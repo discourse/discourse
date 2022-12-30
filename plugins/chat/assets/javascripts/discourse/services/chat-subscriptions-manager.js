@@ -77,8 +77,6 @@ export default class ChatSubscriptionsManager extends Service {
   }
 
   _stopChannelArchiveStatusSubscription() {
-    this._super(...arguments);
-
     if (this.currentUser.admin) {
       this.messageBus.unsubscribe(
         "/chat/channel-archive-status",
