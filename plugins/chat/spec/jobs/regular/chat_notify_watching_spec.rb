@@ -92,12 +92,20 @@ RSpec.describe Jobs::ChatNotifyWatching do
     end
 
     it "skips the watching notifications if it was mentioned through a group" do
-      group.add(user1)
+      group.add(user2)
       PostAlerter.expects(:push_notification).never
 
       messages = listen_for_notifications(user2, mentioned_group_ids: [group.id])
 
       expect(messages.size).to be_zero
+    end
+
+    it "doesn't skip watching notifications if the user is not a member of the mentioned group" do
+      PostAlerter.expects(:push_notification).once
+
+      messages = listen_for_notifications(user2, mentioned_group_ids: [group.id])
+
+      expect(messages).to be_present
     end
 
     it "skips the watching notifications if it was mentioned via @all mention" do
@@ -134,6 +142,20 @@ RSpec.describe Jobs::ChatNotifyWatching do
       messages = listen_for_notifications(user2, global_mentions: ["here"])
 
       assert_notification_alert_is_correct(messages.first.data, user1, user2, message)
+    end
+
+    context "when among the user groups there is a mentioned one" do
+      it 'skips the watching notification' do
+        group.add(user2)
+        another_group = Fabricate(:group)
+        another_group.add(user2)
+
+        PostAlerter.expects(:push_notification).never
+
+        messages = listen_for_notifications(user2, mentioned_group_ids: [group.id])
+
+        expect(messages.size).to be_zero
+      end
     end
   end
 
@@ -182,7 +204,7 @@ RSpec.describe Jobs::ChatNotifyWatching do
         )
       end
 
-      it "sends a mobile notification" do
+      it "only sends a mobile notification" do
         expects_push_notification(user1, user2, message)
 
         messages = listen_for_notifications(user2)
@@ -193,7 +215,7 @@ RSpec.describe Jobs::ChatNotifyWatching do
       context "when the channel is muted via membership preferences" do
         before { membership2.update!(muted: true) }
 
-        it "does not send a desktop or mobile notification" do
+        it "does not send any notification" do
           PostAlerter.expects(:push_notification).never
           messages = listen_for_notifications(user2)
           expect(messages).to be_empty

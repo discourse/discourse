@@ -19,7 +19,7 @@ module Jobs
 
       members =
         UserChatChannelMembership
-          .includes(user: :groups)
+          .includes(:user)
           .joins(user: :user_option)
           .where(user_option: { chat_enabled: true })
           .where(chat_channel_id: @chat_channel.id)
@@ -29,13 +29,19 @@ module Jobs
             @chat_message.id
           )
           .where.not(user_id: direct_mentioned_user_ids)
-          .where.not(groups: { id: mentioned_group_ids })
           .where(
             "desktop_notification_level = ? OR mobile_notification_level = ?",
             always_notification_level,
             always_notification_level,
           )
           .merge(User.not_suspended)
+
+      if mentioned_group_ids.present?
+        members = members
+          .joins("LEFT OUTER JOIN group_users gu ON gu.user_id = users.id")
+          .group("user_chat_channel_memberships.id")
+          .having("COUNT(gu.group_id) = 0 OR bool_and(gu.group_id NOT IN (?))", mentioned_group_ids)
+      end
 
       if global_mentions.include?(Chat::ChatNotifier::ALL_KEYWORD)
         members = members.where(user_option: { ignore_channel_wide_mention: true })

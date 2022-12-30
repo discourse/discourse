@@ -154,6 +154,8 @@ class Chat::ChatNotifier
     inaccessible_mentions[:group_mentions_disabled] = mentions_disabled
     inaccessible_mentions[:too_many_members] = too_many_members
 
+    return if mentionable.blank?
+
     mentioned_by_group(mentionable).find_in_batches(batch_size: MENTION_BATCH_SIZE) do |reached_by_group|
       grouped = group_users_to_notify(reached_by_group)
       ordered_group_names = group_name_mentions & mentionable.map { |mg| mg.name.downcase }
@@ -321,7 +323,7 @@ class Chat::ChatNotifier
   # Jobs to create notifications
 
   def notify_mentioned_users(mention_type, user_ids)
-    return if user_ids.blank?
+    return if user_ids.blank? || mention_type.blank?
 
     Jobs.enqueue(
       :chat_notify_mentioned,
