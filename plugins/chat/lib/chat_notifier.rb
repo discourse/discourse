@@ -37,11 +37,21 @@ class Chat::ChatNotifier
     end
 
     def notify_edit(chat_message:, timestamp:)
-      new(chat_message, timestamp).notify_edit
+      Jobs.enqueue(
+        :send_message_notifications,
+        chat_message_id: chat_message.id,
+        timestamp: timestamp.iso8601(6),
+        reason: "edit"
+      )
     end
 
     def notify_new(chat_message:, timestamp:)
-      new(chat_message, timestamp).notify_new
+      Jobs.enqueue(
+        :send_message_notifications,
+        chat_message_id: chat_message.id,
+        timestamp: timestamp.iso8601(6),
+        reason: "new"
+      )
     end
   end
 
@@ -333,7 +343,7 @@ class Chat::ChatNotifier
         chat_message_id: @chat_message.id,
         to_notify_ids_map: to_notify.as_json,
         already_notified_user_ids: already_notified_user_ids,
-        timestamp: @timestamp.iso8601(6),
+        timestamp: @timestamp,
       },
     )
   end
@@ -344,7 +354,7 @@ class Chat::ChatNotifier
       {
         chat_message_id: @chat_message.id,
         except_user_ids: except,
-        timestamp: @timestamp.iso8601(6),
+        timestamp: @timestamp,
       },
     )
   end

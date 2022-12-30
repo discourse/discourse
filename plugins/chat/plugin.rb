@@ -198,6 +198,7 @@ after_initialize do
   load File.expand_path("../app/jobs/regular/chat_notify_watching.rb", __FILE__)
   load File.expand_path("../app/jobs/regular/update_channel_user_count.rb", __FILE__)
   load File.expand_path("../app/jobs/regular/delete_user_messages.rb", __FILE__)
+  load File.expand_path("../app/jobs/regular/send_message_notifications.rb", __FILE__)
   load File.expand_path("../app/jobs/scheduled/delete_old_chat_messages.rb", __FILE__)
   load File.expand_path("../app/jobs/scheduled/update_user_counts_for_chat_channels.rb", __FILE__)
   load File.expand_path("../app/jobs/scheduled/email_chat_notifications.rb", __FILE__)
