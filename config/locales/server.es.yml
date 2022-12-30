@@ -3395,6 +3395,16 @@ es:
         %{context}
 
         %{respond_instructions}
+    user_watching_category_or_tag:
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_watching_first_post:
       title: "Usuario vigilando la primera publicación"
       subject_template: "[%{email_prefix}] %{topic_title}"

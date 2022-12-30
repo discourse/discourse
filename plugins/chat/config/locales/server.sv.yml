@@ -42,7 +42,7 @@ sv:
       text_body_template: |
         Arkivering av chatt kanalen **\#%{channel_name}** misslyckades. %{messages_archived} meddelanden har arkiverats. Delvis arkiverade meddelanden kopierades till ämnet [%{topic_title}](%{topic_url}). Besök kanalen på %{channel_url} för att försöka igen.
   chat:
-    deleted_chat_username: raderad
+    deleted_chat_username: raderat
     errors:
       channel_exists_for_category: "En kanal finns redan för denna kategori och namn"
       channel_new_message_disallowed: "Kanalen är %{status}, inga nya meddelanden kan skickas"
@@ -107,7 +107,7 @@ sv:
       statuses:
         read_only: "Endast läsning"
         archived: "Arkiverad"
-        closed: "Stängd"
+        closed: "Stängda"
         open: "Öppna"
       archive:
         first_post_raw: "Detta ämne är ett arkiv av chatt kanalen [%{channel_name}](%{channel_url})."
@@ -120,7 +120,7 @@ sv:
         multi_user_truncated: "%{users} och %{leftover} andra"
     category_channel:
       errors:
-        slug_contains_non_ascii_chars: "innehåller icke-ascii tecken"
+        slug_contains_non_ascii_chars: "innehåller icke-ascii-tecken"
         is_already_in_use: "används redan"
     bookmarkable:
       notification_title: "meddelande i %{channel_name}"

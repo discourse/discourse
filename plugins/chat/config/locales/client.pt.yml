@@ -29,6 +29,8 @@ pt:
           users_limit:
             one: "%{count} usuário"
             other: "%{count} usuários"
+      only_chat_push_notifications:
+        title: "Enviar notificações push apenas para chat"
       reply: "Responder"
       edit: "Editar"
       rebake_message: "Reconstruir HTML"

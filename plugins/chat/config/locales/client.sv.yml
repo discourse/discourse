@@ -211,7 +211,7 @@ sv:
         closed_header: "Kanalen är stängd"
         closed: "Stängd"
         open_header: "Kanalen är öppen"
-        open: "Öppna"
+        open: "Öppen"
       browse:
         back: "Tillbaka"
         title: Kanaler

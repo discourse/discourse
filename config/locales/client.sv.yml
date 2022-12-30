@@ -148,7 +148,7 @@ sv:
       public_topic: "Gjorde det här ämnet publikt %{when}"
       open_topic: "Konverterade detta till ett ämne %{when}"
       private_topic: "Gjorde det här ämnet till ett personligt meddelande %{when}"
-      split_topic: "Splitta det här ämnet %{when}"
+      split_topic: "Dela det här ämnet %{when}"
       invited_user: "Bjöd in %{who} %{when}"
       invited_group: "Bjöd in %{who} %{when}"
       user_left: "%{who} tog bort sig själva från detta meddelande %{when}"
@@ -1740,7 +1740,7 @@ sv:
       secondary: "visa mig inte dessa tips"
       first_notification:
         title: "Din första avisering!"
-        content: "Aviseringar används för att hålla dig uppdaterad med vad som händer i samhället."
+        content: "Aviseringar används för att hålla dig uppdaterad om vad som händer i samhället."
       topic_timeline:
         title: "Ämnestidslinje"
         content: "Bläddra snabbt genom ett inlägg med hjälp av ämnestidslinjen."
@@ -2506,7 +2506,7 @@ sv:
         mentions_with_unread:
           one: "Omnämnanden - %{count} oläst omnämnande"
           other: "Omnämnanden - %{count} olästa omnämnanden"
-        likes: "Gillar"
+        likes: "Gillningar"
         likes_with_unread:
           one: "Gillningar - %{count} oläst gillning"
           other: "Gillningar - %{count} olästa gillningar"
@@ -4034,7 +4034,7 @@ sv:
               content: "Allting"
               title: "Alla ämnen"
             faq:
-              content: "FAQ"
+              content: "Vanliga frågor och svar"
             groups:
               content: "Grupper"
               title: "Alla grupper"
@@ -4203,6 +4203,9 @@ sv:
               other: "%{count} användare har de nya e-postdomänerna och kommer att läggas till i gruppen."
             automatic_membership_associated_groups: "Användare som är medlemmar i en grupp på en tjänst som listas här kommer automatiskt att läggas till i denna grupp när de loggar in med tjänsten."
             primary_group: "Automatiskt inställd som primär grupp"
+          alert:
+            primary_group: "Eftersom detta är en primär grupp kommer namnet '%{group_name}' att användas i CSS-klasser som kan ses av alla."
+            flair_group: "Eftersom den här gruppen har underikon för sina medlemmar kommer namnet \"%{group_name}\" att vara synligt för alla."
         name_placeholder: "Gruppnamn, inga mellanslag, samma regler som för användarnamn"
         primary: "Primär grupp"
         no_primary: "(ingen primär grupp)"
