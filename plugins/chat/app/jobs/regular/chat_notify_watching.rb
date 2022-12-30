@@ -37,9 +37,9 @@ module Jobs
           )
           .merge(User.not_suspended)
 
-      if global_mentions.include?("all")
+      if global_mentions.include?(Chat::ChatNotifier::ALL_KEYWORD)
         members = members.where(user_option: { ignore_channel_wide_mention: true })
-      elsif global_mentions.include?("here")
+      elsif global_mentions.include?(Chat::ChatNotifier::HERE_KEYWORD)
         members = members.where("last_seen_at < ?", 5.minutes.ago)
       end
 

@@ -31,9 +31,10 @@ class Chat::ChatNotifier
   HERE_MENTIONS = :here_mentions
   GLOBAL_MENTIONS = :global_mentions
   STATIC_MENTION_TYPES = [DIRECT_MENTIONS, HERE_MENTIONS, GLOBAL_MENTIONS]
+  HERE_KEYWORD = 'here'
+  ALL_KEYWORD = 'all'
 
   MENTION_BATCH_SIZE = 250
-
   class << self
     def push_notification_tag(type, chat_channel_id)
       "#{Discourse.current_hostname}-chat-#{type}-#{chat_channel_id}"
@@ -73,8 +74,8 @@ class Chat::ChatNotifier
     end
 
     global_mentions = []
-    global_mentions << "all" if typed_global_mention?
-    global_mentions << "here" if typed_here_mention?
+    global_mentions << ALL_KEYWORD if typed_global_mention?
+    global_mentions << HERE_KEYWORD if typed_here_mention?
 
     notify_watching_users(
       mentioned_channel_member_ids,
@@ -168,9 +169,6 @@ class Chat::ChatNotifier
       classified.each do |group_name, member_ids|
         notify_mentioned_users(group_name, member_ids)
       end
-
-      inaccessible_mentions[:welcome_to_join] = inaccessible_mentions[:welcome_to_join].concat(grouped[:welcome_to_join])
-      inaccessible_mentions[:unreachable] = inaccessible_mentions[:unreachable].concat(grouped[:unreachable])
     end
   end
 

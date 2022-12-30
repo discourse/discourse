@@ -335,31 +335,6 @@ describe Chat::ChatNotifier do
           unreachable_users = unreachable_msg.data[:cannot_see].map { |u| u["id"] }
           expect(unreachable_users).to contain_exactly(user_3.id)
         end
-
-        it "notify posts of users who are part of the mentioned group but participating" do
-          group =
-            Fabricate(
-              :public_group,
-              users: [user_2, user_3],
-              mentionable_level: Group::ALIAS_LEVELS[:everyone],
-            )
-          msg =
-            build_cooked_msg("Hello @#{group.name}", user_1, chat_channel: personal_chat_channel)
-
-          messages =
-            MessageBus.track_publish("/chat/#{personal_chat_channel.id}") do
-              described_class.new(msg, msg.created_at).notify_new
-
-              assert_users_were_notifier_with_mention_type(group.name, [user_2.id])
-            end
-
-          unreachable_msg = messages.first
-
-          expect(unreachable_msg).to be_present
-          expect(unreachable_msg.data[:without_membership]).to be_empty
-          unreachable_users = unreachable_msg.data[:cannot_see].map { |u| u["id"] }
-          expect(unreachable_users).to contain_exactly(user_3.id)
-        end
       end
     end
 
@@ -422,30 +397,6 @@ describe Chat::ChatNotifier do
           following: false,
         )
         msg = build_cooked_msg("Hello @#{user_3.username}", user_1)
-
-        messages =
-          MessageBus.track_publish("/chat/#{channel.id}") do
-            described_class.new(msg, msg.created_at).notify_new
-
-            assert_users_were_notifier_with_mention_type(:direct_mentions, [])
-          end
-
-        not_participating_msg = messages.first
-
-        expect(not_participating_msg).to be_present
-        expect(not_participating_msg.data[:cannot_see]).to be_empty
-        not_participating_users = not_participating_msg.data[:without_membership].map { |u| u["id"] }
-        expect(not_participating_users).to contain_exactly(user_3.id)
-      end
-
-      it "can invite other group members to channel" do
-        group =
-          Fabricate(
-            :public_group,
-            users: [user_2, user_3],
-            mentionable_level: Group::ALIAS_LEVELS[:everyone],
-          )
-        msg = build_cooked_msg("Hello @#{group.name}", user_1)
 
         messages =
           MessageBus.track_publish("/chat/#{channel.id}") do
