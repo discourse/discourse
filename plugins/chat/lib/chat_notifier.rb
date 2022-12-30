@@ -32,6 +32,8 @@ class Chat::ChatNotifier
   GLOBAL_MENTIONS = :global_mentions
   STATIC_MENTION_TYPES = [DIRECT_MENTIONS, HERE_MENTIONS, GLOBAL_MENTIONS]
 
+  MENTION_BATCH_SIZE = 250
+
   class << self
     def push_notification_tag(type, chat_channel_id)
       "#{Discourse.current_hostname}-chat-#{type}-#{chat_channel_id}"
@@ -151,38 +153,34 @@ class Chat::ChatNotifier
     inaccessible_mentions[:group_mentions_disabled] = mentions_disabled
     inaccessible_mentions[:too_many_members] = too_many_members
 
-    reached_by_group = chat_users
-      .where.not(id: mentioned_channel_member_ids)
-      .joins(:groups)
-      .where(groups: { id: mentionable.map(&:id) })
-      .group('users.id')
-      .select("users.*", "ARRAY_AGG(LOWER(groups.name)) AS mentioned_group_names")
+    mentioned_by_group(mentionable).find_in_batches(batch_size: MENTION_BATCH_SIZE) do |reached_by_group|
+      grouped = group_users_to_notify(reached_by_group)
+      ordered_group_names = group_name_mentions & mentionable.map { |mg| mg.name.downcase }
 
-    grouped = group_users_to_notify(reached_by_group)
-    ordered_group_names = group_name_mentions & mentionable.map { |mg| mg.name.downcase }
+      classified = grouped[:already_participating].reduce({}) do |memo, member|
+        first_mentioned_group = ordered_group_names.detect { |gn| member.mentioned_group_names.include?(gn) }
 
-    classified = grouped[:already_participating].reduce({}) do |memo, member|
-      first_mentioned_group = ordered_group_names.detect { |gn| member.mentioned_group_names.include?(gn) }
+        memo[first_mentioned_group] = memo[first_mentioned_group].to_a << member.id
 
-      memo[first_mentioned_group] = memo[first_mentioned_group].to_a << member.id
+        memo
+      end
 
-      memo
+      classified.each do |group_name, member_ids|
+        notify_mentioned_users(group_name, member_ids)
+      end
+
+      inaccessible_mentions[:welcome_to_join] = inaccessible_mentions[:welcome_to_join].concat(grouped[:welcome_to_join])
+      inaccessible_mentions[:unreachable] = inaccessible_mentions[:unreachable].concat(grouped[:unreachable])
     end
-
-    classified.each do |group_name, member_ids|
-      notify_mentioned_users(group_name, member_ids)
-    end
-
-    inaccessible_mentions[:welcome_to_join] = inaccessible_mentions[:welcome_to_join].concat(grouped[:welcome_to_join])
-    inaccessible_mentions[:unreachable] = inaccessible_mentions[:unreachable].concat(grouped[:unreachable])
   end
 
   def send_here_mentions
-    here_user_ids = channel_wide_mentions(mentionable_groups.map(&:id))
+    channel_wide_mentions(mentionable_groups.map(&:id))
       .where("last_seen_at > ?", 5.minutes.ago)
-      .pluck(:id)
-
-    notify_mentioned_users(HERE_MENTIONS, here_user_ids)
+      .select(:id)
+      .find_in_batches(batch_size: MENTION_BATCH_SIZE) do |here_users|
+        notify_mentioned_users(HERE_MENTIONS, here_users.map(&:id))
+      end
   end
 
   def send_global_mentions
@@ -193,7 +191,9 @@ class Chat::ChatNotifier
         .where("last_seen_at < ?", 5.minutes.ago)
     end
 
-    notify_mentioned_users(GLOBAL_MENTIONS, global_mentions.pluck(:id))
+    global_mentions.select(:id).find_in_batches(batch_size: MENTION_BATCH_SIZE) do |user_ids|
+      notify_mentioned_users(GLOBAL_MENTIONS, user_ids.map(&:id))
+    end
   end
 
   def group_users_to_notify(users)
@@ -250,6 +250,15 @@ class Chat::ChatNotifier
   end
 
   # Query helpers
+
+  def mentioned_by_group(mentionable_groups)
+    chat_users
+      .where.not(id: mentioned_channel_member_ids)
+      .joins(:groups)
+      .where(groups: { id: mentionable_groups.map(&:id) })
+      .group('users.id')
+      .select("users.*", "ARRAY_AGG(LOWER(groups.name)) AS mentioned_group_names")
+  end
 
   def mentioned_channel_member_ids
     @mentioned_channel_member_ids ||= begin
