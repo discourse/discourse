@@ -163,6 +163,7 @@ RSpec.describe "User menu notifications | sidebar", type: :system, js: true do
     fab!(:other_user) { Fabricate(:user) }
 
     before do
+      Jobs.run_immediately!
       channel_1.add(current_user)
     end
 

@@ -134,7 +134,7 @@ class Chat::ChatNotifier
 
   def chat_users
     users =
-      User.includes(:do_not_disturb_timings, :push_subscriptions, :user_chat_channel_memberships)
+      User.includes(:user_chat_channel_memberships, :group_users)
 
     users
       .distinct
@@ -275,7 +275,9 @@ class Chat::ChatNotifier
     mentionable.each { |g| to_notify[g.name.downcase] = [] }
 
     reached_by_group =
-      chat_users.joins(:groups).where(groups: mentionable).where.not(id: already_covered_ids)
+      chat_users
+        .includes(:groups)
+        .joins(:groups).where(groups: mentionable).where.not(id: already_covered_ids)
 
     grouped = group_users_to_notify(reached_by_group)
 
