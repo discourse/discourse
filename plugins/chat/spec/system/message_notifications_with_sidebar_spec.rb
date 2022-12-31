@@ -89,6 +89,8 @@ RSpec.describe "Message notifications - with sidebar", type: :system, js: true d
           end
 
           context "when a message with mentions is created" do
+            before { Jobs.run_immediately! }
+
             it "correctly renders notifications" do
               visit("/")
               using_session(:user_1) do

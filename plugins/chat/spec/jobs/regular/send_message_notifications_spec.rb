@@ -31,7 +31,7 @@ RSpec.describe Jobs::SendMessageNotifications do
 
         subject.execute(
           chat_message_id: chat_message.id,
-          reason: "invalid"
+          reason: "new"
         )
       end
 

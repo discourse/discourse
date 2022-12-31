@@ -41,7 +41,7 @@ class Chat::ChatNotifier
         :send_message_notifications,
         chat_message_id: chat_message.id,
         timestamp: timestamp.iso8601(6),
-        reason: "edit"
+        reason: :edit
       )
     end
 
@@ -50,7 +50,7 @@ class Chat::ChatNotifier
         :send_message_notifications,
         chat_message_id: chat_message.id,
         timestamp: timestamp.iso8601(6),
-        reason: "new"
+        reason: :new
       )
     end
   end
@@ -133,10 +133,8 @@ class Chat::ChatNotifier
   end
 
   def chat_users
-    users =
-      User.includes(:do_not_disturb_timings, :push_subscriptions, :user_chat_channel_memberships)
-
-    users
+    User
+      .includes(:user_chat_channel_memberships, :group_users)
       .distinct
       .joins("LEFT OUTER JOIN user_chat_channel_memberships uccm ON uccm.user_id = users.id")
       .joins(:user_option)
@@ -275,7 +273,9 @@ class Chat::ChatNotifier
     mentionable.each { |g| to_notify[g.name.downcase] = [] }
 
     reached_by_group =
-      chat_users.joins(:groups).where(groups: mentionable).where.not(id: already_covered_ids)
+      chat_users
+        .includes(:groups)
+        .joins(:groups).where(groups: mentionable).where.not(id: already_covered_ids)
 
     grouped = group_users_to_notify(reached_by_group)
 

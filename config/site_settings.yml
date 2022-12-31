@@ -913,7 +913,6 @@ posting:
   max_mentions_per_post: 10
   max_users_notified_per_group_mention:
     default: 100
-    max: 250
     client: true
   newuser_max_replies_per_topic: 3
   newuser_max_mentions_per_post: 2
