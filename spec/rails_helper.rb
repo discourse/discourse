@@ -245,6 +245,7 @@ RSpec.configure do |config|
       allow: [Webdrivers::Chromedriver.base_url]
     )
 
+    Capybara.threadsafe = true
     Capybara.disable_animation = true
 
     Capybara.configure do |capybara_config|
