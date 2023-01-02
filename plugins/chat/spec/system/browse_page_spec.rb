@@ -134,6 +134,17 @@ RSpec.describe "Browse page", type: :system, js: true do
           expect(browse_view).to have_content(category_channel_4.name)
         end
 
+        context "when loading more" do
+          before { 25.times { Fabricate(:chat_channel, status: :open) } }
+
+          it "works" do
+            visit("/chat/browse/all")
+            scroll_to(find(".chat-channel-card:last-child"))
+
+            expect(page).to have_selector(".chat-channel-card", count: 29)
+          end
+        end
+
         include_examples "never visible channels" do
           before { visit("/chat/browse/all") }
         end

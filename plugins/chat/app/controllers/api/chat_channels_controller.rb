@@ -23,7 +23,7 @@ class Chat::Api::ChatChannelsController < Chat::Api
       end
 
     load_more_params = options.merge(offset: options[:offset] + options[:limit]).to_query
-    load_more_url = URI::HTTP.build(path: "/chat/api/channels", query: load_more_params)
+    load_more_url = URI::HTTP.build(path: "/chat/api/channels", query: load_more_params).request_uri
 
     render json: serialized_channels, root: "channels", meta: { load_more_url: load_more_url }
   end
