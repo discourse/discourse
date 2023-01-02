@@ -9,7 +9,6 @@ RSpec.describe "JIT messages", type: :system, js: true do
   let(:channel) { PageObjects::Pages::ChatChannel.new }
 
   before do
-    Jobs.run_immediately!
     channel_1.add(current_user)
     chat_system_bootstrap
     sign_in(current_user)
@@ -18,6 +17,8 @@ RSpec.describe "JIT messages", type: :system, js: true do
   context "when mentioning a user not on the channel" do
     it "displays a mention warning" do
       chat.visit_channel(channel_1)
+
+      Jobs.run_immediately!
       channel.send_message("hi @#{other_user.username}")
 
       expect(page).to have_content(
