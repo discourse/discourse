@@ -162,14 +162,11 @@ RSpec.describe "User menu notifications | sidebar", type: :system, js: true do
     fab!(:channel_1) { Fabricate(:chat_channel) }
     fab!(:other_user) { Fabricate(:user) }
 
-    before do
-      Jobs.run_immediately!
-      channel_1.add(current_user)
-    end
+    before { channel_1.add(current_user) }
 
     it "shows an invitation notification" do
       chat.visit_channel(channel_1)
-      channel.send_message("this is fine @#{other_user.username}")
+      Sidekiq::Testing.inline! { channel.send_message("this is fine @#{other_user.username}") }
       find(".invite-link", wait: 5).click
 
       using_session(:user_1) do
