@@ -170,8 +170,6 @@ RSpec.describe "User menu notifications | sidebar", type: :system, js: true do
     it "shows an invitation notification" do
       chat.visit_channel(channel_1)
       channel.send_message("this is fine @#{other_user.username}")
-
-      find(".chat-composer-input").click # ensures autocomplete is closed and not masking invite link
       find(".invite-link", wait: 5).click
 
       using_session(:user_1) do
