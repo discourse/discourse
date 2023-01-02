@@ -37,11 +37,21 @@ class Chat::ChatNotifier
     end
 
     def notify_edit(chat_message:, timestamp:)
-      new(chat_message, timestamp).notify_edit
+      Jobs.enqueue(
+        :send_message_notifications,
+        chat_message_id: chat_message.id,
+        timestamp: timestamp.iso8601(6),
+        reason: :edit
+      )
     end
 
     def notify_new(chat_message:, timestamp:)
-      new(chat_message, timestamp).notify_new
+      Jobs.enqueue(
+        :send_message_notifications,
+        chat_message_id: chat_message.id,
+        timestamp: timestamp.iso8601(6),
+        reason: :new
+      )
     end
   end
 
@@ -123,10 +133,8 @@ class Chat::ChatNotifier
   end
 
   def chat_users
-    users =
-      User.includes(:do_not_disturb_timings, :push_subscriptions, :user_chat_channel_memberships)
-
-    users
+    User
+      .includes(:user_chat_channel_memberships, :group_users)
       .distinct
       .joins("LEFT OUTER JOIN user_chat_channel_memberships uccm ON uccm.user_id = users.id")
       .joins(:user_option)
@@ -265,7 +273,9 @@ class Chat::ChatNotifier
     mentionable.each { |g| to_notify[g.name.downcase] = [] }
 
     reached_by_group =
-      chat_users.joins(:groups).where(groups: mentionable).where.not(id: already_covered_ids)
+      chat_users
+        .includes(:groups)
+        .joins(:groups).where(groups: mentionable).where.not(id: already_covered_ids)
 
     grouped = group_users_to_notify(reached_by_group)
 
@@ -333,7 +343,7 @@ class Chat::ChatNotifier
         chat_message_id: @chat_message.id,
         to_notify_ids_map: to_notify.as_json,
         already_notified_user_ids: already_notified_user_ids,
-        timestamp: @timestamp.iso8601(6),
+        timestamp: @timestamp,
       },
     )
   end
@@ -344,7 +354,7 @@ class Chat::ChatNotifier
       {
         chat_message_id: @chat_message.id,
         except_user_ids: except,
-        timestamp: @timestamp.iso8601(6),
+        timestamp: @timestamp,
       },
     )
   end

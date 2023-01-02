@@ -9,6 +9,7 @@ RSpec.describe "JIT messages", type: :system, js: true do
   let(:channel) { PageObjects::Pages::ChatChannel.new }
 
   before do
+    Jobs.run_immediately!
     channel_1.add(current_user)
     chat_system_bootstrap
     sign_in(current_user)
