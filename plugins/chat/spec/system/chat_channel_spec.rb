@@ -24,8 +24,7 @@ RSpec.describe "Chat channel", type: :system, js: true do
       expect(channel).to have_no_loading_skeleton
       expect(page).to have_no_css("[data-id='#{unloaded_message.id}']")
 
-      find(".chat-composer-input").fill_in(with: "test message")
-      find(".send-btn").click
+      channel.send_message("test_message")
 
       expect(channel).to have_no_loading_skeleton
       expect(page).to have_css("[data-id='#{unloaded_message.id}']")

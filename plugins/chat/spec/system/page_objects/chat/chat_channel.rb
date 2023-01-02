@@ -12,7 +12,7 @@ module PageObjects
       end
 
       def click_send_message
-        find(".chat-composer .send-btn").click
+        find(".chat-composer .send-btn:enabled").click
       end
 
       def message_by_id(id)
