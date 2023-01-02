@@ -131,7 +131,7 @@ export default Component.extend({
 
   @action
   fetchChannelsFromServer(filter) {
-    if (this.isDetroyed || this.isDestroying) {
+    if (this.isDestroyed || this.isDestroying) {
       return;
     }
 
@@ -169,7 +169,7 @@ export default Component.extend({
 
   @action
   getInitialChannels() {
-    if (this.isDetroyed || this.isDestroying) {
+    if (this.isDestroyed || this.isDestroying) {
       return;
     }
 
