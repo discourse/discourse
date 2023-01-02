@@ -149,6 +149,18 @@ RSpec.describe "Browse page", type: :system, js: true do
           expect(browse_view).to have_no_content(category_channel_4.name)
         end
 
+        context "when loading more" do
+          fab!(:valid_channel) { Fabricate(:chat_channel, status: :open) }
+          fab!(:invalid_channel) { Fabricate(:chat_channel, status: :closed) }
+
+          it "keeps the filter" do
+            visit("/chat/browse/open")
+
+            expect(page).to have_content(valid_channel.title)
+            expect(page).to have_no_content(invalid_channel.title)
+          end
+        end
+
         include_examples "never visible channels" do
           before { visit("/chat/browse/open") }
         end
@@ -162,6 +174,18 @@ RSpec.describe "Browse page", type: :system, js: true do
           expect(browse_view).to have_no_content(category_channel_2.name)
           expect(browse_view).to have_content(category_channel_3.name)
           expect(browse_view).to have_no_content(category_channel_4.name)
+        end
+
+        context "when loading more" do
+          fab!(:valid_channel) { Fabricate(:chat_channel, status: :closed) }
+          fab!(:invalid_channel) { Fabricate(:chat_channel, status: :open) }
+
+          it "keeps the filter" do
+            visit("/chat/browse/closed")
+
+            expect(page).to have_content(valid_channel.title)
+            expect(page).to have_no_content(invalid_channel.title)
+          end
         end
 
         include_examples "never visible channels" do
@@ -179,6 +203,18 @@ RSpec.describe "Browse page", type: :system, js: true do
           expect(browse_view).to have_no_content(category_channel_2.name)
           expect(browse_view).to have_no_content(category_channel_3.name)
           expect(browse_view).to have_content(category_channel_4.name)
+        end
+
+        context "when loading more" do
+          fab!(:valid_channel) { Fabricate(:chat_channel, status: :archived) }
+          fab!(:invalid_channel) { Fabricate(:chat_channel, status: :open) }
+
+          it "keeps the filter" do
+            visit("/chat/browse/archived")
+
+            expect(page).to have_content(valid_channel.title)
+            expect(page).to have_no_content(invalid_channel.title)
+          end
         end
 
         include_examples "never visible channels" do
