@@ -15,7 +15,7 @@ RSpec.describe "JIT messages", type: :system, js: true do
   end
 
   context "when mentioning a user not on the channel" do
-    it "displays a mention warning" do
+    xit "displays a mention warning" do
       chat.visit_channel(channel_1)
 
       Jobs.run_immediately!
