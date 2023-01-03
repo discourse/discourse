@@ -139,11 +139,11 @@ class TopicView
 
     if @posts && !@skip_custom_fields
       if (added_fields = User.allowed_user_custom_fields(@guardian)).present?
-        @user_custom_fields = User.custom_fields_for_ids(@posts.pluck(:user_id), added_fields)
+        @user_custom_fields = User.custom_fields_for_ids(@posts.map(&:user_id), added_fields)
       end
 
       if (allowed_fields = TopicView.allowed_post_custom_fields(@user, @topic)).present?
-        @post_custom_fields = Post.custom_fields_for_ids(@posts.pluck(:id), allowed_fields)
+        @post_custom_fields = Post.custom_fields_for_ids(@posts.map(&:id), allowed_fields)
       end
     end
 
@@ -778,7 +778,6 @@ class TopicView
         :reply_to_user,
         :deleted_by,
         :incoming_email,
-        :topic,
         :image_upload
       )
 
