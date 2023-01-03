@@ -72,6 +72,7 @@ module PageObjects
         find(".chat-composer-input").click # makes helper more reliable by ensuring focus is not lost
         find(".chat-composer-input").fill_in(with: text)
         click_send_message
+        find(".chat-composer-input").click # ensures autocomplete is closed and not masking anything
       end
 
       def reply_to(message)
