@@ -311,7 +311,7 @@ GEM
     pry-rails (0.3.9)
       pry (>= 0.10.4)
     public_suffix (5.0.1)
-    puma (6.0.1)
+    puma (6.0.2)
       nio4r (~> 2.0)
     r2 (0.2.7)
     racc (1.6.1)
@@ -640,4 +640,4 @@ DEPENDENCIES
   yaml-lint
 
 BUNDLED WITH
-   2.3.22
+   2.4.1
