@@ -82,10 +82,7 @@ describe Chat::ChatMessageUpdater do
       )
     expect(updater.failed?).to eq(true)
     expect(updater.error.message).to match(
-      I18n.t(
-        "chat.errors.message_too_long",
-        { maximum: SiteSetting.chat_maximum_message_length },
-      ),
+      I18n.t("chat.errors.message_too_long", { maximum: SiteSetting.chat_maximum_message_length }),
     )
     expect(chat_message.reload.message).to eq(og_message)
   end
@@ -258,6 +255,59 @@ describe Chat::ChatMessageUpdater do
     expect(revision.new_message).to eq(new_message)
     expect(revision.user_id).to eq(guardian.user.id)
     expect(chat_message.reload.last_editor_id).to eq(guardian.user.id)
+  end
+
+  describe "duplicates" do
+    fab!(:upload1) { Fabricate(:upload, user: user1) }
+    fab!(:upload2) { Fabricate(:upload, user: user1) }
+
+    before do
+      SiteSetting.chat_duplicate_message_sensitivity = 1.0
+      public_chat_channel.update!(user_count: 50)
+    end
+
+    it "errors when editing the message to be the same as one that was posted recently" do
+      chat_message_1 = create_chat_message(user1, "this is some chat message", public_chat_channel)
+      chat_message_2 =
+        create_chat_message(
+          Fabricate(:user),
+          "another different chat message here",
+          public_chat_channel,
+        )
+
+      chat_message_1.update!(created_at: 30.seconds.ago)
+      chat_message_2.update!(created_at: 20.seconds.ago)
+
+      updater =
+        Chat::ChatMessageUpdater.update(
+          guardian: guardian,
+          chat_message: chat_message_1,
+          new_content: "another different chat message here",
+        )
+      expect(updater.failed?).to eq(true)
+      expect(updater.error.message).to eq(I18n.t("chat.errors.duplicate_message"))
+    end
+
+    it "does not count the message as a duplicate when editing leaves the message the same but changes uploads" do
+      chat_message =
+        create_chat_message(
+          user1,
+          "this is some chat message",
+          public_chat_channel,
+          upload_ids: [upload1.id, upload2.id],
+        )
+      chat_message.update!(created_at: 30.seconds.ago)
+
+      updater =
+        Chat::ChatMessageUpdater.update(
+          guardian: guardian,
+          chat_message: chat_message,
+          new_content: "this is some chat message",
+          upload_ids: [upload2.id],
+        )
+      expect(updater.failed?).to eq(false)
+      expect(chat_message.reload.uploads.count).to eq(1)
+    end
   end
 
   describe "uploads" do

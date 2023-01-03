@@ -2068,6 +2068,54 @@ RSpec.describe TopicsController do
       expect(response.status).to eq(200)
     end
 
+    it 'does not result in N+1 queries problem when multiple topic participants have primary or flair group configured' do
+      user2 = Fabricate(:user)
+      user3 = Fabricate(:user)
+      post2 = Fabricate(:post, topic: topic, user: user2)
+      post3 = Fabricate(:post, topic: topic, user: user3)
+      group = Fabricate(:group)
+      user2.update!(primary_group: group)
+      user3.update!(flair_group: group)
+
+      # warm up
+      get "/t/#{topic.id}.json"
+      expect(response.status).to eq(200)
+
+      first_request_queries = track_sql_queries do
+        get "/t/#{topic.id}.json"
+
+        expect(response.status).to eq(200)
+
+        expect(response.parsed_body["details"]["participants"].map { |u| u["id"] }).to contain_exactly(
+          post_author1.id,
+          user2.id,
+          user3.id
+        )
+      end
+
+      group2 = Fabricate(:group)
+      user4 = Fabricate(:user, flair_group: group2)
+      user5 = Fabricate(:user, primary_group: group2)
+      post4 = Fabricate(:post, topic: topic, user: user4)
+      post5 = Fabricate(:post, topic: topic, user: user5)
+
+      second_request_queries = track_sql_queries do
+        get "/t/#{topic.id}.json"
+
+        expect(response.status).to eq(200)
+
+        expect(response.parsed_body["details"]["participants"].map { |u| u["id"] }).to contain_exactly(
+          post_author1.id,
+          user2.id,
+          user3.id,
+          user4.id,
+          user5.id
+        )
+      end
+
+      expect(second_request_queries.count).to eq(first_request_queries.count)
+    end
+
     context 'when a topic with nil slug exists' do
       before do
         nil_slug_topic = Fabricate(:topic)
@@ -2682,6 +2730,91 @@ RSpec.describe TopicsController do
     it "doesn't raise an error on a very long link" do
       get "/t/#{topic.id}.json", headers: { HTTP_REFERER: "http://#{'a' * 2000}.com" }
       expect(response.status).to eq(200)
+    end
+
+    context "with mentions" do
+      fab!(:post) { Fabricate(:post, user: post_author1) }
+      fab!(:topic) { post.topic }
+      fab!(:post2) { Fabricate(
+        :post,
+        user: post_author2,
+        topic: topic,
+        raw: "I am mentioning @#{post_author1.username}."
+      ) }
+
+      it "returns mentions" do
+        get "/t/#{topic.slug}/#{topic.id}.json"
+
+        expect(response.status).to eq(200)
+
+        json = response.parsed_body
+        expect(json["post_stream"]["posts"][1]["mentioned_users"].length).to be(1)
+
+        mentioned_user = json["post_stream"]["posts"][1]["mentioned_users"][0]
+        expect(mentioned_user["id"]).to be(post_author1.id)
+        expect(mentioned_user["name"]).to eq(post_author1.name)
+        expect(mentioned_user["username"]).to eq(post_author1.username)
+      end
+
+      it "doesn't return status on mentions by default" do
+        post_author1.set_status!("off to dentist", "tooth")
+
+        get "/t/#{topic.slug}/#{topic.id}.json"
+
+        expect(response.status).to eq(200)
+
+        json = response.parsed_body
+        expect(json["post_stream"]["posts"][1]["mentioned_users"].length).to be(1)
+        status = json["post_stream"]["posts"][1]["mentioned_users"][0]["status"]
+        expect(status).to be_nil
+      end
+
+      it "returns mentions with status if user status is enabled" do
+        SiteSetting.enable_user_status = true
+        post_author1.set_status!("off to dentist", "tooth")
+
+        get "/t/#{topic.slug}/#{topic.id}.json"
+
+        expect(response.status).to eq(200)
+
+        json = response.parsed_body
+        expect(json["post_stream"]["posts"][1]["mentioned_users"].length).to be(1)
+
+        status = json["post_stream"]["posts"][1]["mentioned_users"][0]["status"]
+        expect(status).to be_present
+        expect(status["emoji"]).to eq(post_author1.user_status.emoji)
+        expect(status["description"]).to eq(post_author1.user_status.description)
+      end
+
+      it "returns an empty list of mentioned users if there is no mentions in a post" do
+        Fabricate(
+          :post,
+          user: post_author2,
+          topic: topic,
+          raw: "Post without mentions.")
+
+        get "/t/#{topic.slug}/#{topic.id}.json"
+
+        expect(response.status).to eq(200)
+
+        json = response.parsed_body
+        expect(json["post_stream"]["posts"][2]["mentioned_users"].length).to be(0)
+      end
+
+      it "returns an empty list of mentioned users if an unexisting user was mentioned" do
+        Fabricate(
+          :post,
+          user: post_author2,
+          topic: topic,
+          raw: "Mentioning an @unexisting_user.")
+
+        get "/t/#{topic.slug}/#{topic.id}.json"
+
+        expect(response.status).to eq(200)
+
+        json = response.parsed_body
+        expect(json["post_stream"]["posts"][2]["mentioned_users"].length).to be(0)
+      end
     end
 
     describe "has_escaped_fragment?" do
@@ -3914,6 +4047,9 @@ RSpec.describe TopicsController do
     end
 
     context 'when logged in as a TL4 user' do
+      before do
+        SiteSetting.enable_category_group_moderation = true
+      end
       it "raises an error if the user can't see the topic" do
         user.update!(trust_level: TrustLevel[4])
         sign_in(user)
@@ -3923,6 +4059,46 @@ RSpec.describe TopicsController do
         post "/t/#{pm_topic.id}/timer.json", params: {
           time: '24',
           status_type: TopicTimer.types[1]
+        }
+
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["error_type"]).to eq('invalid_access')
+      end
+
+      it "allows a category moderator to create a delete timer" do
+        user.update!(trust_level: TrustLevel[4])
+        topic.category.update!(reviewable_by_group: user.groups.first)
+
+        sign_in(user)
+
+        post "/t/#{topic.id}/timer.json", params: {
+          time: 10,
+          status_type: 'delete'
+        }
+
+        expect(response.status).to eq(200)
+      end
+
+      it "raises an error setting a delete timer" do
+        user.update!(trust_level: TrustLevel[4])
+        sign_in(user)
+
+        post "/t/#{topic.id}/timer.json", params: {
+          time: 10,
+          status_type: 'delete'
+        }
+
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["error_type"]).to eq('invalid_access')
+      end
+
+      it "raises an error setting delete_replies timer" do
+        user.update!(trust_level: TrustLevel[4])
+        sign_in(user)
+
+        post "/t/#{topic.id}/timer.json", params: {
+          time: 10,
+          status_type: 'delete_replies'
         }
 
         expect(response.status).to eq(403)

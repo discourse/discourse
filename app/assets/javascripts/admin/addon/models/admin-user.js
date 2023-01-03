@@ -197,6 +197,7 @@ const AdminUser = User.extend({
   canLockTrustLevel: lt("trust_level", 4),
 
   canSuspend: not("staff"),
+  canSilence: not("staff"),
 
   @discourseComputed("suspended_till", "suspended_at")
   suspendDuration(suspendedTill, suspendedAt) {

@@ -108,17 +108,15 @@ fr:
       join: "Rejoindre"
       new_messages: "nouveaux messages"
       mention_warning:
-        cannot_see:
-          one: "%{usernames} ne peut pas accéder à ce canal et n'a pas été averti(e)."
-          other: "%{usernames} ne peuvent pas accéder à ce canal et n'ont pas été avertis."
         dismiss: "rejeter"
         invitations_sent:
           one: "Invitation envoyée"
           other: "Invitations envoyées"
         invite: "Inviter à rejoindre le canal"
-        without_membership:
-          one: "%{usernames} n'a pas rejoint ce canal."
-          other: "%{usernames} n'ont pas rejoint ce canal."
+        groups:
+          users_limit:
+            one: "%{count} utilisateur"
+            other: "%{count} utilisateurs"
       aria_roles:
         header: "En-tête de discussion"
         composer: "Compositeur de discussion"
@@ -276,6 +274,7 @@ fr:
       settings:
         auto_join_users_label: "Ajouter automatiquement des utilisateurs"
         auto_join_users_info: "Vérifier toutes les heures quels utilisateurs ont été actifs au cours des 3 derniers mois et, s'ils ont accès à la catégorie %{category}, les ajouter à ce canal."
+        enable_auto_join_users: "Ajouter automatiquement tous les utilisateurs récemment actifs"
         auto_join_users_warning: "Chaque utilisateur qui n'est pas membre de ce canal et qui a accès à la catégorie %{category} le rejoindra. Voulez-vous continuer ?"
         desktop_notification_level: "Notifications sur le bureau"
         follow: "Rejoindre"

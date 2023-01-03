@@ -22,8 +22,7 @@ acceptance(
   function (needs) {
     needs.settings({
       allow_uncategorized_topics: false,
-      enable_experimental_sidebar_hamburger: true,
-      enable_sidebar: true,
+      navigation_menu: "sidebar",
     });
 
     needs.user({ admin: false });
@@ -66,8 +65,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
   });
 
   needs.settings({
-    enable_experimental_sidebar_hamburger: true,
-    enable_sidebar: true,
+    navigation_menu: "sidebar",
     suppress_uncategorized_badge: false,
     allow_uncategorized_topics: true,
   });

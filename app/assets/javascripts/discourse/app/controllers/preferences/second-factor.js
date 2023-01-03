@@ -10,6 +10,7 @@ import { findAll } from "discourse/models/login-method";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import showModal from "discourse/lib/show-modal";
 import { inject as service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
 
 export default Controller.extend(CanCheckEmails, {
   dialog: service(),
@@ -113,6 +114,29 @@ export default Controller.extend(CanCheckEmails, {
       .finally(() => this.set("resetPasswordLoading", false));
   },
 
+  disableAllMessage() {
+    let templateElements = [I18n.t("user.second_factor.delete_confirm_header")];
+    templateElements.push("<ul>");
+    this.totps.forEach((totp) => {
+      templateElements.push(`<li>${totp.name}</li>`);
+    });
+    this.security_keys.forEach((key) => {
+      templateElements.push(`<li>${key.name}</li>`);
+    });
+    if (this.currentUser.second_factor_backup_enabled) {
+      templateElements.push(
+        `<li>${I18n.t("user.second_factor_backup.title")}</li>`
+      );
+    }
+    templateElements.push("</ul>");
+    templateElements.push(
+      I18n.t("user.second_factor.delete_confirm_instruction", {
+        confirm: I18n.t("user.second_factor.disable"),
+      })
+    );
+    return htmlSafe(templateElements.join(""));
+  },
+
   actions: {
     confirmPassword() {
       if (!this.password) {
@@ -130,8 +154,11 @@ export default Controller.extend(CanCheckEmails, {
 
       this.dialog.deleteConfirm({
         title: I18n.t("user.second_factor.disable_confirm"),
+        message: this.disableAllMessage(),
         confirmButtonLabel: "user.second_factor.disable",
+        confirmPhrase: I18n.t("user.second_factor.disable"),
         confirmButtonIcon: "ban",
+        cancelButtonClass: "btn-flat",
         didConfirm: () => {
           this.model
             .disableAllSecondFactors()
@@ -140,6 +167,88 @@ export default Controller.extend(CanCheckEmails, {
               DiscourseURL.redirectTo(userPath(`${usernameLower}/preferences`));
             })
             .catch((e) => this.handleError(e))
+            .finally(() => this.set("loading", false));
+        },
+      });
+    },
+    disableSingleSecondFactor(secondFactorMethod) {
+      if (this.totps.concat(this.security_keys).length === 1) {
+        this.send("disableAllSecondFactors");
+        return;
+      }
+      this.dialog.deleteConfirm({
+        title: I18n.t("user.second_factor.delete_single_confirm_title"),
+        message: I18n.t("user.second_factor.delete_single_confirm_message", {
+          name: secondFactorMethod.name,
+        }),
+        confirmButtonLabel: "user.second_factor.delete",
+        confirmButtonIcon: "ban",
+        cancelButtonClass: "btn-flat",
+        didConfirm: () => {
+          this.currentUser
+            .updateSecondFactor(
+              secondFactorMethod.id,
+              secondFactorMethod.name,
+              true,
+              secondFactorMethod.method
+            )
+            .then((response) => {
+              if (response.error) {
+                return;
+              }
+              this.markDirty();
+            })
+            .catch((e) => this.handleError(e))
+            .finally(() => {
+              this.setProperties({
+                totps: this.totps.filter(
+                  (totp) =>
+                    totp.id !== secondFactorMethod.id ||
+                    totp.method !== secondFactorMethod.method
+                ),
+                security_keys: this.security_keys.filter(
+                  (key) =>
+                    key.id !== secondFactorMethod.id ||
+                    key.method !== secondFactorMethod.method
+                ),
+              });
+
+              this.set("loading", false);
+            });
+        },
+      });
+    },
+
+    disableSecondFactorBackup() {
+      this.dialog.deleteConfirm({
+        title: I18n.t("user.second_factor.delete_backup_codes_confirm_title"),
+        message: I18n.t(
+          "user.second_factor.delete_backup_codes_confirm_message"
+        ),
+        confirmButtonLabel: "user.second_factor.delete",
+        confirmButtonIcon: "ban",
+        cancelButtonClass: "btn-flat",
+        didConfirm: () => {
+          this.set("backupCodes", []);
+          this.set("loading", true);
+
+          this.model
+            .updateSecondFactor(0, "", true, SECOND_FACTOR_METHODS.BACKUP_CODE)
+            .then((response) => {
+              if (response.error) {
+                this.set("errorMessage", response.error);
+                return;
+              }
+
+              this.set("errorMessage", null);
+              this.model.set("second_factor_backup_enabled", false);
+              this.markDirty();
+              this.send("closeModal");
+            })
+            .catch((error) => {
+              this.send("closeModal");
+              this.onError(error);
+            })
             .finally(() => this.set("loading", false));
         },
       });

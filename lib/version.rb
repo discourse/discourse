@@ -7,10 +7,10 @@ module Discourse
   # work around reloader
   unless defined? ::Discourse::VERSION
     module VERSION #:nodoc:
-      MAJOR = 2
-      MINOR = 9
+      MAJOR = 3
+      MINOR = 0
       TINY  = 0
-      PRE   = 'beta14'
+      PRE   = 'beta15'
 
       STRING = [MAJOR, MINOR, TINY, PRE].compact.join('.')
     end

@@ -51,5 +51,9 @@ class ReviewableClaimedTopicsController < ApplicationController
     end
 
     MessageBus.publish("/reviewable_claimed", data, group_ids: group_ids.to_a)
+
+    if !SiteSetting.legacy_navigation_menu?
+      Jobs.enqueue(:refresh_users_reviewable_counts, group_ids: group_ids.to_a)
+    end
   end
 end

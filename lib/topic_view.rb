@@ -34,7 +34,9 @@ class TopicView
     :queued_posts_enabled,
     :personal_message,
     :can_review_topic,
-    :page
+    :page,
+    :mentioned_users,
+    :mentions
   )
   alias queued_posts_enabled? queued_posts_enabled
 
@@ -137,13 +139,16 @@ class TopicView
 
     if @posts && !@skip_custom_fields
       if (added_fields = User.allowed_user_custom_fields(@guardian)).present?
-        @user_custom_fields = User.custom_fields_for_ids(@posts.pluck(:user_id), added_fields)
+        @user_custom_fields = User.custom_fields_for_ids(@posts.map(&:user_id), added_fields)
       end
 
       if (allowed_fields = TopicView.allowed_post_custom_fields(@user, @topic)).present?
-        @post_custom_fields = Post.custom_fields_for_ids(@posts.pluck(:id), allowed_fields)
+        @post_custom_fields = Post.custom_fields_for_ids(@posts.map(&:id), allowed_fields)
       end
     end
+
+    parse_mentions
+    load_mentioned_users
 
     TopicView.preload(self)
 
@@ -407,12 +412,13 @@ class TopicView
   end
 
   def has_bookmarks?
-    return false if @user.blank?
-    return false if @topic.trashed?
     bookmarks.any?
   end
 
   def bookmarks
+    return [] if @user.blank?
+    return [] if @topic.trashed?
+
     @bookmarks ||= Bookmark.for_user_in_topic(@user, @topic.id).select(
       :id, :bookmarkable_id, :bookmarkable_type, :reminder_at, :name, :auto_delete_preference
     )
@@ -472,7 +478,7 @@ class TopicView
   def participants
     @participants ||= begin
       participants = {}
-      User.where(id: post_counts_by_user.keys).includes(:primary_group).each { |u| participants[u.id] = u }
+      User.where(id: post_counts_by_user.keys).includes(:primary_group, :flair_group).each { |u| participants[u.id] = u }
       participants
     end
   end
@@ -670,6 +676,23 @@ class TopicView
     @topic.published_page
   end
 
+  def parse_mentions
+    @mentions = @posts
+      .to_h { |p| [p.id, p.mentions] }
+      .reject { |_, v| v.empty? }
+  end
+
+  def load_mentioned_users
+    usernames = @mentions.values.flatten.uniq
+    mentioned_users = User.where(username: usernames)
+
+    if SiteSetting.enable_user_status
+      mentioned_users = mentioned_users.includes(:user_status)
+    end
+
+    @mentioned_users = mentioned_users.to_h { |u| [u.username, u] }
+  end
+
   protected
 
   def read_posts_set
@@ -752,11 +775,10 @@ class TopicView
   def filter_posts_by_ids(post_ids)
     @posts = Post.where(id: post_ids, topic_id: @topic.id)
       .includes(
-        { user: :primary_group },
+        { user: [:primary_group, :flair_group] },
         :reply_to_user,
         :deleted_by,
         :incoming_email,
-        :topic,
         :image_upload
       )
 

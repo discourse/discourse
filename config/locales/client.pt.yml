@@ -77,15 +77,33 @@ pt:
         date_month: "DD MMM"
         date_year: "MMM 'YY"
       medium:
+        less_than_x_minutes:
+          one: "menos de %{count} minuto"
+          other: "menos de %{count} minutos"
         x_minutes:
           one: "%{count} minuto"
           other: "%{count} minutos"
         x_hours:
           one: "%{count} hora"
           other: "%{count} horas"
+        about_x_hours:
+          one: "a cerca de %{count} hora"
+          other: "a cerca de %{count} horas"
         x_days:
           one: "%{count} dia"
           other: "%{count} dias"
+        x_months:
+          one: "%{count} mês"
+          other: "%{count} meses"
+        about_x_years:
+          one: "a cerca de %{count} ano"
+          other: "a cerca de %{count} anos"
+        over_x_years:
+          one: "mais de %{count} ano"
+          other: "mais de %{count} anos"
+        almost_x_years:
+          one: "quase %{count} ano"
+          other: "quase %{count} anos"
         date_year: "DD MMM, 'YY"
       medium_with_ago:
         x_minutes:
@@ -120,47 +138,49 @@ pt:
       to_placeholder: "ir para data"
     share:
       topic_html: 'Tópico: <span class="topic-title">%{topicTitle}</span>'
+      post: "publicação #%{postNumber} de @%{username}"
       close: "fechar"
       twitter: "Partilhar no Twitter"
       facebook: "Partilhar no Facebook"
       email: "Enviar por e-mail"
       url: "Copiar e partilhar URL"
     action_codes:
-      public_topic: "tornei este tópico publico %{when}"
-      open_topic: "converteu isto em um tópico %{when}"
-      private_topic: "tornou este tópico numa mensagem privada %{when}"
-      split_topic: "dividir este tópico %{when}"
-      invited_user: "convidou %{who} %{when}"
-      invited_group: "convidou %{who} %{when}"
+      public_topic: "Tornei este tópico publico %{when}"
+      open_topic: "Converteu isto em um tópico %{when}"
+      private_topic: "Tornou este tópico numa mensagem privada %{when}"
+      split_topic: "Dividir este tópico %{when}"
+      invited_user: "Convidou %{who} %{when}"
+      invited_group: "Convidou %{who} %{when}"
       user_left: "%{who} removeram-se desta mensagem %{when}"
-      removed_user: "removeu %{who} %{when}"
-      removed_group: "removeu %{who} %{when}"
-      autobumped: "automaticamente colidido %{when}"
+      removed_user: "Removeu %{who} %{when}"
+      removed_group: "Removeu %{who} %{when}"
+      autobumped: "Automaticamente colidido %{when}"
       autoclosed:
-        enabled: "fechado %{when}"
-        disabled: "aberto %{when}"
+        enabled: "Fechado %{when}"
+        disabled: "Aberto %{when}"
       closed:
-        enabled: "fechado %{when}"
-        disabled: "aberto %{when}"
+        enabled: "Fechado %{when}"
+        disabled: "Aberto %{when}"
       archived:
-        enabled: "arquivado %{when}"
-        disabled: "removido do arquivo %{when}"
+        enabled: "Arquivado %{when}"
+        disabled: "Removido do arquivo %{when}"
       pinned:
-        enabled: "afixado %{when}"
-        disabled: "desafixado %{when}"
+        enabled: "Afixado %{when}"
+        disabled: "Desafixado %{when}"
       pinned_globally:
-        enabled: "afixado globalmente %{when}"
-        disabled: "desafixado %{when}"
+        enabled: "Afixado globalmente %{when}"
+        disabled: "Desafixado %{when}"
       visible:
-        enabled: "listado %{when}"
-        disabled: "removido da lista %{when}"
+        enabled: "Listado %{when}"
+        disabled: "Removido da lista %{when}"
       banner:
-        enabled: "tornou isto numa faixa %{when}. Esta irá aparecer no topo de cada página até que seja rejeitada pelo utilizador."
-        disabled: "removeu esta faixa %{when}. Esta não irá aparecer no topo de cada página."
-      forwarded: "encaminhou o e-mail acima"
+        enabled: "Tornou isto numa faixa %{when}. Esta irá aparecer no topo de cada página até que seja rejeitada pelo utilizador."
+        disabled: "Removeu esta faixa %{when}. Esta não irá aparecer no topo de cada página."
+      forwarded: "Encaminhou o e-mail acima"
     topic_admin_menu: "ações do tópico"
     skip_to_main_content: "Saltar para o conteúdo principal"
     emails_are_disabled: "Todos os envios de e-mail foram globalmente desativados por um administrador. Nenhum e-mail de notificação será enviado."
+    emails_are_disabled_non_staff: "O envio de e-mail foi desativado para usuários que não são da equipe."
     software_update_prompt:
       message: "Atualizámos este site, <span>por favor recarregue a página</span> ou poderá experienciar um comportamento inesperado."
       dismiss: "Marcar como visto"
@@ -169,9 +189,11 @@ pt:
       other: "Para que o início do teu Site seja o mais simples possível, estás agora em modo de inicialização simples. A todos os novos utilizadores será concedido o Nível de Confiança 1 e o resumo por e-mail enviado diariamente estará ativado. Isto será automaticamente desligado quando %{count} utilizadores se tiverem juntado ao fórum."
     bootstrap_mode_disabled: "O modo de inicialização simples será desactivado em 24 horas."
     bootstrap_invite_button_title: "Enviar Convites"
+    bootstrap_wizard_link_title: "Concluir assistente de configuração"
     themes:
       default_description: "Predefinição"
       broken_theme_alert: "Seu site pode não funcionar porque um tema ou componente têm erros."
+      error_caused_by: "Causado por '%{name}'. <a target='blank' href='%{path}'>Clique aqui</a> para atualizar, reconfigurar ou desabilitar."
       only_admins: "(esta mensagem é exibida apenas para administradores do site)"
     s3:
       regions:
@@ -229,7 +251,6 @@ pt:
     conduct: "Código de Conduta"
     mobile_view: "Visualização Mobile"
     desktop_view: "Visualização Desktop"
-    or: "ou"
     now: "ainda agora"
     read_more: "ler mais"
     more: "Mais"
@@ -352,8 +373,6 @@ pt:
     disable: "Desativar"
     continue: "Continuar"
     undo: "Desfazer"
-    revert: "Reverter"
-    failed: "Falhou"
     switch_to_anon: "Entrar em modo Anónimo"
     switch_from_anon: "Sair de modo Anónimo"
     banner:
@@ -552,7 +571,10 @@ pt:
       relative: "Relativo"
     time_shortcut:
       now: "Agora"
+      in_one_hour: "Em uma hora"
+      in_two_hours: "Em duas horas"
       later_today: "Hoje, mais tarde"
+      two_days: "Dois dias"
       next_business_day: "Próximo dia útil"
       tomorrow: "Amanhã"
       post_local_date: "Data no post"
@@ -617,6 +639,8 @@ pt:
         reset_to_default: "Restaurar ao padrão"
       group:
         all: "todos os grupos"
+      sort:
+        label: "Organizado por %{criteria}"
     group_histories:
       actions:
         change_group_setting: "Mudar configuração do grupo"
@@ -962,7 +986,6 @@ pt:
       notification_schedule:
         title: "Agendamento de Notificações"
         label: "Activar agendamento de notificações personalizado"
-        tip: "Fora destas horas será automaticamente colocado no modo 'não incomodar'."
         midnight: "Meia-noite"
         none: "Nenhuma"
         monday: "Segunda-feira"
@@ -1155,6 +1178,7 @@ pt:
         tags: "Etiquetas"
         interface: "Interface"
         apps: "Aplicações"
+        sidebar: "Barra Lateral"
       change_password:
         success: "(email enviado)"
         in_progress: "(a enviar email)"
@@ -1206,7 +1230,9 @@ pt:
         use: "Utilizar a aplicação Authenticator"
         enforced_notice: "É necessário ativar a autenticação em dois passos para aceder a este site."
         disable: "Desativar"
-        disable_confirm: "Tem a certeza que deseja desativar todos os métodos de dois passos?"
+        disable_confirm: "Tem certeza que deseja desativar a autenticação de dois fatores?"
+        delete: "Apagar"
+        delete_single_confirm_title: "Excluindo um autenticador"
         save: "Guardar"
         edit: "Editar"
         edit_title: "Editar Autenticador"
@@ -1219,6 +1245,8 @@ pt:
         security_key:
           register: "Registar"
           default_name: "Chave de Segurança Principal"
+          iphone_default_name: "iPhone"
+          android_default_name: "Android"
           not_allowed_error: "O processo de registo da chave de segurança atingiu o tempo limite ou foi cancelado."
           already_added_error: "Já registou esta chave de segurança. Não precisa de a registar novamente."
           save: "Guardar"
@@ -1285,7 +1313,6 @@ pt:
         authenticated: "O seu email foi autenticado por %{provider}"
         invite_auth_email_invalid: "O seu email de convite não coincide com o email autenticado por %{provider}"
         authenticated_by_invite: "Seu e-mail foi autenticado pelo convite"
-        frequency_immediately: "Enviar-lhe-emos um email imediatamente caso não leia o que lhe estamos a enviar."
         frequency:
           one: "Só iremos enviar-lhe um email se não o tivermos visto no último minuto."
           other: "Só iremos enviar-lhe um email se não o tivermos visto nos últimos %{count} minutos."
@@ -1503,7 +1530,9 @@ pt:
         title: "Resumo"
         stats: "Estatísticas"
         time_read: "tempo de leitura"
+        time_read_title: "%{duration} (todo o tempo)"
         recent_time_read: "tempo de leitura recente"
+        recent_time_read_title: "%{duration} (nos últimos 60 dias)"
         topic_count:
           one: "Tópico criado"
           other: "tópicos criados"
@@ -1560,6 +1589,9 @@ pt:
         none: "(nenhum)"
       flair:
         none: "(nenhum)"
+      status:
+        title: "Status customizado"
+        not_set: "Não definido"
       primary_group:
         title: "Grupo Primário"
         none: "(nenhum)"
@@ -1572,6 +1604,23 @@ pt:
         the_topic: "o tópico"
     user_status:
       save: "Guardar"
+      set_custom_status: "Definir status customizado"
+      what_are_you_doing: "O que está fazendo?"
+      pause_notifications: "Pausar notificações"
+      remove_status: "Remover status"
+    user_tips:
+      primary: "Entendi!"
+      secondary: "não me mostre essas dicas"
+      first_notification:
+        title: "Sua primeira notificação!"
+      topic_timeline:
+        title: "Linha do tempo do tópico"
+      post_menu:
+        title: "Menu de publicação"
+      topic_notification_levels:
+        title: "Agora você está acompanhando este tópico"
+      suggested_topics:
+        title: "Coninue lendo!"
     loading: "A carregar..."
     errors:
       prev_page: "enquanto tenta carregar"
@@ -1605,7 +1654,6 @@ pt:
       login_disabled: "Enquanto o site se encontrar no modo só de leitura, a opção de iniciar a sessão está desativada."
       logout_disabled: "Enquanto o site se encontrar no modo só de leitura, a opção de terminar a sessão está desativada."
     learn_more: "saber mais..."
-    first_post: Primeira publicação
     mute: Silenciar
     unmute: Desativar silêncio
     last_post: Publicado
@@ -1692,6 +1740,7 @@ pt:
       title: "Efetuar login"
       username: "Utilizador"
       password: "Palavra-passe"
+      show_password: "Mostrar"
       second_factor_title: "Autenticação em Dois Passos"
       second_factor_description: "Por favor introduza um código de autenticação a partir da sua aplicação:"
       second_factor_backup: "Faça login usando um código de backup"
@@ -1735,17 +1784,28 @@ pt:
         name: "Google"
       twitter:
         name: "Twitter"
+        title: "Cadastrar-se com o Twitter"
+        sr_title: "Cadastrar-se com o Twitter"
       instagram:
         name: "Instagram"
+        title: "Iniciar sessão com o Instagram"
+        sr_title: "Iniciar sessão com o Instagram"
       facebook:
         name: "Facebook"
+        title: "Iniciar sessão com o Facebook"
+        sr_title: "Iniciar sessão com o Facebook"
       github:
         name: "GitHub"
+        title: "Iniciar sessão com o GitHub"
+        sr_title: "Iniciar sessão com o GitHub"
       discord:
         name: "Discord"
+        title: "Iniciar sessão com o Discord"
+        sr_title: "Iniciar sessão com o Discord"
       second_factor_toggle:
         totp: "Use um aplicativo de autenticação"
         backup_code: "Use um código de backup"
+        security_key: "Em vez disso, usar uma chave de segurança"
     invites:
       accept_title: "Convite"
       emoji: "emoji de envelope"
@@ -1796,6 +1856,9 @@ pt:
       select_to_filter: "Selecione um valor para filtrar"
       default_header_text: Selecionar...
       no_content: Não foram encontradas correspondências
+      results_count:
+        one: "%{count} resultado"
+        other: "%{count} resultados"
       filter_placeholder: Pesquisar...
       filter_placeholder_with_any: Pesquisar ou criar...
       create: "Criar: '%{content}'"
@@ -1853,6 +1916,9 @@ pt:
       similar_topics: "O seu tópico é similar a..."
       drafts_offline: "rascunhos off-line"
       edit_conflict: "editar conflito"
+      esc: "esc"
+      esc_label: "Clique ou precione Esc para descartar"
+      ok_proceed: "Ok, continuar"
       group_mentioned:
         one: "Ao usar %{group}, estará a notificar <a href='%{group_link}'>%{count} pessoa</a> – tem a certeza?"
         other: "Ao mencionar %{group}, estará a notificar <a href='%{group_link}'>%{count} pessoas</a> – tem a certeza?"
@@ -1966,6 +2032,7 @@ pt:
       ignore: "Ignorar"
       image_alt_text:
         aria_label: Texto alternativo para a imagem
+      delete_image_button: Excluir Imagem
     notifications:
       tooltip:
         regular:
@@ -1977,6 +2044,9 @@ pt:
         high_priority:
           one: "%{count} notificação de alta prioridade não lida"
           other: "%{count} notificações de alta prioridade não lidas"
+        new_message_notification:
+          one: "%{count} nova notificação de mensagem"
+          other: "%{count} novas notificações de mensagem"
       title: "notificações de menções de @name, respostas às suas publicações e tópicos, mensagens, etc"
       none: "De momento, não é possível carregar as notificações."
       empty: "Não foram encontradas notificações."
@@ -1989,6 +2059,7 @@ pt:
       bookmark_reminder: "<span>%{username}</span>%{description}"
       replied: "<span>%{username}</span> %{description}"
       posted: "<span>%{username}</span> %{description}"
+      watching_category_or_tag: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
@@ -2047,6 +2118,7 @@ pt:
         invited_to_private_message: "convidado para mensagem particular"
         invitee_accepted: "convite aceito"
         posted: "novo post"
+        watching_category_or_tag: "novo post"
         moved_post: "post movido"
         linked: "linkado"
         bookmark_reminder: "lembrete de favorito"
@@ -2310,14 +2382,7 @@ pt:
       show_links: "mostrar hiperligações dentro deste tópico"
       collapse_details: "ocultar detalhes do tópico"
       expand_details: "expandir detalhes do tópico"
-      read_more_in_category: "Pretende ler mais? Navegue por outros tópicos em %{catLink} ou %{latestLink}."
-      read_more: "Pretende ler mais? %{catLink} ou %{latestLink}."
       unread_indicator: "Nenhum membro leu o último post deste tópico ainda."
-      read_more_MF: "{ UNREAD, plural, =0 {} one { Existe <a href='{basePath}/unread'>1 não lido </a> } other { Existem <a href='{basePath}/unread'># não lidos</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{e } false {existe } other{}} <a href='{basePath}/new'>1 novo</a> tópico} other { {BOTH, select, true{e } false {existem } other{}} <a href='{basePath}/new'># novos</a> tópicos} } restantes, ou {CATEGORY, select, true {navegue por outros tópicos em {catLink}} false {{latestLink}} other {}}"
-      bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
-      browse_all_categories: Pesquisar em todas as categorias
-      browse_all_tags: Procurar todas as tags
-      view_latest_topics: ver os tópicos mais recentes
       suggest_create_topic: Pronto para <a href>iniciar uma nova conversa?</a>
       jump_reply_up: avançar para resposta mais recente
       jump_reply_down: avançar para resposta mais antiga
@@ -3396,9 +3461,7 @@ pt:
     safe_mode:
       enabled: "O modo de segurança está activado, para sair do modo de segurança feche esta janela do navegador"
     image_removed: "(imagem removida)"
-    do_not_disturb:
-      title: "Não perturbe por..."
-      label: "Não perturbe"
+    pause_notifications:
       remaining: "%{remaining} restante"
       options:
         half_hour: "30 minutos"
@@ -3612,7 +3675,6 @@ pt:
         about: "Editar aqui a sua participação e nomes no grupo"
         group_members: "Membros do grupo"
         delete: "Eliminar"
-        delete_confirm: "Eliminar este grupo?"
         delete_failed: "Impossível eliminar grupo. Se se trata de um grupo automático, não pode ser eliminado."
         delete_automatic_group: Este é um grupo automático e não pode ser apagado.
         delete_owner_confirm: "Remover privilégios do proprietário para '%{username}'?"
@@ -3681,9 +3743,8 @@ pt:
         detailed_instruction: "Um pedido POST será enviado ao URL fornecido quando o evento escolhido acontecer."
         new: "Novo Webhook"
         create: "Criar"
+        edit: "Editar"
         save: "Guardar"
-        destroy: "Apagar"
-        description: "Descrição"
         controls: "Controlos"
         go_back: "Voltar à lista"
         payload_url: "URL de carga"
@@ -3732,9 +3793,6 @@ pt:
           headers: "Cabeçalhos"
           payload: "Carga"
           body: "Corpo"
-          go_list: "Ir para à lista"
-          go_details: "Editar webhook"
-          go_events: "Ir para eventos"
           ping: "Ping"
           status: "Código de Estado"
           event_id: "ID"
@@ -4280,7 +4338,6 @@ pt:
       user:
         suspend_failed: "Ocorreu um erro ao suspender este utilizador %{error}"
         unsuspend_failed: "Ocorreu um erro ao retirar a suspensão deste utilizador %{error}"
-        suspend_duration: "Durante quanto tempo o utilizador estará suspenso?"
         suspend_reason_label: "Qual é o motivo da sua suspensão? Este texto <b>estará visível para todos</b> na página do perfil deste utilizador, e será mostrada ao utilizador quando tentar iniciar sessão. Mantenha-o breve."
         suspend_reason: "Motivo"
         suspend_reason_title: "Motivo da Suspensão"
@@ -4386,6 +4443,11 @@ pt:
         unlock_trust_level: "Desbloquear Nível de Confiança"
         silenced_count: "Silenciado"
         suspended_count: "Suspenso"
+        other_matches_list:
+          username: "Nome de Utilizador"
+          trust_level: "Nível de Confiança"
+          read_time: "Tempo de leitura"
+          posts: "Mensagens"
         tl3_requirements:
           title: "Requisitos para o Nível de Confiança 3"
           table_title:
@@ -4505,6 +4567,7 @@ pt:
           search: "Pesquisar"
           groups: "Grupos"
           dashboard: "Painel de Administração"
+          navigation: "Navegação"
         default_categories:
           modal_yes: "Sim"
       badges:
@@ -4631,7 +4694,6 @@ pt:
       next: "Próximo"
       step-text: "Passo"
       step: "%{current} de %{total}"
-      upload: "Carregar"
       uploading: "A carregar…"
       upload_error: "Pedimos desculpa, ocorreu um erro ao carregar esse ficheiro. Por favor, tente novamente."
       invites:

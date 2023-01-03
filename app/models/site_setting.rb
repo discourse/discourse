@@ -184,7 +184,7 @@ class SiteSetting < ActiveRecord::Base
   end
 
   def self.whispers_allowed_group_ids
-    if SiteSetting.enable_whispers && SiteSetting.whispers_allowed_groups.present?
+    if SiteSetting.whispers_allowed_groups.present?
       SiteSetting.whispers_allowed_groups_map
     else
       []
@@ -235,6 +235,10 @@ class SiteSetting < ActiveRecord::Base
   def self.shared_drafts_enabled?
     c = SiteSetting.shared_drafts_category
     c.present? && c.to_i != SiteSetting.uncategorized_category_id.to_i
+  end
+
+  def self.legacy_navigation_menu?
+    SiteSetting.navigation_menu == "legacy"
   end
 
   ALLOWLIST_DEPRECATED_SITE_SETTINGS = {

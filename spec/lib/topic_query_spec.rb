@@ -226,10 +226,16 @@ RSpec.describe TopicQuery do
 
   describe 'deleted filter' do
     it "filters deleted topics correctly" do
-      _topic = Fabricate(:topic, deleted_at: 1.year.ago)
+      SiteSetting.enable_category_group_moderation = true
+      group_moderator = Fabricate(:user)
+      group = Fabricate(:group)
+      group.add(group_moderator)
+      category = Fabricate(:category, reviewable_by_group: group)
+      topic = Fabricate(:topic, category: category, deleted_at: 1.year.ago)
 
       expect(TopicQuery.new(admin, status: 'deleted').list_latest.topics.size).to eq(1)
       expect(TopicQuery.new(moderator, status: 'deleted').list_latest.topics.size).to eq(1)
+      expect(TopicQuery.new(group_moderator, status: 'deleted', category: category.id).list_latest.topics.size).to eq(1)
       expect(TopicQuery.new(user, status: 'deleted').list_latest.topics.size).to eq(0)
       expect(TopicQuery.new(nil, status: 'deleted').list_latest.topics.size).to eq(0)
     end
@@ -829,7 +835,7 @@ RSpec.describe TopicQuery do
 
     context 'with whispers' do
       before do
-        SiteSetting.enable_whispers = true
+        SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
       end
 
       it 'correctly shows up in unread for staff' do
@@ -916,6 +922,22 @@ RSpec.describe TopicQuery do
 
         # if we attempt to access non preloaded fields explode
         expect { new_topic.custom_fields["boom"] }.to raise_error(StandardError)
+      end
+    end
+
+    context 'when preloading associations' do
+      it "preloads associations" do
+        DiscoursePluginRegistry.register_topic_preloader_association(:first_post, Plugin::Instance.new)
+
+        topic = Fabricate(:topic)
+        Fabricate(:post, topic: topic)
+
+        new_topic = topic_query.list_new.topics.first
+        expect(new_topic.association(:image_upload).loaded?).to eq(true) # Preloaded by default
+        expect(new_topic.association(:first_post).loaded?).to eq(true)   # Testing a user-defined preloaded association
+        expect(new_topic.association(:user).loaded?).to eq(false)        # Testing the negative
+
+        DiscoursePluginRegistry.reset_register!(:topic_preloader_associations)
       end
     end
 
@@ -1063,13 +1085,8 @@ RSpec.describe TopicQuery do
   end
 
   describe '#list_related_for' do
-    let(:user) do
-      Fabricate(:admin)
-    end
-
-    let(:sender) do
-      Fabricate(:admin)
-    end
+    let(:user) { Fabricate(:user) }
+    let(:sender) { Fabricate(:user) }
 
     let(:group_with_user) do
       group = Fabricate(:group, messageable_level: Group::ALIAS_LEVELS[:everyone])

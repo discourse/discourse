@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe DistributedMutex do
+  before do
+    DistributedMutex.any_instance.stubs(:sleep)
+  end
+
   let(:key) { "test_mutex_key" }
 
   after do

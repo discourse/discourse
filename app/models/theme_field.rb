@@ -148,7 +148,14 @@ class ThemeField < ActiveRecord::Base
     javascript_cache.source_map = js_compiler.source_map
     javascript_cache.save!
 
-    doc.add_child("<script defer src='#{javascript_cache.url}' data-theme-id='#{theme_id}'></script>") if javascript_cache.content.present?
+    if javascript_cache.content.present?
+      doc.add_child(
+        <<~HTML.html_safe
+          <link rel="preload" href="#{javascript_cache.url}" as="script">
+          <script defer src='#{javascript_cache.url}' data-theme-id='#{theme_id}'></script>
+        HTML
+      )
+    end
     [doc.to_s, errors&.join("\n")]
   end
 
@@ -241,7 +248,13 @@ class ThemeField < ActiveRecord::Base
     javascript_cache.source_map = js_compiler.source_map
     javascript_cache.save!
     doc = ""
-    doc = "<script defer src='#{javascript_cache.url}' data-theme-id='#{theme_id}'></script>" if javascript_cache.content.present?
+    if javascript_cache.content.present?
+      doc =
+        <<~HTML.html_safe
+          <link rel="preload" href="#{javascript_cache.url}" as="script">
+          <script defer src='#{javascript_cache.url}' data-theme-id='#{theme_id}'></script>
+        HTML
+    end
     [doc, errors&.join("\n")]
   end
 

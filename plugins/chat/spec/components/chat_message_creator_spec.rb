@@ -112,6 +112,18 @@ describe Chat::ChatMessageCreator do
       }.to change { ChatMessage.count }.by(1)
     end
 
+    it "updates the channel’s last message date" do
+      previous_last_message_sent_at = public_chat_channel.last_message_sent_at
+
+      Chat::ChatMessageCreator.create(
+        chat_channel: public_chat_channel,
+        user: user1,
+        content: "this is a message",
+      )
+
+      expect(previous_last_message_sent_at).to be < public_chat_channel.reload.last_message_sent_at
+    end
+
     it "sets the last_editor_id to the user who created the message" do
       message =
         Chat::ChatMessageCreator.create(

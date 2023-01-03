@@ -202,6 +202,10 @@ class Category < ActiveRecord::Base
     Category.clear_subcategory_ids
   end
 
+  def top_level?
+    self.parent_category_id.nil?
+  end
+
   def self.scoped_to_permissions(guardian, permission_types)
     if guardian.try(:is_admin?)
       all
@@ -224,7 +228,7 @@ class Category < ActiveRecord::Base
         staged: guardian.is_staged?,
         permissions: permissions,
         user_id: guardian.user.id,
-        everyone: Group[:everyone].id)
+        everyone: Group::AUTO_GROUPS[:everyone])
     end
   end
 

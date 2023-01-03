@@ -39,7 +39,6 @@ acceptance("Composer", function (needs) {
     whisperer: true,
   });
   needs.settings({
-    enable_whispers: true,
     general_category_id: 1,
     default_composer_category: 1,
   });
@@ -70,12 +69,12 @@ acceptance("Composer", function (needs) {
     server.get("/posts/419", () => {
       return helper.response({ id: 419 });
     });
-    server.get("/u/is_local_username", () => {
+    server.get("/composer/mentions", () => {
       return helper.response({
-        valid: [],
-        valid_groups: ["staff"],
-        mentionable_groups: [{ name: "staff", user_count: 30 }],
-        cannot_see: [],
+        users: [],
+        user_reasons: {},
+        groups: { staff: { user_count: 30 } },
+        group_reasons: {},
         max_users_notified_per_group_mention: 100,
       });
     });

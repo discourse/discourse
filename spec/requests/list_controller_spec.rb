@@ -89,6 +89,56 @@ RSpec.describe ListController do
 
       expect(response.body).to have_tag "title", text: "Discourse - Best community"
     end
+
+    it "returns structured data" do
+      get "/latest"
+
+      expect(response.status).to eq(200)
+      topic_list = Nokogiri::HTML5(response.body).css('.topic-list')
+      first_item = topic_list.css('[itemprop="itemListElement"]')
+      expect(first_item.css('[itemprop="position"]')[0]['content']).to eq('1')
+      expect(first_item.css('[itemprop="url"]')[0]['href']).to eq(topic.url)
+    end
+
+    it 'does not N+1 queries when topic featured users have different primary groups' do
+      user.update!(primary_group: group)
+
+      # warm up
+      get "/latest.json"
+      expect(response.status).to eq(200)
+
+      initial_sql_queries_count = track_sql_queries do
+        get "/latest.json"
+
+        expect(response.status).to eq(200)
+
+        body = response.parsed_body
+
+        expect(body["topic_list"]["topics"].map { |t| t["id"] }).to contain_exactly(topic.id)
+        expect(body["topic_list"]["topics"][0]["posters"].map { |p| p["user_id"] }).to contain_exactly(user.id)
+      end.count
+
+      group2 = Fabricate(:group)
+      user2 = Fabricate(:user, primary_group: group2)
+      topic.update!(last_post_user_id: user2.id)
+
+      group3 = Fabricate(:group)
+      user3 = Fabricate(:user, flair_group: group3)
+      topic.update!(featured_user3_id: user3.id)
+
+      new_sql_queries_count = track_sql_queries do
+        get "/latest.json"
+
+        expect(response.status).to eq(200)
+
+        body = response.parsed_body
+
+        expect(body["topic_list"]["topics"].map { |t| t["id"] }).to contain_exactly(topic.id)
+        expect(body["topic_list"]["topics"][0]["posters"].map { |p| p["user_id"] }).to contain_exactly(user.id, user2.id, user3.id)
+      end.count
+
+      expect(new_sql_queries_count).to be <= initial_sql_queries_count
+    end
   end
 
   describe "categories and X" do
@@ -199,8 +249,6 @@ RSpec.describe ListController do
   end
 
   describe '#private_messages_group' do
-    fab!(:user) { Fabricate(:user) }
-
     describe 'when user not in personal_message_enabled_groups group' do
       let!(:topic) { Fabricate(:private_message_topic, allowed_groups: [group]) }
 
@@ -235,7 +283,6 @@ RSpec.describe ListController do
       it "should not display group private messages for a moderator's group" do
         moderator = Fabricate(:moderator)
         sign_in(moderator)
-        group.add(moderator)
 
         get "/topics/private-messages-group/#{user.username}/#{group.name}.json"
 

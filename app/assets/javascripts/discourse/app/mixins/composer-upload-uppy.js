@@ -352,8 +352,7 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
     this._uppyInstance.on("upload-error", this._handleUploadError);
 
     this._uppyInstance.on("cancel-all", () => {
-      // uppyInstance.reset() also fires cancel-all, so we want to
-      // only do the manual cancelling work if the user clicked cancel
+      // Do the manual cancelling work only if the user clicked cancel
       if (this.userCancelled) {
         Object.values(this.placeholders).forEach((data) => {
           run(() => {
@@ -453,7 +452,7 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
         placeholderData.processingPlaceholder
       );
 
-      // Safari applies user-defined replacements to text inserted programatically.
+      // Safari applies user-defined replacements to text inserted programmatically.
       // One of the most common replacements is ... -> …, so we take care of the case
       // where that transformation has been applied to the original placeholder
       this.appEvents.trigger(
@@ -545,7 +544,7 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
   },
 
   _reset() {
-    this._uppyInstance?.reset();
+    this._uppyInstance?.cancelAll();
     this.setProperties({
       uploadProgress: 0,
       isUploading: false,

@@ -6,11 +6,13 @@
           <MountWidget @widget="home-logo" @args={{hash minimized=true}} />
           <MountWidget @widget="header-topic-info" @args={{this.dummy}} />
           <div class="panel clearfix">
-            <MountWidget @widget="header-icons" @args={{hash user=this.dummy.user}} />
+            <MountWidget
+              @widget="header-icons"
+              @args={{hash user=this.dummy.user}}
+            />
           </div>
         </div>
       </div>
     </header>
   </div>
 </StyleguideExample>
-

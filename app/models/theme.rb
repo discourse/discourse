@@ -6,7 +6,7 @@ require 'json_schemer'
 class Theme < ActiveRecord::Base
   include GlobalPath
 
-  BASE_COMPILER_VERSION = 67
+  BASE_COMPILER_VERSION = 69
 
   attr_accessor :child_components
 
@@ -394,7 +394,12 @@ class Theme < ActiveRecord::Base
       end
       caches = JavascriptCache.where(theme_id: theme_ids)
       caches = caches.sort_by { |cache| theme_ids.index(cache.theme_id) }
-      return caches.map { |c| "<script defer src='#{c.url}' data-theme-id='#{c.theme_id}'></script>" }.join("\n")
+      return caches.map do |c|
+        <<~HTML.html_safe
+          <link rel="preload" href="#{c.url}" as="script">
+          <script defer src='#{c.url}' data-theme-id='#{c.theme_id}'></script>
+        HTML
+      end.join("\n")
     end
     list_baked_fields(theme_ids, target, name).map { |f| f.value_baked || f.value }.join("\n")
   end
@@ -754,7 +759,7 @@ class Theme < ActiveRecord::Base
   attr_accessor :theme_setting_requests_refresh
 
   def to_scss_variable(name, value)
-    escaped = SassC::Script::Value::String.quote(value, sass: true)
+    escaped = SassC::Script::Value::String.quote(value.to_s, sass: true)
     "$#{name}: unquote(#{escaped});"
   end
 

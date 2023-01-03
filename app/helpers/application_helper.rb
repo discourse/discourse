@@ -95,9 +95,10 @@ module ApplicationHelper
     path = ActionController::Base.helpers.asset_path("#{script}.js")
 
     if GlobalSetting.use_s3? && GlobalSetting.s3_cdn_url
+      resolved_s3_asset_cdn_url = GlobalSetting.s3_asset_cdn_url.presence || GlobalSetting.s3_cdn_url
       if GlobalSetting.cdn_url
         folder = ActionController::Base.config.relative_url_root || "/"
-        path = path.gsub(File.join(GlobalSetting.cdn_url, folder, "/"), File.join(GlobalSetting.s3_cdn_url, "/"))
+        path = path.gsub(File.join(GlobalSetting.cdn_url, folder, "/"), File.join(resolved_s3_asset_cdn_url, "/"))
       else
         # we must remove the subfolder path here, assets are uploaded to s3
         # without it getting involved
@@ -105,7 +106,7 @@ module ApplicationHelper
           path = path.sub(ActionController::Base.config.relative_url_root, "")
         end
 
-        path = "#{GlobalSetting.s3_cdn_url}#{path}"
+        path = "#{resolved_s3_asset_cdn_url}#{path}"
       end
 
       # assets needed for theme testing are not compressed because they take a fair

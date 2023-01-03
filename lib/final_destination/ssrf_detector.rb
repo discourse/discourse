@@ -2,8 +2,8 @@
 
 class FinalDestination
   module SSRFDetector
-    class DisallowedIpError < SocketError
-    end
+    class DisallowedIpError < SocketError; end
+    class LookupFailedError < SocketError; end
 
     def self.standard_private_ranges
       @private_ranges ||= [
@@ -61,7 +61,12 @@ class FinalDestination
     end
 
     def self.lookup_and_filter_ips(name, timeout: nil)
-      ips = lookup_ips(name, timeout: timeout)
+      begin
+        ips = lookup_ips(name, timeout: timeout)
+      rescue SocketError
+        raise LookupFailedError, "FinalDestination: lookup failed"
+      end
+
       return ips if host_bypasses_checks?(name)
 
       ips.filter! { |ip| FinalDestination::SSRFDetector.ip_allowed?(ip) }

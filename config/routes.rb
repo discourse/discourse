@@ -300,7 +300,6 @@ Discourse::Application.routes.draw do
 
           resources :web_hooks
           get 'web_hook_events/:id' => 'web_hooks#list_events', as: :web_hook_events
-          get 'web_hooks/:id/events' => 'web_hooks#list_events'
           get 'web_hooks/:id/events/bulk' => 'web_hooks#bulk_events'
           post 'web_hooks/:web_hook_id/events/:event_id/redeliver' => 'web_hooks#redeliver_event'
           post 'web_hooks/:id/ping' => 'web_hooks#ping'
@@ -393,6 +392,7 @@ Discourse::Application.routes.draw do
       post "session/2fa/test-action" => "session#test_second_factor_restricted_route"
     end
     get "session/scopes" => "session#scopes"
+    get "composer/mentions" => "composer#mentions"
     get "composer_messages" => "composer_messages#index"
     get "composer_messages/user_not_seen_in_a_while" => "composer_messages#user_not_seen_in_a_while"
 
@@ -425,7 +425,6 @@ Discourse::Application.routes.draw do
         collection do
           get "check_username"
           get "check_email"
-          get "is_local_username"
         end
       end
 
@@ -561,11 +560,11 @@ Discourse::Application.routes.draw do
 
     get "highlight-js/:hostname/:version.js" => "highlight_js#show", constraints: { hostname: /[\w\.-]+/, format: :js }
 
-    get "stylesheets/:name.css.map" => "stylesheets#show_source_map", constraints: { name: /[-a-z0-9_]+/ }
-    get "stylesheets/:name.css" => "stylesheets#show", constraints: { name: /[-a-z0-9_]+/ }
+    get "stylesheets/:name" => "stylesheets#show_source_map", constraints: { name: /[-a-z0-9_]+/, format: /css\.map/ }, format: true
+    get "stylesheets/:name" => "stylesheets#show", constraints: { name: /[-a-z0-9_]+/, format: "css" }, format: true
     get "color-scheme-stylesheet/:id(/:theme_id)" => "stylesheets#color_scheme", constraints: { format: :json }
-    get "theme-javascripts/:digest.js" => "theme_javascripts#show", constraints: { digest: /\h{40}/ }
-    get "theme-javascripts/:digest.map" => "theme_javascripts#show_map", constraints: { digest: /\h{40}/ }
+    get "theme-javascripts/:digest" => "theme_javascripts#show", constraints: { digest: /\h{40}/, format: :js }, format: true
+    get "theme-javascripts/:digest" => "theme_javascripts#show_map", constraints: { digest: /\h{40}/, format: :map }, format: true
     get "theme-javascripts/tests/:theme_id-:digest.js" => "theme_javascripts#show_tests"
 
     post "uploads/lookup-metadata" => "uploads#metadata"

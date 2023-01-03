@@ -3,19 +3,31 @@
     <p>{{i18n "topic.publish_page.unpublished"}}</p>
   {{else}}
     <ConditionalLoadingSpinner @condition={{this.initializing}}>
-      <p class="publish-description">{{i18n "topic.publish_page.description"}}</p>
+      <p class="publish-description">{{i18n
+          "topic.publish_page.description"
+        }}</p>
 
       <form>
         <div class="controls">
           <label>{{i18n "topic.publish_page.slug"}}</label>
-          <TextField @value={{this.publishedPage.slug}} @onChange={{action "checkSlug"}} @onChangeImmediate={{action "startCheckSlug"}} @disabled={{this.existing}} @class="publish-slug" />
+          <TextField
+            @value={{this.publishedPage.slug}}
+            @onChange={{action "checkSlug"}}
+            @onChangeImmediate={{action "startCheckSlug"}}
+            @disabled={{this.existing}}
+            @class="publish-slug"
+          />
         </div>
 
         <div class="controls">
           <label>{{i18n "topic.publish_page.public"}}</label>
 
           <p class="description">
-            <Input @type="checkbox" @checked={{readonly this.publishedPage.public}} {{on "click" (action "onChangePublic" value="target.checked")}} />
+            <Input
+              @type="checkbox"
+              @checked={{readonly this.publishedPage.public}}
+              {{on "click" (action "onChangePublic" value="target.checked")}}
+            />
             {{i18n "topic.publish_page.public_description"}}
           </p>
         </div>
@@ -28,7 +40,11 @@
           <div class="current-url">
             {{i18n "topic.publish_page.publish_url"}}
             <div>
-              <a href={{this.publishedPage.url}} target="_blank" rel="noopener noreferrer">{{this.publishedPage.url}}</a>
+              <a
+                href={{this.publishedPage.url}}
+                target="_blank"
+                rel="noopener noreferrer"
+              >{{this.publishedPage.url}}</a>
             </div>
           </div>
         {{else}}
@@ -40,7 +56,8 @@
           {{/if}}
 
           {{#if this.invalid}}
-            {{i18n "topic.publish_page.invalid_slug"}} <span class="invalid-slug">{{this.reason}}.</span>
+            {{i18n "topic.publish_page.invalid_slug"}}
+            <span class="invalid-slug">{{this.reason}}.</span>
           {{/if}}
         {{/if}}
 
@@ -51,12 +68,33 @@
 
 <div class="modal-footer">
   {{#if this.showUnpublish}}
-    <DButton @label="topic.publish_page.unpublish" @icon="trash-alt" @class="btn-danger" @isLoading={{this.unpublishing}} @action={{action "unpublish"}} />
+    <DButton
+      @label="topic.publish_page.unpublish"
+      @icon="trash-alt"
+      @class="btn-danger"
+      @isLoading={{this.unpublishing}}
+      @action={{action "unpublish"}}
+    />
 
-    <DButton @class="close-publish-page" @icon="times" @label="close" @action={{action "closeModal"}} />
+    <DButton
+      @class="close-publish-page"
+      @icon="times"
+      @label="close"
+      @action={{action "closeModal"}}
+    />
   {{else if this.unpublished}}
-    <DButton @label="topic.publish_page.publishing_settings" @action={{action "startNew"}} />
+    <DButton
+      @label="topic.publish_page.publishing_settings"
+      @action={{action "startNew"}}
+    />
   {{else}}
-    <DButton @label="topic.publish_page.publish" @class="btn-primary publish-page" @icon="file" @disabled={{this.disabled}} @isLoading={{this.saving}} @action={{action "publish"}} />
+    <DButton
+      @label="topic.publish_page.publish"
+      @class="btn-primary publish-page"
+      @icon="file"
+      @disabled={{this.disabled}}
+      @isLoading={{this.saving}}
+      @action={{action "publish"}}
+    />
   {{/if}}
 </div>

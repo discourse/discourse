@@ -46,7 +46,7 @@ module("Integration | Component | Widget | poster-name", function (hooks) {
     assert.ok(exists("span.moderator"));
     assert.ok(exists(".d-icon-shield-alt"));
     assert.ok(exists("span.new-user"));
-    assert.ok(exists("span.fish"));
+    assert.ok(exists("span.group--fish"));
   });
 
   test("disable display name on posts", async function (assert) {

@@ -37,7 +37,7 @@ class ContentSecurityPolicy
       ['/svg-sprite/',         false, true, false],
     ]
 
-    def script_assets(base = base_url, s3_cdn = GlobalSetting.s3_cdn_url, cdn = GlobalSetting.cdn_url, worker: false)
+    def script_assets(base = base_url, s3_cdn = GlobalSetting.s3_asset_cdn_url.presence || GlobalSetting.s3_cdn_url, cdn = GlobalSetting.cdn_url, worker: false)
       SCRIPT_ASSET_DIRECTORIES.map do |dir, can_use_s3_cdn, can_use_cdn, for_worker|
         next if worker && !for_worker
         if can_use_s3_cdn && s3_cdn

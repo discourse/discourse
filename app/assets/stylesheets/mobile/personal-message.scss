@@ -35,19 +35,6 @@
     width: 100%;
   }
 
-  .small-action {
-    margin-left: 0;
-  }
-
-  .small-action-desc.timegap {
-    margin-left: 0;
-    padding: 1em 1em 1em 0;
-  }
-
-  .small-action:not(.time-gap) {
-    padding: 1em;
-  }
-
   .topic-meta-data .names .first.staff {
     flex-basis: 100%;
     & + .second,

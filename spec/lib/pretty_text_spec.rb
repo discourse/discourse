@@ -549,17 +549,17 @@ RSpec.describe PrettyText do
       expect(PrettyText.cook("```   ruby the mooby\n`````")).to eq('<pre><code class="lang-ruby"></code></pre>')
       expect(PrettyText.cook("```cpp\ncpp\n```")).to match_html("<pre><code class='lang-cpp'>cpp\n</code></pre>")
       expect(PrettyText.cook("```\ncpp\n```")).to match_html("<pre><code class='lang-auto'>cpp\n</code></pre>")
-      expect(PrettyText.cook("```text\ncpp\n```")).to match_html("<pre><code class='lang-nohighlight'>cpp\n</code></pre>")
-      expect(PrettyText.cook("```custom\ncustom content\n```")).to match_html("<pre data-code-wrap='custom'><code class='lang-nohighlight'>custom content\n</code></pre>")
-      expect(PrettyText.cook("```custom foo=bar\ncustom content\n```")).to match_html("<pre data-code-foo='bar' data-code-wrap='custom'><code class='lang-nohighlight'>custom content</code></pre>")
-      expect(PrettyText.cook("```INVALID a=1\n```")).to match_html("<pre data-code-a='1' data-code-wrap='INVALID'><code class='lang-nohighlight'>\n</code></pre>")
-      expect(PrettyText.cook("```INVALID a=1, foo=bar , baz=2\n```")).to match_html("<pre data-code-a='1' data-code-foo='bar' data-code-baz='2' data-code-wrap='INVALID'><code class='lang-nohighlight'>\n</code></pre>")
-      expect(PrettyText.cook("```text\n```")).to match_html("<pre><code class='lang-nohighlight'>\n</code></pre>")
+      expect(PrettyText.cook("```text\ncpp\n```")).to match_html("<pre><code class='lang-plaintext'>cpp\n</code></pre>")
+      expect(PrettyText.cook("```custom\ncustom content\n```")).to match_html("<pre data-code-wrap='custom'><code class='lang-plaintext'>custom content\n</code></pre>")
+      expect(PrettyText.cook("```custom foo=bar\ncustom content\n```")).to match_html("<pre data-code-foo='bar' data-code-wrap='custom'><code class='lang-plaintext'>custom content</code></pre>")
+      expect(PrettyText.cook("```INVALID a=1\n```")).to match_html("<pre data-code-a='1' data-code-wrap='INVALID'><code class='lang-plaintext'>\n</code></pre>")
+      expect(PrettyText.cook("```INVALID a=1, foo=bar , baz=2\n```")).to match_html("<pre data-code-a='1' data-code-foo='bar' data-code-baz='2' data-code-wrap='INVALID'><code class='lang-plaintext'>\n</code></pre>")
+      expect(PrettyText.cook("```text\n```")).to match_html("<pre><code class='lang-plaintext'>\n</code></pre>")
       expect(PrettyText.cook("```auto\n```")).to match_html("<pre><code class='lang-auto'>\n</code></pre>")
       expect(PrettyText.cook("```ruby startline=3 $%@#\n```")).to match_html("<pre data-code-startline='3'><code class='lang-ruby'>\n</code></pre>")
-      expect(PrettyText.cook("```mermaid a_-你=17\n```")).to match_html("<pre data-code-a_-='17' data-code-wrap='mermaid'><code class='lang-nohighlight'>\n</code></pre>")
-      expect(PrettyText.cook("```mermaid foo=<script>alert(document.cookie)</script>\n```")).to match_html("<pre data-code-foo='&lt;script&gt;alert(document.cookie)&lt;/script&gt;' data-code-wrap='mermaid'><code class='lang-nohighlight'>\n</code></pre>")
-      expect(PrettyText.cook("```mermaid foo=‮ begin admin o\n```")).to match_html("<pre data-code-wrap='mermaid'><code class='lang-nohighlight'>\n</code></pre>")
+      expect(PrettyText.cook("```mermaid a_-你=17\n```")).to match_html("<pre data-code-a_-='17' data-code-wrap='mermaid'><code class='lang-plaintext'>\n</code></pre>")
+      expect(PrettyText.cook("```mermaid foo=<script>alert(document.cookie)</script>\n```")).to match_html("<pre data-code-foo='&lt;script&gt;alert(document.cookie)&lt;/script&gt;' data-code-wrap='mermaid'><code class='lang-plaintext'>\n</code></pre>")
+      expect(PrettyText.cook("```mermaid foo=‮ begin admin o\n```")).to match_html("<pre data-code-wrap='mermaid'><code class='lang-plaintext'>\n</code></pre>")
       expect(PrettyText.cook("```c++\nc++\n```")).to match_html("<pre><code class='lang-c++'>c++\n</code></pre>")
       expect(PrettyText.cook("```structured-text\nstructured-text\n```")).to match_html("<pre><code class='lang-structured-text'>structured-text\n</code></pre>")
       expect(PrettyText.cook("```p21\np21\n```")).to match_html("<pre><code class='lang-p21'>p21\n</code></pre>")
@@ -1456,20 +1456,24 @@ RSpec.describe PrettyText do
     SiteSetting.enable_experimental_hashtag_autocomplete = true
 
     user = Fabricate(:user)
-    category = Fabricate(:category, name: 'testing')
-    category2 = Fabricate(:category, name: 'known')
+    category = Fabricate(:category, name: 'testing', slug: 'testing')
+    category2 = Fabricate(:category, name: 'known', slug: 'known')
+    group = Fabricate(:group)
+    private_category = Fabricate(:private_category, name: 'secret', group: group, slug: 'secret')
     Fabricate(:topic, tags: [Fabricate(:tag, name: 'known')])
 
-    cooked = PrettyText.cook(" #unknown::tag #known #known::tag #testing", user_id: user.id)
+    cooked = PrettyText.cook(" #unknown::tag #known #known::tag #testing #secret", user_id: user.id)
 
-    [
-      "<span class=\"hashtag-raw\">#unknown::tag</span>",
-      "<a class=\"hashtag-cooked\" href=\"#{category2.url}\" data-type=\"category\" data-slug=\"known\"><svg class=\"fa d-icon d-icon-folder svg-icon svg-node\"><use href=\"#folder\"></use></svg><span>known</span></a>",
-      "<a class=\"hashtag-cooked\" href=\"/tag/known\" data-type=\"tag\" data-slug=\"known\"><svg class=\"fa d-icon d-icon-tag svg-icon svg-node\"><use href=\"#tag\"></use></svg><span>known</span></a>",
-      "<a class=\"hashtag-cooked\" href=\"#{category.url}\" data-type=\"category\" data-slug=\"testing\"><svg class=\"fa d-icon d-icon-folder svg-icon svg-node\"><use href=\"#folder\"></use></svg><span>testing</span></a>"
-    ].each do |element|
-      expect(cooked).to include(element)
-    end
+    expect(cooked).to include("<span class=\"hashtag-raw\">#unknown::tag</span>")
+    expect(cooked).to include("<a class=\"hashtag-cooked\" href=\"#{category2.url}\" data-type=\"category\" data-slug=\"known\"><svg class=\"fa d-icon d-icon-folder svg-icon svg-node\"><use href=\"#folder\"></use></svg><span>known</span></a>")
+    expect(cooked).to include("<a class=\"hashtag-cooked\" href=\"/tag/known\" data-type=\"tag\" data-slug=\"known\" data-ref=\"known::tag\"><svg class=\"fa d-icon d-icon-tag svg-icon svg-node\"><use href=\"#tag\"></use></svg><span>known</span></a>")
+    expect(cooked).to include("<a class=\"hashtag-cooked\" href=\"#{category.url}\" data-type=\"category\" data-slug=\"testing\"><svg class=\"fa d-icon d-icon-folder svg-icon svg-node\"><use href=\"#folder\"></use></svg><span>testing</span></a>")
+    expect(cooked).to include("<span class=\"hashtag-raw\">#secret</span>")
+
+    # If the user hash access to the private category it should be cooked with the details + icon
+    group.add(user)
+    cooked = PrettyText.cook(" #unknown::tag #known #known::tag #testing #secret", user_id: user.id)
+    expect(cooked).to include("<a class=\"hashtag-cooked\" href=\"#{private_category.url}\" data-type=\"category\" data-slug=\"secret\"><svg class=\"fa d-icon d-icon-folder svg-icon svg-node\"><use href=\"#folder\"></use></svg><span>secret</span></a>")
 
     cooked = PrettyText.cook("[`a` #known::tag here](http://example.com)", user_id: user.id)
 
@@ -1485,7 +1489,7 @@ RSpec.describe PrettyText do
 
     cooked = PrettyText.cook("<A href='/a'>test</A> #known::tag", user_id: user.id)
     html = <<~HTML
-      <p><a href="/a">test</a> <a class="hashtag-cooked" href="/tag/known" data-type="tag" data-slug="known"><svg class="fa d-icon d-icon-tag svg-icon svg-node"><use href="#tag"></use></svg><span>known</span></a></p>
+      <p><a href="/a">test</a> <a class="hashtag-cooked" href="/tag/known" data-type="tag" data-slug="known" data-ref="known::tag"><svg class="fa d-icon d-icon-tag svg-icon svg-node"><use href="#tag"></use></svg><span>known</span></a></p>
     HTML
     expect(cooked).to eq(html.strip)
 
@@ -1690,13 +1694,22 @@ HTML
       SiteSetting.watched_words_regular_expressions = true
 
       Fabricate(:user, username: "test")
-      category = Fabricate(:category, slug: "test")
+      category = Fabricate(:category, slug: "test", name: "test")
       Fabricate(:watched_word, action: WatchedWord.actions[:replace], word: "es", replacement: "discourse")
 
       expect(PrettyText.cook("@test #test test")).to match_html(<<~HTML)
         <p>
           <a class="mention" href="/u/test">@test</a>
           <a class="hashtag" href="/c/test/#{category.id}">#<span>test</span></a>
+          tdiscourset
+        </p>
+      HTML
+
+      SiteSetting.enable_experimental_hashtag_autocomplete = true
+      expect(PrettyText.cook("@test #test test")).to match_html(<<~HTML)
+        <p>
+          <a class="mention" href="/u/test">@test</a>
+          <a class="hashtag-cooked" href="#{category.url}" data-type="category" data-slug="test"><svg class="fa d-icon d-icon-folder svg-icon svg-node"><use href="#folder"></use></svg><span>test</span></a>
           tdiscourset
         </p>
       HTML

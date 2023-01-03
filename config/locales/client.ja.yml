@@ -148,7 +148,6 @@ ja:
       banner:
         enabled: "%{when}にこれをバナーにしました。ユーザーが閉じるまで各ページの上部に表示されます。"
         disabled: "%{when}にこのバナーを削除しました。今後ページの上部に表示されることはありません。"
-      forwarded: "上記のメールを転送しました"
     topic_admin_menu: "トピックの操作"
     skip_to_main_content: "メインコンテンツにスキップ"
     emails_are_disabled: "メールの送信は管理者によって無効化されています。メール通知は一切送信されません。"
@@ -223,7 +222,6 @@ ja:
     conduct: "行動規範"
     mobile_view: "モバイルビュー"
     desktop_view: "デスクトップビュー"
-    or: "または"
     now: "たった今"
     read_more: "もっと読む"
     more: "もっと"
@@ -351,8 +349,6 @@ ja:
     disable: "無効化"
     continue: "続行"
     undo: "元に戻す"
-    revert: "戻す"
-    failed: "失敗しました"
     switch_to_anon: "匿名モードを開始"
     switch_from_anon: "匿名モードを終了"
     banner:
@@ -955,7 +951,6 @@ ja:
       notification_schedule:
         title: "通知スケジュール"
         label: "カスタム通知スケジュールを有効にする"
-        tip: "これらの時間外は、自動的に「おやすみモード」に設定されます。"
         midnight: "深夜"
         none: "なし"
         monday: "月曜日"
@@ -1153,8 +1148,6 @@ ja:
         warnings: "運営スタッフからの警告"
         read_more_in_group: "もっと読みますか？%{groupLink} で他のメッセージを閲覧できます。"
         read_more: "もっと読みますか？<a href='%{basePath}/u/%{username}/messages'>個人メッセージ</a>で他のメッセージを閲覧できます。"
-        read_more_group_pm_MF: "{ UNREAD, plural, =0 {} one {<a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># 未読</a> } other { <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># 未読</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{および } false { } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># 新規</a>のメッセージ} other { {BOTH, select, true{および } false { } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># 新規</a>のメッセージ} }があります。または{groupLink}で他のメッセージを閲覧できます。"
-        read_more_personal_pm_MF: "{ UNREAD, plural, =0 {} one {<a href='{basePath}/u/{username}/messages/unread'># 未読</a> } other { are <a href='{basePath}/u/{username}/messages/unread'># 未読</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{および} false {} other{}} <a href='{basePath}/u/{username}/messages/new'># 新規</a>のメッセージ} other { {BOTH, select, true{および} false {} other{}} <a href='{basePath}/u/{username}/messages/new'># 新規</a>のメッセージ} }が残っています。または、他の<a href='{basePath}/u/{username}/messages'>個人メッセージ</a>を閲覧できます。"
       preferences_nav:
         account: "アカウント"
         security: "セキュリティ"
@@ -1217,7 +1210,7 @@ ja:
         use: "認証アプリを使用する"
         enforced_notice: "このサイトにアクセスするには二要素認証を有効にする必要があります。"
         disable: "無効化"
-        disable_confirm: "すべての二要素認証を無効にしてもよろしいですか？"
+        delete: "削除"
         save: "保存"
         edit: "編集"
         edit_title: "認証アプリの編集"
@@ -1305,7 +1298,6 @@ ja:
         authenticated: "あなたのメールアドレスは %{provider} によって認証されました"
         invite_auth_email_invalid: "あなたの招待メールは %{provider} が認証したメールと一致しません"
         authenticated_by_invite: "あなたのメールは招待によって認証されました"
-        frequency_immediately: "メールの内容をまだ読んでいない場合は、今すぐメールを送信します。"
         frequency:
           other: "最後のアクセスから %{count} 分以上アクセスがない場合にのみメールを送信します。"
       associated_accounts:
@@ -1653,19 +1645,16 @@ ja:
       logout_disabled: "閲覧専用モードのため、ログアウトできません。"
     staff_writes_only_mode:
       enabled: "このサイトはスタッフ専用モードになっています。このまま閲覧できますが、返信や「いいね！」、その他の操作はスタッフメンバーのみに制限されています。"
-    too_few_topics_and_posts_notice_MF: >-
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">ディスカッションを開始しましょう！</a> 現在、{currentTopics, plural, one {<strong>#</strong> 件のトピック} other {<strong>#</strong> 件のトピック}}と{currentPosts, plural, one {<strong>#</strong> 件の投稿} other {<strong>#</strong> 件の投稿}}があります。訪問者が読んで返信できる項目がもっと必要です。少なくとも {requiredTopics, plural, one {<strong>#</strong> 件のトピック} other {<strong>#</strong> 件のトピック}}と{requiredPosts, plural, one {<strong>#</strong> 件の投稿} other {<strong>#</strong> 件の投稿}}を作成することをお勧めします。このメッセージはスタッフのみに表示されます。
-    too_few_topics_notice_MF: >-
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">ディスカッションを開始しましょう！</a> 現在、{currentTopics, plural, one {<strong>#</strong> 件のトピック} other {<strong>#</strong> 件のトピック}}があります。訪問者が読んで返信できる項目がもっと必要です。少なくとも {requiredTopics, plural, one {<strong>#</strong> 件のトピック} other {<strong>#</strong> 件のトピック}}を作成することをお勧めします。このメッセージはスタッフのみに表示されます。
-    too_few_posts_notice_MF: >-
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">ディスカッションを開始しましょう！</a> 現在、{currentPosts, plural, one {<strong>#</strong> 件の投稿} other {<strong>#</strong> 件の投稿}}があります。訪問者が読んで返信できる項目がもっと必要です。少なくとも {requiredPosts, plural, one {<strong>#</strong> 件の投稿} other {<strong>#</strong> 件の投稿}}を作成することをお勧めします。このメッセージはスタッフのみに表示されます。
     logs_error_rate_notice:
-      reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {1 時間当たりのエラー件数 (#)}}</a> がサイトで設定されている{limit, plural, other {エラー件数 (#)}} の制限に達しました。"
-      reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {1 分当たりのエラー件数 (#)}}</a> がサイトで設定されている{limit, plural, other {エラー件数 (#)}} の制限に達しました。"
-      exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {1 時間当たりのエラー件数 (#)}}</a> がサイトで設定されている{limit, plural, other {エラー件数 (#)}} の制限を超えました。"
-      exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {1 分当たりのエラー件数 (#)}}</a> がサイトで設定されている{limit, plural, other {エラー件数 (#)}} の制限を超えました。"
+      reached_hour_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {1 時間当たりのエラー件数 (#)}}</a> がサイトで設定されている{limit, plural, other {エラー件数 (#)}} の制限に達しました。
+      reached_minute_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {1 分当たりのエラー件数 (#)}}</a> がサイトで設定されている{limit, plural, other {エラー件数 (#)}} の制限に達しました。
+      exceeded_hour_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {1 時間当たりのエラー件数 (#)}}</a> がサイトで設定されている{limit, plural, other {エラー件数 (#)}} の制限を超えました。
+      exceeded_minute_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {1 分当たりのエラー件数 (#)}}</a> がサイトで設定されている{limit, plural, other {エラー件数 (#)}} の制限を超えました。
     learn_more: "もっと詳しく..."
-    first_post: 最初の投稿
     mute: ミュート
     unmute: ミュート解除
     last_post: 最終投稿
@@ -1688,7 +1677,8 @@ ja:
       enabled_description: "このトピックの要約を閲覧しています。コミュニティーが最も面白いとした投稿のまとめです。"
       description:
         other: "<b>%{count}</b> 件の返信があります。"
-      description_time_MF: "{replyCount, plural, other {<b>#</b> 件の返信}}があります。読了目安時間は <b>{readingTime, plural, other {# 分}}</b>です。"
+      description_time_MF: |
+        {replyCount, plural, other {<b>#</b> 件の返信}}があります。読了目安時間は <b>{readingTime, plural, other {# 分}}</b>です。
       enable: "このトピックを要約する"
       disable: "すべての投稿を表示"
       short_label: "要約"
@@ -1759,6 +1749,7 @@ ja:
       title: "ログイン"
       username: "ユーザー"
       password: "パスワード"
+      show_password: "表示"
       second_factor_title: "二要素認証"
       second_factor_description: "アプリから認証コードを入力してください:"
       second_factor_backup: "バックアップ コードを使用してログインする"
@@ -2090,6 +2081,7 @@ ja:
       bookmark_reminder: "<span>%{username}</span> %{description}"
       replied: "<span>%{username}</span> %{description}"
       posted: "<span>%{username}</span> %{description}"
+      watching_category_or_tag: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}、%{username2}</span> %{description}"
@@ -2151,6 +2143,7 @@ ja:
         invited_to_private_message: "個人メッセージに招待"
         invitee_accepted: "招待が承諾されました"
         posted: "新しい投稿"
+        watching_category_or_tag: "新しい投稿"
         moved_post: "投稿が移動されました"
         linked: "リンクされました"
         bookmark_reminder: "ブックマークのリマインダー"
@@ -2455,14 +2448,7 @@ ja:
       show_links: "このトピック内のリンクを表示する"
       collapse_details: "トピックの詳細を折りたたむ"
       expand_details: "トピックの詳細を展開する"
-      read_more_in_category: "もっと読みますか？%{catLink} または %{latestLink} での他のトピックを閲覧できます。"
-      read_more: "もっと読みますか？%{catLink} または %{latestLink}。"
       unread_indicator: "このトピックの最後の投稿を読んだメンバーはまだいません。"
-      read_more_MF: "{ UNREAD, plural, =0 {} other {<a href='{basePath}/unread'># 件の未読</a>} }{ NEW, plural, =0 {} other { {BOTH, select, true{と} false {} other{}} <a href='{basePath}/new'># 件の新しい</a>トピック} } が残っています。または {CATEGORY, select, true {{catLink} のほかのトピックを閲覧してください} false {{latestLink}} other {}}"
-      bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
-      browse_all_categories: すべてのカテゴリを閲覧する
-      browse_all_tags: すべてのタグを閲覧する
-      view_latest_topics: 最新のトピックを表示する
       suggest_create_topic: <a href>新しい会話を開始しますか？</a>
       jump_reply_up: 以前の返信へジャンプ
       jump_reply_down: 以後の返信へジャンプ
@@ -3183,7 +3169,8 @@ ja:
       official_warning: "運営スタッフからの警告"
       delete_spammer: "迷惑行為者を削除"
       flag_for_review: "レビューのキューに入れる"
-      delete_confirm_MF: "このユーザーの {POSTS, plural, other {<b>#</b> 件の投稿}}と{TOPICS, plural, other {<b>#</b> 件のトピック}}を削除し、アカウントを削除し、IP アドレス <b>{ip_address}</b> からの登録をブロックし、メールアドレス <b>{email}</b> を永久ブロックリストに追加しようとしています。このユーザーは本当に迷惑行為者ですか？"
+      delete_confirm_MF: |
+        このユーザーの {POSTS, plural, other {<b>#</b> 件の投稿}}と{TOPICS, plural, other {<b>#</b> 件のトピック}}を削除し、アカウントを削除し、IP アドレス <b>{ip_address}</b> からの登録をブロックし、メールアドレス <b>{email}</b> を永久ブロックリストに追加しようとしています。このユーザーは本当に迷惑行為者ですか？
       yes_delete_spammer: "はい、迷惑行為者を削除する"
       ip_address_missing: "(該当なし)"
       hidden_email_address: "(非表示)"
@@ -3347,7 +3334,6 @@ ja:
         this_month: "今月"
         this_week: "今週"
         today: "今日"
-        other_periods: "人気を参照:"
     browser_update: '残念ながら、<a href="https://www.discourse.org/faq/#browser">あなたのブラウザはサポートされていません</a>。リッチコンテンツを表示するには<a href="https://browsehappy.com">サポートされているブラウザに切り替え</a>てから、ログインして返信してください。'
     safari_13_warning: このサイトは、まもなく iOS と Safari バージョン 13 以下のサポートを終了します。簡易版の読み取り専用バージョンは、引き続き利用可能です。(<a href="https://meta.discourse.org/t/224747">詳細</a>)
     permission_types:
@@ -3623,9 +3609,7 @@ ja:
     safe_mode:
       enabled: "セーフモードが有効になっています。セーフモードを終了するには、このブラウザウィンドウを閉じてください。"
     image_removed: "(画像は削除されました)"
-    do_not_disturb:
-      title: "おやすみモード..."
-      label: "おやすみモード"
+    pause_notifications:
       remaining: "残り %{remaining}"
       options:
         half_hour: "30 分"
@@ -3898,9 +3882,6 @@ ja:
         about: "グループのメンバーシップとグループ名を編集"
         group_members: "グループメンバー"
         delete: "削除"
-        delete_confirm: "このグループを削除しますか？"
-        delete_with_messages_confirm:
-          other: "このグループを削除すると %{count} 件のメッセージが孤立し、グループメンバーがアクセスできなくなります。<br><br>よろしいですか？"
         delete_failed: "グループを削除できません。自動作成グループを削除することはできません。"
         delete_automatic_group: これは自動グループであるため削除できません。
         delete_owner_confirm: "'%{username}' のオーナー権限を削除しますか？"
@@ -4007,9 +3988,8 @@ ja:
         detailed_instruction: "選択したイベントが発生すると、指定した URL に POST リクエストが送信されます。"
         new: "新しい Webhook"
         create: "作成"
+        edit: "編集"
         save: "保存"
-        destroy: "削除"
-        description: "説明"
         controls: "コントロール"
         go_back: "リストに戻る"
         payload_url: "ペイロード URL"
@@ -4088,9 +4068,6 @@ ja:
           headers: "ヘッダー"
           payload: "ペイロード"
           body: "本文"
-          go_list: "リストに移動"
-          go_details: "Webhook の編集"
-          go_events: "イベントに移動"
           ping: "Ping"
           status: "ステータスコード"
           event_id: "ID"
@@ -4111,6 +4088,8 @@ ja:
         howto: "プラグインをインストールするには？"
         official: "公式プラグイン"
         broken_route: "'%{name}' へのリンクを構成できません。広告ブロッカーが無効になっていることを確認し、ページを再読み込みしてみてください。"
+      navigation_menu:
+        sidebar: "サイドバー"
       backups:
         title: "バックアップ"
         menu:
@@ -4324,7 +4303,6 @@ ja:
             error: "このテーマは、このバージョンの Discourse と互換性がないため、自動的に無効になりました。"
             minimum: "Discourse バージョン %{version} 以上が必要です。"
             maximum: "Discourse バージョン %{version} 以下が必要です。"
-          component_of: "次に属するコンポーネント:"
           update_to_latest: "最新に更新"
           check_for_updates: "アップデートを確認"
           updating: "アップデート中..."
@@ -4795,7 +4773,6 @@ ja:
       user:
         suspend_failed: "このユーザーを凍結中にエラーが発生しました: %{error}"
         unsuspend_failed: "このユーザーの凍結を解除中にエラーが発生しました: %{error}"
-        suspend_duration: "ユーザーをどれくらいの期間凍結しますか？"
         suspend_reason_label: "凍結する理由を説明してください。ここに書いた理由は、このユーザーのプロファイルページで<b>全員に閲覧可能</b>となります。またこのユーザーがログインを試みた際にも表示されます。手短に説明してください。"
         suspend_reason_hidden_label: "なぜ凍結していますか？このテキストはユーザーがログインしようとするときに表示されます。簡潔に説明してください。"
         suspend_reason: "理由"
@@ -4829,11 +4806,11 @@ ja:
         penalty_post_edit: "投稿を編集する"
         penalty_post_none: "何もしない"
         penalty_count: "ペナルティ数"
-        penalty_history: "ペナルティ履歴"
         clear_penalty_history:
           title: "ペナルティ履歴をクリア"
           description: "ペナルティのあるユーザーは TL3 に昇格されません"
-        delete_all_posts_confirm_MF: "{POSTS, plural, other {# 件の投稿}}と{TOPICS, plural, other {# 件のトピック}}を削除しようとしています。よろしいですか？"
+        delete_all_posts_confirm_MF: |
+          {POSTS, plural, other {# 件の投稿}}と{TOPICS, plural, other {# 件のトピック}}を削除しようとしています。よろしいですか？
         silence: "投稿禁止"
         unsilence: "投稿禁止を解除"
         silenced: "投稿禁止？"
@@ -4980,6 +4957,11 @@ ja:
         silenced_count: "投稿禁止"
         suspended_count: "凍結"
         last_six_months: "過去 6 か月"
+        other_matches_list:
+          username: "ユーザー名"
+          trust_level: "信頼レベル"
+          read_time: "閲覧時間"
+          posts: "投稿"
         tl3_requirements:
           title: "信頼レベル 3 の要件"
           table_title:
@@ -5123,7 +5105,7 @@ ja:
           search: "検索"
           groups: "グループ"
           dashboard: "ダッシュボード"
-          sidebar: "サイドバー"
+          navigation: "ナビゲーション"
         secret_list:
           invalid_input: "入力フィールドを空にしたり、縦棒文字を含めることはできません。"
         default_categories:
@@ -5293,10 +5275,8 @@ ja:
       finish: "セットアップを終了"
       back: "戻る"
       next: "次へ"
-      configure_more: "さらに構成..."
       step-text: "手順"
       step: "%{current} / %{total}"
-      upload: "アップロード"
       uploading: "アップロード中..."
       upload_error: "ファイルのアップロード中にエラーが発生しました。もう一度お試しください。"
       staff_count:

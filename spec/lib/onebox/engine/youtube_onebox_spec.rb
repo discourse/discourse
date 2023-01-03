@@ -14,6 +14,8 @@ RSpec.describe Onebox::Engine::YoutubeOnebox do
     stub_request(:get, "https://www.youtube.com/playlist?list=PL5308B2E5749D1696").to_return(status: 200, body: onebox_response("youtube-playlist"))
 
     stub_request(:get, "https://www.youtube.com/embed/KCyIfcevExE").to_return(status: 200, body: onebox_response("youtube-embed"))
+
+    stub_request(:get, "https://www.youtube.com/embed/VvoFuaLAslw").to_return(status: 200, body: onebox_response("youtube-shorts"))
   end
 
   it "adds wmode=opaque" do
@@ -101,6 +103,12 @@ RSpec.describe Onebox::Engine::YoutubeOnebox do
   it "can parse youtube embed results" do
     preview = expect(Onebox.preview('https://www.youtube.com/watch?v=KCyIfcevExE').placeholder_html)
     preview.to match(/Delvon/)
+    preview.to match(/hqdefault/)
+  end
+
+  it "can parse youtube shorts results" do
+    preview = expect(Onebox.preview('https://youtube.com/shorts/VvoFuaLAslw').placeholder_html)
+    preview.to match(/POMBO/)
     preview.to match(/hqdefault/)
   end
 end

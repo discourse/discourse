@@ -3,11 +3,19 @@
 </div>
 
 <div class="body">
-  <DTextarea @value={{this.shareUrl}} @class="topic-share-url" @aria-label={{I18n "share.url"}} />
+  <DTextarea
+    @value={{this.shareUrl}}
+    @class="topic-share-url"
+    @aria-label={{I18n "share.url"}}
+  />
 
   <div class="sources">
     {{#each this.sources as |source|}}
-      <ShareSource @source={{source}} @title={{this.topic.title}} @action={{action "share"}} />
+      <ShareSource
+        @source={{source}}
+        @title={{this.topic.title}}
+        @action={{action "share"}}
+      />
     {{/each}}
   </div>
 </div>

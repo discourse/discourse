@@ -8,8 +8,12 @@ export default {
     // seems it has started using opengraph tags when sharing
     const ogTitle = document.querySelector("meta[property='og:title']");
     const ogUrl = document.querySelector("meta[property='og:url']");
+    const twitterTitle = document.querySelector(
+      "meta[property='twitter:title']"
+    );
+    const twitterUrl = document.querySelector("meta[property='twitter:url']");
 
-    if (!ogTitle || !ogUrl) {
+    if (!ogTitle || !ogUrl || !twitterTitle || !twitterUrl) {
       return;
     }
 
@@ -17,6 +21,8 @@ export default {
     appEvents.on("page:changed", ({ title, url }) => {
       ogTitle.setAttribute("content", title);
       ogUrl.setAttribute("content", getAbsoluteURL(url));
+      twitterTitle.setAttribute("content", title);
+      twitterUrl.setAttribute("content", getAbsoluteURL(url));
     });
   },
 };

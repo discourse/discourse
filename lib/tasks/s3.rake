@@ -206,6 +206,11 @@ task 's3:expire_missing_assets' => :environment do
 
   puts "Checking for stale S3 assets..."
 
+  if Discourse.readonly_mode?
+    puts "Discourse is in readonly mode. Skipping s3 asset deletion in case this is a read-only mirror of a live site."
+    exit 0
+  end
+
   assets_to_delete = existing_assets.dup
 
   # Check that all current assets are uploaded, and remove them from the to_delete list

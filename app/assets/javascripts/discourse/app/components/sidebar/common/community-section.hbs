@@ -3,7 +3,8 @@
   @headerLinkText={{i18n "sidebar.sections.community.header_link_text"}}
   @headerActionsIcon={{this.headerActionsIcon}}
   @headerActions={{this.headerActions}}
-  @collapsable={{@collapsable}} >
+  @collapsable={{@collapsable}}
+>
 
   {{#if this.displayShortSiteDescription}}
     <Sidebar::SectionMessage>
@@ -28,8 +29,12 @@
       @prefixValue={{sectionLink.prefixValue}}
       @suffixCSSClass={{sectionLink.suffixCSSClass}}
       @suffixValue={{sectionLink.suffixValue}}
-      @suffixType={{sectionLink.suffixType}}/>
+      @suffixType={{sectionLink.suffixType}}
+    />
   {{/each}}
 
-  <Sidebar::MoreSectionLinks @sectionLinks={{this.moreSectionLinks}} @secondarySectionLinks={{this.moreSecondarySectionLinks}} />
+  <Sidebar::MoreSectionLinks
+    @sectionLinks={{this.moreSectionLinks}}
+    @secondarySectionLinks={{this.moreSecondarySectionLinks}}
+  />
 </Sidebar::Section>

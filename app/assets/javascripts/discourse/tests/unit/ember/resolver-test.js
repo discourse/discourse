@@ -1,6 +1,6 @@
 import { buildResolver, setResolverOption } from "discourse-common/resolver";
 import { module, test } from "qunit";
-import { registerTemplateModule } from "discourse/tests/helpers/template-module-helper";
+import { registerTemporaryModule } from "discourse/tests/helpers/temporary-module-helper";
 import DiscourseTemplateMap from "discourse-common/lib/discourse-template-map";
 
 let resolver;
@@ -13,7 +13,7 @@ function lookupTemplate(assert, name, expectedTemplate, message) {
 
 function setTemplates(templateModuleNames) {
   for (const name of templateModuleNames) {
-    registerTemplateModule(name, name);
+    registerTemporaryModule(name, name);
   }
 }
 

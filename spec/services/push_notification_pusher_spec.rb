@@ -57,7 +57,7 @@ RSpec.describe PushNotificationPusher do
 
       TranslationOverride.upsert!("pt_BR", "discourse_push_notifications.popup.mentioned", "pt_BR notification")
 
-      Webpush.expects(:payload_send).with do |*args|
+      WebPush.expects(:payload_send).with do |*args|
         JSON.parse(args.first[:message])["title"] == "pt_BR notification"
       end.once
 
@@ -71,9 +71,9 @@ RSpec.describe PushNotificationPusher do
       sub = create_subscription
 
       response = Struct.new(:body, :inspect, :message).new("test", "test", "failed")
-      error = Webpush::ResponseError.new(response, "localhost")
+      error = WebPush::ResponseError.new(response, "localhost")
 
-      Webpush.expects(:payload_send).raises(error).times(4)
+      WebPush.expects(:payload_send).raises(error).times(4)
 
       # 3 failures in more than 24 hours
       3.times do
@@ -107,7 +107,7 @@ RSpec.describe PushNotificationPusher do
         { endpoint: "endpoint 3", keys: { p256dh: "public ECDH key", auth: "private ECDH key" } }.to_json)
 
       expect(PushSubscription.where(user_id: user.id)).to contain_exactly(missing_endpoint, missing_p256dh, missing_auth, valid_subscription)
-      Webpush.expects(:payload_send).with(has_entries(endpoint: "endpoint 3", p256dh: "public ECDH key", auth: "private ECDH key")).once
+      WebPush.expects(:payload_send).with(has_entries(endpoint: "endpoint 3", p256dh: "public ECDH key", auth: "private ECDH key")).once
 
       execute_push
 
@@ -115,7 +115,7 @@ RSpec.describe PushNotificationPusher do
     end
 
     it "handles timeouts" do
-      Webpush.expects(:payload_send).raises(Net::ReadTimeout.new)
+      WebPush.expects(:payload_send).raises(Net::ReadTimeout.new)
       subscription = create_subscription
 
       expect { execute_push }.to_not raise_exception

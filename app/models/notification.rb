@@ -138,6 +138,11 @@ class Notification < ActiveRecord::Base
                         chat_quoted: 33,
                         assigned: 34,
                         question_answer_user_commented: 35, # Used by https://github.com/discourse/discourse-question-answer
+                        watching_category_or_tag: 36,
+                        new_features: 37,
+                        following: 800, # Used by https://github.com/discourse/discourse-follow
+                        following_created_topic: 801, # Used by https://github.com/discourse/discourse-follow
+                        following_replied: 802, # Used by https://github.com/discourse/discourse-follow
                        )
   end
 

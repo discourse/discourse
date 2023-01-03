@@ -37,7 +37,10 @@ class ChatMessage < ActiveRecord::Base
 
   def validate_message(has_uploads:)
     WatchedWordsValidator.new(attributes: [:message]).validate(self)
-    Chat::DuplicateMessageValidator.new(self).validate
+
+    if self.new_record? || self.changed.include?("message")
+      Chat::DuplicateMessageValidator.new(self).validate
+    end
 
     if !has_uploads && message_too_short?
       self.errors.add(
@@ -52,10 +55,7 @@ class ChatMessage < ActiveRecord::Base
     if message_too_long?
       self.errors.add(
         :base,
-        I18n.t(
-          "chat.errors.message_too_long",
-          maximum: SiteSetting.chat_maximum_message_length,
-        ),
+        I18n.t("chat.errors.message_too_long", maximum: SiteSetting.chat_maximum_message_length),
       )
     end
   end
@@ -110,19 +110,20 @@ class ChatMessage < ActiveRecord::Base
   def cook
     ensure_last_editor_id
 
-    # A rule in our Markdown pipeline may have Guardian checks that require a
-    # user to be present. The last editing user of the message will be more
-    # generally up to date than the creating user. For example, we use
-    # this when cooking #hashtags to determine whether we should render
-    # the found hashtag based on whether the user can access the channel it
-    # is referencing.
     self.cooked = self.class.cook(self.message, user_id: self.last_editor_id)
     self.cooked_version = BAKED_VERSION
   end
 
   def rebake!(invalidate_oneboxes: false, priority: nil)
+    ensure_last_editor_id
+
     previous_cooked = self.cooked
-    new_cooked = self.class.cook(message, invalidate_oneboxes: invalidate_oneboxes)
+    new_cooked =
+      self.class.cook(
+        message,
+        invalidate_oneboxes: invalidate_oneboxes,
+        user_id: self.last_editor_id,
+      )
     update_columns(cooked: new_cooked, cooked_version: BAKED_VERSION)
     args = { chat_message_id: self.id }
     args[:queue] = priority.to_s if priority && priority != :normal
@@ -177,6 +178,12 @@ class ChatMessage < ActiveRecord::Base
   ]
 
   def self.cook(message, opts = {})
+    # A rule in our Markdown pipeline may have Guardian checks that require a
+    # user to be present. The last editing user of the message will be more
+    # generally up to date than the creating user. For example, we use
+    # this when cooking #hashtags to determine whether we should render
+    # the found hashtag based on whether the user can access the channel it
+    # is referencing.
     cooked =
       PrettyText.cook(
         message,
@@ -184,7 +191,7 @@ class ChatMessage < ActiveRecord::Base
         markdown_it_rules: MARKDOWN_IT_RULES,
         force_quote_link: true,
         user_id: opts[:user_id],
-        hashtag_context: "chat-composer"
+        hashtag_context: "chat-composer",
       )
 
     result =
@@ -245,5 +252,6 @@ end
 #
 #  idx_chat_messages_by_created_at_not_deleted            (created_at) WHERE (deleted_at IS NULL)
 #  index_chat_messages_on_chat_channel_id_and_created_at  (chat_channel_id,created_at)
+#  index_chat_messages_on_chat_channel_id_and_id          (chat_channel_id,id) WHERE (deleted_at IS NULL)
 #  index_chat_messages_on_last_editor_id                  (last_editor_id)
 #

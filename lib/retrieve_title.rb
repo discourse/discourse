@@ -9,7 +9,7 @@ module RetrieveTitle
       max_redirects: max_redirects,
       initial_https_redirect_ignore_limit: initial_https_redirect_ignore_limit
     )
-  rescue Net::ReadTimeout
+  rescue Net::ReadTimeout, FinalDestination::SSRFDetector::LookupFailedError
     # do nothing for Net::ReadTimeout errors
   end
 

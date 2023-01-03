@@ -41,11 +41,17 @@ export default Service.extend({
 
   _showControlModal(type, user, opts) {
     opts = opts || {};
-    let controller = showModal(`admin-${type}-user`, {
+
+    const controller = showModal(`admin-penalize-user`, {
       admin: true,
       modalClass: `${type}-user-modal`,
     });
-    controller.setProperties({ postId: opts.postId, postEdit: opts.postEdit });
+
+    controller.setProperties({
+      penaltyType: type,
+      postId: opts.postId,
+      postEdit: opts.postEdit,
+    });
 
     return (
       user.adminUserView

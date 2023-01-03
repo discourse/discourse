@@ -4,7 +4,8 @@
     @class="sidebar-section-header sidebar-section-header-collapsable btn-flat"
     @action={{@toggleSectionDisplay}}
     @ariaExpanded={{@isExpanded}}
-    @ariaControls={{@sidebarSectionContentID}} >
+    @ariaControls={{@sidebarSectionContentID}}
+  >
     {{yield}}
   </DButton>
 {{else}}

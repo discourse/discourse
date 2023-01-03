@@ -4,18 +4,14 @@ import {
   publishToMessageBus,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import {
-  click,
-  fillIn,
-  settled,
-  triggerKeyEvent,
-  visit,
-} from "@ember/test-helpers";
-import { skip, test } from "qunit";
+import { click, fillIn, settled, visit } from "@ember/test-helpers";
+import { skip } from "qunit";
 import {
   baseChatPretenders,
   chatChannelPretender,
 } from "../helpers/chat-pretenders";
+
+const GROUP_NAME = "group1";
 
 acceptance("Discourse Chat - Composer", function (needs) {
   needs.user({ has_chat_enabled: true });
@@ -32,6 +28,14 @@ acceptance("Discourse Chat - Composer", function (needs) {
     server.post("/chat/drafts", () => {
       return helper.response([]);
     });
+
+    server.get("/chat/api/mentions/groups.json", () => {
+      return helper.response({
+        unreachable: [GROUP_NAME],
+        over_members_limit: [],
+        invalid: [],
+      });
+    });
   });
 
   needs.hooks.beforeEach(function () {
@@ -40,7 +44,7 @@ acceptance("Discourse Chat - Composer", function (needs) {
     });
   });
 
-  test("when pasting html in composer", async function (assert) {
+  skip("when pasting html in composer", async function (assert) {
     await visit("/chat/channel/11/another-category");
 
     const clipboardEvent = new Event("paste", { bubbles: true });
@@ -60,50 +64,6 @@ acceptance("Discourse Chat - Composer", function (needs) {
     await settled();
 
     assert.equal(document.querySelector(".chat-composer-input").value, "Foo");
-  });
-
-  test("when selecting an emoji from the picker", async function (assert) {
-    const emojiReactionStore = this.container.lookup(
-      "service:chat-emoji-reaction-store"
-    );
-
-    assert.deepEqual(
-      emojiReactionStore.favorites,
-      this.siteSettings.default_emoji_reactions.split("|")
-    );
-
-    await visit("/chat/channel/11/-");
-    await click(".chat-composer-dropdown__trigger-btn");
-    await click(".chat-composer-dropdown__action-btn.emoji");
-    await click(`[data-emoji="grinning"]`);
-
-    assert.deepEqual(
-      emojiReactionStore.favorites,
-      ["grinning"].concat(this.siteSettings.default_emoji_reactions.split("|")),
-      "it tracks the emoji"
-    );
-  });
-
-  skip("when selecting an emoji from the autocomplete", async function (assert) {
-    const emojiReactionStore = this.container.lookup(
-      "service:chat-emoji-reaction-store"
-    );
-
-    assert.deepEqual(
-      emojiReactionStore.favorites,
-      this.siteSettings.default_emoji_reactions.split("|")
-    );
-
-    await visit("/chat/channel/11/-");
-    await fillIn(".chat-composer-input", "test :grinni");
-    await triggerKeyEvent(".chat-composer-input", "keyup", "ArrowDown"); // necessary to show the menu
-    await click(".autocomplete.ac-emoji ul li:first-child a");
-
-    assert.deepEqual(
-      emojiReactionStore.favorites,
-      ["grinning"].concat(this.siteSettings.default_emoji_reactions.split("|")),
-      "it tracks the emoji"
-    );
   });
 });
 
@@ -135,7 +95,7 @@ acceptance("Discourse Chat - Composer - unreliable network", function (needs) {
     sendAttempt = 0;
   });
 
-  test("Sending a message with unreliable network", async function (assert) {
+  skip("Sending a message with unreliable network", async function (assert) {
     await visit("/chat/channel/11/-");
     await fillIn(".chat-composer-input", "network-error-message");
     await click(".send-btn");
@@ -172,7 +132,7 @@ acceptance("Discourse Chat - Composer - unreliable network", function (needs) {
     );
   });
 
-  test("Draft with unreliable network", async function (assert) {
+  skip("Draft with unreliable network", async function (assert) {
     await visit("/chat/channel/11/-");
     this.chatService.set("isNetworkUnreliable", true);
     await settled();

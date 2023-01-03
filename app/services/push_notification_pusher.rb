@@ -121,7 +121,7 @@ class PushNotificationPusher
     end
 
     begin
-      Webpush.payload_send(
+      WebPush.payload_send(
         endpoint: endpoint,
         message: message.to_json,
         p256dh: p256dh,
@@ -140,9 +140,9 @@ class PushNotificationPusher
       if subscription.first_error_at || subscription.error_count != 0
         subscription.update_columns(error_count: 0, first_error_at: nil)
       end
-    rescue Webpush::ExpiredSubscription
+    rescue WebPush::ExpiredSubscription
       subscription.destroy!
-    rescue Webpush::ResponseError => e
+    rescue WebPush::ResponseError => e
       if e.response.message == "MismatchSenderId"
         subscription.destroy!
       else

@@ -62,6 +62,7 @@ import {
 import { addPostClassesCallback } from "discourse/widgets/post";
 import {
   addGroupPostSmallActionCode,
+  addPostSmallActionClassesCallback,
   addPostSmallActionIcon,
 } from "discourse/widgets/post-small-action";
 import { addQuickAccessProfileItem } from "discourse/widgets/quick-access-profile";
@@ -107,12 +108,13 @@ import DiscourseURL from "discourse/lib/url";
 import { registerNotificationTypeRenderer } from "discourse/lib/notification-types-manager";
 import { registerUserMenuTab } from "discourse/lib/user-menu/tab";
 import { registerModelTransformer } from "discourse/lib/model-transformers";
+import { registerCustomUserNavMessagesDropdownRow } from "discourse/controllers/user-private-messages";
 
 // If you add any methods to the API ensure you bump up the version number
 // based on Semantic Versioning 2.0.0. Please update the changelog at
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
-const PLUGIN_API_VERSION = "1.5.0";
+const PLUGIN_API_VERSION = "1.6.0";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -508,7 +510,7 @@ class PluginApi {
     ) {
       const siteSettings = this.container.lookup("service:site-settings");
 
-      if (siteSettings.enable_experimental_sidebar_hamburger) {
+      if (siteSettings.navigation_menu !== "legacy") {
         try {
           const { href, route, label, rawLabel, className } = fn();
           const textContent = rawLabel || I18n.t(label);
@@ -533,7 +535,7 @@ class PluginApi {
           this.addCommunitySectionLink(args, name.match(/footerLinks/));
         } catch {
           deprecated(
-            `Usage of \`api.decorateWidget('hamburger-menu:generalLinks')\` is incompatible with the \`enable_experimental_sidebar_hamburger\` site setting. Please use \`api.addCommunitySectionLink\` instead.`,
+            `Usage of \`api.decorateWidget('hamburger-menu:generalLinks')\` is incompatible with the \`navigation_menu\` site setting when not set to "legacy". Please use \`api.addCommunitySectionLink\` instead.`,
             { id: "discourse.decorate-widget.hamburger-widget-links" }
           );
         }
@@ -929,6 +931,22 @@ class PluginApi {
    **/
   addGroupPostSmallActionCode(actionCode) {
     addGroupPostSmallActionCode(actionCode);
+  }
+
+  /**
+   * Adds a callback to be called before rendering any small action post
+   * that returns custom classes to add to the small action post
+   *
+   * ```javascript
+   * addPostSmallActionClassesCallback(post => {
+   *   if (post.actionCode.includes("group")) {
+   *     return ["group-small-post"];
+   *   }
+   * });
+   * ```
+   **/
+  addPostSmallActionClassesCallback(callback) {
+    addPostSmallActionClassesCallback(callback);
   }
 
   /**
@@ -2017,6 +2035,19 @@ class PluginApi {
    */
   registerModelTransformer(modelName, transformer) {
     registerModelTransformer(modelName, transformer);
+  }
+
+  /**
+   * EXPERIMENTAL. Do not use.
+   * Adds a row to the dropdown used on the `userPrivateMessages` route used to navigate between the different user
+   * messages pages.
+   *
+   * @param {string} routeName The Ember route name to transition to when the row is selected in the dropdown
+   * @param {string} name The text displayed to represent the row in the dropdown
+   * @param {string} [icon] The name of the icon that will be used when displaying the row in the dropdown
+   */
+  addUserMessagesNavigationDropdownRow(routeName, name, icon) {
+    registerCustomUserNavMessagesDropdownRow(routeName, name, icon);
   }
 }
 

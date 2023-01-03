@@ -1,13 +1,22 @@
 <DModalBody>
   <form class="form-horizontal">
     <div class="input-group">
-      <label for="authenticator-name">{{i18n "user.second_factor.edit_description"}}</label>
-      <Input name="authenticator-name" @type="text" @value={{this.model.name}} />
+      <label for="authenticator-name">{{i18n
+          "user.second_factor.edit_description"
+        }}</label>
+      <Input
+        name="authenticator-name"
+        @type="text"
+        @value={{this.model.name}}
+      />
     </div>
   </form>
 </DModalBody>
 
 <div class="modal-footer">
-  <DButton @action={{action "editSecondFactor"}} @class="btn-primary" @label="user.second_factor.save" />
-  <DButton @action={{action "disableSecondFactor"}} @class="btn-danger no-text" @icon="trash-alt" @aria-label="user.second_factor.disable" @title="user.second_factor.disable" />
+  <DButton
+    @action={{action "editSecondFactor"}}
+    @class="btn-primary"
+    @label="user.second_factor.save"
+  />
 </div>

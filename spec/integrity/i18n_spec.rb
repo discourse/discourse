@@ -20,6 +20,14 @@ def is_yaml_compatible?(english, translated)
   true
 end
 
+def load_yaml(path)
+  if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new("3.1.0")
+    YAML.load_file(path, aliases: true)
+  else
+    YAML.load_file(path)
+  end
+end
+
 RSpec.describe "i18n integrity checks" do
   it "has an i18n key for each Site Setting" do
     SiteSetting.all_settings.each do |s|
@@ -47,7 +55,7 @@ RSpec.describe "i18n integrity checks" do
 
   Dir["#{Rails.root}/config/locales/client.*.yml"].each do |path|
     it "has valid client YAML for '#{path}'" do
-      yaml = YAML.load_file(path)
+      yaml = load_yaml(path)
       locale = extract_locale(path)
 
       expect(yaml.keys).to eq([locale])
@@ -62,7 +70,7 @@ RSpec.describe "i18n integrity checks" do
   end
 
   Dir["#{Rails.root}/**/locale*/*.en.yml"].each do |english_path|
-    english_yaml = YAML.load_file(english_path)["en"]
+    english_yaml = load_yaml(english_path)["en"]
 
     context(english_path) do
       it "has no duplicate keys" do
@@ -76,7 +84,7 @@ RSpec.describe "i18n integrity checks" do
 
       context(path) do
         locale = extract_locale(path)
-        yaml = YAML.load_file(path)
+        yaml = load_yaml(path)
 
         it "has no duplicate keys" do
           duplicates = DuplicateKeyFinder.new.find_duplicates(path)

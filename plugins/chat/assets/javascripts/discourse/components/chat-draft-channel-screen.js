@@ -34,7 +34,7 @@ export default class ChatDraftChannelScreen extends Component {
         this.set(
           "previewedChannel",
           ChatChannel.create(
-            Object.assign({}, response.chat_channel, { isDraft: true })
+            Object.assign({}, response.channel, { isDraft: true })
           )
         );
       })

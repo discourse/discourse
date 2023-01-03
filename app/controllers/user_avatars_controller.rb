@@ -48,7 +48,7 @@ class UserAvatarsController < ApplicationController
 
     hijack do
       begin
-        proxy_avatar("https://avatars.discourse-cdn.com/#{params[:version]}/letter/#{params[:letter]}/#{params[:color]}/#{params[:size]}.png", Time.new('1990-01-01'))
+        proxy_avatar("https://avatars.discourse-cdn.com/#{params[:version]}/letter/#{params[:letter]}/#{params[:color]}/#{params[:size]}.png", Time.new(1990, 01, 01))
       rescue OpenURI::HTTPError
         render_blank
       end
@@ -125,6 +125,8 @@ class UserAvatarsController < ApplicationController
       if optimized.local?
         optimized_path = Discourse.store.path_for(optimized)
         image = optimized_path if File.exist?(optimized_path)
+      elsif GlobalSetting.redirect_avatar_requests
+        return redirect_s3_avatar(Discourse.store.cdn_url(optimized.url))
       else
         return proxy_avatar(Discourse.store.cdn_url(optimized.url), upload.created_at)
       end
@@ -179,11 +181,16 @@ class UserAvatarsController < ApplicationController
     send_file path, disposition: nil
   end
 
+  def redirect_s3_avatar(url)
+    immutable_for 1.hour
+    redirect_to url, allow_other_host: true
+  end
+
   # this protects us from a DoS
   def render_blank
     path = Rails.root + "public/images/avatar.png"
     expires_in 10.minutes, public: true
-    response.headers["Last-Modified"] = Time.new('1990-01-01').httpdate
+    response.headers["Last-Modified"] = Time.new(1990, 01, 01).httpdate
     response.headers["Content-Length"] = File.size(path).to_s
     send_file path, disposition: nil
   end

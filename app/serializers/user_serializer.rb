@@ -2,7 +2,7 @@
 
 class UserSerializer < UserCardSerializer
   include UserTagNotificationsMixin
-  include UserSidebarTagsMixin
+  include UserSidebarMixin
 
   attributes :bio_raw,
              :bio_cooked,
@@ -64,7 +64,10 @@ class UserSerializer < UserCardSerializer
                      :user_auth_tokens,
                      :user_notification_schedule,
                      :use_logo_small_as_avatar,
-                     :sidebar_tags
+                     :sidebar_tags,
+                     :sidebar_category_ids,
+                     :sidebar_list_destination,
+                     :display_sidebar_tags
 
   untrusted_attributes :bio_raw,
                        :bio_cooked,
@@ -105,7 +108,7 @@ class UserSerializer < UserCardSerializer
   end
 
   def second_factor_enabled
-    object.totp_enabled? || object.security_keys_enabled? || object.backup_codes_enabled?
+    object.totp_enabled? || object.security_keys_enabled?
   end
 
   def include_second_factor_backup_enabled?

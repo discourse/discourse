@@ -154,6 +154,10 @@ RSpec.describe DiscourseUpdates do
       Discourse.redis.set('new_features', MultiJson.dump(sample_features))
     end
 
+    after do
+      DiscourseUpdates.clean_state
+    end
+
     it 'returns all items on the first run' do
       result = DiscourseUpdates.new_features
 
@@ -211,6 +215,16 @@ RSpec.describe DiscourseUpdates do
       expect(result[0]["title"]).to eq("Confetti")
       expect(result[1]["title"]).to eq("Whistles")
       expect(result[2]["title"]).to eq("Bells")
+    end
+  end
+
+  describe "#get_last_viewed_feature_date" do
+    fab!(:user) { Fabricate(:user) }
+
+    it "returns an ActiveSupport::TimeWithZone object" do
+      time = Time.zone.parse("2022-12-13T21:33:59Z")
+      DiscourseUpdates.bump_last_viewed_feature_date(user.id, time)
+      expect(DiscourseUpdates.get_last_viewed_feature_date(user.id)).to eq(time)
     end
   end
 end

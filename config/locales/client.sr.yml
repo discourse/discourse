@@ -156,37 +156,36 @@ sr:
       email: "Пошаљи е-поштом"
       url: "Копирај и подели линк"
     action_codes:
-      public_topic: "објављује ову тему %{when}"
-      private_topic: "претвара ову тему у приватну поруку %{when}"
-      split_topic: "раздваја ову тему %{when}"
-      invited_user: "позива корисника %{who} %{when}"
-      invited_group: "позива групу %{who} %{when}"
+      public_topic: "Објављује ову тему %{when}"
+      private_topic: "Претвара ову тему у приватну поруку %{when}"
+      split_topic: "Раздваја ову тему %{when}"
+      invited_user: "Позива групу %{who} %{when}"
+      invited_group: "Позива групу %{who} %{when}"
       user_left: "%{who} напушта овај разговор %{when}"
-      removed_user: "уклања корисника %{who} %{when}"
-      removed_group: "уклања групу %{who} %{when}"
-      autobumped: "аутоматски ставља на врх %{when}"
+      removed_user: "Уклања групу %{who} %{when}"
+      removed_group: "Уклања групу %{who} %{when}"
+      autobumped: "Аутоматски ставља на врх %{when}"
       autoclosed:
-        enabled: "затвара %{when}"
-        disabled: "отвара %{when}"
+        enabled: "Затвара %{when}"
+        disabled: "Отвара %{when}"
       closed:
-        enabled: "затвара %{when}"
-        disabled: "отвара %{when}"
+        enabled: "Затвара %{when}"
+        disabled: "Отвара %{when}"
       archived:
-        enabled: "архивира %{when}"
-        disabled: "деархивира %{when}"
+        enabled: "Архивира %{when}"
+        disabled: "Деархивира %{when}"
       pinned:
-        enabled: "закачи %{when}"
-        disabled: "откачи %{when}"
+        enabled: "Закачи %{when}"
+        disabled: "Откачи %{when}"
       pinned_globally:
-        enabled: "глобално закачи %{when}"
-        disabled: "откачи %{when}"
+        enabled: "Глобално закачи %{when}"
+        disabled: "Откачи %{when}"
       visible:
-        enabled: "укључује %{when}"
-        disabled: "искључује %{when}"
+        enabled: "Укључује %{when}"
+        disabled: "Искључује %{when}"
       banner:
-        enabled: "прави транспарент %{when}. Транспарент ће бити приказан на врху сваке странице док га корисник не одбаци."
-        disabled: "уклања овај транспарент %{when}. Транспарент више неће бити приказан на врху сваке странице."
-      forwarded: "прослеђује наведену е-поруку"
+        enabled: "Прави транспарент %{when}. Транспарент ће бити приказан на врху сваке странице док га корисник не одбаци."
+        disabled: "Уклања овај транспарент %{when}. Транспарент више неће бити приказан на врху сваке странице."
     topic_admin_menu: "радње око теме"
     emails_are_disabled: "Администратор је глобално онемогућио одлазну е-пошту. Ниједно обавештење неће бити послато."
     software_update_prompt:
@@ -251,7 +250,6 @@ sr:
     conduct: "Kodeks ponašanja"
     mobile_view: "Mobilni pogled"
     desktop_view: "Računarski pogled"
-    or: "ili"
     now: "upravo sad"
     read_more: "pročitaj više"
     more: "Više"
@@ -373,8 +371,6 @@ sr:
     disable: "Onemogući"
     continue: "Nastavi"
     undo: "Vrati na prethodno"
-    revert: "Vrati nazad"
-    failed: "Neuspešno"
     switch_to_anon: "Uključi Anonimni režim"
     switch_from_anon: "Izađi iz Anonimnog režima"
     banner:
@@ -761,6 +757,7 @@ sr:
       second_factor:
         name: "Ime foruma"
         disable: "Onemogući"
+        delete: "Obriši"
         save: "Sačuvaj"
         edit: "Izmeni"
         security_key:
@@ -794,7 +791,6 @@ sr:
         ok: "Poslaćemo vam e-mail za potvrdu"
         invalid: "Molimo unesite validnu e-mail adresu"
         authenticated: "E-mail vam je potvrđen od %{provider}"
-        frequency_immediately: "Odmah ćemo vam poslati e-mail ako niste pročitali ono o ćemu vam šaljemo e-mailove."
       associated_accounts:
         revoke: "Povuci"
         cancel: "Odustani"
@@ -997,7 +993,6 @@ sr:
     read_only_mode:
       login_disabled: "Prijave su onemogućene dok je stranica u modulu \"samo čitanje\"."
     learn_more: "saznaj više..."
-    first_post: Prva poruka
     mute: Utišaj
     unmute: Poništi utišanje
     last_post: Pisao
@@ -1046,6 +1041,7 @@ sr:
     login:
       username: "Korisnik"
       password: "Šifra"
+      show_password: "Pokaži"
       caps_lock_warning: "Caps Lock vam je uključen"
       error: "Nepoznata greška"
       rate_limit: "Molimo sačekajte pre nego pokušate opet da se prijavite."
@@ -1268,10 +1264,6 @@ sr:
       back_to_list: "Nazad na listu tema"
       options: "Opcije Teme"
       show_links: "Prikaži linkove u ovoj temi"
-      read_more_in_category: "Želite da pročitate više? Pregledaj druge teme u %{catLink} ili %{latestLink}."
-      read_more: "Želite da pročitate više? %{catLink} ili %{latestLink}."
-      browse_all_categories: Pregledaj sve kategorije
-      view_latest_topics: pogledaj najnovije teme
       jump_reply_up: skoči na raniji odgovor
       jump_reply_down: skoči na kasniji odgovor
       deleted: "Tema je obrisana"
@@ -1799,7 +1791,7 @@ sr:
     footer_nav:
       back: "Nazad"
       share: "Podeli"
-    do_not_disturb:
+    pause_notifications:
       options:
         custom: "Posebna"
     trust_levels:
@@ -1918,7 +1910,6 @@ sr:
         about: "Ovde izmenite svoje članstvo u grupama i imenima grupa"
         group_members: "Članovi grupe"
         delete: "Obriši"
-        delete_confirm: "Obriši ovu grupu?"
         delete_failed: "Nemoguće obrisati grupu. Ako je ovo automatska grupa, ne možete je obrisati."
         add: "Dodaj"
         custom: "Posebna"
@@ -1939,9 +1930,8 @@ sr:
         scopes:
           action: Akcije
       web_hooks:
+        edit: "Izmeni"
         save: "Sačuvaj"
-        destroy: "Obriši"
-        description: "Opis"
         active: "Aktivni"
         delivery_status:
           failed: "Neuspešno"
@@ -2244,7 +2234,6 @@ sr:
       user:
         suspend_failed: "Nešto nije pošlo kako treba pri suspenziji ovog korisnika %{error}"
         unsuspend_failed: "Nešto nije u redu, pri ukidanju suspenzije ovog korisnika %{error}"
-        suspend_duration: "Koliko dugo će ovaj korisnik biti suspendovan?"
         suspend_reason_label: "Zažto ga suspendiraš? Ovaj tekst <b>će biti vidljiv svima</b> na korisničkom profilu korisnika, i biće prikazan korisniku kad se pokuša prijaviti. Neka bude kratak."
         suspend_reason: "Razlog"
         suspended_by: "Suspendovan od"
@@ -2326,6 +2315,11 @@ sr:
         lock_trust_level: "Zaključaj Nivo Poverenja"
         unlock_trust_level: "Odključaj Nivo Poverenja"
         suspended_count: "Suspendovani"
+        other_matches_list:
+          username: "Korisničko Ime"
+          trust_level: "Nivo poverenja"
+          read_time: "Vreme Čitanja"
+          posts: "Poruka"
         tl3_requirements:
           title: "Predispozicije Za Nivo Poverenja 3"
           value_heading: "Vriednost"
@@ -2424,6 +2418,7 @@ sr:
           search: "Pretraži"
           groups: "Grupe"
           dashboard: "Komandna Tabla"
+          navigation: "Navigacija"
         default_categories:
           modal_yes: "Da"
       badges:
@@ -2516,7 +2511,6 @@ sr:
       next: "Dalje"
       step-text: "Korak"
       step: "%{current} od %{total}"
-      upload: "Upload"
       uploading: "Uploading..."
       upload_error: "Žao nam je, dogodila se greška pri učitavanju te datoteke. Molimo pokušajte ponovo."
       staff_count:

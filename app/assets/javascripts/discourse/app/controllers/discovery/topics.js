@@ -22,7 +22,7 @@ const controllerOpts = {
 
   canStar: alias("currentUser.id"),
   showTopicPostBadges: not("new"),
-  redirectedReason: alias("currentUser.redirected_to_top.reason"),
+  redirectedReason: alias("currentUser.user_option.redirected_to_top.reason"),
 
   expandGloballyPinned: false,
   expandAllPinned: false,

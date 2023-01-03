@@ -799,8 +799,8 @@ class TopicQuery
       when 'unlisted'
         result = result.where('NOT topics.visible')
       when 'deleted'
-        guardian = @guardian
-        if guardian.is_staff?
+        category = Category.find_by(id: options[:category])
+        if @guardian.can_see_deleted_topics?(category)
           result = result.where('topics.deleted_at IS NOT NULL')
           require_deleted_clause = false
         end
@@ -899,7 +899,10 @@ class TopicQuery
       muted_tag_ids = TagUser.lookup(user, :muted).pluck(:tag_id)
     else
       muted_tag_names = SiteSetting.default_tags_muted.split("|")
-      muted_tag_ids = Tag.where(name: muted_tag_names).pluck(:id)
+
+      if muted_tag_names.present?
+        muted_tag_ids = Tag.where(name: muted_tag_names).pluck(:id)
+      end
     end
 
     if muted_tag_ids.blank?

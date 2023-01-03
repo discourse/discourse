@@ -9,10 +9,16 @@ module("Discourse Chat | Component | chat-channel-metadata", function (hooks) {
   setupRenderingTest(hooks);
 
   test("displays last message sent at", async function (assert) {
-    const lastMessageSentAt = moment();
+    let lastMessageSentAt = moment().subtract(1, "day");
     this.channel = fabricators.directMessageChatChannel({
       last_message_sent_at: lastMessageSentAt,
     });
+    await render(hbs`<ChatChannelMetadata @channel={{this.channel}} />`);
+
+    assert.dom(".chat-channel-metadata__date").hasText("Yesterday");
+
+    lastMessageSentAt = moment();
+    this.channel.set("last_message_sent_at", lastMessageSentAt);
     await render(hbs`<ChatChannelMetadata @channel={{this.channel}} />`);
 
     assert
@@ -22,21 +28,20 @@ module("Discourse Chat | Component | chat-channel-metadata", function (hooks) {
 
   test("unreadIndicator", async function (assert) {
     this.channel = fabricators.directMessageChatChannel();
-    this.currentUser.set("chat_channel_tracking_state", {
-      [this.channel.id]: { unread_count: 1 },
-    });
+    this.channel.currentUserMembership.unread_count = 1;
+
     this.unreadIndicator = true;
     await render(
       hbs`<ChatChannelMetadata @channel={{this.channel}} @unreadIndicator={{this.unreadIndicator}}/>`
     );
 
-    assert.ok(exists(".chat-channel-unread-indicator"));
+    assert.true(exists(".chat-channel-unread-indicator"));
 
     this.unreadIndicator = false;
     await render(
       hbs`<ChatChannelMetadata @channel={{this.channel}} @unreadIndicator={{this.unreadIndicator}}/>`
     );
 
-    assert.notOk(exists(".chat-channel-unread-indicator"));
+    assert.false(exists(".chat-channel-unread-indicator"));
   });
 });

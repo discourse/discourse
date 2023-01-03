@@ -23,6 +23,7 @@ sv:
     default_emoji_reactions: "Standardval av emoji-reaktioner för chattmeddelanden. Lägg till upp till 5 emojis som snabbval."
     direct_message_enabled_groups: "Tillåt användare inom dessa grupper att skapa personliga chattar från användare till användare. Obs: personal kan alltid skapa personliga chattar och användare kommer att kunna svara på personliga chattar som initieras av användare som har tillstånd att skapa dem."
     chat_message_flag_allowed_groups: "Användare i dessa grupper får flagga chattmeddelanden."
+    max_mentions_per_chat_message: "Maximalt antal @namnomnämnanden en användare kan göra i ett chattmeddelande."
     chat_max_direct_message_users: "Användare kan inte lägga till fler än detta antal andra användare när de skapar ett nytt direktmeddelande. Ställ in till 0 för att endast tillåta meddelanden till sig själv. Personalen är undantagen från denna inställning."
     chat_allow_archiving_channels: "Tillåt att personalen arkiverar meddelanden till ett ämne när en kanal stängs."
     errors:
@@ -41,7 +42,7 @@ sv:
       text_body_template: |
         Arkivering av chatt kanalen **\#%{channel_name}** misslyckades. %{messages_archived} meddelanden har arkiverats. Delvis arkiverade meddelanden kopierades till ämnet [%{topic_title}](%{topic_url}). Besök kanalen på %{channel_url} för att försöka igen.
   chat:
-    deleted_chat_username: raderad
+    deleted_chat_username: raderat
     errors:
       channel_exists_for_category: "En kanal finns redan för denna kategori och namn"
       channel_new_message_disallowed: "Kanalen är %{status}, inga nya meddelanden kan skickas"
@@ -106,7 +107,7 @@ sv:
       statuses:
         read_only: "Endast läsning"
         archived: "Arkiverad"
-        closed: "Stängd"
+        closed: "Stängda"
         open: "Öppna"
       archive:
         first_post_raw: "Detta ämne är ett arkiv av chatt kanalen [%{channel_name}](%{channel_url})."
@@ -119,7 +120,7 @@ sv:
         multi_user_truncated: "%{users} och %{leftover} andra"
     category_channel:
       errors:
-        slug_contains_non_ascii_chars: "innehåller icke-ascii tecken"
+        slug_contains_non_ascii_chars: "innehåller icke-ascii-tecken"
         is_already_in_use: "används redan"
     bookmarkable:
       notification_title: "meddelande i %{channel_name}"
@@ -168,14 +169,17 @@ sv:
         other: "Du har nya chattmeddelanden"
       from: "%{site_name}"
       subject:
-        direct_message:
-          one: "[%{email_prefix}] Nytt meddelande från %{message_title}"
-          other: "[%{email_prefix}] Nya meddelanden från %{message_title} och %{others}"
-        chat_channel:
-          one: "[%{email_prefix}] Nytt meddelande i %{message_title}"
-          other: "[%{email_prefix}] Nya meddelanden i %{message_title} och %{others}"
-        other_direct_message: "från %{dm_title}"
-        others: "%{count} andra"
+        direct_message_from_1: "[%{email_prefix}] Nytt meddelande från %{username}"
+        direct_message_from_2: "[%{email_prefix}] Nytt meddelande från %{username1} och %{username2}"
+        direct_message_from_more:
+          one: "[%{email_prefix}] Nytt meddelande från %{username} och ytterligare %{count}"
+          other: "[%{email_prefix}] Nytt meddelande från %{username} och ytterligare %{count}"
+        chat_channel_1: "[%{email_prefix}] Nytt meddelande i %{channel}"
+        chat_channel_2: "[%{email_prefix}] Nytt meddelande i %{channel1} och %{channel2}"
+        chat_channel_more:
+          one: "[%{email_prefix}] Nytt meddelande i %{channel} och ytterligare %{count}"
+          other: "[%{email_prefix}] Nytt meddelande i %{channel} och ytterligare %{count}"
+        chat_channel_and_direct_message: "[%{email_prefix}] Nytt meddelande i %{channel} och från %{username}"
       unsubscribe: "Den här chattsammanfattningen skickas från %{site_link} när du är borta. Ändra din %{email_preferences_link} eller %{unsubscribe_link} för att avsluta prenumerationen."
       unsubscribe_no_link: "Den här chattsammanfattningen skickas från %{site_link} när du är borta. Ändra din %{email_preferences_link}."
       view_messages:

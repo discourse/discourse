@@ -1,45 +1,38 @@
-import componentTest, {
-  setupRenderingTest,
-} from "discourse/tests/helpers/component-test";
-import { click } from "@ember/test-helpers";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { click, render } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
-import { exists, query, visible } from "discourse/tests/helpers/qunit-helpers";
-import { module } from "qunit";
+import { exists, visible } from "discourse/tests/helpers/qunit-helpers";
+import { module, test } from "qunit";
 import { htmlSafe } from "@ember/template";
 
 module("Discourse Chat | Component | collapser", function (hooks) {
   setupRenderingTest(hooks);
 
-  componentTest("renders header", {
-    template: hbs`{{collapser header=header}}`,
+  test("renders header", async function (assert) {
+    this.set("header", htmlSafe(`<div class="cat">tomtom</div>`));
 
-    beforeEach() {
-      this.set("header", htmlSafe("<div class='cat'>tomtom</div>"));
-    },
+    await render(hbs`<Collapser @header={{this.header}} />`);
 
-    async test(assert) {
-      const element = query(".cat");
-
-      assert.ok(exists(element));
-    },
+    assert.true(exists(".cat"));
   });
 
-  componentTest("collapses and expands yielded body", {
-    template: hbs`{{#collapser}}<div class='cat'>body text</div>{{/collapser}}`,
+  test("collapses and expands yielded body", async function (assert) {
+    await render(hbs`
+      <Collapser>
+        <div class="cat">body text</div>
+      </Collapser>
+    `);
 
-    test: async function (assert) {
-      const openButton = ".chat-message-collapser-closed";
-      const closeButton = ".chat-message-collapser-opened";
-      const body = ".cat";
+    const openButton = ".chat-message-collapser-closed";
+    const closeButton = ".chat-message-collapser-opened";
+    const body = ".cat";
 
-      assert.ok(visible(body));
-      await click(closeButton);
+    assert.true(visible(body));
 
-      assert.notOk(visible(body));
+    await click(closeButton);
+    assert.false(visible(body));
 
-      await click(openButton);
-
-      assert.ok(visible(body));
-    },
+    await click(openButton);
+    assert.true(visible(body));
   });
 });

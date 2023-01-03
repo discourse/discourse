@@ -10,10 +10,7 @@
   <div
     class={{concat-class
       "full-page-chat"
-      (if
-        this.shouldUseCoreSidebar
-        "full-page-chat-sidebar-enabled"
-      )
+      (if this.shouldUseCoreSidebar "full-page-chat-sidebar-enabled")
     }}
   >
     {{#if this.shouldUseChatSidebar}}

@@ -364,9 +364,9 @@ RSpec.describe Guardian do
       end
     end
 
-    it "allows TL0 to message group with messageable_level = everyone" do
+    it "allows TL0 to message group with messageable_level = everyone regardless of personal_message_enabled_groups" do
       group.update!(messageable_level: Group::ALIAS_LEVELS[:everyone])
-      SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_0]
+      SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_1]
       expect(Guardian.new(trust_level_0).can_send_private_message?(group)).to eq(true)
       expect(Guardian.new(user).can_send_private_message?(group)).to eq(true)
     end
@@ -997,8 +997,8 @@ RSpec.describe Guardian do
       end
 
       it 'respects whispers' do
-        SiteSetting.enable_whispers = true
-        SiteSetting.whispers_allowed_groups = "#{group.id}"
+        SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}|#{group.id}"
+
         regular_post = post
         whisper_post = Fabricate(:post, post_type: Post.types[:whisper])
 

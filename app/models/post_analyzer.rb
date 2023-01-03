@@ -78,18 +78,7 @@ class PostAnalyzer
   def raw_mentions
     return [] if @raw.blank?
     return @raw_mentions if @raw_mentions.present?
-
-    raw_mentions = cooked_stripped.css('.mention, .mention-group').map do |e|
-      if name = e.inner_text
-        name = name[1..-1]
-        name = User.normalize_username(name)
-        name
-      end
-    end
-
-    raw_mentions.compact!
-    raw_mentions.uniq!
-    @raw_mentions = raw_mentions
+    @raw_mentions = PrettyText.extract_mentions(cooked_stripped)
   end
 
   # from rack ... compat with ruby 2.2

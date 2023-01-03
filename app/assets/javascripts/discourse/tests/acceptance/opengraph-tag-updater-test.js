@@ -11,8 +11,7 @@ acceptance("Opengraph Tag Updater", function (needs) {
 
   test("updates OG title and URL", async function (assert) {
     await visit("/");
-    await click("#toggle-hamburger-menu");
-    await click("a.about-link");
+    await click("a[href='/about']");
 
     assert.strictEqual(
       document
@@ -24,6 +23,20 @@ acceptance("Opengraph Tag Updater", function (needs) {
     assert.ok(
       document
         .querySelector("meta[property='og:url']")
+        .getAttribute("content")
+        .endsWith("/about"),
+      "it should update OG URL"
+    );
+    assert.strictEqual(
+      document
+        .querySelector("meta[property='twitter:title']")
+        .getAttribute("content"),
+      document.title,
+      "it should update OG title"
+    );
+    assert.ok(
+      document
+        .querySelector("meta[property='twitter:url']")
         .getAttribute("content")
         .endsWith("/about"),
       "it should update OG URL"

@@ -32,6 +32,7 @@ class WebHookPostSerializer < PostSerializer
     flair_bg_color
     flair_color
     notice
+    mentioned_users
   }.each do |attr|
     define_method("include_#{attr}?") do
       false

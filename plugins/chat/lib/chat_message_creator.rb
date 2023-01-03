@@ -53,6 +53,7 @@ class Chat::ChatMessageCreator
         chat_message: @chat_message,
         timestamp: @chat_message.created_at,
       )
+      @chat_channel.touch(:last_message_sent_at)
       DiscourseEvent.trigger(:chat_message_created, @chat_message, @chat_channel, @user)
     rescue => error
       @error = error
