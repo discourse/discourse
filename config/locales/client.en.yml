@@ -429,7 +429,6 @@ en:
     enable: "Enable"
     disable: "Disable"
     continue: "Continue"
-    undo: "Undo"
 
     switch_to_anon: "Enter Anonymous Mode"
     switch_from_anon: "Exit Anonymous Mode"
@@ -747,6 +746,7 @@ en:
         denied: "denied"
         undone: "request undone"
         handle: "handle membership request"
+        undo: "Undo"
       manage:
         title: "Manage"
         name: "Name"
