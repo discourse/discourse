@@ -167,6 +167,7 @@ class PostDestroyer
       trash_user_actions
       remove_associated_replies
       remove_associated_notifications
+      handle_post_flags
 
       if @user.id != @post.user_id && !@opts[:skip_staff_log]
         if @post.topic && @post.is_first_post?
@@ -184,15 +185,6 @@ class PostDestroyer
       update_associated_category_latest_topic
       update_user_counts if !permanent?
       TopicUser.update_post_action_cache(post_id: @post.id)
-
-      DB.after_commit do
-        if @opts[:reviewable]
-          notify_deletion(@opts[:reviewable], { notify_responders: @opts[:notify_responders], parent_post: @opts[:parent_post] })
-          ignore(@post.reviewable_flag) if @post.reviewable_flag && SiteSetting.notify_users_after_responses_deleted_on_flagged_post
-        elsif reviewable = @post.reviewable_flag
-          @opts[:defer_flags] ? ignore(reviewable) : agree(reviewable)
-        end
-      end
     end
 
     update_imap_sync(@post, true) if @post.topic&.deleted_at
@@ -431,6 +423,21 @@ class PostDestroyer
           UserStatCountUpdater.set!(user_stat: user_stat, count: user_stat.post_count - count, count_column: :post_count)
         else
           UserStatCountUpdater.set!(user_stat: user_stat, count: user_stat.post_count + count, count_column: :post_count)
+        end
+      end
+    end
+  end
+
+  def handle_post_flags
+    if permanent?
+      Reviewable.where(target: @post).destroy_all
+    else
+      DB.after_commit do
+        if @opts[:reviewable]
+          notify_deletion(@opts[:reviewable], { notify_responders: @opts[:notify_responders], parent_post: @opts[:parent_post] })
+          ignore(@post.reviewable_flag) if @post.reviewable_flag && SiteSetting.notify_users_after_responses_deleted_on_flagged_post
+        elsif reviewable = @post.reviewable_flag
+          @opts[:defer_flags] ? ignore(reviewable) : agree(reviewable)
         end
       end
     end

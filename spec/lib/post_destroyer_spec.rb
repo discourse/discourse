@@ -1100,6 +1100,16 @@ RSpec.describe PostDestroyer do
       PostDestroyer.new(moderator, regular_post, force_destroy: true).destroy
       expect { regular_post.reload }.to raise_error(ActiveRecord::RecordNotFound)
     end
+
+    context "when the post was flagged" do
+      fab!(:flagged_post) { Fabricate(:reviewable_flagged_post, target: reply) }
+
+      it "destroys the reviewable" do
+        PostDestroyer.new(reply.user, reply, permanent: true).destroy
+        expect { reply.reload }.to raise_error(ActiveRecord::RecordNotFound)
+        expect { flagged_post.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+    end
   end
 
   describe "publishes messages to subscribers" do
