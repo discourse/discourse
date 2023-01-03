@@ -1,22 +1,27 @@
-<div class='autocomplete ac-user'>
+<div class="autocomplete ac-user">
   <ul>
     {{#each options.users as |user|}}
       <li>
         <a href title="{{user.name}}" class="{{user.cssClasses}}">
           {{avatar user imageSize="tiny"}}
-          <span class='username'>{{format-username user.username}}</span>
-          {{#if user.name}}
-            <span class='name'>{{user.name}}</span>
-          {{/if}}
-          {{#if user.status}}
-            {{emoji user.status.emoji}}
-            <span class='status-description' title='{{user.status.description}}'>
-              {{user.status.description}}
-            </span>
-            {{#if user.status.ends_at}}
-              {{format-age user.status.ends_at}}
+          <div class="ac-user--metadata">
+            <span class="username">{{format-username user.username}}</span>
+            {{#if user.name}}
+              <span class="name">{{user.name}}</span>
             {{/if}}
-          {{/if}}
+            {{#if user.status}}
+              {{emoji user.status.emoji}}
+              <span
+                class="status-description"
+                title="{{user.status.description}}"
+              >
+                {{user.status.description}}
+              </span>
+              {{#if user.status.ends_at}}
+                {{format-age user.status.ends_at}}
+              {{/if}}
+            {{/if}}
+          </div>
         </a>
       </li>
     {{/each}}
@@ -25,8 +30,8 @@
       {{#each options.emails as |email|}}
         <li>
           <a href title="{{email.username}}">
-            {{d-icon 'envelope'}}
-            <span class='username'>{{format-username email.username}}</span>
+            {{d-icon "envelope"}}
+            <span class="username">{{format-username email.username}}</span>
           </a>
         </li>
       {{/each}}
@@ -37,8 +42,8 @@
         <li>
           <a href title="{{group.full_name}}">
             {{d-icon "users"}}
-            <span class='username'>{{group.name}}</span>
-            <span class='name'>{{group.full_name}}</span>
+            <span class="username">{{group.name}}</span>
+            <span class="name">{{group.full_name}}</span>
           </a>
         </li>
       {{/each}}

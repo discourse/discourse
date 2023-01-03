@@ -434,13 +434,20 @@ html.composer-open {
           }
         }
 
+        .ac-user--metadata {
+          display: flex;
+          align-items: baseline;
+          gap: 0.25rem;
+        }
+
         .avatar {
           margin-right: 0.25em;
         }
 
         .name {
-          display: contents;
           font-size: var(--font-down-1);
+          padding: 0;
+          margin: 0;
           color: var(--primary-high);
         }
 
