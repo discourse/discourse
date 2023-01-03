@@ -5105,9 +5105,9 @@ en:
           new_name: "New Color Palette"
           copy_name_prefix: "Copy of"
           delete_confirm: "Delete this color palette?"
-          undo: "undo"
+          undo: "Undo"
           undo_title: "Undo your changes to this color since the last time it was saved."
-          revert: "revert"
+          revert: "Revert"
           revert_title: "Reset this color to Discourse's default color palette."
           primary:
             name: "primary"
