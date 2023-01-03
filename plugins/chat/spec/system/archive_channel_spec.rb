@@ -53,9 +53,9 @@ RSpec.describe "Archive channel", type: :system, js: true do
       end
 
       context "when archiving" do
-        # before { Jobs.run_immediately! }
+        it "works" do
+          Jobs.run_immediately!
 
-        xit "works" do
           chat.visit_channel_settings(channel_1)
           click_button(I18n.t("js.chat.channel_settings.archive_channel"))
           find("#split-topic-name").fill_in(with: "An interesting topic for cats")
@@ -77,7 +77,9 @@ RSpec.describe "Archive channel", type: :system, js: true do
             )
           end
 
-          xit "clears unread indicators" do
+          it "clears unread indicators" do
+            Jobs.run_immediately!
+
             visit("/")
             expect(page.find(".chat-channel-unread-indicator")).to have_content(1)
 
@@ -92,10 +94,7 @@ RSpec.describe "Archive channel", type: :system, js: true do
       end
 
       context "when archiving failed" do
-        before do
-          # Jobs.run_immediately!
-          channel_1.update!(status: :read_only)
-        end
+        before { channel_1.update!(status: :read_only) }
 
         fab!(:archive) do
           ChatChannelArchive.create!(
@@ -108,7 +107,9 @@ RSpec.describe "Archive channel", type: :system, js: true do
           )
         end
 
-        xit "can be retried" do
+        it "can be retried" do
+          Jobs.run_immediately!
+
           chat.visit_channel(channel_1)
           click_button(I18n.t("js.chat.channel_archive.retry"))
 

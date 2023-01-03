@@ -39,10 +39,10 @@ RSpec.describe "User menu notifications | sidebar", type: :system, js: true do
     context "when dm channel" do
       fab!(:dm_channel_1) { Fabricate(:direct_message_channel, users: [current_user, other_user]) }
 
-      # before { Jobs.run_immediately! }
-
       context "when @username" do
-        xit "shows a mention notification" do
+        it "shows a mention notification" do
+          Jobs.run_immediately!
+
           message =
             Chat::ChatMessageCreator.create(
               chat_channel: dm_channel_1,
@@ -106,7 +106,9 @@ RSpec.describe "User menu notifications | sidebar", type: :system, js: true do
       end
 
       context "when @username" do
-        xit "shows a mention notification" do
+        it "shows a mention notification" do
+          Jobs.run_immediately!
+
           message =
             Chat::ChatMessageCreator.create(
               chat_channel: channel_1,

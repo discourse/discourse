@@ -15,7 +15,7 @@ RSpec.describe "JIT messages", type: :system, js: true do
   end
 
   context "when mentioning a user not on the channel" do
-    xit "displays a mention warning" do
+    it "displays a mention warning" do
       Jobs.run_immediately!
 
       chat.visit_channel(channel_1)
@@ -36,7 +36,7 @@ RSpec.describe "JIT messages", type: :system, js: true do
       private_channel_1.add(current_user)
     end
 
-    xit "displays a mention warning" do
+    it "displays a mention warning" do
       Jobs.run_immediately!
 
       chat.visit_channel(private_channel_1)
@@ -52,7 +52,7 @@ RSpec.describe "JIT messages", type: :system, js: true do
     context "when group can't be mentioned" do
       fab!(:group_1) { Fabricate(:group, mentionable_level: Group::ALIAS_LEVELS[:nobody]) }
 
-      xit "displays a mention warning" do
+      it "displays a mention warning" do
         Jobs.run_immediately!
 
         chat.visit_channel(channel_1)
