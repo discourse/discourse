@@ -46,6 +46,7 @@ RSpec.describe "JIT messages", type: :system, js: true do
       expect(page).to have_content(
         I18n.t("js.chat.mention_warning.cannot_see.one", username: other_user.username),
         wait: 5,
+      )
     end
   end
 
