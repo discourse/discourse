@@ -149,7 +149,7 @@ module CookedProcessorMixin
     return unless image_sizes.present?
     image_sizes.each do |image_size|
       url, size = image_size[0], image_size[1]
-      if url && url.include?(src) &&
+      if url && src && url.include?(src) &&
          size && size["width"].to_i > 0 && size["height"].to_i > 0
         return [size["width"], size["height"]]
       end
