@@ -32,6 +32,8 @@ RSpec.describe "Message notifications - mobile", type: :system, js: true, mobile
         context "when not member of the channel" do
           context "when a message is created" do
             it "doesn't show anything" do
+              Jobs.run_immediately!
+
               visit("/chat")
               using_session(:user_1) { create_message(channel: channel_1, creator: user_1) }
 
@@ -71,7 +73,9 @@ RSpec.describe "Message notifications - mobile", type: :system, js: true, mobile
             before { channel_1.membership_for(current_user).update!(muted: true) }
 
             context "when a message is created" do
-              xit "doesn't show anything" do
+              it "doesn't show anything" do
+                Jobs.run_immediately!
+
                 visit("/chat")
                 using_session(:user_1) { create_message(channel: channel_1, creator: user_1) }
 
@@ -85,6 +89,8 @@ RSpec.describe "Message notifications - mobile", type: :system, js: true, mobile
 
           context "when a message is created" do
             it "correctly renders notifications" do
+              Jobs.run_immediately!
+
               visit("/chat")
               using_session(:user_1) { create_message(channel: channel_1, creator: user_1) }
 
@@ -98,6 +104,8 @@ RSpec.describe "Message notifications - mobile", type: :system, js: true, mobile
 
           context "when a message with mentions is created" do
             it "correctly renders notifications" do
+              Jobs.run_immediately!
+
               visit("/chat")
               using_session(:user_1) do
                 create_message(
@@ -127,6 +135,8 @@ RSpec.describe "Message notifications - mobile", type: :system, js: true, mobile
 
         context "when a message is created" do
           it "correctly renders notifications" do
+            Jobs.run_immediately!
+
             visit("/chat")
             using_session(:user_1) { create_message(channel: dm_channel_1, creator: user_1) }
 
@@ -141,6 +151,8 @@ RSpec.describe "Message notifications - mobile", type: :system, js: true, mobile
           end
 
           it "reorders channels" do
+            Jobs.run_immediately!
+
             visit("/chat")
 
             expect(page).to have_css(
@@ -175,6 +187,8 @@ RSpec.describe "Message notifications - mobile", type: :system, js: true, mobile
 
         context "when messages are created" do
           it "correctly renders notifications" do
+            Jobs.run_immediately!
+
             visit("/chat")
             using_session(:user_1) { create_message(channel: channel_1, creator: user_1) }
 
