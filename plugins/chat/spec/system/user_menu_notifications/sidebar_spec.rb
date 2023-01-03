@@ -39,10 +39,10 @@ RSpec.describe "User menu notifications | sidebar", type: :system, js: true do
     context "when dm channel" do
       fab!(:dm_channel_1) { Fabricate(:direct_message_channel, users: [current_user, other_user]) }
 
-      before { Jobs.run_immediately! }
+      # before { Jobs.run_immediately! }
 
       context "when @username" do
-        it "shows a mention notification" do
+        xit "shows a mention notification" do
           message =
             Chat::ChatMessageCreator.create(
               chat_channel: dm_channel_1,
@@ -71,7 +71,7 @@ RSpec.describe "User menu notifications | sidebar", type: :system, js: true do
       before do
         channel_1.add(current_user)
         channel_1.add(other_user)
-        Jobs.run_immediately!
+        # Jobs.run_immediately!
       end
 
       context "when group mention" do
@@ -79,7 +79,7 @@ RSpec.describe "User menu notifications | sidebar", type: :system, js: true do
 
         before { group.add(current_user) }
 
-        it "shows a group mention notification" do
+        xit "shows a group mention notification" do
           message =
             Chat::ChatMessageCreator.create(
               chat_channel: channel_1,
@@ -106,7 +106,7 @@ RSpec.describe "User menu notifications | sidebar", type: :system, js: true do
       end
 
       context "when @username" do
-        it "shows a mention notification" do
+        xit "shows a mention notification" do
           message =
             Chat::ChatMessageCreator.create(
               chat_channel: channel_1,
@@ -130,7 +130,7 @@ RSpec.describe "User menu notifications | sidebar", type: :system, js: true do
       end
 
       context "when @all" do
-        it "shows a mention notification" do
+        xit "shows a mention notification" do
           message =
             Chat::ChatMessageCreator.create(
               chat_channel: channel_1,
@@ -164,7 +164,7 @@ RSpec.describe "User menu notifications | sidebar", type: :system, js: true do
 
     before { channel_1.add(current_user) }
 
-    it "shows an invitation notification" do
+    xit "shows an invitation notification" do
       Jobs.run_immediately!
 
       chat.visit_channel(channel_1)

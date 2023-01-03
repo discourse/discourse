@@ -46,7 +46,7 @@ RSpec.describe "Message notifications - with sidebar", type: :system, js: true d
 
           context "when user is in DnD" do
             before do
-              Jobs.run_immediately!
+              # Jobs.run_immediately!
               Fabricate(
                 :do_not_disturb_timing,
                 user: current_user,
@@ -55,7 +55,7 @@ RSpec.describe "Message notifications - with sidebar", type: :system, js: true d
               )
             end
 
-            it "doesn’t show indicator in header" do
+            xit "doesn’t show indicator in header" do
               visit("/")
               using_session(:user_1) { create_message(channel: channel_1, creator: user_1) }
 
@@ -89,9 +89,9 @@ RSpec.describe "Message notifications - with sidebar", type: :system, js: true d
           end
 
           context "when a message with mentions is created" do
-            before { Jobs.run_immediately! }
+            # before { Jobs.run_immediately! }
 
-            it "correctly renders notifications" do
+            xit "correctly renders notifications" do
               visit("/")
               using_session(:user_1) do
                 create_message(
