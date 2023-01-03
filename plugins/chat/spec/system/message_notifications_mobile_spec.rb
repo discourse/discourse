@@ -48,7 +48,7 @@ RSpec.describe "Message notifications - mobile", type: :system, js: true, mobile
 
           context "when user is in DnD" do
             before do
-              # Jobs.run_immediately!
+              Jobs.run_immediately!
               Fabricate(
                 :do_not_disturb_timing,
                 user: current_user,

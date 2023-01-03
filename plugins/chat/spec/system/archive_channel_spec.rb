@@ -53,7 +53,7 @@ RSpec.describe "Archive channel", type: :system, js: true do
       end
 
       context "when archiving" do
-        # before { Jobs.run_immediately! }
+        before { Jobs.run_immediately! }
 
         it "works" do
           chat.visit_channel_settings(channel_1)
@@ -93,7 +93,7 @@ RSpec.describe "Archive channel", type: :system, js: true do
 
       context "when archiving failed" do
         before do
-          # Jobs.run_immediately!
+          Jobs.run_immediately!
           channel_1.update!(status: :read_only)
         end
 

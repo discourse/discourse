@@ -39,7 +39,7 @@ RSpec.describe "User menu notifications | sidebar", type: :system, js: true do
     context "when dm channel" do
       fab!(:dm_channel_1) { Fabricate(:direct_message_channel, users: [current_user, other_user]) }
 
-      # before { Jobs.run_immediately! }
+      before { Jobs.run_immediately! }
 
       context "when @username" do
         it "shows a mention notification" do
@@ -71,7 +71,7 @@ RSpec.describe "User menu notifications | sidebar", type: :system, js: true do
       before do
         channel_1.add(current_user)
         channel_1.add(other_user)
-        # Jobs.run_immediately!
+        Jobs.run_immediately!
       end
 
       context "when group mention" do
@@ -163,7 +163,7 @@ RSpec.describe "User menu notifications | sidebar", type: :system, js: true do
     fab!(:other_user) { Fabricate(:user) }
 
     before do
-      # Jobs.run_immediately!
+      Jobs.run_immediately!
       channel_1.add(current_user)
     end
 

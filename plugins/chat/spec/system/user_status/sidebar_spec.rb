@@ -13,7 +13,7 @@ RSpec.describe "User status | sidebar", type: :system, js: true do
     chat_system_bootstrap
     current_user.set_status!("online", "heart")
     sign_in(current_user)
-    # Jobs.run_immediately!
+    Jobs.run_immediately!
   end
 
   it "shows user status" do
