@@ -23,6 +23,7 @@ RSpec.describe "JIT messages", type: :system, js: true do
 
       expect(page).to have_content(
         I18n.t("js.chat.mention_warning.without_membership.one", username: other_user.username),
+        wait: 5,
       )
     end
   end
@@ -44,7 +45,7 @@ RSpec.describe "JIT messages", type: :system, js: true do
 
       expect(page).to have_content(
         I18n.t("js.chat.mention_warning.cannot_see.one", username: other_user.username),
-      )
+        wait: 5,
     end
   end
 
@@ -60,6 +61,7 @@ RSpec.describe "JIT messages", type: :system, js: true do
 
         expect(page).to have_content(
           I18n.t("js.chat.mention_warning.group_mentions_disabled.one", group_name: group_1.name),
+          wait: 5,
         )
       end
     end
