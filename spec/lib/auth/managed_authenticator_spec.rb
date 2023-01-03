@@ -6,6 +6,10 @@ RSpec.describe Auth::ManagedAuthenticator do
       def name
         "myauth"
       end
+
+      def primary_email_verified?(auth_token)
+        auth_token[:info][:email_verified]
+      end
     end.new
   }
 
@@ -16,7 +20,8 @@ RSpec.describe Auth::ManagedAuthenticator do
       info: {
         name: "Best Display Name",
         email: "awesome@example.com",
-        nickname: "IAmGroot"
+        nickname: "IAmGroot",
+        email_verified: true
       },
       credentials: {
         token: "supersecrettoken"
@@ -59,14 +64,19 @@ RSpec.describe Auth::ManagedAuthenticator do
 
     it 'only sets email valid for present strings' do
       # (Twitter sometimes sends empty email strings)
-      result = authenticator.after_authenticate(create_hash.merge(info: { email: "email@example.com" }))
+      result = authenticator.after_authenticate(create_hash.merge(info: { email: "email@example.com", email_verified: true }))
       expect(result.email_valid).to eq(true)
 
-      result = authenticator.after_authenticate(create_hash.merge(info: { email: "" }))
+      result = authenticator.after_authenticate(create_hash.merge(info: { email: "", email_verified: true }))
       expect(result.email_valid).to be_falsey
 
-      result = authenticator.after_authenticate(create_hash.merge(info: { email: nil }))
+      result = authenticator.after_authenticate(create_hash.merge(info: { email: nil, email_verified: true }))
       expect(result.email_valid).to be_falsey
+    end
+
+    it 'does not set email valid if email_verified is false' do
+      result = authenticator.after_authenticate(create_hash.merge(info: { email: "email@example.com", email_verified: false }))
+      expect(result.email_valid).to eq(false)
     end
 
     describe 'connecting to another user account' do
