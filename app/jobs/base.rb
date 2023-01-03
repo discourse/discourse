@@ -360,7 +360,7 @@ module Jobs
           begin
             until queue.empty?
               queued_klass, queued_opts = queue.pop(true)
-              queued_klass.new.perform(queued_opts)
+              queued_klass.new.execute(queued_opts)
             end
           ensure
             Thread.current[:discourse_nested_job_queue] = nil
