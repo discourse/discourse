@@ -839,6 +839,7 @@ export default Controller.extend(bufferedProperty("model"), {
             Bookmark.create({
               bookmarkable_id: post.id,
               bookmarkable_type: "Post",
+              user_id: this.currentUser.id,
               auto_delete_preference:
                 this.currentUser.user_option.bookmark_auto_delete_preference,
             }),
@@ -1352,6 +1353,7 @@ export default Controller.extend(bufferedProperty("model"), {
         Bookmark.create({
           bookmarkable_id: this.model.id,
           bookmarkable_type: "Topic",
+          user_id: this.currentUser.id,
           auto_delete_preference:
             this.currentUser.user_option.bookmark_auto_delete_preference,
         })

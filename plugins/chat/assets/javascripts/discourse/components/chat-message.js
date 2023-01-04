@@ -727,6 +727,8 @@ export default Component.extend({
           bookmarkable_type: "ChatMessage",
           bookmarkable_id: this.message.id,
           user_id: this.currentUser.id,
+          auto_delete_preference:
+            this.currentUser.user_option.bookmark_auto_delete_preference,
         }),
       {
         onAfterSave: (savedData) => {
