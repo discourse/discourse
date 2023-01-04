@@ -274,7 +274,7 @@ class PostRevisor
   end
 
   def cleanup_whitespaces(raw)
-    raw.present? ? TextCleaner.normalize_whitespaces(raw).gsub(/\s+\z/, "") : ""
+    raw.present? ? TextCleaner.normalize_whitespaces(raw).rstrip : ""
   end
 
   def should_revise?
