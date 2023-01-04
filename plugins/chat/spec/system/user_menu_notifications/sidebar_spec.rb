@@ -71,7 +71,6 @@ RSpec.describe "User menu notifications | sidebar", type: :system, js: true do
       before do
         channel_1.add(current_user)
         channel_1.add(other_user)
-        # Jobs.run_immediately!
       end
 
       context "when group mention" do
@@ -79,7 +78,9 @@ RSpec.describe "User menu notifications | sidebar", type: :system, js: true do
 
         before { group.add(current_user) }
 
-        xit "shows a group mention notification" do
+        it "shows a group mention notification" do
+          Jobs.run_immediately!
+
           message =
             Chat::ChatMessageCreator.create(
               chat_channel: channel_1,
@@ -166,9 +167,7 @@ RSpec.describe "User menu notifications | sidebar", type: :system, js: true do
 
     before { channel_1.add(current_user) }
 
-    xit "shows an invitation notification" do
-      Jobs.run_immediately!
-
+    it "shows an invitation notification" do
       chat.visit_channel(channel_1)
       channel.send_message("this is fine @#{other_user.username}")
       find(".invite-link", wait: 5).click
