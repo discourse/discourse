@@ -213,7 +213,14 @@ RSpec.describe BookmarkManager do
 
     it "when post is deleted it raises invalid access from guardian check" do
       post.trash!
-      expect { subject.create_for(bookmarkable_id: post.id, bookmarkable_type: "Post", name: name) }.to raise_error(Discourse::InvalidAccess)
+      expect do
+        subject.create_for(bookmarkable_id: post.id, bookmarkable_type: "Post", name: name)
+      end.to raise_error(Discourse::InvalidAccess)
+    end
+
+    it "adds a validation error when the bookmarkable_type is not registered" do
+      subject.create_for(bookmarkable_id: post.id, bookmarkable_type: "BlahFactory", name: name)
+      expect(subject.errors.full_messages).to include(I18n.t("bookmarks.errors.invalid_bookmarkable", type: "BlahFactory"))
     end
 
     it "updates the topic user bookmarked column to true if any post is bookmarked" do
@@ -227,9 +234,31 @@ RSpec.describe BookmarkManager do
       expect(tu.bookmarked).to eq(true)
     end
 
-    it "sets auto_delete_preference to never by default" do
+    it "sets auto_delete_preference to clear_reminder by default" do
       bookmark = subject.create_for(bookmarkable_id: post.id, bookmarkable_type: "Post", name: name, reminder_at: reminder_at)
-      expect(bookmark.auto_delete_preference).to eq(Bookmark.auto_delete_preferences[:never])
+      expect(bookmark.auto_delete_preference).to eq(Bookmark.auto_delete_preferences[:clear_reminder])
+    end
+
+    context "when the user has set their bookmark_auto_delete_preference" do
+      before do
+        user.user_option.update!(bookmark_auto_delete_preference: Bookmark.auto_delete_preferences[:on_owner_reply])
+      end
+
+      it "sets auto_delete_preferences to the user's user_option.bookmark_auto_delete_preference" do
+        bookmark = subject.create_for(bookmarkable_id: post.id, bookmarkable_type: "Post", name: name, reminder_at: reminder_at)
+        expect(bookmark.auto_delete_preference).to eq(Bookmark.auto_delete_preferences[:on_owner_reply])
+      end
+
+      it "uses the passed in auto_delete_preference option instead of the user's one" do
+        bookmark = subject.create_for(
+          bookmarkable_id: post.id,
+          bookmarkable_type: "Post",
+          name: name,
+          reminder_at: reminder_at,
+          options: { auto_delete_preference: Bookmark.auto_delete_preferences[:when_reminder_sent] }
+        )
+        expect(bookmark.auto_delete_preference).to eq(Bookmark.auto_delete_preferences[:when_reminder_sent])
+      end
     end
 
     context "when a reminder time is provided" do

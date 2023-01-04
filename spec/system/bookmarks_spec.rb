@@ -11,10 +11,14 @@ describe "Bookmarking posts and topics", type: :system, js: true do
 
   before { sign_in user }
 
-  it "allows the user to create bookmarks with and without reminders" do
+  def visit_topic_and_open_bookmark_modal(post)
     topic_page.visit_topic(topic)
     topic_page.expand_post_actions(post)
     topic_page.click_post_action_button(post, :bookmark)
+  end
+
+  it "allows the user to create bookmarks with and without reminders" do
+    visit_topic_and_open_bookmark_modal(post)
 
     bookmark_modal.fill_name("something important")
     bookmark_modal.save
@@ -24,8 +28,7 @@ describe "Bookmarking posts and topics", type: :system, js: true do
     expect(bookmark.name).to eq("something important")
     expect(bookmark.reminder_at).to eq(nil)
 
-    topic_page.expand_post_actions(post2)
-    topic_page.click_post_action_button(post2, :bookmark)
+    visit_topic_and_open_bookmark_modal(post2)
 
     bookmark_modal.select_preset_reminder(:tomorrow)
     expect(topic_page).to have_post_bookmarked(post2)
@@ -35,9 +38,7 @@ describe "Bookmarking posts and topics", type: :system, js: true do
   end
 
   it "does not create a bookmark if the modal is closed with the cancel button" do
-    topic_page.visit_topic(topic)
-    topic_page.expand_post_actions(post)
-    topic_page.click_post_action_button(post, :bookmark)
+    visit_topic_and_open_bookmark_modal(post)
 
     bookmark_modal.fill_name("something important")
     bookmark_modal.cancel
@@ -47,9 +48,7 @@ describe "Bookmarking posts and topics", type: :system, js: true do
   end
 
   it "creates a bookmark if the modal is closed by clicking outside the modal window" do
-    topic_page.visit_topic(topic)
-    topic_page.expand_post_actions(post)
-    topic_page.click_post_action_button(post, :bookmark)
+    visit_topic_and_open_bookmark_modal(post)
 
     bookmark_modal.fill_name("something important")
     bookmark_modal.click_outside
@@ -78,9 +77,20 @@ describe "Bookmarking posts and topics", type: :system, js: true do
     end
 
     it "is respected when the user creates a new bookmark" do
-      topic_page.visit_topic(topic)
-      topic_page.expand_post_actions(post)
-      topic_page.click_post_action_button(post, :bookmark)
+      visit_topic_and_open_bookmark_modal(post)
+
+      bookmark_modal.save
+      expect(topic_page).to have_post_bookmarked(post)
+
+      bookmark = Bookmark.find_by(bookmarkable: post, user: user)
+      expect(bookmark.auto_delete_preference).to eq(
+        Bookmark.auto_delete_preferences[:on_owner_reply],
+      )
+    end
+
+    it "allows the user to choose a different auto delete preference for a bookmark" do
+      visit_topic_and_open_bookmark_modal(post)
+
       bookmark_modal.save
       expect(topic_page).to have_post_bookmarked(post)
 

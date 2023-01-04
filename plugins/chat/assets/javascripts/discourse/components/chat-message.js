@@ -723,13 +723,7 @@ export default Component.extend({
   toggleBookmark() {
     return openBookmarkModal(
       this.message.bookmark ||
-        Bookmark.create({
-          bookmarkable_type: "ChatMessage",
-          bookmarkable_id: this.message.id,
-          user_id: this.currentUser.id,
-          auto_delete_preference:
-            this.currentUser.user_option.bookmark_auto_delete_preference,
-        }),
+        Bookmark.createFor(this.currentUser, "ChatMessage", this.message.id),
       {
         onAfterSave: (savedData) => {
           const bookmark = Bookmark.create(savedData);

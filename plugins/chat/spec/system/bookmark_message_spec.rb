@@ -14,9 +14,6 @@ RSpec.describe "Bookmark message", type: :system, js: true do
     chat_system_bootstrap
     category_channel_1.add(current_user)
     sign_in(current_user)
-
-    # cdp_params = { source: "window.isRunningSystemSpecs = true" }
-    # page.driver.browser.execute_cdp("Page.addScriptToEvaluateOnNewDocument", **cdp_params)
   end
 
   context "when desktop" do
