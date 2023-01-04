@@ -429,7 +429,6 @@ en:
     enable: "Enable"
     disable: "Disable"
     continue: "Continue"
-    undo: "Undo"
 
     switch_to_anon: "Enter Anonymous Mode"
     switch_from_anon: "Exit Anonymous Mode"
@@ -747,6 +746,7 @@ en:
         denied: "denied"
         undone: "request undone"
         handle: "handle membership request"
+        undo: "Undo"
       manage:
         title: "Manage"
         name: "Name"
@@ -3581,7 +3581,6 @@ en:
         create_for_topic: "Create bookmark for topic"
         edit: "Edit bookmark"
         edit_for_topic: "Edit bookmark for topic"
-        created: "Created"
         updated: "Updated"
         name: "Name"
         name_placeholder: "What is this bookmark for?"
@@ -3907,7 +3906,6 @@ en:
     category_title: "Category"
     history_capped_revisions: "History, last 100 revisions"
     history: "History"
-    changed_by: "by %{author}"
 
     raw_email:
       title: "Incoming Email"
@@ -5107,9 +5105,9 @@ en:
           new_name: "New Color Palette"
           copy_name_prefix: "Copy of"
           delete_confirm: "Delete this color palette?"
-          undo: "undo"
+          undo: "Undo"
           undo_title: "Undo your changes to this color since the last time it was saved."
-          revert: "revert"
+          revert: "Revert"
           revert_title: "Reset this color to Discourse's default color palette."
           primary:
             name: "primary"
