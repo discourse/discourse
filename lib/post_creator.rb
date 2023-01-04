@@ -514,7 +514,7 @@ class PostCreator
   end
 
   def setup_post
-    @opts[:raw] = TextCleaner.normalize_whitespaces(@opts[:raw] || '').gsub(/\s+\z/, "")
+    @opts[:raw] = TextCleaner.normalize_whitespaces(@opts[:raw] || '').rstrip
 
     post = Post.new(raw: @opts[:raw],
                     topic_id: @topic.try(:id),
