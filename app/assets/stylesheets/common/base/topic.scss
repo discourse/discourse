@@ -150,7 +150,8 @@ $topic-progress-height: 42px;
   &.docked {
     position: initial;
     .topic-admin-popup-menu.right-side {
-      bottom: -150px; // Prevents menu from being too high when a topic is very short
+      bottom: unset;
+      right: 10px;
     }
   }
 
