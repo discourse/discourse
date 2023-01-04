@@ -4201,6 +4201,15 @@ RSpec.describe UsersController do
           expect(topic_post_count[topic.id.to_s]).to eq(1)
         end
 
+        it "doesn't include the post count when the signed in user doesn't have access" do
+          c = Fabricate(:category, read_restricted: true)
+          topic.update(category_id: c.id)
+          expect(Guardian.new(user1).can_see?(topic)).to eq(false)
+          get "/u/#{admin.username}.json", params: { include_post_count_for: topic.id }
+          topic_post_count = response.parsed_body.dig("user", "topic_post_count")
+          expect(topic_post_count).to eq(nil)
+        end
+
         it "includes all post types for staff members" do
           SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
           sign_in(admin)
