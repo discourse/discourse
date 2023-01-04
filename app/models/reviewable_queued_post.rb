@@ -74,13 +74,15 @@ class ReviewableQueuedPost < Reviewable
 
   def perform_approve_post(performed_by, args)
     created_post = nil
-
-    creator = PostCreator.new(created_by, create_options.merge(
+    opts = create_options.merge(
       skip_validations: true,
       skip_jobs: true,
       skip_events: true,
       skip_guardian: true
-    ))
+    )
+    opts.merge!(guardian: Guardian.new(performed_by)) if performed_by.staff?
+
+    creator = PostCreator.new(created_by, opts)
     created_post = creator.create
 
     unless created_post && creator.errors.blank?
