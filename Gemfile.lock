@@ -471,7 +471,7 @@ GEM
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.8.2)
-    unicode-display_width (2.4.0)
+    unicode-display_width (2.4.2)
     unicorn (6.1.0)
       kgio (~> 2.6)
       raindrops (~> 0.7)
