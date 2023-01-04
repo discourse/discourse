@@ -44,6 +44,12 @@ module Jobs
         EmailAddressValidator.valid_value?(address)
       end
 
+      # Mask the email addresses of non-staged users so
+      # they are not revealed unnecessarily when we are sending
+      # the email notification out.
+      bcc_addresses = User.not_staged.with_email(cc_addresses).pluck(:email)
+      cc_addresses = cc_addresses - bcc_addresses
+
       # There is a rare race condition causing the Imap::Sync class to create
       # an incoming email and associated post/topic, which then kicks off
       # the PostAlerter to notify others in the PM about a reply in the topic,
@@ -66,7 +72,13 @@ module Jobs
       # The EmailLog record created by the sender will have the raw email
       # stored, the group smtp ID, and any cc addresses recorded for later
       # cross referencing.
-      message = GroupSmtpMailer.send_mail(group, email, post, cc_addresses)
+      message = GroupSmtpMailer.send_mail(
+        group,
+        email,
+        post,
+        cc_addresses: cc_addresses,
+        bcc_addresses: bcc_addresses
+      )
       Email::Sender.new(message, :group_smtp, recipient_user).send
 
       # Create an incoming email record to avoid importing again from IMAP

@@ -144,6 +144,7 @@ end
 #  topic_id                  :integer
 #  bounce_error_code         :string
 #  smtp_transaction_response :string(500)
+#  bcc_addresses             :text
 #
 # Indexes
 #
