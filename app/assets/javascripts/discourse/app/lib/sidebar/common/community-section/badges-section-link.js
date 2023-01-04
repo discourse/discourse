@@ -12,7 +12,7 @@ export default class BadgesSectionLink extends BaseSectionLink {
   }
 
   get title() {
-    return I18n.t("sidebar.sections.community.links.badges.content");
+    return I18n.t("sidebar.sections.community.links.badges.title");
   }
 
   get text() {
