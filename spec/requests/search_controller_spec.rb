@@ -242,50 +242,64 @@ RSpec.describe SearchController do
     end
 
     context 'when rate limited' do
-      it 'rate limits anon searches per user' do
-        SiteSetting.rate_limit_search_anon_user = 2
-        RateLimiter.enable
-        RateLimiter.clear_all!
-
-        2.times do
-          get "/search/query.json", params: {
-                term: 'wookie'
-              }
-
-          expect(response.status).to eq(200)
-          json = response.parsed_body
-          expect(json["grouped_search_result"]["error"]).to eq(nil)
-        end
-
+      def unlimited_request(ip_address = "1.2.3.4")
         get "/search/query.json", params: {
               term: 'wookie'
-            }
+            }, env: { REMOTE_ADDR: ip_address  }
+
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["grouped_search_result"]["error"]).to eq(nil)
+      end
+
+      def limited_request(ip_address = "1.2.3.4")
+        get "/search/query.json", params: {
+              term: 'wookie'
+            }, env: { REMOTE_ADDR: ip_address }
         expect(response.status).to eq(200)
         json = response.parsed_body
         expect(json["grouped_search_result"]["error"]).to eq(I18n.t("rate_limiter.slow_down"))
       end
 
-      it 'rate limits anon searches globally' do
-        SiteSetting.rate_limit_search_anon_global = 2
+      it 'rate limits anon searches per user' do
+        SiteSetting.rate_limit_search_anon_user_per_second = 2
+        SiteSetting.rate_limit_search_anon_user_per_minute = 3
         RateLimiter.enable
         RateLimiter.clear_all!
 
-        2.times do
-          get "/search/query.json", params: {
-                term: 'wookie'
-              }
+        start = Time.now
+        freeze_time start
 
-          expect(response.status).to eq(200)
-          json = response.parsed_body
-          expect(json["grouped_search_result"]["error"]).to eq(nil)
-        end
+        unlimited_request
+        unlimited_request
+        limited_request
 
-        get "/search/query.json", params: {
-              term: 'wookie'
-            }
-        expect(response.status).to eq(200)
-        json = response.parsed_body
-        expect(json["grouped_search_result"]["error"]).to eq(I18n.t("rate_limiter.slow_down"))
+        freeze_time start + 2
+
+        unlimited_request
+        limited_request
+
+        # cause it is a diff IP
+        unlimited_request("100.0.0.0")
+      end
+
+      it 'rate limits anon searches globally' do
+        SiteSetting.rate_limit_search_anon_global_per_second = 2
+        SiteSetting.rate_limit_search_anon_global_per_minute = 3
+        RateLimiter.enable
+        RateLimiter.clear_all!
+
+        t = Time.now
+        freeze_time t
+
+        unlimited_request("1.2.3.4")
+        unlimited_request("1.2.3.5")
+        limited_request("1.2.3.6")
+
+        freeze_time t + 2
+
+        unlimited_request("1.2.3.7")
+        limited_request("1.2.3.8")
       end
 
       context "with a logged in user" do
@@ -375,52 +389,62 @@ RSpec.describe SearchController do
     end
 
     context 'when rate limited' do
-      it 'rate limits anon searches per user' do
-        SiteSetting.rate_limit_search_anon_user = 2
-        RateLimiter.enable
-        RateLimiter.clear_all!
 
-        2.times do
-          get "/search.json", params: {
-                q: 'bantha'
-              }
-
-          expect(response.status).to eq(200)
-          json = response.parsed_body
-          expect(json["grouped_search_result"]["error"]).to eq(nil)
-        end
-
+      def unlimited_request(ip_address = "1.2.3.4")
         get "/search.json", params: {
-              q: 'bantha'
-            }
+              q: 'wookie'
+            }, env: { REMOTE_ADDR: ip_address  }
+
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["grouped_search_result"]["error"]).to eq(nil)
+      end
+
+      def limited_request(ip_address = "1.2.3.4")
+        get "/search.json", params: {
+              q: 'wookie'
+            }, env: { REMOTE_ADDR: ip_address }
         expect(response.status).to eq(200)
         json = response.parsed_body
         expect(json["grouped_search_result"]["error"]).to eq(I18n.t("rate_limiter.slow_down"))
+      end
 
+      it 'rate limits anon searches per user' do
+        SiteSetting.rate_limit_search_anon_user_per_second = 2
+        SiteSetting.rate_limit_search_anon_user_per_minute = 3
+        RateLimiter.enable
+        RateLimiter.clear_all!
+
+        t = Time.now
+        freeze_time t
+
+        unlimited_request
+        unlimited_request
+        limited_request
+
+        freeze_time(t + 2)
+
+        unlimited_request
+        limited_request
+        unlimited_request("1.2.3.100")
       end
 
       it 'rate limits anon searches globally' do
-        SiteSetting.rate_limit_search_anon_global = 2
+        SiteSetting.rate_limit_search_anon_global_per_second = 2
+        SiteSetting.rate_limit_search_anon_global_per_minute = 3
         RateLimiter.enable
         RateLimiter.clear_all!
 
-        2.times do
-          get "/search.json", params: {
-                q: 'bantha'
-              }
+        unlimited_request("1.1.1.1")
+        unlimited_request("2.2.2.2")
+        limited_request("3.3.3.3")
 
-          expect(response.status).to eq(200)
-          json = response.parsed_body
-          expect(json["grouped_search_result"]["error"]).to eq(nil)
-        end
+        t = Time.now
+        freeze_time t
+        freeze_time(t + 2)
 
-        get "/search.json", params: {
-              q: 'bantha'
-            }
-        expect(response.status).to eq(200)
-        json = response.parsed_body
-        expect(json["grouped_search_result"]["error"]).to eq(I18n.t("rate_limiter.slow_down"))
-
+        unlimited_request("4.4.4.4")
+        limited_request("5.5.5.5")
       end
 
       context "with a logged in user" do
