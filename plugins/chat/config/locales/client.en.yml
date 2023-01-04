@@ -345,7 +345,7 @@ en:
 
       direct_messages:
         title: "Personal chat"
-        new: "New personal chat"
+        new: "Create a personal chat"
         create: "Go"
         leave: "Leave this personal chat"
         cannot_create: "Sorry, you cannot send direct messages."

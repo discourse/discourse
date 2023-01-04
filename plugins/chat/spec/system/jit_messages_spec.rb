@@ -15,7 +15,7 @@ RSpec.describe "JIT messages", type: :system, js: true do
   end
 
   context "when mentioning a user not on the channel" do
-    xit "displays a mention warning" do
+    it "displays a mention warning" do
       Jobs.run_immediately!
 
       chat.visit_channel(channel_1)
@@ -23,6 +23,7 @@ RSpec.describe "JIT messages", type: :system, js: true do
 
       expect(page).to have_content(
         I18n.t("js.chat.mention_warning.without_membership.one", username: other_user.username),
+        wait: 5,
       )
     end
   end
@@ -44,6 +45,7 @@ RSpec.describe "JIT messages", type: :system, js: true do
 
       expect(page).to have_content(
         I18n.t("js.chat.mention_warning.cannot_see.one", username: other_user.username),
+        wait: 5,
       )
     end
   end
@@ -60,6 +62,7 @@ RSpec.describe "JIT messages", type: :system, js: true do
 
         expect(page).to have_content(
           I18n.t("js.chat.mention_warning.group_mentions_disabled.one", group_name: group_1.name),
+          wait: 5,
         )
       end
     end

@@ -12,12 +12,13 @@ export default class AboutSectionLink extends BaseSectionLink {
   }
 
   get title() {
-    return I18n.t("sidebar.sections.community.links.about.content");
+    return I18n.t("sidebar.sections.community.links.about.title");
   }
 
   get text() {
     return I18n.t("sidebar.sections.community.links.about.content");
   }
+
   get prefixValue() {
     return "info-circle";
   }
