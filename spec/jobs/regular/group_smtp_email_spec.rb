@@ -36,7 +36,16 @@ RSpec.describe Jobs::GroupSmtpEmail do
 
   it "sends an email using the GroupSmtpMailer and Email::Sender" do
     message = Mail::Message.new(body: "hello", to: "myemail@example.invalid")
-    GroupSmtpMailer.expects(:send_mail).with(group, "test@test.com", post, ["otherguy@test.com", "cormac@lit.com"]).returns(message)
+    GroupSmtpMailer
+      .expects(:send_mail)
+      .with(
+        group,
+        "test@test.com",
+        post,
+        cc_addresses: %w[otherguy@test.com cormac@lit.com],
+        bcc_addresses: [],
+      )
+      .returns(message)
     subject.execute(args)
   end
 
@@ -172,10 +181,26 @@ RSpec.describe Jobs::GroupSmtpEmail do
     it "has the cc_addresses and cc_user_ids filled in correctly" do
       subject.execute(args)
       expect(ActionMailer::Base.deliveries.count).to eq(1)
-      expect(ActionMailer::Base.deliveries.last.subject).to eq("Re: Help I need support")
+      sent_mail = ActionMailer::Base.deliveries.last
+      expect(sent_mail.subject).to eq("Re: Help I need support")
+      expect(sent_mail.cc).to eq(["otherguy@test.com", "cormac@lit.com"])
       email_log = EmailLog.find_by(post_id: post.id, topic_id: post.topic_id, user_id: recipient_user.id)
       expect(email_log.cc_addresses).to eq("otherguy@test.com;cormac@lit.com")
       expect(email_log.cc_user_ids).to match_array([staged1.id, staged2.id])
+    end
+
+    it "where cc_addresses match non-staged users, convert to bcc_addresses" do
+      staged2.update!(staged: false, active: true)
+      subject.execute(args)
+      expect(ActionMailer::Base.deliveries.count).to eq(1)
+      sent_mail = ActionMailer::Base.deliveries.last
+      expect(sent_mail.subject).to eq("Re: Help I need support")
+      expect(sent_mail.cc).to eq(["otherguy@test.com"])
+      expect(sent_mail.bcc).to eq(["cormac@lit.com"])
+      email_log = EmailLog.find_by(post_id: post.id, topic_id: post.topic_id, user_id: recipient_user.id)
+      expect(email_log.cc_addresses).to eq("otherguy@test.com")
+      expect(email_log.bcc_addresses).to eq("cormac@lit.com")
+      expect(email_log.cc_user_ids).to match_array([staged1.id])
     end
   end
 
