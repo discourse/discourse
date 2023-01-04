@@ -247,7 +247,7 @@ RSpec.describe SiteSerializer do
       SiteSetting.whispers_allowed_groups = "#{group1.id}|#{group2.id}"
 
       serialized = described_class.new(Site.new(admin_guardian), scope: admin_guardian, root: false).as_json
-      expect(serialized[:whispers_allowed_groups_names]).to eq(["whisperers1", "whisperers2"])
+      expect(serialized[:whispers_allowed_groups_names]).to contain_exactly("whisperers1", "whisperers2")
     end
 
     it "returns correct group names for automatic groups" do
@@ -263,7 +263,7 @@ RSpec.describe SiteSerializer do
       SiteSetting.whispers_allowed_groups = "#{group1.id}|#{group2.id}"
 
       serialized = described_class.new(Site.new(user_guardian), scope: user_guardian, root: false).as_json
-      expect(serialized[:whispers_allowed_groups_names]).to eq(["whisperers1", "whisperers2"])
+      expect(serialized[:whispers_allowed_groups_names]).to contain_exactly("whisperers1", "whisperers2")
     end
 
     it "returns nil when user is not allowed to whisper" do
