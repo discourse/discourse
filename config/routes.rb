@@ -177,7 +177,7 @@ Discourse::Application.routes.draw do
           get "/incoming/:id" => "email#incoming"
           get "/incoming_from_bounced/:id" => "email#incoming_from_bounced"
           get "preview-digest" => "email#preview_digest"
-          get "send-digest" => "email#send_digest"
+          post "send-digest" => "email#send_digest"
           get "smtp_should_reject"
           post "handle_mail"
           get "advanced-test"
