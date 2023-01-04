@@ -1497,7 +1497,7 @@ class User < ActiveRecord::Base
   end
 
   def logged_out
-    MessageBus.publish "/logout", self.id, user_ids: [self.id]
+    MessageBus.publish "/logout/#{self.id}", self.id, user_ids: [self.id]
     DiscourseEvent.trigger(:user_logged_out, self)
   end
 
