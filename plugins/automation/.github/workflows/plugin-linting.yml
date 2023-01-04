@@ -41,8 +41,8 @@ jobs:
         shell: bash
         run: |
           yarn prettier -v
-          if [ 0 -lt $(find assets admin/assets -type f \( -name "*.scss" -or -name "*.js" -or -name "*.es6" \) 2> /dev/null | wc -l) ]; then
-            yarn prettier --list-different "assets/**/*.{scss,js,es6}"
+          if [ 0 -lt $(find assets admin/assets -type f \( -name "*.scss" -or -name "*.js" -or -name "*.es6" -or -name "*.hbs" \) 2> /dev/null | wc -l) ]; then
+            yarn prettier --list-different "assets/**/*.{scss,js,es6,hbs}"
           fi
           if [ 0 -lt $(find test -type f \( -name "*.js" -or -name "*.es6" \) 2> /dev/null | wc -l) ]; then
             yarn prettier --list-different "test/**/*.{js,es6}"
@@ -50,7 +50,12 @@ jobs:
 
       - name: Ember template lint
         if: ${{ !cancelled() }}
-        run: yarn ember-template-lint --no-error-on-unmatched-pattern assets/javascripts admin/assets/javascripts
+        run: yarn ember-template-lint --no-error-on-unmatched-pattern assets/javascripts
+
+      # Separated due to https://github.com/ember-template-lint/ember-template-lint/issues/2758
+      - name: Ember template lint (admin)
+        if: ${{ !cancelled() }}
+        run: yarn ember-template-lint --no-error-on-unmatched-pattern admin/assets/javascripts
 
       - name: Rubocop
         if: ${{ !cancelled() }}

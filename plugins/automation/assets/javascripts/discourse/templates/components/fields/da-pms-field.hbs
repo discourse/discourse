@@ -13,7 +13,10 @@
   {{#each field.metadata.value as |pm|}}
     <div class="pm-field">
       <div class="control-group">
-        {{fields/da-field-label label=(i18n "discourse_automation.fields.pms.title.label") field=field}}
+        {{fields/da-field-label
+          label=(i18n "discourse_automation.fields.pms.title.label")
+          field=field
+        }}
         <div class="controls">
           <div class="field-wrapper">
             {{input
@@ -35,7 +38,10 @@
       </div>
 
       <div class="control-group">
-        {{fields/da-field-label label=(i18n "discourse_automation.fields.pms.raw.label") field=field}}
+        {{fields/da-field-label
+          label=(i18n "discourse_automation.fields.pms.raw.label")
+          field=field
+        }}
         <div class="controls">
           <div class="field-wrapper">
             {{d-editor value=pm.raw}}

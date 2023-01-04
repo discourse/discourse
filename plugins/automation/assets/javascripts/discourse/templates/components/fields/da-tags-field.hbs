@@ -6,10 +6,7 @@
       {{tag-chooser
         tags=field.metadata.value
         onChange=(action (mut field.metadata.value))
-        options=(hash
-          allowAny=false
-          disabled=field.isDisabled
-        )
+        options=(hash allowAny=false disabled=field.isDisabled)
       }}
 
       {{fields/da-field-description description=description}}
