@@ -180,7 +180,7 @@ RSpec.describe ReviewableQueuedPost, type: :model do
       expect(Post.count).to eq(post_count + 1)
     end
 
-    it "creates a topic with staff tag" do
+    it "creates a topic with staff tag when approved" do
       hidden_tag = Fabricate(:tag)
       staff_tag_group = Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
       reviewable.payload['tags'] += [hidden_tag.name]
