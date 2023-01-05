@@ -69,6 +69,7 @@ module PageObjects
       end
 
       def send_message(text = nil)
+        text = text.chomp if text.present? # having \n on the end of the string counts as an Enter keypress
         find(".chat-composer-input").click # makes helper more reliable by ensuring focus is not lost
         find(".chat-composer-input").fill_in(with: text)
         click_send_message
