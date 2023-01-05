@@ -538,7 +538,7 @@ class UserNotifications < ActionMailer::Base
           .visible_tags(Guardian.new(user))
           .joins(:topic_tags)
           .where("topic_tags.topic_id = ?", post.topic_id)
-          .limit(3)
+          .limit(SiteSetting.max_tags_per_topic)
           .pluck(:name)
 
       show_tags_in_subject = tags.any? ? tags.join(" ") : nil

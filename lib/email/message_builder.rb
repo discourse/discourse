@@ -161,6 +161,11 @@ module Email
       result['X-Discourse-Post-Id']  = @opts[:post_id].to_s  if @opts[:post_id]
       result['X-Discourse-Topic-Id'] = @opts[:topic_id].to_s if @opts[:topic_id]
 
+      # at this point these have been filtered by the recipient's guardian for visibility,
+      # see UserNotifications#send_notification_email
+      result['X-Discourse-Tags'] = @template_args[:show_tags_in_subject] if @opts[:show_tags_in_subject]
+      result['X-Discourse-Category'] = @template_args[:show_category_in_subject] if @opts[:show_category_in_subject]
+
       # please, don't send us automatic responses...
       result['X-Auto-Response-Suppress'] = 'All'
 
