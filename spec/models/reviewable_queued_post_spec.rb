@@ -180,7 +180,21 @@ RSpec.describe ReviewableQueuedPost, type: :model do
       expect(Post.count).to eq(post_count + 1)
     end
 
-    it "creates the post and topic when rejected" do
+    it "creates a topic with staff tag when approved" do
+      hidden_tag = Fabricate(:tag)
+      staff_tag_group = Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
+      reviewable.payload['tags'] += [hidden_tag.name]
+
+      result = reviewable.perform(moderator, :approve_post)
+
+      expect(result.success?).to eq(true)
+      expect(result.created_post_topic).to be_present
+      expect(result.created_post_topic).to be_valid
+      expect(reviewable.topic_id).to eq(result.created_post_topic.id)
+      expect(result.created_post_topic.tags.pluck(:name)).to match_array(reviewable.payload['tags'])
+    end
+
+    it "does not create the post and topic when rejected" do
       topic_count, post_count = Topic.count, Post.count
       result = reviewable.perform(moderator, :reject_post)
 
