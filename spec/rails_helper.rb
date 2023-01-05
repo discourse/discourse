@@ -245,6 +245,10 @@ RSpec.configure do |config|
       allow: [Webdrivers::Chromedriver.base_url]
     )
 
+    if ENV["CAPBYARA_DEFAULT_MAX_WAIT_TIME"].present?
+      Capybara.default_max_wait_time = ENV["CAPBYARA_DEFAULT_MAX_WAIT_TIME"].to_i
+    end
+
     Capybara.threadsafe = true
     Capybara.disable_animation = true
 
