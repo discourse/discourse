@@ -288,8 +288,8 @@ class Chat::ChatController < Chat::ChatBaseController
   end
 
   def message_link
-    return render_404 if @message.blank? || @message.deleted_at.present?
-    return render_404 if @message.chat_channel.blank?
+    raise Discourse::NotFound if @message.blank? || @message.deleted_at.present?
+    raise Discourse::NotFound if @message.chat_channel.blank?
     set_channel_and_chatable_with_access_check(chat_channel_id: @message.chat_channel_id)
     render json:
              success_json.merge(
