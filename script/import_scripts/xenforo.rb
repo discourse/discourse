@@ -89,6 +89,7 @@ class ImportScripts::XenForo < ImportScripts::Base
           post_create_action: proc do |u|
             import_avatar(user['id'], u)
           end
+        }
       end
     end
   end
