@@ -2020,7 +2020,7 @@ RSpec.describe User do
     fab!(:user) { Fabricate(:user) }
 
     it 'should publish the right message' do
-      message = MessageBus.track_publish('/logout') { user.logged_out }.first
+      message = MessageBus.track_publish("/logout/#{user.id}") { user.logged_out }.first
 
       expect(message.data).to eq(user.id)
     end

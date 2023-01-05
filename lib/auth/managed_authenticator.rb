@@ -32,7 +32,7 @@ class Auth::ManagedAuthenticator < Auth::Authenticator
   def primary_email_verified?(auth_token)
     # Omniauth providers should only provide verified emails in the :info hash.
     # This method allows additional checks to be added
-    true
+    false
   end
 
   def can_revoke?

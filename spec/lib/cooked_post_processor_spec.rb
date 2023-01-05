@@ -870,9 +870,16 @@ RSpec.describe CookedPostProcessor do
     let(:post) { build(:post) }
     let(:cpp) { CookedPostProcessor.new(post) }
 
+    let(:image_sizes) do
+      { "http://my.discourse.org/image.png" => { "width" => 111, "height" => 222 } }
+    end
+
     it "returns the size" do
-      image_sizes = { "http://my.discourse.org/image.png" => { "width" => 111, "height" => 222 } }
       expect(cpp.get_size_from_image_sizes("/image.png", image_sizes)).to eq([111, 222])
+    end
+
+    it "returns nil whe img node has no src" do
+      expect(cpp.get_size_from_image_sizes(nil, image_sizes)).to eq(nil)
     end
   end
 

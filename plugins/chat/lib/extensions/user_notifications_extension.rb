@@ -69,7 +69,7 @@ module Chat::UserNotificationsExtension
 
     # Prioritize messages from regular channels over direct messages
     if channels.any?
-      channel_notification_text(channels, dm_users)
+      channel_notification_text(channels.sort_by(&:last_message_sent_at), dm_users)
     else
       direct_message_notification_text(dm_users)
     end

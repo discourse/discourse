@@ -2035,7 +2035,7 @@ developer:
     default: true
     client: true
   enable_experimental_hashtag_autocomplete:
-    default: false
+    default: true
     client: true
   experimental_hashtag_search_result_limit:
     default: 20

@@ -31,7 +31,8 @@ acceptance("Password Reset", function (needs) {
       } else {
         return helper.response({
           success: "OK",
-          message: I18n.t("password_reset.success"),
+          message:
+            "You successfully changed your password and are now logged in.",
         });
       }
     });
@@ -44,7 +45,8 @@ acceptance("Password Reset", function (needs) {
       ) {
         return helper.response({
           success: "OK",
-          message: I18n.t("password_reset.success"),
+          message:
+            "You successfully changed your password and are now logged in.",
         });
       } else if (body.second_factor_token === "123123") {
         return helper.response({
