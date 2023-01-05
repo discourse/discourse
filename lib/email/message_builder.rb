@@ -141,8 +141,7 @@ module Email
         body: body,
         charset: 'UTF-8',
         from: from_value,
-        cc: @opts[:cc],
-        bcc: @opts[:bcc]
+        cc: @opts[:cc]
       }
 
       args[:delivery_method_options] = @opts[:delivery_method_options] if @opts[:delivery_method_options]
