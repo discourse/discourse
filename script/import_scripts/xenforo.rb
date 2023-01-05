@@ -89,6 +89,7 @@ class ImportScripts::XenForo < ImportScripts::Base
           post_create_action: proc do |u|
             import_avatar(user['id'], u)
           end
+        }
       end
     end
   end
@@ -117,7 +118,7 @@ class ImportScripts::XenForo < ImportScripts::Base
         position: c['display_order'],
         post_create_action: proc do |category|
           url = "board/#{c['node_name']}"
-          Permalink.find_or_create_by(url: url, category_id: category.id) 
+          Permalink.find_or_create_by(url: url, category_id: category.id)
         end
       }
     end
@@ -135,7 +136,7 @@ class ImportScripts::XenForo < ImportScripts::Base
         parent_category_id: category_id_from_imported_category_id(c['parent_node_id']),
         post_create_action: proc do |category|
           url = "board/#{c['node_name']}"
-          Permalink.find_or_create_by(url: url, category_id: category.id) 
+          Permalink.find_or_create_by(url: url, category_id: category.id)
         end
       }
     end
@@ -192,7 +193,7 @@ class ImportScripts::XenForo < ImportScripts::Base
     total_count = mysql_query("SELECT COUNT(*) AS count FROM #{TABLE_PREFIX}liked_content WHERE content_type = 'post'").first["count"]
     batches(BATCH_SIZE) do |offset|
       results = mysql_query(
-        "SELECT like_id, content_id, like_user_id, like_date 
+        "SELECT like_id, content_id, like_user_id, like_date
          FROM #{TABLE_PREFIX}liked_content
          WHERE content_type = 'post'
          ORDER BY like_id
@@ -297,10 +298,10 @@ class ImportScripts::XenForo < ImportScripts::Base
     post_count = mysql_query("SELECT COUNT(*) count FROM xf_conversation_message").first["count"]
     batches(BATCH_SIZE) do |offset|
       posts = mysql_query <<-SQL
-        SELECT c.conversation_id, c.recipients, c.title, m.message, m.user_id, m.message_date, m.message_id, IF(c.first_message_id != m.message_id, c.first_message_id, 0) as topic_id 
-        FROM xf_conversation_master c 
-        LEFT JOIN xf_conversation_message m ON m.conversation_id = c.conversation_id 
-        ORDER BY c.conversation_id, m.message_id 
+        SELECT c.conversation_id, c.recipients, c.title, m.message, m.user_id, m.message_date, m.message_id, IF(c.first_message_id != m.message_id, c.first_message_id, 0) as topic_id
+        FROM xf_conversation_master c
+        LEFT JOIN xf_conversation_message m ON m.conversation_id = c.conversation_id
+        ORDER BY c.conversation_id, m.message_id
         LIMIT #{BATCH_SIZE}
         OFFSET #{offset}
       SQL
@@ -316,7 +317,7 @@ class ImportScripts::XenForo < ImportScripts::Base
             id: message_id,
             user_id: user_id,
             raw: raw,
-            created_at:  Time.zone.at(post["message_date"].to_i),
+            created_at: Time.zone.at(post["message_date"].to_i),
             import_mode: true
           }
           unless post["topic_id"] > 0
@@ -450,13 +451,13 @@ class ImportScripts::XenForo < ImportScripts::Base
   def process_xf_attachments(xf_type, s, import_id)
     ids = Set.new
     ids.merge(s.scan(get_xf_regexp(xf_type)).map { |x| x[0].to_i })
-    
+
     # not all attachments have an [ATTACH=] tag so we need to get the other ID's from the xf_attachment table
     if xf_type == :attachment && import_id > 0
       sql = "SELECT attachment_id FROM #{TABLE_PREFIX}attachment WHERE content_id=#{import_id} and content_type='post';"
-      ids.merge(mysql_query(sql).to_a.map { |v| v["attachment_id"].to_i})
+      ids.merge(mysql_query(sql).to_a.map { |v| v["attachment_id"].to_i })
     end
-    
+
     ids.each do |id|
       next unless id
       sql = get_xf_sql(xf_type, id).dup.squish!
@@ -519,7 +520,7 @@ class ImportScripts::XenForo < ImportScripts::Base
     when :attachment
       <<-SQL
         SELECT a.attachment_id, a.data_id, d.filename, d.file_hash, d.user_id
-        FROM #{TABLE_PREFIX}attachment AS a 
+        FROM #{TABLE_PREFIX}attachment AS a
         INNER JOIN #{TABLE_PREFIX}attachment_data d ON a.data_id = d.data_id
         WHERE attachment_id = #{id}
         AND content_type = 'post'
