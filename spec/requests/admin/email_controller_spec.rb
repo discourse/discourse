@@ -201,6 +201,19 @@ describe Admin::EmailController do
     end
   end
 
+  describe '#send_digest' do
+    context "when logged in as an admin" do
+      before { sign_in(admin) }
+
+      it "sends the digest" do
+        post "/admin/email/send-digest.json", params: {
+          last_seen_at: 1.week.ago, username: admin.username, email: email('previous_replies')
+        }
+        expect(response.status).to eq(200)
+      end
+    end
+  end
+
   describe '#handle_mail' do
     it "returns a bad request if neither email parameter is present" do
       post "/admin/email/handle_mail.json"
