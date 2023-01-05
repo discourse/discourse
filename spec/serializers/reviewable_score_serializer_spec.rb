@@ -15,7 +15,7 @@ RSpec.describe ReviewableScoreSerializer do
       end
 
       it 'adds a link for category settings' do
-        category = Fabricate.build(:category)
+        category = Fabricate(:category, name: 'Reviewable Category', slug: 'reviewable-category')
         reviewable.category = category
         serialized = serialized_score('category')
         link_url = "#{Discourse.base_url}/c/#{category.slug}/edit/settings"
