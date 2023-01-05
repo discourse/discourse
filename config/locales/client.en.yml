@@ -4903,7 +4903,6 @@ en:
 
       customize:
         title: "Customize"
-        long_title: "Site Customizations"
         preview: "preview"
         explain_preview: "See the site with this theme enabled"
         save: "Save"
