@@ -2,6 +2,7 @@
 
 Fabricator(:category) do
   name { sequence(:name) { |n| "Amazing Category #{n}" } }
+  slug { sequence(:slug) { |n| "amazing-category-#{n}" } }
   skip_category_definition true
   user
 end

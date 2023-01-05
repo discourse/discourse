@@ -72,7 +72,7 @@ class ReviewableScoreSerializer < ApplicationSerializer
     when 'watched_word'
       "#{Discourse.base_url}/admin/customize/watched_words"
     when 'category'
-      "#{Discourse.base_url}/c/#{object.reviewable.category&.name}/edit/settings"
+      "#{Discourse.base_url}/c/#{object.reviewable.category&.slug}/edit/settings"
     else
       "#{Discourse.base_url}/admin/site_settings/category/all_results?filter=#{text}"
     end

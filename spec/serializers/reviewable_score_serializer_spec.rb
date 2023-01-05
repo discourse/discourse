@@ -18,7 +18,7 @@ RSpec.describe ReviewableScoreSerializer do
         category = Fabricate.build(:category)
         reviewable.category = category
         serialized = serialized_score('category')
-        link_url = "#{Discourse.base_url}/c/#{category.name}/edit/settings"
+        link_url = "#{Discourse.base_url}/c/#{category.slug}/edit/settings"
         category_link = "<a href=\"#{link_url}\">#{I18n.t('reviewables.reasons.links.category')}</a>"
 
         expect(serialized.reason).to include(category_link)
