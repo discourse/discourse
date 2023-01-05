@@ -257,8 +257,17 @@ RSpec.configure do |config|
       capybara_config.server_port = 31337 + ENV['TEST_ENV_NUMBER'].to_i
     end
 
+    # The valid values for SELENIUM_BROWSER_LOG_LEVEL are:
+    #
+    # OFF
+    # SEVERE
+    # WARNING
+    # INFO
+    # DEBUG
+    # ALL
+    browser_log_level = ENV["SELENIUM_BROWSER_LOG_LEVEL"] || "SEVERE"
     chrome_browser_options = Selenium::WebDriver::Chrome::Options.new(
-      logging_prefs: { "browser" => "INFO", "driver" => "ALL" }
+      logging_prefs: { "browser" => browser_log_level, "driver" => "ALL" }
     ).tap do |options|
       options.add_argument("--window-size=1400,1400")
       options.add_argument("--no-sandbox")
