@@ -155,6 +155,8 @@ RSpec.describe Email::MessageBuilder do
         body: 'hello world',
         topic_id: 1234,
         post_id: 4567,
+        show_tags_in_subject: "foo bar baz",
+        show_category_in_subject: "random"
         }.merge(additional_opts)
       )
     end
@@ -169,6 +171,14 @@ RSpec.describe Email::MessageBuilder do
 
     it "uses the default reply-to header" do
       expect(message_with_header_args.header_args['Reply-To']).to eq("\"Discourse\" <#{SiteSetting.notification_email}>")
+    end
+
+    it "passes through the topic tags" do
+      expect(message_with_header_args.header_args['X-Discourse-Tags']).to eq('foo bar baz')
+    end
+
+    it "passes through the topic category" do
+      expect(message_with_header_args.header_args['X-Discourse-Category']).to eq('random')
     end
 
     context "when allow_reply_by_email is enabled " do

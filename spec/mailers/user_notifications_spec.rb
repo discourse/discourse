@@ -400,6 +400,19 @@ RSpec.describe UserNotifications do
       expect(mail_html.scan(/>bobmarley/).count).to eq(1)
     end
 
+    it "the number of tags shown in subject should match max_tags_per_topic" do
+      SiteSetting.email_subject = "[%{site_name}] %{optional_pm}%{optional_cat}%{optional_tags}%{topic_title}"
+      SiteSetting.max_tags_per_topic = 1
+      mail = UserNotifications.user_replied(
+        user,
+        post: response,
+        notification_type: notification.notification_type,
+        notification_data_hash: notification.data_hash
+      )
+      expect(mail.subject).to match(/Taggo/)
+      expect(mail.subject).not_to match(/Taggie/)
+    end
+
     it "doesn't include details when private_email is enabled" do
       SiteSetting.private_email = true
       mail = UserNotifications.user_replied(
