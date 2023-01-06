@@ -6881,9 +6881,9 @@ merge2@^1.2.3, merge2@^1.3.0:
   integrity sha512-8q7VEgMJW4J8tcfVPy8g09NcQwZdbwFEqhe/WZkoIzjn/3TGDwtOCYtXGxA3O8tPzpczCCDgv+P2P5y00ZJOOg==
 
 message-bus-client@^4.3.0:
-  version "4.3.0"
-  resolved "https://registry.yarnpkg.com/message-bus-client/-/message-bus-client-4.3.0.tgz#03710b9acdbaa4c9117b2215b2dd8038a360c168"
-  integrity sha512-tJbSFz+NB8fBXn5OqGqisi881SUv1ypIoETHgyQHfg5NHFr15Y+BIx4gPqXhy5iG0EJlayZfcNyFxYfFfhyv+w==
+  version "4.3.1"
+  resolved "https://registry.yarnpkg.com/message-bus-client/-/message-bus-client-4.3.1.tgz#2107b569131b03d7277801cd3409059e48e9f25e"
+  integrity sha512-gPG8POalZrM6t9xZPIzER3uDCiAfdwMEjx6ulbYICqzJx0CpLSnZRXKuWvhds4dM3iZQZXpH37UCfYYNICKu5g==
 
 messageformat@0.1.5:
   version "0.1.5"
