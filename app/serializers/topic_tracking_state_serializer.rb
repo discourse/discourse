@@ -1,22 +1,30 @@
 # frozen_string_literal: true
 
 class TopicTrackingStateSerializer < ApplicationSerializer
-  attributes :topic_id,
-             :highest_post_number,
-             :last_read_post_number,
-             :created_at,
-             :category_id,
-             :notification_level,
-             :created_in_new_period,
-             :treat_as_new_topic_start_date,
-             :tags
+  attributes :data, :meta
 
-  def created_in_new_period
-    return true if !scope
-    object.created_at >= treat_as_new_topic_start_date
+  def data
+    object.each do |item|
+      TopicTrackingStateItemSerializer.new(item, scope: scope, root: false).as_json
+    end
   end
 
-  def include_tags?
-    object.respond_to?(:tags)
+  def meta
+    channels = [
+      TopicTrackingState::PUBLISH_LATEST_MESSAGE_BUS_CHANNEL,
+      TopicTrackingState::PUBLISH_RECOVER_MESSAGE_BUS_CHANNEL,
+      TopicTrackingState::PUBLISH_DELETE_MESSAGE_BUS_CHANNEL,
+      TopicTrackingState::PUBLISH_DESTROY_MESSAGE_BUS_CHANNEL,
+    ]
+
+    if !scope.anonymous?
+      channels.push(
+        TopicTrackingState::PUBLISH_NEW_MESSAGE_BUS_CHANNEL,
+        TopicTrackingState::PUBLISH_UNREAD_MESSAGE_BUS_CHANNEL,
+        TopicTrackingState.unread_channel_key(scope.user.id),
+      )
+    end
+
+    MessageBus.last_ids(*channels)
   end
 end

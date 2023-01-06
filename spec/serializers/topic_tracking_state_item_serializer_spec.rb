@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe TopicTrackingStateSerializer do
+RSpec.describe TopicTrackingStateItemSerializer do
   fab!(:user) { Fabricate(:user) }
   fab!(:post) { create_post }
 
