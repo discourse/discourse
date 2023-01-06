@@ -394,13 +394,13 @@ function testUserPrivateMessagesWithGroupMessages(needs, customUserProps) {
     await publishNewToMessageBus({ groupIds: [14], topicId: 2 });
 
     assert.strictEqual(
-      query(".messages-nav .user-nav__messages-unread").innerText.trim(),
+      query(".messages-nav .user-nav__messages-group-unread").innerText.trim(),
       I18n.t("user.messages.unread_with_count", { count: 1 }),
       "displays the right count"
     );
 
     assert.strictEqual(
-      query(".messages-nav .user-nav__messages-new").innerText.trim(),
+      query(".messages-nav .user-nav__messages-group-new").innerText.trim(),
       I18n.t("user.messages.new_with_count", { count: 1 }),
       "displays the right count"
     );
