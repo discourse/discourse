@@ -393,14 +393,46 @@ function testUserPrivateMessagesWithGroupMessages(needs, customUserProps) {
     await publishUnreadToMessageBus({ groupIds: [14], topicId: 1 });
     await publishNewToMessageBus({ groupIds: [14], topicId: 2 });
 
+    if (customUserProps?.redesigned_user_page_nav_enabled) {
+      assert.strictEqual(
+        query(
+          ".messages-nav .user-nav__messages-group-unread"
+        ).innerText.trim(),
+        I18n.t("user.messages.unread_with_count", { count: 1 }),
+        "displays the right count"
+      );
+
+      assert.strictEqual(
+        query(".messages-nav .user-nav__messages-group-new").innerText.trim(),
+        I18n.t("user.messages.new_with_count", { count: 1 }),
+        "displays the right count"
+      );
+
+      assert.ok(exists(".show-mores"), "displays the topic incoming info");
+
+      await visit("/u/charlie/messages/unread");
+
+      assert.strictEqual(
+        query(".messages-nav .user-nav__messages-unread").innerText.trim(),
+        I18n.t("user.messages.unread"),
+        "displays the right count"
+      );
+
+      assert.strictEqual(
+        query(".messages-nav .user-nav__messages-new").innerText.trim(),
+        I18n.t("user.messages.new"),
+        "displays the right count"
+      );
+    }
+
     assert.strictEqual(
-      query(".messages-nav .user-nav__messages-group-unread").innerText.trim(),
+      query(".messages-nav a.unread").innerText.trim(),
       I18n.t("user.messages.unread_with_count", { count: 1 }),
       "displays the right count"
     );
 
     assert.strictEqual(
-      query(".messages-nav .user-nav__messages-group-new").innerText.trim(),
+      query(".messages-nav  a.new").innerText.trim(),
       I18n.t("user.messages.new_with_count", { count: 1 }),
       "displays the right count"
     );
@@ -410,13 +442,13 @@ function testUserPrivateMessagesWithGroupMessages(needs, customUserProps) {
     await visit("/u/charlie/messages/unread");
 
     assert.strictEqual(
-      query(".messages-nav .user-nav__messages-unread").innerText.trim(),
+      query(".messages-nav  a.unread").innerText.trim(),
       I18n.t("user.messages.unread"),
       "displays the right count"
     );
 
     assert.strictEqual(
-      query(".messages-nav .user-nav__messages-new").innerText.trim(),
+      query(".messages-nav  a.new").innerText.trim(),
       I18n.t("user.messages.new"),
       "displays the right count"
     );
