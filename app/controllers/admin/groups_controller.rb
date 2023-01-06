@@ -44,35 +44,6 @@ class Admin::GroupsController < Admin::StaffController
     end
   end
 
-  def add_owners
-    group = Group.find_by(id: params.require(:id))
-    raise Discourse::NotFound unless group
-
-    return can_not_modify_automatic if group.automatic
-    guardian.ensure_can_edit_group!(group)
-
-    users = User.where(username: group_params[:usernames].split(","))
-
-    users.each do |user|
-      group_action_logger = GroupActionLogger.new(current_user, group)
-
-      if !group.users.include?(user)
-        group.add(user)
-        group_action_logger.log_add_user_to_group(user)
-      end
-      group.group_users.where(user_id: user.id).update_all(owner: true)
-      group_action_logger.log_make_user_group_owner(user)
-
-      if group_params[:notify_users] == "true" || group_params[:notify_users] == true
-        group.notify_added_to_group(user, owner: true)
-      end
-    end
-
-    group.restore_user_count!
-
-    render json: success_json.merge!(usernames: users.pluck(:username))
-  end
-
   def remove_owner
     group = Group.find_by(id: params.require(:id))
     raise Discourse::NotFound unless group

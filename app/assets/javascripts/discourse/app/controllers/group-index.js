@@ -141,7 +141,7 @@ export default Controller.extend({
         });
 
       case "makeOwners":
-        return ajax(`/admin/groups/${this.model.id}/owners.json`, {
+        return ajax(`/groups/${this.model.id}/owners.json`, {
           type: "PUT",
           data: {
             usernames: selection.mapBy("username").join(","),
