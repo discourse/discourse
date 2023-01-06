@@ -136,7 +136,21 @@ export default DiscourseRoute.extend(FilterModeMixin, {
       noSubcategories,
       loading: false,
     });
-    this.searchService.set("searchContext", model.tag.searchContext);
+
+    if (model.category || model.additionalTags) {
+      const tagIntersectionSearchContext = {
+        type: "tagIntersection",
+        tagId: model.tag.id,
+        tag: model.tag,
+        additionalTags: model.additionalTags || null,
+        categoryId: model.category?.id || null,
+        category: model.category || null,
+      };
+
+      this.searchService.set("searchContext", tagIntersectionSearchContext);
+    } else {
+      this.searchService.set("searchContext", model.tag.searchContext);
+    }
   },
 
   titleToken() {
