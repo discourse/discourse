@@ -134,7 +134,7 @@ export default Controller.extend({
       case "removeMembers":
         return ajax(`/groups/${this.model.id}/members.json`, {
           type: "DELETE",
-          data: { user_ids: selection.map((u) => u.id).join(",") },
+          data: { user_ids: selection.mapBy("id").join(",") },
         }).then(() => {
           this.model.reloadMembers(this.memberParams, true);
           this.set("isBulk", false);
@@ -144,7 +144,7 @@ export default Controller.extend({
         return ajax(`/admin/groups/${this.model.id}/owners.json`, {
           type: "PUT",
           data: {
-            group: { usernames: selection.map((u) => u.username).join(",") },
+            usernames: selection.mapBy("username").join(","),
           },
         }).then(() => {
           selection.forEach((s) => s.set("owner", true));
