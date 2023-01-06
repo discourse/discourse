@@ -393,10 +393,9 @@ class GroupsController < ApplicationController
     guardian.ensure_can_edit_group!(group)
 
     users = users_from_params
+    group_action_logger = GroupActionLogger.new(current_user, group)
 
     users.each do |user|
-      group_action_logger = GroupActionLogger.new(current_user, group)
-
       if !group.users.include?(user)
         group.add(user)
         group_action_logger.log_add_user_to_group(user)
