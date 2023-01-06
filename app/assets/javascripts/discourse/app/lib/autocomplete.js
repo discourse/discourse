@@ -236,7 +236,10 @@ export default function (options) {
           // resync in case of drift (upload for example)
           let pos = guessCompletePosition();
 
-          if (pos.completeStart && pos.completeEnd) {
+          if (
+            pos.completeStart !== undefined &&
+            pos.completeEnd !== undefined
+          ) {
             completeStart = pos.completeStart;
             completeEnd = pos.completeEnd;
           } else {
@@ -578,17 +581,7 @@ export default function (options) {
 
     let start, end;
 
-    let letterRegex = /[a-zA-Z\.-]/;
-
-    while (
-      element.value[c] !== undefined &&
-      letterRegex.test(element.value[c])
-    ) {
-      c += 1;
-    }
     let initial = c;
-
-    c -= 1;
 
     while (prevIsGood && c >= 0) {
       c -= 1;
@@ -600,7 +593,7 @@ export default function (options) {
 
         if (
           checkTriggerRule({ backSpace: true }) &&
-          (!prev || allowedLettersRegex.test(prev))
+          (prev === undefined || allowedLettersRegex.test(prev))
         ) {
           start = c;
           term = element.value.substring(c + 1, initial);
@@ -609,7 +602,7 @@ export default function (options) {
           break;
         }
       }
-      prevIsGood = letterRegex.test(prev);
+      prevIsGood = !allowedLettersRegex.test(prev);
     }
 
     return { completeStart: start, completeEnd: end, term };

@@ -26,13 +26,33 @@ module("Unit | Utility | autocomplete", function (hooks) {
     cleanup();
   });
 
+  function simulateKey(element, key, options) {
+    options = options || {};
+    let keyCode = key.charCodeAt(0);
+
+    element.dispatchEvent(
+      new KeyboardEvent("keydown", { key, keyCode, which: keyCode })
+    );
+    if (!options.skipValueChange) {
+      let pos = element.selectionStart;
+      let value = element.value;
+      element.value = value.slice(0, pos) + key + value.slice(pos);
+      element.selectionStart = pos + 1;
+      element.selectionEnd = pos + 1;
+    }
+    element.dispatchEvent(
+      new KeyboardEvent("keyup", { key, keyCode, which: keyCode })
+    );
+  }
+
   test("Autocomplete can account for cursor drift correctly", function (assert) {
-    let element = textArea("01234 @");
+    let element = textArea("");
     let $element = $(element);
 
     autocomplete.call($element, {
       key: "@",
-      dataSource: () => ["test1", "test2"],
+      dataSource: (term) =>
+        ["test1", "test2"].filter((word) => word.includes(term)),
       template: compile(`<div id='ac-testing' class='autocomplete ac-test'>
   <ul>
     {{#each options as |option|}}
@@ -46,26 +66,22 @@ module("Unit | Utility | autocomplete", function (hooks) {
 </div>`),
     });
 
-    element.dispatchEvent(new KeyboardEvent("keydown", { key: "@" }));
-    element.dispatchEvent(new KeyboardEvent("keyup", { key: "@" }));
+    simulateKey(element, "@");
+    simulateKey(element, "\r", { skipValueChange: true });
 
-    element.value = "0123456 @t hello";
+    assert.strictEqual(element.value, "@test1 ");
+    assert.strictEqual(element.selectionStart, 7);
+    assert.strictEqual(element.selectionEnd, 7);
 
-    element.setSelectionRange(9, 9);
+    simulateKey(element, "@");
+    simulateKey(element, "2");
+    simulateKey(element, "\r", { skipValueChange: true });
 
-    element.dispatchEvent(new KeyboardEvent("keydown", { key: "t" }));
-    element.dispatchEvent(new KeyboardEvent("keyup", { key: "t" }));
+    assert.strictEqual(element.value, "@test1 @test2 ");
+    assert.strictEqual(element.selectionStart, 14);
+    assert.strictEqual(element.selectionEnd, 14);
 
-    element.dispatchEvent(
-      new KeyboardEvent("keydown", { key: "\n", keyCode: 13 })
-    );
-    element.dispatchEvent(
-      new KeyboardEvent("keyup", { key: "\n", keyCode: 13 })
-    );
-
-    assert.strictEqual(element.value, "0123456 @test1  hello");
-    assert.strictEqual(15, element.selectionStart);
-    assert.strictEqual(15, element.selectionEnd);
+    element.selection;
   });
 
   test("Autocomplete can render on @", function (assert) {
