@@ -2,10 +2,10 @@
 
 RSpec.describe Middleware::RequestTracker do
   def env(opts = {})
-    create_request_env.merge(
+    path = opts.delete(:path) || "/path?bla=1"
+    create_request_env(path: path).merge(
       "HTTP_HOST" => "http://test.com",
       "HTTP_USER_AGENT" => "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36",
-      "REQUEST_URI" => "/path?bla=1",
       "REQUEST_METHOD" => "GET",
       "HTTP_ACCEPT" => "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
       "rack.input" => StringIO.new
@@ -665,6 +665,22 @@ RSpec.describe Middleware::RequestTracker do
       expect(headers["X-Sql-Time"].to_f).to be > 0
 
       expect(headers["X-Runtime"].to_f).to be > 0
+    end
+
+    it "can correctly log messagebus request types" do
+      tracker = Middleware::RequestTracker.new(app([200, {}, []]))
+
+      tracker.call(env(path: "/message-bus/abcde/poll"))
+      expect(@data[:is_background]).to eq(true)
+      expect(@data[:background_type]).to eq("message-bus")
+
+      tracker.call(env(path: "/message-bus/abcde/poll?dlp=t"))
+      expect(@data[:is_background]).to eq(true)
+      expect(@data[:background_type]).to eq("message-bus-dlp")
+
+      tracker.call(env("HTTP_DONT_CHUNK" => "True", path: "/message-bus/abcde/poll"))
+      expect(@data[:is_background]).to eq(true)
+      expect(@data[:background_type]).to eq("message-bus-dontchunk")
     end
   end
 end
