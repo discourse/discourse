@@ -19,4 +19,13 @@ RSpec.describe UserField do
 
     expect(user_field.description).to eq("<b>click me!</b>alert('TEST');")
   end
+
+  it 'allows target attribute in the description' do
+    link = "<a target=\"_blank\" href=\"/elsewhere\">elsewhere</a>"
+    user_field = Fabricate(:user_field)
+
+    user_field.update!(description: link)
+
+    expect(user_field.description).to eq(link)
+  end
 end

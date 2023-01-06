@@ -28,7 +28,7 @@ class UserField < ActiveRecord::Base
 
   def sanitize_description
     if description_changed?
-      self.description = sanitize_field(self.description)
+      self.description = sanitize_field(self.description, additional_attributes: ['target'])
     end
   end
 end
