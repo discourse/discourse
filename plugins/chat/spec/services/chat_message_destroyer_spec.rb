@@ -23,11 +23,7 @@ RSpec.describe ChatMessageDestroyer do
 
     it "deletes flags associated to deleted chat messages" do
       guardian = Guardian.new(Discourse.system_user)
-      Chat::ChatReviewQueue.new.flag_message(
-        message_1,
-        guardian,
-        ReviewableScore.types[:off_topic],
-      )
+      Chat::ChatReviewQueue.new.flag_message(message_1, guardian, ReviewableScore.types[:off_topic])
 
       reviewable = ReviewableChatMessage.last
       expect(reviewable).to be_present

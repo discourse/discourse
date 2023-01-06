@@ -85,27 +85,27 @@ module Chat::UserNotificationsExtension
         "user_notifications.chat_summary.subject.chat_channel_more",
         email_prefix: @email_prefix,
         channel: channels.first.title,
-        count: total_count - 1
+        count: total_count - 1,
       )
     elsif channels.size == 1 && dm_users.size == 0
       I18n.t(
         "user_notifications.chat_summary.subject.chat_channel_1",
         email_prefix: @email_prefix,
-        channel: channels.first.title
+        channel: channels.first.title,
       )
     elsif channels.size == 1 && dm_users.size == 1
       I18n.t(
         "user_notifications.chat_summary.subject.chat_channel_and_direct_message",
         email_prefix: @email_prefix,
         channel: channels.first.title,
-        username: dm_users.first.username
+        username: dm_users.first.username,
       )
     elsif channels.size == 2
       I18n.t(
         "user_notifications.chat_summary.subject.chat_channel_2",
         email_prefix: @email_prefix,
         channel1: channels.first.title,
-        channel2: channels.second.title
+        channel2: channels.second.title,
       )
     end
   end
@@ -116,21 +116,21 @@ module Chat::UserNotificationsExtension
       I18n.t(
         "user_notifications.chat_summary.subject.direct_message_from_1",
         email_prefix: @email_prefix,
-        username: dm_users.first.username
+        username: dm_users.first.username,
       )
     when 2
       I18n.t(
         "user_notifications.chat_summary.subject.direct_message_from_2",
         email_prefix: @email_prefix,
         username1: dm_users.first.username,
-        username2: dm_users.second.username
+        username2: dm_users.second.username,
       )
     else
       I18n.t(
         "user_notifications.chat_summary.subject.direct_message_from_more",
         email_prefix: @email_prefix,
         username: dm_users.first.username,
-        count: dm_users.size - 1
+        count: dm_users.size - 1,
       )
     end
   end

@@ -92,17 +92,32 @@ RSpec.describe Chat::GuardianExtensions do
         fab!(:group_user) { Fabricate(:group_user, group: group, user: user) }
 
         it "returns true if the user can join the category" do
-          category = Fabricate(:private_category, group: group, permission_type: CategoryGroup.permission_types[:readonly])
+          category =
+            Fabricate(
+              :private_category,
+              group: group,
+              permission_type: CategoryGroup.permission_types[:readonly],
+            )
           channel.update(chatable: category)
           guardian = Guardian.new(user)
           expect(guardian.can_join_chat_channel?(channel)).to eq(false)
 
-          category = Fabricate(:private_category, group: group, permission_type: CategoryGroup.permission_types[:create_post])
+          category =
+            Fabricate(
+              :private_category,
+              group: group,
+              permission_type: CategoryGroup.permission_types[:create_post],
+            )
           channel.update(chatable: category)
           guardian = Guardian.new(user)
           expect(guardian.can_join_chat_channel?(channel)).to eq(true)
 
-          category = Fabricate(:private_category, group: group, permission_type: CategoryGroup.permission_types[:full])
+          category =
+            Fabricate(
+              :private_category,
+              group: group,
+              permission_type: CategoryGroup.permission_types[:full],
+            )
           channel.update(chatable: category)
           guardian = Guardian.new(user)
           expect(guardian.can_join_chat_channel?(channel)).to eq(true)

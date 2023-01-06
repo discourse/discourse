@@ -517,7 +517,8 @@ describe ChatMessage do
       it "keeps the same hashtags the user has permission to after rebake" do
         group.add(chat_message.user)
         chat_message.update!(
-          message: "this is the message ##{category.slug} ##{secure_category.slug} ##{chat_message.chat_channel.slug}",
+          message:
+            "this is the message ##{category.slug} ##{secure_category.slug} ##{chat_message.chat_channel.slug}",
         )
         chat_message.cook
         chat_message.save!
