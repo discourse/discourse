@@ -10,7 +10,7 @@ describe 'Redesigned user page navigation menu', type: :system, js: true do
       everyone_group.add(user)
       SiteSetting.enable_new_user_profile_nav_groups = everyone_group.name
 
-      resize_window(width: 400) do
+      resize_window(width: 500) do
         sign_in(user)
 
         user_preferences_page.visit(user)
