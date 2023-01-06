@@ -125,12 +125,25 @@ class Middleware::RequestTracker
       is_api: is_api,
       is_user_api: is_user_api,
       is_background: is_message_bus || is_topic_timings,
-      background_type: is_message_bus ? "message-bus" : "topic-timings",
       is_mobile: helper.is_mobile?,
       track_view: track_view,
       timing: timing,
       queue_seconds: env['REQUEST_QUEUE_SECONDS']
     }
+
+    if h[:is_background]
+      h[:background_type] = if is_message_bus
+        if request.query_string.include?("dlp=t")
+          "message-bus-dlp"
+        elsif env["HTTP_DONT_CHUNK"]
+          "message-bus-dontchunk"
+        else
+          "message-bus"
+        end
+      else
+        "topic-timings"
+      end
+    end
 
     if h[:is_crawler]
       user_agent = env['HTTP_USER_AGENT']
