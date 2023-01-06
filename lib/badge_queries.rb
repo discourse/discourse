@@ -153,18 +153,22 @@ module BadgeQueries
 
   def self.invite_badge(count, trust_level)
     <<~SQL
-      SELECT u.id user_id, current_timestamp granted_at
-      FROM users u
+      SELECT u.id user_id, current_timestamp granted_at 
+      FROM users u 
       WHERE u.id IN (
-        SELECT invited_by_id
-        FROM invites i
-        JOIN invited_users iu ON iu.invite_id = i.id
-        JOIN users u2 ON u2.id = iu.user_id
-        WHERE i.deleted_at IS NULL AND u2.active AND u2.trust_level >= #{trust_level.to_i} AND u2.silenced_till IS NULL
-        GROUP BY invited_by_id
-        HAVING COUNT(*) >= #{count.to_i}
+        SELECT invited_by_id 
+        FROM invites i 
+        JOIN invited_users iu ON iu.invite_id = i.id 
+        JOIN users u2 ON u2.id = iu.user_id 
+        WHERE i.deleted_at IS NULL
+        AND i.invited_by_id <> u2.id
+        AND u2.active 
+        AND u2.trust_level >= 0 
+        AND u2.silenced_till IS NULL 
+        GROUP BY invited_by_id 
+        HAVING COUNT(*) >= 1 
       ) AND u.active AND u.silenced_till IS NULL AND u.id > 0 AND
-        (:backfill OR u.id IN (:user_ids) )
+      (:backfill OR u.id IN (:user_ids) )
     SQL
   end
 
