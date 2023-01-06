@@ -246,11 +246,14 @@ export default function (options) {
             completeStart = completeEnd = caretPosition(me[0]);
           }
 
+          let space =
+            text.substring(completeEnd + 1, completeEnd + 2) === " " ? "" : " ";
+
           text =
             text.substring(0, completeStart) +
             (options.preserveKey ? options.key || "" : "") +
             term +
-            " " +
+            space +
             text.substring(completeEnd + 1, text.length);
 
           me.val(text);

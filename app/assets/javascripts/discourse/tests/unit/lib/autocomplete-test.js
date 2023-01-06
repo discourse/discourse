@@ -36,9 +36,16 @@ module("Unit | Utility | autocomplete", function (hooks) {
     if (!options.skipValueChange) {
       let pos = element.selectionStart;
       let value = element.value;
-      element.value = value.slice(0, pos) + key + value.slice(pos);
-      element.selectionStart = pos + 1;
-      element.selectionEnd = pos + 1;
+      // backspace
+      if (key === "\b") {
+        element.value = value.slice(0, pos - 1) + value.slice(pos);
+        element.selectionStart = pos - 1;
+        element.selectionEnd = pos - 1;
+      } else {
+        element.value = value.slice(0, pos) + key + value.slice(pos);
+        element.selectionStart = pos + 1;
+        element.selectionEnd = pos + 1;
+      }
     }
     element.dispatchEvent(
       new KeyboardEvent("keyup", { key, keyCode, which: keyCode })
@@ -81,7 +88,16 @@ module("Unit | Utility | autocomplete", function (hooks) {
     assert.strictEqual(element.selectionStart, 14);
     assert.strictEqual(element.selectionEnd, 14);
 
-    element.selection;
+    element.selectionStart = 6;
+    element.selectionEnd = 6;
+
+    simulateKey(element, "\b");
+    simulateKey(element, "\b");
+    simulateKey(element, "\r", { skipValueChange: true });
+
+    assert.strictEqual(element.value, "@test1 @test2 ");
+    assert.strictEqual(element.selectionStart, 7);
+    assert.strictEqual(element.selectionEnd, 7);
   });
 
   test("Autocomplete can render on @", function (assert) {
