@@ -5,12 +5,11 @@
 # This is a rudimentary script that allows us to
 #  quickly determine if any gems are slowing down startup
 
-require 'benchmark'
-require 'fileutils'
+require "benchmark"
+require "fileutils"
 
 module RequireProfiler
   class << self
-
     attr_accessor :stats
 
     def profiling_enabled?
@@ -25,10 +24,19 @@ module RequireProfiler
 
     def start(tmp_options = {})
       @start_time = Time.now
-      [ ::Kernel, (class << ::Kernel; self; end) ].each do |klass|
+      [
+        ::Kernel,
+        (
+          class << ::Kernel
+            self
+          end
+        ),
+      ].each do |klass|
         klass.class_eval do
           def require_with_profiling(path, *args)
-            RequireProfiler.measure(path, caller, :require) { require_without_profiling(path, *args) }
+            RequireProfiler.measure(path, caller, :require) do
+              require_without_profiling(path, *args)
+            end
           end
           alias require_without_profiling require
           alias require require_with_profiling
@@ -47,7 +55,14 @@ module RequireProfiler
 
     def stop
       @stop_time = Time.now
-      [ ::Kernel, (class << ::Kernel; self; end) ].each do |klass|
+      [
+        ::Kernel,
+        (
+          class << ::Kernel
+            self
+          end
+        ),
+      ].each do |klass|
         klass.class_eval do
           alias require require_without_profiling
           alias load load_without_profiling
@@ -63,21 +78,20 @@ module RequireProfiler
       @stack ||= []
       self.stats ||= {}
 
-      stat = self.stats.fetch(path) { |key| self.stats[key] = { calls: 0, time: 0, parent_time: 0 } }
+      stat =
+        self.stats.fetch(path) { |key| self.stats[key] = { calls: 0, time: 0, parent_time: 0 } }
 
       @stack << stat
 
       time = Time.now
       begin
-        output = yield  # do the require or load here
+        output = yield # do the require or load here
       ensure
         delta = Time.now - time
         stat[:time] += delta
         stat[:calls] += 1
         @stack.pop
-        @stack.each do |frame|
-          frame[:parent_time] += delta
-        end
+        @stack.each { |frame| frame[:parent_time] += delta }
       end
 
       output
@@ -102,7 +116,6 @@ module RequireProfiler
       puts "GC duration: #{gc_duration_finish}"
       puts "GC impact: #{gc_duration_finish - gc_duration_start}"
     end
-
   end
 end
 
@@ -122,8 +135,9 @@ RequireProfiler.profile do
   end
 end
 
-sorted = RequireProfiler.stats.to_a.sort { |a, b| b[1][:time] - b[1][:parent_time] <=> a[1][:time] - a[1][:parent_time] }
+sorted =
+  RequireProfiler.stats.to_a.sort do |a, b|
+    b[1][:time] - b[1][:parent_time] <=> a[1][:time] - a[1][:parent_time]
+  end
 
-sorted[0..120].each do |k, v|
-  puts "#{k} : time #{v[:time] - v[:parent_time]} "
-end
+sorted[0..120].each { |k, v| puts "#{k} : time #{v[:time] - v[:parent_time]} " }

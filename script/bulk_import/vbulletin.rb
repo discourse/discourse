@@ -7,43 +7,42 @@ require "htmlentities"
 require "parallel"
 
 class BulkImport::VBulletin < BulkImport::Base
-
-  TABLE_PREFIX ||= ENV['TABLE_PREFIX'] || "vb_"
+  TABLE_PREFIX ||= ENV["TABLE_PREFIX"] || "vb_"
   SUSPENDED_TILL ||= Date.new(3000, 1, 1)
-  ATTACHMENT_DIR ||= ENV['ATTACHMENT_DIR'] || '/shared/import/data/attachments'
-  AVATAR_DIR ||= ENV['AVATAR_DIR'] || '/shared/import/data/customavatars'
+  ATTACHMENT_DIR ||= ENV["ATTACHMENT_DIR"] || "/shared/import/data/attachments"
+  AVATAR_DIR ||= ENV["AVATAR_DIR"] || "/shared/import/data/customavatars"
 
   def initialize
     super
 
-    host     = ENV["DB_HOST"] || "localhost"
+    host = ENV["DB_HOST"] || "localhost"
     username = ENV["DB_USERNAME"] || "root"
     password = ENV["DB_PASSWORD"]
     database = ENV["DB_NAME"] || "vbulletin"
-    charset  = ENV["DB_CHARSET"] || "utf8"
+    charset = ENV["DB_CHARSET"] || "utf8"
 
     @html_entities = HTMLEntities.new
     @encoding = CHARSET_MAP[charset]
 
-    @client = Mysql2::Client.new(
-      host: host,
-      username: username,
-      password: password,
-      database: database,
-      encoding: charset,
-      reconnect: true
-    )
+    @client =
+      Mysql2::Client.new(
+        host: host,
+        username: username,
+        password: password,
+        database: database,
+        encoding: charset,
+        reconnect: true,
+      )
 
     @client.query_options.merge!(as: :array, cache_rows: false)
 
-    @has_post_thanks = mysql_query(<<-SQL
+    @has_post_thanks = mysql_query(<<-SQL).to_a.count > 0
         SELECT `COLUMN_NAME`
           FROM `INFORMATION_SCHEMA`.`COLUMNS`
          WHERE `TABLE_SCHEMA`='#{database}'
            AND `TABLE_NAME`='user'
            AND `COLUMN_NAME` LIKE 'post_thanks_%'
     SQL
-    ).to_a.count > 0
 
     @user_ids_by_email = {}
   end
@@ -95,7 +94,7 @@ class BulkImport::VBulletin < BulkImport::Base
   end
 
   def import_groups
-    puts '', "Importing groups..."
+    puts "", "Importing groups..."
 
     groups = mysql_stream <<-SQL
         SELECT usergroupid, title, description, usertitle
@@ -115,7 +114,7 @@ class BulkImport::VBulletin < BulkImport::Base
   end
 
   def import_users
-    puts '', "Importing users..."
+    puts "", "Importing users..."
 
     users = mysql_stream <<-SQL
         SELECT u.userid, username, email, joindate, birthday, ipaddress, u.usergroupid, bandate, liftdate
@@ -145,7 +144,7 @@ class BulkImport::VBulletin < BulkImport::Base
   end
 
   def import_user_emails
-    puts '', "Importing user emails..."
+    puts "", "Importing user emails..."
 
     users = mysql_stream <<-SQL
         SELECT u.userid, email, joindate
@@ -155,7 +154,7 @@ class BulkImport::VBulletin < BulkImport::Base
     SQL
 
     create_user_emails(users) do |row|
-      user_id, email = row[0 .. 1]
+      user_id, email = row[0..1]
 
       @user_ids_by_email[email.downcase] ||= []
       user_ids = @user_ids_by_email[email.downcase] << user_id
@@ -170,7 +169,7 @@ class BulkImport::VBulletin < BulkImport::Base
         imported_id: user_id,
         imported_user_id: user_id,
         email: email,
-        created_at: Time.zone.at(row[2])
+        created_at: Time.zone.at(row[2]),
       }
     end
 
@@ -179,7 +178,7 @@ class BulkImport::VBulletin < BulkImport::Base
   end
 
   def import_user_stats
-    puts '', "Importing user stats..."
+    puts "", "Importing user stats..."
 
     users = mysql_stream <<-SQL
               SELECT u.userid, joindate, posts, COUNT(t.threadid) AS threads, p.dateline
@@ -199,7 +198,7 @@ class BulkImport::VBulletin < BulkImport::Base
         new_since: Time.zone.at(row[1]),
         post_count: row[2],
         topic_count: row[3],
-        first_post_created_at: row[4] && Time.zone.at(row[4])
+        first_post_created_at: row[4] && Time.zone.at(row[4]),
       }
 
       if @has_post_thanks
@@ -212,7 +211,7 @@ class BulkImport::VBulletin < BulkImport::Base
   end
 
   def import_group_users
-    puts '', "Importing group users..."
+    puts "", "Importing group users..."
 
     group_users = mysql_stream <<-SQL
       SELECT usergroupid, userid
@@ -221,15 +220,12 @@ class BulkImport::VBulletin < BulkImport::Base
     SQL
 
     create_group_users(group_users) do |row|
-      {
-        group_id: group_id_from_imported_id(row[0]),
-        user_id: user_id_from_imported_id(row[1]),
-      }
+      { group_id: group_id_from_imported_id(row[0]), user_id: user_id_from_imported_id(row[1]) }
     end
   end
 
   def import_user_passwords
-    puts '', "Importing user passwords..."
+    puts "", "Importing user passwords..."
 
     user_passwords = mysql_stream <<-SQL
         SELECT userid, password
@@ -239,15 +235,12 @@ class BulkImport::VBulletin < BulkImport::Base
     SQL
 
     create_custom_fields("user", "password", user_passwords) do |row|
-      {
-        record_id: user_id_from_imported_id(row[0]),
-        value: row[1],
-      }
+      { record_id: user_id_from_imported_id(row[0]), value: row[1] }
     end
   end
 
   def import_user_salts
-    puts '', "Importing user salts..."
+    puts "", "Importing user salts..."
 
     user_salts = mysql_stream <<-SQL
         SELECT userid, salt
@@ -258,15 +251,12 @@ class BulkImport::VBulletin < BulkImport::Base
     SQL
 
     create_custom_fields("user", "salt", user_salts) do |row|
-      {
-        record_id: user_id_from_imported_id(row[0]),
-        value: row[1],
-      }
+      { record_id: user_id_from_imported_id(row[0]), value: row[1] }
     end
   end
 
   def import_user_profiles
-    puts '', "Importing user profiles..."
+    puts "", "Importing user profiles..."
 
     user_profiles = mysql_stream <<-SQL
         SELECT userid, homepage, profilevisits
@@ -278,16 +268,23 @@ class BulkImport::VBulletin < BulkImport::Base
     create_user_profiles(user_profiles) do |row|
       {
         user_id: user_id_from_imported_id(row[0]),
-        website: (URI.parse(row[1]).to_s rescue nil),
+        website:
+          (
+            begin
+              URI.parse(row[1]).to_s
+            rescue StandardError
+              nil
+            end
+          ),
         views: row[2],
       }
     end
   end
 
   def import_categories
-    puts '', "Importing categories..."
+    puts "", "Importing categories..."
 
-    categories = mysql_query(<<-SQL
+    categories = mysql_query(<<-SQL).to_a
       select
         forumid,
         parentid,
@@ -311,23 +308,20 @@ class BulkImport::VBulletin < BulkImport::Base
       from forum
       order by forumid
       SQL
-    ).to_a
 
     return if categories.empty?
 
-    parent_categories   = categories.select { |c| c[1] == -1 }
+    parent_categories = categories.select { |c| c[1] == -1 }
     children_categories = categories.select { |c| c[1] != -1 }
 
     parent_category_ids = Set.new parent_categories.map { |c| c[0] }
 
     # cut down the tree to only 2 levels of categories
     children_categories.each do |cc|
-      until parent_category_ids.include?(cc[1])
-        cc[1] = categories.find { |c| c[0] == cc[1] }[1]
-      end
+      cc[1] = categories.find { |c| c[0] == cc[1] }[1] until parent_category_ids.include?(cc[1])
     end
 
-    puts '', "Importing parent categories..."
+    puts "", "Importing parent categories..."
     create_categories(parent_categories) do |row|
       {
         imported_id: row[0],
@@ -337,7 +331,7 @@ class BulkImport::VBulletin < BulkImport::Base
       }
     end
 
-    puts '', "Importing children categories..."
+    puts "", "Importing children categories..."
     create_categories(children_categories) do |row|
       {
         imported_id: row[0],
@@ -350,7 +344,7 @@ class BulkImport::VBulletin < BulkImport::Base
   end
 
   def import_topics
-    puts '', "Importing topics..."
+    puts "", "Importing topics..."
 
     topics = mysql_stream <<-SQL
         SELECT threadid, title, forumid, postuserid, open, dateline, views, visible, sticky
@@ -381,7 +375,7 @@ class BulkImport::VBulletin < BulkImport::Base
   end
 
   def import_posts
-    puts '', "Importing posts..."
+    puts "", "Importing posts..."
 
     posts = mysql_stream <<-SQL
         SELECT postid, p.threadid, parentid, userid, p.dateline, p.visible, pagetext
@@ -396,7 +390,8 @@ class BulkImport::VBulletin < BulkImport::Base
     create_posts(posts) do |row|
       topic_id = topic_id_from_imported_id(row[1])
       replied_post_topic_id = topic_id_from_imported_post_id(row[2])
-      reply_to_post_number = topic_id == replied_post_topic_id ? post_number_from_imported_id(row[2]) : nil
+      reply_to_post_number =
+        topic_id == replied_post_topic_id ? post_number_from_imported_id(row[2]) : nil
 
       post = {
         imported_id: row[0],
@@ -415,7 +410,7 @@ class BulkImport::VBulletin < BulkImport::Base
 
   def import_likes
     return unless @has_post_thanks
-    puts '', "Importing likes..."
+    puts "", "Importing likes..."
 
     @imported_likes = Set.new
     @last_imported_post_id = 0
@@ -438,13 +433,13 @@ class BulkImport::VBulletin < BulkImport::Base
         post_id: post_id_from_imported_id(row[0]),
         user_id: user_id_from_imported_id(row[1]),
         post_action_type_id: 2,
-        created_at: Time.zone.at(row[2])
+        created_at: Time.zone.at(row[2]),
       }
     end
   end
 
   def import_private_topics
-    puts '', "Importing private topics..."
+    puts "", "Importing private topics..."
 
     @imported_topics = {}
 
@@ -473,34 +468,31 @@ class BulkImport::VBulletin < BulkImport::Base
   end
 
   def import_topic_allowed_users
-    puts '', "Importing topic allowed users..."
+    puts "", "Importing topic allowed users..."
 
     allowed_users = Set.new
 
-    mysql_stream(<<-SQL
+    mysql_stream(<<-SQL).each do |row|
         SELECT pmtextid, touserarray
           FROM #{TABLE_PREFIX}pmtext
          WHERE pmtextid > (#{@last_imported_private_topic_id - PRIVATE_OFFSET})
       ORDER BY pmtextid
     SQL
-    ).each do |row|
       next unless topic_id = topic_id_from_imported_id(row[0] + PRIVATE_OFFSET)
-      row[1].scan(/i:(\d+)/).flatten.each do |id|
-        next unless user_id = user_id_from_imported_id(id)
-        allowed_users << [topic_id, user_id]
-      end
+      row[1]
+        .scan(/i:(\d+)/)
+        .flatten
+        .each do |id|
+          next unless user_id = user_id_from_imported_id(id)
+          allowed_users << [topic_id, user_id]
+        end
     end
 
-    create_topic_allowed_users(allowed_users) do |row|
-      {
-        topic_id: row[0],
-        user_id: row[1],
-      }
-    end
+    create_topic_allowed_users(allowed_users) { |row| { topic_id: row[0], user_id: row[1] } }
   end
 
   def import_private_posts
-    puts '', "Importing private posts..."
+    puts "", "Importing private posts..."
 
     posts = mysql_stream <<-SQL
         SELECT pmtextid, title, fromuserid, touserarray, dateline, message
@@ -527,7 +519,7 @@ class BulkImport::VBulletin < BulkImport::Base
   end
 
   def create_permalink_file
-    puts '', 'Creating Permalink File...', ''
+    puts "", "Creating Permalink File...", ""
 
     total = Topic.listable_topics.count
     start = Time.now
@@ -538,9 +530,9 @@ class BulkImport::VBulletin < BulkImport::Base
         i += 1
         pcf = topic.posts.includes(:_custom_fields).where(post_number: 1).first.custom_fields
         if pcf && pcf["import_id"]
-          id = pcf["import_id"].split('-').last
+          id = pcf["import_id"].split("-").last
 
-          f.print [ "XXX#{id}  YYY#{topic.id}" ].to_csv
+          f.print ["XXX#{id}  YYY#{topic.id}"].to_csv
           print "\r%7d/%7d - %6d/sec" % [i, total, i.to_f / (Time.now - start)] if i % 5000 == 0
         end
       end
@@ -549,7 +541,8 @@ class BulkImport::VBulletin < BulkImport::Base
 
   # find the uploaded file information from the db
   def find_upload(post, attachment_id)
-    sql = "SELECT a.attachmentid attachment_id, a.userid user_id, a.filename filename
+    sql =
+      "SELECT a.attachmentid attachment_id, a.userid user_id, a.filename filename
              FROM #{TABLE_PREFIX}attachment a
             WHERE a.attachmentid = #{attachment_id}"
     results = mysql_query(sql)
@@ -563,9 +556,10 @@ class BulkImport::VBulletin < BulkImport::Base
     user_id = row[1]
     db_filename = row[2]
 
-    filename = File.join(ATTACHMENT_DIR, user_id.to_s.split('').join('/'), "#{attachment_id}.attach")
+    filename =
+      File.join(ATTACHMENT_DIR, user_id.to_s.split("").join("/"), "#{attachment_id}.attach")
     real_filename = db_filename
-    real_filename.prepend SecureRandom.hex if real_filename[0] == '.'
+    real_filename.prepend SecureRandom.hex if real_filename[0] == "."
 
     unless File.exist?(filename)
       puts "Attachment file #{row.inspect} doesn't exist"
@@ -588,7 +582,7 @@ class BulkImport::VBulletin < BulkImport::Base
   end
 
   def import_attachments
-    puts '', 'importing attachments...'
+    puts "", "importing attachments..."
 
     RateLimiter.disable
     current_count = 0
@@ -596,7 +590,7 @@ class BulkImport::VBulletin < BulkImport::Base
     success_count = 0
     fail_count = 0
 
-    attachment_regex = /\[attach[^\]]*\](\d+)\[\/attach\]/i
+    attachment_regex = %r{\[attach[^\]]*\](\d+)\[/attach\]}i
 
     Post.find_each do |post|
       current_count += 1
@@ -618,7 +612,12 @@ class BulkImport::VBulletin < BulkImport::Base
       end
 
       if new_raw != post.raw
-        PostRevisor.new(post).revise!(post.user, { raw: new_raw }, bypass_bump: true, edit_reason: 'Import attachments from vBulletin')
+        PostRevisor.new(post).revise!(
+          post.user,
+          { raw: new_raw },
+          bypass_bump: true,
+          edit_reason: "Import attachments from vBulletin",
+        )
       end
 
       success_count += 1
@@ -639,7 +638,7 @@ class BulkImport::VBulletin < BulkImport::Base
       Dir.foreach(AVATAR_DIR) do |item|
         print "\r%7d - %6d/sec" % [count, count.to_f / (Time.now - start)]
 
-        next if item == ('.') || item == ('..') || item == ('.DS_Store')
+        next if item == (".") || item == ("..") || item == (".DS_Store")
         next unless item =~ /avatar(\d+)_(\d).gif/
         scan = item.scan(/avatar(\d+)_(\d).gif/)
         next unless scan[0][0].present?
@@ -671,11 +670,10 @@ class BulkImport::VBulletin < BulkImport::Base
   def import_signatures
     puts "Importing user signatures..."
 
-    total_count = mysql_query(<<-SQL
+    total_count = mysql_query(<<-SQL).first[0].to_i
       SELECT COUNT(userid) count
         FROM #{TABLE_PREFIX}sigparsed
     SQL
-    ).first[0].to_i
     current_count = 0
 
     user_signatures = mysql_stream <<-SQL
@@ -695,13 +693,20 @@ class BulkImport::VBulletin < BulkImport::Base
       next unless u.present?
 
       # can not hold dupes
-      UserCustomField.where(user_id: u.id, name: ["see_signatures", "signature_raw", "signature_cooked"]).destroy_all
+      UserCustomField.where(
+        user_id: u.id,
+        name: %w[see_signatures signature_raw signature_cooked],
+      ).destroy_all
 
-      user_sig.gsub!(/\[\/?sigpic\]/i, "")
+      user_sig.gsub!(%r{\[/?sigpic\]}i, "")
 
       UserCustomField.create!(user_id: u.id, name: "see_signatures", value: true)
       UserCustomField.create!(user_id: u.id, name: "signature_raw", value: user_sig)
-      UserCustomField.create!(user_id: u.id, name: "signature_cooked", value: PrettyText.cook(user_sig, omit_nofollow: false))
+      UserCustomField.create!(
+        user_id: u.id,
+        name: "signature_cooked",
+        value: PrettyText.cook(user_sig, omit_nofollow: false),
+      )
     end
   end
 
@@ -710,15 +715,15 @@ class BulkImport::VBulletin < BulkImport::Base
     total_count = 0
 
     duplicated = {}
-    @user_ids_by_email.
-      select { |e, ids| ids.count > 1 }.
-      each_with_index do |(email, ids), i|
-        duplicated[email] = [ ids, i ]
+    @user_ids_by_email
+      .select { |e, ids| ids.count > 1 }
+      .each_with_index do |(email, ids), i|
+        duplicated[email] = [ids, i]
         count += 1
         total_count += ids.count
       end
 
-    puts '', "Merging #{total_count} duplicated users across #{count} distinct emails..."
+    puts "", "Merging #{total_count} duplicated users across #{count} distinct emails..."
 
     start = Time.now
 
@@ -727,14 +732,15 @@ class BulkImport::VBulletin < BulkImport::Base
       next unless email.presence
 
       # queried one by one to ensure ordering
-      first, *rest = user_ids.map do |id|
-        UserCustomField.includes(:user).find_by!(name: 'import_id', value: id).user
-      end
+      first, *rest =
+        user_ids.map do |id|
+          UserCustomField.includes(:user).find_by!(name: "import_id", value: id).user
+        end
 
       rest.each do |dup|
         UserMerger.new(dup, first).merge!
         first.reload
-        printf '.'
+        printf "."
       end
 
       print "\n%6d/%6d - %6d/sec" % [i, count, i.to_f / (Time.now - start)] if i % 10 == 0
@@ -744,13 +750,11 @@ class BulkImport::VBulletin < BulkImport::Base
   end
 
   def save_duplicated_users
-    File.open('duplicated_users.json', 'w+') do |f|
-      f.puts @user_ids_by_email.to_json
-    end
+    File.open("duplicated_users.json", "w+") { |f| f.puts @user_ids_by_email.to_json }
   end
 
   def read_duplicated_users
-    @user_ids_by_email = JSON.parse File.read('duplicated_users.json')
+    @user_ids_by_email = JSON.parse File.read("duplicated_users.json")
   end
 
   def extract_pm_title(title)
@@ -759,17 +763,26 @@ class BulkImport::VBulletin < BulkImport::Base
 
   def parse_birthday(birthday)
     return if birthday.blank?
-    date_of_birth = Date.strptime(birthday.gsub(/[^\d-]+/, ""), "%m-%d-%Y") rescue nil
+    date_of_birth =
+      begin
+        Date.strptime(birthday.gsub(/[^\d-]+/, ""), "%m-%d-%Y")
+      rescue StandardError
+        nil
+      end
     return if date_of_birth.nil?
-    date_of_birth.year < 1904 ? Date.new(1904, date_of_birth.month, date_of_birth.day) : date_of_birth
+    if date_of_birth.year < 1904
+      Date.new(1904, date_of_birth.month, date_of_birth.day)
+    else
+      date_of_birth
+    end
   end
 
   def print_status(current, max, start_time = nil)
     if start_time.present?
       elapsed_seconds = Time.now - start_time
-      elements_per_minute = '[%.0f items/min]  ' % [current / elapsed_seconds.to_f * 60]
+      elements_per_minute = "[%.0f items/min]  " % [current / elapsed_seconds.to_f * 60]
     else
-      elements_per_minute = ''
+      elements_per_minute = ""
     end
 
     print "\r%9d / %d (%5.1f%%)  %s" % [current, max, current / max.to_f * 100, elements_per_minute]
@@ -782,7 +795,6 @@ class BulkImport::VBulletin < BulkImport::Base
   def mysql_query(sql)
     @client.query(sql)
   end
-
 end
 
 BulkImport::VBulletin.new.run

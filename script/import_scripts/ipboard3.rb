@@ -5,19 +5,19 @@ require "reverse_markdown"
 require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 
 class ImportScripts::IPBoard3 < ImportScripts::Base
-
-  BATCH_SIZE  ||= 5000
+  BATCH_SIZE ||= 5000
   UPLOADS_DIR ||= "/path/to/uploads"
 
   def initialize
     super
 
-    @client = Mysql2::Client.new(
-      host: ENV["DB_HOST"] || "localhost",
-      username: ENV["DB_USER"] || "root",
-      password: ENV["DB_PW"],
-      database: ENV["DB_NAME"],
-    )
+    @client =
+      Mysql2::Client.new(
+        host: ENV["DB_HOST"] || "localhost",
+        username: ENV["DB_USER"] || "root",
+        password: ENV["DB_PW"],
+        database: ENV["DB_NAME"],
+      )
 
     @client.query("SET character_set_results = binary")
   end
@@ -39,7 +39,7 @@ class ImportScripts::IPBoard3 < ImportScripts::Base
     total_users = mysql_query("SELECT COUNT(*) count FROM members").first["count"]
 
     batches(BATCH_SIZE) do |offset|
-      users = mysql_query(<<~SQL
+      users = mysql_query(<<~SQL).to_a
         SELECT member_id id
              , name
              , email
@@ -59,7 +59,6 @@ class ImportScripts::IPBoard3 < ImportScripts::Base
          ORDER BY member_id
          LIMIT #{BATCH_SIZE}
       SQL
-      ).to_a
 
       break if users.empty?
 
@@ -67,7 +66,9 @@ class ImportScripts::IPBoard3 < ImportScripts::Base
 
       create_users(users, total: total_users, offset: offset) do |u|
         next if user_id_from_imported_user_id(u["id"])
-        %W{name email title pp_about_me}.each { |k| u[k]&.encode!("utf-8", "utf-8", invalid: :replace, undef: :replace, replace: "") }
+        %W[name email title pp_about_me].each do |k|
+          u[k]&.encode!("utf-8", "utf-8", invalid: :replace, undef: :replace, replace: "")
+        end
         next if u["name"].blank? && !Email.is_valid?(u["email"])
 
         {
@@ -77,30 +78,38 @@ class ImportScripts::IPBoard3 < ImportScripts::Base
           created_at: Time.zone.at(u["joined"]),
           registration_ip_address: u["ip_address"],
           title: CGI.unescapeHTML(u["title"].presence || ""),
-          date_of_birth: (Date.parse(u["date_of_birth"]) rescue nil),
+          date_of_birth:
+            (
+              begin
+                Date.parse(u["date_of_birth"])
+              rescue StandardError
+                nil
+              end
+            ),
           last_seen_at: Time.zone.at(u["last_activity"]),
           admin: !!(u["g_title"] =~ /admin/i),
           moderator: !!(u["g_title"] =~ /moderator/i),
           bio_raw: clean_up(u["pp_about_me"]),
-          post_create_action: proc do |new_user|
-            if u["member_banned"] == 1
-              new_user.update(suspended_at: DateTime.now, suspended_till: 100.years.from_now)
-            elsif u["pp_main_photo"].present?
-              path = File.join(UPLOADS_DIR, u["pp_main_photo"])
-              if File.exist?(path)
-                begin
-                  upload = create_upload(new_user.id, path, File.basename(path))
-                  if upload.persisted?
-                    new_user.create_user_avatar
-                    new_user.user_avatar.update(custom_upload_id: upload.id)
-                    new_user.update(uploaded_avatar_id: upload.id)
+          post_create_action:
+            proc do |new_user|
+              if u["member_banned"] == 1
+                new_user.update(suspended_at: DateTime.now, suspended_till: 100.years.from_now)
+              elsif u["pp_main_photo"].present?
+                path = File.join(UPLOADS_DIR, u["pp_main_photo"])
+                if File.exist?(path)
+                  begin
+                    upload = create_upload(new_user.id, path, File.basename(path))
+                    if upload.persisted?
+                      new_user.create_user_avatar
+                      new_user.user_avatar.update(custom_upload_id: upload.id)
+                      new_user.update(uploaded_avatar_id: upload.id)
+                    end
+                  rescue StandardError
+                    # don't care
                   end
-                rescue
-                  # don't care
                 end
               end
-            end
-          end
+            end,
         }
       end
     end
@@ -109,10 +118,11 @@ class ImportScripts::IPBoard3 < ImportScripts::Base
   def import_categories
     puts "", "importing categories..."
 
-    categories = mysql_query("SELECT id, parent_id, name, description, position FROM forums ORDER BY id").to_a
+    categories =
+      mysql_query("SELECT id, parent_id, name, description, position FROM forums ORDER BY id").to_a
 
     parent_categories = categories.select { |c| c["parent_id"] == -1 }
-    child_categories  = categories.select { |c| c["parent_id"] != -1 }
+    child_categories = categories.select { |c| c["parent_id"] != -1 }
 
     create_categories(parent_categories) do |c|
       next if category_id_from_imported_category_id(c["id"])
@@ -142,7 +152,7 @@ class ImportScripts::IPBoard3 < ImportScripts::Base
     @closed_topic_ids = []
 
     last_topic_id = -1
-    total_topics = mysql_query(<<~SQL
+    total_topics = mysql_query(<<~SQL).first["count"]
       SELECT COUNT(*) count
         FROM topics
         JOIN posts ON tid = topic_id
@@ -152,10 +162,9 @@ class ImportScripts::IPBoard3 < ImportScripts::Base
          AND approved = 1
          AND queued = 0
     SQL
-    ).first["count"]
 
     batches(BATCH_SIZE) do |offset|
-      topics = mysql_query(<<~SQL
+      topics = mysql_query(<<~SQL).to_a
         SELECT tid id
              , title
              , state
@@ -176,7 +185,6 @@ class ImportScripts::IPBoard3 < ImportScripts::Base
          ORDER BY tid
          LIMIT #{BATCH_SIZE}
       SQL
-      ).to_a
 
       break if topics.empty?
 
@@ -206,17 +214,16 @@ class ImportScripts::IPBoard3 < ImportScripts::Base
     puts "", "importing posts..."
 
     last_post_id = -1
-    total_posts = mysql_query(<<~SQL
+    total_posts = mysql_query(<<~SQL).first["count"]
       SELECT COUNT(*) count
         FROM posts
        WHERE new_topic = 0
          AND pdelete_time = 0
          AND queued = 0
     SQL
-    ).first["count"]
 
     batches(BATCH_SIZE) do |offset|
-      posts = mysql_query(<<~SQL
+      posts = mysql_query(<<~SQL).to_a
         SELECT pid id
              , author_id
              , post_date
@@ -230,7 +237,6 @@ class ImportScripts::IPBoard3 < ImportScripts::Base
          ORDER BY pid
          LIMIT #{BATCH_SIZE}
       SQL
-      ).to_a
 
       break if posts.empty?
 
@@ -276,17 +282,16 @@ class ImportScripts::IPBoard3 < ImportScripts::Base
     puts "", "import personal topics..."
 
     last_personal_topic_id = -1
-    total_personal_topics = mysql_query(<<~SQL
+    total_personal_topics = mysql_query(<<~SQL).first["count"]
       SELECT COUNT(*) count
         FROM message_topics
         JOIN message_posts ON msg_topic_id = mt_id
        WHERE mt_is_deleted = 0
          AND msg_is_first_post = 1
     SQL
-    ).first["count"]
 
     batches(BATCH_SIZE) do |offset|
-      personal_topics = mysql_query(<<~SQL
+      personal_topics = mysql_query(<<~SQL).to_a
         SELECT mt_id id
              , mt_date
              , mt_title
@@ -302,7 +307,6 @@ class ImportScripts::IPBoard3 < ImportScripts::Base
          ORDER BY mt_id
          LIMIT #{BATCH_SIZE}
       SQL
-      ).to_a
 
       break if personal_topics.empty?
 
@@ -312,7 +316,8 @@ class ImportScripts::IPBoard3 < ImportScripts::Base
         next if post_id_from_imported_post_id("pt-#{pt["id"]}")
         user_id = user_id_from_imported_user_id(pt["mt_starter_id"]) || -1
 
-        user_ids = [pt["mt_to_member_id"]] + pt["mt_invited_members"].scan(/i:(\d+);/).flatten.map(&:to_i)
+        user_ids =
+          [pt["mt_to_member_id"]] + pt["mt_invited_members"].scan(/i:(\d+);/).flatten.map(&:to_i)
         user_ids.map! { |id| user_id_from_imported_user_id(id) }
         user_ids.compact!
         user_ids.uniq!
@@ -334,10 +339,13 @@ class ImportScripts::IPBoard3 < ImportScripts::Base
     puts "", "importing personal posts..."
 
     last_personal_post_id = -1
-    total_personal_posts = mysql_query("SELECT COUNT(*) count FROM message_posts WHERE msg_is_first_post = 0").first["count"]
+    total_personal_posts =
+      mysql_query("SELECT COUNT(*) count FROM message_posts WHERE msg_is_first_post = 0").first[
+        "count"
+      ]
 
     batches(BATCH_SIZE) do |offset|
-      personal_posts = mysql_query(<<~SQL
+      personal_posts = mysql_query(<<~SQL).to_a
         SELECT msg_id id
              , msg_topic_id
              , msg_date
@@ -349,7 +357,6 @@ class ImportScripts::IPBoard3 < ImportScripts::Base
          ORDER BY msg_id
          LIMIT #{BATCH_SIZE}
       SQL
-      ).to_a
 
       break if personal_posts.empty?
 
@@ -374,27 +381,32 @@ class ImportScripts::IPBoard3 < ImportScripts::Base
   def clean_up(raw, user_id = -1)
     raw.encode!("utf-8", "utf-8", invalid: :replace, undef: :replace, replace: "")
 
-    raw.gsub!(/<(.+)>&nbsp;<\/\1>/, "\n\n")
+    raw.gsub!(%r{<(.+)>&nbsp;</\1>}, "\n\n")
 
     doc = Nokogiri::HTML5.fragment(raw)
 
-    doc.css("blockquote.ipsBlockquote").each do |bq|
-      post_id = post_id_from_imported_post_id(bq["data-cid"])
-      if post = Post.find_by(id: post_id)
-        bq.replace %{<br>[quote="#{post.user.username},post:#{post.post_number},topic:#{post.topic_id}"]\n#{bq.inner_html}\n[/quote]<br>}
+    doc
+      .css("blockquote.ipsBlockquote")
+      .each do |bq|
+        post_id = post_id_from_imported_post_id(bq["data-cid"])
+        if post = Post.find_by(id: post_id)
+          bq.replace %{<br>[quote="#{post.user.username},post:#{post.post_number},topic:#{post.topic_id}"]\n#{bq.inner_html}\n[/quote]<br>}
+        end
       end
-    end
 
     markdown = ReverseMarkdown.convert(doc.to_html)
 
     markdown.gsub!(/\[attachment=(\d+):.+\]/) do
-      if a = mysql_query("SELECT attach_file, attach_location FROM attachments WHERE attach_id = #{$1}").first
+      if a =
+           mysql_query(
+             "SELECT attach_file, attach_location FROM attachments WHERE attach_id = #{$1}",
+           ).first
         path = File.join(UPLOADS_DIR, a["attach_location"])
         if File.exist?(path)
           begin
             upload = create_upload(user_id, path, a["attach_file"])
             return html_for_upload(upload, a["attach_file"]) if upload.persisted?
-          rescue
+          rescue StandardError
           end
         end
       end
@@ -406,7 +418,6 @@ class ImportScripts::IPBoard3 < ImportScripts::Base
   def mysql_query(sql)
     @client.query(sql)
   end
-
 end
 
 ImportScripts::IPBoard3.new.perform

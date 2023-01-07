@@ -7,14 +7,17 @@ require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 # user documentation: https://meta.discourse.org/t/how-to-migrate-import-from-vanilla-to-discourse/27273
 
 class ImportScripts::Vanilla < ImportScripts::Base
-
   def initialize
     super
 
     @vanilla_file = ARGV[0]
-    raise ArgumentError.new('Vanilla file argument missing. Provide full path to vanilla csv file.') if @vanilla_file.blank?
+    if @vanilla_file.blank?
+      raise ArgumentError.new(
+              "Vanilla file argument missing. Provide full path to vanilla csv file.",
+            )
+    end
 
-    @use_lastest_activity_as_user_bio = true if ARGV.include?('use-latest-activity-as-user-bio')
+    @use_lastest_activity_as_user_bio = true if ARGV.include?("use-latest-activity-as-user-bio")
   end
 
   def execute
@@ -34,7 +37,9 @@ class ImportScripts::Vanilla < ImportScripts::Base
   private
 
   def check_file_exist
-    raise ArgumentError.new("File does not exist: #{@vanilla_file}") unless File.exist?(@vanilla_file)
+    unless File.exist?(@vanilla_file)
+      raise ArgumentError.new("File does not exist: #{@vanilla_file}")
+    end
   end
 
   def parse_file
@@ -65,7 +70,10 @@ class ImportScripts::Vanilla < ImportScripts::Base
         next if useless_tables.include?(table)
         # parse the data
         puts "parsing #{table}..."
-        parsed_data = CSV.parse(data.join("\n"), headers: true, header_converters: :symbol).map { |row| row.to_hash }
+        parsed_data =
+          CSV
+            .parse(data.join("\n"), headers: true, header_converters: :symbol)
+            .map { |row| row.to_hash }
         instance_variable_set("@#{table}".to_sym, parsed_data)
       end
     end
@@ -73,11 +81,14 @@ class ImportScripts::Vanilla < ImportScripts::Base
 
   def read_file
     puts "reading file..."
-    string = File.read(@vanilla_file).gsub("\\N", "")
-      .gsub(/\\$\n/m, "\\n")
-      .gsub("\\,", ",")
-      .gsub(/(?<!\\)\\"/, '""')
-      .gsub(/\\\\\\"/, '\\""')
+    string =
+      File
+        .read(@vanilla_file)
+        .gsub("\\N", "")
+        .gsub(/\\$\n/m, "\\n")
+        .gsub("\\,", ",")
+        .gsub(/(?<!\\)\\"/, '""')
+        .gsub(/\\\\\\"/, '\\""')
     StringIO.new(string)
   end
 
@@ -106,8 +117,16 @@ class ImportScripts::Vanilla < ImportScripts::Base
         created_at: parse_date(user[:date_inserted]),
         bio_raw: clean_up(bio_raw),
         avatar_url: user[:photo],
-        moderator: @user_roles.select { |ur| ur[:user_id] == user[:user_id] }.map { |ur| ur[:role_id] }.include?(moderator_role_id),
-        admin: @user_roles.select { |ur| ur[:user_id] == user[:user_id] }.map { |ur| ur[:role_id] }.include?(admin_role_id),
+        moderator:
+          @user_roles
+            .select { |ur| ur[:user_id] == user[:user_id] }
+            .map { |ur| ur[:role_id] }
+            .include?(moderator_role_id),
+        admin:
+          @user_roles
+            .select { |ur| ur[:user_id] == user[:user_id] }
+            .map { |ur| ur[:role_id] }
+            .include?(admin_role_id),
       }
 
       u
@@ -143,7 +162,8 @@ class ImportScripts::Vanilla < ImportScripts::Base
     c = {
       id: category[:category_id],
       name: category[:name],
-      user_id: user_id_from_imported_user_id(category[:insert_user_id]) || Discourse::SYSTEM_USER_ID,
+      user_id:
+        user_id_from_imported_user_id(category[:insert_user_id]) || Discourse::SYSTEM_USER_ID,
       position: category[:sort].to_i,
       created_at: parse_category_date(category[:date_inserted]),
       description: clean_up(category[:description]),
@@ -164,7 +184,8 @@ class ImportScripts::Vanilla < ImportScripts::Base
     create_posts(@discussions) do |discussion|
       {
         id: "discussion#" + discussion[:discussion_id],
-        user_id: user_id_from_imported_user_id(discussion[:insert_user_id]) || Discourse::SYSTEM_USER_ID,
+        user_id:
+          user_id_from_imported_user_id(discussion[:insert_user_id]) || Discourse::SYSTEM_USER_ID,
         title: discussion[:name],
         category: category_id_from_imported_category_id(discussion[:category_id]),
         raw: clean_up(discussion[:body]),
@@ -181,7 +202,8 @@ class ImportScripts::Vanilla < ImportScripts::Base
 
       {
         id: "comment#" + comment[:comment_id],
-        user_id: user_id_from_imported_user_id(comment[:insert_user_id]) || Discourse::SYSTEM_USER_ID,
+        user_id:
+          user_id_from_imported_user_id(comment[:insert_user_id]) || Discourse::SYSTEM_USER_ID,
         topic_id: t[:topic_id],
         raw: clean_up(comment[:body]),
         created_at: parse_date(comment[:date_inserted]),
@@ -196,20 +218,30 @@ class ImportScripts::Vanilla < ImportScripts::Base
       next if conversation[:first_message_id].blank?
 
       # list all other user ids in the conversation
-      user_ids_in_conversation = @user_conversations.select { |uc| uc[:conversation_id] == conversation[:conversation_id] && uc[:user_id] != conversation[:insert_user_id] }
-        .map { |uc| uc[:user_id] }
+      user_ids_in_conversation =
+        @user_conversations
+          .select do |uc|
+            uc[:conversation_id] == conversation[:conversation_id] &&
+              uc[:user_id] != conversation[:insert_user_id]
+          end
+          .map { |uc| uc[:user_id] }
       # retrieve their emails
-      user_emails_in_conversation = @users.select { |u| user_ids_in_conversation.include?(u[:user_id]) }
-        .map { |u| u[:email] }
+      user_emails_in_conversation =
+        @users.select { |u| user_ids_in_conversation.include?(u[:user_id]) }.map { |u| u[:email] }
       # retrieve their usernames from the database
-      target_usernames = User.joins(:user_emails)
-        .where(user_emails: { email: user_emails_in_conversation })
-        .pluck(:username)
+      target_usernames =
+        User
+          .joins(:user_emails)
+          .where(user_emails: { email: user_emails_in_conversation })
+          .pluck(:username)
 
       next if target_usernames.blank?
 
       user = find_user_by_import_id(conversation[:insert_user_id]) || Discourse.system_user
-      first_message = @conversation_messages.select { |cm| cm[:message_id] == conversation[:first_message_id] }.first
+      first_message =
+        @conversation_messages
+          .select { |cm| cm[:message_id] == conversation[:first_message_id] }
+          .first
 
       {
         id: "conversation#" + conversation[:conversation_id],
@@ -229,12 +261,15 @@ class ImportScripts::Vanilla < ImportScripts::Base
     @conversation_messages.reject! { |cm| first_message_ids.include?(cm[:message_id]) }
 
     create_posts(@conversation_messages) do |message|
-      next unless t = topic_lookup_from_imported_post_id("conversation#" + message[:conversation_id])
+      unless t = topic_lookup_from_imported_post_id("conversation#" + message[:conversation_id])
+        next
+      end
 
       {
         archetype: Archetype.private_message,
         id: "message#" + message[:message_id],
-        user_id: user_id_from_imported_user_id(message[:insert_user_id]) || Discourse::SYSTEM_USER_ID,
+        user_id:
+          user_id_from_imported_user_id(message[:insert_user_id]) || Discourse::SYSTEM_USER_ID,
         topic_id: t[:topic_id],
         raw: clean_up(message[:body]),
         created_at: parse_date(message[:date_inserted]),
@@ -248,13 +283,13 @@ class ImportScripts::Vanilla < ImportScripts::Base
 
   def clean_up(raw)
     return "" if raw.blank?
-    raw.gsub("\\n", "\n")
-      .gsub(/<\/?pre\s*>/i, "\n```\n")
-      .gsub(/<\/?code\s*>/i, "`")
+    raw
+      .gsub("\\n", "\n")
+      .gsub(%r{</?pre\s*>}i, "\n```\n")
+      .gsub(%r{</?code\s*>}i, "`")
       .gsub("&lt;", "<")
       .gsub("&gt;", ">")
   end
-
 end
 
 ImportScripts::Vanilla.new.perform

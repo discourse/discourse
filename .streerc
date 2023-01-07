@@ -5,5 +5,4 @@
 --ignore-files=config/*
 --ignore-files=db/*
 --ignore-files=lib/*
---ignore-files=script/*
 --ignore-files=spec/*
