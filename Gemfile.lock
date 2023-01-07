@@ -301,6 +301,7 @@ GEM
     parser (3.2.0.0)
       ast (~> 2.4.1)
     pg (1.4.5)
+    prettier_print (1.2.0)
     progress (3.6.0)
     pry (0.14.1)
       coderay (~> 1.1)
@@ -408,7 +409,7 @@ GEM
       unicode-display_width (>= 1.4.0, < 3.0)
     rubocop-ast (1.24.1)
       parser (>= 3.1.1.0)
-    rubocop-discourse (3.0.1)
+    rubocop-discourse (3.0.2)
       rubocop (>= 1.1.0)
       rubocop-rspec (>= 2.0.0)
     rubocop-rspec (2.16.0)
@@ -460,6 +461,9 @@ GEM
       sprockets (>= 3.0.0)
     sshkey (2.0.0)
     stackprof (0.2.23)
+    syntax_tree (5.2.0)
+      prettier_print (>= 1.2.0)
+    syntax_tree-disable_ternary (1.0.0)
     test-prof (1.1.0)
     thor (1.2.1)
     tilt (2.0.11)
@@ -627,6 +631,8 @@ DEPENDENCIES
   sprockets-rails
   sshkey
   stackprof
+  syntax_tree
+  syntax_tree-disable_ternary
   test-prof
   thor
   uglifier

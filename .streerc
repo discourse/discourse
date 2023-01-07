@@ -1,2 +1,10 @@
 --print-width=100
---plugins=plugin/trailing_comma
+--plugins=plugin/trailing_comma,disable_ternary
+--ignore-files=Gemfile
+--ignore-files=app/*
+--ignore-files=config/*
+--ignore-files=db/*
+--ignore-files=lib/*
+--ignore-files=plugins/*
+--ignore-files=script/*
+--ignore-files=spec/*
