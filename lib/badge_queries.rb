@@ -166,7 +166,7 @@ module BadgeQueries
         AND u2.trust_level >= 0
         AND u2.silenced_till IS NULL
         GROUP BY invited_by_id
-        HAVING COUNT(*) >= 1
+        HAVING COUNT(*) >= #{count.to_i}
       ) AND u.active AND u.silenced_till IS NULL AND u.id > 0 AND
       (:backfill OR u.id IN (:user_ids) )
     SQL
