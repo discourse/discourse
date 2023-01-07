@@ -153,7 +153,7 @@ module BadgeQueries
 
   def self.invite_badge(count, trust_level)
     <<~SQL
-      SELECT u.id user_id, current_timestamp granted_at 
+      SELECT u.id user_id, current_timestamp granted_at
       FROM users u
       WHERE u.id IN (
         SELECT invited_by_id
