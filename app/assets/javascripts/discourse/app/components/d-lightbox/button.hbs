@@ -1,0 +1,11 @@
+<button
+  type="button"
+  class="btn btn-flat btn--{{@name}} {{@class}}"
+  title={{i18n (concat "experimental_lightbox.buttons." @name)}}
+  {{on "click" @onClick passive=false capture=false}}
+  ...attributes
+>
+  <span aria-hidden="true">
+    {{d-icon @icon}}
+  </span>
+</button>
