@@ -142,6 +142,7 @@ module SvgSprite
         hourglass-start
         id-card
         image
+        images
         inbox
         info-circle
         italic
@@ -180,6 +181,8 @@ module SvgSprite
         reply
         rocket
         search
+        search-plus
+        search-minus
         share
         shield-alt
         sign-in-alt
