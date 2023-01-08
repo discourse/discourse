@@ -4006,6 +4006,21 @@ en:
       content_load_error: '<a href="%url%">The content</a> could not be loaded.'
       image_load_error: '<a href="%url%">The image</a> could not be loaded.'
 
+    experimental_lightbox:
+      image_load_error: "The image could not be loaded."
+      screen_reader_image_title: "Image %{current} of %{total}: %{title}"
+      buttons:
+        next: "Next (Right or down arrow key)"
+        previous: "Previous (Left or up arrow key)"
+        close: "Close (Esc)"
+        download: "Download image"
+        newtab: "Open image in a new tab"
+        zoom: "Zoom image in/out (Z key)"
+        rotate: "Rotate image (R key)"
+        fullscreen: "Toggle browser full screen mode (M key)"
+        carousel: "Display all images in a carousel (A key)"
+        retry: "Retry loading the image"
+
     cannot_render_video: This video cannot be rendered because your browser does not support the codec.
 
     keyboard_shortcuts_help:
