@@ -1,0 +1,69 @@
+<div
+  data-lightbox-body
+  class="d-lightbox__content__body"
+  tabindex="-1"
+  {{on "touchstart" @onTouchstart passive=true capture=true}}
+  {{on "touchend" @onTouchend passive=true capture=true}}
+  {{on "click" @toggleZoom passive=true}}
+>
+  {{#if @shouldDisplayMainImageArrows}}
+    <DLightbox::Button
+      data-lightbox-previous-button
+      @name="previous"
+      @class="d-lightbox__content__body__previous-button"
+      @icon={{@previousButtonIcon}}
+      @onClick={{@showPreviousItem}}
+    />
+  {{/if}}
+  {{#if @isLoading}}
+    <span
+      data-lightbox-loading-spinner
+      class="d-lightbox__content__body__loading-spinner"
+    >
+      {{loading-spinner size="large"}}
+    </span>
+  {{else if @hasLoadingError}}
+    <span
+      data-lightbox-error-message
+      class="d-lightbox__content__body__error-message"
+    >
+      <DLightbox::Button
+        data-lightbox-retry-button
+        @name="retry"
+        @class="d-lightbox__content__body__retry-button"
+        @icon="redo"
+        @onClick={{@reloadImage}}
+      />
+      <span>{{i18n "experimental_lightbox.image_load_error"}}</span>
+    </span>
+  {{else if @isZoomed}}
+    <div
+      data-lightbox-zoomed-image-container
+      class="d-lightbox__content__body__zoomed-image-container"
+      tabindex="-1"
+      {{did-insert @centerZoomedBackgroundPosition}}
+      {{on "mousemove" @zoomOnMouseover passive=true capture=true}}
+    ></div>
+  {{else}}
+    <DLightbox::Backdrop @close={{@close}} />
+    <img
+      data-lightbox-main-image
+      aria-hidden="true"
+      draggable="false"
+      fetchPriority="high"
+      decoding="async"
+      tabindex="-1"
+      class="d-lightbox__content__body__main-image"
+      src={{@currentItem.fullsizeURL}}
+    >
+  {{/if}}
+  {{#if @shouldDisplayMainImageArrows}}
+    <DLightbox::Button
+      data-lightbox-next-button
+      @name="next"
+      @class="d-lightbox__content__body__next-button"
+      @icon={{@nextButtonIcon}}
+      @onClick={{@showNextItem}}
+    />
+  {{/if}}
+</div>
