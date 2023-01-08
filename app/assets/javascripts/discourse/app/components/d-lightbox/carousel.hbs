@@ -1,0 +1,49 @@
+<div
+  data-lightbox-carousel
+  class="d-lightbox__content__carousel"
+>
+  {{#if @shouldDisplayCarouselArrows}}
+    <DLightbox::Button
+      data-lightbox-carousel-previous-button
+      @class="d-lightbox__content__carousel__previous-button"
+      @name="previous"
+      @icon={{@previousButtonIcon}}
+      @onClick={{@showPreviousItem}}
+    />
+  {{/if}}
+  <div
+    data-lightbox-carousel-items
+    class="d-lightbox__content__carousel__carousel-items"
+    tabindex="-1"
+    role="list"
+    aria-hidden="true"
+    {{on "click" @showSelectedImage passive=true capture=true}}
+    {{on "focus" @showSelectedImage passive=true capture=true}}
+  >
+    {{#each @items as |item|}}
+      <img
+        data-lightbox-carousel-item={{if (eq item.index @currentIndex) "current" ""}}
+        fetchPriority="low"
+        decoding="async"
+        loading="lazy"
+        tabindex="-1"
+        src={{item.smallURL}}
+        data-lightbox-item-index={{item.index}}
+        style={{html-safe item.cssVars}}
+        class={{concat
+          "d-lightbox__content__carousel__carousel-items__item"
+          (if (eq item.index @currentIndex) "--is-current active")
+        }}
+      >
+    {{/each}}
+  </div>
+  {{#if @shouldDisplayCarouselArrows}}
+    <DLightbox::Button
+      data-lightbox-carousel-next-button
+      @class="d-lightbox__content__carousel__next-button"
+      @name="next"
+      @icon={{@nextButtonIcon}}
+      @onClick={{@showNextItem}}
+    />
+  {{/if}}
+</div>
