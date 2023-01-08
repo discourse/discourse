@@ -235,7 +235,7 @@ RSpec.describe "Navigation", type: :system, js: true do
         chat_page.open_from_header
 
         expect(page).to have_current_path(
-          chat.channel_path(category_channel_2.slug, category_channel_2.id),
+          chat.c_path(category_channel_2.slug, category_channel_2.id),
         )
         expect(page).to have_content(category_channel_2.title)
       end

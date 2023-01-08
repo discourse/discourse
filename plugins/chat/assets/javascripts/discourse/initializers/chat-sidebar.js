@@ -56,7 +56,11 @@ export default {
             }
 
             get models() {
+<<<<<<< HEAD
               return this.channel.routeModels;
+=======
+              return [slugifyChannel(this.channel), this.channel.id];
+>>>>>>> 5e9506b3a0 (DEV: Rnemae channel path to just c)
             }
 
             get text() {

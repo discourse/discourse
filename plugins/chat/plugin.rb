@@ -668,7 +668,8 @@ after_initialize do
     get base_channel_route, to: redirect(redirect_base)
 
     %w[info info/about info/members info/settings].each do |route|
-      get "#{base_channel_route}/#{route}", to: redirect("#{redirect_base}/#{route}")
+      get "#{base_channel_route}/#{route}",
+        to: redirect("#{redirect_base}/#{route}")
     end
   end
 
