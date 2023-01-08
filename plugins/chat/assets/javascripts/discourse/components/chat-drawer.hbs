@@ -48,8 +48,8 @@
               <LinkTo
                 @route={{this.infoTabRoute}}
                 @models={{array
-                  this.chat.activeChannel.id
                   (slugify-channel this.chat.activeChannel)
+                  this.chat.activeChannel.id
                 }}
                 class="chat-drawer-header__title"
               >

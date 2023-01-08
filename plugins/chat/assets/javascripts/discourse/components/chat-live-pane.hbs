@@ -16,7 +16,7 @@
 
       <LinkTo
         @route={{this.infoTabRoute}}
-        @models={{array this.chatChannel.id (slugify-channel this.chatChannel)}}
+        @models={{array (slugify-channel this.chatChannel) this.chatChannel.id}}
         class="chat-channel-title-wrapper"
       >
         <ChatChannelTitle @channel={{this.chatChannel}} />

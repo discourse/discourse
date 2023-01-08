@@ -39,7 +39,7 @@ RSpec.describe "Sidebar navigation menu", type: :system, js: true do
 
       expect(page).to have_link(
         channel_1.name,
-        href: "/chat/channel/#{channel_1.id}/#{channel_1.slug}",
+        href: "/chat/c/#{channel_1.slug}/#{channel_1.id}",
       )
     end
 

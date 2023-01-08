@@ -57,7 +57,7 @@ export default {
             }
 
             get models() {
-              return [this.channel.id, slugifyChannel(this.channel)];
+              return [slugifyChannel(this.channel), this.channel.id];
             }
 
             get text() {
@@ -220,7 +220,7 @@ export default {
             }
 
             get models() {
-              return [this.channel.id, slugifyChannel(this.channel)];
+              return [slugifyChannel(this.channel), this.channel.id];
             }
 
             get title() {

@@ -306,7 +306,7 @@ export default Component.extend({
         return "/chat/draft-channel";
       case CHAT_VIEW:
         if (channel) {
-          return `/chat/channel/${channel.id}/${channel.slug || "-"}`;
+          return `/chat/c/${channel.slug || "-"}/${channel.id}`;
         } else {
           return "/chat";
         }

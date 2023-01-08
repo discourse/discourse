@@ -297,8 +297,8 @@ export default class Chat extends Service {
 
       return this.router.transitionTo(
         "chat.channel",
-        channel.id,
         slugifyChannel(channel),
+        channel.id,
         { queryParams }
       );
     } else {

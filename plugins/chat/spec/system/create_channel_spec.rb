@@ -165,7 +165,7 @@ RSpec.describe "Create channel", type: :system, js: true do
           expect(page).to have_content(category_1.name)
           created_channel = ChatChannel.find_by(chatable_id: category_1.id)
           expect(page).to have_current_path(
-            chat.channel_path(created_channel.id, created_channel.slug),
+            chat.channel_path(created_channel.slug, created_channel.id),
           )
         end
       end

@@ -21,7 +21,7 @@ const chatTranscriptRule = {
     const channelName = tagInfo.attrs.channel;
     const channelId = tagInfo.attrs.channelId;
     const channelLink = channelId
-      ? options.getURL(`/chat/channel/${channelId}/-`)
+      ? options.getURL(`/chat/c/-/${channelId}`)
       : null;
 
     if (!username || !messageIdStart || !messageTimeStart) {

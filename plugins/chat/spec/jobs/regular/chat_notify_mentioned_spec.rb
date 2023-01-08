@@ -215,7 +215,7 @@ describe Jobs::ChatNotifyMentioned do
       )
       expect(desktop_notification.data[:excerpt]).to eq(message.push_notification_excerpt)
       expect(desktop_notification.data[:post_url]).to eq(
-        "/chat/channel/#{public_channel.id}/#{public_channel.slug}?messageId=#{message.id}",
+        "/chat/c/#{public_channel.slug}/#{public_channel.id}?messageId=#{message.id}",
       )
     end
 
@@ -230,7 +230,7 @@ describe Jobs::ChatNotifyMentioned do
           tag: Chat::ChatNotifier.push_notification_tag(:mention, public_channel.id),
           excerpt: message.push_notification_excerpt,
           post_url:
-            "/chat/channel/#{public_channel.id}/#{public_channel.slug}?messageId=#{message.id}",
+            "/chat/c/#{public_channel.slug}/#{public_channel.id}?messageId=#{message.id}",
           translated_title: payload_translated_title,
         },
       )

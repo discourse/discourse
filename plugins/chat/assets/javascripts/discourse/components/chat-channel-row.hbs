@@ -1,6 +1,6 @@
 <LinkTo
   @route="chat.channel"
-  @models={{array @channel.id (or @channel.slug "-")}}
+  @models={{array (or @channel.slug "-") @channel.id}}
   class={{concat-class
     "chat-channel-row"
     (if @channel.focused "focused")

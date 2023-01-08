@@ -2,7 +2,7 @@ export default function () {
   this.route("chat", { path: "/chat" }, function () {
     this.route(
       "channel",
-      { path: "/channel/:channelId/:channelTitle" },
+      { path: "/c/:channelTitle/:channelId/" },
       function () {
         this.route("info", { path: "/info" }, function () {
           this.route("about", { path: "/about" });

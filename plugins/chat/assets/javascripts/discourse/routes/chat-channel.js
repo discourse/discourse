@@ -19,7 +19,7 @@ export default class ChatChannelRoute extends DiscourseRoute {
     const { channelTitle, messageId } = this.paramsFor(this.routeName);
     const slug = slugifyChannel(model);
     if (channelTitle !== slug) {
-      this.router.replaceWith("chat.channel.index", model.id, slug, {
+      this.router.replaceWith("chat.channel.index", slug, model.id, {
         queryParams: { messageId },
       });
     }
