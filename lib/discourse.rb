@@ -932,6 +932,13 @@ module Discourse
     STDERR.puts "Failed to report exception #{e} #{message}"
   end
 
+  def self.capture_exceptions(message: "", env: nil)
+    yield
+  rescue Exception => e
+    Discourse.warn_exception(e, message: message, env: env)
+    nil
+  end
+
   def self.deprecate(warning, drop_from: nil, since: nil, raise_error: false, output_in_test: false)
     location = caller_locations[1].yield_self { |l| "#{l.path}:#{l.lineno}:in \`#{l.label}\`" }
     warning = ["Deprecation notice:", warning]

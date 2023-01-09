@@ -11,8 +11,10 @@ module Jobs
           .where.not(remote_url: "")
 
       target_themes.each do |remote|
-        remote.update_remote_version
-        remote.save!
+        Discourse.capture_exceptions(message: "Error updating theme #{remote.id}") do
+          remote.update_remote_version
+          remote.save!
+        end
       end
     end
   end
