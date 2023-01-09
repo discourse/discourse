@@ -167,6 +167,23 @@ describe Chat::ChatChannelArchiveService do
         )
       end
 
+      it "does not continue archiving if the destination topic fails to be created" do
+        SiteSetting.max_emojis_in_title = 1
+
+        create_messages(3) && start_archive
+        @channel_archive.update!(destination_topic_title: "Wow this is the new title :tada: :joy:")
+        subject.new(@channel_archive).execute
+        expect(@channel_archive.reload.complete?).to eq(false)
+        expect(@channel_archive.reload.failed?).to eq(true)
+        expect(@channel_archive.archive_error).to eq("Title can't have more than 1 emoji")
+
+        pm_topic = Topic.private_messages.last
+        expect(pm_topic.title).to eq(
+          I18n.t("system_messages.chat_channel_archive_failed.subject_template"),
+        )
+        expect(pm_topic.first_post.raw).to include("Title can't have more than 1 emoji")
+      end
+
       describe "channel members" do
         before do
           create_messages(3)

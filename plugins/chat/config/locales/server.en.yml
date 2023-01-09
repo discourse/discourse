@@ -35,6 +35,15 @@ en:
       subject_template: "Chat channel archive failed"
       text_body_template: |
         Archiving the chat channel **\#%{channel_name}** has failed. %{messages_archived} messages have been archived. Partially archived messages were copied into the topic [%{topic_title}](%{topic_url}). Visit the channel at %{channel_url} to retry.
+    chat_channel_archive_failed_no_topic:
+      title: "Chat Channel Archive Failed"
+      subject_template: "Chat channel archive failed"
+      text_body_template: |
+        Archiving the chat channel **\#%{channel_name}** has failed. No messages have been archived. The topic was not created successfully for the following reasons:
+
+          %{topic_validation_errors}
+
+        Visit the channel at %{channel_url} to retry.
 
   chat:
     deleted_chat_username: deleted

@@ -48,6 +48,21 @@ class Chat::ChatChannelArchiveService
     chat_channel.chat_channel_archive
   end
 
+  def self.validate_topic_params(guardian, topic_params)
+    topic_creator =
+      TopicCreator.new(
+        Discourse.system_user,
+        guardian,
+        {
+          title: topic_params[:topic_title],
+          category: topic_params[:category_id],
+          tags: topic_params[:tags],
+          import_mode: true,
+        },
+      )
+    [topic_creator.valid?, topic_creator.errors.full_messages]
+  end
+
   attr_reader :chat_channel_archive, :chat_channel, :chat_channel_title
 
   def initialize(chat_channel_archive)
@@ -60,7 +75,7 @@ class Chat::ChatChannelArchiveService
     chat_channel_archive.update(archive_error: nil)
 
     begin
-      ensure_destination_topic_exists!
+      return if !ensure_destination_topic_exists!
 
       Rails.logger.info(
         "Creating posts from message batches for #{chat_channel_title} archive, #{chat_channel_archive.total_messages} messages to archive (#{chat_channel_archive.total_messages / ARCHIVED_MESSAGES_PER_POST} posts).",
@@ -95,7 +110,7 @@ class Chat::ChatChannelArchiveService
       kick_all_users
       complete_archive
     rescue => err
-      notify_archiver(:failed, error: err)
+      notify_archiver(:failed, error_message: err.message)
       raise err
     end
   end
@@ -144,22 +159,37 @@ class Chat::ChatChannelArchiveService
             },
           )
 
-        chat_channel_archive.update!(destination_topic: topic_creator.create)
+        if topic_creator.valid?
+          chat_channel_archive.update!(destination_topic: topic_creator.create)
+        else
+          Rails.logger.info("Destination topic for #{chat_channel_title} archive was not valid.")
+          notify_archiver(
+            :failed_no_topic,
+            error_message: topic_creator.errors.full_messages.join("\n"),
+          )
+        end
       end
 
-      Rails.logger.info("Creating first post for #{chat_channel_title} archive.")
-      create_post(
-        I18n.t(
-          "chat.channel.archive.first_post_raw",
-          channel_name: chat_channel_title,
-          channel_url: chat_channel.url,
-        ),
-      )
+      if chat_channel_archive.destination_topic.present?
+        Rails.logger.info("Creating first post for #{chat_channel_title} archive.")
+        create_post(
+          I18n.t(
+            "chat.channel.archive.first_post_raw",
+            channel_name: chat_channel_title,
+            channel_url: chat_channel.url,
+          ),
+        )
+      end
     else
       Rails.logger.info("Topic already exists for #{chat_channel_title} archive.")
     end
 
-    update_destination_topic_status
+    if chat_channel_archive.destination_topic.present?
+      update_destination_topic_status
+      return true
+    end
+
+    false
   end
 
   def update_destination_topic_status
@@ -198,16 +228,17 @@ class Chat::ChatChannelArchiveService
     notify_archiver(:success)
   end
 
-  def notify_archiver(result, error: nil)
+  def notify_archiver(result, error_message: nil)
     base_translation_params = {
       channel_name: chat_channel_title,
-      topic_title: chat_channel_archive.destination_topic.title,
-      topic_url: chat_channel_archive.destination_topic.url,
+      topic_title: chat_channel_archive.destination_topic&.title,
+      topic_url: chat_channel_archive.destination_topic&.url,
+      topic_validation_errors: result == :failed_no_topic ? error_message : nil,
     }
 
-    if result == :failed
+    if result == :failed || result == :failed_no_topic
       Discourse.warn_exception(
-        error,
+        error_message,
         message: "Error when archiving chat channel #{chat_channel_title}.",
         env: {
           chat_channel_id: chat_channel.id,
@@ -219,10 +250,17 @@ class Chat::ChatChannelArchiveService
           channel_url: chat_channel.url,
           messages_archived: chat_channel_archive.archived_messages,
         )
-      chat_channel_archive.update(archive_error: error.message)
+      chat_channel_archive.update(archive_error: error_message)
+      message_translation_key =
+        case result
+        when :failed
+          :chat_channel_archive_failed
+        when :failed_no_topic
+          :chat_channel_archive_failed_no_topic
+        end
       SystemMessage.create_from_system_user(
         chat_channel_archive.archived_by,
-        :chat_channel_archive_failed,
+        message_translation_key,
         error_translation_params,
       )
     else
@@ -235,7 +273,7 @@ class Chat::ChatChannelArchiveService
 
     ChatPublisher.publish_archive_status(
       chat_channel,
-      archive_status: result,
+      archive_status: result != :success ? :failed : :success,
       archived_messages: chat_channel_archive.archived_messages,
       archive_topic_id: chat_channel_archive.destination_topic_id,
       total_messages: chat_channel_archive.total_messages,
