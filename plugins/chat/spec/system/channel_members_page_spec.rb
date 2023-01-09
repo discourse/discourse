@@ -26,9 +26,7 @@ RSpec.describe "Channel - Info - Members page", type: :system, js: true do
       it "redirects to about page" do
         chat_page.visit_channel_members(channel_1)
 
-        expect(page).to have_current_path(
-          "/chat/c/#{channel_1.slug}/#{channel_1.id}/info/about",
-        )
+        expect(page).to have_current_path("/chat/c/#{channel_1.slug}/#{channel_1.id}/info/about")
       end
     end
 
