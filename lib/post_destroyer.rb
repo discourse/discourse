@@ -194,10 +194,11 @@ class PostDestroyer
         end
       end
 
-      if @post.topic && @post.is_first_post?
-        permanent? ? @post.topic.destroy! : @post.topic.trash!(@user)
-        PublishedPage.unpublish!(@user, @post.topic) if @post.topic.published_page
+      if @post.is_first_post? && topic = Topic.with_deleted.find_by(id: @post.topic_id)
+        permanent? ? topic.destroy! : topic.trash!(@user)
+        PublishedPage.unpublish!(@user, topic) if topic.published_page
       end
+
       TopicLink.where(link_post_id: @post.id).destroy_all
       update_associated_category_latest_topic
       update_user_counts if !permanent?

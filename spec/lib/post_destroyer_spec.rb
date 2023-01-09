@@ -1116,13 +1116,32 @@ RSpec.describe PostDestroyer do
       expect(post_revision.reload.persisted?).to be true
     end
 
-    it "always destroy the post when the force_destroy option is passed" do
+    it "destroys the post when force_destroy is true for soft deleted topics" do
+      post = Fabricate(:post)
+      topic = post.topic
+
+      PostDestroyer.new(moderator, post).destroy
+      post = Post.with_deleted.find_by(id: post.id)
+      expect(post).not_to eq(nil)
+
+      PostDestroyer.new(moderator, post, force_destroy: true).destroy
+      post = Post.with_deleted.find_by(id: post.id)
+      expect(post).to eq(nil)
+
+      topic = Topic.with_deleted.find_by(id: topic.id)
+      expect(topic).to eq(nil)
+    end
+
+    it "destroys the post when force_destroy is true for regular posts" do
       PostDestroyer.new(moderator, reply, force_destroy: true).destroy
       expect { reply.reload }.to raise_error(ActiveRecord::RecordNotFound)
 
       regular_post = Fabricate(:post)
+      topic = regular_post.topic
+
       PostDestroyer.new(moderator, regular_post, force_destroy: true).destroy
       expect { regular_post.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      expect { topic.reload }.to raise_error(ActiveRecord::RecordNotFound)
     end
   end
 
