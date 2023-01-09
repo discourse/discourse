@@ -67,16 +67,15 @@ class UserSerializer < UserCardSerializer
                      :sidebar_list_destination,
                      :display_sidebar_tags
 
-  untrusted_attributes :bio_raw,
-                       :bio_cooked,
-                       :profile_background_upload_url,
-                       ###
-                       ### ATTRIBUTES
-                       ###
-                       #
-                       def user_notification_schedule
-                         object.user_notification_schedule || UserNotificationSchedule::DEFAULT
-                       end
+  untrusted_attributes :bio_raw, :bio_cooked, :profile_background_upload_url
+
+  ###
+  ### ATTRIBUTES
+  ###
+  #
+  def user_notification_schedule
+    object.user_notification_schedule || UserNotificationSchedule::DEFAULT
+  end
 
   def mailing_list_posts_per_day
     val = Post.estimate_posts_per_day

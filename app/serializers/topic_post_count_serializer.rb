@@ -9,10 +9,11 @@ class TopicPostCountSerializer < BasicUserSerializer
              :flair_bg_color,
              :admin,
              :moderator,
-             :trust_level,
-             def id
-               object[:user].id
-             end
+             :trust_level
+
+  def id
+    object[:user].id
+  end
 
   def username
     object[:user].username
