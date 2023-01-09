@@ -726,15 +726,16 @@ class TopicView
 
     uniq_usernames = mentions.values.flatten.uniq
     users = User.where(username: uniq_usernames)
-    if SiteSetting.enable_user_status
-      users = users.includes(:user_status)
-    end
+    users = users.includes(:user_status) if SiteSetting.enable_user_status
     users = users.to_h { |u| [u.username, u] }
 
-    @mentioned_users = mentions.map do |post_id, usernames|
-      post_mentions = usernames.map { |u| users[u] }.compact
-      [post_id, post_mentions]
-    end.to_h
+    @mentioned_users =
+      mentions
+        .map do |post_id, usernames|
+          post_mentions = usernames.map { |u| users[u] }.compact
+          [post_id, post_mentions]
+        end
+        .to_h
   end
 
   def calculate_page

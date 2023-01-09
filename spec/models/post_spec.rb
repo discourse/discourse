@@ -641,8 +641,8 @@ RSpec.describe Post do
     fab!(:newuser) { Fabricate(:user, trust_level: TrustLevel[0]) }
     let(:post_with_one_mention) { post_with_body("@Jake is the person I'm mentioning", newuser) }
     let(:post_with_two_mentions) do
-        post_with_body("@Jake @Finn are the people I'm mentioning", newuser)
-      end
+      post_with_body("@Jake @Finn are the people I'm mentioning", newuser)
+    end
 
     context "with new user" do
       before do

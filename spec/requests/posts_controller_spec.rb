@@ -549,11 +549,21 @@ RSpec.describe PostsController do
         user1 = Fabricate(:user)
         user2 = Fabricate(:user)
 
-        put "/posts/#{post.id}.json", params: { post: { raw: "I am mentioning @#{user1.username}" } }
+        put "/posts/#{post.id}.json",
+            params: {
+              post: {
+                raw: "I am mentioning @#{user1.username}",
+              },
+            }
         expect(response.status).to eq(200)
         expect(response.parsed_body["post"]["mentioned_users"][0]["username"]).to eq(user1.username)
 
-        put "/posts/#{post.id}.json", params: { post: { raw: "I am mentioning @#{user2.username}" } }
+        put "/posts/#{post.id}.json",
+            params: {
+              post: {
+                raw: "I am mentioning @#{user2.username}",
+              },
+            }
         expect(response.status).to eq(200)
         expect(response.parsed_body["post"]["mentioned_users"][0]["username"]).to eq(user2.username)
       end
