@@ -117,6 +117,7 @@ module Jobs
     def update_post(post)
       post.raw = update_raw(post.raw)
       post.cooked = update_cooked(post.cooked)
+      invalidate_mentions_cache(post.id)
 
       post.update_columns(raw: post.raw, cooked: post.cooked)
 
@@ -202,6 +203,12 @@ module Jobs
       Post.where(topic_id: aside["data-topic"], post_number: aside["data-post"]).pluck_first(
         :user_id,
       ) == @user_id
+    end
+
+    private
+
+    def invalidate_mentions_cache(post_id)
+      Discourse.redis.hdel("post_mentions", post_id)
     end
   end
 end
