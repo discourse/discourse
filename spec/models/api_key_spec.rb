@@ -7,7 +7,7 @@ RSpec.describe ApiKey do
   it { is_expected.to belong_to :user }
   it { is_expected.to belong_to :created_by }
 
-  it 'generates a key when saving' do
+  it "generates a key when saving" do
     api_key = ApiKey.new
     api_key.save!
     initial_key = api_key.key
@@ -19,7 +19,7 @@ RSpec.describe ApiKey do
     expect(api_key.reload.key).to eq(initial_key)
   end
 
-  it 'does not have the key when loading later from the database' do
+  it "does not have the key when loading later from the database" do
     api_key = ApiKey.create!
     expect(api_key.key_available?).to eq(true)
     expect(api_key.key.length).to eq(64)
@@ -77,8 +77,8 @@ RSpec.describe ApiKey do
     expect(used_recently.revoked_at).to eq(nil)
   end
 
-  describe 'API Key scope mappings' do
-    it 'maps api_key permissions' do
+  describe "API Key scope mappings" do
+    it "maps api_key permissions" do
       api_key_mappings = ApiKeyScope.scope_mappings[:topics]
 
       assert_responds_to(api_key_mappings.dig(:write, :actions))
@@ -88,7 +88,7 @@ RSpec.describe ApiKey do
 
     def assert_responds_to(mappings)
       mappings.each do |m|
-        controller, method = m.split('#')
+        controller, method = m.split("#")
         controller_name = "#{controller.capitalize}Controller"
         expect(controller_name.constantize.method_defined?(method)).to eq(true)
       end
@@ -96,70 +96,68 @@ RSpec.describe ApiKey do
   end
 
   describe "#request_allowed?" do
-    let(:request) {
+    let(:request) do
       ActionDispatch::TestRequest.create.tap do |request|
         request.path_parameters = { controller: "topics", action: "show", topic_id: "3" }
         request.remote_addr = "133.45.67.99"
       end
-    }
+    end
 
     let(:env) { request.env }
 
     let(:key) { ApiKey.new(api_key_scopes: [scope]) }
 
-    context 'with regular scopes' do
+    context "with regular scopes" do
       let(:scope) do
-        ApiKeyScope.new(resource: 'topics', action: 'read', allowed_parameters: { topic_id: '3' })
+        ApiKeyScope.new(resource: "topics", action: "read", allowed_parameters: { topic_id: "3" })
       end
 
-      it 'allows the request if there are no allowed IPs' do
+      it "allows the request if there are no allowed IPs" do
         key.allowed_ips = nil
         key.api_key_scopes = []
         expect(key.request_allowed?(env)).to eq(true)
       end
 
-      it 'rejects the request if the IP is not allowed' do
+      it "rejects the request if the IP is not allowed" do
         key.allowed_ips = %w[115.65.76.87]
         expect(key.request_allowed?(env)).to eq(false)
       end
 
-      it 'allow the request if there are not allowed params' do
+      it "allow the request if there are not allowed params" do
         scope.allowed_parameters = nil
         expect(key.request_allowed?(env)).to eq(true)
       end
 
-      it 'rejects the request when params are different' do
+      it "rejects the request when params are different" do
         request.path_parameters = { controller: "topics", action: "show", topic_id: "4" }
         expect(key.request_allowed?(env)).to eq(false)
       end
 
-      it 'accepts the request if one of the parameters match' do
+      it "accepts the request if one of the parameters match" do
         request.path_parameters = { controller: "topics", action: "show", topic_id: "4" }
         scope.allowed_parameters = { topic_id: %w[3 4] }
         expect(key.request_allowed?(env)).to eq(true)
       end
 
-      it 'allow the request when the scope has an alias' do
+      it "allow the request when the scope has an alias" do
         request.path_parameters = { controller: "topics", action: "show", id: "3" }
         expect(key.request_allowed?(env)).to eq(true)
       end
 
-      it 'rejects the request when the main parameter and the alias are both used' do
+      it "rejects the request when the main parameter and the alias are both used" do
         request.path_parameters = { controller: "topics", action: "show", topic_id: "3", id: "3" }
         expect(key.request_allowed?(env)).to eq(false)
       end
     end
 
-    context 'with global:read scope' do
-      let(:scope) do
-        ApiKeyScope.new(resource: 'global', action: 'read')
-      end
+    context "with global:read scope" do
+      let(:scope) { ApiKeyScope.new(resource: "global", action: "read") }
 
-      it 'allows only GET requests for global:read' do
-        request.request_method = 'GET'
+      it "allows only GET requests for global:read" do
+        request.request_method = "GET"
         expect(key.request_allowed?(env)).to eq(true)
 
-        request.request_method = 'POST'
+        request.request_method = "POST"
         expect(key.request_allowed?(env)).to eq(false)
       end
     end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe UploadsController, type: [:multisite, :request] do
+RSpec.describe UploadsController, type: %i[multisite request] do
   let!(:user) { Fabricate(:user) }
   let(:upload) { Fabricate(:upload_s3) }
 

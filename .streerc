@@ -3,4 +3,3 @@
 --ignore-files=app/*
 --ignore-files=db/*
 --ignore-files=lib/*
---ignore-files=spec/*

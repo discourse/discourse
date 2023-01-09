@@ -16,11 +16,12 @@ module DiscourseEvent::TestHelper
     @events_trigger = nil
 
     if event_name
-      events_trigger = events_trigger.filter do |event|
-        next if event[:event_name] != event_name
-        next if args && event[:params] != args
-        true
-      end
+      events_trigger =
+        events_trigger.filter do |event|
+          next if event[:event_name] != event_name
+          next if args && event[:params] != args
+          true
+        end
     end
 
     events_trigger

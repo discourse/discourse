@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 # rubocop:disable Discourse/OnlyTopLevelMultisiteSpecs
 
-require_relative 'shared_context_for_backup_restore'
+require_relative "shared_context_for_backup_restore"
 
 RSpec.describe BackupRestore::UploadsRestorer do
   include_context "with shared stuff"
@@ -21,11 +21,19 @@ RSpec.describe BackupRestore::UploadsRestorer do
     expect_remaps(
       source_site_name: source_site_name,
       target_site_name: target_site_name,
-      metadata: metadata
+      metadata: metadata,
     )
   end
 
-  def expect_remap(source_site_name: nil, target_site_name:, metadata: [], from:, to:, regex: false, &block)
+  def expect_remap(
+    source_site_name: nil,
+    target_site_name:,
+    metadata: [],
+    from:,
+    to:,
+    regex: false,
+    &block
+  )
     expect_remaps(
       source_site_name: source_site_name,
       target_site_name: target_site_name,
@@ -54,19 +62,25 @@ RSpec.describe BackupRestore::UploadsRestorer do
       if remaps.blank?
         DbHelper.expects(:remap).never
       else
-        DbHelper.expects(:remap).with do |from, to, args|
-          args[:excluded_tables]&.include?("backup_metadata")
-          remaps.shift == { from: from, to: to }
-        end.times(remaps.size)
+        DbHelper
+          .expects(:remap)
+          .with do |from, to, args|
+            args[:excluded_tables]&.include?("backup_metadata")
+            remaps.shift == { from: from, to: to }
+          end
+          .times(remaps.size)
       end
 
       if regex_remaps.blank?
         DbHelper.expects(:regexp_replace).never
       else
-        DbHelper.expects(:regexp_replace).with do |from, to, args|
-          args[:excluded_tables]&.include?("backup_metadata")
-          regex_remaps.shift == { from: from, to: to }
-        end.times(regex_remaps.size)
+        DbHelper
+          .expects(:regexp_replace)
+          .with do |from, to, args|
+            args[:excluded_tables]&.include?("backup_metadata")
+            regex_remaps.shift == { from: from, to: to }
+          end
+          .times(regex_remaps.size)
       end
 
       if target_site_name == "default"
@@ -85,13 +99,14 @@ RSpec.describe BackupRestore::UploadsRestorer do
   def uploads_path(database)
     path = File.join("uploads", database)
 
-    path = File.join(path, "test_#{ENV['TEST_ENV_NUMBER'].presence || '0'}")
+    path = File.join(path, "test_#{ENV["TEST_ENV_NUMBER"].presence || "0"}")
 
     "/#{path}/"
   end
 
   def s3_url_regex(bucket, path)
-    Regexp.escape("//#{bucket}") + %q*\.s3(?:\.dualstack\.[a-z0-9\-]+?|[.\-][a-z0-9\-]+?)?\.amazonaws\.com* + Regexp.escape(path)
+    Regexp.escape("//#{bucket}") +
+      %q*\.s3(?:\.dualstack\.[a-z0-9\-]+?|[.\-][a-z0-9\-]+?)?\.amazonaws\.com* + Regexp.escape(path)
   end
 
   describe "uploads" do
@@ -99,8 +114,8 @@ RSpec.describe BackupRestore::UploadsRestorer do
     let!(:no_multisite) { { name: "multisite", value: false } }
     let!(:source_db_name) { { name: "db_name", value: "foo" } }
     let!(:base_url) { { name: "base_url", value: "https://test.localhost/forum" } }
-    let!(:no_cdn_url)  { { name: "cdn_url", value: nil } }
-    let!(:cdn_url)  { { name: "cdn_url", value: "https://some-cdn.example.com" } }
+    let!(:no_cdn_url) { { name: "cdn_url", value: nil } }
+    let!(:cdn_url) { { name: "cdn_url", value: "https://some-cdn.example.com" } }
     let(:target_site_name) { target_site_type == multisite ? "second" : "default" }
     let(:target_hostname) { target_site_type == multisite ? "test2.localhost" : "test.localhost" }
 
@@ -127,7 +142,7 @@ RSpec.describe BackupRestore::UploadsRestorer do
           source_site_name: "foo",
           target_site_name: "default",
           from: "/uploads/foo/",
-          to: uploads_path("default")
+          to: uploads_path("default"),
         )
       end
     end
@@ -142,13 +157,16 @@ RSpec.describe BackupRestore::UploadsRestorer do
         post.link_post_uploads
 
         FileHelper.stubs(:download).returns(file_from_fixtures("logo.png"))
-        FileStore::S3Store.any_instance.stubs(:store_upload).returns do
-          File.join(
-            "//s3-upload-bucket.s3.dualstack.us-east-1.amazonaws.com",
-            target_site_type == multisite ? "/uploads/#{target_site_name}" : "",
-            "original/1X/bc975735dfc6409c1c2aa5ebf2239949bcbdbd65.png"
-          )
-        end
+        FileStore::S3Store
+          .any_instance
+          .stubs(:store_upload)
+          .returns do
+            File.join(
+              "//s3-upload-bucket.s3.dualstack.us-east-1.amazonaws.com",
+              target_site_type == multisite ? "/uploads/#{target_site_name}" : "",
+              "original/1X/bc975735dfc6409c1c2aa5ebf2239949bcbdbd65.png",
+            )
+          end
         UserAvatar.import_url_for_user("logo.png", Fabricate(:user))
       end
 
@@ -158,10 +176,11 @@ RSpec.describe BackupRestore::UploadsRestorer do
         with_temp_uploads_directory do |directory, path|
           store_class.any_instance.expects(:copy_from).with(path).once
 
-          expect { subject.restore(directory) }
-            .to change { OptimizedImage.count }.by_at_most(-1)
-            .and change { Jobs::CreateAvatarThumbnails.jobs.size }.by(1)
-            .and change { Post.where(baked_version: nil).count }.by(1)
+          expect { subject.restore(directory) }.to change { OptimizedImage.count }.by_at_most(
+            -1,
+          ).and change { Jobs::CreateAvatarThumbnails.jobs.size }.by(1).and change {
+                        Post.where(baked_version: nil).count
+                      }.by(1)
         end
       end
 
@@ -171,10 +190,11 @@ RSpec.describe BackupRestore::UploadsRestorer do
         with_temp_uploads_directory(with_optimized: true) do |directory, path|
           store_class.any_instance.expects(:copy_from).with(path).once
 
-          expect { subject.restore(directory) }
-            .to not_change { OptimizedImage.count }
-            .and not_change { Jobs::CreateAvatarThumbnails.jobs.size }
-            .and change { Post.where(baked_version: nil).count }.by(1)
+          expect { subject.restore(directory) }.to not_change {
+            OptimizedImage.count
+          }.and not_change { Jobs::CreateAvatarThumbnails.jobs.size }.and change {
+                        Post.where(baked_version: nil).count
+                      }.by(1)
         end
       end
     end
@@ -187,14 +207,14 @@ RSpec.describe BackupRestore::UploadsRestorer do
           target_site_name: target_site_name,
           metadata: [source_site_type, base_url],
           from: "https://test.localhost/forum",
-          to: "http://localhost"
+          to: "http://localhost",
         )
       end
 
       it "doesn't remap when `cdn_url` in `backup_metadata` is empty" do
         expect_no_remap(
           target_site_name: target_site_name,
-          metadata: [source_site_type, no_cdn_url]
+          metadata: [source_site_type, no_cdn_url],
         )
       end
 
@@ -206,8 +226,8 @@ RSpec.describe BackupRestore::UploadsRestorer do
           metadata: [source_site_type, cdn_url],
           remaps: [
             { from: "https://some-cdn.example.com/", to: "https://new-cdn.example.com/" },
-            { from: "some-cdn.example.com", to: "new-cdn.example.com" }
-          ]
+            { from: "some-cdn.example.com", to: "new-cdn.example.com" },
+          ],
         )
       end
 
@@ -220,8 +240,8 @@ RSpec.describe BackupRestore::UploadsRestorer do
           metadata: [source_site_type, cdn_url],
           remaps: [
             { from: "https://some-cdn.example.com/", to: "//example.com/discourse/" },
-            { from: "some-cdn.example.com", to: "example.com" }
-          ]
+            { from: "some-cdn.example.com", to: "example.com" },
+          ],
         )
       end
     end
@@ -230,22 +250,20 @@ RSpec.describe BackupRestore::UploadsRestorer do
       it "doesn't remap when `s3_base_url` in `backup_metadata` is empty" do
         expect_no_remap(
           target_site_name: target_site_name,
-          metadata: [source_site_type, s3_base_url]
+          metadata: [source_site_type, s3_base_url],
         )
       end
 
       it "doesn't remap when `s3_cdn_url` in `backup_metadata` is empty" do
         expect_no_remap(
           target_site_name: target_site_name,
-          metadata: [source_site_type, s3_cdn_url]
+          metadata: [source_site_type, s3_cdn_url],
         )
       end
     end
 
     context "when currently stored locally" do
-      before do
-        SiteSetting.enable_s3_uploads = false
-      end
+      before { SiteSetting.enable_s3_uploads = false }
 
       let!(:store_class) { FileStore::LocalStore }
 
@@ -297,7 +315,9 @@ RSpec.describe BackupRestore::UploadsRestorer do
         end
 
         context "with uploads previously stored on S3" do
-          let!(:s3_base_url) { { name: "s3_base_url", value: "//old-bucket.s3-us-east-1.amazonaws.com" } }
+          let!(:s3_base_url) do
+            { name: "s3_base_url", value: "//old-bucket.s3-us-east-1.amazonaws.com" }
+          end
           let!(:s3_cdn_url) { { name: "s3_cdn_url", value: "https://s3-cdn.example.com" } }
 
           shared_examples "regular site remaps from S3" do
@@ -307,7 +327,7 @@ RSpec.describe BackupRestore::UploadsRestorer do
                 metadata: [no_multisite, s3_base_url],
                 from: s3_url_regex("old-bucket", "/"),
                 to: uploads_path(target_site_name),
-                regex: true
+                regex: true,
               )
             end
 
@@ -316,9 +336,12 @@ RSpec.describe BackupRestore::UploadsRestorer do
                 target_site_name: target_site_name,
                 metadata: [no_multisite, s3_cdn_url],
                 remaps: [
-                  { from: "https://s3-cdn.example.com/", to: "//#{target_hostname}#{uploads_path(target_site_name)}" },
-                  { from: "s3-cdn.example.com", to: target_hostname }
-                ]
+                  {
+                    from: "https://s3-cdn.example.com/",
+                    to: "//#{target_hostname}#{uploads_path(target_site_name)}",
+                  },
+                  { from: "s3-cdn.example.com", to: target_hostname },
+                ],
               )
             end
           end
@@ -330,7 +353,7 @@ RSpec.describe BackupRestore::UploadsRestorer do
                 metadata: [source_db_name, multisite, s3_base_url],
                 from: s3_url_regex("old-bucket", "/"),
                 to: "/",
-                regex: true
+                regex: true,
               )
             end
 
@@ -340,8 +363,8 @@ RSpec.describe BackupRestore::UploadsRestorer do
                 metadata: [source_db_name, multisite, s3_cdn_url],
                 remaps: [
                   { from: "https://s3-cdn.example.com/", to: "//#{target_hostname}/" },
-                  { from: "s3-cdn.example.com", to: target_hostname }
-                ]
+                  { from: "s3-cdn.example.com", to: target_hostname },
+                ],
               )
             end
           end
@@ -386,9 +409,7 @@ RSpec.describe BackupRestore::UploadsRestorer do
     end
 
     context "when currently stored on S3" do
-      before do
-        setup_s3
-      end
+      before { setup_s3 }
 
       let!(:store_class) { FileStore::S3Store }
 
@@ -440,7 +461,9 @@ RSpec.describe BackupRestore::UploadsRestorer do
         end
 
         context "with uploads previously stored on S3" do
-          let!(:s3_base_url) { { name: "s3_base_url", value: "//old-bucket.s3-us-east-1.amazonaws.com" } }
+          let!(:s3_base_url) do
+            { name: "s3_base_url", value: "//old-bucket.s3-us-east-1.amazonaws.com" }
+          end
           let!(:s3_cdn_url) { { name: "s3_cdn_url", value: "https://s3-cdn.example.com" } }
 
           shared_examples "regular site remaps from S3" do
@@ -450,20 +473,26 @@ RSpec.describe BackupRestore::UploadsRestorer do
                 metadata: [no_multisite, s3_base_url],
                 from: s3_url_regex("old-bucket", "/"),
                 to: uploads_path(target_site_name),
-                regex: true
+                regex: true,
               )
             end
 
             it "remaps when `s3_cdn_url` changes" do
-              SiteSetting::Upload.expects(:s3_cdn_url).returns("https://new-s3-cdn.example.com").at_least_once
+              SiteSetting::Upload
+                .expects(:s3_cdn_url)
+                .returns("https://new-s3-cdn.example.com")
+                .at_least_once
 
               expect_remaps(
                 target_site_name: target_site_name,
                 metadata: [no_multisite, s3_cdn_url],
                 remaps: [
-                  { from: "https://s3-cdn.example.com/", to: "https://new-s3-cdn.example.com#{uploads_path(target_site_name)}" },
-                  { from: "s3-cdn.example.com", to: "new-s3-cdn.example.com" }
-                ]
+                  {
+                    from: "https://s3-cdn.example.com/",
+                    to: "https://new-s3-cdn.example.com#{uploads_path(target_site_name)}",
+                  },
+                  { from: "s3-cdn.example.com", to: "new-s3-cdn.example.com" },
+                ],
               )
             end
           end
@@ -475,21 +504,24 @@ RSpec.describe BackupRestore::UploadsRestorer do
                 metadata: [source_db_name, multisite, s3_base_url],
                 from: s3_url_regex("old-bucket", "/"),
                 to: "/",
-                regex: true
+                regex: true,
               )
             end
 
             context "when `s3_cdn_url` is configured" do
               it "remaps when `s3_cdn_url` changes" do
-                SiteSetting::Upload.expects(:s3_cdn_url).returns("http://new-s3-cdn.example.com").at_least_once
+                SiteSetting::Upload
+                  .expects(:s3_cdn_url)
+                  .returns("http://new-s3-cdn.example.com")
+                  .at_least_once
 
                 expect_remaps(
                   target_site_name: target_site_name,
                   metadata: [source_db_name, multisite, s3_cdn_url],
                   remaps: [
                     { from: "https://s3-cdn.example.com/", to: "//new-s3-cdn.example.com/" },
-                    { from: "s3-cdn.example.com", to: "new-s3-cdn.example.com" }
-                  ]
+                    { from: "s3-cdn.example.com", to: "new-s3-cdn.example.com" },
+                  ],
                 )
               end
             end
@@ -503,8 +535,8 @@ RSpec.describe BackupRestore::UploadsRestorer do
                   metadata: [source_db_name, multisite, s3_cdn_url],
                   remaps: [
                     { from: "https://s3-cdn.example.com/", to: "//#{target_hostname}/" },
-                    { from: "s3-cdn.example.com", to: target_hostname }
-                  ]
+                    { from: "s3-cdn.example.com", to: target_hostname },
+                  ],
                 )
               end
             end
@@ -593,7 +625,7 @@ RSpec.describe BackupRestore::UploadsRestorer do
       source_site_name: "xylan",
       target_site_name: "default",
       from: "/uploads/xylan/",
-      to: uploads_path("default")
+      to: uploads_path("default"),
     ) do |directory|
       FileUtils.mkdir_p(File.join(directory, "uploads", "PaxHeaders.27134"))
       FileUtils.mkdir_p(File.join(directory, "uploads", ".hidden"))

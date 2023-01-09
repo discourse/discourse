@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'theme_settings_manager'
+require "theme_settings_manager"
 
 RSpec.describe ThemeSettingsManager do
   let!(:theme) { Fabricate(:theme) }
@@ -156,7 +156,9 @@ RSpec.describe ThemeSettingsManager do
       upload_setting.value = upload.url
       theme.reload
 
-      expect(ThemeSetting.exists?(theme_id: theme.id, name: "upload_setting", value: upload.id.to_s)).to be_truthy
+      expect(
+        ThemeSetting.exists?(theme_id: theme.id, name: "upload_setting", value: upload.id.to_s),
+      ).to be_truthy
     end
 
     it "returns the CDN URL" do

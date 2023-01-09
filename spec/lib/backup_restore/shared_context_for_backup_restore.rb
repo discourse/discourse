@@ -2,9 +2,12 @@
 
 RSpec.shared_context "with shared stuff" do
   let!(:logger) do
-    Class.new do
-      def log(message, ex = nil); end
-    end.new
+    Class
+      .new do
+        def log(message, ex = nil)
+        end
+      end
+      .new
   end
 
   def expect_create_readonly_functions
@@ -33,13 +36,14 @@ RSpec.shared_context "with shared stuff" do
   end
 
   def expect_db_migrate
-    Discourse::Utils.expects(:execute_command).with do |env, *command, options|
-      env["SKIP_POST_DEPLOYMENT_MIGRATIONS"] == "0" &&
-        env["SKIP_OPTIMIZE_ICONS"] == "1" &&
-        env["DISABLE_TRANSLATION_OVERRIDES"] == "1" &&
-        command == ["rake", "db:migrate"] &&
-        options[:chdir] == Rails.root
-    end.once
+    Discourse::Utils
+      .expects(:execute_command)
+      .with do |env, *command, options|
+        env["SKIP_POST_DEPLOYMENT_MIGRATIONS"] == "0" && env["SKIP_OPTIMIZE_ICONS"] == "1" &&
+          env["DISABLE_TRANSLATION_OVERRIDES"] == "1" && command == %w[rake db:migrate] &&
+          options[:chdir] == Rails.root
+      end
+      .once
   end
 
   def expect_db_reconnect
@@ -76,11 +80,14 @@ RSpec.shared_context "with shared stuff" do
 
     Dir.mktmpdir do |root_directory|
       current_db = RailsMultisite::ConnectionManagement.current_db
-      file_handler = BackupRestore::BackupFileHandler.new(
-        logger, backup_filename, current_db,
-        root_tmp_directory: root_directory,
-        location: location
-      )
+      file_handler =
+        BackupRestore::BackupFileHandler.new(
+          logger,
+          backup_filename,
+          current_db,
+          root_tmp_directory: root_directory,
+          location: location,
+        )
       tmp_directory, db_dump_path = file_handler.decompress
 
       expected_tmp_path = File.join(root_directory, "tmp/restores", current_db, "2019-12-24-143148")
@@ -93,11 +100,14 @@ RSpec.shared_context "with shared stuff" do
       expect(File.exist?(File.join(tmp_directory, "meta.json"))).to eq(require_metadata_file)
 
       if require_uploads
-        expected_upload_paths ||= ["uploads/default/original/3X/b/d/bd269860bb508aebcb6f08fe7289d5f117830383.png"]
+        expected_upload_paths ||= [
+          "uploads/default/original/3X/b/d/bd269860bb508aebcb6f08fe7289d5f117830383.png",
+        ]
 
         expected_upload_paths.each do |upload_path|
           absolute_upload_path = File.join(tmp_directory, upload_path)
-          expect(File.exist?(absolute_upload_path)).to eq(true), "expected file #{upload_path} does not exist"
+          expect(File.exist?(absolute_upload_path)).to eq(true),
+          "expected file #{upload_path} does not exist"
           yield(absolute_upload_path) if block_given?
         end
       else
@@ -112,6 +122,10 @@ RSpec.shared_context "with shared stuff" do
 
     # We don't want to delete the directory unless it is empty, otherwise this could be annoying
     # when tests run for the "default" database in a development environment.
-    FileUtils.rmdir(target_directory) rescue nil
+    begin
+      FileUtils.rmdir(target_directory)
+    rescue StandardError
+      nil
+    end
   end
 end
