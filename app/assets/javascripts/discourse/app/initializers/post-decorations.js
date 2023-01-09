@@ -2,7 +2,7 @@ import { schedule } from "@ember/runloop";
 import discourseLater from "discourse-common/lib/later";
 import I18n from "I18n";
 import highlightSyntax from "discourse/lib/highlight-syntax";
-import lightbox from "discourse/lib/lightbox";
+import { default as lightbox } from "discourse/lib/lightbox";
 import { iconHTML, iconNode } from "discourse-common/lib/icon-library";
 import { setTextDirections } from "discourse/lib/text-direction";
 import { nativeLazyLoading } from "discourse/lib/lazy-load-images";
@@ -17,6 +17,9 @@ export default {
       const siteSettings = container.lookup("service:site-settings");
       const session = container.lookup("service:session");
       const site = container.lookup("service:site");
+      // will eventually just be called lightbox
+      const lightboxService = container.lookup("service:lightbox");
+
       api.decorateCookedElement(
         (elem) => {
           return highlightSyntax(elem, siteSettings, session);
@@ -26,12 +29,31 @@ export default {
         }
       );
 
-      api.decorateCookedElement(
-        (elem) => {
-          return lightbox(elem, siteSettings);
-        },
-        { id: "discourse-lightbox" }
-      );
+      if (siteSettings.enable_experimental_lightbox) {
+        api.decorateCookedElement(
+          (element, helper) => {
+            return helper
+              ? lightboxService.setupLightboxes({
+                  container: element,
+                  selector: "*:not(.spoiler):not(.spoiled) a.lightbox",
+                })
+              : null;
+          },
+          {
+            id: "experimental-discourse-lightbox",
+            onlyStream: true,
+          }
+        );
+
+        api.cleanupStream(lightboxService.cleanupLightboxes);
+      } else {
+        api.decorateCookedElement(
+          (elem) => {
+            return lightbox(elem, siteSettings);
+          },
+          { id: "discourse-lightbox" }
+        );
+      }
 
       if (siteSettings.support_mixed_text_direction) {
         api.decorateCookedElement(setTextDirections, {
