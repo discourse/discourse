@@ -16,7 +16,7 @@ module PageObjects
         find(".horizontal-overflow-nav__scroll-left").click
       end
 
-      INTERFACE_LINK_CSS_SELECTOR = ".nav-tracking"
+      INTERFACE_LINK_CSS_SELECTOR = ".user-nav__preferences-tracking"
 
       def has_interface_link_visible?
         horizontal_secondary_link_visible?(INTERFACE_LINK_CSS_SELECTOR, visible: true)
@@ -26,7 +26,7 @@ module PageObjects
         horizontal_secondary_link_visible?(INTERFACE_LINK_CSS_SELECTOR, visible: false)
       end
 
-      ACCOUNT_LINK_CSS_SELECTOR = ".nav-account"
+      ACCOUNT_LINK_CSS_SELECTOR = ".user-nav__preferences-account"
 
       def has_account_link_visible?
         horizontal_secondary_link_visible?(ACCOUNT_LINK_CSS_SELECTOR, visible: true)
