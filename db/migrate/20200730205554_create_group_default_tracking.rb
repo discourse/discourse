@@ -9,9 +9,9 @@ class CreateGroupDefaultTracking < ActiveRecord::Migration[6.0]
     end
 
     add_index :group_category_notification_defaults,
-      [:group_id, :category_id],
-      unique: true,
-      name: :idx_group_category_notification_defaults_unique
+              %i[group_id category_id],
+              unique: true,
+              name: :idx_group_category_notification_defaults_unique
 
     create_table :group_tag_notification_defaults do |t|
       t.integer :group_id, null: false
@@ -20,8 +20,8 @@ class CreateGroupDefaultTracking < ActiveRecord::Migration[6.0]
     end
 
     add_index :group_tag_notification_defaults,
-      [:group_id, :tag_id],
-      unique: true,
-      name: :idx_group_tag_notification_defaults_unique
+              %i[group_id tag_id],
+              unique: true,
+              name: :idx_group_tag_notification_defaults_unique
   end
 end
