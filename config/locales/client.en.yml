@@ -346,7 +346,6 @@ en:
       remove_reminder_keep_bookmark: "Remove reminder and keep bookmark"
       created_with_reminder: "You've bookmarked this post with a reminder %{date}. %{name}"
       created_with_reminder_generic: "You've bookmarked this with a reminder %{date}. %{name}"
-      remove: "Remove Bookmark"
       delete: "Delete Bookmark"
       confirm_delete: "Are you sure you want to delete this bookmark? The reminder will also be deleted."
       confirm_clear: "Are you sure you want to clear all your bookmarks from this topic?"
@@ -4353,7 +4352,7 @@ en:
       new_count:
         one: "%{count} new"
         other: "%{count} new"
-      toggle_section: "toggle section"
+      toggle_section: "Toggle section"
       more: "More"
       all_categories: "All categories"
       all_tags: "All tags"
@@ -4362,7 +4361,7 @@ en:
           header_link_text: "About"
         messages:
           header_link_text: "Messages"
-          header_action_title: "create a personal message"
+          header_action_title: "Create a personal message"
           links:
             inbox: "Inbox"
             sent: "Sent"
@@ -4379,7 +4378,7 @@ en:
           none: "You have not added any tags."
           click_to_get_started: "Click here to get started."
           header_link_text: "Tags"
-          header_action_title: "edit your sidebar tags"
+          header_action_title: "Edit your sidebar tags"
           configure_defaults: "Configure defaults"
         categories:
           links:
@@ -4389,29 +4388,33 @@ en:
           none: "You have not added any categories."
           click_to_get_started: "Click here to get started."
           header_link_text: "Categories"
-          header_action_title: "edit your sidebar categories"
+          header_action_title: "Edit your sidebar categories"
           configure_defaults: "Configure defaults"
         community:
           header_link_text: "Community"
-          header_action_title: "create a new topic"
+          header_action_title: "Create a topic"
           links:
             about:
               content: "About"
+              title: "More details about this site"
             admin:
               content: "Admin"
+              title: "Site settings and reports"
             badges:
               content: "Badges"
+              title: "All the badges available to earn"
             everything:
               content: "Everything"
               title: "All topics"
             faq:
               content: "FAQ"
+              title: "Guidelines for using this site"
             groups:
               content: "Groups"
-              title: "All groups"
+              title: "List of available user groups"
             users:
               content: "Users"
-              title: "All users"
+              title: "List of all users"
             my_posts:
               content: "My Posts"
               title: "My recent topic activity"
@@ -4421,7 +4424,7 @@ en:
                 other: "%{count} drafts"
             review:
               content: "Review"
-              title: "review"
+              title: "Flagged posts and other queued items"
               pending_count: "%{count} pending"
 
     welcome_topic_banner:
@@ -4899,7 +4902,6 @@ en:
 
       customize:
         title: "Customize"
-        long_title: "Site Customizations"
         preview: "preview"
         explain_preview: "See the site with this theme enabled"
         save: "Save"

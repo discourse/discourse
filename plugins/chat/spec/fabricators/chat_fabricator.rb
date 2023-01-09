@@ -76,9 +76,7 @@ end
 Fabricator(:chat_upload) do
   transient :user
 
-  user do
-    Fabricate(:user)
-  end
+  user { Fabricate(:user) }
 
   chat_message { |attrs| Fabricate(:chat_message, user: attrs[:user]) }
   upload { |attrs| Fabricate(:upload, user: attrs[:user]) }

@@ -11,10 +11,7 @@ module Jobs
       if prev_most_recent
         admin_ids.each do |admin_id|
           if DiscourseUpdates.get_last_viewed_feature_date(admin_id).blank?
-            DiscourseUpdates.bump_last_viewed_feature_date(
-              admin_id,
-              prev_most_recent["created_at"]
-            )
+            DiscourseUpdates.bump_last_viewed_feature_date(admin_id, prev_most_recent["created_at"])
           end
         end
       end
@@ -32,16 +29,15 @@ module Jobs
         most_recent_feature_date = Time.zone.parse(new_most_recent["created_at"])
         admin_ids.each do |admin_id|
           admin_last_viewed_feature_date = DiscourseUpdates.get_last_viewed_feature_date(admin_id)
-          if admin_last_viewed_feature_date.blank? || admin_last_viewed_feature_date < most_recent_feature_date
+          if admin_last_viewed_feature_date.blank? ||
+               admin_last_viewed_feature_date < most_recent_feature_date
             Notification.consolidate_or_create!(
               user_id: admin_id,
               notification_type: Notification.types[:new_features],
-              data: {}
+              data: {
+              },
             )
-            DiscourseUpdates.bump_last_viewed_feature_date(
-              admin_id,
-              new_most_recent["created_at"]
-            )
+            DiscourseUpdates.bump_last_viewed_feature_date(admin_id, new_most_recent["created_at"])
           end
         end
       end

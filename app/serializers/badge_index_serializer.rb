@@ -11,5 +11,4 @@ class BadgeIndexSerializer < BadgeSerializer
   def has_badge
     @options[:user_badges].include?(object.id)
   end
-
 end

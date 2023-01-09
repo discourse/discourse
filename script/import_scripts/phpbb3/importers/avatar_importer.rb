@@ -49,12 +49,12 @@ module ImportScripts::PhpBB3
 
     def get_avatar_path(avatar_type, filename)
       case avatar_type
-      when Constants::AVATAR_TYPE_UPLOADED, Constants::AVATAR_TYPE_STRING_UPLOADED then
-        filename.gsub!(/_[0-9]+\./, '.') # we need 1337.jpg, not 1337_2983745.jpg
-          get_uploaded_path(filename)
-      when Constants::AVATAR_TYPE_GALLERY, Constants::AVATAR_TYPE_STRING_GALLERY then
+      when Constants::AVATAR_TYPE_UPLOADED, Constants::AVATAR_TYPE_STRING_UPLOADED
+        filename.gsub!(/_[0-9]+\./, ".") # we need 1337.jpg, not 1337_2983745.jpg
+        get_uploaded_path(filename)
+      when Constants::AVATAR_TYPE_GALLERY, Constants::AVATAR_TYPE_STRING_GALLERY
         get_gallery_path(filename)
-      when Constants::AVATAR_TYPE_REMOTE, Constants::AVATAR_TYPE_STRING_REMOTE then
+      when Constants::AVATAR_TYPE_REMOTE, Constants::AVATAR_TYPE_STRING_REMOTE
         download_avatar(filename)
       else
         puts "Invalid avatar type #{avatar_type}. Skipping..."
@@ -67,12 +67,13 @@ module ImportScripts::PhpBB3
       max_image_size_kb = SiteSetting.max_image_size_kb.kilobytes
 
       begin
-        avatar_file = FileHelper.download(
-          url,
-          max_file_size: max_image_size_kb,
-          tmp_file_name: 'discourse-avatar',
-          follow_redirect: true
-        )
+        avatar_file =
+          FileHelper.download(
+            url,
+            max_file_size: max_image_size_kb,
+            tmp_file_name: "discourse-avatar",
+            follow_redirect: true,
+          )
       rescue StandardError => err
         warn "Error downloading avatar: #{err.message}. Skipping..."
         return nil
@@ -100,11 +101,11 @@ module ImportScripts::PhpBB3
 
     def is_allowed_avatar_type?(avatar_type)
       case avatar_type
-      when Constants::AVATAR_TYPE_UPLOADED, Constants::AVATAR_TYPE_STRING_UPLOADED then
+      when Constants::AVATAR_TYPE_UPLOADED, Constants::AVATAR_TYPE_STRING_UPLOADED
         @settings.import_uploaded_avatars
-      when Constants::AVATAR_TYPE_REMOTE, Constants::AVATAR_TYPE_STRING_REMOTE then
+      when Constants::AVATAR_TYPE_REMOTE, Constants::AVATAR_TYPE_STRING_REMOTE
         @settings.import_remote_avatars
-      when Constants::AVATAR_TYPE_GALLERY, Constants::AVATAR_TYPE_STRING_GALLERY then
+      when Constants::AVATAR_TYPE_GALLERY, Constants::AVATAR_TYPE_STRING_GALLERY
         @settings.import_gallery_avatars
       else
         false

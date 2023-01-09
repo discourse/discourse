@@ -12,5 +12,4 @@ class ExceptionsController < ApplicationController
   def not_found_body
     render html: build_not_found_page(status: 200)
   end
-
 end

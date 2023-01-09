@@ -28,9 +28,8 @@ class DetailedTagSerializer < TagSerializer
   private
 
   def category_ids
-    @_category_ids ||= object.categories.pluck(:id) +
-      object.tag_groups.includes(:categories).map do |tg|
-        tg.categories.map(&:id)
-      end.flatten
+    @_category_ids ||=
+      object.categories.pluck(:id) +
+        object.tag_groups.includes(:categories).map { |tg| tg.categories.map(&:id) }.flatten
   end
 end

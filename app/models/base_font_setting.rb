@@ -8,8 +8,6 @@ class BaseFontSetting < EnumSiteSetting
   end
 
   def self.values
-    @values ||= DiscourseFonts.fonts.map do |font|
-      { name: font[:name], value: font[:key] }
-    end
+    @values ||= DiscourseFonts.fonts.map { |font| { name: font[:name], value: font[:key] } }
   end
 end

@@ -11,7 +11,7 @@ class BreakUpThemesTable < ActiveRecord::Migration[4.2]
       t.timestamps null: false
     end
 
-    add_index :theme_fields, [:theme_id, :target, :name], unique: true
+    add_index :theme_fields, %i[theme_id target name], unique: true
 
     [
       [0, "embedded_scss", "embedded_scss"],
@@ -27,7 +27,6 @@ class BreakUpThemesTable < ActiveRecord::Migration[4.2]
       [1, "footer", "footer"],
       [2, "mobile_footer", "footer"],
     ].each do |target, value, name|
-
       execute <<SQL
       INSERT INTO theme_fields (
         theme_id,
@@ -43,14 +42,13 @@ SQL
       remove_column :themes, value
     end
 
-    %w{ head_tag_baked
-        body_tag_baked
-        header_baked
-        footer_baked
-        mobile_footer_baked
-        mobile_header_baked
-       }.each do |col|
-      remove_column :themes, col
-    end
+    %w[
+      head_tag_baked
+      body_tag_baked
+      header_baked
+      footer_baked
+      mobile_footer_baked
+      mobile_header_baked
+    ].each { |col| remove_column :themes, col }
   end
 end

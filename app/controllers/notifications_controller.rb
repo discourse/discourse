@@ -1,10 +1,9 @@
 # frozen_string_literal: true
 
 class NotificationsController < ApplicationController
-
   requires_login
-  before_action :ensure_admin, only: [:create, :update, :destroy]
-  before_action :set_notification, only: [:update, :destroy]
+  before_action :ensure_admin, only: %i[create update destroy]
+  before_action :set_notification, only: %i[update destroy]
 
   def index
     user =
@@ -20,9 +19,8 @@ class NotificationsController < ApplicationController
 
     if notification_types = params[:filter_by_types]&.split(",").presence
       notification_types.map! do |type|
-        Notification.types[type.to_sym] || (
-          raise Discourse::InvalidParameters.new("invalid notification type: #{type}")
-        )
+        Notification.types[type.to_sym] ||
+          (raise Discourse::InvalidParameters.new("invalid notification type: #{type}"))
       end
     end
 
@@ -35,7 +33,8 @@ class NotificationsController < ApplicationController
       if SiteSetting.legacy_navigation_menu?
         notifications = Notification.recent_report(current_user, limit, notification_types)
       else
-        notifications = Notification.prioritized_list(current_user, count: limit, types: notification_types)
+        notifications =
+          Notification.prioritized_list(current_user, count: limit, types: notification_types)
         # notification_types is blank for the "all notifications" user menu tab
         include_reviewables = notification_types.blank? && guardian.can_see_review_queue?
       end
@@ -47,7 +46,8 @@ class NotificationsController < ApplicationController
         end
       end
 
-      if !params.has_key?(:silent) && params[:bump_last_seen_reviewable] && !@readonly_mode && include_reviewables
+      if !params.has_key?(:silent) && params[:bump_last_seen_reviewable] && !@readonly_mode &&
+           include_reviewables
         current_user_id = current_user.id
         Scheduler::Defer.later "bump last seen reviewable for user" do
           # we lookup current_user again in the background thread to avoid
@@ -62,13 +62,13 @@ class NotificationsController < ApplicationController
 
       json = {
         notifications: serialize_data(notifications, NotificationSerializer),
-        seen_notification_id: current_user.seen_notification_id
+        seen_notification_id: current_user.seen_notification_id,
       }
 
       if include_reviewables
         json[:pending_reviewables] = Reviewable.basic_serializers_for_list(
           Reviewable.user_menu_list_for(current_user),
-          current_user
+          current_user,
         ).as_json
       end
 
@@ -76,10 +76,8 @@ class NotificationsController < ApplicationController
     else
       offset = params[:offset].to_i
 
-      notifications = Notification.where(user_id: user.id)
-        .visible
-        .includes(:topic)
-        .order(created_at: :desc)
+      notifications =
+        Notification.where(user_id: user.id).visible.includes(:topic).order(created_at: :desc)
 
       notifications = notifications.where(read: true) if params[:filter] == "read"
 
@@ -88,12 +86,14 @@ class NotificationsController < ApplicationController
       total_rows = notifications.dup.count
       notifications = notifications.offset(offset).limit(60)
       notifications = filter_inaccessible_notifications(notifications)
-      render_json_dump(notifications: serialize_data(notifications, NotificationSerializer),
-                       total_rows_notifications: total_rows,
-                       seen_notification_id: user.seen_notification_id,
-                       load_more_notifications: notifications_path(username: user.username, offset: offset + 60, filter: params[:filter]))
+      render_json_dump(
+        notifications: serialize_data(notifications, NotificationSerializer),
+        total_rows_notifications: total_rows,
+        seen_notification_id: user.seen_notification_id,
+        load_more_notifications:
+          notifications_path(username: user.username, offset: offset + 60, filter: params[:filter]),
+      )
     end
-
   end
 
   def mark_read
@@ -144,7 +144,15 @@ class NotificationsController < ApplicationController
   end
 
   def notification_params
-    params.permit(:notification_type, :user_id, :data, :read, :topic_id, :post_number, :post_action_id)
+    params.permit(
+      :notification_type,
+      :user_id,
+      :data,
+      :read,
+      :topic_id,
+      :post_number,
+      :post_action_id,
+    )
   end
 
   def render_notification

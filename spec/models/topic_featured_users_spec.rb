@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe TopicFeaturedUsers do
-  it 'ensures consistency' do
-
+  it "ensures consistency" do
     t = Fabricate(:topic)
     Fabricate(:post, topic: t, user: t.user)
     p2 = Fabricate(:post, topic: t)
@@ -10,11 +9,13 @@ RSpec.describe TopicFeaturedUsers do
     p4 = Fabricate(:post, topic: t)
     p5 = Fabricate(:post, topic: t)
 
-    t.update_columns(featured_user1_id: 66,
-                     featured_user2_id: 70,
-                     featured_user3_id: 12,
-                     featured_user4_id: 7,
-                     last_post_user_id: p5.user_id)
+    t.update_columns(
+      featured_user1_id: 66,
+      featured_user2_id: 70,
+      featured_user3_id: 12,
+      featured_user4_id: 7,
+      last_post_user_id: p5.user_id,
+    )
 
     TopicFeaturedUsers.ensure_consistency!
     t.reload

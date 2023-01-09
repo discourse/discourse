@@ -10,7 +10,7 @@ class CensoredWordsValidator < ActiveModel::EachValidator
       record.errors.add(
         attribute,
         :contains_censored_words,
-        censored_words: join_censored_words(censored_words)
+        censored_words: join_censored_words(censored_words),
       )
     end
   end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'post_item_excerpt'
+require_relative "post_item_excerpt"
 
 class AdminUserActionSerializer < ApplicationSerializer
   include PostItemExcerpt
@@ -24,7 +24,7 @@ class AdminUserActionSerializer < ApplicationSerializer
     :deleted_at,
     :deleted_by,
     :reply_to_post_number,
-    :action_type
+    :action_type,
   )
 
   def post_id
@@ -64,7 +64,8 @@ class AdminUserActionSerializer < ApplicationSerializer
   end
 
   def moderator_action
-    object.post_type == Post.types[:moderator_action] || object.post_type == Post.types[:small_action]
+    object.post_type == Post.types[:moderator_action] ||
+      object.post_type == Post.types[:small_action]
   end
 
   def deleted_by
@@ -76,9 +77,12 @@ class AdminUserActionSerializer < ApplicationSerializer
   end
 
   def action_type
-    object.user_actions.select { |ua| ua.user_id = object.user_id }
+    object
+      .user_actions
+      .select { |ua| ua.user_id = object.user_id }
       .select { |ua| [UserAction::REPLY, UserAction::RESPONSE].include? ua.action_type }
-      .first.try(:action_type)
+      .first
+      .try(:action_type)
   end
 
   # we need this to handle deleted topics which aren't loaded via

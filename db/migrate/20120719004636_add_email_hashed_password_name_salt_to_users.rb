@@ -17,7 +17,6 @@ class AddEmailHashedPasswordNameSaltToUsers < ActiveRecord::Migration[4.2]
     add_column :users, :activation_key, :string, limit: 32
 
     add_column :user_open_ids, :active, :boolean, null: false
-
   end
 
   def down

@@ -95,8 +95,8 @@ class WebhooksController < ActionController::Base
       message_event = event.dig("msys", "message_event")
       next unless message_event
 
-      message_id   = message_event.dig("rcpt_meta", "message_id")
-      to_address   = message_event["rcpt_to"]
+      message_id = message_event.dig("rcpt_meta", "message_id")
+      to_address = message_event["rcpt_to"]
       bounce_class = message_event["bounce_class"]
       next unless bounce_class
 
@@ -116,7 +116,7 @@ class WebhooksController < ActionController::Base
   end
 
   def aws
-    raw  = request.raw_post
+    raw = request.raw_post
     json = JSON.parse(raw)
 
     case json["Type"]
@@ -152,11 +152,14 @@ class WebhooksController < ActionController::Base
     return false if (Time.at(timestamp.to_i) - Time.now).abs > 12.hours.to_i
 
     # check the signature
-    signature == OpenSSL::HMAC.hexdigest("SHA256", SiteSetting.mailgun_api_key, "#{timestamp}#{token}")
+    signature ==
+      OpenSSL::HMAC.hexdigest("SHA256", SiteSetting.mailgun_api_key, "#{timestamp}#{token}")
   end
 
   def handle_mailgun_legacy(params)
-    return mailgun_failure unless valid_mailgun_signature?(params["token"], params["timestamp"], params["signature"])
+    unless valid_mailgun_signature?(params["token"], params["timestamp"], params["signature"])
+      return mailgun_failure
+    end
 
     event = params["event"]
     message_id = Email::MessageIdService.message_id_clean(params["Message-Id"])
@@ -177,7 +180,13 @@ class WebhooksController < ActionController::Base
 
   def handle_mailgun_new(params)
     signature = params["signature"]
-    return mailgun_failure unless valid_mailgun_signature?(signature["token"], signature["timestamp"], signature["signature"])
+    unless valid_mailgun_signature?(
+             signature["token"],
+             signature["timestamp"],
+             signature["signature"],
+           )
+      return mailgun_failure
+    end
 
     data = params["event-data"]
     error_code = params.dig("delivery-status", "code")
@@ -207,5 +216,4 @@ class WebhooksController < ActionController::Base
 
     Email::Receiver.update_bounce_score(email_log.user.email, bounce_score)
   end
-
 end

@@ -8,7 +8,7 @@ class CreateTopicInvites < ActiveRecord::Migration[4.2]
       t.timestamps null: false
     end
 
-    add_index :topic_invites, [:topic_id, :invite_id], unique: true
+    add_index :topic_invites, %i[topic_id invite_id], unique: true
     add_index :topic_invites, :invite_id
   end
 end

@@ -4,11 +4,11 @@ class ExtraLocalesController < ApplicationController
   layout :false
 
   skip_before_action :check_xhr,
-    :preload_json,
-    :redirect_to_login_if_required,
-    :verify_authenticity_token
+                     :preload_json,
+                     :redirect_to_login_if_required,
+                     :verify_authenticity_token
 
-  OVERRIDES_BUNDLE ||= 'overrides'
+  OVERRIDES_BUNDLE ||= "overrides"
   MD5_HASH_LENGTH ||= 32
 
   def show

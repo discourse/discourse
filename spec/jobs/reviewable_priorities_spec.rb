@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::ReviewablePriorities do
-
   it "needs returns 0s with no existing reviewables" do
     Jobs::ReviewablePriorities.new.execute({})
 
@@ -38,7 +37,7 @@ RSpec.describe Jobs::ReviewablePriorities do
     expect(Reviewable.score_required_to_hide_post).to eq(8.33)
   end
 
-  context 'when there are enough reviewables' do
+  context "when there are enough reviewables" do
     let(:medium_threshold) { 8.0 }
     let(:high_threshold) { 13.0 }
     let(:score_to_hide_post) { 8.66 }
@@ -54,7 +53,7 @@ RSpec.describe Jobs::ReviewablePriorities do
       expect(Reviewable.score_required_to_hide_post).to eq(score_to_hide_post)
     end
 
-    it 'ignore negative scores when calculating priorities' do
+    it "ignore negative scores when calculating priorities" do
       create_reviewables(Jobs::ReviewablePriorities.min_reviewables)
       negative_score = -9
       10.times { create_with_score(negative_score) }
@@ -67,7 +66,7 @@ RSpec.describe Jobs::ReviewablePriorities do
       expect(Reviewable.score_required_to_hide_post).to eq(score_to_hide_post)
     end
 
-    it 'ignores non-approved reviewables' do
+    it "ignores non-approved reviewables" do
       create_reviewables(Jobs::ReviewablePriorities.min_reviewables)
       low_score = 2
       10.times { create_with_score(low_score, status: :pending) }

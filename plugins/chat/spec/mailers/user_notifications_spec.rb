@@ -25,7 +25,7 @@ describe UserNotifications do
         Chat::DirectMessageChannelCreator.create!(acting_user: sender, target_users: [sender, user])
       end
 
-      it 'calls guardian can_join_chat_channel?' do
+      it "calls guardian can_join_chat_channel?" do
         Fabricate(:chat_message, user: sender, chat_channel: channel)
         Guardian.any_instance.expects(:can_join_chat_channel?).once
         email = described_class.chat_summary(user, {})
@@ -34,11 +34,12 @@ describe UserNotifications do
 
       describe "email subject" do
         it "includes the sender username in the subject" do
-          expected_subject = I18n.t(
-            "user_notifications.chat_summary.subject.direct_message_from_1",
-            email_prefix: SiteSetting.title,
-            username: sender.username
-          )
+          expected_subject =
+            I18n.t(
+              "user_notifications.chat_summary.subject.direct_message_from_1",
+              email_prefix: SiteSetting.title,
+              username: sender.username,
+            )
           Fabricate(:chat_message, user: sender, chat_channel: channel)
           email = described_class.chat_summary(user, {})
 
@@ -54,11 +55,12 @@ describe UserNotifications do
             chat_channel: channel,
           )
           DirectMessageUser.create!(direct_message: channel.chatable, user: another_participant)
-          expected_subject = I18n.t(
-            "user_notifications.chat_summary.subject.direct_message_from_1",
-            email_prefix: SiteSetting.title,
-            username: sender.username
-          )
+          expected_subject =
+            I18n.t(
+              "user_notifications.chat_summary.subject.direct_message_from_1",
+              email_prefix: SiteSetting.title,
+              username: sender.username,
+            )
           Fabricate(:chat_message, user: sender, chat_channel: channel)
           email = described_class.chat_summary(user, {})
 
@@ -80,12 +82,13 @@ describe UserNotifications do
           Fabricate(:chat_message, user: sender, chat_channel: channel)
           email = described_class.chat_summary(user, {})
 
-          expected_subject = I18n.t(
-            "user_notifications.chat_summary.subject.direct_message_from_2",
-            email_prefix: SiteSetting.title,
-            username1: another_dm_user.username,
-            username2: sender.username
-          )
+          expected_subject =
+            I18n.t(
+              "user_notifications.chat_summary.subject.direct_message_from_2",
+              email_prefix: SiteSetting.title,
+              username1: another_dm_user.username,
+              username2: sender.username,
+            )
 
           expect(email.subject).to eq(expected_subject)
           expect(email.subject).to include(sender.username)
@@ -116,12 +119,13 @@ describe UserNotifications do
 
           email = described_class.chat_summary(user, {})
 
-          expected_subject = I18n.t(
-            "user_notifications.chat_summary.subject.direct_message_from_more",
-            email_prefix: SiteSetting.title,
-            username: senders.first.username,
-            count: 2
-          )
+          expected_subject =
+            I18n.t(
+              "user_notifications.chat_summary.subject.direct_message_from_more",
+              email_prefix: SiteSetting.title,
+              username: senders.first.username,
+              count: 2,
+            )
 
           expect(email.subject).to eq(expected_subject)
         end
@@ -162,11 +166,12 @@ describe UserNotifications do
           before { Fabricate(:chat_mention, user: user, chat_message: chat_message) }
 
           it "includes the sender username in the subject" do
-            expected_subject = I18n.t(
-              "user_notifications.chat_summary.subject.chat_channel_1",
-              email_prefix: SiteSetting.title,
-              channel: channel.title(user)
-            )
+            expected_subject =
+              I18n.t(
+                "user_notifications.chat_summary.subject.chat_channel_1",
+                email_prefix: SiteSetting.title,
+                channel: channel.title(user),
+              )
 
             email = described_class.chat_summary(user, {})
 
@@ -193,12 +198,13 @@ describe UserNotifications do
 
             email = described_class.chat_summary(user, {})
 
-            expected_subject = I18n.t(
-              "user_notifications.chat_summary.subject.chat_channel_2",
-              email_prefix: SiteSetting.title,
-              channel1: channel.title(user),
-              channel2: another_chat_channel.title(user)
-            )
+            expected_subject =
+              I18n.t(
+                "user_notifications.chat_summary.subject.chat_channel_2",
+                email_prefix: SiteSetting.title,
+                channel1: channel.title(user),
+                channel2: another_chat_channel.title(user),
+              )
 
             expect(email.subject).to eq(expected_subject)
             expect(email.subject).to include(channel.title(user))
@@ -224,12 +230,13 @@ describe UserNotifications do
               Fabricate(:chat_mention, user: user, chat_message: another_chat_message)
             end
 
-            expected_subject = I18n.t(
-              "user_notifications.chat_summary.subject.chat_channel_more",
-              email_prefix: SiteSetting.title,
-              channel: channel.title(user),
-              count: 2
-            )
+            expected_subject =
+              I18n.t(
+                "user_notifications.chat_summary.subject.chat_channel_more",
+                email_prefix: SiteSetting.title,
+                channel: channel.title(user),
+                count: 2,
+              )
 
             email = described_class.chat_summary(user, {})
 
@@ -250,12 +257,13 @@ describe UserNotifications do
           end
 
           it "always includes the DM second" do
-            expected_subject = I18n.t(
-              "user_notifications.chat_summary.subject.chat_channel_and_direct_message",
-              email_prefix: SiteSetting.title,
-              channel: channel.title(user),
-              username: sender.username
-            )
+            expected_subject =
+              I18n.t(
+                "user_notifications.chat_summary.subject.chat_channel_and_direct_message",
+                email_prefix: SiteSetting.title,
+                channel: channel.title(user),
+                username: sender.username,
+              )
 
             email = described_class.chat_summary(user, {})
 

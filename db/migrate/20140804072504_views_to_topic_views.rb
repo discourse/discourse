@@ -8,6 +8,6 @@ class ViewsToTopicViews < ActiveRecord::Migration[4.2]
     rename_table :views, :topic_views
 
     add_index :topic_views, [:topic_id]
-    add_index :topic_views, [:user_id, :topic_id]
+    add_index :topic_views, %i[user_id topic_id]
   end
 end

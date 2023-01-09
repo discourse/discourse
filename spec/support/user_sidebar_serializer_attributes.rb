@@ -5,19 +5,19 @@ RSpec.shared_examples "User Sidebar Serializer Attributes" do |serializer_klass|
 
   let(:serializer) { serializer_klass.new(user, scope: Guardian.new(user), root: false) }
 
-  before do
-    SiteSetting.navigation_menu = "sidebar"
-  end
+  before { SiteSetting.navigation_menu = "sidebar" }
 
   describe "#sidebar_list_destination" do
-    it 'is not included when navigation menu is legacy' do
+    it "is not included when navigation menu is legacy" do
       SiteSetting.navigation_menu = "legacy"
 
       expect(serializer.as_json[:sidebar_list_destination]).to eq(nil)
     end
 
     it "returns choosen value or default" do
-      expect(serializer.as_json[:sidebar_list_destination]).to eq(SiteSetting.default_sidebar_list_destination)
+      expect(serializer.as_json[:sidebar_list_destination]).to eq(
+        SiteSetting.default_sidebar_list_destination,
+      )
 
       user.user_option.update!(sidebar_list_destination: "unread_new")
 
@@ -25,14 +25,20 @@ RSpec.shared_examples "User Sidebar Serializer Attributes" do |serializer_klass|
     end
   end
 
-  describe '#sidebar_category_ids' do
+  describe "#sidebar_category_ids" do
     fab!(:group) { Fabricate(:group) }
     fab!(:category) { Fabricate(:category) }
     fab!(:category_2) { Fabricate(:category) }
     fab!(:private_category) { Fabricate(:private_category, group: group) }
-    fab!(:category_sidebar_section_link) { Fabricate(:category_sidebar_section_link, user: user, linkable: category) }
-    fab!(:category_sidebar_section_link_2) { Fabricate(:category_sidebar_section_link, user: user, linkable: category_2) }
-    fab!(:category_sidebar_section_link_3) { Fabricate(:category_sidebar_section_link, user: user, linkable: private_category) }
+    fab!(:category_sidebar_section_link) do
+      Fabricate(:category_sidebar_section_link, user: user, linkable: category)
+    end
+    fab!(:category_sidebar_section_link_2) do
+      Fabricate(:category_sidebar_section_link, user: user, linkable: category_2)
+    end
+    fab!(:category_sidebar_section_link_3) do
+      Fabricate(:category_sidebar_section_link, user: user, linkable: private_category)
+    end
 
     it "is not included when navigation menu is legacy" do
       SiteSetting.navigation_menu = "legacy"
@@ -47,31 +53,32 @@ RSpec.shared_examples "User Sidebar Serializer Attributes" do |serializer_klass|
 
       json = serializer.as_json
 
-      expect(json[:sidebar_category_ids]).to eq([
-        category.id,
-        category_2.id
-      ])
+      expect(json[:sidebar_category_ids]).to eq([category.id, category_2.id])
 
       group.add(user)
       serializer = serializer_klass.new(user, scope: Guardian.new(user), root: false)
       json = serializer.as_json
 
-      expect(json[:sidebar_category_ids]).to eq([
-        category.id,
-        category_2.id,
-        private_category.id
-      ])
+      expect(json[:sidebar_category_ids]).to eq([category.id, category_2.id, private_category.id])
     end
   end
 
-  describe '#sidebar_tags' do
+  describe "#sidebar_tags" do
     fab!(:tag) { Fabricate(:tag, name: "foo") }
     fab!(:pm_tag) { Fabricate(:tag, name: "bar", pm_topic_count: 5, topic_count: 0) }
     fab!(:hidden_tag) { Fabricate(:tag, name: "secret") }
-    fab!(:staff_tag_group) { Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: ["secret"]) }
-    fab!(:tag_sidebar_section_link) { Fabricate(:tag_sidebar_section_link, user: user, linkable: tag) }
-    fab!(:tag_sidebar_section_link_2) { Fabricate(:tag_sidebar_section_link, user: user, linkable: pm_tag) }
-    fab!(:tag_sidebar_section_link_3) { Fabricate(:tag_sidebar_section_link, user: user, linkable: hidden_tag) }
+    fab!(:staff_tag_group) do
+      Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: ["secret"])
+    end
+    fab!(:tag_sidebar_section_link) do
+      Fabricate(:tag_sidebar_section_link, user: user, linkable: tag)
+    end
+    fab!(:tag_sidebar_section_link_2) do
+      Fabricate(:tag_sidebar_section_link, user: user, linkable: pm_tag)
+    end
+    fab!(:tag_sidebar_section_link_3) do
+      Fabricate(:tag_sidebar_section_link, user: user, linkable: hidden_tag)
+    end
 
     it "is not included when navigation menu is legacy" do
       SiteSetting.navigation_menu = "legacy"
@@ -99,7 +106,7 @@ RSpec.shared_examples "User Sidebar Serializer Attributes" do |serializer_klass|
 
       expect(json[:sidebar_tags]).to contain_exactly(
         { name: tag.name, pm_only: false },
-        { name: pm_tag.name, pm_only: true }
+        { name: pm_tag.name, pm_only: true },
       )
 
       user.update!(admin: true)
@@ -109,7 +116,7 @@ RSpec.shared_examples "User Sidebar Serializer Attributes" do |serializer_klass|
       expect(json[:sidebar_tags]).to contain_exactly(
         { name: tag.name, pm_only: false },
         { name: pm_tag.name, pm_only: true },
-        { name: hidden_tag.name, pm_only: false }
+        { name: hidden_tag.name, pm_only: false },
       )
     end
   end
@@ -117,20 +124,20 @@ RSpec.shared_examples "User Sidebar Serializer Attributes" do |serializer_klass|
   describe "#display_sidebar_tags" do
     fab!(:tag) { Fabricate(:tag) }
 
-    it 'should not be included in serialised object when navigation menu is legacy' do
+    it "should not be included in serialised object when navigation menu is legacy" do
       SiteSetting.tagging_enabled = true
       SiteSetting.navigation_menu = "legacy"
 
       expect(serializer.as_json[:display_sidebar_tags]).to eq(nil)
     end
 
-    it 'should not be included in serialised object when tagging has been disabled' do
+    it "should not be included in serialised object when tagging has been disabled" do
       SiteSetting.tagging_enabled = false
 
       expect(serializer.as_json[:display_sidebar_tags]).to eq(nil)
     end
 
-    it 'should be true when user has visible tags' do
+    it "should be true when user has visible tags" do
       SiteSetting.tagging_enabled = true
 
       Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [tag.name])
@@ -139,7 +146,7 @@ RSpec.shared_examples "User Sidebar Serializer Attributes" do |serializer_klass|
       expect(serializer.as_json[:display_sidebar_tags]).to eq(true)
     end
 
-    it 'should be false when user has no visible tags' do
+    it "should be false when user has no visible tags" do
       SiteSetting.tagging_enabled = true
 
       Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [tag.name])

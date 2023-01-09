@@ -7,6 +7,6 @@ class CreateDraftSequence < ActiveRecord::Migration[4.2]
       t.string :draft_key, null: false
       t.integer :sequence, null: false
     end
-    add_index :draft_sequences, [:user_id, :draft_key], unique: true
+    add_index :draft_sequences, %i[user_id draft_key], unique: true
   end
 end

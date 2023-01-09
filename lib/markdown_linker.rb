@@ -2,7 +2,6 @@
 
 # Helps create links using markdown (where references are at the bottom)
 class MarkdownLinker
-
   def initialize(base_url)
     @base_url = base_url
     @index = 1
@@ -19,11 +18,8 @@ class MarkdownLinker
 
   def references
     result = +""
-    (@rendered..@index - 1).each do |i|
-      result << "[#{i}]: #{@markdown_links[i]}\n"
-    end
+    (@rendered..@index - 1).each { |i| result << "[#{i}]: #{@markdown_links[i]}\n" }
     @rendered = @index
     result
   end
-
 end

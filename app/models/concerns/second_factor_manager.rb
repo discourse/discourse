@@ -5,24 +5,27 @@ module SecondFactorManager
 
   extend ActiveSupport::Concern
 
-  SecondFactorAuthenticationResult = Struct.new(
-    :ok,
-    :error,
-    :reason,
-    :backup_enabled,
-    :security_key_enabled,
-    :totp_enabled,
-    :multiple_second_factor_methods,
-    :used_2fa_method,
-  )
+  SecondFactorAuthenticationResult =
+    Struct.new(
+      :ok,
+      :error,
+      :reason,
+      :backup_enabled,
+      :security_key_enabled,
+      :totp_enabled,
+      :multiple_second_factor_methods,
+      :used_2fa_method,
+    )
 
   def create_totp(opts = {})
     require_rotp
-    UserSecondFactor.create!({
-                               user_id: self.id,
-                               method: UserSecondFactor.methods[:totp],
-                               data: ROTP::Base32.random
-                             }.merge(opts))
+    UserSecondFactor.create!(
+      {
+        user_id: self.id,
+        method: UserSecondFactor.methods[:totp],
+        data: ROTP::Base32.random,
+      }.merge(opts),
+    )
   end
 
   def get_totp_object(data)
@@ -38,19 +41,18 @@ module SecondFactorManager
     totps = self&.user_second_factors.totps
     authenticated = false
     totps.each do |totp|
-
       last_used = 0
 
-      if totp.last_used
-        last_used = totp.last_used.to_i
-      end
+      last_used = totp.last_used.to_i if totp.last_used
 
-      authenticated = !token.blank? && totp.totp_object.verify(
-        token,
-        drift_ahead: TOTP_ALLOWED_DRIFT_SECONDS,
-        drift_behind: TOTP_ALLOWED_DRIFT_SECONDS,
-        after: last_used
-      )
+      authenticated =
+        !token.blank? &&
+          totp.totp_object.verify(
+            token,
+            drift_ahead: TOTP_ALLOWED_DRIFT_SECONDS,
+            drift_behind: TOTP_ALLOWED_DRIFT_SECONDS,
+            after: last_used,
+          )
 
       if authenticated
         totp.update!(last_used: DateTime.now)
@@ -61,21 +63,21 @@ module SecondFactorManager
   end
 
   def totp_enabled?
-    !SiteSetting.enable_discourse_connect &&
-      SiteSetting.enable_local_logins &&
+    !SiteSetting.enable_discourse_connect && SiteSetting.enable_local_logins &&
       self&.user_second_factors.totps.exists?
   end
 
   def backup_codes_enabled?
-    !SiteSetting.enable_discourse_connect &&
-      SiteSetting.enable_local_logins &&
+    !SiteSetting.enable_discourse_connect && SiteSetting.enable_local_logins &&
       self&.user_second_factors.backup_codes.exists?
   end
 
   def security_keys_enabled?
-    !SiteSetting.enable_discourse_connect &&
-      SiteSetting.enable_local_logins &&
-      self&.security_keys.where(factor_type: UserSecurityKey.factor_types[:second_factor], enabled: true).exists?
+    !SiteSetting.enable_discourse_connect && SiteSetting.enable_local_logins &&
+      self
+        &.security_keys
+        .where(factor_type: UserSecurityKey.factor_types[:second_factor], enabled: true)
+        .exists?
   end
 
   def has_any_second_factor_methods_enabled?
@@ -166,35 +168,35 @@ module SecondFactorManager
       security_key_credential,
       challenge: Webauthn.challenge(self, secure_session),
       rp_id: Webauthn.rp_id(self, secure_session),
-      origin: Discourse.base_url
+      origin: Discourse.base_url,
     ).authenticate_security_key
   end
 
   def invalid_totp_or_backup_code_result
     invalid_second_factor_authentication_result(
       I18n.t("login.invalid_second_factor_code"),
-      "invalid_second_factor"
+      "invalid_second_factor",
     )
   end
 
   def invalid_security_key_result(error_message = nil)
     invalid_second_factor_authentication_result(
       error_message || I18n.t("login.invalid_security_key"),
-      "invalid_security_key"
+      "invalid_security_key",
     )
   end
 
   def invalid_second_factor_method_result
     invalid_second_factor_authentication_result(
       I18n.t("login.invalid_second_factor_method"),
-      "invalid_second_factor_method"
+      "invalid_second_factor_method",
     )
   end
 
   def not_enabled_second_factor_method_result
     invalid_second_factor_authentication_result(
       I18n.t("login.not_enabled_second_factor_method"),
-      "not_enabled_second_factor_method"
+      "not_enabled_second_factor_method",
     )
   end
 
@@ -206,22 +208,19 @@ module SecondFactorManager
       backup_codes_enabled?,
       security_keys_enabled?,
       totp_enabled?,
-      has_multiple_second_factor_methods?
+      has_multiple_second_factor_methods?,
     )
   end
 
   def generate_backup_codes
     codes = []
-    10.times do
-      codes << SecureRandom.hex(16)
-    end
+    10.times { codes << SecureRandom.hex(16) }
 
-    codes_json = codes.map do |code|
-      salt = SecureRandom.hex(16)
-      { salt: salt,
-        code_hash: hash_backup_code(code, salt)
-      }
-    end
+    codes_json =
+      codes.map do |code|
+        salt = SecureRandom.hex(16)
+        { salt: salt, code_hash: hash_backup_code(code, salt) }
+      end
 
     if self.user_second_factors.backup_codes.empty?
       create_backup_codes(codes_json)
@@ -239,7 +238,7 @@ module SecondFactorManager
         user_id: self.id,
         data: code.to_json,
         enabled: true,
-        method: UserSecondFactor.methods[:backup_codes]
+        method: UserSecondFactor.methods[:backup_codes],
       )
     end
   end
@@ -264,10 +263,15 @@ module SecondFactorManager
   end
 
   def hash_backup_code(code, salt)
-    Pbkdf2.hash_password(code, salt, Rails.configuration.pbkdf2_iterations, Rails.configuration.pbkdf2_algorithm)
+    Pbkdf2.hash_password(
+      code,
+      salt,
+      Rails.configuration.pbkdf2_iterations,
+      Rails.configuration.pbkdf2_algorithm,
+    )
   end
 
   def require_rotp
-    require 'rotp' if !defined? ROTP
+    require "rotp" if !defined?(ROTP)
   end
 end

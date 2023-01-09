@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'text_sentinel'
-require 'text_cleaner'
+require "text_sentinel"
+require "text_cleaner"
 
 class QualityTitleValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)

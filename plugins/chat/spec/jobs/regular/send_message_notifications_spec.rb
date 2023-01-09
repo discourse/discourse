@@ -21,7 +21,7 @@ RSpec.describe Jobs::SendMessageNotifications do
         subject.execute(
           chat_message_id: chat_message.id,
           reason: "invalid",
-          timestamp: 1.minute.ago
+          timestamp: 1.minute.ago,
         )
       end
 
@@ -29,32 +29,21 @@ RSpec.describe Jobs::SendMessageNotifications do
         Chat::ChatNotifier.any_instance.expects(:notify_new).never
         Chat::ChatNotifier.any_instance.expects(:notify_edit).never
 
-        subject.execute(
-          chat_message_id: chat_message.id,
-          reason: "new"
-        )
+        subject.execute(chat_message_id: chat_message.id, reason: "new")
       end
 
       it "calls notify_new when the reason is 'new'" do
         Chat::ChatNotifier.any_instance.expects(:notify_new).once
         Chat::ChatNotifier.any_instance.expects(:notify_edit).never
 
-        subject.execute(
-          chat_message_id: chat_message.id,
-          reason: "new",
-          timestamp: 1.minute.ago
-        )
+        subject.execute(chat_message_id: chat_message.id, reason: "new", timestamp: 1.minute.ago)
       end
 
       it "calls notify_edit when the reason is 'edit'" do
         Chat::ChatNotifier.any_instance.expects(:notify_new).never
         Chat::ChatNotifier.any_instance.expects(:notify_edit).once
 
-        subject.execute(
-          chat_message_id: chat_message.id,
-          reason: "edit",
-          timestamp: 1.minute.ago
-        )
+        subject.execute(chat_message_id: chat_message.id, reason: "edit", timestamp: 1.minute.ago)
       end
     end
   end

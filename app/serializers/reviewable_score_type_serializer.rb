@@ -20,5 +20,4 @@ class ReviewableScoreTypeSerializer < ApplicationSerializer
   def icon
     "flag"
   end
-
 end

@@ -19,28 +19,24 @@ class GroupCategoryNotificationDefault < ActiveRecord::Base
     changed = false
 
     # Update pre-existing
-    if category_ids.present? && GroupCategoryNotificationDefault
-        .where(group_id: group.id, category_id: category_ids)
-        .where.not(notification_level: level_num)
-        .update_all(notification_level: level_num) > 0
-
+    if category_ids.present? &&
+         GroupCategoryNotificationDefault
+           .where(group_id: group.id, category_id: category_ids)
+           .where.not(notification_level: level_num)
+           .update_all(notification_level: level_num) > 0
       changed = true
     end
 
     # Remove extraneous category users
     if GroupCategoryNotificationDefault
-        .where(group_id: group.id, notification_level: level_num)
-        .where.not(category_id: category_ids)
-        .delete_all > 0
-
+         .where(group_id: group.id, notification_level: level_num)
+         .where.not(category_id: category_ids)
+         .delete_all > 0
       changed = true
     end
 
     if category_ids.present?
-      params = {
-        group_id: group.id,
-        level_num: level_num,
-      }
+      params = { group_id: group.id, level_num: level_num }
 
       sql = <<~SQL
         INSERT INTO group_category_notification_defaults (group_id, category_id, notification_level)
@@ -52,9 +48,7 @@ class GroupCategoryNotificationDefault < ActiveRecord::Base
       # into the query, plus it is a bit of a micro optimisation
       category_ids.each do |category_id|
         params[:category_id] = category_id
-        if DB.exec(sql, params) > 0
-          changed = true
-        end
+        changed = true if DB.exec(sql, params) > 0
       end
     end
 

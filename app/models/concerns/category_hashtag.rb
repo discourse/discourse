@@ -55,9 +55,7 @@ module CategoryHashtag
               end
             end
           else
-            categories.find do |cat|
-              cat.slug.downcase == parent_slug && cat.top_level?
-            end
+            categories.find { |cat| cat.slug.downcase == parent_slug && cat.top_level? }
           end
         end
         .compact

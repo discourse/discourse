@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class SpamRule::AutoSilence
-
   attr_reader :group_message
 
   def initialize(user, post = nil)
@@ -10,9 +9,7 @@ class SpamRule::AutoSilence
   end
 
   def perform
-    I18n.with_locale(SiteSetting.default_locale) do
-      silence_user if should_autosilence?
-    end
+    I18n.with_locale(SiteSetting.default_locale) { silence_user if should_autosilence? }
   end
 
   def self.prevent_posting?(user)
@@ -36,7 +33,7 @@ class SpamRule::AutoSilence
       user_id: @user.id,
       spam_type: PostActionType.types[:spam],
       pending: ReviewableScore.statuses[:pending],
-      agreed: ReviewableScore.statuses[:agreed]
+      agreed: ReviewableScore.statuses[:agreed],
     }
 
     result = DB.query(<<~SQL, params)
@@ -53,23 +50,30 @@ class SpamRule::AutoSilence
   end
 
   def flagged_post_ids
-    Post.where(user_id: @user.id)
-      .where('spam_count > 0 OR off_topic_count > 0 OR inappropriate_count > 0')
+    Post
+      .where(user_id: @user.id)
+      .where("spam_count > 0 OR off_topic_count > 0 OR inappropriate_count > 0")
       .pluck(:id)
   end
 
   def silence_user
     Post.transaction do
-
-      silencer = UserSilencer.new(
-        @user,
-        Discourse.system_user,
-        message: :too_many_spam_flags,
-        post_id: @post&.id
-      )
+      silencer =
+        UserSilencer.new(
+          @user,
+          Discourse.system_user,
+          message: :too_many_spam_flags,
+          post_id: @post&.id,
+        )
 
       if silencer.silence && SiteSetting.notify_mods_when_user_silenced
-        @group_message = GroupMessage.create(Group[:moderators].name, :user_automatically_silenced, user: @user, limit_once_per: false)
+        @group_message =
+          GroupMessage.create(
+            Group[:moderators].name,
+            :user_automatically_silenced,
+            user: @user,
+            limit_once_per: false,
+          )
       end
     end
   end

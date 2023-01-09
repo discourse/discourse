@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class TopicTimestampChanger
-  class InvalidTimestampError < StandardError; end
+  class InvalidTimestampError < StandardError
+  end
 
   def initialize(timestamp:, topic: nil, topic_id: nil)
     @topic = topic || Topic.with_deleted.find(topic_id)
@@ -46,11 +47,7 @@ class TopicTimestampChanger
   end
 
   def update_topic(last_posted_at)
-    @topic.update(
-      created_at: @timestamp,
-      updated_at: @timestamp,
-      last_posted_at: last_posted_at
-    )
+    @topic.update(created_at: @timestamp, updated_at: @timestamp, last_posted_at: last_posted_at)
   end
 
   def update_post(post, timestamp)

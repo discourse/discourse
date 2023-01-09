@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'i18n/backend/pluralization'
+require "i18n/backend/pluralization"
 
 module I18n
   module Backend
@@ -22,9 +22,7 @@ module I18n
       # force explicit loading
       def load_translations(*filenames)
         unless filenames.empty?
-          self.class.sort_locale_files(filenames.flatten).each do |filename|
-            load_file(filename)
-          end
+          self.class.sort_locale_files(filenames.flatten).each { |filename| load_file(filename) }
         end
       end
 
@@ -90,10 +88,12 @@ module I18n
         if overrides
           if options[:count]
             if !existing_translations
-              I18n.fallbacks[locale].drop(1).each do |fallback|
-                existing_translations = super(fallback, key, scope, options)
-                break if existing_translations.present?
-              end
+              I18n.fallbacks[locale]
+                .drop(1)
+                .each do |fallback|
+                  existing_translations = super(fallback, key, scope, options)
+                  break if existing_translations.present?
+                end
             end
 
             if existing_translations
@@ -106,9 +106,11 @@ module I18n
 
               result = {}
 
-              remapped_translations.merge(overrides).each do |k, v|
-                result[k.split('.').last.to_sym] = v if k != key && k.start_with?(key)
-              end
+              remapped_translations
+                .merge(overrides)
+                .each do |k, v|
+                  result[k.split(".").last.to_sym] = v if k != key && k.start_with?(key)
+                end
               return result if result.size > 0
             end
           end
