@@ -1230,9 +1230,11 @@ class Search
   end
 
   def self.escape_string(term)
-    # HACK: The ’ has to be "unaccented" before it is escaped or the resulting
-    # tsqueries will be invalid
-    term = term.gsub("\u{2019}", "'") if SiteSetting.search_ignore_accents
+    # HACK: The ’ and other similar characters have to be "unaccented" before
+    # it is escaped or the resulting tsqueries will be invalid
+    if SiteSetting.search_ignore_accents
+      term = term.gsub(/[\u02b9\u02bb\u02bc\u02bd\u02c8\u2018\u2019\u201b\u2032\uff07]/, "'")
+    end
 
     PG::Connection.escape_string(term).gsub('\\', '\\\\\\')
   end

@@ -645,6 +645,12 @@ RSpec.describe Topic do
       expect(Topic.similar_to("怎么上自己的", "")).to eq([])
     end
 
+    it "does not result in invalid statement when title contains unicode characters" do
+      SiteSetting.search_ignore_accents = true
+
+      expect(Topic.similar_to("'bad quotes'", "'bad quotes'")).to eq([])
+    end
+
     context "with a similar topic" do
       fab!(:post) do
         SearchIndexer.enable
