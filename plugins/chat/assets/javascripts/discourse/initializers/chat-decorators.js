@@ -12,6 +12,8 @@ export default {
 
   initializeWithPluginApi(api, container) {
     const siteSettings = container.lookup("service:site-settings");
+    const lightboxService = container.lookup("service:lightbox");
+
     api.decorateChatMessage((element) => decorateGithubOneboxBody(element), {
       id: "onebox-github-body",
     });
@@ -63,13 +65,40 @@ export default {
       id: "linksNewTab",
     });
 
-    api.decorateChatMessage(
-      (element) =>
-        this.lightbox(element.querySelectorAll("img:not(.emoji, .avatar)")),
-      {
-        id: "lightbox",
-      }
-    );
+    if (siteSettings.enable_experimental_lightbox) {
+      api.decorateChatMessage(
+        (element) => {
+          lightboxService.setupLightboxes({
+            container: element,
+            selector: "img:not(.emoji, .avatar)",
+          });
+        },
+        {
+          id: "experimental-chat-lightbox",
+        }
+        // TODO: Does chat have a hook to clean up?
+        // the current lightbox implementation (Magnific) adds listeners to each image
+        // but it doesn't look like they were cleaned up. This implementation adds a single
+        // listener to the parent element (chat message in this case)
+        //
+        // Topics have a cleanupStream method that is called when the topic is removed
+        // api.cleanupStream(cleanUpLightboxes);
+        //
+        // The implmentation would look something like this
+        // api.cleanupChatStream(lightboxService.cleanupLightboxes);
+        //
+        // that said, the new lightbox event listners are cleaned up in dom:clean which
+        // fires on route transition anyway.
+      );
+    } else {
+      api.decorateChatMessage(
+        (element) =>
+          this.lightbox(element.querySelectorAll("img:not(.emoji, .avatar)")),
+        {
+          id: "lightbox",
+        }
+      );
+    }
   },
 
   _getScrollParent(node, maxParentSelector) {
