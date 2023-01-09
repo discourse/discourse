@@ -12,7 +12,9 @@ class SecondFactor::AuthManagerResult
 
   def initialize(status, data)
     if !STATUSES.key?(status)
-      raise ArgumentError.new("#{status.inspect} is not a valid status. Allowed statuses: #{STATUSES.inspect}")
+      raise ArgumentError.new(
+              "#{status.inspect} is not a valid status. Allowed statuses: #{STATUSES.inspect}",
+            )
     end
     @status_id = STATUSES[status]
     @data = data

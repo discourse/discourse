@@ -1,8 +1,7 @@
 # frozen_string_literal: true
-require 'swagger_helper'
+require "swagger_helper"
 
-RSpec.describe 'groups' do
-
+RSpec.describe "groups" do
   let(:admin) { Fabricate(:admin) }
 
   before do
@@ -10,17 +9,18 @@ RSpec.describe 'groups' do
     sign_in(admin)
   end
 
-  path '/search.json' do
-    get 'Search for a term' do
-      tags 'Search'
-      operationId 'search'
-      consumes 'application/json'
+  path "/search.json" do
+    get "Search for a term" do
+      tags "Search"
+      operationId "search"
+      consumes "application/json"
       parameter(
         name: :q,
         in: :query,
         type: :string,
-        example: 'api @blake #support tags:api after:2021-06-04 in:unseen in:open order:latest_topic',
-        description: <<~MD
+        example:
+          "api @blake #support tags:api after:2021-06-04 in:unseen in:open order:latest_topic",
+        description: <<~MD,
           The query string needs to be url encoded and is made up of the following options:
           - Search term. This is just a string. Usually it would be the first item in the query.
           - `@<username>`: Use the `@` followed by the username to specify posts by this user.
@@ -49,12 +49,12 @@ RSpec.describe 'groups' do
       )
       parameter name: :page, in: :query, type: :integer, example: 1
 
-      produces 'application/json'
-      response '200', 'success response' do
-        expected_response_schema = load_spec_schema('search_response')
+      produces "application/json"
+      response "200", "success response" do
+        expected_response_schema = load_spec_schema("search_response")
         schema expected_response_schema
 
-        let(:q) { 'awesome post' }
+        let(:q) { "awesome post" }
         let(:page) { 1 }
 
         run_test!

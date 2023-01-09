@@ -22,11 +22,9 @@ RSpec.describe SecondFactor::Actions::DiscourseConnectProvider do
   end
 
   def create_request(query_string)
-    ActionDispatch::TestRequest.create({
-      "REQUEST_METHOD" => "GET",
-      "PATH_INFO" => "/",
-      "QUERY_STRING" => query_string
-    })
+    ActionDispatch::TestRequest.create(
+      { "REQUEST_METHOD" => "GET", "PATH_INFO" => "/", "QUERY_STRING" => query_string },
+    )
   end
 
   def params_from_payload(payload)
@@ -85,19 +83,16 @@ RSpec.describe SecondFactor::Actions::DiscourseConnectProvider do
       request = create_request(sso.payload)
       params = params_from_payload(sso.payload)
       action = create_instance(user, request)
-      expect(action.second_factor_auth_skipped!(params)).to eq({
-        logout: true,
-        return_sso_url: "http://hobbit.shire.com/sso"
-      })
+      expect(action.second_factor_auth_skipped!(params)).to eq(
+        { logout: true, return_sso_url: "http://hobbit.shire.com/sso" },
+      )
     end
 
     it "returns a hash with no_current_user: true if there's no current_user" do
       request = create_request(sso.payload)
       params = params_from_payload(sso.payload)
       action = create_instance(nil, request)
-      expect(action.second_factor_auth_skipped!(params)).to eq({
-        no_current_user: true
-      })
+      expect(action.second_factor_auth_skipped!(params)).to eq({ no_current_user: true })
     end
 
     it "returns sso_redirect_url to the SSO website with payload that indicates confirmed 2FA if confirmed_2fa_during_login is true" do
@@ -133,10 +128,9 @@ RSpec.describe SecondFactor::Actions::DiscourseConnectProvider do
       request = create_request(sso.payload)
       params = params_from_payload(sso.payload)
       action = create_instance(nil, request)
-      expect(action.second_factor_auth_skipped!(params)).to eq({
-        logout: true,
-        return_sso_url: "http://hobbit.shire.com/sso"
-      })
+      expect(action.second_factor_auth_skipped!(params)).to eq(
+        { logout: true, return_sso_url: "http://hobbit.shire.com/sso" },
+      )
     end
   end
 
@@ -195,10 +189,12 @@ RSpec.describe SecondFactor::Actions::DiscourseConnectProvider do
     end
 
     it "includes a description" do
-      expect(output[:description]).to eq(I18n.t(
-        "second_factor_auth.actions.discourse_connect_provider.description",
-        hostname: "hobbit.shire.com",
-      ))
+      expect(output[:description]).to eq(
+        I18n.t(
+          "second_factor_auth.actions.discourse_connect_provider.description",
+          hostname: "hobbit.shire.com",
+        ),
+      )
     end
   end
 

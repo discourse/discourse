@@ -4,17 +4,15 @@
 RSpec.describe QualityTitleValidator do
   let(:valid_title) { "hello this is my cool topic! welcome: all;" }
   let(:short_title) { valid_title.slice(0, SiteSetting.min_topic_title_length - 1) }
-  let(:long_title) { valid_title.center(SiteSetting.max_topic_title_length + 1, 'x') }
-  let(:xxxxx_title) { valid_title.gsub(/./, 'x') }
+  let(:long_title) { valid_title.center(SiteSetting.max_topic_title_length + 1, "x") }
+  let(:xxxxx_title) { valid_title.gsub(/./, "x") }
 
   let(:meaningless_title) { "asdf asdf asdf asdf" }
   let(:loud_title) { "ALL CAPS INVALID TITLE" }
   let(:pretentious_title) { "superverylongwordintitlefornoparticularreason" }
   fab!(:topic) { Fabricate(:post).topic }
 
-  before do
-    SiteSetting.title_prettify = false
-  end
+  before { SiteSetting.title_prettify = false }
 
   it "allows a regular title with a few ascii characters" do
     topic.title = valid_title
@@ -26,16 +24,16 @@ RSpec.describe QualityTitleValidator do
     expect(topic).to be_valid
   end
 
-  it 'allows Chinese characters' do
-    topic.title = '现在发现使用中文标题没法发帖子了'
+  it "allows Chinese characters" do
+    topic.title = "现在发现使用中文标题没法发帖子了"
     expect(topic).to be_valid
   end
 
   it "strips a title when identifying length" do
-    topic.title = short_title.center(SiteSetting.min_topic_title_length + 1, ' ')
+    topic.title = short_title.center(SiteSetting.min_topic_title_length + 1, " ")
     expect(topic).not_to be_valid
     expect(topic.errors.full_messages.first).to include(
-      I18n.t("errors.messages.too_short", count: SiteSetting.min_topic_title_length)
+      I18n.t("errors.messages.too_short", count: SiteSetting.min_topic_title_length),
     )
   end
 
@@ -43,7 +41,7 @@ RSpec.describe QualityTitleValidator do
     topic.title = long_title
     expect(topic).not_to be_valid
     expect(topic.errors.full_messages.first).to include(
-      I18n.t("errors.messages.too_long", count: SiteSetting.max_topic_title_length)
+      I18n.t("errors.messages.too_long", count: SiteSetting.max_topic_title_length),
     )
   end
 
@@ -51,26 +49,32 @@ RSpec.describe QualityTitleValidator do
     topic.title = short_title
     expect(topic).not_to be_valid
     expect(topic.errors.full_messages.first).to include(
-      I18n.t("errors.messages.too_short", count: SiteSetting.min_topic_title_length)
+      I18n.t("errors.messages.too_short", count: SiteSetting.min_topic_title_length),
     )
   end
 
   it "doesn't allow a title of one repeated character" do
     topic.title = xxxxx_title
     expect(topic).not_to be_valid
-    expect(topic.errors.full_messages.first).to include(I18n.t("errors.messages.is_invalid_meaningful"))
+    expect(topic.errors.full_messages.first).to include(
+      I18n.t("errors.messages.is_invalid_meaningful"),
+    )
   end
 
   it "doesn't allow a meaningless title" do
     topic.title = meaningless_title
     expect(topic).not_to be_valid
-    expect(topic.errors.full_messages.first).to include(I18n.t("errors.messages.is_invalid_meaningful"))
+    expect(topic.errors.full_messages.first).to include(
+      I18n.t("errors.messages.is_invalid_meaningful"),
+    )
   end
 
   it "doesn't allow a pretentious title" do
     topic.title = pretentious_title
     expect(topic).not_to be_valid
-    expect(topic.errors.full_messages.first).to include(I18n.t("errors.messages.is_invalid_unpretentious"))
+    expect(topic.errors.full_messages.first).to include(
+      I18n.t("errors.messages.is_invalid_unpretentious"),
+    )
   end
 
   it "doesn't allow a loud title" do

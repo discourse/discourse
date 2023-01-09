@@ -28,12 +28,10 @@ class BookmarkReminderNotificationHandler
 
   def clear_reminder
     Rails.logger.debug(
-      "Clearing bookmark reminder for bookmark_id #{bookmark.id}. reminder at: #{bookmark.reminder_at}"
+      "Clearing bookmark reminder for bookmark_id #{bookmark.id}. reminder at: #{bookmark.reminder_at}",
     )
 
-    if bookmark.auto_clear_reminder_when_reminder_sent?
-      bookmark.reminder_at = nil
-    end
+    bookmark.reminder_at = nil if bookmark.auto_clear_reminder_when_reminder_sent?
 
     bookmark.clear_reminder!
   end

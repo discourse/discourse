@@ -71,18 +71,18 @@ class Collection {
 
   @bind
   loadMore() {
+    let promise = Promise.resolve();
+
     if (this.loading) {
-      return;
+      return promise;
     }
 
     if (
       this._fetchedAll ||
       (this.totalRows && this.items.length >= this.totalRows)
     ) {
-      return;
+      return promise;
     }
-
-    let promise;
 
     this.loading = true;
 
@@ -97,8 +97,6 @@ class Collection {
         }
         this.meta = result.meta;
       });
-    } else {
-      promise = Promise.resolve();
     }
 
     return promise.finally(() => {

@@ -5,7 +5,7 @@ module WildcardUrlChecker
     return false if !valid_url?(url_to_check)
 
     escaped_url = Regexp.escape(url).sub("\\*", '\S*')
-    url_regex = Regexp.new("\\A#{escaped_url}\\z", 'i')
+    url_regex = Regexp.new("\\A#{escaped_url}\\z", "i")
 
     url_to_check.match?(url_regex)
   end

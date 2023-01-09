@@ -913,7 +913,6 @@ posting:
   max_mentions_per_post: 10
   max_users_notified_per_group_mention:
     default: 100
-    max: 250
     client: true
   newuser_max_replies_per_topic: 3
   newuser_max_mentions_per_post: 2
@@ -1550,6 +1549,10 @@ files:
     default: false
     client: true
     hidden: true
+  composer_ios_media_optimisation_image_enabled:
+    default: false
+    client: true
+    hidden: true
 
 trust:
   default_trust_level:
@@ -2036,7 +2039,7 @@ developer:
     default: true
     client: true
   enable_experimental_hashtag_autocomplete:
-    default: false
+    default: true
     client: true
   experimental_hashtag_search_result_limit:
     default: 20

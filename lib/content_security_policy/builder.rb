@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require 'content_security_policy/default'
+require "content_security_policy/default"
 
 class ContentSecurityPolicy
   class Builder
@@ -33,7 +33,9 @@ class ContentSecurityPolicy
     def <<(extension)
       return unless valid_extension?(extension)
 
-      extension.each { |directive, sources| extend_directive(normalize_directive(directive), sources) }
+      extension.each do |directive, sources|
+        extend_directive(normalize_directive(directive), sources)
+      end
     end
 
     def build
@@ -53,7 +55,7 @@ class ContentSecurityPolicy
     private
 
     def normalize_directive(directive)
-      directive.to_s.gsub('-', '_').to_sym
+      directive.to_s.gsub("-", "_").to_sym
     end
 
     def normalize_source(source)

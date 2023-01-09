@@ -2,11 +2,13 @@
 
 class ChatMessageDestroyer
   def destroy_in_batches(chat_messages_query, batch_size: 200)
-    chat_messages_query.in_batches(of: batch_size).each do |relation|
-      destroyed_ids = relation.destroy_all.pluck(:id)
-      reset_last_read(destroyed_ids)
-      delete_flags(destroyed_ids)
-    end
+    chat_messages_query
+      .in_batches(of: batch_size)
+      .each do |relation|
+        destroyed_ids = relation.destroy_all.pluck(:id)
+        reset_last_read(destroyed_ids)
+        delete_flags(destroyed_ids)
+      end
   end
 
   private

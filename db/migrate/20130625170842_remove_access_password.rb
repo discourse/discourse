@@ -2,7 +2,10 @@
 
 class RemoveAccessPassword < ActiveRecord::Migration[4.2]
   def up
-    result = execute("SELECT count(*) FROM site_settings where name='access_password' and char_length(value) > 0")
+    result =
+      execute(
+        "SELECT count(*) FROM site_settings where name='access_password' and char_length(value) > 0",
+      )
     if result[0] && result[0]["count"].to_i > (0)
       execute "DELETE FROM site_settings where name='access_password'"
       SiteSetting.login_required = true

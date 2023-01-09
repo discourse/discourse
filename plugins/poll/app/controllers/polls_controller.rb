@@ -3,7 +3,7 @@
 class DiscoursePoll::PollsController < ::ApplicationController
   requires_plugin DiscoursePoll::PLUGIN_NAME
 
-  before_action :ensure_logged_in, except: [:voters, :grouped_poll_results]
+  before_action :ensure_logged_in, except: %i[voters grouped_poll_results]
 
   def vote
     post_id = params.require(:post_id)
@@ -63,8 +63,14 @@ class DiscoursePoll::PollsController < ::ApplicationController
 
     begin
       render json: {
-        grouped_results: DiscoursePoll::Poll.grouped_poll_results(current_user, post_id, poll_name, user_field_name)
-      }
+               grouped_results:
+                 DiscoursePoll::Poll.grouped_poll_results(
+                   current_user,
+                   post_id,
+                   poll_name,
+                   user_field_name,
+                 ),
+             }
     rescue DiscoursePoll::Error => e
       render_json_error e.message
     end

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'net/imap'
-require 'net/smtp'
-require 'net/pop'
+require "net/imap"
+require "net/smtp"
+require "net/pop"
 
 # Usage:
 #
@@ -84,15 +84,14 @@ class EmailSettingsValidator
     debug: Rails.env.development?
   )
     begin
-      port, enable_tls, enable_starttls_auto = provider_specific_ssl_overrides(
-        host, port, enable_tls, enable_starttls_auto
-      )
+      port, enable_tls, enable_starttls_auto =
+        provider_specific_ssl_overrides(host, port, enable_tls, enable_starttls_auto)
 
       if enable_tls && enable_starttls_auto
         raise ArgumentError, "TLS and STARTTLS are mutually exclusive"
       end
 
-      if ![:plain, :login, :cram_md5].include?(authentication.to_sym)
+      if !%i[plain login cram_md5].include?(authentication.to_sym)
         raise ArgumentError, "Invalid authentication method. Must be plain, login, or cram_md5."
       end
 
@@ -100,7 +99,6 @@ class EmailSettingsValidator
         if Rails.env.development?
           domain = "localhost"
         else
-
           # Because we are using the SMTP settings here to send emails,
           # the domain should just be the TLD of the host.
           domain = MiniSuffix.domain(host)
@@ -154,7 +152,11 @@ class EmailSettingsValidator
     begin
       imap = Net::IMAP.new(host, port: port, ssl: ssl, open_timeout: open_timeout)
       imap.login(username, password)
-      imap.logout rescue nil
+      begin
+        imap.logout
+      rescue StandardError
+        nil
+      end
       imap.disconnect
     rescue => err
       log_and_raise(err, debug)
@@ -163,7 +165,9 @@ class EmailSettingsValidator
 
   def self.log_and_raise(err, debug)
     if debug
-      Rails.logger.warn("[EmailSettingsValidator] Error encountered when validating email settings: #{err.message} #{err.backtrace.join("\n")}")
+      Rails.logger.warn(
+        "[EmailSettingsValidator] Error encountered when validating email settings: #{err.message} #{err.backtrace.join("\n")}",
+      )
     end
     raise err
   end

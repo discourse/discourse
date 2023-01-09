@@ -1,16 +1,16 @@
 # frozen_string_literal: true
 
 RSpec.describe RegexPresenceValidator do
-  subject { described_class.new(regex: 'latest', regex_error: 'site_settings.errors.must_include_latest') }
+  subject do
+    described_class.new(regex: "latest", regex_error: "site_settings.errors.must_include_latest")
+  end
 
   describe "#valid_value?" do
     describe "when value is present" do
       it "without regex match" do
         expect(subject.valid_value?("categories|new")).to eq(false)
 
-        expect(subject.error_message).to eq(I18n.t(
-          "site_settings.errors.must_include_latest"
-        ))
+        expect(subject.error_message).to eq(I18n.t("site_settings.errors.must_include_latest"))
       end
 
       it "with regex match" do
@@ -22,9 +22,7 @@ RSpec.describe RegexPresenceValidator do
       it "should not be valid" do
         expect(subject.valid_value?("")).to eq(false)
 
-        expect(subject.error_message).to eq(I18n.t(
-          "site_settings.errors.must_include_latest"
-        ))
+        expect(subject.error_message).to eq(I18n.t("site_settings.errors.must_include_latest"))
       end
     end
   end

@@ -9,6 +9,6 @@ class CreateLastReadPosts < ActiveRecord::Migration[4.2]
       t.timestamps null: false
     end
 
-    add_index :last_read_posts, [:user_id, :forum_thread_id], unique: true
+    add_index :last_read_posts, %i[user_id forum_thread_id], unique: true
   end
 end

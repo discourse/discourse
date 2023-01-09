@@ -105,7 +105,10 @@ RSpec.describe CategoryHashtagDataSource do
   describe "#search_sort" do
     it "orders by exact slug match then text" do
       results_to_sort = [
-        HashtagAutocompleteService::HashtagItem.new(text: "System Tests", slug: "system-test-development"),
+        HashtagAutocompleteService::HashtagItem.new(
+          text: "System Tests",
+          slug: "system-test-development",
+        ),
         HashtagAutocompleteService::HashtagItem.new(text: "Ruby Dev", slug: "ruby-dev"),
         HashtagAutocompleteService::HashtagItem.new(text: "Dev", slug: "dev"),
         HashtagAutocompleteService::HashtagItem.new(text: "Dev Tools", slug: "dev-tools"),

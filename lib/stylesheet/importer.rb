@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-require 'global_path'
+require "global_path"
 
 module Stylesheet
   class Importer
     include GlobalPath
 
-    THEME_TARGETS ||= %w{embedded_theme mobile_theme desktop_theme}
+    THEME_TARGETS ||= %w[embedded_theme mobile_theme desktop_theme]
 
     def self.plugin_assets
       @plugin_assets ||= {}
@@ -18,12 +18,20 @@ module Stylesheet
 
         ["", "mobile", "desktop"].each do |type|
           asset_name = type.present? ? "#{plugin_directory_name}_#{type}" : plugin_directory_name
-          stylesheets = type.present? ? DiscoursePluginRegistry.send("#{type}_stylesheets") : DiscoursePluginRegistry.stylesheets
+          stylesheets =
+            (
+              if type.present?
+                DiscoursePluginRegistry.send("#{type}_stylesheets")
+              else
+                DiscoursePluginRegistry.stylesheets
+              end
+            )
 
-          plugin_assets[asset_name] = stylesheets[plugin_directory_name] if plugin_directory_name.present?
+          plugin_assets[asset_name] = stylesheets[
+            plugin_directory_name
+          ] if plugin_directory_name.present?
         end
       end
-
     end
 
     register_imports!
@@ -33,25 +41,21 @@ module Stylesheet
       heading_font = DiscourseFonts.fonts.find { |f| f[:key] == SiteSetting.heading_font }
       contents = +""
 
-      if body_font.present?
-        contents << <<~CSS
+      contents << <<~CSS if body_font.present?
           #{font_css(body_font)}
 
           :root {
             --font-family: #{body_font[:stack]};
           }
         CSS
-      end
 
-      if heading_font.present?
-        contents << <<~CSS
+      contents << <<~CSS if heading_font.present?
           #{font_css(heading_font)}
 
           :root {
             --heading-font-family: #{heading_font[:stack]};
           }
         CSS
-      end
 
       contents
     end
@@ -64,8 +68,16 @@ module Stylesheet
           # Overwrite font definition because the preview canvases in the wizard require explicit @font-face definitions.
           # uses same technique as https://github.com/jonathantneal/system-font-css
           font[:variants] = [
-            { src: 'local(".SFNS-Regular"), local(".SFNSText-Regular"), local(".HelveticaNeueDeskInterface-Regular"), local(".LucidaGrandeUI"), local("Segoe UI"), local("Ubuntu"), local("Roboto-Regular"), local("DroidSans"), local("Tahoma")', weight: 400 },
-            { src: 'local(".SFNS-Bold"), local(".SFNSText-Bold"), local(".HelveticaNeueDeskInterface-Bold"), local(".LucidaGrandeUI"), local("Segoe UI Bold"), local("Ubuntu Bold"), local("Roboto-Bold"), local("DroidSans-Bold"), local("Tahoma Bold")', weight: 700 }
+            {
+              src:
+                'local(".SFNS-Regular"), local(".SFNSText-Regular"), local(".HelveticaNeueDeskInterface-Regular"), local(".LucidaGrandeUI"), local("Segoe UI"), local("Ubuntu"), local("Roboto-Regular"), local("DroidSans"), local("Tahoma")',
+              weight: 400,
+            },
+            {
+              src:
+                'local(".SFNS-Bold"), local(".SFNSText-Bold"), local(".HelveticaNeueDeskInterface-Bold"), local(".LucidaGrandeUI"), local("Segoe UI Bold"), local("Ubuntu Bold"), local("Roboto-Bold"), local("DroidSans-Bold"), local("Tahoma Bold")',
+              weight: 700,
+            },
           ]
         end
 
@@ -85,9 +97,9 @@ module Stylesheet
 
     def category_backgrounds
       contents = +""
-      Category.where('uploaded_background_id IS NOT NULL').each do |c|
-        contents << category_css(c) if c.uploaded_background&.url.present?
-      end
+      Category
+        .where("uploaded_background_id IS NOT NULL")
+        .each { |c| contents << category_css(c) if c.uploaded_background&.url.present? }
 
       contents
     end
@@ -106,16 +118,18 @@ module Stylesheet
       if resolved_ids
         theme = Theme.find_by_id(theme_id)
         contents << theme&.scss_variables.to_s
-        Theme.list_baked_fields(resolved_ids, :common, :color_definitions).each do |field|
-          contents << "\n\n// Color definitions from #{field.theme.name}\n\n"
+        Theme
+          .list_baked_fields(resolved_ids, :common, :color_definitions)
+          .each do |field|
+            contents << "\n\n// Color definitions from #{field.theme.name}\n\n"
 
-          if field.theme_id == theme.id
-            contents << field.value
-          else
-            contents << field.compiled_css(prepended_scss)
+            if field.theme_id == theme.id
+              contents << field.value
+            else
+              contents << field.compiled_css(prepended_scss)
+            end
+            contents << "\n\n"
           end
-          contents << "\n\n"
-        end
       end
       contents
     end
@@ -130,24 +144,24 @@ module Stylesheet
     def color_variables
       contents = +""
       if @color_scheme_id
-        colors = begin
-          ColorScheme.find(@color_scheme_id).resolved_colors
-        rescue
-          ColorScheme.base_colors
-        end
+        colors =
+          begin
+            ColorScheme.find(@color_scheme_id).resolved_colors
+          rescue StandardError
+            ColorScheme.base_colors
+          end
       elsif (@theme_id && !theme.component)
         colors = theme&.color_scheme&.resolved_colors || ColorScheme.base_colors
       else
         # this is a slightly ugly backwards compatibility fix,
         # we shouldn't be using the default theme color scheme for components
         # (most components use CSS custom properties which work fine without this)
-        colors = Theme.find_by_id(SiteSetting.default_theme_id)&.color_scheme&.resolved_colors ||
-          ColorScheme.base_colors
+        colors =
+          Theme.find_by_id(SiteSetting.default_theme_id)&.color_scheme&.resolved_colors ||
+            ColorScheme.base_colors
       end
 
-      colors.each do |n, hex|
-        contents << "$#{n}: ##{hex} !default; "
-      end
+      colors.each { |n, hex| contents << "$#{n}: ##{hex} !default; " }
 
       contents
     end
@@ -192,15 +206,12 @@ module Stylesheet
 
           contents << value
         end
-
       end
       contents
     end
 
     def theme
-      unless @theme
-        @theme = (@theme_id && Theme.find(@theme_id)) || :nil
-      end
+      @theme = (@theme_id && Theme.find(@theme_id)) || :nil unless @theme
       @theme == :nil ? nil : @theme
     end
 
@@ -215,7 +226,14 @@ module Stylesheet
       if font[:variants].present?
         fonts_dir = UrlHelper.absolute("#{Discourse.base_path}/fonts")
         font[:variants].each do |variant|
-          src = variant[:src] ? variant[:src] : "url(\"#{fonts_dir}/#{variant[:filename]}?v=#{DiscourseFonts::VERSION}\") format(\"#{variant[:format]}\")"
+          src =
+            (
+              if variant[:src]
+                variant[:src]
+              else
+                "url(\"#{fonts_dir}/#{variant[:filename]}?v=#{DiscourseFonts::VERSION}\") format(\"#{variant[:format]}\")"
+              end
+            )
           contents << <<~CSS
             @font-face {
               font-family: #{font[:name]};
@@ -228,6 +246,5 @@ module Stylesheet
 
       contents
     end
-
   end
 end

@@ -4,7 +4,6 @@
 #  A class that handles interaction between a plugin and the Discourse App.
 #
 class DiscoursePluginRegistry
-
   # Plugins often need to be able to register additional handlers, data, or
   # classes that will be used by core classes. This should be used if you
   # need to control which type the registry is, and if it doesn't need to
@@ -24,9 +23,7 @@ class DiscoursePluginRegistry
         instance_variable_set(:"@#{register_name}", type.new)
     end
 
-    define_method(register_name) do
-      self.class.public_send(register_name)
-    end
+    define_method(register_name) { self.class.public_send(register_name) }
   end
 
   # Plugins often need to add values to a list, and we need to filter those
@@ -45,10 +42,7 @@ class DiscoursePluginRegistry
 
     define_singleton_method(register_name) do
       unfiltered = public_send(:"_raw_#{register_name}")
-      unfiltered
-        .filter { |v| v[:plugin].enabled? }
-        .map { |v| v[:value] }
-        .uniq
+      unfiltered.filter { |v| v[:plugin].enabled? }.map { |v| v[:value] }.uniq
     end
 
     define_singleton_method("register_#{register_name.to_s.singularize}") do |value, plugin|
@@ -158,9 +152,7 @@ class DiscoursePluginRegistry
         next if each_options[:admin]
       end
 
-      Dir.glob("#{root}/**/*.#{ext}") do |f|
-        yield f
-      end
+      Dir.glob("#{root}/**/*.#{ext}") { |f| yield f }
     end
   end
 
@@ -227,7 +219,7 @@ class DiscoursePluginRegistry
 
   def self.seed_paths
     result = SeedFu.fixture_paths.dup
-    unless Rails.env.test? && ENV['LOAD_PLUGINS'] != "1"
+    unless Rails.env.test? && ENV["LOAD_PLUGINS"] != "1"
       seed_path_builders.each { |b| result += b.call }
     end
     result.uniq
@@ -239,7 +231,7 @@ class DiscoursePluginRegistry
 
   VENDORED_CORE_PRETTY_TEXT_MAP = {
     "moment.js" => "vendor/assets/javascripts/moment.js",
-    "moment-timezone.js" => "vendor/assets/javascripts/moment-timezone-with-data.js"
+    "moment-timezone.js" => "vendor/assets/javascripts/moment-timezone-with-data.js",
   }
   def self.core_asset_for_name(name)
     asset = VENDORED_CORE_PRETTY_TEXT_MAP[name]
@@ -248,16 +240,12 @@ class DiscoursePluginRegistry
   end
 
   def self.reset!
-    @@register_names.each do |name|
-      instance_variable_set(:"@#{name}", nil)
-    end
+    @@register_names.each { |name| instance_variable_set(:"@#{name}", nil) }
   end
 
   def self.reset_register!(register_name)
     found_register = @@register_names.detect { |name| name == register_name }
 
-    if found_register
-      instance_variable_set(:"@#{found_register}", nil)
-    end
+    instance_variable_set(:"@#{found_register}", nil) if found_register
   end
 end

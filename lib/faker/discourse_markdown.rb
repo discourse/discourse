@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'faker'
-require 'net/http'
-require 'json'
+require "faker"
+require "net/http"
+require "json"
 
 module Faker
   class DiscourseMarkdown < Markdown
@@ -27,11 +27,8 @@ module Faker
         image = next_image
         image_file = load_image(image)
 
-        upload = ::UploadCreator.new(
-          image_file,
-          image[:filename],
-          origin: image[:url]
-        ).create_for(user_id)
+        upload =
+          ::UploadCreator.new(image_file, image[:filename], origin: image[:url]).create_for(user_id)
 
         ::UploadMarkdown.new(upload).to_markdown if upload.present? && upload.persisted?
       rescue => e
@@ -62,7 +59,7 @@ module Faker
         end
 
         image = @images.pop
-        { filename: "#{image['id']}.jpg", url: "#{image['download_url']}.jpg" }
+        { filename: "#{image["id"]}.jpg", url: "#{image["download_url"]}.jpg" }
       end
 
       def image_cache_dir
@@ -74,12 +71,13 @@ module Faker
 
         if !::File.exist?(cache_path)
           FileUtils.mkdir_p(image_cache_dir)
-          temp_file = ::FileHelper.download(
-            image[:url],
-            max_file_size: [SiteSetting.max_image_size_kb.kilobytes, 10.megabytes].max,
-            tmp_file_name: "image",
-            follow_redirect: true
-          )
+          temp_file =
+            ::FileHelper.download(
+              image[:url],
+              max_file_size: [SiteSetting.max_image_size_kb.kilobytes, 10.megabytes].max,
+              tmp_file_name: "image",
+              follow_redirect: true,
+            )
           FileUtils.cp(temp_file, cache_path)
         end
 

@@ -173,7 +173,7 @@ module BadgeQueries
     <<~SQL
       SELECT p.user_id, p.id post_id, current_timestamp granted_at
       FROM badge_posts p
-      WHERE #{is_topic ? "p.post_number = 1" : "p.post_number > 1" } AND p.like_count >= #{count.to_i} AND
+      WHERE #{is_topic ? "p.post_number = 1" : "p.post_number > 1"} AND p.like_count >= #{count.to_i} AND
         (:backfill OR p.id IN (:post_ids) )
     SQL
   end
@@ -271,5 +271,4 @@ module BadgeQueries
        WHERE "rank" = 1
     SQL
   end
-
 end

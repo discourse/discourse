@@ -131,6 +131,10 @@ export default Component.extend({
 
   @action
   fetchChannelsFromServer(filter) {
+    if (this.isDestroyed || this.isDestroying) {
+      return;
+    }
+
     this.setProperties({
       loading: true,
       searchIndex: this.searchIndex + 1,
@@ -165,6 +169,10 @@ export default Component.extend({
 
   @action
   getInitialChannels() {
+    if (this.isDestroyed || this.isDestroying) {
+      return;
+    }
+
     const channels = this.getChannelsWithFilter(this.filter);
     this.set("channels", channels);
     this.focusFirstChannel(channels);

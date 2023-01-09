@@ -1026,7 +1026,7 @@ export default Component.extend({
         this.set("sendingLoading", false);
       });
 
-    if (this.details.can_load_more_future) {
+    if (this.details?.can_load_more_future) {
       msgCreationPromise.then(() => this._fetchAndScrollToLatest());
     } else {
       const stagedMessage = this._prepareSingleMessage(

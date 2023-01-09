@@ -13,10 +13,11 @@ RSpec.describe "User status | sidebar", type: :system, js: true do
     chat_system_bootstrap
     current_user.set_status!("online", "heart")
     sign_in(current_user)
-    Jobs.run_immediately!
   end
 
   it "shows user status" do
+    Jobs.run_immediately!
+
     visit("/")
 
     expect(find(".user-status .emoji")["title"]).to eq("online")
@@ -25,6 +26,8 @@ RSpec.describe "User status | sidebar", type: :system, js: true do
 
   context "when changing status" do
     it "updates status" do
+      Jobs.run_immediately!
+
       visit("/")
       current_user.set_status!("offline", "tooth")
 
@@ -35,6 +38,8 @@ RSpec.describe "User status | sidebar", type: :system, js: true do
 
   context "when removing status" do
     it "removes status" do
+      Jobs.run_immediately!
+
       visit("/")
       current_user.clear_status!
 

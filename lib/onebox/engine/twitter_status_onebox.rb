@@ -7,7 +7,9 @@ module Onebox
       include LayoutSupport
       include HTML
 
-      matches_regexp(/^https?:\/\/(mobile\.|www\.)?twitter\.com\/.+?\/status(es)?\/\d+(\/(video|photo)\/\d?+)?+(\/?\?.*)?\/?$/)
+      matches_regexp(
+        %r{^https?://(mobile\.|www\.)?twitter\.com/.+?/status(es)?/\d+(/(video|photo)/\d?+)?+(/?\?.*)?/?$},
+      )
       always_https
 
       def self.===(other)
@@ -16,11 +18,11 @@ module Onebox
       end
 
       def http_params
-        { 'User-Agent' => 'DiscourseBot/1.0' }
+        { "User-Agent" => "DiscourseBot/1.0" }
       end
 
       def to_html
-        raw.present? ? super : ''
+        raw.present? ? super : ""
       end
 
       private
@@ -38,9 +40,7 @@ module Onebox
       end
 
       def raw
-        if twitter_api_credentials_present?
-          @raw ||= client.status(match[:id]).to_hash
-        end
+        @raw ||= client.status(match[:id]).to_hash if twitter_api_credentials_present?
       end
 
       def access(*keys)
@@ -70,7 +70,7 @@ module Onebox
       end
 
       def avatar
-        access(:user, :profile_image_url_https).sub('normal', '400x400')
+        access(:user, :profile_image_url_https).sub("normal", "400x400")
       end
 
       def likes
@@ -114,7 +114,7 @@ module Onebox
           quoted_tweet: quoted_tweet,
           quoted_full_name: quoted_full_name,
           quoted_screen_name: quoted_screen_name,
-          quoted_link: quoted_link
+          quoted_link: quoted_link,
         }
       end
     end

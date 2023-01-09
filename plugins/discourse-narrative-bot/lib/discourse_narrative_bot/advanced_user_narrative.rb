@@ -3,99 +3,101 @@
 module DiscourseNarrativeBot
   class AdvancedUserNarrative < Base
     I18N_KEY = "discourse_narrative_bot.advanced_user_narrative".freeze
-    BADGE_NAME = 'Licensed'.freeze
+    BADGE_NAME = "Licensed".freeze
 
     TRANSITION_TABLE = {
       begin: {
         next_state: :tutorial_edit,
         next_instructions: Proc.new { I18n.t("#{I18N_KEY}.edit.instructions", i18n_post_args) },
         init: {
-          action: :start_advanced_track
-        }
+          action: :start_advanced_track,
+        },
       },
-
       tutorial_edit: {
         next_state: :tutorial_delete,
         next_instructions: Proc.new { I18n.t("#{I18N_KEY}.delete.instructions", i18n_post_args) },
         edit: {
-          action: :reply_to_edit
+          action: :reply_to_edit,
         },
         reply: {
           next_state: :tutorial_edit,
-          action: :missing_edit
-        }
+          action: :missing_edit,
+        },
       },
-
       tutorial_delete: {
         next_state: :tutorial_recover,
         next_instructions: Proc.new { I18n.t("#{I18N_KEY}.recover.instructions", i18n_post_args) },
         delete: {
-          action: :reply_to_delete
+          action: :reply_to_delete,
         },
         reply: {
           next_state: :tutorial_delete,
-          action: :missing_delete
-        }
+          action: :missing_delete,
+        },
       },
-
       tutorial_recover: {
         next_state: :tutorial_category_hashtag,
-        next_instructions: Proc.new do
-          category = Category.secured(Guardian.new(@user)).last
-          slug = category.slug
+        next_instructions:
+          Proc.new do
+            category = Category.secured(Guardian.new(@user)).last
+            slug = category.slug
 
-          if parent_category = category.parent_category
-            slug = "#{parent_category.slug}#{CategoryHashtag::SEPARATOR}#{slug}"
-          end
+            if parent_category = category.parent_category
+              slug = "#{parent_category.slug}#{CategoryHashtag::SEPARATOR}#{slug}"
+            end
 
-          I18n.t("#{I18N_KEY}.category_hashtag.instructions",
-            i18n_post_args(category: "##{slug}")
-          )
-        end,
+            I18n.t(
+              "#{I18N_KEY}.category_hashtag.instructions",
+              i18n_post_args(category: "##{slug}"),
+            )
+          end,
         recover: {
-          action: :reply_to_recover
+          action: :reply_to_recover,
         },
         reply: {
           next_state: :tutorial_recover,
-          action: :missing_recover
-        }
+          action: :missing_recover,
+        },
       },
-
       tutorial_category_hashtag: {
         next_state: :tutorial_change_topic_notification_level,
-        next_instructions: Proc.new { I18n.t("#{I18N_KEY}.change_topic_notification_level.instructions", i18n_post_args) },
+        next_instructions:
+          Proc.new do
+            I18n.t("#{I18N_KEY}.change_topic_notification_level.instructions", i18n_post_args)
+          end,
         reply: {
-          action: :reply_to_category_hashtag
-        }
+          action: :reply_to_category_hashtag,
+        },
       },
-
       tutorial_change_topic_notification_level: {
         next_state: :tutorial_poll,
         next_instructions: Proc.new { I18n.t("#{I18N_KEY}.poll.instructions", i18n_post_args) },
         topic_notification_level_changed: {
-          action: :reply_to_topic_notification_level_changed
+          action: :reply_to_topic_notification_level_changed,
         },
         reply: {
           next_state: :tutorial_change_topic_notification_level,
-          action: :missing_topic_notification_level_change
-        }
+          action: :missing_topic_notification_level_change,
+        },
       },
-
       tutorial_poll: {
-        prerequisite: Proc.new { SiteSetting.poll_enabled && @user.has_trust_level?(SiteSetting.poll_minimum_trust_level_to_create) },
+        prerequisite:
+          Proc.new do
+            SiteSetting.poll_enabled &&
+              @user.has_trust_level?(SiteSetting.poll_minimum_trust_level_to_create)
+          end,
         next_state: :tutorial_details,
         next_instructions: Proc.new { I18n.t("#{I18N_KEY}.details.instructions", i18n_post_args) },
         reply: {
-          action: :reply_to_poll
-        }
+          action: :reply_to_poll,
+        },
       },
-
       tutorial_details: {
         next_state: :end,
         reply: {
-          action: :reply_to_details
-        }
-      }
+          action: :reply_to_details,
+        },
+      },
     }
 
     def self.badge_name
@@ -103,7 +105,7 @@ module DiscourseNarrativeBot
     end
 
     def self.reset_trigger
-      I18n.t('discourse_narrative_bot.advanced_user_narrative.reset_trigger')
+      I18n.t("discourse_narrative_bot.advanced_user_narrative.reset_trigger")
     end
 
     def reset_bot(user, post)
@@ -123,13 +125,18 @@ module DiscourseNarrativeBot
 
       fake_delay
 
-      post = PostCreator.create!(
-        @user,
-        raw: I18n.t("#{I18N_KEY}.edit.bot_created_post_raw", i18n_post_args(discobot_username: self.discobot_username)),
-        topic_id: data[:topic_id],
-        skip_bot: true,
-        skip_validations: true
-      )
+      post =
+        PostCreator.create!(
+          @user,
+          raw:
+            I18n.t(
+              "#{I18N_KEY}.edit.bot_created_post_raw",
+              i18n_post_args(discobot_username: self.discobot_username),
+            ),
+          topic_id: data[:topic_id],
+          skip_bot: true,
+          skip_validations: true,
+        )
 
       set_state_data(:post_id, post.id)
       post
@@ -138,13 +145,18 @@ module DiscourseNarrativeBot
     def init_tutorial_recover
       data = get_data(@user)
 
-      post = PostCreator.create!(
-        @user,
-        raw: I18n.t("#{I18N_KEY}.recover.deleted_post_raw", i18n_post_args(discobot_username: self.discobot_username)),
-        topic_id: data[:topic_id],
-        skip_bot: true,
-        skip_validations: true
-      )
+      post =
+        PostCreator.create!(
+          @user,
+          raw:
+            I18n.t(
+              "#{I18N_KEY}.recover.deleted_post_raw",
+              i18n_post_args(discobot_username: self.discobot_username),
+            ),
+          topic_id: data[:topic_id],
+          skip_bot: true,
+          skip_validations: true,
+        )
 
       set_state_data(:post_id, post.id)
 
@@ -172,18 +184,15 @@ module DiscourseNarrativeBot
       opts = {
         title: I18n.t("#{I18N_KEY}.title"),
         target_usernames: @user.username,
-        archetype: Archetype.private_message
+        archetype: Archetype.private_message,
       }
 
-      if @post &&
-         @post.topic.private_message? &&
-         @post.topic.topic_allowed_users.pluck(:user_id).include?(@user.id)
+      if @post && @post.topic.private_message? &&
+           @post.topic.topic_allowed_users.pluck(:user_id).include?(@user.id)
       end
 
       if @data[:topic_id]
-        opts = opts
-          .merge(topic_id: @data[:topic_id])
-          .except(:title, :target_usernames, :archetype)
+        opts = opts.merge(topic_id: @data[:topic_id]).except(:title, :target_usernames, :archetype)
       end
       post = reply_to(@post, raw, opts)
 
@@ -213,9 +222,10 @@ module DiscourseNarrativeBot
       fake_delay
 
       unless @data[:attempted]
-        reply_to(@post, I18n.t("#{I18N_KEY}.edit.not_found",
-          i18n_post_args(url: Post.find_by(id: post_id).url)
-        ))
+        reply_to(
+          @post,
+          I18n.t("#{I18N_KEY}.edit.not_found", i18n_post_args(url: Post.find_by(id: post_id).url)),
+        )
       end
 
       enqueue_timeout_job(@user)
@@ -233,16 +243,15 @@ module DiscourseNarrativeBot
       #{instance_eval(&@next_instructions)}
       MD
 
-      PostCreator.create!(self.discobot_user,
-        raw: raw,
-        topic_id: @topic_id
-      )
+      PostCreator.create!(self.discobot_user, raw: raw, topic_id: @topic_id)
     end
 
     def missing_delete
       return unless valid_topic?(@post.topic_id)
       fake_delay
-      reply_to(@post, I18n.t("#{I18N_KEY}.delete.not_found", i18n_post_args)) unless @data[:attempted]
+      unless @data[:attempted]
+        reply_to(@post, I18n.t("#{I18N_KEY}.delete.not_found", i18n_post_args))
+      end
       enqueue_timeout_job(@user)
       false
     end
@@ -258,18 +267,19 @@ module DiscourseNarrativeBot
       #{instance_eval(&@next_instructions)}
       MD
 
-      PostCreator.create!(self.discobot_user,
-        raw: raw,
-        topic_id: @post.topic_id
-      )
+      PostCreator.create!(self.discobot_user, raw: raw, topic_id: @post.topic_id)
     end
 
     def missing_recover
-      return unless valid_topic?(@post.topic_id) &&
-        post_id = get_state_data(:post_id) && @post.id != post_id
+      unless valid_topic?(@post.topic_id) &&
+               post_id = get_state_data(:post_id) && @post.id != post_id
+        return
+      end
 
       fake_delay
-      reply_to(@post, I18n.t("#{I18N_KEY}.recover.not_found", i18n_post_args)) unless @data[:attempted]
+      unless @data[:attempted]
+        reply_to(@post, I18n.t("#{I18N_KEY}.recover.not_found", i18n_post_args))
+      end
       enqueue_timeout_job(@user)
       false
     end
@@ -278,7 +288,7 @@ module DiscourseNarrativeBot
       topic_id = @post.topic_id
       return unless valid_topic?(topic_id)
 
-      if Nokogiri::HTML5.fragment(@post.cooked).css('.hashtag').size > 0
+      if Nokogiri::HTML5.fragment(@post.cooked).css(".hashtag").size > 0
         raw = <<~MD
           #{I18n.t("#{I18N_KEY}.category_hashtag.reply", i18n_post_args)}
 
@@ -289,7 +299,9 @@ module DiscourseNarrativeBot
         reply_to(@post, raw)
       else
         fake_delay
-        reply_to(@post, I18n.t("#{I18N_KEY}.category_hashtag.not_found", i18n_post_args)) unless @data[:attempted]
+        unless @data[:attempted]
+          reply_to(@post, I18n.t("#{I18N_KEY}.category_hashtag.not_found", i18n_post_args))
+        end
         enqueue_timeout_job(@user)
         false
       end
@@ -299,7 +311,12 @@ module DiscourseNarrativeBot
       return unless valid_topic?(@post.topic_id)
 
       fake_delay
-      reply_to(@post, I18n.t("#{I18N_KEY}.change_topic_notification_level.not_found", i18n_post_args)) unless @data[:attempted]
+      unless @data[:attempted]
+        reply_to(
+          @post,
+          I18n.t("#{I18N_KEY}.change_topic_notification_level.not_found", i18n_post_args),
+        )
+      end
       enqueue_timeout_job(@user)
       false
     end
@@ -316,10 +333,7 @@ module DiscourseNarrativeBot
 
       fake_delay
 
-      post = PostCreator.create!(self.discobot_user,
-        raw: raw,
-        topic_id: @topic_id
-      )
+      post = PostCreator.create!(self.discobot_user, raw: raw, topic_id: @topic_id)
 
       enqueue_timeout_job(@user)
       post
@@ -340,7 +354,9 @@ module DiscourseNarrativeBot
         reply_to(@post, raw)
       else
         fake_delay
-        reply_to(@post, I18n.t("#{I18N_KEY}.poll.not_found", i18n_post_args)) unless @data[:attempted]
+        unless @data[:attempted]
+          reply_to(@post, I18n.t("#{I18N_KEY}.poll.not_found", i18n_post_args))
+        end
         enqueue_timeout_job(@user)
         false
       end
@@ -355,7 +371,9 @@ module DiscourseNarrativeBot
       if Nokogiri::HTML5.fragment(@post.cooked).css("details").size > 0
         reply_to(@post, I18n.t("#{I18N_KEY}.details.reply", i18n_post_args))
       else
-        reply_to(@post, I18n.t("#{I18N_KEY}.details.not_found", i18n_post_args)) unless @data[:attempted]
+        unless @data[:attempted]
+          reply_to(@post, I18n.t("#{I18N_KEY}.details.not_found", i18n_post_args))
+        end
         enqueue_timeout_job(@user)
         false
       end
@@ -370,7 +388,9 @@ module DiscourseNarrativeBot
       if @post.wiki
         reply_to(@post, I18n.t("#{I18N_KEY}.wiki.reply", i18n_post_args))
       else
-        reply_to(@post, I18n.t("#{I18N_KEY}.wiki.not_found", i18n_post_args)) unless @data[:attempted]
+        unless @data[:attempted]
+          reply_to(@post, I18n.t("#{I18N_KEY}.wiki.not_found", i18n_post_args))
+        end
         enqueue_timeout_job(@user)
         false
       end
@@ -379,9 +399,10 @@ module DiscourseNarrativeBot
     def end_reply
       fake_delay
 
-      reply_to(@post, I18n.t("#{I18N_KEY}.end.message",
-        i18n_post_args(certificate: certificate('advanced'))
-      ))
+      reply_to(
+        @post,
+        I18n.t("#{I18N_KEY}.end.message", i18n_post_args(certificate: certificate("advanced"))),
+      )
     end
 
     def synchronize(user)

@@ -10,7 +10,7 @@ module Email
     end
 
     def self.ensure_valid_address_lists!(mail)
-      [:to, :cc, :bcc].each do |field|
+      %i[to cc bcc].each do |field|
         addresses = mail[field]
 
         if addresses&.errors.present?
@@ -21,7 +21,8 @@ module Email
 
     def self.ensure_valid_date!(mail)
       if mail.date.nil?
-        raise Email::Receiver::InvalidPost, I18n.t("system_messages.email_reject_invalid_post_specified.date_invalid")
+        raise Email::Receiver::InvalidPost,
+              I18n.t("system_messages.email_reject_invalid_post_specified.date_invalid")
       end
     end
   end

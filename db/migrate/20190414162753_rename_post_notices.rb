@@ -2,8 +2,16 @@
 
 class RenamePostNotices < ActiveRecord::Migration[5.2]
   def up
-    add_index :post_custom_fields, :post_id, unique: true, name: "index_post_custom_fields_on_notice_type", where: "name = 'notice_type'"
-    add_index :post_custom_fields, :post_id, unique: true, name: "index_post_custom_fields_on_notice_args", where: "name = 'notice_args'"
+    add_index :post_custom_fields,
+              :post_id,
+              unique: true,
+              name: "index_post_custom_fields_on_notice_type",
+              where: "name = 'notice_type'"
+    add_index :post_custom_fields,
+              :post_id,
+              unique: true,
+              name: "index_post_custom_fields_on_notice_args",
+              where: "name = 'notice_args'"
 
     # Split site setting `min_post_notice_tl` into `new_user_notice_tl` and `returning_user_notice_tl`.
     execute <<~SQL

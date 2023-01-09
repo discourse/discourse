@@ -17,11 +17,12 @@ class Auth::TwitterAuthenticator < Auth::ManagedAuthenticator
 
   def register_middleware(omniauth)
     omniauth.provider :twitter,
-           setup: lambda { |env|
-             strategy = env["omniauth.strategy"]
-              strategy.options[:consumer_key] = SiteSetting.twitter_consumer_key
-              strategy.options[:consumer_secret] = SiteSetting.twitter_consumer_secret
-           }
+                      setup:
+                        lambda { |env|
+                          strategy = env["omniauth.strategy"]
+                          strategy.options[:consumer_key] = SiteSetting.twitter_consumer_key
+                          strategy.options[:consumer_secret] = SiteSetting.twitter_consumer_secret
+                        }
   end
 
   # twitter doesn't return unverfied email addresses in the API

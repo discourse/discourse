@@ -1,22 +1,25 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseHub do
-  describe '.discourse_version_check' do
-    it 'should return just return the json that the hub returns' do
-      hub_response = { 'success' => 'OK', 'latest_version' => '0.8.1', 'critical_updates' => false }
+  describe ".discourse_version_check" do
+    it "should return just return the json that the hub returns" do
+      hub_response = { "success" => "OK", "latest_version" => "0.8.1", "critical_updates" => false }
 
-      stub_request(:get, (ENV['HUB_BASE_URL'] || "http://local.hub:3000/api") + "/version_check").
-        with(query: DiscourseHub.version_check_payload).
-        to_return(status: 200, body: hub_response.to_json)
+      stub_request(
+        :get,
+        (ENV["HUB_BASE_URL"] || "http://local.hub:3000/api") + "/version_check",
+      ).with(query: DiscourseHub.version_check_payload).to_return(
+        status: 200,
+        body: hub_response.to_json,
+      )
 
       expect(DiscourseHub.discourse_version_check).to eq(hub_response)
     end
   end
 
-  describe '.version_check_payload' do
-
-    describe 'when Discourse Hub has not fetched stats since past 7 days' do
-      it 'should include stats' do
+  describe ".version_check_payload" do
+    describe "when Discourse Hub has not fetched stats since past 7 days" do
+      it "should include stats" do
         DiscourseHub.stats_fetched_at = 8.days.ago
         json = JSON.parse(DiscourseHub.version_check_payload.to_json)
 
@@ -39,8 +42,8 @@ RSpec.describe DiscourseHub do
       end
     end
 
-    describe 'when Discourse Hub has fetched stats in past 7 days' do
-      it 'should not include stats' do
+    describe "when Discourse Hub has fetched stats in past 7 days" do
+      it "should not include stats" do
         DiscourseHub.stats_fetched_at = 2.days.ago
         json = JSON.parse(DiscourseHub.version_check_payload.to_json)
 
@@ -55,9 +58,9 @@ RSpec.describe DiscourseHub do
       end
     end
 
-    describe 'when send_anonymize_stats is disabled' do
-      describe 'when Discourse Hub has not fetched stats for the past year' do
-        it 'should not include stats' do
+    describe "when send_anonymize_stats is disabled" do
+      describe "when Discourse Hub has not fetched stats for the past year" do
+        it "should not include stats" do
           DiscourseHub.stats_fetched_at = 1.year.ago
           SiteSetting.share_anonymized_statistics = false
           json = JSON.parse(DiscourseHub.version_check_payload.to_json)
@@ -75,29 +78,27 @@ RSpec.describe DiscourseHub do
     end
   end
 
-  describe '.collection_action' do
+  describe ".collection_action" do
     before do
       @orig_logger = Rails.logger
       Rails.logger = @fake_logger = FakeLogger.new
     end
 
-    after do
-      Rails.logger = @orig_logger
-    end
+    after { Rails.logger = @orig_logger }
 
-    it 'should log correctly on error' do
-      stub_request(:get, (ENV['HUB_BASE_URL'] || "http://local.hub:3000/api") + '/test').
-        to_return(status: 500, body: "", headers: {})
+    it "should log correctly on error" do
+      stub_request(:get, (ENV["HUB_BASE_URL"] || "http://local.hub:3000/api") + "/test").to_return(
+        status: 500,
+        body: "",
+        headers: {
+        },
+      )
 
-      DiscourseHub.collection_action(:get, '/test')
+      DiscourseHub.collection_action(:get, "/test")
 
-      expect(@fake_logger.warnings).to eq([
-        DiscourseHub.response_status_log_message('/test', 500),
-      ])
+      expect(@fake_logger.warnings).to eq([DiscourseHub.response_status_log_message("/test", 500)])
 
-      expect(@fake_logger.errors).to eq([
-        DiscourseHub.response_body_log_message("")
-      ])
+      expect(@fake_logger.errors).to eq([DiscourseHub.response_body_log_message("")])
     end
   end
 end

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class SafeModeController < ApplicationController
-  layout 'no_ember'
+  layout "no_ember"
   before_action :ensure_safe_mode_enabled
   before_action :force_safe_mode_for_route
 
@@ -39,5 +39,4 @@ class SafeModeController < ApplicationController
     request.env[ApplicationController::NO_THEMES] = true
     request.env[ApplicationController::NO_PLUGINS] = true
   end
-
 end

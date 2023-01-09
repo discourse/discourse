@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-module SiteSettings; end
+module SiteSettings
+end
 
 class SiteSettings::YamlLoader
   def initialize(file)
@@ -13,14 +14,16 @@ class SiteSettings::YamlLoader
       yaml[category].each do |setting_name, hash|
         if hash.is_a?(Hash)
           # Get default value for the site setting:
-          value = hash.delete('default')
+          value = hash.delete("default")
 
           if value.nil?
-            raise StandardError, "The site setting `#{setting_name}` in '#{@file}' is missing default value."
+            raise StandardError,
+                  "The site setting `#{setting_name}` in '#{@file}' is missing default value."
           end
 
-          if hash.values_at('min', 'max').any? && hash['validator'].present?
-            raise StandardError, "The site setting `#{setting_name}` in '#{@file}' will have it's min/max validation ignored because there is a validator also specified."
+          if hash.values_at("min", "max").any? && hash["validator"].present?
+            raise StandardError,
+                  "The site setting `#{setting_name}` in '#{@file}' will have it's min/max validation ignored because there is a validator also specified."
           end
 
           yield category, setting_name, value, hash.deep_symbolize_keys!
@@ -35,7 +38,7 @@ class SiteSettings::YamlLoader
   private
 
   def load_yaml(path)
-    if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('3.1.0')
+    if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new("3.1.0")
       YAML.load_file(path, aliases: true)
     else
       YAML.load_file(path)

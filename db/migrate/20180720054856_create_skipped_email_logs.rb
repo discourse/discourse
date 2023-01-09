@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'migration/column_dropper'
+require "migration/column_dropper"
 
 class CreateSkippedEmailLogs < ActiveRecord::Migration[5.2]
   def change
@@ -44,6 +44,6 @@ class CreateSkippedEmailLogs < ActiveRecord::Migration[5.2]
 
     execute(sql)
 
-    Migration::ColumnDropper.mark_readonly('email_logs', 'skipped_reason')
+    Migration::ColumnDropper.mark_readonly("email_logs", "skipped_reason")
   end
 end

@@ -439,6 +439,7 @@ html.composer-open {
         }
 
         .name {
+          display: contents;
           font-size: var(--font-down-1);
           color: var(--primary-high);
         }

@@ -9,6 +9,6 @@ class CreateUserFirsts < ActiveRecord::Migration[4.2]
       t.datetime :created_at, null: false
     end
 
-    add_index :user_firsts, [:user_id, :first_type], unique: true
+    add_index :user_firsts, %i[user_id first_type], unique: true
   end
 end

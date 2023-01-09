@@ -17,7 +17,7 @@ class GroupEmailCredentialsCheck
             host: group.smtp_server,
             port: group.smtp_port,
             username: group.email_username,
-            password: group.email_password
+            password: group.email_password,
           )
         end
       end
@@ -30,7 +30,7 @@ class GroupEmailCredentialsCheck
             host: group.smtp_server,
             port: group.smtp_port,
             username: group.email_username,
-            password: group.email_password
+            password: group.email_password,
           )
         end
       end
@@ -48,11 +48,13 @@ class GroupEmailCredentialsCheck
         group_id: group.id,
         group_name: group.name,
         group_full_name: group.full_name,
-        message: EmailSettingsExceptionHandler.friendly_exception_message(err, group.smtp_server)
+        message: EmailSettingsExceptionHandler.friendly_exception_message(err, group.smtp_server),
       }
     rescue => err
       Discourse.warn_exception(
-        err, message: "Unexpected error when checking SMTP credentials for group #{group.id} (#{group.name})."
+        err,
+        message:
+          "Unexpected error when checking SMTP credentials for group #{group.id} (#{group.name}).",
       )
       nil
     end
