@@ -36,15 +36,20 @@ class Demon::EmailSync < ::Demon::Base
         status = nil
         idle = false
 
-        while @running && group.reload.imap_mailbox_name.present? do
+        while @running && group.reload.imap_mailbox_name.present?
           ImapSyncLog.debug("Processing mailbox for group #{group.name} in db #{db}", group)
-          status = syncer.process(
-            idle: syncer.can_idle? && status && status[:remaining] == 0,
-            old_emails_limit: status && status[:remaining] > 0 ? 0 : nil,
-          )
+          status =
+            syncer.process(
+              idle: syncer.can_idle? && status && status[:remaining] == 0,
+              old_emails_limit: status && status[:remaining] > 0 ? 0 : nil,
+            )
 
           if !syncer.can_idle? && status[:remaining] == 0
-            ImapSyncLog.debug("Going to sleep for group #{group.name} in db #{db} to wait for new emails", group, db: false)
+            ImapSyncLog.debug(
+              "Going to sleep for group #{group.name} in db #{db} to wait for new emails",
+              group,
+              db: false,
+            )
 
             # Thread goes into sleep for a bit so it is better to return any
             # connection back to the pool.
@@ -66,11 +71,7 @@ class Demon::EmailSync < ::Demon::Base
     # synchronization primitives available anyway).
     @running = false
 
-    @sync_data.each do |db, sync_data|
-      sync_data.each do |_, data|
-        kill_and_disconnect!(data)
-      end
-    end
+    @sync_data.each { |db, sync_data| sync_data.each { |_, data| kill_and_disconnect!(data) } }
 
     exit 0
   end
@@ -89,9 +90,9 @@ class Demon::EmailSync < ::Demon::Base
     @sync_data = {}
     @sync_lock = Mutex.new
 
-    trap('INT')  { kill_threads }
-    trap('TERM') { kill_threads }
-    trap('HUP')  { kill_threads }
+    trap("INT") { kill_threads }
+    trap("TERM") { kill_threads }
+    trap("HUP") { kill_threads }
 
     while @running
       Discourse.redis.set(HEARTBEAT_KEY, Time.now.to_i, ex: HEARTBEAT_INTERVAL)
@@ -101,9 +102,7 @@ class Demon::EmailSync < ::Demon::Base
       @sync_data.filter! do |db, sync_data|
         next true if all_dbs.include?(db)
 
-        sync_data.each do |_, data|
-          kill_and_disconnect!(data)
-        end
+        sync_data.each { |_, data| kill_and_disconnect!(data) }
 
         false
       end
@@ -121,7 +120,10 @@ class Demon::EmailSync < ::Demon::Base
             next true if groups[group_id] && data[:thread]&.alive? && !data[:syncer]&.disconnected?
 
             if !groups[group_id]
-              ImapSyncLog.warn("Killing thread for group because mailbox is no longer synced", group_id)
+              ImapSyncLog.warn(
+                "Killing thread for group because mailbox is no longer synced",
+                group_id,
+              )
             else
               ImapSyncLog.warn("Thread for group is dead", group_id)
             end
@@ -133,12 +135,13 @@ class Demon::EmailSync < ::Demon::Base
           # Spawn new threads for groups that are now synchronized.
           groups.each do |group_id, group|
             if !@sync_data[db][group_id]
-              ImapSyncLog.debug("Starting thread for group #{group.name} mailbox #{group.imap_mailbox_name}", group, db: false)
+              ImapSyncLog.debug(
+                "Starting thread for group #{group.name} mailbox #{group.imap_mailbox_name}",
+                group,
+                db: false,
+              )
 
-              @sync_data[db][group_id] = {
-                thread: start_thread(db, group),
-                syncer: nil
-              }
+              @sync_data[db][group_id] = { thread: start_thread(db, group), syncer: nil }
             end
           end
         end

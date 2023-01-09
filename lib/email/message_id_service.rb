@@ -49,9 +49,8 @@ module Email
         # inbound email sent to Discourse and handled by Email::Receiver,
         # this is the only case where we want to use the original Message-ID
         # because we want to maintain threading in the original mail client.
-        if use_incoming_email_if_present &&
-            incoming_email&.message_id.present? &&
-            incoming_email&.created_via == IncomingEmail.created_via_types[:handle_mail]
+        if use_incoming_email_if_present && incoming_email&.message_id.present? &&
+             incoming_email&.created_via == IncomingEmail.created_via_types[:handle_mail]
           return "<#{first_post.incoming_email.message_id}>"
         end
 
@@ -100,12 +99,26 @@ module Email
         # TODO (martin) 2023-01-01 We should remove these backwards-compatible
         # formats for the Message-ID and solely use the discourse/post/999@host
         # format.
-        topic_ids = message_ids.map { |message_id| message_id[message_id_topic_id_regexp, 1] }.compact.map(&:to_i)
-        post_ids = message_ids.map { |message_id| message_id[message_id_post_id_regexp, 1] }.compact.map(&:to_i)
+        topic_ids =
+          message_ids
+            .map { |message_id| message_id[message_id_topic_id_regexp, 1] }
+            .compact
+            .map(&:to_i)
+        post_ids =
+          message_ids
+            .map { |message_id| message_id[message_id_post_id_regexp, 1] }
+            .compact
+            .map(&:to_i)
 
-        post_ids << message_ids.map { |message_id| message_id[message_id_discourse_regexp, 1] }.compact.map(&:to_i)
+        post_ids << message_ids
+          .map { |message_id| message_id[message_id_discourse_regexp, 1] }
+          .compact
+          .map(&:to_i)
 
-        post_ids << Post.where(outbound_message_id: message_ids).or(Post.where(topic_id: topic_ids, post_number: 1)).pluck(:id)
+        post_ids << Post
+          .where(outbound_message_id: message_ids)
+          .or(Post.where(topic_id: topic_ids, post_number: 1))
+          .pluck(:id)
         post_ids << EmailLog.where(message_id: message_ids).pluck(:post_id)
         post_ids << IncomingEmail.where(message_id: message_ids).pluck(:post_id)
 
@@ -151,11 +164,15 @@ module Email
       end
 
       def message_id_clean(message_id)
-        message_id.present? && is_message_id_rfc?(message_id) ? message_id.gsub(/^<|>$/, "") : message_id
+        if message_id.present? && is_message_id_rfc?(message_id)
+          message_id.gsub(/^<|>$/, "")
+        else
+          message_id
+        end
       end
 
       def is_message_id_rfc?(message_id)
-        message_id.start_with?('<') && message_id.include?('@') && message_id.end_with?('>')
+        message_id.start_with?("<") && message_id.include?("@") && message_id.end_with?(">")
       end
 
       def host

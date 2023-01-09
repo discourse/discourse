@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe Notifications::ConsolidationPlanner do
-  describe '#consolidate_or_save!' do
+  describe "#consolidate_or_save!" do
     let(:threshold) { 1 }
     fab!(:user) { Fabricate(:user) }
-    let(:like_user) { 'user1' }
+    let(:like_user) { "user1" }
 
     before { SiteSetting.notification_consolidation_threshold = threshold }
 
@@ -17,8 +17,14 @@ RSpec.describe Notifications::ConsolidationPlanner do
       expect(saved_like.notification_type).to eq(Notification.types[:liked])
     end
 
-    it 'consolidates multiple notifications into a new one' do
-      first_notification = Fabricate(:notification, user: user, notification_type: Notification.types[:liked], data: { display_username: like_user }.to_json)
+    it "consolidates multiple notifications into a new one" do
+      first_notification =
+        Fabricate(
+          :notification,
+          user: user,
+          notification_type: Notification.types[:liked],
+          data: { display_username: like_user }.to_json,
+        )
       notification = build_notification(:liked, { display_username: like_user })
 
       consolidated_like = subject.consolidate_or_save!(notification)
@@ -26,14 +32,16 @@ RSpec.describe Notifications::ConsolidationPlanner do
       expect(consolidated_like.id).not_to eq(first_notification.id)
       expect(consolidated_like.notification_type).to eq(Notification.types[:liked_consolidated])
       data = JSON.parse(consolidated_like.data)
-      expect(data['count']).to eq(threshold + 1)
+      expect(data["count"]).to eq(threshold + 1)
     end
 
-    it 'updates the notification if we already consolidated it' do
+    it "updates the notification if we already consolidated it" do
       count = 5
-      Fabricate(:notification,
-        user: user, notification_type: Notification.types[:liked_consolidated],
-        data: { count: count, display_username: like_user }.to_json
+      Fabricate(
+        :notification,
+        user: user,
+        notification_type: Notification.types[:liked_consolidated],
+        data: { count: count, display_username: like_user }.to_json,
       )
       notification = build_notification(:liked, { display_username: like_user })
 
@@ -41,12 +49,17 @@ RSpec.describe Notifications::ConsolidationPlanner do
 
       expect { notification.reload }.to raise_error(ActiveRecord::RecordNotFound)
       data = JSON.parse(updated.data)
-      expect(data['count']).to eq(count + 1)
+      expect(data["count"]).to eq(count + 1)
     end
   end
 
   def build_notification(type_sym, data)
-    Fabricate.build(:notification, user: user, notification_type: Notification.types[type_sym], data: data.to_json)
+    Fabricate.build(
+      :notification,
+      user: user,
+      notification_type: Notification.types[type_sym],
+      data: data.to_json,
+    )
   end
 
   def plan_for(notification)

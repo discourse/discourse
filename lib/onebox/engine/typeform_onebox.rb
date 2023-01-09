@@ -5,7 +5,7 @@ module Onebox
     class TypeformOnebox
       include Engine
 
-      matches_regexp(/^https?:\/\/[a-z0-9\-_]+\.typeform\.com\/to\/[a-zA-Z0-9]+/)
+      matches_regexp(%r{^https?://[a-z0-9\-_]+\.typeform\.com/to/[a-zA-Z0-9]+})
       requires_iframe_origins "https://*.typeform.com"
       always_https
 
@@ -31,17 +31,17 @@ module Onebox
 
       def build_typeform_src
         escaped_src = ::Onebox::Helpers.normalize_url_for_output(@url)
-        query_params = CGI::parse(URI::parse(escaped_src).query || '')
+        query_params = CGI.parse(URI.parse(escaped_src).query || "")
 
-        return escaped_src if query_params.has_key?('typeform-embed')
+        return escaped_src if query_params.has_key?("typeform-embed")
 
         if query_params.empty?
-          escaped_src += '?' unless escaped_src.end_with?('?')
+          escaped_src += "?" unless escaped_src.end_with?("?")
         else
-          escaped_src += '&'
+          escaped_src += "&"
         end
 
-        escaped_src += 'typeform-embed=embed-widget'
+        escaped_src += "typeform-embed=embed-widget"
       end
     end
   end

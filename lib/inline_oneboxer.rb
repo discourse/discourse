@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class InlineOneboxer
-
   MIN_TITLE_LENGTH = 2
 
   def initialize(urls, opts = nil)
@@ -60,26 +59,25 @@ class InlineOneboxer
     end
 
     always_allow = SiteSetting.enable_inline_onebox_on_all_domains
-    allowed_domains = SiteSetting.allowed_inline_onebox_domains&.split('|') unless always_allow
+    allowed_domains = SiteSetting.allowed_inline_onebox_domains&.split("|") unless always_allow
 
     if always_allow || allowed_domains
-      uri = begin
-        URI(url)
-      rescue URI::Error
-      end
-
-      if uri.present? &&
-        uri.hostname.present? &&
-        (always_allow || allowed_domains.include?(uri.hostname)) &&
-        !Onebox::DomainChecker.is_blocked?(uri.hostname)
-        if SiteSetting.block_onebox_on_redirect
-          max_redirects = 0
+      uri =
+        begin
+          URI(url)
+        rescue URI::Error
         end
-        title = RetrieveTitle.crawl(
-          url,
-          max_redirects: max_redirects,
-          initial_https_redirect_ignore_limit: SiteSetting.block_onebox_on_redirect
-        )
+
+      if uri.present? && uri.hostname.present? &&
+           (always_allow || allowed_domains.include?(uri.hostname)) &&
+           !Onebox::DomainChecker.is_blocked?(uri.hostname)
+        max_redirects = 0 if SiteSetting.block_onebox_on_redirect
+        title =
+          RetrieveTitle.crawl(
+            url,
+            max_redirects: max_redirects,
+            initial_https_redirect_ignore_limit: SiteSetting.block_onebox_on_redirect,
+          )
         title = nil if title && title.length < MIN_TITLE_LENGTH
         return onebox_for(url, title, opts)
       end
@@ -95,23 +93,20 @@ class InlineOneboxer
     if title && opts[:post_number]
       title += " - "
       if opts[:post_author]
-        title += I18n.t(
-          "inline_oneboxer.topic_page_title_post_number_by_user",
-          post_number: opts[:post_number],
-          username: opts[:post_author]
-        )
+        title +=
+          I18n.t(
+            "inline_oneboxer.topic_page_title_post_number_by_user",
+            post_number: opts[:post_number],
+            username: opts[:post_author],
+          )
       else
-        title += I18n.t(
-          "inline_oneboxer.topic_page_title_post_number",
-          post_number: opts[:post_number]
-        )
+        title +=
+          I18n.t("inline_oneboxer.topic_page_title_post_number", post_number: opts[:post_number])
       end
     end
 
     title = title && Emoji.gsub_emoji_to_unicode(title)
-    if title.present?
-      title = WordWatcher.censor_text(title)
-    end
+    title = WordWatcher.censor_text(title) if title.present?
 
     onebox = { url: url, title: title }
 

@@ -26,7 +26,9 @@ module PageObjects
 
       def click_staff_info_warnings_link(warnings_count: 0)
         staff_counters = page.find(".staff-counters")
-        staff_counters.click_link("#{warnings_count} #{I18n.t("js.user.staff_counters.warnings_received")}")
+        staff_counters.click_link(
+          "#{warnings_count} #{I18n.t("js.user.staff_counters.warnings_received")}",
+        )
         self
       end
     end

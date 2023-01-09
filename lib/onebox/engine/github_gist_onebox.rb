@@ -9,7 +9,7 @@ module Onebox
 
       MAX_FILES = 3
 
-      matches_regexp(/^http(?:s)?:\/\/gist\.(?:(?:\w)+\.)?(github)\.com(?:\/)?/)
+      matches_regexp(%r{^http(?:s)?://gist\.(?:(?:\w)+\.)?(github)\.com(?:/)?})
       always_https
 
       def url
@@ -20,10 +20,10 @@ module Onebox
 
       def data
         @data ||= {
-          title: 'gist.github.com',
+          title: "gist.github.com",
           link: link,
           gist_files: gist_files.take(MAX_FILES),
-          truncated_files?: truncated_files?
+          truncated_files?: truncated_files?,
         }
       end
 
@@ -34,9 +34,7 @@ module Onebox
       def gist_files
         return [] unless gist_api
 
-        @gist_files ||= gist_api["files"].values.map do |file_json|
-          GistFile.new(file_json)
-        end
+        @gist_files ||= gist_api["files"].values.map { |file_json| GistFile.new(file_json) }
       end
 
       def gist_api

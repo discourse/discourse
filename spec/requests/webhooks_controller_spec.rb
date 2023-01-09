@@ -17,24 +17,23 @@ RSpec.describe WebhooksController do
       ActionController::Base.allow_forgery_protection = true # Ensure the endpoint works, even with CSRF protection generally enabled
     end
 
-    after do
-      ActionController::Base.allow_forgery_protection = false
-    end
+    after { ActionController::Base.allow_forgery_protection = false }
 
     it "works (deprecated)" do
       user = Fabricate(:user, email: email)
       email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
 
-      post "/webhooks/mailgun.json", params: {
-        "token" => token,
-        "timestamp" => timestamp,
-        "event" => "dropped",
-        "recipient" => email,
-        "Message-Id" => "<#{message_id}>",
-        "signature" => signature,
-        "error" => "smtp; 550-5.1.1 The email account that you tried to reach does not exist.",
-        "code" => "5.1.1"
-      }
+      post "/webhooks/mailgun.json",
+           params: {
+             "token" => token,
+             "timestamp" => timestamp,
+             "event" => "dropped",
+             "recipient" => email,
+             "Message-Id" => "<#{message_id}>",
+             "signature" => signature,
+             "error" => "smtp; 550-5.1.1 The email account that you tried to reach does not exist.",
+             "code" => "5.1.1",
+           }
 
       expect(response.status).to eq(200)
 
@@ -48,28 +47,30 @@ RSpec.describe WebhooksController do
       user = Fabricate(:user, email: email)
       email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
 
-      post "/webhooks/mailgun.json", params: {
-        "signature" => {
-          "token" => token,
-          "timestamp" => timestamp,
-          "signature" => signature,
-        },
-        "event-data" => {
-          "event" => "failed",
-          "severity" => "temporary",
-          "recipient" => email,
-          "message" => {
-            "headers" => {
-              "message-id" => message_id,
-            }
-          }
-        },
-        "delivery-status" => {
-          "message" => "smtp; 550-5.1.1 The email account that you tried to reach does not exist.",
-          "code" => "5.1.1",
-          "description" => ""
-        }
-      }
+      post "/webhooks/mailgun.json",
+           params: {
+             "signature" => {
+               "token" => token,
+               "timestamp" => timestamp,
+               "signature" => signature,
+             },
+             "event-data" => {
+               "event" => "failed",
+               "severity" => "temporary",
+               "recipient" => email,
+               "message" => {
+                 "headers" => {
+                   "message-id" => message_id,
+                 },
+               },
+             },
+             "delivery-status" => {
+               "message" =>
+                 "smtp; 550-5.1.1 The email account that you tried to reach does not exist.",
+               "code" => "5.1.1",
+               "description" => "",
+             },
+           }
 
       expect(response.status).to eq(200)
 
@@ -85,16 +86,17 @@ RSpec.describe WebhooksController do
       user = Fabricate(:user, email: email)
       email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
 
-      post "/webhooks/sendgrid.json", params: {
-        "_json" => [
-          {
-            "email" => email,
-            "smtp-id" => "<12345@il.com>",
-            "event" => "bounce",
-            "status" => "5.0.0"
-          }
-        ]
-      }
+      post "/webhooks/sendgrid.json",
+           params: {
+             "_json" => [
+               {
+                 "email" => email,
+                 "smtp-id" => "<12345@il.com>",
+                 "event" => "bounce",
+                 "status" => "5.0.0",
+               },
+             ],
+           }
 
       expect(response.status).to eq(200)
 
@@ -110,12 +112,13 @@ RSpec.describe WebhooksController do
       user = Fabricate(:user, email: email)
       email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
 
-      post "/webhooks/mailjet.json", params: {
-        "event" => "bounce",
-        "email" => email,
-        "hard_bounce" => true,
-        "CustomID" => message_id
-      }
+      post "/webhooks/mailjet.json",
+           params: {
+             "event" => "bounce",
+             "email" => email,
+             "hard_bounce" => true,
+             "CustomID" => message_id,
+           }
 
       expect(response.status).to eq(200)
 
@@ -131,19 +134,23 @@ RSpec.describe WebhooksController do
       user = Fabricate(:user, email: email)
       email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
 
-      post "/webhooks/mandrill.json", params: {
-        mandrill_events: [{
-          "event" => "hard_bounce",
-          "msg" => {
-            "email" => email,
-            "diag" => "5.1.1",
-            "bounce_description": "smtp; 550-5.1.1 The email account that you tried to reach does not exist.",
-            "metadata" => {
-              "message_id" => message_id
-            }
-          }
-        }].to_json
-      }
+      post "/webhooks/mandrill.json",
+           params: {
+             mandrill_events: [
+               {
+                 "event" => "hard_bounce",
+                 "msg" => {
+                   "email" => email,
+                   "diag" => "5.1.1",
+                   :"bounce_description" =>
+                     "smtp; 550-5.1.1 The email account that you tried to reach does not exist.",
+                   "metadata" => {
+                     "message_id" => message_id,
+                   },
+                 },
+               },
+             ].to_json,
+           }
 
       expect(response.status).to eq(200)
 
@@ -167,11 +174,12 @@ RSpec.describe WebhooksController do
       user = Fabricate(:user, email: email)
       email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
 
-      post "/webhooks/postmark.json", params: {
-        "Type" => "HardBounce",
-        "MessageID" => message_id,
-        "Email" => email
-      }
+      post "/webhooks/postmark.json",
+           params: {
+             "Type" => "HardBounce",
+             "MessageID" => message_id,
+             "Email" => email,
+           }
       expect(response.status).to eq(200)
 
       email_log.reload
@@ -183,11 +191,12 @@ RSpec.describe WebhooksController do
       user = Fabricate(:user, email: email)
       email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
 
-      post "/webhooks/postmark.json", params: {
-        "Type" => "SoftBounce",
-        "MessageID" => message_id,
-        "Email" => email
-      }
+      post "/webhooks/postmark.json",
+           params: {
+             "Type" => "SoftBounce",
+             "MessageID" => message_id,
+             "Email" => email,
+           }
       expect(response.status).to eq(200)
 
       email_log.reload
@@ -202,20 +211,23 @@ RSpec.describe WebhooksController do
       user = Fabricate(:user, email: email)
       email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
 
-      post "/webhooks/sparkpost.json", params: {
-        "_json" => [{
-          "msys" => {
-            "message_event" => {
-              "bounce_class" => 10,
-              "error_code" => "554",
-              "rcpt_to" => email,
-              "rcpt_meta" => {
-                "message_id" => message_id
-              }
-            }
-          }
-        }]
-      }
+      post "/webhooks/sparkpost.json",
+           params: {
+             "_json" => [
+               {
+                 "msys" => {
+                   "message_event" => {
+                     "bounce_class" => 10,
+                     "error_code" => "554",
+                     "rcpt_to" => email,
+                     "rcpt_meta" => {
+                       "message_id" => message_id,
+                     },
+                   },
+                 },
+               },
+             ],
+           }
 
       expect(response.status).to eq(200)
 

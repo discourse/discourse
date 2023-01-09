@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe TopicRetriever do
-
   let(:embed_url) { "http://eviltrout.com/2013/02/10/why-discourse-uses-emberjs.html" }
   let(:author_username) { "eviltrout" }
   let(:topic_retriever) { TopicRetriever.new(embed_url, author_username: author_username) }
@@ -13,9 +12,7 @@ RSpec.describe TopicRetriever do
 
   describe "#retrieve" do
     context "when host is invalid" do
-      before do
-        topic_retriever.stubs(:invalid_url?).returns(true)
-      end
+      before { topic_retriever.stubs(:invalid_url?).returns(true) }
 
       it "does not perform_retrieve" do
         topic_retriever.expects(:perform_retrieve).never
@@ -24,9 +21,7 @@ RSpec.describe TopicRetriever do
     end
 
     context "when topics have been retrieved recently" do
-      before do
-        topic_retriever.stubs(:retrieved_recently?).returns(true)
-      end
+      before { topic_retriever.stubs(:retrieved_recently?).returns(true) }
 
       it "does not perform_retrieve" do
         topic_retriever.expects(:perform_retrieve).never
@@ -35,14 +30,10 @@ RSpec.describe TopicRetriever do
     end
 
     context "when host is valid" do
-      before do
-        Fabricate(:embeddable_host, host: 'http://eviltrout.com/')
-      end
+      before { Fabricate(:embeddable_host, host: "http://eviltrout.com/") }
 
       context "when topics have been retrieved recently" do
-        before do
-          topic_retriever.stubs(:retrieved_recently?).returns(true)
-        end
+        before { topic_retriever.stubs(:retrieved_recently?).returns(true) }
 
         it "does not perform_retrieve" do
           topic_retriever.expects(:perform_retrieve).never
@@ -51,9 +42,7 @@ RSpec.describe TopicRetriever do
       end
 
       context "when topics have not been retrieved recently" do
-        before do
-          topic_retriever.stubs(:retrieved_recently?).returns(false)
-        end
+        before { topic_retriever.stubs(:retrieved_recently?).returns(false) }
 
         it "does perform_retrieve" do
           topic_retriever.expects(:perform_retrieve).once
@@ -63,9 +52,7 @@ RSpec.describe TopicRetriever do
     end
 
     context "when host is invalid" do
-      before do
-        Fabricate(:embeddable_host, host: 'http://not-eviltrout.com/')
-      end
+      before { Fabricate(:embeddable_host, host: "http://not-eviltrout.com/") }
 
       it "does not perform_retrieve" do
         topic_retriever.expects(:perform_retrieve).never
@@ -74,9 +61,7 @@ RSpec.describe TopicRetriever do
     end
 
     it "works with URLs with whitespaces" do
-      expect { TopicRetriever.new(" https://example.com ").retrieve }
-        .not_to raise_error
+      expect { TopicRetriever.new(" https://example.com ").retrieve }.not_to raise_error
     end
   end
-
 end

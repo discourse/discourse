@@ -12,12 +12,16 @@ RSpec.describe ThemeJavascriptsController do
   end
 
   let!(:theme) { Fabricate(:theme) }
-  let(:theme_field) { ThemeField.create!(theme: theme, target_id: 0, name: "header", value: "<a>html</a>") }
-  let(:javascript_cache) { JavascriptCache.create!(content: 'console.log("hello");', theme_field: theme_field) }
+  let(:theme_field) do
+    ThemeField.create!(theme: theme, target_id: 0, name: "header", value: "<a>html</a>")
+  end
+  let(:javascript_cache) do
+    JavascriptCache.create!(content: 'console.log("hello");', theme_field: theme_field)
+  end
   before { clear_disk_cache }
   after { clear_disk_cache }
 
-  describe '#show' do
+  describe "#show" do
     def update_digest_and_get(digest)
       # actually set digest to make sure 404 is raised by router
       javascript_cache.update(digest: digest)
@@ -25,33 +29,33 @@ RSpec.describe ThemeJavascriptsController do
       get "/theme-javascripts/#{digest}.js"
     end
 
-    it 'only accepts 40-char hexadecimal digest name' do
-      update_digest_and_get('0123456789abcdefabcd0123456789abcdefabcd')
+    it "only accepts 40-char hexadecimal digest name" do
+      update_digest_and_get("0123456789abcdefabcd0123456789abcdefabcd")
       expect(response.status).to eq(200)
 
-      update_digest_and_get('0123456789abcdefabcd0123456789abcdefabc')
+      update_digest_and_get("0123456789abcdefabcd0123456789abcdefabc")
       expect(response.status).to eq(404)
 
-      update_digest_and_get('gggggggggggggggggggggggggggggggggggggggg')
+      update_digest_and_get("gggggggggggggggggggggggggggggggggggggggg")
       expect(response.status).to eq(404)
 
-      update_digest_and_get('0123456789abcdefabc_0123456789abcdefabcd')
+      update_digest_and_get("0123456789abcdefabc_0123456789abcdefabcd")
       expect(response.status).to eq(404)
 
-      update_digest_and_get('0123456789abcdefabc-0123456789abcdefabcd')
+      update_digest_and_get("0123456789abcdefabc-0123456789abcdefabcd")
       expect(response.status).to eq(404)
 
-      update_digest_and_get('../../Gemfile')
+      update_digest_and_get("../../Gemfile")
       expect(response.status).to eq(404)
     end
 
-    it 'considers the database record as the source of truth' do
+    it "considers the database record as the source of truth" do
       clear_disk_cache
 
       get "/theme-javascripts/#{javascript_cache.digest}.js"
       expect(response.status).to eq(200)
       expect(response.body).to eq(javascript_cache.content)
-      expect(response.headers['Content-Length']).to eq(javascript_cache.content.bytesize.to_s)
+      expect(response.headers["Content-Length"]).to eq(javascript_cache.content.bytesize.to_s)
 
       javascript_cache.destroy!
 
@@ -67,7 +71,7 @@ RSpec.describe ThemeJavascriptsController do
       expect(response.body).to eq('console.log("hello");')
 
       digest = SecureRandom.hex(20)
-      javascript_cache.update(digest: digest, source_map: '{fakeSourceMap: true}')
+      javascript_cache.update(digest: digest, source_map: "{fakeSourceMap: true}")
       get "/theme-javascripts/#{digest}.js"
       expect(response.status).to eq(200)
       expect(response.body).to eq <<~JS
@@ -102,7 +106,7 @@ RSpec.describe ThemeJavascriptsController do
       expect(response.status).to eq(404)
 
       digest = SecureRandom.hex(20)
-      javascript_cache.update(digest: digest, source_map: '{fakeSourceMap: true}')
+      javascript_cache.update(digest: digest, source_map: "{fakeSourceMap: true}")
       get "/theme-javascripts/#{digest}.map"
       expect(response.status).to eq(200)
       expect(response.body).to eq("{fakeSourceMap: true}")
@@ -114,14 +118,15 @@ RSpec.describe ThemeJavascriptsController do
   end
 
   describe "#show_tests" do
-    let(:component) { Fabricate(:theme, component: true, name: 'enabled-component') }
+    let(:component) { Fabricate(:theme, component: true, name: "enabled-component") }
     let!(:tests_field) do
-      field = component.set_field(
-        target: :tests_js,
-        type: :js,
-        name: "acceptance/some-test.js",
-        value: "assert.ok(true);"
-      )
+      field =
+        component.set_field(
+          target: :tests_js,
+          type: :js,
+          name: "acceptance/some-test.js",
+          value: "assert.ok(true);",
+        )
       component.save!
       field
     end
@@ -131,7 +136,7 @@ RSpec.describe ThemeJavascriptsController do
         theme: component,
         target_id: Theme.targets[:settings],
         name: "yaml",
-        value: "num_setting: 5"
+        value: "num_setting: 5",
       )
       component.save!
     end
@@ -141,13 +146,15 @@ RSpec.describe ThemeJavascriptsController do
       _, digest = component.baked_js_tests_with_digest
 
       get "/theme-javascripts/tests/#{component.id}-#{digest}.js"
-      expect(response.body).to include("require(\"discourse/lib/theme-settings-store\").registerSettings(#{component.id}, {\"num_setting\":5}, { force: true });")
+      expect(response.body).to include(
+        "require(\"discourse/lib/theme-settings-store\").registerSettings(#{component.id}, {\"num_setting\":5}, { force: true });",
+      )
       expect(response.body).to include("assert.ok(true);")
     end
 
     it "includes theme uploads URLs in the settings object" do
       SiteSetting.authorized_extensions = "*"
-      js_file = Tempfile.new(["vendorlib", ".js"])
+      js_file = Tempfile.new(%w[vendorlib .js])
       js_file.write("console.log(123);\n")
       js_file.rewind
       js_upload = UploadCreator.new(js_file, "vendorlib.js").create_for(Discourse::SYSTEM_USER_ID)
@@ -155,7 +162,7 @@ RSpec.describe ThemeJavascriptsController do
         type: :theme_upload_var,
         target: :common,
         name: "vendorlib",
-        upload_id: js_upload.id
+        upload_id: js_upload.id,
       )
       component.save!
       _, digest = component.baked_js_tests_with_digest
@@ -163,9 +170,9 @@ RSpec.describe ThemeJavascriptsController do
       get "/theme-javascripts/tests/#{component.id}-#{digest}.js"
       expect(response.body).to include(
         "require(\"discourse/lib/theme-settings-store\").registerSettings(" +
-        "#{component.id}, {\"num_setting\":5,\"theme_uploads\":{\"vendorlib\":" +
-        "\"/uploads/default/test_#{ENV['TEST_ENV_NUMBER'].presence || '0'}/original/1X/#{js_upload.sha1}.js\"},\"theme_uploads_local\":{\"vendorlib\":" +
-        "\"/theme-javascripts/#{js_upload.sha1}.js?__ws=test.localhost\"}}, { force: true });"
+          "#{component.id}, {\"num_setting\":5,\"theme_uploads\":{\"vendorlib\":" +
+          "\"/uploads/default/test_#{ENV["TEST_ENV_NUMBER"].presence || "0"}/original/1X/#{js_upload.sha1}.js\"},\"theme_uploads_local\":{\"vendorlib\":" +
+          "\"/theme-javascripts/#{js_upload.sha1}.js?__ws=test.localhost\"}}, { force: true });",
       )
       expect(response.body).to include("assert.ok(true);")
     ensure
@@ -174,7 +181,7 @@ RSpec.describe ThemeJavascriptsController do
     end
 
     it "responds with 404 if digest is not a 40 chars hex" do
-      digest = Rack::Utils.escape('../../../../../../../../../../etc/passwd').gsub('.', '%2E')
+      digest = Rack::Utils.escape("../../../../../../../../../../etc/passwd").gsub(".", "%2E")
       get "/theme-javascripts/tests/#{component.id}-#{digest}.js"
       expect(response.status).to eq(404)
 
@@ -195,7 +202,9 @@ RSpec.describe ThemeJavascriptsController do
       expect(response.headers["Content-Length"].to_i).to eq(content.size)
 
       get "/theme-javascripts/tests/#{component.id}-#{digest}.js",
-        headers: { "If-Modified-Since" => (last_modified + 10.seconds).rfc2822 }
+          headers: {
+            "If-Modified-Since" => (last_modified + 10.seconds).rfc2822,
+          }
       expect(response.status).to eq(304)
     end
 

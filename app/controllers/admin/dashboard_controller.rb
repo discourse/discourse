@@ -11,9 +11,12 @@ class Admin::DashboardController < Admin::StaffController
     render json: data
   end
 
-  def moderation; end
-  def security; end
-  def reports; end
+  def moderation
+  end
+  def security
+  end
+  def reports
+  end
 
   def general
     render json: AdminDashboardGeneralData.fetch_cached_stats
@@ -33,7 +36,7 @@ class Admin::DashboardController < Admin::StaffController
     data = {
       new_features: new_features,
       has_unseen_features: DiscourseUpdates.has_unseen_features?(current_user.id),
-      release_notes_link: AdminDashboardGeneralData.fetch_cached_stats["release_notes_link"]
+      release_notes_link: AdminDashboardGeneralData.fetch_cached_stats["release_notes_link"],
     }
     render json: data
   end

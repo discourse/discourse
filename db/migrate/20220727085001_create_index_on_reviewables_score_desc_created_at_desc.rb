@@ -4,9 +4,12 @@ class CreateIndexOnReviewablesScoreDescCreatedAtDesc < ActiveRecord::Migration[7
   def change
     add_index(
       :reviewables,
-      [:score, :created_at],
-      order: { score: :desc, created_at: :desc },
-      name: 'idx_reviewables_score_desc_created_at_desc'
+      %i[score created_at],
+      order: {
+        score: :desc,
+        created_at: :desc,
+      },
+      name: "idx_reviewables_score_desc_created_at_desc",
     )
   end
 end

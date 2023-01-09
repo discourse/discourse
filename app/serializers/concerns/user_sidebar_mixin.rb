@@ -2,13 +2,11 @@
 
 module UserSidebarMixin
   def sidebar_tags
-    object.visible_sidebar_tags(scope)
+    object
+      .visible_sidebar_tags(scope)
       .pluck(:name, :topic_count, :pm_topic_count)
       .reduce([]) do |tags, sidebar_tag|
-        tags.push(
-          name: sidebar_tag[0],
-          pm_only: sidebar_tag[1] == 0 && sidebar_tag[2] > 0
-        )
+        tags.push(name: sidebar_tag[0], pm_only: sidebar_tag[1] == 0 && sidebar_tag[2] > 0)
       end
   end
 
@@ -33,7 +31,11 @@ module UserSidebarMixin
   end
 
   def sidebar_list_destination
-    object.user_option.sidebar_list_none_selected? ? SiteSetting.default_sidebar_list_destination : object.user_option.sidebar_list_destination
+    if object.user_option.sidebar_list_none_selected?
+      SiteSetting.default_sidebar_list_destination
+    else
+      object.user_option.sidebar_list_destination
+    end
   end
 
   def include_sidebar_list_destination?

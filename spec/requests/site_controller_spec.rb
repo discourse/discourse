@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe SiteController do
-  describe '#basic_info' do
-    it 'is visible always even for sites requiring login' do
+  describe "#basic_info" do
+    it "is visible always even for sites requiring login" do
       upload = Fabricate(:upload)
 
       SiteSetting.login_required = true
@@ -31,8 +31,8 @@ RSpec.describe SiteController do
     end
   end
 
-  describe '#statistics' do
-    it 'is visible for sites requiring login' do
+  describe "#statistics" do
+    it "is visible for sites requiring login" do
       SiteSetting.login_required = true
       SiteSetting.share_anonymized_statistics = true
 
@@ -56,11 +56,11 @@ RSpec.describe SiteController do
       expect(json["likes_30_days"]).to be_present
     end
 
-    it 'is not visible if site setting share_anonymized_statistics is disabled' do
+    it "is not visible if site setting share_anonymized_statistics is disabled" do
       SiteSetting.share_anonymized_statistics = false
 
       get "/site/statistics.json"
-      expect(response).to redirect_to '/'
+      expect(response).to redirect_to "/"
     end
   end
 end

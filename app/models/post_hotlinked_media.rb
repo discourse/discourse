@@ -4,11 +4,11 @@ class PostHotlinkedMedia < ActiveRecord::Base
   belongs_to :post
   belongs_to :upload
   enum status: {
-    downloaded: "downloaded",
-    too_large: "too_large",
-    download_failed: "download_failed",
-    upload_create_failed: "upload_create_failed"
-  }
+         downloaded: "downloaded",
+         too_large: "too_large",
+         download_failed: "download_failed",
+         upload_create_failed: "upload_create_failed",
+       }
 
   def self.normalize_src(src)
     uri = Addressable::URI.heuristic_parse(src)

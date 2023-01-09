@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require_relative 'database_base'
-require_relative '../support/constants'
+require_relative "database_base"
+require_relative "../support/constants"
 
 module ImportScripts::PhpBB3
   class Database_3_0 < DatabaseBase

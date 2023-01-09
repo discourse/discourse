@@ -6,7 +6,6 @@
 # with `NewPostManager.add_handler` to take other approaches depending
 # on the user or input.
 class NewPostManager
-
   attr_reader :user, :args
 
   def self.sorted_handlers
@@ -38,24 +37,21 @@ class NewPostManager
     user = manager.user
     args = manager.args
 
-    !!(
-      args[:first_post_checks] &&
-      user.post_count == 0 &&
-      user.topic_count == 0
-    )
+    !!(args[:first_post_checks] && user.post_count == 0 && user.topic_count == 0)
   end
 
   def self.is_fast_typer?(manager)
     args = manager.args
 
     is_first_post?(manager) &&
-    args[:typing_duration_msecs].to_i < SiteSetting.min_first_post_typing_time &&
-    SiteSetting.auto_silence_fast_typers_on_first_post &&
-    manager.user.trust_level <= SiteSetting.auto_silence_fast_typers_max_trust_level
+      args[:typing_duration_msecs].to_i < SiteSetting.min_first_post_typing_time &&
+      SiteSetting.auto_silence_fast_typers_on_first_post &&
+      manager.user.trust_level <= SiteSetting.auto_silence_fast_typers_max_trust_level
   end
 
   def self.auto_silence?(manager)
-    is_first_post?(manager) && WordWatcher.new("#{manager.args[:title]} #{manager.args[:raw]}").should_silence?
+    is_first_post?(manager) &&
+      WordWatcher.new("#{manager.args[:title]} #{manager.args[:raw]}").should_silence?
   end
 
   def self.matches_auto_silence_regex?(manager)
@@ -74,7 +70,6 @@ class NewPostManager
     end
 
     "#{args[:title]} #{args[:raw]}" =~ regex
-
   end
 
   def self.exempt_user?(user)
@@ -90,19 +85,25 @@ class NewPostManager
 
     return :email_spam if manager.args[:email_spam]
 
-    return :post_count if (
-      user.trust_level <= TrustLevel.levels[:basic] &&
-      (user.post_count + user.topic_count) < SiteSetting.approve_post_count
-    )
+    if (
+         user.trust_level <= TrustLevel.levels[:basic] &&
+           (user.post_count + user.topic_count) < SiteSetting.approve_post_count
+       )
+      return :post_count
+    end
 
     return :trust_level if user.trust_level < SiteSetting.approve_unless_trust_level.to_i
 
-    return :new_topics_unless_trust_level if (
-      manager.args[:title].present? &&
-      user.trust_level < SiteSetting.approve_new_topics_unless_trust_level.to_i
-    )
+    if (
+         manager.args[:title].present? &&
+           user.trust_level < SiteSetting.approve_new_topics_unless_trust_level.to_i
+       )
+      return :new_topics_unless_trust_level
+    end
 
-    return :watched_word if WordWatcher.new("#{manager.args[:title]} #{manager.args[:raw]}").requires_approval?
+    if WordWatcher.new("#{manager.args[:title]} #{manager.args[:raw]}").requires_approval?
+      return :watched_word
+    end
 
     return :fast_typer if is_fast_typer?(manager)
 
@@ -112,10 +113,12 @@ class NewPostManager
 
     return :category if post_needs_approval_in_its_category?(manager)
 
-    return :contains_media if (
-      manager.args[:image_sizes].present? &&
-      user.trust_level < SiteSetting.review_media_unless_trust_level.to_i
-    )
+    if (
+         manager.args[:image_sizes].present? &&
+           user.trust_level < SiteSetting.review_media_unless_trust_level.to_i
+       )
+      return :contains_media
+    end
 
     :skip
   end
@@ -136,7 +139,6 @@ class NewPostManager
   end
 
   def self.default_handler(manager)
-
     reason = post_needs_approval?(manager)
     return if reason == :skip
 
@@ -171,11 +173,26 @@ class NewPostManager
 
     I18n.with_locale(SiteSetting.default_locale) do
       if is_fast_typer?(manager)
-        UserSilencer.silence(manager.user, Discourse.system_user, keep_posts: true, reason: I18n.t("user.new_user_typed_too_fast"))
+        UserSilencer.silence(
+          manager.user,
+          Discourse.system_user,
+          keep_posts: true,
+          reason: I18n.t("user.new_user_typed_too_fast"),
+        )
       elsif auto_silence?(manager) || matches_auto_silence_regex?(manager)
-        UserSilencer.silence(manager.user, Discourse.system_user, keep_posts: true, reason: I18n.t("user.content_matches_auto_silence_regex"))
+        UserSilencer.silence(
+          manager.user,
+          Discourse.system_user,
+          keep_posts: true,
+          reason: I18n.t("user.content_matches_auto_silence_regex"),
+        )
       elsif reason == :email_spam && is_first_post?(manager)
-        UserSilencer.silence(manager.user, Discourse.system_user, keep_posts: true, reason: I18n.t("user.email_in_spam_header"))
+        UserSilencer.silence(
+          manager.user,
+          Discourse.system_user,
+          keep_posts: true,
+          reason: I18n.t("user.email_in_spam_header"),
+        )
       end
     end
 
@@ -183,12 +200,10 @@ class NewPostManager
   end
 
   def self.queue_enabled?
-    SiteSetting.approve_post_count > 0 ||
-    SiteSetting.approve_unless_trust_level.to_i > 0 ||
-    SiteSetting.approve_new_topics_unless_trust_level.to_i > 0 ||
-    SiteSetting.approve_unless_staged ||
-    WordWatcher.words_for_action_exists?(:require_approval) ||
-    handlers.size > 1
+    SiteSetting.approve_post_count > 0 || SiteSetting.approve_unless_trust_level.to_i > 0 ||
+      SiteSetting.approve_new_topics_unless_trust_level.to_i > 0 ||
+      SiteSetting.approve_unless_staged ||
+      WordWatcher.words_for_action_exists?(:require_approval) || handlers.size > 1
   end
 
   def initialize(user, args)
@@ -197,14 +212,15 @@ class NewPostManager
   end
 
   def perform
-    if !self.class.exempt_user?(@user) && matches = WordWatcher.new("#{@args[:title]} #{@args[:raw]}").should_block?.presence
+    if !self.class.exempt_user?(@user) &&
+         matches = WordWatcher.new("#{@args[:title]} #{@args[:raw]}").should_block?.presence
       result = NewPostResult.new(:created_post, false)
       if matches.size == 1
-        key = 'contains_blocked_word'
+        key = "contains_blocked_word"
         translation_args = { word: CGI.escapeHTML(matches[0]) }
       else
-        key = 'contains_blocked_words'
-        translation_args = { words: CGI.escapeHTML(matches.join(', ')) }
+        key = "contains_blocked_words"
+        translation_args = { words: CGI.escapeHTML(matches.join(", ")) }
       end
       result.errors.add(:base, I18n.t(key, translation_args))
       return result
@@ -217,8 +233,13 @@ class NewPostManager
     end
 
     # We never queue private messages
-    return perform_create_post if @args[:archetype] == Archetype.private_message ||
-                                  (args[:topic_id] && Topic.where(id: args[:topic_id], archetype: Archetype.private_message).exists?)
+    if @args[:archetype] == Archetype.private_message ||
+         (
+           args[:topic_id] &&
+             Topic.where(id: args[:topic_id], archetype: Archetype.private_message).exists?
+         )
+      return perform_create_post
+    end
 
     NewPostManager.default_handler(self) || perform_create_post
   end
@@ -226,11 +247,8 @@ class NewPostManager
   # Enqueue this post
   def enqueue(reason = nil)
     result = NewPostResult.new(:enqueued)
-    payload = {
-      raw: @args[:raw],
-      tags: @args[:tags]
-    }
-    %w(typing_duration_msecs composer_open_duration_msecs reply_to_post_number).each do |a|
+    payload = { raw: @args[:raw], tags: @args[:tags] }
+    %w[typing_duration_msecs composer_open_duration_msecs reply_to_post_number].each do |a|
       payload[a] = @args[a].to_i if @args[a]
     end
 
@@ -239,21 +257,27 @@ class NewPostManager
     payload[:via_email] = true if !!@args[:via_email]
     payload[:raw_email] = @args[:raw_email] if @args[:raw_email].present?
 
-    reviewable = ReviewableQueuedPost.new(
-      created_by: @user,
-      payload: payload,
-      topic_id: @args[:topic_id],
-      reviewable_by_moderator: true
-    )
-    reviewable.payload['title'] = @args[:title] if @args[:title].present?
+    reviewable =
+      ReviewableQueuedPost.new(
+        created_by: @user,
+        payload: payload,
+        topic_id: @args[:topic_id],
+        reviewable_by_moderator: true,
+      )
+    reviewable.payload["title"] = @args[:title] if @args[:title].present?
     reviewable.category_id = args[:category] if args[:category].present?
     reviewable.created_new!
 
     create_options = reviewable.create_options
 
-    creator = @args[:topic_id] ?
-      PostCreator.new(@user, create_options) :
-      TopicCreator.new(@user, Guardian.new(@user), create_options)
+    creator =
+      (
+        if @args[:topic_id]
+          PostCreator.new(@user, create_options)
+        else
+          TopicCreator.new(@user, Guardian.new(@user), create_options)
+        end
+      )
 
     errors = Set.new
     creator.valid?
@@ -265,7 +289,7 @@ class NewPostManager
           Discourse.system_user,
           ReviewableScore.types[:needs_approval],
           reason: reason,
-          force_review: true
+          force_review: true,
         )
       else
         reviewable.errors.full_messages.each { |msg| errors << msg }
@@ -293,5 +317,4 @@ class NewPostManager
 
     result
   end
-
 end

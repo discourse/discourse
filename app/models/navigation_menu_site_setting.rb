@@ -13,7 +13,7 @@ class NavigationMenuSiteSetting < EnumSiteSetting
     @values ||= [
       { name: "admin.navigation_menu.sidebar", value: SIDEBAR },
       { name: "admin.navigation_menu.header_dropdown", value: HEADER_DROPDOWN },
-      { name: "admin.navigation_menu.legacy", value: LEGACY }
+      { name: "admin.navigation_menu.legacy", value: LEGACY },
     ]
   end
 

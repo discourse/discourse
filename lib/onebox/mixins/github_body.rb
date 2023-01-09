@@ -14,7 +14,7 @@ module Onebox
 
         def compute_body(body)
           if body
-            body = body.gsub(GITHUB_COMMENT_REGEX, '').strip
+            body = body.gsub(GITHUB_COMMENT_REGEX, "").strip
             if body.length == 0
               body = nil
             elsif body.length > MAX_BODY_LENGTH

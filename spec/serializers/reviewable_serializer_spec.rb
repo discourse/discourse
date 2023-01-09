@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe ReviewableSerializer do
-
   fab!(:reviewable) { Fabricate(:reviewable_queued_post) }
   fab!(:admin) { Fabricate(:admin) }
 
@@ -18,7 +17,7 @@ RSpec.describe ReviewableSerializer do
     expect(json[:removed_topic_id]).to be_nil
   end
 
-  it 'Includes the removed topic id when the topis was deleted' do
+  it "Includes the removed topic id when the topis was deleted" do
     reviewable.topic.trash!(admin)
     json = described_class.new(reviewable.reload, scope: Guardian.new(admin), root: nil).as_json
     expect(json[:removed_topic_id]).to eq reviewable.topic_id
@@ -26,12 +25,12 @@ RSpec.describe ReviewableSerializer do
 
   it "will not throw an error when the payload is `nil`" do
     reviewable.payload = nil
-    json = ReviewableQueuedPostSerializer.new(reviewable, scope: Guardian.new(admin), root: nil).as_json
-    expect(json['payload']).to be_blank
+    json =
+      ReviewableQueuedPostSerializer.new(reviewable, scope: Guardian.new(admin), root: nil).as_json
+    expect(json["payload"]).to be_blank
   end
 
   describe "urls" do
-
     it "links to the flagged post" do
       fp = Fabricate(:reviewable_flagged_post)
       json = described_class.new(fp, scope: Guardian.new(admin), root: nil).as_json

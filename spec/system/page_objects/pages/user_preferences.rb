@@ -39,9 +39,7 @@ module PageObjects
       private
 
       def horizontal_secondary_link_visible?(selector, visible: true)
-        within(".user-navigation-secondary") do
-          page.has_selector?(selector, visible: visible)
-        end
+        within(".user-navigation-secondary") { page.has_selector?(selector, visible: visible) }
       end
     end
   end

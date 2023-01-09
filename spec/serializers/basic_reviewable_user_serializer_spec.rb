@@ -12,8 +12,8 @@ describe BasicReviewableUserSerializer do
         name: user.name,
         email: user.email,
         bio: "blah whatever",
-        website: "ff.website.com"
-      }
+        website: "ff.website.com",
+      },
     )
   end
 

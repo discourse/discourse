@@ -56,12 +56,10 @@ class UploadSecurity
   end
 
   def should_be_secure_with_reason
-    insecure_context_checks.each do |check, reason|
-      return [false, reason] if perform_check(check)
-    end
+    insecure_context_checks.each { |check, reason| return false, reason if perform_check(check) }
     secure_context_checks.each do |check, reason|
-      return [perform_check(check), reason] if priority_check?(check)
-      return [true, reason] if perform_check(check)
+      return perform_check(check), reason if priority_check?(check)
+      return true, reason if perform_check(check)
     end
 
     [false, "no checks satisfied"]
@@ -123,7 +121,8 @@ class UploadSecurity
   private
 
   def access_control_post
-    @access_control_post ||= @upload.access_control_post_id.present? ? @upload.access_control_post : nil
+    @access_control_post ||=
+      @upload.access_control_post_id.present? ? @upload.access_control_post : nil
   end
 
   def insecure_context_checks
@@ -132,7 +131,7 @@ class UploadSecurity
       insecure_creation_for_modifiers: "one or more creation for_modifiers was satisfied",
       public_type: "upload is public type",
       custom_emoji: "upload is used for custom emoji",
-      regular_emoji: "upload is used for regular emoji"
+      regular_emoji: "upload is used for regular emoji",
     }
   end
 
@@ -142,7 +141,7 @@ class UploadSecurity
       access_control_post_has_secure_uploads: "access control post dictates security",
       secure_creation_for_modifiers: "one or more creation for_modifiers was satisfied",
       uploading_in_composer: "uploading via the composer",
-      already_secure: "upload is already secure"
+      already_secure: "upload is already secure",
     }
   end
 

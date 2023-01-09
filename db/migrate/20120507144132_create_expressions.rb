@@ -10,6 +10,9 @@ class CreateExpressions < ActiveRecord::Migration[4.2]
       t.timestamps null: false
     end
 
-    add_index :expressions, [:parent_id, :parent_type, :expression_type_id, :user_id], unique: true, name: "expressions_pk"
+    add_index :expressions,
+              %i[parent_id parent_type expression_type_id user_id],
+              unique: true,
+              name: "expressions_pk"
   end
 end

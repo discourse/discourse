@@ -4,7 +4,6 @@ require "mysql2"
 require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 
 class ImportScripts::HigherLogic < ImportScripts::Base
-
   HIGHERLOGIC_DB = "higherlogic"
   BATCH_SIZE = 1000
   ATTACHMENT_DIR = "/shared/import/data/attachments"
@@ -12,11 +11,7 @@ class ImportScripts::HigherLogic < ImportScripts::Base
   def initialize
     super
 
-    @client = Mysql2::Client.new(
-      host: "localhost",
-      username: "root",
-      database: HIGHERLOGIC_DB
-    )
+    @client = Mysql2::Client.new(host: "localhost", username: "root", database: HIGHERLOGIC_DB)
   end
 
   def execute
@@ -29,7 +24,7 @@ class ImportScripts::HigherLogic < ImportScripts::Base
   end
 
   def import_groups
-    puts '', 'importing groups'
+    puts "", "importing groups"
 
     groups = mysql_query <<-SQL
         SELECT CommunityKey, CommunityName
@@ -37,16 +32,11 @@ class ImportScripts::HigherLogic < ImportScripts::Base
       ORDER BY CommunityName
     SQL
 
-    create_groups(groups) do |group|
-      {
-        id: group['CommunityKey'],
-        name: group['CommunityName']
-      }
-    end
+    create_groups(groups) { |group| { id: group["CommunityKey"], name: group["CommunityName"] } }
   end
 
   def import_users
-    puts '', 'importing users'
+    puts "", "importing users"
     total_count = mysql_query("SELECT count(*) FROM Contact").first["count"]
 
     batches(BATCH_SIZE) do |offset|
@@ -59,43 +49,42 @@ class ImportScripts::HigherLogic < ImportScripts::Base
 
       break if results.size < 1
 
-      next if all_records_exist? :users, results.map { |u| u['ContactKey'] }
+      next if all_records_exist? :users, results.map { |u| u["ContactKey"] }
 
       create_users(results, total: total_count, offset: offset) do |user|
-        next if user['EmailAddress'].blank?
+        next if user["EmailAddress"].blank?
         {
-          id: user['ContactKey'],
-          email: user['EmailAddress'],
-          name: "#{user['FirstName']} #{user['LastName']}",
-          created_at: user['CreatedOn'] == nil ? 0 : Time.zone.at(user['CreatedOn']),
-          bio_raw: user['Bio'],
-          active: user['UserStatus'] == "Active",
-          admin: user['HLAdminFlag'] == 1
+          id: user["ContactKey"],
+          email: user["EmailAddress"],
+          name: "#{user["FirstName"]} #{user["LastName"]}",
+          created_at: user["CreatedOn"] == nil ? 0 : Time.zone.at(user["CreatedOn"]),
+          bio_raw: user["Bio"],
+          active: user["UserStatus"] == "Active",
+          admin: user["HLAdminFlag"] == 1,
         }
       end
     end
   end
 
   def import_group_users
-    puts '', 'importing group users'
+    puts "", "importing group users"
 
-    group_users = mysql_query(<<-SQL
+    group_users = mysql_query(<<-SQL).to_a
       SELECT CommunityKey, ContactKey
         FROM CommunityMember
     SQL
-    ).to_a
 
     group_users.each do |row|
-      next unless user_id = user_id_from_imported_user_id(row['ContactKey'])
-      next unless group_id = group_id_from_imported_group_id(row['CommunityKey'])
-      puts '', '.'
+      next unless user_id = user_id_from_imported_user_id(row["ContactKey"])
+      next unless group_id = group_id_from_imported_group_id(row["CommunityKey"])
+      puts "", "."
 
       GroupUser.find_or_create_by(user_id: user_id, group_id: group_id)
     end
   end
 
   def import_categories
-    puts '', 'importing categories'
+    puts "", "importing categories"
 
     categories = mysql_query <<-SQL
       SELECT DiscussionKey, DiscussionName
@@ -103,15 +92,12 @@ class ImportScripts::HigherLogic < ImportScripts::Base
     SQL
 
     create_categories(categories) do |category|
-      {
-        id: category['DiscussionKey'],
-        name: category['DiscussionName']
-      }
+      { id: category["DiscussionKey"], name: category["DiscussionName"] }
     end
   end
 
   def import_posts
-    puts '', 'importing topics and posts'
+    puts "", "importing topics and posts"
     total_count = mysql_query("SELECT count(*) FROM DiscussionPost").first["count"]
 
     batches(BATCH_SIZE) do |offset|
@@ -131,28 +117,28 @@ class ImportScripts::HigherLogic < ImportScripts::Base
       SQL
 
       break if results.size < 1
-      next if all_records_exist? :posts, results.map { |p| p['MessageKey'] }
+      next if all_records_exist? :posts, results.map { |p| p["MessageKey"] }
 
       create_posts(results, total: total_count, offset: offset) do |post|
-        raw = preprocess_raw(post['Body'])
+        raw = preprocess_raw(post["Body"])
         mapped = {
-          id: post['MessageKey'],
-          user_id: user_id_from_imported_user_id(post['ContactKey']),
+          id: post["MessageKey"],
+          user_id: user_id_from_imported_user_id(post["ContactKey"]),
           raw: raw,
-          created_at: Time.zone.at(post['CreatedOn']),
+          created_at: Time.zone.at(post["CreatedOn"]),
         }
 
-        if post['ParentMessageKey'].nil?
-          mapped[:category] = category_id_from_imported_category_id(post['DiscussionKey']).to_i
-          mapped[:title] = CGI.unescapeHTML(post['Subject'])
-          mapped[:pinned] = post['PinnedFlag'] == 1
+        if post["ParentMessageKey"].nil?
+          mapped[:category] = category_id_from_imported_category_id(post["DiscussionKey"]).to_i
+          mapped[:title] = CGI.unescapeHTML(post["Subject"])
+          mapped[:pinned] = post["PinnedFlag"] == 1
         else
-          topic = topic_lookup_from_imported_post_id(post['ParentMessageKey'])
+          topic = topic_lookup_from_imported_post_id(post["ParentMessageKey"])
 
           if topic.present?
             mapped[:topic_id] = topic[:topic_id]
           else
-            puts "Parent post #{post['ParentMessageKey']} doesn't exist. Skipping."
+            puts "Parent post #{post["ParentMessageKey"]} doesn't exist. Skipping."
             next
           end
         end
@@ -163,20 +149,19 @@ class ImportScripts::HigherLogic < ImportScripts::Base
   end
 
   def import_attachments
-    puts '', 'importing attachments'
+    puts "", "importing attachments"
 
     count = 0
 
-    total_attachments = mysql_query(<<-SQL
+    total_attachments = mysql_query(<<-SQL).first["count"]
       SELECT COUNT(*) count
         FROM LibraryEntryFile l
         JOIN DiscussionPost p ON p.AttachmentDocumentKey = l.DocumentKey
        WHERE p.CreatedOn > '2020-01-01 00:00:00'
     SQL
-    ).first['count']
 
     batches(BATCH_SIZE) do |offset|
-      attachments = mysql_query(<<-SQL
+      attachments = mysql_query(<<-SQL).to_a
            SELECT l.VersionName,
                   l.FileExtension,
                   p.MessageKey
@@ -186,17 +171,16 @@ class ImportScripts::HigherLogic < ImportScripts::Base
             LIMIT #{BATCH_SIZE}
            OFFSET #{offset}
       SQL
-      ).to_a
 
       break if attachments.empty?
 
       attachments.each do |a|
         print_status(count += 1, total_attachments, get_start_time("attachments"))
-        original_filename = "#{a['VersionName']}.#{a['FileExtension']}"
+        original_filename = "#{a["VersionName"]}.#{a["FileExtension"]}"
         path = File.join(ATTACHMENT_DIR, original_filename)
 
         if File.exist?(path)
-          if post = Post.find(post_id_from_imported_post_id(a['MessageKey']))
+          if post = Post.find(post_id_from_imported_post_id(a["MessageKey"]))
             filename = File.basename(original_filename)
             upload = create_upload(post.user.id, path, filename)
 
@@ -205,7 +189,9 @@ class ImportScripts::HigherLogic < ImportScripts::Base
 
               post.raw << "\n\n" << html
               post.save!
-              PostUpload.create!(post: post, upload: upload) unless PostUpload.where(post: post, upload: upload).exists?
+              unless PostUpload.where(post: post, upload: upload).exists?
+                PostUpload.create!(post: post, upload: upload)
+              end
             end
           end
         end
@@ -217,7 +203,7 @@ class ImportScripts::HigherLogic < ImportScripts::Base
     raw = body.dup
 
     # trim off any post text beyond ---- to remove email threading
-    raw = raw.slice(0..(raw.index('------'))) || raw
+    raw = raw.slice(0..(raw.index("------"))) || raw
 
     raw = HtmlToMarkdown.new(raw).to_markdown
     raw
