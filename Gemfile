@@ -169,6 +169,9 @@ group :test, :development do
   gem 'rswag-specs'
 
   gem 'annotate'
+
+  gem "syntax_tree"
+  gem 'syntax_tree-disable_ternary'
 end
 
 group :development do

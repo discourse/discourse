@@ -219,9 +219,19 @@ martin</div>
     channel = Fabricate(:chat_channel)
     message1 = Fabricate(:chat_message, chat_channel: channel, user: post.user)
     message2 = Fabricate(:chat_message, chat_channel: channel, user: post.user)
-    md = ChatTranscriptService.new(channel, message2.user, messages_or_ids: [message2.id]).generate_markdown
+    md =
+      ChatTranscriptService.new(
+        channel,
+        message2.user,
+        messages_or_ids: [message2.id],
+      ).generate_markdown
     message1.update!(message: md)
-    md_for_post = ChatTranscriptService.new(channel, message1.user, messages_or_ids: [message1.id]).generate_markdown
+    md_for_post =
+      ChatTranscriptService.new(
+        channel,
+        message1.user,
+        messages_or_ids: [message1.id],
+      ).generate_markdown
     post.update!(raw: md_for_post)
     expect(post.cooked.chomp).to eq(<<~COOKED.chomp)
 <div class="chat-transcript" data-message-id="#{message1.id}" data-username="#{message1.user.username}" data-datetime="#{message1.created_at.iso8601}" data-channel-name="#{channel.name}" data-channel-id="#{channel.id}">

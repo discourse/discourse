@@ -84,6 +84,8 @@ class SidebarSiteSettingsBackfiller
       SQL
     end
 
+    return 0 if select_statements.blank?
+
     DB.query_single(<<~SQL)[0]
     SELECT
       COUNT(*)

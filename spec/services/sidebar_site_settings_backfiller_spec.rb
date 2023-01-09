@@ -226,6 +226,16 @@ RSpec.describe SidebarSiteSettingsBackfiller do
 
         expect(backfiller.number_of_users_to_backfill).to eq(3)
       end
+
+      it "returns 0 for the user count when no new category is added or removed" do
+        backfiller = described_class.new(
+          "default_sidebar_categories",
+          previous_value: "",
+          new_value: ""
+        )
+
+        expect(backfiller.number_of_users_to_backfill).to eq(0)
+      end
     end
 
     context 'for default_sidebar_tags setting' do

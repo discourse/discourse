@@ -53,8 +53,12 @@ RSpec.describe "List channels | sidebar", type: :system, js: true do
       it "sorts them alphabetically" do
         visit("/")
 
-        expect(page.find("#sidebar-section-content-chat-channels li:nth-child(1)")).to have_css(".channel-#{channel_2.id}")
-        expect(page.find("#sidebar-section-content-chat-channels li:nth-child(2)")).to have_css(".channel-#{channel_1.id}")
+        expect(page.find("#sidebar-section-content-chat-channels li:nth-child(1)")).to have_css(
+          ".channel-#{channel_2.id}",
+        )
+        expect(page.find("#sidebar-section-content-chat-channels li:nth-child(2)")).to have_css(
+          ".channel-#{channel_1.id}",
+        )
       end
     end
 
