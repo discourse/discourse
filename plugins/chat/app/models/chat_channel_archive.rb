@@ -13,6 +13,10 @@ class ChatChannelArchive < ActiveRecord::Base
   def failed?
     !complete? && self.archive_error.present?
   end
+
+  def new_topic?
+    self.destination_topic_title.present?
+  end
 end
 
 # == Schema Information

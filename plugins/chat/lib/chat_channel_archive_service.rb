@@ -2,9 +2,7 @@
 
 ##
 # From time to time, site admins may choose to sunset a chat channel and archive
-# the messages within. The main use case for this is a topic-based channel, but
-# it can be used for category channels just fine. It cannot be used for DM channels
-# in its current iteration.
+# the messages within. It cannot be used for DM channels in its current iteration.
 #
 # To archive a channel, we mark it read_only first to prevent any further message
 # additions or changes, and create a record to track whether the archive topic
@@ -17,8 +15,28 @@
 class Chat::ChatChannelArchiveService
   ARCHIVED_MESSAGES_PER_POST = 100
 
+  class ArchiveValidationError < StandardError
+    attr_reader :errors
+
+    def initialize(errors: [])
+      super
+      @errors = errors
+    end
+  end
+
   def self.begin_archive_process(chat_channel:, acting_user:, topic_params:)
     return if ChatChannelArchive.exists?(chat_channel: chat_channel)
+
+    # Only need to validate topic params for a new topic, not an existing one.
+    if topic_params[:topic_id].blank?
+      valid, errors =
+        Chat::ChatChannelArchiveService.validate_topic_params(
+          Guardian.new(acting_user),
+          topic_params,
+        )
+
+      raise ArchiveValidationError.new(errors: errors) if !valid
+    end
 
     ChatChannelArchive.transaction do
       chat_channel.read_only!(acting_user)
@@ -81,16 +99,16 @@ class Chat::ChatChannelArchiveService
         "Creating posts from message batches for #{chat_channel_title} archive, #{chat_channel_archive.total_messages} messages to archive (#{chat_channel_archive.total_messages / ARCHIVED_MESSAGES_PER_POST} posts).",
       )
 
-      # a batch should be idempotent, either the post is created and the
+      # A batch should be idempotent, either the post is created and the
       # messages are deleted or we roll back the whole thing.
       #
-      # at some point we may want to reconsider disabling post validations,
+      # At some point we may want to reconsider disabling post validations,
       # and add in things like dynamic resizing of the number of messages per
-      # post based on post length, but that can be done later
+      # post based on post length, but that can be done later.
       #
-      # another future improvement is to send a MessageBus message for each
+      # Another future improvement is to send a MessageBus message for each
       # completed batch, so the UI can receive updates and show a progress
-      # bar or something similar
+      # bar or something similar.
       chat_channel
         .chat_messages
         .find_in_batches(batch_size: ARCHIVED_MESSAGES_PER_POST) do |chat_messages|
@@ -193,10 +211,10 @@ class Chat::ChatChannelArchiveService
   end
 
   def update_destination_topic_status
-    # we only want to do this when the destination topic is new, not an
+    # We only want to do this when the destination topic is new, not an
     # existing topic, because we don't want to update the status unexpectedly
     # on an existing topic
-    if chat_channel_archive.destination_topic_title.present?
+    if chat_channel_archive.new_topic?
       if SiteSetting.chat_archive_destination_topic_status == "archived"
         chat_channel_archive.destination_topic.update!(archived: true)
       elsif SiteSetting.chat_archive_destination_topic_status == "closed"

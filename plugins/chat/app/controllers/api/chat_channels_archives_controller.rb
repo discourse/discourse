@@ -19,16 +19,15 @@ class Chat::Api::ChatChannelsArchivesController < Chat::Api::ChatChannelsControl
       raise Discourse::InvalidAccess.new(I18n.t("chat.errors.channel_cannot_be_archived"))
     end
 
-    if new_topic
-      valid, errors = Chat::ChatChannelArchiveService.validate_topic_params(guardian, topic_params)
-      return render json: failed_json.merge(errors: errors), status: 400 if !valid
+    begin
+      Chat::ChatChannelArchiveService.begin_archive_process(
+        chat_channel: channel_from_params,
+        acting_user: current_user,
+        topic_params: topic_params,
+      )
+    rescue Chat::ChatChannelArchiveService::ArchiveValidationError => err
+      return render json: failed_json.merge(errors: err.errors), status: 400
     end
-
-    Chat::ChatChannelArchiveService.begin_archive_process(
-      chat_channel: channel_from_params,
-      acting_user: current_user,
-      topic_params: topic_params,
-    )
 
     render json: success_json
   end
