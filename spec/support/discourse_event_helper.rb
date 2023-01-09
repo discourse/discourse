@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 module DiscourseEvent::TestHelper
-  def trigger(event_name, *params)
-    super(event_name, *params)
+  def trigger(event_name, *params, **kwargs)
+    super(event_name, *params, **kwargs)
 
     if @events_trigger
+      params << kwargs if kwargs != {}
       @events_trigger << { event_name: event_name, params: params }
     end
   end
@@ -29,7 +30,6 @@ module DiscourseEvent::TestHelper
     events = track_events(event_name, args: args) { yield }
     events.first
   end
-
 end
 
 DiscourseEvent.singleton_class.prepend DiscourseEvent::TestHelper

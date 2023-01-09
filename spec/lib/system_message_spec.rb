@@ -4,9 +4,7 @@ require 'system_message'
 require 'topic_subtype'
 
 RSpec.describe SystemMessage do
-
   describe '#create' do
-
     fab!(:admin) { Fabricate(:admin) }
     fab!(:user) { Fabricate(:user) }
 
@@ -81,12 +79,26 @@ RSpec.describe SystemMessage do
 
     it 'sends event with post object' do
       system_message = SystemMessage.new(user)
+
       event = DiscourseEvent.track(:system_message_sent) {
         system_message.create(:tl2_promotion_message)
       }
+
       expect(event[:event_name]).to eq(:system_message_sent)
       expect(event[:params].first[:post]).to eq(Post.last)
       expect(event[:params].first[:message_type]).to eq(:tl2_promotion_message)
+    end
+
+    it 'sends an event before the system message is sent' do
+      system_message = SystemMessage.new(user)
+
+      event = DiscourseEvent.track(:before_system_message_sent) {
+        system_message.create(:tl2_promotion_message)
+      }
+
+      expect(event[:event_name]).to eq(:before_system_message_sent)
+      expect(event[:params].first[:message_type]).to eq(:tl2_promotion_message)
+      expect(event[:params].first[:recipient]).to eq(user)
     end
   end
 end

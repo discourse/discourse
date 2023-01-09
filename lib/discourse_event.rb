@@ -9,9 +9,9 @@ class DiscourseEvent
     @events ||= Hash.new { |hash, key| hash[key] = Set.new }
   end
 
-  def self.trigger(event_name, *params)
+  def self.trigger(event_name, *args, **kwargs)
     events[event_name].each do |event|
-      event.call(*params)
+      event.call(*args, **kwargs)
     end
   end
 
