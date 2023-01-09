@@ -85,8 +85,8 @@ RSpec.describe SystemMessage do
       }
 
       expect(event[:event_name]).to eq(:system_message_sent)
-      expect(event[:kwargs][:post]).to eq(Post.last)
-      expect(event[:kwargs][:message_type]).to eq(:tl2_promotion_message)
+      expect(event[:params].last[:post]).to eq(Post.last)
+      expect(event[:params].last[:message_type]).to eq(:tl2_promotion_message)
     end
 
     it 'sends an event before the system message is sent' do
@@ -97,8 +97,8 @@ RSpec.describe SystemMessage do
       }
 
       expect(event[:event_name]).to eq(:before_system_message_sent)
-      expect(event[:kwargs][:message_type]).to eq(:tl2_promotion_message)
-      expect(event[:kwargs][:recipient]).to eq(user)
+      expect(event[:params].last[:message_type]).to eq(:tl2_promotion_message)
+      expect(event[:params].last[:recipient]).to eq(user)
     end
   end
 end
