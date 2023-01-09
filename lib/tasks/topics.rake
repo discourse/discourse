@@ -6,9 +6,9 @@ def close_old_topics(category)
   topics = Topic.where(closed: false, category_id: category.id)
 
   if category.auto_close_based_on_last_post
-    topics = topics.where('last_posted_at < ?', category.auto_close_hours.hours.ago)
+    topics = topics.where("last_posted_at < ?", category.auto_close_hours.hours.ago)
   else
-    topics = topics.where('created_at < ?', category.auto_close_hours.hours.ago)
+    topics = topics.where("created_at < ?", category.auto_close_hours.hours.ago)
   end
 
   topics_closed = 0
@@ -26,8 +26,8 @@ def close_old_topics(category)
 end
 
 def apply_auto_close(category)
-  topics = Topic.where(closed: false, category_id: category.id)
-    .where(<<-SQL, TopicTimer.types[:close])
+  topics =
+    Topic.where(closed: false, category_id: category.id).where(<<-SQL, TopicTimer.types[:close])
       NOT EXISTS (
         SELECT 1
         FROM topic_timers
@@ -47,7 +47,11 @@ def apply_auto_close(category)
 
   topics.find_each do |topic|
     topic.inherit_auto_close_from_category
-    RakeHelpers.print_status_with_label("    applying auto-close to topics: ", topics_closed += 1, total)
+    RakeHelpers.print_status_with_label(
+      "    applying auto-close to topics: ",
+      topics_closed += 1,
+      total,
+    )
   end
 end
 
@@ -72,9 +76,15 @@ task "topics:watch_all_replied_topics" => :environment do
   count = 0
 
   topics.find_each do |t|
-    t.topic_users.where(posted: true).find_each do |tp|
-      tp.update!(notification_level: TopicUser.notification_levels[:watching], notifications_reason_id: TopicUser.notification_reasons[:created_post])
-    end
+    t
+      .topic_users
+      .where(posted: true)
+      .find_each do |tp|
+        tp.update!(
+          notification_level: TopicUser.notification_levels[:watching],
+          notifications_reason_id: TopicUser.notification_reasons[:created_post],
+        )
+      end
     RakeHelpers.print_status(count += 1, total)
   end
 

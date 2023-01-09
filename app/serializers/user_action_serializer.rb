@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'post_item_excerpt'
+require_relative "post_item_excerpt"
 
 class UserActionSerializer < ApplicationSerializer
   include PostItemExcerpt
@@ -98,5 +98,4 @@ class UserActionSerializer < ApplicationSerializer
   def action_code_path
     object.action_code_path
   end
-
 end

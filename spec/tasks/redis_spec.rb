@@ -3,37 +3,26 @@
 RSpec.describe "Redis rake tasks", type: :multisite do
   let(:redis) { Discourse.redis.without_namespace }
 
-  before do
-    Discourse::Application.load_tasks
-  end
+  before { Discourse::Application.load_tasks }
 
-  describe 'clean up' do
-    it 'should clean up orphan Redis keys' do
-      active_keys = [
-        '__mb_backlog_id_n_/users/someusername$|$default',
-        'default:user-last-seen:607',
-        'sidekiq:something:do:something',
-        'somekeytonotbetouched'
+  describe "clean up" do
+    it "should clean up orphan Redis keys" do
+      active_keys = %w[
+        __mb_backlog_id_n_/users/someusername$|$default
+        default:user-last-seen:607
+        sidekiq:something:do:something
+        somekeytonotbetouched
       ]
 
-      orphan_keys = [
-        'tgxworld:user-last-seen:607',
-        '__mb_backlog_id_n_/users/someusername$|$tgxworld'
-      ]
+      orphan_keys = %w[tgxworld:user-last-seen:607 __mb_backlog_id_n_/users/someusername$|$tgxworld]
 
-      (active_keys | orphan_keys).each do |key|
-        redis.set(key, 1)
-      end
+      (active_keys | orphan_keys).each { |key| redis.set(key, 1) }
 
-      Rake::Task['redis:clean_up'].invoke
+      Rake::Task["redis:clean_up"].invoke
 
-      active_keys.each do |key|
-        expect(redis.get(key)).to eq('1')
-      end
+      active_keys.each { |key| expect(redis.get(key)).to eq("1") }
 
-      orphan_keys.each do |key|
-        expect(redis.get(key)).to eq(nil)
-      end
+      orphan_keys.each { |key| expect(redis.get(key)).to eq(nil) }
     ensure
       active_keys.each { |key| redis.del(key) }
     end

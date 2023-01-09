@@ -11,13 +11,14 @@ module IntegrationHelpers
     challenge = body["challenge"]
     user = Fabricate.build(:user)
 
-    post "/u.json", params: {
-      username: user.username,
-      email: user.email,
-      password: 'asdasljdhaiosdjioaeiow',
-      password_confirmation: honeypot,
-      challenge: challenge.reverse
-    }
+    post "/u.json",
+         params: {
+           username: user.username,
+           email: user.email,
+           password: "asdasljdhaiosdjioaeiow",
+           password_confirmation: honeypot,
+           challenge: challenge.reverse,
+         }
 
     expect(response.status).to eq(200)
 
@@ -35,11 +36,12 @@ module IntegrationHelpers
   end
 
   def read_secure_session
-    id = begin
-      session[:secure_session_id]
-    rescue NoMethodError
-      nil
-    end
+    id =
+      begin
+        session[:secure_session_id]
+      rescue NoMethodError
+        nil
+      end
 
     # This route will init the secure_session for us
     get "/session/hp.json" if id.nil?

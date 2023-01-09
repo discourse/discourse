@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.shared_examples "a JSON endpoint" do |expected_response_status|
-  before do |example|
-    submit_request(example.metadata)
-  end
+  before { |example| submit_request(example.metadata) }
 
   def expect_schema_valid(schemer, params)
     valid = schemer.valid?(params)
@@ -15,7 +13,7 @@ RSpec.shared_examples "a JSON endpoint" do |expected_response_status|
       if details
         puts "VALIDATION DETAILS: #{details}"
       else
-        puts "POSSIBLE ISSUE W/: #{validation_result['data_pointer']}"
+        puts "POSSIBLE ISSUE W/: #{validation_result["data_pointer"]}"
       end
     end
     expect(valid).to eq(true)

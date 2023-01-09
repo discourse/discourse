@@ -15,7 +15,7 @@ class GroupArchivedMessage < ActiveRecord::Base
       :group_pm_update_summary,
       group_id: group_id,
       topic_id: topic_id,
-      acting_user_id: opts[:acting_user_id]
+      acting_user_id: opts[:acting_user_id],
     )
   end
 
@@ -31,20 +31,19 @@ class GroupArchivedMessage < ActiveRecord::Base
       :group_pm_update_summary,
       group_id: group_id,
       topic_id: topic_id,
-      acting_user_id: opts[:acting_user_id]
+      acting_user_id: opts[:acting_user_id],
     )
   end
 
   def self.trigger(event, group_id, topic_id)
     group = Group.find_by(id: group_id)
     topic = Topic.find_by(id: topic_id)
-    if group && topic
-      DiscourseEvent.trigger(event, group: group, topic: topic)
-    end
+    DiscourseEvent.trigger(event, group: group, topic: topic) if group && topic
   end
 
   def self.set_imap_sync(topic_id)
-    IncomingEmail.joins(:post)
+    IncomingEmail
+      .joins(:post)
       .where.not(imap_uid: nil)
       .where(topic_id: topic_id, posts: { post_number: 1 })
       .update_all(imap_sync: true)
@@ -55,7 +54,7 @@ class GroupArchivedMessage < ActiveRecord::Base
     PrivateMessageTopicTrackingState.publish_group_archived(
       topic: topic,
       group_id: group_id,
-      acting_user_id: acting_user_id
+      acting_user_id: acting_user_id,
     )
   end
   private_class_method :publish_topic_tracking_state

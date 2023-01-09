@@ -6,7 +6,7 @@ class Developer < ActiveRecord::Base
   after_save :rebuild_cache
   after_destroy :rebuild_cache
 
-  @id_cache = DistributedCache.new('developer_ids')
+  @id_cache = DistributedCache.new("developer_ids")
 
   def self.user_ids
     @id_cache["ids"] || rebuild_cache

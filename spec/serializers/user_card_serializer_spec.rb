@@ -66,7 +66,6 @@ RSpec.describe UserCardSerializer do
         expect(json[:pending_posts_count]).to eq 0
       end
     end
-
   end
 
   describe "#status" do

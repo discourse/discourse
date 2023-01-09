@@ -15,7 +15,7 @@ module HasSanitizableFields
       field = CGI.unescape_html(sanitizer.sanitize(field, attributes: allowed_attributes))
       # Just replace the characters that our translations use for interpolation.
       # Calling CGI.unescape removes characters like '+', which will corrupt the original value.
-      field = field.gsub('%7B', '{').gsub('%7D', '}')
+      field = field.gsub("%7B", "{").gsub("%7D", "}")
     end
 
     field

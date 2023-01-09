@@ -39,11 +39,8 @@ class FlaggedUserSerializer < BasicUserSerializer
     fields = User.allowed_user_custom_fields(scope)
 
     result = {}
-    fields.each do |k|
-      result[k] = object.custom_fields[k] if object.custom_fields[k].present?
-    end
+    fields.each { |k| result[k] = object.custom_fields[k] if object.custom_fields[k].present? }
 
     result
   end
-
 end

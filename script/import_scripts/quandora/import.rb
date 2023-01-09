@@ -1,10 +1,9 @@
 # frozen_string_literal: true
 
-require_relative './quandora_question.rb'
+require_relative "./quandora_question.rb"
 require File.expand_path(File.dirname(__FILE__) + "/../base.rb")
 
 class ImportScripts::Quandora < ImportScripts::Base
-
   JSON_FILES_DIR = "output"
 
   def initialize
@@ -12,8 +11,8 @@ class ImportScripts::Quandora < ImportScripts::Base
     @system_user = Discourse.system_user
     @questions = []
     Dir.foreach(JSON_FILES_DIR) do |filename|
-      next if filename == ('.') || filename == ('..')
-      question = File.read JSON_FILES_DIR + '/' + filename
+      next if filename == (".") || filename == ("..")
+      question = File.read JSON_FILES_DIR + "/" + filename
       @questions << question
     end
   end
@@ -33,9 +32,7 @@ class ImportScripts::Quandora < ImportScripts::Base
       q = QuandoraQuestion.new question
       import_users q.users
       created_topic = import_topic q.topic
-      if created_topic
-        import_posts q.replies, created_topic.topic_id
-      end
+      import_posts q.replies, created_topic.topic_id if created_topic
       topics += 1
       print_status topics, total
     end
@@ -43,9 +40,7 @@ class ImportScripts::Quandora < ImportScripts::Base
   end
 
   def import_users(users)
-    users.each do |user|
-      create_user user, user[:id]
-    end
+    users.each { |user| create_user user, user[:id] }
   end
 
   def import_topic(topic)
@@ -54,7 +49,7 @@ class ImportScripts::Quandora < ImportScripts::Base
       post = Post.find(post_id) # already imported this topic
     else
       topic[:user_id] = user_id_from_imported_user_id(topic[:author_id]) || -1
-      topic[:category] = 'quandora-import'
+      topic[:category] = "quandora-import"
 
       post = create_post(topic, topic[:id])
 
@@ -68,9 +63,7 @@ class ImportScripts::Quandora < ImportScripts::Base
   end
 
   def import_posts(posts, topic_id)
-    posts.each do |post|
-      import_post post, topic_id
-    end
+    posts.each { |post| import_post post, topic_id }
   end
 
   def import_post(post, topic_id)
@@ -91,6 +84,4 @@ class ImportScripts::Quandora < ImportScripts::Base
   end
 end
 
-if __FILE__ == $0
-  ImportScripts::Quandora.new.perform
-end
+ImportScripts::Quandora.new.perform if __FILE__ == $0

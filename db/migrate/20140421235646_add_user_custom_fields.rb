@@ -9,6 +9,6 @@ class AddUserCustomFields < ActiveRecord::Migration[4.2]
       t.timestamps null: false
     end
 
-    add_index :user_custom_fields, [:user_id, :name]
+    add_index :user_custom_fields, %i[user_id name]
   end
 end

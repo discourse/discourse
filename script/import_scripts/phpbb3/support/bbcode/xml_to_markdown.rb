@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'nokogiri'
-require_relative 'markdown_node'
+require "nokogiri"
+require_relative "markdown_node"
 
 module ImportScripts::PhpBB3::BBCode
   class XmlToMarkdown
@@ -14,7 +14,7 @@ module ImportScripts::PhpBB3::BBCode
       @allow_inline_code = opts.fetch(:allow_inline_code, false)
       @traditional_linebreaks = opts.fetch(:traditional_linebreaks, false)
 
-      @doc = Nokogiri::XML(xml)
+      @doc = Nokogiri.XML(xml)
       @list_stack = []
     end
 
@@ -28,9 +28,9 @@ module ImportScripts::PhpBB3::BBCode
 
     private
 
-    IGNORED_ELEMENTS = ["s", "e", "i"]
-    ELEMENTS_WITHOUT_LEADING_WHITESPACES = ["LIST", "LI"]
-    ELEMENTS_WITH_HARD_LINEBREAKS = ["B", "I", "U"]
+    IGNORED_ELEMENTS = %w[s e i]
+    ELEMENTS_WITHOUT_LEADING_WHITESPACES = %w[LIST LI]
+    ELEMENTS_WITH_HARD_LINEBREAKS = %w[B I U]
     EXPLICIT_LINEBREAK_THRESHOLD = 2
 
     def preprocess_xml
@@ -65,9 +65,7 @@ module ImportScripts::PhpBB3::BBCode
       xml_node.children.each { |xml_child| visit(xml_child, md_node || md_parent) }
 
       after_hook = "after_#{xml_node.name}"
-      if respond_to?(after_hook, include_all: true)
-        send(after_hook, xml_node, md_node)
-      end
+      send(after_hook, xml_node, md_node) if respond_to?(after_hook, include_all: true)
     end
 
     def create_node(xml_node, md_parent)
@@ -84,19 +82,15 @@ module ImportScripts::PhpBB3::BBCode
     end
 
     def visit_B(xml_node, md_node)
-      if xml_node.parent&.name != 'B'
-        md_node.enclosed_with = "**"
-      end
+      md_node.enclosed_with = "**" if xml_node.parent&.name != "B"
     end
 
     def visit_I(xml_node, md_node)
-      if xml_node.parent&.name != 'I'
-        md_node.enclosed_with = "_"
-      end
+      md_node.enclosed_with = "_" if xml_node.parent&.name != "I"
     end
 
     def visit_U(xml_node, md_node)
-      if xml_node.parent&.name != 'U'
+      if xml_node.parent&.name != "U"
         md_node.prefix = "[u]"
         md_node.postfix = "[/u]"
       end
@@ -122,10 +116,7 @@ module ImportScripts::PhpBB3::BBCode
       md_node.prefix_linebreaks = md_node.postfix_linebreaks = @list_stack.size == 0 ? 2 : 1
       md_node.prefix_linebreak_type = LINEBREAK_HTML if @list_stack.size == 0
 
-      @list_stack << {
-        unordered: xml_node.attribute('type').nil?,
-        item_count: 0
-      }
+      @list_stack << { unordered: xml_node.attribute("type").nil?, item_count: 0 }
     end
 
     def after_LIST(xml_node, md_node)
@@ -138,21 +129,21 @@ module ImportScripts::PhpBB3::BBCode
 
       list[:item_count] += 1
 
-      indentation = ' ' * 2 * depth
-      symbol = list[:unordered] ? '*' : "#{list[:item_count]}."
+      indentation = " " * 2 * depth
+      symbol = list[:unordered] ? "*" : "#{list[:item_count]}."
 
       md_node.prefix = "#{indentation}#{symbol} "
       md_node.postfix_linebreaks = 1
     end
 
     def visit_IMG(xml_node, md_node)
-      md_node.text = +"![](#{xml_node.attribute('src')})"
+      md_node.text = +"![](#{xml_node.attribute("src")})"
       md_node.prefix_linebreaks = md_node.postfix_linebreaks = 2
       md_node.skip_children
     end
 
     def visit_URL(xml_node, md_node)
-      original_url = xml_node.attribute('url').to_s
+      original_url = xml_node.attribute("url").to_s
       url = CGI.unescapeHTML(original_url)
       url = @url_replacement.call(url) if @url_replacement
 
@@ -173,7 +164,8 @@ module ImportScripts::PhpBB3::BBCode
     def visit_br(xml_node, md_node)
       md_node.postfix_linebreaks += 1
 
-      if md_node.postfix_linebreaks > 1 && ELEMENTS_WITH_HARD_LINEBREAKS.include?(xml_node.parent&.name)
+      if md_node.postfix_linebreaks > 1 &&
+           ELEMENTS_WITH_HARD_LINEBREAKS.include?(xml_node.parent&.name)
         md_node.postfix_linebreak_type = LINEBREAK_HARD
       end
     end
@@ -194,7 +186,8 @@ module ImportScripts::PhpBB3::BBCode
 
     def visit_QUOTE(xml_node, md_node)
       if post = quoted_post(xml_node)
-        md_node.prefix = %Q{[quote="#{post[:username]}, post:#{post[:post_number]}, topic:#{post[:topic_id]}"]\n}
+        md_node.prefix =
+          %Q{[quote="#{post[:username]}, post:#{post[:post_number]}, topic:#{post[:topic_id]}"]\n}
         md_node.postfix = "\n[/quote]"
       elsif username = quoted_username(xml_node)
         md_node.prefix = %Q{[quote="#{username}"]\n}
@@ -242,11 +235,11 @@ module ImportScripts::PhpBB3::BBCode
       return if size.nil?
 
       if size.between?(1, 99)
-        md_node.prefix = '<small>'
-        md_node.postfix = '</small>'
+        md_node.prefix = "<small>"
+        md_node.postfix = "</small>"
       elsif size.between?(101, 200)
-        md_node.prefix = '<big>'
-        md_node.postfix = '</big>'
+        md_node.prefix = "<big>"
+        md_node.postfix = "</big>"
       end
     end
 
@@ -267,7 +260,8 @@ module ImportScripts::PhpBB3::BBCode
 
         parent_prefix = prefix_from_parent(md_parent)
 
-        if parent_prefix && md_node.xml_node_name != "br" && (md_parent.prefix_children || !markdown.empty?)
+        if parent_prefix && md_node.xml_node_name != "br" &&
+             (md_parent.prefix_children || !markdown.empty?)
           prefix = "#{parent_prefix}#{prefix}"
         end
 
@@ -275,11 +269,21 @@ module ImportScripts::PhpBB3::BBCode
           text, prefix, postfix = hoist_whitespaces!(markdown, text, prefix, postfix)
         end
 
-        add_linebreaks!(markdown, md_node.prefix_linebreaks, md_node.prefix_linebreak_type, parent_prefix)
+        add_linebreaks!(
+          markdown,
+          md_node.prefix_linebreaks,
+          md_node.prefix_linebreak_type,
+          parent_prefix,
+        )
         markdown << prefix
         markdown << text
         markdown << postfix
-        add_linebreaks!(markdown, md_node.postfix_linebreaks, md_node.postfix_linebreak_type, parent_prefix)
+        add_linebreaks!(
+          markdown,
+          md_node.postfix_linebreaks,
+          md_node.postfix_linebreak_type,
+          parent_prefix,
+        )
       end
 
       markdown
@@ -296,9 +300,7 @@ module ImportScripts::PhpBB3::BBCode
       end
 
       unless postfix.empty?
-        if ends_with_whitespace?(text)
-          postfix = "#{postfix}#{text[-1]}"
-        end
+        postfix = "#{postfix}#{text[-1]}" if ends_with_whitespace?(text)
         text = text.rstrip
       end
 
@@ -319,16 +321,24 @@ module ImportScripts::PhpBB3::BBCode
 
       if linebreak_type == LINEBREAK_HTML
         max_linebreak_count = [existing_linebreak_count, required_linebreak_count - 1].max + 1
-        required_linebreak_count = max_linebreak_count if max_linebreak_count > EXPLICIT_LINEBREAK_THRESHOLD
+        required_linebreak_count = max_linebreak_count if max_linebreak_count >
+          EXPLICIT_LINEBREAK_THRESHOLD
       end
 
       return if existing_linebreak_count >= required_linebreak_count
 
       rstrip!(markdown)
-      alternative_linebreak_start_index = required_linebreak_count > EXPLICIT_LINEBREAK_THRESHOLD ? 1 : 2
+      alternative_linebreak_start_index =
+        required_linebreak_count > EXPLICIT_LINEBREAK_THRESHOLD ? 1 : 2
 
       required_linebreak_count.times do |index|
-        linebreak = linebreak(linebreak_type, index, alternative_linebreak_start_index, required_linebreak_count)
+        linebreak =
+          linebreak(
+            linebreak_type,
+            index,
+            alternative_linebreak_start_index,
+            required_linebreak_count,
+          )
 
         markdown << (linebreak == "\n" ? prefix.rstrip : prefix) if prefix && index > 0
         markdown << linebreak
@@ -336,18 +346,25 @@ module ImportScripts::PhpBB3::BBCode
     end
 
     def rstrip!(markdown)
-      markdown.gsub!(/\s*(?:\\?\n|<br>\n)*\z/, '')
+      markdown.gsub!(/\s*(?:\\?\n|<br>\n)*\z/, "")
     end
 
-    def linebreak(linebreak_type, linebreak_index, alternative_linebreak_start_index, required_linebreak_count)
+    def linebreak(
+      linebreak_type,
+      linebreak_index,
+      alternative_linebreak_start_index,
+      required_linebreak_count
+    )
       use_alternative_linebreak = linebreak_index >= alternative_linebreak_start_index
       is_last_linebreak = linebreak_index + 1 == required_linebreak_count
 
-      return "<br>\n" if linebreak_type == LINEBREAK_HTML &&
-        use_alternative_linebreak && is_last_linebreak
+      if linebreak_type == LINEBREAK_HTML && use_alternative_linebreak && is_last_linebreak
+        return "<br>\n"
+      end
 
-      return "\\\n" if linebreak_type == LINEBREAK_HARD ||
-        @traditional_linebreaks || use_alternative_linebreak
+      if linebreak_type == LINEBREAK_HARD || @traditional_linebreaks || use_alternative_linebreak
+        return "\\\n"
+      end
 
       "\n"
     end

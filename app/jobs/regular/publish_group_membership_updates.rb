@@ -11,13 +11,16 @@ module Jobs
 
       added_members = args[:type] == Group::AUTO_GROUPS_ADD
 
-      User.human_users.where(id: args[:user_ids]).each do |user|
-        if added_members
-          group.trigger_user_added_event(user, group.automatic?)
-        else
-          group.trigger_user_removed_event(user)
+      User
+        .human_users
+        .where(id: args[:user_ids])
+        .each do |user|
+          if added_members
+            group.trigger_user_added_event(user, group.automatic?)
+          else
+            group.trigger_user_removed_event(user)
+          end
         end
-      end
     end
   end
 end

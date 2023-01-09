@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe ReplyByEmailEnabledValidator do
-
-  describe '#valid_value?' do
+  describe "#valid_value?" do
     subject(:validator) { described_class.new }
 
     it "only validates when enabling the setting" do
@@ -25,7 +24,5 @@ RSpec.describe ReplyByEmailEnabledValidator do
       SiteSetting.expects(:email_polling_enabled?).returns(true)
       expect(validator.valid_value?("t")).to eq(true)
     end
-
   end
-
 end

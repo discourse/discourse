@@ -2,8 +2,8 @@
 
 class MakePostNumberDistinct < ActiveRecord::Migration[4.2]
   def up
-
-    DB.exec('update posts p
+    DB.exec(
+      "update posts p
 set post_number = calc
 from
 (
@@ -20,7 +20,8 @@ from
 	)
 
 ) as X
-where calc <> p.post_number and X.id = p.id')
+where calc <> p.post_number and X.id = p.id",
+    )
   end
 
   def down

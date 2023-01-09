@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'shared_context_for_backup_restore'
+require_relative "shared_context_for_backup_restore"
 
 RSpec.describe BackupRestore::SystemInterface do
   include_context "with shared stuff"
@@ -8,9 +8,7 @@ RSpec.describe BackupRestore::SystemInterface do
   subject { BackupRestore::SystemInterface.new(logger) }
 
   describe "readonly mode" do
-    after do
-      Discourse::READONLY_KEYS.each { |key| Discourse.redis.del(key) }
-    end
+    after { Discourse::READONLY_KEYS.each { |key| Discourse.redis.del(key) } }
 
     describe "#enable_readonly_mode" do
       it "enables readonly mode" do
@@ -107,29 +105,26 @@ RSpec.describe BackupRestore::SystemInterface do
     end
 
     context "with Sidekiq workers" do
-      after do
-        flush_sidekiq_redis_namespace
-      end
+      after { flush_sidekiq_redis_namespace }
 
       def flush_sidekiq_redis_namespace
-        Sidekiq.redis do |redis|
-          redis.scan_each { |key| redis.del(key) }
-        end
+        Sidekiq.redis { |redis| redis.scan_each { |key| redis.del(key) } }
       end
 
       def create_workers(site_id: nil, all_sites: false)
-        payload = Sidekiq::Testing.fake! do
-          data = { post_id: 1 }
+        payload =
+          Sidekiq::Testing.fake! do
+            data = { post_id: 1 }
 
-          if all_sites
-            data[:all_sites] = true
-          else
-            data[:current_site_id] = site_id || RailsMultisite::ConnectionManagement.current_db
+            if all_sites
+              data[:all_sites] = true
+            else
+              data[:current_site_id] = site_id || RailsMultisite::ConnectionManagement.current_db
+            end
+
+            Jobs.enqueue(:process_post, data)
+            Jobs::ProcessPost.jobs.last
           end
-
-          Jobs.enqueue(:process_post, data)
-          Jobs::ProcessPost.jobs.last
-        end
 
         Sidekiq.redis do |conn|
           hostname = "localhost"
@@ -137,15 +132,16 @@ RSpec.describe BackupRestore::SystemInterface do
           key = "#{hostname}:#{pid}"
           process = { pid: pid, hostname: hostname }
 
-          conn.sadd('processes', key)
-          conn.hmset(key, 'info', Sidekiq.dump_json(process))
+          conn.sadd("processes", key)
+          conn.hmset(key, "info", Sidekiq.dump_json(process))
 
-          data = Sidekiq.dump_json(
-            queue: 'default',
-            run_at: Time.now.to_i,
-            payload: Sidekiq.dump_json(payload)
-          )
-          conn.hmset("#{key}:work", '444', data)
+          data =
+            Sidekiq.dump_json(
+              queue: "default",
+              run_at: Time.now.to_i,
+              payload: Sidekiq.dump_json(payload),
+            )
+          conn.hmset("#{key}:work", "444", data)
         end
       end
 

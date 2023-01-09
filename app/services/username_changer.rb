@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class UsernameChanger
-
   def initialize(user, new_username, actor = nil)
     @user = user
     @old_username = user.username
@@ -37,23 +36,33 @@ class UsernameChanger
         StaffActionLogger.new(@actor).log_username_change(@user, @old_username, @new_username)
       end
 
-      UsernameChanger.update_username(user_id: @user.id,
-                                      old_username: @old_username,
-                                      new_username: @new_username,
-                                      avatar_template: @user.avatar_template_url,
-                                      asynchronous: asynchronous) if run_update_job
+      if run_update_job
+        UsernameChanger.update_username(
+          user_id: @user.id,
+          old_username: @old_username,
+          new_username: @new_username,
+          avatar_template: @user.avatar_template_url,
+          asynchronous: asynchronous,
+        )
+      end
       return true
     end
 
     false
   end
 
-  def self.update_username(user_id:, old_username:, new_username:, avatar_template:, asynchronous: true)
+  def self.update_username(
+    user_id:,
+    old_username:,
+    new_username:,
+    avatar_template:,
+    asynchronous: true
+  )
     args = {
       user_id: user_id,
       old_username: old_username,
       new_username: new_username,
-      avatar_template: avatar_template
+      avatar_template: avatar_template,
     }
 
     if asynchronous

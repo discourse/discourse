@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class PersonalMessageEnabledGroupsValidator
-
   def initialize(opts = {})
     @opts = opts
   end

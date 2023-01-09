@@ -3,10 +3,7 @@
 class EmailLogSerializer < ApplicationSerializer
   include EmailLogsMixin
 
-  attributes :reply_key,
-             :bounced,
-             :has_bounce_key,
-             :smtp_transaction_response
+  attributes :reply_key, :bounced, :has_bounce_key, :smtp_transaction_response
 
   has_one :user, serializer: BasicUserSerializer, embed: :objects
 

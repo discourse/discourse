@@ -8,6 +8,6 @@ class CreateWebCrawlerRequests < ActiveRecord::Migration[5.1]
       t.integer :count, null: false, default: 0
     end
 
-    add_index :web_crawler_requests, [:date, :user_agent], unique: true
+    add_index :web_crawler_requests, %i[date user_agent], unique: true
   end
 end

@@ -2,40 +2,31 @@
 
 #mixin for all guardian methods dealing with category permissions
 module CategoryGuardian
-
   # Creating Method
   def can_create_category?(parent = nil)
-    is_admin? ||
-    (
-      SiteSetting.moderators_manage_categories_and_groups &&
-      is_moderator?
-    )
+    is_admin? || (SiteSetting.moderators_manage_categories_and_groups && is_moderator?)
   end
 
   # Editing Method
   def can_edit_category?(category)
     is_admin? ||
-    (
-      SiteSetting.moderators_manage_categories_and_groups &&
-      is_moderator? &&
-      can_see_category?(category)
-    )
+      (
+        SiteSetting.moderators_manage_categories_and_groups && is_moderator? &&
+          can_see_category?(category)
+      )
   end
 
   def can_edit_serialized_category?(category_id:, read_restricted:)
     is_admin? ||
-    (
-      SiteSetting.moderators_manage_categories_and_groups &&
-      is_moderator? &&
-      can_see_serialized_category?(category_id: category_id, read_restricted: read_restricted)
-    )
+      (
+        SiteSetting.moderators_manage_categories_and_groups && is_moderator? &&
+          can_see_serialized_category?(category_id: category_id, read_restricted: read_restricted)
+      )
   end
 
   def can_delete_category?(category)
-    can_edit_category?(category) &&
-    category.topic_count <= 0 &&
-    !category.uncategorized? &&
-    !category.has_children?
+    can_edit_category?(category) && category.topic_count <= 0 && !category.uncategorized? &&
+      !category.has_children?
   end
 
   def can_see_serialized_category?(category_id:, read_restricted: true)
@@ -84,6 +75,7 @@ module CategoryGuardian
   end
 
   def topic_featured_link_allowed_category_ids
-    @topic_featured_link_allowed_category_ids = Category.where(topic_featured_link_allowed: true).pluck(:id)
+    @topic_featured_link_allowed_category_ids =
+      Category.where(topic_featured_link_allowed: true).pluck(:id)
   end
 end

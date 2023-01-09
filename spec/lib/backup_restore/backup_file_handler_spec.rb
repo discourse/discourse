@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'shared_context_for_backup_restore'
+require_relative "shared_context_for_backup_restore"
 
 RSpec.describe BackupRestore::BackupFileHandler do
   include_context "with shared stuff"
@@ -9,7 +9,7 @@ RSpec.describe BackupRestore::BackupFileHandler do
     expect_decompress_and_clean_up_to_work(
       backup_filename: "backup_since_v1.6.tar.gz",
       require_metadata_file: false,
-      require_uploads: true
+      require_uploads: true,
     )
   end
 
@@ -18,7 +18,7 @@ RSpec.describe BackupRestore::BackupFileHandler do
       backup_filename: "sql_only_backup.sql.gz",
       expected_dump_filename: "sql_only_backup.sql",
       require_metadata_file: false,
-      require_uploads: false
+      require_uploads: false,
     )
   end
 
@@ -27,11 +27,11 @@ RSpec.describe BackupRestore::BackupFileHandler do
       backup_filename: "backup_with_wrong_upload_path.tar.gz",
       require_metadata_file: false,
       require_uploads: true,
-      expected_upload_paths: [
-        "uploads/default/original/1X/both.txt",
-        "uploads/default/original/1X/only-uploads.txt",
-        "uploads/default/original/1X/only-var.txt"
-      ]
+      expected_upload_paths: %w[
+        uploads/default/original/1X/both.txt
+        uploads/default/original/1X/only-uploads.txt
+        uploads/default/original/1X/only-var.txt
+      ],
     ) do |upload_path|
       content = File.read(upload_path).chomp
 
@@ -54,7 +54,7 @@ RSpec.describe BackupRestore::BackupFileHandler do
       backup_filename: "backup_since_v1.6.tar.gz",
       require_metadata_file: false,
       require_uploads: true,
-      location: BackupLocationSiteSetting::LOCAL
+      location: BackupLocationSiteSetting::LOCAL,
     )
   end
 end

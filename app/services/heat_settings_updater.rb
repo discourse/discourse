@@ -70,23 +70,20 @@ class HeatSettingsUpdater
       if SiteSetting.get(name) != SiteSetting.defaults[name]
         SiteSetting.set_and_log(name, SiteSetting.defaults[name])
       end
-    elsif SiteSetting.get(name) == 0 ||
-      (new_value.to_f / SiteSetting.get(name) - 1.0).abs >= 0.05
-
-      rounded_new_value = if new_value.is_a?(Integer)
-        if new_value > 9
-          digits = new_value.digits.reverse
-          (digits[0] * 10 + digits[1]) * 10.pow(digits[2..-1].size)
+    elsif SiteSetting.get(name) == 0 || (new_value.to_f / SiteSetting.get(name) - 1.0).abs >= 0.05
+      rounded_new_value =
+        if new_value.is_a?(Integer)
+          if new_value > 9
+            digits = new_value.digits.reverse
+            (digits[0] * 10 + digits[1]) * 10.pow(digits[2..-1].size)
+          else
+            new_value
+          end
         else
-          new_value
+          new_value.round(2)
         end
-      else
-        new_value.round(2)
-      end
 
-      if SiteSetting.get(name) != rounded_new_value
-        SiteSetting.set_and_log(name, rounded_new_value)
-      end
+      SiteSetting.set_and_log(name, rounded_new_value) if SiteSetting.get(name) != rounded_new_value
     end
   end
 end

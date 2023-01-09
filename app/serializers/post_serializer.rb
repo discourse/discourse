@@ -1,22 +1,19 @@
 # frozen_string_literal: true
 
 class PostSerializer < BasicPostSerializer
-
   # To pass in additional information we might need
-  INSTANCE_VARS ||= [
-    :parent_post,
-    :add_raw,
-    :add_title,
-    :single_post_link_counts,
-    :draft_sequence,
-    :post_actions,
-    :all_post_actions,
-    :add_excerpt
+  INSTANCE_VARS ||= %i[
+    parent_post
+    add_raw
+    add_title
+    single_post_link_counts
+    draft_sequence
+    post_actions
+    all_post_actions
+    add_excerpt
   ]
 
-  INSTANCE_VARS.each do |v|
-    self.public_send(:attr_accessor, v)
-  end
+  INSTANCE_VARS.each { |v| self.public_send(:attr_accessor, v) }
 
   attributes :post_number,
              :post_type,
@@ -95,9 +92,7 @@ class PostSerializer < BasicPostSerializer
     super(object, opts)
 
     PostSerializer::INSTANCE_VARS.each do |name|
-      if opts.include? name
-        self.public_send("#{name}=", opts[name])
-      end
+      self.public_send("#{name}=", opts[name]) if opts.include? name
     end
   end
 
@@ -150,13 +145,14 @@ class PostSerializer < BasicPostSerializer
   end
 
   def include_group_moderator?
-    @group_moderator ||= begin
-      if @topic_view
-        @topic_view.category_group_moderator_user_ids.include?(object.user_id)
-      else
-        object&.user&.guardian&.is_category_group_moderator?(object&.topic&.category)
+    @group_moderator ||=
+      begin
+        if @topic_view
+          @topic_view.category_group_moderator_user_ids.include?(object.user_id)
+        else
+          object&.user&.guardian&.is_category_group_moderator?(object&.topic&.category)
+        end
       end
-    end
   end
 
   def yours
@@ -260,7 +256,7 @@ class PostSerializer < BasicPostSerializer
     {
       username: object.reply_to_user.username,
       name: object.reply_to_user.name,
-      avatar_template: object.reply_to_user.avatar_template
+      avatar_template: object.reply_to_user.avatar_template,
     }
   end
 
@@ -290,16 +286,22 @@ class PostSerializer < BasicPostSerializer
       count = object.public_send(count_col) if object.respond_to?(count_col)
       summary = { id: id, count: count }
 
-      if scope.post_can_act?(object, sym, opts: { taken_actions: actions }, can_see_post: can_see_post)
+      if scope.post_can_act?(
+           object,
+           sym,
+           opts: {
+             taken_actions: actions,
+           },
+           can_see_post: can_see_post,
+         )
         summary[:can_act] = true
       end
 
       if sym == :notify_user &&
-         (
-           (scope.current_user.present? && scope.current_user == object.user) ||
-           (object.user && object.user.bot?)
-         )
-
+           (
+             (scope.current_user.present? && scope.current_user == object.user) ||
+               (object.user && object.user.bot?)
+           )
         summary.delete(:can_act)
       end
 
@@ -316,9 +318,7 @@ class PostSerializer < BasicPostSerializer
       summary.delete(:count) if summary[:count] == 0
 
       # Only include it if the user can do it or it has a count
-      if summary[:can_act] || summary[:count]
-        result << summary
-      end
+      result << summary if summary[:can_act] || summary[:count]
     end
 
     result
@@ -339,7 +339,8 @@ class PostSerializer < BasicPostSerializer
   def include_link_counts?
     return true if @single_post_link_counts.present?
 
-    @topic_view.present? && @topic_view.link_counts.present? && @topic_view.link_counts[object.id].present?
+    @topic_view.present? && @topic_view.link_counts.present? &&
+      @topic_view.link_counts[object.id].present?
   end
 
   def include_read?
@@ -496,9 +497,7 @@ class PostSerializer < BasicPostSerializer
   end
 
   def include_last_wiki_edit?
-    object.wiki &&
-    object.post_number == 1 &&
-    object.revisions.size > 0
+    object.wiki && object.post_number == 1 && object.revisions.size > 0
   end
 
   def include_hidden_reason_id?
@@ -563,9 +562,7 @@ class PostSerializer < BasicPostSerializer
 
   def mentioned_users
     if @topic_view && (mentions = @topic_view.mentions[object.id])
-      users =  mentions
-        .map { |username| @topic_view.mentioned_users[username] }
-        .compact
+      users = mentions.map { |username| @topic_view.mentioned_users[username] }.compact
     else
       users = User.where(username: object.mentions)
     end
@@ -573,7 +570,7 @@ class PostSerializer < BasicPostSerializer
     users.map { |user| BasicUserWithStatusSerializer.new(user, root: false) }
   end
 
-private
+  private
 
   def can_review_topic?
     return @can_review_topic unless @can_review_topic.nil?

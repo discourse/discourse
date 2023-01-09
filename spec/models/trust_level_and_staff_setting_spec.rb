@@ -2,9 +2,7 @@
 
 RSpec.describe TrustLevelAndStaffSetting do
   describe ".values" do
-    after do
-      I18n.reload!
-    end
+    after { I18n.reload! }
 
     it "returns translated names" do
       TranslationOverride.upsert!(I18n.locale, "js.trust_levels.names.newuser", "New Member")
@@ -14,7 +12,9 @@ RSpec.describe TrustLevelAndStaffSetting do
 
       value = values.find { |v| v[:value] == 0 }
       expect(value).to be_present
-      expect(value[:name]).to eq(I18n.t("js.trust_levels.detailed_name", level: 0, name: "New Member"))
+      expect(value[:name]).to eq(
+        I18n.t("js.trust_levels.detailed_name", level: 0, name: "New Member"),
+      )
 
       value = values.find { |v| v[:value] == "admin" }
       expect(value).to be_present

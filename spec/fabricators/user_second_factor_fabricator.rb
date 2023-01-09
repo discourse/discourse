@@ -2,7 +2,7 @@
 
 Fabricator(:user_second_factor_totp, from: :user_second_factor) do
   user
-  data 'rcyryaqage3jexfj'
+  data "rcyryaqage3jexfj"
   enabled true
   method UserSecondFactor.methods[:totp]
 end

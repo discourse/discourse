@@ -6,8 +6,7 @@ require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 # Edit the constants and initialize method for your import data.
 
 class ImportScripts::JsonGeneric < ImportScripts::Base
-
-  JSON_FILE_PATH = ENV['JSON_FILE']
+  JSON_FILE_PATH = ENV["JSON_FILE"]
   BATCH_SIZE ||= 1000
 
   def initialize
@@ -30,24 +29,18 @@ class ImportScripts::JsonGeneric < ImportScripts::Base
   end
 
   def username_for(name)
-    result = name.downcase.gsub(/[^a-z0-9\-\_]/, '')
+    result = name.downcase.gsub(/[^a-z0-9\-\_]/, "")
 
-    if result.blank?
-      result = Digest::SHA1.hexdigest(name)[0...10]
-    end
+    result = Digest::SHA1.hexdigest(name)[0...10] if result.blank?
 
     result
   end
 
   def import_users
-    puts '', "Importing users"
+    puts "", "Importing users"
 
     users = []
-    @imported_json['topics'].each do |t|
-      t['posts'].each do |p|
-        users << p['author'].scrub
-      end
-    end
+    @imported_json["topics"].each { |t| t["posts"].each { |p| users << p["author"].scrub } }
     users.uniq!
 
     create_users(users) do |u|
@@ -56,7 +49,7 @@ class ImportScripts::JsonGeneric < ImportScripts::Base
         username: username_for(u),
         name: u,
         email: "#{username_for(u)}@example.com",
-        created_at: Time.now
+        created_at: Time.now,
       }
     end
   end
@@ -67,8 +60,8 @@ class ImportScripts::JsonGeneric < ImportScripts::Base
     topics = 0
     posts = 0
 
-    @imported_json['topics'].each do |t|
-      first_post = t['posts'][0]
+    @imported_json["topics"].each do |t|
+      first_post = t["posts"][0]
       next unless first_post
 
       topic = {
@@ -77,25 +70,32 @@ class ImportScripts::JsonGeneric < ImportScripts::Base
         raw: first_post["body"],
         created_at: Time.zone.parse(first_post["date"]),
         cook_method: Post.cook_methods[:raw_html],
-        title: t['title'],
-        category: ENV['CATEGORY_ID'],
-        custom_fields: { import_id: "pid:#{first_post['id']}" }
+        title: t["title"],
+        category: ENV["CATEGORY_ID"],
+        custom_fields: {
+          import_id: "pid:#{first_post["id"]}",
+        },
       }
 
-      topic[:pinned_at] = Time.zone.parse(first_post["date"]) if t['pinned']
+      topic[:pinned_at] = Time.zone.parse(first_post["date"]) if t["pinned"]
       topics += 1
       parent_post = create_post(topic, topic[:id])
 
-      t['posts'][1..-1].each do |p|
-        create_post({
-          id: p["id"],
-          topic_id: parent_post.topic_id,
-          user_id: user_id_from_imported_user_id(username_for(p["author"])) || -1,
-          raw: p["body"],
-          created_at: Time.zone.parse(p["date"]),
-          cook_method: Post.cook_methods[:raw_html],
-          custom_fields: { import_id: "pid:#{p['id']}" }
-        }, p['id'])
+      t["posts"][1..-1].each do |p|
+        create_post(
+          {
+            id: p["id"],
+            topic_id: parent_post.topic_id,
+            user_id: user_id_from_imported_user_id(username_for(p["author"])) || -1,
+            raw: p["body"],
+            created_at: Time.zone.parse(p["date"]),
+            cook_method: Post.cook_methods[:raw_html],
+            custom_fields: {
+              import_id: "pid:#{p["id"]}",
+            },
+          },
+          p["id"],
+        )
         posts += 1
       end
     end
@@ -104,6 +104,4 @@ class ImportScripts::JsonGeneric < ImportScripts::Base
   end
 end
 
-if __FILE__ == $0
-  ImportScripts::JsonGeneric.new.perform
-end
+ImportScripts::JsonGeneric.new.perform if __FILE__ == $0
