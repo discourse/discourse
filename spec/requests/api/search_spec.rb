@@ -33,7 +33,8 @@ RSpec.describe "groups" do
           - `in:`: `title`, `likes`, `personal`, `messages`, `seen`, `unseen`, `posted`, `created`, `watching`, `tracking`, `bookmarks`, `assigned`, `unassigned`, `first`, `pinned`, `wiki`
           - `with:`: `images`
           - `status:`: `open`, `closed`, `public`, `archived`, `noreplies`, `single_user`, `solved`, `unsolved`
-          - `group_messages:`: groupname
+          - `group:`: group_name or group_id
+          - `group_messages:`: group_name or group_id
           - `min_posts:`: 1
           - `max_posts:`: 10
           - `min_views:`: 1
