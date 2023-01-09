@@ -785,6 +785,46 @@ RSpec.describe Guardian do
     end
   end
 
+  describe "can_see_deleted_post?" do
+    fab!(:post) { Fabricate(:post) }
+
+    before do
+      post.trash!(user)
+    end
+
+    it "returns false for post that is not deleted" do
+      post.recover!
+      expect(Guardian.new(admin).can_see_deleted_post?(post)).to be_falsey
+    end
+
+    it "returns false for anon" do
+      expect(Guardian.new.can_see_deleted_post?(post)).to be_falsey
+    end
+
+    it "returns true for admin" do
+      expect(Guardian.new(admin).can_see_deleted_post?(post)).to be_truthy
+    end
+
+    it "returns true for mods" do
+      expect(Guardian.new(moderator).can_see_deleted_post?(post)).to be_truthy
+    end
+
+    it "returns false for < TL4 users" do
+      user.update!(trust_level: TrustLevel[1])
+      expect(Guardian.new(user).can_see_deleted_post?(post)).to be_falsey
+    end
+
+    it "returns false if not ther person who deleted it" do
+      post.update!(deleted_by: another_user)
+      expect(Guardian.new(user).can_see_deleted_post?(post)).to be_falsey
+    end
+
+    it "returns true for TL4 users' own posts" do
+      user.update!(trust_level: TrustLevel[4])
+      expect(Guardian.new(user).can_see_deleted_post?(post)).to be_truthy
+    end
+  end
+
   describe 'can_see?' do
 
     it 'returns false with a nil object' do
