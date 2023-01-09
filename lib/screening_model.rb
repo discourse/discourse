@@ -17,16 +17,16 @@ module ScreeningModel
     end
   end
 
-  included do
-    before_validation :set_default_action
-  end
+  included { before_validation :set_default_action }
 
   def set_default_action
     self.action_type ||= self.class.actions[self.class.df_action]
   end
 
   def action_name=(arg)
-    raise ArgumentError.new("Invalid action type #{arg}") if arg.nil? || !self.class.actions.has_key?(arg.to_sym)
+    if arg.nil? || !self.class.actions.has_key?(arg.to_sym)
+      raise ArgumentError.new("Invalid action type #{arg}")
+    end
     self.action_type = self.class.actions[arg.to_sym]
   end
 

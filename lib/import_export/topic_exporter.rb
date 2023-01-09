@@ -4,13 +4,9 @@ require "import_export/base_exporter"
 
 module ImportExport
   class TopicExporter < ImportExport::BaseExporter
-
     def initialize(topic_ids)
       @topics = Topic.where(id: topic_ids).to_a
-      @export_data = {
-        topics: [],
-        users: []
-      }
+      @export_data = { topics: [], users: [] }
     end
 
     def perform
@@ -24,6 +20,5 @@ module ImportExport
     def default_filename_prefix
       "topic-export"
     end
-
   end
 end

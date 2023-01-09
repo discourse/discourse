@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative './opengraph_image'
+require_relative "./opengraph_image"
 
 module Onebox
   module Engine
@@ -9,7 +9,7 @@ module Onebox
       include StandardEmbed
       include OpengraphImage
 
-      matches_regexp(/^https?:\/\/flic\.kr\/p\//)
+      matches_regexp(%r{^https?://flic\.kr/p/})
       always_https
     end
   end

@@ -20,20 +20,24 @@ task "admin:invite", [:email] => [:environment] do |_, args|
 
   puts "Granting admin!"
   user.grant_admin!
-  if user.trust_level < 1
-    user.change_trust_level!(1)
-  end
+  user.change_trust_level!(1) if user.trust_level < 1
 
   user.email_tokens.update_all confirmed: true
 
   puts "Sending email!"
-  email_token = user.email_tokens.create!(email: user.email, scope: EmailToken.scopes[:password_reset])
-  Jobs.enqueue(:user_email, type: "account_created", user_id: user.id, email_token: email_token.token)
+  email_token =
+    user.email_tokens.create!(email: user.email, scope: EmailToken.scopes[:password_reset])
+  Jobs.enqueue(
+    :user_email,
+    type: "account_created",
+    user_id: user.id,
+    email_token: email_token.token,
+  )
 end
 
 desc "Creates a forum administrator"
 task "admin:create" => :environment do
-  require 'highline/import'
+  require "highline/import"
 
   begin
     email = ask("Email:  ")
@@ -43,8 +47,11 @@ task "admin:create" => :environment do
     if existing_user
       # user already exists, ask for password reset
       admin = existing_user
-      reset_password = ask("User with this email already exists! Do you want to reset the password for this email? (Y/n)  ")
-      if (reset_password == "" || reset_password.downcase == 'y')
+      reset_password =
+        ask(
+          "User with this email already exists! Do you want to reset the password for this email? (Y/n)  ",
+        )
+      if (reset_password == "" || reset_password.downcase == "y")
         begin
           password = ask("Password:  ") { |q| q.echo = false }
           password_confirmation = ask("Repeat password:  ") { |q| q.echo = false }
@@ -74,9 +81,7 @@ task "admin:create" => :environment do
       admin.password = password
     end
 
-    if SiteSetting.full_name_required && admin.name.blank?
-      admin.name = ask("Full name:  ")
-    end
+    admin.name = ask("Full name:  ") if SiteSetting.full_name_required && admin.name.blank?
 
     # save/update user account
     saved = admin.save
@@ -95,15 +100,12 @@ task "admin:create" => :environment do
 
   # grant admin privileges
   grant_admin = ask("Do you want to grant Admin privileges to this account? (Y/n)  ")
-  if (grant_admin == "" || grant_admin.downcase == 'y')
+  if (grant_admin == "" || grant_admin.downcase == "y")
     admin.grant_admin!
-    if admin.trust_level < 1
-      admin.change_trust_level!(1)
-    end
+    admin.change_trust_level!(1) if admin.trust_level < 1
     admin.email_tokens.update_all confirmed: true
     admin.activate
 
     say("\nYour account now has Admin privileges!")
   end
-
 end

@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class TopicRetriever
-
   def initialize(embed_url, opts = nil)
     @embed_url = embed_url
     @opts = opts || {}
@@ -41,7 +40,9 @@ class TopicRetriever
 
   def fetch_http
     if @author_username.nil?
-      username = SiteSetting.embed_by_username.presence || SiteSetting.site_contact_username.presence || Discourse.system_user.username
+      username =
+        SiteSetting.embed_by_username.presence || SiteSetting.site_contact_username.presence ||
+          Discourse.system_user.username
     else
       username = @author_username
     end
@@ -51,5 +52,4 @@ class TopicRetriever
 
     TopicEmbed.import_remote(user, @embed_url)
   end
-
 end
