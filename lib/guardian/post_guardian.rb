@@ -239,8 +239,15 @@ module PostGuardian
     return false unless can_see_post_topic?(post)
     return false unless post.user == @user || Topic.visible_post_types(@user).include?(post.post_type)
     return true if is_moderator? || is_category_group_moderator?(post.topic.category)
-    return true if post.deleted_at.blank? || (post.deleted_by_id == @user.id && @user.has_trust_level?(TrustLevel[4]))
+    return true if !post.trashed? || can_see_deleted_post?(post)
     false
+  end
+
+  def can_see_deleted_post?(post)
+    return false if !post.trashed?
+    return false if @user.anonymous?
+    return true if is_staff?
+    post.deleted_by_id == @user.id && @user.has_trust_level?(TrustLevel[4])
   end
 
   def can_view_edit_history?(post)

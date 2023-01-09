@@ -505,28 +505,56 @@ RSpec.describe UploadsController do
         let!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
 
         before do
-          sign_in(user)
           upload.update(access_control_post_id: post.id)
         end
 
-        context "when the user has access to the post via guardian" do
-          it "should return signed url for legitimate request" do
-            sign_in(user)
+        context "when the user is anon" do
+          it "should return signed url for public posts" do
             get secure_url
             expect(response.status).to eq(302)
             expect(response.redirect_url).to match("Amz-Expires")
           end
-        end
 
-        context "when the user does not have access to the post via guardian" do
-          before do
-            post.topic.change_category_to_id(private_category.id)
-          end
-
-          it "returns a 403" do
-            sign_in(user)
+          it "should return 403 for deleted posts" do
+            post.trash!
             get secure_url
             expect(response.status).to eq(403)
+          end
+
+          context "when the user does not have access to the post via guardian" do
+            before do
+              post.topic.change_category_to_id(private_category.id)
+            end
+
+            it "returns a 403" do
+              get secure_url
+              expect(response.status).to eq(403)
+            end
+          end
+        end
+
+        context "when the user is logged in" do
+          before do
+            sign_in(user)
+          end
+
+          context "when the user has access to the post via guardian" do
+            it "should return signed url for legitimate request" do
+              get secure_url
+              expect(response.status).to eq(302)
+              expect(response.redirect_url).to match("Amz-Expires")
+            end
+          end
+
+          context "when the user does not have access to the post via guardian" do
+            before do
+              post.topic.change_category_to_id(private_category.id)
+            end
+
+            it "returns a 403" do
+              get secure_url
+              expect(response.status).to eq(403)
+            end
           end
         end
       end
