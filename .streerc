@@ -1,3 +1,2 @@
 --print-width=100
 --plugins=plugin/trailing_comma,disable_ternary
---ignore-files=app/*

@@ -1,14 +1,18 @@
 # frozen_string_literal: true
 
 class TopicPostCountSerializer < BasicUserSerializer
-
-  attributes :post_count, :primary_group_name,
-             :flair_name, :flair_url, :flair_color, :flair_bg_color,
-             :admin, :moderator, :trust_level,
-
-  def id
-    object[:user].id
-  end
+  attributes :post_count,
+             :primary_group_name,
+             :flair_name,
+             :flair_url,
+             :flair_color,
+             :flair_bg_color,
+             :admin,
+             :moderator,
+             :trust_level,
+             def id
+               object[:user].id
+             end
 
   def username
     object[:user].username
@@ -58,5 +62,4 @@ class TopicPostCountSerializer < BasicUserSerializer
   def trust_level
     object[:user].trust_level
   end
-
 end

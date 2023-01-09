@@ -5,29 +5,30 @@ class Tag < ActiveRecord::Base
   include HasDestroyedWebHook
 
   RESERVED_TAGS = [
-    'none',
-    'constructor' # prevents issues with javascript's constructor of objects
+    "none",
+    "constructor", # prevents issues with javascript's constructor of objects
   ]
 
-  validates :name,
-    presence: true,
-    uniqueness: { case_sensitive: false }
+  validates :name, presence: true, uniqueness: { case_sensitive: false }
 
-  validate :target_tag_validator, if: Proc.new { |t| t.new_record? || t.will_save_change_to_target_tag_id? }
+  validate :target_tag_validator,
+           if: Proc.new { |t| t.new_record? || t.will_save_change_to_target_tag_id? }
   validate :name_validator
   validates :description, length: { maximum: 280 }
 
-  scope :where_name, ->(name) do
-    name = Array(name).map(&:downcase)
-    where("lower(tags.name) IN (?)", name)
-  end
+  scope :where_name,
+        ->(name) {
+          name = Array(name).map(&:downcase)
+          where("lower(tags.name) IN (?)", name)
+        }
 
   # tags that have never been used and don't belong to a tag group
-  scope :unused, -> do
-    where(topic_count: 0, pm_topic_count: 0)
-      .joins("LEFT JOIN tag_group_memberships tgm ON tags.id = tgm.tag_id")
-      .where("tgm.tag_id IS NULL")
-  end
+  scope :unused,
+        -> {
+          where(topic_count: 0, pm_topic_count: 0).joins(
+            "LEFT JOIN tag_group_memberships tgm ON tags.id = tgm.tag_id",
+          ).where("tgm.tag_id IS NULL")
+        }
 
   scope :base_tags, -> { where(target_tag_id: nil) }
 
@@ -93,7 +94,7 @@ class Tag < ActiveRecord::Base
   end
 
   def self.find_by_name(name)
-    self.find_by('lower(name) = ?', name.downcase)
+    self.find_by("lower(name) = ?", name.downcase)
   end
 
   def self.top_tags(limit_arg: nil, category: nil, guardian: nil)
@@ -102,19 +103,24 @@ class Tag < ActiveRecord::Base
     limit = limit_arg || (SiteSetting.max_tags_in_filter_list + 1)
     scope_category_ids = (guardian || Guardian.new).allowed_category_ids
 
-    if category
-      scope_category_ids &= ([category.id] + category.subcategories.pluck(:id))
-    end
+    scope_category_ids &= ([category.id] + category.subcategories.pluck(:id)) if category
 
     return [] if scope_category_ids.empty?
 
-    filter_sql = guardian&.is_staff? ? '' : " AND tags.id IN (#{DiscourseTagging.visible_tags(guardian).select(:id).to_sql})"
+    filter_sql =
+      (
+        if guardian&.is_staff?
+          ""
+        else
+          " AND tags.id IN (#{DiscourseTagging.visible_tags(guardian).select(:id).to_sql})"
+        end
+      )
 
     tag_names_with_counts = DB.query <<~SQL
       SELECT tags.name as tag_name, SUM(stats.topic_count) AS sum_topic_count
         FROM category_tag_stats stats
         JOIN tags ON stats.tag_id = tags.id AND stats.topic_count > 0
-       WHERE stats.category_id in (#{scope_category_ids.join(',')})
+       WHERE stats.category_id in (#{scope_category_ids.join(",")})
        #{filter_sql}
     GROUP BY tags.name
     ORDER BY sum_topic_count DESC, tag_name ASC
@@ -181,16 +187,16 @@ class Tag < ActiveRecord::Base
 
   def update_synonym_associations
     if target_tag_id && saved_change_to_target_tag_id?
-      target_tag.tag_groups.each { |tag_group| tag_group.tags << self unless tag_group.tags.include?(self) }
-      target_tag.categories.each { |category| category.tags << self unless category.tags.include?(self) }
+      target_tag.tag_groups.each do |tag_group|
+        tag_group.tags << self unless tag_group.tags.include?(self)
+      end
+      target_tag.categories.each do |category|
+        category.tags << self unless category.tags.include?(self)
+      end
     end
   end
 
-  %i{
-    tag_created
-    tag_updated
-    tag_destroyed
-  }.each do |event|
+  %i[tag_created tag_updated tag_destroyed].each do |event|
     define_method("trigger_#{event}_event") do
       DiscourseEvent.trigger(event, self)
       true
@@ -200,9 +206,7 @@ class Tag < ActiveRecord::Base
   private
 
   def name_validator
-    if name.present? && RESERVED_TAGS.include?(self.name.strip.downcase)
-      errors.add(:name, :invalid)
-    end
+    errors.add(:name, :invalid) if name.present? && RESERVED_TAGS.include?(self.name.strip.downcase)
   end
 end
 

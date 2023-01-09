@@ -31,9 +31,7 @@ class UserSerializer < UserCardSerializer
     can_edit
   end
 
-  staff_attributes :post_count,
-                   :can_be_deleted,
-                   :can_delete_all_posts
+  staff_attributes :post_count, :can_be_deleted, :can_delete_all_posts
 
   private_attributes :locale,
                      :muted_category_ids,
@@ -72,14 +70,13 @@ class UserSerializer < UserCardSerializer
   untrusted_attributes :bio_raw,
                        :bio_cooked,
                        :profile_background_upload_url,
-
-  ###
-  ### ATTRIBUTES
-  ###
-  #
-  def user_notification_schedule
-    object.user_notification_schedule || UserNotificationSchedule::DEFAULT
-  end
+                       ###
+                       ### ATTRIBUTES
+                       ###
+                       #
+                       def user_notification_schedule
+                         object.user_notification_schedule || UserNotificationSchedule::DEFAULT
+                       end
 
   def mailing_list_posts_per_day
     val = Post.estimate_posts_per_day
@@ -87,8 +84,7 @@ class UserSerializer < UserCardSerializer
   end
 
   def groups
-    object.groups.order(:id)
-      .visible_groups(scope.user).members_visible_groups(scope.user)
+    object.groups.order(:id).visible_groups(scope.user).members_visible_groups(scope.user)
   end
 
   def group_users
@@ -144,15 +140,19 @@ class UserSerializer < UserCardSerializer
   end
 
   def user_api_keys
-    keys = object.user_api_keys.where(revoked_at: nil).map do |k|
-      {
-        id: k.id,
-        application_name: k.application_name,
-        scopes: k.scopes.map { |s| I18n.t("user_api_key.scopes.#{s.name}") },
-        created_at: k.created_at,
-        last_used_at: k.last_used_at,
-      }
-    end
+    keys =
+      object
+        .user_api_keys
+        .where(revoked_at: nil)
+        .map do |k|
+          {
+            id: k.id,
+            application_name: k.application_name,
+            scopes: k.scopes.map { |s| I18n.t("user_api_key.scopes.#{s.name}") },
+            created_at: k.created_at,
+            last_used_at: k.last_used_at,
+          }
+        end
 
     keys.sort! { |a, b| a[:last_used_at].to_time <=> b[:last_used_at].to_time }
     keys.length > 0 ? keys : nil
@@ -162,7 +162,7 @@ class UserSerializer < UserCardSerializer
     ActiveModel::ArraySerializer.new(
       object.user_auth_tokens,
       each_serializer: UserAuthTokenSerializer,
-      scope: scope
+      scope: scope,
     )
   end
 
@@ -306,7 +306,8 @@ class UserSerializer < UserCardSerializer
   end
 
   def use_logo_small_as_avatar
-    object.is_system_user? && SiteSetting.logo_small && SiteSetting.use_site_small_logo_as_system_avatar
+    object.is_system_user? && SiteSetting.logo_small &&
+      SiteSetting.use_site_small_logo_as_system_avatar
   end
 
   private
@@ -314,11 +315,8 @@ class UserSerializer < UserCardSerializer
   def custom_field_keys
     fields = super
 
-    if scope.can_edit?(object)
-      fields += DiscoursePluginRegistry.serialized_current_user_fields.to_a
-    end
+    fields += DiscoursePluginRegistry.serialized_current_user_fields.to_a if scope.can_edit?(object)
 
     fields
   end
-
 end

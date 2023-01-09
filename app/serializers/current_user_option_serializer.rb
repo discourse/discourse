@@ -18,10 +18,9 @@ class CurrentUserOptionSerializer < ApplicationSerializer
              :should_be_redirected_to_top,
              :redirected_to_top,
              :treat_as_new_topic_start_date,
-
-  def likes_notifications_disabled
-    object.likes_notifications_disabled?
-  end
+             def likes_notifications_disabled
+               object.likes_notifications_disabled?
+             end
 
   def include_redirected_to_top?
     object.redirected_to_top.present?
