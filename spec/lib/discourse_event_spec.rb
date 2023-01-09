@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseEvent do
-
   describe "#events" do
     it "defaults to {}" do
       begin
@@ -21,7 +20,6 @@ RSpec.describe DiscourseEvent do
   end
 
   context 'when calling events' do
-
     let(:harvey) {
       OpenStruct.new(
         name: 'Harvey Dent',
@@ -42,15 +40,12 @@ RSpec.describe DiscourseEvent do
     end
 
     context 'when event does not exist' do
-
       it "does not raise an error" do
         DiscourseEvent.trigger(:missing_event)
       end
-
     end
 
     context 'when single event exists' do
-
       it "doesn't raise an error" do
         DiscourseEvent.trigger(:acid_face, harvey)
       end
@@ -59,11 +54,9 @@ RSpec.describe DiscourseEvent do
         DiscourseEvent.trigger(:acid_face, harvey)
         expect(harvey.name).to eq('Two Face')
       end
-
     end
 
     context 'when multiple events exist' do
-
       let(:event_handler_2) do
         Proc.new { |user| user.job = 'Supervillain' }
       end
@@ -84,7 +77,6 @@ RSpec.describe DiscourseEvent do
     end
 
     describe '#all_off' do
-
       let(:event_handler_2) do
         Proc.new { |user| user.job = 'Supervillain' }
       end
@@ -99,7 +91,20 @@ RSpec.describe DiscourseEvent do
         DiscourseEvent.trigger(:acid_face, harvey) # Doesn't change anything
         expect(harvey.job).to eq('gardening')
       end
+    end
+  end
 
+  it "allows using kwargs" do
+    begin
+      handler = Proc.new do |name:, message:|
+        expect(name).to eq("Supervillain")
+        expect(message).to eq("Two Face")
+      end
+
+      DiscourseEvent.on(:acid_face, &handler)
+      DiscourseEvent.trigger(:acid_face, name: "Supervillain", message: "Two Face")
+    ensure
+      DiscourseEvent.off(:acid_face, &handler)
     end
   end
 end
