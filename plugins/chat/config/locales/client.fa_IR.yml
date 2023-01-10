@@ -239,7 +239,7 @@ fa_IR:
         title: "گفتگو"
       direct_messages:
         title: "گفتگوی شخصی"
-        new: "گفتگوی شخصی جدید"
+        new: "ایجاد گفتگوی شخصی"
         create: "برو"
         cannot_create: "با عرض پوزش، شما نمی‌توانید پیام مستقیم ارسال کنید."
       incoming_webhooks:

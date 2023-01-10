@@ -278,7 +278,6 @@ nb_NO:
       edit: "Rediger bokmerke"
       not_bookmarked: "bokmerk dette innlegget"
       created_with_reminder: "Du har bokmerket dette innlegget med en påminnelse %{date} %{name}"
-      remove: "Fjern bokmerke"
       delete: "Slett bokmerke"
       confirm_delete: "Er du sikker på at du vil slette denne bokmerket? Påminnelsen vil også bli slettet."
       confirm_clear: "Er du sikker på at du vil fjerne alle favoritter fra dette emnet?"
@@ -341,7 +340,6 @@ nb_NO:
     enable: "Aktiver"
     disable: "Deaktiver"
     continue: "Fortsett"
-    undo: "Angre"
     switch_to_anon: "Start inkognitomodus"
     switch_from_anon: "Avslutt inkognitomodus"
     banner:
@@ -632,6 +630,7 @@ nb_NO:
         denied: "nektet"
         undone: "forespørsel, angret"
         handle: "Behandler forespørsel om medlemskap"
+        undo: "Angre"
       manage:
         title: "Behandle"
         name: "Navn"
@@ -980,7 +979,6 @@ nb_NO:
         perm_denied_expl: "Du tillot ikke varsler. Tillat varsler via innstillingene i din nettleser."
         disable: "Slå av varslinger"
         enable: "Slå på varslinger"
-        each_browser_note: 'Merk: Denne innstillingen må endres for hver nettleser som brukes. Alle varsler vil bli deaktivert når du er i "ikke forstyrr", uavhengig av denne innstillingen.'
         consent_prompt: "Ønsker du å motta skrivebordsvarsler når andre svarer på dine innlegg?"
       dismiss: "Avslå"
       dismiss_notifications: "Forkast alle"
@@ -2760,7 +2758,6 @@ nb_NO:
       bookmarks:
         create: "Opprett bokmerke"
         edit: "Rediger bokmerke"
-        created: "Opprettet"
         updated: "Oppdatert"
         name: "Navn"
         name_placeholder: "Hva er bokmerket etter?"
@@ -3042,7 +3039,6 @@ nb_NO:
       other: "brukere"
     category_title: "Kategori"
     history_capped_revisions: "Historikk, siste 100 revisjoner"
-    changed_by: "av %{author}"
     raw_email:
       title: "Innkommende e-post"
       not_available: "Ikke tilgjengelig!"
@@ -3433,14 +3429,12 @@ nb_NO:
               content: "O-S-S"
             groups:
               content: "Grupper"
-              title: "Alle grupper"
             users:
               content: "Brukere"
             my_posts:
               content: "Mine innlegg"
             review:
               content: "Gjennomgang"
-              title: "gjennomgang"
   admin_js:
     type_to_filter: "skriv for å filtrere…"
     admin:
@@ -3792,7 +3786,6 @@ nb_NO:
         button_title: "Send invitasjoner"
       customize:
         title: "Tilpasse"
-        long_title: "Nettstedstilpasninger"
         preview: "forhåndsvisning"
         explain_preview: "Se siden iført denne drakten"
         save: "Lagre"
@@ -3931,9 +3924,9 @@ nb_NO:
         colors:
           title: "Farger"
           copy_name_prefix: "Kopi av"
-          undo: "angre"
+          undo: "Angre"
           undo_title: "Fjern endringer av denne fargen siden sist den ble lagret."
-          revert: "gå tilbake"
+          revert: "Reverser"
           primary:
             name: "primær"
             description: "Det meste av tekst, ikoner og kanter."

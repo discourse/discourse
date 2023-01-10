@@ -294,7 +294,6 @@ nl:
         title: "Chat"
       direct_messages:
         title: "Privéchat"
-        new: "Nieuwe privéchat"
         create: "Gaan"
         leave: "Deze privéchat verlaten"
         cannot_create: "Sorry, je kunt geen directe berichten sturen."

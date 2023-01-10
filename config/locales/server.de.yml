@@ -767,10 +767,6 @@ de:
         other: "vor fast %{count} Jahren"
   password_reset:
     no_token: 'Ups! Der Link, den du benutzt hast, funktioniert nicht mehr. Du kannst dich jetzt <a href="%{base_url}/login">anmelden</a>. Falls du dein Passwort vergessen hast, kannst du <a href="%{base_url}/password-reset">einen Link anfordern</a>, um es zurückzusetzen.'
-    choose_new: "Wähle ein neues Passwort"
-    choose: "Wähle ein Passwort"
-    update: "Passwort aktualisieren"
-    save: "Passwort festlegen"
     title: "Passwort zurücksetzen"
     success: "Dein Passwort wurde erfolgreich geändert und du bist nun angemeldet."
     success_unapproved: "Dein Passwort wurde erfolgreich geändert."

@@ -327,7 +327,6 @@ tr_TR:
         title: "Sohbet"
       direct_messages:
         title: "Kişisel sohbet"
-        new: "Yeni kişisel sohbet"
         create: "Git"
         leave: "Bu kişisel sohbetten ayrıl"
         cannot_create: "Üzgünüz, doğrudan mesaj gönderemezsiniz."

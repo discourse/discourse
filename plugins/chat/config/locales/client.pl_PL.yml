@@ -285,7 +285,6 @@ pl_PL:
         title: "Czat"
       direct_messages:
         title: "Czat osobisty"
-        new: "Nowy osobisty czat"
         leave: "Opuść ten osobisty czat"
         cannot_create: "Przepraszamy, nie możesz wysyłać bezpośrednich wiadomości."
       incoming_webhooks:

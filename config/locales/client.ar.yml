@@ -443,7 +443,6 @@ ar:
       remove_reminder_keep_bookmark: "إزالة التذكير والاحتفاظ بالإشارة المرجعية"
       created_with_reminder: "لقد وضعت إشارة مرجعية على هذا المنشور وضبطت تذكيرًا في %{date}. ‏%{name}"
       created_with_reminder_generic: "لقد وضعت إشارة مرجعية على هذا المنشور وضبطت تذكيرًا في %{date}. ‏%{name}"
-      remove: "إزالة الإشارة المرجعية"
       delete: "حذف الإشارة المرجعية"
       confirm_delete: "هل تريد بالتأكيد حذف هذه الإشارة المرجعية؟ سيتم حذف التذكير أيضًا."
       confirm_clear: "هل تريد بالتأكيد مسح كل إشاراتك المرجعية من هذا الموضوع؟"
@@ -533,7 +532,6 @@ ar:
     enable: "تفعيل"
     disable: "إيقاف"
     continue: "متابعة"
-    undo: "تراجع"
     switch_to_anon: "دخول وضع التخفي"
     switch_from_anon: "الخروج من وضع التخفي"
     banner:
@@ -886,6 +884,7 @@ ar:
         denied: "تم الرفض"
         undone: "تم التراجع عن الطلب"
         handle: "التعامل مع طلب العضوية"
+        undo: "تراجع"
       manage:
         title: "إدارة"
         name: "الاسم"
@@ -1279,7 +1278,6 @@ ar:
         perm_denied_expl: "لقد رفضت منح الإذن بإرسال الإشعارات. يمكنك السماح بالإشعارات في إعدادات المتصفح."
         disable: "إيقاف الإشعارات"
         enable: "تفعيل الإشعارات"
-        each_browser_note: 'ملاحظة: عليك تغيير هذا الإعداد في كل متصفح تستخدمه. سيتم إيقاف جميع الإشعارات في وضع "عدم الإزعاج"، بغض النظر عن هذا الإعداد.'
         consent_prompt: "هل تريد تلقي إشعارات فورية عند رد الأشخاص على منشوراتك؟"
       dismiss: "تجاهل"
       dismiss_notifications: "تجاهل الكل"
@@ -3724,7 +3722,6 @@ ar:
         create_for_topic: "إنشاء إشارة مرجعية للموضوع"
         edit: "تعديل الإشارة المرجعية"
         edit_for_topic: "تعديل الإشارة المرجعية للموضوع"
-        created: "تاريخ الإنشاء"
         updated: "تاريخ التحديث"
         name: "الاسم"
         name_placeholder: "ما استخدام هذه الإشارة المرجعية؟"
@@ -4062,7 +4059,6 @@ ar:
     category_title: "الفئة"
     history_capped_revisions: "السجل، آخر 100 مراجعة"
     history: "السجل"
-    changed_by: "بواسطة %{author}"
     raw_email:
       title: "البريد الوارد"
       not_available: "غير متوفرة!"
@@ -4561,7 +4557,6 @@ ar:
         few: "%{count} جديدة"
         many: "%{count} جديدًا"
         other: "%{count} جديدة"
-      toggle_section: "تبديل القسم"
       more: "المزيد"
       all_categories: "كل الفئات"
       all_tags: "كل الوسوم"
@@ -4570,7 +4565,6 @@ ar:
           header_link_text: "نبذة"
         messages:
           header_link_text: "الرسائل"
-          header_action_title: "إنشاء رسالة شخصية"
           links:
             inbox: "صندوق الوارد"
             sent: "المُرسَلة"
@@ -4587,7 +4581,6 @@ ar:
           none: "لم تضف أي وسوم."
           click_to_get_started: "انقر هنا للبدء."
           header_link_text: "الوسوم"
-          header_action_title: "تعديل وسوم الشريط الجانبي"
           configure_defaults: "ضبط الإعدادات الافتراضية"
         categories:
           links:
@@ -4597,11 +4590,9 @@ ar:
           none: "لم تضف أي فئات."
           click_to_get_started: "انقر هنا للبدء."
           header_link_text: "الفئات"
-          header_action_title: "تعديل فئات الشريط الجانبي"
           configure_defaults: "ضبط الإعدادات الافتراضية"
         community:
           header_link_text: "المجتمع"
-          header_action_title: "إنشاء موضوع جديد"
           links:
             about:
               content: "نبذة"
@@ -4616,10 +4607,8 @@ ar:
               content: "الأسئلة الشائعة"
             groups:
               content: "المجموعات"
-              title: "كل المجموعات"
             users:
               content: "المستخدمون"
-              title: "جميع المستخدمين"
             my_posts:
               content: "منشوراتي"
               draft_count:
@@ -4631,7 +4620,6 @@ ar:
                 other: "%{count} مسودة"
             review:
               content: "المراجعة"
-              title: "مراجعة"
               pending_count: "بقي %{count}"
     welcome_topic_banner:
       title: "إنشاء موضوعك الترحيبي"
@@ -5094,7 +5082,6 @@ ar:
         button_title: "إرسال الدعوات"
       customize:
         title: "تخصيص"
-        long_title: "تخصيصات الموقع"
         preview: "معاينة"
         explain_preview: "معاينة الموقع بعد تفعيل هذه السمة"
         save: "حفظ"

@@ -377,7 +377,6 @@ ru:
       remove_reminder_keep_bookmark: "Удалить напоминание, но оставить закладку"
       created_with_reminder: "Вы добавили эту запись в закладки с напоминанием %{date}: «%{name}»"
       created_with_reminder_generic: "Добавлено в закладки с напоминанием %{date}: «%{name}»"
-      remove: "Удаление закладки"
       delete: "Удалить закладку"
       confirm_delete: "Действительно удалить эту закладку? Напоминание также будет удалено."
       confirm_clear: "Действительно удалить все ваши закладки из этой темы?"
@@ -457,7 +456,6 @@ ru:
     enable: "Включить"
     disable: "Отключить"
     continue: "Продолжить"
-    undo: "Отменить"
     switch_to_anon: "Войти в анонимный режим"
     switch_from_anon: "Выйти из анонимного режима"
     banner:
@@ -782,6 +780,7 @@ ru:
         denied: "отказано"
         undone: "запрос отменён"
         handle: "обрабатывать запрос на вступление"
+        undo: "Отменить"
       manage:
         title: "Управление"
         name: "Имя"
@@ -1163,7 +1162,6 @@ ru:
         perm_denied_expl: "Вы запретили уведомления в браузере. Разрешите уведомления в настройках браузера."
         disable: "Отключить уведомления"
         enable: "Включить уведомления"
-        each_browser_note: 'Примечание: этот параметр необходимо изменить в каждом используемом браузере. В режиме «Не беспокоить» все уведомления, касающиеся форума, будут отключены, вне зависимости от значения этого параметра.'
         consent_prompt: "Вы хотите получать уведомления в реальном времени, когда пользователи отвечают на ваши записи?"
       dismiss: "Пометить прочитанными"
       dismiss_notifications: "Отклонить всё"
@@ -3406,7 +3404,6 @@ ru:
         create_for_topic: "Создать закладку для темы"
         edit: "Изменить закладку"
         edit_for_topic: "Изменить закладку для темы"
-        created: "Создана"
         updated: "Обновлена"
         name: "Название"
         name_placeholder: "Для чего эта закладка?"
@@ -3725,7 +3722,6 @@ ru:
     category_title: "Категория"
     history_capped_revisions: "История, последние 100 изменений"
     history: "История"
-    changed_by: "автором %{author}"
     raw_email:
       title: "Входящее письмо"
       not_available: "Недоступно!"
@@ -4182,7 +4178,6 @@ ru:
         few: "%{count} новые"
         many: "%{count} новых"
         other: "%{count} новой"
-      toggle_section: "свернуть / развернуть раздел"
       more: "Ещё"
       all_categories: "Все категории"
       all_tags: "Все теги"
@@ -4191,7 +4186,6 @@ ru:
           header_link_text: "Информация"
         messages:
           header_link_text: "Личные сообщения"
-          header_action_title: "создать личное сообщение"
           links:
             inbox: "Входящие"
             sent: "Отправленные"
@@ -4204,17 +4198,14 @@ ru:
           none: "Вы не добавили ни одного тега."
           click_to_get_started: "Нажмите здесь, чтобы начать."
           header_link_text: "Теги"
-          header_action_title: "Редактировать теги боковой панели"
           configure_defaults: "Настроить значения по умолчанию"
         categories:
           none: "Вы не добавили ни одной категории."
           click_to_get_started: "Нажмите здесь, чтобы начать."
           header_link_text: "Категории"
-          header_action_title: "Редактировать категории боковой панели"
           configure_defaults: "Настроить значения по умолчанию"
         community:
           header_link_text: "Сообщество"
-          header_action_title: "Cоздать новую тему"
           links:
             about:
               content: "О форуме"
@@ -4229,10 +4220,8 @@ ru:
               content: "Ответы на вопросы"
             groups:
               content: "Группы"
-              title: "Все группы"
             users:
               content: "Пользователи"
-              title: "Все пользователи"
             my_posts:
               content: "Мои записи"
               draft_count:
@@ -4242,7 +4231,6 @@ ru:
                 other: "%{count} черновика"
             review:
               content: "Очередь проверки"
-              title: "очередь проверки записей"
               pending_count: "В ожидании: %{count}"
     welcome_topic_banner:
       title: "Создать приветственную тему"
@@ -4696,7 +4684,6 @@ ru:
         button_title: "Отправить приглашения"
       customize:
         title: "Оформление"
-        long_title: "Стили и заголовки"
         preview: "предпросмотр"
         explain_preview: "Предпросмотр сайта с новым оформлением"
         save: "Сохранить"
@@ -4905,7 +4892,7 @@ ru:
           delete_confirm: "Удалить эту цветовую палитру?"
           undo: "Отменить"
           undo_title: "Отменить изменения этого цвета с момента последнего сохранения."
-          revert: "Восстановить"
+          revert: "Вернуть"
           revert_title: "Сброс этого цвета на значение по умолчанию."
           primary:
             name: "Первичный"

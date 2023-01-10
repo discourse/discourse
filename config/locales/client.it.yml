@@ -315,7 +315,6 @@ it:
       remove_reminder_keep_bookmark: "Rimuovi il promemoria e mantieni il segnalibro"
       created_with_reminder: "Hai aggiunto ai segnalibri questo messaggio con un promemoria %{date}. %{name}"
       created_with_reminder_generic: "L'hai aggiunto ai segnalibri con un promemoria per il %{date}. %{name}"
-      remove: "Rimuovi Segnalibro"
       delete: "Cancella Segnalibro"
       confirm_delete: "Vuoi eliminare questo segnalibro? Anche il promemoria verrà eliminato."
       confirm_clear: "Vuoi rimuovere tutti i segnalibri da questo argomento?"
@@ -385,7 +384,6 @@ it:
     enable: "Attiva"
     disable: "Disattiva"
     continue: "Continua"
-    undo: "Annulla"
     switch_to_anon: "Avvia Modalità Anonima"
     switch_from_anon: "Esci da Modalità Anonima"
     banner:
@@ -682,6 +680,7 @@ it:
         denied: "negato"
         undone: "richiesta annullata"
         handle: "gestisci le richieste di iscrizione"
+        undo: "Annulla"
       manage:
         title: "Gestisci"
         name: "Nome"
@@ -1051,7 +1050,6 @@ it:
         perm_denied_expl: "Hai negato il permesso per le notifiche. Autorizza le notifiche tramite le impostazioni del tuo browser."
         disable: "Disabilita Notifiche"
         enable: "Abilita Notifiche"
-        each_browser_note: 'Nota: devi modificare questa impostazione su ogni browser che utilizzi. Tutte le notifiche verranno disabilitate quando l''utente è in stato "non disturbare", indipendentemente da questa impostazione.'
         consent_prompt: "Desideri ricevere notifiche in tempo reale quando qualcuno risponde a un tuo messaggio?"
       dismiss: "Ignora"
       dismiss_notifications: "Ignora tutti"
@@ -3120,7 +3118,6 @@ it:
         create_for_topic: "Crea un segnalibro per quest'argomento"
         edit: "Modifica Segnalibro"
         edit_for_topic: "Modifica il segnalibro per quest'argomento"
-        created: "Creazione"
         updated: "Aggiornato"
         name: "Nome"
         name_placeholder: "A cosa serve questo segnalibro?"
@@ -3422,7 +3419,6 @@ it:
     category_title: "Categoria"
     history_capped_revisions: "Cronologia, ultime 100 revisioni"
     history: "Cronologia"
-    changed_by: "da %{author}"
     raw_email:
       title: "Email In Arrivo"
       not_available: "Non disponibile!"
@@ -3837,7 +3833,6 @@ it:
       new_count:
         one: "%{count} nuovo"
         other: "%{count} nuovi"
-      toggle_section: "attiva/disattiva sezione"
       more: "Altro"
       all_categories: "Tutte le categorie"
       all_tags: "Tutte le etichette"
@@ -3846,7 +3841,6 @@ it:
           header_link_text: "Informazioni"
         messages:
           header_link_text: "Messaggi"
-          header_action_title: "crea un messaggio personale"
           links:
             inbox: "Posta in arrivo"
             sent: "Inviati"
@@ -3863,7 +3857,6 @@ it:
           none: "Non hai aggiunto nessuna etichetta."
           click_to_get_started: "Clicca qui per iniziare."
           header_link_text: "Etichette"
-          header_action_title: "modifica le etichette nella barra laterale"
           configure_defaults: "Configura impostazioni predefinite"
         categories:
           links:
@@ -3873,11 +3866,9 @@ it:
           none: "Non hai aggiunto nessuna categoria."
           click_to_get_started: "Clicca qui per iniziare."
           header_link_text: "Categorie"
-          header_action_title: "modifica le categorie nella barra laterale"
           configure_defaults: "Configura impostazioni predefinite"
         community:
           header_link_text: "Community"
-          header_action_title: "crea un nuovo argomento"
           links:
             about:
               content: "Informazioni"
@@ -3892,10 +3883,8 @@ it:
               content: "FAQ"
             groups:
               content: "Gruppi"
-              title: "Tutti i gruppi"
             users:
               content: "Utenti"
-              title: "Tutti gli utenti"
             my_posts:
               content: "I miei Messaggi"
               draft_count:
@@ -3903,7 +3892,6 @@ it:
                 other: "%{count} bozze"
             review:
               content: "Revisiona"
-              title: "revisiona"
               pending_count: "%{count} in attesa"
     welcome_topic_banner:
       title: "Crea il tuo argomento di benvenuto"
@@ -4350,7 +4338,6 @@ it:
         button_title: "Manda Inviti"
       customize:
         title: "Personalizza"
-        long_title: "Personalizzazioni Sito"
         preview: "anteprima"
         explain_preview: "Guarda il sito con questo tema abilitato"
         save: "Salva"
@@ -4555,9 +4542,9 @@ it:
           new_name: "Nuova tavolozza dei colori"
           copy_name_prefix: "Copia di"
           delete_confirm: "Eliminare questa tavolozza dei colori?"
-          undo: "annulla"
+          undo: "Annulla"
           undo_title: "Annulla le modifiche effettuate a questo colore dall'ultimo salvataggio."
-          revert: "ripristina"
+          revert: "Ripristina"
           revert_title: "Reimposta questo colore alla tavolozza dei colori predefiniti di Discourse."
           primary:
             name: "primario"

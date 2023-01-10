@@ -294,7 +294,6 @@ fr:
         title: "Discussion"
       direct_messages:
         title: "Discussion privée"
-        new: "Nouvelle discussion privée"
         create: "Valider"
         leave: "Quitter cette discussion privée"
         cannot_create: "Nous sommes désolés, vous ne pouvez pas envoyer de messages privés."

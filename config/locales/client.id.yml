@@ -278,7 +278,6 @@ id:
       remove_reminder_keep_bookmark: "Hapus pengingat dan simpan penanda"
       created_with_reminder: "Anda telah menandai kiriman ini dengan pengingat %{date}. %{name}"
       created_with_reminder_generic: "Anda telah menandai kiriman ini dengan pengingat %{date}. %{name}"
-      remove: "Hilangkan penandaan"
       delete: "Hapus Bookmark"
       confirm_delete: "Yakin ingin menghapus penanda ini? Pengingat juga akan dihapus."
       confirm_clear: "Yakin ingin menghapus semua penandaan Anda dari topik ini?"
@@ -343,7 +342,6 @@ id:
     enable: "Aktifkan"
     disable: "Nonaktifkan"
     continue: "Lanjutkan"
-    undo: "Batalkan perintah"
     switch_to_anon: "Masuki Mode Anonim"
     switch_from_anon: "Keluar Mode Anonim"
     banner:
@@ -604,6 +602,7 @@ id:
         accepted: "Diterima"
         deny: "Menolak"
         denied: "ditolak"
+        undo: "Batalkan perintah"
       manage:
         title: "Mengelola"
         name: "Nama"
@@ -1634,7 +1633,6 @@ id:
         controls:
           first: "Revisi pertama"
       bookmarks:
-        created: "Dibuat"
         name: "Nama"
         options: "Pilihan"
     category:
@@ -1822,7 +1820,6 @@ id:
               content: "Pengguna"
             review:
               content: "Ulasan"
-              title: "ulasan"
   admin_js:
     type_to_filter: "ketik untuk memfilter..."
     admin:
@@ -1935,8 +1932,8 @@ id:
           body_tag:
             text: "Konten"
         colors:
-          undo: "batalkan perintah"
-          revert: "dibalik"
+          undo: "Batalkan perintah"
+          revert: "Dibalik"
       email:
         title: "Surel"
         settings: "Pengaturan"
