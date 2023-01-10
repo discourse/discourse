@@ -29,6 +29,13 @@ DiscourseEvent.on(:site_setting_changed) do |name, old_value, new_value|
     end
   end
 
+  # Set bootstrap min users for private sites to a lower default
+  if name == :login_required && new_value == true && SiteSetting.bootstrap_mode_enabled == true
+    if SiteSetting.bootstrap_mode_min_users == 50 # The default
+      SiteSetting.bootstrap_mode_min_users = 10
+    end
+  end
+
   Stylesheet::Manager.clear_color_scheme_cache! if %i[base_font heading_font].include?(name)
 
   Report.clear_cache(:storage_stats) if %i[backup_location s3_backup_bucket].include?(name)
