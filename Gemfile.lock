@@ -194,7 +194,7 @@ GEM
     libv8-node (16.10.0.0-x86_64-darwin)
     libv8-node (16.10.0.0-x86_64-darwin-19)
     libv8-node (16.10.0.0-x86_64-linux)
-    listen (3.7.1)
+    listen (3.8.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
     literate_randomizer (0.4.0)
