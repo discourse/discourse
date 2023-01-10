@@ -1791,10 +1791,12 @@ class User < ActiveRecord::Base
   def set_status!(description, emoji, ends_at = nil)
     status = { description: description, emoji: emoji, set_at: Time.zone.now, ends_at: ends_at }
 
-    if user_status
-      user_status.update!(status)
-    else
-      self.user_status = UserStatus.create!(status)
+    ActiveRecord::Base.transaction do
+      if user_status
+        user_status.update!(status)
+      else
+        self.user_status = UserStatus.create!(status)
+      end
     end
 
     publish_user_status(user_status)
