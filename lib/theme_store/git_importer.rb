@@ -122,6 +122,7 @@ class ThemeStore::GitImporter
     when "ssh"
       clone_ssh!
     else
+      return clone_folder! if @url == "tmp/component"
       raise RemoteTheme::ImportError.new(I18n.t("themes.import_error.git_unsupported_scheme"))
     end
   end
@@ -181,6 +182,16 @@ class ThemeStore::GitImporter
         raise_import_error!
       end
     end
+  end
+
+  def clone_folder!
+    Discourse::Utils.execute_command(
+      { "GIT_TERMINAL_PROMPT" => "0" },
+      "git",
+      "clone",
+      @url,
+      @temp_folder,
+    )
   end
 
   def with_ssh_private_key
