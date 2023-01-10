@@ -767,10 +767,6 @@ fr:
         other: "il y a presque %{count} ans"
   password_reset:
     no_token: 'Oups ! Le lien que vous avez utilisé ne fonctionne plus. Vous pouvez vous <a href="%{base_url}/login">connecter</a> maintenant. Si vous avez oublié votre mot de passe, vous pouvez <a href="%{base_url}/password-reset">demander un lien</a> pour le réinitialiser.'
-    choose_new: "Choisir un nouveau mot de passe"
-    choose: "Choisir un mot de passe"
-    update: "Mettre à jour le mot de passe"
-    save: "Définir le mot de passe"
     title: "Réinitialiser le mot de passe"
     success: "Vous avez modifié votre mot de passe avec succès et vous êtes maintenant connecté(e)."
     success_unapproved: "Vous avez modifié votre mot de passe avec succès."

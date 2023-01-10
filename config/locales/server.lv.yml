@@ -183,9 +183,6 @@ lv:
         one: "pirms %{count} dienas"
         other: "pirms %{count} dienām"
   password_reset:
-    choose_new: "Izvēlēties jaunu paroli"
-    choose: "Izvēlēties paroli"
-    save: "Iestatīt paroli"
     title: "Atjaunot paroli"
   change_email:
     please_continue: "Turpināt %{site_name}"

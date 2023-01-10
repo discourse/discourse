@@ -300,10 +300,6 @@ sq:
         one: "pothuajse %{count} vit më parë"
         other: "pothuajse %{count} vite më parë"
   password_reset:
-    choose_new: "Zgjidhni një fjalëkalim të ri"
-    choose: "Zgjidhni një fjalëkalim të ri"
-    update: "Rifresko Fjalëkalimin"
-    save: "Vendos Fjalëkalim"
     title: "Rivendos Fjalëkalimin"
     success: "Ndryshimi i fjalëkalimit u krye me sukses dhe tashmë ju jeni futur në faqe."
     success_unapproved: "Ndryshimi i fjalëkalimit u krye me sukses."

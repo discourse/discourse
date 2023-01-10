@@ -294,7 +294,6 @@ es:
         title: "Chat"
       direct_messages:
         title: "Chat personal"
-        new: "Nuevo chat personal"
         create: "Ir"
         leave: "Abandonar este chat personal"
         cannot_create: "Lo sentimos, no puedes enviar mensajes directos."

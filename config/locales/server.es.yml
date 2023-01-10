@@ -767,10 +767,6 @@ es:
         other: "hace casi %{count} años"
   password_reset:
     no_token: '¡Uy! El enlace que has utilizado ya no funciona. Ahora puedes <a href="%{base_url}/login">Iniciar sesión</a>. Si has olvidado tu contraseña, puedes <a href="%{base_url}/password-reset">solicitar un enlace</a> para restablecerla.'
-    choose_new: "Escoge una nueva contraseña"
-    choose: "Escoge una contraseña"
-    update: "Actualizar contraseña"
-    save: "Establecer contraseña"
     title: "Restablecer contraseña"
     success: "Has cambiado tu contraseña correctamente y ahora has iniciado sesión."
     success_unapproved: "Has cambiado tu contraseña correctamente."

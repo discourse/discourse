@@ -768,10 +768,6 @@ fi:
         other: "lähes %{count} vuotta sitten"
   password_reset:
     no_token: 'Käyttämäsi linkki ei enää toimi. Voit <a href="%{base_url}/login">kirjautua sisään</a> nyt. Jos olet unohtanut salasanasi, voit <a href="%{base_url}/password-reset">pyytää linkkiä</a> sen palauttamiseksi.'
-    choose_new: "Valitse uusi salasana"
-    choose: "Valitse salasana"
-    update: "Päivitä salasana"
-    save: "Aseta salasana"
     title: "Palauta salasana"
     success: "Salasanan vaihto onnistui, ja olet nyt kirjautunut sisään."
     success_unapproved: "Salasana vaihdettu onnistuneesti."

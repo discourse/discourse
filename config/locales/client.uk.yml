@@ -379,7 +379,6 @@ uk:
       remove_reminder_keep_bookmark: "Вилучити нагадування, але зберегти закладку"
       created_with_reminder: "Ви додали цей допис у закладку із нагадуванням %{date}. %{name}"
       created_with_reminder_generic: "Ви створили закладку із нагадуванням %{date}. %{name}"
-      remove: "Вилучити закладку"
       delete: "Видалити закладку"
       confirm_delete: "Ви впевнені, що хочете видалити цю закладку? Нагадування також буде видалено."
       confirm_clear: "Ви впевнені, що хочете вилучити всі закладки з цієї теми?"
@@ -459,7 +458,6 @@ uk:
     enable: "Увімкнути"
     disable: "Вимкнути"
     continue: "Продовжити"
-    undo: "Скасувати"
     switch_to_anon: "Увійти в анонімний режим"
     switch_from_anon: "Полишити анонімний режим"
     banner:
@@ -784,6 +782,7 @@ uk:
         denied: "відмовлено"
         undone: "запит скасовано"
         handle: "обробляти запит на вступ"
+        undo: "Скасувати"
       manage:
         title: "Керувати"
         name: "Імʼя"
@@ -1165,7 +1164,6 @@ uk:
         perm_denied_expl: "Ви заборонили сповіщення. Дозвольте сповіщення у налаштуваннях свого оглядача."
         disable: "Вимкнути сповіщення"
         enable: "Увімкнути сповіщення"
-        each_browser_note: 'Примітка. Вам потрібно змінити це налаштування в кожному оглядачі, який ви використовуєте. У режимі «не турбувати» всі сповіщення буде вимкнено незалежно від цього налаштування.'
         consent_prompt: "Хочете отримувати сповіщення в реальному часі, коли люди відповідають на ваші дописи?"
       dismiss: "Відкинути"
       dismiss_notifications: "Відхилити всі"
@@ -3424,7 +3422,6 @@ uk:
         create_for_topic: "Створіть закладку для теми"
         edit: "Редагувати закладку"
         edit_for_topic: "Редагувати закладку для теми"
-        created: "Створено"
         updated: "Оновлено"
         name: "Назва"
         name_placeholder: "Для чого ця закладка?"
@@ -3744,7 +3741,6 @@ uk:
     category_title: "Розділ"
     history_capped_revisions: "Історія та останні 100 змін"
     history: "Історія"
-    changed_by: "%{author}"
     raw_email:
       title: "Вхідне повідомлення"
       not_available: "Не доступно!"
@@ -4201,7 +4197,6 @@ uk:
         few: "%{count} нових"
         many: "%{count} нова"
         other: "%{count} нова"
-      toggle_section: "Переключити розділ"
       more: "Більше"
       all_categories: "Всі розділи"
       all_tags: "Всі теґи"
@@ -4210,7 +4205,6 @@ uk:
           header_link_text: "Про"
         messages:
           header_link_text: "Повідомлення"
-          header_action_title: "створити особисте повідомлення"
           links:
             inbox: "Вхідні"
             sent: "Надіслано"
@@ -4227,7 +4221,6 @@ uk:
           none: "Ви не додали жодного теґу."
           click_to_get_started: "Натисніть тут, щоб почати."
           header_link_text: "Теґи"
-          header_action_title: "Редагувати теґи бічної панелі"
           configure_defaults: "Налаштувати типові значення"
         categories:
           links:
@@ -4237,11 +4230,9 @@ uk:
           none: "Ви не додали жодного розділу."
           click_to_get_started: "Натисніть тут, щоб почати."
           header_link_text: "Розділи"
-          header_action_title: "редагувати розділи бічної панелі"
           configure_defaults: "Налаштувати типові значення"
         community:
           header_link_text: "Спільнота"
-          header_action_title: "створити нову тему"
           links:
             about:
               content: "Про"
@@ -4256,10 +4247,8 @@ uk:
               content: "Часті запитання"
             groups:
               content: "Групи"
-              title: "Усі групи"
             users:
               content: "Користувачі"
-              title: "Всі користувачі"
             my_posts:
               content: "Мої дописи"
               draft_count:
@@ -4269,7 +4258,6 @@ uk:
                 other: "%{count} чернеток"
             review:
               content: "Переглянути"
-              title: "переглянути"
               pending_count: "%{count} очікує на розгляд"
     welcome_topic_banner:
       title: "Створіть тему привітання"
@@ -4724,7 +4712,6 @@ uk:
         button_title: "Надіслати запрошення"
       customize:
         title: "Customize"
-        long_title: "Site Customizations"
         preview: "preview"
         explain_preview: "Попередній перегляд сайту з активованим стилем"
         save: "Зберегти"
@@ -4931,7 +4918,7 @@ uk:
           new_name: "Нова Колірна Палітра"
           copy_name_prefix: "Копіювати з"
           delete_confirm: "видалити цю колірну палітру?"
-          undo: "скасувати"
+          undo: "Скасувати"
           undo_title: "Скасувати ваші зміни цього кольору з часу останнього збереження."
           revert: "Повернути"
           revert_title: "Скиньте цей колір на колірну палітру Discourse за замовчуванням."
