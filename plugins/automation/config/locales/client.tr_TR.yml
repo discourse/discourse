@@ -5,3 +5,295 @@
 # https://translate.discourse.org/
 
 tr_TR:
+  js:
+    discourse_automation:
+      title: Otomasyon
+      create: Oluştur
+      update: Güncelle
+      select_script: Komut dosyası seçin
+      select_trigger: Tetikleyici seçin
+      confirm_automation_reset: Bu eylem komut dosyası ve tetikleyici seçeneklerini sıfırlar, yeni durum kaydedilir, devam etmek istiyor musunuz?
+      confirm_automation_trigger: Bu eylem otomasyonu tetikler, devam etmek istiyor musunuz?
+      no_automation_yet: Henüz otomasyon oluşturmadınız.
+      edit_automation:
+        trigger_section:
+          forced: Bu tetikleyici komut dosyası ile zorlanır.
+          next_pending_automation: "Bir sonraki otomasyon şu saatte tetiklenecek: %{date}"
+          trigger_now: "Şimdi tetikle"
+          title: Ne zaman/Ne...
+        fields_section:
+          title: Komut dosyası seçenekleri
+      destroy_automation:
+        confirm: "Şunu silmek istediğinizden emin misiniz: \"%{name}\"?"
+      fields:
+        key_value:
+          label: Yapılandır
+        user:
+          label: Kullanıcı
+        pm:
+          title:
+            label: Başlık
+          raw:
+            label: Gövde
+        pms:
+          confirm_remove_pm: "Bu özel mesajı kaldırmak istediğinizden emin misiniz?"
+          placeholder_title: Özel mesaj başlığı
+          add_pm: Özel mesaj ekle
+          no_pm_created: Henüz özel mesaj oluşturmadınız. Otomasyonunuz tetiklendiğinde özel mesajlar gönderilecek.
+          title:
+            label: Başlık
+          raw:
+            label: Gövde
+          delay:
+            label: Gecikme (dakika)
+          encrypt:
+            label: Mümkünse özel mesajı şifreler
+        group:
+          label: Grup
+        text:
+          label: Metin
+      triggerables:
+        not_found: '"%{automation}" otomasyonu için "%{trigger}" tetikleyicisi bulunamadı, ilişkili eklentinin yüklü olduğundan emin olun'
+        user_badge_granted:
+          fields:
+            badge:
+              label: Rozet
+            only_first_grant:
+              label: Sadece ilk izinde
+        stalled_topic:
+          durations:
+            PT1H: "Bir saat"
+            P1D: "Bir gün"
+            P1W: "Bir hafta"
+            P2W: "İki hafta"
+            P1M: "Bir ay"
+            P3M: "Üç ay"
+            P6M: "Altı ay"
+            P1Y: "Bir yıl"
+          fields:
+            categories:
+              label: Kategorilerle sınırlı
+            tags:
+              label: Etiketlerle sınırlı
+            stalled_after:
+              label: 'Şundan sonra durdu:'
+        recurring:
+          every: Her
+          frequencies:
+            minute: dakika
+            hour: saat
+            day: gün
+            weekday: hafta içi günü
+            week: hafta
+            month: ay
+            year: yıl
+          fields:
+            recurrence:
+              label: Tekrarlama
+            start_date:
+              label: Başlangıç tarihi
+        stalled_wiki:
+          durations:
+            PT1H: "Bir saat"
+            P1D: "Bir gün"
+            P1W: "Bir hafta"
+            P2W: "İki hafta"
+            P1M: "Bir ay"
+            P3M: "Üç ay"
+            P6M: "Altı ay"
+            P1Y: "Bir yıl"
+          fields:
+            restricted_category:
+              label: Kategori ile sınırlı
+            stalled_after:
+              label: Tetikleyici gecikmesi
+              description: Son viki düzenlemesi ile otomasyonun tetiklenmesi arasındaki gecikmeyi tanımlar
+            retriggered_after:
+              label: Yeniden tetikleyici gecikmesi
+              description: İlk tetiklemeden sonra viki hala düzenlenmemişse ilk tetikleyici ile sonraki tetikleyici arasındaki gecikmeyi tanımlar
+        user_added_to_group:
+          fields:
+            joined_group:
+              label: İzlenen grup
+        user_removed_from_group:
+          fields:
+            left_group:
+              label: İzlenen grup
+        user_promoted:
+          fields:
+            restricted_group:
+              label: Grupla sınırla
+            trust_level_transition:
+              label: Güven seviyesi geçişi
+          trust_levels:
+            ALL: "Tüm güven seviyeleri"
+            TL01: "GS0 - GS1"
+            TL12: "GS1 - GS2"
+            TL23: "GS2 - GS3"
+            TL34: "GS3 - GS4"
+        point_in_time:
+          fields:
+            execute_at:
+              label: 'Şurada yürüt:'
+        topic:
+          fields:
+            restricted_topic:
+              label: Konu Kimliği
+        post_created_edited:
+          fields:
+            valid_trust_levels:
+              label: Geçerli güven seviyeleri
+              description: Yalnızca gönderi bu güven seviyelerindeki bir kullanıcı tarafından oluşturulduğunda tetiklenir, varsayılan olarak herhangi bir güven seviyesidir
+            restricted_category:
+              label: Kategori
+              description: İsteğe bağlı, tetikleyici yürütmeyi bu kategoriyle sınırlandırmaya izin verir
+        pm_created:
+          fields:
+            restricted_user:
+              label: Kullanıcı
+              description: Tetikleyicinin yürütülmesini bu kullanıcıyla sınırlandırmaya izin verir
+            ignore_staff:
+              label: Personeli yok say
+              description: Gönderen bir personel kullanıcısıysa tetikleyiciyi atla
+            valid_trust_levels:
+              label: Geçerli güven seviyeleri
+              description: Yalnızca gönderi bu güven seviyelerindeki bir kullanıcı tarafından oluşturulduğunda tetiklenir, varsayılan olarak herhangi bir güven seviyesidir
+        after_post_cook:
+          fields:
+            valid_trust_levels:
+              label: Geçerli güven seviyeleri
+              description: Yalnızca gönderi bu güven seviyelerindeki bir kullanıcı tarafından oluşturulduğunda tetiklenir, varsayılan olarak herhangi bir güven seviyesidir
+            restricted_category:
+              label: Kategori
+              description: İsteğe bağlı, tetikleyici yürütmeyi bu kategoriyle sınırlandırmaya izin verir
+            restricted_tags:
+              label: Etiketler
+              description: İsteğe bağlı, tetikleyici yürütmeyi bu etiketlerden herhangi biriyle sınırlandırmaya izin verir
+      scriptables:
+        not_found: '"%{automation}" otomasyonu için "%{script}" komut dosyası bulunamadı, ilişkili eklentinin yüklü olduğundan emin olun'
+        zapier_webhook:
+          fields:
+            webhook_url:
+              label: Web kancası URL'si
+              description: "Geçerli bir Zapier web kancası URL'si bekler, ör.: https://hooks.zapier.com/hooks/catch/xxx/yyy/"
+        auto_responder:
+          fields:
+            once:
+              label: Bir kez
+              description: Konuya göre yalnızca bir kez yanıt verir
+            word_answer_list:
+              label: Kelime/yanıt çiftlerinin listesi
+              description: "Anahtar/değer gruplarının bir listesini tanımlar; burada \"anahtar\" aranan terim, \"değer\" ise yanıt metnidir. \"Değer\" ifadesinin, yanıtta \"anahtar\" değeriyle değiştirilecek bir yer tutucu olarak \"%%KEY%%\" ifadesini kabul ettiğini unutmayın. Anahtar'ın bir regex olarak değerlendirileceğini ve \".\" gibi özel karakterlerin aslında bir noktayı kastediyorsanız kaçınılması gerektiğini unutmayın, ör.: \"\\.\""
+            answering_user:
+              label: Yanıtlayan kullanıcı
+              description: Varsayılan olarak Sistem kullanıcısını ayarlar
+        post:
+          fields:
+            creator:
+              label: Oluşturucu
+            topic:
+              label: Konu Kimliği
+            post:
+              label: Gönderi içeriği
+        user_global_notice:
+          fields:
+            level:
+              label: Seviye
+            notice:
+              label: Bildiri
+              description: HTML kabul eder, bunu güvenilmeyen girdi ile doldurmayın!
+          levels:
+            warning: Uyarı
+            info: Bilgi
+            success: Başarılı
+            error: Hata
+        suspend_user_by_email:
+          fields:
+            suspend_until:
+              label: Şu tarihe kadar askıya al (varsayılan)
+            reason:
+              label: Sebep (varsayılan)
+            actor:
+              label: Kullanıcı
+              description: "Askıya alma işleminden sorumlu kullanıcı (varsayılan: sistem)"
+        pin_topic:
+          fields:
+            pinnable_topic:
+              label: Konu Kimliği
+            pinned_globally:
+              label: Küresel olarak sabitlendi
+            pinned_until:
+              label: 'Şu tarihe kadar sabitlendi:'
+        banner_topic:
+          fields:
+            topic_id:
+              label: Konu Kimliği
+            banner_until:
+              label: 'Şu tarihe kadar banner yap:'
+            user:
+              label: Kullanıcı
+              description: "Banner'ı oluşturan kullanıcı (varsayılan: sistem)"
+        flag_post_on_words:
+          fields:
+            words:
+              label: Kontrol edilen kelimeler
+        topic_required_words:
+          fields:
+            words:
+              label: Gerekli kelimeler listesi
+        gift_exchange:
+          fields:
+            gift_exchangers_group:
+              label: Katılımcıların grup adı
+            giftee_assignment_messages:
+              label: Hediye eden kişiye gönderilen mesajlar
+        send_pms:
+          add_a_pm_btn:
+            label: Özel mesaj ekle
+          fields:
+            receiver:
+              label: Özel mesaj alıcısı
+            sendable_pms:
+              label: Özel mesajlar
+            sender:
+              label: Özel mesajı gönderen
+        close_topic:
+          fields:
+            topic:
+              label: Konu Kimliği
+            message:
+              label: Kapanış mesajı
+              description: "Konu Kapatıldı kaydında gösterilecek isteğe bağlı mesaj"
+            user:
+              label: Kullanıcı
+              description: "Konuyu kapatan kullanıcı (varsayılan: sistem)"
+        add_user_to_group_through_custom_field:
+          fields:
+            custom_field_name:
+              label: "Kullanıcı Özel Alan adı"
+      models:
+        script:
+          name:
+            label: Komut dosyası
+        trigger:
+          name:
+            label: Tetikleyici
+        automation:
+          name:
+            label: İsim
+          trigger:
+            label: Tetikleyici
+          script:
+            label: Komut dosyası
+          version:
+            label: Sürüm
+          enabled:
+            label: Etkin
+          disabled:
+            label: Devre Dışı
+          placeholders:
+            label: Yer Tutucular
+          last_updated_at:
+            label: Son güncelleme
+          last_updated_by:
+            label: Güncelleyen
