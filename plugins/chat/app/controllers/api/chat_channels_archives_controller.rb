@@ -20,7 +20,7 @@ class Chat::Api::ChatChannelsArchivesController < Chat::Api::ChatChannelsControl
     end
 
     begin
-      Chat::ChatChannelArchiveService.begin_archive_process(
+      Chat::ChatChannelArchiveService.create_archive_process(
         chat_channel: channel_from_params,
         acting_user: current_user,
         topic_params: topic_params,

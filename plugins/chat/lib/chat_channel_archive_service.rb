@@ -24,7 +24,7 @@ class Chat::ChatChannelArchiveService
     end
   end
 
-  def self.begin_archive_process(chat_channel:, acting_user:, topic_params:)
+  def self.create_archive_process(chat_channel:, acting_user:, topic_params:)
     return if ChatChannelArchive.exists?(chat_channel: chat_channel)
 
     # Only need to validate topic params for a new topic, not an existing one.

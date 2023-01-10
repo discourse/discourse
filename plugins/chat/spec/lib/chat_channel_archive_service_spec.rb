@@ -12,11 +12,11 @@ describe Chat::ChatChannelArchiveService do
   let(:topic_params) { { topic_title: "This will be a new topic", category_id: category.id } }
   subject { Chat::ChatChannelArchiveService }
 
-  describe "#begin_archive_process" do
+  describe "#create_archive_process" do
     before { 3.times { Fabricate(:chat_message, chat_channel: channel) } }
 
     it "marks the channel as read_only" do
-      subject.begin_archive_process(
+      subject.create_archive_process(
         chat_channel: channel,
         acting_user: user,
         topic_params: topic_params,
@@ -25,7 +25,7 @@ describe Chat::ChatChannelArchiveService do
     end
 
     it "creates the chat channel archive record to save progress and topic params" do
-      subject.begin_archive_process(
+      subject.create_archive_process(
         chat_channel: channel,
         acting_user: user,
         topic_params: topic_params,
@@ -40,7 +40,7 @@ describe Chat::ChatChannelArchiveService do
 
     it "enqueues the archive job" do
       channel_archive =
-        subject.begin_archive_process(
+        subject.create_archive_process(
           chat_channel: channel,
           acting_user: user,
           topic_params: topic_params,
@@ -56,13 +56,13 @@ describe Chat::ChatChannelArchiveService do
     end
 
     it "does nothing if there is already an archive record for the channel" do
-      subject.begin_archive_process(
+      subject.create_archive_process(
         chat_channel: channel,
         acting_user: user,
         topic_params: topic_params,
       )
       expect {
-        subject.begin_archive_process(
+        subject.create_archive_process(
           chat_channel: channel,
           acting_user: user,
           topic_params: topic_params,
@@ -74,7 +74,7 @@ describe Chat::ChatChannelArchiveService do
       new_message = Fabricate(:chat_message, chat_channel: channel)
       new_message.trash!
       channel_archive =
-        subject.begin_archive_process(
+        subject.create_archive_process(
           chat_channel: channel,
           acting_user: user,
           topic_params: topic_params,
@@ -90,7 +90,7 @@ describe Chat::ChatChannelArchiveService do
 
     def start_archive
       @channel_archive =
-        subject.begin_archive_process(
+        subject.create_archive_process(
           chat_channel: channel,
           acting_user: user,
           topic_params: topic_params,
