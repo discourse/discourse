@@ -14,7 +14,7 @@ module DiscourseDev
       default_config = YAML.load_file(default_file_path, permitted_classes: [Date])
 
       if File.exist?(file_path)
-        user_config = YAML.load_file(file_path)
+        user_config = YAML.load_file(file_path, permitted_classes: [Date])
       else
         puts "I did no detect a custom `config/dev.yml` file, creating one for you where you can amend defaults."
         FileUtils.cp(default_file_path, file_path)
