@@ -98,6 +98,17 @@ module("Unit | Utility | autocomplete", function (hooks) {
     assert.strictEqual(element.value, "@test1 @test2 ");
     assert.strictEqual(element.selectionStart, 7);
     assert.strictEqual(element.selectionEnd, 7);
+
+    // lets see that deleting last space triggers autocomplete
+    element.selectionStart = element.value.length;
+    element.selectionEnd = element.value.length;
+    simulateKey(element, "\b");
+    let list = document.querySelectorAll("#ac-testing ul li");
+    assert.strictEqual(list.length, 1);
+
+    simulateKey(element, "\b");
+    list = document.querySelectorAll("#ac-testing ul li");
+    assert.strictEqual(list.length, 2);
   });
 
   test("Autocomplete can render on @", function (assert) {

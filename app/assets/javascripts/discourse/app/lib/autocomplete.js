@@ -576,11 +576,17 @@ export default function (options) {
     }
   }
 
-  function guessCompletePosition() {
+  function guessCompletePosition(opts) {
     let prev, stopFound, term;
     let prevIsGood = true;
     let element = me[0];
+    let backSpace = opts && opts.backSpace;
+
     let c = caretPosition(element);
+
+    if (backSpace) {
+      c -= 1;
+    }
 
     let start, end;
 
@@ -589,13 +595,14 @@ export default function (options) {
     while (prevIsGood && c >= 0) {
       c -= 1;
       prev = element.value[c];
+
       stopFound = prev === options.key;
 
       if (stopFound) {
         prev = element.value[c - 1];
 
         if (
-          checkTriggerRule({ backSpace: true }) &&
+          checkTriggerRule({ backSpace }) &&
           (prev === undefined || allowedLettersRegex.test(prev))
         ) {
           start = c;
@@ -647,7 +654,7 @@ export default function (options) {
     }
 
     if (completeStart === null && e.which === keys.backSpace && options.key) {
-      let position = guessCompletePosition();
+      let position = guessCompletePosition({ backSpace: true });
       completeStart = position.completeStart;
 
       if (position.completeEnd) {
