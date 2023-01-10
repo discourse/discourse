@@ -30,29 +30,15 @@ class Chat::Api::ChatChannelsController < Chat::Api
 
   def destroy
     confirmation = params.require(:channel).require(:name_confirmation)&.downcase
-    guardian.ensure_can_delete_chat_channel!
+    destroy_result =
+      Chat::ChatChannelDestroyer.new(guardian, channel_from_params).execute(
+        name_confirmation: confirmation,
+      )
 
-    if channel_from_params.title(current_user).downcase != confirmation
-      raise Discourse::InvalidParameters.new(:name_confirmation)
-    end
+    return render json: success_json if destroy_result.succeeded?
 
-    begin
-      ChatChannel.transaction do
-        channel_from_params.trash!(current_user)
-        StaffActionLogger.new(current_user).log_custom(
-          "chat_channel_delete",
-          {
-            chat_channel_id: channel_from_params.id,
-            chat_channel_name: channel_from_params.title(current_user),
-          },
-        )
-      end
-    rescue ActiveRecord::Rollback
-      return render_json_error(I18n.t("chat.errors.delete_channel_failed"))
-    end
-
-    Jobs.enqueue(:chat_channel_delete, { chat_channel_id: channel_from_params.id })
-    render json: success_json
+    render json: failed_json.merge(errors: destroy_result.errors),
+           status: destroy_result.http_status
   end
 
   def create

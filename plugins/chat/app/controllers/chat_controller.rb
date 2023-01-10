@@ -98,20 +98,23 @@ class Chat::ChatController < Chat::ChatBaseController
 
     content = params[:message]
 
-    chat_message_creator =
-      Chat::ChatMessageCreator.create(
-        chat_channel: @chat_channel,
-        user: current_user,
-        in_reply_to_id: reply_to_msg_id,
-        content: content,
-        staged_id: params[:staged_id],
-        upload_ids: params[:upload_ids],
-      )
+    create_payload =
+      Chat::ChatMessageCreatorV2::ChatMessageCreatorPayload.new.tap do |payload|
+        payload.in_reply_to_id = reply_to_msg_id
+        payload.content = content
+        payload.staged_id = params[:staged_id]
+        payload.upload_ids = params[:upload_ids]
+      end
+    create_result = Chat::ChatMessageCreatorV2.new(guardian, @chat_channel, create_payload).execute
 
-    return render_json_error(chat_message_creator.error) if chat_message_creator.failed?
+    if create_result.failed?
+      return render_json_error(create_result.errors), status: create_result.http_status
+    end
 
+    # NOTE: All of this should probably be in the service too?? It's all to do with
+    # creation
     @user_chat_channel_membership.update!(
-      last_read_message_id: chat_message_creator.chat_message.id,
+      last_read_message_id: create_result.service_data.chat_message.id,
     )
 
     if @chat_channel.direct_message_channel?
@@ -140,7 +143,7 @@ class Chat::ChatController < Chat::ChatBaseController
     ChatPublisher.publish_user_tracking_state(
       current_user,
       @chat_channel.id,
-      chat_message_creator.chat_message.id,
+      create_result.service_data.chat_message.id,
     )
     render json: success_json
   end
