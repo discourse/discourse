@@ -122,6 +122,11 @@ he:
           two: "אזכורים אסורים בקבוצה %{group_name} ובעוד %{others}"
           many: "אזכורים אסורים בקבוצה %{group_name} ובעוד %{others}"
           other: "אזכורים אסורים בקבוצה %{group_name} ובעוד %{others}"
+        too_many_members:
+          one: "בקבוצה %{group_name} יש יותר מדי חברים. לא נשלחו התראות."
+          two: "בקבוצה %{group_name} וב־%{others} נוספות יש יותר מדי חברים. לא נשלחו התראות."
+          many: "בקבוצה %{group_name} וב־%{others} נוספות יש יותר מדי חברים. לא נשלחו התראות."
+          other: "בקבוצה %{group_name} וב־%{others} נוספות יש יותר מדי חברים. לא נשלחו התראות."
         warning_multiple:
           one: "%{count} נוסף"
           two: "%{count} נוספים"
@@ -136,6 +141,7 @@ he:
             two: "אזכורים אסורים בקבוצה ‎@%{group} ובקבוצה ‎@%{group_2}"
             many: "אזכורים אסורים בקבוצה ‎@%{group} ובקבוצה ‎@%{group_2}"
             other: "אזכורים אסורים בקבוצה ‎@%{group} ובקבוצה ‎@%{group_2}"
+          unreachable_multiple: "‎@%{group} ועוד %{count} נוספות לא מרשות לאזכר"
           too_many_members_multiple: "%{count} קבוצות אלו חורגות מ%{notification_limit} של %{limit}"
           users_limit:
             one: "משתמש/ת %{count}"
@@ -335,7 +341,7 @@ he:
         title: "צ׳אט"
       direct_messages:
         title: "צ׳אט אישי"
-        new: "צ׳אט אישי חדש"
+        new: "יצירת צ׳אט אישי"
         create: "קדימה"
         leave: "יציאה מהצ׳אט האישי הזה"
         cannot_create: "מחילה, אין לך אפשרות לשלוח הודעות ישירות."

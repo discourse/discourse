@@ -771,10 +771,6 @@ sv:
         other: "nästan %{count} år sedan"
   password_reset:
     no_token: 'Hoppsan! Länken du använde fungerar inte längre. Du kan <a href="%{base_url}/login">logga in</a> nu. Om du har glömt ditt lösenord kan du <a href="%{base_url}/password-reset">begära en länk</a> för att återställa det.'
-    choose_new: "Välj ett nytt lösenord"
-    choose: "Välj ett lösenord"
-    update: "Uppdatera lösenord"
-    save: "Välj lösenord"
     title: "Återställ lösenord"
     success: "Du har lyckats med att byta ditt lösenord och är nu inloggad."
     success_unapproved: "Du lyckades med att byta ditt lösenord."
@@ -970,7 +966,7 @@ sv:
     mailing_list_mode: "Stäng av utskicksläge"
     all: "Skicka mig inga fler e-postmeddelanden från %{sitename}"
     different_user_description: "Du är för tillfället inloggad som en annan användare än den som vi skickade e-post till. Logga ut, eller aktivera anonymt läge, och försök igen."
-    not_found_description: Tyvärr kunde vi inte hitta den avprenumerationen. Kan länken i din e-post vara för gammal och ha löpt ut?"
+    not_found_description: "Tyvärr kunde vi inte hitta den avprenumerationen. Kan länken i din e-post vara för gammal och ha löpt ut?"
     user_not_found_description: "Tyvärr kunde vi inte hitta någon användare för den här prenumerationen. Du försöker troligen avprenumerera ett konto som inte längre finns."
     log_out: "Logga ut"
     submit: "Spara inställningar"

@@ -463,10 +463,6 @@ sk:
         many: "pred takmer %{count} rokmi"
         other: "pred takmer %{count} rokmi"
   password_reset:
-    choose_new: "Napíš nové heslo"
-    choose: "Napíš heslo"
-    update: "Aktualizujte heslo"
-    save: "Nastavte heslo"
     title: "Obnoviť heslo"
     success: "Heslo bolo úspešne zmenené a ste prihlasený do systému. "
     success_unapproved: "Heslo bolo úspešne zmenené."

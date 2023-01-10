@@ -380,7 +380,6 @@ he:
       remove_reminder_keep_bookmark: "הסרת תזכורת ושמירת הסימנייה"
       created_with_reminder: "סימנת את הפוסט הזה עם תזכורת %{date}. %{name}"
       created_with_reminder_generic: "סימנת את זה עם תזכורת %{date}. %{name}"
-      remove: "הסרה מהסימניות"
       delete: "מחיקת סימנייה"
       confirm_delete: "למחוק את הסימנייה הזאת? גם התזכורת תימחק."
       confirm_clear: "לנקות את כל הסימניות מנושא זה?"
@@ -460,7 +459,6 @@ he:
     enable: "הפעלה"
     disable: "השבתה"
     continue: "המשך"
-    undo: "לבטל פעולה"
     switch_to_anon: "מעבר למצב אלמוני"
     switch_from_anon: "יציאה ממצב אלמוני"
     banner:
@@ -785,6 +783,7 @@ he:
         denied: "נדחה"
         undone: "הבקשה נמשכה"
         handle: "טיפול בבקשות חברות"
+        undo: "לבטל פעולה"
       manage:
         title: "ניהול"
         name: "שם"
@@ -1167,7 +1166,7 @@ he:
         perm_denied_expl: "דחית הרשאה לקבלת התראות. יש לאפשר התראות בהגדרות הדפדפן שלך."
         disable: "השבתת התראות"
         enable: "הפעלת התראות"
-        each_browser_note: 'הערה: עליך לשנות הגדרה זו בכל דפדפן שבו אתה משתמש. כל ההודעות יושבתו במצב "אל תפריע", ללא קשר להגדרה זו.'
+        each_browser_note: 'הערה: עליך לשנות הגדרה זו בכל דפדפן שמשמש אותך. כל ההודעות יושבתו אם בחרת להשהות התראות מתפריט המשתמש, ללא קשר להגדרה זו.'
         consent_prompt: "לקבל התראות חיות כשמתקבלות תגובות לפוסטים שלך?"
       dismiss: "דחה"
       dismiss_notifications: "להתעלם מהכול"
@@ -3440,7 +3439,6 @@ he:
         create_for_topic: "יצירת סימנייה לנושא"
         edit: "עריכת סימנייה"
         edit_for_topic: "עריכת סימנייה לנושא"
-        created: "נוצר"
         updated: "עודכן"
         name: "שם"
         name_placeholder: "עבור מה הסימנייה?"
@@ -3761,7 +3759,6 @@ he:
     category_title: "קטגוריה"
     history_capped_revisions: "היסטוריה, 100 התיקונים האחרונים"
     history: "היסטוריה"
-    changed_by: "מאת %{author}"
     raw_email:
       title: "דוא״ל נכנס"
       not_available: "לא זמין!"
@@ -4262,25 +4259,29 @@ he:
           configure_defaults: "הגדרת ברירות מחדל"
         community:
           header_link_text: "קהילה"
-          header_action_title: "יצירת נושא חדש"
+          header_action_title: "יצירת נושא"
           links:
             about:
               content: "על אודות"
+              title: "פרטים נוספים על האתר הזה"
             admin:
               content: "הנהלה"
+              title: "הגדרות האתר ודוחות"
             badges:
               content: "עיטורים"
+              title: "כל העיטורים שאפשר לקבל"
             everything:
               content: "הכול"
               title: "כל הנושאים"
             faq:
               content: "שאלות נפוצות"
+              title: "הנחיות לשימוש באתר הזה"
             groups:
               content: "קבוצות"
-              title: "כל הקבוצות"
+              title: "רשימת קבוצות משתמשים זמינות"
             users:
               content: "משתמשים"
-              title: "כל המשתמשים"
+              title: "רשימת כל המשתמשים"
             my_posts:
               content: "הפוסטים שלי"
               title: "הפעילות האחרונה שלי בנושא"
@@ -4292,7 +4293,7 @@ he:
                 other: "%{count} טיוטות"
             review:
               content: "סקירה"
-              title: "סקירה"
+              title: "פוסטים מסומנים ופריטים אחרים בתור"
               pending_count: "%{count} ממתינים"
     welcome_topic_banner:
       title: "כאן ניתן ליצור את נושא קבלת הפנים שלך"
@@ -4449,6 +4450,9 @@ he:
               other: "ל־%{count} משתמשים יש את כתובות הדוא״ל בשם התחום החדש ויתווספו לקבוצה."
             automatic_membership_associated_groups: "משתמשים שהם חברים בקבוצה בשירות שמופיע כאן יתווספו לקבוצה הזאת אוטומטית עם כניסתם לשירות."
             primary_group: "קבע כקבוצה ראשית באופן אוטומטי"
+          alert:
+            primary_group: "מכיוון שזו קבוצה עיקרית, ייעשה שימוש בשם ‚%{group_name}’ במחלקות CSS שחשופות לכולם."
+            flair_group: "מכיוון שבקבוצה זאת יש סמלון לחברים, השם ‚%{group_name}’ יהיה גלוי לכולם."
         name_placeholder: "שם קבוצה, ללא רווחים, לפי הכללים של שמות משתמשים"
         primary: "קבוצה ראשית"
         no_primary: "(אין קבוצה ראשית)"
@@ -4756,7 +4760,6 @@ he:
         button_title: "משלוח הזמנות"
       customize:
         title: "התאמה אישית"
-        long_title: "התאמה של האתר"
         preview: "תצוגה מקדימה"
         explain_preview: "הצגת האתר עם ערכת העיצוב הזאת מופעלת"
         save: "שמור"
@@ -4963,9 +4966,9 @@ he:
           new_name: "לוח צבעים חדש"
           copy_name_prefix: "העתק של"
           delete_confirm: "למחוק לוח צבעים זה?"
-          undo: "ביטול (Unfo)"
+          undo: "לבטל פעולה"
           undo_title: "ביטול השינויים לצבע זה מאז הפעם שעברה שהוא נשמר."
-          revert: "לחזור"
+          revert: "להחזיר"
           revert_title: "לאפס את הצבע הזה ללוח הצבעים כברירת מחדל של Discourse."
           primary:
             name: "ראשי"

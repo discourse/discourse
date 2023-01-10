@@ -501,10 +501,6 @@ hr:
         few: "prije skoro %{count} godina"
         other: "prije skoro %{count} godina"
   password_reset:
-    choose_new: "Izaberite novu lozinku"
-    choose: "Izaberite lozinku"
-    update: "Ažurirajte zaporku"
-    save: "Postavite zaporku"
     title: "Ponovo postavite zaporku"
     success: "Uspiješno ste promijenili zaporku i sad ste prijavljeni."
     success_unapproved: "Uspiješno ste promijenili zaporku."

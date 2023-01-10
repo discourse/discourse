@@ -280,7 +280,7 @@ hu:
         title: "Csevegés"
       direct_messages:
         title: "Személyes csevegés"
-        new: "Új személyes csevegés"
+        new: "Személyes csevegés létrehozása"
         create: "Ugrás"
         leave: "E személyes csevegés elhagyása"
       incoming_webhooks:

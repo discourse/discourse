@@ -253,7 +253,6 @@ et:
       edit: "Muuda järjehoidjat"
       not_bookmarked: "lisa sellele postitusele järjehoidja"
       created_with_reminder: "Olete selle postituse järjehoidjatesse lisanud meeldetuletusega %{date}. %{name}"
-      remove: "Eemalda järjehoidja"
       delete: "Kustuta järjehoidja"
       confirm_delete: "Kas soovid selle järjehoidja kustutada? Kustutatakse ka meeldetuletus."
       confirm_clear: "Kas soovid kindlasti sellest teemast kustutada kõik oma järjehoidjad?"
@@ -305,7 +304,6 @@ et:
     enable: "Võimalda"
     disable: "Tõkesta"
     continue: "Jätka"
-    undo: "Ennista"
     switch_to_anon: "Sisene anonüümsesse režiimi"
     switch_from_anon: "Välju anonüümsest režiimist"
     banner:
@@ -486,6 +484,7 @@ et:
       requests:
         reason: "Põhjus"
         accepted: "aktsepteeritud"
+        undo: "Ennista"
       manage:
         title: "Halda"
         name: "Nimi"
@@ -2058,7 +2057,6 @@ et:
             button: "HTML"
       bookmarks:
         edit: "Muuda järjehoidjat"
-        created: "Loodud"
         name: "Nimi"
         options: "Võimalused"
         actions:
@@ -2284,7 +2282,6 @@ et:
       one: "kasutaja"
       other: "kasutajad"
     category_title: "Foorum"
-    changed_by: "autor %{author}"
     raw_email:
       title: "Sissetulevad e-kirjad"
       not_available: "Pole saadaval!"
@@ -2560,14 +2557,12 @@ et:
               content: "KKK"
             groups:
               content: "Grupid"
-              title: "Kõik grupid"
             users:
               content: "Kasutajad"
             my_posts:
               content: "Minu"
             review:
               content: "Vaata üle"
-              title: "vaata üle"
   admin_js:
     type_to_filter: "filtreerimiseks trüki..."
     admin:
@@ -2839,7 +2834,6 @@ et:
         button_title: "Saada kutsed"
       customize:
         title: "Kohanda"
-        long_title: "Saidi kohandused"
         preview: "eelvaade"
         save: "Salvesta"
         new: "Uus"
@@ -2915,9 +2909,9 @@ et:
           long_title: "Värvipaletid"
           copy_name_prefix: "Koopia sellest"
           delete_confirm: "Kas kustutada see vävripalett?"
-          undo: "ennista"
+          undo: "Ennista"
           undo_title: "Ennista selle värvistiku muudatused alates viimasest salvestamisest."
-          revert: "võta tagasi"
+          revert: "Võta tagasi"
           primary:
             name: "primaarne"
             description: "Enamik tekste, ikoone ja ääri."

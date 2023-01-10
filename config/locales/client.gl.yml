@@ -270,7 +270,6 @@ gl:
       edit: "Editar marcador"
       not_bookmarked: "marcar esta publicación"
       created_with_reminder: "Fixou como marcador esta publicación cun recordatorio %{date}. %{name}"
-      remove: "Retirar marcador"
       delete: "Eliminar marcador"
       confirm_delete: "Confirma a eliminación deste marcador? O recordatorio tamén se eliminará."
       confirm_clear: "Confirma o borrado de todos os marcadores deste tema?"
@@ -330,7 +329,6 @@ gl:
     enable: "Activar"
     disable: "Desactivar"
     continue: "Continuar"
-    undo: "Desfacer"
     switch_to_anon: "Entrar no modo anónimo"
     switch_from_anon: "Saír do modo anónimo"
     banner:
@@ -615,6 +613,7 @@ gl:
         denied: "rexeitado"
         undone: "petición retirada"
         handle: "xestionar a petición de incorporación"
+        undo: "Desfacer"
       manage:
         title: "Xestionar"
         name: "Nome"
@@ -952,7 +951,6 @@ gl:
         perm_denied_expl: "Denegou o permiso para recibir notificacións no navegador. Permita as notificacións na configuración do navegador."
         disable: "Desactivar as notificacións"
         enable: "Activar as notificacións"
-        each_browser_note: 'Nota: Ten que cambiar este axuste en todos os navegadores que use. Desactivaranse todas as notificacións cando estea en «non molestar», independentemente deste axuste.'
         consent_prompt: "Quere recibir notificacións ao vivo cando a xente lea as súas publicacións?"
       dismiss: "Desbotar"
       dismiss_notifications: "Desbotar todo"
@@ -2719,7 +2717,6 @@ gl:
       bookmarks:
         create: "Crear marcador"
         edit: "Editar marcador"
-        created: "Creado"
         updated: "Actualizado"
         name: "Nome"
         name_placeholder: "Para que serve este marcador?"
@@ -2998,7 +2995,6 @@ gl:
       one: "usuario"
       other: "usuarios"
     category_title: "Categoría"
-    changed_by: "de %{author}"
     raw_email:
       title: "Correo entrante"
       not_available: "Non dispoñíbel!"
@@ -3369,14 +3365,12 @@ gl:
               content: "PMF"
             groups:
               content: "Grupos"
-              title: "Todos os grupos"
             users:
               content: "Usuarios"
             my_posts:
               content: "As miñas publicacións"
             review:
               content: "Revisar"
-              title: "revisar"
   admin_js:
     type_to_filter: "escriba para filtrar..."
     admin:
@@ -3772,7 +3766,6 @@ gl:
         button_title: "Enviar convites"
       customize:
         title: "Personalizar"
-        long_title: "Personalización do sitio"
         preview: "visualizar"
         explain_preview: "Ver o sitio con este tema activado"
         save: "Gardar"
@@ -3966,9 +3959,9 @@ gl:
           new_name: "Nova paleta de cores"
           copy_name_prefix: "Copiar de"
           delete_confirm: "Eliminar esta paleta de cores?"
-          undo: "desfacer"
+          undo: "Desfacer"
           undo_title: "Desfai os teus cambio nesta cor desde a última vez que a gardaches."
-          revert: "reverter"
+          revert: "Reverter"
           revert_title: "Restabelece esta cor na paleta de cores predeterminada de Discourse."
           primary:
             name: "primario"

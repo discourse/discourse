@@ -345,7 +345,6 @@ cs:
       remove_reminder_keep_bookmark: "Odebrat připomenutí a ponechat záložku"
       created_with_reminder: "Tento příspěvek jste označili záložkou s připomenutím %{date}. %{name}"
       created_with_reminder_generic: "Toto jste si přidali do záložek s připomenutím %{date}. %{name}"
-      remove: "Odstranit záložku"
       delete: "Smazat záložku"
       confirm_delete: "Opravdu chcete tuto záložku smazat? Připomenutí bude také smazáno."
       confirm_clear: "Opravdu chcete odstranit všechny své záložky z tohoto tématu?"
@@ -425,7 +424,6 @@ cs:
     enable: "Zapnout"
     disable: "Vypnout"
     continue: "Pokračovat"
-    undo: "Zpět"
     switch_to_anon: "Vstoupit do anonymního módu"
     switch_from_anon: "Opustit anonymní mód"
     banner:
@@ -643,6 +641,7 @@ cs:
       requests:
         reason: "Reason"
         accepted: "přijato"
+        undo: "Zpět"
       manage:
         title: "Spravovat"
         name: "Název"
@@ -2373,7 +2372,6 @@ cs:
             title: "Zobrazit html část emailu"
             button: "HTML"
       bookmarks:
-        created: "Vytvořený"
         name: "Jméno"
         options: "Možnosti"
     category:
@@ -2600,7 +2598,6 @@ cs:
       many: "uživatelů"
       other: "uživatelů"
     category_title: "Kategorie"
-    changed_by: "od uživatele %{author}"
     raw_email:
       title: "Příchozí email"
       not_available: "Není k dispozici!"
@@ -2920,7 +2917,6 @@ cs:
               content: "FAQ"
             groups:
               content: "Skupiny"
-              title: "Všechny skupiny"
             users:
               content: "Uživatelé"
             my_posts:
@@ -3201,7 +3197,6 @@ cs:
         button_title: "Poslat pozvánky"
       customize:
         title: "Přizpůsobení"
-        long_title: "Přizpůsobení webu"
         preview: "náhled"
         explain_preview: "Náhled stránky s povoleným motivem"
         save: "Uložit"
@@ -3300,9 +3295,9 @@ cs:
         colors:
           title: "Barvy"
           copy_name_prefix: "Kopie"
-          undo: "zpět"
+          undo: "Zpět"
           undo_title: "Vrať svoje změny této barvy od doby kdy byla posledně uložena."
-          revert: "vrátit"
+          revert: "Vrátit"
           primary:
             name: "primární"
             description: "Většina textu, ikon a okrajů."

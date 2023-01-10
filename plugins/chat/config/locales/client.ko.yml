@@ -192,7 +192,6 @@ ko:
       admin:
         title: "채팅"
       direct_messages:
-        new: "새로운 개인 채팅"
         create: "이동"
         leave: "이 개인 채팅에서 나가기"
       incoming_webhooks:

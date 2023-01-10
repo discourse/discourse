@@ -166,7 +166,6 @@ te:
         unbookmark: "ఈ అంశంపై అన్ని పేజీకలను తొలగించడానికి నొక్కండి"
     bookmarks:
       not_bookmarked: "ఈ టపాకు పేజీక ఉంచు"
-      remove: "పేజీక తొలగించండి"
       save: "భద్రపరచు"
       search: "వెతుకు"
     drafts:
@@ -181,7 +180,6 @@ te:
     uploaded: "ఎగుమతైంది!"
     enable: "చేతనం"
     disable: "అచేతనం"
-    undo: "రద్దు"
     banner:
       edit: "సవరించు"
     choose_topic:
@@ -260,6 +258,7 @@ te:
     groups:
       requests:
         reason: "కారణం"
+        undo: "రద్దు"
       manage:
         name: "పేరు"
         full_name: "పూర్తి పేరు"
@@ -1067,7 +1066,6 @@ te:
           side_by_side_markdown:
             title: "ముడి మూల తేడాను పక్కపక్కన చూపు"
       bookmarks:
-        created: "సృష్టించిన"
         name: "పేరు"
         options: "ఎంపికలు"
     category:
@@ -1200,7 +1198,6 @@ te:
       one: "వాడుకరి"
       other: "వాడుకరులు"
     category_title: "వర్గం"
-    changed_by: " %{author} రాసిన"
     raw_email:
       not_available: "అందుబాటులో లేదు!"
     categories_list: "వర్గాల జాబితా"
@@ -1554,7 +1551,6 @@ te:
         button_title: "ఆహ్వానాలు పంపు"
       customize:
         title: "కస్టమైజ్"
-        long_title: "సైట్ కస్టమైజేషనులు"
         preview: "మునుజూపు"
         save: "భద్రపరుచు"
         new: "కొత్త"

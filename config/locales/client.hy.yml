@@ -259,7 +259,6 @@ hy:
       create: "Ստեղծել էջանշան"
       edit: "Խմբագրել էջանշանը"
       not_bookmarked: "Էջանշել այս գրառումը"
-      remove: "Հեռացնել էջանշանը"
       delete: "Ջնջել Էջանշանը"
       confirm_delete: "Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել այս էջանշանը: Բոլոր կապակցված   հիշեցումները կջնջվեն: "
       confirm_clear: "Դուք համոզվա՞ծ եք, որ ցանկանում եք հեռացնել այս թեմայի բոլոր էջանշանները:"
@@ -311,7 +310,6 @@ hy:
     enable: "Միացնել"
     disable: "Անջատել"
     continue: "Շարունակել"
-    undo: "Ետարկել"
     switch_to_anon: "Սկսել Անանուն Ռեժիմը"
     switch_from_anon: "Ավարտել Անանուն Ռեժիմը"
     banner:
@@ -546,6 +544,7 @@ hy:
         denied: "Մերժվել"
         undone: "հայցը չեղարկել"
         handle: "Մշակել հարցումը "
+        undo: "Ետարկել"
       manage:
         title: "Կառավարել"
         name: "Անուն"
@@ -2316,7 +2315,6 @@ hy:
       bookmarks:
         create: "Ստեղծել էջանշան"
         edit: "Խմբագրել էջանշանը"
-        created: "Ստեղծված"
         updated: "Թարմացված"
         name: "Անուն"
         name_placeholder: "Ինչի՞ համար է այս էջանշանը: "
@@ -2555,7 +2553,6 @@ hy:
       one: "օգտատեր"
       other: "օգտատերեր"
     category_title: "Կատեգորիա"
-    changed_by: "%{author}-ի կողմից"
     raw_email:
       title: "Մուտքային Էլ. նամակ"
       not_available: "Հասանելի չէ!"
@@ -2901,14 +2898,12 @@ hy:
               content: "ՀՏՀ"
             groups:
               content: "Խմբեր"
-              title: "Բոլոր խմբերը"
             users:
               content: "Օգտատերեր"
             my_posts:
               content: "Իմ Գրառումները"
             review:
               content: "Վերանայում"
-              title: "վերանայում"
   admin_js:
     type_to_filter: "գրեք ֆիլտրելու համար..."
     admin:
@@ -3270,7 +3265,6 @@ hy:
         button_title: "Ուղարկել Հրավերներ"
       customize:
         title: "Անհատականացնել"
-        long_title: "Կայքի Անհատականացումներ"
         preview: "նախադիտում"
         explain_preview: "Դիտել այս կայքը՝ այս թեման միացված վիճակում"
         save: "Պահպանել"
@@ -3441,9 +3435,9 @@ hy:
           new_name: "Նոր Գունապնակ"
           copy_name_prefix: "Կրկնօրինակ՝ "
           delete_confirm: "Ջնջե՞լ այս գունապնակը:"
-          undo: "ետարկել"
+          undo: "Ետարկել"
           undo_title: "Ետարկել այս գույնի Ձեր փոփոխությունները՝ սկսած դրա վերջին պահպանման պահից:"
-          revert: "վերադարձնել"
+          revert: "Հետադարձել"
           revert_title: "Վերահաստատել այս գույնը Discourse-ի լռելյայն գունապնակում:"
           primary:
             name: "հիմնական"

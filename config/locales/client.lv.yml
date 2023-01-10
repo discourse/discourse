@@ -285,7 +285,6 @@ lv:
       created: "Jūs esat atzīmējis šo ziņu ar grāmatzīmi. %{name}"
       not_bookmarked: "atzīmējiet šo ziņu ar grāmatzīmi"
       created_with_reminder: "Jūs atzīmējāt šo ziņu ar grāmatzīmi, atgādinot %{date}. %{name}"
-      remove: "Noņemt grāmatzīmi"
       delete: "Dzēst grāmatzīmi"
       confirm_delete: "Vai tiešām vēlaties dzēst šo grāmatzīmi? Atgādinājums arī tiks dzēsts."
       confirm_clear: "Vai tiešām vēlaties notīrīt visas grāmatzīmes no šīs tēmas?"
@@ -331,7 +330,6 @@ lv:
     enable: "Ieslēgt"
     disable: "Atslēgt"
     continue: "Turpināt"
-    undo: "Atsaukt"
     switch_to_anon: "Ieiet anonīmajā režīmā"
     switch_from_anon: "Iziet no anonīmā režīma"
     banner:
@@ -588,6 +586,7 @@ lv:
         denied: "atteikts"
         undone: "pieprasījums atsaukts"
         handle: "izskatīt reģistrācijas pieprasījumu"
+        undo: "Atsaukt"
       manage:
         title: "Pārvaldīt"
         name: "Vārds"
@@ -932,7 +931,6 @@ lv:
         perm_denied_expl: "Jūs neatļāvāt paziņojumus. Atļaujiet paziņojumus jūsu pārlūkprogrammas iestatījumos."
         disable: "Atslēgt paziņojumus"
         enable: "Ieslēgt paziņojumus"
-        each_browser_note: 'Piezīme. Šis iestatījums ir jāmaina katrā izmantotajā pārlūkprogrammā. Neatkarīgi no šī iestatījuma visi paziņojumi tiks atspējoti režīmā “netraucēt”.'
         consent_prompt: "Vai vēlaties saņemt tiešraides paziņojumus, kad cilvēki atbild uz jūsu ziņām?"
       dismiss: "Nerādīt"
       dismiss_notifications: "Vairs nerādīt visus"
@@ -2345,7 +2343,6 @@ lv:
             title: "Parādīt e-pasta html daļu"
             button: "HTML"
       bookmarks:
-        created: "Radīts"
         name: "Vārds"
         options: "Iespējas"
     category:
@@ -2545,7 +2542,6 @@ lv:
       one: "lietotājs"
       other: "lietotāji"
     category_title: "Sadaļa"
-    changed_by: "%{author}"
     raw_email:
       title: "Ienākošie e-pasti"
       not_available: "Nav pieejams!"
@@ -2825,14 +2821,12 @@ lv:
               content: "BUJ"
             groups:
               content: "Grupas"
-              title: "Visas grupas"
             users:
               content: "Lietotāji"
             my_posts:
               content: "Mani ieraksti"
             review:
               content: "Pārskats"
-              title: "pārskats"
   admin_js:
     type_to_filter: "ievadiet, lai atlasītu..."
     admin:
@@ -3065,7 +3059,6 @@ lv:
         button_title: "Nosūtīt ielūgumus"
       customize:
         title: "Pielāgot"
-        long_title: "Vietnes pielāgojumi"
         preview: "priekšskatījums"
         explain_preview: "Aplūkot vietni ar ieslēgtu šo dizainu"
         save: "Saglabāt"
@@ -3131,8 +3124,8 @@ lv:
           body_tag:
             text: "Ķermenis"
         colors:
-          undo: "atsaukt"
-          revert: "atgriezt"
+          undo: "Atsaukt"
+          revert: "Atgriezt"
           success:
             name: "veiksmīgi"
           love:

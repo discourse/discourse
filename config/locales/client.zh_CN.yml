@@ -283,7 +283,6 @@ zh_CN:
       remove_reminder_keep_bookmark: "移除提醒并保留书签"
       created_with_reminder: "您已将此帖子加入书签，并于 %{date}设置了一个提醒。%{name}"
       created_with_reminder_generic: "您已将此加入书签并设置了一个提醒 %{date}。%{name}"
-      remove: "移除书签"
       delete: "删除书签"
       confirm_delete: "确定要删除此书签吗？提醒也将一并删除。"
       confirm_clear: "确定要清除此话题中的所有书签吗？"
@@ -348,7 +347,6 @@ zh_CN:
     enable: "启用"
     disable: "禁用"
     continue: "继续"
-    undo: "撤消"
     switch_to_anon: "进入匿名模式"
     switch_from_anon: "退出匿名模式"
     banner:
@@ -631,6 +629,7 @@ zh_CN:
         denied: "已拒绝"
         undone: "请求已撤消"
         handle: "处理成员资格请求"
+        undo: "撤消"
       manage:
         title: "管理"
         name: "名称"
@@ -994,7 +993,6 @@ zh_CN:
         perm_denied_expl: "您拒绝了通知的权限。通过您的浏览器设置允许通知。"
         disable: "禁用通知"
         enable: "启用通知"
-        each_browser_note: '注意：您必须在您使用的每个浏览器上更改此设置。在“勿扰”模式下，所有通知都将被禁用，无论此设置如何。'
         consent_prompt: "当其他人回复您的帖子时是否接收实时通知？"
       dismiss: "忽略"
       dismiss_notifications: "全部忽略"
@@ -2970,7 +2968,6 @@ zh_CN:
         create_for_topic: "为话题创建书签"
         edit: "编辑书签"
         edit_for_topic: "编辑话题的书签"
-        created: "已创建"
         updated: "更新"
         name: "名称"
         name_placeholder: "此书签有什么用？"
@@ -3263,7 +3260,6 @@ zh_CN:
     category_title: "类别"
     history_capped_revisions: "历史记录，最近 100 次修订"
     history: "历史记录"
-    changed_by: "作者 %{author}"
     raw_email:
       title: "传入电子邮件"
       not_available: "不可用！"
@@ -3657,7 +3653,6 @@ zh_CN:
         other: "%{count} 未读"
       new_count:
         other: "%{count} 新"
-      toggle_section: "切换版块"
       more: "更多"
       all_categories: "所有类别"
       all_tags: "所有标签"
@@ -3666,7 +3661,6 @@ zh_CN:
           header_link_text: "关于"
         messages:
           header_link_text: "消息"
-          header_action_title: "创建个人消息"
           links:
             inbox: "收件箱"
             sent: "已发送"
@@ -3683,7 +3677,6 @@ zh_CN:
           none: "您还没有添加任何标签。"
           click_to_get_started: "点击此处开始。"
           header_link_text: "标签"
-          header_action_title: "编辑您的边栏标签"
           configure_defaults: "配置默认值"
         categories:
           links:
@@ -3693,11 +3686,9 @@ zh_CN:
           none: "您还没有添加任何类别。"
           click_to_get_started: "点击此处开始。"
           header_link_text: "类别"
-          header_action_title: "编辑您的边栏类别"
           configure_defaults: "配置默认值"
         community:
           header_link_text: "社区"
-          header_action_title: "创建新话题"
           links:
             about:
               content: "关于"
@@ -3712,17 +3703,14 @@ zh_CN:
               content: "常见问题解答"
             groups:
               content: "群组"
-              title: "所有群组"
             users:
               content: "用户"
-              title: "所有用户"
             my_posts:
               content: "我的帖子"
               draft_count:
                 other: "%{count} 个草稿"
             review:
               content: "审核"
-              title: "审核"
               pending_count: "%{count} 待处理"
     welcome_topic_banner:
       title: "创建您的欢迎话题"
@@ -4165,7 +4153,6 @@ zh_CN:
         button_title: "发送邀请"
       customize:
         title: "自定义"
-        long_title: "站点自定义"
         preview: "预览"
         explain_preview: "查看启用此主题的站点"
         save: "保存"
