@@ -53,7 +53,7 @@ class TopicTrackingState
 
     message = { topic_id: topic.id, message_type: NEW_TOPIC_MESSAGE_TYPE, payload: payload }
 
-    group_ids = topic.category && topic.category.secure_group_ids
+    group_ids = secure_category_group_ids(topic)
 
     MessageBus.publish("/new", message.as_json, group_ids: group_ids)
     publish_read(topic.id, 1, topic.user)
@@ -84,8 +84,9 @@ class TopicTrackingState
       if whisper
         [Group::AUTO_GROUPS[:staff], *SiteSetting.whispers_allowed_group_ids]
       else
-        topic.category && topic.category.secure_group_ids
+        secure_category_group_ids(topic)
       end
+
     MessageBus.publish("/latest", message.as_json, group_ids: group_ids)
   end
 
@@ -171,7 +172,7 @@ class TopicTrackingState
   end
 
   def self.publish_recover(topic)
-    group_ids = topic.category && topic.category.secure_group_ids
+    group_ids = secure_category_group_ids(topic)
 
     message = { topic_id: topic.id, message_type: RECOVER_MESSAGE_TYPE }
 
@@ -179,7 +180,7 @@ class TopicTrackingState
   end
 
   def self.publish_delete(topic)
-    group_ids = topic.category && topic.category.secure_group_ids
+    group_ids = secure_category_group_ids(topic)
 
     message = { topic_id: topic.id, message_type: DELETE_MESSAGE_TYPE }
 
@@ -187,7 +188,7 @@ class TopicTrackingState
   end
 
   def self.publish_destroy(topic)
-    group_ids = topic.category && topic.category.secure_group_ids
+    group_ids = secure_category_group_ids(topic)
 
     message = { topic_id: topic.id, message_type: DESTROY_MESSAGE_TYPE }
 
@@ -546,4 +547,15 @@ class TopicTrackingState
     opts = { readers_count: post.readers_count, reader_id: user_id }
     post.publish_change_to_clients!(:read, opts)
   end
+
+  def self.secure_category_group_ids(topic)
+    ids = topic&.category&.secure_group_ids
+
+    if ids.blank?
+      [Group::AUTO_GROUPS[:admin]]
+    else
+      ids
+    end
+  end
+  private_class_method :secure_category_group_ids
 end
