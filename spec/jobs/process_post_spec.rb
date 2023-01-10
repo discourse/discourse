@@ -2,7 +2,7 @@
 
 RSpec.describe Jobs::ProcessPost do
   it "returns when the post cannot be found" do
-    expect { Jobs::ProcessPost.new.perform(post_id: 1, sync_exec: true) }.not_to raise_error
+    expect { Jobs::ProcessPost.new.execute(post_id: 1) }.not_to raise_error
   end
 
   context "with a post" do

@@ -197,26 +197,29 @@ module Jobs
       @db_duration || 0
     end
 
+    def perform_immediately(*args)
+      opts = args.extract_options!.with_indifferent_access
+
+      if opts.has_key?(:current_site_id) &&
+           opts[:current_site_id] != RailsMultisite::ConnectionManagement.current_db
+        raise ArgumentError.new(
+                "You can't connect to another database when executing a job synchronously.",
+              )
+      else
+        begin
+          retval = execute(opts)
+        rescue => exc
+          Discourse.handle_job_exception(exc, error_context(opts))
+        end
+
+        retval
+      end
+    end
+
     def perform(*args)
       opts = args.extract_options!.with_indifferent_access
 
       Sidekiq.redis { |r| r.set("last_job_perform_at", Time.now.to_i) } if ::Jobs.run_later?
-
-      if opts.delete(:sync_exec)
-        if opts.has_key?(:current_site_id) &&
-             opts[:current_site_id] != RailsMultisite::ConnectionManagement.current_db
-          raise ArgumentError.new(
-                  "You can't connect to another database when executing a job synchronously.",
-                )
-        else
-          begin
-            retval = execute(opts)
-          rescue => exc
-            Discourse.handle_job_exception(exc, error_context(opts))
-          end
-          return retval
-        end
-      end
 
       dbs =
         if opts[:current_site_id]
@@ -334,9 +337,6 @@ module Jobs
 
       DB.after_commit { klass.client_push(hash) }
     else
-      # Otherwise execute the job right away
-      opts["sync_exec"] = true
-
       if Rails.env == "development"
         Scheduler::Defer.later("job") { klass.new.perform(opts) }
       else
@@ -358,7 +358,7 @@ module Jobs
           begin
             until queue.empty?
               queued_klass, queued_opts = queue.pop(true)
-              queued_klass.new.perform(queued_opts)
+              queued_klass.new.perform_immediately(queued_opts)
             end
           ensure
             Thread.current[:discourse_nested_job_queue] = nil
