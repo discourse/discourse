@@ -564,7 +564,7 @@ class PostSerializer < BasicPostSerializer
     if @topic_view
       users = @topic_view.mentioned_users[object.id]
     else
-      users = User.where(username: object.mentions)
+      users = User.where(id: object.mentions)
     end
 
     users.map { |user| BasicUserWithStatusSerializer.new(user, root: false) }

@@ -1200,15 +1200,24 @@ class Post < ActiveRecord::Base
 
   def mentions
     if Discourse.redis.hexists("post_mentions", id)
-      Discourse.redis.hget("post_mentions", id).split(",")
+      Discourse.redis.hget("post_mentions", id).split(",").map(&:to_i)
     else
-      extracted_mentions = PrettyText.extract_mentions(Nokogiri::HTML5.fragment(cooked))
-      Discourse.redis.hset("post_mentions", id, extracted_mentions.join(","))
-      extracted_mentions
+      mentioned_usernames = parse_mentioned_usernames
+      mentioned_ids = load_user_ids(mentioned_usernames)
+      Discourse.redis.hset("post_mentions", id, mentioned_ids.join(","))
+      mentioned_ids
     end
   end
 
+  def parse_mentioned_usernames
+    PrettyText.extract_mentions(Nokogiri::HTML5.fragment(cooked))
+  end
+
   private
+
+  def load_user_ids(usernames)
+    User.where(username: usernames).pluck(:id)
+  end
 
   def parse_quote_into_arguments(quote)
     return {} unless quote.present?

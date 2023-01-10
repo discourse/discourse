@@ -722,20 +722,64 @@ class TopicView
   private
 
   def load_mentioned_users
-    mentions = @posts.to_h { |p| [p.id, p.mentions] }
+    mentions = load_mentions
+    users = load_users(mentions.values.flatten.uniq)
 
-    uniq_usernames = mentions.values.flatten.uniq
-    users = User.where(username: uniq_usernames)
+    @mentioned_users = mentions.map do |post_id, user_ids|
+      mentioned_users = user_ids.map { |id| users[id] }.compact
+      [post_id, mentioned_users]
+    end.to_h
+  end
+
+  def load_users(ids)
+    users = User.where(id: ids)
     users = users.includes(:user_status) if SiteSetting.enable_user_status
-    users = users.to_h { |u| [u.username, u] }
+    users.to_h { |u| [u.id, u] }
+  end
 
-    @mentioned_users =
-      mentions
-        .map do |post_id, usernames|
-          post_mentions = usernames.map { |u| users[u] }.compact
-          [post_id, post_mentions]
-        end
-        .to_h
+  def load_mentions
+    post_ids = @posts.map(&:id)
+    mentions_by_post = Discourse.redis.hmget("post_mentions", post_ids)
+
+    #
+    # here's what redis.hmget returns
+    #
+    # [0] = ""    – there is no mentions in this post
+    # [1] = "1,2" – users with ids 1 and 2 are mentioned in this post
+    # [2] = nil   – there is no cache for this post yet
+    #
+
+    mentions_from_cache = {}
+    parsed_mentions = {}
+    mentions_by_post.each_with_index do |value, index|
+      post_id = post_ids[index]
+      if value.nil?
+        usernames = @posts[index].parse_mentioned_usernames
+        parsed_mentions[post_id] = usernames
+      else
+        mentions_from_cache[post_id] = value.split(",").map(&:to_i)
+      end
+    end
+
+    if parsed_mentions.any?
+      usernames_to_user_ids = User
+        .where(username: parsed_mentions.values.flatten.uniq)
+        .pluck(:id, :username)
+        .to_h { |u| [u[1], u[0] ]}
+
+      mentions_to_cache = []
+      parsed_mentions.each do |post_id, usernames|
+        user_ids = usernames.map {|username| usernames_to_user_ids[username]}
+        mentions_from_cache[post_id] = user_ids
+
+        mentions_to_cache << post_id
+        mentions_to_cache << user_ids.join(",")
+      end
+
+      Discourse.redis.hmset("post_mentions", *mentions_to_cache)
+    end
+
+    mentions_from_cache
   end
 
   def calculate_page
