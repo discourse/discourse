@@ -109,6 +109,18 @@ module("Unit | Utility | autocomplete", function (hooks) {
     simulateKey(element, "\b");
     list = document.querySelectorAll("#ac-testing ul li");
     assert.strictEqual(list.length, 2);
+
+    // close autocomplete
+    simulateKey(element, "\r");
+
+    // does not trigger by mistake at the start
+    element.value = "test";
+    element.selectionStart = element.value.length;
+    element.selectionEnd = element.value.length;
+
+    simulateKey(element, "\b");
+    list = document.querySelectorAll("#ac-testing ul li");
+    assert.strictEqual(list.length, 0);
   });
 
   test("Autocomplete can render on @", function (assert) {
