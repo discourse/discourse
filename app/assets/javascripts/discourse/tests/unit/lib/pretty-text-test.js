@@ -878,8 +878,8 @@ eviltrout</p>
 
     assert.cooked(
       "```text\ntext\n```",
-      '<pre><code class="lang-nohighlight">text\n</code></pre>',
-      "handles text by adding nohighlight"
+      '<pre><code class="lang-plaintext">text\n</code></pre>',
+      "handles text by adding plaintext"
     );
 
     assert.cooked(
@@ -908,7 +908,7 @@ eviltrout</p>
 
     assert.cooked(
       "```eviltrout\nhello\n```",
-      '<pre data-code-wrap="eviltrout"><code class="lang-nohighlight">hello\n</code></pre>',
+      '<pre data-code-wrap="eviltrout"><code class="lang-plaintext">hello\n</code></pre>',
       "it converts to custom block unknown code names"
     );
 

@@ -5,7 +5,10 @@
         <ul class="nav nav-pills">
           <NavItem @route="admin.dashboard" @label="admin.dashboard.title" />
           {{#if this.currentUser.admin}}
-            <NavItem @route="adminSiteSettings" @label="admin.site_settings.title" />
+            <NavItem
+              @route="adminSiteSettings"
+              @label="admin.site_settings.title"
+            />
           {{/if}}
           <NavItem @route="adminUsers" @label="admin.users.title" />
           {{#if this.showGroups}}

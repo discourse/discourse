@@ -570,9 +570,8 @@ table {
     @include clearfix;
   }
 
-  .control-label {
+  .control-label:not(.checkbox-label) {
     font-family: var(--heading-font-family);
-
     font-weight: bold;
     font-size: var(--font-up-2);
     line-height: var(--line-height-large);

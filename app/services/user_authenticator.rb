@@ -1,8 +1,12 @@
 # frozen_string_literal: true
 
 class UserAuthenticator
-
-  def initialize(user, session, authenticator_finder: Users::OmniauthCallbacksController, require_password: true)
+  def initialize(
+    user,
+    session,
+    authenticator_finder: Users::OmniauthCallbacksController,
+    require_password: true
+  )
     @user = user
     @session = session
     if session&.dig(:authentication) && session[:authentication].is_a?(Hash)
@@ -61,5 +65,4 @@ class UserAuthenticator
   def authenticator_name
     @auth_result&.authenticator_name
   end
-
 end

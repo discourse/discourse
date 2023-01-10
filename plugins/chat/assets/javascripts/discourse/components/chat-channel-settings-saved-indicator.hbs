@@ -1,7 +1,10 @@
 <span
   {{did-update this.activate @property}}
   {{will-destroy this.teardown}}
-  class={{concat-class "chat-channel-settings-saved-indicator" (if this.isActive "is-active")}}
+  class={{concat-class
+    "chat-channel-settings-saved-indicator"
+    (if this.isActive "is-active")
+  }}
   role="status"
 >
   {{#if this.isActive}}

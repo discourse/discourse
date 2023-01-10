@@ -4,25 +4,26 @@ RSpec.describe UserAvatar do
   fab!(:user) { Fabricate(:user) }
   let(:avatar) { user.create_user_avatar! }
 
-  describe '#update_gravatar!' do
-    let(:temp) { Tempfile.new('test') }
+  describe "#update_gravatar!" do
+    let(:temp) { Tempfile.new("test") }
     fab!(:upload) { Fabricate(:upload, user: user) }
 
     describe "when working" do
-
       before do
         temp.binmode
         # tiny valid png
-        temp.write(Base64.decode64("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACklEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg=="))
+        temp.write(
+          Base64.decode64(
+            "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACklEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg==",
+          ),
+        )
         temp.rewind
         FileHelper.expects(:download).returns(temp)
       end
 
-      after do
-        temp.unlink
-      end
+      after { temp.unlink }
 
-      it 'can update gravatars' do
+      it "can update gravatars" do
         freeze_time Time.now
 
         expect { avatar.update_gravatar! }.to change { Upload.count }.by(1)
@@ -30,9 +31,7 @@ RSpec.describe UserAvatar do
         expect(avatar.last_gravatar_download_attempt).to eq(Time.now)
         expect(user.reload.uploaded_avatar).to eq(nil)
 
-        expect do
-          avatar.destroy
-        end.to_not change { Upload.count }
+        expect do avatar.destroy end.to_not change { Upload.count }
       end
 
       it "updates gravatars even if uploads have been disabled" do
@@ -42,14 +41,11 @@ RSpec.describe UserAvatar do
         expect(avatar.gravatar_upload).to eq(Upload.last)
       end
 
-      describe 'when user has an existing custom upload' do
+      describe "when user has an existing custom upload" do
         it "should not change the user's uploaded avatar" do
           user.update!(uploaded_avatar: upload)
 
-          avatar.update!(
-            custom_upload: upload,
-            gravatar_upload: Fabricate(:upload, user: user)
-          )
+          avatar.update!(custom_upload: upload, gravatar_upload: Fabricate(:upload, user: user))
 
           avatar.update_gravatar!
 
@@ -60,7 +56,7 @@ RSpec.describe UserAvatar do
         end
       end
 
-      describe 'when user has an existing gravatar' do
+      describe "when user has an existing gravatar" do
         it "should update the user's uploaded avatar correctly" do
           user.update!(uploaded_avatar: upload)
           avatar.update!(gravatar_upload: upload)
@@ -79,33 +75,30 @@ RSpec.describe UserAvatar do
     end
 
     describe "when failing" do
-
       it "always update 'last_gravatar_download_attempt'" do
         freeze_time Time.now
 
         FileHelper.expects(:download).raises(SocketError)
 
-        expect do
-          expect { avatar.update_gravatar! }.to raise_error(SocketError)
-        end.to_not change { Upload.count }
+        expect do expect { avatar.update_gravatar! }.to raise_error(SocketError) end.to_not change {
+          Upload.count
+        }
 
         expect(avatar.last_gravatar_download_attempt).to eq(Time.now)
       end
-
     end
 
     describe "404 should be silent, nothing to do really" do
-
       it "does nothing when avatar is 404" do
         SecureRandom.stubs(:urlsafe_base64).returns("5555")
         freeze_time Time.now
 
-        stub_request(:get, "https://www.gravatar.com/avatar/#{avatar.user.email_hash}.png?d=404&reset_cache=5555&s=360").
-          to_return(status: 404, body: "", headers: {})
+        stub_request(
+          :get,
+          "https://www.gravatar.com/avatar/#{avatar.user.email_hash}.png?d=404&reset_cache=5555&s=360",
+        ).to_return(status: 404, body: "", headers: {})
 
-        expect do
-          avatar.update_gravatar!
-        end.to_not change { Upload.count }
+        expect do avatar.update_gravatar! end.to_not change { Upload.count }
 
         expect(avatar.last_gravatar_download_attempt).to eq(Time.now)
       end
@@ -120,9 +113,8 @@ RSpec.describe UserAvatar do
     end
   end
 
-  describe '.import_url_for_user' do
-
-    it 'creates user_avatar record if missing' do
+  describe ".import_url_for_user" do
+    it "creates user_avatar record if missing" do
       user = Fabricate(:user)
       user.user_avatar.destroy
       user.reload
@@ -136,20 +128,24 @@ RSpec.describe UserAvatar do
       expect(user.user_avatar.custom_upload_id).to eq(user.uploaded_avatar_id)
     end
 
-    it 'can leave gravatar alone' do
+    it "can leave gravatar alone" do
       upload = Fabricate(:upload)
 
       user = Fabricate(:user, uploaded_avatar_id: upload.id)
       user.user_avatar.update_columns(gravatar_upload_id: upload.id)
 
-      stub_request(:get, "http://thisfakesomething.something.com/")
-        .to_return(status: 200, body: file_from_fixtures("logo.png"), headers: {})
+      stub_request(:get, "http://thisfakesomething.something.com/").to_return(
+        status: 200,
+        body: file_from_fixtures("logo.png"),
+        headers: {
+        },
+      )
 
       url = "http://thisfakesomething.something.com/"
 
-      expect do
-        UserAvatar.import_url_for_user(url, user, override_gravatar: false)
-      end.to change { Upload.count }.by(1)
+      expect do UserAvatar.import_url_for_user(url, user, override_gravatar: false) end.to change {
+        Upload.count
+      }.by(1)
 
       user.reload
       expect(user.uploaded_avatar_id).to eq(upload.id)
@@ -160,16 +156,18 @@ RSpec.describe UserAvatar do
       expect(user.user_avatar.custom_upload_id).to eq(last_id)
     end
 
-    describe 'when avatar url returns an invalid status code' do
-      it 'should not do anything' do
-        stub_request(:get, "http://thisfakesomething.something.com/")
-          .to_return(status: 500, body: "", headers: {})
+    describe "when avatar url returns an invalid status code" do
+      it "should not do anything" do
+        stub_request(:get, "http://thisfakesomething.something.com/").to_return(
+          status: 500,
+          body: "",
+          headers: {
+          },
+        )
 
         url = "http://thisfakesomething.something.com/"
 
-        expect do
-          UserAvatar.import_url_for_user(url, user)
-        end.to_not change { Upload.count }
+        expect do UserAvatar.import_url_for_user(url, user) end.to_not change { Upload.count }
 
         user.reload
 
@@ -180,17 +178,13 @@ RSpec.describe UserAvatar do
   end
 
   describe "ensure_consistency!" do
-
     it "will clean up dangling avatars" do
       upload1 = Fabricate(:upload)
       upload2 = Fabricate(:upload)
 
       user_avatar = Fabricate(:user).user_avatar
 
-      user_avatar.update_columns(
-        gravatar_upload_id: upload1.id,
-        custom_upload_id: upload2.id
-      )
+      user_avatar.update_columns(gravatar_upload_id: upload1.id, custom_upload_id: upload2.id)
 
       upload1.destroy!
       upload2.destroy!
@@ -199,10 +193,7 @@ RSpec.describe UserAvatar do
       expect(user_avatar.gravatar_upload_id).to eq(nil)
       expect(user_avatar.custom_upload_id).to eq(nil)
 
-      user_avatar.update_columns(
-        gravatar_upload_id: upload1.id,
-        custom_upload_id: upload2.id
-      )
+      user_avatar.update_columns(gravatar_upload_id: upload1.id, custom_upload_id: upload2.id)
 
       UserAvatar.ensure_consistency!
 
@@ -210,6 +201,5 @@ RSpec.describe UserAvatar do
       expect(user_avatar.gravatar_upload_id).to eq(nil)
       expect(user_avatar.custom_upload_id).to eq(nil)
     end
-
   end
 end

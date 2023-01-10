@@ -1,7 +1,6 @@
 import { computed, get } from "@ember/object";
 import Component from "@ember/component";
 import I18n from "I18n";
-import Site from "discourse/models/site";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import discourseComputed from "discourse-common/utils/decorators";
 import getURL from "discourse-common/lib/get-url";
@@ -51,7 +50,7 @@ export default Component.extend({
 
       if (suggestedGroupName) {
         return I18n.messageFormat("user.messages.read_more_group_pm_MF", {
-          BOTH: hasBoth,
+          HAS_UNREAD_AND_NEW: hasBoth,
           UNREAD: unreadCount,
           NEW: newCount,
           username,
@@ -61,7 +60,7 @@ export default Component.extend({
         });
       } else {
         return I18n.messageFormat("user.messages.read_more_personal_pm_MF", {
-          BOTH: hasBoth,
+          HAS_UNREAD_AND_NEW: hasBoth,
           UNREAD: unreadCount,
           NEW: newCount,
           username,
@@ -81,29 +80,13 @@ export default Component.extend({
   },
 
   _topicBrowseMoreMessage(topic) {
-    const opts = {
-      latestLink: `<a href="${getURL("/latest")}">${I18n.t(
-        "topic.view_latest_topics"
-      )}</a>`,
-    };
     let category = topic.get("category");
 
     if (
       category &&
-      get(category, "id") === Site.currentProp("uncategorized_category_id")
+      get(category, "id") === this.site.uncategorized_category_id
     ) {
       category = null;
-    }
-
-    if (category) {
-      opts.catLink = categoryBadgeHTML(category);
-    } else {
-      opts.catLink =
-        '<a href="' +
-        getURL("/categories") +
-        '">' +
-        I18n.t("topic.browse_all_categories") +
-        "</a>";
     }
 
     let unreadTopics = 0;
@@ -115,21 +98,24 @@ export default Component.extend({
     }
 
     if (newTopics + unreadTopics > 0) {
-      const hasBoth = unreadTopics > 0 && newTopics > 0;
-
       return I18n.messageFormat("topic.read_more_MF", {
-        BOTH: hasBoth,
+        HAS_UNREAD_AND_NEW: unreadTopics > 0 && newTopics > 0,
         UNREAD: unreadTopics,
         NEW: newTopics,
-        CATEGORY: category ? true : false,
-        latestLink: opts.latestLink,
-        catLink: opts.catLink,
+        HAS_CATEGORY: category ? true : false,
+        categoryLink: category ? categoryBadgeHTML(category) : null,
         basePath: getURL(""),
       });
     } else if (category) {
-      return I18n.t("topic.read_more_in_category", opts);
+      return I18n.t("topic.read_more_in_category", {
+        categoryLink: categoryBadgeHTML(category),
+        latestLink: getURL("/latest"),
+      });
     } else {
-      return I18n.t("topic.read_more", opts);
+      return I18n.t("topic.read_more", {
+        categoryLink: getURL("/categories"),
+        latestLink: getURL("/latest"),
+      });
     }
   },
 

@@ -3,7 +3,7 @@
 ## These tasks are destructive and are for clearing out all the
 #   content and users from your site.
 desc "Remove all topics in a category"
-task "destroy:topics", [:category, :parent_category] => :environment do |t, args|
+task "destroy:topics", %i[category parent_category] => :environment do |t, args|
   category = args[:category]
   parent_category = args[:parent_category]
   descriptive_slug = parent_category ? "#{parent_category}/#{category}" : category
@@ -48,7 +48,5 @@ task "destroy:categories" => :environment do |t, args|
   destroy_task = DestroyTask.new
   categories = args.extras
   puts "Going to delete these categories: #{categories}"
-  categories.each do |id|
-    destroy_task.destroy_category(id, true)
-  end
+  categories.each { |id| destroy_task.destroy_category(id, true) }
 end

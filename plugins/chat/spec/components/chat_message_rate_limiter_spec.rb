@@ -64,11 +64,11 @@ describe Chat::ChatMessageRateLimiter do
     limiter.run!
 
     expect { limiter.run! }.to raise_error(RateLimiter::LimitExceeded).and change {
-                                                                             UserHistory.where(
-                                                                               target_user: user,
-                                                                               acting_user: Discourse.system_user,
-                                                                               action: UserHistory.actions[:silence_user],
-                                                                             ).count
-                                                                           }.by(1)
+            UserHistory.where(
+              target_user: user,
+              acting_user: Discourse.system_user,
+              action: UserHistory.actions[:silence_user],
+            ).count
+          }.by(1)
   end
 end

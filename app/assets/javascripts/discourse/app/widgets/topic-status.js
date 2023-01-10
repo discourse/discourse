@@ -15,7 +15,7 @@ export default createWidget("topic-status", {
     const result = [];
 
     TopicStatusIcons.render(topic, function (name, key) {
-      const iconArgs = key === "unpinned" ? { class: "unpinned" } : null;
+      const iconArgs = { class: key === "unpinned" ? "unpinned" : null };
       const icon = iconNode(name, iconArgs);
 
       const attributes = {

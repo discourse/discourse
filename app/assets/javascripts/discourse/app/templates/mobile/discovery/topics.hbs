@@ -1,14 +1,38 @@
-<TopicDismissButtons @position="top" @selectedTopics={{this.selected}} @model={{this.model}} @showResetNew={{this.showResetNew}} @showDismissRead={{this.showDismissRead}} @resetNew={{action "resetNew"}} />
+<TopicDismissButtons
+  @position="top"
+  @selectedTopics={{this.selected}}
+  @model={{this.model}}
+  @showResetNew={{this.showResetNew}}
+  @showDismissRead={{this.showDismissRead}}
+  @resetNew={{action "resetNew"}}
+/>
 
-<DiscoveryTopicsList @model={{this.model}} @refresh={{action "refresh"}} @incomingCount={{this.topicTrackingState.incomingCount}} as |discoveryTopicList|>
+<DiscoveryTopicsList
+  @model={{this.model}}
+  @refresh={{action "refresh"}}
+  @incomingCount={{this.topicTrackingState.incomingCount}}
+  as |discoveryTopicList|
+>
   {{#if this.top}}
     <div class="top-lists">
-      <PeriodChooser @period={{this.period}} @action={{action "changePeriod"}} @fullDay={{false}} />
+      <PeriodChooser
+        @period={{this.period}}
+        @action={{action "changePeriod"}}
+        @fullDay={{false}}
+      />
     </div>
   {{else}}
     {{#if this.topicTrackingState.hasIncoming}}
-      <a href {{on "click" this.showInserted}} class="alert alert-info clickable">
-        <CountI18n @key="topic_count_" @suffix={{this.topicTrackingState.filter}} @count={{this.topicTrackingState.incomingCount}} />
+      <a
+        href
+        {{on "click" this.showInserted}}
+        class="alert alert-info clickable"
+      >
+        <CountI18n
+          @key="topic_count_"
+          @suffix={{this.topicTrackingState.filter}}
+          @count={{this.topicTrackingState.incomingCount}}
+        />
       </a>
     {{/if}}
   {{/if}}
@@ -20,7 +44,9 @@
       @showPosters={{true}}
       @canBulkSelect={{this.canBulkSelect}}
       @toggleBulkSelect={{action "toggleBulkSelect"}}
-      @updateAutoAddTopicsToBulkSelect={{action "updateAutoAddTopicsToBulkSelect"}}
+      @updateAutoAddTopicsToBulkSelect={{action
+        "updateAutoAddTopicsToBulkSelect"
+      }}
       @hideCategory={{this.model.hideCategory}}
       @order={{this.order}}
       @bulkSelectEnabled={{this.bulkSelectEnabled}}
@@ -31,25 +57,48 @@
       @category={{this.category}}
       @topics={{this.model.topics}}
       @scrollOnLoad={{true}}
-      @onScroll={{discoveryTopicList.saveScrollPosition}}/>
+      @onScroll={{discoveryTopicList.saveScrollPosition}}
+    />
   {{/if}}
 </DiscoveryTopicsList>
 
 <footer class="topic-list-bottom">
   <ConditionalLoadingSpinner @condition={{this.model.loadingMore}} />
   {{#if this.allLoaded}}
-    <TopicDismissButtons @position="bottom" @selectedTopics={{this.selected}} @model={{this.model}} @showResetNew={{this.showResetNew}} @showDismissRead={{this.showDismissRead}} @resetNew={{action "resetNew"}} />
+    <TopicDismissButtons
+      @position="bottom"
+      @selectedTopics={{this.selected}}
+      @model={{this.model}}
+      @showResetNew={{this.showResetNew}}
+      @showDismissRead={{this.showDismissRead}}
+      @resetNew={{action "resetNew"}}
+    />
 
-    <FooterMessage @education={{this.footerEducation}} @message={{this.footerMessage}}>
+    <FooterMessage
+      @education={{this.footerEducation}}
+      @message={{this.footerMessage}}
+    >
       {{#if this.latest}}
         {{#if this.canCreateTopicOnCategory}}
-          <DiscourseLinkedText @action={{route-action "createTopic"}} @text="topic.suggest_create_topic" />
+          <DiscourseLinkedText
+            @action={{route-action "createTopic"}}
+            @text="topic.suggest_create_topic"
+          />
         {{/if}}
       {{else if this.top}}
-        <LinkTo @route="discovery.categories">{{i18n "topic.browse_all_categories"}}</LinkTo>, <LinkTo @route="discovery.latest">{{i18n "topic.view_latest_topics"}}</LinkTo> {{i18n "or"}} {{i18n "filters.top.other_periods"}}
-        <TopPeriodButtons @period={{this.period}} @action={{action "changePeriod"}} />
+        {{html-safe
+          (i18n
+            "topic.browse_all_categories_latest_or_top" basePath=(base-path)
+          )
+        }}
+        <TopPeriodButtons
+          @period={{this.period}}
+          @action={{action "changePeriod"}}
+        />
       {{else}}
-        <LinkTo @route="discovery.categories"> {{i18n "topic.browse_all_categories"}}</LinkTo> {{i18n "or"}} <LinkTo @route="discovery.latest">{{i18n "topic.view_latest_topics"}}</LinkTo>
+        {{html-safe
+          (i18n "topic.browse_all_categories_latest" basePath=(base-path))
+        }}
       {{/if}}
     </FooterMessage>
   {{/if}}

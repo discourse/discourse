@@ -95,6 +95,13 @@ describe FinalDestination::SSRFDetector do
       )
     end
 
+    it "raises an exception if lookup fails" do
+      subject.stubs(:lookup_ips).raises(SocketError)
+      expect { subject.lookup_and_filter_ips("example.com") }.to raise_error(
+        subject::LookupFailedError,
+      )
+    end
+
     it "bypasses filtering for allowlisted hosts" do
       SiteSetting.allowed_internal_hosts = "example.com"
       subject.stubs(:lookup_ips).returns(["127.0.0.1"])

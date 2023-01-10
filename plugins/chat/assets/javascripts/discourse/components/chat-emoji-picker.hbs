@@ -1,6 +1,6 @@
-{{!-- template-lint-disable no-invalid-interactive --}}
-{{!-- template-lint-disable no-nested-interactive --}}
-{{!-- template-lint-disable no-down-event-binding --}}
+{{! template-lint-disable no-invalid-interactive }}
+{{! template-lint-disable no-nested-interactive }}
+{{! template-lint-disable no-down-event-binding }}
 <div
   class={{concat-class
     "chat-emoji-picker"
@@ -80,7 +80,10 @@
             class={{concat-class
               "btn-flat"
               "chat-emoji-picker__section-btn"
-              (if (eq this.chatEmojiPickerManager.lastVisibleSection section) "active")
+              (if
+                (eq this.chatEmojiPickerManager.lastVisibleSection section)
+                "active"
+              )
             }}
             tabindex="-1"
             style={{this.navBtnStyle}}
@@ -95,7 +98,7 @@
                 height="18"
                 class="emoji"
                 src={{emojis.firstObject.url}}
-              >
+              />
             {{/if}}
           </DButton>
         {{/each-in}}
@@ -131,7 +134,7 @@
                 this.chatEmojiReactionStore.diversity
               }}
               loading="lazy"
-            >
+            />
           {{else}}
             <p class="chat-emoji-picker__no-reults">
               {{i18n "chat.emoji_picker.no_results"}}
@@ -180,7 +183,7 @@
                   }}
                   loading="lazy"
                   {{on "focus" this.didFocusFirstEmoji}}
-                >
+                />
               {{/let}}
 
               {{#if
@@ -206,7 +209,7 @@
                         this.chatEmojiReactionStore.diversity
                       }}
                       loading="lazy"
-                    >
+                    />
                   {{/if}}
                 {{/each}}
               {{/if}}

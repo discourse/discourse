@@ -1,5 +1,8 @@
 <p>
-  <CountI18n @key="topic.multi_select.description" @count={{this.selectedPostsCount}} />
+  <CountI18n
+    @key="topic.multi_select.description"
+    @count={{this.selectedPostsCount}}
+  />
 </p>
 
 {{#if this.canSelectAll}}
@@ -19,19 +22,39 @@
 {{/if}}
 
 {{#if this.canDeleteSelected}}
-  <DButton @action={{this.deleteSelected}} @icon="far-trash-alt" @label="topic.multi_select.delete" @class="btn-danger" />
+  <DButton
+    @action={{this.deleteSelected}}
+    @icon="far-trash-alt"
+    @label="topic.multi_select.delete"
+    @class="btn-danger"
+  />
 {{/if}}
 
 {{#if this.canMergeTopic}}
-  <DButton @action={{route-action "moveToTopic"}} @icon="sign-out-alt" @label="topic.move_to.action" @class="btn-primary move-to-topic" />
+  <DButton
+    @action={{route-action "moveToTopic"}}
+    @icon="sign-out-alt"
+    @label="topic.move_to.action"
+    @class="btn-primary move-to-topic"
+  />
 {{/if}}
 
 {{#if this.canChangeOwner}}
-  <DButton @action={{route-action "changeOwner"}} @icon="user" @label="topic.change_owner.action" @class="btn-primary" />
+  <DButton
+    @action={{route-action "changeOwner"}}
+    @icon="user"
+    @label="topic.change_owner.action"
+    @class="btn-primary"
+  />
 {{/if}}
 
 {{#if this.canMergePosts}}
-  <DButton @action={{this.mergePosts}} @icon="arrows-alt-v" @label="topic.merge_posts.action" @class="btn-primary" />
+  <DButton
+    @action={{this.mergePosts}}
+    @icon="arrows-alt-v"
+    @label="topic.merge_posts.action"
+    @class="btn-primary"
+  />
 {{/if}}
 
 <p class="cancel">

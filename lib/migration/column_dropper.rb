@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'migration/base_dropper'
+require "migration/base_dropper"
 
 module Migration
   class ColumnDropper
@@ -32,7 +32,9 @@ module Migration
       BaseDropper.drop_readonly_function(table_name, column_name)
 
       # Backward compatibility for old functions created in the public schema
-      DB.exec("DROP FUNCTION IF EXISTS #{BaseDropper.old_readonly_function_name(table_name, column_name)} CASCADE")
+      DB.exec(
+        "DROP FUNCTION IF EXISTS #{BaseDropper.old_readonly_function_name(table_name, column_name)} CASCADE",
+      )
     end
   end
 end

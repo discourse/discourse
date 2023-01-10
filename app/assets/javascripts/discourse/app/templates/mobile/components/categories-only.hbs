@@ -1,6 +1,6 @@
 {{#if this.categories}}
   {{#if this.filteredCategories}}
-    <div class="category-list {{if this.showTopics "with-topics"}}">
+    <div class="category-list {{if this.showTopics 'with-topics'}}">
       {{#each this.filteredCategories as |c|}}
         <ParentCategoryRow @category={{c}} @showTopics={{this.showTopics}} />
       {{/each}}
@@ -15,9 +15,17 @@
           {{d-icon this.mutedToggleIcon}}
         {{/if}}
       </a>
-      <div class="category-list {{if this.showTopics "with-topics"}} {{unless this.showMutedCategories "hidden"}}">
+      <div
+        class="category-list
+          {{if this.showTopics 'with-topics'}}
+          {{unless this.showMutedCategories 'hidden'}}"
+      >
         {{#each this.mutedCategories as |c|}}
-          <ParentCategoryRow @category={{c}} @showTopics={{this.showTopics}} @listType="muted" />
+          <ParentCategoryRow
+            @category={{c}}
+            @showTopics={{this.showTopics}}
+            @listType="muted"
+          />
         {{/each}}
       </div>
     </div>

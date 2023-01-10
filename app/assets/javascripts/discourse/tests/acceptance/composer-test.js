@@ -39,7 +39,6 @@ acceptance("Composer", function (needs) {
     whisperer: true,
   });
   needs.settings({
-    enable_whispers: true,
     general_category_id: 1,
     default_composer_category: 1,
   });

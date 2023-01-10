@@ -15,7 +15,7 @@ export default RestModel.extend({
   groupsFilterInName: null,
 
   @discourseComputed("wildcard_web_hook")
-  webHookType: {
+  webhookType: {
     get(wildcard) {
       return wildcard ? "wildcard" : "individual";
     },

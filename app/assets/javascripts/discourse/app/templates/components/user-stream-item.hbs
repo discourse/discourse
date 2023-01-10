@@ -1,5 +1,9 @@
 <div class="user-stream-item__header info">
-  <a href={{this.userUrl}} data-user-card={{(or @item.draft_username @item.username)}} class="avatar-link">
+  <a
+    href={{this.userUrl}}
+    data-user-card={{(or @item.draft_username @item.username)}}
+    class="avatar-link"
+  >
     <div class="avatar-wrapper">
       {{avatar @item imageSize="large" extraClasses="actor" ignoreTitle="true"}}
     </div>
@@ -29,46 +33,83 @@
   {{#if @item.deleted_by}}
     <span class="delete-info">
       {{d-icon "far-trash-alt"}}
-      {{avatar @item.deleted_by imageSize="tiny" extraClasses="actor" ignoreTitle="true"}}
+      {{avatar
+        @item.deleted_by
+        imageSize="tiny"
+        extraClasses="actor"
+        ignoreTitle="true"
+      }}
       {{format-date @item.deleted_at leaveAgo="true"}}
     </span>
   {{/if}}
 
-  <PluginOutlet @name="user-stream-item-header" @tagName="span" @connectorTagName="div" @args={{hash item=@item}} />
+  <PluginOutlet
+    @name="user-stream-item-header"
+    @tagName="span"
+    @connectorTagName="div"
+    @args={{hash item=@item}}
+  />
 </div>
 
 {{#if this.actionDescription}}
   <p class="excerpt">{{this.actionDescription}}</p>
 {{/if}}
 
-<p data-topic-id={{@item.topic_id}} data-post-id={{@item.post_id}} data-user-id={{@item.user_id}} class="excerpt">
-  {{!-- template-lint-disable no-triple-curlies --}}
+<p
+  data-topic-id={{@item.topic_id}}
+  data-post-id={{@item.post_id}}
+  data-user-id={{@item.user_id}}
+  class="excerpt"
+>
   {{~#if @item.expandedExcerpt}}
-    {{~{@item.expandedExcerpt}~}}
+    {{~html-safe @item.expandedExcerpt~}}
   {{else}}
-    {{~{@item.excerpt}~}}
+    {{~html-safe @item.excerpt~}}
   {{/if~}}
-  {{!-- template-lint-enable --}}
 </p>
 
 {{#each @item.children as |child|}}
-  {{!-- DEPRECATED: 'child-actions' class --}}
+  {{! DEPRECATED: 'child-actions' class }}
   <div class="user-stream-item-actions child-actions">
     {{d-icon child.icon class="icon"}}
     {{#each child.items as |grandChild|}}
-      <a href={{grandChild.userUrl}} data-user-card={{grandChild.username}} class="avatar-link">
+      <a
+        href={{grandChild.userUrl}}
+        data-user-card={{grandChild.username}}
+        class="avatar-link"
+      >
         <div class="avatar-wrapper">
-          {{avatar grandChild imageSize="tiny" extraClasses="actor" ignoreTitle="true" avatarTemplatePath="acting_avatar_template"}}
+          {{avatar
+            grandChild
+            imageSize="tiny"
+            extraClasses="actor"
+            ignoreTitle="true"
+            avatarTemplatePath="acting_avatar_template"
+          }}
         </div>
       </a>
-      {{#if grandChild.edit_reason}} &mdash; <span class="edit-reason">{{grandChild.edit_reason}}</span>{{/if}}
+      {{#if grandChild.edit_reason}}
+        &mdash;
+        <span class="edit-reason">{{grandChild.edit_reason}}</span>{{/if}}
     {{/each}}
   </div>
 {{/each}}
 
 {{#if @item.editableDraft}}
   <div class="user-stream-item-draft-actions">
-    <DButton @action={{@resumeDraft}} @actionParam={{@item}} @icon="pencil-alt" @label="drafts.resume" @class="btn-default resume-draft" />
-    <DButton @action={{@removeDraft}} @actionParam={{@item}} @icon="far-trash-alt" @class="btn-danger remove-draft" @title="drafts.remove" />
+    <DButton
+      @action={{@resumeDraft}}
+      @actionParam={{@item}}
+      @icon="pencil-alt"
+      @label="drafts.resume"
+      @class="btn-default resume-draft"
+    />
+    <DButton
+      @action={{@removeDraft}}
+      @actionParam={{@item}}
+      @icon="far-trash-alt"
+      @class="btn-danger remove-draft"
+      @title="drafts.remove"
+    />
   </div>
 {{/if}}

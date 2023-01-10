@@ -18,7 +18,7 @@ class AddFlagStatsToUser < ActiveRecord::Migration[5.2]
           SUM(CASE WHEN pa.deferred_at IS NOT NULL THEN 1 ELSE 0 END) as flags_ignored
         FROM post_actions AS pa
         INNER JOIN users AS u ON u.id = pa.user_id
-        WHERE pa.post_action_type_id IN (#{PostActionType.notify_flag_types.values.join(', ')})
+        WHERE pa.post_action_type_id IN (#{PostActionType.notify_flag_types.values.join(", ")})
         AND pa.user_id > 0
         GROUP BY u.id
       ) AS x

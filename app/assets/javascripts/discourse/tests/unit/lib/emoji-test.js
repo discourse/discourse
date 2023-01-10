@@ -1,22 +1,27 @@
-import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
 import { emojiSearch } from "pretty-text/emoji";
 import { emojiUnescape } from "discourse/lib/text";
-import { test } from "qunit";
+import { module, test } from "qunit";
 import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
+import { setupTest } from "ember-qunit";
+import { getOwner } from "discourse-common/lib/get-owner";
 
-discourseModule("Unit | Utility | emoji", function () {
+module("Unit | Utility | emoji", function (hooks) {
+  setupTest(hooks);
+
   test("emojiUnescape", function (assert) {
+    const siteSettings = getOwner(this).lookup("service:site-settings");
+
     const testUnescape = (input, expected, description, settings = {}) => {
       const originalSettings = {};
       for (const [key, value] of Object.entries(settings)) {
-        originalSettings[key] = this.siteSettings[key];
-        this.siteSettings[key] = value;
+        originalSettings[key] = siteSettings[key];
+        siteSettings[key] = value;
       }
 
       assert.strictEqual(emojiUnescape(input), expected, description);
 
       for (const [key, value] of Object.entries(originalSettings)) {
-        this.siteSettings[key] = value;
+        siteSettings[key] = value;
       }
     };
 

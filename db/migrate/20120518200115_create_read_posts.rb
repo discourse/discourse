@@ -9,11 +9,10 @@ class CreateReadPosts < ActiveRecord::Migration[4.2]
       t.column :seen, :integer, null: false
     end
 
-    add_index :read_posts, [:forum_thread_id, :user_id, :page], unique: true
+    add_index :read_posts, %i[forum_thread_id user_id page], unique: true
   end
 
   def down
     drop_table :read_posts
   end
-
 end

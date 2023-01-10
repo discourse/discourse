@@ -22,47 +22,46 @@ class Auth::GoogleOAuth2Authenticator < Auth::ManagedAuthenticator
 
   def register_middleware(omniauth)
     options = {
-      setup: lambda { |env|
-        strategy = env["omniauth.strategy"]
-        strategy.options[:client_id] = SiteSetting.google_oauth2_client_id
-        strategy.options[:client_secret] = SiteSetting.google_oauth2_client_secret
+      setup:
+        lambda do |env|
+          strategy = env["omniauth.strategy"]
+          strategy.options[:client_id] = SiteSetting.google_oauth2_client_id
+          strategy.options[:client_secret] = SiteSetting.google_oauth2_client_secret
 
-        if (google_oauth2_hd = SiteSetting.google_oauth2_hd).present?
-          strategy.options[:hd] = google_oauth2_hd
-        end
+          if (google_oauth2_hd = SiteSetting.google_oauth2_hd).present?
+            strategy.options[:hd] = google_oauth2_hd
+          end
 
-        if (google_oauth2_prompt = SiteSetting.google_oauth2_prompt).present?
-          strategy.options[:prompt] = google_oauth2_prompt.gsub("|", " ")
-        end
+          if (google_oauth2_prompt = SiteSetting.google_oauth2_prompt).present?
+            strategy.options[:prompt] = google_oauth2_prompt.gsub("|", " ")
+          end
 
-        # All the data we need for the `info` and `credentials` auth hash
-        # are obtained via the user info API, not the JWT. Using and verifying
-        # the JWT can fail due to clock skew, so let's skip it completely.
-        # https://github.com/zquestz/omniauth-google-oauth2/pull/392
-        strategy.options[:skip_jwt] = true
-      }
+          # All the data we need for the `info` and `credentials` auth hash
+          # are obtained via the user info API, not the JWT. Using and verifying
+          # the JWT can fail due to clock skew, so let's skip it completely.
+          # https://github.com/zquestz/omniauth-google-oauth2/pull/392
+          strategy.options[:skip_jwt] = true
+        end,
     }
     omniauth.provider :google_oauth2, options
   end
 
   def after_authenticate(auth_token, existing_account: nil)
     groups = provides_groups? ? raw_groups(auth_token.uid) : nil
-    if groups
-      auth_token.extra[:raw_groups] = groups
-    end
+    auth_token.extra[:raw_groups] = groups if groups
 
     result = super
 
     if groups
-      result.associated_groups = groups.map { |group| group.with_indifferent_access.slice(:id, :name) }
+      result.associated_groups =
+        groups.map { |group| group.with_indifferent_access.slice(:id, :name) }
     end
 
     result
   end
 
   def provides_groups?
-    SiteSetting.google_oauth2_hd.present? &&
-      SiteSetting.google_oauth2_hd_groups &&
+    SiteSetting.google_oauth2_hd.present? && SiteSetting.google_oauth2_hd_groups &&
       SiteSetting.google_oauth2_hd_groups_service_account_admin_email.present? &&
       SiteSetting.google_oauth2_hd_groups_service_account_json.present?
   end
@@ -77,20 +76,20 @@ class Auth::GoogleOAuth2Authenticator < Auth::ManagedAuthenticator
     return if client.nil?
 
     loop do
-      params = {
-        userKey: uid
-      }
+      params = { userKey: uid }
       params[:pageToken] = page_token if page_token
 
       response = client.get(groups_url, params: params, raise_errors: false)
 
       if response.status == 200
         response = response.parsed
-        groups.push(*response['groups'])
-        page_token = response['nextPageToken']
+        groups.push(*response["groups"])
+        page_token = response["nextPageToken"]
         break if page_token.nil?
       else
-        Rails.logger.error("[Discourse Google OAuth2] failed to retrieve groups for #{uid} - status #{response.status}")
+        Rails.logger.error(
+          "[Discourse Google OAuth2] failed to retrieve groups for #{uid} - status #{response.status}",
+        )
         break
       end
     end
@@ -107,26 +106,35 @@ class Auth::GoogleOAuth2Authenticator < Auth::ManagedAuthenticator
       scope: GROUPS_SCOPE,
       iat: Time.now.to_i,
       exp: Time.now.to_i + 60,
-      sub: SiteSetting.google_oauth2_hd_groups_service_account_admin_email
+      sub: SiteSetting.google_oauth2_hd_groups_service_account_admin_email,
     }
     headers = { "alg" => "RS256", "typ" => "JWT" }
     key = OpenSSL::PKey::RSA.new(service_account_info["private_key"])
 
-    encoded_jwt = ::JWT.encode(payload, key, 'RS256', headers)
+    encoded_jwt = ::JWT.encode(payload, key, "RS256", headers)
 
-    client = OAuth2::Client.new(
-      SiteSetting.google_oauth2_client_id,
-      SiteSetting.google_oauth2_client_secret,
-      site: OAUTH2_BASE_URL
-    )
+    client =
+      OAuth2::Client.new(
+        SiteSetting.google_oauth2_client_id,
+        SiteSetting.google_oauth2_client_secret,
+        site: OAUTH2_BASE_URL,
+      )
 
-    token_response = client.request(:post, '/token', body: {
-      grant_type: "urn:ietf:params:oauth:grant-type:jwt-bearer",
-      assertion: encoded_jwt
-    },  raise_errors: false)
+    token_response =
+      client.request(
+        :post,
+        "/token",
+        body: {
+          grant_type: "urn:ietf:params:oauth:grant-type:jwt-bearer",
+          assertion: encoded_jwt,
+        },
+        raise_errors: false,
+      )
 
     if token_response.status != 200
-      Rails.logger.error("[Discourse Google OAuth2] failed to retrieve group fetch token - status #{token_response.status}")
+      Rails.logger.error(
+        "[Discourse Google OAuth2] failed to retrieve group fetch token - status #{token_response.status}",
+      )
       return
     end
 

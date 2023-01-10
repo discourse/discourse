@@ -91,9 +91,10 @@ fa_IR:
           one: "دعوت‌نامه ارسال شد"
           other: "دعوت‌نامه‌ها ارسال شد"
         invite: "دعوت به کانال"
-        without_membership:
-          one: "%{usernames} هنوز در این کانال عضو نشده است."
-          other: "%{usernames} هنوز در این کانال عضو نشده است."
+        groups:
+          users_limit:
+            one: "%{count} کاربر"
+            other: "%{count} کاربر"
       aria_roles:
         channels_list: "فهرست کانال‌های گفتگو"
       no_public_channels: "شما هنوز عضو هیچ کانالی نشده‌اید."
@@ -238,7 +239,7 @@ fa_IR:
         title: "گفتگو"
       direct_messages:
         title: "گفتگوی شخصی"
-        new: "گفتگوی شخصی جدید"
+        new: "ایجاد گفتگوی شخصی"
         create: "برو"
         cannot_create: "با عرض پوزش، شما نمی‌توانید پیام مستقیم ارسال کنید."
       incoming_webhooks:

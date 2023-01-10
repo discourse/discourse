@@ -1,7 +1,10 @@
 {{#if this.includeAvatar}}
   <div class="user-image">
     <div class="user-image-inner">
-      <a href={{this.userPath}} data-user-card={{@user.username}}>{{avatar @user imageSize="large"}}</a>
+      <a href={{this.userPath}} data-user-card={{@user.username}}>{{avatar
+          @user
+          imageSize="large"
+        }}</a>
       <UserAvatarFlair @user={{@user}} />
     </div>
   </div>
@@ -28,9 +31,18 @@
       {{/if}}
     </span>
     {{#if (and @showStatus @user.status)}}
-      <UserStatusMessage @status={{@user.status}} @showDescription={{true}} @showTooltip={{false}} />
+      <UserStatusMessage
+        @status={{@user.status}}
+        @showDescription={{@showStatusDescription}}
+        @showTooltip={{@showStatusTooltip}}
+      />
     {{/if}}
-    <PluginOutlet @name="after-user-name" @tagName="span" @connectorTagName="span" @args={{hash user=this.user}} />
+    <PluginOutlet
+      @name="after-user-name"
+      @tagName="span"
+      @connectorTagName="span"
+      @args={{hash user=this.user}}
+    />
   </div>
   <div class="title">{{@user.title}}</div>
 
@@ -42,4 +54,9 @@
 
 </div>
 
-<PluginOutlet @name="after-user-info" @tagName="span" @connectorTagName="div" @args={{hash user=this.user}} />
+<PluginOutlet
+  @name="after-user-info"
+  @tagName="span"
+  @connectorTagName="div"
+  @args={{hash user=this.user}}
+/>

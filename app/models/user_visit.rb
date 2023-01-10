@@ -2,7 +2,7 @@
 
 class UserVisit < ActiveRecord::Base
   def self.counts_by_day_query(start_date, end_date, group_id = nil)
-    result = where('visited_at >= ? and visited_at <= ?', start_date.to_date, end_date.to_date)
+    result = where("visited_at >= ? and visited_at <= ?", start_date.to_date, end_date.to_date)
 
     if group_id
       result = result.joins("INNER JOIN users ON users.id = user_visits.user_id")

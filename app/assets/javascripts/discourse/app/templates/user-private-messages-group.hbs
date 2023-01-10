@@ -8,21 +8,32 @@
 
   {{#if this.viewingSelf}}
     <li class="messages-group-new">
-      <LinkTo @route="userPrivateMessages.group.new" @model={{this.groupName}} class="new">
+      <LinkTo
+        @route="userPrivateMessages.group.new"
+        @model={{this.groupName}}
+        class="new"
+      >
         {{d-icon "exclamation-circle"}}
         <span>{{this.newLinkText}}</span>
       </LinkTo>
     </li>
 
     <li class="messages-group-unread">
-      <LinkTo @route="userPrivateMessages.group.unread" @model={{this.groupName}} class="unread">
+      <LinkTo
+        @route="userPrivateMessages.group.unread"
+        @model={{this.groupName}}
+        class="unread"
+      >
         {{d-icon "plus-circle"}}
         <span>{{this.unreadLinkText}}</span>
       </LinkTo>
     </li>
 
     <li class="messages-group-archive">
-      <LinkTo @route="userPrivateMessages.group.archive" @model={{this.groupName}}>
+      <LinkTo
+        @route="userPrivateMessages.group.archive"
+        @model={{this.groupName}}
+      >
         {{d-icon "archive"}}
         <span>{{i18n "user.messages.archive"}}</span>
       </LinkTo>

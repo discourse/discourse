@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require Rails.root.join('script/import_scripts/phpbb3/support/bbcode/xml_to_markdown')
+require Rails.root.join("script/import_scripts/phpbb3/support/bbcode/xml_to_markdown")
 
 RSpec.describe ImportScripts::PhpBB3::BBCode::XmlToMarkdown do
   def convert(xml, opts = {})
@@ -8,19 +8,20 @@ RSpec.describe ImportScripts::PhpBB3::BBCode::XmlToMarkdown do
   end
 
   it "converts unformatted text" do
-    xml = '<t>unformatted text</t>'
-    expect(convert(xml)).to eq('unformatted text')
+    xml = "<t>unformatted text</t>"
+    expect(convert(xml)).to eq("unformatted text")
   end
 
   it "converts nested formatting" do
-    xml = '<r><I><s>[i]</s>this is italic<B><s>[b]</s> and bold<e>[/b]</e></B> text<e>[/i]</e></I></r>'
-    expect(convert(xml)).to eq('_this is italic **and bold** text_')
+    xml =
+      "<r><I><s>[i]</s>this is italic<B><s>[b]</s> and bold<e>[/b]</e></B> text<e>[/i]</e></I></r>"
+    expect(convert(xml)).to eq("_this is italic **and bold** text_")
   end
 
   context "with bold text" do
     it "converts bold text" do
-      xml = '<r><B><s>[b]</s>this is bold text<e>[/b]</e></B></r>'
-      expect(convert(xml)).to eq('**this is bold text**')
+      xml = "<r><B><s>[b]</s>this is bold text<e>[/b]</e></B></r>"
+      expect(convert(xml)).to eq("**this is bold text**")
     end
 
     it "converts multi-line bold text" do
@@ -46,15 +47,15 @@ RSpec.describe ImportScripts::PhpBB3::BBCode::XmlToMarkdown do
     end
 
     it "ignores duplicate bold text" do
-      xml = '<r><B><s>[b]</s><B><s>[b]</s>this is bold text<e>[/b]</e></B><e>[/b]</e></B></r>'
-      expect(convert(xml)).to eq('**this is bold text**')
+      xml = "<r><B><s>[b]</s><B><s>[b]</s>this is bold text<e>[/b]</e></B><e>[/b]</e></B></r>"
+      expect(convert(xml)).to eq("**this is bold text**")
     end
   end
 
   context "with italic text" do
     it "converts italic text" do
-      xml = '<r><I><s>[i]</s>this is italic text<e>[/i]</e></I></r>'
-      expect(convert(xml)).to eq('_this is italic text_')
+      xml = "<r><I><s>[i]</s>this is italic text<e>[/i]</e></I></r>"
+      expect(convert(xml)).to eq("_this is italic text_")
     end
 
     it "converts multi-line italic text" do
@@ -80,15 +81,15 @@ RSpec.describe ImportScripts::PhpBB3::BBCode::XmlToMarkdown do
     end
 
     it "ignores duplicate italic text" do
-      xml = '<r><I><s>[i]</s><I><s>[i]</s>this is italic text<e>[/i]</e></I><e>[/i]</e></I></r>'
-      expect(convert(xml)).to eq('_this is italic text_')
+      xml = "<r><I><s>[i]</s><I><s>[i]</s>this is italic text<e>[/i]</e></I><e>[/i]</e></I></r>"
+      expect(convert(xml)).to eq("_this is italic text_")
     end
   end
 
   context "with underlined text" do
     it "converts underlined text" do
-      xml = '<r><U><s>[u]</s>this is underlined text<e>[/u]</e></U></r>'
-      expect(convert(xml)).to eq('[u]this is underlined text[/u]')
+      xml = "<r><U><s>[u]</s>this is underlined text<e>[/u]</e></U></r>"
+      expect(convert(xml)).to eq("[u]this is underlined text[/u]")
     end
 
     it "converts multi-line underlined text" do
@@ -114,8 +115,8 @@ RSpec.describe ImportScripts::PhpBB3::BBCode::XmlToMarkdown do
     end
 
     it "ignores duplicate underlined text" do
-      xml = '<r><U><s>[u]</s><U><s>[u]</s>this is underlined text<e>[/u]</e></U><e>[/u]</e></U></r>'
-      expect(convert(xml)).to eq('[u]this is underlined text[/u]')
+      xml = "<r><U><s>[u]</s><U><s>[u]</s>this is underlined text<e>[/u]</e></U><e>[/u]</e></U></r>"
+      expect(convert(xml)).to eq("[u]this is underlined text[/u]")
     end
   end
 
@@ -124,14 +125,14 @@ RSpec.describe ImportScripts::PhpBB3::BBCode::XmlToMarkdown do
       let(:opts) { { allow_inline_code: true } }
 
       it "converts single line code blocks" do
-        xml = '<r><CODE><s>[code]</s>one line of code<e>[/code]</e></CODE></r>'
-        expect(convert(xml, opts)).to eq('`one line of code`')
+        xml = "<r><CODE><s>[code]</s>one line of code<e>[/code]</e></CODE></r>"
+        expect(convert(xml, opts)).to eq("`one line of code`")
       end
     end
 
     context "with inline code blocks disabled" do
       it "converts single line code blocks" do
-        xml = '<r>foo <CODE><s>[code]</s>some code<e>[/code]</e></CODE> bar</r>'
+        xml = "<r>foo <CODE><s>[code]</s>some code<e>[/code]</e></CODE> bar</r>"
 
         expect(convert(xml)).to eq(<<~MD.chomp)
           foo
@@ -315,7 +316,7 @@ RSpec.describe ImportScripts::PhpBB3::BBCode::XmlToMarkdown do
         </URL><e>[/img]</e></IMG></r>
       XML
 
-      expect(convert(xml)).to eq('![](https://example.com/foo.png)')
+      expect(convert(xml)).to eq("![](https://example.com/foo.png)")
     end
 
     it "converts image with link" do
@@ -326,47 +327,53 @@ RSpec.describe ImportScripts::PhpBB3::BBCode::XmlToMarkdown do
         <e>[/img]</e></IMG><e>[/url]</e></URL></r>
       XML
 
-      expect(convert(xml)).to eq('[![](https://example.com/foo.png)](https://example.com/)')
+      expect(convert(xml)).to eq("[![](https://example.com/foo.png)](https://example.com/)")
     end
   end
 
   context "with links" do
     it "converts links created without BBCode" do
-      xml = '<r><URL url="https://en.wikipedia.org/wiki/Capybara">https://en.wikipedia.org/wiki/Capybara</URL></r>'
-      expect(convert(xml)).to eq('https://en.wikipedia.org/wiki/Capybara')
+      xml =
+        '<r><URL url="https://en.wikipedia.org/wiki/Capybara">https://en.wikipedia.org/wiki/Capybara</URL></r>'
+      expect(convert(xml)).to eq("https://en.wikipedia.org/wiki/Capybara")
     end
 
     it "converts links created with BBCode" do
-      xml = '<r><URL url="https://en.wikipedia.org/wiki/Capybara"><s>[url]</s>https://en.wikipedia.org/wiki/Capybara<e>[/url]</e></URL></r>'
-      expect(convert(xml)).to eq('https://en.wikipedia.org/wiki/Capybara')
+      xml =
+        '<r><URL url="https://en.wikipedia.org/wiki/Capybara"><s>[url]</s>https://en.wikipedia.org/wiki/Capybara<e>[/url]</e></URL></r>'
+      expect(convert(xml)).to eq("https://en.wikipedia.org/wiki/Capybara")
     end
 
     it "converts links with link text" do
-      xml = '<r><URL url="https://en.wikipedia.org/wiki/Capybara"><s>[url=https://en.wikipedia.org/wiki/Capybara]</s>Capybara<e>[/url]</e></URL></r>'
-      expect(convert(xml)).to eq('[Capybara](https://en.wikipedia.org/wiki/Capybara)')
+      xml =
+        '<r><URL url="https://en.wikipedia.org/wiki/Capybara"><s>[url=https://en.wikipedia.org/wiki/Capybara]</s>Capybara<e>[/url]</e></URL></r>'
+      expect(convert(xml)).to eq("[Capybara](https://en.wikipedia.org/wiki/Capybara)")
     end
 
     it "converts internal links" do
       opts = {
-        url_replacement: lambda do |url|
-          if url == 'http://forum.example.com/viewtopic.php?f=2&t=2'
-            'https://discuss.example.com/t/welcome-topic/18'
-          end
-        end
+        url_replacement:
+          lambda do |url|
+            if url == "http://forum.example.com/viewtopic.php?f=2&t=2"
+              "https://discuss.example.com/t/welcome-topic/18"
+            end
+          end,
       }
 
-      xml = '<r><URL url="http://forum.example.com/viewtopic.php?f=2&amp;t=2"><LINK_TEXT text="viewtopic.php?f=2&amp;t=2">http://forum.example.com/viewtopic.php?f=2&amp;t=2</LINK_TEXT></URL></r>'
-      expect(convert(xml, opts)).to eq('https://discuss.example.com/t/welcome-topic/18')
+      xml =
+        '<r><URL url="http://forum.example.com/viewtopic.php?f=2&amp;t=2"><LINK_TEXT text="viewtopic.php?f=2&amp;t=2">http://forum.example.com/viewtopic.php?f=2&amp;t=2</LINK_TEXT></URL></r>'
+      expect(convert(xml, opts)).to eq("https://discuss.example.com/t/welcome-topic/18")
     end
 
     it "converts email links created without BBCode" do
       xml = '<r><EMAIL email="foo.bar@example.com">foo.bar@example.com</EMAIL></r>'
-      expect(convert(xml)).to eq('<foo.bar@example.com>')
+      expect(convert(xml)).to eq("<foo.bar@example.com>")
     end
 
     it "converts email links created with BBCode" do
-      xml = '<r><EMAIL email="foo.bar@example.com"><s>[email]</s>foo.bar@example.com<e>[/email]</e></EMAIL></r>'
-      expect(convert(xml)).to eq('<foo.bar@example.com>')
+      xml =
+        '<r><EMAIL email="foo.bar@example.com"><s>[email]</s>foo.bar@example.com<e>[/email]</e></EMAIL></r>'
+      expect(convert(xml)).to eq("<foo.bar@example.com>")
     end
 
     it "converts truncated, long links" do
@@ -377,7 +384,9 @@ RSpec.describe ImportScripts::PhpBB3::BBCode::XmlToMarkdown do
         <e>[/url]</e></URL></r>
       XML
 
-      expect(convert(xml)).to eq('http://answers.yahoo.com/question/index?qid=20070920134223AAkkPli')
+      expect(convert(xml)).to eq(
+        "http://answers.yahoo.com/question/index?qid=20070920134223AAkkPli",
+      )
     end
 
     it "converts BBCodes inside link text" do
@@ -387,7 +396,7 @@ RSpec.describe ImportScripts::PhpBB3::BBCode::XmlToMarkdown do
         <e>[/url]</e></URL></r>
       XML
 
-      expect(convert(xml)).to eq('[**Hello _world_!**](http://example.com)')
+      expect(convert(xml)).to eq("[**Hello _world_!**](http://example.com)")
     end
   end
 
@@ -449,7 +458,8 @@ RSpec.describe ImportScripts::PhpBB3::BBCode::XmlToMarkdown do
     end
 
     it "converts quote with author attribute" do
-      xml = '<r><QUOTE author="Mr. Blobby"><s>[quote="Mr. Blobby"]</s>Lorem ipsum<e>[/quote]</e></QUOTE></r>'
+      xml =
+        '<r><QUOTE author="Mr. Blobby"><s>[quote="Mr. Blobby"]</s>Lorem ipsum<e>[/quote]</e></QUOTE></r>'
 
       expect(convert(xml)).to eq(<<~MD.chomp)
         [quote="Mr. Blobby"]
@@ -479,10 +489,13 @@ RSpec.describe ImportScripts::PhpBB3::BBCode::XmlToMarkdown do
     end
 
     context "with user_id attribute" do
-      let(:opts) { { username_from_user_id: lambda { |user_id| user_id == 48 ? "mr_blobby" : nil } } }
+      let(:opts) do
+        { username_from_user_id: lambda { |user_id| user_id == 48 ? "mr_blobby" : nil } }
+      end
 
       it "uses the correct username when the user exists" do
-        xml = '<r><QUOTE author="Mr. Blobby" user_id="48"><s>[quote="Mr. Blobby" user_id=48]</s>Lorem ipsum<e>[/quote]</e></QUOTE></r>'
+        xml =
+          '<r><QUOTE author="Mr. Blobby" user_id="48"><s>[quote="Mr. Blobby" user_id=48]</s>Lorem ipsum<e>[/quote]</e></QUOTE></r>'
 
         expect(convert(xml, opts)).to eq(<<~MD.chomp)
           [quote="mr_blobby"]
@@ -492,7 +505,8 @@ RSpec.describe ImportScripts::PhpBB3::BBCode::XmlToMarkdown do
       end
 
       it "uses the author name when the user does not exist" do
-        xml = '<r><QUOTE author="Mr. Blobby" user_id="49"><s>[quote="Mr. Blobby" user_id=48]</s>Lorem ipsum<e>[/quote]</e></QUOTE></r>'
+        xml =
+          '<r><QUOTE author="Mr. Blobby" user_id="49"><s>[quote="Mr. Blobby" user_id=48]</s>Lorem ipsum<e>[/quote]</e></QUOTE></r>'
 
         expect(convert(xml, opts)).to eq(<<~MD.chomp)
           [quote="Mr. Blobby"]
@@ -502,14 +516,20 @@ RSpec.describe ImportScripts::PhpBB3::BBCode::XmlToMarkdown do
       end
 
       it "creates a blockquote when the user does not exist and the author is missing" do
-        xml = '<r><QUOTE user_id="49"><s>[quote=user_id=48]</s>Lorem ipsum<e>[/quote]</e></QUOTE></r>'
+        xml =
+          '<r><QUOTE user_id="49"><s>[quote=user_id=48]</s>Lorem ipsum<e>[/quote]</e></QUOTE></r>'
         expect(convert(xml, opts)).to eq("> Lorem ipsum")
       end
     end
 
     context "with post_id attribute" do
       let(:opts) do
-        { quoted_post_from_post_id: lambda { |post_id| { username: 'mr_blobby', post_number: 3, topic_id: 951 } if post_id == 43 } }
+        {
+          quoted_post_from_post_id:
+            lambda do |post_id|
+              { username: "mr_blobby", post_number: 3, topic_id: 951 } if post_id == 43
+            end,
+        }
       end
 
       it "uses information from the quoted post if the post exists" do
@@ -589,34 +609,36 @@ RSpec.describe ImportScripts::PhpBB3::BBCode::XmlToMarkdown do
 
   it "converts smilies" do
     opts = {
-      smilie_to_emoji: lambda do |smilie|
-        case smilie
-        when ':D'
-          ':smiley:'
-        when ':eek:'
-          ':astonished:'
-        end
-      end
+      smilie_to_emoji:
+        lambda do |smilie|
+          case smilie
+          when ":D"
+            ":smiley:"
+          when ":eek:"
+            ":astonished:"
+          end
+        end,
     }
 
-    xml = '<r><E>:D</E> <E>:eek:</E></r>'
+    xml = "<r><E>:D</E> <E>:eek:</E></r>"
     expect(convert(xml, opts)).to eq(":smiley: :astonished:")
   end
 
   context "with attachments" do
     it "converts attachments" do
       opts = {
-        upload_md_from_file: lambda do |filename, index|
-          url = \
-            case index
-            when 0 then
-              "upload://hash2.png"
-            when 1 then
-              "upload://hash1.png"
-            end
+        upload_md_from_file:
+          lambda do |filename, index|
+            url =
+              case index
+              when 0
+                "upload://hash2.png"
+              when 1
+                "upload://hash1.png"
+              end
 
-          "![#{filename}|231x231](#{url})"
-        end
+            "![#{filename}|231x231](#{url})"
+          end,
       }
 
       xml = <<~XML
@@ -761,20 +783,22 @@ RSpec.describe ImportScripts::PhpBB3::BBCode::XmlToMarkdown do
     end
 
     it "preserves whitespace between tags" do
-      xml = "<r>foo <B><s>[b]</s>bold<e>[/b]</e></B> <I><s>[i]</s>italic<e>[/i]</e></I> <U><s>[u]</s>underlined<e>[/u]</e></U> bar</r>"
+      xml =
+        "<r>foo <B><s>[b]</s>bold<e>[/b]</e></B> <I><s>[i]</s>italic<e>[/i]</e></I> <U><s>[u]</s>underlined<e>[/u]</e></U> bar</r>"
       expect(convert(xml)).to eq("foo **bold** _italic_ [u]underlined[/u] bar")
     end
   end
 
   context "with unknown element" do
     it "converts an unknown element right below the root element" do
-      xml = '<r><UNKNOWN><s>[unknown]</s>foo<e>[/unknown]</e></UNKNOWN></r>'
-      expect(convert(xml)).to eq('foo')
+      xml = "<r><UNKNOWN><s>[unknown]</s>foo<e>[/unknown]</e></UNKNOWN></r>"
+      expect(convert(xml)).to eq("foo")
     end
 
     it "converts an unknown element inside a known element" do
-      xml = '<r><B><s>[b]</s><UNKNOWN><s>[unknown]</s>bar<e>[/unknown]</e></UNKNOWN><e>[/b]</e></B></r>'
-      expect(convert(xml)).to eq('**bar**')
+      xml =
+        "<r><B><s>[b]</s><UNKNOWN><s>[unknown]</s>bar<e>[/unknown]</e></UNKNOWN><e>[/b]</e></B></r>"
+      expect(convert(xml)).to eq("**bar**")
     end
   end
 

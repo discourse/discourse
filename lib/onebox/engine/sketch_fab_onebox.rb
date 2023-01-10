@@ -6,7 +6,9 @@ module Onebox
       include Engine
       include StandardEmbed
 
-      matches_regexp(/^https?:\/\/sketchfab\.com\/(?:models\/|3d-models\/(?:[^\/\s]+-)?)([a-z0-9]{32})/)
+      matches_regexp(
+        /^https?:\/\/sketchfab\.com\/(?:models\/|3d-models\/(?:[^\/\s]+-)?)([a-z0-9]{32})/,
+      )
       always_https
       requires_iframe_origins("https://sketchfab.com")
 

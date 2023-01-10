@@ -8,21 +8,45 @@
   {{/if}}
 
   <div class="control-group bookmark-name-wrap">
-    <Input id="bookmark-name" @value={{this.model.name}} name="bookmark-name" class="bookmark-name" @enter={{action "saveAndClose"}} placeholder={{i18n "post.bookmarks.name_placeholder"}} maxlength="100" />
-    <DButton @icon="cog" @action={{action "toggleShowOptions"}} @class="bookmark-options-button" @ariaLabel="post.bookmarks.options" @title="post.bookmarks.options" />
+    <Input
+      id="bookmark-name"
+      @value={{this.model.name}}
+      name="bookmark-name"
+      class="bookmark-name"
+      @enter={{action "saveAndClose"}}
+      placeholder={{i18n "post.bookmarks.name_placeholder"}}
+      maxlength="100"
+    />
+    <DButton
+      @icon="cog"
+      @action={{action "toggleShowOptions"}}
+      @class="bookmark-options-button"
+      @ariaLabel="post.bookmarks.options"
+      @title="post.bookmarks.options"
+    />
   </div>
 
   {{#if this.showOptions}}
     <div class="bookmark-options-panel">
-      <label class="control-label" for="bookmark_auto_delete_preference">{{i18n "bookmarks.auto_delete_preference.label"}}</label>
-      <ComboBox @content={{this.autoDeletePreferences}} @value={{this.autoDeletePreference}} @class="bookmark-option-selector" @onChange={{action (mut this.autoDeletePreference)}} />
+      <label class="control-label" for="bookmark_auto_delete_preference">{{i18n
+          "bookmarks.auto_delete_preference.label"
+        }}</label>
+      <ComboBox
+        @content={{this.autoDeletePreferences}}
+        @value={{this.autoDeletePreference}}
+        @class="bookmark-option-selector"
+        @onChange={{action (mut this.autoDeletePreference)}}
+      />
     </div>
   {{/if}}
 
-  {{#if this.showExistingReminderAt }}
+  {{#if this.showExistingReminderAt}}
     <div class="alert alert-info existing-reminder-at-alert">
       {{d-icon "far-clock"}}
-      <span>{{i18n "bookmarks.reminders.existing_reminder" at_date_time=this.existingReminderAtFormatted}}</span>
+      <span>{{i18n
+          "bookmarks.reminders.existing_reminder"
+          at_date_time=this.existingReminderAtFormatted
+        }}</span>
     </div>
   {{/if}}
 
@@ -32,17 +56,38 @@
     </label>
 
     {{#if this.userHasTimezoneSet}}
-      <TimeShortcutPicker @timeShortcuts={{this.timeOptions}} @prefilledDatetime={{this.prefilledDatetime}} @onTimeSelected={{action "onTimeSelected"}} @hiddenOptions={{this.hiddenTimeShortcutOptions}} @customLabels={{this.customTimeShortcutLabels}} @_itsatrap={{this._itsatrap}} />
+      <TimeShortcutPicker
+        @timeShortcuts={{this.timeOptions}}
+        @prefilledDatetime={{this.prefilledDatetime}}
+        @onTimeSelected={{action "onTimeSelected"}}
+        @hiddenOptions={{this.hiddenTimeShortcutOptions}}
+        @customLabels={{this.customTimeShortcutLabels}}
+        @_itsatrap={{this._itsatrap}}
+      />
     {{else}}
-      <div class="alert alert-info">{{html-safe (i18n "bookmarks.no_timezone" basePath=(base-path))}}</div>
+      <div class="alert alert-info">{{html-safe
+          (i18n "bookmarks.no_timezone" basePath=(base-path))
+        }}</div>
     {{/if}}
   </div>
 
   <div class="modal-footer control-group">
-    <DButton @id="save-bookmark" @label="bookmarks.save" @class="btn-primary" @action={{action "saveAndClose"}} />
+    <DButton
+      @id="save-bookmark"
+      @label="bookmarks.save"
+      @class="btn-primary"
+      @action={{action "saveAndClose"}}
+    />
     <DModalCancel @close={{action "closeWithoutSavingBookmark"}} />
     {{#if this.showDelete}}
-      <DButton @id="delete-bookmark" @icon="trash-alt" @class="delete-bookmark btn-danger" @action={{action "delete"}} @ariaLabel="post.bookmarks.actions.delete_bookmark.name" @title="post.bookmarks.actions.delete_bookmark.name" />
+      <DButton
+        @id="delete-bookmark"
+        @icon="trash-alt"
+        @class="delete-bookmark btn-danger"
+        @action={{action "delete"}}
+        @ariaLabel="post.bookmarks.actions.delete_bookmark.name"
+        @title="post.bookmarks.actions.delete_bookmark.name"
+      />
     {{/if}}
   </div>
 </ConditionalLoadingSpinner>

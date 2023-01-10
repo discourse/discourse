@@ -167,37 +167,37 @@ cs:
       url: "Zkopírujte a sdílejte URL adresu."
     action_codes:
       public_topic: "Téma zveřejněno %{when}"
-      open_topic: "toto převedl na téma %{when}"
+      open_topic: "Toto převedl na téma %{when}"
       private_topic: "Téma změněno na osobní zprávu %{when}"
-      split_topic: "rozdělil toto téma %{when}"
-      invited_user: "%{who} pozván %{when}"
-      invited_group: "%{who} pozvána %{when}"
+      split_topic: "Rozdělil toto téma %{when}"
+      invited_user: "%{who} Pozvána %{when}"
+      invited_group: "%{who} Pozvána %{when}"
       user_left: "%{who} se odstranil z této zpráy %{when}"
-      removed_user: "%{who} smazán %{when}"
-      removed_group: "%{who} smazána %{when}"
-      autobumped: "automaticky bumped %{when}"
+      removed_user: "%{who} Smazána %{when}"
+      removed_group: "%{who} Smazána %{when}"
+      autobumped: "Automaticky bumped %{when}"
       autoclosed:
-        enabled: "uzavřeno %{when}"
-        disabled: "otevřeno %{when}"
+        enabled: "Uzavřeno %{when}"
+        disabled: "Otevřeno %{when}"
       closed:
-        enabled: "uzavřeno %{when}"
-        disabled: "otevřeno %{when}"
+        enabled: "Uzavřeno %{when}"
+        disabled: "Otevřeno %{when}"
       archived:
-        enabled: "archivováno %{when}"
-        disabled: "odarchivováno %{when}"
+        enabled: "Archivováno %{when}"
+        disabled: "Odarchivováno %{when}"
       pinned:
-        enabled: "připnuto %{when}"
-        disabled: "odepnuto %{when}"
+        enabled: "Připnuto %{when}"
+        disabled: "Odepnuto %{when}"
       pinned_globally:
-        enabled: "globálně připnuto %{when}"
-        disabled: "odepnuto %{when}"
+        enabled: "Globálně připnuto %{when}"
+        disabled: "Odepnuto %{when}"
       visible:
-        enabled: "uvedeno %{when}"
-        disabled: "neuvedeno %{when}"
+        enabled: "Uvedeno %{when}"
+        disabled: "Neuvedeno %{when}"
       banner:
-        enabled: "vytvořil(a) tento banner %{when}. Bude se zobrazovat nahoře na každé stránce, dokud nebude uživatelem odmítnut."
-        disabled: "odstranil(a) tento banner %{when}. Už se nebude zobrazovat na každé stránce nahoře."
-      forwarded: "přeposlat výše uvedený e-mail"
+        enabled: "Vytvořil(a) tento banner %{when}. Bude se zobrazovat nahoře na každé stránce, dokud nebude uživatelem odmítnut."
+        disabled: "Odstranil(a) tento banner %{when}. Už se nebude zobrazovat na každé stránce nahoře."
+      forwarded: "Výše uvedený e-mail přeposlán"
     topic_admin_menu: "Akce tématu."
     skip_to_main_content: "Přeskočit na hlavní obsah"
     emails_are_disabled: "Všechny odchozí emaily byly administrátorem vypnuty. Žádné odchozí emaily nebudou odeslány."
@@ -212,6 +212,7 @@ cs:
       other: "Aby se váš web jednodušeji rozjel, nachází se v režimu bootstrap. Všichni noví uživatelé začínají s důveryhodností 1 a mají povolené denní odesílání souhrnných emailů. Tento režim se automaticky vypne, jakmile se zaregistruje alespoň %{count} uživatelů."
     bootstrap_mode_disabled: "Režim bootstrap bude deaktivován v následujících 24 hodinách."
     bootstrap_invite_button_title: "Poslat pozvánky"
+    bootstrap_wizard_link_title: "Dokončete průvodce nastavením"
     themes:
       default_description: "Výchozí"
       broken_theme_alert: "Váš web nemusí fungovat, protože motiv/komponenta obsahuje chyby."
@@ -222,6 +223,7 @@ cs:
       regions:
         ap_northeast_1: "Asia Pacific (Tokyo)"
         ap_northeast_2: "Asia Pacific (Soul)"
+        ap_east_1: "Asie a Tichomoří (Hong Kong)"
         ap_south_1: "Asia Pacific (Bombaj)"
         ap_southeast_1: "Asia Pacific (Singapur)"
         ap_southeast_2: "Asia Pacific (Sydney)"
@@ -253,6 +255,7 @@ cs:
     delete: "Smazat"
     generic_error: "Bohužel nastala chyba."
     generic_error_with_reason: "Nastala chyba: %{error}"
+    multiple_errors: "Vyskytlo se více chyb: %{errors}"
     sign_up: "Registrace"
     log_in: "Přihlásit se"
     age: "Věk"
@@ -275,7 +278,6 @@ cs:
     conduct: "Kodex chování"
     mobile_view: "Mobilní verze"
     desktop_view: "Plná verze"
-    or: "nebo"
     now: "právě teď"
     read_more: "číst dále"
     more: "Více"
@@ -320,6 +322,7 @@ cs:
       like_count: "Líbí se"
       topic_count: "Témata"
       post_count: "Příspěvky"
+      user_count: "Registrace"
       active_user_count: "Aktivní uživatelé"
       contact: "Kontaktujte nás"
       contact_info: "V případě kritické chyby nebo urgentní záležitosti ovlivňující tuto stránku nás prosím kontaktujte na %{contact_info}."
@@ -342,7 +345,6 @@ cs:
       remove_reminder_keep_bookmark: "Odebrat připomenutí a ponechat záložku"
       created_with_reminder: "Tento příspěvek jste označili záložkou s připomenutím %{date}. %{name}"
       created_with_reminder_generic: "Toto jste si přidali do záložek s připomenutím %{date}. %{name}"
-      remove: "Odstranit záložku"
       delete: "Smazat záložku"
       confirm_delete: "Opravdu chcete tuto záložku smazat? Připomenutí bude také smazáno."
       confirm_clear: "Opravdu chcete odstranit všechny své záložky z tohoto tématu?"
@@ -422,9 +424,6 @@ cs:
     enable: "Zapnout"
     disable: "Vypnout"
     continue: "Pokračovat"
-    undo: "Zpět"
-    revert: "Vrátit"
-    failed: "Selhání"
     switch_to_anon: "Vstoupit do anonymního módu"
     switch_from_anon: "Opustit anonymní mód"
     banner:
@@ -447,6 +446,8 @@ cs:
       date_filter: "Publikováno mezi"
       in_reply_to: "v odpovědi na"
       explain:
+        why: "vysvětlete, proč tato položka skončila ve frontě"
+        title: "Přezkoumatelné bodování"
         formula: "Vzorec"
         subtotal: "Mezisoučet"
         total: "Celkem"
@@ -454,6 +455,14 @@ cs:
         score_to_hide: "Skóre pro skrytí příspěvku"
         take_action_bonus:
           name: "podnikl akci"
+        user_accuracy_bonus:
+          name: "uživatelská přesnost"
+          title: "Uživatelé, jejichž vlajky byly historicky odsouhlaseny, dostávají bonus."
+        trust_level_bonus:
+          name: "věrohodnost"
+          title: "Kontrolovatelné položky vytvořené uživateli s vyšší důvěryhodností mají vyšší skóre."
+        type_bonus:
+          name: "bonus za psaní"
       delete: "Smazat"
       settings:
         saved: "Uloženo"
@@ -463,10 +472,14 @@ cs:
       topic: "Téma:"
       filtered_user: "Uživatel"
       filtered_reviewed_by: "Zkontroloval"
+      deleted_post: "(příspěvek smazán)"
+      deleted_user: "(uživatel smazán)"
       user:
+        website: "Webová stránka"
         username: "Uživatelské jméno"
         email: "Email"
         name: "Jméno"
+        fields: "Pole"
         reject_reason: "Reason"
       topics:
         topic: "Témata"
@@ -628,6 +641,7 @@ cs:
       requests:
         reason: "Reason"
         accepted: "přijato"
+        undo: "Zpět"
       manage:
         title: "Spravovat"
         name: "Název"
@@ -1070,7 +1084,7 @@ cs:
         use: "Použijte ověřovací aplikaci"
         enforced_notice: "Před přístupem na tento web musíte povolit dvoufaktorové ověřování."
         disable: "Vypnout"
-        disable_confirm: "Opravdu chcete zakázat všechny dvoufaktorové metody?"
+        delete: "Smazat"
         save: "Uložit"
         edit: "Upravit"
         edit_title: "Upravit autentifikátor"
@@ -1140,7 +1154,6 @@ cs:
         ok: "Pro potvrzení vám pošleme email."
         invalid: "Zadejte prosím správnou emailovou adresu"
         authenticated: "Vaše emailová adresa byla autorizována přes službu %{provider}."
-        frequency_immediately: "Pokud jste obsah dosud nečetli, pošleme vám ho ihned emailem."
         frequency:
           one: "Email vám zašleme pouze pokud jste se neukázali během poslední minuty."
           few: "Email vám zašleme pouze pokud jste se neukázali během posledních %{count} minut."
@@ -1403,7 +1416,6 @@ cs:
       login_disabled: "Přihlášení je zakázáno jelikož je stránka v režimu jen pro čtení."
       logout_disabled: "Odhlášení je zakázáno zatímco je stránka v režimu jen pro čtení."
     learn_more: "více informací..."
-    first_post: První příspěvek
     mute: Ignorovat
     unmute: Zrušit ignorování
     last_post: Přispěl
@@ -1474,6 +1486,7 @@ cs:
     login:
       username: "Uživatel"
       password: "Heslo"
+      show_password: "Zobrazit"
       second_factor_title: "Dvoufaktorové ověření"
       second_factor_description: "Prosím zadejte autentikační kód z vaší aplikace:"
       second_factor_backup_description: "Prosíme zadejte jeden ze svých záložních kódů:"
@@ -1705,6 +1718,7 @@ cs:
       bookmark_reminder: "<span>%{username}</span> %{description}"
       replied: "<span>%{username}</span> %{description}"
       posted: "<span>%{username}</span> %{description}"
+      watching_category_or_tag: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
@@ -1951,10 +1965,6 @@ cs:
       back_to_list: "Zpátky na seznam témat"
       options: "Možnosti"
       show_links: "zobrazit odkazy v tomto tématu"
-      read_more_in_category: "Chcete si toho přečíst víc? Projděte si témata v %{catLink} nebo %{latestLink}."
-      read_more: "Chcete si přečíst další informace? %{catLink} nebo %{latestLink}."
-      browse_all_categories: Projděte všechny kategorie
-      view_latest_topics: zobrazte si populární témata
       jump_reply_up: přejít na předchozí odpověď
       jump_reply_down: přejít na následující odpověď
       deleted: "Téma bylo smazáno"
@@ -2362,7 +2372,6 @@ cs:
             title: "Zobrazit html část emailu"
             button: "HTML"
       bookmarks:
-        created: "Vytvořený"
         name: "Jméno"
         options: "Možnosti"
     category:
@@ -2589,7 +2598,6 @@ cs:
       many: "uživatelů"
       other: "uživatelů"
     category_title: "Kategorie"
-    changed_by: "od uživatele %{author}"
     raw_email:
       title: "Příchozí email"
       not_available: "Není k dispozici!"
@@ -2856,7 +2864,7 @@ cs:
       dismiss: "Označit jako přečtené"
     safe_mode:
       enabled: "Bezpečný režim je povolený, k jeho zakázání zavři toto okno prohlížeče"
-    do_not_disturb:
+    pause_notifications:
       remaining: "%{remaining} zbývá"
       options:
         custom: "Přizpůsobené"
@@ -2909,7 +2917,6 @@ cs:
               content: "FAQ"
             groups:
               content: "Skupiny"
-              title: "Všechny skupiny"
             users:
               content: "Uživatelé"
             my_posts:
@@ -3048,9 +3055,8 @@ cs:
         detailed_instruction: "Pokud nastane vybraná událost, žádost o příspěvek bude odeslána na uvedené URL."
         new: "Nový Webhook"
         create: "Vytvoř"
+        edit: "Upravit"
         save: "Uložit"
-        destroy: "Smazat"
-        description: "Popis"
         controls: "Správa"
         go_back: "Zpět na seznam"
         payload_url: "Payload URL"
@@ -3104,9 +3110,6 @@ cs:
           headers: "Hlavičky"
           payload: "Payload"
           body: "Tělo"
-          go_list: "Přejít na seznam"
-          go_details: "Editovat webhook"
-          go_events: "Přejít na události"
           ping: "Ping"
           status: "Stavový kód"
           event_id: "ID"
@@ -3194,7 +3197,6 @@ cs:
         button_title: "Poslat pozvánky"
       customize:
         title: "Přizpůsobení"
-        long_title: "Přizpůsobení webu"
         preview: "náhled"
         explain_preview: "Náhled stránky s povoleným motivem"
         save: "Uložit"
@@ -3293,9 +3295,9 @@ cs:
         colors:
           title: "Barvy"
           copy_name_prefix: "Kopie"
-          undo: "zpět"
+          undo: "Zpět"
           undo_title: "Vrať svoje změny této barvy od doby kdy byla posledně uložena."
-          revert: "vrátit"
+          revert: "Vrátit"
           primary:
             name: "primární"
             description: "Většina textu, ikon a okrajů."
@@ -3583,7 +3585,6 @@ cs:
       user:
         suspend_failed: "Nastala chyba při zakazování uživatele %{error}"
         unsuspend_failed: "Nastala chyba při povolování uživatele %{error}"
-        suspend_duration: "Jak dlouho má zákaz platit? (dny)"
         suspend_reason_label: "Why are you suspending? This text <b>will be visible to everyone</b> on this user's profile page, and will be shown to the user when they try to log in. Keep it short."
         suspend_reason_hidden_label: "Důvod zablokování? Tento text se zobrazí uživateli ve chvíli, kdy se pokusí přihlásit. Udržuj ho krátký."
         suspend_reason: "Reason"
@@ -3715,6 +3716,11 @@ cs:
         unlock_trust_level: "Odemknout úroveň důvěryhodnosti"
         silenced_count: "Ztišení"
         suspended_count: "Zakázaní"
+        other_matches_list:
+          username: "Uživatelské jméno"
+          trust_level: "Věrohodnost"
+          read_time: "Čas strávený čtením"
+          posts: "Příspěvky"
         tl3_requirements:
           title: "Požadavky pro důvěryhodnost 3"
           table_title:
@@ -3835,6 +3841,7 @@ cs:
           search: "Vyhledávání"
           groups: "Skupiny"
           dashboard: "Rozcestník"
+          navigation: "Navigace"
         default_categories:
           modal_yes: "Ano"
       badges:
@@ -3957,7 +3964,6 @@ cs:
       next: "Další"
       step-text: "Krok"
       step: "%{current} z %{total}"
-      upload: "Nahrát"
       uploading: "Nahrává se..."
       upload_error: "Bohužel nastala chyba při nahrávání příspěvku. Prosím zkuste to znovu."
       staff_count:

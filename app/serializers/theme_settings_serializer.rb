@@ -1,8 +1,15 @@
 # frozen_string_literal: true
 
 class ThemeSettingsSerializer < ApplicationSerializer
-  attributes :setting, :type, :default, :value, :description, :valid_values,
-             :list_type, :textarea, :json_schema
+  attributes :setting,
+             :type,
+             :default,
+             :value,
+             :description,
+             :valid_values,
+             :list_type,
+             :textarea,
+             :json_schema
 
   def setting
     object.name
@@ -21,7 +28,12 @@ class ThemeSettingsSerializer < ApplicationSerializer
   end
 
   def description
-    locale_file_description = object.theme.internal_translations.find  { |t| t.key == "theme_metadata.settings.#{setting}" } &.value
+    locale_file_description =
+      object
+        .theme
+        .internal_translations
+        .find { |t| t.key == "theme_metadata.settings.#{setting}" }
+        &.value
     locale_file_description || object.description
   end
 

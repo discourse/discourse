@@ -13,6 +13,10 @@ module PageObjects
       def cancel
         find(".d-modal-cancel").click
       end
+
+      def click_outside
+        find(".modal-outer-container").click(x: 0, y: 0)
+      end
     end
   end
 end

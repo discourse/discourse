@@ -1,44 +1,35 @@
-import componentTest, {
-  setupRenderingTest,
-} from "discourse/tests/helpers/component-test";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { query } from "discourse/tests/helpers/qunit-helpers";
 import hbs from "htmlbars-inline-precompile";
 import I18n from "I18n";
-import { module } from "qunit";
+import { module, test } from "qunit";
+import { render } from "@ember/test-helpers";
 
 module("Discourse Chat | Component | chat-message-separator", function (hooks) {
   setupRenderingTest(hooks);
 
-  componentTest("newest message", {
-    template: hbs`{{chat-message-separator message=message}}`,
+  test("newest message", async function (assert) {
+    this.set("message", { newestMessage: true });
 
-    async beforeEach() {
-      this.set("message", { newestMessage: true });
-    },
+    await render(hbs`<ChatMessageSeparator @message={{this.message}} />`);
 
-    async test(assert) {
-      assert.equal(
-        query(".chat-message-separator.new-message .text").innerText.trim(),
-        I18n.t("chat.new_messages")
-      );
-    },
+    assert.strictEqual(
+      query(".chat-message-separator.new-message .text").innerText.trim(),
+      I18n.t("chat.new_messages")
+    );
   });
 
-  componentTest("first message of the day", {
-    template: hbs`{{chat-message-separator message=message}}`,
+  test("first message of the day", async function (assert) {
+    this.set("date", moment().format("LLL"));
+    this.set("message", { firstMessageOfTheDayAt: this.date });
 
-    async beforeEach() {
-      this.set("date", moment().format("LLL"));
-      this.set("message", { firstMessageOfTheDayAt: this.date });
-    },
+    await render(hbs`<ChatMessageSeparator @message={{this.message}} />`);
 
-    async test(assert) {
-      assert.equal(
-        query(
-          ".chat-message-separator.first-daily-message .text"
-        ).innerText.trim(),
-        this.date
-      );
-    },
+    assert.strictEqual(
+      query(
+        ".chat-message-separator.first-daily-message .text"
+      ).innerText.trim(),
+      this.date
+    );
   });
 });

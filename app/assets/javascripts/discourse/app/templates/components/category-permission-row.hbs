@@ -7,7 +7,19 @@
 <span class="options actionable">
   <DButton @icon="check-square" @class="btn btn-flat see" @disabled={{true}} />
 
-  <DButton @icon={{this.canReplyIcon}} @action={{action "setPermissionReply"}} @translatedTitle={{this.replyTooltip}} @class={{concat "btn btn-flat reply-toggle " this.replyGranted}} @disabled={{this.replyDisabled}} />
+  <DButton
+    @icon={{this.canReplyIcon}}
+    @action={{action "setPermissionReply"}}
+    @translatedTitle={{this.replyTooltip}}
+    @class={{concat "btn btn-flat reply-toggle " this.replyGranted}}
+    @disabled={{this.replyDisabled}}
+  />
 
-  <DButton @icon={{this.canCreateIcon}} @action={{action "setPermissionFull"}} @translatedTitle={{this.createTooltip}} @class={{concat "btn btn-flat create-toggle " this.createGranted}} @disabled={{this.createDisabled}} />
+  <DButton
+    @icon={{this.canCreateIcon}}
+    @action={{action "setPermissionFull"}}
+    @translatedTitle={{this.createTooltip}}
+    @class={{concat "btn btn-flat create-toggle " this.createGranted}}
+    @disabled={{this.createDisabled}}
+  />
 </span>

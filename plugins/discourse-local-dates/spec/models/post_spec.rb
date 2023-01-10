@@ -1,12 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe Post do
+  before { Jobs.run_immediately! }
 
-  before do
-    Jobs.run_immediately!
-  end
-
-  describe '#local_dates' do
+  describe "#local_dates" do
     it "should have correct custom fields" do
       post = Fabricate(:post, raw: <<~SQL)
         [date=2018-09-17 time=01:39:00 format="LLL" timezone="Europe/Paris" timezones="Europe/Paris|America/Los_Angeles"]
@@ -37,7 +34,7 @@ RSpec.describe Post do
     end
 
     it "should not contain dates from examples" do
-      Oneboxer.stubs(:cached_onebox).with('https://example.com').returns(<<-HTML)
+      Oneboxer.stubs(:cached_onebox).with("https://example.com").returns(<<-HTML)
         <aside class="onebox githubcommit">
           <span class="discourse-local-date" data-format="ll" data-date="2020-01-20" data-time="15:06:58" data-timezone="UTC">03:06PM - 20 Jan 20 UTC</span>
         </aside>
@@ -48,5 +45,4 @@ RSpec.describe Post do
       expect(post.local_dates.count).to eq(0)
     end
   end
-
 end

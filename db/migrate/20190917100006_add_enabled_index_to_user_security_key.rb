@@ -2,6 +2,6 @@
 
 class AddEnabledIndexToUserSecurityKey < ActiveRecord::Migration[6.0]
   def change
-    add_index :user_security_keys, [:factor_type, :enabled]
+    add_index :user_security_keys, %i[factor_type enabled]
   end
 end

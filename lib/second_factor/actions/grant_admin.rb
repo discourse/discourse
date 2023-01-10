@@ -10,14 +10,14 @@ module SecondFactor::Actions
 
     def second_factor_auth_required!(params)
       user = find_user(params[:user_id])
-      description = I18n.t(
-        "second_factor_auth.actions.grant_admin.description",
-        username: "@#{user.username}"
-      )
+      description =
+        I18n.t("second_factor_auth.actions.grant_admin.description", username: "@#{user.username}")
       {
-        callback_params: { user_id: user.id },
+        callback_params: {
+          user_id: user.id,
+        },
         redirect_url: admin_user_show_path(id: user.id, username: user.username),
-        description: description
+        description: description,
       }
     end
 

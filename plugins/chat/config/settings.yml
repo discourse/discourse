@@ -1,6 +1,6 @@
 chat:
   chat_enabled:
-    default: false
+    default: true
     client: true
   chat_allowed_groups:
     client: true

@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class UrlHelper
-
   # At the moment this handles invalid URLs that browser address bar accepts
   # where second # is not encoded
   #
@@ -12,7 +11,11 @@ class UrlHelper
     if uri
       # Addressable::URI::CharacterClasses::UNRESERVED is used here because without it
       # the # in the fragment is not encoded
-      fragment = Addressable::URI.encode_component(fragment, Addressable::URI::CharacterClasses::UNRESERVED) if fragment&.include?('#')
+      fragment =
+        Addressable::URI.encode_component(
+          fragment,
+          Addressable::URI::CharacterClasses::UNRESERVED,
+        ) if fragment&.include?("#")
       uri.fragment = fragment
       uri
     end
@@ -36,16 +39,17 @@ class UrlHelper
   end
 
   def self.is_local(url)
-    url.present? && (
-      Discourse.store.has_been_uploaded?(url) ||
-      !!(url =~ Regexp.new("^#{Discourse.base_path}/(assets|plugins|images)/")) ||
-      url.start_with?(Discourse.asset_host || Discourse.base_url_no_prefix)
-    )
+    url.present? &&
+      (
+        Discourse.store.has_been_uploaded?(url) ||
+          !!(url =~ Regexp.new("^#{Discourse.base_path}/(assets|plugins|images)/")) ||
+          url.start_with?(Discourse.asset_host || Discourse.base_url_no_prefix)
+      )
   end
 
   def self.absolute(url, cdn = Discourse.asset_host)
-    cdn = "https:#{cdn}" if cdn && cdn =~ /^\/\//
-    url =~ /^\/[^\/]/ ? (cdn || Discourse.base_url_no_prefix) + url : url
+    cdn = "https:#{cdn}" if cdn && cdn =~ %r{^//}
+    url =~ %r{^/[^/]} ? (cdn || Discourse.base_url_no_prefix) + url : url
   end
 
   def self.absolute_without_cdn(url)
@@ -64,7 +68,7 @@ class UrlHelper
     Discourse.deprecate(
       "UrlHelper.escape_uri is deprecated. For normalization of user input use `.normalized_encode`. For true encoding, use `.encode`",
       output_in_test: true,
-      drop_from: '3.0'
+      drop_from: "3.0",
     )
     normalized_encode(uri)
   end
@@ -80,15 +84,11 @@ class UrlHelper
     # Hopefully we can simplify this back to `Addressable::URI.normalized_encode` in the future.
 
     # edge case where we expect mailto:test%40test.com to normalize to mailto:test@test.com
-    if url.match(/\Amailto:/)
-      return normalize_with_addressable(url)
-    end
+    return normalize_with_addressable(url) if url.match(/\Amailto:/)
 
     # If it doesn't pass the regexp, it's definitely not gonna parse with URI.parse. Skip
     # to addressable
-    if !url.match?(/\A#{URI::regexp}\z/)
-      return normalize_with_addressable(url)
-    end
+    return normalize_with_addressable(url) if !url.match?(/\A#{URI.regexp}\z/)
 
     begin
       normalize_with_ruby_uri(url)
@@ -153,9 +153,7 @@ class UrlHelper
   def self.normalize_with_addressable(url)
     u = Addressable::URI.normalized_encode(url, Addressable::URI)
 
-    if u.host && !u.host.ascii_only?
-      u.host = ::Addressable::IDNA.to_ascii(u.host)
-    end
+    u.host = ::Addressable::IDNA.to_ascii(u.host) if u.host && !u.host.ascii_only?
 
     u.to_s
   end
@@ -163,15 +161,10 @@ class UrlHelper
   def self.normalize_with_ruby_uri(url)
     u = URI.parse(url)
 
-    if u.scheme && u.scheme != u.scheme.downcase
-      u.scheme = u.scheme.downcase
-    end
+    u.scheme = u.scheme.downcase if u.scheme && u.scheme != u.scheme.downcase
 
-    if u.host && u.host != u.host.downcase
-      u.host = u.host.downcase
-    end
+    u.host = u.host.downcase if u.host && u.host != u.host.downcase
 
     u.to_s
   end
-
 end

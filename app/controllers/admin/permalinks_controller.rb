@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class Admin::PermalinksController < Admin::AdminController
-
   before_action :fetch_permalink, only: [:destroy]
 
   def index
@@ -20,7 +19,8 @@ class Admin::PermalinksController < Admin::AdminController
       params[:permalink_type_value] = Tag.find_by_name(params[:permalink_type_value])&.id
     end
 
-    permalink = Permalink.new(:url => params[:url], params[:permalink_type] => params[:permalink_type_value])
+    permalink =
+      Permalink.new(:url => params[:url], params[:permalink_type] => params[:permalink_type_value])
     if permalink.save
       render_serialized(permalink, PermalinkSerializer)
     else
@@ -38,5 +38,4 @@ class Admin::PermalinksController < Admin::AdminController
   def fetch_permalink
     @permalink = Permalink.find(params[:id])
   end
-
 end

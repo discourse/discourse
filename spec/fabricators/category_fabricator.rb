@@ -6,12 +6,11 @@ Fabricator(:category) do
   user
 end
 
-Fabricator(:category_with_definition, from: :category) do
-  skip_category_definition false
-end
+Fabricator(:category_with_definition, from: :category) { skip_category_definition false }
 
 Fabricator(:private_category, from: :category) do
   transient :group
+  transient :permission_type
 
   name { sequence(:name) { |n| "Private Category #{n}" } }
   slug { sequence(:slug) { |n| "private#{n}" } }
@@ -19,7 +18,10 @@ Fabricator(:private_category, from: :category) do
 
   after_build do |cat, transients|
     cat.update!(read_restricted: true)
-    cat.category_groups.build(group_id: transients[:group].id, permission_type: CategoryGroup.permission_types[:full])
+    cat.category_groups.build(
+      group_id: transients[:group].id,
+      permission_type: transients[:permission_type] || CategoryGroup.permission_types[:full],
+    )
   end
 end
 
@@ -32,7 +34,7 @@ Fabricator(:link_category, from: :category) do
 end
 
 Fabricator(:mailinglist_mirror_category, from: :category) do
-  email_in 'list@example.com'
+  email_in "list@example.com"
   email_in_allow_strangers true
   mailinglist_mirror true
 end

@@ -68,6 +68,9 @@ ko:
       new_messages: "새 메시지"
       mention_warning:
         dismiss: "무시"
+        groups:
+          users_limit:
+            other: "사용자 %{count}명"
       aria_roles:
         header: "채팅 헤더"
         composer: "채팅 작성기"
@@ -189,7 +192,6 @@ ko:
       admin:
         title: "채팅"
       direct_messages:
-        new: "새로운 개인 채팅"
         create: "이동"
         leave: "이 개인 채팅에서 나가기"
       incoming_webhooks:

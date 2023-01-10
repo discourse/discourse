@@ -6,8 +6,8 @@ RSpec.shared_examples "a chatable model" do
 
     it "returns a new chat channel model" do
       expect(chat_channel).to have_attributes persisted?: false,
-                                              class: channel_class,
-                                              chatable: chatable
+                      class: channel_class,
+                      chatable: chatable
     end
   end
 

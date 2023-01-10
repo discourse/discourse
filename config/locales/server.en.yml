@@ -833,10 +833,6 @@ en:
 
   password_reset:
     no_token: 'Oops! The link you used no longer works. You can <a href="%{base_url}/login">Log In</a> now. If you forgot your password, you can <a href="%{base_url}/password-reset">request a link</a> to reset it.'
-    choose_new: "Choose a new password"
-    choose: "Choose a password"
-    update: "Update Password"
-    save: "Set Password"
     title: "Reset Password"
     success: "You successfully changed your password and are now logged in."
     success_unapproved: "You successfully changed your password."
@@ -1049,7 +1045,7 @@ en:
     mailing_list_mode: "Turn off mailing list mode"
     all: "Don’t send me any mail from %{sitename}"
     different_user_description: "You are currently logged in as a different user than the one we emailed. Please log out, or enter anonymous mode, and try again."
-    not_found_description: Sorry, we couldn't find that subscription. It's possible the link in your email is too old and has expired?"
+    not_found_description: "Sorry, we couldn't find that subscription. It's possible the link in your email is too old and has expired?"
     user_not_found_description: "Sorry, we couldn't find a user for this subscription. You are probably attempting to unsubscribe an account that no longer exists."
     log_out: "Log Out"
     submit: "Save preferences"
@@ -1513,11 +1509,11 @@ en:
     allow_duplicate_topic_titles_category: "Allow topics with identical, duplicate titles if the category is different. allow_duplicate_topic_titles must be disabled."
     unique_posts_mins: "How many minutes before a user can make a post with the same content again"
     educate_until_posts: "When the user starts typing their first (n) new posts, show the pop-up new user education panel in the composer."
-    title: "The name of this site, as used in the title tag."
-    site_description: "Describe this site in one sentence, as used in the meta description tag."
-    short_site_description: "Short description, as used in the title tag on homepage."
-    contact_email: "Email address of key contact responsible for this site. Used for critical notifications, and also displayed on <a href='%{base_path}/about' target='_blank'>/about</a> for urgent matters."
-    contact_url: "Contact URL for this site. Displayed on the <a href='%{base_path}/about' target='_blank'>/about</a> page for urgent matters."
+    title: "The name of this site. Visible to all visitors including anonymous users."
+    site_description: "Describe this site in one sentence. Visible to all visitors including anonymous users."
+    short_site_description: "Short description in a few words. Visible to all visitors including anonymous users."
+    contact_email: "Email address of key contact responsible for this site. Used for critical notifications, and also displayed on <a href='%{base_path}/about' target='_blank'>/about</a>. Visible to anonymous users on public sites."
+    contact_url: "Contact URL for this site. When present, replaces email address on <a href='%{base_path}/about' target='_blank'>/about</a> and visible to anonymous users on public sites."
     crawl_images: "Retrieve images from remote URLs to insert the correct width and height dimensions."
     download_remote_images_to_local: "Convert remote (hotlinked) images to local images by downloading them; This preserves content even if the images are removed from the remote site in future."
     download_remote_images_threshold: "Minimum disk space necessary to download remote images locally (in percent)"
@@ -1533,8 +1529,8 @@ en:
     edit_history_visible_to_public: "Allow everyone to see previous versions of an edited post. When disabled, only staff members can view."
     delete_removed_posts_after: "Posts removed by the author will be automatically deleted after (n) hours. If set to 0, posts will be deleted immediately."
     notify_users_after_responses_deleted_on_flagged_post: "When a post is flagged and then removed, all users that responded to the post and had their responses removed will be notified."
-    max_image_width: "Maximum thumbnail width of images in a post"
-    max_image_height: "Maximum thumbnail height of images in a post"
+    max_image_width: "Maximum thumbnail width of images in a post. Images with a larger width will be resized and lightboxed."
+    max_image_height: "Maximum thumbnail height of images in a post. Images with a larger height will be resized and lightboxed."
     responsive_post_image_sizes: "Resize lightbox preview images to allow for high DPI screens of the following pixel ratios. Remove all values to disable responsive images."
     fixed_category_positions: "If checked, you will be able to arrange categories into a fixed order. If unchecked, categories are listed in order of activity."
     fixed_category_positions_on_create: "If checked, category ordering will be maintained on topic creation dialog (requires fixed_category_positions)."
@@ -1683,7 +1679,6 @@ en:
 
     enable_badges: "Enable the badge system"
     max_favorite_badges: "Maximum number of badges that user can select"
-    enable_whispers: "Allow staff private communication within topics."
     whispers_allowed_groups: "Allow private communication within topics for members of specified groups."
 
     allow_index_in_robots_txt: "Specify in robots.txt that this site is allowed to be indexed by web search engines. In exceptional cases you can permanently <a href='%{base_path}/admin/customize/robots'>override robots.txt</a>."
@@ -2214,7 +2209,7 @@ en:
     display_name_on_posts: "Show a user's full name on their posts in addition to their @username."
     show_time_gap_days: "If two posts are made this many days apart, display the time gap in the topic."
     short_progress_text_threshold: "After the number of posts in a topic goes above this number, the progress bar will only show the current post number. If you change the progress bar's width, you may need to change this value."
-    default_code_lang: "Default programming language syntax highlighting applied to code blocks (auto, nohighlight, ruby, python etc.). This value must also be present in the `highlighted languages` site setting."
+    default_code_lang: "Default programming language syntax highlighting applied to code blocks (auto, text, ruby, python etc.). This value must also be present in the `highlighted languages` site setting."
     warn_reviving_old_topic_age: "When someone starts replying to a topic where the last reply is older than this many days, a warning will be displayed. Disable by setting to 0."
     autohighlight_all_code: "Force apply code highlighting to all preformatted code blocks even when they didn't explicitly specify the language."
     highlighted_languages: "Included syntax highlighting rules. (Warning: including too many languages may impact performance) see: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> for a demo"
@@ -2357,6 +2352,8 @@ en:
 
     push_notifications_prompt: "Display user consent prompt."
     push_notifications_icon: "The badge icon that appears in the notification corner. A 96×96 monochromatic PNG with transparency is recommended."
+    enable_desktop_push_notifications: "Enable desktop push notifications"
+    push_notification_time_window_mins: "Wait (n) minutes before sending push notification. Helps prevent push notifications from being sent to an active online user."
 
     base_font: "Base font to use for most text on the site. Themes can override via the `--font-family` CSS custom property."
     heading_font: "Font to use for headings on the site. Themes can override via the `--heading-font-family` CSS custom property."
@@ -2388,7 +2385,7 @@ en:
     suggest_weekends_in_date_pickers: "Include weekends (Saturday and Sunday) in date picker suggestions (disable this if you use Discourse only on weekdays, Monday through Friday)."
 
     splash_screen: "Displays a temporary loading screen while site assets load"
-    navigation_menu: "Determine which navigation menu to be used for the site."
+    navigation_menu: "Determine which navigation menu to use. Sidebar and header navigation are customizable by users. Legacy option is available for backward compatibility."
     default_sidebar_categories: "Selected categories will be displayed under Sidebar's Categories section by default."
     default_sidebar_tags: "Selected tags will be displayed under Sidebar's Tags section by default."
     enable_new_user_profile_nav_groups: "EXPERIMENTAL: Users of the selected groups will be shown the new user profile navigation menu"
@@ -3790,6 +3787,18 @@ en:
 
         %{respond_instructions}
 
+    user_watching_category_or_tag:
+      title: "User Watching Category or Tag"
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+
     user_watching_first_post:
       title: "User Watching First Post"
       subject_template: "[%{email_prefix}] %{topic_title}"
@@ -4928,7 +4937,8 @@ en:
     title: "Discourse Setup"
     step:
       introduction:
-        title: "Tell us about your community"
+        title: "About your site"
+        description: "These will be shown on your login and any public pages. You can always change them later."
 
         fields:
           title:
@@ -4937,33 +4947,35 @@ en:
           site_description:
             label: "Describe your community in a sentence"
             placeholder: "A place for Jane and her friends to discuss cool stuff"
-          contact_email:
-            label: "Point of contact"
-            placeholder: "example@user.com"
-            description: "Person or group responsible for this community. Used for critical updates, and listed on <a href='%{base_path}/about' target='_blank'>your about page</a> for urgent contact."
           default_locale:
             label: "Language"
 
       privacy:
-        title: "Member Experience"
+        title: "Member experience"
 
         fields:
           login_required:
             placeholder: "Private"
             extra_description: "Only logged in users can access this community"
           invite_only:
-            placeholder: "Invite Only"
+            placeholder: "Invite only"
             extra_description: "Users must be invited by trusted users or staff, otherwise users can sign up on their own"
           must_approve_users:
-            placeholder: "Require Approval"
+            placeholder: "Require approval"
             extra_description: "Users must be approved by staff"
+          chat_enabled:
+            placeholder: "Enable chat"
+            extra_description: "Engage with your members in real time"
+          enable_sidebar:
+            placeholder: "Enable sidebar"
+            extra_description: "Access your favorite spaces with ease"
 
       ready:
-        title: "Your Discourse is Ready!"
+        title: "Your site is ready!"
         description: "That's it! You've done the basics to setup your community. Now you can jump in and have a look around, write a welcome topic, and send invites!<br><br>Have fun!"
 
       styling:
-        title: "Look & Feel"
+        title: "Look and feel"
         fields:
           color_scheme:
             label: "Color scheme"
@@ -4996,38 +5008,39 @@ en:
                 label: "Subcategories with Featured Topics"
 
       branding:
-        title: "Customize Logos"
+        title: "Site logo"
         fields:
           logo:
-            label: "Primary Logo"
-            description: "The logo at the top left of your site. Use a wide rectangular image with a height of 120 and an aspect ratio greater than 3:1"
+            label: "Primary logo"
+            description: "Recommended size: 600 x 200"
           logo_small:
-            label: "Square Logo"
-            description: "A square version of your logo. Shown at the top left when scrolling down, and when sharing on social platforms. Ideally at least 512x512."
+            label: "Square logo"
+            description: "Recommended size: 512 x 512. Also used as the favicon and mobile home screen app icon."
 
       corporate:
-        title: "Your Organization"
+        title: "Your organization"
+        description: "The following information will be used in your Terms of Service and About pages. Feel free to skip if no company exists."
 
         fields:
           company_name:
-            label: "Company Name"
-            placeholder: "Example Organization"
-            description: "Entered in your Terms of Service page. Feel free to skip if no company exists."
+            label: "Company name"
+            placeholder: "Acme Organization"
           governing_law:
-            label: "Governing Law"
+            label: "Governing law"
             placeholder: "California law"
-            description: "Entered in your Terms of Service page. Feel free to skip if no company exists."
           contact_url:
-            label: "Web Page"
+            label: "Web page"
             placeholder: "https://www.example.com/contact-us"
-            description: "General contact web page for you or your organization. Will be displayed on <a href='%{base_path}/about' target='_blank'>your about page</a>."
           city_for_disputes:
-            label: "City for Disputes"
+            label: "City for disputes"
             placeholder: "San Francisco, California"
-            description: "Entered in your Terms of Service page. Feel free to skip if no company exists."
           site_contact:
-            label: "Automated Messages"
+            label: "Automated messages"
             description: "All automated Discourse personal messages will be sent from this user, such as flag warnings and backup completion notices."
+          contact_email:
+            label: "Point of contact"
+            placeholder: "example@user.com"
+            description: "Email address of key contact responsible for this site. Used for critical notifications, and listed on your <a href='%{base_path}/about' target='_blank'>your about page</a> for urgent matters."
 
       invites:
         title: "Invite Staff"

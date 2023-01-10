@@ -1,18 +1,16 @@
 # frozen_string_literal: true
 
-require 'csv'
+require "csv"
 
 RSpec.describe Admin::WatchedWordsController do
   fab!(:admin) { Fabricate(:admin) }
   fab!(:user) { Fabricate(:user) }
 
-  describe '#destroy' do
+  describe "#destroy" do
     fab!(:watched_word) { Fabricate(:watched_word) }
 
     context "when logged in as a non-staff user" do
-      before do
-        sign_in(user)
-      end
+      before { sign_in(user) }
 
       it "can't delete a watched word" do
         delete "/admin/customize/watched_words/#{watched_word.id}.json"
@@ -22,11 +20,9 @@ RSpec.describe Admin::WatchedWordsController do
     end
 
     context "when logged in as staff user" do
-      before do
-        sign_in(admin)
-      end
+      before { sign_in(admin) }
 
-      it 'should return the right response when given an invalid id param' do
+      it "should return the right response when given an invalid id param" do
         delete "/admin/customize/watched_words/9999.json"
 
         expect(response.status).to eq(400)
@@ -42,149 +38,152 @@ RSpec.describe Admin::WatchedWordsController do
     end
   end
 
-  describe '#create' do
+  describe "#create" do
     context "when logged in as a non-staff user" do
-      before do
-        sign_in(user)
-      end
+      before { sign_in(user) }
 
       it "can't create a watched word" do
-        post "/admin/customize/watched_words.json", params: {
-          action_key: 'flag',
-          word: 'Fr33'
-        }
+        post "/admin/customize/watched_words.json", params: { action_key: "flag", word: "Fr33" }
 
         expect(response.status).to eq(404)
       end
     end
 
     context "when logged in as a staff user" do
-      before do
-        sign_in(admin)
-      end
+      before { sign_in(admin) }
 
-      it 'creates a word with default case sensitivity' do
-        post '/admin/customize/watched_words.json', params: {
-          action_key: 'flag',
-          word: 'Deals'
-        }
+      it "creates a word with default case sensitivity" do
+        post "/admin/customize/watched_words.json", params: { action_key: "flag", word: "Deals" }
 
         expect(response.status).to eq(200)
-        expect(WatchedWord.take.word).to eq('Deals')
+        expect(WatchedWord.take.word).to eq("Deals")
       end
 
-      it 'creates a word with the given case sensitivity' do
-        post '/admin/customize/watched_words.json', params: {
-          action_key: 'flag',
-          word: 'PNG',
-          case_sensitive: true
-        }
+      it "creates a word with the given case sensitivity" do
+        post "/admin/customize/watched_words.json",
+             params: {
+               action_key: "flag",
+               word: "PNG",
+               case_sensitive: true,
+             }
 
         expect(response.status).to eq(200)
         expect(WatchedWord.take.case_sensitive?).to eq(true)
-        expect(WatchedWord.take.word).to eq('PNG')
+        expect(WatchedWord.take.word).to eq("PNG")
       end
     end
   end
 
-  describe '#upload' do
+  describe "#upload" do
     context "when logged in as a non-staff user" do
-      before do
-        sign_in(user)
-      end
+      before { sign_in(user) }
 
       it "can't create watched words via file upload" do
-        post "/admin/customize/watched_words/upload.json", params: {
-          action_key: 'flag',
-          file: Rack::Test::UploadedFile.new(file_from_fixtures("words.csv", "csv"))
-        }
+        post "/admin/customize/watched_words/upload.json",
+             params: {
+               action_key: "flag",
+               file: Rack::Test::UploadedFile.new(file_from_fixtures("words.csv", "csv")),
+             }
 
         expect(response.status).to eq(404)
       end
     end
 
-    context 'when logged in as admin' do
+    context "when logged in as admin" do
       before do
         sign_in(admin)
-        Fabricate(:tag, name: 'tag1')
-        Fabricate(:tag, name: 'tag2')
-        Fabricate(:tag, name: 'tag3')
+        Fabricate(:tag, name: "tag1")
+        Fabricate(:tag, name: "tag2")
+        Fabricate(:tag, name: "tag3")
       end
 
-      it 'creates the words from the file' do
-        post '/admin/customize/watched_words/upload.json', params: {
-          action_key: 'flag',
-          file: Rack::Test::UploadedFile.new(file_from_fixtures("words.csv", "csv"))
-        }
+      it "creates the words from the file" do
+        post "/admin/customize/watched_words/upload.json",
+             params: {
+               action_key: "flag",
+               file: Rack::Test::UploadedFile.new(file_from_fixtures("words.csv", "csv")),
+             }
 
         expect(response.status).to eq(200)
         expect(WatchedWord.count).to eq(6)
 
         expect(WatchedWord.pluck(:word)).to contain_exactly(
-          'thread', '线', 'धागा', '실', 'tråd', 'нить'
+          "thread",
+          "线",
+          "धागा",
+          "실",
+          "tråd",
+          "нить",
         )
 
         expect(WatchedWord.pluck(:action).uniq).to eq([WatchedWord.actions[:flag]])
         expect(UserHistory.where(action: UserHistory.actions[:watched_word_create]).count).to eq(6)
       end
 
-      it 'creates the words from the file' do
-        post '/admin/customize/watched_words/upload.json', params: {
-          action_key: 'tag',
-          file: Rack::Test::UploadedFile.new(file_from_fixtures("words_tag.csv", "csv"))
-        }
+      it "creates the words from the file" do
+        post "/admin/customize/watched_words/upload.json",
+             params: {
+               action_key: "tag",
+               file: Rack::Test::UploadedFile.new(file_from_fixtures("words_tag.csv", "csv")),
+             }
 
         expect(response.status).to eq(200)
         expect(WatchedWord.count).to eq(2)
 
         expect(WatchedWord.pluck(:word, :replacement)).to contain_exactly(
-          ['hello', 'tag1,tag2'],
-          ['world', 'tag2,tag3']
+          %w[hello tag1,tag2],
+          %w[world tag2,tag3],
         )
 
         expect(WatchedWord.pluck(:action).uniq).to eq([WatchedWord.actions[:tag]])
         expect(UserHistory.where(action: UserHistory.actions[:watched_word_create]).count).to eq(2)
       end
 
-      it 'creates case-sensitive words from the file' do
-        post '/admin/customize/watched_words/upload.json', params: {
-          action_key: 'flag',
-          file: Rack::Test::UploadedFile.new(file_from_fixtures("words_case_sensitive.csv", "csv"))
-        }
+      it "creates case-sensitive words from the file" do
+        post "/admin/customize/watched_words/upload.json",
+             params: {
+               action_key: "flag",
+               file:
+                 Rack::Test::UploadedFile.new(
+                   file_from_fixtures("words_case_sensitive.csv", "csv"),
+                 ),
+             }
 
         expect(response.status).to eq(200)
         expect(WatchedWord.pluck(:word, :case_sensitive)).to contain_exactly(
-          ['hello', true],
-          ['UN', true],
-          ['world', false],
-          ['test', false]
+          ["hello", true],
+          ["UN", true],
+          ["world", false],
+          ["test", false],
         )
       end
     end
   end
 
-  describe '#download' do
-    context 'when not logged in as admin' do
+  describe "#download" do
+    context "when not logged in as admin" do
       it "doesn't allow performing #download" do
         get "/admin/customize/watched_words/action/block/download"
         expect(response.status).to eq(404)
       end
     end
 
-    context 'when logged in as admin' do
+    context "when logged in as admin" do
       before do
         sign_in(admin)
-        Fabricate(:tag, name: 'tag1')
-        Fabricate(:tag, name: 'tag2')
-        Fabricate(:tag, name: 'tag3')
+        Fabricate(:tag, name: "tag1")
+        Fabricate(:tag, name: "tag2")
+        Fabricate(:tag, name: "tag3")
       end
 
       it "words of different actions are downloaded separately" do
         block_word_1 = Fabricate(:watched_word, action: WatchedWord.actions[:block])
         block_word_2 = Fabricate(:watched_word, action: WatchedWord.actions[:block])
         censor_word_1 = Fabricate(:watched_word, action: WatchedWord.actions[:censor])
-        autotag_1 = Fabricate(:watched_word, action: WatchedWord.actions[:tag], replacement: "tag1,tag2")
-        autotag_2 = Fabricate(:watched_word, action: WatchedWord.actions[:tag], replacement: "tag3,tag2")
+        autotag_1 =
+          Fabricate(:watched_word, action: WatchedWord.actions[:tag], replacement: "tag1,tag2")
+        autotag_2 =
+          Fabricate(:watched_word, action: WatchedWord.actions[:tag], replacement: "tag3,tag2")
 
         get "/admin/customize/watched_words/action/block/download"
         expect(response.status).to eq(200)
@@ -201,14 +200,14 @@ RSpec.describe Admin::WatchedWordsController do
         tag_words = response.body.split("\n").map(&:parse_csv)
         expect(tag_words).to contain_exactly(
           [autotag_1.word, autotag_1.replacement],
-          [autotag_2.word, autotag_2.replacement]
+          [autotag_2.word, autotag_2.replacement],
         )
       end
     end
   end
 
-  describe '#clear_all' do
-    context 'with non admins' do
+  describe "#clear_all" do
+    context "with non admins" do
       it "doesn't allow them to perform #clear_all" do
         word = Fabricate(:watched_word, action: WatchedWord.actions[:block])
         delete "/admin/customize/watched_words/action/block"
@@ -217,10 +216,8 @@ RSpec.describe Admin::WatchedWordsController do
       end
     end
 
-    context 'with admins' do
-      before do
-        sign_in(admin)
-      end
+    context "with admins" do
+      before { sign_in(admin) }
 
       it "allows them to perform #clear_all" do
         word = Fabricate(:watched_word, action: WatchedWord.actions[:block])

@@ -17,6 +17,7 @@ permissions:
 
 jobs:
   build:
+    if: "!(github.event_name == 'push' && github.repository == 'discourse/discourse-private-mirror')"
     name: ${{ matrix.target }} ${{ matrix.build_type }}
     runs-on: ${{ (matrix.build_type == 'annotations') && 'ubuntu-latest' || 'ubuntu-20.04-8core' }}
     container: discourse/discourse_test:slim${{ (matrix.build_type == 'frontend' || matrix.build_type == 'system') && '-browsers' || '' }}
@@ -29,6 +30,7 @@ jobs:
       PGUSER: discourse
       PGPASSWORD: discourse
       USES_PARALLEL_DATABASES: ${{ matrix.build_type == 'backend' }}
+      CAPBYARA_DEFAULT_MAX_WAIT_TIME: 4
 
     strategy:
       fail-fast: false
@@ -176,14 +178,14 @@ jobs:
 
       - name: Plugin System Tests
         if: matrix.build_type == 'system' && matrix.target == 'plugins'
-        run: LOAD_PLUGINS=1 bin/rspec plugins/*/spec/system
+        run: LOAD_PLUGINS=1 bin/rspec plugins/*/spec/system --format documentation --profile
 
       - name: Upload failed system test screenshots
         uses: actions/upload-artifact@v3
         if: matrix.build_type == 'system' && failure()
         with:
           name: failed-system-test-screenshots
-          path: tmp/screenshots/*.png
+          path: tmp/capybara/*.png
 
       - name: Check Annotations
         if: matrix.build_type == 'annotations'
@@ -203,6 +205,7 @@ jobs:
         timeout-minutes: 30
 
   core_frontend_tests:
+    if: "!(github.event_name == 'push' && github.repository == 'discourse/discourse-private-mirror')"
     name: core frontend (${{ matrix.browser }})
     runs-on: ubuntu-20.04-8core
     container:

@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class UserSilencer
-
   attr_reader :user_history
 
   def initialize(user, by_user = nil, opts = {})
@@ -29,11 +28,7 @@ class UserSilencer
       if @user.save
         message_type = @opts[:message] || :silenced_by_staff
 
-        details = StaffMessageFormat.new(
-          :silence,
-          @opts[:reason],
-          @opts[:message_body]
-        ).format
+        details = StaffMessageFormat.new(:silence, @opts[:reason], @opts[:message_body]).format
 
         context = "#{message_type}: #{@opts[:reason]}"
 
@@ -41,10 +36,7 @@ class UserSilencer
           log_params = { context: context, details: details }
           log_params[:post_id] = @opts[:post_id].to_i if @opts[:post_id]
 
-          @user_history = StaffActionLogger.new(@by_user).log_silence_user(
-            @user,
-            log_params
-          )
+          @user_history = StaffActionLogger.new(@by_user).log_silence_user(@user, log_params)
         end
 
         silence_message_params = {}
@@ -58,7 +50,7 @@ class UserSilencer
           post_id: @opts[:post_id],
           silenced_till: @user.silenced_till,
           silenced_at: DateTime.now,
-          silence_message_params: silence_message_params
+          silence_message_params: silence_message_params,
         )
 
         silence_message_params.merge!(post_alert_options: { skip_send_email: true })
@@ -73,8 +65,20 @@ class UserSilencer
   def hide_posts
     return unless @user.trust_level == TrustLevel[0]
 
-    Post.where(user_id: @user.id).where("created_at > ?", 24.hours.ago).update_all(["hidden = true, hidden_reason_id = COALESCE(hidden_reason_id, ?)", Post.hidden_reasons[:new_user_spam_threshold_reached]])
-    topic_ids = Post.where(user_id: @user.id, post_number: 1).where("created_at > ?", 24.hours.ago).pluck(:topic_id)
+    Post
+      .where(user_id: @user.id)
+      .where("created_at > ?", 24.hours.ago)
+      .update_all(
+        [
+          "hidden = true, hidden_reason_id = COALESCE(hidden_reason_id, ?)",
+          Post.hidden_reasons[:new_user_spam_threshold_reached],
+        ],
+      )
+    topic_ids =
+      Post
+        .where(user_id: @user.id, post_number: 1)
+        .where("created_at > ?", 24.hours.ago)
+        .pluck(:topic_id)
     Topic.where(id: topic_ids).update_all(visible: false) unless topic_ids.empty?
   end
 
@@ -86,5 +90,4 @@ class UserSilencer
       StaffActionLogger.new(@by_user).log_unsilence_user(@user) if @by_user
     end
   end
-
 end

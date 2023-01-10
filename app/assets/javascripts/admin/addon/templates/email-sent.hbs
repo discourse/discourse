@@ -13,10 +13,22 @@
     <tbody>
       <tr class="filters">
         <td>{{i18n "admin.email.logs.filters.title"}}</td>
-        <td><TextField @value={{this.filter.user}} @placeholderKey="admin.email.logs.filters.user_placeholder" /></td>
-        <td><TextField @value={{this.filter.address}} @placeholderKey="admin.email.logs.filters.address_placeholder" /></td>
-        <td><TextField @value={{this.filter.type}} @placeholderKey="admin.email.logs.filters.type_placeholder" /></td>
-        <td><TextField @value={{this.filter.reply_key}} @placeholderKey="admin.email.logs.filters.reply_key_placeholder" /></td>
+        <td><TextField
+            @value={{this.filter.user}}
+            @placeholderKey="admin.email.logs.filters.user_placeholder"
+          /></td>
+        <td><TextField
+            @value={{this.filter.address}}
+            @placeholderKey="admin.email.logs.filters.address_placeholder"
+          /></td>
+        <td><TextField
+            @value={{this.filter.type}}
+            @placeholderKey="admin.email.logs.filters.type_placeholder"
+          /></td>
+        <td><TextField
+            @value={{this.filter.reply_key}}
+            @placeholderKey="admin.email.logs.filters.reply_key_placeholder"
+          /></td>
         <td></td>
       </tr>
 
@@ -25,14 +37,23 @@
           <td class="sent-email-date">{{format-date l.created_at}}</td>
           <td class="sent-email-username">
             {{#if l.user}}
-              <LinkTo @route="adminUser" @model={{l.user}}>{{avatar l.user imageSize="tiny"}}</LinkTo>
-              <LinkTo @route="adminUser" @model={{l.user}}>{{l.user.username}}</LinkTo>
+              <LinkTo @route="adminUser" @model={{l.user}}>{{avatar
+                  l.user
+                  imageSize="tiny"
+                }}</LinkTo>
+              <LinkTo
+                @route="adminUser"
+                @model={{l.user}}
+              >{{l.user.username}}</LinkTo>
             {{else}}
               &mdash;
             {{/if}}
           </td>
           <td class="sent-email-address">
-            {{#if l.bounced}}{{d-icon "redo" title="admin.email.bounced"}}{{/if}}
+            {{#if l.bounced}}{{d-icon
+                "redo"
+                title="admin.email.bounced"
+              }}{{/if}}
             <a href="mailto:{{l.to_address}}">{{l.to_address}}</a>
           </td>
           <td class="sent-email-type">{{l.email_type}}</td>
@@ -41,9 +62,11 @@
           </td>
           <td class="sent-email-post-link-with-smtp-response">
             {{#if l.post_url}}
-              <a href={{l.post_url}}>{{l.post_description}}</a><br>
+              <a href={{l.post_url}}>{{l.post_description}}</a><br />
             {{/if}}
-            <code title={{l.smtp_transaction_response}}>{{l.smtp_transaction_response}}</code>
+            <code
+              title={{l.smtp_transaction_response}}
+            >{{l.smtp_transaction_response}}</code>
           </td>
         </tr>
       {{else}}

@@ -126,38 +126,37 @@ nb_NO:
       email: "Send via e-post"
       url: "Kopier og del URL"
     action_codes:
-      public_topic: "gjorde dette emnet offentlig %{when}"
-      open_topic: "konverterte dette til et emne %{when}"
-      private_topic: "gjorde dette emnet om til en personlig melding %{when}"
-      split_topic: "del opp dette emnet %{when}"
-      invited_user: "inviterte %{who} %{when}"
-      invited_group: "inviterte %{who} %{when}"
+      public_topic: "Gjorde dette emnet offentlig %{when}"
+      open_topic: "Konverterte dette til et emne %{when}"
+      private_topic: "Gjorde dette emnet om til en personlig melding %{when}"
+      split_topic: "Del opp dette emnet %{when}"
+      invited_user: "Inviterte %{who} %{when}"
+      invited_group: "Inviterte %{who} %{when}"
       user_left: "%{who} fjernet seg selv fra denne meldingen %{when}"
-      removed_user: "fjernet %{who} %{when}"
-      removed_group: "fjernet %{who} %{when}"
-      autobumped: "automatisk flyttet øverst %{when}"
+      removed_user: "Fjernet %{who} %{when}"
+      removed_group: "Fjernet %{who} %{when}"
+      autobumped: "Automatisk flyttet øverst %{when}"
       autoclosed:
-        enabled: "lukket %{when}"
-        disabled: "åpnet %{when}"
+        enabled: "Lukket %{when}"
+        disabled: "Åpnet %{when}"
       closed:
-        enabled: "lukket %{when}"
-        disabled: "åpnet %{when}"
+        enabled: "Lukket %{when}"
+        disabled: "Åpnet %{when}"
       archived:
-        enabled: "arkivert %{when}"
-        disabled: "arkivering opphevet %{when}"
+        enabled: "Arkivert %{when}"
+        disabled: "Arkivering opphevet %{when}"
       pinned:
-        enabled: "festet %{when}"
-        disabled: "feste fjernet %{when}"
+        enabled: "Festet %{when}"
+        disabled: "Feste fjernet %{when}"
       pinned_globally:
-        enabled: "festet globalt %{when}"
-        disabled: "feste fjernet %{when}"
+        enabled: "Festet globalt %{when}"
+        disabled: "Feste fjernet %{when}"
       visible:
-        enabled: "gjort synlig %{when}"
-        disabled: "skjult %{when}"
+        enabled: "Gjort synlig %{when}"
+        disabled: "Skjult %{when}"
       banner:
-        enabled: "gjorde dette til et banner %{when}. Det vil vises på toppen av hver side inntil brukeren lukker det."
-        disabled: "fjernet dette banneret %{when}. Det vil ikke lenger vises på toppen av hver side."
-      forwarded: "videresendte e-posten voer"
+        enabled: "Gjorde dette til et banner %{when}. Det vil vises på toppen av hver side inntil brukeren lukker det."
+        disabled: "Fjernet dette banneret %{when}. Det vil ikke lenger vises på toppen av hver side."
     topic_admin_menu: "handlinger for tråd"
     skip_to_main_content: "Gå til hovedinnhold"
     emails_are_disabled: "All utgående e-post har blitt deaktivert globalt av en administrator. Ingen e-postvarslinger vil bli sendt."
@@ -223,7 +222,6 @@ nb_NO:
     conduct: "Regler for god oppførsel"
     mobile_view: "Mobilvisning"
     desktop_view: "Skrivebordsvisning"
-    or: "eller"
     now: "akkurat nå"
     read_more: "les mer"
     more: "Mer"
@@ -280,7 +278,6 @@ nb_NO:
       edit: "Rediger bokmerke"
       not_bookmarked: "bokmerk dette innlegget"
       created_with_reminder: "Du har bokmerket dette innlegget med en påminnelse %{date} %{name}"
-      remove: "Fjern bokmerke"
       delete: "Slett bokmerke"
       confirm_delete: "Er du sikker på at du vil slette denne bokmerket? Påminnelsen vil også bli slettet."
       confirm_clear: "Er du sikker på at du vil fjerne alle favoritter fra dette emnet?"
@@ -343,9 +340,6 @@ nb_NO:
     enable: "Aktiver"
     disable: "Deaktiver"
     continue: "Fortsett"
-    undo: "Angre"
-    revert: "Reverser"
-    failed: "Mislykket"
     switch_to_anon: "Start inkognitomodus"
     switch_from_anon: "Avslutt inkognitomodus"
     banner:
@@ -636,6 +630,7 @@ nb_NO:
         denied: "nektet"
         undone: "forespørsel, angret"
         handle: "Behandler forespørsel om medlemskap"
+        undo: "Angre"
       manage:
         title: "Behandle"
         name: "Navn"
@@ -943,7 +938,6 @@ nb_NO:
       notification_schedule:
         title: "Tidsplan for varsling"
         label: "Aktiver egendefinert meldingsplan"
-        tip: "Utenfor disse timene vil du bli satt i «ikke forstyrr» automatisk."
         midnight: "Midnatt"
         none: "Ingen"
         monday: "Mandag"
@@ -985,7 +979,6 @@ nb_NO:
         perm_denied_expl: "Du tillot ikke varsler. Tillat varsler via innstillingene i din nettleser."
         disable: "Slå av varslinger"
         enable: "Slå på varslinger"
-        each_browser_note: 'Merk: Denne innstillingen må endres for hver nettleser som brukes. Alle varsler vil bli deaktivert når du er i "ikke forstyrr", uavhengig av denne innstillingen.'
         consent_prompt: "Ønsker du å motta skrivebordsvarsler når andre svarer på dine innlegg?"
       dismiss: "Avslå"
       dismiss_notifications: "Forkast alle"
@@ -1180,7 +1173,7 @@ nb_NO:
         use: "Bruk Autentisering-appen"
         enforced_notice: "Du er nødvendig for å aktivere to-faktor-autentisering før du går inn på dette nettstedet."
         disable: "Deaktiver"
-        disable_confirm: "Er du sikker på at du vil skru av alle to-faktor-metoder?"
+        delete: "Slett"
         save: "Lagre"
         edit: "Rediger"
         edit_title: "Rediger autentisering"
@@ -1259,7 +1252,6 @@ nb_NO:
         authenticated: "Din e-post har blitt autentisert av %{provider}"
         invite_auth_email_invalid: "Invitasjons-e-posten din samsvarer ikke med e-posten godkjent av %{provider}"
         authenticated_by_invite: "E-posten din er blitt godkjent av invitasjonen"
-        frequency_immediately: "Vi sender deg umiddelbart en e-post hvis du ikke har lest det vi sender e-post om."
         frequency:
           one: "Vi sender deg bare e-post hvis vi ikke har sett deg deg det siste minuttet."
           other: "Vi sender deg bare e-post hvis vi ikke har sett deg de siste %{count} minuttene."
@@ -1580,15 +1572,18 @@ nb_NO:
       enabled: "Dette nettstedet er i lesemodus. Fortsett gjerne å lese, men du kan ikke svare, gi likes eller utføre andre handlinger som er slått av."
       login_disabled: "Innlogging er deaktivert mens nettsiden er i skrivebeskyttet modus."
       logout_disabled: "Du kan ikke logge ut når nettstedet er i lese-modus."
-    too_few_posts_notice_MF: >-
+    too_few_posts_notice_MF: |
       La oss <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">starte diskusjonen!</a> Der {currentPosts, plural, one {er <strong>#</strong> innlegg} other {er <strong>#</strong> innlegg}}. Besøkende trenger mer å lese og svare på — vi anbefaler minst {requiredPosts, plural, one {<strong>#</strong> innlegg} other {<strong>#</strong> innlegg}}. Bare ansatte kan se denne meldingen.
     logs_error_rate_notice:
-      reached_hour_MF: "<b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# feil/time} other {# feil/time}}</a> nådd området innstillingen grense for {limit, plural, one {# feil/time} other {# feil/time}}."
-      reached_minute_MF: "<b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# feil/minutt} other {# feil/minutt}}</a> nådd området innstillingen grense for {limit, plural, one {# feil/minutt} other {# feil/minutt}}."
-      exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# feil/time} other {# feil/time}}</a> overskrider sideinnstillingsgrensen på {limit, plural, one {# error/time} other {# errors/hour}}"
-      exceeded_minute_MF: "<b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, one {# feil / minutt} other {# feil / minutt}}</a> overskredet nettstedsinnstillingsgrensen på {limit, plural, one {# feil / minutt} other {# feil / minutt}}."
+      reached_hour_MF: |
+        <b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# feil/time} other {# feil/time}}</a> nådd området innstillingen grense for {limit, plural, one {# feil/time} other {# feil/time}}.
+      reached_minute_MF: |
+        <b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# feil/minutt} other {# feil/minutt}}</a> nådd området innstillingen grense for {limit, plural, one {# feil/minutt} other {# feil/minutt}}.
+      exceeded_hour_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# feil/time} other {# feil/time}}</a> overskrider sideinnstillingsgrensen på {limit, plural, one {# error/time} other {# errors/hour}}
+      exceeded_minute_MF: |
+        <b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, one {# feil / minutt} other {# feil / minutt}}</a> overskredet nettstedsinnstillingsgrensen på {limit, plural, one {# feil / minutt} other {# feil / minutt}}.
     learn_more: "lær mer…"
-    first_post: Første innlegg
     mute: Ignorer
     unmute: Fjern ignorering
     last_post: Postet
@@ -1608,7 +1603,8 @@ nb_NO:
       intro: "Hei! Ser ut som du liker diskusjonen, men du har ikke registrert deg for en konto ennå."
     summary:
       enabled_description: "Du ser for øyeblikket en oppsummering av dette emnet: de mest interessante innleggene ifølge brukerne."
-      description_time_MF: "Det {replyCount, plural, one {er <b>#</b> svar} other {er <b>#</b> svarer}} med en estimert lesetid på <b>{readingTime, plural, one {# minutt} other {# minutter}}</b>."
+      description_time_MF: |
+        Det {replyCount, plural, one {er <b>#</b> svar} other {er <b>#</b> svarer}} med en estimert lesetid på <b>{readingTime, plural, one {# minutt} other {# minutter}}</b>.
       enable: "Oppsummer dette emnet"
       disable: "Vis alle innlegg"
     deleted_filter:
@@ -1674,6 +1670,7 @@ nb_NO:
       title: "Logg inn"
       username: "Bruker"
       password: "Passord"
+      show_password: "Vis"
       second_factor_title: "To-faktor autentisering"
       second_factor_description: "Skriv inn verifiseringskoden fra din app:"
       second_factor_backup: "Logg inn ved hjelp av en sikkerhetskode"
@@ -1965,6 +1962,7 @@ nb_NO:
       bookmark_reminder: "<span>%{username}</span> %{description}"
       replied: "<span>%{username}</span> %{description}"
       posted: "<span>%{username}</span> %{description}"
+      watching_category_or_tag: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
@@ -2020,6 +2018,7 @@ nb_NO:
         invited_to_private_message: "invitert til privat melding"
         invitee_accepted: "invitasjonen akseptert"
         posted: "nytt innlegg"
+        watching_category_or_tag: "nytt innlegg"
         moved_post: "innlegg flyttet"
         linked: "knyttet"
         bookmark_reminder: "påminnelse for bokmerke"
@@ -2250,14 +2249,7 @@ nb_NO:
       show_links: "vis lenker i dette emnet"
       collapse_details: "vis/skjul detaljer for emnet"
       expand_details: "utvid emnebeskrivelse"
-      read_more_in_category: "Vil du lese mer? Les andre emner i %{catLink} eller %{latestLink}."
-      read_more: "Vil du lese mer? %{catLink} eller %{latestLink}."
       unread_indicator: "Ingen medlem har lest den siste posten i dette emnet ennå."
-      read_more_MF: "Der { UNREAD, plural, =0 {} one { er <a href='{basePath}/unread'># ulest</a> } other { er <a href='{basePath}/unread'># ulest</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{og } false {er } other{}} <a href='{basePath}/new'># nye</a> emne} other { {BOTH, select, true{og } false {er } other{}} <a href='{basePath}/new'># nye</a> emner} } gjenstår, eller {CATEGORY, select, true {bla gjennom andre emner i {catLink}} false {{latestLink}} other {}}"
-      bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
-      browse_all_categories: Se alle kategorier
-      browse_all_tags: Bla gjennom alle tagger
-      view_latest_topics: se siste emner
       suggest_create_topic: Klar til å <a href>starte en ny samtale?</a>
       jump_reply_up: hopp til tidligere svar
       jump_reply_down: hopp til senere svar
@@ -2766,7 +2758,6 @@ nb_NO:
       bookmarks:
         create: "Opprett bokmerke"
         edit: "Rediger bokmerke"
-        created: "Opprettet"
         updated: "Oppdatert"
         name: "Navn"
         name_placeholder: "Hva er bokmerket etter?"
@@ -2951,7 +2942,8 @@ nb_NO:
       official_warning: "Offisiell advarsel"
       delete_spammer: "Slett spammer"
       flag_for_review: "Kø for gjennomgang"
-      delete_confirm_MF: "Du er i ferd med å slette {POSTS, plural, one {<b>1</b> innlegg} other {<b>#</b> innlegg}} og {TOPICS, plural, one {<b>1</b> emne} other {<b>#</b> emner}} opprettet av denne brukeren, fjerne kontoen, blokkere påmeldinger fra IP-adressen <b>{ip_address}</b>, og legge til e-postadressen <b>{email}</b> til en permanent blokkeringsliste. Er du sikker på at denne brukeren virkelig sender søppelpost?"
+      delete_confirm_MF: |
+        Du er i ferd med å slette {POSTS, plural, one {<b>1</b> innlegg} other {<b>#</b> innlegg}} og {TOPICS, plural, one {<b>1</b> emne} other {<b>#</b> emner}} opprettet av denne brukeren, fjerne kontoen, blokkere påmeldinger fra IP-adressen <b>{ip_address}</b>, og legge til e-postadressen <b>{email}</b> til en permanent blokkeringsliste. Er du sikker på at denne brukeren virkelig sender søppelpost?
       yes_delete_spammer: "Ja, slett spammer"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(skjult)"
@@ -3047,7 +3039,6 @@ nb_NO:
       other: "brukere"
     category_title: "Kategori"
     history_capped_revisions: "Historikk, siste 100 revisjoner"
-    changed_by: "av %{author}"
     raw_email:
       title: "Innkommende e-post"
       not_available: "Ikke tilgjengelig!"
@@ -3120,7 +3111,6 @@ nb_NO:
         this_month: "Den siste måneden"
         this_week: "Den siste uken"
         today: "I dag"
-        other_periods: "se toppen:"
     permission_types:
       full: "Opprett / Svar / Se"
       create_post: "Svar / Se"
@@ -3379,9 +3369,7 @@ nb_NO:
     safe_mode:
       enabled: "Sikkert modus er påskrudd, for å skru av sikkert modus, lukk dette nettleservinduet"
     image_removed: "(bilde fjernet)"
-    do_not_disturb:
-      title: "Ikke forstyrr for..."
-      label: "Ikke forstyrr"
+    pause_notifications:
       remaining: "%{remaining} gjenstående"
       options:
         half_hour: "30 minutter"
@@ -3441,14 +3429,12 @@ nb_NO:
               content: "O-S-S"
             groups:
               content: "Grupper"
-              title: "Alle grupper"
             users:
               content: "Brukere"
             my_posts:
               content: "Mine innlegg"
             review:
               content: "Gjennomgang"
-              title: "gjennomgang"
   admin_js:
     type_to_filter: "skriv for å filtrere…"
     admin:
@@ -3627,9 +3613,8 @@ nb_NO:
         detailed_instruction: "En POST-forespørsel sendes til den angitte URL-en når den valgte hendelsen skjer."
         new: "Ny webhook"
         create: "Opprett"
+        edit: "Endre"
         save: "Lagre"
-        destroy: "Slett"
-        description: "Beskrivelse"
         controls: "Handlinger"
         go_back: "Tilbake til liste"
         payload_url: "Payload URL"
@@ -3707,9 +3692,6 @@ nb_NO:
           headers: "Hoder"
           payload: "Payload"
           body: "Body"
-          go_list: "Gå til liste"
-          go_details: "Rediger webhook"
-          go_events: "Gå til hendelser"
           ping: "Ping"
           status: "Statuskode"
           event_id: "ID"
@@ -3804,7 +3786,6 @@ nb_NO:
         button_title: "Send invitasjoner"
       customize:
         title: "Tilpasse"
-        long_title: "Nettstedstilpasninger"
         preview: "forhåndsvisning"
         explain_preview: "Se siden iført denne drakten"
         save: "Lagre"
@@ -3943,9 +3924,9 @@ nb_NO:
         colors:
           title: "Farger"
           copy_name_prefix: "Kopi av"
-          undo: "angre"
+          undo: "Angre"
           undo_title: "Fjern endringer av denne fargen siden sist den ble lagret."
-          revert: "gå tilbake"
+          revert: "Reverser"
           primary:
             name: "primær"
             description: "Det meste av tekst, ikoner og kanter."
@@ -4296,7 +4277,6 @@ nb_NO:
       user:
         suspend_failed: "Noe gikk galt ved utestenging av denne brukeren %{error}"
         unsuspend_failed: "Noe gikk galt ved opphevelse av utestenging av denne brukeren %{error}"
-        suspend_duration: "Hvor lenge skal brukeren være utestengt? (dager)"
         suspend_reason_label: "Hvorfor stenger du ute brukeren? Denne teksten <b>vil være synlig for alle</b> på denne brukerens profilside og vil bli vist til brukeren når vedkommende forsøker å logge inn. Fatt deg i korthet."
         suspend_reason_hidden_label: "Hvorfor stenger du ute brukeren? Denne teksten vil bli vist til brukeren når vedkommende prøver å logge inn. Fatt deg i korthet."
         suspend_reason: "Begrunnelse"
@@ -4427,6 +4407,11 @@ nb_NO:
         unlock_trust_level: "Lås opp tillitsnivå"
         silenced_count: "Dempet"
         suspended_count: "Utestengt"
+        other_matches_list:
+          username: "Brukernavn"
+          trust_level: "Tillitsnivå"
+          read_time: "Lesetid"
+          posts: "Innlegg"
         tl3_requirements:
           title: "Krav til tillitsnivå 3"
           table_title:
@@ -4551,6 +4536,7 @@ nb_NO:
           search: "Søk"
           groups: "Grupper"
           dashboard: "Dashbord"
+          navigation: "Navigasjon"
         default_categories:
           modal_yes: "Ja"
       badges:
@@ -4671,7 +4657,6 @@ nb_NO:
       next: "Neste"
       step-text: "Steg"
       step: "%{current} av %{total}"
-      upload: "Last opp"
       uploading: "Laster opp…"
       upload_error: "Beklager, det skjedde en feil ved opplastingen av den filen. Vennligst prøv igjen."
       staff_count:

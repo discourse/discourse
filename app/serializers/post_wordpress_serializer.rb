@@ -11,5 +11,4 @@ class PostWordpressSerializer < BasicPostSerializer
       nil
     end
   end
-
 end

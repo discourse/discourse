@@ -112,13 +112,6 @@ ar:
       join: "الانضمام"
       new_messages: "رسائل جديدة"
       mention_warning:
-        cannot_see:
-          zero: "لا يستطيع %{usernames} الوصول إلى هذه القناة ولم يتم إرسال إشعار إليهم."
-          one: "لا يستطيع %{usernames} الوصول إلى هذه القناة ولم يتم إرسال إشعار إليه."
-          two: "لا يستطيع %{usernames} الوصول إلى هذه القناة ولم يتم إرسال إشعار إليهما."
-          few: "لا يستطيع %{usernames} الوصول إلى هذه القناة ولم يتم إرسال إشعار إليهم."
-          many: "لا يستطيع %{usernames} الوصول إلى هذه القناة ولم يتم إرسال إشعار إليهم."
-          other: "لا يستطيع %{usernames} الوصول إلى هذه القناة ولم يتم إرسال إشعار إليهم."
         dismiss: "تجاهل"
         invitations_sent:
           zero: "تم إرسال دعوات"
@@ -128,13 +121,14 @@ ar:
           many: "تم إرسال دعوات"
           other: "تم إرسال دعوات"
         invite: "دعوة إلى القناة"
-        without_membership:
-          zero: "لم ينضم %{usernames} إلى هذه القناة."
-          one: "لم ينضم %{usernames} إلى هذه القناة."
-          two: "لم ينضم %{usernames} إلى هذه القناة."
-          few: "لم ينضم %{usernames} إلى هذه القناة."
-          many: "لم ينضم %{usernames} إلى هذه القناة."
-          other: "لم ينضم %{usernames} إلى هذه القناة."
+        groups:
+          users_limit:
+            zero: "%{count} مستخدمًا"
+            one: "مستخدم واحد (%{count})"
+            two: "مستخدمان (%{count})"
+            few: "%{count} مستخدمين"
+            many: "%{count} مستخدمًا"
+            other: "%{count} مستخدم"
       aria_roles:
         header: "رأس الدردشة"
         composer: "أداة إنشاء الدردشة"
@@ -306,6 +300,7 @@ ar:
         mention: "للإشارات فقط"
         always: "للنشاط بأكمله"
       settings:
+        enable_auto_join_users: "إضافة كل المستخدمين النشطين مؤخرًا تلقائيًا"
         auto_join_users_warning: "سينضم كل المستخدمين الذين ليسوا أعضاءً في هذه القناة ولديهم وصول إلى فئة %{category}. هل أنت متأكد؟"
         desktop_notification_level: "إشعارات سطح المكتب"
         follow: "الانضمام"
@@ -319,11 +314,11 @@ ar:
         save: "حفظ"
         saved: "تم الحفظ"
         unfollow: "مغادرة"
+        admin_title: "مسؤول"
       admin:
         title: "الدردشة"
       direct_messages:
         title: "الدردشة الشخصية"
-        new: "دردشة شخصية جديدة"
         create: "إنشاء"
         leave: "مغادرة هذه الدردشة الشخصية"
         cannot_create: "عذرًا، لا يمكنك إرسال الرسائل المباشرة."

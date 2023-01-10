@@ -3,18 +3,18 @@ import Component from "@ember/component";
 import { action, computed } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { inject as service } from "@ember/service";
-import { and, empty, reads } from "@ember/object/computed";
+import { and, empty } from "@ember/object/computed";
 
 export default class ChannelsList extends Component {
   @service chat;
   @service router;
   @service chatStateManager;
+  @service chatChannelsManager;
   tagName = "";
   inSidebar = false;
   toggleSection = null;
-  @reads("chat.publicChannels.[]") publicChannels;
-  @reads("chat.directMessageChannels.[]") directMessageChannels;
-  @empty("publicChannels") publicChannelsEmpty;
+  @empty("chatChannelsManager.publicMessageChannels")
+  publicMessageChannelsEmpty;
   @and("site.mobileView", "showDirectMessageChannels")
   showMobileDirectMessageButton;
 
@@ -27,27 +27,19 @@ export default class ChannelsList extends Component {
     return "chat.direct_messages.new";
   }
 
-  @computed("canCreateDirectMessageChannel", "directMessageChannels")
+  @computed(
+    "canCreateDirectMessageChannel",
+    "chatChannelsManager.directMessageChannels"
+  )
   get showDirectMessageChannels() {
     return (
       this.canCreateDirectMessageChannel ||
-      this.directMessageChannels?.length > 0
+      this.chatChannelsManager.directMessageChannels?.length > 0
     );
   }
 
   get canCreateDirectMessageChannel() {
     return this.chat.userCanDirectMessage;
-  }
-
-  @computed("directMessageChannels.@each.last_message_sent_at")
-  get sortedDirectMessageChannels() {
-    if (!this.directMessageChannels?.length) {
-      return [];
-    }
-
-    return this.chat.truncateDirectMessageChannels(
-      this.chat.sortDirectMessageChannels(this.directMessageChannels)
-    );
   }
 
   @computed("inSidebar")
@@ -58,11 +50,11 @@ export default class ChannelsList extends Component {
   }
 
   @computed(
-    "publicChannelsEmpty",
+    "publicMessageChannelsEmpty",
     "currentUser.{staff,has_joinable_public_channels}"
   )
   get displayPublicChannels() {
-    if (this.publicChannelsEmpty) {
+    if (this.publicMessageChannelsEmpty) {
       return (
         this.currentUser?.staff ||
         this.currentUser?.has_joinable_public_channels

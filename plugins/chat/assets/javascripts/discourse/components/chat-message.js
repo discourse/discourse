@@ -43,6 +43,7 @@ export default Component.extend({
   onHoverMessage: null,
   chatEmojiReactionStore: service("chat-emoji-reaction-store"),
   chatEmojiPickerManager: service("chat-emoji-picker-manager"),
+  chatChannelsManager: service("chat-channels-manager"),
   adminTools: optionalService(),
   _hasSubscribedToAppEvents: false,
   tagName: "",
@@ -589,13 +590,11 @@ export default Component.extend({
       // so we will fully refresh if we were not members of the channel
       // already
       if (!this.chatChannel.isFollowing || this.chatChannel.isDraft) {
-        this.chat.forceRefreshChannels().then(() => {
-          return this.chat
-            .getChannelBy("id", this.chatChannel.id)
-            .then((reactedChannel) => {
-              this.onSwitchChannel(reactedChannel);
-            });
-        });
+        return this.chatChannelsManager
+          .getChannel(this.chatChannel.id)
+          .then((reactedChannel) => {
+            this.onSwitchChannel(reactedChannel);
+          });
       }
     });
   },
@@ -724,11 +723,7 @@ export default Component.extend({
   toggleBookmark() {
     return openBookmarkModal(
       this.message.bookmark ||
-        Bookmark.create({
-          bookmarkable_type: "ChatMessage",
-          bookmarkable_id: this.message.id,
-          user_id: this.currentUser.id,
-        }),
+        Bookmark.createFor(this.currentUser, "ChatMessage", this.message.id),
       {
         onAfterSave: (savedData) => {
           const bookmark = Bookmark.create(savedData);

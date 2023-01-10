@@ -11,9 +11,7 @@ describe DeletedChatUser do
 
   describe "#avatar_template" do
     it "returns a default path" do
-      expect(subject.avatar_template).to eq(
-        "/plugins/chat/images/deleted-chat-user-avatar.png",
-      )
+      expect(subject.avatar_template).to eq("/plugins/chat/images/deleted-chat-user-avatar.png")
     end
   end
 end

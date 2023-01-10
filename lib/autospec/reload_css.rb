@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-module Autospec; end
+module Autospec
+end
 
 class Autospec::ReloadCss
-
   WATCHERS = {}
   def self.watch(pattern, &blk)
     WATCHERS[pattern] = blk
@@ -30,7 +30,7 @@ class Autospec::ReloadCss
     if paths.any? { |p| p =~ /\.(css|s[ac]ss)/ }
       # todo connect to dev instead?
       ActiveRecord::Base.establish_connection
-      [:desktop, :mobile].each do |style|
+      %i[desktop mobile].each do |style|
         s = DiscourseStylesheets.new(style)
         s.compile
         paths << "public" + s.stylesheet_relpath_no_digest
@@ -44,10 +44,9 @@ class Autospec::ReloadCss
       p = p.sub(/\.sass\.erb/, "")
       p = p.sub(/\.sass/, "")
       p = p.sub(/\.scss/, "")
-      p = p.sub(/^app\/assets\/stylesheets/, "assets")
+      p = p.sub(%r{^app/assets/stylesheets}, "assets")
       { name: p, hash: hash || SecureRandom.hex }
     end
     message_bus.publish "/file-change", paths
   end
-
 end

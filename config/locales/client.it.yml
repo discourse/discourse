@@ -145,38 +145,37 @@ it:
       email: "Invia per email"
       url: "Copia e condividi l'URL"
     action_codes:
-      public_topic: "ha reso questo argomento pubblico %{when}"
+      public_topic: "Ha reso questo argomento pubblico %{when}"
       open_topic: "Convertito in un argomento il %{when}"
-      private_topic: "ha reso questo argomento un messaggio personale %{when}"
-      split_topic: "ha separato questo argomento %{when}"
-      invited_user: "ha invitato %{who} %{when}"
-      invited_group: "ha invitato %{who} %{when}"
+      private_topic: "Ha reso questo argomento un messaggio personale %{when}"
+      split_topic: "Ha separato questo argomento %{when}"
+      invited_user: "Ha invitato %{who} %{when}"
+      invited_group: "Ha invitato %{who} %{when}"
       user_left: "%{who} ha rimosso se stesso da questo messaggio %{when}"
-      removed_user: "ha rimosso %{who} %{when}"
-      removed_group: "ha rimosso %{who} %{when}"
-      autobumped: "riproposto automaticamente %{when}"
+      removed_user: "Ha rimosso %{who} %{when}"
+      removed_group: "Ha rimosso %{who} %{when}"
+      autobumped: "Riproposto automaticamente %{when}"
       autoclosed:
-        enabled: "chiuso %{when}"
-        disabled: "aperto %{when}"
+        enabled: "Chiuso %{when}"
+        disabled: "Aperto %{when}"
       closed:
-        enabled: "chiuso %{when}"
-        disabled: "aperto %{when}"
+        enabled: "Chiuso %{when}"
+        disabled: "Aperto %{when}"
       archived:
-        enabled: "archiviato %{when}"
-        disabled: "archiviazione annullata %{when}"
+        enabled: "Archiviato %{when}"
+        disabled: "Archiviazione annullata %{when}"
       pinned:
-        enabled: "appuntato %{when}"
-        disabled: "spuntato %{when}"
+        enabled: "Appuntato %{when}"
+        disabled: "Spuntato %{when}"
       pinned_globally:
-        enabled: "appuntato globalmente %{when}"
-        disabled: "spuntato %{when}"
+        enabled: "Appuntato globalmente %{when}"
+        disabled: "Spuntato %{when}"
       visible:
-        enabled: "visibile in elenco %{when}"
-        disabled: "invisibile in elenco %{when}"
+        enabled: "Visibile in elenco %{when}"
+        disabled: "Invisibile in elenco %{when}"
       banner:
-        enabled: "lo ha reso un banner il %{when}. Apparirà in cima ad ogni pagina finché non verrà chiuso dall'utente."
-        disabled: "ha rimosso questo banner il %{when}. Non apparirà più in cima ad ogni pagina."
-      forwarded: "ha inoltrato l'email sopra"
+        enabled: "Lo ha reso un banner il %{when}. Apparirà in cima ad ogni pagina finché non verrà chiuso dall'utente."
+        disabled: "Ha rimosso questo banner il %{when}. Non apparirà più in cima ad ogni pagina."
     topic_admin_menu: "azioni argomento"
     skip_to_main_content: "Passa al contenuto principale"
     emails_are_disabled: "Tutte le e-mail in uscita sono state disabilitate a livello globale da un amministratore. Non sarà inviato nessun tipo di notifica via e-mail."
@@ -253,7 +252,6 @@ it:
     conduct: "Codice di Condotta"
     mobile_view: "Visualizzazione cellulari"
     desktop_view: "Visualizzazione Desktop"
-    or: "oppure"
     now: "proprio ora"
     read_more: "altre informazioni"
     more: "Altro"
@@ -317,7 +315,6 @@ it:
       remove_reminder_keep_bookmark: "Rimuovi il promemoria e mantieni il segnalibro"
       created_with_reminder: "Hai aggiunto ai segnalibri questo messaggio con un promemoria %{date}. %{name}"
       created_with_reminder_generic: "L'hai aggiunto ai segnalibri con un promemoria per il %{date}. %{name}"
-      remove: "Rimuovi Segnalibro"
       delete: "Cancella Segnalibro"
       confirm_delete: "Vuoi eliminare questo segnalibro? Anche il promemoria verrà eliminato."
       confirm_clear: "Vuoi rimuovere tutti i segnalibri da questo argomento?"
@@ -387,9 +384,6 @@ it:
     enable: "Attiva"
     disable: "Disattiva"
     continue: "Continua"
-    undo: "Annulla"
-    revert: "Ripristina"
-    failed: "Errore"
     switch_to_anon: "Avvia Modalità Anonima"
     switch_from_anon: "Esci da Modalità Anonima"
     banner:
@@ -686,6 +680,7 @@ it:
         denied: "negato"
         undone: "richiesta annullata"
         handle: "gestisci le richieste di iscrizione"
+        undo: "Annulla"
       manage:
         title: "Gestisci"
         name: "Nome"
@@ -1012,7 +1007,6 @@ it:
       notification_schedule:
         title: "Programmazione delle notifiche"
         label: "Attiva pianificazione delle notifiche personalizzata"
-        tip: "Al di fuori di questo orario, il tuo stato sarà automaticamente impostato su 'non disturbare'."
         midnight: "Mezzanotte"
         none: "Nessun orario"
         monday: "lunedi"
@@ -1056,7 +1050,6 @@ it:
         perm_denied_expl: "Hai negato il permesso per le notifiche. Autorizza le notifiche tramite le impostazioni del tuo browser."
         disable: "Disabilita Notifiche"
         enable: "Abilita Notifiche"
-        each_browser_note: 'Nota: devi modificare questa impostazione su ogni browser che utilizzi. Tutte le notifiche verranno disabilitate quando l''utente è in stato "non disturbare", indipendentemente da questa impostazione.'
         consent_prompt: "Desideri ricevere notifiche in tempo reale quando qualcuno risponde a un tuo messaggio?"
       dismiss: "Ignora"
       dismiss_notifications: "Ignora tutti"
@@ -1212,14 +1205,13 @@ it:
         warnings: "Avvertimenti ufficiali"
         read_more_in_group: "Vuoi continuare a leggere? Sfoglia altri messaggi in %{groupLink}."
         read_more: "Vuoi continuare a leggere? Sfoglia altri messaggi in <a href='%{basePath}/u/%{username}/messages'>messaggi personali</a>."
-        read_more_group_pm_MF: "{ UNREAD, plural, =0 {} one { C'è<a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># messaggio non letto</a> } other { Ci sono <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># messaggi non letti</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{e } false {c'è } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nuovo</a> messaggio} other { {BOTH, select, true{e } false {ci sono} other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nuovi</a> messaggi} } rimanenti, oppure sfoglia altri messaggi in {groupLink}"
-        read_more_personal_pm_MF: "{ UNREAD, plural, =0 {} one { C'è <a href='{basePath}/u/{username}/messages/unread'># messaggio non letto</a> } other { Ci sono <a href='{basePath}/u/{username}/messages/unread'># messaggi non letti</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{e } false {c'è } other{}} <a href='{basePath}/u/{username}/messages/new'># nuovo</a> messaggio} other { {BOTH, select, true{e } false {ci sono } other{}} <a href='{basePath}/u/{username}/messages/new'># nuovi</a> messaggi} } rimanenti, o sfoglia altri <a href='{basePath}/u/{username}/messages'>messaggi personali</a>"
       preferences_nav:
         account: "Account"
         security: "Sicurezza"
         profile: "Profilo"
         emails: "Email"
         notifications: "Notifiche"
+        tracking: "Seguite"
         categories: "Categorie"
         users: "Utenti"
         tags: "Etichette"
@@ -1277,7 +1269,7 @@ it:
         use: "Usa l'app Authenticator"
         enforced_notice: "È necessario abilitare l'autenticazione a due fattori prima di accedere a questo sito."
         disable: "Disabilita"
-        disable_confirm: "Vuoi davvero disabilitare tutti i metodi a due fattori?"
+        delete: "Elimina"
         save: "Salva"
         edit: "Modifica"
         edit_title: "Modifica Authenticator"
@@ -1365,7 +1357,6 @@ it:
         authenticated: "%{provider} ha autenticato la tua email"
         invite_auth_email_invalid: "La tua email di invito non corrisponde all'email autenticata da %{provider}"
         authenticated_by_invite: "La tua email è stata autenticata dall'invito"
-        frequency_immediately: "Ti invieremo immediatamente una email se non hai letto ciò per cui ti stiamo scrivendo."
         frequency:
           one: "TI invieremo un'email solo se non ti avremo visto nell'ultimo minuto."
           other: "Ti invieremo un'email solo se manchi da almeno %{count} minuti."
@@ -1474,6 +1465,7 @@ it:
       email_in_reply_to: "Nelle email includi un estratto delle risposte al messaggio"
       other_settings: "Altro"
       categories_settings: "Categorie"
+      topics_settings: "Argomenti"
       new_topic_duration:
         label: "Considera un argomento \"nuovo\" se"
         not_viewed: "non l'ho ancora visto"
@@ -1723,12 +1715,15 @@ it:
     staff_writes_only_mode:
       enabled: "Questo sito è in modalità di sola lettura per lo staff. Puoi continuare a navigare nel sito, ma le risposte, i \"Mi piace\" e altre azioni sono limitate ai soli membri dello staff."
     logs_error_rate_notice:
-      reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# errore/ora} other {# errori/ore}}</a> ha raggiunto il limite di {limit, plural, one {# errore/ora} other {# errori/ora}} impostato dal sito."
-      reached_minute_MF: "<b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# errore/minuto} other {# errori/minuto}}</a> ha raggiunto il limite di {limit, plural, one {# errore/minuto} other {# errori/minuto}} impostato dal sito."
-      exceeded_hour_MF: "<b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# errore/ora} other {# errori/ora}}</a> ha superato il limite di {limit, plural, one {# errore/ora} other {# errori/ora}} impostato dal sito."
-      exceeded_minute_MF: "<b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# errore/minuto} other {# errori/minuto}}</a> ha superato il limite di {limit, plural, one {# errore/minuto} other {# errori/minuto}} impostato dal sito."
+      reached_hour_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# errore/ora} other {# errori/ore}}</a> ha raggiunto il limite di {limit, plural, one {# errore/ora} other {# errori/ora}} impostato dal sito.
+      reached_minute_MF: |
+        <b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# errore/minuto} other {# errori/minuto}}</a> ha raggiunto il limite di {limit, plural, one {# errore/minuto} other {# errori/minuto}} impostato dal sito.
+      exceeded_hour_MF: |
+        <b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# errore/ora} other {# errori/ora}}</a> ha superato il limite di {limit, plural, one {# errore/ora} other {# errori/ora}} impostato dal sito.
+      exceeded_minute_MF: |
+        <b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# errore/minuto} other {# errori/minuto}}</a> ha superato il limite di {limit, plural, one {# errore/minuto} other {# errori/minuto}} impostato dal sito.
     learn_more: "per saperne di più..."
-    first_post: Primo messaggio
     mute: Silenzia
     unmute: Riattiva
     last_post: Pubblicato
@@ -1753,7 +1748,8 @@ it:
       description:
         one: "C'è <b>%{count}</b> risposta."
         other: "Ci sono <b>%{count}</b> risposte."
-      description_time_MF: "{replyCount, plural, one {C'è <b>#</b> risposta} other {Ci sono <b>#</b> risposte}} con un tempo di lettura stimato di <b>{readingTime, plural, one {# minuto} other {# minuti}}</b>."
+      description_time_MF: |
+        {replyCount, plural, one {C'è <b>#</b> risposta} other {Ci sono <b>#</b> risposte}} con un tempo di lettura stimato di <b>{readingTime, plural, one {# minuto} other {# minuti}}</b>.
       enable: "Riassumi Questo Argomento"
       disable: "Mostra Tutti i Messaggi"
       short_label: "Riassumi"
@@ -1824,6 +1820,7 @@ it:
       title: "Accedi"
       username: "Utente"
       password: "Password"
+      show_password: "Mostra"
       second_factor_title: "Autenticazione a Due Fattori"
       second_factor_description: "Inserisci il codice di autenticazione dalla tua app:"
       second_factor_backup: "Accedi utilizzando un codice di backup"
@@ -2171,6 +2168,7 @@ it:
       bookmark_reminder: "<span>%{username}</span> %{description}"
       replied: "<span>%{username}</span> %{description}"
       posted: "<span>%{username}</span> %{description}"
+      watching_category_or_tag: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
@@ -2240,6 +2238,7 @@ it:
         invited_to_private_message: "invitato ad un Messaggio Privato"
         invitee_accepted: "invito accettato"
         posted: "nuovo messaggio"
+        watching_category_or_tag: "nuovo messaggio"
         moved_post: "messaggio spostato"
         linked: "linkato"
         bookmark_reminder: "promemoria segnalibro"
@@ -2278,6 +2277,7 @@ it:
         other: "<span>%{count}%{plus} risultati per</span><span class='term'>%{term}</span>"
       title: "Cerca"
       full_page_title: "Cerca"
+      results: "risultati"
       no_results: "Nessun risultato trovato."
       no_more_results: "Nessun altro risultato trovato."
       post_format: "n°%{post_number} da %{username}"
@@ -2562,14 +2562,7 @@ it:
       show_links: "mostra i collegamenti in questo argomento"
       collapse_details: "comprimi i dettagli dell'argomento"
       expand_details: "espandi i dettagli dell'argomento"
-      read_more_in_category: "Vuoi saperne di più? Leggi altri argomenti in %{catLink} o %{latestLink}."
-      read_more: "Vuoi saperne di più? Consulta %{catLink} o %{latestLink}."
       unread_indicator: "Nessun utente ha ancora letto l'ultimo messaggio di questo Argomento."
-      read_more_MF: "{ UNREAD, plural, =0 {} one { C'è <a href='{basePath}/unread'># non letto</a> } other { Ci sono <a href='{basePath}/unread'># non letti</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{e } false {c'è } other{}} <a href='{basePath}/new'># nuovo</a> argomento} other { {BOTH, select, true{e } false {ci sono } other{}} <a href='{basePath}/new'># nuovi</a> argomenti} } restanti, o {CATEGORY, select, true {sfoglia altri argomenti in {catLink}} false {{latestLink}} other {}}"
-      bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
-      browse_all_categories: Scorri tutte le categorie
-      browse_all_tags: Sfoglia tutte le etichette
-      view_latest_topics: visualizza gli argomenti più recenti
       suggest_create_topic: Pronto per <a href>iniziare una nuova conversazione?</a>
       jump_reply_up: passa a una risposta precedente
       jump_reply_down: passa a una risposta successiva
@@ -3125,7 +3118,6 @@ it:
         create_for_topic: "Crea un segnalibro per quest'argomento"
         edit: "Modifica Segnalibro"
         edit_for_topic: "Modifica il segnalibro per quest'argomento"
-        created: "Creazione"
         updated: "Aggiornato"
         name: "Nome"
         name_placeholder: "A cosa serve questo segnalibro?"
@@ -3324,7 +3316,8 @@ it:
       official_warning: "Avvertimento Ufficiale"
       delete_spammer: "Cancella Spammer"
       flag_for_review: "Coda per la revisione"
-      delete_confirm_MF: "Stai per cancellare {POSTS, plural, one {<b>#</b> messaggio} other {<b>#</b> messaggi}} e {TOPICS, plural, one {<b>#</b> argomento} other {<b>#</b> argomenti}} di questo utente, rimuovere il suo account, bloccare le registrazioni dal suo indirizzo IP <b>{ip_address}</b> e aggiungere il suo indirizzo email <b>{email}</b> ad un elenco di indirizzi bloccati permanente. Sei sicuro che questo utente sia veramente uno spammer?"
+      delete_confirm_MF: |
+        Stai per cancellare {POSTS, plural, one {<b>#</b> messaggio} other {<b>#</b> messaggi}} e {TOPICS, plural, one {<b>#</b> argomento} other {<b>#</b> argomenti}} di questo utente, rimuovere il suo account, bloccare le registrazioni dal suo indirizzo IP <b>{ip_address}</b> e aggiungere il suo indirizzo email <b>{email}</b> ad un elenco di indirizzi bloccati permanente. Sei sicuro che questo utente sia veramente uno spammer?
       yes_delete_spammer: "Sì, cancella lo spammer"
       ip_address_missing: "(N/D)"
       hidden_email_address: "(nascosto)"
@@ -3426,7 +3419,6 @@ it:
     category_title: "Categoria"
     history_capped_revisions: "Cronologia, ultime 100 revisioni"
     history: "Cronologia"
-    changed_by: "da %{author}"
     raw_email:
       title: "Email In Arrivo"
       not_available: "Non disponibile!"
@@ -3503,7 +3495,6 @@ it:
         this_month: "Mese"
         this_week: "Settimana"
         today: "Oggi"
-        other_periods: "vedi argomenti popolari:"
     browser_update: 'Purtroppo, <a href="https://www.discourse.org/faq/#browser">il tuo browser non è supportato</a>. Per visualizzare i contenuti multimediali, <a href="https://browsehappy.com">passa a un browser supportato</a>, accedi e rispondi.'
     safari_13_warning: Questo sito a breve non supporterà più iOS e Safari nelle versioni 13 e precedenti. Rimarrà disponibile una versione semplificata a sola lettura. (<a href="https://meta.discourse.org/t/224747">Altre informazioni</a>)
     permission_types:
@@ -3792,9 +3783,7 @@ it:
     safe_mode:
       enabled: "La modalità sicura è attiva, per disattivarla chiudi il browser"
     image_removed: "(immagine rimossa)"
-    do_not_disturb:
-      title: "Non disturbare per..."
-      label: "Non disturbare"
+    pause_notifications:
       remaining: "%{remaining} rimanenti"
       options:
         half_hour: "30 minuti"
@@ -3844,7 +3833,6 @@ it:
       new_count:
         one: "%{count} nuovo"
         other: "%{count} nuovi"
-      toggle_section: "attiva/disattiva sezione"
       more: "Altro"
       all_categories: "Tutte le categorie"
       all_tags: "Tutte le etichette"
@@ -3853,7 +3841,6 @@ it:
           header_link_text: "Informazioni"
         messages:
           header_link_text: "Messaggi"
-          header_action_title: "crea un messaggio personale"
           links:
             inbox: "Posta in arrivo"
             sent: "Inviati"
@@ -3870,7 +3857,6 @@ it:
           none: "Non hai aggiunto nessuna etichetta."
           click_to_get_started: "Clicca qui per iniziare."
           header_link_text: "Etichette"
-          header_action_title: "modifica le etichette nella barra laterale"
           configure_defaults: "Configura impostazioni predefinite"
         categories:
           links:
@@ -3880,11 +3866,9 @@ it:
           none: "Non hai aggiunto nessuna categoria."
           click_to_get_started: "Clicca qui per iniziare."
           header_link_text: "Categorie"
-          header_action_title: "modifica le categorie nella barra laterale"
           configure_defaults: "Configura impostazioni predefinite"
         community:
           header_link_text: "Community"
-          header_action_title: "crea un nuovo argomento"
           links:
             about:
               content: "Informazioni"
@@ -3899,10 +3883,8 @@ it:
               content: "FAQ"
             groups:
               content: "Gruppi"
-              title: "Tutti i gruppi"
             users:
               content: "Utenti"
-              title: "Tutti gli utenti"
             my_posts:
               content: "I miei Messaggi"
               draft_count:
@@ -3910,7 +3892,6 @@ it:
                 other: "%{count} bozze"
             review:
               content: "Revisiona"
-              title: "revisiona"
               pending_count: "%{count} in attesa"
     welcome_topic_banner:
       title: "Crea il tuo argomento di benvenuto"
@@ -4178,9 +4159,8 @@ it:
         detailed_instruction: "Una richiesta di tipo POST verrà inviata agli URL forniti quando si verifica uno degli eventi scelti."
         new: "Nuovo Webhook"
         create: "Crea"
+        edit: "Modifica"
         save: "Salva"
-        destroy: "Elimina"
-        description: "Descrizione"
         controls: "Controlli"
         go_back: "Torna all'elenco"
         payload_url: "URL di Payload"
@@ -4261,9 +4241,6 @@ it:
           headers: "Intestazioni"
           payload: "Payload"
           body: "Corpo"
-          go_list: "Vai all'elenco"
-          go_details: "Modifica webhook"
-          go_events: "Vai agli eventi"
           ping: "Ping"
           status: "Codice Stato"
           event_id: "ID"
@@ -4284,6 +4261,8 @@ it:
         howto: "Come installo i plugin?"
         official: "Plugin Ufficiale"
         broken_route: "Impossibile configurare il collegamento a '%{name}'. Assicurati che i blocchi degli annunci siano disabilitati e prova a ricaricare la pagina."
+      navigation_menu:
+        sidebar: "Barra laterale"
       backups:
         title: "Backup"
         menu:
@@ -4359,7 +4338,6 @@ it:
         button_title: "Manda Inviti"
       customize:
         title: "Personalizza"
-        long_title: "Personalizzazioni Sito"
         preview: "anteprima"
         explain_preview: "Guarda il sito con questo tema abilitato"
         save: "Salva"
@@ -4497,7 +4475,6 @@ it:
             error: "Questo tema è stato disattivato automaticamente perché non compatibile con questa versione di Discourse."
             minimum: "Richiede versione %{version} o superiore di Discourse."
             maximum: "Richiede versione %{version} o inferiore di Discourse."
-          component_of: "Componente di:"
           update_to_latest: "Aggiorna all'ultima versione"
           check_for_updates: "Controllo Aggiornamenti"
           updating: "Aggiornamento..."
@@ -4565,9 +4542,9 @@ it:
           new_name: "Nuova tavolozza dei colori"
           copy_name_prefix: "Copia di"
           delete_confirm: "Eliminare questa tavolozza dei colori?"
-          undo: "annulla"
+          undo: "Annulla"
           undo_title: "Annulla le modifiche effettuate a questo colore dall'ultimo salvataggio."
-          revert: "ripristina"
+          revert: "Ripristina"
           revert_title: "Reimposta questo colore alla tavolozza dei colori predefiniti di Discourse."
           primary:
             name: "primario"
@@ -4970,7 +4947,6 @@ it:
       user:
         suspend_failed: "Si è verificato un errore durante la sospensione di questo utente %{error}"
         unsuspend_failed: "Si è verificato un errore durante la riattivazione di questo utente %{error}"
-        suspend_duration: "Per quanto tempo l'utente sarà sospeso?"
         suspend_reason_label: "Perché stai sospendendo l'utente? Questo testo <b>sarà visibile a tutti</b> nella pagina del profilo dell'utente, e gli verrà mostrato tutte le volte che tenterà di accedere. Scrivi un testo breve."
         suspend_reason_hidden_label: "Perché stai sospendendo l'utente? Questo testo gli verrà mostrato tutte le volte che tenterà di accedere. Scrivi un testo breve."
         suspend_reason: "Motivo"
@@ -5004,11 +4980,11 @@ it:
         penalty_post_edit: "Modifica il messaggio"
         penalty_post_none: "Non fare nulla"
         penalty_count: "Conteggio Penalità"
-        penalty_history: "Cronologia delle penalizzazioni"
         clear_penalty_history:
           title: "Cancella cronologia delle penalizzazioni"
           description: "utenti con penalizzazioni non possono accedere al Livello di affidabilità 3"
-        delete_all_posts_confirm_MF: "Stai per eliminare {POSTS, plural, one {# messaggio} other {# messaggi}} e {TOPICS, plural, one {# argomento} other {# argomenti}}. Vuoi continuare?"
+        delete_all_posts_confirm_MF: |
+          Stai per eliminare {POSTS, plural, one {# messaggio} other {# messaggi}} e {TOPICS, plural, one {# argomento} other {# argomenti}}. Vuoi continuare?
         silence: "Silenzia"
         unsilence: "Riattiva utente"
         silenced: "Silenziato?"
@@ -5158,6 +5134,11 @@ it:
         silenced_count: "Silenziati"
         suspended_count: "Sospesi"
         last_six_months: "Ultimi 6 mesi"
+        other_matches_list:
+          username: "Nome utente"
+          trust_level: "Livello di attendibilità"
+          read_time: "Tempo di lettura"
+          posts: "Messaggi"
         tl3_requirements:
           title: "Requisiti per livello di attendibilità 3"
           table_title:
@@ -5302,7 +5283,7 @@ it:
           search: "Cerca"
           groups: "Gruppi"
           dashboard: "Dashboard"
-          sidebar: "Barra laterale"
+          navigation: "Navigazione"
         secret_list:
           invalid_input: "I campi di inserimento non possono essere vuoti o contenere il carattere barra verticale."
         default_categories:
@@ -5473,10 +5454,8 @@ it:
       finish: "Esci dalla configurazione"
       back: "Indietro"
       next: "Avanti"
-      configure_more: "Configura altro..."
       step-text: "Intervallo"
       step: "%{current} di %{total}"
-      upload: "Carica"
       uploading: "Caricamento..."
       upload_error: "Spiacenti, c'è stato un errore caricando il file. Per favore, prova di nuovo."
       staff_count:

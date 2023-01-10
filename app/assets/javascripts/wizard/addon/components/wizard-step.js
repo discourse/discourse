@@ -26,6 +26,9 @@ export default Component.extend({
 
   @discourseComputed("step.displayIndex", "wizard.totalSteps")
   showNextButton(current, total) {
+    if (this.showConfigureMore === true) {
+      return false;
+    }
     return current < total;
   },
 
@@ -37,6 +40,11 @@ export default Component.extend({
   @discourseComputed("step.id")
   nextButtonClass(step) {
     return step === "ready" ? "configure-more" : "next";
+  },
+
+  @discourseComputed("step.id")
+  showConfigureMore(step) {
+    return step === "ready";
   },
 
   @discourseComputed("step.id")

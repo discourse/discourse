@@ -5,7 +5,7 @@ RSpec.describe BookmarkManager do
 
   let(:reminder_at) { 1.day.from_now }
   fab!(:post) { Fabricate(:post) }
-  let(:name) { 'Check this out!' }
+  let(:name) { "Check this out!" }
 
   subject { described_class.new(user) }
 
@@ -40,7 +40,14 @@ RSpec.describe BookmarkManager do
   end
 
   describe ".update" do
-    let!(:bookmark) { Fabricate(:bookmark_next_business_day_reminder, user: user, bookmarkable: post, name: "Old name") }
+    let!(:bookmark) do
+      Fabricate(
+        :bookmark_next_business_day_reminder,
+        user: user,
+        bookmarkable: post,
+        name: "Old name",
+      )
+    end
     let(:new_name) { "Some new name" }
     let(:new_reminder_at) { 10.days.from_now }
     let(:options) { {} }
@@ -50,7 +57,7 @@ RSpec.describe BookmarkManager do
         bookmark_id: bookmark.id,
         name: new_name,
         reminder_at: new_reminder_at,
-        options: options
+        options: options,
       )
     end
 
@@ -69,7 +76,9 @@ RSpec.describe BookmarkManager do
     end
 
     context "when options are provided" do
-      let(:options) { { auto_delete_preference: Bookmark.auto_delete_preferences[:when_reminder_sent] } }
+      let(:options) do
+        { auto_delete_preference: Bookmark.auto_delete_preferences[:when_reminder_sent] }
+      end
 
       it "saves any additional options successfully" do
         update_bookmark
@@ -86,9 +95,7 @@ RSpec.describe BookmarkManager do
     end
 
     context "if the bookmark no longer exists" do
-      before do
-        bookmark.destroy!
-      end
+      before { bookmark.destroy! }
       it "raises a not found error" do
         expect { update_bookmark }.to raise_error(Discourse::NotFound)
       end
@@ -97,8 +104,12 @@ RSpec.describe BookmarkManager do
 
   describe ".destroy_for_topic" do
     let!(:topic) { Fabricate(:topic) }
-    let!(:bookmark1) { Fabricate(:bookmark, bookmarkable: Fabricate(:post, topic: topic), user: user) }
-    let!(:bookmark2) { Fabricate(:bookmark, bookmarkable: Fabricate(:post, topic: topic), user: user) }
+    let!(:bookmark1) do
+      Fabricate(:bookmark, bookmarkable: Fabricate(:post, topic: topic), user: user)
+    end
+    let!(:bookmark2) do
+      Fabricate(:bookmark, bookmarkable: Fabricate(:post, topic: topic), user: user)
+    end
 
     it "destroys all bookmarks for the topic for the specified user" do
       subject.destroy_for_topic(topic)
@@ -136,9 +147,7 @@ RSpec.describe BookmarkManager do
     end
 
     context "when the bookmark does no longer exist" do
-      before do
-        bookmark.destroy
-      end
+      before { bookmark.destroy }
       it "does not error, and does not create a notification" do
         described_class.send_reminder_notification(bookmark.id)
         expect(notifications_for_user.any?).to eq(false)
@@ -146,9 +155,7 @@ RSpec.describe BookmarkManager do
     end
 
     context "if the post has been deleted" do
-      before do
-        bookmark.bookmarkable.trash!
-      end
+      before { bookmark.bookmarkable.trash! }
       it "does not error and does not create a notification" do
         described_class.send_reminder_notification(bookmark.id)
         bookmark.reload
@@ -157,7 +164,10 @@ RSpec.describe BookmarkManager do
     end
 
     def notifications_for_user
-      Notification.where(notification_type: Notification.types[:bookmark_reminder], user_id: bookmark.user.id)
+      Notification.where(
+        notification_type: Notification.types[:bookmark_reminder],
+        user_id: bookmark.user.id,
+      )
     end
   end
 
@@ -179,14 +189,14 @@ RSpec.describe BookmarkManager do
     context "if the bookmark is belonging to some other user" do
       let!(:bookmark) { Fabricate(:bookmark, user: Fabricate(:admin)) }
       it "raises an invalid access error" do
-        expect { subject.toggle_pin(bookmark_id: bookmark.id) }.to raise_error(Discourse::InvalidAccess)
+        expect { subject.toggle_pin(bookmark_id: bookmark.id) }.to raise_error(
+          Discourse::InvalidAccess,
+        )
       end
     end
 
     context "if the bookmark no longer exists" do
-      before do
-        bookmark.destroy!
-      end
+      before { bookmark.destroy! }
       it "raises a not found error" do
         expect { subject.toggle_pin(bookmark_id: bookmark.id) }.to raise_error(Discourse::NotFound)
       end
@@ -213,11 +223,25 @@ RSpec.describe BookmarkManager do
 
     it "when post is deleted it raises invalid access from guardian check" do
       post.trash!
-      expect { subject.create_for(bookmarkable_id: post.id, bookmarkable_type: "Post", name: name) }.to raise_error(Discourse::InvalidAccess)
+      expect do
+        subject.create_for(bookmarkable_id: post.id, bookmarkable_type: "Post", name: name)
+      end.to raise_error(Discourse::InvalidAccess)
+    end
+
+    it "adds a validation error when the bookmarkable_type is not registered" do
+      subject.create_for(bookmarkable_id: post.id, bookmarkable_type: "BlahFactory", name: name)
+      expect(subject.errors.full_messages).to include(
+        I18n.t("bookmarks.errors.invalid_bookmarkable", type: "BlahFactory"),
+      )
     end
 
     it "updates the topic user bookmarked column to true if any post is bookmarked" do
-      subject.create_for(bookmarkable_id: post.id, bookmarkable_type: "Post", name: name, reminder_at: reminder_at)
+      subject.create_for(
+        bookmarkable_id: post.id,
+        bookmarkable_type: "Post",
+        name: name,
+        reminder_at: reminder_at,
+      )
       tu = TopicUser.find_by(user: user)
       expect(tu.bookmarked).to eq(true)
       tu.update(bookmarked: false)
@@ -227,14 +251,64 @@ RSpec.describe BookmarkManager do
       expect(tu.bookmarked).to eq(true)
     end
 
-    it "sets auto_delete_preference to never by default" do
-      bookmark = subject.create_for(bookmarkable_id: post.id, bookmarkable_type: "Post", name: name, reminder_at: reminder_at)
-      expect(bookmark.auto_delete_preference).to eq(Bookmark.auto_delete_preferences[:never])
+    it "sets auto_delete_preference to clear_reminder by default" do
+      bookmark =
+        subject.create_for(
+          bookmarkable_id: post.id,
+          bookmarkable_type: "Post",
+          name: name,
+          reminder_at: reminder_at,
+        )
+      expect(bookmark.auto_delete_preference).to eq(
+        Bookmark.auto_delete_preferences[:clear_reminder],
+      )
+    end
+
+    context "when the user has set their bookmark_auto_delete_preference" do
+      before do
+        user.user_option.update!(
+          bookmark_auto_delete_preference: Bookmark.auto_delete_preferences[:on_owner_reply],
+        )
+      end
+
+      it "sets auto_delete_preferences to the user's user_option.bookmark_auto_delete_preference" do
+        bookmark =
+          subject.create_for(
+            bookmarkable_id: post.id,
+            bookmarkable_type: "Post",
+            name: name,
+            reminder_at: reminder_at,
+          )
+        expect(bookmark.auto_delete_preference).to eq(
+          Bookmark.auto_delete_preferences[:on_owner_reply],
+        )
+      end
+
+      it "uses the passed in auto_delete_preference option instead of the user's one" do
+        bookmark =
+          subject.create_for(
+            bookmarkable_id: post.id,
+            bookmarkable_type: "Post",
+            name: name,
+            reminder_at: reminder_at,
+            options: {
+              auto_delete_preference: Bookmark.auto_delete_preferences[:when_reminder_sent],
+            },
+          )
+        expect(bookmark.auto_delete_preference).to eq(
+          Bookmark.auto_delete_preferences[:when_reminder_sent],
+        )
+      end
     end
 
     context "when a reminder time is provided" do
       it "saves the values correctly" do
-        subject.create_for(bookmarkable_id: post.id, bookmarkable_type: "Post", name: name, reminder_at: reminder_at)
+        subject.create_for(
+          bookmarkable_id: post.id,
+          bookmarkable_type: "Post",
+          name: name,
+          reminder_at: reminder_at,
+        )
         bookmark = Bookmark.find_by(user: user, bookmarkable: post)
 
         expect(bookmark.reminder_at).to eq_time(reminder_at)
@@ -243,10 +317,18 @@ RSpec.describe BookmarkManager do
     end
 
     context "when options are provided" do
-      let(:options) { { auto_delete_preference: Bookmark.auto_delete_preferences[:when_reminder_sent] } }
+      let(:options) do
+        { auto_delete_preference: Bookmark.auto_delete_preferences[:when_reminder_sent] }
+      end
 
       it "saves any additional options successfully" do
-        subject.create_for(bookmarkable_id: post.id, bookmarkable_type: "Post", name: name, reminder_at: reminder_at, options: options)
+        subject.create_for(
+          bookmarkable_id: post.id,
+          bookmarkable_type: "Post",
+          name: name,
+          reminder_at: reminder_at,
+          options: options,
+        )
         bookmark = Bookmark.find_by(user: user, bookmarkable: post)
 
         expect(bookmark.auto_delete_preference).to eq(1)
@@ -254,20 +336,22 @@ RSpec.describe BookmarkManager do
     end
 
     context "when the bookmark already exists for the user & post" do
-      before do
-        Bookmark.create(bookmarkable: post, user: user)
-      end
+      before { Bookmark.create(bookmarkable: post, user: user) }
 
       it "adds an error to the manager" do
         subject.create_for(bookmarkable_id: post.id, bookmarkable_type: "Post")
-        expect(subject.errors.full_messages).to include(I18n.t("bookmarks.errors.already_bookmarked", type: "Post"))
+        expect(subject.errors.full_messages).to include(
+          I18n.t("bookmarks.errors.already_bookmarked", type: "Post"),
+        )
       end
     end
 
     context "when the bookmark name is too long" do
       it "adds an error to the manager" do
         subject.create_for(bookmarkable_id: post.id, bookmarkable_type: "Post", name: "test" * 100)
-        expect(subject.errors.full_messages).to include("Name is too long (maximum is 100 characters)")
+        expect(subject.errors.full_messages).to include(
+          "Name is too long (maximum is 100 characters)",
+        )
       end
     end
 
@@ -275,8 +359,15 @@ RSpec.describe BookmarkManager do
       let(:reminder_at) { 10.days.ago }
 
       it "adds an error to the manager" do
-        subject.create_for(bookmarkable_id: post.id, bookmarkable_type: "Post", name: name, reminder_at: reminder_at)
-        expect(subject.errors.full_messages).to include(I18n.t("bookmarks.errors.cannot_set_past_reminder"))
+        subject.create_for(
+          bookmarkable_id: post.id,
+          bookmarkable_type: "Post",
+          name: name,
+          reminder_at: reminder_at,
+        )
+        expect(subject.errors.full_messages).to include(
+          I18n.t("bookmarks.errors.cannot_set_past_reminder"),
+        )
       end
     end
 
@@ -284,89 +375,34 @@ RSpec.describe BookmarkManager do
       let(:reminder_at) { 11.years.from_now }
 
       it "adds an error to the manager" do
-        subject.create_for(bookmarkable_id: post.id, bookmarkable_type: "Post", name: name, reminder_at: reminder_at)
-        expect(subject.errors.full_messages).to include(I18n.t("bookmarks.errors.cannot_set_reminder_in_distant_future"))
+        subject.create_for(
+          bookmarkable_id: post.id,
+          bookmarkable_type: "Post",
+          name: name,
+          reminder_at: reminder_at,
+        )
+        expect(subject.errors.full_messages).to include(
+          I18n.t("bookmarks.errors.cannot_set_reminder_in_distant_future"),
+        )
       end
     end
 
     context "when the post is inaccessible for the user" do
-      before do
-        post.trash!
-      end
+      before { post.trash! }
       it "raises an invalid access error" do
-        expect { subject.create_for(bookmarkable_id: post.id, bookmarkable_type: "Post", name: name) }.to raise_error(Discourse::InvalidAccess)
+        expect {
+          subject.create_for(bookmarkable_id: post.id, bookmarkable_type: "Post", name: name)
+        }.to raise_error(Discourse::InvalidAccess)
       end
     end
 
     context "when the topic is inaccessible for the user" do
-      before do
-        post.topic.update(category: Fabricate(:private_category, group: Fabricate(:group)))
-      end
+      before { post.topic.update(category: Fabricate(:private_category, group: Fabricate(:group))) }
       it "raises an invalid access error" do
-        expect { subject.create_for(bookmarkable_id: post.id, bookmarkable_type: "Post", name: name) }.to raise_error(Discourse::InvalidAccess)
+        expect {
+          subject.create_for(bookmarkable_id: post.id, bookmarkable_type: "Post", name: name)
+        }.to raise_error(Discourse::InvalidAccess)
       end
-    end
-
-    it "does not save user preference by default" do
-      user.user_option.update(bookmark_auto_delete_preference: Bookmark.auto_delete_preferences[:on_owner_reply])
-      subject.create_for(
-        bookmarkable_id: post.id,
-        bookmarkable_type: "Post",
-        options: { auto_delete_preference: Bookmark.auto_delete_preferences[:when_reminder_sent] }
-      )
-      expect(user.user_option.bookmark_auto_delete_preference).to eq(Bookmark.auto_delete_preferences[:on_owner_reply])
-
-      bookmark = Bookmark.find_by(user: user)
-      subject.update(
-        bookmark_id: bookmark.id,
-        name: "test",
-        reminder_at: 1.day.from_now,
-        options: { auto_delete_preference: Bookmark.auto_delete_preferences[:when_reminder_sent] }
-      )
-      expect(user.user_option.bookmark_auto_delete_preference).to eq(Bookmark.auto_delete_preferences[:on_owner_reply])
-    end
-
-    it "saves user's preference when save_user_preferences option is specified" do
-      user.user_option.update(bookmark_auto_delete_preference: Bookmark.auto_delete_preferences[:on_owner_reply])
-      subject.create_for(
-        bookmarkable_id: post.id,
-        bookmarkable_type: "Post",
-        options: { auto_delete_preference: Bookmark.auto_delete_preferences[:when_reminder_sent], save_user_preferences: true }
-      )
-      user.user_option.reload
-      expect(user.user_option.bookmark_auto_delete_preference).to eq(Bookmark.auto_delete_preferences[:when_reminder_sent])
-
-      bookmark = Bookmark.find_by(user: user)
-      subject.update(
-        bookmark_id: bookmark.id,
-        name: "test",
-        reminder_at: 1.day.from_now,
-        options: { auto_delete_preference: Bookmark.auto_delete_preferences[:on_owner_reply], save_user_preferences: true }
-      )
-      user.user_option.reload
-      expect(user.user_option.bookmark_auto_delete_preference).to eq(Bookmark.auto_delete_preferences[:on_owner_reply])
-    end
-
-    it "does not save user preferences when save_user_preferences is false" do
-      user.user_option.update(bookmark_auto_delete_preference: Bookmark.auto_delete_preferences[:on_owner_reply])
-      subject.create_for(
-        bookmarkable_id: post.id,
-        bookmarkable_type: "Post",
-        options: { auto_delete_preference: Bookmark.auto_delete_preferences[:when_reminder_sent], save_user_preferences: false }
-      )
-      user.user_option.reload
-      expect(user.user_option.bookmark_auto_delete_preference).to eq(Bookmark.auto_delete_preferences[:on_owner_reply])
-    end
-
-    it "does not save user preferences when save_user_preferences is true and auto_delete_preference is nil" do
-      user.user_option.update(bookmark_auto_delete_preference: Bookmark.auto_delete_preferences[:on_owner_reply])
-      subject.create_for(
-        bookmarkable_id: post.id,
-        bookmarkable_type: "Post",
-        options: { auto_delete_preference: nil, save_user_preferences: true }
-      )
-      user.user_option.reload
-      expect(user.user_option.bookmark_auto_delete_preference).to eq(Bookmark.auto_delete_preferences[:on_owner_reply])
     end
   end
 end

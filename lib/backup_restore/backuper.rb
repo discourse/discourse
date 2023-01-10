@@ -4,7 +4,6 @@ require "mini_mime"
 require "file_store/s3_store"
 
 module BackupRestore
-
   class Backuper
     attr_reader :success
 
@@ -84,7 +83,11 @@ module BackupRestore
       @dump_filename = File.join(@tmp_directory, BackupRestore::DUMP_FILE)
       @archive_directory = BackupRestore::LocalBackupStore.base_directory(db: @current_db)
       filename = @filename_override || "#{get_parameterized_title}-#{@timestamp}"
-      @archive_basename = File.join(@archive_directory, "#{filename}-#{BackupRestore::VERSION_PREFIX}#{BackupRestore.current_version}")
+      @archive_basename =
+        File.join(
+          @archive_directory,
+          "#{filename}-#{BackupRestore::VERSION_PREFIX}#{BackupRestore.current_version}",
+        )
 
       @backup_filename =
         if @with_uploads
@@ -119,9 +122,18 @@ module BackupRestore
       BackupMetadata.delete_all
       BackupMetadata.create!(name: "base_url", value: Discourse.base_url)
       BackupMetadata.create!(name: "cdn_url", value: Discourse.asset_host)
-      BackupMetadata.create!(name: "s3_base_url", value: SiteSetting.Upload.enable_s3_uploads ? SiteSetting.Upload.s3_base_url : nil)
-      BackupMetadata.create!(name: "s3_cdn_url", value: SiteSetting.Upload.enable_s3_uploads ? SiteSetting.Upload.s3_cdn_url : nil)
-      BackupMetadata.create!(name: "db_name", value: RailsMultisite::ConnectionManagement.current_db)
+      BackupMetadata.create!(
+        name: "s3_base_url",
+        value: SiteSetting.Upload.enable_s3_uploads ? SiteSetting.Upload.s3_base_url : nil,
+      )
+      BackupMetadata.create!(
+        name: "s3_cdn_url",
+        value: SiteSetting.Upload.enable_s3_uploads ? SiteSetting.Upload.s3_cdn_url : nil,
+      )
+      BackupMetadata.create!(
+        name: "db_name",
+        value: RailsMultisite::ConnectionManagement.current_db,
+      )
       BackupMetadata.create!(name: "multisite", value: Rails.configuration.multisite)
     end
 
@@ -132,7 +144,7 @@ module BackupRestore
       pg_dump_running = true
 
       Thread.new do
-        RailsMultisite::ConnectionManagement::establish_connection(db: @current_db)
+        RailsMultisite::ConnectionManagement.establish_connection(db: @current_db)
         while pg_dump_running
           message = logs.pop.strip
           log(message) unless message.blank?
@@ -159,23 +171,24 @@ module BackupRestore
       db_conf = BackupRestore.database_configuration
 
       password_argument = "PGPASSWORD='#{db_conf.password}'" if db_conf.password.present?
-      host_argument     = "--host=#{db_conf.host}"         if db_conf.host.present?
-      port_argument     = "--port=#{db_conf.port}"         if db_conf.port.present?
+      host_argument = "--host=#{db_conf.host}" if db_conf.host.present?
+      port_argument = "--port=#{db_conf.port}" if db_conf.port.present?
       username_argument = "--username=#{db_conf.username}" if db_conf.username.present?
 
-      [ password_argument,            # pass the password to pg_dump (if any)
-        "pg_dump",                    # the pg_dump command
-        "--schema=public",            # only public schema
-        "-T public.pg_*",             # exclude tables and views whose name starts with "pg_"
+      [
+        password_argument, # pass the password to pg_dump (if any)
+        "pg_dump", # the pg_dump command
+        "--schema=public", # only public schema
+        "-T public.pg_*", # exclude tables and views whose name starts with "pg_"
         "--file='#{@dump_filename}'", # output to the dump.sql file
-        "--no-owner",                 # do not output commands to set ownership of objects
-        "--no-privileges",            # prevent dumping of access privileges
-        "--verbose",                  # specifies verbose mode
-        "--compress=4",               # Compression level of 4
-        host_argument,                # the hostname to connect to (if any)
-        port_argument,                # the port to connect to (if any)
-        username_argument,            # the username to connect as (if any)
-        db_conf.database              # the name of the database to dump
+        "--no-owner", # do not output commands to set ownership of objects
+        "--no-privileges", # prevent dumping of access privileges
+        "--verbose", # specifies verbose mode
+        "--compress=4", # Compression level of 4
+        host_argument, # the hostname to connect to (if any)
+        port_argument, # the port to connect to (if any)
+        username_argument, # the username to connect as (if any)
+        db_conf.database, # the name of the database to dump
       ].join(" ")
     end
 
@@ -185,8 +198,10 @@ module BackupRestore
       archive_filename = File.join(@archive_directory, @backup_filename)
 
       Discourse::Utils.execute_command(
-        'mv', @dump_filename, archive_filename,
-        failure_message: "Failed to move database dump file."
+        "mv",
+        @dump_filename,
+        archive_filename,
+        failure_message: "Failed to move database dump file.",
       )
 
       remove_tmp_directory
@@ -198,17 +213,29 @@ module BackupRestore
       tar_filename = "#{@archive_basename}.tar"
 
       log "Making sure archive does not already exist..."
-      Discourse::Utils.execute_command('rm', '-f', tar_filename)
-      Discourse::Utils.execute_command('rm', '-f', "#{tar_filename}.gz")
+      Discourse::Utils.execute_command("rm", "-f", tar_filename)
+      Discourse::Utils.execute_command("rm", "-f", "#{tar_filename}.gz")
 
       log "Creating empty archive..."
-      Discourse::Utils.execute_command('tar', '--create', '--file', tar_filename, '--files-from', '/dev/null')
+      Discourse::Utils.execute_command(
+        "tar",
+        "--create",
+        "--file",
+        tar_filename,
+        "--files-from",
+        "/dev/null",
+      )
 
       log "Archiving data dump..."
       Discourse::Utils.execute_command(
-        'tar', '--append', '--dereference', '--file', tar_filename, File.basename(@dump_filename),
+        "tar",
+        "--append",
+        "--dereference",
+        "--file",
+        tar_filename,
+        File.basename(@dump_filename),
         failure_message: "Failed to archive data dump.",
-        chdir: File.dirname(@dump_filename)
+        chdir: File.dirname(@dump_filename),
       )
 
       add_local_uploads_to_archive(tar_filename)
@@ -218,8 +245,10 @@ module BackupRestore
 
       log "Gzipping archive, this may take a while..."
       Discourse::Utils.execute_command(
-        'gzip', "-#{SiteSetting.backup_gzip_compression_level_for_uploads}", tar_filename,
-        failure_message: "Failed to gzip archive."
+        "gzip",
+        "-#{SiteSetting.backup_gzip_compression_level_for_uploads}",
+        tar_filename,
+        failure_message: "Failed to gzip archive.",
       )
     end
 
@@ -244,14 +273,21 @@ module BackupRestore
         if SiteSetting.include_thumbnails_in_backups
           exclude_optimized = ""
         else
-          optimized_path = File.join(upload_directory, 'optimized')
+          optimized_path = File.join(upload_directory, "optimized")
           exclude_optimized = "--exclude=#{optimized_path}"
         end
 
         Discourse::Utils.execute_command(
-          'tar', '--append', '--dereference', exclude_optimized, '--file', tar_filename, upload_directory,
-          failure_message: "Failed to archive uploads.", success_status_codes: [0, 1],
-          chdir: File.join(Rails.root, "public")
+          "tar",
+          "--append",
+          "--dereference",
+          exclude_optimized,
+          "--file",
+          tar_filename,
+          upload_directory,
+          failure_message: "Failed to archive uploads.",
+          success_status_codes: [0, 1],
+          chdir: File.join(Rails.root, "public"),
         )
       else
         log "No local uploads found. Skipping archiving of local uploads..."
@@ -287,9 +323,14 @@ module BackupRestore
 
       log "Appending uploads to archive..."
       Discourse::Utils.execute_command(
-        'tar', '--append', '--file', tar_filename, upload_directory,
-        failure_message: "Failed to append uploads to archive.", success_status_codes: [0, 1],
-        chdir: @tmp_directory
+        "tar",
+        "--append",
+        "--file",
+        tar_filename,
+        upload_directory,
+        failure_message: "Failed to append uploads to archive.",
+        success_status_codes: [0, 1],
+        chdir: @tmp_directory,
       )
 
       log "No uploads found on S3. Skipping archiving of uploads stored on S3..." if count == 0
@@ -327,9 +368,7 @@ module BackupRestore
       logs = Discourse::Utils.logs_markdown(@logs, user: @user)
       post = SystemMessage.create_from_system_user(@user, status, logs: logs)
 
-      if @user.id == Discourse::SYSTEM_USER_ID
-        post.topic.invite_group(@user, Group[:admins])
-      end
+      post.topic.invite_group(@user, Group[:admins]) if @user.id == Discourse::SYSTEM_USER_ID
     rescue => ex
       log "Something went wrong while notifying user.", ex
     end
@@ -399,7 +438,12 @@ module BackupRestore
     def publish_log(message, timestamp)
       return unless @publish_to_message_bus
       data = { timestamp: timestamp, operation: "backup", message: message }
-      MessageBus.publish(BackupRestore::LOGS_CHANNEL, data, user_ids: [@user_id], client_ids: [@client_id])
+      MessageBus.publish(
+        BackupRestore::LOGS_CHANNEL,
+        data,
+        user_ids: [@user_id],
+        client_ids: [@client_id],
+      )
     end
 
     def save_log(message, timestamp)
@@ -416,5 +460,4 @@ module BackupRestore
       end
     end
   end
-
 end

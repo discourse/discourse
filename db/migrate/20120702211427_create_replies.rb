@@ -8,7 +8,7 @@ class CreateReplies < ActiveRecord::Migration[4.2]
       t.timestamps null: false
     end
 
-    add_index :post_replies, [:post_id, :reply_id], unique: true
+    add_index :post_replies, %i[post_id reply_id], unique: true
 
     execute "INSERT INTO post_replies (post_id, reply_id, created_at, updated_at)
              SELECT p2.id, p.id, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
