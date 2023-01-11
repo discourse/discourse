@@ -1,106 +1,123 @@
-## Modules
+## Classes
 
 <dl>
-<dt><a href="#module_Collection">Collection</a></dt>
+<dt><a href="#Collection">Collection</a></dt>
 <dd></dd>
-<dt><a href="#module_ChatApi">ChatApi</a></dt>
+<dt><a href="#ChatApi">ChatApi</a></dt>
 <dd></dd>
 </dl>
 
-<a name="module_Collection"></a>
+## Functions
+
+<dl>
+<dt><a href="#load">load()</a> ⇒ <code>Promise</code></dt>
+<dd><p>Loads first batch of results</p>
+</dd>
+<dt><a href="#loadMore">loadMore()</a> ⇒ <code>Promise</code></dt>
+<dd><p>Attempts to load more results</p>
+</dd>
+<dt><a href="#channel">channel(channelId)</a> ⇒ <code>Promise</code></dt>
+<dd><p>Get a channel by its ID.</p>
+</dd>
+<dt><a href="#channels">channels()</a> ⇒ <code>module:Collection</code></dt>
+<dd><p>List all accessible category channels of the current user.</p>
+</dd>
+<dt><a href="#moveChannelMessages">moveChannelMessages(channelId, data)</a> ⇒ <code>Promise</code></dt>
+<dd><p>Moves messages from one channel to another.</p>
+</dd>
+<dt><a href="#destroyChannel">destroyChannel(channelId, channelName)</a> ⇒ <code>Promise</code></dt>
+<dd><p>Destroys a channel.</p>
+</dd>
+<dt><a href="#createChannel">createChannel(data)</a> ⇒ <code>Promise</code></dt>
+<dd><p>Creates a channel.</p>
+</dd>
+<dt><a href="#categoryPermissions">categoryPermissions(categoryId)</a> ⇒ <code>Promise</code></dt>
+<dd><p>Lists chat permissions for a category.</p>
+</dd>
+<dt><a href="#sendMessage">sendMessage(channelId, data)</a> ⇒ <code>Promise</code></dt>
+<dd><p>Sends a message.</p>
+</dd>
+<dt><a href="#createChannelArchive">createChannelArchive(channelId, data)</a> ⇒ <code>Promise</code></dt>
+<dd><p>Creates a channel archive.</p>
+</dd>
+<dt><a href="#updateChannel">updateChannel(channelId, data)</a> ⇒ <code>Promise</code></dt>
+<dd><p>Updates a channel.</p>
+</dd>
+<dt><a href="#updateChannelStatus">updateChannelStatus(channelId, status)</a> ⇒ <code>Promise</code></dt>
+<dd><p>Updates the status of a channel.</p>
+</dd>
+<dt><a href="#listChannelMemberships">listChannelMemberships(channelId)</a> ⇒ <code>module:Collection</code></dt>
+<dd><p>Lists members of a channel.</p>
+</dd>
+<dt><a href="#listCurrentUserChannels">listCurrentUserChannels()</a> ⇒ <code>Promise</code></dt>
+<dd><p>Lists public and direct message channels of the current user.</p>
+</dd>
+<dt><a href="#followChannel">followChannel(channelId)</a> ⇒ <code>Promise</code></dt>
+<dd><p>Makes current user follow a channel.</p>
+</dd>
+<dt><a href="#unfollowChannel">unfollowChannel(channelId)</a> ⇒ <code>Promise</code></dt>
+<dd><p>Makes current user unfollow a channel.</p>
+</dd>
+<dt><a href="#updateCurrentUserChannelNotificationsSettings">updateCurrentUserChannelNotificationsSettings(channelId, data)</a> ⇒ <code>Promise</code></dt>
+<dd><p>Update notifications settings of current user for a channel.</p>
+</dd>
+</dl>
+
+<a name="Collection"></a>
 
 ## Collection
-
-* [Collection](#module_Collection)
-    * [module.exports](#exp_module_Collection--module.exports) ⏏
-        * [new module.exports(resourceURL, handler)](#new_module_Collection--module.exports_new)
-        * [.load()](#module_Collection--module.exports+load) ⇒ <code>Promise</code>
-        * [.loadMore()](#module_Collection--module.exports+loadMore) ⇒ <code>Promise</code>
-
+**Kind**: global class  
 
 * * *
 
-<a name="exp_module_Collection--module.exports"></a>
+<a name="new_Collection_new"></a>
 
-### module.exports ⏏
+### new Collection()
 Handles a paginated API response.
 
-**Kind**: Exported class  
 
 * * *
 
-<a name="new_module_Collection--module.exports_new"></a>
-
-#### new module.exports(resourceURL, handler)
-Create a Collection instance
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| resourceURL | <code>string</code> | the API endpoint to call |
-| handler | <code>callback</code> | anonymous function used to handle the response |
-
-
-* * *
-
-<a name="module_Collection--module.exports+load"></a>
-
-#### module.exports.load() ⇒ <code>Promise</code>
-Loads first batch of results
-
-**Kind**: instance method of [<code>module.exports</code>](#exp_module_Collection--module.exports)  
-
-* * *
-
-<a name="module_Collection--module.exports+loadMore"></a>
-
-#### module.exports.loadMore() ⇒ <code>Promise</code>
-Attempts to load more results
-
-**Kind**: instance method of [<code>module.exports</code>](#exp_module_Collection--module.exports)  
-
-* * *
-
-<a name="module_ChatApi"></a>
+<a name="ChatApi"></a>
 
 ## ChatApi
-
-* [ChatApi](#module_ChatApi)
-    * [module.exports](#exp_module_ChatApi--module.exports) ⏏
-        * [.channel(channelId)](#module_ChatApi--module.exports+channel) ⇒ <code>Promise</code>
-        * [.channels()](#module_ChatApi--module.exports+channels) ⇒ [<code>module.exports</code>](#exp_module_Collection--module.exports)
-        * [.moveChannelMessages(channelId, data)](#module_ChatApi--module.exports+moveChannelMessages) ⇒ <code>Promise</code>
-        * [.destroyChannel(channelId, channelName)](#module_ChatApi--module.exports+destroyChannel) ⇒ <code>Promise</code>
-        * [.createChannel(data)](#module_ChatApi--module.exports+createChannel) ⇒ <code>Promise</code>
-        * [.categoryPermissions(categoryId)](#module_ChatApi--module.exports+categoryPermissions) ⇒ <code>Promise</code>
-        * [.sendMessage(channelId, data)](#module_ChatApi--module.exports+sendMessage) ⇒ <code>Promise</code>
-        * [.createChannelArchive(channelId, data)](#module_ChatApi--module.exports+createChannelArchive) ⇒ <code>Promise</code>
-        * [.updateChannel(channelId, data)](#module_ChatApi--module.exports+updateChannel) ⇒ <code>Promise</code>
-        * [.updateChannelStatus(channelId, status)](#module_ChatApi--module.exports+updateChannelStatus) ⇒ <code>Promise</code>
-        * [.listChannelMemberships(channelId)](#module_ChatApi--module.exports+listChannelMemberships) ⇒ [<code>module.exports</code>](#exp_module_Collection--module.exports)
-        * [.listCurrentUserChannels()](#module_ChatApi--module.exports+listCurrentUserChannels) ⇒ <code>Promise</code>
-        * [.followChannel(channelId)](#module_ChatApi--module.exports+followChannel) ⇒ <code>Promise</code>
-        * [.unfollowChannel(channelId)](#module_ChatApi--module.exports+unfollowChannel) ⇒ <code>Promise</code>
-        * [.updateCurrentUserChannelNotificationsSettings(channelId, data)](#module_ChatApi--module.exports+updateCurrentUserChannelNotificationsSettings) ⇒ <code>Promise</code>
-
+**Kind**: global class  
+**Implements**: <code>Service</code>  
 
 * * *
 
-<a name="exp_module_ChatApi--module.exports"></a>
+<a name="new_ChatApi_new"></a>
 
-### module.exports ⏏
+### new ChatApi()
 Chat API service. Provides methods to interact with the chat API.
 
-**Kind**: Exported class  
 
 * * *
 
-<a name="module_ChatApi--module.exports+channel"></a>
+<a name="load"></a>
 
-#### module.exports.channel(channelId) ⇒ <code>Promise</code>
+## load() ⇒ <code>Promise</code>
+Loads first batch of results
+
+**Kind**: global function  
+
+* * *
+
+<a name="loadMore"></a>
+
+## loadMore() ⇒ <code>Promise</code>
+Attempts to load more results
+
+**Kind**: global function  
+
+* * *
+
+<a name="channel"></a>
+
+## channel(channelId) ⇒ <code>Promise</code>
 Get a channel by its ID.
 
-**Kind**: instance method of [<code>module.exports</code>](#exp_module_ChatApi--module.exports)  
+**Kind**: global function  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -113,12 +130,12 @@ this.chatApi.channel(1).then(channel => { ... })
 
 * * *
 
-<a name="module_ChatApi--module.exports+channels"></a>
+<a name="channels"></a>
 
-#### module.exports.channels() ⇒ [<code>module.exports</code>](#exp_module_Collection--module.exports)
+## channels() ⇒ <code>module:Collection</code>
 List all accessible category channels of the current user.
 
-**Kind**: instance method of [<code>module.exports</code>](#exp_module_ChatApi--module.exports)  
+**Kind**: global function  
 **Example**  
 ```js
 this.chatApi.channels.then(channels => { ... })
@@ -126,12 +143,12 @@ this.chatApi.channels.then(channels => { ... })
 
 * * *
 
-<a name="module_ChatApi--module.exports+moveChannelMessages"></a>
+<a name="moveChannelMessages"></a>
 
-#### module.exports.moveChannelMessages(channelId, data) ⇒ <code>Promise</code>
+## moveChannelMessages(channelId, data) ⇒ <code>Promise</code>
 Moves messages from one channel to another.
 
-**Kind**: instance method of [<code>module.exports</code>](#exp_module_ChatApi--module.exports)  
+**Kind**: global function  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -151,12 +168,12 @@ this.chatApi
 
 * * *
 
-<a name="module_ChatApi--module.exports+destroyChannel"></a>
+<a name="destroyChannel"></a>
 
-#### module.exports.destroyChannel(channelId, channelName) ⇒ <code>Promise</code>
+## destroyChannel(channelId, channelName) ⇒ <code>Promise</code>
 Destroys a channel.
 
-**Kind**: instance method of [<code>module.exports</code>](#exp_module_ChatApi--module.exports)  
+**Kind**: global function  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -170,12 +187,12 @@ this.chatApi.destroyChannel(1, "foo").then(() => { ... })
 
 * * *
 
-<a name="module_ChatApi--module.exports+createChannel"></a>
+<a name="createChannel"></a>
 
-#### module.exports.createChannel(data) ⇒ <code>Promise</code>
+## createChannel(data) ⇒ <code>Promise</code>
 Creates a channel.
 
-**Kind**: instance method of [<code>module.exports</code>](#exp_module_ChatApi--module.exports)  
+**Kind**: global function  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -194,12 +211,12 @@ this.chatApi
 
 * * *
 
-<a name="module_ChatApi--module.exports+categoryPermissions"></a>
+<a name="categoryPermissions"></a>
 
-#### module.exports.categoryPermissions(categoryId) ⇒ <code>Promise</code>
+## categoryPermissions(categoryId) ⇒ <code>Promise</code>
 Lists chat permissions for a category.
 
-**Kind**: instance method of [<code>module.exports</code>](#exp_module_ChatApi--module.exports)  
+**Kind**: global function  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -208,12 +225,12 @@ Lists chat permissions for a category.
 
 * * *
 
-<a name="module_ChatApi--module.exports+sendMessage"></a>
+<a name="sendMessage"></a>
 
-#### module.exports.sendMessage(channelId, data) ⇒ <code>Promise</code>
+## sendMessage(channelId, data) ⇒ <code>Promise</code>
 Sends a message.
 
-**Kind**: instance method of [<code>module.exports</code>](#exp_module_ChatApi--module.exports)  
+**Kind**: global function  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -228,12 +245,12 @@ Sends a message.
 
 * * *
 
-<a name="module_ChatApi--module.exports+createChannelArchive"></a>
+<a name="createChannelArchive"></a>
 
-#### module.exports.createChannelArchive(channelId, data) ⇒ <code>Promise</code>
+## createChannelArchive(channelId, data) ⇒ <code>Promise</code>
 Creates a channel archive.
 
-**Kind**: instance method of [<code>module.exports</code>](#exp_module_ChatApi--module.exports)  
+**Kind**: global function  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -248,12 +265,12 @@ Creates a channel archive.
 
 * * *
 
-<a name="module_ChatApi--module.exports+updateChannel"></a>
+<a name="updateChannel"></a>
 
-#### module.exports.updateChannel(channelId, data) ⇒ <code>Promise</code>
+## updateChannel(channelId, data) ⇒ <code>Promise</code>
 Updates a channel.
 
-**Kind**: instance method of [<code>module.exports</code>](#exp_module_ChatApi--module.exports)  
+**Kind**: global function  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -265,12 +282,12 @@ Updates a channel.
 
 * * *
 
-<a name="module_ChatApi--module.exports+updateChannelStatus"></a>
+<a name="updateChannelStatus"></a>
 
-#### module.exports.updateChannelStatus(channelId, status) ⇒ <code>Promise</code>
+## updateChannelStatus(channelId, status) ⇒ <code>Promise</code>
 Updates the status of a channel.
 
-**Kind**: instance method of [<code>module.exports</code>](#exp_module_ChatApi--module.exports)  
+**Kind**: global function  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -280,12 +297,12 @@ Updates the status of a channel.
 
 * * *
 
-<a name="module_ChatApi--module.exports+listChannelMemberships"></a>
+<a name="listChannelMemberships"></a>
 
-#### module.exports.listChannelMemberships(channelId) ⇒ [<code>module.exports</code>](#exp_module_Collection--module.exports)
+## listChannelMemberships(channelId) ⇒ <code>module:Collection</code>
 Lists members of a channel.
 
-**Kind**: instance method of [<code>module.exports</code>](#exp_module_ChatApi--module.exports)  
+**Kind**: global function  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -294,21 +311,21 @@ Lists members of a channel.
 
 * * *
 
-<a name="module_ChatApi--module.exports+listCurrentUserChannels"></a>
+<a name="listCurrentUserChannels"></a>
 
-#### module.exports.listCurrentUserChannels() ⇒ <code>Promise</code>
+## listCurrentUserChannels() ⇒ <code>Promise</code>
 Lists public and direct message channels of the current user.
 
-**Kind**: instance method of [<code>module.exports</code>](#exp_module_ChatApi--module.exports)  
+**Kind**: global function  
 
 * * *
 
-<a name="module_ChatApi--module.exports+followChannel"></a>
+<a name="followChannel"></a>
 
-#### module.exports.followChannel(channelId) ⇒ <code>Promise</code>
+## followChannel(channelId) ⇒ <code>Promise</code>
 Makes current user follow a channel.
 
-**Kind**: instance method of [<code>module.exports</code>](#exp_module_ChatApi--module.exports)  
+**Kind**: global function  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -317,12 +334,12 @@ Makes current user follow a channel.
 
 * * *
 
-<a name="module_ChatApi--module.exports+unfollowChannel"></a>
+<a name="unfollowChannel"></a>
 
-#### module.exports.unfollowChannel(channelId) ⇒ <code>Promise</code>
+## unfollowChannel(channelId) ⇒ <code>Promise</code>
 Makes current user unfollow a channel.
 
-**Kind**: instance method of [<code>module.exports</code>](#exp_module_ChatApi--module.exports)  
+**Kind**: global function  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -331,12 +348,12 @@ Makes current user unfollow a channel.
 
 * * *
 
-<a name="module_ChatApi--module.exports+updateCurrentUserChannelNotificationsSettings"></a>
+<a name="updateCurrentUserChannelNotificationsSettings"></a>
 
-#### module.exports.updateCurrentUserChannelNotificationsSettings(channelId, data) ⇒ <code>Promise</code>
+## updateCurrentUserChannelNotificationsSettings(channelId, data) ⇒ <code>Promise</code>
 Update notifications settings of current user for a channel.
 
-**Kind**: instance method of [<code>module.exports</code>](#exp_module_ChatApi--module.exports)  
+**Kind**: global function  
 
 | Param | Type | Description |
 | --- | --- | --- |

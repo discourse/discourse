@@ -1,5 +1,3 @@
-/** @module ChatApi */
-
 import Service, { inject as service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import UserChatChannelMembership from "discourse/plugins/chat/discourse/models/user-chat-channel-membership";
@@ -7,6 +5,9 @@ import Collection from "../lib/Collection";
 
 /**
  * Chat API service. Provides methods to interact with the chat API.
+ *
+ * @class ChatApi
+ * @implements {Service}
  */
 export default class ChatApi extends Service {
   @service chatChannelsManager;

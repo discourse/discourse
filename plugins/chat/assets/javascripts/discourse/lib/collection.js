@@ -1,5 +1,3 @@
-/** @module Collection */
-
 import { ajax } from "discourse/lib/ajax";
 import { tracked } from "@glimmer/tracking";
 import { bind } from "discourse-common/utils/decorators";
@@ -7,6 +5,8 @@ import { Promise } from "rsvp";
 
 /**
  * Handles a paginated API response.
+ *
+ * @class Collection
  */
 export default class Collection {
   @tracked items = [];
