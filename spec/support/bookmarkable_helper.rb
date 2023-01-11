@@ -47,9 +47,12 @@ class UserTestBookmarkable < BaseBookmarkable
   end
 
   def self.list_query(user, guardian)
-    user.bookmarks.joins(
-      "INNER JOIN users ON users.id = bookmarks.bookmarkable_id AND bookmarks.bookmarkable_type = 'User'"
-    ).where(bookmarkable_type: "User")
+    user
+      .bookmarks
+      .joins(
+        "INNER JOIN users ON users.id = bookmarks.bookmarkable_id AND bookmarks.bookmarkable_type = 'User'",
+      )
+      .where(bookmarkable_type: "User")
   end
 
   def self.search_query(bookmarks, query, ts_query, &bookmarkable_search)

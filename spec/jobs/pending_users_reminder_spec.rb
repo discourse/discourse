@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::PendingUsersReminder do
-  context 'when must_approve_users is true' do
+  context "when must_approve_users is true" do
     before do
       SiteSetting.must_approve_users = true
       Jobs::PendingUsersReminder.any_instance.stubs(:previous_newest_username).returns(nil)
@@ -42,16 +42,17 @@ RSpec.describe Jobs::PendingUsersReminder do
       it "sets the correct pending user count in the notification" do
         SiteSetting.pending_users_reminder_delay_minutes = 8
         Fabricate(:user, created_at: 9.minutes.ago)
-        PostCreator.expects(:create).with(Discourse.system_user, has_entries(title: '1 user waiting for approval'))
+        PostCreator.expects(:create).with(
+          Discourse.system_user,
+          has_entries(title: "1 user waiting for approval"),
+        )
         Jobs::PendingUsersReminder.new.execute({})
       end
     end
   end
 
-  context 'when must_approve_users is false' do
-    before do
-      SiteSetting.must_approve_users = false
-    end
+  context "when must_approve_users is false" do
+    before { SiteSetting.must_approve_users = false }
 
     it "doesn't send a message to anyone when there are pending users" do
       AdminUserIndexQuery.any_instance.stubs(:find_users_query).returns(stub_everything(count: 1))

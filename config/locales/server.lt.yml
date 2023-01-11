@@ -680,10 +680,6 @@ lt:
         many: "beveik prieš %{count} metų"
         other: "beveik prieš %{count} metų"
   password_reset:
-    choose_new: "Pasirinkite naują slaptažodį"
-    choose: "Pasirinkite slaptažodį"
-    update: "Atnaujinti slaptažodį"
-    save: "Nustatykite slaptažodį"
     title: "Keisti slaptažodį"
     success: "Jūs sėkmingai pasikeitėte savo slaptažodį ir dabar esate prisijungęs."
     success_unapproved: "Jūs sėkmingai pasikeitėte savo slaptažodį."

@@ -327,7 +327,7 @@ sv:
         title: "Chatt"
       direct_messages:
         title: "Personlig chatt"
-        new: "Ny personlig chatt"
+        new: "Skapa en personlig chatt"
         create: "Kör"
         leave: "Lämna den här personliga chatten"
         cannot_create: "Tyvärr kan du inte skicka direktmeddelanden."

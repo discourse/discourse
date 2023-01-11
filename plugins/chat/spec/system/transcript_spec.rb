@@ -173,7 +173,7 @@ RSpec.describe "Quoting chat message transcripts", type: :system, js: true do
     context "when quoting a message in another message" do
       fab!(:message_1) { Fabricate(:chat_message, chat_channel: chat_channel_1) }
 
-      xit "quotes the message" do
+      it "quotes the message" do
         chat_page.visit_channel(chat_channel_1)
 
         expect(chat_channel_page).to have_no_loading_skeleton

@@ -43,15 +43,11 @@ class Enum < Hash
 
   # Public: Create a subset of enum, only include specified keys.
   def only(*keys)
-    dup.tap do |d|
-      d.keep_if { |k| keys.include?(k) }
-    end
+    dup.tap { |d| d.keep_if { |k| keys.include?(k) } }
   end
 
   # Public: Create a subset of enum, preserve all items but specified ones.
   def except(*keys)
-    dup.tap do |d|
-      d.delete_if { |k| keys.include?(k) }
-    end
+    dup.tap { |d| d.delete_if { |k| keys.include?(k) } }
   end
 end

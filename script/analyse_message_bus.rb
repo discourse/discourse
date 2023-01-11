@@ -9,23 +9,24 @@ wait_seconds = ARGV[0]&.to_i || 10
 
 puts "Counting messages for #{wait_seconds} seconds..."
 
-print 'Seen 0 messages'
-t = Thread.new do
-  MessageBus.backend_instance.global_subscribe do |m|
-    channel = m.channel
-    if channel.start_with?("/distributed_hash")
-      payload = JSON.parse(m.data)["data"]
-      info = payload["hash_key"]
-      # info += ".#{payload["key"]}" # Uncomment if you need more granular info
-      channel += " (#{info})"
+print "Seen 0 messages"
+t =
+  Thread.new do
+    MessageBus.backend_instance.global_subscribe do |m|
+      channel = m.channel
+      if channel.start_with?("/distributed_hash")
+        payload = JSON.parse(m.data)["data"]
+        info = payload["hash_key"]
+        # info += ".#{payload["key"]}" # Uncomment if you need more granular info
+        channel += " (#{info})"
+      end
+
+      channel_counters[channel] += 1
+      messages_seen += 1
+
+      print "\rSeen #{messages_seen} messages from #{channel_counters.size} channels"
     end
-
-    channel_counters[channel] += 1
-    messages_seen += 1
-
-    print "\rSeen #{messages_seen} messages from #{channel_counters.size} channels"
   end
-end
 
 sleep wait_seconds
 
@@ -53,10 +54,12 @@ puts "| #{"channel".ljust(max_channel_name_length)} | #{"message count".rjust(ma
 puts "|#{"-" * (max_channel_name_length + 2)}|#{"-" * (max_count_length + 2)}|"
 
 result_count = 10
-sorted_results.first(result_count).each do |name, value|
-  name = "`#{name}`"
-  puts "| #{name.ljust(max_channel_name_length)} | #{value.to_s.rjust(max_count_length)} |"
-end
+sorted_results
+  .first(result_count)
+  .each do |name, value|
+    name = "`#{name}`"
+    puts "| #{name.ljust(max_channel_name_length)} | #{value.to_s.rjust(max_count_length)} |"
+  end
 other_count = messages_seen - sorted_results.first(result_count).sum { |k, v| v }
 puts "| #{"(other)".ljust(max_channel_name_length)} | #{other_count.to_s.rjust(max_count_length)} |"
 puts "|#{" " * (max_channel_name_length + 2)}|#{" " * (max_count_length + 2)}|"

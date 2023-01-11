@@ -2,12 +2,7 @@
 
 module Email
   class AuthenticationResults
-    VERDICT = Enum.new(
-      :gray,
-      :pass,
-      :fail,
-      start: 0,
-    )
+    VERDICT = Enum.new(:gray, :pass, :fail, start: 0)
 
     def initialize(headers)
       @authserv_id = SiteSetting.email_in_authserv_id
@@ -16,11 +11,10 @@ module Email
     end
 
     def results
-      @results ||= Array(@headers).map do |header|
-        parse_header(header.to_s)
-      end.filter do |result|
-        @authserv_id.blank? || @authserv_id == result[:authserv_id]
-      end
+      @results ||=
+        Array(@headers)
+          .map { |header| parse_header(header.to_s) }
+          .filter { |result| @authserv_id.blank? || @authserv_id == result[:authserv_id] }
     end
 
     def action
@@ -55,7 +49,8 @@ module Email
           end
         end
       end
-      verdict = VERDICT[:gray] if SiteSetting.email_in_authserv_id.blank? && verdict == VERDICT[:pass]
+      verdict = VERDICT[:gray] if SiteSetting.email_in_authserv_id.blank? &&
+        verdict == VERDICT[:pass]
       verdict
     end
 
@@ -67,10 +62,11 @@ module Email
       authres_version = /\d+#{cfws}?/
       no_result = /#{cfws}?;#{cfws}?none/
       keyword = /([a-zA-Z0-9-]*[a-zA-Z0-9])/
-      authres_payload = /\A#{cfws}?#{authserv_id}(?:#{cfws}#{authres_version})?(?:#{no_result}|([\S\s]*))/
+      authres_payload =
+        /\A#{cfws}?#{authserv_id}(?:#{cfws}#{authres_version})?(?:#{no_result}|([\S\s]*))/
 
       method_version = authres_version
-      method = /#{keyword}\s*(?:#{cfws}?\/#{cfws}?#{method_version})?/
+      method = %r{#{keyword}\s*(?:#{cfws}?/#{cfws}?#{method_version})?}
       result = keyword
       methodspec = /#{cfws}?#{method}#{cfws}?=#{cfws}?#{result}/
       reasonspec = /reason#{cfws}?=#{cfws}?#{value}/
@@ -87,27 +83,21 @@ module Email
 
       if resinfo_val
         resinfo_scan = resinfo_val.scan(resinfo)
-        parsed_resinfo = resinfo_scan.map do |x|
-          {
-            method: x[2],
-            result: x[8],
-            reason: x[12] || x[13],
-            props: x[-1].scan(propspec).map do |y|
-              {
-                ptype: y[0],
-                property: y[4],
-                pvalue: y[8] || y[9]
-              }
-            end
-          }
-        end
+        parsed_resinfo =
+          resinfo_scan.map do |x|
+            {
+              method: x[2],
+              result: x[8],
+              reason: x[12] || x[13],
+              props:
+                x[-1]
+                  .scan(propspec)
+                  .map { |y| { ptype: y[0], property: y[4], pvalue: y[8] || y[9] } },
+            }
+          end
       end
 
-      {
-        authserv_id: parsed_authserv_id,
-        resinfo: parsed_resinfo
-      }
+      { authserv_id: parsed_authserv_id, resinfo: parsed_resinfo }
     end
-
   end
 end

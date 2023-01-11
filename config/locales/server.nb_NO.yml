@@ -524,10 +524,6 @@ nb_NO:
         one: "nesten %{count} år siden"
         other: "nesten %{count} år siden"
   password_reset:
-    choose_new: "Velg et nytt passord"
-    choose: "Velg et passord"
-    update: "Oppdater passord"
-    save: "Sett passord"
     title: "Tilbakestill passord"
     success: "Du har endret passordet og er nå logget inn."
     success_unapproved: "Du har endret ditt passord."

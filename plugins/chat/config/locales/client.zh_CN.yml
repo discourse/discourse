@@ -289,7 +289,6 @@ zh_CN:
         title: "聊天"
       direct_messages:
         title: "个人聊天"
-        new: "新的个人聊天"
         create: "开始"
         leave: "离开此个人聊天"
         cannot_create: "抱歉，您无法发送直接消息。"

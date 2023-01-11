@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class RateLimiter
-
   def self.time_left(available_in)
     if available_in <= 3
       I18n.t("rate_limiter.short_time")
@@ -38,5 +37,4 @@ class RateLimiter
       I18n.t("rate_limiter.too_many_requests", time_left: time_left)
     end
   end
-
 end

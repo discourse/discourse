@@ -46,7 +46,7 @@ describe Chat::ChatReviewQueue do
 
       it "returns an error" do
         expect(second_flag_result).to include success: false,
-                                              errors: [I18n.t("chat.reviewables.message_already_handled")]
+                errors: [I18n.t("chat.reviewables.message_already_handled")]
       end
 
       it "returns an error when trying to use notify_moderators and the previous flag is still pending" do
@@ -59,7 +59,7 @@ describe Chat::ChatReviewQueue do
           )
 
         expect(notify_moderators_result).to include success: false,
-                                                    errors: [I18n.t("chat.reviewables.message_already_handled")]
+                errors: [I18n.t("chat.reviewables.message_already_handled")]
       end
     end
 
@@ -87,7 +87,7 @@ describe Chat::ChatReviewQueue do
           queue.flag_message(message, admin_guardian, ReviewableScore.types[:spam])
 
         expect(second_flag_result).to include success: false,
-                                              errors: [I18n.t("chat.reviewables.message_already_handled")]
+                errors: [I18n.t("chat.reviewables.message_already_handled")]
       end
     end
 
@@ -105,7 +105,7 @@ describe Chat::ChatReviewQueue do
 
       it "raises an error when we are inside the cooldown window" do
         expect(second_flag_result).to include success: false,
-                                              errors: [I18n.t("chat.reviewables.message_already_handled")]
+                errors: [I18n.t("chat.reviewables.message_already_handled")]
       end
 
       it "allows the user to re-flag after the cooldown period" do

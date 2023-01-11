@@ -322,10 +322,6 @@ id:
       almost_x_years:
         other: "hampir %{count} tahun yang lalu"
   password_reset:
-    choose_new: "Pilih kata sandi baru"
-    choose: "Pilih kata sandi"
-    update: "Perbaharui Kata Sandi"
-    save: "Atur Kata Sandi"
     title: "Atur Ulang Kata Sandi"
     success: "Anda telah mengubah kata sandi dengan sukses dan sekarang telah login."
     success_unapproved: "Anda telah mengubah kata sandi dengan sukses."

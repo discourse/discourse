@@ -281,7 +281,6 @@ vi:
       remove_reminder_keep_bookmark: "Xóa lời nhắc và giữ lại dấu trang"
       created_with_reminder: "Bạn đã đánh dấu bài đăng này với lời nhắc %{date}. %{name}"
       created_with_reminder_generic: "Bạn đã đánh dấu trang này với lời nhắc %{date}. %{name}"
-      remove: "Xóa dấu trang"
       delete: "Xóa chỉ mục"
       confirm_delete: "Bạn có chắc chắn muốn xóa dấu trang này không? Lời nhắc cũng sẽ bị xóa."
       confirm_clear: "Bạn có chắc muốn xóa toàn bộ đánh dấu trong chủ đề này?"
@@ -346,7 +345,6 @@ vi:
     enable: "Kích hoạt"
     disable: "Vô hiệu hóa"
     continue: "Tiếp tục"
-    undo: "Hoàn tác"
     switch_to_anon: "Vào chế độ Ẩn danh"
     switch_from_anon: "Thoát chế độ Ẩn danh"
     banner:
@@ -627,6 +625,7 @@ vi:
         denied: "Đã từ chối"
         undone: "yêu cầu bị hủy"
         handle: "xử lý yêu cầu thành viên"
+        undo: "Hoàn tác"
       manage:
         title: "Quản lý"
         name: "Tên"
@@ -984,7 +983,6 @@ vi:
         perm_denied_expl: "Bạn đã từ chối nhận thông báo, để nhận lại bạn cần thiết lập trình duyệt."
         disable: "Khóa Notification"
         enable: "Cho phép Notification"
-        each_browser_note: 'Lưu ý: Bạn phải thay đổi cài đặt này trên mọi trình duyệt bạn sử dụng. Tất cả thông báo sẽ bị tắt khi ở chế độ "không làm phiền", bất kể cài đặt này là gì.'
         consent_prompt: "Bạn có muốn thông báo trực tiếp khi mọi người trả lời bài đăng của bạn không?"
       dismiss: "Hủy bỏ"
       dismiss_notifications: "Bỏ qua tất cả"
@@ -2898,7 +2896,6 @@ vi:
         create_for_topic: "Tạo dấu trang cho chủ đề"
         edit: "Chỉnh sửa dấu trang"
         edit_for_topic: "Chỉnh sửa dấu trang cho chủ đề"
-        created: "Tạo bởi"
         updated: "Đã cập nhật"
         name: "Tên"
         name_placeholder: "Đánh dấu này là gì?"
@@ -3186,7 +3183,6 @@ vi:
     category_title: "Danh mục"
     history_capped_revisions: "Lịch sử, 100 bản sửa đổi gần đây nhất"
     history: "Lịch sử"
-    changed_by: "bởi %{author}"
     raw_email:
       title: "Email đến"
       not_available: "Không sẵn sàng!"
@@ -3575,7 +3571,6 @@ vi:
         other: "%{count} chưa đọc"
       new_count:
         other: "%{count} mới"
-      toggle_section: "phần chuyển đổi"
       more: "Thêm"
       all_categories: "Tất cả danh mục"
       sections:
@@ -3583,7 +3578,6 @@ vi:
           header_link_text: "Giới thiệu"
         messages:
           header_link_text: "Tin nhắn"
-          header_action_title: "tạo một tin nhắn cá nhân"
           links:
             inbox: "Hộp thư"
             sent: "Đã gửi"
@@ -3596,15 +3590,12 @@ vi:
           none: "Bạn chưa thêm bất kỳ thẻ nào."
           click_to_get_started: "Bấm vào đây để bắt đầu."
           header_link_text: "Thẻ"
-          header_action_title: "chỉnh sửa thẻ thanh bên của bạn"
         categories:
           none: "Bạn chưa thêm bất kỳ danh mục nào."
           click_to_get_started: "Bấm vào đây để bắt đầu."
           header_link_text: "Thư mục"
-          header_action_title: "chỉnh sửa danh mục thanh bên của bạn"
         community:
           header_link_text: "Cộng đồng"
-          header_action_title: "tạo một chủ đề mới"
           links:
             about:
               content: "Giới thiệu"
@@ -3619,17 +3610,14 @@ vi:
               content: "Câu hỏi thường gặp"
             groups:
               content: "Nhóm"
-              title: "Các nhóm"
             users:
               content: "Người dùng"
-              title: "Tất cả Thành viên"
             my_posts:
               content: "Bài viết của tôi"
               draft_count:
                 other: "%{count} bản nháp"
             review:
               content: "Review"
-              title: "review"
     until: "Cho đến khi:"
   admin_js:
     type_to_filter: "gõ để lọc..."
@@ -4066,7 +4054,6 @@ vi:
         button_title: "Gửi Lời Mời"
       customize:
         title: "Tùy biến"
-        long_title: "Tùy biến trang"
         preview: "xem trước"
         explain_preview: "Xem trang web đã bật chủ đề này"
         save: "Lưu"
@@ -4263,9 +4250,9 @@ vi:
           new_name: "Bảng màu mới"
           copy_name_prefix: "Bản sao của"
           delete_confirm: "Xóa bảng màu này?"
-          undo: "hoàn tác"
+          undo: "Hoàn tác"
           undo_title: "Hoàn tác thay đổi của bạn vơ"
-          revert: "phục hồi"
+          revert: "Phục hồi"
           revert_title: "Đặt lại màu này thành bảng màu mặc định của Discourse."
           primary:
             name: "chính"

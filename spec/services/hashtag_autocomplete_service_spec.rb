@@ -50,9 +50,7 @@ RSpec.describe HashtagAutocompleteService do
     end
 
     it "respects the limit param" do
-      expect(subject.search("book", %w[tag category], limit: 1).map(&:text)).to eq(
-        ["great-books"],
-      )
+      expect(subject.search("book", %w[tag category], limit: 1).map(&:text)).to eq(["great-books"])
     end
 
     it "does not allow more than SEARCH_MAX_LIMIT results to be specified by the limit param" do

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'yaml'
+require "yaml"
 
 desc "Exports site settings"
 task "site_settings:export" => :environment do
@@ -10,8 +10,8 @@ end
 
 desc "Imports site settings"
 task "site_settings:import" => :environment do
-  yml = (STDIN.tty?) ? '' : STDIN.read
-  if yml == ''
+  yml = (STDIN.tty?) ? "" : STDIN.read
+  if yml == ""
     puts
     puts "Please specify a settings yml file"
     puts "Example: rake site_settings:import < settings.yml"
@@ -32,7 +32,5 @@ task "site_settings:import" => :environment do
   puts " Not Found: #{counts[:not_found]}"
   puts " Errors:    #{counts[:errors]}"
 
-  if counts[:not_found] + counts[:errors] > 0
-    exit 1
-  end
+  exit 1 if counts[:not_found] + counts[:errors] > 0
 end

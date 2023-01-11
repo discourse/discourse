@@ -1549,6 +1549,10 @@ files:
     default: false
     client: true
     hidden: true
+  composer_ios_media_optimisation_image_enabled:
+    default: false
+    client: true
+    hidden: true
 
 trust:
   default_trust_level:

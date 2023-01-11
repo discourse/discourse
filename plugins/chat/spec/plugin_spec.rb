@@ -345,7 +345,7 @@ describe Chat do
       end
     end
 
-    context "when followed public channels exist" do
+    context "when followed direct message channels exist" do
       fab!(:user_2) { Fabricate(:user) }
       fab!(:channel) { Fabricate(:direct_message_channel, users: [user, user_2]) }
 
@@ -356,7 +356,7 @@ describe Chat do
       end
     end
 
-    context "when followed direct message channels exist" do
+    context "when followed public channels exist" do
       fab!(:channel) { Fabricate(:chat_channel) }
 
       before do

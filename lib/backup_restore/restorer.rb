@@ -65,8 +65,8 @@ module BackupRestore
 
       after_restore_hook
     rescue Compression::Strategy::ExtractFailed
-      log 'ERROR: The uncompressed file is too big. Consider increasing the hidden ' \
-          '"decompressed_backup_max_file_size_mb" setting.'
+      log "ERROR: The uncompressed file is too big. Consider increasing the hidden " \
+            '"decompressed_backup_max_file_size_mb" setting.'
       @database_restorer.rollback
     rescue SystemExit
       log "Restore process was cancelled!"
@@ -118,10 +118,10 @@ module BackupRestore
 
       DiscourseEvent.trigger(:site_settings_restored)
 
-      if @disable_emails && SiteSetting.disable_emails == 'no'
+      if @disable_emails && SiteSetting.disable_emails == "no"
         log "Disabling outgoing emails for non-staff users..."
         user = User.find_by_email(@user_info[:email]) || Discourse.system_user
-        SiteSetting.set_and_log(:disable_emails, 'non-staff', user)
+        SiteSetting.set_and_log(:disable_emails, "non-staff", user)
       end
     end
 
@@ -152,7 +152,7 @@ module BackupRestore
         post = SystemMessage.create_from_system_user(user, status, logs: logs)
       else
         log "Could not send notification to '#{@user_info[:username]}' " \
-          "(#{@user_info[:email]}), because the user does not exist."
+              "(#{@user_info[:email]}), because the user does not exist."
       end
     rescue => ex
       log "Something went wrong while notifying user.", ex

@@ -159,9 +159,6 @@ th:
       x_months:
         other: "%{count}เดือนที่แล้ว"
   password_reset:
-    choose_new: "เลือกรหัสผู้ใช้ใหม่"
-    choose: "เลือกรหัสผู้ใช้"
-    save: "ตั้งรหัสผ่าน"
     title: "รีเซ็ทรหัสผ่าน"
   change_email:
     please_continue: "ดำเนินการต่อไปยัง %{site_name}"

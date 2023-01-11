@@ -6,7 +6,7 @@ module Onebox
       include Engine
       include StandardEmbed
 
-      matches_regexp(/^https?:\/\/www\.mixcloud\.com\//)
+      matches_regexp(%r{^https?://www\.mixcloud\.com/})
       always_https
       requires_iframe_origins "https://www.mixcloud.com"
 

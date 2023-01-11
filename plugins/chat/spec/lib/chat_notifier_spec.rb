@@ -275,7 +275,7 @@ describe Chat::ChatNotifier do
 
       include_examples "ensure only channel members are notified"
 
-      it 'calls guardian can_join_chat_channel?' do
+      it "calls guardian can_join_chat_channel?" do
         Guardian.any_instance.expects(:can_join_chat_channel?).at_least_once
         msg = build_cooked_msg("Hello @#{group.name} and @#{user_2.username}", user_1)
         to_notify = described_class.new(msg, msg.created_at).notify_new
@@ -463,7 +463,8 @@ describe Chat::ChatNotifier do
 
         expect(not_participating_msg).to be_present
         expect(not_participating_msg.data[:cannot_see]).to be_empty
-        not_participating_users = not_participating_msg.data[:without_membership].map { |u| u["id"] }
+        not_participating_users =
+          not_participating_msg.data[:without_membership].map { |u| u["id"] }
         expect(not_participating_users).to contain_exactly(user_3.id)
       end
 
@@ -515,7 +516,8 @@ describe Chat::ChatNotifier do
 
         expect(not_participating_msg).to be_present
         expect(not_participating_msg.data[:cannot_see]).to be_empty
-        not_participating_users = not_participating_msg.data[:without_membership].map { |u| u["id"] }
+        not_participating_users =
+          not_participating_msg.data[:without_membership].map { |u| u["id"] }
         expect(not_participating_users).to contain_exactly(user_3.id)
       end
 
@@ -539,7 +541,8 @@ describe Chat::ChatNotifier do
 
         expect(not_participating_msg).to be_present
         expect(not_participating_msg.data[:cannot_see]).to be_empty
-        not_participating_users = not_participating_msg.data[:without_membership].map { |u| u["id"] }
+        not_participating_users =
+          not_participating_msg.data[:without_membership].map { |u| u["id"] }
         expect(not_participating_users).to contain_exactly(user_3.id)
       end
 
@@ -598,11 +601,12 @@ describe Chat::ChatNotifier do
         SiteSetting.max_users_notified_per_group_mention = (group.user_count - 1)
         msg = build_cooked_msg("Hello @#{group.name}", user_1)
 
-        messages = MessageBus.track_publish("/chat/#{channel.id}") do
-          to_notify = described_class.new(msg, msg.created_at).notify_new
+        messages =
+          MessageBus.track_publish("/chat/#{channel.id}") do
+            to_notify = described_class.new(msg, msg.created_at).notify_new
 
-          expect(to_notify[group.name]).to be_nil
-        end
+            expect(to_notify[group.name]).to be_nil
+          end
 
         too_many_members_msg = messages.first
         expect(too_many_members_msg).to be_present
@@ -614,11 +618,12 @@ describe Chat::ChatNotifier do
         group.update!(mentionable_level: Group::ALIAS_LEVELS[:only_admins])
         msg = build_cooked_msg("Hello @#{group.name}", user_1)
 
-        messages = MessageBus.track_publish("/chat/#{channel.id}") do
-          to_notify = described_class.new(msg, msg.created_at).notify_new
+        messages =
+          MessageBus.track_publish("/chat/#{channel.id}") do
+            to_notify = described_class.new(msg, msg.created_at).notify_new
 
-          expect(to_notify[group.name]).to be_nil
-        end
+            expect(to_notify[group.name]).to be_nil
+          end
 
         mentions_disabled_msg = messages.first
         expect(mentions_disabled_msg).to be_present

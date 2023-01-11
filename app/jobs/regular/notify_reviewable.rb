@@ -11,16 +11,15 @@ class Jobs::NotifyReviewable < ::Jobs::Base
     all_updates = Hash.new { |h, k| h[k] = {} }
 
     if args[:updated_reviewable_ids].present?
-      Reviewable.where(id: args[:updated_reviewable_ids]).each do |r|
-        payload = {
-          last_performing_username: args[:performing_username],
-          status: r.status
-        }
+      Reviewable
+        .where(id: args[:updated_reviewable_ids])
+        .each do |r|
+          payload = { last_performing_username: args[:performing_username], status: r.status }
 
-        all_updates[:admins][r.id] = payload
-        all_updates[:moderators][r.id] = payload if r.reviewable_by_moderator?
-        all_updates[r.reviewable_by_group_id][r.id] = payload if r.reviewable_by_group_id
-      end
+          all_updates[:admins][r.id] = payload
+          all_updates[:moderators][r.id] = payload if r.reviewable_by_moderator?
+          all_updates[r.reviewable_by_group_id][r.id] = payload if r.reviewable_by_group_id
+        end
     end
 
     counts = Hash.new(0)
@@ -38,10 +37,7 @@ class Jobs::NotifyReviewable < ::Jobs::Base
         updates: all_updates[:admins],
       )
     else
-      notify_users(
-        User.real.admins,
-        all_updates[:admins]
-      )
+      notify_users(User.real.admins, all_updates[:admins])
     end
 
     if reviewable.reviewable_by_moderator?
@@ -54,7 +50,7 @@ class Jobs::NotifyReviewable < ::Jobs::Base
       else
         notify_users(
           User.real.moderators.where("id NOT IN (?)", @contacted),
-          all_updates[:moderators]
+          all_updates[:moderators],
         )
       end
     end

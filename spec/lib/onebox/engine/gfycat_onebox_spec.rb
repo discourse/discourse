@@ -5,9 +5,7 @@ RSpec.describe Onebox::Engine::GfycatOnebox do
   let(:html) { described_class.new(link).to_html }
   let(:placeholder_html) { described_class.new(link).placeholder_html }
 
-  before do
-    stub_request(:get, link).to_return(status: 200, body: onebox_response("gfycat"))
-  end
+  before { stub_request(:get, link).to_return(status: 200, body: onebox_response("gfycat")) }
 
   it "has the title" do
     expect(html).to include("shrillnegativearrowana")

@@ -30,7 +30,7 @@ module Jobs
         Discourse.system_user,
         :backup_failed,
         target_group_names: Group[:admins].name,
-        logs: "#{ex}\n" + ex.backtrace.join("\n")
+        logs: "#{ex}\n" + ex.backtrace.join("\n"),
       )
     end
   end

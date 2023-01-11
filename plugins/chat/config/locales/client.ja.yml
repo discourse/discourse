@@ -289,7 +289,6 @@ ja:
         title: "チャット"
       direct_messages:
         title: "パーソナルチャット"
-        new: "新しいパーソナルチャット"
         create: "開始"
         leave: "このパーソナルチャットから退出する"
         cannot_create: "ダイレクトメッセージを送信できません。"

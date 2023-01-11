@@ -20,48 +20,55 @@ RSpec.describe Tag do
     SiteSetting.min_trust_level_to_tag_topics = 0
   end
 
-  describe 'Associations' do
-    it 'should delete associated sidebar_section_links when tag is destroyed' do
+  describe "Associations" do
+    it "should delete associated sidebar_section_links when tag is destroyed" do
       tag_sidebar_section_link = Fabricate(:tag_sidebar_section_link)
-      tag_sidebar_section_link_2 = Fabricate(:tag_sidebar_section_link, linkable: tag_sidebar_section_link.linkable)
+      tag_sidebar_section_link_2 =
+        Fabricate(:tag_sidebar_section_link, linkable: tag_sidebar_section_link.linkable)
       category_sidebar_section_link = Fabricate(:category_sidebar_section_link)
 
-      expect { tag_sidebar_section_link.linkable.destroy! }.to change { SidebarSectionLink.count }.from(3).to(1)
+      expect { tag_sidebar_section_link.linkable.destroy! }.to change {
+        SidebarSectionLink.count
+      }.from(3).to(1)
       expect(SidebarSectionLink.first).to eq(category_sidebar_section_link)
     end
   end
 
-  describe 'new' do
+  describe "new" do
     subject { Fabricate.build(:tag) }
 
-    it 'triggers a extensibility event' do
+    it "triggers a extensibility event" do
       event = DiscourseEvent.track_events { subject.save! }.last
 
       expect(event[:event_name]).to eq(:tag_created)
       expect(event[:params].first).to eq(subject)
     end
 
-    it 'prevents case-insensitive duplicates' do
+    it "prevents case-insensitive duplicates" do
       Fabricate.build(:tag, name: "hello").save!
-      expect { Fabricate.build(:tag, name: "hElLo").save! }.to raise_error(ActiveRecord::RecordInvalid)
+      expect { Fabricate.build(:tag, name: "hElLo").save! }.to raise_error(
+        ActiveRecord::RecordInvalid,
+      )
     end
 
     it 'does not allow creation of tag with name in "RESERVED_TAGS"' do
-      expect { Fabricate.build(:tag, name: "None").save! }.to raise_error(ActiveRecord::RecordInvalid)
+      expect { Fabricate.build(:tag, name: "None").save! }.to raise_error(
+        ActiveRecord::RecordInvalid,
+      )
     end
   end
 
-  describe 'destroy' do
+  describe "destroy" do
     subject { Fabricate(:tag) }
 
-    it 'triggers a extensibility event' do
+    it "triggers a extensibility event" do
       event = DiscourseEvent.track_events { subject.destroy! }.last
 
       expect(event[:event_name]).to eq(:tag_destroyed)
       expect(event[:params].first).to eq(subject)
     end
 
-    it 'removes it from its tag group' do
+    it "removes it from its tag group" do
       tag_group = Fabricate(:tag_group, tags: [tag])
       expect { tag.destroy }.to change { TagGroupMembership.count }.by(-1)
       expect(tag_group.reload.tags).to be_empty
@@ -73,7 +80,7 @@ RSpec.describe Tag do
     expect { tag.destroy }.to change { Tag.count }.by(-1)
   end
 
-  describe '#top_tags' do
+  describe "#top_tags" do
     it "returns nothing if nothing has been tagged" do
       make_some_tags(tag_a_topic: false)
       expect(Tag.top_tags.sort).to be_empty
@@ -99,8 +106,12 @@ RSpec.describe Tag do
 
       it "works correctly" do
         expect(Tag.top_tags(category: @category1).sort).to eq([@tags[0].name].sort)
-        expect(Tag.top_tags(guardian: Guardian.new(Fabricate(:admin))).sort).to eq([@tags[0].name, @tags[1].name, @tags[2].name].sort)
-        expect(Tag.top_tags(category: @private_category, guardian: Guardian.new(Fabricate(:admin))).sort).to eq([@tags[2].name].sort)
+        expect(Tag.top_tags(guardian: Guardian.new(Fabricate(:admin))).sort).to eq(
+          [@tags[0].name, @tags[1].name, @tags[2].name].sort,
+        )
+        expect(
+          Tag.top_tags(category: @private_category, guardian: Guardian.new(Fabricate(:admin))).sort,
+        ).to eq([@tags[2].name].sort)
 
         expect(Tag.top_tags.sort).to eq([@tags[0].name, @tags[1].name].sort)
         expect(Tag.top_tags(category: @private_category)).to be_empty
@@ -136,8 +147,10 @@ RSpec.describe Tag do
     end
 
     context "with hidden tags" do
-      let(:hidden_tag) { Fabricate(:tag, name: 'hidden') }
-      let!(:staff_tag_group) { Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name]) }
+      let(:hidden_tag) { Fabricate(:tag, name: "hidden") }
+      let!(:staff_tag_group) do
+        Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
+      end
       let!(:topic2) { Fabricate(:topic, tags: [tag, hidden_tag]) }
 
       it "returns all tags to staff" do
@@ -149,24 +162,28 @@ RSpec.describe Tag do
       end
 
       it "doesn't return hidden tags to non-staff" do
-        expect(Tag.top_tags(guardian: Guardian.new(Fabricate(:user)))).to_not include(hidden_tag.name)
+        expect(Tag.top_tags(guardian: Guardian.new(Fabricate(:user)))).to_not include(
+          hidden_tag.name,
+        )
       end
     end
   end
 
-  describe '#pm_tags' do
+  describe "#pm_tags" do
     let(:regular_user) { Fabricate(:trust_level_4) }
     let(:admin) { Fabricate(:admin) }
     let(:personal_message) do
-      Fabricate(:private_message_topic, user: regular_user, topic_allowed_users: [
-        Fabricate.build(:topic_allowed_user, user: regular_user),
-        Fabricate.build(:topic_allowed_user, user: admin)
-      ])
+      Fabricate(
+        :private_message_topic,
+        user: regular_user,
+        topic_allowed_users: [
+          Fabricate.build(:topic_allowed_user, user: regular_user),
+          Fabricate.build(:topic_allowed_user, user: admin),
+        ],
+      )
     end
 
-    before do
-      2.times { |i| Fabricate(:tag, topics: [personal_message], name: "tag-#{i}") }
-    end
+    before { 2.times { |i| Fabricate(:tag, topics: [personal_message], name: "tag-#{i}") } }
 
     it "returns nothing if user is not a staff" do
       expect(Tag.pm_tags(guardian: Guardian.new(regular_user))).to be_empty
@@ -197,14 +214,18 @@ RSpec.describe Tag do
 
   describe "unused tags scope" do
     let!(:tags) do
-      [ Fabricate(:tag, name: "used_publically", topic_count: 2, pm_topic_count: 0),
-      Fabricate(:tag, name: "used_privately", topic_count: 0, pm_topic_count: 3),
-      Fabricate(:tag, name: "used_everywhere", topic_count: 0, pm_topic_count: 3),
-      Fabricate(:tag, name: "unused1", topic_count: 0, pm_topic_count: 0),
-      Fabricate(:tag, name: "unused2", topic_count: 0, pm_topic_count: 0)]
+      [
+        Fabricate(:tag, name: "used_publically", topic_count: 2, pm_topic_count: 0),
+        Fabricate(:tag, name: "used_privately", topic_count: 0, pm_topic_count: 3),
+        Fabricate(:tag, name: "used_everywhere", topic_count: 0, pm_topic_count: 3),
+        Fabricate(:tag, name: "unused1", topic_count: 0, pm_topic_count: 0),
+        Fabricate(:tag, name: "unused2", topic_count: 0, pm_topic_count: 0),
+      ]
     end
 
-    let(:tag_in_group) { Fabricate(:tag, name: "unused_in_group", topic_count: 0, pm_topic_count: 0) }
+    let(:tag_in_group) do
+      Fabricate(:tag, name: "unused_in_group", topic_count: 0, pm_topic_count: 0)
+    end
     let!(:tag_group) { Fabricate(:tag_group, tag_names: [tag_in_group.name]) }
 
     it "returns the correct tags" do

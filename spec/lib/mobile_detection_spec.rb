@@ -43,5 +43,4 @@ Mozilla/5.0 (iPhone; CPU iPhone OS 14_8 like Mac OS X) AppleWebKit/605.1.15 (KHT
       expect(MobileDetection.modern_mobile_device?(agent)).to eq(false)
     end
   end
-
 end

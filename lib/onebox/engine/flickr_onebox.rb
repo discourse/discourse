@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative './opengraph_image'
+require_relative "./opengraph_image"
 
 module Onebox
   module Engine
@@ -8,12 +8,12 @@ module Onebox
       include Engine
       include StandardEmbed
 
-      matches_regexp(/^https?:\/\/www\.flickr\.com\/photos\//)
+      matches_regexp(%r{^https?://www\.flickr\.com/photos/})
       always_https
 
       def to_html
         og = get_opengraph
-        return album_html(og) if og.url =~ /\/sets\//
+        return album_html(og) if og.url =~ %r{/sets/}
         return image_html(og) if !og.image.nil?
         nil
       end

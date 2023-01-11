@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe CategoriesController do
-  describe '#destroy' do
+  describe "#destroy" do
     subject(:destroy_category) { delete "/categories/#{category.slug}.json" }
 
     fab!(:admin) { Fabricate(:admin) }

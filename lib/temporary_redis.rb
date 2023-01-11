@@ -12,7 +12,7 @@ class TemporaryRedis
   end
 
   def port
-    @port ||= find_free_port(11000..11900)
+    @port ||= find_free_port(11_000..11_900)
   end
 
   def start
@@ -22,29 +22,35 @@ class TemporaryRedis
     FileUtils.touch(REDIS_LOG_PATH)
 
     puts "Starting redis on port: #{port}"
-    @thread = Thread.new do
-      system(
-        @redis_server_bin,
-        "--port", port.to_s,
-        "--pidfile", REDIS_PID_PATH,
-        "--logfile", REDIS_LOG_PATH,
-        "--databases", "1",
-        "--save", '""',
-        "--appendonly", "no",
-        "--daemonize", "no",
-        "--maxclients", "100",
-        "--dir", REDIS_TEMP_DIR
-      )
-    end
+    @thread =
+      Thread.new do
+        system(
+          @redis_server_bin,
+          "--port",
+          port.to_s,
+          "--pidfile",
+          REDIS_PID_PATH,
+          "--logfile",
+          REDIS_LOG_PATH,
+          "--databases",
+          "1",
+          "--save",
+          '""',
+          "--appendonly",
+          "no",
+          "--daemonize",
+          "no",
+          "--maxclients",
+          "100",
+          "--dir",
+          REDIS_TEMP_DIR,
+        )
+      end
 
     puts "Waiting for redis server to start..."
     success = false
     instance = nil
-    config = {
-      port: port,
-      host: "127.0.0.1",
-      db: 0
-    }
+    config = { port: port, host: "127.0.0.1", db: 0 }
     start = Time.now
     while !success
       begin
@@ -82,20 +88,18 @@ class TemporaryRedis
   def set_redis_server_bin
     path = `which redis-server 2> /dev/null`.strip
     if path.size < 1
-      STDERR.puts 'ERROR: redis-server is not installed on this machine. Please install it'
+      STDERR.puts "ERROR: redis-server is not installed on this machine. Please install it"
       exit(1)
     end
     @redis_server_bin = path
   rescue => ex
-    STDERR.puts 'ERROR: Failed to find redis-server binary:'
+    STDERR.puts "ERROR: Failed to find redis-server binary:"
     STDERR.puts ex.inspect
     exit(1)
   end
 
   def find_free_port(range)
-    range.each do |port|
-      return port if port_available?(port)
-    end
+    range.each { |port| return port if port_available?(port) }
   end
 
   def port_available?(port)

@@ -39,18 +39,19 @@ class FinalDestination::Resolver
   def self.ensure_lookup_thread
     return if @thread&.alive?
 
-    @thread = Thread.new do
-      while true
-        @queue.deq
-        @error = nil
-        begin
-          @result = Addrinfo.getaddrinfo(@lookup, 80, nil, :STREAM).map(&:ip_address)
-        rescue => e
-          @error = e
+    @thread =
+      Thread.new do
+        while true
+          @queue.deq
+          @error = nil
+          begin
+            @result = Addrinfo.getaddrinfo(@lookup, 80, nil, :STREAM).map(&:ip_address)
+          rescue => e
+            @error = e
+          end
+          @parent.wakeup
         end
-        @parent.wakeup
       end
-    end
     @thread.name = "final-destination_resolver_thread"
   end
 end

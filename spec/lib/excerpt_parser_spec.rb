@@ -3,7 +3,6 @@
 require "excerpt_parser"
 
 RSpec.describe ExcerptParser do
-
   it "handles nested <details> blocks" do
     html = <<~HTML.strip
       <details>
@@ -22,31 +21,48 @@ RSpec.describe ExcerptParser do
       Lorem ipsum dolor sit amet, consectetur adi&hellip;</details>
     HTML
 
-    expect(ExcerptParser.get_excerpt(html, 6, {})).to match_html('<details><summary>FOO</summary>BAR&hellip;</details>')
-    expect(ExcerptParser.get_excerpt(html, 3, {})).to match_html('<details class="disabled"><summary>FOO</summary></details>')
+    expect(ExcerptParser.get_excerpt(html, 6, {})).to match_html(
+      "<details><summary>FOO</summary>BAR&hellip;</details>",
+    )
+    expect(ExcerptParser.get_excerpt(html, 3, {})).to match_html(
+      '<details class="disabled"><summary>FOO</summary></details>',
+    )
   end
 
   it "respects length parameter for <details> block" do
-    html = '<details><summary>foo</summary><p>bar</p></details>'
-    expect(ExcerptParser.get_excerpt(html, 100, {})).to match_html('<details><summary>foo</summary>bar</details>')
-    expect(ExcerptParser.get_excerpt(html, 5, {})).to match_html('<details><summary>foo</summary>ba&hellip;</details>')
-    expect(ExcerptParser.get_excerpt(html, 3, {})).to match_html('<details class="disabled"><summary>foo</summary></details>')
-    expect(ExcerptParser.get_excerpt(html, 2, {})).to match_html('<details class="disabled"><summary>fo&hellip;</summary></details>')
+    html = "<details><summary>foo</summary><p>bar</p></details>"
+    expect(ExcerptParser.get_excerpt(html, 100, {})).to match_html(
+      "<details><summary>foo</summary>bar</details>",
+    )
+    expect(ExcerptParser.get_excerpt(html, 5, {})).to match_html(
+      "<details><summary>foo</summary>ba&hellip;</details>",
+    )
+    expect(ExcerptParser.get_excerpt(html, 3, {})).to match_html(
+      '<details class="disabled"><summary>foo</summary></details>',
+    )
+    expect(ExcerptParser.get_excerpt(html, 2, {})).to match_html(
+      '<details class="disabled"><summary>fo&hellip;</summary></details>',
+    )
   end
 
   it "allows <svg> with <use> inside for icons when keep_svg is true" do
     html = '<svg class="fa d-icon d-icon-folder svg-icon svg-node"><use href="#folder"></use></svg>'
-    expect(ExcerptParser.get_excerpt(html, 100, { keep_svg: true })).to match_html('<svg class="fa d-icon d-icon-folder svg-icon svg-node"><use href="#folder"></use></svg>')
-    expect(ExcerptParser.get_excerpt(html, 100, {})).to match_html('')
+    expect(ExcerptParser.get_excerpt(html, 100, { keep_svg: true })).to match_html(
+      '<svg class="fa d-icon d-icon-folder svg-icon svg-node"><use href="#folder"></use></svg>',
+    )
+    expect(ExcerptParser.get_excerpt(html, 100, {})).to match_html("")
 
     html = '<svg class="blah"><use href="#folder"></use></svg>'
-    expect(ExcerptParser.get_excerpt(html, 100, { keep_svg: true })).to match_html('')
+    expect(ExcerptParser.get_excerpt(html, 100, { keep_svg: true })).to match_html("")
 
     html = '<svg><use href="#folder"></use></svg>'
-    expect(ExcerptParser.get_excerpt(html, 100, { keep_svg: true })).to match_html('')
+    expect(ExcerptParser.get_excerpt(html, 100, { keep_svg: true })).to match_html("")
 
-    html = '<use href="#user"></use><svg class="fa d-icon d-icon-folder svg-icon svg-node"><use href="#folder"></use></svg>'
-    expect(ExcerptParser.get_excerpt(html, 100, { keep_svg: true })).to match_html('<svg class="fa d-icon d-icon-folder svg-icon svg-node"><use href="#folder"></use></svg>')
+    html =
+      '<use href="#user"></use><svg class="fa d-icon d-icon-folder svg-icon svg-node"><use href="#folder"></use></svg>'
+    expect(ExcerptParser.get_excerpt(html, 100, { keep_svg: true })).to match_html(
+      '<svg class="fa d-icon d-icon-folder svg-icon svg-node"><use href="#folder"></use></svg>',
+    )
   end
 
   describe "keep_onebox_body parameter" do
@@ -105,7 +121,9 @@ RSpec.describe ExcerptParser do
           </blockquote>
         </aside>
       HTML
-      expect(ExcerptParser.get_excerpt(html, 100, keep_quotes: true)).to eq("This is a quoted text.")
+      expect(ExcerptParser.get_excerpt(html, 100, keep_quotes: true)).to eq(
+        "This is a quoted text.",
+      )
     end
   end
 end

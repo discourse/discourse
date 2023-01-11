@@ -5,7 +5,7 @@ module Reports::TopUsersByLikesReceivedFromInferiorTrustLevel
 
   class_methods do
     def report_top_users_by_likes_received_from_inferior_trust_level(report)
-      report.icon = 'heart'
+      report.icon = "heart"
       report.data = []
 
       report.modes = [:table]
@@ -20,17 +20,22 @@ module Reports::TopUsersByLikesReceivedFromInferiorTrustLevel
             username: :username,
             avatar: :user_avatar_template,
           },
-          title: I18n.t("reports.top_users_by_likes_received_from_inferior_trust_level.labels.user")
+          title:
+            I18n.t("reports.top_users_by_likes_received_from_inferior_trust_level.labels.user"),
         },
         {
           type: :number,
           property: :trust_level,
-          title: I18n.t("reports.top_users_by_likes_received_from_inferior_trust_level.labels.trust_level")
+          title:
+            I18n.t(
+              "reports.top_users_by_likes_received_from_inferior_trust_level.labels.trust_level",
+            ),
         },
         {
           type: :number,
           property: :qtt_like,
-          title: I18n.t("reports.top_users_by_likes_received_from_inferior_trust_level.labels.qtt_like")
+          title:
+            I18n.t("reports.top_users_by_likes_received_from_inferior_trust_level.labels.qtt_like"),
         },
       ]
 
@@ -56,16 +61,17 @@ module Reports::TopUsersByLikesReceivedFromInferiorTrustLevel
       WHERE rank <= 10
       SQL
 
-      DB.query(sql, start_date: report.start_date, end_date: report.end_date).each do |row|
-        report.data << {
-          user_id: row.user_id,
-          username: row.username,
-          user_avatar_template: User.avatar_template(row.username, row.uploaded_avatar_id),
-          trust_level: row.trust_level,
-          qtt_like: row.qtt_like,
-        }
-      end
-
+      DB
+        .query(sql, start_date: report.start_date, end_date: report.end_date)
+        .each do |row|
+          report.data << {
+            user_id: row.user_id,
+            username: row.username,
+            user_avatar_template: User.avatar_template(row.username, row.uploaded_avatar_id),
+            trust_level: row.trust_level,
+            qtt_like: row.qtt_like,
+          }
+        end
     end
   end
 end

@@ -1,17 +1,15 @@
 # frozen_string_literal: true
 
 RSpec.describe WizardController do
-  context 'when wizard is enabled' do
-    before do
-      SiteSetting.wizard_enabled = true
-    end
+  context "when wizard is enabled" do
+    before { SiteSetting.wizard_enabled = true }
 
-    it 'needs you to be logged in' do
+    it "needs you to be logged in" do
       get "/wizard.json"
       expect(response.status).to eq(403)
     end
 
-    it 'needs you to be logged in' do
+    it "needs you to be logged in" do
       get "/wizard"
       # for whatever reason, no access is 404
       # we may want to revisit this at some point and make it 403
@@ -41,7 +39,7 @@ RSpec.describe WizardController do
       sign_in(Fabricate(:admin))
       get "/wizard.json"
       expect(response.status).to eq(200)
-      expect(response.parsed_body.has_key?('wizard')).to eq(true)
+      expect(response.parsed_body.has_key?("wizard")).to eq(true)
     end
   end
 end

@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 
-require 'image_sizer'
+require "image_sizer"
 
 module Jobs
-
   class ProcessPost < ::Jobs::Base
-
     def execute(args)
       DistributedMutex.synchronize("process_post_#{args[:post_id]}", validity: 10.minutes) do
         post = Post.find_by(id: args[:post_id])
@@ -19,7 +17,11 @@ module Jobs
           cooking_options = args[:cooking_options] || {}
           cooking_options[:topic_id] = post.topic_id
           recooked = post.cook(post.raw, cooking_options.symbolize_keys)
-          post.update_columns(cooked: recooked, baked_at: Time.zone.now, baked_version: Post::BAKED_VERSION)
+          post.update_columns(
+            cooked: recooked,
+            baked_at: Time.zone.now,
+            baked_version: Post::BAKED_VERSION,
+          )
         end
 
         cp = CookedPostProcessor.new(post, args)
@@ -31,7 +33,9 @@ module Jobs
         if cooked != (recooked || orig_cooked)
           if orig_cooked.present? && cooked.blank?
             # TODO stop/restart the worker if needed, let's gather a few here first
-            Rails.logger.warn("Cooked post processor in FATAL state, bypassing. You need to urgently restart sidekiq\norig: #{orig_cooked}\nrecooked: #{recooked}\ncooked: #{cooked}\npost id: #{post.id}")
+            Rails.logger.warn(
+              "Cooked post processor in FATAL state, bypassing. You need to urgently restart sidekiq\norig: #{orig_cooked}\nrecooked: #{recooked}\ncooked: #{cooked}\npost id: #{post.id}",
+            )
           else
             post.update_column(:cooked, cp.html)
             post.topic.update_excerpt(post.excerpt_for_topic) if post.is_first_post?
@@ -50,7 +54,7 @@ module Jobs
               Discourse.system_user,
               post,
               :inappropriate,
-              reason: :watched_word
+              reason: :watched_word,
             )
           end
         end
@@ -68,5 +72,4 @@ module Jobs
       Jobs.enqueue(:pull_hotlinked_images, post_id: post.id)
     end
   end
-
 end

@@ -700,10 +700,6 @@ da:
         one: "næsten %{count} år siden"
         other: "næsten %{count} år siden"
   password_reset:
-    choose_new: "Vælg en ny adgangskode"
-    choose: "Vælg en adgangskode"
-    update: "Opdatér Adgangskode"
-    save: "Gem Adgangskode"
     title: "Nulstil Adgangskode"
     success: "Din adgangskode er ændret og du er nu logget ind."
     success_unapproved: "Din adgangskode er nu ændret."

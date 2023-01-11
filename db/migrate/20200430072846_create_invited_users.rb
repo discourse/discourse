@@ -10,6 +10,6 @@ class CreateInvitedUsers < ActiveRecord::Migration[6.0]
     end
 
     add_index :invited_users, :invite_id
-    add_index :invited_users, [:user_id, :invite_id], unique: true, where: 'user_id IS NOT NULL'
+    add_index :invited_users, %i[user_id invite_id], unique: true, where: "user_id IS NOT NULL"
   end
 end

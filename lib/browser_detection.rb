@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 module BrowserDetection
-
   def self.browser(user_agent)
     case user_agent
     when /Edg/i
@@ -66,5 +65,4 @@ module BrowserDetection
       :unknown
     end
   end
-
 end

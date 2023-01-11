@@ -4,7 +4,7 @@ module Email
   class Cleaner
     def initialize(mail, remove_attachments: true, truncate: true, rejected: false)
       @mail = Mail.new(mail)
-      @mail.charset = 'UTF-8'
+      @mail.charset = "UTF-8"
       @remove_attachments = remove_attachments
       @truncate = truncate
       @rejected = rejected
@@ -17,13 +17,16 @@ module Email
     end
 
     def self.delete_rejected!
-      IncomingEmail.delete_by('rejection_message IS NOT NULL AND created_at < ?', SiteSetting.delete_rejected_email_after_days.days.ago)
+      IncomingEmail.delete_by(
+        "rejection_message IS NOT NULL AND created_at < ?",
+        SiteSetting.delete_rejected_email_after_days.days.ago,
+      )
     end
 
     private
 
     def truncate!
-      parts.each { |part| part.body = part.body.decoded.truncate(truncate_limit, omission: '') }
+      parts.each { |part| part.body = part.body.decoded.truncate(truncate_limit, omission: "") }
     end
 
     def parts
