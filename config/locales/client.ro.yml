@@ -309,7 +309,6 @@ ro:
       not_bookmarked: "marchează ca semn de carte acest post"
       remove_reminder_keep_bookmark: "Șterge memento-ul și păstrează semnul de carte"
       created_with_reminder: "Ai marcat această postare cu un memento %{date}. %{name}"
-      remove: "Șterge semn de carte"
       delete: "Șterge semn de carte"
       confirm_delete: "Sunteţi sigur că doriţi să ştergeţi acest semn de carte? Mementoul va fi de asemenea şters."
       confirm_clear: "Sigur doriți să ștergeți toate marcajele din acest subiect?"
@@ -382,7 +381,6 @@ ro:
     enable: "Activează"
     disable: "Dezactivează"
     continue: "Continuă"
-    undo: "Anulează acțiunea"
     switch_to_anon: "Intrați în Modul anonim"
     switch_from_anon: "Ieșiți din Modul anonim"
     banner:
@@ -673,6 +671,7 @@ ro:
         denied: "respinse"
         undone: "cerere retrasă"
         handle: "gestionează cererea de înscriere"
+        undo: "Anulează acțiunea"
       manage:
         title: "Gestionează"
         name: "Nume"
@@ -971,7 +970,6 @@ ro:
         perm_denied_expl: "Ai blocat notificările. Activează notificările din setările browser-ului."
         disable: "Dezactivează notificări"
         enable: "Activează notificările"
-        each_browser_note: 'Notă: trebuie să modifici această setare în fiecare browser pe care îl utilizezi. Toate notificările vor fi dezactivate când se află în modul „nu deranja”, indiferent de această setare.'
         consent_prompt: "Vrei să primești notificări atunci când cineva îți răspunde?"
       dismiss: "Înlătură"
       dismiss_notifications: "Elimină tot"
@@ -2415,7 +2413,6 @@ ro:
       bookmarks:
         create: "Creare semn de carte"
         edit: "Editare semn de carte"
-        created: "Creat"
         updated: "Actualizat"
         name: "Nume"
         name_placeholder: "Pentru ce este acest semn de carte?"
@@ -2642,7 +2639,6 @@ ro:
       few: "utilizatori"
       other: "de utilizatori"
     category_title: "Categorie"
-    changed_by: "de %{author}"
     raw_email:
       not_available: "Indisponibil!"
     categories_list: "Listă categorii"
@@ -2961,14 +2957,12 @@ ro:
               content: "Întrebări frecvente"
             groups:
               content: "Grupuri"
-              title: "Toate grupurile"
             users:
               content: "Utilizatori"
             my_posts:
               content: "Postările mele"
             review:
               content: "Revizuire"
-              title: "revizuire"
   admin_js:
     type_to_filter: "tastează pentru a filtra..."
     admin:
@@ -3229,7 +3223,6 @@ ro:
         button_title: "Trimite invitații"
       customize:
         title: "Personalizare"
-        long_title: "Personalizările site-ului"
         preview: "previzualizare"
         explain_preview: "Vizualizează site-ul cu această temă activată"
         save: "Salvare"
@@ -3303,9 +3296,9 @@ ro:
         colors:
           title: "Culori"
           copy_name_prefix: "Copie a"
-          undo: "revenire"
+          undo: "Anulează acțiunea"
           undo_title: "Revino asupra schimbărilor aduse acestei culori, de ultima oară când a fost salvată și până acum."
-          revert: "revenire"
+          revert: "Revenire la starea inițială"
           primary:
             name: "primar"
             description: "Majoritatea textului, iconițe și margini."

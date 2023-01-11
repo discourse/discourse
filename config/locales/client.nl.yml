@@ -315,7 +315,6 @@ nl:
       remove_reminder_keep_bookmark: "Herinnering verwijderen en bladwijzer behouden"
       created_with_reminder: "Je hebt een bladwijzer voor dit bericht gemaakt met een herinnering voor %{date}. %{name}"
       created_with_reminder_generic: "Je hebt een bladwijzer hiervoor gemaakt met een herinnering voor %{date}. %{name}"
-      remove: "Bladwijzer verwijderen"
       delete: "Bladwijzer verwijderen"
       confirm_delete: "Weet je zeker dat je deze bladwijzer wilt verwijderen? De herinnering wordt ook verwijderd."
       confirm_clear: "Weet je zeker dat je alle bladwijzers van dit topic wilt verwijderen?"
@@ -385,7 +384,6 @@ nl:
     enable: "Inschakelen"
     disable: "Uitschakelen"
     continue: "Doorgaan"
-    undo: "Ongedaan maken"
     switch_to_anon: "Anonieme modus starten"
     switch_from_anon: "Anonieme modus verlaten"
     banner:
@@ -682,6 +680,7 @@ nl:
         denied: "geweigerd"
         undone: "verzoek ongedaan gemaakt"
         handle: "lidmaatschapsverzoek behandelen"
+        undo: "Ongedaan maken"
       manage:
         title: "Beheren"
         name: "Naam"
@@ -1051,7 +1050,6 @@ nl:
         perm_denied_expl: "Je hebt toestemming voor meldingen geweigerd. Sta meldingen toe via je browserinstellingen."
         disable: "Meldingen uitschakelen"
         enable: "Meldingen inschakelen"
-        each_browser_note: 'Opmerking: je moet deze instelling wijzigen in elke browser die je gebruikt. Alle meldingen worden uitgeschakeld wanneer je op ''niet storen'' staat, ongeacht deze instelling.'
         consent_prompt: "Wil je live meldingen ontvangen als mensen antwoorden op je berichten?"
       dismiss: "Negeren"
       dismiss_notifications: "Alles negeren"
@@ -3133,7 +3131,6 @@ nl:
         create_for_topic: "Bladwijzer maken voor topic"
         edit: "Bladwijzer bewerken"
         edit_for_topic: "Bladwijzer voor topic bewerken"
-        created: "Gemaakt"
         updated: "Bijgewerkt"
         name: "Naam"
         name_placeholder: "Waar is deze bladwijzer voor?"
@@ -3436,7 +3433,6 @@ nl:
     category_title: "Categorie"
     history_capped_revisions: "Geschiedenis, laatste 100 herzieningen"
     history: "Geschiedenis"
-    changed_by: "van %{author}"
     raw_email:
       title: "Inkomende e-mail"
       not_available: "Niet beschikbaar!"
@@ -3853,7 +3849,6 @@ nl:
       new_count:
         one: "%{count} nieuw"
         other: "%{count} nieuw"
-      toggle_section: "sectie schakelen"
       more: "Meer"
       all_categories: "Alle categorieën"
       all_tags: "Alle tags"
@@ -3862,7 +3857,6 @@ nl:
           header_link_text: "Over"
         messages:
           header_link_text: "Berichten"
-          header_action_title: "maak een persoonlijk bericht"
           links:
             inbox: "Inbox"
             sent: "Verzonden"
@@ -3879,7 +3873,6 @@ nl:
           none: "Je hebt geen tags toegevoegd."
           click_to_get_started: "Klik hier om te beginnen."
           header_link_text: "Tags"
-          header_action_title: "bewerk je zijbalktags"
           configure_defaults: "Standaardinstellingen configureren"
         categories:
           links:
@@ -3889,11 +3882,9 @@ nl:
           none: "Je hebt geen categorieën toegevoegd."
           click_to_get_started: "Klik hier om te beginnen."
           header_link_text: "Categorieën"
-          header_action_title: "bewerk je zijbalkcategorieën"
           configure_defaults: "Standaardinstellingen configureren"
         community:
           header_link_text: "Community"
-          header_action_title: "maak een nieuw topic"
           links:
             about:
               content: "Over"
@@ -3908,10 +3899,8 @@ nl:
               content: "FAQ"
             groups:
               content: "Groepen"
-              title: "Alle groepen"
             users:
               content: "Gebruikers"
-              title: "Alle gebruikers"
             my_posts:
               content: "Mijn berichten"
               title: "Mijn recente topicactiviteit"
@@ -3921,7 +3910,6 @@ nl:
                 other: "%{count} concepten"
             review:
               content: "Beoordelen"
-              title: "beoordelen"
               pending_count: "%{count} wachtend"
     welcome_topic_banner:
       title: "Maak je welkomsttopic"
@@ -4375,7 +4363,6 @@ nl:
         button_title: "Uitnodigingen sturen"
       customize:
         title: "Aanpassen"
-        long_title: "Websiteaanpassingen"
         preview: "voorbeeld"
         explain_preview: "De website bekijken met dit thema ingeschakeld"
         save: "Opslaan"
@@ -4580,9 +4567,9 @@ nl:
           new_name: "Nieuw kleurenpalet"
           copy_name_prefix: "Kopie van"
           delete_confirm: "Dit kleurenpalet verwijderen?"
-          undo: "ongedaan maken"
+          undo: "Ongedaan maken"
           undo_title: "Je wijzigingen aan deze kleur sinds de laatste keer dat deze is opgeslagen ongedaan maken."
-          revert: "herstellen"
+          revert: "Herstellen"
           revert_title: "Deze kleur herstellen naar het standaardkleurenpalet van Discourse."
           primary:
             name: "primair"

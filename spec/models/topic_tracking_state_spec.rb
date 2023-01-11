@@ -10,7 +10,26 @@ RSpec.describe TopicTrackingState do
   fab!(:private_message_post) { Fabricate(:private_message_post) }
   let(:private_message_topic) { private_message_post.topic }
 
-  describe "#publish_latest" do
+  fab!(:read_restricted_category) { Fabricate(:category, read_restricted: true) }
+  fab!(:read_restricted_topic) { Fabricate(:topic, category: read_restricted_category) }
+
+  describe ".publish_new" do
+    it "should publish message only to admin group when category is read restricted but no groups have been granted access" do
+      message =
+        MessageBus
+          .track_publish("/new") { described_class.publish_new(read_restricted_topic) }
+          .first
+
+      data = message.data
+
+      expect(data["topic_id"]).to eq(read_restricted_topic.id)
+      expect(data["message_type"]).to eq(described_class::NEW_TOPIC_MESSAGE_TYPE)
+      expect(message.group_ids).to contain_exactly(Group::AUTO_GROUPS[:admin])
+      expect(message.user_ids).to eq(nil)
+    end
+  end
+
+  describe ".publish_latest" do
     it "can correctly publish latest" do
       message = MessageBus.track_publish("/latest") { described_class.publish_latest(topic) }.first
 
@@ -34,6 +53,20 @@ RSpec.describe TopicTrackingState do
           .first
 
       expect(message.group_ids).to contain_exactly(whisperers_group.id, Group::AUTO_GROUPS[:staff])
+    end
+
+    it "should publish message only to admin group when category is read restricted but no groups have been granted access" do
+      message =
+        MessageBus
+          .track_publish("/latest") { described_class.publish_latest(read_restricted_topic) }
+          .first
+
+      data = message.data
+
+      expect(data["topic_id"]).to eq(read_restricted_topic.id)
+      expect(data["message_type"]).to eq(described_class::LATEST_MESSAGE_TYPE)
+      expect(message.group_ids).to contain_exactly(Group::AUTO_GROUPS[:admin])
+      expect(message.user_ids).to eq(nil)
     end
 
     describe "private message" do
@@ -697,6 +730,54 @@ RSpec.describe TopicTrackingState do
       state = TopicTrackingState.report(post.user)
 
       expect(state.map(&:topic_id)).to contain_exactly(topic.id)
+    end
+  end
+
+  describe ".publish_recover" do
+    it "should publish message only to admin group when category is read restricted but no groups have been granted access" do
+      message =
+        MessageBus
+          .track_publish("/recover") { described_class.publish_recover(read_restricted_topic) }
+          .first
+
+      data = message.data
+
+      expect(data["topic_id"]).to eq(read_restricted_topic.id)
+      expect(data["message_type"]).to eq(described_class::RECOVER_MESSAGE_TYPE)
+      expect(message.group_ids).to contain_exactly(Group::AUTO_GROUPS[:admin])
+      expect(message.user_ids).to eq(nil)
+    end
+  end
+
+  describe ".publish_delete" do
+    it "should publish message only to admin group when category is read restricted but no groups have been granted access" do
+      message =
+        MessageBus
+          .track_publish("/delete") { described_class.publish_delete(read_restricted_topic) }
+          .first
+
+      data = message.data
+
+      expect(data["topic_id"]).to eq(read_restricted_topic.id)
+      expect(data["message_type"]).to eq(described_class::DELETE_MESSAGE_TYPE)
+      expect(message.group_ids).to contain_exactly(Group::AUTO_GROUPS[:admin])
+      expect(message.user_ids).to eq(nil)
+    end
+  end
+
+  describe ".publish_destroy" do
+    it "should publish message only to admin group when category is read restricted but no groups have been granted access" do
+      message =
+        MessageBus
+          .track_publish("/destroy") { described_class.publish_destroy(read_restricted_topic) }
+          .first
+
+      data = message.data
+
+      expect(data["topic_id"]).to eq(read_restricted_topic.id)
+      expect(data["message_type"]).to eq(described_class::DESTROY_MESSAGE_TYPE)
+      expect(message.group_ids).to contain_exactly(Group::AUTO_GROUPS[:admin])
+      expect(message.user_ids).to eq(nil)
     end
   end
 end

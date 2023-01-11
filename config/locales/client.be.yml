@@ -163,7 +163,6 @@ be:
         unbookmark: "Націсніце каб выдаліць усе закладкі ў гэтай тэме"
     bookmarks:
       not_bookmarked: "закладка гэты пост"
-      remove: "выдаліць закладку"
       save: "Захаваць"
       no_user_bookmarks: "У вас няма закладак паведамлення; закладкі дазваляюць хутка спасылацца на канкрэтныя пасады."
       search: "Пошук"
@@ -181,7 +180,6 @@ be:
     enable: "Уключыць"
     disable: "Адключыць"
     continue: "Працягнуць"
-    undo: "Адмяніць"
     switch_to_anon: "Увайсці як ананім"
     switch_from_anon: "Пакінуць ананімны прагляд"
     banner:
@@ -297,6 +295,7 @@ be:
       requests:
         reason: "прычына"
         handle: "звяртацца з просьбай аб членстве"
+        undo: "Адмяніць"
       manage:
         name: "Імя"
         full_name: "поўнае Імя"
@@ -1105,7 +1104,6 @@ be:
           side_by_side_markdown:
             title: "Паказаць непасрэдныя адрозненні побач"
       bookmarks:
-        created: "створаны"
         name: "Імя"
         options: "Налады"
     category:
@@ -1212,7 +1210,6 @@ be:
       many: "карыстальнікі"
       other: "карыстальнікі"
     category_title: "Катэгорыя"
-    changed_by: "%{Author}"
     categories_list: "Спіс катэгорый"
     filters:
       latest:
@@ -1373,14 +1370,12 @@ be:
               content: "Пытанні і адказы"
             groups:
               content: "Групы"
-              title: "Усе групы"
             users:
               content: "карыстальнікаў"
             my_posts:
               content: "мае паведамленні"
             review:
               content: "Патрабуе перагляду"
-              title: "патрабуе перагляду"
   admin_js:
     admin:
       moderator: "Мадэратар"
@@ -1550,7 +1545,6 @@ be:
         button_title: "Адправіць запрашэнні"
       customize:
         title: "Кастамізаваць"
-        long_title: "Site Customizations"
         preview: "preview"
         save: "Save"
         new: "Новая"
@@ -1590,9 +1584,9 @@ be:
         colors:
           title: "<......"
           copy_name_prefix: "капіяваць з"
-          undo: "адмяніць"
+          undo: "Адмяніць"
           undo_title: "Адмяніць вашыя змены гэтага колеру з часу апошняга захавання."
-          revert: "вярнуць"
+          revert: "Вярнуць"
           primary:
             name: "асноўнай"
           secondary:

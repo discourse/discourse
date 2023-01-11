@@ -310,7 +310,6 @@ pt:
       not_bookmarked: "adicionar esta mensagem aos marcadores"
       remove_reminder_keep_bookmark: "Remover lembrete e manter marcador"
       created_with_reminder: "Você marcou este post com um lembrete %{date}. %{name}"
-      remove: "Remover Marcador"
       delete: "Remover Marcador"
       confirm_delete: "Tem certeza de que deseja remover este marcador? O lembrete também será excluído."
       confirm_clear: "De certeza que pretende remover todos os marcadores deste tópico?"
@@ -372,7 +371,6 @@ pt:
     enable: "Ativar "
     disable: "Desativar"
     continue: "Continuar"
-    undo: "Desfazer"
     switch_to_anon: "Entrar em modo Anónimo"
     switch_from_anon: "Sair de modo Anónimo"
     banner:
@@ -667,6 +665,7 @@ pt:
         denied: "rejeitado"
         undone: "pedido desfeito"
         handle: "gerir o pedido de adesão"
+        undo: "Desfazer"
       manage:
         title: "Gerir"
         name: "Nome"
@@ -1027,7 +1026,6 @@ pt:
         perm_denied_expl: "Negou a permissão para as notificações. Autorize as notificações através das configurações do seu navegador."
         disable: "Desativar Notificações"
         enable: "Ativar Notificações"
-        each_browser_note: 'Nota: Terá de alterar esta configuração em cada navegador que usar. Todas as notificações serão desativadas quando estiver em "Não perturbar", independentemente desta configuração.'
         consent_prompt: "Quer receber notificações instantâneas quando outras pessoas responderem às suas publicações?"
       dismiss: "Marcar como visto"
       dismiss_notifications: "Marcar Visto Tudo"
@@ -2883,7 +2881,6 @@ pt:
       bookmarks:
         create: "Criar favorito"
         edit: "Editar favorito"
-        created: "Criado"
         updated: "Atualização"
         name: "Nome"
         name_placeholder: "Para que serve este favorito?"
@@ -3141,7 +3138,6 @@ pt:
       other: "utilizadores"
     category_title: "Categoria"
     history: "Histórico"
-    changed_by: "por %{author}"
     raw_email:
       not_available: "Indisponível!"
     categories_list: "Lista de Categorias"
@@ -3517,14 +3513,12 @@ pt:
               content: "FAQ"
             groups:
               content: "Grupos"
-              title: "Todos os grupos"
             users:
               content: "Utilizadores"
             my_posts:
               content: "As Minhas publicações"
             review:
               content: "Revisão"
-              title: "revisão"
   admin_js:
     type_to_filter: "digite para filtrar..."
     admin:
@@ -3886,7 +3880,6 @@ pt:
         button_title: "Enviar Convites"
       customize:
         title: "Personalizar"
-        long_title: "Personalizações do Sítio"
         preview: "pré-visualização"
         explain_preview: "Veja o site com este tema ativado"
         save: "Guardar"
@@ -4029,9 +4022,9 @@ pt:
           new_name: "Nova Paleta de Cores"
           copy_name_prefix: "Cópia de"
           delete_confirm: "Excluir esta paleta de cores?"
-          undo: "desfazer"
+          undo: "Desfazer"
           undo_title: "Desfazer as alterações a esta cor desde a última gravação."
-          revert: "reverter"
+          revert: "Reverter"
           revert_title: "Redefina essa cor para a paleta de cores padrão do Discourse."
           primary:
             name: "primária"

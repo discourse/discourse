@@ -289,7 +289,6 @@ da:
       remove_reminder_keep_bookmark: "Fjern påmindelse og behold bogmærke"
       created_with_reminder: "Du har sat et bogmærke med en påmindelse for dette indlæg %{date}. %{name}"
       created_with_reminder_generic: "Du har bogmærket dette med en påmindelse %{date}. %{name}"
-      remove: "Fjern bogmærke"
       delete: "Slet Bogmærke"
       confirm_delete: "Er du sikker på, at du vil slette dette bogmærke? Påmindelsen vil også blive slettet."
       confirm_clear: "Er du sikker på, at du vil rydde alle dine bogmærker fra dette emne?"
@@ -357,7 +356,6 @@ da:
     enable: "Aktivér"
     disable: "Deaktivér"
     continue: "Fortsæt"
-    undo: "Fortryd"
     switch_to_anon: "Gå i anonym tilstand"
     switch_from_anon: "Afslut anonym tilstand"
     banner:
@@ -651,6 +649,7 @@ da:
         denied: "Nægtet"
         undone: "anmodning fortrudt"
         handle: "håndter medlemskabsanmodning"
+        undo: "Fortryd"
       manage:
         title: "Administrér"
         name: "Navn"
@@ -1014,7 +1013,6 @@ da:
         perm_denied_expl: "Du nægtede adgang for notifikationer. Tillad notifikationer via indstillingerne i din browser."
         disable: "Deaktiver notifikationer"
         enable: "Aktiver notifikationer"
-        each_browser_note: 'Bemærk: Du skal ændre denne indstilling i hver browser, du bruger. Alle meddelelser deaktiveres, når de er i "forstyr ikke", uanset denne indstilling.'
         consent_prompt: "Ønsker du live notifikationer, når folk svarer på dine indlæg?"
       dismiss: "Ignorer Alle"
       dismiss_notifications: "Skjul Alle"
@@ -2917,7 +2915,6 @@ da:
         create_for_topic: "Opret bogmærke til emnet"
         edit: "Rediger bogmærke"
         edit_for_topic: "Rediger bogmærke til emnet"
-        created: "Oprettet"
         updated: "Opdateret"
         name: "Navn"
         name_placeholder: "Hvad er dette bogmærke til?"
@@ -3205,7 +3202,6 @@ da:
     category_title: "Kategori"
     history_capped_revisions: "Historik, seneste 100 revisioner"
     history: "Historik"
-    changed_by: "af %{author}"
     raw_email:
       title: "Indgående e-mail"
       not_available: "Ikke tilgængelig!"
@@ -3635,7 +3631,6 @@ da:
               content: "OSS"
             groups:
               content: "Grupper"
-              title: "Alle grupper"
             users:
               content: "Brugere"
             my_posts:
@@ -3643,7 +3638,6 @@ da:
               title_drafts: "Mine uopslåede kladder"
             review:
               content: "Anmeldelse"
-              title: "anmeldelse"
     until: "Indtil:"
   admin_js:
     type_to_filter: "skriv for at filtrere…"
@@ -4062,7 +4056,6 @@ da:
         button_title: "Send Invitationer"
       customize:
         title: "Tilpasning"
-        long_title: "Tilpasning af site"
         preview: "forhåndsvisning"
         explain_preview: "Se sitet med dette tema slået til"
         save: "Gem"
@@ -4263,9 +4256,9 @@ da:
           new_name: "Ny farvepalet"
           copy_name_prefix: "Kopi af"
           delete_confirm: "Slet denne farvepalet?"
-          undo: "fortryd"
+          undo: "Fortryd"
           undo_title: "Fortryd dine ændringer til denne farve, siden sidste gang den blev gemt."
-          revert: "gendan"
+          revert: "Gendan"
           revert_title: "Nulstil denne farve til Discourses standard farvepalet."
           primary:
             name: "Primær"

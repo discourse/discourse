@@ -541,10 +541,6 @@ zh_TW:
       almost_x_years:
         other: "約 %{count} 年前"
   password_reset:
-    choose_new: "選擇一個新密碼"
-    choose: "選擇一個密碼"
-    update: "更新密碼"
-    save: "設定密碼"
     title: "重設密碼"
     success: "密碼修改成功，現在已為你登入。"
     success_unapproved: "你的密碼已成功修改。"

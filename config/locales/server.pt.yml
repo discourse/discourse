@@ -591,10 +591,6 @@ pt:
         one: "há quase %{count} ano atrás"
         other: "há quase %{count} anos atrás"
   password_reset:
-    choose_new: "Escolha uma nova palavra-passe"
-    choose: "Escolha uma palavra-passe"
-    update: "Atualizar Palavra-passe"
-    save: "Definir Palavra-passe"
     title: "Redefinir Palavra-passe"
     success: "A sua palavra-passe foi alterada com sucesso e está agora ligado."
     success_unapproved: "Palavra-passe modificada com sucesso."

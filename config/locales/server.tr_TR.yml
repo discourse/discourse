@@ -764,10 +764,6 @@ tr_TR:
         other: "neredeyse %{count} yıl önce"
   password_reset:
     no_token: 'Hay aksi! Kullandığınız bağlantı artık çalışmıyor. Şimdi <a href="%{base_url}/login">Giriş</a> yapabilirsiniz. Şifrenizi unuttuysanız sıfırlamak için <a href="%{base_url}/password-reset">bağlantı talep edebilirsiniz</a>.'
-    choose_new: "Yeni bir şifre seçin"
-    choose: "Şifre seçin"
-    update: "Şifreyi güncelleyin"
-    save: "Şifre Belirleyin"
     title: "Şifreyi Sıfırlayın"
     success: "Şifrenizi başarıyla değiştirdiniz ve giriş yaptınız."
     success_unapproved: "Şifrenizi başarıyla değiştirdiniz."
@@ -963,7 +959,7 @@ tr_TR:
     mailing_list_mode: "Posta listesi modunu kapat"
     all: "Bana %{sitename} adresinden herhangi bir posta gönderme."
     different_user_description: "Şu anda e-posta gönderdiğimiz kullanıcıdan farklı bir kullanıcı olarak giriş yapmış durumdasınız. Lütfen çıkış yapın veya anonim moda girip tekrar deneyin."
-    not_found_description: Üzgünüz, bu aboneliği bulamadık. E-postanızdaki bağlantı çok eski ve süresi dolmuş olabilir mi?"
+    not_found_description: "Üzgünüz, bu aboneliği bulamadık. E-postanızdaki bağlantı çok eski ve süresi dolmuş olabilir mi?"
     user_not_found_description: "Üzgünüz, bu abonelik için bir kullanıcı bulamadık. Muhtemelen artık var olmayan bir hesabın aboneliğini iptal etmeye çalışıyorsunuz."
     log_out: "Çıkış Yap"
     submit: "Tercihleri kaydet"

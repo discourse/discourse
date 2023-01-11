@@ -315,7 +315,6 @@ fi:
       remove_reminder_keep_bookmark: "Poista muistutus ja säilytä kirjanmerkki"
       created_with_reminder: "Olet kirjanmerkinnyt tämän viestin muistutuksen kera %{date}. %{name}"
       created_with_reminder_generic: "Olet lisännyt tämän kirjanmerkkeihin muistutuksella %{date}. %{name}"
-      remove: "Poista kirjanmerkki"
       delete: "Poista kirjanmerkki"
       confirm_delete: "Oletko varma, että haluat poistaa tämän kirjanmerkin? Muistutus poistetaan myös."
       confirm_clear: "Haluatko varmasti poistaa kaikki kirjanmerkkisi tästä ketjusta?"
@@ -385,7 +384,6 @@ fi:
     enable: "Ota käyttöön"
     disable: "Poista käytöstä"
     continue: "Jatka"
-    undo: "Kumoa"
     switch_to_anon: "Siirry anonyymitilaan"
     switch_from_anon: "Poistu anonyymitilasta"
     banner:
@@ -682,6 +680,7 @@ fi:
         denied: "hylättiin"
         undone: "pyyntö peruttu"
         handle: "käsittele jäsenhakemus"
+        undo: "Kumoa"
       manage:
         title: "Hallitse"
         name: "Nimi"
@@ -1051,7 +1050,6 @@ fi:
         perm_denied_expl: "Olet kieltänyt ilmoitukset. Salli ilmoitukset selaimesi asetuksista."
         disable: "Poista ilmoitukset käytöstä"
         enable: "Näytä ilmoituksia"
-        each_browser_note: 'Huomautus: Tätä asetusta on muutettava jokaisessa käyttämässäsi selaimessa. Kaikki ilmoitukset poistetaan käytöstä, kun ”älä häiritse” -tila on käytössä riippumatta tästä asetuksesta.'
         consent_prompt: "Haluatko reaaliaikaisia ilmoituksia, kun ihmiset vastaavat viesteihisi?"
       dismiss: "Kuittaa"
       dismiss_notifications: "Kuittaa kaikki"
@@ -3121,7 +3119,6 @@ fi:
         create_for_topic: "Luo kirjanmerkki ketjulle"
         edit: "Muokkaa kirjanmerkkiä"
         edit_for_topic: "Muokkaa ketjun kirjanmerkkiä"
-        created: "Luotu"
         updated: "Päivitetty"
         name: "Nimi"
         name_placeholder: "Mitä varten kirjanmerkki on?"
@@ -3423,7 +3420,6 @@ fi:
     category_title: "Alue"
     history_capped_revisions: "Historia, viimeiset 100 versiota"
     history: "Historia"
-    changed_by: "käyttäjältä %{author}"
     raw_email:
       title: "Saapuva sähköposti"
       not_available: "Ei käytettävissä!"
@@ -3838,7 +3834,6 @@ fi:
       new_count:
         one: "%{count} uusi"
         other: "%{count} uutta"
-      toggle_section: "vaihda osa"
       more: "Lisää"
       all_categories: "Kaikki alueet"
       all_tags: "Kaikki tunnisteet"
@@ -3847,7 +3842,6 @@ fi:
           header_link_text: "Tietoa"
         messages:
           header_link_text: "Viestit"
-          header_action_title: "luo yksityisviesti"
           links:
             inbox: "Postilaatikko"
             sent: "Lähetetyt"
@@ -3864,7 +3858,6 @@ fi:
           none: "Et ole lisännyt tunnisteita."
           click_to_get_started: "Aloita klikkaamalla tätä."
           header_link_text: "Tunnisteet"
-          header_action_title: "muokkaa sivupalkin tunnisteitasi"
           configure_defaults: "Määritä oletukset"
         categories:
           links:
@@ -3874,11 +3867,9 @@ fi:
           none: "Et ole lisännyt alueita."
           click_to_get_started: "Aloita klikkaamalla tätä."
           header_link_text: "Alueet"
-          header_action_title: "muokkaa sivupalkin alueitasi"
           configure_defaults: "Määritä oletukset"
         community:
           header_link_text: "Yhteisö"
-          header_action_title: "aloita uusi ketju"
           links:
             about:
               content: "Tietoa"
@@ -3893,10 +3884,8 @@ fi:
               content: "UKK"
             groups:
               content: "Ryhmät"
-              title: "Kaikki ryhmät"
             users:
               content: "Käyttäjät"
-              title: "Kaikki käyttäjät"
             my_posts:
               content: "Viestini"
               draft_count:
@@ -3904,7 +3893,6 @@ fi:
                 other: "%{count} luonnosta"
             review:
               content: "Käsittele"
-              title: "käsittele"
               pending_count: "%{count} odottaa"
     welcome_topic_banner:
       title: "Luo tervetuloketjusi"
@@ -4350,7 +4338,6 @@ fi:
         button_title: "Lähetä kutsuja"
       customize:
         title: "Mukauta"
-        long_title: "Sivuston mukautukset"
         preview: "esikatselu"
         explain_preview: "Näe miltä sivusto näyttää tällä teemalla"
         save: "Tallenna"
@@ -4555,9 +4542,9 @@ fi:
           new_name: "Uusi väripaletti"
           copy_name_prefix: "Kopio"
           delete_confirm: "Poistetaanko tämä väripaletti?"
-          undo: "kumoa"
+          undo: "Kumoa"
           undo_title: "Kumoa muutoksesi tähän väriin viimeisimmän tallennuskerran jälkeen."
-          revert: "palauta"
+          revert: "Palauta"
           revert_title: "Nollaa tämä väri vastaamaan Discoursen oletusväripaletin väriä."
           primary:
             name: "ensisijainen"

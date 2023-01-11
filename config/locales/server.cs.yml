@@ -526,10 +526,6 @@ cs:
         many: "téměř před %{count} roky"
         other: "téměř před %{count} roky"
   password_reset:
-    choose_new: "Vyberte si nové heslo"
-    choose: "Vybrat heslo"
-    update: "změnit heslo"
-    save: "Nastavit heslo"
     title: "Resetovat heslo"
     success: "Heslo bylo úspěšně změněno a nyní jste přihlášeni."
     success_unapproved: "Heslo bylo úšpěšně změněno."

@@ -109,7 +109,7 @@ class DbHelper
         rows = DB.query(<<~SQL, like: like)
         SELECT \"#{r.column_name}\"
           FROM \"#{r.table_name}\"
-         WHERE \""#{r.column_name}"\" LIKE :like
+         WHERE \"#{r.column_name}\" LIKE :like
       SQL
 
         if rows.size > 0

@@ -452,10 +452,6 @@ ro:
         few: "cu aproape %{count} ani în urmă"
         other: "cu aproape %{count} de ani în urmă"
   password_reset:
-    choose_new: "Alege o parolă nouă"
-    choose: "Alege o parolă"
-    update: "Actualizează parola"
-    save: "Setează parola"
     title: "Resetează parola"
     success: "Ți-ai schimbat cu succes parola și acum ești autentificat."
     success_unapproved: "Ți-ai schimbat cu succes parola."
