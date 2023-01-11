@@ -28,7 +28,7 @@ export default class ChatApi extends Service {
 
   /**
    * List all accessible category channels of the current user.
-   * @returns {Collection}
+   * @returns {module:Collection}
    *
    * @example
    *
@@ -171,7 +171,7 @@ export default class ChatApi extends Service {
   /**
    * Lists members of a channel.
    * @param {number} channelId - The ID of the channel.
-   * @returns {Collection}
+   * @returns {module:Collection}
    */
   listChannelMemberships(channelId) {
     return new Collection(

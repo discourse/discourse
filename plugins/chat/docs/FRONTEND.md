@@ -68,7 +68,7 @@ Attempts to load more results
 * [ChatApi](#module_ChatApi)
     * [module.exports](#exp_module_ChatApi--module.exports) ⏏
         * [.channel(channelId)](#module_ChatApi--module.exports+channel) ⇒ <code>Promise</code>
-        * [.channels()](#module_ChatApi--module.exports+channels) ⇒ <code>Collection</code>
+        * [.channels()](#module_ChatApi--module.exports+channels) ⇒ [<code>module.exports</code>](#exp_module_Collection--module.exports)
         * [.moveChannelMessages(channelId, data)](#module_ChatApi--module.exports+moveChannelMessages) ⇒ <code>Promise</code>
         * [.destroyChannel(channelId, channelName)](#module_ChatApi--module.exports+destroyChannel) ⇒ <code>Promise</code>
         * [.createChannel(data)](#module_ChatApi--module.exports+createChannel) ⇒ <code>Promise</code>
@@ -77,7 +77,7 @@ Attempts to load more results
         * [.createChannelArchive(channelId, data)](#module_ChatApi--module.exports+createChannelArchive) ⇒ <code>Promise</code>
         * [.updateChannel(channelId, data)](#module_ChatApi--module.exports+updateChannel) ⇒ <code>Promise</code>
         * [.updateChannelStatus(channelId, status)](#module_ChatApi--module.exports+updateChannelStatus) ⇒ <code>Promise</code>
-        * [.listChannelMemberships(channelId)](#module_ChatApi--module.exports+listChannelMemberships) ⇒ <code>Collection</code>
+        * [.listChannelMemberships(channelId)](#module_ChatApi--module.exports+listChannelMemberships) ⇒ [<code>module.exports</code>](#exp_module_Collection--module.exports)
         * [.listCurrentUserChannels()](#module_ChatApi--module.exports+listCurrentUserChannels) ⇒ <code>Promise</code>
         * [.followChannel(channelId)](#module_ChatApi--module.exports+followChannel) ⇒ <code>Promise</code>
         * [.unfollowChannel(channelId)](#module_ChatApi--module.exports+unfollowChannel) ⇒ <code>Promise</code>
@@ -115,7 +115,7 @@ this.chatApi.channel(1).then(channel => { ... })
 
 <a name="module_ChatApi--module.exports+channels"></a>
 
-#### module.exports.channels() ⇒ <code>Collection</code>
+#### module.exports.channels() ⇒ [<code>module.exports</code>](#exp_module_Collection--module.exports)
 List all accessible category channels of the current user.
 
 **Kind**: instance method of [<code>module.exports</code>](#exp_module_ChatApi--module.exports)  
@@ -282,7 +282,7 @@ Updates the status of a channel.
 
 <a name="module_ChatApi--module.exports+listChannelMemberships"></a>
 
-#### module.exports.listChannelMemberships(channelId) ⇒ <code>Collection</code>
+#### module.exports.listChannelMemberships(channelId) ⇒ [<code>module.exports</code>](#exp_module_Collection--module.exports)
 Lists members of a channel.
 
 **Kind**: instance method of [<code>module.exports</code>](#exp_module_ChatApi--module.exports)  
