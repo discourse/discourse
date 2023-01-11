@@ -308,7 +308,6 @@ sr:
       remove_reminder_keep_bookmark: "Uklonite podsetnik i sačuvajte obeleživač"
       created_with_reminder: "Obeležili ste ovu poruku sa podsetnikom %{date}. %{name}"
       created_with_reminder_generic: "Obeležili ste ovu poruku sa podsetnikom %{date}. %{name}"
-      remove: "Obriši marker"
       delete: "Ukloni obeleživač"
       confirm_delete: "Da li ste sigurni da želite da uklonite ovaj obeleživač? Podsetnik će takođe biti uklonjen."
       confirm_clear: "Da li ste sigurni da želite da uklonite sve obeleživače sa ove teme?"
@@ -370,7 +369,6 @@ sr:
     enable: "Omogući"
     disable: "Onemogući"
     continue: "Nastavi"
-    undo: "Vrati na prethodno"
     switch_to_anon: "Uključi Anonimni režim"
     switch_from_anon: "Izađi iz Anonimnog režima"
     banner:
@@ -530,6 +528,7 @@ sr:
         accepted: "prihvaćen"
         deny: "Odbij"
         denied: "odbijen"
+        undo: "Vrati na prethodno"
       manage:
         name: "Ime foruma"
         full_name: "Ime"
@@ -1471,7 +1470,6 @@ sr:
           side_by_side_markdown:
             title: "Prikaži razlike u sirovom izvoru jednu nasuprot druge."
       bookmarks:
-        created: "Napravljeno"
         name: "Ime foruma"
         options: "Opcije"
     category:
@@ -1616,7 +1614,6 @@ sr:
       few: "korisnici"
       other: "korisnici"
     category_title: "Kategorija"
-    changed_by: "od %{author}"
     raw_email:
       not_available: "Nije dostupno!"
     categories_list: "Lista Kategorija"
@@ -2000,7 +1997,6 @@ sr:
         button_text: "Izvoz"
       customize:
         title: "Prilagođavanje"
-        long_title: "Prilagođavanje Stranice"
         preview: "Prikaz"
         save: "Sačuvaj"
         new: "Novo"
@@ -2034,9 +2030,9 @@ sr:
         colors:
           title: "Boje"
           copy_name_prefix: "Kopija od"
-          undo: "Poništi"
+          undo: "Vrati na prethodno"
           undo_title: "Poništi promene ovoj boji od zadnjeg puta kad su sačuvane."
-          revert: "vrati"
+          revert: "Vrati nazad"
           primary:
             name: "primarna"
             description: "Većina teksta, ikonica i granica."

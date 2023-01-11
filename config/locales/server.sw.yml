@@ -406,10 +406,6 @@ sw:
         one: "siku %{count} iliyopita"
         other: "siku %{count} zilizopita"
   password_reset:
-    choose_new: "Chagua nywila"
-    choose: "Chagua nywila"
-    update: "Sasisha Nywila"
-    save: "Seti Nywila"
     title: "Weka Upya Nywila"
     success: "Umebadilisha nywila yako kwa mafanikio na sasa umeingia."
     success_unapproved: "Umebadilisha nywila yako kwa mafanikio."

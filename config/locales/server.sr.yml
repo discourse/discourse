@@ -215,7 +215,6 @@ sr:
         few: "pre %{count} mesec dana"
         other: "pre %{count} mesec dana"
   password_reset:
-    save: "Postavi Šifru"
     title: "Resetujte Šifru"
   change_email:
     max_secondary_emails_error: "Dosegli ste maksimalni dozvoljeni broj sekundarne e-pošte."

@@ -315,7 +315,6 @@ fr:
       remove_reminder_keep_bookmark: "Supprimer le rappel et conserver le signet"
       created_with_reminder: "Vous avez mis un signet à ce message avec un rappel pour le %{date}. %{name}"
       created_with_reminder_generic: "Vous avez mis ceci en signet avec un rappel pour le %{date}. %{name}"
-      remove: "Retirer le signet"
       delete: "Supprimer le signet"
       confirm_delete: "Voulez-vous vraiment supprimer ce signet ? Le rappel sera également supprimé."
       confirm_clear: "Voulez-vous vraiment retirer tous les signets de ce sujet ?"
@@ -385,7 +384,6 @@ fr:
     enable: "Activer"
     disable: "Désactiver"
     continue: "Continuer"
-    undo: "Annuler"
     switch_to_anon: "Activer le mode anonyme"
     switch_from_anon: "Quitter le mode anonyme"
     banner:
@@ -682,6 +680,7 @@ fr:
         denied: "refusé"
         undone: "demande annulée"
         handle: "gérer une demande d'adhésion"
+        undo: "Annuler"
       manage:
         title: "Gérer"
         name: "Nom"
@@ -1051,7 +1050,6 @@ fr:
         perm_denied_expl: "Vous n'avez pas autorisé les notifications. Autorisez-les à partir des paramètres de votre navigateur."
         disable: "Désactiver les notifications"
         enable: "Activer les notifications"
-        each_browser_note: 'Remarque : vous devez modifier ce paramètre sur chaque navigateur que vous utiliserez. Toutes les notifications seront désactivées lorsque vous serez en mode « Ne pas déranger », quel que soit la valeur de ce paramètre.'
         consent_prompt: "Souhaitez-vous recevoir des notifications en temps réel en cas de réponse à vos messages ?"
       dismiss: "Vu"
       dismiss_notifications: "Tout vu"
@@ -3120,7 +3118,6 @@ fr:
         create_for_topic: "Créer un signet associé à ce sujet"
         edit: "Modifier le signet"
         edit_for_topic: "Modifier le signet associé à ce sujet"
-        created: "Créé"
         updated: "Mis à jour"
         name: "Nom"
         name_placeholder: "À quoi correspond ce signet ?"
@@ -3422,7 +3419,6 @@ fr:
     category_title: "Catégorie"
     history_capped_revisions: "Historique des 100 dernières modifications"
     history: "Historique"
-    changed_by: "par %{author}"
     raw_email:
       title: "E-mail entrant"
       not_available: "Indisponible !"
@@ -3837,7 +3833,6 @@ fr:
       new_count:
         one: "%{count} nouveau"
         other: "%{count} nouveaux"
-      toggle_section: "basculer la section"
       more: "Plus"
       all_categories: "Toutes les catégories"
       all_tags: "Toutes les étiquettes"
@@ -3846,7 +3841,6 @@ fr:
           header_link_text: "À propos"
         messages:
           header_link_text: "Messages"
-          header_action_title: "créer un message direct"
           links:
             inbox: "Boîte de réception"
             sent: "Envoyés"
@@ -3863,7 +3857,6 @@ fr:
           none: "Vous n'avez ajouté aucune étiquette."
           click_to_get_started: "Cliquez ici pour commencer."
           header_link_text: "Étiquettes"
-          header_action_title: "modifier les étiquettes de votre barre latérale"
           configure_defaults: "Configurer les valeurs par défaut"
         categories:
           links:
@@ -3873,11 +3866,9 @@ fr:
           none: "Vous n'avez ajouté aucune catégorie."
           click_to_get_started: "Cliquez ici pour commencer."
           header_link_text: "Catégories"
-          header_action_title: "modifier les catégories de votre barre latérale"
           configure_defaults: "Configurer les valeurs par défaut"
         community:
           header_link_text: "Communauté"
-          header_action_title: "créer un nouveau sujet"
           links:
             about:
               content: "À propos"
@@ -3892,10 +3883,8 @@ fr:
               content: "FAQ"
             groups:
               content: "Groupes"
-              title: "Tous les groupes"
             users:
               content: "Utilisateurs"
-              title: "Tous les utilisateurs"
             my_posts:
               content: "Mes messages"
               draft_count:
@@ -3903,7 +3892,6 @@ fr:
                 other: "%{count} brouillons"
             review:
               content: "À examiner"
-              title: "à examiner"
               pending_count: "%{count} en attente"
     welcome_topic_banner:
       title: "Créez votre sujet de bienvenue"
@@ -4350,7 +4338,6 @@ fr:
         button_title: "Envoyer des invitations"
       customize:
         title: "Personnaliser"
-        long_title: "Personnalisations du site"
         preview: "prévisualiser"
         explain_preview: "Voir le site avec ce thème activé"
         save: "Enregistrer"
@@ -4555,9 +4542,9 @@ fr:
           new_name: "Nouvelle palette de couleurs"
           copy_name_prefix: "Copie de"
           delete_confirm: "Supprimer cette palette de couleurs ?"
-          undo: "annuler"
+          undo: "Annuler"
           undo_title: "Annuler les modifications que vous avez apportées à cette couleur depuis son dernier enregistrement."
-          revert: "rétablir"
+          revert: "Rétablir"
           revert_title: "Rétablir la couleur de la palette par défaut de Discourse."
           primary:
             name: "primaire"

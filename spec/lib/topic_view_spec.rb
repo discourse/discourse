@@ -1072,4 +1072,17 @@ RSpec.describe TopicView do
       end
     end
   end
+
+  describe "#tags" do
+    subject(:topic_view_tags) { topic_view.tags }
+
+    let(:topic_view) { described_class.new(topic, user) }
+    let(:topic) { Fabricate.build(:topic, tags: tags) }
+    let(:tags) { Fabricate.build_times(2, :tag) }
+    let(:user) { Fabricate(:user) }
+
+    it "returns the tags names" do
+      expect(topic_view_tags).to match tags.map(&:name)
+    end
+  end
 end

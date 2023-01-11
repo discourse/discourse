@@ -112,7 +112,6 @@ Discourse::Application.routes.draw do
 
       resources :groups, only: [:create] do
         member do
-          put "owners" => "groups#add_owners"
           delete "owners" => "groups#remove_owner"
           put "primary" => "groups#set_primary"
         end
@@ -1052,6 +1051,7 @@ Discourse::Application.routes.draw do
 
           get "permissions" => "groups#permissions"
           put "members" => "groups#add_members"
+          put "owners" => "groups#add_owners"
           put "join" => "groups#join"
           delete "members" => "groups#remove_member"
           delete "leave" => "groups#leave"

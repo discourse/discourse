@@ -285,7 +285,6 @@ ca:
       not_bookmarked: "marca aquesta publicació com a preferit"
       remove_reminder_keep_bookmark: "Elimina el recordatori i mantén el marcador"
       created_with_reminder: "Heu marcat aquesta publicació amb un recordatori de %{date}. %{name}"
-      remove: "Elimina preferit"
       delete: "Suprimeix el marcador"
       confirm_delete: "Esteu segur que voleu suprimir aquest marcador? El recordatori també se suprimirà."
       confirm_clear: "Esteu segur que voleu eliminar tots els preferits d'aquest tema?"
@@ -346,7 +345,6 @@ ca:
     enable: "Activa"
     disable: "Desactiva"
     continue: "Continua"
-    undo: "Desfés"
     switch_to_anon: "Entra en el mode anònim"
     switch_from_anon: "Surt del mode anònim"
     banner:
@@ -615,6 +613,7 @@ ca:
         denied: "denegat"
         undone: "sol·licitud revertida"
         handle: "gestiona la sol·licitud d'afiliació"
+        undo: "Desfés"
       manage:
         title: "Gestiona"
         name: "Nom"
@@ -2378,7 +2377,6 @@ ca:
             title: "Mostra la part HTML del correu electrònic"
             button: "HTML"
       bookmarks:
-        created: "Creat"
         updated: "Actualitzat"
         name: "Nom"
         options: "Opcions"
@@ -2606,7 +2604,6 @@ ca:
       one: "usuari"
       other: "usuaris"
     category_title: "Categoria"
-    changed_by: "per %{author}"
     raw_email:
       title: "Correu entrant"
       not_available: "No disponible!"
@@ -2923,14 +2920,12 @@ ca:
               content: "PMF"
             groups:
               content: "Grups"
-              title: "Tots els grups"
             users:
               content: "Usuaris"
             my_posts:
               content: "Les meves publicacions"
             review:
               content: "Revisa"
-              title: "revisa"
   admin_js:
     type_to_filter: "escriu per a filtrar..."
     admin:
@@ -3284,7 +3279,6 @@ ca:
         button_title: "Envia invitacions"
       customize:
         title: "Personalitza"
-        long_title: "Personalitzacions del lloc web"
         preview: "previsualització"
         explain_preview: "Mostra el lloc web amb aquesta aparença activada"
         save: "Desa"
@@ -3445,9 +3439,9 @@ ca:
           new_name: "Nova paleta de colors"
           copy_name_prefix: "Còpia de"
           delete_confirm: "Voleu suprimir aquesta paleta de colors?"
-          undo: "desfés"
+          undo: "Desfés"
           undo_title: "Desfà els canvis a aquest color des de la darrera vegada que va ser desat."
-          revert: "reverteix"
+          revert: "Reverteix"
           revert_title: "Restableix aquest color a la paleta de colors predeterminada de Discourse."
           primary:
             name: "primari"
