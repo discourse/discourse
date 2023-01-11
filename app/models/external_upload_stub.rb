@@ -43,9 +43,6 @@ class ExternalUploadStub < ActiveRecord::Base
     @statuses ||= Enum.new(created: 1, uploaded: 2, failed: 3)
   end
 
-  # TODO (martin): Lifecycle rule would be best to clean stuff up in the external
-  # systems, I don't think we really want to be calling out to the external systems
-  # here right?
   def self.cleanup!
     expired_created.delete_all
     expired_uploaded.delete_all
