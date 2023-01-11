@@ -12,14 +12,9 @@
 module ActiveRecord
   module AttributeMethods
     module ClassMethods
-      # this is for Rails 5
-      def enforce_raw_sql_whitelist(*args)
-        nil
-      end
-
       BLANK_ARRAY = [].freeze
 
-      # this patch just allows everything in Rails 6
+      # this patch just allows everything in Rails 6+
       def disallow_raw_sql!(args, permit: nil)
         # we may consider moving to https://github.com/rails/rails/pull/33330
         # once all frozen string hints are in place

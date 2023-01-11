@@ -59,7 +59,13 @@ export default MultiSelectComponent.extend(TagsMixin, {
   }),
 
   content: computed("value.[]", function () {
-    return makeArray(this.value).map((x) => this.defaultItem(x, x));
+    let values = makeArray(this.value);
+    if (this.selectKit.options.hiddenValues) {
+      values = values.filter(
+        (val) => !this.selectKit.options.hiddenValues.includes(val)
+      );
+    }
+    return values.map((x) => this.defaultItem(x, x));
   }),
 
   search(filter) {
@@ -92,8 +98,20 @@ export default MultiSelectComponent.extend(TagsMixin, {
       termMatchErrorMessage: json.forbidden_message,
     });
 
-    if (context.get("siteSettings.tags_sort_alphabetically")) {
+    if (context.siteSettings.tags_sort_alphabetically) {
       results = results.sort((a, b) => a.text.localeCompare(b.text));
+    }
+
+    if (json.required_tag_group) {
+      context.set(
+        "selectKit.options.translatedFilterPlaceholder",
+        I18n.t("tagging.choose_for_topic_required_group", {
+          count: json.required_tag_group.min_count,
+          name: json.required_tag_group.name,
+        })
+      );
+    } else {
+      context.set("selectKit.options.translatedFilterPlaceholder", null);
     }
 
     return results.filter((r) => !makeArray(context.tags).includes(r.id));

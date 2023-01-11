@@ -1,0 +1,55 @@
+{{#if this.message}}
+  <div class="alert {{this.alertClass}}">{{this.message}}</div>
+{{/if}}
+{{#unless this.loadError}}
+  <h3>{{this.secondFactorTitle}}</h3>
+  {{#if this.customDescription}}
+    <p class="action-description">{{this.customDescription}}</p>
+  {{/if}}
+  <p>{{this.secondFactorDescription}}</p>
+  {{#if this.showSecurityKeyForm}}
+    <div id="security-key">
+      <DButton
+        @action={{action "authenticateSecurityKey"}}
+        @icon="key"
+        @id="security-key-authenticate-button"
+        @label="login.security_key_authenticate"
+        @type="button"
+        @class="btn btn-large btn-primary"
+      />
+    </div>
+  {{else if (or this.showTotpForm this.showBackupCodesForm)}}
+    <form class={{this.inputFormClass}}>
+      <SecondFactorInput
+        @value={{this.secondFactorToken}}
+        @secondFactorMethod={{this.shownSecondFactorMethod}}
+        @onTokenInput={{action "onTokenInput"}}
+      />
+      <DButton
+        @action={{action "authenticateToken"}}
+        @class="btn-primary"
+        @label="submit"
+        @type="submit"
+      />
+    </form>
+  {{/if}}
+
+  {{#if this.alternativeMethods.length}}
+    <p>
+      {{#each this.alternativeMethods as |method index|}}
+        {{#if (gt index 0)}}
+          <span>&middot;</span>
+        {{/if}}
+        <span>
+          <a
+            href
+            class="toggle-second-factor-method {{method.class}}"
+            {{on "click" (fn this.useAnotherMethod method.id)}}
+          >
+            {{i18n method.translationKey}}
+          </a>
+        </span>
+      {{/each}}
+    </p>
+  {{/if}}
+{{/unless}}

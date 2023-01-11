@@ -157,7 +157,6 @@ nb_NO:
       s3_upload_bucket_is_required: "Du kan ikke aktivere opplasting til S3 hvis ikke du har satt innstillingen 's3_upload_bucket'."
     conflicting_google_user_id: 'Google Account ID for denne kontoen har endret seg; staben må manuelt godkjenne endringen av sikkerhetshensyn. Vennligst kontakt staben og pek dem til <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
   invite:
-    user_exists: "Det er ikke nødvendig å invitere <b>%{email}</b>, de <a href='%{base_path}/u/%{username}/summary'>har allerede en konto!</a>"
     disabled_errors:
       invalid_access: "Du har ingen tilgang til denne resurssen."
   bulk_invite:
@@ -393,14 +392,12 @@ nb_NO:
               too_many: "For mange ord for den handlingen"
       <<: *errors
   uncategorized_category_name: "Ukategorisert"
-  vip_category_name: "Salong"
-  vip_category_description: "En kategori tilgjengelig for brukere på tillitsnivå 3 og høyere."
+  general_category_name: "Generelt"
   meta_category_name: "Tilbakemeldinger"
   meta_category_description: "Diskusjon om dette nettstedet, hvordan det er organisert, hvordan det fungerer og hvordan vi kan forbedre det."
   staff_category_name: "Stab"
   staff_category_description: "Privat kategori for diskusjoner blant staben. Emner er kun synlige for administratorer og moderatorer."
   discourse_welcome_topic:
-    title: "Velkommen til Discourse"
     body: |2
 
       Det første avsnittet av dette festede emnet vil være synlig som en velkomstmelding til alle nye besøkende på hjemmesiden. Det er viktig!
@@ -415,8 +412,6 @@ nb_NO:
       <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
       Vi anbefaler at du stenger dette emnet ved hjelp av Admin :wrench: knappen (oppe til høyre og i bunnen), slik at svar ikke hoper seg opp på en kunngjøring som denne.
-  lounge_welcome:
-    title: "Velkommen til salongen"
   category:
     topic_prefix: "Om kategorien %{category} "
     post_template: "%{replace_paragraph}\n\nBruk de følgende avsnittene for en lengre beskrivelse, eller for å formulere retningslinjer eller regler for kategorien:\n\n- Hvorfor skal folk bruke denne kategorien? Hva er den ment for?\n\n- Hvordan skiller den seg fra de andre kategoriene vi allerede har?\n\n- Hva skal emner i denne kategorien generelt sett inneholde?\n\n- Trenger vi denne kategorien? Kan vi slå den sammen med en annen kategori eller underkategori?\n"
@@ -529,16 +524,10 @@ nb_NO:
         one: "nesten %{count} år siden"
         other: "nesten %{count} år siden"
   password_reset:
-    no_token: "Beklager, den lenken for å endre passord er for gammel. Velg logg inn-knappen bruk 'Jeg glemte passordet mitt' for å motta en ny lenke."
-    choose_new: "Velg et nytt passord"
-    choose: "Velg et passord"
-    update: "Oppdater passord"
-    save: "Sett passord"
     title: "Tilbakestill passord"
     success: "Du har endret passordet og er nå logget inn."
     success_unapproved: "Du har endret ditt passord."
   email_login:
-    invalid_token: "Beklager, denne lenken for innlogging via e-post er for gammel. Bruk 'Logg Inn' knappen og deretter 'Jeg har glemt passordet' for å motta en oppdatert lenke."
     title: "E-post innlogging"
   change_email:
     confirmed: "E-postaddressen din er blitt oppdatert."
@@ -718,6 +707,11 @@ nb_NO:
         editor: Tekstbehandler
         author: Forfatter
         edit_reason: Begrunnelse
+    consolidated_api_requests:
+      xaxis:
+        api: "API"
+        user_api: "Bruker-API"
+      yaxis: "Dag"
     dau_by_mau:
       title: "DAB/MAB"
       xaxis: "Dag"
@@ -946,7 +940,6 @@ nb_NO:
     min_personal_message_title_length: "Minste lengde i antall tegn for en meldingstittel"
     max_emojis_in_title: "Maksimalt antall emojier i en emnetittel"
     min_search_term_length: "Minimum lengde på søkeord i tegn"
-    search_tokenize_chinese_japanese_korean: "Tving søk til å tokenisere Kinesisk/Japansk/Koreansk selv på nettsteder uten KJK"
     search_prefer_recent_posts: "Hvis søking er tregt på et stort forum, vil dette valget forsøke å søke i en index av de nyeste innleggene først"
     search_recent_posts_size: "Hvor mange innlegg som beholdes i indeksen"
     log_search_queries: "Logg søkeord som benyttes av brukerne"
@@ -956,10 +949,7 @@ nb_NO:
     allow_duplicate_topic_titles: "Tillat flere emner med identisk tittel."
     unique_posts_mins: "Hvor mange minutter før en bruker kan lage et innlegg med det samme innholdet igjen"
     educate_until_posts: "Når brukeren begynner å skrive sine første (n) innlegg, vis pop-up med opplæringspanelet for nye brukere i redigeringspanelet."
-    title: "Navnet på denne siden, slik du vil ha det i title-taggen."
-    site_description: "Beskriv siden med en setning, vil brukes i beskrivelses-merkelappen."
     crawl_images: "Hent bilder fra ekstern URL for å sette inn korrekt høyde og bredde."
-    download_remote_images_to_local: "Konverter eksterne bilder ved å laste de ned lokalt, dette forhindrer ødelagte bilder."
     download_remote_images_threshold: "Minimum ledig diskplass for å kunne laste ned eksterne bilder (i prosent)"
     disabled_image_download_domains: "Eksterne bilder vil aldri bli lastet ned fra disse domenene (pipe-separert liste)."
     editing_grace_period: "(n) sekunder etter publisering vil redigering ikke opprette en ny versjon i redigeringsloggen."
@@ -968,8 +958,6 @@ nb_NO:
     staff_edit_locks_post: "Innlegg vil bli sperret for redigering av brukere hvis de har vært redigert av staben "
     edit_history_visible_to_public: "La alle se tidligere versjoner av et redigert innlegg. Hvis det er slått av, kan kun staben se det."
     delete_removed_posts_after: "Innlegg som blir fjernet av forfatter blir automatisk slettet etter (n) timer. Sett til 0 og innleggene blir slettet øyeblikkelig."
-    max_image_width: "Maksimal thumbnail bredde for bilder i et innlegg"
-    max_image_height: "Maksimal thumbnail høyde for bilder i et innlegg"
     fixed_category_positions: "Hvis denne er valgt kan du manuelt bestemme rekkefølgen i listen over kategorier. Ellers vil kategoriene sorteres automatisk basert på aktivitet."
     fixed_category_positions_on_create: "Hvis denne er valgt vil den fastsatte rekkefølgen på kategorier også gjelde for dialogboksen når man lager nye emner (krever fixed_category_positions)."
     add_rel_nofollow_to_user_content: 'Legg til rel nofollow på alle lenker som publiseres av brukere, bortsett fra interne lenker (inkludert foreldredomener). Hvis du endrer denne, må du rebake alle innlegg med: "rake posts:rebake"'
@@ -1192,6 +1180,7 @@ nb_NO:
     set_password:
       title: "Sett passord"
   page_not_found:
+    page_title: "Side Ikke funnet"
     title: "Oisann! Den siden finnes ikke eller er privat."
     popular_topics: "Populært"
     recent_topics: "Nylig"
@@ -1397,7 +1386,6 @@ nb_NO:
     register:
       button: "Registrer"
       title: "Registrer administratorkonto"
-      help: "registrer en ny konto for å komme igang"
     confirm_email:
       title: "Bekreft din e-postadresse"
     resend_email:
@@ -1405,34 +1393,13 @@ nb_NO:
       message: "<p>Vi har sendt aktiverings-eposten på nytt til <b>%{email}</b>"
   safe_mode:
     title: "Start sikkerhetsmodus"
-    description: "Sikkerhetsmodus lar deg teste nettstedet ditt uten at tillegg eller tilpasninger lastes."
   wizard:
     title: "Discourse-oppsett"
     step:
-      forum_title:
-        title: "Navn"
-      introduction:
-        title: "Introduksjon"
       privacy:
-        title: "Tilgang"
         fields:
-          privacy:
-            choices:
-              open:
-                label: "Offentlig"
-              restricted:
-                label: "Privat"
-      contact:
-        fields:
-          contact_email:
-            label: "E-post"
-            placeholder: "navn@example.com"
-          contact_url:
-            label: "Nettside"
-          site_contact:
-            label: "Automatiserte meldinger"
-      corporate:
-        title: "Organisasjon"
+          login_required:
+            placeholder: "Privat"
       styling:
         fields:
           styling_preview:
@@ -1449,16 +1416,6 @@ nb_NO:
                 label: "Kategorier og siste emner"
               categories_and_top_topics:
                 label: "Kategorier og toppemner"
-      logos:
-        title: "Logoer"
-        fields:
-          logo:
-            label: "Primær logo"
-      icons:
-        title: "Ikoner"
-        fields:
-          large_icon:
-            label: "Stort ikon"
   joined: "Medlem fra"
   discourse_push_notifications:
     popup:

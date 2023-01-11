@@ -35,21 +35,13 @@ const Category = RestModel.extend({
     }
   },
 
-  @on("init")
-  setupRequiredTagGroups() {
-    if (this.required_tag_group_name) {
-      this.set("required_tag_groups", [this.required_tag_group_name]);
-    }
-  },
-
-  @discourseComputed(
-    "required_tag_groups",
-    "min_tags_from_required_group",
-    "minimum_required_tags"
-  )
+  @discourseComputed("required_tag_groups", "minimum_required_tags")
   minimumRequiredTags() {
-    if (this.required_tag_groups) {
-      return this.min_tags_from_required_group;
+    if (this.required_tag_groups?.length > 0) {
+      return this.required_tag_groups.reduce(
+        (sum, rtg) => sum + rtg.min_count,
+        0
+      );
     } else {
       return this.minimum_required_tags > 0 ? this.minimum_required_tags : null;
     }
@@ -195,12 +187,18 @@ const Category = RestModel.extend({
     return seconds ? seconds / 60 : null;
   },
 
+  @discourseComputed("notification_level")
+  isTracked(notificationLevel) {
+    return notificationLevel >= NotificationLevels.TRACKING;
+  },
+
   save() {
     const id = this.id;
     const url = id ? `/categories/${id}` : "/categories";
 
     return ajax(url, {
-      data: {
+      contentType: "application/json",
+      data: JSON.stringify({
         name: this.name,
         slug: this.slug,
         color: this.color,
@@ -218,27 +216,18 @@ const Category = RestModel.extend({
         mailinglist_mirror: this.mailinglist_mirror,
         parent_category_id: this.parent_category_id,
         uploaded_logo_id: this.get("uploaded_logo.id"),
+        uploaded_logo_dark_id: this.get("uploaded_logo_dark.id"),
         uploaded_background_id: this.get("uploaded_background.id"),
         allow_badges: this.allow_badges,
         custom_fields: this.custom_fields,
         topic_template: this.topic_template,
         all_topics_wiki: this.all_topics_wiki,
-        allow_unlimited_owner_edits_on_first_post: this
-          .allow_unlimited_owner_edits_on_first_post,
-        allowed_tags:
-          this.allowed_tags && this.allowed_tags.length > 0
-            ? this.allowed_tags
-            : null,
-        allowed_tag_groups:
-          this.allowed_tag_groups && this.allowed_tag_groups.length > 0
-            ? this.allowed_tag_groups
-            : null,
+        allow_unlimited_owner_edits_on_first_post:
+          this.allow_unlimited_owner_edits_on_first_post,
+        allowed_tags: this.allowed_tags,
+        allowed_tag_groups: this.allowed_tag_groups,
         allow_global_tags: this.allow_global_tags,
-        required_tag_group_name:
-          this.required_tag_groups && this.required_tag_groups.length > 0
-            ? this.required_tag_groups[0]
-            : null,
-        min_tags_from_required_group: this.min_tags_from_required_group,
+        required_tag_groups: this.required_tag_groups,
         sort_order: this.sort_order,
         sort_ascending: this.sort_ascending,
         topic_featured_link_allowed: this.topic_featured_link_allowed,
@@ -255,7 +244,7 @@ const Category = RestModel.extend({
         reviewable_by_group_name: this.reviewable_by_group_name,
         read_only_banner: this.read_only_banner,
         default_list_filter: this.default_list_filter,
-      },
+      }),
       type: id ? "PUT" : "POST",
     });
   },
@@ -315,17 +304,15 @@ const Category = RestModel.extend({
 
   @discourseComputed("id", "topicTrackingState.messageCount")
   unreadTopics(id) {
-    return this.topicTrackingState.countUnread(id);
+    return this.topicTrackingState.countUnread({ categoryId: id });
   },
 
   @discourseComputed("id", "topicTrackingState.messageCount")
   newTopics(id) {
-    return this.topicTrackingState.countNew(id);
+    return this.topicTrackingState.countNew({ categoryId: id });
   },
 
   setNotification(notification_level) {
-    this.set("notification_level", notification_level);
-
     User.currentProp(
       "muted_category_ids",
       User.current().calculateMutedIds(
@@ -336,20 +323,51 @@ const Category = RestModel.extend({
     );
 
     const url = `/category/${this.id}/notifications`;
-    return ajax(url, { data: { notification_level }, type: "POST" });
+    return ajax(url, { data: { notification_level }, type: "POST" }).then(
+      (data) => {
+        User.current().set(
+          "indirectly_muted_category_ids",
+          data.indirectly_muted_category_ids
+        );
+        this.set("notification_level", notification_level);
+        this.notifyPropertyChange("notification_level");
+      }
+    );
   },
 
   @discourseComputed("id")
   isUncategorizedCategory(id) {
-    return id === Site.currentProp("uncategorized_category_id");
+    return Category.isUncategorized(id);
   },
 });
 
 let _uncategorized;
 
 Category.reopenClass({
+  // Sort subcategories directly under parents
+  sortCategories(categories) {
+    const children = new Map();
+
+    categories.forEach((category) => {
+      const parentId = parseInt(category.parent_category_id, 10) || -1;
+      const group = children.get(parentId) || [];
+      group.pushObject(category);
+
+      children.set(parentId, group);
+    });
+
+    const reduce = (values) =>
+      values.flatMap((c) => [c, reduce(children.get(c.id) || [])]).flat();
+
+    return reduce(children.get(-1));
+  },
+
+  isUncategorized(categoryId) {
+    return categoryId === Site.currentProp("uncategorized_category_id");
+  },
+
   slugEncoded() {
-    let siteSettings = getOwner(this).lookup("site-settings:main");
+    let siteSettings = getOwner(this).lookup("service:site-settings");
     return siteSettings.slug_generation_method === "encoded";
   },
 
@@ -546,12 +564,16 @@ Category.reopenClass({
 
   search(term, opts) {
     let limit = 5;
+    let parentCategoryId;
 
     if (opts) {
       if (opts.limit === 0) {
         return [];
       } else if (opts.limit) {
         limit = opts.limit;
+      }
+      if (opts.parentCategoryId) {
+        parentCategoryId = opts.parentCategoryId;
       }
     }
 
@@ -573,13 +595,21 @@ Category.reopenClass({
       return data.length === limit;
     };
 
+    const validCategoryParent = (category) => {
+      return (
+        !parentCategoryId ||
+        category.get("parent_category_id") === parentCategoryId
+      );
+    };
+
     for (i = 0; i < length && !done(); i++) {
       const category = categories[i];
       if (
-        (emptyTerm && !category.get("parent_category_id")) ||
-        (!emptyTerm &&
-          (category.get("name").toLowerCase().indexOf(term) === 0 ||
-            category.get("slug").toLowerCase().indexOf(slugTerm) === 0))
+        ((emptyTerm && !category.get("parent_category_id")) ||
+          (!emptyTerm &&
+            (category.get("name").toLowerCase().startsWith(term) ||
+              category.get("slug").toLowerCase().startsWith(slugTerm)))) &&
+        validCategoryParent(category)
       ) {
         data.push(category);
       }
@@ -590,11 +620,12 @@ Category.reopenClass({
         const category = categories[i];
 
         if (
-          !emptyTerm &&
-          (category.get("name").toLowerCase().indexOf(term) > 0 ||
-            category.get("slug").toLowerCase().indexOf(slugTerm) > 0)
+          ((!emptyTerm &&
+            category.get("name").toLowerCase().indexOf(term) > 0) ||
+            category.get("slug").toLowerCase().indexOf(slugTerm) > 0) &&
+          validCategoryParent(category)
         ) {
-          if (data.indexOf(category) === -1) {
+          if (!data.includes(category)) {
             data.push(category);
           }
         }

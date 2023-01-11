@@ -1,18 +1,16 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 class TestEngine
   def self.===(uri)
     true
   end
 
   def self.iframe_origins
-    ["https://example.com", "https://example2.com"]
+    %w[https://example.com https://example2.com]
   end
 end
 
-describe Onebox::Matcher do
+RSpec.describe Onebox::Matcher do
   let(:opts) { { allowed_iframe_regexes: [/.*/] } }
 
   describe "oneboxed" do
@@ -57,7 +55,7 @@ describe Onebox::Matcher do
     end
 
     describe "with a allowlisted port/scheme" do
-      %w{http://example.com https://example.com http://example.com:80 //example.com}.each do |url|
+      %w[http://example.com https://example.com http://example.com:80 //example.com].each do |url|
         it "finds an engine for '#{url}'" do
           matcher = Onebox::Matcher.new(url, opts)
           matcher.stubs(:ordered_engines).returns([TestEngine])
@@ -67,7 +65,7 @@ describe Onebox::Matcher do
     end
 
     describe "without a allowlisted port/scheme" do
-      %w{http://example.com:21 ftp://example.com}.each do |url|
+      %w[http://example.com:21 ftp://example.com].each do |url|
         it "doesn't find an engine for '#{url}'" do
           matcher = Onebox::Matcher.new(url, opts)
           matcher.stubs(:ordered_engines).returns([TestEngine])
@@ -90,13 +88,22 @@ describe Onebox::Matcher do
       end
 
       it "doesn't find an engine when only some subdomains are allowed" do
-        matcher = Onebox::Matcher.new("https://example.com", allowed_iframe_regexes: Onebox::Engine.origins_to_regexes(["https://example.com"]))
+        matcher =
+          Onebox::Matcher.new(
+            "https://example.com",
+            allowed_iframe_regexes: Onebox::Engine.origins_to_regexes(["https://example.com"]),
+          )
         matcher.stubs(:ordered_engines).returns([TestEngine])
         expect(matcher.oneboxed).to be_nil
       end
 
       it "finds an engine when all required domains are allowed" do
-        matcher = Onebox::Matcher.new("https://example.com", allowed_iframe_regexes: Onebox::Engine.origins_to_regexes(["https://example.com", "https://example2.com"]))
+        matcher =
+          Onebox::Matcher.new(
+            "https://example.com",
+            allowed_iframe_regexes:
+              Onebox::Engine.origins_to_regexes(%w[https://example.com https://example2.com]),
+          )
         matcher.stubs(:ordered_engines).returns([TestEngine])
         expect(matcher.oneboxed).not_to be_nil
       end

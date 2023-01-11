@@ -59,19 +59,20 @@ pl_PL:
     bad_color_scheme: "Nie można zaktualizować szablonu, nieprawidłowa paleta kolorów"
     other_error: "Coś poszło nie tak podczas aktualizacji szablonu"
     ember_selector_error: "Przepraszamy - używanie selektorów #ember lub .ember-view w CSS jest zabronione, ponieważ nazwy te są generowane dynamicznie w czasie pracy i z czasem się zmienią, co ostatecznie skończy się uszkodzenonym CSS. Wypróbuj inny selektor."
-    compile_error:
-      unrecognized_extension: "Nie rozpoznano rozszerzenia pliku: %{extension}"
     import_error:
       generic: Wystąpił błąd podczas importowania tego motywu
+      upload: "Błąd tworzenia zasobu do przesłania: %{name}. %{errors}"
       about_json: "Błąd importu: about.json nie istnieje lub jest nieprawidłowy. Czy to na pewno szablon Discourse?"
       about_json_values: "Plik about.json zawiera niepoprawne wartości: %{errors}"
       modifier_values: "modyfikatory about.json zawierają nieprawidłowe wartości: %{errors}"
       git: "Podczas klonowania repozytorium git wystąpił błąd: dostęp jest zabroniony albo repozytorium nie istnieje"
       git_ref_not_found: "Nie można sprawdzić odwołania git: %{ref}"
+      git_unsupported_scheme: "Nie można sklonować repozytorium git: schemat nieobsługiwany"
       unpack_failed: "Błąd przy rozpakowywaniu pliku"
       file_too_big: "Nieskompresowany plik jest zbyt duży."
       unknown_file_type: "Przesłany plik nie spełnia wymagań poprawnego motywu Discourse."
       not_allowed_theme: "`%{repo}` nie jest na liście dozwolonych motywów (sprawdź globalne ustawienie `allowed_theme_repos`)."
+      ssh_key_gone: "Czekałeś zbyt długo, aby zainstalować motyw, a klucz SSH wygasł. Spróbuj ponownie."
     errors:
       component_no_user_selectable: "Komponenty motywu nie mogą być dobieralne przez użytkowników"
       component_no_default: "Komponenty motywu nie mogą być domyślnym motywem"
@@ -130,7 +131,6 @@ pl_PL:
         unsubscribe_not_allowed: "Zdarza się, kiedy anulowanie subskrypcji przez e‐mail nie jest dozwolone dla tego użytkownika."
         email_not_allowed: "Zdarza się, gdy adres e-mail nie znajduje się na liście dozwolonych adresów lub jest na liście zablokowanych."
       unrecognized_error: "Niezidentyfikowany błąd"
-    secure_media_placeholder: "Zredagowano: Ta strona posiada włączone zabezpieczone media, odwiedź wątek lub kliknij przycisk Zobacz media, aby zobaczyć załączone media."
     view_redacted_media: "Wyświetl załączniki"
   errors: &errors
     format: ! "%{attribute} %{message}"
@@ -212,7 +212,6 @@ pl_PL:
       page_publishing_requirements: "Nie można włączyć publikowania stron, jeśli włączone są bezpieczne media."
       s3_backup_requires_s3_settings: "Nie możesz używać S3 do tworzenia kopii zapasowych bez podania \"%{setting_name}\"."
       s3_bucket_reused: "Nie możesz używać tego samego bucketu jako \"s3_upload_bucket\" i \"s3_backup_bucket\". Wybierz inny bucket albo podaj różne ścieżki dla każdego z bucketów."
-      secure_media_requirements: "Przesyłanie S3 musi być włączone przed włączeniem bezpiecznych mediów."
       share_quote_facebook_requirements: "Aby włączyć udostępnianie na Facebooku, musisz ustawić identyfikator aplikacji Facebook."
       second_factor_cannot_enforce_with_socials: "Nie można wymusić 2FA z włączonym logowaniu społecznościowym. Najpierw musisz wyłączyć logowanie przez: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "Nie można wymusić 2FA, jeśli lokalne logowanie jest wyłączone."
@@ -222,6 +221,8 @@ pl_PL:
       cors_origins_should_not_have_trailing_slash: "Nie należy dodawać końcowego ukośnika (/) do źródeł CORS."
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "User-Agent musi mieć co najmniej 3 znaki, aby uniknąć niewłaściwego ograniczania prawdziwych użytkowników."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Do ustawienia nie można dodać żadnej z następujących wartości: %{values}."
+      strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Nie można wyłączyć usuwania metadanych obrazu, jeśli 'composer media optimization image enabled'. Wyłącz 'composer media optimization image enabled' przed wyłączeniem usuwania metadanych obrazu."
+      twitter_summary_large_image_no_svg: "Obrazy podsumowania Twittera używane w metadanych twitter:image nie mogą być obrazami .svg."
     conflicting_google_user_id: 'Identyfikator konta Google dla tego konta został zmieniony; interwencja personelu jest wymagana ze względów bezpieczeństwa. Skontaktuj się z personelem i wskaż go <br> <a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "Przepraszamy, nie mogliśmy wygenerować podglądu tej strony internetowej, ponieważ nie można znaleźć serwera „%{hostname}”. Zamiast podglądu w poście pojawi się tylko link. :cry:"
@@ -246,7 +247,7 @@ pl_PL:
       <p>W przeciwnym razie <a href="%{base_url}/password-reset">zresetuj hasło</a>.</p>
     not_found_template_link: |
       <p>To zaproszenie do <a href="%{base_url}">%{site_name}</a> nie może już zostać zrealizowane. Poproś osobę, która Cię zaprosiła, aby wysłała Ci nowe zaproszenie.</p>
-    user_exists: "Nie ma potrzeby zapraszania <b>%{email}</b>, <a href='%{base_path}/u/%{username}/summary'>obecnie posiada konto!</a>"
+    user_exists: "Nie ma potrzeby zapraszania <b>%{email}</b>, ponieważ ma już konto!"
     invite_exists: "Zaprosiłeś już <b>%{email}</b>."
     invalid_email: "%{email} nie jest prawidłowym adresem e-mail."
     rate_limit:
@@ -259,8 +260,12 @@ pl_PL:
     disabled_errors:
       discourse_connect_enabled: "Zaproszenia są wyłączone, ponieważ DiscourseConnect jest włączony."
       invalid_access: "Nie masz uprawnień do przeglądania żądanego zasobu."
-    requires_groups: "Zaproszenie zapisane. Aby dać dostęp do określonego tematu, dodaj jedną z następujących grup: %{groups}."
+    requires_groups: "Zaproszenie nie zostało zapisane, ponieważ podany temat jest niedostępny. Dodaj jedną z następujących grup: %{groups}."
     domain_not_allowed: "Twój adres e-mail nie może zostać użyty do zrealizowania tego zaproszenia."
+    max_redemptions_allowed_one: "dla zaproszeń e-mail powinno wynosić 1."
+    redemption_count_less_than_max: "powinien być mniejszy niż %{max_redemptions_allowed}."
+    email_xor_domain: "Pola adresu e-mail i domeny nie są dozwolone jednocześnie"
+    existing_user_success: "Zaproszenie zostało pomyślnie zrealizowane"
   bulk_invite:
     file_should_be_csv: "Wgrywany plik powinien być formatu csv."
     max_rows: "Wysłano %{max_bulk_invites} pierwszych zaproszeń. Sprobuj podzielić plik na mniejsze części."
@@ -270,6 +275,7 @@ pl_PL:
     max_redemptions_limit: "powinien być między 2, a 1%{max_limit}"
   topic_invite:
     failed_to_invite: "Nie można zaprosić użytkownika do tego tematu, ponieważ nie jest członkiem choć jednej z następujących grup: %{group_names}."
+    not_pm: "Możesz zapraszać tylko do prywatnych wiadomości."
     user_exists: "Przepraszamy, ten użytkownik został już zaproszony. Możesz zaprosić użytkownika do tematu tylko raz."
     muted_topic: "Przepraszamy, ten użytkownik wyciszył ten temat."
     receiver_does_not_allow_pm: "Przepraszamy, ten użytkownik nie pozwala na wysyłanie mu prywatnych wiadomości."
@@ -436,11 +442,14 @@ pl_PL:
   bookmarks:
     errors:
       already_bookmarked_post: "Nie możesz dodać zakładki do tego samego wpisu dwa razy."
+      already_bookmarked: "Nie możesz dodać zakładek tego samego %{type} dwukrotnie."
       too_many: "Przepraszamy, nie możesz dodać więcej niż %{limit} zakładek. Odwiedź stronę <a href='%{user_bookmarks_url}'>%{user_bookmarks_url}</a> aby niektóre usunąć."
       cannot_set_past_reminder: "Nie możesz ustawić przypomnienia o zakładce w przeszłości."
       cannot_set_reminder_in_distant_future: "Nie możesz ustawić przypomnienia o zakładce na więcej niż 10 lat w przyszłości."
-      time_must_be_provided: "czas musi zostać podany dla wszystkich przypomnień"
+      time_must_be_provided: "Czas musi zostać podany dla wszystkich przypomnień"
       for_topic_must_use_first_post: "Możesz użyć tylko pierwszego posta, aby dodać do zakładek temat."
+      bookmarkable_id_type_required: "Wymagana jest nazwa i typ rekordu do zakładki."
+      invalid_bookmarkable: "%{type} nie można dodać do zakładek."
     reminders:
       at_desktop: "Następnym razem będę na swoim pulpicie"
       later_today: "Później dzisiaj"
@@ -537,7 +546,7 @@ pl_PL:
       Możesz edytować swoje wcześniejsze odpowiedzi, aby dodać cytat, poprzez podświetlenie tekstu i wybranie przycisku <b>cytuj odpowiedź</b> który się pojawi.
 
       Każdemu łatwiej będzie przeczytać temat, który ma kilka pogłębionych odpowiedzi, zamiast wielu niewielkich, indywidualnych.
-    dominating_topic: Zamieściłeś tutaj ponad %{percent}% odpowiedzi, czy jest ktoś jeszcze, z kim chciałbyś się skontaktować?
+    dominating_topic: Dużo pisałeś w tym temacie! Zastanów się, czy nie dać innym możliwości odpowiadania tutaj i dyskutowania ze sobą.
     get_a_room: Odpowiedziałeś na @%{reply_username} %{count} razy. Czy wiesz, że możesz zamiast tego wysłać wiadomość osobistą?
     too_many_replies: |
       ### Osiągnąłeś/łaś limit odpowiedzi w tym temacie
@@ -577,6 +586,7 @@ pl_PL:
               target_user_not_found: "Jeden z użytkowników, do których chciałaś/łeś/łaś wysłać tę wiadomość nie został znaleziony."
               unable_to_update: "Wystąpił błąd przy aktualizacji tego tematu."
               unable_to_tag: "Wystąpił błąd podczas tagowania tematu."
+              unable_to_unlist: "Przepraszamy, nie możesz utworzyć niepublicznego tematu."
             featured_link:
               invalid: "Link jest nieprawidłowy, powinien zawierać http:// lub https://."
         user:
@@ -634,16 +644,21 @@ pl_PL:
               too_many: "Za długi opis akcji"
             base:
               invalid_url: "Adres URL zamiany jest nieprawidłowy"
+              invalid_tag_list: "Zastępcza lista tagów jest nieprawidłowa"
+        sidebar_section_link:
+          attributes:
+            linkable_type:
+              invalid: "nie jest prawidłowy"
       <<: *errors
   uncategorized_category_name: "Bez kategorii"
-  vip_category_name: "Salon"
-  vip_category_description: "Kategoria wyłącznie dla członków o poziomie zaufania 3 lub wyższym."
+  general_category_name: "Ogólne"
+  general_category_description: "Utwórz tutaj tematy, które nie pasują do żadnej innej istniejącej kategorii."
   meta_category_name: "Dyskusje o serwisie"
   meta_category_description: "Dyskusje o tej stronie, jej organizacji, tym jak działa i jak możemy ją usprawnić."
   staff_category_name: "Zespół"
   staff_category_description: "Ukryta kategoria dla rozmów zespołu. Tematy są widoczne tylko dla adminów i moderatorów."
   discourse_welcome_topic:
-    title: "Witaj w Discourse"
+    title: "Witamy w naszej społeczności!"
     body: |2
 
       Pierwszy paragraf tego przypiętego tematu będzie widoczny jako wiadomość powitalna dla wszystkich odwiedzających stronę główną. Jest bardzo ważny!
@@ -658,29 +673,6 @@ pl_PL:
       <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
       Rozważ zamknięcie tego tematu poprzez administracyjny :wrench: (w prawym górnym i dolnym rogu), aby zapobiec niepotrzebnym odpowiedziom do ogłoszenia.
-  lounge_welcome:
-    title: "Witaj w Salonie"
-    body: |2
-
-      Gratulacje! :confetti_ball:
-
-      Jeśli widzisz ten temat, niedawno awansowałeś/łaś na **regularny** (poziom zaufania 3).
-
-      Możesz teraz &hellip;
-
-      * Edytować tytuł dowolnego tematu
-      * Zmienić kategorię dowolnego tematu
-      * Umożliwić wyszukiwarce podążać za Twoimi linkami ([automatyczne nofollow] (https://en.wikipedia.org/wiki/Nofollow) zostało usunięte )
-      * Przeglądać prywatną kategorię widoczną tylko dla użytkowników o poziomie zaufania 3 i wyższym
-      * Ukrywać spam za pomocą jednej flagi
-
-      Oto [aktualna lista innych stałych bywalców] (%{base_path}/badges/3/regular). Nie zapomnij się przywitać.
-
-      Dziękujemy za bycie ważną częścią tej społeczności!
-
-      (Aby uzyskać więcej informacji na temat poziomów zaufania, [zobacz ten temat][trust]. Należy pamiętać, że stałymi członkami pozostaną tylko członkowie, którzy z czasem będą nadal spełniać wymagania).
-
-      [trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
   admin_quick_start_title: "README: Skrócony poradnik administratora"
   category:
     topic_prefix: "O kategorii %{category}"
@@ -698,6 +690,8 @@ pl_PL:
       permission_conflict: "Grupa posiadająca dostęp do podkategorii musi mieć także dostęp do jej kategorii nadrzędnej. Grupy %{group_names} mają dostęp do jednej z podkategorii, ale nie do grupy nadrzędnej."
       disallowed_topic_tags: "Ten temat zawiera tagi %{tags}, które nie są dozwolone w tej kategorii"
       disallowed_tags_generic: "W tym temacie niedozwolone są tagi."
+      slug_contains_non_ascii_chars: "zawiera znaki inne niż ascii"
+      is_already_in_use: "jest już w użyciu"
     cannot_delete:
       uncategorized: "Ta kategoria ma specjalny charakter. Jest przeznaczona jako miejsce do przechowywania tematów nieprzypisanych do żadnej kategorii i jako taka nie może zostać usunięta."
       has_subcategories: "Nie można usunąć tej kategorii ponieważ posiada podkategorie. "
@@ -715,6 +709,11 @@ pl_PL:
   post:
     image_placeholder:
       broken: "Ten obraz jest uszkodzony"
+      blocked_hotlinked_title: "Obraz przechowywany jest w innej witrynie. Kliknij, aby otworzyć nową kartę."
+      blocked_hotlinked: "Zewnętrzny obraz"
+    media_placeholder:
+      blocked_hotlinked_title: "Media przechowywane są w innej witrynie. Kliknij, aby otworzyć nową kartę."
+      blocked_hotlinked: "Zewnętrzne media"
     hidden_bidi_character: "Znaki dwukierunkowe mogą zmienić kolejność renderowania tekstu. Może to służyć do ukrywania złośliwego kodu."
     has_likes:
       one: "%{count} polubienie"
@@ -722,7 +721,7 @@ pl_PL:
       many: "%{count} polubień"
       other: "%{count} polubień"
     cannot_permanently_delete:
-      many_posts: "Nie możesz trwale usunąć tego tematu, ponieważ są tam inne posty."
+      many_posts: "Ten temat zawiera nieusunięte posty. Usuń je trwale przed trwałym usunięciem tematu."
       wait_or_different_admin: "Musisz odczekać %{time_left} przed trwałym usunięciem tego posta lub musi to zrobić inny administrator."
   rate_limiter:
     slow_down: "Wykonałeś/łaś tę akcję zbyt wiele razy, spróbuj ponownie później."
@@ -736,7 +735,7 @@ pl_PL:
       public_group_membership: "Dołączasz/opuszczasz grupy zbyt często. Zaczekaj %{time_left} , zanim spróbujesz ponownie."
       topics_per_day: "Osiągnąłeś maksymalną liczbę nowych tematów dziennie. Możesz utworzyć więcej tematów w %{time_left}."
       pms_per_day: "Osiągnąłeś maksymalną liczbę dozwolonych wiadomości dziennie. Możesz utworzyć więcej nowych wiadomości za %{time_left}."
-      create_like: "Wow! Podzieliłeś się wielką miłością! Osiągnąłeś maksymalną liczbę polubień na dzisiaj, ale kiedy zdobędziesz większy poziom zaufania, zyskasz więcej dziennych polubień. Będziesz mógł polubić wpisy ponownie za %{time_left}."
+      create_like: "Wow! Dzielisz się wielką miłością! Osiągnąłeś maksymalną liczbę polubień w ciągu 24 godzin, ale w miarę zdobywania poziomów zaufania będziesz zdobywał więcej dziennych polubień. Będziesz mógł ponownie polubić posty za %{time_left}."
       create_bookmark: "Osiągnąłeś maksymalną liczbę zakładek na dziś. Możesz utworzyć więcej zakładek za %{time_left}."
       edit_post: "Osiągnąłeś maksymalną liczbę edycji na dziś. Możesz przesłać więcej edycji za %{time_left}."
       live_post_counts: "Zbyt szybko prosisz o bieżące zliczanie wpisów. Spróbuj ponownie za %{time_left}."
@@ -870,16 +869,12 @@ pl_PL:
         many: "prawie %{count} lat temu"
         other: "prawie %{count} lat temu"
   password_reset:
-    no_token: "Przepraszamy, ten link do zmiany hasła jest zbyt stary. Wybierz przycisk \"Zaloguj\", a następnie \"Zapomniałem hasła\", by uzyskać nowy link."
-    choose_new: "Wprowadź nowe hasło"
-    choose: "Wprowadź hasło"
-    update: "Aktualizuj hasło"
-    save: "Ustaw hasło"
+    no_token: 'Ups! Link, którego użyłeś, już nie działa. Możesz <a href="%{base_url}/login">zalogować się</a> teraz. Jeśli nie pamiętasz swojego hasła, możesz <a href="%{base_url}/password-reset">poprosić o łącze</a>, aby je zresetować.'
     title: "Zresetuj hasło"
     success: "Twoje hasło zostało pomyślnie zmienione, zalogowano."
     success_unapproved: "Zmieniłeś(-a) swoje hasło."
   email_login:
-    invalid_token: "Przepraszamy, ten link do logowania jest zbyt stary. Kliknij przycisk \"Zaloguj\" i użyj opcji \"Zapomniałem hasła\", aby otrzymać nowy link."
+    invalid_token: 'Ups! Link, którego użyłeś, już nie działa. Możesz <a href="%{base_url}/login">zalogować się</a> teraz. Jeśli nie pamiętasz swojego hasła, możesz <a href="%{base_url}/password-reset">poprosić o łącze</a>, aby je zresetować.'
     title: "Logowanie e-mailem"
   user_auth_tokens:
     browser:
@@ -966,7 +961,6 @@ pl_PL:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Niewłaściwe"
-      description: 'Ten wpis zawiera treści, które rozsądna osoba uznałaby za agresywne, obrażliwe lub sprzeczne z <a href="%{base_path}/guidelines">wytycznymi naszej społeczności</a>.'
       short_description: 'Naruszenie <a href="%{base_path}/guidelines">wytycznych naszej społeczności</a>.'
     notify_user:
       title: "Wyślij wiadomość do @%{username}"
@@ -1032,7 +1026,6 @@ pl_PL:
       short_description: "To jest reklama"
     inappropriate:
       title: "Niewłaściwe"
-      description: 'Ten temat zawiera treści, które rozsądna osoba uznałaby za agresywne, obrażliwe lub sprzeczne z <a href="%{base_path}/guidelines">wytycznymi naszej społeczności</a>.'
       long_form: "oflagowano jako niewłaściwe"
       short_description: 'Naruszenie <a href="%{base_path}/guidelines">wytycznych naszej społeczności</a>.'
     notify_moderators:
@@ -1070,7 +1063,7 @@ pl_PL:
     mailing_list_mode: "Wyłącz tryb listy mailingowej"
     all: "Nie wysyłaj mi żadnych wiadomości z %{sitename}"
     different_user_description: "Jesteś zalogowany jako inny użytkownik niż ten do którego wysłano wysłaliśmy emaila. proszę wyloguj się, lub przejść do trybu incognito i spróbuj ponownie."
-    not_found_description: "Przepraszamy: nie mogliśmy Cię wypisać z subskrypcji. Możliwe, że link wysłany w wiadomości email wygasł."
+    user_not_found_description: "Przepraszamy, nie mogliśmy znaleźć użytkownika dla tej subskrypcji. Prawdopodobnie próbujesz zrezygnować z subskrypcji z konta, które już nie istnieje."
     log_out: "Wyloguj"
     submit: "Zapisz ustawienia"
     digest_frequency:
@@ -1199,6 +1192,11 @@ pl_PL:
         editor: Edytor
         author: Autor
         edit_reason: Powód
+    consolidated_api_requests:
+      xaxis:
+        api: "API"
+        user_api: "API użytkownika"
+      yaxis: "Dzień"
     dau_by_mau:
       title: "DAU / MAU"
       xaxis: "Dzień"
@@ -1441,7 +1439,7 @@ pl_PL:
       labels:
         user: Użytkownik
         qtt_like: Polubienia otrzymane
-      description: "Top 10 użytkowników, którzy otrzymali więcej polubień."
+      description: "Top 10 użytkowników, którzy otrzymali polubienia."
     top_users_by_likes_received_from_inferior_trust_level:
       title: "Najlepsi użytkownicy według polubień otrzymanych od użytkownika o niższym poziomie zaufania"
       labels:
@@ -1454,7 +1452,7 @@ pl_PL:
       labels:
         user: Użytkownik
         qtt_like: Polubienia otrzymane
-      description: "Top 10 użytkowników, którzy mają polubienia od szerokiego grona osób."
+      description: "Top 10 użytkowników, którzy otrzymali polubienia od szerokiego grona osób."
   dashboard:
     group_email_credentials_warning: 'Wystąpił problem z poświadczeniami e-mail dla grupy <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. Żadne e-maile nie będą wysyłane ze skrzynki odbiorczej grupy, dopóki ten problem nie zostanie rozwiązany. %{error}'
     rails_env_warning: "Twój serwer działa w trybie %{env}"
@@ -1486,6 +1484,7 @@ pl_PL:
     unreachable_themes: "Nie byliśmy w stanie sprawdzić aktualizacji następujących tematów:"
     watched_word_regexp_error: "Wyrażenie regularne dla '%{action}' jest nieprawidłowe. Sprawdź ustawienia <a href='%{base_path}/admin/customize/watched_words'>obserwowanych słów</a> lub wyłącz ustawienie witryny „obserwowane słowa regularne”."
   site_settings:
+    allow_bulk_invite: "Zezwalaj na zaproszenia zbiorcze, przesyłając plik CSV"
     disabled: "wyłączone"
     display_local_time_in_user_card: "Wyświetl czas lokalny w oparciu o strefę czasową użytkownika po otwarciu karty użytkownika."
     censored_words: "Wskazane słowa będą automatycznie zamieniane na &#9632;&#9632;&#9632;&#9632;"
@@ -1506,7 +1505,8 @@ pl_PL:
     min_personal_message_title_length: "Minimalna liczba znaków w temacie wiadomości "
     max_emojis_in_title: "Maksymalna liczba emoji w tytule tematu"
     min_search_term_length: "Minimalna długość wyszukiwanego tekstu, w znakach"
-    search_tokenize_chinese_japanese_korean: "Wymuś wyszukiwanie żeby tokenizowało Chiński/Japoński/Koreański nawet na stronach nie-CJK"
+    search_tokenize_chinese: "Wymuś na wyszukiwarce tokenizację języka chińskiego nawet na stronach, które nie są chińskie"
+    search_tokenize_japanese: "Wymuś na wyszukiwarce tokenizację języka japońskiego nawet na stronach, które nie są japońskie"
     search_prefer_recent_posts: "Jeśli wyszukiwanie na twoim dużym forum jest wolne, ta opcja pozwala zindeskować najpierw ostanie wpisy."
     search_recent_posts_size: "Jak dużo ostanich wpisów trzymać w indeksie"
     log_search_queries: "Dzienniki wyszukiwanych przez użytkowników treści"
@@ -1520,15 +1520,13 @@ pl_PL:
     allow_duplicate_topic_titles_category: "Zezwalaj na tematy z identycznymi, zduplikowanymi tytułami, jeśli kategoria jest inna. allow_duplicate_topic_titles musi być wyłączone."
     unique_posts_mins: "Ile minut musi upłynąć zanim użytkownik będzie mógł/mogła ponownie zrobić wpis z tą samą treścią"
     educate_until_posts: "Wyświetlaj okno edukacyjne po rozpoczęciu pisania dopóki nowy użytkownik nie napisze tylu wpisów."
-    title: "Nazwa tej strony używana w tagu title."
-    site_description: "Opis strony w jednym zdaniu, wykorzystywany w meta tagu description."
-    short_site_description: "Krótki opis, użyty w tytule na stronie głównej."
-    contact_email: "Adres e-mail do kluczowego kontaktu do osoby odpowiedzialnej za tę witrynę. Używany do krytycznych powiadomień, a także wyświetlany na <a href='%{base_path}/about' target='_blank'>/about</a> w pilnych sprawach."
-    contact_url: "Adres URL kontaktu dla tej witryny. Wyświetlany na stronie <a href='%{base_path}/about' target='_blank'>/about</a> dla pilnych spraw."
+    site_description: "Opisz tę stronę w jednym zdaniu. Widoczne dla wszystkich odwiedzających, w tym użytkowników anonimowych."
+    short_site_description: "Krótki opis w kilku słowach. Widoczne dla wszystkich odwiedzających, w tym użytkowników anonimowych."
     crawl_images: "Pobieraj grafiki ze zdalnych URLi aby ustawić poprawną wysokość i szerokość w tagu img."
-    download_remote_images_to_local: "Pobieraj zdalne grafiki i twórz ich lokalne kopie aby zapobiegać uszkodzonym/brakującym obrazkom na stronach."
     download_remote_images_threshold: "Minimalna ilość wolnego miejsca na dysku wymagana przez funkcję pobierania zdalnych grafik (w procentach)"
     disabled_image_download_domains: "Zdalne grafiki z tych domen nie będą pobierane."
+    block_hotlinked_media: "Uniemożliwia użytkownikom wprowadzanie zdalnych (hotlinked) mediów w swoich postach. Zdalne nośniki, które nie są pobierane przez 'download_remote_images_to_local' zostaną zastąpione linkiem zastępczym."
+    block_hotlinked_media_exceptions: "Lista podstawowych adresów URL, które są wyłączone z ustawienia block_hotlinked_media. Dołącz protokół (np. https://example.com)."
     editing_grace_period: "Przez (n) sekund po utworzeniu nowego wpisu jego kolejne edycje nie będą tworzyć nowych wersji w historii wpisu."
     editing_grace_period_max_diff: "Maksymalna liczba zmian znaków dozwolona w okresie karencji edycji, jeśli więcej zmieniono, zapisz kolejną wersję wpisu (poziom zaufania 0 i 1)"
     editing_grace_period_max_diff_high_trust: "Maksymalna liczba zmian znaków dozwolona w okresie karencji edycji, jeśli więcej zmieniono, zapisz kolejną wersję wpisu (poziom zaufania 2 i wyższy)"
@@ -1538,8 +1536,6 @@ pl_PL:
     edit_history_visible_to_public: "Pozwól wszystkim zobaczyć poprzednie wersje edytowanego posta. Gdy wyłączone, tylko członkowie personelu mogą je przeglądać."
     delete_removed_posts_after: "Wpisy usunięte przez autora będą automatycznie zlikwidowane po (n) godzinach. Jeżeli liczba godzin będzie wynosić 0, to zostaną usunięte natychmiast. "
     notify_users_after_responses_deleted_on_flagged_post: "Gdy post zostanie oznaczony, a następnie usunięty, wszyscy użytkownicy, którzy na niego odpowiedzieli, a ich odpowiedzi zostały usunięte, zostaną powiadomieni."
-    max_image_width: "Maksymalna szerokość miniaturki grafiki we wpisie. "
-    max_image_height: "Maksymalna wysokość miniaturki grafiki we wpisie. "
     responsive_post_image_sizes: "Zmień rozmiar podglądu lightbox, aby umożliwić wyświetlanie ekranów o wysokiej rozdzielczości DPI o następujących proporcjach pikseli. Usuń wszystkie wartości, aby wyłączyć responsywne obrazy."
     fixed_category_positions: "Zaznacz, aby ręcznie ustawiać kolejność kategorii. Odznacz, aby kategorie były sortowane na podstawie aktywności. "
     fixed_category_positions_on_create: "Jeśli zaznaczone, kolejność kategorii będzie utrzymywana w oknie dialogowym tworzenia tematu (wymaga fixed_category_positions)."
@@ -1550,6 +1546,7 @@ pl_PL:
     show_pinned_excerpt_mobile: "Pokaż fragment przypiętych tematów w widoku mobilnym"
     show_pinned_excerpt_desktop: "Pokaż fragment przypiętych tematów w widoku \"wersja komputerowa\""
     post_onebox_maxlength: "Maksymalna długość (ilość znaków) treści wpisu osadzonego via Onebox"
+    block_onebox_on_redirect: "Blokuj onebox dla adresów URL, które przekierowują."
     allowed_inline_onebox_domains: "Lista domen, które zostaną zamienione na osadzony onebox w zmniejszonej formie, jeśli będą umieszczone w poście bez tytułu"
     enable_inline_onebox_on_all_domains: "Ignoruj ustawienie witryny `inline_onebox_domain_whitelist` i zezwalaj na osadzanie ramek we wszystkich domenach."
     force_custom_user_agent_hosts: "Hosty, dla których ma być używany niestandardowy klient użytkownika Onebox przy wszystkich żądaniach. (Szczególnie przydatne dla hostów, które ograniczają dostęp do agenta użytkownika)."
@@ -1563,12 +1560,11 @@ pl_PL:
     logo_small_dark: "Ciemna alternatywa dla ustawienia witryny 'logo small'."
     mobile_logo_dark: "Ciemna alternatywa dla ustawienia witryny 'mobile logo'."
     large_icon: "Obraz używany jako podstawa dla innych ikon metadanych. Idealnie powinna być większa niż 512 x 512. Jeśli pozostanie puste, zostanie użyte logo_small."
-    manifest_icon: "Obraz używany jako logo / obraz powitalny na Androidzie. Zostanie automatycznie zmieniony na 512 × 512. Jeśli pozostanie puste, zostanie użyty duży_plik."
+    manifest_icon: "Obraz używany jako logo / obraz powitalny na Androidzie. Zostanie automatycznie przeskalowany do rozmiaru 512 × 512. Jeśli pozostanie puste, zostanie użyty large_icon."
     manifest_screenshots: "Zrzuty ekranu, które pokazują możliwości i funkcjonalność Twojej instancji na stronie instalacyjnej. Wszystkie obrazy powinny być przesłane lokalnie i o tych samych wymiarach."
     favicon: "Favicona dla Twojej strony, zobacz <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. Aby działała poprawnie poprzez CDN, musi to być w formacie png. Zostanie przeskalowana do 32x32. Jeśli pozostanie pusta, zostanie użyte large_icon."
-    apple_touch_icon: "Ikona używana dla urządzeń Apple Touch. Zostanie automatycznie zmieniony na 180x180. Jeśli pozostanie puste, zostanie użyty duży_plik."
-    opengraph_image: "Domyślny obraz opengraph, używany, gdy strona nie ma innego odpowiedniego obrazu. Jeśli pozostanie puste, zostanie użyty duży_plik"
-    twitter_summary_large_image: "„Podsumowanie dużego obrazu” karty Twittera (powinno mieć co najmniej 280 szerokości i co najmniej 150 wysokości). Jeśli pole pozostanie puste, generowane są zwykłe metadane karty przy użyciu opengraph_image."
+    apple_touch_icon: "Ikona używana dla urządzeń Apple Touch. Zostanie automatycznie przeskalowany do rozmiaru 180x180. Jeśli pozostanie puste, zostanie użyty large_icon."
+    opengraph_image: "Domyślny obraz opengraph, używany, gdy strona nie ma innego odpowiedniego obrazu. Jeśli pozostanie puste, zostanie użyty large_icon"
     notification_email: "Adres z którego wysyłane będą wszystkie istotne emaile systemowe.\nKonieczna jest poprawna konfiguracja rekordów SPF, DKIM oraz zwrotnego PTR użytej domeny."
     email_custom_headers: "A pipe-delimited list of custom email headers"
     email_subject: "Konfigurowalny format tematyczny dla standardowych e-maili. Zobacz <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
@@ -1582,12 +1578,9 @@ pl_PL:
     summary_percent_filter: "Gdy użytkownik kliknie na 'Podsumowaniu tematu', pokaż % najlepszych wpisów"
     summary_max_results: "Maksymalna liczba wpisów zwróconych przez „Podsumuj ten temat”"
     summary_timeline_button: "Pokaż przycisk „Podsumuj” na osi czasu"
-    enable_personal_messages: "Zezwalaj użytkownikom na poziomie zaufania 1 (konfigurowalnym za pomocą min. zaufania do wysyłania wiadomości) na tworzenie i odpowiadanie na wiadomości. Należy pamiętać, że personel zawsze może wysyłać wiadomości bez względu na wszystko."
     enable_system_message_replies: "Pozwala użytkownikom odpowiadać na wiadomości systemowe, nawet jeśli wiadomości osobiste są wyłączone"
-    enable_long_polling: "Message bus used for notification can use long polling"
     enable_chunked_encoding: "Włącz odpowiedzi fragmentaryczne serwera. Ta funkcja działa w większości konfiguracji, jednak niektóre serwery proxy mogą buforować odpowiedzi, powodując opóźnienia."
     long_polling_base_url: "Podstawowy URL używany dla long polling (kiedy CDN dostarcza dynamicznych treści, upewnij się że ustawiłeś/łaś to w origin pull) np.: http://origin.site.com"
-    long_polling_interval: "Okres czasu jaki serwer powinien odczekać przed odpowiedzią klientowi kiedy nie ma danych do przesłania (tylko do zalogowanych użytkowników)"
     polling_interval: "Kiedy nie long polling, jak często zalogowani klienci powinni poll w milisekundach"
     anon_polling_interval: "How often should anonymous clients poll in milliseconds"
     background_polling_interval: "Jak często klienci powinni poll w milisekundach (kiedy okno jest w tle)"
@@ -1627,7 +1620,7 @@ pl_PL:
     ga_universal_auto_link_domains: "Włącz śledzenie w wielu domenach za pomocą Google Analythics. Wychodzące linki do tych domen będą miały dodatkowy identyfikator klienta. Zobacz <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>poradnik Cross-Domain Tracking od Google.</a>"
     gtm_container_id: "Identyfikator menedżera tagów Google. np .: GTM-ABCDEF. <br/>Uwaga: skrypty innych firm ładowane przez GTM mogą wymagać uwzględnienia w 'content security policy script src'."
     enable_escaped_fragments: "Wróć do Google Ajax-Crawling API, jeśli nie zostanie wykryty żaden webcrawler. Zobacz <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
-    moderators_manage_categories_and_groups: "Pozwól moderatorom zarządzać kategoriami i grupami"
+    moderators_manage_categories_and_groups: "Zezwalaj moderatorom na tworzenie kategorii i grup oraz zarządzanie nimi"
     moderators_change_post_ownership: "Zezwalaj moderatorom na zmianę właściciela posta"
     cors_origins: "Dozwolone źródła dla zapytać cross-origin (CORS). Każde źródło musi zawierać http:// lub https://. Zmienna środowiskowa DISCOURSE_ENABLE_CORS musi być ustawiona na true żeby włączyć CORS."
     use_admin_ip_allowlist: "Administratorzy mogą się zalogować tylko wtedy, gdy używają adresu IP zdefiniowanego na liście ekranowanych adresów IP (Administrator > Logi > Ekranowane adresy IP)."
@@ -1637,7 +1630,7 @@ pl_PL:
     allowed_iframes: "Lista prefiksów domeny src iframe, które dyskurs może bezpiecznie dopuścić w wpisach"
     allowed_crawler_user_agents: "Agenci użytkowników dla robotów indeksujących, które powinny mieć dostęp do strony. OSTRZEŻENIE! USTAWIENIE TEGO SPOWODUJE BLOKADE ROBOTÓW, KTÓRE NIE SĄ NA LIŚCIE!"
     blocked_crawler_user_agents: "Unikalne słowo bez rozróżniania wielkości liter w ciągu znaków, które identyfikują crawlery internetowe, które nie powinny mieć dostępu do witryny. Nie ma zastosowania, jeśli dozwolona lista jest zdefiniowana."
-    slow_down_crawler_user_agents: "User-Agent'y robotów indeksujących, którym należy ograniczyć prędkość, zgodnie z ustawieniami \"spowolnij szybkość indeksowania\". Każda wartość musi mieć co najmniej 3 znaki."
+    slow_down_crawler_user_agents: 'User-Agent''y robotów indeksujących, którym należy ograniczyć prędkość, zgodnie z ustawieniami "spowolnij szybkość indeksowania". Każda wartość musi mieć co najmniej 3 znaki.'
     slow_down_crawler_rate: "Jeśli określono parametr slow_down_crawler_user_agents, ta stawka będzie obowiązywać dla wszystkich robotów (liczba sekund opóźnienia między żądaniami)"
     content_security_policy: "Włącz politykę bezpieczeństwa treści"
     content_security_policy_report_only: "Włącz tylko treść-bezpieczeństwo-zasady-tylko raport"
@@ -1649,6 +1642,7 @@ pl_PL:
     post_menu: "Określ które elementy menu wpisu powinny być widoczne i w jakiej kolejności. Przykład like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "Elementy w menu, które w menu wpisu będą ukryte, chyba że kliknięty zostanie przycisk rozwijania."
     share_links: "Określ które elementy menu udostępniania powinny być widoczne i w jakiej kolejności. "
+    allow_username_in_share_links: "Zezwalaj na umieszczanie nazw użytkowników w linkach do udostępniania. Jest to przydatne, aby nagradzać odznaki na podstawie unikalnych odwiedzających."
     site_contact_username: "Nazwa użytkownika, spod której wysyłane będą automatyczne wiadomości. Jeśli pusta, użyte będzie domyślne konto System."
     site_contact_group_name: "Prawidłowa nazwa grupy, do której zostaną zaproszone wszystkie automatyczne wiadomości."
     send_welcome_message: "Wyślij wszystkim nowym użytkownikom powitalną wiadomość z krótkim przewodnikiem."
@@ -1656,7 +1650,7 @@ pl_PL:
     send_tl2_promotion_message: "Wyślij nowym użytkownikom poziomu zaufania 2 wiadomość o promocji."
     suppress_reply_directly_below: "Nie pokazuj rozwijanej liczby odpowiedzi przy wpisie, gdy jest tylko jedna odpowiedź bezpośrednio pod tym wpisem."
     suppress_reply_directly_above: "Nie pokazuj rozwijanego \"w odpowiedzi na\" przy wpisie, gdy jest tylko jedna odpowiedź bezpośrednio nad tym wpisem."
-    remove_full_quote: "Automatycznie usuwaj pełne cytaty z bezpośrednich odpowiedzi."
+    remove_full_quote: "Automatycznie usuń cytat, jeśli (a) pojawia się na początku wpisu, (b) dotyczy całego wpisu i (c) pochodzi z bezpośrednio poprzedzającego wpisu. Aby uzyskać szczegółowe informacje, zobacz <a href='https://meta.discourse.org/t/removal-of-full-quotes-from-direct-replies/106857' target='_blank'>Usuwanie pełnych cytatów z bezpośrednich odpowiedzi</a>"
     suppress_reply_when_quoting: "Nie pokazuj rozwijanego \"w odpowiedzi na\" przy wpisie, gdy we wpisie zacytowano odpowiedź."
     max_reply_history: "Maksymalna liczba odpowiedzi, dla której \"w odpowiedzi na\" będzie się rozwijać."
     topics_per_period_in_top_summary: "Liczba tematów wyświetlanych w domyślnym podsumowaniu najbardziej popularnych tematów."
@@ -1670,7 +1664,7 @@ pl_PL:
     email_token_valid_hours: "Tokeny resetujące hasło / aktywujące konto są ważne przez (n) godzin."
     enable_badges: "Włącz system odznak"
     max_favorite_badges: "Maksymalna liczba odznak, które użytkownik może wybrać"
-    enable_whispers: "Pozwalaj administracji na prywatną rozmowę w tematach."
+    whispers_allowed_groups: "Zezwalaj na prywatną komunikację w ramach tematów członkom określonych grup."
     allow_index_in_robots_txt: "W pliku robots.txt określ, że ta witryna może być indeksowana przez wyszukiwarki internetowe. W wyjątkowych przypadkach możesz trwale <a href='%{base_path}/admin/customize/robots'>zastąpić plik robots.txt</a>."
     blocked_email_domains: "Lista domen poczty e-mail rozdzielonych pionową kreską, z których użytkownicy nie mogą rejestrować kont. Przykład: mailinator.com|trashmail.net"
     allowed_email_domains: "Lista rozdzielonych pionową kreską domen e-mail, z których użytkownicy MUSZĄ się rejestrować. UWAGA: Użytkownicy z domenami e-mail innymi niż wypisane tutaj nie będą mogli się zarejestrować!"
@@ -1721,7 +1715,7 @@ pl_PL:
     google_oauth2_client_secret: "Client Secret twojej aplikacji w Google"
     google_oauth2_prompt: "Opcjonalna lista wartości łańcuchowych rozdzielanych spacjami, która określa, czy serwer autoryzacji monituje użytkownika o ponowne uwierzytelnienie i zgodę. Możliwe wartości można znaleźć na <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> ."
     google_oauth2_hd: "Opcjonalna domena Google Apps Hosted, do której logowanie będzie ograniczone. Więcej informacji można znaleźć na <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a>"
-    google_oauth2_hd_groups: "(eksperymentalne) Pobierz grupy dyskusyjne Google użytkowników w domenie hostowanej po uwierzytelnieniu. Pobrane grupy dyskusyjne Google mogą być używane do automatycznego przyznawania członkostwa w grupach Discourse (zobacz ustawienia grupy)."
+    google_oauth2_hd_groups: "(eksperymentalne) Pobierz grupy dyskusyjne Google użytkowników w domenie hostowanej po uwierzytelnieniu. Pobrane grupy dyskusyjne Google mogą być używane do przyznawania automatycznego członkostwa w grupach Discourse (zobacz ustawienia grupy). Więcej informacji znajdziesz na https://meta.discourse.org/t/226850"
     enable_twitter_logins: "Włącz uwierzytelnianie przez Twittera, wymaga twitter_consumer_key i twitter_consumer_secret. Zobacz <a href='https://meta.discourse.org/t/13395' target='_blank'>Konfigurowanie logowania przez Twittera (i bogatych embedów) dla Discourse</a>."
     twitter_consumer_key: "Klucz klienta do uwierzytelnienia na Twitterze, zarejestrowany na <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
     twitter_consumer_secret: "Sekret klienta dotyczący uwierzytelniania na Twitterze, zarejestrowany na <a href='https://developer.twitter.com/apps' target='_blank'>stronie https://developer.twitter.com/apps</a>"
@@ -1737,7 +1731,6 @@ pl_PL:
     discord_trusted_guilds: 'Zezwalaj tylko członkom tych gildii Discorda na logowanie się przez Discord. Użyj numerycznego identyfikatora gildii. Aby uzyskać więcej informacji, zapoznaj się z instrukcjami zamieszczonymi <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">tutaj</a>. Pozostaw puste, aby pozwolić na dołączenie z dowolnej gildii.'
     enable_backups: "Pozwól administratorom tworzyć kopie zapasowe forum"
     allow_restore: "Zezwól na przywracanie, które może zastąpić WSZYSTKIE dane witryny! Pozostaw wyłączone, chyba że planujesz przywrócić kopię zapasową"
-    maximum_backups: "Maksymalna liczba kopii zapasowych do przechowywania na dysku. Starsze kopie zapasowe zostaną automatycznie usunięte."
     automatic_backups_enabled: "Uruchom automatyczne kopie zapasowe zgodnie z ustawioną częstotliwością kopii"
     backup_frequency: "Liczba dni pomiędzy tworzeniem kopii zapasowych."
     s3_backup_bucket: "Zdalne wiadro do przechowywania kopii zapasowych. UWAGA: Upewnij się, że jest to wiadro prywatne."
@@ -1800,7 +1793,7 @@ pl_PL:
     use_site_small_logo_as_system_avatar: "Użyj małego logo witryny zamiast awatara użytkownika system. Wymaga obecności logo."
     restrict_letter_avatar_colors: "Lista 6-cyfrowych szesnastkowych wartości kolorów, które mają być używane jako tło awatara."
     enable_listing_suspended_users_on_search: "Zezwól zwykłym użytkownikom na znajdowanie zawieszonych użytkowników."
-    selectable_avatars_enabled: "Wymuś na użytkownikach wybieranie awatara z listy."
+    selectable_avatars_mode: "Pozwól użytkownikom wybrać awatar z listy selectable_avatars i ogranicz przesyłanie niestandardowych awatarów do wybranego poziomu zaufania."
     selectable_avatars: "Lista awatarów, z których mogą wybierać użytkownicy."
     allow_all_attachments_for_group_messages: "Zezwól na wszystkie załączniki email dla wiadomości grupowych."
     png_to_jpg_quality: "Jakość skonwertowanego pliku JPG (1 to najniższa jakość, 99 to najlepsza jakość, 100 aby dezaktywować)."
@@ -1847,7 +1840,6 @@ pl_PL:
     min_trust_to_edit_wiki_post: "Minimalny poziom zaufania wymagany do edycji wpisu oznaczonego jako wiki."
     min_trust_to_edit_post: "Minimalny poziom zaufania potrzebny do edytowania wpisów."
     min_trust_to_allow_self_wiki: "Wymagany poziom zaufania, by wpis użytkownika uczynić wiki."
-    min_trust_to_send_messages: "Minimalny poziom zaufania wymagany do tworzenia wiadomości prywatnych."
     min_trust_to_send_email_messages: "Minimalny poziom zaufania jest wymagany do wysyłania osobistych wiadomości pocztą e-mail."
     min_trust_to_flag_posts: "Minimalny poziom zaufania potrzebny do flagowania wpisów"
     min_trust_to_post_links: "Minimalny poziom zaufania potrzebny do umieszczania linków we wpisach"
@@ -1865,7 +1857,6 @@ pl_PL:
     max_mentions_per_post: "Maksymalna liczba powiadomień poprzez @nazwę w jednym wpisie (dla wszystkich)."
     max_users_notified_per_group_mention: "Maksymalna liczba użytkowników, którzy mogą otrzymać powiadomienie jeśli ktoś wspomniał(a) o grupie (jeśli próg został osiągnięty, nie będzie żadnych powiadomień)"
     enable_mentions: "Zezwól użytkownikom na wzmianki innych użytkowników."
-    here_mention: "Nazwa użyta do wzmianki @here. Nie może być istniejącą nazwą użytkownika."
     max_here_mentioned: "Maksymalna liczba osób oznaczonych przez @here."
     min_trust_level_for_here_mention: "Minimalny poziom zaufania do oznaczania @here."
     create_thumbnails: "Stwórz miniatury i obrazy lightbox, które są za duże, aby pasować do wpisu."
@@ -1911,7 +1902,6 @@ pl_PL:
     faq_url: "If you have a FAQ hosted elsewhere that you want to use, provide the full URL here."
     tos_url: "If you have a Terms of Service document hosted elsewhere that you want to use, provide the full URL here."
     privacy_policy_url: "If you have a Privacy Policy document hosted elsewhere that you want to use, provide the full URL here."
-    log_anonymizer_details: "Określa, czy zachować dane użytkownika w dzienniku po ich anonimizacji. Aby zachować zgodność z RODO, musisz to wyłączyć."
     newuser_spam_host_threshold: "Jak wiele razy użytkownik może zamieścić link do tego samego hosta wewnątrz wpisów `newuser_spam_host_threshold` przed rozważeniem spamu."
     allowed_spam_host_domains: "Lista domen wykluczonych z testowania pod kątem spamu. Nowi użytkownicy nigdy nie będą ograniczani w dodawaniu wpisów z linkami do tych domen."
     staff_like_weight: "Jaką wagę polubienia przypisuje się personelowi (użytkownicy mają wagę 1)"
@@ -2026,7 +2016,7 @@ pl_PL:
     enable_user_directory: "Dostarcz katalog użytkowników do wyszukiwania"
     enable_group_directory: "Udostępnij katalog grup do przeglądania"
     enable_category_group_moderation: "Zezwalaj grupom na moderowanie treści w określonych kategoriach"
-    group_in_subject: "Ustaw %%{optional_pm} w temacie wiadomości e-mail z nazwą pierwszej grupy w prywatnej wiadomości, zobacz: <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>Dostosuj format tematu dla standardowych wiadomości e-mail</a>"
+    group_in_subject: "Ustaw %%{optional_pm} w temacie wiadomości e-mail z nazwą pierwszej grupy w prywatnej wiadomości, zobacz: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Dostosuj format tematu dla standardowych wiadomości e-mail</a>"
     allow_anonymous_posting: "Zezwól użytkownikom na przechodzenie w tryb anonimowości."
     anonymous_posting_min_trust_level: "Minimalny poziom zaufania potrzebny by aktywować anonimowe wpisy"
     anonymous_account_duration_minutes: "Aby chronić anonimowość twórz nowe anonimowe konto co N minut dla każdego użytkownika. Przykład: jeśli ustawione na 600, dopóki nie minie 600 minut od ostatniego wpisu i użytkownik przełącza się na anon, zostanie utworzone nowe anonimowe konto."
@@ -2075,7 +2065,7 @@ pl_PL:
     display_name_on_posts: "Pokazuj imię i nazwisko użytkownika przy jego wpisach, a także jego @nazwę użytkownika."
     show_time_gap_days: "Jeśli dwa wpisy zostały dodane w dużej przerwie, wyświetl okres w temacie."
     short_progress_text_threshold: "Po tym jak liczba wpisów w tym temacie przekroczy ten numer, ten pasek postępu pokaże tylko bieżącą liczbę wpisów. Jeśli zmienisz szerokość paska postępu, możliwe, że będziesz musiał zmienić tą wartość."
-    default_code_lang: "Domyślne podświetlanie składni języka programowania zastosowane do bloków kodu GitHub (auto, nohighlight, ruby, python itp.)"
+    default_code_lang: "Domyślne podświetlanie składni języka programowania stosowane do bloków kodu (auto, tekst, ruby, python itp.). Ta wartość musi być również obecna w ustawieniu witryny `highlighted languages`."
     warn_reviving_old_topic_age: "Kiedy ktoś rozpoczyna udziela odpowiedzi na dany temat, w którym ostatnia odpowiedź jest starsza niż tak wiele dni, wyświetlone zostanie ostrzeżenie. Wyłącz tą ustawienia ustawiając 0."
     autohighlight_all_code: "Narzuć dodawanie podświetlenia kodu do wszystkich bloków kodu, w przypadku gdy nie jest dokładnie określony język."
     highlighted_languages: "Dołączone reguły podświetlania składni. (Ostrzeżenie: dołączenie zbyt wielu języków może wpłynąć na wydajność) Zobacz: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a>, aby zobaczyć wersję demonstracyjną"
@@ -2096,9 +2086,6 @@ pl_PL:
     delete_merged_stub_topics_after_days: "Liczba dni, po których wątki, z których zostały przeniesione wszystkie posty, zostaną automatycznie usunięte. Aby to wyłączyć, ustaw wartość na 0."
     bootstrap_mode_min_users: "Minimalna liczba użytkowników potrzebnych do wyłączenia trybu rozruchowego (ustaw 0, aby wyłączyć)"
     prevent_anons_from_downloading_files: "Zablokuj możliwość pobierania załączników przez anonimowych użytkowników."
-    secure_media: 'Ogranicza dostęp do WSZYSTKICH przesłanych plików (obrazów, wideo, audio, tekstu, plików PDF, zip i innych). Jeśli opcja „wymagane logowanie” jest włączona, tylko zalogowani użytkownicy mają dostęp do przesyłanych plików. W przeciwnym razie dostęp będzie ograniczony tylko do przesłanych multimediów w wiadomościach prywatnych i kategoriach prywatnych. OSTRZEŻENIE: to ustawienie jest złożone i wymaga głębokiego zrozumienia administracyjnego. Zobacz <a target="_blank" href="https://meta.discourse.org/t/secure-media-uploads/140017">ten artykuł</a>, aby dowiedzieć się więcej.'
-    secure_media_allow_embed_images_in_emails: "Umożliwia osadzanie bezpiecznych obrazów, które normalnie byłyby redagowane w wiadomościach e-mail, jeśli ich rozmiar jest mniejszy niż ustawienie'secure media max email embed image size kb'."
-    secure_media_max_email_embed_image_size_kb: "Limit rozmiaru dla zabezpieczonych obrazów, które zostaną osadzone w wiadomości e-mail, gdy włączone jest ustawienie 'secure media allow embed in emails'. Bez tego ustawienia podany limit nie ma zastosowania."
     slug_generation_method: "Wybierz metodę tworzenia ślimaka. 'Zakodowane\" stworzy procentowy ciąg kodujący, \"żadne\" wyłączy tą metodę."
     enable_emoji: "Włącz obsługę emoji"
     enable_emoji_shortcuts: "Typowe tekstowe buźki, takie jak :) :p :( zostaną przekonwertowane na emoji"
@@ -2150,7 +2137,7 @@ pl_PL:
     default_categories_tracking: "Lista kategorii śledzonych domyślnie."
     default_categories_muted: "Lista domyślnie wyciszonych kategorii."
     default_categories_watching_first_post: "Lista kategorii, w której domyślnie każdy pierwszy wpis w temacie będzie obserwowany."
-    default_categories_regular: "Lista kategorii, które nie są domyślnie wyciszone. Przydatne, gdy włączone jest ustawienie witryny `mute_all_categories_by_default`."
+    default_categories_normal: "Lista kategorii, które nie są domyślnie wyciszone. Przydatne, gdy włączone jest ustawienie witryny `mute_all_categories_by_default`."
     mute_all_categories_by_default: "Ustaw domyślny poziom powiadomień wszystkich kategorii na wyciszony. Wymagaj od użytkowników wyrażenia zgody na kategorie, aby pojawiały się na stronach 'latest' i 'categories'. Jeśli chcesz zmienić ustawienia domyślne dla anonimowych użytkowników, ustaw ustawienia 'default_categories_'."
     default_tags_watching: "Lista tagów, które są domyślnie obserwowane."
     default_tags_tracking: "Lista tagów, które są śledzone domyślnie."
@@ -2176,20 +2163,22 @@ pl_PL:
     tags_sort_alphabetically: "Pokaż tagi w alfabetycznym porządku. Domyślne pokazywane są według popularności."
     tags_listed_by_group: "Wyświetl listę tagów według grup tagów na <a href='%{base_path}/tags' target='_blank'>liście tagów</a>."
     tag_style: "Styl etykiet tagów"
-    allow_staff_to_tag_pms: "Zezwalaj pracownikom na oznaczanie dowolnej wiadomości osobistej"
     min_trust_level_to_tag_topics: "Minimalny poziom zaufania wymagany do tagowania tematów"
     suppress_overlapping_tags_in_list: "Jeśli tagi dopasowane są dokładnie do słów w tytule tematu, nie pokazuj tagu"
     remove_muted_tags_from_latest: "Nie pokazuj tematów oznaczonych tylko wyciszonymi tagami na najnowszej liście tematów."
     force_lowercase_tags: "Wymuś, aby wszystkie nowe tagi były małymi literami."
     company_name: "Nazwa firmy"
     governing_law: "Obowiązujące prawo"
-    city_for_disputes: "Miasto dyskusji"
+    city_for_disputes: "Miasto sporów"
     shared_drafts_category: "Włącz funkcję współdzielonych szkiców przez wyznaczenie kategorii dla szkiców tematów. Tematy w tej kategorii zostaną ukryte z list tematów dla personelu."
     shared_drafts_min_trust_level: "Zezwalaj użytkownikom na wyświetlanie i edycję wspólnych szkiców."
     push_notifications_prompt: "Wyświetl monit o zgodę użytkownika."
     push_notifications_icon: "Ikona odznaki pojawiająca się w rogu powiadomień. Zalecany jest monochromyczny PNG 96×96 z przezroczystym tłem."
+    enable_desktop_push_notifications: "Włącz powiadomienia push na pulpicie"
+    push_notification_time_window_mins: "Poczekaj (n) minut przed wysłaniem powiadomienia push. Pomaga zapobiegać wysyłaniu powiadomień push do aktywnego użytkownika online."
     base_font: "Podstawowa czcionka używana dla większości tekstu w witrynie. Motywy można nadpisywać za pomocą niestandardowej właściwości CSS `--font-family`."
     heading_font: "Czcionka używana w nagłówkach witryny. Motywy można nadpisywać za pomocą niestandardowej właściwości CSS `--heading-font-family`."
+    enable_sitemap: "Wygeneruj mapę witryny dla swojej strony i umieść ją w pliku robots.txt."
     short_title: "Krótki tytuł będzie używany na ekranie głównym użytkownika, launcherze lub w innych miejscach, gdzie przestrzeń może być ograniczona. Powinien składać się maksymalnie z 12 znaków."
     dashboard_hidden_reports: "Zezwalaj na ukrycie określonych raportów z panelu administracyjnego."
     dashboard_visible_tabs: "Wybierz, które karty panelu administracyjnego są widoczne."
@@ -2202,6 +2191,12 @@ pl_PL:
     create_revision_on_bulk_topic_moves: "Utwórz rewizję dla pierwszych postów, gdy tematy zostaną przeniesione do nowej kategorii zbiorczo."
     allow_changing_staged_user_tracking: "Zezwalaj na zmianę preferencji powiadomień o kategoriach i tagach użytkownika etapowego przez administratora."
     use_email_for_username_and_name_suggestions: "Użyj pierwszej części adresów e-mail jako sugestii dla nazwy użytkownika i pełnej nazwy. Pamiętaj, że ułatwia to odgadnięcie pełnych adresów e-mail użytkowników (ponieważ duża część osób korzysta z wspólnych usług, takich jak `gmail.com`)."
+    use_name_for_username_suggestions: "Proponując nazwy użytkownika, używaj imienia i nazwiska użytkownika."
+    suggest_weekends_in_date_pickers: "Uwzględnij weekendy (sobota i niedziela) w sugestiach selektora dat (wyłącz tę opcję, jeśli używasz Discourse tylko w dni powszednie, od poniedziałku do piątku)."
+    splash_screen: "Wyświetla tymczasowy ekran ładowania podczas ładowania zasobów witryny"
+    enable_new_user_profile_nav_groups: "EKSPERYMENTALNE: Użytkownikom wybranych grup zostanie wyświetlone nowe menu nawigacyjne profilu użytkownika"
+    enable_experimental_topic_timeline_groups: "EKSPERYMENTALNE: Użytkownikom wybranych grup zostanie pokazana odświeżona oś czasu tematu"
+    enable_experimental_hashtag_autocomplete: "EKSPERYMENTALNIE: Użyj nowego systemu autouzupełniania #hashtagów dla kategorii i tagów, który inaczej renderuje wybrany element i usprawnia wyszukiwanie"
     errors:
       invalid_css_color: "Nieprawidłowy kolor. Wpisz nazwę koloru lub wartość szesnastkową."
       invalid_email: "Nieprawidłowy adres e-mail."
@@ -2230,6 +2225,7 @@ pl_PL:
       email_polling_disabled: "Musisz włączyć manualne lub cykliczne przeglądanie POP3 przed włączeniem odpowiedzi przez email."
       user_locale_not_enabled: "Musisz najpierw włączyć ''pozwól na ustawienia lokalne\" przed włączeniem tych ustawień."
       invalid_regex: "Wyrażenie regularne jest niepoprawne lub niedozwolone."
+      invalid_regex_with_message: "Wyrażenie regularne '%{regex}' zawiera błąd: %{message}"
       email_editable_enabled: "Musisz wyłączyć 'możliwość edycji emaili' przed włączeniem tych ustawień."
       staged_users_disabled: "Przed włączeniem tego ustawienia musisz najpierw włączyć 'staged users'."
       reply_by_email_disabled: "Przed włączeniem tego ustawienia musisz najpierw włączyć opcję 'reply by email'."
@@ -2250,7 +2246,9 @@ pl_PL:
         leading_trailing_slash: "Wyrażenie regularne nie może zaczynać się ani kończyć ukośnikiem."
       unicode_usernames_avatars: "Wewnętrzne awatary systemowe nie obsługują nazw użytkowników zawierających unicode."
       list_value_count: "Lista musi zawierać dokładnie %{count} wartości."
-      google_oauth2_hd_groups: "Musisz najpierw ustawić 'google oauth2 hd' przed włączeniem tego ustawienia."
+      markdown_linkify_tlds: "Nie możesz uwzględnić wartości '*'."
+      discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Nie można włączyć DiscourseConnect, jeśli wymuszono 2FA."
+      delete_rejected_email_after_days: "To ustawienie nie może być niższe niż ustawienie delete_email_logs_after_days ani większe niż %{max}"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2450,6 +2448,14 @@ pl_PL:
     second_factor_toggle:
       totp: "Zamiast tego użyj aplikacji uwierzytelniającej lub klucza bezpieczeństwa"
       backup_code: "Zamiast tego użyj kodu zapasowego"
+  second_factor_auth:
+    challenge_expired: "Upłynęło zbyt wiele czasu od wykonania wyzwania 2FA i nie jest ono już ważne. Spróbuj ponownie."
+    challenge_not_completed: "Nie ukończyłeś wyzwania 2FA, aby wykonać tę czynność. Ukończ wyzwanie 2FA i spróbuj ponownie."
+    actions:
+      grant_admin:
+        description: "Aby zapewnić dodatkowe środki bezpieczeństwa, musisz potwierdzić swój kod 2FA, zanim %{username} uzyska dostęp administratora."
+      discourse_connect_provider:
+        description: "%{hostname} poprosił Cię o potwierdzenie Twojego 2FA. Zostaniesz przekierowany z powrotem na stronę, gdy potwierdzisz swoją weryfikację dwuetapową."
   admin:
     email:
       sent_test: "wysłany!"
@@ -2674,12 +2680,12 @@ pl_PL:
       %{notes}
   flag_reasons:
     off_topic: "Twój wpis został oznaczony jako **nie na temat**: społeczność uważa, że nie pasuje do tematu, w którym został dodany, biorąc pod uwagę jego tytuł i treść pierwszego wpisu."
-    inappropriate: "Twój wpis został oznaczony jako **nieodpowiedni**: społeczność uznała, że zbyt agresywny lub niezgodny z [jej wytycznymi](%{base_path}/guidelines)."
+    inappropriate: "Twój post został oznaczony jako **nieodpowiedni**: społeczność uważa, że jest on obraźliwy, stanowi przejaw nienawiści lub narusza [nasze wytyczne dla społeczności](%{base_path}/guidelines)."
     spam: "Twój wpis został oznaczony jako **spam**: społeczność czuje, że jest to reklama, czyli coś nadmiernie promującego, a nie użytecznego czy odnoszącego się do tematu."
     notify_moderators: "Twój wpis został oznaczony jako **do uwagi moderatora**: społeczność czuje, że wpis wymaga ręcznej interwencji członka personelu."
     responder:
       off_topic: "Post został oznaczony jako **nie na temat**: społeczność uważa, że nie pasuje on do tematu, który obecnie określa tytuł i pierwszy post."
-      inappropriate: "Post został oznaczony jako **nieodpowiedni**: społeczność uważa, że jest obraźliwy, wulgarny lub narusza [nasze wytyczne dla społeczności](%{base_path}/guidelines)."
+      inappropriate: "Post został oznaczony jako **nieodpowiedni**: społeczność uważa, że jest on obraźliwy, stanowi przejaw nienawiści lub narusza [nasze wytyczne dla społeczności](%{base_path}/guidelines)."
       spam: "Post został oznaczony jako **spam**: społeczność uważa, że jest to reklama, lub coś, co ma charakter nadmiernie promocyjny, a nie jest przydatne lub związane z tematem zgodnie z oczekiwaniami."
       notify_moderators: "Post został oznaczony **w celu zwrócenia uwagi moderatora**: społeczność uważa, że coś w tym poście wymaga ręcznej interwencji członka personelu."
   flags_dispositions:
@@ -2859,11 +2865,13 @@ pl_PL:
     tl2_promotion_message:
       subject_template: "Gratulujemy awansu na następny poziom zaufania!"
       text_body_template: |
-        Awansowaliśmy Cię na kolejny [poziom zaufania] (https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)!
+        Awansowaliśmy Cię o kolejny [poziom zaufania](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)!
 
-        Jako doświadczony użytkownik możesz docenić [tą listę przydatnych porad i sztuczek] (https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
+        Osiągnięcie 2. poziomu zaufania oznacza, że przeczytałeś(-aś) i aktywnie uczestniczyłeś(-aś) w życiu społeczności na tyle, by być uznanym za jej członka.
 
-        Zapraszamy do angażowania się — cieszymy się, że jesteś w pobliżu.
+        Jako doświadczony użytkownik możesz docenić [tę listę przydatnych wskazówek i trików](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
+
+        Zapraszamy Cię do dalszego zaangażowania - cieszymy się, że jesteś z nami.
     backup_succeeded:
       title: "Kopia zapasowa została utworzona "
       subject_template: "Kopia zapasowa jest gotowa"
@@ -2905,18 +2913,15 @@ pl_PL:
     bulk_invite_succeeded:
       title: "Zaproszenia hurtowe udane"
       subject_template: "Przetwarzanie masowej ilości zaproszeń zakończyło się sukcesem."
-      text_body_template: "Plik z zaproszeniami został przetworzony. Wysłanych zaproszeń: %{sent}."
-    bulk_invite_failed:
-      title: "Zaproszenia hurtowe Nieudane"
-      subject_template: "Plik z zaproszeniami został przetworzony z błędami."
       text_body_template: |
-        Twój zbiorczy plik zaproszeń użytkowników został przetworzony, %{sent} zaproszeń wysłanych z %{failed} błędem(-ami).
-
-        Oto dziennik:
+        Twój zbiorczy plik zaproszeń użytkowników został przetworzony, %{sent} zaproszeń wysłanych, %{skipped} pominięto i %{warnings} ostrzeżeń.
 
         ``` text
         %{logs}
         ```
+    bulk_invite_failed:
+      title: "Zaproszenia hurtowe Nieudane"
+      subject_template: "Plik z zaproszeniami został przetworzony z błędami."
     user_added_to_group_as_owner:
       title: "Dodano do grupy jako właściciel"
       subject_template: "Zostałeś/łaś dodany jako właściciel grupy %{group_name}"
@@ -3136,6 +3141,15 @@ pl_PL:
         Odpowiedziałeś/łaś na wiadomość e-mail z podsumowaniem, która nie została zaakceptowana.
 
         Jeśli uważasz, że to błąd, [skontaktuj się z nami](%{base_url}/about).
+    email_reject_too_many_recipients:
+      title: "E-mail odrzucony -- Zbyt wielu odbiorców"
+      subject_template: "[%{email_prefix}] Problem z e-mailem -- Zbyt wielu odbiorców"
+      text_body_template: |
+        Przepraszamy, ale Twoja wiadomość e-mail do %{destination} (tytuł %{former_title}) nie została wysłana.
+
+        Próbowałeś wysłać wiadomość e-mail do więcej niż %{max_recipients_count} osób, a nasz system automatycznie otagował Twój e-mail jako spam.
+
+        Jeśli uważasz, że jest to błąd, [skontaktuj się z członkiem personelu](%{base_url}/about).
     email_error_notification:
       title: "Błąd emaila powiadomienie"
       subject_template: "[%{email_prefix}] Problem z pocztą elektroniczną - błąd autoryzacji POP"
@@ -3283,7 +3297,7 @@ pl_PL:
   subject_re: "Re: "
   subject_pm: "[PW] "
   email_from: "%{user_name} z %{site_name}"
-  email_from_without_site: "%{user_name}"
+  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "Poprzednie odpowiedzi"
     reached_limit:
@@ -3304,6 +3318,11 @@ pl_PL:
     reply_above_line: "## Wpisz swoją odpowiedź powyżej tej linii. ##"
     posted_by: "Dodany przez %{username} w dniu %{post_date}"
     pm_participants: "Uczestnicy: %{participants}"
+    more_pm_participants:
+      one: "%{participants} i %{count} inny"
+      few: "%{participants} i %{count} inni"
+      many: "%{participants} i %{count} innych"
+      other: "%{participants} i %{count} innych"
     invited_group_to_private_message_body: |
       %{username} zaprosił @%{group_name} do wiadomości
 
@@ -3492,6 +3511,17 @@ pl_PL:
         %{context}
 
         %{respond_instructions}
+    user_watching_category_or_tag:
+      title: "Użytkownik obserwuje kategorię lub tag"
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_watching_first_post:
       title: "Użytkownik Przegląda pierwszy wpis"
       subject_template: "[%{email_prefix}] %{topic_title}"
@@ -3601,7 +3631,7 @@ pl_PL:
       title: "Zaloguj za pomocą linku"
       subject_template: "[%{email_prefix}] Zaloguj się przez link"
       text_body_template: |
-        Oto Twój link do logowania się na [%{site_name}] (%{base_url}).
+        Oto Twój link do logowania się na [%{site_name}](%{base_url}).
 
         Jeśli nie prosiłeś/łaś o ten link, możesz bezpiecznie zignorować tę wiadomość e-mail.
 
@@ -3743,15 +3773,15 @@ pl_PL:
       text_body_template: |
         Witaj,
 
-        Zauważyliśmy logowanie z urządzenia lub lokalizacji, z której zwykle nie korzystasz. Czy to byłeś/łaś ty?
+        Zauważyliśmy logowanie z urządzenia lub miejsca, którego zwykle nie używasz. Czy to byłeś Ty?
 
          - Lokalizacja: %{location} (%{client_ip})
          - Przeglądarka: %{browser}
          - Urządzenie: %{device} - %{os}
 
-        Jeśli to byłeś/łaś ty, świetnie! Nie musisz nic więcej robić.
+        Jeśli to byłeś Ty, to świetnie! Nie musisz robić nic więcej.
 
-        Jeśli to nie byłeś/łaś Ty, proszę [przejrzyj swoje istniejące sesje](%{base_url}/my/preferences/account) i rozważ zmianę hasła.
+        Jeśli to nie byłeś Ty, proszę [przejrzyj swoje dotychczasowe sesje] (%{base_url}/my/preferences/security) i rozważ zmianę hasła.
     post_approved:
       title: "Twój post został zatwierdzony"
       subject_template: "[%{site_name}] Twój post został zatwierdzony"
@@ -3763,6 +3793,7 @@ pl_PL:
     title: "Ups! Ta strona jest prywatna."
   site_setting_missing: "Ustawienie `%{name}` musi być ustawione."
   page_not_found:
+    page_title: "Nie znaleziono strony"
     title: "Ups! Ta strona nie istnieje lub jest prywatna."
     popular_topics: "Popularne"
     recent_topics: "Ostatnie"
@@ -3792,10 +3823,10 @@ pl_PL:
     png_to_jpg_conversion_failure_message: "Wystąpił błąd podczas konwersji z PNG na JPG."
     optimize_failure_message: "Wystąpił błąd podczas optymalizacji przesłanego obrazu."
     download_failure: "Pobieranie pliku od zewnętrznego dostawcy nie powiodło się."
-    size_mismatch_failure: "Rozmiar pliku przesłanego do S3 nie był zgodny z rozmiarem przewidzianym przez zewnętrzny serwer przesyłania. %{additional_detail}"
     create_multipart_failure: "Nie udało się utworzyć wieloczęściowego przesyłania w zewnętrznym sklepie."
     checksum_mismatch_failure: "Suma kontrolna przesłanego pliku nie zgadza się. Zawartość pliku mogła ulec zmianie podczas przesyłania. Proszę spróbuj ponownie."
     cannot_promote_failure: "Przesyłanie nie może zostać zakończone, być może zostało już zakończone lub wcześniej zakończone niepowodzeniem."
+    size_zero_failure: "Przepraszamy, wygląda na to, że coś poszło nie tak, plik, który próbujesz przesłać ma 0 bajtów. Spróbuj ponownie."
     attachments:
       too_large: "Przepraszamy, plik który chcesz wczytać jest zbyt duży (maximum to is %{max_size_kb}KB)."
       too_large_humanized: "Przepraszamy, plik, który próbujesz przesłać, jest za duży (maksymalny rozmiar to %{max_size})."
@@ -3851,6 +3882,8 @@ pl_PL:
     dark_rose: "Ciemna róża"
     wcag: "Jasny WCAG"
     wcag_theme_name: "Jasny WCAG"
+    dracula: "Dracula"
+    dracula_theme_name: "Dracula"
     wcag_dark: "Ciemny WCAG"
     wcag_dark_theme_name: "Ciemny WCAG"
     default_theme_name: "Domyślny"
@@ -3970,174 +4003,6 @@ pl_PL:
       Tak, język prawniczy jest nudny, ale musimy się chronić &ndash; co za tym idzie, Ciebie i Twoje dane &ndash; przeciwko nieprzyjaznym ludziom. Mamy [Warunki korzystania z usługi](%{base_path}/tos) opisujące Twoje (i nasze) zachowanie oraz prawa związane z treścią, prywatnością i przepisami. Aby korzystać z tej usługi, musisz zgodzić się na przestrzeganie naszych[TOS](%{base_path}/tos).
   tos_topic:
     title: "Warunki użytkowania"
-    body: |
-      Niniejsze warunki regulują korzystanie z forum internetowego pod adresem <%{base_url}>. Aby korzystać z forum, musisz wyrazić zgodę na te warunki z firmą %{company_name}, która prowadzi forum.
-
-      Firma może oferować inne produkty i usługi na innych warunkach. Niniejsze warunki mają zastosowanie tylko do korzystania z forum.
-
-      Przejdź do:
-
-      - [Ważne terminy](#heading--important-terms)
-      - [Twoja zgoda na korzystanie z forum](#heading--permission)
-      - [Warunki korzystania z forum](#heading--conditions)
-      - [Dopuszczalne użycie](#heading--acceptable-use)
-      - [Standardy treści](#heading--content-standards)
-      - [Egzekwowanie](#heading--enforcement)
-      - [Twoje konto](#heading--your-account)
-      - [Twoja treść](#heading--your-content)
-      - [Twoja odpowiedzialność](#heading--responsibility)
-      - [Zastrzeżenia](#heading--disclaimers)
-      - [Ograniczenie odpowiedzialności](#heading--liability)
-      - [Informacje zwrotne](#heading--feedback)
-      - [Zakończenie](#heading--termination)
-      - [Sprzeczki](#heading--disputes)
-      - [Ogólne warunki](#heading--general)
-      - [Kontakt](#heading--contact)
-      - [Zmiany](#heading--changes)
-
-      <h2 id="heading--important-terms"><a href="#heading--important-terms">Ważne terminy</a></h2>
-
-      ***Warunki te obejmują szereg ważnych postanowień, które mają wpływ na Twoje prawa i obowiązki, takie jak [zastrzeżenia](#heading--disclaimers), [ograniczenia odpowiedzialności](#heading--liability) firmy wobec Ciebie, zgodę na pokrycie kosztów w firmie za szkody spowodowane niewłaściwym użytkowaniem forum w sekcji [odpowiedzialność za twoje użycie](#heading--responsibility), oraz umowa na arbitraż [sporów](#heading--disputes).***
-
-      <h2 id="heading--permission"><a href="#heading--permission">Twoja zgoda na korzystanie z forum</a></h2>
-
-      Z zastrzeżeniem niniejszych warunków firma zezwala na korzystanie z forum. Aby korzystać z forum, każdy użytkownik musi wyrazić zgodę na te warunki.
-
-      <h2 id="heading--conditions"><a href="#heading--conditions">Warunki korzystania z forum</a></h2>
-
-      Twoja zgoda na korzystanie z forum podlega następującym warunkom:
-
-      1. Musisz mieć co najmniej trzynaście lat.
-
-      2. Nie możesz już korzystać z forum, jeśli firma skontaktuje się z Tobą bezpośrednio, aby powiedzieć, że nie możesz tego dalej robić.
-
-      3. Musisz korzystać z forum zgodnie z [dopuszczalnym użyciem](#heading--acceptable-use) oraz [standardami treści](#heading--content-standards).
-
-      <h2 id="heading--acceptable-use"><a href="#heading--acceptable-use">Dopuszczalne użycie</a></h2>
-
-      1. Korzystając z forum nie możesz łamać prawa.
-
-      2. Nie możesz używać ani próbować używać kont innych osób na forum bez ich wyraźnej zgody.
-
-      3. Na forum nie możesz kupować, sprzedawać ani w inny sposób handlować nazwami użytkowników lub innymi unikalnymi identyfikatorami.
-
-      4. Za pośrednictwem forum nie możesz wysyłać reklam, łańcuszków, innych próśb, ani wykorzystywać forum do gromadzenia adresów lub innych danych osobowych do komercyjnych list mailingowych lub baz danych.
-
-      5. Nie możesz zautomatyzować dostępu do forum ani monitorować forum, na przykład za pomocą robota indeksującego, wtyczki lub dodatku do przeglądarki lub innego programu komputerowego, który nie jest przeglądarką internetową. Możesz przeszukać forum w celu zindeksowania go pod kątem publicznie dostępnej wyszukiwarki, jeśli taką uruchomisz.
-
-      6. Nie możesz używać forum do wysyłania wiadomości e-mail na listy dystrybucyjne, grupy dyskusyjne lub aliasy poczty grupowej.
-
-      7. Nie możesz fałszywie sugerować, że jesteś powiązany lub wspierany przez firmę.
-
-      8. Zabrania się umieszczania hiperłączy do obrazów lub innych treści niehipertekstowych na forum na innych stronach internetowych.
-
-      9. Nie możesz usuwać żadnych znaków wskazujących na prawa własności z materiałów pobranych z forum.
-
-      10. Nie możesz wyświetlać żadnej części forum na innych stronach za pomocą `<iframe>`.
-
-      11. Nie możesz wyłączać, oszukiwać ani omijać zabezpieczeń lub ograniczeń dostępu do forum.
-
-      12. Nie możesz obciążać infrastruktury forum nadmierną liczbą żądań lub żądań mających na celu nieuzasadnione obciążenie systemów informatycznych leżących u podstaw forum.
-
-      13. Na forum nie możesz podszywać się pod inne osoby.
-
-      14. Nie możesz zachęcać ani pomagać nikomu, kto narusza warunki użytkowania forum.
-
-      <h2 id="heading--content-standards"><a href="#heading--content-standards">Standardy treści</a></h2>
-
-      1. Nie możesz przesyłać na forum treści, które są nielegalne, obraźliwe lub w inny sposób szkodliwe dla innych. Obejmuje to treści napastliwe, nieodpowiednie lub obraźliwe.
-
-      2. Nie możesz przesyłać na forum treści, które naruszają prawo, naruszają czyjekolwiek prawa własności intelektualnej, naruszają czyjąś prywatność lub naruszają umowy, które masz z innymi osobami.
-
-      3. Zabrania się przesyłania na forum treści zawierających złośliwy kod komputerowy, taki jak wirusy komputerowe lub oprogramowanie szpiegujące.
-
-      4. Nie możesz przesyłać treści na forum jako zastępcze źródło, do przechowywania określonego adresu, tekstu, nazwy użytkownika lub innego unikalnego identyfikatora.
-
-      5. Nie możesz używać forum do ujawniania informacji, których nie masz prawa ujawniać, takich jak informacje poufne lub osobiste innych osób.
-
-      <h2 id="heading--enforcement"><a href="#heading--enforcement">Egzekwowanie</a></h2>
-
-      Firma może badać i ścigać naruszenia niniejszych warunków w najszerszym zakresie prawnym. Spółka może zgłaszać i współpracować z organami ścigania przy ściganiu naruszeń prawa i niniejszego regulaminu.
-
-      Firma zastrzega sobie prawo do zmiany, redagowania i usuwania treści na forum z dowolnego powodu. Jeśli uważasz, że ktoś przesłał treści na forum z naruszeniem niniejszych warunków, [skontaktuj się z nami](#heading--contact).
-
-      <h2 id="heading--your-account"><a href="#heading--your-account">Twoje konto</a></h2>
-
-      Aby korzystać z niektórych funkcji forum, musisz utworzyć konto i zalogować się do niego.
-
-      Aby utworzyć konto, musisz podać kilka informacji o sobie. Zakładając konto, zgadzasz się podać co najmniej prawidłowy adres e-mail oraz aktualizować ten adres w razie potrzeby. Możesz zamknąć swoje konto w dowolnym momencie, wysyłając e-mail na <%{contact_email}>.
-
-      Zgadzasz się ponosić odpowiedzialność za wszystkie działania podejmowane przy użyciu Twojego konta, niezależnie od tego, czy zostały przez Ciebie autoryzowane, czy nie, dopóki nie zamkniesz konta lub nie powiadomisz firmy, że Twoje konto zostało przejęte. Zgadzasz się natychmiastowo powiadomić firmę, jeśli podejrzewasz, że Twoje konto zostało przejęte. Potwierdzasz również, że wybierzesz bezpieczne hasło dla swojego konta i zachowasz je w tajemnicy.
-
-      Firma może ograniczyć, zawiesić lub zamknąć Twoje konto na forum zgodnie ze swoją polityką dotyczącą żądań usunięcia treści związanych z prawami autorskimi lub jeśli firma ma uzasadnione powody, by sądzić, że złamałeś/łaś jakąkolwiek zasadę w niniejszych warunkach regulaminu.
-
-      <h2 id="heading--your-content"><a href="#heading--your-content">Twoje treści</a></h2>
-
-      Żadne z postanowień niniejszych warunków nie daje firmie żadnych praw własności intelektualnej, którą udostępniasz na forum, takich jak informacje o Twoim koncie, posty lub inne treści przesyłane na forum. Żadne z postanowień niniejszych warunków nie daje również żadnych praw własności do własności intelektualnej firmy.
-
-      Ponosisz wyłączną odpowiedzialność za treści, które przesyłasz na forum. Zgadzasz się nie sugerować błędnie, że treści, które przesyłasz na forum, są sponsorowane lub zatwierdzane przez firmę. Niniejsze warunki nie zobowiązują firmy do przechowywania, utrzymywania lub dostarczania kopii przesyłanych treści ani do ich zmiany zgodnie z niniejszymi warunkami.
-
-      Treści, które przesyłasz na forum, należą do Ciebie, a Ty decydujesz, jakich uprawnień udzielisz do nich innym. Równocześnie udzielasz firmie licencji na udostępnianie treści, które przesyłasz na forum, innym użytkownikom forum. Ta specjalna licencja umożliwia firmie kopiowanie, publikowanie i analizowanie treści przesyłanych na forum.
-
-      Gdy przesłane treści zostaną usunięte z forum, czy to przez Ciebie, czy przez firmę, specjalna licencja firmy wygasa, gdy ostatnia kopia zniknie z kopii zapasowych firmy, pamięci podręcznej i innych systemów. Inne licencje, które stosujesz do przesyłanych treści, takie jak [Creative Commons](https://creativecommons.org), mogą obowiązywać po usunięciu treści. Licencje te mogą dawać innym osobom lub samej firmie prawo do ponownego udostępniania treści za pośrednictwem forum.
-
-      Inne osoby, które zobaczą treści przesyłane na forum, mogą naruszać warunki, na których udzielasz licencji na te treści. Zgadzasz się, że firma nie będzie odpowiedzialna za te naruszenia lub ich konsekwencje.
-
-      <h2 id="heading--responsibility"><a href="#heading--responsibility">Twoja odpowiedzialność</a></h2>
-
-      Zgadzasz się zwolnić firmę z roszczeń prawnych innych osób związanych z naruszeniem przez Ciebie niniejszych warunków lub naruszenia tych warunków przez inne osoby korzystające z Twojego konta na forum. Zarówno Ty, jak i firma zgadzacie się powiadomić drugą stronę o wszelkich roszczeniach prawnych, w przypadku których być może będziecie musieli jak najszybciej zabezpieczyć firmę. Jeśli firma nie powiadomi Cię niezwłocznie o roszczeniu prawnym, nie będziesz musiał rekompensować firmie odszkodowania za szkody, przed którymi mógłbyś się bronić lub które mógłbyś złagodzić za niezwłocznym powiadomieniem. Zgadzasz się zezwolić firmie na kontrolowanie dochodzenia, obronę i rozstrzyganie roszczeń prawnych, za które musiałbyś zabezpieczyć firmę, oraz na współpracę w tych wysiłkach. Firma zobowiązuje się nie wyrażać zgody na żadne ugody, które przyznają się do winy lub nakładają na Ciebie zobowiązania bez Twojej wcześniejszej zgody.
-
-      <h2 id="heading--disclaimers"><a href="#heading--disclaimers">Zastrzeżenia</a></h2>
-
-      ***Akceptujesz całe ryzyko związane z używaniem forum i zawartością na forum. W zakresie, w jakim pozwala na to prawo, firma i jej dostawcy zapewniają forum takie, jakie jest, bez jakiejkolwiek gwarancji.***
-
-      Forum może zawierać hiperłącza i promować fora oraz usługi prowadzone przez inne osoby. Firma nie udziela żadnych gwarancji dotyczących usług świadczonych przez inne osoby ani treści, które mogą dostarczać. Korzystanie z usług świadczonych przez inne osoby może podlegać innym warunkom między użytkownikiem a usługodawcą.
-
-      <h2 id="heading--liability"><a href="#heading--liability">Ograniczenia odpowiedzialności</a></h2>
-
-      ***Ani firma, ani jej dostawcy nie będą ponosić odpowiedzialności za szkody wynikające z naruszenia umowy, których ich personel nie mógł/mogła racjonalnie przewidzieć, gdy wyraziłeś/łaś zgodę na niniejsze warunki.***
-
-      ***O ile pozwalają na to przepisy prawa, całkowita odpowiedzialność wobec użytkownika za wszelkiego rodzaju roszczenia związane z forum lub zawartością forum będzie ograniczona do 50 USD.***
-
-      <h2 id="heading--feedback"><a href="#heading--feedback">Feedback</a></h2>
-
-      Firma z przyjemnością przyjmuje opinie i sugestie dotyczące forum. Zobacz sekcję [kontakt](#heading--contact) poniżej, aby dowiedzieć się, jak się z nami skontaktować.
-
-      Zgadzasz się, że firma będzie mogła działać w oparciu o opinie i sugestie, które przekażesz, i że nie będzie musiała powiadamiać Cię, że Twoja opinia została wykorzystana, uzyskiwać Twojej zgody na jej wykorzystanie ani płacić. Zgadzasz się nie przesyłać opinii ani sugestii, które Twoim zdaniem mogą być poufne lub zastrzeżone.
-
-      <h2 id="heading--termination"><a href="#heading--termination">Zakończenie</a></h2>
-
-      Ty lub firma możecie w dowolnym momencie wypowiedzieć umowę zawartą w niniejszych warunkach. Wraz z wygaśnięciem naszej umowy wygasa również Twoja zgoda na korzystanie z forum.
-
-      <h2 id="heading--disputes"><a href="#heading--disputes">Sprzeczki</a></h2>
-
-      %{governing_law} będzie rozstrzygać wszelkie spory związane z niniejszymi warunkami lub korzystaniem z forum.
-
-      Ty i firma zgadzacie się ubiegać się o nakazy związane z niniejszymi warunkami tylko w sądzie okręgowym, bądź lokalnym w %{city_for_disputes}. Ani Ty, ani firma nie będziecie sprzeciwiać się jurysdykcji w tych sądach.
-
-      ***Oprócz ubiegania się o nakaz sądowy lub roszczeń na podstawie ustawy o oszustwach komputerowych i nadużyciach, Ty i firma rozwiążecie wszelkie spory na drodze wiążącego arbitrażu w %{city_for_disputes}. Wszelkie spory będą rozstrzygane indywidualnie, a nie w ramach pozwu zbiorowego lub innego postępowania reprezentacyjnego, czy to jako powód, czy członek grupy. Żaden arbiter nie połączy żadnego sporu z jakimkolwiek innym arbitrażem bez zgody firmy.***
-
-      <h2 id="heading--general"><a href="#heading--general">Ogólne warunki</a></h2>
-
-      Jeśli postanowienie niniejszych warunków jest niewykonalne w formie pisemnej, ale można je zmienić, aby uczynić je wykonalnym, należy je zmodyfikować w minimalnym zakresie niezbędnym do jego wykonalności. W przeciwnym razie przepis ten powinien zostać usunięty.
-
-      Nie możesz scedować swojej umowy z firmą. Firma może przekazać Twoją umowę na dowolny podmiot stowarzyszony z firmą, każdą inną firmę, która uzyska kontrolę nad firmą, lub każdą inną firmę, która kupi aktywa firmy związane z forum. Wszelkie próby przeniesienia praw na te warunki nie mają skutków prawnych.
-
-      Ani wykonanie jakichkolwiek praw wynikających z niniejszej Umowy, ani zrzeczenie się jakiegokolwiek naruszenia niniejszej Umowy nie zrzeka do jakiegokolwiek innego naruszenia niniejszej Umowy.
-
-      Warunki te obejmują wszystkie warunki umowy między Tobą a firmą dotyczące korzystania z forum. Niniejsze warunki całkowicie zastępują wszelkie inne umowy dotyczące korzystania z forum, pisemne lub nie.
-
-      <h2 id="heading--contact"><a href="#heading--contact">Kontakt</a></h2>
-
-      Możesz powiadomić firmę zgodnie z niniejszymi warunkami i wysłać pytania do firmy na adres <%{contact_email}>.
-
-      Firma może powiadomić Cię o zmianach w podanych warunkach, korzystając z adresu e-mail, który podałeś/łaś dla swojego konta na forum lub wysyłając wiadomość na stronie głównej forum lub na stronie Twojego konta.
-
-      <h2 id="heading--changes"><a href="#heading--changes">Zmiany</a></h2>
-
-      Firma ostatnio zaktualizowała niniejsze warunki 12 lipca 2018 r. I może je ponownie zaktualizować. Firma będzie publikować wszystkie aktualizacje na forum. W przypadku aktualizacji, które zawierają istotne zmiany, firma zgadza się na wysłanie Ci e-maila, jeśli utworzyłeś/łaś konto i podałeś/łaś prawidłowy adres e-mail. Firma może również ogłaszać aktualizacje za pomocą specjalnych wiadomości lub alertów na forum.
-
-      Po otrzymaniu powiadomienia o aktualizacji niniejszych warunków musisz wyrazić zgodę na nowe warunki, aby móc dalej korzystać z forum.
   privacy_topic:
     title: "Polityka prywatności"
     body: |
@@ -4420,7 +4285,7 @@ pl_PL:
       long_description: |
         Ta odznaka jest przyznawana, gdy masz co najmniej 20 polubionych wpisów i dałeś/łaś w zamian 10 lub więcej polubień. Gdy ktoś polubi twój wpis, znajdź czas, by polubić również wpisy innych użytkowników.
     gives_back:
-      name: Oddać
+      name: Daje coś od siebie
       description: Ma 100 polubionych wpisów i dał 100 polubień
       long_description: |
         Ta odznaka jest przyznawana, gdy masz co najmniej 100 polubionych wpisów i dałeś/łaś w zamian 100 lub więcej polubień. Dziękujemy za twoją aktywność!
@@ -4478,6 +4343,7 @@ pl_PL:
       invalid_token: "Nieprawidłowy token."
     email_input: "Email administratora. "
     submit_button: "Wyślij Email"
+    safe_mode: "Tryb awaryjny: wyłącz wszystkie motywy/wtyczki podczas logowania"
   performance_report:
     initial_post_raw: Ten temat zawiera codzienne raporty wydajności dla twojej strony.
     initial_topic_title: Raporty wydajności strony
@@ -4505,6 +4371,16 @@ pl_PL:
         other: '"%{tag_name}" jest ograniczony do kategorii "%{category_names}"'
       synonym: 'Synonimy nie są dozwolone. Zamiast tego użyj "%{tag_name}".'
       has_synonyms: 'Nie można użyć "%{tag_name}", ponieważ zawiera synonimy.'
+      restricted_tags_cannot_be_used_in_category:
+        one: 'Tag "%{tags}" nie może być użyty w kategorii "%{category}". Usuń go.'
+        few: 'Następujące tagi nie mogą być używane w kategorii "%{category}": %{tags}. Usuń je.'
+        many: 'Następujące tagi nie mogą być używane w kategorii "%{category}": %{tags}. Usuń je.'
+        other: 'Następujące tagi nie mogą być używane w kategorii "%{category}": %{tags}. Usuń je.'
+      category_does_not_allow_tags:
+        one: 'Kategoria "%{category}" nie pozwala na użycie tagu: "%{tags}". Proszę go usunąć.'
+        few: 'Kategoria "%{category}" nie pozwala na użycie tagów: "%{tags}". Proszę je usunąć.'
+        many: 'Kategoria "%{category}" nie pozwala na użycie tagów: "%{tags}". Proszę je usunąć.'
+        other: 'Kategoria "%{category}" nie pozwala na użycie tagów: "%{tags}". Proszę je usunąć.'
     required_tags_from_group:
       one: "Musisz dołączyć co najmniej %{count} %{tag_group_name} tag. Tagi w tej grupie to: %{tags}."
       few: "Musisz dołączyć co najmniej %{count} %{tag_group_name} tagi. Tagi w tej grupie to: %{tags}."
@@ -4518,7 +4394,7 @@ pl_PL:
     register:
       button: "Zarejestruj"
       title: "Zarejestrowano konto administratora"
-      help: "zarejestruj nowe konto aby rozpocząć"
+      help: "Zarejestruj nowe konto, aby rozpocząć."
       no_emails: "Niestety, podczas instalacji nie zdefiniowano żadnych e-maili administratora, więc finalizacja konfiguracji może być trudna. Dodaj adres e-mail programisty w pliku konfiguracyjnym lub <a href='https://meta.discourse.org/t/create-admin-account-from-console/17274'>utwórz konto administratora z konsoli</a>."
     confirm_email:
       title: "Potwierdzenie przez email"
@@ -4528,92 +4404,49 @@ pl_PL:
       message: "<p>Powtórnie przesłaliśmy e-maila aktywacyjnego do <b>%{email}</b>"
   safe_mode:
     title: "Wejście w tryb bezpieczny"
-    description: "Tryb awaryjny pozwala na sprawdzenie twojej strony bez ładowania pluginów i modyfikacji."
-    no_customizations: "Wyłącz bieżący motyw."
-    only_official: "Wyłącz nieoficjalne wtyczki"
+    description: "Tryb awaryjny umożliwia testowanie witryny bez ładowania wtyczek lub motywów."
+    no_themes: "Wyłącz motywy i komponenty motywu"
+    no_unofficial_plugins: "Wyłącz nieoficjalne wtyczki"
     no_plugins: "Wyłącz wszystkie wtyczki"
     enter: "Włącz Tryb Bezpieczny"
     must_select: "Musisz wybrać przynajmniej jedną opcję, by wejść do trybu bezpiecznego."
   wizard:
     title: "Instalacja Discourse"
     step:
-      locale:
-        title: "Witaj w swoim Discourse!"
-        fields:
-          default_locale:
-            description: "Jaki jest podstawowy język dla twojej społeczności?"
-      forum_title:
-        title: "Imię"
-        description: "Twoja nazwa jest znakiem widocznym z daleka, <i>Pierwszą</i> rzeczą, którą goście zobaczą w twojej społeczności. Co nazwa i tytuł mówią o twojej społeczności?"
+      introduction:
+        title: "O Twojej witrynie"
         fields:
           title:
-            label: "Twoja pełna nazwa"
+            label: "Nazwa społeczności"
             placeholder: "Hangout Jane"
           site_description:
-            label: "Opisz swoją społeczność w jednym krótkim zdaniu (używanym w wynikach wyszukiwania i mediach społecznościowych)"
+            label: "Opisz swoja społeczność w jednym zdaniu."
             placeholder: "Miejsce dla Jane i jej przyjaciół na dyskusje o fajnych sprawach."
-          short_site_description:
-            label: "Opisz swoją społeczność kilkoma słowami (używane do tytułu strony głównej)"
-            placeholder: "Najlepsza społeczność kiedykolwiek"
-      introduction:
-        title: "Wprowadzenie"
-        disabled: "<p>Nie znaleźliśmy żadnego tematu o tytule “%{topic_title}”.</p> <ul> <li>Jeśli zmieniłeś/łaś tytuł, edytuj ten temat, aby zmodyfikować tekst wprowadzający do witryny.</li> <li>Jeśli usunąłeś/łaś ten temat, utwórz kolejny temat z “%{topic_title}” jako tytuł. Treść pierwszego posta to tekst wprowadzający do Twojej witryny.</li> </ul>"
-        fields:
-          welcome:
-            label: "Temat powitalny"
-            description: "<p>Jak opisałbyś twoją społeczność nieznajomemu w windzie mając tylko 1 minutę?</p> <ul> <li>Dla kogo są te dyskusje?</li> <li>Gdzie mogę je znaleźć?</li> <li>Dlaczego powinienem odwiedzić tą społeczność?</li> </ul><p>Temat wprowadzający to pierwsza rzecz, którą nowi użytkownicy przeczytają. Pomyśl o tym, jak o <b>jednym paragrafie</b> 'sprzedanie pomysłu' lub 'misja przedsiębiorstwa'.</p>"
-            one_paragraph: "Ogranicz wiadomość powitalną do jednego akapitu."
-            extra_description: "Jeśli nie masz pewności, możesz pominąć ten krok i edytować temat powitalny później."
+          default_locale:
+            label: "Język"
       privacy:
-        title: "Dostęp"
-        description: "<p>Czy Twoja społeczność jest otwarta dla wszystkich, czy też jest ograniczona członkostwem, zaproszeniem lub ręcznym zatwierdzeniem? Jeśli wolisz, możesz ustawić tą opcje jako prywatne, a później przełączyć stronę w tryb publiczny.</p>"
+        title: "Doświadczenie użytkownika"
         fields:
-          privacy:
-            choices:
-              open:
-                label: "Publiczne"
-                description: "Wszyscy mają dostęp do społeczności"
-              restricted:
-                label: "Prywatne"
-                description: "Tylko zalogowani użytkownicy mają dostęp do społeczności"
-          privacy_options:
-            description: "W jaki sposób użytkownicy rejestrują swoje konta?"
-            choices:
-              open:
-                label: "Użytkownicy mogą rejestrować się samodzielnie."
-              invite_only:
-                label: "Użytkownicy muszą zostać zaproszeni przez zaufanych użytkowników lub członków zespołu, zanim będą mogli się zarejestrować."
-              must_approve:
-                label: "Użytkownicy mogą rejestrować się samodzielnie, ale muszą zostać zaakceptowani przez zespół."
-      contact:
-        title: "Dane kontaktowe"
-        fields:
-          contact_email:
-            label: "E-mail"
-            placeholder: "name@example.com"
-            description: "Adres email osoby lub grupy odpowiedzialnej za tą społeczność. Używany dla krytycznych powiadomień jak na przykład nieobsłużone oflagowania, aktualizację bezpieczeństwa i na <a href='%{base_path}/about' target='_blank'>stronie o Tobie</a> dla szybkiego kontaktu."
-          contact_url:
-            label: "Strona kontaktowa"
-            placeholder: "https://www.example.com/contact-us"
-            description: "Ogólna strona kontaktowa do ciebie i twojej organizacja. Będzie wyświetlane na <a href='%{base_path}/about' target='_blank'>twojej stronie </a>."
-          site_contact:
-            label: "Automatyczne wiadomości"
-            description: "Wszystkie automatyczne wiadomości prywatne Discourse będą wysyłane z tego użytkownika, jak na przykład ostrzeżenia o flagach i powiadomienia ukończenia backupu."
-      corporate:
-        title: "Organizacja"
-        description: "Te informacje zostaną wprowadzone w <a href='%{base_path}/tos' target='blank'>warunkach korzystania z usługi</a>, czyli w temacie, który można edytować w ukrytej kategorii personelu. Jeśli nie masz firmy, możesz na razie pominąć ten krok."
-        fields:
-          company_name:
-            label: "Nazwa firmy"
-            placeholder: "Przykładowa organizacja"
-          governing_law:
-            label: "Obowiązujące prawo"
-            placeholder: "Prawo kalifornijskie"
-          city_for_disputes:
-            label: "Miasto dyskusji"
-            placeholder: "Kalifornia, San Francisco"
+          login_required:
+            placeholder: "Prywatne"
+            extra_description: "Tylko zalogowani użytkownicy mają dostęp do społeczności"
+          invite_only:
+            placeholder: "Tylko zaproszenie"
+            extra_description: "Użytkownicy muszą zostać zaproszeni przez zaufanych użytkowników lub personel, w przeciwnym razie użytkownicy mogą zarejestrować się samodzielnie"
+          must_approve_users:
+            placeholder: "Wymaga zatwierdzenia"
+            extra_description: "Użytkownicy muszą być zatwierdzeni przez personel"
+          chat_enabled:
+            placeholder: "Włącz czat"
+            extra_description: "Współpracuj ze swoimi członkami w czasie rzeczywistym"
+          enable_sidebar:
+            placeholder: "Włącz pasek boczny"
+            extra_description: "Uzyskaj łatwy dostęp do ulubionych przestrzeni"
+      ready:
+        title: "Twoja strona jest gotowa!"
+        description: "Otóż to! Wykonałeś podstawowe czynności związane z utworzeniem swojej społeczności. Teraz możesz wejść i rozejrzeć się, napisać temat powitalny i wysłać zaproszenia!<br><br>Baw się dobrze!"
       styling:
-        title: "Stylizacja"
+        title: "Wygląd i odczucia"
         fields:
           color_scheme:
             label: "Schemat kolorów"
@@ -4634,30 +4467,43 @@ pl_PL:
                 label: "Kategorie z wybranymi tematami"
               categories_and_latest_topics:
                 label: "Kategorie i ostatnie tematy"
+              categories_and_latest_topics_created_date:
+                label: "Kategorie i najnowsze tematy (sortuj według daty utworzenia tematu)"
               categories_and_top_topics:
                 label: "Kategorie i najlepsze tematy"
               categories_boxes:
                 label: "Bloki kategorii"
               categories_boxes_with_topics:
                 label: "Bloki kategorii z tematami"
-      logos:
-        title: "Loga"
+              subcategories_with_featured_topics:
+                label: "Podkategorie z polecanymi tematami"
+      branding:
+        title: "Logo witryny"
         fields:
           logo:
             label: "Podstawowe logo"
-            description: "Obraz logo w lewym górnym rogu witryny. Użyj szerokiego prostokątnego obrazu o wysokości 120 i współczynniku proporcji większym niż 3:1"
+            description: "Zalecany rozmiar: 600 x 200"
           logo_small:
             label: "Kwadratowe logo"
-            description: "Kwadratowa wersja Twojego logo. Wyświetlane w lewym górnym rogu witryny podczas przewijania w dół, w przeglądarce i podczas udostępniania na platformach społecznościowych. Idealna grafika powinna być większa niż 512x512."
-      icons:
-        title: "Ikony"
+      corporate:
+        title: "Twoja organizacja"
         fields:
-          favicon:
-            label: "Ikona przeglądarki"
-            description: "Obraz ikony używany do reprezentowania Twojej witryny w przeglądarkach internetowych, który dobrze wygląda w małych rozmiarach. Zalecane rozszerzenia graficzne to PNG lub JPG. Domyślnie użyjemy kwadratowego logo."
-          large_icon:
-            label: "Duża ikona"
-            description: "Obraz ikony używany do reprezentowania Twojej witryny na nowoczesnych urządzeniach, który dobrze wygląda w większych rozmiarach. Idealnie większy niż 512 × 512. Domyślnie użyjemy kwadratowego logo."
+          company_name:
+            label: "Nazwa firmy"
+          governing_law:
+            label: "Obowiązujące prawo"
+            placeholder: "Prawo kalifornijskie"
+          contact_url:
+            label: "Strona internetowa"
+            placeholder: "https://www.example.com/contact-us"
+          city_for_disputes:
+            placeholder: "Kalifornia, San Francisco"
+          site_contact:
+            label: "Automatyczne wiadomości"
+            description: "Wszystkie automatyczne wiadomości prywatne Discourse będą wysyłane z tego użytkownika, jak na przykład ostrzeżenia o flagach i powiadomienia ukończenia backupu."
+          contact_email:
+            label: "Punkt kontaktu"
+            placeholder: "example@user.com"
       invites:
         title: "Zaproś administrację"
         description: "Już prawie koniec! Teraz zaprośmy trochę ludzi, aby rozwinąć twoją społeczność i pomóc <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>zasiać nowe dyskusje</a> poprzez interesujące tematy i odpowiedzi."
@@ -4816,6 +4662,8 @@ pl_PL:
   notification_level:
     ignore_error: "Przepraszamy, nie możesz zignorować tego użytkownika."
     mute_error: "Przepraszamy, nie możesz wyciszyć tego użytkownika."
+    error: "Przepraszamy, nie możesz zmienić poziomu powiadomień dla tego użytkownika."
+    invalid_value: '„%{value}” nie jest prawidłowym poziomem powiadamiania.'
   discord:
     not_in_allowed_guild: "Uwierzytelnianie nie powiodło się. Nie jesteś członkiem dozwolonej gildii Discord."
   old_keys_reminder:
@@ -4837,6 +4685,9 @@ pl_PL:
     post_raw: "Kontynuacja dyskusji z %{parent_url}.\n\nPoprzednie dyskusje:\n\n%{previous_topics}"
     small_action_post_raw: "Kontynuuj dyskusję na %{new_title}."
   fallback_username: "użytkownik"
+  user_status:
+    errors:
+      ends_at_should_be_greater_than_set_at: "ends_at powinno być większe niż set_at"
   activemodel:
     errors:
       <<: *errors

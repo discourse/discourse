@@ -1,13 +1,9 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
-describe Jobs::DeleteTopic do
+RSpec.describe Jobs::DeleteTopic do
   fab!(:admin) { Fabricate(:admin) }
 
-  fab!(:topic) do
-    Fabricate(:topic_timer, user: admin).topic
-  end
+  fab!(:topic) { Fabricate(:topic_timer, user: admin).topic }
 
   let(:first_post) { create_post(topic: topic) }
 
@@ -20,7 +16,6 @@ describe Jobs::DeleteTopic do
     expect(topic.reload).to be_trashed
     expect(first_post.reload).to be_trashed
     expect(topic.reload.public_topic_timer).to eq(nil)
-
   end
 
   it "should do nothing if topic is already deleted" do
@@ -44,9 +39,7 @@ describe Jobs::DeleteTopic do
   end
 
   describe "user isn't authorized to delete topics" do
-    let(:topic) {
-      Fabricate(:topic_timer, user: Fabricate(:user)).topic
-    }
+    let(:topic) { Fabricate(:topic_timer, user: Fabricate(:user)).topic }
 
     it "shouldn't delete the topic" do
       create_post(topic: topic)
@@ -57,5 +50,4 @@ describe Jobs::DeleteTopic do
       expect(topic.reload).to_not be_trashed
     end
   end
-
 end

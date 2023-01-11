@@ -1,7 +1,8 @@
 import {
   acceptance,
+  count,
   exists,
-  queryAll,
+  query,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -46,6 +47,7 @@ acceptance("Dashboard", function (needs) {
 
   test("general tab", async function (assert) {
     await visit("/admin");
+
     assert.ok(exists(".admin-report.signups"), "signups report");
     assert.ok(exists(".admin-report.posts"), "posts report");
     assert.ok(exists(".admin-report.dau-by-mau"), "dau-by-mau report");
@@ -57,11 +59,10 @@ acceptance("Dashboard", function (needs) {
       exists(".admin-report.new-contributors"),
       "new-contributors report"
     );
-
     assert.strictEqual(
-      $(".section.dashboard-problems .problem-messages ul li:first-child")
-        .html()
-        .trim(),
+      query(
+        ".section.dashboard-problems .problem-messages ul li:first-child"
+      ).innerHTML.trim(),
       "Houston...",
       "displays problems"
     );
@@ -81,16 +82,14 @@ acceptance("Dashboard", function (needs) {
     await click(".dashboard .navigation-item.reports .navigation-link");
 
     assert.strictEqual(
-      queryAll(".dashboard .reports-index.section .reports-list .report")
-        .length,
+      count(".dashboard .reports-index.section .reports-list .report"),
       1
     );
 
     await fillIn(".dashboard .filter-reports-input", "flags");
 
     assert.strictEqual(
-      queryAll(".dashboard .reports-index.section .reports-list .report")
-        .length,
+      count(".dashboard .reports-index.section .reports-list .report"),
       0
     );
 
@@ -98,8 +97,7 @@ acceptance("Dashboard", function (needs) {
     await click(".dashboard .navigation-item.reports .navigation-link");
 
     assert.strictEqual(
-      queryAll(".dashboard .reports-index.section .reports-list .report")
-        .length,
+      count(".dashboard .reports-index.section .reports-list .report"),
       1,
       "navigating back and forth resets filter"
     );
@@ -107,8 +105,7 @@ acceptance("Dashboard", function (needs) {
     await fillIn(".dashboard .filter-reports-input", "activities");
 
     assert.strictEqual(
-      queryAll(".dashboard .reports-index.section .reports-list .report")
-        .length,
+      count(".dashboard .reports-index.section .reports-list .report"),
       1,
       "filter is case insensitive"
     );

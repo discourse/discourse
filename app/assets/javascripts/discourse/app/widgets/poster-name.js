@@ -17,6 +17,23 @@ export function disableNameSuppression() {
 createWidget("poster-name-title", {
   tagName: "span.user-title",
 
+  buildClasses(attrs) {
+    let classNames = [];
+
+    classNames.push(attrs.title);
+
+    if (attrs.titleIsGroup) {
+      classNames.push(attrs.primaryGroupName);
+    }
+
+    classNames = classNames.map(
+      (className) =>
+        `user-title--${className.replace(/\s+/g, "-").toLowerCase()}`
+    );
+
+    return classNames;
+  },
+
   html(attrs) {
     let titleContents = attrs.title;
     if (attrs.primaryGroupName && attrs.titleIsGroup) {
@@ -42,6 +59,20 @@ export default createWidget("poster-name", {
     showGlyph: true,
   },
 
+  didRenderWidget() {
+    if (this.attrs.user) {
+      this.attrs.user.trackStatus();
+      this.attrs.user.on("status-changed", this, "scheduleRerender");
+    }
+  },
+
+  willRerenderWidget() {
+    if (this.attrs.user) {
+      this.attrs.user.off("status-changed", this, "scheduleRerender");
+      this.attrs.user.stopTrackingStatus();
+    }
+  },
+
   // TODO: Allow extensibility
   posterGlyph(attrs) {
     if (attrs.moderator || attrs.groupModerator) {
@@ -58,6 +89,12 @@ export default createWidget("poster-name", {
         attributes: {
           href: attrs.usernameUrl,
           "data-user-card": attrs.username,
+          class: `${
+            this.siteSettings.hide_user_profiles_from_public &&
+            !this.currentUser
+              ? "non-clickable"
+              : ""
+          }`,
         },
       },
       formatUsername(text)
@@ -89,12 +126,9 @@ export default createWidget("poster-name", {
       classNames.push("new-user");
     }
 
-    let afterNameContents =
-      applyDecorators(this, "after-name", attrs, this.state) || [];
-
     const primaryGroupName = attrs.primary_group_name;
     if (primaryGroupName && primaryGroupName.length) {
-      classNames.push(primaryGroupName);
+      classNames.push(`group--${primaryGroupName}`);
     }
     let nameContents = [this.userLink(attrs, nameFirst ? name : username)];
 
@@ -104,6 +138,10 @@ export default createWidget("poster-name", {
         nameContents.push(glyph);
       }
     }
+
+    const afterNameContents =
+      applyDecorators(this, "after-name", attrs, this.state) || [];
+
     nameContents = nameContents.concat(afterNameContents);
 
     const contents = [
@@ -141,6 +179,16 @@ export default createWidget("poster-name", {
       );
     }
 
+    if (this.siteSettings.enable_user_status) {
+      this.addUserStatus(contents, attrs);
+    }
+
     return contents;
+  },
+
+  addUserStatus(contents, attrs) {
+    if (attrs.user && attrs.user.status) {
+      contents.push(this.attach("post-user-status", attrs.user.status));
+    }
   },
 });

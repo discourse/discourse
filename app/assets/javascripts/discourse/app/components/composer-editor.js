@@ -1,8 +1,4 @@
-import {
-  authorizedExtensions,
-  authorizesAllExtensions,
-  authorizesOneOrMoreImageExtensions,
-} from "discourse/lib/uploads";
+import { authorizesOneOrMoreImageExtensions } from "discourse/lib/uploads";
 import { alias } from "@ember/object/computed";
 import { BasePlugin } from "@uppy/core";
 import { resolveAllShortUrls } from "pretty-text/upload-short-url";
@@ -14,6 +10,7 @@ import {
 } from "discourse/lib/utilities";
 import discourseComputed, {
   bind,
+  debounce,
   observes,
   on,
 } from "discourse-common/utils/decorators";
@@ -22,11 +19,15 @@ import {
   linkSeenHashtags,
 } from "discourse/lib/link-hashtags";
 import {
-  cannotSee,
+  fetchUnseenHashtagsInContext,
+  linkSeenHashtagsInContext,
+} from "discourse/lib/hashtag-autocomplete";
+import {
   fetchUnseenMentions,
   linkSeenMentions,
 } from "discourse/lib/link-mentions";
-import { later, next, schedule, throttle } from "@ember/runloop";
+import { next, schedule, throttle } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 import Component from "@ember/component";
 import Composer from "discourse/models/composer";
 import ComposerUploadUppy from "discourse/mixins/composer-upload-uppy";
@@ -52,7 +53,8 @@ import userSearch from "discourse/lib/user-search";
 // Group 3 is optional. group 4 can match images with or without a markdown title.
 // All matches are whitespace tolerant as long it's still valid markdown.
 // If the image is inside a code block, we'll ignore it `(?!(.*`))`.
-const IMAGE_MARKDOWN_REGEX = /!\[(.*?)\|(\d{1,4}x\d{1,4})(,\s*\d{1,3}%)?(.*?)\]\((upload:\/\/.*?)\)(?!(.*`))/g;
+const IMAGE_MARKDOWN_REGEX =
+  /!\[(.*?)\|(\d{1,4}x\d{1,4})(,\s*\d{1,3}%)?(.*?)\]\((upload:\/\/.*?)\)(?!(.*`))/g;
 
 let uploadHandlers = [];
 export function addComposerUploadHandler(extensions, method) {
@@ -103,7 +105,10 @@ export default Component.extend(ComposerUploadUppy, {
   editorClass: ".d-editor",
   fileUploadElementId: "file-uploader",
   mobileFileUploaderId: "mobile-file-upload",
+
+  // TODO (martin) Remove this once the chat plugin is using the new composerEventPrefix
   eventPrefix: "composer",
+  composerEventPrefix: "composer",
   uploadType: "composer",
   uppyId: "composer-editor-uppy",
   composerModel: alias("composer"),
@@ -116,6 +121,12 @@ export default Component.extend(ComposerUploadUppy, {
   uploadMarkdownResolvers,
   uploadPreProcessors,
   uploadHandlers,
+
+  init() {
+    this._super(...arguments);
+    this.warnedCannotSeeMentions = [];
+    this.warnedGroupMentions = [];
+  },
 
   @discourseComputed("composer.requiredCategoryMissing")
   replyPlaceholder(requiredCategoryMissing) {
@@ -180,6 +191,10 @@ export default Component.extend(ComposerUploadUppy, {
           }
         }
       },
+
+      hashtagTypesInPriorityOrder:
+        this.site.hashtag_configurations["topic-composer"],
+      hashtagIcons: this.site.hashtag_icons,
     };
   },
 
@@ -196,24 +211,6 @@ export default Component.extend(ComposerUploadUppy, {
       categoryId,
       includeGroups: true,
     });
-  },
-
-  @discourseComputed()
-  acceptsAllFormats() {
-    return (
-      this.capabilities.isIOS ||
-      authorizesAllExtensions(this.currentUser.staff, this.siteSettings)
-    );
-  },
-
-  @discourseComputed()
-  acceptedFormats() {
-    const extensions = authorizedExtensions(
-      this.currentUser.staff,
-      this.siteSettings
-    );
-
-    return extensions.map((ext) => `.${ext}`).join();
   },
 
   @bind
@@ -477,85 +474,101 @@ export default Component.extend(ComposerUploadUppy, {
   },
 
   _renderUnseenMentions(preview, unseen) {
-    // 'Create a New Topic' scenario is not supported (per conversation with codinghorror)
-    // https://meta.discourse.org/t/taking-another-1-7-release-task/51986/7
-    fetchUnseenMentions(unseen, this.get("composer.topic.id")).then((r) => {
+    fetchUnseenMentions({
+      names: unseen,
+      topicId: this.get("composer.topic.id"),
+      allowedNames: this.get("composer.targetRecipients")?.split(","),
+    }).then((response) => {
       linkSeenMentions(preview, this.siteSettings);
       this._warnMentionedGroups(preview);
       this._warnCannotSeeMention(preview);
-      this._warnHereMention(r.here_count);
+      this._warnHereMention(response.here_count);
     });
   },
 
   _renderUnseenHashtags(preview) {
-    const unseen = linkSeenHashtags(preview);
+    let unseen;
+    const hashtagContext = this.site.hashtag_configurations["topic-composer"];
+    if (this.siteSettings.enable_experimental_hashtag_autocomplete) {
+      unseen = linkSeenHashtagsInContext(hashtagContext, preview);
+    } else {
+      unseen = linkSeenHashtags(preview);
+    }
+
     if (unseen.length > 0) {
-      fetchUnseenHashtags(unseen).then(() => {
-        linkSeenHashtags(preview);
-      });
+      if (this.siteSettings.enable_experimental_hashtag_autocomplete) {
+        fetchUnseenHashtagsInContext(hashtagContext, unseen).then(() => {
+          linkSeenHashtagsInContext(hashtagContext, preview);
+        });
+      } else {
+        fetchUnseenHashtags(unseen).then(() => {
+          linkSeenHashtags(preview);
+        });
+      }
     }
   },
 
+  @debounce(2000)
   _warnMentionedGroups(preview) {
     schedule("afterRender", () => {
-      let found = this.warnedGroupMentions || [];
-      preview?.querySelectorAll(".mention-group.notify")?.forEach((mention) => {
-        if (this._isInQuote(mention)) {
-          return;
-        }
+      preview
+        .querySelectorAll(".mention-group[data-mentionable-user-count]")
+        .forEach((mention) => {
+          const { name } = mention.dataset;
+          if (
+            this.warnedGroupMentions.includes(name) ||
+            this._isInQuote(mention)
+          ) {
+            return;
+          }
 
-        let name = mention.dataset.name;
-        if (found.indexOf(name) === -1) {
-          this.groupsMentioned([
-            {
-              name,
-              user_count: mention.dataset.mentionableUserCount,
-              max_mentions: mention.dataset.maxMentions,
-            },
-          ]);
-          found.push(name);
-        }
-      });
-
-      this.set("warnedGroupMentions", found);
+          this.warnedGroupMentions.push(name);
+          this.groupsMentioned({
+            name,
+            userCount: mention.dataset.mentionableUserCount,
+            maxMentions: mention.dataset.maxMentions,
+          });
+        });
     });
   },
 
+  // add a delay to allow for typing, so you don't open the warning right away
+  // previously we would warn after @bob even if you were about to mention @bob2
+  @debounce(2000)
   _warnCannotSeeMention(preview) {
-    const composerDraftKey = this.get("composer.draftKey");
-
-    if (composerDraftKey === Composer.NEW_PRIVATE_MESSAGE_KEY) {
+    if (this.composer.draftKey === Composer.NEW_PRIVATE_MESSAGE_KEY) {
       return;
     }
 
-    schedule("afterRender", () => {
-      let found = this.warnedCannotSeeMentions || [];
+    preview.querySelectorAll(".mention[data-reason]").forEach((mention) => {
+      const { name } = mention.dataset;
+      if (this.warnedCannotSeeMentions.includes(name)) {
+        return;
+      }
 
-      preview?.querySelectorAll(".mention.cannot-see")?.forEach((mention) => {
-        let name = mention.dataset.name;
-
-        if (found.indexOf(name) === -1) {
-          // add a delay to allow for typing, so you don't open the warning right away
-          // previously we would warn after @bob even if you were about to mention @bob2
-          later(
-            this,
-            () => {
-              if (
-                preview?.querySelectorAll(
-                  `.mention.cannot-see[data-name="${name}"]`
-                )?.length > 0
-              ) {
-                this.cannotSeeMention([{ name, reason: cannotSee[name] }]);
-                found.push(name);
-              }
-            },
-            2000
-          );
-        }
+      this.warnedCannotSeeMentions.push(name);
+      this.cannotSeeMention({
+        name,
+        reason: mention.dataset.reason,
       });
-
-      this.set("warnedCannotSeeMentions", found);
     });
+
+    preview
+      .querySelectorAll(".mention-group[data-reason]")
+      .forEach((mention) => {
+        const { name } = mention.dataset;
+        if (this.warnedCannotSeeMentions.includes(name)) {
+          return;
+        }
+
+        this.warnedCannotSeeMentions.push(name);
+        this.cannotSeeMention({
+          name,
+          reason: mention.dataset.reason,
+          notifiedCount: mention.dataset.notifiedUserCount,
+          isGroup: true,
+        });
+      });
   },
 
   _warnHereMention(hereCount) {
@@ -563,13 +576,7 @@ export default Component.extend(ComposerUploadUppy, {
       return;
     }
 
-    later(
-      this,
-      () => {
-        this.hereMention(hereCount);
-      },
-      2000
-    );
+    this.hereMention(hereCount);
   },
 
   @bind
@@ -584,9 +591,8 @@ export default Component.extend(ComposerUploadUppy, {
     );
 
     const scale = event.target.dataset.scale;
-    const matchingPlaceholder = this.get("composer.reply").match(
-      IMAGE_MARKDOWN_REGEX
-    );
+    const matchingPlaceholder =
+      this.get("composer.reply").match(IMAGE_MARKDOWN_REGEX);
 
     if (matchingPlaceholder) {
       const match = matchingPlaceholder[index];
@@ -612,6 +618,8 @@ export default Component.extend(ComposerUploadUppy, {
 
   resetImageControls(buttonWrapper) {
     const imageResize = buttonWrapper.querySelector(".scale-btn-container");
+    const imageDelete = buttonWrapper.querySelector(".delete-image-button");
+
     const readonlyContainer = buttonWrapper.querySelector(
       ".alt-text-readonly-container"
     );
@@ -620,6 +628,8 @@ export default Component.extend(ComposerUploadUppy, {
     );
 
     imageResize.removeAttribute("hidden");
+    imageDelete.removeAttribute("hidden");
+
     readonlyContainer.removeAttribute("hidden");
     buttonWrapper.removeAttribute("editing");
     editContainer.setAttribute("hidden", "true");
@@ -627,9 +637,8 @@ export default Component.extend(ComposerUploadUppy, {
 
   commitAltText(buttonWrapper) {
     const index = parseInt(buttonWrapper.getAttribute("data-image-index"), 10);
-    const matchingPlaceholder = this.get("composer.reply").match(
-      IMAGE_MARKDOWN_REGEX
-    );
+    const matchingPlaceholder =
+      this.get("composer.reply").match(IMAGE_MARKDOWN_REGEX);
     const match = matchingPlaceholder[index];
     const input = buttonWrapper.querySelector("input.alt-text-input");
     const replacement = match.replace(
@@ -666,6 +675,7 @@ export default Component.extend(ComposerUploadUppy, {
 
     const buttonWrapper = event.target.closest(".button-wrapper");
     const imageResize = buttonWrapper.querySelector(".scale-btn-container");
+    const imageDelete = buttonWrapper.querySelector(".delete-image-button");
 
     const readonlyContainer = buttonWrapper.querySelector(
       ".alt-text-readonly-container"
@@ -679,6 +689,7 @@ export default Component.extend(ComposerUploadUppy, {
 
     buttonWrapper.setAttribute("editing", "true");
     imageResize.setAttribute("hidden", "true");
+    imageDelete.setAttribute("hidden", "true");
     readonlyContainer.setAttribute("hidden", "true");
     editContainerInput.value = altText.textContent;
     editContainer.removeAttribute("hidden");
@@ -706,10 +717,30 @@ export default Component.extend(ComposerUploadUppy, {
     this.resetImageControls(buttonWrapper);
   },
 
+  @bind
+  _handleImageDeleteButtonClick(event) {
+    if (!event.target.classList.contains("delete-image-button")) {
+      return;
+    }
+    const index = parseInt(
+      event.target.closest(".button-wrapper").dataset.imageIndex,
+      10
+    );
+    const matchingPlaceholder =
+      this.get("composer.reply").match(IMAGE_MARKDOWN_REGEX);
+    this.appEvents.trigger(
+      "composer:replace-text",
+      matchingPlaceholder[index],
+      "",
+      { regex: IMAGE_MARKDOWN_REGEX, index }
+    );
+  },
+
   _registerImageAltTextButtonClick(preview) {
     preview.addEventListener("click", this._handleAltTextEditButtonClick);
     preview.addEventListener("click", this._handleAltTextOkButtonClick);
     preview.addEventListener("click", this._handleAltTextCancelButtonClick);
+    preview.addEventListener("click", this._handleImageDeleteButtonClick);
     preview.addEventListener("keypress", this._handleAltTextInputKeypress);
   },
 
@@ -719,7 +750,7 @@ export default Component.extend(ComposerUploadUppy, {
     this.appEvents.trigger("composer:will-close");
     next(() => {
       // need to wait a bit for the "slide down" transition of the composer
-      later(
+      discourseLater(
         () => this.appEvents.trigger("composer:closed"),
         isTesting() ? 0 : 400
       );
@@ -809,7 +840,6 @@ export default Component.extend(ComposerUploadUppy, {
 
     extraButtons(toolbar) {
       toolbar.addButton({
-        tabindex: "0",
         id: "quote",
         group: "fontStyles",
         icon: "far-comment",
@@ -857,8 +887,14 @@ export default Component.extend(ComposerUploadUppy, {
       this._warnMentionedGroups(preview);
       this._warnCannotSeeMention(preview);
 
-      // Paint category and tag hashtags
-      const unseenHashtags = linkSeenHashtags(preview);
+      // Paint category, tag, and other data source hashtags
+      let unseenHashtags;
+      const hashtagContext = this.site.hashtag_configurations["topic-composer"];
+      if (this.siteSettings.enable_experimental_hashtag_autocomplete) {
+        unseenHashtags = linkSeenHashtagsInContext(hashtagContext, preview);
+      } else {
+        unseenHashtags = linkSeenHashtags(preview);
+      }
       if (unseenHashtags.length > 0) {
         discourseDebounce(this, this._renderUnseenHashtags, preview, 450);
       }

@@ -3,7 +3,7 @@
   "properties": {
     "members": {
       "type": "array",
-      "items": [
+      "items":
         {
           "type": "object",
           "additionalProperties": false,
@@ -54,11 +54,10 @@
             "timezone"
           ]
         }
-      ]
     },
     "owners": {
       "type": "array",
-      "items": [
+      "items":
         {
           "type": "object",
           "additionalProperties": false,
@@ -109,7 +108,6 @@
             "timezone"
           ]
         }
-      ]
     },
     "meta": {
       "type": "object",

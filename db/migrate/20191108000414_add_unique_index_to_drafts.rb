@@ -2,7 +2,6 @@
 
 class AddUniqueIndexToDrafts < ActiveRecord::Migration[6.0]
   def up
-
     execute <<~SQL
       DELETE FROM drafts d1
       USING (
@@ -17,8 +16,8 @@ class AddUniqueIndexToDrafts < ActiveRecord::Migration[6.0]
         d1.id <> d2.id
     SQL
 
-    remove_index :drafts, [:user_id, :draft_key]
-    add_index :drafts, [:user_id, :draft_key], unique: true
+    remove_index :drafts, %i[user_id draft_key]
+    add_index :drafts, %i[user_id draft_key], unique: true
   end
 
   def down

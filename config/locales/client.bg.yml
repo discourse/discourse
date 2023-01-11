@@ -120,55 +120,52 @@ bg:
       to_placeholder: "до дата"
     share:
       topic_html: 'Тема: <span class="topic-title">%{topicTitle}</span>'
-      post: "публикации #%{postNumber}"
       close: "затвори"
       twitter: "Споделете в Twitter"
       facebook: "Споделете във Facebook"
       email: "Изпратете чрез имейл"
       url: "Копирайте и споделете линка"
     action_codes:
-      public_topic: "направи тази тема публична на %{when}"
-      private_topic: "направи тази тема персонално съобщение%{when}"
-      split_topic: "раздели тази тема %{when}"
-      invited_user: "покани %{who} %{when}"
-      invited_group: "покани %{who} на %{when}"
+      public_topic: "Направи тази тема публична на %{when}"
+      private_topic: "Направи тази тема персонално съобщение%{when}"
+      split_topic: "Раздели тази тема %{when}"
+      invited_user: "Покани %{who} на %{when}"
+      invited_group: "Покани %{who} на %{when}"
       user_left: "%{who}напусна чата %{when}"
-      removed_user: "изтри %{who} %{when}"
-      removed_group: "изтри %{who} на %{when}"
-      autobumped: "автоматично вдигната %{when}"
+      removed_user: "Изтри %{who} на %{when}"
+      removed_group: "Изтри %{who} на %{when}"
+      autobumped: "Автоматично вдигната %{when}"
       autoclosed:
-        enabled: "затворена %{when}"
-        disabled: "отворена %{when}"
+        enabled: "Затворена %{when}"
+        disabled: "Отворена %{when}"
       closed:
-        enabled: "затворена %{when}"
-        disabled: "отворена %{when}"
+        enabled: "Затворена %{when}"
+        disabled: "Отворена %{when}"
       archived:
-        enabled: "архивирана %{when}"
-        disabled: "разархивирана %{when}"
+        enabled: "Архивирана %{when}"
+        disabled: "Разархивирана %{when}"
       pinned:
-        enabled: "закована %{when}"
-        disabled: "откована %{when}"
+        enabled: "Закована %{when}"
+        disabled: "Откована %{when}"
       pinned_globally:
-        enabled: "закована глобално %{when}"
-        disabled: "откована %{when}"
+        enabled: "Закована глобално %{when}"
+        disabled: "Откована %{when}"
       visible:
-        enabled: "добавена в списъка %{when}"
-        disabled: "премахната от списъка %{when}"
+        enabled: "Добавена в списъка %{when}"
+        disabled: "Премахната от списъка %{when}"
       banner:
-        enabled: "направи темата банер на %{when}. Тя ще се появява най-отгоре на всяка страница докато не бъде премахната от потребителя. "
+        enabled: "Направи темата банер на %{when}. Тя ще се появява най-отгоре на всяка страница докато не бъде премахната от потребителя. "
         disabled: "Тази тема вече не е банер %{when} . Тя няма да се показва най-отгоре на всяка страница."
-      forwarded: "препрати горния имейл"
     topic_admin_menu: "действия по темата"
     skip_to_main_content: "Прескачане към основното съдържание"
-    wizard_required: "Добре дошли във вашия нов Discourse! Нека започнем с <a href='%{url}' data-auto-route='true'>съветника за настройка</a> ✨"
     emails_are_disabled: "Всички изходящи имейли са изцяло забранени от администратора. Няма да бъдат изпращани никакви имейл известия."
     software_update_prompt:
       message: "Актуализирахме този сайт, <span>моля, презаредете</span>, или може да изпитате неочаквано поведение."
       dismiss: "Отмени"
     bootstrap_mode_disabled: "Режимът на стартиране ще бъде изключен в следващите 24 часа. "
+    bootstrap_invite_button_title: "Изпрати поканите"
     themes:
       default_description: "По подразбиране"
-      broken_theme_alert: "Вашият уебсайт може да не работи, защото в тема / компонент %{theme} има грешки. Изключете я тук %{path}."
     s3:
       regions:
         ap_northeast_1: "Азия (Токио)"
@@ -199,7 +196,10 @@ bg:
     not_implemented: "Тази функционалност все още не е добавена."
     no_value: "Не"
     yes_value: "Да"
+    ok_value: "Ок"
+    cancel_value: "Прекрати"
     submit: "Изпрати"
+    delete: "Изтрий"
     generic_error: "Съжаляваме, възникна грешка."
     generic_error_with_reason: "Грешка: %{error}"
     sign_up: "Регистрация"
@@ -222,7 +222,6 @@ bg:
     conduct: "Правила за поведение"
     mobile_view: "Мобилен изглед"
     desktop_view: "Десктоп изглед"
-    or: "или"
     now: "преди малко"
     read_more: "прочетете повече"
     more: "Повече"
@@ -260,7 +259,6 @@ bg:
       like_count: "Харесвания"
       topic_count: "Теми"
       post_count: "Публикации"
-      user_count: "Потребители"
       active_user_count: "Активни потребители"
       contact: "Свържете се с нас"
       contact_info: "В случай на критичен или спешен въпрос засягащ този сайт, моля свържете се с нас на адрес %{contact_email}."
@@ -276,10 +274,10 @@ bg:
         unbookmark_with_reminder: "Щракнете, за да премахнете всички отметки и напомняния в тази тема."
     bookmarks:
       created: "Отбелязахте тази публикация. %{name}"
+      edit: "Редактиране на отметката"
       not_bookmarked: "добавете тази публикация в Отметки"
       remove_reminder_keep_bookmark: "Премахнете напомнянето и запазете отметката"
       created_with_reminder: "Отбелязахте тази публикация с напомняне %{date}. %{name}"
-      remove: "Премахнете отметката"
       delete: "Изтрийте отметката"
       confirm_delete: "Наистина ли искате да изтриете тази отметка? Напомнянето, свързано с нея, също ще бъде отменено."
       confirm_clear: "Наистина ли искате да премахните всичките отметки от тази тема?"
@@ -289,10 +287,7 @@ bg:
       list_permission_denied: "Нямате право да преглеждате отметките на този потребител."
       no_user_bookmarks: "Нямате отбелязани публикации; отметките ви позволяват бързо да препращате към конкретни публикации."
       auto_delete_preference:
-        label: "Автоматично изтриване"
-        never: "Никога"
-        when_reminder_sent: "След като напомнянето е изпратено"
-        on_owner_reply: "След като отговоря на тази тема"
+        when_reminder_sent: "Изтриване на отметка"
       search_placeholder: "Търсете отметки по име, заглавие на тема или съдържание на публикация"
       search: "Търсене"
       reminders:
@@ -310,7 +305,6 @@ bg:
       remove_confirmation: "Сигурни ли сте, че искате да изтриете тази чернова?"
       new_topic: "Проект на нова тема"
       new_private_message: "Нова чернова на лично съобщение"
-      topic_reply: "Проект на отговор"
       abandon:
         confirm: "Имате чернова за тази тема. Какво бихте искали да направите с нея?"
         yes_value: "Отхвърляне"
@@ -346,14 +340,10 @@ bg:
     enable: "Позволи"
     disable: "Деактивиране"
     continue: "Напред"
-    undo: "Отмени"
-    revert: "Върни"
-    failed: "Провалени"
     switch_to_anon: "Влез в Анонимен режим. "
     switch_from_anon: "Излез от Анонимен режим."
     banner:
-      close: "Премахнете банера"
-      edit: "Редактирай този банер >>"
+      edit: "Редактирай"
     pwa:
       install_banner: "Искате ли <a href>да инсталирате %{title} на това устройство?</a>"
     choose_topic:
@@ -538,6 +528,7 @@ bg:
         other: "дни "
       relative: "Относителна"
     time_shortcut:
+      now: "Сега"
       later_today: "По-късно днес"
       next_business_day: "Следващия работен ден"
       tomorrow: "Утре"
@@ -546,13 +537,21 @@ bg:
       this_weekend: "Този уикенд"
       start_of_next_business_week: "Понеделник"
       start_of_next_business_week_alt: "Следващия понеделник"
+      next_week: "Следваща седмица"
       two_weeks: "Две седмици"
       next_month: "Следващия месец"
+      two_months: "Два месеца"
+      three_months: "Три месеца"
+      four_months: "Четири месеца"
       six_months: "Шест месеца"
-      custom: "Друга дата и час"
+      one_year: "Една година"
+      forever: "Завинаги"
       relative: "Относително време"
       none: "Няма нужда"
+      never: "Никога"
       last_custom: "Последна персонализирана дата и час"
+      custom: "Друга дата и час"
+      select_timeframe: "Избери времева рамка"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> публикува <a href='%{topicUrl}'>тази тема</a>"
       you_posted_topic: "<a href='%{userUrl}'>Вие</a> публикувахте <a href='%{topicUrl}'>тази тема</a>"
@@ -621,6 +620,7 @@ bg:
         denied: "отказан"
         undone: "заявката е отменена"
         handle: "обработва заявка за членство"
+        undo: "Отмени"
       manage:
         title: "Управление"
         name: "Име"
@@ -942,7 +942,6 @@ bg:
       notification_schedule:
         title: "График за уведомяване"
         label: "Активирайте персонализиран график за известия"
-        tip: "Извън тези часове автоматично ще бъдете въведени в режим „Не безпокойте“."
         midnight: "Полунощ"
         none: "Без"
         monday: "Понеделник"
@@ -986,7 +985,6 @@ bg:
         perm_denied_expl: "Вие сте забранили известията. Моля разрешете ги чрез настройките на браузъра си."
         disable: "Деактивиране на Известията"
         enable: "Активиране на Известията"
-        each_browser_note: 'Забележка: Трябва да промените тази настройка на всеки браузър, който използвате. Всички известия ще бъдат деактивирани, когато сте в „не безпокойте“, независимо от тази настройка.'
         consent_prompt: "Искате ли известявания в реално време, когато хората отговарят на вашите публикации?"
       dismiss: "Отмени"
       dismiss_notifications: "Отмени всички"
@@ -1004,13 +1002,9 @@ bg:
       no_notifications_page_title: "Все още нямате известия"
       no_notifications_page_body: >
         Ще бъдете уведомени за дейност, пряко свързана с вас, включително отговори на вашите теми и публикации, когато някой <b>@спомене</b> или ви цитира, и отговори на теми, които гледате. Известия също ще бъдат изпращани на вашия имейл, когато не сте влизали известно време. <br><br> Потърсете %{icon} да решите за кои конкретни теми, категории и тагове искате да получавате известия. За повече информация вижте вашите <a href='%{preferencesUrl}'>предпочитания за уведомяване</a>.
-      first_notification: "Вашето първо известие! Изберете го за да започнете."
       dynamic_favicon: "Показване на броя на иконата на браузъра"
       skip_new_user_tips:
         description: "Пропуснете съвети и значки за въвеждане на нови потребители"
-        not_first_time: "Не ти ли е за първи път?"
-        skip_link: "Пропуснете тези съвети"
-        read_later: "Ще го прочета по-късно."
       theme_default_on_all_devices: "Направи тази тема стандарт на всичките ми устройства"
       color_scheme_default_on_all_devices: "Задаване на цветова схема(и) по подразбиране на всички мои устройства"
       color_scheme: "Цветова схема"
@@ -1029,6 +1023,9 @@ bg:
       external_links_in_new_tab: "Отваряй всички външни връзки в нов раздел."
       enable_quoting: "Включи отговор с цитат при маркиран текст."
       enable_defer: "Активирайте отлагане, за да маркирате темите като непрочетени"
+      experimental_sidebar:
+        options: "Опции"
+        navigation_section: "Навигация"
       change: "промени"
       featured_topic: "Представена тема"
       moderator: "%{user} е модератор"
@@ -1070,7 +1067,7 @@ bg:
       muted_categories: "Заглушен"
       muted_categories_instructions: "Няма да получавате известия за нови теми в тези категории и те няма да се показват в категориите или най-новите страници."
       muted_categories_instructions_dont_hide: "Няма да получавате известия за нови теми в тези категории."
-      regular_categories: "Редовен"
+      regular_categories: "Нормален"
       regular_categories_instructions: "Ще видите тези категории в списъците с теми „Последни“ и „Топ“."
       no_category_access: "Като модератор имате ограничен достъп до категориите, запазването е изключено."
       delete_account: "Изтрий моя профил"
@@ -1125,17 +1122,17 @@ bg:
         move_to_archive: "Архив"
         failed_to_move: "Грешка при преместването на съобщенията (може би интернета ви спря?)"
         tags: "Етикети"
+        all_tags: "Всички тагове"
         warnings: "Официални предупреждения"
         read_more_in_group: "Искате ли да прочетете повече? Разгледайте други съобщения в %{groupLink}."
         read_more: "Искате ли да прочетете повече? Разгледайте други съобщения в <a href='%{basePath}/u/%{username}/messages'>лични съобщения</a>."
-        read_more_group_pm_MF: "Има{ UNREAD, plural, =0 {} one { е <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># непрочетено</a> } other { са <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># непрочетени</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{и } false {е } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># ново</a> съобщение} other { {BOTH, select, true{и } false {са } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># нови</a> съобщения} } оставащи, или прегледайте други съобщения в {groupLink}"
-        read_more_personal_pm_MF: "Има { UNREAD, plural, =0 {} one { е <a href='{basePath}/u/{username}/messages/unread'># непрочетено</a> } other { са <a href='{basePath}/u/{username}/messages/unread'># непрочетени</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{и } false {е } other{}} <a href='{basePath}/u/{username}/messages/new'># ново</a> съобщение} other { {BOTH, select, true{и } false {са } other{}} <a href='{basePath}/u/{username}/messages/new'># нови</a> съобщения} } оставащи, или прегледайте други <a href='{basePath}/u/{username}/messages'>лични съобщения</a>"
       preferences_nav:
         account: "Профил"
         security: "Сигурност"
         profile: "Профил"
         emails: "Имейли"
         notifications: "Известия"
+        tracking: "Следене"
         categories: "Категории"
         users: "Потребители"
         tags: "Етикети"
@@ -1192,13 +1189,11 @@ bg:
         use: "Използвайте приложението за удостоверяване"
         enforced_notice: "От вас се изисква да активирате двуфакторна автентификация, преди да влезете в този сайт."
         disable: "Деактивиране"
-        disable_confirm: "Наистина ли искате да деактивирате всички двуфакторни методи?"
+        delete: "Изтрий"
         save: "Запази"
         edit: "Редактирай"
         edit_title: "Редактиране на Authenticator"
         edit_description: "Име на Authenticator"
-        enable_security_key_description: |
-          Когато сте <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">хардуерен ключ за сигурност</a> , натиснете бутона Регистриране по-долу.
         totp:
           title: "Authenticator, базиран на токени"
           add: "Добавете Authenticator"
@@ -1206,14 +1201,10 @@ bg:
           name_and_code_required_error: "Трябва да предоставите име и кода от вашето приложение за удостоверяване."
         security_key:
           register: "Регистриране"
-          title: "Ключове за сигурност"
-          add: "Добавете ключ за сигурност"
           default_name: "Основен ключ за сигурност"
           not_allowed_error: "Процесът на регистрация на ключ за сигурност или е изтекъл, или е бил анулиран."
           already_added_error: "Вече сте регистрирали този ключ за сигурност. Не е нужно да го регистрирате отново."
-          edit: "Редактиране на ключа за сигурност"
           save: "Запази"
-          edit_description: "Име на ключа за сигурност"
           name_required_error: "Трябва да посочите име за вашия ключ за сигурност."
       change_about:
         title: "Смяна на За мен"
@@ -1277,7 +1268,6 @@ bg:
         authenticated: "Вашият имейл беше потвърден от %{provider}."
         invite_auth_email_invalid: "Вашият имейл с покана не съвпада с имейла, удостоверен с %{provider}"
         authenticated_by_invite: "Вашият имейл е удостоверен от поканата"
-        frequency_immediately: "Ще ви изпратим мейл веднага, ако не сте прочели поста за който сме ви писали."
         frequency:
           one: "Ние ще ви изпратим имейл само ако не сме ви виждали през последната минута."
           other: "Ние ще ви изпратим имейл само ако не сме ви виждали през последните %{count} минути."
@@ -1384,6 +1374,7 @@ bg:
       email_in_reply_to: "Включи откъс от отговора на поста в мейлите"
       other_settings: "Други"
       categories_settings: "Категории"
+      topics_settings: "Теми"
       new_topic_duration:
         label: "Отбелязване на темите като нови, когато"
         not_viewed: "Аз все още не съм ги видял"
@@ -1520,6 +1511,8 @@ bg:
         sent_by: "Изпратено от"
         private_message: "Съобщение"
         the_topic: "темата"
+    user_status:
+      save: "Запази"
     loading: "Зарежда се..."
     errors:
       prev_page: "докато се зареждаше"
@@ -1552,11 +1545,13 @@ bg:
       login_disabled: "Влизането е изключено, докато страницата е в режим само за четене."
       logout_disabled: "Излизане от сайта е временно спряно, докато е пуснат режим \"само за четене\"."
     logs_error_rate_notice:
-      reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# грешка/минута} other {# грешки/минута}}</a> достигна ограничението за настройка на сайта от {limit, plural, one {# грешка/минута} other {# грешки/минута}}."
-      exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# грешка/час} other {# грешки/час}}</a> превиши лимита за настройка на сайта от {limit, plural, one {# грешка/час} other {# грешки/час}}."
-      exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# грешка/минута} other {# грешки/минута}}</a> превиши лимита за настройка на сайта от {limit, plural, one {# грешка/минута} other {# грешки/минута}}."
+      reached_minute_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# грешка/минута} other {# грешки/минута}}</a> достигна ограничението за настройка на сайта от {limit, plural, one {# грешка/минута} other {# грешки/минута}}.
+      exceeded_hour_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# грешка/час} other {# грешки/час}}</a> превиши лимита за настройка на сайта от {limit, plural, one {# грешка/час} other {# грешки/час}}.
+      exceeded_minute_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# грешка/минута} other {# грешки/минута}}</a> превиши лимита за настройка на сайта от {limit, plural, one {# грешка/минута} other {# грешки/минута}}.
     learn_more: "научете повече..."
-    first_post: Първа публикация
     mute: Заглушаване
     unmute: Премахване на заглушаване
     last_post: Публикувано
@@ -1571,14 +1566,13 @@ bg:
       other: отговори
     signup_cta:
       sign_up: "Регистрирай се"
-      hide_session: "Напомни ми утре"
       hide_forever: "не благодаря"
       hidden_for_session: "Добре, ще те попитаме утре. Винаги можете да използвате „Вход“ и за създаване на акаунт."
       intro: "Здравейте! Изглежда, че следите дискусията, но все още не сте създали собствен профил."
-      value_prop: "Когато създадете профил, ще отбелязваме това, което сте чели, така че да можете да продължите от там, откъдето сте спрели. Можете също така да получавате известия тук и по електронната поща, когато има нови мнения. Също така ще може да маркирате любимите си публикации."
     summary:
       enabled_description: "В момента гледате резюме на тази тема: най-интересните публикации определени от общността."
-      description_time_MF: "Има{replyCount, plural, one {<b>#</b> reply} other { <b>#</b> отговора}} с очаквано време за четене <b>{readingTime, plural, one {# минута} other {# минути}}</b>."
+      description_time_MF: |
+        Има{replyCount, plural, one {<b>#</b> reply} other { <b>#</b> отговора}} с очаквано време за четене <b>{readingTime, plural, one {# минута} other {# минути}}</b>.
       enable: "Обобщи Тази Тема"
       disable: "Покажи всички публикации"
       short_label: "Обобщаване"
@@ -1597,6 +1591,8 @@ bg:
       leave_message: "Сигурни ли сте, че искате да оставите това съобщение?"
       remove_allowed_user: "Сигурни ли сте, че искате да премахнете %{name} от това съобщение?"
       remove_allowed_group: "Сигурни ли сте, че искате да премахнете %{name} от това съобщение?"
+      leave: "Напусни"
+      remove_user: "Премахни потребител"
     email: "Имейл"
     username: "Потребителско име"
     last_seen: "Видяно"
@@ -1645,13 +1641,13 @@ bg:
       title: "Вход"
       username: "Потребител"
       password: "Парола"
+      show_password: "Покажи"
       second_factor_title: "Двуфакторна автентификация"
       second_factor_description: "Моля, въведете кода за удостоверяване от вашето приложение:"
       second_factor_backup: "Влезте с помощта на резервен код"
       second_factor_backup_title: "Двуфакторно резервно копие"
       second_factor_backup_description: "Моля, въведете един от вашите резервни кодове:"
       second_factor: "Влезте с помощта на приложението Authenticator"
-      security_key_description: "Когато сте подготвили вашия физически ключ за сигурност, натиснете бутона Удостоверяване с ключ за сигурност по-долу."
       security_key_alternative: "Опитайте друг начин"
       security_key_authenticate: "Удостоверяване с ключ за сигурност"
       security_key_not_allowed_error: "Процесът на удостоверяване на ключа за сигурност или изтече, или беше анулиран."
@@ -1687,28 +1683,16 @@ bg:
       not_approved: "Вашият профил все още не е одобрен. Ще бъдете уведомени с имейл, когато е възможно влизането Ви. "
       google_oauth2:
         name: "Google"
-        title: "с Google"
-        sr_title: "Влезте с Google"
       twitter:
         name: "Twitter"
-        title: "с Twitter"
-        sr_title: "Влезте с Twitter"
       instagram:
         name: "Instagram"
-        title: "чрез Instagram"
-        sr_title: "Влезте с Instagram"
       facebook:
         name: "Facebook"
-        title: "със Facebook"
-        sr_title: "Влезте с Facebook"
       github:
         name: "GitHub"
-        title: " с Github"
-        sr_title: "Влезте с GitHub"
       discord:
         name: "Discord"
-        title: "с Discord"
-        sr_title: "Влезте с Discord"
       second_factor_toggle:
         totp: "Вместо това използвайте приложение за удостоверяване"
         backup_code: "Вместо това използвайте резервен код"
@@ -1723,7 +1707,6 @@ bg:
       success: "Профилът ви е създаден и вече сте влезли в него."
       name_label: "Име"
       password_label: "Парола"
-      optional_description: "(по избор)"
     password_reset:
       continue: "Продължете към %{site_name}"
     emoji_set:
@@ -1775,9 +1758,6 @@ bg:
       min_content_not_reached:
         one: "Изберете поне %{count} елемент."
         other: "Изберете поне %{count} елемента."
-      invalid_selection_length:
-        one: "Изборът трябва да съдържа поне %{count} знак."
-        other: "Изборът трябва да съдържа поне %{count} знака."
       components:
         tag_drop:
           filter_for_more: Филтрирайте за повече...
@@ -1848,7 +1828,6 @@ bg:
       create_shared_draft: "Създаване на споделена чернова"
       edit_shared_draft: "Редактиране на споделена чернова"
       title: "Или натиснете %{modifier}Enter"
-      users_placeholder: "Добави потребител"
       title_placeholder: "За какво става дума в дискусията с едно изречение?"
       title_or_link_placeholder: "Напишете заглавие или поставете линк тук"
       edit_reason_placeholder: "защо редактирате ?"
@@ -1918,9 +1897,6 @@ bg:
         reply_as_new_group_message:
           label: Отговорете като ново групово съобщение
           desc: Създайте ново съобщение, започващо със същите получатели
-        reply_as_private_message:
-          label: Ново съобщение
-          desc: Създайте ново лично съобщение
         reply_to_topic:
           label: Отговорете на тема
           desc: Отговорете на темата, а не на конкретен пост
@@ -1934,6 +1910,7 @@ bg:
       none: "В момента не могат да бъдат заредени уведомленията."
       empty: "Няма намерени нотификации."
       reviewable_items: "точки, изискващи преглед"
+      watching_first_post_label: "Нова тема"
       dismiss_confirmation:
         dismiss: "Отмени"
         cancel: "Отмени"
@@ -1952,6 +1929,7 @@ bg:
         invited_to_private_message: "поканени на лично съобщение"
         invitee_accepted: "поканата е приета"
         posted: "нова публикация"
+        watching_category_or_tag: "нова публикация"
         moved_post: "постът е преместен"
         linked: "свързани"
         bookmark_reminder: "напомняне за отметка"
@@ -1990,6 +1968,7 @@ bg:
         other: "<span>%{count}%{plus} резултата за</span><span class='term'>%{term}</span>"
       title: "Търсене"
       full_page_title: "Търсене"
+      results: "резултати"
       no_results: "Няма резултати "
       no_more_results: "Не са намерени резултати."
       post_format: "#%{post_number} от %{username} "
@@ -2024,7 +2003,7 @@ bg:
       tips:
         category_tag: "филтри по категория или таг"
         author: "филтри по автор на публикацията"
-        in: "филтри по метаданни (напр. в:заглавие, в:лично, в:закрепено)"
+        in: "филтри по метаданни (напр. in:title, in:personal, in:pinned)"
         status: "филтри по статус на темата"
         full_search: "стартира търсене в цялата страница"
         full_search_key: "%{modifier} + Enter"
@@ -2066,13 +2045,20 @@ bg:
     go_back: "Назад "
     not_logged_in_user: "Потребителска страница с история на текущата дейност и предпочитания"
     current_user: "Отиди към потребителската страница "
+    user_menu:
+      tabs:
+        replies: "Отговори"
+        mentions: "Споменавания"
+        likes: "Дадени харесвания"
+        bookmarks: "Отметки"
+        profile: "Профил"
     topics:
       new_messages_marker: "последно посещение"
       bulk:
         select_all: "Селектирай всички"
         clear_all: "Изчисти всички"
         unlist_topics: "Непоказани теми"
-        reset_read: "Изчисти прочетеното "
+        defer: "Отложи "
         delete: "Изтрий темите"
         dismiss: "Отмени"
         dismiss_read: "Отхвърли всички непрочетени"
@@ -2123,8 +2109,6 @@ bg:
       move_to_inbox:
         title: "Премести във входящи"
         help: "Премести съобщението обратно във входящи"
-      edit_message:
-        title: "Редактирай"
       defer:
         title: "Отложи "
       list: "Теми"
@@ -2156,10 +2140,6 @@ bg:
       back_to_list: "Назад към Списъка с теми"
       options: "Настройки на темата"
       show_links: "покажи връзките в тази тема"
-      read_more_in_category: "Искате да прочетете повече ? Разгледайте други теми в %{catLink} или %{latestLink}."
-      read_more: "Искате да прочетете повече ? %{catLink} или %{latestLink}."
-      browse_all_categories: Прегледай всички категории
-      view_latest_topics: виж последните теми
       jump_reply_up: към по ранен отговор
       jump_reply_down: към по-късен отговор
       deleted: "Темата беше изтрита"
@@ -2200,24 +2180,6 @@ bg:
         min_duration: "Продължителността трябва да е по-голяма от 0"
         max_duration: "Продължителността трябва да бъде по-малка от 20 години"
         duration: "Продължителност"
-      auto_update_input:
-        none: "Избери времева рамка"
-        now: "Сега"
-        later_today: "По-късно днес"
-        tomorrow: "Утре"
-        later_this_week: "По-късно тази седмица"
-        this_weekend: "Този уикенд"
-        next_week: "Следваща седмица"
-        two_weeks: "Две седмици"
-        next_month: "Следващия месец"
-        two_months: "Два месеца"
-        three_months: "Три месеца"
-        four_months: "Четири месеца"
-        six_months: "Шест месеца"
-        one_year: "Една година"
-        forever: "Завинаги"
-        pick_date_and_time: "Изберете дата и час"
-        set_based_on_last_post: "Затваряне въз основа на последната публикация"
       publish_to_category:
         title: "График за публикуване"
       temp_open:
@@ -2302,8 +2264,6 @@ bg:
         unpin: "Откови темата..."
         unarchive: "Разархивирай темата"
         archive: "Архивирай темата"
-        invisible: "Премахни от списъците"
-        visible: "Включи в списъците"
         reset_read: "Изчисти прочетените данни "
       feature:
         pin: "Закови темата"
@@ -2314,7 +2274,6 @@ bg:
         title: "Отговорете"
         help: "започнете да пишете отговор на тази тема"
       share:
-        title: "Споделяне"
         extended_title: "Сподели линк"
         help: "споделете връзка към тази тема"
         invite_users: "Покана"
@@ -2607,7 +2566,6 @@ bg:
             button: "HTML"
       bookmarks:
         edit: "Редактиране на отметката"
-        created: "Създадени"
         name: "Име"
         name_placeholder: "За какво е тази отметка?"
         set_reminder: "Напомни ми"
@@ -2628,6 +2586,8 @@ bg:
       topic_template: "Шаблон на темата"
       tags: "Етикети"
       tags_placeholder: "(По желание) списък на позволените етикети"
+      required_tag_group:
+        delete: "Изтрий"
       topic_featured_link_allowed: "Разрешаване на включени връзки в тази категория"
       delete: "Изтрий категорията"
       create: "Нова категория"
@@ -2675,8 +2635,6 @@ bg:
       review_group_name: "име на групата"
       this_year: "тази година "
       default_position: "Позиция по подразбиране "
-      position_disabled: "Категорията ще се показва в ред на активност. За да контролирате реда на категориите в списъците, "
-      position_disabled_click: 'Разреши "fixed category positions" настройка '
       minimum_required_tags: "Минимален брой етикети на тема"
       parent: "Главна категория"
       notifications:
@@ -2793,7 +2751,6 @@ bg:
       one: "потребител"
       other: "потребители"
     category_title: "Категория"
-    changed_by: "от %{author}"
     raw_email:
       title: "Входяща поща"
       not_available: "Не е наличен!"
@@ -2870,6 +2827,7 @@ bg:
       full: "Създай / Отговори / Виж"
       create_post: "Отговари / Виж"
       readonly: "Виж"
+    preloader_text: "Зареждане"
     lightbox:
       download: "изтегли"
       previous: "Назад (стрелка наляво)"
@@ -2924,7 +2882,6 @@ bg:
         edit: "%{shortcut} Редакция"
         delete: "%{shortcut} Изтриване"
         mark_muted: "%{shortcut} Заглушете темата"
-        mark_regular: "%{shortcut} Номална (стандартна) тема"
         mark_tracking: "%{shortcut} Следете темата"
         mark_watching: "%{shortcut} Наблюдаване на темата"
     badges:
@@ -2949,7 +2906,6 @@ bg:
     download_calendar:
       download: "Изтегли"
     tagging:
-      all_tags: "Всички тагове"
       other_tags: "Други тагове"
       selector_all_tags: "всички тагове"
       selector_no_tags: "няма тагове"
@@ -2963,7 +2919,6 @@ bg:
       sort_by_count: "брой"
       sort_by_name: "име"
       manage_groups_description: "Дефинирай групи за организране на етикетите"
-      cancel_delete_unused: "Отмени"
       filters:
         without_category: "%{filter} %{tag} теми"
       notifications:
@@ -2976,7 +2931,7 @@ bg:
           title: "Следене"
           description: "Автоматично ще следите всички теми с този етикет. Броя на непрочетените и новите публикации ще се появява до темата."
         regular:
-          title: "Редовен"
+          title: "Нормален"
           description: "Ще бъдете уведомен, ако някой спомене вашето @име или отговори на Ваша публикация."
         muted:
           title: "Заглушен"
@@ -3004,8 +2959,11 @@ bg:
       back: "Назад"
       share: "Споделяне"
       dismiss: "Отмени"
-    do_not_disturb:
+    pause_notifications:
       options:
+        half_hour: "30 минути"
+        one_hour: "1 час"
+        two_hours: "2 часа"
         custom: "По избор"
     trust_levels:
       names:
@@ -3014,6 +2972,51 @@ bg:
         member: "потребител"
         regular: "редовен"
         leader: "лидер"
+    sidebar:
+      unread_count:
+        one: "%{count} непрочетен"
+        other: "%{count} непрочетени"
+      new_count:
+        one: "%{count} нов"
+        other: "%{count} нови"
+      more: "Повече"
+      all_categories: "Всички категории"
+      sections:
+        about:
+          header_link_text: "Относно"
+        messages:
+          header_link_text: "Съобщения"
+          links:
+            inbox: "Кутия"
+            sent: "Изпратени"
+            new: "Нов"
+            new_with_count: "Нов (%{count})"
+            unread: "Непрочетени"
+            unread_with_count: "Непрочетен (%{count})"
+            archive: "Архив"
+        tags:
+          header_link_text: "Тагове"
+        categories:
+          header_link_text: "Категории"
+        community:
+          header_link_text: "Общност "
+          links:
+            about:
+              content: "Относно"
+            admin:
+              content: "Администратор"
+            badges:
+              content: "Значки"
+            faq:
+              content: "FAQ"
+            groups:
+              content: "Групи"
+            users:
+              content: "Потребители"
+            my_posts:
+              content: "Моите публикации"
+            review:
+              content: "Преглед"
   admin_js:
     type_to_filter: "филтрирай..."
     admin:
@@ -3096,7 +3099,6 @@ bg:
         about: "Редактирайте членството в групата и имената. "
         group_members: "Членове на групата"
         delete: "Изтрий"
-        delete_confirm: "Изтрий тази група?"
         delete_failed: "Не можете да изтриете група. Ако това е автоматична група, тя не може да бъде премахната."
         delete_owner_confirm: "Махни шефските права на '%{username}'?"
         add: "Добави "
@@ -3120,9 +3122,8 @@ bg:
         scopes:
           action: Действие
       web_hooks:
+        edit: "Редактирай"
         save: "Запази"
-        destroy: "Изтрий"
-        description: "Описание"
         active: "Активни"
         post_event:
           details: "Когато има нов отговор, редакция, изтриване или възстановяване."
@@ -3212,7 +3213,6 @@ bg:
         button_title: "Изпрати поканите"
       customize:
         title: "Персонализация"
-        long_title: "Персонализация на сайта"
         preview: "преглед"
         save: "Запази"
         new: "Нов"
@@ -3220,7 +3220,6 @@ bg:
         delete: "Изтрий"
         color: "Цвят"
         opacity: "Прозрачност"
-        copy: "Копирай"
         email_templates:
           title: "Имейл"
           subject: "Тема"
@@ -3257,9 +3256,9 @@ bg:
         colors:
           title: "Цветове"
           copy_name_prefix: "Копие на"
-          undo: "отмени"
+          undo: "Отмени"
           undo_title: "Върнете промените направени на този цвят до последно запазените."
-          revert: "върни"
+          revert: "Върни"
           primary:
             name: "главен"
             description: "Повече от текстовете, икони и граници "
@@ -3515,7 +3514,6 @@ bg:
       user:
         suspend_failed: "Нещо се обърка при отстраняването на този потребител %{error}"
         unsuspend_failed: "Нещо се обърка при отстраняването на този потребител %{error} "
-        suspend_duration: "За колко време потребителят ще бъде отстранен?"
         suspend_reason_label: "Защо отстранявате? Този текст <b>ще бъде видим за всички</b> на профилната страница на потребителя и ще се показва на потребителя, когато направи опит да се логне. Бъдете кратки."
         suspend_reason: "Причина"
         suspended_by: "Отстранен от"
@@ -3598,10 +3596,14 @@ bg:
         trust_level_2_users: "Потребители с Ниво на доверие 2"
         trust_level_3_requirements: "Изисквания за Ниво на доверие 3"
         trust_level_locked_tip: "Нивото на доверие е заключено, системата не може да насърчава или понижава потребителя "
-        trust_level_unlocked_tip: "Нивото на доверие е отключено, системата може да насърчава или понижава потребителя "
         lock_trust_level: "Заключете системата с нива на доверие"
         unlock_trust_level: "Отклчете системата с нива"
         suspended_count: "Отстранени"
+        other_matches_list:
+          username: "Потребителско име"
+          trust_level: "Ниво на Доверие"
+          read_time: "Време за прочитане "
+          posts: "Публикации"
         tl3_requirements:
           title: "Изисквания за Ниво на доверие 3"
           value_heading: "Стойност"
@@ -3647,19 +3649,19 @@ bg:
         delete_confirm: "Сигурни ли сте, че искате да изтриете това потребителско поле?"
         options: "Опции"
         required:
-          title: "Да се изисква при регистрация?"
+          title: "Да се изисква при регистрация"
           enabled: "задължително"
           disabled: "по желание"
         editable:
-          title: "Да се редактира след регистрация?"
+          title: "Да се редактира след регистрация"
           enabled: "може да се редактира"
           disabled: "Текстово поле"
         show_on_profile:
-          title: "Покажи на публичния профил?"
+          title: "Покажи на публичния профил"
           enabled: "показано на профила"
           disabled: "не се показва на профила"
         show_on_user_card:
-          title: "Показване в потребителската карта?"
+          title: "Показване в потребителската карта"
           enabled: "показано в потребителската карта"
           disabled: "не е показано в потребителската карта"
         field_types:
@@ -3717,6 +3719,7 @@ bg:
           search: "Търсене"
           groups: "Групи"
           dashboard: "Работен плот"
+          navigation: "Навигация"
         default_categories:
           modal_yes: "Да"
       badges:
@@ -3835,13 +3838,11 @@ bg:
           topics: "Теми"
   wizard_js:
     wizard:
-      done: "Готово"
       back: "Назад"
       next: "Напред"
-      upload: "Качване"
+      step-text: "Стъпка"
       uploading: "Качва се..."
       upload_error: "Съжаляваме, възникна грешка при качването на този файл. Моля, опитайте отново."
-      quit: "Може би по-късно"
       invites:
         add_user: "добавяне"
         roles:

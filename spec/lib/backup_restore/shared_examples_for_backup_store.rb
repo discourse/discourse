@@ -1,21 +1,47 @@
 # frozen_string_literal: true
 # rubocop:disable Discourse/OnlyTopLevelMultisiteSpecs
 
-shared_context "backups" do
+RSpec.shared_context "with backups" do
   before { create_backups }
   after { remove_backups }
 
   # default backup files
-  let(:backup1) { BackupFile.new(filename: "b.tar.gz", size: 17, last_modified: Time.parse("2018-09-13T15:10:00Z")) }
-  let(:backup2) { BackupFile.new(filename: "a.tgz", size: 29, last_modified: Time.parse("2018-02-11T09:27:00Z")) }
-  let(:backup3) { BackupFile.new(filename: "r.sql.gz", size: 11, last_modified: Time.parse("2017-12-20T03:48:00Z")) }
+  let(:backup1) do
+    BackupFile.new(
+      filename: "b.tar.gz",
+      size: 17,
+      last_modified: Time.parse("2018-09-13T15:10:00Z"),
+    )
+  end
+  let(:backup2) do
+    BackupFile.new(filename: "a.tgz", size: 29, last_modified: Time.parse("2018-02-11T09:27:00Z"))
+  end
+  let(:backup3) do
+    BackupFile.new(
+      filename: "r.sql.gz",
+      size: 11,
+      last_modified: Time.parse("2017-12-20T03:48:00Z"),
+    )
+  end
 
   # backup files on another multisite
-  let(:backup4) { BackupFile.new(filename: "multi-1.tar.gz", size: 22, last_modified: Time.parse("2018-11-26T03:17:09Z")) }
-  let(:backup5) { BackupFile.new(filename: "multi-2.tar.gz", size: 19, last_modified: Time.parse("2018-11-27T03:16:54Z")) }
+  let(:backup4) do
+    BackupFile.new(
+      filename: "multi-1.tar.gz",
+      size: 22,
+      last_modified: Time.parse("2018-11-26T03:17:09Z"),
+    )
+  end
+  let(:backup5) do
+    BackupFile.new(
+      filename: "multi-2.tar.gz",
+      size: 19,
+      last_modified: Time.parse("2018-11-27T03:16:54Z"),
+    )
+  end
 end
 
-shared_examples "backup store" do
+RSpec.shared_examples "backup store" do
   it "creates the correct backup store" do
     expect(store).to be_a(expected_type)
   end
@@ -46,7 +72,7 @@ shared_examples "backup store" do
   end
 
   context "with backup files" do
-    include_context "backups"
+    include_context "with backups"
 
     describe "#files" do
       it "sorts files by last modified date in descending order" do
@@ -56,13 +82,15 @@ shared_examples "backup store" do
       it "returns only *.gz and *.tgz files" do
         files = store.files
         expect(files).to_not be_empty
-        expect(files.map(&:filename)).to contain_exactly(backup1.filename, backup2.filename, backup3.filename)
+        expect(files.map(&:filename)).to contain_exactly(
+          backup1.filename,
+          backup2.filename,
+          backup3.filename,
+        )
       end
 
       it "works with multisite", type: :multisite do
-        test_multisite_connection("second") do
-          expect(store.files).to eq([backup5, backup4])
-        end
+        test_multisite_connection("second") { expect(store.files).to eq([backup5, backup4]) }
       end
     end
 
@@ -77,9 +105,7 @@ shared_examples "backup store" do
       end
 
       it "works with multisite", type: :multisite do
-        test_multisite_connection("second") do
-          expect(store.latest_file).to eq(backup5)
-        end
+        test_multisite_connection("second") { expect(store.latest_file).to eq(backup5) }
       end
     end
 
@@ -208,13 +234,13 @@ shared_examples "backup store" do
   end
 end
 
-shared_examples "remote backup store" do
+RSpec.shared_examples "remote backup store" do
   it "is a remote store" do
     expect(store.remote?).to eq(true)
   end
 
   context "with backups" do
-    include_context "backups"
+    include_context "with backups"
 
     describe "#upload_file" do
       def upload_file
@@ -222,11 +248,7 @@ shared_examples "remote backup store" do
         # to that
         freeze_time(Time.now.to_s)
 
-        backup = BackupFile.new(
-          filename: "foo.tar.gz",
-          size: 33,
-          last_modified: Time.zone.now
-        )
+        backup = BackupFile.new(filename: "foo.tar.gz", size: 33, last_modified: Time.zone.now)
 
         expect(store.files).to_not include(backup)
 
@@ -246,15 +268,14 @@ shared_examples "remote backup store" do
       end
 
       it "works with multisite", type: :multisite do
-        test_multisite_connection("second") do
-          upload_file
-        end
+        test_multisite_connection("second") { upload_file }
       end
 
       it "raises an exception when a file with same filename exists" do
         Tempfile.create(backup1.filename) do |file|
-          expect { store.upload_file(backup1.filename, file.path, "application/gzip") }
-            .to raise_exception(BackupRestore::BackupStore::BackupFileExists)
+          expect {
+            store.upload_file(backup1.filename, file.path, "application/gzip")
+          }.to raise_exception(BackupRestore::BackupStore::BackupFileExists)
         end
       end
     end
@@ -268,8 +289,9 @@ shared_examples "remote backup store" do
       end
 
       it "raises an exception when a file with same filename exists" do
-        expect { store.generate_upload_url(backup1.filename) }
-          .to raise_exception(BackupRestore::BackupStore::BackupFileExists)
+        expect { store.generate_upload_url(backup1.filename) }.to raise_exception(
+          BackupRestore::BackupStore::BackupFileExists,
+        )
       end
 
       it "works with multisite", type: :multisite do

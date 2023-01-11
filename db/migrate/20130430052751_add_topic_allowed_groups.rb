@@ -8,7 +8,7 @@ class AddTopicAllowedGroups < ActiveRecord::Migration[4.2]
       t.integer :topic_id, null: false
     end
 
-    add_index :topic_allowed_groups, [:group_id, :topic_id], unique: true
-    add_index :topic_allowed_groups, [:topic_id, :group_id], unique: true
+    add_index :topic_allowed_groups, %i[group_id topic_id], unique: true
+    add_index :topic_allowed_groups, %i[topic_id group_id], unique: true
   end
 end

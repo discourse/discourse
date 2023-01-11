@@ -1,9 +1,6 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
-describe 'message bus integration' do
-
+RSpec.describe "message bus integration" do
   it "allows anonymous requests to the messagebus" do
     post "/message-bus/poll"
     expect(response.status).to eq(200)
@@ -29,5 +26,4 @@ describe 'message bus integration' do
       expect(response.status).to eq(200)
     end
   end
-
 end

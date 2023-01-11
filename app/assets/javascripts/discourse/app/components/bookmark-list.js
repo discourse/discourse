@@ -1,9 +1,8 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
-import { schedule } from "@ember/runloop";
-import bootbox from "bootbox";
-import discourseDebounce from "discourse-common/lib/debounce";
+import { next, schedule } from "@ember/runloop";
 import { openBookmarkModal } from "discourse/controllers/bookmark";
+import { ajax } from "discourse/lib/ajax";
 import {
   openLinkInNewTab,
   shouldOpenInNewTab,
@@ -11,8 +10,10 @@ import {
 import Scrolling from "discourse/mixins/scrolling";
 import I18n from "I18n";
 import { Promise } from "rsvp";
+import { inject as service } from "@ember/service";
 
 export default Component.extend(Scrolling, {
+  dialog: service(),
   classNames: ["bookmark-list-wrapper"],
 
   didInsertElement() {
@@ -27,18 +28,12 @@ export default Component.extend(Scrolling, {
   },
 
   scrollToLastPosition() {
-    let scrollTo = this.session.bookmarkListScrollPosition;
-    if (scrollTo && scrollTo >= 0) {
+    const scrollTo = this.session.bookmarkListScrollPosition;
+    if (scrollTo >= 0) {
       schedule("afterRender", () => {
-        discourseDebounce(
-          this,
-          function () {
-            if (this.element && !this.isDestroying && !this.isDestroyed) {
-              window.scrollTo(0, scrollTo + 1);
-            }
-          },
-          0
-        );
+        if (this.element && !this.isDestroying && !this.isDestroyed) {
+          next(() => window.scrollTo(0, scrollTo));
+        }
       });
     }
   },
@@ -70,22 +65,19 @@ export default Component.extend(Scrolling, {
       if (!bookmark.reminder_at) {
         return deleteBookmark();
       }
-      bootbox.confirm(I18n.t("bookmarks.confirm_delete"), (result) => {
-        if (result) {
-          deleteBookmark();
-        } else {
-          resolve(false);
-        }
+      this.dialog.deleteConfirm({
+        message: I18n.t("bookmarks.confirm_delete"),
+        didConfirm: () => deleteBookmark(),
+        didCancel: () => resolve(false),
       });
     });
   },
 
   @action
   screenExcerptForExternalLink(event) {
-    if (event.target && event.target.tagName === "A") {
-      let link = event.target;
-      if (shouldOpenInNewTab(link.href)) {
-        openLinkInNewTab(link);
+    if (event?.target?.tagName === "A") {
+      if (shouldOpenInNewTab(event.target.href)) {
+        openLinkInNewTab(event, event.target);
       }
     }
   },
@@ -104,6 +96,16 @@ export default Component.extend(Scrolling, {
       onAfterDelete: () => {
         this.reload();
       },
+    });
+  },
+
+  @action
+  clearBookmarkReminder(bookmark) {
+    return ajax(`/bookmarks/${bookmark.id}`, {
+      type: "PUT",
+      data: { reminder_at: null },
+    }).then(() => {
+      bookmark.set("reminder_at", null);
     });
   },
 

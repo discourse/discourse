@@ -40,6 +40,13 @@ da:
     user_cant_post_in_topic: "Du kan ikke stemme, fordi du ikke kan lave indlæg i dette emne."
     topic_must_be_open_to_vote: "Emnet skal være åbent for at kunne stemme."
     poll_must_be_open_to_vote: "Afstemning skal være åben for at kunne stemme."
+    one_vote_per_user: "Kun 1 stemme er tilladt i denne afstemning."
+    max_vote_per_user:
+      one: Kun %{count} stemme er tilladt i denne afstemning.
+      other: Maksimum %{count} stemmer er tilladt i denne afstemning.
+    min_vote_per_user:
+      one: Der kræves mindst %{count} stemme i denne afstemning.
+      other: Der kræves mindst %{count} stemmer i denne afstemning.
     topic_must_be_open_to_toggle_status: "Emnet skal være åbent for at ændre status."
     only_staff_or_op_can_toggle_status: "Kun medlemmer af hjælperteamet eller emnets opretter kan ændre status for en afstemning."
     insufficient_rights_to_create: "Du kan ikke oprette afstemninger."

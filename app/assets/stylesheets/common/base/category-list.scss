@@ -9,7 +9,7 @@
     max-width: 100%;
     @include ellipsis;
     vertical-align: text-top;
-    line-height: $line-height-medium;
+    line-height: var(--line-height-medium);
   }
   &.with-topics {
     .subcategories-with-subcategories {
@@ -20,6 +20,24 @@
   }
   &.hidden {
     display: none;
+  }
+}
+
+.navigation-categories .category-list.subcategory-list {
+  margin-bottom: 1em;
+}
+
+.subcategory-list {
+  .parent-category {
+    h3 {
+      display: inline;
+    }
+    .category-text-title {
+      display: inline-flex;
+    }
+    .stat {
+      margin-left: 0.5em;
+    }
   }
 }
 
@@ -60,7 +78,7 @@
       }
     }
 
-    .logo.aspect-image img {
+    .category-logo.aspect-image img {
       display: block;
       width: auto;
       height: 40px;
@@ -68,7 +86,7 @@
     }
 
     @supports (--custom: property) {
-      .logo.aspect-image img {
+      .category-logo.aspect-image img {
         --height: 40px;
         height: var(--height);
         width: calc(var(--height) * var(--aspect-ratio));
@@ -92,7 +110,7 @@
   }
 
   &.no-logos {
-    .logo {
+    .category-logo {
       display: none;
     }
   }
@@ -125,7 +143,7 @@
   .description {
     margin-bottom: 1em;
     text-align: center;
-    font-size: $font-0;
+    font-size: var(--font-0);
     color: var(--primary-med-or-secondary-high);
     position: relative;
     @include line-clamp(4);
@@ -142,10 +160,10 @@
   }
 
   h3 {
-    font-size: $font-up-2;
+    font-size: var(--font-up-2);
     margin-bottom: 0.5em;
     margin-top: 0.25em;
-    line-height: $line-height-medium;
+    line-height: var(--line-height-medium);
     text-align: center;
     color: var(--primary);
     overflow: hidden;
@@ -171,7 +189,7 @@
       }
       .category-text-title {
         order: 2;
-        line-height: $line-height-medium;
+        line-height: var(--line-height-medium);
         overflow: hidden;
         margin-bottom: 0.25em;
         word-wrap: break-word;
@@ -223,7 +241,7 @@
         min-width: 0;
         @include ellipsis;
       }
-      .logo img {
+      .category-logo img {
         display: inline-block;
         --height: 20px;
         height: var(--height);
@@ -242,7 +260,7 @@
   }
 
   h3 {
-    font-size: $font-up-2;
+    font-size: var(--font-up-2);
     text-align: center;
     overflow: hidden;
   }
@@ -257,6 +275,9 @@
 
   .featured-topics {
     margin-bottom: 1em;
+    // we absolutely position the parent category's link so the whole box is clickable
+    // to prevent this covering topic links, we need to raise the z-index
+    z-index: 1;
     ul {
       color: var(--primary-medium);
       list-style: none;
@@ -313,7 +334,7 @@
   margin-bottom: 0;
   border-top: 1px solid var(--primary-low);
   .category-description {
-    font-size: $font-down-1;
+    font-size: var(--font-down-1);
   }
   .category-logo.aspect-image {
     --max-height: 75px;
@@ -324,7 +345,7 @@
   > h3 a.category-title-link,
   > h4 a.category-title-link {
     color: var(--primary-medium);
-    font-size: $font-down-1;
+    font-size: var(--font-down-1);
   }
   > .category-description,
   tr.category-description {

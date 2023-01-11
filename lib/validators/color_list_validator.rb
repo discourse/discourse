@@ -11,6 +11,6 @@ class ColorListValidator
   end
 
   def error_message
-    I18n.t('site_settings.errors.invalid_hex_value')
+    I18n.t("site_settings.errors.invalid_hex_value")
   end
 end

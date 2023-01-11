@@ -9,7 +9,7 @@ class DiscourseCLI < Thor
   end
 
   desc "remap [--global,--regex] FROM TO", "Remap a string sequence across all tables"
-  long_desc <<-LONGDESC
+  long_desc <<-TEXT
     Replace a string sequence FROM with TO across all tables.
 
     With --global option, the remapping is run on ***ALL***
@@ -30,7 +30,7 @@ class DiscourseCLI < Thor
     discourse remap talk.foo.com talk.bar.com # renaming a Discourse domain name
 
     discourse remap --regex "\[\/?color(=[^\]]*)*]" "" # removing "color" bbcodes
-  LONGDESC
+  TEXT
   option :global, type: :boolean
   option :regex, type: :boolean
   def remap(from, to)
@@ -45,7 +45,7 @@ class DiscourseCLI < Thor
     puts "THIS TASK WILL REWRITE DATA, ARE YOU SURE (type YES)"
     puts "WILL RUN ON ALL #{RailsMultisite::ConnectionManagement.all_dbs.length} DBS" if options[:global]
     text = STDIN.gets
-    if text.strip != "YES"
+    if text.strip.upcase != "YES"
       puts "aborting."
       exit 1
     end

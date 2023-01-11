@@ -1,22 +1,19 @@
 # frozen_string_literal: true
 
 class PostSerializer < BasicPostSerializer
-
   # To pass in additional information we might need
-  INSTANCE_VARS ||= [
-    :parent_post,
-    :add_raw,
-    :add_title,
-    :single_post_link_counts,
-    :draft_sequence,
-    :post_actions,
-    :all_post_actions,
-    :add_excerpt
+  INSTANCE_VARS ||= %i[
+    parent_post
+    add_raw
+    add_title
+    single_post_link_counts
+    draft_sequence
+    post_actions
+    all_post_actions
+    add_excerpt
   ]
 
-  INSTANCE_VARS.each do |v|
-    self.public_send(:attr_accessor, v)
-  end
+  INSTANCE_VARS.each { |v| self.public_send(:attr_accessor, v) }
 
   attributes :post_number,
              :post_type,
@@ -86,15 +83,16 @@ class PostSerializer < BasicPostSerializer
              :excerpt,
              :reviewable_id,
              :reviewable_score_count,
-             :reviewable_score_pending_count
+             :reviewable_score_pending_count,
+             :user_suspended,
+             :user_status,
+             :mentioned_users
 
   def initialize(object, opts)
     super(object, opts)
 
     PostSerializer::INSTANCE_VARS.each do |name|
-      if opts.include? name
-        self.public_send("#{name}=", opts[name])
-      end
+      self.public_send("#{name}=", opts[name]) if opts.include? name
     end
   end
 
@@ -147,13 +145,14 @@ class PostSerializer < BasicPostSerializer
   end
 
   def include_group_moderator?
-    @group_moderator ||= begin
-      if @topic_view
-        @topic_view.category_group_moderator_user_ids.include?(object.user_id)
-      else
-        object&.user&.guardian&.is_category_group_moderator?(object&.topic&.category)
+    @group_moderator ||=
+      begin
+        if @topic_view
+          @topic_view.category_group_moderator_user_ids.include?(object.user_id)
+        else
+          object&.user&.guardian&.is_category_group_moderator?(object&.topic&.category)
+        end
       end
-    end
   end
 
   def yours
@@ -173,7 +172,7 @@ class PostSerializer < BasicPostSerializer
   end
 
   def include_can_permanently_delete?
-    SiteSetting.can_permanently_delete && object.deleted_at
+    SiteSetting.can_permanently_delete && scope.is_admin? && object.deleted_at
   end
 
   def can_recover
@@ -256,7 +255,8 @@ class PostSerializer < BasicPostSerializer
   def reply_to_user
     {
       username: object.reply_to_user.username,
-      avatar_template: object.reply_to_user.avatar_template
+      name: object.reply_to_user.name,
+      avatar_template: object.reply_to_user.avatar_template,
     }
   end
 
@@ -280,22 +280,28 @@ class PostSerializer < BasicPostSerializer
     result = []
     can_see_post = scope.can_see_post?(object)
 
-    PostActionType.types.except(:bookmark).each do |sym, id|
+    PostActionType.types.each do |sym, id|
       count_col = "#{sym}_count".to_sym
 
       count = object.public_send(count_col) if object.respond_to?(count_col)
       summary = { id: id, count: count }
 
-      if scope.post_can_act?(object, sym, opts: { taken_actions: actions }, can_see_post: can_see_post)
+      if scope.post_can_act?(
+           object,
+           sym,
+           opts: {
+             taken_actions: actions,
+           },
+           can_see_post: can_see_post,
+         )
         summary[:can_act] = true
       end
 
       if sym == :notify_user &&
-         (
-           (scope.current_user.present? && scope.current_user == object.user) ||
-           (object.user && object.user.bot?)
-         )
-
+           (
+             (scope.current_user.present? && scope.current_user == object.user) ||
+               (object.user && object.user.bot?)
+           )
         summary.delete(:can_act)
       end
 
@@ -312,9 +318,7 @@ class PostSerializer < BasicPostSerializer
       summary.delete(:count) if summary[:count] == 0
 
       # Only include it if the user can do it or it has a count
-      if summary[:can_act] || summary[:count]
-        result << summary
-      end
+      result << summary if summary[:can_act] || summary[:count]
     end
 
     result
@@ -335,7 +339,8 @@ class PostSerializer < BasicPostSerializer
   def include_link_counts?
     return true if @single_post_link_counts.present?
 
-    @topic_view.present? && @topic_view.link_counts.present? && @topic_view.link_counts[object.id].present?
+    @topic_view.present? && @topic_view.link_counts.present? &&
+      @topic_view.link_counts[object.id].present?
   end
 
   def include_read?
@@ -368,9 +373,9 @@ class PostSerializer < BasicPostSerializer
 
   def post_bookmark
     if @topic_view.present?
-      @post_bookmark ||= @topic_view.user_post_bookmarks.find { |bookmark| bookmark.post_id == object.id && !bookmark.for_topic }
+      @post_bookmark ||= @topic_view.bookmarks.find { |bookmark| bookmark.bookmarkable == object }
     else
-      @post_bookmark ||= object.bookmarks.find_by(user: scope.user, for_topic: false)
+      @post_bookmark ||= Bookmark.find_by(user: scope.user, bookmarkable: object)
     end
   end
 
@@ -492,9 +497,7 @@ class PostSerializer < BasicPostSerializer
   end
 
   def include_last_wiki_edit?
-    object.wiki &&
-    object.post_number == 1 &&
-    object.revisions.size > 0
+    object.wiki && object.post_number == 1 && object.revisions.size > 0
   end
 
   def include_hidden_reason_id?
@@ -541,7 +544,33 @@ class PostSerializer < BasicPostSerializer
     can_review_topic?
   end
 
-private
+  def user_suspended
+    true
+  end
+
+  def include_user_suspended?
+    object.user&.suspended?
+  end
+
+  def include_user_status?
+    SiteSetting.enable_user_status && object.user&.has_status?
+  end
+
+  def user_status
+    UserStatusSerializer.new(object.user&.user_status, root: false)
+  end
+
+  def mentioned_users
+    if @topic_view && (mentions = @topic_view.mentions[object.id])
+      users = mentions.map { |username| @topic_view.mentioned_users[username] }.compact
+    else
+      users = User.where(username: object.mentions)
+    end
+
+    users.map { |user| BasicUserWithStatusSerializer.new(user, root: false) }
+  end
+
+  private
 
   def can_review_topic?
     return @can_review_topic unless @can_review_topic.nil?
@@ -571,5 +600,4 @@ private
   def post_actions
     @post_actions ||= (@topic_view&.all_post_actions || {})[object.id]
   end
-
 end

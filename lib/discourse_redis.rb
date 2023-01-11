@@ -14,9 +14,9 @@ class DiscourseRedis
     GlobalSetting.redis_config
   end
 
-  def initialize(config = nil, namespace: true)
+  def initialize(config = nil, namespace: true, raw_redis: nil)
     @config = config || DiscourseRedis.config
-    @redis = DiscourseRedis.raw_connection(@config.dup)
+    @redis = raw_redis || DiscourseRedis.raw_connection(@config.dup)
     @namespace = namespace
   end
 
@@ -46,15 +46,103 @@ class DiscourseRedis
   end
 
   # Proxy key methods through, but prefix the keys with the namespace
-  [:append, :blpop, :brpop, :brpoplpush, :decr, :decrby, :expire, :expireat, :get, :getbit, :getrange, :getset,
-   :hdel, :hexists, :hget, :hgetall, :hincrby, :hincrbyfloat, :hkeys, :hlen, :hmget, :hmset, :hset, :hsetnx, :hvals, :incr,
-   :incrby, :incrbyfloat, :lindex, :linsert, :llen, :lpop, :lpush, :lpushx, :lrange, :lrem, :lset, :ltrim,
-   :mapped_hmset, :mapped_hmget, :mapped_mget, :mapped_mset, :mapped_msetnx, :move, :mset,
-   :msetnx, :persist, :pexpire, :pexpireat, :psetex, :pttl, :rename, :renamenx, :rpop, :rpoplpush, :rpush, :rpushx, :sadd, :scard,
-   :sdiff, :set, :setbit, :setex, :setnx, :setrange, :sinter, :sismember, :smembers, :sort, :spop, :srandmember, :srem, :strlen,
-   :sunion, :ttl, :type, :watch, :zadd, :zcard, :zcount, :zincrby, :zrange, :zrangebyscore, :zrank, :zrem, :zremrangebyrank,
-   :zremrangebyscore, :zrevrange, :zrevrangebyscore, :zrevrank, :zrangebyscore,
-   :dump, :restore].each do |m|
+  %i[
+    append
+    blpop
+    brpop
+    brpoplpush
+    decr
+    decrby
+    expire
+    expireat
+    get
+    getbit
+    getrange
+    getset
+    hdel
+    hexists
+    hget
+    hgetall
+    hincrby
+    hincrbyfloat
+    hkeys
+    hlen
+    hmget
+    hmset
+    hset
+    hsetnx
+    hvals
+    incr
+    incrby
+    incrbyfloat
+    lindex
+    linsert
+    llen
+    lpop
+    lpush
+    lpushx
+    lrange
+    lrem
+    lset
+    ltrim
+    mapped_hmset
+    mapped_hmget
+    mapped_mget
+    mapped_mset
+    mapped_msetnx
+    move
+    mset
+    msetnx
+    persist
+    pexpire
+    pexpireat
+    psetex
+    pttl
+    rename
+    renamenx
+    rpop
+    rpoplpush
+    rpush
+    rpushx
+    sadd
+    sadd?
+    scard
+    sdiff
+    set
+    setbit
+    setex
+    setnx
+    setrange
+    sinter
+    sismember
+    smembers
+    sort
+    spop
+    srandmember
+    srem
+    srem?
+    strlen
+    sunion
+    ttl
+    type
+    watch
+    zadd
+    zcard
+    zcount
+    zincrby
+    zrange
+    zrangebyscore
+    zrank
+    zrem
+    zremrangebyrank
+    zremrangebyscore
+    zrevrange
+    zrevrangebyscore
+    zrevrank
+    zrangebyscore
+    dump
+    restore
+  ].each do |m|
     define_method m do |*args, **kwargs|
       args[0] = "#{namespace}:#{args[0]}" if @namespace
       DiscourseRedis.ignore_readonly { @redis.public_send(m, *args, **kwargs) }
@@ -72,27 +160,27 @@ class DiscourseRedis
   end
 
   def mget(*args)
-    args.map! { |a| "#{namespace}:#{a}" }  if @namespace
+    args.map! { |a| "#{namespace}:#{a}" } if @namespace
     DiscourseRedis.ignore_readonly { @redis.mget(*args) }
   end
 
-  def del(k)
+  def del(*keys)
     DiscourseRedis.ignore_readonly do
-      k = "#{namespace}:#{k}"  if @namespace
-      @redis.del k
+      keys = keys.flatten(1)
+      keys.map! { |k| "#{namespace}:#{k}" } if @namespace
+      @redis.del(*keys)
     end
   end
 
   def scan_each(options = {}, &block)
     DiscourseRedis.ignore_readonly do
-      match = options[:match].presence || '*'
+      match = options[:match].presence || "*"
 
-      options[:match] =
-        if @namespace
-          "#{namespace}:#{match}"
-        else
-          match
-        end
+      options[:match] = if @namespace
+        "#{namespace}:#{match}"
+      else
+        match
+      end
 
       if block
         @redis.scan_each(**options) do |key|
@@ -100,17 +188,19 @@ class DiscourseRedis
           block.call(key)
         end
       else
-        @redis.scan_each(**options).map do |key|
-          key = remove_namespace(key) if @namespace
-          key
-        end
+        @redis
+          .scan_each(**options)
+          .map do |key|
+            key = remove_namespace(key) if @namespace
+            key
+          end
       end
     end
   end
 
   def keys(pattern = nil)
     DiscourseRedis.ignore_readonly do
-      pattern = pattern || '*'
+      pattern = pattern || "*"
       pattern = "#{namespace}:#{pattern}" if @namespace
       keys = @redis.keys(pattern)
 
@@ -124,9 +214,7 @@ class DiscourseRedis
   end
 
   def delete_prefixed(prefix)
-    DiscourseRedis.ignore_readonly do
-      keys("#{prefix}*").each { |k| Discourse.redis.del(k) }
-    end
+    DiscourseRedis.ignore_readonly { keys("#{prefix}*").each { |k| Discourse.redis.del(k) } }
   end
 
   def reconnect
@@ -145,13 +233,32 @@ class DiscourseRedis
     RailsMultisite::ConnectionManagement.current_db
   end
 
-  def self.namespace
-    Rails.logger.warn("DiscourseRedis.namespace is going to be deprecated, do not use it!")
-    RailsMultisite::ConnectionManagement.current_db
-  end
-
   def self.new_redis_store
     Cache.new
+  end
+
+  def multi
+    DiscourseRedis.ignore_readonly do
+      if block_given?
+        @redis.multi do |transaction|
+          yield DiscourseRedis.new(@config, namespace: @namespace, raw_redis: transaction)
+        end
+      else
+        @redis.multi
+      end
+    end
+  end
+
+  def pipelined
+    DiscourseRedis.ignore_readonly do
+      if block_given?
+        @redis.pipelined do |transaction|
+          yield DiscourseRedis.new(@config, namespace: @namespace, raw_redis: transaction)
+        end
+      else
+        @redis.pipelined
+      end
+    end
   end
 
   private
@@ -160,4 +267,20 @@ class DiscourseRedis
     key[(namespace.length + 1)..-1]
   end
 
+  class EvalHelper
+    def initialize(script)
+      @script = script
+      @sha1 = Digest::SHA1.hexdigest(script)
+    end
+
+    def eval(redis, *args, **kwargs)
+      redis.evalsha @sha1, *args, **kwargs
+    rescue ::Redis::CommandError => e
+      if e.to_s =~ /^NOSCRIPT/
+        redis.eval @script, *args, **kwargs
+      else
+        raise
+      end
+    end
+  end
 end

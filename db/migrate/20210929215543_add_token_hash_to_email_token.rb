@@ -5,9 +5,10 @@ class AddTokenHashToEmailToken < ActiveRecord::Migration[6.1]
     add_column :email_tokens, :token_hash, :string
 
     loop do
-      rows = DB
-        .query("SELECT id, token FROM email_tokens WHERE token_hash IS NULL LIMIT 500")
-        .map { |row| { id: row.id, token_hash: Digest::SHA256.hexdigest(row.token) } }
+      rows =
+        DB
+          .query("SELECT id, token FROM email_tokens WHERE token_hash IS NULL LIMIT 500")
+          .map { |row| { id: row.id, token_hash: Digest::SHA256.hexdigest(row.token) } }
 
       break if rows.size == 0
 

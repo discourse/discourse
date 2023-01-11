@@ -1,7 +1,9 @@
+import Component from "@ember/component";
 import {
   buildArgsWithDeprecations,
   renderedConnectorsFor,
 } from "discourse/lib/plugin-connectors";
+
 /**
    A plugin outlet is an extension point for templates where other templates can
    be inserted by plugins.
@@ -33,8 +35,6 @@ import {
    The list of disabled plugins is returned via the `Site` singleton.
 
 **/
-import Component from "@ember/component";
-
 export default Component.extend({
   tagName: "",
   connectorTagName: "",

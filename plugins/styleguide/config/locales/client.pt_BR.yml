@@ -87,3 +87,8 @@ pt_BR:
           title: "Controle giratório"
         empty_state:
           title: "Estado vazio"
+        rich_tooltip:
+          title: "Dica Avançada"
+          description: "Descrição"
+          header: "Cabeçalho"
+          hover_to_see: "Passe o mouse para ver uma dica"

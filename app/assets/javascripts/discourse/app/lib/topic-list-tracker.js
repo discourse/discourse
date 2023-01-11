@@ -1,8 +1,31 @@
 import { Promise } from "rsvp";
+import { NotificationLevels } from "discourse/lib/notification-levels";
+
 let model, currentTopicId;
+
+let lastTopicId, lastHighestRead;
 
 export function setTopicList(incomingModel) {
   model = incomingModel;
+
+  model?.topics?.forEach((topic) => {
+    // Only update unread counts for tracked topics
+
+    if (topic.notification_level >= NotificationLevels.TRACKING) {
+      const highestRead = getHighestReadCache(topic.id);
+
+      if (highestRead && highestRead >= topic.last_read_post_number) {
+        const count = Math.max(topic.highest_post_number - highestRead, 0);
+
+        topic.setProperties({
+          unread_posts: count,
+          new_posts: count,
+        });
+
+        resetHighestReadCache();
+      }
+    }
+  });
   currentTopicId = null;
 }
 
@@ -12,6 +35,22 @@ export function nextTopicUrl() {
 
 export function previousTopicUrl() {
   return urlAt(-1);
+}
+
+export function setHighestReadCache(topicId, postNumber) {
+  lastTopicId = topicId;
+  lastHighestRead = postNumber;
+}
+
+export function getHighestReadCache(topicId) {
+  if (topicId === lastTopicId) {
+    return lastHighestRead;
+  }
+}
+
+export function resetHighestReadCache() {
+  lastTopicId = undefined;
+  lastHighestRead = undefined;
 }
 
 function urlAt(delta) {

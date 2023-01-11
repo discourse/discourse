@@ -1,4 +1,5 @@
 import Controller from "@ember/controller";
+import I18n from "I18n";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { action } from "@ember/object";
 import { Promise } from "rsvp";
@@ -13,25 +14,21 @@ export function openBookmarkModal(
   }
 ) {
   return new Promise((resolve) => {
-    const modalTitle = () => {
-      if (bookmark.for_topic) {
-        return bookmark.id
-          ? "post.bookmarks.edit_for_topic"
-          : "post.bookmarks.create_for_topic";
-      }
-      return bookmark.id ? "post.bookmarks.edit" : "post.bookmarks.create";
+    const model = {
+      id: bookmark.id,
+      reminderAt: bookmark.reminder_at,
+      autoDeletePreference: bookmark.auto_delete_preference,
+      name: bookmark.name,
     };
+
+    model.bookmarkableId = bookmark.bookmarkable_id;
+    model.bookmarkableType = bookmark.bookmarkable_type;
+
     let modalController = showModal("bookmark", {
-      model: {
-        postId: bookmark.post_id,
-        topicId: bookmark.topic_id,
-        id: bookmark.id,
-        reminderAt: bookmark.reminder_at,
-        autoDeletePreference: bookmark.auto_delete_preference,
-        name: bookmark.name,
-        forTopic: bookmark.for_topic,
-      },
-      title: modalTitle(),
+      model,
+      titleTranslated: I18n.t(
+        bookmark.id ? "bookmarks.edit" : "bookmarks.create"
+      ),
       modalClass: "bookmark-with-reminder",
     });
     modalController.setProperties({

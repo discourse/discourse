@@ -1,10 +1,11 @@
+import Route from "@ember/routing/route";
 import {
   findNote,
   sectionById,
 } from "discourse/plugins/styleguide/discourse/lib/styleguide";
 import { createData } from "discourse/plugins/styleguide/discourse/lib/dummy-data";
 
-export default Ember.Route.extend({
+export default Route.extend({
   model(params) {
     return sectionById(params.section);
   },

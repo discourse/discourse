@@ -144,7 +144,7 @@ export default Component.extend({
 
   @discourseComputed("inviteModel", "inviteModel.details.can_invite_via_email")
   canInviteViaEmail(inviteModel, canInviteViaEmail) {
-    return this.inviteModel === this.currentUser ? true : canInviteViaEmail;
+    return inviteModel === this.currentUser ? true : canInviteViaEmail;
   },
 
   @discourseComputed("isPM", "canInviteViaEmail")

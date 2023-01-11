@@ -6,15 +6,15 @@
     },
     "secondary_emails": {
       "type": "array",
-      "items": []
+      "items": {}
     },
     "unconfirmed_emails": {
       "type": "array",
-      "items": []
+      "items": {}
     },
     "associated_accounts": {
       "type": "array",
-      "items": []
+      "items": {}
     }
   },
   "required": [

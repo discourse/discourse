@@ -1,15 +1,13 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
-describe UserEmail do
+RSpec.describe UserEmail do
   fab!(:user) { Fabricate(:user) }
 
-  context "validation" do
+  describe "Validations" do
     it "allows only one primary email" do
-      expect {
-        Fabricate(:secondary_email, user: user, primary: true)
-      }.to raise_error(ActiveRecord::RecordInvalid)
+      expect { Fabricate(:secondary_email, user: user, primary: true) }.to raise_error(
+        ActiveRecord::RecordInvalid,
+      )
     end
 
     it "allows multiple secondary emails" do
@@ -26,8 +24,8 @@ describe UserEmail do
     end
   end
 
-  describe 'normalized_email' do
-    it 'checks if normalized email is unique' do
+  describe "normalized_email" do
+    it "checks if normalized email is unique" do
       SiteSetting.normalize_emails = true
 
       user_email = user.user_emails.create(email: "a.b+c@example.com", primary: false)
@@ -39,7 +37,7 @@ describe UserEmail do
       expect(user_email).not_to be_valid
     end
 
-    it 'does not check uniqueness if email normalization is not enabled' do
+    it "does not check uniqueness if email normalization is not enabled" do
       SiteSetting.normalize_emails = false
 
       user_email = user.user_emails.create(email: "a.b+c@example.com", primary: false)
@@ -52,7 +50,7 @@ describe UserEmail do
     end
   end
 
-  context "indexes" do
+  describe "Indexes" do
     it "allows only one primary email" do
       expect {
         Fabricate.build(:secondary_email, user: user, primary: true).save(validate: false)

@@ -1,0 +1,71 @@
+.chat-composer-upload {
+  display: inline-flex;
+  height: 50px;
+  padding: 0.5rem;
+  border: 1px solid var(--primary-low-mid);
+  margin-right: 0.5em;
+
+  &:last-child {
+    margin-right: 0;
+  }
+
+  .preview {
+    width: 50px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 1em 0 0;
+    border-radius: 8px;
+
+    .d-icon {
+      font-size: var(--font-up-6);
+    }
+
+    .preview-img {
+      max-width: 100%;
+      max-height: 100%;
+    }
+  }
+
+  .data {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    line-height: var(--line-height-medium);
+    font-size: var(--font-down-1);
+    color: var(--primary-high);
+
+    .top-data,
+    .bottom-data {
+      display: flex;
+      align-items: center;
+    }
+
+    .file-name {
+      display: inline-block;
+      max-width: 150px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      margin-right: 0.5em;
+    }
+
+    .uploading,
+    .processing {
+      font-size: var(--font-down-2);
+      margin-right: 0.75em;
+    }
+
+    .upload-progress {
+      width: 110px;
+    }
+
+    .extension-pill {
+      background: var(--primary-low);
+      border-radius: 5px;
+      font-size: var(--font-down-2-rem);
+      padding: 0.1em 0.4em;
+    }
+  }
+}

@@ -3,6 +3,8 @@ import discourseComputed from "discourse-common/utils/decorators";
 import getURL from "discourse-common/lib/get-url";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 import { propertyEqual } from "discourse/lib/computed";
+import { userPath } from "discourse/lib/url";
+import I18n from "I18n";
 
 export default Component.extend({
   classNameBindings: [
@@ -22,17 +24,27 @@ export default Component.extend({
   ),
 
   @discourseComputed("post.user")
-  name() {
-    if (prioritizeNameInUx(this.post.user.name)) {
-      return this.post.user.name;
+  name(postUser) {
+    if (prioritizeNameInUx(postUser.name)) {
+      return postUser.name;
     }
-    return this.post.user.username;
+    return postUser.username;
   },
 
   @discourseComputed("post.user")
-  primaryGroup() {
-    if (this.post.user.primary_group_name) {
-      return `group-${this.post.user.primary_group_name}`;
+  primaryGroup(postUser) {
+    if (postUser.primary_group_name) {
+      return `group-${postUser.primary_group_name}`;
     }
+  },
+
+  @discourseComputed("post.user.username")
+  userUrl(username) {
+    return userPath(username.toLowerCase());
+  },
+
+  @discourseComputed("post.topic.title", "post.post_number")
+  titleAriaLabel(title, postNumber) {
+    return I18n.t("groups.aria_post_number", { postNumber, title });
   },
 });

@@ -53,12 +53,12 @@
     var ku = moment.defineLocale('ku', {
         months: months,
         monthsShort: months,
-        weekdays: 'یه‌كشه‌ممه‌_دووشه‌ممه‌_سێشه‌ممه‌_چوارشه‌ممه‌_پێنجشه‌ممه‌_هه‌ینی_شه‌ممه‌'.split(
-            '_'
-        ),
-        weekdaysShort: 'یه‌كشه‌م_دووشه‌م_سێشه‌م_چوارشه‌م_پێنجشه‌م_هه‌ینی_شه‌ممه‌'.split(
-            '_'
-        ),
+        weekdays:
+            'یه‌كشه‌ممه‌_دووشه‌ممه‌_سێشه‌ممه‌_چوارشه‌ممه‌_پێنجشه‌ممه‌_هه‌ینی_شه‌ممه‌'.split(
+                '_'
+            ),
+        weekdaysShort:
+            'یه‌كشه‌م_دووشه‌م_سێشه‌م_چوارشه‌م_پێنجشه‌م_هه‌ینی_شه‌ممه‌'.split('_'),
         weekdaysMin: 'ی_د_س_چ_پ_ه_ش'.split('_'),
         weekdaysParseExact: true,
         longDateFormat: {

@@ -10,15 +10,19 @@ concurrency:
   group: linting-${{ format('{0}-{1}', github.head_ref || github.run_number, github.job) }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 jobs:
   build:
+    if: "!(github.event_name == 'push' && github.repository == 'discourse/discourse-private-mirror')"
     name: run
     runs-on: ubuntu-latest
     container: discourse/discourse_test:slim
     timeout-minutes: 30
 
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 1
 
@@ -28,7 +32,7 @@ jobs:
           git config --global user.name "Discourse CI"
 
       - name: Bundler cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: vendor/bundle
           key: ${{ runner.os }}-gem-${{ hashFiles('**/Gemfile.lock') }}
@@ -46,10 +50,10 @@ jobs:
 
       - name: Get yarn cache directory
         id: yarn-cache-dir
-        run: echo "::set-output name=dir::$(yarn cache dir)"
+        run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
 
       - name: Yarn cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         id: yarn-cache
         with:
           path: ${{ steps.yarn-cache-dir.outputs.dir }}
@@ -61,38 +65,43 @@ jobs:
         run: yarn install
 
       - name: Rubocop
-        if: ${{ always() }}
-        run: bundle exec rubocop .
+        if: ${{ !cancelled() }}
+        run: bundle exec rubocop --parallel .
+
+      - name: syntax_tree
+        if: ${{ !cancelled() }}
+        run: bundle exec stree check Gemfile $(git ls-files '*.rb') $(git ls-files '*.rake')
 
       - name: ESLint (core)
-        if: ${{ always() }}
+        if: ${{ !cancelled() }}
         run: yarn eslint app/assets/javascripts
 
       - name: ESLint (core plugins)
-        if: ${{ always() }}
+        if: ${{ !cancelled() }}
         run: yarn eslint plugins
 
       - name: Prettier
-        if: ${{ always() }}
+        if: ${{ !cancelled() }}
         run: |
           yarn prettier -v
-          yarn prettier --list-different \
+          yarn pprettier --list-different \
             "app/assets/stylesheets/**/*.scss" \
             "app/assets/javascripts/**/*.js" \
             "plugins/**/assets/stylesheets/**/*.scss" \
             "plugins/**/assets/javascripts/**/*.js"
 
       - name: Ember template lint
-        if: ${{ always() }}
+        if: ${{ !cancelled() }}
         run: |
           yarn ember-template-lint \
-            app/assets/javascripts \
-            plugins/**/assets/javascripts
+            --no-error-on-unmatched-pattern \
+            "app/assets/javascripts/**/*.hbs" \
+            "plugins/**/assets/javascripts/**/*.hbs"
 
       - name: English locale lint (core)
-        if: ${{ always() }}
+        if: ${{ !cancelled() }}
         run: bundle exec ruby script/i18n_lint.rb "config/**/locales/{client,server}.en.yml"
 
       - name: English locale lint (core plugins)
-        if: ${{ always() }}
+        if: ${{ !cancelled() }}
         run: bundle exec ruby script/i18n_lint.rb "plugins/**/locales/{client,server}.en.yml"

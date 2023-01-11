@@ -10,9 +10,8 @@ if (security) {
         .getElementById("security-key-allowed-credential-ids")
         .value.split(","),
       (credentialData) => {
-        document.getElementById(
-          "security-key-credential"
-        ).value = JSON.stringify(credentialData);
+        document.getElementById("security-key-credential").value =
+          JSON.stringify(credentialData);
 
         $(e.target).parents("form").submit();
       },

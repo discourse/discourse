@@ -1,11 +1,7 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
-describe AboutController do
-
-  context '.index' do
-
+RSpec.describe AboutController do
+  describe "#index" do
     it "should display the about page for anonymous user when login_required is false" do
       SiteSetting.login_required = false
       get "/about"
@@ -14,11 +10,11 @@ describe AboutController do
       expect(response.body).to include("<title>About - Discourse</title>")
     end
 
-    it 'should redirect to login page for anonymous user when login_required is true' do
+    it "should redirect to login page for anonymous user when login_required is true" do
       SiteSetting.login_required = true
       get "/about"
 
-      expect(response).to redirect_to '/login'
+      expect(response).to redirect_to "/login"
     end
 
     it "should display the about page for logged in user when login_required is true" do
@@ -29,16 +25,16 @@ describe AboutController do
       expect(response.status).to eq(200)
     end
 
-    context "crawler view" do
+    context "with crawler view" do
       it "should include correct title" do
-        get '/about', headers: { 'HTTP_USER_AGENT' => 'Googlebot' }
+        get "/about", headers: { "HTTP_USER_AGENT" => "Googlebot" }
         expect(response.status).to eq(200)
         expect(response.body).to include("<title>About - Discourse</title>")
       end
 
       it "should include correct user URLs" do
         Fabricate(:admin, username: "anAdminUser")
-        get '/about', headers: { 'HTTP_USER_AGENT' => 'Googlebot' }
+        get "/about", headers: { "HTTP_USER_AGENT" => "Googlebot" }
         expect(response.status).to eq(200)
         expect(response.body).to include("/u/anadminuser")
       end

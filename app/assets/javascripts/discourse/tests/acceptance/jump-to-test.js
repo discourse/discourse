@@ -1,6 +1,6 @@
 import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
-import { skip, test } from "qunit";
+import { test } from "qunit";
 
 acceptance("Jump to", function (needs) {
   needs.user();
@@ -34,20 +34,6 @@ acceptance("Jump to", function (needs) {
       currentURL(),
       "/t/internationalization-localization/280/3",
       "it jumps to the correct post"
-    );
-  });
-
-  skip("invalid date", async function (assert) {
-    await visit("/t/internationalization-localization/280");
-    await click("nav#topic-progress .nums");
-    await click("button.jump-to-post");
-    await fillIn("input.date-picker", "2094-02-24");
-    await click(".jump-to-post-modal .btn-primary");
-
-    assert.strictEqual(
-      currentURL(),
-      "/t/internationalization-localization/280/20",
-      "it jumps to the last post if no post found"
     );
   });
 });

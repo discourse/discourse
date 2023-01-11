@@ -39,15 +39,14 @@
     </style>
     }}
 
-    <pre class="onebox">
-      <code class="{{lang}}">
-        <ol class="start lines" start="{{cr_results.from}}" style="counter-reset: li-counter {{cr_results.from_minus_one}} ;">
-          {{#lines}}
-            <li{{#selected}} class="selected"{{/selected}}>{{data}}</li>
-          {{/lines}}
-        </ol>
-      </code>
-    </pre>
+    {{!-- pre and code are intentionally on the same line to control whitespace --}}
+    <pre class="onebox"><code class="{{lang}}">
+      <ol class="start lines" start="{{cr_results.from}}" style="counter-reset: li-counter {{cr_results.from_minus_one}} ;">
+        {{#lines}}
+          <li{{#selected}} class="selected"{{/selected}}>{{data}}</li>
+        {{/lines}}
+      </ol>
+    </code></pre>
   {{/has_lines}}
 {{/binary}}
 

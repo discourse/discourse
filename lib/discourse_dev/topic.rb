@@ -1,13 +1,15 @@
 # frozen_string_literal: true
 
-require 'discourse_dev/record'
-require 'faker'
+require "discourse_dev/record"
+require "faker"
 
 module DiscourseDev
   class Topic < Record
-
-    def initialize
+    def initialize(private_messages: false, recipient: nil, ignore_current_count: false)
       @settings = DiscourseDev.config.topic
+      @private_messages = private_messages
+      @recipient = recipient
+      @ignore_current_count = ignore_current_count
       super(::Topic, @settings[:count])
     end
 
@@ -29,26 +31,35 @@ module DiscourseDev
         max_views = SiteSetting.topic_views_heat_high + SiteSetting.topic_views_heat_medium
       end
 
+      if @category
+        merge_attributes = { category: @category.id, tags: tags }
+      else
+        merge_attributes = { archetype: "private_message", target_usernames: [@recipient] }
+      end
+
       {
         title: title[0, SiteSetting.max_topic_title_length],
         raw: Faker::DiscourseMarkdown.sandwich(sentences: 5),
-        category: @category.id,
         created_at: Faker::Time.between(from: DiscourseDev.config.start_date, to: DateTime.now),
-        tags: tags,
         topic_opts: {
           import_mode: true,
           views: Faker::Number.between(from: 1, to: max_views),
-          custom_fields: { dev_sample: true }
+          custom_fields: {
+            dev_sample: true,
+          },
         },
-        skip_validations: true
-      }
+        skip_validations: true,
+      }.merge(merge_attributes)
     end
 
     def title
       if current_count < I18n.t("faker.discourse.topics").count
         Faker::Discourse.unique.topic
       else
-        Faker::Lorem.unique.sentence(word_count: 5, supplemental: true, random_words_to_add: 4).chomp(".")
+        Faker::Lorem
+          .unique
+          .sentence(word_count: 5, supplemental: true, random_words_to_add: 4)
+          .chomp(".")
       end
     end
 
@@ -57,15 +68,21 @@ module DiscourseDev
 
       @tags = []
 
-      Faker::Number.between(from: @settings.dig(:tags, :min), to: @settings.dig(:tags, :max)).times do
-        @tags << Faker::Discourse.tag
-      end
+      Faker::Number
+        .between(from: @settings.dig(:tags, :min), to: @settings.dig(:tags, :max))
+        .times { @tags << Faker::Discourse.tag }
 
       @tags.uniq
     end
 
     def create!
-      @category = Category.random
+      if @private_messages && !::User.find_by_username(@recipient)
+        puts "Cannot create PMs for missing user with username: #{@recipient}"
+        exit 1
+      end
+
+      @category = @private_messages ? nil : Category.random
+
       user = self.user
       topic_data = Faker::DiscourseMarkdown.with_user(user.id) { data }
       post = PostCreator.new(user, topic_data).create!
@@ -73,7 +90,11 @@ module DiscourseDev
       if override = @settings.dig(:replies, :overrides).find { |o| o[:title] == topic_data[:title] }
         reply_count = override[:count]
       else
-        reply_count = Faker::Number.between(from: @settings.dig(:replies, :min), to: @settings.dig(:replies, :max))
+        reply_count =
+          Faker::Number.between(
+            from: @settings.dig(:replies, :min),
+            to: @settings.dig(:replies, :max),
+          )
       end
 
       topic = post.topic
@@ -82,12 +103,13 @@ module DiscourseDev
     end
 
     def populate!
-      topics = super
+      topics = super(ignore_current_count: @ignore_current_count)
       delete_unwanted_sidekiq_jobs
       topics
     end
 
     def user
+      return ::User.find_by_username(@recipient) if @private_messages
       return User.random if @category.groups.blank?
 
       group_ids = @category.groups.pluck(:id)
@@ -103,9 +125,7 @@ module DiscourseDev
     end
 
     def delete_unwanted_sidekiq_jobs
-      Sidekiq::ScheduledSet.new.each do |job|
-        job.delete if job.item["class"] == "Jobs::UserEmail"
-      end
+      Sidekiq::ScheduledSet.new.each { |job| job.delete if job.item["class"] == "Jobs::UserEmail" }
     end
   end
 end

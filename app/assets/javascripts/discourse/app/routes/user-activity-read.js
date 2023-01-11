@@ -4,6 +4,7 @@ import { action } from "@ember/object";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import getURL from "discourse-common/lib/get-url";
 import I18n from "I18n";
+import { htmlSafe } from "@ember/template";
 
 export default UserTopicListRoute.extend({
   userActionType: UserAction.TYPES.topics,
@@ -23,13 +24,21 @@ export default UserTopicListRoute.extend({
       });
   },
 
+  afterModel(model, transition) {
+    if (!this.isPoppedState(transition)) {
+      this.session.set("topicListScrollPosition", null);
+    }
+  },
+
   emptyState() {
     const title = I18n.t("user_activity.no_read_topics_title");
-    const body = I18n.t("user_activity.no_read_topics_body", {
-      topUrl: getURL("/top"),
-      categoriesUrl: getURL("/categories"),
-      searchIcon: iconHTML("search"),
-    }).htmlSafe();
+    const body = htmlSafe(
+      I18n.t("user_activity.no_read_topics_body", {
+        topUrl: getURL("/top"),
+        categoriesUrl: getURL("/categories"),
+        searchIcon: iconHTML("search"),
+      })
+    );
     return { title, body };
   },
 

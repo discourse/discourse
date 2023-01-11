@@ -18,5 +18,4 @@ class CreateArchetypes < ActiveRecord::Migration[4.2]
     remove_column :forum_threads, :archetype_id
     drop_table :archetypes
   end
-
 end

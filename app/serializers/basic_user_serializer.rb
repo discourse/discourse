@@ -28,22 +28,12 @@ class BasicUserSerializer < ApplicationSerializer
   end
 
   def categories_with_notification_level(lookup_level)
-    category_user_notification_levels.select do |id, level|
-      level == CategoryUser.notification_levels[lookup_level]
-    end.keys
+    category_user_notification_levels
+      .select { |id, level| level == CategoryUser.notification_levels[lookup_level] }
+      .keys
   end
 
   def category_user_notification_levels
     @category_user_notification_levels ||= CategoryUser.notification_levels_for(user)
-  end
-
-  def tags_with_notification_level(lookup_level)
-    tag_user_notification_levels.select do |id, level|
-      level == TagUser.notification_levels[lookup_level]
-    end.keys
-  end
-
-  def tag_user_notification_levels
-    @tag_user_notification_levels ||= TagUser.notification_levels_for(user)
   end
 end

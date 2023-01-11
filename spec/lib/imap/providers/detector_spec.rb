@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe Imap::Providers::Detector do
   it "returns the gmail provider if the gmail imap server is used" do
     config = {
@@ -9,7 +7,7 @@ RSpec.describe Imap::Providers::Detector do
       port: 993,
       ssl: true,
       username: "test@gmail.com",
-      password: "testpassword1"
+      password: "testpassword1",
     }
     expect(described_class.init_with_detected_provider(config)).to be_a(Imap::Providers::Gmail)
   end
@@ -20,7 +18,7 @@ RSpec.describe Imap::Providers::Detector do
       port: 993,
       ssl: true,
       username: "test@yo.com",
-      password: "testpassword1"
+      password: "testpassword1",
     }
     expect(described_class.init_with_detected_provider(config)).to be_a(Imap::Providers::Generic)
   end

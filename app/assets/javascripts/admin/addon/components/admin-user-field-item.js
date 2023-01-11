@@ -1,20 +1,17 @@
-import discourseComputed, {
-  observes,
-  on,
-} from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import { i18n, propertyEqual } from "discourse/lib/computed";
 import Component from "@ember/component";
 import I18n from "I18n";
 import UserField from "admin/models/user-field";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
-import { empty } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { scheduleOnce } from "@ember/runloop";
+import { schedule } from "@ember/runloop";
+import { action } from "@ember/object";
 
 export default Component.extend(bufferedProperty("userField"), {
-  editing: empty("userField.id"),
-  classNameBindings: [":user-field"],
+  tagName: "",
+  isEditing: false,
 
   cantMoveUp: propertyEqual("userField", "firstField"),
   cantMoveDown: propertyEqual("userField", "lastField"),
@@ -26,21 +23,21 @@ export default Component.extend(bufferedProperty("userField"), {
     return UserField.fieldTypeById(fieldType);
   },
 
-  @on("didInsertElement")
-  @observes("editing")
-  _focusOnEdit() {
-    if (this.editing) {
-      scheduleOnce("afterRender", this, "_focusName");
-    }
+  didInsertElement() {
+    this._super(...arguments);
+
+    this._focusName();
   },
 
   _focusName() {
-    $(".user-field-name").select();
+    schedule("afterRender", () => {
+      document.querySelector(".user-field-name")?.focus();
+    });
   },
 
   @discourseComputed("userField.field_type")
   fieldName(fieldType) {
-    return UserField.fieldTypeById(fieldType).get("name");
+    return UserField.fieldTypeById(fieldType)?.name;
   },
 
   @discourseComputed(
@@ -67,42 +64,46 @@ export default Component.extend(bufferedProperty("userField"), {
     return ret.join(", ");
   },
 
-  actions: {
-    save() {
-      const buffered = this.buffered;
-      const attrs = buffered.getProperties(
-        "name",
-        "description",
-        "field_type",
-        "editable",
-        "required",
-        "show_on_profile",
-        "show_on_user_card",
-        "searchable",
-        "options"
-      );
+  @action
+  save() {
+    const attrs = this.buffered.getProperties(
+      "name",
+      "description",
+      "field_type",
+      "editable",
+      "required",
+      "show_on_profile",
+      "show_on_user_card",
+      "searchable",
+      "options"
+    );
 
-      this.userField
-        .save(attrs)
-        .then(() => {
-          this.set("editing", false);
-          this.commitBuffer();
-        })
-        .catch(popupAjaxError);
-    },
+    return this.userField
+      .save(attrs)
+      .then(() => {
+        if (this.isDestroying || this.isDestroyed) {
+          return;
+        }
 
-    edit() {
-      this.set("editing", true);
-    },
+        this.set("isEditing", false);
+        this.commitBuffer();
+      })
+      .catch(popupAjaxError);
+  },
 
-    cancel() {
-      const id = this.get("userField.id");
-      if (isEmpty(id)) {
-        this.destroyAction(this.userField);
-      } else {
-        this.rollbackBuffer();
-        this.set("editing", false);
-      }
-    },
+  @action
+  edit() {
+    this.set("isEditing", true);
+    this._focusName();
+  },
+
+  @action
+  cancel() {
+    if (isEmpty(this.userField?.id)) {
+      this.destroyAction(this.userField);
+    } else {
+      this.rollbackBuffer();
+      this.set("isEditing", false);
+    }
   },
 });

@@ -1,7 +1,16 @@
 import EmberObject, { computed, get, getProperties } from "@ember/object";
+import { camelize } from "@ember/string";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import { defaultHomepage, escapeExpression } from "discourse/lib/utilities";
-import { equal, filterBy, gt, or } from "@ember/object/computed";
+import {
+  alias,
+  equal,
+  filterBy,
+  gt,
+  mapBy,
+  or,
+  readOnly,
+} from "@ember/object/computed";
 import getURL, { getURLWithCDN } from "discourse-common/lib/get-url";
 import { A } from "@ember/array";
 import Badge from "discourse/models/badge";
@@ -30,12 +39,37 @@ import { isEmpty } from "@ember/utils";
 import { longDate } from "discourse/lib/formatter";
 import { url } from "discourse/lib/computed";
 import { userPath } from "discourse/lib/url";
+import { htmlSafe } from "@ember/template";
+import Evented from "@ember/object/evented";
+import { cancel } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
+import { isTesting } from "discourse-common/config/environment";
+import {
+  hideAllUserTips,
+  hideUserTip,
+  showNextUserTip,
+  showUserTip,
+} from "discourse/lib/user-tips";
+import { dependentKeyCompat } from "@ember/object/compat";
 
 export const SECOND_FACTOR_METHODS = {
   TOTP: 1,
   BACKUP_CODE: 2,
   SECURITY_KEY: 3,
 };
+
+const TEXT_SIZE_COOKIE_NAME = "text_size";
+const COOKIE_EXPIRY_DAYS = 365;
+
+export function extendTextSizeCookie() {
+  const currentValue = cookie(TEXT_SIZE_COOKIE_NAME);
+  if (currentValue) {
+    cookie(TEXT_SIZE_COOKIE_NAME, currentValue, {
+      path: "/",
+      expires: COOKIE_EXPIRY_DAYS,
+    });
+  }
+}
 
 const isForever = (dt) => moment().diff(dt, "years") < -100;
 
@@ -61,6 +95,9 @@ let userFields = [
   "primary_group_id",
   "flair_group_id",
   "user_notification_schedule",
+  "sidebar_category_ids",
+  "sidebar_tag_names",
+  "status",
 ];
 
 export function addSaveableUserField(fieldName) {
@@ -97,21 +134,74 @@ let userOptionFields = [
   "title_count_mode",
   "timezone",
   "skip_new_user_tips",
+  "seen_popups",
   "default_calendar",
+  "bookmark_auto_delete_preference",
+  "sidebar_list_destination",
 ];
 
 export function addSaveableUserOptionField(fieldName) {
   userOptionFields.push(fieldName);
 }
 
+function userOption(userOptionKey) {
+  return computed(`user_option.${userOptionKey}`, {
+    get(key) {
+      deprecated(
+        `Getting ${key} property of user object is deprecated. Use user_option object instead`,
+        {
+          id: "discourse.user.userOptions",
+          since: "2.9.0.beta12",
+          dropFrom: "3.0.0.beta1",
+        }
+      );
+
+      return this.get(`user_option.${key}`);
+    },
+
+    set(key, value) {
+      deprecated(
+        `Setting ${key} property of user object is deprecated. Use user_option object instead`,
+        {
+          id: "discourse.user.userOptions",
+          since: "2.9.0.beta12",
+          dropFrom: "3.0.0.beta1",
+        }
+      );
+
+      if (!this.user_option) {
+        this.set("user_option", {});
+      }
+
+      return this.set(`user_option.${key}`, value);
+    },
+  });
+}
+
 const User = RestModel.extend({
+  mailing_list_mode: userOption("mailing_list_mode"),
+  external_links_in_new_tab: userOption("external_links_in_new_tab"),
+  enable_quoting: userOption("enable_quoting"),
+  dynamic_favicon: userOption("dynamic_favicon"),
+  automatically_unpin_topics: userOption("automatically_unpin_topics"),
+  likes_notifications_disabled: userOption("likes_notifications_disabled"),
+  hide_profile_and_presence: userOption("hide_profile_and_presence"),
+  title_count_mode: userOption("title_count_mode"),
+  enable_defer: userOption("enable_defer"),
+  timezone: userOption("timezone"),
+  skip_new_user_tips: userOption("skip_new_user_tips"),
+  default_calendar: userOption("default_calendar"),
+  bookmark_auto_delete_preference: userOption(
+    "bookmark_auto_delete_preference"
+  ),
+  seen_popups: userOption("seen_popups"),
+  should_be_redirected_to_top: userOption("should_be_redirected_to_top"),
+  redirected_to_top: userOption("redirected_to_top"),
+  treat_as_new_topic_start_date: userOption("treat_as_new_topic_start_date"),
+
   hasPMs: gt("private_messages_stats.all", 0),
   hasStartedPMs: gt("private_messages_stats.mine", 0),
   hasUnreadPMs: gt("private_messages_stats.unread", 0),
-
-  redirected_to_top: {
-    reason: null,
-  },
 
   @discourseComputed("can_be_deleted", "post_count")
   canBeDeleted(canBeDeleted, postCount) {
@@ -174,9 +264,9 @@ const User = RestModel.extend({
   @discourseComputed("profile_background_upload_url")
   profileBackgroundUrl(bgUrl) {
     if (isEmpty(bgUrl) || !this.siteSettings.allow_profile_backgrounds) {
-      return "".htmlSafe();
+      return htmlSafe("");
     }
-    return ("background-image: url(" + getURLWithCDN(bgUrl) + ")").htmlSafe();
+    return htmlSafe("background-image: url(" + getURLWithCDN(bgUrl) + ")");
   },
 
   @discourseComputed()
@@ -304,6 +394,22 @@ const User = RestModel.extend({
   @discourseComputed("silenced_till")
   silencedTillDate: longDate,
 
+  sidebarCategoryIds: alias("sidebar_category_ids"),
+
+  @discourseComputed("sidebar_tags.[]")
+  sidebarTags(sidebarTags) {
+    if (!sidebarTags || sidebarTags.length === 0) {
+      return [];
+    }
+
+    return sidebarTags.sort((a, b) => {
+      return a.name.localeCompare(b.name);
+    });
+  },
+
+  sidebarTagNames: mapBy("sidebarTags", "name"),
+  sidebarListDestination: readOnly("sidebar_list_destination"),
+
   changeUsername(new_username) {
     return ajax(userPath(`${this.username_lower}/preferences/username`), {
       type: "PUT",
@@ -331,38 +437,36 @@ const User = RestModel.extend({
 
   save(fields) {
     const data = this.getProperties(
-      userFields.filter((uf) => !fields || fields.indexOf(uf) !== -1)
+      userFields.filter((uf) => !fields || fields.includes(uf))
     );
 
-    if (fields) {
-      userOptionFields = userOptionFields.filter(
-        (uo) => fields.indexOf(uo) !== -1
-      );
-    }
+    const filteredUserOptionFields = fields
+      ? userOptionFields.filter((uo) => fields.includes(uo))
+      : userOptionFields;
 
-    userOptionFields.forEach((s) => {
+    filteredUserOptionFields.forEach((s) => {
       data[s] = this.get(`user_option.${s}`);
     });
 
-    let updatedState = {};
+    const updatedState = {};
 
     ["muted", "regular", "watched", "tracked", "watched_first_post"].forEach(
-      (s) => {
-        if (fields === undefined || fields.includes(s + "_category_ids")) {
-          let prop =
-            s === "watched_first_post"
-              ? "watchedFirstPostCategories"
-              : s + "Categories";
-          let cats = this.get(prop);
-          if (cats) {
-            let cat_ids = cats.map((c) => c.get("id"));
-            updatedState[s + "_category_ids"] = cat_ids;
+      (categoryNotificationLevel) => {
+        if (
+          fields === undefined ||
+          fields.includes(`${categoryNotificationLevel}_category_ids`)
+        ) {
+          const categories = this.get(
+            `${camelize(categoryNotificationLevel)}Categories`
+          );
 
-            // HACK: denote lack of categories
-            if (cats.length === 0) {
-              cat_ids = [-1];
-            }
-            data[s + "_category_ids"] = cat_ids;
+          if (categories) {
+            const ids = categories.map((c) => c.get("id"));
+            updatedState[`${categoryNotificationLevel}_category_ids`] = ids;
+            // HACK: Empty arrays are not sent in the request, we use [-1],
+            // an invalid category ID, that will be ignored by the server.
+            data[`${categoryNotificationLevel}_category_ids`] =
+              ids.length === 0 ? [-1] : ids;
           }
         }
       }
@@ -379,6 +483,12 @@ const User = RestModel.extend({
       }
     });
 
+    ["sidebar_category_ids", "sidebar_tag_names"].forEach((prop) => {
+      if (data[prop]?.length === 0) {
+        data[prop] = null;
+      }
+    });
+
     // TODO: We can remove this when migrated fully to rest model.
     this.set("isSaving", true);
     return ajax(userPath(`${this.username_lower}.json`), {
@@ -386,16 +496,9 @@ const User = RestModel.extend({
       type: "PUT",
     })
       .then((result) => {
-        this.set("bio_excerpt", result.user.bio_excerpt);
-        const userProps = getProperties(
-          this.user_option,
-          "enable_quoting",
-          "enable_defer",
-          "external_links_in_new_tab",
-          "dynamic_favicon"
-        );
-        User.current().setProperties(userProps);
         this.setProperties(updatedState);
+        this.setProperties(getProperties(result.user, "bio_excerpt"));
+        return result;
       })
       .finally(() => {
         this.set("isSaving", false);
@@ -524,25 +627,27 @@ const User = RestModel.extend({
     });
   },
 
-  loadUserAction(id) {
-    const stream = this.stream;
-    return ajax(`/user_actions/${id}.json`).then((result) => {
-      if (result && result.user_action) {
-        const ua = result.user_action;
+  async loadUserAction(id) {
+    const result = await ajax(`/user_actions/${id}.json`);
 
-        if ((this.get("stream.filter") || ua.action_type) !== ua.action_type) {
-          return;
-        }
-        if (!this.get("stream.filter") && !this.inAllStream(ua)) {
-          return;
-        }
+    if (!result?.user_action) {
+      return;
+    }
 
-        ua.title = emojiUnescape(escapeExpression(ua.title));
-        const action = UserAction.collapseStream([UserAction.create(ua)]);
-        stream.set("itemsLoaded", stream.get("itemsLoaded") + 1);
-        stream.get("content").insertAt(0, action[0]);
-      }
-    });
+    const ua = result.user_action;
+
+    if ((this.get("stream.filter") || ua.action_type) !== ua.action_type) {
+      return;
+    }
+
+    if (!this.get("stream.filter") && !this.inAllStream(ua)) {
+      return;
+    }
+
+    ua.title = emojiUnescape(escapeExpression(ua.title));
+    const action = UserAction.collapseStream([UserAction.create(ua)]);
+    this.stream.set("itemsLoaded", this.stream.get("itemsLoaded") + 1);
+    this.stream.get("content").insertAt(0, action[0]);
   },
 
   inAllStream(ua) {
@@ -574,6 +679,20 @@ const User = RestModel.extend({
   @discourseComputed("filteredGroups", "numGroupsToDisplay")
   showMoreGroupsLink(filteredGroups, numGroupsToDisplay) {
     return filteredGroups.length > numGroupsToDisplay;
+  },
+
+  // NOTE: This only includes groups *visible* to the user via the serializer,
+  // so be wary when using this.
+  isInAnyGroups(groupIds) {
+    if (!this.groups) {
+      return;
+    }
+
+    // auto group ID 0 is "everyone"
+    return (
+      groupIds.includes(0) ||
+      this.groups.mapBy("id").some((groupId) => groupIds.includes(groupId))
+    );
   },
 
   // The user's stat count, excluding PMs.
@@ -661,11 +780,6 @@ const User = RestModel.extend({
         json.user.card_badge = Badge.create(json.user.card_badge);
       }
 
-      if (!json.user._timezone) {
-        json.user._timezone = json.user.timezone;
-        delete json.user.timezone;
-      }
-
       user.setProperties(json.user);
       return user;
     });
@@ -731,29 +845,59 @@ const User = RestModel.extend({
     });
   },
 
-  @discourseComputed("muted_category_ids")
-  mutedCategories(mutedCategoryIds) {
-    return Category.findByIds(mutedCategoryIds);
+  @dependentKeyCompat
+  get mutedCategories() {
+    return Category.findByIds(this.get("muted_category_ids"));
+  },
+  set mutedCategories(categories) {
+    this.set(
+      "muted_category_ids",
+      categories.map((c) => c.id)
+    );
   },
 
-  @discourseComputed("regular_category_ids")
-  regularCategories(regularCategoryIds) {
-    return Category.findByIds(regularCategoryIds);
+  @dependentKeyCompat
+  get regularCategories() {
+    return Category.findByIds(this.get("regular_category_ids"));
+  },
+  set regularCategories(categories) {
+    this.set(
+      "regular_category_ids",
+      categories.map((c) => c.id)
+    );
   },
 
-  @discourseComputed("tracked_category_ids")
-  trackedCategories(trackedCategoryIds) {
-    return Category.findByIds(trackedCategoryIds);
+  @dependentKeyCompat
+  get trackedCategories() {
+    return Category.findByIds(this.get("tracked_category_ids"));
+  },
+  set trackedCategories(categories) {
+    this.set(
+      "tracked_category_ids",
+      categories.map((c) => c.id)
+    );
   },
 
-  @discourseComputed("watched_category_ids")
-  watchedCategories(watchedCategoryIds) {
-    return Category.findByIds(watchedCategoryIds);
+  @dependentKeyCompat
+  get watchedCategories() {
+    return Category.findByIds(this.get("watched_category_ids"));
+  },
+  set watchedCategories(categories) {
+    this.set(
+      "watched_category_ids",
+      categories.map((c) => c.id)
+    );
   },
 
-  @discourseComputed("watched_first_post_category_ids")
-  watchedFirstPostCategories(wachedFirstPostCategoryIds) {
-    return Category.findByIds(wachedFirstPostCategoryIds);
+  @dependentKeyCompat
+  get watchedFirstPostCategories() {
+    return Category.findByIds(this.get("watched_first_post_category_ids"));
+  },
+  set watchedFirstPostCategories(categories) {
+    this.set(
+      "watched_first_post_category_ids",
+      categories.map((c) => c.id)
+    );
   },
 
   @discourseComputed("can_delete_account")
@@ -772,18 +916,25 @@ const User = RestModel.extend({
     }
   },
 
-  updateNotificationLevel(level, expiringAt) {
+  updateNotificationLevel({ level, expiringAt = null, actingUser = null }) {
+    if (!actingUser) {
+      actingUser = User.current();
+    }
     return ajax(`${userPath(this.username)}/notification_level.json`, {
       type: "PUT",
-      data: { notification_level: level, expiring_at: expiringAt },
+      data: {
+        notification_level: level,
+        expiring_at: expiringAt,
+        acting_user_id: actingUser.id,
+      },
     }).then(() => {
-      const currentUser = User.current();
-      if (currentUser) {
-        if (level === "normal" || level === "mute") {
-          currentUser.ignored_users.removeObject(this.username);
-        } else if (level === "ignore") {
-          currentUser.ignored_users.addObject(this.username);
-        }
+      if (!actingUser.ignored_users) {
+        actingUser.ignored_users = [];
+      }
+      if (level === "normal" || level === "mute") {
+        actingUser.ignored_users.removeObject(this.username);
+      } else if (level === "ignore") {
+        actingUser.ignored_users.addObject(this.username);
       }
     });
   },
@@ -915,8 +1066,8 @@ const User = RestModel.extend({
 
   @discourseComputed("user_option.text_size_seq", "user_option.text_size")
   currentTextSize(serverSeq, serverSize) {
-    if (cookie("text_size")) {
-      const [cookieSize, cookieSeq] = cookie("text_size").split("|");
+    if (cookie(TEXT_SIZE_COOKIE_NAME)) {
+      const [cookieSize, cookieSeq] = cookie(TEXT_SIZE_COOKIE_NAME).split("|");
       if (cookieSeq >= serverSeq) {
         return cookieSize;
       }
@@ -927,12 +1078,12 @@ const User = RestModel.extend({
   updateTextSizeCookie(newSize) {
     if (newSize) {
       const seq = this.get("user_option.text_size_seq");
-      cookie("text_size", `${newSize}|${seq}`, {
+      cookie(TEXT_SIZE_COOKIE_NAME, `${newSize}|${seq}`, {
         path: "/",
-        expires: 9999,
+        expires: COOKIE_EXPIRY_DAYS,
       });
     } else {
-      removeCookie("text_size", { path: "/", expires: 1 });
+      removeCookie(TEXT_SIZE_COOKIE_NAME, { path: "/" });
     }
   },
 
@@ -945,34 +1096,17 @@ const User = RestModel.extend({
     );
   },
 
-  resolvedTimezone(currentUser) {
-    if (this.hasSavedTimezone()) {
-      return this._timezone;
-    }
+  resolvedTimezone() {
+    deprecated(
+      "user.resolvedTimezone() has been deprecated. Use user.user_option.timezone instead",
+      {
+        id: "discourse.user.resolved-timezone",
+        since: "2.9.0.beta12",
+        dropFrom: "3.0.0.beta1",
+      }
+    );
 
-    // only change the timezone and save it if we are
-    // looking at our own user
-    if (currentUser.id === this.id) {
-      this.changeTimezone(moment.tz.guess());
-      ajax(userPath(this.username + ".json"), {
-        type: "PUT",
-        dataType: "json",
-        data: { timezone: this._timezone },
-      });
-    }
-
-    return this._timezone;
-  },
-
-  changeTimezone(tz) {
-    this._timezone = tz;
-  },
-
-  hasSavedTimezone() {
-    if (this._timezone) {
-      return true;
-    }
-    return false;
+    return this.user_option.timezone;
   },
 
   calculateMutedIds(notificationLevel, id, type) {
@@ -1015,26 +1149,111 @@ const User = RestModel.extend({
     this.appEvents.trigger("do-not-disturb:changed", this.do_not_disturb_until);
   },
 
+  updateDraftProperties(properties) {
+    this.setProperties(properties);
+    this.appEvents.trigger("user-drafts:changed");
+  },
+
+  updateReviewableCount(count) {
+    this.set("reviewable_count", count);
+    this.appEvents.trigger("user-reviewable-count:changed", count);
+  },
+
   isInDoNotDisturb() {
     return (
       this.do_not_disturb_until &&
       new Date(this.do_not_disturb_until) >= new Date()
     );
   },
+
+  @discourseComputed(
+    "tracked_tags.[]",
+    "watched_tags.[]",
+    "watching_first_post_tags.[]"
+  )
+  trackedTags(trackedTags, watchedTags, watchingFirstPostTags) {
+    return [...trackedTags, ...watchedTags, ...watchingFirstPostTags];
+  },
+
+  showUserTip(options) {
+    const userTips = Site.currentProp("user_tips");
+    if (!userTips || this.skip_new_user_tips) {
+      return;
+    }
+
+    if (!userTips[options.id]) {
+      if (!isTesting()) {
+        // eslint-disable-next-line no-console
+        console.warn("Cannot show user tip with type =", options.id);
+      }
+      return;
+    }
+
+    const seenUserTips = this.seen_popups || [];
+    if (
+      seenUserTips.includes(-1) ||
+      seenUserTips.includes(userTips[options.id])
+    ) {
+      return;
+    }
+
+    showUserTip({
+      ...options,
+      onDismiss: () => this.hideUserTipForever(options.id),
+      onDismissAll: () => this.hideUserTipForever(),
+    });
+  },
+
+  hideUserTipForever(userTipId) {
+    const userTips = Site.currentProp("user_tips");
+    if (!userTips || this.skip_new_user_tips) {
+      return;
+    }
+
+    // Empty userTipId means all user tips.
+    if (userTipId && !userTips[userTipId]) {
+      // eslint-disable-next-line no-console
+      console.warn("Cannot hide user tip with type =", userTipId);
+      return;
+    }
+
+    // Hide user tips and maybe show the next one.
+    if (userTipId) {
+      hideUserTip(userTipId);
+      showNextUserTip();
+    } else {
+      hideAllUserTips();
+    }
+
+    // Update list of seen user tips.
+    let seenUserTips = this.seen_popups || [];
+    if (userTipId) {
+      if (seenUserTips.includes(userTips[userTipId])) {
+        return;
+      }
+      seenUserTips.push(userTips[userTipId]);
+    } else {
+      if (seenUserTips.includes(-1)) {
+        return;
+      }
+      seenUserTips = [-1];
+    }
+
+    // Save seen user tips on the server.
+    if (!this.user_option) {
+      this.set("user_option", {});
+    }
+    this.set("user_option.seen_popups", seenUserTips);
+    if (userTipId) {
+      return this.save(["seen_popups"]);
+    } else {
+      this.set("user_option.skip_new_user_tips", true);
+      return this.save(["seen_popups", "skip_new_user_tips"]);
+    }
+  },
 });
 
 User.reopenClass(Singleton, {
-  munge(json) {
-    // timezone should not be directly accessed, use
-    // resolvedTimezone() and changeTimezone(tz)
-    if (!json._timezone) {
-      json._timezone = json.timezone;
-      delete json.timezone;
-    }
-
-    return json;
-  },
-
   // Find a `User` for a given username.
   findByUsername(username, options) {
     const user = User.create({ username });
@@ -1043,22 +1262,30 @@ User.reopenClass(Singleton, {
 
   // TODO: Use app.register and junk Singleton
   createCurrent() {
-    let userJson = PreloadStore.get("currentUser");
-
-    if (userJson && userJson.primary_group_id) {
-      const primaryGroup = userJson.groups.find(
-        (group) => group.id === userJson.primary_group_id
-      );
-      if (primaryGroup) {
-        userJson.primary_group_name = primaryGroup.name;
-      }
-    }
-
+    const userJson = PreloadStore.get("currentUser");
     if (userJson) {
-      userJson = User.munge(userJson);
+      userJson.isCurrent = true;
+
+      if (userJson.primary_group_id) {
+        const primaryGroup = userJson.groups.find(
+          (group) => group.id === userJson.primary_group_id
+        );
+        if (primaryGroup) {
+          userJson.primary_group_name = primaryGroup.name;
+        }
+      }
+
+      if (!userJson.user_option.timezone) {
+        userJson.user_option.timezone = moment.tz.guess();
+        this._saveTimezone(userJson);
+      }
+
       const store = getOwner(this).lookup("service:store");
-      return store.createRecord("user", userJson);
+      const currentUser = store.createRecord("user", userJson);
+      currentUser.trackStatus();
+      return currentUser;
     }
+
     return null;
   },
 
@@ -1129,6 +1356,120 @@ User.reopenClass(Singleton, {
       type: "POST",
     });
   },
+
+  _saveTimezone(user) {
+    ajax(userPath(user.username + ".json"), {
+      type: "PUT",
+      dataType: "json",
+      data: { timezone: user.user_option.timezone },
+    });
+  },
+});
+
+User.reopenClass({
+  create(args) {
+    args = args || {};
+    this.deleteStatusTrackingFields(args);
+    return this._super(args);
+  },
+
+  deleteStatusTrackingFields(args) {
+    // every user instance has to have it's own tracking fields
+    // when creating a new user model
+    // its _subscribersCount and _clearStatusTimerId fields
+    // should be equal to 0 and null
+    // here we makes sure that even if these fields
+    // will be passed in args they won't be set anyway
+    //
+    // this is something that could be implemented by making these fields private,
+    // but EmberObject doesn't support private fields
+    if (args.hasOwnProperty("_subscribersCount")) {
+      delete args._subscribersCount;
+    }
+    if (args.hasOwnProperty("_clearStatusTimerId")) {
+      delete args._clearStatusTimerId;
+    }
+  },
+});
+
+// user status tracking
+User.reopen(Evented, {
+  _subscribersCount: 0,
+  _clearStatusTimerId: null,
+
+  // always call stopTrackingStatus() when done with a user
+  trackStatus() {
+    if (this._subscribersCount === 0) {
+      this.addObserver("status", this, "_statusChanged");
+
+      this.appEvents.on("user-status:changed", this, this._updateStatus);
+
+      if (this.status && this.status.ends_at) {
+        this._scheduleStatusClearing(this.status.ends_at);
+      }
+    }
+
+    this._subscribersCount++;
+  },
+
+  stopTrackingStatus() {
+    if (this._subscribersCount === 0) {
+      return;
+    }
+
+    if (this._subscribersCount === 1) {
+      // the last subscriber is unsubscribing
+      this.removeObserver("status", this, "_statusChanged");
+      this.appEvents.off("user-status:changed", this, this._updateStatus);
+      this._unscheduleStatusClearing();
+    }
+
+    this._subscribersCount--;
+  },
+
+  _statusChanged(sender, key) {
+    this.trigger("status-changed");
+
+    const status = this.get(key);
+    if (status && status.ends_at) {
+      this._scheduleStatusClearing(status.ends_at);
+    } else {
+      this._unscheduleStatusClearing();
+    }
+  },
+
+  _scheduleStatusClearing(endsAt) {
+    if (isTesting()) {
+      return;
+    }
+
+    if (this._clearStatusTimerId) {
+      this._unscheduleStatusClearing();
+    }
+
+    const utcNow = moment.utc();
+    const remaining = moment.utc(endsAt).diff(utcNow, "milliseconds");
+    this._clearStatusTimerId = discourseLater(
+      this,
+      "_autoClearStatus",
+      remaining
+    );
+  },
+
+  _unscheduleStatusClearing() {
+    cancel(this._clearStatusTimerId);
+    this._clearStatusTimerId = null;
+  },
+
+  _autoClearStatus() {
+    this.set("status", null);
+  },
+
+  _updateStatus(statuses) {
+    if (statuses.hasOwnProperty(this.id)) {
+      this.set("status", statuses[this.id]);
+    }
+  },
 });
 
 if (typeof Discourse !== "undefined") {
@@ -1137,9 +1478,9 @@ if (typeof Discourse !== "undefined") {
   Object.defineProperty(Discourse, "User", {
     get() {
       if (!warned) {
-        deprecated("Import the User class instead of using User", {
+        deprecated("Import the User class instead of using Discourse.User", {
           since: "2.4.0",
-          dropFrom: "2.6.0",
+          id: "discourse.globals.user",
         });
         warned = true;
       }

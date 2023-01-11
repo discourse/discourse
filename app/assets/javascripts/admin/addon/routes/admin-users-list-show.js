@@ -12,8 +12,9 @@ export default DiscourseRoute.extend({
     const routeName = "adminUsersList.show";
 
     if (transition.targetName === routeName) {
-      const params = transition.routeInfos.find((a) => a.name === routeName)
-        .params;
+      const params = transition.routeInfos.find(
+        (a) => a.name === routeName
+      ).params;
       const controller = this.controllerFor(routeName);
       if (controller) {
         controller.setProperties({

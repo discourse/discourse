@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe Jobs::CleanUpUnusedStagedUsers do
   fab!(:staged_user) { Fabricate(:user, staged: true) }
 
@@ -16,19 +14,19 @@ RSpec.describe Jobs::CleanUpUnusedStagedUsers do
     context "when staged user is old enough" do
       before { staged_user.update!(created_at: 2.years.ago) }
 
-      context "regular staged user" do
+      context "with regular staged user" do
         it "deletes the staged user" do
           expect { described_class.new.execute({}) }.to change { User.count }.by(-1)
           expect(User.exists?(staged_user.id)).to eq(false)
         end
       end
 
-      context "staged admin" do
+      context "with staged admin" do
         before { staged_user.update!(admin: true) }
         include_examples "does not delete"
       end
 
-      context "staged moderator" do
+      context "with staged moderator" do
         before { staged_user.update!(moderator: true) }
         include_examples "does not delete"
       end
@@ -39,7 +37,7 @@ RSpec.describe Jobs::CleanUpUnusedStagedUsers do
       end
     end
 
-    context 'when staged user is not old enough' do
+    context "when staged user is not old enough" do
       before { staged_user.update!(created_at: 5.months.ago) }
       include_examples "does not delete"
     end

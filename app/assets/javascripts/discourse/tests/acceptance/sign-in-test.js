@@ -2,10 +2,10 @@ import {
   acceptance,
   count,
   exists,
-  queryAll,
+  query,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
-import { skip, test } from "qunit";
+import { test } from "qunit";
 
 acceptance("Signing In", function () {
   test("sign in", async function (assert) {
@@ -18,9 +18,20 @@ acceptance("Signing In", function () {
     await fillIn("#login-account-password", "incorrect");
     await click(".modal-footer .btn-primary");
     assert.ok(exists("#modal-alert:visible"), "it displays the login error");
-    assert.not(
+    assert.notOk(
       exists(".modal-footer .btn-primary:disabled"),
       "enables the login button"
+    );
+
+    // Test password unmasking
+    assert.ok(
+      exists("#login-account-password[type='password']"),
+      "password is masked by default"
+    );
+    await click(".toggle-password-mask");
+    assert.ok(
+      exists("#login-account-password[type='text']"),
+      "password is unmasked after toggle is clicked"
     );
 
     // Use the correct password
@@ -41,14 +52,14 @@ acceptance("Signing In", function () {
     await fillIn("#login-account-password", "not-activated");
     await click(".modal-footer .btn-primary");
     assert.strictEqual(
-      queryAll(".modal-body b").text(),
+      query(".modal-body b").innerText,
       "<small>eviltrout@example.com</small>"
     );
     assert.ok(!exists(".modal-body small"), "it escapes the email address");
 
     await click(".modal-footer button.resend");
     assert.strictEqual(
-      queryAll(".modal-body b").text(),
+      query(".modal-body b").innerText,
       "<small>current@example.com</small>"
     );
     assert.ok(!exists(".modal-body small"), "it escapes the email address");
@@ -64,7 +75,7 @@ acceptance("Signing In", function () {
     await click(".modal-footer .btn-primary");
     await click(".modal-footer button.edit-email");
     assert.strictEqual(
-      queryAll(".activate-new-email").val(),
+      query(".activate-new-email").value,
       "current@example.com"
     );
     assert.strictEqual(
@@ -76,12 +87,12 @@ acceptance("Signing In", function () {
     assert.ok(!exists(".modal-footer .btn-primary:disabled"));
     await click(".modal-footer .btn-primary");
     assert.strictEqual(
-      queryAll(".modal-body b").text(),
+      query(".modal-body b").innerText,
       "different@example.com"
     );
   });
 
-  skip("second factor", async function (assert) {
+  test("second factor", async function (assert) {
     await visit("/");
     await click("header .login-button");
 
@@ -91,8 +102,7 @@ acceptance("Signing In", function () {
     await fillIn("#login-account-password", "need-second-factor");
     await click(".modal-footer .btn-primary");
 
-    assert.not(exists("#modal-alert:visible"), "it hides the login error");
-    assert.not(
+    assert.notOk(
       exists("#credentials:visible"),
       "it hides the username and password prompt"
     );
@@ -100,7 +110,7 @@ acceptance("Signing In", function () {
       exists("#second-factor:visible"),
       "it displays the second factor prompt"
     );
-    assert.not(
+    assert.notOk(
       exists(".modal-footer .btn-primary:disabled"),
       "enables the login button"
     );
@@ -114,7 +124,7 @@ acceptance("Signing In", function () {
     );
   });
 
-  skip("security key", async function (assert) {
+  test("security key", async function (assert) {
     await visit("/");
     await click("header .login-button");
 
@@ -124,12 +134,11 @@ acceptance("Signing In", function () {
     await fillIn("#login-account-password", "need-security-key");
     await click(".modal-footer .btn-primary");
 
-    assert.not(exists("#modal-alert:visible"), "it hides the login error");
-    assert.not(
+    assert.notOk(
       exists("#credentials:visible"),
       "it hides the username and password prompt"
     );
-    assert.not(
+    assert.notOk(
       exists("#login-second-factor:visible"),
       "it does not display the second factor prompt"
     );
@@ -137,7 +146,7 @@ acceptance("Signing In", function () {
       exists("#security-key:visible"),
       "it shows the security key prompt"
     );
-    assert.not(exists("#login-button:visible"), "hides the login button");
+    assert.notOk(exists("#login-button:visible"), "hides the login button");
   });
 
   test("create account", async function (assert) {
@@ -162,7 +171,7 @@ acceptance("Signing In", function () {
     );
     await click(".modal-footer .btn-primary");
 
-    await fillIn("#new-account-username", "goodtuna");
+    await fillIn("#new-account-username", "good-tuna");
     assert.ok(
       exists("#username-validation.good"),
       "the username validation is good"

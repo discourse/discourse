@@ -100,9 +100,10 @@
             '_'
         ),
         monthsShort: 'jan_feb_mar_apr_maí_jún_júl_ágú_sep_okt_nóv_des'.split('_'),
-        weekdays: 'sunnudagur_mánudagur_þriðjudagur_miðvikudagur_fimmtudagur_föstudagur_laugardagur'.split(
-            '_'
-        ),
+        weekdays:
+            'sunnudagur_mánudagur_þriðjudagur_miðvikudagur_fimmtudagur_föstudagur_laugardagur'.split(
+                '_'
+            ),
         weekdaysShort: 'sun_mán_þri_mið_fim_fös_lau'.split('_'),
         weekdaysMin: 'Su_Má_Þr_Mi_Fi_Fö_La'.split('_'),
         longDateFormat: {

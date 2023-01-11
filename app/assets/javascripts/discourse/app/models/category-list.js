@@ -32,65 +32,71 @@ CategoryList.reopenClass({
       }
     });
 
-    result.category_list.categories.forEach((c) => {
-      if (c.parent_category_id) {
-        c.parentCategory = list.findBy("id", c.parent_category_id);
-      }
+    result.category_list.categories.forEach((c) =>
+      categories.pushObject(this._buildCategoryResult(c, list, statPeriod))
+    );
 
-      if (c.subcategory_ids) {
-        c.subcategories = c.subcategory_ids.map((scid) =>
-          list.findBy("id", parseInt(scid, 10))
-        );
-      }
-
-      if (c.topics) {
-        c.topics = c.topics.map((t) => Topic.create(t));
-      }
-
-      switch (statPeriod) {
-        case "week":
-        case "month":
-          const stat = c[`topics_${statPeriod}`];
-          if (stat > 0) {
-            const unit = I18n.t(`categories.topic_stat_unit.${statPeriod}`);
-
-            c.stat = I18n.t("categories.topic_stat", {
-              count: stat, // only used to correctly pluralize the string
-              number: `<span class="value">${number(stat)}</span>`,
-              unit: `<span class="unit">${unit}</span>`,
-            });
-
-            c.statTitle = I18n.t(
-              `categories.topic_stat_sentence_${statPeriod}`,
-              {
-                count: stat,
-              }
-            );
-
-            c.pickAll = false;
-            break;
-          }
-        default:
-          c.stat = `<span class="value">${number(c.topics_all_time)}</span>`;
-          c.statTitle = I18n.t("categories.topic_sentence", {
-            count: c.topics_all_time,
-          });
-          c.pickAll = true;
-          break;
-      }
-
-      if (Site.currentProp("mobileView")) {
-        c.statTotal = I18n.t("categories.topic_stat_all_time", {
-          count: c.topics_all_time,
-          number: `<span class="value">${number(c.topics_all_time)}</span>`,
-        });
-      }
-
-      const record = Site.current().updateCategory(c);
-      record.setupGroupsAndPermissions();
-      categories.pushObject(record);
-    });
     return categories;
+  },
+
+  _buildCategoryResult(c, list, statPeriod) {
+    if (c.parent_category_id) {
+      c.parentCategory = list.findBy("id", c.parent_category_id);
+    }
+
+    if (c.subcategory_list) {
+      c.subcategories = c.subcategory_list.map((subCategory) =>
+        this._buildCategoryResult(subCategory, list, statPeriod)
+      );
+    } else if (c.subcategory_ids) {
+      c.subcategories = c.subcategory_ids.map((scid) =>
+        list.findBy("id", parseInt(scid, 10))
+      );
+    }
+
+    if (c.topics) {
+      c.topics = c.topics.map((t) => Topic.create(t));
+    }
+
+    switch (statPeriod) {
+      case "week":
+      case "month":
+        const stat = c[`topics_${statPeriod}`];
+        if (stat > 0) {
+          const unit = I18n.t(`categories.topic_stat_unit.${statPeriod}`);
+
+          c.stat = I18n.t("categories.topic_stat", {
+            count: stat, // only used to correctly pluralize the string
+            number: `<span class="value">${number(stat)}</span>`,
+            unit: `<span class="unit">${unit}</span>`,
+          });
+
+          c.statTitle = I18n.t(`categories.topic_stat_sentence_${statPeriod}`, {
+            count: stat,
+          });
+
+          c.pickAll = false;
+          break;
+        }
+      default:
+        c.stat = `<span class="value">${number(c.topics_all_time)}</span>`;
+        c.statTitle = I18n.t("categories.topic_sentence", {
+          count: c.topics_all_time,
+        });
+        c.pickAll = true;
+        break;
+    }
+
+    if (Site.currentProp("mobileView")) {
+      c.statTotal = I18n.t("categories.topic_stat_all_time", {
+        count: c.topics_all_time,
+        number: `<span class="value">${number(c.topics_all_time)}</span>`,
+      });
+    }
+
+    const record = Site.current().updateCategory(c);
+    record.setupGroupsAndPermissions();
+    return record;
   },
 
   listForParent(store, category) {

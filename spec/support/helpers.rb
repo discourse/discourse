@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-GIT_INITIAL_BRANCH_SUPPORTED = Gem::Version.new(`git --version`.match(/[\d\.]+/)[0]) >= Gem::Version.new("2.28.0")
+GIT_INITIAL_BRANCH_SUPPORTED =
+  Gem::Version.new(`git --version`.match(/[\d\.]+/)[0]) >= Gem::Version.new("2.28.0")
 
 module Helpers
   extend ActiveSupport::Concern
@@ -27,8 +28,8 @@ module Helpers
   end
 
   def fixture_file(filename)
-    return '' if filename.blank?
-    file_path = File.expand_path(Rails.root + 'spec/fixtures/' + filename)
+    return "" if filename.blank?
+    file_path = File.expand_path(Rails.root + "spec/fixtures/" + filename)
     File.read(file_path)
   end
 
@@ -45,17 +46,21 @@ module Helpers
   end
 
   def create_post(args = {})
+    # Pretty much all the tests with `create_post` will fail without this
+    # since allow_uncategorized_topics is now false by default
+    SiteSetting.allow_uncategorized_topics = true unless args[:allow_uncategorized_topics] == false
+
     args[:title] ||= "This is my title #{Helpers.next_seq}"
     args[:raw] ||= "This is the raw body of my post, it is cool #{Helpers.next_seq}"
     args[:topic_id] = args[:topic].id if args[:topic]
+    automated_group_refresh_required = args[:user].blank?
     user = args.delete(:user) || Fabricate(:user)
+    Group.refresh_automatic_groups! if automated_group_refresh_required
     args[:category] = args[:category].id if args[:category].is_a?(Category)
     creator = PostCreator.new(user, args)
     post = creator.create
 
-    if creator.errors.present?
-      raise StandardError.new(creator.errors.full_messages.join(" "))
-    end
+    raise StandardError.new(creator.errors.full_messages.join(" ")) if creator.errors.present?
 
     post
   end
@@ -84,7 +89,7 @@ module Helpers
   end
 
   def create_staff_only_tags(tag_names)
-    create_limited_tags('Staff Tags', Group::AUTO_GROUPS[:staff], tag_names)
+    create_limited_tags("Staff Tags", Group::AUTO_GROUPS[:staff], tag_names)
   end
 
   def create_limited_tags(tag_group_name, group_id, tag_names)
@@ -92,12 +97,12 @@ module Helpers
     TagGroupPermission.where(
       tag_group: tag_group,
       group_id: Group::AUTO_GROUPS[:everyone],
-      permission_type: TagGroupPermission.permission_types[:full]
+      permission_type: TagGroupPermission.permission_types[:full],
     ).update(permission_type: TagGroupPermission.permission_types[:readonly])
     TagGroupPermission.create!(
       tag_group: tag_group,
       group_id: group_id,
-      permission_type: TagGroupPermission.permission_types[:full]
+      permission_type: TagGroupPermission.permission_types[:full],
     )
     tag_names.each do |name|
       tag_group.tags << (Tag.where(name: name).first || Fabricate(:tag, name: name))
@@ -105,10 +110,7 @@ module Helpers
   end
 
   def create_hidden_tags(tag_names)
-    tag_group = Fabricate(:tag_group,
-      name: 'Hidden Tags',
-      permissions: { staff: :full }
-    )
+    tag_group = Fabricate(:tag_group, name: "Hidden Tags", permissions: { staff: :full })
     tag_names.each do |name|
       tag_group.tags << (Tag.where(name: name).first || Fabricate(:tag, name: name))
     end
@@ -123,7 +125,7 @@ module Helpers
   end
 
   def capture_output(output_name)
-    if ENV['RAILS_ENABLE_TEST_STDOUT']
+    if ENV["RAILS_ENABLE_TEST_STDOUT"]
       yield
       return
     end
@@ -152,9 +154,7 @@ module Helpers
     old_root = ActionController::Base.config.relative_url_root
     ActionController::Base.config.relative_url_root = f
 
-    before_next_spec do
-      ActionController::Base.config.relative_url_root = old_root
-    end
+    before_next_spec { ActionController::Base.config.relative_url_root = old_root }
   end
 
   def setup_git_repo(files)
@@ -180,5 +180,16 @@ module Helpers
   ensure
     target.send(:remove_const, const)
     target.const_set(const, old)
+  end
+
+  def track_sql_queries
+    queries = []
+    callback = ->(*, payload) do
+      queries << payload.fetch(:sql) unless %w[CACHE SCHEMA].include?(payload.fetch(:name))
+    end
+
+    ActiveSupport::Notifications.subscribed(callback, "sql.active_record") { yield }
+
+    queries
   end
 end

@@ -5,6 +5,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import {
   postUrl,
   selectedElement,
+  selectedRange,
   selectedText,
   setCaretPosition,
   translateModKey,
@@ -21,6 +22,7 @@ import discourseDebounce from "discourse-common/lib/debounce";
 import { getAbsoluteURL } from "discourse-common/lib/get-url";
 import { next, schedule } from "@ember/runloop";
 import toMarkdown from "discourse/lib/to-markdown";
+import escapeRegExp from "discourse-common/utils/escape-regexp";
 
 function getQuoteTitle(element) {
   const titleEl = element.querySelector(".title");
@@ -40,10 +42,6 @@ function fixQuotes(str) {
   // u+201c “
   // u+201d ”
   return str.replace(/[\u201C\u201D]/g, '"');
-}
-
-function regexSafeStr(str) {
-  return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
 export default Component.extend(KeyEnterEscape, {
@@ -164,10 +162,14 @@ export default Component.extend(KeyEnterEscape, {
     const cooked =
       $selectedElement.find(".cooked")[0] ||
       $selectedElement.closest(".cooked")[0];
-    const postBody = toMarkdown(cooked.innerHTML);
 
+    // computing markdown takes a lot of time on long posts
+    // this code attempts to compute it only when we can't fast track
     let opts = {
-      full: _selectedText === postBody,
+      full:
+        selectedRange().startOffset > 0
+          ? false
+          : _selectedText === toMarkdown(cooked.innerHTML),
     };
 
     for (
@@ -192,22 +194,24 @@ export default Component.extend(KeyEnterEscape, {
         this.topic.postStream.findLoadedPost(postId)?.can_edit
       );
 
-      const regexp = new RegExp(regexSafeStr(quoteState.buffer), "gi");
-      const matches = postBody.match(regexp);
+      if (this._canEditPost) {
+        const regexp = new RegExp(escapeRegExp(quoteState.buffer), "gi");
+        const matches = cooked.innerHTML.match(regexp);
 
-      if (
-        quoteState.buffer.length < 1 ||
-        quoteState.buffer.includes("|") || // tables are too complex
-        quoteState.buffer.match(/\n/g) || // linebreaks are too complex
-        matches?.length > 1 // duplicates are too complex
-      ) {
-        this.set("_isFastEditable", false);
-        this.set("_fastEditInitalSelection", null);
-        this.set("_fastEditNewSelection", null);
-      } else if (matches?.length === 1) {
-        this.set("_isFastEditable", true);
-        this.set("_fastEditInitalSelection", quoteState.buffer);
-        this.set("_fastEditNewSelection", quoteState.buffer);
+        if (
+          quoteState.buffer.length < 1 ||
+          quoteState.buffer.includes("|") || // tables are too complex
+          quoteState.buffer.match(/\n/g) || // linebreaks are too complex
+          matches?.length > 1 // duplicates are too complex
+        ) {
+          this.set("_isFastEditable", false);
+          this.set("_fastEditInitalSelection", null);
+          this.set("_fastEditNewSelection", null);
+        } else if (matches?.length === 1) {
+          this.set("_isFastEditable", true);
+          this.set("_fastEditInitalSelection", quoteState.buffer);
+          this.set("_fastEditNewSelection", quoteState.buffer);
+        }
       }
     }
 
@@ -413,12 +417,14 @@ export default Component.extend(KeyEnterEscape, {
     return getAbsoluteURL(postUrl(topic.slug, topic.id, postNumber));
   },
 
-  @discourseComputed("topic.details.can_create_post", "composerVisible")
-  embedQuoteButton(canCreatePost, composerOpened) {
+  @discourseComputed(
+    "topic.details.can_create_post",
+    "topic.details.can_reply_as_new_topic"
+  )
+  embedQuoteButton(canCreatePost, canReplyAsNewTopic) {
     return (
-      (canCreatePost || composerOpened) &&
-      this.currentUser &&
-      this.currentUser.get("enable_quoting")
+      (canCreatePost || canReplyAsNewTopic) &&
+      this.currentUser?.get("user_option.enable_quoting")
     );
   },
 

@@ -17,12 +17,9 @@ export default Component.extend({
     "form.smtp_port"
   )
   missingSettings(email_username, email_password, smtp_server, smtp_port) {
-    return [
-      email_username,
-      email_password,
-      smtp_server,
-      smtp_port,
-    ].some((value) => isEmpty(value));
+    return [email_username, email_password, smtp_server, smtp_port].some(
+      (value) => isEmpty(value)
+    );
   },
 
   @action
@@ -37,6 +34,7 @@ export default Component.extend({
       EmberObject.create({
         email_username: this.group.email_username,
         email_password: this.group.email_password,
+        email_from_alias: this.group.email_from_alias,
         smtp_server: this.group.smtp_server,
         smtp_port: (this.group.smtp_port || "").toString(),
         smtp_ssl: this.group.smtp_ssl,
@@ -45,7 +43,8 @@ export default Component.extend({
   },
 
   @action
-  prefillSettings(provider) {
+  prefillSettings(provider, event) {
+    event?.preventDefault();
     this.form.setProperties(emailProviderDefaultSettings(provider, "smtp"));
   },
 
@@ -73,6 +72,7 @@ export default Component.extend({
           smtp_port: this.form.smtp_port,
           smtp_ssl: this.form.smtp_ssl,
           email_username: this.form.email_username,
+          email_from_alias: this.form.email_from_alias,
           email_password: this.form.email_password,
         });
       })

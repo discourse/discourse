@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'sqlite3'
+require "sqlite3"
 
 module ImportScripts
   class GenericDatabase
@@ -80,24 +80,20 @@ module ImportScripts
           VALUES (:id, :raw, :topic_id, :user_id, :created_at, :reply_to_post_id, :url, :upload_count)
         SQL
 
-        attachments&.each do |attachment|
-          @db.execute(<<-SQL, post_id: post[:id], path: attachment)
+        attachments&.each { |attachment| @db.execute(<<-SQL, post_id: post[:id], path: attachment) }
             INSERT OR REPLACE INTO post_upload (post_id, path)
             VALUES (:post_id, :path)
           SQL
-        end
 
-        like_user_ids&.each do |user_id|
-          @db.execute(<<-SQL, post_id: post[:id], user_id: user_id)
+        like_user_ids&.each { |user_id| @db.execute(<<-SQL, post_id: post[:id], user_id: user_id) }
             INSERT OR REPLACE INTO like (post_id, user_id)
             VALUES (:post_id, :user_id)
           SQL
-        end
       end
     end
 
     def sort_posts_by_created_at
-      @db.execute 'DELETE FROM post_order'
+      @db.execute "DELETE FROM post_order"
 
       @db.execute <<-SQL
         INSERT INTO post_order (post_id)
@@ -146,7 +142,7 @@ module ImportScripts
         LIMIT #{@batch_size}
       SQL
 
-      add_last_column_value(rows, 'id')
+      add_last_column_value(rows, "id")
     end
 
     def get_user_id(username)
@@ -173,7 +169,7 @@ module ImportScripts
         LIMIT #{@batch_size}
       SQL
 
-      add_last_column_value(rows, 'id')
+      add_last_column_value(rows, "id")
     end
 
     def fetch_topic_attachments(topic_id)
@@ -200,7 +196,7 @@ module ImportScripts
         LIMIT #{@batch_size}
       SQL
 
-      add_last_column_value(rows, 'rowid')
+      add_last_column_value(rows, "rowid")
     end
 
     def fetch_sorted_posts(last_row_id)
@@ -213,7 +209,7 @@ module ImportScripts
         LIMIT #{@batch_size}
       SQL
 
-      add_last_column_value(rows, 'rowid')
+      add_last_column_value(rows, "rowid")
     end
 
     def fetch_post_attachments(post_id)
@@ -240,7 +236,7 @@ module ImportScripts
         LIMIT #{@batch_size}
       SQL
 
-      add_last_column_value(rows, 'rowid')
+      add_last_column_value(rows, "rowid")
     end
 
     def execute_sql(sql)
@@ -254,12 +250,12 @@ module ImportScripts
     private
 
     def configure_database
-      @db.execute 'PRAGMA journal_mode = OFF'
-      @db.execute 'PRAGMA locking_mode = EXCLUSIVE'
+      @db.execute "PRAGMA journal_mode = OFF"
+      @db.execute "PRAGMA locking_mode = EXCLUSIVE"
     end
 
     def key_data_type
-      @numeric_keys ? 'INTEGER' : 'TEXT'
+      @numeric_keys ? "INTEGER" : "TEXT"
     end
 
     def create_category_table
@@ -299,7 +295,7 @@ module ImportScripts
         )
       SQL
 
-      @db.execute 'CREATE INDEX IF NOT EXISTS user_by_username ON user (username)'
+      @db.execute "CREATE INDEX IF NOT EXISTS user_by_username ON user (username)"
     end
 
     def create_topic_table
@@ -317,7 +313,7 @@ module ImportScripts
         )
       SQL
 
-      @db.execute 'CREATE INDEX IF NOT EXISTS topic_by_user_id ON topic (user_id)'
+      @db.execute "CREATE INDEX IF NOT EXISTS topic_by_user_id ON topic (user_id)"
 
       @db.execute <<-SQL
         CREATE TABLE IF NOT EXISTS topic_upload (
@@ -326,7 +322,7 @@ module ImportScripts
         )
       SQL
 
-      @db.execute 'CREATE UNIQUE INDEX IF NOT EXISTS topic_upload_unique ON topic_upload(topic_id, path)'
+      @db.execute "CREATE UNIQUE INDEX IF NOT EXISTS topic_upload_unique ON topic_upload(topic_id, path)"
     end
 
     def create_post_table
@@ -343,7 +339,7 @@ module ImportScripts
         )
       SQL
 
-      @db.execute 'CREATE INDEX IF NOT EXISTS post_by_user_id ON post (user_id)'
+      @db.execute "CREATE INDEX IF NOT EXISTS post_by_user_id ON post (user_id)"
 
       @db.execute <<-SQL
         CREATE TABLE IF NOT EXISTS post_order (
@@ -358,7 +354,7 @@ module ImportScripts
         )
       SQL
 
-      @db.execute 'CREATE UNIQUE INDEX IF NOT EXISTS post_upload_unique ON post_upload(post_id, path)'
+      @db.execute "CREATE UNIQUE INDEX IF NOT EXISTS post_upload_unique ON post_upload(post_id, path)"
     end
 
     def prepare(hash)

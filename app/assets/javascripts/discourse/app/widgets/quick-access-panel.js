@@ -3,6 +3,7 @@ import { Promise } from "rsvp";
 import Session from "discourse/models/session";
 import { createWidget } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
+import { postRNWebviewMessage } from "discourse/lib/utilities";
 
 /**
  * This tries to enforce a consistent flow of fetching, caching, refreshing,
@@ -16,6 +17,9 @@ export default createWidget("quick-access-panel", {
   tagName: "div.quick-access-panel",
   emptyStatePlaceholderItemKey: null,
   emptyStateWidget: null,
+  settings: {
+    viewAllLabel: null,
+  },
 
   buildKey: () => {
     throw Error('Cannot attach abstract widget "quick-access-panel".');
@@ -75,6 +79,7 @@ export default createWidget("quick-access-panel", {
   markRead() {
     return this.markReadRequest().then(() => {
       this.refreshNotifications(this.state);
+      postRNWebviewMessage("markRead", "1");
     });
   },
 
@@ -126,6 +131,7 @@ export default createWidget("quick-access-panel", {
           title: "view_all",
           titleOptions: { tab },
           icon: "chevron-down",
+          label: this.settings.viewAllLabel,
           className: "btn btn-default btn-icon no-text show-all",
           "aria-label": "view_all",
           ariaLabelOptions: { tab },

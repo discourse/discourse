@@ -15,6 +15,11 @@
 # on the current secure? status, otherwise there would be a lot of additional
 # complex queries and joins to perform. Over time more of these specific
 # queries will be implemented.
+#
+# NOTE: When updating this to add more cases where uploads will be marked
+# secure, consider uploads:secure_upload_analyse_and_update as well, which
+# does not use this class directly but uses an SQL version of its rules for
+# efficient updating of many uploads in bulk.
 class UploadSecurity
   @@custom_public_types = []
 
@@ -24,6 +29,7 @@ class UploadSecurity
     profile_background
     card_background
     category_logo
+    category_logo_dark
     category_background
     group_flair
     badge_image
@@ -50,19 +56,17 @@ class UploadSecurity
   end
 
   def should_be_secure_with_reason
-    insecure_context_checks.each do |check, reason|
-      return [false, reason] if perform_check(check)
-    end
+    insecure_context_checks.each { |check, reason| return false, reason if perform_check(check) }
     secure_context_checks.each do |check, reason|
-      return [perform_check(check), reason] if priority_check?(check)
-      return [true, reason] if perform_check(check)
+      return perform_check(check), reason if priority_check?(check)
+      return true, reason if perform_check(check)
     end
 
     [false, "no checks satisfied"]
   end
 
-  def secure_media_disabled_check
-    !SiteSetting.secure_media?
+  def secure_uploads_disabled_check
+    !SiteSetting.secure_uploads?
   end
 
   def insecure_creation_for_modifiers_check
@@ -91,14 +95,14 @@ class UploadSecurity
 
   # whether the upload should remain secure or not after posting depends on its context,
   # which is based on the post it is linked to via access_control_post_id.
-  # if that post is with_secure_media? then the upload should also be secure.
+  # if that post is with_secure_uploads? then the upload should also be secure.
   # this may change to false if the upload was set to secure on upload e.g. in
   # a post composer then it turned out that the post itself was not in a secure context
   #
-  # a post is with secure media if it is a private message or in a read restricted
+  # a post is with secure uploads if it is a private message or in a read restricted
   # category
-  def access_control_post_has_secure_media_check
-    access_control_post&.with_secure_media?
+  def access_control_post_has_secure_uploads_check
+    access_control_post&.with_secure_uploads?
   end
 
   def uploading_in_composer_check
@@ -117,26 +121,27 @@ class UploadSecurity
   private
 
   def access_control_post
-    @access_control_post ||= @upload.access_control_post_id.present? ? @upload.access_control_post : nil
+    @access_control_post ||=
+      @upload.access_control_post_id.present? ? @upload.access_control_post : nil
   end
 
   def insecure_context_checks
     {
-      secure_media_disabled: "secure media is disabled",
+      secure_uploads_disabled: "secure uploads is disabled",
       insecure_creation_for_modifiers: "one or more creation for_modifiers was satisfied",
       public_type: "upload is public type",
       custom_emoji: "upload is used for custom emoji",
-      regular_emoji: "upload is used for regular emoji"
+      regular_emoji: "upload is used for regular emoji",
     }
   end
 
   def secure_context_checks
     {
       login_required: "login is required",
-      access_control_post_has_secure_media: "access control post dictates security",
+      access_control_post_has_secure_uploads: "access control post dictates security",
       secure_creation_for_modifiers: "one or more creation for_modifiers was satisfied",
       uploading_in_composer: "uploading via the composer",
-      already_secure: "upload is already secure"
+      already_secure: "upload is already secure",
     }
   end
 
@@ -144,7 +149,7 @@ class UploadSecurity
   # of whether an upload should be secure or not, and thus should be returned
   # immediately if there is an access control post
   def priority_check?(check)
-    check == :access_control_post_has_secure_media && access_control_post
+    check == :access_control_post_has_secure_uploads && access_control_post
   end
 
   def perform_check(check)

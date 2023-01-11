@@ -1,82 +1,68 @@
-import componentTest, {
-  setupRenderingTest,
-} from "discourse/tests/helpers/component-test";
-import {
-  discourseModule,
-  queryAll,
-} from "discourse/tests/helpers/qunit-helpers";
+import { module, test } from "qunit";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { render } from "@ember/test-helpers";
+import { count } from "discourse/tests/helpers/qunit-helpers";
 import hbs from "htmlbars-inline-precompile";
 
-discourseModule(
+module(
   "Integration | Component | Widget | discourse-poll-option",
   function (hooks) {
     setupRenderingTest(hooks);
-    const template = hbs`{{mount-widget
-                    widget="discourse-poll-option"
-                    args=(hash option=option isMultiple=isMultiple vote=vote)}}`;
 
-    componentTest("single, not selected", {
-      template,
+    const template = hbs`
+      <MountWidget
+        @widget="discourse-poll-option"
+        @args={{hash
+          option=this.option
+          isMultiple=this.isMultiple
+          vote=this.vote
+        }}
+      />
+    `;
 
-      beforeEach() {
-        this.set("option", { id: "opt-id" });
-        this.set("vote", []);
-      },
+    test("single, not selected", async function (assert) {
+      this.set("option", { id: "opt-id" });
+      this.set("vote", []);
 
-      test(assert) {
-        assert.ok(
-          queryAll("li .d-icon-far-circle:nth-of-type(1)").length === 1
-        );
-      },
+      await render(template);
+
+      assert.strictEqual(count("li .d-icon-far-circle:nth-of-type(1)"), 1);
     });
 
-    componentTest("single, selected", {
-      template,
+    test("single, selected", async function (assert) {
+      this.set("option", { id: "opt-id" });
+      this.set("vote", ["opt-id"]);
 
-      beforeEach() {
-        this.set("option", { id: "opt-id" });
-        this.set("vote", ["opt-id"]);
-      },
+      await render(template);
 
-      test(assert) {
-        assert.ok(queryAll("li .d-icon-circle:nth-of-type(1)").length === 1);
-      },
+      assert.strictEqual(count("li .d-icon-circle:nth-of-type(1)"), 1);
     });
 
-    componentTest("multi, not selected", {
-      template,
+    test("multi, not selected", async function (assert) {
+      this.setProperties({
+        option: { id: "opt-id" },
+        isMultiple: true,
+        vote: [],
+      });
 
-      beforeEach() {
-        this.setProperties({
-          option: { id: "opt-id" },
-          isMultiple: true,
-          vote: [],
-        });
-      },
+      await render(template);
 
-      test(assert) {
-        assert.ok(
-          queryAll("li .d-icon-far-square:nth-of-type(1)").length === 1
-        );
-      },
+      assert.strictEqual(count("li .d-icon-far-square:nth-of-type(1)"), 1);
     });
 
-    componentTest("multi, selected", {
-      template,
+    test("multi, selected", async function (assert) {
+      this.setProperties({
+        option: { id: "opt-id" },
+        isMultiple: true,
+        vote: ["opt-id"],
+      });
 
-      beforeEach() {
-        this.setProperties({
-          option: { id: "opt-id" },
-          isMultiple: true,
-          vote: ["opt-id"],
-        });
-      },
+      await render(template);
 
-      test(assert) {
-        assert.ok(
-          queryAll("li .d-icon-far-check-square:nth-of-type(1)").length === 1
-        );
-      },
+      assert.strictEqual(
+        count("li .d-icon-far-check-square:nth-of-type(1)"),
+        1
+      );
     });
   }
 );

@@ -6,15 +6,18 @@ module OneboxHelpers
     File.exist?(file) ? File.read(file) : ""
   end
 
-  def inspect_html_fragment(raw_fragment, tag_name, attribute = 'src')
+  def inspect_html_fragment(raw_fragment, tag_name, attribute = "src")
     preview = Nokogiri::HTML::DocumentFragment.parse(raw_fragment)
     preview.css(tag_name).first[attribute]
   end
 
-  shared_context "engines" do
+  RSpec.shared_context "with engines" do
     before do
       fixture = defined?(@onebox_fixture) ? @onebox_fixture : described_class.onebox_name
-      stub_request(:get, defined?(@uri) ? @uri : @link).to_return(status: 200, body: onebox_response(fixture))
+      stub_request(:get, defined?(@uri) ? @uri : @link).to_return(
+        status: 200,
+        body: onebox_response(fixture),
+      )
     end
 
     let(:onebox) { described_class.new(link) }
@@ -23,7 +26,7 @@ module OneboxHelpers
     let(:link) { @link }
   end
 
-  shared_examples_for "an engine" do
+  RSpec.shared_examples_for "an engine" do
     it "responds to data" do
       expect(described_class.private_instance_methods).to include(:data)
     end
@@ -48,7 +51,7 @@ module OneboxHelpers
     end
   end
 
-  shared_examples_for "a layout engine" do
+  RSpec.shared_examples_for "a layout engine" do
     describe "#to_html" do
       it "includes subname" do
         expect(html).to include(%|<aside class="onebox #{described_class.onebox_name}">|)

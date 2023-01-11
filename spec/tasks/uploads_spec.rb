@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe "tasks/uploads" do
   before do
     Rake::Task.clear
@@ -10,35 +8,26 @@ RSpec.describe "tasks/uploads" do
   end
 
   describe "uploads:secure_upload_analyse_and_update" do
-    let!(:uploads) do
-      [
-        multi_post_upload1,
-        upload1,
-        upload2,
-        upload3
-      ]
-    end
+    let!(:uploads) { [multi_post_upload1, upload1, upload2, upload3] }
     let(:multi_post_upload1) { Fabricate(:upload_s3) }
     let(:upload1) { Fabricate(:upload_s3) }
     let(:upload2) { Fabricate(:upload_s3) }
-    let(:upload3) { Fabricate(:upload_s3, original_filename: 'test.pdf', extension: 'pdf') }
+    let(:upload3) { Fabricate(:upload_s3, original_filename: "test.pdf", extension: "pdf") }
 
     let!(:post1) { Fabricate(:post) }
     let!(:post2) { Fabricate(:post) }
     let!(:post3) { Fabricate(:post) }
 
     before do
-      PostUpload.create(post: post1, upload: multi_post_upload1)
-      PostUpload.create(post: post2, upload: multi_post_upload1)
-      PostUpload.create(post: post2, upload: upload1)
-      PostUpload.create(post: post3, upload: upload2)
-      PostUpload.create(post: post3, upload: upload3)
+      UploadReference.create(target: post1, upload: multi_post_upload1)
+      UploadReference.create(target: post2, upload: multi_post_upload1)
+      UploadReference.create(target: post2, upload: upload1)
+      UploadReference.create(target: post3, upload: upload2)
+      UploadReference.create(target: post3, upload: upload3)
     end
 
     def invoke_task
-      capture_stdout do
-        Rake::Task['uploads:secure_upload_analyse_and_update'].invoke
-      end
+      capture_stdout { Rake::Task["uploads:secure_upload_analyse_and_update"].invoke }
     end
 
     context "when the store is internal" do
@@ -54,10 +43,8 @@ RSpec.describe "tasks/uploads" do
         uploads.each { |upload| stub_upload(upload) }
       end
 
-      context "when secure media is enabled" do
-        before do
-          SiteSetting.secure_media = true
-        end
+      context "when secure upload is enabled" do
+        before { SiteSetting.secure_uploads = true }
 
         it "sets an access_control_post for each post upload, using the first linked post in the case of multiple links" do
           invoke_task
@@ -65,6 +52,24 @@ RSpec.describe "tasks/uploads" do
           expect(upload1.reload.access_control_post).to eq(post2)
           expect(upload2.reload.access_control_post).to eq(post3)
           expect(upload3.reload.access_control_post).to eq(post3)
+        end
+
+        it "sets everything attached to a post as secure and rebakes all those posts if login is required" do
+          SiteSetting.login_required = true
+          freeze_time
+
+          post1.update_columns(baked_at: 1.week.ago)
+          post2.update_columns(baked_at: 1.week.ago)
+          post3.update_columns(baked_at: 1.week.ago)
+
+          invoke_task
+
+          expect(post1.reload.baked_at).not_to eq_time(1.week.ago)
+          expect(post2.reload.baked_at).not_to eq_time(1.week.ago)
+          expect(post3.reload.baked_at).not_to eq_time(1.week.ago)
+          expect(upload2.reload.secure).to eq(true)
+          expect(upload1.reload.secure).to eq(true)
+          expect(upload3.reload.secure).to eq(true)
         end
 
         it "sets the uploads that are media and attachments in the read restricted topic category to secure" do
@@ -76,7 +81,7 @@ RSpec.describe "tasks/uploads" do
         end
 
         it "sets the upload in the PM topic to secure" do
-          post3.topic.update(archetype: 'private_message', category: nil)
+          post3.topic.update(archetype: "private_message", category: nil)
           invoke_task
           expect(upload2.reload.secure).to eq(true)
           expect(upload1.reload.secure).to eq(false)
@@ -99,7 +104,7 @@ RSpec.describe "tasks/uploads" do
 
         context "for an upload that is already secure and does not need to change" do
           before do
-            post3.topic.update(archetype: 'private_message', category: nil)
+            post3.topic.update(archetype: "private_message", category: nil)
             upload2.update(access_control_post: post3)
             upload2.update_secure_status
             upload3.update(access_control_post: post3)
@@ -125,7 +130,7 @@ RSpec.describe "tasks/uploads" do
           it "changes the upload to not secure and updates the ACL" do
             upload_to_mark_not_secure = Fabricate(:upload_s3, secure: true)
             post_for_upload = Fabricate(:post)
-            PostUpload.create(post: post_for_upload, upload: upload_to_mark_not_secure)
+            UploadReference.create(target: post_for_upload, upload: upload_to_mark_not_secure)
 
             setup_s3
             uploads.each { |upload| stub_upload(upload) }
@@ -139,29 +144,23 @@ RSpec.describe "tasks/uploads" do
     end
   end
 
-  describe "uploads:disable_secure_media" do
+  describe "uploads:disable_secure_uploads" do
     def invoke_task
-      capture_stdout do
-        Rake::Task['uploads:disable_secure_media'].invoke
-      end
+      capture_stdout { Rake::Task["uploads:disable_secure_uploads"].invoke }
     end
 
     before do
       setup_s3
       uploads.each { |upload| stub_upload(upload) }
 
-      SiteSetting.secure_media = true
-      PostUpload.create(post: post1, upload: upload1)
-      PostUpload.create(post: post1, upload: upload2)
-      PostUpload.create(post: post2, upload: upload3)
-      PostUpload.create(post: post2, upload: upload4)
+      SiteSetting.secure_uploads = true
+      UploadReference.create(target: post1, upload: upload1)
+      UploadReference.create(target: post1, upload: upload2)
+      UploadReference.create(target: post2, upload: upload3)
+      UploadReference.create(target: post2, upload: upload4)
     end
 
-    let!(:uploads) do
-      [
-        upload1, upload2, upload3, upload4, upload5
-      ]
-    end
+    let!(:uploads) { [upload1, upload2, upload3, upload4, upload5] }
     let(:post1) { Fabricate(:post) }
     let(:post2) { Fabricate(:post) }
     let(:upload1) { Fabricate(:upload_s3, secure: true, access_control_post: post1) }
@@ -170,16 +169,14 @@ RSpec.describe "tasks/uploads" do
     let(:upload4) { Fabricate(:upload_s3, secure: true, access_control_post: post2) }
     let(:upload5) { Fabricate(:upload_s3, secure: false) }
 
-    it "disables the secure media setting" do
+    it "disables the secure upload setting" do
       invoke_task
-      expect(SiteSetting.secure_media).to eq(false)
+      expect(SiteSetting.secure_uploads).to eq(false)
     end
 
     it "updates all secure uploads to secure: false" do
       invoke_task
-      [upload1, upload2, upload3, upload4].each do |upl|
-        expect(upl.reload.secure).to eq(false)
-      end
+      [upload1, upload2, upload3, upload4].each { |upl| expect(upl.reload.secure).to eq(false) }
     end
 
     it "rebakes the associated posts" do
@@ -193,9 +190,34 @@ RSpec.describe "tasks/uploads" do
       expect(post2.reload.baked_at).not_to eq_time(1.week.ago)
     end
 
-    it "updates the affected ACLs" do
-      FileStore::S3Store.any_instance.expects(:update_upload_ACL).times(4)
+    it "updates the affected ACLs via the SyncAclsForUploads job" do
       invoke_task
+      expect(Jobs::SyncAclsForUploads.jobs.last["args"][0]["upload_ids"]).to match_array(
+        [upload1.id, upload2.id, upload3.id, upload4.id],
+      )
+    end
+  end
+
+  describe "uploads:downsize" do
+    def invoke_task
+      capture_stdout { Rake::Task["uploads:downsize"].invoke }
+    end
+
+    before { STDIN.stubs(:beep) }
+
+    fab!(:upload) { Fabricate(:image_upload, width: 200, height: 200) }
+
+    it "corrects upload attributes" do
+      upload.update!(thumbnail_height: 0)
+
+      expect { invoke_task }.to change { upload.reload.thumbnail_height }.to(200)
+    end
+
+    it "updates attributes of uploads that are over the size limit" do
+      upload.update!(thumbnail_height: 0)
+      SiteSetting.max_image_size_kb = 0.001 # 1 byte
+
+      expect { invoke_task }.to change { upload.reload.thumbnail_height }.to(200)
     end
   end
 end

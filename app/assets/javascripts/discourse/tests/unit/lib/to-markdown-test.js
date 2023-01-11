@@ -1,5 +1,8 @@
 import { module, test } from "qunit";
-import toMarkdown from "discourse/lib/to-markdown";
+import toMarkdown, {
+  addBlockDecorateCallback,
+  addTagDecorateCallback,
+} from "discourse/lib/to-markdown";
 
 module("Unit | Utility | to-markdown", function () {
   test("converts styles between normal words", function (assert) {
@@ -350,6 +353,42 @@ helloWorld();</code>consectetur.`;
     assert.strictEqual(toMarkdown(html), markdown);
   });
 
+  test("strips user status from mentions", function (assert) {
+    const statusHtml = `
+        <img class="emoji user-status"
+             src="/images/emoji/twitter/desert_island.png?v=12"
+             title="vacation">
+    `;
+    const html = `Mentioning <a class="mention" href="/u/andrei">@andrei${statusHtml}</a>`;
+    const expectedMarkdown = `Mentioning @andrei`;
+
+    assert.strictEqual(toMarkdown(html), expectedMarkdown);
+  });
+
+  test("keeps hashtag-cooked and converts to bare hashtag with type", function (assert) {
+    const html = `
+      <p dir="ltr">This is <a class="hashtag-cooked" href="/c/ux/14" data-type="category" data-slug="ux">
+      <svg class="fa d-icon d-icon-folder svg-icon svg-node">
+        <use href="#folder"></use>
+      </svg>
+      <span>ux</span>
+      </a> and <a class="hashtag-cooked" href="/tag/design" data-slug="design">
+      <svg class="fa d-icon d-icon-tag svg-icon svg-node">
+        <use href="#tag"></use>
+      </svg>
+      <span>design</span>
+      </a> and <a class="hashtag-cooked" href="/c/uncategorized/design/22" data-type="category" data-slug="design" data-ref="uncategorized:design">
+      <svg class="fa d-icon d-icon-folder svg-icon svg-node">
+        <use href="#folder"></use>
+      </svg>
+      <span>design</span>
+      </a></p>
+    `;
+
+    const markdown = `This is #ux::category and #design and #uncategorized:design`;
+    assert.strictEqual(toMarkdown(html), markdown);
+  });
+
   test("keeps emoji and removes click count", function (assert) {
     const html = `
       <p>
@@ -426,9 +465,63 @@ there is a quote above
     assert.strictEqual(toMarkdown(html), markdown.trim());
   });
 
+  test("converts nested quotes to markdown", function (assert) {
+    let html = `
+      <aside class="quote no-group">
+        <blockquote>
+          <aside class="quote no-group">
+            <blockquote>
+              <p dir="ltr">test</p>
+            </blockquote>
+          </aside>
+          <p dir="ltr">test2</p>
+        </blockquote>
+      </aside>
+    `;
+
+    let markdown = `
+[quote]
+[quote]
+test
+[/quote]
+
+test2
+[/quote]
+`;
+
+    assert.strictEqual(toMarkdown(html), markdown.trim());
+  });
+
   test("strips base64 image URLs", function (assert) {
     const html =
       '<img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAgAAZABkAAD/7AARRHVja3kAAQAEAAAAPAAA/+4AJkFkb2JlAGTAAAAAAQMAFQQDBgoNAAABywAAAgsAAAJpAAACyf/bAIQABgQEBAUEBgUFBgkGBQYJCwgGBggLDAoKCwoKDBAMDAwMDAwQDA4PEA8ODBMTFBQTExwbGxscHx8fHx8fHx8fHwEHBwcNDA0YEBAYGhURFRofHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8f/8IAEQgAEAAQAwERAAIRAQMRAf/EAJQAAQEBAAAAAAAAAAAAAAAAAAMFBwEAAwEAAAAAAAAAAAAAAAAAAAEDAhAAAQUBAQAAAAAAAAAAAAAAAgABAwQFESARAAIBAwIHAAAAAAAAAAAAAAERAgAhMRIDQWGRocEiIxIBAAAAAAAAAAAAAAAAAAAAIBMBAAMAAQQDAQAAAAAAAAAAAQARITHwQVGBYXGR4f/aAAwDAQACEQMRAAAB0UlMciEJn//aAAgBAQABBQK5bGtFn6pWi2K12wWTRkjb/9oACAECAAEFAvH/2gAIAQMAAQUCIuIJOqRndRiv/9oACAECAgY/Ah//2gAIAQMCBj8CH//aAAgBAQEGPwLWQzwHepfNbcUNfM4tUIbA9QL4AvnxTlAxacpWJReOlf/aAAgBAQMBPyHZDveuCyu4B4lz2lDKto2ca5uclPK0aoq32x8xgTSLeSgbyzT65n//2gAIAQIDAT8hlQjP/9oACAEDAwE/IaE9GcZFJ//aAAwDAQACEQMRAAAQ5F//2gAIAQEDAT8Q1oowKccI3KTdAWkPLw2ssIrwKYUzuJoUJsIHOCoG23ISlja+rU9QvCx//9oACAECAwE/EAuNIiKf/9oACAEDAwE/ECujJzHf7iwHOv5NhK+8efH50z//2Q==" />';
     assert.strictEqual(toMarkdown(html), "[image]");
+  });
+
+  test("addTagDecorateCallback", function (assert) {
+    const html = `<span class="loud">HELLO THERE</span>`;
+
+    addTagDecorateCallback(function (text) {
+      if (this.element.attributes.class === "loud") {
+        this.prefix = "^^";
+        this.suffix = "^^";
+        return text.toLowerCase();
+      }
+    });
+
+    assert.strictEqual(toMarkdown(html), "^^hello there^^");
+  });
+
+  test("addBlockDecorateCallback", function (assert) {
+    const html = `<div class="quiet">hey<br>there</div>`;
+
+    addBlockDecorateCallback(function () {
+      if (this.element.attributes.class === "quiet") {
+        this.prefix = "[quiet]";
+        this.suffix = "[/quiet]";
+      }
+    });
+
+    assert.strictEqual(toMarkdown(html), "[quiet]hey\nthere[/quiet]");
   });
 });

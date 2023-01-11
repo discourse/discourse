@@ -6,12 +6,12 @@ class PostReplyKey < ActiveRecord::Base
 
   before_validation { self.reply_key ||= self.class.generate_reply_key }
 
-  validates :post_id, presence: true, uniqueness: { scope: :user_id }
+  validates :post_id, presence: true
   validates :user_id, presence: true
   validates :reply_key, presence: true
 
   def reply_key
-    super&.delete('-')
+    super&.delete("-")
   end
 
   def self.generate_reply_key

@@ -8,21 +8,21 @@ export default DiscourseRoute.extend(ViewingActionType, {
     acting_username: { refreshModel: true },
   },
 
-  emptyStateOthers: I18n.t("user_activity.no_activity_others"),
-
   model() {
     const user = this.modelFor("user");
     const stream = user.get("stream");
 
     return {
       stream,
-      isAnotherUsersPage: this.isAnotherUsersPage(user),
       emptyState: this.emptyState(),
-      emptyStateOthers: this.emptyStateOthers,
     };
   },
 
   afterModel(model, transition) {
+    if (!this.isPoppedState(transition)) {
+      this.session.set("userStreamScrollPosition", null);
+    }
+
     return model.stream.filterBy({
       filter: this.userActionType,
       actingUsername: transition.to.queryParams.acting_username,

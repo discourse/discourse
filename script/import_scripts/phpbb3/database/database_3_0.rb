@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require_relative 'database_base'
-require_relative '../support/constants'
+require_relative "database_base"
+require_relative "../support/constants"
 
 module ImportScripts::PhpBB3
   class Database_3_0 < DatabaseBase
@@ -13,7 +13,7 @@ module ImportScripts::PhpBB3
       SQL
     end
 
-    def fetch_users(last_user_id)
+    def fetch_users(last_user_id, _profile_fields)
       query(<<-SQL, :user_id)
         SELECT u.user_id, u.user_email, u.username, u.user_password, u.user_regdate, u.user_lastvisit, u.user_ip,
           u.user_type, u.user_inactive_reason, g.group_name, b.ban_start, b.ban_end, b.ban_reason,
@@ -115,13 +115,13 @@ module ImportScripts::PhpBB3
     def fetch_poll_options(topic_id)
       query(<<-SQL)
         SELECT o.poll_option_id, o.poll_option_text, o.poll_option_total AS total_votes,
-          o.poll_option_total - (
+          GREATEST(CAST(o.poll_option_total AS SIGNED) - (
             SELECT COUNT(DISTINCT v.vote_user_id)
               FROM #{@table_prefix}poll_votes v
                 JOIN #{@table_prefix}users u ON (v.vote_user_id = u.user_id)
                 JOIN #{@table_prefix}topics t ON (v.topic_id = t.topic_id)
               WHERE v.poll_option_id = o.poll_option_id AND v.topic_id = o.topic_id
-          ) AS anonymous_votes
+          ),0) AS anonymous_votes
         FROM #{@table_prefix}poll_options o
         WHERE o.topic_id = #{topic_id}
         ORDER BY o.poll_option_id
@@ -227,8 +227,27 @@ module ImportScripts::PhpBB3
         SELECT b.user_id, t.topic_first_post_id
         FROM #{@table_prefix}bookmarks b
           JOIN #{@table_prefix}topics t ON (b.topic_id = t.topic_id)
-        WHERE b.user_id > #{last_user_id}
+        WHERE (b.user_id, b.topic_id) > (#{last_user_id}, #{last_topic_id})
         ORDER BY b.user_id, b.topic_id
+        LIMIT #{@batch_size}
+      SQL
+    end
+
+    def count_likes
+      count(<<-SQL)
+        SELECT COUNT(*) AS count
+        FROM #{@table_prefix}thanks
+        WHERE user_id <> poster_id
+      SQL
+    end
+
+    def fetch_likes(last_post_id, last_user_id)
+      query(<<-SQL, :post_id, :user_id)
+        SELECT post_id, user_id, thanks_time
+        FROM #{@table_prefix}thanks
+        WHERE user_id <> poster_id
+          AND (post_id, user_id) > (#{last_post_id}, #{last_user_id})
+        ORDER BY post_id, user_id
         LIMIT #{@batch_size}
       SQL
     end

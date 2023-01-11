@@ -58,8 +58,6 @@ pt:
     bad_color_scheme: "Não é possível atualizar o tema, a paleta de cores é inválida"
     other_error: "Ocorreu algo de errado ao atualizar o tema"
     ember_selector_error: "Não é permitido usar seletores CSS #ember ou .ember-view, porque esses nomes são gerados dinamicamente no tempo de execução e mudarão com o tempo, resultando em CSS corrompido. Experimente um seletor diferente."
-    compile_error:
-      unrecognized_extension: "Extensão de ficheiro desconhecida: %{extension}"
     import_error:
       generic: Ocorreu um erro ao importar esse tema
       about_json: "Erro de importação: about.json não existe ou é inválido. Tem a certeza de que este é um Tema do Discourse?"
@@ -124,7 +122,6 @@ pt:
         unsubscribe_not_allowed: "Acontece quando desubescrever via e-mail não é permitido para este utilizador."
         email_not_allowed: "Acontece quando o endereço de email não está na lista de permissões ou está na lista de bloqueio."
       unrecognized_error: "Erro Desconhecido"
-    secure_media_placeholder: "Editado: este site tem mídia segura habilitada, visite o tópico ou clique em Exibir Mídia para ver a mídia anexada."
     view_redacted_media: "Exibir media"
   errors: &errors
     format: ! "%{attribute} %{message}"
@@ -194,7 +191,6 @@ pt:
       page_publishing_requirements: "A publicação de página não pode ser ativada se a media segura estiver ativada."
       s3_backup_requires_s3_settings: "Não pode utilizar S3 como local para cópia de segurança a não ser que providencie '%{setting_name}'."
       s3_bucket_reused: "Não pode utilizar o mesmo balde para 's3_upload_bucket' e 's3_backup_bucket'. Escolha um balde diferente ou use uma localização diferente para cada balde."
-      secure_media_requirements: "Envios para S3 deve estar ativado antes de ativar média segura."
       share_quote_facebook_requirements: "Você tem de definir um ID de Aplicação do Facebook para ativar a partilha de citações para o Facebook."
       second_factor_cannot_enforce_with_socials: "Você não pode aplicar o 2FA com logins sociais ativados. Você tem primeiro de desativar o login via: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "Não pode forçar 2FA se logins locais estiver desativado."
@@ -214,7 +210,6 @@ pt:
       <p>Se você se lembrar da sua senha, você pode <a href="%{base_url}/login">Efetuar Login</a>.</p>
 
       <p>Caso contrário, <a href="%{base_url}/password-reset">Redefinir senha</a>.</p>
-    user_exists: "Não há necessidade de convidar <b>%{email}</b>, eles <a href='%{base_path}/u/%{username}/summary'>já têm uma conta!</a>"
     invite_exists: "Você já convidou <b>%{email}</b>."
     invalid_email: "%{email} não é um endereço de email válido."
     rate_limit:
@@ -368,7 +363,7 @@ pt:
   too_late_to_edit: "Essa mensagem foi criada há muito tempo. Já não pode ser editada ou apagada."
   edit_conflict: "Essa postagem foi editada por outro usuário e suas alterações não podem mais ser salvas."
   revert_version_same: "A versão actual é o mesma versão para a qual está a tentar reverter."
-  cannot_edit_on_slow_mode: "Este tópico está em modo lento. Para incentivar uma discussão ponderada e respeitada, a edição de postagens antigas neste tópico não é permitida enquanto em modo lento."
+  cannot_edit_on_slow_mode: "Este tópico está em modo lento. Para incentivar uma discussão ponderada e respeitada, a edição de posts antigos neste tópico não é permitida enquanto em modo lento."
   excerpt_image: "imagem"
   bookmarks:
     errors:
@@ -376,7 +371,6 @@ pt:
       too_many: "Desculpe, você não pode adicionar mais de %{limit} favoritos, visite <a href='%{user_bookmarks_url}'>%{user_bookmarks_url}</a> para remover alguns."
       cannot_set_past_reminder: "Você não pode definir um lembrete de favoritos no passado."
       cannot_set_reminder_in_distant_future: "Você não pode definir um lembrete de favoritos para mais de 10 anos no futuro."
-      time_must_be_provided: "tempo deve ser fornecido para todos os lembretes"
     reminders:
       at_desktop: "Da próxima vez que eu estiver no meu desktop"
       later_today: "Hoje, mais tarde"
@@ -474,16 +468,11 @@ pt:
               invalid_url: "A URL de substituição é inválida"
       <<: *errors
   uncategorized_category_name: "Sem categoria"
-  vip_category_name: "Salão"
-  vip_category_description: "Uma categoria exclusiva para membros de Nível de Confiança 3 ou superior."
+  general_category_name: "Geral"
   meta_category_name: "Comentários sobre o Sítio"
   meta_category_description: "Discussão sobre este sítio, a sua organização, como funciona, e como podemos melhorá-lo."
   staff_category_name: "Pessoal"
   staff_category_description: "Categoria privada para discussões do pessoal. Os tópicos estão apenas visíveis para administradores e moderadores."
-  discourse_welcome_topic:
-    title: "Bem-vindo ao Discourse"
-  lounge_welcome:
-    title: "Bem-vindo ao Salão"
   category:
     topic_prefix: "Acerca da categoria %{category}"
     post_template: "%{replace_paragraph}\n\nUtilize os seguintes parágrafos para uma descrição mais longa, ou para estabelecer orientações ou regras da categoria:\n\n- Porque devem as pessoas utilizar esta categoria? Para que serve?\n\n- No que difere ao certo em relação às outras categorias que já temos?\n\n- O que devem conter, de maneira geral, os tópicos desta categoria?\n\n- Precisamos desta categoria? Podemos uni-la com outra categoria, ou subcategoria?\n"
@@ -602,11 +591,6 @@ pt:
         one: "há quase %{count} ano atrás"
         other: "há quase %{count} anos atrás"
   password_reset:
-    no_token: "Desculpe, essa hiperligação para alterar a palavra-passe é muito antiga. Selecione o botão Iniciar Sessão e utilize 'Esqueci a minha palavra-passe' para obter uma nova hiperligação."
-    choose_new: "Escolha uma nova palavra-passe"
-    choose: "Escolha uma palavra-passe"
-    update: "Atualizar Palavra-passe"
-    save: "Definir Palavra-passe"
     title: "Redefinir Palavra-passe"
     success: "A sua palavra-passe foi alterada com sucesso e está agora ligado."
     success_unapproved: "Palavra-passe modificada com sucesso."
@@ -670,6 +654,7 @@ pt:
       long_form: "sinalizou isto como spam"
     inappropriate:
       title: "Inapropriado"
+      description: 'Este tópico contém conteúdo que uma pessoa razoável consideraria ofensivo, abusivo, uma conduta odiosa ou uma violação de <a href="%{base_path}/guidelines">nossas diretrizes da comunidade</a>.'
       long_form: "sinalizou isto como inapropriado"
     notify_moderators:
       title: "Algo Mais"
@@ -768,6 +753,11 @@ pt:
         post: Publicação
         editor: Editor
         edit_reason: Motivo
+    consolidated_api_requests:
+      xaxis:
+        api: "API"
+        user_api: "API de Utlizador"
+      yaxis: "Dia"
     dau_by_mau:
       xaxis: "Dia"
     daily_engaged_users:
@@ -977,7 +967,6 @@ pt:
     max_topic_title_length: "Tamanho máximo permitido por título de cada tópico, em caracteres"
     min_personal_message_title_length: "Tamanho mínimo permitido por título nas mensagens, em caracteres"
     min_search_term_length: "Tamanho mínimo válido para termos de pesquisa, em caracteres"
-    search_tokenize_chinese_japanese_korean: "Forçar pesquisa para atomizar Chinês/Japonês/Coreano mesmo em sites que não sejam CJC"
     search_prefer_recent_posts: "Se pesquisar no seu fórum vasto é lento, esta opção tenta usar um índex de publicações recentes primeiro"
     search_recent_posts_size: "Quantas publicações recentes a manter no índex"
     search_query_log_max_size: "O número máximo de consultas de pesquisa a serem mantidas"
@@ -986,17 +975,12 @@ pt:
     allow_duplicate_topic_titles: "Permitir tópicos com títulos idênticos e duplicados."
     unique_posts_mins: "Quantos minutos antes que um utilizador possa criar uma mensagem com o mesmo conteúdo outra vez?"
     educate_until_posts: "Quando um utilizador começar a escrever as primeiras (n) novas mensagens, mostrar o painel pop-up de educação do novo utilizador no editor."
-    title: "O nome deste sítio, tal como usado na etiqueta do título."
-    site_description: "Descrever este sítio em uma frase, tal como usado na etiqueta de descrição meta."
     crawl_images: "Recuperar imagens de URLs remotos para inserir o comprimento e largura corretos."
-    download_remote_images_to_local: "Converta as imagens remotas em imagens locais transferindo-as; isto evita imagens corrompidas."
     download_remote_images_threshold: "Espaço mínimo necessário em disco para transferir as imagens remotas localmente (em percentagem)"
     disabled_image_download_domains: "As imagens remotas nunca serão transferidas destes domínios. Lista delimitada por canal."
     editing_grace_period: "Por (n) segundos após publicar, a edição não irá criar uma nova versão no histórico da mensagem."
     edit_history_visible_to_public: "Permitir que todos vejam versões anteriores de uma mensagem editada. Quando desativado, apenas membros do pessoal podem ver."
     delete_removed_posts_after: "Mensagens removidas pelo autor serão automaticamente eliminadas após um período de (n) horas. Se estiver definido a 0, as mensagens serão eliminadas imediatamente."
-    max_image_width: "Largura máxima de miniaturas de imagens numa mensagem."
-    max_image_height: "Altura máxima de miniaturas de imagens numa mensagem."
     fixed_category_positions: "Se estiver marcado, irá conseguir organizar as categorias por uma ordem fixa. Se não estiver marcado, as categorias são listadas por ordem de actividade."
     fixed_category_positions_on_create: "Se marcado, a ordenação de categorias irá ser mantida no diálogo de criação do tópico (requer fixed_category_positions)"
     add_rel_nofollow_to_user_content: 'Adicionar a etiqueta rel nofollow em todos os conteúdos submetidos pelo utilizador, excepto para hiperligações internas (incluindo domínios pai). Se mudar isto, terá que atualizar todas as suas mensagens com: "rake posts:rebake"'
@@ -1011,9 +995,7 @@ pt:
     force_https: "Forçar o site a usar apenas HTTPS. ALERTA: NÃO active esta opção enquanto não verificar que o HTTPS está completamente configurado e funcional absolutamente em todo o lado! Verificou a sua CDN, todos os logins por rede social, e quaisquer logos ou outras dependências externas para garantir que também são compatíveis com HTTPS?"
     summary_score_threshold: "Pontuação mínima necessária para que uma mensagem seja incluída em 'Resumir Este Tópico'"
     summary_percent_filter: "Quando um utilizador clica em 'Resumir Este Tópico', mostrar as melhores % de mensagens"
-    enable_long_polling: "O sistema de mensagens usado para notificações pode fazer solicitações longas"
     long_polling_base_url: "URL base utilizado para sondar o servidor (quando um CDN serve conteúdo dinâmico, certifique-se de definir isto para a \"pull\" original) por exemplo: http://origem.site.com"
-    long_polling_interval: "O tempo que um servidor deverá aguardar antes de responder aos clientes quando não existirem dados para serem enviados (apenas utilizadores autenticados)"
     polling_interval: "Quando não está a ocorrer uma solicitação ao servidor, com que frequência devem os clientes ligados requerer uma atualização, em milissegundos"
     anon_polling_interval: "Com que frequência os clientes anónimos podem sondar o servidor em milisegundos"
     background_polling_interval: "Com que frequência deverão os clientes solicitar o servidor, em milissegundos (quando a janela está em plano de fundo)"
@@ -1046,7 +1028,6 @@ pt:
     prioritize_username_in_ux: "Mostrar o nome de utilizador primeiro na página de utilizador, cartão de utilizador e publicações (quando o nome desactivado é mostrado primeiro)"
     email_token_valid_hours: "Os símbolos para palavra-passe esquecida /conta ativada são válidos por (n) horas."
     enable_badges: "Ativar o sistema de distintivos"
-    enable_whispers: "Permitir à equipa de apio comunicar de forma privada dentro de tópicos."
     blocked_email_domains: "Lista de domínios de email que os utilizadores não podem usar para registo de contas. Exemplo: mailinator.com|trashmail.net"
     allowed_email_domains: "Lista de domínios de email que os utilizadores DEVEM usar para registar contas. AVISO: Utilizadores com domínios de email diferentes dos listados não serão permitidos!"
     log_out_strict: "Ao terminar sessão, saia de TODAS as sessões do utilizador em todos dispositivos"
@@ -1061,7 +1042,6 @@ pt:
     enable_signup_cta: "Mostrar um aviso a utilizadores anónimos que retornem levando-os a inscreverem-se para uma conta."
     google_oauth2_client_id: "ID do cliente da sua aplicação Google."
     google_oauth2_client_secret: "Chave do cliente da sua aplicação Google."
-    maximum_backups: "O número máximo de cópias de segurança a manter no disco. As cópias de segurança antigas são eliminadas automaticamente."
     automatic_backups_enabled: "Executar cópias de segurança automáticas de acordo com as definições de frequência de cópia de segurança"
     s3_backup_bucket: "Balde remoto para guardar cópias de segurança. AVISO: Certifique-se que este é um balde privado."
     backup_time_of_day: "Altura do dia UTC em que a cópia de segurança deve ocorrer."
@@ -1466,7 +1446,6 @@ pt:
     subject_template: "[%{email_prefix}] disponível atualização"
   flag_reasons:
     off_topic: "A sua mensagem foi marcada como **fora do contexto**: a comunidade sente que não se enquadra neste tópico, conforme o seu título e a sua primeira mensagem."
-    inappropriate: "A sua mensagem foi sinalizada como **inapropriada**: a comunidade sente que é ofensiva, abusiva ou que é uma violação das [orientações da nossa comunidade](%{base_path}/guidelines)."
     spam: "A sua mensagem foi marcada como **spam**: a comunidade sente que é um anúncio, algo que é excecionalmente promocional na sua natureza em vez de ser útil ou relevante para o tópico tal como seria esperado."
     notify_moderators: "A sua mensagem foi marcada **para atenção do moderador**: a comunidade sente que algo na sua mensagem requer intervenção manual de um membro do pessoal."
   flags_dispositions:
@@ -1537,7 +1516,6 @@ pt:
       subject_template: "A restauração falhou"
     bulk_invite_succeeded:
       subject_template: "Convites de utilizadores em massa processados com sucesso"
-      text_body_template: "O seu ficheiro de convites de utilizadores em massa foi processado, %{sent} convites enviados."
     bulk_invite_failed:
       subject_template: "Convite de utilizadores em massa processado com erros"
     csv_export_succeeded:
@@ -1783,6 +1761,16 @@ pt:
         %{context}
 
         %{respond_instructions}
+    user_watching_category_or_tag:
+      text_body_template: |2
+
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_watching_first_post:
       text_body_template: |2
 
@@ -1842,6 +1830,7 @@ pt:
     post_approved:
       title: "A sua publicação foi aprovada"
   page_not_found:
+    page_title: "Página Não Encontrada"
     title: "Oops! Essa página não existe or é privada."
     popular_topics: "Popular"
     recent_topics: "Recente"
@@ -2083,8 +2072,7 @@ pt:
     reader:
       name: Leitor
       description: Ler todas as respostas num tópico com mais de 100 respostas
-      long_description: |2
-
+      long_description: |
         Este distintivo é concedido pela primeira vez que lê um tópico alongado com mais de 100 respostas. Ler uma discussão atentamente ajuda-o a acompanhar uma discussão, compreender diferentes pontos de vista, e leva a discussões mais interessantes. Quanto mais lê, melhor fica a discussão. Como costumamos dizer, Ler é Fundamental! :slight_smile:
     popular_link:
       name: Ligação Popular
@@ -2095,8 +2083,7 @@ pt:
     hot_link:
       name: Ligação Quente
       description: Publicou uma ligação externa com 300 cliques
-      long_description: |2
-
+      long_description: |
         Este distintivo é concedido quando uma ligação que partilhou obtém 300 cliques. Obrigado por publicar uma ligação fascinante que empurrou a conversa para a frente e iluminou a discussão!
     famous_link:
       name: Ligação Famosa
@@ -2172,7 +2159,6 @@ pt:
     register:
       button: "Registar"
       title: "Registar Conta de Administração"
-      help: "registe uma conta nova para começar"
     confirm_email:
       title: "Confirme o seu Email"
     resend_email:
@@ -2180,57 +2166,22 @@ pt:
       message: "<p>Reenviamos o email de ativação para <b>%{email}</b>"
   safe_mode:
     title: "Entrar em modo de segurança"
-    description: "O modo de segurança permite-lhe testar o seu sítio sem carregar plugins ou alterações."
-    only_official: "Desativar plugins não-oficiais"
+    no_unofficial_plugins: "Desativar plugins não-oficiais"
     no_plugins: "Desativar todos os plugins"
     enter: "Entrar em Modo de Segurança"
   wizard:
     title: "Configuração do Discourse"
     step:
-      locale:
-        title: "Bem-vindo ao seu Discourse!"
-        fields:
-          default_locale:
-            description: "Qual é a linguagem por defeito para a sua comunidade?"
-      forum_title:
-        title: "Nome"
-        description: "O nome é um sinal visível à distância, a primeira coisa que potenciais visitantes verão sobre a sua comunidade. O que é o que seu nome e título dizem sobre a sua comunidade?"
+      introduction:
         fields:
           title:
-            label: "O nome da sua comunidade"
             placeholder: "Reduto da Joana"
           site_description:
             placeholder: "Um lugar para a Jona e os seus amigos falarem de coisas giras"
-      introduction:
-        title: "Introdução"
-        fields:
-          welcome:
-            label: "Tópico de Boas-vindas"
-            one_paragraph: "Por favor limite a sua mensagem de boas-vindas a um paragrafo."
       privacy:
-        title: "Acesso"
         fields:
-          privacy:
-            choices:
-              open:
-                label: "Público"
-              restricted:
-                label: "Privado"
-      contact:
-        title: "Contacte-nos"
-        fields:
-          contact_email:
-            label: "Email"
-            placeholder: "name@example.com"
-            description: "Endereço de email da pessoa ou grupo responsáveis por esta comunidade. Usado para notificações críticas tais como denúncias não tratadas, actualizações de segurança, assim como <a href='%{base_path}/about' target='_blank'>na sua página de descrição</a> para comunicações urgentes com a comunidade."
-          contact_url:
-            label: "Página da Internet"
-            placeholder: "https://www.example.com/contact-us"
-            description: "Página da internet com informação geral sobre si ou a sua organização. Será mostrada na <a href='%{base_path}/about' target='_blank'>sua página de descrição</a>."
-          site_contact:
-            label: "Mensagens Automatizadas"
-      corporate:
-        title: "Organização"
+          login_required:
+            placeholder: "Privado"
       styling:
         fields:
           styling_preview:
@@ -2247,16 +2198,10 @@ pt:
                 label: "Categorias e Tópicos Recentes"
               categories_and_top_topics:
                 label: "Categorias e Melhores Tópicos"
-      logos:
-        title: "Logos"
+      corporate:
         fields:
-          logo:
-            label: "Logo Primário"
-      icons:
-        title: "Ícones"
-        fields:
-          large_icon:
-            label: "Ícone Grande"
+          contact_url:
+            placeholder: "https://www.example.com/contact-us"
       invites:
         title: "Convidar Equipa de Apoio"
       finished:

@@ -47,7 +47,7 @@ function addSingleLocalDate(buffer, state, config) {
     ]);
   }
   if (config.range) {
-    token.attrs.push(["data-range", true]);
+    token.attrs.push(["data-range", config.range]);
   }
 
   if (
@@ -152,12 +152,12 @@ function addLocalRange(buffer, matches, state) {
   config.timezones = parsed.attrs.timezones;
   config.displayedTimezone = parsed.attrs.displayedTimezone;
   config.countdown = parsed.attrs.countdown;
-  config.range = parsed.attrs.from && parsed.attrs.to;
 
   if (parsed.attrs.from) {
     [date, time] = parsed.attrs.from.split("T");
     config.date = date;
     config.time = time;
+    config.range = "from";
     addSingleLocalDate(buffer, state, config);
   }
   if (config.range) {
@@ -167,6 +167,7 @@ function addLocalRange(buffer, matches, state) {
     [date, time] = parsed.attrs.to.split("T");
     config.date = date;
     config.time = time;
+    config.range = "to";
     addSingleLocalDate(buffer, state, config);
   }
 }
@@ -202,9 +203,8 @@ export function setup(helper) {
   helper.registerOptions((opts, siteSettings) => {
     opts.datesEmailFormat = siteSettings.discourse_local_dates_email_format;
 
-    opts.features[
-      "discourse-local-dates"
-    ] = !!siteSettings.discourse_local_dates_enabled;
+    opts.features["discourse-local-dates"] =
+      !!siteSettings.discourse_local_dates_enabled;
   });
 
   helper.registerPlugin((md) => {

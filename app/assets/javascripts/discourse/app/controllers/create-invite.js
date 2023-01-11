@@ -12,12 +12,14 @@ import Invite from "discourse/models/invite";
 import I18n from "I18n";
 import { FORMAT } from "select-kit/components/future-date-input-selector";
 import { sanitize } from "discourse/lib/text";
+import { timeShortcuts } from "discourse/lib/time-shortcut";
 
 export default Controller.extend(
   ModalFunctionality,
   bufferedProperty("invite"),
   {
     allGroups: null,
+    topics: null,
 
     flashText: null,
     flashClass: null,
@@ -48,6 +50,7 @@ export default Controller.extend(
       });
 
       this.setProperties({
+        topics: [],
         flashText: null,
         flashClass: null,
         flashLink: false,
@@ -72,7 +75,7 @@ export default Controller.extend(
     },
 
     setInvite(invite) {
-      this.set("invite", invite);
+      this.setProperties({ invite, topics: invite.topics });
     },
 
     save(opts) {
@@ -119,7 +122,11 @@ export default Controller.extend(
 
       return this.invite
         .save(data)
-        .then((result) => {
+        .then(() => {
+          if (!this.invite.id) {
+            return;
+          }
+
           this.rollbackBuffer();
 
           if (
@@ -129,22 +136,14 @@ export default Controller.extend(
             this.invites.unshiftObject(this.invite);
           }
 
-          if (result.warnings) {
+          if (this.isEmail && opts.sendEmail) {
+            this.send("closeModal");
+          } else {
             this.setProperties({
-              flashText: sanitize(result.warnings.join(",")),
-              flashClass: "warning",
+              flashText: sanitize(I18n.t("user.invited.invite.invite_saved")),
+              flashClass: "success",
               flashLink: !this.editing,
             });
-          } else {
-            if (this.isEmail && opts.sendEmail) {
-              this.send("closeModal");
-            } else {
-              this.setProperties({
-                flashText: sanitize(I18n.t("user.invited.invite.invite_saved")),
-                flashClass: "success",
-                flashLink: !this.editing,
-              });
-            }
           }
         })
         .catch((e) =>
@@ -183,6 +182,32 @@ export default Controller.extend(
       return staff || groups.any((g) => g.owner);
     },
 
+    @discourseComputed("currentUser.staff")
+    canArriveAtTopic(staff) {
+      if (staff && !this.siteSettings.must_approve_users) {
+        return true;
+      }
+      return false;
+    },
+
+    @discourseComputed
+    timeShortcuts() {
+      const timezone = this.currentUser.user_option.timezone;
+      const shortcuts = timeShortcuts(timezone);
+      return [
+        shortcuts.laterToday(),
+        shortcuts.tomorrow(),
+        shortcuts.laterThisWeek(),
+        shortcuts.monday(),
+        shortcuts.twoWeeks(),
+        shortcuts.nextMonth(),
+        shortcuts.twoMonths(),
+        shortcuts.threeMonths(),
+        shortcuts.fourMonths(),
+        shortcuts.sixMonths(),
+      ];
+    },
+
     @action
     copied() {
       this.save({ sendEmail: false, copy: true });
@@ -200,6 +225,12 @@ export default Controller.extend(
       getNativeContact(this.capabilities, ["email"], false).then((result) => {
         this.set("buffered.email", result[0].email[0]);
       });
+    },
+
+    @action
+    onChangeTopic(topicId, topic) {
+      this.set("topics", [topic]);
+      this.set("buffered.topicId", topicId);
     },
   }
 );

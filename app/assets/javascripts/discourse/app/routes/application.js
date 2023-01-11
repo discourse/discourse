@@ -5,7 +5,6 @@ import DiscourseRoute from "discourse/routes/discourse";
 import I18n from "I18n";
 import OpenComposer from "discourse/mixins/open-composer";
 import { ajax } from "discourse/lib/ajax";
-import bootbox from "bootbox";
 import { findAll } from "discourse/models/login-method";
 import { getOwner } from "discourse-common/lib/get-owner";
 import getURL from "discourse-common/lib/get-url";
@@ -17,8 +16,18 @@ import showModal from "discourse/lib/show-modal";
 
 function unlessReadOnly(method, message) {
   return function () {
-    if (this.site.get("isReadOnly")) {
-      bootbox.alert(message);
+    if (this.site.isReadOnly) {
+      this.dialog.alert(message);
+    } else {
+      this[method]();
+    }
+  };
+}
+
+function unlessStrictlyReadOnly(method, message) {
+  return function () {
+    if (this.site.isReadOnly && !this.site.isStaffWritesOnly) {
+      this.dialog.alert(message);
     } else {
       this[method]();
     }
@@ -29,6 +38,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
   siteTitle: setting("title"),
   shortSiteDescription: setting("short_site_description"),
   documentTitle: service(),
+  dialog: service(),
 
   actions: {
     toggleAnonymous() {
@@ -41,7 +51,11 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
       mobile.toggleMobileView();
     },
 
-    logout: unlessReadOnly(
+    toggleSidebar() {
+      this.controllerFor("application").send("toggleSidebar");
+    },
+
+    logout: unlessStrictlyReadOnly(
       "_handleLogout",
       I18n.t("read_only_mode.logout_disabled")
     ),
@@ -110,7 +124,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
       return true;
     },
 
-    showLogin: unlessReadOnly(
+    showLogin: unlessStrictlyReadOnly(
       "handleShowLogin",
       I18n.t("read_only_mode.login_disabled")
     ),

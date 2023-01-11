@@ -1,5 +1,5 @@
 @mixin search-page-spacing {
-  padding: 2rem 10%;
+  padding: 1rem 10%;
 
   @include breakpoint(medium) {
     padding: 1rem;
@@ -63,7 +63,6 @@
 
   .search-advanced {
     position: relative;
-
     .search-actions,
     .search-title,
     .search-bar {
@@ -76,19 +75,17 @@
 
     .search-info {
       display: flex;
-      @include search-page-spacing();
       flex-wrap: wrap;
+      padding: 1em 10%;
+      background-color: var(--secondary);
       border-bottom: 1px solid var(--primary-low);
-      padding-top: 2em;
-      margin-bottom: 2em;
-      flex-direction: row;
-      align-items: flex-start;
-      justify-content: flex-start;
+      @include breakpoint(medium) {
+        padding: 0.5em 0;
+      }
 
       &.bulk-select-visible {
         @include sticky;
         top: 60px;
-        background-color: var(--secondary);
         z-index: 10;
       }
 
@@ -97,7 +94,10 @@
       }
 
       button {
-        margin: 0 0.5em 0.5em 0;
+        margin: 0 0.5em 0 0;
+        @include breakpoint(medium) {
+          margin: 0 0.5em 0.5em 0;
+        }
       }
 
       #bulk-select {
@@ -109,6 +109,13 @@
         button {
           margin-right: 0.5em;
         }
+      }
+
+      .sort-by.inline-form label {
+        margin-bottom: 0;
+      }
+      #search-sort-by {
+        margin-bottom: 0;
       }
     }
   }
@@ -127,7 +134,7 @@
   .user-items {
     display: grid;
     gap: 2em 1em;
-    grid: auto-flow / repeat(4, 1fr);
+    grid: auto-flow / repeat(4, minmax(0, 1fr));
 
     @include breakpoint(medium) {
       grid: auto-flow / repeat(3, 1fr);
@@ -150,14 +157,22 @@
     details.advanced-filters,
     details.search-advanced-additional-options {
       margin-top: 1em;
-
       > summary {
         color: var(--tertiary);
         cursor: pointer;
+        padding-top: 0.25em;
+        padding-bottom: 0.25em;
+        &:focus-visible {
+          outline: 2px solid transparent;
+          background-color: var(--tertiary-very-low);
+        }
       }
       &[open] > summary {
         color: var(--primary);
         margin-bottom: 1em;
+        &:focus-visible {
+          background-color: var(--tertiary-very-low);
+        }
       }
     }
 
@@ -229,7 +244,7 @@
 
 .fps-result {
   display: flex;
-  padding: 0 0.5em;
+  padding: 0 0.5em 0 0;
   margin-bottom: 2em;
   max-width: 100%;
   word-break: break-word;
@@ -249,26 +264,30 @@
 
   .topic {
     padding-bottom: 0.25em;
-    max-width: 700px;
     display: grid;
     grid-template-areas:
       "bulk-select title"
       "meta meta";
     grid-template-columns: auto 1fr;
-    align-items: baseline;
+
     .bulk-select {
       position: absolute;
-      left: 0px;
-      top: 0px;
-      padding: 0.5em;
-      background: var(--tertiary-very-low);
+      left: 0.5em;
+      top: 0.75em;
+      padding: 0.25em 0.5em;
+      background-color: var(--tertiary-low);
+
       input[type="checkbox"] {
         margin: 0;
       }
     }
+
     .search-link {
+      align-items: baseline;
+      display: flex;
       grid-area: title;
     }
+
     .search-category {
       grid-area: meta;
     }
@@ -290,14 +309,14 @@
     font-weight: normal;
 
     .discourse-tag.simple {
-      font-size: $font-down-1;
+      font-size: var(--font-down-1);
       margin-right: 0.25em;
     }
   }
 
   .blurb {
-    font-size: $font-0;
-    line-height: $line-height-large;
+    font-size: var(--font-0);
+    line-height: var(--line-height-large);
     color: var(--primary-medium);
     .date {
       color: var(--primary-high);
@@ -314,23 +333,24 @@
     margin-top: 0.25em;
     .d-icon {
       color: var(--love);
-      font-size: $font-down-1;
+      font-size: var(--font-down-1);
     }
   }
 
-  a.search-link:visited .topic-title {
+  a.search-link.visited .topic-title {
     color: var(--primary-medium);
   }
   .search-link {
     .topic-title {
-      font-size: $font-up-1;
-      line-height: $line-height-medium;
+      font-size: var(--font-up-1);
+      line-height: var(--line-height-medium);
       color: var(--primary);
     }
     .topic-statuses {
       display: inline-block;
+      flex-shrink: 0;
       font-size: 1.3em;
-      line-height: $line-height-medium;
+      line-height: var(--line-height-medium);
       color: var(--primary-medium);
       span {
         line-height: 1;
@@ -339,7 +359,7 @@
   }
 
   .discourse-tag.simple {
-    font-size: $font-down-1;
+    font-size: var(--font-down-1);
     margin-right: 0.25em;
   }
 }
@@ -360,11 +380,13 @@
     .avatar {
       margin-right: 0.5em;
       min-width: 25px;
+      flex: 0 0 auto;
     }
     .user-titles {
       display: flex;
       flex-direction: column;
       max-width: 300px;
+      overflow: hidden;
       .name {
         color: var(--primary-high-or-secondary-low);
         font-size: var(--font-0);

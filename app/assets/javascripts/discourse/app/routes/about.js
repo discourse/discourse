@@ -29,6 +29,7 @@ export default DiscourseRoute.extend({
           result.about.category_moderators[index].category = category;
         });
       }
+
       return result.about;
     });
   },

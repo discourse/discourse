@@ -5,10 +5,11 @@ import { createWidget } from "discourse/widgets/widget";
 import { actionDescriptionHtml } from "discourse/widgets/post-small-action";
 import { h } from "virtual-dom";
 import { iconNode } from "discourse-common/lib/icon-library";
-import { later } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 import { relativeAge } from "discourse/lib/formatter";
 import renderTags from "discourse/lib/render-tags";
 import renderTopicFeaturedLink from "discourse/lib/render-topic-featured-link";
+import { hideUserTip } from "discourse/lib/user-tips";
 
 const SCROLLER_HEIGHT = 50;
 const LAST_READ_HEIGHT = 20;
@@ -444,7 +445,7 @@ export default createWidget("topic-timeline", {
     const stream = this.attrs.topic.get("postStream");
 
     // a little debounce to avoid flashing
-    later(() => {
+    discourseLater(() => {
       if (!this.state.position === scrollPosition) {
         return;
       }
@@ -597,5 +598,31 @@ export default createWidget("topic-timeline", {
     }
 
     return result;
+  },
+
+  didRenderWidget() {
+    if (!this.currentUser || !this.siteSettings.enable_user_tips) {
+      return;
+    }
+
+    this.currentUser.showUserTip({
+      id: "topic_timeline",
+
+      titleText: I18n.t("user_tips.topic_timeline.title"),
+      contentText: I18n.t("user_tips.topic_timeline.content"),
+
+      reference: document.querySelector("div.timeline-scrollarea-wrapper"),
+      appendTo: document.querySelector("div.topic-timeline"),
+
+      placement: "left",
+    });
+  },
+
+  destroy() {
+    hideUserTip("topic_timeline");
+  },
+
+  willRerenderWidget() {
+    hideUserTip("topic_timeline");
   },
 });

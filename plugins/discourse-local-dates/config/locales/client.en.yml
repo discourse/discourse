@@ -25,6 +25,7 @@ en:
           format_title: Date format
           timezone: Timezone
           until: Until...
+          current_timezone: "Current timezone:"
           recurring:
             every_day: "Every day"
             every_week: "Every week"

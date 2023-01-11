@@ -13,7 +13,7 @@ module("Unit | Utility | url", function () {
   test("isInternal with a HTTP url", function (assert) {
     sinon.stub(DiscourseURL, "origin").returns("http://eviltrout.com");
 
-    assert.not(DiscourseURL.isInternal(null), "a blank URL is not internal");
+    assert.notOk(DiscourseURL.isInternal(null), "a blank URL is not internal");
     assert.ok(DiscourseURL.isInternal("/test"), "relative URLs are internal");
     assert.ok(
       DiscourseURL.isInternal("//eviltrout.com"),
@@ -27,11 +27,11 @@ module("Unit | Utility | url", function () {
       DiscourseURL.isInternal("https://eviltrout.com/moustache"),
       "a url on a HTTPS of the same host is internal"
     );
-    assert.not(
+    assert.notOk(
       DiscourseURL.isInternal("//twitter.com.com"),
       "a different host is not internal (protocol-less)"
     );
-    assert.not(
+    assert.notOk(
       DiscourseURL.isInternal("http://twitter.com"),
       "a different host is not internal"
     );
@@ -47,11 +47,11 @@ module("Unit | Utility | url", function () {
 
   test("isInternal on subfolder install", function (assert) {
     sinon.stub(DiscourseURL, "origin").returns("http://eviltrout.com/forum");
-    assert.not(
+    assert.notOk(
       DiscourseURL.isInternal("http://eviltrout.com"),
       "the host root is not internal"
     );
-    assert.not(
+    assert.notOk(
       DiscourseURL.isInternal("http://eviltrout.com/tophat"),
       "a url on the same host but on a different folder is not internal"
     );
@@ -143,14 +143,26 @@ module("Unit | Utility | url", function () {
     );
   });
 
-  test("routeTo redirects secure media URLS because they are server side only", async function (assert) {
+  test("routeTo redirects secure uploads URLS because they are server side only", async function (assert) {
     sinon.stub(DiscourseURL, "redirectTo");
     sinon.stub(DiscourseURL, "handleURL");
-    DiscourseURL.routeTo("/secure-media-uploads/original/1X/test.pdf");
+    DiscourseURL.routeTo("/secure-uploads/original/1X/test.pdf");
     assert.ok(
-      DiscourseURL.redirectTo.calledWith(
-        "/secure-media-uploads/original/1X/test.pdf"
-      )
+      DiscourseURL.redirectTo.calledWith("/secure-uploads/original/1X/test.pdf")
+    );
+  });
+
+  test("anchor handling", async function (assert) {
+    sinon.stub(DiscourseURL, "jumpToElement");
+    sinon.stub(DiscourseURL, "replaceState");
+    DiscourseURL.routeTo("#heading1");
+    assert.ok(
+      DiscourseURL.jumpToElement.calledWith("heading1"),
+      "in-page anchors call jumpToElement"
+    );
+    assert.ok(
+      DiscourseURL.replaceState.calledWith("#heading1"),
+      "in-page anchors call replaceState with the url fragment"
     );
   });
 });

@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class InlineOneboxer
-
   MIN_TITLE_LENGTH = 2
 
   def initialize(urls, opts = nil)
@@ -19,6 +18,14 @@ class InlineOneboxer
 
   def self.cache_lookup(url)
     Discourse.cache.read(cache_key(url))
+  end
+
+  def self.local_handlers
+    @local_handlers ||= {}
+  end
+
+  def self.register_local_handler(controller, &handler)
+    local_handlers[controller] = handler
   end
 
   def self.lookup(url, opts = nil)
@@ -46,23 +53,31 @@ class InlineOneboxer
           # not permitted to see topic
           return nil
         end
+      elsif handler = local_handlers[route[:controller]]
+        return handler.call(url, route)
       end
     end
 
     always_allow = SiteSetting.enable_inline_onebox_on_all_domains
-    allowed_domains = SiteSetting.allowed_inline_onebox_domains&.split('|') unless always_allow
+    allowed_domains = SiteSetting.allowed_inline_onebox_domains&.split("|") unless always_allow
 
     if always_allow || allowed_domains
-      uri = begin
-        URI(url)
-      rescue URI::Error
-      end
+      uri =
+        begin
+          URI(url)
+        rescue URI::Error
+        end
 
-      if uri.present? &&
-        uri.hostname.present? &&
-        (always_allow || allowed_domains.include?(uri.hostname)) &&
-        !Onebox::DomainChecker.is_blocked?(uri.hostname)
-        title = RetrieveTitle.crawl(url)
+      if uri.present? && uri.hostname.present? &&
+           (always_allow || allowed_domains.include?(uri.hostname)) &&
+           !Onebox::DomainChecker.is_blocked?(uri.hostname)
+        max_redirects = 0 if SiteSetting.block_onebox_on_redirect
+        title =
+          RetrieveTitle.crawl(
+            url,
+            max_redirects: max_redirects,
+            initial_https_redirect_ignore_limit: SiteSetting.block_onebox_on_redirect,
+          )
         title = nil if title && title.length < MIN_TITLE_LENGTH
         return onebox_for(url, title, opts)
       end
@@ -78,19 +93,23 @@ class InlineOneboxer
     if title && opts[:post_number]
       title += " - "
       if opts[:post_author]
-        title += I18n.t(
-          "inline_oneboxer.topic_page_title_post_number_by_user",
-          post_number: opts[:post_number],
-          username: opts[:post_author]
-        )
+        title +=
+          I18n.t(
+            "inline_oneboxer.topic_page_title_post_number_by_user",
+            post_number: opts[:post_number],
+            username: opts[:post_author],
+          )
       else
-        title += I18n.t(
-          "inline_oneboxer.topic_page_title_post_number",
-          post_number: opts[:post_number]
-        )
+        title +=
+          I18n.t("inline_oneboxer.topic_page_title_post_number", post_number: opts[:post_number])
       end
     end
-    onebox = { url: url, title: title && Emoji.gsub_emoji_to_unicode(title) }
+
+    title = title && Emoji.gsub_emoji_to_unicode(title)
+    title = WordWatcher.censor_text(title) if title.present?
+
+    onebox = { url: url, title: title }
+
     Discourse.cache.write(cache_key(url), onebox, expires_in: 1.day) if !opts[:skip_cache]
     onebox
   end

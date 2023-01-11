@@ -1,4 +1,4 @@
-import { and, not, or } from "@ember/object/computed";
+import { and, equal, not, or } from "@ember/object/computed";
 import DiscourseURL from "discourse/lib/url";
 import I18n from "I18n";
 import PostsWithPlaceholders from "discourse/lib/posts-with-placeholders";
@@ -37,7 +37,6 @@ export default RestModel.extend({
   posts: null,
   stream: null,
   userFilters: null,
-  summary: null,
   loaded: null,
   loadingAbove: null,
   loadingBelow: null,
@@ -48,6 +47,7 @@ export default RestModel.extend({
   timelineLookup: null,
   filterRepliesToPostNumber: null,
   filterUpwardsPostID: null,
+  filter: null,
 
   init() {
     this._identityMap = {};
@@ -62,7 +62,6 @@ export default RestModel.extend({
       postsWithPlaceholders,
       stream: [],
       userFilters: [],
-      summary: false,
       filterRepliesToPostNumber:
         parseInt(this.get("topic.replies_to_post_number"), 10) || false,
       filterUpwardsPostID: false,
@@ -77,6 +76,8 @@ export default RestModel.extend({
 
   loading: or("loadingAbove", "loadingBelow", "loadingFilter", "stagingPost"),
   notLoading: not("loading"),
+
+  summary: equal("filter", "summary"),
 
   @discourseComputed(
     "isMegaTopic",
@@ -137,7 +138,7 @@ export default RestModel.extend({
     params for the stream.
   **/
   @discourseComputed(
-    "summary",
+    "filter",
     "userFilters.[]",
     "filterRepliesToPostNumber",
     "filterUpwardsPostID"
@@ -145,8 +146,8 @@ export default RestModel.extend({
   streamFilters() {
     const result = {};
 
-    if (this.summary) {
-      result.filter = "summary";
+    if (this.filter) {
+      result.filter = this.filter;
     }
 
     const userFilters = this.userFilters;
@@ -235,14 +236,14 @@ export default RestModel.extend({
   cancelFilter() {
     this.setProperties({
       userFilters: [],
-      summary: false,
       filterRepliesToPostNumber: false,
       filterUpwardsPostID: false,
       mixedHiddenPosts: false,
+      filter: null,
     });
   },
 
-  refreshAndJumptoSecondVisible() {
+  refreshAndJumpToSecondVisible() {
     return this.refresh({}).then(() => {
       if (this.posts && this.posts.length > 1) {
         DiscourseURL.jumpToPost(this.posts[1].get("post_number"));
@@ -252,15 +253,15 @@ export default RestModel.extend({
 
   showSummary() {
     this.cancelFilter();
-    this.set("summary", true);
-    return this.refreshAndJumptoSecondVisible();
+    this.set("filter", "summary");
+    return this.refreshAndJumpToSecondVisible();
   },
 
   // Filter the stream to a particular user.
   filterParticipant(username) {
     this.cancelFilter();
     this.userFilters.addObject(username);
-    return this.refreshAndJumptoSecondVisible();
+    return this.refreshAndJumpToSecondVisible();
   },
 
   filterReplies(postNumber, postId) {
@@ -357,6 +358,15 @@ export default RestModel.extend({
           loaded: true,
         });
         this._checkIfShouldShowRevisions();
+
+        // Reset all error props
+        topic.setProperties({
+          errorLoading: false,
+          errorTitle: null,
+          errorHtml: null,
+          errorMessage: null,
+          noRetry: false,
+        });
       })
       .catch((result) => {
         this.errorLoading(result);
@@ -386,6 +396,7 @@ export default RestModel.extend({
       if (postIdx !== -1) {
         return this.findPostsByIds(headGap).then((posts) => {
           posts.forEach((p) => {
+            this._initUserModels(p);
             const stored = this.storePost(p);
             if (!currentPosts.includes(stored)) {
               currentPosts.insertAt(postIdx++, stored);
@@ -598,6 +609,7 @@ export default RestModel.extend({
   },
 
   prependPost(post) {
+    this._initUserModels(post);
     const stored = this.storePost(post);
     if (stored) {
       const posts = this.posts;
@@ -608,6 +620,7 @@ export default RestModel.extend({
   },
 
   appendPost(post) {
+    this._initUserModels(post);
     const stored = this.storePost(post);
     if (stored) {
       const posts = this.posts;
@@ -680,12 +693,15 @@ export default RestModel.extend({
     });
   },
 
-  /* mainly for backwards compatability with plugins, used in quick messages plugin
-   * TODO: remove July 2021
+  /* mainly for backwards compatibility with plugins, used in quick messages plugin
+   * TODO: remove July 2022
    * */
   triggerNewPostInStream(postId, opts) {
     deprecated(
-      "Please use triggerNewPostsInStream, this method will be removed July 2021"
+      "Please use triggerNewPostsInStream, this method will be removed July 2021",
+      {
+        id: "discourse.post-stream.trigger-new-post",
+      }
     );
     return this.triggerNewPostsInStream([postId], opts);
   },
@@ -713,7 +729,7 @@ export default RestModel.extend({
     let missingIds = [];
 
     postIds.forEach((postId) => {
-      if (postId && this.stream.indexOf(postId) === -1) {
+      if (postId && !this.stream.includes(postId)) {
         missingIds.push(postId);
       }
     });
@@ -724,7 +740,7 @@ export default RestModel.extend({
 
     if (loadedAllPosts) {
       missingIds.forEach((postId) => {
-        if (this._loadingPostIds.indexOf(postId) === -1) {
+        if (!this._loadingPostIds.includes(postId)) {
           this._loadingPostIds.push(postId);
         }
       });
@@ -846,12 +862,12 @@ export default RestModel.extend({
     return resolved;
   },
 
-  triggerLikedPost(postId, likesCount) {
+  triggerLikedPost(postId, likesCount, userID, eventType) {
     const resolved = Promise.resolve();
 
     const post = this.findLoadedPost(postId);
     if (post) {
-      post.updateLikeCount(likesCount);
+      post.updateLikeCount(likesCount, userID, eventType);
       this.storePost(post);
     }
 
@@ -869,6 +885,17 @@ export default RestModel.extend({
     });
 
     return resolved;
+  },
+
+  triggerChangedTopicStats() {
+    if (this.firstPostNotLoaded) {
+      return Promise.reject();
+    }
+
+    return Promise.resolve().then(() => {
+      const firstPost = this.posts.findBy("post_number", 1);
+      return firstPost.id;
+    });
   },
 
   postForPostNumber(postNumber) {
@@ -1225,10 +1252,26 @@ export default RestModel.extend({
 
     const json = error.jqXHR.responseJSON;
     if (json && json.extras && json.extras.html) {
+      topic.set("errorTitle", json.extras.title);
       topic.set("errorHtml", json.extras.html);
     } else {
       topic.set("errorMessage", I18n.t("topic.server_error.description"));
       topic.set("noRetry", error.jqXHR.status === 403);
+    }
+  },
+
+  _initUserModels(post) {
+    post.user = User.create({
+      id: post.user_id,
+      username: post.username,
+    });
+
+    if (post.user_status) {
+      post.user.status = post.user_status;
+    }
+
+    if (post.mentioned_users) {
+      post.mentioned_users = post.mentioned_users.map((u) => User.create(u));
     }
   },
 

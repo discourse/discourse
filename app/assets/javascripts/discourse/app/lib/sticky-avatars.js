@@ -5,15 +5,15 @@ import { headerOffset } from "discourse/lib/offset-calculator";
 import { schedule } from "@ember/runloop";
 
 export default class StickyAvatars {
+  static init(container) {
+    return new this(container).init();
+  }
+
   stickyClass = "sticky-avatar";
   topicPostSelector = "#topic .post-stream .topic-post";
   intersectionObserver = null;
   direction = "⬇️";
   prevOffset = -1;
-
-  static init(container) {
-    return new this(container).init();
-  }
 
   constructor(container) {
     this.container = container;
@@ -90,8 +90,8 @@ export default class StickyAvatars {
               return;
             }
 
-            const postContentHeight = entry.target.querySelector(".contents")
-              ?.clientHeight;
+            const postContentHeight =
+              entry.target.querySelector(".contents")?.clientHeight;
             if (
               this.direction === "⬆️" ||
               postContentHeight > window.innerHeight - headerOffset()

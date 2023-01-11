@@ -2,10 +2,9 @@
 # frozen_string_literal: true
 
 class Users::OmniauthCallbacksController < ApplicationController
-
   skip_before_action :redirect_to_login_if_required
 
-  layout 'no_ember'
+  layout "no_ember"
 
   # need to be able to call this
   skip_before_action :check_xhr
@@ -13,6 +12,8 @@ class Users::OmniauthCallbacksController < ApplicationController
   # this is the only spot where we allow CSRF, our openid / oauth redirect
   # will not have a CSRF token, however the payload is all validated so its safe
   skip_before_action :verify_authenticity_token, only: :complete
+
+  allow_in_staff_writes_only_mode :complete
 
   def confirm_request
     self.class.find_authenticator(params[:provider])
@@ -22,6 +23,7 @@ class Users::OmniauthCallbacksController < ApplicationController
   def complete
     auth = request.env["omniauth.auth"]
     raise Discourse::NotFound unless request.env["omniauth.auth"]
+    raise Discourse::ReadOnly if @readonly_mode && !staff_writes_only_mode?
 
     auth[:session] = session
 
@@ -37,7 +39,7 @@ class Users::OmniauthCallbacksController < ApplicationController
       DiscourseEvent.trigger(:after_auth, authenticator, @auth_result, session, cookies, request)
     end
 
-    preferred_origin = request.env['omniauth.origin']
+    preferred_origin = request.env["omniauth.origin"]
 
     if session[:destination_url].present?
       preferred_origin = session[:destination_url]
@@ -50,10 +52,11 @@ class Users::OmniauthCallbacksController < ApplicationController
     end
 
     if preferred_origin.present?
-      parsed = begin
-        URI.parse(preferred_origin)
-      rescue URI::Error
-      end
+      parsed =
+        begin
+          URI.parse(preferred_origin)
+        rescue URI::Error
+        end
 
       if valid_origin?(parsed)
         @origin = +"#{parsed.path}"
@@ -61,14 +64,14 @@ class Users::OmniauthCallbacksController < ApplicationController
       end
     end
 
-    if @origin.blank?
-      @origin = Discourse.base_path("/")
-    end
+    @origin = Discourse.base_path("/") if @origin.blank?
 
     @auth_result.destination_url = @origin
     @auth_result.authenticator_name = authenticator.name
 
     return render_auth_result_failure if @auth_result.failed?
+
+    raise Discourse::ReadOnly if staff_writes_only_mode? && !@auth_result.user&.staff?
 
     complete_response_data
 
@@ -76,16 +79,13 @@ class Users::OmniauthCallbacksController < ApplicationController
 
     client_hash = @auth_result.to_client_hash
     if authenticator.can_connect_existing_user? &&
-      (SiteSetting.enable_local_logins || Discourse.enabled_authenticators.count > 1)
+         (SiteSetting.enable_local_logins || Discourse.enabled_authenticators.count > 1)
       # There is more than one login method, and users are allowed to manage associations themselves
       client_hash[:associate_url] = persist_auth_token(auth)
     end
 
-    cookies['_bypass_cache'] = true
-    cookies[:authentication_data] = {
-      value: client_hash.to_json,
-      path: Discourse.base_path("/")
-    }
+    cookies["_bypass_cache"] = true
+    cookies[:authentication_data] = { value: client_hash.to_json, path: Discourse.base_path("/") }
     redirect_to @origin
   end
 
@@ -103,24 +103,24 @@ class Users::OmniauthCallbacksController < ApplicationController
 
     flash[:error] = I18n.t(
       "login.omniauth_error.#{error_key}",
-      default: I18n.t("login.omniauth_error.generic")
+      default: I18n.t("login.omniauth_error.generic"),
     ).html_safe
 
-    render 'failure'
+    render "failure"
   end
 
   def self.find_authenticator(name)
     Discourse.enabled_authenticators.each do |authenticator|
       return authenticator if authenticator.name == name
     end
-    raise Discourse::InvalidAccess.new(I18n.t('authenticator_not_found'))
+    raise Discourse::InvalidAccess.new(I18n.t("authenticator_not_found"))
   end
 
   protected
 
   def render_auth_result_failure
     flash[:error] = @auth_result.failed_reason.html_safe
-    render 'failure'
+    render "failure"
   end
 
   def complete_response_data
@@ -155,13 +155,16 @@ class Users::OmniauthCallbacksController < ApplicationController
         user.update!(password: SecureRandom.hex)
 
         # Ensure there is an active email token
-        if !EmailToken.where(email: user.email, confirmed: true).exists? && !user.email_tokens.active.where(email: user.email).exists?
+        if !EmailToken.where(email: user.email, confirmed: true).exists? &&
+             !user.email_tokens.active.where(email: user.email).exists?
           user.email_tokens.create!(email: user.email, scope: EmailToken.scopes[:signup])
         end
 
         user.activate
       end
-      user.update!(registration_ip_address: request.remote_ip) if user.registration_ip_address.blank?
+      if user.registration_ip_address.blank?
+        user.update!(registration_ip_address: request.remote_ip)
+      end
     end
 
     if ScreenedIpAddress.should_block?(request.remote_ip)
@@ -193,7 +196,9 @@ class Users::OmniauthCallbacksController < ApplicationController
 
   def persist_auth_token(auth)
     secret = SecureRandom.hex
-    secure_session.set "#{Users::AssociateAccountsController.key(secret)}", auth.to_json, expires: 10.minutes
+    secure_session.set "#{Users::AssociateAccountsController.key(secret)}",
+                       auth.to_json,
+                       expires: 10.minutes
     "#{Discourse.base_path}/associate/#{secret}"
   end
 end

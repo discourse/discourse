@@ -1,6 +1,7 @@
 import I18n from "I18n";
 import Mixin from "@ember/object/mixin";
 import { computed } from "@ember/object";
+import { readOnly } from "@ember/object/computed";
 import discourseComputed from "discourse-common/utils/decorators";
 import { isPresent } from "@ember/utils";
 
@@ -47,23 +48,25 @@ export default Mixin.create({
 
   @discourseComputed("valid_values")
   validValues(validValues) {
-    const vals = [],
-      translateNames = this.translate_names;
+    const values = [];
+    const translateNames = this.translate_names;
 
     (validValues || []).forEach((v) => {
       if (v.name && v.name.length > 0 && translateNames) {
-        vals.addObject({ name: I18n.t(v.name), value: v.value });
+        values.addObject({ name: I18n.t(v.name), value: v.value });
       } else {
-        vals.addObject(v);
+        values.addObject(v);
       }
     });
-    return vals;
+    return values;
   },
 
   @discourseComputed("valid_values")
   allowsNone(validValues) {
-    if (validValues && validValues.indexOf("") >= 0) {
+    if (validValues?.includes("")) {
       return "admin.settings.none";
     }
   },
+
+  anyValue: readOnly("allow_any"),
 });

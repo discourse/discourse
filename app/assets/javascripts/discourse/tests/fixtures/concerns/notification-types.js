@@ -35,4 +35,7 @@ export const NOTIFICATION_TYPES = {
   chat_message: 30,
   chat_invitation: 31,
   chat_group_mention: 32,
+  chat_quoted: 33,
+  assigned: 34,
+  question_answer_user_commented: 35,
 };

@@ -12,7 +12,11 @@ export default DiscourseRoute.extend({
   model(params, transition) {
     const controller = this.controllerFor("user-activity-bookmarks");
 
-    if (this.isPoppedState(transition) && this.session.bookmarksModel) {
+    if (
+      this.isPoppedState(transition) &&
+      this.session.bookmarksModel &&
+      this.session.bookmarksModel.searchTerm === params.q
+    ) {
       return Promise.resolve(this.session.bookmarksModel);
     }
 
@@ -20,6 +24,8 @@ export default DiscourseRoute.extend({
       bookmarksModel: null,
       bookmarkListScrollPosition: null,
     });
+
+    controller.set("loading", true);
 
     return this._loadBookmarks(params)
       .then((response) => {
@@ -36,7 +42,8 @@ export default DiscourseRoute.extend({
         this.session.set("bookmarksModel", model);
         return model;
       })
-      .catch(() => controller.set("permissionDenied", true));
+      .catch(() => controller.set("permissionDenied", true))
+      .finally(() => controller.set("loading", false));
   },
 
   renderTemplate() {
@@ -47,15 +54,6 @@ export default DiscourseRoute.extend({
   didTransition() {
     this.controllerFor("user-activity")._showFooter();
     return true;
-  },
-
-  @action
-  loading(transition) {
-    let controller = this.controllerFor("user-activity-bookmarks");
-    controller.set("loading", true);
-    transition.promise.finally(function () {
-      controller.set("loading", false);
-    });
   },
 
   @action

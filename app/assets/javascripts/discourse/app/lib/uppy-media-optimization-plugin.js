@@ -51,8 +51,8 @@ export default class UppyMediaOptimization extends UploadPreProcessorPlugin {
 
   @bind
   async _optimizeSerial(fileIds) {
-    let optimizeTasks = fileIds.map((fileId) => () =>
-      this._optimizeFile(fileId)
+    let optimizeTasks = fileIds.map(
+      (fileId) => () => this._optimizeFile(fileId)
     );
 
     for (const task of optimizeTasks) {

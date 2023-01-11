@@ -29,7 +29,7 @@ export default Component.extend({
 
   @discourseComputed("choices.[]", "collection.[]")
   filteredChoices(choices, collection) {
-    return makeArray(choices).filter((i) => collection.indexOf(i) < 0);
+    return makeArray(choices).filter((i) => !collection.includes(i));
   },
 
   keyDown(event) {
@@ -39,8 +39,8 @@ export default Component.extend({
   },
 
   actions: {
-    changeValue(index, newValue) {
-      this._replaceValue(index, newValue);
+    changeValue(index, event) {
+      this._replaceValue(index, event.target.value);
     },
 
     addValue(newValue) {
@@ -58,6 +58,22 @@ export default Component.extend({
 
     selectChoice(choice) {
       this._addValue(choice);
+    },
+
+    shift(operation, index) {
+      let futureIndex = index + operation;
+
+      if (futureIndex > this.collection.length - 1) {
+        futureIndex = 0;
+      } else if (futureIndex < 0) {
+        futureIndex = this.collection.length - 1;
+      }
+
+      const shiftedValue = this.collection[index];
+      this.collection.removeAt(index);
+      this.collection.insertAt(futureIndex, shiftedValue);
+
+      this._saveValues();
     },
   },
 
@@ -97,6 +113,11 @@ export default Component.extend({
     }
 
     this.set("values", this.collection.join(this.inputDelimiter || "\n"));
+  },
+
+  @discourseComputed("collection")
+  showUpDownButtons(collection) {
+    return collection.length - 1 ? true : false;
   },
 
   _splitValues(values, delimiter) {

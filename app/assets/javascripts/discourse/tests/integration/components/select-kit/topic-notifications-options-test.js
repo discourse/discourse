@@ -1,30 +1,13 @@
-import componentTest, {
-  setupRenderingTest,
-} from "discourse/tests/helpers/component-test";
+import { module, test } from "qunit";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { render } from "@ember/test-helpers";
 import I18n from "I18n";
-import Topic from "discourse/models/topic";
-import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
-import hbs from "htmlbars-inline-precompile";
+import { hbs } from "ember-cli-htmlbars";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { getOwner } from "discourse-common/lib/get-owner";
 
-const buildTopic = function (archetype) {
-  return Topic.create({
-    id: 4563,
-  }).updateFromJson({
-    title: "Qunit Test Topic",
-    details: {
-      notification_level: 1,
-    },
-    archetype,
-  });
-};
-
-function extractDescs(rows) {
-  return Array.from(
-    rows.find(".desc").map(function () {
-      return this.textContent.trim();
-    })
-  );
+function extractDescriptions(rows) {
+  return [...rows].map((el) => el.querySelector(".desc").textContent.trim());
 }
 
 function getTranslations(type = "") {
@@ -33,76 +16,91 @@ function getTranslations(type = "") {
   });
 }
 
-discourseModule(
+module(
   "Integration | Component | select-kit/topic-notifications-options",
   function (hooks) {
     setupRenderingTest(hooks);
 
-    componentTest("regular topic notification level descriptions", {
-      template: hbs`
-        {{topic-notifications-options
-          value=topic.details.notification_level
-          topic=topic
-        }}
-      `,
+    test("regular topic notification level descriptions", async function (assert) {
+      const store = getOwner(this).lookup("service:store");
+      this.set(
+        "topic",
+        store.createRecord("topic", {
+          id: 4563,
+          title: "Qunit Test Topic",
+          archetype: "regular",
+          details: {
+            notification_level: 1,
+          },
+        })
+      );
 
-      beforeEach() {
-        this.set("topic", buildTopic("regular"));
-      },
+      await render(hbs`
+        <TopicNotificationsOptions
+          @value={{this.topic.details.notification_level}}
+          @topic={{this.topic}}
+        />
+      `);
 
-      async test(assert) {
-        await selectKit().expand();
+      await selectKit().expand();
 
-        const uiTexts = extractDescs(selectKit().rows());
-        const descriptions = getTranslations();
+      const uiTexts = extractDescriptions(selectKit().rows());
+      const descriptions = getTranslations();
 
+      assert.strictEqual(
+        uiTexts.length,
+        descriptions.length,
+        "it has the correct copy"
+      );
+
+      uiTexts.forEach((text, index) => {
         assert.strictEqual(
-          uiTexts.length,
-          descriptions.length,
+          text.trim(),
+          descriptions[index].trim(),
           "it has the correct copy"
         );
-        uiTexts.forEach((text, index) => {
-          assert.strictEqual(
-            text.trim(),
-            descriptions[index].trim(),
-            "it has the correct copy"
-          );
-        });
-      },
+      });
     });
 
-    componentTest("PM topic notification level descriptions", {
-      template: hbs`
-        {{topic-notifications-options
-          value=topic.details.notification_level
-          topic=topic
-        }}
-      `,
+    test("PM topic notification level descriptions", async function (assert) {
+      const store = getOwner(this).lookup("service:store");
+      this.set(
+        "topic",
+        store.createRecord("topic", {
+          id: 4563,
+          title: "Qunit Test Topic",
+          archetype: "private_message",
+          details: {
+            notification_level: 1,
+          },
+        })
+      );
 
-      beforeEach() {
-        this.set("topic", buildTopic("private_message"));
-      },
+      await render(hbs`
+        <TopicNotificationsOptions
+          @value={{this.topic.details.notification_level}}
+          @topic={{this.topic}}
+        />
+      `);
 
-      async test(assert) {
-        await selectKit().expand();
+      await selectKit().expand();
 
-        const uiTexts = extractDescs(selectKit().rows());
-        const descriptions = getTranslations("_pm");
+      const uiTexts = extractDescriptions(selectKit().rows());
+      const descriptions = getTranslations("_pm");
 
+      assert.strictEqual(
+        uiTexts.length,
+        descriptions.length,
+        "it has the correct copy"
+      );
+
+      uiTexts.forEach((text, index) => {
         assert.strictEqual(
-          uiTexts.length,
-          descriptions.length,
+          text.trim(),
+          descriptions[index].trim(),
           "it has the correct copy"
         );
-
-        uiTexts.forEach((text, index) => {
-          assert.strictEqual(
-            text.trim(),
-            descriptions[index].trim(),
-            "it has the correct copy"
-          );
-        });
-      },
+      });
     });
   }
 );

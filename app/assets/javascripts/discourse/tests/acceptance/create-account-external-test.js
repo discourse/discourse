@@ -52,7 +52,10 @@ acceptance("Create Account - external auth", function (needs) {
       "it shows the registration modal"
     );
 
-    assert.not(exists("#new-account-username"), "it does not show the fields");
+    assert.notOk(
+      exists("#new-account-username"),
+      "it does not show the fields"
+    );
   });
 });
 

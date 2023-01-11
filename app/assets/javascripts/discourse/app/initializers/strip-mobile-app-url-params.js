@@ -4,9 +4,9 @@ export default {
   initialize() {
     let queryStrings = window.location.search;
 
-    if (queryStrings.indexOf("user_api_public_key") !== -1) {
+    if (queryStrings.includes("user_api_public_key")) {
       let params = queryStrings.startsWith("?")
-        ? queryStrings.substr(1).split("&")
+        ? queryStrings.slice(1).split("&")
         : [];
 
       params = params.filter((param) => {

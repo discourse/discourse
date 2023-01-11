@@ -2,9 +2,8 @@ import Controller from "@ember/controller";
 import I18n from "I18n";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import { alias } from "@ember/object/computed";
-import discourseDebounce from "discourse-common/lib/debounce";
 import { isEmpty } from "@ember/utils";
-import { observes } from "discourse-common/utils/decorators";
+import { debounce, observes } from "discourse-common/utils/decorators";
 import { action } from "@ember/object";
 
 export default Controller.extend({
@@ -30,7 +29,7 @@ export default Controller.extend({
           }
 
           if (word.startsWith("plugin:")) {
-            pluginFilter = word.substr("plugin:".length).trim();
+            pluginFilter = word.slice("plugin:".length).trim();
             return false;
           }
 
@@ -113,18 +112,13 @@ export default Controller.extend({
   },
 
   @observes("filter", "onlyOverridden", "model")
+  @debounce(INPUT_DELAY)
   filterContent() {
-    discourseDebounce(
-      this,
-      () => {
-        if (this._skipBounce) {
-          this.set("_skipBounce", false);
-        } else {
-          this.filterContentNow(this.categoryNameKey);
-        }
-      },
-      INPUT_DELAY
-    );
+    if (this._skipBounce) {
+      this.set("_skipBounce", false);
+    } else {
+      this.filterContentNow(this.categoryNameKey);
+    }
   },
 
   @action

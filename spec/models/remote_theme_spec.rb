@@ -1,10 +1,13 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
-describe RemoteTheme do
-  context '#import_remote' do
-    def about_json(love_color: "FAFAFA", tertiary_low_color: "FFFFFF", color_scheme_name: "Amazing", about_url: "https://www.site.com/about")
+RSpec.describe RemoteTheme do
+  describe "#import_remote" do
+    def about_json(
+      love_color: "FAFAFA",
+      tertiary_low_color: "FFFFFF",
+      color_scheme_name: "Amazing",
+      about_url: "https://www.site.com/about"
+    )
       <<~JSON
         {
           "name": "awesome theme",
@@ -47,7 +50,7 @@ describe RemoteTheme do
         "common/color_definitions.scss" => ":root{--color-var: red}",
         "assets/font.woff2" => "FAKE FONT",
         "settings.yaml" => "boolean_setting: true",
-        "locales/en.yml" => "sometranslations"
+        "locales/en.yml" => "sometranslations",
       )
     end
 
@@ -55,24 +58,18 @@ describe RemoteTheme do
       MockGitImporter.register("https://example.com/initial_repo.git", initial_repo)
     end
 
-    after do
-      `rm -fr #{initial_repo}`
-    end
+    after { `rm -fr #{initial_repo}` }
 
-    around(:each) do |group|
-      MockGitImporter.with_mock do
-        group.run
-      end
-    end
+    around(:each) { |group| MockGitImporter.with_mock { group.run } }
 
-    it 'can correctly import a remote theme' do
-      time = Time.new('2000')
+    it "can correctly import a remote theme" do
+      time = Time.new("2000")
       freeze_time time
 
       @theme = RemoteTheme.import_theme(initial_repo_url)
       remote = @theme.remote_theme
 
-      expect(@theme.name).to eq('awesome theme')
+      expect(@theme.name).to eq("awesome theme")
       expect(remote.remote_url).to eq(initial_repo_url)
       expect(remote.remote_version).to eq(`cd #{initial_repo} && git rev-parse HEAD`.strip)
       expect(remote.local_version).to eq(`cd #{initial_repo} && git rev-parse HEAD`.strip)
@@ -109,14 +106,17 @@ describe RemoteTheme do
 
       scheme = ColorScheme.find_by(theme_id: @theme.id)
       expect(scheme.name).to eq("Amazing")
-      expect(scheme.colors.find_by(name: 'love').hex).to eq('fafafa')
-      expect(scheme.colors.find_by(name: 'tertiary-low').hex).to eq('ffffff')
+      expect(scheme.colors.find_by(name: "love").hex).to eq("fafafa")
+      expect(scheme.colors.find_by(name: "tertiary-low").hex).to eq("ffffff")
 
       expect(@theme.color_scheme_id).to eq(scheme.id)
       @theme.update(color_scheme_id: nil)
 
       File.write("#{initial_repo}/common/header.html", "I AM UPDATED")
-      File.write("#{initial_repo}/about.json", about_json(love_color: "EAEAEA", about_url: "https://newsite.com/about"))
+      File.write(
+        "#{initial_repo}/about.json",
+        about_json(love_color: "EAEAEA", about_url: "https://newsite.com/about"),
+      )
 
       File.write("#{initial_repo}/settings.yml", "integer_setting: 32")
       `cd #{initial_repo} && git add settings.yml`
@@ -125,7 +125,7 @@ describe RemoteTheme do
       File.delete("#{initial_repo}/stylesheets/file.scss")
       `cd #{initial_repo} && git commit -am "update"`
 
-      time = Time.new('2001')
+      time = Time.new("2001")
       freeze_time time
 
       remote.update_remote_version
@@ -138,7 +138,7 @@ describe RemoteTheme do
 
       scheme = ColorScheme.find_by(theme_id: @theme.id)
       expect(scheme.name).to eq("Amazing")
-      expect(scheme.colors.find_by(name: 'love').hex).to eq('eaeaea')
+      expect(scheme.colors.find_by(name: "love").hex).to eq("eaeaea")
       expect(@theme.color_scheme_id).to eq(nil) # Should only be set on first import
 
       mapped = Hash[*@theme.theme_fields.map { |f| ["#{f.target_id}-#{f.name}", f.value] }.flatten]
@@ -156,7 +156,10 @@ describe RemoteTheme do
       expect(remote.about_url).to eq("https://newsite.com/about")
 
       # It should be able to remove old colors as well
-      File.write("#{initial_repo}/about.json", about_json(love_color: "BABABA", tertiary_low_color: "", color_scheme_name: "Amazing 2"))
+      File.write(
+        "#{initial_repo}/about.json",
+        about_json(love_color: "BABABA", tertiary_low_color: "", color_scheme_name: "Amazing 2"),
+      )
       `cd #{initial_repo} && git commit -am "update"`
 
       remote.update_from_remote
@@ -167,7 +170,7 @@ describe RemoteTheme do
       expect(scheme_count).to eq(1)
 
       scheme = ColorScheme.find_by(theme_id: @theme.id)
-      expect(scheme.colors.find_by(name: 'tertiary_low_color')).to eq(nil)
+      expect(scheme.colors.find_by(name: "tertiary_low_color")).to eq(nil)
     end
 
     it "can update themes with overwritten history" do
@@ -175,7 +178,7 @@ describe RemoteTheme do
       remote = theme.remote_theme
 
       old_version = `cd #{initial_repo} && git rev-parse HEAD`.strip
-      expect(theme.name).to eq('awesome theme')
+      expect(theme.name).to eq("awesome theme")
       expect(remote.remote_url).to eq(initial_repo_url)
       expect(remote.local_version).to eq(old_version)
       expect(remote.remote_version).to eq(old_version)
@@ -199,7 +202,7 @@ describe RemoteTheme do
       remote_url: "https://github.com/org/testtheme.git",
       local_version: "a2ec030e551fc8d8579790e1954876fe769fe40a",
       remote_version: "21122230dbfed804067849393c3332083ddd0c07",
-      commits_behind: 2
+      commits_behind: 2,
     )
   end
 
@@ -208,18 +211,18 @@ describe RemoteTheme do
       remote_url: "https://gitlab.com/org/repo.git",
       local_version: "a2ec030e551fc8d8579790e1954876fe769fe40a",
       remote_version: "21122230dbfed804067849393c3332083ddd0c07",
-      commits_behind: 5
+      commits_behind: 5,
     )
   end
 
-  context "#github_diff_link" do
+  describe "#github_diff_link" do
     it "is blank for non-github repos" do
       expect(gitlab_repo.github_diff_link).to be_blank
     end
 
     it "returns URL for comparing between local_version and remote_version" do
       expect(github_repo.github_diff_link).to eq(
-        "https://github.com/org/testtheme/compare/#{github_repo.local_version}...#{github_repo.remote_version}"
+        "https://github.com/org/testtheme/compare/#{github_repo.local_version}...#{github_repo.remote_version}",
       )
     end
 
@@ -229,7 +232,7 @@ describe RemoteTheme do
     end
   end
 
-  context ".joined_remotes" do
+  describe ".joined_remotes" do
     it "finds records that are associated with themes" do
       github_repo
       gitlab_repo
@@ -243,7 +246,7 @@ describe RemoteTheme do
     end
   end
 
-  context ".out_of_date_themes" do
+  describe ".out_of_date_themes" do
     let(:remote) { RemoteTheme.create!(remote_url: "https://github.com/org/testtheme") }
     let!(:theme) { Fabricate(:theme, remote_theme: remote) }
 
@@ -260,11 +263,15 @@ describe RemoteTheme do
       theme.update!(enabled: false)
       expect(described_class.out_of_date_themes).to eq([])
     end
-
   end
 
-  context ".unreachable_themes" do
-    let(:remote) { RemoteTheme.create!(remote_url: "https://github.com/org/testtheme", last_error_text: "can't contact this repo :(") }
+  describe ".unreachable_themes" do
+    let(:remote) do
+      RemoteTheme.create!(
+        remote_url: "https://github.com/org/testtheme",
+        last_error_text: "can't contact this repo :(",
+      )
+    end
     let!(:theme) { Fabricate(:theme, remote_theme: remote) }
 
     it "finds out of date themes" do

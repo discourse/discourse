@@ -3,9 +3,9 @@ import Component from "@ember/component";
 
 function RGBToHex(rgb) {
   // Choose correct separator
-  let sep = rgb.indexOf(",") > -1 ? "," : " ";
+  let sep = rgb.includes(",") ? "," : " ";
   // Turn "rgb(r,g,b)" into [r,g,b]
-  rgb = rgb.substr(4).split(")")[0].split(sep);
+  rgb = rgb.slice(4).split(")")[0].split(sep);
 
   let r = (+rgb[0]).toString(16),
     g = (+rgb[1]).toString(16),

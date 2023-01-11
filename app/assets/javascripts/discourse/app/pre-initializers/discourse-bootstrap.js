@@ -9,16 +9,21 @@ import I18n from "I18n";
 import PreloadStore from "discourse/lib/preload-store";
 import RSVP from "rsvp";
 import Session from "discourse/models/session";
-import deprecated from "discourse-common/lib/deprecated";
 import { setDefaultOwner } from "discourse-common/lib/get-owner";
 import { setIconList } from "discourse-common/lib/icon-library";
 import { setURLContainer } from "discourse/lib/url";
+import runloop from "@ember/runloop";
+import { DEBUG } from "@glimmer/env";
 
 export default {
   name: "discourse-bootstrap",
 
   // The very first initializer to run
-  initialize(container, app) {
+  initialize(container) {
+    if (DEBUG) {
+      runloop._backburner.ASYNC_STACKS = true;
+    }
+
     setURLContainer(container);
     setDefaultOwner(container);
 
@@ -39,39 +44,22 @@ export default {
       preloaded = JSON.parse(preloadedDataElement.dataset.preloaded);
     }
 
-    Object.keys(preloaded).forEach(function (key) {
+    const keys = Object.keys(preloaded);
+    if (keys.length === 0) {
+      throw "No preload data found in #data-preloaded. Unable to boot Discourse.";
+    }
+
+    keys.forEach(function (key) {
       PreloadStore.store(key, JSON.parse(preloaded[key]));
 
       if (setupData.debugPreloadedAppData === "true") {
-        /* eslint-disable no-console */
+        // eslint-disable-next-line no-console
         console.log(key, PreloadStore.get(key));
-        /* eslint-enable no-console */
       }
     });
 
-    let baseUrl = setupData.baseUrl;
-    Object.defineProperty(app, "BaseUrl", {
-      get() {
-        deprecated(`use "get-url" helpers instead of Discourse.BaseUrl`, {
-          since: "2.5",
-          dropFrom: "2.6",
-        });
-        return baseUrl;
-      },
-    });
-    let baseUri = setupData.baseUri;
-    Object.defineProperty(app, "BaseUri", {
-      get() {
-        deprecated(`use "get-url" helpers instead of Discourse.BaseUri`, {
-          since: "2.5",
-          dropFrom: "2.6",
-        });
-        return baseUri;
-      },
-    });
-    setupURL(setupData.cdn, baseUrl, setupData.baseUri);
+    setupURL(setupData.cdn, setupData.baseUrl, setupData.baseUri);
     setEnvironment(setupData.environment);
-    app.SiteSettings = PreloadStore.get("siteSettings");
     I18n.defaultLocale = setupData.defaultLocale;
 
     window.Logster = window.Logster || {};
@@ -92,9 +80,8 @@ export default {
     }
 
     session.darkModeAvailable =
-      document.head.querySelectorAll(
-        'link[media="(prefers-color-scheme: dark)"]'
-      ).length > 0;
+      document.querySelectorAll('link[media="(prefers-color-scheme: dark)"]')
+        .length > 0;
 
     session.defaultColorSchemeIsDark = setupData.colorSchemeIsDark === "true";
 
@@ -138,23 +125,5 @@ export default {
 
       window.onerror(e && e.message, null, null, null, e);
     });
-
-    // Deprecate lodash usage
-    let lo = window._;
-    if (lo) {
-      Object.keys(lo).forEach((m) => {
-        let old = lo[m];
-        lo[m] = function () {
-          deprecated(
-            `lodash is deprecated and will be removed from Discourse.`,
-            {
-              since: "2.6",
-              dropFrom: "2.7",
-            }
-          );
-          return old(...arguments);
-        };
-      });
-    }
   },
 };

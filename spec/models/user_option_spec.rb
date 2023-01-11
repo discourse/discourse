@@ -1,9 +1,6 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
-describe UserOption do
-
+RSpec.describe UserOption do
   describe "#ensure_consistency!" do
     it "recreates missing user option records" do
       user = Fabricate(:user)
@@ -51,7 +48,6 @@ describe UserOption do
 
   describe "site settings" do
     it "should apply defaults from site settings" do
-
       SiteSetting.default_other_enable_quoting = false
       SiteSetting.default_other_enable_defer = true
       SiteSetting.default_other_external_links_in_new_tab = true
@@ -106,7 +102,7 @@ describe UserOption do
         expect(user.user_option.redirected_to_top).to eq(nil)
       end
 
-      context "and when top is in the `SiteSetting.top_menu`" do
+      context "when top is in the `SiteSetting.top_menu`" do
         before { SiteSetting.top_menu = "latest|top" }
 
         it "should have no reason when there are not enough topics" do
@@ -114,8 +110,7 @@ describe UserOption do
           expect(user.user_option.redirected_to_top).to eq(nil)
         end
 
-        context "and there are enough topics" do
-
+        context "when there are enough topics" do
           before { SiteSetting.expects(:min_redirected_to_top_period).returns(:monthly) }
 
           describe "a new user" do
@@ -124,16 +119,24 @@ describe UserOption do
               user.stubs(:last_seen_at).returns(5.minutes.ago)
             end
 
-            after do
-              Discourse.redis.flushdb
-            end
+            after { Discourse.redis.flushdb }
 
             it "should have a reason for the first visit" do
               freeze_time do
                 delay = SiteSetting.active_user_rate_limit_secs / 2
 
-                expect_enqueued_with(job: :update_top_redirection, args: { user_id: user.id, redirected_at: Time.zone.now.to_s }, at: Time.zone.now + delay) do
-                  expect(user.user_option.redirected_to_top).to eq(reason: I18n.t('redirected_to_top_reasons.new_user'), period: :monthly)
+                expect_enqueued_with(
+                  job: :update_top_redirection,
+                  args: {
+                    user_id: user.id,
+                    redirected_at: Time.zone.now.to_s,
+                  },
+                  at: Time.zone.now + delay,
+                ) do
+                  expect(user.user_option.redirected_to_top).to eq(
+                    reason: I18n.t("redirected_to_top_reasons.new_user"),
+                    period: :monthly,
+                  )
                 end
               end
             end
@@ -153,40 +156,35 @@ describe UserOption do
               user.last_seen_at = 2.months.ago
               user.user_option.expects(:update_last_redirected_to_top!).once
 
-              expect(user.user_option.redirected_to_top).to eq(reason: I18n.t('redirected_to_top_reasons.not_seen_in_a_month'),
-                                                               period: :monthly)
+              expect(user.user_option.redirected_to_top).to eq(
+                reason: I18n.t("redirected_to_top_reasons.not_seen_in_a_month"),
+                period: :monthly,
+              )
             end
-
           end
-
         end
-
       end
-
     end
-
   end
 
-  describe '.user_tzinfo' do
+  describe ".user_tzinfo" do
     fab!(:user) { Fabricate(:user) }
 
-    context 'user with valid timezone given' do
-      before do
-        user.user_option.update(timezone: 'Europe/Paris')
-      end
+    context "with user with valid timezone given" do
+      before { user.user_option.update(timezone: "Europe/Paris") }
 
-      it 'returns the expect timezone' do
-        expect(UserOption.user_tzinfo(user.id)).to eq(ActiveSupport::TimeZone.find_tzinfo('Europe/Paris'))
+      it "returns the expect timezone" do
+        expect(UserOption.user_tzinfo(user.id)).to eq(
+          ActiveSupport::TimeZone.find_tzinfo("Europe/Paris"),
+        )
       end
     end
 
-    context 'user with invalid timezone given' do
-      before do
-        user.user_option.update(timezone: 'Catopia/Catcity')
-      end
+    context "with user with invalid timezone given" do
+      before { user.user_option.update(timezone: "Catopia/Catcity") }
 
-      it 'fallbacks to UTC' do
-        expect(UserOption.user_tzinfo(user.id)).to eq(ActiveSupport::TimeZone.find_tzinfo('UTC'))
+      it "fallbacks to UTC" do
+        expect(UserOption.user_tzinfo(user.id)).to eq(ActiveSupport::TimeZone.find_tzinfo("UTC"))
       end
     end
   end

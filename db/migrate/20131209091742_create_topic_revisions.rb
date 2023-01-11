@@ -17,7 +17,7 @@ class CreateTopicRevisions < ActiveRecord::Migration[4.2]
 
     change_table :topic_revisions do |t|
       t.index :topic_id
-      t.index [:topic_id, :number]
+      t.index %i[topic_id number]
     end
   end
 

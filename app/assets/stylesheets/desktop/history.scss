@@ -2,7 +2,7 @@
 
 .modal.history-modal {
   .modal-inner-container {
-    max-width: $large-width;
+    max-width: var(--d-max-width);
   }
   .modal-body {
     height: 70vh;
@@ -46,7 +46,7 @@
   }
   .markdown {
     font-family: monospace;
-    font-size: $font-down-1;
+    font-size: var(--font-down-1);
     width: 100%;
     border-collapse: collapse;
     border-spacing: 0;

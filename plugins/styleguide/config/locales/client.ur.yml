@@ -87,3 +87,6 @@ ur:
           title: "اسپنرز"
         empty_state:
           title: "خالی حالت"
+        rich_tooltip:
+          description: "تفصیل"
+          header: "ہَیڈر"

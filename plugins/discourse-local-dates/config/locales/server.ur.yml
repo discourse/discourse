@@ -6,7 +6,7 @@
 
 ur:
   site_settings:
-    discourse_local_dates_enabled: "ڈِسکورس-مقامی-تاریخیں والی خصوصیت فعال کریں۔ یہ [تاریخ] عنصر کا استعمال کرنے والی پوسٹس میں مقامی ٹائم زَون سے آگاہ تاریخوں کو قابلِ استعمال بنائے گا۔"
+    discourse_local_dates_enabled: "ڈسکورس-لوکل-تاریخ کی خصوصیت کو فعال کریں۔ یہ [date] عنصر کا استعمال کرتے ہوئے پوسٹس میں مقامی ٹائم زون سے آگاہی کی تاریخوں میں تعاون کا اضافہ کرے گا۔"
     discourse_local_dates_default_formats: "اکثر استعمال ہونے والے تاریخ ٹائم فارمیٹس، دیکھیے: <a target='_blank' rel='noopener' href='https://momentjs.com/docs/#/parsing/string-format/'>momentjs سٹرِنگ فارمَیٹ</a>"
     discourse_local_dates_default_timezones: "ٹائم زَونَوں کی ڈِیفالٹ فہرست، ایک درست <a target='_blank' rel='noopener' href='https://en.wikipedia.org/wiki/List_of_tz_database_time_zones'>TZ</a> ہونا لازمی ہے"
     discourse_local_dates_email_format: "ای میلز میں تاریخ ظاہر کرنے کیلئے استعمال کیے جانے والا فارمیٹ۔"

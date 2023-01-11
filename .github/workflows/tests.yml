@@ -12,12 +12,16 @@ concurrency:
   group: tests-${{ format('{0}-{1}', github.head_ref || github.run_number, github.job) }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 jobs:
   build:
+    if: "!(github.event_name == 'push' && github.repository == 'discourse/discourse-private-mirror')"
     name: ${{ matrix.target }} ${{ matrix.build_type }}
-    runs-on: ubuntu-latest
-    container: discourse/discourse_test:2.0.20220818-0047-slim${{ startsWith(matrix.build_type, 'frontend') && '-browsers' || '' }}
-    timeout-minutes: 60
+    runs-on: ${{ (matrix.build_type == 'annotations') && 'ubuntu-latest' || 'ubuntu-20.04-8core' }}
+    container: discourse/discourse_test:slim${{ (matrix.build_type == 'frontend' || matrix.build_type == 'system') && '-browsers' || '' }}
+    timeout-minutes: 20
 
     env:
       DISCOURSE_HOSTNAME: www.example.com
@@ -25,25 +29,23 @@ jobs:
       RAILS_ENV: test
       PGUSER: discourse
       PGPASSWORD: discourse
-      USES_PARALLEL_DATABASES: ${{ matrix.build_type == 'backend' && matrix.target == 'core' }}
+      USES_PARALLEL_DATABASES: ${{ matrix.build_type == 'backend' }}
+      CAPBYARA_DEFAULT_MAX_WAIT_TIME: 4
 
     strategy:
       fail-fast: false
 
       matrix:
-        build_type: [backend, frontend, frontend-legacy, annotations]
+        build_type: [backend, frontend, system, annotations]
         target: [core, plugins]
         exclude:
           - build_type: annotations
             target: plugins
           - build_type: frontend
             target: core # Handled by core_frontend_tests job (below)
-        include:
-          - build_type: frontend
-            target: core-plugins
 
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 1
 
@@ -63,7 +65,7 @@ jobs:
           sudo -u postgres psql -c "CREATE ROLE $PGUSER LOGIN SUPERUSER PASSWORD '$PGPASSWORD';"
 
       - name: Bundler cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: vendor/bundle
           key: ${{ runner.os }}-gem-${{ hashFiles('**/Gemfile.lock') }}
@@ -81,10 +83,10 @@ jobs:
 
       - name: Get yarn cache directory
         id: yarn-cache-dir
-        run: echo "::set-output name=dir::$(yarn cache dir)"
+        run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
 
       - name: Yarn cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         id: yarn-cache
         with:
           path: ${{ steps.yarn-cache-dir.outputs.dir }}
@@ -104,7 +106,7 @@ jobs:
         run: bin/rake plugin:pull_compatible_all
 
       - name: Fetch app state cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         id: app-cache
         with:
           path: tmp/app-cache
@@ -145,33 +147,45 @@ jobs:
         if: steps.app-cache.outputs.cache-hit != 'true'
         run: rm -rf tmp/app-cache/uploads && cp -r public/uploads tmp/app-cache/uploads
 
+      - name: Fetch turbo_rspec_runtime.log cache
+        uses: actions/cache@v3
+        id: test-runtime-cache
+        if: matrix.build_type == 'backend' && matrix.target == 'core'
+        with:
+          path: tmp/turbo_rspec_runtime.log
+          key: rspec-runtime-backend-core
+
       - name: Core RSpec
         if: matrix.build_type == 'backend' && matrix.target == 'core'
         run: bin/turbo_rspec --verbose
 
       - name: Plugin RSpec
         if: matrix.build_type == 'backend' && matrix.target == 'plugins'
-        run: bin/rake plugin:spec
+        run: bin/rake plugin:turbo_spec
 
-      - name: Core QUnit (Legacy)
-        if: matrix.build_type == 'frontend-legacy' && matrix.target == 'core'
-        run: QUNIT_EMBER_CLI=0 bin/rake qunit:test['1200000']
+      - name: Plugin QUnit
+        if: matrix.build_type == 'frontend' && matrix.target == 'plugins'
+        run: QUNIT_PARALLEL=3 bin/rake plugin:qunit['*','1200000']
         timeout-minutes: 30
 
-      - name: Wizard QUnit (Legacy)
-        if: matrix.build_type == 'frontend-legacy' && matrix.target == 'core'
-        run: QUNIT_EMBER_CLI=0 bin/rake qunit:test['600000','/wizard/qunit']
-        timeout-minutes: 10
+      - name: Ember Build for System Tests
+        if: matrix.build_type == 'system'
+        run: bin/ember-cli --build
 
-      - name: Plugin QUnit (Legacy)
-        if: matrix.build_type == 'frontend-legacy' && matrix.target == 'plugins'
-        run: QUNIT_EMBER_CLI=0 bin/rake plugin:qunit['*','1200000']
-        timeout-minutes: 30
+      - name: Core System Tests
+        if: matrix.build_type == 'system' && matrix.target == 'core'
+        run: bin/rspec spec/system --format documentation --profile
 
-      # - name: Plugin QUnit (Ember CLI)
-      #   if: matrix.build_type == 'frontend' && (matrix.target == 'plugins' || matrix.target == 'core-plugins')
-      #   run: QUNIT_EMBER_CLI=1 bin/rake plugin:qunit['*','1200000']
-      #   timeout-minutes: 30
+      - name: Plugin System Tests
+        if: matrix.build_type == 'system' && matrix.target == 'plugins'
+        run: LOAD_PLUGINS=1 bin/rspec plugins/*/spec/system --format documentation --profile
+
+      - name: Upload failed system test screenshots
+        uses: actions/upload-artifact@v3
+        if: matrix.build_type == 'system' && failure()
+        with:
+          name: failed-system-test-screenshots
+          path: tmp/capybara/*.png
 
       - name: Check Annotations
         if: matrix.build_type == 'annotations'
@@ -190,61 +204,65 @@ jobs:
           fi
         timeout-minutes: 30
 
-  # core_frontend_tests:
-  #   name: core frontend (${{ matrix.browser }})
-  #   runs-on: ubuntu-latest
-  #   container: discourse/discourse_test:slim-browsers
-  #   timeout-minutes: 30
+  core_frontend_tests:
+    if: "!(github.event_name == 'push' && github.repository == 'discourse/discourse-private-mirror')"
+    name: core frontend (${{ matrix.browser }})
+    runs-on: ubuntu-20.04-8core
+    container:
+      image: discourse/discourse_test:slim-browsers
+      options: --user discourse
 
-  #   strategy:
-  #     fail-fast: false
-  #     matrix:
-  #       browser: ["Chrome", "Firefox", "Headless Firefox"]
+    timeout-minutes: 35
 
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #       with:
-  #         fetch-depth: 1
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: ["Chrome", "Firefox ESR", "Firefox Evergreen"]
 
-  #     - name: Setup Git
-  #       run: |
-  #         git config --global user.email "ci@ci.invalid"
-  #         git config --global user.name "Discourse CI"
+    env:
+      TESTEM_BROWSER: ${{ (startsWith(matrix.browser, 'Firefox') && 'Firefox') || matrix.browser }}
+      TESTEM_FIREFOX_PATH: ${{ (matrix.browser == 'Firefox Evergreen') && '/opt/firefox-evergreen/firefox' }}
 
-  #     - name: Get yarn cache directory
-  #       id: yarn-cache-dir
-  #       run: echo "::set-output name=dir::$(yarn cache dir)"
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
 
-  #     - name: Yarn cache
-  #       uses: actions/cache@v2
-  #       id: yarn-cache
-  #       with:
-  #         path: ${{ steps.yarn-cache-dir.outputs.dir }}
-  #         key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-  #         restore-keys: |
-  #           ${{ runner.os }}-yarn-
+      - name: Setup Git
+        run: |
+          git config --global user.email "ci@ci.invalid"
+          git config --global user.name "Discourse CI"
 
-  #     - name: Yarn install
-  #       working-directory: ./app/assets/javascripts/discourse
-  #       run: yarn install
+      - name: Get yarn cache directory
+        id: yarn-cache-dir
+        run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
 
-  #     - name: Ember Build
-  #       working-directory: ./app/assets/javascripts/discourse
-  #       run: |
-  #         sudo -E -u discourse mkdir /tmp/emberbuild
-  #         sudo -E -u discourse -H yarn ember build --environment=test  -o /tmp/emberbuild
+      - name: Yarn cache
+        uses: actions/cache@v3
+        id: yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
 
-  #     - name: Core QUnit 1
-  #       working-directory: ./app/assets/javascripts/discourse
-  #       run: sudo -E -u discourse -H yarn ember exam --path /tmp/emberbuild --split=3 --partition=1 --launch "${{ matrix.browser }}" --random
-  #       timeout-minutes: 20
+      - name: Yarn install
+        working-directory: ./app/assets/javascripts/discourse
+        run: yarn install
 
-  #     - name: Core QUnit 2
-  #       working-directory: ./app/assets/javascripts/discourse
-  #       run: sudo -E -u discourse -H yarn ember exam --path /tmp/emberbuild --split=3 --partition=2 --launch "${{ matrix.browser }}" --random
-  #       timeout-minutes: 20
+      - name: Ember Build
+        working-directory: ./app/assets/javascripts/discourse
+        run: |
+          mkdir /tmp/emberbuild
+          yarn ember build --environment=test  -o /tmp/emberbuild
 
-  #     - name: Core QUnit 3
-  #       working-directory: ./app/assets/javascripts/discourse
-  #       run: sudo -E -u discourse -H yarn ember exam --path /tmp/emberbuild --split=3 --partition=3 --launch "${{ matrix.browser }}" --random
-  #       timeout-minutes: 20
+      - name: Core QUnit
+        working-directory: ./app/assets/javascripts/discourse
+        run: yarn ember exam --path /tmp/emberbuild --load-balance --parallel=5  --launch "${{ env.TESTEM_BROWSER }}" --write-execution-file --random
+        timeout-minutes: 15
+
+      - uses: actions/upload-artifact@v3
+        if: ${{ always() }}
+        with:
+          name: ember-exam-execution-${{matrix.browser}}
+          path: ./app/assets/javascripts/discourse/test-execution-*.json

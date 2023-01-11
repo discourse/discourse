@@ -106,6 +106,8 @@ acceptance(
 
       await fillIn('input[name="username"]', "myusername@gmail.com");
       await fillIn('input[name="password"]', "password@gmail.com");
+      await fillIn("#from_alias", "akasomegroup@example.com");
+
       await click(".test-smtp-settings");
 
       assert.ok(exists(".smtp-settings-ok"), "tested settings are ok");
@@ -124,12 +126,12 @@ acceptance(
 
       await click("#enable_smtp");
       assert.strictEqual(
-        query(".modal-body").innerText,
+        query(".dialog-body").innerText.trim(),
         I18n.t("groups.manage.email.smtp_disable_confirm"),
         "shows a confirm dialogue warning SMTP settings will be wiped"
       );
 
-      await click(".modal-footer .btn.btn-primary");
+      await click(".dialog-footer .btn-primary");
     });
 
     test("enabling IMAP, testing, and saving", async function (assert) {
@@ -200,11 +202,11 @@ acceptance(
 
       await click("#enable_imap");
       assert.strictEqual(
-        query(".modal-body").innerText,
+        query(".dialog-body").innerText.trim(),
         I18n.t("groups.manage.email.imap_disable_confirm"),
         "shows a confirm dialogue warning IMAP settings will be wiped"
       );
-      await click(".modal-footer .btn.btn-primary");
+      await click(".dialog-footer .btn-primary");
     });
   }
 );
@@ -360,11 +362,13 @@ acceptance(
       await click(".test-smtp-settings");
 
       assert.strictEqual(
-        query(".modal-body").innerText,
-        "There was an issue with the SMTP credentials provided, check the username and password and try again.",
-        "shows a dialogue with the error message from the server"
+        query(".dialog-body").innerText.trim(),
+        I18n.t("generic_error_with_reason", {
+          error:
+            "There was an issue with the SMTP credentials provided, check the username and password and try again.",
+        })
       );
-      await click(".modal-footer .btn.btn-primary");
+      await click(".dialog-footer .btn-primary");
     });
   }
 );

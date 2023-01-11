@@ -1,33 +1,43 @@
-{{#if collection}}
+{{#if this.collection}}
   <div class="values">
-    {{#each collection as |value index|}}
+    {{#each this.collection as |value index|}}
       <div data-index={{index}} class="value">
-        {{d-button
-          action=(action "removeValue")
-          actionParam=value
-          icon="times"
-          class="remove-value-btn btn-small"
-        }}
+        <DButton
+          @action={{action "removeValue"}}
+          @actionParam={{value}}
+          @icon="times"
+          @class="remove-value-btn btn-small"
+        />
 
-        {{input
-          title=value
-          value=value
+        <Input
+          title={{value}}
+          @value={{value}}
           class="value-input"
-          focus-out=(action "changeValue" index)
-        }}
+          {{on "focusout" (fn (action "changeValue") index)}}
+        />
+
+        {{#if this.showUpDownButtons}}
+          <DButton
+            @action={{action "shift" -1 index}}
+            @icon="arrow-up"
+            @class="shift-up-value-btn btn-small"
+          />
+          <DButton
+            @action={{action "shift" 1 index}}
+            @icon="arrow-down"
+            @class="shift-down-value-btn btn-small"
+          />
+        {{/if}}
       </div>
     {{/each}}
   </div>
 {{/if}}
 
-{{combo-box
-  options=(hash
-    allowAny=true
-  )
-  none=noneKey
-  valueProperty=null
-  nameProperty=null
-  value=newValue
-  content=filteredChoices
-  onChange=(action "selectChoice")
-}}
+<ComboBox
+  @valueProperty={{null}}
+  @nameProperty={{null}}
+  @value={{this.newValue}}
+  @content={{this.filteredChoices}}
+  @onChange={{action "selectChoice"}}
+  @options={{hash allowAny=true none=this.noneKey}}
+/>

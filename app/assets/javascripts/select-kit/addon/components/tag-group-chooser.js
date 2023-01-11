@@ -28,16 +28,10 @@ export default MultiSelectComponent.extend(TagsMixin, {
       .map((t) => this.defaultItem(t, t));
   }),
 
-  actions: {
-    onChange(value) {
-      this.set("tagGroups", value);
-    },
-  },
-
   search(query) {
     const data = {
       q: query,
-      limit: this.get("siteSettings.max_tag_search_results"),
+      limit: this.siteSettings.max_tag_search_results,
     };
 
     return this.searchTags(

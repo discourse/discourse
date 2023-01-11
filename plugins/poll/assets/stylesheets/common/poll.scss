@@ -13,7 +13,7 @@ div.poll {
 
   li {
     cursor: pointer;
-    font-size: $font-up-1;
+    font-size: var(--font-up-1);
   }
 
   li[data-poll-option-id] {
@@ -39,8 +39,8 @@ div.poll {
     padding: 1em 0;
 
     .info-label {
-      font-size: $font-up-4;
-      line-height: $line-height-medium;
+      font-size: var(--font-up-4);
+      line-height: var(--line-height-medium);
     }
 
     .info-text {
@@ -54,7 +54,7 @@ div.poll {
     padding: 0.5em 1em;
 
     .poll-results-number-rating {
-      font-size: $font-up-5;
+      font-size: var(--font-up-5);
     }
   }
 
@@ -130,7 +130,6 @@ div.poll {
   }
 
   .pie-chart-legends {
-    display: flex;
     justify-content: center;
     text-align: center;
     margin-top: 0.5em;
@@ -138,7 +137,7 @@ div.poll {
     .legend {
       align-items: center;
       cursor: pointer;
-      display: flex;
+      display: inline-flex;
       flex-direction: row;
       margin-left: 1em;
       font-size: var(--font-down-0);

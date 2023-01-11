@@ -18,13 +18,13 @@
     align-items: center;
 
     .title {
-      font-size: $font-0;
+      font-size: var(--font-0);
       font-weight: normal;
       margin-bottom: 8px;
 
       .post-date {
         color: var(--primary-medium);
-        font-size: $font-down-1;
+        font-size: var(--font-down-1);
       }
     }
   }
@@ -50,7 +50,7 @@
       flex-direction: row;
 
       .social-link {
-        font-size: $font-up-6;
+        font-size: var(--font-up-6);
         margin-right: 8px;
       }
     }
@@ -99,20 +99,6 @@
           width: 100%;
         }
       }
-    }
-
-    .max-redemptions-allowed {
-      margin-bottom: 8px;
-
-      .max-redemptions-allowed-input {
-        width: 20%;
-        min-width: 100px;
-      }
-    }
-
-    .invite-link-expires-at .date-picker,
-    .time-input {
-      width: 150px;
     }
 
     .invite-user-input-wrapper {

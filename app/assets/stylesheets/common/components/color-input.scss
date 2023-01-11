@@ -1,0 +1,31 @@
+.color-picker {
+  display: flex;
+  * {
+    height: 35px;
+  }
+  .add-on {
+    @include form-item-sizing;
+    background-color: var(--primary-low);
+    border-color: var(--primary-medium);
+    border-right-color: transparent;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+  }
+  .hex-input {
+    margin-right: 0;
+  }
+  .picker {
+    padding: 0;
+    border-left: none;
+    cursor: pointer;
+    margin-bottom: 0;
+  }
+  // Reset webkit/blink default style
+  input[type="color"]::-webkit-color-swatch-wrapper {
+    padding: 0;
+  }
+  input[type="color"]::-webkit-color-swatch {
+    border: none;
+    border-radius: 0; // Reset webkit specific style
+  }
+}

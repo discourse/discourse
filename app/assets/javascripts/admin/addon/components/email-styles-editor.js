@@ -1,10 +1,11 @@
 import Component from "@ember/component";
 import I18n from "I18n";
-import bootbox from "bootbox";
 import discourseComputed from "discourse-common/utils/decorators";
 import { reads } from "@ember/object/computed";
+import { inject as service } from "@ember/service";
 
 export default Component.extend({
+  dialog: service(),
   editorId: reads("fieldName"),
 
   @discourseComputed("fieldName")
@@ -33,22 +34,18 @@ export default Component.extend({
 
   actions: {
     reset() {
-      bootbox.confirm(
-        I18n.t("admin.customize.email_style.reset_confirm", {
+      this.dialog.yesNoConfirm({
+        message: I18n.t("admin.customize.email_style.reset_confirm", {
           fieldName: I18n.t(`admin.customize.email_style.${this.fieldName}`),
         }),
-        I18n.t("no_value"),
-        I18n.t("yes_value"),
-        (result) => {
-          if (result) {
-            this.styles.setField(
-              this.fieldName,
-              this.styles.get(`default_${this.fieldName}`)
-            );
-            this.notifyPropertyChange("editorContents");
-          }
-        }
-      );
+        didConfirm: () => {
+          this.styles.setField(
+            this.fieldName,
+            this.styles.get(`default_${this.fieldName}`)
+          );
+          this.notifyPropertyChange("editorContents");
+        },
+      });
     },
     save() {
       this.attrs.save();

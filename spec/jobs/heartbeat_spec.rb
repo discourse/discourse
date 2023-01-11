@@ -1,11 +1,7 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
-describe ::Jobs::Heartbeat do
-  after do
-    Discourse.disable_readonly_mode
-  end
+RSpec.describe ::Jobs::Heartbeat do
+  after { Discourse.disable_readonly_mode }
 
   it "still enqueues heartbeats in readonly mode" do
     freeze_time 1.week.from_now

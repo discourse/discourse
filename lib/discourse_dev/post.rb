@@ -1,11 +1,10 @@
 # frozen_string_literal: true
 
-require 'discourse_dev/record'
-require 'faker'
+require "discourse_dev/record"
+require "faker"
 
 module DiscourseDev
   class Post < Record
-
     attr_reader :topic
 
     def initialize(topic, count)
@@ -14,7 +13,7 @@ module DiscourseDev
 
       category = topic.category
       @max_likes_count = DiscourseDev.config.post[:max_likes_count]
-      unless category.groups.blank?
+      if category&.groups.present?
         group_ids = category.groups.pluck(:id)
         @user_ids = ::GroupUser.where(group_id: group_ids).pluck(:user_id)
         @user_count = @user_ids.count
@@ -28,7 +27,7 @@ module DiscourseDev
         raw: Faker::DiscourseMarkdown.sandwich(sentences: 5),
         created_at: Faker::Time.between(from: topic.last_posted_at, to: DateTime.now),
         skip_validations: true,
-        skip_guardian: true
+        skip_guardian: true,
       }
     end
 
@@ -44,17 +43,24 @@ module DiscourseDev
     def generate_likes(post)
       user_ids = [post.user_id]
 
-      Faker::Number.between(from: 0, to: @max_likes_count).times do
-        user = self.user
-        next if user_ids.include?(user.id)
+      Faker::Number
+        .between(from: 0, to: @max_likes_count)
+        .times do
+          user = self.user
+          next if user_ids.include?(user.id)
 
-        PostActionCreator.new(user, post, PostActionType.types[:like], created_at: Faker::Time.between(from: post.created_at, to: DateTime.now)).perform
-        user_ids << user.id
-      end
+          PostActionCreator.new(
+            user,
+            post,
+            PostActionType.types[:like],
+            created_at: Faker::Time.between(from: post.created_at, to: DateTime.now),
+          ).perform
+          user_ids << user.id
+        end
     end
 
     def user
-      return User.random if topic.category.groups.blank?
+      return User.random if topic.category&.groups.blank?
       return Discourse.system_user if @user_ids.blank?
 
       position = Faker::Number.between(from: 0, to: @user_count - 1)
@@ -90,13 +96,14 @@ module DiscourseDev
       count.times do |i|
         begin
           user = User.random
-          reply = Faker::DiscourseMarkdown.with_user(user.id) do
-            {
-              topic_id: topic.id,
-              raw: Faker::DiscourseMarkdown.sandwich(sentences: 5),
-              skip_validations: true
-            }
-          end
+          reply =
+            Faker::DiscourseMarkdown.with_user(user.id) do
+              {
+                topic_id: topic.id,
+                raw: Faker::DiscourseMarkdown.sandwich(sentences: 5),
+                skip_validations: true,
+              }
+            end
           PostCreator.new(user, reply).create!
         rescue ActiveRecord::RecordNotSaved => e
           puts e
@@ -109,6 +116,5 @@ module DiscourseDev
     def self.random
       super(::Post)
     end
-
   end
 end

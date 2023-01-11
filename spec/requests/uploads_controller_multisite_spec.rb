@@ -1,14 +1,12 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
-describe UploadsController, type: [:multisite, :request] do
+RSpec.describe UploadsController, type: %i[multisite request] do
   let!(:user) { Fabricate(:user) }
   let(:upload) { Fabricate(:upload_s3) }
 
   before do
     setup_s3
-    SiteSetting.secure_media = true
+    SiteSetting.secure_uploads = true
     upload.update(secure: true)
   end
 

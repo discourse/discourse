@@ -2,11 +2,21 @@
   <ul>
     {{#each options.users as |user|}}
       <li>
-        <a href title="{{user.name}}">
+        <a href title="{{user.name}}" class="{{user.cssClasses}}">
           {{avatar user imageSize="tiny"}}
           <span class='username'>{{format-username user.username}}</span>
-          <span class='name'>{{user.name}}</span>
-          {{decorate-username-selector user.username}}
+          {{#if user.name}}
+            <span class='name'>{{user.name}}</span>
+          {{/if}}
+          {{#if user.status}}
+            {{emoji user.status.emoji}}
+            <span class='status-description' title='{{user.status.description}}'>
+              {{user.status.description}}
+            </span>
+            {{#if user.status.ends_at}}
+              {{format-age user.status.ends_at}}
+            {{/if}}
+          {{/if}}
         </a>
       </li>
     {{/each}}

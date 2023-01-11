@@ -1,138 +1,128 @@
-import componentTest, {
-  setupRenderingTest,
-} from "discourse/tests/helpers/component-test";
+import { module, test } from "qunit";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { fillIn, render } from "@ember/test-helpers";
+import { createFile } from "discourse/tests/helpers/qunit-helpers";
+import { hbs } from "ember-cli-htmlbars";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import {
-  createFile,
-  discourseModule,
-} from "discourse/tests/helpers/qunit-helpers";
-import hbs from "htmlbars-inline-precompile";
-import pretender from "discourse/tests/helpers/create-pretender";
-import { fillIn } from "@ember/test-helpers";
 
-let requestNumber = 1;
+let requestNumber;
 
-discourseModule("Integration | Component | emoji-uploader", function (hooks) {
+module("Integration | Component | emoji-uploader", function (hooks) {
   setupRenderingTest(hooks);
 
-  const template = hbs` {{emoji-uploader
-    emojiGroups=emojiGroups
-    done=doneUpload
-    id="emoji-uploader"
-  }}`;
-
   hooks.beforeEach(function () {
-    requestNumber = 1;
+    requestNumber = 0;
     this.setProperties({
-      emojiGroups: ["default", "coolemojis"],
+      emojiGroups: ["default", "cool-emojis"],
     });
 
     pretender.post("/admin/customize/emojis.json", () => {
+      requestNumber++;
+
       if (requestNumber === 1) {
-        return [
-          200,
-          { "Content-Type": "application/json" },
-          {
-            group: "coolemojis",
-            name: "okey",
-            url:
-              "//upload.s3.dualstack.us-east-2.amazonaws.com/original/1X/123.png",
-          },
-        ];
-        requestNumber += 1;
+        return response({
+          group: "cool-emojis",
+          name: "okay",
+          url: "//upload.s3.dualstack.us-east-2.amazonaws.com/original/1X/123.png",
+        });
       } else if (requestNumber === 2) {
-        return [
-          200,
-          { "Content-Type": "application/json" },
-          {
-            group: "coolemojis",
-            name: null,
-            url:
-              "//upload.s3.dualstack.us-east-2.amazonaws.com/original/1X/456.png",
-          },
-        ];
+        return response({
+          group: "cool-emojis",
+          name: null,
+          url: "//upload.s3.dualstack.us-east-2.amazonaws.com/original/1X/456.png",
+        });
       }
     });
   });
 
-  componentTest("uses the selected group for the upload", {
-    template,
+  test("uses the selected group for the upload", async function (assert) {
+    await render(hbs`
+      <EmojiUploader
+        @id="emoji-uploader"
+        @emojiGroups={{this.emojiGroups}}
+        @done={{this.doneUpload}}
+      />
+    `);
 
-    async test(assert) {
-      const done = assert.async();
-      await selectKit("#emoji-group-selector").expand();
-      await selectKit("#emoji-group-selector").selectRowByValue("coolemojis");
+    const done = assert.async();
+    await selectKit("#emoji-group-selector").expand();
+    await selectKit("#emoji-group-selector").selectRowByValue("cool-emojis");
 
-      this.set("doneUpload", (upload, group) => {
-        assert.equal("coolemojis", group);
+    this.set("doneUpload", (upload, group) => {
+      assert.strictEqual("cool-emojis", group);
+      done();
+    });
+    const image = createFile("avatar.png");
+
+    await this.container
+      .lookup("service:app-events")
+      .trigger("upload-mixin:emoji-uploader:add-files", image);
+  });
+
+  test("does not clear the selected group between multiple uploads", async function (assert) {
+    await render(hbs`
+      <EmojiUploader
+        @id="emoji-uploader"
+        @emojiGroups={{this.emojiGroups}}
+        @done={{this.doneUpload}}
+      />
+    `);
+
+    const done = assert.async();
+    await selectKit("#emoji-group-selector").expand();
+    await selectKit("#emoji-group-selector").selectRowByValue("cool-emojis");
+
+    let uploadDoneCount = 0;
+    this.set("doneUpload", (upload, group) => {
+      uploadDoneCount++;
+      assert.strictEqual("cool-emojis", group);
+
+      if (uploadDoneCount === 2) {
         done();
-      });
-      const image = createFile("avatar.png");
-      await this.container
-        .lookup("service:app-events")
-        .trigger("upload-mixin:emoji-uploader:add-files", image);
-    },
+      }
+    });
+
+    const image = createFile("avatar.png");
+    const image2 = createFile("avatar2.png");
+
+    await this.container
+      .lookup("service:app-events")
+      .trigger("upload-mixin:emoji-uploader:add-files", [image, image2]);
   });
 
-  componentTest("does not clear the selected group between multiple uploads", {
-    template,
+  test("clears the name after the first upload to avoid duplicate names", async function (assert) {
+    await render(hbs`
+      <EmojiUploader
+        @id="emoji-uploader"
+        @emojiGroups={{this.emojiGroups}}
+        @done={{this.doneUpload}}
+      />
+    `);
 
-    async test(assert) {
-      const done = assert.async();
-      await selectKit("#emoji-group-selector").expand();
-      await selectKit("#emoji-group-selector").selectRowByValue("coolemojis");
+    const done = assert.async();
+    await selectKit("#emoji-group-selector").expand();
+    await selectKit("#emoji-group-selector").selectRowByValue("cool-emojis");
+    await fillIn("#emoji-name", "okay");
 
-      let uploadDoneCount = 0;
-      this.set("doneUpload", (upload, group) => {
-        uploadDoneCount += 1;
-        assert.equal("coolemojis", group);
+    let uploadDoneCount = 0;
+    this.set("doneUpload", (upload) => {
+      uploadDoneCount++;
 
-        if (uploadDoneCount === 2) {
-          done();
-        }
-      });
+      if (uploadDoneCount === 1) {
+        assert.strictEqual(upload.name, "okay");
+      }
 
-      const image = createFile("avatar.png");
-      const image2 = createFile("avatar2.png");
-      await this.container
-        .lookup("service:app-events")
-        .trigger("upload-mixin:emoji-uploader:add-files", [image, image2]);
-    },
+      if (uploadDoneCount === 2) {
+        assert.strictEqual(upload.name, null);
+        done();
+      }
+    });
+
+    const image = createFile("avatar.png");
+    const image2 = createFile("avatar2.png");
+    await this.container
+      .lookup("service:app-events")
+      .trigger("upload-mixin:emoji-uploader:add-files", [image, image2]);
   });
-
-  componentTest(
-    "clears the name after the first upload to avoid duplicate names",
-    {
-      template,
-
-      async test(assert) {
-        const done = assert.async();
-        await selectKit("#emoji-group-selector").expand();
-        await selectKit("#emoji-group-selector").selectRowByValue("coolemojis");
-        await fillIn("#emoji-name", "okey");
-
-        let uploadDoneCount = 0;
-        this.set("doneUpload", (upload) => {
-          if (uploadDoneCount === 0) {
-            assert.equal(upload.name, "okey");
-          }
-          uploadDoneCount += 1;
-
-          if (uploadDoneCount === 1) {
-            assert.equal(this.name, null);
-          }
-
-          if (uploadDoneCount === 2) {
-            done();
-          }
-        });
-
-        const image = createFile("avatar.png");
-        const image2 = createFile("avatar2.png");
-        await this.container
-          .lookup("service:app-events")
-          .trigger("upload-mixin:emoji-uploader:add-files", [image, image2]);
-      },
-    }
-  );
 });

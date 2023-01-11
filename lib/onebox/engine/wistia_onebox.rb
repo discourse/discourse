@@ -6,12 +6,30 @@ module Onebox
       include Engine
       include StandardEmbed
 
-      matches_regexp(/https?:\/\/(.+)?(wistia.com|wi.st)\/(medias|embed)\/.*/)
+      matches_regexp(%r{https?://(.+)?(wistia.com|wi.st)/(medias|embed)/.*})
       requires_iframe_origins("https://fast.wistia.com", "https://fast.wistia.net")
       always_https
 
       def to_html
-        get_oembed.html
+        oembed = get_oembed
+        extracted_url = oembed.html.match(/iframe\ src\=\"(.*?)\"/)
+
+        if extracted_url
+          iframe_src = extracted_url[1]
+
+          <<~HTML
+          <iframe
+            src="#{iframe_src}"
+            width="#{oembed.width}"
+            height="#{oembed.height}"
+            title="#{oembed.title}"
+            frameborder="0"
+            allowfullscreen
+          ></iframe>
+          HTML
+        else
+          oembed.html
+        end
       end
 
       def placeholder_html

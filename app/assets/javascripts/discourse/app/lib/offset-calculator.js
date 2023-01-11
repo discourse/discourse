@@ -10,6 +10,7 @@ export function minimumOffset() {
     {
       since: "2.8.0.beta10",
       dropFrom: "2.9.0.beta2",
+      id: "discourse.offset-calculator.minimumOffset",
     }
   );
 
@@ -46,8 +47,8 @@ export default function offsetCalculator() {
 
   const windowHeight = window.innerHeight;
   const documentHeight = document.body.clientHeight;
-  const topicBottomOffsetTop = document.getElementById("topic-bottom")
-    .offsetTop;
+  const topicBottomOffsetTop =
+    document.getElementById("topic-bottom").offsetTop;
 
   // the footer is bigger than the window, we can scroll down past the last post
   if (documentHeight - windowHeight > topicBottomOffsetTop) {

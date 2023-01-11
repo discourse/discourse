@@ -1,9 +1,10 @@
 import {
   acceptance,
+  count,
   exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, fillIn, visit } from "@ember/test-helpers";
+import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 
 acceptance("Create Account - User Fields", function (needs) {
@@ -45,9 +46,6 @@ acceptance("Create Account - User Fields", function (needs) {
 
     await fillIn("#new-account-name", "Dr. Good Tuna");
     await fillIn("#new-account-password", "cool password bro");
-    // without this double fill, field will sometimes being empty
-    // got consistent repro by having browser search bar focused when starting test
-    await fillIn("#new-account-email", "good.tuna@test.com");
     await fillIn("#new-account-email", "good.tuna@test.com");
     await fillIn("#new-account-username", "goodtuna");
 
@@ -64,5 +62,37 @@ acceptance("Create Account - User Fields", function (needs) {
     await fillIn(".user-field input[type=text]:nth-of-type(1)", "Barky");
     await click(".user-field input[type=checkbox]");
     await click(".modal-footer .btn-primary");
+  });
+
+  test("can submit with enter", async function (assert) {
+    await visit("/");
+    await click("header .sign-up-button");
+    await triggerKeyEvent(".modal-footer .btn-primary", "keydown", "Enter");
+
+    assert.strictEqual(
+      count("#modal-alert:visible"),
+      1,
+      "hitting Enter triggers action"
+    );
+  });
+
+  test("shows validation error for user fields", async function (assert) {
+    await visit("/");
+    await click("header .sign-up-button");
+
+    await fillIn("#new-account-password", "cool password bro");
+    await fillIn(".user-field-whats-your-dad-like input", "cool password bro");
+
+    await click(".modal-footer .btn-primary");
+
+    assert.ok(
+      exists(".user-field-what-is-your-pets-name .tip.bad"),
+      "shows required field error"
+    );
+
+    assert.ok(
+      exists(".user-field-whats-your-dad-like .tip.bad"),
+      "shows same as password error"
+    );
   });
 });

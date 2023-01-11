@@ -1,25 +1,46 @@
 import Component from "@ember/component";
 import FilterModeMixin from "discourse/mixins/filter-mode";
 import NavItem from "discourse/models/nav-item";
-import bootbox from "bootbox";
 import discourseComputed from "discourse-common/utils/decorators";
+import { NotificationLevels } from "discourse/lib/notification-levels";
+import { getOwner } from "discourse-common/lib/get-owner";
 import { inject as service } from "@ember/service";
 
 export default Component.extend(FilterModeMixin, {
   router: service(),
-
+  dialog: service(),
   tagName: "",
 
   // Should be a `readOnly` instead but some themes/plugins still pass
   // the `categories` property into this component
   @discourseComputed("site.categoriesList")
   categories(categoriesList) {
-    return categoriesList;
+    if (this.currentUser?.indirectly_muted_category_ids) {
+      return categoriesList.filter(
+        (category) =>
+          !this.currentUser.indirectly_muted_category_ids.includes(category.id)
+      );
+    } else {
+      return categoriesList;
+    }
   },
 
   @discourseComputed("category")
   showCategoryNotifications(category) {
     return category && this.currentUser;
+  },
+
+  @discourseComputed("category.notification_level")
+  categoryNotificationLevel(notificationLevel) {
+    if (
+      this.currentUser?.indirectly_muted_category_ids?.includes(
+        this.category.id
+      )
+    ) {
+      return NotificationLevels.MUTED;
+    } else {
+      return notificationLevel;
+    }
   },
 
   // don't show tag notification menu on tag intersections
@@ -86,14 +107,16 @@ export default Component.extend(FilterModeMixin, {
     "category",
     "noSubcategories",
     "tag.id",
-    "router.currentRoute.queryParams"
+    "router.currentRoute.queryParams",
+    "skipCategoriesNavItem"
   )
   navItems(
     filterType,
     category,
     noSubcategories,
     tagId,
-    currentRouteQueryParams
+    currentRouteQueryParams,
+    skipCategoriesNavItem
   ) {
     return NavItem.buildList(category, {
       filterType,
@@ -101,7 +124,19 @@ export default Component.extend(FilterModeMixin, {
       currentRouteQueryParams,
       tagId,
       siteSettings: this.siteSettings,
+      skipCategoriesNavItem,
     });
+  },
+
+  @discourseComputed("filterType")
+  notCategoriesRoute(filterType) {
+    return filterType !== "categories";
+  },
+
+  @discourseComputed()
+  canBulk() {
+    const controller = getOwner(this).lookup("controller:discovery/topics");
+    return controller.canBulkSelect;
   },
 
   actions: {
@@ -122,7 +157,7 @@ export default Component.extend(FilterModeMixin, {
 
     clickCreateTopicButton() {
       if (this.categoryReadOnlyBanner && !this.hasDraft) {
-        bootbox.alert(this.categoryReadOnlyBanner);
+        this.dialog.alert(this.categoryReadOnlyBanner);
       } else {
         this.createTopic();
       }

@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
-describe Jobs::CleanupImapSyncLog do
+RSpec.describe Jobs::CleanupImapSyncLog do
   let(:job_class) { Jobs::CleanupImapSyncLog.new }
 
   it "deletes logs older than RETAIN_LOGS_DAYS" do

@@ -5,6 +5,7 @@ import {
 import { test } from "qunit";
 import { PresenceChannelNotFound } from "discourse/services/presence";
 import { setTestPresence } from "discourse/lib/user-presence";
+import sinon from "sinon";
 
 function usersFixture() {
   return [
@@ -31,7 +32,7 @@ function usersFixture() {
 
 acceptance("Presence - Subscribing", function (needs) {
   needs.pretender((server, helper) => {
-    server.get("/presence/get", (request) => {
+    server.get("/presence/get", async (request) => {
       const channels = request.queryParams.channels;
       const response = {};
 
@@ -42,7 +43,7 @@ acceptance("Presence - Subscribing", function (needs) {
             last_message_id: 1,
             users: usersFixture(),
           };
-        } else if (c.startsWith("/countonly/")) {
+        } else if (c.startsWith("/count-only/")) {
           response[c] = {
             count: 3,
             last_message_id: 1,
@@ -59,16 +60,21 @@ acceptance("Presence - Subscribing", function (needs) {
   test("subscribing and receiving updates", async function (assert) {
     let presenceService = this.container.lookup("service:presence");
     let channel = presenceService.getChannel("/test/ch1");
+    let changes = 0;
+    const countChanges = () => changes++;
+    channel.on("change", countChanges);
+
     assert.strictEqual(channel.name, "/test/ch1");
 
     await channel.subscribe({
       users: usersFixture(),
       last_message_id: 1,
     });
+    assert.strictEqual(changes, 1);
 
     assert.strictEqual(channel.users.length, 3, "it starts with three users");
 
-    publishToMessageBus(
+    await publishToMessageBus(
       "/presence/test/ch1",
       {
         leaving_user_ids: [1],
@@ -78,8 +84,9 @@ acceptance("Presence - Subscribing", function (needs) {
     );
 
     assert.strictEqual(channel.users.length, 2, "one user is removed");
+    assert.strictEqual(changes, 2);
 
-    publishToMessageBus(
+    await publishToMessageBus(
       "/presence/test/ch1",
       {
         entering_users: [usersFixture()[0]],
@@ -89,6 +96,8 @@ acceptance("Presence - Subscribing", function (needs) {
     );
 
     assert.strictEqual(channel.users.length, 3, "one user is added");
+    assert.strictEqual(changes, 3);
+    channel.off("change", countChanges);
   });
 
   test("fetches data when no initial state", async function (assert) {
@@ -99,7 +108,7 @@ acceptance("Presence - Subscribing", function (needs) {
 
     assert.strictEqual(channel.users.length, 3, "loads initial state");
 
-    publishToMessageBus(
+    await publishToMessageBus(
       "/presence/test/ch1",
       {
         leaving_user_ids: [1],
@@ -114,7 +123,13 @@ acceptance("Presence - Subscribing", function (needs) {
       "updates following messagebus message"
     );
 
-    publishToMessageBus(
+    const stub = sinon
+      .stub(console, "log")
+      .withArgs(
+        "PresenceChannel '/test/ch1' dropped message (received 99, expecting 3), resyncing..."
+      );
+
+    await publishToMessageBus(
       "/presence/test/ch1",
       {
         leaving_user_ids: [2],
@@ -123,8 +138,7 @@ acceptance("Presence - Subscribing", function (needs) {
       99
     );
 
-    await channel._presenceState._resubscribePromise;
-
+    sinon.assert.calledOnce(stub);
     assert.strictEqual(
       channel.users.length,
       3,
@@ -145,7 +159,7 @@ acceptance("Presence - Subscribing", function (needs) {
 
   test("can subscribe to count_only channel", async function (assert) {
     let presenceService = this.container.lookup("service:presence");
-    let channel = presenceService.getChannel("/countonly/ch1");
+    let channel = presenceService.getChannel("/count-only/ch1");
 
     await channel.subscribe();
 
@@ -153,8 +167,8 @@ acceptance("Presence - Subscribing", function (needs) {
     assert.strictEqual(channel.countOnly, true, "identifies as countOnly");
     assert.strictEqual(channel.users, null, "has null users list");
 
-    publishToMessageBus(
-      "/presence/countonly/ch1",
+    await publishToMessageBus(
+      "/presence/count-only/ch1",
       {
         count_delta: 1,
       },
@@ -164,16 +178,14 @@ acceptance("Presence - Subscribing", function (needs) {
 
     assert.strictEqual(channel.count, 4, "updates the count via messagebus");
 
-    publishToMessageBus(
-      "/presence/countonly/ch1",
+    await publishToMessageBus(
+      "/presence/count-only/ch1",
       {
         leaving_user_ids: [2],
       },
       0,
       3
     );
-
-    await channel._presenceState._resubscribePromise;
 
     assert.strictEqual(
       channel.count,
@@ -216,14 +228,14 @@ acceptance("Presence - Subscribing", function (needs) {
     assert.strictEqual(channel.subscribed, false, "channel can unsubscribe");
     assert.strictEqual(
       channelDup._presenceState,
-      channel._presenceState,
-      "state is maintained"
+      presenceService._presenceChannelStates.get(channel.name),
+      "state is maintained in the subscribed channel"
     );
 
     await channelDup.unsubscribe();
     assert.strictEqual(channel.subscribed, false, "channelDup can unsubscribe");
     assert.strictEqual(
-      channelDup._presenceState,
+      presenceService._presenceChannelStates.get(channel.name),
       undefined,
       "state is cleared"
     );
@@ -233,10 +245,29 @@ acceptance("Presence - Subscribing", function (needs) {
 acceptance("Presence - Entering and Leaving", function (needs) {
   needs.user();
 
+  let responseStartPromise;
+  let resolveResponseStartPromise;
+  let responseWaitPromise;
+
   const requests = [];
-  needs.hooks.afterEach(() => requests.clear());
+
+  needs.hooks.beforeEach(() => {
+    responseStartPromise = new Promise(
+      (resolve) => (resolveResponseStartPromise = resolve)
+    );
+  });
+
+  needs.hooks.afterEach(() => {
+    requests.clear();
+    responseWaitPromise = null;
+    responseStartPromise = null;
+  });
+
   needs.pretender((server, helper) => {
-    server.post("/presence/update", (request) => {
+    server.post("/presence/update", async (request) => {
+      resolveResponseStartPromise();
+      await responseWaitPromise;
+
       const body = new URLSearchParams(request.requestBody);
       requests.push(body);
 
@@ -280,9 +311,71 @@ acceptance("Presence - Entering and Leaving", function (needs) {
     );
   });
 
-  test("raises an error when entering a non-existant channel", async function (assert) {
+  test("join should be a no-op if already present", async function (assert) {
     const presenceService = this.container.lookup("service:presence");
-    const channel = presenceService.getChannel("/blah/doesnotexist");
+    const channel = presenceService.getChannel("/test/ch1");
+
+    await channel.enter();
+    assert.strictEqual(requests.length, 1, "updated the server for enter");
+
+    await channel.enter();
+    assert.strictEqual(
+      requests.length,
+      1,
+      "does not update the server unnecessarily"
+    );
+  });
+
+  test("leave should be a no-op if not present", async function (assert) {
+    const presenceService = this.container.lookup("service:presence");
+    const channel = presenceService.getChannel("/test/ch1");
+
+    await channel.enter();
+    assert.strictEqual(requests.length, 1, "updated the server for enter");
+
+    await channel.leave();
+    assert.strictEqual(requests.length, 2, "updated the server for leave");
+
+    await channel.leave();
+    assert.strictEqual(
+      requests.length,
+      2,
+      "did not update the server unnecessarily"
+    );
+  });
+
+  test("interleaved join/leave calls work correctly", async function (assert) {
+    let resolveServerResponse;
+    responseWaitPromise = new Promise(
+      (resolve) => (resolveServerResponse = resolve)
+    );
+
+    const presenceService = this.container.lookup("service:presence");
+    const channel = presenceService.getChannel("/test/ch1");
+
+    const enterPromise = channel.enter();
+
+    await responseStartPromise;
+
+    const leavePromise = channel.leave();
+
+    resolveServerResponse();
+
+    await enterPromise;
+    await leavePromise;
+
+    assert.strictEqual(requests.length, 2, "server received two requests");
+
+    const presentChannels = requests.map((r) => r.getAll("present_channels[]"));
+    const leaveChannels = requests.map((r) => r.getAll("leave_channels[]"));
+
+    assert.deepEqual(presentChannels, [["/test/ch1"], []]);
+    assert.deepEqual(leaveChannels, [[], ["/test/ch1"]]);
+  });
+
+  test("raises an error when entering a non-existent channel", async function (assert) {
+    const presenceService = this.container.lookup("service:presence");
+    const channel = presenceService.getChannel("/blah/does-not-exist");
     await assert.rejects(
       channel.enter(),
       PresenceChannelNotFound,

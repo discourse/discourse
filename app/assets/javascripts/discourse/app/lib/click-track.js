@@ -3,45 +3,64 @@ import I18n from "I18n";
 import { Promise } from "rsvp";
 import User from "discourse/models/user";
 import { ajax } from "discourse/lib/ajax";
-import bootbox from "bootbox";
 import getURL, { samePrefix } from "discourse-common/lib/get-url";
 import { isTesting } from "discourse-common/config/environment";
-import { later } from "@ember/runloop";
 import { selectedText } from "discourse/lib/utilities";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
+import deprecated from "discourse-common/lib/deprecated";
+import { getOwner } from "discourse-common/lib/get-owner";
+import jQuery from "jquery";
 
-export function isValidLink($link) {
-  // .hashtag == category/tag link
+export function isValidLink(link) {
+  if (link instanceof jQuery) {
+    link = link[0];
+
+    deprecated("isValidLink now expects an Element, not a jQuery object", {
+      since: "2.9.0.beta7",
+      id: "discourse.click-track.is-valid-link-jquery",
+    });
+  }
+
+  // .hashtag/.hashtag-cooked == category/tag link
   // .back == quote back ^ button
-  if ($link.is(".lightbox, .no-track-link, .hashtag, .back")) {
+  if (
+    ["lightbox", "no-track-link", "hashtag", "hashtag-cooked", "back"].some(
+      (name) => link.classList.contains(name)
+    )
+  ) {
     return false;
   }
 
-  if ($link.parents("aside.quote, .elided, .expanded-embed").length !== 0) {
+  const closest = link.closest("aside.quote, .elided, .expanded-embed");
+  if (closest && closest !== link) {
     return false;
   }
 
-  if ($link.closest(".onebox-result, .onebox-body").length) {
-    const $a = $link.closest(".onebox").find("header a");
-    if ($a[0] && $a[0].href === $link[0].href) {
+  if (link.closest(".onebox-result, .onebox-body")) {
+    const a = link.closest(".onebox")?.querySelector("header a");
+
+    if (a && a.href === link.href) {
       return true;
     }
   }
 
   return (
-    $link.hasClass("track-link") ||
-    $link.closest(".hashtag, .badge-category, .onebox-result, .onebox-body")
-      .length === 0
+    link.classList.contains("track-link") ||
+    !link.closest(
+      ".hashtag, .hashtag-cooked, .badge-category, .onebox-result, .onebox-body"
+    )
   );
 }
 
 export function shouldOpenInNewTab(href) {
   const isInternal = DiscourseURL.isInternal(href);
-  const openExternalInNewTab = User.currentProp("external_links_in_new_tab");
+  const openExternalInNewTab = User.currentProp(
+    "user_option.external_links_in_new_tab"
+  );
   return !isInternal && openExternalInNewTab;
 }
 
-export function openLinkInNewTab(link) {
+export function openLinkInNewTab(event, link) {
   let href = (link.href || link.dataset.href || "").trim();
   if (href === "") {
     return;
@@ -51,23 +70,7 @@ export function openLinkInNewTab(link) {
   newWindow.opener = null;
   newWindow.focus();
 
-  // Hack to prevent changing current window.location.
-  // e.preventDefault() does not work.
-  if (!link.dataset.href) {
-    link.classList.add("no-href");
-    link.dataset.href = link.href;
-    link.dataset.autoRoute = true;
-    link.removeAttribute("href");
-
-    later(() => {
-      if (link) {
-        link.classList.remove("no-href");
-        link.setAttribute("href", link.dataset.href);
-        delete link.dataset.href;
-        delete link.dataset.autoRoute;
-      }
-    }, 50);
-  }
+  event.preventDefault();
 }
 
 export default {
@@ -85,27 +88,31 @@ export default {
       }
     }
 
-    const $link = $(e.currentTarget);
-    const tracking = isValidLink($link);
+    const link = e.currentTarget;
+    const tracking = isValidLink(link);
 
-    // Return early for mentions and group mentions
-    if ($link.is(".mention, .mention-group")) {
+    // Return early for mentions and group mentions. This is not in
+    // isValidLink because returning true here allows the group card
+    // to pop up. If we returned false it would not.
+    if (
+      ["mention", "mention-group"].some((name) => link.classList.contains(name))
+    ) {
       return true;
     }
 
-    let href = ($link.attr("href") || $link.data("href") || "").trim();
-    if (!href || href.indexOf("mailto:") === 0) {
+    let href = (link.getAttribute("href") || link.dataset.href || "").trim();
+    if (!href || href.startsWith("mailto:")) {
       return true;
     }
 
-    if ($link.hasClass("attachment")) {
+    if (link.classList.contains("attachment")) {
       // Warn the user if they cannot download the file.
       if (
-        siteSettings &&
-        siteSettings.prevent_anons_from_downloading_files &&
+        siteSettings?.prevent_anons_from_downloading_files &&
         !User.current()
       ) {
-        bootbox.alert(I18n.t("post.errors.attachment_download_requires_login"));
+        const dialog = getOwner(this).lookup("service:dialog");
+        dialog.alert(I18n.t("post.errors.attachment_download_requires_login"));
       } else if (wantsNewWindow(e)) {
         const newWindow = window.open(href, "_blank");
         newWindow.opener = null;
@@ -116,23 +123,27 @@ export default {
       return false;
     }
 
-    const $article = $link.closest(
+    const article = link.closest(
       "article:not(.onebox-body), .excerpt, #revisions"
     );
-    const postId = $article.data("post-id");
-    const topicId = $("#topic").data("topic-id") || $article.data("topic-id");
-    const userId = $link.data("user-id") || $article.data("user-id");
-    const ownLink = userId && userId === User.currentProp("id");
+    const postId = article.dataset.postId;
+    const topicId =
+      document.querySelector("#topic")?.dataset?.topicId ||
+      article.dataset.topicId;
+    const userId = link.dataset.userId || article.dataset.userId;
+    const ownLink = userId && parseInt(userId, 10) === User.currentProp("id");
 
     // Update badge clicks unless it's our own.
     if (tracking && !ownLink) {
-      const $badge = $("span.badge", $link);
-      if ($badge.length === 1) {
-        const html = $badge.html();
+      const badge = link.querySelector("span.badge");
+
+      if (badge) {
+        const html = badge.innerHTML;
         const key = `${new Date().toLocaleDateString()}-${postId}-${href}`;
+
         if (/^\d+$/.test(html) && !sessionStorage.getItem(key)) {
           sessionStorage.setItem(key, true);
-          $badge.html(parseInt(html, 10) + 1);
+          badge.innerHTML = parseInt(html, 10) + 1;
         }
       }
     }
@@ -159,7 +170,7 @@ export default {
 
     if (!wantsNewWindow(e)) {
       if (shouldOpenInNewTab(href)) {
-        openLinkInNewTab($link[0]);
+        openLinkInNewTab(e, link);
       } else {
         trackPromise.finally(() => {
           if (DiscourseURL.isInternal(href) && samePrefix(href)) {

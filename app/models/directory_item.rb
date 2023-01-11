@@ -7,12 +7,7 @@ class DirectoryItem < ActiveRecord::Base
   @@plugin_queries = []
 
   def self.period_types
-    @types ||= Enum.new(all: 1,
-                        yearly: 2,
-                        monthly: 3,
-                        weekly: 4,
-                        daily: 5,
-                        quarterly: 6)
+    @types ||= Enum.new(all: 1, yearly: 2, monthly: 3, weekly: 4, daily: 5, quarterly: 6)
   end
 
   def self.refresh!
@@ -43,36 +38,49 @@ class DirectoryItem < ActiveRecord::Base
 
     since =
       case period_type
-      when :daily then 1.day.ago
-      when :weekly then 1.week.ago
-      when :monthly then 1.month.ago
-      when :quarterly then 3.months.ago
-      when :yearly then 1.year.ago
-      else 1000.years.ago
+      when :daily
+        1.day.ago
+      when :weekly
+        1.week.ago
+      when :monthly
+        1.month.ago
+      when :quarterly
+        3.months.ago
+      when :yearly
+        1.year.ago
+      else
+        1000.years.ago
       end
 
     ActiveRecord::Base.transaction do
       # Delete records that belonged to users who have been deleted
-      DB.exec("DELETE FROM directory_items
+      DB.exec(
+        "DELETE FROM directory_items
                 USING directory_items di
                 LEFT JOIN users u ON (u.id = user_id AND u.active AND u.silenced_till IS NULL AND u.id > 0)
                 WHERE di.id = directory_items.id AND
                       u.id IS NULL AND
-                      di.period_type = :period_type", period_type: period_types[period_type])
+                      di.period_type = :period_type",
+        period_type: period_types[period_type],
+      )
 
       # Create new records for users who don't have one yet
 
-      column_names = DirectoryColumn.automatic_column_names + DirectoryColumn.plugin_directory_columns
-      DB.exec("INSERT INTO directory_items(period_type, user_id, #{column_names.map(&:to_s).join(", ")})
+      column_names =
+        DirectoryColumn.automatic_column_names + DirectoryColumn.plugin_directory_columns
+      DB.exec(
+        "INSERT INTO directory_items(period_type, user_id, #{column_names.map(&:to_s).join(", ")})
                 SELECT
                     :period_type,
                     u.id,
-                    #{Array.new(column_names.count) { |_| 0 }.join(", ") }
+                    #{Array.new(column_names.count) { |_| 0 }.join(", ")}
                 FROM users u
                 LEFT JOIN directory_items di ON di.user_id = u.id AND di.period_type = :period_type
                 WHERE di.id IS NULL AND u.id > 0 AND u.silenced_till IS NULL AND u.active
-                #{SiteSetting.must_approve_users ? 'AND u.approved' : ''}
-              ", period_type: period_types[period_type])
+                #{SiteSetting.must_approve_users ? "AND u.approved" : ""}
+              ",
+        period_type: period_types[period_type],
+      )
 
       # Calculate new values and update records
       #
@@ -88,10 +96,11 @@ class DirectoryItem < ActiveRecord::Base
         was_liked_type: UserAction::WAS_LIKED,
         new_topic_type: UserAction::NEW_TOPIC,
         reply_type: UserAction::REPLY,
-        regular_post_type: Post.types[:regular]
+        regular_post_type: Post.types[:regular],
       }
 
-      DB.exec("WITH x AS (SELECT
+      DB.exec(
+        "WITH x AS (SELECT
                     u.id user_id,
                     SUM(CASE WHEN p.id IS NOT NULL AND t.id IS NOT NULL AND ua.action_type = :was_liked_type THEN 1 ELSE 0 END) likes_received,
                     SUM(CASE WHEN p.id IS NOT NULL AND t.id IS NOT NULL AND ua.action_type = :like_type THEN 1 ELSE 0 END) likes_given,
@@ -131,15 +140,12 @@ class DirectoryItem < ActiveRecord::Base
         di.post_count <> x.post_count )
 
               ",
-              query_args
-             )
+        query_args,
+      )
 
-      @@plugin_queries.each do |plugin_query|
-        DB.exec(plugin_query, query_args)
-      end
+      @@plugin_queries.each { |plugin_query| DB.exec(plugin_query, query_args) }
 
-      if period_type == :all
-        DB.exec <<~SQL
+      DB.exec <<~SQL if period_type == :all
           UPDATE user_stats s
           SET likes_given         = d.likes_given,
               likes_received      = d.likes_received,
@@ -155,7 +161,6 @@ class DirectoryItem < ActiveRecord::Base
               s.post_count          <> d.post_count
             )
         SQL
-      end
     end
   end
 end

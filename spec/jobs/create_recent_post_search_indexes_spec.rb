@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
-describe Jobs::CreateRecentPostSearchIndexes do
+RSpec.describe Jobs::CreateRecentPostSearchIndexes do
   subject { described_class.new }
 
   fab!(:post) do
@@ -15,21 +13,19 @@ describe Jobs::CreateRecentPostSearchIndexes do
     Fabricate(:post)
   end
 
-  before do
-    SearchIndexer.enable
-  end
+  before { SearchIndexer.enable }
 
-  describe '#execute' do
-    it 'should not create the index if requried posts size has not been reached' do
+  describe "#execute" do
+    it "should not create the index if requried posts size has not been reached" do
       SiteSetting.search_recent_posts_size = 1
       SiteSetting.search_enable_recent_regular_posts_offset_size = 3
 
-      expect do
-        subject.execute({})
-      end.to_not change { SiteSetting.search_recent_regular_posts_offset_post_id }
+      expect do subject.execute({}) end.to_not change {
+        SiteSetting.search_recent_regular_posts_offset_post_id
+      }
     end
 
-    it 'should create the right index' do
+    it "should create the right index" do
       SiteSetting.search_recent_posts_size = 1
       SiteSetting.search_enable_recent_regular_posts_offset_size = 1
 

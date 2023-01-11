@@ -16,7 +16,7 @@
 // --------------------------------------------------
 
 .badge-wrapper {
-  font-size: $font-down-1;
+  font-size: var(--font-down-1);
   white-space: nowrap;
   position: relative;
   display: inline-flex;
@@ -153,7 +153,7 @@
     a.badge-category {
       display: inline-block;
       padding: 6px 8px;
-      line-height: $line-height-medium;
+      line-height: var(--line-height-medium);
     }
   }
 }
@@ -166,8 +166,8 @@
   padding: 0.21em 0.42em;
   min-width: 0.5em;
   color: var(--secondary);
-  font-size: $font-down-2;
-  line-height: $line-height-small;
+  font-size: var(--font-down-2);
+  line-height: var(--line-height-small);
   text-align: center;
   background-color: var(--primary-low-mid-or-secondary-low);
   &[href] {
@@ -192,10 +192,10 @@
 
   &.new-topic::before {
     content: "";
-    background: var(--tertiary-high);
+    background: var(--tertiary-med-or-tertiary);
     display: inline-block;
-    height: 0.4em;
-    width: 0.4em;
+    height: 8px;
+    width: 8px;
     border-radius: 50%;
   }
 
@@ -216,8 +216,8 @@
 
 .badge-posts {
   font-weight: normal;
-  font-size: $font-0;
-  line-height: $line-height-small;
+  font-size: var(--font-0);
+  line-height: var(--line-height-small);
   &[href] {
     color: var(--primary-med-or-secondary-med);
   }
@@ -232,5 +232,5 @@
   color: var(--primary);
   background-color: var(--primary-low);
   border-color: var(--primary-low);
-  font-size: $font-down-1;
+  font-size: var(--font-down-1);
 }

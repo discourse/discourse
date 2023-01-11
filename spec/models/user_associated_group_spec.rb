@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
-describe UserAssociatedGroup do
+RSpec.describe UserAssociatedGroup do
   let(:user) { Fabricate(:user) }
   let(:group) { Fabricate(:group) }
   let(:group2) { Fabricate(:group) }

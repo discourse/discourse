@@ -2,6 +2,7 @@ import {
   avatarImg,
   avatarUrl,
   caretRowCol,
+  clipboardCopyAsync,
   defaultHomepage,
   emailValid,
   escapeExpression,
@@ -10,16 +11,27 @@ import {
   getRawSize,
   inCodeBlock,
   initializeDefaultHomepage,
+  mergeSortedLists,
+  modKeysPressed,
   setCaretPosition,
   setDefaultHomepage,
   slugify,
   toAsciiPrintable,
 } from "discourse/lib/utilities";
-import { skip, test } from "qunit";
+import sinon from "sinon";
+import { module, test } from "qunit";
 import Handlebars from "handlebars";
-import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
+import { chromeTest } from "discourse/tests/helpers/qunit-helpers";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { click, render } from "@ember/test-helpers";
+import { hbs } from "ember-cli-htmlbars";
+import { setupURL } from "discourse-common/lib/get-url";
+import { setupTest } from "ember-qunit";
+import { getOwner } from "discourse-common/lib/get-owner";
 
-discourseModule("Unit | Utilities", function () {
+module("Unit | Utilities", function (hooks) {
+  setupTest(hooks);
+
   test("escapeExpression", function (assert) {
     assert.strictEqual(
       escapeExpression(">"),
@@ -87,6 +99,14 @@ discourseModule("Unit | Utilities", function () {
       "/fake/template/" + rawSize(45) + ".png",
       "different size"
     );
+
+    setupURL("https://app-cdn.example.com", "https://example.com", "");
+
+    assert.strictEqual(
+      avatarUrl("/fake/template/{size}.png", "large"),
+      "https://app-cdn.example.com/fake/template/" + rawSize(45) + ".png",
+      "uses CDN if present"
+    );
   });
 
   let setDevicePixelRatio = function (value) {
@@ -141,7 +161,10 @@ discourseModule("Unit | Utilities", function () {
     meta.name = "discourse_current_homepage";
     meta.content = "hot";
     document.body.appendChild(meta);
-    initializeDefaultHomepage(this.siteSettings);
+
+    const siteSettings = getOwner(this).lookup("service:site-settings");
+    initializeDefaultHomepage(siteSettings);
+
     assert.strictEqual(
       defaultHomepage(),
       "hot",
@@ -151,8 +174,10 @@ discourseModule("Unit | Utilities", function () {
   });
 
   test("defaultHomepage via site settings", function (assert) {
-    this.siteSettings.top_menu = "top|latest|hot";
-    initializeDefaultHomepage(this.siteSettings);
+    const siteSettings = getOwner(this).lookup("service:site-settings");
+    siteSettings.top_menu = "top|latest|hot";
+    initializeDefaultHomepage(siteSettings);
+
     assert.strictEqual(
       defaultHomepage(),
       "top",
@@ -161,8 +186,11 @@ discourseModule("Unit | Utilities", function () {
   });
 
   test("setDefaultHomepage", function (assert) {
-    initializeDefaultHomepage(this.siteSettings);
+    const siteSettings = getOwner(this).lookup("service:site-settings");
+    initializeDefaultHomepage(siteSettings);
+
     assert.strictEqual(defaultHomepage(), "latest");
+
     setDefaultHomepage("top");
     assert.strictEqual(defaultHomepage(), "top");
   });
@@ -260,18 +288,23 @@ discourseModule("Unit | Utilities", function () {
 
   test("inCodeBlock", function (assert) {
     const texts = [
-      // closed code blocks
+      // CLOSED CODE BLOCKS:
       "000\n\n    111\n\n000",
       "000 `111` 000",
       "000\n```\n111\n```\n000",
       "000\n[code]111[/code]\n000",
-      // open code blocks
+      // OPEN CODE BLOCKS:
       "000\n\n    111",
       "000 `111",
       "000\n```\n111",
       "000\n[code]111",
-      // complex test
+      // COMPLEX TEST:
       "000\n\n```\n111\n```\n\n000\n\n`111 111`\n\n000\n\n[code]\n111\n[/code]\n\n    111\n\t111\n\n000`111",
+      // INDENTED OPEN CODE BLOCKS:
+      // - Using tab
+      "000\n\t```111\n\t111\n\t111```\n000",
+      // - Using spaces
+      `000\n  \`\`\`111\n  111\n  111\`\`\`\n000`,
     ];
 
     texts.forEach((text) => {
@@ -283,20 +316,134 @@ discourseModule("Unit | Utilities", function () {
     });
   });
 
-  skip("inCodeBlock - runs fast", function (assert) {
-    const phrase = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
-    const text = `${phrase}\n\n\`\`\`\n${phrase}\n\`\`\`\n\n${phrase}\n\n\`${phrase}\n${phrase}\n\n${phrase}\n\n[code]\n${phrase}\n[/code]\n\n${phrase}\n\n    ${phrase}\n\n\`${phrase}\`\n\n${phrase}`;
+  test("mergeSortedLists", function (assert) {
+    const comparator = (a, b) => b > a;
+    assert.deepEqual(
+      mergeSortedLists([], [1, 2, 3], comparator),
+      [1, 2, 3],
+      "it doesn't error when the first list is blank"
+    );
+    assert.deepEqual(
+      mergeSortedLists([3, 2, 1], [], comparator),
+      [3, 2, 1],
+      "it doesn't error when the second list is blank"
+    );
+    assert.deepEqual(
+      mergeSortedLists([], [], comparator),
+      [],
+      "it doesn't error when the both lists are blank"
+    );
+    assert.deepEqual(
+      mergeSortedLists([5, 4, 0, -1], [1], comparator),
+      [5, 4, 1, 0, -1],
+      "it correctly merges lists when one list has 1 item only"
+    );
+    assert.deepEqual(
+      mergeSortedLists([2], [1], comparator),
+      [2, 1],
+      "it correctly merges lists when both lists has 1 item each"
+    );
+    assert.deepEqual(
+      mergeSortedLists([1], [1], comparator),
+      [1, 1],
+      "it correctly merges lists when both lists has 1 item and their items are identical"
+    );
+    assert.deepEqual(
+      mergeSortedLists([5, 4, 3, 2, 1], [6, 2, 1], comparator),
+      [6, 5, 4, 3, 2, 2, 1, 1],
+      "it correctly merges lists that share common items"
+    );
+  });
+});
 
-    let time = Number.MAX_VALUE;
-    for (let i = 0; i < 10; ++i) {
-      const start = performance.now();
-      inCodeBlock(text, text.length);
-      const end = performance.now();
-      time = Math.min(time, end - start);
+module("Unit | Utilities | modKeysPressed", function (hooks) {
+  setupRenderingTest(hooks);
+
+  test("returns an array of modifier keys pressed during keyboard or mouse event", async function (assert) {
+    let i = 0;
+
+    this.handleClick = (event) => {
+      if (i === 0) {
+        assert.deepEqual(modKeysPressed(event), []);
+      } else if (i === 1) {
+        assert.deepEqual(modKeysPressed(event), ["alt"]);
+      } else if (i === 2) {
+        assert.deepEqual(modKeysPressed(event), ["shift"]);
+      } else if (i === 3) {
+        assert.deepEqual(modKeysPressed(event), ["meta"]);
+      } else if (i === 4) {
+        assert.deepEqual(modKeysPressed(event), ["ctrl"]);
+      } else if (i === 5) {
+        assert.deepEqual(modKeysPressed(event), [
+          "alt",
+          "shift",
+          "meta",
+          "ctrl",
+        ]);
+      }
+    };
+
+    await render(hbs`<button id="btn" {{on "click" this.handleClick}} />`);
+
+    await click("#btn");
+    i++;
+    await click("#btn", { altKey: true });
+    i++;
+    await click("#btn", { shiftKey: true });
+    i++;
+    await click("#btn", { metaKey: true });
+    i++;
+    await click("#btn", { ctrlKey: true });
+    i++;
+    await click("#btn", {
+      altKey: true,
+      shiftKey: true,
+      metaKey: true,
+      ctrlKey: true,
+    });
+  });
+});
+
+module("Unit | Utilities | clipboard", function (hooks) {
+  setupTest(hooks);
+
+  hooks.beforeEach(function () {
+    this.mockClipboard = {
+      writeText: sinon.stub().resolves(true),
+      write: sinon.stub().resolves(true),
+    };
+    sinon.stub(window.navigator, "clipboard").get(() => this.mockClipboard);
+  });
+
+  async function asyncFunction() {
+    return new Blob(["some text to copy"], {
+      type: "text/plain",
+    });
+  }
+
+  test("clipboardCopyAsync - browser does not support window.ClipboardItem", async function (assert) {
+    // without this check the stubbing will fail on Firefox
+    if (window.ClipboardItem) {
+      sinon.stub(window, "ClipboardItem").value(null);
     }
 
-    // This runs in 'keyUp' event handler so it should run as fast as
-    // possible. It should take less than 1ms for the test text.
-    assert.ok(time < 10);
+    await clipboardCopyAsync(asyncFunction);
+    assert.strictEqual(
+      this.mockClipboard.writeText.calledWith("some text to copy"),
+      true,
+      "it writes to the clipboard using writeText instead of write"
+    );
   });
+
+  chromeTest(
+    "clipboardCopyAsync - browser does support window.ClipboardItem",
+    async function (assert) {
+      await clipboardCopyAsync(asyncFunction);
+      assert.strictEqual(
+        this.mockClipboard.write.called,
+        true,
+        "it writes to the clipboard using write"
+      );
+    }
+  );
 });

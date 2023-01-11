@@ -22,3 +22,6 @@ sk:
           title: "Príspevok"
         suggested_topics:
           title: "Odporúčané témy"
+        rich_tooltip:
+          description: "Popis"
+          header: "Hlavička"

@@ -1,7 +1,7 @@
 {{#if @count}}
-  {{#link-to "full-page-search" (query-params q=this.searchParams)}}
+  <LinkTo @route="full-page-search" @query={{hash q=this.searchParams}}>
     {{@count}}
-  {{/link-to}}
+  </LinkTo>
 {{else}}
   &ndash;
 {{/if}}

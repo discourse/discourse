@@ -1,4 +1,4 @@
-{{#load-more selector=".email-list tr" action=(action "loadMore")}}
+<LoadMore @selector=".email-list tr" @action={{action "loadMore"}}>
   <table class="table email-list">
     <thead>
       <tr>
@@ -6,32 +6,46 @@
         <th>{{i18n "admin.email.incoming_emails.from_address"}}</th>
         <th>{{i18n "admin.email.incoming_emails.to_addresses"}}</th>
         <th>{{i18n "admin.email.incoming_emails.subject"}}</th>
-        <th>{{i18n "admin.email.incoming_emails.error"}}</th>
+        <th colspan="2">{{i18n "admin.email.incoming_emails.error"}}</th>
       </tr>
     </thead>
 
     <tbody>
       <tr class="filters">
         <td>{{i18n "admin.email.logs.filters.title"}}</td>
-        <td>{{text-field value=filter.from placeholderKey="admin.email.incoming_emails.filters.from_placeholder"}}</td>
-        <td>{{text-field value=filter.to placeholderKey="admin.email.incoming_emails.filters.to_placeholder"}}</td>
-        <td>{{text-field value=filter.subject placeholderKey="admin.email.incoming_emails.filters.subject_placeholder"}}</td>
-        <td>{{text-field value=filter.error placeholderKey="admin.email.incoming_emails.filters.error_placeholder"}}</td>
+        <td><TextField
+            @value={{this.filter.from}}
+            @placeholderKey="admin.email.incoming_emails.filters.from_placeholder"
+          /></td>
+        <td><TextField
+            @value={{this.filter.to}}
+            @placeholderKey="admin.email.incoming_emails.filters.to_placeholder"
+          /></td>
+        <td><TextField
+            @value={{this.filter.subject}}
+            @placeholderKey="admin.email.incoming_emails.filters.subject_placeholder"
+          /></td>
+        <td colspan="2"><TextField
+            @value={{this.filter.error}}
+            @placeholderKey="admin.email.incoming_emails.filters.error_placeholder"
+          /></td>
       </tr>
 
-      {{#each model as |email|}}
+      {{#each this.model as |email|}}
         <tr>
           <td class="time">{{format-date email.created_at}}</td>
           <td class="username">
             <div>
               {{#if email.user}}
-                {{#link-to "adminUser" email.user}}
+                <LinkTo @route="adminUser" @model={{email.user}}>
                   {{avatar email.user imageSize="tiny"}}
                   {{email.from_address}}
-                {{/link-to}}
+                </LinkTo>
               {{else}}
                 {{#if email.from_address}}
-                  <a href="mailto:{{email.from_address}}">{{email.from_address}}</a>
+                  <a
+                    href="mailto:{{email.from_address}}"
+                  >{{email.from_address}}</a>
                 {{else}}
                   &mdash;
                 {{/if}}
@@ -48,14 +62,28 @@
           </td>
           <td>{{email.subject}}</td>
           <td class="error">
-            <a href {{action "showIncomingEmail" email.id}}>{{email.error}}</a>
+            <a
+              href
+              {{on "click" (fn this.handleShowIncomingEmail email.id)}}
+            >{{email.error}}</a>
+          </td>
+          <td class="email-details">
+            <a
+              href
+              {{on "click" (fn this.handleShowIncomingEmail email.id)}}
+              title={{i18n "admin.email.details_title"}}
+            >
+              {{d-icon "info-circle"}}
+            </a>
           </td>
         </tr>
       {{else}}
-        <tr><td colspan="5">{{i18n "admin.email.incoming_emails.none"}}</td></tr>
+        <tr><td colspan="6">{{i18n
+              "admin.email.incoming_emails.none"
+            }}</td></tr>
       {{/each}}
     </tbody>
   </table>
-{{/load-more}}
+</LoadMore>
 
-{{conditional-loading-spinner condition=loading}}
+<ConditionalLoadingSpinner @condition={{this.loading}} />

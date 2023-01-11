@@ -6,11 +6,8 @@ import { test } from "qunit";
 acceptance(
   "Composer disabled, uncategorized not allowed when any topic_template present",
   function (needs) {
-    needs.user();
-    needs.settings({
-      enable_whispers: true,
-      allow_uncategorized_topics: false,
-    });
+    needs.user({ whisperer: true });
+    needs.settings({ allow_uncategorized_topics: false });
 
     test("Disable body until category is selected", async function (assert) {
       await visit("/");
@@ -72,18 +69,21 @@ acceptance(
           id: 1,
           name: "test won",
           slug: "test-won",
+          permission: 1,
           topic_template: null,
         },
         {
           id: 2,
           name: "test too",
           slug: "test-too",
+          permission: 1,
           topic_template: "",
         },
         {
           id: 3,
           name: "test free",
           slug: "test-free",
+          permission: 1,
           topic_template: null,
         },
       ],

@@ -16,8 +16,8 @@ export default TextField.extend({
   @on("init")
   deprecateComponent() {
     deprecated(
-      "`{{user-selector}}` is deprecated. Please use `{{email-group-user-chooser}}` instead.",
-      { since: "2.7", dropFrom: "2.8" }
+      "The `<UserSelector>` component is deprecated. Please use `<EmailGroupUserChooser>` instead.",
+      { since: "2.7", dropFrom: "2.8", id: "discourse.user-selector-component" }
     );
   },
 
@@ -121,14 +121,14 @@ export default TextField.extend({
             return v.username || v.name;
           } else {
             const excludes = allExcludedUsernames();
-            return v.usernames.filter((item) => excludes.indexOf(item) === -1);
+            return v.usernames.filter((item) => !excludes.includes(item));
           }
         },
 
         onChangeItems(items) {
           let hasGroups = false;
           items = items.map((i) => {
-            if (groups.indexOf(i) > -1) {
+            if (groups.includes(i)) {
               hasGroups = true;
             }
             return i.username ? i.username : i;

@@ -1,75 +1,86 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe Admin::SearchLogsController do
   fab!(:admin) { Fabricate(:admin) }
+  fab!(:moderator) { Fabricate(:moderator) }
   fab!(:user) { Fabricate(:user) }
 
-  before do
-    SearchLog.log(term: 'ruby', search_type: :header, ip_address: '127.0.0.1')
+  before { SearchLog.log(term: "ruby", search_type: :header, ip_address: "127.0.0.1") }
+
+  after { SearchLog.clear_debounce_cache! }
+
+  describe "#index" do
+    shared_examples "search logs accessible" do
+      it "returns search logs" do
+        get "/admin/logs/search_logs.json"
+
+        expect(response.status).to eq(200)
+
+        json = response.parsed_body
+        expect(json[0]["term"]).to eq("ruby")
+        expect(json[0]["searches"]).to eq(1)
+        expect(json[0]["ctr"]).to eq(0)
+      end
+    end
+
+    context "when logged in as an admin" do
+      before { sign_in(admin) }
+
+      include_examples "search logs accessible"
+    end
+
+    context "when logged in as a moderator" do
+      before { sign_in(moderator) }
+
+      include_examples "search logs accessible"
+    end
+
+    context "when logged in as a non-staff user" do
+      before { sign_in(user) }
+
+      it "denies access with a 404 response" do
+        get "/admin/logs/search_logs.json"
+
+        expect(response.status).to eq(404)
+        expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
+      end
+    end
   end
 
-  after do
-    SearchLog.clear_debounce_cache!
-  end
+  describe "#term" do
+    shared_examples "search log term accessible" do
+      it "returns search log term" do
+        get "/admin/logs/search_logs/term.json", params: { term: "ruby" }
 
-  context "#index" do
-    it "raises an error if you aren't logged in" do
-      get '/admin/logs/search_logs.json'
-      expect(response.status).to eq(404)
+        expect(response.status).to eq(200)
+
+        json = response.parsed_body
+        expect(json["term"]["type"]).to eq("search_log_term")
+        expect(json["term"]["search_result"]).to be_present
+      end
     end
 
-    it "raises an error if you aren't an admin" do
-      sign_in(user)
-      get '/admin/logs/search_logs.json'
-      expect(response.status).to eq(404)
+    context "when logged in as an admin" do
+      before { sign_in(admin) }
+
+      include_examples "search log term accessible"
     end
 
-    it "should work if you are an admin" do
-      sign_in(admin)
-      get '/admin/logs/search_logs.json'
+    context "when logged in as a moderator" do
+      before { sign_in(moderator) }
 
-      expect(response.status).to eq(200)
-
-      json = response.parsed_body
-      expect(json[0]['term']).to eq('ruby')
-      expect(json[0]['searches']).to eq(1)
-      expect(json[0]['ctr']).to eq(0)
-    end
-  end
-
-  context "#term" do
-    it "raises an error if you aren't logged in" do
-      get '/admin/logs/search_logs/term.json', params: {
-        term: "ruby"
-      }
-
-      expect(response.status).to eq(404)
+      include_examples "search log term accessible"
     end
 
-    it "raises an error if you aren't an admin" do
-      sign_in(user)
+    context "when logged in as a non-staff user" do
+      before { sign_in(user) }
 
-      get '/admin/logs/search_logs/term.json', params: {
-        term: "ruby"
-      }
+      it "denies access with a 404 response" do
+        get "/admin/logs/search_logs/term.json", params: { term: "ruby" }
 
-      expect(response.status).to eq(404)
-    end
-
-    it "should work if you are an admin" do
-      sign_in(admin)
-
-      get '/admin/logs/search_logs/term.json', params: {
-        term: "ruby"
-      }
-
-      expect(response.status).to eq(200)
-
-      json = response.parsed_body
-      expect(json['term']['type']).to eq('search_log_term')
-      expect(json['term']['search_result']).to be_present
+        expect(response.status).to eq(404)
+        expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
+      end
     end
   end
 end

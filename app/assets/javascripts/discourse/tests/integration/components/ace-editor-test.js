@@ -1,62 +1,37 @@
-import componentTest, {
-  setupRenderingTest,
-} from "discourse/tests/helpers/component-test";
-import {
-  discourseModule,
-  exists,
-  queryAll,
-} from "discourse/tests/helpers/qunit-helpers";
-import hbs from "htmlbars-inline-precompile";
+import { module, test } from "qunit";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { render } from "@ember/test-helpers";
+import { count, exists } from "discourse/tests/helpers/qunit-helpers";
+import { hbs } from "ember-cli-htmlbars";
 
-discourseModule("Integration | Component | ace-editor", function (hooks) {
+module("Integration | Component | ace-editor", function (hooks) {
   setupRenderingTest(hooks);
 
-  componentTest("css editor", {
-    skip: true,
-    template: hbs`{{ace-editor mode="css"}}`,
-    test(assert) {
-      assert.expect(1);
-      assert.ok(exists(".ace_editor"), "it renders the ace editor");
-    },
+  test("css editor", async function (assert) {
+    await render(hbs`<AceEditor @mode="css" />`);
+    assert.ok(exists(".ace_editor"), "it renders the ace editor");
   });
 
-  componentTest("html editor", {
-    skip: true,
-    template: hbs`{{ace-editor mode="html" content="<b>wat</b>"}}`,
-    test(assert) {
-      assert.expect(1);
-      assert.ok(exists(".ace_editor"), "it renders the ace editor");
-    },
+  test("html editor", async function (assert) {
+    await render(hbs`<AceEditor @mode="html" @content="<b>wat</b>" />`);
+    assert.ok(exists(".ace_editor"), "it renders the ace editor");
   });
 
-  componentTest("sql editor", {
-    skip: true,
-    template: hbs`{{ace-editor mode="sql" content="SELECT * FROM users"}}`,
-    test(assert) {
-      assert.expect(1);
-      assert.ok(exists(".ace_editor"), "it renders the ace editor");
-    },
+  test("sql editor", async function (assert) {
+    await render(hbs`<AceEditor @mode="sql" @content="SELECT * FROM users" />`);
+    assert.ok(exists(".ace_editor"), "it renders the ace editor");
   });
 
-  componentTest("disabled editor", {
-    skip: true,
-    template: hbs`
-      {{ace-editor mode="sql" content="SELECT * FROM users" disabled=true}}
-    `,
-    test(assert) {
-      const $ace = queryAll(".ace_editor");
-      assert.expect(3);
-      assert.ok($ace.length, "it renders the ace editor");
-      assert.strictEqual(
-        $ace.parent().data().editor.getReadOnly(),
-        true,
-        "it sets ACE to read-only mode"
-      );
-      assert.strictEqual(
-        $ace.parent().attr("data-disabled"),
-        "true",
-        "ACE wrapper has `data-disabled` attribute set to true"
-      );
-    },
+  test("disabled editor", async function (assert) {
+    await render(hbs`
+      <AceEditor @mode="sql" @content="SELECT * FROM users" @disabled=true />
+    `);
+
+    assert.ok(exists(".ace_editor"), "it renders the ace editor");
+    assert.strictEqual(
+      count(".ace-wrapper[data-disabled]"),
+      1,
+      "it has a data-disabled attr"
+    );
   });
 });

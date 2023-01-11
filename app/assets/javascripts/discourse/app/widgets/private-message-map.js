@@ -1,6 +1,5 @@
 import { avatarFor, avatarImg } from "discourse/widgets/post";
 import I18n from "I18n";
-import bootbox from "bootbox";
 import { createWidget } from "discourse/widgets/widget";
 import getURL from "discourse-common/lib/get-url";
 import { h } from "virtual-dom";
@@ -10,18 +9,16 @@ import { makeArray } from "discourse-common/lib/helpers";
 createWidget("pm-remove-group-link", {
   tagName: "a.remove-invited.no-text.btn-icon.btn",
   template: hbs`{{d-icon "times"}}`,
+  services: ["dialog"],
 
   click() {
-    bootbox.confirm(
-      I18n.t("private_message_info.remove_allowed_group", {
+    this.dialog.deleteConfirm({
+      message: I18n.t("private_message_info.remove_allowed_group", {
         name: this.attrs.name,
       }),
-      (confirmed) => {
-        if (confirmed) {
-          this.sendWidgetAction("removeAllowedGroup", this.attrs);
-        }
-      }
-    );
+      confirmButtonLabel: "private_message_info.remove_group",
+      didConfirm: () => this.sendWidgetAction("removeAllowedGroup", this.attrs),
+    });
   },
 });
 
@@ -48,22 +45,23 @@ createWidget("pm-map-user-group", {
 createWidget("pm-remove-link", {
   tagName: "a.remove-invited.no-text.btn-icon.btn",
   template: hbs`{{d-icon "times"}}`,
+  services: ["dialog"],
 
   click() {
     const messageKey = this.attrs.isCurrentUser
       ? "leave_message"
       : "remove_allowed_user";
 
-    bootbox.confirm(
-      I18n.t(`private_message_info.${messageKey}`, {
+    this.dialog.deleteConfirm({
+      message: I18n.t(`private_message_info.${messageKey}`, {
         name: this.attrs.user.username,
       }),
-      (confirmed) => {
-        if (confirmed) {
-          this.sendWidgetAction("removeAllowedUser", this.attrs.user);
-        }
-      }
-    );
+      confirmButtonLabel: this.attrs.isCurrentUser
+        ? "private_message_info.leave"
+        : "private_message_info.remove_user",
+      didConfirm: () =>
+        this.sendWidgetAction("removeAllowedUser", this.attrs.user),
+    });
   },
 });
 

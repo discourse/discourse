@@ -21,6 +21,7 @@ module("Unit | Utility | allowLister", function () {
       "custom.foo",
       "custom.baz",
       "custom[data-*]",
+      "custom[data-custom-*=foo]",
       "custom[rel=nofollow]",
     ]);
 
@@ -38,11 +39,12 @@ module("Unit | Utility | allowLister", function () {
           custom: {
             class: ["foo", "baz"],
             "data-*": ["*"],
+            "data-custom-*": ["foo"],
             rel: ["nofollow", "test"],
           },
         },
       },
-      "Expecting a correct white list"
+      "Expecting a correct allow list"
     );
 
     allowLister.disable("test");
@@ -53,7 +55,7 @@ module("Unit | Utility | allowLister", function () {
         tagList: {},
         attrList: {},
       },
-      "Expecting an empty white list"
+      "Expecting an empty allow list"
     );
   });
 });

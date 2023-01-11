@@ -49,10 +49,19 @@ cs:
   disable_remote_images_download_reason: "Stahování obrázků z cizích serverů bylo vypnuto protože na disku není dostatek místa."
   anonymous: "Anonymní"
   remove_posts_deleted_by_author: "Smazáno autorem"
+  redirect_warning: "Nepodařilo se nám ověřit, že vámi vybraný odkaz byl skutečně zveřejněn na fóru. Pokud přesto chcete pokračovat, vyberte odkaz níže."
+  on_another_topic: "V jiném tématu"
   inline_oneboxer:
+    topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} od %{username}"
   themes:
+    bad_color_scheme: "Motiv nelze aktualizovat, neplatná paleta barev"
     other_error: "Něco se pokazilo při aktualizaci skinu (theme)"
+    ember_selector_error: "Omlouváme se – použití selektorů CSS #ember nebo .ember-view není povoleno, protože tyto názvy jsou dynamicky generovány za běhu a časem se budou měnit, což nakonec povede k nefunkčnímu CSS. Zkuste jiný selektor."
+    import_error:
+      generic: Při importu tohoto motivu došlo k chybě
+      upload: "Chyba při vytváření položky pro upload: %{name}. %{errors}"
+      about_json: "Chyba importu: about.json neexistuje nebo je neplatný. Jste si jisti, že se jedná o Discourse motiv?"
   emails:
     incoming:
       default_subject: "Toto téma potřebuje nadpis"
@@ -130,7 +139,6 @@ cs:
       default_categories_already_selected: "Nemůžete vybrat kategorii používanou v jiném seznamu."
       s3_upload_bucket_is_required: "Nemůžete nahrávat na S3 dokud nezadáte 's3_upload_bucket'."
   invite:
-    user_exists: "Netřeba posílat pozvánku na <b>%{email}</b>. Tento email <a href='%{base_path}/u/%{username}/summary'>je veden u tohoto účtu!</a>"
     disabled_errors:
       invalid_access: "Nemáte oprávnění na zobrazení požadovaného zdroje."
   bulk_invite:
@@ -348,14 +356,12 @@ cs:
               too_many: "Příliš mnoho slov pro tuto akci"
       <<: *errors
   uncategorized_category_name: "Nezařazené"
-  vip_category_name: "VIP"
-  vip_category_description: "Kategorie je přístupná výhradně členům s důvěryhodností 3 a vyšší."
+  general_category_name: "Základní"
   meta_category_name: "Poznámky k webu"
   meta_category_description: "Diskutuje tento web, jeho organizaci, jak funguje a jak ho vylepšit."
   staff_category_name: "Redakce"
   staff_category_description: "Privátní kategorie pro diskuze redakce. Témata jsou viditelná pouze pro moderátory a správce."
   discourse_welcome_topic:
-    title: "Vítejte v Discourse"
     body: |2
 
       První odstavec tohoto připnutého tématu se zobrazí na domovské stránce jako uvítací zpráva pro všechny nové návštěvníky. Je to důležité!
@@ -370,8 +376,6 @@ cs:
       <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
       Možná budete chtít toto téma v administraci (vpravo nahoře a dole) zavřít, aby se nehromadily odpovědi na oznámeních.
-  lounge_welcome:
-    title: "Vítejte ve VIP"
   category:
     topic_prefix: "O kategorii %{category}"
     post_template: "%{replace_paragraph}\n\nPoužijte následující odstavce pro delší popis, nebo pro vytvoření pokynů ke kategorii nebo pravidel:\n\n- Proč by lidé měli používat tuto kategorii? K čemu slouží?\n\n- Jak přesně je tato kategorie odlišná od ostatních, které již máme?\n\n- Co by měly témata v této kategorii obvykle obsahovat?\n\n- Potřebujeme tuto kategorii? Můžeme ji sloučit s jinou kategorií nebo subkategorií?\n"
@@ -522,10 +526,6 @@ cs:
         many: "téměř před %{count} roky"
         other: "téměř před %{count} roky"
   password_reset:
-    choose_new: "Vyberte si nové heslo"
-    choose: "Vybrat heslo"
-    update: "změnit heslo"
-    save: "Nastavit heslo"
     title: "Resetovat heslo"
     success: "Heslo bylo úspěšně změněno a nyní jste přihlášeni."
     success_unapproved: "Heslo bylo úšpěšně změněno."
@@ -647,6 +647,11 @@ cs:
         post: Příspěvek
         editor: Editor
         edit_reason: Reason
+    consolidated_api_requests:
+      xaxis:
+        api: "API"
+        user_api: "Uživatelské API"
+      yaxis: "Den"
     dau_by_mau:
       xaxis: "Den"
     daily_engaged_users:
@@ -834,7 +839,6 @@ cs:
     unique_posts_mins: "Kolik minut musí uplynout, než může uživatel zaslat příspěvek se stejným obsahem"
     manifest_screenshots: "Snímky obrazovky, které na stránce s výzvou k instalaci předvádějí funkce vaší instance a funkce. Všechny obrázky by měly být lokálně nahrávány a mít stejné rozměry."
     email_custom_headers: "Seznam vlastních hlaviček emailů, oddělený svislítkem"
-    enable_long_polling: "'Message bus' smí používat dlouhé výzvy"
     anon_polling_interval: "Jak často se mají zasílat výzvy anonymním uživatelům v milisekundách"
     post_menu: "Určuje, které položky se zobrazí v menu u příspěvku a v jakém pořadí. Příklad: like|edit|flag|delete|share|bookmark|reply"
     send_welcome_message: "Poslat všem novým uživatelům uvítací zprávu s rychlým návodem jak začít."
@@ -994,6 +998,7 @@ cs:
     signup_after_approval:
       subject_template: "Byli jste schváleni na %{site_name}!"
   page_not_found:
+    page_title: "Stránka nenalezena"
     popular_topics: "Populární"
     recent_topics: "Nedávné"
     see_more: "Více"
@@ -1113,27 +1118,10 @@ cs:
       title: "Znovu odeslat aktivační email"
   wizard:
     step:
-      locale:
-        title: "Vítejte ve vašem Discourse!"
-      forum_title:
-        title: "Jméno"
       privacy:
-        title: "Přístup"
         fields:
-          privacy:
-            choices:
-              open:
-                label: "Veřejné"
-              restricted:
-                label: "Soukromé"
-      contact:
-        fields:
-          contact_email:
-            placeholder: "jmeno@priklad.cz"
-          contact_url:
-            placeholder: "https://www.example.com/contact-us"
-      corporate:
-        title: "Organizace"
+          login_required:
+            placeholder: "Soukromé"
       styling:
         fields:
           styling_preview:
@@ -1150,16 +1138,10 @@ cs:
                 label: "Kategorie a nejnovější témata"
               categories_and_top_topics:
                 label: "Kategorie a populární témata"
-      logos:
-        title: "Loga"
+      corporate:
         fields:
-          logo:
-            label: "Primární loga"
-      icons:
-        title: "Ikony"
-        fields:
-          large_icon:
-            label: "Velká ikona"
+          contact_url:
+            placeholder: "https://www.example.com/contact-us"
       invites:
         title: "Pozvi redakci"
       finished:

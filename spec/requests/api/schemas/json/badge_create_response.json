@@ -3,7 +3,7 @@
   "properties": {
     "badge_types": {
       "type": "array",
-      "items": [
+      "items":
         {
           "type": "object",
           "additionalProperties": false,
@@ -24,7 +24,6 @@
             "sort_order"
           ]
         }
-      ]
     },
     "badge": {
       "type": "object",

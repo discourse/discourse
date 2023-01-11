@@ -4,31 +4,32 @@
 #
 # by default 1 new topic every 30 sec, 1 reply to last topic every 30 secs
 
-require 'optparse'
-require 'gabbler'
+require "optparse"
+require "gabbler"
 
 user_id = nil
 
 def sentence
-  @gabbler ||= Gabbler.new.tap do |gabbler|
-    story = File.read(File.dirname(__FILE__) + "/alice.txt")
-    gabbler.learn(story)
-  end
+  @gabbler ||=
+    Gabbler.new.tap do |gabbler|
+      story = File.read(File.dirname(__FILE__) + "/alice.txt")
+      gabbler.learn(story)
+    end
 
   sentence = +""
-  until sentence.length > 800 do
+  until sentence.length > 800
     sentence << @gabbler.sentence
     sentence << "\n"
   end
   sentence
 end
 
-OptionParser.new do |opts|
-  opts.banner = "Usage: ruby user_simulator.rb [options]"
-  opts.on("-u", "--user NUMBER", "user id") do |u|
-    user_id = u.to_i
+OptionParser
+  .new do |opts|
+    opts.banner = "Usage: ruby user_simulator.rb [options]"
+    opts.on("-u", "--user NUMBER", "user id") { |u| user_id = u.to_i }
   end
-end.parse!
+  .parse!
 
 unless user_id
   puts "user must be specified"
@@ -37,19 +38,19 @@ end
 
 require File.expand_path(File.dirname(__FILE__) + "/../config/environment")
 
-unless ["profile", "development"].include? Rails.env
+unless %w[profile development].include? Rails.env
   puts "Bad idea to run a script that inserts random posts in any non development environment"
   exit
 end
 
 user = User.find(user_id)
-last_topics = Topic.order('id desc').limit(10).pluck(:id)
+last_topics = Topic.order("id desc").limit(10).pluck(:id)
 
 puts "Simulating activity for user id #{user.id}: #{user.name}"
 
 while true
   puts "Creating a random topic"
-  category = Category.where(read_restricted: false).order('random()').first
+  category = Category.where(read_restricted: false).order("random()").first
   PostCreator.create(user, raw: sentence, title: sentence[0..50].strip, category: category.id)
 
   puts "creating random reply"

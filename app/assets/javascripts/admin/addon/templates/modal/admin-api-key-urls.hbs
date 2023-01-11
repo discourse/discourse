@@ -1,11 +1,11 @@
-{{#d-modal-body title="admin.api.scopes.allowed_urls"}}
+<DModalBody @title="admin.api.scopes.allowed_urls">
   <div>
     <ul>
-      {{#each model.urls as |url|}}
+      {{#each this.model.urls as |url|}}
         <li>
           <code>{{url}}</code>
         </li>
       {{/each}}
     </ul>
   </div>
-{{/d-modal-body}}
+</DModalBody>

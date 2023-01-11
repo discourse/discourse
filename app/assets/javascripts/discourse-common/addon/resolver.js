@@ -1,11 +1,108 @@
-import { classify, dasherize } from "@ember/string";
+import { dasherize, decamelize } from "@ember/string";
 import deprecated from "discourse-common/lib/deprecated";
 import { findHelper } from "discourse-common/lib/helpers";
-import { get } from "@ember/object";
 import SuffixTrie from "discourse-common/lib/suffix-trie";
+import Resolver from "ember-resolver";
+import { buildResolver as buildLegacyResolver } from "discourse-common/lib/legacy-resolver";
+import DiscourseTemplateMap from "discourse-common/lib/discourse-template-map";
 
 let _options = {};
 let moduleSuffixTrie = null;
+
+const DEPRECATED_MODULES = new Map(
+  Object.entries({
+    "controller:discovery.categoryWithID": {
+      newName: "controller:discovery.category",
+      since: "2.6.0",
+    },
+    "controller:discovery.parentCategory": {
+      newName: "controller:discovery.category",
+      since: "2.6.0",
+    },
+    "controller:tags-show": { newName: "controller:tag-show", since: "2.6.0" },
+    "controller:tags.show": { newName: "controller:tag.show", since: "2.6.0" },
+    "controller:tagsShow": { newName: "controller:tagShow", since: "2.6.0" },
+    "route:discovery.categoryWithID": {
+      newName: "route:discovery.category",
+      since: "2.6.0",
+    },
+    "route:discovery.parentCategory": {
+      newName: "route:discovery.category",
+      since: "2.6.0",
+    },
+    "route:tags-show": { newName: "route:tag-show", since: "2.6.0" },
+    "route:tags.show": { newName: "route:tag.show", since: "2.6.0" },
+    "route:tagsShow": { newName: "route:tagShow", since: "2.6.0" },
+    "app-events:main": {
+      newName: "service:app-events",
+      since: "2.4.0",
+      dropFrom: "2.9.0.beta1",
+    },
+    // Deprecations below are silenced because they're in widespread use, and upgrading
+    // themes/plugins right now would break their compatibility with the stable branch.
+    // These should be unsilenced for the release of 2.9.0 stable.
+    "store:main": {
+      newName: "service:store",
+      since: "2.8.0.beta8",
+      dropFrom: "2.9.0.beta1",
+      silent: true,
+    },
+    "search-service:main": {
+      newName: "service:search",
+      since: "2.8.0.beta8",
+      dropFrom: "2.9.0.beta1",
+      silent: true,
+    },
+    "key-value-store:main": {
+      newName: "service:key-value-store",
+      since: "2.9.0.beta7",
+      dropFrom: "3.0.0",
+      silent: true,
+    },
+    "pm-topic-tracking-state:main": {
+      newName: "service:pm-topic-tracking-state",
+      since: "2.9.0.beta7",
+      dropFrom: "3.0.0",
+      silent: true,
+    },
+    "message-bus:main": {
+      newName: "service:message-bus",
+      since: "2.9.0.beta7",
+      dropFrom: "3.0.0",
+      silent: true,
+    },
+    "site-settings:main": {
+      newName: "service:site-settings",
+      since: "2.9.0.beta7",
+      dropFrom: "3.0.0",
+      silent: true,
+    },
+    "current-user:main": {
+      newName: "service:current-user",
+      since: "2.9.0.beta7",
+      dropFrom: "3.0.0",
+      silent: true,
+    },
+    "session:main": {
+      newName: "service:session",
+      since: "2.9.0.beta7",
+      dropFrom: "3.0.0",
+      silent: true,
+    },
+    "site:main": {
+      newName: "service:site",
+      since: "2.9.0.beta7",
+      dropFrom: "3.0.0",
+      silent: true,
+    },
+    "topic-tracking-state:main": {
+      newName: "service:topic-tracking-state",
+      since: "2.9.0.beta7",
+      dropFrom: "3.0.0",
+      silent: true,
+    },
+  })
+);
 
 export function setResolverOption(name, value) {
   _options[name] = value;
@@ -19,28 +116,22 @@ export function clearResolverOptions() {
   _options = {};
 }
 
-function parseName(fullName) {
-  const nameParts = fullName.split(":");
-  const type = nameParts[0];
-  let fullNameWithoutType = nameParts[1];
-  const namespace = get(this, "namespace");
-  const root = namespace;
-
-  return {
-    fullName,
-    type,
-    fullNameWithoutType,
-    name: fullNameWithoutType,
-    root,
-    resolveMethodName: "resolve" + classify(type),
-  };
-}
-
 function lookupModuleBySuffix(suffix) {
   if (!moduleSuffixTrie) {
     moduleSuffixTrie = new SuffixTrie("/");
+    const searchPaths = [
+      "discourse/", // Includes themes/plugins
+      "discourse-common/",
+      "select-kit/",
+      "admin/",
+      "wizard/",
+      "truth-helpers/",
+    ];
     Object.keys(requirejs.entries).forEach((name) => {
-      if (!name.includes("/templates/")) {
+      if (
+        searchPaths.some((s) => name.startsWith(s)) &&
+        !name.includes("/templates/")
+      ) {
         moduleSuffixTrie.add(name);
       }
     });
@@ -49,251 +140,282 @@ function lookupModuleBySuffix(suffix) {
 }
 
 export function buildResolver(baseName) {
-  return Ember.DefaultResolver.extend({
-    parseName,
+  let LegacyResolver = buildLegacyResolver(baseName);
 
-    resolveRouter(parsedName) {
+  return class extends Resolver {
+    LegacyResolver = LegacyResolver;
+
+    init(props) {
+      super.init(props);
+      this.legacyResolver = this.LegacyResolver.create(props);
+    }
+
+    resolveRouter(/* parsedName */) {
       const routerPath = `${baseName}/router`;
       if (requirejs.entries[routerPath]) {
         const module = requirejs(routerPath, null, null, true);
         return module.default;
       }
-      return this._super(parsedName);
-    },
+    }
 
-    normalize(fullName) {
-      if (fullName === "app-events:main") {
-        deprecated(
-          "`app-events:main` has been replaced with `service:app-events`",
-          { since: "2.4.0", dropFrom: "2.9.0.beta1" }
-        );
-        return "service:app-events";
-      }
-
-      for (const [key, value] of Object.entries({
-        "controller:discovery.categoryWithID": "controller:discovery.category",
-        "controller:discovery.parentCategory": "controller:discovery.category",
-        "controller:tags-show": "controller:tag-show",
-        "controller:tags.show": "controller:tag.show",
-        "controller:tagsShow": "controller:tagShow",
-        "route:discovery.categoryWithID": "route:discovery.category",
-        "route:discovery.parentCategory": "route:discovery.category",
-        "route:tags-show": "route:tag-show",
-        "route:tags.show": "route:tag.show",
-        "route:tagsShow": "route:tagShow",
-      })) {
-        if (fullName === key) {
-          deprecated(`${key} was replaced with ${value}`, { since: "2.6.0" });
-          return value;
+    // We overwrite this instead of `normalize` so we still get the benefits of the cache.
+    _normalize(fullName) {
+      const deprecationInfo = DEPRECATED_MODULES.get(fullName);
+      if (deprecationInfo) {
+        if (!deprecationInfo.silent) {
+          deprecated(
+            `"${fullName}" is deprecated, use "${deprecationInfo.newName}" instead`,
+            {
+              since: deprecationInfo.since,
+              dropFrom: deprecationInfo.dropFrom,
+              id: "discourse.resolver-resolutions",
+            }
+          );
         }
+        fullName = deprecationInfo.newName;
       }
 
       const split = fullName.split(":");
-      if (split.length > 1) {
-        const appBase = `${baseName}/${split[0]}s/`;
-        const adminBase = "admin/" + split[0] + "s/";
+      const type = split[0];
 
-        // Allow render 'admin/templates/xyz' too
-        split[1] = split[1].replace(".templates", "").replace("/templates", "");
+      let normalized;
+      if (type === "template" && split[1]?.includes("connectors/")) {
+        // The default normalize implementation will skip dasherizing component template names
+        // We need the same for our connector templates names
+        normalized = "template:" + split[1].replace(/_/g, "-");
+      } else {
+        normalized = super._normalize(fullName);
+      }
 
-        // Try slashes
-        let dashed = dasherize(split[1].replace(/\./g, "/"));
-        if (
-          requirejs.entries[appBase + dashed] ||
-          requirejs.entries[adminBase + dashed]
-        ) {
-          return split[0] + ":" + dashed;
+      // This is code that we don't really want to keep long term. The main situation where we need it is for
+      // doing stuff like `controllerFor('adminWatchedWordsAction')` where the real route name
+      // is actually `adminWatchedWords.action`. The default behavior for the former is to
+      // normalize to `adminWatchedWordsAction` where the latter becomes `adminWatchedWords.action`.
+      // While these end up looking up the same file ultimately, they are treated as different
+      // items and so we can end up with two distinct version of the controller!
+      if (
+        split.length > 1 &&
+        (type === "controller" || type === "route" || type === "template")
+      ) {
+        let corrected;
+        // This should only apply when there's a dot or slash in the name
+        if (split[1].includes(".") || split[1].includes("/")) {
+          // Check to see if the dasherized version exists. If it does we want to
+          // normalize to that eagerly so the normalized versions of the dotted/slashed and
+          // dotless/slashless match.
+          const dashed = dasherize(split[1].replace(/[\.\/]/g, "-"));
+
+          const adminBase = `admin/${type}s/`;
+          const wizardBase = `wizard/${type}s/`;
+          if (
+            lookupModuleBySuffix(`${type}s/${dashed}`) ||
+            requirejs.entries[adminBase + dashed] ||
+            requirejs.entries[adminBase + dashed.replace(/^admin[-]/, "")] ||
+            requirejs.entries[
+              adminBase + dashed.replace(/^admin[-]/, "").replace(/-/g, "_")
+            ] ||
+            requirejs.entries[wizardBase + dashed] ||
+            requirejs.entries[wizardBase + dashed.replace(/^wizard[-]/, "")] ||
+            requirejs.entries[
+              wizardBase + dashed.replace(/^wizard[-]/, "").replace(/-/g, "_")
+            ]
+          ) {
+            corrected = type + ":" + dashed;
+          }
         }
 
-        // Try with dashes instead of slashes
-        dashed = dasherize(split[1].replace(/\./g, "-"));
-        if (
-          requirejs.entries[appBase + dashed] ||
-          requirejs.entries[adminBase + dashed]
-        ) {
-          return split[0] + ":" + dashed;
+        if (corrected && corrected !== normalized) {
+          normalized = corrected;
         }
       }
-      return this._super(fullName);
-    },
 
-    customResolve(parsedName) {
-      // If we end with the name we want, use it. This allows us to define components within plugins.
-      const suffix = parsedName.type + "s/" + parsedName.fullNameWithoutType,
-        dashed = dasherize(suffix),
-        moduleName = lookupModuleBySuffix(dashed);
+      return normalized;
+    }
 
-      let module;
-      if (moduleName) {
-        module = requirejs(moduleName, null, null, true /* force sync */);
-        if (module && module["default"]) {
-          module = module["default"];
+    chooseModuleName(moduleName, parsedName) {
+      let resolved = super.chooseModuleName(moduleName, parsedName);
+      if (resolved) {
+        return resolved;
+      }
+
+      const standard = parsedName.fullNameWithoutType;
+
+      let variants = [standard];
+
+      if (standard.includes("/")) {
+        variants.push(parsedName.fullNameWithoutType.replace(/\//g, "-"));
+      }
+
+      for (let name of variants) {
+        // If we end with the name we want, use it. This allows us to define components within plugins.
+        const suffix = parsedName.type + "s/" + name;
+        resolved = lookupModuleBySuffix(dasherize(suffix));
+        if (resolved) {
+          return resolved;
         }
       }
-      return module;
-    },
+    }
 
-    resolveWidget(parsedName) {
-      return this.customResolve(parsedName) || this._super(parsedName);
-    },
-
-    resolveAdapter(parsedName) {
-      return this.customResolve(parsedName) || this._super(parsedName);
-    },
-
-    resolveModel(parsedName) {
-      return this.customResolve(parsedName) || this._super(parsedName);
-    },
-
-    resolveView(parsedName) {
-      return this.customResolve(parsedName) || this._super(parsedName);
-    },
+    resolveOther(parsedName) {
+      let resolved = super.resolveOther(parsedName);
+      if (!resolved) {
+        let legacyParsedName = this.legacyResolver.parseName(
+          `${parsedName.type}:${parsedName.fullName}`
+        );
+        resolved = this.legacyResolver.resolveOther(legacyParsedName);
+        if (resolved) {
+          deprecated(
+            `Unable to resolve with new resolver, but resolved with legacy resolver: ${parsedName.fullName}`,
+            { id: "discourse.legacy-resolver-fallback" }
+          );
+        }
+      }
+      return resolved;
+    }
 
     resolveHelper(parsedName) {
-      return (
-        findHelper(parsedName.fullNameWithoutType) ||
-        this.customResolve(parsedName) ||
-        this._super(parsedName)
-      );
-    },
+      return findHelper(parsedName.fullNameWithoutType);
+    }
 
-    resolveController(parsedName) {
-      return this.customResolve(parsedName) || this._super(parsedName);
-    },
-
-    resolveComponent(parsedName) {
-      return this.customResolve(parsedName) || this._super(parsedName);
-    },
-
-    resolveService(parsedName) {
-      return this.customResolve(parsedName) || this._super(parsedName);
-    },
-
-    resolveRawView(parsedName) {
-      return this.customResolve(parsedName) || this._super(parsedName);
-    },
-
+    // If no match is found here, the resolver falls back to `resolveOther`.
     resolveRoute(parsedName) {
       if (parsedName.fullNameWithoutType === "basic") {
         return requirejs("discourse/routes/discourse", null, null, true)
           .default;
       }
-
-      return this.customResolve(parsedName) || this._super(parsedName);
-    },
-
-    findLoadingTemplate(parsedName) {
-      if (parsedName.fullNameWithoutType.match(/loading$/)) {
-        return Ember.TEMPLATES.loading;
-      }
-    },
-
-    findConnectorTemplate(parsedName) {
-      const full = parsedName.fullNameWithoutType.replace("components/", "");
-      if (full.indexOf("connectors") === 0) {
-        return Ember.TEMPLATES[`javascripts/${full}`];
-      }
-    },
+    }
 
     resolveTemplate(parsedName) {
       return (
-        this.findPluginMobileTemplate(parsedName) ||
-        this.findPluginTemplate(parsedName) ||
         this.findMobileTemplate(parsedName) ||
         this.findTemplate(parsedName) ||
+        this.findAdminTemplate(parsedName) ||
+        this.findWizardTemplate(parsedName) ||
         this.findLoadingTemplate(parsedName) ||
         this.findConnectorTemplate(parsedName) ||
-        Ember.TEMPLATES.not_found
+        this.discourseTemplateModule("not_found")
       );
-    },
+    }
 
-    findPluginTemplate(parsedName) {
-      const pluginParsedName = this.parseName(
-        parsedName.fullName.replace("template:", "template:javascripts/")
-      );
-      return this.findTemplate(pluginParsedName);
-    },
-
-    findPluginMobileTemplate(parsedName) {
-      if (_options.mobileView) {
-        let pluginParsedName = this.parseName(
-          parsedName.fullName.replace(
-            "template:",
-            "template:javascripts/mobile/"
-          )
-        );
-        return this.findTemplate(pluginParsedName);
+    findLoadingTemplate(parsedName) {
+      if (parsedName.fullNameWithoutType.match(/loading$/)) {
+        return this.discourseTemplateModule("loading");
       }
-    },
+    }
+
+    findConnectorTemplate(parsedName) {
+      if (parsedName.fullName.startsWith("template:connectors/")) {
+        const connectorParsedName = this.parseName(
+          parsedName.fullName
+            .replace("template:connectors/", "template:")
+            .replace("components/", "")
+        );
+        return this.findTemplate(connectorParsedName);
+      }
+    }
 
     findMobileTemplate(parsedName) {
       if (_options.mobileView) {
-        let mobileParsedName = this.parseName(
-          parsedName.fullName.replace("template:", "template:mobile/")
-        );
-        return this.findTemplate(mobileParsedName);
+        return this.findTemplate(parsedName, "mobile/");
       }
-    },
+    }
 
-    findTemplate(parsedName) {
+    /**
+     * Given a template path, this function will return a template, taking into account
+     * priority rules for theme and plugin overrides. See `lib/discourse-template-map.js`
+     */
+    discourseTemplateModule(name) {
+      const resolvedName = DiscourseTemplateMap.resolve(name);
+      if (resolvedName) {
+        return require(resolvedName).default;
+      }
+    }
+
+    findTemplate(parsedName, prefix) {
+      prefix = prefix || "";
+
       const withoutType = parsedName.fullNameWithoutType,
-        slashedType = withoutType.replace(/\./g, "/"),
-        decamelized = withoutType.decamelize(),
-        dashed = decamelized.replace(/\./g, "-").replace(/\_/g, "-"),
-        templates = Ember.TEMPLATES;
+        underscored = decamelize(withoutType).replace(/-/g, "_"),
+        segments = withoutType.split("/");
 
       return (
-        this._super(parsedName) ||
-        templates[slashedType] ||
-        templates[withoutType] ||
-        templates[withoutType.replace(/\.raw$/, "")] ||
-        templates[dashed] ||
-        templates[decamelized.replace(/\./, "/")] ||
-        templates[decamelized.replace(/\_/, "/")] ||
-        templates[`${baseName}/templates/${withoutType}`] ||
-        this.findAdminTemplate(parsedName) ||
-        this.findUnderscoredTemplate(parsedName)
+        // Convert dots and dashes to slashes
+        this.discourseTemplateModule(
+          prefix + withoutType.replace(/[\.-]/g, "/")
+        ) ||
+        // Default unmodified behavior of original resolveTemplate.
+        this.discourseTemplateModule(prefix + withoutType) ||
+        // Underscored without namespace
+        this.discourseTemplateModule(prefix + underscored) ||
+        // Underscored with first segment as directory
+        this.discourseTemplateModule(prefix + underscored.replace("_", "/")) ||
+        // Underscore only the last segment
+        this.discourseTemplateModule(
+          `${prefix}${segments.slice(0, -1).join("/")}/${segments[
+            segments.length - 1
+          ].replace(/-/g, "_")}`
+        ) ||
+        // All dasherized
+        this.discourseTemplateModule(prefix + withoutType.replace(/\//g, "-"))
       );
-    },
-
-    findUnderscoredTemplate(parsedName) {
-      let decamelized = parsedName.fullNameWithoutType.decamelize();
-      let underscored = decamelized.replace(/\-/g, "_");
-      return Ember.TEMPLATES[underscored];
-    },
+    }
 
     // Try to find a template within a special admin namespace, e.g. adminEmail => admin/templates/email
     // (similar to how discourse lays out templates)
     findAdminTemplate(parsedName) {
-      let decamelized = parsedName.fullNameWithoutType.decamelize();
-      if (decamelized.indexOf("components") === 0) {
-        let comPath = `admin/templates/${decamelized}`;
-        const compTemplate =
-          Ember.TEMPLATES[`javascripts/${comPath}`] || Ember.TEMPLATES[comPath];
-        if (compTemplate) {
-          return compTemplate;
-        }
+      if (parsedName.fullNameWithoutType === "admin") {
+        return this.discourseTemplateModule("admin/templates/admin");
       }
 
-      if (decamelized === "javascripts/admin") {
-        return Ember.TEMPLATES["admin/templates/admin"];
-      }
+      let namespaced, match;
 
-      if (
-        decamelized.indexOf("admin") === 0 ||
-        decamelized.indexOf("javascripts/admin") === 0
-      ) {
-        decamelized = decamelized.replace(/^admin\_/, "admin/templates/");
-        decamelized = decamelized.replace(/^admin\./, "admin/templates/");
-        decamelized = decamelized.replace(/\./g, "_");
-
-        const dashed = decamelized.replace(/_/g, "-");
+      if (parsedName.fullNameWithoutType.startsWith("components/")) {
         return (
-          Ember.TEMPLATES[decamelized] ||
-          Ember.TEMPLATES[dashed] ||
-          Ember.TEMPLATES[dashed.replace("admin-", "admin/")]
+          this.findTemplate(parsedName, "admin/templates/") ||
+          this.findTemplate(parsedName, "admin/") // Nested under discourse/templates/admin (e.g. from plugins)
         );
+      } else if (/^admin[_\.-]/.test(parsedName.fullNameWithoutType)) {
+        namespaced = parsedName.fullNameWithoutType.slice(6);
+      } else if (
+        (match = parsedName.fullNameWithoutType.match(/^admin([A-Z])(.+)$/))
+      ) {
+        namespaced = `${match[1].toLowerCase()}${match[2]}`;
       }
-    },
-  });
+
+      let resolved;
+
+      if (namespaced) {
+        let adminParsedName = this.parseName(`template:${namespaced}`);
+        resolved =
+          this.findTemplate(adminParsedName, "admin/templates/") ||
+          this.findTemplate(parsedName, "admin/templates/") ||
+          this.findTemplate(adminParsedName, "admin/"); // Nested under discourse/templates/admin (e.g. from plugin)
+      }
+
+      return resolved;
+    }
+
+    findWizardTemplate(parsedName) {
+      if (parsedName.fullNameWithoutType === "wizard") {
+        return this.discourseTemplateModule("wizard/templates/wizard");
+      }
+
+      let namespaced;
+
+      if (parsedName.fullNameWithoutType.startsWith("components/")) {
+        // Look up components as-is
+        namespaced = parsedName.fullNameWithoutType;
+      } else if (/^wizard[_\.-]/.test(parsedName.fullNameWithoutType)) {
+        // This may only get hit for the loading routes and may be removable.
+        namespaced = parsedName.fullNameWithoutType.slice(7);
+      }
+
+      if (namespaced) {
+        let wizardParsedName = this.parseName(
+          `template:wizard/templates/${namespaced}`
+        );
+        return this.findTemplate(wizardParsedName);
+      }
+    }
+  };
 }

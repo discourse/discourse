@@ -1,0 +1,38 @@
+.user-status.modal {
+  .modal-inner-container {
+    box-sizing: border-box;
+    min-width: 310px;
+  }
+
+  .modal-footer {
+    margin: 0;
+    border-top: 0;
+    padding: 10px 0;
+
+    .delete-status {
+      margin-left: auto;
+      margin-right: 0;
+    }
+  }
+
+  .modal-body {
+    width: 375px;
+    box-sizing: border-box;
+
+    @media (max-width: 600px) {
+      width: 100%;
+    }
+
+    .control-group-remove-status {
+      margin-top: 25px;
+    }
+
+    .pause-notifications {
+      margin-top: 1.5em;
+    }
+
+    .control-label {
+      font-weight: 700;
+    }
+  }
+}

@@ -1,4 +1,5 @@
 import EmberObject from "@ember/object";
+import { bind } from "discourse-common/utils/decorators";
 import PreloadStore from "discourse/lib/preload-store";
 
 export default {
@@ -6,18 +7,21 @@ export default {
   after: "message-bus",
 
   initialize(container) {
-    const banner = EmberObject.create(PreloadStore.get("banner") || {}),
-      site = container.lookup("site:main");
+    this.site = container.lookup("service:site");
+    this.messageBus = container.lookup("service:message-bus");
 
-    site.set("banner", banner);
+    const banner = EmberObject.create(PreloadStore.get("banner") || {});
+    this.site.set("banner", banner);
 
-    const messageBus = container.lookup("message-bus:main");
-    if (!messageBus) {
-      return;
-    }
+    this.messageBus.subscribe("/site/banner", this.onMessage);
+  },
 
-    messageBus.subscribe("/site/banner", function (ban) {
-      site.set("banner", EmberObject.create(ban || {}));
-    });
+  teardown() {
+    this.messageBus.unsubscribe("/site/banner", this.onMessage);
+  },
+
+  @bind
+  onMessage(data = {}) {
+    this.site.set("banner", EmberObject.create(data));
   },
 };

@@ -1,0 +1,15 @@
+.chat-selection-management {
+  .chat-selection-management-buttons {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+
+    .cancel-btn {
+      margin-left: initial;
+    }
+
+    .btn {
+      margin-bottom: 0.25em;
+    }
+  }
+}

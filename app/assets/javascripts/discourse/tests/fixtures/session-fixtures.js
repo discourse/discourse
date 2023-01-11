@@ -18,21 +18,39 @@ export default {
       title: "co-founder",
       reply_count: 859,
       topic_count: 36,
-      enable_quoting: true,
-      external_links_in_new_tab: false,
-      dynamic_favicon: true,
       trust_level: 4,
       can_edit: true,
       can_invite_to_forum: true,
-      should_be_redirected_to_top: false,
+      can_send_private_messages: true,
       custom_fields: {},
       muted_category_ids: [],
       dismissed_banner_key: null,
       akismet_review_count: 0,
-      title_count_mode: "notifications",
-      timezone: "Australia/Brisbane",
-      skip_new_user_tips: false,
-      can_review: true
-    }
-  }
+      can_review: true,
+      ignored_users: [],
+      groups: [
+        {
+          id: 10,
+          automatic: true,
+          name: "trust_level_0",
+          display_name: "trust_level_0",
+        },
+        {
+          id: 11,
+          automatic: true,
+          name: "trust_level_1",
+          display_name: "trust_level_1",
+        }
+      ],
+      user_option: {
+        external_links_in_new_tab: false,
+        enable_quoting: true,
+        dynamic_favicon: true,
+        title_count_mode: "notifications",
+        timezone: "Australia/Brisbane",
+        skip_new_user_tips: false,
+        should_be_redirected_to_top: false,
+      },
+    },
+  },
 };

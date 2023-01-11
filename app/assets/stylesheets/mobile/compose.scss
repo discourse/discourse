@@ -33,6 +33,14 @@
     }
   }
 
+  // Firefox for Android hack
+  @supports (-moz-appearance: none) {
+    .keyboard-visible #reply-control.open {
+      position: sticky;
+      height: calc(100vh - var(--header-offset, 4em));
+    }
+  }
+
   .reply-to {
     justify-content: space-between;
     margin-bottom: 6px;
@@ -85,8 +93,10 @@
     margin-bottom: 6px;
   }
 
-  .category-input {
+  .category-input,
+  .with-tags .category-input {
     margin-bottom: 6px;
+    max-width: calc(50% - 3px);
   }
 
   .submit-panel {
@@ -159,12 +169,10 @@
     }
   }
 
-  .d-editor-button-bar {
-    display: none;
-  }
-
-  .toolbar-visible .d-editor-button-bar {
-    display: flex;
+  .wmd-controls:not(.toolbar-visible) {
+    .d-editor-button-bar {
+      display: none;
+    }
   }
 
   .d-editor-button-bar .btn {
@@ -189,18 +197,19 @@
 
     .mini-tag-chooser {
       margin: 0 0 6px 6px;
+      max-width: calc(50% - 3px);
     }
 
     .selected-name {
       .name {
-        font-size: $font-down-1;
+        font-size: var(--font-down-1);
         .badge-wrapper {
-          font-size: $font-0;
+          font-size: var(--font-0);
         }
       }
     }
 
-    .formated-selection {
+    .formatted-selection {
       font-size: var(--font-down-1);
     }
   }

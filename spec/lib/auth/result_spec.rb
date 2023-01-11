@@ -1,11 +1,11 @@
 # frozen_string_literal: true
-require 'rails_helper'
-
-describe Auth::Result do
+RSpec.describe Auth::Result do
   fab!(:initial_email) { "initialemail@example.org" }
   fab!(:initial_username) { "initialusername" }
   fab!(:initial_name) { "Initial Name" }
-  fab!(:user) { Fabricate(:user, email: initial_email, username: initial_username, name: initial_name) }
+  fab!(:user) do
+    Fabricate(:user, email: initial_email, username: initial_username, name: initial_name)
+  end
 
   let(:new_email) { "newemail@example.org" }
   let(:new_username) { "newusername" }
@@ -51,6 +51,15 @@ describe Auth::Result do
     expect(user.email).to eq(new_email)
     expect(user.username).to eq(new_username)
     expect(user.name).to eq(new_name)
+  end
+
+  it "overrides username with suggested value if missing" do
+    SiteSetting.auth_overrides_username = true
+
+    result.username = nil
+    result.apply_user_attributes!
+
+    expect(user.username).to eq("New_Name")
   end
 
   it "updates the user's email if currently invalid" do

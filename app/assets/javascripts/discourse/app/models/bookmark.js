@@ -11,12 +11,18 @@ import { formattedReminderTime } from "discourse/lib/bookmark";
 import getURL from "discourse-common/lib/get-url";
 import { longDate } from "discourse/lib/formatter";
 import { none } from "@ember/object/computed";
+import { capitalize } from "@ember/string";
+import { applyModelTransformations } from "discourse/lib/model-transformers";
 
 export const AUTO_DELETE_PREFERENCES = {
   NEVER: 0,
+  CLEAR_REMINDER: 3,
   WHEN_REMINDER_SENT: 1,
   ON_OWNER_REPLY: 2,
 };
+
+export const NO_REMINDER_ICON = "bookmark";
+export const WITH_REMINDER_ICON = "discourse-bookmark-clock";
 
 const Bookmark = RestModel.extend({
   newBookmark: none("id"),
@@ -37,10 +43,10 @@ const Bookmark = RestModel.extend({
   },
 
   attachedTo() {
-    if (this.for_topic) {
-      return { target: "topic", targetId: this.topic_id };
-    }
-    return { target: "post", targetId: this.post_id };
+    return {
+      target: this.bookmarkable_type.toLowerCase(),
+      targetId: this.bookmarkable_id,
+    };
   },
 
   togglePin() {
@@ -83,16 +89,9 @@ const Bookmark = RestModel.extend({
 
   @discourseComputed("bumpedAt", "createdAt")
   bumpedAtTitle(bumpedAt, createdAt) {
-    const firstPost = I18n.t("first_post");
-    const lastPost = I18n.t("last_post");
-    const createdAtDate = longDate(createdAt);
-    const bumpedAtDate = longDate(bumpedAt);
-
-    return I18n.messageFormat("topic.bumped_at_title_MF", {
-      FIRST_POST: firstPost,
-      CREATED_AT: createdAtDate,
-      LAST_POST: lastPost,
-      BUMPED_AT: bumpedAtDate,
+    return I18n.t("topic.bumped_at_title", {
+      createdAtDate: longDate(createdAt),
+      bumpedAtDate: longDate(bumpedAt),
     });
   },
 
@@ -111,7 +110,7 @@ const Bookmark = RestModel.extend({
     const newTags = [];
 
     tags.forEach(function (tag) {
-      if (title.toLowerCase().indexOf(tag) === -1) {
+      if (!title.toLowerCase().includes(tag)) {
         newTags.push(tag);
       }
     });
@@ -123,10 +122,17 @@ const Bookmark = RestModel.extend({
 
   @discourseComputed("reminder_at", "currentUser")
   formattedReminder(bookmarkReminderAt, currentUser) {
-    return formattedReminderTime(
-      bookmarkReminderAt,
-      currentUser.resolvedTimezone(currentUser)
-    ).capitalize();
+    return capitalize(
+      formattedReminderTime(
+        bookmarkReminderAt,
+        currentUser.user_option.timezone
+      )
+    );
+  },
+
+  @discourseComputed("reminder_at")
+  reminderAtExpired(bookmarkReminderAt) {
+    return moment(bookmarkReminderAt) < moment();
   },
 
   @discourseComputed()
@@ -134,7 +140,8 @@ const Bookmark = RestModel.extend({
     // for topic level bookmarks we want to jump to the last unread post URL,
     // which the topic-link helper does by default if no linked post number is
     // provided
-    const linkedPostNumber = this.for_topic ? null : this.linked_post_number;
+    const linkedPostNumber =
+      this.bookmarkable_type === "Topic" ? null : this.linked_post_number;
 
     return Topic.create({
       id: this.topic_id,
@@ -145,17 +152,9 @@ const Bookmark = RestModel.extend({
     });
   },
 
-  @discourseComputed(
-    "post_user_username",
-    "post_user_avatar_template",
-    "post_user_name"
-  )
-  postUser(post_user_username, avatarTemplate, name) {
-    return User.create({
-      username: post_user_username,
-      avatar_template: avatarTemplate,
-      name,
-    });
+  @discourseComputed("bookmarkable_type")
+  bookmarkableTopicAlike(bookmarkable_type) {
+    return ["Topic", "Post"].includes(bookmarkable_type);
   },
 });
 
@@ -163,7 +162,21 @@ Bookmark.reopenClass({
   create(args) {
     args = args || {};
     args.currentUser = args.currentUser || User.current();
+    args.user = User.create(args.user);
     return this._super(args);
+  },
+
+  createFor(user, bookmarkableType, bookmarkableId) {
+    return Bookmark.create({
+      bookmarkable_type: bookmarkableType,
+      bookmarkable_id: bookmarkableId,
+      user_id: user.id,
+      auto_delete_preference: user.user_option.bookmark_auto_delete_preference,
+    });
+  },
+
+  async applyTransformations(bookmarks) {
+    await applyModelTransformations("bookmark", bookmarks);
   },
 });
 

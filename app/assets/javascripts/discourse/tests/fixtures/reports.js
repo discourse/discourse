@@ -4,8 +4,8 @@ export default {
       {
         title: "My report",
         description: "List of my activities",
-        type: "my_report"
-      }
-    ]
-  }
+        type: "my_report",
+      },
+    ],
+  },
 };

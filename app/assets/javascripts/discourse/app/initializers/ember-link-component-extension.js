@@ -1,3 +1,4 @@
+import Ember from "ember";
 let initializedOnce = false;
 
 export default {

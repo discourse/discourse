@@ -1,7 +1,7 @@
 import {
   acceptance,
   exists,
-  queryAll,
+  query,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
 import DiscourseURL from "discourse/lib/url";
@@ -31,7 +31,8 @@ acceptance("Password Reset", function (needs) {
       } else {
         return helper.response({
           success: "OK",
-          message: I18n.t("password_reset.success"),
+          message:
+            "You successfully changed your password and are now logged in.",
         });
       }
     });
@@ -44,7 +45,8 @@ acceptance("Password Reset", function (needs) {
       ) {
         return helper.response({
           success: "OK",
-          message: I18n.t("password_reset.success"),
+          message:
+            "You successfully changed your password and are now logged in.",
         });
       } else if (body.second_factor_token === "123123") {
         return helper.response({
@@ -73,25 +75,35 @@ acceptance("Password Reset", function (needs) {
     await fillIn(".password-reset input", "123");
     assert.ok(exists(".password-reset .tip.bad"), "input is not valid");
     assert.ok(
-      queryAll(".password-reset .tip.bad")
-        .html()
-        .indexOf(I18n.t("user.password.too_short")) > -1,
+      query(".password-reset .tip.bad").innerHTML.includes(
+        I18n.t("user.password.too_short")
+      ),
       "password too short"
     );
 
     await fillIn(".password-reset input", "jonesyAlienSlayer");
-    await click(".password-reset form button");
+    await click(".password-reset form button[type='submit']");
     assert.ok(exists(".password-reset .tip.bad"), "input is not valid");
     assert.ok(
-      queryAll(".password-reset .tip.bad")
-        .html()
-        .indexOf("is the name of your cat") > -1,
+      query(".password-reset .tip.bad").innerHTML.includes(
+        "is the name of your cat"
+      ),
       "server validation error message shows"
+    );
+
+    assert.ok(
+      exists("#new-account-password[type='password']"),
+      "password is masked by default"
+    );
+    await click(".toggle-password-mask");
+    assert.ok(
+      exists("#new-account-password[type='text']"),
+      "password is unmasked after toggle is clicked"
     );
 
     await fillIn(".password-reset input", "perf3ctly5ecur3");
     sinon.stub(DiscourseURL, "redirectTo");
-    await click(".password-reset form button");
+    await click(".password-reset form button[type='submit']");
     assert.ok(DiscourseURL.redirectTo.calledWith("/"), "form is gone");
   });
 
@@ -112,7 +124,7 @@ acceptance("Password Reset", function (needs) {
     assert.ok(exists(".alert-error"), "shows 2 factor error");
 
     assert.ok(
-      queryAll(".alert-error").html().indexOf("invalid token") > -1,
+      query(".alert-error").innerHTML.includes("invalid token"),
       "shows server validation error message"
     );
 
@@ -125,7 +137,7 @@ acceptance("Password Reset", function (needs) {
     await fillIn(".password-reset input", "perf3ctly5ecur3");
 
     sinon.stub(DiscourseURL, "redirectTo");
-    await click(".password-reset form button");
+    await click(".password-reset form button[type='submit']");
     assert.ok(
       DiscourseURL.redirectTo.calledWith("/"),
       "it redirects after submitting form"

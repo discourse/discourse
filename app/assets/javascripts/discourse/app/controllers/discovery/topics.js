@@ -15,15 +15,14 @@ import { action } from "@ember/object";
 
 const controllerOpts = {
   discovery: controller(),
-  discoveryTopics: controller("discovery/topics"),
   router: service(),
 
   period: null,
   canCreateTopicOnCategory: null,
 
   canStar: alias("currentUser.id"),
-  showTopicPostBadges: not("discoveryTopics.new"),
-  redirectedReason: alias("currentUser.redirected_to_top.reason"),
+  showTopicPostBadges: not("new"),
+  redirectedReason: alias("currentUser.user_option.redirected_to_top.reason"),
 
   expandGloballyPinned: false,
   expandAllPinned: false,
@@ -37,11 +36,13 @@ const controllerOpts = {
   // We want them to bubble in DiscoveryTopicsController
   @action
   loadingBegan() {
+    this.set("application.showFooter", false);
     return true;
   },
 
   @action
   loadingComplete() {
+    this.set("application.showFooter", this.loadedAllItems);
     return true;
   },
 
@@ -55,23 +56,28 @@ const controllerOpts = {
     return this._isFilterPage(filter, "new") && topicsLength > 0;
   },
 
+  // Show newly inserted topics
+  @action
+  showInserted(event) {
+    event?.preventDefault();
+    const tracker = this.topicTrackingState;
+
+    // Move inserted into topics
+    this.model.loadBefore(tracker.get("newIncoming"), true);
+    tracker.resetTracking();
+  },
+
   actions: {
     changeSort() {
       deprecated(
         "changeSort has been changed from an (action) to a (route-action)",
-        { since: "2.6.0", dropFrom: "2.7.0" }
+        {
+          since: "2.6.0",
+          dropFrom: "2.7.0",
+          id: "discourse.topics.change-sort",
+        }
       );
       return routeAction("changeSort", this.router._router, ...arguments)();
-    },
-
-    // Show newly inserted topics
-    showInserted() {
-      const tracker = this.topicTrackingState;
-
-      // Move inserted into topics
-      this.model.loadBefore(tracker.get("newIncoming"), true);
-      tracker.resetTracking();
-      return false;
     },
 
     refresh(options = { skipResettingParams: [] }) {

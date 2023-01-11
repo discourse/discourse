@@ -1,8 +1,4 @@
-import {
-  acceptance,
-  query,
-  queryAll,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "I18n";
 import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -18,12 +14,15 @@ acceptance("Details Button", function (needs) {
 
     await visit("/");
     await click("#create-topic");
+    const categoryChooser = selectKit(".category-chooser");
+    await categoryChooser.expand();
+    await categoryChooser.selectRowByValue(2);
 
     await popupMenu.expand();
     await popupMenu.selectRowByValue("insertDetails");
 
     assert.strictEqual(
-      queryAll(".d-editor-input").val(),
+      query(".d-editor-input").value,
       `\n[details="${I18n.t("composer.details_title")}"]\n${I18n.t(
         "composer.details_text"
       )}\n[/details]\n`,
@@ -40,7 +39,7 @@ acceptance("Details Button", function (needs) {
     await popupMenu.selectRowByValue("insertDetails");
 
     assert.strictEqual(
-      queryAll(".d-editor-input").val(),
+      query(".d-editor-input").value,
       `\n[details="${I18n.t(
         "composer.details_title"
       )}"]\nThis is my title\n[/details]\n`,
@@ -67,7 +66,7 @@ acceptance("Details Button", function (needs) {
     await popupMenu.selectRowByValue("insertDetails");
 
     assert.strictEqual(
-      queryAll(".d-editor-input").val(),
+      query(".d-editor-input").value,
       `Before \n[details="${I18n.t(
         "composer.details_title"
       )}"]\nsome text in between\n[/details]\n After`,
@@ -94,7 +93,7 @@ acceptance("Details Button", function (needs) {
     await popupMenu.selectRowByValue("insertDetails");
 
     assert.strictEqual(
-      queryAll(".d-editor-input").val(),
+      query(".d-editor-input").value,
       `Before \n\n[details="${I18n.t(
         "composer.details_title"
       )}"]\nsome text in between\n[/details]\n\n After`,
@@ -119,6 +118,9 @@ acceptance("Details Button", function (needs) {
 
     await visit("/");
     await click("#create-topic");
+    const categoryChooser = selectKit(".category-chooser");
+    await categoryChooser.expand();
+    await categoryChooser.selectRowByValue(2);
     await fillIn(".d-editor-input", multilineInput);
 
     const textarea = query(".d-editor-input");
@@ -129,7 +131,7 @@ acceptance("Details Button", function (needs) {
     await popupMenu.selectRowByValue("insertDetails");
 
     assert.strictEqual(
-      queryAll(".d-editor-input").val(),
+      query(".d-editor-input").value,
       `\n[details="${I18n.t(
         "composer.details_title"
       )}"]\n${multilineInput}\n[/details]\n`,

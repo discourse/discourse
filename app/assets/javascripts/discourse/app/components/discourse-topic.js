@@ -1,5 +1,6 @@
 import { isBlank } from "@ember/utils";
-import { later, schedule, scheduleOnce, throttle } from "@ember/runloop";
+import { schedule, scheduleOnce, throttle } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 import AddArchetypeClass from "discourse/mixins/add-archetype-class";
 import ClickTrack from "discourse/lib/click-track";
 import Component from "@ember/component";
@@ -76,7 +77,7 @@ export default Component.extend(
           this.pauseHeaderTopicUpdate = true;
           this._lastShowTopic = true;
 
-          later(() => {
+          discourseLater(() => {
             this._lastShowTopic = false;
             this.pauseHeaderTopicUpdate = false;
           }, debounceDuration);

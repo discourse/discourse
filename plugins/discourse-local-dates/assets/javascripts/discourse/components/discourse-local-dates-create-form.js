@@ -1,18 +1,22 @@
 /* global Pikaday:true */
-import computed, { observes } from "discourse-common/utils/decorators";
+import computed, {
+  debounce,
+  observes,
+} from "discourse-common/utils/decorators";
 import Component from "@ember/component";
-import EmberObject from "@ember/object";
+import EmberObject, { action } from "@ember/object";
 import I18n from "I18n";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import { Promise } from "rsvp";
 import { cookAsync } from "discourse/lib/text";
-import discourseDebounce from "discourse-common/lib/debounce";
 import { isEmpty } from "@ember/utils";
 import loadScript from "discourse/lib/load-script";
 import { notEmpty } from "@ember/object/computed";
 import { propertyNotEqual } from "discourse/lib/computed";
 import { schedule } from "@ember/runloop";
 import { getOwner } from "discourse-common/lib/get-owner";
+import { applyLocalDates } from "discourse/lib/local-dates";
+import generateDateMarkup from "discourse/plugins/discourse-local-dates/lib/local-date-markup-generator";
 
 export default Component.extend({
   timeFormat: "HH:mm:ss",
@@ -56,24 +60,20 @@ export default Component.extend({
     });
   },
 
-  @observes("markup")
-  _renderPreview() {
-    discourseDebounce(
-      this,
-      function () {
-        const markup = this.markup;
+  @observes("computedConfig.{from,to,options}", "options", "isValid", "isRange")
+  @debounce(INPUT_DELAY)
+  async _renderPreview() {
+    if (this.markup) {
+      const result = await cookAsync(this.markup);
+      this.set("currentPreview", result);
 
-        if (markup) {
-          cookAsync(markup).then((result) => {
-            this.set("currentPreview", result);
-            schedule("afterRender", () =>
-              this.$(".preview .discourse-local-date").applyLocalDates()
-            );
-          });
-        }
-      },
-      INPUT_DELAY
-    );
+      schedule("afterRender", () => {
+        applyLocalDates(
+          document.querySelectorAll(".preview .discourse-local-date"),
+          this.siteSettings
+        );
+      });
+    }
   },
 
   @computed("date", "toDate", "toTime")
@@ -204,8 +204,8 @@ export default Component.extend({
   ),
 
   @computed("currentUserTimezone")
-  formatedCurrentUserTimezone(timezone) {
-    return timezone.replace("_", " ").replace("Etc/", "").split("/");
+  formattedCurrentUserTimezone(timezone) {
+    return timezone.replace("_", " ").replace("Etc/", "").replace("/", ", ");
   },
 
   @computed("formats")
@@ -259,43 +259,7 @@ export default Component.extend({
   },
 
   _generateDateMarkup(fromDateTime, options, isRange, toDateTime) {
-    let text = ``;
-
-    if (isRange) {
-      let from = [fromDateTime.date, fromDateTime.time]
-        .filter((element) => !isEmpty(element))
-        .join("T");
-      let to = [toDateTime.date, toDateTime.time]
-        .filter((element) => !isEmpty(element))
-        .join("T");
-      text += `[date-range from=${from} to=${to}`;
-    } else {
-      text += `[date=${fromDateTime.date}`;
-    }
-
-    if (fromDateTime.time && !isRange) {
-      text += ` time=${fromDateTime.time}`;
-    }
-
-    if (fromDateTime.format && fromDateTime.format.length) {
-      text += ` format="${fromDateTime.format}"`;
-    }
-
-    if (options.timezone) {
-      text += ` timezone="${options.timezone}"`;
-    }
-
-    if (options.timezones && options.timezones.length) {
-      text += ` timezones="${options.timezones.join("|")}"`;
-    }
-
-    if (options.recurring && !isRange) {
-      text += ` recurring="${options.recurring}"`;
-    }
-
-    text += `]`;
-
-    return text;
+    return generateDateMarkup(fromDateTime, options, isRange, toDateTime);
   },
 
   @computed("advancedMode")
@@ -321,7 +285,6 @@ export default Component.extend({
         text = this._generateDateMarkup(config.from, options, isRange);
       }
     }
-
     return text;
   },
 
@@ -337,6 +300,12 @@ export default Component.extend({
       : I18n.t("discourse_local_dates.create.form.until");
 
     return dateTime.isValid() ? dateTime.format("LLLL") : emptyText;
+  },
+
+  @action
+  updateFormat(format, event) {
+    event?.preventDefault();
+    this.set("format", format);
   },
 
   actions: {
@@ -398,8 +367,10 @@ export default Component.extend({
     return new Promise((resolve) => {
       loadScript("/javascripts/pikaday.js").then(() => {
         const options = {
-          field: this.$(`.fake-input`)[0],
-          container: this.$(`#picker-container-${this.elementId}`)[0],
+          field: this.element.querySelector(".fake-input"),
+          container: this.element.querySelector(
+            `#picker-container-${this.elementId}`
+          ),
           bound: false,
           format: "YYYY-MM-DD",
           reposition: false,
@@ -432,22 +403,22 @@ export default Component.extend({
   },
 
   _setPickerMinDate(date) {
-    if (date && !moment(date, this.dateFormat).isValid()) {
-      date = null;
-    }
-
     schedule("afterRender", () => {
-      this._picker.setMinDate(moment(date, this.dateFormat).toDate());
+      if (moment(date, this.dateFormat).isValid()) {
+        this._picker.setMinDate(moment(date, this.dateFormat).toDate());
+      } else {
+        this._picker.setMinDate(null);
+      }
     });
   },
 
   _setPickerDate(date) {
-    if (date && !moment(date, this.dateFormat).isValid()) {
-      date = null;
-    }
-
     schedule("afterRender", () => {
-      this._picker.setDate(moment.utc(date), true);
+      if (moment(date, this.dateFormat).isValid()) {
+        this._picker.setDate(moment.utc(date), true);
+      } else {
+        this._picker.setDate(null);
+      }
     });
   },
 

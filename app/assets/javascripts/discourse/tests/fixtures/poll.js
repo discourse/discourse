@@ -31,7 +31,7 @@ export default {
             { id: 4, can_act: true },
             { id: 5, hidden: true, can_act: true },
             { id: 7, can_act: true },
-            { id: 8, can_act: true }
+            { id: 8, can_act: true },
           ],
           moderator: false,
           admin: true,
@@ -48,103 +48,103 @@ export default {
                 {
                   id: "4d8a15e3cc35750f016ce15a43937620",
                   html: "1",
-                  votes: 2
+                  votes: 2,
                 },
                 {
                   id: "cd314db7dfbac2b10687b6f39abfdf41",
                   html: "2",
-                  votes: 1
+                  votes: 1,
                 },
                 {
                   id: "68b434ff88aeae7054e42cd05a4d9056",
                   html: "3",
-                  votes: 1
+                  votes: 1,
                 },
                 {
                   id: "aa2393b424f2f395abb63bf785760a3b",
                   html: "4",
-                  votes: 0
+                  votes: 0,
                 },
                 {
                   id: "8b2f2930cac0574c3450f5db9a6fb7f9",
                   html: "5",
-                  votes: 1
+                  votes: 1,
                 },
                 {
                   id: "60cad69e0cfcb3fa77a68d11d3758002",
                   html: "6",
-                  votes: 0
+                  votes: 0,
                 },
                 {
                   id: "9ab1070dec27185440cdabb4948a5e9a",
                   html: "7",
-                  votes: 1
+                  votes: 1,
                 },
                 {
                   id: "99944bf07088f815a966d585daed6a7e",
                   html: "8",
-                  votes: 3
+                  votes: 3,
                 },
                 {
                   id: "345a83050400d78f5fac98d381b45e23",
                   html: "9",
-                  votes: 3
+                  votes: 3,
                 },
                 {
                   id: "46c01f638a50d86e020f47469733b8be",
                   html: "10",
-                  votes: 3
+                  votes: 3,
                 },
                 {
                   id: "07f7f85b2a3809faff68a35e81a664eb",
                   html: "11",
-                  votes: 2
+                  votes: 2,
                 },
                 {
                   id: "b3e8c14e714910cb8dd7089f097be133",
                   html: "12",
-                  votes: 4
+                  votes: 4,
                 },
                 {
                   id: "b4f15431e07443c372d521e4ed131abe",
                   html: "13",
-                  votes: 2
+                  votes: 2,
                 },
                 {
                   id: "a77bc9a30933e5af327211db2da46e17",
                   html: "14",
-                  votes: 2
+                  votes: 2,
                 },
                 {
                   id: "303d7c623da1985e94a9d27d43596934",
                   html: "15",
-                  votes: 2
+                  votes: 2,
                 },
                 {
                   id: "4e885ead68ff4456f102843df9fbbd7f",
                   html: "16",
-                  votes: 1
+                  votes: 1,
                 },
                 {
                   id: "cbf6e2b72e403b12d7ee63a138f32647",
                   html: "17",
-                  votes: 2
+                  votes: 2,
                 },
                 {
                   id: "9364fa2d67fbd62c473165441ad69571",
                   html: "18",
-                  votes: 2
+                  votes: 2,
                 },
                 {
                   id: "eb8661f072794ea57baa7827cd8ffc88",
                   html: "19",
-                  votes: 1
+                  votes: 1,
                 },
                 {
                   id: "b373436e858c0821135f994a5ff3345f",
                   html: "20",
-                  votes: 2
-                }
+                  votes: 2,
+                },
               ],
               voters: 35,
               status: "open",
@@ -158,13 +158,13 @@ export default {
                 id: 400 + i,
                 username: `bruce${400 + i}`,
                 avatar_template: "/images/avatar.png",
-                name: "Bruce Wayne"
-              }))
-            }
-          ]
-        }
+                name: "Bruce Wayne",
+              })),
+            },
+          ],
+        },
       ],
-      stream: [16]
+      stream: [16],
     },
     timeline_lookup: [[1, 0]],
     id: 13,
@@ -196,20 +196,20 @@ export default {
       created_by: {
         id: 1,
         username: "tgx",
-        avatar_template: "/images/avatar.png"
+        avatar_template: "/images/avatar.png",
       },
       last_poster: {
         id: 1,
         username: "tgx",
-        avatar_template: "/images/avatar.png"
+        avatar_template: "/images/avatar.png",
       },
       participants: [
         {
           id: 1,
           username: "tgx",
           avatar_template: "/images/avatar.png",
-          post_count: 1
-        }
+          post_count: 1,
+        },
       ],
       suggested_topics: [],
       notification_level: 3,
@@ -222,7 +222,7 @@ export default {
       can_invite_to: true,
       can_create_post: true,
       can_reply_as_new_topic: true,
-      can_flag_topic: true
+      can_flag_topic: true,
     },
     highest_post_number: 1,
     last_read_post_number: 1,
@@ -231,7 +231,7 @@ export default {
     actions_summary: [
       { id: 4, count: 0, hidden: false, can_act: true },
       { id: 7, count: 0, hidden: false, can_act: true },
-      { id: 8, count: 0, hidden: false, can_act: true }
+      { id: 8, count: 0, hidden: false, can_act: true },
     ],
     chunk_size: 20,
     bookmarked: false,
@@ -269,7 +269,7 @@ export default {
             { id: 4, can_act: true },
             { id: 5, hidden: true, can_act: true },
             { id: 7, can_act: true },
-            { id: 8, can_act: true }
+            { id: 8, can_act: true },
           ],
           moderator: false,
           admin: true,
@@ -286,18 +286,18 @@ export default {
                 {
                   id: "4d8a15e3cc35750f016ce15a43937620",
                   html: "1",
-                  votes: 29
+                  votes: 29,
                 },
                 {
                   id: "cd314db7dfbac2b10687b6f39abfdf41",
                   html: "2",
-                  votes: 29
+                  votes: 29,
                 },
                 {
                   id: "68b434ff88aeae7054e42cd05a4d9056",
                   html: "3",
-                  votes: 42
-                }
+                  votes: 42,
+                },
               ],
               voters: 100,
               status: "open",
@@ -313,15 +313,15 @@ export default {
                     id: 1000 + i,
                     name: "Bruce Wayne",
                     username: `bruce${1000 + i}`,
-                    avatar_template: "/images/avatar.png"
+                    avatar_template: "/images/avatar.png",
                   })
-                )
-              }
-            }
-          ]
-        }
+                ),
+              },
+            },
+          ],
+        },
       ],
-      stream: [17]
+      stream: [17],
     },
     timeline_lookup: [[1, 0]],
     id: 14,
@@ -353,20 +353,20 @@ export default {
       created_by: {
         id: 1,
         username: "tgx",
-        avatar_template: "/images/avatar.png"
+        avatar_template: "/images/avatar.png",
       },
       last_poster: {
         id: 1,
         username: "tgx",
-        avatar_template: "/images/avatar.png"
+        avatar_template: "/images/avatar.png",
       },
       participants: [
         {
           id: 1,
           username: "tgx",
           avatar_template: "/images/avatar.png",
-          post_count: 1
-        }
+          post_count: 1,
+        },
       ],
       suggested_topics: [],
       notification_level: 3,
@@ -379,7 +379,7 @@ export default {
       can_invite_to: true,
       can_create_post: true,
       can_reply_as_new_topic: true,
-      can_flag_topic: true
+      can_flag_topic: true,
     },
     highest_post_number: 1,
     last_read_post_number: 1,
@@ -388,7 +388,7 @@ export default {
     actions_summary: [
       { id: 4, count: 0, hidden: false, can_act: true },
       { id: 7, count: 0, hidden: false, can_act: true },
-      { id: 8, count: 0, hidden: false, can_act: true }
+      { id: 8, count: 0, hidden: false, can_act: true },
     ],
     chunk_size: 20,
     bookmarked: false,
@@ -426,7 +426,7 @@ export default {
             { id: 4, can_act: true },
             { id: 5, hidden: true, can_act: true },
             { id: 7, can_act: true },
-            { id: 8, can_act: true }
+            { id: 8, can_act: true },
           ],
           moderator: false,
           admin: true,
@@ -443,39 +443,39 @@ export default {
                 {
                   id: "57ddd734344eb7436d64a7d68a0df444",
                   html: "test",
-                  votes: 0
+                  votes: 0,
                 },
                 {
                   id: "b5b78d79ab5b5d75d4d33d8b87f5d2aa",
                   html: "haha",
-                  votes: 0
-                }
+                  votes: 0,
+                },
               ],
               voters: 2,
               status: "open",
-              name: "poll"
+              name: "poll",
             },
             {
               options: [
                 {
                   id: "c26ad90783b0d80936e5fdb292b7963c",
                   html: "donkey",
-                  votes: 0
+                  votes: 0,
                 },
                 {
                   id: "99f2b9ac452ba73b115fcf3556e6d2d4",
                   html: "kong",
-                  votes: 0
-                }
+                  votes: 0,
+                },
               ],
               voters: 3,
               status: "open",
-              name: "test"
-            }
-          ]
-        }
+              name: "test",
+            },
+          ],
+        },
       ],
-      stream: [18]
+      stream: [18],
     },
     timeline_lookup: [[1, 0]],
     id: 15,
@@ -507,20 +507,20 @@ export default {
       created_by: {
         id: 1,
         username: "tgx",
-        avatar_template: "/images/avatar.png"
+        avatar_template: "/images/avatar.png",
       },
       last_poster: {
         id: 1,
         username: "tgx",
-        avatar_template: "/images/avatar.png"
+        avatar_template: "/images/avatar.png",
       },
       participants: [
         {
           id: 1,
           username: "tgx",
           avatar_template: "/images/avatar.png",
-          post_count: 1
-        }
+          post_count: 1,
+        },
       ],
       suggested_topics: [],
       notification_level: 3,
@@ -533,7 +533,7 @@ export default {
       can_invite_to: true,
       can_create_post: true,
       can_reply_as_new_topic: true,
-      can_flag_topic: true
+      can_flag_topic: true,
     },
     highest_post_number: 1,
     last_read_post_number: 1,
@@ -542,7 +542,7 @@ export default {
     actions_summary: [
       { id: 4, count: 0, hidden: false, can_act: true },
       { id: 7, count: 0, hidden: false, can_act: true },
-      { id: 8, count: 0, hidden: false, can_act: true }
+      { id: 8, count: 0, hidden: false, can_act: true },
     ],
     chunk_size: 20,
     bookmarked: false,
@@ -591,7 +591,7 @@ export default {
             { id: 4, can_act: true },
             { id: 8, can_act: true },
             { id: 6, can_act: true },
-            { id: 7, can_act: true }
+            { id: 7, can_act: true },
           ],
           moderator: true,
           admin: true,
@@ -622,32 +622,32 @@ export default {
                 {
                   id: "687a1ccf3c6a260f9aeeb7f68a1d463c",
                   html: "This Is",
-                  votes: 2
+                  votes: 2,
                 },
                 {
                   id: "9377906763a1221d31d656ea0c4a4495",
                   html: "A test for sure",
-                  votes: 2
+                  votes: 2,
                 },
                 {
                   id: "ecf47c65a85a0bb20029072b1b721977",
                   html: "Why not give it some more",
-                  votes: 1
-                }
+                  votes: 1,
+                },
               ],
               voters: 2,
-              chart_type: "pie"
-            }
+              chart_type: "pie",
+            },
           ],
           polls_votes: {
             poll: [
               "687a1ccf3c6a260f9aeeb7f68a1d463c",
-              "9377906763a1221d31d656ea0c4a4495"
-            ]
-          }
-        }
+              "9377906763a1221d31d656ea0c4a4495",
+            ],
+          },
+        },
       ],
-      stream: [294]
+      stream: [294],
     },
     timeline_lookup: [[1, 2]],
     suggested_topics: [],
@@ -690,7 +690,7 @@ export default {
     actions_summary: [
       { id: 4, count: 0, hidden: false, can_act: true },
       { id: 8, count: 0, hidden: false, can_act: true },
-      { id: 7, count: 0, hidden: false, can_act: true }
+      { id: 7, count: 0, hidden: false, can_act: true },
     ],
     chunk_size: 20,
     bookmarked: false,
@@ -719,21 +719,21 @@ export default {
           flair_name: null,
           flair_url: null,
           flair_color: "",
-          flair_bg_color: ""
-        }
+          flair_bg_color: "",
+        },
       ],
       created_by: {
         id: 1,
         username: "markvanlan",
         name: "",
-        avatar_template: "/user_avatar/localhost/markvanlan/{size}/11_2.png"
+        avatar_template: "/user_avatar/localhost/markvanlan/{size}/11_2.png",
       },
       last_poster: {
         id: 1,
         username: "markvanlan",
         name: "",
-        avatar_template: "/user_avatar/localhost/markvanlan/{size}/11_2.png"
-      }
-    }
-  }
+        avatar_template: "/user_avatar/localhost/markvanlan/{size}/11_2.png",
+      },
+    },
+  },
 };

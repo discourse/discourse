@@ -2,6 +2,7 @@ en:
   got: "winter"
   foo: "Foo in :en"
   bar: "Bar in :en"
+  foo_with_variable: "Foo in :en with %{variable}"
   wat: "Hello %{count}"
   world: "Hello %{world}"
   items:

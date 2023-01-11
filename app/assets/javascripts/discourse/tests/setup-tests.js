@@ -2,6 +2,7 @@ import {
   applyPretender,
   exists,
   resetSite,
+  testCleanup,
   testsInitialized,
   testsTornDown,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -10,12 +11,14 @@ import pretender, {
   pretenderHelpers,
   resetPretender,
 } from "discourse/tests/helpers/create-pretender";
+import { resetSettings } from "discourse/tests/helpers/site-settings";
+import { getOwner, setDefaultOwner } from "discourse-common/lib/get-owner";
 import {
-  currentSettings,
-  resetSettings,
-} from "discourse/tests/helpers/site-settings";
-import { setDefaultOwner } from "discourse-common/lib/get-owner";
-import { setApplication, setResolver } from "@ember/test-helpers";
+  getSettledState,
+  isSettled,
+  setApplication,
+  setResolver,
+} from "@ember/test-helpers";
 import { setupS3CDN, setupURL } from "discourse-common/lib/get-url";
 import Application from "../app";
 import MessageBus from "message-bus-client";
@@ -27,15 +30,15 @@ import Session from "discourse/models/session";
 import User from "discourse/models/user";
 import bootbox from "bootbox";
 import { buildResolver } from "discourse-common/resolver";
-import { createHelperContext } from "discourse-common/lib/helpers";
 import deprecated from "discourse-common/lib/deprecated";
 import { flushMap } from "discourse/services/store";
-import { registerObjects } from "discourse/pre-initializers/inject-discourse-objects";
 import sinon from "sinon";
-import { run } from "@ember/runloop";
-import { isLegacyEmber } from "discourse-common/config/environment";
 import { disableCloaking } from "discourse/widgets/post-stream";
 import { clearState as clearPresenceState } from "discourse/tests/helpers/presence-pretender";
+import { addModuleExcludeMatcher } from "ember-cli-test-loader/test-support/index";
+import SiteSettingService from "discourse/services/site-settings";
+import jQuery from "jquery";
+import { setupDeprecationCounter } from "discourse/tests/helpers/deprecation-counter";
 
 const Plugin = $.fn.modal;
 const Modal = Plugin.Constructor;
@@ -64,15 +67,12 @@ function AcceptanceModal(option, _relatedTarget) {
   });
 }
 
-let app;
 let started = false;
 
 function createApplication(config, settings) {
-  if (app) {
-    run(app, "destroy");
-  }
+  const app = Application.create(config);
 
-  app = Application.create(config);
+  app.injectTestHelpers();
   setApplication(app);
   setResolver(buildResolver("discourse").create({ namespace: app }));
 
@@ -100,6 +100,8 @@ function createApplication(config, settings) {
       return container;
     });
 
+  SiteSettingService.create = () => settings;
+
   if (!started) {
     app.instanceInitializer({
       name: "test-helper",
@@ -111,22 +113,15 @@ function createApplication(config, settings) {
     started = true;
   }
 
-  app.SiteSettings = settings;
-  registerObjects(app);
   return app;
 }
 
 function setupToolbar() {
   // Most default toolbar items aren't useful for Discourse
   QUnit.config.urlConfig = QUnit.config.urlConfig.reject((c) =>
-    [
-      "noglobals",
-      "notrycatch",
-      "nolint",
-      "devmode",
-      "dockcontainer",
-      "nocontainer",
-    ].includes(c.id)
+    ["noglobals", "nolint", "devmode", "dockcontainer", "nocontainer"].includes(
+      c.id
+    )
   );
 
   QUnit.config.urlConfig.push({
@@ -154,6 +149,23 @@ function setupToolbar() {
     id: "qunit_single_plugin",
     label: "Plugin",
     value: Array.from(pluginNames),
+  });
+
+  // Abort tests when the qunit controls are clicked
+  document.querySelector("#qunit").addEventListener("click", ({ target }) => {
+    if (!target.closest("#qunit-testrunner-toolbar")) {
+      // Outside toolbar, carry on
+      return;
+    }
+
+    if (target.closest("label[for=qunit-urlconfig-hidepassed]")) {
+      // This one can be toggled during tests, carry on
+      return;
+    }
+
+    if (["INPUT", "SELECT", "LABEL"].includes(target.tagName)) {
+      document.querySelector("#qunit-abort-tests-button")?.click();
+    }
   });
 }
 
@@ -183,14 +195,12 @@ function writeSummaryLine(message) {
   }
 }
 
-function setupTestsCommon(application, container, config) {
+export default function setupTests(config) {
   disableCloaking();
 
-  QUnit.config.hidepassed = true;
+  setupDeprecationCounter(QUnit);
 
-  application.rootElement = "#ember-testing";
-  application.setupForTesting();
-  application.injectTestHelpers();
+  QUnit.config.hidepassed = true;
 
   sinon.config = {
     injectIntoThis: false,
@@ -212,32 +222,6 @@ function setupTestsCommon(application, container, config) {
 
   $.fn.modal = AcceptanceModal;
 
-  let server;
-
-  Object.defineProperty(window, "server", {
-    get() {
-      deprecated(
-        "Accessing the global variable `server` is deprecated. Use a `pretend()` method instead.",
-        {
-          since: "2.6.0.beta.3",
-          dropFrom: "2.6.0",
-        }
-      );
-      return server;
-    },
-  });
-  Object.defineProperty(window, "sandbox", {
-    get() {
-      deprecated(
-        "Accessing the global variable `sandbox` is deprecated. Import `sinon` instead",
-        {
-          since: "2.6.0.beta.4",
-          dropFrom: "2.6.0",
-        }
-      );
-      return sinon;
-    },
-  });
   Object.defineProperty(window, "exists", {
     get() {
       deprecated(
@@ -245,6 +229,7 @@ function setupTestsCommon(application, container, config) {
         {
           since: "2.6.0.beta.4",
           dropFrom: "2.6.0",
+          id: "discourse.qunit.global-exists",
         }
       );
       return exists;
@@ -257,43 +242,41 @@ function setupTestsCommon(application, container, config) {
     setupData = setupDataElement.dataset;
     setupDataElement.remove();
   }
+
+  let app;
   QUnit.testStart(function (ctx) {
     bootbox.$body = $("#ember-testing");
     let settings = resetSettings();
     resetThemeSettings();
 
-    if (config) {
-      // Ember CLI testing environment
-      app = createApplication(config, settings);
-    }
+    app = createApplication(config, settings);
 
     const cdn = setupData ? setupData.cdn : null;
     const baseUri = setupData ? setupData.baseUri : "";
-    setupURL(cdn, "http://localhost:3000", baseUri);
+    setupURL(cdn, "http://localhost:3000", baseUri, { snapshot: true });
     if (setupData && setupData.s3BaseUrl) {
-      setupS3CDN(setupData.s3BaseUrl, setupData.s3Cdn);
+      setupS3CDN(setupData.s3BaseUrl, setupData.s3Cdn, { snapshot: true });
     } else {
-      setupS3CDN(null, null);
+      setupS3CDN(null, null, { snapshot: true });
     }
 
-    server = pretender;
-    applyDefaultHandlers(server);
+    applyDefaultHandlers(pretender);
 
-    server.prepareBody = function (body) {
-      if (body && typeof body === "object") {
+    pretender.prepareBody = function (body) {
+      if (typeof body === "object") {
         return JSON.stringify(body);
       }
       return body;
     };
 
     if (QUnit.config.logAllRequests) {
-      server.handledRequest = function (verb, path) {
+      pretender.handledRequest = function (verb, path) {
         // eslint-disable-next-line no-console
         console.log("REQ: " + verb + " " + path);
       };
     }
 
-    server.unhandledRequest = function (verb, path) {
+    pretender.unhandledRequest = function (verb, path) {
       if (QUnit.config.logAllRequests) {
         // eslint-disable-next-line no-console
         console.log("REQ: " + verb + " " + path + " missing");
@@ -307,10 +290,10 @@ function setupTestsCommon(application, container, config) {
       throw new Error(error);
     };
 
-    server.checkPassthrough = (request) =>
+    pretender.checkPassthrough = (request) =>
       request.requestHeaders["Discourse-Script"];
 
-    applyPretender(ctx.module, server, pretenderHelpers());
+    applyPretender(ctx.module, pretender, pretenderHelpers());
 
     Session.resetCurrent();
     if (setupData) {
@@ -319,35 +302,42 @@ function setupTestsCommon(application, container, config) {
       session.highlightJsPath = setupData.highlightJsPath;
     }
     User.resetCurrent();
-    let site = resetSite(settings);
-    createHelperContext({
-      siteSettings: settings,
-      capabilities: {},
-      site,
-      registry: app.__registry__,
-    });
 
     PreloadStore.reset();
+    resetSite();
 
     sinon.stub(ScrollingDOMMethods, "screenNotFull");
     sinon.stub(ScrollingDOMMethods, "bindOnScroll");
     sinon.stub(ScrollingDOMMethods, "unbindOnScroll");
-
-    // Unless we ever need to test this, let's leave it off.
-    $.fn.autocomplete = function () {};
   });
 
   QUnit.testDone(function () {
+    testCleanup(getOwner(app), app);
+
     sinon.restore();
     resetPretender();
     clearPresenceState();
 
-    // Destroy any modals
-    $(".modal-backdrop").remove();
+    // Clean up the DOM. Some tests might leave extra classes or elements behind.
+    Array.from(document.getElementsByClassName("modal-backdrop")).forEach((e) =>
+      e.remove()
+    );
+    document.body.removeAttribute("class");
+    let html = document.documentElement;
+    html.removeAttribute("class");
+    html.removeAttribute("style");
+    let testing = document.getElementById("ember-testing");
+    testing.removeAttribute("class");
+    testing.removeAttribute("style");
+
+    const testContainer = document.getElementById("ember-testing-container");
+    testContainer.scrollTop = 0;
+    testContainer.scrollLeft = 0;
+
     flushMap();
 
     MessageBus.unsubscribe("*");
-    server = null;
+    localStorage.clear();
   });
 
   if (getUrlParameter("qunit_disable_auto_start") === "1") {
@@ -388,50 +378,14 @@ function setupTestsCommon(application, container, config) {
     return true;
   };
 
-  if (isLegacyEmber()) {
-    Object.keys(requirejs.entries).forEach(function (entry) {
-      if (shouldLoadModule(entry)) {
-        require(entry, null, null, true);
-      }
-    });
-  } else {
-    // Ember CLI
-    const emberCliTestLoader = require("ember-cli-test-loader/test-support/index");
-    emberCliTestLoader.addModuleExcludeMatcher(
-      (name) => !shouldLoadModule(name)
-    );
-  }
+  addModuleExcludeMatcher((name) => !shouldLoadModule(name));
 
   // forces 0 as duration for all jquery animations
-  // eslint-disable-next-line no-undef
   jQuery.fx.off = true;
 
   setupToolbar();
   reportMemoryUsageAfterTests();
-  setApplication(application);
-  setDefaultOwner(application.__container__);
-  resetSite();
-}
-
-export function setupTestsLegacy(application) {
-  app = application;
-  setResolver(buildResolver("discourse").create({ namespace: app }));
-  setupTestsCommon(application, app.__container__);
-
-  app.instanceInitializer({
-    name: "test-helper",
-    initialize: testsInitialized,
-    teardown: testsTornDown,
-  });
-  app.SiteSettings = currentSettings();
-  app.start();
-}
-
-export default function setupTests(config) {
-  let settings = resetSettings();
-  app = createApplication(config, settings);
-  setupTestsCommon(app, app.__container__, config);
-  sinon.restore();
+  patchFailedAssertion();
 }
 
 function getUrlParameter(name) {
@@ -459,4 +413,20 @@ function replaceUrlParameter(name, value) {
       formElement.value = value;
     }
   });
+}
+
+function patchFailedAssertion() {
+  const oldPushResult = QUnit.assert.pushResult;
+
+  QUnit.assert.pushResult = function (resultInfo) {
+    if (!resultInfo.result && !isSettled()) {
+      // eslint-disable-next-line no-console
+      console.warn(
+        "ℹ️ Hint: when the assertion failed, the Ember runloop was not in a settled state. Maybe you missed an `await` further up the test? Or maybe you need to manually add `await settled()` before your assertion?",
+        getSettledState()
+      );
+    }
+
+    oldPushResult.call(this, resultInfo);
+  };
 }

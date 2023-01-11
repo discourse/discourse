@@ -113,7 +113,7 @@ const DiscourseLocation = EmberObject.extend({
 
    Get the current `history.state`
    Polyfill checks for native browser support and falls back to retrieving
-   from a private _historyState constiable
+   from a private _historyState variable
 
    @method getState
   */
@@ -207,7 +207,7 @@ const DiscourseLocation = EmberObject.extend({
     if (url !== "") {
       rootURL = rootURL.replace(/\/$/, "");
 
-      if (rootURL.length > 0 && url.indexOf(rootURL + "/") === 0) {
+      if (rootURL.length > 0 && url.startsWith(rootURL + "/")) {
         rootURL = "";
       }
     }

@@ -53,18 +53,22 @@ const DEFAULT_QUICK_TIPS = [
     label: I18n.t("search.tips.full_search_key", { modifier: "Ctrl" }),
     description: I18n.t("search.tips.full_search"),
   },
+  {
+    label: "@me",
+    description: I18n.t("search.tips.me"),
+  },
 ];
 
 let QUICK_TIPS = [];
 
 export function addSearchSuggestion(value) {
-  if (suggestionShortcuts.indexOf(value) === -1) {
+  if (!suggestionShortcuts.includes(value)) {
     suggestionShortcuts.push(value);
   }
 }
 
 export function addQuickSearchRandomTip(tip) {
-  if (QUICK_TIPS.indexOf(tip) === -1) {
+  if (!QUICK_TIPS.includes(tip)) {
     QUICK_TIPS.push(tip);
   }
 }
@@ -89,6 +93,12 @@ class Highlighted extends RawHtml {
 function createSearchResult({ type, linkField, builder }) {
   return createWidget(`search-result-${type}`, {
     tagName: "ul.list",
+
+    buildAttributes() {
+      return {
+        "aria-label": `${type} ${I18n.t("search.results")}`,
+      };
+    },
 
     html(attrs) {
       return attrs.results.map((r) => {
@@ -292,7 +302,7 @@ createWidget("search-menu-results", {
       return h("div.no-results", I18n.t("search.no_results"));
     }
 
-    if (!term) {
+    if (!term && !attrs.inPMInboxContext) {
       return this.attach("search-menu-initial-options", { term });
     }
 
@@ -354,7 +364,7 @@ createWidget("search-menu-results", {
       if (["topic"].includes(rt.type)) {
         const more = buildMoreNode(rt);
         if (more) {
-          resultNodeContents.push(h("div.show-more", more));
+          resultNodeContents.push(h("div.search-menu__show-more", more));
         }
       }
 
@@ -364,7 +374,9 @@ createWidget("search-menu-results", {
     const content = [];
 
     if (!searchTopics) {
-      content.push(this.attach("search-menu-initial-options", { term }));
+      if (!attrs.inPMInboxContext) {
+        content.push(this.attach("search-menu-initial-options", { term }));
+      }
     } else {
       if (mainResultsContent.length) {
         content.push(mainResultsContent);
@@ -390,7 +402,7 @@ createWidget("search-menu-assistant", {
       addSearchSuggestion("in:likes");
       addSearchSuggestion("in:bookmarks");
       addSearchSuggestion("in:mine");
-      addSearchSuggestion("in:personal");
+      addSearchSuggestion("in:messages");
       addSearchSuggestion("in:seen");
       addSearchSuggestion("in:tracking");
       addSearchSuggestion("in:unseen");
@@ -530,7 +542,7 @@ createWidget("search-menu-initial-options", {
           case "private_messages":
             content.push(
               this.attach("search-menu-assistant-item", {
-                slug: `${term} in:personal`,
+                slug: `${term} in:messages`,
               })
             );
             break;
@@ -638,7 +650,13 @@ createWidget("search-menu-assistant-item", {
     const attributes = {};
     attributes.href = "#";
 
-    let content = [iconNode(attrs.icon || "search")];
+    let content = [
+      h(
+        "span",
+        { attributes: { "aria-label": I18n.t("search.title") } },
+        iconNode(attrs.icon || "search")
+      ),
+    ];
 
     if (prefix) {
       content.push(h("span.search-item-prefix", `${prefix} `));

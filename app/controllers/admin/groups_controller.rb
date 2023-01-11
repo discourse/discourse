@@ -1,33 +1,25 @@
 # frozen_string_literal: true
 
-class Admin::GroupsController < Admin::AdminController
+class Admin::GroupsController < Admin::StaffController
   def create
     guardian.ensure_can_create_group!
 
     attributes = group_params.to_h.except(:owner_usernames, :usernames)
     group = Group.new(attributes)
 
-    unless group_params[:allow_membership_requests]
-      group.membership_request_template = nil
-    end
+    group.membership_request_template = nil unless group_params[:allow_membership_requests]
 
     if group_params[:owner_usernames].present?
-      owner_ids = User.where(
-        username: group_params[:owner_usernames].split(",")
-      ).pluck(:id)
+      owner_ids = User.where(username: group_params[:owner_usernames].split(",")).pluck(:id)
 
-      owner_ids.each do |user_id|
-        group.group_users.build(user_id: user_id, owner: true)
-      end
+      owner_ids.each { |user_id| group.group_users.build(user_id: user_id, owner: true) }
     end
 
     if group_params[:usernames].present?
       user_ids = User.where(username: group_params[:usernames].split(",")).pluck(:id)
       user_ids -= owner_ids if owner_ids
 
-      user_ids.each do |user_id|
-        group.group_users.build(user_id: user_id)
-      end
+      user_ids.each { |user_id| group.group_users.build(user_id: user_id) }
     end
 
     if group.save
@@ -45,10 +37,8 @@ class Admin::GroupsController < Admin::AdminController
     if group.automatic
       can_not_modify_automatic
     else
-      details = { name: group.name }
-      details[:grant_trust_level] = group.grant_trust_level if group.grant_trust_level
+      StaffActionLogger.new(current_user).log_group_deletetion(group)
 
-      StaffActionLogger.new(current_user).log_custom('delete_group', details)
       group.destroy!
       render json: success_json
     end
@@ -103,8 +93,6 @@ class Admin::GroupsController < Admin::AdminController
       GroupActionLogger.new(current_user, group).log_remove_user_as_group_owner(user)
     end
 
-    Group.reset_counters(group.id, :group_users)
-
     render json: success_json
   end
 
@@ -113,7 +101,7 @@ class Admin::GroupsController < Admin::AdminController
     raise Discourse::NotFound unless group
 
     users = User.where(username: group_params[:usernames].split(","))
-    users.each { |user| guardian.ensure_can_change_primary_group!(user) }
+    users.each { |user| guardian.ensure_can_change_primary_group!(user, group) }
     users.update_all(primary_group_id: params[:primary] == "true" ? group.id : nil)
 
     render json: success_json
@@ -144,45 +132,43 @@ class Admin::GroupsController < Admin::AdminController
   protected
 
   def can_not_modify_automatic
-    render_json_error(I18n.t('groups.errors.can_not_modify_automatic'))
+    render_json_error(I18n.t("groups.errors.can_not_modify_automatic"))
   end
 
   private
 
   def group_params
-    permitted = [
-      :name,
-      :mentionable_level,
-      :messageable_level,
-      :visibility_level,
-      :members_visibility_level,
-      :automatic_membership_email_domains,
-      :title,
-      :primary_group,
-      :grant_trust_level,
-      :incoming_email,
-      :flair_icon,
-      :flair_upload_id,
-      :flair_bg_color,
-      :flair_color,
-      :bio_raw,
-      :public_admission,
-      :public_exit,
-      :allow_membership_requests,
-      :full_name,
-      :default_notification_level,
-      :membership_request_template,
-      :owner_usernames,
-      :usernames,
-      :publish_read_state,
-      :notify_users
+    permitted = %i[
+      name
+      mentionable_level
+      messageable_level
+      visibility_level
+      members_visibility_level
+      automatic_membership_email_domains
+      title
+      primary_group
+      grant_trust_level
+      incoming_email
+      flair_icon
+      flair_upload_id
+      flair_bg_color
+      flair_color
+      bio_raw
+      public_admission
+      public_exit
+      allow_membership_requests
+      full_name
+      default_notification_level
+      membership_request_template
+      owner_usernames
+      usernames
+      publish_read_state
+      notify_users
     ]
     custom_fields = DiscoursePluginRegistry.editable_group_custom_fields
     permitted << { custom_fields: custom_fields } unless custom_fields.blank?
 
-    if guardian.can_associate_groups?
-      permitted << { associated_group_ids: [] }
-    end
+    permitted << { associated_group_ids: [] } if guardian.can_associate_groups?
 
     permitted = permitted | DiscoursePluginRegistry.group_params
 

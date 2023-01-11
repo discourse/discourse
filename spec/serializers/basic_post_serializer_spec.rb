@@ -1,10 +1,7 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
-describe BasicPostSerializer do
-
-  context "name" do
+RSpec.describe BasicPostSerializer do
+  describe "#name" do
     let(:user) { Fabricate.build(:user) }
     let(:post) { Fabricate.build(:post, user: user) }
     let(:serializer) { BasicPostSerializer.new(post, scope: Guardian.new, root: false) }
@@ -19,7 +16,5 @@ describe BasicPostSerializer do
       SiteSetting.enable_names = false
       expect(json[:name]).to be_blank
     end
-
   end
-
 end

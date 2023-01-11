@@ -21,24 +21,34 @@ createWidget("post-link-arrow", {
 });
 
 export default createWidget("embedded-post", {
+  tagName: "div.reply",
   buildKey: (attrs) => `embedded-post-${attrs.id}`,
+
+  buildAttributes(attrs) {
+    const attributes = { "data-post-id": attrs.id };
+    if (this.state.role) {
+      attributes.role = this.state.role;
+    }
+    if (this.state["aria-label"]) {
+      attributes["aria-label"] = this.state["aria-label"];
+    }
+    return attributes;
+  },
 
   html(attrs, state) {
     attrs.embeddedPost = true;
     return [
-      h("div.reply", { attributes: { "data-post-id": attrs.id } }, [
-        h("div.row", [
-          this.attach("post-avatar", attrs),
-          h("div.topic-body", [
-            h("div.topic-meta-data.embedded-reply", [
-              this.attach("poster-name", attrs),
-              this.attach("post-link-arrow", {
-                above: state.above,
-                shareUrl: attrs.customShare,
-              }),
-            ]),
-            new PostCooked(attrs, new DecoratorHelper(this), this.currentUser),
+      h("div.row", [
+        this.attach("post-avatar", attrs),
+        h("div.topic-body", [
+          h("div.topic-meta-data.embedded-reply", [
+            this.attach("poster-name", attrs),
+            this.attach("post-link-arrow", {
+              above: state.above,
+              shareUrl: attrs.customShare,
+            }),
           ]),
+          new PostCooked(attrs, new DecoratorHelper(this), this.currentUser),
         ]),
       ]),
     ];

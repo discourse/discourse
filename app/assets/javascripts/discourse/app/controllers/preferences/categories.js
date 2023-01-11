@@ -4,29 +4,41 @@ import { or } from "@ember/object/computed";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Controller.extend({
-  init() {
-    this._super(...arguments);
-
-    this.saveAttrNames = [
-      "muted_category_ids",
-      "regular_category_ids",
+  @discourseComputed("siteSettings.mute_all_categories_by_default")
+  saveAttrNames(muteAllCategoriesByDefault) {
+    return [
       "watched_category_ids",
       "tracked_category_ids",
       "watched_first_post_category_ids",
+      muteAllCategoriesByDefault
+        ? "regular_category_ids"
+        : "muted_category_ids",
     ];
   },
 
   @discourseComputed(
+    "siteSettings.mute_all_categories_by_default",
     "model.watchedCategories",
     "model.watchedFirstPostCategories",
     "model.trackedCategories",
-    "model.regularCategories",
-    "model.mutedCategories"
+    "model.mutedCategories",
+    "model.regularCategories"
   )
-  selectedCategories(watched, watchedFirst, tracked, regular, muted) {
-    return []
-      .concat(watched, watchedFirst, tracked, regular, muted)
-      .filter((t) => t);
+  selectedCategories(
+    muteAllCategoriesByDefault,
+    watched,
+    watchedFirst,
+    tracked,
+    muted,
+    regular
+  ) {
+    let categories = [].concat(watched, watchedFirst, tracked);
+
+    categories = categories.concat(
+      muteAllCategoriesByDefault ? regular : muted
+    );
+
+    return categories.filter((t) => t);
   },
 
   @discourseComputed

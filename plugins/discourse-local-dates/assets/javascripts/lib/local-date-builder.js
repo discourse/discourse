@@ -16,6 +16,7 @@ export default class LocalDateBuilder {
     this.time = params.time;
     this.date = params.date;
     this.recurring = params.recurring;
+    this.sameLocalDayAsFrom = params.sameLocalDayAsFrom;
     this.timezones = Array.from(
       new Set((params.timezones || []).filter(Boolean))
     );
@@ -66,12 +67,12 @@ export default class LocalDateBuilder {
     }
 
     const previews = this._generatePreviews(localDate, displayedTimezone);
-
+    const hasTime = hour !== undefined;
     return {
       pastEvent:
         !this.recurring &&
         moment.tz(this.localTimezone).isAfter(localDate.datetime),
-      formated: this._applyFormatting(localDate, displayedTimezone),
+      formatted: this._applyFormatting(localDate, displayedTimezone, hasTime),
       previews,
       textPreview: this._generateTextPreviews(previews),
     };
@@ -80,8 +81,8 @@ export default class LocalDateBuilder {
   _generateTextPreviews(previews) {
     return previews
       .map((preview) => {
-        const formatedZone = this._zoneWithoutPrefix(preview.timezone);
-        return `${formatedZone} ${preview.formated}`;
+        const formattedZone = this._zoneWithoutPrefix(preview.timezone);
+        return `${formattedZone} ${preview.formatted}`;
       })
       .join(", ");
   }
@@ -96,7 +97,7 @@ export default class LocalDateBuilder {
     previewedTimezones.push({
       timezone: this._zoneWithoutPrefix(this.localTimezone),
       current: true,
-      formated: this._createDateTimeRange(
+      formatted: this._createDateTimeRange(
         DateWithZoneHelper.fromDatetime(
           localDate.datetime,
           localDate.timezone,
@@ -128,7 +129,7 @@ export default class LocalDateBuilder {
 
       previewedTimezones.push({
         timezone: this._zoneWithoutPrefix(timezone),
-        formated: this._createDateTimeRange(
+        formatted: this._createDateTimeRange(
           DateWithZoneHelper.fromDatetime(
             localDate.datetime,
             localDate.timezone,
@@ -209,7 +210,7 @@ export default class LocalDateBuilder {
     return duration < 0 ? dates.reverse() : dates;
   }
 
-  _applyFormatting(localDate, displayedTimezone) {
+  _applyFormatting(localDate, displayedTimezone, hasTime) {
     if (this.countdown) {
       const diffTime = moment.tz(this.localTimezone).diff(localDate.datetime);
 
@@ -233,10 +234,14 @@ export default class LocalDateBuilder {
           localDate.add(1, "day").datetime.endOf("day")
         );
 
+      if (this.sameLocalDayAsFrom) {
+        return this._timeOnlyFormat(localDate, displayedTimezone);
+      }
+
       if (inCalendarRange && sameTimezone) {
         const date = localDate.datetimeWithZone(this.localTimezone);
 
-        if (date.hours() === 0 && date.minutes() === 0) {
+        if (hasTime && date.hours() === 0 && date.minutes() === 0) {
           return date.format("dddd");
         }
 
@@ -288,7 +293,13 @@ export default class LocalDateBuilder {
   }
 
   _formatWithZone(localDate, displayedTimezone, format) {
-    let formated = localDate.datetimeWithZone(displayedTimezone).format(format);
-    return `${formated} (${this._zoneWithoutPrefix(displayedTimezone)})`;
+    let formatted = localDate
+      .datetimeWithZone(displayedTimezone)
+      .format(format);
+    return `${formatted} (${this._zoneWithoutPrefix(displayedTimezone)})`;
+  }
+
+  _timeOnlyFormat(localTime, displayedTimezone) {
+    return this._formatWithZone(localTime, displayedTimezone, "LT");
   }
 }

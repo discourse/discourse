@@ -5,18 +5,19 @@ module Discourse
   VERSION_COMPATIBILITY_FILENAME ||= ".discourse-compatibility"
 
   # work around reloader
-  unless defined? ::Discourse::VERSION
+  unless defined?(::Discourse::VERSION)
     module VERSION #:nodoc:
-      MAJOR = 2
-      MINOR = 8
-      TINY  = 14
-      PRE   = nil
+      MAJOR = 3
+      MINOR = 0
+      TINY = 0
+      PRE = "beta16"
 
-      STRING = [MAJOR, MINOR, TINY, PRE].compact.join('.')
+      STRING = [MAJOR, MINOR, TINY, PRE].compact.join(".")
     end
   end
 
-  class InvalidVersionListError < StandardError; end
+  class InvalidVersionListError < StandardError
+  end
 
   def self.has_needed_version?(current, needed)
     Gem::Version.new(current) >= Gem::Version.new(needed)
@@ -31,7 +32,7 @@ module Discourse
   #  2.4.4.beta6: some-other-branch-ref
   #  2.4.2.beta1: v1-tag
   def self.find_compatible_resource(version_list, version = ::Discourse::VERSION::STRING)
-    return unless version_list
+    return unless version_list.present?
 
     begin
       version_list = YAML.safe_load(version_list)
@@ -57,7 +58,10 @@ module Discourse
     return if checkout_version.nil?
 
     begin
-      Discourse::Utils.execute_command "git", "check-ref-format", "--allow-onelevel", checkout_version
+      Discourse::Utils.execute_command "git",
+                                       "check-ref-format",
+                                       "--allow-onelevel",
+                                       checkout_version
     rescue RuntimeError
       raise InvalidVersionListError, "Invalid ref name: #{checkout_version}"
     end
@@ -68,7 +72,10 @@ module Discourse
   # Find a compatible resource from a git repo
   def self.find_compatible_git_resource(path)
     return unless File.directory?("#{path}/.git")
-    compat_resource, std_error, s = Open3.capture3("git -C '#{path}' show HEAD@{upstream}:#{Discourse::VERSION_COMPATIBILITY_FILENAME}")
+    compat_resource, std_error, s =
+      Open3.capture3(
+        "git -C '#{path}' show HEAD@{upstream}:#{Discourse::VERSION_COMPATIBILITY_FILENAME}",
+      )
     Discourse.find_compatible_resource(compat_resource) if s.success?
   rescue InvalidVersionListError => e
     $stderr.puts "Invalid version list in #{path}"

@@ -90,6 +90,166 @@
   }
 }
 
+.user-menu.revamped {
+  right: 0;
+  width: 320px;
+  padding: 0;
+
+  .panel-body-bottom {
+    flex: 0;
+  }
+
+  .menu-tabs-container {
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid var(--primary-low);
+    padding: 0.75em 0 0;
+    overflow-y: auto;
+  }
+
+  .tabs-list {
+    display: flex;
+    flex-direction: column;
+
+    .btn {
+      display: flex;
+      padding: 0.857em;
+      position: relative;
+
+      .d-icon {
+        color: var(--primary-medium);
+      }
+
+      .badge-notification {
+        background-color: var(--tertiary-med-or-tertiary);
+        position: absolute;
+        right: 6px;
+        top: 6px;
+        font-size: var(--font-down-3);
+      }
+
+      &.active {
+        background-color: var(--tertiary-low);
+      }
+      &:hover {
+        background-color: var(--highlight-medium);
+      }
+    }
+  }
+
+  .bottom-tabs {
+    border-top: 1px solid var(--primary-low);
+  }
+
+  .panel-body-contents {
+    display: flex;
+    flex-direction: row-reverse;
+  }
+
+  .quick-access-panel {
+    width: 320px;
+    padding: 0.75em;
+    justify-content: space-between;
+    box-sizing: border-box;
+    min-width: 0; // makes sure menu tabs don't go off screen
+
+    .double-user,
+    .multi-user {
+      white-space: unset;
+    }
+
+    .item-label {
+      color: var(--primary);
+    }
+
+    li {
+      background-color: var(--secondary);
+
+      &.unread,
+      &.pending {
+        background-color: var(--tertiary-low);
+      }
+
+      &:hover {
+        background-color: var(--highlight-medium);
+        outline: none;
+      }
+
+      &:focus-within {
+        background: var(--highlight-medium);
+        a {
+          // we don't need the link focus because we're styling the parent
+          outline: 0;
+        }
+      }
+    }
+  }
+
+  #quick-access-profile {
+    display: inline;
+    max-height: 99%; //  macOS Chrome sometimes adds an unneeded scrollbar at 100%
+
+    ul {
+      flex-wrap: nowrap;
+      height: 100%;
+      align-items: center;
+      overflow-y: auto; // really short viewports
+    }
+    li {
+      flex: 1 1 auto;
+      max-height: 3em; // prevent buttons from getting too tall
+      > * {
+        // button, a, and everything else
+        height: 100%;
+        align-items: center;
+        margin: 0;
+        padding: 0 0.5em;
+      }
+      .d-icon {
+        padding-top: 0;
+      }
+    }
+
+    .set-user-status {
+      .emoji {
+        padding-top: 0;
+      }
+    }
+
+    .profile-tab-btn {
+      .relative-date {
+        font-size: var(--font-down-3);
+        color: var(--primary-medium);
+      }
+
+      justify-content: unset;
+      line-height: var(--line-height-large);
+      width: 100%;
+
+      .d-icon {
+        padding: 0;
+      }
+    }
+
+    .do-not-disturb {
+      .d-icon-toggle-on {
+        color: var(--tertiary);
+      }
+    }
+  }
+}
+
+// remove when the widgets-based implementation of the user menu is removed
+.user-menu:not(.revamped) {
+  .quick-access-panel {
+    li {
+      span:first-child {
+        color: var(--primary);
+      }
+    }
+  }
+}
+
 .hamburger-panel {
   a.widget-link {
     width: 100%;
@@ -129,7 +289,7 @@
     }
 
     .new {
-      font-size: $font-down-1;
+      font-size: var(--font-down-1);
       margin-left: 0.5em;
       color: var(--primary-med-or-secondary-med);
     }
@@ -164,8 +324,8 @@
       background-color: transparent;
       display: inline;
       padding: 0;
-      font-size: $font-down-1;
-      line-height: $line-height-large;
+      font-size: var(--font-down-1);
+      line-height: var(--line-height-large);
     }
     .badge-wrapper {
       &.bar,
@@ -189,11 +349,11 @@
   b.topics-count {
     color: var(--primary-med-or-secondary-med);
     font-weight: normal;
-    font-size: $font-down-1;
+    font-size: var(--font-down-1);
   }
 
   div.discourse-tags {
-    font-size: $font-down-1;
+    font-size: var(--font-down-1);
   }
 }
 
@@ -248,10 +408,6 @@
         display: none;
       }
 
-      span:first-child {
-        color: var(--primary);
-      }
-
       span.double-user,
       // e.g., "username, username2"
       span.multi-user
@@ -301,7 +457,8 @@
         }
       }
 
-      a {
+      a,
+      .profile-tab-btn {
         display: flex;
         margin: 0.25em;
         padding: 0em 0.25em;
@@ -338,9 +495,16 @@
         padding-top: 0.2em;
         margin-right: 0.5em;
       }
+
+      img.emoji {
+        height: 1em;
+        width: 1em;
+        padding-top: 0.2em;
+        margin-right: 0.5em;
+      }
     }
     .is-warning {
-      .d-icon-far-envelope {
+      .d-icon-envelope {
         color: var(--danger);
       }
     }
@@ -394,6 +558,9 @@
           grid-gap: 0 1em;
           a {
             @include ellipsis;
+            > div {
+              display: block;
+            }
           }
           button {
             span:not(.relative-date) {
@@ -491,5 +658,59 @@ div.menu-links-header {
   .fa,
   button {
     color: var(--primary-med-or-secondary-med);
+  }
+}
+
+body.footer-nav-ipad {
+  .hamburger-panel .revamped,
+  .menu-panel.slide-in {
+    margin-top: var(--footer-nav-height);
+  }
+}
+
+.hamburger-panel .menu-panel.slide-in {
+  left: 0;
+
+  .panel-body {
+    display: block;
+  }
+  .panel-body-contents {
+    max-height: unset;
+    min-height: 100%;
+  }
+}
+.header-cloak {
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  background-color: black;
+  --opacity: 0.5;
+  opacity: var(--opacity);
+  top: 0;
+  left: 0;
+  display: none;
+  touch-action: pan-y pinch-zoom;
+
+  @media (prefers-reduced-motion: no-preference) {
+    &.animate {
+      transition: opacity 0.1s linear;
+    }
+  }
+}
+
+.menu-panel.slide-in {
+  transform: translateX(var(--offset));
+  @media (prefers-reduced-motion: no-preference) {
+    &.animate {
+      transition: transform 0.1s linear;
+    }
+  }
+  &.moving,
+  &.animate {
+    // PERF: only render first 20 items in a list to allow for smooth
+    // pan events
+    li:nth-child(n + 20) {
+      display: none;
+    }
   }
 }

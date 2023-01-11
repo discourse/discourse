@@ -41,7 +41,8 @@ class TopicViewSerializer < ApplicationSerializer
     :pinned_at,
     :pinned_until,
     :image_url,
-    :slow_mode_seconds
+    :slow_mode_seconds,
+    :external_id,
   )
 
   attributes(
@@ -76,7 +77,7 @@ class TopicViewSerializer < ApplicationSerializer
     :thumbnails,
     :user_last_posted_at,
     :is_shared_draft,
-    :slow_mode_enabled_until
+    :slow_mode_enabled_until,
   )
 
   has_one :details, serializer: TopicViewDetailsSerializer, root: false, embed: :objects
@@ -102,6 +103,10 @@ class TopicViewSerializer < ApplicationSerializer
 
   def include_is_warning?
     is_warning
+  end
+
+  def include_external_id?
+    external_id
   end
 
   def draft
@@ -198,6 +203,14 @@ class TopicViewSerializer < ApplicationSerializer
   end
 
   def topic_timer
+    topic_timer = object.topic.public_topic_timer
+
+    return nil if topic_timer.blank?
+
+    if topic_timer.publishing_to_category?
+      return nil if !scope.can_see_category?(Category.find_by(id: topic_timer.category_id))
+    end
+
     TopicTimerSerializer.new(object.topic.public_topic_timer, root: false)
   end
 
@@ -234,7 +247,8 @@ class TopicViewSerializer < ApplicationSerializer
   end
 
   def include_destination_category_id?
-    scope.can_see_shared_draft? && SiteSetting.shared_drafts_enabled? && object.topic.shared_draft.present?
+    scope.can_see_shared_draft? && SiteSetting.shared_drafts_enabled? &&
+      object.topic.shared_draft.present?
   end
 
   def is_shared_draft
@@ -263,21 +277,22 @@ class TopicViewSerializer < ApplicationSerializer
     Group
       .joins(:group_users)
       .where(
-        id: object.topic.custom_fields['requested_group_id'].to_i,
-        group_users: { user_id: scope.user.id, owner: true }
+        id: object.topic.custom_fields["requested_group_id"].to_i,
+        group_users: {
+          user_id: scope.user.id,
+          owner: true,
+        },
       )
       .pluck_first(:name)
   end
 
   def include_requested_group_name?
-    object.personal_message && object.topic.custom_fields['requested_group_id']
+    object.personal_message && object.topic.custom_fields["requested_group_id"]
   end
 
   def include_published_page?
-    SiteSetting.enable_page_publishing? &&
-      scope.is_staff? &&
-      object.published_page.present? &&
-      !SiteSetting.secure_media
+    SiteSetting.enable_page_publishing? && scope.is_staff? && object.published_page.present? &&
+      !SiteSetting.secure_uploads
   end
 
   def thumbnails

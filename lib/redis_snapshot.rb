@@ -13,12 +13,7 @@ class RedisSnapshot
   def self.load(redis = Discourse.redis)
     keys = redis.keys
 
-    values =
-      redis.pipelined do
-        keys.each do |key|
-          redis.dump(key)
-        end
-      end
+    values = redis.pipelined { |batch| keys.each { |key| batch.dump(key) } }
 
     new(keys.zip(values).delete_if { |k, v| v.nil? })
   end
@@ -28,12 +23,10 @@ class RedisSnapshot
   end
 
   def restore(redis = Discourse.redis)
-    redis.pipelined do
-      redis.flushdb
+    redis.pipelined do |batch|
+      batch.flushdb
 
-      @dump.each do |key, value|
-        redis.restore(key, 0, value)
-      end
+      @dump.each { |key, value| batch.restore(key, 0, value) }
     end
 
     nil

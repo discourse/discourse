@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-if !ENV["RAILS_ENV"] && (ARGV[0] == "s" || ARGV[0] == "server")
+if !ENV["RAILS_ENV"] && (ARGV[0] == "s" || ARGV[0] == "server") && Process.respond_to?(:fork)
   ENV["UNICORN_PORT"] ||= "3000"
 
   if ARGV[1] == "-p" && (port = ARGV[2].to_i) > 0

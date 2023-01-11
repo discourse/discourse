@@ -1,15 +1,12 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
-describe GivenDailyLike do
-
-  it 'no errors without a user' do
-    expect(-> { GivenDailyLike.increment_for(nil) }).not_to raise_error
-    expect(-> { GivenDailyLike.decrement_for(nil) }).not_to raise_error
+RSpec.describe GivenDailyLike do
+  it "no errors without a user" do
+    expect { GivenDailyLike.increment_for(nil) }.not_to raise_error
+    expect { GivenDailyLike.decrement_for(nil) }.not_to raise_error
   end
 
-  context 'with a user' do
+  context "with a user" do
     fab!(:user) { Fabricate(:user) }
 
     def value_for(user_id, date)
@@ -20,7 +17,7 @@ describe GivenDailyLike do
       GivenDailyLike.find_for(user_id, date).pluck(:limit_reached)[0] || false
     end
 
-    it 'can be incremented and decremented' do
+    it "can be incremented and decremented" do
       SiteSetting.max_likes_per_day = 2
 
       dt = Date.today
@@ -45,7 +42,5 @@ describe GivenDailyLike do
       expect(value_for(user.id, dt)).to eq(0)
       expect(limit_reached_for(user.id, dt)).to eq(false)
     end
-
   end
-
 end

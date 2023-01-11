@@ -1,16 +1,12 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe "Pausing/Unpausing Sidekiq", type: :multisite do
   describe "#pause!, #unpause! and #paused?" do
     it "can pause and unpause" do
       Sidekiq.pause!
       expect(Sidekiq.paused?).to eq(true)
 
-      test_multisite_connection("second") do
-        expect(Sidekiq.paused?).to eq(false)
-      end
+      test_multisite_connection("second") { expect(Sidekiq.paused?).to eq(false) }
 
       Sidekiq.unpause!
 
@@ -25,27 +21,23 @@ RSpec.describe "Pausing/Unpausing Sidekiq", type: :multisite do
 
       Sidekiq.unpause_all!
 
-      RailsMultisite::ConnectionManagement.each_connection do
-        expect(Sidekiq.paused?).to eq(false)
-      end
+      RailsMultisite::ConnectionManagement.each_connection { expect(Sidekiq.paused?).to eq(false) }
     end
   end
 end
 
 RSpec.describe Sidekiq::Pausable, type: :multisite do
-  after do
-    Sidekiq.unpause_all!
-  end
+  after { Sidekiq.unpause_all! }
 
   describe "when sidekiq is paused" do
     let(:middleware) { Sidekiq::Pausable.new }
 
     def call_middleware(db = RailsMultisite::ConnectionManagement::DEFAULT)
-      middleware.call(Jobs::PostAlert.new, {
-        "args" => [{ "current_site_id" => db }]
-      }, "critical") do
-        yield
-      end
+      middleware.call(
+        Jobs::PostAlert.new,
+        { "args" => [{ "current_site_id" => db }] },
+        "critical",
+      ) { yield }
     end
 
     it "should delay the job" do

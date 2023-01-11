@@ -10,6 +10,10 @@
   <%= discourse_stylesheet_link_tag(:admin) %>
 <%- end %>
 
+<%- if admin? %>
+  <%= discourse_stylesheet_link_tag(:wizard) %>
+<%- end %>
+
 <%- Discourse.find_plugin_css_assets(include_official: allow_plugins?, include_unofficial: allow_third_party_plugins?, mobile_view: mobile_view?, desktop_view: !mobile_view?, request: request).each do |file| %>
   <%= discourse_stylesheet_link_tag(file) %>
 <%- end %>

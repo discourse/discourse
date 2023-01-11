@@ -1,7 +1,7 @@
 import { bind } from "discourse-common/utils/decorators";
 import discourseDebounce from "discourse-common/lib/debounce";
-import { isAppWebview } from "discourse/lib/utilities";
-import { later, run, schedule, throttle } from "@ember/runloop";
+import { run, throttle } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 import {
   nextTopicUrl,
   previousTopicUrl,
@@ -12,6 +12,25 @@ import domUtils from "discourse-common/utils/dom-utils";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import { ajax } from "discourse/lib/ajax";
 import { headerOffset } from "discourse/lib/offset-calculator";
+import { helperContext } from "discourse-common/lib/helpers";
+
+let extraKeyboardShortcutsHelp = {};
+function addExtraKeyboardShortcutHelp(help) {
+  const category = help.category;
+  if (extraKeyboardShortcutsHelp[category]) {
+    extraKeyboardShortcutsHelp[category] = extraKeyboardShortcutsHelp[
+      category
+    ].concat([help]);
+  } else {
+    extraKeyboardShortcutsHelp[category] = [help];
+  }
+}
+
+export function clearExtraKeyboardShortcutHelp() {
+  extraKeyboardShortcutsHelp = {};
+}
+
+export { extraKeyboardShortcutsHelp as extraKeyboardShortcutsHelp };
 
 const DEFAULT_BINDINGS = {
   "!": { postAction: "showFlags" },
@@ -31,7 +50,7 @@ const DEFAULT_BINDINGS = {
   "command+right": { handler: "webviewKeyboardForward", anonymous: true },
   "command+]": { handler: "webviewKeyboardForward", anonymous: true },
   "mod+p": { handler: "printTopic", anonymous: true },
-  d: { postAction: "deletePost" },
+  d: { postAction: "deletePostWithConfirmation" },
   e: { handler: "editPost" },
   end: { handler: "goToLastPost", anonymous: true },
   "command+down": { handler: "goToLastPost", anonymous: true },
@@ -116,11 +135,12 @@ export default {
 
     this.searchService = this.container.lookup("service:search");
     this.appEvents = this.container.lookup("service:app-events");
-    this.currentUser = this.container.lookup("current-user:main");
-    this.siteSettings = this.container.lookup("site-settings:main");
+    this.currentUser = this.container.lookup("service:current-user");
+    this.siteSettings = this.container.lookup("service:site-settings");
+    this.site = this.container.lookup("service:site");
 
     // Disable the shortcut if private messages are disabled
-    if (!this.siteSettings.enable_personal_messages) {
+    if (!this.currentUser?.can_send_private_messages) {
       delete DEFAULT_BINDINGS["g m"];
     }
   },
@@ -132,6 +152,10 @@ export default {
   },
 
   teardown() {
+    const prototype = Object.getPrototypeOf(this.keyTrapper);
+    prototype.stopCallback = this.oldStopCallback;
+    this.oldStopCallback = null;
+
     this.keyTrapper?.destroy();
     this.keyTrapper = null;
     this.container = null;
@@ -209,6 +233,16 @@ export default {
    * - path       - a specific path to limit the shortcut to .e.g /latest
    * - postAction - binds the shortcut to fire the specified post action when a
    *                post is selected
+   * - help       - adds the shortcut to the keyboard shortcuts modal. `help` is an object
+   *                with key/value pairs
+   *                {
+   *                  category: String,
+   *                  name: String,
+   *                  definition: (See function `buildShortcut` in
+   *                    app/assets/javascripts/discourse/app/controllers/keyboard-shortcuts-help.js
+   *                    for definition structure)
+   *                }
+   *
    * - click      - allows to provide a selector on which a click event
    *                will be triggered, eg: { click: ".topic.last .title" }
    **/
@@ -218,6 +252,9 @@ export default {
     shortcut = shortcut.trim();
     let newBinding = Object.assign({ handler: callback }, opts);
     this.bindKey(shortcut, newBinding);
+    if (opts.help) {
+      addExtraKeyboardShortcutHelp(opts.help);
+    }
   },
 
   // unbinds all the shortcuts in a key binding object e.g.
@@ -277,7 +314,10 @@ export default {
 
     this.sendToSelectedPost("replyToPost");
     // lazy but should work for now
-    later(() => $(".d-editor .quote").click(), 500);
+    discourseLater(
+      () => document.querySelector(".d-editor .quote")?.click(),
+      500
+    );
 
     return false;
   },
@@ -310,9 +350,9 @@ export default {
   },
 
   goToFirstSuggestedTopic() {
-    const $el = $(".suggested-topics a.raw-topic-link:first");
-    if ($el.length) {
-      $el.click();
+    const el = document.querySelector(".suggested-topics a.raw-topic-link");
+    if (el) {
+      el.click();
     } else {
       const controller = this.container.lookup("controller:topic");
       // Only the last page contains list of suggested topics.
@@ -342,7 +382,7 @@ export default {
   },
 
   _jumpTo(direction) {
-    if ($(".container.posts").length) {
+    if (document.querySelector(".container.posts")) {
       this.container.lookup("controller:topic").send(direction);
     }
   },
@@ -384,7 +424,7 @@ export default {
 
   printTopic(event) {
     run(() => {
-      if ($(".container.posts").length) {
+      if (document.querySelector(".container.posts")) {
         event.preventDefault(); // We need to stop printing the current page in Firefox
         this.container.lookup("controller:topic").print();
       }
@@ -399,9 +439,9 @@ export default {
     event.preventDefault();
 
     // If the page has a create-topic button, use it for context sensitive attributes like category
-    let $createTopicButton = $("#create-topic");
-    if ($createTopicButton.length) {
-      $createTopicButton.click();
+    const createTopicButton = document.querySelector("#create-topic");
+    if (createTopicButton) {
+      createTopicButton.click();
       return;
     }
 
@@ -413,16 +453,11 @@ export default {
 
   focusComposer(event) {
     const composer = this.container.lookup("controller:composer");
-    if (composer.get("model.viewOpen")) {
-      preventKeyboardEvent(event);
-
-      schedule("afterRender", () => {
-        const input = document.querySelector("textarea.d-editor-input");
-        input && input.focus();
-      });
-    } else {
-      composer.openIfDraft(event);
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
     }
+    composer.focusComposer(event);
   },
 
   fullscreenComposer() {
@@ -604,48 +639,47 @@ export default {
       this._lastMoveTime && now - this._lastMoveTime < 1.5 * animationDuration;
     this._lastMoveTime = now;
 
-    const $articles = this._findArticles();
-    if ($articles === undefined) {
+    let articles = this._findArticles();
+    if (articles === undefined) {
       return;
     }
+    articles = Array.from(articles);
 
-    let $selected = $articles.filter(".selected");
-    if ($selected.length === 0) {
-      $selected = $articles.filter("[data-islastviewedtopic=true]");
+    let selected = articles.find((element) =>
+      element.classList.contains("selected")
+    );
+    if (!selected) {
+      selected = articles.find(
+        (element) => element.dataset.islastviewedtopic === "true"
+      );
     }
 
     // Discard selection if it is not in viewport, so users can combine
     // keyboard shortcuts with mouse scrolling.
-    if ($selected.length !== 0 && !fast) {
-      const offset = headerOffset();
-      const beginScreen = $(window).scrollTop() - offset;
-      const endScreen = beginScreen + window.innerHeight + offset;
-      const beginArticle = $selected.offset().top;
-      const endArticle = $selected.offset().top + $selected.height();
-      if (beginScreen > endArticle || beginArticle > endScreen) {
-        $selected = null;
+    if (selected && !fast) {
+      const rect = selected.getBoundingClientRect();
+      if (rect.bottom < headerOffset() || rect.top > window.innerHeight) {
+        selected = null;
       }
     }
 
     // If still nothing is selected, select the first post that is
     // visible and cancel move operation.
-    if (!$selected || $selected.length === 0) {
+    if (!selected) {
       const offset = headerOffset();
-      $selected = $articles
-        .toArray()
-        .find((article) =>
-          direction > 0
-            ? article.getBoundingClientRect().top > offset
-            : article.getBoundingClientRect().bottom > offset
-        );
-      if (!$selected) {
-        $selected = $articles[$articles.length - 1];
+      selected = articles.find((article) =>
+        direction > 0
+          ? article.getBoundingClientRect().top >= offset
+          : article.getBoundingClientRect().bottom >= offset
+      );
+      if (!selected) {
+        selected = articles[articles.length - 1];
       }
       direction = 0;
     }
 
-    const index = $articles.index($selected);
-    let article = $articles.eq(index)[0];
+    const index = articles.indexOf(selected);
+    let article = selected;
 
     // Try doing a page scroll in the context of current post.
     if (!fast && direction !== 0 && article) {
@@ -678,25 +712,27 @@ export default {
     }
 
     // Try scrolling to post above or below.
-    if ($selected.length !== 0) {
+    if (!selected) {
       if (direction === -1 && index === 0) {
         return;
       }
-      if (direction === 1 && index === $articles.length - 1) {
+      if (direction === 1 && index === articles.length - 1) {
         return;
       }
     }
 
-    article = $articles.eq(index + direction)[0];
+    article = articles[index + direction];
     if (!article) {
       return;
     }
 
-    $articles.removeClass("selected");
+    for (const a of articles) {
+      a.classList.remove("selected");
+    }
     article.classList.add("selected");
 
     this.appEvents.trigger("keyboard:move-selection", {
-      articles: $articles.get(),
+      articles,
       selectedArticle: article,
     });
 
@@ -746,52 +782,55 @@ export default {
   },
 
   _onScrollEndsCallback() {
-    document.querySelector(".topic-post.selected a.tabLoc")?.focus();
+    document.querySelector(".topic-post.selected span.tabLoc")?.focus();
   },
 
   categoriesTopicsList() {
     switch (this.siteSettings.desktop_category_page_style) {
       case "categories_with_featured_topics":
-        return $(".latest .featured-topic");
+        return document.querySelectorAll(".latest .featured-topic");
       case "categories_and_latest_topics":
-        return $(".latest-topic-list .latest-topic-list-item");
+      case "categories_and_latest_topics_created_date":
+        return document.querySelectorAll(
+          ".latest-topic-list .latest-topic-list-item"
+        );
       case "categories_and_top_topics":
-        return $(".top-topic-list .latest-topic-list-item");
+        return document.querySelectorAll(
+          ".top-topic-list .latest-topic-list-item"
+        );
       default:
-        return $();
+        return [];
     }
   },
 
   _findArticles() {
-    const $topicList = $(".topic-list");
-    const $postsWrapper = $(".posts-wrapper");
-    const $categoriesTopicsList = this.categoriesTopicsList();
-    const $searchResults = $(".search-results");
-
-    if ($postsWrapper.length > 0) {
-      return $(".posts-wrapper .topic-post, .topic-list tbody tr");
-    } else if ($topicList.length > 0) {
-      return $topicList.find(".topic-list-item");
-    } else if ($categoriesTopicsList.length > 0) {
-      return $categoriesTopicsList;
-    } else if ($searchResults.length > 0) {
-      return $searchResults.find(".fps-result");
+    let categoriesTopicsList;
+    if (document.querySelector(".posts-wrapper")) {
+      return document.querySelectorAll(
+        ".posts-wrapper .topic-post, .topic-list tbody tr"
+      );
+    } else if (document.querySelector(".topic-list")) {
+      return document.querySelectorAll(".topic-list .topic-list-item");
+    } else if ((categoriesTopicsList = this.categoriesTopicsList())) {
+      return categoriesTopicsList;
+    } else if (document.querySelector(".search-results")) {
+      return document.querySelectorAll(".search-results .fps-result");
     }
   },
 
   _changeSection(direction) {
-    const $sections = $(".nav.nav-pills li"),
-      active = $(".nav.nav-pills li.active"),
-      index = $sections.index(active) + direction;
+    const sections = Array.from(document.querySelectorAll(".nav.nav-pills li"));
+    const active = document.querySelector(".nav.nav-pills li.active");
+    const index = sections.indexOf(active) + direction;
 
-    if (index >= 0 && index < $sections.length) {
-      $sections.eq(index).find("a").click();
+    if (index >= 0 && index < sections.length) {
+      sections[index].querySelector("a")?.click();
     }
   },
 
   _stopCallback() {
     const prototype = Object.getPrototypeOf(this.keyTrapper);
-    const oldStopCallback = prototype.stopCallback;
+    const oldCallback = (this.oldStopCallback = prototype.stopCallback);
 
     prototype.stopCallback = function (e, element, combo, sequence) {
       if (this.paused) {
@@ -805,7 +844,7 @@ export default {
         return false;
       }
 
-      return oldStopCallback.call(this, e, element, combo, sequence);
+      return oldCallback.call(this, e, element, combo, sequence);
     };
   },
 
@@ -830,13 +869,13 @@ export default {
   },
 
   webviewKeyboardBack() {
-    if (isAppWebview()) {
+    if (helperContext().capabilities.isAppWebview) {
       window.history.back();
     }
   },
 
   webviewKeyboardForward() {
-    if (isAppWebview()) {
+    if (helperContext().capabilities.isAppWebview) {
       window.history.forward();
     }
   },

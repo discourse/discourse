@@ -74,9 +74,10 @@ export default Controller.extend({
     saveEmail() {
       this.set("saving", true);
 
-      return (this.new
-        ? this.model.addEmail(this.newEmail)
-        : this.model.changeEmail(this.newEmail)
+      return (
+        this.new
+          ? this.model.addEmail(this.newEmail)
+          : this.model.changeEmail(this.newEmail)
       ).then(
         () => {
           this.set("success", true);

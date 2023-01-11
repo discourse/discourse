@@ -3,12 +3,11 @@ import {
   exists,
   loggedInUser,
   query,
-  queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
 import I18n from "I18n";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { skip } from "qunit";
+import { test } from "qunit";
 import topicFixtures from "discourse/tests/fixtures/topic";
 import { cloneJSON } from "discourse-common/lib/object";
 
@@ -82,16 +81,15 @@ acceptance("Bookmarking", function (needs) {
     function handleRequest(request) {
       const data = helper.parsePostData(request.requestBody);
 
-      if (data.post_id === "398") {
-        if (data.for_topic === "true") {
-          return helper.response({ id: 3, success: "OK" });
-        } else {
-          return helper.response({ id: 1, success: "OK" });
-        }
-      } else if (data.post_id === "419") {
+      if (data.bookmarkable_id === "398" && data.bookmarkable_type === "Post") {
+        return helper.response({ id: 1, success: "OK" });
+      } else if (data.bookmarkable_type === "Topic") {
+        return helper.response({ id: 3, success: "OK" });
+      } else if (
+        data.bookmarkable_id === "419" &&
+        data.bookmarkable_type === "Post"
+      ) {
         return helper.response({ id: 2, success: "OK" });
-      } else {
-        throw new Error("Pretender: unknown post_id");
       }
     }
     server.post("/bookmarks", handleRequest);
@@ -104,16 +102,20 @@ acceptance("Bookmarking", function (needs) {
     server.get("/t/280.json", () => helper.response(topicResponse));
   });
 
-  skip("Bookmarks modal opening", async function (assert) {
+  test("Bookmarks modal opening", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await openBookmarkModal();
     assert.ok(
       exists("#bookmark-reminder-modal"),
       "it shows the bookmark modal"
     );
+    assert.ok(
+      exists("#tap_tile_none.active"),
+      "it highlights the None option by default"
+    );
   });
 
-  skip("Bookmarks modal selecting reminder type", async function (assert) {
+  test("Bookmarks modal selecting reminder type", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
     await openBookmarkModal();
@@ -133,7 +135,7 @@ acceptance("Bookmarking", function (needs) {
     await click("#save-bookmark");
   });
 
-  skip("Saving a bookmark with a reminder", async function (assert) {
+  test("Saving a bookmark with a reminder", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await openBookmarkModal();
     await fillIn("input#bookmark-name", "Check this out later");
@@ -151,9 +153,13 @@ acceptance("Bookmarking", function (needs) {
     );
   });
 
-  skip("Opening the options panel and remembering the option", async function (assert) {
+  test("Opening the options panel and remembering the option", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await openBookmarkModal();
+    assert.notOk(
+      exists(".bookmark-options-panel"),
+      "it should not open the options panel by default"
+    );
     await click(".bookmark-options-button");
     assert.ok(
       exists(".bookmark-options-panel"),
@@ -174,7 +180,7 @@ acceptance("Bookmarking", function (needs) {
     );
   });
 
-  skip("Saving a bookmark with no reminder or name", async function (assert) {
+  test("Saving a bookmark with no reminder or name", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await openBookmarkModal();
     await click("#save-bookmark");
@@ -183,7 +189,7 @@ acceptance("Bookmarking", function (needs) {
       exists(".topic-post:first-child button.bookmark.bookmarked"),
       "it shows the bookmarked icon on the post"
     );
-    assert.not(
+    assert.notOk(
       exists(
         ".topic-post:first-child button.bookmark.bookmarked > .d-icon-discourse-bookmark-clock"
       ),
@@ -191,7 +197,7 @@ acceptance("Bookmarking", function (needs) {
     );
   });
 
-  skip("Deleting a bookmark with a reminder", async function (assert) {
+  test("Deleting a bookmark with a reminder", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await openBookmarkModal();
     await click("#tap_tile_tomorrow");
@@ -205,35 +211,35 @@ acceptance("Bookmarking", function (needs) {
 
     await click("#delete-bookmark");
 
-    assert.ok(exists(".bootbox.modal"), "it asks for delete confirmation");
+    assert.ok(exists(".dialog-body"), "it asks for delete confirmation");
     assert.ok(
-      queryAll(".bootbox.modal")
-        .text()
-        .includes(I18n.t("bookmarks.confirm_delete")),
+      query(".dialog-body").innerText.includes(
+        I18n.t("bookmarks.confirm_delete")
+      ),
       "it shows delete confirmation message"
     );
 
-    await click(".bootbox.modal .btn-primary");
+    await click(".dialog-footer .btn-danger");
 
-    assert.not(
+    assert.notOk(
       exists(".topic-post:first-child button.bookmark.bookmarked"),
       "it no longer shows the bookmarked icon on the post after bookmark is deleted"
     );
   });
 
-  skip("Cancelling saving a bookmark", async function (assert) {
+  test("Cancelling saving a bookmark", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await openBookmarkModal();
     await click(".d-modal-cancel");
-    assert.not(
+    assert.notOk(
       exists(".topic-post:first-child button.bookmark.bookmarked"),
       "it does not show the bookmarked icon on the post because it is not saved"
     );
   });
 
-  skip("Editing a bookmark", async function (assert) {
+  test("Editing a bookmark", async function (assert) {
     await visit("/t/internationalization-localization/280");
-    let now = moment.tz(loggedInUser().resolvedTimezone(loggedInUser()));
+    let now = moment.tz(loggedInUser().user_option.timezone);
     let tomorrow = now.add(1, "day").format("YYYY-MM-DD");
     await openBookmarkModal();
     await fillIn("input#bookmark-name", "Test name");
@@ -241,28 +247,25 @@ acceptance("Bookmarking", function (needs) {
 
     await openEditBookmarkModal();
     assert.strictEqual(
-      queryAll("#bookmark-name").val(),
+      query("#bookmark-name").value,
       "Test name",
       "it should prefill the bookmark name"
     );
     assert.strictEqual(
-      queryAll("#custom-date > input").val(),
+      query("#custom-date > input").value,
       tomorrow,
       "it should prefill the bookmark date"
     );
     assert.strictEqual(
-      queryAll("#custom-time").val(),
+      query("#custom-time").value,
       "08:00",
       "it should prefill the bookmark time"
     );
   });
 
-  skip("Using a post date for the reminder date", async function (assert) {
+  test("Using a post date for the reminder date", async function (assert) {
     await visit("/t/internationalization-localization/280");
-    let postDate = moment.tz(
-      "2036-01-15",
-      loggedInUser().resolvedTimezone(loggedInUser())
-    );
+    let postDate = moment.tz("2036-01-15", loggedInUser().user_option.timezone);
     let postDateFormatted = postDate.format("YYYY-MM-DD");
     await openBookmarkModal();
     await fillIn("input#bookmark-name", "Test name");
@@ -270,23 +273,23 @@ acceptance("Bookmarking", function (needs) {
 
     await openEditBookmarkModal();
     assert.strictEqual(
-      queryAll("#bookmark-name").val(),
+      query("#bookmark-name").value,
       "Test name",
       "it should prefill the bookmark name"
     );
     assert.strictEqual(
-      queryAll("#custom-date > input").val(),
+      query("#custom-date > input").value,
       postDateFormatted,
       "it should prefill the bookmark date"
     );
     assert.strictEqual(
-      queryAll("#custom-time").val(),
+      query("#custom-time").value,
       "10:35",
       "it should prefill the bookmark time"
     );
   });
 
-  skip("Cannot use the post date for a reminder when the post date is in the past", async function (assert) {
+  test("Cannot use the post date for a reminder when the post date is in the past", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await openBookmarkModal(2);
     assert.notOk(
@@ -295,9 +298,9 @@ acceptance("Bookmarking", function (needs) {
     );
   });
 
-  skip("The topic level bookmark button deletes all bookmarks if several posts on the topic are bookmarked", async function (assert) {
-    const yesButton = "a.btn-primary";
-    const noButton = "a.btn-default";
+  test("The topic level bookmark button deletes all bookmarks if several posts on the topic are bookmarked", async function (assert) {
+    const yesButton = ".dialog-footer .btn-primary";
+    const noButton = ".dialog-footer .btn-default";
 
     await visit("/t/internationalization-localization/280");
     await openBookmarkModal(1);
@@ -341,7 +344,7 @@ acceptance("Bookmarking", function (needs) {
     );
   });
 
-  skip("The topic level bookmark button opens the edit modal if only the first post on the topic is bookmarked", async function (assert) {
+  test("The topic level bookmark button opens the edit modal if only the first post on the topic is bookmarked", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await openBookmarkModal(1);
     await click("#save-bookmark");
@@ -360,16 +363,9 @@ acceptance("Bookmarking", function (needs) {
     );
   });
 
-  skip("Creating and editing a topic level bookmark", async function (assert) {
+  test("Creating and editing a topic level bookmark", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-button-bookmark");
-
-    assert.strictEqual(
-      query("#discourse-modal-title").innerText,
-      I18n.t("post.bookmarks.create_for_topic"),
-      "The create modal says creating a topic bookmark"
-    );
-
     await click("#save-bookmark");
 
     assert.notOk(
@@ -384,13 +380,6 @@ acceptance("Bookmarking", function (needs) {
     );
 
     await click("#topic-footer-button-bookmark");
-
-    assert.strictEqual(
-      query("#discourse-modal-title").innerText,
-      I18n.t("post.bookmarks.edit_for_topic"),
-      "The edit modal says editing a topic bookmark"
-    );
-
     await fillIn("input#bookmark-name", "Test name");
     await click("#tap_tile_tomorrow");
 
@@ -419,7 +408,7 @@ acceptance("Bookmarking", function (needs) {
       "the footer button says Clear Bookmarks because there is more than one"
     );
     await click("#topic-footer-button-bookmark");
-    await click("a.btn-primary");
+    await click(".dialog-footer .btn-primary");
 
     assert.ok(
       !exists(".topic-post:first-child button.bookmark.bookmarked"),
@@ -432,7 +421,7 @@ acceptance("Bookmarking", function (needs) {
     );
   });
 
-  skip("Deleting a topic_level bookmark with a reminder", async function (assert) {
+  test("Deleting a topic_level bookmark with a reminder", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-button-bookmark");
     await click("#save-bookmark");
@@ -450,15 +439,15 @@ acceptance("Bookmarking", function (needs) {
     await click("#topic-footer-button-bookmark");
     await click("#delete-bookmark");
 
-    assert.ok(exists(".bootbox.modal"), "it asks for delete confirmation");
+    assert.ok(exists(".dialog-body"), "it asks for delete confirmation");
     assert.ok(
-      queryAll(".bootbox.modal")
-        .text()
-        .includes(I18n.t("bookmarks.confirm_delete")),
+      query(".dialog-body").innerText.includes(
+        I18n.t("bookmarks.confirm_delete")
+      ),
       "it shows delete confirmation message"
     );
 
-    await click(".bootbox.modal .btn-primary");
+    await click(".dialog-footer .btn-danger");
 
     assert.strictEqual(
       query("#topic-footer-button-bookmark").innerText,
@@ -467,7 +456,7 @@ acceptance("Bookmarking", function (needs) {
     );
   });
 
-  skip("The topic level bookmark button opens the edit modal if only one post in the post stream is bookmarked", async function (assert) {
+  test("The topic level bookmark button opens the edit modal if only one post in the post stream is bookmarked", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await openBookmarkModal(2);
     await click("#save-bookmark");
@@ -486,12 +475,12 @@ acceptance("Bookmarking", function (needs) {
     );
   });
 
-  skip("The topic level bookmark button shows an icon with a clock if there is a bookmark with a reminder on the first post", async function (assert) {
+  test("The topic level bookmark button shows an icon with a clock if there is a bookmark with a reminder on the first post", async function (assert) {
     const postNumber = 1;
     await testTopicLevelBookmarkButtonIcon(assert, postNumber);
   });
 
-  skip("The topic level bookmark button shows an icon with a clock if there is a bookmark with a reminder on the second post", async function (assert) {
+  test("The topic level bookmark button shows an icon with a clock if there is a bookmark with a reminder on the second post", async function (assert) {
     const postNumber = 2;
     await testTopicLevelBookmarkButtonIcon(assert, postNumber);
   });

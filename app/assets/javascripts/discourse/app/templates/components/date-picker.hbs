@@ -1,6 +1,7 @@
-{{input
-  type=inputType
+<Input
+  @type={{this.inputType}}
   class="date-picker"
-  placeholder=placeholder
-  value=value
-}}
+  placeholder={{this.placeholder}}
+  @value={{this.value}}
+  autocomplete="off"
+/>

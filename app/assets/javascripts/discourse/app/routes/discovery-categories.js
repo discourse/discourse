@@ -4,7 +4,6 @@ import EmberObject, { action } from "@ember/object";
 import I18n from "I18n";
 import OpenComposer from "discourse/mixins/open-composer";
 import PreloadStore from "discourse/lib/preload-store";
-import Site from "discourse/models/site";
 import TopicList from "discourse/models/topic-list";
 import { ajax } from "discourse/lib/ajax";
 import { defaultHomepage } from "discourse/lib/utilities";
@@ -24,10 +23,17 @@ const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
     let style =
       !this.site.mobileView && this.siteSettings.desktop_category_page_style;
 
-    if (style === "categories_and_latest_topics") {
+    if (
+      style === "categories_and_latest_topics" ||
+      style === "categories_and_latest_topics_created_date"
+    ) {
       return this._findCategoriesAndTopics("latest");
     } else if (style === "categories_and_top_topics") {
       return this._findCategoriesAndTopics("top");
+    } else {
+      // The server may have serialized this. Based on the logic above, we don't need it
+      // so remove it to avoid it being used later by another TopicList route.
+      PreloadStore.remove("topic_list");
     }
 
     return CategoryList.list(this.store);
@@ -43,11 +49,12 @@ const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
       return model;
     });
   },
+
   _loadBefore(store) {
     return function (topic_ids, storeInSession) {
       // refresh dupes
       this.topics.removeObjects(
-        this.topics.filter((topic) => topic_ids.indexOf(topic.id) >= 0)
+        this.topics.filter((topic) => topic_ids.includes(topic.id))
       );
 
       const url = `${getURL("/")}latest.json?topic_ids=${topic_ids.join(",")}`;
@@ -71,10 +78,11 @@ const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
       });
     };
   },
+
   _findCategoriesAndTopics(filter) {
     return hash({
       wrappedCategoriesList: PreloadStore.getAndRemove("categories_list"),
-      topicsList: PreloadStore.getAndRemove(`topic_list_${filter}`),
+      topicsList: PreloadStore.getAndRemove("topic_list"),
     }).then((response) => {
       let { wrappedCategoriesList, topicsList } = response;
       let categoriesList =
@@ -82,8 +90,8 @@ const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
       let store = this.store;
 
       if (categoriesList && topicsList) {
-        if (topicsList.topic_list && topicsList.topic_list.top_tags) {
-          Site.currentProp("top_tags", topicsList.topic_list.top_tags);
+        if (topicsList.topic_list?.top_tags) {
+          this.site.set("top_tags", topicsList.topic_list.top_tags);
         }
 
         return EmberObject.create({
@@ -99,8 +107,8 @@ const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
       }
       // Otherwise, return the ajax result
       return ajax(`/categories_and_${filter}`).then((result) => {
-        if (result.topic_list && result.topic_list.top_tags) {
-          Site.currentProp("top_tags", result.topic_list.top_tags);
+        if (result.topic_list?.top_tags) {
+          this.site.set("top_tags", result.topic_list.top_tags);
         }
 
         return EmberObject.create({

@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
-describe Developer do
+RSpec.describe Developer do
   it "can correctly flag developer accounts" do
     user = Fabricate(:user)
     guardian = Guardian.new(user)

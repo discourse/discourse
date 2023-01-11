@@ -13,8 +13,7 @@ class InviteSerializer < ApplicationSerializer
              :created_at,
              :updated_at,
              :expires_at,
-             :expired,
-             :warnings
+             :expired
 
   has_many :topics, embed: :object, serializer: BasicTopicSerializer
   has_many :groups, embed: :object, serializer: BasicGroupSerializer
@@ -45,13 +44,5 @@ class InviteSerializer < ApplicationSerializer
 
   def expired
     object.expired?
-  end
-
-  def warnings
-    object.warnings(scope)
-  end
-
-  def include_warnings?
-    object.warnings(scope).present?
   end
 end

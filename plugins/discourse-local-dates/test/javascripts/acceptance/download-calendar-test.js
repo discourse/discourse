@@ -8,14 +8,15 @@ import I18n from "I18n";
 import { test } from "qunit";
 import { fixturesByUrl } from "discourse/tests/helpers/create-pretender";
 import sinon from "sinon";
+import { cloneJSON } from "discourse-common/lib/object";
 
 acceptance(
   "Local Dates - Download calendar without default calendar option set",
   function (needs) {
-    needs.user({ default_calendar: "none_selected" });
+    needs.user({ "user_option.default_calendar": "none_selected" });
     needs.settings({ discourse_local_dates_enabled: true });
     needs.pretender((server, helper) => {
-      const response = { ...fixturesByUrl["/t/281.json"] };
+      const response = cloneJSON(fixturesByUrl["/t/281.json"]);
       const startDate = moment
         .tz("Africa/Cairo")
         .add(1, "days")
@@ -42,10 +43,10 @@ acceptance(
 acceptance(
   "Local Dates - Download calendar is not available for dates in the past",
   function (needs) {
-    needs.user({ default_calendar: "none_selected" });
+    needs.user({ "user_option.default_calendar": "none_selected" });
     needs.settings({ discourse_local_dates_enabled: true });
     needs.pretender((server, helper) => {
-      const response = { ...fixturesByUrl["/t/281.json"] };
+      const response = cloneJSON(fixturesByUrl["/t/281.json"]);
       const startDate = moment
         .tz("Africa/Cairo")
         .subtract(1, "days")
@@ -68,10 +69,10 @@ acceptance(
 acceptance(
   "Local Dates - Download calendar with default calendar option set",
   function (needs) {
-    needs.user({ default_calendar: "google" });
+    needs.user({ "user_option.default_calendar": "google" });
     needs.settings({ discourse_local_dates_enabled: true });
     needs.pretender((server, helper) => {
-      const response = { ...fixturesByUrl["/t/281.json"] };
+      const response = cloneJSON(fixturesByUrl["/t/281.json"]);
       const startDate = moment
         .tz("Africa/Cairo")
         .add(1, "days")

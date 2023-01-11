@@ -6,10 +6,31 @@ import { getURLWithCDN } from "discourse-common/lib/get-url";
 import { isEmpty } from "@ember/utils";
 import lightbox from "discourse/lib/lightbox";
 import { next } from "@ember/runloop";
+import { htmlSafe } from "@ember/template";
+import { authorizesOneOrMoreExtensions } from "discourse/lib/uploads";
+import I18n from "I18n";
 
 export default Component.extend(UppyUploadMixin, {
   classNames: ["image-uploader"],
-  uploadingOrProcessing: or("uploading", "processing"),
+  disabled: or("notAllowed", "uploading", "processing"),
+
+  @discourseComputed("disabled", "notAllowed")
+  disabledReason(disabled, notAllowed) {
+    if (disabled && notAllowed) {
+      return I18n.t("post.errors.no_uploads_authorized");
+    }
+  },
+
+  @discourseComputed(
+    "currentUser.staff",
+    "siteSettings.{authorized_extensions,authorized_extensions_for_staff}"
+  )
+  notAllowed() {
+    return !authorizesOneOrMoreExtensions(
+      this.currentUser?.staff,
+      this.siteSettings
+    );
+  },
 
   @discourseComputed("imageUrl", "placeholderUrl")
   showingPlaceholder(imageUrl, placeholderUrl) {
@@ -19,15 +40,15 @@ export default Component.extend(UppyUploadMixin, {
   @discourseComputed("placeholderUrl")
   placeholderStyle(url) {
     if (isEmpty(url)) {
-      return "".htmlSafe();
+      return htmlSafe("");
     }
-    return `background-image: url(${url})`.htmlSafe();
+    return htmlSafe(`background-image: url(${url})`);
   },
 
   @discourseComputed("imageUrl")
   imageCDNURL(url) {
     if (isEmpty(url)) {
-      return "".htmlSafe();
+      return htmlSafe("");
     }
 
     return getURLWithCDN(url);
@@ -35,7 +56,7 @@ export default Component.extend(UppyUploadMixin, {
 
   @discourseComputed("imageCDNURL")
   backgroundStyle(url) {
-    return `background-image: url(${url})`.htmlSafe();
+    return htmlSafe(`background-image: url(${url})`);
   },
 
   @discourseComputed("imageUrl")
@@ -48,6 +69,12 @@ export default Component.extend(UppyUploadMixin, {
 
   validateUploadedFilesOptions() {
     return { imagesOnly: true };
+  },
+
+  _uppyReady() {
+    this._onPreProcessComplete(() => {
+      this.set("processing", false);
+    });
   },
 
   uploadDone(upload) {

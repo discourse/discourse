@@ -16,7 +16,11 @@ class UserCardSerializer < BasicUserSerializer
     attributes(*attrs)
     attrs.each do |attr|
       define_method "include_#{attr}?" do
-        can_edit
+        if defined?(super)
+          super() && can_edit
+        else
+          can_edit
+        end
       end
     end
   end
@@ -66,13 +70,10 @@ class UserCardSerializer < BasicUserSerializer
              :flair_color,
              :featured_topic,
              :timezone,
-             :pending_posts_count
+             :pending_posts_count,
+             :status
 
-  untrusted_attributes :bio_excerpt,
-                       :website,
-                       :website_name,
-                       :location,
-                       :card_background_upload_url
+  untrusted_attributes :bio_excerpt, :website, :website_name, :location, :card_background_upload_url
 
   staff_attributes :staged
 
@@ -86,8 +87,7 @@ class UserCardSerializer < BasicUserSerializer
   end
 
   def include_email?
-    (object.id && object.id == scope.user.try(:id)) ||
-      (scope.is_staff? && object.staged?)
+    (object.id && object.id == scope.user.try(:id)) || (scope.is_staff? && object.staged?)
   end
 
   alias_method :include_secondary_emails?, :include_email?
@@ -106,13 +106,14 @@ class UserCardSerializer < BasicUserSerializer
   end
 
   def website_name
-    uri = begin
-      URI(website.to_s)
-    rescue URI::Error
-    end
+    uri =
+      begin
+        URI(website.to_s)
+      rescue URI::Error
+      end
 
     return if uri.nil? || uri.host.nil?
-    uri.host.sub(/^www\./, '') + uri.path
+    uri.host.sub(/^www\./, "") + uri.path
   end
 
   def ignored
@@ -136,7 +137,7 @@ class UserCardSerializer < BasicUserSerializer
   # Needed because 'send_private_message_to_user' will always return false
   # when the current user is being serialized
   def can_send_private_messages
-    scope.can_send_private_message?(Discourse.system_user)
+    scope.can_send_private_messages?
   end
 
   def can_send_private_message_to_user
@@ -220,6 +221,14 @@ class UserCardSerializer < BasicUserSerializer
 
   def card_background_upload_url
     object.card_background_upload&.url
+  end
+
+  def include_status?
+    SiteSetting.enable_user_status && user.has_status?
+  end
+
+  def status
+    UserStatusSerializer.new(user.user_status, root: false)
   end
 
   private

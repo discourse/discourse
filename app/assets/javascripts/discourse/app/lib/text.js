@@ -23,6 +23,7 @@ function getOpts(opts) {
       formatUsername,
       watchedWordsReplace: context.site.watched_words_replace,
       watchedWordsLink: context.site.watched_words_link,
+      additionalOptions: context.site.markdown_additional_options,
     },
     opts
   );
@@ -42,7 +43,7 @@ export function cookAsync(text, options) {
 }
 
 // Warm up pretty text with a set of options and return a function
-// which can be used to cook without rebuilding prettytext every time
+// which can be used to cook without rebuilding pretty-text every time
 export function generateCookFunction(options) {
   return loadMarkdownIt().then(() => {
     const prettyText = createPrettyText(options);
@@ -64,6 +65,12 @@ export function sanitize(text, options) {
 export function sanitizeAsync(text, options) {
   return loadMarkdownIt().then(() => {
     return createPrettyText(options).sanitize(text);
+  });
+}
+
+export function parseAsync(md, options = {}, env = {}) {
+  return loadMarkdownIt().then(() => {
+    return createPrettyText(options).opts.engine.parse(md, env);
   });
 }
 
@@ -141,7 +148,7 @@ export function excerpt(cooked, length) {
 
     if (element.nodeType === Node.TEXT_NODE) {
       if (resultLength + element.textContent.length > length) {
-        const text = element.textContent.substr(0, length - resultLength);
+        const text = element.textContent.slice(0, length - resultLength);
         result += encode(text);
         result += "&hellip;";
         resultLength += text.length;

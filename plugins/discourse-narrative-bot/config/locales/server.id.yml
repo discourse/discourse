@@ -26,6 +26,7 @@ id:
   discourse_narrative_bot:
     bio: "Hai, aku bukan orang sungguhan. Aku adalah bot yang dapat mengajari kami tentang situs ini. Untuk berinteraksi denganku, kirimkan aku sebuah pesan atau sebutkan namaku."
     tl2_promotion_message:
+      subject_template: "Sekarang Anda telah dipromosikan, saatnya mempelajari beberapa fitur lanjutan!"
       text_body_template: |
         Balas pesan ini dengan `@%{discobot_username} %{reset_trigger}` untuk mengetahui lebih lanjut apa yang Anda bisa lakukan.
     timeout:
@@ -81,6 +82,15 @@ id:
       "10":
         quote: "Jika pikiran seseorang mau membayangi dan mempercayai sesuatu, hal itu akan tercapai."
         author: "Napoleon Hill"
+      "11":
+        quote: "Damai di rumah Damai di Dunia."
+        author: "Mustafa Kemal Ataturk"
+      "12":
+        quote: "Pendidikan bukanlah cara untuk keluar dari kemiskinan, itu adalah cara untuk memeranginya."
+        author: "Julius Nyerere"
+      "13":
+        quote: "Perjalanan seribu mil harus dimulai dengan satu langkah."
+        author: "Lao Tzu"
       results: |-
         > :left_speech_bubble: _%{quote}_ &mdash; %{author}
     magic_8_ball:

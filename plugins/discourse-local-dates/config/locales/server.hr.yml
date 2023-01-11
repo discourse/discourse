@@ -1,0 +1,12 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hr:
+  site_settings:
+    discourse_local_dates_enabled: "Uključire discourse-local-dates mogućnost. Ovo će dati podršku datumima iz objava koji ovise o lokalnim vremenskim zonama i koriste [date] element."
+    discourse_local_dates_default_formats: "Često upotrebljavani formati datuma i vremena, vidi: <a target='_blank' rel='noopener' href='https://momentjs.com/docs/#/parsing/string-format/'>momentjs string format</a>"
+    discourse_local_dates_default_timezones: "Zadana lista vremenskih zona, mora biti važeća <a target='_blank' rel='noopener' href='https://en.wikipedia.org/wiki/List_of_tz_database_time_zones'>TZ</a>"
+    discourse_local_dates_email_format: "Format koji se koristi za prikaz datuma u email-ovima."

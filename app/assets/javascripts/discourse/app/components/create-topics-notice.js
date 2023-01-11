@@ -4,11 +4,13 @@ import I18n from "I18n";
 import LivePostCounts from "discourse/models/live-post-counts";
 import { alias } from "@ember/object/computed";
 import { htmlSafe } from "@ember/template";
+import { inject as service } from "@ember/service";
 
 export default Component.extend({
   classNameBindings: ["hidden:hidden", ":create-topics-notice"],
 
   enabled: false,
+  router: service(),
 
   publicTopicCount: null,
   publicPostCount: null,
@@ -37,14 +39,16 @@ export default Component.extend({
     }
   },
 
-  @discourseComputed()
-  shouldSee() {
-    const user = this.currentUser;
+  @discourseComputed(
+    "siteSettings.show_create_topics_notice",
+    "router.currentRouteName"
+  )
+  shouldSee(showCreateTopicsNotice, currentRouteName) {
     return (
-      user &&
-      user.get("admin") &&
-      this.siteSettings.show_create_topics_notice &&
-      !this.site.get("wizard_required")
+      this.currentUser?.get("admin") &&
+      showCreateTopicsNotice &&
+      !this.site.get("wizard_required") &&
+      !currentRouteName.startsWith("wizard")
     );
   },
 
@@ -54,12 +58,12 @@ export default Component.extend({
     "publicTopicCount",
     "publicPostCount"
   )
-  hidden() {
+  hidden(enabled, shouldSee, publicTopicCount, publicPostCount) {
     return (
-      !this.enabled ||
-      !this.shouldSee ||
-      this.publicTopicCount == null ||
-      this.publicPostCount == null
+      !enabled ||
+      !shouldSee ||
+      publicTopicCount == null ||
+      publicPostCount == null
     );
   },
 
@@ -68,15 +72,15 @@ export default Component.extend({
     "publicPostCount",
     "topicTrackingState.incomingCount"
   )
-  message() {
+  message(publicTopicCount, publicPostCount) {
     let msg = null;
 
     if (
-      this.publicTopicCount < this.requiredTopics &&
-      this.publicPostCount < this.requiredPosts
+      publicTopicCount < this.requiredTopics &&
+      publicPostCount < this.requiredPosts
     ) {
       msg = "too_few_topics_and_posts_notice_MF";
-    } else if (this.publicTopicCount < this.requiredTopics) {
+    } else if (publicTopicCount < this.requiredTopics) {
       msg = "too_few_topics_notice_MF";
     } else {
       msg = "too_few_posts_notice_MF";
@@ -86,8 +90,8 @@ export default Component.extend({
       I18n.messageFormat(msg, {
         requiredTopics: this.requiredTopics,
         requiredPosts: this.requiredPosts,
-        currentTopics: this.publicTopicCount,
-        currentPosts: this.publicPostCount,
+        currentTopics: publicTopicCount,
+        currentPosts: publicPostCount,
       })
     );
   },

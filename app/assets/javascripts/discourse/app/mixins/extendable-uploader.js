@@ -92,7 +92,7 @@ export default Mixin.create(UploadDebugging, {
     });
   },
 
-  _onPreProcessComplete(callback, allCompleteCallback) {
+  _onPreProcessComplete(callback, allCompleteCallback = null) {
     this._uppyInstance.on("preprocess-complete", (file, skipped, pluginId) => {
       this._consoleDebug(
         `[${pluginId}] ${skipped ? "skipped" : "completed"} processing file ${
@@ -105,7 +105,9 @@ export default Mixin.create(UploadDebugging, {
       this._completePreProcessing(pluginId, (allComplete) => {
         if (allComplete) {
           this._consoleDebug("[uppy] All upload preprocessors complete!");
-          allCompleteCallback();
+          if (allCompleteCallback) {
+            allCompleteCallback();
+          }
         }
       });
     });
@@ -137,6 +139,7 @@ export default Mixin.create(UploadDebugging, {
   _addNeedProcessing(fileCount) {
     this._eachPreProcessor((pluginName, status) => {
       status.needProcessing += fileCount;
+      status.allComplete = false;
     });
   },
 
@@ -165,6 +168,7 @@ export default Mixin.create(UploadDebugging, {
     ) {
       preProcessorStatus.allComplete = true;
       preProcessorStatus.needProcessing = 0;
+      preProcessorStatus.completeProcessing = 0;
 
       if (this._allPreprocessorsComplete()) {
         callback(true);

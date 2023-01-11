@@ -56,8 +56,6 @@ bs_BA:
   themes:
     bad_color_scheme: "Ne može se ažurirati tema, nevažeća paleta boja"
     other_error: "Nešto je krenulo loše pri ažuriranju izgleda teme."
-    compile_error:
-      unrecognized_extension: "Neprepoznata ekstenzija datoteke: %{extension}"
     import_error:
       about_json_values: "o .json sadrži nevažeće vrijednosti: %{errors}"
       git: "Greška prilikom kloniranja git repository-a, pristup je odbijen ili repositroy nije pronađen."
@@ -120,6 +118,9 @@ bs_BA:
       load_from_remote: "There was an error loading that post."
   invite:
     confirm_email: "<p>Skoro ste gotovi! Na vašu e-adresu poslali smo aktivacijski mail. Slijedite upute u pošti da biste aktivirali svoj račun.</p><p>Ako ne stigne, provjerite svoju mapu neželjene pošte.</p>"
+  topic_invite:
+    muted_topic: "Žao nam je, navedeni korisnik je utišao ovu temu."
+    receiver_does_not_allow_pm: "Žao nam je, navedeni korisnik vam ne dozvoljava da mu šaljete privatne poruke."
   backup:
     operation_already_running: "An operation is currently running. Can't start a new job right now."
     backup_file_should_be_tar_gz: "The backup file should be a .tar.gz archive."
@@ -224,13 +225,10 @@ bs_BA:
             hex:
               invalid: "is not a valid color"
       <<: *errors
-  vip_category_name: "Lounge"
-  vip_category_description: "A category exclusive to members with trust level 3 and higher."
+  general_category_name: "General"
   meta_category_description: "Discussion about this site, its organization, how it works, and how we can improve it."
   staff_category_name: "Staff"
   staff_category_description: "Private category for staff discussions. Topics are only visible to admins and moderators."
-  lounge_welcome:
-    title: "Welcome to the Lounge"
   category:
     topic_prefix: "About the %{category} category"
     errors:
@@ -312,10 +310,6 @@ bs_BA:
         few: "prije %{count} mjeseca"
         other: "prije %{count} mjeseci"
   password_reset:
-    choose_new: "Izaberite novu šifru"
-    choose: "Izaberite šifru"
-    update: "Obnovi Šifru"
-    save: "Namjesti Šifru"
     title: "Resetuj Šifru"
     success: "Uspješno ste promjenili šifru i sada se možete ulogovati."
     success_unapproved: "Uspješno ste promjenili šifru."
@@ -363,7 +357,6 @@ bs_BA:
       long_form: "opomenuo kao spam"
     inappropriate:
       title: "Inappropriate"
-      description: 'Ova tema sadrži sadržaj koji bi razumna osoba smatrala uvredljivim, nasilnim ili kršenjem <a href="%{base_path}/guidelines">smjernica naše zajednice</a>.'
       long_form: "opomenuto kao neprikladno"
     notify_moderators:
       title: "Obavijesti Moderatore"
@@ -435,6 +428,11 @@ bs_BA:
         post: Objava
         editor: Urednik
         edit_reason: Reason
+    consolidated_api_requests:
+      xaxis:
+        api: "API"
+        user_api: "Korisnički API"
+      yaxis: "Day"
     dau_by_mau:
       xaxis: "Day"
     daily_engaged_users:
@@ -616,17 +614,12 @@ bs_BA:
     allow_duplicate_topic_titles: "Allow topics with identical, duplicate titles."
     unique_posts_mins: "How many minutes before a user can make a post with the same content again"
     educate_until_posts: "When the user starts typing their first (n) new posts, show the pop-up new user education panel in the composer."
-    title: "Brief title of this site, used in the title tag."
-    site_description: "Describe this site in one sentence, used in the meta description tag."
     crawl_images: "Retrieve images from remote URLs to insert the correct width and height dimensions."
-    download_remote_images_to_local: "Convert remote images to local images by downloading them; this prevents broken images."
     download_remote_images_threshold: "Minimum disk space necessary to download remote images locally (in percent)"
     disabled_image_download_domains: "Remote images will never be downloaded from these domains. Pipe-delimited list."
     editing_grace_period: "For (n) seconds after posting, editing will not create a new version in the post history."
     edit_history_visible_to_public: "Allow everyone to see previous versions of an edited post. When disabled, only staff members can view."
     delete_removed_posts_after: "Posts removed by the author will be automatically deleted after (n) hours. If set to 0, posts will be deleted immediately."
-    max_image_width: "Maximum thumbnail width of images in a post"
-    max_image_height: "Maximum thumbnail height of images in a post"
     fixed_category_positions: "If checked, you will be able to arrange categories into a fixed order. If unchecked, categories are listed in order of activity."
     add_rel_nofollow_to_user_content: 'Add rel nofollow to all submitted user content, except for internal links (including parent domains). If you change this, you must rebake all posts with: "rake posts:rebake"'
     post_excerpt_maxlength: "Maximum length of a post excerpt / summary."
@@ -635,8 +628,6 @@ bs_BA:
     email_custom_headers: "A pipe-delimited list of custom email headers"
     summary_score_threshold: "The minimum score required for a post to be included in 'Summarize This Topic'"
     summary_percent_filter: "When a user clicks 'Summarize This Topic', show the top % of posts"
-    enable_long_polling: "Message bus used for notification can use long polling"
-    long_polling_interval: "Interval before a new long poll is issued in milliseconds "
     polling_interval: "How often should logged in user clients poll in milliseconds"
     anon_polling_interval: "How often should anonymous clients poll in milliseconds"
     cooldown_minutes_after_hiding_posts: "Number of minutes a user must wait before they can edit a post hidden via community flagging"
@@ -667,7 +658,6 @@ bs_BA:
     allow_new_registrations: "Allow new user registrations. Uncheck this to prevent anyone from creating a new account."
     google_oauth2_client_id: "Client ID of your Google application."
     google_oauth2_client_secret: "Client secret of your Google application."
-    maximum_backups: "The maximum amount of backups to keep on disk. Older backups are automatically deleted"
     s3_backup_bucket: "The remote bucket to hold backups. WARNING: Make sure it is a private bucket."
     active_user_rate_limit_secs: "How frequently we update the 'last_seen_at' field, in seconds"
     verbose_localization: "Show extended localization tips in the UI"
@@ -849,7 +839,6 @@ bs_BA:
     subject_template: "Set password for your %{site_name} account"
   flag_reasons:
     off_topic: "Your post was flagged as **off-topic**: the community thinks it does not fit into the topic, as currently defined by the title and the first post."
-    inappropriate: "Your post was flagged as **inappropriate**: the community thinks it is offensive, abusive, or a violation of [the community guidelines](%{base_path}/guidelines)."
     spam: "Your post was flagged as **spam**: the community thinks it is an advertisement, not useful or relevant to the topic, but promotional in nature."
     notify_moderators: "Your post was flagged **for moderator attention**: the community thinks something about the post requires moderator intervention."
   flags_dispositions:
@@ -877,7 +866,6 @@ bs_BA:
       subject_template: "Restore failed"
     bulk_invite_succeeded:
       subject_template: "Bulk user invite processed successfully"
-      text_body_template: "Your bulk user invite file was processed, %{sent} invites mailed."
     bulk_invite_failed:
       subject_template: "Bulk user invite processed with errors"
     csv_export_failed:
@@ -940,6 +928,7 @@ bs_BA:
     post_approved:
       title: "Vaš post je odobren"
   page_not_found:
+    page_title: "Stranica nije pronađena"
     popular_topics: "Popularno"
     recent_topics: "Nove"
     see_more: "Više"
@@ -1044,30 +1033,14 @@ bs_BA:
   finish_installation:
     register:
       button: "Registriraj"
-      help: "Registriraj novi račun kako bi počeo"
     resend_email:
       title: "Pošalji ponovo email aktivacije"
   wizard:
     step:
-      forum_title:
-        title: "Ime"
       privacy:
-        title: "Pristup"
         fields:
-          privacy:
-            choices:
-              open:
-                label: "Javno"
-              restricted:
-                label: "Privatno"
-      contact:
-        fields:
-          contact_email:
-            placeholder: "name@example.com"
-          contact_url:
-            placeholder: "https://www.example.com/contact-us"
-      corporate:
-        title: "Organizacija"
+          login_required:
+            placeholder: "Privatno"
       styling:
         fields:
           styling_preview:
@@ -1082,6 +1055,10 @@ bs_BA:
                 label: "Kategorije i zadnje teme"
               categories_and_top_topics:
                 label: "Kategorije i top teme"
+      corporate:
+        fields:
+          contact_url:
+            placeholder: "https://www.example.com/contact-us"
   joined: "Registrovan"
   discourse_push_notifications:
     popup:

@@ -1,9 +1,12 @@
 import Route from "@ember/routing/route";
 import showModal from "discourse/lib/show-modal";
+import I18n from "I18n";
 import { next } from "@ember/runloop";
-import { showUnassignedComponentWarning } from "admin/routes/admin-customize-themes-show";
+import { inject as service } from "@ember/service";
 
 export default Route.extend({
+  dialog: service(),
+
   queryParams: {
     repoUrl: null,
     repoName: null,
@@ -32,13 +35,16 @@ export default Route.extend({
 
   actions: {
     installModal() {
-      const currentTheme = this.controllerFor("adminCustomizeThemes.show")
-        .model;
-      if (currentTheme && currentTheme.warnUnassignedComponent) {
-        showUnassignedComponentWarning(currentTheme, (result) => {
-          if (!result) {
+      const currentTheme = this.controllerFor(
+        "adminCustomizeThemes.show"
+      ).model;
+      if (currentTheme?.warnUnassignedComponent) {
+        this.dialog.yesNoConfirm({
+          message: I18n.t("admin.customize.theme.unsaved_parent_themes"),
+          didConfirm: () => {
+            currentTheme.set("recentlyInstalled", false);
             showModal("admin-install-theme", { admin: true });
-          }
+          },
         });
       } else {
         showModal("admin-install-theme", { admin: true });

@@ -1,6 +1,8 @@
 import UserAction from "discourse/models/user-action";
 import UserTopicListRoute from "discourse/routes/user-topic-list";
 import { action } from "@ember/object";
+import { htmlSafe } from "@ember/template";
+import getURL from "discourse-common/lib/get-url";
 import I18n from "I18n";
 
 export default UserTopicListRoute.extend({
@@ -22,11 +24,30 @@ export default UserTopicListRoute.extend({
       });
   },
 
+  afterModel(model, transition) {
+    if (!this.isPoppedState(transition)) {
+      this.session.set("topicListScrollPosition", null);
+    }
+  },
+
   emptyState() {
-    return {
-      title: I18n.t("user_activity.no_topics_title"),
-      body: "",
-    };
+    const user = this.modelFor("user");
+    let title, body;
+    if (this.isCurrentUser(user)) {
+      title = I18n.t("user_activity.no_topics_title");
+      body = htmlSafe(
+        I18n.t("user_activity.no_topics_body", {
+          searchUrl: getURL("/search"),
+        })
+      );
+    } else {
+      title = I18n.t("user_activity.no_topics_title_others", {
+        username: user.username,
+      });
+      body = "";
+    }
+
+    return { title, body };
   },
 
   @action

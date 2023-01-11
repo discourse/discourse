@@ -10,14 +10,14 @@ import I18n from "I18n";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { test } from "qunit";
 
-acceptance("Category Edit - security", function (needs) {
+acceptance("Category Edit - Security", function (needs) {
   needs.user();
 
   test("default", async function (assert) {
     await visit("/c/bug/edit/security");
 
-    const firstRow = queryAll(".row-body").first();
-    const badgeName = firstRow.find(".group-name-label").text();
+    const firstRow = query(".row-body");
+    const badgeName = firstRow.querySelector(".group-name-label").innerText;
     assert.strictEqual(badgeName, "everyone");
 
     assert.strictEqual(count(".d-icon-check-square"), 3);
@@ -56,11 +56,14 @@ acceptance("Category Edit - security", function (needs) {
     await availableGroups.expand();
     await availableGroups.selectRowByValue("staff");
 
-    const addedRow = queryAll(".row-body").last();
+    const addedRow = [...queryAll(".row-body")].at(-1);
 
-    assert.strictEqual(addedRow.find(".group-name-label").text(), "staff");
     assert.strictEqual(
-      addedRow.find(".d-icon-check-square").length,
+      addedRow.querySelector(".group-name-label").innerText,
+      "staff"
+    );
+    assert.strictEqual(
+      addedRow.querySelectorAll(".d-icon-check-square").length,
       3,
       "new row permissions match default 'everyone' permissions"
     );
@@ -70,7 +73,6 @@ acceptance("Category Edit - security", function (needs) {
     const availableGroups = selectKit(".available-groups");
 
     await visit("/c/bug/edit/security");
-
     await click(".row-body .remove-permission");
 
     assert.ok(!exists(".row-body"), "removes the permission from the list");
@@ -84,11 +86,14 @@ acceptance("Category Edit - security", function (needs) {
       "adds back the permission tp the list"
     );
 
-    const firstRow = queryAll(".row-body").first();
+    const firstRow = query(".row-body");
 
-    assert.strictEqual(firstRow.find(".group-name-label").text(), "everyone");
     assert.strictEqual(
-      firstRow.find(".d-icon-check-square").length,
+      firstRow.querySelector(".group-name-label").innerText,
+      "everyone"
+    );
+    assert.strictEqual(
+      firstRow.querySelectorAll(".d-icon-check-square").length,
       1,
       "adds only 'See' permission for a new row"
     );
@@ -99,10 +104,10 @@ acceptance("Category Edit - security", function (needs) {
 
     await visit("/c/bug/edit/security");
 
-    const everyoneRow = queryAll(".row-body").first();
+    const everyoneRow = query(".row-body");
 
     assert.strictEqual(
-      everyoneRow.find(".reply-granted, .create-granted").length,
+      everyoneRow.querySelectorAll(".reply-granted, .create-granted").length,
       2,
       "everyone has full permissions by default"
     );
@@ -110,58 +115,58 @@ acceptance("Category Edit - security", function (needs) {
     await availableGroups.expand();
     await availableGroups.selectRowByValue("staff");
 
-    const staffRow = queryAll(".row-body").last();
+    const staffRow = [...queryAll(".row-body")].at(-1);
 
     assert.strictEqual(
-      staffRow.find(".reply-granted, .create-granted").length,
+      staffRow.querySelectorAll(".reply-granted, .create-granted").length,
       2,
       "staff group also has full permissions"
     );
 
-    await click(everyoneRow.find(".reply-toggle")[0]);
+    await click(everyoneRow.querySelector(".reply-toggle"));
 
     assert.strictEqual(
-      everyoneRow.find(".reply-granted, .create-granted").length,
+      everyoneRow.querySelectorAll(".reply-granted, .create-granted").length,
       0,
       "everyone does not have reply or create"
     );
 
     assert.strictEqual(
-      staffRow.find(".reply-granted, .create-granted").length,
+      staffRow.querySelectorAll(".reply-granted, .create-granted").length,
       2,
       "staff group still has full permissions"
     );
 
-    await click(staffRow.find(".reply-toggle")[0]);
+    await click(staffRow.querySelector(".reply-toggle"));
 
     assert.strictEqual(
-      everyoneRow.find(".reply-granted, .create-granted").length,
+      everyoneRow.querySelectorAll(".reply-granted, .create-granted").length,
       0,
       "everyone permission unchanged"
     );
 
     assert.strictEqual(
-      staffRow.find(".reply-granted").length,
+      staffRow.querySelectorAll(".reply-granted").length,
       0,
       "staff does not have reply permission"
     );
 
     assert.strictEqual(
-      staffRow.find(".create-granted").length,
+      staffRow.querySelectorAll(".create-granted").length,
       0,
       "staff does not have create permission"
     );
 
-    await click(everyoneRow.find(".create-toggle")[0]);
+    await click(everyoneRow.querySelector(".create-toggle"));
 
     assert.strictEqual(
-      everyoneRow.find(".reply-granted, .create-granted").length,
+      everyoneRow.querySelectorAll(".reply-granted, .create-granted").length,
       2,
       "everyone has full permissions"
     );
 
     assert.strictEqual(
-      staffRow.find(".reply-granted, .create-granted").length,
+      staffRow.querySelectorAll(".reply-granted, .create-granted").length,
       2,
       "staff group has full permissions (inherited from everyone)"
     );

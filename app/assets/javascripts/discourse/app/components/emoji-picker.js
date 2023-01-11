@@ -1,5 +1,8 @@
 import { action, computed } from "@ember/object";
-import { bind, observes } from "discourse-common/utils/decorators";
+import discourseComputed, {
+  bind,
+  observes,
+} from "discourse-common/utils/decorators";
 import {
   emojiSearch,
   extendedEmojiList,
@@ -7,7 +10,8 @@ import {
 } from "pretty-text/emoji";
 import { emojiUnescape, emojiUrlFor } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
-import { later, schedule } from "@ember/runloop";
+import { schedule } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 import Component from "@ember/component";
 import { createPopper } from "@popperjs/core";
 import { htmlSafe } from "@ember/template";
@@ -17,14 +21,13 @@ import { underscore } from "@ember/string";
 function customEmojis() {
   const list = extendedEmojiList();
   const groups = [];
-  Object.keys(list).forEach((code) => {
-    const emoji = list[code];
+  for (const [code, emoji] of list.entries()) {
     groups[emoji.group] = groups[emoji.group] || [];
     groups[emoji.group].push({
       code,
       src: emojiUrlFor(code),
     });
-  });
+  }
   return groups;
 }
 
@@ -32,18 +35,21 @@ export default Component.extend({
   emojiStore: service("emoji-store"),
   tagName: "",
   customEmojis: null,
-  selectedDiversity: null,
   recentEmojis: null,
   hoveredEmoji: null,
   isActive: false,
-  isLoading: true,
   usePopper: true,
+  placement: "auto", // one of popper.js' placements, see https://popper.js.org/docs/v2/constructors/#options
+  initialFilter: "",
+  elements: {
+    searchInput: ".emoji-picker-search-container input",
+    picker: ".emoji-picker-emoji-area",
+  },
 
   init() {
     this._super(...arguments);
 
     this.set("customEmojis", customEmojis());
-    this.set("selectedDiversity", this.emojiStore.diversity);
 
     if ("IntersectionObserver" in window) {
       this._sectionObserver = this._setupSectionObserver();
@@ -54,6 +60,13 @@ export default Component.extend({
     this._super(...arguments);
 
     this.appEvents.on("emoji-picker:close", this, "onClose");
+  },
+
+  // `readOnly` may seem like a better choice here, but the computed property
+  // provides caching (emojiStore.diversity is a simple getter)
+  @discourseComputed("emojiStore.diversity")
+  selectedDiversity(diversity) {
+    return diversity;
   },
 
   // didReceiveAttrs would be a better choice here, but this is sadly causing
@@ -78,10 +91,10 @@ export default Component.extend({
 
   @action
   onShow() {
-    this.set("isLoading", true);
     this.set("recentEmojis", this.emojiStore.favorites);
 
     schedule("afterRender", () => {
+      this._applyFilter(this.initialFilter);
       document.addEventListener("click", this.handleOutsideClick);
 
       const emojiPicker = document.querySelector(".emoji-picker");
@@ -89,11 +102,9 @@ export default Component.extend({
         return;
       }
 
-      const textareaWrapper = document.querySelector(
-        ".d-editor-textarea-wrapper"
-      );
+      const popperAnchor = this._getPopperAnchor();
 
-      if (!this.site.isMobileDevice && this.usePopper && textareaWrapper) {
+      if (!this.site.isMobileDevice && this.usePopper && popperAnchor) {
         const modifiers = [
           {
             name: "preventOverflow",
@@ -106,7 +117,10 @@ export default Component.extend({
           },
         ];
 
-        if (window.innerWidth < textareaWrapper.clientWidth * 2) {
+        if (
+          this.placement === "auto" &&
+          window.innerWidth < popperAnchor.clientWidth * 2
+        ) {
           modifiers.push({
             name: "computeStyles",
             enabled: true,
@@ -124,17 +138,14 @@ export default Component.extend({
           });
         }
 
-        this._popper = createPopper(textareaWrapper, emojiPicker, {
-          placement: "auto",
-          modifiers,
+        this._popper = createPopper(popperAnchor, emojiPicker, {
+          placement: this.placement,
         });
       }
 
       // this is a low-tech trick to prevent appending hundreds of emojis
       // of blocking the rendering of the picker
-      later(() => {
-        this.set("isLoading", false);
-
+      discourseLater(() => {
         schedule("afterRender", () => {
           if (!this.site.isMobileDevice || this.isEditorFocused) {
             const filter = emojiPicker.querySelector("input.filter");
@@ -156,9 +167,10 @@ export default Component.extend({
   },
 
   @action
-  onClose() {
+  onClose(event) {
+    event?.stopPropagation();
     document.removeEventListener("click", this.handleOutsideClick);
-    this.onEmojiPickerClose && this.onEmojiPickerClose();
+    this.onEmojiPickerClose && this.onEmojiPickerClose(event);
   },
 
   diversityScales: computed("selectedDiversity", function () {
@@ -179,7 +191,7 @@ export default Component.extend({
   }),
 
   @action
-  onClearRecents() {
+  onClearRecent() {
     this.emojiStore.favorites = [];
     this.set("recentEmojis", []);
   },
@@ -188,7 +200,6 @@ export default Component.extend({
   onDiversitySelection(index) {
     const scale = index + 1;
     this.emojiStore.diversity = scale;
-    this.set("selectedDiversity", scale);
 
     this._applyDiversity(scale);
   },
@@ -224,12 +235,13 @@ export default Component.extend({
     });
 
     if (this.site.isMobileDevice) {
-      this.onClose();
+      this.onClose(event);
     }
   },
 
   @action
-  onCategorySelection(sectionName) {
+  onCategorySelection(sectionName, event) {
+    event?.preventDefault();
     const section = document.querySelector(
       `.emoji-picker-emoji-area .section[data-section="${sectionName}"]`
     );
@@ -238,21 +250,137 @@ export default Component.extend({
 
   @action
   keydown(event) {
-    if (event.code === "Escape") {
-      this.onClose();
+    const arrowKeys = ["ArrowDown", "ArrowUp", "ArrowLeft", "ArrowRight"];
+    const emojis = document.querySelectorAll(".emoji-picker-emoji-area .emoji");
+
+    let currentEmoji;
+
+    this.set(
+      "hoveredEmoji",
+      this._codeWithDiversity(event.target.title, this.selectedDiversity)
+    );
+
+    if (
+      event.key === "ArrowDown" &&
+      this._focusedOn(this.elements.searchInput)
+    ) {
+      emojis[0].focus();
+      event.preventDefault();
+      return false;
+    }
+
+    if (event.key === "Escape") {
+      this.onClose(event);
+      const path = event.path || (event.composedPath && event.composedPath());
+
+      const fromChatComposer = path.find((e) =>
+        e?.classList?.contains("chat-composer-container")
+      );
+
+      const fromTopicComposer = path.find((e) =>
+        e?.classList?.contains("d-editor")
+      );
+
+      if (fromTopicComposer) {
+        document.querySelector(".d-editor-input")?.focus();
+      } else if (fromChatComposer) {
+        document.querySelector(".chat-composer-input")?.focus();
+      } else {
+        document.querySelector("textarea")?.focus();
+      }
+
+      return false;
+    }
+
+    if (arrowKeys.includes(event.key)) {
+      if (!this._focusedOn(this.elements.picker)) {
+        return;
+      }
+
+      Array.from(emojis).find((e, index) => {
+        currentEmoji = index;
+        return e.isEqualNode(event.target);
+      });
+
+      if (event.key === "ArrowRight") {
+        let nextEmoji = currentEmoji + 1;
+
+        if (nextEmoji < emojis.length) {
+          emojis[nextEmoji].focus();
+        } else if (nextEmoji >= emojis.length) {
+          emojis[0].focus();
+        }
+      }
+
+      if (event.key === "ArrowLeft") {
+        const previousEmoji = currentEmoji - 1;
+        if (currentEmoji > 0) {
+          emojis[previousEmoji].focus();
+        }
+      }
+
+      const active = emojis[currentEmoji];
+
+      if (event.key === "ArrowDown") {
+        // source: https://stackoverflow.com/a/49090383/349424
+        // look for same element type with
+        // - higher offsetTop
+        // - same offsetLeft
+        const emojiBelow = [...emojis]
+          .filter((c) => c.offsetTop > active.offsetTop)
+          .find((c) => c.offsetLeft === active.offsetLeft);
+
+        emojiBelow?.focus();
+      }
+
+      if (event.key === "ArrowUp") {
+        // look for same element type with
+        // - lower offsetTop
+        // - same offsetLeft
+        const emojiAbove = [...emojis]
+          .reverse()
+          .filter((c) => c.offsetTop < active.offsetTop)
+          .find((c) => c.offsetLeft === active.offsetLeft);
+
+        if (emojiAbove) {
+          emojiAbove.focus();
+        } else {
+          document.querySelector(this.elements.searchInput).focus();
+        }
+      }
+
+      event.preventDefault();
+      return false;
+    }
+
+    if (event.key === "Enter") {
+      if (!this._focusedOn(".emoji")) {
+        return;
+      }
+      this.onEmojiSelection(event);
+      this.onClose(event);
+      event.preventDefault();
       return false;
     }
   },
 
   @action
-  onFilter(event) {
+  onFilterChange(event) {
+    this._applyFilter(event.target.value);
+  },
+
+  _focusedOn(item) {
+    // returns the item currently being focused on
+    return document.activeElement.closest(item) ? document.activeElement : null;
+  },
+
+  _applyFilter(filter) {
     const emojiPicker = document.querySelector(".emoji-picker");
     const results = document.querySelector(".emoji-picker-emoji-area .results");
     results.innerHTML = "";
 
-    if (event.target.value) {
-      results.innerHTML = emojiSearch(event.target.value.toLowerCase(), {
-        maxResults: 20,
+    if (filter) {
+      results.innerHTML = emojiSearch(filter.toLowerCase(), {
         diversity: this.emojiStore.diversity,
       })
         .map(this._replaceEmoji)
@@ -276,8 +404,9 @@ export default Component.extend({
   _replaceEmoji(code) {
     const escaped = emojiUnescape(`:${escapeExpression(code)}:`, {
       lazy: true,
+      tabIndex: "0",
     });
-    return htmlSafe(`<span>${escaped}</span>`);
+    return htmlSafe(escaped);
   },
 
   _codeWithDiversity(code, selectedDiversity) {
@@ -329,11 +458,20 @@ export default Component.extend({
     );
   },
 
+  _getPopperAnchor() {
+    // .d-editor-textarea-wrapper is only for backward compatibility here
+    // in new code use .emoji-picker-anchor
+    return (
+      document.querySelector(".emoji-picker-anchor") ??
+      document.querySelector(".d-editor-textarea-wrapper")
+    );
+  },
+
   @bind
   handleOutsideClick(event) {
     const emojiPicker = document.querySelector(".emoji-picker");
     if (emojiPicker && !emojiPicker.contains(event.target)) {
-      this.onClose();
+      this.onClose(event);
     }
   },
 });

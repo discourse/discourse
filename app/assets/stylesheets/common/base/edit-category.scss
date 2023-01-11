@@ -134,10 +134,6 @@ div.edit-category {
         .filter-input {
           min-width: 250px;
         }
-
-        .select-kit-body {
-          max-width: 100%;
-        }
       }
     }
 
@@ -161,6 +157,23 @@ div.edit-category {
   .category-topic-auto-close-hours,
   .category-default-slow-mode-seconds {
     width: 200px;
+  }
+
+  .required-tag-groups {
+    .required-tag-group-row {
+      display: flex;
+      gap: 0.5em;
+
+      > * {
+        margin: 0;
+      }
+
+      input[type="number"] {
+        width: 4em;
+      }
+
+      margin-bottom: 1em;
+    }
   }
 }
 

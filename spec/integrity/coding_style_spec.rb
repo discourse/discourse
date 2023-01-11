@@ -1,13 +1,11 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
-def list_files(base_dir, pattern = '*')
+def list_files(base_dir, pattern = "*")
   Dir[File.join("#{base_dir}", pattern)]
 end
 
 def list_js_files(base_dir)
-  list_files(base_dir, '**/*.es6')
+  list_files(base_dir, "**/*.es6")
 end
 
 def grep_files(files, regex)
@@ -19,29 +17,29 @@ def grep_file(file, regex)
   lines.count > 0 ? file : nil
 end
 
-describe 'Coding style' do
-  describe 'Javascript' do
+RSpec.describe "Coding style" do
+  describe "Javascript" do
     it 'prevents this.get("foo") pattern' do
-      js_files = list_js_files('app/assets/javascripts')
+      js_files = list_js_files("app/assets/javascripts")
       offenses = grep_files(js_files, /this\.get\("\w+"\)/)
 
-      expect(offenses).to be_empty, <<~MSG
+      expect(offenses).to be_empty, <<~TEXT
         Do not use this.get("foo") accessor for single property, instead
         prefer to use this.foo
 
         Offenses:
         #{offenses.join("\n")}
-      MSG
+      TEXT
     end
   end
 
-  describe 'Post Migrations' do
+  describe "Post Migrations" do
     def check_offenses(files, method_name, constant_name)
       method_name_regex = /#{Regexp.escape(method_name)}/
       constant_name_regex = /#{Regexp.escape(constant_name)}/
       offenses = files.reject { |file| is_valid?(file, method_name_regex, constant_name_regex) }
 
-      expect(offenses).to be_empty, <<~MSG
+      expect(offenses).to be_empty, <<~TEXT
         You need to use the constant #{constant_name} when you use
         #{method_name} in order to help with restoring backups.
 
@@ -49,7 +47,7 @@ describe 'Coding style' do
 
         Offenses:
         #{offenses.join("\n")}
-      MSG
+      TEXT
     end
 
     def is_valid?(file, method_name_regex, constant_name_regex)
@@ -59,8 +57,8 @@ describe 'Coding style' do
       contains_method_name ? contains_constant_name : true
     end
 
-    it 'ensures dropped tables and columns are stored in constants' do
-      migration_files = list_files('db/post_migrate', '**/*.rb')
+    it "ensures dropped tables and columns are stored in constants" do
+      migration_files = list_files("db/post_migrate", "**/*.rb")
 
       check_offenses(migration_files, "ColumnDropper.execute_drop", "DROPPED_COLUMNS")
       check_offenses(migration_files, "TableDropper.execute_drop", "DROPPED_TABLES")

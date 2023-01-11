@@ -1,21 +1,14 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe Jobs::BookmarkReminderNotifications do
   subject { described_class.new }
 
+  fab!(:user) { Fabricate(:user) }
   let(:five_minutes_ago) { Time.zone.now - 5.minutes }
-  let(:bookmark1) { Fabricate(:bookmark) }
-  let(:bookmark2) { Fabricate(:bookmark) }
-  let(:bookmark3) { Fabricate(:bookmark) }
-  let!(:bookmarks) do
-    [
-      bookmark1,
-      bookmark2,
-      bookmark3
-    ]
-  end
+  let(:bookmark1) { Fabricate(:bookmark, user: user) }
+  let(:bookmark2) { Fabricate(:bookmark, user: user) }
+  let(:bookmark3) { Fabricate(:bookmark, user: user) }
+  let!(:bookmarks) { [bookmark1, bookmark2, bookmark3] }
 
   before do
     # this is done to avoid model validations on Bookmark
@@ -25,27 +18,25 @@ RSpec.describe Jobs::BookmarkReminderNotifications do
     Discourse.redis.flushdb
   end
 
-  it "sends every reminder and marks the reminder_at to nil for all bookmarks, as well as last sent date" do
+  it "sends every reminder and sets the reminder_last_sent_at" do
     subject.execute
     bookmark1.reload
     bookmark2.reload
     bookmark3.reload
-    expect(bookmark1.reminder_at).to eq(nil)
     expect(bookmark1.reminder_last_sent_at).not_to eq(nil)
-    expect(bookmark2.reminder_at).to eq(nil)
     expect(bookmark2.reminder_last_sent_at).not_to eq(nil)
-    expect(bookmark3.reminder_at).to eq(nil)
     expect(bookmark3.reminder_last_sent_at).not_to eq(nil)
   end
 
   it "will not send a reminder for a bookmark in the future" do
+    freeze_time
     bookmark4 = Fabricate(:bookmark, reminder_at: Time.zone.now + 1.day)
-    BookmarkReminderNotificationHandler.expects(:send_notification).with(bookmark1)
-    BookmarkReminderNotificationHandler.expects(:send_notification).with(bookmark2)
-    BookmarkReminderNotificationHandler.expects(:send_notification).with(bookmark3)
-    BookmarkReminderNotificationHandler.expects(:send_notification).with(bookmark4).never
-    subject.execute
+    expect { subject.execute }.to change { Notification.where(user: user).count }.by(3)
+    expect(bookmark1.reload.reminder_last_sent_at).to eq_time(Time.zone.now)
+    expect(bookmark2.reload.reminder_last_sent_at).to eq_time(Time.zone.now)
+    expect(bookmark3.reload.reminder_last_sent_at).to eq_time(Time.zone.now)
     expect(bookmark4.reload.reminder_at).not_to eq(nil)
+    expect(bookmark4.reload.reminder_last_sent_at).to eq(nil)
   end
 
   context "when a user is over the bookmark limit" do
@@ -62,17 +53,19 @@ RSpec.describe Jobs::BookmarkReminderNotifications do
       begin
         Jobs::BookmarkReminderNotifications.max_reminder_notifications_per_run = 2
         subject.execute
-        expect(bookmark1.reload.reminder_at).to eq(nil)
-        expect(bookmark2.reload.reminder_at).to eq(nil)
-        expect(bookmark3.reload.reminder_at).not_to eq(nil)
+        expect(bookmark1.reload.reminder_last_sent_at).not_to eq(nil)
+        expect(bookmark2.reload.reminder_last_sent_at).not_to eq(nil)
+        expect(bookmark3.reload.reminder_last_sent_at).to eq(nil)
       end
     end
   end
 
-  it 'will not send notification when topic is not available' do
-    bookmark1.topic.destroy
-    bookmark2.topic.destroy
-    bookmark3.topic.destroy
-    expect { subject.execute }.not_to change { Notification.where(notification_type: Notification.types[:bookmark_reminder]).count }
+  it "will not send notification when topic is not available" do
+    bookmark1.bookmarkable.topic.destroy
+    bookmark2.bookmarkable.topic.destroy
+    bookmark3.bookmarkable.topic.destroy
+    expect { subject.execute }.not_to change {
+      Notification.where(notification_type: Notification.types[:bookmark_reminder]).count
+    }
   end
 end

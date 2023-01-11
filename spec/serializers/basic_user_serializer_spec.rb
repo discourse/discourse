@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
-describe BasicUserSerializer do
-  describe '#as_json' do
+RSpec.describe BasicUserSerializer do
+  describe "#as_json" do
     let(:user) { Fabricate.build(:user) }
     let(:serializer) { BasicUserSerializer.new(user, scope: Guardian.new(user), root: false) }
     let(:json) { serializer.as_json }
@@ -14,9 +12,11 @@ describe BasicUserSerializer do
       expect(json[:avatar_template]).to eq(user.avatar_template)
     end
 
-    describe 'extended serializers' do
+    describe "extended serializers" do
       let(:post_action) { Fabricate(:post_action, user: user) }
-      let(:serializer) { PostActionUserSerializer.new(post_action, scope: Guardian.new(user), root: false) }
+      let(:serializer) do
+        PostActionUserSerializer.new(post_action, scope: Guardian.new(user), root: false)
+      end
       it "returns the user correctly" do
         expect(serializer.user.username).to eq(user.username)
       end

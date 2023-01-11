@@ -13,7 +13,7 @@ zh_TW:
         colors:
           title: "顏色"
         icons:
-          title: "表徵圖"
+          title: "圖標"
         categories:
           title: "分類"
         navigation:
@@ -26,3 +26,6 @@ zh_TW:
           title: "貼文"
         suggested_topics:
           title: "推薦的話題"
+        rich_tooltip:
+          description: "描述"
+          header: "頁首"

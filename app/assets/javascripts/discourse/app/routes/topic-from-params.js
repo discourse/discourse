@@ -92,7 +92,7 @@ export default DiscourseRoute.extend({
 
     const opts = {};
     if (document.location.hash) {
-      opts.anchor = document.location.hash.substr(1);
+      opts.anchor = document.location.hash.slice(1);
     } else if (_discourse_anchor) {
       opts.anchor = _discourse_anchor;
     }

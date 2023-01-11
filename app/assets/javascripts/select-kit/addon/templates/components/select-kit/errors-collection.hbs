@@ -1,6 +1,6 @@
-{{#if collection.content}}
+{{#if this.collection.content}}
   <ul class="select-kit-errors-collection">
-    {{#each collection.content as |item|}}
+    {{#each this.collection.content as |item|}}
       <li class="select-kit-error">{{item}}</li>
     {{/each}}
   </ul>

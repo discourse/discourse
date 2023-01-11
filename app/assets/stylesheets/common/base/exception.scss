@@ -6,11 +6,11 @@
     font-size: 4.286em;
   }
   .reason {
-    font-size: $font-up-4;
+    font-size: var(--font-up-4);
   }
   .url {
     font-style: italic;
-    font-size: $font-down-1;
+    font-size: var(--font-down-1);
   }
   .desc {
     margin-top: 16px;

@@ -3,6 +3,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import layout from "select-kit/templates/components/category-drop/category-drop-header";
 import { readOnly } from "@ember/object/computed";
 import { schedule } from "@ember/runloop";
+import { htmlSafe } from "@ember/template";
 
 export default ComboBoxSelectBoxHeaderComponent.extend({
   layout,
@@ -43,7 +44,7 @@ export default ComboBoxSelectBoxHeaderComponent.extend({
             }
           }
         }
-        return style.htmlSafe();
+        return htmlSafe(style);
       }
     }
   },

@@ -22,7 +22,7 @@ export default {
     caps.isAndroid = ua.includes("Android");
     caps.isWinphone = ua.includes("Windows Phone");
     caps.isOpera = !!window.opera || ua.includes(" OPR/");
-    caps.isFirefox = typeof InstallTrigger !== "undefined";
+    caps.isFirefox = ua.includes("Firefox");
     caps.isChrome = !!window.chrome && !caps.isOpera;
     caps.isSafari =
       /Constructor/.test(window.HTMLElement) ||
@@ -45,6 +45,12 @@ export default {
       window.matchMedia("(display-mode: standalone)").matches ||
       window.navigator.standalone ||
       document.referrer.includes("android-app://");
+
+    caps.isiOSPWA = caps.isPwa && caps.isIOS;
+
+    caps.wasLaunchedFromDiscourseHub =
+      window.location.search.includes("discourse_app=1");
+    caps.isAppWebview = window.ReactNativeWebView !== undefined;
 
     // Inject it
     app.register("capabilities:main", caps, { instantiate: false });

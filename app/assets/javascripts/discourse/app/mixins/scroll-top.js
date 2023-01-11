@@ -7,7 +7,7 @@ const context = {
     if (isTesting()) {
       return;
     }
-    $(document).scrollTop(0);
+    document.documentElement.scrollTop = 0;
   },
 };
 

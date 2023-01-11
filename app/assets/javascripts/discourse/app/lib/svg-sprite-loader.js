@@ -7,7 +7,8 @@ export function loadSprites(spritePath, spriteName) {
   if (!spriteContainer) {
     spriteContainer = document.createElement("div");
     spriteContainer.id = SVG_CONTAINER_ID;
-    document.body.appendChild(spriteContainer);
+    const spriteWrapper = document.querySelector("discourse-assets-icons");
+    spriteWrapper?.appendChild(spriteContainer);
   }
 
   let sprites = spriteContainer.querySelector(`.${spriteName}`);

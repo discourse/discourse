@@ -1,11 +1,14 @@
 import Application from "@ember/application";
 import { buildResolver } from "discourse-common/resolver";
 import { isTesting } from "discourse-common/config/environment";
+import { normalizeEmberEventHandling } from "./lib/ember-events";
 
 const _pluginCallbacks = [];
 let _unhandledThemeErrors = [];
 
 const Discourse = Application.extend({
+  modulePrefix: "discourse",
+
   rootElement: "#main",
 
   customEvents: {
@@ -52,6 +55,15 @@ const Discourse = Application.extend({
   start() {
     document.querySelector("noscript")?.remove();
 
+    // Rewire event handling to eliminate event delegation for better compat
+    // between Glimmer and Classic components.
+    normalizeEmberEventHandling(this);
+
+    if (Error.stackTraceLimit) {
+      // We need Errors to have full stack traces for `lib/source-identifier`
+      Error.stackTraceLimit = Infinity;
+    }
+
     Object.keys(requirejs._eak_seen).forEach((key) => {
       if (/\/pre\-initializers\//.test(key)) {
         const initializer = this._prepareInitializer(key);
@@ -80,6 +92,12 @@ const Discourse = Application.extend({
 
   _registerPluginCode(version, code) {
     _pluginCallbacks.push({ version, code });
+  },
+
+  ready() {
+    performance.mark("discourse-ready");
+    const event = new CustomEvent("discourse-ready");
+    document.dispatchEvent(event);
   },
 });
 

@@ -12,11 +12,9 @@ To learn more about the philosophy and goals of the project, [visit **discourse.
 
 ## Screenshots
 
- 
+
 <a href="https://bbs.boingboing.net"><img alt="Boing Boing" src="https://user-images.githubusercontent.com/1681963/52239245-04ad8280-289c-11e9-9c88-8c173d4a0422.png" width="720px"></a>
 <a href="https://twittercommunity.com/"><img src="https://user-images.githubusercontent.com/1681963/52239250-04ad8280-289c-11e9-9e42-574f6eaab9d7.png" width="720px"></a>
-<a href="https://forums.gearboxsoftware.com/"><img src="https://user-images.githubusercontent.com/1681963/89088042-68ffb400-d364-11ea-93be-161ea04d8b29.png" width="720px"></a>
-
 
 <img src="https://user-images.githubusercontent.com/1681963/52239118-b304f800-289b-11e9-9904-16450680d9ec.jpg" alt="Mobile" width="414">
 
@@ -32,15 +30,13 @@ To get your environment setup, follow the community setup guide for your operati
 
 If you're familiar with how Rails works and are comfortable setting up your own environment, you can also try out the [**Discourse Advanced Developer Guide**](docs/DEVELOPER-ADVANCED.md), which is aimed primarily at Ubuntu and macOS environments.
 
-Before you get started, ensure you have the following minimum versions: [Ruby 2.7+](https://www.ruby-lang.org/en/downloads/), [PostgreSQL 13+](https://www.postgresql.org/download/), [Redis 6.0+](https://redis.io/download). If you're having trouble, please see our [**TROUBLESHOOTING GUIDE**](docs/TROUBLESHOOTING.md) first!
+Before you get started, ensure you have the following minimum versions: [Ruby 2.7+](https://www.ruby-lang.org/en/downloads/), [PostgreSQL 13+](https://www.postgresql.org/download/), [Redis 6.2+](https://redis.io/download). If you're having trouble, please see our [**TROUBLESHOOTING GUIDE**](docs/TROUBLESHOOTING.md) first!
 
 ## Setting up Discourse
 
 If you want to set up a Discourse forum for production use, see our [**Discourse Install Guide**](docs/INSTALL.md).
 
 If you're looking for business class hosting, see [discourse.org/buy](https://www.discourse.org/buy/).
-
-If you're looking for our remote work solution, see [teams.discourse.com](https://teams.discourse.com/).
 
 ## Requirements
 
@@ -54,6 +50,8 @@ Discourse supports the **latest, stable releases** of all major browsers and pla
 | Google Chrome         | Android      | Android      |
 | Microsoft Edge        |              |              |
 | Mozilla Firefox       |              |              |
+
+Additionally, we aim to support Safari on iOS 12.5+ until January 2023 (Discourse 3.0).
 
 ## Built With
 
@@ -93,7 +91,7 @@ The original Discourse code contributors can be found in [**AUTHORS.MD**](docs/A
 
 ## Copyright / License
 
-Copyright 2014 - 2021 Civilized Discourse Construction Kit, Inc.
+Copyright 2014 - 2023 Civilized Discourse Construction Kit, Inc.
 
 Licensed under the GNU General Public License Version 2.0 (or later);
 you may not use this work except in compliance with the License.
@@ -108,6 +106,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 Discourse logo and “Discourse Forum” ®, Civilized Discourse Construction Kit, Inc.
+
+## Accessibility
+
+To guide our ongoing effort to build accessible software we follow the [W3C’s Web Content Accessibility Guidelines (WCAG)](https://www.w3.org/TR/WCAG21/). If you'd like to report an accessibility issue that makes it difficult for you to use Discourse, email accessibility@discourse.org. For more information visit [discourse.org/accessibility](https://discourse.org/accessibility).
 
 ## Dedication
 

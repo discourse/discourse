@@ -1,29 +1,32 @@
 # frozen_string_literal: true
 
 class EmailLog < ActiveRecord::Base
-  CRITICAL_EMAIL_TYPES ||= Set.new %w{
-    account_created
-    admin_login
-    confirm_new_email
-    confirm_old_email
-    confirm_old_email_add
-    forgot_password
-    notify_old_email
-    notify_old_email_add
-    signup
-    signup_after_approval
-  }
+  CRITICAL_EMAIL_TYPES ||=
+    Set.new %w[
+              account_created
+              admin_login
+              confirm_new_email
+              confirm_old_email
+              confirm_old_email_add
+              forgot_password
+              notify_old_email
+              notify_old_email_add
+              signup
+              signup_after_approval
+            ]
+
+  # cf. https://www.iana.org/assignments/smtp-enhanced-status-codes/smtp-enhanced-status-codes.xhtml
+  SMTP_ERROR_CODE_REGEXP = Regexp.new(/\d\.\d\.\d+|\d{3}/).freeze
 
   belongs_to :user
   belongs_to :post
-  belongs_to :smtp_group, class_name: 'Group'
+  belongs_to :smtp_group, class_name: "Group"
 
   validates :email_type, :to_address, presence: true
 
   scope :bounced, -> { where(bounced: true) }
 
-  scope :addressed_to_user, ->(user) do
-    where(<<~SQL, user_id: user.id)
+  scope :addressed_to_user, ->(user) { where(<<~SQL, user_id: user.id) }
       EXISTS(
         SELECT 1
         FROM user_emails
@@ -32,6 +35,12 @@ class EmailLog < ActiveRecord::Base
          email_logs.cc_addresses ILIKE '%' || user_emails.email || '%')
       )
     SQL
+
+  before_save do
+    if self.bounce_error_code.present?
+      match = SMTP_ERROR_CODE_REGEXP.match(self.bounce_error_code)
+      self.bounce_error_code = match.present? ? match[0] : nil
+    end
   end
 
   after_create do
@@ -56,11 +65,11 @@ class EmailLog < ActiveRecord::Base
   end
 
   def self.reached_max_emails?(user, email_type = nil)
-    return false if SiteSetting.max_emails_per_day_per_user == 0 || CRITICAL_EMAIL_TYPES.include?(email_type)
+    if SiteSetting.max_emails_per_day_per_user == 0 || CRITICAL_EMAIL_TYPES.include?(email_type)
+      return false
+    end
 
-    count = where('created_at > ?', 1.day.ago)
-      .where(user_id: user.id)
-      .count
+    count = where("created_at > ?", 1.day.ago).where(user_id: user.id).count
 
     count >= SiteSetting.max_emails_per_day_per_user
   end
@@ -77,15 +86,11 @@ class EmailLog < ActiveRecord::Base
   end
 
   def self.last_sent_email_address
-    self.where(email_type: "signup")
-      .order(created_at: :desc)
-      .limit(1)
-      .pluck(:to_address)
-      .first
+    self.where(email_type: "signup").order(created_at: :desc).limit(1).pluck(:to_address).first
   end
 
   def bounce_key
-    super&.delete('-')
+    super&.delete("-")
   end
 
   def cc_users
@@ -117,22 +122,24 @@ end
 #
 # Table name: email_logs
 #
-#  id            :integer          not null, primary key
-#  to_address    :string           not null
-#  email_type    :string           not null
-#  user_id       :integer
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
-#  post_id       :integer
-#  bounce_key    :uuid
-#  bounced       :boolean          default(FALSE), not null
-#  message_id    :string
-#  smtp_group_id :integer
-#  cc_addresses  :text
-#  cc_user_ids   :integer          is an Array
-#  raw           :text
-#  topic_id      :integer
-#  bcc_addresses :text
+#  id                        :integer          not null, primary key
+#  to_address                :string           not null
+#  email_type                :string           not null
+#  user_id                   :integer
+#  created_at                :datetime         not null
+#  updated_at                :datetime         not null
+#  post_id                   :integer
+#  bounce_key                :uuid
+#  bounced                   :boolean          default(FALSE), not null
+#  message_id                :string
+#  smtp_group_id             :integer
+#  cc_addresses              :text
+#  cc_user_ids               :integer          is an Array
+#  raw                       :text
+#  topic_id                  :integer
+#  bounce_error_code         :string
+#  smtp_transaction_response :string(500)
+#  bcc_addresses             :text
 #
 # Indexes
 #

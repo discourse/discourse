@@ -26,3 +26,6 @@ hy:
           title: "Գրառում"
         suggested_topics:
           title: "Առաջարկվող Թեմաներ"
+        rich_tooltip:
+          description: "Նկարագրույթուն"
+          header: "Վերնամաս"

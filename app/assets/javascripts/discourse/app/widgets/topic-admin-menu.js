@@ -76,33 +76,44 @@ createWidget("topic-admin-menu-button", {
 
   showAdminMenu(e) {
     this.state.expanded = true;
-    let $button;
+    let button;
 
     if (e === undefined) {
-      $button = $(".keyboard-target-admin-menu");
+      button = document.querySelector(".keyboard-target-admin-menu");
     } else {
-      $button = $(e.target).closest("button");
+      button = e.target.closest("button");
     }
 
-    const position = $button.position(),
-      SPACING = 3,
-      MENU_WIDTH = 217;
+    const position = { top: button.offsetTop, left: button.offsetLeft };
+    const spacing = 3;
+    const menuWidth = 212;
 
-    const rtl = $("html").hasClass("rtl");
-    position.outerHeight = $button.outerHeight();
-
-    if (rtl) {
-      position.left -= MENU_WIDTH - $button.outerWidth();
-    }
+    const rtl = document.documentElement.classList.contains("html.rtl");
+    const buttonDOMRect = button.getBoundingClientRect();
+    position.outerHeight = buttonDOMRect.height;
 
     if (this.attrs.openUpwards) {
       if (rtl) {
-        position.left -= $button[0].offsetWidth + SPACING;
+        position.left -= buttonDOMRect.width + spacing;
       } else {
-        position.left += $button[0].offsetWidth + SPACING;
+        position.left += buttonDOMRect.width + spacing;
       }
     } else {
-      position.top += $button[0].offsetHeight + SPACING;
+      if (rtl) {
+        if (buttonDOMRect.left < menuWidth) {
+          position.left += 0;
+        } else {
+          position.left -= menuWidth - buttonDOMRect.width;
+        }
+      } else {
+        const offsetRight = window.innerWidth - buttonDOMRect.right;
+
+        if (offsetRight < menuWidth) {
+          position.left -= menuWidth - buttonDOMRect.width;
+        }
+      }
+
+      position.top += buttonDOMRect.height + spacing;
     }
 
     this.state.position = position;
@@ -150,6 +161,7 @@ export default createWidget("topic-admin-menu", {
         action: "toggleMultiSelect",
         icon: "tasks",
         label: "actions.multi_select",
+        button_group: "topic",
       });
     }
 
@@ -164,6 +176,7 @@ export default createWidget("topic-admin-menu", {
           action: "deleteTopic",
           icon: "far-trash-alt",
           label: "actions.delete",
+          button_group: "topic",
         });
       }
 
@@ -174,6 +187,7 @@ export default createWidget("topic-admin-menu", {
           action: "recoverTopic",
           icon: "undo",
           label: "actions.recover",
+          button_group: "topic",
         });
       }
     }
@@ -186,6 +200,7 @@ export default createWidget("topic-admin-menu", {
           action: "toggleClosed",
           icon: "unlock",
           label: "actions.open",
+          button_group: "topic",
         });
       } else {
         this.addActionButton({
@@ -194,6 +209,7 @@ export default createWidget("topic-admin-menu", {
           action: "toggleClosed",
           icon: "lock",
           label: "actions.close",
+          button_group: "topic",
         });
       }
     }
@@ -205,6 +221,7 @@ export default createWidget("topic-admin-menu", {
         action: "showTopicTimerModal",
         icon: "far-clock",
         label: "actions.timed_update",
+        button_group: "time",
       });
     }
 
@@ -219,6 +236,7 @@ export default createWidget("topic-admin-menu", {
         action: "showFeatureTopic",
         icon: "thumbtack",
         label: featured ? "actions.unpin" : "actions.pin",
+        button_group: "topic",
       });
     }
 
@@ -230,6 +248,7 @@ export default createWidget("topic-admin-menu", {
           action: "showChangeTimestamp",
           icon: "calendar-alt",
           label: "change_timestamp.title",
+          button_group: "time",
         });
       }
 
@@ -239,6 +258,7 @@ export default createWidget("topic-admin-menu", {
         action: "resetBumpDate",
         icon: "anchor",
         label: "actions.reset_bump_date",
+        button_group: "time",
       });
     }
 
@@ -252,6 +272,7 @@ export default createWidget("topic-admin-menu", {
           label: topic.get("archived")
             ? "actions.unarchive"
             : "actions.archive",
+          button_group: "topic",
         });
       }
     }
@@ -263,6 +284,7 @@ export default createWidget("topic-admin-menu", {
         action: "toggleVisibility",
         icon: visible ? "far-eye-slash" : "far-eye",
         label: visible ? "actions.invisible" : "actions.visible",
+        button_group: "topic",
       });
     }
 
@@ -278,6 +300,7 @@ export default createWidget("topic-admin-menu", {
           label: isPrivateMessage
             ? "actions.make_public"
             : "actions.make_private",
+          button_group: "topic",
         });
       }
 
@@ -287,6 +310,7 @@ export default createWidget("topic-admin-menu", {
         action: "showTopicSlowModeUpdate",
         icon: "hourglass-start",
         label: "actions.slow_mode",
+        button_group: "time",
       });
 
       if (this.currentUser.get("staff")) {
@@ -310,8 +334,9 @@ export default createWidget("topic-admin-menu", {
 
     if (attrs.openUpwards) {
       const documentHeight = $(document).height();
-      const mainHeight = $("#main").height();
-      let bottom = documentHeight - top - 70 - $("#main").offset().top;
+      const mainHeight = $(".ember-application").height();
+      let bottom =
+        documentHeight - top - 70 - $(".ember-application").offset().top;
 
       if (documentHeight > mainHeight) {
         bottom = bottom - (documentHeight - mainHeight) - outerHeight;
@@ -343,13 +368,31 @@ export default createWidget("topic-admin-menu", {
       this.attrs,
       this.state
     );
-    return h(
-      "ul",
-      attrs.actionButtons
-        .concat(extraButtons)
-        .filter(Boolean)
-        .map((b) => this.attach("admin-menu-button", b))
+
+    const actionButtons = attrs.actionButtons
+      .concat(extraButtons)
+      .filter(Boolean);
+
+    const buttonMap = actionButtons.reduce(
+      (prev, current) =>
+        prev.set(current.button_group, [
+          ...(prev.get(current.button_group) || []),
+          current,
+        ]),
+      new Map()
     );
+
+    let combinedButtonLists = [];
+
+    for (const [group, buttons] of buttonMap.entries()) {
+      let buttonList = [];
+      buttons.forEach((button) => {
+        buttonList.push(this.attach("admin-menu-button", button));
+      });
+      combinedButtonLists.push(h(`ul.topic-admin-menu-${group}`, buttonList));
+    }
+
+    return h("ul", combinedButtonLists);
   },
 
   clickOutside() {

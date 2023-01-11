@@ -85,3 +85,6 @@ nb_NO:
           title: "Toppikoner"
         spinners:
           title: "Spinnere"
+        rich_tooltip:
+          description: "Beskrivelse"
+          header: "Hode"

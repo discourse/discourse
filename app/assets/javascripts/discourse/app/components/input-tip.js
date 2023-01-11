@@ -1,6 +1,7 @@
 import { alias, not } from "@ember/object/computed";
 import Component from "@ember/component";
 import { iconHTML } from "discourse-common/lib/icon-library";
+import { htmlSafe } from "@ember/template";
 
 export default Component.extend({
   classNameBindings: [":tip", "good", "bad"],
@@ -12,7 +13,7 @@ export default Component.extend({
 
   tipIconHTML() {
     let icon = iconHTML(this.good ? "check" : "times");
-    return `${icon}`.htmlSafe();
+    return htmlSafe(`${icon}`);
   },
 
   didReceiveAttrs() {

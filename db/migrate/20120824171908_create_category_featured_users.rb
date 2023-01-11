@@ -8,6 +8,6 @@ class CreateCategoryFeaturedUsers < ActiveRecord::Migration[4.2]
       t.timestamps null: false
     end
 
-    add_index :category_featured_users, [:category_id, :user_id], unique: true
+    add_index :category_featured_users, %i[category_id user_id], unique: true
   end
 end

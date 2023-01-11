@@ -1,21 +1,22 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-require 'discourse_ip_info'
+require "discourse_ip_info"
 
-describe UserAuthToken do
+RSpec.describe UserAuthToken do
   fab!(:user) { Fabricate(:user) }
 
   it "can remove old expired tokens" do
-
     SiteSetting.verbose_auth_token_logging = true
 
     freeze_time Time.zone.now
     SiteSetting.maximum_session_age = 1
 
-    token = UserAuthToken.generate!(user_id: user.id,
-                                    user_agent: "some user agent 2",
-                                    client_ip: "1.1.2.3")
+    token =
+      UserAuthToken.generate!(
+        user_id: user.id,
+        user_agent: "some user agent 2",
+        client_ip: "1.1.2.3",
+      )
 
     freeze_time 1.hour.from_now
     UserAuthToken.cleanup!
@@ -31,13 +32,15 @@ describe UserAuthToken do
     UserAuthToken.cleanup!
 
     expect(UserAuthToken.where(id: token.id).count).to eq(0)
-
   end
 
   it "can lookup hashed" do
-    token = UserAuthToken.generate!(user_id: user.id,
-                                    user_agent: "some user agent 2",
-                                    client_ip: "1.1.2.3")
+    token =
+      UserAuthToken.generate!(
+        user_id: user.id,
+        user_agent: "some user agent 2",
+        client_ip: "1.1.2.3",
+      )
 
     lookup_token = UserAuthToken.lookup(token.unhashed_auth_token)
 
@@ -49,9 +52,12 @@ describe UserAuthToken do
   end
 
   it "can validate token was seen at lookup time" do
-    user_token = UserAuthToken.generate!(user_id: user.id,
-                                         user_agent: "some user agent 2",
-                                         client_ip: "1.1.2.3")
+    user_token =
+      UserAuthToken.generate!(
+        user_id: user.id,
+        user_agent: "some user agent 2",
+        client_ip: "1.1.2.3",
+      )
 
     expect(user_token.auth_token_seen).to eq(false)
 
@@ -59,13 +65,15 @@ describe UserAuthToken do
 
     user_token.reload
     expect(user_token.auth_token_seen).to eq(true)
-
   end
 
   it "can rotate with no params maintaining data" do
-    user_token = UserAuthToken.generate!(user_id: user.id,
-                                         user_agent: "some user agent 2",
-                                         client_ip: "1.1.2.3")
+    user_token =
+      UserAuthToken.generate!(
+        user_id: user.id,
+        user_agent: "some user agent 2",
+        client_ip: "1.1.2.3",
+      )
 
     user_token.update_columns(auth_token_seen: true)
     expect(user_token.rotate!).to eq(true)
@@ -76,9 +84,12 @@ describe UserAuthToken do
 
   it "expires correctly" do
     freeze_time Time.zone.now
-    user_token = UserAuthToken.generate!(user_id: user.id,
-                                         user_agent: "some user agent 2",
-                                         client_ip: "1.1.2.3")
+    user_token =
+      UserAuthToken.generate!(
+        user_id: user.id,
+        user_agent: "some user agent 2",
+        client_ip: "1.1.2.3",
+      )
 
     UserAuthToken.lookup(user_token.unhashed_auth_token, seen: true)
 
@@ -102,9 +113,12 @@ describe UserAuthToken do
   it "can properly rotate tokens" do
     freeze_time 3.days.ago
 
-    user_token = UserAuthToken.generate!(user_id: user.id,
-                                         user_agent: "some user agent 2",
-                                         client_ip: "1.1.2.3")
+    user_token =
+      UserAuthToken.generate!(
+        user_id: user.id,
+        user_agent: "some user agent 2",
+        client_ip: "1.1.2.3",
+      )
 
     prev_auth_token = user_token.auth_token
     unhashed_prev = user_token.unhashed_auth_token
@@ -154,9 +168,8 @@ describe UserAuthToken do
   end
 
   it "keeps prev token valid for 1 minute after it is confirmed" do
-    token = UserAuthToken.generate!(user_id: user.id,
-                                    user_agent: "some user agent",
-                                    client_ip: "1.1.2.3")
+    token =
+      UserAuthToken.generate!(user_id: user.id, user_agent: "some user agent", client_ip: "1.1.2.3")
 
     UserAuthToken.lookup(token.unhashed_auth_token, seen: true)
 
@@ -170,80 +183,87 @@ describe UserAuthToken do
 
     expect(UserAuthToken.lookup(token.unhashed_auth_token, seen: true)).not_to eq(nil)
     expect(UserAuthToken.lookup(prev_token, seen: true)).not_to eq(nil)
-
   end
 
   it "can correctly log auth tokens" do
     SiteSetting.verbose_auth_token_logging = true
 
-    token = UserAuthToken.generate!(user_id: user.id,
-                                    user_agent: "some user agent",
-                                    client_ip: "1.1.2.3")
+    token =
+      UserAuthToken.generate!(user_id: user.id, user_agent: "some user agent", client_ip: "1.1.2.3")
 
-    expect(UserAuthTokenLog.where(
-      action: 'generate',
-      user_id: user.id,
-      user_agent: "some user agent",
-      client_ip: "1.1.2.3",
-      user_auth_token_id: token.id,
-    ).count).to eq(1)
+    expect(
+      UserAuthTokenLog.where(
+        action: "generate",
+        user_id: user.id,
+        user_agent: "some user agent",
+        client_ip: "1.1.2.3",
+        user_auth_token_id: token.id,
+      ).count,
+    ).to eq(1)
 
-    UserAuthToken.lookup(token.unhashed_auth_token,
+    UserAuthToken.lookup(
+      token.unhashed_auth_token,
       seen: true,
       user_agent: "something diff",
-      client_ip: "1.2.3.3"
+      client_ip: "1.2.3.3",
     )
 
-    UserAuthToken.lookup(token.unhashed_auth_token,
+    UserAuthToken.lookup(
+      token.unhashed_auth_token,
       seen: true,
       user_agent: "something diff2",
-      client_ip: "1.2.3.3"
+      client_ip: "1.2.3.3",
     )
 
-    expect(UserAuthTokenLog.where(
-      action: "seen token",
-      user_id: user.id,
-      auth_token: token.auth_token,
-      client_ip: "1.2.3.3",
-      user_auth_token_id: token.id
-    ).count).to eq(1)
+    expect(
+      UserAuthTokenLog.where(
+        action: "seen token",
+        user_id: user.id,
+        auth_token: token.auth_token,
+        client_ip: "1.2.3.3",
+        user_auth_token_id: token.id,
+      ).count,
+    ).to eq(1)
 
     fake_token = SecureRandom.hex
-    UserAuthToken.lookup(fake_token,
-                         seen: true,
-                         user_agent: "bob",
-                         client_ip: "127.0.0.1",
-                         path: "/path"
-                        )
-
-    expect(UserAuthTokenLog.where(
-      action: "miss token",
-      auth_token: UserAuthToken.hash_token(fake_token),
+    UserAuthToken.lookup(
+      fake_token,
+      seen: true,
       user_agent: "bob",
       client_ip: "127.0.0.1",
-      path: "/path"
-    ).count).to eq(1)
+      path: "/path",
+    )
+
+    expect(
+      UserAuthTokenLog.where(
+        action: "miss token",
+        auth_token: UserAuthToken.hash_token(fake_token),
+        user_agent: "bob",
+        client_ip: "127.0.0.1",
+        path: "/path",
+      ).count,
+    ).to eq(1)
 
     freeze_time(UserAuthToken::ROTATE_TIME.from_now)
 
     token.rotate!(user_agent: "firefox", client_ip: "1.1.1.1")
 
-    expect(UserAuthTokenLog.where(
-      action: "rotate",
-      auth_token: token.auth_token,
-      user_agent: "firefox",
-      client_ip: "1.1.1.1",
-      user_auth_token_id: token.id
-    ).count).to eq(1)
-
+    expect(
+      UserAuthTokenLog.where(
+        action: "rotate",
+        auth_token: token.auth_token,
+        user_agent: "firefox",
+        client_ip: "1.1.1.1",
+        user_auth_token_id: token.id,
+      ).count,
+    ).to eq(1)
   end
 
   it "calls before_destroy" do
     SiteSetting.verbose_auth_token_logging = true
 
-    token = UserAuthToken.generate!(user_id: user.id,
-                                    user_agent: "some user agent",
-                                    client_ip: "1.1.2.3")
+    token =
+      UserAuthToken.generate!(user_id: user.id, user_agent: "some user agent", client_ip: "1.1.2.3")
 
     expect(user.user_auth_token_logs.count).to eq(1)
 
@@ -256,9 +276,8 @@ describe UserAuthToken do
   end
 
   it "will not mark token unseen when prev and current are the same" do
-    token = UserAuthToken.generate!(user_id: user.id,
-                                    user_agent: "some user agent",
-                                    client_ip: "1.1.2.3")
+    token =
+      UserAuthToken.generate!(user_id: user.id, user_agent: "some user agent", client_ip: "1.1.2.3")
 
     lookup = UserAuthToken.lookup(token.unhashed_auth_token, seen: true)
     lookup = UserAuthToken.lookup(token.unhashed_auth_token, seen: true)
@@ -266,7 +285,7 @@ describe UserAuthToken do
     expect(lookup.auth_token_seen).to eq(true)
   end
 
-  context "suspicious login" do
+  context "with suspicious login" do
     fab!(:admin) { Fabricate(:admin) }
 
     it "is not checked when generated for non-staff" do
@@ -286,7 +305,5 @@ describe UserAuthToken do
 
       expect(Jobs::SuspiciousLogin.jobs.size).to eq(0)
     end
-
   end
-
 end

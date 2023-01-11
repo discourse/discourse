@@ -1,7 +1,7 @@
 <a class="user-card-badge-link" href={{this.badgeUrl}}>
-  {{#badge-button badge=@badge}}
+  <BadgeButton @badge={{@badge}}>
     {{#if this.showGrantCount}}
       <span class="count">(&times;&nbsp;{{@count}})</span>
     {{/if}}
-  {{/badge-button}}
+  </BadgeButton>
 </a>

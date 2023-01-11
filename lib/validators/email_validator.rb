@@ -1,24 +1,23 @@
 # frozen_string_literal: true
 
 class EmailValidator < ActiveModel::EachValidator
-
   def validate_each(record, attribute, value)
-    unless value =~ EmailValidator.email_regex
+    if !EmailAddressValidator.valid_value?(value)
       if Invite === record && attribute == :email
-        record.errors.add(:base, I18n.t(:'invite.invalid_email', email: CGI.escapeHTML(value)))
+        record.errors.add(:base, I18n.t(:"invite.invalid_email", email: CGI.escapeHTML(value)))
       else
-        record.errors.add(attribute, I18n.t(:'user.email.invalid'))
+        record.errors.add(attribute, I18n.t(:"user.email.invalid"))
       end
       invalid = true
     end
 
-    unless EmailValidator.allowed?(value)
-      record.errors.add(attribute, I18n.t(:'user.email.not_allowed'))
+    if !EmailValidator.allowed?(value)
+      record.errors.add(attribute, I18n.t(:"user.email.not_allowed"))
       invalid = true
     end
 
     if !invalid && ScreenedEmail.should_block?(value)
-      record.errors.add(attribute, I18n.t(:'user.email.blocked'))
+      record.errors.add(attribute, I18n.t(:"user.email.blocked"))
     end
   end
 
@@ -41,17 +40,22 @@ class EmailValidator < ActiveModel::EachValidator
   end
 
   def self.email_in_restriction_setting?(setting, value)
-    domains = setting.gsub('.', '\.')
+    domains = setting.gsub(".", '\.')
     regexp = Regexp.new("@(.+\\.)?(#{domains})$", true)
     value =~ regexp
   end
 
   def self.is_developer?(value)
-    Rails.configuration.respond_to?(:developer_emails) && Rails.configuration.developer_emails.include?(value)
+    Rails.configuration.respond_to?(:developer_emails) &&
+      Rails.configuration.developer_emails.include?(value)
   end
 
   def self.email_regex
-    /\A[a-zA-Z0-9!#\$%&'*+\/=?\^_`{|}~\-]+(?:\.[a-zA-Z0-9!#\$%&'\*+\/=?\^_`{|}~\-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9\-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9\-]*[a-zA-Z0-9])?$\z/
+    Discourse.deprecate(
+      "EmailValidator.email_regex is deprecated. Please use EmailAddressValidator instead.",
+      output_in_test: true,
+      drop_from: "2.9.0",
+    )
+    EmailAddressValidator.email_regex
   end
-
 end

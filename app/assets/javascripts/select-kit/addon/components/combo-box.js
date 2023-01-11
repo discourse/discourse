@@ -1,5 +1,5 @@
 import SingleSelectComponent from "select-kit/components/single-select";
-import { computed } from "@ember/object";
+import { gte } from "@ember/object/computed";
 
 export default SingleSelectComponent.extend({
   pluginApiIdentifiers: ["combo-box"],
@@ -13,5 +13,5 @@ export default SingleSelectComponent.extend({
     headerComponent: "combo-box/combo-box-header",
   },
 
-  autoFilterable: computed.gte("content.length", 10),
+  autoFilterable: gte("content.length", 10),
 });

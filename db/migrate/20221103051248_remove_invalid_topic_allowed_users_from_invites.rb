@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class RemoveInvalidTopicAllowedUsersFromInvites < ActiveRecord::Migration[6.1]
+class RemoveInvalidTopicAllowedUsersFromInvites < ActiveRecord::Migration[7.0]
   def up
     # We are getting all the topic_allowed_users records that
     # match an invited user, which is created as part of the invite

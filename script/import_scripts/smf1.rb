@@ -5,21 +5,21 @@ require "htmlentities"
 require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 
 class ImportScripts::Smf1 < ImportScripts::Base
-
-  BATCH_SIZE  ||= 5000
+  BATCH_SIZE ||= 5000
   UPLOADS_DIR ||= ENV["UPLOADS_DIR"].presence
-  FORUM_URL   ||= ENV["FORUM_URL"].presence
+  FORUM_URL ||= ENV["FORUM_URL"].presence
 
   def initialize
-    fail "UPLOADS_DIR env variable is required (example: '/path/to/attachments')"   unless UPLOADS_DIR
+    fail "UPLOADS_DIR env variable is required (example: '/path/to/attachments')" unless UPLOADS_DIR
     fail "FORUM_URL env variable is required (example: 'https://domain.com/forum')" unless FORUM_URL
 
-    @client = Mysql2::Client.new(
-      host: ENV["DB_HOST"] || "localhost",
-      username: ENV["DB_USER"] || "root",
-      password: ENV["DB_PW"],
-      database: ENV["DB_NAME"],
-    )
+    @client =
+      Mysql2::Client.new(
+        host: ENV["DB_HOST"] || "localhost",
+        username: ENV["DB_USER"] || "root",
+        password: ENV["DB_PW"],
+        database: ENV["DB_NAME"],
+      )
 
     check_version!
 
@@ -29,7 +29,12 @@ class ImportScripts::Smf1 < ImportScripts::Base
 
     puts "Loading existing usernames..."
 
-    @old_to_new_usernames = UserCustomField.joins(:user).where(name: "import_username").pluck("value", "users.username").to_h
+    @old_to_new_usernames =
+      UserCustomField
+        .joins(:user)
+        .where(name: "import_username")
+        .pluck("value", "users.username")
+        .to_h
 
     puts "Loading pm mapping..."
 
@@ -41,13 +46,14 @@ class ImportScripts::Smf1 < ImportScripts::Base
       .where("title NOT ILIKE 'Re: %'")
       .group(:id)
       .order(:id)
-      .pluck("string_agg(topic_allowed_users.user_id::text, ',' ORDER BY topic_allowed_users.user_id), title, topics.id")
+      .pluck(
+        "string_agg(topic_allowed_users.user_id::text, ',' ORDER BY topic_allowed_users.user_id), title, topics.id",
+      )
       .each do |users, title, topic_id|
-      @pm_mapping[users] ||= {}
-      @pm_mapping[users][title] ||= []
-      @pm_mapping[users][title] << topic_id
-    end
-
+        @pm_mapping[users] ||= {}
+        @pm_mapping[users][title] ||= []
+        @pm_mapping[users][title] << topic_id
+      end
   end
 
   def execute
@@ -71,7 +77,10 @@ class ImportScripts::Smf1 < ImportScripts::Base
   end
 
   def check_version!
-    version = mysql_query("SELECT value FROM smf_settings WHERE variable = 'smfVersion' LIMIT 1").first["value"]
+    version =
+      mysql_query("SELECT value FROM smf_settings WHERE variable = 'smfVersion' LIMIT 1").first[
+        "value"
+      ]
     fail "Incompatible version (#{version})" unless version&.start_with?("1.")
   end
 
@@ -84,10 +93,7 @@ class ImportScripts::Smf1 < ImportScripts::Base
     create_groups(groups) do |g|
       next if g["groupName"].blank?
 
-      {
-        id: g["id_group"],
-        full_name: g["groupName"],
-      }
+      { id: g["id_group"], full_name: g["groupName"] }
     end
   end
 
@@ -98,7 +104,7 @@ class ImportScripts::Smf1 < ImportScripts::Base
     total = mysql_query("SELECT COUNT(*) count FROM smf_members").first["count"]
 
     batches(BATCH_SIZE) do |offset|
-      users = mysql_query(<<~SQL
+      users = mysql_query(<<~SQL).to_a
         SELECT m.id_member
              , memberName
              , dateRegistered
@@ -125,7 +131,6 @@ class ImportScripts::Smf1 < ImportScripts::Base
          ORDER BY m.id_member
          LIMIT #{BATCH_SIZE}
       SQL
-      ).to_a
 
       break if users.empty?
 
@@ -158,38 +163,45 @@ class ImportScripts::Smf1 < ImportScripts::Base
           ip_address: u["memberIP2"],
           active: u["is_activated"] == 1,
           approved: u["is_activated"] == 1,
-          post_create_action: proc do |user|
-            # usernames
-            @old_to_new_usernames[u["memberName"]] = user.username
+          post_create_action:
+            proc do |user|
+              # usernames
+              @old_to_new_usernames[u["memberName"]] = user.username
 
-            # groups
-            GroupUser.transaction do
-              group_ids.each do |gid|
-                (group_id = group_id_from_imported_group_id(gid)) && GroupUser.find_or_create_by(user: user, group_id: group_id)
+              # groups
+              GroupUser.transaction do
+                group_ids.each do |gid|
+                  (group_id = group_id_from_imported_group_id(gid)) &&
+                    GroupUser.find_or_create_by(user: user, group_id: group_id)
+                end
               end
-            end
 
-            # avatar
-            avatar_url = nil
+              # avatar
+              avatar_url = nil
 
-            if u["avatar"].present?
-              if u["avatar"].start_with?("http")
-                avatar_url = u["avatar"]
-              elsif u["avatar"].start_with?("avatar_")
-                avatar_url = "#{FORUM_URL}/avatar-members/#{u["avatar"]}"
+              if u["avatar"].present?
+                if u["avatar"].start_with?("http")
+                  avatar_url = u["avatar"]
+                elsif u["avatar"].start_with?("avatar_")
+                  avatar_url = "#{FORUM_URL}/avatar-members/#{u["avatar"]}"
+                end
               end
-            end
 
-            avatar_url ||= if u["attachmentType"] == 0 && u["id_attach"].present?
-              "#{FORUM_URL}/index.php?action=dlattach;attach=#{u["id_attach"]};type=avatar"
-            elsif u["attachmentType"] == 1 && u["filename"].present?
-              "#{FORUM_URL}/avatar-members/#{u["filename"]}"
-            end
+              avatar_url ||=
+                if u["attachmentType"] == 0 && u["id_attach"].present?
+                  "#{FORUM_URL}/index.php?action=dlattach;attach=#{u["id_attach"]};type=avatar"
+                elsif u["attachmentType"] == 1 && u["filename"].present?
+                  "#{FORUM_URL}/avatar-members/#{u["filename"]}"
+                end
 
-            if avatar_url.present?
-              UserAvatar.import_url_for_user(avatar_url, user) rescue nil
-            end
-          end
+              if avatar_url.present?
+                begin
+                  UserAvatar.import_url_for_user(avatar_url, user)
+                rescue StandardError
+                  nil
+                end
+              end
+            end,
         }
       end
     end
@@ -198,7 +210,7 @@ class ImportScripts::Smf1 < ImportScripts::Base
   def import_categories
     puts "", "Importing categories..."
 
-    categories = mysql_query(<<~SQL
+    categories = mysql_query(<<~SQL).to_a
       SELECT id_board
            , id_parent
            , boardOrder
@@ -207,7 +219,6 @@ class ImportScripts::Smf1 < ImportScripts::Base
        FROM smf_boards
       ORDER BY id_parent, id_board
     SQL
-    ).to_a
 
     parent_categories = categories.select { |c| c["id_parent"] == 0 }
     children_categories = categories.select { |c| c["id_parent"] != 0 }
@@ -218,9 +229,13 @@ class ImportScripts::Smf1 < ImportScripts::Base
         name: c["name"],
         description: pre_process_raw(c["description"].presence),
         position: c["boardOrder"],
-        post_create_action: proc do |category|
-          Permalink.find_or_create_by(url: "forums/index.php/board,#{c["id_board"]}.0.html", category_id: category.id)
-        end,
+        post_create_action:
+          proc do |category|
+            Permalink.find_or_create_by(
+              url: "forums/index.php/board,#{c["id_board"]}.0.html",
+              category_id: category.id,
+            )
+          end,
       }
     end
 
@@ -231,9 +246,13 @@ class ImportScripts::Smf1 < ImportScripts::Base
         name: c["name"],
         description: pre_process_raw(c["description"].presence),
         position: c["boardOrder"],
-        post_create_action: proc do |category|
-          Permalink.find_or_create_by(url: "forums/index.php/board,#{c["id_board"]}.0.html", category_id: category.id)
-        end,
+        post_create_action:
+          proc do |category|
+            Permalink.find_or_create_by(
+              url: "forums/index.php/board,#{c["id_board"]}.0.html",
+              category_id: category.id,
+            )
+          end,
       }
     end
   end
@@ -245,7 +264,7 @@ class ImportScripts::Smf1 < ImportScripts::Base
     total = mysql_query("SELECT COUNT(*) count FROM smf_messages").first["count"]
 
     batches(BATCH_SIZE) do |offset|
-      posts = mysql_query(<<~SQL
+      posts = mysql_query(<<~SQL).to_a
         SELECT m.id_msg
              , m.id_topic
              , m.id_board
@@ -262,7 +281,6 @@ class ImportScripts::Smf1 < ImportScripts::Base
         ORDER BY m.id_msg
         LIMIT #{BATCH_SIZE}
       SQL
-      ).to_a
 
       break if posts.empty?
 
@@ -287,12 +305,18 @@ class ImportScripts::Smf1 < ImportScripts::Base
           post[:views] = p["numViews"]
           post[:pinned_at] = created_at if p["isSticky"] == 1
           post[:post_create_action] = proc do |pp|
-            Permalink.find_or_create_by(url: "forums/index.php/topic,#{p["id_topic"]}.0.html", topic_id: pp.topic_id)
+            Permalink.find_or_create_by(
+              url: "forums/index.php/topic,#{p["id_topic"]}.0.html",
+              topic_id: pp.topic_id,
+            )
           end
         elsif parent = topic_lookup_from_imported_post_id(p["id_first_msg"])
           post[:topic_id] = parent[:topic_id]
           post[:post_create_action] = proc do |pp|
-            Permalink.find_or_create_by(url: "forums/index.php/topic,#{p["id_topic"]}.msg#{p["id_msg"]}.html", post_id: pp.id)
+            Permalink.find_or_create_by(
+              url: "forums/index.php/topic,#{p["id_topic"]}.msg#{p["id_msg"]}.html",
+              post_id: pp.id,
+            )
           end
         else
           next
@@ -307,10 +331,15 @@ class ImportScripts::Smf1 < ImportScripts::Base
     puts "", "Importing personal posts..."
 
     last_post_id = -1
-    total = mysql_query("SELECT COUNT(*) count FROM smf_personal_messages WHERE deletedBySender = 0").first["count"]
+    total =
+      mysql_query(
+        "SELECT COUNT(*) count FROM smf_personal_messages WHERE deletedBySender = 0",
+      ).first[
+        "count"
+      ]
 
     batches(BATCH_SIZE) do |offset|
-      posts = mysql_query(<<~SQL
+      posts = mysql_query(<<~SQL).to_a
         SELECT id_pm
              , id_member_from
              , msgtime
@@ -323,7 +352,6 @@ class ImportScripts::Smf1 < ImportScripts::Base
          ORDER BY id_pm
          LIMIT #{BATCH_SIZE}
       SQL
-      ).to_a
 
       break if posts.empty?
 
@@ -335,7 +363,8 @@ class ImportScripts::Smf1 < ImportScripts::Base
       create_posts(posts, total: total, offset: offset) do |p|
         next unless user_id = user_id_from_imported_user_id(p["id_member_from"])
         next if p["recipients"].blank?
-        recipients = p["recipients"].split(",").map { |id| user_id_from_imported_user_id(id) }.compact.uniq
+        recipients =
+          p["recipients"].split(",").map { |id| user_id_from_imported_user_id(id) }.compact.uniq
         next if recipients.empty?
 
         id = "pm-#{p["id_pm"]}"
@@ -385,10 +414,13 @@ class ImportScripts::Smf1 < ImportScripts::Base
 
     count = 0
     last_upload_id = -1
-    total = mysql_query("SELECT COUNT(*) count FROM smf_attachments WHERE id_msg IS NOT NULL").first["count"]
+    total =
+      mysql_query("SELECT COUNT(*) count FROM smf_attachments WHERE id_msg IS NOT NULL").first[
+        "count"
+      ]
 
     batches(BATCH_SIZE) do |offset|
-      uploads = mysql_query(<<~SQL
+      uploads = mysql_query(<<~SQL).to_a
         SELECT id_attach
              , id_msg
              , filename
@@ -399,7 +431,6 @@ class ImportScripts::Smf1 < ImportScripts::Base
          ORDER BY id_attach
          LIMIT #{BATCH_SIZE}
       SQL
-      ).to_a
 
       break if uploads.empty?
 
@@ -408,7 +439,13 @@ class ImportScripts::Smf1 < ImportScripts::Base
       uploads.each do |u|
         count += 1
 
-        next unless post = PostCustomField.joins(:post).find_by(name: "import_id", value: u["id_msg"].to_s)&.post
+        unless post =
+                 PostCustomField
+                   .joins(:post)
+                   .find_by(name: "import_id", value: u["id_msg"].to_s)
+                   &.post
+          next
+        end
 
         path = File.join(UPLOADS_DIR, "#{u["id_attach"]}_#{u["file_hash"]}")
         next unless File.exist?(path) && File.size(path) > 0
@@ -433,15 +470,25 @@ class ImportScripts::Smf1 < ImportScripts::Base
     puts "", "Importing likes..."
 
     count = 0
-    total = mysql_query("SELECT COUNT(*) count FROM smf_thank_you_post WHERE thx_time > 0").first["count"]
+    total =
+      mysql_query("SELECT COUNT(*) count FROM smf_thank_you_post WHERE thx_time > 0").first["count"]
     like = PostActionType.types[:like]
 
-    mysql_query("SELECT id_msg, id_member, thx_time FROM smf_thank_you_post WHERE thx_time > 0 ORDER BY id_thx_post").each do |l|
+    mysql_query(
+      "SELECT id_msg, id_member, thx_time FROM smf_thank_you_post WHERE thx_time > 0 ORDER BY id_thx_post",
+    ).each do |l|
       print_status(count += 1, total, get_start_time("likes"))
       next unless post_id = post_id_from_imported_post_id(l["id_msg"])
       next unless user_id = user_id_from_imported_user_id(l["id_member"])
-      next if PostAction.where(post_action_type_id: like, post_id: post_id, user_id: user_id).exists?
-      PostAction.create(post_action_type_id: like, post_id: post_id, user_id: user_id, created_at: Time.at(l["thx_time"]))
+      if PostAction.where(post_action_type_id: like, post_id: post_id, user_id: user_id).exists?
+        next
+      end
+      PostAction.create(
+        post_action_type_id: like,
+        post_id: post_id,
+        user_id: user_id,
+        created_at: Time.at(l["thx_time"]),
+      )
     end
   end
 
@@ -457,7 +504,7 @@ class ImportScripts::Smf1 < ImportScripts::Base
     count = 0
     total = mysql_query("SELECT COUNT(*) count FROM smf_feedback WHERE approved").first["count"]
 
-    mysql_query(<<~SQL
+    mysql_query(<<~SQL).each do |f|
       SELECT feedbackid
            , id_member
            , feedbackmember_id
@@ -470,7 +517,6 @@ class ImportScripts::Smf1 < ImportScripts::Base
        WHERE approved
        ORDER BY feedbackid
     SQL
-    ).each do |f|
       print_status(count += 1, total, get_start_time("feedbacks"))
       next unless user_id_from = user_id_from_imported_user_id(f["feedbackmember_id"])
       next unless user_id_to = user_id_from_imported_user_id(f["id_member"])
@@ -498,7 +544,10 @@ class ImportScripts::Smf1 < ImportScripts::Base
     puts "", "Importing banned email domains..."
 
     blocklist = SiteSetting.blocked_email_domains.split("|")
-    banned_domains = mysql_query("SELECT SUBSTRING(email_address, 3) domain FROM smf_ban_items WHERE email_address RLIKE '^%@[^%]+$' GROUP BY email_address").map { |r| r["domain"] }
+    banned_domains =
+      mysql_query(
+        "SELECT SUBSTRING(email_address, 3) domain FROM smf_ban_items WHERE email_address RLIKE '^%@[^%]+$' GROUP BY email_address",
+      ).map { |r| r["domain"] }
 
     SiteSetting.blocked_email_domains = (blocklist + banned_domains).uniq.sort.join("|")
   end
@@ -508,7 +557,10 @@ class ImportScripts::Smf1 < ImportScripts::Base
 
     count = 0
 
-    banned_emails = mysql_query("SELECT email_address FROM smf_ban_items WHERE email_address RLIKE '^[^%]+@[^%]+$' GROUP BY email_address").map { |r| r["email_address"] }
+    banned_emails =
+      mysql_query(
+        "SELECT email_address FROM smf_ban_items WHERE email_address RLIKE '^[^%]+@[^%]+$' GROUP BY email_address",
+      ).map { |r| r["email_address"] }
     banned_emails.each do |email|
       print_status(count += 1, banned_emails.size, get_start_time("banned_emails"))
       ScreenedEmail.find_or_create_by(email: email)
@@ -520,7 +572,7 @@ class ImportScripts::Smf1 < ImportScripts::Base
 
     count = 0
 
-    banned_ips = mysql_query(<<~SQL
+    banned_ips = mysql_query(<<~SQL).to_a
       SELECT CONCAT_WS('.', ip_low1, ip_low2, ip_low3, ip_low4) low
            , CONCAT_WS('.', ip_high1, ip_high2, ip_high3, ip_high4) high
            , hits
@@ -528,7 +580,6 @@ class ImportScripts::Smf1 < ImportScripts::Base
        WHERE (ip_low1 + ip_low2 + ip_low3 + ip_low4 + ip_high1 + ip_high2 + ip_high3 + ip_high4) > 0
        GROUP BY low, high, hits;
     SQL
-    ).to_a
 
     banned_ips.each do |r|
       print_status(count += 1, banned_ips.size, get_start_time("banned_ips"))
@@ -537,15 +588,15 @@ class ImportScripts::Smf1 < ImportScripts::Base
           ScreenedIpAddress.create(ip_address: r["low"], match_count: r["hits"])
         end
       else
-        low_values  = r["low"].split(".").map(&:to_i)
+        low_values = r["low"].split(".").map(&:to_i)
         high_values = r["high"].split(".").map(&:to_i)
-        first_diff  = low_values.zip(high_values).count { |a, b| a == b }
+        first_diff = low_values.zip(high_values).count { |a, b| a == b }
         first_diff -= 1 if low_values[first_diff] == 0 && high_values[first_diff] == 255
-        prefix      = low_values[0...first_diff]
-        suffix      = [0] * (3 - first_diff)
-        mask        = 8 * (first_diff + 1)
-        values      = (low_values[first_diff]..high_values[first_diff])
-        hits        = (r["hits"] / [1, values.count].max).floor
+        prefix = low_values[0...first_diff]
+        suffix = [0] * (3 - first_diff)
+        mask = 8 * (first_diff + 1)
+        values = (low_values[first_diff]..high_values[first_diff])
+        hits = (r["hits"] / [1, values.count].max).floor
         values.each do |v|
           range_values = prefix + [v] + suffix
           ip_address = "#{range_values.join(".")}/#{mask}"
@@ -562,10 +613,28 @@ class ImportScripts::Smf1 < ImportScripts::Base
     ScreenedIpAddress.roll_up
   end
 
-  IGNORED_BBCODE ||= %w{
-    black blue center color email flash font glow green iurl left list move red
-    right shadown size table time white
-  }
+  IGNORED_BBCODE ||= %w[
+    black
+    blue
+    center
+    color
+    email
+    flash
+    font
+    glow
+    green
+    iurl
+    left
+    list
+    move
+    red
+    right
+    shadown
+    size
+    table
+    time
+    white
+  ]
 
   def pre_process_raw(raw)
     return "" if raw.blank?
@@ -573,59 +642,59 @@ class ImportScripts::Smf1 < ImportScripts::Base
     raw = @htmlentities.decode(raw)
 
     # [acronym]
-    raw.gsub!(/\[acronym=([^\]]+)\](.*?)\[\/acronym\]/im) { %{<abbr title="#{$1}">#{$2}</abbr>} }
+    raw.gsub!(%r{\[acronym=([^\]]+)\](.*?)\[/acronym\]}im) { %{<abbr title="#{$1}">#{$2}</abbr>} }
 
     # [br]
     raw.gsub!(/\[br\]/i, "\n")
-    raw.gsub!(/<br\s*\/?>/i, "\n")
+    raw.gsub!(%r{<br\s*/?>}i, "\n")
     # [hr]
     raw.gsub!(/\[hr\]/i, "<hr/>")
 
     # [sub]
-    raw.gsub!(/\[sub\](.*?)\[\/sub\]/im) { "<sub>#{$1}</sub>" }
+    raw.gsub!(%r{\[sub\](.*?)\[/sub\]}im) { "<sub>#{$1}</sub>" }
     # [sup]
-    raw.gsub!(/\[sup\](.*?)\[\/sup\]/im) { "<sup>#{$1}</sup>" }
+    raw.gsub!(%r{\[sup\](.*?)\[/sup\]}im) { "<sup>#{$1}</sup>" }
 
     # [html]
     raw.gsub!(/\[html\]/i, "\n```html\n")
-    raw.gsub!(/\[\/html\]/i, "\n```\n")
+    raw.gsub!(%r{\[/html\]}i, "\n```\n")
 
     # [php]
     raw.gsub!(/\[php\]/i, "\n```php\n")
-    raw.gsub!(/\[\/php\]/i, "\n```\n")
+    raw.gsub!(%r{\[/php\]}i, "\n```\n")
 
     # [code]
-    raw.gsub!(/\[\/?code\]/i, "\n```\n")
+    raw.gsub!(%r{\[/?code\]}i, "\n```\n")
 
     # [pre]
-    raw.gsub!(/\[\/?pre\]/i, "\n```\n")
+    raw.gsub!(%r{\[/?pre\]}i, "\n```\n")
 
     # [tt]
-    raw.gsub!(/\[\/?tt\]/i, "`")
+    raw.gsub!(%r{\[/?tt\]}i, "`")
 
     # [ftp]
     raw.gsub!(/\[ftp/i, "[url")
-    raw.gsub!(/\[\/ftp\]/i, "[/url]")
+    raw.gsub!(%r{\[/ftp\]}i, "[/url]")
 
     # [me]
-    raw.gsub!(/\[me=([^\]]*)\](.*?)\[\/me\]/im) { "_\\* #{$1} #{$2}_" }
+    raw.gsub!(%r{\[me=([^\]]*)\](.*?)\[/me\]}im) { "_\\* #{$1} #{$2}_" }
 
     # [li]
-    raw.gsub!(/\[li\](.*?)\[\/li\]/im) { "- #{$1}" }
+    raw.gsub!(%r{\[li\](.*?)\[/li\]}im) { "- #{$1}" }
 
     # puts [img] on their own line
-    raw.gsub!(/\[img[^\]]*\](.*?)\[\/img\]/im) { "\n#{$1}\n" }
+    raw.gsub!(%r{\[img[^\]]*\](.*?)\[/img\]}im) { "\n#{$1}\n" }
 
     # puts [youtube] on their own line
-    raw.gsub!(/\[youtube\](.*?)\[\/youtube\]/im) { "\n#{$1}\n" }
+    raw.gsub!(%r{\[youtube\](.*?)\[/youtube\]}im) { "\n#{$1}\n" }
 
-    IGNORED_BBCODE.each { |code| raw.gsub!(/\[#{code}[^\]]*\](.*?)\[\/#{code}\]/im, '\1') }
+    IGNORED_BBCODE.each { |code| raw.gsub!(%r{\[#{code}[^\]]*\](.*?)\[/#{code}\]}im, '\1') }
 
     # ensure [/quote] are on their own line
-    raw.gsub!(/\s*\[\/quote\]\s*/im, "\n[/quote]\n")
+    raw.gsub!(%r{\s*\[/quote\]\s*}im, "\n[/quote]\n")
 
     # [quote]
-    raw.gsub!(/\s*\[quote (.+?)\]\s/im) {
+    raw.gsub!(/\s*\[quote (.+?)\]\s/im) do
       params = $1
       post_id = params[/msg(\d+)/, 1]
       username = params[/author=(.+) link=/, 1]
@@ -636,14 +705,14 @@ class ImportScripts::Smf1 < ImportScripts::Base
       else
         %{\n[quote="#{username}"]\n}
       end
-    }
+    end
 
     # remove tapatalk mess
-    raw.gsub!(/Sent from .+? using \[url=.*?\].+?\[\/url\]/i, "")
+    raw.gsub!(%r{Sent from .+? using \[url=.*?\].+?\[/url\]}i, "")
     raw.gsub!(/Sent from .+? using .+?\z/i, "")
 
     # clean URLs
-    raw.gsub!(/\[url=(.+?)\]\1\[\/url\]/i, '\1')
+    raw.gsub!(%r{\[url=(.+?)\]\1\[/url\]}i, '\1')
 
     raw
   end
@@ -651,7 +720,6 @@ class ImportScripts::Smf1 < ImportScripts::Base
   def mysql_query(sql)
     @client.query(sql)
   end
-
 end
 
 ImportScripts::Smf1.new.perform

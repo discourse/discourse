@@ -28,7 +28,7 @@ const VersionCheck = EmberObject.extend({
   @discourseComputed("installed_sha")
   shortSha(installedSHA) {
     if (installedSHA) {
-      return installedSHA.substr(0, 10);
+      return installedSHA.slice(0, 10);
     }
   },
 });

@@ -3,8 +3,16 @@
 // BEWARE: changing these styles implies they take effect anywhere they are seen
 // throughout the Discourse application
 
+:root {
+  --d-max-width: 1110px;
+}
+
 // Base Elements
 body.widget-dragging {
+  cursor: ns-resize;
+}
+
+body.dragging {
   cursor: ns-resize;
 }
 
@@ -52,17 +60,17 @@ input,
 button,
 select,
 textarea {
-  font-size: $font-0;
+  font-size: var(--font-0);
   font-weight: normal;
-  line-height: $line-height-medium;
+  line-height: var(--line-height-medium);
 }
 
 select,
 textarea {
   display: inline-block;
   margin-bottom: 9px;
-  font-size: $font-0;
-  line-height: $line-height-large;
+  font-size: var(--font-0);
+  line-height: var(--line-height-large);
   color: var(--primary);
 }
 
@@ -73,7 +81,7 @@ textarea {
 
 select,
 input[type="file"] {
-  line-height: $line-height-large;
+  line-height: var(--line-height-large);
 }
 
 select {
@@ -180,5 +188,34 @@ input {
   .wrap,
   .full-width {
     min-width: 0;
+  }
+}
+
+body.has-sidebar-page {
+  .wrap {
+    // increase page max-width to accommodate sidebar width
+    max-width: calc(var(--d-sidebar-width) + var(--d-max-width));
+  }
+
+  #main-outlet-wrapper {
+    grid-template-columns: var(--d-sidebar-width) minmax(0, 1fr);
+    gap: 0 2em;
+    padding-left: 0;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  body.sidebar-animate {
+    #main-outlet-wrapper {
+      //  grid-template-columns transition supported in Firefox, Chrome support coming summer 2022
+      transition-property: grid-template-columns, max-width;
+      transition-timing-function: var(--d-sidebar-animation-ease);
+      transition-duration: var(--d-sidebar-animation-time);
+    }
+
+    .d-header-wrap .wrap {
+      transition: max-width var(--d-sidebar-animation-time)
+        var(--d-sidebar-animation-ease);
+    }
   }
 }

@@ -3,7 +3,7 @@
   "properties": {
     "directory_items": {
       "type": "array",
-      "items": [
+      "items":
         {
           "type": "object",
           "additionalProperties": false,
@@ -79,7 +79,6 @@
             "user"
           ]
         }
-      ]
     },
     "meta": {
       "type": "object",

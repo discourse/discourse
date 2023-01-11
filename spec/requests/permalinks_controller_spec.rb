@@ -1,12 +1,10 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
-describe PermalinksController do
+RSpec.describe PermalinksController do
   fab!(:topic) { Fabricate(:topic) }
   fab!(:permalink) { Fabricate(:permalink, url: "deadroute/topic/546") }
 
-  describe 'show' do
+  describe "show" do
     it "should redirect to a permalink's target_url with status 301" do
       permalink.update!(topic_id: topic.id)
 
@@ -27,12 +25,12 @@ describe PermalinksController do
     end
 
     it "should apply normalizations" do
-      permalink.update!(external_url: '/topic/100')
+      permalink.update!(external_url: "/topic/100")
       SiteSetting.permalink_normalizations = "/(.*)\\?.*/\\1"
 
       get "/#{permalink.url}", params: { test: "hello" }
 
-      expect(response).to redirect_to('/topic/100')
+      expect(response).to redirect_to("/topic/100")
       expect(response.status).to eq(301)
 
       SiteSetting.permalink_normalizations = "/(.*)\\?.*/\\1X"
@@ -42,8 +40,8 @@ describe PermalinksController do
       expect(response.status).to eq(404)
     end
 
-    it 'return 404 if permalink record does not exist' do
-      get '/not/a/valid/url'
+    it "return 404 if permalink record does not exist" do
+      get "/not/a/valid/url"
       expect(response.status).to eq(404)
     end
   end

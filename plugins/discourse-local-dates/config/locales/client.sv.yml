@@ -31,6 +31,7 @@ sv:
           format_title: Datumformat
           timezone: Tidszon
           until: Tills...
+          current_timezone: "Aktuell tidszon:"
           recurring:
             every_day: "Varje dag"
             every_week: "Varje vecka"

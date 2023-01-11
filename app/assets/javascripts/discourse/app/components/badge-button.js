@@ -1,20 +1,12 @@
-import Component from "@ember/component";
-import { alias } from "@ember/object/computed";
-import discourseComputed from "discourse-common/utils/decorators";
+import Component from "@glimmer/component";
+import domFromString from "discourse-common/lib/dom-from-string";
 
-export default Component.extend({
-  tagName: "span",
-  classNameBindings: [
-    ":user-badge",
-    "badge.badgeTypeClassName",
-    "badge.enabled::disabled",
-  ],
-
-  @discourseComputed("badge.description")
-  title(badgeDescription) {
-    return $("<div>" + badgeDescription + "</div>").text();
-  },
-
-  attributeBindings: ["data-badge-name", "title"],
-  "data-badge-name": alias("badge.name"),
-});
+// Takes @badge as argument.
+export default class BadgeButtonComponent extends Component {
+  get title() {
+    const description = this.args.badge?.description;
+    if (description) {
+      return domFromString(`<div>${description}</div>`)[0].innerText;
+    }
+  }
+}

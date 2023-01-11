@@ -6,7 +6,11 @@ export default MultiSelectFilterComponent.extend({
 
   @action
   onPaste(event) {
-    const data = event.originalEvent.clipboardData;
+    if (this.selectKit.options.maximum === 1) {
+      return;
+    }
+
+    const data = event?.clipboardData;
 
     if (!data) {
       return;

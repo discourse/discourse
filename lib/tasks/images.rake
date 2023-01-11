@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_dependency "file_helper"
+require "file_helper"
 
 task "images:compress" => :environment do
   images = Dir.glob("#{Rails.root}/app/**/*.png")

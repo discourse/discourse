@@ -4,11 +4,17 @@ import {
   exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
+import {
+  click,
+  fillIn,
+  settled,
+  triggerKeyEvent,
+  visit,
+} from "@ember/test-helpers";
 import I18n from "I18n";
 import searchFixtures from "discourse/tests/fixtures/search-fixtures";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { test } from "qunit";
+import { skip, test } from "qunit";
 import { DEFAULT_TYPE_FILTER } from "discourse/widgets/search-menu";
 
 acceptance("Search - Anonymous", function (needs) {
@@ -81,7 +87,7 @@ acceptance("Search - Anonymous", function (needs) {
       "shows matching user results"
     );
 
-    await triggerKeyEvent(".search-menu", "keydown", 40);
+    await triggerKeyEvent(".search-menu", "keydown", "ArrowDown");
     await click(document.activeElement);
 
     assert.ok(
@@ -107,7 +113,8 @@ acceptance("Search - Anonymous", function (needs) {
     );
   });
 
-  test("search button toggles search menu", async function (assert) {
+  // TODO: This feature doesn't work currently (/t/69760)
+  skip("search button toggles search menu", async function (assert) {
     await visit("/");
 
     await click("#search-button");
@@ -133,7 +140,7 @@ acceptance("Search - Anonymous", function (needs) {
     assert.strictEqual(
       query(firstResult).textContent.trim(),
       `${I18n.t("search.in")} test`,
-      "contenxtual tag search is first available option with no term"
+      "contextual tag search is first available option with no term"
     );
 
     await fillIn("#search-term", "smth");
@@ -190,12 +197,12 @@ acceptance("Search - Anonymous", function (needs) {
     assert.strictEqual(
       query(firstResult).textContent.trim(),
       I18n.t("search.in_this_topic"),
-      "contenxtual topic search is first available option"
+      "contextual topic search is first available option"
     );
 
     await fillIn("#search-term", "a proper");
-    await focus("input#search-term");
-    await triggerKeyEvent(".search-menu", "keydown", 40);
+    await query("input#search-term").focus();
+    await triggerKeyEvent(".search-menu", "keydown", "ArrowDown");
 
     await click(document.activeElement);
     assert.ok(
@@ -224,8 +231,8 @@ acceptance("Search - Anonymous", function (needs) {
     );
 
     await fillIn("#search-term", "dev");
-    await focus("input#search-term");
-    await triggerKeyEvent(".search-menu", "keydown", 40);
+    await query("input#search-term").focus();
+    await triggerKeyEvent(".search-menu", "keydown", "ArrowDown");
     await click(document.activeElement);
 
     assert.ok(
@@ -234,8 +241,8 @@ acceptance("Search - Anonymous", function (needs) {
     );
 
     await fillIn("#search-term", "");
-    await focus("input#search-term");
-    await triggerKeyEvent("input#search-term", "keydown", 8); // backspace
+    await query("input#search-term").focus();
+    await triggerKeyEvent("input#search-term", "keydown", "Backspace");
 
     assert.ok(
       !exists(".search-menu .search-context"),
@@ -254,12 +261,12 @@ acceptance("Search - Anonymous", function (needs) {
     assert.strictEqual(
       query(firstResult).textContent.trim(),
       I18n.t("search.in_this_topic"),
-      "contenxtual topic search is first available option"
+      "contextual topic search is first available option"
     );
 
     await fillIn("#search-term", "proper");
-    await focus("input#search-term");
-    await triggerKeyEvent(".search-menu", "keydown", 40);
+    await query("input#search-term").focus();
+    await triggerKeyEvent(".search-menu", "keydown", "ArrowDown");
     await click(document.activeElement);
 
     assert.ok(
@@ -332,7 +339,10 @@ acceptance("Search - Anonymous", function (needs) {
 
 acceptance("Search - Authenticated", function (needs) {
   needs.user();
-  needs.settings({ log_search_queries: true });
+  needs.settings({
+    log_search_queries: true,
+    allow_uncategorized_topics: true,
+  });
 
   needs.pretender((server, helper) => {
     server.get("/search/query", (request) => {
@@ -364,6 +374,17 @@ acceptance("Search - Authenticated", function (needs) {
 
       return helper.response(searchFixtures["search/query"]);
     });
+
+    server.get("/inline-onebox", () =>
+      helper.response({
+        "inline-oneboxes": [
+          {
+            url: "http://www.something.com",
+            title: searchFixtures["search/query"].topics[0].title,
+          },
+        ],
+      })
+    );
   });
 
   test("Right filters are shown in full page search", async function (assert) {
@@ -393,8 +414,8 @@ acceptance("Search - Authenticated", function (needs) {
     await visit("/t/internationalization-localization/280");
     await click("#search-button");
     await fillIn("#search-term", "plans");
-    await focus("input#search-term");
-    await triggerKeyEvent(".search-menu", "keydown", 40);
+    await query("input#search-term").focus();
+    await triggerKeyEvent(".search-menu", "keydown", "ArrowDown");
     await click(document.activeElement);
 
     assert.notStrictEqual(count(".search-menu .results .item"), 0);
@@ -407,11 +428,6 @@ acceptance("Search - Authenticated", function (needs) {
   });
 
   test("search dropdown keyboard navigation", async function (assert) {
-    const keyEnter = 13;
-    const keyArrowDown = 40;
-    const keyArrowUp = 38;
-    const keyEsc = 27;
-    const keyA = 65;
     const container = ".search-menu .results";
 
     await visit("/");
@@ -420,13 +436,13 @@ acceptance("Search - Authenticated", function (needs) {
 
     assert.ok(exists(query(`${container} ul li`)), "has a list of items");
 
-    await triggerKeyEvent("#search-term", "keydown", keyEnter);
+    await triggerKeyEvent("#search-term", "keydown", "Enter");
     assert.ok(
       exists(query(`${container} .search-result-topic`)),
       "has topic results"
     );
 
-    await triggerKeyEvent("#search-term", "keydown", keyArrowDown);
+    await triggerKeyEvent("#search-term", "keydown", "ArrowDown");
 
     assert.strictEqual(
       document.activeElement.getAttribute("href"),
@@ -434,7 +450,7 @@ acceptance("Search - Authenticated", function (needs) {
       "arrow down selects first element"
     );
 
-    await triggerKeyEvent("#search-term", "keydown", keyArrowDown);
+    await triggerKeyEvent("#search-term", "keydown", "ArrowDown");
 
     assert.strictEqual(
       document.activeElement.getAttribute("href"),
@@ -442,10 +458,10 @@ acceptance("Search - Authenticated", function (needs) {
       "arrow down selects next element"
     );
 
-    await triggerKeyEvent("#search-term", "keydown", keyArrowDown);
-    await triggerKeyEvent("#search-term", "keydown", keyArrowDown);
-    await triggerKeyEvent("#search-term", "keydown", keyArrowDown);
-    await triggerKeyEvent("#search-term", "keydown", keyArrowDown);
+    await triggerKeyEvent("#search-term", "keydown", "ArrowDown");
+    await triggerKeyEvent("#search-term", "keydown", "ArrowDown");
+    await triggerKeyEvent("#search-term", "keydown", "ArrowDown");
+    await triggerKeyEvent("#search-term", "keydown", "ArrowDown");
 
     assert.strictEqual(
       document.activeElement.getAttribute("href"),
@@ -453,12 +469,17 @@ acceptance("Search - Authenticated", function (needs) {
       "arrow down sets focus to more results link"
     );
 
-    await triggerKeyEvent(".search-menu", "keydown", keyEsc);
+    await triggerKeyEvent(".search-menu", "keydown", "Escape");
+    assert.strictEqual(
+      document.activeElement,
+      query("#search-button"),
+      "Escaping search returns focus to search button"
+    );
     assert.ok(!exists(".search-menu:visible"), "Esc removes search dropdown");
 
     await click("#search-button");
-    await triggerKeyEvent(".search-menu", "keydown", keyArrowDown);
-    await triggerKeyEvent(".search-menu", "keydown", keyArrowUp);
+    await triggerKeyEvent(".search-menu", "keydown", "ArrowDown");
+    await triggerKeyEvent(".search-menu", "keydown", "ArrowUp");
 
     assert.strictEqual(
       document.activeElement.tagName.toLowerCase(),
@@ -466,15 +487,16 @@ acceptance("Search - Authenticated", function (needs) {
       "arrow up sets focus to search term input"
     );
 
-    await triggerKeyEvent(".search-menu", "keydown", keyEsc);
+    await triggerKeyEvent(".search-menu", "keydown", "Escape");
     await click("#create-topic");
     await click("#search-button");
-    await triggerKeyEvent(".search-menu", "keydown", keyArrowDown);
+    await triggerKeyEvent(".search-menu", "keydown", "ArrowDown");
 
     const firstLink = query(`${container} li:nth-child(1) a`).getAttribute(
       "href"
     );
-    await triggerKeyEvent(".search-menu", "keydown", keyA);
+    await triggerKeyEvent(".search-menu", "keydown", "A");
+    await settled();
 
     assert.strictEqual(
       query("#reply-control textarea").value,
@@ -483,14 +505,14 @@ acceptance("Search - Authenticated", function (needs) {
     );
 
     await click("#search-button");
-    await triggerKeyEvent("#search-term", "keydown", keyEnter);
+    await triggerKeyEvent("#search-term", "keydown", "Enter");
 
     assert.ok(
       exists(query(`${container} .search-result-topic`)),
       "has topic results"
     );
 
-    await triggerKeyEvent("#search-term", "keydown", keyEnter);
+    await triggerKeyEvent("#search-term", "keydown", "Enter");
 
     assert.ok(
       exists(query(`.search-container`)),
@@ -504,8 +526,32 @@ acceptance("Search - Authenticated", function (needs) {
     // new search launched, Enter key should be reset
     await click("#search-button");
     assert.ok(exists(query(`${container} ul li`)), "has a list of items");
-    await triggerKeyEvent("#search-term", "keydown", keyEnter);
+    await triggerKeyEvent("#search-term", "keydown", "Enter");
     assert.ok(exists(query(`.search-menu`)), "search dropdown is visible");
+  });
+
+  test("search while composer is open", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click(".reply");
+    await fillIn(".d-editor-input", "a link");
+    await click("#search-button");
+    await fillIn("#search-term", "dev");
+
+    await triggerKeyEvent("#search-term", "keydown", "Enter");
+    await triggerKeyEvent(".search-menu", "keydown", "ArrowDown");
+    await triggerKeyEvent("#search-term", "keydown", 65); // maps to lowercase a
+
+    assert.ok(
+      query(".d-editor-input").value.includes("a link"),
+      "still has the original composer content"
+    );
+
+    assert.ok(
+      query(".d-editor-input").value.includes(
+        searchFixtures["search/query"].topics[0].slug
+      ),
+      "adds link from search to composer"
+    );
   });
 
   test("Shows recent search results", async function (assert) {
@@ -570,6 +616,147 @@ acceptance("Search - assistant", function (needs) {
   needs.user();
 
   needs.pretender((server, helper) => {
+    server.get("/search/query", (request) => {
+      if (request.queryParams["search_context[type]"] === "private_messages") {
+        // return only one result for PM search
+        return helper.response({
+          posts: [
+            {
+              id: 3833,
+              name: "Bill Dudney",
+              username: "bdudney",
+              avatar_template:
+                "/user_avatar/meta.discourse.org/bdudney/{size}/8343_1.png",
+              uploaded_avatar_id: 8343,
+              created_at: "2013-02-07T17:46:57.469Z",
+              cooked:
+                "<p>I've gotten vagrant up and running with a development environment but it's taking forever to load.</p>\n\n<p>For example <a href=\"http://192.168.10.200:3000/\" rel=\"nofollow\">http://192.168.10.200:3000/</a> takes tens of seconds to load.</p>\n\n<p>I'm running the whole stack on a new rMBP with OS X 10.8.2.</p>\n\n<p>Any ideas of what I've done wrong? Or is this just a function of being on the bleeding edge?</p>\n\n<p>Thanks,</p>\n\n<p>-bd</p>",
+              post_number: 1,
+              post_type: 1,
+              updated_at: "2013-02-07T17:46:57.469Z",
+              like_count: 0,
+              reply_count: 1,
+              reply_to_post_number: null,
+              quote_count: 0,
+              incoming_link_count: 4422,
+              reads: 327,
+              score: 21978.4,
+              yours: false,
+              topic_id: 2179,
+              topic_slug: "development-mode-super-slow",
+              display_username: "Bill Dudney",
+              primary_group_name: null,
+              version: 2,
+              can_edit: false,
+              can_delete: false,
+              can_recover: false,
+              user_title: null,
+              actions_summary: [
+                {
+                  id: 2,
+                  count: 0,
+                  hidden: false,
+                  can_act: false,
+                },
+                {
+                  id: 3,
+                  count: 0,
+                  hidden: false,
+                  can_act: false,
+                },
+                {
+                  id: 4,
+                  count: 0,
+                  hidden: false,
+                  can_act: false,
+                },
+                {
+                  id: 5,
+                  count: 0,
+                  hidden: true,
+                  can_act: false,
+                },
+                {
+                  id: 6,
+                  count: 0,
+                  hidden: false,
+                  can_act: false,
+                },
+                {
+                  id: 7,
+                  count: 0,
+                  hidden: false,
+                  can_act: false,
+                },
+                {
+                  id: 8,
+                  count: 0,
+                  hidden: false,
+                  can_act: false,
+                },
+              ],
+              moderator: false,
+              admin: false,
+              staff: false,
+              user_id: 1828,
+              hidden: false,
+              hidden_reason_id: null,
+              trust_level: 1,
+              deleted_at: null,
+              user_deleted: false,
+              edit_reason: null,
+              can_view_edit_history: true,
+              wiki: false,
+              blurb:
+                "I've gotten vagrant up and running with a development environment but it's taking forever to load. For example http://192.168.10.200:3000/ takes...",
+            },
+          ],
+          topics: [
+            {
+              id: 2179,
+              title: "Development mode super slow",
+              fancy_title: "Development mode super slow",
+              slug: "development-mode-super-slow",
+              posts_count: 72,
+              reply_count: 53,
+              highest_post_number: 73,
+              image_url: null,
+              created_at: "2013-02-07T17:46:57.262Z",
+              last_posted_at: "2015-04-17T08:08:26.671Z",
+              bumped: true,
+              bumped_at: "2015-04-17T08:08:26.671Z",
+              unseen: false,
+              pinned: false,
+              unpinned: null,
+              visible: true,
+              closed: false,
+              archived: false,
+              bookmarked: null,
+              liked: null,
+              views: 9538,
+              like_count: 45,
+              has_summary: true,
+              archetype: "regular",
+              last_poster_username: null,
+              category_id: 7,
+              pinned_globally: false,
+              posters: [],
+              tags: ["dev", "slow"],
+              tags_descriptions: {
+                dev: "dev description",
+                slow: "slow description",
+              },
+            },
+          ],
+          grouped_search_result: {
+            term: "emoji",
+            post_ids: [3833],
+          },
+        });
+      }
+      return helper.response(searchFixtures["search/query"]);
+    });
+
     server.get("/u/search/users", () => {
       return helper.response({
         users: [
@@ -645,9 +832,9 @@ acceptance("Search - assistant", function (needs) {
     await triggerKeyEvent("#search-term", "keyup", 51);
     assert.strictEqual(query(firstTarget).innerText, "sam in:title");
 
-    await fillIn("#search-term", "in:pers");
+    await fillIn("#search-term", "in:mess");
     await triggerKeyEvent("#search-term", "keyup", 51);
-    assert.strictEqual(query(firstTarget).innerText, "in:personal");
+    assert.strictEqual(query(firstTarget).innerText, "in:messages");
   });
 
   test("shows users when typing @", async function (assert) {
@@ -665,5 +852,35 @@ acceptance("Search - assistant", function (needs) {
 
     await click(query(firstUser));
     assert.strictEqual(query("#search-term").value, `@${firstUsername}`);
+  });
+
+  test("shows 'in messages' button when in an inbox", async function (assert) {
+    await visit("/u/charlie/messages");
+    await click("#search-button");
+
+    assert.ok(exists(".btn.search-context"), "it shows the button");
+
+    await fillIn("#search-term", "");
+    await query("input#search-term").focus();
+    await triggerKeyEvent("input#search-term", "keydown", "Backspace");
+
+    assert.notOk(exists(".btn.search-context"), "it removes the button");
+
+    await click(".d-header");
+    await click("#search-button");
+    assert.ok(
+      exists(".btn.search-context"),
+      "it shows the button when reinvoking search"
+    );
+
+    await fillIn("#search-term", "emoji");
+    await query("input#search-term").focus();
+    await triggerKeyEvent("#search-term", "keydown", "Enter");
+
+    assert.strictEqual(
+      count(".search-menu .search-result-topic"),
+      1,
+      "it passes the PM search context to the search query"
+    );
   });
 });

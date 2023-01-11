@@ -37,7 +37,7 @@
   .directory-last-updated {
     margin-bottom: 0.5em;
     color: var(--primary-medium);
-    font-size: $font-down-1;
+    font-size: var(--font-down-1);
   }
 
   table {
@@ -55,10 +55,10 @@
 
       .number,
       .time-read {
-        font-size: $font-up-3;
+        font-size: var(--font-up-3);
         color: var(--primary-medium);
         @media screen and (max-width: $small-width) {
-          font-size: $font-up-1;
+          font-size: var(--font-up-1);
         }
       }
       .time-read {
@@ -68,7 +68,7 @@
         font-size: var(--font-up-1);
         color: var(--primary-medium);
         @media screen and (max-width: $small-width) {
-          font-size: $font-0;
+          font-size: var(--font-0);
         }
       }
     }

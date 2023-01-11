@@ -1,7 +1,0 @@
-<%
-if @force_ember_debug || Rails.env.development? || Rails.env.test?
-  require_asset ("ember.debug.js")
-else
-  require_asset ("ember.prod.js")
-end
-%>

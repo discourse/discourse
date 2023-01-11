@@ -1,15 +1,11 @@
 # frozen_string_literal: true
 
-require "rails_helper"
 require "import_export/category_structure_exporter"
 
-describe ImportExport::CategoryStructureExporter do
+RSpec.describe ImportExport::CategoryStructureExporter do
+  before { STDOUT.stubs(:write) }
 
-  before do
-    STDOUT.stubs(:write)
-  end
-
-  it 'export all the categories' do
+  it "export all the categories" do
     category = Fabricate(:category)
     data = ImportExport::CategoryStructureExporter.new.perform.export_data
 
@@ -18,7 +14,7 @@ describe ImportExport::CategoryStructureExporter do
     expect(data[:users].blank?).to eq(true)
   end
 
-  it 'export all the categories with permission groups' do
+  it "export all the categories with permission groups" do
     category = Fabricate(:category)
     group = Fabricate(:group)
     category_group = Fabricate(:category_group, category: category, group: group)
@@ -29,7 +25,7 @@ describe ImportExport::CategoryStructureExporter do
     expect(data[:users].blank?).to eq(true)
   end
 
-  it 'export all the categories with permission groups and users' do
+  it "export all the categories with permission groups and users" do
     category = Fabricate(:category)
     group = Fabricate(:group)
     user = Fabricate(:user)
@@ -41,5 +37,4 @@ describe ImportExport::CategoryStructureExporter do
     expect(data[:groups].count).to eq(1)
     expect(data[:users].count).to eq(1)
   end
-
 end

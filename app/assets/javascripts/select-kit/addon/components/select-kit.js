@@ -22,7 +22,7 @@ export const ERRORS_COLLECTION = "ERRORS_COLLECTION";
 
 const EMPTY_OBJECT = Object.freeze({});
 const SELECT_KIT_OPTIONS = Mixin.create({
-  mergedProperties: ["selectKitOptions"],
+  concatenatedProperties: ["selectKitOptions"],
   selectKitOptions: EMPTY_OBJECT,
 });
 
@@ -207,13 +207,14 @@ export default Component.extend(
     didReceiveAttrs() {
       this._super(...arguments);
 
-      Object.keys(this.selectKitOptions).forEach((key) => {
+      const mergedOptions = Object.assign({}, ...this.selectKitOptions);
+      Object.keys(mergedOptions).forEach((key) => {
         if (isPresent(this.options[key])) {
           this.selectKit.options.set(key, this.options[key]);
           return;
         }
 
-        const value = this.selectKitOptions[key];
+        const value = mergedOptions[key];
 
         if (
           key === "componentForRow" ||
@@ -231,7 +232,7 @@ export default Component.extend(
 
         if (
           typeof value === "string" &&
-          value.indexOf(".") < 0 &&
+          !value.includes(".") &&
           value in this
         ) {
           const computedValue = get(this, value);
@@ -282,6 +283,7 @@ export default Component.extend(
       closeOnChange: true,
       limitMatches: null,
       placement: isDocumentRTL() ? "bottom-end" : "bottom-start",
+      verticalOffset: 3,
       filterComponent: "select-kit/select-kit-filter",
       selectedNameComponent: "selected-name",
       selectedChoiceComponent: "selected-choice",
@@ -292,6 +294,8 @@ export default Component.extend(
       placementStrategy: null,
       mobilePlacementStrategy: null,
       desktopPlacementStrategy: null,
+      hiddenValues: null,
+      disabled: false,
     },
 
     autoFilterable: computed("content.[]", "selectKit.filter", function () {
@@ -592,7 +596,7 @@ export default Component.extend(
         filter = this._normalize(filter);
         content = content.filter((c) => {
           const name = this._normalize(this.getName(c));
-          return name && name.indexOf(filter) > -1;
+          return name?.includes(filter);
         });
       }
       return content;
@@ -871,9 +875,31 @@ export default Component.extend(
           placement: this.selectKit.options.placement,
           modifiers: [
             {
+              name: "eventListeners",
+              options: {
+                resize: !this.site.mobileView,
+                scroll: !this.site.mobileView,
+              },
+            },
+            {
+              name: "flip",
+              enabled: !inModal,
+              options: {
+                padding: {
+                  top:
+                    parseInt(
+                      document.documentElement.style.getPropertyValue(
+                        "--header-offset"
+                      ),
+                      10
+                    ) || 0,
+                },
+              },
+            },
+            {
               name: "offset",
               options: {
-                offset: [0, 3],
+                offset: [0, this.selectKit.options.verticalOffset],
               },
             },
             {
@@ -916,7 +942,7 @@ export default Component.extend(
               },
             },
             {
-              name: "sameWidth",
+              name: "minWidth",
               enabled: window.innerWidth > 450,
               phase: "beforeWrite",
               requires: ["computeStyles"],
@@ -925,24 +951,12 @@ export default Component.extend(
                   state.rects.reference.width,
                   220
                 )}px`;
-
-                if (state.rects.reference.width >= 300) {
-                  state.styles.popper.maxWidth = `${state.rects.reference.width}px`;
-                } else {
-                  state.styles.popper.maxWidth = "300px";
-                }
               },
               effect: ({ state }) => {
                 state.elements.popper.style.minWidth = `${Math.max(
                   state.elements.reference.offsetWidth,
                   220
                 )}px`;
-
-                if (state.elements.reference.offsetWidth >= 300) {
-                  state.elements.popper.style.maxWidth = `${state.elements.reference.offsetWidth}px`;
-                } else {
-                  state.elements.popper.style.maxWidth = "300px";
-                }
               },
             },
             {
@@ -1059,7 +1073,11 @@ export default Component.extend(
         discourseSetup &&
         discourseSetup.getAttribute("data-environment") === "development"
       ) {
-        deprecated(text, { since: "v2.4.0", dropFrom: "2.9.0.beta1" });
+        deprecated(text, {
+          since: "v2.4.0",
+          dropFrom: "2.9.0.beta1",
+          id: "discourse.select-kit",
+        });
       }
     },
 
@@ -1103,6 +1121,7 @@ export default Component.extend(
         none: "options.none",
         rootNone: "options.none",
         disabled: "options.disabled",
+        isDisabled: "options.disabled",
         rootNoneLabel: "options.none",
         showFullTitle: "options.showFullTitle",
         title: "options.translatedNone",

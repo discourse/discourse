@@ -1,10 +1,20 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
+RSpec.describe GroupUser do
+  fab!(:group) { Fabricate(:group) }
+  fab!(:user) { Fabricate(:user) }
 
-describe GroupUser do
+  describe "callbacks" do
+    it "increments and decrements `Group#user_count` when record is created and destroyed" do
+      group_user = GroupUser.new(user: user, group: group)
 
-  it 'correctly sets notification level' do
+      expect do group_user.save! end.to change { group.reload.user_count }.from(0).to(1)
+
+      expect do group_user.destroy! end.to change { group.reload.user_count }.from(1).to(0)
+    end
+  end
+
+  it "correctly sets notification level" do
     moderator = Fabricate(:moderator)
 
     Group.refresh_automatic_groups!(:moderators)
@@ -12,7 +22,7 @@ describe GroupUser do
 
     expect(gu.notification_level).to eq(NotificationLevels.all[:tracking])
 
-    group = Group.create!(name: 'bob')
+    group = Group.create!(name: "bob")
     group.add(moderator)
     group.save
 
@@ -66,10 +76,26 @@ describe GroupUser do
     end
 
     it "only upgrades notifications" do
-      CategoryUser.create!(user: user, category_id: category1.id, notification_level: levels[:muted])
-      CategoryUser.create!(user: user, category_id: category2.id, notification_level: levels[:tracking])
-      CategoryUser.create!(user: user, category_id: category3.id, notification_level: levels[:watching_first_post])
-      CategoryUser.create!(user: user, category_id: category4.id, notification_level: levels[:watching])
+      CategoryUser.create!(
+        user: user,
+        category_id: category1.id,
+        notification_level: levels[:muted],
+      )
+      CategoryUser.create!(
+        user: user,
+        category_id: category2.id,
+        notification_level: levels[:tracking],
+      )
+      CategoryUser.create!(
+        user: user,
+        category_id: category3.id,
+        notification_level: levels[:watching_first_post],
+      )
+      CategoryUser.create!(
+        user: user,
+        category_id: category4.id,
+        notification_level: levels[:watching],
+      )
       group.regular_category_ids = [category1.id]
       group.watching_first_post_category_ids = [category2.id, category3.id, category4.id]
       group.save!
@@ -82,9 +108,21 @@ describe GroupUser do
     end
 
     it "merges notifications" do
-      CategoryUser.create!(user: user, category_id: category1.id, notification_level: CategoryUser.notification_levels[:tracking])
-      CategoryUser.create!(user: user, category_id: category2.id, notification_level: CategoryUser.notification_levels[:watching])
-      CategoryUser.create!(user: user, category_id: category4.id, notification_level: CategoryUser.notification_levels[:watching_first_post])
+      CategoryUser.create!(
+        user: user,
+        category_id: category1.id,
+        notification_level: CategoryUser.notification_levels[:tracking],
+      )
+      CategoryUser.create!(
+        user: user,
+        category_id: category2.id,
+        notification_level: CategoryUser.notification_levels[:watching],
+      )
+      CategoryUser.create!(
+        user: user,
+        category_id: category4.id,
+        notification_level: CategoryUser.notification_levels[:watching_first_post],
+      )
       group.muted_category_ids = [category3.id]
       group.tracking_category_ids = [category4.id]
       group.save!
@@ -143,7 +181,10 @@ describe GroupUser do
       expect(TagUser.lookup(user, :regular).pluck(:tag_id)).to eq([tag1.id])
       expect(TagUser.lookup(user, :tracking).pluck(:tag_id)).to be_empty
       expect(TagUser.lookup(user, :watching).pluck(:tag_id)).to eq([tag4.id])
-      expect(TagUser.lookup(user, :watching_first_post).pluck(:tag_id)).to contain_exactly(tag2.id, tag3.id)
+      expect(TagUser.lookup(user, :watching_first_post).pluck(:tag_id)).to contain_exactly(
+        tag2.id,
+        tag3.id,
+      )
     end
 
     it "merges notifications" do
@@ -161,24 +202,24 @@ describe GroupUser do
     end
   end
 
-  describe '#ensure_consistency!' do
+  describe "#ensure_consistency!" do
     fab!(:group) { Fabricate(:group) }
     fab!(:group_2) { Fabricate(:group) }
 
     fab!(:pm_post) { Fabricate(:private_message_post) }
 
-    fab!(:pm_topic) do
-      pm_post.topic.tap { |t| t.allowed_groups << group }
-    end
+    fab!(:pm_topic) { pm_post.topic.tap { |t| t.allowed_groups << group } }
 
     fab!(:user) do
       Fabricate(:user, last_seen_at: Time.zone.now).tap do |u|
         group.add(u)
         group_2.add(u)
 
-        TopicUser.change(u.id, pm_topic.id,
+        TopicUser.change(
+          u.id,
+          pm_topic.id,
           notification_level: TopicUser.notification_levels[:tracking],
-          last_read_post_number: pm_post.post_number
+          last_read_post_number: pm_post.post_number,
         )
       end
     end
@@ -188,9 +229,11 @@ describe GroupUser do
       Fabricate(:user, last_seen_at: Time.zone.now).tap do |u|
         group.add(u)
 
-        TopicUser.change(u.id, pm_topic.id,
+        TopicUser.change(
+          u.id,
+          pm_topic.id,
           notification_level: TopicUser.notification_levels[:regular],
-          last_read_post_number: pm_post.post_number
+          last_read_post_number: pm_post.post_number,
         )
       end
     end
@@ -200,36 +243,42 @@ describe GroupUser do
       Fabricate(:user).tap do |u|
         group.add(u)
 
-        TopicUser.change(u.id, pm_topic.id,
+        TopicUser.change(
+          u.id,
+          pm_topic.id,
           notification_level: TopicUser.notification_levels[:tracking],
-          last_read_post_number: pm_post.post_number
+          last_read_post_number: pm_post.post_number,
         )
       end
     end
 
-    it 'updates first unread pm timestamp correctly' do
+    it "updates first unread pm timestamp correctly" do
       freeze_time 10.minutes.from_now
 
-      post = create_post(
-        user: pm_topic.user,
-        topic_id: pm_topic.id
-      )
+      post = create_post(user: pm_topic.user, topic_id: pm_topic.id)
 
-      expect { GroupUser.ensure_consistency! }
-        .to_not change { group.group_users.find_by(user_id: user_3.id).first_unread_pm_at }
+      expect { GroupUser.ensure_consistency! }.to_not change {
+        group.group_users.find_by(user_id: user_3.id).first_unread_pm_at
+      }
 
       expect(post.topic.updated_at).to_not eq_time(10.minutes.ago)
-      expect(group.group_users.find_by(user_id: user.id).first_unread_pm_at).to eq_time(post.topic.updated_at)
-      expect(group_2.group_users.find_by(user_id: user.id).first_unread_pm_at).to eq_time(10.minutes.ago)
-      expect(group.group_users.find_by(user_id: user_2.id).first_unread_pm_at).to eq_time(10.minutes.ago)
+      expect(group.group_users.find_by(user_id: user.id).first_unread_pm_at).to eq_time(
+        post.topic.updated_at,
+      )
+      expect(group_2.group_users.find_by(user_id: user.id).first_unread_pm_at).to eq_time(
+        10.minutes.ago,
+      )
+      expect(group.group_users.find_by(user_id: user_2.id).first_unread_pm_at).to eq_time(
+        10.minutes.ago,
+      )
     end
   end
 
-  describe '#destroy!' do
+  describe "#destroy!" do
     fab!(:group) { Fabricate(:group) }
 
-    it "removes `primary_group_id` and exec `match_primary_group_changes` method on user model" do
-      user = Fabricate(:user, primary_group: group)
+    it "removes `primary_group_id`, `flair_group_id` and exec `match_primary_group_changes` method on user model" do
+      user = Fabricate(:user, primary_group: group, flair_group: group)
       group_user = Fabricate(:group_user, group: group, user: user)
 
       user.expects(:match_primary_group_changes).once
@@ -237,6 +286,22 @@ describe GroupUser do
 
       user.reload
       expect(user.primary_group_id).to be_nil
+      expect(user.flair_group_id).to be_nil
+    end
+
+    it "restores previous trust level" do
+      user = Fabricate(:user)
+      expect(user.trust_level).to eq(1)
+
+      user.change_trust_level!(2, log_action_for: Discourse.system_user)
+      user.change_trust_level!(3, log_action_for: Discourse.system_user)
+      group.update!(grant_trust_level: 4)
+
+      group_user = Fabricate(:group_user, group: group, user: user)
+      expect(user.reload.trust_level).to eq(4)
+
+      group_user.destroy!
+      expect(user.reload.trust_level).to eq(3)
     end
   end
 end

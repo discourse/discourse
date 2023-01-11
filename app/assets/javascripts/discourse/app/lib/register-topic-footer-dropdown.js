@@ -40,7 +40,7 @@ export function registerTopicFooterDropdown(dropdown) {
     priority: 0,
 
     // an object used to display the state of the dropdown
-    // when no value is currectnly set, eg: { id: 1, name: "foo" }
+    // when no value is currently set, eg: { id: 1, name: "foo" }
     noneItem: null,
   };
 

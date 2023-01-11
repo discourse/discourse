@@ -169,7 +169,7 @@ export default Controller.extend(ModalFunctionality, {
           DiscourseURL.routeTo(result.url);
         })
         .catch((xhr) => {
-          this.flash(extractError(xhr, I18n.t("topic.move_to.error")));
+          this.flash(extractError(xhr, I18n.t("topic.move_to.error")), "error");
         })
         .finally(() => {
           this.set("saving", false);

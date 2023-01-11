@@ -1,11 +1,13 @@
 import Controller from "@ember/controller";
 import I18n from "I18n";
-import bootbox from "bootbox";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import discourseComputed from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { action } from "@ember/object";
+import { inject as service } from "@ember/service";
 
 export default Controller.extend(bufferedProperty("siteText"), {
+  dialog: service(),
   saved: false,
   queryParams: ["locale"],
 
@@ -14,35 +16,36 @@ export default Controller.extend(bufferedProperty("siteText"), {
     return this.siteText.value === value;
   },
 
-  actions: {
-    saveChanges() {
-      const attrs = this.buffered.getProperties("value");
-      attrs.locale = this.locale;
+  @action
+  saveChanges() {
+    const attrs = this.buffered.getProperties("value");
+    attrs.locale = this.locale;
 
-      this.siteText
-        .save(attrs)
-        .then(() => {
-          this.commitBuffer();
-          this.set("saved", true);
-        })
-        .catch(popupAjaxError);
-    },
+    this.siteText
+      .save(attrs)
+      .then(() => {
+        this.commitBuffer();
+        this.set("saved", true);
+      })
+      .catch(popupAjaxError);
+  },
 
-    revertChanges() {
-      this.set("saved", false);
+  @action
+  revertChanges() {
+    this.set("saved", false);
 
-      bootbox.confirm(I18n.t("admin.site_text.revert_confirm"), (result) => {
-        if (result) {
-          this.siteText
-            .revert(this.locale)
-            .then((props) => {
-              const buffered = this.buffered;
-              buffered.setProperties(props);
-              this.commitBuffer();
-            })
-            .catch(popupAjaxError);
-        }
-      });
-    },
+    this.dialog.yesNoConfirm({
+      message: I18n.t("admin.site_text.revert_confirm"),
+      didConfirm: () => {
+        this.siteText
+          .revert(this.locale)
+          .then((props) => {
+            const buffered = this.buffered;
+            buffered.setProperties(props);
+            this.commitBuffer();
+          })
+          .catch(popupAjaxError);
+      },
+    });
   },
 });

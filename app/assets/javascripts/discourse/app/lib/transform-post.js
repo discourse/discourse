@@ -18,7 +18,7 @@ export function transformBasicPost(post) {
     deleted: post.get("deleted"),
     deleted_at: post.deleted_at,
     user_deleted: post.user_deleted,
-    isDeleted: post.deleted_at || post.user_deleted, // xxxxx
+    isDeleted: post.deleted_at || post.user_deleted,
     deletedByAvatarTemplate: null,
     deletedByUsername: null,
     primary_group_name: post.primary_group_name,
@@ -57,7 +57,7 @@ export function transformBasicPost(post) {
     showFlagDelete: false,
     canRecover: post.can_recover,
     canEdit: post.can_edit,
-    canFlag: !isEmpty(post.get("flagsAvailable")),
+    canFlag: !post.get("topic.deleted") && !isEmpty(post.get("flagsAvailable")),
     canReviewTopic: false,
     reviewableId: post.reviewable_id,
     reviewableScoreCount: post.reviewable_score_count,
@@ -74,6 +74,7 @@ export function transformBasicPost(post) {
     actionsSummary: null,
     read: post.read,
     replyToUsername: null,
+    replyToName: null,
     replyToAvatarTemplate: null,
     reply_to_post_number: post.reply_to_post_number,
     cooked_hidden: !!post.cooked_hidden,
@@ -84,6 +85,7 @@ export function transformBasicPost(post) {
     readCount: post.readers_count,
     canPublishPage: false,
     trustLevel: post.trust_level,
+    userSuspended: post.user_suspended,
   };
 
   _additionalAttributes.forEach((a) => (postAtts[a] = post[a]));
@@ -125,8 +127,7 @@ export default function transformPost(
     postType === postTypes.small_action || post.action_code === "split_topic";
   postAtts.canBookmark = !!currentUser;
   postAtts.canManage = currentUser && currentUser.get("canManageTopic");
-  postAtts.canViewRawEmail =
-    currentUser && (currentUser.id === post.user_id || currentUser.staff);
+  postAtts.canViewRawEmail = currentUser && currentUser.staff;
   postAtts.canArchiveTopic = !!details.can_archive_topic;
   postAtts.canCloseTopic = !!details.can_close_topic;
   postAtts.canSplitMergeTopic = !!details.can_split_merge_topic;
@@ -152,6 +153,7 @@ export default function transformPost(
   postAtts.topicUrl = topic.get("url");
   postAtts.isSaving = post.isSaving;
   postAtts.staged = post.staged;
+  postAtts.user = post.user;
 
   if (post.notice) {
     postAtts.notice = post.notice;
@@ -176,7 +178,7 @@ export default function transformPost(
   }
 
   const showTopicMap =
-    _additionalAttributes.indexOf("topicMap") !== -1 ||
+    (_additionalAttributes.includes("topicMap") && post.post_number === 1) ||
     showPMMap ||
     (post.post_number === 1 &&
       topic.archetype === "regular" &&
@@ -227,6 +229,7 @@ export default function transformPost(
   const replyToUser = post.get("reply_to_user");
   if (replyToUser) {
     postAtts.replyToUsername = replyToUser.username;
+    postAtts.replyToName = replyToUser.name;
     postAtts.replyToAvatarTemplate = replyToUser.avatar_template;
   }
 
@@ -254,10 +257,11 @@ export default function transformPost(
     postAtts.canToggleLike = likeAction.get("canToggle");
     postAtts.showLike = postAtts.liked || postAtts.canToggleLike;
     postAtts.likeCount = likeAction.count;
-  }
-
-  if (!currentUser) {
-    postAtts.showLike = !topic.archived;
+  } else if (
+    !currentUser ||
+    (topic.archived && topic.user_id !== currentUser.id)
+  ) {
+    postAtts.showLike = true;
   }
 
   if (postAtts.post_number === 1) {

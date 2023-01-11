@@ -1,10 +1,19 @@
+import I18n from "I18n";
+import EmberObject from "@ember/object";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
+import sinon from "sinon";
+import userFixtures from "discourse/tests/fixtures/user-fixtures";
 import {
   acceptance,
   exists,
+  publishToMessageBus,
   query,
   queryAll,
+  updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
+import * as logout from "discourse/lib/logout";
 import { click, currentRouteName, visit } from "@ember/test-helpers";
+import { cloneJSON } from "discourse-common/lib/object";
 import { test } from "qunit";
 
 acceptance("User Routes", function (needs) {
@@ -35,12 +44,18 @@ acceptance("User Routes", function (needs) {
 
   test("Invites", async function (assert) {
     await visit("/u/eviltrout/invited/pending");
-    assert.ok($("body.user-invites-page").length, "has the body class");
+    assert.ok(
+      document.body.classList.contains("user-invites-page"),
+      "has the body class"
+    );
   });
 
   test("Notifications", async function (assert) {
     await visit("/u/eviltrout/notifications");
-    assert.ok($("body.user-notifications-page").length, "has the body class");
+    assert.ok(
+      document.body.classList.contains("user-notifications-page"),
+      "has the body class"
+    );
 
     const $links = queryAll(".item.notification a");
 
@@ -49,33 +64,34 @@ acceptance("User Routes", function (needs) {
         "/u/eviltrout/notifications/likes-received?acting_username=aquaman"
       )
     );
+
+    updateCurrentUser({ moderator: true, admin: false });
+    await visit("/u/charlie/summary");
+    assert.notOk(
+      exists(".user-nav > .user-notifications"),
+      "does not have the notifications tab"
+    );
+
+    updateCurrentUser({ moderator: false, admin: true });
+    await visit("/u/charlie/summary");
+    assert.ok(
+      exists(".user-nav > .user-notifications"),
+      "has the notifications tab"
+    );
   });
 
   test("Root URL - Viewing Self", async function (assert) {
     await visit("/u/eviltrout");
-    assert.ok($("body.user-activity-page").length, "has the body class");
+    assert.ok(
+      document.body.classList.contains("user-activity-page"),
+      "has the body class"
+    );
     assert.strictEqual(
       currentRouteName(),
       "userActivity.index",
       "it defaults to activity"
     );
     assert.ok(exists(".container.viewing-self"), "has the viewing-self class");
-  });
-
-  test("Viewing Summary", async function (assert) {
-    await visit("/u/eviltrout/summary");
-
-    assert.ok(exists(".replies-section li a"), "replies");
-    assert.ok(exists(".topics-section li a"), "topics");
-    assert.ok(exists(".links-section li a"), "links");
-    assert.ok(exists(".replied-section .user-info"), "liked by");
-    assert.ok(exists(".liked-by-section .user-info"), "liked by");
-    assert.ok(exists(".liked-section .user-info"), "liked");
-    assert.ok(exists(".badges-section .badge-card"), "badges");
-    assert.ok(
-      exists(".top-categories-section .category-link"),
-      "top categories"
-    );
   });
 
   test("Viewing Drafts", async function (assert) {
@@ -103,14 +119,16 @@ acceptance(
       await visit("/u/eviltrout");
       assert.strictEqual(
         query(".user-profile-names .username").textContent.trim(),
-        "eviltrout",
+        `eviltrout
+                Robin Ward is an admin`,
         "eviltrout profile is shown"
       );
 
       await visit("/u/e.il.rout");
       assert.strictEqual(
         query(".user-profile-names .username").textContent.trim(),
-        "e.il.rout",
+        `e.il.rout
+                Robin Ward is an admin`,
         "e.il.rout profile is shown"
       );
     });
@@ -127,7 +145,210 @@ acceptance("User Routes - Moderator viewing warnings", function (needs) {
 
   test("Messages - Warnings", async function (assert) {
     await visit("/u/eviltrout/messages/warnings");
-    assert.ok($("body.user-messages-page").length, "has the body class");
-    assert.ok($("div.alert-info").length, "has the permissions alert");
+    assert.ok(
+      document.body.classList.contains("user-messages-page"),
+      "has the body class"
+    );
+    assert.ok(exists("div.alert-info"), "has the permissions alert");
+  });
+});
+
+acceptance("User - Saving user options", function (needs) {
+  needs.user({
+    admin: false,
+    moderator: false,
+    username: "eviltrout",
+    id: 1,
+    user_option: EmberObject.create({}),
+  });
+
+  needs.settings({
+    disable_mailing_list_mode: false,
+  });
+
+  let putRequestData;
+
+  needs.pretender((server, helper) => {
+    server.put("/u/eviltrout.json", (request) => {
+      putRequestData = helper.parsePostData(request.requestBody);
+      return helper.response({ user: {} });
+    });
+  });
+
+  needs.hooks.afterEach(() => {
+    putRequestData = null;
+  });
+
+  test("saving user options", async function (assert) {
+    await visit("/u/eviltrout/preferences/emails");
+    await click(".pref-mailing-list-mode input[type='checkbox']");
+    await click(".save-changes");
+
+    assert.deepEqual(
+      putRequestData,
+      {
+        digest_after_minutes: "10080",
+        email_digests: "true",
+        email_level: "1",
+        email_messages_level: "0",
+        mailing_list_mode: "true",
+      },
+      "sends a PUT request to update the specified user option"
+    );
+
+    await selectKit("#user-email-messages-level").expand();
+    await selectKit("#user-email-messages-level").selectRowByValue(2); // never option
+    await click(".save-changes");
+
+    assert.deepEqual(
+      putRequestData,
+      {
+        digest_after_minutes: "10080",
+        email_digests: "true",
+        email_level: "1",
+        email_messages_level: "2",
+        mailing_list_mode: "true",
+      },
+      "is able to save a different user_option on a subsequent request"
+    );
+  });
+});
+
+acceptance("User - Notification level dropdown visibility", function (needs) {
+  needs.user({ username: "eviltrout", id: 1, ignored_ids: [] });
+
+  needs.pretender((server, helper) => {
+    server.get("/u/charlie.json", () => {
+      const cloned = cloneJSON(userFixtures["/u/charlie.json"]);
+      cloned.user.can_ignore_user = false;
+      cloned.user.can_mute_user = false;
+      return helper.response(200, cloned);
+    });
+  });
+
+  test("Notification level button is not rendered for user who cannot mute or ignore another user", async function (assert) {
+    await visit("/u/charlie");
+    assert.notOk(exists(".user-notifications-dropdown"));
+  });
+});
+
+acceptance(
+  "User - Muting other user with notification level dropdown",
+  function (needs) {
+    needs.user({ username: "eviltrout", id: 1, ignored_ids: [] });
+
+    needs.pretender((server, helper) => {
+      server.get("/u/charlie.json", () => {
+        const cloned = cloneJSON(userFixtures["/u/charlie.json"]);
+        cloned.user.can_mute_user = true;
+        return helper.response(200, cloned);
+      });
+
+      server.put("/u/charlie/notification_level.json", (request) => {
+        let requestParams = new URLSearchParams(request.requestBody);
+        // Ensure the correct `notification_level` param is sent to the server
+        if (requestParams.get("notification_level") === "mute") {
+          return helper.response(200, {});
+        } else {
+          return helper.response(422, {});
+        }
+      });
+    });
+
+    test("Notification level is set to normal and can be changed to muted", async function (assert) {
+      await visit("/u/charlie");
+      assert.ok(
+        exists(".user-notifications-dropdown"),
+        "Notification level dropdown is present"
+      );
+
+      const dropdown = selectKit(".user-notifications-dropdown");
+      await dropdown.expand();
+      assert.strictEqual(dropdown.selectedRow().value(), "changeToNormal");
+
+      await dropdown.selectRowByValue("changeToMuted");
+      await dropdown.expand();
+      assert.strictEqual(dropdown.selectedRow().value(), "changeToMuted");
+    });
+  }
+);
+
+acceptance(
+  "User - Ignoring other user with notification level dropdown",
+  function (needs) {
+    needs.user({ username: "eviltrout", id: 1, ignored_ids: [] });
+
+    needs.pretender((server, helper) => {
+      server.get("/u/charlie.json", () => {
+        const cloned = cloneJSON(userFixtures["/u/charlie.json"]);
+        cloned.user.can_ignore_user = true;
+        return helper.response(200, cloned);
+      });
+
+      server.put("/u/charlie/notification_level.json", (request) => {
+        let requestParams = new URLSearchParams(request.requestBody);
+        // Ensure the correct `notification_level` param is sent to the server
+        if (requestParams.get("notification_level") === "ignore") {
+          return helper.response(200, {});
+        } else {
+          return helper.response(422, {});
+        }
+      });
+    });
+    test("Notification level can be changed to ignored", async function (assert) {
+      await visit("/u/charlie");
+      assert.ok(
+        exists(".user-notifications-dropdown"),
+        "Notification level dropdown is present"
+      );
+
+      const notificationLevelDropdown = selectKit(
+        ".user-notifications-dropdown"
+      );
+      await notificationLevelDropdown.expand();
+      assert.strictEqual(
+        notificationLevelDropdown.selectedRow().value(),
+        "changeToNormal"
+      );
+
+      await notificationLevelDropdown.selectRowByValue("changeToIgnored");
+      assert.ok(exists(".ignore-duration-modal"));
+
+      const durationDropdown = selectKit(
+        ".ignore-duration-modal .future-date-input-selector"
+      );
+      await durationDropdown.expand();
+      await durationDropdown.selectRowByIndex(0);
+      await click(".modal-footer .ignore-duration-save");
+      await notificationLevelDropdown.expand();
+      assert.strictEqual(
+        notificationLevelDropdown.selectedRow().value(),
+        "changeToIgnored"
+      );
+    });
+  }
+);
+
+acceptance("User - Logout", function (needs) {
+  needs.user({ username: "eviltrout" });
+
+  test("Dialog works", async function (assert) {
+    sinon.stub(logout, "default");
+    await visit("/u/eviltrout");
+    await publishToMessageBus("/logout/19");
+
+    assert.ok(exists(".dialog-body"));
+    assert.ok(
+      !exists(".dialog-footer .btn-default"),
+      "no cancel button present"
+    );
+    assert.strictEqual(
+      query(".dialog-footer .btn-primary").innerText,
+      I18n.t("home"),
+      "primary dialog button is present"
+    );
+
+    await click(".dialog-overlay");
+    assert.ok(logout.default.called, "logout helper was called");
   });
 });

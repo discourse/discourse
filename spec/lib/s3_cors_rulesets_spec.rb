@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
 require "s3_cors_rulesets"
 
 RSpec.describe S3CorsRulesets do
@@ -34,10 +33,8 @@ RSpec.describe S3CorsRulesets do
         client.expects(:put_bucket_cors).with(
           bucket: "s3-upload-bucket",
           cors_configuration: {
-            cors_rules: [
-              S3CorsRulesets::ASSETS
-            ]
-          }
+            cors_rules: [S3CorsRulesets::ASSETS],
+          },
         )
         result = sync_rules
         expect(result[:assets_rules_status]).to eq(S3CorsRulesets::RULE_STATUS_APPLIED)
@@ -46,9 +43,7 @@ RSpec.describe S3CorsRulesets do
       end
 
       it "does not apply the ASSETS rules if they already exist" do
-        client.stub_responses(:get_bucket_cors, {
-          cors_rules: [S3CorsRulesets::ASSETS]
-        })
+        client.stub_responses(:get_bucket_cors, { cors_rules: [S3CorsRulesets::ASSETS] })
         client.expects(:put_bucket_cors).never
         result = sync_rules
         expect(result[:assets_rules_status]).to eq(S3CorsRulesets::RULE_STATUS_EXISTED)
@@ -63,18 +58,14 @@ RSpec.describe S3CorsRulesets do
         client.expects(:put_bucket_cors).with(
           bucket: "s3-upload-bucket",
           cors_configuration: {
-            cors_rules: [
-              S3CorsRulesets::ASSETS
-            ]
-          }
+            cors_rules: [S3CorsRulesets::ASSETS],
+          },
         )
         client.expects(:put_bucket_cors).with(
           bucket: "s3-backup-upload-bucket",
           cors_configuration: {
-            cors_rules: [
-              S3CorsRulesets::BACKUP_DIRECT_UPLOAD
-            ]
-          }
+            cors_rules: [S3CorsRulesets::BACKUP_DIRECT_UPLOAD],
+          },
         )
         result = sync_rules
         expect(result[:assets_rules_status]).to eq(S3CorsRulesets::RULE_STATUS_APPLIED)
@@ -89,18 +80,14 @@ RSpec.describe S3CorsRulesets do
         client.expects(:put_bucket_cors).with(
           bucket: "s3-upload-bucket",
           cors_configuration: {
-            cors_rules: [
-              S3CorsRulesets::ASSETS
-            ]
-          }
+            cors_rules: [S3CorsRulesets::ASSETS],
+          },
         )
         client.expects(:put_bucket_cors).with(
           bucket: "s3-upload-bucket",
           cors_configuration: {
-            cors_rules: [
-              S3CorsRulesets::DIRECT_UPLOAD
-            ]
-          }
+            cors_rules: [S3CorsRulesets::DIRECT_UPLOAD],
+          },
         )
         result = sync_rules
         expect(result[:assets_rules_status]).to eq(S3CorsRulesets::RULE_STATUS_APPLIED)
@@ -112,9 +99,16 @@ RSpec.describe S3CorsRulesets do
         SiteSetting.enable_direct_s3_uploads = true
         setup_backups
 
-        client.stub_responses(:get_bucket_cors, {
-          cors_rules: [S3CorsRulesets::ASSETS, S3CorsRulesets::BACKUP_DIRECT_UPLOAD, S3CorsRulesets::DIRECT_UPLOAD]
-        })
+        client.stub_responses(
+          :get_bucket_cors,
+          {
+            cors_rules: [
+              S3CorsRulesets::ASSETS,
+              S3CorsRulesets::BACKUP_DIRECT_UPLOAD,
+              S3CorsRulesets::DIRECT_UPLOAD,
+            ],
+          },
+        )
         client.expects(:put_bucket_cors).never
         result = sync_rules
         expect(result[:assets_rules_status]).to eq(S3CorsRulesets::RULE_STATUS_EXISTED)
@@ -133,19 +127,15 @@ RSpec.describe S3CorsRulesets do
     context "when S3 is set up with database settings" do
       let(:use_db_s3_config) { true }
 
-      before do
-        setup_s3
-      end
+      before { setup_s3 }
 
       it "only tries to apply the ASSETS rules by default" do
         client.stub_responses(:get_bucket_cors, {})
         client.expects(:put_bucket_cors).with(
           bucket: "s3-upload-bucket",
           cors_configuration: {
-            cors_rules: [
-              S3CorsRulesets::ASSETS
-            ]
-          }
+            cors_rules: [S3CorsRulesets::ASSETS],
+          },
         )
         result = sync_rules
         expect(result[:assets_rules_status]).to eq(S3CorsRulesets::RULE_STATUS_APPLIED)
@@ -154,9 +144,7 @@ RSpec.describe S3CorsRulesets do
       end
 
       it "does not apply the ASSETS rules if they already exist" do
-        client.stub_responses(:get_bucket_cors, {
-          cors_rules: [S3CorsRulesets::ASSETS]
-        })
+        client.stub_responses(:get_bucket_cors, { cors_rules: [S3CorsRulesets::ASSETS] })
         client.expects(:put_bucket_cors).never
         result = sync_rules
         expect(result[:assets_rules_status]).to eq(S3CorsRulesets::RULE_STATUS_EXISTED)
@@ -173,18 +161,14 @@ RSpec.describe S3CorsRulesets do
         client.expects(:put_bucket_cors).with(
           bucket: "s3-upload-bucket",
           cors_configuration: {
-            cors_rules: [
-              S3CorsRulesets::ASSETS
-            ]
-          }
+            cors_rules: [S3CorsRulesets::ASSETS],
+          },
         )
         client.expects(:put_bucket_cors).with(
           bucket: "s3-backup-upload-bucket",
           cors_configuration: {
-            cors_rules: [
-              S3CorsRulesets::BACKUP_DIRECT_UPLOAD
-            ]
-          }
+            cors_rules: [S3CorsRulesets::BACKUP_DIRECT_UPLOAD],
+          },
         )
         result = sync_rules
         expect(result[:assets_rules_status]).to eq(S3CorsRulesets::RULE_STATUS_APPLIED)
@@ -199,18 +183,14 @@ RSpec.describe S3CorsRulesets do
         client.expects(:put_bucket_cors).with(
           bucket: "s3-upload-bucket",
           cors_configuration: {
-            cors_rules: [
-              S3CorsRulesets::ASSETS
-            ]
-          }
+            cors_rules: [S3CorsRulesets::ASSETS],
+          },
         )
         client.expects(:put_bucket_cors).with(
           bucket: "s3-upload-bucket",
           cors_configuration: {
-            cors_rules: [
-              S3CorsRulesets::DIRECT_UPLOAD
-            ]
-          }
+            cors_rules: [S3CorsRulesets::DIRECT_UPLOAD],
+          },
         )
         result = sync_rules
         expect(result[:assets_rules_status]).to eq(S3CorsRulesets::RULE_STATUS_APPLIED)

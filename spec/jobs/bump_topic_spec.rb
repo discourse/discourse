@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
-describe Jobs::BumpTopic do
+RSpec.describe Jobs::BumpTopic do
   fab!(:admin) { Fabricate(:admin) }
   fab!(:user) { Fabricate(:user) }
 
@@ -33,5 +31,4 @@ describe Jobs::BumpTopic do
 
     expect(topic.reload.public_topic_timer).to eq(nil)
   end
-
 end

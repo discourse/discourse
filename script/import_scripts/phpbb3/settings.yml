@@ -5,7 +5,7 @@ database:
   host: localhost
   port: 3306
   username: root
-  password:
+  password: password
   schema: phpbb
   table_prefix: phpbb_ # Change this, if your forum is using a different prefix. Usually all table names start with phpbb_
   batch_size: 1000 # Don't change this unless you know what you're doing. The default (1000) should work just fine.
@@ -32,24 +32,29 @@ import:
   #   name: Bar Category
   #   parent_id: foo
   #
-  new_categories:
+  new_categories: []
 
   # Category mappings
   #
-  # For example, topics from phpBB category 1 and 2 will be imported
-  # in the new "Foo Category" category, topics from phpBB category 3
-  # will be imported in subcategory "Bar category", topics from phpBB
-  # category 4 will be merged into category 5 and category 6 will be
-  # skipped.
+  # * "source_category_id" is the forum ID in phpBB3
+  # * "target_category_id" is either a forum ID from phpBB3 or a "forum_id"
+  #   from the "new_categories" setting (see above)
+  # * "discourse_category_id" is a category ID from Discourse
+  # * "skip" allows you to ignore a category during import
   #
-  # category_mappings:
-  #   1: foo
-  #   2: foo
-  #   3: bar
-  #   4: 5
-  #   6: SKIP
+  # Use "target_category_id" if you want to merge categories and use
+  # "discourse_category_id" if you want to import a forum into an existing
+  # category in Discourse.
   #
-  category_mappings:
+  #  category_mappings:
+  #    - source_category_id: 1
+  #      target_category_id: foo
+  #    - source_category_id: 2
+  #      discourse_category_id: 42
+  #    - source_category_id: 6
+  #      skip: true
+  #
+  category_mappings: []
 
   # Tag mappings
   #
@@ -64,7 +69,7 @@ import:
   #   3:
   #   - third-category
   #
-  tag_mappings:
+  tag_mappings: {}
 
   # Rank to trust level mapping
   #
@@ -76,7 +81,7 @@ import:
   #   trust_level_2: 1000
   #   trust_level_3: 3000
   #
-  rank_mapping:
+  rank_mapping: {}
 
   # WARNING: Do not activate this option unless you know what you are doing.
   # It will probably break the BBCode to Markdown conversion and slows down your import.
@@ -122,6 +127,9 @@ import:
   private_messages: true
   polls: true
 
+  # Import likes from the phpBB's "Thanks for posts" extension
+  likes: false
+
   # When true: each imported user will have the original username from phpBB as its name
   # When false: the name of each imported user will be blank unless the username was changed during import
   username_as_name: false
@@ -134,3 +142,12 @@ import:
     # here are two example mappings...
     smiley: [':D', ':-D', ':grin:']
     heart: ':love:'
+
+  # Map custom profile fields from phpBB to custom user fields in Discourse (works for phpBB 3.1+)
+  #
+  #  custom_fields:
+  #    - phpbb_field_name: "company_name"
+  #      discourse_field_name: "Company"
+  #    - phpbb_field_name: "facebook"
+  #      discourse_field_name: "Facebook"
+  custom_fields: []

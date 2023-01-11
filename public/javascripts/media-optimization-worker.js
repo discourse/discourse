@@ -25,10 +25,10 @@ function resizeWithAspect(
   };
 }
 
-function logIfDebug(message) {
+function logIfDebug(...messages) {
   if (DedicatedWorkerGlobalScope.debugMode) {
     // eslint-disable-next-line no-console
-    console.log(message);
+    console.log(...messages);
   }
 }
 

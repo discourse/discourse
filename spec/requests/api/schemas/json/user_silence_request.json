@@ -1,0 +1,20 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "silenced_till": {
+      "type": "string",
+      "example": "2022-06-01T08:00:00.000Z"
+    },
+    "reason": {
+      "type": "string"
+    },
+    "message": {
+      "type": "string",
+      "description": "Will send an email with this message when present"
+    },
+    "post_action": {
+      "type": "string",
+      "example": "delete"
+    }
+  }
+}

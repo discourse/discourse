@@ -1,12 +1,14 @@
 import Component from "@ember/component";
-import EmberObject from "@ember/object";
+import EmberObject, { action } from "@ember/object";
 import I18n from "I18n";
 import LinkLookup from "discourse/lib/link-lookup";
 import { not } from "@ember/object/computed";
 import { scheduleOnce } from "@ember/runloop";
 import showModal from "discourse/lib/show-modal";
+import { ajax } from "discourse/lib/ajax";
 
 let _messagesCache = {};
+let _recipient_names = [];
 
 export default Component.extend({
   classNameBindings: [":composer-popup-container", "hidden"],
@@ -18,6 +20,7 @@ export default Component.extend({
   _similarTopicsMessage: null,
   _yourselfConfirm: null,
   similarTopics: null,
+  usersNotSeen: null,
 
   hidden: not("composer.viewOpenOrFullscreen"),
 
@@ -51,11 +54,13 @@ export default Component.extend({
     this.set("messageCount", messages.get("length"));
   },
 
-  actions: {
-    closeMessage(message) {
-      this._removeMessage(message);
-    },
+  @action
+  closeMessage(message, event) {
+    event?.preventDefault();
+    this._removeMessage(message);
+  },
 
+  actions: {
     hideMessage(message) {
       this._removeMessage(message);
       // kind of hacky but the visibility depends on this
@@ -119,6 +124,53 @@ export default Component.extend({
     const composer = this.composer;
     if (composer.get("privateMessage")) {
       const recipients = composer.targetRecipientsArray;
+      const recipient_names = recipients
+        .filter((r) => r.type === "user")
+        .map(({ name }) => name);
+
+      if (
+        recipient_names.length > 0 &&
+        recipient_names.length !== _recipient_names.length &&
+        !recipient_names.every((v, i) => v === _recipient_names[i])
+      ) {
+        _recipient_names = recipient_names;
+
+        ajax(`/composer_messages/user_not_seen_in_a_while`, {
+          type: "GET",
+          data: {
+            usernames: recipient_names,
+          },
+        }).then((response) => {
+          if (
+            response.user_count > 0 &&
+            this.get("usersNotSeen") !== response.usernames.join("-")
+          ) {
+            this.set("usersNotSeen", response.usernames.join("-"));
+            this.messagesByTemplate["education"] = undefined;
+
+            let usernames = [];
+            response.usernames.forEach((username, index) => {
+              usernames[
+                index
+              ] = `<a class='mention' href='/u/${username}'>@${username}</a>`;
+            });
+
+            let body_key = "composer.user_not_seen_in_a_while.single";
+            if (response.user_count > 1) {
+              body_key = "composer.user_not_seen_in_a_while.multiple";
+            }
+            const message = composer.store.createRecord("composer-message", {
+              id: "user-not-seen",
+              templateName: "education",
+              body: I18n.t(body_key, {
+                usernames: usernames.join(", "),
+                time_ago: response.time_ago,
+              }),
+            });
+            this.send("popup", message);
+          }
+        });
+      }
 
       if (
         recipients.length > 0 &&
@@ -128,7 +180,7 @@ export default Component.extend({
           this._yourselfConfirm ||
           composer.store.createRecord("composer-message", {
             id: "yourself_confirm",
-            templateName: "custom-body",
+            templateName: "education",
             title: I18n.t("composer.yourself_confirm.title"),
             body: I18n.t("composer.yourself_confirm.body"),
           });
@@ -158,7 +210,7 @@ export default Component.extend({
     }
 
     // TODO pass the 200 in from somewhere
-    const raw = (composer.get("reply") || "").substr(0, 200);
+    const raw = (composer.get("reply") || "").slice(0, 200);
     const title = composer.get("title") || "";
 
     // Ensure we have at least a title

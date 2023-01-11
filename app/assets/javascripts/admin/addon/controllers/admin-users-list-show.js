@@ -48,6 +48,7 @@ export default Controller.extend(CanCheckEmails, {
       return;
     }
 
+    const page = this._page;
     this.set("refreshing", true);
 
     AdminUser.findAll(this.query, {
@@ -55,17 +56,19 @@ export default Controller.extend(CanCheckEmails, {
       show_emails: this.showEmails,
       order: this.order,
       asc: this.asc,
-      page: this._page,
+      page,
     })
       .then((result) => {
-        if (!result || result.length === 0) {
+        this._results[page] = result;
+        this.set("model", this._results.flat());
+
+        if (result.length === 0) {
           this._canLoadMore = false;
         }
-
-        this._results = this._results.concat(result);
-        this.set("model", this._results);
       })
-      .finally(() => this.set("refreshing", false));
+      .finally(() => {
+        this.set("refreshing", false);
+      });
   },
 
   actions: {

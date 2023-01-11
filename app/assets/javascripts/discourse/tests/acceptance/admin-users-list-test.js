@@ -1,9 +1,9 @@
 import {
   acceptance,
   exists,
-  queryAll,
+  query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, visit } from "@ember/test-helpers";
+import { click, fillIn, visit } from "@ember/test-helpers";
 import I18n from "I18n";
 import { test } from "qunit";
 
@@ -17,6 +17,17 @@ acceptance("Admin - Users List", function (needs) {
     assert.ok(!exists(".user:nth-of-type(1) .email small"), "escapes email");
   });
 
+  test("searching users with no matches", async function (assert) {
+    await visit("/admin/users/list/active");
+
+    await fillIn(".controls.username input", "doesntexist");
+
+    assert.equal(
+      query(".users-list-container").innerText,
+      I18n.t("search.no_results")
+    );
+  });
+
   test("sorts users", async function (assert) {
     await visit("/admin/users/list/active");
 
@@ -25,18 +36,18 @@ acceptance("Admin - Users List", function (needs) {
     await click(".users-list .sortable:nth-child(1)");
 
     assert.ok(
-      queryAll(".users-list .user:nth-child(1) .username")
-        .text()
-        .includes("eviltrout"),
+      query(".users-list .user:nth-child(1) .username").innerText.includes(
+        "eviltrout"
+      ),
       "list should be sorted by username"
     );
 
     await click(".users-list .sortable:nth-child(1)");
 
     assert.ok(
-      queryAll(".users-list .user:nth-child(1) .username")
-        .text()
-        .includes("discobot"),
+      query(".users-list .user:nth-child(1) .username").innerText.includes(
+        "discobot"
+      ),
       "list should be sorted ascending by username"
     );
   });
@@ -49,7 +60,7 @@ acceptance("Admin - Users List", function (needs) {
     await click(".show-emails");
 
     assert.strictEqual(
-      queryAll(".users-list .user:nth-child(1) .email").text(),
+      query(".users-list .user:nth-child(1) .email").innerText,
       "<small>eviltrout@example.com</small>",
       "shows the emails"
     );
@@ -57,7 +68,7 @@ acceptance("Admin - Users List", function (needs) {
     await click(".hide-emails");
 
     assert.strictEqual(
-      queryAll(".users-list .user:nth-child(1) .email").text(),
+      query(".users-list .user:nth-child(1) .email").innerText,
       "",
       "hides the emails"
     );
@@ -71,38 +82,38 @@ acceptance("Admin - Users List", function (needs) {
 
     await visit("/admin/users/list/active");
 
-    assert.strictEqual(queryAll(".admin-title h2").text(), activeTitle);
+    assert.strictEqual(query(".admin-title h2").innerText, activeTitle);
     assert.ok(
-      queryAll(".users-list .user:nth-child(1) .username")
-        .text()
-        .includes(activeUser)
+      query(".users-list .user:nth-child(1) .username").innerText.includes(
+        activeUser
+      )
     );
 
     await click('a[href="/admin/users/list/new"]');
 
-    assert.strictEqual(queryAll(".admin-title h2").text(), suspectTitle);
+    assert.strictEqual(query(".admin-title h2").innerText, suspectTitle);
     assert.ok(
-      queryAll(".users-list .user:nth-child(1) .username")
-        .text()
-        .includes(suspectUser)
+      query(".users-list .user:nth-child(1) .username").innerText.includes(
+        suspectUser
+      )
     );
 
     await click(".users-list .sortable:nth-child(4)");
 
-    assert.strictEqual(queryAll(".admin-title h2").text(), suspectTitle);
+    assert.strictEqual(query(".admin-title h2").innerText, suspectTitle);
     assert.ok(
-      queryAll(".users-list .user:nth-child(1) .username")
-        .text()
-        .includes(suspectUser)
+      query(".users-list .user:nth-child(1) .username").innerText.includes(
+        suspectUser
+      )
     );
 
     await click('a[href="/admin/users/list/active"]');
 
-    assert.strictEqual(queryAll(".admin-title h2").text(), activeTitle);
+    assert.strictEqual(query(".admin-title h2").innerText, activeTitle);
     assert.ok(
-      queryAll(".users-list .user:nth-child(1) .username")
-        .text()
-        .includes(activeUser)
+      query(".users-list .user:nth-child(1) .username").innerText.includes(
+        activeUser
+      )
     );
   });
 });

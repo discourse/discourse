@@ -1,6 +1,7 @@
 import Component from "@ember/component";
 import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
+import { htmlSafe } from "@ember/template";
 
 export default Component.extend({
   tagName: "button",
@@ -9,7 +10,7 @@ export default Component.extend({
 
   @discourseComputed("color", "usedColors")
   isUsed(color, usedColors) {
-    return (usedColors || []).indexOf(color.toUpperCase()) >= 0;
+    return (usedColors || []).includes(color.toUpperCase());
   },
 
   @discourseComputed("isUsed")
@@ -19,7 +20,7 @@ export default Component.extend({
 
   @discourseComputed("color")
   style(color) {
-    return `background-color: #${color};`.htmlSafe();
+    return htmlSafe(`background-color: #${color};`);
   },
 
   click(e) {

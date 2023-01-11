@@ -3,7 +3,7 @@
   "properties": {
     "user_actions": {
       "type": "array",
-      "items": [
+      "items":
         {
           "type": "object",
           "additionalProperties": false,
@@ -137,7 +137,6 @@
             "archived"
           ]
         }
-      ]
     }
   },
   "required": [

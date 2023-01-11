@@ -5,7 +5,7 @@ acceptance("current-user", function (needs) {
   needs.user();
 
   test("currentUser has appEvents", function (assert) {
-    let currentUser = this.container.lookup("current-user:main");
+    let currentUser = this.container.lookup("service:current-user");
     assert.ok(currentUser.appEvents);
   });
 });

@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-require "i18n/duplicate_key_finder"
-
 def extract_locale(path)
   path[/\.([^.]{2,})\.yml$/, 1]
 end
@@ -23,7 +20,15 @@ def is_yaml_compatible?(english, translated)
   true
 end
 
-describe "i18n integrity checks" do
+def load_yaml(path)
+  if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new("3.1.0")
+    YAML.load_file(path, aliases: true)
+  else
+    YAML.load_file(path)
+  end
+end
+
+RSpec.describe "i18n integrity checks" do
   it "has an i18n key for each Site Setting" do
     SiteSetting.all_settings.each do |s|
       next if s[:setting][/^test_/]
@@ -32,10 +37,12 @@ describe "i18n integrity checks" do
   end
 
   it "has an i18n key for each Badge description" do
-    Badge.where(system: true).each do |b|
-      expect(b.long_description).to be_present
-      expect(b.description).to be_present
-    end
+    Badge
+      .where(system: true)
+      .each do |b|
+        expect(b.long_description).to be_present
+        expect(b.description).to be_present
+      end
   end
 
   Dir["#{Rails.root}/config/locales/{client,server}.*.yml"].each do |path|
@@ -50,7 +57,7 @@ describe "i18n integrity checks" do
 
   Dir["#{Rails.root}/config/locales/client.*.yml"].each do |path|
     it "has valid client YAML for '#{path}'" do
-      yaml = YAML.load_file(path)
+      yaml = load_yaml(path)
       locale = extract_locale(path)
 
       expect(yaml.keys).to eq([locale])
@@ -65,7 +72,7 @@ describe "i18n integrity checks" do
   end
 
   Dir["#{Rails.root}/**/locale*/*.en.yml"].each do |english_path|
-    english_yaml = YAML.load_file(english_path)["en"]
+    english_yaml = load_yaml(english_path)["en"]
 
     context(english_path) do
       it "has no duplicate keys" do
@@ -79,7 +86,7 @@ describe "i18n integrity checks" do
 
       context(path) do
         locale = extract_locale(path)
-        yaml = YAML.load_file(path)
+        yaml = load_yaml(path)
 
         it "has no duplicate keys" do
           duplicates = DuplicateKeyFinder.new.find_duplicates(path)
@@ -100,7 +107,7 @@ describe "i18n integrity checks" do
   end
 end
 
-describe "fallbacks" do
+RSpec.describe "fallbacks" do
   before do
     I18n.backend = I18n::Backend::DiscourseI18n.new
     I18n.fallbacks = I18n::Backend::FallbackLocaleList.new
@@ -111,20 +118,14 @@ describe "fallbacks" do
   it "finds the fallback translation" do
     I18n.backend.store_translations(:en, test: "en test")
 
-    I18n.with_locale("pl_PL") do
-      expect(I18n.t("test")).to eq("en test")
-    end
+    I18n.with_locale("pl_PL") { expect(I18n.t("test")).to eq("en test") }
   end
 
-  context "in a multi-threaded environment" do
+  context "when in a multi-threaded environment" do
     it "finds the fallback translation" do
       I18n.backend.store_translations(:en, test: "en test")
 
-      thread = Thread.new do
-        I18n.with_locale("pl_PL") do
-          expect(I18n.t("test")).to eq("en test")
-        end
-      end
+      thread = Thread.new { I18n.with_locale("pl_PL") { expect(I18n.t("test")).to eq("en test") } }
 
       begin
         thread.join

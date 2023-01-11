@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe PostJobsEnqueuer do
   let!(:post) { Fabricate(:post, topic: topic) }
   let!(:topic) { Fabricate(:topic) }
@@ -12,13 +10,14 @@ RSpec.describe PostJobsEnqueuer do
 
   context "for regular topics" do
     it "enqueues the :post_alert job" do
-      expect_enqueued_with(job: :post_alert, args: {
-        post_id: post.id,
-        new_record: true,
-        options: opts[:post_alert_options]
-      }) do
-        subject.enqueue_jobs
-      end
+      expect_enqueued_with(
+        job: :post_alert,
+        args: {
+          post_id: post.id,
+          new_record: true,
+          options: opts[:post_alert_options],
+        },
+      ) { subject.enqueue_jobs }
     end
 
     it "enqueues the :notify_mailing_list_subscribers job" do
@@ -95,9 +94,12 @@ RSpec.describe PostJobsEnqueuer do
         end
 
         it "does not enqueue the :make_embedded_topic_visible job" do
-          expect_not_enqueued_with(job: :make_embedded_topic_visible, args: { topic_id: topic.id }) do
-            subject.enqueue_jobs
-          end
+          expect_not_enqueued_with(
+            job: :make_embedded_topic_visible,
+            args: {
+              topic_id: topic.id,
+            },
+          ) { subject.enqueue_jobs }
         end
       end
     end

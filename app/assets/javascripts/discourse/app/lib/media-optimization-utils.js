@@ -1,11 +1,13 @@
 import { Promise } from "rsvp";
-import { isAppleDevice } from "discourse/lib/utilities";
+import { helperContext } from "discourse-common/lib/helpers";
 
 // Chrome and Firefox use a native method to do Image -> Bitmap Array (it happens of the main thread!)
 // Safari < 15 uses the `<img async>` element due to https://bugs.webkit.org/show_bug.cgi?id=182424
 // Safari > 15 still uses `<img async>` due to their buggy createImageBitmap not handling EXIF rotation
 async function fileToDrawable(file) {
-  if ("createImageBitmap" in self && !isAppleDevice()) {
+  const caps = helperContext().capabilities;
+
+  if ("createImageBitmap" in self && !caps.isApple) {
     return await createImageBitmap(file);
   } else {
     const url = URL.createObjectURL(file);
@@ -30,7 +32,7 @@ async function fileToDrawable(file) {
   }
 }
 
-function drawableToimageData(drawable) {
+function drawableToImageData(drawable) {
   const width = drawable.width,
     height = drawable.height,
     sx = 0,
@@ -78,7 +80,7 @@ function jpegDecodeFailure(type, imageData) {
 
 export async function fileToImageData(file) {
   const drawable = await fileToDrawable(file);
-  const imageData = drawableToimageData(drawable);
+  const imageData = drawableToImageData(drawable);
 
   if (isTransparent(file.type, imageData)) {
     throw "Image has transparent pixels, won't convert to JPEG!";

@@ -1,9 +1,6 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
-describe StylesheetCache do
-
+RSpec.describe StylesheetCache do
   describe ".add" do
     it "correctly cycles once MAX_TO_KEEP is hit" do
       StylesheetCache.destroy_all
@@ -35,7 +32,7 @@ describe StylesheetCache do
       StylesheetCache.add("mobile", SecureRandom.hex, "body { }", "map", max_to_keep: 2)
       StylesheetCache.add("mobile", SecureRandom.hex, "body { }", "map", max_to_keep: 2)
 
-      expect(StylesheetCache.order(:id).pluck(:target)).to eq(["desktop", "desktop", "mobile", "mobile"])
+      expect(StylesheetCache.order(:id).pluck(:target)).to eq(%w[desktop desktop mobile mobile])
     end
   end
 

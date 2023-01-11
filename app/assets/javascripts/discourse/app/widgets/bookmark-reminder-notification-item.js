@@ -16,6 +16,7 @@ createWidgetFrom(
         username,
       });
     },
+
     notificationTitle(notificationName, data) {
       if (notificationName) {
         if (data.bookmark_name) {

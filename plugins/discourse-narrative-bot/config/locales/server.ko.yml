@@ -83,6 +83,15 @@ ko:
       "10":
         quote: "\"당신은 당신이 상상하고 믿는 모든 것들을 이룰 수 있다.\""
         author: "나폴레온 힐"
+      "11":
+        quote: "가정에 평화, 세계에 평화."
+        author: "무스타파 케말 아타튀르크"
+      "12":
+        quote: "교육은 빈곤을 탈출하는 방법이 아니라 빈곤과 싸우는 방법입니다."
+        author: "줄리어스 니에레레"
+      "13":
+        quote: "천 마일의 여행도 한 걸음부터 시작해야 합니다."
+        author: "노자"
       results: |-
         > :left_speech_bubble: _%{quote}_ &mdash; %{author}
     magic_8_ball:

@@ -1,9 +1,6 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
-describe PostAction do
-
+RSpec.describe PostAction do
   it "triggers the 'flag_reviewed' event when there was at least one flag" do
     admin = Fabricate(:admin)
 
@@ -16,5 +13,4 @@ describe PostAction do
     events = DiscourseEvent.track_events { PostDestroyer.new(admin, flagged_post).destroy }
     expect(events.map { |e| e[:event_name] }).to include(:flag_reviewed)
   end
-
 end

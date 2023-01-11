@@ -136,7 +136,7 @@ export default createWidget("home-logo", {
     }
     e.preventDefault();
 
-    DiscourseURL.routeToTag($(e.target).closest("a")[0]);
+    DiscourseURL.routeToTag(e.target.closest("a"));
     return false;
   },
 });

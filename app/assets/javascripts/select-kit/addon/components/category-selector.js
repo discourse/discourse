@@ -5,6 +5,7 @@ import MultiSelectComponent from "select-kit/components/multi-select";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import { makeArray } from "discourse-common/lib/helpers";
 import { mapBy } from "@ember/object/computed";
+import { htmlSafe } from "@ember/template";
 
 export default MultiSelectComponent.extend({
   pluginApiIdentifiers: ["category-selector"],
@@ -15,7 +16,7 @@ export default MultiSelectComponent.extend({
   selectKitOptions: {
     filterable: true,
     allowAny: false,
-    allowUncategorized: "allowUncategorized",
+    allowUncategorized: true,
     displayCategoryDescription: false,
     selectedChoiceComponent: "selected-choice-category",
   },
@@ -34,6 +35,14 @@ export default MultiSelectComponent.extend({
   content: computed("categories.[]", "blockedCategories.[]", function () {
     const blockedCategories = makeArray(this.blockedCategories);
     return Category.list().filter((category) => {
+      if (category.isUncategorizedCategory) {
+        if (this.attrs.options?.allowUncategorized !== undefined) {
+          return this.attrs.options.allowUncategorized;
+        }
+
+        return this.selectKit.options.allowUncategorized;
+      }
+
       return (
         this.categories.includes(category) ||
         !blockedCategories.includes(category)
@@ -64,17 +73,19 @@ export default MultiSelectComponent.extend({
       if (subcategoryIds.size > 1) {
         result.push(
           EmberObject.create({
-            multicategory: [...subcategoryIds],
+            multiCategory: [...subcategoryIds],
             category: result[0],
             title: I18n.t("category_row.plus_subcategories_title", {
               name: result[0].name,
               count: subcategoryIds.size - 1,
             }),
-            label: categoryBadgeHTML(result[0], {
-              link: false,
-              recursive: true,
-              plusSubcategories: subcategoryIds.size - 1,
-            }).htmlSafe(),
+            label: htmlSafe(
+              categoryBadgeHTML(result[0], {
+                link: false,
+                recursive: true,
+                plusSubcategories: subcategoryIds.size - 1,
+              })
+            ),
           })
         );
       }
@@ -84,8 +95,8 @@ export default MultiSelectComponent.extend({
   },
 
   select(value, item) {
-    if (item.multicategory) {
-      const items = item.multicategory.map((id) =>
+    if (item.multiCategory) {
+      const items = item.multiCategory.map((id) =>
         Category.findById(parseInt(id, 10))
       );
 

@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
-describe "auto reject reviewable users" do
-  context "reviewable users" do
+RSpec.describe "auto reject reviewable users" do
+  describe "reviewable users" do
     fab!(:old_user) { Fabricate(:reviewable, created_at: 80.days.ago) }
 
     it "does not send email to rejected user" do
@@ -14,9 +12,7 @@ describe "auto reject reviewable users" do
       Jobs::AutoQueueHandler.new.execute({})
 
       expect(old_user.reload.rejected?).to eq(true)
-      expect(UserHistory.last.context).to eq(
-        I18n.t("user.destroy_reasons.reviewable_reject_auto")
-      )
+      expect(UserHistory.last.context).to eq(I18n.t("user.destroy_reasons.reviewable_reject_auto"))
     end
   end
 end

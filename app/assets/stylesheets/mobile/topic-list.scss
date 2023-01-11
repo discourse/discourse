@@ -48,11 +48,12 @@
     }
     > li {
       margin-right: 0;
-      font-size: $font-down-1;
+      font-size: var(--font-down-1);
       border: 1px solid var(--primary-medium);
+      border-radius: var(--d-input-border-radius);
     }
     > li > a {
-      line-height: $line-height-large;
+      line-height: var(--line-height-large);
       display: flex;
       align-items: center;
       .d-icon {
@@ -118,13 +119,13 @@
   }
 
   .main-link {
-    line-height: $line-height-medium;
+    line-height: var(--line-height-medium);
     position: relative;
     z-index: z("base") + 1; // Intentionally overlapping category to create bigger tap target
     font-size: var(--font-up-1);
     a.title {
       color: var(--primary);
-      padding: 0.5em 0 1.2em 0;
+      padding: 0;
     }
     .topic-statuses {
       a {
@@ -139,8 +140,8 @@
     position: relative;
     display: inline-block;
     top: -1px;
-    font-size: $font-0;
-    line-height: $line-height-small;
+    font-size: var(--font-0);
+    line-height: var(--line-height-small);
     padding: 0.15em 0.4em 0.2em 0.4em;
     .d-icon {
       color: var(--secondary);
@@ -161,18 +162,24 @@
   }
 
   .topic-item-stats {
+    .category,
+    .discourse-tags {
+      // disabling clicks because these targets are too small on mobile
+      pointer-events: none;
+    }
     position: relative;
+    display: flex;
+    align-items: baseline;
     margin-top: 0.5em;
     z-index: z("base");
-    .category,
-    .num,
-    .last-poster {
-      float: left;
+    .num.activity {
+      margin-left: auto;
+      font-size: var(--font-down-1);
     }
     .category a {
       max-width: 160px;
     }
-    .num .fa,
+    .num .d-icon,
     a,
     a:visited {
       color: var(--primary-med-or-secondary-med);
@@ -182,9 +189,7 @@
   .age {
     white-space: nowrap;
     a {
-      // let's make all ages dim on mobile so we're not
-      // overwhelming people with info about each topic
-      color: var(--primary-low-mid-or-secondary-high) !important;
+      color: var(--primary-medium);
     }
   }
 }
@@ -299,11 +304,11 @@ tr.category-topic-link {
   }
 
   h3 {
-    font-size: $font-up-2;
+    font-size: var(--font-up-2);
   }
 
   h4 {
-    font-size: $font-up-1;
+    font-size: var(--font-up-1);
   }
 
   .category-name {
@@ -317,7 +322,7 @@ tr.category-topic-link {
   }
 
   .category-topic-link .main-link .age {
-    font-size: $font-down-1;
+    font-size: var(--font-down-1);
   }
 
   .category-description td {
@@ -355,7 +360,7 @@ tr.category-topic-link {
       float: left;
       margin: 3px 1em 0 0;
       font-weight: normal;
-      font-size: $font-down-1;
+      font-size: var(--font-down-1);
       .value {
         font-weight: bold;
       }
@@ -405,7 +410,7 @@ tr.category-topic-link {
 
 .category-heading {
   p {
-    font-size: $font-up-1;
+    font-size: var(--font-up-1);
     margin-bottom: 0.75em;
   }
 }
@@ -413,9 +418,6 @@ tr.category-topic-link {
 .category-logo.aspect-image {
   display: block;
   margin: 1.5em 0 1em;
-  img {
-    max-width: 100%;
-  }
 }
 
 button.dismiss-read {
@@ -434,7 +436,7 @@ td .main-link {
 }
 .topic-list {
   .num.posts-map {
-    font-size: $font-up-2;
+    font-size: var(--font-up-2);
     padding: 0;
     button {
       padding: 0;
@@ -462,9 +464,66 @@ td .main-link {
 
 .category-list .category.muted a.category-title-link {
   color: var(--primary-medium);
-  font-size: $font-down-1;
+  font-size: var(--font-down-1);
 }
 
 .muted-categories-link {
   margin-left: 0;
+}
+
+// Bulk select
+
+.topic-list-header {
+  display: none;
+}
+
+.topic-list.sticky-header {
+  .topic-list-header {
+    display: table-header-group;
+    position: sticky;
+    z-index: z("base") + 2;
+    top: var(--header-offset);
+    background: var(--secondary);
+    tr {
+      display: flex;
+      align-items: center;
+      border: none;
+    }
+
+    .topic-list-data {
+      display: none;
+      &.bulk-select {
+        display: inline-block;
+      }
+      &.default {
+        display: flex;
+        span:not(.bulk-select-topics) {
+          display: none;
+        }
+      }
+    }
+
+    button.bulk-select {
+      padding-left: 0.85em; // visual alignment
+    }
+  }
+}
+
+.bulk-select-topics {
+  display: flex;
+  padding-left: 0.85em;
+  .btn {
+    margin-right: 0.5em;
+  }
+}
+
+.topic-list-data .pull-left {
+  label {
+    // bulk select checkbox
+    display: flex;
+    width: 45px;
+    height: 45px;
+    justify-content: center;
+    align-items: center;
+  }
 }

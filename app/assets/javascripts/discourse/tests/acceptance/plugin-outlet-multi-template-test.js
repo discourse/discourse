@@ -1,28 +1,25 @@
 import {
   acceptance,
   count,
-  queryAll,
+  query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { clearCache } from "discourse/lib/plugin-connectors";
-import hbs from "htmlbars-inline-precompile";
+import { hbs } from "ember-cli-htmlbars";
 import { test } from "qunit";
 import { visit } from "@ember/test-helpers";
+import { registerTemporaryModule } from "../helpers/temporary-module-helper";
 
-const HELLO = "javascripts/multi-test/connectors/user-profile-primary/hello";
+const HELLO =
+  "discourse/plugins/my-plugin/templates/connectors/user-profile-primary/hello";
 const GOODBYE =
-  "javascripts/multi-test/connectors/user-profile-primary/goodbye";
+  "discourse/plugins/my-plugin/templates/connectors/user-profile-primary/goodbye";
 
 acceptance("Plugin Outlet - Multi Template", function (needs) {
   needs.hooks.beforeEach(() => {
-    clearCache();
-    Ember.TEMPLATES[HELLO] = hbs`<span class='hello-span'>Hello</span>`;
-    Ember.TEMPLATES[GOODBYE] = hbs`<span class='bye-span'>Goodbye</span>`;
-  });
-
-  needs.hooks.afterEach(() => {
-    delete Ember.TEMPLATES[HELLO];
-    delete Ember.TEMPLATES[GOODBYE];
-    clearCache();
+    registerTemporaryModule(HELLO, hbs`<span class='hello-span'>Hello</span>`);
+    registerTemporaryModule(
+      GOODBYE,
+      hbs`<span class='bye-span'>Goodbye</span>`
+    );
   });
 
   test("Renders a template into the outlet", async function (assert) {
@@ -38,12 +35,12 @@ acceptance("Plugin Outlet - Multi Template", function (needs) {
       "it has class names"
     );
     assert.strictEqual(
-      queryAll(".hello-span").text(),
+      query(".hello-span").innerText,
       "Hello",
       "it renders into the outlet"
     );
     assert.strictEqual(
-      queryAll(".bye-span").text(),
+      query(".bye-span").innerText,
       "Goodbye",
       "it renders into the outlet"
     );

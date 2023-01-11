@@ -163,9 +163,23 @@ const Report = EmberObject.extend({
     return this._computeTrend(prev, total, higherIsBetter);
   },
 
-  @discourseComputed("prev30Days", "lastThirtyDaysCount", "higher_is_better")
-  thirtyDaysTrend(prev30Days, lastThirtyDaysCount, higherIsBetter) {
-    return this._computeTrend(prev30Days, lastThirtyDaysCount, higherIsBetter);
+  @discourseComputed(
+    "prev30Days",
+    "prev_period",
+    "lastThirtyDaysCount",
+    "higher_is_better"
+  )
+  thirtyDaysTrend(
+    prev30Days,
+    prev_period,
+    lastThirtyDaysCount,
+    higherIsBetter
+  ) {
+    return this._computeTrend(
+      prev30Days ?? prev_period,
+      lastThirtyDaysCount,
+      higherIsBetter
+    );
   },
 
   @discourseComputed("type")
@@ -236,10 +250,15 @@ const Report = EmberObject.extend({
     );
   },
 
-  @discourseComputed("prev30Days", "lastThirtyDaysCount")
-  thirtyDaysCountTitle(prev30Days, lastThirtyDaysCount) {
+  @discourseComputed("prev30Days", "prev_period")
+  canDisplayTrendIcon(prev30Days, prev_period) {
+    return prev30Days ?? prev_period;
+  },
+
+  @discourseComputed("prev30Days", "prev_period", "lastThirtyDaysCount")
+  thirtyDaysCountTitle(prev30Days, prev_period, lastThirtyDaysCount) {
     return this.changeTitle(
-      prev30Days,
+      prev30Days ?? prev_period,
       lastThirtyDaysCount,
       "in the previous 30 day period"
     );
@@ -335,7 +354,7 @@ const Report = EmberObject.extend({
             value,
             type,
             property: mainProperty,
-            formatedValue: value ? escapeExpression(value) : "—",
+            formattedValue: value ? escapeExpression(value) : "—",
           };
         },
       };
@@ -345,7 +364,7 @@ const Report = EmberObject.extend({
   _userLabel(properties, row) {
     const username = row[properties.username];
 
-    const formatedValue = () => {
+    const formattedValue = () => {
       const userId = row[properties.id];
 
       const user = EmberObject.create({
@@ -367,14 +386,14 @@ const Report = EmberObject.extend({
 
     return {
       value: username,
-      formatedValue: username ? formatedValue() : "—",
+      formattedValue: username ? formattedValue() : "—",
     };
   },
 
   _topicLabel(properties, row) {
     const topicTitle = row[properties.title];
 
-    const formatedValue = () => {
+    const formattedValue = () => {
       const topicId = row[properties.id];
       const href = getURL(`/t/-/${topicId}`);
       return `<a href='${href}'>${escapeExpression(topicTitle)}</a>`;
@@ -382,7 +401,7 @@ const Report = EmberObject.extend({
 
     return {
       value: topicTitle,
-      formatedValue: topicTitle ? formatedValue() : "—",
+      formattedValue: topicTitle ? formattedValue() : "—",
     };
   },
 
@@ -395,7 +414,7 @@ const Report = EmberObject.extend({
     return {
       property: properties.title,
       value: postTitle,
-      formatedValue:
+      formattedValue:
         postTitle && href
           ? `<a href='${href}'>${escapeExpression(postTitle)}</a>`
           : "—",
@@ -405,14 +424,14 @@ const Report = EmberObject.extend({
   _secondsLabel(value) {
     return {
       value: toNumber(value),
-      formatedValue: durationTiny(value),
+      formattedValue: durationTiny(value),
     };
   },
 
   _percentLabel(value) {
     return {
       value: toNumber(value),
-      formatedValue: value ? `${value}%` : "—",
+      formattedValue: value ? `${value}%` : "—",
     };
   },
 
@@ -421,25 +440,25 @@ const Report = EmberObject.extend({
       ? true
       : options.formatNumbers;
 
-    const formatedValue = () => (formatNumbers ? number(value) : value);
+    const formattedValue = () => (formatNumbers ? number(value) : value);
 
     return {
       value: toNumber(value),
-      formatedValue: value ? formatedValue() : "—",
+      formattedValue: value ? formattedValue() : "—",
     };
   },
 
   _bytesLabel(value) {
     return {
       value: toNumber(value),
-      formatedValue: I18n.toHumanSize(value),
+      formattedValue: I18n.toHumanSize(value),
     };
   },
 
   _dateLabel(value, date, format = "LL") {
     return {
       value,
-      formatedValue: value ? date.format(format) : "—",
+      formattedValue: value ? date.format(format) : "—",
     };
   },
 
@@ -448,14 +467,14 @@ const Report = EmberObject.extend({
 
     return {
       value,
-      formatedValue: value ? escaped : "—",
+      formattedValue: value ? escaped : "—",
     };
   },
 
   _linkLabel(properties, row) {
     const property = properties[0];
     const value = getURL(row[property]);
-    const formatedValue = (href, anchor) => {
+    const formattedValue = (href, anchor) => {
       return `<a href="${escapeExpression(href)}">${escapeExpression(
         anchor
       )}</a>`;
@@ -463,7 +482,7 @@ const Report = EmberObject.extend({
 
     return {
       value,
-      formatedValue: value ? formatedValue(value, row[properties[1]]) : "—",
+      formattedValue: value ? formattedValue(value, row[properties[1]]) : "—",
     };
   },
 

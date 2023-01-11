@@ -1,19 +1,22 @@
 # frozen_string_literal: true
 
 class GroupUser < ActiveRecord::Base
-  belongs_to :group, counter_cache: "user_count"
+  belongs_to :group
   belongs_to :user
 
   after_save :update_title
   after_destroy :grant_other_available_title
 
   after_save :set_primary_group
-  after_destroy :remove_primary_group, :recalculate_trust_level
+  after_destroy :remove_primary_and_flair_group, :recalculate_trust_level
 
   before_create :set_notification_level
   after_save :grant_trust_level
   after_save :set_category_notifications
   after_save :set_tag_notifications
+
+  after_commit :increase_group_user_count, on: [:create]
+  after_commit :decrease_group_user_count, on: [:destroy]
 
   def self.notification_levels
     NotificationLevels.all
@@ -24,7 +27,10 @@ class GroupUser < ActiveRecord::Base
   end
 
   def self.update_first_unread_pm(last_seen, limit: 10_000)
-    DB.exec(<<~SQL, archetype: Archetype.private_message, last_seen: last_seen, limit: limit, now: 10.minutes.ago)
+    whisperers_group_ids = SiteSetting.whispers_allowed_group_ids
+
+    DB.exec(
+      <<~SQL,
     UPDATE group_users gu
     SET first_unread_pm_at = Y.min_date
     FROM (
@@ -51,7 +57,7 @@ class GroupUser < ActiveRecord::Base
           WHERE t.deleted_at IS NULL
           AND t.archetype = :archetype
           AND tu.last_read_post_number < CASE
-                                         WHEN u.admin OR u.moderator
+                                         WHEN u.admin OR u.moderator #{whisperers_group_ids.present? ? "OR gu2.group_id IN (:whisperers_group_ids)" : ""}
                                          THEN t.highest_staff_post_number
                                          ELSE t.highest_post_number
                                          END
@@ -70,6 +76,12 @@ class GroupUser < ActiveRecord::Base
     ) Y
     WHERE gu.user_id = Y.user_id AND gu.group_id = Y.group_id
     SQL
+      archetype: Archetype.private_message,
+      last_seen: last_seen,
+      limit: limit,
+      now: 10.minutes.ago,
+      whisperers_group_ids: whisperers_group_ids,
+    )
   end
 
   protected
@@ -82,10 +94,14 @@ class GroupUser < ActiveRecord::Base
     user.update!(primary_group: group) if group.primary_group
   end
 
-  def remove_primary_group
-    return if user.primary_group_id != group_id
+  def remove_primary_and_flair_group
     return if self.destroyed_by_association&.active_record == User # User is being destroyed, so don't try to update
-    user.update_attribute(:primary_group_id, nil)
+
+    updates = {}
+    updates[:primary_group_id] = nil if user.primary_group_id == group_id
+    updates[:flair_group_id] = nil if user.flair_group_id == group_id
+
+    user.update(updates) if updates.present?
   end
 
   def grant_other_available_title
@@ -96,10 +112,12 @@ class GroupUser < ActiveRecord::Base
 
   def update_title
     if group.title.present?
-      DB.exec("
+      DB.exec(
+        "
         UPDATE users SET title = :title
         WHERE (title IS NULL OR title = '') AND id = :id",
-        id: user_id, title: group.title
+        id: user_id,
+        title: group.title,
       )
     end
   end
@@ -114,7 +132,7 @@ class GroupUser < ActiveRecord::Base
     return if group.grant_trust_level.nil?
     return if self.destroyed_by_association&.active_record == User # User is being destroyed, so don't try to recalculate
 
-    Promotion.recalculate(user)
+    Promotion.recalculate(user, use_previous_trust_level: true)
   end
 
   def set_category_notifications
@@ -122,28 +140,34 @@ class GroupUser < ActiveRecord::Base
   end
 
   def self.set_category_notifications(group, user)
-    group_levels = group.group_category_notification_defaults.each_with_object({}) do |r, h|
-      h[r.notification_level] ||= []
-      h[r.notification_level] << r.category_id
-    end
+    group_levels =
+      group
+        .group_category_notification_defaults
+        .each_with_object({}) do |r, h|
+          h[r.notification_level] ||= []
+          h[r.notification_level] << r.category_id
+        end
 
     return if group_levels.empty?
 
-    user_levels = CategoryUser.where(user_id: user.id).each_with_object({}) do |r, h|
-      h[r.notification_level] ||= []
-      h[r.notification_level] << r.category_id
-    end
+    user_levels =
+      CategoryUser
+        .where(user_id: user.id)
+        .each_with_object({}) do |r, h|
+          h[r.notification_level] ||= []
+          h[r.notification_level] << r.category_id
+        end
 
     higher_level_category_ids = user_levels.values.flatten
 
-    [:muted, :regular, :tracking, :watching_first_post, :watching].each do |level|
+    %i[muted regular tracking watching_first_post watching].each do |level|
       level_num = NotificationLevels.all[level]
       higher_level_category_ids -= (user_levels[level_num] || [])
       if group_category_ids = group_levels[level_num]
         CategoryUser.batch_set(
           user,
           level,
-          group_category_ids + (user_levels[level_num] || []) - higher_level_category_ids
+          group_category_ids + (user_levels[level_num] || []) - higher_level_category_ids,
         )
       end
     end
@@ -154,31 +178,45 @@ class GroupUser < ActiveRecord::Base
   end
 
   def self.set_tag_notifications(group, user)
-    group_levels = group.group_tag_notification_defaults.each_with_object({}) do |r, h|
-      h[r.notification_level] ||= []
-      h[r.notification_level] << r.tag_id
-    end
+    group_levels =
+      group
+        .group_tag_notification_defaults
+        .each_with_object({}) do |r, h|
+          h[r.notification_level] ||= []
+          h[r.notification_level] << r.tag_id
+        end
 
     return if group_levels.empty?
 
-    user_levels = TagUser.where(user_id: user.id).each_with_object({}) do |r, h|
-      h[r.notification_level] ||= []
-      h[r.notification_level] << r.tag_id
-    end
+    user_levels =
+      TagUser
+        .where(user_id: user.id)
+        .each_with_object({}) do |r, h|
+          h[r.notification_level] ||= []
+          h[r.notification_level] << r.tag_id
+        end
 
     higher_level_tag_ids = user_levels.values.flatten
 
-    [:muted, :regular, :tracking, :watching_first_post, :watching].each do |level|
+    %i[muted regular tracking watching_first_post watching].each do |level|
       level_num = NotificationLevels.all[level]
       higher_level_tag_ids -= (user_levels[level_num] || [])
       if group_tag_ids = group_levels[level_num]
         TagUser.batch_set(
           user,
           level,
-          group_tag_ids + (user_levels[level_num] || []) - higher_level_tag_ids
+          group_tag_ids + (user_levels[level_num] || []) - higher_level_tag_ids,
         )
       end
     end
+  end
+
+  def increase_group_user_count
+    Group.increment_counter(:user_count, self.group_id)
+  end
+
+  def decrease_group_user_count
+    Group.decrement_counter(:user_count, self.group_id)
   end
 end
 

@@ -3,7 +3,6 @@ import cookie, { removeCookie } from "discourse/lib/cookie";
 import Component from "@ember/component";
 import I18n from "I18n";
 import discourseComputed, { bind } from "discourse-common/utils/decorators";
-import getURL from "discourse-common/lib/get-url";
 import { htmlSafe } from "@ember/template";
 import { inject as service } from "@ember/service";
 
@@ -50,6 +49,8 @@ const Notice = EmberObject.extend({
 });
 
 export default Component.extend({
+  tagName: "",
+  router: service(),
   logsNoticeService: service("logsNotice"),
   logNotice: null,
 
@@ -70,25 +71,25 @@ export default Component.extend({
     );
   },
 
+  get visible() {
+    return !this.router.currentRouteName.startsWith("wizard.");
+  },
+
   @discourseComputed(
     "site.isReadOnly",
-    "site.wizard_required",
+    "site.isStaffWritesOnly",
     "siteSettings.login_required",
     "siteSettings.disable_emails",
     "siteSettings.global_notice",
-    "siteSettings.bootstrap_mode_enabled",
-    "siteSettings.bootstrap_mode_min_users",
     "session.safe_mode",
     "logNotice.{id,text,hidden}"
   )
   notices(
     isReadOnly,
-    wizardRequired,
+    isStaffWritesOnly,
     loginRequired,
     disableEmails,
     globalNotice,
-    bootstrapModeEnabled,
-    bootstrapModeMinUsers,
     safeMode,
     logNotice
   ) {
@@ -112,7 +113,14 @@ export default Component.extend({
       );
     }
 
-    if (isReadOnly) {
+    if (isStaffWritesOnly) {
+      notices.push(
+        Notice.create({
+          text: I18n.t("staff_writes_only_mode.enabled"),
+          id: "alert-staff-writes-only",
+        })
+      );
+    } else if (isReadOnly) {
       notices.push(
         Notice.create({
           text: I18n.t("read_only_mode.enabled"),
@@ -121,42 +129,20 @@ export default Component.extend({
       );
     }
 
-    if (disableEmails === "yes" || disableEmails === "non-staff") {
+    if (disableEmails === "yes") {
       notices.push(
         Notice.create({
           text: I18n.t("emails_are_disabled"),
           id: "alert-emails-disabled",
         })
       );
-    }
-
-    if (wizardRequired) {
-      const requiredText = I18n.t("wizard_required", {
-        url: getURL("/wizard"),
-      });
+    } else if (disableEmails === "non-staff") {
       notices.push(
-        Notice.create({ text: htmlSafe(requiredText), id: "alert-wizard" })
+        Notice.create({
+          text: I18n.t("emails_are_disabled_non_staff"),
+          id: "alert-emails-disabled",
+        })
       );
-    }
-
-    if (this.currentUser?.staff && bootstrapModeEnabled) {
-      if (bootstrapModeMinUsers > 0) {
-        notices.push(
-          Notice.create({
-            text: I18n.t("bootstrap_mode_enabled", {
-              count: bootstrapModeMinUsers,
-            }),
-            id: "alert-bootstrap-mode",
-          })
-        );
-      } else {
-        notices.push(
-          Notice.create({
-            text: I18n.t("bootstrap_mode_disabled"),
-            id: "alert-bootstrap-mode",
-          })
-        );
-      }
     }
 
     if (globalNotice?.length > 0) {

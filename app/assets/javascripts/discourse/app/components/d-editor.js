@@ -11,13 +11,13 @@ import discourseComputed, {
 } from "discourse-common/utils/decorators";
 import { emojiSearch, isSkinTonableEmoji } from "pretty-text/emoji";
 import { emojiUrlFor, generateCookFunction } from "discourse/lib/text";
-import { later, schedule, scheduleOnce } from "@ember/runloop";
+import { schedule, scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
 import I18n from "I18n";
 import ItsATrap from "@discourse/itsatrap";
 import { Promise } from "rsvp";
 import { SKIP } from "discourse/lib/autocomplete";
-import { categoryHashtagTriggerRule } from "discourse/lib/category-hashtags";
+import { setupHashtagAutocomplete } from "discourse/lib/hashtag-autocomplete";
 import deprecated from "discourse-common/lib/deprecated";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { findRawTemplate } from "discourse-common/lib/raw-templates";
@@ -28,35 +28,20 @@ import { linkSeenMentions } from "discourse/lib/link-mentions";
 import { loadOneboxes } from "discourse/lib/load-oneboxes";
 import loadScript from "discourse/lib/load-script";
 import { resolveCachedShortUrls } from "pretty-text/upload-short-url";
-import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
 import { inject as service } from "@ember/service";
 import showModal from "discourse/lib/show-modal";
 import { siteDir } from "discourse/lib/text-direction";
 import { translations } from "pretty-text/emoji/data";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { action } from "@ember/object";
-import TextareaTextManipulation from "discourse/mixins/textarea-text-manipulation";
-
-// Our head can be a static string or a function that returns a string
-// based on input (like for numbered lists).
-function getHead(head, prev) {
-  if (typeof head === "string") {
-    return [head, head.length];
-  } else {
-    return getHead(head(prev));
-  }
-}
+import TextareaTextManipulation, {
+  getHead,
+} from "discourse/mixins/textarea-text-manipulation";
 
 function getButtonLabel(labelKey, defaultLabel) {
   // use the Font Awesome icon if the label matches the default
   return I18n.t(labelKey) === defaultLabel ? null : labelKey;
 }
-
-const OP = {
-  NONE: 0,
-  REMOVED: 1,
-  ADDED: 2,
-};
 
 const FOUR_SPACES_INDENT = "4-spaces-indent";
 
@@ -64,7 +49,7 @@ let _createCallbacks = [];
 
 class Toolbar {
   constructor(opts) {
-    const { site, siteSettings } = opts;
+    const { siteSettings, capabilities } = opts;
     this.shortcuts = {};
     this.context = null;
 
@@ -120,16 +105,16 @@ class Toolbar {
         }),
     });
 
-    this.addButton({
-      id: "code",
-      group: "insertions",
-      shortcut: "E",
-      preventFocus: true,
-      trimLeading: true,
-      action: (...args) => this.context.send("formatCode", args),
-    });
+    if (!capabilities.touch) {
+      this.addButton({
+        id: "code",
+        group: "insertions",
+        shortcut: "E",
+        preventFocus: true,
+        trimLeading: true,
+        action: (...args) => this.context.send("formatCode", args),
+      });
 
-    if (!site.mobileView) {
       this.addButton({
         id: "bullet",
         group: "extras",
@@ -224,7 +209,9 @@ export function clearToolbarCallbacks() {
 }
 
 export function onToolbarCreate(func) {
-  deprecated("`onToolbarCreate` is deprecated, use the plugin api instead.");
+  deprecated("`onToolbarCreate` is deprecated, use the plugin api instead.", {
+    id: "discourse.d-editor.on-toolbar-create",
+  });
   addToolbarCallback(func);
 }
 
@@ -235,6 +222,7 @@ export default Component.extend(TextareaTextManipulation, {
   _itsatrap: null,
   showLink: true,
   emojiPickerIsActive: false,
+  emojiFilter: "",
   emojiStore: service("emoji-store"),
   isEditorFocused: false,
   processPreview: true,
@@ -270,7 +258,7 @@ export default Component.extend(TextareaTextManipulation, {
     this._textarea = this.element.querySelector("textarea.d-editor-input");
     this._$textarea = $(this._textarea);
     this._applyEmojiAutocomplete(this._$textarea);
-    this._applyCategoryHashtagAutocomplete(this._$textarea);
+    this._applyHashtagAutocomplete(this._$textarea);
 
     scheduleOnce("afterRender", this, this._readyNow);
 
@@ -285,8 +273,8 @@ export default Component.extend(TextareaTextManipulation, {
       });
     });
 
-    this._itsatrap.bind("tab", () => this._indentSelection("right"));
-    this._itsatrap.bind("shift+tab", () => this._indentSelection("left"));
+    this._itsatrap.bind("tab", () => this.indentSelection("right"));
+    this._itsatrap.bind("shift+tab", () => this.indentSelection("left"));
 
     // disable clicking on links in the preview
     this.element
@@ -294,18 +282,14 @@ export default Component.extend(TextareaTextManipulation, {
       .addEventListener("click", this._handlePreviewLinkClick);
 
     if (this.composerEvents) {
-      this.appEvents.on("composer:insert-block", this, "_insertBlock");
-      this.appEvents.on("composer:insert-text", this, "_insertText");
-      this.appEvents.on("composer:replace-text", this, "_replaceText");
+      this.appEvents.on("composer:insert-block", this, "insertBlock");
+      this.appEvents.on("composer:insert-text", this, "insertText");
+      this.appEvents.on("composer:replace-text", this, "replaceText");
       this.appEvents.on(
         "composer:indent-selected-text",
         this,
-        "_indentSelection"
+        "indentSelection"
       );
-    }
-
-    if (isTesting()) {
-      this.element.addEventListener("paste", this.paste);
     }
   },
 
@@ -338,13 +322,13 @@ export default Component.extend(TextareaTextManipulation, {
   @on("willDestroyElement")
   _shutDown() {
     if (this.composerEvents) {
-      this.appEvents.off("composer:insert-block", this, "_insertBlock");
-      this.appEvents.off("composer:insert-text", this, "_insertText");
-      this.appEvents.off("composer:replace-text", this, "_replaceText");
+      this.appEvents.off("composer:insert-block", this, "insertBlock");
+      this.appEvents.off("composer:insert-text", this, "insertText");
+      this.appEvents.off("composer:replace-text", this, "replaceText");
       this.appEvents.off(
         "composer:indent-selected-text",
         this,
-        "_indentSelection"
+        "indentSelection"
       );
     }
 
@@ -367,7 +351,7 @@ export default Component.extend(TextareaTextManipulation, {
   @discourseComputed()
   toolbar() {
     const toolbar = new Toolbar(
-      this.getProperties("site", "siteSettings", "showLink")
+      this.getProperties("site", "siteSettings", "showLink", "capabilities")
     );
     toolbar.context = this;
 
@@ -376,6 +360,12 @@ export default Component.extend(TextareaTextManipulation, {
     if (this.extraButtons) {
       this.extraButtons(toolbar);
     }
+
+    const firstButton = toolbar.groups.mapBy("buttons").flat().firstObject;
+    if (firstButton) {
+      firstButton.tabindex = 0;
+    }
+
     return toolbar;
   },
 
@@ -469,29 +459,18 @@ export default Component.extend(TextareaTextManipulation, {
     }
   },
 
-  _applyCategoryHashtagAutocomplete() {
-    const siteSettings = this.siteSettings;
-
-    this._$textarea.autocomplete({
-      template: findRawTemplate("category-tag-autocomplete"),
-      key: "#",
-      afterComplete: (value) => {
-        this.set("value", value);
-        schedule("afterRender", this, this._focusTextArea);
-      },
-      transformComplete: (obj) => {
-        return obj.text;
-      },
-      dataSource: (term) => {
-        if (term.match(/\s/)) {
-          return null;
-        }
-        return searchCategoryTag(term, siteSettings);
-      },
-      triggerRule: (textarea, opts) => {
-        return categoryHashtagTriggerRule(textarea, opts);
-      },
-    });
+  _applyHashtagAutocomplete() {
+    setupHashtagAutocomplete(
+      this.site.hashtag_configurations["topic-composer"],
+      this._$textarea,
+      this.siteSettings,
+      {
+        afterComplete: (value) => {
+          this.set("value", value);
+          schedule("afterRender", this, this.focusTextArea);
+        },
+      }
+    );
   },
 
   _applyEmojiAutocomplete($textarea) {
@@ -504,7 +483,7 @@ export default Component.extend(TextareaTextManipulation, {
       key: ":",
       afterComplete: (text) => {
         this.set("value", text);
-        schedule("afterRender", this, this._focusTextArea);
+        schedule("afterRender", this, this.focusTextArea);
       },
 
       onKeyUp: (text, cp) => {
@@ -512,9 +491,10 @@ export default Component.extend(TextareaTextManipulation, {
           return false;
         }
 
-        const matches = /(?:^|[\s.\?,@\/#!%&*;:\[\]{}=\-_()])(:(?!:).?[\w-]*:?(?!:)(?:t\d?)?:?) ?$/gi.exec(
-          text.substring(0, cp)
-        );
+        const matches =
+          /(?:^|[\s.\?,@\/#!%&*;:\[\]{}=\-_()])(:(?!:).?[\w-]*:?(?!:)(?:t\d?)?:?) ?$/gi.exec(
+            text.substring(0, cp)
+          );
 
         if (matches && matches[1]) {
           return [matches[1]];
@@ -528,17 +508,7 @@ export default Component.extend(TextareaTextManipulation, {
         } else {
           $textarea.autocomplete({ cancel: true });
           this.set("emojiPickerIsActive", true);
-
-          schedule("afterRender", () => {
-            const filterInput = document.querySelector(
-              ".emoji-picker input[name='filter']"
-            );
-            if (filterInput) {
-              filterInput.value = v.term;
-
-              later(() => filterInput.dispatchEvent(new Event("input")), 50);
-            }
-          });
+          this.set("emojiFilter", v.term);
 
           return "";
         }
@@ -569,10 +539,12 @@ export default Component.extend(TextareaTextManipulation, {
 
           // note this will only work for emojis starting with :
           // eg: :-)
+          const emojiTranslation =
+            this.get("site.custom_emoji_translation") || {};
           const allTranslations = Object.assign(
             {},
             translations,
-            this.getWithDefault("site.custom_emoji_translation", {})
+            emojiTranslation
           );
           if (allTranslations[full]) {
             return resolve([allTranslations[full]]);
@@ -599,11 +571,15 @@ export default Component.extend(TextareaTextManipulation, {
 
           return resolve(options);
         })
-          .then((list) =>
-            list.map((code) => {
+          .then((list) => {
+            if (list === SKIP) {
+              return [];
+            }
+
+            return list.map((code) => {
               return { code, src: emojiUrlFor(code) };
-            })
-          )
+            });
+          })
           .then((list) => {
             if (list.length) {
               list.push({ label: I18n.t("composer.more_emoji"), term });
@@ -617,117 +593,9 @@ export default Component.extend(TextareaTextManipulation, {
     });
   },
 
-  // perform the same operation over many lines of text
-  _getMultilineContents(lines, head, hval, hlen, tail, tlen, opts) {
-    let operation = OP.NONE;
-
-    const applyEmptyLines = opts && opts.applyEmptyLines;
-
-    return lines
-      .map((l) => {
-        if (!applyEmptyLines && l.length === 0) {
-          return l;
-        }
-
-        if (
-          operation !== OP.ADDED &&
-          ((l.slice(0, hlen) === hval && tlen === 0) ||
-            (tail.length && l.slice(-tlen) === tail))
-        ) {
-          operation = OP.REMOVED;
-          if (tlen === 0) {
-            const result = l.slice(hlen);
-            [hval, hlen] = getHead(head, hval);
-            return result;
-          } else if (l.slice(-tlen) === tail) {
-            const result = l.slice(hlen, -tlen);
-            [hval, hlen] = getHead(head, hval);
-            return result;
-          }
-        } else if (operation === OP.NONE) {
-          operation = OP.ADDED;
-        } else if (operation === OP.REMOVED) {
-          return l;
-        }
-
-        const result = `${hval}${l}${tail}`;
-        [hval, hlen] = getHead(head, hval);
-        return result;
-      })
-      .join("\n");
-  },
-
-  _applySurround(sel, head, tail, exampleKey, opts) {
-    const pre = sel.pre;
-    const post = sel.post;
-
-    const tlen = tail.length;
-    if (sel.start === sel.end) {
-      if (tlen === 0) {
-        return;
-      }
-
-      const [hval, hlen] = getHead(head);
-      const example = I18n.t(`composer.${exampleKey}`);
-      this.set("value", `${pre}${hval}${example}${tail}${post}`);
-      this._selectText(pre.length + hlen, example.length);
-    } else if (opts && !opts.multiline) {
-      let [hval, hlen] = getHead(head);
-
-      if (opts.useBlockMode && sel.value.split("\n").length > 1) {
-        hval += "\n";
-        hlen += 1;
-        tail = `\n${tail}`;
-      }
-
-      if (pre.slice(-hlen) === hval && post.slice(0, tail.length) === tail) {
-        this.set(
-          "value",
-          `${pre.slice(0, -hlen)}${sel.value}${post.slice(tail.length)}`
-        );
-        this._selectText(sel.start - hlen, sel.value.length);
-      } else {
-        this.set("value", `${pre}${hval}${sel.value}${tail}${post}`);
-        this._selectText(sel.start + hlen, sel.value.length);
-      }
-    } else {
-      const lines = sel.value.split("\n");
-
-      let [hval, hlen] = getHead(head);
-      if (
-        lines.length === 1 &&
-        pre.slice(-tlen) === tail &&
-        post.slice(0, hlen) === hval
-      ) {
-        this.set(
-          "value",
-          `${pre.slice(0, -hlen)}${sel.value}${post.slice(tlen)}`
-        );
-        this._selectText(sel.start - hlen, sel.value.length);
-      } else {
-        const contents = this._getMultilineContents(
-          lines,
-          head,
-          hval,
-          hlen,
-          tail,
-          tlen,
-          opts
-        );
-
-        this.set("value", `${pre}${contents}${post}`);
-        if (lines.length === 1 && tlen > 0) {
-          this._selectText(sel.start + hlen, sel.value.length);
-        } else {
-          this._selectText(sel.start, contents.length);
-        }
-      }
-    }
-  },
-
   _applyList(sel, head, exampleKey, opts) {
-    if (sel.value.indexOf("\n") !== -1) {
-      this._applySurround(sel, head, "", exampleKey, opts);
+    if (sel.value.includes("\n")) {
+      this.applySurround(sel, head, "", exampleKey, opts);
     } else {
       const [hval, hlen] = getHead(head);
       if (sel.start === sel.end) {
@@ -735,17 +603,16 @@ export default Component.extend(TextareaTextManipulation, {
       }
 
       const trimmedPre = sel.pre.trim();
-      const number =
-        sel.value.indexOf(hval) === 0
-          ? sel.value.slice(hlen)
-          : `${hval}${sel.value}`;
+      const number = sel.value.startsWith(hval)
+        ? sel.value.slice(hlen)
+        : `${hval}${sel.value}`;
       const preLines = trimmedPre.length ? `${trimmedPre}\n\n` : "";
 
       const trimmedPost = sel.post.trim();
       const post = trimmedPost.length ? `\n\n${trimmedPost}` : trimmedPost;
 
       this.set("value", `${preLines}${number}${post}`);
-      this._selectText(preLines.length, number.length);
+      this.selectText(preLines.length, number.length);
     }
   },
 
@@ -797,6 +664,13 @@ export default Component.extend(TextareaTextManipulation, {
     return true;
   },
 
+  @action
+  onEmojiPickerClose() {
+    if (!(this.isDestroyed || this.isDestroying)) {
+      this.set("emojiPickerIsActive", false);
+    }
+  },
+
   actions: {
     emoji() {
       if (this.disabled) {
@@ -811,17 +685,17 @@ export default Component.extend(TextareaTextManipulation, {
         return;
       }
 
-      const selected = this._getSelected(button.trimLeading);
+      const selected = this.getSelected(button.trimLeading);
       const toolbarEvent = {
         selected,
         selectText: (from, length) =>
-          this._selectText(from, length, { scroll: false }),
+          this.selectText(from, length, { scroll: false }),
         applySurround: (head, tail, exampleKey, opts) =>
-          this._applySurround(selected, head, tail, exampleKey, opts),
+          this.applySurround(selected, head, tail, exampleKey, opts),
         applyList: (head, exampleKey, opts) =>
           this._applyList(selected, head, exampleKey, opts),
-        addText: (text) => this._addText(selected, text),
-        replaceText: (text) => this._addText({ pre: "", post: "" }, text),
+        formatCode: (...args) => this.send("formatCode", args),
+        addText: (text) => this.addText(selected, text),
         getText: () => this.value,
         toggleDirection: () => this._toggleDirection(),
       };
@@ -856,9 +730,9 @@ export default Component.extend(TextareaTextManipulation, {
         return;
       }
 
-      const sel = this._getSelected("", { lineVal: true });
+      const sel = this.getSelected("", { lineVal: true });
       const selValue = sel.value;
-      const hasNewLine = selValue.indexOf("\n") !== -1;
+      const hasNewLine = selValue.includes("\n");
       const isBlankLine = sel.lineVal.trim().length === 0;
       const isFourSpacesIndent =
         this.siteSettings.code_formatting_style === FOUR_SPACES_INDENT;
@@ -868,25 +742,20 @@ export default Component.extend(TextareaTextManipulation, {
           if (isFourSpacesIndent) {
             const example = I18n.t(`composer.code_text`);
             this.set("value", `${sel.pre}    ${example}${sel.post}`);
-            return this._selectText(sel.pre.length + 4, example.length);
+            return this.selectText(sel.pre.length + 4, example.length);
           } else {
-            return this._applySurround(
-              sel,
-              "```\n",
-              "\n```",
-              "paste_code_text"
-            );
+            return this.applySurround(sel, "```\n", "\n```", "paste_code_text");
           }
         } else {
-          return this._applySurround(sel, "`", "`", "code_title");
+          return this.applySurround(sel, "`", "`", "code_title");
         }
       } else {
         if (isFourSpacesIndent) {
-          return this._applySurround(sel, "    ", "", "code_text");
+          return this.applySurround(sel, "    ", "", "code_text");
         } else {
           const preNewline = sel.pre[-1] !== "\n" && sel.pre !== "" ? "\n" : "";
           const postNewline = sel.post[0] !== "\n" ? "\n" : "";
-          return this._addText(
+          return this.addText(
             sel,
             `${preNewline}\`\`\`\n${sel.value}\n\`\`\`${postNewline}`
           );

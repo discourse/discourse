@@ -1,35 +1,31 @@
-import { discourseModule, query } from "discourse/tests/helpers/qunit-helpers";
-import componentTest, {
-  setupRenderingTest,
-} from "discourse/tests/helpers/component-test";
-import hbs from "htmlbars-inline-precompile";
-import createStore from "discourse/tests/helpers/create-store";
+import { module, test } from "qunit";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { render } from "@ember/test-helpers";
+import { query } from "discourse/tests/helpers/qunit-helpers";
+import { hbs } from "ember-cli-htmlbars";
+import { getOwner } from "discourse-common/lib/get-owner";
 
-discourseModule("Integration | Component | pending-post", function (hooks) {
+module("Integration | Component | pending-post", function (hooks) {
   setupRenderingTest(hooks);
 
-  componentTest("it renders", {
-    template: hbs`<PendingPost @post={{this.post}}/>`,
+  test("it renders", async function (assert) {
+    const store = getOwner(this).lookup("service:store");
+    store.createRecord("category", { id: 2 });
+    const post = store.createRecord("pending-post", {
+      id: 1,
+      topic_url: "topic-url",
+      username: "USERNAME",
+      category_id: 2,
+      raw_text: "**bold text**",
+    });
+    this.set("post", post);
 
-    beforeEach() {
-      const store = createStore();
-      store.createRecord("category", { id: 2 });
-      const post = store.createRecord("pending-post", {
-        id: 1,
-        topic_url: "topic-url",
-        username: "USERNAME",
-        category_id: 2,
-        raw_text: "**bold text**",
-      });
-      this.set("post", post);
-    },
+    await render(hbs`<PendingPost @post={{this.post}}/>`);
 
-    test(assert) {
-      assert.strictEqual(
-        query("p.excerpt").textContent.trim(),
-        "bold text",
-        "renders the cooked text"
-      );
-    },
+    assert.strictEqual(
+      query("p.excerpt").textContent.trim(),
+      "bold text",
+      "renders the cooked text"
+    );
   });
 });

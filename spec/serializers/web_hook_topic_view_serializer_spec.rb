@@ -1,24 +1,17 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe WebHookTopicViewSerializer do
   fab!(:admin) { Fabricate(:admin) }
   fab!(:topic) { Fabricate(:topic) }
 
   let(:serializer) do
-    WebHookTopicViewSerializer.new(TopicView.new(topic),
-      scope: Guardian.new(admin),
-      root: false
-    )
+    WebHookTopicViewSerializer.new(TopicView.new(topic), scope: Guardian.new(admin), root: false)
   end
 
-  before do
-    SiteSetting.tagging_enabled = true
-  end
+  before { SiteSetting.tagging_enabled = true }
 
-  it 'should only include the keys that are sent out in the webhook' do
-    expected_keys = %i{
+  it "should only include the keys that are sent out in the webhook" do
+    expected_keys = %i[
       id
       title
       fancy_title
@@ -52,10 +45,14 @@ RSpec.describe WebHookTopicViewSerializer do
       tags
       tags_descriptions
       thumbnails
-    }
+    ]
 
     keys = serializer.as_json.keys
 
+    expect(serializer.as_json.keys).to contain_exactly(*expected_keys)
+
+    topic.external_id = "external_id"
+    expected_keys << :external_id
     expect(serializer.as_json.keys).to contain_exactly(*expected_keys)
   end
 end

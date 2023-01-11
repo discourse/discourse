@@ -5,7 +5,7 @@ import { Promise } from "rsvp";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
 import { formatUsername } from "discourse/lib/utilities";
-import { later } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 
 let primaryTab = false;
 let liveEnabled = false;
@@ -94,7 +94,7 @@ function confirmNotification(siteSettings) {
   const clickEventHandler = () => notification.close();
 
   notification.addEventListener("click", clickEventHandler);
-  later(() => {
+  discourseLater(() => {
     notification.close();
     notification.removeEventListener("click", clickEventHandler);
   }, 10 * 1000);
@@ -144,7 +144,7 @@ function isIdle() {
 }
 
 // Call-in point from message bus
-function onNotification(data, siteSettings, user) {
+async function onNotification(data, siteSettings, user) {
   if (!liveEnabled) {
     return;
   }
@@ -177,22 +177,22 @@ function onNotification(data, siteSettings, user) {
   const notificationTag =
     "discourse-notification-" + siteSettings.title + "-" + data.topic_id;
 
-  requestPermission().then(function () {
-    // This shows the notification!
-    const notification = new Notification(notificationTitle, {
-      body: notificationBody,
-      icon: notificationIcon,
-      tag: notificationTag,
-    });
-    notification.onclick = () => {
-      DiscourseURL.routeTo(data.post_url);
-      notification.close();
-    };
+  await requestPermission();
 
-    desktopNotificationHandlers.forEach((handler) =>
-      handler(data, siteSettings, user)
-    );
+  // This shows the notification!
+  const notification = new Notification(notificationTitle, {
+    body: notificationBody,
+    icon: notificationIcon,
+    tag: notificationTag,
   });
+  notification.onclick = () => {
+    DiscourseURL.routeTo(data.post_url);
+    notification.close();
+  };
+
+  desktopNotificationHandlers.forEach((handler) =>
+    handler(data, siteSettings, user)
+  );
 }
 
 // Utility function

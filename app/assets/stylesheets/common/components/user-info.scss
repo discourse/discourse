@@ -20,7 +20,7 @@
     width: 70%;
     padding-left: 5px;
     @media screen and (max-width: 600px) {
-      font-size: $font-down-1;
+      font-size: var(--font-down-1);
     }
 
     .name-line {

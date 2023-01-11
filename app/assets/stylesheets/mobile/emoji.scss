@@ -6,4 +6,13 @@
   top: 0;
   left: 0;
   border-bottom: 1px solid var(--primary-low);
+  min-height: 50vh;
+  .emoji-picker-emoji-area {
+    img.emoji {
+      // custom emojis might import images of various sizes
+      // we don't want them to be deformed in the picker
+      width: 28px !important;
+      height: 28px !important;
+    }
+  }
 }

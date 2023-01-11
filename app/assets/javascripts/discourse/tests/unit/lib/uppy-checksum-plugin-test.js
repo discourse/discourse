@@ -8,21 +8,24 @@ class FakeUppy {
     this.preprocessors = [];
     this.emitted = [];
     this.files = {
-      "uppy-test/file/vv2/xvejg5w/blah/png-1d-1d-2v-1d-1e-image/jpeg-9043429-1624921727764": {
-        meta: {},
-        data: createFile("test1.png", "image/png", "testblobdata1"),
-        size: 1024,
-      },
-      "uppy-test/file/blah1/ads37x2/blah1/png-1d-1d-2v-1d-1e-image/jpeg-99999-1837921727764": {
-        meta: {},
-        data: createFile("test2.png", "image/png", "testblobdata2"),
-        size: 2048,
-      },
-      "uppy-test/file/mnb3/jfhrg43x/blah3/png-1d-1d-2v-1d-1e-image/jpeg-111111-1837921727764": {
-        meta: {},
-        data: createFile("test2.png", "image/png", "testblobdata2"),
-        size: 209715200,
-      },
+      "uppy-test/file/vv2/xvejg5w/blah/png-1d-1d-2v-1d-1e-image/jpeg-9043429-1624921727764":
+        {
+          meta: {},
+          data: createFile("test1.png", "image/png", "testblobdata1"),
+          size: 1024,
+        },
+      "uppy-test/file/blah1/ads37x2/blah1/png-1d-1d-2v-1d-1e-image/jpeg-99999-1837921727764":
+        {
+          meta: {},
+          data: createFile("test2.png", "image/png", "testblobdata2"),
+          size: 2048,
+        },
+      "uppy-test/file/mnb3/jfhrg43x/blah3/png-1d-1d-2v-1d-1e-image/jpeg-111111-1837921727764":
+        {
+          meta: {},
+          data: createFile("test2.png", "image/png", "testblobdata2"),
+          size: 209715200,
+        },
     };
   }
 

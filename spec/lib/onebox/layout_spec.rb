@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
-describe Onebox::Layout do
+RSpec.describe Onebox::Layout do
   let(:record) { {} }
   let(:layout) { described_class.new("amazon", record) }
   let(:html) { layout.to_html }

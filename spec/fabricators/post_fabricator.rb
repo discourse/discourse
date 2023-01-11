@@ -5,16 +5,19 @@ Fabricator(:post) do
   topic { |attrs| Fabricate(:topic, user: attrs[:user]) }
   raw "Hello world"
   post_type Post.types[:regular]
+
+  # Fabrication bypasses PostCreator, for performance reasons, where the counts are updated so we have to handle this manually here.
+  after_create { |post, _transients| UserStatCountUpdater.increment!(post) }
 end
 
 Fabricator(:post_with_long_raw_content, from: :post) do
-  raw 'This is a sample post with semi-long raw content. The raw content is also more than
+  raw "This is a sample post with semi-long raw content. The raw content is also more than
       two hundred characters to satisfy any test conditions that require content longer
-      than the typical test post raw content. It really is some long content, folks.'
+      than the typical test post raw content. It really is some long content, folks."
 end
 
 Fabricator(:post_with_youtube, from: :post) do
-  raw 'http://www.youtube.com/watch?v=9bZkp7q19f0'
+  raw "http://www.youtube.com/watch?v=9bZkp7q19f0"
   cooked '<p><a href="http://www.youtube.com/watch?v=9bZkp7q19f0" class="onebox" target="_blank">http://www.youtube.com/watch?v=9bZkp7q19f0</a></p>'
 end
 
@@ -34,7 +37,7 @@ Fabricator(:basic_reply, from: :post) do
   user(fabricator: :coding_horror)
   reply_to_post_number 1
   topic
-  raw 'this reply has no quotes'
+  raw "this reply has no quotes"
 end
 
 Fabricator(:reply, from: :post) do
@@ -46,14 +49,12 @@ Fabricator(:reply, from: :post) do
   '
 end
 
-Fabricator(:post_with_plenty_of_images, from: :post) do
-  cooked <<~HTML
+Fabricator(:post_with_plenty_of_images, from: :post) { cooked <<~HTML }
 <aside class="quote"><img src="/#{Discourse.store.upload_path}/original/1X/1234567890123456.jpg"></aside>
 <div class="onebox-result"><img src="/#{Discourse.store.upload_path}/original/1X/1234567890123456.jpg"></div>
 <div class="onebox"><img src="/#{Discourse.store.upload_path}/original/1X/1234567890123456.jpg"></div>
-<p>With an emoji! <img src="//cdn.discourse.org/meta/images/emoji/twitter/smile.png?v=#{Emoji::EMOJI_VERSION}" title=":smile:" class="emoji" alt="smile" width="72" height="72"></p>
+<p>With an emoji! <img src="//cdn.discourse.org/meta/images/emoji/twitter/smile.png?v=#{Emoji::EMOJI_VERSION}" title=":smile:" class="emoji" alt="smile" loading="lazy" width="20" height="20"></p>
 HTML
-end
 
 Fabricator(:post_with_uploaded_image, from: :post) do
   raw { "<img src=\"#{Fabricate(:image_upload)}\" width=\"1500\" height=\"2000\">" }
@@ -96,21 +97,19 @@ Fabricator(:post_with_uploads, from: :post) do
 "
 end
 
-Fabricator(:post_with_uploads_and_links, from: :post) do
-  raw <<~RAW
+Fabricator(:post_with_uploads_and_links, from: :post) { raw <<~MD }
     <a href="/#{Discourse.store.upload_path}/original/2X/2345678901234567.jpg">Link</a>
     <img src="/#{Discourse.store.upload_path}/original/1X/1234567890123456.jpg">
     <a href="http://www.google.com">Google</a>
     <img src="http://foo.bar/image.png">
     <a class="attachment" href="/#{Discourse.store.upload_path}/original/1X/af2c2618032c679333bebf745e75f9088748d737.txt">text.txt</a> (20 Bytes)
     :smile:
-  RAW
-end
+  MD
 
 Fabricator(:post_with_external_links, from: :post) do
   user
   topic
-  raw <<~RAW
+  raw <<~MD
     Here's a link to twitter: http://twitter.com
     And a link to google: http://google.com
     And a secure link to google: https://google.com
@@ -118,35 +117,54 @@ Fabricator(:post_with_external_links, from: :post) do
     And a markdown link with a period after it [codinghorror](http://www.codinghorror.com/blog).
     And one with a hash http://discourse.org#faq
     And one with a two hash http://discourse.org#a#b
-  RAW
+  MD
 end
 
 Fabricator(:private_message_post, from: :post) do
+  transient :recipient
   user
   topic do |attrs|
-    Fabricate(:private_message_topic,
+    Fabricate(
+      :private_message_topic,
       user: attrs[:user],
       created_at: attrs[:created_at],
       subtype: TopicSubtype.user_to_user,
       topic_allowed_users: [
         Fabricate.build(:topic_allowed_user, user: attrs[:user]),
-        Fabricate.build(:topic_allowed_user, user: Fabricate(:user))
-      ]
+        Fabricate.build(:topic_allowed_user, user: attrs[:recipient] || Fabricate(:user)),
+      ],
     )
   end
   raw "Ssshh! This is our secret conversation!"
 end
 
-Fabricator(:private_message_post_one_user, from: :post) do
+Fabricator(:group_private_message_post, from: :post) do
+  transient :recipients
   user
   topic do |attrs|
-    Fabricate(:private_message_topic,
+    Fabricate(
+      :private_message_topic,
       user: attrs[:user],
       created_at: attrs[:created_at],
       subtype: TopicSubtype.user_to_user,
-      topic_allowed_users: [
-        Fabricate.build(:topic_allowed_user, user: attrs[:user]),
-      ]
+      topic_allowed_users: [Fabricate.build(:topic_allowed_user, user: attrs[:user])],
+      topic_allowed_groups: [
+        Fabricate.build(:topic_allowed_group, group: attrs[:recipients] || Fabricate(:group)),
+      ],
+    )
+  end
+  raw "Ssshh! This is our group secret conversation!"
+end
+
+Fabricator(:private_message_post_one_user, from: :post) do
+  user
+  topic do |attrs|
+    Fabricate(
+      :private_message_topic,
+      user: attrs[:user],
+      created_at: attrs[:created_at],
+      subtype: TopicSubtype.user_to_user,
+      topic_allowed_users: [Fabricate.build(:topic_allowed_user, user: attrs[:user])],
     )
   end
   raw "Ssshh! This is our secret conversation!"
@@ -163,10 +181,6 @@ Fabricator(:post_via_email, from: :post) do
   end
 end
 
-Fabricator(:whisper, from: :post) do
-  post_type Post.types[:whisper]
-end
+Fabricator(:whisper, from: :post) { post_type Post.types[:whisper] }
 
-Fabricator(:small_action, from: :post) do
-  post_type Post.types[:small_action]
-end
+Fabricator(:small_action, from: :post) { post_type Post.types[:small_action] }

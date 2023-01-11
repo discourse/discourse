@@ -3,6 +3,7 @@ import attributeHook from "discourse-common/lib/attribute-hook";
 import { h } from "virtual-dom";
 import { isDevelopment } from "discourse-common/config/environment";
 import escape from "discourse-common/lib/escape";
+import deprecated from "discourse-common/lib/deprecated";
 
 const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
 let _renderers = [];
@@ -10,7 +11,7 @@ let _renderers = [];
 let warnMissingIcons = true;
 let _iconList;
 
-const REPLACEMENTS = {
+export const REPLACEMENTS = {
   "d-tracking": "bell",
   "d-muted": "discourse-bell-slash",
   "d-regular": "far-bell",
@@ -26,15 +27,16 @@ const REPLACEMENTS = {
   "notification.group_mentioned": "users",
   "notification.quoted": "quote-right",
   "notification.replied": "reply",
-  "notification.posted": "reply",
+  "notification.posted": "discourse-bell-exclamation",
+  "notification.watching_category_or_tag": "discourse-bell-exclamation",
   "notification.edited": "pencil-alt",
   "notification.bookmark_reminder": "discourse-bookmark-clock",
   "notification.liked": "heart",
   "notification.liked_2": "heart",
   "notification.liked_many": "heart",
   "notification.liked_consolidated": "heart",
-  "notification.private_message": "far-envelope",
-  "notification.invited_to_private_message": "far-envelope",
+  "notification.private_message": "envelope",
+  "notification.invited_to_private_message": "envelope",
   "notification.invited_to_topic": "hand-point-right",
   "notification.invitee_accepted": "user",
   "notification.moved_post": "sign-out-alt",
@@ -48,6 +50,7 @@ const REPLACEMENTS = {
   "notification.membership_request_consolidated": "users",
   "notification.reaction": "bell",
   "notification.votes_released": "plus",
+  "notification.chat_quoted": "quote-right",
 };
 
 export function replaceIcon(source, destination) {
@@ -63,16 +66,19 @@ export function enableMissingIconWarning() {
 }
 
 export function renderIcon(renderType, id, params) {
-  for (let i = 0; i < _renderers.length; i++) {
-    let renderer = _renderers[i];
-    let rendererForType = renderer[renderType];
+  params ||= {};
 
-    if (rendererForType) {
-      const icon = { id, replacementId: REPLACEMENTS[id] };
-      let result = rendererForType(icon, params || {});
-      if (result) {
-        return result;
-      }
+  for (const renderer of _renderers) {
+    const rendererForType = renderer[renderType];
+    if (!rendererForType) {
+      continue;
+    }
+
+    const icon = { id, replacementId: REPLACEMENTS[id] };
+    const result = rendererForType(icon, params);
+
+    if (result) {
+      return result;
     }
   }
 }
@@ -101,7 +107,7 @@ export function registerIconRenderer(renderer) {
 function iconClasses(icon, params) {
   // "notification." is invalid syntax for classes, use replacement instead
   const dClass =
-    icon.replacementId && icon.id.indexOf("notification.") > -1
+    icon.replacementId && icon.id.includes("notification.")
       ? icon.replacementId
       : icon.id;
 
@@ -119,7 +125,7 @@ export function setIconList(iconList) {
 }
 
 export function isExistingIconId(id) {
-  return _iconList && _iconList.indexOf(id) >= 0;
+  return _iconList?.includes(id);
 }
 
 function warnIfMissing(id) {
@@ -148,6 +154,10 @@ registerIconRenderer({
 
     if (params.label) {
       html += " aria-hidden='true'";
+    } else if (params["aria-label"]) {
+      html += ` aria-hidden='false' aria-label='${escape(
+        params["aria-label"]
+      )}'`;
     }
     html += ` xmlns="${SVG_NAMESPACE}"><use href="#${id}" /></svg>`;
     if (params.label) {
@@ -158,9 +168,19 @@ registerIconRenderer({
         I18n.t(params.title)
       )}'>${html}</span>`;
     }
+
     if (params.translatedtitle) {
+      deprecated(`use 'translatedTitle' option instead of 'translatedtitle'`, {
+        since: "2.9.0.beta6",
+        dropFrom: "2.10.0.beta1",
+        id: "discourse.icon-renderer-translatedtitle",
+      });
+      params.translatedTitle = params.translatedtitle;
+    }
+
+    if (params.translatedTitle) {
       html = `<span class="svg-icon-title" title='${escape(
-        params.translatedtitle
+        params.translatedTitle
       )}'>${html}</span>`;
     }
     return html;

@@ -1,4 +1,4 @@
-import { and, equal, or } from "@ember/object/computed";
+import { equal, or } from "@ember/object/computed";
 import discourseComputed from "discourse-common/utils/decorators";
 import categoryFromId from "discourse-common/utils/category-macro";
 import RestModel from "discourse/models/rest";
@@ -31,7 +31,7 @@ const UserAction = RestModel.extend({
 
   @discourseComputed("action_type")
   descriptionKey(action) {
-    if (action === null || UserAction.TO_SHOW.indexOf(action) >= 0) {
+    if (action === null || UserAction.TO_SHOW.includes(action)) {
       if (this.isPM) {
         return this.sameUser ? "sent_by_you" : "sent_by_user";
       } else {
@@ -108,7 +108,6 @@ const UserAction = RestModel.extend({
   mentionType: equal("action_type", UserActionTypes.mentions),
   isPM: or("messageSentType", "messageReceivedType"),
   postReplyType: or("postType", "replyType"),
-  removableBookmark: and("bookmarkType", "sameUser"),
 
   addChild(action) {
     let groups = this.childGroups;
@@ -180,7 +179,7 @@ UserAction.reopenClass({
       const found = uniq[key];
       if (found === void 0) {
         let current;
-        if (UserAction.TO_COLLAPSE.indexOf(item.action_type) >= 0) {
+        if (UserAction.TO_COLLAPSE.includes(item.action_type)) {
           current = UserAction.create(item);
           item.switchToActing();
           current.addChild(item);
@@ -191,7 +190,7 @@ UserAction.reopenClass({
         collapsed[pos] = current;
         pos += 1;
       } else {
-        if (UserAction.TO_COLLAPSE.indexOf(item.action_type) >= 0) {
+        if (UserAction.TO_COLLAPSE.includes(item.action_type)) {
           item.switchToActing();
           collapsed[found].addChild(item);
         } else {

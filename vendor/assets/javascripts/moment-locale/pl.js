@@ -11,12 +11,14 @@
 
     //! moment.js locale configuration
 
-    var monthsNominative = 'styczeń_luty_marzec_kwiecień_maj_czerwiec_lipiec_sierpień_wrzesień_październik_listopad_grudzień'.split(
-            '_'
-        ),
-        monthsSubjective = 'stycznia_lutego_marca_kwietnia_maja_czerwca_lipca_sierpnia_września_października_listopada_grudnia'.split(
-            '_'
-        ),
+    var monthsNominative =
+            'styczeń_luty_marzec_kwiecień_maj_czerwiec_lipiec_sierpień_wrzesień_październik_listopad_grudzień'.split(
+                '_'
+            ),
+        monthsSubjective =
+            'stycznia_lutego_marca_kwietnia_maja_czerwca_lipca_sierpnia_września_października_listopada_grudnia'.split(
+                '_'
+            ),
         monthsParse = [
             /^sty/i,
             /^lut/i,
@@ -70,9 +72,8 @@
         monthsParse: monthsParse,
         longMonthsParse: monthsParse,
         shortMonthsParse: monthsParse,
-        weekdays: 'niedziela_poniedziałek_wtorek_środa_czwartek_piątek_sobota'.split(
-            '_'
-        ),
+        weekdays:
+            'niedziela_poniedziałek_wtorek_środa_czwartek_piątek_sobota'.split('_'),
         weekdaysShort: 'ndz_pon_wt_śr_czw_pt_sob'.split('_'),
         weekdaysMin: 'Nd_Pn_Wt_Śr_Cz_Pt_So'.split('_'),
         longDateFormat: {

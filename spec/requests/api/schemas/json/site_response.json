@@ -35,6 +35,12 @@
         "posted": {
           "type": "integer"
         },
+        "watching_category_or_tag": {
+          "type": "integer"
+        },
+        "new_features": {
+          "type": "integer"
+        },
         "moved_post": {
           "type": "integer"
         },
@@ -103,6 +109,24 @@
         },
         "chat_group_mention": {
           "type": "integer"
+        },
+        "chat_quoted": {
+          "type": "integer"
+        },
+        "assigned": {
+          "type": "integer"
+        },
+        "question_answer_user_commented": {
+          "type": "integer"
+        },
+        "following": {
+          "type": "integer"
+        },
+        "following_created_topic": {
+          "type": "integer"
+        },
+        "following_replied": {
+          "type": "integer"
         }
       },
       "required": [
@@ -115,6 +139,7 @@
         "invited_to_private_message",
         "invitee_accepted",
         "posted",
+        "watching_category_or_tag",
         "moved_post",
         "linked",
         "granted_badge",
@@ -194,7 +219,7 @@
     },
     "groups": {
       "type": "array",
-      "items": [
+      "items":
         {
           "type": "object",
           "additionalProperties": false,
@@ -232,31 +257,30 @@
             "flair_color"
           ]
         }
-      ]
     },
     "filters": {
       "type": "array",
-      "items": [
+      "items": {
 
-      ]
+      }
     },
     "periods": {
       "type": "array",
-      "items": [
+      "items": {
 
-      ]
+      }
     },
     "top_menu_items": {
       "type": "array",
-      "items": [
+      "items": {
 
-      ]
+      }
     },
     "anonymous_top_menu_items": {
       "type": "array",
-      "items": [
+      "items": {
 
-      ]
+      }
     },
     "uncategorized_category_id": {
       "type": "integer"
@@ -266,16 +290,16 @@
     },
     "post_action_types": {
       "type": "array",
-      "items": [
+      "items":
         {
           "type": "object",
           "additionalProperties": false,
           "properties": {
             "id": {
-              "type": "integer"
+              "type": ["integer", "null"]
             },
             "name_key": {
-              "type": "string"
+              "type": ["string", "null"]
             },
             "name": {
               "type": "string"
@@ -303,20 +327,19 @@
             "is_custom_flag"
           ]
         }
-      ]
     },
     "topic_flag_types": {
       "type": "array",
-      "items": [
+      "items":
         {
           "type": "object",
           "additionalProperties": false,
           "properties": {
             "id": {
-              "type": "integer"
+              "type": ["integer", "null"]
             },
             "name_key": {
-              "type": "string"
+              "type": ["string", "null"]
             },
             "name": {
               "type": "string"
@@ -344,7 +367,6 @@
             "is_custom_flag"
           ]
         }
-      ]
     },
     "can_create_tag": {
       "type": "boolean"
@@ -360,9 +382,9 @@
     },
     "top_tags": {
       "type": "array",
-      "items": [
+      "items": {
 
-      ]
+      }
     },
     "wizard_required": {
       "type": "boolean"
@@ -372,13 +394,13 @@
     },
     "topic_featured_link_allowed_category_ids": {
       "type": "array",
-      "items": [
+      "items": {
 
-      ]
+      }
     },
     "user_themes": {
       "type": "array",
-      "items": [
+      "items":
         {
           "type": "object",
           "additionalProperties": false,
@@ -406,11 +428,10 @@
             "color_scheme_id"
           ]
         }
-      ]
     },
     "user_color_schemes": {
       "type": "array",
-      "items": [
+      "items":
         {
           "type": "object",
           "additionalProperties": false,
@@ -431,7 +452,6 @@
             "is_dark"
           ]
         }
-      ]
     },
     "default_dark_color_scheme": {
       "type": [
@@ -440,19 +460,16 @@
       ]
     },
     "censored_regexp": {
-      "type": [
-        "string",
-        "null"
-      ]
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
     },
     "custom_emoji_translation": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
-      },
-      "required": [
-
-      ]
+      }
     },
     "watched_words_replace": {
       "type": [
@@ -466,9 +483,21 @@
         "null"
       ]
     },
+    "markdown_additional_options" : {
+      "type": "object"
+    },
+    "hashtag_configurations" : {
+      "type": "object"
+    },
+    "hashtag_icons" : {
+      "type": "array"
+    },
+    "displayed_about_plugin_stat_groups" : {
+      "type": "array"
+    },
     "categories": {
       "type": "array",
-      "items": [
+      "items":
         {
           "type": "object",
           "additionalProperties": false,
@@ -498,13 +527,22 @@
               "type": "integer"
             },
             "description": {
-              "type": "string"
+              "type": [
+                "string",
+                "null"
+              ]
             },
             "description_text": {
-              "type": "string"
+              "type": [
+                "string",
+                "null"
+              ]
             },
             "description_excerpt": {
-              "type": "string"
+              "type": [
+                "string",
+                "null"
+              ]
             },
             "topic_url": {
               "type": "string"
@@ -568,27 +606,38 @@
             },
             "allowed_tags": {
               "type": "array",
-              "items": [
+              "items": {
 
-              ]
+              }
             },
             "allowed_tag_groups": {
               "type": "array",
-              "items": [
+              "items": {
 
-              ]
+              }
             },
             "allow_global_tags": {
               "type": "boolean"
             },
-            "min_tags_from_required_group": {
-              "type": "integer"
-            },
-            "required_tag_group_name": {
-              "type": [
-                "string",
-                "null"
-              ]
+            "required_tag_groups": {
+              "type": "array",
+              "items":
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "min_count": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "min_count"
+                  ]
+                }
             },
             "read_only_banner": {
               "type": [
@@ -602,6 +651,12 @@
                 "null"
               ]
             },
+            "uploaded_logo_dark": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
             "uploaded_background": {
               "type": [
                 "string",
@@ -610,6 +665,16 @@
             },
             "can_edit": {
               "type": "boolean"
+            },
+            "custom_fields": {
+              "type": [
+                "object",
+                "null"
+              ],
+              "additionalProperties": true
+            },
+            "parent_category_id": {
+              "type": "integer"
             }
           },
           "required": [
@@ -621,9 +686,6 @@
             "topic_count",
             "post_count",
             "position",
-            "description",
-            "description_text",
-            "description_excerpt",
             "topic_url",
             "read_restricted",
             "permission",
@@ -643,19 +705,21 @@
             "allowed_tags",
             "allowed_tag_groups",
             "allow_global_tags",
-            "min_tags_from_required_group",
-            "required_tag_group_name",
+            "required_tag_groups",
             "read_only_banner",
             "uploaded_logo",
+            "uploaded_logo_dark",
             "uploaded_background",
             "can_edit"
           ]
         }
-      ]
+    },
+    "show_welcome_topic_banner": {
+      "type": "boolean"
     },
     "archetypes": {
       "type": "array",
-      "items": [
+      "items":
         {
           "type": "object",
           "additionalProperties": false,
@@ -668,9 +732,9 @@
             },
             "options": {
               "type": "array",
-              "items": [
+              "items": {
 
-              ]
+              }
             }
           },
           "required": [
@@ -679,19 +743,21 @@
             "options"
           ]
         }
-      ]
     },
     "user_fields": {
       "type": "array",
-      "items": [
+      "items": {
 
-      ]
+      }
     },
     "auth_providers": {
       "type": "array",
-      "items": [
+      "items": {
 
-      ]
+      }
+    },
+    "whispers_allowed_groups_names" : {
+      "type": "array"
     }
   },
   "required": [

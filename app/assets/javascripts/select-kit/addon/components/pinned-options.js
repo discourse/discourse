@@ -1,6 +1,7 @@
 import { action, computed } from "@ember/object";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
 import I18n from "I18n";
+import { htmlSafe } from "@ember/template";
 
 const UNPINNED = "unpinned";
 const PINNED = "pinned";
@@ -20,7 +21,7 @@ export default DropdownSelectBoxComponent.extend({
     const state = pinned ? `pinned${globally}` : UNPINNED;
     const title = I18n.t(`topic_statuses.${state}.title`);
 
-    content.label = `<span>${title}</span>`.htmlSafe();
+    content.label = htmlSafe(`<span>${title}</span>`);
     content.title = title;
     content.name = state;
     content.icon = `thumbtack${state === UNPINNED ? " unpinned" : ""}`;

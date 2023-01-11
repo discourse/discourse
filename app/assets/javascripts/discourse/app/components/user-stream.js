@@ -6,15 +6,16 @@ import I18n from "I18n";
 import LoadMore from "discourse/mixins/load-more";
 import Post from "discourse/models/post";
 import { NEW_TOPIC_KEY } from "discourse/models/composer";
-import bootbox from "bootbox";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { observes } from "discourse-common/utils/decorators";
 import { on } from "@ember/object/evented";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { schedule } from "@ember/runloop";
+import { next, schedule } from "@ember/runloop";
+import { inject as service } from "@ember/service";
 
 export default Component.extend(LoadMore, {
   tagName: "ul",
+  dialog: service(),
   _lastDecoratedElement: null,
 
   _initialize: on("init", function () {
@@ -48,6 +49,7 @@ export default Component.extend(LoadMore, {
       return ClickTrack.trackClick(e, this.siteSettings);
     });
     this._updateLastDecoratedElement();
+    this._scrollToLastPosition();
   }),
 
   // This view is being removed. Shut down operations
@@ -69,6 +71,22 @@ export default Component.extend(LoadMore, {
       return;
     }
     this._lastDecoratedElement = lastElement;
+  },
+
+  _scrollToLastPosition() {
+    const scrollTo = this.session.userStreamScrollPosition;
+    if (scrollTo >= 0) {
+      schedule("afterRender", () => {
+        if (this.element && !this.isDestroying && !this.isDestroyed) {
+          next(() => window.scrollTo(0, scrollTo));
+        }
+      });
+    }
+  },
+
+  scrolled() {
+    this._super(...arguments);
+    this.session.set("userStreamScrollPosition", window.scrollY);
   },
 
   actions: {
@@ -110,25 +128,22 @@ export default Component.extend(LoadMore, {
 
     removeDraft(draft) {
       const stream = this.stream;
-      bootbox.confirm(
-        I18n.t("drafts.remove_confirmation"),
-        I18n.t("no_value"),
-        I18n.t("yes_value"),
-        (confirmed) => {
-          if (confirmed) {
-            Draft.clear(draft.draft_key, draft.sequence)
-              .then(() => {
-                stream.remove(draft);
-                if (draft.draft_key === NEW_TOPIC_KEY) {
-                  this.currentUser.set("has_topic_draft", false);
-                }
-              })
-              .catch((error) => {
-                popupAjaxError(error);
-              });
-          }
-        }
-      );
+
+      this.dialog.yesNoConfirm({
+        message: I18n.t("drafts.remove_confirmation"),
+        didConfirm: () => {
+          Draft.clear(draft.draft_key, draft.sequence)
+            .then(() => {
+              stream.remove(draft);
+              if (draft.draft_key === NEW_TOPIC_KEY) {
+                this.currentUser.set("has_topic_draft", false);
+              }
+            })
+            .catch((error) => {
+              popupAjaxError(error);
+            });
+        },
+      });
     },
 
     loadMore() {

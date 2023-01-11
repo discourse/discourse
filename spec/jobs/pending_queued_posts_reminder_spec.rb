@@ -1,46 +1,57 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
-describe Jobs::PendingQueuedPostsReminder do
+RSpec.describe Jobs::PendingQueuedPostsReminder do
   let(:job) { described_class.new }
 
-  context "notify_about_queued_posts_after is 0" do
+  context "when notify_about_queued_posts_after is 0" do
     before { SiteSetting.notify_about_queued_posts_after = 0 }
 
     it "never emails" do
       described_class.any_instance.expects(:should_notify_ids).never
-      expect {
-        job.execute({})
-      }.to_not change { Post.count }
+      expect { job.execute({}) }.to_not change { Post.count }
     end
   end
 
-  context "notify_about_queued_posts_after is 24" do
+  context "when notify_about_queued_posts_after accepts a float" do
     before do
-      SiteSetting.notify_about_queued_posts_after = 24
+      SiteSetting.notify_about_queued_posts_after = 0.25
+      job.last_notified_id = nil
     end
 
-    context "when we haven't been notified in a while" do
+    it "creates system message if there are new queued posts" do
+      Fabricate(:reviewable_queued_post, created_at: 16.minutes.ago)
+      Fabricate(:reviewable_queued_post, created_at: 14.minutes.ago)
+      # expect 16 minute post to be picked up but not 14 min post
+      expect { job.execute({}) }.to change { Post.count }.by(1)
+      expect(
+        Topic.where(
+          subtype: TopicSubtype.system_message,
+          title: I18n.t("system_messages.queued_posts_reminder.subject_template", count: 1),
+        ).exists?,
+      ).to eq(true)
+    end
+  end
 
-      before do
-        job.last_notified_id = nil
-      end
+  context "when notify_about_queued_posts_after is 24" do
+    before { SiteSetting.notify_about_queued_posts_after = 24 }
+
+    context "when we haven't been notified in a while" do
+      before { job.last_notified_id = nil }
 
       it "doesn't create system message if there are no queued posts" do
-        expect {
-          job.execute({})
-        }.to_not change { Post.count }
+        expect { job.execute({}) }.to_not change { Post.count }
       end
 
       it "creates system message if there are new queued posts" do
         Fabricate(:reviewable_queued_post, created_at: 48.hours.ago)
         Fabricate(:reviewable_queued_post, created_at: 45.hours.ago)
         expect { job.execute({}) }.to change { Post.count }.by(1)
-        expect(Topic.where(
-          subtype: TopicSubtype.system_message,
-          title: I18n.t('system_messages.queued_posts_reminder.subject_template', count: 2)
-        ).exists?).to eq(true)
+        expect(
+          Topic.where(
+            subtype: TopicSubtype.system_message,
+            title: I18n.t("system_messages.queued_posts_reminder.subject_template", count: 2),
+          ).exists?,
+        ).to eq(true)
       end
     end
 

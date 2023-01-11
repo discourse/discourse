@@ -9,6 +9,6 @@ class CreateExpressionTypes < ActiveRecord::Migration[4.2]
       t.timestamps null: false
     end
 
-    add_index :expression_types, [:site_id, :name], unique: true
+    add_index :expression_types, %i[site_id name], unique: true
   end
 end

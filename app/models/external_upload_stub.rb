@@ -7,27 +7,32 @@ class ExternalUploadStub < ActiveRecord::Base
   UPLOADED_EXPIRY_HOURS = 24
   FAILED_EXPIRY_HOURS = 48
 
-  belongs_to :created_by, class_name: 'User'
+  belongs_to :created_by, class_name: "User"
 
-  validates :filesize, numericality: {
-    allow_nil: false, only_integer: true, greater_than_or_equal_to: 1
-  }
+  validates :filesize,
+            numericality: {
+              allow_nil: false,
+              only_integer: true,
+              greater_than_or_equal_to: 1,
+            }
 
-  scope :expired_created, -> {
-    where(
-      "status = ? AND created_at <= ?",
-      ExternalUploadStub.statuses[:created],
-      CREATED_EXPIRY_HOURS.hours.ago
-    )
-  }
+  scope :expired_created,
+        -> {
+          where(
+            "status = ? AND created_at <= ?",
+            ExternalUploadStub.statuses[:created],
+            CREATED_EXPIRY_HOURS.hours.ago,
+          )
+        }
 
-  scope :expired_uploaded, -> {
-    where(
-      "status = ? AND created_at <= ?",
-      ExternalUploadStub.statuses[:uploaded],
-      UPLOADED_EXPIRY_HOURS.hours.ago
-    )
-  }
+  scope :expired_uploaded,
+        -> {
+          where(
+            "status = ? AND created_at <= ?",
+            ExternalUploadStub.statuses[:uploaded],
+            UPLOADED_EXPIRY_HOURS.hours.ago,
+          )
+        }
 
   before_create do
     self.unique_identifier = SecureRandom.uuid
@@ -35,11 +40,7 @@ class ExternalUploadStub < ActiveRecord::Base
   end
 
   def self.statuses
-    @statuses ||= Enum.new(
-      created: 1,
-      uploaded: 2,
-      failed: 3,
-    )
+    @statuses ||= Enum.new(created: 1, uploaded: 2, failed: 3)
   end
 
   # TODO (martin): Lifecycle rule would be best to clean stuff up in the external

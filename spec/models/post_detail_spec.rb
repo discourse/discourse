@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
-describe PostDetail do
+RSpec.describe PostDetail do
   it { is_expected.to belong_to :post }
 
   it { is_expected.to validate_presence_of :key }

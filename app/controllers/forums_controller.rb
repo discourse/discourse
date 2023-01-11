@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-require "read_only_header"
+require "read_only_mixin"
 
 class ForumsController < ActionController::Base
-  include ReadOnlyHeader
+  include ReadOnlyMixin
 
   before_action :check_readonly_mode
-  after_action  :add_readonly_header
+  after_action :add_readonly_header
 
   def status
     if params[:cluster]

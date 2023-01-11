@@ -29,17 +29,9 @@
 .groups-boxes {
   display: grid;
   grid-gap: 1em;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(16em, 1fr));
   margin: 1em 0;
   width: 100%;
-
-  @include breakpoint("medium") {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  @include breakpoint("mobile-extra-large") {
-    grid-template-columns: repeat(2, 1fr);
-  }
 
   .group-box {
     display: flex;
@@ -53,6 +45,7 @@
 
       &:hover {
         box-shadow: shadow("card");
+        border-color: var(--primary-low-mid-or-secondary-high);
       }
     }
 
@@ -93,7 +86,7 @@
           span {
             width: 100%;
             word-break: break-word;
-            line-height: $line-height-medium;
+            line-height: var(--line-height-medium);
           }
         }
       }
@@ -115,7 +108,7 @@
     }
 
     .groups-info-name {
-      font-size: $font-up-1;
+      font-size: var(--font-up-1);
       font-weight: bold;
       color: var(--primary);
     }
@@ -155,16 +148,20 @@
   }
   &.groups-notifications-form {
     .control-instructions {
-      color: $primary-medium;
+      color: var(--primary-medium);
       margin-bottom: 10px;
-      font-size: $font-down-1;
-      line-height: $line-height-large;
+      font-size: var(--font-down-1);
+      line-height: var(--line-height-large);
     }
 
     .category-selector,
     .tag-chooser {
       width: 100%;
     }
+  }
+
+  .groups-form-incoming-email {
+    margin-bottom: 1em;
   }
 }
 

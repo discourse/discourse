@@ -1,4 +1,4 @@
-import { isAppWebview, postRNWebviewMessage } from "discourse/lib/utilities";
+import { postRNWebviewMessage } from "discourse/lib/utilities";
 import { createWidget } from "discourse/widgets/widget";
 
 createWidget("footer-nav", {
@@ -27,7 +27,7 @@ createWidget("footer-nav", {
       })
     );
 
-    if (isAppWebview()) {
+    if (this.capabilities.isAppWebview) {
       buttons.push(
         this.attach("flat-button", {
           action: "share",

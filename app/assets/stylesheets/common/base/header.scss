@@ -14,8 +14,10 @@
   backface-visibility: hidden; /** do magic for scrolling performance **/
 
   > .wrap {
-    width: calc(100% - 20px); // accommodates for 10px vertical padding
+    box-sizing: border-box;
+    width: 100%;
     height: 100%;
+
     .contents {
       display: flex;
       align-items: center;
@@ -54,8 +56,13 @@
     width: auto;
   }
 
+  #site-text-logo {
+    margin: 0;
+    @include ellipsis;
+  }
+
   .d-icon-home {
-    font-size: $font-up-6;
+    font-size: var(--font-up-6);
   }
 
   .panel {
@@ -134,7 +141,7 @@
       border-top: 1px solid transparent;
       border-left: 1px solid transparent;
       border-right: 1px solid transparent;
-      .d-icon {
+      > .d-icon {
         color: var(--primary-medium);
       }
     }
@@ -151,7 +158,7 @@
       border-top: 1px solid var(--primary-low);
       border-left: 1px solid var(--primary-low);
       border-right: 1px solid var(--primary-low);
-      .d-icon {
+      > .d-icon {
         color: var(--primary-medium);
       }
       &:after {
@@ -173,19 +180,41 @@
 
   .d-icon {
     width: 100%;
-    font-size: $font-up-4;
-    line-height: $line-height-large;
+    font-size: var(--font-up-4);
+    line-height: var(--line-height-large);
     display: inline-block;
     color: var(--header_primary-low-mid);
   }
+
   .notifications {
     position: relative;
   }
   .ring {
     position: absolute;
-    top: -9px;
+    top: -11px;
+    right: 23.5px;
     z-index: z("base");
     margin-left: 0;
+    background: radial-gradient(transparent, var(--success));
+    border-radius: 100%;
+    width: 20px;
+    height: 20px;
+    transform-origin: center;
+    animation-iteration-count: infinite;
+    animation-duration: 3s;
+    animation-name: ping;
+
+    &.revamped {
+      right: -4px;
+      top: -6px;
+
+      &.regular-notifications {
+        background: radial-gradient(
+          transparent,
+          var(--tertiary-med-or-tertiary)
+        );
+      }
+    }
   }
   .header-dropdown-toggle {
     position: relative;
@@ -196,16 +225,55 @@
     left: 0;
     top: -4px;
     min-width: 0.6em;
-  }
-  .unread-notifications {
     left: auto;
     right: -3px;
+
+    &.with-icon {
+      &.new-pms {
+        background-color: var(--success);
+      }
+      &.new-reviewables {
+        background-color: var(--danger);
+      }
+      .d-icon {
+        color: var(--secondary);
+        font-size: var(--font-down-1);
+        width: 1em;
+      }
+    }
+  }
+  .unread-notifications {
     background-color: var(--tertiary-med-or-tertiary);
   }
   .unread-high-priority-notifications,
   .ring {
     left: auto;
     right: 25px;
+  }
+}
+
+.header-sidebar-toggle {
+  button {
+    margin-right: 1em;
+    box-sizing: content-box; // matches other header icons
+    display: flex;
+    justify-content: center;
+    width: 2.2857em;
+    height: 2.2857em;
+    padding: 0.2143em;
+    &:focus,
+    .discourse-no-touch & {
+      &:hover {
+        background-color: var(--primary-low);
+      }
+    }
+    .d-icon {
+      width: 100%;
+      font-size: var(--font-up-4);
+      line-height: var(--line-height-large);
+      display: inline-block;
+      color: var(--header_primary-low-mid);
+    }
   }
 }
 
@@ -218,7 +286,7 @@
   display: flex;
   align-items: center;
   height: 100%;
-  line-height: $line-height-medium;
+  line-height: var(--line-height-medium);
   padding: 0 1.5em 0 0.5em;
   // we need to hide overflow in both to truncate the title in a flexbox
   overflow: hidden;
@@ -260,7 +328,7 @@
   .header-title {
     padding: 0;
     margin: 0;
-    font-size: $font-up-3;
+    font-size: var(--font-up-3);
     width: 100%;
   }
   .categories-wrapper {
@@ -308,7 +376,7 @@ $mobile-avatar-height: 1.532em;
 .topic-header-participants {
   display: flex;
   align-items: center;
-  font-size: $font-down-1;
+  font-size: var(--font-down-1);
   @include ellipsis;
   &:not(:first-child) {
     margin-left: 5px;

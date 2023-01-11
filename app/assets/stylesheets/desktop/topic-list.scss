@@ -36,7 +36,7 @@
 
   button.bulk-select {
     padding: 0;
-    line-height: $line-height-large;
+    line-height: var(--line-height-large);
   }
 
   .topic-list-data.bulk-select {
@@ -55,9 +55,10 @@
   .badge-notification {
     position: relative;
     top: -2px;
+
     &.new-topic {
       top: -1px;
-      padding-left: 5px;
+      padding-left: 2px;
     }
   }
 
@@ -79,7 +80,7 @@
         cursor: default;
         color: var(--primary-med-or-secondary-med);
         line-height: $td-posters-more-lh;
-        font-size: $font-down-1;
+        font-size: var(--font-down-1);
       }
     }
   }
@@ -109,7 +110,7 @@
     width: auto;
     color: var(--primary-med-or-secondary-med);
     text-align: left;
-    font-size: $font-down-1;
+    font-size: var(--font-down-1);
     margin-top: 5px;
     .fa {
       margin-right: 2px;
@@ -117,16 +118,13 @@
     a {
       color: var(--primary-med-or-secondary-med);
       margin-right: 3px;
-      line-height: $line-height-large;
+      line-height: var(--line-height-large);
     }
   }
   .activity {
     width: 60px;
     &:lang(zh_CN) {
       width: 80px;
-    }
-    span {
-      cursor: pointer;
     }
   }
   .age {
@@ -139,6 +137,12 @@
 
 .topic-list-bottom {
   margin: 20px 0;
+  .footer-message {
+    padding-top: 4px;
+  }
+  .dismiss-container-bottom {
+    float: right;
+  }
 }
 
 // Misc. stuff
@@ -159,12 +163,6 @@
   h2 {
     margin: 20px 0 10px;
   }
-  .show-more.has-topics {
-    top: 0;
-    .alert {
-      padding: 16px 35px 16px 14px;
-    }
-  }
 }
 
 .bulk-select-topics {
@@ -175,10 +173,9 @@
   }
 }
 
-button.dismiss-read {
-  float: right;
-  margin-bottom: 5px;
-  margin-left: 10px;
+.dismiss-container-top {
+  display: flex;
+  justify-content: flex-end;
 }
 
 .category-breadcrumb {
@@ -196,25 +193,10 @@ button.dismiss-read {
 
 /* Tablet (portrait) ----------- */
 
-@include breakpoint(medium) {
-  // slightly smaller font, tighten spacing on nav pills
-  .nav-pills {
-    > li > a {
-      font-size: $font-0;
-      padding: 7px 10px;
-    }
-  }
+// These styles kick in a little earlier when the sidebar appears
 
+@include breakpoint(medium, $sidebar: true) {
   .topic-list {
-    // tighter table header spacing
-    .topic-list-item .topic-list-data:first-of-type {
-      padding: 12px 5px;
-    }
-    // smaller table cell spacing
-    .topic-list-data {
-      padding: 10px;
-      font-size: $font-0;
-    }
     // suppress views column
     .views {
       display: none;
@@ -229,6 +211,10 @@ button.dismiss-read {
     }
     // show only the first poster
     .topic-list-data.posters {
+      a:first-child .avatar.latest:not(.single) {
+        top: 0px;
+        left: 0px;
+      }
       a:not(.latest) {
         display: none;
       }
@@ -239,5 +225,49 @@ button.dismiss-read {
         }
       }
     }
+  }
+}
+
+@include breakpoint(medium) {
+  // slightly smaller font, tighten spacing on nav pills
+  .nav-pills {
+    > li > a {
+      font-size: var(--font-0);
+      padding: 7px 10px;
+    }
+  }
+
+  .topic-list {
+    // tighter table header spacing
+    .topic-list-item .topic-list-data:first-of-type {
+      padding: 12px 5px;
+    }
+    // smaller table cell spacing
+    .topic-list-data {
+      padding: 10px;
+      font-size: var(--font-0);
+    }
+  }
+}
+
+.container.list-container {
+  position: relative;
+}
+
+.welcome-cta {
+  background-color: var(--secondary);
+  border: 1px solid var(--primary-low);
+  box-shadow: shadow("menu-panel");
+  border-radius: 4px;
+  padding: 12px 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  z-index: z("usercard");
+  &__content {
+    width: 70%;
+  }
+  &__button {
+    align-self: center;
   }
 }

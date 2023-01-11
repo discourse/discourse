@@ -1,4 +1,4 @@
-import { cancel, later } from "@ember/runloop";
+import { cancel } from "@ember/runloop";
 import Category from "discourse/models/category";
 import { action } from "@ember/object";
 import { buildCategoryPanel } from "discourse/components/edit-category-panel";
@@ -7,6 +7,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import getURL from "discourse-common/lib/get-url";
 import { isEmpty } from "@ember/utils";
 import { not } from "@ember/object/computed";
+import discourseLater from "discourse-common/lib/later";
 
 export default buildCategoryPanel("general", {
   init() {
@@ -122,7 +123,7 @@ export default buildCategoryPanel("general", {
   },
 
   _focusCategoryName() {
-    this._laterFocus = later(() => {
+    this._laterFocus = discourseLater(() => {
       const categoryName = this.element.querySelector(".category-name");
       categoryName && categoryName.focus();
     }, 25);

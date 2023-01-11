@@ -1,32 +1,74 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
-describe OptimizedImage do
+RSpec.describe OptimizedImage do
   let(:upload) { build(:upload) }
   before { upload.id = 42 }
 
-  describe '.crop' do
-    it 'should produce cropped images (requires ImageMagick 7)' do
+  describe ".crop" do
+    it "should produce cropped images (requires ImageMagick 7)" do
       tmp_path = "/tmp/cropped.png"
+      desired_width = 5
+      desired_height = 5
 
       begin
         OptimizedImage.crop(
           "#{Rails.root}/spec/fixtures/images/logo.png",
           tmp_path,
-          5,
-          5
+          desired_width,
+          desired_height,
         )
 
-        # we don't want to deal with something new here every time image magick
-        # is upgraded or pngquant is upgraded, lets just test the basics ...
-        # cropped image should be less than 120 bytes
+        w, h = FastImage.size(tmp_path)
+        expect(w).to eq(desired_width)
+        expect(h).to eq(desired_height)
 
         cropped_size = File.size(tmp_path)
-
-        expect(cropped_size).to be < 120
+        expect(cropped_size).to be < 200
         expect(cropped_size).to be > 50
+      ensure
+        File.delete(tmp_path) if File.exist?(tmp_path)
+      end
+    end
 
+    it "should correctly crop images vertically" do
+      tmp_path = "/tmp/cropped.png"
+      desired_width = 100
+      desired_height = 66
+
+      begin
+        OptimizedImage.crop(
+          "#{Rails.root}/spec/fixtures/images/logo.png", # 244x66px
+          tmp_path,
+          desired_width,
+          desired_height,
+        )
+
+        w, h = FastImage.size(tmp_path)
+
+        expect(w).to eq(desired_width)
+        expect(h).to eq(desired_height)
+      ensure
+        File.delete(tmp_path) if File.exist?(tmp_path)
+      end
+    end
+
+    it "should correctly crop images horizontally" do
+      tmp_path = "/tmp/cropped.png"
+      desired_width = 244
+      desired_height = 500
+
+      begin
+        OptimizedImage.crop(
+          "#{Rails.root}/spec/fixtures/images/logo.png", # 244x66px
+          tmp_path,
+          desired_width,
+          desired_height,
+        )
+
+        w, h = FastImage.size(tmp_path)
+
+        expect(w).to eq(desired_width)
+        expect(h).to eq(desired_height)
       ensure
         File.delete(tmp_path) if File.exist?(tmp_path)
       end
@@ -37,20 +79,18 @@ describe OptimizedImage do
 
       it "doesn't return any color options by default" do
         instructions = described_class.resize_instructions(image, image, "50x50")
-        expect(instructions).to_not include('-colors')
+        expect(instructions).to_not include("-colors")
       end
 
       it "supports an optional color option" do
         instructions = described_class.resize_instructions(image, image, "50x50", colors: 12)
-        expect(instructions).to include('-colors')
+        expect(instructions).to include("-colors")
       end
-
     end
 
-    describe '.resize' do
-      it 'should work correctly when extension is bad' do
-
-        original_path = Dir::Tmpname.create(['origin', '.bin']) { nil }
+    describe ".resize" do
+      it "should work correctly when extension is bad" do
+        original_path = Dir::Tmpname.create(%w[origin .bin]) { nil }
 
         begin
           FileUtils.cp "#{Rails.root}/spec/fixtures/images/logo.png", original_path
@@ -60,25 +100,17 @@ describe OptimizedImage do
 
           orig_size = File.size(original_path)
 
-          OptimizedImage.resize(
-            original_path,
-            original_path,
-            5,
-            5,
-            filename: "test.png"
-          )
+          OptimizedImage.resize(original_path, original_path, 5, 5, filename: "test.png")
 
           new_size = File.size(original_path)
           expect(orig_size).to be > new_size
           expect(new_size).not_to eq(0)
-
         ensure
           File.delete(original_path) if File.exist?(original_path)
         end
       end
 
-      it 'should work correctly' do
-
+      it "should work correctly" do
         file = File.open("#{Rails.root}/spec/fixtures/images/resized.png")
         upload = UploadCreator.new(file, "test.bin").create_for(-1)
 
@@ -109,8 +141,8 @@ describe OptimizedImage do
         expect(thumb.filesize).to be > 200
       end
 
-      describe 'when an svg with a href is masked as a png' do
-        it 'should not trigger the external request' do
+      describe "when an svg with a href is masked as a png" do
+        it "should not trigger the external request" do
           tmp_path = "/tmp/resized.png"
 
           begin
@@ -120,7 +152,7 @@ describe OptimizedImage do
                 tmp_path,
                 5,
                 5,
-                raise_on_error: true
+                raise_on_error: true,
               )
             end.to raise_error(RuntimeError, /improper image header/)
           ensure
@@ -130,21 +162,20 @@ describe OptimizedImage do
       end
     end
 
-    describe '.downsize' do
-      it 'should downsize logo (requires ImageMagick 7)' do
+    describe ".downsize" do
+      it "should downsize logo (requires ImageMagick 7)" do
         tmp_path = "/tmp/downsized.png"
 
         begin
           OptimizedImage.downsize(
             "#{Rails.root}/spec/fixtures/images/logo.png",
             tmp_path,
-            "100x100\>"
+            "100x100\>",
           )
 
           info = FastImage.new(tmp_path)
           expect(info.size).to eq([100, 27])
           expect(File.size(tmp_path)).to be < 2300
-
         ensure
           File.delete(tmp_path) if File.exist?(tmp_path)
         end
@@ -153,7 +184,6 @@ describe OptimizedImage do
   end
 
   describe ".safe_path?" do
-
     it "correctly detects unsafe paths" do
       expect(OptimizedImage.safe_path?("/path/A-AA/22_00.JPG")).to eq(true)
       expect(OptimizedImage.safe_path?("/path/AAA/2200.JPG")).to eq(true)
@@ -167,25 +197,21 @@ describe OptimizedImage do
       expect(OptimizedImage.safe_path?("/path/x.png y.png")).to eq(false)
       expect(OptimizedImage.safe_path?(nil)).to eq(false)
     end
-
   end
 
   describe "ensure_safe_paths!" do
     it "raises nothing on safe paths" do
-      expect {
-        OptimizedImage.ensure_safe_paths!("/a.png", "/b.png")
-      }.not_to raise_error
+      expect { OptimizedImage.ensure_safe_paths!("/a.png", "/b.png") }.not_to raise_error
     end
 
     it "raises InvalidAccess error on paths" do
-      expect {
-        OptimizedImage.ensure_safe_paths!("/a.png", "/b.png", "c.png")
-      }.to raise_error(Discourse::InvalidAccess)
+      expect { OptimizedImage.ensure_safe_paths!("/a.png", "/b.png", "c.png") }.to raise_error(
+        Discourse::InvalidAccess,
+      )
     end
   end
 
   describe ".local?" do
-
     def local(url)
       OptimizedImage.new(url: url).local?
     end
@@ -200,9 +226,8 @@ describe OptimizedImage do
   end
 
   describe ".create_for" do
-
-    context "versioning" do
-      let(:filename) { 'logo.png' }
+    context "with versioning" do
+      let(:filename) { "logo.png" }
       let(:file) { file_from_fixtures(filename) }
 
       it "is able to update optimized images on version change" do
@@ -231,35 +256,31 @@ describe OptimizedImage do
       # we don't really optimize anything, we simply copy
       # but at least this confirms this actually works
 
-      SiteSetting.authorized_extensions = 'svg'
-      svg = file_from_fixtures('image.svg')
-      upload = UploadCreator.new(svg, 'image.svg').create_for(Discourse.system_user.id)
+      SiteSetting.authorized_extensions = "svg"
+      svg = file_from_fixtures("image.svg")
+      upload = UploadCreator.new(svg, "image.svg").create_for(Discourse.system_user.id)
       resized = upload.get_optimized_image(50, 50, {})
 
       # we perform some basic svg mangling but expect the string Discourse to be there
       expect(File.read(Discourse.store.path_for(resized))).to include("Discourse")
-      expect(File.read(Discourse.store.path_for(resized))).to eq(File.read(Discourse.store.path_for(upload)))
+      expect(File.read(Discourse.store.path_for(resized))).to eq(
+        File.read(Discourse.store.path_for(upload)),
+      )
     end
 
     context "when using an internal store" do
-
       let(:store) { FakeInternalStore.new }
       before { Discourse.stubs(:store).returns(store) }
 
       context "when an error happened while generating the thumbnail" do
-
         it "returns nil" do
           OptimizedImage.expects(:resize).returns(false)
           expect(OptimizedImage.create_for(upload, 100, 200)).to eq(nil)
         end
-
       end
 
       context "when the thumbnail is properly generated" do
-
-        before do
-          OptimizedImage.expects(:resize).returns(true)
-        end
+        before { OptimizedImage.expects(:resize).returns(true) }
 
         it "does not download a copy of the original image" do
           store.expects(:download).never
@@ -281,18 +302,14 @@ describe OptimizedImage do
         end
 
         it "is able to change the format" do
-          oi = OptimizedImage.create_for(upload, 100, 200, format: 'gif')
+          oi = OptimizedImage.create_for(upload, 100, 200, format: "gif")
           expect(oi.url).to eq("/internally/stored/optimized/image.gif")
         end
-
       end
-
     end
 
     describe "external store" do
-      before do
-        setup_s3
-      end
+      before { setup_s3 }
 
       context "when we have a bad file returned" do
         it "returns nil" do
@@ -305,15 +322,20 @@ describe OptimizedImage do
       end
 
       context "when the thumbnail is properly generated" do
-        context "secure media disabled" do
+        context "with secure uploads disabled" do
           let(:s3_upload) { Fabricate(:upload_s3) }
           let(:optimized_path) { %r{/optimized/\d+X.*/#{s3_upload.sha1}_2_100x200\.png} }
 
           before do
             stub_request(:head, "http://#{s3_upload.url}").to_return(status: 200)
-            stub_request(:get, "http://#{s3_upload.url}").to_return(status: 200, body: file_from_fixtures("logo.png"))
-            stub_request(:put, %r{https://#{SiteSetting.s3_upload_bucket}\.s3\.#{SiteSetting.s3_region}\.amazonaws.com#{optimized_path}})
-              .to_return(status: 200, headers: { "ETag" => "someetag" })
+            stub_request(:get, "http://#{s3_upload.url}").to_return(
+              status: 200,
+              body: file_from_fixtures("logo.png"),
+            )
+            stub_request(
+              :put,
+              %r{https://#{SiteSetting.s3_upload_bucket}\.s3\.#{SiteSetting.s3_region}\.amazonaws.com#{optimized_path}},
+            ).to_return(status: 200, headers: { "ETag" => "someetag" })
           end
 
           it "downloads a copy of the original image" do
@@ -323,7 +345,9 @@ describe OptimizedImage do
             expect(oi.extension).to eq(".png")
             expect(oi.width).to eq(100)
             expect(oi.height).to eq(200)
-            expect(oi.url).to match(%r{//#{SiteSetting.s3_upload_bucket}\.s3\.dualstack\.us-west-1\.amazonaws\.com#{optimized_path}})
+            expect(oi.url).to match(
+              %r{//#{SiteSetting.s3_upload_bucket}\.s3\.dualstack\.us-west-1\.amazonaws\.com#{optimized_path}},
+            )
             expect(oi.filesize).to be > 0
 
             oi.filesize = nil
@@ -340,9 +364,9 @@ describe OptimizedImage do
     end
   end
 
-  describe '#destroy' do
-    describe 'when upload_id is no longer valid' do
-      it 'should still destroy the record' do
+  describe "#destroy" do
+    describe "when upload_id is no longer valid" do
+      it "should still destroy the record" do
         image = Fabricate(:optimized_image)
         image.upload.delete
         image.reload.destroy
@@ -351,11 +375,9 @@ describe OptimizedImage do
       end
     end
   end
-
 end
 
 class FakeInternalStore
-
   def external?
     false
   end
@@ -367,5 +389,4 @@ class FakeInternalStore
   def store_optimized_image(file, optimized_image, content_type = nil, secure: false)
     "/internally/stored/optimized/image#{optimized_image.extension}"
   end
-
 end

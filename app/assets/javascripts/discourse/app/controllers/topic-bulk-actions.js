@@ -4,7 +4,8 @@ import I18n from "I18n";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { Promise } from "rsvp";
 import Topic from "discourse/models/topic";
-import bootbox from "bootbox";
+
+import { inject as service } from "@ember/service";
 
 const _buttons = [];
 
@@ -57,9 +58,12 @@ addBulkButton("showNotificationLevel", "notification_level", {
   icon: "d-regular",
   class: "btn-default",
 });
-addBulkButton("resetRead", "reset_read", {
-  icon: "backward",
+addBulkButton("deletePostTiming", "defer", {
+  icon: "circle",
   class: "btn-default",
+  buttonVisible() {
+    return this.currentUser.user_option.enable_defer;
+  },
 });
 addBulkButton("unlistTopics", "unlist_topics", {
   icon: "far-eye-slash",
@@ -73,12 +77,19 @@ addBulkButton("relistTopics", "relist_topics", {
   buttonVisible: (topics) =>
     topics.some((t) => !t.visible) && !topics.some((t) => t.isPrivateMessage),
 });
+addBulkButton("resetBumpDateTopics", "reset_bump_dates", {
+  icon: "anchor",
+  class: "btn-default",
+  buttonVisible() {
+    return this.currentUser.canManageTopic;
+  },
+});
 addBulkButton("showTagTopics", "change_tags", {
   icon: "tag",
   class: "btn-default",
   enabledSetting: "tagging_enabled",
   buttonVisible() {
-    return this.currentUser.staff;
+    return this.currentUser.canManageTopic;
   },
 });
 addBulkButton("showAppendTagTopics", "append_tags", {
@@ -86,7 +97,7 @@ addBulkButton("showAppendTagTopics", "append_tags", {
   class: "btn-default",
   enabledSetting: "tagging_enabled",
   buttonVisible() {
-    return this.currentUser.staff;
+    return this.currentUser.canManageTopic;
   },
 });
 addBulkButton("removeTags", "remove_tags", {
@@ -94,7 +105,7 @@ addBulkButton("removeTags", "remove_tags", {
   class: "btn-default",
   enabledSetting: "tagging_enabled",
   buttonVisible() {
-    return this.currentUser.staff;
+    return this.currentUser.canManageTopic;
   },
 });
 addBulkButton("deleteTopics", "delete", {
@@ -108,7 +119,7 @@ addBulkButton("deleteTopics", "delete", {
 // Modal for performing bulk actions on topics
 export default Controller.extend(ModalFunctionality, {
   userPrivateMessages: controller("user-private-messages"),
-
+  dialog: service(),
   tags: null,
   emptyTags: empty("tags"),
   categoryId: alias("model.category.id"),
@@ -141,7 +152,7 @@ export default Controller.extend(ModalFunctionality, {
 
     return this._processChunks(operation)
       .catch(() => {
-        bootbox.alert(I18n.t("generic_error"));
+        this.dialog.alert(I18n.t("generic_error"));
       })
       .finally(() => {
         this.set("loading", false);
@@ -287,6 +298,10 @@ export default Controller.extend(ModalFunctionality, {
       this.forEachPerformed({ type: "relist" }, (t) => t.set("visible", true));
     },
 
+    resetBumpDateTopics() {
+      this.performAndRefresh({ type: "reset_bump_dates" });
+    },
+
     changeCategory() {
       const categoryId = parseInt(this.newCategoryId, 10) || 0;
 
@@ -299,21 +314,17 @@ export default Controller.extend(ModalFunctionality, {
       );
     },
 
-    resetRead() {
-      this.performAndRefresh({ type: "reset_read" });
+    deletePostTiming() {
+      this.performAndRefresh({ type: "destroy_post_timing" });
     },
 
     removeTags() {
-      bootbox.confirm(
-        I18n.t("topics.bulk.confirm_remove_tags", {
+      this.dialog.deleteConfirm({
+        message: I18n.t("topics.bulk.confirm_remove_tags", {
           count: this.get("model.topics").length,
         }),
-        (result) => {
-          if (result) {
-            this.performAndRefresh({ type: "remove_tags" });
-          }
-        }
-      );
+        didConfirm: () => this.performAndRefresh({ type: "remove_tags" }),
+      });
     },
   },
 });

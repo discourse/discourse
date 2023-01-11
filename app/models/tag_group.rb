@@ -6,10 +6,11 @@ class TagGroup < ActiveRecord::Base
   has_many :tag_group_memberships, dependent: :destroy
   has_many :tags, through: :tag_group_memberships
   has_many :category_tag_groups, dependent: :destroy
+  has_many :category_required_tag_groups, dependent: :destroy
   has_many :categories, through: :category_tag_groups
   has_many :tag_group_permissions, dependent: :destroy
 
-  belongs_to :parent_tag, class_name: 'Tag'
+  belongs_to :parent_tag, class_name: "Tag"
 
   before_create :init_permissions
   before_save :apply_permissions
@@ -27,7 +28,11 @@ class TagGroup < ActiveRecord::Base
     if tag_names_arg.empty?
       self.parent_tag = nil
     else
-      if tag_name = DiscourseTagging.tags_for_saving(tag_names_arg, Guardian.new(Discourse.system_user)).first
+      if tag_name =
+           DiscourseTagging.tags_for_saving(
+             tag_names_arg,
+             Guardian.new(Discourse.system_user),
+           ).first
         self.parent_tag = Tag.find_by_name(tag_name) || Tag.create(name: tag_name)
       end
     end
@@ -39,11 +44,7 @@ class TagGroup < ActiveRecord::Base
 
   # TODO: long term we can cache this if TONs of tag groups exist
   def self.find_id_by_slug(slug)
-    self.pluck(:id, :name).each do |id, name|
-      if Slug.for(name) == slug
-        return id
-      end
-    end
+    self.pluck(:id, :name).each { |id, name| return id if Slug.for(name) == slug }
     nil
   end
 
@@ -59,7 +60,7 @@ class TagGroup < ActiveRecord::Base
     unless tag_group_permissions.present? || @permissions
       tag_group_permissions.build(
         group_id: Group::AUTO_GROUPS[:everyone],
-        permission_type: TagGroupPermission.permission_types[:full]
+        permission_type: TagGroupPermission.permission_types[:full],
       )
     end
   end
@@ -94,10 +95,14 @@ class TagGroup < ActiveRecord::Base
           OR
           id NOT IN (SELECT tag_group_id FROM category_tag_groups)
         )
-        AND id IN (SELECT tag_group_id FROM tag_group_permissions WHERE group_id = ?)
+        AND id IN (SELECT tag_group_id FROM tag_group_permissions WHERE group_id IN (?))
       SQL
 
-      TagGroup.where(filter_sql, guardian.allowed_category_ids, Group::AUTO_GROUPS[:everyone])
+      TagGroup.where(
+        filter_sql,
+        guardian.allowed_category_ids,
+        DiscourseTagging.permitted_group_ids(guardian),
+      )
     end
   end
 end

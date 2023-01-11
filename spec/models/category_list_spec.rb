@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-require 'category_list'
+require "category_list"
 
-describe CategoryList do
+RSpec.describe CategoryList do
   before do
     # we need automatic updating here cause we are testing this
     Topic.update_featured_topics = true
@@ -13,8 +12,7 @@ describe CategoryList do
   fab!(:admin) { Fabricate(:admin) }
   let(:category_list) { CategoryList.new(Guardian.new(user), include_topics: true) }
 
-  context "security" do
-
+  describe "security" do
     it "properly hide secure categories" do
       cat = Fabricate(:category_with_definition)
       Fabricate(:topic, category: cat)
@@ -47,14 +45,52 @@ describe CategoryList do
 
       CategoryFeaturedTopic.feature_topics
 
-      expect(CategoryList.new(Guardian.new(admin), include_topics: true).categories.find { |x| x.name == public_cat.name }.displayable_topics.count).to eq(3)
-      expect(CategoryList.new(Guardian.new(admin), include_topics: true).categories.find { |x| x.name == private_cat.name }.displayable_topics.count).to eq(1)
+      expect(
+        CategoryList
+          .new(Guardian.new(admin), include_topics: true)
+          .categories
+          .find { |x| x.name == public_cat.name }
+          .displayable_topics
+          .count,
+      ).to eq(3)
+      expect(
+        CategoryList
+          .new(Guardian.new(admin), include_topics: true)
+          .categories
+          .find { |x| x.name == private_cat.name }
+          .displayable_topics
+          .count,
+      ).to eq(1)
 
-      expect(CategoryList.new(Guardian.new(user), include_topics: true).categories.find { |x| x.name == public_cat.name }.displayable_topics.count).to eq(2)
-      expect(CategoryList.new(Guardian.new(user), include_topics: true).categories.find { |x| x.name == private_cat.name }).to eq(nil)
+      expect(
+        CategoryList
+          .new(Guardian.new(user), include_topics: true)
+          .categories
+          .find { |x| x.name == public_cat.name }
+          .displayable_topics
+          .count,
+      ).to eq(2)
+      expect(
+        CategoryList
+          .new(Guardian.new(user), include_topics: true)
+          .categories
+          .find { |x| x.name == private_cat.name },
+      ).to eq(nil)
 
-      expect(CategoryList.new(Guardian.new(nil), include_topics: true).categories.find { |x| x.name == public_cat.name }.displayable_topics.count).to eq(1)
-      expect(CategoryList.new(Guardian.new(nil), include_topics: true).categories.find { |x| x.name == private_cat.name }).to eq(nil)
+      expect(
+        CategoryList
+          .new(Guardian.new(nil), include_topics: true)
+          .categories
+          .find { |x| x.name == public_cat.name }
+          .displayable_topics
+          .count,
+      ).to eq(1)
+      expect(
+        CategoryList
+          .new(Guardian.new(nil), include_topics: true)
+          .categories
+          .find { |x| x.name == private_cat.name },
+      ).to eq(nil)
     end
 
     it "doesn't show muted topics" do
@@ -63,37 +99,57 @@ describe CategoryList do
 
       CategoryFeaturedTopic.feature_topics
 
-      expect(CategoryList.new(Guardian.new(user), include_topics: true).categories.find { |x| x.name == cat.name }.displayable_topics.count).to eq(1)
+      expect(
+        CategoryList
+          .new(Guardian.new(user), include_topics: true)
+          .categories
+          .find { |x| x.name == cat.name }
+          .displayable_topics
+          .count,
+      ).to eq(1)
 
       TopicUser.change(user.id, topic.id, notification_level: TopicUser.notification_levels[:muted])
 
-      expect(CategoryList.new(Guardian.new(user), include_topics: true).categories.find { |x| x.name == cat.name }.displayable_topics.count).to eq(0)
+      expect(
+        CategoryList
+          .new(Guardian.new(user), include_topics: true)
+          .categories
+          .find { |x| x.name == cat.name }
+          .displayable_topics
+          .count,
+      ).to eq(0)
     end
-
   end
 
   context "when mute_all_categories_by_default enabled" do
     fab!(:category) { Fabricate(:category) }
 
-    before do
-      SiteSetting.mute_all_categories_by_default = true
-    end
+    before { SiteSetting.mute_all_categories_by_default = true }
 
     it "returns correct notification level for user tracking category" do
-      CategoryUser.set_notification_level_for_category(user, NotificationLevels.all[:tracking], category.id)
-      notification_level = category_list.categories.find { |c| c.id == category.id }.notification_level
+      CategoryUser.set_notification_level_for_category(
+        user,
+        NotificationLevels.all[:tracking],
+        category.id,
+      )
+      notification_level =
+        category_list.categories.find { |c| c.id == category.id }.notification_level
       expect(notification_level).to eq(CategoryUser.notification_levels[:tracking])
     end
 
     it "returns correct notification level in default categories for anonymous" do
       SiteSetting.default_categories_watching = category.id.to_s
-      notification_level = CategoryList.new(Guardian.new).categories.find { |c| c.id == category.id }.notification_level
+      notification_level =
+        CategoryList
+          .new(Guardian.new)
+          .categories
+          .find { |c| c.id == category.id }
+          .notification_level
       expect(notification_level).to eq(CategoryUser.notification_levels[:regular])
     end
   end
 
   context "with a category" do
-
     fab!(:topic_category) { Fabricate(:category_with_definition, num_featured_topics: 2) }
 
     context "with a topic in a category" do
@@ -111,7 +167,14 @@ describe CategoryList do
       let!(:topic1) { Fabricate(:topic, category: topic_category, bumped_at: 8.minutes.ago) }
       let!(:topic2) { Fabricate(:topic, category: topic_category, bumped_at: 5.minutes.ago) }
       let!(:topic3) { Fabricate(:topic, category: topic_category, bumped_at: 2.minutes.ago) }
-      let!(:pinned) { Fabricate(:topic, category: topic_category, pinned_at: 10.minutes.ago, bumped_at: 10.minutes.ago) }
+      let!(:pinned) do
+        Fabricate(
+          :topic,
+          category: topic_category,
+          pinned_at: 10.minutes.ago,
+          bumped_at: 10.minutes.ago,
+        )
+      end
       let!(:dismissed_topic_user) { Fabricate(:dismissed_topic_user, topic: topic2, user: user) }
 
       def displayable_topics
@@ -131,14 +194,18 @@ describe CategoryList do
       end
     end
 
-    context "notification level" do
+    context "with notification level" do
       it "returns 'regular' as default notification level" do
         category = category_list.categories.find { |c| c.id == topic_category.id }
         expect(category.notification_level).to eq(NotificationLevels.all[:regular])
       end
 
       it "returns the users notification level" do
-        CategoryUser.set_notification_level_for_category(user, NotificationLevels.all[:watching], topic_category.id)
+        CategoryUser.set_notification_level_for_category(
+          user,
+          NotificationLevels.all[:watching],
+          topic_category.id,
+        )
         category_list = CategoryList.new(Guardian.new(user))
         category = category_list.categories.find { |c| c.id == topic_category.id }
 
@@ -152,14 +219,14 @@ describe CategoryList do
         expect(category.notification_level).to eq(NotificationLevels.all[:regular])
       end
     end
-
   end
 
-  describe 'category order' do
+  describe "category order" do
     def ordered_category_list(some_user)
       categories = Category.secured(Guardian.new(some_user))
       subcategories = categories.where.not(parent_category_id: nil).pluck(:id)
-      CategoryList.order_categories(categories).pluck(:id) - subcategories.push(SiteSetting.uncategorized_category_id)
+      CategoryList.order_categories(categories).pluck(:id) -
+        subcategories.push(SiteSetting.uncategorized_category_id)
     end
 
     let(:category_ids_admin) { ordered_category_list(admin) }
@@ -171,10 +238,8 @@ describe CategoryList do
       uncategorized.save
     end
 
-    context 'fixed_category_positions is enabled' do
-      before do
-        SiteSetting.fixed_category_positions = true
-      end
+    context "when fixed_category_positions is enabled" do
+      before { SiteSetting.fixed_category_positions = true }
 
       it "returns categories in specified order" do
         cat1 = Fabricate(:category_with_definition, position: 1)
@@ -195,10 +260,8 @@ describe CategoryList do
       end
     end
 
-    context 'fixed_category_positions is disabled' do
-      before do
-        SiteSetting.fixed_category_positions = false
-      end
+    context "when fixed_category_positions is disabled" do
+      before { SiteSetting.fixed_category_positions = false }
 
       it "returns categories in order of activity" do
         cat1 = Fabricate(:category_with_definition, position: 0)
@@ -242,19 +305,25 @@ describe CategoryList do
       end
     end
 
-    context 'some categories are muted' do
+    context "when some categories are muted" do
       let!(:cat1) { Fabricate(:category_with_definition) }
       let!(:muted_cat) { Fabricate(:category_with_definition) }
       let!(:cat3) { Fabricate(:category_with_definition) }
 
       before do
-        CategoryUser.set_notification_level_for_category(user, NotificationLevels.all[:muted], muted_cat.id)
+        CategoryUser.set_notification_level_for_category(
+          user,
+          NotificationLevels.all[:muted],
+          muted_cat.id,
+        )
       end
 
       it "returns muted categories at the end of the list" do
         category_list = CategoryList.new(Guardian.new user).categories.pluck(:id)
 
-        expect(category_list).to eq([SiteSetting.uncategorized_category_id, cat1.id, cat3.id, muted_cat.id])
+        expect(category_list).to eq(
+          [SiteSetting.uncategorized_category_id, cat1.id, cat3.id, muted_cat.id],
+        )
       end
     end
   end

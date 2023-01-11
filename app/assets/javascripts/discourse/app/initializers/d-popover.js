@@ -1,20 +1,19 @@
-import {
-  POPOVER_SELECTORS,
-  hidePopover,
-  showPopover,
-} from "discourse/lib/d-popover";
+import { showPopover } from "discourse/lib/d-popover";
 
 export default {
   name: "d-popover",
 
-  initialize(container) {
-    const router = container.lookup("router:main");
-    router.on("routeWillChange", hidePopover);
-
-    $("#main")
-      .on("click.d-popover mouseenter.d-popover", POPOVER_SELECTORS, (e) =>
-        showPopover(e)
-      )
-      .on("mouseleave.d-popover", POPOVER_SELECTORS, (e) => hidePopover(e));
+  initialize() {
+    ["click", "mouseover"].forEach((eventType) => {
+      document.addEventListener(eventType, (e) => {
+        if (e.target.dataset.tooltip || e.target.dataset.popover) {
+          showPopover(e, {
+            interactive: false,
+            content: (reference) =>
+              reference.dataset.tooltip || reference.dataset.popover,
+          });
+        }
+      });
+    });
   },
 };

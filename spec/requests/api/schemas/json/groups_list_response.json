@@ -3,7 +3,7 @@
   "properties": {
     "groups": {
       "type": "array",
-      "items": [
+      "items":
         {
           "type": "object",
           "additionalProperties": false,
@@ -167,7 +167,6 @@
             "publish_read_state"
           ]
         }
-      ]
     },
     "extras": {
       "type": "object",
@@ -175,9 +174,9 @@
       "properties": {
         "type_filters": {
           "type": "array",
-          "items": [
+          "items": {
 
-          ]
+          }
         }
       },
       "required": [

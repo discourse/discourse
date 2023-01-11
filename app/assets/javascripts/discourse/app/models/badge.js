@@ -45,14 +45,10 @@ const Badge = RestModel.extend({
       type = "PUT";
     }
 
-    return ajax(url, { type, data })
-      .then((json) => {
-        this.updateFromJson(json);
-        return this;
-      })
-      .catch((error) => {
-        throw new Error(error);
-      });
+    return ajax(url, { type, data }).then((json) => {
+      this.updateFromJson(json);
+      return this;
+    });
   },
 
   destroy() {
@@ -81,9 +77,8 @@ Badge.reopenClass({
     if ("badge_groupings" in json) {
       json.badge_groupings.forEach(
         (badgeGroupingJson) =>
-          (badgeGroupings[badgeGroupingJson.id] = BadgeGrouping.create(
-            badgeGroupingJson
-          ))
+          (badgeGroupings[badgeGroupingJson.id] =
+            BadgeGrouping.create(badgeGroupingJson))
       );
     }
 

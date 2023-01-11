@@ -24,8 +24,7 @@ export default Controller.extend(ModalFunctionality, {
   keyGenUrl: "/admin/themes/generate_key_pair",
   importUrl: "/admin/themes/import",
   recordType: "theme",
-  checkPrivate: match("uploadUrl", /^ssh\:\/\/.*\@.*\.git$|.*\@.*\:.*\.git$/),
-  privateKey: null,
+  checkPrivate: match("uploadUrl", /^ssh:\/\/.+@.+$|.+@.+:.+$/),
   localFile: null,
   uploadUrl: null,
   uploadName: null,
@@ -102,10 +101,7 @@ export default Controller.extend(ModalFunctionality, {
       this._keyLoading = true;
       ajax(this.keyGenUrl, { type: "POST" })
         .then((pair) => {
-          this.setProperties({
-            privateKey: pair.private_key,
-            publicKey: pair.public_key,
-          });
+          this.set("publicKey", pair.public_key);
         })
         .catch(popupAjaxError)
         .finally(() => {
@@ -136,7 +132,6 @@ export default Controller.extend(ModalFunctionality, {
       localFile: null,
       uploadUrl: null,
       publicKey: null,
-      privateKey: null,
       branch: null,
       selection: "popular",
     });
@@ -208,8 +203,13 @@ export default Controller.extend(ModalFunctionality, {
           remote: this.uploadUrl,
           branch: this.branch,
           public_key: this.publicKey,
-          private_key: this.privateKey,
         };
+      }
+
+      // User knows that theme cannot be installed, but they want to continue
+      // to force install it.
+      if (this.themeCannotBeInstalled) {
+        options.data["force"] = true;
       }
 
       if (this.get("model.user_id")) {
@@ -225,9 +225,18 @@ export default Controller.extend(ModalFunctionality, {
           this.send("closeModal");
         })
         .then(() => {
-          this.setProperties({ privateKey: null, publicKey: null });
+          this.set("publicKey", null);
         })
-        .catch(popupAjaxError)
+        .catch((error) => {
+          if (!this.publicKey || this.themeCannotBeInstalled) {
+            return popupAjaxError(error);
+          }
+
+          this.set(
+            "themeCannotBeInstalled",
+            I18n.t("admin.customize.theme.force_install")
+          );
+        })
         .finally(() => this.set("loading", false));
     },
   },

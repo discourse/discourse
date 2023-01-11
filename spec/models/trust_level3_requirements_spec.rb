@@ -1,10 +1,7 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
-describe TrustLevel3Requirements do
-
-  let(:user) { Fabricate.build(:user) }
+RSpec.describe TrustLevel3Requirements do
+  fab!(:user) { Fabricate(:user) }
   subject(:tl3_requirements) { described_class.new(user) }
   fab!(:moderator) { Fabricate(:moderator) }
 
@@ -13,22 +10,23 @@ describe TrustLevel3Requirements do
   fab!(:topic3) { Fabricate(:topic) }
   fab!(:topic4) { Fabricate(:topic) }
 
-  before do
-    described_class.clear_cache
-  end
+  before { described_class.clear_cache }
 
   def make_view(topic, at, user_id)
-    TopicViewItem.add(topic.id, '11.22.33.44', user_id, at, _skip_redis = true)
+    TopicViewItem.add(topic.id, "11.22.33.44", user_id, at, _skip_redis = true)
   end
 
   def like_at(created_by, post, created_at)
-    PostActionCreator.new(created_by, post, PostActionType.types[:like], created_at: created_at).perform
+    PostActionCreator.new(
+      created_by,
+      post,
+      PostActionType.types[:like],
+      created_at: created_at,
+    ).perform
   end
 
   describe "requirements" do
-
     describe "penalty_counts" do
-
       it "returns if the user has been silenced in last 6 months" do
         expect(tl3_requirements.penalty_counts.silenced).to eq(0)
         expect(tl3_requirements.penalty_counts.total).to eq(0)
@@ -60,7 +58,7 @@ describe TrustLevel3Requirements do
         UserHistory.create!(
           target_user_id: user.id,
           acting_user_id: moderator.id,
-          action: UserHistory.actions[:suspend_user]
+          action: UserHistory.actions[:suspend_user],
         )
 
         expect(tl3_requirements.penalty_counts.suspended).to eq(1)
@@ -69,7 +67,7 @@ describe TrustLevel3Requirements do
         UserHistory.create!(
           target_user_id: user.id,
           acting_user_id: moderator.id,
-          action: UserHistory.actions[:unsuspend_user]
+          action: UserHistory.actions[:unsuspend_user],
         )
 
         expect(tl3_requirements.penalty_counts.suspended).to eq(0)
@@ -85,7 +83,7 @@ describe TrustLevel3Requirements do
         UserHistory.create!(
           target_user_id: user.id,
           acting_user_id: Discourse.system_user.id,
-          action: UserHistory.actions[:suspend_user]
+          action: UserHistory.actions[:suspend_user],
         )
 
         expect(tl3_requirements.penalty_counts.suspended).to eq(1)
@@ -94,7 +92,7 @@ describe TrustLevel3Requirements do
         UserHistory.create!(
           target_user_id: user.id,
           acting_user_id: Discourse.system_user.id,
-          action: UserHistory.actions[:unsuspend_user]
+          action: UserHistory.actions[:unsuspend_user],
         )
 
         expect(tl3_requirements.penalty_counts.suspended).to eq(1)
@@ -259,11 +257,12 @@ describe TrustLevel3Requirements do
     it "excludes private messages" do
       user.save!
 
-      private_topic = create_post(
-        user: moderator,
-        archetype: Archetype.private_message,
-        target_usernames: [user.username, moderator.username]
-      ).topic
+      private_topic =
+        create_post(
+          user: moderator,
+          archetype: Archetype.private_message,
+          target_usernames: [user.username, moderator.username],
+        ).topic
 
       _reply1 = create_post(topic: private_topic, user: user)
 
@@ -274,9 +273,9 @@ describe TrustLevel3Requirements do
   describe "topics_viewed" do
     it "counts topics views within last 100 days (default time period), not counting a topic more than once" do
       user.save
-      make_view(topic1, 1.day.ago,    user.id)
-      make_view(topic1, 3.days.ago,   user.id) # same topic, different day
-      make_view(topic2, 4.days.ago,   user.id)
+      make_view(topic1, 1.day.ago, user.id)
+      make_view(topic1, 3.days.ago, user.id) # same topic, different day
+      make_view(topic2, 4.days.ago, user.id)
       make_view(topic3, 101.days.ago, user.id) # too long ago
       expect(tl3_requirements.topics_viewed).to eq(2)
     end
@@ -284,9 +283,9 @@ describe TrustLevel3Requirements do
     it "counts topics views within last 200 days, respecting tl3_time_period setting" do
       SiteSetting.tl3_time_period = 200
       user.save
-      make_view(topic1, 1.day.ago,    user.id)
-      make_view(topic1, 3.days.ago,   user.id) # same topic, different day
-      make_view(topic2, 4.days.ago,   user.id)
+      make_view(topic1, 1.day.ago, user.id)
+      make_view(topic1, 3.days.ago, user.id) # same topic, different day
+      make_view(topic2, 4.days.ago, user.id)
       make_view(topic3, 101.days.ago, user.id)
       make_view(topic4, 201.days.ago, user.id) # too long ago
       expect(tl3_requirements.topics_viewed).to eq(3)
@@ -294,11 +293,12 @@ describe TrustLevel3Requirements do
 
     it "excludes private messages" do
       user.save
-      private_topic = create_post(
-        user: moderator,
-        archetype: Archetype.private_message,
-        target_usernames: [user.username, moderator.username]
-      ).topic
+      private_topic =
+        create_post(
+          user: moderator,
+          archetype: Archetype.private_message,
+          target_usernames: [user.username, moderator.username],
+        ).topic
 
       make_view(topic1, 1.day.ago, user.id)
       make_view(private_topic, 1.day.ago, user.id)
@@ -320,23 +320,24 @@ describe TrustLevel3Requirements do
   describe "topics_viewed_all_time" do
     it "counts topics viewed at any time" do
       user.save
-      make_view(topic1, 1.day.ago,    user.id)
-      make_view(topic2,  100.days.ago, user.id)
-      make_view(topic3,  101.days.ago, user.id)
+      make_view(topic1, 1.day.ago, user.id)
+      make_view(topic2, 100.days.ago, user.id)
+      make_view(topic3, 101.days.ago, user.id)
       expect(tl3_requirements.topics_viewed_all_time).to eq(3)
     end
 
     it "excludes private messages" do
       user.save
-      private_topic = create_post(
-        user: moderator,
-        archetype: Archetype.private_message,
-        target_usernames: [user.username, moderator.username]
-      ).topic
+      private_topic =
+        create_post(
+          user: moderator,
+          archetype: Archetype.private_message,
+          target_usernames: [user.username, moderator.username],
+        ).topic
 
-      make_view(topic1, 1.day.ago,    user.id)
-      make_view(topic2,  100.days.ago, user.id)
-      make_view(topic3,  101.days.ago, user.id)
+      make_view(topic1, 1.day.ago, user.id)
+      make_view(topic2, 100.days.ago, user.id)
+      make_view(topic3, 101.days.ago, user.id)
       make_view(private_topic, 1.day.ago, user.id)
       make_view(private_topic, 100.days.ago, user.id)
       expect(tl3_requirements.topics_viewed_all_time).to eq(3)
@@ -355,26 +356,61 @@ describe TrustLevel3Requirements do
   context "with flagged posts" do
     before do
       user.save
-      flags = [:off_topic, :inappropriate, :notify_user, :notify_moderators, :spam].map do |t|
-        Fabricate(:flag, post: Fabricate(:post, user: user), post_action_type_id: PostActionType.types[t], agreed_at: 1.minute.ago)
-      end
+      flags =
+        %i[off_topic inappropriate notify_user notify_moderators spam].map do |t|
+          Fabricate(
+            :flag,
+            post: Fabricate(:post, user: user),
+            post_action_type_id: PostActionType.types[t],
+            agreed_at: 1.minute.ago,
+          )
+        end
 
-      _deferred_flags = [:off_topic, :inappropriate, :notify_user, :notify_moderators, :spam].map do |t|
-        Fabricate(:flag, post: Fabricate(:post, user: user), post_action_type_id: PostActionType.types[t], deferred_at: 1.minute.ago)
-      end
+      _deferred_flags =
+        %i[off_topic inappropriate notify_user notify_moderators spam].map do |t|
+          Fabricate(
+            :flag,
+            post: Fabricate(:post, user: user),
+            post_action_type_id: PostActionType.types[t],
+            deferred_at: 1.minute.ago,
+          )
+        end
 
-      _deleted_flags = [:off_topic, :inappropriate, :notify_user, :notify_moderators, :spam].map do |t|
-        Fabricate(:flag, post: Fabricate(:post, user: user), post_action_type_id: PostActionType.types[t], deleted_at: 1.minute.ago)
-      end
+      _deleted_flags =
+        %i[off_topic inappropriate notify_user notify_moderators spam].map do |t|
+          Fabricate(
+            :flag,
+            post: Fabricate(:post, user: user),
+            post_action_type_id: PostActionType.types[t],
+            deleted_at: 1.minute.ago,
+          )
+        end
 
       # Same post, different user:
-      Fabricate(:flag, post: flags[1].post, post_action_type_id: PostActionType.types[:spam], agreed_at: 1.minute.ago)
+      Fabricate(
+        :flag,
+        post: flags[1].post,
+        post_action_type_id: PostActionType.types[:spam],
+        agreed_at: 1.minute.ago,
+      )
 
       # Flagged their own post:
-      Fabricate(:flag, user: user, post: Fabricate(:post, user: user), post_action_type_id: PostActionType.types[:spam], agreed_at: 1.minute.ago)
+      Fabricate(
+        :flag,
+        user: user,
+        post: Fabricate(:post, user: user),
+        post_action_type_id: PostActionType.types[:spam],
+        agreed_at: 1.minute.ago,
+      )
 
       # More than 100 days ago:
-      Fabricate(:flag, post: Fabricate(:post, user: user, created_at: 101.days.ago), post_action_type_id: PostActionType.types[:spam], created_at: 101.days.ago, agreed_at: 1.day.ago)
+      Fabricate(
+        :flag,
+        post: Fabricate(:post, user: user, created_at: 101.days.ago),
+        post_action_type_id: PostActionType.types[:spam],
+        created_at: 101.days.ago,
+        agreed_at: 1.day.ago,
+      )
     end
 
     it "num_flagged_posts and num_flagged_by_users count spam and inappropriate agreed flags in the last 100 days" do
@@ -396,7 +432,7 @@ describe TrustLevel3Requirements do
       create_post(
         user: moderator,
         archetype: Archetype.private_message,
-        target_usernames: [user.username, moderator.username]
+        target_usernames: [user.username, moderator.username],
       )
     end
 
@@ -417,19 +453,18 @@ describe TrustLevel3Requirements do
   end
 
   describe "num_likes_received" do
-    before do
-      UserActionManager.enable
-    end
+    before { UserActionManager.enable }
 
     let(:topic) { Fabricate(:topic, user: user, created_at: 102.days.ago) }
     let(:old_post) { create_post(topic: topic, user: user, created_at: 102.days.ago) }
     let(:recent_post1) { create_post(topic: topic, user: user, created_at: 1.hour.ago) }
     let(:recent_post2) { create_post(topic: topic, user: user, created_at: 10.days.ago) }
     let(:private_post) do
+      Group.refresh_automatic_groups!
       create_post(
         user: user,
         archetype: Archetype.private_message,
-        target_usernames: [liker.username, liker2.username]
+        target_usernames: [liker.username, liker2.username],
       )
     end
 
@@ -450,8 +485,7 @@ describe TrustLevel3Requirements do
     end
   end
 
-  context "requirements with defaults" do
-
+  describe "requirements with defaults" do
     before do
       tl3_requirements.stubs(:min_days_visited).returns(50)
       tl3_requirements.stubs(:min_topics_replied_to).returns(10)
@@ -599,5 +633,4 @@ describe TrustLevel3Requirements do
       end
     end
   end
-
 end
