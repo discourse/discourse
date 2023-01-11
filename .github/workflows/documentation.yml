@@ -60,11 +60,6 @@ jobs:
       - name: Yarn install
         run: yarn install
 
-      - name: jsdoc-to-markdown install
-        run: |
-          yarn global add jsdoc-to-markdown
-          yarn global upgrade jsdoc-to-markdown
-
       - name: Check Chat documentation
         run: |
           LOAD_PLUGINS=1 bin/rake chat:doc
