@@ -9,5 +9,5 @@ task "chat:doc" do
     plugins/chat/assets/javascripts/discourse/services/chat-api.js
   ]
 
-  `jsdoc2md --separators -c #{config} -f #{files.join(" ")} > #{destination}`
+  `yarn jsdoc2md --separators -c #{config} -f #{files.join(" ")} > #{destination}`
 end
