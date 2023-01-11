@@ -66,3 +66,6 @@ openapi/*
 
 # Cached License Data Files
 /.licenses
+
+# Storybook build artifacts
+app/assets/javascripts/discourse/storybook-static
