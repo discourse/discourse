@@ -5,11 +5,20 @@ import { tracked } from "@glimmer/tracking";
 import { bind } from "discourse-common/utils/decorators";
 import { Promise } from "rsvp";
 
+/**
+ * @module Collection
+ * @public
+ */
 class Collection {
   @tracked items = [];
   @tracked meta = {};
   @tracked loading = false;
 
+  /**
+   * Create a Collection instance
+   * @param {string} resourceURL - the API endpoint to call
+   * @param {callback} handler - anonymous function used to handle the response
+   */
   constructor(resourceURL, handler) {
     this._resourceURL = resourceURL;
     this._handler = handler;
@@ -43,12 +52,16 @@ class Collection {
     };
   }
 
+  /**
+   * Loads first batch of results
+   * @returns {Promise}
+   */
   @bind
   load(params = {}) {
     this._fetchedAll = false;
 
     if (this.loading) {
-      return;
+      return Promise.resolve();
     }
 
     this.loading = true;
@@ -69,6 +82,10 @@ class Collection {
       });
   }
 
+  /**
+   * Attempts to load more results
+   * @returns {Promise}
+   */
   @bind
   loadMore() {
     let promise = Promise.resolve();
@@ -133,7 +150,7 @@ export default class ChatApi extends Service {
 
   /**
    * List all accessible category channels of the current user.
-   * @returns {Collection}
+   * @returns {Collection} {@link Collection}
    *
    * @example
    *
@@ -276,7 +293,7 @@ export default class ChatApi extends Service {
   /**
    * Lists members of a channel.
    * @param {number} channelId - The ID of the channel.
-   * @returns {Collection}
+   * @returns {Collection} {@link Collection}
    */
   listChannelMemberships(channelId) {
     return new Collection(

@@ -1,3 +1,52 @@
+## Modules
+
+<dl>
+<dt><a href="#module_Collection">Collection</a></dt>
+<dd></dd>
+<dt><a href="#module_ChatApi">ChatApi</a></dt>
+<dd></dd>
+</dl>
+
+<a name="module_Collection"></a>
+
+## Collection
+**Access**: public  
+
+* [Collection](#module_Collection)
+    * _instance_
+        * [.load()](#module_Collection..Collection+load) ⇒ <code>Promise</code>
+        * [.loadMore()](#module_Collection..Collection+loadMore) ⇒ <code>Promise</code>
+    * _inner_
+        * [~Collection](#module_Collection..Collection)
+            * [new Collection(resourceURL, handler)](#new_module_Collection..Collection_new)
+
+<a name="module_Collection..Collection+load"></a>
+
+### collection.load() ⇒ <code>Promise</code>
+Loads first batch of results
+
+**Kind**: instance method of [<code>Collection</code>](#module_Collection)  
+<a name="module_Collection..Collection+loadMore"></a>
+
+### collection.loadMore() ⇒ <code>Promise</code>
+Attempts to load more results
+
+**Kind**: instance method of [<code>Collection</code>](#module_Collection)  
+<a name="module_Collection..Collection"></a>
+
+### Collection~Collection
+**Kind**: inner class of [<code>Collection</code>](#module_Collection)  
+<a name="new_module_Collection..Collection_new"></a>
+
+#### new Collection(resourceURL, handler)
+Create a Collection instance
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| resourceURL | <code>string</code> | the API endpoint to call |
+| handler | <code>callback</code> | anonymous function used to handle the response |
+
 <a name="module_ChatApi"></a>
 
 ## ChatApi
@@ -41,6 +90,7 @@ this.chatApi.channel(1).then(channel => { ... })
 List all accessible category channels of the current user.
 
 **Kind**: instance method of [<code>ChatApi</code>](#module_ChatApi)  
+**Returns**: <code>Collection</code> - [Collection](Collection)  
 **Example**  
 ```js
 this.chatApi.channels.then(channels => { ... })
@@ -181,6 +231,7 @@ Updates the status of a channel.
 Lists members of a channel.
 
 **Kind**: instance method of [<code>ChatApi</code>](#module_ChatApi)  
+**Returns**: <code>Collection</code> - [Collection](Collection)  
 
 | Param | Type | Description |
 | --- | --- | --- |
