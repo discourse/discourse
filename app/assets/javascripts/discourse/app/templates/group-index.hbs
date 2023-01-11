@@ -54,6 +54,7 @@
                     <BulkGroupMemberDropdown
                       @bulkSelection={{this.bulkSelection}}
                       @canAdminGroup={{this.model.can_admin_group}}
+                      @canEditGroup={{this.model.can_edit_group}}
                       @onChange={{action "actOnSelection" this.bulkSelection}}
                     />
                   {{/if}}
@@ -148,6 +149,7 @@
                   <GroupMemberDropdown
                     @member={{m}}
                     @canAdminGroup={{this.model.can_admin_group}}
+                    @canEditGroup={{this.model.can_edit_group}}
                     @onChange={{action "actOnGroup" m}}
                   />
                 {{/if}}

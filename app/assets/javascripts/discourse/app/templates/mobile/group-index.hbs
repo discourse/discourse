@@ -44,6 +44,7 @@
                 <GroupMemberDropdown
                   @member={{user}}
                   @canAdminGroup={{this.model.can_admin_group}}
+                  @canEditGroup={{this.model.can_edit_group}}
                   @onChange={{action "actOnGroup" user}}
                 />
               {{/if}}
