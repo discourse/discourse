@@ -189,7 +189,7 @@ Lists members of a channel.
 <a name="module_ChatApi+listCurrentUserChannels"></a>
 
 ### chatApi.listCurrentUserChannels() ⇒ <code>Promise</code>
-Lists channels of the current user.
+Lists public and direct message channels of the current user.
 
 **Kind**: instance method of [<code>ChatApi</code>](#module_ChatApi)  
 <a name="module_ChatApi+followChannel"></a>

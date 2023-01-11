@@ -290,7 +290,7 @@ export default class ChatApi extends Service {
   }
 
   /**
-   * Lists channels of the current user.
+   * Lists public and direct message channels of the current user.
    * @returns {Promise}
    */
   listCurrentUserChannels() {
