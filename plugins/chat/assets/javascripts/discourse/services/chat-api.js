@@ -6,7 +6,7 @@ import { bind } from "discourse-common/utils/decorators";
 import { Promise } from "rsvp";
 
 /**
- * @module Collection
+ * @class
  * @public
  */
 class Collection {
@@ -127,7 +127,7 @@ class Collection {
 }
 
 /**
- * @module ChatApi
+ * @class
  * @public
  */
 export default class ChatApi extends Service {
@@ -150,7 +150,7 @@ export default class ChatApi extends Service {
 
   /**
    * List all accessible category channels of the current user.
-   * @returns {Collection} {@link Collection}
+   * @returns {Collection}
    *
    * @example
    *
@@ -293,7 +293,7 @@ export default class ChatApi extends Service {
   /**
    * Lists members of a channel.
    * @param {number} channelId - The ID of the channel.
-   * @returns {Collection} {@link Collection}
+   * @returns {Collection}
    */
   listChannelMemberships(channelId) {
     return new Collection(
