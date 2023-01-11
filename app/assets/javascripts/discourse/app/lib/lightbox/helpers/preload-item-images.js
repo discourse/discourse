@@ -29,14 +29,14 @@ export async function preloadItemImages(lightboxItem) {
       ...lightboxItem,
       isLoaded: true,
       hasLoadingError: false,
-      width: fullsizeImage.width,
-      height: fullsizeImage.height,
+      width: fullsizeImage.naturalWidth,
+      height: fullsizeImage.naturalHeight,
       aspectRatio:
         lightboxItem.aspectRatio ||
         `${smallImage.naturalWidth} / ${smallImage.naturalHeight}`,
       canZoom:
-        fullsizeImage.width > window.innerWidth ||
-        fullsizeImage.height > window.innerHeight,
+        fullsizeImage.naturalWidth > window.innerWidth ||
+        fullsizeImage.naturalHeight > window.innerHeight,
     };
   } catch (error) {
     lightboxItem.hasLoadingError = true;

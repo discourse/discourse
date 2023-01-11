@@ -2,8 +2,8 @@ import {
   generateLightboxMarkup,
   generateLightboxObject,
 } from "discourse/tests/helpers/lightbox-helpers";
-import { click, module, test } from "qunit";
-
+import { module, test } from "qunit";
+import { click } from "@ember/test-helpers";
 import { LIGHTBOX_APP_EVENT_NAMES } from "discourse/lib/lightbox/constants";
 import domFromString from "discourse-common/lib/dom-from-string";
 import { getOwner } from "discourse-common/lib/get-owner";

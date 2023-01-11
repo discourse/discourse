@@ -10,14 +10,18 @@ module(
   "Unit | lib | Experimental Lightbox | Helpers | getSiteThemeColor()",
   function () {
     test("gets the correct site theme color", async function (assert) {
-      const querySelectorStub = sinon
-        .stub(document, "querySelector")
-        .returns({ content: "#ff0000" });
+      const querySelectorSpy = sinon.spy(document, "querySelector");
+      const MetaSiteColorStub = sinon.stub(
+        HTMLMetaElement.prototype,
+        "content"
+      );
+
+      MetaSiteColorStub.value("#ff0000");
 
       const themeColor = await getSiteThemeColor();
 
       assert.strictEqual(
-        querySelectorStub.calledWith('meta[name="theme-color"]'),
+        querySelectorSpy.calledWith('meta[name="theme-color"]'),
         true,
         "Queries the correct element"
       );
@@ -28,29 +32,28 @@ module(
         "returns the correct theme color"
       );
 
-      querySelectorStub.restore();
+      querySelectorSpy.restore();
+      MetaSiteColorStub.restore();
     });
 
     test("sets the site theme color correctly", async function (assert) {
-      const querySelectorStub = sinon
-        .stub(document, "querySelector")
-        .returns({ content: "#ff0000" });
+      const querySelectorSpy = sinon.spy(document, "querySelector");
 
       await setSiteThemeColor("0000ff");
 
       assert.strictEqual(
-        querySelectorStub.calledWith('meta[name="theme-color"]'),
+        querySelectorSpy.calledWith('meta[name="theme-color"]'),
         true,
-        "Queries the correct element"
+        "queries the correct element"
       );
 
       assert.strictEqual(
-        querySelectorStub.returnValues[0].content,
+        querySelectorSpy.returnValues[0].content,
         "#0000ff",
         "sets the correct theme color"
       );
 
-      querySelectorStub.restore();
+      querySelectorSpy.restore();
     });
   }
 );

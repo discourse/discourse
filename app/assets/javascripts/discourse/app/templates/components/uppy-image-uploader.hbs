@@ -19,14 +19,20 @@
     </label>
 
     {{#if this.imageUrl}}
+      <DButton
+        @action={{action "trash"}}
+        @class="btn-danger pad-left no-text"
+        @icon="far-trash-alt"
+        @type="button"
+      />
       {{#if this.experimentalLightboxEnabled}}
         <DButton
           @icon="discourse-expand"
           @title="expand"
           @type="button"
           @class="image-uploader-lightbox-btn no-text"
-          data-lightbox-trigger
           @disabled={{this.loadingLightbox}}
+          data-lightbox-trigger
         />
       {{else}}
         <DButton

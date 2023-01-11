@@ -1,63 +1,88 @@
-const root = window.location.href.replace(/\/[^/]*$/, "");
-
-const IMAGE_FOLDER = `${root}/images/lightbox`;
+// we use transparent pngs here to avoid loading actual images in tests. We don't care so much about the content of the image
+// we only care that the correct loading state is set and the metadata is correct
+const PNGS = {
+  first: {
+    fullsizeURL:
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAC7gAAAAKCAYAAAAkEBP9AAAAqElEQVR42u3aQQEAIAwAIdfN/pVmDO8BOZizdw8AAAAAAAAAAAAAAHw2gjsAAAAAAAAAAAAAAAWCOwAAAAAAAAAAAAAACYI7AAAAAAAAAAAAAAAJgjsAAAAAAAAAAAAAAAmCOwAAAAAAAAAAAAAACYI7AAAAAAAAAAAAAAAJgjsAAAAAAAAAAAAAAAmCOwAAAAAAAAAAAAAACYI7AAAAAAAAAAAAAAAJD2GpFp8NV4+AAAAAAElFTkSuQmCC",
+    smallURL:
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAfQAAAABCAYAAAAo/lyUAAAAG0lEQVR42mP8z8AARKNgFIyCUTAKRsEoGMoAAJ3mAgDVocSsAAAAAElFTkSuQmCC",
+  },
+  second: {
+    fullsizeURL:
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA+gAAAACCAYAAADLlPadAAAAJ0lEQVR42u3XMQEAAAgDoNk/pzk0xh5owdzmAgAAAFSNoAMAAEDfA6HNBcm32R2bAAAAAElFTkSuQmCC",
+    smallURL:
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAfQAAAABCAYAAAAo/lyUAAAAHElEQVR42mP8/5ThP8MoGAWjYBSMglEwCoY0AACaegLl/taPAQAAAABJRU5ErkJggg==",
+  },
+  third: {
+    fullsizeURL:
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA+gAAAACCAYAAADLlPadAAAAJklEQVR42u3XMQEAAAgDoPnZv7DG2AMtmNxeAAAAgKoRdAAAAOh7JuQED1zV49EAAAAASUVORK5CYII=",
+    smallURL:
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAfQAAAABCAYAAAAo/lyUAAAAHElEQVR42mNk+M/xn2EUjIJRMApGwSgYBUMaAADbVwIINvIVWgAAAABJRU5ErkJggg==",
+  },
+  smallerThanViewPort: {
+    fullsizeURL:
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAAACCAYAAADirOGHAAAAIUlEQVR42u3UAQ0AAAgDoNvE/iU1xzcIwWTvAlBghAW0eNbwBD9majEtAAAAAElFTkSuQmCC",
+    smallURL:
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJYAAAABCAYAAAA8YlcZAAAAE0lEQVR42mNkUPj/n2EUjAIqAwD2IwIg6SI42wAAAABJRU5ErkJggg==",
+  },
+};
 
 export const LIGHTBOX_IMAGE_FIXTURES = {
   first: {
-    fullsizeURL: `${IMAGE_FOLDER}/first_large.png`,
-    smallURL: `${IMAGE_FOLDER}/first_small.png`,
-    downloadURL: `${IMAGE_FOLDER}/first_download.png`,
-    fileDetails: "1068×1518 221 KB",
-    width: 1068,
-    height: 1518,
-    aspectRatio: "351 / 500",
+    fullsizeURL: PNGS.first.fullsizeURL,
+    smallURL: PNGS.first.smallURL,
+    downloadURL: PNGS.first.fullsizeURL,
+    fileDetails: "3000×10 221 KB",
+    width: 3000,
+    height: 10,
+    aspectRatio: "3000 / 10",
     dominantColor: "F0F1F3",
     index: 0,
     title: "first image title",
     alt: "first image alt",
-    cssVars: `--dominant-color: #F0F1F3;--aspect-ratio: 351 / 500;--small-url: url(${IMAGE_FOLDER}/first_small.png);`,
+    cssVars: `--dominant-color: #F0F1F3;--aspect-ratio: 3000 / 10;--small-url: url(${PNGS.first.smallURL});`,
   },
   second: {
-    fullsizeURL: `${IMAGE_FOLDER}/second_large.png`,
-    smallURL: `${IMAGE_FOLDER}/second_small.png`,
-    downloadURL: `${IMAGE_FOLDER}/second_download.png`,
-    fileDetails: "1068×1609 166 KB",
-    width: 1068,
-    height: 1609,
-    aspectRatio: "331 / 500",
+    fullsizeURL: PNGS.second.fullsizeURL,
+    smallURL: PNGS.second.smallURL,
+    downloadURL: PNGS.second.fullsizeURL,
+    fileDetails: "1000×2 166 KB",
+    width: 1000,
+    height: 2,
+    aspectRatio: "1000 / 2",
     dominantColor: "F9F5F6",
     index: 1,
     title: "second image title",
     alt: "second image alt",
-    cssVars: `--dominant-color: #F9F5F6;--aspect-ratio: 331 / 500;--small-url: url(${IMAGE_FOLDER}/second_small.png);`,
+    cssVars: `--dominant-color: #F9F5F6;--aspect-ratio: 1000 / 2;--small-url: url(${PNGS.second.smallURL});`,
   },
   third: {
-    fullsizeURL: `${IMAGE_FOLDER}/third_large.png`,
-    smallURL: `${IMAGE_FOLDER}/third_small.png`,
-    downloadURL: `${IMAGE_FOLDER}/third_download.png`,
-    fileDetails: "1068×1518 240 KB",
-    width: 1068,
-    height: 1518,
-    aspectRatio: "331 / 500",
+    fullsizeURL: PNGS.third.fullsizeURL,
+    smallURL: PNGS.third.smallURL,
+    downloadURL: PNGS.third.fullsizeURL,
+    fileDetails: "1000×2 240 KB",
+    width: 1000,
+    height: 2,
+    aspectRatio: "1000 / 2",
     dominantColor: "EEF0EE",
     index: 2,
     title: "third image title",
     alt: "third image alt",
-    cssVars: `--dominant-color: #EEF0EE;--aspect-ratio: 331 / 500;--small-url: url(${IMAGE_FOLDER}/third_small.png);`,
+    cssVars: `--dominant-color: #F9F5F6;--aspect-ratio: 1000 / 2;--small-url: url(${PNGS.third.smallURL});`,
   },
   smallerThanViewPort: {
-    fullsizeURL: `${IMAGE_FOLDER}/fourth_large.png`,
-    smallURL: `${IMAGE_FOLDER}/fourth_small.png`,
-    downloadURL: `${IMAGE_FOLDER}/fourth_download.png`,
-    fileDetails: "700×273 92.3 KB",
-    width: 700,
-    height: 273,
-    aspectRatio: "690 / 269",
+    fullsizeURL: PNGS.smallerThanViewPort.fullsizeURL,
+    smallURL: PNGS.smallerThanViewPort.smallURL,
+    downloadURL: PNGS.smallerThanViewPort.fullsizeURL,
+    fileDetails: "300×2 92.3 KB",
+    width: 300,
+    height: 2,
+    aspectRatio: "300 / 2",
     dominantColor: "F0F0F1",
     index: 3,
     title: "fourth image title",
     alt: "fourth image alt",
-    cssVars: `--dominant-color: #F0F0F1;--aspect-ratio: 690 / 269;--small-url: url(${IMAGE_FOLDER}/fourth_small.png);`,
+    cssVars: `--dominant-color: #F0F0F1;--aspect-ratio: 300 / 2;--small-url: url(${PNGS.smallerThanViewPort.smallURL});`,
   },
   invalidImage: {
     fullsizeURL: `https:expected-lightbox-invalid/.image/404.png`,

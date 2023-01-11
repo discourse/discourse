@@ -1,4 +1,3 @@
-import { helperContext } from "discourse-common/lib/helpers";
 import { postRNWebviewMessage } from "discourse/lib/utilities";
 
 export async function getSiteThemeColor() {
@@ -15,7 +14,5 @@ export async function setSiteThemeColor(color = "000000") {
     siteThemeColor.content = _color;
   }
 
-  if (helperContext().capabilities.isAppWebview) {
-    postRNWebviewMessage("headerBg", _color);
-  }
+  postRNWebviewMessage?.("headerBg", _color);
 }

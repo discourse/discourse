@@ -59,7 +59,9 @@ module("Integration | Component | d-lightbox", function (hooks) {
       query("[data-lightbox-element]").classList.contains(
         "d-lightbox--is-vertical"
       ) ||
-        query("[data-lightbox-element]").contains("d-lightbox--is-horizontal"),
+        query("[data-lightbox-element]").classList.contains(
+          "d-lightbox--is-horizontal"
+        ),
       "it has a layout class"
     );
 
