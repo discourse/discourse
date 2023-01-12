@@ -594,7 +594,7 @@ class SessionController < ApplicationController
       client_ip: request&.ip,
       user_agent: request&.user_agent,
     }
-    DiscourseEvent.trigger(:before_session_destroy, event_data)
+    DiscourseEvent.trigger(:before_session_destroy, event_data, **Discourse::Utils::EMPTY_KEYWORDS)
     redirect_url = event_data[:redirect_url]
 
     reset_session
