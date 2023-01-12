@@ -10,10 +10,11 @@ module DiscourseDev
     def initialize
       default_file_path = File.join(Rails.root, "config", "dev_defaults.yml")
       @file_path = File.join(Rails.root, "config", "dev.yml")
-      default_config = YAML.load_file(default_file_path)
+      # https://stackoverflow.com/questions/71332602/upgrading-to-ruby-3-1-causes-psychdisallowedclass-exception-when-using-yaml-lo
+      default_config = YAML.load_file(default_file_path, permitted_classes: [Date])
 
       if File.exist?(file_path)
-        user_config = YAML.load_file(file_path)
+        user_config = YAML.load_file(file_path, permitted_classes: [Date])
       else
         puts "I did no detect a custom `config/dev.yml` file, creating one for you where you can amend defaults."
         FileUtils.cp(default_file_path, file_path)
