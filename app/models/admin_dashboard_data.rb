@@ -344,6 +344,11 @@ class AdminDashboardData
         return I18n.t("dashboard.s3_config_warning", base_path: Discourse.base_path)
       end
 
+      if (SiteSetting.enable_s3_uploads && SiteSetting.s3_private_bucket_policy?) &&
+        !SiteSetting.secure_uploads
+        return I18n.t("dashboard.s3_bucket_policy_warning", base_path: Discourse.base_path)
+      end
+
       if SiteSetting.backup_location == BackupLocationSiteSetting::S3 &&
            (bad_keys || SiteSetting.s3_backup_bucket.blank?)
         return I18n.t("dashboard.s3_backup_config_warning", base_path: Discourse.base_path)

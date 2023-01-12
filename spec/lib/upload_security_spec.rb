@@ -161,6 +161,12 @@ RSpec.describe UploadSecurity do
         expect(subject.should_be_secure?).to eq(true)
       end
     end
+    context "when s3 bucket has a private only bucket policy" do
+      before { upload.update(secure: true) }
+      it "returns true" do
+        expect(subject.should_be_secure?).to eq(true)
+      end
+    end
 
     context "for attachments" do
       before { upload.update(original_filename: "test.pdf") }
