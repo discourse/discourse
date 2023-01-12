@@ -176,7 +176,6 @@ RSpec.describe SiteSettingExtension do
       expect(changed_event_1[:params]).to eq([:test_setting, 1, 2])
       expect(changed_event_2[:params]).to eq([:test_setting, 2, 1])
     end
-
   end
 
   describe "DiscourseEvent for login_required changed to true" do
