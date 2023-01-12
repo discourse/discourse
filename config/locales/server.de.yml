@@ -1686,6 +1686,7 @@ de:
     enable_s3_uploads: "Speichere hochgeladene Dateien auf Amazon S3. WICHTIG: Benötigt gültige S3-Anmeldedaten (sowohl „access key id“ als auch „secret access key“)."
     s3_use_iam_profile: 'Verwende ein <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2_instance-profiles.html">AWS-EC2-Instanz-Profil</a>, um Zugriff auf den S3-Bucket zu gewähren. BEACHTE: Das Aktivieren setzt voraus, dass Discourse in einer entsprechend konfigurierten EC2-Instanz läuft, und überschreibt die Einstellungen „s3 access key id“ und „s3 secret access key“.'
     s3_upload_bucket: "Der Name des Amazon-S3-Buckets, in dem hochgeladene Dateien gespeichert werden sollen. ACHTUNG: nur Kleinbuchstaben, keine Punkte, keine Unterstriche."
+    s3_private_bucket_policy: "Die Richtlinie des Amazon-S3-Buckets blockiert öffentlichen Zugriff"
     s3_access_key_id: "Die „access key id“ für Amazon S3, die für den Upload von Bildern, Anhängen und Backups verwendet wird."
     s3_secret_access_key: "Der „secret access key“ für Amazon S3, der für den Upload von Bildern, Anhängen und Backups verwendet wird."
     s3_region: "Der Name der Amazon-S3-Region, die für das Hochladen von Bildern und Backups verwendet wird."

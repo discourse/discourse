@@ -1415,6 +1415,8 @@ files:
   s3_upload_bucket:
     default: ""
     regex: '^[a-z0-9\-\/_]+$' # can't use '.' when using HTTPS
+  s3_private_bucket_policy:
+    default: false
   s3_endpoint:
     default: ""
     regex: '^https?:\/\/.+[^\/]$'

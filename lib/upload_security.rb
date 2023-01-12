@@ -118,6 +118,10 @@ class UploadSecurity
     @upload.secure?
   end
 
+  def s3_private_bucket_policy_check
+    SiteSetting.enable_s3_uploads? && SiteSetting.s3_private_bucket_policy?
+  end
+
   private
 
   def access_control_post
@@ -142,6 +146,7 @@ class UploadSecurity
       secure_creation_for_modifiers: "one or more creation for_modifiers was satisfied",
       uploading_in_composer: "uploading via the composer",
       already_secure: "upload is already secure",
+      s3_private_bucket_policy: "s3 bucket has a private only bucket policy",
     }
   end
 
