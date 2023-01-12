@@ -579,7 +579,7 @@ RSpec.describe Category do
 
     it "deletes related embeddable host" do
       embeddable_host = Fabricate(:embeddable_host, category: @category)
-      @category.destroy
+      @category.destroy!
       expect { embeddable_host.reload }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
