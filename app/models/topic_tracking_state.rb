@@ -95,6 +95,8 @@ class TopicTrackingState
   end
 
   def self.publish_muted(topic)
+    return unless topic.regular?
+
     user_ids =
       topic
         .topic_users
@@ -110,6 +112,8 @@ class TopicTrackingState
   end
 
   def self.publish_unmuted(topic)
+    return unless topic.regular?
+
     user_ids =
       User
         .watching_topic(topic)
@@ -172,6 +176,8 @@ class TopicTrackingState
   end
 
   def self.publish_recover(topic)
+    return unless topic.regular?
+
     group_ids = secure_category_group_ids(topic)
 
     message = { topic_id: topic.id, message_type: RECOVER_MESSAGE_TYPE }
@@ -180,6 +186,8 @@ class TopicTrackingState
   end
 
   def self.publish_delete(topic)
+    return unless topic.regular?
+
     group_ids = secure_category_group_ids(topic)
 
     message = { topic_id: topic.id, message_type: DELETE_MESSAGE_TYPE }
@@ -188,6 +196,8 @@ class TopicTrackingState
   end
 
   def self.publish_destroy(topic)
+    return unless topic.regular?
+
     group_ids = secure_category_group_ids(topic)
 
     message = { topic_id: topic.id, message_type: DESTROY_MESSAGE_TYPE }
@@ -549,12 +559,14 @@ class TopicTrackingState
   end
 
   def self.secure_category_group_ids(topic)
-    ids = topic&.category&.secure_group_ids
+    category = topic.category
 
-    if ids.blank?
-      [Group::AUTO_GROUPS[:admin]]
+    if category.read_restricted
+      ids = [Group::AUTO_GROUPS[:admins]]
+      ids.push(*category.secure_group_ids)
+      ids.uniq
     else
-      ids
+      nil
     end
   end
   private_class_method :secure_category_group_ids
