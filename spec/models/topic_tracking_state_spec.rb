@@ -3,33 +3,91 @@
 RSpec.describe TopicTrackingState do
   fab!(:user) { Fabricate(:user) }
   fab!(:whisperers_group) { Fabricate(:group) }
-
-  let(:post) { create_post }
-
-  let(:topic) { post.topic }
   fab!(:private_message_post) { Fabricate(:private_message_post) }
   let(:private_message_topic) { private_message_post.topic }
+  let(:post) { create_post }
+  let(:topic) { post.topic }
 
-  fab!(:read_restricted_category) { Fabricate(:category, read_restricted: true) }
-  fab!(:read_restricted_topic) { Fabricate(:topic, category: read_restricted_category) }
+  shared_examples "does not publish message for private topics" do |method|
+    it "should not publish any message for a private topic" do
+      messages =
+        MessageBus.track_publish { described_class.public_send(method, private_message_topic) }
 
-  describe ".publish_new" do
-    it "should publish message only to admin group when category is read restricted but no groups have been granted access" do
+      expect(messages).to eq([])
+    end
+  end
+
+  shared_examples "publishes message to right groups and users" do |message_bus_channel, method|
+    fab!(:public_category) { Fabricate(:category, read_restricted: false) }
+    fab!(:topic_in_public_category) { Fabricate(:topic, category: public_category) }
+    fab!(:group) { Fabricate(:group) }
+    fab!(:read_restricted_category_with_groups) { Fabricate(:private_category, group: group) }
+
+    fab!(:topic_in_read_restricted_category_with_groups) do
+      Fabricate(:topic, category: read_restricted_category_with_groups)
+    end
+
+    fab!(:read_restricted_category_with_no_groups) { Fabricate(:category, read_restricted: true) }
+
+    fab!(:topic_in_read_restricted_category_with_no_groups) do
+      Fabricate(:topic, category: read_restricted_category_with_no_groups)
+    end
+
+    it "should publish message to everyone for a topic in a category that is not read restricted" do
       message =
         MessageBus
-          .track_publish("/new") { described_class.publish_new(read_restricted_topic) }
+          .track_publish(message_bus_channel) do
+            described_class.public_send(method, topic_in_public_category)
+          end
           .first
 
       data = message.data
 
-      expect(data["topic_id"]).to eq(read_restricted_topic.id)
-      expect(data["message_type"]).to eq(described_class::NEW_TOPIC_MESSAGE_TYPE)
-      expect(message.group_ids).to contain_exactly(Group::AUTO_GROUPS[:admin])
+      expect(data["topic_id"]).to eq(topic_in_public_category.id)
+      expect(message.group_ids).to eq(nil)
+      expect(message.user_ids).to eq(nil)
+    end
+
+    it "should publish message only to admin group and groups that have permission to read a category when topic is in category that is restricted to certain groups" do
+      message =
+        MessageBus
+          .track_publish(message_bus_channel) do
+            described_class.public_send(method, topic_in_read_restricted_category_with_groups)
+          end
+          .first
+
+      data = message.data
+
+      expect(data["topic_id"]).to eq(topic_in_read_restricted_category_with_groups.id)
+      expect(message.group_ids).to contain_exactly(Group::AUTO_GROUPS[:admins], group.id)
+      expect(message.user_ids).to eq(nil)
+    end
+
+    it "should publish message only to admin group when topic is in category that is read restricted but no groups have been granted access" do
+      message =
+        MessageBus
+          .track_publish(message_bus_channel) do
+            described_class.public_send(method, topic_in_read_restricted_category_with_no_groups)
+          end
+          .first
+
+      data = message.data
+
+      expect(data["topic_id"]).to eq(topic_in_read_restricted_category_with_no_groups.id)
+      expect(message.group_ids).to contain_exactly(Group::AUTO_GROUPS[:admins])
       expect(message.user_ids).to eq(nil)
     end
   end
 
+  describe ".publish_new" do
+    include_examples("publishes message to right groups and users", "/new", :publish_new)
+    include_examples("does not publish message for private topics", :publish_new)
+  end
+
   describe ".publish_latest" do
+    include_examples("publishes message to right groups and users", "/latest", :publish_latest)
+    include_examples("does not publish message for private topics", :publish_latest)
+
     it "can correctly publish latest" do
       message = MessageBus.track_publish("/latest") { described_class.publish_latest(topic) }.first
 
@@ -38,6 +96,8 @@ RSpec.describe TopicTrackingState do
       expect(data["topic_id"]).to eq(topic.id)
       expect(data["message_type"]).to eq(described_class::LATEST_MESSAGE_TYPE)
       expect(data["payload"]["archetype"]).to eq(Archetype.default)
+      expect(message.group_ids).to eq(nil)
+      expect(message.user_ids).to eq(nil)
     end
 
     it "publishes whisper post to staff users and members of whisperers group" do
@@ -53,29 +113,6 @@ RSpec.describe TopicTrackingState do
           .first
 
       expect(message.group_ids).to contain_exactly(whisperers_group.id, Group::AUTO_GROUPS[:staff])
-    end
-
-    it "should publish message only to admin group when category is read restricted but no groups have been granted access" do
-      message =
-        MessageBus
-          .track_publish("/latest") { described_class.publish_latest(read_restricted_topic) }
-          .first
-
-      data = message.data
-
-      expect(data["topic_id"]).to eq(read_restricted_topic.id)
-      expect(data["message_type"]).to eq(described_class::LATEST_MESSAGE_TYPE)
-      expect(message.group_ids).to contain_exactly(Group::AUTO_GROUPS[:admin])
-      expect(message.user_ids).to eq(nil)
-    end
-
-    describe "private message" do
-      it "should not publish any message" do
-        messages =
-          MessageBus.track_publish { described_class.publish_latest(private_message_topic) }
-
-        expect(messages).to eq([])
-      end
     end
   end
 
@@ -241,6 +278,8 @@ RSpec.describe TopicTrackingState do
     let(:user) { Fabricate(:user, last_seen_at: Date.today) }
     let(:post) { create_post(user: user) }
 
+    include_examples("does not publish message for private topics", :publish_muted)
+
     it "can correctly publish muted" do
       TopicUser.find_by(topic: topic, user: post.user).update(notification_level: 0)
       messages = MessageBus.track_publish("/latest") { TopicTrackingState.publish_muted(topic) }
@@ -272,6 +311,8 @@ RSpec.describe TopicTrackingState do
     let(:second_user) { Fabricate(:user, last_seen_at: Date.today) }
     let(:third_user) { Fabricate(:user, last_seen_at: Date.today) }
     let(:post) { create_post(user: user) }
+
+    include_examples("does not publish message for private topics", :publish_unmuted)
 
     it "can correctly publish unmuted" do
       Fabricate(:topic_tag, topic: topic)
@@ -734,50 +775,17 @@ RSpec.describe TopicTrackingState do
   end
 
   describe ".publish_recover" do
-    it "should publish message only to admin group when category is read restricted but no groups have been granted access" do
-      message =
-        MessageBus
-          .track_publish("/recover") { described_class.publish_recover(read_restricted_topic) }
-          .first
-
-      data = message.data
-
-      expect(data["topic_id"]).to eq(read_restricted_topic.id)
-      expect(data["message_type"]).to eq(described_class::RECOVER_MESSAGE_TYPE)
-      expect(message.group_ids).to contain_exactly(Group::AUTO_GROUPS[:admin])
-      expect(message.user_ids).to eq(nil)
-    end
+    include_examples("publishes message to right groups and users", "/recover", :publish_recover)
+    include_examples("does not publish message for private topics", :publish_recover)
   end
 
   describe ".publish_delete" do
-    it "should publish message only to admin group when category is read restricted but no groups have been granted access" do
-      message =
-        MessageBus
-          .track_publish("/delete") { described_class.publish_delete(read_restricted_topic) }
-          .first
-
-      data = message.data
-
-      expect(data["topic_id"]).to eq(read_restricted_topic.id)
-      expect(data["message_type"]).to eq(described_class::DELETE_MESSAGE_TYPE)
-      expect(message.group_ids).to contain_exactly(Group::AUTO_GROUPS[:admin])
-      expect(message.user_ids).to eq(nil)
-    end
+    include_examples("publishes message to right groups and users", "/delete", :publish_delete)
+    include_examples("does not publish message for private topics", :publish_delete)
   end
 
   describe ".publish_destroy" do
-    it "should publish message only to admin group when category is read restricted but no groups have been granted access" do
-      message =
-        MessageBus
-          .track_publish("/destroy") { described_class.publish_destroy(read_restricted_topic) }
-          .first
-
-      data = message.data
-
-      expect(data["topic_id"]).to eq(read_restricted_topic.id)
-      expect(data["message_type"]).to eq(described_class::DESTROY_MESSAGE_TYPE)
-      expect(message.group_ids).to contain_exactly(Group::AUTO_GROUPS[:admin])
-      expect(message.user_ids).to eq(nil)
-    end
+    include_examples("publishes message to right groups and users", "/destroy", :publish_destroy)
+    include_examples("does not publish message for private topics", :publish_destroy)
   end
 end
