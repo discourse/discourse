@@ -18,6 +18,32 @@ RSpec.describe Scheduler::Defer do
 
   after { @defer.stop! }
 
+  it "supports basic instrumentation" do
+    @defer.later("first") {}
+    @defer.later("first") {}
+    @defer.later("second") {}
+    @defer.later("bad") { raise "boom" }
+
+    wait_for(200) { @defer.length == 0 }
+
+    stats = Hash[@defer.stats]
+
+    expect(stats["first"][:queued]).to eq(2)
+    expect(stats["first"][:finished]).to eq(2)
+    expect(stats["first"][:errors]).to eq(0)
+    expect(stats["first"][:duration]).to be > 0
+
+    expect(stats["second"][:queued]).to eq(1)
+    expect(stats["second"][:finished]).to eq(1)
+    expect(stats["second"][:errors]).to eq(0)
+    expect(stats["second"][:duration]).to be > 0
+
+    expect(stats["bad"][:queued]).to eq(1)
+    expect(stats["bad"][:finished]).to eq(1)
+    expect(stats["bad"][:duration]).to be > 0
+    expect(stats["bad"][:errors]).to eq(1)
+  end
+
   it "supports timeout reporting" do
     @defer.timeout = 0.05
 

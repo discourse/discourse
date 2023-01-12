@@ -1,11 +1,6 @@
 # frozen_string_literal: true
 
 class Bookmark < ActiveRecord::Base
-  self.ignored_columns = [
-    "post_id", # TODO (martin) (2022-08-01) remove
-    "for_topic", # TODO (martin) (2022-08-01) remove
-  ]
-
   cattr_accessor :registered_bookmarkables
   self.registered_bookmarkables = []
 

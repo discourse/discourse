@@ -7,69 +7,6 @@ RSpec.describe Email::MessageIdService do
 
   subject { described_class }
 
-  describe "#generate_for_post" do
-    it "generates for the post using the message_id on the post's incoming_email" do
-      Fabricate(:incoming_email, message_id: "test@test.localhost", post: post)
-      post.reload
-      expect(subject.generate_for_post(post, use_incoming_email_if_present: true)).to eq(
-        "<test@test.localhost>",
-      )
-    end
-
-    it "generates for the post without an incoming_email record" do
-      expect(subject.generate_for_post(post)).to match(subject.message_id_post_id_regexp)
-      expect(subject.generate_for_post(post, use_incoming_email_if_present: true)).to match(
-        subject.message_id_post_id_regexp,
-      )
-    end
-  end
-
-  describe "#generate_for_topic" do
-    it "generates for the topic using the message_id on the first post's incoming_email" do
-      Fabricate(
-        :incoming_email,
-        message_id: "test213428@somemailservice.com",
-        post: post,
-        created_via: IncomingEmail.created_via_types[:handle_mail],
-      )
-      post.reload
-      expect(subject.generate_for_topic(topic, use_incoming_email_if_present: true)).to eq(
-        "<test213428@somemailservice.com>",
-      )
-    end
-
-    it "does not use the first post's incoming email if it was created via group_smtp, only handle_mail" do
-      incoming =
-        Fabricate(
-          :incoming_email,
-          message_id: "test213428@somemailservice.com",
-          post: post,
-          created_via: IncomingEmail.created_via_types[:group_smtp],
-        )
-      post.reload
-      expect(subject.generate_for_topic(topic, use_incoming_email_if_present: true)).to match(
-        subject.message_id_topic_id_regexp,
-      )
-      incoming.update(created_via: IncomingEmail.created_via_types[:handle_mail])
-      expect(subject.generate_for_topic(topic, use_incoming_email_if_present: true)).to eq(
-        "<test213428@somemailservice.com>",
-      )
-    end
-
-    it "generates for the topic without an incoming_email record" do
-      expect(subject.generate_for_topic(topic)).to match(subject.message_id_topic_id_regexp)
-      expect(subject.generate_for_topic(topic, use_incoming_email_if_present: true)).to match(
-        subject.message_id_topic_id_regexp,
-      )
-    end
-
-    it "generates canonical for the topic" do
-      canonical_topic_id = subject.generate_for_topic(topic, canonical: true)
-      expect(canonical_topic_id).to match(subject.message_id_topic_id_regexp)
-      expect(canonical_topic_id).to eq("<topic/#{topic.id}@test.localhost>")
-    end
-  end
-
   describe "#generate_or_use_existing" do
     it "does not override a post's existing outbound_message_id" do
       post.update!(outbound_message_id: "blah@host.test")
