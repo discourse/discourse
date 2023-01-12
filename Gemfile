@@ -261,12 +261,7 @@ if ENV["IMPORT"] == "1"
   gem "parallel", require: false
 end
 
-# workaround for openssl 3.0, see
-# https://github.com/pushpad/web-push/pull/2
-gem "web-push",
-    require: false,
-    git: "https://github.com/xfalcox/web-push",
-    branch: "openssl-3-compat"
+gem "web-push"
 gem "colored2", require: false
 gem "maxminddb"
 
