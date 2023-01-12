@@ -155,6 +155,7 @@ class Notification < ActiveRecord::Base
         following: 800, # Used by https://github.com/discourse/discourse-follow
         following_created_topic: 801, # Used by https://github.com/discourse/discourse-follow
         following_replied: 802, # Used by https://github.com/discourse/discourse-follow
+        circles_activity: 900, # Used by https://github.com/discourse/discourse-circles
       )
   end
 
