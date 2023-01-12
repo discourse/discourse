@@ -997,7 +997,8 @@ RSpec.describe Chat::ChatController do
     end
 
     it "doesn't invite users who cannot chat" do
-      SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:admin]
+      SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:admins]
+
       expect {
         put "/chat/#{chat_channel.id}/invite.json", params: { user_ids: [user.id] }
       }.not_to change {
