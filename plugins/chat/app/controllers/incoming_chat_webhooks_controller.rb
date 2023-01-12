@@ -85,12 +85,15 @@ class Chat::IncomingChatWebhooksController < ApplicationController
           )
   end
 
+  # The webhook POST body can be in 3 different formats:
+  #
+  # * { text: "message text" }, which is the most basic method, and also mirrors Slack payloads
+  # * { attachments: [ text: "message text" ] }, which is a variant of Slack payloads using legacy attachments
+  # * { payload: "<JSON STRING>", attachments: null, text: null }, where JSON STRING can look
+  #   like the `attachments` example above (along with other attributes), which is fired by OpsGenie
   def validate_payload
-    params.require([:key])
+    params.require(:key)
 
-    # TODO (martin) It is not clear whether the :payload key is actually
-    # present in the webhooks sent from OpsGenie, so once it is confirmed
-    # in production what we are actually getting then we can remove this.
     if !params[:text] && !params[:payload] && !params[:attachments]
       raise Discourse::InvalidParameters
     end
@@ -99,7 +102,7 @@ class Chat::IncomingChatWebhooksController < ApplicationController
   def debug_payload
     return if !SiteSetting.chat_debug_webhook_payloads
     Rails.logger.warn(
-      "Debugging chat webhook payload: " +
+      "Debugging chat webhook payload for endpoint #{params[:key]}: " +
         JSON.dump(
           { payload: params[:payload], attachments: params[:attachments], text: params[:text] },
         ),
