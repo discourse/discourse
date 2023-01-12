@@ -252,6 +252,11 @@ async function buildFromBootstrap(proxy, baseURL, req, response, preload) {
       url.searchParams.append("safe_mode", reqUrlSafeMode);
     }
 
+    const enableSidebar = forUrlSearchParams.get("enable_sidebar");
+    if (enableSidebar) {
+      url.searchParams.append("enable_sidebar", enableSidebar);
+    }
+
     const reqUrlPreviewThemeId = forUrlSearchParams.get("preview_theme_id");
     if (reqUrlPreviewThemeId) {
       url.searchParams.append("preview_theme_id", reqUrlPreviewThemeId);
