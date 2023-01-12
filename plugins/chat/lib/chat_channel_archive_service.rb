@@ -2,9 +2,7 @@
 
 ##
 # From time to time, site admins may choose to sunset a chat channel and archive
-# the messages within. The main use case for this is a topic-based channel, but
-# it can be used for category channels just fine. It cannot be used for DM channels
-# in its current iteration.
+# the messages within. It cannot be used for DM channels in its current iteration.
 #
 # To archive a channel, we mark it read_only first to prevent any further message
 # additions or changes, and create a record to track whether the archive topic
@@ -17,8 +15,28 @@
 class Chat::ChatChannelArchiveService
   ARCHIVED_MESSAGES_PER_POST = 100
 
-  def self.begin_archive_process(chat_channel:, acting_user:, topic_params:)
+  class ArchiveValidationError < StandardError
+    attr_reader :errors
+
+    def initialize(errors: [])
+      super
+      @errors = errors
+    end
+  end
+
+  def self.create_archive_process(chat_channel:, acting_user:, topic_params:)
     return if ChatChannelArchive.exists?(chat_channel: chat_channel)
+
+    # Only need to validate topic params for a new topic, not an existing one.
+    if topic_params[:topic_id].blank?
+      valid, errors =
+        Chat::ChatChannelArchiveService.validate_topic_params(
+          Guardian.new(acting_user),
+          topic_params,
+        )
+
+      raise ArchiveValidationError.new(errors: errors) if !valid
+    end
 
     ChatChannelArchive.transaction do
       chat_channel.read_only!(acting_user)
@@ -48,6 +66,21 @@ class Chat::ChatChannelArchiveService
     chat_channel.chat_channel_archive
   end
 
+  def self.validate_topic_params(guardian, topic_params)
+    topic_creator =
+      TopicCreator.new(
+        Discourse.system_user,
+        guardian,
+        {
+          title: topic_params[:topic_title],
+          category: topic_params[:category_id],
+          tags: topic_params[:tags],
+          import_mode: true,
+        },
+      )
+    [topic_creator.valid?, topic_creator.errors.full_messages]
+  end
+
   attr_reader :chat_channel_archive, :chat_channel, :chat_channel_title
 
   def initialize(chat_channel_archive)
@@ -60,22 +93,22 @@ class Chat::ChatChannelArchiveService
     chat_channel_archive.update(archive_error: nil)
 
     begin
-      ensure_destination_topic_exists!
+      return if !ensure_destination_topic_exists!
 
       Rails.logger.info(
         "Creating posts from message batches for #{chat_channel_title} archive, #{chat_channel_archive.total_messages} messages to archive (#{chat_channel_archive.total_messages / ARCHIVED_MESSAGES_PER_POST} posts).",
       )
 
-      # a batch should be idempotent, either the post is created and the
+      # A batch should be idempotent, either the post is created and the
       # messages are deleted or we roll back the whole thing.
       #
-      # at some point we may want to reconsider disabling post validations,
+      # At some point we may want to reconsider disabling post validations,
       # and add in things like dynamic resizing of the number of messages per
-      # post based on post length, but that can be done later
+      # post based on post length, but that can be done later.
       #
-      # another future improvement is to send a MessageBus message for each
+      # Another future improvement is to send a MessageBus message for each
       # completed batch, so the UI can receive updates and show a progress
-      # bar or something similar
+      # bar or something similar.
       chat_channel
         .chat_messages
         .find_in_batches(batch_size: ARCHIVED_MESSAGES_PER_POST) do |chat_messages|
@@ -95,7 +128,7 @@ class Chat::ChatChannelArchiveService
       kick_all_users
       complete_archive
     rescue => err
-      notify_archiver(:failed, error: err)
+      notify_archiver(:failed, error_message: err.message)
       raise err
     end
   end
@@ -144,29 +177,44 @@ class Chat::ChatChannelArchiveService
             },
           )
 
-        chat_channel_archive.update!(destination_topic: topic_creator.create)
+        if topic_creator.valid?
+          chat_channel_archive.update!(destination_topic: topic_creator.create)
+        else
+          Rails.logger.info("Destination topic for #{chat_channel_title} archive was not valid.")
+          notify_archiver(
+            :failed_no_topic,
+            error_message: topic_creator.errors.full_messages.join("\n"),
+          )
+        end
       end
 
-      Rails.logger.info("Creating first post for #{chat_channel_title} archive.")
-      create_post(
-        I18n.t(
-          "chat.channel.archive.first_post_raw",
-          channel_name: chat_channel_title,
-          channel_url: chat_channel.url,
-        ),
-      )
+      if chat_channel_archive.destination_topic.present?
+        Rails.logger.info("Creating first post for #{chat_channel_title} archive.")
+        create_post(
+          I18n.t(
+            "chat.channel.archive.first_post_raw",
+            channel_name: chat_channel_title,
+            channel_url: chat_channel.url,
+          ),
+        )
+      end
     else
       Rails.logger.info("Topic already exists for #{chat_channel_title} archive.")
     end
 
-    update_destination_topic_status
+    if chat_channel_archive.destination_topic.present?
+      update_destination_topic_status
+      return true
+    end
+
+    false
   end
 
   def update_destination_topic_status
-    # we only want to do this when the destination topic is new, not an
+    # We only want to do this when the destination topic is new, not an
     # existing topic, because we don't want to update the status unexpectedly
     # on an existing topic
-    if chat_channel_archive.destination_topic_title.present?
+    if chat_channel_archive.new_topic?
       if SiteSetting.chat_archive_destination_topic_status == "archived"
         chat_channel_archive.destination_topic.update!(archived: true)
       elsif SiteSetting.chat_archive_destination_topic_status == "closed"
@@ -198,16 +246,17 @@ class Chat::ChatChannelArchiveService
     notify_archiver(:success)
   end
 
-  def notify_archiver(result, error: nil)
+  def notify_archiver(result, error_message: nil)
     base_translation_params = {
       channel_name: chat_channel_title,
-      topic_title: chat_channel_archive.destination_topic.title,
-      topic_url: chat_channel_archive.destination_topic.url,
+      topic_title: chat_channel_archive.destination_topic&.title,
+      topic_url: chat_channel_archive.destination_topic&.url,
+      topic_validation_errors: result == :failed_no_topic ? error_message : nil,
     }
 
-    if result == :failed
+    if result == :failed || result == :failed_no_topic
       Discourse.warn_exception(
-        error,
+        error_message,
         message: "Error when archiving chat channel #{chat_channel_title}.",
         env: {
           chat_channel_id: chat_channel.id,
@@ -219,10 +268,17 @@ class Chat::ChatChannelArchiveService
           channel_url: chat_channel.url,
           messages_archived: chat_channel_archive.archived_messages,
         )
-      chat_channel_archive.update(archive_error: error.message)
+      chat_channel_archive.update(archive_error: error_message)
+      message_translation_key =
+        case result
+        when :failed
+          :chat_channel_archive_failed
+        when :failed_no_topic
+          :chat_channel_archive_failed_no_topic
+        end
       SystemMessage.create_from_system_user(
         chat_channel_archive.archived_by,
-        :chat_channel_archive_failed,
+        message_translation_key,
         error_translation_params,
       )
     else
@@ -235,7 +291,7 @@ class Chat::ChatChannelArchiveService
 
     ChatPublisher.publish_archive_status(
       chat_channel,
-      archive_status: result,
+      archive_status: result != :success ? :failed : :success,
       archived_messages: chat_channel_archive.archived_messages,
       archive_topic_id: chat_channel_archive.destination_topic_id,
       total_messages: chat_channel_archive.total_messages,

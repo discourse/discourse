@@ -1053,10 +1053,12 @@ RSpec.describe PostAlerter do
     it "triggers :before_create_notification" do
       type = Notification.types[:private_message]
       events =
-        DiscourseEvent.track_events { PostAlerter.new.create_notification(user, type, post, {}) }
+        DiscourseEvent.track_events do
+          PostAlerter.new.create_notification(user, type, post, { revision_number: 1 })
+        end
       expect(events).to include(
         event_name: :before_create_notification,
-        params: [user, type, post, {}],
+        params: [user, type, post, { revision_number: 1 }],
       )
     end
   end
