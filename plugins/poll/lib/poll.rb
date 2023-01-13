@@ -306,6 +306,10 @@ class DiscoursePoll::Poll
   end
 
   def self.extract(raw, topic_id, user_id = nil)
+    # Poll Post handlers get called very early in the post
+    # creation process. `raw` could be nil here.
+    return [] if raw.blank?
+
     # TODO: we should fix the callback mess so that the cooked version is available
     # in the validators instead of cooking twice
     raw = raw.sub(%r{\[quote.+/quote\]}m, "")
