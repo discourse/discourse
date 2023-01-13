@@ -2388,6 +2388,7 @@ en:
     navigation_menu: "Determine which navigation menu to use. Sidebar and header navigation are customizable by users. Legacy option is available for backward compatibility."
     default_sidebar_categories: "Selected categories will be displayed under Sidebar's Categories section by default."
     default_sidebar_tags: "Selected tags will be displayed under Sidebar's Tags section by default."
+    enable_new_notifications_menu: "Enables the new notifications menu for the legacy navigation menu."
     enable_new_user_profile_nav_groups: "EXPERIMENTAL: Users of the selected groups will be shown the new user profile navigation menu"
     enable_experimental_topic_timeline_groups: "EXPERIMENTAL: Users of the selected groups will be shown the refactored topic timeline"
     enable_experimental_hashtag_autocomplete: "EXPERIMENTAL: Use the new #hashtag autocompletion system for categories and tags that renders the selected item differently and has improved search"
@@ -2449,6 +2450,7 @@ en:
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "You cannot enable DiscourseConnect if 2FA is enforced."
       delete_rejected_email_after_days: "This setting cannot be set lower than the delete_email_logs_after_days setting or greater than %{max}"
       invalid_uncategorized_category_setting: "The Uncategorized category cannot be selected if allow uncategorized topics is not allowed"
+      enable_new_notifications_menu_not_legacy_navigation_menu: "You must set `navigation_menu` to `legacy` before enabling this setting."
 
     placeholder:
       discourse_connect_provider_secrets:
