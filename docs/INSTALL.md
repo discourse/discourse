@@ -21,8 +21,8 @@ Hosting Rails applications is complicated. Even if you already have Postgres, Re
 
 ### Software Requirements
 
-- [Postgres 13+](https://www.postgresql.org/download/)
-- [Redis 6+](https://redis.io/download)
+- [Postgres 13](https://www.postgresql.org/download/)
+- [Redis 7](https://redis.io/download)
 - [Ruby 3.1+](https://www.ruby-lang.org/en/downloads/)
 ## Security
 
