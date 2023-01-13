@@ -234,7 +234,7 @@ export default function (options) {
           let text = me.val();
 
           // resync in case of drift (upload for example)
-          let pos = guessCompletePosition();
+          let pos = guessCompletePosition({ completeTerm: true });
 
           if (
             pos.completeStart !== undefined &&
@@ -581,6 +581,7 @@ export default function (options) {
     let prevIsGood = true;
     let element = me[0];
     let backSpace = opts && opts.backSpace;
+    let completeTermOption = opts && opts.completeTerm;
 
     let c = caretPosition(element);
 
@@ -614,6 +615,9 @@ export default function (options) {
         }
       }
       prevIsGood = !allowedLettersRegex.test(prev);
+      if (completeTermOption) {
+        prevIsGood ||= prev === " ";
+      }
     }
 
     return { completeStart: start, completeEnd: end, term };

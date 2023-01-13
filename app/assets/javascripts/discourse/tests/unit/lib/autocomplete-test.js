@@ -26,14 +26,27 @@ module("Unit | Utility | autocomplete", function (hooks) {
     cleanup();
   });
 
-  function simulateKey(element, key, options) {
-    options = options || {};
+  function simulateKey(element, key) {
     let keyCode = key.charCodeAt(0);
 
-    element.dispatchEvent(
-      new KeyboardEvent("keydown", { key, keyCode, which: keyCode })
-    );
-    if (!options.skipValueChange) {
+    let bubbled = false;
+    let trackBubble = function () {
+      bubbled = true;
+    };
+
+    element.addEventListener("keydown", trackBubble);
+
+    let keyboardEvent = new KeyboardEvent("keydown", {
+      key,
+      keyCode,
+      which: keyCode,
+    });
+
+    element.dispatchEvent(keyboardEvent);
+
+    element.removeEventListener("keydown", trackBubble);
+
+    if (bubbled) {
       let pos = element.selectionStart;
       let value = element.value;
       // backspace
@@ -47,6 +60,7 @@ module("Unit | Utility | autocomplete", function (hooks) {
         element.selectionEnd = pos + 1;
       }
     }
+
     element.dispatchEvent(
       new KeyboardEvent("keyup", { key, keyCode, which: keyCode })
     );
@@ -74,7 +88,7 @@ module("Unit | Utility | autocomplete", function (hooks) {
     });
 
     simulateKey(element, "@");
-    simulateKey(element, "\r", { skipValueChange: true });
+    simulateKey(element, "\r");
 
     assert.strictEqual(element.value, "@test1 ");
     assert.strictEqual(element.selectionStart, 7);
@@ -82,7 +96,7 @@ module("Unit | Utility | autocomplete", function (hooks) {
 
     simulateKey(element, "@");
     simulateKey(element, "2");
-    simulateKey(element, "\r", { skipValueChange: true });
+    simulateKey(element, "\r");
 
     assert.strictEqual(element.value, "@test1 @test2 ");
     assert.strictEqual(element.selectionStart, 14);
@@ -93,7 +107,7 @@ module("Unit | Utility | autocomplete", function (hooks) {
 
     simulateKey(element, "\b");
     simulateKey(element, "\b");
-    simulateKey(element, "\r", { skipValueChange: true });
+    simulateKey(element, "\r");
 
     assert.strictEqual(element.value, "@test1 @test2 ");
     assert.strictEqual(element.selectionStart, 7);
@@ -121,6 +135,46 @@ module("Unit | Utility | autocomplete", function (hooks) {
     simulateKey(element, "\b");
     list = document.querySelectorAll("#ac-testing ul li");
     assert.strictEqual(list.length, 0);
+  });
+
+  test("Autocomplete can handle spaces", function (assert) {
+    let element = textArea("");
+    let $element = $(element);
+
+    autocomplete.call($element, {
+      key: "@",
+      dataSource: (term) =>
+        [
+          { username: "jd", name: "jane dale" },
+          { username: "jb", name: "jack black" },
+        ]
+          .filter((user) => {
+            return user.username.includes(term) || user.name.includes(term);
+          })
+          .map((user) => user.username),
+      template: compile(`<div id='ac-testing' class='autocomplete ac-test'>
+  <ul>
+    {{#each options as |option|}}
+      <li>
+        <a href>
+          {{option}}
+        </a>
+      </li>
+    {{/each}}
+  </ul>
+</div>`),
+    });
+
+    simulateKey(element, "@");
+    simulateKey(element, "j");
+    simulateKey(element, "a");
+    simulateKey(element, "n");
+    simulateKey(element, "e");
+    simulateKey(element, " ");
+    simulateKey(element, "d");
+    simulateKey(element, "\r");
+
+    assert.strictEqual(element.value, "@jd ");
   });
 
   test("Autocomplete can render on @", function (assert) {
