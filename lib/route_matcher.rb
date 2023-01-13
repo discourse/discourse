@@ -59,7 +59,7 @@ class RouteMatcher
 
     params.all? do |param|
       param_alias = aliases&.[](param)
-      allowed_values = [allowed_param_values[param.to_s]].flatten
+      allowed_values = [allowed_param_values.fetch(param.to_s, [])].flatten
 
       value = requested_params[param.to_s]
       alias_value = requested_params[param_alias.to_s]

@@ -479,7 +479,12 @@ class TopicsController < ApplicationController
     enabled = params[:enabled] == "true"
 
     check_for_status_presence(:status, status)
-    @topic = Topic.find_by(id: topic_id)
+    @topic =
+      if params[:category_id]
+        Topic.find_by(id: topic_id, category_id: params[:category_id].to_i)
+      else
+        Topic.find_by(id: topic_id)
+      end
 
     case status
     when "closed"
