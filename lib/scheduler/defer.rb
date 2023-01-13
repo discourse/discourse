@@ -79,7 +79,11 @@ module Scheduler
     def start_thread
       @mutex.synchronize do
         @reactor = MessageBus::TimerThread.new if !@reactor
-        @thread = Thread.new { do_work while true } if !@thread&.alive?
+        @thread =
+          Thread.new do
+            @thread.abort_on_exception = true if Rails.env.test?
+            do_work while true
+          end if !@thread&.alive?
       end
     end
 
@@ -110,11 +114,13 @@ module Scheduler
       Discourse.handle_job_exception(ex, message: "Processing deferred code queue")
     ensure
       ActiveRecord::Base.connection_handler.clear_active_connections!
-      @stats_mutex.synchronize do
-        stats = @stats[desc]
-        if stats
-          stats[:finished] += 1
-          stats[:duration] += Process.clock_gettime(Process::CLOCK_MONOTONIC) - start
+      if start
+        @stats_mutex.synchronize do
+          stats = @stats[desc]
+          if stats
+            stats[:finished] += 1
+            stats[:duration] += Process.clock_gettime(Process::CLOCK_MONOTONIC) - start
+          end
         end
       end
     end
