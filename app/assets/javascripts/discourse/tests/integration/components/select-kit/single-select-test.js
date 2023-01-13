@@ -411,4 +411,17 @@ module("Integration | Component | select-kit/single-select", function (hooks) {
 
     assert.ok(header.bottom > body.top, "it correctly offsets the body");
   });
+
+  test("options.expandedOnInsert", async function (assert) {
+    setDefaultState(this);
+    await render(hbs`
+      <SingleSelect
+        @value={{this.value}}
+        @content={{this.content}}
+        @options={{hash expandedOnInsert=true}}
+      />
+    `);
+
+    assert.dom(".single-select.is-expanded").exists();
+  });
 });

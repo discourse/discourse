@@ -188,6 +188,14 @@ export default Component.extend(
       this.handleDeprecations();
     },
 
+    didInsertElement() {
+      this._super(...arguments);
+
+      if (this.selectKit.options.expandedOnInsert) {
+        this._open();
+      }
+    },
+
     click(event) {
       event.preventDefault();
       event.stopPropagation();
@@ -296,6 +304,7 @@ export default Component.extend(
       desktopPlacementStrategy: null,
       hiddenValues: null,
       disabled: false,
+      expandedOnInsert: false,
     },
 
     autoFilterable: computed("content.[]", "selectKit.filter", function () {
