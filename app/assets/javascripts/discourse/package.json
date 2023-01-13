@@ -81,7 +81,7 @@
     "jsdom": "^21.0.0",
     "loader.js": "^4.7.0",
     "markdown-it": "^13.0.1",
-    "message-bus-client": "^4.3.0",
+    "message-bus-client": "^4.3.2",
     "messageformat": "0.1.5",
     "pretender": "^3.4.7",
     "pretty-text": "1.0.0",
