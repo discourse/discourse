@@ -85,7 +85,6 @@ class Site
                 .joins("LEFT JOIN topics t on t.id = categories.topic_id")
                 .select("categories.*, t.slug topic_slug")
                 .order(:position)
-                .to_a
 
             modifiers = []
             # some plugins may need to change the categories cached on site load
