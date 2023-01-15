@@ -2084,6 +2084,9 @@ navigation:
     choices:
       - "default"
       - "unread_new"
+  enable_new_notifications_menu:
+    default: false
+    validator: "EnableNewNotificationsMenuValidator"
 
 embedding:
   embed_by_username:
