@@ -9315,10 +9315,9 @@ vary@^1, vary@~1.1.2:
   resolved "https://registry.yarnpkg.com/vary/-/vary-1.1.2.tgz#2299f02c6ded30d4a5961b0b9f74524a18f634fc"
   integrity sha1-IpnwLG3tMNSllhsLn3RSShj2NPw=
 
-virtual-dom@^2.1.1:
+"virtual-dom@git+https://github.com/balval/virtual-dom.git":
   version "2.1.1"
-  resolved "https://registry.yarnpkg.com/virtual-dom/-/virtual-dom-2.1.1.tgz#80eda2d481b9ede0c049118cefcb4a05f21d1375"
-  integrity sha1-gO2i1IG57eDASRGM78tKBfIdE3U=
+  resolved "git+https://github.com/balval/virtual-dom.git#36c3518e1d2aa5786b0b4c19b50e2b8e4b746c78"
   dependencies:
     browser-split "0.0.1"
     error "^4.3.0"
