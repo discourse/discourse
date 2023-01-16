@@ -14,6 +14,10 @@ RSpec.describe HashtagsController do
 
   before do
     SiteSetting.tagging_enabled = true
+
+    # TODO (martin) Remove when enable_experimental_hashtag_autocomplete is default for all sites
+    SiteSetting.enable_experimental_hashtag_autocomplete = false
+
     tag_group
   end
 
