@@ -615,12 +615,17 @@ class Search
   end
 
   advanced_filter(/^group:(.+)$/i) do |posts, match|
-    group_id =
+    group_query =
       Group
         .visible_groups(@guardian.user)
         .members_visible_groups(@guardian.user)
-        .where("name ilike ? OR (id = ? AND id > 0)", match, match.to_i)
-        .pluck_first(:id)
+        .where("groups.name ILIKE ? OR (id = ? AND id > 0)", match, match.to_i)
+
+    DiscoursePluginRegistry.search_groups_set_query_callbacks.each do |cb|
+      group_query = cb.call(group_query, @term, @guardian)
+    end
+
+    group_id = group_query.pluck_first(:id)
 
     if group_id
       posts.where(
@@ -944,11 +949,17 @@ class Search
   end
 
   def groups_search
-    groups =
-      Group
-        .visible_groups(@guardian.user, "name ASC", include_everyone: false)
-        .where("name ILIKE :term OR full_name ILIKE :term", term: "%#{@term}%")
-        .limit(limit)
+    group_query =
+      Group.visible_groups(@guardian.user, "groups.name ASC", include_everyone: false).where(
+        "groups.name ILIKE :term OR groups.full_name ILIKE :term",
+        term: "%#{@term}%",
+      )
+
+    DiscoursePluginRegistry.search_groups_set_query_callbacks.each do |cb|
+      group_query = cb.call(group_query, @term, @guardian)
+    end
+
+    groups = group_query.limit(limit)
 
     groups.each { |group| @results.add(group) }
   end
