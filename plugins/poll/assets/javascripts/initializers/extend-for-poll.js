@@ -136,11 +136,9 @@ function initializePolls(api) {
   api.cleanupStream(cleanUpPolls);
 
   const siteSettings = api.container.lookup("site-settings:main");
-  if (!siteSettings.poll_enabled) {
-    return;
+  if (siteSettings.poll_enabled) {
+    api.addSearchSuggestion("in:polls");
   }
-
-  api.addSearchSuggestion("in:polls");
 }
 
 export default {
