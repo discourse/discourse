@@ -48,7 +48,7 @@ RSpec.describe DiscourseJsProcessor do
           console.log("hello world");
         }
       }
-      let numbericSeparator = 100_000_000;
+      let numericSeparator = 100_000_000;
       logicalAssignment ||= 2;
       nullishCoalescing ?? 'works';
       try {

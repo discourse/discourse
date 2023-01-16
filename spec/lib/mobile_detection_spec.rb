@@ -36,13 +36,17 @@ RSpec.describe MobileDetection do
 
   it "detects modern browsers correctly" do
     modern_user_agents.each do |agent|
-      expect(MobileDetection.modern_mobile_device?(agent)).to eq(true),
-      "Failed User Agent: '#{agent}'"
+      expect(MobileDetection.modern_mobile_device?(agent)).to(
+        eq(true),
+        "Failed User Agent: '#{agent}'",
+      )
     end
 
     old_user_agents.each do |agent|
-      expect(MobileDetection.modern_mobile_device?(agent)).to eq(false),
-      "Failed User Agent: '#{agent}'"
+      expect(MobileDetection.modern_mobile_device?(agent)).to(
+        eq(false),
+        "Failed User Agent: '#{agent}'",
+      )
     end
   end
 end
