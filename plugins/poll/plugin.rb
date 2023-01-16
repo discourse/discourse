@@ -239,5 +239,4 @@ after_initialize do
       posts
     end
   end
-
 end
