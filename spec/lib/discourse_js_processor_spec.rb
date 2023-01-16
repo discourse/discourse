@@ -37,6 +37,45 @@ RSpec.describe DiscourseJsProcessor do
     end
   end
 
+  it "passes through modern JS syntaxes which are supported in our target browsers" do
+    script = <<~JS.chomp
+      optional?.chaining;
+      const template = func`test`;
+      class MyClass {
+        classProperty = 1;
+        #privateProperty = 1;
+        #privateMethod() {
+          console.log("hello world");
+        }
+      }
+      let numericSeparator = 100_000_000;
+      logicalAssignment ||= 2;
+      nullishCoalescing ?? 'works';
+      try {
+        "optional catch binding";
+      } catch {
+        "works";
+      }
+      async function* asyncGeneratorFunction() {
+        yield await Promise.resolve('a');
+      }
+      let a = {
+        x,
+        y,
+        ...spreadRest
+      };
+    JS
+
+    result = DiscourseJsProcessor.transpile(script, "blah", "blah/mymodule")
+    expect(result).to eq <<~JS.strip
+      define("blah/mymodule", [], function () {
+        "use strict";
+
+      #{script.indent(2)}
+      });
+    JS
+  end
+
   it "correctly transpiles widget hbs" do
     result = DiscourseJsProcessor.transpile(<<~JS, "blah", "blah/mymodule")
       import hbs from "discourse/widgets/hbs-compiler";

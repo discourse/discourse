@@ -6,22 +6,12 @@ class DiscourseJsProcessor
   class TranspileError < StandardError
   end
 
+  # To generate a list of babel plugins used by ember-cli, set
+  # babel: { debug: true } in ember-cli-build.js, then run `yarn ember build -prod`
   DISCOURSE_COMMON_BABEL_PLUGINS = [
-    "proposal-optional-chaining",
     ["proposal-decorators", { legacy: true }],
-    "transform-template-literals",
-    "proposal-class-properties",
     "proposal-class-static-block",
-    "proposal-private-property-in-object",
-    "proposal-private-methods",
-    "proposal-numeric-separator",
-    "proposal-logical-assignment-operators",
-    "proposal-nullish-coalescing-operator",
-    "proposal-json-strings",
-    "proposal-optional-catch-binding",
     "transform-parameters",
-    "proposal-async-generator-functions",
-    "proposal-object-rest-spread",
     "proposal-export-namespace-from",
   ]
 

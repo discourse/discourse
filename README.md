@@ -51,7 +51,7 @@ Discourse supports the **latest, stable releases** of all major browsers and pla
 | Microsoft Edge        |              |              |
 | Mozilla Firefox       |              |              |
 
-Additionally, we aim to support Safari on iOS 12.5+ until January 2023 (Discourse 3.0).
+Additionally, we aim to support Safari on iOS 15.7+.
 
 ## Built With
 
