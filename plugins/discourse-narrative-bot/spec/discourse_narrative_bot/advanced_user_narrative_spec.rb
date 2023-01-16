@@ -494,6 +494,9 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
       end
 
       it "should create the right reply" do
+        # TODO (martin) Remove when enable_experimental_hashtag_autocomplete is default for all sites
+        SiteSetting.enable_experimental_hashtag_autocomplete = false
+
         category = Fabricate(:category)
 
         post.update!(raw: "Check out this ##{category.slug}")
