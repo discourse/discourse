@@ -134,6 +134,13 @@ function initializePolls(api) {
     id: "discourse-poll",
   });
   api.cleanupStream(cleanUpPolls);
+
+  const siteSettings = api.container.lookup("site-settings:main");
+  if (!siteSettings.poll_enabled) {
+    return;
+  }
+
+  api.addSearchSuggestion("in:polls");
 }
 
 export default {
