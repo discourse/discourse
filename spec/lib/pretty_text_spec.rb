@@ -1619,6 +1619,9 @@ RSpec.describe PrettyText do
   end
 
   it "produces hashtag links" do
+    # TODO (martin) Remove when enable_experimental_hashtag_autocomplete is default for all sites
+    SiteSetting.enable_experimental_hashtag_autocomplete = false
+
     category = Fabricate(:category, name: "testing")
     category2 = Fabricate(:category, name: "known")
     Fabricate(:topic, tags: [Fabricate(:tag, name: "known")])
@@ -1908,6 +1911,9 @@ HTML
     end
 
     it "does not replace hashtags and mentions" do
+      # TODO (martin) Remove when enable_experimental_hashtag_autocomplete is default for all sites
+      SiteSetting.enable_experimental_hashtag_autocomplete = false
+
       Fabricate(:user, username: "test")
       category = Fabricate(:category, slug: "test")
       Fabricate(
@@ -1927,6 +1933,9 @@ HTML
     end
 
     it "does not replace hashtags and mentions when watched words are regular expressions" do
+      # TODO (martin) Remove when enable_experimental_hashtag_autocomplete is default for all sites
+      SiteSetting.enable_experimental_hashtag_autocomplete = false
+
       SiteSetting.watched_words_regular_expressions = true
 
       Fabricate(:user, username: "test")
