@@ -30,6 +30,9 @@ RSpec.describe ListController do
 
       get "/latest?page=1111111111111111111111111111111111111111"
       expect(response.status).to eq(400)
+
+      get "/latest?tags[1]=hello"
+      expect(response.status).to eq(400)
     end
 
     it "returns 200 for legit requests" do
@@ -58,6 +61,9 @@ RSpec.describe ListController do
       expect(response.status).to eq(200)
 
       get "/latest.json?topic_ids=14583%2C14584"
+      expect(response.status).to eq(200)
+
+      get "/latest?tags[]=hello"
       expect(response.status).to eq(200)
     end
 
