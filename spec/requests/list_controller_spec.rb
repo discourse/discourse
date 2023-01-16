@@ -31,7 +31,7 @@ RSpec.describe ListController do
       get "/latest?page=1111111111111111111111111111111111111111"
       expect(response.status).to eq(400)
 
-      get '/latest?tags[1]=hello'
+      get "/latest?tags[1]=hello"
       expect(response.status).to eq(400)
     end
 
@@ -63,7 +63,7 @@ RSpec.describe ListController do
       get "/latest.json?topic_ids=14583%2C14584"
       expect(response.status).to eq(200)
 
-      get '/latest?tags[]=hello'
+      get "/latest?tags[]=hello"
       expect(response.status).to eq(200)
     end
 
