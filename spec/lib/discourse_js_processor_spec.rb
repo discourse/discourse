@@ -41,13 +41,6 @@ RSpec.describe DiscourseJsProcessor do
     script = <<~JS.chomp
       optional?.chaining;
       const template = func`test`;
-      class MyClass {
-        classProperty = 1;
-        #privateProperty = 1;
-        #privateMethod() {
-          console.log("hello world");
-        }
-      }
       let numericSeparator = 100_000_000;
       logicalAssignment ||= 2;
       nullishCoalescing ?? 'works';
@@ -74,6 +67,24 @@ RSpec.describe DiscourseJsProcessor do
       #{script.indent(2)}
       });
     JS
+  end
+
+  it "supports decorators and class properties without error" do
+    script = <<~JS.chomp
+      class MyClass {
+        classProperty = 1;
+        #privateProperty = 1;
+        #privateMethod() {
+          console.log("hello world");
+        }
+        @decorated
+        myMethod(){
+        }
+      }
+    JS
+
+    result = DiscourseJsProcessor.transpile(script, "blah", "blah/mymodule")
+    expect(result).to include("_applyDecoratedDescriptor")
   end
 
   it "correctly transpiles widget hbs" do
