@@ -12,6 +12,8 @@ describe Chat::ChatChannelArchiveService do
   let(:topic_params) { { topic_title: "This will be a new topic", category_id: category.id } }
   subject { Chat::ChatChannelArchiveService }
 
+  before { SiteSetting.chat_enabled = true }
+
   describe "#create_archive_process" do
     before { 3.times { Fabricate(:chat_message, chat_channel: channel) } }
 
@@ -182,6 +184,20 @@ describe Chat::ChatChannelArchiveService do
           I18n.t("system_messages.chat_channel_archive_failed.subject_template"),
         )
         expect(pm_topic.first_post.raw).to include("Title can't have more than 1 emoji")
+      end
+
+      context "when enable_experimental_hashtag_autocomplete" do
+        before { SiteSetting.enable_experimental_hashtag_autocomplete = true }
+
+        it "uses the channel slug to autolink a hashtag for the channel in the PM" do
+          create_messages(3) && start_archive
+          subject.new(@channel_archive).execute
+          expect(@channel_archive.reload.complete?).to eq(true)
+          pm_topic = Topic.private_messages.last
+          expect(pm_topic.first_post.cooked).to include(
+            "<a class=\"hashtag-cooked\" href=\"#{channel.relative_url}\" data-type=\"channel\" data-slug=\"#{channel.slug}\" data-ref=\"#{channel.slug}::channel\"><svg class=\"fa d-icon d-icon-comment svg-icon svg-node\"><use href=\"#comment\"></use></svg><span>#{channel.title(user)}</span></a>",
+          )
+        end
       end
 
       describe "channel members" do
