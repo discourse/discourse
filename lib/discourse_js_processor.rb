@@ -10,6 +10,8 @@ class DiscourseJsProcessor
   # babel: { debug: true } in ember-cli-build.js, then run `yarn ember build -prod`
   DISCOURSE_COMMON_BABEL_PLUGINS = [
     ["proposal-decorators", { legacy: true }],
+    "proposal-class-properties",
+    "proposal-private-methods",
     "proposal-class-static-block",
     "transform-parameters",
     "proposal-export-namespace-from",
