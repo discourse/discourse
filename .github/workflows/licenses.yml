@@ -37,22 +37,16 @@ jobs:
           path: vendor/bundle
           key: ${{ runner.os }}-gem-${{ hashFiles('**/Gemfile.lock') }}
           restore-keys: |
-            ${{ runner.os }}-gem-
+            licenses-${{ runner.os }}-gem-
 
-      - name: Setup gems
+      - name: Setup licensed
         run: |
+          bundle add licensed --skip-install
           bundle config --local path vendor/bundle
           bundle config --local deployment true
           bundle config --local without development
           bundle install --jobs 4
           bundle clean
-
-      - name: Setup licensed
-        run: |
-          bundle config unset deployment
-          bundle add licensed --skip-install
-          bundle config --local deployment true
-          bundle install --jobs 4
 
       - name: Get yarn cache directory
         id: yarn-cache-dir
