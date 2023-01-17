@@ -80,15 +80,57 @@ RSpec.describe TagsController do
 
       it "works for tags in groups" do
         tag_group = Fabricate(:tag_group, tags: [test_tag, topic_tag, synonym])
-        get "/tags.json"
-        expect(response.status).to eq(200)
 
+        get "/tags.json"
+
+        expect(response.status).to eq(200)
         tags = response.parsed_body["tags"]
         expect(tags.length).to eq(0)
         group = response.parsed_body.dig("extras", "tag_groups")&.first
         expect(group).to be_present
         expect(group["tags"].length).to eq(2)
         expect(group["tags"].map { |t| t["id"] }).to contain_exactly(test_tag.name, topic_tag.name)
+      end
+
+      it "does not result in N+1 queries with multiple tag_groups" do
+        tag_group = Fabricate(:tag_group, tags: [test_tag, topic_tag, synonym])
+
+        # warm up
+        get "/tags.json"
+        expect(response.status).to eq(200)
+
+        initial_sql_queries_count =
+          track_sql_queries do
+            get "/tags.json"
+
+            expect(response.status).to eq(200)
+
+            tag_groups = response.parsed_body.dig("extras", "tag_groups")
+
+            expect(tag_groups.length).to eq(1)
+            expect(tag_groups.map { |tag_group| tag_group["name"] }).to contain_exactly(
+              tag_group.name,
+            )
+          end.length
+
+        tag_group2 = Fabricate(:tag_group, tags: [topic_tag])
+
+        new_sql_queries_count =
+          track_sql_queries do
+            get "/tags.json"
+
+            expect(response.status).to eq(200)
+
+            tag_groups = response.parsed_body.dig("extras", "tag_groups")
+
+            expect(tag_groups.length).to eq(2)
+            expect(tag_groups.map { |tag_group| tag_group["name"] }).to contain_exactly(
+              tag_group.name,
+              tag_group2.name,
+            )
+          end.length
+
+        expect(new_sql_queries_count).to be <= initial_sql_queries_count
       end
     end
 
