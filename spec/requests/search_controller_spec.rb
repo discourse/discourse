@@ -256,9 +256,9 @@ RSpec.describe SearchController do
         get "/search/query.json", params: {
               term: 'wookie'
             }, env: { REMOTE_ADDR: ip_address }
-        expect(response.status).to eq(200)
+        expect(response.status).to eq(429)
         json = response.parsed_body
-        expect(json["grouped_search_result"]["error"]).to eq(I18n.t("rate_limiter.slow_down"))
+        expect(json["message"]).to eq(I18n.t("rate_limiter.slow_down"))
       end
 
       it 'rate limits anon searches per user' do
@@ -323,9 +323,9 @@ RSpec.describe SearchController do
           get "/search/query.json", params: {
                 term: 'wookie'
               }
-          expect(response.status).to eq(200)
+          expect(response.status).to eq(429)
           json = response.parsed_body
-          expect(json["grouped_search_result"]["error"]).to eq(I18n.t("rate_limiter.slow_down"))
+          expect(json["message"]).to eq(I18n.t("rate_limiter.slow_down"))
         end
       end
     end
@@ -404,9 +404,9 @@ RSpec.describe SearchController do
         get "/search.json", params: {
               q: 'wookie'
             }, env: { REMOTE_ADDR: ip_address }
-        expect(response.status).to eq(200)
+        expect(response.status).to eq(429)
         json = response.parsed_body
-        expect(json["grouped_search_result"]["error"]).to eq(I18n.t("rate_limiter.slow_down"))
+        expect(json["message"]).to eq(I18n.t("rate_limiter.slow_down"))
       end
 
       it 'rate limits anon searches per user' do
@@ -468,9 +468,9 @@ RSpec.describe SearchController do
           get "/search.json", params: {
                 q: 'bantha'
               }
-          expect(response.status).to eq(200)
+          expect(response.status).to eq(429)
           json = response.parsed_body
-          expect(json["grouped_search_result"]["error"]).to eq(I18n.t("rate_limiter.slow_down"))
+          expect(json["message"]).to eq(I18n.t("rate_limiter.slow_down"))
         end
       end
     end
