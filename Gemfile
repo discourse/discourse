@@ -172,6 +172,8 @@ group :test, :development do
 
   gem "syntax_tree"
   gem "syntax_tree-disable_ternary"
+
+  gem "licensed", require: false
 end
 
 group :development do
@@ -180,7 +182,6 @@ group :development do
   gem "better_errors", platform: :mri, require: !!ENV["BETTER_ERRORS"]
   gem "binding_of_caller"
   gem "yaml-lint"
-  gem "licensed", require: false
 end
 
 if ENV["ALLOW_DEV_POPULATE"] == "1"
