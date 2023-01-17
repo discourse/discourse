@@ -49,7 +49,11 @@ jobs:
 
       - name: Setup licensed
         run: |
-          bundle add licensed
+          bundle config --local deployment false
+          bundle add licensed --skip-install
+          bundle config --local deployment true
+          bundle install --jobs 4
+          bundle clean
 
       - name: Get yarn cache directory
         id: yarn-cache-dir
