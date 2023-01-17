@@ -30,13 +30,12 @@ ru:
     chat_channel_archive_complete:
       title: "Архивация канала завершена"
       subject_template: "Архивация канала успешно завершена"
-      text_body_template: |
-        Архивация канала **\#%{channel_name}** успешно завершена. Сообщения были скопированы в тему [%{topic_title}](%{topic_url}).
     chat_channel_archive_failed:
       title: "Не удалось заархивировать канал"
       subject_template: "Не удалось заархивировать канал"
-      text_body_template: |
-        Не удалось заархивировать канал **\#%{channel_name}**. Сообщения %{messages_archived} были заархивированы. Частично заархивированные сообщения были скопированы в тему [%{topic_title}](%{topic_url}). Посетите канал %{channel_url} и повторите попытку.
+    chat_channel_archive_failed_no_topic:
+      title: "Не удалось заархивировать канал"
+      subject_template: "Не удалось заархивировать канал"
   chat:
     deleted_chat_username: удалён
     errors:
@@ -114,7 +113,7 @@ ru:
         multi_user_truncated: "%{users} и ещё %{leftover}"
     category_channel:
       errors:
-        slug_contains_non_ascii_chars: "Содержит символы не в ascii-кодировке"
+        slug_contains_non_ascii_chars: "содержит символы не в ascii-кодировке"
     bookmarkable:
       notification_title: "Сообщение в канале %{channel_name}"
     personal_chat: "личный чат"
@@ -126,7 +125,7 @@ ru:
         one: "%{count} участник"
         few: "%{count} участника"
         many: "%{count} участников"
-        other: "%{count} участников"
+        other: "%{count} участника"
       and_x_others:
         one: "и ещё %{count}"
         few: "и ещё %{count}"
@@ -169,7 +168,7 @@ ru:
       from: "%{site_name}"
       subject:
         direct_message_from_1: "[%{email_prefix}] Новое сообщение от %{username}"
-        chat_channel_1: "[%{email_prefix}] Новое сообщение в %{channel}"
+        chat_channel_1: "[%{email_prefix}] Новое сообщение в канале «%{channel}»"
       unsubscribe: "Этот дайджест чата рассылается с сайта %{site_link} в период вашего отсутствия на форуме. Для отмены подписки измените %{email_preferences_link} или %{unsubscribe_link}."
       unsubscribe_no_link: "Этот дайджест чата рассылается с сайта %{site_link} в период вашего отсутствия на форуме. Настройка рассылки: %{email_preferences_link}."
       view_messages:

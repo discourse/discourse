@@ -179,7 +179,6 @@ ru:
         read_only: "Только для чтения"
         archived_header: "Канал заархивирован"
         archived: "Архивные"
-        archive_failed: "Во время архивации поизошла ошибка. %{completed}/%{total} сообщений были заархивированы в <a target=\"_blank\" href=\"%{topic_url}\">целевой теме</a>. Нажмите «Повторить», чтобы попытаться завершить архивирование."
         archive_completed: "См. <a target=\"_blank\" href=\"%{topic_url}\">архивную тему</a>."
         closed_header: "Канал закрыт"
         closed: "Закрытые"

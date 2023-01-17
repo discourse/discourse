@@ -168,7 +168,6 @@ hu:
         read_only: "Csak olvasható"
         archived_header: "A csatorna archiválva van"
         archived: "Archivált"
-        archive_failed: "A csatorna archiválása nem sikerült.</a>%{completed}/%{total} üzenet archiválva lett a <a target=\"_blank\" href=\"%{topic_url}\">céltémában</a> . Nyomja meg az Újra gombot az archiválás befejezéséhez."
         archive_completed: "Lásd <a target=\"_blank\" href=\"%{topic_url}\">az archív témát</a>"
         closed_header: "A csatorna zárolt"
         closed: "Zárt"

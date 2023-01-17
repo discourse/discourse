@@ -33,13 +33,12 @@ ja:
     chat_channel_archive_complete:
       title: "チャットチャンネルのアーカイブ完了"
       subject_template: "チャットチャンネルのアーカイブが正常に完了しました"
-      text_body_template: |
-        チャットチャンネル **\#%{channel_name}** のアーカイブが正常に完了しました。メッセージはトピック [%{topic_title}](%{topic_url}) にコピーされました。
     chat_channel_archive_failed:
       title: "チャットチャンネルのアーカイブ失敗"
       subject_template: "チャットチャンネルのアーカイブに失敗しました"
-      text_body_template: |
-        チャットチャンネル **\#%{channel_name}** のアーカイブに失敗しました。%{messages_archived} 件のメッセージがアーカイブされました。部分的にアーカイブされたメッセージは、トピック [%{topic_title}](%{topic_url}) にコピーされました。%{channel_url} よりチャンネルにアクセスして、再試行してください。
+    chat_channel_archive_failed_no_topic:
+      title: "チャットチャンネルのアーカイブ失敗"
+      subject_template: "チャットチャンネルのアーカイブに失敗しました"
   chat:
     deleted_chat_username: 削除済み
     errors:
