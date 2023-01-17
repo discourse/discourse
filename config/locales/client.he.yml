@@ -1033,7 +1033,7 @@ he:
       posts: "פוסטים"
       topics: "נושאים"
       latest: "לאחרונה"
-      subcategories: "תתי קטגוריות"
+      subcategories: "תת־קטגוריות"
       muted: "קטגוריות מושתקות"
       topic_sentence:
         one: "נושא אחד"
@@ -4685,6 +4685,7 @@ he:
         broken_route: "לא ניתן להגדיר את הקישור אל ‚%{name}’. כדאי לוודא שחוסמי פרסומות מושבתים ואז לנסות לטעון את הדף מחדש."
       navigation_menu:
         sidebar: "סרגל צד"
+        legacy: "מיושן"
       backups:
         title: "גיבויים"
         menu:
