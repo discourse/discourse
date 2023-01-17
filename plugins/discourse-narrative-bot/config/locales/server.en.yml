@@ -401,8 +401,18 @@ en:
           Did you know that you can refer to categories and tags in your post? For example, have you seen the %{category} category?
 
           Type `#` in the middle of a sentence and select any category or tag.
+        instructions_experimental: |-
+          Did you know that you can refer to categories and tags in your post? For example, have you seen the %{category} category?
+
+          Type `#` anywhere in a sentence and select any category or tag.
         not_found: |-
           Hmm, I don’t see a category in there anywhere. Note that `#` can't be the first character. Can you copy this in your next reply?
+
+          ```text
+          I can create a category link via #
+          ```
+        not_found_experimental: |-
+          Hmm, I don’t see a category in there anywhere. Can you copy this in your next reply?
 
           ```text
           I can create a category link via #
