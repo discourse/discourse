@@ -642,9 +642,13 @@ class TopicQuery
     options.reverse_merge!(@options)
     options.reverse_merge!(per_page: per_page_setting) unless options[:limit] == false
 
-    # Whether to return visible topics
-    options[:visible] = true if @user.nil? || @user.regular?
-    options[:visible] = false if @user && @user.id == options[:filtered_to_user]
+    # Whether to include unlisted (visible = false) topics
+    viewing_own_topics = @user && @user.id == options[:filtered_to_user]
+
+    if options[:visible].nil?
+      options[:visible] = true if @user.nil? || @user.regular?
+      options[:visible] = false if @guardian.can_see_unlisted_topics? || viewing_own_topics
+    end
 
     # Start with a list of all topics
     result = Topic.unscoped.includes(:category)
