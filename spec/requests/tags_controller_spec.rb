@@ -93,7 +93,7 @@ RSpec.describe TagsController do
       end
 
       it "does not result in N+1 queries with multiple tag_groups" do
-        tag_group = Fabricate(:tag_group, tags: [test_tag, topic_tag, synonym])
+        tag_group1 = Fabricate(:tag_group, tags: [test_tag, topic_tag, synonym])
 
         # warm up
         get "/tags.json"
@@ -109,7 +109,7 @@ RSpec.describe TagsController do
 
             expect(tag_groups.length).to eq(1)
             expect(tag_groups.map { |tag_group| tag_group["name"] }).to contain_exactly(
-              tag_group.name,
+              tag_group1.name,
             )
           end.length
 
@@ -125,7 +125,7 @@ RSpec.describe TagsController do
 
             expect(tag_groups.length).to eq(2)
             expect(tag_groups.map { |tag_group| tag_group["name"] }).to contain_exactly(
-              tag_group.name,
+              tag_group1.name,
               tag_group2.name,
             )
           end.length
