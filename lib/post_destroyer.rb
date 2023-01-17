@@ -110,6 +110,7 @@ class PostDestroyer
     UserActionManager.post_created(@post)
     DiscourseEvent.trigger(:post_recovered, @post, @opts, @user)
     Jobs.enqueue(:sync_topic_user_bookmarked, topic_id: topic.id) if topic
+    Jobs.enqueue(:notify_mailing_list_subscribers, post_id: @post.id)
 
     if @post.is_first_post?
       UserActionManager.topic_created(topic)
