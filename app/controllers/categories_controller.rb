@@ -365,7 +365,7 @@ class CategoriesController < ApplicationController
         if SiteSetting.enable_category_group_moderation?
           params[:reviewable_by_group_id] = Group.where(
             name: params[:reviewable_by_group_name],
-          ).pluck_first(:id) if params[:reviewable_by_group_name]
+          ).pick(:id) if params[:reviewable_by_group_name]
         end
 
         result =

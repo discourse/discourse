@@ -843,7 +843,7 @@ class TopicsController < ApplicationController
 
     if params[:title].present?
       # when creating a new topic, ensure the 1st post is a regular post
-      if Post.where(topic: topic, id: post_ids).order(:post_number).pluck_first(:post_type) !=
+      if Post.where(topic: topic, id: post_ids).order(:post_number).pick(:post_type) !=
            Post.types[:regular]
         return(
           render_json_error(

@@ -368,8 +368,7 @@ class Guardian
 
   def can_use_flair_group?(user, group_id = nil)
     return false if !user || !group_id || !user.group_ids.include?(group_id.to_i)
-    flair_icon, flair_upload_id =
-      Group.where(id: group_id.to_i).pluck_first(:flair_icon, :flair_upload_id)
+    flair_icon, flair_upload_id = Group.where(id: group_id.to_i).pick(:flair_icon, :flair_upload_id)
     flair_icon.present? || flair_upload_id.present?
   end
 

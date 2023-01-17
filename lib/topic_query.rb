@@ -630,8 +630,7 @@ class TopicQuery
     category_id = category_id_or_slug.to_i
 
     if category_id == 0
-      category_id =
-        Category.where(slug: category_id_or_slug, parent_category_id: nil).pluck_first(:id)
+      category_id = Category.where(slug: category_id_or_slug, parent_category_id: nil).pick(:id)
     end
 
     category_id
@@ -678,7 +677,7 @@ class TopicQuery
         filter = (options[:filter] || options[:f])
         # category default sort order
         sort_order, sort_ascending =
-          Category.where(id: category_id).pluck_first(:sort_order, :sort_ascending)
+          Category.where(id: category_id).pick(:sort_order, :sort_ascending)
         if sort_order && (filter.blank? || %i[latest unseen].include?(filter))
           options[:order] = sort_order
           options[:ascending] = !!sort_ascending ? "true" : "false"
@@ -1023,7 +1022,7 @@ class TopicQuery
           :first_unread_pm_at,
         )
       else
-        UserStat.where(user_id: @user.id).pluck_first(:first_unread_pm_at)
+        UserStat.where(user_id: @user.id).pick(:first_unread_pm_at)
       end
 
     query = query.where("topics.updated_at >= ?", first_unread_pm_at) if first_unread_pm_at

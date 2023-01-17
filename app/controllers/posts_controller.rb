@@ -614,7 +614,7 @@ class PostsController < ApplicationController
         bookmarkable_id: params[:post_id],
         bookmarkable_type: "Post",
         user_id: current_user.id,
-      ).pluck_first(:id)
+      ).pick(:id)
     destroyed_bookmark = BookmarkManager.new(current_user).destroy(bookmark_id)
 
     render json:
