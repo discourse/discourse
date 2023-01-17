@@ -778,10 +778,11 @@ aside.onebox.xkcd .onebox-body img {
   }
 
   .discourse-tags {
+    vertical-align: bottom;
     .d-icon-tag {
       font-size: var(--font-down-1);
       margin-right: 0.35em;
-      margin-top: 0.25em;
+      margin-top: 0.15em;
       color: var(--primary-medium);
       align-self: center;
     }
