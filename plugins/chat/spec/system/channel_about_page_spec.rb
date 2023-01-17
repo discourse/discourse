@@ -16,14 +16,14 @@ RSpec.describe "Channel - Info - About page", type: :system, js: true do
       chat_page.visit_channel_about(channel_1)
 
       expect(page.find(".category-name")).to have_content(channel_1.chatable.name)
-      expect(page.find(".channel-info-about-view__title")).to have_content(channel_1.title)
+      expect(page.find(".channel-info-about-view__name")).to have_content(channel_1.title)
     end
 
     it "escapes channel title" do
       channel_1.update!(name: "<script>alert('hello')</script>")
       chat_page.visit_channel_about(channel_1)
 
-      expect(page.find(".channel-info-about-view__title")["innerHTML"].strip).to eq(
+      expect(page.find(".channel-info-about-view__name")["innerHTML"].strip).to eq(
         "&lt;script&gt;alert('hello')&lt;/script&gt;",
       )
       expect(page.find(".chat-channel-title__name")["innerHTML"].strip).to eq(
@@ -31,10 +31,10 @@ RSpec.describe "Channel - Info - About page", type: :system, js: true do
       )
     end
 
-    it "can’t edit title" do
+    it "can’t edit name" do
       chat_page.visit_channel_about(channel_1)
 
-      expect(page).to have_no_selector(".edit-title-btn")
+      expect(page).to have_no_selector(".edit-name-btn")
     end
 
     it "can’t edit description" do
@@ -76,20 +76,17 @@ RSpec.describe "Channel - Info - About page", type: :system, js: true do
 
     before { sign_in(current_user) }
 
-    it "can edit title" do
+    it "can edit name" do
       chat_page.visit_channel_about(channel_1)
-      find(".edit-title-btn").click
+      find(".edit-name-btn").click
 
-      expect(page).to have_selector(
-        ".chat-channel-edit-title-modal__title-input",
-        text: channel_1.title,
-      )
+      expect(find(".chat-channel-edit-name-modal__name-input").value).to eq(channel_1.title)
 
-      title = "A new title"
-      find(".chat-channel-edit-title-modal__title-input").fill_in(with: title)
+      name = "A new name"
+      find(".chat-channel-edit-name-modal__name-input").fill_in(with: name)
       find(".create").click
 
-      expect(page).to have_content(title)
+      expect(page).to have_content(name)
     end
 
     it "can edit description" do
