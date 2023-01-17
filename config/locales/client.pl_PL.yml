@@ -380,7 +380,6 @@ pl_PL:
       remove_reminder_keep_bookmark: "Usuń przypomnienie i zachowaj zakładkę"
       created_with_reminder: "Dodano post do zakładek z przypomnieniem %{date}. %{name}"
       created_with_reminder_generic: "Dodałeś to do zakładek z przypomnieniem %{date}. %{name}"
-      remove: "Usuń zakładkę"
       delete: "Usuń zakładkę"
       confirm_delete: "Czy na pewno chcesz usunąć tę zakładkę? Przypomnienie również zostanie usunięte."
       confirm_clear: "Czy na pewno chcesz usunąć wszystkie swoje zakładki ustawione w tym temacie?"
@@ -460,7 +459,6 @@ pl_PL:
     enable: "Włącz"
     disable: "Wyłącz"
     continue: "Kontynuuj"
-    undo: "Cofnij"
     switch_to_anon: "Włącz tryb anonimowy"
     switch_from_anon: "Zakończ tryb anonimowy"
     banner:
@@ -785,6 +783,7 @@ pl_PL:
         denied: "odrzucony"
         undone: "prośba cofnięta"
         handle: "obsłuż prośby o członkostwo"
+        undo: "Cofnij"
       manage:
         title: "Zarządzaj"
         name: "Nazwa"
@@ -1167,7 +1166,6 @@ pl_PL:
         perm_denied_expl: "Odmówiłeś/łaś dostępu dla powiadomień. Pozwól na powiadomienia w ustawieniach przeglądarki."
         disable: "Wyłącz powiadomienia"
         enable: "Włącz powiadomienia"
-        each_browser_note: 'Uwaga: musisz zmienić to ustawienie w każdej przeglądarce, której używasz. Wszystkie powiadomienia zostaną wyłączone w trybie „nie przeszkadzać”, niezależnie od tego ustawienia.'
         consent_prompt: "Czy chcesz otrzymywać natychmiastowe powiadomienia, gdy ktoś odpowiada na twoje posty?"
       dismiss: "Odrzuć"
       dismiss_notifications: "Odrzuć wszystkie"
@@ -3449,7 +3447,6 @@ pl_PL:
         create_for_topic: "Utwórz zakładkę do tematu"
         edit: "Edytuj zakładkę"
         edit_for_topic: "Edytuj zakładkę dla tematu"
-        created: "Utworzono"
         updated: "Zaktualizowane"
         name: "Imię"
         name_placeholder: "Do czego ma służyć ta zakładka?"
@@ -3767,7 +3764,6 @@ pl_PL:
     category_title: "Kategoria"
     history_capped_revisions: "Historia, ostatnie 100 wersji"
     history: "Historia"
-    changed_by: "przez %{author}"
     raw_email:
       title: "Email przychodzący"
       not_available: "Niedostępne!"
@@ -4226,7 +4222,6 @@ pl_PL:
         few: "%{count} nowe"
         many: "%{count} nowych"
         other: "%{count} nowy"
-      toggle_section: "przełącz sekcję"
       more: "Więcej"
       all_categories: "Wszystkie kategorie"
       all_tags: "Wszystkie tagi"
@@ -4235,7 +4230,6 @@ pl_PL:
           header_link_text: "O stronie"
         messages:
           header_link_text: "Wiadomości"
-          header_action_title: "utwórz osobistą wiadomość"
           links:
             inbox: "Skrzynka odbiorcza"
             sent: "Wysłane"
@@ -4252,7 +4246,6 @@ pl_PL:
           none: "Nie dodałeś żadnych tagów."
           click_to_get_started: "Kliknij tutaj, aby rozpocząć."
           header_link_text: "Etykiety"
-          header_action_title: "edytuj tagi paska bocznego"
           configure_defaults: "Skonfiguruj ustawienia domyślne"
         categories:
           links:
@@ -4262,11 +4255,9 @@ pl_PL:
           none: "Nie dodałeś żadnych kategorii."
           click_to_get_started: "Kliknij tutaj, aby rozpocząć."
           header_link_text: "Kategorie"
-          header_action_title: "edytuj kategorie paska bocznego"
           configure_defaults: "Skonfiguruj ustawienia domyślne"
         community:
           header_link_text: "Społeczność"
-          header_action_title: "utwórz nowy temat"
           links:
             about:
               content: "O stronie"
@@ -4281,10 +4272,8 @@ pl_PL:
               content: "FAQ"
             groups:
               content: "Grupy"
-              title: "Wszystkie grupy"
             users:
               content: "Użytkownicy"
-              title: "Wszyscy użytkownicy"
             my_posts:
               content: "Wysłane"
               title: "Moja ostatnia aktywność w temacie"
@@ -4296,7 +4285,6 @@ pl_PL:
                 other: "%{count} szkice"
             review:
               content: "Sprawdź"
-              title: "sprawdź"
               pending_count: "%{count} oczekujących"
     welcome_topic_banner:
       title: "Stwórz swój temat powitalny"
@@ -4759,7 +4747,6 @@ pl_PL:
         button_title: "Wysyłanie zaproszeń"
       customize:
         title: "Wygląd"
-        long_title: "Personalizacja strony"
         preview: "podgląd"
         explain_preview: "Zobacz tę stronę z włączonym stylem"
         save: "Zapisz"
@@ -4966,9 +4953,9 @@ pl_PL:
           new_name: "Nowa paleta kolorów"
           copy_name_prefix: "Kopia"
           delete_confirm: "Usunąć tę paletę kolorów?"
-          undo: "cofnij"
+          undo: "Cofnij"
           undo_title: "Cofnij zmiany tego koloru od ostatniego zapisu"
-          revert: "przywróć"
+          revert: "Przywróć"
           revert_title: "Zresetuj ten kolor do domyślnej wartości palety Discourse."
           primary:
             name: "podstawowy"

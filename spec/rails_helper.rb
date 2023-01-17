@@ -190,6 +190,18 @@ RSpec.configure do |config|
   # instead of true.
   config.use_transactional_fixtures = true
 
+  # Sometimes you may have a large string or object that you are comparing
+  # with some expectation, and you want to see the full diff between actual
+  # and expected without rspec truncating 90% of the diff. Setting the
+  # max_formatted_output_length to nil disables this truncation completely.
+  #
+  # c.f. https://www.rubydoc.info/gems/rspec-expectations/RSpec/Expectations/Configuration#max_formatted_output_length=-instance_method
+  if ENV["RSPEC_DISABLE_DIFF_TRUNCATION"]
+    config.expect_with :rspec do |expectation|
+      expectation.max_formatted_output_length = nil
+    end
+  end
+
   # If true, the base class of anonymous controllers will be inferred
   # automatically. This will be the default behavior in future versions of
   # rspec-rails.

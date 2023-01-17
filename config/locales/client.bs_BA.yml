@@ -289,7 +289,6 @@ bs_BA:
       create: "Stvaranje zabilješke"
       edit: "Izmijeni zabilješku"
       not_bookmarked: "zabilježi objavu"
-      remove: "Ukloni zabilješku"
       delete: "Izbriši zabilješku"
       confirm_delete: "Jeste li sigurni da želite izbrisati ovu zabilješku? Podsjetnik će takođe biti izbrisan."
       confirm_clear: "Jeste li sigurni da želite ukloniti sve vaše zabilješke iz ove teme?"
@@ -349,7 +348,6 @@ bs_BA:
     enable: "Omogući"
     disable: "Onemogući"
     continue: "Nastavi"
-    undo: "Vrati nazad"
     switch_to_anon: "Uđi u privatni način rada"
     switch_from_anon: "Izađi iz privatnog načina rada"
     banner:
@@ -613,6 +611,7 @@ bs_BA:
         denied: "odbijeno"
         undone: "zahtjev izbrsan"
         handle: "obradi zahtjev za članstvo"
+        undo: "Vrati nazad"
       manage:
         title: "Uredi"
         name: "Ime"
@@ -2471,7 +2470,6 @@ bs_BA:
       bookmarks:
         create: "Stvaranje zabilješke"
         edit: "Izmijeni zabilješku"
-        created: "Stvoreno"
         updated: "Ažurirano"
         name: "Ime"
         name_placeholder: "Za što služi ova zabilješka?"
@@ -2713,7 +2711,6 @@ bs_BA:
       few: "korisnika"
       other: "korisnika"
     category_title: "Kategorija"
-    changed_by: "od %{author}"
     raw_email:
       title: "Dolazna email"
       not_available: "Nije dostupno!"
@@ -3091,14 +3088,12 @@ bs_BA:
               content: "Česta pitanja"
             groups:
               content: "Grupe"
-              title: "Sve grupe"
             users:
               content: "Users"
             my_posts:
               content: "Moje objave"
             review:
               content: "Pregled"
-              title: "pregled"
   admin_js:
     type_to_filter: "kucaj da sortiraš..."
     admin:
@@ -3455,7 +3450,6 @@ bs_BA:
         button_title: "Pošalji pozivnice"
       customize:
         title: "Customize"
-        long_title: "Site Customizations"
         preview: "preview"
         explain_preview: "Pogledajte lokaciju sa omogućenom ovom temom"
         save: "Save"
@@ -3613,9 +3607,9 @@ bs_BA:
           new_name: "Nova paleta boja"
           copy_name_prefix: "Copy of"
           delete_confirm: "Izbrisati ovu paletu boja?"
-          undo: "undo"
+          undo: "Vrati nazad"
           undo_title: "Undo your changes to this color since the last time it was saved."
-          revert: "vrati"
+          revert: "Vrati nazad"
           revert_title: "Vrati boju na standardnu boju Discourse palete."
           primary:
             name: "primary"

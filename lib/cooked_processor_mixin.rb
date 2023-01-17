@@ -70,7 +70,7 @@ module CookedProcessorMixin
           found = false
           parent = img
           while parent = parent.parent
-            if parent["class"] && parent["class"].include?("allowlistedgeneric")
+            if parent["class"] && parent["class"].match?(/\b(allowlistedgeneric|discoursetopic)\b/)
               found = true
               break
             end

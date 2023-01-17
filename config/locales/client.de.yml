@@ -315,7 +315,6 @@ de:
       remove_reminder_keep_bookmark: "Erinnerung entfernen und Lesezeichen behalten"
       created_with_reminder: "Du wirst %{date} an dieses Lesezeichen erinnert. %{name}"
       created_with_reminder_generic: "Du wirst am %{date} an dieses Lesezeichen erinnert. %{name}"
-      remove: "Lesezeichen entfernen"
       delete: "Lesezeichen löschen"
       confirm_delete: "Möchtest du dieses Lesezeichen wirklich löschen? Die Erinnerung wird ebenfalls gelöscht."
       confirm_clear: "Möchtest du wirklich alle deine Lesezeichen in diesem Thema löschen?"
@@ -385,7 +384,6 @@ de:
     enable: "Aktivieren"
     disable: "Deaktivieren"
     continue: "Weiter"
-    undo: "Rückgängig machen"
     switch_to_anon: "Anonymen Modus aktivieren"
     switch_from_anon: "Anonymen Modus deaktivieren"
     banner:
@@ -682,6 +680,7 @@ de:
         denied: "abgelehnt"
         undone: "Anfrage zurückgenommen"
         handle: "Mitgliedschaftsanfrage bearbeiten"
+        undo: "Rückgängig machen"
       manage:
         title: "Verwalten"
         name: "Name"
@@ -1008,6 +1007,7 @@ de:
       notification_schedule:
         title: "Zeitplan für Benachrichtigungen"
         label: "Aktiviere den benutzerdefinierten Zeitplan für Benachrichtigungen"
+        tip: "Außerhalb dieser Zeiten werden deine Benachrichtigungen pausiert."
         midnight: "Mitternacht"
         none: "Keine"
         monday: "Montag"
@@ -1051,7 +1051,6 @@ de:
         perm_denied_expl: "Du hast das Anzeigen von Benachrichtigungen verboten. Aktiviere die Benachrichtigungen über deine Browser-Einstellungen."
         disable: "Benachrichtigungen deaktivieren"
         enable: "Benachrichtigungen aktivieren"
-        each_browser_note: 'Hinweis: Du musst diese Einstellung in jedem von dir verwendeten Browser ändern. Alle Benachrichtigungen werden deaktiviert, wenn der „Nicht stören“-Modus verwendet wird, unabhängig von dieser Einstellung.'
         consent_prompt: "Möchtest du Live-Benachrichtigungen erhalten, wenn jemand auf deine Beiträge antwortet?"
       dismiss: "Alles gelesen"
       dismiss_notifications: "Alles gelesen"
@@ -1663,6 +1662,7 @@ de:
       save: "Speichern"
       set_custom_status: "Benutzerdefinierten Status festlegen"
       what_are_you_doing: "Was machst du gerade?"
+      pause_notifications: "Benachrichtigungen pausieren"
       remove_status: "Status entfernen"
     user_tips:
       primary: "Verstanden!"
@@ -3120,7 +3120,6 @@ de:
         create_for_topic: "Lesezeichen für Thema erstellen"
         edit: "Lesezeichen bearbeiten"
         edit_for_topic: "Lesezeichen für Thema bearbeiten"
-        created: "Erstellt"
         updated: "Aktualisiert"
         name: "Name"
         name_placeholder: "Wofür dient dieses Lesezeichen?"
@@ -3422,7 +3421,6 @@ de:
     category_title: "Kategorie"
     history_capped_revisions: "Verlauf, letzte 100 Überarbeitungen"
     history: "Verlauf"
-    changed_by: "von %{author}"
     raw_email:
       title: "Eingegangene E-Mail"
       not_available: "Nicht verfügbar!"
@@ -3788,6 +3786,8 @@ de:
       enabled: "Der abgesicherte Modus ist aktiviert. Schließe das Browserfenster, um ihn zu verlassen."
     image_removed: "(Bild entfernt)"
     pause_notifications:
+      title: "Benachrichtigungen pausieren für..."
+      label: "Benachrichtigungen pausieren"
       remaining: "%{remaining} verbleibend"
       options:
         half_hour: "30 Minuten"
@@ -3837,7 +3837,6 @@ de:
       new_count:
         one: "%{count} neu"
         other: "%{count} neu"
-      toggle_section: "Abschnitt umschalten"
       more: "Mehr"
       all_categories: "Alle Kategorien"
       all_tags: "Alle Schlagwörter"
@@ -3846,7 +3845,6 @@ de:
           header_link_text: "Über uns"
         messages:
           header_link_text: "Nachrichten"
-          header_action_title: "eine persönliche Nachricht erstellen"
           links:
             inbox: "Posteingang"
             sent: "Gesendet"
@@ -3863,7 +3861,6 @@ de:
           none: "Du hast keine Schlagwörter hinzugefügt."
           click_to_get_started: "Klicke hier, um zu beginnen."
           header_link_text: "Schlagwörter"
-          header_action_title: "bearbeite die Schlagwörter in deiner Seitenleiste"
           configure_defaults: "Standardeinstellungen konfigurieren"
         categories:
           links:
@@ -3873,11 +3870,9 @@ de:
           none: "Du hast keine Kategorien hinzugefügt."
           click_to_get_started: "Klicke hier, um zu beginnen."
           header_link_text: "Kategorien"
-          header_action_title: "bearbeite die Kategorien in deiner Seitenleiste"
           configure_defaults: "Standardeinstellungen konfigurieren"
         community:
           header_link_text: "Community"
-          header_action_title: "ein neues Thema erstellen"
           links:
             about:
               content: "Über uns"
@@ -3892,10 +3887,8 @@ de:
               content: "FAQ"
             groups:
               content: "Gruppen"
-              title: "Alle Gruppen"
             users:
               content: "Benutzer"
-              title: "Alle Benutzer"
             my_posts:
               content: "Meine Beiträge"
               draft_count:
@@ -3903,7 +3896,6 @@ de:
                 other: "%{count} Entwürfe"
             review:
               content: "Überprüfen"
-              title: "überprüfen"
               pending_count: "%{count} ausstehend"
     welcome_topic_banner:
       title: "Erstelle dein Willkommensthema"
@@ -4350,7 +4342,6 @@ de:
         button_title: "Einladungen versenden"
       customize:
         title: "Anpassen"
-        long_title: "Website-Anpassungen"
         preview: "Vorschau"
         explain_preview: "Website mit diesem Theme anschauen"
         save: "Speichern"
@@ -4555,9 +4546,9 @@ de:
           new_name: "Neue Farbpalette"
           copy_name_prefix: "Kopie von"
           delete_confirm: "Diese Farbpalette löschen?"
-          undo: "rückgängig machen"
+          undo: "Rückgängig machen"
           undo_title: "Die seit dem letzten Speichern an dieser Farbe vorgenommenen Änderungen rückgängig machen."
-          revert: "verwerfen"
+          revert: "Verwerfen"
           revert_title: "Diese Farbe auf den Standardwert aus der Farbpalette zurücksetzen."
           primary:
             name: "erste"
@@ -4654,7 +4645,7 @@ de:
         last_seen_user: "Zuletzt gesehener Benutzer:"
         no_result: "Für diese Zusammenfassung wurden keine Ergebnisse gefunden."
         reply_key: "Antwort-Schlüssel"
-        post_link_with_smtp: "Post- und SMTP-Details"
+        post_link_with_smtp: "Beitrag & SMTP-Details"
         skipped_reason: "Grund des Überspringens"
         incoming_emails:
           from_address: "Von"

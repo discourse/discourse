@@ -283,7 +283,6 @@ ja:
       remove_reminder_keep_bookmark: "リマインダーを削除してブックマークを保持"
       created_with_reminder: "%{date} のリマインダー付きでこの投稿をブックマークしました。%{name}"
       created_with_reminder_generic: "%{date} のリマインダー付きでこれをブックマークしました。%{name}"
-      remove: "ブックマークを削除"
       delete: "ブックマークを削除"
       confirm_delete: "このブックマークを削除してもよろしいですか？リマインダーも削除されます。"
       confirm_clear: "このトピックのすべてのブックマークをクリアしてもよろしいですか?"
@@ -348,7 +347,6 @@ ja:
     enable: "有効化"
     disable: "無効化"
     continue: "続行"
-    undo: "元に戻す"
     switch_to_anon: "匿名モードを開始"
     switch_from_anon: "匿名モードを終了"
     banner:
@@ -631,6 +629,7 @@ ja:
         denied: "拒否"
         undone: "リクエストの取り消し"
         handle: "メンバーシップリクエストを処理する"
+        undo: "元に戻す"
       manage:
         title: "管理"
         name: "名前"
@@ -994,7 +993,6 @@ ja:
         perm_denied_expl: "通知へのアクセスが拒否されました。ブラウザの設定から通知を許可してください。"
         disable: "通知を無効にする"
         enable: "通知を有効にする"
-        each_browser_note: '注意: 使用するすべてのブラウザでこの設定を変更する必要があります。「おやすみモード」では、この設定に関係なくすべての通知が無効になります。'
         consent_prompt: "あなたの投稿に返信があったときライブ通知しますか？"
       dismiss: "閉じる"
       dismiss_notifications: "すべて閉じる"
@@ -2970,7 +2968,6 @@ ja:
         create_for_topic: "トピックのブックマークを作成する"
         edit: "ブックマークを編集"
         edit_for_topic: "トピックのブックマークを編集する"
-        created: "作成"
         updated: "更新"
         name: "名前"
         name_placeholder: "これは何のブックマークですか？"
@@ -3263,7 +3260,6 @@ ja:
     category_title: "カテゴリ"
     history_capped_revisions: "履歴、直近の 100 回のレビジョン"
     history: "履歴"
-    changed_by: "%{author}"
     raw_email:
       title: "受信メール"
       not_available: "利用できません！"
@@ -3657,7 +3653,6 @@ ja:
         other: "未読 %{count}"
       new_count:
         other: "新規 %{count}"
-      toggle_section: "セクションの切り替え"
       more: "もっと"
       all_categories: "すべてのカテゴリ"
       all_tags: "すべてのタグ"
@@ -3666,7 +3661,6 @@ ja:
           header_link_text: "サイト情報"
         messages:
           header_link_text: "メッセージ"
-          header_action_title: "個人メッセージを作成"
           links:
             inbox: "受信トレイ"
             sent: "送信済み"
@@ -3683,7 +3677,6 @@ ja:
           none: "追加したタグはまだありません"
           click_to_get_started: "ここをクリックして開始してください。"
           header_link_text: "タグ"
-          header_action_title: "サイドバーのタグを編集"
           configure_defaults: "デフォルトの構成"
         categories:
           links:
@@ -3693,11 +3686,9 @@ ja:
           none: "追加したカテゴリはありません"
           click_to_get_started: "ここをクリックして開始してください。"
           header_link_text: "カテゴリ"
-          header_action_title: "サイドバーのカテゴリを編集"
           configure_defaults: "デフォルトの構成"
         community:
           header_link_text: "コミュニティー"
-          header_action_title: "新しいトピックを作成"
           links:
             about:
               content: "サイト情報"
@@ -3712,17 +3703,14 @@ ja:
               content: "FAQ"
             groups:
               content: "グループ"
-              title: "すべてのグループ"
             users:
               content: "ユーザー"
-              title: "すべてのユーザー"
             my_posts:
               content: "自分の投稿"
               draft_count:
                 other: "%{count} 下書き"
             review:
               content: "レビュー"
-              title: "レビュー"
               pending_count: "保留中 %{count}"
     welcome_topic_banner:
       title: "ウェルカムトピックを作成しましょう"
@@ -4165,7 +4153,6 @@ ja:
         button_title: "招待を送信"
       customize:
         title: "カスタマイズ"
-        long_title: "サイトのカスタマイズ"
         preview: "プレビュー"
         explain_preview: "このテーマを有効にした状態でサイトを見る"
         save: "保存"

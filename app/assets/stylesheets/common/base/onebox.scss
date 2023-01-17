@@ -738,7 +738,8 @@ aside.onebox.xkcd .onebox-body img {
 
 // allowlistedgeneric twitter labels
 .onebox.allowlistedgeneric,
-.onebox.whitelistedgeneric {
+.onebox.whitelistedgeneric,
+.onebox.discoursetopic {
   .label1,
   .label2 {
     color: var(--primary-med-or-secondary-med);
@@ -754,6 +755,7 @@ aside.onebox.xkcd .onebox-body img {
 .onebox {
   &.allowlistedgeneric,
   &.whitelistedgeneric,
+  &.discoursetopic,
   &.gfycat,
   &.githubfolder {
     .site-icon {
@@ -766,6 +768,24 @@ aside.onebox.xkcd .onebox-body img {
     border: 1px solid var(--primary-low);
     padding-left: calc(1em - 5px);
     margin-left: 5px;
+  }
+}
+
+.onebox.discoursetopic {
+  h3 {
+    width: 100%;
+    margin-bottom: 0.2rem !important;
+  }
+
+  .d-icon-tag {
+    width: 0.75rem;
+    padding-top: 0.3rem;
+    position: absolute;
+    color: var(--primary-medium);
+  }
+
+  .discourse-tags .discourse-tag:first-of-type {
+    padding-left: 1rem;
   }
 }
 

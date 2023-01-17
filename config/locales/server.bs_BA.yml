@@ -310,10 +310,6 @@ bs_BA:
         few: "prije %{count} mjeseca"
         other: "prije %{count} mjeseci"
   password_reset:
-    choose_new: "Izaberite novu šifru"
-    choose: "Izaberite šifru"
-    update: "Obnovi Šifru"
-    save: "Namjesti Šifru"
     title: "Resetuj Šifru"
     success: "Uspješno ste promjenili šifru i sada se možete ulogovati."
     success_unapproved: "Uspješno ste promjenili šifru."

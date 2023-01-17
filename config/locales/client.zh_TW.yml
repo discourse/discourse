@@ -279,7 +279,6 @@ zh_TW:
       not_bookmarked: "將此貼文加入書籤"
       remove_reminder_keep_bookmark: "刪除提醒並保留書籤"
       created_with_reminder: "您已使用提醒 %{date}將此帖子添加為書籤。 %{name}"
-      remove: "移除書籤"
       delete: "刪除書籤"
       confirm_delete: "您確定要刪除這個書籤嗎？提醒也會被刪除。"
       confirm_clear: "確定要移除該話題上的所有書籤嗎？"
@@ -344,7 +343,6 @@ zh_TW:
     enable: "啟用"
     disable: "停用"
     continue: "繼續"
-    undo: "復原"
     switch_to_anon: "進入匿名模式"
     switch_from_anon: "離開匿名模式"
     banner:
@@ -610,6 +608,7 @@ zh_TW:
         denied: "被拒絕"
         undone: "請求未完成"
         handle: "處理會員申請"
+        undo: "復原"
       manage:
         title: "管理"
         name: "名稱"
@@ -2352,7 +2351,6 @@ zh_TW:
             button: "HTML"
       bookmarks:
         edit: "編輯書籤"
-        created: "已建立"
         name: "名稱"
         options: "選項"
         actions:
@@ -2573,7 +2571,6 @@ zh_TW:
     users_lowercase:
       other: "使用者"
     category_title: "分類"
-    changed_by: "作者 %{author}"
     raw_email:
       title: "寄來的郵件"
       not_available: "不可使用"
@@ -2847,7 +2844,6 @@ zh_TW:
         other: "%{count} 個未讀"
       new_count:
         other: "%{count} 近期"
-      toggle_section: "切換選擇"
       more: "更多"
       all_categories: "所有分類"
       all_tags: "所有標籤"
@@ -2856,7 +2852,6 @@ zh_TW:
           header_link_text: "關於"
         messages:
           header_link_text: "訊息"
-          header_action_title: "寫一則個人訊息"
           links:
             inbox: "收件匣"
             sent: "送出"
@@ -2869,17 +2864,14 @@ zh_TW:
           none: "您尚未新增任何標籤。"
           click_to_get_started: "按一下這裡開始。"
           header_link_text: "標籤"
-          header_action_title: "編輯側選單的標籤"
           configure_defaults: "設定預設值"
         categories:
           none: "您尚未新增任何類別。"
           click_to_get_started: "按一下這裡開始。"
           header_link_text: "分類"
-          header_action_title: "編輯側選單的分類"
           configure_defaults: "設定預設值"
         community:
           header_link_text: "社群"
-          header_action_title: "開啟新話題"
           links:
             about:
               content: "關於"
@@ -2894,17 +2886,14 @@ zh_TW:
               content: "常見問答"
             groups:
               content: "群組"
-              title: "所有群組"
             users:
               content: "使用者"
-              title: "所有使用者"
             my_posts:
               content: "我的貼文"
               draft_count:
                 other: "%{count} 草稿"
             review:
               content: "審核"
-              title: "審核"
               pending_count: "剩餘 %{count}"
     welcome_topic_banner:
       title: "建立您的歡迎主題"
@@ -3233,7 +3222,6 @@ zh_TW:
         button_title: "送出邀請"
       customize:
         title: "客製化"
-        long_title: "網站客製化"
         preview: "預覽"
         explain_preview: "以此佈景主題預覽網站"
         save: "儲存"
@@ -3390,7 +3378,7 @@ zh_TW:
           delete_confirm: "刪除此調色盤？"
           undo: "復原"
           undo_title: "復原你前次對此顏色所做的修改"
-          revert: "回復"
+          revert: "恢復"
           revert_title: "將此顏色重置為Discourse的預設調色。"
           primary:
             name: "一級"

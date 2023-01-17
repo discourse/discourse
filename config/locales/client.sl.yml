@@ -317,7 +317,6 @@ sl:
       created: "To objavo ste dodali med zaznamke. %{name}"
       not_bookmarked: "zaznamuj prispevek"
       created_with_reminder: "To objavo ste zaznamovali z opomnikom %{date}. %{name}"
-      remove: "Odstrani zaznamek"
       delete: "Odstrani zaznamek"
       confirm_delete: "Ali ste prepričani, da želite odstraniti ta zaznamek? Opomnik bo prav tako odstranjen."
       confirm_clear: "Ste prepričani, da želite odstraniti vse svoje zaznamke iz te teme?"
@@ -383,7 +382,6 @@ sl:
     enable: "Omogoči"
     disable: "Onemogoči"
     continue: "Nadaljuj"
-    undo: "Razveljavi"
     switch_to_anon: "Vklopi anonimni način"
     switch_from_anon: "Izklopi anonimni način"
     banner:
@@ -635,6 +633,7 @@ sl:
         denied: "zavrnjeno"
         undone: "zahtevek umaknjen"
         handle: "obravnavaj zahteve za članstvo"
+        undo: "Razveljavi"
       manage:
         title: "Upravljaj"
         name: "Ime skupine"
@@ -981,7 +980,6 @@ sl:
         perm_denied_expl: "Zavrnili ste dovoljenje za obvestila. Omogočite obvestila v nastavitvah vašega brskalnika."
         disable: "Onemogoči obvestila"
         enable: "Omogoči obvestila"
-        each_browser_note: 'Opomba: To nastavitev morate spremeniti v vsakem brskalniku, ki ga uporabljate. Vsa obvestila bodo onemogočena, če imate možnost »ne moti«, ne glede na to nastavitev.'
         consent_prompt: "Ali hočete obvestila v brskalniku, ko prejmete odgovore na vaše prispevke?"
       dismiss: "Opusti"
       dismiss_notifications: "Opusti vse"
@@ -2738,7 +2736,6 @@ sl:
             title: "Prikaži HTML obliko e-sporočila"
             button: "HTML"
       bookmarks:
-        created: "Ustvarjeno"
         name: "Polno ime"
         options: "Možnosti"
       filtered_replies:
@@ -2996,7 +2993,6 @@ sl:
       few: "uporabniki"
       other: "uporabnikov"
     category_title: "Kategorija"
-    changed_by: "od %{author}"
     raw_email:
       title: "Dohodno e-sporočilo"
       not_available: "Ni na voljo!"
@@ -3403,14 +3399,12 @@ sl:
               content: "Pravila skupnosti"
             groups:
               content: "Skupine"
-              title: "Vse skupine"
             users:
               content: "Uporabniki"
             my_posts:
               content: "Moji prispevki"
             review:
               content: "Pregled"
-              title: "pregled"
   admin_js:
     type_to_filter: "vnesite za filter..."
     admin:
@@ -3723,8 +3717,8 @@ sl:
         colors:
           title: "Barve"
           copy_name_prefix: "Kopija od"
-          undo: "razveljavi"
-          revert: "povrni"
+          undo: "Razveljavi"
+          revert: "Povrni"
           primary:
             name: "primarni"
           highlight:

@@ -316,7 +316,6 @@ tr_TR:
       remove_reminder_keep_bookmark: "Anımsatıcıyı kaldır ve yer imini tut"
       created_with_reminder: "Bu gönderiyi %{date} tarihli bir anımsatıcı ile yer imlerine eklediniz. %{name}"
       created_with_reminder_generic: "Bunu %{date} tarihli bir anımsatıcıyla yer imlerine eklediniz. %{name}"
-      remove: "Yer İmini Kaldır"
       delete: "Yer İmini Sil"
       confirm_delete: "Bu yer imini silmek istediğinizden emin misiniz? Anımsatıcı da silinir."
       confirm_clear: "Bu konudaki tüm yer imlerinizi silmek istediğinize emin misiniz?"
@@ -386,7 +385,6 @@ tr_TR:
     enable: "Etkinleştir"
     disable: "Devre dışı bırak"
     continue: "Devam et"
-    undo: "Geri Al"
     switch_to_anon: "Anonim Moda Gir"
     switch_from_anon: "Anonim Moddan Çık"
     banner:
@@ -683,6 +681,7 @@ tr_TR:
         denied: "reddedildi"
         undone: "talep reddedildi"
         handle: "üyelik talebini işle"
+        undo: "Geri Al"
       manage:
         title: "Yönet"
         name: "Ad"
@@ -1053,7 +1052,6 @@ tr_TR:
         perm_denied_expl: "Bildirim izinlerini reddettiniz. Bildirimlere tarayıcı ayarlarınızdan izin verebilirsiniz."
         disable: "Bildirimleri Devre Dışı Bırak"
         enable: "Bildirimleri Etkinleştir"
-        each_browser_note: 'Not: Kullandığınız her tarayıcıda bu ayarı değiştirmeniz gerekir. Bu ayardan bağımsız olarak, "rahatsız etmeyin" modundayken tüm bildirimler devre dışı bırakılır.'
         consent_prompt: "Gönderilerinize yanıt verildiğinde canlı bildirim almak ister misiniz?"
       dismiss: "Kapat"
       dismiss_notifications: "Tümünü Kapat"
@@ -3260,7 +3258,6 @@ tr_TR:
         create_for_topic: "Konu için yer imi oluştur"
         edit: "Yer imini düzenle"
         edit_for_topic: "Bu konunun yer imini düzenle"
-        created: "Oluşturuldu"
         updated: "Güncellendi"
         name: "Ad"
         name_placeholder: "Bu yer imi ne için?"
@@ -3563,7 +3560,6 @@ tr_TR:
     category_title: "Kategori"
     history_capped_revisions: "Geçmiş, son 100 revizyon"
     history: "Geçmiş"
-    changed_by: "Yazan: %{author}"
     raw_email:
       title: "Gelen E-posta"
       not_available: "Kullanılamıyor!"
@@ -3982,7 +3978,6 @@ tr_TR:
       new_count:
         one: "%{count} yeni"
         other: "%{count} yeni"
-      toggle_section: "bölümü değiştir"
       more: "Daha fazla"
       all_categories: "Tüm kategoriler"
       all_tags: "Tüm etiketler"
@@ -3991,7 +3986,6 @@ tr_TR:
           header_link_text: "Hakkında"
         messages:
           header_link_text: "Mesajlar"
-          header_action_title: "kişisel mesaj oluştur"
           links:
             inbox: "Gelen Kutusu"
             sent: "Gönderilen"
@@ -4008,7 +4002,6 @@ tr_TR:
           none: "Etiket eklemediniz."
           click_to_get_started: "Başlamak için buraya tıklayın."
           header_link_text: "Etiketler"
-          header_action_title: "kenar çubuğu etiketlerinizi düzenleyin"
           configure_defaults: "Varsayılanları yapılandır"
         categories:
           links:
@@ -4018,11 +4011,9 @@ tr_TR:
           none: "Kategori eklemediniz."
           click_to_get_started: "Başlamak için buraya tıklayın."
           header_link_text: "Kategoriler"
-          header_action_title: "kenar çubuğu kategorilerinizi düzenleyin"
           configure_defaults: "Varsayılanları yapılandır"
         community:
           header_link_text: "Topluluk"
-          header_action_title: "yeni bir konu oluştur"
           links:
             about:
               content: "Hakkında"
@@ -4037,10 +4028,8 @@ tr_TR:
               content: "SSS"
             groups:
               content: "Gruplar"
-              title: "Tüm gruplar"
             users:
               content: "Kullanıcılar"
-              title: "Tüm kullanıcılar"
             my_posts:
               content: "Gönderilerim"
               title: "Son konu etkinliğim"
@@ -4050,7 +4039,6 @@ tr_TR:
                 other: "%{count} taslak"
             review:
               content: "İncele"
-              title: "incele"
               pending_count: "%{count} beklemede"
     welcome_topic_banner:
       title: "Karşılama Konunuzu oluşturun"
@@ -4507,7 +4495,6 @@ tr_TR:
         button_title: "Davet Gönder"
       customize:
         title: "Özelleştir"
-        long_title: "Site Özelleştirmeleri"
         preview: "ön izleme"
         explain_preview: "Bu temanın etkin olduğu siteye bakın"
         save: "Kaydet"
@@ -4712,9 +4699,9 @@ tr_TR:
           new_name: "Yeni Renk Paleti"
           copy_name_prefix: "Şunun kopyası:"
           delete_confirm: "Bu renk paleti silinsin mi?"
-          undo: "geri al"
+          undo: "Geri Al"
           undo_title: "Bu rengin son kaydedilmesinden bu yana yaptığınız değişiklikleri geri alın."
-          revert: "eski haline getir"
+          revert: "Eski Haline Getir"
           revert_title: "Bu rengi Discourse'un varsayılan renk paletine sıfırlayın."
           primary:
             name: "birincil"

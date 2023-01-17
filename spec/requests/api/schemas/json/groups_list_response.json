@@ -131,6 +131,9 @@
             "can_admin_group": {
               "type": "boolean"
             },
+            "can_edit_group": {
+              "type": "boolean"
+            },
             "publish_read_state": {
               "type": "boolean"
             }
