@@ -63,8 +63,8 @@ jobs:
       - name: Check RubyGems Licenses
         if: ${{ !cancelled() }}
         run: |
-          licensed cache
-          licensed status
+          bundle exec licensed cache
+          bundle exec licensed status
 
       - name: Yarn install
         run: yarn install
