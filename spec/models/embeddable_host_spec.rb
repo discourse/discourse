@@ -91,7 +91,7 @@ describe EmbeddableHost do
       expect(EmbeddableHost.url_allowed?('http://discourse.org')).to eq(true)
     end
 
-    it 'always allow forum own URL' do
+    it 'does not allow forum own URL' do
       expect(EmbeddableHost.url_allowed?(Discourse.base_url)).to eq(true)
     end
   end
