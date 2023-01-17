@@ -62,6 +62,11 @@ def setup_message_bus_env(env)
 
     extra_headers["Discourse-Logged-Out"] = "1" if env[Auth::DefaultCurrentUserProvider::BAD_TOKEN]
 
+    if Rails.env.development?
+      # Adding no-transform prevents the expressjs ember-cli proxy buffering/compressing the response
+      extra_headers["Cache-Control"] = "no-transform, must-revalidate, private, max-age=0"
+    end
+
     hash = {
       extra_headers: extra_headers,
       user_id: user_id,
@@ -100,6 +105,8 @@ MessageBus.on_middleware_error do |env, e|
     [403, {}, ["Invalid Access"]]
   elsif RateLimiter::LimitExceeded === e
     [429, { "Retry-After" => e.available_in.to_s }, [e.description]]
+  elsif Errno::EPIPE === e
+    [422, {}, ["Closed by Client"]]
   end
 end
 
