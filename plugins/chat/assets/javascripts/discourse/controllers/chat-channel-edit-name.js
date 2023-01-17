@@ -6,30 +6,30 @@ export default class ChatChannelEditTitleController extends Controller.extend(
   ModalFunctionality
 ) {
   @service chatApi;
-  editedTitle = "";
+  editedName = "";
 
-  @computed("model.title", "editedTitle")
+  @computed("model.title", "editedName")
   get isSaveDisabled() {
     return (
-      this.model.title === this.editedTitle ||
-      this.editedTitle?.length > this.siteSettings.max_topic_title_length
+      this.model.title === this.editedName ||
+      this.editedName?.length > this.siteSettings.max_topic_title_length
     );
   }
 
   onShow() {
-    this.set("editedTitle", this.model.title || "");
+    this.set("editedName", this.model.title || "");
   }
 
   onClose() {
-    this.set("editedTitle", "");
+    this.set("editedName", "");
     this.clearFlash();
   }
 
   @action
-  onSaveChatChannelTitle() {
+  onSaveChatChannelName() {
     return this.chatApi
       .updateChannel(this.model.id, {
-        name: this.editedTitle,
+        name: this.editedName,
       })
       .then((result) => {
         this.model.set("title", result.channel.title);
@@ -43,8 +43,8 @@ export default class ChatChannelEditTitleController extends Controller.extend(
   }
 
   @action
-  onChangeChatChannelTitle(title) {
+  onChangeChatChannelName(title) {
     this.clearFlash();
-    this.set("editedTitle", title);
+    this.set("editedName", title);
   }
 }
