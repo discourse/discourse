@@ -777,15 +777,15 @@ aside.onebox.xkcd .onebox-body img {
     margin-bottom: 0.2rem !important;
   }
 
-  .d-icon-tag {
-    width: 0.75rem;
-    padding-top: 0.3rem;
-    position: absolute;
-    color: var(--primary-medium);
-  }
-
-  .discourse-tags .discourse-tag:first-of-type {
-    padding-left: 1rem;
+  .discourse-tags {
+    vertical-align: bottom;
+    .d-icon-tag {
+      font-size: var(--font-down-1);
+      margin-right: 0.35em;
+      margin-top: 0.15em;
+      color: var(--primary-medium);
+      align-self: center;
+    }
   }
 }
 
