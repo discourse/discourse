@@ -98,8 +98,6 @@ class CorrectSchemaDiscrepancies < ActiveRecord::Migration[6.0]
       plugin_store_rows.key
       plugin_store_rows.plugin_name
       plugin_store_rows.type_name
-      post_details.key
-      post_details.value
       post_search_data.locale
       schema_migrations.version
       screened_emails.email

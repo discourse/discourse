@@ -51,8 +51,6 @@ class Post < ActiveRecord::Base
 
   has_one :incoming_email
 
-  has_many :post_details
-
   has_many :post_revisions
   has_many :revisions, -> { order(:number) }, foreign_key: :post_id, class_name: "PostRevision"
 
@@ -179,20 +177,12 @@ class Post < ActiveRecord::Base
     @notices ||= Enum.new(custom: "custom", new_user: "new_user", returning_user: "returning_user")
   end
 
-  def self.find_by_detail(key, value)
-    includes(:post_details).find_by(post_details: { key: key, value: value })
-  end
-
   def self.find_by_number(topic_id, post_number)
     find_by(topic_id: topic_id, post_number: post_number)
   end
 
   def whisper?
     post_type == Post.types[:whisper]
-  end
-
-  def add_detail(key, value, extra = nil)
-    post_details.build(key: key, value: value, extra: extra)
   end
 
   def limit_posts_per_day

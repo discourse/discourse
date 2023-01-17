@@ -1060,22 +1060,6 @@ RSpec.describe Post do
     end
   end
 
-  describe "details" do
-    it "adds details" do
-      post = Fabricate.build(:post)
-      post.add_detail("key", "value")
-      expect(post.post_details.size).to eq(1)
-      expect(post.post_details.first.key).to eq("key")
-      expect(post.post_details.first.value).to eq("value")
-    end
-
-    it "can find a post by a detail" do
-      detail = Fabricate(:post_detail)
-      post = detail.post
-      expect(Post.find_by_detail(detail.key, detail.value).id).to eq(post.id)
-    end
-  end
-
   describe "cooking" do
     let(:post) do
       Fabricate.build(:post, post_args.merge(raw: "please read my blog http://blog.example.com"))
