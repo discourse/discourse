@@ -172,8 +172,6 @@ group :test, :development do
 
   gem "syntax_tree"
   gem "syntax_tree-disable_ternary"
-
-  gem "licensed", require: false
 end
 
 group :development do

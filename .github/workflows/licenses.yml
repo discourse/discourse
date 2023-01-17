@@ -47,6 +47,10 @@ jobs:
           bundle install --jobs 4
           bundle clean
 
+      - name: Setup licensed
+        run: |
+          bundle add licensed
+
       - name: Get yarn cache directory
         id: yarn-cache-dir
         run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
