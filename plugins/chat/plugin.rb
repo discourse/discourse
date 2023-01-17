@@ -455,6 +455,8 @@ after_initialize do
   add_to_serializer(:current_user, :chat_drafts) do
     ChatDraft
       .where(user_id: object.id)
+      .order(updated_at: :desc)
+      .limit(20)
       .pluck(:chat_channel_id, :data)
       .map { |row| { channel_id: row[0], data: row[1] } }
   end
