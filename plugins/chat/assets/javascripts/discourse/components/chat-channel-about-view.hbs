@@ -18,22 +18,22 @@
 <div class="chat-form__section">
   <div class="chat-form__field">
     <label class="chat-form__label">
-      <span>{{i18n "chat.about_view.title"}}</span>
+      <span>{{i18n "chat.about_view.name"}}</span>
       {{#if (chat-guardian "can-edit-chat-channel")}}
         <div class="chat-form__label-actions">
           <DButton
-            @class="edit-title-btn btn-flat"
+            @class="edit-name-btn btn-flat"
             @label="chat.channel_settings.edit"
             @action={{if
-              this.onEditChatChannelTitle
-              this.onEditChatChannelTitle
+              this.onEditChatChannelName
+              this.onEditChatChannelName
             }}
           />
         </div>
       {{/if}}
     </label>
     <div class="chat-form__control">
-      <div class="channel-info-about-view__title">
+      <div class="channel-info-about-view__name">
         {{replace-emoji this.channel.escapedTitle}}
       </div>
     </div>

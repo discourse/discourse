@@ -233,6 +233,7 @@ en:
         associated_topic: Linked topic
         associated_category: Linked category
         title: Title
+        name: Name
         description: Description
 
       channel_info:
@@ -243,10 +244,10 @@ en:
           members: Members
           settings: Settings
 
-      channel_edit_title_modal:
-        title: Edit title
-        input_placeholder: Add a title
-        description: Give a short descriptive title to your channel
+      channel_edit_name_modal:
+        title: Edit name
+        input_placeholder: Add a name
+        description: Give a short descriptive name to your channel
 
       channel_edit_description_modal:
         title: Edit description
