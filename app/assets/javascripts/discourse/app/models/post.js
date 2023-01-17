@@ -461,6 +461,12 @@ Post.reopenClass({
     });
   },
 
+  purgeRevisions(postId) {
+    return ajax(`/posts/${postId}/revisions/purge`, {
+      type: "DELETE",
+    });
+  },
+
   showRevision(postId, version) {
     return ajax(`/posts/${postId}/revisions/${version}/show`, {
       type: "PUT",

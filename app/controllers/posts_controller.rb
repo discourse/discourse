@@ -466,6 +466,22 @@ class PostsController < ApplicationController
     render body: nil
   end
 
+  def purge_revisions
+    guardian.ensure_can_purge_post_revisions!
+
+    post = find_post_from_params
+    raise Discourse::InvalidParameters.new(:post) if post.blank?
+    raise Discourse::NotFound unless post.revisions.present?
+
+    updated_at = Time.zone.now
+    post.revisions.destroy_all
+
+    post.update(version: 1, public_version: 1, last_version_at: updated_at)
+    post.rebake!
+
+    render body: nil
+  end
+
   def show_revision
     post_revision = find_post_revision_from_params
     guardian.ensure_can_show_post_revision!(post_revision)

@@ -250,6 +250,16 @@
           @disabled={{this.loading}}
         />
       {{/if}}
+
+      {{#if this.canPurge}}
+        <DButton
+          @action={{action "purgeVersions"}}
+          @icon="far-trash-alt"
+          @label="post.revisions.controls.destroy"
+          @class="btn-danger"
+          @disabled={{this.loading}}
+        />
+      {{/if}}
     </div>
   </div>
 {{/if}}
