@@ -30,6 +30,16 @@ class DraftsController < ApplicationController
   def create
     raise Discourse::NotFound.new if params[:draft_key].blank?
 
+    if params[:data].size > SiteSetting.max_draft_length
+      raise Discourse::InvalidParameters.new(:data)
+    end
+
+    begin
+      data = JSON.parse(params[:data])
+    rescue JSON::ParserError
+      raise Discourse::InvalidParameters.new(:data)
+    end
+
     sequence =
       begin
         Draft.set(
@@ -66,12 +76,6 @@ class DraftsController < ApplicationController
       end
 
     json = success_json.merge(draft_sequence: sequence)
-
-    begin
-      data = JSON::parse(params[:data])
-    rescue JSON::ParserError
-      raise Discourse::InvalidParameters.new(:data)
-    end
 
     if data.present?
       # this is a bit of a kludge we need to remove (all the parsing) too many special cases here
