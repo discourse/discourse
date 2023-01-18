@@ -78,6 +78,30 @@ class Tag < ActiveRecord::Base
 
     DB.exec <<~SQL
       UPDATE tags t
+      SET public_topic_count = x.topic_count
+      FROM (
+        WITH tags_with_public_topics AS (
+          SELECT
+            COUNT(topics.id) AS topic_count,
+            tags.id AS tag_id
+          FROM tags
+          INNER JOIN topic_tags ON tags.id = topic_tags.tag_id
+          INNER JOIN topics ON topics.id = topic_tags.topic_id AND topics.deleted_at IS NULL AND topics.archetype != 'private_message'
+          INNER JOIN categories ON categories.id = topics.category_id AND NOT categories.read_restricted
+          GROUP BY tags.id
+        )
+        SELECT
+          COALESCE(tags_with_public_topics.topic_count, 0 ) AS topic_count,
+          tags.id AS tag_id
+        FROM tags
+        LEFT JOIN tags_with_public_topics ON tags_with_public_topics.tag_id = tags.id
+      ) x
+      WHERE x.tag_id = t.id
+      AND x.topic_count <> t.public_topic_count;
+    SQL
+
+    DB.exec <<~SQL
+      UPDATE tags t
          SET pm_topic_count = x.pm_topic_count
         FROM (
              SELECT COUNT(topics.id) AS pm_topic_count, tags.id AS tag_id
@@ -214,14 +238,15 @@ end
 #
 # Table name: tags
 #
-#  id             :integer          not null, primary key
-#  name           :string           not null
-#  topic_count    :integer          default(0), not null
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
-#  pm_topic_count :integer          default(0), not null
-#  target_tag_id  :integer
-#  description    :string
+#  id                 :integer          not null, primary key
+#  name               :string           not null
+#  topic_count        :integer          default(0), not null
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
+#  pm_topic_count     :integer          default(0), not null
+#  target_tag_id      :integer
+#  description        :string
+#  public_topic_count :integer          default(0), not null
 #
 # Indexes
 #

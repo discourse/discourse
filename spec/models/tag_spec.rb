@@ -202,13 +202,48 @@ RSpec.describe Tag do
     end
   end
 
-  describe "topic counts" do
+  describe ".ensure_consistency!" do
     it "should exclude private message topics" do
       topic
       Fabricate(:private_message_topic, tags: [tag])
       Tag.ensure_consistency!
       tag.reload
       expect(tag.topic_count).to eq(1)
+    end
+
+    it "should update Tag#topic_count and Tag#public_topic_count correctly" do
+      tag = Fabricate(:tag, name: "tag1")
+      tag2 = Fabricate(:tag, name: "tag2")
+      tag3 = Fabricate(:tag, name: "tag3")
+      group = Fabricate(:group)
+      category = Fabricate(:category)
+      private_category = Fabricate(:private_category, group: group)
+      private_category2 = Fabricate(:private_category, group: group)
+
+      _topic_with_tag = Fabricate(:topic, category: category, tags: [tag])
+
+      _topic_with_tag_in_private_category =
+        Fabricate(:topic, category: private_category, tags: [tag])
+
+      _topic_with_tag2_in_private_category2 =
+        Fabricate(:topic, category: private_category2, tags: [tag2])
+
+      tag.update!(topic_count: 123, public_topic_count: 456)
+      tag2.update!(topic_count: 123, public_topic_count: 456)
+      tag3.update!(topic_count: 123, public_topic_count: 456)
+
+      Tag.ensure_consistency!
+
+      tag.reload
+      tag2.reload
+      tag3.reload
+
+      expect(tag.topic_count).to eq(2)
+      expect(tag.public_topic_count).to eq(1)
+      expect(tag2.topic_count).to eq(1)
+      expect(tag2.public_topic_count).to eq(0)
+      expect(tag3.topic_count).to eq(0)
+      expect(tag3.public_topic_count).to eq(0)
     end
   end
 
