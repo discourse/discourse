@@ -5,11 +5,12 @@ class TagsController < ::ApplicationController
   include TopicQueryParams
 
   before_action :ensure_tags_enabled
-  before_action :ensure_visible, only: %i[show info]
 
   def self.show_methods
     Discourse.anonymous_filters.map { |f| :"show_#{f}" }
   end
+
+  before_action :ensure_visible, only: [:show, :info, *show_methods]
 
   requires_login except: [:index, :show, :tag_feed, :search, :info, *show_methods]
 
