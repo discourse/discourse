@@ -31,8 +31,6 @@ class TopicView
     :personal_message,
     :can_review_topic,
     :page,
-    :mentioned_users,
-    :mentions,
   )
   alias queued_posts_enabled? queued_posts_enabled
 
@@ -143,9 +141,6 @@ class TopicView
         @post_custom_fields = Post.custom_fields_for_ids(@posts.map(&:id), allowed_fields)
       end
     end
-
-    parse_mentions
-    load_mentioned_users
 
     TopicView.preload(self)
 
@@ -700,17 +695,21 @@ class TopicView
     @topic.published_page
   end
 
-  def parse_mentions
-    @mentions = @posts.to_h { |p| [p.id, p.mentions] }.reject { |_, v| v.empty? }
-  end
+  def mentioned_users
+    @mentioned_users ||=
+      begin
+        mentions = @posts.to_h { |p| [p.id, p.mentions] }.reject { |_, v| v.empty? }
+        usernames = mentions.values
+        usernames.flatten!
+        usernames.uniq!
 
-  def load_mentioned_users
-    usernames = @mentions.values.flatten.uniq
-    mentioned_users = User.where(username: usernames)
+        users = User.where(username: usernames).includes(:user_status).index_by(&:username)
 
-    mentioned_users = mentioned_users.includes(:user_status) if SiteSetting.enable_user_status
-
-    @mentioned_users = mentioned_users.to_h { |u| [u.username, u] }
+        mentions.reduce({}) do |hash, (post_id, post_mentioned_usernames)|
+          hash[post_id] = post_mentioned_usernames.map { |username| users[username] }.compact
+          hash
+        end
+      end
   end
 
   def tags
