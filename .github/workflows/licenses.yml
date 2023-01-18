@@ -39,15 +39,23 @@ jobs:
           restore-keys: |
             licenses-${{ runner.os }}-gem-
 
+      - name: Setup gems
+        run: |
+          bundle config --local path vendor/bundle
+          bundle config --local deployment true
+          bundle config --local without development
+          bundle install --jobs 4
+          bundle clean
+
       - name: Setup licensed
         run: |
           export BUNDLER_VER=$(awk '/BUNDLED WITH/ { getline; gsub(/ /,""); print $0 }' Gemfile.lock)
           mkdir licensed
           cd licensed
           bundle init
-          ruby -e 'File.write("Gemfile.lock", File.read("Gemfile.lock").sub(/(BUNDLED WITH\n\s+)(.+)/, "\\1#{ENV["BUNDLER_VER"]}"))'
           bundle config --local path .
           bundle add licensed
+          ruby -e 'File.write("Gemfile.lock", File.read("Gemfile.lock").sub(/(BUNDLED WITH\n\s+)(.+)/, "\\1#{ENV["BUNDLER_VER"]}"))'
 
       - name: Get yarn cache directory
         id: yarn-cache-dir
