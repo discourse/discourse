@@ -83,8 +83,6 @@ class SearchController < ApplicationController
       raise Discourse::InvalidParameters.new("string contains null byte")
     end
 
-    rate_limit_errors = rate_limit_search
-
     discourse_expires_in 1.minute
 
     search_args = { guardian: guardian }
