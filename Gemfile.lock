@@ -16,7 +16,7 @@ GIT
 
 GIT
   remote: https://github.com/tablecheck/sassc-ruby
-  revision: 9da935428da9586fadb1e01947766a4147f5ebfb
+  revision: 2b7f883c8e2b8284a876166febff1e42a7c2de01
   branch: embedded-sass-merge
   specs:
     sassc (3.0.0)
