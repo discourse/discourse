@@ -46,14 +46,14 @@ class TagsController < ::ApplicationController
         TagGroup
           .visible(guardian)
           .order("name ASC")
-          .includes(:tags)
+          .includes(:none_synonym_tags)
           .map do |tag_group|
             {
               id: tag_group.id,
               name: tag_group.name,
               tags:
                 self.class.tag_counts_json(
-                  tag_group.tags.where(target_tag_id: nil),
+                  tag_group.none_synonym_tags,
                   show_pm_tags: guardian.can_tag_pms?,
                 ),
             }

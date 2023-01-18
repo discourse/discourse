@@ -18,6 +18,7 @@ export default Component.extend(UtilsMixin, {
     "title",
     "rowValue:data-value",
     "rowName:data-name",
+    "index:data-index",
     "role",
     "ariaChecked:aria-checked",
     "guid:data-guid",
@@ -30,6 +31,7 @@ export default Component.extend(UtilsMixin, {
     "isNone:none",
     "item.classNames",
   ],
+  index: 0,
 
   role: "menuitemradio",
 

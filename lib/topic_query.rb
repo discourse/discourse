@@ -15,10 +15,15 @@ class TopicQuery
     @validators ||=
       begin
         int = lambda { |x| Integer === x || (String === x && x.match?(/^-?[0-9]+$/)) }
-
         zero_up_to_max_int = lambda { |x| int.call(x) && x.to_i.between?(0, PG_MAX_INT) }
+        array_or_string = lambda { |x| Array === x || String === x }
 
-        { max_posts: zero_up_to_max_int, min_posts: zero_up_to_max_int, page: zero_up_to_max_int }
+        {
+          max_posts: zero_up_to_max_int,
+          min_posts: zero_up_to_max_int,
+          page: zero_up_to_max_int,
+          tags: array_or_string,
+        }
       end
   end
 
@@ -637,9 +642,13 @@ class TopicQuery
     options.reverse_merge!(@options)
     options.reverse_merge!(per_page: per_page_setting) unless options[:limit] == false
 
-    # Whether to return visible topics
-    options[:visible] = true if @user.nil? || @user.regular?
-    options[:visible] = false if @user && @user.id == options[:filtered_to_user]
+    # Whether to include unlisted (visible = false) topics
+    viewing_own_topics = @user && @user.id == options[:filtered_to_user]
+
+    if options[:visible].nil?
+      options[:visible] = true if @user.nil? || @user.regular?
+      options[:visible] = false if @guardian.can_see_unlisted_topics? || viewing_own_topics
+    end
 
     # Start with a list of all topics
     result = Topic.unscoped.includes(:category)

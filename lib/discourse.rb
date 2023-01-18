@@ -191,6 +191,18 @@ module Discourse
 
   reset_job_exception_stats!
 
+  if Rails.env.test?
+    def self.catch_job_exceptions!
+      raise "tests only" if !Rails.env.test?
+      @catch_job_exceptions = true
+    end
+
+    def self.reset_catch_job_exceptions!
+      raise "tests only" if !Rails.env.test?
+      remove_instance_variable(:@catch_job_exceptions)
+    end
+  end
+
   # Log an exception.
   #
   # If your code is in a scheduled job, it is recommended to use the
@@ -220,7 +232,7 @@ module Discourse
       { current_db: cm.current_db, current_hostname: cm.current_hostname }.merge(context),
     )
 
-    raise ex if Rails.env.test?
+    raise ex if Rails.env.test? && !@catch_job_exceptions
   end
 
   # Expected less matches than what we got in a find

@@ -45,6 +45,6 @@ module UserSidebarMixin
   private
 
   def sidebar_navigation_menu?
-    !SiteSetting.legacy_navigation_menu?
+    !SiteSetting.legacy_navigation_menu? || options[:enable_sidebar_param] == "1"
   end
 end

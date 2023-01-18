@@ -234,8 +234,10 @@ describe ChatMessage do
       expect(cooked).to eq("<p><span class=\"mention\">@mention</span></p>")
     end
 
-    # TODO (martin) Remove this when enable_experimental_hashtag_autocomplete is default
     it "supports category-hashtag plugin" do
+      # TODO (martin) Remove when enable_experimental_hashtag_autocomplete is default for all sites
+      SiteSetting.enable_experimental_hashtag_autocomplete = false
+
       category = Fabricate(:category)
 
       cooked = ChatMessage.cook("##{category.slug}")
