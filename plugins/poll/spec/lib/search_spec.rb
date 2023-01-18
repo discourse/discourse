@@ -23,9 +23,7 @@ RSpec.describe Search do
     SearchIndexer.index(topic, force: true)
   end
 
-  after do
-    SearchIndexer.disable
-  end
+  after { SearchIndexer.disable }
 
   context "when using in:polls" do
     it "displays only posts containing polls" do
