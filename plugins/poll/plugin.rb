@@ -231,4 +231,12 @@ after_initialize do
     SiteSetting.poll_enabled && scope.user&.id.present? && preloaded_polls.present? &&
       preloaded_polls.any? { |p| p.has_voted?(scope.user) }
   end
+
+  register_search_advanced_filter(/in:polls/) do |posts, match|
+    if SiteSetting.poll_enabled
+      posts.joins(:polls)
+    else
+      posts
+    end
+  end
 end
