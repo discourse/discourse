@@ -3498,7 +3498,6 @@ de:
         this_week: "Woche"
         today: "Heute"
     browser_update: 'Leider wird <a href="https://www.discourse.org/faq/#browser">dein Browser nicht unterstützt</a>. Bitte <a href="https://browsehappy.com">wechsle zu einem unterstützten Browser</a>, um die Inhalte in vollem Umfang zu sehen, dich anzumelden und zu antworten.'
-    safari_13_warning: Diese Website wird bald die Unterstützung für iOS und Safari Version 13 und darunter entfernen. Eine vereinfachte Nur-Lesen-Version wird weiterhin verfügbar sein. (<a href="https://meta.discourse.org/t/224747">Mehr Informationen</a>)
     permission_types:
       full: "Erstellen/Antworten/Ansehen"
       create_post: "Antworten/Ansehen"
@@ -4122,7 +4121,6 @@ de:
             topics:
               read: Lies ein Thema oder einen bestimmten Beitrag darin. RSS wird ebenfalls unterstützt.
               write: Erstelle ein neues Thema oder schreibe einen Beitrag zu einem bestehenden.
-              update: Aktualisiere ein Thema. Ändere den Titel, die Kategorie, Schlagwörter usw.
               read_lists: Lies Themenlisten wie „Angesagt“, „Neu“, „Aktuell“ usw. RSS wird ebenfalls unterstützt.
             posts:
               edit: Bearbeite jeden Beitrag oder einen bestimmten.

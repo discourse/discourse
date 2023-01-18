@@ -23,6 +23,7 @@ he:
     default_emoji_reactions: "רגשות אמוג׳י כברירת מחדל להודעות צ׳אט. ניתן להוסיף עד 5 אמוג׳ים לתגובה מהירה."
     direct_message_enabled_groups: "לאפשר למשתמשים בקבוצות אלה ליצור צ׳אטים אישיים בין המשתמשים לבין עצמם. הערה: הסגל תמיד יכול ליצור צ׳אטים אישיים, ומשתמשים יוכלו להשיב לצ׳אטים אישיים שיזמו משתמשים שיש להם הרשאה ליצור אותם."
     chat_message_flag_allowed_groups: "משתמשים בקבוצות אלו רשאים לסמן הודעות צ׳אט בדגל."
+    max_mentions_per_chat_message: "מספר התראות מרבי של @שם בהן יכול להשתמש משתמש בהודעת צ׳אט."
     chat_max_direct_message_users: "משתמשים לא יכולים להוסיף יותר מכמות זו של משתמשים אחרים בעת יצירת הודעה ישירה חדשה. יש להגדיר ל־0 כדי לאפשר הודעות עצמיות. הסגל מוחרג מההגדרה הזאת."
     chat_allow_archiving_channels: "לאפשר לסגל להעביר הודעות לארכיון בנושא בעת סגירת ערוץ."
     errors:
@@ -33,13 +34,12 @@ he:
     chat_channel_archive_complete:
       title: "העברת ערוץ הצ׳אט לארכיון הושלמה"
       subject_template: "העברת ערוץ הצ׳אט לארכיון הושלמה בהצלחה"
-      text_body_template: |
-        העברת ערוץ הצ׳אט **‎\#%{channel_name}** לארכיון הושלמה בהצלחה. ההודעות הועתקו לנושא [%{topic_title}](%{topic_url}).
     chat_channel_archive_failed:
       title: "העברת הצ׳אט לארכיון נכשלה"
       subject_template: "העברת הצ׳אט לארכיון נכשלה"
-      text_body_template: |
-        העברת ערוץ הצ׳אט **‎\#%{channel_name}** לארכיון נכשלה. %{messages_archived} הודעות הועברו לארכיון. הודעות שהועברו לארכיון באופן חלקי הועתקו לנושא [%{topic_title}](%{topic_url}). יש לבקר בכתובת הערוץ %{channel_url} כדי לנסות שוב.
+    chat_channel_archive_failed_no_topic:
+      title: "העברת הצ׳אט לארכיון נכשלה"
+      subject_template: "העברת הצ׳אט לארכיון נכשלה"
   chat:
     deleted_chat_username: נמחק
     errors:

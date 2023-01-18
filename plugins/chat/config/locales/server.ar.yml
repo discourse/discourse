@@ -32,13 +32,12 @@ ar:
     chat_channel_archive_complete:
       title: "اكتمل أرشيف قناة الدردشة"
       subject_template: "اكتمل أرشيف قناة الدردشة بنجاح"
-      text_body_template: |
-        اكتملت أرشفة قناة الدردشة **\#%{channel_name}** بنجاح. وتم نسخ الرسائل إلى الموضوع [%{topic_title}](%{topic_url}).
     chat_channel_archive_failed:
       title: "فشلت أرشفة قناة الدردشة"
       subject_template: "فشلت أرشفة قناة الدردشة"
-      text_body_template: |
-        فشلت أرشفة قناة الدردشة **\#%{channel_name}**. تم وضع الرسائل %{messages_archived} في الأرشيف. تم نسخ الرسائل المؤرشفة جزئيًا في الموضوع [%{topic_title}](%{topic_url}). انتقل إلى القناة في %{channel_url} لإعادة المحاولة.
+    chat_channel_archive_failed_no_topic:
+      title: "فشلت أرشفة قناة الدردشة"
+      subject_template: "فشلت أرشفة قناة الدردشة"
   chat:
     deleted_chat_username: تم الحذف
     errors:

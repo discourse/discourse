@@ -175,7 +175,6 @@ fr:
         read_only: "Lecture seule"
         archived_header: "Le canal est archivé"
         archived: "Archivé"
-        archive_failed: "Échec de l'archivage du canal. %{completed}/%{total} messages ont été archivés dans <a target=\"_blank\" href=\"%{topic_url}\">le sujet de destination</a>. Appuyez sur Réessayer pour tenter de terminer l'archivage."
         archive_completed: "Voir <a target=\"_blank\" href=\"%{topic_url}\">le sujet de l'archive</a>"
         closed_header: "Le canal est fermé"
         closed: "Fermé"

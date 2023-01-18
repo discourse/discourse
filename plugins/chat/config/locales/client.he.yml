@@ -215,7 +215,6 @@ he:
         read_only: "לקריאה בלבד"
         archived_header: "הערוץ בארכיון"
         archived: "בארכיון"
-        archive_failed: "העברת הערוץ לארכיון נכשלה. %{completed}/%{total} הודעות הועברו לארכיון תחת <a target=\"_blank\" href=\"%{topic_url}\">נושא היעד</a>. נא לנסות להשלים את ההעברה לארכיון פעם נוספת."
         archive_completed: "אפשר לעיין ב<a target=\"_blank\" href=\"%{topic_url}\">ארכיון הנושא</a>"
         closed_header: "הערוץ סגור"
         closed: "סגורה"
