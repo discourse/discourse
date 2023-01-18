@@ -73,6 +73,24 @@ RSpec.describe "Create channel", type: :system, js: true do
       end
     end
 
+    it "autogenerates slug from name and changes slug placeholder" do
+      visit("/chat")
+      find(".new-channel-btn").click
+      name = "Cats & Dogs"
+      find(".category-chooser").click
+      find(".category-row[data-value=\"#{category_1.id}\"]").click
+      fill_in("channel-name", with: name)
+      fill_in("channel-description", with: "All kind of cute cats")
+
+      wait_for_attribute(find(".create-channel-slug-input"), :placeholder, "cats-dogs")
+      find(".create-channel-modal .create").click
+
+      expect(page).to have_content(name)
+      created_channel = ChatChannel.find_by(chatable_id: category_1.id)
+      expect(created_channel.slug).to eq("cats-dogs")
+      expect(page).to have_current_path(chat.channel_path(created_channel.id, created_channel.slug))
+    end
+
     context "when saving" do
       context "when error" do
         it "displays the error" do
