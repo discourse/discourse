@@ -39,7 +39,7 @@ acceptance("Group Members", function (needs) {
   needs.user();
 
   needs.pretender((server, helper) => {
-    server.put("/admin/groups/47/owners.json", () => {
+    server.put("/groups/47/owners.json", () => {
       return helper.response({ success: true });
     });
   });

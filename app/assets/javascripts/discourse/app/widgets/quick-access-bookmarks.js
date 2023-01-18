@@ -70,7 +70,7 @@ createWidgetFrom(QuickAccessPanel, "quick-access-bookmarks", {
       href,
       title: bookmark.name,
       content: bookmark.title,
-      username: bookmark.user.username,
+      username: bookmark.user?.username,
     });
   },
 

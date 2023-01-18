@@ -228,7 +228,6 @@ sw:
         unbookmark: "Bofya kuondoa mialamisho yote kwenye mada hii"
     bookmarks:
       not_bookmarked: "alamisha chapisho hili"
-      remove: "Ondoa Alamisho"
       confirm_clear: "Una uhakika unataka kuondoa mialamisho ya mada hii?"
       save: "hifadhi"
       search: "Tafuta"
@@ -263,7 +262,6 @@ sw:
     enable: "Ruhusu"
     disable: "Zuia"
     continue: "Endelea"
-    undo: "Tendua"
     switch_to_anon: "Ingia Hali-tumizi Isiyojulikana"
     switch_from_anon: "Ondoka kwenye Hali-tumizi Isiyojulikana"
     banner:
@@ -391,6 +389,7 @@ sw:
       requests:
         reason: "Sababu"
         accepted: "imeruhusiwa"
+        undo: "Tendua"
       manage:
         title: "Simamia"
         name: "Jina"
@@ -1857,7 +1856,6 @@ sw:
             title: "Onyesha sehemu yenye html kwenye barua pepe."
             button: "HTML"
       bookmarks:
-        created: "Imetengenezwa"
         name: "Jina"
         options: "Chaguo"
     category:
@@ -2025,7 +2023,6 @@ sw:
       one: "Mtumiaji"
       other: "Watumiaji"
     category_title: "Kategoria"
-    changed_by: "na %{author}"
     raw_email:
       title: "Barua Pepe Iliyopokelewa"
       not_available: "Haipatikani!"
@@ -2289,7 +2286,6 @@ sw:
               content: "FAQ"
             groups:
               content: "Vikundi"
-              title: "Vikundi vyote"
             users:
               content: "Watumiaji"
             my_posts:
@@ -2563,7 +2559,6 @@ sw:
         button_title: "Tuma Mialiko"
       customize:
         title: "Geuza Kukufaa"
-        long_title: "Mabadiliko Maalum ya Tovuti"
         preview: "kihakiki"
         explain_preview: "Tembelea tovuti inayotumia mandhari hii."
         save: "Hifadhi"
@@ -2652,9 +2647,9 @@ sw:
         colors:
           title: "Rangi"
           copy_name_prefix: "Nakala ya"
-          undo: "tendua"
+          undo: "Tendua"
           undo_title: "tendua madiliko kwenye rangi hii kutoka mara ya mwisho ilivyohifadhiwa."
-          revert: "rejea"
+          revert: "Rudisha Nyuma"
           primary:
             name: "msingi"
             description: "Neno, ikoni, na mipaka mingi."

@@ -41,7 +41,7 @@ class Chat::ChatNotifier
         :send_message_notifications,
         chat_message_id: chat_message.id,
         timestamp: timestamp.iso8601(6),
-        reason: :edit
+        reason: :edit,
       )
     end
 
@@ -50,7 +50,7 @@ class Chat::ChatNotifier
         :send_message_notifications,
         chat_message_id: chat_message.id,
         timestamp: timestamp.iso8601(6),
-        reason: :new
+        reason: :new,
       )
     end
   end
@@ -112,8 +112,7 @@ class Chat::ChatNotifier
     group_mentions_count = group_name_mentions.length
 
     skip_notifications =
-      (direct_mentions_count + group_mentions_count) >
-        SiteSetting.max_mentions_per_chat_message
+      (direct_mentions_count + group_mentions_count) > SiteSetting.max_mentions_per_chat_message
 
     {}.tap do |to_notify|
       # The order of these methods is the precedence
@@ -248,24 +247,21 @@ class Chat::ChatNotifier
   end
 
   def visible_groups
-    @visible_groups ||=
-        Group
-          .where("LOWER(name) IN (?)", group_name_mentions)
-          .visible_groups(@user)
+    @visible_groups ||= Group.where("LOWER(name) IN (?)", group_name_mentions).visible_groups(@user)
   end
 
   def expand_group_mentions(to_notify, already_covered_ids, skip)
     return [] if skip || visible_groups.empty?
 
-    mentionable_groups = Group
-      .mentionable(@user, include_public: false)
-      .where(id: visible_groups.map(&:id))
+    mentionable_groups =
+      Group.mentionable(@user, include_public: false).where(id: visible_groups.map(&:id))
 
     mentions_disabled = visible_groups - mentionable_groups
 
-    too_many_members, mentionable = mentionable_groups.partition do |group|
-      group.user_count > SiteSetting.max_users_notified_per_group_mention
-    end
+    too_many_members, mentionable =
+      mentionable_groups.partition do |group|
+        group.user_count > SiteSetting.max_users_notified_per_group_mention
+      end
 
     to_notify[:group_mentions_disabled] = mentions_disabled
     to_notify[:too_many_members] = too_many_members
@@ -275,7 +271,9 @@ class Chat::ChatNotifier
     reached_by_group =
       chat_users
         .includes(:groups)
-        .joins(:groups).where(groups: mentionable).where.not(id: already_covered_ids)
+        .joins(:groups)
+        .where(groups: mentionable)
+        .where.not(id: already_covered_ids)
 
     grouped = group_users_to_notify(reached_by_group)
 
@@ -295,7 +293,13 @@ class Chat::ChatNotifier
   end
 
   def notify_creator_of_inaccessible_mentions(to_notify)
-    inaccessible = to_notify.extract!(:unreachable, :welcome_to_join, :too_many_members, :group_mentions_disabled)
+    inaccessible =
+      to_notify.extract!(
+        :unreachable,
+        :welcome_to_join,
+        :too_many_members,
+        :group_mentions_disabled,
+      )
     return if inaccessible.values.all?(&:blank?)
 
     ChatPublisher.publish_inaccessible_mentions(
@@ -304,7 +308,7 @@ class Chat::ChatNotifier
       inaccessible[:unreachable].to_a,
       inaccessible[:welcome_to_join].to_a,
       inaccessible[:too_many_members].to_a,
-      inaccessible[:group_mentions_disabled].to_a
+      inaccessible[:group_mentions_disabled].to_a,
     )
   end
 
@@ -321,9 +325,7 @@ class Chat::ChatNotifier
     to_notify
       .except(:unreachable, :welcome_to_join)
       .each do |key, user_ids|
-        to_notify[key] = user_ids.reject do |user_id|
-          screener.ignoring_or_muting_actor?(user_id)
-        end
+        to_notify[key] = user_ids.reject { |user_id| screener.ignoring_or_muting_actor?(user_id) }
       end
 
     # :welcome_to_join contains users because it's serialized by MB.
@@ -351,11 +353,7 @@ class Chat::ChatNotifier
   def notify_watching_users(except: [])
     Jobs.enqueue(
       :chat_notify_watching,
-      {
-        chat_message_id: @chat_message.id,
-        except_user_ids: except,
-        timestamp: @timestamp,
-      },
+      { chat_message_id: @chat_message.id, except_user_ids: except, timestamp: @timestamp },
     )
   end
 end

@@ -399,10 +399,6 @@ et:
         one: "peaaegu %{count} aasta tagasi"
         other: "peaaegu %{count} aastat tagasi"
   password_reset:
-    choose_new: "Vali uus parool"
-    choose: "Vali parool"
-    update: "Uuenda parooli"
-    save: "Määra Parool"
     title: "Uuenda Parool"
     success: "Sinu parooli muutmine õnnestus ja oled nüüd sisse logitud."
     success_unapproved: "Sinu parooli muutmine õnnestus."

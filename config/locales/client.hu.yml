@@ -315,7 +315,6 @@ hu:
       remove_reminder_keep_bookmark: "Emlékeztető eltávolítása és könyvjelző megtartása"
       created_with_reminder: "Könyvjelzőzte ezt a bejegyzést, és emlékeztetőt állított be ekkorra: %{date}. %{name}"
       created_with_reminder_generic: "Könyvjelzőzte ezt, és emlékeztetőt állított be ekkorra: %{date}. %{name}"
-      remove: "Könyvjelző eltávolítása"
       delete: "Könyvjelző törlése"
       confirm_delete: "Biztos, hogy törli ezt a könyvjelzőt? Az emlékeztető is törlődni fog."
       confirm_clear: "Biztos, hogy törli az összes könyvjelzőjét ebből a témából?"
@@ -385,7 +384,6 @@ hu:
     enable: "Engedélyezés"
     disable: "Letiltás"
     continue: "Folytatás"
-    undo: "Visszavonás"
     switch_to_anon: "Anonim módba lépés"
     switch_from_anon: "Kilépés az anonim módból"
     banner:
@@ -682,6 +680,7 @@ hu:
         denied: "tiltva"
         undone: "kérés visszavonva"
         handle: "tagsági kérés kezelése"
+        undo: "Visszavonás"
       manage:
         title: "Kezelés"
         name: "Név"
@@ -1051,7 +1050,7 @@ hu:
         perm_denied_expl: "Letiltotta a figyelmeztetéseket. Engedélyezze őket a böngésző beállításaiban."
         disable: "Értesítések kikapcsolása"
         enable: "Értesítések bekapcsolása"
-        each_browser_note: 'Megjegyzés: Ezt a beállítást minden használt böngészőben meg kell változtatnia. Az összes értesítés letiltásra került ettől a beállítástól függetlenül, ha a profilját „Ne zavarjanak” állapotba teszi.'
+        each_browser_note: 'Megjegyzés: Ezt a beállítást minden használt böngészőben módosítania kell. Ettől a beállítástól függetlenül minden értesítés le lesz tiltva, ha szünetelteti az értesítéseket a felhasználói menüből.'
         consent_prompt: "Szeretne élő értesítéseket kapni, ha valaki válaszol a hozzászólásaira?"
       dismiss: "Elvetés"
       dismiss_notifications: "Összes elvetése"
@@ -3041,7 +3040,6 @@ hu:
       bookmarks:
         create: "Könyvjelző létrehozása"
         edit: "Könyvjelző szerkesztése"
-        created: "Létrehozott"
         updated: "Frissítve"
         name: "Név"
         name_placeholder: "Mire való ez a könyvjelző?"
@@ -3269,7 +3267,6 @@ hu:
       other: "felhasználók"
     category_title: "Kategória"
     history: "Idővonal"
-    changed_by: "szerző %{author}"
     raw_email:
       title: "Bejövő email"
       not_available: "Nem elérhető!"
@@ -3618,7 +3615,7 @@ hu:
           header_link_text: "Névjegy"
         messages:
           header_link_text: "Üzenetek"
-          header_action_title: "új személyes üzenet létrehozása"
+          header_action_title: "Személyes üzenet létrehozása"
           links:
             inbox: "Beérkezett üzenetek"
             sent: "Elküldött"
@@ -3635,7 +3632,6 @@ hu:
           none: "Még nem adott hozzá címkéket."
           click_to_get_started: "Kattintson ide a kezdéshez."
           header_link_text: "Címkék"
-          header_action_title: "szerkessze az oldalsávja címkéit"
           configure_defaults: "Alapértelmezések beállítása"
         categories:
           links:
@@ -3645,36 +3641,39 @@ hu:
           none: "Még nem adott hozzá kategóriákat."
           click_to_get_started: "Kattintson ide a kezdéshez."
           header_link_text: "Kategóriák"
-          header_action_title: "szerkessze az oldalsávja kategóriáit"
           configure_defaults: "Alapértelmezések beállítása"
         community:
           header_link_text: "Közösség"
-          header_action_title: "új téma létrehozása"
+          header_action_title: "Téma létrehozása"
           links:
             about:
               content: "Névjegy"
+              title: "További részletek erről az oldalról"
             admin:
               content: "Adminisztrátor"
+              title: "Oldalbeállítások és jelentések"
             badges:
               content: "Jelvények"
+              title: "Az összes megszerezhető jelvény"
             everything:
               content: "Összes"
               title: "Minden téma"
             faq:
               content: "GYIK"
+              title: "Útmutató az oldal használatához"
             groups:
               content: "Csoportok"
-              title: "Összes csoport"
+              title: "Az elérhető felhasználói csoportok listája"
             users:
               content: "Felhasználók"
-              title: "Minden felhasználó"
+              title: "Az összes felhasználó listája"
             my_posts:
               content: "Saját bejegyzéseim"
               title: "Legutóbbi téma tevékenységem"
               title_drafts: "Nem közzétett piszkozataim"
             review:
               content: "Áttekintés"
-              title: "áttekintés"
+              title: "Megjelölt bejegyzések és egyéb sorban álló elemek"
               pending_count: "%{count} függőben"
     welcome_topic_banner:
       title: "Hozzon létre üdvözlő témát"
@@ -4055,7 +4054,6 @@ hu:
         button_title: "Meghívók küldése"
       customize:
         title: "Személyre szabás"
-        long_title: "Oldal testreszabása"
         preview: "előnézet"
         explain_preview: "Az oldal megtekintése ezzel a témával"
         save: "Mentés"

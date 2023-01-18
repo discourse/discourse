@@ -22,7 +22,13 @@ RSpec.describe CategoryGuardian do
 
     context "when restricted category" do
       fab!(:group) { Fabricate(:group) }
-      fab!(:category) { Fabricate(:private_category, group: group, permission_type: CategoryGroup.permission_types[:readonly]) }
+      fab!(:category) do
+        Fabricate(
+          :private_category,
+          group: group,
+          permission_type: CategoryGroup.permission_types[:readonly],
+        )
+      end
       fab!(:group_user) { Fabricate(:group_user, group: group, user: user) }
 
       it "returns false for anonymous user" do
@@ -38,12 +44,22 @@ RSpec.describe CategoryGuardian do
       end
 
       it "returns true for member of group with create_post access" do
-        category = Fabricate(:private_category, group: group, permission_type: CategoryGroup.permission_types[:create_post])
+        category =
+          Fabricate(
+            :private_category,
+            group: group,
+            permission_type: CategoryGroup.permission_types[:create_post],
+          )
         expect(Guardian.new(user).can_post_in_category?(category)).to eq(true)
       end
 
       it "returns true for member of group with full access" do
-        category = Fabricate(:private_category, group: group, permission_type: CategoryGroup.permission_types[:full])
+        category =
+          Fabricate(
+            :private_category,
+            group: group,
+            permission_type: CategoryGroup.permission_types[:full],
+          )
         expect(Guardian.new(user).can_post_in_category?(category)).to eq(true)
       end
     end

@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe TopicLinkSerializer do
-
   it "correctly serializes the topic link" do
-    post = Fabricate(:post, raw: 'https://meta.discourse.org/')
+    post = Fabricate(:post, raw: "https://meta.discourse.org/")
     TopicLink.extract_from(post)
     serialized = described_class.new(post.topic_links.first, root: false).as_json
 

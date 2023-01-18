@@ -3,15 +3,12 @@
 RSpec.describe UserAction do
   fab!(:coding_horror) { Fabricate(:coding_horror) }
 
-  before do
-    UserActionManager.enable
-  end
+  before { UserActionManager.enable }
 
   it { is_expected.to validate_presence_of :action_type }
   it { is_expected.to validate_presence_of :user_id }
 
-  describe '#stream' do
-
+  describe "#stream" do
     fab!(:public_post) { Fabricate(:post) }
     let(:public_topic) { public_post.topic }
     fab!(:user) { Fabricate(:user) }
@@ -19,27 +16,30 @@ RSpec.describe UserAction do
     fab!(:private_post) { Fabricate(:post) }
     let(:private_topic) do
       topic = private_post.topic
-      topic.update_columns(category_id: nil, archetype: Archetype::private_message)
+      topic.update_columns(category_id: nil, archetype: Archetype.private_message)
       TopicAllowedUser.create(topic_id: topic.id, user_id: user.id)
       topic
     end
 
     def log_test_action(opts = {})
-      UserAction.log_action!({
-        action_type: UserAction::NEW_PRIVATE_MESSAGE,
-        user_id: user.id,
-        acting_user_id: user.id,
-        target_topic_id: private_topic.id,
-        target_post_id: private_post.id,
-      }.merge(opts))
+      UserAction.log_action!(
+        {
+          action_type: UserAction::NEW_PRIVATE_MESSAGE,
+          user_id: user.id,
+          acting_user_id: user.id,
+          target_topic_id: private_topic.id,
+          target_post_id: private_post.id,
+        }.merge(opts),
+      )
     end
 
     it "allows publishing when group is deleted" do
       public_topic.category.update!(read_restricted: true)
 
-      m = MessageBus.track_publish("/u/#{user.username_lower}") do
-        log_test_action(target_topic_id: public_topic.id, target_post_id: public_post.id)
-      end
+      m =
+        MessageBus.track_publish("/u/#{user.username_lower}") do
+          log_test_action(target_topic_id: public_topic.id, target_post_id: public_post.id)
+        end
 
       expect(m[0].group_ids).to eq([Group::AUTO_GROUPS[:admins]])
       expect(m[0].user_ids).to eq([user.id])
@@ -54,21 +54,28 @@ RSpec.describe UserAction do
         UserAction.stream(user_id: user.id, guardian: Guardian.new(viewer))
       end
 
-      it 'includes the events correctly' do
+      it "includes the events correctly" do
         # Create some test data using a helper
         log_test_action
         log_test_action(action_type: UserAction::GOT_PRIVATE_MESSAGE)
-        log_test_action(action_type: UserAction::NEW_TOPIC, target_topic_id: public_topic.id, target_post_id: public_post.id)
+        log_test_action(
+          action_type: UserAction::NEW_TOPIC,
+          target_topic_id: public_topic.id,
+          target_post_id: public_post.id,
+        )
 
         Jobs.run_immediately!
         PostActionNotifier.enable
 
         mystats = stats_for_user(user)
-        expecting = [UserAction::NEW_TOPIC, UserAction::NEW_PRIVATE_MESSAGE, UserAction::GOT_PRIVATE_MESSAGE].sort
+        expecting = [
+          UserAction::NEW_TOPIC,
+          UserAction::NEW_PRIVATE_MESSAGE,
+          UserAction::GOT_PRIVATE_MESSAGE,
+        ].sort
         expect(mystats).to eq(expecting)
 
-        expect(stream(user).map(&:action_type))
-          .to contain_exactly(*expecting)
+        expect(stream(user).map(&:action_type)).to contain_exactly(*expecting)
 
         other_stats = stats_for_user
         expecting = [UserAction::NEW_TOPIC]
@@ -113,42 +120,33 @@ RSpec.describe UserAction do
       end
     end
 
-    describe 'assignments' do
-      let(:stream) do
-        UserAction.stream(user_id: user.id, guardian: Guardian.new(user))
-      end
+    describe "assignments" do
+      let(:stream) { UserAction.stream(user_id: user.id, guardian: Guardian.new(user)) }
 
       before do
         log_test_action(action_type: UserAction::ASSIGNED)
         private_post.custom_fields ||= {}
-        private_post.custom_fields["action_code_who"] = 'testing'
-        private_post.custom_fields["action_code_path"] = '/p/1234'
-        private_post.custom_fields["random_field"] = 'random_value'
+        private_post.custom_fields["action_code_who"] = "testing"
+        private_post.custom_fields["action_code_path"] = "/p/1234"
+        private_post.custom_fields["random_field"] = "random_value"
         private_post.save!
       end
 
-      it 'should include the right attributes in the stream' do
+      it "should include the right attributes in the stream" do
         expect(stream.count).to eq(1)
 
         user_action_row = stream.first
 
         expect(user_action_row.action_type).to eq(UserAction::ASSIGNED)
-        expect(user_action_row.action_code_who).to eq('testing')
-        expect(user_action_row.action_code_path).to eq('/p/1234')
+        expect(user_action_row.action_code_who).to eq("testing")
+        expect(user_action_row.action_code_path).to eq("/p/1234")
       end
     end
 
     describe "mentions" do
-      before do
-        log_test_action(action_type: UserAction::MENTION)
-      end
+      before { log_test_action(action_type: UserAction::MENTION) }
 
-      let(:stream) do
-        UserAction.stream(
-          user_id: user.id,
-          guardian: Guardian.new(user)
-        )
-      end
+      let(:stream) { UserAction.stream(user_id: user.id, guardian: Guardian.new(user)) }
 
       it "is returned by the stream" do
         expect(stream.count).to eq(1)
@@ -160,10 +158,9 @@ RSpec.describe UserAction do
         expect(stream).to be_blank
       end
     end
-
   end
 
-  describe 'when user likes' do
+  describe "when user likes" do
     fab!(:post) { Fabricate(:post) }
     let(:likee) { post.user }
     fab!(:liker) { coding_horror }
@@ -172,9 +169,7 @@ RSpec.describe UserAction do
       UserAction.stream(user_id: likee.id, guardian: Guardian.new)
     end
 
-    before do
-      @old_count = likee_stream.count
-    end
+    before { @old_count = likee_stream.count }
 
     it "creates a new stream entry" do
       PostActionCreator.like(liker, post)
@@ -188,7 +183,7 @@ RSpec.describe UserAction do
         @likee_action = likee.user_actions.find_by(action_type: UserAction::WAS_LIKED)
       end
 
-      it 'should result in correct data assignment' do
+      it "should result in correct data assignment" do
         expect(@liker_action).not_to eq(nil)
         expect(@likee_action).not_to eq(nil)
         expect(likee.user_stat.reload.likes_received).to eq(1)
@@ -199,12 +194,12 @@ RSpec.describe UserAction do
         expect(liker.user_stat.reload.likes_given).to eq(0)
       end
 
-      context 'with private message' do
+      context "with private message" do
         fab!(:post) { Fabricate(:private_message_post) }
         let(:likee) { post.topic.topic_allowed_users.first.user }
         let(:liker) { post.topic.topic_allowed_users.last.user }
 
-        it 'should not increase user stats' do
+        it "should not increase user stats" do
           expect(@liker_action).not_to eq(nil)
           expect(liker.user_stat.reload.likes_given).to eq(0)
           expect(@likee_action).not_to eq(nil)
@@ -215,24 +210,19 @@ RSpec.describe UserAction do
           expect(likee.user_stat.reload.likes_received).to eq(0)
         end
       end
-
     end
 
     context "when liking a private message" do
-      before do
-        post.topic.update_columns(category_id: nil, archetype: Archetype::private_message)
-      end
+      before { post.topic.update_columns(category_id: nil, archetype: Archetype.private_message) }
 
       it "doesn't add the entry to the stream" do
         PostActionCreator.like(liker, post)
         expect(likee_stream.count).not_to eq(@old_count + 1)
       end
-
     end
-
   end
 
-  describe 'when a user posts a new topic' do
+  describe "when a user posts a new topic" do
     before do
       freeze_time(100.days.ago) do
         @post = create_post
@@ -240,8 +230,8 @@ RSpec.describe UserAction do
       end
     end
 
-    describe 'topic action' do
-      it 'should exist' do
+    describe "topic action" do
+      it "should exist" do
         @action = @post.user.user_actions.find_by(action_type: UserAction::NEW_TOPIC)
 
         expect(@action).not_to eq(nil)
@@ -249,47 +239,55 @@ RSpec.describe UserAction do
       end
     end
 
-    it 'should not log a post user action' do
+    it "should not log a post user action" do
       expect(@post.user.user_actions.find_by(action_type: UserAction::REPLY)).to eq(nil)
     end
 
-    describe 'when another user posts on the topic' do
+    describe "when another user posts on the topic" do
       before do
         @other_user = coding_horror
         @mentioned = Fabricate(:admin)
 
-        @response = PostCreator.new(@other_user, reply_to_post_number: 1, topic_id: @post.topic_id, raw: "perhaps @#{@mentioned.username} knows how this works?").create
+        @response =
+          PostCreator.new(
+            @other_user,
+            reply_to_post_number: 1,
+            topic_id: @post.topic_id,
+            raw: "perhaps @#{@mentioned.username} knows how this works?",
+          ).create
 
         PostAlerter.post_created(@response)
       end
 
-      it 'should log user actions correctly' do
+      it "should log user actions correctly" do
         expect(@response.user.user_actions.find_by(action_type: UserAction::REPLY)).not_to eq(nil)
         expect(@post.user.user_actions.find_by(action_type: UserAction::RESPONSE)).not_to eq(nil)
         expect(@mentioned.user_actions.find_by(action_type: UserAction::MENTION)).not_to eq(nil)
-        expect(@post.user.user_actions.joins(:target_post).where('posts.post_number = 2').count).to eq(1)
+        expect(
+          @post.user.user_actions.joins(:target_post).where("posts.post_number = 2").count,
+        ).to eq(1)
       end
 
-      it 'should not log a double notification for a post edit' do
+      it "should not log a double notification for a post edit" do
         @response.raw = "here it goes again"
         @response.save!
         expect(@response.user.user_actions.where(action_type: UserAction::REPLY).count).to eq(1)
       end
-
     end
   end
 
-  describe 'synchronize_target_topic_ids' do
-    it 'correct target_topic_id' do
+  describe "synchronize_target_topic_ids" do
+    it "correct target_topic_id" do
       post = Fabricate(:post)
 
-      action = UserAction.log_action!(
-        action_type: UserAction::NEW_PRIVATE_MESSAGE,
-        user_id: post.user.id,
-        acting_user_id: post.user.id,
-        target_topic_id: -1,
-        target_post_id: post.id,
-      )
+      action =
+        UserAction.log_action!(
+          action_type: UserAction::NEW_PRIVATE_MESSAGE,
+          user_id: post.user.id,
+          acting_user_id: post.user.id,
+          target_topic_id: -1,
+          target_post_id: post.id,
+        )
 
       UserAction.log_action!(
         action_type: UserAction::NEW_PRIVATE_MESSAGE,

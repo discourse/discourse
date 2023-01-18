@@ -684,10 +684,6 @@ ko:
       almost_x_years:
         other: "약 %{count}년 전"
   password_reset:
-    choose_new: "새 비밀번호를 입력하세요"
-    choose: "비밀번호를 입력하세요"
-    update: "비밀번호 업데이트"
-    save: "비밀번호 설정"
     title: "비밀번호 리셋"
     success: "비밀번호를 변경했으며, 로그인되었습니다."
     success_unapproved: "비밀번호를 변경했습니다."

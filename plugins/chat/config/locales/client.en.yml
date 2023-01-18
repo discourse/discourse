@@ -205,7 +205,8 @@ en:
         read_only: "Read Only"
         archived_header: "Channel is archived"
         archived: "Archived"
-        archive_failed: "Archive channel failed. %{completed}/%{total} messages have been archived in <a target=\"_blank\" href=\"%{topic_url}\">the destination topic</a>. Press retry to attempt to complete the archive."
+        archive_failed: "Archive channel failed. %{completed}/%{total} messages have been archived. <a target=\"_blank\" href=\"%{topic_url}\">the destination topic</a>. Press retry to attempt to complete the archive."
+        archive_failed_no_topic: "Archive channel failed. %{completed}/%{total} messages have been archived, the destination topic was not created. Press retry to attempt to complete the archive."
         archive_completed: "See <a target=\"_blank\" href=\"%{topic_url}\">the archive topic</a>"
         closed_header: "Channel is closed"
         closed: "Closed"
@@ -232,6 +233,7 @@ en:
         associated_topic: Linked topic
         associated_category: Linked category
         title: Title
+        name: Name
         description: Description
 
       channel_info:
@@ -242,10 +244,10 @@ en:
           members: Members
           settings: Settings
 
-      channel_edit_title_modal:
-        title: Edit title
-        input_placeholder: Add a title
-        description: Give a short descriptive title to your channel
+      channel_edit_name_modal:
+        title: Edit name
+        input_placeholder: Add a name
+        description: Give a short descriptive name to your channel
 
       channel_edit_description_modal:
         title: Edit description
@@ -345,7 +347,7 @@ en:
 
       direct_messages:
         title: "Personal chat"
-        new: "New personal chat"
+        new: "Create a personal chat"
         create: "Go"
         leave: "Leave this personal chat"
         cannot_create: "Sorry, you cannot send direct messages."

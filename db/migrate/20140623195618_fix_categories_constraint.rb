@@ -2,7 +2,7 @@
 
 class FixCategoriesConstraint < ActiveRecord::Migration[4.2]
   def change
-    remove_index :categories, name: 'index_categories_on_parent_category_id_and_name'
+    remove_index :categories, name: "index_categories_on_parent_category_id_and_name"
 
     # Remove any previous duplicates
     execute "DELETE FROM categories WHERE id IN (SELECT id FROM (SELECT id, row_number() over (partition BY parent_category_id, name ORDER BY id) AS rnum FROM categories) t WHERE t.rnum > 1)"

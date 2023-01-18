@@ -148,6 +148,7 @@ ko:
       banner:
         enabled: "%{when}에 배너를 만들었습니다. 사용자가 닫을 때까지 모든 페이지의 상단에 나타납니다."
         disabled: "%{when}에 이 배너를 제거했습니다. 더 이상 모든 페이지의 상단에 표시되지 않습니다."
+      forwarded: "위의 이메일을 전달했습니다."
     topic_admin_menu: "주제 관리"
     skip_to_main_content: "메인 콘텐츠로 건너뛰기"
     emails_are_disabled: "관리자에 의해 모든 이메일의 발신이 비활성화되었습니다. 어떤 종류의 이메일 알림도 전송되지 않습니다."
@@ -162,6 +163,7 @@ ko:
     themes:
       default_description: "디폴트"
       broken_theme_alert: "테마/구성 요소에 오류가 있어 사이트가 작동하지 않을 수 있습니다."
+      error_caused_by: "'%{name}' 테마에서 오류가 발생하였습니다. <a target='blank' href='%{path}'>여기</a>를 클릭해 업데이트, 재설정 혹은 테마 사용을 중지하세요."
       only_admins: "(이 메시지는 사이트 관리자에게만 표시됩니다)"
     s3:
       regions:
@@ -199,6 +201,7 @@ ko:
     delete: "삭제하기"
     generic_error: "죄송합니다. 오류가 발생했습니다."
     generic_error_with_reason: "오류가 발생했습니다. %{error}"
+    multiple_errors: "복수의 오류가 발생하였습니다: %{errors}"
     sign_up: "회원가입"
     log_in: "로그인"
     age: "나이"
@@ -277,7 +280,6 @@ ko:
       not_bookmarked: "이 게시물 북마크하기"
       remove_reminder_keep_bookmark: "미리 알림 제거 및 북마크 유지"
       created_with_reminder: "%{date} 미리 알림과 함께 이 게시물을 북마크했습니다. %{name}"
-      remove: "북마크 제거"
       delete: "북마크 삭제"
       confirm_delete: "이 북마크를 삭제할까요? 미리 알림도 삭제됩니다."
       confirm_clear: "이 주제의 모든 북마크를 지울까요?"
@@ -341,7 +343,6 @@ ko:
     enable: "활성화"
     disable: "비활성화"
     continue: "계속하기"
-    undo: "실행 취소"
     switch_to_anon: "익명 모드 시작"
     switch_from_anon: "익명 모드 종료"
     banner:
@@ -529,6 +530,8 @@ ko:
       relative: "상대적"
     time_shortcut:
       now: "지금"
+      in_one_hour: "한 시간 내에"
+      in_two_hours: "두 시간 내에"
       later_today: "오늘 중"
       next_business_day: "다음 영업일"
       tomorrow: "내일"
@@ -593,6 +596,8 @@ ko:
         reset_to_default: "디폴트로 리셋"
       group:
         all: "모든 그룹"
+      sort:
+        label: "%{criteria}로 정렬"
     group_histories:
       actions:
         change_group_setting: "그룹 설정 변경"
@@ -619,6 +624,7 @@ ko:
         denied: "거부됨"
         undone: "요청 실행 취소"
         handle: "멤버십 요청 처리"
+        undo: "실행 취소"
       manage:
         title: "관리"
         name: "이름"
@@ -919,6 +925,7 @@ ko:
           all: "모두"
           read: "읽음"
           unread: "읽지 않음"
+          unseen: "읽지 않음"
         ignore_duration_title: "사용자 무시"
         ignore_duration_username: "사용자명"
         ignore_duration_when: "기간:"
@@ -979,7 +986,6 @@ ko:
         perm_denied_expl: "알림 권한을 거부한 상태입니다. 브라우저 설정에서 알림을 허용해 주세요."
         disable: "알림 비활성화"
         enable: "알림 활성화"
-        each_browser_note: '참고: 사용하는 모든 브라우저에서 이 설정을 변경해야 합니다. 이 설정에 관계없이 ''방해 금지''에 있는 경우 모든 알림이 비활성화됩니다.'
         consent_prompt: "내 게시물에 댓글이 달리면 실시간으로 알림을 받을까요?"
       dismiss: "해제"
       dismiss_notifications: "모두 해제"
@@ -2356,6 +2362,7 @@ ko:
       show_links: "이 주제에 링크 표시"
       collapse_details: "주제 상세 정보 접기"
       expand_details: "주제 상세 정보 펼치기"
+      read_more_in_category: "더 읽고 싶으신가요? %{categoryLink}의 다른 토픽을 살펴보거나 <a href='%{latestLink}'>최신 토픽</a>을 확인해 보세요."
       unread_indicator: "아직 이 주제의 마지막 게시물을 읽은 회원이 없습니다."
       suggest_create_topic: <a href>새 대화를 시작</a>할 준비가 되었나요?
       jump_reply_up: 이전 댓글로 이동
@@ -2862,7 +2869,6 @@ ko:
         create_for_topic: "주제에 대한 북마크 만들기"
         edit: "북마크 편집"
         edit_for_topic: "주제에 대한 북마크 편집"
-        created: "생성일"
         updated: "업데이트일"
         name: "이름"
         name_placeholder: "이 북마크는 무엇인가요?"
@@ -3146,7 +3152,6 @@ ko:
     category_title: "카테고리"
     history_capped_revisions: "히스토리, 최근 100개의 수정 버전"
     history: "히스토리"
-    changed_by: "작성자: %{author}"
     raw_email:
       title: "수신 이메일"
       not_available: "Raw 이메일이 가능하지 않습니다."
@@ -3547,7 +3552,6 @@ ko:
           none: "태그를 추가하지 않았습니다."
           click_to_get_started: "시작하려면 여기를 클릭하십시오."
           header_link_text: "태그"
-          header_action_title: "사이드바 태그 편집"
           configure_defaults: "기본값 구성"
         categories:
           links:
@@ -3555,10 +3559,8 @@ ko:
               content: "카테고리 추가"
           click_to_get_started: "시작하려면 여기를 클릭하십시오."
           header_link_text: "카테고리"
-          header_action_title: "사이드바 카테고리 편집"
         community:
           header_link_text: "커뮤니티"
-          header_action_title: "새글 쓰기"
           links:
             about:
               content: "소개"
@@ -3573,17 +3575,14 @@ ko:
               content: "자주하는 질문"
             groups:
               content: "그룹"
-              title: "모든 그룹"
             users:
               content: "사용자들"
-              title: "모든 사용자"
             my_posts:
               content: "내 글"
               draft_count:
                 other: "초안 %{count}"
             review:
               content: "검토"
-              title: "검토"
     welcome_topic_banner:
       title: "환영 글 만들기"
       button_title: "편집 시작"
@@ -4011,7 +4010,6 @@ ko:
         button_title: "초대 전송"
       customize:
         title: "사용자 지정"
-        long_title: "사이트 사용자 지정"
         preview: "미리 보기"
         explain_preview: "이 테마 적용한 사이트 보기"
         save: "저장"
@@ -4210,7 +4208,7 @@ ko:
           new_name: "새 색상 팔레트"
           copy_name_prefix: "다음의 사본"
           delete_confirm: "이 색상 팔레트를 삭제할까요?"
-          undo: "실행 복귀"
+          undo: "실행 취소"
           undo_title: "마지막 저장 이후 색상 변경사항을 실행 취소합니다."
           revert: "되돌리기"
           revert_title: "이 색상을 Discourse의 디폴트 색상 팔레트로 리셋합니다."

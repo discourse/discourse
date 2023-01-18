@@ -2,8 +2,10 @@
 
 class FinalDestination
   module SSRFDetector
-    class DisallowedIpError < SocketError; end
-    class LookupFailedError < SocketError; end
+    class DisallowedIpError < SocketError
+    end
+    class LookupFailedError < SocketError
+    end
 
     def self.standard_private_ranges
       @private_ranges ||= [

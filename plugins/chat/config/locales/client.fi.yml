@@ -294,7 +294,6 @@ fi:
         title: "Chat"
       direct_messages:
         title: "Henkilökohtainen chat"
-        new: "Uusi henkilökohtainen chat"
         create: "Siirry"
         leave: "Poistu tästä henkilökohtaisesta chatista"
         cannot_create: "Valitettavasti et voi lähettää yksityisviestejä."

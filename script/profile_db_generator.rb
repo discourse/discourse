@@ -5,7 +5,7 @@
 # we want our script to generate a consistent output, to do so
 #  we monkey patch array sample so it always uses the same rng
 class Array
-  RNG = Random.new(1098109928029800)
+  RNG = Random.new(1_098_109_928_029_800)
 
   def sample
     self[RNG.rand(size)]
@@ -16,9 +16,7 @@ end
 def unbundled_require(gem)
   if defined?(::Bundler)
     spec_path = Dir.glob("#{Gem.dir}/specifications/#{gem}-*.gemspec").last
-    if spec_path.nil?
-      raise LoadError
-    end
+    raise LoadError if spec_path.nil?
 
     spec = Gem::Specification.load spec_path
     spec.activate
@@ -30,13 +28,14 @@ def unbundled_require(gem)
 end
 
 def sentence
-  @gabbler ||= Gabbler.new.tap do |gabbler|
-    story = File.read(File.dirname(__FILE__) + "/alice.txt")
-    gabbler.learn(story)
-  end
+  @gabbler ||=
+    Gabbler.new.tap do |gabbler|
+      story = File.read(File.dirname(__FILE__) + "/alice.txt")
+      gabbler.learn(story)
+    end
 
   sentence = +""
-  until sentence.length > 800 do
+  until sentence.length > 800
     sentence << @gabbler.sentence
     sentence << "\n"
   end
@@ -74,13 +73,13 @@ if User.count > 2
   exit
 end
 
-require 'optparse'
+require "optparse"
 begin
-  unbundled_require 'gabbler'
+  unbundled_require "gabbler"
 rescue LoadError
   puts "installing gabbler gem"
   puts `gem install gabbler`
-  unbundled_require 'gabbler'
+  unbundled_require "gabbler"
 end
 
 number_of_users = 100
@@ -98,41 +97,61 @@ users = User.human_users.all
 
 puts
 puts "Creating 10 categories"
-categories = 10.times.map do |i|
-  putc "."
-  Category.create(name: "category#{i}", text_color: "ffffff", color: "000000", user: admin_user)
-end
+categories =
+  10.times.map do |i|
+    putc "."
+    Category.create(name: "category#{i}", text_color: "ffffff", color: "000000", user: admin_user)
+  end
 
 puts
 puts "Creating 100 topics"
-topic_ids = 100.times.map do
-  post = PostCreator.create(admin_user, raw: sentence, title: sentence[0..50].strip, category:  categories.sample.id, skip_validations: true)
-  putc "."
-  post.topic_id
-end
+topic_ids =
+  100.times.map do
+    post =
+      PostCreator.create(
+        admin_user,
+        raw: sentence,
+        title: sentence[0..50].strip,
+        category: categories.sample.id,
+        skip_validations: true,
+      )
+    putc "."
+    post.topic_id
+  end
 
 puts
 puts "Creating 2000 replies"
 2000.times do
   putc "."
-  PostCreator.create(users.sample, raw: sentence, topic_id: topic_ids.sample, skip_validations: true)
+  PostCreator.create(
+    users.sample,
+    raw: sentence,
+    topic_id: topic_ids.sample,
+    skip_validations: true,
+  )
 end
 
 puts
 puts "creating perf test topic"
-first_post = PostCreator.create(
-  users.sample,
-  raw: sentence,
-  title: "I am a topic used for perf tests",
-  category: categories.sample.id,
-  skip_validations: true
-)
+first_post =
+  PostCreator.create(
+    users.sample,
+    raw: sentence,
+    title: "I am a topic used for perf tests",
+    category: categories.sample.id,
+    skip_validations: true,
+  )
 
 puts
 puts "Creating 100 replies for perf test topic"
 100.times do
   putc "."
-  PostCreator.create(users.sample, raw: sentence, topic_id: first_post.topic_id, skip_validations: true)
+  PostCreator.create(
+    users.sample,
+    raw: sentence,
+    topic_id: first_post.topic_id,
+    skip_validations: true,
+  )
 end
 
 # no sidekiq so update some stuff

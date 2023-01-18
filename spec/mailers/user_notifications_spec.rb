@@ -36,14 +36,20 @@ RSpec.describe UserNotifications do
       topic_user = TopicUser.find_by(user_id: user.id, topic_id: post1.topic_id)
       # to avoid reloads after update_columns
       user = topic_user.user
-      user.user_option.update_columns(email_previous_replies: UserOption.previous_replies_type[:unless_emailed])
+      user.user_option.update_columns(
+        email_previous_replies: UserOption.previous_replies_type[:unless_emailed],
+      )
 
       expect(UserNotifications.get_context_posts(post3, topic_user, user).count).to eq(1)
 
-      user.user_option.update_columns(email_previous_replies: UserOption.previous_replies_type[:never])
+      user.user_option.update_columns(
+        email_previous_replies: UserOption.previous_replies_type[:never],
+      )
       expect(UserNotifications.get_context_posts(post3, topic_user, user).count).to eq(0)
 
-      user.user_option.update_columns(email_previous_replies: UserOption.previous_replies_type[:always])
+      user.user_option.update_columns(
+        email_previous_replies: UserOption.previous_replies_type[:always],
+      )
       expect(UserNotifications.get_context_posts(post3, topic_user, user).count).to eq(2)
 
       SiteSetting.private_email = true
@@ -73,11 +79,12 @@ RSpec.describe UserNotifications do
     end
   end
 
-  describe '.post_approved' do
+  describe ".post_approved" do
     fab!(:post) { Fabricate(:post) }
 
-    it 'works' do
-      subject = UserNotifications.post_approved(user, { notification_data_hash: { post_url: post.url } })
+    it "works" do
+      subject =
+        UserNotifications.post_approved(user, { notification_data_hash: { post_url: post.url } })
 
       expect(subject.to).to eq([user.email])
       expect(subject.subject).to be_present
@@ -87,9 +94,7 @@ RSpec.describe UserNotifications do
   end
 
   describe ".confirm_new_email" do
-    let(:opts) do
-      { requested_by_admin: requested_by_admin, email_token: token }
-    end
+    let(:opts) { { requested_by_admin: requested_by_admin, email_token: token } }
     let(:token) { "test123" }
 
     context "when requested by admin" do
@@ -97,7 +102,7 @@ RSpec.describe UserNotifications do
 
       it "uses the requested by admin template" do
         expect(UserNotifications.confirm_new_email(user, opts).body).to include(
-          "This email change was requested by a site admin."
+          "This email change was requested by a site admin.",
         )
       end
     end
@@ -107,51 +112,64 @@ RSpec.describe UserNotifications do
 
       it "uses the normal template" do
         expect(UserNotifications.confirm_new_email(user, opts).body).not_to include(
-          "This email change was requested by a site admin."
+          "This email change was requested by a site admin.",
         )
       end
     end
   end
 
-  describe '.email_login' do
-    let(:email_token) { Fabricate(:email_token, user: user, scope: EmailToken.scopes[:email_login]).token }
+  describe ".email_login" do
+    let(:email_token) do
+      Fabricate(:email_token, user: user, scope: EmailToken.scopes[:email_login]).token
+    end
     subject { UserNotifications.email_login(user, email_token: email_token) }
 
     it "generates the right email" do
       expect(subject.to).to eq([user.email])
       expect(subject.from).to eq([SiteSetting.notification_email])
 
-      expect(subject.subject).to eq(I18n.t(
-        'user_notifications.email_login.subject_template',
-        email_prefix: SiteSetting.title
-      ))
+      expect(subject.subject).to eq(
+        I18n.t("user_notifications.email_login.subject_template", email_prefix: SiteSetting.title),
+      )
 
-      expect(subject.body.to_s).to match(I18n.t(
-        'user_notifications.email_login.text_body_template',
-        site_name: SiteSetting.title,
-        base_url: Discourse.base_url,
-        email_token: email_token
-      ))
+      expect(subject.body.to_s).to match(
+        I18n.t(
+          "user_notifications.email_login.text_body_template",
+          site_name: SiteSetting.title,
+          base_url: Discourse.base_url,
+          email_token: email_token,
+        ),
+      )
     end
   end
 
-  describe '.digest' do
+  describe ".digest" do
     subject { UserNotifications.digest(user) }
 
-    after do
-      Discourse.redis.keys('summary-new-users:*').each { |key| Discourse.redis.del(key) }
-    end
+    after { Discourse.redis.keys("summary-new-users:*").each { |key| Discourse.redis.del(key) } }
 
     context "without new topics" do
       it "doesn't send the email" do
         expect(subject.to).to be_blank
       end
-
     end
 
     context "with topics only from new users" do
-      let!(:new_today) { Fabricate(:topic, user: Fabricate(:user, trust_level: TrustLevel[0], created_at: 10.minutes.ago), title: "Hey everyone look at me") }
-      let!(:new_yesterday) { Fabricate(:topic, user: Fabricate(:user, trust_level: TrustLevel[0], created_at: 25.hours.ago), created_at: 25.hours.ago, title: "This topic is of interest to you") }
+      let!(:new_today) do
+        Fabricate(
+          :topic,
+          user: Fabricate(:user, trust_level: TrustLevel[0], created_at: 10.minutes.ago),
+          title: "Hey everyone look at me",
+        )
+      end
+      let!(:new_yesterday) do
+        Fabricate(
+          :topic,
+          user: Fabricate(:user, trust_level: TrustLevel[0], created_at: 25.hours.ago),
+          created_at: 25.hours.ago,
+          title: "This topic is of interest to you",
+        )
+      end
 
       it "returns topics from new users if they're more than 24 hours old" do
         expect(subject.to).to eq([user.email])
@@ -162,7 +180,9 @@ RSpec.describe UserNotifications do
     end
 
     context "with new topics" do
-      let!(:popular_topic) { Fabricate(:topic, user: Fabricate(:coding_horror), created_at: 1.hour.ago) }
+      let!(:popular_topic) do
+        Fabricate(:topic, user: Fabricate(:coding_horror), created_at: 1.hour.ago)
+      end
 
       it "works" do
         expect(subject.to).to eq([user.email])
@@ -171,19 +191,19 @@ RSpec.describe UserNotifications do
         expect(subject.html_part.body.to_s).to be_present
         expect(subject.text_part.body.to_s).to be_present
         expect(subject.header["List-Unsubscribe"].to_s).to match(/\/email\/unsubscribe\/\h{64}/)
-        expect(subject.html_part.body.to_s).to include('New Users')
+        expect(subject.html_part.body.to_s).to include("New Users")
       end
 
       it "doesn't include new user count if digest_after_minutes is low" do
         user.user_option.digest_after_minutes = 60
-        expect(subject.html_part.body.to_s).to_not include('New Users')
+        expect(subject.html_part.body.to_s).to_not include("New Users")
       end
 
       it "works with min_date string" do
         digest = UserNotifications.digest(user, since: 1.month.ago.to_date.to_s)
         expect(digest.html_part.body.to_s).to be_present
         expect(digest.text_part.body.to_s).to be_present
-        expect(digest.html_part.body.to_s).to include('New Users')
+        expect(digest.html_part.body.to_s).to include("New Users")
       end
 
       it "includes email_prefix in email subject instead of site title" do
@@ -195,8 +215,22 @@ RSpec.describe UserNotifications do
       end
 
       it "excludes deleted topics and their posts" do
-        deleted = Fabricate(:topic, user: Fabricate(:user), title: "Delete this topic plz", created_at: 1.hour.ago)
-        post = Fabricate(:post, topic: deleted, score: 100.0, post_number: 2, raw: "Your wish is my command", created_at: 1.hour.ago)
+        deleted =
+          Fabricate(
+            :topic,
+            user: Fabricate(:user),
+            title: "Delete this topic plz",
+            created_at: 1.hour.ago,
+          )
+        post =
+          Fabricate(
+            :post,
+            topic: deleted,
+            score: 100.0,
+            post_number: 2,
+            raw: "Your wish is my command",
+            created_at: 1.hour.ago,
+          )
         deleted.trash!
         html = subject.html_part.body.to_s
         expect(html).to_not include deleted.title
@@ -206,25 +240,60 @@ RSpec.describe UserNotifications do
       it "excludes shared drafts" do
         cat = Fabricate(:category)
         SiteSetting.shared_drafts_category = cat.id
-        topic = Fabricate(:topic, title: "This is a draft", category_id: cat.id, created_at: 1.hour.ago)
-        post = Fabricate(
-          :post,
-          topic: topic,
-          score: 100.0,
-          post_number: 2,
-          raw: "secret draft content",
-          created_at: 1.hour.ago
-        )
+        topic =
+          Fabricate(:topic, title: "This is a draft", category_id: cat.id, created_at: 1.hour.ago)
+        post =
+          Fabricate(
+            :post,
+            topic: topic,
+            score: 100.0,
+            post_number: 2,
+            raw: "secret draft content",
+            created_at: 1.hour.ago,
+          )
         html = subject.html_part.body.to_s
         expect(html).to_not include topic.title
         expect(html).to_not include post.raw
       end
 
       it "excludes whispers and other post types that don't belong" do
-        t = Fabricate(:topic, user: Fabricate(:user), title: "Who likes the same stuff I like?", created_at: 1.hour.ago)
-        whisper = Fabricate(:post, topic: t, score: 100.0, post_number: 2, raw: "You like weird stuff", post_type: Post.types[:whisper], created_at: 1.hour.ago)
-        mod_action = Fabricate(:post, topic: t, score: 100.0, post_number: 3, raw: "This topic unlisted", post_type: Post.types[:moderator_action], created_at: 1.hour.ago)
-        small_action = Fabricate(:post, topic: t, score: 100.0, post_number: 4, raw: "A small action", post_type: Post.types[:small_action], created_at: 1.hour.ago)
+        t =
+          Fabricate(
+            :topic,
+            user: Fabricate(:user),
+            title: "Who likes the same stuff I like?",
+            created_at: 1.hour.ago,
+          )
+        whisper =
+          Fabricate(
+            :post,
+            topic: t,
+            score: 100.0,
+            post_number: 2,
+            raw: "You like weird stuff",
+            post_type: Post.types[:whisper],
+            created_at: 1.hour.ago,
+          )
+        mod_action =
+          Fabricate(
+            :post,
+            topic: t,
+            score: 100.0,
+            post_number: 3,
+            raw: "This topic unlisted",
+            post_type: Post.types[:moderator_action],
+            created_at: 1.hour.ago,
+          )
+        small_action =
+          Fabricate(
+            :post,
+            topic: t,
+            score: 100.0,
+            post_number: 4,
+            raw: "A small action",
+            post_type: Post.types[:small_action],
+            created_at: 1.hour.ago,
+          )
         html = subject.html_part.body.to_s
         expect(html).to_not include whisper.raw
         expect(html).to_not include mod_action.raw
@@ -232,10 +301,45 @@ RSpec.describe UserNotifications do
       end
 
       it "excludes deleted and hidden posts" do
-        t = Fabricate(:topic, user: Fabricate(:user), title: "Post objectionable stuff here", created_at: 1.hour.ago)
-        deleted = Fabricate(:post, topic: t, score: 100.0, post_number: 2, raw: "This post is uncalled for", deleted_at: 5.minutes.ago, created_at: 1.hour.ago)
-        hidden = Fabricate(:post, topic: t, score: 100.0, post_number: 3, raw: "Try to find this post", hidden: true, hidden_at: 5.minutes.ago, hidden_reason_id: Post.hidden_reasons[:flagged_by_tl3_user], created_at: 1.hour.ago)
-        user_deleted = Fabricate(:post, topic: t, score: 100.0, post_number: 4, raw: "I regret this post", user_deleted: true, created_at: 1.hour.ago)
+        t =
+          Fabricate(
+            :topic,
+            user: Fabricate(:user),
+            title: "Post objectionable stuff here",
+            created_at: 1.hour.ago,
+          )
+        deleted =
+          Fabricate(
+            :post,
+            topic: t,
+            score: 100.0,
+            post_number: 2,
+            raw: "This post is uncalled for",
+            deleted_at: 5.minutes.ago,
+            created_at: 1.hour.ago,
+          )
+        hidden =
+          Fabricate(
+            :post,
+            topic: t,
+            score: 100.0,
+            post_number: 3,
+            raw: "Try to find this post",
+            hidden: true,
+            hidden_at: 5.minutes.ago,
+            hidden_reason_id: Post.hidden_reasons[:flagged_by_tl3_user],
+            created_at: 1.hour.ago,
+          )
+        user_deleted =
+          Fabricate(
+            :post,
+            topic: t,
+            score: 100.0,
+            post_number: 4,
+            raw: "I regret this post",
+            user_deleted: true,
+            created_at: 1.hour.ago,
+          )
         html = subject.html_part.body.to_s
         expect(html).to_not include deleted.raw
         expect(html).to_not include hidden.raw
@@ -244,28 +348,44 @@ RSpec.describe UserNotifications do
 
       it "excludes posts that are newer than editing grace period" do
         SiteSetting.editing_grace_period = 5.minutes
-        too_new = Fabricate(:topic, user: Fabricate(:user), title: "Oops I need to edit this", created_at: 1.minute.ago)
-        _too_new_post = Fabricate(:post, user: too_new.user, topic: too_new, score: 100.0, post_number: 1, created_at: 1.minute.ago)
+        too_new =
+          Fabricate(
+            :topic,
+            user: Fabricate(:user),
+            title: "Oops I need to edit this",
+            created_at: 1.minute.ago,
+          )
+        _too_new_post =
+          Fabricate(
+            :post,
+            user: too_new.user,
+            topic: too_new,
+            score: 100.0,
+            post_number: 1,
+            created_at: 1.minute.ago,
+          )
         html = subject.html_part.body.to_s
         expect(html).to_not include too_new.title
       end
 
       it "uses theme color" do
-        cs = Fabricate(:color_scheme, name: 'Fancy', color_scheme_colors: [
-          Fabricate(:color_scheme_color, name: 'header_primary', hex: 'F0F0F0'),
-          Fabricate(:color_scheme_color, name: 'header_background', hex: '1E1E1E')
-        ])
-        theme = Fabricate(:theme,
-                          user_selectable: true,
-                          user: Fabricate(:admin),
-                          color_scheme_id: cs.id
-        )
+        cs =
+          Fabricate(
+            :color_scheme,
+            name: "Fancy",
+            color_scheme_colors: [
+              Fabricate(:color_scheme_color, name: "header_primary", hex: "F0F0F0"),
+              Fabricate(:color_scheme_color, name: "header_background", hex: "1E1E1E"),
+            ],
+          )
+        theme =
+          Fabricate(:theme, user_selectable: true, user: Fabricate(:admin), color_scheme_id: cs.id)
 
         theme.set_default!
 
         html = subject.html_part.body.to_s
-        expect(html).to include 'F0F0F0'
-        expect(html).to include '1E1E1E'
+        expect(html).to include "F0F0F0"
+        expect(html).to include "1E1E1E"
       end
 
       it "supports subfolder" do
@@ -276,7 +396,9 @@ RSpec.describe UserNotifications do
         expect(text).to be_present
         expect(html).to_not include("/forum/forum")
         expect(text).to_not include("/forum/forum")
-        expect(subject.header["List-Unsubscribe"].to_s).to match(/http:\/\/test.localhost\/forum\/email\/unsubscribe\/\h{64}/)
+        expect(subject.header["List-Unsubscribe"].to_s).to match(
+          /http:\/\/test.localhost\/forum\/email\/unsubscribe\/\h{64}/,
+        )
 
         topic_url = "http://test.localhost/forum/t/#{popular_topic.slug}/#{popular_topic.id}"
         expect(html).to include(topic_url)
@@ -293,40 +415,48 @@ RSpec.describe UserNotifications do
     end
   end
 
-  describe '.user_replied' do
+  describe ".user_replied" do
     let(:response_by_user) { Fabricate(:user, name: "John Doe") }
-    let(:category) { Fabricate(:category, name: 'India') }
-    let(:tag1) { Fabricate(:tag, name: 'Taggo') }
-    let(:tag2) { Fabricate(:tag, name: 'Taggie') }
+    let(:category) { Fabricate(:category, name: "India") }
+    let(:tag1) { Fabricate(:tag, name: "Taggo") }
+    let(:tag2) { Fabricate(:tag, name: "Taggie") }
 
     let(:hidden_tag) { Fabricate(:tag, name: "hidden") }
     let!(:hidden_tag_group) do
       Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
     end
 
-    let(:topic) { Fabricate(:topic, category: category, tags: [tag1, tag2, hidden_tag], title: "Super cool topic") }
-    let(:post) { Fabricate(:post, topic: topic, raw: 'This is My super duper cool topic') }
+    let(:topic) do
+      Fabricate(
+        :topic,
+        category: category,
+        tags: [tag1, tag2, hidden_tag],
+        title: "Super cool topic",
+      )
+    end
+    let(:post) { Fabricate(:post, topic: topic, raw: "This is My super duper cool topic") }
     let(:response) { Fabricate(:basic_reply, topic: post.topic, user: response_by_user) }
     let(:user) { Fabricate(:user) }
     let(:notification) { Fabricate(:replied_notification, user: user, post: response) }
 
-    it 'generates a correct email' do
-
+    it "generates a correct email" do
       SiteSetting.default_email_in_reply_to = true
 
       # Fabricator is not fabricating this ...
-      SiteSetting.email_subject = "[%{site_name}] %{optional_pm}%{optional_cat}%{optional_tags}%{topic_title}"
+      SiteSetting.email_subject =
+        "[%{site_name}] %{optional_pm}%{optional_cat}%{optional_tags}%{topic_title}"
       SiteSetting.enable_names = true
       SiteSetting.display_name_on_posts = true
-      mail = UserNotifications.user_replied(
-        user,
-        post: response,
-        notification_type: notification.notification_type,
-        notification_data_hash: notification.data_hash
-      )
+      mail =
+        UserNotifications.user_replied(
+          user,
+          post: response,
+          notification_type: notification.notification_type,
+          notification_data_hash: notification.data_hash,
+        )
 
       # from should include full user name
-      expect(mail[:from].display_names).to eql(['John Doe via Discourse'])
+      expect(mail[:from].display_names).to eql(["John Doe via Discourse"])
 
       # subject should include category name
       expect(mail.subject).to match(/India/)
@@ -355,12 +485,13 @@ RSpec.describe UserNotifications do
 
       # no In Reply To if user opts out
       user.user_option.email_in_reply_to = false
-      mail = UserNotifications.user_replied(
-        user,
-        post: response,
-        notification_type: notification.notification_type,
-        notification_data_hash: notification.data_hash
-      )
+      mail =
+        UserNotifications.user_replied(
+          user,
+          post: response,
+          notification_type: notification.notification_type,
+          notification_data_hash: notification.data_hash,
+        )
 
       expect(mail.html_part.body.to_s.scan(/In Reply To/).count).to eq(0)
 
@@ -372,12 +503,13 @@ RSpec.describe UserNotifications do
       response.user.name = "Bob Marley"
       response.user.save
 
-      mail = UserNotifications.user_replied(
-        user,
-        post: response,
-        notification_type: notification.notification_type,
-        notification_data_hash: notification.data_hash
-      )
+      mail =
+        UserNotifications.user_replied(
+          user,
+          post: response,
+          notification_type: notification.notification_type,
+          notification_data_hash: notification.data_hash,
+        )
 
       mail_html = mail.html_part.body.to_s
       expect(mail_html.scan(/>Bob Marley/).count).to eq(1)
@@ -388,26 +520,43 @@ RSpec.describe UserNotifications do
 
       SiteSetting.prioritize_username_in_ux = true
 
-      mail = UserNotifications.user_replied(
-        user,
-        post: response,
-        notification_type: notification.notification_type,
-        notification_data_hash: notification.data_hash
-      )
+      mail =
+        UserNotifications.user_replied(
+          user,
+          post: response,
+          notification_type: notification.notification_type,
+          notification_data_hash: notification.data_hash,
+        )
 
       mail_html = mail.html_part.body.to_s
       expect(mail_html.scan(/>Bob Marley/).count).to eq(0)
       expect(mail_html.scan(/>bobmarley/).count).to eq(1)
     end
 
+    it "the number of tags shown in subject should match max_tags_per_topic" do
+      SiteSetting.email_subject =
+        "[%{site_name}] %{optional_pm}%{optional_cat}%{optional_tags}%{topic_title}"
+      SiteSetting.max_tags_per_topic = 1
+      mail =
+        UserNotifications.user_replied(
+          user,
+          post: response,
+          notification_type: notification.notification_type,
+          notification_data_hash: notification.data_hash,
+        )
+      expect(mail.subject).to match(/Taggo/)
+      expect(mail.subject).not_to match(/Taggie/)
+    end
+
     it "doesn't include details when private_email is enabled" do
       SiteSetting.private_email = true
-      mail = UserNotifications.user_replied(
-        user,
-        post: response,
-        notification_type: notification.notification_type,
-        notification_data_hash: notification.data_hash
-      )
+      mail =
+        UserNotifications.user_replied(
+          user,
+          post: response,
+          notification_type: notification.notification_type,
+          notification_data_hash: notification.data_hash,
+        )
 
       expect(mail.html_part.body.to_s).to_not include(response.raw)
       expect(mail.html_part.body.to_s).to_not include(topic.url)
@@ -418,24 +567,25 @@ RSpec.describe UserNotifications do
     it "includes excerpt when post_excerpts_in_emails is enabled" do
       paragraphs = [
         "This is the first paragraph, but you should read more.",
-        "And here is its friend, the second paragraph."
+        "And here is its friend, the second paragraph.",
       ]
       SiteSetting.post_excerpts_in_emails = true
       SiteSetting.post_excerpt_maxlength = paragraphs.first.length
       response.update!(raw: paragraphs.join("\n\n"))
-      mail = UserNotifications.user_replied(
-        user,
-        post: response,
-        notification_type: notification.notification_type,
-        notification_data_hash: notification.data_hash
-      )
+      mail =
+        UserNotifications.user_replied(
+          user,
+          post: response,
+          notification_type: notification.notification_type,
+          notification_data_hash: notification.data_hash,
+        )
       mail_html = mail.html_part.body.to_s
       expect(mail_html.scan(/#{paragraphs[0]}/).count).to eq(1)
       expect(mail_html.scan(/#{paragraphs[1]}/).count).to eq(0)
     end
   end
 
-  describe '.user_posted' do
+  describe ".user_posted" do
     let(:response_by_user) { Fabricate(:user, name: "John Doe", username: "john") }
     let(:topic) { Fabricate(:topic, title: "Super cool topic") }
     let(:post) { Fabricate(:post, topic: topic) }
@@ -443,20 +593,21 @@ RSpec.describe UserNotifications do
     let(:user) { Fabricate(:user) }
     let(:notification) { Fabricate(:posted_notification, user: user, post: response) }
 
-    it 'generates a correct email' do
+    it "generates a correct email" do
       SiteSetting.enable_names = false
-      mail = UserNotifications.user_posted(
-        user,
-        post: response,
-        notification_type: notification.notification_type,
-        notification_data_hash: notification.data_hash
-      )
+      mail =
+        UserNotifications.user_posted(
+          user,
+          post: response,
+          notification_type: notification.notification_type,
+          notification_data_hash: notification.data_hash,
+        )
 
       # from should not include full user name if "show user full names" is disabled
-      expect(mail[:from].display_names).to_not eql(['John Doe'])
+      expect(mail[:from].display_names).to_not eql(["John Doe"])
 
       # from should include username if "show user full names" is disabled
-      expect(mail[:from].display_names).to eql(['john via Discourse'])
+      expect(mail[:from].display_names).to eql(["john via Discourse"])
 
       # subject should not include category name
       expect(mail.subject).not_to match(/Uncategorized/)
@@ -474,57 +625,62 @@ RSpec.describe UserNotifications do
 
     it "doesn't include details when private_email is enabled" do
       SiteSetting.private_email = true
-      mail = UserNotifications.user_posted(
-        user,
-        post: response,
-        notification_type: notification.notification_type,
-        notification_data_hash: notification.data_hash
-      )
+      mail =
+        UserNotifications.user_posted(
+          user,
+          post: response,
+          notification_type: notification.notification_type,
+          notification_data_hash: notification.data_hash,
+        )
 
       expect(mail.html_part.body.to_s).to_not include(response.raw)
       expect(mail.text_part.to_s).to_not include(response.raw)
     end
 
     it "uses the original subject for staged users" do
-      incoming_email = Fabricate(
-        :incoming_email,
-        subject: "Original Subject",
-        post: post,
-        topic: post.topic,
-        user: user
-      )
+      incoming_email =
+        Fabricate(
+          :incoming_email,
+          subject: "Original Subject",
+          post: post,
+          topic: post.topic,
+          user: user,
+        )
 
-      mail = UserNotifications.user_posted(
-        user,
-        post: response,
-        notification_type: notification.notification_type,
-        notification_data_hash: notification.data_hash
-      )
+      mail =
+        UserNotifications.user_posted(
+          user,
+          post: response,
+          notification_type: notification.notification_type,
+          notification_data_hash: notification.data_hash,
+        )
       expect(mail.subject).to match(/Super cool topic/)
 
       user.update!(staged: true)
-      mail = UserNotifications.user_posted(
-        user,
-        post: response,
-        notification_type: notification.notification_type,
-        notification_data_hash: notification.data_hash
-      )
+      mail =
+        UserNotifications.user_posted(
+          user,
+          post: response,
+          notification_type: notification.notification_type,
+          notification_data_hash: notification.data_hash,
+        )
       expect(mail.subject).to eq("Re: Original Subject")
 
       another_post = Fabricate(:post, topic: topic)
       incoming_email.update!(post_id: another_post.id)
 
-      mail = UserNotifications.user_private_message(
-        user,
-        post: response,
-        notification_type: notification.notification_type,
-        notification_data_hash: notification.data_hash
-      )
+      mail =
+        UserNotifications.user_private_message(
+          user,
+          post: response,
+          notification_type: notification.notification_type,
+          notification_data_hash: notification.data_hash,
+        )
       expect(mail.subject).to match(/Super cool topic/)
     end
   end
 
-  describe '.user_private_message' do
+  describe ".user_private_message" do
     let(:response_by_user) { Fabricate(:user, name: "", username: "john") }
     let(:topic) { Fabricate(:private_message_topic, title: "Super cool topic") }
     let(:post) { Fabricate(:post, topic: topic) }
@@ -532,17 +688,18 @@ RSpec.describe UserNotifications do
     let(:user) { Fabricate(:user) }
     let(:notification) { Fabricate(:private_message_notification, user: user, post: response) }
 
-    it 'generates a correct email' do
+    it "generates a correct email" do
       SiteSetting.enable_names = true
-      mail = UserNotifications.user_private_message(
-        user,
-        post: response,
-        notification_type: notification.notification_type,
-        notification_data_hash: notification.data_hash
-      )
+      mail =
+        UserNotifications.user_private_message(
+          user,
+          post: response,
+          notification_type: notification.notification_type,
+          notification_data_hash: notification.data_hash,
+        )
 
       # from should include username if full user name is not provided
-      expect(mail[:from].display_names).to eql(['john via Discourse'])
+      expect(mail[:from].display_names).to eql(["john via Discourse"])
 
       # subject should include "[PM]"
       expect(mail.subject).to include("[PM] ")
@@ -563,12 +720,13 @@ RSpec.describe UserNotifications do
 
     it "doesn't include details when private_email is enabled" do
       SiteSetting.private_email = true
-      mail = UserNotifications.user_private_message(
-        user,
-        post: response,
-        notification_type: notification.notification_type,
-        notification_data_hash: notification.data_hash
-      )
+      mail =
+        UserNotifications.user_private_message(
+          user,
+          post: response,
+          notification_type: notification.notification_type,
+          notification_data_hash: notification.data_hash,
+        )
 
       expect(mail.html_part.body.to_s).to_not include(response.raw)
       expect(mail.html_part.body.to_s).to_not include(topic.url)
@@ -579,12 +737,13 @@ RSpec.describe UserNotifications do
     it "doesn't include group name in subject" do
       group = Fabricate(:group)
       topic.allowed_groups = [group]
-      mail = UserNotifications.user_private_message(
-        user,
-        post: response,
-        notification_type: notification.notification_type,
-        notification_data_hash: notification.data_hash
-      )
+      mail =
+        UserNotifications.user_private_message(
+          user,
+          post: response,
+          notification_type: notification.notification_type,
+          notification_data_hash: notification.data_hash,
+        )
 
       expect(mail.subject).to include("[PM] ")
     end
@@ -599,20 +758,21 @@ RSpec.describe UserNotifications do
       topic.allowed_users = [user, user1, user2]
       topic.allowed_groups = [group1, group2]
 
-      mail = UserNotifications.user_private_message(
-        user,
-        post: response,
-        notification_type: notification.notification_type,
-        notification_data_hash: notification.data_hash
-      )
+      mail =
+        UserNotifications.user_private_message(
+          user,
+          post: response,
+          notification_type: notification.notification_type,
+          notification_data_hash: notification.data_hash,
+        )
 
-      expect(mail.body).to include("[group1 (2)](http://test.localhost/g/group1), [group2 (1)](http://test.localhost/g/group2), [one](http://test.localhost/u/one), [two](http://test.localhost/u/two)")
+      expect(mail.body).to include(
+        "[group1 (2)](http://test.localhost/g/group1), [group2 (1)](http://test.localhost/g/group2), [one](http://test.localhost/u/one), [two](http://test.localhost/u/two)",
+      )
     end
 
     context "when SiteSetting.group_name_in_subject is true" do
-      before do
-        SiteSetting.group_in_subject = true
-      end
+      before { SiteSetting.group_in_subject = true }
 
       let(:group) { Fabricate(:group, name: "my_group") }
       let(:mail) do
@@ -620,7 +780,7 @@ RSpec.describe UserNotifications do
           user,
           post: response,
           notification_type: notification.notification_type,
-          notification_data_hash: notification.data_hash
+          notification_data_hash: notification.data_hash,
         )
       end
 
@@ -639,9 +799,7 @@ RSpec.describe UserNotifications do
       end
 
       context "with one group in pm" do
-        before do
-          topic.allowed_groups = [group]
-        end
+        before { topic.allowed_groups = [group] }
 
         include_examples "includes first group name"
       end
@@ -649,9 +807,7 @@ RSpec.describe UserNotifications do
       context "with multiple groups in pm" do
         let(:group2) { Fabricate(:group) }
 
-        before do
-          topic.allowed_groups = [group, group2]
-        end
+        before { topic.allowed_groups = [group, group2] }
 
         include_examples "includes first group name"
       end
@@ -664,71 +820,73 @@ RSpec.describe UserNotifications do
     end
 
     it "uses the original subject for staged users when topic was started via email" do
-      incoming_email = Fabricate(
-        :incoming_email,
-        subject: "Original Subject",
-        post: post,
-        topic: topic,
-        user: user
-      )
+      incoming_email =
+        Fabricate(
+          :incoming_email,
+          subject: "Original Subject",
+          post: post,
+          topic: topic,
+          user: user,
+        )
 
-      mail = UserNotifications.user_private_message(
-        user,
-        post: response,
-        notification_type: notification.notification_type,
-        notification_data_hash: notification.data_hash
-      )
+      mail =
+        UserNotifications.user_private_message(
+          user,
+          post: response,
+          notification_type: notification.notification_type,
+          notification_data_hash: notification.data_hash,
+        )
       expect(mail.subject).to match(/Super cool topic/)
 
       user.update!(staged: true)
-      mail = UserNotifications.user_private_message(
-        user,
-        post: response,
-        notification_type: notification.notification_type,
-        notification_data_hash: notification.data_hash
-      )
+      mail =
+        UserNotifications.user_private_message(
+          user,
+          post: response,
+          notification_type: notification.notification_type,
+          notification_data_hash: notification.data_hash,
+        )
       expect(mail.subject).to eq("Re: Original Subject")
 
       another_post = Fabricate(:post, topic: topic)
       incoming_email.update!(post_id: another_post.id)
 
-      mail = UserNotifications.user_private_message(
-        user,
-        post: response,
-        notification_type: notification.notification_type,
-        notification_data_hash: notification.data_hash
-      )
+      mail =
+        UserNotifications.user_private_message(
+          user,
+          post: response,
+          notification_type: notification.notification_type,
+          notification_data_hash: notification.data_hash,
+        )
       expect(mail.subject).to match(/Super cool topic/)
     end
   end
 
-  it 'adds a warning when mail limit is reached' do
+  it "adds a warning when mail limit is reached" do
     SiteSetting.max_emails_per_day_per_user = 2
     user = Fabricate(:user)
 
-    user.email_logs.create!(
-      email_type: 'blah',
-      to_address: user.email,
-      user_id: user.id
-    )
+    user.email_logs.create!(email_type: "blah", to_address: user.email, user_id: user.id)
 
     post = Fabricate(:post)
     reply = Fabricate(:post, topic_id: post.topic_id)
 
-    notification = Fabricate(
-      :notification,
-      topic_id: post.topic_id,
-      post_number: reply.post_number,
-      user: post.user,
-      data: { original_username: 'bob' }.to_json
-    )
+    notification =
+      Fabricate(
+        :notification,
+        topic_id: post.topic_id,
+        post_number: reply.post_number,
+        user: post.user,
+        data: { original_username: "bob" }.to_json,
+      )
 
-    mail = UserNotifications.user_replied(
-      user,
-      post: reply,
-      notification_type: notification.notification_type,
-      notification_data_hash: notification.data_hash
-    )
+    mail =
+      UserNotifications.user_replied(
+        user,
+        post: reply,
+        notification_type: notification.notification_type,
+        notification_data_hash: notification.data_hash,
+      )
 
     # WARNING: you reached the limit of 100 email notifications per day. Further emails will be suppressed.
     # Consider watching less topics or disabling mailing list mode.
@@ -738,12 +896,14 @@ RSpec.describe UserNotifications do
 
   def expects_build_with(condition)
     UserNotifications.any_instance.expects(:build_email).with(user.email, condition)
-    mailer = UserNotifications.public_send(
-      mail_type, user,
-      notification_type: Notification.types[notification.notification_type],
-      notification_data_hash: notification.data_hash,
-      post: notification.post
-    )
+    mailer =
+      UserNotifications.public_send(
+        mail_type,
+        user,
+        notification_type: Notification.types[notification.notification_type],
+        notification_data_hash: notification.data_hash,
+        post: notification.post,
+      )
 
     mailer.message
   end
@@ -769,13 +929,14 @@ RSpec.describe UserNotifications do
       it "doesn't support reply by email" do
         SiteSetting.private_email = true
 
-        mailer = UserNotifications.public_send(
-          mail_type,
-          user,
-          notification_type: Notification.types[notification.notification_type],
-          notification_data_hash: notification.data_hash,
-          post: notification.post
-        )
+        mailer =
+          UserNotifications.public_send(
+            mail_type,
+            user,
+            notification_type: Notification.types[notification.notification_type],
+            notification_data_hash: notification.data_hash,
+            post: notification.post,
+          )
         message = mailer.message
 
         topic = notification.post.topic
@@ -802,15 +963,17 @@ RSpec.describe UserNotifications do
     let(:mail_template) { "user_notifications.#{mail_type}" }
     let(:username) { "walterwhite" }
     let(:notification) do
-      Fabricate(:notification,
-                user: user,
-                topic: post.topic,
-                notification_type: Notification.types[notification_type],
-                post_number: post.post_number,
-                data: { original_username: username }.to_json)
+      Fabricate(
+        :notification,
+        user: user,
+        topic: post.topic,
+        notification_type: Notification.types[notification_type],
+        post_number: post.post_number,
+        data: { original_username: username }.to_json,
+      )
     end
 
-    describe 'email building' do
+    describe "email building" do
       it "has a username" do
         expects_build_with(has_entry(:username, username))
       end
@@ -886,7 +1049,7 @@ RSpec.describe UserNotifications do
           TranslationOverride.upsert!(
             SiteSetting.default_locale,
             "#{mail_template}.text_body_template",
-            custom_body
+            custom_body,
           )
         end
 
@@ -997,7 +1160,8 @@ RSpec.describe UserNotifications do
       let(:invitee) { Fabricate(:user) }
 
       let(:notification) do
-        Fabricate(:notification,
+        Fabricate(
+          :notification,
           notification_type: Notification.types[:invited_to_topic],
           user: invitee,
           topic: post.topic,
@@ -1006,8 +1170,8 @@ RSpec.describe UserNotifications do
             topic_title: post.topic.title,
             display_username: inviter.username,
             original_user_id: inviter.id,
-            original_username: inviter.username
-          }.to_json
+            original_username: inviter.username,
+          }.to_json,
         )
       end
 
@@ -1017,18 +1181,22 @@ RSpec.describe UserNotifications do
           invitee,
           notification_type: Notification.types[notification.notification_type],
           notification_data_hash: notification.data_hash,
-          post: notification.post
+          post: notification.post,
         )
       end
 
       it "sends the email as the inviter" do
         SiteSetting.enable_names = false
 
-        expect(mailer.message.to_s).to include("From: #{inviter.username} via #{SiteSetting.title} <#{SiteSetting.notification_email}>")
+        expect(mailer.message.to_s).to include(
+          "From: #{inviter.username} via #{SiteSetting.title} <#{SiteSetting.notification_email}>",
+        )
       end
 
       it "sends the email as the inviter" do
-        expect(mailer.message.to_s).to include("From: #{inviter.name} via #{SiteSetting.title} <#{SiteSetting.notification_email}>")
+        expect(mailer.message.to_s).to include(
+          "From: #{inviter.name} via #{SiteSetting.title} <#{SiteSetting.notification_email}>",
+        )
       end
     end
   end
@@ -1051,12 +1219,18 @@ RSpec.describe UserNotifications do
 
   describe "notifications from template" do
     context "when user locale is allowed" do
-      before do
-        SiteSetting.allow_user_locale = true
-      end
+      before { SiteSetting.allow_user_locale = true }
 
-      %w(signup signup_after_approval confirm_old_email notify_old_email confirm_new_email
-         forgot_password admin_login account_created).each do |mail_type|
+      %w[
+        signup
+        signup_after_approval
+        confirm_old_email
+        notify_old_email
+        confirm_new_email
+        forgot_password
+        admin_login
+        account_created
+      ].each do |mail_type|
         include_examples "with notification derived from template" do
           let(:locale) { "fr" }
           let(:mail_type) { mail_type }
@@ -1068,12 +1242,18 @@ RSpec.describe UserNotifications do
     end
 
     context "when user locale is not allowed" do
-      before do
-        SiteSetting.allow_user_locale = false
-      end
+      before { SiteSetting.allow_user_locale = false }
 
-      %w(signup signup_after_approval notify_old_email confirm_old_email confirm_new_email
-         forgot_password admin_login account_created).each do |mail_type|
+      %w[
+        signup
+        signup_after_approval
+        notify_old_email
+        confirm_old_email
+        confirm_new_email
+        forgot_password
+        admin_login
+        account_created
+      ].each do |mail_type|
         include_examples "with notification derived from template" do
           let(:locale) { "fr" }
           let(:mail_type) { mail_type }
@@ -1083,7 +1263,6 @@ RSpec.describe UserNotifications do
         end
       end
     end
-
   end
 
   describe "#participants" do
@@ -1110,34 +1289,44 @@ RSpec.describe UserNotifications do
         Fabricate(:small_action, topic: topic, post_number: 4, user: admin),
         Fabricate(:post, topic: topic, post_number: 5, user: user4),
         Fabricate(:post, topic: topic, post_number: 6, user: user3),
-        Fabricate(:post, topic: topic, post_number: 7, user: user4)
+        Fabricate(:post, topic: topic, post_number: 7, user: user4),
       ]
     end
 
     it "returns a list of participants (except for the recipient), groups first, followed by users in order of their last reply" do
-      expect(UserNotifications.participants(posts.last, user3)).to eq("[group1 (3)](http://test.localhost/g/group1), " \
-        "[four](http://test.localhost/u/four), [two](http://test.localhost/u/two), [one](http://test.localhost/u/one), " \
-        "[admin](http://test.localhost/u/admin)")
+      expect(UserNotifications.participants(posts.last, user3)).to eq(
+        "[group1 (3)](http://test.localhost/g/group1), " \
+          "[four](http://test.localhost/u/four), [two](http://test.localhost/u/two), [one](http://test.localhost/u/one), " \
+          "[admin](http://test.localhost/u/admin)",
+      )
     end
 
     it "caps the list according to site setting" do
       SiteSetting.max_participant_names = 3
-      list = "[group1 (3)](http://test.localhost/g/group1), [four](http://test.localhost/u/four), [two](http://test.localhost/u/two)"
-      expect(UserNotifications.participants(posts.last, user3)).to eq(I18n.t("user_notifications.more_pm_participants", participants: list, count: 2))
+      list =
+        "[group1 (3)](http://test.localhost/g/group1), [four](http://test.localhost/u/four), [two](http://test.localhost/u/two)"
+      expect(UserNotifications.participants(posts.last, user3)).to eq(
+        I18n.t("user_notifications.more_pm_participants", participants: list, count: 2),
+      )
     end
 
     it "orders groups by user count" do
       SiteSetting.max_participant_names = 3
       topic.allowed_groups = [group1, group2, group3]
 
-      list = "[group1 (3)](http://test.localhost/g/group1), [group3 (2)](http://test.localhost/g/group3), [group2 (1)](http://test.localhost/g/group2)"
-      expect(UserNotifications.participants(posts.last, user3)).to eq(I18n.t("user_notifications.more_pm_participants", participants: list, count: 4))
+      list =
+        "[group1 (3)](http://test.localhost/g/group1), [group3 (2)](http://test.localhost/g/group3), [group2 (1)](http://test.localhost/g/group2)"
+      expect(UserNotifications.participants(posts.last, user3)).to eq(
+        I18n.t("user_notifications.more_pm_participants", participants: list, count: 4),
+      )
     end
 
     it "orders users by their last reply and user id" do
-      expect(UserNotifications.participants(posts[-3], user4)).to eq("[group1 (3)](http://test.localhost/g/group1), " \
-        "[two](http://test.localhost/u/two), [one](http://test.localhost/u/one), [three](http://test.localhost/u/three), " \
-        "[admin](http://test.localhost/u/admin)")
+      expect(UserNotifications.participants(posts[-3], user4)).to eq(
+        "[group1 (3)](http://test.localhost/g/group1), " \
+          "[two](http://test.localhost/u/two), [one](http://test.localhost/u/one), [three](http://test.localhost/u/three), " \
+          "[admin](http://test.localhost/u/admin)",
+      )
     end
 
     it "prefers full group names when available" do
@@ -1146,8 +1335,11 @@ RSpec.describe UserNotifications do
 
       group2.update!(full_name: "Awesome Group")
 
-      list = "[group1 (3)](http://test.localhost/g/group1), [Awesome Group (1)](http://test.localhost/g/group2)"
-      expect(UserNotifications.participants(posts.last, user3)).to eq(I18n.t("user_notifications.more_pm_participants", participants: list, count: 4))
+      list =
+        "[group1 (3)](http://test.localhost/g/group1), [Awesome Group (1)](http://test.localhost/g/group2)"
+      expect(UserNotifications.participants(posts.last, user3)).to eq(
+        I18n.t("user_notifications.more_pm_participants", participants: list, count: 4),
+      )
     end
 
     it "always uses usernames when prioritize_username_in_ux is enabled" do
@@ -1155,14 +1347,18 @@ RSpec.describe UserNotifications do
       user1.update!(name: "Indiana Jones")
 
       SiteSetting.prioritize_username_in_ux = true
-      expect(UserNotifications.participants(posts.last, user3)).to eq("[group1 (3)](http://test.localhost/g/group1), " \
-        "[four](http://test.localhost/u/four), [two](http://test.localhost/u/two), [one](http://test.localhost/u/one), " \
-        "[admin](http://test.localhost/u/admin)")
+      expect(UserNotifications.participants(posts.last, user3)).to eq(
+        "[group1 (3)](http://test.localhost/g/group1), " \
+          "[four](http://test.localhost/u/four), [two](http://test.localhost/u/two), [one](http://test.localhost/u/one), " \
+          "[admin](http://test.localhost/u/admin)",
+      )
 
       SiteSetting.prioritize_username_in_ux = false
-      expect(UserNotifications.participants(posts.last, user3)).to eq("[group1 (3)](http://test.localhost/g/group1), " \
-        "[James Bond](http://test.localhost/u/four), [two](http://test.localhost/u/two), [Indiana Jones](http://test.localhost/u/one), " \
-        "[admin](http://test.localhost/u/admin)")
+      expect(UserNotifications.participants(posts.last, user3)).to eq(
+        "[group1 (3)](http://test.localhost/g/group1), " \
+          "[James Bond](http://test.localhost/u/four), [two](http://test.localhost/u/two), [Indiana Jones](http://test.localhost/u/one), " \
+          "[admin](http://test.localhost/u/admin)",
+      )
     end
 
     it "reveals the email address of staged users if enabled" do
@@ -1170,17 +1366,20 @@ RSpec.describe UserNotifications do
       user1.update!(staged: true, email: "indiana.jones@example.com")
 
       SiteSetting.prioritize_username_in_ux = true
-      expect(UserNotifications.participants(posts.last, user3, reveal_staged_email: true)).to eq( \
+      expect(UserNotifications.participants(posts.last, user3, reveal_staged_email: true)).to eq(
         "[group1 (3)](http://test.localhost/g/group1), james.bond@mi6.invalid, [two](http://test.localhost/u/two), " \
-        "indiana.jones@example.com, [admin](http://test.localhost/u/admin)")
+          "indiana.jones@example.com, [admin](http://test.localhost/u/admin)",
+      )
     end
 
     it "does only include human users" do
       topic.allowed_users << Discourse.system_user
 
-      expect(UserNotifications.participants(posts.last, user3)).to eq("[group1 (3)](http://test.localhost/g/group1), " \
-        "[four](http://test.localhost/u/four), [two](http://test.localhost/u/two), [one](http://test.localhost/u/one), " \
-        "[admin](http://test.localhost/u/admin)")
+      expect(UserNotifications.participants(posts.last, user3)).to eq(
+        "[group1 (3)](http://test.localhost/g/group1), " \
+          "[four](http://test.localhost/u/four), [two](http://test.localhost/u/two), [one](http://test.localhost/u/one), " \
+          "[admin](http://test.localhost/u/admin)",
+      )
     end
   end
 
@@ -1197,9 +1396,7 @@ RSpec.describe UserNotifications do
     end
 
     context "when user doesn't have timezone set" do
-      before do
-        user.user_option.timezone = nil
-      end
+      before { user.user_option.timezone = nil }
 
       it "doesn't raise error" do
         expect { UserNotifications.account_silenced(user) }.not_to raise_error
@@ -1229,9 +1426,7 @@ RSpec.describe UserNotifications do
     end
 
     context "when user doesn't have timezone set" do
-      before do
-        user.user_option.timezone = nil
-      end
+      before { user.user_option.timezone = nil }
 
       it "doesn't raise error" do
         expect { UserNotifications.account_suspended(user) }.not_to raise_error

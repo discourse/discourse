@@ -335,7 +335,6 @@ lt:
       not_bookmarked: "pažymėkite šį įrašą"
       remove_reminder_keep_bookmark: "Pašalinkite priminimą ir išsaugokite žymę"
       created_with_reminder: "Jūs pažymėjote šį įrašą priminimu %{date}. %{name}"
-      remove: "Pašalinti Žymę"
       delete: "Ištrinti žymę"
       confirm_delete: "Ar tikrai norite ištrinti šią žymę? Priminimas taip pat bus ištrintas."
       confirm_clear: "Ar tikrai norite išvalyti visas savo žymes iš šios temos?"
@@ -392,7 +391,6 @@ lt:
     enable: "Įjungti"
     disable: "Išjungti"
     continue: "Tęsti"
-    undo: "Anuliuoti"
     switch_to_anon: "Pasirinkti slaptumo būseną"
     switch_from_anon: "Išjunkti slaptumo būseną"
     banner:
@@ -656,6 +654,7 @@ lt:
         denied: "atmesti"
         undone: "prašymas anuliuotas"
         handle: "tvarkyti narystės užklausą"
+        undo: "Anuliuoti"
       manage:
         title: "Redaguoti"
         name: "Vardas"
@@ -1008,7 +1007,6 @@ lt:
         perm_denied_expl: "Užklausa atmesta nes jūs to neleidote. Jaigu norite gauti perspėjimus, tai galite jūsų naršyklės nustatymuose."
         disable: "Išjungti Pranešimus"
         enable: "Galimi Pranešimai"
-        each_browser_note: 'Pastaba: šį nustatymą turite pakeisti kiekvienoje naudojamoje naršyklėje. Visi pranešimai bus išjungti, kai yra „netrukdyti“ režimas, neatsižvelgiant į šį nustatymą.'
         consent_prompt: "Ar norite gauti tiesioginius pranešimus, kai žmonės atsakys į jūsų įrašus?"
       dismiss: "Praleisti"
       dismiss_notifications: "Atmesti visus"
@@ -2819,7 +2817,6 @@ lt:
         create_for_topic: "Sukurti žymę temai"
         edit: "Redaguoti žymę"
         edit_for_topic: "Redaguoti temos žymę"
-        created: "Sukurta"
         updated: "Atnaujinta"
         name: "Vardas"
         name_placeholder: "Kam skirta ši žymė?"
@@ -3106,7 +3103,6 @@ lt:
     category_title: "Kategorija"
     history_capped_revisions: "Istorija, paskutiniai 100 peržiūrų"
     history: "Istorija"
-    changed_by: "pagal %{author}"
     raw_email:
       title: "Įeinantis paštas"
       not_available: "Nėra galimybių!"
@@ -3510,7 +3506,6 @@ lt:
           header_link_text: "Kategorijos"
         community:
           header_link_text: "Bendruomenė"
-          header_action_title: "sukurti naują temą"
           links:
             about:
               content: "Apie"
@@ -3525,14 +3520,12 @@ lt:
               content: "DUK"
             groups:
               content: "Grupės"
-              title: "Visos grupės"
             users:
               content: "Vartotojai"
             my_posts:
               content: "Mano Įrašai"
             review:
               content: "Peržiūra"
-              title: "peržiūra"
   admin_js:
     type_to_filter: "įrašyk kažką dėl filtro..."
     admin:
@@ -3917,7 +3910,6 @@ lt:
         button_title: "Siųsti pakvietimą"
       customize:
         title: "Pakeisti"
-        long_title: "Puslapio Keitimas"
         preview: "peržiūra"
         explain_preview: "Peržiūrėkite svetainę, kurioje įjungta ši tema"
         save: "Išsaugoti"
@@ -4087,9 +4079,9 @@ lt:
           new_name: "Nauja spalvų paletė"
           copy_name_prefix: "Kopija"
           delete_confirm: "Ištrinti šią spalvų paletę?"
-          undo: "anuliuoti"
+          undo: "Anuliuoti"
           undo_title: "Anuliuoti šios spalvos pakeitimus į paskutinį kartą išsaugotus."
-          revert: "grąžinti"
+          revert: "Grąžinti"
           revert_title: "Iš naujo nustatykite šią spalvą į numatytąją „Discourse“ spalvų paletę."
           primary:
             name: "pirminė"

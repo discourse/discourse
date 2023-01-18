@@ -1,13 +1,17 @@
 import { test } from "qunit";
 import I18n from "I18n";
-import { click, visit } from "@ember/test-helpers";
+import { click, settled, visit } from "@ember/test-helpers";
 import {
   acceptance,
   exists,
   query,
   queryAll,
+  updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import Site from "discourse/models/site";
+import { resetCustomCountables } from "discourse/lib/sidebar/user/categories-section/category-section-link";
+import { UNREAD_LIST_DESTINATION } from "discourse/controllers/preferences/sidebar";
 import { bind } from "discourse-common/utils/decorators";
 
 acceptance("Sidebar - Plugin API", function (needs) {
@@ -628,5 +632,116 @@ acceptance("Sidebar - Plugin API", function (needs) {
       exists(".sidebar-section-test-chat-channels"),
       "does not display the section"
     );
+  });
+
+  test("Registering a custom countable for a section link in the user's sidebar categories section", async function (assert) {
+    try {
+      return await withPluginApi("1.6.0", async (api) => {
+        const categories = Site.current().categories;
+        const category1 = categories[0];
+        const category2 = categories[1];
+
+        updateCurrentUser({
+          sidebar_category_ids: [category1.id, category2.id],
+        });
+
+        // User has one unread topic
+        this.container.lookup("service:topic-tracking-state").loadStates([
+          {
+            topic_id: 2,
+            highest_post_number: 12,
+            last_read_post_number: 11,
+            created_at: "2020-02-09T09:40:02.672Z",
+            category_id: category1.id,
+            notification_level: 2,
+            created_in_new_period: false,
+            treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+          },
+        ]);
+
+        api.registerUserCategorySectionLinkCountable({
+          badgeTextFunction: (count) => {
+            return `some custom ${count}`;
+          },
+          route: "discovery.latestCategory",
+          routeQuery: { status: "open" },
+          shouldRegister: ({ category }) => {
+            if (category.name === category1.name) {
+              return true;
+            } else if (category.name === category2.name) {
+              return false;
+            }
+          },
+          refreshCountFunction: ({ category }) => {
+            return category.topic_count;
+          },
+          prioritizeOverDefaults: ({ category }) => {
+            return category.topic_count > 1000;
+          },
+        });
+
+        await visit("/");
+
+        assert.ok(
+          exists(
+            `.sidebar-section-link-${category1.name} .sidebar-section-link-suffix.unread`
+          ),
+          "the right suffix is displayed when custom countable is active"
+        );
+
+        assert.strictEqual(
+          query(`.sidebar-section-link-${category1.name}`).pathname,
+          `/c/${category1.name}/${category1.id}`,
+          "does not use route configured for custom countable when user has elected not to show any counts in sidebar"
+        );
+
+        assert.notOk(
+          exists(
+            `.sidebar-section-link-${category2.name} .sidebar-section-link-suffix.unread`
+          ),
+          "does not display suffix when custom countable is not registered"
+        );
+
+        updateCurrentUser({
+          sidebar_list_destination: UNREAD_LIST_DESTINATION,
+        });
+
+        assert.strictEqual(
+          query(
+            `.sidebar-section-link-${category1.name} .sidebar-section-link-content-badge`
+          ).innerText.trim(),
+          I18n.t("sidebar.unread_count", { count: 1 }),
+          "displays the right badge text in section link when unread is present and custom countable is not prioritised over unread"
+        );
+
+        category1.set("topic_count", 2000);
+
+        api.refreshUserSidebarCategoriesSectionCounts();
+
+        await settled();
+
+        assert.strictEqual(
+          query(
+            `.sidebar-section-link-${category1.name} .sidebar-section-link-content-badge`
+          ).innerText.trim(),
+          `some custom ${category1.topic_count}`,
+          "displays the right badge text in section link when unread is present but custom countable is prioritised over unread"
+        );
+
+        assert.strictEqual(
+          query(`.sidebar-section-link-${category1.name}`).pathname,
+          `/c/${category1.name}/${category1.id}/l/latest`,
+          "has the right pathname for section link"
+        );
+
+        assert.strictEqual(
+          query(`.sidebar-section-link-${category1.name}`).search,
+          "?status=open",
+          "has the right query params for section link"
+        );
+      });
+    } finally {
+      resetCustomCountables();
+    }
   });
 });

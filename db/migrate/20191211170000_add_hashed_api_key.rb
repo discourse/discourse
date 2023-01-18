@@ -4,12 +4,10 @@ class AddHashedApiKey < ActiveRecord::Migration[6.0]
     add_column(:api_keys, :key_hash, :string)
     add_column(:api_keys, :truncated_key, :string)
 
-    execute(
-      <<~SQL
+    execute(<<~SQL)
         UPDATE api_keys
         SET truncated_key = LEFT(key, 4)
       SQL
-    )
 
     batch_size = 500
     begin

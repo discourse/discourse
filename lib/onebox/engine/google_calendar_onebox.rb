@@ -10,7 +10,7 @@ module Onebox
       requires_iframe_origins "https://calendar.google.com"
 
       def to_html
-        url = @url.split('&').first
+        url = @url.split("&").first
         src = ::Onebox::Helpers.normalize_url_for_output(url)
         "<iframe src='#{src}&rm=minimal' style='border: 0' width='800' height='600' frameborder='0' scrolling='no'>#{placeholder_html}</iframe>"
       end

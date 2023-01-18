@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-desc 'Print debug information about post_revisions which cannot be deserialized'
-task 'revisions:debug_deserialization' => :environment do
+desc "Print debug information about post_revisions which cannot be deserialized"
+task "revisions:debug_deserialization" => :environment do
   puts "Checking #{PostRevision.count} PostRevision records in batches of 1000... this may take some time..."
   sleep 1
 

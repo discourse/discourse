@@ -6,7 +6,6 @@ require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 # Edit the constants and initialize method for your import data.
 
 class ImportScripts::Muut < ImportScripts::Base
-
   JSON_FILE_PATH = "/path/to/json/file"
   CSV_FILE_PATH = "/path/to/csv/file"
 
@@ -36,39 +35,33 @@ class ImportScripts::Muut < ImportScripts::Base
   end
 
   def repair_json(arg)
-    arg.gsub!(/^\(/, "")     # content of file is surround by ( )
+    arg.gsub!(/^\(/, "") # content of file is surround by ( )
     arg.gsub!(/\)$/, "")
 
-    arg.gsub!(/\]\]$/, "]")  # there can be an extra ] at the end
+    arg.gsub!(/\]\]$/, "]") # there can be an extra ] at the end
 
     arg.gsub!(/\}\{/, "},{") # missing commas sometimes!
 
-    arg.gsub!("}]{", "},{")  # surprise square brackets
-    arg.gsub!("}[{", "},{")  # :troll:
+    arg.gsub!("}]{", "},{") # surprise square brackets
+    arg.gsub!("}[{", "},{") # :troll:
 
     arg
   end
 
   def import_users
-    puts '', "Importing users"
+    puts "", "Importing users"
 
-    create_users(@imported_users) do |u|
-      {
-        id: u[0],
-        email: u[1],
-        created_at: Time.now
-      }
-    end
+    create_users(@imported_users) { |u| { id: u[0], email: u[1], created_at: Time.now } }
   end
 
   def import_categories
     puts "", "Importing categories"
 
-    create_categories(@imported_json['categories']) do |category|
+    create_categories(@imported_json["categories"]) do |category|
       {
-        id: category['path'], # muut has no id for categories, so use the path
-        name: category['title'],
-        slug: category['path']
+        id: category["path"], # muut has no id for categories, so use the path
+        name: category["title"],
+        slug: category["path"],
       }
     end
   end
@@ -79,23 +72,23 @@ class ImportScripts::Muut < ImportScripts::Base
     topics = 0
     posts = 0
 
-    @imported_json['categories'].each do |category|
-
-      @imported_json['threads'][category['path']].each do |thread|
-
+    @imported_json["categories"].each do |category|
+      @imported_json["threads"][category["path"]].each do |thread|
         next if thread["seed"]["key"] == "skip-this-topic"
 
         mapped = {}
         mapped[:id] = "#{thread["seed"]["key"]}-#{thread["seed"]["date"]}"
 
-        if thread["seed"]["author"] && user_id_from_imported_user_id(thread["seed"]["author"]["path"]) != ""
+        if thread["seed"]["author"] &&
+             user_id_from_imported_user_id(thread["seed"]["author"]["path"]) != ""
           mapped[:user_id] = user_id_from_imported_user_id(thread["seed"]["author"]["path"]) || -1
         else
           mapped[:user_id] = -1
         end
 
         # update user display name
-        if thread["seed"]["author"] && thread["seed"]["author"]["displayname"] != "" && mapped[:user_id] != -1
+        if thread["seed"]["author"] && thread["seed"]["author"]["displayname"] != "" &&
+             mapped[:user_id] != -1
           user = User.find_by(id: mapped[:user_id])
           if user
             user.name = thread["seed"]["author"]["displayname"]
@@ -122,18 +115,21 @@ class ImportScripts::Muut < ImportScripts::Base
         # create replies
         if thread["replies"].present? && thread["replies"].count > 0
           thread["replies"].reverse_each do |post|
-
             if post_id_from_imported_post_id(post["id"])
               next # already imported this post
             end
 
-            new_post = create_post({
-                id: "#{post["key"]}-#{post["date"]}",
-                topic_id: parent_post.topic_id,
-                user_id: user_id_from_imported_user_id(post["author"]["path"]) || -1,
-                raw: process_muut_post_body(post["body"]),
-                created_at: Time.zone.at(post["date"])
-              }, post["id"])
+            new_post =
+              create_post(
+                {
+                  id: "#{post["key"]}-#{post["date"]}",
+                  topic_id: parent_post.topic_id,
+                  user_id: user_id_from_imported_user_id(post["author"]["path"]) || -1,
+                  raw: process_muut_post_body(post["body"]),
+                  created_at: Time.zone.at(post["date"]),
+                },
+                post["id"],
+              )
 
             if new_post.is_a?(Post)
               posts += 1
@@ -141,9 +137,7 @@ class ImportScripts::Muut < ImportScripts::Base
               puts "Error creating post #{post["id"]}. Skipping."
               puts new_post.inspect
             end
-
           end
-
         end
 
         topics += 1
@@ -165,7 +159,7 @@ class ImportScripts::Muut < ImportScripts::Base
     raw.gsub!("---", "```\n")
 
     # tab
-    raw.gsub!(/\\t/, '  ')
+    raw.gsub!(/\\t/, "  ")
 
     # double quote
     raw.gsub!(/\\\"/, '"')
@@ -177,9 +171,6 @@ class ImportScripts::Muut < ImportScripts::Base
   def file_full_path(relpath)
     File.join JSON_FILES_DIR, relpath.split("?").first
   end
-
 end
 
-if __FILE__ == $0
-  ImportScripts::Muut.new.perform
-end
+ImportScripts::Muut.new.perform if __FILE__ == $0

@@ -208,9 +208,13 @@ $search-pad-horizontal: 0.5em;
       margin-top: 2px;
     }
 
-    .search-item-slug .badge-wrapper {
-      font-size: var(--font-0);
-      margin-left: 2px;
+    .search-item-slug {
+      margin-right: 5px;
+
+      .badge-wrapper {
+        font-size: var(--font-0);
+        margin-left: 2px;
+      }
     }
 
     .search-menu-initial-options {
@@ -225,7 +229,13 @@ $search-pad-horizontal: 0.5em;
     .search-menu-initial-options,
     .search-result-tag,
     .search-menu-assistant {
+      .search-item-prefix {
+        padding-right: 5px;
+      }
       .search-link {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
         @include ellipsis;
         .d-icon {
           margin-right: 5px;

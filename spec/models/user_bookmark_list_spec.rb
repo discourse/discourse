@@ -19,7 +19,9 @@ RSpec.describe UserBookmarkList do
 
   it "returns all types of bookmarks" do
     list.load
-    expect(list.bookmarks.map(&:id)).to match_array([post_bookmark.id, topic_bookmark.id, user_bookmark.id])
+    expect(list.bookmarks.map(&:id)).to match_array(
+      [post_bookmark.id, topic_bookmark.id, user_bookmark.id],
+    )
     expect(list.has_more).to eq(false)
   end
 

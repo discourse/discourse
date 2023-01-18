@@ -344,7 +344,6 @@ hr:
       remove_reminder_keep_bookmark: "Ukloni podsjetnik i zadrži oznaku"
       created_with_reminder: "Označili ste ovu objavu s podsjetnikom %{date}. %{name}"
       created_with_reminder_generic: "Označili ste ovo s podsjetnikom %{date}. %{name}"
-      remove: "Ukloni zabilješku"
       delete: "Izbriši oznaku"
       confirm_delete: "Jeste li sigurni da želite izbrisati ovu oznaku? Podsjetnik će također biti izbrisan."
       confirm_clear: "Jeste li sigurni da želite ukloniti sve vaše zabilježbe iz ove teme?"
@@ -419,7 +418,6 @@ hr:
     enable: "Omogući"
     disable: "Onemogući"
     continue: "Nastavi"
-    undo: "Vrati na prethodno"
     switch_to_anon: "Uđi u anonimni mod"
     switch_from_anon: "Napusti neimenovani način"
     banner:
@@ -726,6 +724,7 @@ hr:
         denied: "odbijen"
         undone: "zahtjev poništen"
         handle: "obradi zahtjev za članstvo"
+        undo: "Vrati na prethodno"
       manage:
         title: "Upravljanje"
         name: "Ime"
@@ -1098,7 +1097,6 @@ hr:
         perm_denied_expl: "Odbili ste dopuštenje za obavijesti. Dopusti obavijesti putem postavki preglednika."
         disable: "Isključi obavijesti"
         enable: "Uključi obavijesti"
-        each_browser_note: 'Napomena: Ovu postavku morate promijeniti na svakom pregledniku kojeg koristite. Sve obavijesti bit će onemogućene kada su u "ne ometaj", bez obzira na ovu postavku.'
         consent_prompt: "Želite li obavijesti (uživo) kada ljudi odgovaraju na vaše postove?"
       dismiss: "Skloni"
       dismiss_notifications: "Skloni sve"
@@ -3142,7 +3140,6 @@ hr:
         create_for_topic: "Napravite oznaku za temu"
         edit: "Uredi oznaku"
         edit_for_topic: "Uredi oznaku za temu"
-        created: "Stvoreno"
         updated: "Ažurirano"
         name: "Ime i prezime"
         name_placeholder: "Čemu služi ova oznaka?"
@@ -3450,7 +3447,6 @@ hr:
     category_title: "Kategorija"
     history_capped_revisions: "Povijest, posljednjih 100 izmjena"
     history: "Povijest"
-    changed_by: "od %{author}"
     raw_email:
       title: "Dolazna e-pošta"
       not_available: "Nije dostupno!"
@@ -3898,7 +3894,6 @@ hr:
           header_link_text: "Kategorije"
         community:
           header_link_text: "Zajednica"
-          header_action_title: "otvori novu temu"
           links:
             about:
               content: "O nama"
@@ -3913,14 +3908,12 @@ hr:
               content: "ČPP"
             groups:
               content: "Grupe"
-              title: "Sve grupe"
             users:
               content: "Korisnika"
             my_posts:
               content: "Moje objave"
             review:
               content: "Osvrt"
-              title: "osvrt"
   admin_js:
     type_to_filter: "upiši za filtriranje"
     admin:
@@ -4362,7 +4355,6 @@ hr:
         button_title: "Pošalji pozivnice"
       customize:
         title: "Prilagodba"
-        long_title: "Prilagodba stranice"
         preview: "predprikaz"
         explain_preview: "Pogledajte web-mjesto s omogućenom ovom temom"
         save: "Spremi"
@@ -4563,9 +4555,9 @@ hr:
           new_name: "Nova paleta boja"
           copy_name_prefix: "Kopija"
           delete_confirm: "Izbrisati ovu paletu boja?"
-          undo: "poništi"
+          undo: "Vrati na prethodno"
           undo_title: "Poništi promjene ovoj boji od zadnjeg puta kad su spremljene."
-          revert: "vrati"
+          revert: "Vrati nazad"
           revert_title: "Vratite ovu boju na zadanu paletu boja diskursa."
           primary:
             name: "primarna"

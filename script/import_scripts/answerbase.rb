@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require 'csv'
-require 'reverse_markdown'
-require_relative 'base'
-require_relative 'base/generic_database'
+require "csv"
+require "reverse_markdown"
+require_relative "base"
+require_relative "base/generic_database"
 
 # Call it like this:
 #   RAILS_ENV=production bundle exec ruby script/import_scripts/answerbase.rb DIRNAME
@@ -15,8 +15,10 @@ class ImportScripts::Answerbase < ImportScripts::Base
   ANSWER_IMAGE_DIRECTORY = "Answer Images"
   QUESTION_ATTACHMENT_DIRECTORY = "Question Attachments"
   QUESTION_IMAGE_DIRECTORY = "Question Images"
-  EMBEDDED_IMAGE_REGEX = /<a[^>]*href="[^"]*relativeUrl=(?<path>[^"\&]*)[^"]*"[^>]*>\s*<img[^>]*>\s*<\/a>/i
-  QUESTION_LINK_REGEX = /<a[^>]*?href="#{Regexp.escape(OLD_DOMAIN)}\/[^"]*?(?:q|questionid=)(?<id>\d+)[^"]*?"[^>]*>(?<text>.*?)<\/a>/i
+  EMBEDDED_IMAGE_REGEX =
+    %r{<a[^>]*href="[^"]*relativeUrl=(?<path>[^"\&]*)[^"]*"[^>]*>\s*<img[^>]*>\s*</a>}i
+  QUESTION_LINK_REGEX =
+    %r{<a[^>]*?href="#{Regexp.escape(OLD_DOMAIN)}/[^"]*?(?:q|questionid=)(?<id>\d+)[^"]*?"[^>]*>(?<text>.*?)</a>}i
   TOPIC_LINK_NORMALIZATION = '/.*?-(q\d+).*/\1'
   BATCH_SIZE = 1000
 
@@ -24,12 +26,13 @@ class ImportScripts::Answerbase < ImportScripts::Base
     super()
 
     @path = path
-    @db = ImportScripts::GenericDatabase.new(
-      @path,
-      batch_size: BATCH_SIZE,
-      recreate: true,
-      numeric_keys: true
-    )
+    @db =
+      ImportScripts::GenericDatabase.new(
+        @path,
+        batch_size: BATCH_SIZE,
+        recreate: true,
+        numeric_keys: true,
+      )
   end
 
   def execute
@@ -47,11 +50,7 @@ class ImportScripts::Answerbase < ImportScripts::Base
 
     category_position = 0
     csv_parse("categories") do |row|
-      @db.insert_category(
-        id: row[:id],
-        name: row[:name],
-        position: category_position += 1
-      )
+      @db.insert_category(id: row[:id], name: row[:name], position: category_position += 1)
     end
 
     csv_parse("users") do |row|
@@ -62,7 +61,7 @@ class ImportScripts::Answerbase < ImportScripts::Base
         bio: row[:description],
         avatar_path: row[:profile_image],
         created_at: parse_date(row[:createtime]),
-        active: true
+        active: true,
       )
     end
 
@@ -74,8 +73,9 @@ class ImportScripts::Answerbase < ImportScripts::Base
 
       begin
         if row[:type] == "Question"
-          attachments = parse_filenames(row[:attachments], QUESTION_ATTACHMENT_DIRECTORY) +
-            parse_filenames(row[:images], QUESTION_IMAGE_DIRECTORY)
+          attachments =
+            parse_filenames(row[:attachments], QUESTION_ATTACHMENT_DIRECTORY) +
+              parse_filenames(row[:images], QUESTION_IMAGE_DIRECTORY)
 
           @db.insert_topic(
             id: row[:id],
@@ -84,12 +84,13 @@ class ImportScripts::Answerbase < ImportScripts::Base
             category_id: row[:categorylist],
             user_id: user_id,
             created_at: created_at,
-            attachments: attachments
+            attachments: attachments,
           )
           last_topic_id = row[:id]
         else
-          attachments = parse_filenames(row[:attachments], ANSWER_ATTACHMENT_DIRECTORY) +
-            parse_filenames(row[:images], ANSWER_IMAGE_DIRECTORY)
+          attachments =
+            parse_filenames(row[:attachments], ANSWER_ATTACHMENT_DIRECTORY) +
+              parse_filenames(row[:images], ANSWER_IMAGE_DIRECTORY)
 
           @db.insert_post(
             id: row[:id],
@@ -97,10 +98,10 @@ class ImportScripts::Answerbase < ImportScripts::Base
             topic_id: last_topic_id,
             user_id: user_id,
             created_at: created_at,
-            attachments: attachments
+            attachments: attachments,
           )
         end
-      rescue
+      rescue StandardError
         p row
         raise
       end
@@ -110,9 +111,7 @@ class ImportScripts::Answerbase < ImportScripts::Base
   def parse_filenames(text, directory)
     return [] if text.blank?
 
-    text
-      .split(';')
-      .map { |filename| File.join(@path, directory, filename.strip) }
+    text.split(";").map { |filename| File.join(@path, directory, filename.strip) }
   end
 
   def parse_date(text)
@@ -132,10 +131,10 @@ class ImportScripts::Answerbase < ImportScripts::Base
 
     create_categories(rows) do |row|
       {
-        id: row['id'],
-        name: row['name'],
-        description: row['description'],
-        position: row['position']
+        id: row["id"],
+        name: row["name"],
+        description: row["description"],
+        position: row["position"],
       }
     end
   end
@@ -153,19 +152,17 @@ class ImportScripts::Answerbase < ImportScripts::Base
       rows, last_id = @db.fetch_users(last_id)
       break if rows.empty?
 
-      next if all_records_exist?(:users, rows.map { |row| row['id'] })
+      next if all_records_exist?(:users, rows.map { |row| row["id"] })
 
       create_users(rows, total: total_count, offset: offset) do |row|
         {
-          id: row['id'],
-          email: row['email'],
-          username: row['username'],
-          bio_raw: row['bio'],
-          created_at: row['created_at'],
-          active: row['active'] == 1,
-          post_create_action: proc do |user|
-            create_avatar(user, row['avatar_path'])
-          end
+          id: row["id"],
+          email: row["email"],
+          username: row["username"],
+          bio_raw: row["bio"],
+          created_at: row["created_at"],
+          active: row["active"] == 1,
+          post_create_action: proc { |user| create_avatar(user, row["avatar_path"]) },
         }
       end
     end
@@ -191,24 +188,25 @@ class ImportScripts::Answerbase < ImportScripts::Base
       rows, last_id = @db.fetch_topics(last_id)
       break if rows.empty?
 
-      next if all_records_exist?(:posts, rows.map { |row| row['id'] })
+      next if all_records_exist?(:posts, rows.map { |row| row["id"] })
 
       create_posts(rows, total: total_count, offset: offset) do |row|
-        attachments = @db.fetch_topic_attachments(row['id']) if row['upload_count'] > 0
-        user_id = user_id_from_imported_user_id(row['user_id']) || Discourse.system_user.id
+        attachments = @db.fetch_topic_attachments(row["id"]) if row["upload_count"] > 0
+        user_id = user_id_from_imported_user_id(row["user_id"]) || Discourse.system_user.id
 
         {
-          id: row['id'],
-          title: row['title'],
-          raw: raw_with_attachments(row['raw'].presence || row['title'], attachments, user_id),
-          category: category_id_from_imported_category_id(row['category_id']),
+          id: row["id"],
+          title: row["title"],
+          raw: raw_with_attachments(row["raw"].presence || row["title"], attachments, user_id),
+          category: category_id_from_imported_category_id(row["category_id"]),
           user_id: user_id,
-          created_at: row['created_at'],
-          closed: row['closed'] == 1,
-          post_create_action: proc do |post|
-            url = "q#{row['id']}"
-            Permalink.create(url: url, topic_id: post.topic.id) unless permalink_exists?(url)
-          end
+          created_at: row["created_at"],
+          closed: row["closed"] == 1,
+          post_create_action:
+            proc do |post|
+              url = "q#{row["id"]}"
+              Permalink.create(url: url, topic_id: post.topic.id) unless permalink_exists?(url)
+            end,
         }
       end
     end
@@ -223,19 +221,19 @@ class ImportScripts::Answerbase < ImportScripts::Base
       rows, last_row_id = @db.fetch_posts(last_row_id)
       break if rows.empty?
 
-      next if all_records_exist?(:posts, rows.map { |row| row['id'] })
+      next if all_records_exist?(:posts, rows.map { |row| row["id"] })
 
       create_posts(rows, total: total_count, offset: offset) do |row|
-        topic = topic_lookup_from_imported_post_id(row['topic_id'])
-        attachments = @db.fetch_post_attachments(row['id']) if row['upload_count'] > 0
-        user_id = user_id_from_imported_user_id(row['user_id']) || Discourse.system_user.id
+        topic = topic_lookup_from_imported_post_id(row["topic_id"])
+        attachments = @db.fetch_post_attachments(row["id"]) if row["upload_count"] > 0
+        user_id = user_id_from_imported_user_id(row["user_id"]) || Discourse.system_user.id
 
         {
-          id: row['id'],
-          raw: raw_with_attachments(row['raw'], attachments, user_id),
+          id: row["id"],
+          raw: raw_with_attachments(row["raw"], attachments, user_id),
           user_id: user_id,
           topic_id: topic[:topic_id],
-          created_at: row['created_at']
+          created_at: row["created_at"],
         }
       end
     end
@@ -247,7 +245,7 @@ class ImportScripts::Answerbase < ImportScripts::Base
     raw = ReverseMarkdown.convert(raw) || ""
 
     attachments&.each do |attachment|
-      path = attachment['path']
+      path = attachment["path"]
       next if embedded_paths.include?(path)
 
       if File.exist?(path)
@@ -269,23 +267,24 @@ class ImportScripts::Answerbase < ImportScripts::Base
     paths = []
     upload_ids = []
 
-    raw = raw.gsub(EMBEDDED_IMAGE_REGEX) do
-      path = File.join(@path, Regexp.last_match['path'])
-      filename = File.basename(path)
-      path = find_image_path(filename)
+    raw =
+      raw.gsub(EMBEDDED_IMAGE_REGEX) do
+        path = File.join(@path, Regexp.last_match["path"])
+        filename = File.basename(path)
+        path = find_image_path(filename)
 
-      if path
-        upload = @uploader.create_upload(user_id, path, filename)
+        if path
+          upload = @uploader.create_upload(user_id, path, filename)
 
-        if upload.present? && upload.persisted?
-          paths << path
-          upload_ids << upload.id
-          @uploader.html_for_upload(upload, filename)
+          if upload.present? && upload.persisted?
+            paths << path
+            upload_ids << upload.id
+            @uploader.html_for_upload(upload, filename)
+          end
+        else
+          STDERR.puts "Could not find file: #{path}"
         end
-      else
-        STDERR.puts "Could not find file: #{path}"
       end
-    end
 
     [raw, paths, upload_ids]
   end
@@ -311,11 +310,11 @@ class ImportScripts::Answerbase < ImportScripts::Base
 
   def add_permalink_normalizations
     normalizations = SiteSetting.permalink_normalizations
-    normalizations = normalizations.blank? ? [] : normalizations.split('|')
+    normalizations = normalizations.blank? ? [] : normalizations.split("|")
 
     add_normalization(normalizations, TOPIC_LINK_NORMALIZATION)
 
-    SiteSetting.permalink_normalizations = normalizations.join('|')
+    SiteSetting.permalink_normalizations = normalizations.join("|")
   end
 
   def add_normalization(normalizations, normalization)
@@ -327,11 +326,13 @@ class ImportScripts::Answerbase < ImportScripts::Base
   end
 
   def csv_parse(table_name)
-    CSV.foreach(File.join(@path, "#{table_name}.csv"),
-                headers: true,
-                header_converters: :symbol,
-                skip_blanks: true,
-                encoding: 'bom|utf-8') { |row| yield row }
+    CSV.foreach(
+      File.join(@path, "#{table_name}.csv"),
+      headers: true,
+      header_converters: :symbol,
+      skip_blanks: true,
+      encoding: "bom|utf-8",
+    ) { |row| yield row }
   end
 end
 

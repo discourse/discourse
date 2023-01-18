@@ -79,11 +79,14 @@ class CurrentUserSerializer < BasicUserSerializer
   def groups
     owned_group_ids = GroupUser.where(user_id: id, owner: true).pluck(:group_id).to_set
 
-    object.visible_groups.pluck(:id, :name, :has_messages).map do |id, name, has_messages|
-      group = { id: id, name: name, has_messages: has_messages }
-      group[:owner] = true if owned_group_ids.include?(id)
-      group
-    end
+    object
+      .visible_groups
+      .pluck(:id, :name, :has_messages)
+      .map do |id, name, has_messages|
+        group = { id: id, name: name, has_messages: has_messages }
+        group[:owner] = true if owned_group_ids.include?(id)
+        group
+      end
   end
 
   def link_posting_access
@@ -141,7 +144,7 @@ class CurrentUserSerializer < BasicUserSerializer
   def custom_fields
     fields = nil
     if SiteSetting.public_user_custom_fields.present?
-      fields = SiteSetting.public_user_custom_fields.split('|')
+      fields = SiteSetting.public_user_custom_fields.split("|")
     end
     DiscoursePluginRegistry.serialized_current_user_fields.each do |f|
       fields ||= []
@@ -184,15 +187,21 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def top_category_ids
-    omitted_notification_levels = [CategoryUser.notification_levels[:muted], CategoryUser.notification_levels[:regular]]
-    CategoryUser.where(user_id: object.id)
+    omitted_notification_levels = [
+      CategoryUser.notification_levels[:muted],
+      CategoryUser.notification_levels[:regular],
+    ]
+    CategoryUser
+      .where(user_id: object.id)
       .where.not(notification_level: omitted_notification_levels)
-      .order("
+      .order(
+        "
         CASE
           WHEN notification_level = 3 THEN 1
           WHEN notification_level = 2 THEN 2
           WHEN notification_level = 4 THEN 3
-        END")
+        END",
+      )
       .pluck(:category_id)
       .slice(0, SiteSetting.header_dropdown_category_count)
   end
@@ -293,7 +302,9 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def redesigned_topic_timeline_enabled
     if SiteSetting.enable_experimental_topic_timeline_groups.present?
-      object.in_any_groups?(SiteSetting.enable_experimental_topic_timeline_groups.split("|").map(&:to_i))
+      object.in_any_groups?(
+        SiteSetting.enable_experimental_topic_timeline_groups.split("|").map(&:to_i),
+      )
     else
       false
     end

@@ -316,7 +316,6 @@ sv:
       remove_reminder_keep_bookmark: "Ta bort påminnelsen och behåll bokmärket"
       created_with_reminder: "Du har bokmärkt detta inlägg med en påminnelse %{date}. %{name}"
       created_with_reminder_generic: "Du har bokmärkt detta med en påminnelse %{date}. %{name}"
-      remove: "Ta bort bokmärke"
       delete: "Radera bokmärke"
       confirm_delete: "Är du säker på att du vill radera det här bokmärket? Påminnelsen kommer också att raderas."
       confirm_clear: "Är du säker på att du vill radera alla dina bokmärken från ämnet?"
@@ -386,7 +385,6 @@ sv:
     enable: "Aktivera"
     disable: "Inaktivera"
     continue: "Fortsätt"
-    undo: "Ångra"
     switch_to_anon: "Starta anonymt läge"
     switch_from_anon: "Avsluta anonymt läge"
     banner:
@@ -683,6 +681,7 @@ sv:
         denied: "nekad"
         undone: "förfrågan återkallad"
         handle: "hantera begäran om medlemskap"
+        undo: "Ångra"
       manage:
         title: "Hantera"
         name: "Namn"
@@ -1053,7 +1052,7 @@ sv:
         perm_denied_expl: "Du nekade tillåtelse för aviseringar. Tillåt aviseringar via din webbläsares inställningar."
         disable: "Inaktivera aviseringar"
         enable: "Aktivera aviseringar"
-        each_browser_note: 'Obs! Du måste ändra den här inställningen i varje webbläsare du använder. Alla meddelanden kommer att inaktiveras när du är i ”stör ej”, oavsett denna inställning.'
+        each_browser_note: 'Obs: Du måste ändra den här inställningen i varje webbläsare du använder. Alla aviseringar kommer att inaktiveras om du pausar aviseringar från användarmenyn, oavsett denna inställning.'
         consent_prompt: "Vill du ha realtidsaviseringar när personer svarar på dina inlägg?"
       dismiss: "Avfärda"
       dismiss_notifications: "Avfärda alla"
@@ -3260,7 +3259,6 @@ sv:
         create_for_topic: "Skapa bokmärke för ämne"
         edit: "Redigera bokmärke"
         edit_for_topic: "Redigera bokmärke för ämne"
-        created: "Skapade"
         updated: "Uppdaterade"
         name: "Namn"
         name_placeholder: "Vad används detta bokmärke till?"
@@ -3563,7 +3561,6 @@ sv:
     category_title: "Kategori"
     history_capped_revisions: "Historik, senaste 100 versionerna"
     history: "Historik"
-    changed_by: "av %{author}"
     raw_email:
       title: "Inkommande e-post"
       not_available: "Ej tillgänglig!"
@@ -3982,7 +3979,7 @@ sv:
       new_count:
         one: "%{count} ny"
         other: "%{count} nya"
-      toggle_section: "växla avsnitt"
+      toggle_section: "Växla avsnitt"
       more: "Mer"
       all_categories: "Alla kategorier"
       all_tags: "Alla taggar"
@@ -3991,7 +3988,7 @@ sv:
           header_link_text: "Om"
         messages:
           header_link_text: "Meddelanden"
-          header_action_title: "skapa ett personligt meddelande"
+          header_action_title: "Skapa ett personligt meddelande"
           links:
             inbox: "Inkorg"
             sent: "Skickat"
@@ -4008,7 +4005,7 @@ sv:
           none: "Du har inte lagt till några taggar."
           click_to_get_started: "Klicka här för att komma igång."
           header_link_text: "Taggar"
-          header_action_title: "redigera sidofältets taggar"
+          header_action_title: "Redigera ditt sidofälts taggar"
           configure_defaults: "Konfigurera standardvärden"
         categories:
           links:
@@ -4018,29 +4015,33 @@ sv:
           none: "Du har inte lagt till några kategorier."
           click_to_get_started: "Klicka här för att komma igång."
           header_link_text: "Kategorier"
-          header_action_title: "redigera sidofältets kategorier"
+          header_action_title: "Redigera ditt sidofälts kategorier"
           configure_defaults: "Konfigurera standardvärden"
         community:
           header_link_text: "Community"
-          header_action_title: "skapa ett nytt ämne"
+          header_action_title: "Skapa ett ämne"
           links:
             about:
               content: "Om"
+              title: "Mer information om denna webbplats"
             admin:
               content: "Admin"
+              title: "Webbplatsinställningar och rapporter"
             badges:
               content: "Utmärkelser"
+              title: "Alla utmärkelser som kan förtjänas"
             everything:
               content: "Allting"
               title: "Alla ämnen"
             faq:
               content: "Vanliga frågor och svar"
+              title: "Riktlinjer för att använda denna webbplats"
             groups:
               content: "Grupper"
-              title: "Alla grupper"
+              title: "Lista över tillgängliga användargrupper"
             users:
               content: "Användare"
-              title: "Alla användare"
+              title: "Lista över alla användare"
             my_posts:
               content: "Mina inlägg"
               title: "Min senaste ämnesaktivitet"
@@ -4050,7 +4051,7 @@ sv:
                 other: "%{count} utkast"
             review:
               content: "Granska"
-              title: "granska"
+              title: "Flaggade inlägg och andra objekt i kö"
               pending_count: "%{count} väntande"
     welcome_topic_banner:
       title: "Skapa ditt välkomstämne"
@@ -4510,7 +4511,6 @@ sv:
         button_title: "Skicka inbjudningar"
       customize:
         title: "Anpassa"
-        long_title: "Webbplatsanpassningar"
         preview: "förhandsgranska"
         explain_preview: "Visa sidan med detta tema aktiverat"
         save: "Spara"
@@ -4715,9 +4715,9 @@ sv:
           new_name: "Ny färgpalett"
           copy_name_prefix: "Kopia av"
           delete_confirm: "Radera den här färgpaletten?"
-          undo: "ångra"
+          undo: "Ångra"
           undo_title: "Återställ ändringarna för den här färgen till den senast sparade versionen."
-          revert: "återställ"
+          revert: "Återställ"
           revert_title: "Återställ den här färgen till Discourse-standardfärgspaletten."
           primary:
             name: "primär"

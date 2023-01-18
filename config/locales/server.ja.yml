@@ -717,10 +717,6 @@ ja:
         other: "ほぼ %{count} 年前"
   password_reset:
     no_token: 'おっとっと！使用したリンクは機能しなくなっています。今すぐ<a href="%{base_url}/login">ログイン</a>しましょう。パスワードを忘れた場合は、リセットするための<a href="%{base_url}/password-reset">リンクをリクエスト</a>できます。'
-    choose_new: "新しいパスワードを選択する"
-    choose: "パスワードを選択する"
-    update: "パスワードを更新"
-    save: "パスワードを設定"
     title: "パスワードをリセット"
     success: "パスワードを変更し、ログインしました。"
     success_unapproved: "パスワードを変更しました。"

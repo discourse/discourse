@@ -9,7 +9,7 @@ RSpec.describe TopicTrackingStateSerializer do
     SiteSetting.chat_enabled = false if defined?(::Chat)
   end
 
-  it 'serializes topic tracking state reports' do
+  it "serializes topic tracking state reports" do
     report = TopicTrackingState.report(user)
     serialized = described_class.new(report[0], scope: Guardian.new(user), root: false).as_json
 
@@ -31,7 +31,7 @@ RSpec.describe TopicTrackingStateSerializer do
     DiscourseTagging.tag_topic_by_names(
       post.topic,
       Guardian.new(Discourse.system_user),
-      ['bananas', 'apples']
+      %w[bananas apples],
     )
 
     report = TopicTrackingState.report(user)

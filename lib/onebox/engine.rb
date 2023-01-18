@@ -7,9 +7,7 @@ module Onebox
     end
 
     def self.engines
-      constants.select do |constant|
-        constant.to_s =~ /Onebox$/
-      end.sort.map(&method(:const_get))
+      constants.select { |constant| constant.to_s =~ /Onebox$/ }.sort.map(&method(:const_get))
     end
 
     def self.all_iframe_origins
@@ -25,7 +23,7 @@ module Onebox
           escaped_origin = escaped_origin.sub("\\*", '\S*')
         end
 
-        Regexp.new("\\A#{escaped_origin}", 'i')
+        Regexp.new("\\A#{escaped_origin}", "i")
       end
     end
 
@@ -50,7 +48,7 @@ module Onebox
       @url = url
       @uri = URI(url)
       if always_https?
-        @uri.scheme = 'https'
+        @uri.scheme = "https"
         @url = @uri.to_s
       end
       @timeout = timeout || Onebox.options.timeout

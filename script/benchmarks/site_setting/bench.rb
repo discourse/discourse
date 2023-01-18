@@ -1,37 +1,32 @@
 # frozen_string_literal: true
 
-require 'benchmark/ips'
-require File.expand_path('../../../../config/environment', __FILE__)
+require "benchmark/ips"
+require File.expand_path("../../../../config/environment", __FILE__)
 
 # Put pre conditions here
 # Used db but it's OK in the most cases
 
 # build the cache
 SiteSetting.title = SecureRandom.hex
-SiteSetting.default_locale = SiteSetting.default_locale == 'en' ? 'zh_CN' : 'en'
+SiteSetting.default_locale = SiteSetting.default_locale == "en" ? "zh_CN" : "en"
 SiteSetting.refresh!
 
 tests = [
-  ["current cache", lambda do
-    SiteSetting.title
-    SiteSetting.enable_discourse_connect
-  end
+  [
+    "current cache",
+    lambda do
+      SiteSetting.title
+      SiteSetting.enable_discourse_connect
+    end,
   ],
-  ["change default locale with current cache refreshed", lambda do
-    SiteSetting.default_locale = SiteSetting.default_locale == 'en' ? 'zh_CN' : 'en'
-  end
+  [
+    "change default locale with current cache refreshed",
+    lambda { SiteSetting.default_locale = SiteSetting.default_locale == "en" ? "zh_CN" : "en" },
   ],
-  ["change site setting", lambda do
-    SiteSetting.title = SecureRandom.hex
-  end
-  ],
+  ["change site setting", lambda { SiteSetting.title = SecureRandom.hex }],
 ]
 
-Benchmark.ips do |x|
-  tests.each do |test, proc|
-    x.report(test, proc)
-  end
-end
+Benchmark.ips { |x| tests.each { |test, proc| x.report(test, proc) } }
 
 # 2017-08-02 - Erick's Site Setting change
 

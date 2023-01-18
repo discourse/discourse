@@ -3,8 +3,15 @@
 module Onebox
   class Preview
     # see https://bugs.ruby-lang.org/issues/14688
-    client_exception = defined?(Net::HTTPClientException) ? Net::HTTPClientException : Net::HTTPServerException
-    WEB_EXCEPTIONS ||= [client_exception, OpenURI::HTTPError, Timeout::Error, Net::HTTPError, Errno::ECONNREFUSED]
+    client_exception =
+      defined?(Net::HTTPClientException) ? Net::HTTPClientException : Net::HTTPServerException
+    WEB_EXCEPTIONS ||= [
+      client_exception,
+      OpenURI::HTTPError,
+      Timeout::Error,
+      Net::HTTPError,
+      Errno::ECONNREFUSED,
+    ]
 
     def initialize(url, options = Onebox.options)
       @url = url
@@ -59,20 +66,22 @@ module Onebox
       return "" unless html
 
       if @options[:max_width]
-        doc = Nokogiri::HTML5::fragment(html)
+        doc = Nokogiri::HTML5.fragment(html)
         if doc
-          doc.css('[width]').each do |e|
-            width = e['width'].to_i
+          doc
+            .css("[width]")
+            .each do |e|
+              width = e["width"].to_i
 
-            if width > @options[:max_width]
-              height = e['height'].to_i
-              if (height > 0)
-                ratio = (height.to_f / width.to_f)
-                e['height'] = (@options[:max_width] * ratio).floor
+              if width > @options[:max_width]
+                height = e["height"].to_i
+                if (height > 0)
+                  ratio = (height.to_f / width.to_f)
+                  e["height"] = (@options[:max_width] * ratio).floor
+                end
+                e["width"] = @options[:max_width]
               end
-              e['width'] = @options[:max_width]
             end
-          end
           return doc.to_html
         end
       end
@@ -96,6 +105,7 @@ module Onebox
       @engine
     end
 
-    class InvalidURI < StandardError; end
+    class InvalidURI < StandardError
+    end
   end
 end

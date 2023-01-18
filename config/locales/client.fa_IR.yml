@@ -289,7 +289,6 @@ fa_IR:
       not_bookmarked: "این نوشته را نشانک بزنید"
       remove_reminder_keep_bookmark: "حذف یادآوری و نگه داشتن نشانک"
       created_with_reminder: "شما این نوشته را با یادآوری %{date} نشانک کردید. %{name}"
-      remove: "پاک کردن نشانک"
       delete: "حذف نشانک"
       confirm_delete: "آیا مطمئن هستید که می‌خواهید این نشانک را حذف کنید؟ یادآوری هم حذف خواهد شد."
       confirm_clear: "آیا مطمئنید می‌خواهید همه‌ی نشانک‌های خود را از این موضوع پاک کنید؟"
@@ -356,7 +355,6 @@ fa_IR:
     enable: "فعال کردن"
     disable: "ازکاراندازی"
     continue: "ادامه"
-    undo: "بی‌اثر کردن"
     switch_to_anon: "ورود به حالت ناشناس"
     switch_from_anon: "خروج از حالت ناشناس"
     banner:
@@ -653,6 +651,7 @@ fa_IR:
         denied: "رد شده"
         undone: "بازگرداندن درخواست"
         handle: "رسیدگی به درخواست عضویت"
+        undo: "بی‌اثر کردن"
       manage:
         title: "مدیریت"
         name: "نام"
@@ -991,6 +990,7 @@ fa_IR:
         perm_denied_expl: "شما دسترسی دریافت اعلان را بسته‌اید. در تنظیمات مرورگر خود آن‌را فعال کنید."
         disable: "غیرفعال کردن آگاه‌سازی"
         enable: "فعال کردن آگاه‌سازی"
+        each_browser_note: 'توجه: شما باید این تنظیمات را در هر مرورگری که استفاده می‌کنید، تغییر دهید. اگر آگاه‌سازی‌ها را از منوی کاربر متوقف کنید، صرف‌نظر از این تنظیم، همه آگاه‌سازی‌ها غیرفعال می‌شوند.'
         consent_prompt: "آیا مایلید وقتی دیگران به شما پاسخ می‌دهند، آگاه‌سازی زنده دریافت کنید؟"
       dismiss: "نخواستیم"
       dismiss_notifications: "پنهان کردن همه"
@@ -2788,7 +2788,6 @@ fa_IR:
         create_for_topic: "ایجاد نشانک برای موضوع"
         edit: "ویرایش نشانک"
         edit_for_topic: "ویرایش نشانک برای موضوع"
-        created: "ساخته شده"
         updated: "به روز شده"
         name: "نام"
         name_placeholder: "این نشانک برای چی است؟"
@@ -3023,7 +3022,6 @@ fa_IR:
       one: "کاربران"
       other: "کاربران"
     category_title: "دسته"
-    changed_by: "توسط %{author}"
     raw_email:
       title: "ایمیل دریافتی"
       not_available: "در دسترس نیست!"
@@ -3369,22 +3367,24 @@ fa_IR:
           none: "شما هنوز هیچ برچسبی اضافه نکرده‌اید."
           click_to_get_started: "برای شروع اینجا را کلیک کنید."
           header_link_text: "برچسب"
-          header_action_title: "برچسب‌های نوار کناری خود را ویرایش کنید"
+          header_action_title: "ويرايش برچسب‌های نوار کناری خود"
           configure_defaults: "تنظیمات پیش‌فرض"
         categories:
           none: "شما هنوز هیچ دسته‌بندی اضافه نکرده‌اید."
           click_to_get_started: "برای شروع اینجا را کلیک کنید."
           header_link_text: "دسته‌بندی‌ها"
-          header_action_title: "دسته‌بندی‌های نوار کناری خود را ویرایش کنید"
+          header_action_title: "ويرايش دسته‌بندی‌های نوار کناری خود"
           configure_defaults: "تنظیمات پیش‌فرض"
         community:
           header_link_text: "انجمن"
-          header_action_title: "ایجاد موضوع جدید"
+          header_action_title: "ایجاد موضوع"
           links:
             about:
               content: "درباره"
+              title: "جزئیات بیشتر در مورد این سایت"
             admin:
               content: "مدیر کل"
+              title: "تنظیمات و گزارش‌های سایت"
             badges:
               content: "نشان‌ها"
             everything:
@@ -3392,12 +3392,13 @@ fa_IR:
               title: "همه موضوعات"
             faq:
               content: "پرسش‌های متداول"
+              title: "راهنمای استفاده از این سایت"
             groups:
               content: "گروه‌ها"
-              title: "همه گروه‌ها"
+              title: "فهرست گروه‌های کاربری موجود"
             users:
               content: "کاربران"
-              title: "همه کاربران"
+              title: "فهرست همه‌ی کاربران"
             my_posts:
               content: "نوشته‌های من"
               draft_count:
@@ -3405,7 +3406,6 @@ fa_IR:
                 other: "%{count} پیش‌نویس"
             review:
               content: "بازنگری"
-              title: "بازنگری"
               pending_count: "%{count} در انتظار"
     until: "تا وقتی که:"
   admin_js:
@@ -3743,7 +3743,6 @@ fa_IR:
         button_title: "ارسال دعوتنامه‌ها"
       customize:
         title: "سفارشی‌سازی"
-        long_title: "سفارشی‌سازی‌های سایت"
         preview: "پیش‌نمایش"
         explain_preview: "نمایش سایت با این قالب"
         save: "ذخیره"
@@ -3877,7 +3876,7 @@ fa_IR:
         colors:
           title: "رنگ‌ها"
           copy_name_prefix: "کپی از"
-          undo: "خنثی کردن"
+          undo: "بی‌اثر کردن"
           undo_title: "برگشت دادن رنگ دخیره شده خود به آخرین رنگی که ذخیره شده است"
           revert: "برگشت"
           primary:

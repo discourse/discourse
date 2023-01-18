@@ -9,6 +9,7 @@ class SubscriptionMailer < ActionMailer::Base
                 template: "unsubscribe_mailer",
                 site_title: SiteSetting.title,
                 site_domain_name: Discourse.current_hostname,
-                confirm_unsubscribe_link: email_unsubscribe_url(unsubscribe_key, host: Discourse.base_url)
+                confirm_unsubscribe_link:
+                  email_unsubscribe_url(unsubscribe_key, host: Discourse.base_url)
   end
 end

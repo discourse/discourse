@@ -89,7 +89,6 @@ class ChatChannel < ActiveRecord::Base
 
   # TODO (martin) Move UpdateUserCountsForChatChannels into here
   def self.update_counts
-
     # NOTE: ChatChannel#messages_count is not updated every time
     # a message is created or deleted in a channel, so it should not
     # be displayed in the UI. It is updated eventually via Jobs::ChatPeriodicalUpdates

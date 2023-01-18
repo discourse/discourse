@@ -15,11 +15,8 @@ fork do
     BackupRestore::Restorer.new(
       user_id: user_id,
       filename: opts[:filename],
-      factory: BackupRestore::Factory.new(
-        user_id: user_id,
-        client_id: opts[:client_id]
-      ),
-      disable_emails: opts.fetch(:disable_emails, true)
+      factory: BackupRestore::Factory.new(user_id: user_id, client_id: opts[:client_id]),
+      disable_emails: opts.fetch(:disable_emails, true),
     ).run
   end
 

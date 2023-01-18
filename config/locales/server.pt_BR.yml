@@ -768,10 +768,6 @@ pt_BR:
         other: "há quase %{count} anos"
   password_reset:
     no_token: 'Ops! O link que você usou não funciona mais. Agora você poderá <a href="%{base_url}/login">Log In</a>. Se tiver esquecido sua senha, você poderá <a href="%{base_url}/password-reset">solicitar um link</a> para redefini-la.'
-    choose_new: "Escolha uma nova senha"
-    choose: "Escolha uma senha"
-    update: "Atualizar senha"
-    save: "Definir senha"
     title: "Redefinir senha"
     success: "Sua senha foi modificada com êxito e você já entrou com a sua conta."
     success_unapproved: "Senha modificada com êxito."

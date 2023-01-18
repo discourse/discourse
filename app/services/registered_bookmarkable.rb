@@ -65,12 +65,10 @@ class RegisteredBookmarkable
     return if bookmarks_of_type.empty?
 
     if bookmarkable_klass.has_preloads?
-      ActiveRecord::Associations::Preloader
-        .new(
-          records: bookmarks_of_type,
-          associations: [bookmarkable: bookmarkable_klass.preload_associations]
-        )
-        .call
+      ActiveRecord::Associations::Preloader.new(
+        records: bookmarks_of_type,
+        associations: [bookmarkable: bookmarkable_klass.preload_associations],
+      ).call
     end
 
     bookmarkable_klass.perform_custom_preload!(bookmarks_of_type, guardian)

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require_relative 'base'
-require 'tiny_tds'
+require_relative "base"
+require "tiny_tds"
 
 # Import script for Telligent communities
 #
@@ -40,17 +40,19 @@ require 'tiny_tds'
 
 class ImportScripts::Telligent < ImportScripts::Base
   BATCH_SIZE ||= 1000
-  LOCAL_AVATAR_REGEX ||= /\A~\/.*(?<directory>communityserver-components-(?:selectable)?avatars)\/(?<path>[^\/]+)\/(?<filename>.+)/i
-  REMOTE_AVATAR_REGEX ||= /\Ahttps?:\/\//i
+  LOCAL_AVATAR_REGEX ||=
+    %r{\A~/.*(?<directory>communityserver-components-(?:selectable)?avatars)/(?<path>[^/]+)/(?<filename>.+)}i
+  REMOTE_AVATAR_REGEX ||= %r{\Ahttps?://}i
   ATTACHMENT_REGEXES ||= [
-    /<a[^>]*\shref="[^"]*?\/cfs-file(?:systemfile)?(?:\.ashx)?\/__key\/(?<directory>[^\/]+)\/(?<path>[^\/]+)\/(?<filename>.+?)".*?>.*?<\/a>/i,
-    /<img[^>]*\ssrc="[^"]*?\/cfs-file(?:systemfile)?(?:\.ashx)?\/__key\/(?<directory>[^\/]+)\/(?<path>[^\/]+)\/(?<filename>.+?)".*?>/i,
-    /\[View:[^\]]*?\/cfs-file(?:systemfile)?(?:\.ashx)?\/__key\/(?<directory>[^\/]+)\/(?<path>[^\/]+)\/(?<filename>.+?)(?:\:[:\d\s]*?)?\]/i,
-    /\[(?<tag>img|url)\][^\[]*?cfs-file(?:systemfile)?(?:\.ashx)?\/__key\/(?<directory>[^\/]+)\/(?<path>[^\/]+)\/(?<filename>.+?)\[\/\k<tag>\]/i,
-    /\[(?<tag>img|url)=[^\[]*?cfs-file(?:systemfile)?(?:\.ashx)?\/__key\/(?<directory>[^\/]+)\/(?<path>[^\/]+)\/(?<filename>.+?)\][^\[]*?\[\/\k<tag>\]/i
+    %r{<a[^>]*\shref="[^"]*?/cfs-file(?:systemfile)?(?:\.ashx)?/__key/(?<directory>[^/]+)/(?<path>[^/]+)/(?<filename>.+?)".*?>.*?</a>}i,
+    %r{<img[^>]*\ssrc="[^"]*?/cfs-file(?:systemfile)?(?:\.ashx)?/__key/(?<directory>[^/]+)/(?<path>[^/]+)/(?<filename>.+?)".*?>}i,
+    %r{\[View:[^\]]*?/cfs-file(?:systemfile)?(?:\.ashx)?/__key/(?<directory>[^/]+)/(?<path>[^/]+)/(?<filename>.+?)(?:\:[:\d\s]*?)?\]}i,
+    %r{\[(?<tag>img|url)\][^\[]*?cfs-file(?:systemfile)?(?:\.ashx)?/__key/(?<directory>[^/]+)/(?<path>[^/]+)/(?<filename>.+?)\[/\k<tag>\]}i,
+    %r{\[(?<tag>img|url)=[^\[]*?cfs-file(?:systemfile)?(?:\.ashx)?/__key/(?<directory>[^/]+)/(?<path>[^/]+)/(?<filename>.+?)\][^\[]*?\[/\k<tag>\]}i,
   ]
   PROPERTY_NAMES_REGEX ||= /(?<name>\w+):S:(?<start>\d+):(?<length>\d+):/
-  INTERNAL_LINK_REGEX ||= /\shref=".*?\/f\/\d+(?:(\/t\/(?<topic_id>\d+))|(?:\/p\/\d+\/(?<post_id>\d+))|(?:\/p\/(?<post_id>\d+)\/reply))\.aspx[^"]*?"/i
+  INTERNAL_LINK_REGEX ||=
+    %r{\shref=".*?/f/\d+(?:(/t/(?<topic_id>\d+))|(?:/p/\d+/(?<post_id>\d+))|(?:/p/(?<post_id>\d+)/reply))\.aspx[^"]*?"}i
 
   CATEGORY_LINK_NORMALIZATION = '/.*?(f\/\d+)$/\1'
   TOPIC_LINK_NORMALIZATION = '/.*?(f\/\d+\/t\/\d+)$/\1'
@@ -82,19 +84,20 @@ class ImportScripts::Telligent < ImportScripts::Base
     "1D20" => "”",
     "B000" => "°",
     "0003" => ["0300".to_i(16)].pack("U"),
-    "0103" => ["0301".to_i(16)].pack("U")
+    "0103" => ["0301".to_i(16)].pack("U"),
   }
 
   def initialize
     super()
 
-    @client = TinyTds::Client.new(
-      host: ENV["DB_HOST"],
-      username: ENV["DB_USERNAME"],
-      password: ENV["DB_PASSWORD"],
-      database: ENV["DB_NAME"],
-      timeout: 60 # the user query is very slow
-    )
+    @client =
+      TinyTds::Client.new(
+        host: ENV["DB_HOST"],
+        username: ENV["DB_USERNAME"],
+        password: ENV["DB_PASSWORD"],
+        database: ENV["DB_NAME"],
+        timeout: 60, # the user query is very slow
+      )
 
     @filestore_root_directory = ENV["FILE_BASE_DIR"]
     @files = {}
@@ -180,10 +183,11 @@ class ImportScripts::Telligent < ImportScripts::Base
           bio_raw: html_to_markdown(ap_properties["bio"]),
           location: ap_properties["location"],
           website: ap_properties["webAddress"],
-          post_create_action: proc do |user|
-            import_avatar(user, up_properties["avatarUrl"])
-            suspend_user(user, up_properties["BannedUntil"], up_properties["UserBanReason"])
-          end
+          post_create_action:
+            proc do |user|
+              import_avatar(user, up_properties["avatarUrl"])
+              suspend_user(user, up_properties["BannedUntil"], up_properties["UserBanReason"])
+            end,
         }
       end
 
@@ -193,13 +197,18 @@ class ImportScripts::Telligent < ImportScripts::Base
 
   # TODO move into base importer (create_user) and use consistent error handling
   def import_avatar(user, avatar_url)
-    return if @filestore_root_directory.blank? || avatar_url.blank? || avatar_url.include?("anonymous")
+    if @filestore_root_directory.blank? || avatar_url.blank? || avatar_url.include?("anonymous")
+      return
+    end
 
     if match_data = avatar_url.match(LOCAL_AVATAR_REGEX)
-      avatar_path = File.join(@filestore_root_directory,
-                              match_data[:directory].gsub("-", "."),
-                              match_data[:path].split("-"),
-                              match_data[:filename])
+      avatar_path =
+        File.join(
+          @filestore_root_directory,
+          match_data[:directory].gsub("-", "."),
+          match_data[:path].split("-"),
+          match_data[:filename],
+        )
 
       if File.file?(avatar_path)
         @uploader.create_avatar(user, avatar_path)
@@ -207,7 +216,11 @@ class ImportScripts::Telligent < ImportScripts::Base
         STDERR.puts "Could not find avatar: #{avatar_path}"
       end
     elsif avatar_url.match?(REMOTE_AVATAR_REGEX)
-      UserAvatar.import_url_for_user(avatar_url, user) rescue nil
+      begin
+        UserAvatar.import_url_for_user(avatar_url, user)
+      rescue StandardError
+        nil
+      end
     end
   end
 
@@ -224,7 +237,7 @@ class ImportScripts::Telligent < ImportScripts::Base
   end
 
   def import_categories
-    if ENV['CATEGORY_MAPPING']
+    if ENV["CATEGORY_MAPPING"]
       import_mapped_forums_as_categories
     else
       import_groups_and_forums_as_categories
@@ -234,7 +247,7 @@ class ImportScripts::Telligent < ImportScripts::Base
   def import_mapped_forums_as_categories
     puts "", "Importing categories..."
 
-    json = JSON.parse(File.read(ENV['CATEGORY_MAPPING']))
+    json = JSON.parse(File.read(ENV["CATEGORY_MAPPING"]))
 
     categories = []
     @forum_ids_to_tags = {}
@@ -256,7 +269,7 @@ class ImportScripts::Telligent < ImportScripts::Base
           id: id,
           name: name,
           parent_id: parent_id,
-          forum_ids: index == last_index ? forum_ids : nil
+          forum_ids: index == last_index ? forum_ids : nil,
         }
         parent_id = id
       end
@@ -271,9 +284,7 @@ class ImportScripts::Telligent < ImportScripts::Base
           id: c[:id],
           name: c[:name],
           parent_category_id: category_id_from_imported_category_id(c[:parent_id]),
-          post_create_action: proc do |category|
-            map_forum_ids(category.id, c[:forum_ids])
-          end
+          post_create_action: proc { |category| map_forum_ids(category.id, c[:forum_ids]) },
         }
       end
     end
@@ -302,10 +313,10 @@ class ImportScripts::Telligent < ImportScripts::Base
 
     create_categories(parent_categories) do |row|
       {
-        id: "G#{row['GroupID']}",
+        id: "G#{row["GroupID"]}",
         name: clean_category_name(row["Name"]),
         description: html_to_markdown(row["HtmlDescription"]),
-        position: row["SortOrder"]
+        position: row["SortOrder"],
       }
     end
 
@@ -320,28 +331,31 @@ class ImportScripts::Telligent < ImportScripts::Base
       parent_category_id = parent_category_id_for(row)
 
       if category_id = replace_with_category_id(child_categories, parent_category_id)
-        add_category(row['ForumId'], Category.find_by_id(category_id))
-        url = "f/#{row['ForumId']}"
+        add_category(row["ForumId"], Category.find_by_id(category_id))
+        url = "f/#{row["ForumId"]}"
         Permalink.create(url: url, category_id: category_id) unless Permalink.exists?(url: url)
         nil
       else
         {
-          id: row['ForumId'],
+          id: row["ForumId"],
           parent_category_id: parent_category_id,
           name: clean_category_name(row["Name"]),
           description: html_to_markdown(row["Description"]),
           position: row["SortOrder"],
-          post_create_action: proc do |category|
-            url = "f/#{row['ForumId']}"
-            Permalink.create(url: url, category_id: category.id) unless Permalink.exists?(url: url)
-          end
+          post_create_action:
+            proc do |category|
+              url = "f/#{row["ForumId"]}"
+              unless Permalink.exists?(url: url)
+                Permalink.create(url: url, category_id: category.id)
+              end
+            end,
         }
       end
     end
   end
 
   def parent_category_id_for(row)
-    category_id_from_imported_category_id("G#{row['GroupId']}") if row.key?("GroupId")
+    category_id_from_imported_category_id("G#{row["GroupId"]}") if row.key?("GroupId")
   end
 
   def replace_with_category_id(child_categories, parent_category_id)
@@ -351,23 +365,21 @@ class ImportScripts::Telligent < ImportScripts::Base
   def only_child?(child_categories, parent_category_id)
     count = 0
 
-    child_categories.each do |row|
-      count += 1 if parent_category_id_for(row) == parent_category_id
-    end
+    child_categories.each { |row| count += 1 if parent_category_id_for(row) == parent_category_id }
 
     count == 1
   end
 
   def clean_category_name(name)
-    CGI.unescapeHTML(name)
-      .strip
+    CGI.unescapeHTML(name).strip
   end
 
   def import_topics
     puts "", "Importing topics..."
 
     last_topic_id = -1
-    total_count = count("SELECT COUNT(1) AS count FROM te_Forum_Threads t WHERE #{ignored_forum_sql_condition}")
+    total_count =
+      count("SELECT COUNT(1) AS count FROM te_Forum_Threads t WHERE #{ignored_forum_sql_condition}")
 
     batches do |offset|
       rows = query(<<~SQL)
@@ -399,13 +411,16 @@ class ImportScripts::Telligent < ImportScripts::Base
           created_at: row["DateCreated"],
           closed: row["IsLocked"],
           views: row["TotalViews"],
-          post_create_action: proc do |action_post|
-            topic = action_post.topic
-            Jobs.enqueue_at(topic.pinned_until, :unpin_topic, topic_id: topic.id) if topic.pinned_until
-            url = "f/#{row['ForumId']}/t/#{row['ThreadId']}"
-            Permalink.create(url: url, topic_id: topic.id) unless Permalink.exists?(url: url)
-            import_topic_views(topic, row["TopicContentId"])
-          end
+          post_create_action:
+            proc do |action_post|
+              topic = action_post.topic
+              if topic.pinned_until
+                Jobs.enqueue_at(topic.pinned_until, :unpin_topic, topic_id: topic.id)
+              end
+              url = "f/#{row["ForumId"]}/t/#{row["ThreadId"]}"
+              Permalink.create(url: url, topic_id: topic.id) unless Permalink.exists?(url: url)
+              import_topic_views(topic, row["TopicContentId"])
+            end,
         }
 
         if row["StickyDate"] > Time.now
@@ -446,9 +461,8 @@ class ImportScripts::Telligent < ImportScripts::Base
   end
 
   def ignored_forum_sql_condition
-    @ignored_forum_sql_condition ||= @ignored_forum_ids.present? \
-      ? "t.ForumId NOT IN (#{@ignored_forum_ids.join(',')})" \
-      : "1 = 1"
+    @ignored_forum_sql_condition ||=
+      @ignored_forum_ids.present? ? "t.ForumId NOT IN (#{@ignored_forum_ids.join(",")})" : "1 = 1"
   end
 
   def import_posts
@@ -492,7 +506,8 @@ class ImportScripts::Telligent < ImportScripts::Base
       next if all_records_exist?(:post, rows.map { |row| row["ThreadReplyId"] })
 
       create_posts(rows, total: total_count, offset: offset) do |row|
-        imported_parent_id = row["ParentReplyId"]&.nonzero? ? row["ParentReplyId"] : import_topic_id(row["ThreadId"])
+        imported_parent_id =
+          row["ParentReplyId"]&.nonzero? ? row["ParentReplyId"] : import_topic_id(row["ThreadId"])
         parent_post = topic_lookup_from_imported_post_id(imported_parent_id)
         user_id = user_id_from_imported_user_id(row["UserId"]) || Discourse::SYSTEM_USER_ID
 
@@ -503,13 +518,13 @@ class ImportScripts::Telligent < ImportScripts::Base
             user_id: user_id,
             topic_id: parent_post[:topic_id],
             created_at: row["ThreadReplyDate"],
-            reply_to_post_number: parent_post[:post_number]
+            reply_to_post_number: parent_post[:post_number],
           }
 
           post[:custom_fields] = { is_accepted_answer: "true" } if row["IsFirstVerifiedAnswer"]
           post
         else
-          puts "Failed to import post #{row['ThreadReplyId']}. Parent was not found."
+          puts "Failed to import post #{row["ThreadReplyId"]}. Parent was not found."
         end
       end
     end
@@ -565,7 +580,7 @@ class ImportScripts::Telligent < ImportScripts::Base
           id: row["MessageId"],
           raw: raw_with_attachment(row, user_id, :message),
           user_id: user_id,
-          created_at: row["DateCreated"]
+          created_at: row["DateCreated"],
         }
 
         if current_conversation_id == row["ConversationId"]
@@ -574,7 +589,7 @@ class ImportScripts::Telligent < ImportScripts::Base
           if parent_post
             post[:topic_id] = parent_post[:topic_id]
           else
-            puts "Failed to import message #{row['MessageId']}. Parent was not found."
+            puts "Failed to import message #{row["MessageId"]}. Parent was not found."
             post = nil
           end
         else
@@ -583,7 +598,7 @@ class ImportScripts::Telligent < ImportScripts::Base
           post[:target_usernames] = get_recipient_usernames(row)
 
           if post[:target_usernames].empty?
-            puts "Private message without recipients. Skipping #{row['MessageId']}"
+            puts "Private message without recipients. Skipping #{row["MessageId"]}"
             post = nil
           end
 
@@ -611,7 +626,7 @@ class ImportScripts::Telligent < ImportScripts::Base
   def get_recipient_user_ids(participant_ids)
     return [] if participant_ids.blank?
 
-    user_ids = participant_ids.split(';')
+    user_ids = participant_ids.split(";")
     user_ids.uniq!
     user_ids.map!(&:strip)
   end
@@ -619,9 +634,9 @@ class ImportScripts::Telligent < ImportScripts::Base
   def get_recipient_usernames(row)
     import_user_ids = get_recipient_user_ids(row["ParticipantIds"])
 
-    import_user_ids.map! do |import_user_id|
-      find_user_by_import_id(import_user_id).try(:username)
-    end.compact
+    import_user_ids
+      .map! { |import_user_id| find_user_by_import_id(import_user_id).try(:username) }
+      .compact
   end
 
   def index_directory(root_directory)
@@ -646,17 +661,16 @@ class ImportScripts::Telligent < ImportScripts::Base
     filename = row["FileName"]
     return raw if @filestore_root_directory.blank? || filename.blank?
 
-    if row["IsRemote"]
-      return "#{raw}\n#{filename}"
-    end
+    return "#{raw}\n#{filename}" if row["IsRemote"]
 
-    path = File.join(
-      "telligent.evolution.components.attachments",
-      "%02d" % row["ApplicationTypeId"],
-      "%02d" % row["ApplicationId"],
-      "%02d" % row["ApplicationContentTypeId"],
-      ("%010d" % row["ContentId"]).scan(/.{2}/)
-    )
+    path =
+      File.join(
+        "telligent.evolution.components.attachments",
+        "%02d" % row["ApplicationTypeId"],
+        "%02d" % row["ApplicationId"],
+        "%02d" % row["ApplicationContentTypeId"],
+        ("%010d" % row["ContentId"]).scan(/.{2}/),
+      )
     path = fix_attachment_path(path, filename)
 
     if path && !embedded_paths.include?(path)
@@ -677,11 +691,11 @@ class ImportScripts::Telligent < ImportScripts::Base
   def print_file_not_found_error(type, path, row)
     case type
     when :topic
-      id = row['ThreadId']
+      id = row["ThreadId"]
     when :post
-      id = row['ThreadReplyId']
+      id = row["ThreadReplyId"]
     when :message
-      id = row['MessageId']
+      id = row["MessageId"]
     end
 
     STDERR.puts "Could not find file for #{type} #{id}: #{path}"
@@ -692,30 +706,31 @@ class ImportScripts::Telligent < ImportScripts::Base
     paths = []
     upload_ids = []
 
-    return [raw, paths, upload_ids] if @filestore_root_directory.blank?
+    return raw, paths, upload_ids if @filestore_root_directory.blank?
 
     ATTACHMENT_REGEXES.each do |regex|
-      raw = raw.gsub(regex) do
-        match_data = Regexp.last_match
+      raw =
+        raw.gsub(regex) do
+          match_data = Regexp.last_match
 
-        path = File.join(match_data[:directory], match_data[:path])
-        fixed_path = fix_attachment_path(path, match_data[:filename])
+          path = File.join(match_data[:directory], match_data[:path])
+          fixed_path = fix_attachment_path(path, match_data[:filename])
 
-        if fixed_path && File.file?(fixed_path)
-          filename = File.basename(fixed_path)
-          upload = @uploader.create_upload(user_id, fixed_path, filename)
+          if fixed_path && File.file?(fixed_path)
+            filename = File.basename(fixed_path)
+            upload = @uploader.create_upload(user_id, fixed_path, filename)
 
-          if upload.present? && upload.persisted?
-            paths << fixed_path
-            upload_ids << upload.id
-            @uploader.html_for_upload(upload, filename)
+            if upload.present? && upload.persisted?
+              paths << fixed_path
+              upload_ids << upload.id
+              @uploader.html_for_upload(upload, filename)
+            end
+          else
+            path = File.join(path, match_data[:filename])
+            print_file_not_found_error(type, path, row)
+            match_data[0]
           end
-        else
-          path = File.join(path, match_data[:filename])
-          print_file_not_found_error(type, path, row)
-          match_data[0]
         end
-      end
     end
 
     [raw, paths, upload_ids]
@@ -806,8 +821,8 @@ class ImportScripts::Telligent < ImportScripts::Base
 
     md = HtmlToMarkdown.new(html).to_markdown
     md.gsub!(/\[quote.*?\]/, "\n" + '\0' + "\n")
-    md.gsub!(/(?<!^)\[\/quote\]/, "\n[/quote]\n")
-    md.gsub!(/\[\/quote\](?!$)/, "\n[/quote]\n")
+    md.gsub!(%r{(?<!^)\[/quote\]}, "\n[/quote]\n")
+    md.gsub!(%r{\[/quote\](?!$)}, "\n[/quote]\n")
     md.gsub!(/\[View:(http.*?)[:\d\s]*?(?:\]|\z)/i, '\1')
     md.strip!
     md
@@ -832,13 +847,15 @@ class ImportScripts::Telligent < ImportScripts::Base
     properties = {}
     return properties if names.blank? || values.blank?
 
-    names.scan(PROPERTY_NAMES_REGEX).each do |property|
-      name = property[0]
-      start_index = property[1].to_i
-      end_index = start_index + property[2].to_i - 1
+    names
+      .scan(PROPERTY_NAMES_REGEX)
+      .each do |property|
+        name = property[0]
+        start_index = property[1].to_i
+        end_index = start_index + property[2].to_i - 1
 
-      properties[name] = values[start_index..end_index]
-    end
+        properties[name] = values[start_index..end_index]
+      end
 
     properties
   end
@@ -862,12 +879,12 @@ class ImportScripts::Telligent < ImportScripts::Base
 
   def add_permalink_normalizations
     normalizations = SiteSetting.permalink_normalizations
-    normalizations = normalizations.blank? ? [] : normalizations.split('|')
+    normalizations = normalizations.blank? ? [] : normalizations.split("|")
 
     add_normalization(normalizations, CATEGORY_LINK_NORMALIZATION)
     add_normalization(normalizations, TOPIC_LINK_NORMALIZATION)
 
-    SiteSetting.permalink_normalizations = normalizations.join('|')
+    SiteSetting.permalink_normalizations = normalizations.join("|")
   end
 
   def add_normalization(normalizations, normalization)

@@ -30,7 +30,7 @@ end
 
 UserOption.where(user_id: -1).update_all(
   email_messages_level: UserOption.email_level_types[:never],
-  email_level: UserOption.email_level_types[:never]
+  email_level: UserOption.email_level_types[:never],
 )
 
 Group.user_trust_level_change!(-1, TrustLevel[4])
@@ -44,22 +44,25 @@ if ENV["SMOKE"] == "1"
     ue.user_id = 0
   end
 
-  smoke_user = User.seed do |u|
-    u.id = 0
-    u.name = "smoke_user"
-    u.username = "smoke_user"
-    u.username_lower = "smoke_user"
-    u.password = "P4ssw0rd"
-    u.active = true
-    u.approved = true
-    u.approved_at = Time.now
-    u.trust_level = TrustLevel[3]
-  end.first
+  smoke_user =
+    User
+      .seed do |u|
+        u.id = 0
+        u.name = "smoke_user"
+        u.username = "smoke_user"
+        u.username_lower = "smoke_user"
+        u.password = "P4ssw0rd"
+        u.active = true
+        u.approved = true
+        u.approved_at = Time.now
+        u.trust_level = TrustLevel[3]
+      end
+      .first
 
   UserOption.where(user_id: smoke_user.id).update_all(
     email_digests: false,
     email_messages_level: UserOption.email_level_types[:never],
-    email_level: UserOption.email_level_types[:never]
+    email_level: UserOption.email_level_types[:never],
   )
 
   EmailToken.where(user_id: smoke_user.id).update_all(confirmed: true)

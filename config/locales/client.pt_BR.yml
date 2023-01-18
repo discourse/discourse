@@ -315,7 +315,6 @@ pt_BR:
       remove_reminder_keep_bookmark: "Remover lembrete e manter favorito"
       created_with_reminder: "Você marcou esta postagem com um lembrete em %{date}. %{name}"
       created_with_reminder_generic: "Você marcou isso como lembrete em %{date}. %{name}"
-      remove: "Remover favorito"
       delete: "Excluir favorito"
       confirm_delete: "Tem certeza de que deseja excluir este favorito? O lembrete também será excluído."
       confirm_clear: "Você tem certeza de que deseja apagar todos os seus favoritos deste tópico?"
@@ -385,7 +384,6 @@ pt_BR:
     enable: "Ativar"
     disable: "Desativar"
     continue: "Continuar"
-    undo: "Desfazer"
     switch_to_anon: "Entrar no Modo anônimo"
     switch_from_anon: "Sair do Modo anônimo"
     banner:
@@ -682,6 +680,7 @@ pt_BR:
         denied: "negado"
         undone: "solicitação desfeita"
         handle: "tratar solicitação de associação"
+        undo: "Desfazer"
       manage:
         title: "Gerenciar"
         name: "Nome"
@@ -1051,7 +1050,6 @@ pt_BR:
         perm_denied_expl: "Você negou permissão para notificações. Permita as notificações nas configurações do seu navegador."
         disable: "Desativar notificações"
         enable: "Ativar notificações"
-        each_browser_note: 'Observação: é preciso alterar esta configuração em cada navegador utilizado. Todas as notificações serão desativadas no modo "Não incomodar", seja qual for a configuração.'
         consent_prompt: "Você quer notificações em tempo real quando as pessoas responderem às suas postagens?"
       dismiss: "Descartar"
       dismiss_notifications: "Descartar tudo"
@@ -3121,7 +3119,6 @@ pt_BR:
         create_for_topic: "Criar favorito para o tópico"
         edit: "Editar favorito"
         edit_for_topic: "Editar favorito para o tópico"
-        created: "Criado"
         updated: "Atualizado"
         name: "Nome"
         name_placeholder: "Para que serve este favorito?"
@@ -3423,7 +3420,6 @@ pt_BR:
     category_title: "Categoria"
     history_capped_revisions: "Histórico, últimas 100 revisões"
     history: "Histórico"
-    changed_by: "de %{author}"
     raw_email:
       title: "E-mails recebidos"
       not_available: "Não disponível!"
@@ -3838,7 +3834,6 @@ pt_BR:
       new_count:
         one: "%{count} nova"
         other: "%{count} novas"
-      toggle_section: "alternar seção"
       more: "Mais"
       all_categories: "Todas as categorias"
       all_tags: "Todas as etiquetas"
@@ -3847,7 +3842,6 @@ pt_BR:
           header_link_text: "Sobre"
         messages:
           header_link_text: "Mensagens"
-          header_action_title: "criar uma mensagem pessoal"
           links:
             inbox: "Caixa de entrada"
             sent: "Enviadas"
@@ -3864,7 +3858,6 @@ pt_BR:
           none: "Você não adicionou nenhuma etiqueta."
           click_to_get_started: "Clique aqui para começar."
           header_link_text: "Etiquetas"
-          header_action_title: "editar as suas etiquetas da barra lateral"
           configure_defaults: "Configurar padrões"
         categories:
           links:
@@ -3874,11 +3867,9 @@ pt_BR:
           none: "Você não adicionou nenhuma categoria."
           click_to_get_started: "Clique aqui para começar."
           header_link_text: "Categorias"
-          header_action_title: "editar suas categorias de barra lateral"
           configure_defaults: "Configurar padrões"
         community:
           header_link_text: "Comunidade"
-          header_action_title: "criar um novo tópico"
           links:
             about:
               content: "Sobre"
@@ -3893,10 +3884,8 @@ pt_BR:
               content: "FAQ"
             groups:
               content: "Grupos"
-              title: "Todos os grupos"
             users:
               content: "Usuários(as)"
-              title: "Todos(as) os(as) usuários(as)"
             my_posts:
               content: "Minhas postagens"
               draft_count:
@@ -3904,7 +3893,6 @@ pt_BR:
                 other: "%{count} rascunhos"
             review:
               content: "Revisar"
-              title: "revisar"
               pending_count: "%{count} pendente"
     welcome_topic_banner:
       title: "Crie seu Tópico de Boas-Vindas"
@@ -4351,7 +4339,6 @@ pt_BR:
         button_title: "Enviar convites"
       customize:
         title: "Personalizar"
-        long_title: "Personalizações do site"
         preview: "pré-visualização"
         explain_preview: "Veja o site com este tema ativado"
         save: "Salvar"
@@ -4556,9 +4543,9 @@ pt_BR:
           new_name: "Nova paleta de cores"
           copy_name_prefix: "Copiar de"
           delete_confirm: "Excluir esta paleta de cores?"
-          undo: "desfazer"
+          undo: "Desfazer"
           undo_title: "Desfaça suas alterações nesta cor desde a última vez que foi salva."
-          revert: "reverter"
+          revert: "Reverter"
           revert_title: "Redefina esta cor na paleta de cores padrão do Discourse."
           primary:
             name: "primário(a)"

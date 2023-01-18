@@ -2,7 +2,10 @@
   @sectionName="messages"
   @headerActionIcon="plus"
   @headerActions={{array
-    (hash action=(fn (route-action "composePrivateMessage") null null))
+    (hash
+      action=(fn (route-action "composePrivateMessage") null null)
+      title=(i18n "sidebar.sections.messages.header_action_title")
+    )
   }}
   @headerActionsIcon="plus"
   @headerLinkText={{i18n "sidebar.sections.messages.header_link_text"}}

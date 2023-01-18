@@ -1,11 +1,12 @@
 {{#if this.currentUser.redesigned_user_page_nav_enabled}}
   <DSection @pageClass="user-preferences" />
   <div class="user-navigation user-navigation-secondary">
-    <HorizontalOverflowNav>
+    <HorizontalOverflowNav @ariaLabel="User secondary - preferences">
       <UserNav::PreferencesNav
         @currentUser={{this.currentUser}}
         @model={{this.model}}
         @siteSettings={{this.siteSettings}}
+        @ariaCurrentContext="subNav"
       />
     </HorizontalOverflowNav>
   </div>

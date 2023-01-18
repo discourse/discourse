@@ -22,15 +22,14 @@
 # that correctly and will import the replies in the wrong order.
 # You should run `rake posts:reorder_posts` after the import.
 
-require 'csv'
-require 'set'
+require "csv"
+require "set"
 require File.expand_path(File.dirname(__FILE__) + "/base.rb")
-require 'reverse_markdown' # gem 'reverse_markdown'
+require "reverse_markdown" # gem 'reverse_markdown'
 
 # Call it like this:
 #   RAILS_ENV=production bundle exec ruby script/import_scripts/getsatisfaction.rb DIRNAME
 class ImportScripts::GetSatisfaction < ImportScripts::Base
-
   IMPORT_ARCHIVED_TOPICS = false
 
   # The script classifies each topic as private when at least one associated category
@@ -85,22 +84,24 @@ class ImportScripts::GetSatisfaction < ImportScripts::Base
       previous_line = nil
 
       File.open(target_filename, "w") do |file|
-        File.open(source_filename).each_line do |line|
-          line.gsub!(/(?<![^\\]\\)\\"/, '""')
-          line.gsub!(/\\\\/, '\\')
+        File
+          .open(source_filename)
+          .each_line do |line|
+            line.gsub!(/(?<![^\\]\\)\\"/, '""')
+            line.gsub!(/\\\\/, '\\')
 
-          if previous_line
-            previous_line << "\n" unless line.starts_with?(",")
-            line = "#{previous_line}#{line}"
-            previous_line = nil
-          end
+            if previous_line
+              previous_line << "\n" unless line.starts_with?(",")
+              line = "#{previous_line}#{line}"
+              previous_line = nil
+            end
 
-          if line.gsub!(/,\+1\\\R$/m, ',"+1"').present?
-            previous_line = line
-          else
-            file.puts(line)
+            if line.gsub!(/,\+1\\\R$/m, ',"+1"').present?
+              previous_line = line
+            else
+              file.puts(line)
+            end
           end
-        end
 
         file.puts(previous_line) if previous_line
       end
@@ -108,18 +109,18 @@ class ImportScripts::GetSatisfaction < ImportScripts::Base
   end
 
   def csv_parse(table_name)
-    CSV.foreach(csv_filename(table_name),
-                headers: true,
-                header_converters: :symbol,
-                skip_blanks: true,
-                encoding: 'bom|utf-8') { |row| yield row }
+    CSV.foreach(
+      csv_filename(table_name),
+      headers: true,
+      header_converters: :symbol,
+      skip_blanks: true,
+      encoding: "bom|utf-8",
+    ) { |row| yield row }
   end
 
   def total_rows(table_name)
-    CSV.foreach(csv_filename(table_name),
-                headers: true,
-                skip_blanks: true,
-                encoding: 'bom|utf-8')
+    CSV
+      .foreach(csv_filename(table_name), headers: true, skip_blanks: true, encoding: "bom|utf-8")
       .inject(0) { |c, _| c + 1 }
   end
 
@@ -138,13 +139,11 @@ class ImportScripts::GetSatisfaction < ImportScripts::Base
         name: row[:realname],
         username: row[:nickname],
         created_at: DateTime.parse(row[:joined_date]),
-        active: true
+        active: true,
       }
 
       count += 1
-      if count % BATCH_SIZE == 0
-        import_users_batch!(users, count - users.length, total)
-      end
+      import_users_batch!(users, count - users.length, total) if count % BATCH_SIZE == 0
     end
 
     import_users_batch!(users, count - users.length, total)
@@ -153,9 +152,7 @@ class ImportScripts::GetSatisfaction < ImportScripts::Base
   def import_users_batch!(users, offset, total)
     return if users.empty?
 
-    create_users(users, offset: offset, total: total) do |user|
-      user
-    end
+    create_users(users, offset: offset, total: total) { |user| user }
     users.clear
   end
 
@@ -168,13 +165,11 @@ class ImportScripts::GetSatisfaction < ImportScripts::Base
       rows << {
         id: row[:category_id],
         name: row[:name],
-        description: row[:description].present? ? normalize_raw!(row[:description]) : nil
+        description: row[:description].present? ? normalize_raw!(row[:description]) : nil,
       }
     end
 
-    create_categories(rows) do |row|
-      row
-    end
+    create_categories(rows) { |row| row }
   end
 
   def import_topic_id(topic_id)
@@ -200,7 +195,13 @@ class ImportScripts::GetSatisfaction < ImportScripts::Base
       else
         topic = map_post(row)
         topic[:id] = topic_id
-        topic[:title] = row[:subject].present? ? row[:subject].strip[0...255] : "Topic title missing"
+        topic[:title] = (
+          if row[:subject].present?
+            row[:subject].strip[0...255]
+          else
+            "Topic title missing"
+          end
+        )
         topic[:category] = category_id(row)
         topic[:archived] = row[:archived_at].present?
 
@@ -210,9 +211,7 @@ class ImportScripts::GetSatisfaction < ImportScripts::Base
       topics << topic
       count += 1
 
-      if count % BATCH_SIZE == 0
-        import_topics_batch!(topics, count - topics.length, total)
-      end
+      import_topics_batch!(topics, count - topics.length, total) if count % BATCH_SIZE == 0
     end
 
     import_topics_batch!(topics, count - topics.length, total)
@@ -290,9 +289,7 @@ class ImportScripts::GetSatisfaction < ImportScripts::Base
       posts << post
       count += 1
 
-      if count % BATCH_SIZE == 0
-        import_posts_batch!(posts, count - posts.length, total)
-      end
+      import_posts_batch!(posts, count - posts.length, total) if count % BATCH_SIZE == 0
     end
 
     import_posts_batch!(posts, count - posts.length, total)
@@ -324,7 +321,7 @@ class ImportScripts::GetSatisfaction < ImportScripts::Base
     {
       user_id: user_id_from_imported_user_id(row[:user_id]) || Discourse.system_user.id,
       created_at: DateTime.parse(row[:created_at]),
-      raw: normalize_raw!(row[:formatted_content])
+      raw: normalize_raw!(row[:formatted_content]),
     }
   end
 
@@ -334,7 +331,7 @@ class ImportScripts::GetSatisfaction < ImportScripts::Base
 
     # hoist code
     hoisted = {}
-    raw.gsub!(/(<pre>\s*)?<code>(.*?)<\/code>(\s*<\/pre>)?/mi) do
+    raw.gsub!(%r{(<pre>\s*)?<code>(.*?)</code>(\s*</pre>)?}mi) do
       code = $2
       hoist = SecureRandom.hex
       # tidy code, wow, this is impressively crazy
@@ -350,9 +347,7 @@ class ImportScripts::GetSatisfaction < ImportScripts::Base
     # in this case double space works best ... so odd
     raw.gsub!("   ", "\n\n")
 
-    hoisted.each do |hoist, code|
-      raw.gsub!(hoist, "\n```\n#{code}\n```\n")
-    end
+    hoisted.each { |hoist, code| raw.gsub!(hoist, "\n```\n#{code}\n```\n") }
 
     raw = CGI.unescapeHTML(raw)
     raw = ReverseMarkdown.convert(raw)
@@ -360,7 +355,7 @@ class ImportScripts::GetSatisfaction < ImportScripts::Base
   end
 
   def create_permalinks
-    puts '', 'Creating Permalinks...', ''
+    puts "", "Creating Permalinks...", ""
 
     Topic.listable_topics.find_each do |topic|
       tcf = topic.first_post.custom_fields
@@ -372,7 +367,6 @@ class ImportScripts::GetSatisfaction < ImportScripts::Base
       end
     end
   end
-
 end
 
 unless ARGV[0] && Dir.exist?(ARGV[0])
