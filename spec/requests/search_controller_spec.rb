@@ -228,11 +228,9 @@ RSpec.describe SearchController do
       expect(response.status).to eq(200)
     end
 
-    context 'when rate limited' do
+    context "when rate limited" do
       def unlimited_request(ip_address = "1.2.3.4")
-        get "/search/query.json", params: {
-              term: 'wookie'
-            }, env: { REMOTE_ADDR: ip_address  }
+        get "/search/query.json", params: { term: "wookie" }, env: { REMOTE_ADDR: ip_address }
 
         expect(response.status).to eq(200)
         json = response.parsed_body
@@ -240,15 +238,13 @@ RSpec.describe SearchController do
       end
 
       def limited_request(ip_address = "1.2.3.4")
-        get "/search/query.json", params: {
-              term: 'wookie'
-            }, env: { REMOTE_ADDR: ip_address }
+        get "/search/query.json", params: { term: "wookie" }, env: { REMOTE_ADDR: ip_address }
         expect(response.status).to eq(429)
         json = response.parsed_body
         expect(json["message"]).to eq(I18n.t("rate_limiter.slow_down"))
       end
 
-      it 'rate limits anon searches per user' do
+      it "rate limits anon searches per user" do
         SiteSetting.rate_limit_search_anon_user_per_second = 2
         SiteSetting.rate_limit_search_anon_user_per_minute = 3
         RateLimiter.enable
@@ -270,7 +266,7 @@ RSpec.describe SearchController do
         unlimited_request("100.0.0.0")
       end
 
-      it 'rate limits anon searches globally' do
+      it "rate limits anon searches globally" do
         SiteSetting.rate_limit_search_anon_global_per_second = 2
         SiteSetting.rate_limit_search_anon_global_per_minute = 3
         RateLimiter.enable
@@ -305,9 +301,7 @@ RSpec.describe SearchController do
             expect(json["grouped_search_result"]["error"]).to eq(nil)
           end
 
-          get "/search/query.json", params: {
-                term: 'wookie'
-              }
+          get "/search/query.json", params: { term: "wookie" }
           expect(response.status).to eq(429)
           json = response.parsed_body
           expect(json["message"]).to eq(I18n.t("rate_limiter.slow_down"))
@@ -373,12 +367,9 @@ RSpec.describe SearchController do
       expect(SearchLog.where(term: "bantha")).to be_blank
     end
 
-    context 'when rate limited' do
-
+    context "when rate limited" do
       def unlimited_request(ip_address = "1.2.3.4")
-        get "/search.json", params: {
-              q: 'wookie'
-            }, env: { REMOTE_ADDR: ip_address  }
+        get "/search.json", params: { q: "wookie" }, env: { REMOTE_ADDR: ip_address }
 
         expect(response.status).to eq(200)
         json = response.parsed_body
@@ -386,15 +377,13 @@ RSpec.describe SearchController do
       end
 
       def limited_request(ip_address = "1.2.3.4")
-        get "/search.json", params: {
-              q: 'wookie'
-            }, env: { REMOTE_ADDR: ip_address }
+        get "/search.json", params: { q: "wookie" }, env: { REMOTE_ADDR: ip_address }
         expect(response.status).to eq(429)
         json = response.parsed_body
         expect(json["message"]).to eq(I18n.t("rate_limiter.slow_down"))
       end
 
-      it 'rate limits anon searches per user' do
+      it "rate limits anon searches per user" do
         SiteSetting.rate_limit_search_anon_user_per_second = 2
         SiteSetting.rate_limit_search_anon_user_per_minute = 3
         RateLimiter.enable
@@ -414,7 +403,7 @@ RSpec.describe SearchController do
         unlimited_request("1.2.3.100")
       end
 
-      it 'rate limits anon searches globally' do
+      it "rate limits anon searches globally" do
         SiteSetting.rate_limit_search_anon_global_per_second = 2
         SiteSetting.rate_limit_search_anon_global_per_minute = 3
         RateLimiter.enable
@@ -448,9 +437,7 @@ RSpec.describe SearchController do
             expect(json["grouped_search_result"]["error"]).to eq(nil)
           end
 
-          get "/search.json", params: {
-                q: 'bantha'
-              }
+          get "/search.json", params: { q: "bantha" }
           expect(response.status).to eq(429)
           json = response.parsed_body
           expect(json["message"]).to eq(I18n.t("rate_limiter.slow_down"))

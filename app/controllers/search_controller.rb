@@ -49,7 +49,10 @@ class SearchController < ApplicationController
     search_args[:user_id] = current_user.id if current_user.present?
 
     if rate_limit_search
-      return render json: failed_json.merge(message: I18n.t("rate_limiter.slow_down")), status: :too_many_requests
+      return(
+        render json: failed_json.merge(message: I18n.t("rate_limiter.slow_down")),
+               status: :too_many_requests
+      )
     elsif site_overloaded?
       result =
         Search::GroupedSearchResults.new(
@@ -104,7 +107,10 @@ class SearchController < ApplicationController
     ].present?
 
     if rate_limit_search
-      return render json: failed_json.merge(message: I18n.t("rate_limiter.slow_down")), status: :too_many_requests
+      return(
+        render json: failed_json.merge(message: I18n.t("rate_limiter.slow_down")),
+               status: :too_many_requests
+      )
     elsif site_overloaded?
       result =
         GroupedSearchResults.new(
@@ -163,12 +169,42 @@ class SearchController < ApplicationController
   def rate_limit_search
     begin
       if current_user.present?
-        RateLimiter.new(current_user, "search-min", SiteSetting.rate_limit_search_user, 1.minute, error_code: 429).performed!
+        RateLimiter.new(
+          current_user,
+          "search-min",
+          SiteSetting.rate_limit_search_user,
+          1.minute,
+          error_code: 429,
+        ).performed!
       else
-        RateLimiter.new(nil, "search-min-#{request.remote_ip}-per-sec", SiteSetting.rate_limit_search_anon_user_per_second, 1.second, error_code: 429).performed!
-        RateLimiter.new(nil, "search-min-#{request.remote_ip}-per-min", SiteSetting.rate_limit_search_anon_user_per_minute, 1.minute, error_code: 429).performed!
-        RateLimiter.new(nil, "search-min-anon-global-per-sec", SiteSetting.rate_limit_search_anon_global_per_second, 1.second, error_code: 429).performed!
-        RateLimiter.new(nil, "search-min-anon-global-per-min", SiteSetting.rate_limit_search_anon_global_per_minute, 1.minute, error_code: 429).performed!
+        RateLimiter.new(
+          nil,
+          "search-min-#{request.remote_ip}-per-sec",
+          SiteSetting.rate_limit_search_anon_user_per_second,
+          1.second,
+          error_code: 429,
+        ).performed!
+        RateLimiter.new(
+          nil,
+          "search-min-#{request.remote_ip}-per-min",
+          SiteSetting.rate_limit_search_anon_user_per_minute,
+          1.minute,
+          error_code: 429,
+        ).performed!
+        RateLimiter.new(
+          nil,
+          "search-min-anon-global-per-sec",
+          SiteSetting.rate_limit_search_anon_global_per_second,
+          1.second,
+          error_code: 429,
+        ).performed!
+        RateLimiter.new(
+          nil,
+          "search-min-anon-global-per-min",
+          SiteSetting.rate_limit_search_anon_global_per_minute,
+          1.minute,
+          error_code: 429,
+        ).performed!
       end
     rescue RateLimiter::LimitExceeded => e
       return e
