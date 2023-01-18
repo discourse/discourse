@@ -41,12 +41,13 @@ jobs:
 
       - name: Setup licensed
         run: |
-          bundle add licensed --skip-install
-          bundle config --local path vendor/bundle
-          bundle config --local deployment true
-          bundle config --local without development
-          bundle install --jobs 4
-          bundle clean
+          export BUNDLER_VER=$(awk '/BUNDLED WITH/ { getline; gsub(/ /,""); print $0 }' Gemfile.lock)
+          mkdir licensed
+          cd licensed
+          bundle init
+          ruby -e 'File.write("Gemfile.lock", File.read("Gemfile.lock").sub(/(BUNDLED WITH\n\s+)(.+)/, "\\1#{ENV["BUNDLER_VER"]}"))'
+          bundle config --local path .
+          bundle add licensed
 
       - name: Get yarn cache directory
         id: yarn-cache-dir
@@ -63,6 +64,7 @@ jobs:
 
       - name: Check RubyGems Licenses
         if: ${{ !cancelled() }}
+        working-directory: ./licensed
         run: |
           bundle exec licensed cache
           bundle exec licensed status
