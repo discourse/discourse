@@ -6108,7 +6108,6 @@ en:
         sample: "Paste the following HTML code into your site to create and embed Discourse topics. Replace <b>REPLACE_ME</b> with the canonical URL of the page you are embedding it on."
         title: "Embedding"
         host: "Allowed Hosts"
-        class_name: "Class Name"
         allowed_paths: "Path Allowlist"
         edit: "edit"
         category: "Post to Category"
