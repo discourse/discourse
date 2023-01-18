@@ -47,7 +47,7 @@ class Stylesheet::Manager::Builder
           color_scheme_id: @color_scheme&.id,
           load_paths: load_paths,
         )
-      rescue SassC::SyntaxError => e
+      rescue SassC::SyntaxError, SassC::NotRenderedError => e
         if Stylesheet::Importer::THEME_TARGETS.include?(@target.to_s)
           # no special errors for theme, handled in theme editor
           ["", nil]

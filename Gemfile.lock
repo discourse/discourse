@@ -14,6 +14,14 @@ GIT
       concurrent-ruby (~> 1.0)
       rack (> 1, < 3)
 
+GIT
+  remote: https://github.com/tablecheck/sassc-ruby
+  revision: 9da935428da9586fadb1e01947766a4147f5ebfb
+  branch: embedded-sass-merge
+  specs:
+    sassc (3.0.0)
+      sass-embedded (~> 1.54)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -159,6 +167,7 @@ GEM
     gc_tracer (1.5.1)
     globalid (1.1.0)
       activesupport (>= 5.0)
+    google-protobuf (3.21.12)
     guess_html_encoding (0.0.11)
     hana (1.3.7)
     hashdiff (1.0.1)
@@ -429,9 +438,17 @@ GEM
     sanitize (6.0.1)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
-    sassc (2.0.1)
-      ffi (~> 1.9)
-      rake
+    sass-embedded (1.57.1)
+      google-protobuf (~> 3.21)
+      rake (>= 10.0.0)
+    sass-embedded (1.57.1-aarch64-linux-gnu)
+      google-protobuf (~> 3.21)
+    sass-embedded (1.57.1-arm64-darwin)
+      google-protobuf (~> 3.21)
+    sass-embedded (1.57.1-x86_64-darwin)
+      google-protobuf (~> 3.21)
+    sass-embedded (1.57.1-x86_64-linux-gnu)
+      google-protobuf (~> 3.21)
     sassc-rails (2.1.2)
       railties (>= 4.0.0)
       sassc (>= 2.0)
@@ -627,7 +644,7 @@ DEPENDENCIES
   ruby-readability
   rubyzip
   sanitize
-  sassc (= 2.0.1)
+  sassc!
   sassc-rails
   selenium-webdriver
   shoulda-matchers

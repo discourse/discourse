@@ -231,7 +231,7 @@ gem "logster"
 
 # NOTE: later versions of sassc are causing a segfault, possibly dependent on processer architecture
 # and until resolved should be locked at 2.0.1
-gem "sassc", "2.0.1", require: false
+gem "sassc", git: "https://github.com/tablecheck/sassc-ruby", branch: "embedded-sass-merge"
 gem "sassc-rails"
 
 gem "rotp", require: false
