@@ -167,6 +167,12 @@ class EmbedController < ApplicationController
       if params[:class_name]
         " class=\"#{params[:class_name]}\""
       elsif embeddable_host.present? && embeddable_host.class_name.present?
+        Discourse.deprecate(
+          "class_name field of EmbeddableHost has been deprecated. Prefer passing class_name as a parameter.",
+          since: "3.1.0.beta1",
+          drop_from: "3.2",
+        )
+
         " class=\"#{embeddable_host.class_name}\""
       else
         ""
