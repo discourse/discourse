@@ -194,23 +194,24 @@ $search-pad-horizontal: 0.5em;
     .search-item-user img.avatar {
       width: 20px;
       height: 20px;
-      margin-right: 5px;
+      margin-right: 0.5em;
     }
 
     .label-suffix {
       color: var(--primary-medium);
+      margin-right: 0.33em;
+    }
+
+    .search-item-tag {
+      color: var(--primary-high);
     }
 
     .extra-hint {
       color: var(--primary-low-mid);
       font-size: var(--font-down-1);
-      float: right;
-      margin-top: 2px;
     }
 
     .search-item-slug {
-      margin-right: 5px;
-
       .badge-wrapper {
         font-size: var(--font-0);
         margin-left: 2px;
@@ -230,15 +231,19 @@ $search-pad-horizontal: 0.5em;
     .search-result-tag,
     .search-menu-assistant {
       .search-item-prefix {
-        padding-right: 5px;
+        margin-right: 0.33em;
+      }
+      .badge-wrapper {
+        font-size: var(--font-0);
+        margin-right: 0.5em;
       }
       .search-link {
         display: flex;
         flex-wrap: wrap;
-        align-items: center;
+        align-items: baseline;
         @include ellipsis;
         .d-icon {
-          margin-right: 5px;
+          margin-right: 0.33em;
           vertical-align: middle;
         }
         .d-icon-tag {
