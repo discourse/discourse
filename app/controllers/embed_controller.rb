@@ -78,7 +78,6 @@ class EmbedController < ApplicationController
 
   def comments
     embed_url = params[:embed_url]
-    embed_username = params[:discourse_username]
     embed_topic_id = params[:topic_id]&.to_i
 
     unless embed_topic_id || EmbeddableHost.url_allowed?(embed_url)
@@ -116,7 +115,6 @@ class EmbedController < ApplicationController
         :retrieve_topic,
         user_id: current_user.try(:id),
         embed_url: embed_url,
-        author_username: embed_username,
         referer: request.env["HTTP_REFERER"],
       )
       render "loading"
