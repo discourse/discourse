@@ -4361,6 +4361,18 @@ en:
       all_categories: "All categories"
       all_tags: "All tags"
       sections:
+        custom:
+          add: "Add custom section"
+          edit: "Edit custom section"
+          name: "Section title"
+          save: "Save"
+          delete: "Delete"
+          delete_confirm: "Are you sure you want to delete this section?"
+          links:
+            name: "Link name"
+            points_to: "Points to"
+            add: "Add link"
+            delete: "Delete link"
         about:
           header_link_text: "About"
         messages:
