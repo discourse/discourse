@@ -18,8 +18,11 @@ export default Controller.extend({
     const html = `<div id='discourse-comments'></div>
 
 <script type="text/javascript">
-  DiscourseEmbed = { discourseUrl: '${baseUrl}/',
-                     discourseEmbedUrl: 'REPLACE_ME' };
+  DiscourseEmbed = {
+    discourseUrl: '${baseUrl}/',
+    discourseEmbedUrl: 'REPLACE_ME',
+    // className: 'REPLACE_ME_TOO',
+  };
 
   (function() {
     var d = document.createElement('script'); d.type = 'text/javascript'; d.async = true;

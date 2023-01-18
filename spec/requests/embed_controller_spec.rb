@@ -349,6 +349,19 @@ RSpec.describe EmbedController do
 
         expect(response.body).to match('class="example"')
       end
+
+      it "contains custom class name from params" do
+        get "/embed/comments",
+            params: {
+              embed_url: embed_url,
+              class_name: "param-class-name",
+            },
+            headers: {
+              "REFERER" => "https://example.com/some-other-path",
+            }
+
+        expect(response.body).to match('class="param-class-name"')
+      end
     end
 
     context "with CSP frame-ancestors enabled" do

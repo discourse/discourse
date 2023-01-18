@@ -164,7 +164,9 @@ class EmbedController < ApplicationController
     embeddable_host = EmbeddableHost.record_for_url(request.referer)
 
     @embeddable_css_class =
-      if embeddable_host.present? && embeddable_host.class_name.present?
+      if params[:class_name]
+        " class=\"#{params[:class_name]}\""
+      elsif embeddable_host.present? && embeddable_host.class_name.present?
         " class=\"#{embeddable_host.class_name}\""
       else
         ""
