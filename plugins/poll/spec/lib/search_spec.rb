@@ -24,19 +24,20 @@ RSpec.describe Search do
   end
 
   after do
-    SiteSetting.poll_enabled = true
     SearchIndexer.disable
   end
 
-  describe "in:polls" do
-    it "allows filtering search to posts containing polls" do
-      results = Search.execute("rainbow in:polls", guardian: Guardian.new())
+  context "when using in:polls" do
+    it "displays only posts containing polls" do
+      results = Search.execute("rainbow in:polls", guardian: Guardian.new)
       expect(results.posts).to contain_exactly(post_with_poll)
     end
+  end
 
-    it "ignores in:polls if plugin is disabled" do
+  context "when polls are disabled" do
+    it "ignores in:polls filter" do
       SiteSetting.poll_enabled = false
-      results = Search.execute("rainbow in:polls", guardian: Guardian.new())
+      results = Search.execute("rainbow in:polls", guardian: Guardian.new)
       expect(results.posts).to contain_exactly(regular_post, post_with_poll)
     end
   end
