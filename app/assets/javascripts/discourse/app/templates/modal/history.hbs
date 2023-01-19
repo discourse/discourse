@@ -251,7 +251,7 @@
         />
       {{/if}}
 
-      {{#if this.canPurge}}
+      {{#if this.displayPurgeButton}}
         <DButton
           @action={{action "purgeVersions"}}
           @icon="far-trash-alt"

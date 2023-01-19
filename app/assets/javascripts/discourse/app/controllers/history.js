@@ -227,11 +227,12 @@ export default Controller.extend(ModalFunctionality, {
     return this.currentUser && this.currentUser.get("staff");
   },
 
-  @discourseComputed()
-  canPurge() {
+  @discourseComputed("model.previous_hidden")
+  displayPurgeButton(previousHidden) {
     return (
-      this.siteSettings.can_permanently_delete_revisions &&
-      this.currentUser?.staff
+      this.siteSettings.can_permanently_delete &&
+      this.currentUser?.staff &&
+      previousHidden
     );
   },
 

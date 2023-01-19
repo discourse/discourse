@@ -2050,7 +2050,7 @@ RSpec.describe PostsController do
   end
 
   describe "#purge_revisions" do
-    before { SiteSetting.can_permanently_delete_revisions = true }
+    before { SiteSetting.can_permanently_delete = true }
 
     fab!(:post) do
       Fabricate(
@@ -2094,8 +2094,8 @@ RSpec.describe PostsController do
         expect(response).to_not be_successful
       end
 
-      it "fails when 'can_permanently_delete_revisions' setting is false" do
-        SiteSetting.can_permanently_delete_revisions = false
+      it "fails when 'can_permanently_delete' setting is false" do
+        SiteSetting.can_permanently_delete = false
         delete "/posts/#{post_id}/revisions/purge.json"
         expect(response).to_not be_successful
       end

@@ -2383,7 +2383,6 @@ en:
     share_quote_visibility: "Determine when to show quote sharing buttons: never, to anonymous users only or all users. "
 
     create_revision_on_bulk_topic_moves: "Create revision for first posts when topics are moved into a new category in bulk."
-    can_permanently_delete_revisions: "Allow staff members to permanently delete the history of revisions on a post without removing the revision changes."
 
     allow_changing_staged_user_tracking: "Allow a staged user's category and tag notification preferences to be changed by an admin user."
     use_email_for_username_and_name_suggestions: "Use the first part of email addresses for username and name suggestions. Note that this makes it easier for the public to guess full user email addresses (because a large proportion of people share common services like `gmail.com`)."

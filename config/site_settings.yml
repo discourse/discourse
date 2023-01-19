@@ -2539,10 +2539,6 @@ uncategorized:
 
   create_revision_on_bulk_topic_moves:
     default: true
-  can_permanently_delete_revisions:
-    default: false
-    client: true
-    hidden: true
 
   allow_changing_staged_user_tracking: false
 
