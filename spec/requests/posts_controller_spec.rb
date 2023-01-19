@@ -2049,6 +2049,76 @@ RSpec.describe PostsController do
     end
   end
 
+  describe "#permanently_delete_revisions" do
+    before { SiteSetting.can_permanently_delete = true }
+
+    fab!(:post) do
+      Fabricate(
+        :post,
+        user: Fabricate(:user),
+        raw: "Lorem ipsum dolor sit amet, cu nam libris tractatos, ancillae senserit ius ex",
+      )
+    end
+
+    fab!(:post_with_no_revisions) do
+      Fabricate(
+        :post,
+        user: Fabricate(:user),
+        raw: "Lorem ipsum dolor sit amet, cu nam libris tractatos, ancillae senserit ius ex",
+      )
+    end
+
+    fab!(:post_revision) { Fabricate(:post_revision, post: post) }
+    fab!(:post_revision_2) { Fabricate(:post_revision, post: post) }
+
+    let(:post_id) { post.id }
+
+    describe "when logged in as a regular user" do
+      it "does not delete revisions" do
+        sign_in(user)
+        delete "/posts/#{post_id}/revisions/permanently_delete.json"
+        expect(response).to_not be_successful
+      end
+    end
+
+    describe "when logged in as staff" do
+      before { sign_in(admin) }
+
+      it "fails when post record is not found" do
+        delete "/posts/#{post_id + 1}/revisions/permanently_delete.json"
+        expect(response).to_not be_successful
+      end
+
+      it "fails when no post revisions are found" do
+        delete "/posts/#{post_with_no_revisions.id}/revisions/permanently_delete.json"
+        expect(response).to_not be_successful
+      end
+
+      it "fails when 'can_permanently_delete' setting is false" do
+        SiteSetting.can_permanently_delete = false
+        delete "/posts/#{post_id}/revisions/permanently_delete.json"
+        expect(response).to_not be_successful
+      end
+
+      it "permanently deletes revisions from post and adds a staff log" do
+        delete "/posts/#{post_id}/revisions/permanently_delete.json"
+        expect(response.status).to eq(200)
+
+        # It creates a staff log
+        logs =
+          UserHistory.find_by(
+            action: UserHistory.actions[:permanently_delete_post_revisions],
+            acting_user_id: admin.id,
+            post_id: post_id,
+          )
+        expect(logs).to be_present
+
+        # ensure post revisions are deleted
+        expect(PostRevision.where(post: post)).to eq([])
+      end
+    end
+  end
+
   describe "#revert" do
     include_examples "action requires login", :put, "/posts/123/revisions/2/revert.json"
 

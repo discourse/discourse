@@ -191,7 +191,7 @@ export default class CreateChannelController extends Controller.extend(
       : null;
     this._updatePermissionsHint(category);
 
-    const name = category?.name || "";
+    const name = this.name || category?.name || "";
     this.setProperties({
       categoryId,
       category,
