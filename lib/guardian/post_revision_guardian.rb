@@ -13,7 +13,7 @@ module PostRevisionGuardian
     is_staff?
   end
 
-  def can_purge_post_revisions?
+  def can_permanently_delete_post_revisions?
     is_staff? && SiteSetting.can_permanently_delete
   end
 

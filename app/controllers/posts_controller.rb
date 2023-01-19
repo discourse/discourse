@@ -466,8 +466,8 @@ class PostsController < ApplicationController
     render body: nil
   end
 
-  def purge_revisions
-    guardian.ensure_can_purge_post_revisions!
+  def permanently_delete_revisions
+    guardian.ensure_can_permanently_delete_post_revisions!
 
     post = find_post_from_params
     raise Discourse::InvalidParameters.new(:post) if post.blank?
@@ -475,7 +475,7 @@ class PostsController < ApplicationController
 
     RateLimiter.new(
       current_user,
-      "admin_purge_post_revisions",
+      "admin_permanently_delete_post_revisions",
       20,
       1.minute,
       apply_limit_to_staff: true,
@@ -485,7 +485,7 @@ class PostsController < ApplicationController
       updated_at = Time.zone.now
       post.revisions.destroy_all
       post.update(version: 1, public_version: 1, last_version_at: updated_at)
-      StaffActionLogger.new(current_user).log_purge_post_revisions(post)
+      StaffActionLogger.new(current_user).log_permanently_delete_post_revisions(post)
     end
 
     post.rebake!

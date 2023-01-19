@@ -2049,7 +2049,7 @@ RSpec.describe PostsController do
     end
   end
 
-  describe "#purge_revisions" do
+  describe "#permanently_delete_revisions" do
     before { SiteSetting.can_permanently_delete = true }
 
     fab!(:post) do
@@ -2076,7 +2076,7 @@ RSpec.describe PostsController do
     describe "when logged in as a regular user" do
       it "does not delete revisions" do
         sign_in(user)
-        delete "/posts/#{post_id}/revisions/purge.json"
+        delete "/posts/#{post_id}/revisions/permanently_delete.json"
         expect(response).to_not be_successful
       end
     end
@@ -2085,29 +2085,29 @@ RSpec.describe PostsController do
       before { sign_in(admin) }
 
       it "fails when post record is not found" do
-        delete "/posts/#{post_id + 1}/revisions/purge.json"
+        delete "/posts/#{post_id + 1}/revisions/permanently_delete.json"
         expect(response).to_not be_successful
       end
 
       it "fails when no post revisions are found" do
-        delete "/posts/#{post_with_no_revisions.id}/revisions/purge.json"
+        delete "/posts/#{post_with_no_revisions.id}/revisions/permanently_delete.json"
         expect(response).to_not be_successful
       end
 
       it "fails when 'can_permanently_delete' setting is false" do
         SiteSetting.can_permanently_delete = false
-        delete "/posts/#{post_id}/revisions/purge.json"
+        delete "/posts/#{post_id}/revisions/permanently_delete.json"
         expect(response).to_not be_successful
       end
 
       it "permanently deletes revisions from post and adds a staff log" do
-        delete "/posts/#{post_id}/revisions/purge.json"
+        delete "/posts/#{post_id}/revisions/permanently_delete.json"
         expect(response.status).to eq(200)
 
         # It creates a staff log
         logs =
-          UserHistory.create!(
-            action: UserHistory.actions[:purge_post_revisions],
+          UserHistory.find_by(
+            action: UserHistory.actions[:permanently_delete_post_revisions],
             acting_user_id: admin.id,
             post_id: post_id,
           )

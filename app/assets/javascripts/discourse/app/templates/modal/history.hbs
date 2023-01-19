@@ -251,9 +251,9 @@
         />
       {{/if}}
 
-      {{#if this.displayPurgeButton}}
+      {{#if this.displayPermanentlyDeleteButton}}
         <DButton
-          @action={{action "purgeVersions"}}
+          @action={{action "permanentlyDeleteVersions"}}
           @icon="far-trash-alt"
           @label="post.revisions.controls.destroy"
           @class="btn-danger"

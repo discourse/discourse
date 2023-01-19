@@ -461,8 +461,8 @@ Post.reopenClass({
     });
   },
 
-  purgeRevisions(postId) {
-    return ajax(`/posts/${postId}/revisions/purge`, {
+  permanentlyDeleteRevisions(postId) {
+    return ajax(`/posts/${postId}/revisions/permanently_delete`, {
       type: "DELETE",
     });
   },

@@ -114,11 +114,11 @@ export default Controller.extend(ModalFunctionality, {
     );
   },
 
-  purge(postId) {
+  permanentlyDeleteRevisions(postId) {
     this.dialog.yesNoConfirm({
       message: I18n.t("post.revisions.controls.destroy_confirm"),
       didConfirm: () => {
-        Post.purgeRevisions(postId).then(() => {
+        Post.permanentlyDeleteRevisions(postId).then(() => {
           this.send("closeModal");
         });
       },
@@ -228,7 +228,7 @@ export default Controller.extend(ModalFunctionality, {
   },
 
   @discourseComputed("model.previous_hidden")
-  displayPurgeButton(previousHidden) {
+  displayPermanentlyDeleteButton(previousHidden) {
     return (
       this.siteSettings.can_permanently_delete &&
       this.currentUser?.staff &&
@@ -373,8 +373,8 @@ export default Controller.extend(ModalFunctionality, {
     hideVersion() {
       this.hide(this.get("model.post_id"), this.get("model.current_revision"));
     },
-    purgeVersions() {
-      this.purge(this.get("model.post_id"));
+    permanentlyDeleteVersions() {
+      this.permanentlyDeleteRevisions(this.get("model.post_id"));
     },
     showVersion() {
       this.show(this.get("model.post_id"), this.get("model.current_revision"));
