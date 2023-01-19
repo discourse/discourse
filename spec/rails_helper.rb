@@ -62,6 +62,7 @@ require "test_prof/before_all/adapters/active_record"
 require "webdrivers"
 require "selenium-webdriver"
 require "capybara/rails"
+require "zonebie/rspec"
 
 # The shoulda-matchers gem no longer detects the test framework
 # you're using or mixes itself into that framework automatically.

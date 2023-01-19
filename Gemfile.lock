@@ -503,6 +503,7 @@ GEM
       nokogiri (~> 1.8)
     yaml-lint (0.1.2)
     zeitwerk (2.6.6)
+    zonebie (0.6.1)
 
 PLATFORMS
   aarch64-linux
@@ -649,6 +650,7 @@ DEPENDENCIES
   webrick
   xorcist
   yaml-lint
+  zonebie
 
 BUNDLED WITH
    2.4.1

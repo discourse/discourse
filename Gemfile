@@ -147,6 +147,7 @@ group :test do
   gem "selenium-webdriver", require: false
   gem "test-prof"
   gem "webdrivers", require: false
+  gem "zonebie"
 end
 
 group :test, :development do
