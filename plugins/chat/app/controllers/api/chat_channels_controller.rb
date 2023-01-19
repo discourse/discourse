@@ -57,7 +57,7 @@ class Chat::Api::ChatChannelsController < Chat::Api
 
   def create
     channel_params =
-      params.require(:channel).permit(:chatable_id, :name, :description, :auto_join_users)
+      params.require(:channel).permit(:chatable_id, :name, :slug, :description, :auto_join_users)
 
     guardian.ensure_can_create_chat_channel!
     if channel_params[:name].length > SiteSetting.max_topic_title_length
@@ -81,6 +81,7 @@ class Chat::Api::ChatChannelsController < Chat::Api
     channel =
       chatable.create_chat_channel!(
         name: channel_params[:name],
+        slug: channel_params[:slug],
         description: channel_params[:description],
         user_count: 1,
         auto_join_users: auto_join_users,

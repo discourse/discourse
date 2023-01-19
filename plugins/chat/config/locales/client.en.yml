@@ -289,7 +289,8 @@ en:
         create: "Create channel"
         description: "Description (optional)"
         name: "Channel name"
-        slug: "Channel slug"
+        slug: "Channel slug (optional)"
+        generating_slug: "Generating slug..."
         title: "New channel"
         type: "Type"
         types:

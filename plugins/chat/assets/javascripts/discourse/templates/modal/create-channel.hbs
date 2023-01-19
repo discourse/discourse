@@ -8,6 +8,7 @@
       class="create-channel-name-input"
       @type="text"
       @value={{this.name}}
+      {{on "input" (action "onNameChange" value="target.value")}}
     />
   </div>
 
