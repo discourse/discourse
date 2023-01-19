@@ -12,6 +12,7 @@ import { inject as service } from "@ember/service";
 
 export default Controller.extend({
   dialog: service(),
+  subpageTitle: I18n.t("user.preferences_nav.profile"),
   init() {
     this._super(...arguments);
     this.saveAttrNames = [
