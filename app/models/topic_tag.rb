@@ -9,7 +9,7 @@ class TopicTag < ActiveRecord::Base
       if topic.archetype == Archetype.private_message
         tag.increment!(:pm_topic_count)
       else
-        counters_to_update = { topic_count: 1 }
+        counters_to_update = { staff_topic_count: 1 }
 
         if Category.exists?(id: topic.category_id, read_restricted: false)
           counters_to_update[:public_topic_count] = 1
@@ -35,7 +35,7 @@ class TopicTag < ActiveRecord::Base
           stat.topic_count == 1 ? stat.destroy! : stat.decrement!(:topic_count)
         end
 
-        counters_to_update = { topic_count: -1 }
+        counters_to_update = { staff_topic_count: -1 }
 
         if Category.exists?(id: topic.category_id, read_restricted: false)
           counters_to_update[:public_topic_count] = -1

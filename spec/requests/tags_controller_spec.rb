@@ -12,18 +12,43 @@ RSpec.describe TagsController do
 
   describe "#index" do
     fab!(:test_tag) { Fabricate(:tag, name: "test") }
-    fab!(:topic_tag) { Fabricate(:tag, name: "topic-test", topic_count: 1) }
+    fab!(:topic_tag) do
+      Fabricate(:tag, name: "topic-test", public_topic_count: 1, staff_topic_count: 1)
+    end
     fab!(:synonym) { Fabricate(:tag, name: "synonym", target_tag: topic_tag) }
 
-    shared_examples "successfully retrieve tags with topic_count > 0" do
-      it "should return the right response" do
+    shared_examples "retrieves the right tags" do
+      it "retrieves all tags as a staff user" do
+        sign_in(admin)
+
+        get "/tags.json"
+
+        expect(response.status).to eq(200)
+
+        tags = response.parsed_body["tags"]
+
+        expect(tags[0]["name"]).to eq(test_tag.name)
+        expect(tags[0]["count"]).to eq(0)
+        expect(tags[0]["pm_count"]).to eq(0)
+
+        expect(tags[1]["name"]).to eq(topic_tag.name)
+        expect(tags[1]["count"]).to eq(1)
+        expect(tags[1]["pm_count"]).to eq(0)
+      end
+
+      it "only retrieve tags that have been used in public topics for non-staff user" do
+        sign_in(user)
+
         get "/tags.json"
 
         expect(response.status).to eq(200)
 
         tags = response.parsed_body["tags"]
         expect(tags.length).to eq(1)
-        expect(tags[0]["text"]).to eq("topic-test")
+
+        expect(tags[0]["name"]).to eq(topic_tag.name)
+        expect(tags[0]["count"]).to eq(1)
+        expect(tags[0]["pm_count"]).to eq(0)
       end
     end
 
@@ -76,7 +101,7 @@ RSpec.describe TagsController do
 
     context "with tags_listed_by_group enabled" do
       before { SiteSetting.tags_listed_by_group = true }
-      include_examples "successfully retrieve tags with topic_count > 0"
+      include_examples "retrieves the right tags"
 
       it "works for tags in groups" do
         tag_group = Fabricate(:tag_group, tags: [test_tag, topic_tag, synonym])
@@ -136,20 +161,7 @@ RSpec.describe TagsController do
 
     context "with tags_listed_by_group disabled" do
       before { SiteSetting.tags_listed_by_group = false }
-      include_examples "successfully retrieve tags with topic_count > 0"
-    end
-
-    context "when user can admin tags" do
-      it "successfully retrieve all tags" do
-        sign_in(admin)
-
-        get "/tags.json"
-
-        expect(response.status).to eq(200)
-
-        tags = response.parsed_body["tags"]
-        expect(tags.length).to eq(2)
-      end
+      include_examples "retrieves the right tags"
     end
 
     context "with hidden tags" do
@@ -763,10 +775,10 @@ RSpec.describe TagsController do
         expect(response.parsed_body["results"].map { |j| j["id"] }.sort).to eq(%w[stuff stumped])
       end
 
-      it "returns tags ordered by topic_count, and prioritises exact matches" do
-        Fabricate(:tag, name: "tag1", topic_count: 10)
-        Fabricate(:tag, name: "tag2", topic_count: 100)
-        Fabricate(:tag, name: "tag", topic_count: 1)
+      it "returns tags ordered by public_topic_count, and prioritises exact matches" do
+        Fabricate(:tag, name: "tag1", public_topic_count: 10, staff_topic_count: 10)
+        Fabricate(:tag, name: "tag2", public_topic_count: 100, staff_topic_count: 100)
+        Fabricate(:tag, name: "tag", public_topic_count: 1, staff_topic_count: 1)
 
         get "/tags/filter/search.json", params: { q: "tag", limit: 2 }
         expect(response.status).to eq(200)
@@ -976,11 +988,41 @@ RSpec.describe TagsController do
       context "with some tags" do
         let!(:tags) do
           [
-            Fabricate(:tag, name: "used_publically", topic_count: 2, pm_topic_count: 0),
-            Fabricate(:tag, name: "used_privately", topic_count: 0, pm_topic_count: 3),
-            Fabricate(:tag, name: "used_everywhere", topic_count: 0, pm_topic_count: 3),
-            Fabricate(:tag, name: "unused1", topic_count: 0, pm_topic_count: 0),
-            Fabricate(:tag, name: "unused2", topic_count: 0, pm_topic_count: 0),
+            Fabricate(
+              :tag,
+              name: "used_publically",
+              public_topic_count: 2,
+              staff_topic_count: 2,
+              pm_topic_count: 0,
+            ),
+            Fabricate(
+              :tag,
+              name: "used_privately",
+              public_topic_count: 0,
+              staff_topic_count: 0,
+              pm_topic_count: 3,
+            ),
+            Fabricate(
+              :tag,
+              name: "used_everywhere",
+              public_topic_count: 0,
+              staff_topic_count: 0,
+              pm_topic_count: 3,
+            ),
+            Fabricate(
+              :tag,
+              name: "unused1",
+              public_topic_count: 0,
+              staff_topic_count: 0,
+              pm_topic_count: 0,
+            ),
+            Fabricate(
+              :tag,
+              name: "unused2",
+              public_topic_count: 0,
+              staff_topic_count: 0,
+              pm_topic_count: 0,
+            ),
           ]
         end
 

@@ -29,10 +29,10 @@ RSpec.describe "Updating tag counts" do
 
   before do
     expect(tag1.public_topic_count).to eq(1)
-    expect(tag1.topic_count).to eq(2)
+    expect(tag1.staff_topic_count).to eq(2)
     expect(tag1.pm_topic_count).to eq(1)
     expect(tag2.reload.public_topic_count).to eq(1)
-    expect(tag2.topic_count).to eq(2)
+    expect(tag2.staff_topic_count).to eq(2)
     expect(tag2.pm_topic_count).to eq(1)
   end
 

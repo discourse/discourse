@@ -4,6 +4,10 @@ class Tag < ActiveRecord::Base
   include Searchable
   include HasDestroyedWebHook
 
+  self.ignored_columns = [
+    "topic_count", # TODO: Drop on 1 July 2023
+  ]
+
   RESERVED_TAGS = [
     "none",
     "constructor", # prevents issues with javascript's constructor of objects
@@ -25,10 +29,13 @@ class Tag < ActiveRecord::Base
   # tags that have never been used and don't belong to a tag group
   scope :unused,
         -> {
-          where(topic_count: 0, pm_topic_count: 0).joins(
+          where(staff_topic_count: 0, pm_topic_count: 0).joins(
             "LEFT JOIN tag_group_memberships tgm ON tags.id = tgm.tag_id",
           ).where("tgm.tag_id IS NULL")
         }
+
+  scope :used_tags_in_regular_topics,
+        ->(guardian) { where("tags.#{Tag.topic_count_column(guardian)} > 0") }
 
   scope :base_tags, -> { where(target_tag_id: nil) }
 
@@ -62,7 +69,7 @@ class Tag < ActiveRecord::Base
   def self.update_topic_counts
     DB.exec <<~SQL
       UPDATE tags t
-         SET topic_count = x.topic_count
+         SET staff_topic_count = x.topic_count
         FROM (
              SELECT COUNT(topics.id) AS topic_count, tags.id AS tag_id
                FROM tags
@@ -73,7 +80,7 @@ class Tag < ActiveRecord::Base
            GROUP BY tags.id
         ) x
        WHERE x.tag_id = t.id
-         AND x.topic_count <> t.topic_count
+         AND x.topic_count <> t.staff_topic_count
     SQL
 
     DB.exec <<~SQL
@@ -121,19 +128,18 @@ class Tag < ActiveRecord::Base
     self.find_by("lower(name) = ?", name.downcase)
   end
 
-  def self.top_tags(limit_arg: nil, category: nil, guardian: nil)
+  def self.top_tags(limit_arg: nil, category: nil, guardian: Guardian.new)
     # we add 1 to max_tags_in_filter_list to efficiently know we have more tags
     # than the limit. Frontend is responsible to enforce limit.
     limit = limit_arg || (SiteSetting.max_tags_in_filter_list + 1)
-    scope_category_ids = (guardian || Guardian.new).allowed_category_ids
-
+    scope_category_ids = guardian.allowed_category_ids
     scope_category_ids &= ([category.id] + category.subcategories.pluck(:id)) if category
 
     return [] if scope_category_ids.empty?
 
     filter_sql =
       (
-        if guardian&.is_staff?
+        if guardian.is_staff?
           ""
         else
           " AND tags.id IN (#{DiscourseTagging.visible_tags(guardian).select(:id).to_sql})"
@@ -152,6 +158,14 @@ class Tag < ActiveRecord::Base
     SQL
 
     tag_names_with_counts.map { |row| row.tag_name }
+  end
+
+  def self.topic_count_column(guardian)
+    if guardian&.is_staff? || SiteSetting.include_secure_categories_in_tag_counts
+      "staff_topic_count"
+    else
+      "public_topic_count"
+    end
   end
 
   def self.pm_tags(limit: 1000, guardian: nil, allowed_user: nil)

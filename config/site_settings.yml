@@ -1798,6 +1798,8 @@ security:
   suppress_secured_categories_from_admin:
     default: false
     hidden: true
+  include_secure_categories_in_tag_counts:
+    default: false
 
 onebox:
   post_onebox_maxlength:
