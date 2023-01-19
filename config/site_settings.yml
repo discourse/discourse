@@ -532,17 +532,17 @@ login:
       value: "sso_provider.value_placeholder"
   blocked_email_domains:
     default: "mailinator.com"
-    type: list
+    type: host_list
     list_type: simple
   allowed_email_domains:
     default: ""
-    type: list
+    type: host_list
     list_type: simple
   normalize_emails:
     default: false
   auto_approve_email_domains:
     default: ""
-    type: list
+    type: host_list
     list_type: simple
   hide_email_address_taken:
     client: true
