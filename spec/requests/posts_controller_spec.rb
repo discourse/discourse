@@ -2100,9 +2100,18 @@ RSpec.describe PostsController do
         expect(response).to_not be_successful
       end
 
-      it "permanently deletes revisions from post" do
+      it "permanently deletes revisions from post and adds a staff log" do
         delete "/posts/#{post_id}/revisions/purge.json"
         expect(response.status).to eq(200)
+
+        # It creates a staff log
+        logs =
+          UserHistory.create!(
+            action: UserHistory.actions[:purge_post_revisions],
+            acting_user_id: admin.id,
+            post_id: post_id,
+          )
+        expect(logs).to be_present
 
         # ensure post revisions are deleted
         expect(PostRevision.where(post: post)).to eq([])

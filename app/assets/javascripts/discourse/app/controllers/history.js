@@ -231,8 +231,7 @@ export default Controller.extend(ModalFunctionality, {
   canPurge() {
     return (
       this.siteSettings.can_permanently_delete_revisions &&
-      this.currentUser &&
-      this.currentUser.get("staff")
+      this.currentUser?.staff
     );
   },
 

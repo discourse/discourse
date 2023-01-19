@@ -473,10 +473,21 @@ class PostsController < ApplicationController
     raise Discourse::InvalidParameters.new(:post) if post.blank?
     raise Discourse::NotFound unless post.revisions.present?
 
-    updated_at = Time.zone.now
-    post.revisions.destroy_all
+    RateLimiter.new(
+      current_user,
+      "admin_purge_post_revisions",
+      20,
+      1.minute,
+      apply_limit_to_staff: true,
+    ).performed!
 
-    post.update(version: 1, public_version: 1, last_version_at: updated_at)
+    ActiveRecord::Base.transaction do
+      updated_at = Time.zone.now
+      post.revisions.destroy_all
+      post.update(version: 1, public_version: 1, last_version_at: updated_at)
+      StaffActionLogger.new(current_user).log_purge_post_revisions(post)
+    end
+
     post.rebake!
 
     render body: nil
