@@ -247,6 +247,7 @@ end
 #  target_tag_id      :integer
 #  description        :string
 #  public_topic_count :integer          default(0), not null
+#  staff_topic_count  :integer          default(0), not null
 #
 # Indexes
 #
