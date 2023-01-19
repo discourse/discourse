@@ -3637,7 +3637,6 @@ tr_TR:
         this_week: "Hafta"
         today: "Bugün"
     browser_update: 'Ne yazık ki <a href="https://www.discourse.org/faq/#browser">tarayıcınız desteklenmiyor</a>. Lütfen zengin içeriği görüntülemek, giriş yapmak ve yanıtlamak için <a href="https://browsehappy.com">desteklenen bir tarayıcıya geçin.</a>'
-    safari_13_warning: Bu site yakında iOS ve Safari sürüm 13 ve altını desteklemeyecek. Basitleştirilmiş ve salt okunur bir sürüm kullanılabilir olmaya devam edecek. (<a href="https://meta.discourse.org/t/224747">daha fazla bilgi</a>)
     permission_types:
       full: "Oluştur / Yanıtla / Bak"
       create_post: "Yanıtla / Bak"
@@ -4269,7 +4268,6 @@ tr_TR:
             topics:
               read: Bir konuyu veya içindeki belirli bir gönderiyi okuyun. RSS de desteklenir.
               write: Yeni bir konu oluşturun veya mevcut bir konuya gönderin.
-              update: Bir konuyu güncelleyin. Başlığı, kategoriyi, etiketleri vb. değiştirin.
               read_lists: En iyi, yeni, en son vb. gibi konu listelerini okuyun. RSS de desteklenir.
             posts:
               edit: Herhangi bir gönderiyi veya belirli bir gönderiyi düzenleyin.

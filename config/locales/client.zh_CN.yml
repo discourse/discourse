@@ -3331,7 +3331,6 @@ zh_CN:
         this_week: "周"
         today: "今天"
     browser_update: '很抱歉，<a href="https://www.discourse.org/faq/#browser">您的浏览器不受支持</a>。请<a href="https://browsehappy.com">切换到支持的浏览器</a>查看富内容、登录和回复。'
-    safari_13_warning: 此站点将很快移除对 iOS 和 Safari 13 及以下版本的支持。简化的只读版本将保持可用。（<a href="https://meta.discourse.org/t/224747">更多信息</a>）
     permission_types:
       full: "创建/回复/查看"
       create_post: "回复/查看"
@@ -3935,7 +3934,6 @@ zh_CN:
             topics:
               read: 阅读一个话题或其中的一个帖子。也支持 RSS。
               write: 创建一个新话题或发布到现有话题。
-              update: 更新话题。更改标题、类别、标签等。
               read_lists: 阅读诸如热门、新、最新等话题列表。也支持 RSS。
             posts:
               edit: 编辑任意帖子或特定帖子。

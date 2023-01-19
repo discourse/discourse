@@ -175,7 +175,6 @@ pt_BR:
         read_only: "Somente leitura"
         archived_header: "O canal está arquivado"
         archived: "Arquivados"
-        archive_failed: "Falha no canal de arquivamento. %{completed}/%{total} mensagens foram arquivadas <a target=\"_blank\" href=\"%{topic_url}\">no tópico de destino</a>. Pressione repetir para tentar concluir o arquivo."
         archive_completed: "Veja <a target=\"_blank\" href=\"%{topic_url}\">o tópico de arquivo</a>"
         closed_header: "Canal fechado"
         closed: "Fechados"

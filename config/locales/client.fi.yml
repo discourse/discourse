@@ -322,7 +322,7 @@ fi:
       no_timezone: 'Et ole valinnut aikavyöhykettä, joten et voi asettaa muistutuksia. Aseta se <a href="%{basePath}/my/preferences/profile">profiilisivullasi</a>.'
       invalid_custom_datetime: "Antamasi päivämäärä ja kellonaika ei kelpaa, yritä uudelleen."
       list_permission_denied: "Et voi nähdä tämän käyttäjän kirjanmerkkejä."
-      no_user_bookmarks: "Kirjanmerkeissäsi ei ole mitään. Kirjanmerkitsemällä viestin löydät sen myöhemmin helposti."
+      no_user_bookmarks: "Kirjanmerkeissäsi ei ole mitään. Kirjanmerkitsemällä viestejä löydät ne myöhemmin helposti."
       auto_delete_preference:
         label: "Kun sinulle on ilmoitettu"
         never: "Säilytä kirjanmerkki"
@@ -455,7 +455,7 @@ fi:
       topic: "Ketju:"
       filtered_topic: "Olet suodattanut käsiteltävän sisällön yhdestä ketjusta."
       filtered_user: "Käyttäjä"
-      filtered_reviewed_by: "Käsittelijä:"
+      filtered_reviewed_by: "Käsittelijä"
       show_all_topics: "näytä kaikki ketjut"
       deleted_post: "(viesti poistettu)"
       deleted_user: "(käyttäjä poistettu)"
@@ -3497,7 +3497,6 @@ fi:
         this_week: "Viikko"
         today: "Tänään"
     browser_update: 'Valitettavasti <a href="https://www.discourse.org/faq/#browser">selaintasi ei tueta</a>. <a href="https://browsehappy.com">Vaihda tuettuun selaimeen</a>, niin voit katsella monipuolista sisältöä, kirjautua sisään ja vastata.'
-    safari_13_warning: Tämä sivusto poistaa pian iOS:n ja Safarin version 13 ja sitä vanhempien versioiden tuen. Yksinkertaistettu vain luku -versio on edelleen käytettävissä. (<a href="https://meta.discourse.org/t/224747">Lisätietoja</a>)
     permission_types:
       full: "Luoda / Vastata / Nähdä"
       create_post: "Vastata / Nähdä"
@@ -4118,7 +4117,6 @@ fi:
             topics:
               read: Lue ketjua tai tiettyä sen viestiä. RSS on myös tuettu.
               write: Aloita uusi ketju tai kirjoita olemassa olevaan.
-              update: Päivitä ketju. Muuta otsikkoa, aluetta, tunnisteita jne.
               read_lists: Lue ketjuluetteloita, kuten suositut, uudet, tuoreimmat jne. RSS on myös tuettu.
             posts:
               edit: Muokkaa mitä tahansa viestiä tai tiettyä viestiä.
@@ -4718,7 +4716,7 @@ fi:
           actions:
             delete_user: "poista käyttäjä"
             change_trust_level: "muuta luottamustasoa"
-            change_username: "muuta käyttäjätunnusta"
+            change_username: "vaihda käyttäjätunnus"
             change_site_setting: "muuta sivuston asetusta"
             change_theme: "vaihda teema"
             delete_theme: "poista teema"

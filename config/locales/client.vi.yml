@@ -3573,6 +3573,7 @@ vi:
         other: "%{count} mới"
       more: "Thêm"
       all_categories: "Tất cả danh mục"
+      all_tags: "Tất cả các thẻ"
       sections:
         about:
           header_link_text: "Giới thiệu"
@@ -3837,7 +3838,6 @@ vi:
             topics:
               read: Đọc một chủ đề hoặc một bài viết cụ thể trong đó. RSS cũng được hỗ trợ.
               write: Tạo một chủ đề mới hoặc đăng một chủ đề hiện có.
-              update: Cập nhật chủ đề. Thay đổi tiêu đề, danh mục, thẻ, v.v.
               read_lists: Đọc danh sách chủ đề như hàng đầu, mới, mới nhất, v.v. RSS cũng được hỗ trợ.
             posts:
               edit: Chỉnh sửa bất kỳ bài đăng nào hoặc một bài đăng cụ thể.

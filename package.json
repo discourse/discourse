@@ -31,6 +31,7 @@
     "chrome-launcher": "^0.15.1",
     "chrome-remote-interface": "^0.31.3",
     "eslint-config-discourse": "^3.3.0",
+    "jsdoc-to-markdown": "^8.0.0",
     "lefthook": "^1.2.0",
     "puppeteer-core": "^13.7.0"
   },

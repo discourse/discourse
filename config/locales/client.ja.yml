@@ -3331,7 +3331,6 @@ ja:
         this_week: "今週"
         today: "今日"
     browser_update: '残念ながら、<a href="https://www.discourse.org/faq/#browser">あなたのブラウザはサポートされていません</a>。リッチコンテンツを表示するには<a href="https://browsehappy.com">サポートされているブラウザに切り替え</a>てから、ログインして返信してください。'
-    safari_13_warning: このサイトは、まもなく iOS と Safari バージョン 13 以下のサポートを終了します。簡易版の読み取り専用バージョンは、引き続き利用可能です。(<a href="https://meta.discourse.org/t/224747">詳細</a>)
     permission_types:
       full: "作成 / 返信 / 閲覧"
       create_post: "返信 / 閲覧"
@@ -3935,7 +3934,6 @@ ja:
             topics:
               read: トピックまたはその中の特定の投稿を読み取ります。RSS もサポートされています。
               write: 新しいトピックまたは既存のトピックに投稿を作成します。
-              update: トピックを更新します。タイトル、カテゴリ、タグなどを変更します。
               read_lists: 人気、新規、最新などのトピックリストを読み取ります。RSS もサポートされています。
             posts:
               edit: 任意の投稿または特定の投稿を編集します。
