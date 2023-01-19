@@ -2091,7 +2091,7 @@ RSpec.describe Topic do
     it "can take a timestamp for a future time" do
       freeze_time now
       topic.set_or_create_timer(TopicTimer.types[:close], "2013-11-22 5:00", by_user: admin)
-      expect(topic.topic_timers.first.execute_at).to eq_time(Time.zone.local(2013, 11, 22, 5, 0))
+      expect(topic.topic_timers.first.execute_at).to eq_time(Time.zone.parse("2013-11-22T05:00Z"))
     end
 
     it "sets a validation error when given a timestamp in the past" do

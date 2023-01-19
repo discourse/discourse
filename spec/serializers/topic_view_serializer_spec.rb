@@ -621,7 +621,9 @@ RSpec.describe TopicViewSerializer do
       expect(json[:topic_timer][:based_on_last_post]).to eq(false)
       expect(json[:topic_timer][:category_id]).to eq(nil)
       expect(json[:topic_timer][:duration_minutes]).to eq(nil)
-      expect(json[:topic_timer][:execute_at]).to eq("2022-04-06T16:23:56.000Z")
+      expect(json[:topic_timer][:execute_at]).to eq(
+        Time.zone.parse("2022-04-06T16:23:56.000Z").as_json,
+      )
       expect(json[:topic_timer][:status_type]).to eq("close")
     end
 

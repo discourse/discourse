@@ -1403,7 +1403,7 @@ RSpec.describe PostCreator do
           user,
           raw: "This is very interesting test post content",
           topic_id: topic,
-          created_at: "2019-09-02 00:00:00 UTC",
+          created_at: "2019-09-02 00:00:00",
         )
 
       expect(post1.created_at).to eq_time(time)
@@ -2054,7 +2054,7 @@ RSpec.describe PostCreator do
       post = PostCreator.create!(user, title: "this is a returning topic", raw: "this is a post")
       expect(post.custom_fields[Post::NOTICE]).to eq(
         "type" => Post.notices[:returning_user],
-        "last_posted_at" => old_post.created_at.iso8601,
+        "last_posted_at" => old_post.created_at.utc.iso8601,
       )
 
       post =

@@ -23,10 +23,12 @@ RSpec.describe BackupRestore::DatabaseRestorer do
 
     it "stores the date of the last restore" do
       date_string = "2020-01-10T17:38:27Z"
-      freeze_time(Time.parse(date_string))
+      freeze_time(Time.zone.parse(date_string))
       execute_stubbed_restore
 
-      expect(BackupMetadata.value_for(BackupMetadata::LAST_RESTORE_DATE)).to eq(date_string)
+      expect(Time.zone.parse(BackupMetadata.value_for(BackupMetadata::LAST_RESTORE_DATE))).to eq(
+        date_string,
+      )
     end
 
     context "with real psql" do
@@ -223,10 +225,12 @@ RSpec.describe BackupRestore::DatabaseRestorer do
         ActiveRecord::Base.connection.expects(:drop_schema).with("backup").never
 
         date_string = "2020-01-08T17:38:27Z"
-        freeze_time(Time.parse(date_string))
+        freeze_time(Time.zone.parse(date_string))
 
         subject.drop_backup_schema
-        expect(BackupMetadata.value_for(BackupMetadata::LAST_RESTORE_DATE)).to eq(date_string)
+        expect(Time.zone.parse(BackupMetadata.value_for(BackupMetadata::LAST_RESTORE_DATE))).to eq(
+          date_string,
+        )
       end
     end
   end

@@ -1504,7 +1504,7 @@ RSpec.describe Admin::UsersController do
         expect(response.status).to eq(200)
         reg_user.reload
         expect(reg_user).to be_silenced
-        expect(reg_user.silenced_till).to eq(future_date)
+        expect(reg_user.silenced_till).to eq(future_date.in_time_zone)
       end
 
       it "will send a message if provided" do

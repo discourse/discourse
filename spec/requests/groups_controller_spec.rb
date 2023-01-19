@@ -574,7 +574,7 @@ RSpec.describe GroupsController do
       get "/groups/#{group.name}/members.json", params: { order: "added_at" }
       members = response.parsed_body["members"]
 
-      expect(members.last["added_at"]).to eq(first_user.created_at.as_json)
+      expect(members.last["added_at"]).to eq(first_user.created_at.utc.as_json)
     end
 
     it "can sort items" do

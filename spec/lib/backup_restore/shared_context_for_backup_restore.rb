@@ -71,7 +71,7 @@ RSpec.shared_context "with shared stuff" do
     expected_upload_paths: nil,
     location: nil
   )
-    freeze_time(DateTime.parse("2019-12-24 14:31:48"))
+    freeze_time(Time.zone.parse("2019-12-24 14:31:48"))
 
     source_file = File.join(Rails.root, "spec/fixtures/backups", backup_filename)
     target_directory = BackupRestore::LocalBackupStore.base_directory

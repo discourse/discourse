@@ -69,7 +69,7 @@ RSpec.describe SitemapController do
 
       expect(response.status).to eq(200)
       expect(loc).to eq("#{Discourse.base_url}/t/#{topic.slug}/#{topic.id}")
-      expect(last_mod).to eq(topic.bumped_at.xmlschema)
+      expect(last_mod).to eq(topic.bumped_at.utc.xmlschema)
     end
   end
 
@@ -89,7 +89,7 @@ RSpec.describe SitemapController do
 
       expect(response.status).to eq(200)
       expect(loc).to eq("#{Discourse.base_url}/t/#{topic.slug}/#{topic.id}")
-      expect(last_mod).to eq(topic.bumped_at.xmlschema)
+      expect(last_mod).to eq(topic.bumped_at.utc.xmlschema)
 
       all_urls = urls.map { |u| u.at_css("loc").text }
       expect(all_urls).not_to include("#{Discourse.base_url}/t/#{old_topic.slug}/#{old_topic.id}")

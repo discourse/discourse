@@ -29,14 +29,14 @@ RSpec.describe UserStatusController do
         status = "off to dentist"
         status_emoji = "tooth"
         ends_at = "2100-01-01T18:00:00.000Z"
-        user.set_status!(status, status_emoji, DateTime.parse(ends_at))
+        user.set_status!(status, status_emoji, ends_at)
 
         get "/user-status.json"
 
         expect(response.status).to eq(200)
         expect(response.parsed_body["description"]).to eq(status)
         expect(response.parsed_body["emoji"]).to eq(status_emoji)
-        expect(response.parsed_body["ends_at"]).to eq(ends_at)
+        expect(response.parsed_body["ends_at"]).to eq(Time.zone.parse(ends_at).as_json)
       end
     end
   end
@@ -143,7 +143,7 @@ RSpec.describe UserStatusController do
 
         expect(messages[0].data[user.id][:description]).to eq(status)
         expect(messages[0].data[user.id][:emoji]).to eq(emoji)
-        expect(messages[0].data[user.id][:ends_at]).to eq(ends_at)
+        expect(messages[0].data[user.id][:ends_at]).to eq(Time.zone.parse(ends_at).iso8601)
       end
     end
   end
