@@ -22,6 +22,16 @@ RSpec.describe "Create channel", type: :system, js: true do
         expect(find(".create-channel-hint")).to have_content(Group[:everyone].name)
       end
 
+      it "does not override channel name if that was already specified" do
+        visit("/chat")
+        find(".new-channel-btn").click
+        fill_in("channel-name", with: "My Cool Channel")
+        find(".category-chooser").click
+        find(".category-row[data-value=\"#{category_1.id}\"]").click
+
+        expect(page).to have_field("channel-name", with: "My Cool Channel")
+      end
+
       context "when category is private" do
         fab!(:group_1) { Fabricate(:group) }
         fab!(:private_category_1) { Fabricate(:private_category, group: group_1) }
@@ -95,6 +105,7 @@ RSpec.describe "Create channel", type: :system, js: true do
           name = "Cats"
           find(".category-chooser").click
           find(".category-row[data-value=\"#{category_1.id}\"]").click
+          expect(page).to have_field("channel-name", with: category_1.name)
           fill_in("channel-name", with: name)
           fill_in("channel-description", with: "All kind of cute cats")
           find(".create-channel-modal .create").click
