@@ -15,6 +15,8 @@ class ColorScheme < ActiveRecord::Base
       "danger" => "e45735",
       "success" => "1ca551",
       "love" => "fa6c8d",
+      "selected" => "393939",
+      "hover" => "494949"
     },
     # By @itsbhanusharma
     Neutral: {
@@ -28,6 +30,8 @@ class ColorScheme < ActiveRecord::Base
       "danger" => "b85e48",
       "success" => "518751",
       "love" => "fa6c8d",
+      "selected" => "e6e6e6",
+      "hover" => "f0f0f0"
     },
     # By @Flower_Child
     "Grey Amber": {
@@ -41,6 +45,8 @@ class ColorScheme < ActiveRecord::Base
       "danger" => "e45735",
       "success" => "fdd459",
       "love" => "fdd459",
+      "selected" => "272727",
+      "hover" => "2F2F30",
     },
     # By @rafafotes
     "Shades of Blue": {
@@ -54,9 +60,11 @@ class ColorScheme < ActiveRecord::Base
       "danger" => "bf3c3c",
       "success" => "70db82",
       "love" => "fc94cb",
+      "selected" => "e3ebf2",
+      "hover" => "f7f9fb",
     },
     # By @mikechristopher
-    Latte: {
+    "Latte": {
       "primary" => "f2e5d7",
       "secondary" => "262322",
       "tertiary" => "f7f2ed",
@@ -67,6 +75,8 @@ class ColorScheme < ActiveRecord::Base
       "danger" => "db9584",
       "success" => "78be78",
       "love" => "8f6201",
+      "selected" => "3e2a14",
+      "hover" => "4c3319",
     },
     # By @Flower_Child
     Summer: {
@@ -93,8 +103,10 @@ class ColorScheme < ActiveRecord::Base
       "danger" => "6c3e63",
       "success" => "d9b2bb",
       "love" => "d9b2bb",
+      "selected" => "2a1620",
+      "hover" => "331b27",
     },
-    WCAG: {
+    "WCAG": {
       "primary" => "000000",
       "primary-medium" => "696969",
       "primary-low-mid" => "909090",
@@ -110,6 +122,8 @@ class ColorScheme < ActiveRecord::Base
       "danger" => "BB1122",
       "success" => "3d854d",
       "love" => "9D256B",
+      "selected" => "2a1620",
+      "hover" => "331b27",
     },
     "WCAG Dark": {
       "primary" => "ffffff",
@@ -124,6 +138,8 @@ class ColorScheme < ActiveRecord::Base
       "danger" => "BB1122",
       "success" => "3d854d",
       "love" => "9D256B",
+      "selected" => "002382",
+      "hover" => "0037cd",
     },
     # By @zenorocha
     Dracula: {
@@ -167,6 +183,8 @@ class ColorScheme < ActiveRecord::Base
       "success" => "50fa7b",
       "love_low" => "6C4667",
       "love" => "ff79c6",
+      "selected" => "002382",
+      "hover" => "0037cd",
     },
     # By @altercation
     "Solarized Light": {

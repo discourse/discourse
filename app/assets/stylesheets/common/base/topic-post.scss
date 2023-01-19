@@ -208,7 +208,8 @@ $quote-share-maxwidth: 150px;
 // add staff color
 .moderator {
   .regular > .cooked {
-    background-color: var(--highlight-low-or-medium);
+    //background-color: var(--highlight-low-or-medium);
+    background-color: var(--highlight-bg);
   }
   .clearfix > .topic-meta-data > .names {
     span.user-title {
