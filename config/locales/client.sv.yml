@@ -3638,7 +3638,6 @@ sv:
         this_week: "Vecka"
         today: "Idag"
     browser_update: 'Tyvärr stöds inte <a href="https://www.discourse.org/faq/#browser">din webbläsare</a>. Vänligen <a href="https://browsehappy.com">byt till en webbläsare som stöds</a> för att se innehåll, logga in och svara.'
-    safari_13_warning: Webbplatsen har fullt stöd för redigering av innehåll med webbläsare på iOS 12.5 och 13 till januari 2023. Därefter krävs iOS 14 eller senare. Äldre versioner av iOS kan då endast läsa förenklat innehåll. (<a href="https://meta.discourse.org/t/224747">mer information</a>)
     permission_types:
       full: "Skapa / svara / se"
       create_post: "Svara / se"
@@ -4285,7 +4284,7 @@ sv:
             topics:
               read: Läs ett ämne eller ett specifikt inlägg i det. RSS stöds också.
               write: Skapa ett nytt ämne eller inlägg till en befintligt sådan.
-              update: Uppdatera ett ämne. Ändra titel, kategori, taggar, etc.
+              update: Uppdatera ett ämne. Ändra titel, kategori, taggar, status, arketyp, featured_link etc.
               read_lists: Läs ämneslistor som topp, ny, senaste osv. RSS stöds också.
             posts:
               edit: Redigera ett inlägg eller ett specifikt inlägg.

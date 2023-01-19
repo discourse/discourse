@@ -248,7 +248,7 @@ class Chat::ChatChannelArchiveService
 
   def notify_archiver(result, error_message: nil)
     base_translation_params = {
-      channel_name: chat_channel_title,
+      channel_hashtag_or_name: channel_hashtag_or_name,
       topic_title: chat_channel_archive.destination_topic&.title,
       topic_url: chat_channel_archive.destination_topic&.url,
       topic_validation_errors: result == :failed_no_topic ? error_message : nil,
@@ -300,5 +300,12 @@ class Chat::ChatChannelArchiveService
 
   def kick_all_users
     Chat::ChatChannelMembershipManager.new(chat_channel).unfollow_all_users
+  end
+
+  def channel_hashtag_or_name
+    if chat_channel.slug.present? && SiteSetting.enable_experimental_hashtag_autocomplete
+      return "##{chat_channel.slug}::channel"
+    end
+    chat_channel_title
   end
 end

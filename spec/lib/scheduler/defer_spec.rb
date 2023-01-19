@@ -12,11 +12,15 @@ RSpec.describe Scheduler::Defer do
   end
 
   before do
+    Discourse.catch_job_exceptions!
     @defer = DeferInstance.new
     @defer.async = true
   end
 
-  after { @defer.stop! }
+  after do
+    @defer.stop!
+    Discourse.reset_catch_job_exceptions!
+  end
 
   it "supports basic instrumentation" do
     @defer.later("first") {}

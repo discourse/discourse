@@ -28,8 +28,8 @@ class ApiKeyScope < ActiveRecord::Base
             params: %i[topic_id],
           },
           update: {
-            actions: %w[topics#update],
-            params: %i[topic_id],
+            actions: %w[topics#update topics#status],
+            params: %i[topic_id category_id],
           },
           read: {
             actions: %w[topics#show topics#feed topics#posts],

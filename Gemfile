@@ -18,7 +18,7 @@ else
   # this allows us to include the bits of rails we use without pieces we do not.
   #
   # To issue a rails update bump the version number here
-  rails_version = "7.0.3.1"
+  rails_version = "7.0.4"
   gem "actionmailer", rails_version
   gem "actionpack", rails_version
   gem "actionview", rails_version
@@ -32,8 +32,8 @@ end
 gem "json"
 
 # TODO: At the moment Discourse does not work with Sprockets 4, we would need to correct internals
-# This is a desired upgrade we should get to.
-gem "sprockets", "3.7.2"
+# We intend to drop sprockets rather than upgrade to 4.x
+gem "sprockets", git: "https://github.com/rails/sprockets", branch: "3.x"
 
 # this will eventually be added to rails,
 # allows us to precompile all our templates in the unicorn master

@@ -1201,4 +1201,26 @@ RSpec.describe PostDestroyer do
       )
     end
   end
+
+  describe "mailing_list_mode emails on recovery" do
+    fab!(:topic) { Fabricate(:topic) }
+    fab!(:post_1) { Fabricate(:post, topic: topic) }
+    fab!(:post_2) { Fabricate(:post, topic: topic) }
+
+    it "enqueues the notify_mailing_list_subscribers_job for the post" do
+      PostDestroyer.new(admin, post_2).destroy
+      post_2.reload
+      expect_enqueued_with(job: :notify_mailing_list_subscribers, args: { post_id: post_2.id }) do
+        PostDestroyer.new(admin, post_2).recover
+      end
+    end
+
+    it "enqueues the notify_mailing_list_subscribers_job for the op" do
+      PostDestroyer.new(admin, post_1).destroy
+      post_1.reload
+      expect_enqueued_with(job: :notify_mailing_list_subscribers, args: { post_id: post_1.id }) do
+        PostDestroyer.new(admin, post_1).recover
+      end
+    end
+  end
 end

@@ -740,8 +740,7 @@ createWidget("search-menu-assistant-item", {
       // category and tag combination
       if (attrs.tag && attrs.isIntersection) {
         attributes.href = getURL(`/tag/${attrs.tag}`);
-        content.push(iconNode("tag"));
-        content.push(h("span.search-item-tag", attrs.tag));
+        content.push(h("span.search-item-tag", [iconNode("tag"), attrs.tag]));
       }
     } else if (attrs.tag) {
       if (attrs.isIntersection && attrs.additionalTags?.length) {
@@ -749,8 +748,7 @@ createWidget("search-menu-assistant-item", {
         content.push(h("span.search-item-tag", `tags:${tags.join("+")}`));
       } else {
         attributes.href = getURL(`/tag/${attrs.tag}`);
-        content.push(iconNode("tag"));
-        content.push(h("span.search-item-tag", attrs.tag));
+        content.push(h("span.search-item-tag", [iconNode("tag"), attrs.tag]));
       }
     } else if (attrs.user) {
       const userResult = [

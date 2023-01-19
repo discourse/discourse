@@ -3987,8 +3987,6 @@ en:
 
     browser_update: 'Unfortunately, <a href="https://www.discourse.org/faq/#browser">your browser is unsupported</a>. Please <a href="https://browsehappy.com">switch to a supported browser</a> to view rich content, log in and reply.'
 
-    safari_13_warning: This site will soon remove support for iOS and Safari versions 13 and below. A simplified read-only version will remain available. (<a href="https://meta.discourse.org/t/224747">more information</a>)
-
     permission_types:
       full: "Create / Reply / See"
       create_post: "Reply / See"
@@ -4670,7 +4668,7 @@ en:
             topics:
               read: Read a topic or a specific post in it. RSS is also supported.
               write: Create a new topic or post to an existing one.
-              update: Update a topic. Change the title, category, tags, etc.
+              update: Update a topic. Change the title, category, tags, status, archetype, featured_link etc.
               read_lists: Read topic lists like top, new, latest, etc. RSS is also supported.
             posts:
               edit: Edit any post or a specific one.

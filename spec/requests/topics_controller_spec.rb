@@ -1037,6 +1037,99 @@ RSpec.describe TopicsController do
         expect(topic.posts.last.action_code).to eq("visible.enabled")
       end
     end
+
+    context "with API key" do
+      let(:api_key) { Fabricate(:api_key, user: moderator, created_by: moderator) }
+
+      context "when key scope has restricted params" do
+        before do
+          ApiKeyScope.create(
+            resource: "topics",
+            action: "update",
+            api_key_id: api_key.id,
+            allowed_parameters: {
+              "category_id" => ["#{topic.category_id}"],
+            },
+          )
+        end
+
+        it "fails to update topic status in an unpermitted category" do
+          put "/t/#{topic.id}/status.json",
+              params: {
+                status: "closed",
+                enabled: "true",
+                category_id: tracked_category.id,
+              },
+              headers: {
+                "HTTP_API_KEY" => api_key.key,
+                "HTTP_API_USERNAME" => api_key.user.username,
+              }
+
+          expect(response.status).to eq(403)
+          expect(response.body).to include(I18n.t("invalid_access"))
+          expect(topic.reload.closed).to eq(false)
+        end
+
+        it "fails without a category_id" do
+          put "/t/#{topic.id}/status.json",
+              params: {
+                status: "closed",
+                enabled: "true",
+              },
+              headers: {
+                "HTTP_API_KEY" => api_key.key,
+                "HTTP_API_USERNAME" => api_key.user.username,
+              }
+
+          expect(response.status).to eq(403)
+          expect(response.body).to include(I18n.t("invalid_access"))
+          expect(topic.reload.closed).to eq(false)
+        end
+
+        it "updates topic status in a permitted category" do
+          put "/t/#{topic.id}/status.json",
+              params: {
+                status: "closed",
+                enabled: "true",
+                category_id: topic.category_id,
+              },
+              headers: {
+                "HTTP_API_KEY" => api_key.key,
+                "HTTP_API_USERNAME" => api_key.user.username,
+              }
+
+          expect(response.status).to eq(200)
+          expect(topic.reload.closed).to eq(true)
+        end
+      end
+
+      context "when key scope has no param restrictions" do
+        before do
+          ApiKeyScope.create(
+            resource: "topics",
+            action: "update",
+            api_key_id: api_key.id,
+            allowed_parameters: {
+            },
+          )
+        end
+
+        it "updates topic status" do
+          put "/t/#{topic.id}/status.json",
+              params: {
+                status: "closed",
+                enabled: "true",
+              },
+              headers: {
+                "HTTP_API_KEY" => api_key.key,
+                "HTTP_API_USERNAME" => api_key.user.username,
+              }
+
+          expect(response.status).to eq(200)
+          expect(topic.reload.closed).to eq(true)
+        end
+      end
+    end
   end
 
   describe "#destroy_timings" do
