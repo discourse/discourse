@@ -1,7 +1,10 @@
 {{! template-lint-disable no-down-event-binding }}
 {{! template-lint-disable no-invalid-interactive }}
 
-<div class="horizontal-overflow-nav {{if this.hasScroll 'has-scroll'}}">
+<nav
+  class="horizontal-overflow-nav {{if this.hasScroll 'has-scroll'}}"
+  aria-label={{@ariaLabel}}
+>
   {{#if this.hasScroll}}
     <a
       role="button"
@@ -43,4 +46,4 @@
       {{d-icon "chevron-right"}}
     </a>
   {{/if}}
-</div>
+</nav>

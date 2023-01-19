@@ -2,7 +2,7 @@
   <DSection @pageClass="user-activity" />
 
   <div class="user-navigation user-navigation-secondary">
-    <HorizontalOverflowNav>
+    <HorizontalOverflowNav @ariaLabel="User secondary - activity">
       <UserNav::ActivityNav
         @user={{this.user}}
         @viewingSelf={{this.viewingSelf}}
@@ -10,6 +10,7 @@
         @siteSettings={{this.siteSettings}}
         @draftLabel={{this.draftLabel}}
         @pendingLabel={{this.pendingLabel}}
+        @ariaCurrentContext="subNav"
       />
     </HorizontalOverflowNav>
   </div>

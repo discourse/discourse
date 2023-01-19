@@ -277,6 +277,10 @@ module TopicGuardian
       )
   end
 
+  def can_see_unlisted_topics?
+    is_staff? || @user.has_trust_level?(TrustLevel[4])
+  end
+
   def can_get_access_to_topic?(topic)
     topic&.access_topic_via_group.present? && authenticated?
   end

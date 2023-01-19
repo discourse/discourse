@@ -3496,7 +3496,6 @@ fr:
         this_week: "Semaine"
         today: "Aujourd'hui"
     browser_update: 'Malheureusement, <a href="https://www.discourse.org/faq/#browser">votre navigateur n''est pas pris en charge</a>. Merci de <a href="https://browsehappy.com">mettre à jour votre navigateur</a> pour afficher le contenu enrichi, vous connecter et répondre.'
-    safari_13_warning: Ce site va bientôt supprimer la prise en charge des versions 13 et inférieures d'iOS et de Safari. Une version simplifiée en lecture seule restera disponible. (<a href="https://meta.discourse.org/t/224747">plus d'informations</a>)
     permission_types:
       full: "Créer/Répondre/Voir"
       create_post: "Répondre/Voir"
@@ -4118,7 +4117,6 @@ fr:
             topics:
               read: Lire un sujet ou un message spécifique qu'il contient. Le RSS est aussi accepté.
               write: Créer un nouveau sujet ou publier sur un sujet existant.
-              update: Mettre à jour un sujet. Modifiez le titre, la catégorie, les étiquettes, etc.
               read_lists: Lire les listes de sujets comme top, nouveaux, récents, etc. Le RSS est aussi accepté.
             posts:
               edit: Modifiez n'importe quel message ou un message spécifique.
@@ -4765,7 +4763,7 @@ fr:
             post_edit: "message modifié"
             post_unlocked: "message déverrouillé"
             check_personal_message: "vérifier un message direct"
-            disabled_second_factor: "désactiver la validation en deux étapes"
+            disabled_second_factor: "désactiver l'authentification à deux facteurs"
             topic_published: "sujet publié"
             post_approved: "message approuvé"
             post_rejected: "message rejeté"
@@ -5019,7 +5017,7 @@ fr:
         private_topics_count: Sujets privés
         posts_read_count: Messages lus
         post_count: Messages créés
-        second_factor_enabled: Validation en deux étapes activée
+        second_factor_enabled: Authentification à deux facteurs activée
         topics_entered: Sujets vus
         flags_given_count: Signalements effectués
         flags_received_count: Signalements reçus

@@ -16,6 +16,7 @@ RSpec.describe TopicQuery do
   fab!(:creator) { Fabricate(:user) }
   let(:topic_query) { TopicQuery.new(user) }
 
+  fab!(:tl4_user) { Fabricate(:trust_level_4) }
   fab!(:moderator) { Fabricate(:moderator) }
   fab!(:admin) { Fabricate(:admin) }
 
@@ -795,8 +796,11 @@ RSpec.describe TopicQuery do
         # includes the invisible topic if you're a moderator
         expect(TopicQuery.new(moderator).list_latest.topics.include?(invisible_topic)).to eq(true)
 
-        # includes the invisible topic if you're an admin" do
+        # includes the invisible topic if you're an admin
         expect(TopicQuery.new(admin).list_latest.topics.include?(invisible_topic)).to eq(true)
+
+        # includes the invisible topic if you're a TL4 user
+        expect(TopicQuery.new(tl4_user).list_latest.topics.include?(invisible_topic)).to eq(true)
       end
 
       context "with sort_order" do

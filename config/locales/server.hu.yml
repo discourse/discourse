@@ -995,6 +995,11 @@ hu:
     log_anonymizer_details: "Anonimizálás után meg kell-e őrizni a felhasználó adatait a naplóban."
     reply_by_email_enabled: "E-mail válaszok engedélyezése."
     block_auto_generated_emails: "Az automatikusan generáltként azonosított bejövő e-mailek letiltása."
+    sendgrid_verification_key: "Sendgrid ellenőrző kulcs, amelyet a webhook üzenetek ellenőrzésére használnak."
+    mailjet_webhook_token: "A webhook hasznos terhelésének ellenőrzésére használt token. Ezt a webhook 't' lekérdezési paramétereként kell átadni, például: https://example.com/webhook/mailjet?t=supersecret"
+    mandrill_authentication_key: "Mandrill hitelesítési kulcs a webhook üzenetek ellenőrzésére."
+    postmark_webhook_token: "A webhook hasznos terhelésének ellenőrzésére használt token. Ezt a webhook „t” lekérdezési paramétereként kell átadni, például: https://example.com/webhook/postmark?t=supersecret"
+    sparkpost_webhook_token: "A webhook hasznos terhelésének ellenőrzésére használt token. Ezt a webhook 't' lekérdezési paramétereként kell átadni, például: https://example.com/webhook/sparkpost?t=supersecret"
     email_editable: "Engedélyezi a felhasználóknak, hogy a regisztráció után megváltoztassák az e-mail címüket."
     suppress_digest_email_after_days: "Letiltja az összefoglaló e-maileket azon felhasználók számára, akik nem láttak a webhelyen (n) napnál hosszabb ideig."
     digest_suppress_categories: "Letiltom ezeket a kategóriákat az összefoglaló e-mailekből."
@@ -1011,6 +1016,7 @@ hu:
     company_name: "Cégnév"
     use_email_for_username_and_name_suggestions: "Használja az e-mail címek első részét a felhasználónév- és névjavaslatokhoz. Vegye figyelembe, hogy ez megkönnyíti a nyilvánosság számára a teljes felhasználói e-mail címek kitalálását (mivel az emberek nagy része olyan gyakori szolgáltatásokat használ, mint a „gmail.com”)."
     navigation_menu: "Határozza meg, melyik navigációs menüt használja. Az oldalsáv és a fejléc navigációja a felhasználók által testreszabható. A visszamenőleges kompatibilitás érdekében a régebbi opció is elérhető."
+    enable_new_notifications_menu: "Engedélyezi az új értesítési menü használatát a régi navigációs menüben."
     enable_experimental_topic_timeline_groups: "KÍSÉRLETI: A kiválasztott csoportok felhasználóinak megjelenik az átdolgozott téma idővonala"
     enable_experimental_hashtag_autocomplete: "KÍSÉRLETI: Használja az új #hashtag automatikus kiegészítési rendszert a kategóriákhoz és címkékhez, amelyek másképp jelenítik meg a kiválasztott elemet, és javítják a keresést"
     errors:
@@ -1033,6 +1039,7 @@ hu:
       search_tokenize_chinese_enabled: "A beállítás engedélyezése előtt le kell tiltania a „search_tokenize_chinese” beállítást."
       search_tokenize_japanese_enabled: "A beállítás engedélyezése előtt le kell tiltania a „search_tokenize_japanese” beállítást."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "A DiscourseConnect nem engedélyezhető, ha a 2FA kényszerítve van."
+      enable_new_notifications_menu_not_legacy_navigation_menu: "A beállítás engedélyezése előtt a `navigation_menu`-t `legacy` értékre kell állítani."
   search:
     within_post: "#%{post_number}, szerző: %{username}"
     types:

@@ -33,13 +33,12 @@ nl:
     chat_channel_archive_complete:
       title: "Archiveren van chatkanaal voltooid"
       subject_template: "Archiveren van chatkanaal voltooid"
-      text_body_template: |
-        Het archiveren van het chatkanaal **\#%{channel_name}** is voltooid. De berichten zijn gekopieerd naar het topic [%{topic_title}](%{topic_url}).
     chat_channel_archive_failed:
       title: "Archiveren van chatkanaal mislukt"
       subject_template: "Archiveren van chatkanaal mislukt"
-      text_body_template: |
-        Het archiveren van het chatkanaal **\#%{channel_name}** is mislukt. %{messages_archived} berichten zijn gearchiveerd. Gedeeltelijk gearchiveerde berichten zijn gekopieerd naar het topic [%{topic_title}](%{topic_url}). Ga naar het kanaal op %{channel_url} om het opnieuw te proberen.
+    chat_channel_archive_failed_no_topic:
+      title: "Archiveren van kanaal mislukt"
+      subject_template: "Chatkanaal archiveren mislukt"
   chat:
     deleted_chat_username: verwijderd
     errors:

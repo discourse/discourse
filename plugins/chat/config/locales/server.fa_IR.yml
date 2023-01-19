@@ -12,6 +12,10 @@ fa_IR:
     chat_message_flag_allowed_groups: "کاربران در این گروه‌ها مجاز به گزارش دادن، پیام‌های گفتگو هستند."
     errors:
       chat_upload_not_allowed_secure_uploads: "وقتی که در تنظیمات سایت آپلودهای ایمن فعال باشد، آپلود گفتگو مجاز نیست."
+  system_messages:
+    chat_channel_archive_complete:
+      text_body_template: |
+        بایگانی کانال گفتگو %{channel_hashtag_or_name} با موفقیت انجام شد. پیام‌ها در موضوع [%{topic_title}](%{topic_url}) کپی شده‌اند.
   chat:
     deleted_chat_username: حذف شد
     errors:

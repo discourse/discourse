@@ -181,7 +181,6 @@ pl_PL:
         read_only: "Tylko do odczytu"
         archived_header: "Kanał został zarchiwizowany"
         archived: "Zarchiwizowany"
-        archive_failed: "Archiwizacja kanału nie powiodła się. %{completed}/%{total} wiadomości zostało zarchiwizowanych w <a target=\"_blank\" href=\"%{topic_url}\">temacie docelowym</a>. Naciśnij przycisk ponów, aby spróbować zakończyć archiwizację."
         closed_header: "Kanał jest zamknięty"
         closed: "Zamknięta"
         open_header: "Kanał jest otwarty"
