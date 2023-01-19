@@ -2288,12 +2288,18 @@ RSpec.describe Search do
     end
 
     it "escapes the term correctly" do
-      expect(Search.ts_query(term: 'Title with trailing backslash\\')).to eq(
-        "TO_TSQUERY('english', '''Title with trailing backslash\\\\\\\\'':*')",
+      document = "trailing title with backslash"
+      ts_query = Search.ts_query(term: 'Title with trailing backslash\\')
+
+      expect(DB.query_single("SELECT to_tsvector('english', ?) @@ #{ts_query}", document)).to eq(
+        [true],
       )
 
-      expect(Search.ts_query(term: "Title with trailing quote'")).to eq(
-        "TO_TSQUERY('english', '''Title with trailing quote'''''':*')",
+      document = "trailing title with quote"
+      ts_query = Search.ts_query(term: 'Title with trailing quote\\')
+
+      expect(DB.query_single("SELECT to_tsvector('english', ?) @@ #{ts_query}", document)).to eq(
+        [true],
       )
     end
   end

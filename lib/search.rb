@@ -1237,7 +1237,11 @@ class Search
   end
 
   def self.set_tsquery_weight_filter(term, weight_filter)
-    "'#{self.escape_string(term)}':*#{weight_filter}"
+    term
+      .split(/[\s\.#,\?\+]+/)
+      .filter { |split_term| split_term.present? }
+      .map { |split_term| "'#{self.escape_string(split_term)}':*#{weight_filter}" }
+      .join(" & ")
   end
 
   def self.escape_string(term)
