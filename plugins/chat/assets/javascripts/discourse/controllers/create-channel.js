@@ -156,7 +156,7 @@ export default class CreateChannelController extends Controller.extend(
     this.setProperties({
       categoryId,
       category,
-      name: category?.name || "",
+      name: this.name || category?.name || "",
     });
   }
 
