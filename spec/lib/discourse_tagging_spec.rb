@@ -641,9 +641,11 @@ RSpec.describe DiscourseTagging do
 
       it "user does not get an error when editing their topic with a hidden tag" do
         PostRevisor.new(post).revise!(admin, raw: post.raw, tags: [hidden_tag.name])
+
         expect(
           PostRevisor.new(post).revise!(topic.user, raw: post.raw + " edit", tags: []),
         ).to be_truthy
+
         expect(topic.reload.tags).to eq([hidden_tag])
       end
     end
@@ -967,8 +969,16 @@ RSpec.describe DiscourseTagging do
       topic = Fabricate(:topic, tags: [tag2])
       expect(DiscourseTagging.add_or_create_synonyms_by_name(tag1, [tag2.name])).to eq(true)
       expect_same_tag_names(topic.reload.tags, [tag1])
-      expect(tag1.reload.topic_count).to eq(1)
-      expect(tag2.reload.topic_count).to eq(0)
+
+      tag1.reload
+
+      expect(tag1.public_topic_count).to eq(1)
+      expect(tag1.staff_topic_count).to eq(1)
+
+      tag2.reload
+
+      expect(tag2.public_topic_count).to eq(0)
+      expect(tag2.staff_topic_count).to eq(0)
     end
   end
 end
