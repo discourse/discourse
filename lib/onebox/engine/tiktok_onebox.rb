@@ -26,9 +26,7 @@ module Onebox
             style="
               min-width: 332px;
               height: 742px;
-              overflow: hidden;
-              padding-top: 3px;
-              background-color: #fff;
+              border-top: 3px solid #fff;
               border-radius: 9px;
               "
           ></iframe>
