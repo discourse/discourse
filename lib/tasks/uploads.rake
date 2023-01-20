@@ -537,6 +537,10 @@ task "uploads:sync_s3_acls" => :environment do
   end
 end
 
+#
+# TODO (martin) Update this rake task to use the _first_ UploadReference
+# record for each upload to determine security, and do not mark things
+# as secure if the first record is something public e.g. a site setting.
 task "uploads:disable_secure_uploads" => :environment do
   RailsMultisite::ConnectionManagement.each_connection do |db|
     unless Discourse.store.external?
@@ -584,6 +588,10 @@ end
 # the upload secure flag and S3 upload ACLs. Any uploads that
 # have their secure status changed will have all associated posts
 # rebaked.
+#
+# TODO (martin) Update this rake task to use the _first_ UploadReference
+# record for each upload to determine security, and do not mark things
+# as secure if the first record is something public e.g. a site setting.
 task "uploads:secure_upload_analyse_and_update" => :environment do
   RailsMultisite::ConnectionManagement.each_connection do |db|
     unless Discourse.store.external?
