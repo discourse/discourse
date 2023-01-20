@@ -72,10 +72,9 @@ acceptance("Group Members", function (needs) {
     );
   });
 
-  test("Shows bulk actions", async function (assert) {
+  test("Shows bulk actions as an admin user", async function (assert) {
     await visit("/g/discourse");
 
-    assert.ok(exists("button.bulk-select"));
     await click("button.bulk-select");
 
     await click(queryAll("input.bulk-select")[0]);
@@ -83,7 +82,50 @@ acceptance("Group Members", function (needs) {
 
     const memberDropdown = selectKit(".bulk-group-member-dropdown");
     await memberDropdown.expand();
-    await memberDropdown.selectRowByValue("makeOwners");
+
+    assert.ok(
+      exists('[data-value="removeMembers"]'),
+      "it includes remove member option"
+    );
+
+    assert.ok(
+      exists('[data-value="makeOwners"]'),
+      "it includes make owners option"
+    );
+
+    assert.ok(
+      exists('[data-value="setPrimary"]'),
+      "it includes set primary option"
+    );
+  });
+
+  test("Shows bulk actions as a group owner", async function (assert) {
+    updateCurrentUser({ moderator: false, admin: false });
+
+    await visit("/g/discourse");
+
+    await click("button.bulk-select");
+
+    await click(queryAll("input.bulk-select")[0]);
+    await click(queryAll("input.bulk-select")[1]);
+
+    const memberDropdown = selectKit(".bulk-group-member-dropdown");
+    await memberDropdown.expand();
+
+    assert.ok(
+      exists('[data-value="removeMembers"]'),
+      "it includes remove member option"
+    );
+
+    assert.ok(
+      exists('[data-value="makeOwners"]'),
+      "it includes make owners option"
+    );
+
+    assert.notOk(
+      exists('[data-value="setPrimary"]'),
+      "it does not include set primary (staff only) option"
+    );
   });
 
   test("Bulk actions - Menu, Select all and Clear all buttons", async function (assert) {
