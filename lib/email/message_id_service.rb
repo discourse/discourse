@@ -136,7 +136,7 @@ module Email
 
       def message_id_clean(message_id)
         if message_id.present? && is_message_id_rfc?(message_id)
-          message_id.gsub(/^<|>$/, "")
+          message_id.gsub(/\A<|>\z/, "")
         else
           message_id
         end

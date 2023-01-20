@@ -49,7 +49,7 @@ class LocaleFileChecker
   end
 
   def reference_file(path)
-    path = path.gsub(/\.\w{2,}\.yml$/, ".#{REFERENCE_LOCALE}.yml")
+    path = path.gsub(/\.\w{2,}\.yml\z/, ".#{REFERENCE_LOCALE}.yml")
     path if File.exist?(path)
   end
 

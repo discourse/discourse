@@ -25,7 +25,7 @@ class TopicEmbed < ActiveRecord::Base
   end
 
   def self.normalize_url(url)
-    url.downcase.sub(%r{/$}, "").sub(/\-+/, "-").strip
+    url.downcase.sub(%r{/\z}, "").sub(/\-+/, "-").strip
   end
 
   def self.imported_from_html(url)
@@ -36,7 +36,7 @@ class TopicEmbed < ActiveRecord::Base
 
   # Import an article from a source (RSS/Atom/Other)
   def self.import(user, url, title, contents, category_id: nil, cook_method: nil, tags: nil)
-    return unless url =~ %r{^https?\://}
+    return unless url =~ %r{\Ahttps?\://}
 
     contents = first_paragraph_from(contents) if SiteSetting.embed_truncate && cook_method.nil?
     contents ||= ""
@@ -253,7 +253,7 @@ class TopicEmbed < ActiveRecord::Base
   end
 
   def self.topic_id_for_embed(embed_url)
-    embed_url = normalize_url(embed_url).sub(%r{^https?\://}, "")
+    embed_url = normalize_url(embed_url).sub(%r{\Ahttps?\://}, "")
     TopicEmbed.where("embed_url ~* ?", "^https?://#{Regexp.escape(embed_url)}$").pluck_first(
       :topic_id,
     )

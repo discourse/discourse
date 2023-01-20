@@ -396,7 +396,7 @@ class User < ActiveRecord::Base
       .reserved_usernames
       .unicode_normalize
       .split("|")
-      .any? { |reserved| username.match?(/^#{Regexp.escape(reserved).gsub('\*', ".*")}$/) }
+      .any? { |reserved| username.match?(/\A#{Regexp.escape(reserved).gsub('\*', ".*")}\z/) }
   end
 
   def self.editable_user_custom_fields(by_staff: false)
@@ -1117,7 +1117,7 @@ class User < ActiveRecord::Base
     # TODO it may be worth caching this in a distributed cache, should be benched
     if SiteSetting.external_system_avatars_enabled
       url = SiteSetting.external_system_avatars_url.dup
-      url = +"#{Discourse.base_path}#{url}" unless url =~ %r{^https?://}
+      url = +"#{Discourse.base_path}#{url}" unless url =~ %r{\Ahttps?://}
       url.gsub! "{color}", letter_avatar_color(normalized_username)
       url.gsub! "{username}", UrlHelper.encode_component(username)
       url.gsub! "{first_letter}",

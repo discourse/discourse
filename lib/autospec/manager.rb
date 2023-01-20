@@ -153,7 +153,7 @@ class Autospec::Manager
       filename, _ = failed_specs[0].split(":")
       if filename && File.exist?(filename) && !File.directory?(filename)
         spec = File.read(filename)
-        start, _ = spec.split(/\S*#focus\S*$/)
+        start, _ = spec.split(/\S*#focus\S*\z/)
         if start.length < spec.length
           line = start.scan(/\n/).length + 1
           puts "Found #focus tag on line #{line}!"
@@ -194,7 +194,7 @@ class Autospec::Manager
   def listen_for_changes
     puts "@@@@@@@@@@@@ listen_for_changes" if @debug
 
-    options = { ignore: %r{^lib/autospec} }
+    options = { ignore: %r{\Alib/autospec} }
 
     if @opts[:force_polling]
       options[:force_polling] = true
@@ -216,7 +216,7 @@ class Autospec::Manager
         # process_change can acquire a mutex and block
         # the acceptor
         Thread.new do
-          if file =~ /(es6|js)$/
+          if file =~ /(es6|js)\z/
             process_change([[file]])
           else
             process_change([[file, line]])

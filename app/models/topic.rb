@@ -1200,7 +1200,7 @@ class Topic < ActiveRecord::Base
       else
         !!invite_to_topic(invited_by, target_user, group_ids, guardian)
       end
-    elsif username_or_email =~ /^.+@.+$/ && guardian.can_invite_via_email?(self)
+    elsif username_or_email =~ /\A.+@.+\z/ && guardian.can_invite_via_email?(self)
       !!Invite.generate(
         invited_by,
         email: username_or_email,

@@ -6,8 +6,8 @@ class EmbeddableHost < ActiveRecord::Base
   after_destroy :reset_embedding_settings
 
   before_validation do
-    self.host.sub!(%r{^https?://}, "")
-    self.host.sub!(%r{/.*$}, "")
+    self.host.sub!(%r{\Ahttps?://}, "")
+    self.host.sub!(%r{/.*\z}, "")
   end
 
   # TODO(2021-07-23): Remove

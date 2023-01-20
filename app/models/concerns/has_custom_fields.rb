@@ -20,7 +20,7 @@ module HasCustomFields
 
       sorted_types = types.keys.select { |k| k.end_with?("*") }.sort_by(&:length).reverse
 
-      sorted_types.each { |t| return types[t] if key =~ /^#{t}/i }
+      sorted_types.each { |t| return types[t] if key =~ /\A#{t}/i }
 
       types[key]
     end

@@ -102,7 +102,7 @@ module PrettyText
     # TODO (martin) Remove this when everything is using hashtag_lookup
     # after enable_experimental_hashtag_autocomplete is default.
     def category_tag_hashtag_lookup(text)
-      is_tag = text =~ /#{TAG_HASHTAG_POSTFIX}$/
+      is_tag = text =~ /#{TAG_HASHTAG_POSTFIX}\z/
 
       if !is_tag && category = Category.query_from_hashtag_slug(text)
         [category.url, text]
