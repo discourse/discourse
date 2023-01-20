@@ -5,7 +5,7 @@ class Tag < ActiveRecord::Base
   include HasDestroyedWebHook
 
   self.ignored_columns = [
-    "topic_count", # TODO: Drop on 1 July 2023
+    "topic_count", # TODO(tgxworld): Remove on 1 July 2023
   ]
 
   RESERVED_TAGS = [
