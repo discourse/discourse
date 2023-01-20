@@ -1,3 +1,14 @@
+<section class="field minimum-required-tags">
+  <label for="category-minimum-tags">
+    {{i18n "category.minimum_required_tags"}}
+  </label>
+  <TextField
+    @value={{this.category.minimum_required_tags}}
+    @id="category-minimum-tags"
+    @type="number"
+    @min="0"
+  />
+</section>
 <section class="field allowed-tags">
   <label>{{i18n "category.tags_allowed_tags"}}</label>
   <TagChooser
