@@ -213,6 +213,9 @@ $search-pad-horizontal: 0.5em;
     }
 
     .search-item-slug {
+      .keyword {
+        margin-right: 0.33em;
+      }
       .badge-wrapper {
         font-size: var(--font-0);
         margin-left: 2px;
