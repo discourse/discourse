@@ -1,8 +1,12 @@
 # frozen_string_literal: true
 
 class GroupRequest < ActiveRecord::Base
+  REASON_CHARACTER_LIMIT = 280
+
   belongs_to :group
   belongs_to :user
+
+  validates :reason, length: { maximum: REASON_CHARACTER_LIMIT }
 end
 
 # == Schema Information
