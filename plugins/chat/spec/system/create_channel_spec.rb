@@ -1,35 +1,43 @@
 # frozen_string_literal: true
 
 RSpec.describe "Create channel", type: :system, js: true do
-  fab!(:current_admin_user) { Fabricate(:admin) }
   fab!(:category_1) { Fabricate(:category) }
 
   let(:chat_page) { PageObjects::Pages::Chat.new }
+  let(:channel_modal) { PageObjects::Modals::ChatChannelCreate.new }
 
-  before do
-    chat_system_bootstrap
-    sign_in(current_admin_user)
+  before { chat_system_bootstrap }
+
+  context "when user cannot create channel" do
+    fab!(:current_user) { Fabricate(:user) }
+    before { sign_in(current_user) }
+
+    it "does not show the create channel button" do
+      chat_page.visit_browse
+      expect(chat_page).not_to have_new_channel_button
+    end
   end
 
   context "when can create channel" do
+    fab!(:current_admin_user) { Fabricate(:admin) }
+    before { sign_in(current_admin_user) }
+
     context "when selecting a category" do
       it "shows access hint" do
-        visit("/chat")
-        find(".new-channel-btn").click
-        find(".category-chooser").click
-        find(".category-row[data-value=\"#{category_1.id}\"]").click
+        chat_page.visit_browse
+        chat_page.new_channel_button.click
+        channel_modal.select_category(category_1)
 
-        expect(find(".create-channel-hint")).to have_content(Group[:everyone].name)
+        expect(channel_modal).to have_create_hint(Group[:everyone].name)
       end
 
       it "does not override channel name if that was already specified" do
-        visit("/chat")
-        find(".new-channel-btn").click
-        fill_in("channel-name", with: "My Cool Channel")
-        find(".category-chooser").click
-        find(".category-row[data-value=\"#{category_1.id}\"]").click
+        chat_page.visit_browse
+        chat_page.new_channel_button.click
+        channel_modal.fill_name("My Cool Channel")
+        channel_modal.select_category(category_1)
 
-        expect(page).to have_field("channel-name", with: "My Cool Channel")
+        expect(channel_modal).to have_name_prefilled("My Cool Channel")
       end
 
       context "when category is private" do
@@ -37,12 +45,11 @@ RSpec.describe "Create channel", type: :system, js: true do
         fab!(:private_category_1) { Fabricate(:private_category, group: group_1) }
 
         it "shows access hint when selecting the category" do
-          visit("/chat")
-          find(".new-channel-btn").click
-          find(".category-chooser").click
-          find(".category-row[data-value=\"#{private_category_1.id}\"]").click
+          chat_page.visit_browse
+          chat_page.new_channel_button.click
+          channel_modal.select_category(private_category_1)
 
-          expect(find(".create-channel-hint")).to have_content(group_1.name)
+          expect(channel_modal).to have_create_hint(group_1.name)
         end
 
         context "when category is a child" do
@@ -52,12 +59,11 @@ RSpec.describe "Create channel", type: :system, js: true do
           end
 
           it "shows access hint when selecting the category" do
-            visit("/chat")
-            find(".new-channel-btn").click
-            find(".category-chooser").click
-            find(".category-row[data-value=\"#{child_category.id}\"]").click
+            chat_page.visit_browse
+            chat_page.new_channel_button.click
+            channel_modal.select_category(child_category)
 
-            expect(find(".create-channel-hint")).to have_content(group_2.name)
+            expect(channel_modal).to have_create_hint(group_2.name)
           end
         end
       end
@@ -72,28 +78,27 @@ RSpec.describe "Create channel", type: :system, js: true do
       fab!(:private_category_1) { Fabricate(:private_category, group: group_1) }
 
       it "escapes the group name" do
-        visit("/chat")
-        find(".new-channel-btn").click
-        find(".category-chooser").click
-        find(".category-row[data-value=\"#{private_category_1.id}\"]").click
+        chat_page.visit_browse
+        chat_page.new_channel_button.click
+        channel_modal.select_category(private_category_1)
 
-        expect(find(".create-channel-hint")["innerHTML"].strip).to include(
+        expect(channel_modal.create_channel_hint["innerHTML"].strip).to include(
           "&lt;script&gt;e&lt;/script&gt;",
         )
       end
     end
 
     it "autogenerates slug from name and changes slug placeholder" do
-      visit("/chat")
-      find(".new-channel-btn").click
+      chat_page.visit_browse
+      chat_page.new_channel_button.click
       name = "Cats & Dogs"
-      find(".category-chooser").click
-      find(".category-row[data-value=\"#{category_1.id}\"]").click
-      fill_in("channel-name", with: name)
-      fill_in("channel-description", with: "All kind of cute cats")
+      channel_modal.select_category(category_1)
+      channel_modal.fill_name(name)
+      channel_modal.fill_description("All kind of cute cats")
 
-      wait_for_attribute(find(".create-channel-slug-input"), :placeholder, "cats-dogs")
-      find(".create-channel-modal .create").click
+      wait_for_attribute(channel_modal.slug_input, :placeholder, "cats-dogs")
+
+      channel_modal.click_primary_button
 
       expect(page).to have_content(name)
       created_channel = ChatChannel.find_by(chatable_id: category_1.id)
@@ -102,15 +107,14 @@ RSpec.describe "Create channel", type: :system, js: true do
     end
 
     it "allows the user to set a slug independently of name" do
-      visit("/chat")
-      find(".new-channel-btn").click
+      chat_page.visit_browse
+      chat_page.new_channel_button.click
       name = "Cats & Dogs"
-      find(".category-chooser").click
-      find(".category-row[data-value=\"#{category_1.id}\"]").click
-      fill_in("channel-name", with: name)
-      fill_in("channel-description", with: "All kind of cute cats")
-      fill_in("channel-slug", with: "pets-everywhere")
-      find(".create-channel-modal .create").click
+      channel_modal.select_category(category_1)
+      channel_modal.fill_name(name)
+      channel_modal.fill_description("All kind of cute cats")
+      channel_modal.fill_slug("pets-everywhere")
+      channel_modal.click_primary_button
 
       expect(page).to have_content(name)
       created_channel = ChatChannel.find_by(chatable_id: category_1.id)
@@ -122,12 +126,11 @@ RSpec.describe "Create channel", type: :system, js: true do
       context "when error" do
         it "displays the error" do
           existing_channel = Fabricate(:chat_channel)
-          visit("/chat")
-          find(".new-channel-btn").click
-          find(".category-chooser").click
-          find(".category-row[data-value=\"#{existing_channel.chatable_id}\"]").click
-          fill_in("channel-name", with: existing_channel.name)
-          find(".create-channel-modal .create").click
+          chat_page.visit_browse
+          chat_page.new_channel_button.click
+          channel_modal.select_category(existing_channel.chatable)
+          channel_modal.fill_name(existing_channel.name)
+          channel_modal.click_primary_button
 
           expect(page).to have_content(I18n.t("chat.errors.channel_exists_for_category"))
         end
@@ -135,17 +138,15 @@ RSpec.describe "Create channel", type: :system, js: true do
 
       context "when successful" do
         it "redirects to created channel" do
-          visit("/chat")
-          find(".new-channel-btn").click
-          name = "Cats"
-          find(".category-chooser").click
-          find(".category-row[data-value=\"#{category_1.id}\"]").click
-          expect(page).to have_field("channel-name", with: category_1.name)
-          fill_in("channel-name", with: name)
-          fill_in("channel-description", with: "All kind of cute cats")
-          find(".create-channel-modal .create").click
+          chat_page.visit_browse
+          chat_page.new_channel_button.click
+          channel_modal.select_category(category_1)
+          expect(channel_modal).to have_name_prefilled(category_1.name)
 
-          expect(page).to have_content(name)
+          channel_modal.fill_description("All kind of cute cats")
+          channel_modal.click_primary_button
+
+          expect(page).to have_content(category_1.name)
           created_channel = ChatChannel.find_by(chatable_id: category_1.id)
           expect(page).to have_current_path(
             chat.channel_path(created_channel.id, created_channel.slug),
