@@ -35,7 +35,7 @@ def gather_uploads
     .where("url !~ ?", "^\/uploads\/#{current_db}")
     .find_each do |upload|
       begin
-        old_db = upload.url[%r{^/uploads/([^/]+)/}, 1]
+        old_db = upload.url[%r{\A/uploads/([^/]+)/}, 1]
         from = upload.url.dup
         to = upload.url.sub("/uploads/#{old_db}/", "/uploads/#{current_db}/")
         source = "#{public_directory}#{from}"
@@ -321,8 +321,8 @@ def regenerate_missing_optimized
     scope.find_each do |optimized_image|
       upload = optimized_image.upload
 
-      next unless optimized_image.url =~ %r{^/[^/]}
-      next unless upload.url =~ %r{^/[^/]}
+      next unless optimized_image.url =~ %r{\A/[^/]}
+      next unless upload.url =~ %r{\A/[^/]}
 
       thumbnail = "#{public_directory}#{optimized_image.url}"
       original = "#{public_directory}#{upload.url}"

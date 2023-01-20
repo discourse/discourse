@@ -10,7 +10,7 @@ task "assets:prestage" => :environment do |t|
   def get_assets(path)
     Dir
       .glob("#{Rails.root}/public/assets/#{path}*")
-      .map { |f| "/assets/#{path}#{f.split("/")[-1]}" if f =~ /[a-f0-9]{16}\.(css|js)$/ }
+      .map { |f| "/assets/#{path}#{f.split("/")[-1]}" if f =~ /[a-f0-9]{16}\.(css|js)\z/ }
       .compact
   end
 

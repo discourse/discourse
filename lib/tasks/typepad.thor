@@ -34,7 +34,7 @@ class Typepad < Thor
     File.open(options[:file]).each_line do |l|
       l = l.scrub
 
-      if l =~ /^--------$/
+      if l =~ /\A--------\z/
         parsed_entry = process_entry(input)
         if parsed_entry
           puts "Parsed #{parsed_entry[:title]}"
@@ -119,7 +119,7 @@ class Typepad < Thor
   def parse_meta_data(section)
     result = {}
     section.split(/\n/).each do |l|
-      if l =~ /^([A-Z\ ]+)\: (.*)$/
+      if l =~ /\A([A-Z\ ]+)\: (.*)\z/
         key, value = Regexp.last_match[1], Regexp.last_match[2]
         clean_type!(key)
         value.strip!
@@ -134,7 +134,7 @@ class Typepad < Thor
 
   def parse_section(section)
     section.strip!
-    if section =~ /^([^:]+):/
+    if section =~ /\A([^:]+):/
       type = clean_type!(Regexp.last_match[1])
       value = section.split("\n")[1..-1].join("\n")
       value.strip!
@@ -195,8 +195,8 @@ class Typepad < Thor
 
         comment[:name] = comment[:author]
         if comment[:author]
-          comment[:author].gsub!(/^[_\.]+/, '')
-          comment[:author].gsub!(/[_\.]+$/, '')
+          comment[:author].gsub!(/\A[_\.]+/, '')
+          comment[:author].gsub!(/[_\.]+\z/, '')
 
           if comment[:author].size < 12
             comment[:author].gsub!(/ /, '_')

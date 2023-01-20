@@ -58,7 +58,7 @@ module Onebox
                   next unless env[:node_name] == "a"
                   a_tag = env[:node]
                   a_tag["href"] ||= "#"
-                  if a_tag["href"] =~ %r{^(?:[a-z]+:)?//}
+                  if a_tag["href"] =~ %r{\A(?:[a-z]+:)?//}
                     a_tag["rel"] = "nofollow ugc noopener"
                   else
                     a_tag.remove_attribute("target")

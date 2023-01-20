@@ -421,7 +421,7 @@ class Category < ActiveRecord::Base
     end
 
     # only allow to use category itself id.
-    match_id = /^(\d+)-category/.match(self.slug)
+    match_id = /\A(\d+)-category/.match(self.slug)
     if match_id.present?
       errors.add(:slug, :invalid) if new_record? || (match_id[1] != self.id.to_s)
     end
@@ -897,7 +897,7 @@ class Category < ActiveRecord::Base
       slug_path.inject(nil) do |parent_id, slug|
         category = Category.where(slug: slug, parent_category_id: parent_id)
 
-        if match_id = /^(\d+)-category/.match(slug).presence
+        if match_id = /\A(\d+)-category/.match(slug).presence
           category = category.or(Category.where(id: match_id[1], parent_category_id: parent_id))
         end
 

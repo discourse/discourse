@@ -158,8 +158,8 @@ class DiscoursePluginRegistry
     end
   end
 
-  JS_REGEX = /\.js$|\.js\.erb$|\.js\.es6$/
-  HANDLEBARS_REGEX = /\.(hb[rs]|js\.handlebars)$/
+  JS_REGEX = /\.js$|\.js\.erb$|\.js\.es6\z/
+  HANDLEBARS_REGEX = /\.(hb[rs]|js\.handlebars)\z/
 
   def self.register_asset(asset, opts = nil, plugin_directory_name = nil)
     if asset =~ JS_REGEX
@@ -172,7 +172,7 @@ class DiscoursePluginRegistry
       else
         self.javascripts << asset
       end
-    elsif asset =~ /\.css$|\.scss$/
+    elsif asset =~ /\.css$|\.scss\z/
       if opts == :mobile
         self.mobile_stylesheets[plugin_directory_name] ||= Set.new
         self.mobile_stylesheets[plugin_directory_name] << asset

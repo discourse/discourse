@@ -377,7 +377,7 @@ class AdminDashboardData
   end
 
   def subfolder_ends_in_slash_check
-    I18n.t("dashboard.subfolder_ends_in_slash") if Discourse.base_path =~ %r{/$}
+    I18n.t("dashboard.subfolder_ends_in_slash") if Discourse.base_path =~ %r{/\z}
   end
 
   def email_polling_errored_recently

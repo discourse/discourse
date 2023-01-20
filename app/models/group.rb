@@ -1005,7 +1005,7 @@ class Group < ActiveRecord::Base
     user = email_username_user
     domain = email_username_domain
     if user.present? && domain.present?
-      /^#{Regexp.escape(user)}(\+[^@]*)?@#{Regexp.escape(domain)}$/i
+      /\A#{Regexp.escape(user)}(\+[^@]*)?@#{Regexp.escape(domain)}\z/i
     end
   end
 
@@ -1160,8 +1160,8 @@ class Group < ActiveRecord::Base
     value
       .split("|")
       .each do |domain|
-        domain.sub!(%r{^https?://}, "")
-        domain.sub!(%r{/.*$}, "")
+        domain.sub!(%r{\Ahttps?://}, "")
+        domain.sub!(%r{/.*\z}, "")
 
         if domain =~ Group::VALID_DOMAIN_REGEX
           valid_domains << domain
