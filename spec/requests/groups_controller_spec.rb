@@ -1979,6 +1979,20 @@ describe GroupsController do
       expect(response.status).to eq(409)
     end
 
+    it "limits the character count of the reason" do
+      sign_in(user)
+
+      post "/groups/#{group.name}/request_membership.json",
+           params: {
+             reason: "x" * (GroupRequest::REASON_CHARACTER_LIMIT + 1),
+           }
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to contain_exactly(
+        "Reason is too long (maximum is 280 characters)",
+      )
+    end
+
     it 'should create the right PM' do
       owner1 = Fabricate(:user, last_seen_at: Time.zone.now)
       owner2 = Fabricate(:user, last_seen_at: Time.zone.now - 1 .day)
