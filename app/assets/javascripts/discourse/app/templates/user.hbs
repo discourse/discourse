@@ -172,7 +172,10 @@
 
           <div class="primary-textual">
             <div class="user-profile-names">
-              <h1 class={{if this.nameFirst "full-name" "username"}}>
+              <div
+                class="{{if this.nameFirst 'full-name' 'username'}}
+                  user-profile-names__primary"
+              >
                 {{if
                   this.nameFirst
                   this.model.name
@@ -182,15 +185,22 @@
                 {{#if this.model.status}}
                   <UserStatusMessage @status={{this.model.status}} />
                 {{/if}}
-              </h1>
-              <h2 class={{if this.nameFirst "username" "full-name"}}>{{#if
+              </div>
+              <div
+                class="{{if this.nameFirst 'username' 'full-name'}}
+                  user-profile-names__secondary"
+              >{{#if
                   this.nameFirst
-                }}{{this.model.username}}{{else}}{{this.model.name}}{{/if}}</h2>
+                }}{{this.model.username}}{{else}}{{this.model.name}}{{/if}}</div>
               {{#if this.model.staged}}
-                <h2 class="staged">{{i18n "user.staged"}}</h2>
+                <div class="staged user-profile-names__secondary">{{i18n
+                    "user.staged"
+                  }}</div>
               {{/if}}
               {{#if this.model.title}}
-                <h3>{{this.model.title}}</h3>
+                <div
+                  class="user-profile-names__title"
+                >{{this.model.title}}</div>
               {{/if}}
               <PluginOutlet
                 @name="user-post-names"
@@ -201,9 +211,10 @@
             </div>
 
             {{#if this.showFeaturedTopic}}
-              <h3 class="featured-topic">
-                <span>{{i18n "user.featured_topic"}}</span>
-                <LinkTo
+              <div class="featured-topic user-profile__featured-topic">
+                <span title={{i18n "user.featured_topic"}}>
+                  {{d-icon "book"~}}
+                </span><LinkTo
                   @route="topic"
                   @models={{array
                     this.model.featured_topic.slug
@@ -212,19 +223,20 @@
                 >{{html-safe
                     (replace-emoji this.model.featured_topic.fancy_title)
                   }}</LinkTo>
-              </h3>
+              </div>
             {{/if}}
 
-            <h3 class="location-and-website">
+            <div
+              class="location-and-website user-profile__location-and-website"
+            >
               {{#if this.model.location}}<div
                   class="user-profile-location"
-                >{{d-icon "map-marker-alt"}}
+                >{{d-icon "map-marker-alt"~}}
                   {{this.model.location}}</div>{{/if}}
               {{#if this.model.website_name}}
-                <div class="user-profile-website">
-                  {{d-icon "globe"}}
-                  {{#if this.linkWebsite}}
-                    {{! template-lint-disable  }}
+                <div class="user-profile-website">{{d-icon "globe"~}}
+                  {{#if this.linkWebsite~}}
+                    {{~! template-lint-disable ~}}
                     <a
                       href={{this.model.website}}
                       rel="noopener {{unless
@@ -246,7 +258,7 @@
                 @connectorTagName="div"
                 @args={{hash model=this.model}}
               />
-            </h3>
+            </div>
 
             <div class="bio">
               {{#if this.model.suspended}}
@@ -405,7 +417,6 @@
             </dl>
             <PluginOutlet
               @name="user-profile-secondary"
-              @tagName="span"
               @connectorTagName="div"
               @args={{hash model=this.model}}
             />
