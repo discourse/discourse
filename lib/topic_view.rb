@@ -245,7 +245,8 @@ class TopicView
            @topic.category
         title += " - #{@topic.category.name}"
       elsif SiteSetting.tagging_enabled && @topic.tags.exists?
-        title += " - #{@topic.tags.order("tags.topic_count DESC").first.name}"
+        title +=
+          " - #{@topic.tags.order("tags.#{Tag.topic_count_column(@guardian)} DESC").first.name}"
       end
     end
     title
