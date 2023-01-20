@@ -6,7 +6,7 @@ class DetailedTagSerializer < TagSerializer
   has_many :categories, serializer: BasicCategorySerializer
 
   def synonyms
-    TagsController.tag_counts_json(object.synonyms)
+    TagsController.tag_counts_json(object.synonyms, scope)
   end
 
   def categories

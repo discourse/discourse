@@ -77,6 +77,8 @@ acceptance("Category Edit", function (needs) {
   test("Editing required tag groups", async function (assert) {
     await visit("/c/bug/edit/tags");
 
+    assert.ok(exists(".minimum-required-tags"));
+
     assert.ok(exists(".required-tag-groups"));
     assert.strictEqual(count(".required-tag-group-row"), 0);
 
