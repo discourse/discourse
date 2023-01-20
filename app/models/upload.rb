@@ -263,7 +263,7 @@ class Upload < ActiveRecord::Base
   end
 
   def local?
-    !(url =~ %r{^(https?:)?//})
+    !(url =~ %r{\A(https?:)?//})
   end
 
   def fix_dimensions!
@@ -526,7 +526,7 @@ class Upload < ActiveRecord::Base
             # keep track of the url
             previous_url = upload.url.dup
             # where is the file currently stored?
-            external = previous_url =~ %r{^//}
+            external = previous_url =~ %r{\A//}
             # download if external
             if external
               url = SiteSetting.scheme + ":" + previous_url

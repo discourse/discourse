@@ -99,7 +99,7 @@ class DiscourseConnectBase
     end
 
     decoded_hash.each do |k, v|
-      if field = k[/^custom\.(.+)$/, 1]
+      if field = k[/\Acustom\.(.+)\z/, 1]
         sso.custom_fields[field] = v
       end
     end

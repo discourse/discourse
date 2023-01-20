@@ -46,7 +46,7 @@ class RouteMatcher
     return true if actions.nil? # actions are unrestricted
 
     # message_bus is not a rails route, special handling
-    return true if actions.include?("message_bus") && request.fullpath =~ %r{^/message-bus/.*/poll}
+    return true if actions.include?("message_bus") && request.fullpath =~ %r{\A/message-bus/.*/poll}
 
     path_params = path_params_from_request(request)
     actions.include? "#{path_params[:controller]}##{path_params[:action]}"

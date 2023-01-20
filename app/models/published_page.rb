@@ -8,7 +8,7 @@ class PublishedPage < ActiveRecord::Base
 
   validate :slug_format
   def slug_format
-    if slug !~ /^[a-zA-Z\-\_0-9]+$/
+    if slug !~ /\A[a-zA-Z\-\_0-9]+\z/
       errors.add(:slug, I18n.t("publish_page.slug_errors.invalid"))
     elsif %w[check-slug by-topic].include?(slug)
       errors.add(:slug, I18n.t("publish_page.slug_errors.unavailable"))
