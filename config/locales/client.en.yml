@@ -3809,7 +3809,9 @@ en:
         inappropriate: "It's Inappropriate"
         spam: "It's Spam"
       custom_placeholder_notify_user: "Be specific, be constructive, and always be kind."
+      notify_user_textarea_label: "Message for the user"
       custom_placeholder_notify_moderators: "Let us know specifically what you are concerned about, and provide relevant links and examples where possible."
+      notify_moderators_textarea_label: "Message for the moderators"
       custom_message:
         at_least:
           one: "enter at least %{count} character"
