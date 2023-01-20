@@ -53,7 +53,8 @@ module RetrieveTitle
 
   def self.max_chunk_size(uri)
     # Exception for sites that leave the title until very late.
-    if uri.host =~ /(^|\.)amazon\.(com|ca|co\.uk|es|fr|de|it|com\.au|com\.br|cn|in|co\.jp|com\.mx)\z/
+    if uri.host =~
+         /(^|\.)amazon\.(com|ca|co\.uk|es|fr|de|it|com\.au|com\.br|cn|in|co\.jp|com\.mx)\z/
       return 500
     end
     return 300 if uri.host =~ /(^|\.)youtube\.com\z/ || uri.host =~ /(^|\.)youtu\.be\z/

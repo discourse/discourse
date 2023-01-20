@@ -28,7 +28,9 @@ module Autospec
     watch(%r{\Aapp/assets/javascripts/pretty-text/.*\.js\.es6\z}) do
       "spec/components/pretty_text_spec.rb"
     end
-    watch(%r{\Aplugins/.*/discourse-markdown/.*\.js\.es6\z}) { "spec/components/pretty_text_spec.rb" }
+    watch(%r{\Aplugins/.*/discourse-markdown/.*\.js\.es6\z}) do
+      "spec/components/pretty_text_spec.rb"
+    end
 
     watch(%r{\Aplugins/.*/spec/.*\.rb})
     watch(%r{\A(plugins/.*/)plugin\.rb}) { |m| "#{m[1]}spec" }
