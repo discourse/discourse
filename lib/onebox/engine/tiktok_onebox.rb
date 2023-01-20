@@ -15,6 +15,8 @@ module Onebox
       end
 
       def to_html
+        height = oembed_data.thumbnail_width >= oembed_data.thumbnail_height ? 727 : 742
+
         <<-HTML
           <iframe
             class="tiktok-onebox"
@@ -25,7 +27,7 @@ module Onebox
             scrolling="no"
             style="
               min-width: 332px;
-              height: 742px;
+              height: #{height}px;
               border-top: 3px solid #fff;
               border-radius: 9px;
               "
