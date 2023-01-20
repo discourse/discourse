@@ -11,7 +11,15 @@ module Onebox
       always_https
 
       def placeholder_html
-        ::Onebox::Helpers.video_placeholder_html
+        <<-HTML
+          <img
+            src="#{oembed_data.thumbnail_url}"
+            title="#{oembed_data.title}"
+            style="
+              max-width: #{oembed_data.thumbnail_width / 2}px;
+              max-height: #{oembed_data.thumbnail_height / 2}px;"
+          >
+        HTML
       end
 
       def to_html
@@ -30,6 +38,7 @@ module Onebox
               height: #{height}px;
               border-top: 3px solid #fff;
               border-radius: 9px;
+              background-color: #fff;
               "
           ></iframe>
         HTML
