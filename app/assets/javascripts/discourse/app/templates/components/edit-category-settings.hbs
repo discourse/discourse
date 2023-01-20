@@ -181,20 +181,6 @@
     </div>
   </section>
 
-  {{#if this.siteSettings.tagging_enabled}}
-    <section class="field minimum-required-tags">
-      <label for="category-minimum-tags">
-        {{i18n "category.minimum_required_tags"}}
-      </label>
-      <TextField
-        @value={{this.category.minimum_required_tags}}
-        @id="category-minimum-tags"
-        @type="number"
-        @min="0"
-      />
-    </section>
-  {{/if}}
-
   <section class="field num-auto-bump-daily">
     <label for="category-number-daily-bump">
       {{i18n "category.num_auto_bump_daily"}}

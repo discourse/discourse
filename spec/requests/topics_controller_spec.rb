@@ -2804,7 +2804,7 @@ RSpec.describe TopicsController do
       expect(response.status).to eq(200)
     end
 
-    context "with mentions" do
+    context "when `enable_user_status` site setting is enabled" do
       fab!(:post) { Fabricate(:post, user: post_author1) }
       fab!(:topic) { post.topic }
       fab!(:post2) do
@@ -2816,7 +2816,23 @@ RSpec.describe TopicsController do
         )
       end
 
-      it "returns mentions" do
+      before { SiteSetting.enable_user_status = true }
+
+      it "does not return mentions when `enable_user_status` site setting is disabled" do
+        SiteSetting.enable_user_status = false
+
+        get "/t/#{topic.slug}/#{topic.id}.json"
+
+        expect(response.status).to eq(200)
+
+        json = response.parsed_body
+
+        expect(json["post_stream"]["posts"][1]["mentioned_users"]).to eq(nil)
+      end
+
+      it "returns mentions with status" do
+        post_author1.set_status!("off to dentist", "tooth")
+
         get "/t/#{topic.slug}/#{topic.id}.json"
 
         expect(response.status).to eq(200)
@@ -2828,39 +2844,14 @@ RSpec.describe TopicsController do
         expect(mentioned_user["id"]).to be(post_author1.id)
         expect(mentioned_user["name"]).to eq(post_author1.name)
         expect(mentioned_user["username"]).to eq(post_author1.username)
-      end
 
-      it "doesn't return status on mentions by default" do
-        post_author1.set_status!("off to dentist", "tooth")
-
-        get "/t/#{topic.slug}/#{topic.id}.json"
-
-        expect(response.status).to eq(200)
-
-        json = response.parsed_body
-        expect(json["post_stream"]["posts"][1]["mentioned_users"].length).to be(1)
-        status = json["post_stream"]["posts"][1]["mentioned_users"][0]["status"]
-        expect(status).to be_nil
-      end
-
-      it "returns mentions with status if user status is enabled" do
-        SiteSetting.enable_user_status = true
-        post_author1.set_status!("off to dentist", "tooth")
-
-        get "/t/#{topic.slug}/#{topic.id}.json"
-
-        expect(response.status).to eq(200)
-
-        json = response.parsed_body
-        expect(json["post_stream"]["posts"][1]["mentioned_users"].length).to be(1)
-
-        status = json["post_stream"]["posts"][1]["mentioned_users"][0]["status"]
+        status = mentioned_user["status"]
         expect(status).to be_present
         expect(status["emoji"]).to eq(post_author1.user_status.emoji)
         expect(status["description"]).to eq(post_author1.user_status.description)
       end
 
-      it "returns an empty list of mentioned users if there is no mentions in a post" do
+      it "returns an empty list of mentioned users if there are no mentions in a post" do
         Fabricate(:post, user: post_author2, topic: topic, raw: "Post without mentions.")
 
         get "/t/#{topic.slug}/#{topic.id}.json"

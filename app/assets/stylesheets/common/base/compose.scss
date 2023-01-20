@@ -308,7 +308,7 @@ html.composer-open {
   .mini-tag-chooser {
     flex-grow: 1;
     max-width: calc(50% - 4px);
-    margin: 0 0 8px 8px;
+    margin: 0 0 8px 0px;
     z-index: z("composer", "dropdown");
 
     .select-kit-header {

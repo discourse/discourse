@@ -954,6 +954,16 @@ class StaffActionLogger
     )
   end
 
+  def log_permanently_delete_post_revisions(post)
+    raise Discourse::InvalidParameters.new(:post) if post.nil?
+
+    UserHistory.create!(
+      action: UserHistory.actions[:permanently_delete_post_revisions],
+      acting_user_id: @admin.id,
+      post_id: post.id,
+    )
+  end
+
   private
 
   def get_changes(changes)
