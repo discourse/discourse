@@ -1672,6 +1672,9 @@ trust:
   tl3_links_no_follow:
     default: false
     client: true
+  tl4_delete_posts_and_topics:
+    default: false
+    client: true
   trusted_users_can_edit_others:
     default: true
 
