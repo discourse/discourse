@@ -3,7 +3,7 @@
 class EmailValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
     if value.blank?
-      record.errors.add(attribute, I18n.t(:'user.email.blank'))
+      record.errors.add(attribute, I18n.t(:"user.email.blank"))
       invalid = true
     elsif !EmailAddressValidator.valid_value?(value)
       if Invite === record && attribute == :email

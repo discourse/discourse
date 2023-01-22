@@ -2574,7 +2574,7 @@ RSpec.describe User do
       expect(user.secondary_emails.count).to eq(0)
     end
 
-    it 'returns error if email is nil' do
+    it "returns error if email is nil" do
       user.email = nil
       expect { user.save! }.to raise_error(ActiveRecord::RecordInvalid)
     end
