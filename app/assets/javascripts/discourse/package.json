@@ -69,7 +69,7 @@
     "ember-modifier": "^4.0.0",
     "ember-on-resize-modifier": "^1.1.0",
     "ember-qunit": "^6.1.1",
-    "ember-rfc176-data": "^0.3.17",
+    "ember-rfc176-data": "^0.3.18",
     "ember-source": "~3.28.11",
     "ember-test-selectors": "^6.0.0",
     "eslint": "^8.32.0",
