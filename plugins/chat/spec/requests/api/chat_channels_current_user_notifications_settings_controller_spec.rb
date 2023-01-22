@@ -12,11 +12,7 @@ RSpec.describe Chat::Api::ChatChannelsCurrentUserNotificationsSettingsController
     include_examples "channel access example",
                      :put,
                      "/notifications-settings/me",
-                    {
-                       notifications_settings: {
-                         muted: true,
-                       },
-                     }
+                     { notifications_settings: { muted: true } }
 
     context "when category channel has invalid params" do
       fab!(:channel_1) { Fabricate(:category_channel) }

@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
 module Jobs
-
   class FeatureTopicUsers < ::Jobs::Base
-
     def execute(args)
       topic_id = args[:topic_id]
       raise Discourse::InvalidParameters.new(:topic_id) unless topic_id.present?
@@ -17,7 +15,5 @@ module Jobs
 
       topic.feature_topic_users(args)
     end
-
   end
-
 end

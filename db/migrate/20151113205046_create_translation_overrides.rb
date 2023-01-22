@@ -9,6 +9,6 @@ class CreateTranslationOverrides < ActiveRecord::Migration[4.2]
       t.timestamps null: false
     end
 
-    add_index :translation_overrides, [:locale, :translation_key], unique: true
+    add_index :translation_overrides, %i[locale translation_key], unique: true
   end
 end

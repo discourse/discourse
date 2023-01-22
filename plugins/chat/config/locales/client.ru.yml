@@ -179,7 +179,6 @@ ru:
         read_only: "Только для чтения"
         archived_header: "Канал заархивирован"
         archived: "Архивные"
-        archive_failed: "Во время архивации поизошла ошибка. %{completed}/%{total} сообщений были заархивированы в <a target=\"_blank\" href=\"%{topic_url}\">целевой теме</a>. Нажмите «Повторить», чтобы попытаться завершить архивирование."
         archive_completed: "См. <a target=\"_blank\" href=\"%{topic_url}\">архивную тему</a>."
         closed_header: "Канал закрыт"
         closed: "Закрытые"
@@ -301,7 +300,6 @@ ru:
         title: "Чат"
       direct_messages:
         title: "Личный чат"
-        new: "Новый личный чат"
         create: "Создать"
         leave: "Выйти из личного чата"
         cannot_create: "Вы не можете отправлять прямые сообщения."

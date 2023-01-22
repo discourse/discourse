@@ -175,7 +175,6 @@ fi:
         read_only: "Vain luku"
         archived_header: "Kanava on arkistoitu"
         archived: "Arkistoitu"
-        archive_failed: "Kanavan arkistointi epäonnistui. %{completed}/%{total} viestiä on arkistoitu <a target=\"_blank\" href=\"%{topic_url}\">kohdeketjuun</a>. Yritä arkistoinnin viimeistelyä uudelleen painamalla Yritä uudelleen -painiketta."
         archive_completed: "Katso <a target=\"_blank\" href=\"%{topic_url}\">arkistoketju</a>"
         closed_header: "Kanava on suljettu"
         closed: "Suljettu"
@@ -294,7 +293,6 @@ fi:
         title: "Chat"
       direct_messages:
         title: "Henkilökohtainen chat"
-        new: "Uusi henkilökohtainen chat"
         create: "Siirry"
         leave: "Poistu tästä henkilökohtaisesta chatista"
         cannot_create: "Valitettavasti et voi lähettää yksityisviestejä."

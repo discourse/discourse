@@ -767,10 +767,6 @@ it:
         other: "quasi %{count} anni fa"
   password_reset:
     no_token: 'Ops! Il link che hai utilizzato non funziona più. Puoi <a href="%{base_url}/login">Accedere</a> adesso. Se hai dimenticato la password, puoi <a href="%{base_url}/password-reset">richiedere un link</a> per reimpostarla.'
-    choose_new: "Scegli una nuova password"
-    choose: "Scegli una password"
-    update: "Aggiorna Password"
-    save: "Imposta Password"
     title: "Reimposta Password"
     success: "La tua password è stata cambiata con successo e ora sei connesso."
     success_unapproved: "La tua password è stata cambiata con successo."

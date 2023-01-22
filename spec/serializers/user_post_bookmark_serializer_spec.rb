@@ -4,14 +4,12 @@ RSpec.describe UserPostBookmarkSerializer do
   let(:user) { Fabricate(:user) }
   let(:topic) { Fabricate(:topic) }
   let(:post) { Fabricate(:post, user: user, topic: topic) }
-  let!(:bookmark) { Fabricate(:bookmark, name: 'Test', user: user, bookmarkable: post) }
+  let!(:bookmark) { Fabricate(:bookmark, name: "Test", user: user, bookmarkable: post) }
 
   describe "#highest_post_number" do
     let(:whisperers_group) { Fabricate(:group) }
 
-    before do
-      SiteSetting.whispers_allowed_groups = "#{whisperers_group.id}"
-    end
+    before { SiteSetting.whispers_allowed_groups = "#{whisperers_group.id}" }
 
     it "uses the correct highest_post_number column based on whether the user is whisperer" do
       Fabricate(:post, topic: topic)

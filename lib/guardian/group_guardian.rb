@@ -2,14 +2,9 @@
 
 #mixin for all guardian methods dealing with group permissions
 module GroupGuardian
-
   # Creating Method
   def can_create_group?
-    is_admin? ||
-    (
-      SiteSetting.moderators_manage_categories_and_groups &&
-      is_moderator?
-    )
+    is_admin? || (SiteSetting.moderators_manage_categories_and_groups && is_moderator?)
   end
 
   # Edit authority for groups means membership changes only.
@@ -17,17 +12,15 @@ module GroupGuardian
   # table and thus do not allow membership changes.
   def can_edit_group?(group)
     !group.automatic &&
-      (can_admin_group?(group) || group.users.where('group_users.owner').include?(user))
+      (can_admin_group?(group) || group.users.where("group_users.owner").include?(user))
   end
 
   def can_admin_group?(group)
     is_admin? ||
-    (
-      SiteSetting.moderators_manage_categories_and_groups &&
-      is_moderator? &&
-      can_see?(group) &&
-      group.id != Group::AUTO_GROUPS[:admins]
-    )
+      (
+        SiteSetting.moderators_manage_categories_and_groups && is_moderator? && can_see?(group) &&
+          group.id != Group::AUTO_GROUPS[:admins]
+      )
   end
 
   def can_see_group_messages?(group)

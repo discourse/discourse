@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 
-require 'json'
+require "json"
 
 module SpecSchemas
-
   class SpecLoader
-
     def initialize(filename)
       @filename = filename
     end
@@ -14,5 +12,4 @@ module SpecSchemas
       JSON.parse(File.read(File.join(__dir__, "json", "#{@filename}.json")))
     end
   end
-
 end

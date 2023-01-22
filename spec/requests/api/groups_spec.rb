@@ -1,8 +1,7 @@
 # frozen_string_literal: true
-require 'swagger_helper'
+require "swagger_helper"
 
-RSpec.describe 'groups' do
-
+RSpec.describe "groups" do
   let(:admin) { Fabricate(:admin) }
 
   before do
@@ -10,20 +9,20 @@ RSpec.describe 'groups' do
     sign_in(admin)
   end
 
-  path '/admin/groups.json' do
-    post 'Create a group' do
-      tags 'Groups'
-      operationId 'createGroup'
-      consumes 'application/json'
-      expected_request_schema = load_spec_schema('group_create_request')
+  path "/admin/groups.json" do
+    post "Create a group" do
+      tags "Groups"
+      operationId "createGroup"
+      consumes "application/json"
+      expected_request_schema = load_spec_schema("group_create_request")
       parameter name: :params, in: :body, schema: expected_request_schema
 
-      produces 'application/json'
-      response '200', 'group created' do
-        expected_response_schema = load_spec_schema('group_create_response')
+      produces "application/json"
+      response "200", "group created" do
+        expected_response_schema = load_spec_schema("group_create_response")
         schema expected_response_schema
 
-        let(:params) { { 'group' => { 'name' => 'awesome' } } }
+        let(:params) { { "group" => { "name" => "awesome" } } }
         it_behaves_like "a JSON endpoint", 200 do
           let(:expected_response_schema) { expected_response_schema }
           let(:expected_request_schema) { expected_request_schema }
@@ -32,17 +31,17 @@ RSpec.describe 'groups' do
     end
   end
 
-  path '/admin/groups/{id}.json' do
-    delete 'Delete a group' do
-      tags 'Groups'
-      operationId 'deleteGroup'
-      consumes 'application/json'
+  path "/admin/groups/{id}.json" do
+    delete "Delete a group" do
+      tags "Groups"
+      operationId "deleteGroup"
+      consumes "application/json"
       parameter name: :id, in: :path, type: :integer
       expected_request_schema = nil
 
-      produces 'application/json'
-      response '200', 'response' do
-        expected_response_schema = load_spec_schema('success_ok_response')
+      produces "application/json"
+      response "200", "response" do
+        expected_response_schema = load_spec_schema("success_ok_response")
         schema expected_response_schema
 
         let(:id) { Fabricate(:group).id }
@@ -54,39 +53,41 @@ RSpec.describe 'groups' do
     end
   end
 
-  path '/groups/{id}.json' do
-    put 'Update a group' do
-      tags 'Groups'
-      operationId 'updateGroup'
-      consumes 'application/json'
+  path "/groups/{id}.json" do
+    put "Update a group" do
+      tags "Groups"
+      operationId "updateGroup"
+      consumes "application/json"
       parameter name: :id, in: :path, type: :integer
 
-      expected_request_schema = load_spec_schema('group_create_request')
+      expected_request_schema = load_spec_schema("group_create_request")
       parameter name: :params, in: :body, schema: expected_request_schema
 
-      produces 'application/json'
-      response '200', 'success response' do
-        schema type: :object, properties: {
-          success: { type: :string, example: "OK" }
-        }
+      produces "application/json"
+      response "200", "success response" do
+        schema type: :object, properties: { success: { type: :string, example: "OK" } }
 
         let(:id) { Fabricate(:group).id }
-        let(:params) { { 'group' => { 'name' => 'awesome' } } }
+        let(:params) { { "group" => { "name" => "awesome" } } }
 
         run_test!
       end
     end
 
-    get 'Get a group' do
-      tags 'Groups'
-      operationId 'getGroup'
-      consumes 'application/json'
-      parameter name: :id, in: :path, type: :string, example: 'name', description: "Use group name instead of id"
+    get "Get a group" do
+      tags "Groups"
+      operationId "getGroup"
+      consumes "application/json"
+      parameter name: :id,
+                in: :path,
+                type: :string,
+                example: "name",
+                description: "Use group name instead of id"
       expected_request_schema = nil
 
-      produces 'application/json'
-      response '200', 'success response' do
-        expected_response_schema = load_spec_schema('group_response')
+      produces "application/json"
+      response "200", "success response" do
+        expected_response_schema = load_spec_schema("group_response")
         schema expected_response_schema
 
         let(:id) { Fabricate(:group).name }
@@ -99,17 +100,21 @@ RSpec.describe 'groups' do
     end
   end
 
-  path '/groups/{id}/members.json' do
-    get 'List group members' do
-      tags 'Groups'
-      operationId 'listGroupMembers'
-      consumes 'application/json'
-      parameter name: :id, in: :path, type: :string, example: 'name', description: "Use group name instead of id"
+  path "/groups/{id}/members.json" do
+    get "List group members" do
+      tags "Groups"
+      operationId "listGroupMembers"
+      consumes "application/json"
+      parameter name: :id,
+                in: :path,
+                type: :string,
+                example: "name",
+                description: "Use group name instead of id"
       expected_request_schema = nil
 
-      produces 'application/json'
-      response '200', 'success response' do
-        expected_response_schema = load_spec_schema('group_members_response')
+      produces "application/json"
+      response "200", "success response" do
+        expected_response_schema = load_spec_schema("group_members_response")
         schema expected_response_schema
 
         let(:id) { Fabricate(:group).name }
@@ -121,24 +126,24 @@ RSpec.describe 'groups' do
       end
     end
 
-    put 'Add group members' do
-      tags 'Groups'
-      operationId 'addGroupMembers'
-      consumes 'application/json'
+    put "Add group members" do
+      tags "Groups"
+      operationId "addGroupMembers"
+      consumes "application/json"
       parameter name: :id, in: :path, type: :integer
-      expected_request_schema = load_spec_schema('group_add_members_request')
+      expected_request_schema = load_spec_schema("group_add_members_request")
       parameter name: :params, in: :body, schema: expected_request_schema
 
-      produces 'application/json'
-      response '200', 'success response' do
-        expected_response_schema = load_spec_schema('group_add_members_response')
+      produces "application/json"
+      response "200", "success response" do
+        expected_response_schema = load_spec_schema("group_add_members_response")
         schema expected_response_schema
 
         let(:id) { Fabricate(:group).id }
         let(:user) { Fabricate(:user) }
         let(:user2) { Fabricate(:user) }
         let(:usernames) { "#{user.username},#{user2.username}" }
-        let(:params) { { 'usernames' => usernames } }
+        let(:params) { { "usernames" => usernames } }
 
         it_behaves_like "a JSON endpoint", 200 do
           let(:expected_response_schema) { expected_response_schema }
@@ -147,24 +152,24 @@ RSpec.describe 'groups' do
       end
     end
 
-    delete 'Remove group members' do
-      tags 'Groups'
-      operationId 'removeGroupMembers'
-      consumes 'application/json'
+    delete "Remove group members" do
+      tags "Groups"
+      operationId "removeGroupMembers"
+      consumes "application/json"
       parameter name: :id, in: :path, type: :integer
-      expected_request_schema = load_spec_schema('group_remove_members_request')
+      expected_request_schema = load_spec_schema("group_remove_members_request")
       parameter name: :params, in: :body, schema: expected_request_schema
 
-      produces 'application/json'
-      response '200', 'success response' do
-        expected_response_schema = load_spec_schema('group_remove_members_response')
+      produces "application/json"
+      response "200", "success response" do
+        expected_response_schema = load_spec_schema("group_remove_members_response")
         schema expected_response_schema
 
         let(:id) { Fabricate(:group).id }
         let(:user) { Fabricate(:user) }
         let(:user2) { Fabricate(:user) }
         let(:usernames) { "#{user.username},#{user2.username}" }
-        let(:params) { { 'usernames' => usernames } }
+        let(:params) { { "usernames" => usernames } }
 
         it_behaves_like "a JSON endpoint", 200 do
           let(:expected_response_schema) { expected_response_schema }
@@ -174,16 +179,16 @@ RSpec.describe 'groups' do
     end
   end
 
-  path '/groups.json' do
-    get 'List groups' do
-      tags 'Groups'
-      operationId 'listGroups'
-      consumes 'application/json'
+  path "/groups.json" do
+    get "List groups" do
+      tags "Groups"
+      operationId "listGroups"
+      consumes "application/json"
       expected_request_schema = nil
 
-      produces 'application/json'
-      response '200', 'response' do
-        expected_response_schema = load_spec_schema('groups_list_response')
+      produces "application/json"
+      response "200", "response" do
+        expected_response_schema = load_spec_schema("groups_list_response")
         schema expected_response_schema
 
         it_behaves_like "a JSON endpoint", 200 do
@@ -193,5 +198,4 @@ RSpec.describe 'groups' do
       end
     end
   end
-
 end

@@ -605,10 +605,6 @@ vi:
       almost_x_years:
         other: "gần %{count} năm trước"
   password_reset:
-    choose_new: "Chọn một mật khẩu mới"
-    choose: "Chọn một mật khẩu"
-    update: "Cập nhật mật khẩu"
-    save: "Nhập mật khẩu"
     title: "Thiết lập lại mật khẩu"
     success: "Bạn đã thay đổi mật khẩu thành công và đã được đăng nhập."
     success_unapproved: "Bạn đã thay đổi mật khẩu thành công."

@@ -8,37 +8,54 @@ RSpec.describe HashtagsController do
   fab!(:private_category) { Fabricate(:private_category, group: group) }
 
   fab!(:hidden_tag) { Fabricate(:tag, name: "hidden") }
-  let(:tag_group) { Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name]) }
+  let(:tag_group) do
+    Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
+  end
 
   before do
     SiteSetting.tagging_enabled = true
+
+    # TODO (martin) Remove when enable_experimental_hashtag_autocomplete is default for all sites
+    SiteSetting.enable_experimental_hashtag_autocomplete = false
+
     tag_group
   end
 
   describe "#lookup" do
     context "when logged in" do
       context "as regular user" do
-        before do
-          sign_in(Fabricate(:user))
-        end
+        before { sign_in(Fabricate(:user)) }
 
         it "returns only valid categories and tags" do
-          get "/hashtags.json", params: { slugs: [category.slug, private_category.slug, "none", tag.name, hidden_tag.name] }
+          get "/hashtags.json",
+              params: {
+                slugs: [category.slug, private_category.slug, "none", tag.name, hidden_tag.name],
+              }
 
           expect(response.status).to eq(200)
           expect(response.parsed_body).to eq(
-            "categories" => { category.slug => category.url },
-            "tags" => { tag.name => tag.full_url }
+            "categories" => {
+              category.slug => category.url,
+            },
+            "tags" => {
+              tag.name => tag.full_url,
+            },
           )
         end
 
         it "handles tags with the TAG_HASHTAG_POSTFIX" do
-          get "/hashtags.json", params: { slugs: ["#{tag.name}#{PrettyText::Helpers::TAG_HASHTAG_POSTFIX}"] }
+          get "/hashtags.json",
+              params: {
+                slugs: ["#{tag.name}#{PrettyText::Helpers::TAG_HASHTAG_POSTFIX}"],
+              }
 
           expect(response.status).to eq(200)
           expect(response.parsed_body).to eq(
-            "categories" => {},
-            "tags" => { tag.name => tag.full_url }
+            "categories" => {
+            },
+            "tags" => {
+              tag.name => tag.full_url,
+            },
           )
         end
 
@@ -53,9 +70,7 @@ RSpec.describe HashtagsController do
       context "as admin" do
         fab!(:admin) { Fabricate(:admin) }
 
-        before do
-          sign_in(admin)
-        end
+        before { sign_in(admin) }
 
         it "returns restricted categories and hidden tags" do
           group.add(admin)
@@ -64,8 +79,12 @@ RSpec.describe HashtagsController do
 
           expect(response.status).to eq(200)
           expect(response.parsed_body).to eq(
-            "categories" => { private_category.slug => private_category.url },
-            "tags" => { hidden_tag.name => hidden_tag.full_url }
+            "categories" => {
+              private_category.slug => private_category.url,
+            },
+            "tags" => {
+              hidden_tag.name => hidden_tag.full_url,
+            },
           )
         end
       end
@@ -79,26 +98,29 @@ RSpec.describe HashtagsController do
         it "works" do
           foo = Fabricate(:category_with_definition, slug: "foo")
           foobar = Fabricate(:category_with_definition, slug: "bar", parent_category_id: foo.id)
-          foobarbaz = Fabricate(:category_with_definition, slug: "baz", parent_category_id: foobar.id)
+          foobarbaz =
+            Fabricate(:category_with_definition, slug: "baz", parent_category_id: foobar.id)
 
           qux = Fabricate(:category_with_definition, slug: "qux")
           quxbar = Fabricate(:category_with_definition, slug: "bar", parent_category_id: qux.id)
-          quxbarbaz = Fabricate(:category_with_definition, slug: "baz", parent_category_id: quxbar.id)
+          quxbarbaz =
+            Fabricate(:category_with_definition, slug: "baz", parent_category_id: quxbar.id)
 
-          get "/hashtags.json", params: {
-            slugs: [
-              ":", # should not work
-              "foo",
-              "bar", # should not work
-              "baz", # should not work
-              "foo:bar",
-              "bar:baz",
-              "foo:bar:baz", # should not work
-              "qux",
-              "qux:bar",
-              "qux:bar:baz" # should not work
-            ]
-          }
+          get "/hashtags.json",
+              params: {
+                slugs: [
+                  ":", # should not work
+                  "foo",
+                  "bar", # should not work
+                  "baz", # should not work
+                  "foo:bar",
+                  "bar:baz",
+                  "foo:bar:baz", # should not work
+                  "qux",
+                  "qux:bar",
+                  "qux:bar:baz", # should not work
+                ],
+              }
 
           expect(response.status).to eq(200)
           expect(response.parsed_body["categories"]).to eq(
@@ -106,7 +128,7 @@ RSpec.describe HashtagsController do
             "foo:bar" => foobar.url,
             "bar:baz" => foobarbaz.id < quxbarbaz.id ? foobarbaz.url : quxbarbaz.url,
             "qux" => qux.url,
-            "qux:bar" => quxbar.url
+            "qux:bar" => quxbar.url,
           )
         end
       end

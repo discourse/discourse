@@ -270,7 +270,6 @@ gl:
       edit: "Editar marcador"
       not_bookmarked: "marcar esta publicación"
       created_with_reminder: "Fixou como marcador esta publicación cun recordatorio %{date}. %{name}"
-      remove: "Retirar marcador"
       delete: "Eliminar marcador"
       confirm_delete: "Confirma a eliminación deste marcador? O recordatorio tamén se eliminará."
       confirm_clear: "Confirma o borrado de todos os marcadores deste tema?"
@@ -330,7 +329,6 @@ gl:
     enable: "Activar"
     disable: "Desactivar"
     continue: "Continuar"
-    undo: "Desfacer"
     switch_to_anon: "Entrar no modo anónimo"
     switch_from_anon: "Saír do modo anónimo"
     banner:
@@ -615,6 +613,7 @@ gl:
         denied: "rexeitado"
         undone: "petición retirada"
         handle: "xestionar a petición de incorporación"
+        undo: "Desfacer"
       manage:
         title: "Xestionar"
         name: "Nome"
@@ -952,7 +951,6 @@ gl:
         perm_denied_expl: "Denegou o permiso para recibir notificacións no navegador. Permita as notificacións na configuración do navegador."
         disable: "Desactivar as notificacións"
         enable: "Activar as notificacións"
-        each_browser_note: 'Nota: Ten que cambiar este axuste en todos os navegadores que use. Desactivaranse todas as notificacións cando estea en «non molestar», independentemente deste axuste.'
         consent_prompt: "Quere recibir notificacións ao vivo cando a xente lea as súas publicacións?"
       dismiss: "Desbotar"
       dismiss_notifications: "Desbotar todo"
@@ -1401,6 +1399,7 @@ gl:
           edit_title: "Editar convite"
           instructions: "Compartir esta ligazón para conceder acceso a este sitio:"
           copy_link: "copiar a ligazón"
+          expired_at_time: "Caduca o %{time}"
           show_advanced: "Amosar opcións avanzadas"
           hide_advanced: "Agochar opcións avanzadas"
           add_to_groups: "Engadir aos grupos"
@@ -2129,9 +2128,11 @@ gl:
         dismiss_new: "Desbotar novas"
         toggle: "cambiar a selección en bloque dos temas"
         actions: "Accións en bloque"
+        change_category: "Estabelecer categoría..."
         close_topics: "Pechar temas"
         archive_topics: "Arquivar temas"
         move_messages_to_inbox: "Mover á caixa de entrada"
+        notification_level: "Notificacións..."
         change_notification_level: "Cambiar o nivel de notificacións"
         choose_new_category: "Seleccionar a nova categoría dos temas:"
         selected:
@@ -2355,12 +2356,14 @@ gl:
         open: "Abrir tema"
         close: "Pechar tema"
         multi_select: "Seleccionar publicacións…"
+        slow_mode: "Estabelecer modo lento..."
         timed_update: "Estabelecer temporizador do tema..."
         pin: "Fixar tema…"
         unpin: "Desprender tema…"
         unarchive: "Desarquivar tema"
         archive: "Arquivar tema"
         reset_read: "Restabelecer datos de lecturas"
+        make_public: "Facer público o tema..."
         make_private: "Facer privada a mensaxe"
         reset_bump_date: "Restabelecer data de promoción"
       feature:
@@ -2643,6 +2646,8 @@ gl:
         rebake: "Reconstruír HTML"
         publish_page: "Publicación da páxina"
         unhide: "Non agochar"
+        change_owner: "Cambiar propietario..."
+        grant_badge: "Conceder insignia..."
         lock_post: "Bloquear publicación"
         lock_post_description: "evitar que o autor edite esta publicación"
         unlock_post: "Desbloquear a publicación"
@@ -2656,6 +2661,8 @@ gl:
         delete_topic_confirm_modal_no: "Non, manter este tema"
         delete_topic_error: "Produciuse un erro ao eliminar este tema"
         delete_topic: "eliminar tema"
+        add_post_notice: "Engadir aviso do equipo..."
+        change_post_notice: "Cambiar o aviso do equipo..."
         delete_post_notice: "Eliminar o aviso do equipo"
         remove_timer: "retirar o temporizador"
         edit_timer: "editar temporizador"
@@ -2719,7 +2726,6 @@ gl:
       bookmarks:
         create: "Crear marcador"
         edit: "Editar marcador"
-        created: "Creado"
         updated: "Actualizado"
         name: "Nome"
         name_placeholder: "Para que serve este marcador?"
@@ -2998,7 +3004,6 @@ gl:
       one: "usuario"
       other: "usuarios"
     category_title: "Categoría"
-    changed_by: "de %{author}"
     raw_email:
       title: "Correo entrante"
       not_available: "Non dispoñíbel!"
@@ -3289,6 +3294,7 @@ gl:
         everyone_can_use: "Todos poden usar as etiquetas"
         usable_only_by_groups: "As etiquetas son visíbeis para todos, pero só os seguintes grupos poden usalas"
         visible_only_to_groups: "As etiquetas só son visíbeis para os seguintes grupos"
+        parent_tag_placeholder: "Opcional"
       topics:
         none:
           unread: "Non ten temas sen ler."
@@ -3365,18 +3371,19 @@ gl:
               content: "Administración"
             badges:
               content: "Insignias"
+            everything:
+              content: "Todo"
             faq:
               content: "PMF"
             groups:
               content: "Grupos"
-              title: "Todos os grupos"
             users:
               content: "Usuarios"
             my_posts:
               content: "As miñas publicacións"
             review:
               content: "Revisar"
-              title: "revisar"
+    until: "Ata:"
   admin_js:
     type_to_filter: "escriba para filtrar..."
     admin:
@@ -3772,7 +3779,6 @@ gl:
         button_title: "Enviar convites"
       customize:
         title: "Personalizar"
-        long_title: "Personalización do sitio"
         preview: "visualizar"
         explain_preview: "Ver o sitio con este tema activado"
         save: "Gardar"
@@ -3966,9 +3972,9 @@ gl:
           new_name: "Nova paleta de cores"
           copy_name_prefix: "Copiar de"
           delete_confirm: "Eliminar esta paleta de cores?"
-          undo: "desfacer"
+          undo: "Desfacer"
           undo_title: "Desfai os teus cambio nesta cor desde a última vez que a gardaches."
-          revert: "reverter"
+          revert: "Reverter"
           revert_title: "Restabelece esta cor na paleta de cores predeterminada de Discourse."
           primary:
             name: "primario"

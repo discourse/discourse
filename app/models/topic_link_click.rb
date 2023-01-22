@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'ipaddr'
-require 'url_helper'
+require "ipaddr"
+require "url_helper"
 
 class TopicLinkClick < ActiveRecord::Base
   belongs_to :topic_link, counter_cache: :clicks
@@ -9,9 +9,9 @@ class TopicLinkClick < ActiveRecord::Base
 
   validates_presence_of :topic_link_id
 
-  ALLOWED_REDIRECT_HOSTNAMES = Set.new(%W{www.youtube.com youtu.be})
+  ALLOWED_REDIRECT_HOSTNAMES = Set.new(%W[www.youtube.com youtu.be])
   include ActiveSupport::Deprecation::DeprecatedConstantAccessor
-  deprecate_constant 'WHITELISTED_REDIRECT_HOSTNAMES', 'TopicLinkClick::ALLOWED_REDIRECT_HOSTNAMES'
+  deprecate_constant "WHITELISTED_REDIRECT_HOSTNAMES", "TopicLinkClick::ALLOWED_REDIRECT_HOSTNAMES"
 
   # Create a click from a URL and post_id
   def self.create_from(args = {})
@@ -21,33 +21,34 @@ class TopicLinkClick < ActiveRecord::Base
     uri = UrlHelper.relaxed_parse(url)
     urls = Set.new
     urls << url
-    if url =~ /^http/
-      urls << url.sub(/^https/, 'http')
-      urls << url.sub(/^http:/, 'https:')
+    if url =~ /\Ahttp/
+      urls << url.sub(/\Ahttps/, "http")
+      urls << url.sub(/\Ahttp:/, "https:")
       urls << UrlHelper.schemaless(url)
     end
     urls << UrlHelper.absolute_without_cdn(url)
     urls << uri.path if uri.try(:host) == Discourse.current_hostname
 
-    query = url.index('?')
+    query = url.index("?")
     unless query.nil?
-      endpos = url.index('#') || url.size
+      endpos = url.index("#") || url.size
       urls << url[0..query - 1] + url[endpos..-1]
     end
 
     # link can have query params, and analytics can add more to the end:
     i = url.length
-    while i = url.rindex('&', i - 1)
+    while i = url.rindex("&", i - 1)
       urls << url[0...i]
     end
 
     # add a cdn link
     if uri
       if Discourse.asset_host.present?
-        cdn_uri = begin
-          URI.parse(Discourse.asset_host)
-        rescue URI::Error
-        end
+        cdn_uri =
+          begin
+            URI.parse(Discourse.asset_host)
+          rescue URI::Error
+          end
 
         if cdn_uri && cdn_uri.hostname == uri.hostname && uri.path.starts_with?(cdn_uri.path)
           is_cdn_link = true
@@ -56,10 +57,11 @@ class TopicLinkClick < ActiveRecord::Base
       end
 
       if SiteSetting.Upload.s3_cdn_url.present?
-        cdn_uri = begin
-          URI.parse(SiteSetting.Upload.s3_cdn_url)
-        rescue URI::Error
-        end
+        cdn_uri =
+          begin
+            URI.parse(SiteSetting.Upload.s3_cdn_url)
+          rescue URI::Error
+          end
 
         if cdn_uri && cdn_uri.hostname == uri.hostname && uri.path.starts_with?(cdn_uri.path)
           is_cdn_link = true
@@ -80,12 +82,15 @@ class TopicLinkClick < ActiveRecord::Base
     link = link.where(topic_id: args[:topic_id]) if args[:topic_id].present?
 
     # select the TopicLink associated to first url
-    link = link.order("array_position(ARRAY[#{urls.map { |s| "#{ActiveRecord::Base.connection.quote(s)}" }.join(',')}], url::text)").first
+    link =
+      link.order(
+        "array_position(ARRAY[#{urls.map { |s| "#{ActiveRecord::Base.connection.quote(s)}" }.join(",")}], url::text)",
+      ).first
 
     # If no link is found...
     unless link.present?
       # ... return the url for relative links or when using the same host
-      return url if url =~ /^\/[^\/]/ || uri.try(:host) == Discourse.current_hostname
+      return url if url =~ %r{\A/[^/]} || uri.try(:host) == Discourse.current_hostname
 
       # If we have it somewhere else on the site, just allow the redirect.
       # This is likely due to a onebox of another topic.
@@ -112,7 +117,6 @@ class TopicLinkClick < ActiveRecord::Base
 
     url
   end
-
 end
 
 # == Schema Information

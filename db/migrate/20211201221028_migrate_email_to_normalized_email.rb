@@ -1,12 +1,10 @@
 # frozen_string_literal: true
 
 class MigrateEmailToNormalizedEmail < ActiveRecord::Migration[6.1]
-
   # minimize locking on user_email table
   disable_ddl_transaction!
 
   def up
-
     min, max = DB.query_single "SELECT MIN(id), MAX(id) FROM user_emails"
     # scaling is needed to compensate for "holes" where records were deleted
     # and pathological cases where for some reason id 100_000_000 and 0 exist
@@ -29,7 +27,6 @@ class MigrateEmailToNormalizedEmail < ActiveRecord::Migration[6.1]
 
     low_id = min
     bounds.each do |high_id|
-
       # using execute cause MiniSQL is not logging at the moment
       # to_i is not needed, but specified so it is explicit there is no SQL injection
       execute <<~SQL
@@ -41,7 +38,6 @@ class MigrateEmailToNormalizedEmail < ActiveRecord::Migration[6.1]
 
       low_id = high_id
     end
-
   end
 
   def down

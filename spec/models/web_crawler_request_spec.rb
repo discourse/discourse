@@ -6,17 +6,13 @@ RSpec.describe WebCrawlerRequest do
     CachedCounting.enable
   end
 
-  after do
-    CachedCounting.disable
-  end
+  after { CachedCounting.disable }
 
   it "can log crawler requests" do
     freeze_time
     d1 = Time.now.utc.to_date
 
-    4.times do
-      WebCrawlerRequest.increment!("Googlebot")
-    end
+    4.times { WebCrawlerRequest.increment!("Googlebot") }
 
     WebCrawlerRequest.increment!("Bingbot")
 
@@ -34,5 +30,4 @@ RSpec.describe WebCrawlerRequest do
     expect(WebCrawlerRequest.find_by(date: d1, user_agent: "Googlebot").count).to eq(4)
     expect(WebCrawlerRequest.find_by(date: d1, user_agent: "Bingbot").count).to eq(1)
   end
-
 end

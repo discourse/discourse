@@ -2,12 +2,8 @@
 
 module RedisSnapshotHelper
   def use_redis_snapshotting
-    before(:each) do
-      RedisSnapshot.begin_faux_transaction
-    end
+    before(:each) { RedisSnapshot.begin_faux_transaction }
 
-    after(:each) do
-      RedisSnapshot.end_faux_transaction
-    end
+    after(:each) { RedisSnapshot.end_faux_transaction }
   end
 end

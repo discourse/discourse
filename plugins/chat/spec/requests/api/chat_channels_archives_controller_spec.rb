@@ -98,6 +98,22 @@ RSpec.describe Chat::Api::ChatChannelsArchivesController do
       }.not_to change { ChatChannelArchive.count }
     end
 
+    context "when archiving to a new topic" do
+      it "returns validation errors if the topic is not valid" do
+        SiteSetting.max_emojis_in_title = 1
+        new_topic_params_invalid = new_topic_params.dup
+        new_topic_params_invalid[:archive][
+          :title
+        ] = "Some new topic with too many emoji :joy: :sob: :tada:"
+        sign_in(admin)
+        expect {
+          post "/chat/api/channels/#{channel.id}/archives", params: new_topic_params_invalid
+        }.not_to change { ChatChannelArchive.count }
+        expect(response.status).to eq(400)
+        expect(response.parsed_body["errors"]).to eq(["Title can't have more than 1 emoji"])
+      end
+    end
+
     describe "when retrying the archive process" do
       fab!(:channel) { Fabricate(:category_channel, chatable: category, status: :read_only) }
       fab!(:archive) do

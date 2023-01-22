@@ -4,7 +4,7 @@ class MigrateSearchDataAfterDefaultLocaleRename < ActiveRecord::Migration[6.0]
   disable_ddl_transaction!
 
   def up
-    %w{category tag topic user}.each { |model| fix_search_data(model) }
+    %w[category tag topic user].each { |model| fix_search_data(model) }
   end
 
   def down

@@ -32,10 +32,11 @@ class Chat::ChatMailer
     when_away_frequency = UserOption.chat_email_frequencies[:when_away]
     allowed_group_ids = Chat.allowed_group_ids
 
-    users = User
-      .joins(:user_option)
-      .where(user_options: { chat_enabled: true, chat_email_frequency: when_away_frequency })
-      .where("users.last_seen_at < ?", 15.minutes.ago)
+    users =
+      User
+        .joins(:user_option)
+        .where(user_options: { chat_enabled: true, chat_email_frequency: when_away_frequency })
+        .where("users.last_seen_at < ?", 15.minutes.ago)
 
     if !allowed_group_ids.include?(Group::AUTO_GROUPS[:everyone])
       users = users.joins(:groups).where(groups: { id: allowed_group_ids })

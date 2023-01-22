@@ -2,7 +2,7 @@
 
 class AnonymousUser < ActiveRecord::Base
   belongs_to :user
-  belongs_to :master_user, class_name: 'User'
+  belongs_to :master_user, class_name: "User"
 end
 
 # == Schema Information

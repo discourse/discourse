@@ -1,26 +1,24 @@
 # frozen_string_literal: true
 
 RSpec.describe HeatSettingsUpdater do
-  describe '.update' do
+  describe ".update" do
     subject(:update_settings) { described_class.update }
 
     def expect_default_values
-      [:topic_views_heat, :topic_post_like_heat].each do |prefix|
-        [:low, :medium, :high].each do |level|
+      %i[topic_views_heat topic_post_like_heat].each do |prefix|
+        %i[low medium high].each do |level|
           setting_name = "#{prefix}_#{level}"
           expect(SiteSetting.get(setting_name)).to eq(SiteSetting.defaults[setting_name])
         end
       end
     end
 
-    it 'changes nothing on fresh install' do
-      expect {
-        update_settings
-      }.to_not change { UserHistory.count }
+    it "changes nothing on fresh install" do
+      expect { update_settings }.to_not change { UserHistory.count }
       expect_default_values
     end
 
-    context 'with low activity' do
+    context "with low activity" do
       let!(:hottest_topic1) { Fabricate(:topic, views: 3000, posts_count: 10, like_count: 2) }
       let!(:hottest_topic2) { Fabricate(:topic, views: 3000, posts_count: 10, like_count: 2) }
       let!(:warm_topic1) { Fabricate(:topic, views: 1500, posts_count: 10, like_count: 1) }
@@ -33,25 +31,21 @@ RSpec.describe HeatSettingsUpdater do
       let!(:cold_topic) { Fabricate(:topic, views: 100, posts_count: 10, like_count: 0) }
 
       it "doesn't make settings lower than defaults" do
-        expect {
-          update_settings
-        }.to_not change { UserHistory.count }
+        expect { update_settings }.to_not change { UserHistory.count }
         expect_default_values
       end
 
-      it 'can set back down to minimum defaults' do
-        [:low, :medium, :high].each do |level|
+      it "can set back down to minimum defaults" do
+        %i[low medium high].each do |level|
           SiteSetting.set("topic_views_heat_#{level}", 20_000)
           SiteSetting.set("topic_post_like_heat_#{level}", 5.0)
         end
-        expect {
-          update_settings
-        }.to change { UserHistory.count }.by(6)
+        expect { update_settings }.to change { UserHistory.count }.by(6)
         expect_default_values
       end
     end
 
-    context 'with similar activity' do
+    context "with similar activity" do
       let!(:hottest_topic1) { Fabricate(:topic, views: 3530, posts_count: 100, like_count: 201) }
       let!(:hottest_topic2) { Fabricate(:topic, views: 3530, posts_count: 100, like_count: 201) }
       let!(:warm_topic1) { Fabricate(:topic, views: 2020, posts_count: 100, like_count: 99) }
@@ -64,14 +58,12 @@ RSpec.describe HeatSettingsUpdater do
       let!(:cold_topic) { Fabricate(:topic, views: 100, posts_count: 100, like_count: 1) }
 
       it "doesn't make small changes" do
-        expect {
-          update_settings
-        }.to_not change { UserHistory.count }
+        expect { update_settings }.to_not change { UserHistory.count }
         expect_default_values
       end
     end
 
-    context 'with increased activity' do
+    context "with increased activity" do
       let!(:hottest_topic1) { Fabricate(:topic, views: 10_100, posts_count: 100, like_count: 230) }
       let!(:hottest_topic2) { Fabricate(:topic, views: 10_012, posts_count: 100, like_count: 220) }
       let!(:warm_topic1) { Fabricate(:topic, views: 4020, posts_count: 99, like_count: 126) }
@@ -83,10 +75,8 @@ RSpec.describe HeatSettingsUpdater do
       let!(:lukewarm_topic4) { Fabricate(:topic, views: 2002, posts_count: 99, like_count: 54) }
       let!(:cold_topic) { Fabricate(:topic, views: 100, posts_count: 100, like_count: 1) }
 
-      it 'changes settings when difference is significant' do
-        expect {
-          update_settings
-        }.to change { UserHistory.count }.by(6)
+      it "changes settings when difference is significant" do
+        expect { update_settings }.to change { UserHistory.count }.by(6)
         expect(SiteSetting.topic_views_heat_high).to eq(10_000)
         expect(SiteSetting.topic_views_heat_medium).to eq(4000)
         expect(SiteSetting.topic_views_heat_low).to eq(2000)
@@ -97,9 +87,7 @@ RSpec.describe HeatSettingsUpdater do
 
       it "doesn't change settings when automatic_topic_heat_values is false" do
         SiteSetting.automatic_topic_heat_values = false
-        expect {
-          update_settings
-        }.to_not change { UserHistory.count }
+        expect { update_settings }.to_not change { UserHistory.count }
         expect_default_values
       end
     end

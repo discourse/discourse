@@ -5,7 +5,7 @@ import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { action, computed } from "@ember/object";
 import { gt, notEmpty } from "@ember/object/computed";
 import { inject as service } from "@ember/service";
-import { isBlank } from "@ember/utils";
+import { isBlank, isPresent } from "@ember/utils";
 import { htmlSafe } from "@ember/template";
 
 const DEFAULT_HINT = htmlSafe(
@@ -37,6 +37,13 @@ export default class CreateChannelController extends Controller.extend(
   @computed("categorySelected", "name")
   get createDisabled() {
     return !this.categorySelected || isBlank(this.name);
+  }
+
+  @computed("categorySelected", "name")
+  get categoryName() {
+    return this.categorySelected && isPresent(this.name)
+      ? escapeExpression(this.name)
+      : null;
   }
 
   onShow() {
@@ -149,7 +156,7 @@ export default class CreateChannelController extends Controller.extend(
     this.setProperties({
       categoryId,
       category,
-      name: category?.name || "",
+      name: this.name || category?.name || "",
     });
   }
 

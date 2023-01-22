@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe QuotedPost do
-  it 'correctly extracts quotes' do
+  it "correctly extracts quotes" do
     Jobs.run_immediately!
 
     topic = Fabricate(:topic)
@@ -22,16 +22,25 @@ RSpec.describe QuotedPost do
     RAW
     stub_image_size
 
-    post4 = create_post(topic: topic, raw: raw, post_number: 4, reply_to_post_number: post3.post_number)
+    post4 =
+      create_post(topic: topic, raw: raw, post_number: 4, reply_to_post_number: post3.post_number)
 
-    expect(QuotedPost.where(post_id: post4.id).pluck(:quoted_post_id)).to contain_exactly(post1.id, post2.id, post3.id)
+    expect(QuotedPost.where(post_id: post4.id).pluck(:quoted_post_id)).to contain_exactly(
+      post1.id,
+      post2.id,
+      post3.id,
+    )
     expect(post4.reload.reply_quoted).to eq(true)
 
     SiteSetting.editing_grace_period = 1.minute.to_i
     post5 = create_post(topic: topic, post_number: 5, raw: "post 5")
     raw = raw.sub(post3.full_url, post5.full_url)
     post4.revise(post4.user, { raw: raw }, revised_at: post4.updated_at + 2.minutes)
-    expect(QuotedPost.where(post_id: post4.id).pluck(:quoted_post_id)).to contain_exactly(post1.id, post2.id, post5.id)
+    expect(QuotedPost.where(post_id: post4.id).pluck(:quoted_post_id)).to contain_exactly(
+      post1.id,
+      post2.id,
+      post5.id,
+    )
   end
 
   it "doesn't count quotes from the same post" do
@@ -56,7 +65,7 @@ RSpec.describe QuotedPost do
     expect(QuotedPost.where(quoted_post_id: post.id).count).to eq(0)
   end
 
-  it 'correctly handles deltas' do
+  it "correctly handles deltas" do
     post1 = Fabricate(:post)
     post2 = Fabricate(:post)
 

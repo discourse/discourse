@@ -9,24 +9,25 @@ RSpec.describe UserStat do
     expect(user.user_stat.new_since).to be_present
   end
 
-  describe '#update_view_counts' do
+  describe "#update_view_counts" do
     let(:user) { Fabricate(:user) }
     let(:stat) { user.user_stat }
 
-    context 'with topics_entered' do
-      context 'without any views' do
+    context "with topics_entered" do
+      context "without any views" do
         it "doesn't increase the user's topics_entered" do
-          expect { UserStat.update_view_counts; stat.reload }.not_to change(stat, :topics_entered)
+          expect {
+            UserStat.update_view_counts
+            stat.reload
+          }.not_to change(stat, :topics_entered)
         end
       end
 
-      context 'with a view' do
+      context "with a view" do
         fab!(:topic) { Fabricate(:topic) }
-        let!(:view) { TopicViewItem.add(topic.id, '127.0.0.1', user.id) }
+        let!(:view) { TopicViewItem.add(topic.id, "127.0.0.1", user.id) }
 
-        before do
-          user.update_column :last_seen_at, 1.second.ago
-        end
+        before { user.update_column :last_seen_at, 1.second.ago }
 
         it "adds one to the topics entered" do
           UserStat.update_view_counts
@@ -35,7 +36,7 @@ RSpec.describe UserStat do
         end
 
         it "won't record a second view as a different topic" do
-          TopicViewItem.add(topic.id, '127.0.0.1', user.id)
+          TopicViewItem.add(topic.id, "127.0.0.1", user.id)
           UserStat.update_view_counts
           stat.reload
           expect(stat.topics_entered).to eq(1)
@@ -43,22 +44,28 @@ RSpec.describe UserStat do
       end
     end
 
-    context 'with posts_read_count' do
-      context 'without any post timings' do
+    context "with posts_read_count" do
+      context "without any post timings" do
         it "doesn't increase the user's posts_read_count" do
-          expect { UserStat.update_view_counts; stat.reload }.not_to change(stat, :posts_read_count)
+          expect {
+            UserStat.update_view_counts
+            stat.reload
+          }.not_to change(stat, :posts_read_count)
         end
       end
 
-      context 'with a post timing' do
+      context "with a post timing" do
         let!(:post) { Fabricate(:post) }
         let!(:post_timings) do
-          PostTiming.record_timing(msecs: 1234, topic_id: post.topic_id, user_id: user.id, post_number: post.post_number)
+          PostTiming.record_timing(
+            msecs: 1234,
+            topic_id: post.topic_id,
+            user_id: user.id,
+            post_number: post.post_number,
+          )
         end
 
-        before do
-          user.update_column :last_seen_at, 1.second.ago
-        end
+        before { user.update_column :last_seen_at, 1.second.ago }
 
         it "increases posts_read_count" do
           UserStat.update_view_counts
@@ -69,8 +76,8 @@ RSpec.describe UserStat do
     end
   end
 
-  describe 'ensure consistency!' do
-    it 'can update first unread' do
+  describe "ensure consistency!" do
+    it "can update first unread" do
       post = create_post
 
       freeze_time 10.minutes.from_now
@@ -84,7 +91,7 @@ RSpec.describe UserStat do
       expect(post.user.user_stat.first_unread_at).to eq_time(Time.zone.now)
     end
 
-    it 'updates first unread pm timestamp correctly' do
+    it "updates first unread pm timestamp correctly" do
       freeze_time
 
       user = Fabricate(:user, last_seen_at: Time.zone.now)
@@ -92,21 +99,27 @@ RSpec.describe UserStat do
       pm_topic = Fabricate(:private_message_topic, user: user, recipient: user_2)
       create_post(user: user, topic_id: pm_topic.id)
 
-      TopicUser.change(user.id, pm_topic.id,
-        notification_level: TopicUser.notification_levels[:tracking]
+      TopicUser.change(
+        user.id,
+        pm_topic.id,
+        notification_level: TopicUser.notification_levels[:tracking],
       )
 
       # user that is not tracking PM topic
-      TopicUser.change(user_2.id, pm_topic.id,
-        notification_level: TopicUser.notification_levels[:regular]
+      TopicUser.change(
+        user_2.id,
+        pm_topic.id,
+        notification_level: TopicUser.notification_levels[:regular],
       )
 
       # User that has not been seen recently
       user_3 = Fabricate(:user, last_seen_at: 1.year.ago)
       pm_topic.allowed_users << user_3
 
-      TopicUser.change(user_3.id, pm_topic.id,
-        notification_level: TopicUser.notification_levels[:tracking]
+      TopicUser.change(
+        user_3.id,
+        pm_topic.id,
+        notification_level: TopicUser.notification_levels[:tracking],
       )
 
       user_3_orig_first_unread_pm_at = user_3.user_stat.first_unread_pm_at
@@ -121,13 +134,17 @@ RSpec.describe UserStat do
       pm_topic_2 = Fabricate(:private_message_topic, user: user_5, recipient: user_6)
       create_post(user: user_5, topic_id: pm_topic_2.id)
 
-      TopicUser.change(user_5.id, pm_topic_2.id,
-        notification_level: TopicUser.notification_levels[:tracking]
+      TopicUser.change(
+        user_5.id,
+        pm_topic_2.id,
+        notification_level: TopicUser.notification_levels[:tracking],
       )
 
       # User out of last seen limit
-      TopicUser.change(user_6.id, pm_topic_2.id,
-        notification_level: TopicUser.notification_levels[:tracking]
+      TopicUser.change(
+        user_6.id,
+        pm_topic_2.id,
+        notification_level: TopicUser.notification_levels[:tracking],
       )
 
       create_post(user: user_6, topic_id: pm_topic_2.id)
@@ -143,20 +160,26 @@ RSpec.describe UserStat do
       end
 
       # User affected
-      expect(user.user_stat.reload.first_unread_pm_at).to be_within(1.seconds).of(pm_topic.reload.updated_at)
-      expect(user_2.user_stat.reload.first_unread_pm_at).to be_within(1.seconds).of(UserStat::UPDATE_UNREAD_MINUTES_AGO.minutes.ago)
+      expect(user.user_stat.reload.first_unread_pm_at).to be_within(1.seconds).of(
+        pm_topic.reload.updated_at,
+      )
+      expect(user_2.user_stat.reload.first_unread_pm_at).to be_within(1.seconds).of(
+        UserStat::UPDATE_UNREAD_MINUTES_AGO.minutes.ago,
+      )
       expect(user_3.user_stat.reload.first_unread_pm_at).to eq_time(user_3_orig_first_unread_pm_at)
-      expect(user_4.user_stat.reload.first_unread_pm_at).to be_within(1.seconds).of(UserStat::UPDATE_UNREAD_MINUTES_AGO.minutes.ago)
+      expect(user_4.user_stat.reload.first_unread_pm_at).to be_within(1.seconds).of(
+        UserStat::UPDATE_UNREAD_MINUTES_AGO.minutes.ago,
+      )
       expect(user_5.user_stat.reload.first_unread_pm_at).to eq_time(pm_topic_2.reload.updated_at)
       expect(user_6.user_stat.reload.first_unread_pm_at).to eq_time(user_6_orig_first_unread_pm_at)
     end
   end
 
-  describe 'update_time_read!' do
+  describe "update_time_read!" do
     fab!(:user) { Fabricate(:user) }
     let(:stat) { user.user_stat }
 
-    it 'always expires redis key' do
+    it "always expires redis key" do
       # this tests implementation which is not 100% ideal
       # that said, redis key leaks are not good
       stat.update_time_read!
@@ -165,14 +188,14 @@ RSpec.describe UserStat do
       expect(ttl).to be <= UserStat::MAX_TIME_READ_DIFF
     end
 
-    it 'makes no changes if nothing is cached' do
+    it "makes no changes if nothing is cached" do
       Discourse.redis.del(UserStat.last_seen_key(user.id))
       stat.update_time_read!
       stat.reload
       expect(stat.time_read).to eq(0)
     end
 
-    it 'makes a change if time read is below threshold' do
+    it "makes a change if time read is below threshold" do
       freeze_time
       UserStat.cache_last_seen(user.id, (Time.now - 10).to_f)
       stat.update_time_read!
@@ -180,7 +203,7 @@ RSpec.describe UserStat do
       expect(stat.time_read).to eq(10)
     end
 
-    it 'makes no change if time read is above threshold' do
+    it "makes no change if time read is above threshold" do
       freeze_time
 
       t = Time.now - 1 - UserStat::MAX_TIME_READ_DIFF
@@ -190,10 +213,9 @@ RSpec.describe UserStat do
       stat.reload
       expect(stat.time_read).to eq(0)
     end
-
   end
 
-  describe 'update_distinct_badge_count' do
+  describe "update_distinct_badge_count" do
     fab!(:user) { Fabricate(:user) }
     let(:stat) { user.user_stat }
     fab!(:badge1) { Fabricate(:badge) }
@@ -242,13 +264,12 @@ RSpec.describe UserStat do
       badge2.update(enabled: true)
       expect(stat.reload.distinct_badge_count).to eq(2)
     end
-
   end
 
-  describe '.update_draft_count' do
+  describe ".update_draft_count" do
     fab!(:user) { Fabricate(:user) }
 
-    it 'updates draft_count' do
+    it "updates draft_count" do
       Draft.create!(user: user, draft_key: "topic_1", data: {})
       Draft.create!(user: user, draft_key: "new_topic", data: {})
       Draft.create!(user: user, draft_key: "topic_2", data: {})
@@ -275,9 +296,12 @@ RSpec.describe UserStat do
     end
 
     it "publishes a message to clients" do
-      MessageBus.expects(:publish).with("/u/#{user.username_lower}/counters",
-                                        { pending_posts_count: 1 },
-                                        user_ids: [user.id], group_ids: [Group::AUTO_GROUPS[:staff]])
+      MessageBus.expects(:publish).with(
+        "/u/#{user.username_lower}/counters",
+        { pending_posts_count: 1 },
+        user_ids: [user.id],
+        group_ids: [Group::AUTO_GROUPS[:staff]],
+      )
       update_pending_posts
     end
   end

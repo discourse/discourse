@@ -4,7 +4,9 @@ module PageObjects
   module Pages
     class Chat < PageObjects::Pages::Base
       def prefers_full_page
-        page.execute_script("window.localStorage.setItem('discourse_chat_preferred_mode', '\"FULL_PAGE_CHAT\"');")
+        page.execute_script(
+          "window.localStorage.setItem('discourse_chat_preferred_mode', '\"FULL_PAGE_CHAT\"');",
+        )
       end
 
       def open_from_header

@@ -1,10 +1,9 @@
 # frozen_string_literal: true
 
 class WebHookTopicViewSerializer < TopicViewSerializer
-  attributes :created_by,
-             :last_poster
+  attributes :created_by, :last_poster
 
-  %i{
+  %i[
     post_stream
     timeline_lookup
     pm_with_non_human_user
@@ -23,11 +22,7 @@ class WebHookTopicViewSerializer < TopicViewSerializer
     slow_mode_seconds
     slow_mode_enabled_until
     bookmarks
-  }.each do |attr|
-    define_method("include_#{attr}?") do
-      false
-    end
-  end
+  ].each { |attr| define_method("include_#{attr}?") { false } }
 
   def include_show_read_indicator?
     false

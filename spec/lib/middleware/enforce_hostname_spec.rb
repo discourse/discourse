@@ -1,21 +1,23 @@
 # frozen_string_literal: true
 
 RSpec.describe Middleware::EnforceHostname do
-
   before do
-    RailsMultisite::ConnectionManagement.stubs(:current_db_hostnames).returns(['primary.example.com', 'secondary.example.com'])
-    RailsMultisite::ConnectionManagement.stubs(:current_hostname).returns('primary.example.com')
+    RailsMultisite::ConnectionManagement.stubs(:current_db_hostnames).returns(
+      %w[primary.example.com secondary.example.com],
+    )
+    RailsMultisite::ConnectionManagement.stubs(:current_hostname).returns("primary.example.com")
   end
 
   def check_returned_host(input_host)
     resolved_host = nil
 
-    app = described_class.new(
-      lambda do |env|
-        resolved_host = env["HTTP_HOST"]
-        [200, {}, ["ok"]]
-      end
-    )
+    app =
+      described_class.new(
+        lambda do |env|
+          resolved_host = env["HTTP_HOST"]
+          [200, {}, ["ok"]]
+        end,
+      )
 
     app.call({ "HTTP_HOST" => input_host })
 

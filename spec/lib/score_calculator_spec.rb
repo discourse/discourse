@@ -1,20 +1,20 @@
 # frozen_string_literal: true
 
-require 'score_calculator'
+require "score_calculator"
 
 RSpec.describe ScoreCalculator do
   fab!(:post) { Fabricate(:post, reads: 111) }
   fab!(:another_post) { Fabricate(:post, topic: post.topic, reads: 222) }
   let(:topic) { post.topic }
 
-  context 'with weightings' do
+  context "with weightings" do
     before do
       ScoreCalculator.new(reads: 3).calculate
       post.reload
       another_post.reload
     end
 
-    it 'takes the supplied weightings into effect' do
+    it "takes the supplied weightings into effect" do
       expect(post.score).to eq(333)
       expect(another_post.score).to eq(666)
     end
@@ -29,7 +29,7 @@ RSpec.describe ScoreCalculator do
     end
   end
 
-  describe 'summary' do
+  describe "summary" do
     it "won't update the site settings when the site settings don't match" do
       ScoreCalculator.new(reads: 3).calculate
       topic.reload

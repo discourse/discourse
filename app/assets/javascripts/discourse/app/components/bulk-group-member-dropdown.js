@@ -39,22 +39,24 @@ export default DropdownSelectBoxComponent.extend({
       });
     }
 
-    if (this.bulkSelection.some((m) => !m.primary)) {
-      items.push({
-        id: "setPrimary",
-        name: I18n.t("groups.members.make_all_primary"),
-        description: I18n.t("groups.members.make_all_primary_description"),
-        icon: "id-card",
-      });
-    }
+    if (this.currentUser.staff) {
+      if (this.bulkSelection.some((m) => !m.primary)) {
+        items.push({
+          id: "setPrimary",
+          name: I18n.t("groups.members.make_all_primary"),
+          description: I18n.t("groups.members.make_all_primary_description"),
+          icon: "id-card",
+        });
+      }
 
-    if (this.bulkSelection.some((m) => m.primary)) {
-      items.push({
-        id: "unsetPrimary",
-        name: I18n.t("groups.members.remove_all_primary"),
-        description: I18n.t("groups.members.remove_all_primary_description"),
-        icon: "id-card",
-      });
+      if (this.bulkSelection.some((m) => m.primary)) {
+        items.push({
+          id: "unsetPrimary",
+          name: I18n.t("groups.members.remove_all_primary"),
+          description: I18n.t("groups.members.remove_all_primary_description"),
+          icon: "id-card",
+        });
+      }
     }
 
     return items;

@@ -2,7 +2,6 @@
 
 module Jobs
   class PostUpdateTopicTrackingState < ::Jobs::Base
-
     def execute(args)
       post = Post.find_by(id: args[:post_id])
       return if !post&.topic
@@ -10,15 +9,9 @@ module Jobs
       topic = post.topic
 
       if topic.private_message?
-        if post.post_number > 1
-          PrivateMessageTopicTrackingState.publish_unread(post)
-        end
+        PrivateMessageTopicTrackingState.publish_unread(post) if post.post_number > 1
 
-        TopicGroup.new_message_update(
-          topic.last_poster,
-          topic.id,
-          post.post_number
-        )
+        TopicGroup.new_message_update(topic.last_poster, topic.id, post.post_number)
       else
         TopicTrackingState.publish_unmuted(post.topic)
         if post.post_number > 1
@@ -28,6 +21,5 @@ module Jobs
         TopicTrackingState.publish_latest(post.topic, post.whisper?)
       end
     end
-
   end
 end

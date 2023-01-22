@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class InvitedUserRecordSerializer < BasicUserSerializer
-
   attributes :topics_entered,
              :posts_read_count,
              :last_seen_at,
@@ -56,5 +55,4 @@ class InvitedUserRecordSerializer < BasicUserSerializer
   def can_see_invite_details?
     @can_see_invite_details ||= scope.can_see_invite_details?(invited_by)
   end
-
 end

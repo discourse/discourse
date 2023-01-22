@@ -15,7 +15,7 @@ RSpec.describe Jobs::GroupSmtpEmail do
       group_id: group.id,
       post_id: post_id,
       email: "test@test.com",
-      cc_emails: ["otherguy@test.com", "cormac@lit.com"]
+      cc_emails: %w[otherguy@test.com cormac@lit.com],
     }
   end
   let(:staged1) { Fabricate(:staged, email: "otherguy@test.com") }
@@ -51,14 +51,20 @@ RSpec.describe Jobs::GroupSmtpEmail do
 
   it "includes a 'reply above this line' message" do
     subject.execute(args)
-    email_log = EmailLog.find_by(post_id: post.id, topic_id: post.topic_id, user_id: recipient_user.id)
-    expect(email_log.as_mail_message.html_part.to_s).to include(I18n.t("user_notifications.reply_above_line"))
+    email_log =
+      EmailLog.find_by(post_id: post.id, topic_id: post.topic_id, user_id: recipient_user.id)
+    expect(email_log.as_mail_message.html_part.to_s).to include(
+      I18n.t("user_notifications.reply_above_line"),
+    )
   end
 
   it "does not include context posts" do
     subject.execute(args)
-    email_log = EmailLog.find_by(post_id: post.id, topic_id: post.topic_id, user_id: recipient_user.id)
-    expect(email_log.as_mail_message.text_part.to_s).not_to include(I18n.t("user_notifications.previous_discussion"))
+    email_log =
+      EmailLog.find_by(post_id: post.id, topic_id: post.topic_id, user_id: recipient_user.id)
+    expect(email_log.as_mail_message.text_part.to_s).not_to include(
+      I18n.t("user_notifications.previous_discussion"),
+    )
     expect(email_log.as_mail_message.text_part.to_s).not_to include("some first post content")
   end
 
@@ -67,14 +73,20 @@ RSpec.describe Jobs::GroupSmtpEmail do
     post.update!(reply_to_post_number: 1, reply_to_user: second_post.user)
     PostReply.create(post: second_post, reply: post)
     subject.execute(args)
-    email_log = EmailLog.find_by(post_id: post.id, topic_id: post.topic_id, user_id: recipient_user.id)
-    expect(email_log.raw_headers).to include("In-Reply-To: <discourse/post/#{second_post.id}@#{Email::Sender.host_for(Discourse.base_url)}>")
-    expect(email_log.as_mail_message.html_part.to_s).not_to include(I18n.t("user_notifications.in_reply_to"))
+    email_log =
+      EmailLog.find_by(post_id: post.id, topic_id: post.topic_id, user_id: recipient_user.id)
+    expect(email_log.raw_headers).to include(
+      "In-Reply-To: <discourse/post/#{second_post.id}@#{Email::Sender.host_for(Discourse.base_url)}>",
+    )
+    expect(email_log.as_mail_message.html_part.to_s).not_to include(
+      I18n.t("user_notifications.in_reply_to"),
+    )
   end
 
   it "includes the participants in the correct format (but not the recipient user), and does not have links for the staged users" do
     subject.execute(args)
-    email_log = EmailLog.find_by(post_id: post.id, topic_id: post.topic_id, user_id: recipient_user.id)
+    email_log =
+      EmailLog.find_by(post_id: post.id, topic_id: post.topic_id, user_id: recipient_user.id)
     email_text = email_log.as_mail_message.text_part.to_s
     expect(email_text).to include("Support Group")
     expect(email_text).to include("otherguy@test.com")
@@ -87,7 +99,8 @@ RSpec.describe Jobs::GroupSmtpEmail do
 
   it "creates an EmailLog record with the correct details" do
     subject.execute(args)
-    email_log = EmailLog.find_by(post_id: post.id, topic_id: post.topic_id, user_id: recipient_user.id)
+    email_log =
+      EmailLog.find_by(post_id: post.id, topic_id: post.topic_id, user_id: recipient_user.id)
     expect(email_log).not_to eq(nil)
     expect(email_log.message_id).to eq("discourse/post/#{post.id}@test.localhost")
   end
@@ -96,7 +109,8 @@ RSpec.describe Jobs::GroupSmtpEmail do
     subject.execute(args)
     expect(ActionMailer::Base.deliveries.count).to eq(1)
     expect(ActionMailer::Base.deliveries.last.subject).to eq("Re: Help I need support")
-    incoming_email = IncomingEmail.find_by(post_id: post.id, topic_id: post.topic_id, user_id: post.user.id)
+    incoming_email =
+      IncomingEmail.find_by(post_id: post.id, topic_id: post.topic_id, user_id: post.user.id)
     expect(incoming_email).not_to eq(nil)
     expect(incoming_email.message_id).to eq("discourse/post/#{post.id}@test.localhost")
     expect(incoming_email.created_via).to eq(IncomingEmail.created_via_types[:group_smtp])
@@ -109,7 +123,8 @@ RSpec.describe Jobs::GroupSmtpEmail do
     subject.execute(args)
     expect(ActionMailer::Base.deliveries.count).to eq(1)
     expect(ActionMailer::Base.deliveries.last.subject).to eq("Re: Help I need support")
-    email_log = EmailLog.find_by(post_id: post.id, topic_id: post.topic_id, user_id: recipient_user.id)
+    email_log =
+      EmailLog.find_by(post_id: post.id, topic_id: post.topic_id, user_id: recipient_user.id)
     post_reply_key = PostReplyKey.where(user_id: recipient_user, post_id: post.id).first
     expect(post_reply_key).to eq(nil)
     expect(email_log.raw_headers).not_to include("Reply-To: Support Group <#{group.email_username}")
@@ -120,7 +135,8 @@ RSpec.describe Jobs::GroupSmtpEmail do
     subject.execute(args)
     expect(ActionMailer::Base.deliveries.count).to eq(1)
     expect(ActionMailer::Base.deliveries.last.subject).to eq("Re: Help I need support")
-    email_log = EmailLog.find_by(post_id: post.id, topic_id: post.topic_id, user_id: recipient_user.id)
+    email_log =
+      EmailLog.find_by(post_id: post.id, topic_id: post.topic_id, user_id: recipient_user.id)
     expect(email_log).not_to eq(nil)
     expect(email_log.message_id).to eq("discourse/post/#{post.id}@test.localhost")
   end
@@ -129,7 +145,8 @@ RSpec.describe Jobs::GroupSmtpEmail do
     subject.execute(args)
     expect(ActionMailer::Base.deliveries.count).to eq(1)
     expect(ActionMailer::Base.deliveries.last.subject).to eq("Re: Help I need support")
-    incoming_email = IncomingEmail.find_by(post_id: post.id, topic_id: post.topic_id, user_id: post.user.id)
+    incoming_email =
+      IncomingEmail.find_by(post_id: post.id, topic_id: post.topic_id, user_id: post.user.id)
     expect(incoming_email).not_to eq(nil)
     expect(incoming_email.message_id).to eq("discourse/post/#{post.id}@test.localhost")
     expect(incoming_email.created_via).to eq(IncomingEmail.created_via_types[:group_smtp])
@@ -142,7 +159,8 @@ RSpec.describe Jobs::GroupSmtpEmail do
     subject.execute(args)
     expect(ActionMailer::Base.deliveries.count).to eq(1)
     expect(ActionMailer::Base.deliveries.last.subject).to eq("Re: Help I need support")
-    email_log = EmailLog.find_by(post_id: post.id, topic_id: post.topic_id, user_id: recipient_user.id)
+    email_log =
+      EmailLog.find_by(post_id: post.id, topic_id: post.topic_id, user_id: recipient_user.id)
     post_reply_key = PostReplyKey.where(user_id: recipient_user, post_id: post.id).first
     expect(post_reply_key).to eq(nil)
     expect(email_log.raw).not_to include("Reply-To: Support Group <#{group.email_username}")
@@ -154,7 +172,8 @@ RSpec.describe Jobs::GroupSmtpEmail do
     subject.execute(args)
     expect(ActionMailer::Base.deliveries.count).to eq(1)
     expect(ActionMailer::Base.deliveries.last.subject).to eq("Re: Help I need support")
-    email_log = EmailLog.find_by(post_id: post.id, topic_id: post.topic_id, user_id: recipient_user.id)
+    email_log =
+      EmailLog.find_by(post_id: post.id, topic_id: post.topic_id, user_id: recipient_user.id)
     expect(email_log.raw_headers).to include("From: support-group <#{group.email_username}")
   end
 
@@ -162,7 +181,8 @@ RSpec.describe Jobs::GroupSmtpEmail do
     subject.execute(args)
     expect(ActionMailer::Base.deliveries.count).to eq(1)
     expect(ActionMailer::Base.deliveries.last.subject).to eq("Re: Help I need support")
-    email_log = EmailLog.find_by(post_id: post.id, topic_id: post.topic_id, user_id: recipient_user.id)
+    email_log =
+      EmailLog.find_by(post_id: post.id, topic_id: post.topic_id, user_id: recipient_user.id)
     expect(email_log.to_address).to eq("test@test.com")
     expect(email_log.smtp_group_id).to eq(group.id)
   end
@@ -174,7 +194,7 @@ RSpec.describe Jobs::GroupSmtpEmail do
     expect(ActionMailer::Base.deliveries.count).to eq(1)
     last_email = ActionMailer::Base.deliveries.last
     expect(last_email.subject).to eq("Re: Help I need support")
-    expect(last_email.cc).to match_array(["otherguy@test.com", "cormac@lit.com"])
+    expect(last_email.cc).to match_array(%w[otherguy@test.com cormac@lit.com])
   end
 
   context "when there are cc_addresses" do
@@ -183,8 +203,9 @@ RSpec.describe Jobs::GroupSmtpEmail do
       expect(ActionMailer::Base.deliveries.count).to eq(1)
       sent_mail = ActionMailer::Base.deliveries.last
       expect(sent_mail.subject).to eq("Re: Help I need support")
-      expect(sent_mail.cc).to eq(["otherguy@test.com", "cormac@lit.com"])
-      email_log = EmailLog.find_by(post_id: post.id, topic_id: post.topic_id, user_id: recipient_user.id)
+      expect(sent_mail.cc).to eq(%w[otherguy@test.com cormac@lit.com])
+      email_log =
+        EmailLog.find_by(post_id: post.id, topic_id: post.topic_id, user_id: recipient_user.id)
       expect(email_log.cc_addresses).to eq("otherguy@test.com;cormac@lit.com")
       expect(email_log.cc_user_ids).to match_array([staged1.id, staged2.id])
     end
@@ -197,7 +218,8 @@ RSpec.describe Jobs::GroupSmtpEmail do
       expect(sent_mail.subject).to eq("Re: Help I need support")
       expect(sent_mail.cc).to eq(["otherguy@test.com"])
       expect(sent_mail.bcc).to eq(["cormac@lit.com"])
-      email_log = EmailLog.find_by(post_id: post.id, topic_id: post.topic_id, user_id: recipient_user.id)
+      email_log =
+        EmailLog.find_by(post_id: post.id, topic_id: post.topic_id, user_id: recipient_user.id)
       expect(email_log.cc_addresses).to eq("otherguy@test.com")
       expect(email_log.bcc_addresses).to eq("cormac@lit.com")
       expect(email_log.cc_user_ids).to match_array([staged1.id])
@@ -208,9 +230,7 @@ RSpec.describe Jobs::GroupSmtpEmail do
     let(:post_id) { post.topic.posts.first.id }
 
     context "when the group has imap enabled" do
-      before do
-        group.update!(imap_enabled: true)
-      end
+      before { group.update!(imap_enabled: true) }
 
       it "aborts and does not send a group SMTP email; the OP is the one that sent the email in the first place" do
         expect { subject.execute(args) }.not_to(change { EmailLog.count })
@@ -219,9 +239,7 @@ RSpec.describe Jobs::GroupSmtpEmail do
     end
 
     context "when the group does not have imap enabled" do
-      before do
-        group.update!(imap_enabled: false)
-      end
+      before { group.update!(imap_enabled: false) }
 
       it "sends the email as expected" do
         subject.execute(args)
@@ -235,13 +253,15 @@ RSpec.describe Jobs::GroupSmtpEmail do
       post.trash!
       subject.execute(args)
       expect(ActionMailer::Base.deliveries.count).to eq(0)
-      expect(SkippedEmailLog.exists?(
-        email_type: "group_smtp",
-        user: recipient_user,
-        post: nil,
-        to_address: recipient_user.email,
-        reason_type: SkippedEmailLog.reason_types[:group_smtp_post_deleted]
-      )).to eq(true)
+      expect(
+        SkippedEmailLog.exists?(
+          email_type: "group_smtp",
+          user: recipient_user,
+          post: nil,
+          to_address: recipient_user.email,
+          reason_type: SkippedEmailLog.reason_types[:group_smtp_post_deleted],
+        ),
+      ).to eq(true)
     end
   end
 
@@ -250,13 +270,15 @@ RSpec.describe Jobs::GroupSmtpEmail do
       post.topic.trash!
       subject.execute(args)
       expect(ActionMailer::Base.deliveries.count).to eq(0)
-      expect(SkippedEmailLog.exists?(
-        email_type: "group_smtp",
-        user: recipient_user,
-        post: post,
-        to_address: recipient_user.email,
-        reason_type: SkippedEmailLog.reason_types[:group_smtp_topic_deleted]
-      )).to eq(true)
+      expect(
+        SkippedEmailLog.exists?(
+          email_type: "group_smtp",
+          user: recipient_user,
+          post: post,
+          to_address: recipient_user.email,
+          reason_type: SkippedEmailLog.reason_types[:group_smtp_topic_deleted],
+        ),
+      ).to eq(true)
     end
   end
 
@@ -289,13 +311,15 @@ RSpec.describe Jobs::GroupSmtpEmail do
       group.update!(smtp_enabled: false)
       subject.execute(args)
       expect(ActionMailer::Base.deliveries.count).to eq(0)
-      expect(SkippedEmailLog.exists?(
-        email_type: "group_smtp",
-        user: recipient_user,
-        post: post,
-        to_address: recipient_user.email,
-        reason_type: SkippedEmailLog.reason_types[:group_smtp_disabled_for_group]
-      )).to eq(true)
+      expect(
+        SkippedEmailLog.exists?(
+          email_type: "group_smtp",
+          user: recipient_user,
+          post: post,
+          to_address: recipient_user.email,
+          reason_type: SkippedEmailLog.reason_types[:group_smtp_disabled_for_group],
+        ),
+      ).to eq(true)
     end
   end
 end

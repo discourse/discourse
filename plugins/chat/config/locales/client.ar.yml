@@ -191,7 +191,6 @@ ar:
         read_only: "للقراءة فقط"
         archived_header: "القناة مؤرشفة"
         archived: "مؤرشفة"
-        archive_failed: "فشلت أرشفة القناة. تمت أرشفة %{completed}/%{total} من الرسائل في <a target=\"_blank\" href=\"%{topic_url}\">الموضوع المستهدف</a>. اضغط على إعادة المحاولة لمحاولة إكمال الأرشيف."
         archive_completed: "راجع <a target=\"_blank\" href=\"%{topic_url}\">موضوع الأرشيف</a>"
         closed_header: "القناة مغلقة"
         closed: "مغلقة"
@@ -319,7 +318,6 @@ ar:
         title: "الدردشة"
       direct_messages:
         title: "الدردشة الشخصية"
-        new: "دردشة شخصية جديدة"
         create: "إنشاء"
         leave: "مغادرة هذه الدردشة الشخصية"
         cannot_create: "عذرًا، لا يمكنك إرسال الرسائل المباشرة."

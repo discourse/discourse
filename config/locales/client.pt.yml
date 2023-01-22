@@ -310,7 +310,6 @@ pt:
       not_bookmarked: "adicionar esta mensagem aos marcadores"
       remove_reminder_keep_bookmark: "Remover lembrete e manter marcador"
       created_with_reminder: "Você marcou este post com um lembrete %{date}. %{name}"
-      remove: "Remover Marcador"
       delete: "Remover Marcador"
       confirm_delete: "Tem certeza de que deseja remover este marcador? O lembrete também será excluído."
       confirm_clear: "De certeza que pretende remover todos os marcadores deste tópico?"
@@ -372,7 +371,6 @@ pt:
     enable: "Ativar "
     disable: "Desativar"
     continue: "Continuar"
-    undo: "Desfazer"
     switch_to_anon: "Entrar em modo Anónimo"
     switch_from_anon: "Sair de modo Anónimo"
     banner:
@@ -667,6 +665,7 @@ pt:
         denied: "rejeitado"
         undone: "pedido desfeito"
         handle: "gerir o pedido de adesão"
+        undo: "Desfazer"
       manage:
         title: "Gerir"
         name: "Nome"
@@ -1027,7 +1026,6 @@ pt:
         perm_denied_expl: "Negou a permissão para as notificações. Autorize as notificações através das configurações do seu navegador."
         disable: "Desativar Notificações"
         enable: "Ativar Notificações"
-        each_browser_note: 'Nota: Terá de alterar esta configuração em cada navegador que usar. Todas as notificações serão desativadas quando estiver em "Não perturbar", independentemente desta configuração.'
         consent_prompt: "Quer receber notificações instantâneas quando outras pessoas responderem às suas publicações?"
       dismiss: "Marcar como visto"
       dismiss_notifications: "Marcar Visto Tudo"
@@ -2533,6 +2531,7 @@ pt:
         unarchive: "Desarquivar Tópico"
         archive: "Arquivar Tópico"
         reset_read: "Repor Data de Leitura"
+        make_public: "Criar tópico publico..."
         make_private: "Tornar Mensagem Pessoal"
         reset_bump_date: "Reset à Data do Bump"
       feature:
@@ -2815,6 +2814,7 @@ pt:
         publish_page: "Publicação de Página"
         unhide: "Mostrar"
         change_owner: "Alterar Proprietário..."
+        grant_badge: "Atribuir Crachá..."
         lock_post: "Bloquear Post"
         lock_post_description: "impedir o autor de editar esta publicação"
         unlock_post: "Desbloquear Post"
@@ -2825,6 +2825,8 @@ pt:
         delete_topic_confirm_modal_no: "Não, mantenha este tópico"
         delete_topic_error: "Ocorreu um erro ao excluir este tópico"
         delete_topic: "eliminar tópico"
+        add_post_notice: "Adicionar Nota da Equipe..."
+        change_post_notice: "Alterar Aviso da Equipa..."
         delete_post_notice: "Apagar Aviso da Equipa"
         remove_timer: "remover timer"
         edit_timer: "editar temporizador"
@@ -2883,7 +2885,6 @@ pt:
       bookmarks:
         create: "Criar favorito"
         edit: "Editar favorito"
-        created: "Criado"
         updated: "Atualização"
         name: "Nome"
         name_placeholder: "Para que serve este favorito?"
@@ -3141,7 +3142,6 @@ pt:
       other: "utilizadores"
     category_title: "Categoria"
     history: "Histórico"
-    changed_by: "por %{author}"
     raw_email:
       not_available: "Indisponível!"
     categories_list: "Lista de Categorias"
@@ -3439,6 +3439,7 @@ pt:
       topics:
         none:
           unread: "Não tem tópicos por ler."
+          unseen: "Não tem tópicos por ler."
           new: "Não tem novos tópicos."
           read: "Ainda não leu nenhum tópico."
           posted: "Ainda não publicou em qualquer tópico."
@@ -3462,6 +3463,7 @@ pt:
       enabled: "O modo de segurança está activado, para sair do modo de segurança feche esta janela do navegador"
     image_removed: "(imagem removida)"
     pause_notifications:
+      label: "Pausar notificações"
       remaining: "%{remaining} restante"
       options:
         half_hour: "30 minutos"
@@ -3513,18 +3515,19 @@ pt:
               content: "Administrador"
             badges:
               content: "Crachás"
+            everything:
+              content: "Tudo"
             faq:
               content: "FAQ"
             groups:
               content: "Grupos"
-              title: "Todos os grupos"
             users:
               content: "Utilizadores"
             my_posts:
               content: "As Minhas publicações"
             review:
               content: "Revisão"
-              title: "revisão"
+    until: "Até:"
   admin_js:
     type_to_filter: "digite para filtrar..."
     admin:
@@ -3811,6 +3814,8 @@ pt:
         change_settings: "Alterar Configurações"
         change_settings_short: "Configurações"
         howto: "Como instalo plugins?"
+      navigation_menu:
+        sidebar: "Barra Lateral"
       backups:
         title: "Fazer Cópias de Segurança"
         menu:
@@ -3886,7 +3891,6 @@ pt:
         button_title: "Enviar Convites"
       customize:
         title: "Personalizar"
-        long_title: "Personalizações do Sítio"
         preview: "pré-visualização"
         explain_preview: "Veja o site com este tema ativado"
         save: "Guardar"
@@ -4029,9 +4033,9 @@ pt:
           new_name: "Nova Paleta de Cores"
           copy_name_prefix: "Cópia de"
           delete_confirm: "Excluir esta paleta de cores?"
-          undo: "desfazer"
+          undo: "Desfazer"
           undo_title: "Desfazer as alterações a esta cor desde a última gravação."
-          revert: "reverter"
+          revert: "Reverter"
           revert_title: "Redefina essa cor para a paleta de cores padrão do Discourse."
           primary:
             name: "primária"
@@ -4140,6 +4144,9 @@ pt:
             address_placeholder: "nome@exemplo.com"
             type_placeholder: "resumo, subscrever..."
             reply_key_placeholder: "chave de resposta"
+      moderation_history:
+        actions:
+          delete_topic: "Tópico eliminado"
       logs:
         title: "Logs"
         action: "Ação"

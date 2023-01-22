@@ -770,10 +770,6 @@ nl:
         other: "bijna %{count} jaar geleden"
   password_reset:
     no_token: 'Oeps! De link die je hebt gebruikt werkt niet meer. Je kunt je nu <a href="%{base_url}/login">aanmelden</a> . Als je je wachtwoord bent vergeten, kun je <a href="%{base_url}/password-reset">een link verzoeken</a> om het te herstellen.'
-    choose_new: "Kies een nieuw wachtwoord"
-    choose: "Kies een wachtwoord"
-    update: "Wachtwoord bijwerken"
-    save: "Wachtwoord instellen"
     title: "Wachtwoord herstellen"
     success: "Je hebt je wachtwoord gewijzigd en bent nu aangemeld."
     success_unapproved: "Je hebt je wachtwoord gewijzigd."
@@ -967,7 +963,7 @@ nl:
     mailing_list_mode: "Mailinglijstmodus uitschakelen"
     all: "Stuur me geen e-mail van %{sitename}"
     different_user_description: "Je bent momenteel aangemeld als een andere gebruiker dan die we een e-mail hebben gestuurd. Meld je af of open de anonieme modus en probeer het opnieuw."
-    not_found_description: Sorry, we konden dat abonnement niet vinden. Het is mogelijk dat de link in je e-mail te oud is en verlopen is?"
+    not_found_description: "Sorry, we konden dat abonnement niet vinden. Het is mogelijk dat de link in je e-mail te oud is en verlopen is?"
     user_not_found_description: "Sorry, we konden geen gebruiker vinden voor dit abonnement. Je probeert waarschijnlijk een account op te zeggen dat niet meer bestaat."
     log_out: "Afmelden"
     submit: "Voorkeuren opslaan"

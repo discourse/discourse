@@ -19,8 +19,13 @@ module PageObjects
       end
 
       def has_sidebar_list_destination_preference?(type)
-        list_selector_header = page.find(".preferences-sidebar-navigation__list-destination-selector .select-kit-header-wrapper")
-        list_selector_header.has_content?(I18n.t("js.user.experimental_sidebar.list_destination_#{type}"))
+        list_selector_header =
+          page.find(
+            ".preferences-sidebar-navigation__list-destination-selector .select-kit-header-wrapper",
+          )
+        list_selector_header.has_content?(
+          I18n.t("js.user.experimental_sidebar.list_destination_#{type}"),
+        )
       end
     end
   end

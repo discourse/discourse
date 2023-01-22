@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe 'content security policy integration' do
-
+RSpec.describe "content security policy integration" do
   it "adds the csp headers correctly" do
     SiteSetting.content_security_policy = false
     get "/"
@@ -15,8 +14,10 @@ RSpec.describe 'content security policy integration' do
   context "with different hostnames" do
     before do
       SiteSetting.content_security_policy = true
-      RailsMultisite::ConnectionManagement.stubs(:current_db_hostnames).returns(['primary.example.com', 'secondary.example.com'])
-      RailsMultisite::ConnectionManagement.stubs(:current_hostname).returns('primary.example.com')
+      RailsMultisite::ConnectionManagement.stubs(:current_db_hostnames).returns(
+        %w[primary.example.com secondary.example.com],
+      )
+      RailsMultisite::ConnectionManagement.stubs(:current_hostname).returns("primary.example.com")
     end
 
     it "works with the primary domain" do
@@ -52,5 +53,4 @@ RSpec.describe 'content security policy integration' do
       expect(response.headers["Content-Security-Policy"]).to include("https://test.localhost")
     end
   end
-
 end

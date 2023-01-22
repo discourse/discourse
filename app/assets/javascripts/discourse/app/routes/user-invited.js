@@ -1,4 +1,5 @@
 import DiscourseRoute from "discourse/routes/discourse";
+import I18n from "I18n";
 
 export default DiscourseRoute.extend({
   setupController(controller) {
@@ -9,5 +10,9 @@ export default DiscourseRoute.extend({
     controller.setProperties({
       can_see_invite_details,
     });
+  },
+
+  titleToken() {
+    return I18n.t("user.invited.title");
   },
 });
