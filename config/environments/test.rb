@@ -81,4 +81,7 @@ Discourse::Application.configure do
 
     SiteSetting.refresh!
   end
+
+  # this is a lot of async work which can cause issues and is not necessary
+  config.middleware.delete Middleware::RequestTracker if ENV["SYSTEM_TEST"]
 end

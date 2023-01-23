@@ -369,6 +369,8 @@ RSpec.configure do |config|
 
   last_driven_by = nil
   config.before(:each, type: :system) do |example|
+    ENV["SYSTEM_TEST"] = "1"
+
     if example.metadata[:js]
       driver = [:selenium]
       driver << :mobile if example.metadata[:mobile]
