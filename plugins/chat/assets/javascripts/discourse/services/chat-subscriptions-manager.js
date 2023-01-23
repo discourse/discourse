@@ -286,6 +286,7 @@ export default class ChatSubscriptionsManager extends Service {
         channel.setProperties({
           title: busData.name,
           description: busData.description,
+          slug: busData.slug,
         });
       }
     });
