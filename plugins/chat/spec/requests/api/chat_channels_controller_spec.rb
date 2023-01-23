@@ -236,6 +236,27 @@ RSpec.describe Chat::Api::ChatChannelsController do
             ),
           ).to eq(true)
         end
+
+        it "generates a valid new slug to prevent collisions" do
+          SiteSetting.max_topic_title_length = 15
+          freeze_time(DateTime.parse("2022-07-08 09:30:00"))
+          old_slug = channel_1.slug
+
+          delete "/chat/api/channels/#{channel_1.id}",
+                 params: {
+                   channel: {
+                     name_confirmation: channel_1.title(current_user),
+                   },
+                 }
+
+          expect(response.status).to eq(200)
+          expect(channel_1.reload.slug).to eq(
+            "20220708-0930-#{old_slug}-deleted".truncate(
+              SiteSetting.max_topic_title_length,
+              omission: "",
+            ),
+          )
+        end
       end
     end
   end
