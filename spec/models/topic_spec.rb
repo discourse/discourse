@@ -2473,7 +2473,7 @@ RSpec.describe Topic do
 
   describe "#listable_count_per_day" do
     before(:each) do
-      freeze_time DateTime.parse("2017-03-01 12:00")
+      freeze_time Time.zone.parse("2017-03-01 12:00")
 
       Fabricate(:topic)
       Fabricate(:topic, created_at: 1.day.ago)
@@ -2483,15 +2483,15 @@ RSpec.describe Topic do
     end
 
     let(:listable_topics_count_per_day) do
-      { 1.day.ago.to_date => 2, 2.days.ago.to_date => 1, Time.now.utc.to_date => 1 }
+      { 1.day.ago.utc.to_date => 2, 2.days.ago.utc.to_date => 1, Time.current.utc.to_date => 1 }
     end
 
     it "collect closed interval listable topics count" do
-      expect(Topic.listable_count_per_day(2.days.ago, Time.now)).to include(
+      expect(Topic.listable_count_per_day(2.days.ago, Time.current)).to include(
         listable_topics_count_per_day,
       )
-      expect(Topic.listable_count_per_day(2.days.ago, Time.now)).not_to include(
-        4.days.ago.to_date => 1,
+      expect(Topic.listable_count_per_day(2.days.ago, Time.current)).not_to include(
+        4.days.ago.utc.to_date => 1,
       )
     end
   end

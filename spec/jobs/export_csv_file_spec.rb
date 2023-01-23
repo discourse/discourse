@@ -135,7 +135,7 @@ RSpec.describe Jobs::ExportCsvFile do
     end
 
     it "works with topic reports" do
-      freeze_time DateTime.parse("2010-01-01 6:00")
+      freeze_time DateTime.parse("2010-01-10 6:00")
 
       exporter.extra["name"] = "top_referred_topics"
       post1 = Fabricate(:post)

@@ -31,7 +31,7 @@ class DirectoryItem < ActiveRecord::Base
 
   def self.refresh_period!(period_type, force: false)
     DiscourseEvent.trigger("before_directory_refresh")
-    Discourse.redis.set("directory_#{period_types[period_type]}", Time.zone.now.to_i)
+    Discourse.redis.set("directory_#{period_types[period_type]}", Time.current.to_i)
 
     # Don't calculate it if the user directory is disabled
     return unless SiteSetting.enable_user_directory? || force
@@ -91,7 +91,7 @@ class DirectoryItem < ActiveRecord::Base
       #
       query_args = {
         period_type: period_types[period_type],
-        since: since,
+        since: since.to_date,
         like_type: UserAction::LIKE,
         was_liked_type: UserAction::WAS_LIKED,
         new_topic_type: UserAction::NEW_TOPIC,
