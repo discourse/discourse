@@ -121,6 +121,11 @@ class ApiKeyScope < ActiveRecord::Base
             actions: %w[admin/email#handle_mail admin/email#smtp_should_reject],
           },
         },
+        invites: {
+          create: {
+            actions: %w[invites#create],
+          },
+        },
         badges: {
           create: {
             actions: %w[admin/badges#create],
