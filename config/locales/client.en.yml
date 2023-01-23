@@ -4703,6 +4703,9 @@ en:
               list_user_badges: List user badges.
               assign_badge_to_user: Assign a badge to a user.
               revoke_badge_from_user: Revoke a badge from a user.
+            search:
+              show: Search using the `/search.json?q=term` endpoint.
+              query: Search using the /search/query?term=term` endpoint.
             wordpress:
               publishing: Necessary for the WP Discourse plugin publishing features (required).
               commenting: Necessary for the WP Discourse plugin commenting features.
