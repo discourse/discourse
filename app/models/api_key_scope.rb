@@ -146,16 +146,6 @@ class ApiKeyScope < ActiveRecord::Base
             actions: %w[user_badges#destroy],
           },
         },
-        search: {
-          show: {
-            actions: %w[search#show],
-            params: %i[q page],
-          },
-          query: {
-            actions: %w[search#query],
-            params: %i[term],
-          },
-        },
         wordpress: {
           publishing: {
             actions: %w[site#site posts#create topics#update topics#status topics#show],
