@@ -57,7 +57,6 @@
         />
       {{/if}}
 
-      <div class="penalty-history">{{html-safe this.penaltyHistory}}</div>
     {{else}}
       {{#if (eq this.penaltyType "suspend")}}
         <div class="cant-suspend">{{i18n "admin.user.cant_suspend"}}</div>
@@ -65,6 +64,7 @@
         <div class="cant-silence">{{i18n "admin.user.cant_silence"}}</div>
       {{/if}}
     {{/if}}
+    <div class="penalty-history">{{html-safe this.penaltyHistory}}</div>
   </ConditionalLoadingSpinner>
 </DModalBody>
 
