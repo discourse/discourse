@@ -42,6 +42,10 @@ export default UserTopicListRoute.extend({
     return { title, body };
   },
 
+  titleToken() {
+    return `${I18n.t("user.read")}`;
+  },
+
   @action
   triggerRefresh() {
     this.refresh();

@@ -86,7 +86,7 @@ task "plugin:update", :plugin do |t, args|
 
   upstream_branch =
     `git -C '#{plugin_path}' for-each-ref --format='%(upstream:short)' $(git -C '#{plugin_path}' symbolic-ref -q HEAD)`.strip
-  has_origin_main = `git -C '#{plugin_path}' branch -a`.match?(%r{remotes/origin/main$})
+  has_origin_main = `git -C '#{plugin_path}' branch -a`.match?(%r{remotes/origin/main\z})
   has_local_main = `git -C '#{plugin_path}' show-ref refs/heads/main`.present?
 
   if upstream_branch == "origin/master" && has_origin_main

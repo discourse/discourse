@@ -203,7 +203,7 @@ class SessionController < ApplicationController
         end
 
         # If it's not a relative URL check the host
-        if return_path !~ %r{^/[^/]}
+        if return_path !~ %r{\A/[^/]}
           begin
             uri = URI(return_path)
             if (uri.hostname == Discourse.current_hostname)

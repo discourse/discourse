@@ -11,7 +11,7 @@ class Stylesheet::Manager
 
   CACHE_PATH ||= "tmp/stylesheet-cache"
   MANIFEST_DIR ||= "#{Rails.root}/tmp/cache/assets/#{Rails.env}"
-  THEME_REGEX ||= /_theme$/
+  THEME_REGEX ||= /_theme\z/
   COLOR_SCHEME_STYLESHEET ||= "color_definitions"
 
   @@lock = Mutex.new

@@ -347,6 +347,6 @@ class UserUpdater
 
   def format_url(website)
     return nil if website.blank?
-    website =~ /^http/ ? website : "http://#{website}"
+    website =~ /\Ahttp/ ? website : "http://#{website}"
   end
 end

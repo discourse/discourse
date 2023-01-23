@@ -1,4 +1,5 @@
 import DiscourseRoute from "discourse/routes/discourse";
+import I18n from "I18n";
 
 export default DiscourseRoute.extend({
   showFooter: true,
@@ -10,5 +11,9 @@ export default DiscourseRoute.extend({
     }
 
     return user.summary();
+  },
+
+  titleToken() {
+    return I18n.t("user.summary.title");
   },
 });

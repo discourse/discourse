@@ -10,8 +10,8 @@ describe "Using #hashtag autocompletion to search for and lookup categories and 
   fab!(:category2) do
     Fabricate(:category, name: "Other Category", slug: "other-cat", topic_count: 23)
   end
-  fab!(:tag) { Fabricate(:tag, name: "cooltag", topic_count: 324) }
-  fab!(:tag2) { Fabricate(:tag, name: "othertag", topic_count: 66) }
+  fab!(:tag) { Fabricate(:tag, name: "cooltag", staff_topic_count: 324, public_topic_count: 324) }
+  fab!(:tag2) { Fabricate(:tag, name: "othertag", staff_topic_count: 66, public_topic_count: 66) }
   fab!(:topic) { Fabricate(:topic, category: category, tags: [tag]) }
   fab!(:post) { Fabricate(:post, topic: topic) }
   let(:uncategorized_category) { Category.find(SiteSetting.uncategorized_category_id) }

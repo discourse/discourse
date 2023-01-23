@@ -20,8 +20,8 @@ module UserNotificationsHelper
 
   def logo_url
     logo_url = SiteSetting.site_digest_logo_url
-    logo_url = SiteSetting.site_logo_url if logo_url.blank? || logo_url =~ /\.svg$/i
-    return nil if logo_url.blank? || logo_url =~ /\.svg$/i
+    logo_url = SiteSetting.site_logo_url if logo_url.blank? || logo_url =~ /\.svg\z/i
+    return nil if logo_url.blank? || logo_url =~ /\.svg\z/i
     logo_url
   end
 

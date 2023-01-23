@@ -263,9 +263,20 @@ RSpec.describe Chat::Api::ChatChannelsController do
       new_channel = ChatChannel.last
 
       expect(new_channel.name).to eq(params[:channel][:name])
+      expect(new_channel.slug).to eq("channel-name")
       expect(new_channel.description).to eq(params[:channel][:description])
       expect(new_channel.chatable_type).to eq(category.class.name)
       expect(new_channel.chatable_id).to eq(category.id)
+    end
+
+    it "creates a channel using the user-provided slug" do
+      new_params = params.dup
+      new_params[:channel][:slug] = "wow-so-cool"
+      post "/chat/api/channels", params: new_params
+
+      new_channel = ChatChannel.last
+
+      expect(new_channel.slug).to eq("wow-so-cool")
     end
 
     it "creates a channel sets auto_join_users to false by default" do

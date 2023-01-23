@@ -7,8 +7,8 @@ class PostActionType < ActiveRecord::Base
   include AnonCacheInvalidator
 
   def expire_cache
-    ApplicationSerializer.expire_cache_fragment!(/^post_action_types_/)
-    ApplicationSerializer.expire_cache_fragment!(/^post_action_flag_types_/)
+    ApplicationSerializer.expire_cache_fragment!(/\Apost_action_types_/)
+    ApplicationSerializer.expire_cache_fragment!(/\Apost_action_flag_types_/)
   end
 
   class << self
