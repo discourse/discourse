@@ -101,6 +101,9 @@ class ApiKeyScope < ActiveRecord::Base
           anonymize: {
             actions: %w[admin/users#anonymize],
           },
+          suspend: {
+            actions: %w[admin/users#suspend],
+          },
           delete: {
             actions: %w[admin/users#destroy],
           },
