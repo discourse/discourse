@@ -305,7 +305,7 @@ html.composer-open {
     }
   }
 
-  .category-input +.mini-tag-chooser {
+  .category-input + .mini-tag-chooser {
     margin-left: 8px;
   }
 
@@ -315,7 +315,6 @@ html.composer-open {
     margin: 0 0 8px 0px;
     z-index: z("composer", "dropdown");
     &:has() {
-
     }
 
     .select-kit-header {
