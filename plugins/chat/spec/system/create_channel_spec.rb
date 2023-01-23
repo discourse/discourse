@@ -136,6 +136,22 @@ RSpec.describe "Create channel", type: :system, js: true do
         end
       end
 
+      context "when slug is already being used" do
+        it "displays the error" do
+          Fabricate(:chat_channel, slug: "pets-everywhere")
+          chat_page.visit_browse
+          chat_page.new_channel_button.click
+          channel_modal.select_category(category_1)
+          channel_modal.fill_name("Testing")
+          channel_modal.fill_slug("pets-everywhere")
+          channel_modal.click_primary_button
+
+          expect(page).to have_content(
+            "Slug " + I18n.t("chat.category_channel.errors.is_already_in_use"),
+          )
+        end
+      end
+
       context "when successful" do
         it "redirects to created channel" do
           chat_page.visit_browse
