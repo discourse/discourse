@@ -17,6 +17,7 @@ export default Component.extend({
   draftChannelView: equal("view", DRAFT_CHANNEL_VIEW),
   chat: service(),
   router: service(),
+  chatDrawerSize: service(),
   chatChannelsManager: service(),
   chatStateManager: service(),
   loading: false,
@@ -156,19 +157,11 @@ export default Component.extend({
   },
 
   _checkSize() {
-    if (!this.chatStateManager.isDrawerActive) {
-      return;
-    }
-
     this.sizeTimer = throttle(this, this._performCheckSize, 150);
   },
 
   _performCheckSize() {
     if (!this.isDestroying || this.isDestroyed) {
-      return;
-    }
-
-    if (!this.chatStateManager.isDrawerActive) {
       return;
     }
 
@@ -263,6 +256,12 @@ export default Component.extend({
     this.chatStateManager.didCloseDrawer();
     this.chat.setActiveChannel(null);
     this.appEvents.trigger("chat:float-toggled", true);
+  },
+
+  @action
+  didResize(element, { width, height }) {
+    this.chatDrawerSize.height = height;
+    this.chatDrawerSize.width = width;
   },
 
   @action

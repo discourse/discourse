@@ -1,8 +1,3 @@
-.chat-drawer {
-  width: 400px;
-  max-width: 100vw;
-}
-
 .user-card,
 .group-card {
   z-index: z("usercard") + 1; // bump up user card
