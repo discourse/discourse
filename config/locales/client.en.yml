@@ -4695,6 +4695,8 @@ en:
               update: Update user status.
             email:
               receive_emails: Combine this scope with the mail-receiver to process incoming emails.
+            invites:
+              create: Send email invites or generate invite links.
             badges:
               create: Create a new badge.
               show: Obtain information about a badge.
