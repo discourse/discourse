@@ -421,6 +421,8 @@ RSpec.configure do |config|
     end
 
     Discourse.redis.flushdb
+
+    ENV.delete("SYSTEM_TEST")
   end
 
   config.before(:each, type: :multisite) do
