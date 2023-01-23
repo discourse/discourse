@@ -85,7 +85,7 @@
     "messageformat": "0.1.5",
     "pretender": "^3.4.7",
     "pretty-text": "1.0.0",
-    "qunit": "^2.19.3",
+    "qunit": "^2.19.4",
     "qunit-dom": "^2.0.0",
     "sass": "^1.57.1",
     "select-kit": "1.0.0",
