@@ -84,6 +84,7 @@ class Chat::ChatMessageUpdater
     return unless upload_info[:changed]
 
     ChatUpload.where(chat_message: @chat_message).destroy_all
+    UploadReference.where(target: @chat_message).destroy_all
     @chat_message.attach_uploads(upload_info[:uploads])
   end
 

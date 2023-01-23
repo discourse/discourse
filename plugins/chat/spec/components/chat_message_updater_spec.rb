@@ -329,7 +329,7 @@ describe Chat::ChatMessageUpdater do
           new_content: "I guess this is different",
           upload_ids: [upload2.id, upload1.id],
         )
-      }.not_to change { ChatUpload.count }
+      }.to not_change { ChatUpload.count }.and not_change { UploadReference.count }
     end
 
     it "removes uploads that should be removed" do
@@ -340,6 +340,8 @@ describe Chat::ChatMessageUpdater do
           public_chat_channel,
           upload_ids: [upload1.id, upload2.id],
         )
+      Fabricate(:chat_upload, upload: upload1, chat_message: chat_message)
+      Fabricate(:chat_upload, upload: upload2, chat_message: chat_message)
       expect {
         Chat::ChatMessageUpdater.update(
           guardian: guardian,
@@ -347,7 +349,9 @@ describe Chat::ChatMessageUpdater do
           new_content: "I guess this is different",
           upload_ids: [upload1.id],
         )
-      }.to change { ChatUpload.where(upload_id: upload2.id).count }.by(-1)
+      }.to change { ChatUpload.where(upload_id: upload2.id).count }.by(-1).and change {
+              UploadReference.where(upload_id: upload2.id).count
+            }.by(-1)
     end
 
     it "removes all uploads if they should be removed" do
@@ -358,6 +362,8 @@ describe Chat::ChatMessageUpdater do
           public_chat_channel,
           upload_ids: [upload1.id, upload2.id],
         )
+      Fabricate(:chat_upload, upload: upload1, chat_message: chat_message)
+      Fabricate(:chat_upload, upload: upload2, chat_message: chat_message)
       expect {
         Chat::ChatMessageUpdater.update(
           guardian: guardian,
@@ -365,7 +371,9 @@ describe Chat::ChatMessageUpdater do
           new_content: "I guess this is different",
           upload_ids: [],
         )
-      }.to change { ChatUpload.where(chat_message: chat_message).count }.by(-2)
+      }.to change { ChatUpload.where(chat_message: chat_message).count }.by(-2).and change {
+              UploadReference.where(target: chat_message).count
+            }.by(-2)
     end
 
     it "adds one upload if none exist" do
@@ -377,7 +385,9 @@ describe Chat::ChatMessageUpdater do
           new_content: "I guess this is different",
           upload_ids: [upload1.id],
         )
-      }.to change { ChatUpload.where(chat_message: chat_message).count }.by(1)
+      }.to not_change { ChatUpload.where(chat_message: chat_message).count }.and change {
+              UploadReference.where(target: chat_message).count
+            }.by(1)
     end
 
     it "adds multiple uploads if none exist" do
@@ -389,7 +399,9 @@ describe Chat::ChatMessageUpdater do
           new_content: "I guess this is different",
           upload_ids: [upload1.id, upload2.id],
         )
-      }.to change { ChatUpload.where(chat_message: chat_message).count }.by(2)
+      }.to not_change { ChatUpload.where(chat_message: chat_message).count }.and change {
+              UploadReference.where(target: chat_message).count
+            }.by(2)
     end
 
     it "doesn't remove existing uploads when upload ids that do not exist are passed in" do
@@ -402,7 +414,9 @@ describe Chat::ChatMessageUpdater do
           new_content: "I guess this is different",
           upload_ids: [0],
         )
-      }.not_to change { ChatUpload.where(chat_message: chat_message).count }
+      }.to not_change { ChatUpload.where(chat_message: chat_message).count }.and not_change {
+              UploadReference.where(target: chat_message).count
+            }
     end
 
     it "doesn't add uploads if `chat_allow_uploads` is false" do
@@ -415,7 +429,9 @@ describe Chat::ChatMessageUpdater do
           new_content: "I guess this is different",
           upload_ids: [upload1.id, upload2.id],
         )
-      }.not_to change { ChatUpload.where(chat_message: chat_message).count }
+      }.to not_change { ChatUpload.where(chat_message: chat_message).count }.and not_change {
+              UploadReference.where(target: chat_message).count
+            }
     end
 
     it "doesn't remove existing uploads if `chat_allow_uploads` is false" do
@@ -434,7 +450,9 @@ describe Chat::ChatMessageUpdater do
           new_content: "I guess this is different",
           upload_ids: [],
         )
-      }.not_to change { ChatUpload.where(chat_message: chat_message).count }
+      }.to not_change { ChatUpload.where(chat_message: chat_message).count }.and not_change {
+              UploadReference.where(target: chat_message).count
+            }
     end
 
     it "updates if upload is present even if length is less than `chat_minimum_message_length`" do

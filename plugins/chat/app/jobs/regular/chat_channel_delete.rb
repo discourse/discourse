@@ -38,6 +38,7 @@ module Jobs
           # if the uploads are not used anywhere else they will be deleted
           # by the CleanUpUploads job in core
           ChatUpload.where(chat_message_id: message_ids).delete_all
+          UploadReference.where(target_id: message_ids, target_type: "ChatMessage").delete_all
 
           # only the messages and the channel are Trashable, everything else gets
           # permanently destroyed

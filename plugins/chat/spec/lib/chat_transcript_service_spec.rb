@@ -130,10 +130,10 @@ describe ChatTranscriptService do
         original_filename: "test_img.jpg",
         extension: "jpg",
       )
-    cu1 = ChatUpload.create(chat_message: message, created_at: 10.seconds.ago, upload: video)
-    cu2 = ChatUpload.create(chat_message: message, created_at: 9.seconds.ago, upload: audio)
-    cu3 = ChatUpload.create(chat_message: message, created_at: 8.seconds.ago, upload: attachment)
-    cu4 = ChatUpload.create(chat_message: message, created_at: 7.seconds.ago, upload: image)
+    UploadReference.create(target: message, created_at: 10.seconds.ago, upload: video)
+    UploadReference.create(target: message, created_at: 9.seconds.ago, upload: audio)
+    UploadReference.create(target: message, created_at: 8.seconds.ago, upload: attachment)
+    UploadReference.create(target: message, created_at: 7.seconds.ago, upload: image)
     video_markdown = UploadMarkdown.new(video).to_markdown
     audio_markdown = UploadMarkdown.new(audio).to_markdown
     attachment_markdown = UploadMarkdown.new(attachment).to_markdown
@@ -166,7 +166,7 @@ describe ChatTranscriptService do
         original_filename: "test_img.jpg",
         extension: "jpg",
       )
-    cu = ChatUpload.create(chat_message: message, created_at: 7.seconds.ago, upload: image)
+    UploadReference.create(target: message, created_at: 7.seconds.ago, upload: image)
     image_markdown = UploadMarkdown.new(image).to_markdown
 
     expect(service(message.id).generate_markdown).to eq(<<~MARKDOWN)

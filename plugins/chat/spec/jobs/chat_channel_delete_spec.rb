@@ -17,10 +17,10 @@ describe Jobs::ChatChannelDelete do
     10.times { ChatMessageReaction.create(chat_message: messages.sample, user: users.sample) }
 
     10.times do
-      ChatUpload.create(
-        upload: Fabricate(:upload, user: users.sample),
-        chat_message: messages.sample,
-      )
+      upload = Fabricate(:upload, user: users.sample)
+      message = messages.sample
+      ChatUpload.create(upload: upload, chat_message: message)
+      UploadReference.create(target: message, upload: upload)
     end
 
     ChatMention.create(
@@ -68,11 +68,16 @@ describe Jobs::ChatChannelDelete do
                                   }.by(-1).and change {
                                           ChatUpload.where(chat_message_id: @message_ids).count
                                         }.by(-10).and change {
-                                                ChatMessage.where(id: @message_ids).count
-                                              }.by(-20).and change {
-                                                      ChatMessageReaction.where(
-                                                        chat_message_id: @message_ids,
-                                                      ).count
-                                                    }.by(-10)
+                                                UploadReference.where(
+                                                  target_id: @message_ids,
+                                                  target_type: "ChatMessage",
+                                                ).count
+                                              }.by(-10).and change {
+                                                      ChatMessage.where(id: @message_ids).count
+                                                    }.by(-20).and change {
+                                                            ChatMessageReaction.where(
+                                                              chat_message_id: @message_ids,
+                                                            ).count
+                                                          }.by(-10)
   end
 end

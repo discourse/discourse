@@ -461,7 +461,9 @@ describe Chat::ChatMessageCreator do
             content: "Beep boop",
             upload_ids: [upload1.id],
           )
-        }.to change { ChatUpload.where(upload_id: upload1.id).count }.by(1)
+        }.to not_change { ChatUpload.where(upload_id: upload1.id).count }.and change {
+                UploadReference.where(upload_id: upload1.id).count
+              }.by(1)
       end
 
       it "can attach multiple uploads to a new message" do
@@ -472,9 +474,9 @@ describe Chat::ChatMessageCreator do
             content: "Beep boop",
             upload_ids: [upload1.id, upload2.id],
           )
-        }.to change { ChatUpload.where(upload_id: upload1.id).count }.by(1).and change {
-                ChatUpload.where(upload_id: upload2.id).count
-              }.by(1)
+        }.to not_change { ChatUpload.where(upload_id: [upload1.id, upload2.id]).count }.and change {
+                UploadReference.where(upload_id: [upload1.id, upload2.id]).count
+              }.by(2)
       end
 
       it "filters out uploads that weren't uploaded by the user" do
@@ -497,7 +499,9 @@ describe Chat::ChatMessageCreator do
             content: "Beep boop",
             upload_ids: [upload1.id],
           )
-        }.not_to change { ChatUpload.where(upload_id: upload1.id).count }
+        }.to not_change { ChatUpload.where(upload_id: upload1.id).count }.and not_change {
+                UploadReference.where(upload_id: upload1.id).count
+              }
       end
     end
   end
