@@ -114,62 +114,6 @@
             @args={{hash model=this.model}}
           />
           <UserProfileAvatar @user={{this.model}} @tagName="" />
-          <section class="controls">
-            <ul>
-              {{#if this.model.can_send_private_message_to_user}}
-                <li>
-                  <DButton
-                    @class="btn-primary compose-pm"
-                    @action={{route-action "composePrivateMessage" this.model}}
-                    @icon="envelope"
-                    @label="user.private_message"
-                  />
-                </li>
-              {{/if}}
-
-              {{#if this.canMuteOrIgnoreUser}}
-                <li>
-                  <UserNotificationsDropdown
-                    @user={{this.model}}
-                    @value={{this.userNotificationLevel}}
-                    @updateNotificationLevel={{action
-                      "updateNotificationLevel"
-                    }}
-                  />
-                </li>
-              {{/if}}
-
-              {{#if this.displayTopLevelAdminButton}}
-                <li><a
-                    href={{this.model.adminPath}}
-                    class="btn btn-default"
-                  >{{d-icon "wrench"}}<span class="d-button-label">{{i18n
-                        "admin.user.show_admin_profile"
-                      }}</span></a></li>
-              {{/if}}
-
-              <PluginOutlet
-                @name="user-profile-controls"
-                @connectorTagName="li"
-                @args={{hash model=this.model}}
-              />
-
-              {{#if this.canExpandProfile}}
-                <li>
-                  <DButton
-                    @ariaExpanded={{this.collapsedInfoState.isExpanded}}
-                    @ariaLabel={{this.collapsedInfoState.ariaLabel}}
-                    @ariaControls="collapsed-info-panel"
-                    @class="btn-default"
-                    @label={{concat "user." this.collapsedInfoState.label}}
-                    @icon={{this.collapsedInfoState.icon}}
-                    @action={{action this.collapsedInfoState.action}}
-                  />
-                </li>
-              {{/if}}
-            </ul>
-          </section>
-
           <div class="primary-textual">
             <div class="user-profile-names">
               <div
@@ -325,6 +269,62 @@
               @args={{hash model=this.model}}
             />
           </div>
+
+          <section class="controls">
+            <ul>
+              {{#if this.model.can_send_private_message_to_user}}
+                <li>
+                  <DButton
+                    @class="btn-primary compose-pm"
+                    @action={{route-action "composePrivateMessage" this.model}}
+                    @icon="envelope"
+                    @label="user.private_message"
+                  />
+                </li>
+              {{/if}}
+
+              {{#if this.canMuteOrIgnoreUser}}
+                <li>
+                  <UserNotificationsDropdown
+                    @user={{this.model}}
+                    @value={{this.userNotificationLevel}}
+                    @updateNotificationLevel={{action
+                      "updateNotificationLevel"
+                    }}
+                  />
+                </li>
+              {{/if}}
+
+              {{#if this.displayTopLevelAdminButton}}
+                <li><a
+                    href={{this.model.adminPath}}
+                    class="btn btn-default"
+                  >{{d-icon "wrench"}}<span class="d-button-label">{{i18n
+                        "admin.user.show_admin_profile"
+                      }}</span></a></li>
+              {{/if}}
+
+              <PluginOutlet
+                @name="user-profile-controls"
+                @connectorTagName="li"
+                @args={{hash model=this.model}}
+              />
+
+              {{#if this.canExpandProfile}}
+                <li>
+                  <DButton
+                    @ariaExpanded={{this.collapsedInfoState.isExpanded}}
+                    @ariaLabel={{this.collapsedInfoState.ariaLabel}}
+                    @ariaControls="collapsed-info-panel"
+                    @class="btn-default"
+                    @label={{concat "user." this.collapsedInfoState.label}}
+                    @icon={{this.collapsedInfoState.icon}}
+                    @action={{action this.collapsedInfoState.action}}
+                  />
+                </li>
+              {{/if}}
+            </ul>
+          </section>
         </div>
         <PluginOutlet
           @name="user-profile-above-collapsed-info"
