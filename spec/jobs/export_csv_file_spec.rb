@@ -124,7 +124,7 @@ RSpec.describe Jobs::ExportCsvFile do
       user.user_auth_token_logs.create!(
         action: "login",
         client_ip: "1.1.1.1",
-        created_at: "2010-01-01",
+        created_at: "2010-01-01T00:00Z",
       )
 
       exporter.extra["name"] = "staff_logins"

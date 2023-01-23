@@ -4,12 +4,12 @@ RSpec.describe Jobs::GrantNewUserOfTheMonthBadges do
   let(:granter) { described_class.new }
 
   it "runs correctly" do
-    freeze_time(DateTime.parse("2019-11-30 23:59 UTC"))
+    freeze_time(Time.zone.parse("2019-11-30 23:59"))
 
     u0 = Fabricate(:user, created_at: 2.weeks.ago)
-    BadgeGranter.grant(Badge.find(Badge::NewUserOfTheMonth), u0, created_at: Time.now)
+    BadgeGranter.grant(Badge.find(Badge::NewUserOfTheMonth), u0, created_at: Time.current)
 
-    freeze_time(DateTime.parse("2020-01-01 00:00 UTC"))
+    freeze_time(Time.zone.parse("2020-01-01 00:00"))
 
     user = Fabricate(:user, created_at: 1.week.ago)
     p = Fabricate(:post, user: user)
@@ -24,7 +24,7 @@ RSpec.describe Jobs::GrantNewUserOfTheMonthBadges do
 
     badges = user.user_badges.where(badge_id: Badge::NewUserOfTheMonth)
     expect(badges).to be_present
-    expect(badges.first.granted_at.to_s).to eq("2019-12-31 23:59:59 UTC")
+    expect(badges.first.granted_at.to_s).to eq Time.zone.parse("2019-12-31 23:59:59").to_s
   end
 
   it "does not include people created after the previous month" do

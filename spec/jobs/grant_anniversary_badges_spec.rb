@@ -123,8 +123,8 @@ RSpec.describe Jobs::GrantAnniversaryBadges do
 
   context "with repeated grants" do
     it "won't award twice in the same year" do
-      user = Fabricate(:user, created_at: 400.days.ago)
-      Fabricate(:post, user: user, created_at: 1.week.ago)
+      user = Fabricate(:user, created_at: "2020-01-10")
+      Fabricate(:post, user: user, created_at: "2023-01-20")
 
       granter.execute({})
       granter.execute({})

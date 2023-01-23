@@ -273,8 +273,8 @@ module BadgeQueries
   end
 
   def self.anniversaries(start_date, end_date)
-    start_date = start_date.iso8601(6)
-    end_date = end_date.iso8601(6)
+    start_date = start_date.utc.iso8601(6)
+    end_date = end_date.utc.iso8601(6)
 
     <<~SQL
       SELECT u.id
