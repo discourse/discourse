@@ -314,9 +314,6 @@ html.composer-open {
     max-width: calc(50% - 4px);
     margin: 0 0 8px 0px;
     z-index: z("composer", "dropdown");
-    &:has() {
-    }
-
     .select-kit-header {
       color: var(--primary-high);
     }
