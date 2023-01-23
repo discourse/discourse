@@ -679,7 +679,7 @@ class ApplicationController < ActionController::Base
 
     DiscoursePluginRegistry.html_builders.each do |name, _|
       if name.start_with?("client:")
-        data[name.sub(/^client:/, "")] = DiscoursePluginRegistry.build_html(name, self)
+        data[name.sub(/\Aclient:/, "")] = DiscoursePluginRegistry.build_html(name, self)
       end
     end
 

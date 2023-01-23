@@ -113,7 +113,7 @@ class UserCardSerializer < BasicUserSerializer
       end
 
     return if uri.nil? || uri.host.nil?
-    uri.host.sub(/^www\./, "") + uri.path
+    uri.host.sub(/\Awww\./, "") + uri.path
   end
 
   def ignored

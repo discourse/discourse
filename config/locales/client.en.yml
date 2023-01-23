@@ -197,6 +197,7 @@ en:
 
     topic_admin_menu: "topic actions"
     skip_to_main_content: "Skip to main content"
+    skip_user_nav: "Skip to profile content"
 
     emails_are_disabled: "All outgoing email has been globally disabled by an administrator. No email notifications of any kind will be sent."
     emails_are_disabled_non_staff: "Outgoing email has been disabled for non-staff users."

@@ -216,7 +216,7 @@ module FileStore
 
     def path_for(upload)
       url = upload&.url
-      FileStore::LocalStore.new.path_for(upload) if url && url[%r{^/[^/]}]
+      FileStore::LocalStore.new.path_for(upload) if url && url[%r{\A/[^/]}]
     end
 
     def url_for(upload, force_download: false)
@@ -233,7 +233,7 @@ module FileStore
 
     def cdn_url(url)
       return url if SiteSetting.Upload.s3_cdn_url.blank?
-      schema = url[%r{^(https?:)?//}, 1]
+      schema = url[%r{\A(https?:)?//}, 1]
       folder = s3_bucket_folder_path.nil? ? "" : "#{s3_bucket_folder_path}/"
       url.sub(
         File.join("#{schema}#{absolute_base_url}", folder),

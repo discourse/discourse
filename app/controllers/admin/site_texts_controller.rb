@@ -160,7 +160,7 @@ class Admin::SiteTextsController < Admin::AdminController
     { id: key, value: value, locale: locale }
   end
 
-  PLURALIZED_REGEX = /(.*)\.(zero|one|two|few|many|other)$/
+  PLURALIZED_REGEX = /(.*)\.(zero|one|two|few|many|other)\z/
 
   def find_site_text(locale)
     if self.class.restricted_keys.include?(params[:id])

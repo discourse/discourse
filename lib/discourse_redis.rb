@@ -276,7 +276,7 @@ class DiscourseRedis
     def eval(redis, *args, **kwargs)
       redis.evalsha @sha1, *args, **kwargs
     rescue ::Redis::CommandError => e
-      if e.to_s =~ /^NOSCRIPT/
+      if e.to_s =~ /\ANOSCRIPT/
         redis.eval @script, *args, **kwargs
       else
         raise
