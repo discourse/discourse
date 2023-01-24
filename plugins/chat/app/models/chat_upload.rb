@@ -8,6 +8,8 @@
 class ChatUpload < ActiveRecord::Base
   belongs_to :chat_message
   belongs_to :upload
+
+  deprecate *public_instance_methods(false)
 end
 
 # == Schema Information

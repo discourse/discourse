@@ -461,7 +461,7 @@ describe Chat::ChatMessageCreator do
             content: "Beep boop",
             upload_ids: [upload1.id],
           )
-        }.to not_change { ChatUpload.where(upload_id: upload1.id).count }.and change {
+        }.to not_change { chat_upload_count([upload1]) }.and change {
                 UploadReference.where(upload_id: upload1.id).count
               }.by(1)
       end
@@ -474,7 +474,7 @@ describe Chat::ChatMessageCreator do
             content: "Beep boop",
             upload_ids: [upload1.id, upload2.id],
           )
-        }.to not_change { ChatUpload.where(upload_id: [upload1.id, upload2.id]).count }.and change {
+        }.to not_change { chat_upload_count([upload1, upload2]) }.and change {
                 UploadReference.where(upload_id: [upload1.id, upload2.id]).count
               }.by(2)
       end
@@ -487,7 +487,7 @@ describe Chat::ChatMessageCreator do
             content: "Beep boop",
             upload_ids: [private_upload.id],
           )
-        }.not_to change { ChatUpload.where(upload_id: private_upload.id).count }
+        }.not_to change { chat_upload_count([private_upload]) }
       end
 
       it "doesn't attach uploads when `chat_allow_uploads` is false" do
@@ -499,7 +499,7 @@ describe Chat::ChatMessageCreator do
             content: "Beep boop",
             upload_ids: [upload1.id],
           )
-        }.to not_change { ChatUpload.where(upload_id: upload1.id).count }.and not_change {
+        }.to not_change { chat_upload_count([upload1]) }.and not_change {
                 UploadReference.where(upload_id: upload1.id).count
               }
       end
@@ -608,5 +608,12 @@ describe Chat::ChatMessageCreator do
         )
       end
     end
+  end
+
+  # TODO (martin) Remove this when we remove ChatUpload completely, 2023-04-01
+  def chat_upload_count(uploads)
+    DB.query_single(
+      "SELECT COUNT(*) FROM chat_uploads WHERE upload_id IN (#{uploads.map(&:id).join(",")})",
+    ).first
   end
 end

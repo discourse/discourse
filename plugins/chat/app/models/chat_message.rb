@@ -105,7 +105,7 @@ class ChatMessage < ActiveRecord::Base
         .upload_references
         .includes(:upload)
         .order(:created_at)
-        .map { |upload_reference| UploadMarkdown.new(upload_reference.upload).to_markdown }
+        .map(&:to_markdown)
         .reject(&:empty?)
 
     return self.message if upload_markdown.empty?
