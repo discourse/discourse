@@ -23,7 +23,14 @@ class PostAlerter
         topic_title: post.topic.title,
         topic_id: post.topic.id,
         excerpt:
-          excerpt || post.excerpt(400, text_entities: true, strip_links: true, remap_emoji: true),
+          excerpt ||
+            post.excerpt(
+              400,
+              text_entities: true,
+              strip_links: true,
+              remap_emoji: true,
+              plain_hashtags: true,
+            ),
         username: username || post.username,
         post_url: post_url,
       }
