@@ -145,37 +145,37 @@ tr_TR:
       email: "E-posta ile gönder"
       url: "URL'yi kopyala ve paylaş"
     action_codes:
-      public_topic: "Bu konuyu %{when} tarihinde herkese açık yaptı"
-      open_topic: "Bunu %{when} tarihinde bir konuya dönüştürdü"
-      private_topic: "Bu konuyu %{when} tarihinde bir kişisel mesaj yaptı"
-      split_topic: "Bu konuyu %{when} tarihinde ayırdı"
-      invited_user: "%{when} Tarihinde %{who} adlı kullanıcıyı davet etti"
-      invited_group: "%{when} Tarihinde %{who} adlı kullanıcıyı davet etti"
+      public_topic: "Bu konuyu herkese açık yaptı, %{when}"
+      open_topic: "Bunu bir konuya dönüştürdü, %{when}"
+      private_topic: "Bu konuyu kişisel mesaj yaptı, %{when}"
+      split_topic: "Bu konuyu böldü, %{when}"
+      invited_user: "%{who} adlı kullanıcıyı davet etti, %{when}"
+      invited_group: "%{who} adlı kullanıcıyı davet etti, %{when}"
       user_left: "%{who}, %{when} tarihinde bu mesajdan kendini çıkardı"
-      removed_user: "%{who} Adlı kişiyi %{when} tarihinde çıkardı"
-      removed_group: "%{who} Adlı kişiyi %{when} tarihinde çıkardı"
-      autobumped: "%{when} Tarihinde otomatik olarak üste sıçradı"
+      removed_user: "%{who} adlı kullanıcıyı çıkardı, %{when}"
+      removed_group: "%{who} adlı kullanıcıyı çıkardı, %{when}"
+      autobumped: "Otomatik olarak üste sıçradı, %{when}"
       autoclosed:
-        enabled: "%{when} Tarihinde kapattı"
-        disabled: "%{when} Tarihinde açtı"
+        enabled: "Kapattı, %{when}"
+        disabled: "Açtı, %{when}"
       closed:
-        enabled: "%{when} Tarihinde kapattı"
-        disabled: "%{when} Tarihinde açtı"
+        enabled: "Kapatıldı, %{when}"
+        disabled: "Açıldı, %{when}"
       archived:
-        enabled: "%{when} Tarihinde arşivlendi"
-        disabled: "%{when} Tarihinde arşivden çıkarıldı"
+        enabled: "Arşivlendi, %{when}"
+        disabled: "Arşivden çıkarıldı, %{when}"
       pinned:
-        enabled: "%{when} Tarihinde sabitlendi"
-        disabled: "%{when} Tarihinde sabitlenmesi kaldırıldı"
+        enabled: "Sabitlendi, %{when}"
+        disabled: "Sabitlemesi kaldırıldı, %{when}"
       pinned_globally:
-        enabled: "%{when} Tarihinde küresel olarak sabitlendi"
-        disabled: "%{when} Tarihinde sabitlenmesi kaldırıldı"
+        enabled: "Küresel olarak sabitlendi, %{when}"
+        disabled: "Sabitlemesi kaldırıldı, %{when}"
       visible:
-        enabled: "%{when} Tarihinde listelendi"
-        disabled: "%{when} Tarihinde listeden çıkarıldı"
+        enabled: "Listelendi, %{when}"
+        disabled: "Listeden kaldırıldı, %{when}"
       banner:
-        enabled: "%{when} Tarihinde bunu bir banner yaptı. Kullanıcı tarafından kapatılana kadar her sayfanın en üstünde görünecek."
-        disabled: "%{when} Tarihinde bu banner'ı kaldırdı. Bundan sonra her sayfanın en üstünde görünmeyecek."
+        enabled: "Bunu banner yaptı, %{when}. Kullanıcı tarafından kapatılana kadar her sayfanın en üstünde görünecek."
+        disabled: "Bu banner'ı kaldırdı, %{when}. Bundan sonra her sayfanın en üstünde görünmeyecek."
       forwarded: "Yukarıdaki e-postayı iletti"
     topic_admin_menu: "konu eylemleri"
     skip_to_main_content: "Ana içeriğe atla"
@@ -1008,7 +1008,7 @@ tr_TR:
       notification_schedule:
         title: "Bildirim Zamanlaması"
         label: "Özel bildirim zamanlamasını etkinleştir"
-        tip: "Bu saatler dışında bildirimleriniz duraklatılacaktır."
+        tip: "Bu saatler dışında bildirimleriniz duraklatılacak."
         midnight: "Gece yarısı"
         none: "Yok"
         monday: "Pazartesi"
@@ -1052,6 +1052,7 @@ tr_TR:
         perm_denied_expl: "Bildirim izinlerini reddettiniz. Bildirimlere tarayıcı ayarlarınızdan izin verebilirsiniz."
         disable: "Bildirimleri Devre Dışı Bırak"
         enable: "Bildirimleri Etkinleştir"
+        each_browser_note: 'Not: Kullandığınız her tarayıcıda bu ayarı değiştirmeniz gerekir. Bu ayardan bağımsız olarak, kullanıcı menüsünden bildirimleri duraklattığınızda tüm bildirimler devre dışı bırakılır.'
         consent_prompt: "Gönderilerinize yanıt verildiğinde canlı bildirim almak ister misiniz?"
       dismiss: "Kapat"
       dismiss_notifications: "Tümünü Kapat"
@@ -3978,6 +3979,7 @@ tr_TR:
       new_count:
         one: "%{count} yeni"
         other: "%{count} yeni"
+      toggle_section: "Bölümü değiştir"
       more: "Daha fazla"
       all_categories: "Tüm kategoriler"
       all_tags: "Tüm etiketler"
@@ -3986,6 +3988,7 @@ tr_TR:
           header_link_text: "Hakkında"
         messages:
           header_link_text: "Mesajlar"
+          header_action_title: "Kişisel mesaj oluşturun"
           links:
             inbox: "Gelen Kutusu"
             sent: "Gönderilen"
@@ -4002,6 +4005,7 @@ tr_TR:
           none: "Etiket eklemediniz."
           click_to_get_started: "Başlamak için buraya tıklayın."
           header_link_text: "Etiketler"
+          header_action_title: "Kenar çubuğu etiketlerinizi düzenleyin"
           configure_defaults: "Varsayılanları yapılandır"
         categories:
           links:
@@ -4011,25 +4015,33 @@ tr_TR:
           none: "Kategori eklemediniz."
           click_to_get_started: "Başlamak için buraya tıklayın."
           header_link_text: "Kategoriler"
+          header_action_title: "Kenar çubuğu kategorilerinizi düzenleyin"
           configure_defaults: "Varsayılanları yapılandır"
         community:
           header_link_text: "Topluluk"
+          header_action_title: "Yeni konu oluşturun"
           links:
             about:
               content: "Hakkında"
+              title: "Bu site hakkında daha fazla bilgi"
             admin:
               content: "Yönetici"
+              title: "Site ayarları ve raporları"
             badges:
               content: "Rozetler"
+              title: "Kazanılabilecek tüm rozetler"
             everything:
               content: "Her şey"
               title: "Tüm konular"
             faq:
               content: "SSS"
+              title: "Bu siteyi kullanmak için yönergeler"
             groups:
               content: "Gruplar"
+              title: "Mevcut kullanıcı gruplarının listesi"
             users:
               content: "Kullanıcılar"
+              title: "Tüm kullanıcıların listesi"
             my_posts:
               content: "Gönderilerim"
               title: "Son konu etkinliğim"
@@ -4039,6 +4051,7 @@ tr_TR:
                 other: "%{count} taslak"
             review:
               content: "İncele"
+              title: "Bayrak eklenen gönderiler ve diğer sıraya alınmış ögeler"
               pending_count: "%{count} beklemede"
     welcome_topic_banner:
       title: "Karşılama Konunuzu oluşturun"
@@ -4191,6 +4204,9 @@ tr_TR:
               other: "%{count} kullanıcı yeni e-posta alan adlarına sahip ve gruba eklenecek."
             automatic_membership_associated_groups: "Burada listelenen bir hizmette bir grubun üyesi olan kullanıcılar, hizmete giriş yaptıklarında otomatik olarak bu gruba eklenir."
             primary_group: "Otomatik olarak birincil grup olarak ayarla"
+          alert:
+            primary_group: "Bu birincil bir grup olduğundan, herkes tarafından görüntülenebilen CSS sınıflarında \"%{group_name}\" adı kullanılacak."
+            flair_group: "Bu grubun üyelerine karşı becerisi olduğu için \"%{group_name}\" adı herkes tarafından görünür olacak."
         name_placeholder: "Grup adı, boşluk yok, kullanıcı adı kuralıyla aynı şekilde"
         primary: "Birincil grup"
         no_primary: "(birincil grup yok)"
