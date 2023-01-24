@@ -93,4 +93,9 @@ describe Jobs::ChatChannelDelete do
     expect(new_counts[:messages]).to eq(initial_counts[:messages] - 20)
     expect(new_counts[:reactions]).to eq(initial_counts[:reactions] - 10)
   end
+
+  it "does not error if there are no messages in the channel" do
+    other_channel = Fabricate(:chat_channel)
+    expect { described_class.new.execute(chat_channel_id: other_channel.id) }.not_to raise_error
+  end
 end
