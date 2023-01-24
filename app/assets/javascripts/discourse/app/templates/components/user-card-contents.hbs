@@ -111,7 +111,9 @@
           {{#if this.hasStatus}}
             <h3 class="user-status">
               {{html-safe this.userStatusEmoji}}
-              {{this.user.status.description}}
+              <span class="user-status__description">
+                {{this.user.status.description}}
+              </span>
               {{format-date this.user.status.ends_at format="tiny"}}
             </h3>
           {{/if}}
