@@ -307,6 +307,7 @@ h3.user-status {
   }
 
   .relative-date {
+    flex: 1 0 auto;
     text-align: left;
     font-size: var(--font-down-3);
     padding-top: 0.5em;

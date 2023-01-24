@@ -1109,7 +1109,7 @@ hr:
         perm_denied_expl: "Odbili ste dopuštenje za obavijesti. Dopusti obavijesti putem postavki preglednika."
         disable: "Isključi obavijesti"
         enable: "Uključi obavijesti"
-        each_browser_note: 'Napomena: ovu postavku morate promijeniti na svakom pregledniku koji koristite. Sve će obavijesti biti onemogućene ako pauzirate obavijesti iz korisničkog izbornika, bez obzira na ovu postavku.'
+        each_browser_note: "Napomena: ovu postavku morate promijeniti na svakom pregledniku koji koristite. Sve će obavijesti biti onemogućene ako pauzirate obavijesti iz korisničkog izbornika, bez obzira na ovu postavku."
         consent_prompt: "Želite li obavijesti (uživo) kada ljudi odgovaraju na vaše postove?"
       dismiss: "Skloni"
       dismiss_notifications: "Skloni sve"

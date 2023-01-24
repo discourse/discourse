@@ -51,6 +51,7 @@ cs:
         yesterday: Včera
       about_view:
         title: Nadpis
+        name: Jméno
         description: Popis
       channel_info:
         back_to_channel: "Zpět"

@@ -372,14 +372,6 @@ after_initialize do
     end
   end
 
-  if respond_to?(:register_upload_unused)
-    register_upload_unused do |uploads|
-      uploads.joins("LEFT JOIN chat_uploads cu ON cu.upload_id = uploads.id").where(
-        "cu.upload_id IS NULL",
-      )
-    end
-  end
-
   if respond_to?(:register_upload_in_use)
     register_upload_in_use do |upload|
       ChatMessage.where(

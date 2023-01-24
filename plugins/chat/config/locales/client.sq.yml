@@ -42,6 +42,7 @@ sq:
         yesterday: Dje
       about_view:
         title: Titulli
+        name: Emri
         description: Përshkrimi
       channel_info:
         back_to_channel: "Kthehu mbrapa"

@@ -2680,6 +2680,7 @@ en:
       must_not_contain_two_special_chars_in_seq: "must not contain a sequence of 2 or more special chars (.-_)"
       must_not_end_with_confusing_suffix: "must not end with a confusing suffix like .json or .png etc."
     email:
+      blank: "can't be blank."
       invalid: "is invalid."
       not_allowed: "is not allowed from that email provider. Please use another email address."
       blocked: "is not allowed."
