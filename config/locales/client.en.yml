@@ -4688,6 +4688,7 @@ en:
               update: Update user profile information.
               log_out: Log out all sessions for a user.
               anonymize: Anonymize user accounts.
+              suspend: Suspend user accounts.
               delete: Delete user accounts.
               list: Get a list of users.
             user_status:
@@ -4695,6 +4696,8 @@ en:
               update: Update user status.
             email:
               receive_emails: Combine this scope with the mail-receiver to process incoming emails.
+            invites:
+              create: Send email invites or generate invite links.
             badges:
               create: Create a new badge.
               show: Obtain information about a badge.
@@ -4703,6 +4706,9 @@ en:
               list_user_badges: List user badges.
               assign_badge_to_user: Assign a badge to a user.
               revoke_badge_from_user: Revoke a badge from a user.
+            search:
+              show: Search using the `/search.json?q=term` endpoint.
+              query: Search using the /search/query?term=term` endpoint.
             wordpress:
               publishing: Necessary for the WP Discourse plugin publishing features (required).
               commenting: Necessary for the WP Discourse plugin commenting features.

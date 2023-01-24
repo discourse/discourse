@@ -640,8 +640,7 @@ html.has-full-page-chat {
       );
     }
   }
-}
-
-[data-popper-reference-hidden] {
-  visibility: hidden;
+  [data-popper-reference-hidden] {
+    visibility: hidden;
+  }
 }

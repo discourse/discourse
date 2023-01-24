@@ -4,8 +4,7 @@ import { createPopper } from "@popperjs/core";
 import { schedule } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 
-const MSG_ACTIONS_HORIZONTAL_PADDING = 2;
-const MSG_ACTIONS_VERTICAL_PADDING = -28;
+const MSG_ACTIONS_VERTICAL_PADDING = -10;
 
 export default Component.extend({
   tagName: "",
@@ -28,27 +27,13 @@ export default Component.extend({
           `.chat-message-actions-container[data-id="${this.message.id}"] .chat-message-actions`
         ),
         {
-          placement: "right-start",
+          placement: "top-end",
           modifiers: [
             { name: "hide", enabled: true },
-            {
-              name: "eventListeners",
-              options: {
-                scroll: false,
-              },
-            },
+            { name: "eventListeners", options: { scroll: false } },
             {
               name: "offset",
-              options: {
-                offset: ({ popper, placement }) => {
-                  return [
-                    MSG_ACTIONS_VERTICAL_PADDING,
-                    -(placement.includes("left") || placement.includes("right")
-                      ? popper.width + MSG_ACTIONS_HORIZONTAL_PADDING
-                      : popper.height),
-                  ];
-                },
-              },
+              options: { offset: [-2, MSG_ACTIONS_VERTICAL_PADDING] },
             },
           ],
         }
