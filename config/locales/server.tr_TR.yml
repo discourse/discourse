@@ -1422,6 +1422,8 @@ tr_TR:
     title: "Bu sitenin adı. Anonim kullanıcılar dahil tüm ziyaretçiler tarafından görülebilir."
     site_description: "Bu siteyi bir cümleyle tanımlayın. Anonim kullanıcılar dahil tüm ziyaretçiler tarafından görülebilir."
     short_site_description: "Birkaç kelimelik kısa açıklama. Anonim kullanıcılar dahil tüm ziyaretçiler tarafından görülebilir."
+    contact_email: "Bu siteden sorumlu kilit kişinin e-posta adresi. Kritik bildirimler için kullanılır ve ayrıca acil konular için <a href='%{base_path}/about' target='_blank'>/about</a> adresinde gösterilir. Herkese açık sitelerdeki anonim kullanıcılara görünür."
+    contact_url: "Bu site için iletişim URL'si. Mevcut olduğunda, e-posta adresini <a href='%{base_path}/about' target='_blank'>/about</a> olarak değiştirir ve genel sitelerdeki anonim kullanıcılar tarafından görünür olur."
     crawl_images: "Doğru genişlik ve yükseklik boyutlarını eklemek için uzak URL'lerden görüntüleri alın."
     download_remote_images_to_local: "Uzak (hotlink'li) görüntüleri indirerek yerel görüntülere dönüştürün; Bu işlem, görüntüler gelecekte uzak siteden kaldırılsa bile içeriği korur."
     download_remote_images_threshold: "Uzak görüntüleri yerel olarak indirmek için gereken minimum disk alanı (yüzde olarak)"
@@ -3396,6 +3398,7 @@ tr_TR:
 
         %{respond_instructions}
     user_watching_category_or_tag:
+      title: "Kullanıcı İzleme Kategorisi veya Etiketi"
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}

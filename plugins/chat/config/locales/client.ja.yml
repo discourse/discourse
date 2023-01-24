@@ -115,7 +115,7 @@ ja:
           other: "他 %{count} 件"
         groups:
           users_limit:
-            other: "ユーザー: %{count} 人"
+            other: "%{count} 人のユーザー"
       aria_roles:
         header: "チャットヘッダー"
         composer: "チャット作成ツール"
