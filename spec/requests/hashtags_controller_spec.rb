@@ -142,6 +142,8 @@ RSpec.describe HashtagsController do
     end
 
     context "when enable_experimental_hashtag_autocomplete enabled" do
+      before { SiteSetting.enable_experimental_hashtag_autocomplete = true }
+
       context "when logged in" do
         context "as regular user" do
           before { sign_in(Fabricate(:user)) }
@@ -254,12 +256,18 @@ RSpec.describe HashtagsController do
                 }
 
             expect(response.status).to eq(200)
-            expect(response.parsed_body["categories"]).to eq(
-              "foo" => foo.url,
-              "foo:bar" => foobar.url,
-              "bar:baz" => foobarbaz.id < quxbarbaz.id ? foobarbaz.url : quxbarbaz.url,
-              "qux" => qux.url,
-              "qux:bar" => quxbar.url,
+            found_categories = response.parsed_body["category"]
+            expect(found_categories.map { |c| c["ref"] }).to eq(%w[foo foo:bar bar:baz qux qux:bar])
+            expect(found_categories.find { |c| c["ref"] == "foo" }["relative_url"]).to eq(foo.url)
+            expect(found_categories.find { |c| c["ref"] == "foo:bar" }["relative_url"]).to eq(
+              foobar.url,
+            )
+            expect(found_categories.find { |c| c["ref"] == "bar:baz" }["relative_url"]).to eq(
+              foobarbaz.id < quxbarbaz.id ? foobarbaz.url : quxbarbaz.url,
+            )
+            expect(found_categories.find { |c| c["ref"] == "qux" }["relative_url"]).to eq(qux.url)
+            expect(found_categories.find { |c| c["ref"] == "qux:bar" }["relative_url"]).to eq(
+              quxbar.url,
             )
           end
         end

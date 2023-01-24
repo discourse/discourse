@@ -35,6 +35,8 @@ module CategoryHashtag
         .map(&:downcase)
         .map do |slug|
           slug_path = slug.split(":")
+          next if slug_path.empty? || slug_path.size > 2
+
           if SiteSetting.slug_generation_method == "encoded"
             slug_path.map! { |slug| CGI.escape(slug) }
           end
