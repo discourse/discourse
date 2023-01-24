@@ -148,6 +148,7 @@ ja:
       banner:
         enabled: "%{when}にこれをバナーにしました。ユーザーが閉じるまで各ページの上部に表示されます。"
         disabled: "%{when}にこのバナーを削除しました。今後ページの上部に表示されることはありません。"
+      forwarded: "上記のメールを転送しました"
     topic_admin_menu: "トピックの操作"
     skip_to_main_content: "メインコンテンツにスキップ"
     emails_are_disabled: "メールの送信は管理者によって無効化されています。メール通知は一切送信されません。"
@@ -950,6 +951,7 @@ ja:
       notification_schedule:
         title: "通知スケジュール"
         label: "カスタム通知スケジュールを有効にする"
+        tip: "この時間外は、通知が停止されます。"
         midnight: "深夜"
         none: "なし"
         monday: "月曜日"
@@ -993,12 +995,16 @@ ja:
         perm_denied_expl: "通知へのアクセスが拒否されました。ブラウザの設定から通知を許可してください。"
         disable: "通知を無効にする"
         enable: "通知を有効にする"
+        each_browser_note: "注意: 使用するすべてのブラウザでこの設定を変更する必要があります。ユーザーメニューから通知を一時停止にした場合、この設定に関係なくすべての通知が無効になります。"
         consent_prompt: "あなたの投稿に返信があったときライブ通知しますか？"
       dismiss: "閉じる"
       dismiss_notifications: "すべて閉じる"
       dismiss_notifications_tooltip: "すべての未読の通知を既読にします"
       dismiss_bookmarks_tooltip: "未読のブックマークリマインダーをすべて既読にします"
       dismiss_messages_tooltip: "個人メッセージの未読の通知をすべて既読にします"
+      no_likes_title: "まだ「いいね！」を受け取っていません"
+      no_likes_body: >
+        誰かがあなたの投稿の 1 つに「いいね！」するとここで通知されるため、他の人が評価するものを確認することができます。あなたが他の人の投稿に「いいね！」する場合も、その人に通知されます！<br><br>「いいね！」の通知はメールで送信されませんが、サイトの<a href='%{preferencesUrl}'>通知設定</a>で「いいね！」に関する通知の受信方法を調整することができます。
       no_messages_title: "メッセージはありません"
       no_messages_body: >
         通常の会話の外で、誰かと直接個人的に話す必要がありますか？相手のアバターを選択して、%{icon} メッセージボタンを使うと、その人にメッセージを送信できます。<br><br> ヘルプが必要な場合は、<a href='%{aboutUrl}'>スタッフメンバーにメッセージを送信</a>してください。
@@ -1146,6 +1152,54 @@ ja:
         warnings: "運営スタッフからの警告"
         read_more_in_group: "もっと読みますか？%{groupLink} で他のメッセージを閲覧できます。"
         read_more: "もっと読みますか？<a href='%{basePath}/u/%{username}/messages'>個人メッセージ</a>で他のメッセージを閲覧できます。"
+        read_more_group_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                other {残り <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># 件の未読</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                other {と <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># 件の新着</a>メッセージがあります。または {groupLink} で他のメッセージを閲覧してください}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                other {残り <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># 件の未読</a>メッセージがあります。または {groupLink} で他のメッセージを閲覧してください}
+              }
+              { NEW, plural,
+                   =0 {}
+                other {残り <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># 件の新着</a>メッセージがあります。または {groupLink} で他のメッセージを閲覧してください}
+              }
+            }
+            other {}
+          }
+        read_more_personal_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                other {残り <a href='{basePath}/u/{username}/messages/unread'># 件の未読</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                other {と <a href='{basePath}/u/{username}/messages/new'># 件の新着</a>メッセージがあります。または他の<a href='{basePath}/u/{username}/messages'>個人メッセージ</a>を閲覧してください}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                other {残り <a href='{basePath}/u/{username}/messages/unread'># 件の未読</a>メッセージがあります。または他の<a href='{basePath}/u/{username}/messages'>個人メッセージ</a>を閲覧してください}
+              }
+              { NEW, plural,
+                   =0 {}
+                other {残り <a href='{basePath}/u/{username}/messages/new'># 件の新着</a>メッセージがあります。または他の<a href='{basePath}/u/{username}/messages'>個人メッセージ</a>を閲覧してください}
+              }
+            }
+            other {}
+          }
       preferences_nav:
         account: "アカウント"
         security: "セキュリティ"
@@ -1208,7 +1262,14 @@ ja:
         use: "認証アプリを使用する"
         enforced_notice: "このサイトにアクセスするには二要素認証を有効にする必要があります。"
         disable: "無効化"
+        disable_confirm: "二要素認証を無効にしてもよろしいですか？"
         delete: "削除"
+        delete_confirm_header: "これらのトークンベース認証と物理セキュリティキーは削除されます:"
+        delete_confirm_instruction: "確認するには、下のボックスに <strong>%{confirm}</strong> と入力します。"
+        delete_single_confirm_title: "認証アプリの削除"
+        delete_single_confirm_message: "%{name} を削除しようとしています。この操作を元に戻すことはできません。変更する場合は、この認証アプリをもう一度登録する必要があります。"
+        delete_backup_codes_confirm_title: "バックアップコードの削除"
+        delete_backup_codes_confirm_message: "バックアップコードを削除しようとしています。この操作を元に戻すことはできません。変更する場合は、このバックアップコードをもう一度生成する必要があります。"
         save: "保存"
         edit: "編集"
         edit_title: "認証アプリの編集"
@@ -1374,6 +1435,8 @@ ja:
         title: "バックグラウンドのページのタイトルに表示する件数:"
         notifications: "新しい通知"
         contextual: "新しいページのコンテンツ"
+      bookmark_after_notification:
+        title: "ブックマークのリマインダー通知が送信された後:"
       like_notification_frequency:
         title: "「いいね！」された時に通知する"
         always: "常時"
@@ -1590,6 +1653,7 @@ ja:
       save: "保存"
       set_custom_status: "カスタムステータスを設定する"
       what_are_you_doing: "何をしていますか？"
+      pause_notifications: "通知を停止する"
       remove_status: "ステータスを削除する"
     user_tips:
       primary: "了解！"

@@ -123,6 +123,7 @@ zh_TW:
         associated_topic: 連結的主題
         associated_category: 連結的類別
         title: 標題
+        name: 名字
         description: 簡述
       channel_info:
         back_to_all_channels: "所有頻道"
@@ -131,9 +132,6 @@ zh_TW:
           about: 關於
           members: 成員
           settings: 設定
-      channel_edit_title_modal:
-        title: 編輯標題
-        input_placeholder: 新增標題
       channel_edit_description_modal:
         title: 編輯描述
         input_placeholder: 新增描述

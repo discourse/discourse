@@ -125,6 +125,7 @@ hr:
         yesterday: Jučer
       about_view:
         title: Naslov
+        name: Ime
         description: Opis
       channel_info:
         back_to_channel: "Natrag"

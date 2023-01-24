@@ -48,6 +48,7 @@ th:
         yesterday: เมื่อวาน
       about_view:
         title: ชื่อเรื่อง
+        name: ชื่อ
         description: รายละเอียด
       channel_info:
         back_to_channel: "กลับ"
