@@ -34,11 +34,20 @@ class Chat::ChatChannelDestroyer < ServiceBase
 
   def delete_channel
     ChatChannel.transaction do
+      channel.update!(slug: deleted_slug)
       channel.trash!(guardian.user)
       log_staff_action(
         "chat_channel_delete",
         { chat_channel_id: channel.id, chat_channel_name: channel.title(guardian.user) },
       )
     end
+  end
+
+  # Prevent collisions with newly created channels with the same slug
+  def deleted_slug
+    "#{Time.now.strftime("%Y%m%d-%H%M")}-#{channel.slug}-deleted".truncate(
+      SiteSetting.max_topic_title_length,
+      omission: "",
+    )
   end
 end

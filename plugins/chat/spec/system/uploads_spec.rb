@@ -79,15 +79,21 @@ describe "Uploading files in chat messages", type: :system, js: true do
 
   context "when editing a message with uploads" do
     fab!(:message_2) { Fabricate(:chat_message, user: current_user, chat_channel: channel_1) }
-    fab!(:chat_upload) { Fabricate(:chat_upload, chat_message: message_2, user: current_user) }
+    fab!(:upload_reference) do
+      Fabricate(
+        :upload_reference,
+        target: message_2,
+        upload: Fabricate(:upload, user: current_user),
+      )
+    end
 
     before do
       channel_1.add(current_user)
       sign_in(current_user)
 
       file = file_from_fixtures("logo-dev.png", "images")
-      url = Discourse.store.store_upload(file, chat_upload.upload)
-      chat_upload.upload.update!(url: url, sha1: Upload.generate_digest(file))
+      url = Discourse.store.store_upload(file, upload_reference.upload)
+      upload_reference.upload.update!(url: url, sha1: Upload.generate_digest(file))
     end
 
     it "allows deleting uploads" do

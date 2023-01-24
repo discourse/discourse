@@ -2,7 +2,10 @@
 
 class EmailValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
-    if !EmailAddressValidator.valid_value?(value)
+    if value.blank?
+      record.errors.add(attribute, I18n.t(:"user.email.blank"))
+      invalid = true
+    elsif !EmailAddressValidator.valid_value?(value)
       if Invite === record && attribute == :email
         record.errors.add(:base, I18n.t(:"invite.invalid_email", email: CGI.escapeHTML(value)))
       else

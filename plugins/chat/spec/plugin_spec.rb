@@ -26,7 +26,7 @@ describe Chat do
       )
     end
 
-    it "marks uploads with ChatUpload in use" do
+    it "marks uploads with reference to ChatMessage via UploadReference in use" do
       unused_upload
 
       expect { Jobs::CleanUpUploads.new.execute({}) }.to change { Upload.count }.by(-1)
@@ -61,7 +61,7 @@ describe Chat do
       )
     end
 
-    it "marks uploads with ChatUpload in use" do
+    it "marks uploads with reference to ChatMessage via UploadReference in use" do
       draft_upload
       unused_upload
 

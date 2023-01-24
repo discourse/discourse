@@ -14,8 +14,11 @@ class ChatMessage < ActiveRecord::Base
   has_many :revisions, class_name: "ChatMessageRevision", dependent: :destroy
   has_many :reactions, class_name: "ChatMessageReaction", dependent: :destroy
   has_many :bookmarks, as: :bookmarkable, dependent: :destroy
+  has_many :upload_references, as: :target, dependent: :destroy
+  has_many :uploads, through: :upload_references
+
+  # TODO (martin) Remove this when we drop the ChatUpload table
   has_many :chat_uploads, dependent: :destroy
-  has_many :uploads, through: :chat_uploads
   has_one :chat_webhook_event, dependent: :destroy
   has_one :chat_mention, dependent: :destroy
 
@@ -61,14 +64,20 @@ class ChatMessage < ActiveRecord::Base
   end
 
   def attach_uploads(uploads)
-    return if uploads.blank?
+    return if uploads.blank? || self.new_record?
 
     now = Time.now
-    record_attrs =
+    ref_record_attrs =
       uploads.map do |upload|
-        { upload_id: upload.id, chat_message_id: self.id, created_at: now, updated_at: now }
+        {
+          upload_id: upload.id,
+          target_id: self.id,
+          target_type: "ChatMessage",
+          created_at: now,
+          updated_at: now,
+        }
       end
-    ChatUpload.insert_all!(record_attrs)
+    UploadReference.insert_all!(ref_record_attrs)
   end
 
   def excerpt
@@ -91,20 +100,19 @@ class ChatMessage < ActiveRecord::Base
   end
 
   def to_markdown
-    markdown = []
+    upload_markdown =
+      self
+        .upload_references
+        .includes(:upload)
+        .order(:created_at)
+        .map(&:to_markdown)
+        .reject(&:empty?)
 
-    if self.message.present?
-      msg = self.message
+    return self.message if upload_markdown.empty?
 
-      self.chat_uploads.any? ? markdown << msg + "\n" : markdown << msg
-    end
+    return ["#{self.message}\n"].concat(upload_markdown).join("\n") if self.message.present?
 
-    self
-      .chat_uploads
-      .order(:created_at)
-      .each { |chat_upload| markdown << UploadMarkdown.new(chat_upload.upload).to_markdown }
-
-    markdown.reject(&:empty?).join("\n")
+    upload_markdown.join("\n")
   end
 
   def cook
