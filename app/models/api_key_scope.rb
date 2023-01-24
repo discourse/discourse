@@ -45,6 +45,10 @@ class ApiKeyScope < ActiveRecord::Base
               category_id: :category_slug_path_with_id,
             },
           },
+          status: {
+            actions: %w[topics#status],
+            params: %i[topic_id category_id status enabled],
+          },
         },
         posts: {
           edit: {
