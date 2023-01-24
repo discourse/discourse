@@ -30,14 +30,14 @@ module Jobs
         )
         ChatMessage.transaction do
           chat_messages = ChatMessage.where(chat_channel: chat_channel)
-          message_ids = chat_messages.select(:id)
+          message_ids = chat_messages.pluck(:id)
           ChatMention.where(chat_message_id: message_ids).delete_all
           ChatMessageRevision.where(chat_message_id: message_ids).delete_all
           ChatMessageReaction.where(chat_message_id: message_ids).delete_all
 
           # if the uploads are not used anywhere else they will be deleted
           # by the CleanUpUploads job in core
-          ChatUpload.where(chat_message_id: message_ids).delete_all
+          DB.exec("DELETE FROM chat_uploads WHERE chat_message_id IN (#{message_ids.join(",")})")
           UploadReference.where(target_id: message_ids, target_type: "ChatMessage").delete_all
 
           # only the messages and the channel are Trashable, everything else gets
