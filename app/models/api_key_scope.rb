@@ -101,6 +101,9 @@ class ApiKeyScope < ActiveRecord::Base
           anonymize: {
             actions: %w[admin/users#anonymize],
           },
+          suspend: {
+            actions: %w[admin/users#suspend],
+          },
           delete: {
             actions: %w[admin/users#destroy],
           },
@@ -119,6 +122,11 @@ class ApiKeyScope < ActiveRecord::Base
         email: {
           receive_emails: {
             actions: %w[admin/email#handle_mail admin/email#smtp_should_reject],
+          },
+        },
+        invites: {
+          create: {
+            actions: %w[invites#create],
           },
         },
         badges: {
