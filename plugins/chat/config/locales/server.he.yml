@@ -34,12 +34,22 @@ he:
     chat_channel_archive_complete:
       title: "העברת ערוץ הצ׳אט לארכיון הושלמה"
       subject_template: "העברת ערוץ הצ׳אט לארכיון הושלמה בהצלחה"
+      text_body_template: |
+        העברת הערוץ %{channel_hashtag_or_name} לארכיון הושלמה בהצלחה. ההודעות הועתקו לנושא [%{topic_title}](%{topic_url}).
     chat_channel_archive_failed:
       title: "העברת הצ׳אט לארכיון נכשלה"
       subject_template: "העברת הצ׳אט לארכיון נכשלה"
+      text_body_template: |
+        העברת הערוץ %{channel_hashtag_or_name} לארכיון נכשלה. %{messages_archived} הודעות הועברו לארכיון. הודעות שהועברו לארכיון למחצה הועתקו לנושא [%{topic_title}](%{topic_url}). יש לבקר בערוץ דרך %{channel_url} כדי לנסות שוב.
     chat_channel_archive_failed_no_topic:
       title: "העברת הצ׳אט לארכיון נכשלה"
       subject_template: "העברת הצ׳אט לארכיון נכשלה"
+      text_body_template: |
+        העברת ערוץ הצ׳אט %{channel_hashtag_or_name} לארכיון נכשלה. אף הודעה לא הועברה לארכיון. הנושא לא נוצר כראוי מהסיבות הבאות:
+
+          %{topic_validation_errors}
+
+        ניתן לבקר בערוץ דרך %{channel_url} כדי לנסות שוב.
   chat:
     deleted_chat_username: נמחק
     errors:

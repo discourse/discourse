@@ -115,7 +115,7 @@ ja:
           other: "他 %{count} 件"
         groups:
           users_limit:
-            other: "ユーザー: %{count} 人"
+            other: "%{count} 人のユーザー"
       aria_roles:
         header: "チャットヘッダー"
         composer: "チャット作成ツール"
@@ -195,6 +195,7 @@ ja:
         associated_topic: リンクされたトピック
         associated_category: リンクされたカテゴリ
         title: タイトル
+        name: 名前
         description: 説明
       channel_info:
         back_to_all_channels: "すべてのチャンネル"
@@ -203,10 +204,6 @@ ja:
           about: 紹介
           members: メンバー
           settings: 設定
-      channel_edit_title_modal:
-        title: タイトルを編集する
-        input_placeholder: タイトルを追加する
-        description: チャンネルを説明する短いタイトルを付けます
       channel_edit_description_modal:
         title: 説明を編集する
         input_placeholder: 説明を追加する
@@ -267,8 +264,6 @@ ja:
         always: "すべてのアクティビティ"
       settings:
         auto_join_users_label: "自動的にユーザーを追加する"
-        auto_join_users_info: "過去 3 か月にアクティブだったユーザーを 1 時間ごとに確認し、それらのユーザーが %{category} カテゴリにアクセスできる場合はこのチャンネルに追加します。"
-        enable_auto_join_users: "最近アクティブなユーザーをすべて自動的に追加する"
         auto_join_users_warning: "このチャンネルのメンバーでなく、%{category} カテゴリにアクセスできるすべてのユーザーが参加します。よろしいですか？"
         desktop_notification_level: "デスクトップ通知"
         follow: "参加"
