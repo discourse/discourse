@@ -136,7 +136,15 @@ class UploadSecurity
 
   def publicly_referenced_first_check
     return false if @creating
-    first_reference = @upload.upload_references.order(created_at: :asc).first
+    first_reference =
+      @upload
+        .upload_references
+        .joins(<<~SQL)
+          LEFT JOIN posts ON upload_references.target_type = 'Post' AND upload_references.target_id = posts.id
+        SQL
+        .where("posts.deleted_at IS NULL")
+        .order(created_at: :asc)
+        .first
     return false if first_reference.blank?
     PUBLIC_UPLOAD_REFERENCE_TYPES.include?(first_reference.target_type)
   end
