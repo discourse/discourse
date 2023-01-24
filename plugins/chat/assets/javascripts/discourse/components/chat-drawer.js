@@ -9,6 +9,8 @@ import {
 import { equal } from "@ember/object/computed";
 import { cancel, next, schedule, throttle } from "@ember/runloop";
 import { inject as service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
+import { escapeExpression } from "discourse/lib/utilities";
 
 export default Component.extend({
   tagName: "",
@@ -26,6 +28,7 @@ export default Component.extend({
   rafTimer: null,
   view: null,
   hasUnreadMessages: false,
+  drawerStyle: null,
 
   didInsertElement() {
     this._super(...arguments);
@@ -52,6 +55,8 @@ export default Component.extend({
       "_startDynamicCheckSize"
     );
     this.appEvents.on("composer:resize-ended", this, "_clearDynamicCheckSize");
+
+    this.computeDrawerStyle();
   },
 
   willDestroyElement() {
@@ -116,6 +121,14 @@ export default Component.extend({
     }
 
     return "chat.channel.info.settings";
+  },
+
+  computeDrawerStyle() {
+    let style = "";
+    const { width, height } = this.chatDrawerSize.getSize();
+    style += `width: ${escapeExpression(width || 0)}px;`;
+    style += `height: ${escapeExpression(height || 0)}px;`;
+    this.set("drawerStyle", htmlSafe(style));
   },
 
   openChannelAtMessage(channel, messageId) {
@@ -244,6 +257,7 @@ export default Component.extend({
 
   @action
   toggleExpand() {
+    this.computeDrawerStyle();
     this.chatStateManager.didToggleDrawer();
     this.appEvents.trigger(
       "chat:toggle-expand",
@@ -253,6 +267,7 @@ export default Component.extend({
 
   @action
   close() {
+    this.computeDrawerStyle();
     this.chatStateManager.didCloseDrawer();
     this.chat.setActiveChannel(null);
     this.appEvents.trigger("chat:float-toggled", true);
@@ -260,8 +275,7 @@ export default Component.extend({
 
   @action
   didResize(element, { width, height }) {
-    this.chatDrawerSize.height = height;
-    this.chatDrawerSize.width = width;
+    this.chatDrawerSize.setSize({ width, height });
   },
 
   @action
