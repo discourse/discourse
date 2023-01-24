@@ -11,7 +11,11 @@
     <div class="chat-channel-card__header">
       <LinkTo
         @route="chat.channel"
+<<<<<<< HEAD
         @models={{@channel.routeModels}}
+=======
+        @models={{array @channel.slugifiedTitle @channel.id}}
+>>>>>>> caf59f5f3e (Drop slugify helper and channel route without slug)
         class="chat-channel-card__name-container"
       >
         <span class="chat-channel-card__name">
@@ -26,7 +30,11 @@
         {{#if @channel.currentUserMembership.muted}}
           <LinkTo
             @route="chat.channel.info.settings"
+<<<<<<< HEAD
             @models={{@channel.routeModels}}
+=======
+            @models={{array @channel.slugifiedTitle @channel.id}}
+>>>>>>> caf59f5f3e (Drop slugify helper and channel route without slug)
             class="chat-channel-card__tag -muted"
             tabindex="-1"
           >
@@ -36,7 +44,11 @@
 
         <LinkTo
           @route="chat.channel.info.settings"
+<<<<<<< HEAD
           @models={{@channel.routeModels}}
+=======
+          @models={{array @channel.slugifiedTitle @channel.id}}
+>>>>>>> caf59f5f3e (Drop slugify helper and channel route without slug)
           class="chat-channel-card__setting"
           tabindex="-1"
         >
