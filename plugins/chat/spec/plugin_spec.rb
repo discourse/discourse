@@ -144,7 +144,7 @@ describe Chat do
       ).chat_message
     end
 
-    let(:chat_url) { "#{Discourse.base_url}/chat/c/#{chat_channel.id}" }
+    let(:chat_url) { "#{Discourse.base_url}/chat/c/-/#{chat_channel.id}" }
 
     context "when inline" do
       it "renders channel" do

@@ -13,7 +13,7 @@
         {{else}}
           <LinkTo
             @route="chat.channel"
-            @models={{array (slugify-channel this.model) this.model.id}}
+            @models={{array this.model.slugifiedTitle this.model.id}}
             class="chat-full-page-header__back-btn no-text btn-flat btn"
             title={{i18n "chat.channel_info.back_to_channel"}}
           >
@@ -38,7 +38,7 @@
         >
           <LinkTo
             @route={{concat "chat.channel.info." tab}}
-            @models={{array (slugify-channel this.model) this.model.id}}
+            @models={{array this.model.slugifiedTitle this.model.id}}
             class="chat-tabs-list__link"
           >
             <span>{{i18n (concat "chat.channel_info.tabs." tab)}}</span>

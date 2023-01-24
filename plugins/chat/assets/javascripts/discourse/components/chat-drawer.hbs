@@ -48,7 +48,7 @@
               <LinkTo
                 @route={{this.infoTabRoute}}
                 @models={{array
-                  (slugify-channel this.chat.activeChannel)
+                  this.chat.activeChannel.slugifiedTitle
                   this.chat.activeChannel.id
                 }}
                 class="chat-drawer-header__title"

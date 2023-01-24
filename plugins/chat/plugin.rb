@@ -650,8 +650,6 @@ after_initialize do
     put "/flag" => "chat#flag"
     get "/emojis" => "emojis#index"
 
-    get "/c/:channel_id" => "chat#respond"
-
     base_c_route = "/c/:channel_title/:channel_id"
     get base_c_route => "chat#respond", :as => "channel"
 
@@ -660,7 +658,7 @@ after_initialize do
     end
 
     # /channel -> /c redirects
-    get "/channel/:channel_id", to: redirect("/chat/c/%{channel_id}")
+    get "/channel/:channel_id", to: redirect("/chat/c/-/%{channel_id}")
 
     base_channel_route = "/channel/:channel_id/:channel_title"
     redirect_base = "/chat/c/%{channel_title}/%{channel_id}"
