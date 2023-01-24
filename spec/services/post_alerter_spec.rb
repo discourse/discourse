@@ -1209,6 +1209,22 @@ RSpec.describe PostAlerter do
       expect(JSON.parse(body)).to eq(payload)
     end
 
+    it "does not have invalid HTML in the excerpt when enable_experimental_hashtag_autocomplete is enabled" do
+      SiteSetting.enable_experimental_hashtag_autocomplete = true
+      Fabricate(:category, slug: "random")
+      Jobs.run_immediately!
+      body = nil
+
+      stub_request(:post, "https://site2.com/push").to_return do |request|
+        body = request.body
+        { status: 200, body: "OK" }
+      end
+      create_post_with_alerts(user: user, raw: "this, @eviltrout, is a test with #random")
+      expect(JSON.parse(body)["notifications"][0]["excerpt"]).to eq(
+        "this, @eviltrout, is a test with #random",
+      )
+    end
+
     context "with push subscriptions" do
       before do
         Fabricate(:push_subscription, user: evil_trout)
