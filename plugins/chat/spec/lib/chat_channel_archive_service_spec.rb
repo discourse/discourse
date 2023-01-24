@@ -152,7 +152,7 @@ describe Chat::ChatChannelArchiveService do
 
       it "successfully links uploads from messages to the post" do
         create_messages(3) && start_archive
-        ChatUpload.create(chat_message: ChatMessage.last, upload: Fabricate(:upload))
+        UploadReference.create(target: ChatMessage.last, upload: Fabricate(:upload))
         subject.new(@channel_archive).execute
         expect(@channel_archive.reload.complete?).to eq(true)
         expect(@channel_archive.destination_topic.posts.last.upload_references.count).to eq(1)

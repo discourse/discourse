@@ -17,10 +17,15 @@ describe Jobs::ChatChannelDelete do
     10.times { ChatMessageReaction.create(chat_message: messages.sample, user: users.sample) }
 
     10.times do
-      ChatUpload.create(
-        upload: Fabricate(:upload, user: users.sample),
-        chat_message: messages.sample,
-      )
+      upload = Fabricate(:upload, user: users.sample)
+      message = messages.sample
+
+      # TODO (martin) Remove this when we remove ChatUpload completely, 2023-04-01
+      DB.exec(<<~SQL)
+        INSERT INTO chat_uploads(upload_id, chat_message_id, created_at, updated_at)
+        VALUES(#{upload.id}, #{message.id}, NOW(), NOW())
+      SQL
+      UploadReference.create(target: message, upload: upload)
     end
 
     ChatMention.create(
@@ -52,27 +57,45 @@ describe Jobs::ChatChannelDelete do
     chat_channel.trash!
   end
 
+  def counts
+    {
+      incoming_webhooks: IncomingChatWebhook.where(chat_channel_id: chat_channel.id).count,
+      webhook_events:
+        ChatWebhookEvent.where(incoming_chat_webhook_id: @incoming_chat_webhook_id).count,
+      drafts: ChatDraft.where(chat_channel: chat_channel).count,
+      channel_memberships: UserChatChannelMembership.where(chat_channel: chat_channel).count,
+      revisions: ChatMessageRevision.where(chat_message_id: @message_ids).count,
+      mentions: ChatMention.where(chat_message_id: @message_ids).count,
+      chat_uploads:
+        DB.query_single(
+          "SELECT COUNT(*) FROM chat_uploads WHERE chat_message_id IN (#{@message_ids.join(",")})",
+        ).first,
+      upload_references:
+        UploadReference.where(target_id: @message_ids, target_type: "ChatMessage").count,
+      messages: ChatMessage.where(id: @message_ids).count,
+      reactions: ChatMessageReaction.where(chat_message_id: @message_ids).count,
+    }
+  end
+
   it "deletes all of the messages and related records completely" do
-    expect { described_class.new.execute(chat_channel_id: chat_channel.id) }.to change {
-      IncomingChatWebhook.where(chat_channel_id: chat_channel.id).count
-    }.by(-1).and change {
-            ChatWebhookEvent.where(incoming_chat_webhook_id: @incoming_chat_webhook_id).count
-          }.by(-1).and change { ChatDraft.where(chat_channel: chat_channel).count }.by(
-                  -1,
-                ).and change {
-                        UserChatChannelMembership.where(chat_channel: chat_channel).count
-                      }.by(-3).and change {
-                              ChatMessageRevision.where(chat_message_id: @message_ids).count
-                            }.by(-1).and change {
-                                    ChatMention.where(chat_message_id: @message_ids).count
-                                  }.by(-1).and change {
-                                          ChatUpload.where(chat_message_id: @message_ids).count
-                                        }.by(-10).and change {
-                                                ChatMessage.where(id: @message_ids).count
-                                              }.by(-20).and change {
-                                                      ChatMessageReaction.where(
-                                                        chat_message_id: @message_ids,
-                                                      ).count
-                                                    }.by(-10)
+    initial_counts = counts
+    described_class.new.execute(chat_channel_id: chat_channel.id)
+    new_counts = counts
+
+    expect(new_counts[:incoming_webhooks]).to eq(initial_counts[:incoming_webhooks] - 1)
+    expect(new_counts[:webhook_events]).to eq(initial_counts[:webhook_events] - 1)
+    expect(new_counts[:drafts]).to eq(initial_counts[:drafts] - 1)
+    expect(new_counts[:channel_memberships]).to eq(initial_counts[:channel_memberships] - 3)
+    expect(new_counts[:revisions]).to eq(initial_counts[:revisions] - 1)
+    expect(new_counts[:mentions]).to eq(initial_counts[:mentions] - 1)
+    expect(new_counts[:chat_uploads]).to eq(initial_counts[:chat_uploads] - 10)
+    expect(new_counts[:upload_references]).to eq(initial_counts[:upload_references] - 10)
+    expect(new_counts[:messages]).to eq(initial_counts[:messages] - 20)
+    expect(new_counts[:reactions]).to eq(initial_counts[:reactions] - 10)
+  end
+
+  it "does not error if there are no messages in the channel" do
+    other_channel = Fabricate(:chat_channel)
+    expect { described_class.new.execute(chat_channel_id: other_channel.id) }.not_to raise_error
   end
 end
