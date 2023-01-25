@@ -385,11 +385,19 @@ describe TopicQuery do
       fab!(:tagged_topic3) { Fabricate(:topic, tags: [tag, other_tag]) }
       fab!(:tagged_topic4) { Fabricate(:topic, tags: [uppercase_tag]) }
       fab!(:no_tags_topic) { Fabricate(:topic) }
-      let(:synonym) { Fabricate(:tag, target_tag: tag, name: 'synonym') }
+      fab!(:tag_group) do
+        Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [other_tag.name])
+      end
+      let(:synonym) { Fabricate(:tag, target_tag: tag, name: "synonym") }
 
       it "excludes a tag if desired" do
         topics = TopicQuery.new(moderator, exclude_tag: tag.name).list_latest.topics
         expect(topics.any? { |t| t.tags.include?(tag) }).to eq(false)
+      end
+
+      it "does not exclude a tagged topic without permission" do
+        topics = TopicQuery.new(user, exclude_tag: other_tag.name).list_latest.topics
+        expect(topics.map(&:id)).to include(tagged_topic2.id)
       end
 
       it "returns topics with the tag when filtered to it" do

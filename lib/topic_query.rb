@@ -693,15 +693,16 @@ class TopicQuery
         result = result.where.not(id: TopicTag.distinct.pluck(:topic_id))
       end
 
-      if @options[:exclude_tag].present?
+      if @options[:exclude_tag].present? &&
+           !DiscourseTagging.hidden_tag_names(@guardian).include?(@options[:exclude_tag])
         result = result.where(<<~SQL, name: @options[:exclude_tag])
-        topics.id NOT IN (
-          SELECT topic_tags.topic_id
-          FROM topic_tags
-          INNER JOIN tags ON tags.id = topic_tags.tag_id
-          WHERE tags.name = :name
-        )
-        SQL
+          topics.id NOT IN (
+            SELECT topic_tags.topic_id
+            FROM topic_tags
+            INNER JOIN tags ON tags.id = topic_tags.tag_id
+            WHERE tags.name = :name
+          )
+          SQL
       end
     end
 
