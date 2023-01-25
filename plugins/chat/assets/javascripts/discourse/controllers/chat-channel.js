@@ -5,8 +5,6 @@ import { inject as service } from "@ember/service";
 export default class ChatChannelController extends Controller {
   @service chat;
 
-  queryParams = ["messageId"];
-
   @action
   switchChannel(channel) {
     this.chat.openChannel(channel);

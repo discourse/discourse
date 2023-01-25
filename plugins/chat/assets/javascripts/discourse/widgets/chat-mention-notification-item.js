@@ -48,7 +48,7 @@ const chatNotificationItem = {
       title: data.chat_channel_title,
       slug: data.chat_channel_slug,
     });
-    return `/chat/c/${slug || "-"}/${data.chat_channel_id}?messageId=${
+    return `/chat/c/${slug || "-"}/${data.chat_channel_id}/${
       data.chat_message_id
     }`;
   },

@@ -54,7 +54,7 @@ module(
         query(".chat-invitation a").getAttribute("href"),
         `/chat/c/${slugifyChannel({
           title: data.chat_channel_title,
-        })}/${data.chat_channel_id}?messageId=${data.chat_message_id}`
+        })}/${data.chat_channel_id}/${data.chat_message_id}`
       );
     });
   }
@@ -93,7 +93,7 @@ module(
         query(".chat-invitation a").getAttribute("href"),
         `/chat/c/${slugifyChannel({
           title: data.chat_channel_title,
-        })}/${data.chat_channel_id}?messageId=${data.chat_message_id}`
+        })}/${data.chat_channel_id}/${data.chat_message_id}`
       );
     });
   }
@@ -132,7 +132,7 @@ module(
         query(".chat-invitation a").getAttribute("href"),
         `/chat/c/${slugifyChannel({
           title: data.chat_channel_title,
-        })}/${data.chat_channel_id}?messageId=${data.chat_message_id}`
+        })}/${data.chat_channel_id}/${data.chat_message_id}`
       );
     });
   }

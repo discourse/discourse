@@ -211,17 +211,6 @@ export default Component.extend({
       URL || this.chatStateManager.lastKnownChatURL
     );
 
-    let highlightCb = null;
-
-    if (route.queryParams.messageId) {
-      highlightCb = () => {
-        this.appEvents.trigger(
-          "chat-live-pane:highlight-message",
-          route.queryParams.messageId
-        );
-      };
-    }
-
     switch (route.name) {
       case "chat":
         this.set("view", LIST_VIEW);
@@ -232,9 +221,21 @@ export default Component.extend({
         this.appEvents.trigger("chat:float-toggled", false);
         return;
       case "chat.channel":
-        return this._openChannel(route, highlightCb);
+        return this._openChannel(route);
+      case "chat.channel.near-message":
+        return this._openChannel(route, this._highlightCb(route.params.messageId));
       case "chat.channel-legacy":
-        return this._openChannel(route, highlightCb);
+        return this._openChannel(route, this._highlightCb(route.queryParams.messageId));
+    }
+  },
+
+  _highlightCb(messageId) {
+    if (messageId) {
+      return () => {
+        this.appEvents.trigger(
+          "chat-live-pane:highlight-message",
+          messageId
+        );
     }
   },
 

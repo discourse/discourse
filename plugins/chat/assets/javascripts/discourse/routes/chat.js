@@ -24,6 +24,7 @@ export default class ChatRoute extends DiscourseRoute {
       "chat.channel.index",
       "chat.channel",
       "chat.channel-legacy",
+      "chat.channel.near-message",
       "chat",
       "chat.index",
       "chat.draft-channel",
@@ -76,7 +77,10 @@ export default class ChatRoute extends DiscourseRoute {
 
   @action
   willTransition(transition) {
-    if (!transition?.to?.name?.startsWith("chat.channel")) {
+    if (
+      !transition?.to?.name?.startsWith("chat.channel") ||
+      !transition?.to?.name?.startsWith("chat.channel.near-message")
+    ) {
       this.chat.setActiveChannel(null);
     }
 

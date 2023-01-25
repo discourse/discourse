@@ -1,8 +1,16 @@
 <div class="flagged-post-header">
   <LinkTo
     @route="chat.channel"
+<<<<<<< HEAD
     @models={{this.chatChannel.routeModels}}
     @query={{hash messageId=@reviewable.target_id}}
+=======
+    @models={{array
+      this.chatChannel.slug
+      this.chatChannel.id
+      @reviewable.target_id
+    }}
+>>>>>>> fb10ec58d5 (DEV: Pass messageId as a dynamic segment instead of a query param)
   >
     <ChatChannelTitle @channel={{this.chatChannel}} />
   </LinkTo>

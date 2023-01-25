@@ -654,6 +654,7 @@ after_initialize do
 
     base_c_route = "/c/:channel_title/:channel_id"
     get base_c_route => "chat#respond", :as => "channel"
+    get "#{base_c_route}/:message_id" => "chat#respond"
 
     %w[info info/about info/members info/settings].each do |route|
       get "#{base_c_route}/#{route}" => "chat#respond"
