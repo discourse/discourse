@@ -38,16 +38,12 @@ jobs:
       matrix:
         build_type: [backend, frontend, system, annotations]
         target: [core, plugins]
-        ruby: ['3.1', '3.2']
+        ruby: ['3.1']
         exclude:
           - build_type: annotations
             target: plugins
           - build_type: frontend
             target: core # Handled by core_frontend_tests job (below)
-          - build_type: frontend
-            ruby: '3.2'
-          - build_type: annotations
-            ruby: '3.2'
 
     steps:
       - uses: actions/checkout@v3

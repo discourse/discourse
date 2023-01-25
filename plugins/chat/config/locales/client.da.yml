@@ -126,6 +126,7 @@ da:
         yesterday: I går
       about_view:
         title: Titel
+        name: Navn
         description: Beskrivelse
       channel_info:
         back_to_channel: "Tilbage"

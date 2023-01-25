@@ -676,7 +676,7 @@ createWidget("search-menu-initial-options", {
       slug: term,
       extraHint: I18n.t("search.enter_hint"),
       label: [
-        h("span.keyword", `${term} `),
+        h("span.keyword", `${term}`),
         opts.withLabel
           ? h("span.label-suffix", I18n.t("search.in_topics_posts"))
           : null,
@@ -740,8 +740,7 @@ createWidget("search-menu-assistant-item", {
       // category and tag combination
       if (attrs.tag && attrs.isIntersection) {
         attributes.href = getURL(`/tag/${attrs.tag}`);
-        content.push(iconNode("tag"));
-        content.push(h("span.search-item-tag", attrs.tag));
+        content.push(h("span.search-item-tag", [iconNode("tag"), attrs.tag]));
       }
     } else if (attrs.tag) {
       if (attrs.isIntersection && attrs.additionalTags?.length) {
@@ -749,8 +748,7 @@ createWidget("search-menu-assistant-item", {
         content.push(h("span.search-item-tag", `tags:${tags.join("+")}`));
       } else {
         attributes.href = getURL(`/tag/${attrs.tag}`);
-        content.push(iconNode("tag"));
-        content.push(h("span.search-item-tag", attrs.tag));
+        content.push(h("span.search-item-tag", [iconNode("tag"), attrs.tag]));
       }
     } else if (attrs.user) {
       const userResult = [

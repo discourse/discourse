@@ -87,10 +87,7 @@ export default class ChatChannelSettingsView extends Component {
     const settings = {};
     settings[key] = value;
     return this.chatApi
-      .updateCurrentUserChatChannelNotificationsSettings(
-        this.channel.id,
-        settings
-      )
+      .updateCurrentUserChannelNotificationsSettings(this.channel.id, settings)
       .then((result) => {
         [
           "muted",

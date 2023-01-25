@@ -39,6 +39,18 @@ module SystemHelpers
     retry
   end
 
+  def wait_for_attribute(
+    element,
+    attribute,
+    value,
+    timeout: Capybara.default_max_wait_time,
+    frequency: 0.01
+  )
+    try_until_success(timeout: timeout, frequency: frequency) do
+      expect(element[attribute.to_sym]).to eq(value)
+    end
+  end
+
   def resize_window(width: nil, height: nil)
     original_size = page.driver.browser.manage.window.size
     page.driver.browser.manage.window.resize_to(

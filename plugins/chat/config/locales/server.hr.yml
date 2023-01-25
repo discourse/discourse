@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 hr:
+  system_messages:
+    chat_channel_archive_failed_no_topic:
+      title: "Arhiva Chat kanala nije uspjela"
+      subject_template: "Arhiva kanala za chat nije uspjela"
   chat:
     deleted_chat_username: izbrisao
     errors:

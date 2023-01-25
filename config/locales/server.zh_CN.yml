@@ -474,6 +474,7 @@ zh_CN:
       您可以突出显示文本并选择出现的<b>引用回复</b>按钮，对您之前的回复进行编辑以添加引用。
 
       这样，每个人都可以更轻松地阅读具有少量嵌套回复的话题，而不是查看大量的个别回复。
+    dominating_topic: 您在此话题中发布了很多内容！考虑一下让其他人有机会在这里进行回复并互相讨论。
     get_a_room: 您已回复 @%{reply_username} %{count} 次，您知道您可以向他们发送个人消息吗？
     too_many_replies: |
       ### 您已达到此话题的回复上限
@@ -513,6 +514,7 @@ zh_CN:
               target_user_not_found: "未找到您要向其发送此消息的其中一个用户。"
               unable_to_update: "更新该话题时出错。"
               unable_to_tag: "给话题添加标签时出错。"
+              unable_to_unlist: "抱歉，您不能创建取消公开的话题。"
             featured_link:
               invalid: "无效。URL 应包括 http:// 或 https://。"
         user:
@@ -641,6 +643,7 @@ zh_CN:
     has_likes:
       other: "%{count} 个赞"
     cannot_permanently_delete:
+      many_posts: "此话题有未删除的帖子。请先永久删除这些帖子，然后再永久删除话题。"
       wait_or_different_admin: "您必须等待 %{time_left}才能永久删除此帖子，否则必须由其他管理员执行此操作。"
   rate_limiter:
     slow_down: "您执行此操作的次数过多，请稍后再试。"
@@ -808,6 +811,7 @@ zh_CN:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "不当言论"
+      description: '这篇帖子包含的内容会被一个有理性的人认为具有冒犯性、侮辱性、属于仇恨行为或违反<a href="%{base_path}/guidelines">我们的社区准则</a>。'
       short_description: '违反了<a href="%{base_path}/guidelines">我们的社区准则</a>'
     notify_user:
       title: "向 @%{username} 发送消息"
@@ -873,6 +877,7 @@ zh_CN:
       short_description: "这是广告"
     inappropriate:
       title: "不当言论"
+      description: '此话题包含的内容会被一个有理性的人认为具有冒犯性、侮辱性、属于仇恨行为或违反<a href="%{base_path}/guidelines">我们的社区准则</a>。'
       long_form: "将此话题举报为不当言论"
       short_description: '违反了<a href="%{base_path}/guidelines">我们的社区准则</a>'
     notify_moderators:
@@ -910,6 +915,8 @@ zh_CN:
     mailing_list_mode: "关闭邮寄名单模式"
     all: "不要从 %{sitename} 向我发送任何邮件"
     different_user_description: "您当前登录的用户与我们通过电子邮件联系的用户不同。请退出，或进入匿名模式，然后重试。"
+    not_found_description: "抱歉，我们找不到该订阅。可能您电子邮件中的链接太旧，已过期？"
+    user_not_found_description: "抱歉，我们找不到此订阅的用户。您可能正在尝试取消订阅不再存在的帐户。"
     log_out: "退出"
     submit: "保存偏好设置"
     digest_frequency:
@@ -946,6 +953,7 @@ zh_CN:
       write: "写入所有"
       one_time_password: "创建一次性登录令牌"
       bookmarks_calendar: "读取书签提醒"
+      user_status: "读取和更新用户状态"
     invalid_public_key: "抱歉，该公钥无效。"
     invalid_auth_redirect: "抱歉，此 auth_redirect 主机不被允许。"
     invalid_token: "令牌缺失、无效或已过期。"
@@ -1039,10 +1047,12 @@ zh_CN:
         author: 作者
         edit_reason: 原因
     consolidated_api_requests:
+      title: "合并的 API 请求"
       xaxis:
         api: "API"
         user_api: "用户 API"
       yaxis: "天"
+      description: "对常规 API 密钥和用户 API 密钥的 API 请求。"
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "天"
@@ -1364,6 +1374,11 @@ zh_CN:
     allow_duplicate_topic_titles_category: "如果类别不同，允许有相同或重复标题的话题。必须禁用 allow_duplicate_topic_titles。"
     unique_posts_mins: "用户可以再次发布相同内容的帖子前需要等待的分钟数"
     educate_until_posts: "当用户开始输入他们的前几 (n) 个新帖子时，在编辑器中显示弹出式新用户教育面板。"
+    title: "此站点的名称。对包括匿名用户在内的所有访客可见。"
+    site_description: "用一句话描述此站点。对包括匿名用户在内的所有访客可见。"
+    short_site_description: "几个字的简短描述。对包括匿名用户在内的所有访客可见。"
+    contact_email: "负责此站点的主要联系人的电子邮件地址，用于重要通知，也会显示在 <a href='%{base_path}/about' target='_blank'>/about</a> 上。对公共站点上的匿名用户可见。"
+    contact_url: "此站点的联系 URL。如果存在，将替换 <a href='%{base_path}/about' target='_blank'>/about</a> 上的电子邮件地址，并对公共站点上的匿名用户可见。"
     crawl_images: "从远程 URL 检索图片以插入正确的宽度和高度尺寸。"
     download_remote_images_to_local: "通过下载将远程（热链接）图片转换为本地图片；即使图片将来从远程站点移除，这也会保留内容。"
     download_remote_images_threshold: "将远程图片下载到本地所需的最小磁盘空间（百分比）"
@@ -1379,6 +1394,8 @@ zh_CN:
     edit_history_visible_to_public: "允许所有人查看被编辑过的帖子的先前版本。禁用时，只有管理人员可以查看。"
     delete_removed_posts_after: "被作者移除的帖子将在 (n) 小时后自动删除。如果设置为 0，帖子将被立即删除。"
     notify_users_after_responses_deleted_on_flagged_post: "当帖子由于被举报而遭到移除时，所有回复帖子并且回复被移除的用户都会收到通知。"
+    max_image_width: "帖子中图像的最大缩略图宽度。具有更大宽度的图像将进行大小和光效的调整。"
+    max_image_height: "帖子中图像的最大缩略图高度。具有更大高度的图像将进行大小和光效的调整。"
     responsive_post_image_sizes: "调整灯箱预览图片的大小以允许以下像素比率的高 DPI 屏幕。移除所有值将禁用自适应图片。"
     fixed_category_positions: "如果选中，您将能够按固定顺序排列类别。如果取消选中，则按活动顺序列出类别。"
     fixed_category_positions_on_create: "如果选中，将在话题创建对话框中维护类别排序（需要 fixed_category_positions）。"
@@ -1516,10 +1533,7 @@ zh_CN:
     max_favorite_badges: "用户可以选择的最大徽章数"
     whispers_allowed_groups: "允许指定群组的成员在话题内进行不公开交流。"
     allow_index_in_robots_txt: "在 robots.txt 中指定此站点允许被网络搜索引擎索引。在特殊情况下，您可以永久<a href='%{base_path}/admin/customize/robots'>替换 robots.txt</a>。"
-    blocked_email_domains: "不允许用户用于注册帐户的以 | 分隔的电子邮件网域列表。示例：mailinator.com|trashmail.net"
-    allowed_email_domains: "用户注册帐户时必须使用的以 | 分隔的电子邮件网域列表。警告：不允许使用除所列网域以外的电子邮件网域的用户！"
     normalize_emails: "检查规范化电子邮件是否唯一。规范化电子邮件移除了用户名中的所有点以及 + 和 @ 符号之间的所有内容。"
-    auto_approve_email_domains: "使用此网域列表中电子邮件地址的用户将自动获得批准。"
     hide_email_address_taken: "在注册或忘记密码的过程中，不要告知用户存在一个使用给定电子邮件地址的帐户。对于“忘记密码”请求，需要完整的电子邮件。"
     log_out_strict: "退出时，退出用户在所有设备上的会话"
     version_checks: "Ping Discourse Hub 以获取版本更新并在 <a href='%{base_path}/admin' target='_blank'>/admin</a> 信息中心上显示新版本消息"
@@ -1583,6 +1597,7 @@ zh_CN:
     discord_trusted_guilds: '只允许这些 Discord 公会的成员通过 Discord 登录。使用公会的数字 ID。有关详情，请查看<a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">此处</a>的说明。留空则允许任意公会。'
     enable_backups: "允许管理员创建论坛备份"
     allow_restore: "允许恢复，这可以替换所有站点数据！除非您计划恢复备份，否则请保持禁用状态"
+    maximum_backups: "要保留的最大备份数。系统将自动删除较旧的备份"
     automatic_backups_enabled: "按照定义的备份频率运行自动备份"
     backup_frequency: "备份之间的天数。"
     s3_backup_bucket: "存放备份的远程存储桶。警告：确认它是私有存储桶。"
@@ -1757,6 +1772,7 @@ zh_CN:
     faq_url: "如果您想使用在别处托管的常见问题解答，请在此处提供完整 URL。"
     tos_url: "如果您想使用在别处托管的《服务条款》文档，请在此处提供完整 URL。"
     privacy_policy_url: "如果您想使用在别处托管的《隐私政策》文档，请在此处提供完整 URL。"
+    log_anonymizer_details: "在匿名化后，是否在日志中保留用户的详细信息。"
     newuser_spam_host_threshold: "在被视为垃圾信息之前，新用户可以在他们的 `newuser_spam_host_threshold` 帖子中发布指向同一主机的链接的次数。"
     allowed_spam_host_domains: "从垃圾信息主机测试中排除的网域列表。新用户永远不会被限制创建带有这些网域链接的帖子。"
     staff_like_weight: "管理人员赞的权重（非管理人员赞的权重为 1）。"
@@ -1923,6 +1939,7 @@ zh_CN:
     display_name_on_posts: "在帖子中显示用户的全名以及他们的用户名。"
     show_time_gap_days: "如果两个帖子间隔此天数，在话题中显示时间间隔。"
     short_progress_text_threshold: "当一个话题的帖子数量超过此数值后，进度条将只显示当前帖子数量。如果更改进度条的宽度，则可能需要更改此值。"
+    default_code_lang: "应用于代码块（auto、text、ruby、python 等）的默认编程语言语法高亮显示。此值还必须存在于 `highlighted languages` 站点设置中。"
     warn_reviving_old_topic_age: "当有人开始回复上次回复时间超过此天数的话题时，将显示警告。设置为 0 将禁用。"
     autohighlight_all_code: "即使未显式声明语言，也强制向所有预格式化代码块应用代码高亮显示。"
     highlighted_languages: "包括语法高亮显示规则。（警告：包含太多语言可能会影响性能）请参阅：<a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> 查看演示"
@@ -2039,6 +2056,8 @@ zh_CN:
     shared_drafts_min_trust_level: "允许用户查看和编辑共享草稿。"
     push_notifications_prompt: "显示用户同意提示。"
     push_notifications_icon: "出现在通知角的徽章图标。建议使用具有透明度的 96×96 单色 PNG。"
+    enable_desktop_push_notifications: "启用桌面推送通知"
+    push_notification_time_window_mins: "在发送推送通知前等待 (n) 分钟。有助于避免向活跃的在线用户发送推送通知。"
     base_font: "用于站点上大多数文本的基字体。可以通过 `--font-family` CSS 自定义属性替换主题。"
     heading_font: "用于站点上标题的字体。可以通过 `--heading-font-family` CSS 自定义属性替换主题。"
     enable_sitemap: "为您的站点生成站点地图并将其包含在 robots.txt 文件中。"
@@ -2060,9 +2079,12 @@ zh_CN:
     use_name_for_username_suggestions: "建议用户名时使用用户的全名。"
     suggest_weekends_in_date_pickers: "在日期选择器建议中包括周末（周六和周日）（如果您仅在工作日（周一至周五）使用 Discourse，请禁用此选项）。"
     splash_screen: "在加载站点资源时显示临时加载屏幕"
+    navigation_menu: "确定要使用的导航菜单。边栏和标题导航可由用户自定义。旧版选项用于向后兼容。"
     default_sidebar_categories: "所选类别将默认显示在边栏的“类别”版块下。"
     default_sidebar_tags: "所选标签将默认显示在边栏的“标签”版块下。"
     enable_new_user_profile_nav_groups: "实验性：将向所选群组的用户显示新的用户个人资料导航菜单"
+    enable_experimental_topic_timeline_groups: "实验性：所选群组的用户将看到重构的话题时间线"
+    enable_experimental_hashtag_autocomplete: "实验性：对类别和标签使用新的 #hashtag 自动补全系统，以不同方式呈现所选条目，并改进了搜索"
     errors:
       invalid_css_color: "颜色无效。输入颜色名称或十六进制值。"
       invalid_email: "无效的电子邮件地址。"
@@ -2486,10 +2508,12 @@ zh_CN:
       %{notes}
   flag_reasons:
     off_topic: "您的帖子被举报为**偏离话题**：鉴于话题标题和第一个帖子，社区认为它不适合该话题。"
+    inappropriate: "您的帖子被举报为**不当言论**：社区认为它具有冒犯性、侮辱性、属于仇恨行为或违反了[我们的社区准则](%{base_path}/guidelines)。"
     spam: "您的帖子被举报为**垃圾信息**：社区认为它是广告，像是在过度地推广着什么，而不是预期中与话题有关的内容。"
     notify_moderators: "您的帖子被举报为**需要版主注意**：社区认为帖子需要管理人员手动干预。"
     responder:
       off_topic: "该帖子被举报为**偏离话题**：鉴于话题标题和第一个帖子，社区认为它不适合该话题。"
+      inappropriate: "这篇帖子被举报为**不当言论**：社区认为它具有冒犯性、侮辱性、属于仇恨行为或违反了[我们的社区准则](%{base_path}/guidelines)。"
       spam: "该帖子被举报为**垃圾信息**：社区认为这是一个广告，本质上是过度宣传的东西，而不是像预期的那样有用或与话题相关。"
       notify_moderators: "该帖子被举报为**需要版主注意**：社区认为帖子需要管理人员手动干预。"
   flags_dispositions:
@@ -3310,6 +3334,7 @@ zh_CN:
 
         %{respond_instructions}
     user_watching_category_or_tag:
+      title: "用户关注类别或标签"
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -3808,6 +3833,7 @@ zh_CN:
       是的，法律术语很无聊，但是我们必须保护自己，进而保护您和您的数据免受不友好的人带来的伤害。我们提供了[服务条款](%{base_path}/tos)来描述您（和我们）关于内容、隐私和法律的行为和权利。要使用此服务，您必须同意遵守我们的[服务条款](%{base_path}/tos)。
   tos_topic:
     title: "服务条款"
+    body: "这些条款用于管理 <%{base_url}> 上互联网论坛的使用。要使用该论坛，您必须同意运营该论坛的公司 %{company_name} 设定的这些条款。\n\n该公司提供的其他产品和服务可能适用不同的条款。这些条款仅适用于论坛的使用。\n\n跳转到：\n\n- [重要条款](#heading--important-terms)\n- [您使用论坛的权限](#heading--permission)\n- [使用论坛的条件](#heading--conditions)\n- [可接受的使用](#heading--acceptable-use)\n- [内容标准](#heading--content-standards)\n- [执行](#heading--enforcement)\n- [您的帐户](#heading--your-account)\n- [您的内容](#heading--your-content)\n- [您的责任](#heading--responsibility)\n- [免责声明](#heading--disclaimers)\n- [责任限制](#heading--liability)\n- [反馈](#heading--feedback)\n- [终止](#heading--termination)\n- [争议](#heading--disputes)\n- [一般条款](#heading--general)\n- [联系](#heading--contact)\n- [变更](#heading--changes)\n\n<h2 id=\"heading--important-terms\"><a href=\"#heading--important-terms\">重要条款</a></h2>\n\n***这些条款包括一些影响您的权利和责任的重要条款，例如[免责声明](#heading-disclaimers)中的免责声明，[责任限制](#heading--liability)中公司对您的责任的限制，[使用责任](#heading-responsibility)中您同意对因滥用论坛而造成的损害赔偿公司，以及[争议](#heading--disputes)中仲裁争议的协议***。\n\n<h2 id=\"heading--permission\"><a href=\"#heading--permission\">您使用论坛的权限</a></h2>\n\n在遵守这些条款的前提下，公司授予您使用论坛的权限。每个人都需要同意这些条款才能使用论坛。\n\n<h2 id=\"heading--conditions\"><a href=\"#heading--conditions\">使用论坛的条件</a></h2>\n\n您使用论坛的权限受以下条件限制：\n\n1. 您必须至少达到十三岁。\n\n2. 如果公司直接与您联系，告知您不能再使用该论坛，则您将无法再使用该论坛。\n\n3. 您必须按照[可接受的使用](#heading--accepted-use)和[内容标准](#heading--content-standards)使用论坛。\n\n<h2 id=\"heading--acceptable-use\"><a href=\"#heading--acceptable-use\">可接受的使用</a></h2>\n\n1. 使用论坛时，您不能违法。\n\n2. 未经特别许可，您不能在论坛上使用或尝试使用他人的帐户。\n\n3. 您不得在论坛上购买、出售或以其他方式交易用户名或其他唯一标识符。\n\n4. 您不得通过论坛发送广告、连锁信或其他请求，或使用论坛为商业邮寄名单或数据库收集地址或其他个人数据。\n\n5. 您不得使用网络爬虫、浏览器插件或附加组件或者网络浏览器以外的其他计算机程序自动访问论坛或监控论坛。如果您运行搜索引擎，您可以抓取论坛，为公开的搜索引擎编制索引。\n\n6. 您不得使用论坛将电子邮件发送到分发名单、新闻组或群组邮件别名。\n\n7. 您不得虚假暗示您与本公司有关联或得到认可。\n\n8. 您不得在其他网页上超链接到论坛上的图片或其他非超文本内容。\n\n9. 您不得在从论坛下载的材料中移除任何显示专有所有权的标记。\n\n10. 您不得使用 `<iframe>` 在其他站点上显示论坛的任何部分。\n\n11. 您不得禁用、避免或绕过论坛的任何安全或访问限制。\n\n12. 您不得对论坛的基础架构施加不合理的请求量，或者发起旨在对论坛底层信息系统施加不合理负担的请求。\n\n13. 您不得通过论坛冒充他人。\n\n14. 您不得鼓励或帮助违反这些条款的任何人。\n\n<h2 id=\"heading--content-standards\"><a href=\"#heading--content-standards\">内容标准</a></h2>\n\n1. 您不得向论坛提交非法、冒犯或以其他方式伤害他人的内容。这包括具有骚扰性、侮辱性、不恰当或属于仇恨行为的内容。\n\n2. 您不得向论坛提交违反法律、侵犯任何人的知识产权、侵犯任何人的隐私或违反与他人协议的内容。\n\n3. 您不得向论坛提交包含恶意计算机代码的内容，例如计算机病毒或间谍软件。\n\n4. 您不得将内容仅作为占位符提交至论坛，以占用特定地址、用户名或其他唯一标识符。\n\n5. 您不得使用论坛披露您无权披露的信息，例如他人的机密或个人信息。\n\n<h2 id=\"heading--enforcement\"><a href=\"#heading--enforcement\">执行</a></h2>\n\n公司可以在最大程度上调查和起诉违反这些条款的行为。公司可能通知执法机关并与其合作起诉违反法律和这些条款的行为。 \n\n公司保留以任何原因更改、编辑和删除论坛内容的权利。如果您认为有人向论坛提交了违反这些条款的内容，请[立即与我们联系](#heading--contact)。\n\n<h2 id=\"heading--your-account\"><a href=\"#heading--your-account\">您的帐户</a></h2>\n\n您必须创建并登录帐户才能使用论坛的某些功能。\n\n要创建帐户，您必须提供有关您自己的一些信息。如果您创建帐户，则表示您同意至少提供有效的电子邮件地址，并使该地址保持最新状态。您可以随时通过发送电子邮件至 <%{contact_email}> 关闭您的帐户。 \n\n您同意，无论您是否授权，您对使用您的帐户执行的所有操作负责，直到您关闭帐户或通知公司您的帐户已被入侵。如果您怀疑自己的帐户已被入侵，您同意立即通知公司。您同意为您的帐户选择安全的密码，并保密。\n\n公司可能会根据处理与版权相关的删除请求政策，限制、暂停或关闭您在论坛上的帐户，或者如果公司合理地认为您违反了这些条款中的任何规则，公司也会相应地执行上述处理。\n\n<h2 id=\"heading--your-content\"><a href=\"#heading--your-content\">您的内容</a></h2>\n\n这些条款中的任何内容均未向公司授予您与论坛共享的知识产权（例如您的帐户信息、帖子或提交至论坛的其他内容）的任何所有权。这些条款中的任何内容也未授予您对公司知识产权的任何所有权。\n\n在您和公司之间，您仍然对您提交至论坛的内容负全部责任。您同意不会错误地暗示您提交至论坛的内容是由公司赞助或批准的。这些条款并不要求公司根据这些条款存储、维护或提供您提交的内容的副本，以及对其进行更改。 \n\n您提交至论坛的内容属于您，由您决定授予其他人的权限。但至少，您授权公司向论坛的其他用户提供您提交至论坛的内容。该特殊许可允许公司复制、发布和分析您提交至论坛的内容。 \n\n当您提交的内容从论坛中移除时（无论是由您还是由公司移除），当最后一个副本从公司的备份、缓存和其他系统中消失时，公司的特殊许可将终止。您提交的内容的其他许可，例如 [Creative Commons](https://creativecommons.org) 许可，可能会在您的内容被移除后继续有效。这些许可可能会授予其他人或本公司再次通过论坛分享您的内容的权利。\n\n收到您提交至论坛的内容的其他人可能会违反您对内容进行许可的条款。您同意公司不对这些违规行为或其后果承担责任。\n\n<h2 id=\"heading--responsibility\"><a href=\"#heading--responsibility\">您的责任</a></h2>\n\n您同意就其他人因您违反这些条款或他们因使用您在论坛上的帐户而违反这些条款而提出的法律索赔赔偿公司。您和公司都同意将您可能需要向公司赔偿的任何法律索赔尽快通知对方。如果公司未能及时将法律索赔通知您，则对于您本可以在获得及时通知后进行抗辩或减轻的损害部分，您无需向公司赔偿。对于您必须向公司赔偿的法律索赔，您同意允许公司控制对该法律索赔的调查、辩护和和解，并配合这些努力。本公司同意，在未经您事先同意的情况下，不会同意任何为您承认过错或向您强加义务的和解。\n\n<h2 id=\"heading--disclaimers\"><a href=\"#heading--disclaimers\">免责声明</a></h2>\n\n***您接受使用论坛和论坛内容的所有风险。在法律允许的范围内，公司及其供应商按原样提供论坛，不作任何保证。***\n\n论坛可以超链接并集成其他人运行的论坛和服务。公司不对其他人提供的服务或他们可能提供的内容作出任何保证。使用其他人运行的服务可能受您与运行服务的相关方之间的其他条款约束。\n\n<h2 id=\"heading--liability\"><a href=\"#heading--liability\">责任限制</a></h2>\n\n***公司及其供应商均不对他们的人员在您同意这些条款时无法合理预见的违约损害承担责任。*** \n\n***在法律允许的范围内，对于与论坛或论坛内容相关的任何类型的索赔，您的总责任将被限制在 50 美元以内。***\n\n<h2 id=\"heading--feedback\"><a href=\"#heading--feedback\">反馈</a></h2>\n\n公司欢迎您对论坛提出意见和建议。 请参阅下面的[联系](#heading--contact)部分，了解与我们取得联系的方式。\n\n您同意公司可以根据您提供的反馈和建议自由行事，并且公司不必向您通知您的反馈已被使用、获得您的使用许可或付款给您。您同意不会提交您认为可能是您或他人的机密或专有的反馈或建议。\n\n<h2 id=\"heading--termination\"><a href=\"#heading--termination\">终止</a></h2>\n\n您或公司可以随时终止这些条款中的协议。当我们的协议终止时，您使用论坛的许可也将终止。\n\n以下条款在我们的协议结束后将仍然有效：[您的内容](#heading--your-content)、[反馈](#heading--feedback)、[您的责任](#heading--responsibility)、[免责声明](#heading--disclaimers)、[责任限制](#heading--liability)和[一般条款](#heading--general)。\n\n<h2 id=\"heading--disputes\"><a href=\"#heading--disputes\">争议</a></h2>\n\n%{governing_law} 将管辖与这些条款或您对论坛的使用相关的任何争议。\n\n您和公司同意仅在%{city_for_disputes}的州或联邦法院寻求与这些条款相关的禁令。您和公司都不会反对这些法院的管辖权、法庭或审判地。\n\n***除了根据《计算机欺诈和滥用法案》寻求禁令或提出索赔外，您和公司将通过具有约束力的美国仲裁协会仲裁来解决任何争议。仲裁将遵循 AAA 的商业仲裁规则和消费者相关争议的补充程序。仲裁将在%{city_for_disputes}举行。您将作为个人解决任何争议，而不是作为集体诉讼或其他代表诉讼的一部分，无论是作为原告还是集体成员。未经公司许可，任何仲裁员均不得将任何争议与任何其他仲裁合并。***\n\n任何仲裁裁决将包括仲裁费用、合理的律师费和证人的合理费用。您和公司可以在任何有管辖权的法院进行仲裁裁决。 \n\n<h2 id=\"heading--general\"><a href=\"#heading--general\">一般条款</a></h2>\n\n如果这些条款中的某条规定按书面形式不可执行，但可以更改以使其可执行，则应对该规定进行必要的最小程度的修改以使其具有可执行性。否则，应删除该条款。\n\n您不得转让您与公司的协议。公司可将您的协议转让给公司的任何关联公司、获得公司控制权的任何其他公司，或购买与论坛相关的公司资产的任何其他公司。任何违反这些条款的尝试转让均不具有法律效力。\n\n行使本协议项下的任何权利或放弃任何违反本协议的行为，均不构成放弃任何其他违反本协议的行为。\n\n这些条款体现了您和公司之间关于论坛使用的所有协议条款。这些条款完全取代有关您使用论坛的任何其他书面或非书面协议。\n\n<h2 id=\"heading--contact\"><a href=\"#heading--contact\">联系</a></h2>\n\n您可以根据这些条款通知公司，并发送电子邮件至 <%{contact_email}> 向公司发送问题。\n\n公司可能会根据这些条款，使用您在论坛上为您的帐户提供的电子邮件地址，或通过向论坛首页或您的帐户页面发布消息来通知您。 \n\n<h2 id=\"heading--changes\"><a href=\"#heading--changes\">变更</a></h2>\n\n公司最后更新这些条款的日期为 2018 年 7 月 12 日，并可能再次更新这些条款。公司会将所有更新发布到论坛。对于包含重大变更的更新，如果您已创建帐户并提供了有效的电子邮件地址，公司同意向您发送电子邮件。公司还可能在论坛上通过特殊消息或提醒宣布更新。\n\n收到这些条款的更新通知后，您必须同意新条款才能继续使用论坛。\n"
   privacy_topic:
     title: "隐私政策"
     body: |
@@ -4200,6 +4226,8 @@ zh_CN:
     title: "Discourse 设置"
     step:
       introduction:
+        title: "关于您的站点"
+        description: "这些内容将显示在您的登录页面和所有公共页面上。您以后可以随时进行更改。"
         fields:
           title:
             label: "社区名称"
@@ -4210,21 +4238,28 @@ zh_CN:
           default_locale:
             label: "语言"
       privacy:
+        title: "成员体验"
         fields:
           login_required:
             placeholder: "不公开"
             extra_description: "只有登录用户才能访问此社区"
           invite_only:
+            placeholder: "仅限邀请"
             extra_description: "用户必须由受信任的用户或管理人员邀请，否则用户可以自行注册"
           must_approve_users:
+            placeholder: "需要批准"
             extra_description: "用户必须得到管理人员的批准"
           chat_enabled:
             placeholder: "启用聊天"
+            extra_description: "与您的成员实时互动"
           enable_sidebar:
             placeholder: "启用边栏"
+            extra_description: "轻松访问您最喜欢的空间"
       ready:
+        title: "您的站点已准备就绪！"
         description: "就是这样！您已经完成建立社区的基础工作。现在，您可以进去看一看，撰写一个欢迎话题，然后发送邀请！<br><br>玩得开心！"
       styling:
+        title: "外观"
         fields:
           color_scheme:
             label: "配色方案"
@@ -4255,19 +4290,38 @@ zh_CN:
                 label: "包含话题的类别框"
               subcategories_with_featured_topics:
                 label: "包含精选话题的子类别"
-      corporate:
+      branding:
+        title: "站点徽标"
         fields:
+          logo:
+            label: "主要徽标"
+            description: "推荐大小：600 x 200"
+          logo_small:
+            label: "方形徽标"
+            description: "推荐大小：512 x 512。也用作站点图标和移动主屏幕应用图标。"
+      corporate:
+        title: "您的组织"
+        description: "以下信息将用于您的“服务条款”和“关于”页面。如果没有公司，请尽管跳过。"
+        fields:
+          company_name:
+            label: "公司名称"
+            placeholder: "Acme 组织"
           governing_law:
+            label: "适用法律"
             placeholder: "加州法律"
           contact_url:
+            label: "网页"
             placeholder: "https://www.example.com/contact-us"
           city_for_disputes:
+            label: "争议城市"
             placeholder: "加利福尼亚州旧金山"
           site_contact:
+            label: "自动消息"
             description: "所有自动 Discourse 个人消息都将从此用户发送，例如举报警告和备份完成通知。"
           contact_email:
             label: "联系人"
             placeholder: "example@user.com"
+            description: "负责此站点的主要联系人的电子邮件地址，用于重要通知，也会在<a href='%{base_path}/about' target='_blank'>您的关于页面</a>上列出以供紧急联系。"
       invites:
         title: "邀请管理人员"
         description: "即将完成！让我们邀请一些人来使用有趣的话题和回复帮助<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>培育您的讨论</a>以启动您的社区。"

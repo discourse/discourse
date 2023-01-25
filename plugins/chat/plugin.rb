@@ -13,6 +13,7 @@ register_asset "stylesheets/mixins/chat-scrollbar.scss"
 register_asset "stylesheets/common/core-extensions.scss"
 register_asset "stylesheets/common/chat-emoji-picker.scss"
 register_asset "stylesheets/common/chat-channel-card.scss"
+register_asset "stylesheets/common/create-channel-modal.scss"
 register_asset "stylesheets/common/dc-filter-input.scss"
 register_asset "stylesheets/common/common.scss"
 register_asset "stylesheets/common/chat-browse.scss"
@@ -371,14 +372,6 @@ after_initialize do
     end
   end
 
-  if respond_to?(:register_upload_unused)
-    register_upload_unused do |uploads|
-      uploads.joins("LEFT JOIN chat_uploads cu ON cu.upload_id = uploads.id").where(
-        "cu.upload_id IS NULL",
-      )
-    end
-  end
-
   if respond_to?(:register_upload_in_use)
     register_upload_in_use do |upload|
       ChatMessage.where(
@@ -455,6 +448,8 @@ after_initialize do
   add_to_serializer(:current_user, :chat_drafts) do
     ChatDraft
       .where(user_id: object.id)
+      .order(updated_at: :desc)
+      .limit(20)
       .pluck(:chat_channel_id, :data)
       .map { |row| { channel_id: row[0], data: row[1] } }
   end

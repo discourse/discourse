@@ -50,7 +50,7 @@ class SearchIndexer
       .reduce(additional_lexemes) do |array, (lexeme, _, positions)|
         count = 0
 
-        if lexeme !~ /^(\d+\.)?(\d+\.)*(\*|\d+)$/
+        if lexeme !~ /\A(\d+\.)?(\d+\.)*(\*|\d+)\z/
           loop do
             count += 1
             break if count >= 10 # Safeguard here to prevent infinite loop when a term has many dots

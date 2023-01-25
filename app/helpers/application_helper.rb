@@ -50,7 +50,7 @@ module ApplicationHelper
 
   def google_universal_analytics_json(ua_domain_name = nil)
     result = {}
-    result[:cookieDomain] = ua_domain_name.gsub(%r{^http(s)?://}, "") if ua_domain_name
+    result[:cookieDomain] = ua_domain_name.gsub(%r{\Ahttp(s)?://}, "") if ua_domain_name
     result[:userId] = current_user.id if current_user.present?
     result[:allowLinker] = true if SiteSetting.ga_universal_auto_link_domains.present?
     result.to_json
@@ -117,9 +117,9 @@ module ApplicationHelper
       # seconds.
       if !script.start_with?("discourse/tests/")
         if is_brotli_req?
-          path = path.gsub(/\.([^.]+)$/, '.br.\1')
+          path = path.gsub(/\.([^.]+)\z/, '.br.\1')
         elsif is_gzip_req?
-          path = path.gsub(/\.([^.]+)$/, '.gz.\1')
+          path = path.gsub(/\.([^.]+)\z/, '.gz.\1')
         end
       end
     elsif GlobalSetting.cdn_url&.start_with?("https") && is_brotli_req? &&

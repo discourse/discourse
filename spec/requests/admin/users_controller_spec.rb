@@ -1777,6 +1777,26 @@ RSpec.describe Admin::UsersController do
         expect(user.username).to eq("Hokli")
       end
 
+      it "can sync up with the sso without email" do
+        sso.name = "Bob The Bob"
+        sso.username = "bob"
+        sso.email = "bob@bob.com"
+        sso.external_id = "1"
+
+        user =
+          DiscourseConnect.parse(
+            sso.payload,
+            secure_session: read_secure_session,
+          ).lookup_or_create_user
+
+        sso.name = "Bill"
+        sso.username = "Hokli$$!!"
+        sso.email = nil
+
+        post "/admin/users/sync_sso.json", params: Rack::Utils.parse_query(sso.payload)
+        expect(response.status).to eq(200)
+      end
+
       it "should create new users" do
         sso.name = "Dr. Claw"
         sso.username = "dr_claw"

@@ -242,10 +242,10 @@ class CookedPostProcessor
 
         if !cropped && upload.width && resized_w > upload.width
           cooked_url = UrlHelper.cook_url(upload.url, secure: @post.with_secure_uploads?)
-          srcset << ", #{cooked_url} #{ratio.to_s.sub(/\.0$/, "")}x"
+          srcset << ", #{cooked_url} #{ratio.to_s.sub(/\.0\z/, "")}x"
         elsif t = upload.thumbnail(resized_w, resized_h)
           cooked_url = UrlHelper.cook_url(t.url, secure: @post.with_secure_uploads?)
-          srcset << ", #{cooked_url} #{ratio.to_s.sub(/\.0$/, "")}x"
+          srcset << ", #{cooked_url} #{ratio.to_s.sub(/\.0\z/, "")}x"
         end
 
         img[
@@ -295,7 +295,7 @@ class CookedPostProcessor
 
   def get_filename(upload, src)
     return File.basename(src) unless upload
-    return upload.original_filename unless upload.original_filename =~ /^blob(\.png)?$/i
+    return upload.original_filename unless upload.original_filename =~ /\Ablob(\.png)?\z/i
     I18n.t("upload.pasted_image_filename")
   end
 

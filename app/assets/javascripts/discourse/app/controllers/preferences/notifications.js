@@ -5,6 +5,8 @@ import { NotificationLevels } from "discourse/lib/notification-levels";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Controller.extend({
+  subpageTitle: I18n.t("user.preferences_nav.notifications"),
+
   init() {
     this._super(...arguments);
 

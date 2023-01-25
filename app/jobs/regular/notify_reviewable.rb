@@ -22,58 +22,60 @@ class Jobs::NotifyReviewable < ::Jobs::Base
         end
     end
 
-    counts = Hash.new(0)
+    DistributedMutex.synchronize("notify_reviewable_job", validity: 10, max_get_lock_attempts: 1) do
+      counts = Hash.new(0)
 
-    Reviewable.default_visible.pending.each do |r|
-      counts[:admins] += 1
-      counts[:moderators] += 1 if r.reviewable_by_moderator?
-      counts[r.reviewable_by_group_id] += 1 if r.reviewable_by_group_id
-    end
+      Reviewable.default_visible.pending.each do |r|
+        counts[:admins] += 1
+        counts[:moderators] += 1 if r.reviewable_by_moderator?
+        counts[r.reviewable_by_group_id] += 1 if r.reviewable_by_group_id
+      end
 
-    if SiteSetting.legacy_navigation_menu?
-      notify_legacy(
-        User.real.admins.pluck(:id),
-        count: counts[:admins],
-        updates: all_updates[:admins],
-      )
-    else
-      notify_users(User.real.admins, all_updates[:admins])
-    end
-
-    if reviewable.reviewable_by_moderator?
       if SiteSetting.legacy_navigation_menu?
         notify_legacy(
-          User.real.moderators.where("id NOT IN (?)", @contacted).pluck(:id),
-          count: counts[:moderators],
-          updates: all_updates[:moderators],
+          User.real.admins.pluck(:id),
+          count: counts[:admins],
+          updates: all_updates[:admins],
         )
       else
-        notify_users(
-          User.real.moderators.where("id NOT IN (?)", @contacted),
-          all_updates[:moderators],
-        )
+        notify_users(User.real.admins, all_updates[:admins])
       end
-    end
 
-    if SiteSetting.enable_category_group_moderation? && (group = reviewable.reviewable_by_group)
-      users = group.users.includes(:group_users).where("users.id NOT IN (?)", @contacted)
-
-      users.find_each do |user|
-        count = 0
-        updates = {}
-        user.group_users.each do |gu|
-          updates.merge!(all_updates[gu.group_id])
-          count += counts[gu.group_id]
-        end
-
+      if reviewable.reviewable_by_moderator?
         if SiteSetting.legacy_navigation_menu?
-          notify_legacy([user.id], count: count, updates: updates)
+          notify_legacy(
+            User.real.moderators.where("id NOT IN (?)", @contacted).pluck(:id),
+            count: counts[:moderators],
+            updates: all_updates[:moderators],
+          )
         else
-          notify_user(user, updates)
+          notify_users(
+            User.real.moderators.where("id NOT IN (?)", @contacted),
+            all_updates[:moderators],
+          )
         end
       end
 
-      @contacted += users.pluck(:id)
+      if SiteSetting.enable_category_group_moderation? && (group = reviewable.reviewable_by_group)
+        users = group.users.includes(:group_users).where("users.id NOT IN (?)", @contacted)
+
+        users.find_each do |user|
+          count = 0
+          updates = {}
+          user.group_users.each do |gu|
+            updates.merge!(all_updates[gu.group_id])
+            count += counts[gu.group_id]
+          end
+
+          if SiteSetting.legacy_navigation_menu?
+            notify_legacy([user.id], count: count, updates: updates)
+          else
+            notify_user(user, updates)
+          end
+        end
+
+        @contacted += users.pluck(:id)
+      end
     end
   end
 

@@ -1269,7 +1269,7 @@ acceptance("Composer - Default category", function (needs) {
         name: "General",
         slug: "general",
         permission: 1,
-        ltopic_template: null,
+        topic_template: null,
       },
       {
         id: 2,
@@ -1306,7 +1306,7 @@ acceptance("Composer - Uncategorized category", function (needs) {
         name: "General",
         slug: "general",
         permission: 1,
-        ltopic_template: null,
+        topic_template: null,
       },
       {
         id: 2,
@@ -1337,7 +1337,7 @@ acceptance("Composer - default category not set", function (needs) {
         name: "General",
         slug: "general",
         permission: 1,
-        ltopic_template: null,
+        topic_template: null,
       },
       {
         id: 2,

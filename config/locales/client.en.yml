@@ -197,6 +197,7 @@ en:
 
     topic_admin_menu: "topic actions"
     skip_to_main_content: "Skip to main content"
+    skip_user_nav: "Skip to profile content"
 
     emails_are_disabled: "All outgoing email has been globally disabled by an administrator. No email notifications of any kind will be sent."
     emails_are_disabled_non_staff: "Outgoing email has been disabled for non-staff users."
@@ -1121,7 +1122,7 @@ en:
         perm_denied_expl: "You denied permission for notifications. Allow notifications via your browser settings."
         disable: "Disable Notifications"
         enable: "Enable Notifications"
-        each_browser_note: 'Note: You have to change this setting on every browser you use. All notifications will be disabled if you pause notifications from user menu, regardless of this setting.'
+        each_browser_note: "Note: You have to change this setting on every browser you use. All notifications will be disabled if you pause notifications from user menu, regardless of this setting."
         consent_prompt: "Do you want live notifications when people reply to your posts?"
       dismiss: "Dismiss"
       dismiss_notifications: "Dismiss All"
@@ -3548,6 +3549,8 @@ en:
           last: "Last revision"
           hide: "Hide revision"
           show: "Show revision"
+          destroy: "Delete revisions"
+          destroy_confirm: "Are you sure you want to delete all of the revisions on this post? This action is permanent."
           revert: "Revert to revision %{revision}"
           edit_wiki: "Edit Wiki"
           edit_post: "Edit Post"
@@ -3806,7 +3809,9 @@ en:
         inappropriate: "It's Inappropriate"
         spam: "It's Spam"
       custom_placeholder_notify_user: "Be specific, be constructive, and always be kind."
+      notify_user_textarea_label: "Message for the user"
       custom_placeholder_notify_moderators: "Let us know specifically what you are concerned about, and provide relevant links and examples where possible."
+      notify_moderators_textarea_label: "Message for the moderators"
       custom_message:
         at_least:
           one: "enter at least %{count} character"
@@ -4685,6 +4690,7 @@ en:
               update: Update user profile information.
               log_out: Log out all sessions for a user.
               anonymize: Anonymize user accounts.
+              suspend: Suspend user accounts.
               delete: Delete user accounts.
               list: Get a list of users.
             user_status:
@@ -4692,6 +4698,8 @@ en:
               update: Update user status.
             email:
               receive_emails: Combine this scope with the mail-receiver to process incoming emails.
+            invites:
+              create: Send email invites or generate invite links.
             badges:
               create: Create a new badge.
               show: Obtain information about a badge.
@@ -4700,6 +4708,9 @@ en:
               list_user_badges: List user badges.
               assign_badge_to_user: Assign a badge to a user.
               revoke_badge_from_user: Revoke a badge from a user.
+            search:
+              show: Search using the `/search.json?q=term` endpoint.
+              query: Search using the /search/query?term=term` endpoint.
             wordpress:
               publishing: Necessary for the WP Discourse plugin publishing features (required).
               commenting: Necessary for the WP Discourse plugin commenting features.

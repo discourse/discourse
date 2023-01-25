@@ -117,7 +117,7 @@ export default class ChatChannelsManager extends Service {
 
   async #find(id) {
     return this.chatApi
-      .getChannel(id)
+      .channel(id)
       .catch(popupAjaxError)
       .then((channel) => {
         this.#cache(channel);

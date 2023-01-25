@@ -2,7 +2,7 @@
 
 module GitUrl
   class << self
-    SSH_REGEXP = /(\w+@(\w+\.)*\w+):(.*)/
+    SSH_REGEXP = /\A(\w+@\w+(\.\w+)*):(.*)\z/
 
     def normalize(url)
       if m = SSH_REGEXP.match(url)
@@ -10,7 +10,7 @@ module GitUrl
       end
 
       if url.start_with?("https://github.com/") && !url.end_with?(".git")
-        url = url.gsub(%r{/$}, "")
+        url = url.gsub(%r{/\z}, "")
         url += ".git"
       end
 

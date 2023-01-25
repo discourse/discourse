@@ -179,7 +179,6 @@ ru:
         read_only: "Только для чтения"
         archived_header: "Канал заархивирован"
         archived: "Архивные"
-        archive_failed: "Во время архивации поизошла ошибка. %{completed}/%{total} сообщений были заархивированы в <a target=\"_blank\" href=\"%{topic_url}\">целевой теме</a>. Нажмите «Повторить», чтобы попытаться завершить архивирование."
         archive_completed: "См. <a target=\"_blank\" href=\"%{topic_url}\">архивную тему</a>."
         closed_header: "Канал закрыт"
         closed: "Закрытые"
@@ -202,6 +201,7 @@ ru:
         associated_topic: Связанная тема
         associated_category: Связанная категория
         title: Название
+        name: Название
         description: Описание
       channel_info:
         back_to_all_channels: "Все каналы"
@@ -210,10 +210,6 @@ ru:
           about: Информация
           members: Участники
           settings: Настройки
-      channel_edit_title_modal:
-        title: Изменить название
-        input_placeholder: Добавьте название
-        description: Дайте короткое описательное название вашему каналу
       channel_edit_description_modal:
         title: Изменить описание
         input_placeholder: Добавить описание
@@ -282,7 +278,6 @@ ru:
         mention: "Только для упоминаний"
         always: "Для всех действий"
       settings:
-        enable_auto_join_users: "Автоматически добавлять всех активных пользователей"
         auto_join_users_warning: "Любой пользователь, не являющийся участником этого канала, но имеющий доступ к разделу %{category}, будет автоматически подключён. Продолжить?"
         desktop_notification_level: "Уведомления на рабочем столе"
         follow: "Подписаться"
