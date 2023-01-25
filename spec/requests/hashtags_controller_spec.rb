@@ -107,20 +107,14 @@ RSpec.describe HashtagsController do
             quxbarbaz =
               Fabricate(:category_with_definition, slug: "baz", parent_category_id: quxbar.id)
 
+            invalid_slugs = [":"]
+            child_slugs = %w[bar baz]
+            deeply_nested_slugs = %w[foo:bar:baz qux:bar:baz]
             get "/hashtags.json",
                 params: {
-                  slugs: [
-                    ":", # should not work
-                    "foo",
-                    "bar", # should not work
-                    "baz", # should not work
-                    "foo:bar",
-                    "bar:baz",
-                    "foo:bar:baz", # should not work
-                    "qux",
-                    "qux:bar",
-                    "qux:bar:baz", # should not work
-                  ],
+                  slugs:
+                    invalid_slugs + child_slugs + deeply_nested_slugs +
+                      %w[foo foo:bar bar:baz qux qux:bar],
                 }
 
             expect(response.status).to eq(200)
@@ -284,20 +278,14 @@ RSpec.describe HashtagsController do
             quxbarbaz =
               Fabricate(:category_with_definition, slug: "baz", parent_category_id: quxbar.id)
 
+            invalid_slugs = [":"]
+            child_slugs = %w[bar baz]
+            deeply_nested_slugs = %w[foo:bar:baz qux:bar:baz]
             get "/hashtags.json",
                 params: {
-                  slugs: [
-                    ":", # should not work
-                    "foo",
-                    "bar", # should not work
-                    "baz", # should not work
-                    "foo:bar",
-                    "bar:baz",
-                    "foo:bar:baz", # should not work
-                    "qux",
-                    "qux:bar",
-                    "qux:bar:baz", # should not work
-                  ],
+                  slugs:
+                    invalid_slugs + child_slugs + deeply_nested_slugs +
+                      %w[foo foo:bar bar:baz qux qux:bar],
                   order: %w[category tag],
                 }
 
