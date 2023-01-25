@@ -577,6 +577,12 @@ RSpec.describe Category do
       expect(SiteSetting.shared_drafts_category).to be_blank
     end
 
+    it "deletes related embeddable host" do
+      embeddable_host = Fabricate(:embeddable_host, category: @category)
+      @category.destroy!
+      expect { embeddable_host.reload }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+
     it "triggers a extensibility event" do
       event = DiscourseEvent.track(:category_destroyed) { @category.destroy }
 

@@ -35,7 +35,7 @@ def gather_uploads
     .where("url !~ ?", "^\/uploads\/#{current_db}")
     .find_each do |upload|
       begin
-        old_db = upload.url[%r{^/uploads/([^/]+)/}, 1]
+        old_db = upload.url[%r{\A/uploads/([^/]+)/}, 1]
         from = upload.url.dup
         to = upload.url.sub("/uploads/#{old_db}/", "/uploads/#{current_db}/")
         source = "#{public_directory}#{from}"
@@ -321,8 +321,8 @@ def regenerate_missing_optimized
     scope.find_each do |optimized_image|
       upload = optimized_image.upload
 
-      next unless optimized_image.url =~ %r{^/[^/]}
-      next unless upload.url =~ %r{^/[^/]}
+      next unless optimized_image.url =~ %r{\A/[^/]}
+      next unless upload.url =~ %r{\A/[^/]}
 
       thumbnail = "#{public_directory}#{optimized_image.url}"
       original = "#{public_directory}#{upload.url}"
@@ -537,6 +537,10 @@ task "uploads:sync_s3_acls" => :environment do
   end
 end
 
+#
+# TODO (martin) Update this rake task to use the _first_ UploadReference
+# record for each upload to determine security, and do not mark things
+# as secure if the first record is something public e.g. a site setting.
 task "uploads:disable_secure_uploads" => :environment do
   RailsMultisite::ConnectionManagement.each_connection do |db|
     unless Discourse.store.external?
@@ -584,6 +588,10 @@ end
 # the upload secure flag and S3 upload ACLs. Any uploads that
 # have their secure status changed will have all associated posts
 # rebaked.
+#
+# TODO (martin) Update this rake task to use the _first_ UploadReference
+# record for each upload to determine security, and do not mark things
+# as secure if the first record is something public e.g. a site setting.
 task "uploads:secure_upload_analyse_and_update" => :environment do
   RailsMultisite::ConnectionManagement.each_connection do |db|
     unless Discourse.store.external?

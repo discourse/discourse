@@ -106,8 +106,6 @@ export default Component.extend(ComposerUploadUppy, {
   fileUploadElementId: "file-uploader",
   mobileFileUploaderId: "mobile-file-upload",
 
-  // TODO (martin) Remove this once the chat plugin is using the new composerEventPrefix
-  eventPrefix: "composer",
   composerEventPrefix: "composer",
   uploadType: "composer",
   uppyId: "composer-editor-uppy",

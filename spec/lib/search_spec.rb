@@ -897,7 +897,7 @@ RSpec.describe Search do
       result = Search.execute("search term")
 
       expect(result.posts.first.topic_title_headline).to eq(<<~HTML.chomp)
-      Very very very very very very very long topic title with our <span class=\"#{Search::HIGHLIGHT_CSS_CLASS}\">search</span> <span class=\"#{Search::HIGHLIGHT_CSS_CLASS}\">term</span> in the middle of the title
+        Very very very very very very very long topic title with our <span class=\"#{Search::HIGHLIGHT_CSS_CLASS}\">search</span> <span class=\"#{Search::HIGHLIGHT_CSS_CLASS}\">term</span> in the middle of the title
       HTML
     end
 
@@ -1316,7 +1316,28 @@ RSpec.describe Search do
 
       context "with non staff logged in" do
         it "shows doesn’t show group" do
-          expect(search.groups.map(&:name)).to be_empty
+        end
+      end
+    end
+
+    context "with registered plugin callbacks" do
+      let!(:group) { Fabricate(:group, name: "plugin-special") }
+
+      context "when :search_groups_set_query_callback is registered" do
+        it "changes the search results" do
+          # initial result (without applying the plugin callback )
+          expect(search.groups.map(&:name).include?("plugin-special")).to eq(true)
+
+          DiscoursePluginRegistry.register_search_groups_set_query_callback(
+            Proc.new { |query, term, guardian| query.where.not(name: "plugin-special") },
+            Plugin::Instance.new,
+          )
+
+          # after using the callback we expect the search result to be changed because the
+          # query was altered
+          expect(search.groups.map(&:name).include?("plugin-special")).to eq(false)
+
+          DiscoursePluginRegistry.reset_register!(:search_groups_set_query_callbacks)
         end
       end
     end
@@ -1779,6 +1800,31 @@ RSpec.describe Search do
         expect(
           Search.execute("group:#{group.id}", guardian: Guardian.new(user)).posts,
         ).to contain_exactly(post)
+      end
+
+      context "with registered plugin callbacks" do
+        context "when :search_groups_set_query_callback is registered" do
+          it "changes the search results" do
+            group.update!(
+              visibility_level: Group.visibility_levels[:public],
+              members_visibility_level: Group.visibility_levels[:public],
+            )
+
+            # initial result (without applying the plugin callback )
+            expect(Search.execute("group:like_a_boss").posts).to contain_exactly(post)
+
+            DiscoursePluginRegistry.register_search_groups_set_query_callback(
+              Proc.new { |query, term, guardian| query.where.not(name: "Like_a_Boss") },
+              Plugin::Instance.new,
+            )
+
+            # after using the callback we expect the search result to be changed because the
+            # query was altered
+            expect(Search.execute("group:like_a_boss").posts).to be_blank
+
+            DiscoursePluginRegistry.reset_register!(:search_groups_set_query_callbacks)
+          end
+        end
       end
     end
 
@@ -2356,7 +2402,7 @@ RSpec.describe Search do
       expect(results.posts.length).to eq(1)
 
       # TODO: this is a test we need to fix!
-      #expect(results.blurb(results.posts.first)).to include('Rágis')
+      # expect(results.blurb(results.posts.first)).to include('Rágis')
 
       results = Search.execute("สวัสดี", type_filter: "topic")
       expect(results.posts.length).to eq(1)

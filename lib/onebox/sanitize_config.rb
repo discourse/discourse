@@ -10,7 +10,7 @@ module Onebox
           Sanitize::Config::RELAXED,
           elements:
             Sanitize::Config::RELAXED[:elements] +
-              %w[audio details embed iframe source video svg path],
+              %w[audio details embed iframe source video svg path use],
           attributes: {
             "a" => Sanitize::Config::RELAXED[:attributes]["a"] + %w[target],
             "audio" => %w[controls controlslist],
@@ -40,7 +40,8 @@ module Onebox
             "path" => %w[d fill-rule],
             "svg" => %w[aria-hidden width height viewbox],
             "div" => [:data], # any data-* attributes,
-            "span" => [:data], # any data-* attributes
+            "span" => [:data], # any data-* attributes,
+            "use" => %w[href],
           },
           add_attributes: {
             "iframe" => {
@@ -57,7 +58,7 @@ module Onebox
                   next unless env[:node_name] == "a"
                   a_tag = env[:node]
                   a_tag["href"] ||= "#"
-                  if a_tag["href"] =~ %r{^(?:[a-z]+:)?//}
+                  if a_tag["href"] =~ %r{\A(?:[a-z]+:)?//}
                     a_tag["rel"] = "nofollow ugc noopener"
                   else
                     a_tag.remove_attribute("target")
@@ -88,6 +89,9 @@ module Onebox
             },
             "source" => {
               "src" => HTTP_PROTOCOLS,
+            },
+            "use" => {
+              "href" => [:relative],
             },
           },
           css: {

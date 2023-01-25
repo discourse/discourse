@@ -2,9 +2,11 @@
 
 module UserSidebarMixin
   def sidebar_tags
+    topic_count_column = Tag.topic_count_column(scope)
+
     object
       .visible_sidebar_tags(scope)
-      .pluck(:name, :topic_count, :pm_topic_count)
+      .pluck(:name, topic_count_column, :pm_topic_count)
       .reduce([]) do |tags, sidebar_tag|
         tags.push(name: sidebar_tag[0], pm_only: sidebar_tag[1] == 0 && sidebar_tag[2] > 0)
       end
@@ -45,6 +47,6 @@ module UserSidebarMixin
   private
 
   def sidebar_navigation_menu?
-    !SiteSetting.legacy_navigation_menu?
+    !SiteSetting.legacy_navigation_menu? || options[:enable_sidebar_param] == "1"
   end
 end

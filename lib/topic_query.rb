@@ -14,11 +14,16 @@ class TopicQuery
   def self.validators
     @validators ||=
       begin
-        int = lambda { |x| Integer === x || (String === x && x.match?(/^-?[0-9]+$/)) }
-
+        int = lambda { |x| Integer === x || (String === x && x.match?(/\A-?[0-9]+\z/)) }
         zero_up_to_max_int = lambda { |x| int.call(x) && x.to_i.between?(0, PG_MAX_INT) }
+        array_or_string = lambda { |x| Array === x || String === x }
 
-        { max_posts: zero_up_to_max_int, min_posts: zero_up_to_max_int, page: zero_up_to_max_int }
+        {
+          max_posts: zero_up_to_max_int,
+          min_posts: zero_up_to_max_int,
+          page: zero_up_to_max_int,
+          tags: array_or_string,
+        }
       end
   end
 
@@ -637,9 +642,13 @@ class TopicQuery
     options.reverse_merge!(@options)
     options.reverse_merge!(per_page: per_page_setting) unless options[:limit] == false
 
-    # Whether to return visible topics
-    options[:visible] = true if @user.nil? || @user.regular?
-    options[:visible] = false if @user && @user.id == options[:filtered_to_user]
+    # Whether to include unlisted (visible = false) topics
+    viewing_own_topics = @user && @user.id == options[:filtered_to_user]
+
+    if options[:visible].nil?
+      options[:visible] = true if @user.nil? || @user.regular?
+      options[:visible] = false if @guardian.can_see_unlisted_topics? || viewing_own_topics
+    end
 
     # Start with a list of all topics
     result = Topic.unscoped.includes(:category)
@@ -726,14 +735,17 @@ class TopicQuery
         result = result.where.not(id: TopicTag.distinct.pluck(:topic_id))
       end
 
-      result = result.where(<<~SQL, name: @options[:exclude_tag]) if @options[:exclude_tag].present?
-        topics.id NOT IN (
-          SELECT topic_tags.topic_id
-          FROM topic_tags
-          INNER JOIN tags ON tags.id = topic_tags.tag_id
-          WHERE tags.name = :name
-        )
-        SQL
+      if @options[:exclude_tag].present? &&
+           !DiscourseTagging.hidden_tag_names(@guardian).include?(@options[:exclude_tag])
+        result = result.where(<<~SQL, name: @options[:exclude_tag])
+          topics.id NOT IN (
+            SELECT topic_tags.topic_id
+            FROM topic_tags
+            INNER JOIN tags ON tags.id = topic_tags.tag_id
+            WHERE tags.name = :name
+          )
+          SQL
+      end
     end
 
     result = apply_ordering(result, options)

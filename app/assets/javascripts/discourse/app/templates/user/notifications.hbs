@@ -2,10 +2,11 @@
   <DSection @pageClass="user-notifications" />
 
   <div class="user-navigation user-navigation-secondary">
-    <HorizontalOverflowNav>
+    <HorizontalOverflowNav @ariaLabel="User secondary - notifications">
       <UserNav::NotificationsNav
         @model={{this.model}}
         @siteSettings={{this.siteSettings}}
+        @ariaCurrentContext="subNav"
       />
     </HorizontalOverflowNav>
 
@@ -79,7 +80,7 @@
   {{/if}}
 {{/if}}
 
-<section class="user-content">
+<section class="user-content" id="user-content">
   <LoadMore
     @class="notification-history user-stream"
     @selector=".user-stream .notification"

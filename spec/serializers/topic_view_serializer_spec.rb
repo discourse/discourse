@@ -279,9 +279,33 @@ RSpec.describe TopicViewSerializer do
   end
 
   describe "tags order" do
-    fab!(:tag1) { Fabricate(:tag, name: "ctag", description: "c description", topic_count: 5) }
-    fab!(:tag2) { Fabricate(:tag, name: "btag", description: "b description", topic_count: 9) }
-    fab!(:tag3) { Fabricate(:tag, name: "atag", description: "a description", topic_count: 3) }
+    fab!(:tag1) do
+      Fabricate(
+        :tag,
+        name: "ctag",
+        description: "c description",
+        staff_topic_count: 5,
+        public_topic_count: 5,
+      )
+    end
+    fab!(:tag2) do
+      Fabricate(
+        :tag,
+        name: "btag",
+        description: "b description",
+        staff_topic_count: 9,
+        public_topic_count: 9,
+      )
+    end
+    fab!(:tag3) do
+      Fabricate(
+        :tag,
+        name: "atag",
+        description: "a description",
+        staff_topic_count: 3,
+        public_topic_count: 3,
+      )
+    end
 
     before do
       topic.tags << tag1

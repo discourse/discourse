@@ -377,6 +377,9 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
 
         context "when reply contains the skip trigger" do
           it "should create the right reply" do
+            # TODO (martin) Remove when enable_experimental_hashtag_autocomplete is default for all sites
+            SiteSetting.enable_experimental_hashtag_autocomplete = false
+
             parent_category = Fabricate(:category, name: "a")
             _category = Fabricate(:category, parent_category: parent_category, name: "b")
 
@@ -414,6 +417,9 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
 
       context "when user recovers a post in the right topic" do
         it "should create the right reply" do
+          # TODO (martin) Remove when enable_experimental_hashtag_autocomplete is default for all sites
+          SiteSetting.enable_experimental_hashtag_autocomplete = false
+
           parent_category = Fabricate(:category, name: "a")
           _category = Fabricate(:category, parent_category: parent_category, name: "b")
           post
@@ -442,6 +448,9 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
           topic_id: topic.id,
           track: described_class.to_s,
         )
+
+        # TODO (martin) Remove when enable_experimental_hashtag_autocomplete is default for all sites
+        SiteSetting.enable_experimental_hashtag_autocomplete = false
       end
 
       context "when post is not in the right topic" do
@@ -509,6 +518,28 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
         expect(narrative.get_data(user)[:state].to_sym).to eq(
           :tutorial_change_topic_notification_level,
         )
+      end
+
+      context "when enable_experimental_hashtag_autocomplete is true" do
+        before { SiteSetting.enable_experimental_hashtag_autocomplete = true }
+
+        it "should create the right reply" do
+          category = Fabricate(:category)
+
+          post.update!(raw: "Check out this ##{category.slug}")
+          narrative.input(:reply, user, post: post)
+
+          expected_raw = <<~RAW
+            #{I18n.t("discourse_narrative_bot.advanced_user_narrative.category_hashtag.reply", base_uri: "")}
+
+            #{I18n.t("discourse_narrative_bot.advanced_user_narrative.change_topic_notification_level.instructions", base_uri: "")}
+          RAW
+
+          expect(Post.last.raw).to eq(expected_raw.chomp)
+          expect(narrative.get_data(user)[:state].to_sym).to eq(
+            :tutorial_change_topic_notification_level,
+          )
+        end
       end
     end
 

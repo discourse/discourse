@@ -83,7 +83,7 @@ class TopicsController < ApplicationController
 
     # Special case: a slug with a number in front should look by slug first before looking
     # up that particular number
-    if params[:id] && params[:id] =~ /^\d+[^\d\\]+$/
+    if params[:id] && params[:id] =~ /\A\d+[^\d\\]+\z/
       topic = Topic.find_by_slug(params[:id])
       return redirect_to_correct_topic(topic, opts[:post_number]) if topic
     end
@@ -479,7 +479,12 @@ class TopicsController < ApplicationController
     enabled = params[:enabled] == "true"
 
     check_for_status_presence(:status, status)
-    @topic = Topic.find_by(id: topic_id)
+    @topic =
+      if params[:category_id]
+        Topic.find_by(id: topic_id, category_id: params[:category_id].to_i)
+      else
+        Topic.find_by(id: topic_id)
+      end
 
     case status
     when "closed"

@@ -997,7 +997,8 @@ RSpec.describe Chat::ChatController do
     end
 
     it "doesn't invite users who cannot chat" do
-      SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:admin]
+      SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:admins]
+
       expect {
         put "/chat/#{chat_channel.id}/invite.json", params: { user_ids: [user.id] }
       }.not_to change {
@@ -1284,6 +1285,19 @@ RSpec.describe Chat::ChatController do
       expect {
         post "/chat/drafts.json", params: { chat_channel_id: dm_channel.id, data: "{}" }
       }.to change { ChatDraft.count }.by(1)
+    end
+
+    it "cannot create a too long chat draft" do
+      SiteSetting.max_chat_draft_length = 100
+
+      post "/chat/drafts.json",
+           params: {
+             chat_channel_id: chat_channel.id,
+             data: { value: "a" * (SiteSetting.max_chat_draft_length + 1) }.to_json,
+           }
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to eq([I18n.t("chat.errors.draft_too_long")])
     end
   end
 

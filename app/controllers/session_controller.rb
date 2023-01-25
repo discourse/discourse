@@ -203,7 +203,7 @@ class SessionController < ApplicationController
         end
 
         # If it's not a relative URL check the host
-        if return_path !~ %r{^/[^/]}
+        if return_path !~ %r{\A/[^/]}
           begin
             uri = URI(return_path)
             if (uri.hostname == Discourse.current_hostname)
@@ -594,7 +594,7 @@ class SessionController < ApplicationController
       client_ip: request&.ip,
       user_agent: request&.user_agent,
     }
-    DiscourseEvent.trigger(:before_session_destroy, event_data)
+    DiscourseEvent.trigger(:before_session_destroy, event_data, **Discourse::Utils::EMPTY_KEYWORDS)
     redirect_url = event_data[:redirect_url]
 
     reset_session

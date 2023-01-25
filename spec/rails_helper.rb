@@ -190,6 +190,18 @@ RSpec.configure do |config|
   # instead of true.
   config.use_transactional_fixtures = true
 
+  # Sometimes you may have a large string or object that you are comparing
+  # with some expectation, and you want to see the full diff between actual
+  # and expected without rspec truncating 90% of the diff. Setting the
+  # max_formatted_output_length to nil disables this truncation completely.
+  #
+  # c.f. https://www.rubydoc.info/gems/rspec-expectations/RSpec/Expectations/Configuration#max_formatted_output_length=-instance_method
+  if ENV["RSPEC_DISABLE_DIFF_TRUNCATION"]
+    config.expect_with :rspec do |expectation|
+      expectation.max_formatted_output_length = nil
+    end
+  end
+
   # If true, the base class of anonymous controllers will be inferred
   # automatically. This will be the default behavior in future versions of
   # rspec-rails.
@@ -239,6 +251,17 @@ RSpec.configure do |config|
       capybara_config.server_host = "localhost"
       capybara_config.server_port = 31_337 + ENV["TEST_ENV_NUMBER"].to_i
     end
+
+    module IgnoreUnicornCapturedErrors
+      def raise_server_error!
+        super
+      rescue EOFError, Errno::ECONNRESET, Errno::EPIPE, Errno::ENOTCONN => e
+        # Ignore these exceptions - caused by client. Handled by unicorn in dev/prod
+        # https://github.com/defunkt/unicorn/blob/d947cb91cf/lib/unicorn/http_server.rb#L570-L573
+      end
+    end
+
+    Capybara::Session.class_eval { prepend IgnoreUnicornCapturedErrors }
 
     # The valid values for SELENIUM_BROWSER_LOG_LEVEL are:
     #

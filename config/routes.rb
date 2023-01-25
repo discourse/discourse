@@ -112,7 +112,6 @@ Discourse::Application.routes.draw do
 
       resources :groups, only: [:create] do
         member do
-          put "owners" => "groups#add_owners"
           delete "owners" => "groups#remove_owner"
           put "primary" => "groups#set_primary"
         end
@@ -1052,6 +1051,7 @@ Discourse::Application.routes.draw do
 
           get "permissions" => "groups#permissions"
           put "members" => "groups#add_members"
+          put "owners" => "groups#add_owners"
           put "join" => "groups#join"
           delete "members" => "groups#remove_member"
           delete "leave" => "groups#leave"
@@ -1063,6 +1063,8 @@ Discourse::Application.routes.draw do
     end
 
     resources :associated_groups, only: %i[index], constraints: AdminConstraint.new
+
+    get "slugs/generate", to: "slugs#generate"
 
     # aliases so old API code works
     delete "admin/groups/:id/members" => "groups#remove_member", :constraints => AdminConstraint.new
@@ -1082,6 +1084,7 @@ Discourse::Application.routes.draw do
       put "revisions/:revision/hide" => "posts#hide_revision", :constraints => { revision: /\d+/ }
       put "revisions/:revision/show" => "posts#show_revision", :constraints => { revision: /\d+/ }
       put "revisions/:revision/revert" => "posts#revert", :constraints => { revision: /\d+/ }
+      delete "revisions/permanently_delete" => "posts#permanently_delete_revisions"
       put "recover"
       collection do
         delete "destroy_many"

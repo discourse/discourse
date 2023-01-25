@@ -1184,8 +1184,6 @@ zh_TW:
     enable_rich_text_paste: "自動啟用 HTML 轉換 Markdown 格式（實驗性功能）"
     email_token_valid_hours: "\"忘記密碼\" / \"重啟帳號\" token 有效的小時數 (n)"
     enable_badges: "啟用勳章系統"
-    blocked_email_domains: "不允許以豎線“|”分隔的電子郵件網域清單內的使用者註冊帳號。範例：mailinator.com|trashmail.net"
-    allowed_email_domains: "用管道符“|”分隔的電子郵箱域名的列表，使用者必須使用這些郵箱域名註冊。警告：使用者使用不包含在這個列表裡的郵箱域名，將無法成功註冊。"
     log_out_strict: "登出時，登出使用者所有設備上的所有連線階段"
     version_checks: "當 Discourse 有推新的版本需要更新時，顯示在 <a href='%{base_path}/admin' target='_blank'>/admin/</a>Dashboard 上以提示管理員"
     new_version_emails: "當新版本發佈時，將會發送一封新的 EMail 至 contact_email 設定的位址"

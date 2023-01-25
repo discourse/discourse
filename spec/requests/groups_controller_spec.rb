@@ -1638,6 +1638,164 @@ RSpec.describe GroupsController do
       end
     end
 
+    describe "#add_owners" do
+      context "when logged in as an admin" do
+        before { sign_in(admin) }
+
+        it "should work" do
+          put "/groups/#{group.id}/owners.json",
+              params: {
+                usernames: [user.username, admin.username].join(","),
+              }
+
+          expect(response.status).to eq(200)
+
+          response_body = response.parsed_body
+
+          expect(response_body["usernames"]).to contain_exactly(user.username, admin.username)
+
+          expect(group.group_users.where(owner: true).map(&:user)).to contain_exactly(user, admin)
+        end
+
+        it "returns not-found error when there is no group" do
+          group.destroy!
+
+          put "/groups/#{group.id}/owners.json", params: { usernames: user.username }
+
+          expect(response.status).to eq(404)
+        end
+
+        it "does not allow adding owners to an automatic group" do
+          group.update!(automatic: true)
+
+          expect do
+            put "/groups/#{group.id}/owners.json", params: { usernames: user.username }
+          end.to_not change { group.group_users.count }
+
+          expect(response.status).to eq(422)
+          expect(response.parsed_body["errors"]).to eq(
+            [I18n.t("groups.errors.can_not_modify_automatic")],
+          )
+        end
+
+        it "does not notify users when the param is not present" do
+          put "/groups/#{group.id}/owners.json", params: { usernames: user.username }
+          expect(response.status).to eq(200)
+
+          topic =
+            Topic.find_by(
+              title:
+                I18n.t(
+                  "system_messages.user_added_to_group_as_owner.subject_template",
+                  group_name: group.name,
+                ),
+              archetype: "private_message",
+            )
+          expect(topic.nil?).to eq(true)
+        end
+
+        it "notifies users when the param is present" do
+          put "/groups/#{group.id}/owners.json",
+              params: {
+                usernames: user.username,
+                notify_users: true,
+              }
+          expect(response.status).to eq(200)
+
+          topic =
+            Topic.find_by(
+              title:
+                I18n.t(
+                  "system_messages.user_added_to_group_as_owner.subject_template",
+                  group_name: group.name,
+                ),
+              archetype: "private_message",
+            )
+          expect(topic.nil?).to eq(false)
+          expect(topic.topic_users.map(&:user_id)).to include(-1, user.id)
+        end
+      end
+
+      context "when logged in as a moderator" do
+        before { sign_in(moderator) }
+
+        context "with moderators_manage_categories_and_groups enabled" do
+          before { SiteSetting.moderators_manage_categories_and_groups = true }
+
+          it "adds owners" do
+            put "/groups/#{group.id}/owners.json",
+                params: {
+                  usernames: [user.username, admin.username, moderator.username].join(","),
+                }
+
+            response_body = response.parsed_body
+
+            expect(response.status).to eq(200)
+            expect(response_body["usernames"]).to contain_exactly(
+              user.username,
+              admin.username,
+              moderator.username,
+            )
+            expect(group.group_users.where(owner: true).map(&:user)).to contain_exactly(
+              user,
+              admin,
+              moderator,
+            )
+          end
+        end
+
+        context "with moderators_manage_categories_and_groups disabled" do
+          before { SiteSetting.moderators_manage_categories_and_groups = false }
+
+          it "prevents adding of owners with a 403 response" do
+            put "/groups/#{group.id}/owners.json",
+                params: {
+                  usernames: [user.username, admin.username, moderator.username].join(","),
+                }
+
+            expect(response.status).to eq(403)
+            expect(response.parsed_body["errors"]).to include(I18n.t("invalid_access"))
+            expect(group.group_users.where(owner: true).map(&:user)).to be_empty
+          end
+        end
+      end
+
+      context "when logged in as a non-owner" do
+        before { sign_in(user) }
+
+        it "prevents adding of owners with a 403 response" do
+          put "/groups/#{group.id}/owners.json",
+              params: {
+                usernames: [user.username, admin.username].join(","),
+              }
+
+          expect(response.status).to eq(403)
+          expect(response.parsed_body["errors"]).to include(I18n.t("invalid_access"))
+          expect(group.group_users.where(owner: true).map(&:user)).to be_empty
+        end
+      end
+
+      context "when logged in as an owner" do
+        before { sign_in(user) }
+
+        it "allows adding new owners" do
+          group.add_owner(user)
+
+          put "/groups/#{group.id}/owners.json",
+              params: {
+                usernames: [user.username, admin.username].join(","),
+              }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["usernames"]).to contain_exactly(
+            user.username,
+            admin.username,
+          )
+          expect(group.group_users.where(owner: true).map(&:user)).to contain_exactly(user, admin)
+        end
+      end
+    end
+
     describe "#join" do
       let(:public_group) { Fabricate(:public_group) }
 
@@ -2038,6 +2196,20 @@ RSpec.describe GroupsController do
       post "/groups/#{group.name}/request_membership.json", params: { reason: "Please add me in" }
 
       expect(response.status).to eq(409)
+    end
+
+    it "limits the character count of the reason" do
+      sign_in(user)
+
+      post "/groups/#{group.name}/request_membership.json",
+           params: {
+             reason: "x" * (GroupRequest::REASON_CHARACTER_LIMIT + 1),
+           }
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to contain_exactly(
+        "Reason is too long (maximum is 280 characters)",
+      )
     end
 
     it "should create the right PM" do

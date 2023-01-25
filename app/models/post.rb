@@ -61,6 +61,7 @@ class Post < ActiveRecord::Base
   belongs_to :image_upload, class_name: "Upload"
 
   has_many :post_hotlinked_media, dependent: :destroy, class_name: "PostHotlinkedMedia"
+  has_many :reviewables, as: :target, dependent: :destroy
 
   validates_with PostValidator, unless: :skip_validation
 

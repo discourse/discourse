@@ -5,50 +5,59 @@
 {{/if}}
 
 <UserNav::MessagesSecondaryNav>
-  <li class="messages-latest">
-    <LinkTo @route="userPrivateMessages.user.index" @model={{this.model}}>
-      {{d-icon "envelope"}}
-      <span>{{i18n "categories.latest"}}</span>
-    </LinkTo>
-  </li>
+  <DNavigationItem
+    @route="userPrivateMessages.user.index"
+    @class="user-nav__messages-latest"
+    @model={{this.model}}
+    @ariaCurrentContext="subNav"
+  >
+    {{d-icon "envelope"}}
+    <span>{{i18n "categories.latest"}}</span>
+  </DNavigationItem>
 
-  <li class="messages-sent">
-    <LinkTo @route="userPrivateMessages.user.sent" @model={{this.model}}>
-      {{d-icon "reply"}}
-      <span>{{i18n "user.messages.sent"}}</span>
-    </LinkTo>
-  </li>
+  <DNavigationItem
+    @route="userPrivateMessages.user.sent"
+    @class="user-nav__messages-sent"
+    @model={{this.model}}
+    @ariaCurrentContext="subNav"
+  >
+    {{d-icon "reply"}}
+    <span>{{i18n "user.messages.sent"}}</span>
+  </DNavigationItem>
 
   {{#if this.viewingSelf}}
-    <li class="messages-new">
-      <LinkTo
-        @route="userPrivateMessages.user.new"
-        @model={{this.model}}
-        class="new"
-      >
-        {{d-icon "exclamation-circle"}}
-        <span>{{this.newLinkText}}</span>
-      </LinkTo>
-    </li>
+    <DNavigationItem
+      @route="userPrivateMessages.user.new"
+      @class="user-nav__messages-new"
+      @model={{this.model}}
+      @ariaCurrentContext="subNav"
+    >
+      {{d-icon "exclamation-circle"}}
+      <span>{{this.newLinkText}}</span>
+    </DNavigationItem>
 
-    <li class="messages-unread">
-      <LinkTo
-        @route="userPrivateMessages.user.unread"
-        @model={{this.model}}
-        class="unread"
-      >
-        {{d-icon "plus-circle"}}
-        <span>{{this.unreadLinkText}}</span>
-      </LinkTo>
-    </li>
+    <DNavigationItem
+      @route="userPrivateMessages.user.unread"
+      @class="user-nav__messages-unread"
+      @model={{this.model}}
+      @ariaCurrentContext="subNav"
+    >
+      {{d-icon "plus-circle"}}
+      <span>{{this.unreadLinkText}}</span>
+    </DNavigationItem>
+
   {{/if}}
 
-  <li class="messages-archive">
-    <LinkTo @route="userPrivateMessages.user.archive" @model={{this.model}}>
-      {{d-icon "archive"}}
-      <span>{{i18n "user.messages.archive"}}</span>
-    </LinkTo>
-  </li>
+  <DNavigationItem
+    @route="userPrivateMessages.user.archive"
+    @class="user-nav__messages-archive"
+    @model={{this.model}}
+    @ariaCurrentContext="subNav"
+  >
+    {{d-icon "archive"}}
+    <span>{{i18n "user.messages.archive"}}</span>
+  </DNavigationItem>
+
 </UserNav::MessagesSecondaryNav>
 
 {{outlet}}

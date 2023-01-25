@@ -532,17 +532,17 @@ login:
       value: "sso_provider.value_placeholder"
   blocked_email_domains:
     default: "mailinator.com"
-    type: list
+    type: host_list
     list_type: simple
   allowed_email_domains:
     default: ""
-    type: list
+    type: host_list
     list_type: simple
   normalize_emails:
     default: false
   auto_approve_email_domains:
     default: ""
-    type: list
+    type: host_list
     list_type: simple
   hide_email_address_taken:
     client: true
@@ -1090,6 +1090,9 @@ posting:
   skip_auto_delete_reply_likes: 5
   review_every_post:
     default: false
+  max_draft_length:
+    default: 400_000
+    hidden: true
 
 email:
   email_time_window_mins:
@@ -1245,6 +1248,21 @@ email:
   mailgun_api_key:
     default: ""
     regex: '^((key-)?\h{32}|\h{32}-\h{8}-\h{8})$'
+    secret: true
+  sendgrid_verification_key:
+    default: ""
+    secret: true
+  mailjet_webhook_token:
+    default: ""
+    secret: true
+  mandrill_authentication_key:
+    default: ""
+    secret: true
+  postmark_webhook_token:
+    default: ""
+    secret: true
+  sparkpost_webhook_token:
+    default: ""
     secret: true
   bounce_score_threshold:
     client: true
@@ -1657,6 +1675,9 @@ trust:
   tl3_links_no_follow:
     default: false
     client: true
+  tl4_delete_posts_and_topics:
+    default: false
+    client: true
   trusted_users_can_edit_others:
     default: true
 
@@ -1783,6 +1804,8 @@ security:
   suppress_secured_categories_from_admin:
     default: false
     hidden: true
+  include_secure_categories_in_tag_counts:
+    default: false
 
 onebox:
   post_onebox_maxlength:
@@ -2084,6 +2107,9 @@ navigation:
     choices:
       - "default"
       - "unread_new"
+  enable_new_notifications_menu:
+    default: false
+    validator: "EnableNewNotificationsMenuValidator"
 
 embedding:
   embed_by_username:

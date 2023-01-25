@@ -69,7 +69,11 @@ if defined?(RailsFailover::ActiveRecord)
   end
 
   RailsFailover::ActiveRecord.register_force_reading_role_callback do
-    Discourse.redis.exists?(Discourse::PG_READONLY_MODE_KEY, Discourse::PG_FORCE_READONLY_MODE_KEY)
+    GlobalSetting.pg_force_readonly_mode ||
+      Discourse.redis.exists?(
+        Discourse::PG_READONLY_MODE_KEY,
+        Discourse::PG_FORCE_READONLY_MODE_KEY,
+      )
   rescue => e
     if !e.is_a?(Redis::CannotConnectError)
       Rails.logger.warn "#{e.class} #{e.message}: #{e.backtrace.join("\n")}"

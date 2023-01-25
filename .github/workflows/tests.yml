@@ -18,9 +18,9 @@ permissions:
 jobs:
   build:
     if: "!(github.event_name == 'push' && github.repository == 'discourse/discourse-private-mirror')"
-    name: ${{ matrix.target }} ${{ matrix.build_type }}
+    name: ${{ matrix.target }} ${{ matrix.build_type }} ${{ matrix.ruby }}
     runs-on: ${{ (matrix.build_type == 'annotations') && 'ubuntu-latest' || 'ubuntu-20.04-8core' }}
-    container: discourse/discourse_test:slim${{ (matrix.build_type == 'frontend' || matrix.build_type == 'system') && '-browsers' || '' }}
+    container: discourse/discourse_test:slim${{ (matrix.build_type == 'frontend' || matrix.build_type == 'system') && '-browsers' || '' }}${{ (matrix.ruby == '3.2') && '-ruby-3.2.0' || '' }}
     timeout-minutes: 20
 
     env:
@@ -38,6 +38,7 @@ jobs:
       matrix:
         build_type: [backend, frontend, system, annotations]
         target: [core, plugins]
+        ruby: ['3.1']
         exclude:
           - build_type: annotations
             target: plugins
@@ -68,9 +69,9 @@ jobs:
         uses: actions/cache@v3
         with:
           path: vendor/bundle
-          key: ${{ runner.os }}-gem-${{ hashFiles('**/Gemfile.lock') }}
+          key: ${{ runner.os }}-${{ matrix.ruby }}-gem-${{ hashFiles('**/Gemfile.lock') }}
           restore-keys: |
-            ${{ runner.os }}-gem-
+            ${{ runner.os }}-${{ matrix.ruby }}-gem-
 
       - name: Setup gems
         run: |

@@ -750,8 +750,8 @@ RSpec.describe TopicView do
   end
 
   describe "page_title" do
-    fab!(:tag1) { Fabricate(:tag) }
-    fab!(:tag2) { Fabricate(:tag, topic_count: 2) }
+    fab!(:tag1) { Fabricate(:tag, staff_topic_count: 0, public_topic_count: 0) }
+    fab!(:tag2) { Fabricate(:tag, staff_topic_count: 2, public_topic_count: 2) }
     fab!(:op_post) { Fabricate(:post, topic: topic) }
     fab!(:post1) { Fabricate(:post, topic: topic) }
     fab!(:whisper) { Fabricate(:post, topic: topic, post_type: Post.types[:whisper]) }
@@ -1070,6 +1070,19 @@ RSpec.describe TopicView do
       context "when category is not moderated" do
         it { expect(topic_view.queued_posts_enabled?).to be(nil) }
       end
+    end
+  end
+
+  describe "#tags" do
+    subject(:topic_view_tags) { topic_view.tags }
+
+    let(:topic_view) { described_class.new(topic, user) }
+    let(:topic) { Fabricate.build(:topic, tags: tags) }
+    let(:tags) { Fabricate.build_times(2, :tag) }
+    let(:user) { Fabricate(:user) }
+
+    it "returns the tags names" do
+      expect(topic_view_tags).to match tags.map(&:name)
     end
   end
 end

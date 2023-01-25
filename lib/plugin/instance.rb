@@ -675,17 +675,17 @@ class Plugin::Instance
       DiscoursePluginRegistry.register_glob(admin_path, "hbr", admin: true)
 
       DiscourseJsProcessor.plugin_transpile_paths << root_path.sub(Rails.root.to_s, "").sub(
-        %r{^/*},
+        %r{\A/*},
         "",
       )
       DiscourseJsProcessor.plugin_transpile_paths << admin_path.sub(Rails.root.to_s, "").sub(
-        %r{^/*},
+        %r{\A/*},
         "",
       )
 
       test_path = "#{root_dir_name}/test/javascripts"
       DiscourseJsProcessor.plugin_transpile_paths << test_path.sub(Rails.root.to_s, "").sub(
-        %r{^/*},
+        %r{\A/*},
         "",
       )
     end
@@ -1292,10 +1292,14 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_topic_preloader_association(fields, self)
   end
 
+  def register_search_group_query_callback(callback)
+    DiscoursePluginRegistry.register_search_groups_set_query_callback(callback, self)
+  end
+
   private
 
   def validate_directory_column_name(column_name)
-    match = /^[_a-z]+$/.match(column_name)
+    match = /\A[_a-z]+\z/.match(column_name)
     unless match
       raise "Invalid directory column name '#{column_name}'. Can only contain a-z and underscores"
     end

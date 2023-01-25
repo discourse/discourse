@@ -5,6 +5,7 @@
   grid-template-columns: 1fr 1fr;
   grid-template-rows: auto auto auto;
   grid-gap: 16px;
+  padding-top: 1em;
   .user-primary-navigation {
     grid-column-start: 1;
     grid-row-start: 1;
@@ -101,14 +102,6 @@
 
     .details {
       margin-bottom: 12px;
-
-      h1 {
-        line-height: var(--line-height-small);
-      }
-
-      h2 {
-        line-height: var(--line-height-medium);
-      }
 
       .user-profile-avatar {
         .avatar-flair {
@@ -207,9 +200,7 @@
     }
 
     .controls {
-      order: 3;
       flex: 1 1 25%;
-      margin-left: auto;
 
       .btn {
         margin-bottom: 16px;
@@ -275,7 +266,7 @@
 
 .user-main .collapsed-info.about .details {
   display: flex;
-  margin-bottom: 16px;
+  margin-bottom: 0;
   .user-profile-avatar {
     margin: 0;
     flex: 0 0 auto;

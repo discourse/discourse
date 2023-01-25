@@ -142,7 +142,7 @@ class OptimizedImage < ActiveRecord::Base
   end
 
   def local?
-    !(url =~ %r{^(https?:)?//})
+    !(url =~ %r{\A(https?:)?//})
   end
 
   def calculate_filesize
@@ -337,7 +337,7 @@ class OptimizedImage < ActiveRecord::Base
     else
       error = +"Failed to optimize image:"
 
-      if e.message =~ /^convert:([^`]+)/
+      if e.message =~ /\Aconvert:([^`]+)/
         error << $1
       else
         error << " unknown reason"

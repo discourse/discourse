@@ -1053,10 +1053,12 @@ RSpec.describe PostAlerter do
     it "triggers :before_create_notification" do
       type = Notification.types[:private_message]
       events =
-        DiscourseEvent.track_events { PostAlerter.new.create_notification(user, type, post, {}) }
+        DiscourseEvent.track_events do
+          PostAlerter.new.create_notification(user, type, post, { revision_number: 1 })
+        end
       expect(events).to include(
         event_name: :before_create_notification,
-        params: [user, type, post, {}],
+        params: [user, type, post, { revision_number: 1 }],
       )
     end
   end
@@ -1205,6 +1207,22 @@ RSpec.describe PostAlerter do
       payload["notifications"][1].merge! changes
 
       expect(JSON.parse(body)).to eq(payload)
+    end
+
+    it "does not have invalid HTML in the excerpt when enable_experimental_hashtag_autocomplete is enabled" do
+      SiteSetting.enable_experimental_hashtag_autocomplete = true
+      Fabricate(:category, slug: "random")
+      Jobs.run_immediately!
+      body = nil
+
+      stub_request(:post, "https://site2.com/push").to_return do |request|
+        body = request.body
+        { status: 200, body: "OK" }
+      end
+      create_post_with_alerts(user: user, raw: "this, @eviltrout, is a test with #random")
+      expect(JSON.parse(body)["notifications"][0]["excerpt"]).to eq(
+        "this, @eviltrout, is a test with #random",
+      )
     end
 
     context "with push subscriptions" do

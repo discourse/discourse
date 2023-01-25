@@ -32,7 +32,8 @@ module TopicTagsMixin
         if SiteSetting.tags_sort_alphabetically
           topic.tags.sort_by(&:name)
         else
-          topic.tags.sort_by(&:topic_count).reverse
+          topic_count_column = Tag.topic_count_column(scope)
+          topic.tags.sort_by { |tag| tag.public_send(topic_count_column) }.reverse
         end
       )
     tags = tags.reject { |tag| scope.hidden_tag_names.include?(tag[:name]) } if !scope.is_staff?

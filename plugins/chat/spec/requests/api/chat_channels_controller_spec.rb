@@ -236,6 +236,30 @@ RSpec.describe Chat::Api::ChatChannelsController do
             ),
           ).to eq(true)
         end
+
+        it "generates a valid new slug to prevent collisions" do
+          SiteSetting.max_topic_title_length = 20
+          channel_1 = Fabricate(:chat_channel, name: "a" * SiteSetting.max_topic_title_length)
+          freeze_time(DateTime.parse("2022-07-08 09:30:00"))
+          old_slug = channel_1.slug
+
+          delete(
+            "/chat/api/channels/#{channel_1.id}",
+            params: {
+              channel: {
+                name_confirmation: channel_1.title(current_user),
+              },
+            },
+          )
+
+          expect(response.status).to eq(200)
+          expect(channel_1.reload.slug).to eq(
+            "20220708-0930-#{old_slug}-deleted".truncate(
+              SiteSetting.max_topic_title_length,
+              omission: "",
+            ),
+          )
+        end
       end
     end
   end
@@ -263,9 +287,20 @@ RSpec.describe Chat::Api::ChatChannelsController do
       new_channel = ChatChannel.last
 
       expect(new_channel.name).to eq(params[:channel][:name])
+      expect(new_channel.slug).to eq("channel-name")
       expect(new_channel.description).to eq(params[:channel][:description])
       expect(new_channel.chatable_type).to eq(category.class.name)
       expect(new_channel.chatable_id).to eq(category.id)
+    end
+
+    it "creates a channel using the user-provided slug" do
+      new_params = params.dup
+      new_params[:channel][:slug] = "wow-so-cool"
+      post "/chat/api/channels", params: new_params
+
+      new_channel = ChatChannel.last
+
+      expect(new_channel.slug).to eq("wow-so-cool")
     end
 
     it "creates a channel sets auto_join_users to false by default" do

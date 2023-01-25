@@ -39,7 +39,7 @@ class UserAvatarsController < ApplicationController
   def show_proxy_letter
     is_asset_path
 
-    if SiteSetting.external_system_avatars_url !~ %r{^/letter_avatar_proxy}
+    if SiteSetting.external_system_avatars_url !~ %r{\A/letter_avatar_proxy}
       raise Discourse::NotFound
     end
 
@@ -192,7 +192,7 @@ class UserAvatarsController < ApplicationController
   end
 
   def redirect_s3_avatar(url)
-    immutable_for 1.hour
+    immutable_for 1.day
     redirect_to url, allow_other_host: true
   end
 

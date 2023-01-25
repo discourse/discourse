@@ -3510,7 +3510,6 @@ nl:
         this_week: "Week"
         today: "Vandaag"
     browser_update: '<a href="https://www.discourse.org/faq/#browser">Je browser wordt niet ondersteund</a> helaas. <a href="https://browsehappy.com">Schakel over naar een ondersteunde browser</a> om rijke inhoud te bekijken, je aan te melden en te antwoorden.'
-    safari_13_warning: Deze website verwijdert binnenkort de ondersteuning voor iOS- en Safari-versie 13 en lager. Er blijft een vereenvoudigde alleen-lezen versie beschikbaar. (<a href="https://meta.discourse.org/t/224747">Meer informatie</a>)
     permission_types:
       full: "Maken / Antwoorden / Weergeven"
       create_post: "Antwoorden / Weergeven"
@@ -4140,7 +4139,6 @@ nl:
             topics:
               read: Een topic of een specifiek bericht erin lezen. RSS wordt ook ondersteund.
               write: Een nieuw topic maken of bericht in een bestaand topic plaatsen.
-              update: Werk een topic bij. Wijzig de titel, categorie, tags, enz.
               read_lists: Topiclijsten zoals Top, Nieuw, Nieuwste, etc. lezen. RSS wordt ook ondersteund.
             posts:
               edit: Bewerk elk bericht of een specifieke.

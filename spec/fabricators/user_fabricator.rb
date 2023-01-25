@@ -100,6 +100,8 @@ Fabricator(:trust_level_0, from: :user) { trust_level TrustLevel[0] }
 
 Fabricator(:trust_level_1, from: :user) { trust_level TrustLevel[1] }
 
+Fabricator(:trust_level_3, from: :user) { trust_level TrustLevel[3] }
+
 Fabricator(:trust_level_4, from: :user) do
   name "Leader McElderson"
   username { sequence(:username) { |i| "tl4#{i}" } }

@@ -7,7 +7,7 @@ module Onebox
     end
 
     def self.engines
-      constants.select { |constant| constant.to_s =~ /Onebox$/ }.sort.map(&method(:const_get))
+      constants.select { |constant| constant.to_s =~ /Onebox\z/ }.sort.map(&method(:const_get))
     end
 
     def self.all_iframe_origins
@@ -210,3 +210,4 @@ require_relative "engine/google_drive_onebox"
 require_relative "engine/facebook_media_onebox"
 require_relative "engine/hackernews_onebox"
 require_relative "engine/motoko_onebox"
+require_relative "engine/tiktok_onebox"

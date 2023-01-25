@@ -234,6 +234,7 @@ de:
     not_found_template_link: |
       <p>Diese Einladung zu <a href="%{base_url}">%{site_name}</a> kann nicht mehr eingelöst werden. Bitte die Person, die dich eingeladen hat, dir eine neue Einladung zu schicken.</p>
     existing_user_cannot_redeem: "Diese Einladung kann nicht eingelöst werden. Bitte die Person, die dich eingeladen hat, darum, dir eine neue Einladung zu schicken."
+    existing_user_already_redemeed: "Du hast diesen Einladungslink bereits eingelöst."
     user_exists: "Es ist nicht nötig, <b>%{email}</b> einzuladen. Die Person hat bereits ein Konto!"
     invite_exists: "Du hast <b>%{email}</b> bereits eingeladen."
     invalid_email: "%{email} ist keine gültige E-Mail-Adresse."
@@ -498,6 +499,7 @@ de:
       Du kannst deine letzte Antwort bearbeiten, um ein Zitat hinzuzufügen, indem du den Text auswählst und auf die erscheinende Schaltfläche <b>Zitat</b> klickst.
 
       Es ist für alle einfacher, Themen zu lesen, die wenige umfassende Antworten statt viele kleine und einzelne Antworten haben.
+    dominating_topic: Du hast in diesem Thema schon eine Menge gepostet! Gib doch auch anderen die Möglichkeit, hier zu antworten und miteinander zu diskutieren.
     get_a_room: Du hast @%{reply_username} %{count} Mal geantwortet. Wusstest du, dass du der Person stattdessen eine persönliche Nachricht schicken kannst?
     too_many_replies: |
       ### Du hast das Antwort-Limit für dieses Thema erreicht
@@ -537,6 +539,7 @@ de:
               target_user_not_found: "Einer der Empfänger dieser Nachricht konnte nicht gefunden werden."
               unable_to_update: "Beim Aktualisieren dieses Themas ist ein Fehler aufgetreten."
               unable_to_tag: "Beim Versehen des Themas mit einem Schlagwort ist ein Fehler aufgetreten."
+              unable_to_unlist: "Du kannst kein unsichtbares Thema erstellen."
             featured_link:
               invalid: "ist ungültig. URL sollte http:// oder https:// enthalten."
         user:
@@ -667,6 +670,7 @@ de:
       one: "%{count} „Gefällt mir“"
       other: "%{count} „Gefällt mir“"
     cannot_permanently_delete:
+      many_posts: "Dieses Thema hat wiederhergestellte Beiträge. Bitte lösche sie endgültig, bevor du das Thema endgültig löschst."
       wait_or_different_admin: "Du musst %{time_left} warten, bevor du diesen Beitrag endgültig löschen kannst, oder ein anderer Administrator muss dies tun."
   rate_limiter:
     slow_down: "Du hast diese Aktion zu oft durchgeführt. Bitte versuche es später noch einmal."
@@ -858,6 +862,7 @@ de:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Unangemessen"
+      description: 'Dieser Beitrag enthält Inhalte, die eine vernünftige Person als anstößig, beleidigend, hasserfüllt oder <a href="%{base_path}/guidelines">unsere Community-Richtlinien verletzend</a> auffassen würde.'
       short_description: 'Ein Verstoß gegen <a href="%{base_path}/guidelines">unsere Community-Richtlinien</a>'
     notify_user:
       title: "Schreibe @%{username} eine Nachricht"
@@ -923,6 +928,7 @@ de:
       short_description: "Dies ist Werbung"
     inappropriate:
       title: "Unangemessen"
+      description: 'Dieses Thema enthält Inhalte, die eine vernünftige Person als anstößig, beleidigend, hasserfüllt oder <a href="%{base_path}/guidelines">unsere Community-Richtlinien verletzend</a> auffassen würde.'
       long_form: "als unangemessen gemeldet"
       short_description: 'Ein Verstoß gegen <a href="%{base_path}/guidelines">unsere Community-Richtlinien</a>'
     notify_moderators:
@@ -960,6 +966,8 @@ de:
     mailing_list_mode: "Mailinglisten-Modus ausschalten"
     all: "Sende mir keine E-Mail mehr von %{sitename}"
     different_user_description: "Du bist derzeit als ein anderer Benutzer angemeldet als der, dem wir die E-Mail geschickt haben. Bitte melde dich ab oder gehe in den anonymen Modus und versuche es erneut."
+    not_found_description: "Wir konnten dieses Abonnement leider nicht finden. Möglicherweise ist der Link in deiner E-Mail zu alt und abgelaufen?"
+    user_not_found_description: "Leider konnten wir keinen Benutzer für dieses Abonnement finden. Du versuchst wahrscheinlich, ein Konto abzumelden, das nicht mehr existiert."
     log_out: "Abmelden"
     submit: "Einstellungen speichern"
     digest_frequency:
@@ -996,6 +1004,7 @@ de:
       write: "Alles schreiben"
       one_time_password: "Erstelle ein Einmal-Anmelde-Token"
       bookmarks_calendar: "Lesezeichen-Erinnerungen lesen"
+      user_status: "Benutzerstatus lesen und aktualisieren"
     invalid_public_key: "Entschuldige, der öffentliche Schlüssel ist ungültig."
     invalid_auth_redirect: "Entschuldige, dieser „auth_redirect“-Host ist nicht erlaubt."
     invalid_token: "Fehlendes, ungültiges oder abgelaufenes Token."
@@ -1089,10 +1098,12 @@ de:
         author: Verfasser
         edit_reason: Grund
     consolidated_api_requests:
+      title: "Konsolidierte API-Anfragen"
       xaxis:
         api: "API-Schnittstelle"
         user_api: "Benutzer-API"
       yaxis: "Tag"
+      description: "API-Anfragen für reguläre API-Schlüssel und Benutzer-API-Schlüssel."
     dau_by_mau:
       title: "TAB/MAB"
       xaxis: "Tag"
@@ -1415,6 +1426,11 @@ de:
     allow_duplicate_topic_titles_category: "Themen mit identischen, doppelten Titeln zulassen, wenn die Kategorie unterschiedlich ist. allow_duplicate_topic_titles muss deaktiviert sein."
     unique_posts_mins: "Minuten, nach denen ein Benutzer denselben Inhalt noch einmal schreiben kann."
     educate_until_posts: "Zeige das Hilfe-Panel im Editor, wenn ein Benutzer einen seiner ersten (n) Beiträge zu schreiben beginnt."
+    title: "Der Name dieser Website. Sichtbar für alle Besucher, einschließlich anonymer Benutzer."
+    site_description: "Beschreibe diese Website in einem Satz. Sichtbar für alle Besucher, auch für anonyme Benutzer."
+    short_site_description: "Kurze Beschreibung in ein paar Worten. Sichtbar für alle Besucher, auch für anonyme Benutzer."
+    contact_email: "E-Mail-Adresse einer verantwortlichen Person für diese Website. Wird verwendet für kritische Benachrichtigungen und unter <a href='%{base_path}/about' target='_blank'>/about</a> angezeigt. Sichtbar für anonyme Benutzer auf öffentlichen Websites."
+    contact_url: "Kontakt-URL für diese Website. Wenn vorhanden, ersetzt sie die E-Mail-Adresse unter <a href='%{base_path}/about' target='_blank'>/about</a> und ist für anonyme Benutzer auf öffentlichen Websites sichtbar."
     crawl_images: "Lade Bilder von fremden URLs herunter, um ihre Höhe und Breite zu bestimmen."
     download_remote_images_to_local: "Externe (per Hotlink aufgerufene) Bilder in lokale Bilder konvertieren, indem sie heruntergeladen werden; so bleibt der Inhalt erhalten, auch wenn die Bilder in Zukunft von der externen Website entfernt werden."
     download_remote_images_threshold: "Minimal benötigter freier Festplattenspeicher, um externe Bilder lokal herunterzuladen (in Prozent)"
@@ -1430,6 +1446,8 @@ de:
     edit_history_visible_to_public: "Erlaube jedem, vorherige Versionen eines bearbeiteten Beitrags zu sehen. Wenn deaktiviert, sind diese nur für Team-Mitglieder sichtbar."
     delete_removed_posts_after: "Beiträge, die deren Verfasser selbst entfernt hat, werden nach (n) Stunden automatisch gelöscht. Die Beiträge werden sofort gelöscht, wenn dieser Wert auf 0 gesetzt wird."
     notify_users_after_responses_deleted_on_flagged_post: "Wenn ein Beitrag gemeldet und dann entfernt wird, werden alle Benutzer, die auf den Beitrag geantwortet haben und deren Antworten entfernt wurden, benachrichtigt."
+    max_image_width: "Maximale Breite der Vorschaubilder in einem Beitrag. Bilder mit einer größeren Breite werden verkleinert und mit einem Lightbox versehen."
+    max_image_height: "Maximale Höhe der Vorschaubilder in einem Beitrag. Bilder mit einer größeren Höhe werden verkleinert und mit einem Lightbox versehen."
     responsive_post_image_sizes: "Ändere die Größe der Lightbox-Vorschaubilder, um High-DPI-Bildschirme mit den folgenden Pixelverhältnissen zu ermöglichen. Entferne alle Werte, um responsive Bilder zu deaktivieren."
     fixed_category_positions: "Wenn diese Option aktiviert ist, können Kategorien in einer fest vorgegebenen Reihenfolge angeordnet werden. Andernfalls werden Kategorien nach Aktivität sortiert aufgelistet."
     fixed_category_positions_on_create: "Wenn diese Option aktiviert ist, wird die Reihenfolge der Kategorien im Dialog zur Themenerstellung beibehalten (erfordert fixed_category_positions)."
@@ -1567,10 +1585,7 @@ de:
     max_favorite_badges: "Maximale Anzahl von Abzeichen, die der Benutzer auswählen kann"
     whispers_allowed_groups: "Private Kommunikation innerhalb von Themen für Mitglieder bestimmter Gruppen erlauben."
     allow_index_in_robots_txt: "Lege in der robots.txt fest, dass diese Website von Websuchmaschinen indiziert werden darf. In Ausnahmefällen kannst du die <a href='%{base_path}/admin/customize/robots'>robots.txt dauerhaft überschreiben</a>."
-    blocked_email_domains: "Eine durch senkrechte Striche getrennte Liste von E-Mail-Domains, die für die Registrierung neuer Konten nicht verwendet werden dürfen. Beispiel: mailinator.com|trashmail.net"
-    allowed_email_domains: "Eine durch senkrechte Striche („|“) getrennte Liste von E-Mail-Domains, die für die Registrierung neuer Konten verwendet werden können. ACHTUNG: Benutzer mit E-Mail-Adressen anderer Domains werden nicht zugelassen!"
     normalize_emails: "Überprüfen, ob normalisierte E-Mail-Adressen einzigartig sind. Bei normalisierten E-Mail-Adressen werden alle Punkte aus dem Benutzernamen und alles zwischen + und @ Symbolen entfernt."
-    auto_approve_email_domains: "Benutzer mit E-Mail-Adressen aus dieser Liste von Domains werden automatisch genehmigt."
     hide_email_address_taken: "Benutzer beim Registrieren oder Passwort-Zurücksetzen nicht über ein bereits bestehendes Konto mit dieser E-Mail-Adresse informieren. Erfordert die Angabe vollständiger E-Mail-Adressen zum Passwort-Zurücksetzen."
     log_out_strict: "Beim Abmelden ALLE Sitzungen des Benutzers auf allen Geräten beenden"
     version_checks: "Kontaktiere den Discourse Hub zur Überprüfung auf neue Versionen und zeige Benachrichtigungen über neue Versionen im <a href='%{base_path}/admin' target='_blank'>/admin</a>-Dashboard an."
@@ -1634,6 +1649,7 @@ de:
     discord_trusted_guilds: 'Das Anmelden per Discord nur Mitgliedern dieser Discord-Gilden gestatten. Verwende die numerische ID der Gilde. Lies die Anleitung <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">hier</a>, um mehr zu erfahren. Leer lassen, um jede Gilde zuzulassen.'
     enable_backups: "Erlaube Administratoren, Backups des Forums zu erstellen"
     allow_restore: "Wiederherstellung zulassen, die ALLE Website-Daten ersetzen kann! Lasse dies deaktiviert, es sei denn, du möchtest ein Backup wiederherstellen"
+    maximum_backups: "Die maximale Anzahl an Backups, die gespeichert werden. Ältere Backups werden automatisch gelöscht."
     automatic_backups_enabled: "Automatische Backups aktivieren. Die Backups werden im eingestellten Zeitintervall erstellt."
     backup_frequency: "Die Anzahl von Tagen zwischen Backups."
     s3_backup_bucket: "Der entfernte Bucket, in dem Backups gespeichert werden. WARNUNG: Achte darauf, dass es ein privater Bucket ist."
@@ -1808,6 +1824,7 @@ de:
     faq_url: "Die vollständige URL zu deiner extern gehosteten FAQ, sofern vorhanden."
     tos_url: "Die vollständige URL zu deinen extern gehosteten Nutzungsbedingungen, sofern vorhanden."
     privacy_policy_url: "Die vollständige URL zu deiner extern gehosteten Datenschutzerklärung, sofern vorhanden."
+    log_anonymizer_details: "Legt fest, ob die Daten eines Benutzers nach Anonymisierung im Log gespeichert werden sollen."
     newuser_spam_host_threshold: "Wie oft ein neuer Benutzer einen Link zum selben Host innerhalb seiner `newuser_spam_host_threshold` Beiträge veröffentlichen kann, bevor dies als Spam angesehen wird."
     allowed_spam_host_domains: "Liste von Domains, die keinem Spam-Host-Test unterzogen werden. Neue Benutzer werden niemals daran gehindert, Beiträge mit Links zu diesen Domains zu erstellen."
     staff_like_weight: "Wie viel Gewicht „Gefällt mir“-Angaben des Teams haben sollen („Gefällt mir“-Angaben von Nicht-Team-Mitgliedern haben ein Gewicht von 1.)"
@@ -1974,6 +1991,7 @@ de:
     display_name_on_posts: "Zeige zusätzlich zum @Benutzernamen auch den vollständigen Namen des Benutzers bei seinen Beiträgen."
     show_time_gap_days: "Wenn zwei Beiträge so viele Tage auseinanderliegen, dann wird die Zeitspanne im Thema angezeigt."
     short_progress_text_threshold: "Sobald die Anzahl an Beiträgen in einem Thema diese Nummer übersteigt, zeigt der Fortschrittsbalken nur noch die aktuelle Beitragsnummer. Dieser Wert sollte angepasst werden, falls die Breite des Fortschrittsbalkens verändert wird."
+    default_code_lang: "Standardmäßige Syntaxhervorhebung für Programmiersprachen, die auf Codeblöcke angewendet wird (auto, text, ruby, python usw.). Dieser Wert muss auch in der Website-Einstellung `highlighted languages` enthalten sein."
     warn_reviving_old_topic_age: "Wenn jemand beginnt, auf ein Thema zu antworten, dessen letzte Antwort älter als diese Anzahl an Tagen ist, wird eine Warnung angezeigt. Zum Deaktivieren auf 0 setzen."
     autohighlight_all_code: "Erzwinge Syntaxhervorhebung für alle Quellcode-Blöcke auch dann, wenn keine Sprache angegeben wurde."
     highlighted_languages: "Aktivierte Regeln für die Syntaxhervorhebung. (Warnung: Das Aktivieren zu vieler Sprachen kann die Leistung beeinträchtigen.) Siehe <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> für eine Demonstration"
@@ -2090,6 +2108,8 @@ de:
     shared_drafts_min_trust_level: "Erlaube Benutzern, gemeinsame Entwürfe einzusehen und zu bearbeiten."
     push_notifications_prompt: "Zeige eine Aufforderung zur Benutzerzustimmung an."
     push_notifications_icon: "Das Abzeichensymbol, das in der Benachrichtigungsecke angezeigt wird. Ein monochromatisches PNG mit Transparenz (96 × 96) wird empfohlen."
+    enable_desktop_push_notifications: "Desktop-Push-Benachrichtigungen aktivieren"
+    push_notification_time_window_mins: "(n) Minuten warten, bevor eine Push-Benachrichtigung gesendet wird. Hilft zu verhindern, dass Push-Benachrichtigungen an einen aktiven Online-Benutzer gesendet werden."
     base_font: "Basisschriftart für die meisten Texte auf der Website. Themes können diese Schriftart mit der benutzerdefinierten CSS-Eigenschaft `--font-family` überschreiben."
     heading_font: "Schriftart für Überschriften auf der Website. Themes können diese Schriftart mit der benutzerdefinierten CSS-Eigenschaft `--heading-font-family` überschreiben."
     enable_sitemap: "Generiere eine Sitemap für deine Website und füge sie in die robots.txt-Datei ein."
@@ -2111,9 +2131,12 @@ de:
     use_name_for_username_suggestions: "Beim Vorschlagen von Benutzernamen den vollen Namen eines Benutzers verwenden."
     suggest_weekends_in_date_pickers: "Wochenenden (Samstag und Sonntag) in die Datumsvorschläge einbeziehen (deaktiviere dies, wenn du Discourse nur an Wochentagen von Montag bis Freitag benutzt)."
     splash_screen: "Zeigt einen temporären Ladebildschirm an, während Website-Assets geladen werden"
+    navigation_menu: "Legt fest, welches Navigationsmenü verwendet werden soll. Die Seitenleisten- und Kopfzeilennavigation kann von den Benutzern angepasst werden. Die Legacy-Option ist zur Abwärtskompatibilität verfügbar."
     default_sidebar_categories: "Ausgewählte Kategorien werden standardmäßig im Abschnitt „Kategorien“ der Seitenleiste angezeigt."
     default_sidebar_tags: "Ausgewählte Schlagwörter werden standardmäßig im Abschnitt „Schlagwörter“ der Seitenleiste angezeigt."
     enable_new_user_profile_nav_groups: "EXPERIMENTELL: Benutzern der ausgewählten Gruppen wird das neue Benutzerprofil-Navigationsmenü angezeigt"
+    enable_experimental_topic_timeline_groups: "EXPERIMENTELL: Benutzern der ausgewählten Gruppen wird die umgestaltete Themenzeitleiste angezeigt"
+    enable_experimental_hashtag_autocomplete: "EXPERIMENTELL: Das neue #hashtag-Autovervollständigungssystem für Kategorien und Schlagwörter, das das ausgewählte Element anders darstellt und eine bessere Suche aufweist, verwenden"
     errors:
       invalid_css_color: "Ungültige Farbe. Gib einen Farbnamen oder einen Hexadezimalwert ein."
       invalid_email: "Ungültige E-Mail-Adresse."
@@ -2561,10 +2584,12 @@ de:
       %{notes}
   flag_reasons:
     off_topic: "Dein Beitrag wurde als **Thema verfehlt** gemeldet: Die Community denkt, dass er nicht zum Thema passt, wie es durch den Titel und den ersten Beitrag definiert wurde."
+    inappropriate: "Dein Beitrag wurde als **unangemessen** gemeldet: Die Community denkt, dass er anstößig, beleidigend oder hasserfüllt ist oder einen Verstoß gegen [die Community-Richtlinien](%{base_path}/guidelines) darstellt."
     spam: "Dein Beitrag wurde als **Spam** gemeldet: Die Community denkt, dass es sich um Werbung handelt, zu werblich in seiner Art und nicht nützlich oder für das Diskussionsthema relevant ist."
     notify_moderators: "Dein Beitrag wurde **den Moderatoren gemeldet**: Die Community denkt, dass etwas an deinem Beitrag das Eingreifen eines Team-Mitglieds erfordert."
     responder:
       off_topic: "Der Beitrag wurde als **Thema verfehlt** gemeldet: Die Community denkt, dass er nicht zum Thema passt, wie es durch den Titel und den ersten Beitrag definiert wurde."
+      inappropriate: "Der Beitrag wurde als **unangemessen** gemeldet: Die Community denkt, dass er anstößig, beleidigend oder hasserfüllt ist oder einen Verstoß gegen [die Community-Richtlinien](%{base_path}/guidelines) darstellt."
       spam: "Der Beitrag wurde als **Spam** gemeldet: Die Community denkt, dass es sich um Werbung handelt oder der Beitrag zu werblich in seiner Art und nicht nützlich oder für das Diskussionsthema relevant ist."
       notify_moderators: "Der Beitrag wurde **den Moderatoren gemeldet**: Die Community denkt, dass etwas an dem Beitrag das Eingreifen eines Team-Mitglieds erfordert."
   flags_dispositions:
@@ -3391,6 +3416,7 @@ de:
 
         %{respond_instructions}
     user_watching_category_or_tag:
+      title: "Benutzer beobachtet Kategorie oder Schlagwort"
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -4459,6 +4485,8 @@ de:
     title: "Discourse einrichten"
     step:
       introduction:
+        title: "Über deine Website"
+        description: "Diese werden bei deiner Anmeldung und auf allen öffentlichen Seiten angezeigt. Du kannst sie später jederzeit ändern."
         fields:
           title:
             label: "Name der Community"
@@ -4469,21 +4497,28 @@ de:
           default_locale:
             label: "Sprache"
       privacy:
+        title: "Mitgliedererfahrung"
         fields:
           login_required:
             placeholder: "Privat"
             extra_description: "Nur angemeldete Benutzer können auf diese Community zugreifen"
           invite_only:
+            placeholder: "Nur auf Einladung"
             extra_description: "Benutzer müssen von vertrauenswürdigen Benutzern oder Team-Mitgliedern eingeladen werden, andernfalls können sich Benutzer selbst registrieren"
           must_approve_users:
+            placeholder: "Genehmigung erfordern"
             extra_description: "Benutzer müssen von den Team-Mitgliedern genehmigt werden"
           chat_enabled:
             placeholder: "Chat aktivieren"
+            extra_description: "Interagiere in Echtzeit mit deinen Mitgliedern"
           enable_sidebar:
             placeholder: "Seitenleiste aktivieren"
+            extra_description: "Einfacher Zugriff auf deine Lieblingsplätze"
       ready:
+        title: "Deine Website ist bereit!"
         description: "Das war's! Du hast die Grundlagen für die Einrichtung deiner Community geschaffen. Jetzt kannst du dich umsehen, ein Willkommensthema schreiben und Einladungen verschicken!<br><br>Viel Spaß!"
       styling:
+        title: "Look and Feel"
         fields:
           color_scheme:
             label: "Farbschema"
@@ -4514,19 +4549,38 @@ de:
                 label: "Kategorie-Boxen mit Themen"
               subcategories_with_featured_topics:
                 label: "Unterkategorien mit hervorgehobenen Themen"
-      corporate:
+      branding:
+        title: "Website-Logo"
         fields:
+          logo:
+            label: "Hauptlogo"
+            description: "Empfohlene Größe: 600 x 200"
+          logo_small:
+            label: "Quadratisches Logo"
+            description: "Empfohlene Größe: 512 x 512. Wird auch als Favicon und App-Symbol für den Home-Bildschirm von Mobilgeräten verwendet."
+      corporate:
+        title: "Deine Organisation"
+        description: "Die folgenden Informationen werden in deinen Nutzungsbedingungen und auf deinen „Über uns“-Seiten verwendet. Falls es keine Firma gibt, kannst du dies überspringen."
+        fields:
+          company_name:
+            label: "Firmenname"
+            placeholder: "Acme-Organisation"
           governing_law:
+            label: "Anzuwendendes Recht"
             placeholder: "Deutsches Recht"
           contact_url:
+            label: "Webseite"
             placeholder: "https://www.example.com/contact-us"
           city_for_disputes:
+            label: "Stadt für Rechtsstreitigkeiten"
             placeholder: "Berlin"
           site_contact:
+            label: "Automatische Nachrichten"
             description: "Alle automatischen persönlichen Discourse-Nachrichten werden von diesem Benutzer geschickt, z. B. Warnungen zu Meldungen und Benachrichtigungen über den Abschluss von Backups."
           contact_email:
             label: "Ansprechpartner"
             placeholder: "example@user.com"
+            description: "E-Mail-Adresse einer verantwortlichen Person für diese Website. Wird verwendet für kritische Benachrichtigungen und auf <a href='%{base_path}/about' target='_blank'>deiner „Über uns“-Seite</a> für dringende Anfragen angezeigt."
       invites:
         title: "Team einladen"
         description: "Du hast es fast geschafft! Lass uns ein paar Leute einladen, die dabei helfen, <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>Diskussionen anzuregen</a> – mit interessanten Themen und Beiträgen, um deine Community in Schwung zu bringen."

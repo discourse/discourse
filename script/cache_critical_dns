@@ -15,6 +15,18 @@ require 'optparse'
 # service in the process environment. Any hosts that fail the healthcheck will
 # never be cached.
 #
+# The list of environment variables that cache_critical_dns will read for
+# critical service hostnames can be extended at process execution time by
+# specifying environment variable names within the
+# DISCOURSE_DNS_CACHE_ADDITIONAL_SERVICE_NAMES environment variable. This is a
+# comma-delimited string of extra environment variables to be added to the list
+# defined in the static CRITICAL_HOST_ENV_VARS hash.
+#
+# DISCOURSE_DNS_CACHE_ADDITIONAL_SERVICE_NAMES serves as a kind of lookup table
+# for extra services for caching. Any environment variable names within this
+# list are treated with the same rules as the DISCOURSE_DB_HOST (and co.)
+# variables, as described below.
+#
 # This is as far as you need to read if you are using CNAME or A records for
 # your services.
 #
@@ -88,7 +100,11 @@ CRITICAL_HOST_ENV_VARS = %w{
   DISCOURSE_REDIS_REPLICA_HOST
   DISCOURSE_MESSAGE_BUS_REDIS_HOST
   DISCOURSE_MESSAGE_BUS_REDIS_REPLICA_HOST
-}
+}.union(
+  ENV.fetch('DISCOURSE_DNS_CACHE_ADDITIONAL_SERVICE_NAMES', '')
+    .split(',')
+    .map(&:strip)
+)
 
 DEFAULT_DB_NAME = "discourse"
 DEFAULT_REDIS_PORT = 6379
@@ -243,7 +259,10 @@ ensure
   client.close if client
 end
 
-HEALTH_CHECKS = {
+HEALTH_CHECKS = Hash.new(
+  # unknown keys (like services defined at runtime) are assumed to be healthy
+  lambda { |addr| true }
+).merge!({
   "DISCOURSE_DB_HOST": lambda { |addr|
     postgres_healthcheck(
       host: addr,
@@ -274,7 +293,7 @@ HEALTH_CHECKS = {
       host: addr,
       port: env_as_int("DISCOURSE_MESSAGE_BUS_REDIS_REPLICA_PORT", DEFAULT_REDIS_PORT),
       password: ENV["DISCOURSE_MESSAGE_BUS_REDIS_PASSWORD"])},
-}
+})
 
 def log(msg)
   STDERR.puts "#{Time.now.utc.iso8601}: #{msg}"
