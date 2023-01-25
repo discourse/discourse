@@ -32,7 +32,7 @@
   "devDependencies": {
     "@babel/core": "^7.20.12",
     "@ember/optional-features": "^2.0.0",
-    "@embroider/test-setup": "^2.1.0",
+    "@embroider/test-setup": "^2.1.1",
     "@glimmer/component": "^1.1.2",
     "broccoli-asset-rev": "^3.0.0",
     "ember-cli": "~3.28.5",
