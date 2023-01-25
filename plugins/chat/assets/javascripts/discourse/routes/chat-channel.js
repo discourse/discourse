@@ -14,7 +14,18 @@ export default class ChatChannelRoute extends DiscourseRoute {
   afterModel(model, transition) {
     this.chat.setActiveChannel(model);
 
-    const { channelTitle } = this.paramsFor(this.routeName);
+    const { channelTitle, messageId } = this.paramsFor(this.routeName);
+
+    // Backwards-compatibility
+    if (messageId) {
+      this.router.replaceWith(
+        "chat.channel.near-message",
+        channelTitle,
+        model.id,
+        messageId
+      );
+      this.controller("messageId", null);
+    }
 
     // Rewrite URL with slug in the child route to preseve
     // the :messageId dynamic segment when highlighting a specific message.
