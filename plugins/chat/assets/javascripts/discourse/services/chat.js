@@ -373,11 +373,13 @@ export default class Chat extends Service {
       data.data = JSON.stringify(draft);
     }
 
-    ajax("/chat/drafts", { type: "POST", data, ignoreUnsent: false })
+    ajax("/chat/drafts.json", { type: "POST", data, ignoreUnsent: false })
       .then(() => {
         this.markNetworkAsReliable();
       })
       .catch((error) => {
+        // we ignore a draft which can't be saved because it's too big
+        // and only deal with network error for now
         if (!error.jqXHR?.responseJSON?.errors?.length) {
           this.markNetworkAsUnreliable();
         }
