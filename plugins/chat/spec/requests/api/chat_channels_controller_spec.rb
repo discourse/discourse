@@ -170,12 +170,7 @@ RSpec.describe Chat::Api::ChatChannelsController do
       before { sign_in(current_user) }
 
       it "returns an error" do
-        delete "/chat/api/channels/#{channel_1.id}",
-               params: {
-                 channel: {
-                   name_confirmation: channel_1.title(current_user),
-                 },
-               }
+        delete "/chat/api/channels/#{channel_1.id}"
 
         expect(response.status).to eq(403)
       end
@@ -190,12 +185,7 @@ RSpec.describe Chat::Api::ChatChannelsController do
         before { channel_1.destroy! }
 
         it "returns an error" do
-          delete "/chat/api/channels/#{channel_1.id}",
-                 params: {
-                   channel: {
-                     name_confirmation: channel_1.title(current_user),
-                   },
-                 }
+          delete "/chat/api/channels/#{channel_1.id}"
 
           expect(response.status).to eq(404)
         end
@@ -203,12 +193,7 @@ RSpec.describe Chat::Api::ChatChannelsController do
 
       context "when the confirmation doesn’t match the channel name" do
         it "returns an error" do
-          delete "/chat/api/channels/#{channel_1.id}",
-                 params: {
-                   channel: {
-                     name_confirmation: channel_1.title(current_user) + "foo",
-                   },
-                 }
+          delete "/chat/api/channels/#{channel_1.id}"
 
           expect(response.status).to eq(400)
         end
@@ -216,12 +201,7 @@ RSpec.describe Chat::Api::ChatChannelsController do
 
       context "with valid params" do
         it "properly destroys the channel" do
-          delete "/chat/api/channels/#{channel_1.id}",
-                 params: {
-                   channel: {
-                     name_confirmation: channel_1.title(current_user),
-                   },
-                 }
+          delete "/chat/api/channels/#{channel_1.id}"
 
           expect(response.status).to eq(200)
           expect(channel_1.reload.trashed?).to eq(true)
@@ -242,12 +222,7 @@ RSpec.describe Chat::Api::ChatChannelsController do
           freeze_time(DateTime.parse("2022-07-08 09:30:00"))
           old_slug = channel_1.slug
 
-          delete "/chat/api/channels/#{channel_1.id}",
-                 params: {
-                   channel: {
-                     name_confirmation: channel_1.title(current_user),
-                   },
-                 }
+          delete "/chat/api/channels/#{channel_1.id}"
 
           expect(response.status).to eq(200)
           expect(channel_1.reload.slug).to eq(

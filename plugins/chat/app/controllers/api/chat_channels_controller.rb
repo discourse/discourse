@@ -29,16 +29,11 @@ class Chat::Api::ChatChannelsController < Chat::Api
   end
 
   def destroy
-    confirmation = params.require(:channel).require(:name_confirmation)&.downcase
-    destroy_result =
-      Chat::ChatChannelDestroyer.new(guardian, channel_from_params).execute(
-        name_confirmation: confirmation,
-      )
+    result = Chat::ChannelDestroyer.call(guardian: guardian, channel: channel_from_params)
 
-    return render json: success_json if destroy_result.succeeded?
+    return render json: success_json if result.success?
 
-    render json: failed_json.merge(errors: destroy_result.errors),
-           status: destroy_result.http_status
+    render json: failed_json.merge(errors: result.errors), status: result.http_status
   end
 
   def create

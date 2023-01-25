@@ -70,17 +70,14 @@ export default class ChatApi extends Service {
   /**
    * Destroys a channel.
    * @param {number} channelId - The ID of the channel.
-   * @param {string} channelName - The name of the channel to be destroyed, used as confirmation.
    * @returns {Promise}
    *
    * @example
    *
-   *    this.chatApi.destroyChannel(1, "foo").then(() => { ... })
+   *    this.chatApi.destroyChannel(1).then(() => { ... })
    */
-  destroyChannel(channelId, channelName) {
-    return this.#deleteRequest(`/channels/${channelId}`, {
-      channel: { name_confirmation: channelName },
-    });
+  destroyChannel(channelId) {
+    return this.#deleteRequest(`/channels/${channelId}`);
   }
 
   /**
