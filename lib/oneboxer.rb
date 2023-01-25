@@ -250,7 +250,8 @@ module Oneboxer
       when "list"    then local_category_html(url, route)
       end
 
-    html = html.presence || "<a href='#{URI(url).to_s}'>#{URI(url).to_s}</a>"
+    normalized_url = ::Onebox::Helpers.normalize_url_for_output(URI(url).to_s)
+    html = html.presence || "<a href='#{normalized_url}'>#{normalized_url}</a>"
     { onebox: html, preview: html }
   end
 
@@ -262,18 +263,28 @@ module Oneboxer
         ""
       end
 
+    normalized_url = ::Onebox::Helpers.normalize_url_for_output(url)
     case File.extname(URI(url).path || "")
     when VIDEO_REGEX
       <<~HTML
         <div class="onebox video-onebox">
           <video #{additional_controls} width="100%" height="100%" controls="">
-            <source src='#{url}'>
-            <a href='#{url}'>#{url}</a>
+            <source src='#{normalized_url}'>
+            <a href='#{normalized_url}'>
+              #{normalized_url}
+            </a>
           </video>
         </div>
       HTML
     when AUDIO_REGEX
-      "<audio #{additional_controls} controls><source src='#{url}'><a href='#{url}'>#{url}</a></audio>"
+      <<~HTML
+        <audio #{additional_controls} controls>
+          <source src='#{normalized_url}'>
+          <a href='#{normalized_url}'>
+            #{normalized_url}
+          </a>
+        </audio>
+      HTML
     end
   end
 
