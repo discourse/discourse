@@ -739,6 +739,7 @@ after_initialize do
     limited_pretty_text_features: ChatMessage::MARKDOWN_FEATURES,
     limited_pretty_text_markdown_rules: ChatMessage::MARKDOWN_IT_RULES,
     hashtag_configurations: HashtagAutocompleteService.contexts_with_ordered_types,
+    html_inline_allow_list_override: ChatMessage::HTML_INLINE_ALLOW_LIST_OVERRIDE,
   }
 
   register_user_destroyer_on_content_deletion_callback(

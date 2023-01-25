@@ -49,6 +49,7 @@ export function buildOptions(state) {
     hashtagTypesInPriorityOrder,
     hashtagIcons,
     hashtagLookup,
+    htmlInlineAllowListOverride,
   } = state;
 
   let features = {};
@@ -94,6 +95,7 @@ export function buildOptions(state) {
     hashtagTypesInPriorityOrder,
     hashtagIcons,
     hashtagLookup,
+    htmlInlineAllowListOverride,
   };
 
   // note, this will mutate options due to the way the API is designed

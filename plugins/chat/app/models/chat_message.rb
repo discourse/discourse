@@ -144,6 +144,8 @@ class ChatMessage < ActiveRecord::Base
     where("cooked_version <> ? or cooked_version IS NULL", BAKED_VERSION)
   end
 
+  HTML_INLINE_ALLOW_LIST_OVERRIDE = %w[kbd]
+
   MARKDOWN_FEATURES = %w[
     anchor
     bbcode-block
@@ -183,6 +185,7 @@ class ChatMessage < ActiveRecord::Base
     strikethrough
     blockquote
     emphasis
+    html_inline
   ]
 
   def self.cook(message, opts = {})
@@ -200,6 +203,7 @@ class ChatMessage < ActiveRecord::Base
         force_quote_link: true,
         user_id: opts[:user_id],
         hashtag_context: "chat-composer",
+        html_inline_allow_list_override: HTML_INLINE_ALLOW_LIST_OVERRIDE,
       )
 
     result =

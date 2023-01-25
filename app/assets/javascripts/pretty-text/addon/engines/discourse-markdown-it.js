@@ -323,6 +323,16 @@ function buildCustomMarkdownCookFunction(engineOpts, defaultEngineOpts) {
   if (engineOpts.featuresOverride !== undefined) {
     overrideMarkdownFeatures(featureConfig, engineOpts.featuresOverride);
   }
+
+  // since the AllowLister is what decides which inline HTML to allow,
+  // we need to completely recreate the sanitizer with a new AllowLister
+  // with the override for this to work
+  if (engineOpts.htmlInlineAllowListOverride !== undefined) {
+    newOpts.discourse.htmlInlineAllowListOverride =
+      engineOpts.htmlInlineAllowListOverride;
+    newOpts.sanitizer = createSanitizer(newOpts);
+  }
+
   newOpts.discourse.features = featureConfig;
 
   const markdownitOpts = {
@@ -401,16 +411,20 @@ function setupMarkdownEngine(opts, featureConfig) {
   opts.setup = true;
 
   if (!opts.discourse.sanitizer || !opts.sanitizer) {
-    const allowLister = new AllowLister(opts.discourse);
-
-    opts.allowListed.forEach(([feature, info]) => {
-      allowLister.allowListFeature(feature, info);
-    });
-
-    opts.sanitizer = opts.discourse.sanitizer = !!opts.discourse.sanitize
-      ? (a) => sanitize(a, allowLister)
-      : (a) => a;
+    opts.sanitizer = createSanitizer(opts);
   }
+}
+
+function createSanitizer(opts) {
+  const allowLister = new AllowLister(opts.discourse);
+
+  opts.allowListed.forEach(([feature, info]) => {
+    allowLister.allowListFeature(feature, info);
+  });
+
+  return (opts.discourse.sanitizer = !!opts.discourse.sanitize
+    ? (a) => sanitize(a, allowLister)
+    : (a) => a);
 }
 
 function unhoistForCooked(hoisted, cooked) {

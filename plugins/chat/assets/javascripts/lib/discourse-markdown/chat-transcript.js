@@ -251,6 +251,8 @@ export function setup(helper) {
         hashtagTypesInPriorityOrder:
           chatAdditionalOpts.hashtag_configurations["chat-composer"],
         hashtagIcons: opts.discourse.hashtagIcons,
+        htmlInlineAllowListOverride:
+          chatAdditionalOpts.html_inline_allow_list_override,
       },
       (customCookFn) => {
         customMarkdownCookFn = customCookFn;

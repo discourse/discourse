@@ -7,9 +7,11 @@ const ALLOWLIST_REGEX = /([^\[]+)(\[([^=]+)(=(.*))?\])?/;
 export default class AllowLister {
   constructor(options) {
     this._enabled = { default: true };
-    this._allowedHrefSchemes = (options && options.allowedHrefSchemes) || [];
-    this._allowedIframes = (options && options.allowedIframes) || [];
-    this._rawFeatures = [["default", DEFAULT_LIST]];
+    this._allowedHrefSchemes = options?.allowedHrefSchemes || [];
+    this._allowedIframes = options?.allowedIframes || [];
+    this._rawFeatures = [
+      ["default", options?.htmlInlineAllowListOverride || DEFAULT_LIST],
+    ];
 
     this._cache = null;
 

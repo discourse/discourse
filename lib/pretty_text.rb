@@ -211,6 +211,10 @@ module PrettyText
 
       buffer << "__optInput.topicId = #{opts[:topic_id].to_i};\n" if opts[:topic_id]
 
+      if opts[:html_inline_allow_list_override]
+        buffer << "__optInput.htmlInlineAllowListOverride = #{opts[:html_inline_allow_list_override].to_json};\n"
+      end
+
       if opts[:force_quote_link]
         buffer << "__optInput.forceQuoteLink = #{opts[:force_quote_link]};\n"
       end
