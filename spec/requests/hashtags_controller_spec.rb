@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
 RSpec.describe HashtagsController do
-  fab!(:category) { Fabricate(:category) }
-  fab!(:tag) { Fabricate(:tag) }
+  fab!(:category) { Fabricate(:category, name: "Random", slug: "random") }
+  fab!(:tag) { Fabricate(:tag, name: "bug") }
 
   fab!(:group) { Fabricate(:group) }
-  fab!(:private_category) { Fabricate(:private_category, group: group) }
+  fab!(:private_category) do
+    Fabricate(:private_category, group: group, name: "Staff", slug: "staff")
+  end
 
   fab!(:hidden_tag) { Fabricate(:tag, name: "hidden") }
   let(:tag_group) do
@@ -157,28 +159,53 @@ RSpec.describe HashtagsController do
 
             expect(response.status).to eq(200)
             expect(response.parsed_body).to eq(
-              "categories" => {
-                category.slug => category.url,
-              },
-              "tags" => {
-                tag.name => tag.full_url,
+              {
+                "category" => [
+                  {
+                    "relative_url" => category.url,
+                    "text" => category.name,
+                    "description" => nil,
+                    "icon" => "folder",
+                    "type" => "category",
+                    "ref" => category.slug,
+                    "slug" => category.slug,
+                  },
+                ],
+                "tag" => [
+                  {
+                    "relative_url" => tag.url,
+                    "text" => tag.name,
+                    "description" => nil,
+                    "icon" => "tag",
+                    "type" => "tag",
+                    "ref" => tag.name,
+                    "slug" => tag.name,
+                    "secondary_text" => "x0",
+                  },
+                ],
               },
             )
           end
 
-          it "handles tags with the TAG_HASHTAG_POSTFIX" do
-            get "/hashtags.json",
-                params: {
-                  slugs: ["#{tag.name}#{PrettyText::Helpers::TAG_HASHTAG_POSTFIX}"],
-                  order: %w[category tag],
-                }
+          it "handles tags with the ::tag type suffix" do
+            get "/hashtags.json", params: { slugs: ["#{tag.name}::tag"], order: %w[category tag] }
 
             expect(response.status).to eq(200)
             expect(response.parsed_body).to eq(
-              "categories" => {
-              },
-              "tags" => {
-                tag.name => tag.full_url,
+              {
+                "category" => [],
+                "tag" => [
+                  {
+                    "relative_url" => tag.url,
+                    "text" => tag.name,
+                    "description" => nil,
+                    "icon" => "tag",
+                    "type" => "tag",
+                    "ref" => "#{tag.name}::tag",
+                    "slug" => tag.name,
+                    "secondary_text" => "x0",
+                  },
+                ],
               },
             )
           end
@@ -191,7 +218,7 @@ RSpec.describe HashtagsController do
                 }
 
             expect(response.status).to eq(200)
-            expect(response.parsed_body).to eq("categories" => {}, "tags" => {})
+            expect(response.parsed_body).to eq({ "category" => [], "tag" => [] })
           end
         end
 
@@ -211,11 +238,30 @@ RSpec.describe HashtagsController do
 
             expect(response.status).to eq(200)
             expect(response.parsed_body).to eq(
-              "categories" => {
-                private_category.slug => private_category.url,
-              },
-              "tags" => {
-                hidden_tag.name => hidden_tag.full_url,
+              {
+                "category" => [
+                  {
+                    "relative_url" => private_category.url,
+                    "text" => private_category.name,
+                    "description" => nil,
+                    "icon" => "folder",
+                    "type" => "category",
+                    "ref" => private_category.slug,
+                    "slug" => private_category.slug,
+                  },
+                ],
+                "tag" => [
+                  {
+                    "relative_url" => hidden_tag.url,
+                    "text" => hidden_tag.name,
+                    "description" => nil,
+                    "icon" => "tag",
+                    "type" => "tag",
+                    "ref" => hidden_tag.name,
+                    "slug" => hidden_tag.name,
+                    "secondary_text" => "x0",
+                  },
+                ],
               },
             )
           end
@@ -257,7 +303,9 @@ RSpec.describe HashtagsController do
 
             expect(response.status).to eq(200)
             found_categories = response.parsed_body["category"]
-            expect(found_categories.map { |c| c["ref"] }).to eq(%w[foo foo:bar bar:baz qux qux:bar])
+            expect(found_categories.map { |c| c["ref"] }).to match_array(
+              %w[foo foo:bar bar:baz qux qux:bar],
+            )
             expect(found_categories.find { |c| c["ref"] == "foo" }["relative_url"]).to eq(foo.url)
             expect(found_categories.find { |c| c["ref"] == "foo:bar" }["relative_url"]).to eq(
               foobar.url,
@@ -282,6 +330,95 @@ RSpec.describe HashtagsController do
     end
   end
 
-  # TODO (martin) write a spec here for the new
-  # #lookup behaviour and the new #search behaviour
+  describe "#search" do
+    fab!(:tag_2) { Fabricate(:tag, name: "random") }
+
+    context "when logged in" do
+      before { sign_in(Fabricate(:user)) }
+
+      it "returns the found category and then tag" do
+        get "/hashtags/search.json", params: { term: "rand", order: %w[category tag] }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["results"]).to eq(
+          [
+            {
+              "relative_url" => category.url,
+              "text" => category.name,
+              "description" => nil,
+              "icon" => "folder",
+              "type" => "category",
+              "ref" => category.slug,
+              "slug" => category.slug,
+            },
+            {
+              "relative_url" => tag_2.url,
+              "text" => tag_2.name,
+              "description" => nil,
+              "icon" => "tag",
+              "type" => "tag",
+              "ref" => "#{tag_2.name}::tag",
+              "slug" => tag_2.name,
+              "secondary_text" => "x0",
+            },
+          ],
+        )
+      end
+
+      it "does not return hidden and restricted categories/tags" do
+        get "/hashtags/search.json", params: { term: "staff", order: %w[category tag] }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["results"]).to eq([])
+
+        get "/hashtags/search.json", params: { term: "hidden", order: %w[category tag] }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["results"]).to eq([])
+      end
+    end
+
+    context "when logged in as admin" do
+      before { sign_in(Fabricate(:admin)) }
+
+      it "returns hidden and restricted categories/tags" do
+        get "/hashtags/search.json", params: { term: "staff", order: %w[category tag] }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["results"]).to eq(
+          [
+            {
+              "relative_url" => private_category.url,
+              "text" => private_category.name,
+              "description" => nil,
+              "icon" => "folder",
+              "type" => "category",
+              "ref" => private_category.slug,
+              "slug" => private_category.slug,
+            },
+          ],
+        )
+
+        get "/hashtags/search.json", params: { term: "hidden", order: %w[category tag] }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["results"]).to eq(
+          [
+            {
+              "relative_url" => hidden_tag.url,
+              "text" => hidden_tag.name,
+              "description" => nil,
+              "icon" => "tag",
+              "type" => "tag",
+              "ref" => "#{hidden_tag.name}",
+              "slug" => hidden_tag.name,
+              "secondary_text" => "x0",
+            },
+          ],
+        )
+      end
+    end
+
+    context "when not logged in" do
+      it "returns invalid access" do
+        get "/hashtags/search.json", params: { term: "rand", order: %w[category tag] }
+        expect(response.status).to eq(403)
+      end
+    end
+  end
 end
