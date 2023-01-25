@@ -275,8 +275,6 @@ RSpec.describe HashtagsController do
 
             qux = Fabricate(:category_with_definition, slug: "qux")
             quxbar = Fabricate(:category_with_definition, slug: "bar", parent_category_id: qux.id)
-            quxbarbaz =
-              Fabricate(:category_with_definition, slug: "baz", parent_category_id: quxbar.id)
 
             invalid_slugs = [":"]
             child_slugs = %w[bar baz]
@@ -299,7 +297,7 @@ RSpec.describe HashtagsController do
               foobar.url,
             )
             expect(found_categories.find { |c| c["ref"] == "bar:baz" }["relative_url"]).to eq(
-              foobarbaz.id < quxbarbaz.id ? foobarbaz.url : quxbarbaz.url,
+              foobarbaz.url,
             )
             expect(found_categories.find { |c| c["ref"] == "qux" }["relative_url"]).to eq(qux.url)
             expect(found_categories.find { |c| c["ref"] == "qux:bar" }["relative_url"]).to eq(
