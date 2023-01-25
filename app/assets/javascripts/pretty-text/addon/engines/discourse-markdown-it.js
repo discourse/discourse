@@ -324,6 +324,8 @@ function buildCustomMarkdownCookFunction(engineOpts, defaultEngineOpts) {
     overrideMarkdownFeatures(featureConfig, engineOpts.featuresOverride);
   }
 
+  newOpts.discourse.features = featureConfig;
+
   // since the AllowLister is what decides which inline HTML to allow,
   // we need to completely recreate the sanitizer with a new AllowLister
   // with the override for this to work
@@ -332,8 +334,6 @@ function buildCustomMarkdownCookFunction(engineOpts, defaultEngineOpts) {
       engineOpts.htmlInlineAllowListOverride;
     newOpts.sanitizer = createSanitizer(newOpts);
   }
-
-  newOpts.discourse.features = featureConfig;
 
   const markdownitOpts = {
     discourse: newOpts.discourse,

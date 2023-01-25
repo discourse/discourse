@@ -133,6 +133,9 @@ export default class Chat extends Service {
       markdownItRules: Site.currentProp(
         "markdown_additional_options.chat.limited_pretty_text_markdown_rules"
       ),
+      htmlInlineAllowListOverride: Site.currentProp(
+        "markdown_additional_options.chat.html_inline_allow_list_override"
+      ),
       hashtagTypesInPriorityOrder:
         this.site.hashtag_configurations["chat-composer"],
       hashtagIcons: this.site.hashtag_icons,
