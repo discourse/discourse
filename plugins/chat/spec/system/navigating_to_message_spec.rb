@@ -50,7 +50,7 @@ RSpec.describe "Navigating to message", type: :system, js: true do
         )
       end
 
-      it "highglights the correct message" do
+      it "highlights the correct message" do
         chat_page.visit_channel(channel_1)
         click_link(link)
 
@@ -83,7 +83,7 @@ RSpec.describe "Navigating to message", type: :system, js: true do
         channel_2.add(current_user)
       end
 
-      it "highglights the correct message" do
+      it "highlights the correct message" do
         chat_page.visit_channel(channel_2)
         click_link(link)
 
@@ -94,7 +94,7 @@ RSpec.describe "Navigating to message", type: :system, js: true do
     end
 
     context "when navigating directly to a message link" do
-      it "highglights the correct message" do
+      it "highlights the correct message" do
         visit("/chat/channel/#{channel_1.id}/-?messageId=#{first_message.id}")
 
         expect(page).to have_css(
@@ -136,7 +136,7 @@ RSpec.describe "Navigating to message", type: :system, js: true do
         )
       end
 
-      it "highglights the correct message" do
+      it "highlights the correct message" do
         visit("/")
         chat_page.open_from_header
         chat_drawer_page.open_channel(channel_1)

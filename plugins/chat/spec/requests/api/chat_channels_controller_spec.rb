@@ -238,16 +238,19 @@ RSpec.describe Chat::Api::ChatChannelsController do
         end
 
         it "generates a valid new slug to prevent collisions" do
-          SiteSetting.max_topic_title_length = 15
+          SiteSetting.max_topic_title_length = 20
+          channel_1 = Fabricate(:chat_channel, name: "a" * SiteSetting.max_topic_title_length)
           freeze_time(DateTime.parse("2022-07-08 09:30:00"))
           old_slug = channel_1.slug
 
-          delete "/chat/api/channels/#{channel_1.id}",
-                 params: {
-                   channel: {
-                     name_confirmation: channel_1.title(current_user),
-                   },
-                 }
+          delete(
+            "/chat/api/channels/#{channel_1.id}",
+            params: {
+              channel: {
+                name_confirmation: channel_1.title(current_user),
+              },
+            },
+          )
 
           expect(response.status).to eq(200)
           expect(channel_1.reload.slug).to eq(

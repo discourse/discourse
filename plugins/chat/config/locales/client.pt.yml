@@ -52,6 +52,7 @@ pt:
         yesterday: Ontem
       about_view:
         title: Título
+        name: Nome
         description: Descrição
       channel_info:
         back_to_channel: "Retroceder"

@@ -1091,8 +1091,6 @@ vi:
     email_token_valid_hours: "Token quyên mật khẩu / kích hoạt tài khoản có giá trị trong (n) giờ."
     enable_badges: "Kích hoạt hệ thống huy hiệu"
     whispers_allowed_groups: "Cho phép giao tiếp riêng tư trong các chủ đề cho các thành viên của các nhóm được chỉ định."
-    blocked_email_domains: "Một danh sách đuôi email mà người dùng không được phép dùng để đăng ký tài khoản. Ví dụ: maillinator.com|trashmail.net. Lưu ý mỗi tên miền cách nhau bởi dấu \"|\"."
-    allowed_email_domains: "Danh sách tên miền người dùng ĐƯỢC PHÉP đăng ký tài khoản. CẢNH BÁO: người dùng với tên miền email khác trong danh sách sẽ không được phép đăng ký!"
     normalize_emails: "Kiểm tra xem email chuẩn hóa có phải là duy nhất không. Email được chuẩn hóa sẽ xóa tất cả các dấu chấm khỏi tên người dùng và mọi thứ nằm giữa ký hiệu + và @."
     log_out_strict: "Khi đăng xuất, đăng xuất TẤT CẢ session cho tất cả thiế bị"
     new_version_emails: "Gửi email đến địa chỉ contact_email khi có phiên bản Discourse mới."
