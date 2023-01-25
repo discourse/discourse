@@ -172,7 +172,6 @@ class SearchController < ApplicationController
           "search-min",
           SiteSetting.rate_limit_search_user,
           1.minute,
-          error_code: 429,
         ).performed!
       else
         RateLimiter.new(
@@ -180,28 +179,24 @@ class SearchController < ApplicationController
           "search-min-#{request.remote_ip}-per-sec",
           SiteSetting.rate_limit_search_anon_user_per_second,
           1.second,
-          error_code: 429,
         ).performed!
         RateLimiter.new(
           nil,
           "search-min-#{request.remote_ip}-per-min",
           SiteSetting.rate_limit_search_anon_user_per_minute,
           1.minute,
-          error_code: 429,
         ).performed!
         RateLimiter.new(
           nil,
           "search-min-anon-global-per-sec",
           SiteSetting.rate_limit_search_anon_global_per_second,
           1.second,
-          error_code: 429,
         ).performed!
         RateLimiter.new(
           nil,
           "search-min-anon-global-per-min",
           SiteSetting.rate_limit_search_anon_global_per_minute,
           1.minute,
-          error_code: 429,
         ).performed!
       end
     rescue RateLimiter::LimitExceeded => e
