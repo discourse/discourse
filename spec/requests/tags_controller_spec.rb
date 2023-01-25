@@ -676,6 +676,18 @@ RSpec.describe TagsController do
           expect(response.status).to eq(200)
         end
 
+        it "returns a 404 when tag is restricted" do
+          tag_group = Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: ["test"])
+
+          get "/tag/test/l/latest.json"
+          expect(response.status).to eq(404)
+
+          sign_in(admin)
+
+          get "/tag/test/l/latest.json"
+          expect(response.status).to eq(200)
+        end
+
         context "with muted tags" do
           before do
             TagUser.create!(
@@ -754,6 +766,18 @@ RSpec.describe TagsController do
     it "raises an error if the period is not valid" do
       get "/tag/#{tag.name}/l/top.json?period=decadely"
       expect(response.status).to eq(400)
+    end
+
+    it "returns a 404 if tag is restricted" do
+      tag_group = Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: ["test"])
+
+      get "/tag/test/l/top.json"
+      expect(response.status).to eq(404)
+
+      sign_in(admin)
+
+      get "/tag/test/l/top.json"
+      expect(response.status).to eq(200)
     end
   end
 
