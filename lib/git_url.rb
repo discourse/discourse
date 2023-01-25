@@ -2,7 +2,7 @@
 
 module GitUrl
   class << self
-    SSH_REGEXP = /(\w+@(\w+\.)*\w+):(.*)/
+    SSH_REGEXP = /\A(\w+@\w+(\.\w+)*):(.*)\z/
 
     def normalize(url)
       if m = SSH_REGEXP.match(url)
