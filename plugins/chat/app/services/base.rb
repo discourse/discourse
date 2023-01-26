@@ -112,6 +112,16 @@ module Chat
         end
       end
 
+      # @!scope class
+      # @!method contract(&block)
+
+      # @!scope class
+      # @!method service(&block)
+
+      # @!scope class
+      # @!method rollback(&block)
+
+      # @!visibility private
       def initialize(initial_context = {})
         @context = Context.build(initial_context)
 
@@ -122,6 +132,8 @@ module Chat
           self.context[:contract] = contract
         end
       end
+
+      private
 
       def run
         run!

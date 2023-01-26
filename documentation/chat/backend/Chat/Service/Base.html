@@ -114,7 +114,7 @@
 
   
     <h2>
-      Instance Method Summary
+      Class Method Summary
       <small><a href="#" class="summary_toggle">collapse</a></small>
     </h2>
 
@@ -123,7 +123,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#initialize-instance_method" title="#initialize (instance method)">#<strong>initialize</strong>(initial_context = {})  &#x21d2; Object </a>
+      <a href="#contract-class_method" title="contract (class method)">.<strong>contract</strong>(&amp;block)  &#x21d2; Object </a>
     
 
     
@@ -145,7 +145,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#run-instance_method" title="#run (instance method)">#<strong>run</strong>  &#x21d2; Object </a>
+      <a href="#rollback-class_method" title="rollback (class method)">.<strong>rollback</strong>(&amp;block)  &#x21d2; Object </a>
     
 
     
@@ -167,7 +167,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#run!-instance_method" title="#run! (instance method)">#<strong>run!</strong>  &#x21d2; Object </a>
+      <a href="#service-class_method" title="service (class method)">.<strong>service</strong>(&amp;block)  &#x21d2; Object </a>
     
 
     
@@ -192,14 +192,14 @@
 
   
 
-  <div id="instance_method_details" class="method_details_list">
-    <h2>Instance Method Details</h2>
+  <div id="class_method_details" class="method_details_list">
+    <h2>Class Method Details</h2>
 
     
       <div class="method_details first">
-  <h3 class="signature first" id="initialize-instance_method">
+  <h3 class="signature first" id="contract-class_method">
   
-    #<strong>initialize</strong>(initial_context = {})  &#x21d2; <tt>Object</tt> 
+    .<strong>contract</strong>(&amp;block)  &#x21d2; <tt>Object</tt> 
   
 
   
@@ -211,39 +211,21 @@
       <pre class="lines">
 
 
-113
-114
-115
-116
-117
-118
-119
-120
-121
-122</pre>
+</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 113</span>
+      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 115</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_initial_context'>initial_context</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
-  <span class='ivar'>@context</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="Base/Context.html" title="Chat::Service::Base::Context (class)">Context</a></span></span><span class='period'>.</span><span class='id identifier rubyid_build'><span class='object_link'><a href="Base/Context.html#build-class_method" title="Chat::Service::Base::Context.build (method)">build</a></span></span><span class='lparen'>(</span><span class='id identifier rubyid_initial_context'>initial_context</span><span class='rparen'>)</span>
-
-  <span class='kw'>if</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span><span class='period'>.</span><span class='id identifier rubyid_contract_block'>contract_block</span>
-    <span class='id identifier rubyid_contract_class'>contract_class</span> <span class='op'>=</span> <span class='const'>Class</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='const'><span class='object_link'><a href="Base/Contract.html" title="Chat::Service::Base::Contract (class)">Contract</a></span></span><span class='rparen'>)</span>
-    <span class='id identifier rubyid_contract_class'>contract_class</span><span class='period'>.</span><span class='id identifier rubyid_class_eval'>class_eval</span><span class='lparen'>(</span><span class='op'>&amp;</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span><span class='period'>.</span><span class='id identifier rubyid_contract_block'>contract_block</span><span class='rparen'>)</span>
-    <span class='ivar'>@contract</span> <span class='op'>=</span> <span class='id identifier rubyid_contract_class'>contract_class</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_initial_context'>initial_context</span><span class='period'>.</span><span class='id identifier rubyid_except'>except</span><span class='lparen'>(</span><span class='symbol'>:guardian</span><span class='rparen'>)</span><span class='rparen'>)</span>
-    <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_context'>context</span><span class='lbracket'>[</span><span class='symbol'>:contract</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_contract'>contract</span>
-  <span class='kw'>end</span>
-<span class='kw'>end</span></pre>
+</pre>
     </td>
   </tr>
 </table>
 </div>
     
       <div class="method_details ">
-  <h3 class="signature " id="run-instance_method">
+  <h3 class="signature " id="rollback-class_method">
   
-    #<strong>run</strong>  &#x21d2; <tt>Object</tt> 
+    .<strong>rollback</strong>(&amp;block)  &#x21d2; <tt>Object</tt> 
   
 
   
@@ -255,29 +237,21 @@
       <pre class="lines">
 
 
-124
-125
-126
-127
-128</pre>
+</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 124</span>
+      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 121</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_run'>run</span>
-  <span class='id identifier rubyid_run!'>run!</span>
-<span class='kw'>rescue</span> <span class='const'><span class='object_link'><a href="Base/Failure.html" title="Chat::Service::Base::Failure (class)">Failure</a></span></span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_exception'>exception</span>
-  <span class='id identifier rubyid_raise'>raise</span> <span class='kw'>if</span> <span class='id identifier rubyid_context'>context</span><span class='period'>.</span><span class='id identifier rubyid_object_id'>object_id</span> <span class='op'>!=</span> <span class='id identifier rubyid_exception'>exception</span><span class='period'>.</span><span class='id identifier rubyid_context'>context</span><span class='period'>.</span><span class='id identifier rubyid_object_id'>object_id</span>
-<span class='kw'>end</span></pre>
+</pre>
     </td>
   </tr>
 </table>
 </div>
     
       <div class="method_details ">
-  <h3 class="signature " id="run!-instance_method">
+  <h3 class="signature " id="service-class_method">
   
-    #<strong>run!</strong>  &#x21d2; <tt>Object</tt> 
+    .<strong>service</strong>(&amp;block)  &#x21d2; <tt>Object</tt> 
   
 
   
@@ -289,46 +263,12 @@
       <pre class="lines">
 
 
-130
-131
-132
-133
-134
-135
-136
-137
-138
-139
-140
-141
-142
-143
-144
-145
-146
-147</pre>
+</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 130</span>
+      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 118</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_run!'>run!</span>
-  <span class='id identifier rubyid_run_callbacks'>run_callbacks</span> <span class='symbol'>:contract</span> <span class='kw'>do</span>
-    <span class='kw'>if</span> <span class='id identifier rubyid_contract'>contract</span>
-      <span class='id identifier rubyid_context'>context</span><span class='period'>.</span><span class='id identifier rubyid_fail!'>fail!</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>contract.failed</span><span class='tstring_end'>&quot;</span></span> <span class='op'>=&gt;</span> <span class='kw'>true</span><span class='rparen'>)</span> <span class='kw'>unless</span> <span class='id identifier rubyid_contract'>contract</span><span class='period'>.</span><span class='id identifier rubyid_valid?'>valid?</span>
-      <span class='id identifier rubyid_context'>context</span><span class='period'>.</span><span class='id identifier rubyid_merge'>merge</span><span class='lparen'>(</span><span class='id identifier rubyid_contract'>contract</span><span class='period'>.</span><span class='id identifier rubyid_attributes'>attributes</span><span class='rparen'>)</span>
-    <span class='kw'>end</span>
-  <span class='kw'>end</span>
-
-  <span class='id identifier rubyid_run_callbacks'>run_callbacks</span> <span class='symbol'>:service</span> <span class='kw'>do</span>
-    <span class='id identifier rubyid_instance_eval'>instance_eval</span><span class='lparen'>(</span><span class='op'>&amp;</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span><span class='period'>.</span><span class='id identifier rubyid_service_block'>service_block</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span><span class='period'>.</span><span class='id identifier rubyid_service_block'>service_block</span>
-    <span class='id identifier rubyid_context'>context</span><span class='period'>.</span><span class='id identifier rubyid_called!'>called!</span><span class='lparen'>(</span><span class='kw'>self</span><span class='rparen'>)</span>
-  <span class='kw'>end</span>
-<span class='kw'>rescue</span> <span class='const'>ActiveRecord</span><span class='op'>::</span><span class='const'>Rollback</span>
-  <span class='id identifier rubyid_context'>context</span><span class='period'>.</span><span class='id identifier rubyid_rollback!'>rollback!</span>
-<span class='kw'>rescue</span> <span class='const'>StandardError</span>
-  <span class='id identifier rubyid_context'>context</span><span class='period'>.</span><span class='id identifier rubyid_rollback!'>rollback!</span>
-  <span class='id identifier rubyid_raise'>raise</span>
-<span class='kw'>end</span></pre>
+</pre>
     </td>
   </tr>
 </table>

@@ -5,8 +5,6 @@ task "documentation" do
 end
 
 def generate_chat_documentation
-  require "open3"
-
   destination = File.join(Rails.root, "documentation/chat/frontend/")
   config = File.join(Rails.root, ".jsdoc")
   files = %w[
@@ -15,6 +13,7 @@ def generate_chat_documentation
   ]
   `yarn --silent jsdoc -c #{config} #{files.join(" ")} -d #{destination}`
 
+  require "open3"
   require "yard"
   YARD::Templates::Engine.register_template_path(
     File.join(Rails.root, "documentation", "yard-custom-template"),
