@@ -70,7 +70,7 @@ Attempts to load more results
         * [.channel(channelId)](#module_ChatApi--module.exports+channel) ⇒ <code>Promise</code>
         * [.channels()](#module_ChatApi--module.exports+channels) ⇒ [<code>module.exports</code>](#exp_module_Collection--module.exports)
         * [.moveChannelMessages(channelId, data)](#module_ChatApi--module.exports+moveChannelMessages) ⇒ <code>Promise</code>
-        * [.destroyChannel(channelId, channelName)](#module_ChatApi--module.exports+destroyChannel) ⇒ <code>Promise</code>
+        * [.destroyChannel(channelId)](#module_ChatApi--module.exports+destroyChannel) ⇒ <code>Promise</code>
         * [.createChannel(data)](#module_ChatApi--module.exports+createChannel) ⇒ <code>Promise</code>
         * [.categoryPermissions(categoryId)](#module_ChatApi--module.exports+categoryPermissions) ⇒ <code>Promise</code>
         * [.sendMessage(channelId, data)](#module_ChatApi--module.exports+sendMessage) ⇒ <code>Promise</code>
@@ -154,7 +154,7 @@ this.chatApi
 
 <a name="module_ChatApi--module.exports+destroyChannel"></a>
 
-#### module.exports.destroyChannel(channelId, channelName) ⇒ <code>Promise</code>
+#### module.exports.destroyChannel(channelId) ⇒ <code>Promise</code>
 Destroys a channel.
 
 **Kind**: instance method of [<code>module.exports</code>](#exp_module_ChatApi--module.exports)  
@@ -162,11 +162,10 @@ Destroys a channel.
 | Param | Type | Description |
 | --- | --- | --- |
 | channelId | <code>number</code> | The ID of the channel. |
-| channelName | <code>string</code> | The name of the channel to be destroyed, used as confirmation. |
 
 **Example**  
 ```js
-this.chatApi.destroyChannel(1, "foo").then(() => { ... })
+this.chatApi.destroyChannel(1).then(() => { ... })
 ```
 
 * * *
