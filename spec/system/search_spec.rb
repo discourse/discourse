@@ -9,7 +9,6 @@ describe "Search", type: :system, js: true do
     before do
       SearchIndexer.enable
       SearchIndexer.index(topic, force: true)
-      RateLimiter.enable
     end
 
     after { SearchIndexer.disable }
@@ -42,6 +41,7 @@ describe "Search", type: :system, js: true do
     before do
       SearchIndexer.enable
       SearchIndexer.index(topic, force: true)
+      RateLimiter.enable
     end
 
     after { SearchIndexer.disable }
