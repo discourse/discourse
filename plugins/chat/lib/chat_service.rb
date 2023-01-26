@@ -67,11 +67,12 @@ module ChatService
     attr_reader :context
     attr_reader :contract
 
-    define_model_callbacks :call, :contract
+    define_model_callbacks :service, :contract
   end
 
   module ClassMethods
     attr_reader :contract_block
+    attr_reader :service_block
 
     def call(context = {})
       new(context).tap(&:run).context
@@ -83,6 +84,10 @@ module ChatService
 
     def contract(&block)
       @contract_block = block
+    end
+
+    def service(&block)
+      @service_block = block
     end
   end
 
@@ -115,8 +120,8 @@ module ChatService
       end
     end
 
-    run_callbacks :call do
-      call
+    run_callbacks :service do
+      instance_eval(&self.class.service_block) if self.class.service_block
       context.called!(self)
     end
   rescue ActiveRecord::Rollback

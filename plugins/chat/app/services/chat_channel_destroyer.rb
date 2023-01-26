@@ -10,7 +10,7 @@ class Chat::ChannelDestroyer
     validates :channel, presence: true
   end
 
-  def call
+  service do
     delete_channel
     enqueue_delete_channel_relations_job
   end
