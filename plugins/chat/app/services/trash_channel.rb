@@ -6,7 +6,6 @@ module Chat
     # Note the slug is modified to prevent collisions.
     #
     # @example
-    #
     #  Chat::Service::TrashChannel.call(channel: channel, guardian: guardian)
     #
     class TrashChannel

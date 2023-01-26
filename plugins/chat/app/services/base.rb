@@ -44,16 +44,18 @@ module Chat
           raise Failure, self
         end
 
-        def called!(service)
-          _called << service
-        end
-
         def rollback!
           return false if @rolled_back
           _called.reverse_each do |service|
             service.instance_eval(&self.class.rollback_block) if self.class.rollback_block
           end
           @rolled_back = true
+        end
+
+        private
+
+        def called!(service)
+          _called << service
         end
 
         def _called
