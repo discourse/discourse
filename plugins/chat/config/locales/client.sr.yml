@@ -46,6 +46,7 @@ sr:
         yesterday: Juče
       about_view:
         title: Naslov
+        name: Ime foruma
         description: Opis
       channel_info:
         back_to_channel: "Nazad"

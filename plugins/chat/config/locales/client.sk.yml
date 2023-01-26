@@ -50,6 +50,7 @@ sk:
         yesterday: Včera
       about_view:
         title: Názov
+        name: Meno
         description: Popis
       channel_info:
         back_to_channel: "Späť"

@@ -3,9 +3,11 @@
 RSpec.describe Post do
   fab!(:coding_horror) { Fabricate(:coding_horror) }
 
+  let(:upload_path) { Discourse.store.upload_path }
+
   before { Oneboxer.stubs :onebox }
 
-  let(:upload_path) { Discourse.store.upload_path }
+  it { is_expected.to have_many(:reviewables).dependent(:destroy) }
 
   describe "#hidden_reasons" do
     context "when verifying enum sequence" do

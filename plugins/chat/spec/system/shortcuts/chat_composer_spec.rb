@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Shorcuts | chat composer", type: :system, js: true do
+RSpec.describe "Shortcuts | chat composer", type: :system, js: true do
   fab!(:channel_1) { Fabricate(:chat_channel) }
   fab!(:current_user) { Fabricate(:user) }
 
@@ -15,7 +15,7 @@ RSpec.describe "Shorcuts | chat composer", type: :system, js: true do
   end
 
   context "when using meta + l" do
-    xit "handles insert link shorcut" do
+    xit "handles insert link shortcut" do
     end
   end
 

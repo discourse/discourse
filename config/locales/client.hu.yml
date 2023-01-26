@@ -1050,7 +1050,7 @@ hu:
         perm_denied_expl: "Letiltotta a figyelmeztetéseket. Engedélyezze őket a böngésző beállításaiban."
         disable: "Értesítések kikapcsolása"
         enable: "Értesítések bekapcsolása"
-        each_browser_note: 'Megjegyzés: Ezt a beállítást minden használt böngészőben módosítania kell. Ettől a beállítástól függetlenül minden értesítés le lesz tiltva, ha szünetelteti az értesítéseket a felhasználói menüből.'
+        each_browser_note: "Megjegyzés: Ezt a beállítást minden használt böngészőben módosítania kell. Ettől a beállítástól függetlenül minden értesítés le lesz tiltva, ha szünetelteti az értesítéseket a felhasználói menüből."
         consent_prompt: "Szeretne élő értesítéseket kapni, ha valaki válaszol a hozzászólásaira?"
       dismiss: "Elvetés"
       dismiss_notifications: "Összes elvetése"

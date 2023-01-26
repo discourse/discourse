@@ -23,7 +23,9 @@ de:
     default_emoji_reactions: "Standard-Emoji-Reaktionen für Chat-Nachrichten. Füge bis zu 5 Emojis für schnelle Reaktionen hinzu."
     direct_message_enabled_groups: "Benutzern in diesen Gruppen erlauben, persönliche Benutzer-zu-Benutzer-Chats zu erstellen. Hinweis: Teammitglieder können immer persönliche Chats erstellen und Benutzer können auf persönliche Chats antworten, die von Benutzern initiiert wurden, die die Berechtigung haben, sie zu erstellen."
     chat_message_flag_allowed_groups: "Benutzer in diesen Gruppen dürfen Chat-Nachrichten markieren."
+    max_mentions_per_chat_message: "Maximale Anzahl von @name-Benachrichtigungen, die ein Benutzer in einer Chat-Nachricht verwenden kann."
     chat_max_direct_message_users: "Benutzer können nicht mehr als diese Anzahl anderer Benutzer hinzufügen, wenn sie eine neue Direktnachricht erstellen. Auf 0 setzen, um nur Nachrichten an sich selbst zuzulassen. Teammitglieder sind von dieser Einstellung ausgenommen."
+    chat_allow_archiving_channels: "Dem Team erlauben, Nachrichten zu einem Thema zu archivieren, wenn sie einen Kanal schließen."
     errors:
       chat_default_channel: "Der Standard-Chat-Kanal muss ein öffentlicher Kanal sein."
       direct_message_enabled_groups_invalid: "Du musst mindestens eine Gruppe für diese Einstellung angeben. Wenn du nicht möchtest, dass andere Personen als Teammitglieder Direktnachrichten senden, wähle die Gruppe für Teammitglieder aus."
@@ -51,6 +53,7 @@ de:
       duplicate_message: "Du hast vor Kurzem eine identische Nachricht gepostet."
       delete_channel_failed: "Löschen des Kanals fehlgeschlagen, bitte versuche es erneut."
       minimum_length_not_met: "Die Nachricht ist zu kurz, sie muss mindestens %{minimum} Zeichen lang sein."
+      message_too_long: "Nachricht ist zu lang. Nachrichten dürfen maximal %{maximum} Zeichen lang sein."
       max_reactions_limit_reached: "Neue Reaktionen auf diese Nachricht sind nicht erlaubt."
       message_move_invalid_channel: "Quell- und Zielkanal müssen öffentliche Kanäle sein."
       message_move_no_messages_found: "Es wurden keine Nachrichten mit den angegebenen Nachrichten-IDs gefunden."
@@ -166,7 +169,16 @@ de:
       from: "%{site_name}"
       subject:
         direct_message_from_1: "[%{email_prefix}] Neue Nachricht von %{username}"
+        direct_message_from_2: "[%{email_prefix}] Neue Nachricht von %{username1} und %{username2}"
+        direct_message_from_more:
+          one: "[%{email_prefix}] Neue Nachricht von %{username} und %{count} anderem Benutzer"
+          other: "[%{email_prefix}] Neue Nachricht von %{username} und %{count} anderen"
         chat_channel_1: "[%{email_prefix}] Neue Nachricht in %{channel}"
+        chat_channel_2: "[%{email_prefix}] Neue Nachricht in %{channel1} und %{channel2}"
+        chat_channel_more:
+          one: "[%{email_prefix}] Neue Nachricht in %{channel} und %{count} anderem Kanal"
+          other: "[%{email_prefix}] Neue Nachricht in %{channel} und %{count} anderen"
+        chat_channel_and_direct_message: "[%{email_prefix}] Neue Nachricht in %{channel} und von %{username}"
       unsubscribe: "Diese Chat-Zusammenfassung wird dir von %{site_link} gesendet, wenn du abwesend bist. Ändere deine %{email_preferences_link} oder %{unsubscribe_link}, um dich abzumelden."
       unsubscribe_no_link: "Diese Chat-Zusammenfassung wird dir von %{site_link} gesendet, wenn du abwesend bist. Ändere deine %{email_preferences_link}."
       view_messages:

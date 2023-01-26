@@ -1052,7 +1052,7 @@ sv:
         perm_denied_expl: "Du nekade tillåtelse för aviseringar. Tillåt aviseringar via din webbläsares inställningar."
         disable: "Inaktivera aviseringar"
         enable: "Aktivera aviseringar"
-        each_browser_note: 'Obs: Du måste ändra den här inställningen i varje webbläsare du använder. Alla aviseringar kommer att inaktiveras om du pausar aviseringar från användarmenyn, oavsett denna inställning.'
+        each_browser_note: "Obs: Du måste ändra den här inställningen i varje webbläsare du använder. Alla aviseringar kommer att inaktiveras om du pausar aviseringar från användarmenyn, oavsett denna inställning."
         consent_prompt: "Vill du ha realtidsaviseringar när personer svarar på dina inlägg?"
       dismiss: "Avfärda"
       dismiss_notifications: "Avfärda alla"
