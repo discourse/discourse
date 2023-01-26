@@ -296,16 +296,11 @@ export default class Chat extends Service {
       if (messageId) {
         return this.router.transitionTo(
           "chat.channel.near-message",
-          channel.slugifiedTitle,
-          channel.id,
+          ...channel.routeModels,
           messageId
         );
       } else {
-        return this.router.transitionTo(
-          "chat.channel",
-          channel.slugifiedTitle,
-          channel.id
-        );
+        return this.router.transitionTo("chat.channel", ...channel.routeModels);
       }
     } else {
       this._fireOpenFloatAppEvent(channel, messageId);
