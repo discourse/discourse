@@ -3,12 +3,12 @@
 class Chat::ChannelDestroyer
   include ChatService
 
+  before_contract { guardian(:can_delete_chat_channel?) }
+
   contract do
     attribute :channel
     validates :channel, presence: true
   end
-
-  before { guardian(:can_delete_chat_channel?) }
 
   def call
     delete_channel
