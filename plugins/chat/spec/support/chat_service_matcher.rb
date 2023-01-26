@@ -4,6 +4,7 @@ CONTRACT_FAILED_ERROR = ->(context) { <<~ERROR }
   Contract failed
   ---------------
   #{context.contract.errors.full_messages.join("\n")}
+
   ERROR
 
 RSpec::Matchers.define :succeed do
