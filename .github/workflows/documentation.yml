@@ -60,22 +60,22 @@ jobs:
       - name: Yarn install
         run: yarn install
 
-      - name: Check Chat documentation
+      - name: Check documentation
         run: |
-          LOAD_PLUGINS=1 bin/rake chat:doc
+          LOAD_PLUGINS=1 bin/rake documentation
 
-          if [ ! -z "$(git status --porcelain plugins/chat/docs/)" ]; then
-            echo "Chat documentation is not up to date. To resolve, run:"
-            echo "  LOAD_PLUGINS=1 bin/rake chat:doc"
+          if [ ! -z "$(git status --porcelain documentation/)" ]; then
+            echo "Documentation is not up to date. To resolve, run:"
+            echo "  LOAD_PLUGINS=1 bin/rake documentation"
             echo
             echo "Or manually apply the diff printed below:"
             echo "---------------------------------------------"
-            git -c color.ui=always diff plugins/chat/docs/
+            git -c color.ui=always diff documentation/
             exit 1
           fi
         timeout-minutes: 30
 
-      - name: Deploy
+      - name: Deploy documentation to github pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
