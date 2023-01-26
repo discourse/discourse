@@ -9,7 +9,7 @@ module Chat
     class TrashChannel
       include Base
 
-      # @method call
+      # @!method call
       #   @param [ChatChannel] channel
       #   @param [Guardian] guardian
       #   @return [ChatService::Context]

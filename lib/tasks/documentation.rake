@@ -5,6 +5,8 @@ task "documentation" do
 end
 
 def generate_chat_documentation
+  require "open3"
+
   destination = File.join(Rails.root, "documentation/chat/frontend/")
   config = File.join(Rails.root, ".jsdoc")
   files = %w[
@@ -18,5 +20,7 @@ def generate_chat_documentation
     File.join(Rails.root, "documentation", "yard-custom-template"),
   )
   files = %w[plugins/chat/app/services/base.rb plugins/chat/app/services/trash_channel.rb]
-  `bundle exec yardoc -p documentation/yard-custom-template -t default -r plugins/chat/README.md --output-dir documentation/chat/backend #{files.join(" ")}`
+  cmd =
+    "bundle exec yardoc -p documentation/yard-custom-template -t default -r plugins/chat/README.md --output-dir documentation/chat/backend #{files.join(" ")}"
+  Open3.popen3(cmd) { |_, stderr| puts stderr.read }
 end
