@@ -193,7 +193,7 @@ class PostDestroyer
         end
       end
 
-      if @post.is_first_post? && @topic
+      if @topic && @post.is_first_post?
         permanent? ? @topic.destroy! : @topic.trash!(@user)
         PublishedPage.unpublish!(@user, @topic) if @topic.published_page
       end
