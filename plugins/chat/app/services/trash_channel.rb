@@ -4,12 +4,14 @@ module Chat
   module Service
     # Service responsible for trashing a chat channel.
     # Note the slug is modified to prevent collisions.
+    #
     # @example
     #  Chat::Service::TrashChannel.call(channel: channel, guardian: guardian)
+    #
     class TrashChannel
       include Base
 
-      # @!method call
+      # @!method call(channel:, guardian:)
       #   @param [ChatChannel] channel
       #   @param [Guardian] guardian
       #   @return [ChatService::Context]
