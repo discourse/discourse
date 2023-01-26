@@ -4610,7 +4610,7 @@ en:
         delete_with_messages_confirm:
           one: "%{count} message will become inaccessible to group members"
           other: "%{count} messages will become inaccessible to group members"
-        delete_warning: "This can not be undone"
+        delete_warning: "Deleted groups can not be recovered"
         delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
         delete_automatic_group: This is an automatic group and cannot be deleted.
         delete_owner_confirm: "Remove owner privilege for '%{username}'?"
