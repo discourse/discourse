@@ -1121,7 +1121,7 @@ en:
         perm_denied_expl: "You denied permission for notifications. Allow notifications via your browser settings."
         disable: "Disable Notifications"
         enable: "Enable Notifications"
-        each_browser_note: 'Note: You have to change this setting on every browser you use. All notifications will be disabled if you pause notifications from user menu, regardless of this setting.'
+        each_browser_note: "Note: You have to change this setting on every browser you use. All notifications will be disabled if you pause notifications from user menu, regardless of this setting."
         consent_prompt: "Do you want live notifications when people reply to your posts?"
       dismiss: "Dismiss"
       dismiss_notifications: "Dismiss All"
@@ -5156,6 +5156,12 @@ en:
           love:
             name: "love"
             description: "The like button's color."
+          "selected":
+            name: "selected"
+            description: "The background-colour of elements such as list-items when they are selected/active."
+          "hover":
+            name: "hover"
+            description: "The background-colour of elements such as list-items when they are hovered on or have keyboard focus."
         robots:
           title: "Override your site's robots.txt file:"
           warning: "This will permanently override any related site settings."
