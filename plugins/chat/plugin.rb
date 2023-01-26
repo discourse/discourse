@@ -91,6 +91,7 @@ require_relative "app/core_ext/plugin_instance.rb"
 GlobalSetting.add_default(:allow_unsecure_chat_uploads, false)
 
 after_initialize do
+  # Namespace for classes and modules parts of chat plugin
   module ::Chat
     PLUGIN_NAME = "chat"
     HAS_CHAT_ENABLED = "has_chat_enabled"
@@ -162,7 +163,7 @@ after_initialize do
   load File.expand_path("../app/serializers/admin_chat_index_serializer.rb", __FILE__)
   load File.expand_path("../app/serializers/user_chat_message_bookmark_serializer.rb", __FILE__)
   load File.expand_path("../app/serializers/reviewable_chat_message_serializer.rb", __FILE__)
-  load File.expand_path("../lib/chat_service.rb", __FILE__)
+  load File.expand_path("../app/services/base.rb", __FILE__)
   load File.expand_path("../lib/chat_channel_fetcher.rb", __FILE__)
   load File.expand_path("../lib/chat_channel_hashtag_data_source.rb", __FILE__)
   load File.expand_path("../lib/chat_mailer.rb", __FILE__)
@@ -207,7 +208,7 @@ after_initialize do
   load File.expand_path("../app/jobs/scheduled/auto_join_users.rb", __FILE__)
   load File.expand_path("../app/jobs/scheduled/chat_periodical_updates.rb", __FILE__)
   load File.expand_path("../app/services/chat_publisher.rb", __FILE__)
-  load File.expand_path("../app/services/chat_channel_destroyer.rb", __FILE__)
+  load File.expand_path("../app/services/trash_channel.rb", __FILE__)
   load File.expand_path("../app/services/chat_message_creator_v2.rb", __FILE__)
   load File.expand_path("../app/services/chat_message_destroyer.rb", __FILE__)
   load File.expand_path("../app/controllers/api_controller.rb", __FILE__)

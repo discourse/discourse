@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe(Chat::ChannelDestroyer) do
+RSpec.describe(Chat::Service::TrashChannel) do
   let(:guardian) { Guardian.new(current_user) }
 
   context "when user is not allowed to perform the action" do
