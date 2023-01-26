@@ -14,6 +14,7 @@ def generate_chat_documentation
   ]
   `yarn --silent jsdoc -c #{config} #{files.join(" ")} -d #{destination}`
 
+  require "yard"
   YARD::Templates::Engine.register_template_path(
     File.join(Rails.root, "documentation", "yard-custom-template"),
   )
