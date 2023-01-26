@@ -344,7 +344,13 @@ class OptimizedImage < ActiveRecord::Base
         error << " unknown reason"
       end
 
-      Discourse.warn(error, upload_id: opts[:upload_id], location: to, error_message: e.message, instructions: instructions)
+      Discourse.warn(
+        error,
+        upload_id: opts[:upload_id],
+        location: to,
+        error_message: e.message,
+        instructions: instructions,
+      )
       false
     end
   end
