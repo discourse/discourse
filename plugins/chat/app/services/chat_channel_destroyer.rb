@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+DELETE_CHANNEL_LOG_KEY = "chat_channel_delete"
+
 class Chat::ChannelDestroyer
   include ChatService
 
@@ -33,7 +35,7 @@ class Chat::ChannelDestroyer
 
   private def log_channel_deletion
     StaffActionLogger.new(context.guardian.user).log_custom(
-      "chat_channel_delete",
+      DELETE_CHANNEL_LOG_KEY,
       {
         chat_channel_id: context.channel.id,
         chat_channel_name: context.channel.title(context.guardian.user),
