@@ -112,6 +112,12 @@ module Chat
         end
       end
 
+      # @!method guardian(key, *args)
+      # Helper to fail the service if the guardian call is invalid
+      #
+      # @example
+      #   guardian(:can_see?, topic)
+
       # @!scope class
       # @!method contract(&block)
 
