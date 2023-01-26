@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
-DELETE_CHANNEL_LOG_KEY = "chat_channel_delete"
-
+# A cool class
 class Chat::ChannelDestroyer
   include ChatService
+
+  DELETE_CHANNEL_LOG_KEY = "chat_channel_delete"
 
   before_contract { guardian(:can_delete_chat_channel?) }
 
