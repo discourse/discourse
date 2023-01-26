@@ -275,7 +275,7 @@ acceptance("Group - Authenticated", function (needs) {
     await click(".group-details-button button.btn-danger");
 
     assert.strictEqual(
-      query(".dialog-body").textContent.trim(),
+      query(".dialog-body p:nth-of-type(2)").textContent.trim(),
       I18n.t("admin.groups.delete_with_messages_confirm", {
         count: 2,
       }),
