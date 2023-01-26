@@ -120,12 +120,28 @@ module Chat
 
       # @!scope class
       # @!method contract(&block)
+      # Checks the validity of the given context.
+      # Implements ActiveModel::Validations and ActiveModel::Attributes.
+      #
+      # @example
+      #   contract do
+      #     attribute :name
+      #     validates :name, presence: true
+      #   end
 
       # @!scope class
       # @!method service(&block)
+      # Holds the business logic of the service
+      #
+      # @example
+      #   service { context.topic.update!(archived: true) }
 
       # @!scope class
       # @!method rollback(&block)
+      # Called when the service fails, in reverse order of the services called
+      #
+      # @example
+      #   rollback { context.topic.update!(archived: false) }
 
       # @!visibility private
       def initialize(initial_context = {})
