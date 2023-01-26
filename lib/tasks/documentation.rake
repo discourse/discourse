@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-task "documentation" => :environment do
+task "documentation" do
   generate_chat_documentation
 end
 
