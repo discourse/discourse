@@ -61,8 +61,15 @@ module ChatService
     end
   end
 
+  module Helpers
+    def guardian(name, *args)
+      context.fail!("guardian.failed" => name) unless context[:guardian].public_send(name, *args)
+    end
+  end
+
   included do
     extend ActiveModel::Callbacks
+    include Helpers
 
     attr_reader :context
     attr_reader :contract
@@ -100,10 +107,6 @@ module ChatService
       @contract = contract_class.new(initial_context.except(:guardian))
       self.context[:contract] = contract
     end
-  end
-
-  def guardian(name, *args)
-    context.fail!("guardian.failed" => name) unless context[:guardian].public_send(name, *args)
   end
 
   def run
