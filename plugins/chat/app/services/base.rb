@@ -19,6 +19,7 @@ module Chat
         include ActiveModel::Attributes
         include ActiveModel::AttributeMethods
 
+        # @!visibility private
         def self.model_name
           ActiveModel::Name.new(self, nil, "contract")
         end
@@ -83,7 +84,7 @@ module Chat
         define_model_callbacks :service, :contract
       end
 
-      module ClassMethods
+      class_methods do
         attr_reader :contract_block
         attr_reader :service_block
         attr_reader :rollback_block

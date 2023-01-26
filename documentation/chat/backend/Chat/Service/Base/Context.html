@@ -326,12 +326,12 @@
       <pre class="lines">
 
 
-28
 29
-30</pre>
+30
+31</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 28</span>
+      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 29</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_build'>build</span><span class='lparen'>(</span><span class='id identifier rubyid_context'>context</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='kw'>self</span> <span class='op'>===</span> <span class='id identifier rubyid_context'>context</span> <span class='op'>?</span> <span class='id identifier rubyid_context'>context</span> <span class='op'>:</span> <span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_context'>context</span><span class='rparen'>)</span>
@@ -362,12 +362,12 @@
       <pre class="lines">
 
 
-58
 59
-60</pre>
+60
+61</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 58</span>
+      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 59</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid__called'>_called</span>
   <span class='ivar'>@called</span> <span class='op'>||=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
@@ -392,12 +392,12 @@
       <pre class="lines">
 
 
-46
 47
-48</pre>
+48
+49</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 46</span>
+      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 47</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_called!'>called!</span><span class='lparen'>(</span><span class='id identifier rubyid_service'>service</span><span class='rparen'>)</span>
   <span class='id identifier rubyid__called'>_called</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_service'>service</span>
@@ -444,14 +444,14 @@
       <pre class="lines">
 
 
-40
 41
 42
 43
-44</pre>
+44
+45</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 40</span>
+      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 41</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_fail!'>fail!</span><span class='lparen'>(</span><span class='id identifier rubyid_context'>context</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_merge'>merge</span><span class='lparen'>(</span><span class='id identifier rubyid_context'>context</span><span class='rparen'>)</span>
@@ -500,12 +500,12 @@
       <pre class="lines">
 
 
-36
 37
-38</pre>
+38
+39</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 36</span>
+      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 37</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_failure?'>failure?</span>
   <span class='ivar'>@failure</span> <span class='op'>||</span> <span class='kw'>false</span>
@@ -530,13 +530,13 @@
       <pre class="lines">
 
 
-62
 63
 64
-65</pre>
+65
+66</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 62</span>
+      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 63</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_merge'>merge</span><span class='lparen'>(</span><span class='id identifier rubyid_other_context'>other_context</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_other_context'>other_context</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_key'>key</span><span class='comma'>,</span> <span class='id identifier rubyid_value'>value</span><span class='op'>|</span> <span class='kw'>self</span><span class='lbracket'>[</span><span class='id identifier rubyid_key'>key</span><span class='period'>.</span><span class='id identifier rubyid_to_sym'>to_sym</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_value'>value</span> <span class='rbrace'>}</span>
@@ -562,16 +562,16 @@
       <pre class="lines">
 
 
-50
 51
 52
 53
 54
 55
-56</pre>
+56
+57</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 50</span>
+      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 51</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_rollback!'>rollback!</span>
   <span class='kw'>return</span> <span class='kw'>false</span> <span class='kw'>if</span> <span class='ivar'>@rolled_back</span>
@@ -622,12 +622,12 @@
       <pre class="lines">
 
 
-32
 33
-34</pre>
+34
+35</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 32</span>
+      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 33</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_success?'>success?</span>
   <span class='op'>!</span><span class='id identifier rubyid_failure?'>failure?</span>

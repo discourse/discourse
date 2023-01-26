@@ -97,7 +97,7 @@
 <p class="children">
   
     
-      <strong class="modules">Modules:</strong> <span class='object_link'><a href="Base/ClassMethods.html" title="Chat::Service::Base::ClassMethods (module)">ClassMethods</a></span>, <span class='object_link'><a href="Base/Helpers.html" title="Chat::Service::Base::Helpers (module)">Helpers</a></span>
+      <strong class="modules">Modules:</strong> <span class='object_link'><a href="Base/Helpers.html" title="Chat::Service::Base::Helpers (module)">Helpers</a></span>
     
   
     
@@ -211,7 +211,6 @@
       <pre class="lines">
 
 
-112
 113
 114
 115
@@ -220,10 +219,11 @@
 118
 119
 120
-121</pre>
+121
+122</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 112</span>
+      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 113</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_initial_context'>initial_context</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='ivar'>@context</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="Base/Context.html" title="Chat::Service::Base::Context (class)">Context</a></span></span><span class='period'>.</span><span class='id identifier rubyid_build'><span class='object_link'><a href="Base/Context.html#build-class_method" title="Chat::Service::Base::Context.build (method)">build</a></span></span><span class='lparen'>(</span><span class='id identifier rubyid_initial_context'>initial_context</span><span class='rparen'>)</span>
@@ -255,14 +255,14 @@
       <pre class="lines">
 
 
-123
 124
 125
 126
-127</pre>
+127
+128</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 123</span>
+      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 124</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_run'>run</span>
   <span class='id identifier rubyid_run!'>run!</span>
@@ -289,7 +289,6 @@
       <pre class="lines">
 
 
-129
 130
 131
 132
@@ -306,10 +305,11 @@
 143
 144
 145
-146</pre>
+146
+147</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 129</span>
+      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 130</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_run!'>run!</span>
   <span class='id identifier rubyid_run_callbacks'>run_callbacks</span> <span class='symbol'>:contract</span> <span class='kw'>do</span>

@@ -6,6 +6,7 @@ module Chat
     # Note the slug is modified to prevent collisions.
     #
     # @example
+    #
     #  Chat::Service::TrashChannel.call(channel: channel, guardian: guardian)
     #
     class TrashChannel
@@ -14,7 +15,7 @@ module Chat
       # @!method call(channel:, guardian:)
       #   @param [ChatChannel] channel
       #   @param [Guardian] guardian
-      #   @return [ChatService::Context]
+      #   @return [Chat::Service::Base::Context]
 
       DELETE_CHANNEL_LOG_KEY = "chat_channel_delete"
 
