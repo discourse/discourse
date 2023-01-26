@@ -18,9 +18,13 @@ class Chat::ChannelDestroyer
   private def delete_channel
     ChatChannel.transaction do
       prevents_slug_collision
-      context.channel.trash!(context.guardian.user)
+      soft_delete_channel
       log_channel_deletion
     end
+  end
+
+  private def soft_delete_channel
+    context.channel.trash!(context.guardian.user)
   end
 
   private def enqueue_delete_channel_relations_job
