@@ -12,11 +12,11 @@ class ColorScheme < ActiveRecord::Base
       "header_background" => "111111",
       "header_primary" => "dddddd",
       "highlight" => "a87137",
+      "selected" => "2c2c2c",
+      "hover" => "313131",
       "danger" => "e45735",
       "success" => "1ca551",
-      "love" => "fa6c8d",
-      "selected" => "393939",
-      "hover" => "494949"
+      "love" => "fa6c8d"
     },
     # By @itsbhanusharma
     Neutral: {
@@ -27,11 +27,11 @@ class ColorScheme < ActiveRecord::Base
       "header_background" => "333333",
       "header_primary" => "f3f3f3",
       "highlight" => "ecec70",
+      "selected" => "e6e6e6",
+      "hover" => "f0f0f0",
       "danger" => "b85e48",
       "success" => "518751",
-      "love" => "fa6c8d",
-      "selected" => "e6e6e6",
-      "hover" => "f0f0f0"
+      "love" => "fa6c8d"
     },
     # By @Flower_Child
     "Grey Amber": {
@@ -42,11 +42,11 @@ class ColorScheme < ActiveRecord::Base
       "header_background" => "36393e",
       "header_primary" => "d9d9d9",
       "highlight" => "fdd459",
+      "selected" => "272727",
+      "hover" => "2F2F30",
       "danger" => "e45735",
       "success" => "fdd459",
       "love" => "fdd459",
-      "selected" => "272727",
-      "hover" => "2F2F30",
     },
     # By @rafafotes
     "Shades of Blue": {
@@ -57,11 +57,11 @@ class ColorScheme < ActiveRecord::Base
       "header_background" => "86bddb",
       "header_primary" => "203243",
       "highlight" => "86bddb",
+      "selected" => "bee0f2",
+      "hover" => "d2efff",
       "danger" => "bf3c3c",
       "success" => "70db82",
       "love" => "fc94cb",
-      "selected" => "e3ebf2",
-      "hover" => "f7f9fb",
     },
     # By @mikechristopher
     "Latte": {
@@ -72,11 +72,11 @@ class ColorScheme < ActiveRecord::Base
       "header_background" => "d7c9aa",
       "header_primary" => "262322",
       "highlight" => "d7c9aa",
+      "selected" => "3e2a14",
+      "hover" => "4c3319",
       "danger" => "db9584",
       "success" => "78be78",
       "love" => "8f6201",
-      "selected" => "3e2a14",
-      "hover" => "4c3319",
     },
     # By @Flower_Child
     Summer: {
@@ -87,6 +87,8 @@ class ColorScheme < ActiveRecord::Base
       "header_background" => "96ccbf",
       "header_primary" => "fff1e7",
       "highlight" => "f3c07f",
+      "selected" => "f5eaea",
+      "hover" => "f9f3f3",
       "danger" => "cfebdc",
       "success" => "fcb4b5",
       "love" => "f3c07f",
@@ -99,14 +101,14 @@ class ColorScheme < ActiveRecord::Base
       "quaternary" => "7e566a",
       "header_background" => "a97189",
       "header_primary" => "d9b2bb",
-      "highlight" => "6c3e63",
+      "highlight" => "bd36a3",
+      "selected" => "2a1620",
+      "hover" => "331b27",
       "danger" => "6c3e63",
       "success" => "d9b2bb",
       "love" => "d9b2bb",
-      "selected" => "2a1620",
-      "hover" => "331b27",
     },
-    "WCAG": {
+    "WCAG Light": {
       "primary" => "000000",
       "primary-medium" => "696969",
       "primary-low-mid" => "909090",
@@ -115,15 +117,15 @@ class ColorScheme < ActiveRecord::Base
       "quaternary" => "3369FF",
       "header_background" => "ffffff",
       "header_primary" => "000000",
-      "highlight" => "3369FF",
+      "highlight" => "ffff00",
       "highlight-high" => "0036E6",
       "highlight-medium" => "e0e9ff",
       "highlight-low" => "e0e9ff",
+      "selected" => "E2E9FE",
+      "hover" => "F0F4FE",
       "danger" => "BB1122",
       "success" => "3d854d",
       "love" => "9D256B",
-      "selected" => "2a1620",
-      "hover" => "331b27",
     },
     "WCAG Dark": {
       "primary" => "ffffff",
@@ -135,11 +137,11 @@ class ColorScheme < ActiveRecord::Base
       "header_background" => "000000",
       "header_primary" => "ffffff",
       "highlight" => "3369FF",
+      "selected" => "0d2569",
+      "hover" => "002382",
       "danger" => "BB1122",
       "success" => "3d854d",
       "love" => "9D256B",
-      "selected" => "002382",
-      "hover" => "0037cd",
     },
     # By @zenorocha
     Dracula: {
@@ -174,8 +176,9 @@ class ColorScheme < ActiveRecord::Base
       "header_primary" => "f2f2f2",
       "highlight_low" => "686D55",
       "highlight_medium" => "52592B",
-      "highlight" => "52592B",
       "highlight_high" => "C0C879",
+      "selected" => "4A4463",
+      "hover" => "61597f",
       "danger_low" => "957279",
       "danger" => "ff5555",
       "success_low" => "386D50",
@@ -183,8 +186,6 @@ class ColorScheme < ActiveRecord::Base
       "success" => "50fa7b",
       "love_low" => "6C4667",
       "love" => "ff79c6",
-      "selected" => "002382",
-      "hover" => "0037cd",
     },
     # By @altercation
     "Solarized Light": {
@@ -220,6 +221,8 @@ class ColorScheme < ActiveRecord::Base
       "highlight_medium" => "E3D0A3",
       "highlight" => "F2F481",
       "highlight_high" => "BCAA7F",
+      "selected" => "E8E6D3",
+      "hover" => "F0EBDA",
       "danger_low" => "F8D9C2",
       "danger" => "e45735",
       "success_low" => "CFE5B9",
@@ -263,6 +266,8 @@ class ColorScheme < ActiveRecord::Base
       "highlight_medium" => "464C33",
       "highlight" => "F2F481",
       "highlight_high" => "BFCA47",
+      "selected" => "143B44",
+      "hover" => "21454E",
       "danger_low" => "443836",
       "danger_medium" => "944835",
       "danger" => "e45735",
