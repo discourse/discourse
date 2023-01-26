@@ -17,7 +17,9 @@ class Chat::ChannelDestroyer
     enqueue_delete_channel_relations_job
   end
 
-  private def delete_channel
+  private
+
+  def delete_channel
     ChatChannel.transaction do
       prevents_slug_collision
       soft_delete_channel
@@ -25,15 +27,15 @@ class Chat::ChannelDestroyer
     end
   end
 
-  private def soft_delete_channel
+  def soft_delete_channel
     context.channel.trash!(context.guardian.user)
   end
 
-  private def enqueue_delete_channel_relations_job
+  def enqueue_delete_channel_relations_job
     Jobs.enqueue(:chat_channel_delete, chat_channel_id: context.channel.id)
   end
 
-  private def log_channel_deletion
+  def log_channel_deletion
     StaffActionLogger.new(context.guardian.user).log_custom(
       DELETE_CHANNEL_LOG_KEY,
       {
@@ -43,11 +45,11 @@ class Chat::ChannelDestroyer
     )
   end
 
-  private def prevents_slug_collision
+  def prevents_slug_collision
     context.channel.update!(slug: generate_deleted_slug)
   end
 
-  private def generate_deleted_slug
+  def generate_deleted_slug
     "#{Time.now.strftime("%Y%m%d-%H%M")}-#{context.channel.slug}-deleted".truncate(
       SiteSetting.max_topic_title_length,
       omission: "",
