@@ -3,5 +3,10 @@
 {
   "source": {
     "excludePattern": ""
+  },
+  "templates": {
+    "default": {
+      "includeDate": false
+    }
   }
 }
