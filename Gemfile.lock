@@ -234,6 +234,7 @@ GEM
     multi_json (1.15.0)
     multi_xml (0.6.0)
     mustache (1.1.1)
+    n_plus_one_control (0.6.2)
     net-http (0.3.2)
       uri
     net-imap (0.3.4)
@@ -583,6 +584,7 @@ DEPENDENCIES
   mocha
   multi_json
   mustache
+  n_plus_one_control
   net-http
   net-imap
   net-pop

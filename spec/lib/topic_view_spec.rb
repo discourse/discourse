@@ -1076,13 +1076,22 @@ RSpec.describe TopicView do
   describe "#tags" do
     subject(:topic_view_tags) { topic_view.tags }
 
-    let(:topic_view) { described_class.new(topic, user) }
+    let(:topic_view) { described_class.new(topic) }
     let(:topic) { Fabricate.build(:topic, tags: tags) }
     let(:tags) { Fabricate.build_times(2, :tag) }
-    let(:user) { Fabricate(:user) }
 
     it "returns the tags names" do
       expect(topic_view_tags).to match tags.map(&:name)
+    end
+
+    context "with N+1", :n_plus_one do
+      let!(:topic) { Fabricate(:topic) }
+
+      populate { |n| topic.tags = Fabricate.times(n, :tag) }
+
+      specify do
+        expect { described_class.new(topic.id).tags }.to perform_constant_number_of_queries
+      end
     end
   end
 end
