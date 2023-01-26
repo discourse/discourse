@@ -62,6 +62,8 @@ GEM
     annotate (3.2.0)
       activerecord (>= 3.2, < 8.0)
       rake (>= 10.4, < 14.0)
+    anyway_config (2.3.1)
+      ruby-next-core (>= 0.14.0)
     ast (2.4.2)
     aws-eventstream (1.2.0)
     aws-partitions (1.583.0)
@@ -134,6 +136,7 @@ GEM
       faker (~> 2.16)
       literate_randomizer
     docile (1.4.0)
+    dry-initializer (3.1.1)
     ecma-re-validator (0.4.0)
       regexp_parser (~> 2.2)
     email_reply_trimmer (0.1.13)
@@ -177,6 +180,8 @@ GEM
       progress (~> 3.0, >= 3.0.1)
     image_size (3.2.0)
     in_threads (1.6.0)
+    isolator (0.8.0)
+      sniffer (>= 0.3.1)
     jmespath (1.6.2)
     json (2.6.3)
     json-schema (3.0.0)
@@ -418,6 +423,7 @@ GEM
     rubocop-rspec (2.18.1)
       rubocop (~> 1.33)
       rubocop-capybara (~> 2.17)
+    ruby-next-core (0.15.3)
     ruby-prof (1.4.5)
     ruby-progressbar (1.11.0)
     ruby-readability (0.7.0)
@@ -456,6 +462,9 @@ GEM
     snaky_hash (2.0.1)
       hashie
       version_gem (~> 1.1, >= 1.1.1)
+    sniffer (0.5.0)
+      anyway_config (>= 1.0)
+      dry-initializer (~> 3)
     sprockets-rails (3.4.2)
       actionpack (>= 5.2)
       activesupport (>= 5.2)
@@ -560,6 +569,7 @@ DEPENDENCIES
   htmlentities
   http_accept_language
   image_optim
+  isolator
   json
   json_schemer
   listen
