@@ -190,6 +190,13 @@
       @id="category-number-daily-bump"
       @type="number"
     />
+    <label>
+      <Input
+        @type="checkbox"
+        @checked={{this.category.custom_fields.allow_multiple_auto_bumps}}
+      />
+      {{i18n "category.allow_multiple_auto_bumps"}}
+    </label>
   </section>
 </section>
 

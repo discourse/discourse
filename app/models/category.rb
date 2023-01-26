@@ -19,10 +19,12 @@ class Category < ActiveRecord::Base
   REQUIRE_TOPIC_APPROVAL = "require_topic_approval"
   REQUIRE_REPLY_APPROVAL = "require_reply_approval"
   NUM_AUTO_BUMP_DAILY = "num_auto_bump_daily"
+  ALLOW_MULTIPLE_AUTO_BUMPS = "allow_multiple_auto_bumps"
 
   register_custom_field_type(REQUIRE_TOPIC_APPROVAL, :boolean)
   register_custom_field_type(REQUIRE_REPLY_APPROVAL, :boolean)
   register_custom_field_type(NUM_AUTO_BUMP_DAILY, :integer)
+  register_custom_field_type(ALLOW_MULTIPLE_AUTO_BUMPS, :boolean)
 
   belongs_to :topic
   belongs_to :topic_only_relative_url,
@@ -615,6 +617,10 @@ class Category < ActiveRecord::Base
 
   def num_auto_bump_daily=(v)
     custom_fields[NUM_AUTO_BUMP_DAILY] = v
+  end
+
+  def allow_multiple_auto_bumps?
+    custom_fields[ALLOW_MULTIPLE_AUTO_BUMPS]
   end
 
   def auto_bump_limiter

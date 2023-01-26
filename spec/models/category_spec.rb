@@ -993,6 +993,16 @@ RSpec.describe Category do
       # does not include a bump message
       expect(post1.topic.reload.posts_count).to eq(1)
     end
+
+    context "when multiple auto-bumps are allowed" do
+      it "should bump an already bumped topic" do
+      end
+    end
+
+    context "when multiple auto-bumps are not allowed" do
+      it "should not bump an already auto-bumped topic" do
+      end
+    end
   end
 
   describe "validate permissions compatibility" do
