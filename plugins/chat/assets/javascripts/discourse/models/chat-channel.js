@@ -78,6 +78,10 @@ export default class ChatChannel extends RestModel {
     return this.slug || slugifyChannel(this);
   }
 
+  get routeModels() {
+    return [this.slugifiedTitle, this.id];
+  }
+
   get isDirectMessageChannel() {
     return this.chatable_type === CHATABLE_TYPES.directMessageChannel;
   }
