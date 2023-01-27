@@ -1550,12 +1550,10 @@ RSpec.describe Email::Receiver do
       handler_calls = 0
       handler =
         proc do |topic|
-          expect(
-            [
-              topic.incoming_email.first.from_address,
-              topic.incoming_email.first.to_addresses_split,
-            ].flatten,
-          ).to contain_exactly("discourse@bar.com", "category@foo.com")
+          expect(topic.incoming_email_addresses).to contain_exactly(
+            "discourse@bar.com",
+            "category@foo.com",
+          )
           handler_calls += 1
         end
 

@@ -3586,6 +3586,7 @@ en:
         updated: "Updated"
         name: "Name"
         name_placeholder: "What is this bookmark for?"
+        name_input_label: "Bookmark name"
         set_reminder: "Remind me"
         options: "Options"
         actions:
@@ -5298,6 +5299,7 @@ en:
           no_previous: "There is no previous value."
           deleted: "No new value. The record was deleted."
           actions:
+            permanently_delete_post_revisions: "permanently delete post revisions"
             delete_user: "delete user"
             change_trust_level: "change trust level"
             change_username: "change username"
