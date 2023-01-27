@@ -63,6 +63,7 @@ export default Controller.extend({
   resultCount: null,
   searchTypes: null,
   selected: [],
+  error: null,
 
   init() {
     this._super(...arguments);
@@ -382,6 +383,10 @@ export default Controller.extend({
               model.grouped_search_result = results.grouped_search_result;
               this.set("model", model);
             }
+            this.set("error", null);
+          })
+          .catch((e) => {
+            this.set("error", e.jqXHR.responseJSON?.message);
           })
           .finally(() => {
             this.setProperties({
