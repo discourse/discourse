@@ -247,7 +247,7 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Checks the validity of the given context. Implements ActiveModel::Validations and ActiveModel::Attributes.</p>
+<p>Checks the validity of the given context. Supports after/before/around callbacks. Implements ActiveModel::Validations and and ActiveModel::Attributes.</p>
 
 
   </div>
@@ -258,7 +258,11 @@
     <p class="tag_title">Examples:</p>
     
       
-      <pre class="example code"><code><span class='id identifier rubyid_contract'>contract</span> <span class='kw'>do</span>
+      <pre class="example code"><code><span class='id identifier rubyid_before_contract'>before_contract</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
+<span class='id identifier rubyid_around_contract'>around_contract</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
+<span class='id identifier rubyid_after_contract'>after_contract</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
+
+<span class='id identifier rubyid_contract'>contract</span> <span class='kw'>do</span>
   <span class='id identifier rubyid_attribute'>attribute</span> <span class='symbol'>:name</span>
   <span class='id identifier rubyid_validates'>validates</span> <span class='symbol'>:name</span><span class='comma'>,</span> <span class='label'>presence:</span> <span class='kw'>true</span>
 <span class='kw'>end</span></code></pre>
@@ -275,7 +279,7 @@
 </pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 121</span>
+      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 137</span>
 
 </pre>
     </td>
@@ -295,7 +299,7 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Called when the service fails, in reverse order of the services called</p>
+<p>Called when the service fails, in reverse order of the services called. Supports after/before/around callbacks.</p>
 
 
   </div>
@@ -306,7 +310,11 @@
     <p class="tag_title">Examples:</p>
     
       
-      <pre class="example code"><code><span class='id identifier rubyid_rollback'>rollback</span> <span class='lbrace'>{</span> <span class='id identifier rubyid_context'>context</span><span class='period'>.</span><span class='id identifier rubyid_topic'>topic</span><span class='period'>.</span><span class='id identifier rubyid_update!'>update!</span><span class='lparen'>(</span><span class='label'>archived:</span> <span class='kw'>false</span><span class='rparen'>)</span> <span class='rbrace'>}</span></code></pre>
+      <pre class="example code"><code><span class='id identifier rubyid_before_rollback'>before_rollback</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
+<span class='id identifier rubyid_around_rollback'>around_rollback</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
+<span class='id identifier rubyid_after_rollback'>after_rollback</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
+
+<span class='id identifier rubyid_rollback'>rollback</span> <span class='lbrace'>{</span> <span class='id identifier rubyid_context'>context</span><span class='period'>.</span><span class='id identifier rubyid_topic'>topic</span><span class='period'>.</span><span class='id identifier rubyid_update!'>update!</span><span class='lparen'>(</span><span class='label'>archived:</span> <span class='kw'>false</span><span class='rparen'>)</span> <span class='rbrace'>}</span></code></pre>
     
   </div>
 
@@ -320,7 +328,7 @@
 </pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 139</span>
+      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 163</span>
 
 </pre>
     </td>
@@ -340,7 +348,7 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Holds the business logic of the service</p>
+<p>Holds the business logic of the service. Supports after/before/around callbacks.</p>
 
 
   </div>
@@ -351,7 +359,11 @@
     <p class="tag_title">Examples:</p>
     
       
-      <pre class="example code"><code><span class='id identifier rubyid_service'>service</span> <span class='lbrace'>{</span> <span class='id identifier rubyid_context'>context</span><span class='period'>.</span><span class='id identifier rubyid_topic'>topic</span><span class='period'>.</span><span class='id identifier rubyid_update!'>update!</span><span class='lparen'>(</span><span class='label'>archived:</span> <span class='kw'>true</span><span class='rparen'>)</span> <span class='rbrace'>}</span></code></pre>
+      <pre class="example code"><code><span class='id identifier rubyid_before_service'>before_service</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
+<span class='id identifier rubyid_around_service'>around_service</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
+<span class='id identifier rubyid_after_service'>after_service</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
+
+<span class='id identifier rubyid_service'>service</span> <span class='lbrace'>{</span> <span class='id identifier rubyid_context'>context</span><span class='period'>.</span><span class='id identifier rubyid_topic'>topic</span><span class='period'>.</span><span class='id identifier rubyid_update!'>update!</span><span class='lparen'>(</span><span class='label'>archived:</span> <span class='kw'>true</span><span class='rparen'>)</span> <span class='rbrace'>}</span></code></pre>
     
   </div>
 
@@ -365,7 +377,7 @@
 </pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 132</span>
+      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 152</span>
 
 </pre>
     </td>
@@ -416,7 +428,7 @@
 </pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 115</span>
+      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 131</span>
 
 </pre>
     </td>

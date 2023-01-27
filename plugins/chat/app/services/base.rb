@@ -5,15 +5,19 @@ module Chat
     module Base
       extend ActiveSupport::Concern
 
+      # The only exception that can be raised by a service.
       class Failure < StandardError
+        # @return [Context]
         attr_reader :context
 
+        # @!visibility private
         def initialize(context = nil)
           @context = context
           super
         end
       end
 
+      # Internal class used to hold the contract of the service.
       class Contract
         include ActiveModel::API
         include ActiveModel::Attributes
@@ -25,11 +29,8 @@ module Chat
         end
       end
 
+      # Simple structure to hold the context of the service during its whole lifecycle.
       class Context < OpenStruct
-        def self.build(context = {})
-          self === context ? context : new(context)
-        end
-
         def success?
           !failure?
         end
@@ -38,12 +39,19 @@ module Chat
           @failure || false
         end
 
+        # Marks the service as failed.
+        # @param context [Hash, Context] the context to merge into the current one
+        # @example
+        #   context.fail!("failure": "something went wrong")
+        # @return [Context]
         def fail!(context = {})
           merge(context)
           @failure = true
           raise Failure, self
         end
 
+        # Rolls back the services called in reverse order.
+        # @!visibility private
         def rollback!
           return false if @rolled_back
           _called.reverse_each do |service|
@@ -52,16 +60,24 @@ module Chat
           @rolled_back = true
         end
 
+        # Merges the given context into the current one.
+        # @!visibility private
         def merge(other_context = {})
           other_context.each { |key, value| self[key.to_sym] = value }
           self
         end
 
+        # Marks the service as called, so that it can be rolled back.
+        # @!visibility private
         def called!(service)
           _called << service
         end
 
         private
+
+        def self.build(context = {})
+          self === context ? context : new(context)
+        end
 
         def _called
           @called ||= []
@@ -120,10 +136,14 @@ module Chat
 
       # @!scope class
       # @!method contract(&block)
-      # Checks the validity of the given context.
-      # Implements ActiveModel::Validations and ActiveModel::Attributes.
+      # Checks the validity of the given context. Supports after/before/around callbacks.
+      # Implements ActiveModel::Validations and and ActiveModel::Attributes.
       #
       # @example
+      #   before_contract {}
+      #   around_contract {}
+      #   after_contract {}
+      #
       #   contract do
       #     attribute :name
       #     validates :name, presence: true
@@ -131,16 +151,25 @@ module Chat
 
       # @!scope class
       # @!method service(&block)
-      # Holds the business logic of the service
+      # Holds the business logic of the service. Supports after/before/around callbacks.
       #
       # @example
+      #   before_service {}
+      #   around_service {}
+      #   after_service {}
+      #
       #   service { context.topic.update!(archived: true) }
 
       # @!scope class
       # @!method rollback(&block)
-      # Called when the service fails, in reverse order of the services called
+      # Called when the service fails, in reverse order of the services called.
+      # Supports after/before/around callbacks.
       #
       # @example
+      #   before_rollback {}
+      #   around_rollback {}
+      #   after_rollback {}
+      #
       #   rollback { context.topic.update!(archived: false) }
 
       # @!visibility private

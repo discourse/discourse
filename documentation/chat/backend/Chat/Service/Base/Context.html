@@ -101,44 +101,24 @@
   
 </div>
 
-
-
-
-
-
-
-
-  
-    <h2>
-      Class Method Summary
-      <small><a href="#" class="summary_toggle">collapse</a></small>
-    </h2>
-
-    <ul class="summary">
-      
-        <li class="public ">
-  <span class="summary_signature">
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
     
-      <a href="#build-class_method" title="build (class method)">.<strong>build</strong>(context = {})  &#x21d2; Object </a>
-    
+<p>Simple structure to hold the context of the service during its whole lifecycle.</p>
 
-    
-  </span>
-  
-  
-  
-  
-  
-  
+
+  </div>
+</div>
+<div class="tags">
   
 
-  
-    <span class="summary_desc"><div class='inline'></div></span>
-  
-</li>
+</div>
 
-      
-    </ul>
+
+
+
+
+
   
     <h2>
       Instance Method Summary
@@ -150,7 +130,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#called!-instance_method" title="#called! (instance method)">#<strong>called!</strong>(service)  &#x21d2; Object </a>
+      <a href="#fail!-instance_method" title="#fail! (instance method)">#<strong>fail!</strong>(context = {})  &#x21d2; Context </a>
     
 
     
@@ -164,29 +144,9 @@
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#fail!-instance_method" title="#fail! (instance method)">#<strong>fail!</strong>(context = {})  &#x21d2; Object </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>Marks the service as failed.</p>
+</div></span>
   
 </li>
 
@@ -195,50 +155,6 @@
   <span class="summary_signature">
     
       <a href="#failure%3F-instance_method" title="#failure? (instance method)">#<strong>failure?</strong>  &#x21d2; Boolean </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'></div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#merge-instance_method" title="#merge (instance method)">#<strong>merge</strong>(other_context = {})  &#x21d2; Object </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'></div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#rollback!-instance_method" title="#rollback! (instance method)">#<strong>rollback!</strong>  &#x21d2; Object </a>
     
 
     
@@ -285,80 +201,14 @@
 
   
 
-  <div id="class_method_details" class="method_details_list">
-    <h2>Class Method Details</h2>
-
-    
-      <div class="method_details first">
-  <h3 class="signature first" id="build-class_method">
-  
-    .<strong>build</strong>(context = {})  &#x21d2; <tt>Object</tt> 
-  
-
-  
-
-  
-</h3><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-29
-30
-31</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 29</span>
-
-<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_build'>build</span><span class='lparen'>(</span><span class='id identifier rubyid_context'>context</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
-  <span class='kw'>self</span> <span class='op'>===</span> <span class='id identifier rubyid_context'>context</span> <span class='op'>?</span> <span class='id identifier rubyid_context'>context</span> <span class='op'>:</span> <span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_context'>context</span><span class='rparen'>)</span>
-<span class='kw'>end</span></pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-  </div>
-
   <div id="instance_method_details" class="method_details_list">
     <h2>Instance Method Details</h2>
 
     
       <div class="method_details first">
-  <h3 class="signature first" id="called!-instance_method">
+  <h3 class="signature first" id="fail!-instance_method">
   
-    #<strong>called!</strong>(service)  &#x21d2; <tt>Object</tt> 
-  
-
-  
-
-  
-</h3><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-60
-61
-62</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 60</span>
-
-<span class='kw'>def</span> <span class='id identifier rubyid_called!'>called!</span><span class='lparen'>(</span><span class='id identifier rubyid_service'>service</span><span class='rparen'>)</span>
-  <span class='id identifier rubyid__called'>_called</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_service'>service</span>
-<span class='kw'>end</span></pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
-  <h3 class="signature " id="fail!-instance_method">
-  
-    #<strong>fail!</strong>(context = {})  &#x21d2; <tt>Object</tt> 
+    #<strong>fail!</strong>(context = {})  &#x21d2; <tt><span class='object_link'><a href="" title="Chat::Service::Base::Context (class)">Context</a></span></tt> 
   
 
   
@@ -367,11 +217,56 @@
 </h3><div class="docstring">
   <div class="discussion">
     
+<p>Marks the service as failed.</p>
+
 
   </div>
 </div>
 <div class="tags">
   
+  <div class="examples">
+    <p class="tag_title">Examples:</p>
+    
+      
+      <pre class="example code"><code><span class='id identifier rubyid_context'>context</span><span class='period'>.</span><span class='id identifier rubyid_fail!'>fail!</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>failure</span><span class='label_end'>&quot;:</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>something went wrong</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span></code></pre>
+    
+  </div>
+<p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>context</span>
+      
+      
+        <span class='type'>(<tt>Hash</tt>, <tt><span class='object_link'><a href="" title="Chat::Service::Base::Context (class)">Context</a></span></tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>{}</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the context to merge into the current one</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="" title="Chat::Service::Base::Context (class)">Context</a></span></tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
 <p class="tag_title">Raises:</p>
 <ul class="raise">
   
@@ -392,14 +287,14 @@
       <pre class="lines">
 
 
-41
-42
-43
-44
-45</pre>
+47
+48
+49
+50
+51</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 41</span>
+      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 47</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_fail!'>fail!</span><span class='lparen'>(</span><span class='id identifier rubyid_context'>context</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_merge'>merge</span><span class='lparen'>(</span><span class='id identifier rubyid_context'>context</span><span class='rparen'>)</span>
@@ -448,85 +343,15 @@
       <pre class="lines">
 
 
-37
 38
-39</pre>
+39
+40</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 37</span>
+      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 38</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_failure?'>failure?</span>
   <span class='ivar'>@failure</span> <span class='op'>||</span> <span class='kw'>false</span>
-<span class='kw'>end</span></pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
-  <h3 class="signature " id="merge-instance_method">
-  
-    #<strong>merge</strong>(other_context = {})  &#x21d2; <tt>Object</tt> 
-  
-
-  
-
-  
-</h3><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-55
-56
-57
-58</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 55</span>
-
-<span class='kw'>def</span> <span class='id identifier rubyid_merge'>merge</span><span class='lparen'>(</span><span class='id identifier rubyid_other_context'>other_context</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_other_context'>other_context</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_key'>key</span><span class='comma'>,</span> <span class='id identifier rubyid_value'>value</span><span class='op'>|</span> <span class='kw'>self</span><span class='lbracket'>[</span><span class='id identifier rubyid_key'>key</span><span class='period'>.</span><span class='id identifier rubyid_to_sym'>to_sym</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_value'>value</span> <span class='rbrace'>}</span>
-  <span class='kw'>self</span>
-<span class='kw'>end</span></pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
-  <h3 class="signature " id="rollback!-instance_method">
-  
-    #<strong>rollback!</strong>  &#x21d2; <tt>Object</tt> 
-  
-
-  
-
-  
-</h3><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-47
-48
-49
-50
-51
-52
-53</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 47</span>
-
-<span class='kw'>def</span> <span class='id identifier rubyid_rollback!'>rollback!</span>
-  <span class='kw'>return</span> <span class='kw'>false</span> <span class='kw'>if</span> <span class='ivar'>@rolled_back</span>
-  <span class='id identifier rubyid__called'>_called</span><span class='period'>.</span><span class='id identifier rubyid_reverse_each'>reverse_each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_service'>service</span><span class='op'>|</span>
-    <span class='id identifier rubyid_service'>service</span><span class='period'>.</span><span class='id identifier rubyid_instance_eval'>instance_eval</span><span class='lparen'>(</span><span class='op'>&amp;</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span><span class='period'>.</span><span class='id identifier rubyid_rollback_block'>rollback_block</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span><span class='period'>.</span><span class='id identifier rubyid_rollback_block'>rollback_block</span>
-  <span class='kw'>end</span>
-  <span class='ivar'>@rolled_back</span> <span class='op'>=</span> <span class='kw'>true</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -570,12 +395,12 @@
       <pre class="lines">
 
 
-33
 34
-35</pre>
+35
+36</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 33</span>
+      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 34</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_success?'>success?</span>
   <span class='op'>!</span><span class='id identifier rubyid_failure?'>failure?</span>

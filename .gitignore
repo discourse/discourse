@@ -8,7 +8,6 @@
 /.env
 /.procfile
 /dump.rdb
-/.yardoc
 
 /config/discourse.conf
 /config/discourse.pill
