@@ -16,7 +16,7 @@ class ColorScheme < ActiveRecord::Base
       "hover" => "313131",
       "danger" => "e45735",
       "success" => "1ca551",
-      "love" => "fa6c8d"
+      "love" => "fa6c8d",
     },
     # By @itsbhanusharma
     Neutral: {
@@ -31,7 +31,7 @@ class ColorScheme < ActiveRecord::Base
       "hover" => "f0f0f0",
       "danger" => "b85e48",
       "success" => "518751",
-      "love" => "fa6c8d"
+      "love" => "fa6c8d",
     },
     # By @Flower_Child
     "Grey Amber": {
@@ -64,7 +64,7 @@ class ColorScheme < ActiveRecord::Base
       "love" => "fc94cb",
     },
     # By @mikechristopher
-    "Latte": {
+    Latte: {
       "primary" => "f2e5d7",
       "secondary" => "262322",
       "tertiary" => "f7f2ed",
@@ -108,7 +108,7 @@ class ColorScheme < ActiveRecord::Base
       "success" => "d9b2bb",
       "love" => "d9b2bb",
     },
-    "WCAG": {
+    WCAG: {
       "primary" => "000000",
       "primary-medium" => "696969",
       "primary-low-mid" => "909090",
