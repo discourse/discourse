@@ -75,6 +75,11 @@ RSpec.describe UserStatusController do
         expect(response.status).to eq(400)
       end
 
+      it "validates emoji" do
+        put "/user-status.json", params: { description: "girl_with_pink_hair" }
+        expect(response.status).to eq(400)
+      end
+
       it "limits description parameter to 100 characters" do
         put "/user-status.json", params: { emoji: "tooth", description: "x" * 100 }
         expect(response.status).to eq(200)
