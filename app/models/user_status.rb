@@ -3,6 +3,8 @@
 class UserStatus < ActiveRecord::Base
   belongs_to :user
 
+  validates :description, length: { maximum: 100 }
+
   validate :ends_at_greater_than_set_at,
            if: Proc.new { |t| t.will_save_change_to_set_at? || t.will_save_change_to_ends_at? }
 
