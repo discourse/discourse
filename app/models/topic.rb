@@ -335,6 +335,9 @@ class Topic < ActiveRecord::Base
 
   scope :exclude_scheduled_bump_topics, -> { where.not(id: TopicTimer.scheduled_bump_topics) }
 
+  scope :exclude_auto_bumped_topics,
+        -> { where.not(id: Post.where(action_code: "autobumped").select(:topic_id)) }
+
   scope :secured,
         lambda { |guardian = nil|
           ids = guardian.secure_category_ids if guardian

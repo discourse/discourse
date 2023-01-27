@@ -666,6 +666,8 @@ class Category < ActiveRecord::Base
 
     filters.each { |filter| relation = filter.call(relation) } if filters.length > 0
 
+    relation = relation.exclude_auto_bumped_topics if !allow_multiple_auto_bumps?
+
     topic =
       relation
         .visible
