@@ -2,31 +2,41 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: pre-initializers/chat-plugin-api.js</title>
-
-    <script src="scripts/prettify/prettify.js"> </script>
-    <script src="scripts/prettify/lang-css.js"> </script>
-    <!--[if lt IE 9]>
-      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
-    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+    <title>Discourse: pre-initializers/chat-plugin-api.js</title>
+    
+      <link type="text/css" rel="stylesheet" href="styles/vendor/prism-custom.css">
+    
+    <link type="text/css" rel="stylesheet" href="styles/styles.css">
+    
 </head>
-
 <body>
 
-<div id="main">
+<header class="layout-header">
+  
+  <h1>
+    <a href="./index.html">
+      Discourse
+    </a>
+  </h1>
+  <nav class="layout-nav">
+    <ul><li class="nav-heading">Classes</li><li class="nav-heading"><span class="nav-item-type type-class" title="class">C</span><span class="nav-item-name is-class"><a href="Collection.html">Collection</a></span></li><li class="nav-item"><span class="nav-item-type type-function" title="function">F</span><span class="nav-item-name is-function"><a href="Collection.html#load">load</a></span></li><li class="nav-item"><span class="nav-item-type type-function" title="function">F</span><span class="nav-item-name is-function"><a href="Collection.html#loadMore">loadMore</a></span></li><li class="nav-heading"><span class="nav-item-type type-class" title="class">C</span><span class="nav-item-name is-class"><a href="PluginApi.html">PluginApi</a></span></li><li class="nav-item"><span class="nav-item-type type-function" title="function">F</span><span class="nav-item-name is-function"><a href="PluginApi.html#decorateChatMessage">decorateChatMessage</a></span></li><li class="nav-item"><span class="nav-item-type type-function" title="function">F</span><span class="nav-item-name is-function"><a href="PluginApi.html#registerChatComposerButton">registerChatComposerButton</a></span></li></ul><ul><li class="nav-heading">Modules</li><li class="nav-heading"><span class="nav-item-type type-module" title="module">M</span><span class="nav-item-name is-module"><a href="module-ChatApi.html">ChatApi</a></span></li><li class="nav-item"><span class="nav-item-type type-function" title="function">F</span><span class="nav-item-name is-function"><a href="module-ChatApi.html#categoryPermissions">categoryPermissions</a></span></li><li class="nav-item"><span class="nav-item-type type-function" title="function">F</span><span class="nav-item-name is-function"><a href="module-ChatApi.html#channel">channel</a></span></li><li class="nav-item"><span class="nav-item-type type-function" title="function">F</span><span class="nav-item-name is-function"><a href="module-ChatApi.html#channels">channels</a></span></li><li class="nav-item"><span class="nav-item-type type-function" title="function">F</span><span class="nav-item-name is-function"><a href="module-ChatApi.html#createChannel">createChannel</a></span></li><li class="nav-item"><span class="nav-item-type type-function" title="function">F</span><span class="nav-item-name is-function"><a href="module-ChatApi.html#createChannelArchive">createChannelArchive</a></span></li><li class="nav-item"><span class="nav-item-type type-function" title="function">F</span><span class="nav-item-name is-function"><a href="module-ChatApi.html#destroyChannel">destroyChannel</a></span></li><li class="nav-item"><span class="nav-item-type type-function" title="function">F</span><span class="nav-item-name is-function"><a href="module-ChatApi.html#followChannel">followChannel</a></span></li><li class="nav-item"><span class="nav-item-type type-function" title="function">F</span><span class="nav-item-name is-function"><a href="module-ChatApi.html#listChannelMemberships">listChannelMemberships</a></span></li><li class="nav-item"><span class="nav-item-type type-function" title="function">F</span><span class="nav-item-name is-function"><a href="module-ChatApi.html#listCurrentUserChannels">listCurrentUserChannels</a></span></li><li class="nav-item"><span class="nav-item-type type-function" title="function">F</span><span class="nav-item-name is-function"><a href="module-ChatApi.html#moveChannelMessages">moveChannelMessages</a></span></li><li class="nav-item"><span class="nav-item-type type-function" title="function">F</span><span class="nav-item-name is-function"><a href="module-ChatApi.html#sendMessage">sendMessage</a></span></li><li class="nav-item"><span class="nav-item-type type-function" title="function">F</span><span class="nav-item-name is-function"><a href="module-ChatApi.html#unfollowChannel">unfollowChannel</a></span></li><li class="nav-item"><span class="nav-item-type type-function" title="function">F</span><span class="nav-item-name is-function"><a href="module-ChatApi.html#updateChannel">updateChannel</a></span></li><li class="nav-item"><span class="nav-item-type type-function" title="function">F</span><span class="nav-item-name is-function"><a href="module-ChatApi.html#updateChannelStatus">updateChannelStatus</a></span></li><li class="nav-item"><span class="nav-item-type type-function" title="function">F</span><span class="nav-item-name is-function"><a href="module-ChatApi.html#updateCurrentUserChannelNotificationsSettings">updateCurrentUserChannelNotificationsSettings</a></span></li></ul>
+  </nav>
+</header>
 
-    <h1 class="page-title">Source: pre-initializers/chat-plugin-api.js</h1>
 
+<main class="layout-main  layout-content--source">
+  <div class="container">
+    <p class="page-kind">source</p>
+    <h1 class="page-title">pre-initializers/chat-plugin-api.js</h1>
     
 
 
 
     
-    <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>import { withPluginApi } from "discourse/lib/plugin-api";
+
+<section>
+    <article>
+        <pre id="source" class="source-page line-numbers"><code class="language-js">import { withPluginApi } from "discourse/lib/plugin-api";
 import {
   addChatMessageDecorator,
   resetChatMessageDecorators,
@@ -124,25 +134,23 @@ export default {
   },
 };
 </code></pre>
-        </article>
-    </section>
+    </article>
+</section>
 
 
 
 
-</div>
+  </div>
+</main>
 
-<nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-ChatApi.html">ChatApi</a></li><li><a href="module-Collection.html">Collection</a></li></ul><h3>Classes</h3><ul><li><a href="PluginApi.html">PluginApi</a></li><li><a href="module-ChatApi.html">ChatApi</a></li><li><a href="module-Collection.html">Collection</a></li></ul>
-</nav>
-
-<br class="clear">
-
-<footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.0</a>
+<footer class="layout-footer">
+  <div class="container">
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.0</a>
+  </div>
 </footer>
 
-<script> prettyPrint(); </script>
-<script src="scripts/linenumber.js"> </script>
+
+
+<script src="scripts/prism.dev.js"></script>
 </body>
 </html>

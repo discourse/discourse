@@ -8,5 +8,14 @@
     "default": {
       "includeDate": false
     }
+  },
+  "opts": {
+    "template": "./app/assets/javascripts/node_modules/tidy-jsdoc",
+    "prism-theme": "prism-custom",
+    "encoding": "utf8",
+    "recurse": true
+  },
+  "metadata": {
+    "title": "Discourse"
   }
 }
