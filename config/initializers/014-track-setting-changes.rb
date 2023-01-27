@@ -33,12 +33,14 @@ DiscourseEvent.on(:site_setting_changed) do |name, old_value, new_value|
 
   # Set bootstrap min users for private sites to a lower default
   if name == :login_required && SiteSetting.bootstrap_mode_enabled == true
-    if new_value == true && SiteSetting.bootstrap_mode_min_users == SiteSetting.defaults.get(:bootstrap_mode_min_users)
+    if new_value == true &&
+         SiteSetting.bootstrap_mode_min_users == SiteSetting.defaults.get(:bootstrap_mode_min_users)
       SiteSetting.bootstrap_mode_min_users = PRIVATE_BOOTSTRAP_MODE_MIN_USERS
     end
 
     # Set bootstrap min users for public sites back to the default
-    if new_value == false && SiteSetting.bootstrap_mode_min_users == PRIVATE_BOOTSTRAP_MODE_MIN_USERS
+    if new_value == false &&
+         SiteSetting.bootstrap_mode_min_users == PRIVATE_BOOTSTRAP_MODE_MIN_USERS
       SiteSetting.bootstrap_mode_min_users = SiteSetting.defaults.get(:bootstrap_mode_min_users)
     end
   end
