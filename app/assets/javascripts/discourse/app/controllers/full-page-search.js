@@ -383,6 +383,7 @@ export default Controller.extend({
               model.grouped_search_result = results.grouped_search_result;
               this.set("model", model);
             }
+            this.set("error", null);
           })
           .catch((e) => {
             this.set("error", e.jqXHR.responseJSON?.message);
