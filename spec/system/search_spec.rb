@@ -41,6 +41,7 @@ describe "Search", type: :system, js: true do
     before do
       SearchIndexer.enable
       SearchIndexer.index(topic, force: true)
+      SiteSetting.rate_limit_search_anon_user_per_minute = 15
       RateLimiter.enable
     end
 
