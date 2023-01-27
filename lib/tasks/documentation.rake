@@ -9,6 +9,7 @@ def generate_chat_documentation
   config = File.join(Rails.root, ".jsdoc")
   files = %w[
     plugins/chat/assets/javascripts/discourse/lib/collection.js
+    plugins/chat/assets/javascripts/discourse/pre-initializers/chat-plugin-api.js
     plugins/chat/assets/javascripts/discourse/services/chat-api.js
   ]
   `yarn --silent jsdoc --readme plugins/chat/README.md -c #{config} #{files.join(" ")} -d #{destination}`
