@@ -52,19 +52,19 @@ module Chat
           @rolled_back = true
         end
 
-        private
+        def merge(other_context = {})
+          other_context.each { |key, value| self[key.to_sym] = value }
+          self
+        end
 
         def called!(service)
           _called << service
         end
 
+        private
+
         def _called
           @called ||= []
-        end
-
-        def merge(other_context = {})
-          other_context.each { |key, value| self[key.to_sym] = value }
-          self
         end
       end
 
