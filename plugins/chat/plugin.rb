@@ -631,12 +631,6 @@ after_initialize do
     get "/browse/open" => "chat#respond"
     get "/browse/archived" => "chat#respond"
     get "/draft-channel" => "chat#respond"
-    get "/channel/:channel_id" => "chat#respond"
-    get "/channel/:channel_id/:channel_title" => "chat#respond", :as => "channel"
-    get "/channel/:channel_id/:channel_title/info" => "chat#respond"
-    get "/channel/:channel_id/:channel_title/info/about" => "chat#respond"
-    get "/channel/:channel_id/:channel_title/info/members" => "chat#respond"
-    get "/channel/:channel_id/:channel_title/info/settings" => "chat#respond"
     post "/enable" => "chat#enable_chat"
     post "/disable" => "chat#disable_chat"
     post "/dismiss-retention-reminder" => "chat#dismiss_retention_reminder"
@@ -657,6 +651,25 @@ after_initialize do
     post "/:chat_channel_id" => "chat#create_message"
     put "/flag" => "chat#flag"
     get "/emojis" => "emojis#index"
+
+    base_c_route = "/c/:channel_title/:channel_id"
+    get base_c_route => "chat#respond", :as => "channel"
+
+    %w[info info/about info/members info/settings].each do |route|
+      get "#{base_c_route}/#{route}" => "chat#respond"
+    end
+
+    # /channel -> /c redirects
+    get "/channel/:channel_id", to: redirect("/chat/c/-/%{channel_id}")
+
+    base_channel_route = "/channel/:channel_id/:channel_title"
+    redirect_base = "/chat/c/%{channel_title}/%{channel_id}"
+
+    get base_channel_route, to: redirect(redirect_base)
+
+    %w[info info/about info/members info/settings].each do |route|
+      get "#{base_channel_route}/#{route}", to: redirect("#{redirect_base}/#{route}")
+    end
   end
 
   Discourse::Application.routes.append do

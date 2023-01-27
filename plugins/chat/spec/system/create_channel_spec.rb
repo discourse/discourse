@@ -103,7 +103,7 @@ RSpec.describe "Create channel", type: :system, js: true do
       expect(page).to have_content(name)
       created_channel = ChatChannel.find_by(chatable_id: category_1.id)
       expect(created_channel.slug).to eq("cats-dogs")
-      expect(page).to have_current_path(chat.channel_path(created_channel.id, created_channel.slug))
+      expect(page).to have_current_path(chat.channel_path(created_channel.slug, created_channel.id))
     end
 
     it "allows the user to set a slug independently of name" do
@@ -119,7 +119,7 @@ RSpec.describe "Create channel", type: :system, js: true do
       expect(page).to have_content(name)
       created_channel = ChatChannel.find_by(chatable_id: category_1.id)
       expect(created_channel.slug).to eq("pets-everywhere")
-      expect(page).to have_current_path(chat.channel_path(created_channel.id, created_channel.slug))
+      expect(page).to have_current_path(chat.channel_path(created_channel.slug, created_channel.id))
     end
 
     context "when saving" do
@@ -165,7 +165,7 @@ RSpec.describe "Create channel", type: :system, js: true do
           expect(page).to have_content(category_1.name)
           created_channel = ChatChannel.find_by(chatable_id: category_1.id)
           expect(page).to have_current_path(
-            chat.channel_path(created_channel.id, created_channel.slug),
+            chat.channel_path(created_channel.slug, created_channel.id),
           )
         end
       end
