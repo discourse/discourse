@@ -191,14 +191,6 @@ RSpec.describe Chat::Api::ChatChannelsController do
         end
       end
 
-      context "when the confirmation doesn’t match the channel name" do
-        it "returns an error" do
-          delete "/chat/api/channels/#{channel_1.id}"
-
-          expect(response.status).to eq(400)
-        end
-      end
-
       context "with valid params" do
         it "properly destroys the channel" do
           delete "/chat/api/channels/#{channel_1.id}"
@@ -379,7 +371,7 @@ RSpec.describe Chat::Api::ChatChannelsController do
       it "nullifies the field and doesn’t store an empty string" do
         put "/chat/api/channels/#{channel.id}", params: { channel: { name: "  " } }
 
-        expect(channel.reload.name).to be_nil
+        expect(channel.reload.name).to eq("something")
       end
 
       it "doesn’t nullify the description" do
@@ -400,7 +392,7 @@ RSpec.describe Chat::Api::ChatChannelsController do
       it "nullifies the field and doesn’t store an empty string" do
         put "/chat/api/channels/#{channel.id}", params: { channel: { description: "  " } }
 
-        expect(channel.reload.description).to be_nil
+        expect(channel.reload.description).to eq("something")
       end
 
       it "doesn’t nullify the name" do

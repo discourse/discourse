@@ -23,23 +23,6 @@ module Chat
         def self.model_name
           ActiveModel::Name.new(self, nil, "contract")
         end
-
-        def initialize(params)
-          super(params)
-          change_attribute_defaults(params.with_indifferent_access)
-        end
-
-        def change_attribute_defaults(params)
-          # TODO: Not sure if there is a cleaner way to do this, also maybe
-          # a different name?
-          #
-          # Should be overridden by the contract if necessary.
-          #
-          # Can be used to inspect keys etc on the original params
-          # and set attribute values accordingly. for example, if a key
-          # is missing, we may not want to set the attribute to nil,
-          # but rather keep its original value based on a model
-        end
       end
 
       class Context < OpenStruct
@@ -163,13 +146,6 @@ module Chat
       # @!visibility private
       def initialize(initial_context = {})
         @context = Context.build(initial_context)
-
-        if self.class.contract_block
-          contract_class = Class.new(Contract)
-          contract_class.class_eval(&self.class.contract_block)
-          @contract = contract_class.new(initial_context.except(:guardian))
-          self.context[:contract] = contract
-        end
       end
 
       private
@@ -182,7 +158,12 @@ module Chat
 
       def run!
         run_callbacks :contract do
-          if contract
+          if self.class.contract_block
+            contract_class = Class.new(Contract)
+            contract_class.class_eval(&self.class.contract_block)
+            @contract = contract_class.new(self.context.to_h.except(:guardian))
+            self.context[:contract] = contract
+
             context.fail!("contract.failed" => true) unless contract.valid?
             context.merge(contract.attributes)
           end
