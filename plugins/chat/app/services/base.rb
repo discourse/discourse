@@ -133,7 +133,7 @@ module Chat
       # @!scope class
       # @!method contract(&block)
       # Checks the validity of the given context. Supports after/before/around callbacks.
-      # Implements ActiveModel::Validations and and ActiveModel::Attributes.
+      # Implements ActiveModel::Validations and ActiveModel::Attributes.
       #
       # @example
       #   before_contract {}
