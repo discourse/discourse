@@ -141,10 +141,19 @@ createWidget("reply-to-tab", {
     return { loading: false };
   },
 
-  buildAttributes() {
-    return {
+  buildAttributes(attrs) {
+    let result = {
       tabindex: "0",
     };
+
+    if (!this.attrs.mobileView) {
+      result["aria-controls"] = `embedded-posts__top--${attrs.post_number}`;
+      result["aria-expanded"] = this.attrs.repliesAbove.length
+        ? "true"
+        : "false";
+    }
+
+    return result;
   },
 
   html(attrs, state) {
@@ -504,28 +513,31 @@ createWidget("post-contents", {
     const repliesBelow = state.repliesBelow;
     if (repliesBelow.length) {
       result.push(
-        h("section.embedded-posts.bottom", [
-          repliesBelow.map((p) => {
-            return this.attach("embedded-post", p, {
-              model: p.asPost,
-              state: {
-                role: "region",
-                "aria-label": I18n.t("post.sr_embedded_reply_description", {
-                  post_number: attrs.post_number,
-                  username: p.username,
-                }),
-              },
-            });
-          }),
-          this.attach("button", {
-            title: "post.collapse",
-            icon: "chevron-up",
-            action: "toggleRepliesBelow",
-            actionParam: "true",
-            className: "btn collapse-up",
-            translatedAriaLabel: I18n.t("post.sr_collapse_replies"),
-          }),
-        ])
+        h(
+          `section.embedded-posts.bottom#embedded-posts__bottom--${this.attrs.post_number}`,
+          [
+            repliesBelow.map((p) => {
+              return this.attach("embedded-post", p, {
+                model: p.asPost,
+                state: {
+                  role: "region",
+                  "aria-label": I18n.t("post.sr_embedded_reply_description", {
+                    post_number: attrs.post_number,
+                    username: p.username,
+                  }),
+                },
+              });
+            }),
+            this.attach("button", {
+              title: "post.collapse",
+              icon: "chevron-up",
+              action: "toggleRepliesBelow",
+              actionParam: "true",
+              className: "btn collapse-up",
+              translatedAriaLabel: I18n.t("post.sr_collapse_replies"),
+            }),
+          ]
+        )
       );
     }
 
@@ -738,16 +750,19 @@ createWidget("post-article", {
       rows.push(
         h(
           "div.row",
-          h("section.embedded-posts.top.topic-body", [
-            this.attach("button", {
-              title: "post.collapse",
-              icon: "chevron-down",
-              action: "toggleReplyAbove",
-              actionParam: "true",
-              className: "btn collapse-down",
-            }),
-            replies,
-          ])
+          h(
+            `section.embedded-posts.top.topic-body#embedded-posts__top--${attrs.post_number}`,
+            [
+              this.attach("button", {
+                title: "post.collapse",
+                icon: "chevron-down",
+                action: "toggleReplyAbove",
+                actionParam: "true",
+                className: "btn collapse-down",
+              }),
+              replies,
+            ]
+          )
         )
       );
     }
@@ -759,7 +774,10 @@ createWidget("post-article", {
     rows.push(
       h("div.row", [
         this.attach("post-avatar", attrs),
-        this.attach("post-body", attrs),
+        this.attach(
+          "post-body",
+          Object.assign({}, attrs, { repliesAbove: state.repliesAbove })
+        ),
       ])
     );
     return rows;
