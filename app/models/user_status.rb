@@ -15,7 +15,7 @@ class UserStatus < ActiveRecord::Base
   end
 
   def emoji_exists
-    emoji && Emoji.exists?(emoji)
+    errors.add(:emoji, :invalid) if emoji && !Emoji.exists?(emoji)
   end
 
   def ends_at_greater_than_set_at
