@@ -317,7 +317,6 @@ sl:
       created: "To objavo ste dodali med zaznamke. %{name}"
       not_bookmarked: "zaznamuj prispevek"
       created_with_reminder: "To objavo ste zaznamovali z opomnikom %{date}. %{name}"
-      remove: "Odstrani zaznamek"
       delete: "Odstrani zaznamek"
       confirm_delete: "Ali ste prepričani, da želite odstraniti ta zaznamek? Opomnik bo prav tako odstranjen."
       confirm_clear: "Ste prepričani, da želite odstraniti vse svoje zaznamke iz te teme?"
@@ -383,7 +382,6 @@ sl:
     enable: "Omogoči"
     disable: "Onemogoči"
     continue: "Nadaljuj"
-    undo: "Razveljavi"
     switch_to_anon: "Vklopi anonimni način"
     switch_from_anon: "Izklopi anonimni način"
     banner:
@@ -635,6 +633,7 @@ sl:
         denied: "zavrnjeno"
         undone: "zahtevek umaknjen"
         handle: "obravnavaj zahteve za članstvo"
+        undo: "Razveljavi"
       manage:
         title: "Upravljaj"
         name: "Ime skupine"
@@ -981,7 +980,6 @@ sl:
         perm_denied_expl: "Zavrnili ste dovoljenje za obvestila. Omogočite obvestila v nastavitvah vašega brskalnika."
         disable: "Onemogoči obvestila"
         enable: "Omogoči obvestila"
-        each_browser_note: 'Opomba: To nastavitev morate spremeniti v vsakem brskalniku, ki ga uporabljate. Vsa obvestila bodo onemogočena, če imate možnost »ne moti«, ne glede na to nastavitev.'
         consent_prompt: "Ali hočete obvestila v brskalniku, ko prejmete odgovore na vaše prispevke?"
       dismiss: "Opusti"
       dismiss_notifications: "Opusti vse"
@@ -1418,6 +1416,7 @@ sl:
         invite:
           new_title: "Ustvari povabilo"
           instructions: "Delite to povezavo in takoj omogočite dostop do te strani:"
+          expires_in_time: "Poteče čez %{time}"
           show_advanced: "Pokaži dodatne možnosti"
           add_to_groups: "Dodaj v skupine"
           expires_at: "Poteče po"
@@ -2133,9 +2132,11 @@ sl:
         dismiss_new: "Opusti nove"
         toggle: "preklopi množično izbiro tem"
         actions: "Množična dejanja"
+        change_category: "Določi kategorijo..."
         close_topics: "Zapri teme"
         archive_topics: "Arhiviraj teme"
         move_messages_to_inbox: "Prestavi v Prejeto"
+        notification_level: "Obvestila..."
         change_notification_level: "Spremeni raven obveščanja"
         choose_new_category: "Izberi novo kategorijo za temo:"
         selected:
@@ -2366,12 +2367,14 @@ sl:
         open: "Odpri temo"
         close: "Zapri temo"
         multi_select: "Izberite prispevke..."
+        slow_mode: "Nastavi počasni način..."
         timed_update: "Nastavi opomnik teme..."
         pin: "Pripni temo"
         unpin: "Odpni temo"
         unarchive: "Odarhiviraj temo"
         archive: "Arhiviraj temo"
         reset_read: "Ponastavi podatke o branosti"
+        make_public: "Spremeni v javno temo..."
         make_private: "Spremeni v ZS"
         reset_bump_date: "Ponastavi izpostavljanje"
       feature:
@@ -2666,6 +2669,8 @@ sl:
         rebake: "Obnovi HTML"
         publish_page: "Objavljanje strani"
         unhide: "Ponovni prikaži"
+        change_owner: "Spremeni lastnika..."
+        grant_badge: "Podeli značko..."
         lock_post: "Zakleni prispevek"
         lock_post_description: "onemogoči avtorju da ureja prispevek"
         unlock_post: "Odkleni prispevek"
@@ -2678,6 +2683,8 @@ sl:
           few: "Ta tema ima trenutno več kot %{count} oglede in je morda priljubljena tarča iskanja. Ali ste prepričani, da želite to temo v celoti izbrisati, namesto da bi jo z urejanjem poskusili izboljšati?"
           other: "Ta tema ima trenutno več kot %{count} ogledov in je morda priljubljena tarča iskanja. Ali ste prepričani, da želite to temo v celoti izbrisati, namesto da bi jo z urejanjem poskusili izboljšati?"
         delete_topic: "izbriši temo"
+        add_post_notice: "Dodaj obvestilo osebja..."
+        change_post_notice: "Spremeni obvestilo osebja..."
         delete_post_notice: "Odstrani obvestilo osebja"
         remove_timer: "odstrani opomnik"
         edit_timer: "uredi časovnik"
@@ -2738,7 +2745,6 @@ sl:
             title: "Prikaži HTML obliko e-sporočila"
             button: "HTML"
       bookmarks:
-        created: "Ustvarjeno"
         name: "Polno ime"
         options: "Možnosti"
       filtered_replies:
@@ -2879,6 +2885,7 @@ sl:
     flagging:
       title: "Hvala, da pomagate ohraniti prijazno skupnost!"
       action: "Prijavi prispevek"
+      take_action: "Ukrepaj..."
       take_action_options:
         default:
           title: "Ukrepaj"
@@ -2996,7 +3003,6 @@ sl:
       few: "uporabniki"
       other: "uporabnikov"
     category_title: "Kategorija"
-    changed_by: "od %{author}"
     raw_email:
       title: "Dohodno e-sporočilo"
       not_available: "Ni na voljo!"
@@ -3320,6 +3326,7 @@ sl:
         everyone_can_use: "Oznake lahko uporablja kdorkoli"
         usable_only_by_groups: "Oznake so vidne vsem, vendar jih lahko uporabljajo le naslednje skupine"
         visible_only_to_groups: "Oznake so vidne le naslednjim skupinam"
+        parent_tag_placeholder: "Neobvezno"
       topics:
         none:
           unread: "Nimate neprebranih tem."
@@ -3399,18 +3406,19 @@ sl:
               content: "Admin"
             badges:
               content: "Značke"
+            everything:
+              content: "Vse"
             faq:
               content: "Pravila skupnosti"
             groups:
               content: "Skupine"
-              title: "Vse skupine"
             users:
               content: "Uporabniki"
             my_posts:
               content: "Moji prispevki"
             review:
               content: "Pregled"
-              title: "pregled"
+    until: "Do:"
   admin_js:
     type_to_filter: "vnesite za filter..."
     admin:
@@ -3569,6 +3577,7 @@ sl:
         user: "Uporabnik"
         title: "API"
         created: Ustvarjeno
+        never_used: (nikoli)
         generate: "Ustvari"
         revoke: "Prekliči"
         all_users: "Vsi uporabniki"
@@ -3723,8 +3732,8 @@ sl:
         colors:
           title: "Barve"
           copy_name_prefix: "Kopija od"
-          undo: "razveljavi"
-          revert: "povrni"
+          undo: "Razveljavi"
+          revert: "Povrni"
           primary:
             name: "primarni"
           highlight:

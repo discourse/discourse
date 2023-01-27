@@ -3,34 +3,71 @@
 {{/if}}
 
 <div class="watched-word-controls">
-  <DButton @class="btn-default download-link" @href={{this.downloadLink}} @icon="download" @label="admin.watched_words.download" />
+  <DButton
+    @class="btn-default download-link"
+    @href={{this.downloadLink}}
+    @icon="download"
+    @label="admin.watched_words.download"
+  />
 
-  <WatchedWordUploader @id="watched-word-uploader" @uploading={{this.uploading}} @actionKey={{this.actionNameKey}} @done={{action "uploadComplete"}} />
+  <WatchedWordUploader
+    @id="watched-word-uploader"
+    @uploading={{this.uploading}}
+    @actionKey={{this.actionNameKey}}
+    @done={{action "uploadComplete"}}
+  />
 
-  <DButton @class="watched-word-test" @label="admin.watched_words.test.button_label" @icon="far-eye" @action={{action "test"}} />
+  <DButton
+    @class="watched-word-test"
+    @label="admin.watched_words.test.button_label"
+    @icon="far-eye"
+    @action={{action "test"}}
+  />
 
-  <DButton @class="btn-danger clear-all" @label="admin.watched_words.clear_all" @icon="trash-alt" @action={{action "clearAll"}} />
+  <DButton
+    @class="btn-danger clear-all"
+    @label="admin.watched_words.clear_all"
+    @icon="trash-alt"
+    @action={{action "clearAll"}}
+  />
 </div>
 
 <p class="about">{{this.actionDescription}}</p>
 
 {{#if this.siteSettings.watched_words_regular_expressions}}
-  <p>{{html-safe (i18n "admin.watched_words.regex_warning" basePath=(base-path))}}</p>
+  <p>{{html-safe
+      (i18n "admin.watched_words.regex_warning" basePath=(base-path))
+    }}</p>
 {{/if}}
 
-<WatchedWordForm @actionKey={{this.actionNameKey}} @action={{action "recordAdded"}} @filteredContent={{this.currentAction.words}} />
+<WatchedWordForm
+  @actionKey={{this.actionNameKey}}
+  @action={{action "recordAdded"}}
+  @filteredContent={{this.currentAction.words}}
+/>
 
 {{#if this.currentAction.words}}
   <label class="show-words-checkbox">
-    <Input @type="checkbox" @checked={{this.adminWatchedWords.showWords}} disabled={{this.adminWatchedWords.disableShowWords}} />
-    {{i18n "admin.watched_words.show_words" count=this.currentAction.words.length}}
+    <Input
+      @type="checkbox"
+      @checked={{this.adminWatchedWords.showWords}}
+      disabled={{this.adminWatchedWords.disableShowWords}}
+    />
+    {{i18n
+      "admin.watched_words.show_words"
+      count=this.currentAction.words.length
+    }}
   </label>
 {{/if}}
 
 {{#if this.showWordsList}}
   <div class="watched-words-list watched-words-{{this.actionNameKey}}">
-    {{#each this.currentAction.words as |word| }}
-      <div class="watched-word-box"><AdminWatchedWord @actionKey={{this.actionNameKey}} @word={{word}} @action={{action "recordRemoved"}}/></div>
+    {{#each this.currentAction.words as |word|}}
+      <div class="watched-word-box"><AdminWatchedWord
+          @actionKey={{this.actionNameKey}}
+          @word={{word}}
+          @action={{action "recordRemoved"}}
+        /></div>
     {{/each}}
   </div>
 {{/if}}

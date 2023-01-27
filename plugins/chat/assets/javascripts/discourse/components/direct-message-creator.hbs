@@ -7,7 +7,7 @@
 {{#if (and this.channel.isDraft (not this.isLoading))}}
   <div class="direct-message-creator">
     <div
-      class="filter-area {{if this.isFilterFocused "is-focused"}}"
+      class="filter-area {{if this.isFilterFocused 'is-focused'}}"
       role="button"
       {{on "click" this.focusFilter}}
     >
@@ -18,17 +18,34 @@
 
       <div class="recipients">
         {{#each this.selectedUsers as |selectedUser|}}
-          <DButton @class={{concat "selected-user" (if (eq this.highlightedSelectedUser selectedUser) " is-highlighted")}} @action={{action "deselectUser" selectedUser}} @translatedTitle={{i18n
+          <DButton
+            @class={{concat
+              "selected-user"
+              (if
+                (eq this.highlightedSelectedUser selectedUser) " is-highlighted"
+              )
+            }}
+            @action={{action "deselectUser" selectedUser}}
+            @translatedTitle={{i18n
               "chat.direct_message_creator.selected_user_title"
               username=selectedUser.username
-            }}>
+            }}
+          >
             <ChatUserAvatar @user={{selectedUser}} />
             <span class="username">{{selectedUser.username}}</span>
             {{d-icon "times"}}
           </DButton>
         {{/each}}
 
-        <Input class="filter-usernames" @value={{this.term}} autofocus="autofocus" {{on "input" (action "onFilterInput" value="target.value")}} {{on "focusin" (action (mut this.isFilterFocused) true)}} {{on "focusout" (action "onFilterInputFocusOut")}} {{on "keyup" (action "handleFilterKeyUp")}} />
+        <Input
+          class="filter-usernames"
+          @value={{this.term}}
+          autofocus="autofocus"
+          {{on "input" (action "onFilterInput" value="target.value")}}
+          {{on "focusin" (action (mut this.isFilterFocused) true)}}
+          {{on "focusout" (action "onFilterInputFocusOut")}}
+          {{on "keyup" (action "handleFilterKeyUp")}}
+        />
       </div>
     </div>
 
@@ -38,7 +55,7 @@
           <ul class="results">
             {{#each this.users as |user|}}
               <li
-                class="user {{if (eq this.focusedUser user) "is-focused"}}"
+                class="user {{if (eq this.focusedUser user) 'is-focused'}}"
                 data-username={{user.username}}
                 role="button"
                 tabindex="-1"
@@ -53,7 +70,8 @@
                   @includeLink={{false}}
                   @includeAvatar={{false}}
                   @showStatus={{true}}
-                  @showStatusDescription={{true}} />
+                  @showStatusDescription={{true}}
+                />
               </li>
             {{/each}}
           </ul>

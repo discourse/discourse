@@ -2,9 +2,20 @@
   <div class="admin-controls">
     <div class="controls">
       <div class="inline-form">
-        <DButton @action={{action "toggleMenu"}} @class="menu-toggle" @icon="bars" />
-        <TextField @value={{this.filter}} @placeholderKey="admin.watched_words.search" @class="no-blur" />
-        <DButton @action={{action "clearFilter"}} @label="admin.watched_words.clear_filter" />
+        <DButton
+          @action={{action "toggleMenu"}}
+          @class="menu-toggle"
+          @icon="bars"
+        />
+        <TextField
+          @value={{this.filter}}
+          @placeholderKey="admin.watched_words.search"
+          @class="no-blur"
+        />
+        <DButton
+          @action={{action "clearFilter"}}
+          @label="admin.watched_words.clear_filter"
+        />
       </div>
     </div>
   </div>
@@ -15,7 +26,9 @@
         <li class={{action.nameKey}}>
           <LinkTo @route="adminWatchedWords.action" @model={{action.nameKey}}>
             {{action.name}}
-            {{#if action.words}}<span class="count">({{action.words.length}})</span>{{/if}}
+            {{#if action.words}}<span
+                class="count"
+              >({{action.words.length}})</span>{{/if}}
           </LinkTo>
         </li>
       {{/each}}

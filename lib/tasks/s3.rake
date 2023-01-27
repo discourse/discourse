@@ -20,30 +20,25 @@ def prefix_s3_path(path)
 end
 
 def should_skip?(path)
-  return false if ENV['FORCE_S3_UPLOADS']
+  return false if ENV["FORCE_S3_UPLOADS"]
   existing_assets.include?(prefix_s3_path(path))
 end
 
 def upload(path, remote_path, content_type, content_encoding = nil)
-
   options = {
-    cache_control: 'max-age=31556952, public, immutable',
+    cache_control: "max-age=31556952, public, immutable",
     content_type: content_type,
-    acl: 'public-read'
+    acl: "public-read",
   }
 
-  if content_encoding
-    options[:content_encoding] = content_encoding
-  end
+  options[:content_encoding] = content_encoding if content_encoding
 
   if should_skip?(remote_path)
     puts "Skipping: #{remote_path}"
   else
     puts "Uploading: #{remote_path}"
 
-    File.open(path) do |file|
-      helper.upload(file, remote_path, options)
-    end
+    File.open(path) { |file| helper.upload(file, remote_path, options) }
   end
 
   File.delete(path) if (File.exist?(path) && ENV["DELETE_ASSETS_AFTER_S3_UPLOAD"])
@@ -59,7 +54,12 @@ end
 
 def assets
   cached = Rails.application.assets&.cached
-  manifest = Sprockets::Manifest.new(cached, Rails.root + 'public/assets', Rails.application.config.assets.manifest)
+  manifest =
+    Sprockets::Manifest.new(
+      cached,
+      Rails.root + "public/assets",
+      Rails.application.config.assets.manifest,
+    )
 
   results = []
 
@@ -73,19 +73,18 @@ def assets
       asset_path = "assets/#{path}"
       results << [fullpath, asset_path, content_type]
 
-      if File.exist?(fullpath + '.br')
-        results << [fullpath + '.br', brotli_s3_path(asset_path), content_type, 'br']
+      if File.exist?(fullpath + ".br")
+        results << [fullpath + ".br", brotli_s3_path(asset_path), content_type, "br"]
       end
 
-      if File.exist?(fullpath + '.gz')
-        results << [fullpath + '.gz', gzip_s3_path(asset_path), content_type, 'gzip']
+      if File.exist?(fullpath + ".gz")
+        results << [fullpath + ".gz", gzip_s3_path(asset_path), content_type, "gzip"]
       end
 
-      if File.exist?(fullpath + '.map')
-        results << [fullpath + '.map', asset_path + '.map', 'application/json']
+      if File.exist?(fullpath + ".map")
+        results << [fullpath + ".map", asset_path + ".map", "application/json"]
       end
     end
-
   end
 
   results
@@ -102,7 +101,7 @@ def ensure_s3_configured!
   end
 end
 
-task 's3:correct_acl' => :environment do
+task "s3:correct_acl" => :environment do
   ensure_s3_configured!
 
   puts "ensuring public-read is set on every upload and optimized image"
@@ -129,14 +128,11 @@ task 's3:correct_acl' => :environment do
         puts "Skipping #{type} #{id} url is #{url} #{e}"
       end
     end
-    if i % 100 == 0
-      puts "#{i} done"
-    end
+    puts "#{i} done" if i % 100 == 0
   end
-
 end
 
-task 's3:correct_cachecontrol' => :environment do
+task "s3:correct_cachecontrol" => :environment do
   ensure_s3_configured!
 
   puts "ensuring cache-control is set on every upload and optimized image"
@@ -145,7 +141,7 @@ task 's3:correct_cachecontrol' => :environment do
 
   base_url = Discourse.store.absolute_base_url
 
-  cache_control = 'max-age=31556952, public, immutable'
+  cache_control = "max-age=31556952, public, immutable"
 
   objects = Upload.pluck(:id, :url).map { |array| array << :upload }
   objects.concat(OptimizedImage.pluck(:id, :url).map { |array| array << :optimized_image })
@@ -166,20 +162,17 @@ task 's3:correct_cachecontrol' => :environment do
           cache_control: cache_control,
           content_type: object.content_type,
           content_disposition: object.content_disposition,
-          metadata_directive: 'REPLACE'
+          metadata_directive: "REPLACE",
         )
       rescue => e
         puts "Skipping #{type} #{id} url is #{url} #{e}"
       end
     end
-    if i % 100 == 0
-      puts "#{i} done"
-    end
+    puts "#{i} done" if i % 100 == 0
   end
-
 end
 
-task 's3:ensure_cors_rules' => :environment do
+task "s3:ensure_cors_rules" => :environment do
   ensure_s3_configured!
 
   puts "Installing CORS rules..."
@@ -195,16 +188,19 @@ task 's3:ensure_cors_rules' => :environment do
   puts "Direct upload rules status: #{result[:direct_upload_rules_status]}."
 end
 
-task 's3:upload_assets' => [:environment, 's3:ensure_cors_rules'] do
-  assets.each do |asset|
-    upload(*asset)
-  end
+task "s3:upload_assets" => [:environment, "s3:ensure_cors_rules"] do
+  assets.each { |asset| upload(*asset) }
 end
 
-task 's3:expire_missing_assets' => :environment do
+task "s3:expire_missing_assets" => :environment do
   ensure_s3_configured!
 
   puts "Checking for stale S3 assets..."
+
+  if Discourse.readonly_mode?
+    puts "Discourse is in readonly mode. Skipping s3 asset deletion in case this is a read-only mirror of a live site."
+    exit 0
+  end
 
   assets_to_delete = existing_assets.dup
 

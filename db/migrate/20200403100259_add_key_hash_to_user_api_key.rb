@@ -6,9 +6,10 @@ class AddKeyHashToUserApiKey < ActiveRecord::Migration[6.0]
 
     batch_size = 500
     loop do
-      rows = DB
-        .query("SELECT id, key FROM user_api_keys WHERE key_hash IS NULL LIMIT #{batch_size}")
-        .map { |row| { id: row.id, key_hash: Digest::SHA256.hexdigest(row.key) } }
+      rows =
+        DB
+          .query("SELECT id, key FROM user_api_keys WHERE key_hash IS NULL LIMIT #{batch_size}")
+          .map { |row| { id: row.id, key_hash: Digest::SHA256.hexdigest(row.key) } }
 
       break if rows.size == 0
 

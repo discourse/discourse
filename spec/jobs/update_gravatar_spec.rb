@@ -2,14 +2,18 @@
 
 RSpec.describe Jobs::UpdateGravatar do
   fab!(:user) { Fabricate(:user) }
-  let(:temp) { Tempfile.new('test') }
+  let(:temp) { Tempfile.new("test") }
   fab!(:upload) { Fabricate(:upload, user: user) }
   let(:avatar) { user.create_user_avatar! }
 
   it "picks gravatar if system avatar is picked and gravatar was just downloaded" do
     temp.binmode
     # tiny valid png
-    temp.write(Base64.decode64("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACklEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg=="))
+    temp.write(
+      Base64.decode64(
+        "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACklEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg==",
+      ),
+    )
     temp.rewind
     FileHelper.expects(:download).returns(temp)
 
@@ -38,8 +42,7 @@ RSpec.describe Jobs::UpdateGravatar do
 
     SiteSetting.automatically_download_gravatars = true
 
-    expect { user.refresh_avatar }
-      .not_to change { Jobs::UpdateGravatar.jobs.count }
+    expect { user.refresh_avatar }.not_to change { Jobs::UpdateGravatar.jobs.count }
     user.reload
 
     expect(user.uploaded_avatar_id).to eq(nil)

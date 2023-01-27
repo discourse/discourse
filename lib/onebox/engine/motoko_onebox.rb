@@ -6,7 +6,7 @@ module Onebox
       include Engine
       include StandardEmbed
 
-      matches_regexp(/^https?:\/\/embed\.smartcontracts\.org\/?.*/)
+      matches_regexp(%r{^https?://embed\.smartcontracts\.org/?.*})
       requires_iframe_origins "https://embed.smartcontracts.org"
       always_https
 

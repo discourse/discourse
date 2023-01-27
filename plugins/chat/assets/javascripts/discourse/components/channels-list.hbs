@@ -106,7 +106,10 @@
   {{/if}}
 
   <div id="direct-message-channels" class={{this.directMessageChannelClasses}}>
-    {{#each this.chatChannelsManager.truncatedDirectMessageChannels as |channel|}}
+    {{#each
+      this.chatChannelsManager.truncatedDirectMessageChannels
+      as |channel|
+    }}
       <ChatChannelRow @channel={{channel}} @options={{hash leaveButton=true}} />
     {{/each}}
   </div>

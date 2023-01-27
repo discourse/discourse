@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class UserNotificationScheduleProcessor
-
   attr_accessor :schedule, :user, :timezone_name
 
   def initialize(schedule)
@@ -38,10 +37,11 @@ class UserNotificationScheduleProcessor
         user.do_not_disturb_timings.find_or_create_by(previous_timing.attributes.except("id"))
       end
 
-      next_timing = user.do_not_disturb_timings.new(
-        starts_at: utc_time_at_minute(local_time, end_minute),
-        scheduled: true
-      )
+      next_timing =
+        user.do_not_disturb_timings.new(
+          starts_at: utc_time_at_minute(local_time, end_minute),
+          scheduled: true,
+        )
       save_timing_and_continue(local_time, next_timing, days)
     else
       save_timing_and_continue(local_time, previous_timing, days)
@@ -53,14 +53,13 @@ class UserNotificationScheduleProcessor
   def find_previous_timing(local_time)
     # Try and find a previously scheduled dnd timing that we can extend if the
     # ends_at is at the previous midnight. fallback to a new timing if not.
-    previous = user.do_not_disturb_timings.find_by(
-      ends_at: (local_time - 1.day).end_of_day.utc,
-      scheduled: true
-    )
-    previous || user.do_not_disturb_timings.new(
-      starts_at: local_time.beginning_of_day.utc,
-      scheduled: true
-    )
+    previous =
+      user.do_not_disturb_timings.find_by(
+        ends_at: (local_time - 1.day).end_of_day.utc,
+        scheduled: true,
+      )
+    previous ||
+      user.do_not_disturb_timings.new(starts_at: local_time.beginning_of_day.utc, scheduled: true)
   end
 
   def save_timing_and_continue(local_time, timing, days)
@@ -78,7 +77,15 @@ class UserNotificationScheduleProcessor
   def utc_time_at_minute(base_time, total_minutes)
     hour = total_minutes / 60
     minute = total_minutes % 60
-    Time.new(base_time.year, base_time.month, base_time.day, hour, minute, 0, base_time.formatted_offset).utc
+    Time.new(
+      base_time.year,
+      base_time.month,
+      base_time.day,
+      hour,
+      minute,
+      0,
+      base_time.formatted_offset,
+    ).utc
   end
 
   def transform_wday(wday)

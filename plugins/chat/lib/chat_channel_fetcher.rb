@@ -30,10 +30,14 @@ module Chat::ChatChannelFetcher
   end
 
   def self.generate_allowed_channel_ids_sql(guardian, exclude_dm_channels: false)
-    category_channel_sql = Category.post_create_allowed(guardian)
-      .joins("INNER JOIN chat_channels ON chat_channels.chatable_id = categories.id AND chat_channels.chatable_type = 'Category'")
-      .select("chat_channels.id")
-      .to_sql
+    category_channel_sql =
+      Category
+        .post_create_allowed(guardian)
+        .joins(
+          "INNER JOIN chat_channels ON chat_channels.chatable_id = categories.id AND chat_channels.chatable_type = 'Category'",
+        )
+        .select("chat_channels.id")
+        .to_sql
     dm_channel_sql = ""
     if !exclude_dm_channels
       dm_channel_sql = <<~SQL
@@ -75,8 +79,7 @@ module Chat::ChatChannelFetcher
   end
 
   def self.secured_public_channel_search(guardian, options = {})
-    allowed_channel_ids =
-      generate_allowed_channel_ids_sql(guardian, exclude_dm_channels: true)
+    allowed_channel_ids = generate_allowed_channel_ids_sql(guardian, exclude_dm_channels: true)
 
     channels = ChatChannel.includes(chatable: [:topic_only_relative_url])
     channels = channels.includes(:chat_channel_archive) if options[:include_archives]

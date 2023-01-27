@@ -13,6 +13,7 @@ register_asset "stylesheets/mixins/chat-scrollbar.scss"
 register_asset "stylesheets/common/core-extensions.scss"
 register_asset "stylesheets/common/chat-emoji-picker.scss"
 register_asset "stylesheets/common/chat-channel-card.scss"
+register_asset "stylesheets/common/create-channel-modal.scss"
 register_asset "stylesheets/common/dc-filter-input.scss"
 register_asset "stylesheets/common/common.scss"
 register_asset "stylesheets/common/chat-browse.scss"
@@ -198,6 +199,7 @@ after_initialize do
   load File.expand_path("../app/jobs/regular/chat_notify_watching.rb", __FILE__)
   load File.expand_path("../app/jobs/regular/update_channel_user_count.rb", __FILE__)
   load File.expand_path("../app/jobs/regular/delete_user_messages.rb", __FILE__)
+  load File.expand_path("../app/jobs/regular/send_message_notifications.rb", __FILE__)
   load File.expand_path("../app/jobs/scheduled/delete_old_chat_messages.rb", __FILE__)
   load File.expand_path("../app/jobs/scheduled/update_user_counts_for_chat_channels.rb", __FILE__)
   load File.expand_path("../app/jobs/scheduled/email_chat_notifications.rb", __FILE__)
@@ -370,14 +372,6 @@ after_initialize do
     end
   end
 
-  if respond_to?(:register_upload_unused)
-    register_upload_unused do |uploads|
-      uploads.joins("LEFT JOIN chat_uploads cu ON cu.upload_id = uploads.id").where(
-        "cu.upload_id IS NULL",
-      )
-    end
-  end
-
   if respond_to?(:register_upload_in_use)
     register_upload_in_use do |upload|
       ChatMessage.where(
@@ -454,6 +448,8 @@ after_initialize do
   add_to_serializer(:current_user, :chat_drafts) do
     ChatDraft
       .where(user_id: object.id)
+      .order(updated_at: :desc)
+      .limit(20)
       .pluck(:chat_channel_id, :data)
       .map { |row| { channel_id: row[0], data: row[1] } }
   end
@@ -627,12 +623,6 @@ after_initialize do
     # incoming_webhooks_controller routes
     post "/hooks/:key/slack" => "incoming_chat_webhooks#create_message_slack_compatible"
 
-    # chat_channel_controller routes
-    get "/chat_channels" => "chat_channels#index"
-    post "/chat_channels/:chat_channel_id/notification_settings" =>
-           "chat_channels#notification_settings"
-    get "/chat_channels/:chat_channel_id" => "chat_channels#show"
-
     # chat_controller routes
     get "/" => "chat#respond"
     get "/browse" => "chat#respond"
@@ -641,12 +631,6 @@ after_initialize do
     get "/browse/open" => "chat#respond"
     get "/browse/archived" => "chat#respond"
     get "/draft-channel" => "chat#respond"
-    get "/channel/:channel_id" => "chat#respond"
-    get "/channel/:channel_id/:channel_title" => "chat#respond", :as => "channel"
-    get "/channel/:channel_id/:channel_title/info" => "chat#respond"
-    get "/channel/:channel_id/:channel_title/info/about" => "chat#respond"
-    get "/channel/:channel_id/:channel_title/info/members" => "chat#respond"
-    get "/channel/:channel_id/:channel_title/info/settings" => "chat#respond"
     post "/enable" => "chat#enable_chat"
     post "/disable" => "chat#disable_chat"
     post "/dismiss-retention-reminder" => "chat#dismiss_retention_reminder"
@@ -667,6 +651,25 @@ after_initialize do
     post "/:chat_channel_id" => "chat#create_message"
     put "/flag" => "chat#flag"
     get "/emojis" => "emojis#index"
+
+    base_c_route = "/c/:channel_title/:channel_id"
+    get base_c_route => "chat#respond", :as => "channel"
+
+    %w[info info/about info/members info/settings].each do |route|
+      get "#{base_c_route}/#{route}" => "chat#respond"
+    end
+
+    # /channel -> /c redirects
+    get "/channel/:channel_id", to: redirect("/chat/c/-/%{channel_id}")
+
+    base_channel_route = "/channel/:channel_id/:channel_title"
+    redirect_base = "/chat/c/%{channel_title}/%{channel_id}"
+
+    get base_channel_route, to: redirect(redirect_base)
+
+    %w[info info/about info/members info/settings].each do |route|
+      get "#{base_channel_route}/#{route}", to: redirect("#{redirect_base}/#{route}")
+    end
   end
 
   Discourse::Application.routes.append do

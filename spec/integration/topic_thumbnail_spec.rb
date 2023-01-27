@@ -9,11 +9,11 @@ RSpec.describe "Topic Thumbnails" do
   fab!(:topic) { Fabricate(:topic, image_upload_id: image.id) }
   fab!(:user) { Fabricate(:user) }
 
-  describe 'latest' do
+  describe "latest" do
     def get_topic
       Discourse.redis.del(topic.thumbnail_job_redis_key(Topic.thumbnail_sizes))
       Discourse.redis.del(topic.thumbnail_job_redis_key([]))
-      get '/latest.json'
+      get "/latest.json"
       expect(response.status).to eq(200)
       response.parsed_body["topic_list"]["topics"][0]
     end
@@ -27,11 +27,7 @@ RSpec.describe "Topic Thumbnails" do
     context "with a theme" do
       before do
         theme = Fabricate(:theme)
-        theme.theme_modifier_set.topic_thumbnail_sizes = [
-          [10, 10],
-          [20, 20],
-          [30, 30]
-        ]
+        theme.theme_modifier_set.topic_thumbnail_sizes = [[10, 10], [20, 20], [30, 30]]
         theme.theme_modifier_set.save!
         theme.set_default!
       end
@@ -39,15 +35,15 @@ RSpec.describe "Topic Thumbnails" do
       it "includes the theme specified resolutions" do
         topic_json = nil
 
-        expect do
-          topic_json = get_topic
-        end.to change { Jobs::GenerateTopicThumbnails.jobs.size }.by(2)
+        expect do topic_json = get_topic end.to change {
+          Jobs::GenerateTopicThumbnails.jobs.size
+        }.by(2)
 
-        expect(
-          Jobs::GenerateTopicThumbnails.jobs.map { |j| j["args"][0]["extra_sizes"] }
-        ).to eq([
-          nil, # Job for core/plugin sizes
-          [[10, 10], [20, 20], [30, 30]]] # Job for theme sizes
+        expect(Jobs::GenerateTopicThumbnails.jobs.map { |j| j["args"][0]["extra_sizes"] }).to eq(
+          [
+            nil, # Job for core/plugin sizes
+            [[10, 10], [20, 20], [30, 30]],
+          ], # Job for theme sizes
         )
 
         thumbnails = topic_json["thumbnails"]
@@ -67,9 +63,9 @@ RSpec.describe "Topic Thumbnails" do
         Jobs::GenerateTopicThumbnails.new.execute(args.with_indifferent_access)
 
         # Request again
-        expect do
-          topic_json = get_topic
-        end.not_to change { Jobs::GenerateTopicThumbnails.jobs.size }
+        expect do topic_json = get_topic end.not_to change {
+          Jobs::GenerateTopicThumbnails.jobs.size
+        }
 
         thumbnails = topic_json["thumbnails"]
 
@@ -82,7 +78,6 @@ RSpec.describe "Topic Thumbnails" do
         expect(thumbnails[1]["width"]).to eq(9)
         expect(thumbnails[1]["height"]).to eq(9)
         expect(thumbnails[1]["url"]).to include("/optimized/")
-
       end
     end
 
@@ -92,25 +87,23 @@ RSpec.describe "Topic Thumbnails" do
         plugin.register_topic_thumbnail_size [512, 512]
       end
 
-      after do
-        DiscoursePluginRegistry.reset!
-      end
+      after { DiscoursePluginRegistry.reset! }
 
       it "includes the theme specified resolutions" do
         topic_json = nil
 
-        expect do
-          topic_json = get_topic
-        end.to change { Jobs::GenerateTopicThumbnails.jobs.size }.by(1)
+        expect do topic_json = get_topic end.to change {
+          Jobs::GenerateTopicThumbnails.jobs.size
+        }.by(1)
 
         # Run the job
         args = Jobs::GenerateTopicThumbnails.jobs.last["args"].first
         Jobs::GenerateTopicThumbnails.new.execute(args.with_indifferent_access)
 
         # Request again
-        expect do
-          topic_json = get_topic
-        end.not_to change { Jobs::GenerateTopicThumbnails.jobs.size }
+        expect do topic_json = get_topic end.not_to change {
+          Jobs::GenerateTopicThumbnails.jobs.size
+        }
 
         thumbnails = topic_json["thumbnails"]
 

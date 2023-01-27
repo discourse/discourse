@@ -9,5 +9,9 @@
       {{i18n "review.deleted_user"}}
     {{/if}}
   </span>
-  <PluginOutlet @name="after-reviewable-post-user" @connectorTagName="div" @args={{hash user=this.user}} />
+  <PluginOutlet
+    @name="after-reviewable-post-user"
+    @connectorTagName="div"
+    @args={{hash user=this.user}}
+  />
 </div>

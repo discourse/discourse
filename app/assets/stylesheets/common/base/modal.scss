@@ -636,36 +636,21 @@
 }
 
 .topic-bulk-actions-modal {
+  .modal-inner-container {
+    min-width: 0;
+    width: 100%;
+  }
   p {
     margin-top: 0;
   }
-  &.full .modal-body {
-    height: 400px;
-    max-height: 400px;
-  }
-
   .bulk-buttons {
-    display: flex;
-    flex-wrap: wrap;
-    margin-right: -1%;
-
-    .btn {
-      flex: 1 0 30%;
-      margin-bottom: 1em;
-      margin-right: 1%;
-      white-space: nowrap;
-      overflow: hidden;
-      max-width: 33%;
-
-      @media screen and (max-width: 767px) {
-        flex: 1 0 48%;
-        max-width: 48%;
-      }
-
-      @include breakpoint(mobile-extra-large) {
-        flex: 1 1 auto;
-        min-width: 49%;
-      }
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(12em, 1fr));
+    gap: 0.5em;
+    max-width: 100%;
+    min-width: 0;
+    .d-button-label {
+      @include ellipsis;
     }
   }
 }

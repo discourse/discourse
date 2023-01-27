@@ -123,6 +123,7 @@ function _setupExperimental(
     key: "#",
     afterComplete: autocompleteOptions.afterComplete,
     treatAsTextarea: autocompleteOptions.treatAsTextarea,
+    scrollElementSelector: ".hashtag-autocomplete__fadeout",
     autoSelectFirstSuggestion: true,
     transformComplete: (obj) => obj.ref,
     dataSource: (term) => {

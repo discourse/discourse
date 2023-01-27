@@ -399,10 +399,6 @@ et:
         one: "peaaegu %{count} aasta tagasi"
         other: "peaaegu %{count} aastat tagasi"
   password_reset:
-    choose_new: "Vali uus parool"
-    choose: "Vali parool"
-    update: "Uuenda parooli"
-    save: "Määra Parool"
     title: "Uuenda Parool"
     success: "Sinu parooli muutmine õnnestus ja oled nüüd sisse logitud."
     success_unapproved: "Sinu parooli muutmine õnnestus."
@@ -819,6 +815,8 @@ et:
     user_group_mentioned:
       subject_template: "[%{email_prefix}] %{topic_title}"
     user_posted:
+      subject_template: "[%{email_prefix}] %{topic_title}"
+    user_watching_category_or_tag:
       subject_template: "[%{email_prefix}] %{topic_title}"
     user_watching_first_post:
       subject_template: "[%{email_prefix}] %{topic_title}"

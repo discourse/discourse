@@ -15,7 +15,7 @@ registerUnbound("format-chat-date", function (message, details, mode) {
 
   if (details) {
     url = getURL(
-      `/chat/channel/${details.chat_channel_id}/-?messageId=${message.id}`
+      `/chat/c/-/${details.chat_channel_id}?messageId=${message.id}`
     );
   }
 

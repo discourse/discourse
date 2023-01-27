@@ -73,11 +73,7 @@ class UserCardSerializer < BasicUserSerializer
              :pending_posts_count,
              :status
 
-  untrusted_attributes :bio_excerpt,
-                       :website,
-                       :website_name,
-                       :location,
-                       :card_background_upload_url
+  untrusted_attributes :bio_excerpt, :website, :website_name, :location, :card_background_upload_url
 
   staff_attributes :staged
 
@@ -91,8 +87,7 @@ class UserCardSerializer < BasicUserSerializer
   end
 
   def include_email?
-    (object.id && object.id == scope.user.try(:id)) ||
-      (scope.is_staff? && object.staged?)
+    (object.id && object.id == scope.user.try(:id)) || (scope.is_staff? && object.staged?)
   end
 
   alias_method :include_secondary_emails?, :include_email?
@@ -111,13 +106,14 @@ class UserCardSerializer < BasicUserSerializer
   end
 
   def website_name
-    uri = begin
-      URI(website.to_s)
-    rescue URI::Error
-    end
+    uri =
+      begin
+        URI(website.to_s)
+      rescue URI::Error
+      end
 
     return if uri.nil? || uri.host.nil?
-    uri.host.sub(/^www\./, '') + uri.path
+    uri.host.sub(/\Awww\./, "") + uri.path
   end
 
   def ignored

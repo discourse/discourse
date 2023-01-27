@@ -335,7 +335,7 @@ acceptance("User - Logout", function (needs) {
   test("Dialog works", async function (assert) {
     sinon.stub(logout, "default");
     await visit("/u/eviltrout");
-    await publishToMessageBus("/logout");
+    await publishToMessageBus("/logout/19");
 
     assert.ok(exists(".dialog-body"));
     assert.ok(

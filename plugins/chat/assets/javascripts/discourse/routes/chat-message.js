@@ -11,8 +11,8 @@ export default class ChatMessageRoute extends DiscourseRoute {
       .then((response) => {
         this.transitionTo(
           "chat.channel",
-          response.chat_channel_id,
           response.chat_channel_title,
+          response.chat_channel_id,
           {
             queryParams: { messageId: params.messageId },
           }

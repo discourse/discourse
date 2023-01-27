@@ -39,9 +39,24 @@ module SystemHelpers
     retry
   end
 
+  def wait_for_attribute(
+    element,
+    attribute,
+    value,
+    timeout: Capybara.default_max_wait_time,
+    frequency: 0.01
+  )
+    try_until_success(timeout: timeout, frequency: frequency) do
+      expect(element[attribute.to_sym]).to eq(value)
+    end
+  end
+
   def resize_window(width: nil, height: nil)
     original_size = page.driver.browser.manage.window.size
-    page.driver.browser.manage.window.resize_to(width || original_size.width, height || original_size.height)
+    page.driver.browser.manage.window.resize_to(
+      width || original_size.width,
+      height || original_size.height,
+    )
     yield
   ensure
     page.driver.browser.manage.window.resize_to(original_size.width, original_size.height)
@@ -52,9 +67,7 @@ module SystemHelpers
 
     ENV["TZ"] = timezone
 
-    Capybara.using_session(timezone) do
-      freeze_time(&example)
-    end
+    Capybara.using_session(timezone) { freeze_time(&example) }
 
     ENV["TZ"] = previous_browser_timezone
   end

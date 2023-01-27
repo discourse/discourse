@@ -22,11 +22,11 @@ class Chat::DuplicateMessageValidator
 
     # Check if the same duplicate message has been posted in the last N seconds by any user
     if !chat_message
-        .chat_channel
-        .chat_messages
-        .where("created_at > ?", matrix[:min_past_seconds].seconds.ago)
-        .where(message: chat_message.message)
-        .exists?
+         .chat_channel
+         .chat_messages
+         .where("created_at > ?", matrix[:min_past_seconds].seconds.ago)
+         .where(message: chat_message.message)
+         .exists?
       return
     end
 

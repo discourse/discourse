@@ -1,5 +1,10 @@
 <div class="inner-wrapper">
-  <PluginOutlet @name="admin-customize-themes-list-item" @tagName="span" @connectorTagName="span" @args={{hash theme=this.theme}} />
+  <PluginOutlet
+    @name="admin-customize-themes-list-item"
+    @tagName="span"
+    @connectorTagName="span"
+    @args={{hash theme=this.theme}}
+  />
 
   <div class="info">
     <span class="name">
@@ -11,16 +16,32 @@
         {{d-icon "caret-right"}}
       {{else}}
         {{#if this.theme.default}}
-          {{d-icon "check" class="default-indicator" title="admin.customize.theme.default_theme_tooltip"}}
+          {{d-icon
+            "check"
+            class="default-indicator"
+            title="admin.customize.theme.default_theme_tooltip"
+          }}
         {{/if}}
         {{#if this.theme.isPendingUpdates}}
-          {{d-icon "sync" title="admin.customize.theme.updates_available_tooltip" class="light-grey-icon"}}
+          {{d-icon
+            "sync"
+            title="admin.customize.theme.updates_available_tooltip"
+            class="light-grey-icon"
+          }}
         {{/if}}
         {{#if this.theme.isBroken}}
-          {{d-icon "exclamation-circle" class="broken-indicator" title="admin.customize.theme.broken_theme_tooltip"}}
+          {{d-icon
+            "exclamation-circle"
+            class="broken-indicator"
+            title="admin.customize.theme.broken_theme_tooltip"
+          }}
         {{/if}}
         {{#unless this.theme.enabled}}
-          {{d-icon "ban" class="light-grey-icon" title="admin.customize.theme.disabled_component_tooltip"}}
+          {{d-icon
+            "ban"
+            class="light-grey-icon"
+            title="admin.customize.theme.disabled_component_tooltip"
+          }}
         {{/unless}}
       {{/if}}
     </span>

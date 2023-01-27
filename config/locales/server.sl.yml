@@ -458,10 +458,6 @@ sl:
         few: "skoraj %{count} leta nazaj"
         other: "skoraj %{count} let nazaj"
   password_reset:
-    choose_new: "Vnesite novo geslo"
-    choose: "Vnesite geslo"
-    update: "Spremenite geslo"
-    save: "Nastavi geslo"
     title: "Zamenjaj geslo"
     success: "Uspešno ste zamenjali geslo in ste sedaj prijavljeni."
     success_unapproved: "Uspešno ste zamenjali geslo."
@@ -1485,6 +1481,16 @@ sl:
         %{respond_instructions}
     user_posted:
       title: "Uporabnik je objavil"
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_watching_category_or_tag:
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}

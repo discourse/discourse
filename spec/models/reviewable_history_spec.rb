@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe ReviewableHistory, type: :model do
-
   fab!(:user) { Fabricate(:user) }
   fab!(:admin) { Fabricate(:admin) }
   fab!(:moderator) { Fabricate(:moderator) }
@@ -56,5 +55,4 @@ RSpec.describe ReviewableHistory, type: :model do
     expect(history[1].created_by).to eq(moderator)
     expect(history[1].edited).to eq("category_id" => [old_category.id, nil])
   end
-
 end

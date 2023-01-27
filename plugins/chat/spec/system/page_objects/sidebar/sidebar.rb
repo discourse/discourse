@@ -3,6 +3,14 @@
 module PageObjects
   module Pages
     class Sidebar < PageObjects::Pages::Base
+      def channels_section
+        find(".sidebar-section-chat-channels")
+      end
+
+      def dms_section
+        find(".sidebar-section-chat-dms")
+      end
+
       def open_draft_channel
         find(".sidebar-section-chat-dms .sidebar-section-header-button", visible: false).click
       end
@@ -12,11 +20,11 @@ module PageObjects
       end
 
       def open_channel(channel)
-        find(".sidebar-section-link[href='/chat/channel/#{channel.id}/#{channel.slug}']").click
+        find(".sidebar-section-link[href='/chat/c/#{channel.slug}/#{channel.id}']").click
       end
 
       def find_channel(channel)
-        find(".sidebar-section-link[href='/chat/channel/#{channel.id}/#{channel.slug}']")
+        find(".sidebar-section-link[href='/chat/c/#{channel.slug}/#{channel.id}']")
         self
       end
     end

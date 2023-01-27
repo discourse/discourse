@@ -9,7 +9,12 @@
     <ul style="list-style-type:none">
       <li>{{d-icon "far-clock"}} {{format-date this.model.seen_at}}</li>
       <li>{{d-icon "map-marker-alt"}} {{this.model.location}}</li>
-      <li>{{d-icon this.model.icon}} {{i18n "user.auth_tokens.browser_and_device" browser=this.model.browser device=this.model.device}}</li>
+      <li>{{d-icon this.model.icon}}
+        {{i18n
+          "user.auth_tokens.browser_and_device"
+          browser=this.model.browser
+          device=this.model.device
+        }}</li>
     </ul>
   </div>
 
@@ -17,7 +22,9 @@
     <div>
       <h3>
         {{i18n "user.auth_tokens.latest_post"}}
-        <a href {{on "click" this.toggleExpanded}}>{{d-icon (if this.expanded "caret-up" "caret-down")}}</a>
+        <a href {{on "click" this.toggleExpanded}}>{{d-icon
+            (if this.expanded "caret-up" "caret-down")
+          }}</a>
       </h3>
 
       {{#if this.expanded}}
@@ -30,6 +37,11 @@
 </DModalBody>
 
 <div class="modal-footer">
-  <DButton @class="btn-primary" @action={{action "highlightSecure"}} @icon="lock" @label="user.auth_tokens.secure_account" />
+  <DButton
+    @class="btn-primary"
+    @action={{action "highlightSecure"}}
+    @icon="lock"
+    @label="user.auth_tokens.secure_account"
+  />
   <DModalCancel @close={{route-action "closeModal"}} />
 </div>

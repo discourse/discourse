@@ -1,9 +1,18 @@
 <div class="admin-controls">
   <div class="controls">
-    <DButton @action={{action "toggleMenu"}} @class="menu-toggle" @icon="bars" />
+    <DButton
+      @action={{action "toggleMenu"}}
+      @class="menu-toggle"
+      @icon="bars"
+    />
 
     {{#if this.currentUser.admin}}
-      <DButton @label="admin.plugins.change_settings" @icon="cog" @class="btn-default settings-button" @action={{route-action "showSettings"}} />
+      <DButton
+        @label="admin.plugins.change_settings"
+        @icon="cog"
+        @class="btn-default settings-button"
+        @action={{route-action "showSettings"}}
+      />
     {{/if}}
   </div>
 </div>

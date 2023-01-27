@@ -6,7 +6,7 @@ class DetailedTagSerializer < TagSerializer
   has_many :categories, serializer: BasicCategorySerializer
 
   def synonyms
-    TagsController.tag_counts_json(object.synonyms)
+    TagsController.tag_counts_json(object.synonyms, scope)
   end
 
   def categories
@@ -28,9 +28,8 @@ class DetailedTagSerializer < TagSerializer
   private
 
   def category_ids
-    @_category_ids ||= object.categories.pluck(:id) +
-      object.tag_groups.includes(:categories).map do |tg|
-        tg.categories.map(&:id)
-      end.flatten
+    @_category_ids ||=
+      object.categories.pluck(:id) +
+        object.tag_groups.includes(:categories).map { |tg| tg.categories.map(&:id) }.flatten
   end
 end

@@ -23,7 +23,9 @@ fi:
     default_emoji_reactions: "Chat-viestien oletusarvoiset emoji-reaktiot. Lisää enintään 5 emojia nopeaa reagointia varten."
     direct_message_enabled_groups: "Salli näiden ryhmien käyttäjien luoda käyttäjien välisiä henkilökohtaisia chat-keskusteluja. Huomautus: henkilökunta voi aina luoda henkilökohtaisia chat-keskusteluja, ja käyttäjät voivat vastata henkilökohtaisiin chat-keskusteluihin, jotka on aloittanut käyttäjä, jolla on oikeus luoda niitä."
     chat_message_flag_allowed_groups: "Näiden ryhmien käyttäjät voivat liputtaa chat-viestejä."
+    max_mentions_per_chat_message: "Kuinka monta @nimi-ilmoitusta käyttäjä voi lisätä chat-viestiin."
     chat_max_direct_message_users: "Käyttäjät eivät voi lisätä tätä määrää enempää muita käyttäjiä luodessaan uutta yksityisviestiä. Aseta arvoksi 0, jos haluat sallia ainostaan viestit itselle. Tämä asetus ei koske henkilökuntaa."
+    chat_allow_archiving_channels: "Salli henkilökunnan arkistoida viestejä ketjuun suljettaessa kanavaa."
     errors:
       chat_default_channel: "Oletus-chat-kanavan täytyy olla julkinen kanava."
       direct_message_enabled_groups_invalid: "Sinun täytyy määrittää vähintään yksi ryhmä tälle asetukselle. Jos et halua muiden kuin henkilökunnan lähettävän yksityisviestejä, valitse henkilökunnan ryhmä."
@@ -32,13 +34,12 @@ fi:
     chat_channel_archive_complete:
       title: "Chat-kanavan arkistointi on valmis"
       subject_template: "Chat-kanavan arkistointi on valmis"
-      text_body_template: |
-        Chat-kanavan **\#%{channel_name}** arkistointi on valmis. Viestit kopioitiin ketjuun [%{topic_title}](%{topic_url}).
     chat_channel_archive_failed:
       title: "Chat-kanavan arkistointi epäonnistui"
       subject_template: "Chat-kanavan arkistointi epäonnistui"
-      text_body_template: |
-        Chat-kanavan **\#%{channel_name}** arkistointi epäonnistui. %{messages_archived} viestiä on arkistoitu. Osittain arkistoidut viestit kopioitiin ketjuun [%{topic_title}](%{topic_url}). Yritä uudelleen vierailemalla kanavalla osoitteessa %{channel_url}.
+    chat_channel_archive_failed_no_topic:
+      title: "Chat-kanavan arkistointi epäonnistui"
+      subject_template: "Chat-kanavan arkistointi epäonnistui"
   chat:
     deleted_chat_username: poistettu
     errors:
@@ -52,6 +53,7 @@ fi:
       duplicate_message: "Lähetit identtisen viestin liian äskettäin."
       delete_channel_failed: "Kanavan poistaminen epäonnistui, yritä uudelleen."
       minimum_length_not_met: "Viesti on liian lyhyt, siinä täytyy olla vähintään %{minimum} merkkiä."
+      message_too_long: "Viesti on liian pitkä, viesteissä täytyy olla enintään %{maximum} merkkiä."
       max_reactions_limit_reached: "Uusia reaktioita ei sallita tässä viestissä."
       message_move_invalid_channel: "Lähde- ja kohdekanavan täytyy olla julkisia kanavia."
       message_move_no_messages_found: "Annetuilla viestitunnuksilla ei löytynyt viestejä."
@@ -167,7 +169,16 @@ fi:
       from: "%{site_name}"
       subject:
         direct_message_from_1: "[%{email_prefix}] Uusi viesti käyttäjältä %{username}"
+        direct_message_from_2: "[%{email_prefix}] Uusi viesti käyttäjältä %{username1} ja %{username2}"
+        direct_message_from_more:
+          one: "[%{email_prefix}] Uusi viesti käyttäjältä %{username} ja %{count} muulta"
+          other: "[%{email_prefix}] Uusi viesti käyttäjältä %{username} ja %{count} muulta"
         chat_channel_1: "[%{email_prefix}] Uusi viesti kanavalta %{channel}"
+        chat_channel_2: "[%{email_prefix}] Uusi viesti kanavalla %{channel1} ja %{channel2}"
+        chat_channel_more:
+          one: "[%{email_prefix}] Uusi viesti kanavalla %{channel} ja %{count} muulla"
+          other: "[%{email_prefix}] Uusi viesti kanavalla %{channel} ja %{count} muulla"
+        chat_channel_and_direct_message: "[%{email_prefix}] Uusi viesti kanavalla %{channel} ja käyttäjältä %{username}"
       unsubscribe: "Tämä chat-yhteenveto lähetetään sivustolta %{site_link}, kun olet poissa. Määritä %{email_preferences_link} tai %{unsubscribe_link} peruuttaaksesi tilauksen."
       unsubscribe_no_link: "Tämä chat-yhteenveto lähetetään sivustolta %{site_link}, kun olet poissa. Määritä %{email_preferences_link}."
       view_messages:

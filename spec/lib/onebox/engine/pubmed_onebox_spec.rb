@@ -19,7 +19,10 @@ RSpec.describe Onebox::Engine::PubmedOnebox do
   end
 
   it "has the paper's abstract" do
-    expect(html).to include("The application of maximum likelihood techniques to the estimation of evolutionary trees from nucleic acid sequence data is discussed.") end
+    expect(html).to include(
+      "The application of maximum likelihood techniques to the estimation of evolutionary trees from nucleic acid sequence data is discussed.",
+    )
+  end
 
   it "has the paper's date" do
     expect(html).to include("1981")
@@ -36,7 +39,10 @@ RSpec.describe Onebox::Engine::PubmedOnebox do
 
     before do
       stub_request(:get, link).to_return(status: 200, body: onebox_response("pubmed-electronic"))
-      stub_request(:get, xml_link).to_return(status: 200, body: onebox_response("pubmed-electronic-xml"))
+      stub_request(:get, xml_link).to_return(
+        status: 200,
+        body: onebox_response("pubmed-electronic-xml"),
+      )
     end
 
     it "has the paper's title" do

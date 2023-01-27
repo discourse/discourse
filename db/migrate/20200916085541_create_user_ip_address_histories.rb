@@ -9,7 +9,7 @@ class CreateUserIpAddressHistories < ActiveRecord::Migration[6.0]
       t.timestamps
     end
 
-    add_index :user_ip_address_histories, [:user_id, :ip_address], unique: true
+    add_index :user_ip_address_histories, %i[user_id ip_address], unique: true
   end
 
   def down

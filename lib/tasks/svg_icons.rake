@@ -8,17 +8,11 @@ def library_src
   "#{Rails.root}/node_modules"
 end
 
-task 'svgicons:update' do
-
+task "svgicons:update" do
   yarn = system("yarn install")
   abort('Unable to run "yarn install"') unless yarn
 
-  dependencies = [
-    {
-      source: '@fortawesome/fontawesome-free/sprites',
-      destination: 'fontawesome',
-    }
-  ]
+  dependencies = [{ source: "@fortawesome/fontawesome-free/sprites", destination: "fontawesome" }]
 
   start = Time.now
 

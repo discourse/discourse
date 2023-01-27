@@ -50,6 +50,7 @@ ur:
         yesterday: کَل
       about_view:
         title: عنوان
+        name: نام
         description: تفصیل
       channel_info:
         back_to_channel: "واپس"

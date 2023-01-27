@@ -8,7 +8,10 @@ import { test } from "qunit";
 
 acceptance("Category and Tag Hashtags", function (needs) {
   needs.user();
-  needs.settings({ tagging_enabled: true });
+  needs.settings({
+    tagging_enabled: true,
+    enable_experimental_hashtag_autocomplete: false,
+  });
   needs.pretender((server, helper) => {
     server.get("/hashtags", () => {
       return helper.response({

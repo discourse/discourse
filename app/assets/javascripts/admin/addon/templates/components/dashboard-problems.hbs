@@ -13,8 +13,15 @@
           <div class="problem-messages priority-high">
             <ul>
               {{#each this.highPriorityProblems as |problem|}}
-                <li class={{concat "dashboard-problem " "priority-" problem.priority}}>
-                  {{d-icon "exclamation-triangle"}} {{html-safe problem.message}}
+                <li
+                  class={{concat
+                    "dashboard-problem "
+                    "priority-"
+                    problem.priority
+                  }}
+                >
+                  {{d-icon "exclamation-triangle"}}
+                  {{html-safe problem.message}}
                 </li>
               {{/each}}
             </ul>
@@ -24,14 +31,26 @@
         <div class="problem-messages priority-low">
           <ul>
             {{#each this.lowPriorityProblems as |problem|}}
-              <li class={{concat "dashboard-problem " "priority-" problem.priority}}>{{html-safe problem.message}}</li>
+              <li
+                class={{concat
+                  "dashboard-problem "
+                  "priority-"
+                  problem.priority
+                }}
+              >{{html-safe problem.message}}</li>
             {{/each}}
           </ul>
         </div>
 
         <p class="actions">
-          <DButton @action={{this.refreshProblems}} @class="btn-default" @icon="sync" @label="admin.dashboard.refresh_problems" />
-          {{i18n "admin.dashboard.last_checked"}}: {{this.problemsTimestamp}}
+          <DButton
+            @action={{this.refreshProblems}}
+            @class="btn-default"
+            @icon="sync"
+            @label="admin.dashboard.refresh_problems"
+          />
+          {{i18n "admin.dashboard.last_checked"}}:
+          {{this.problemsTimestamp}}
         </p>
       </ConditionalLoadingSection>
     </div>

@@ -585,10 +585,6 @@ ca:
         one: "fa gairebé %{count} any"
         other: "fa gairebé %{count} any"
   password_reset:
-    choose_new: "Trieu una contrasenya nova"
-    choose: "Trieu una contrasenya"
-    update: "Actualitza la contrasenya"
-    save: "Estableix la contrasenya"
     title: "Reinicia la contrasenya"
     success: "Heu canviat la contrasenya satisfactòriament i ara heu iniciat la sessió."
     success_unapproved: "Heu canviat la contrasenya satisfactòriament."
@@ -1280,8 +1276,6 @@ ca:
     email_token_valid_hours: "Els testimonis (tokens) de contrasenya oblidada i activació de compte són vàlids durant (n) hores."
     enable_badges: "Activa el sistema d'insígnies."
     allow_index_in_robots_txt: "Especifiqueu en robots.txt que els motors de cerca web poden indexar aquest lloc. En casos excepcionals, podeu <a href='%{base_path}/admin/customize/robots'>substituir robots.txt</a> de manera permanent."
-    blocked_email_domains: "Llista de dominis de correu delimitada amb barres verticals amb els quals  els usuaris no poden registrar comptes. Exemple: mailinator.com|trashmail.net"
-    allowed_email_domains: "Llista de dominis de correu delimitada amb barres verticals amb els quals els usuaris HAN DE registrar els comptes. ATENCIÓ: Els usuaris amb dominis de correu diferents dels llistats no són autoritzats!"
     log_out_strict: "Quan es tanca la sessió, tanca TOTES les sessions de l'usuari en tots els dispositius"
     version_checks: "Fes ping al Discourse Hub per a actualitzacions de versions i per a mostrar missatges de versió nova en el tauler <a href='%{base_path}/admin' target='_blank'>/admin</a>."
     new_version_emails: "Envia un correu a contact_email address quan hi hagi una nova versió del Discourse disponible."
@@ -2426,6 +2420,16 @@ ca:
         %{respond_instructions}
     user_posted:
       title: "L'usuari ha publicat"
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_watching_category_or_tag:
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}

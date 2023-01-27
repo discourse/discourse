@@ -723,11 +723,7 @@ export default Component.extend({
   toggleBookmark() {
     return openBookmarkModal(
       this.message.bookmark ||
-        Bookmark.create({
-          bookmarkable_type: "ChatMessage",
-          bookmarkable_id: this.message.id,
-          user_id: this.currentUser.id,
-        }),
+        Bookmark.createFor(this.currentUser, "ChatMessage", this.message.id),
       {
         onAfterSave: (savedData) => {
           const bookmark = Bookmark.create(savedData);
@@ -790,7 +786,7 @@ export default Component.extend({
 
     const { protocol, host } = window.location;
     let url = getURL(
-      `/chat/channel/${this.details.chat_channel_id}/-?messageId=${this.message.id}`
+      `/chat/c/-/${this.details.chat_channel_id}?messageId=${this.message.id}`
     );
     url = url.indexOf("/") === 0 ? protocol + "//" + host + url : url;
     clipboardCopy(url);

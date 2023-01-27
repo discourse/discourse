@@ -15,10 +15,9 @@ module Jobs
       return unless valid_day_value?(:chat_channel_retention_days)
 
       ChatMessageDestroyer.new.destroy_in_batches(
-        ChatMessage
-          .in_public_channel
-          .with_deleted
-          .created_before(SiteSetting.chat_channel_retention_days.days.ago)
+        ChatMessage.in_public_channel.with_deleted.created_before(
+          SiteSetting.chat_channel_retention_days.days.ago,
+        ),
       )
     end
 
@@ -26,10 +25,9 @@ module Jobs
       return unless valid_day_value?(:chat_dm_retention_days)
 
       ChatMessageDestroyer.new.destroy_in_batches(
-        ChatMessage
-          .in_dm_channel
-          .with_deleted
-          .created_before(SiteSetting.chat_dm_retention_days.days.ago)
+        ChatMessage.in_dm_channel.with_deleted.created_before(
+          SiteSetting.chat_dm_retention_days.days.ago,
+        ),
       )
     end
 

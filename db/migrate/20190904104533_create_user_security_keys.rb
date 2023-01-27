@@ -19,8 +19,6 @@ class CreateUserSecurityKeys < ActiveRecord::Migration[5.2]
   end
 
   def down
-    if table_exists?(:user_security_keys)
-      drop_table(:user_security_keys)
-    end
+    drop_table(:user_security_keys) if table_exists?(:user_security_keys)
   end
 end

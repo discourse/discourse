@@ -18,9 +18,7 @@ module Compression
 
         entries_of(compressed_file).each do |entry|
           entry_path = build_entry_path(sanitized_dest_path, entry, sanitized_compressed_file_path)
-          if !is_safe_path_for_extraction?(entry_path, sanitized_dest_path)
-            next
-          end
+          next if !is_safe_path_for_extraction?(entry_path, sanitized_dest_path)
 
           FileUtils.mkdir_p(File.dirname(entry_path))
           if is_file?(entry)
@@ -45,10 +43,10 @@ module Compression
       filename.strip.tap do |name|
         # NOTE: File.basename doesn't work right with Windows paths on Unix
         # get only the filename, not the whole path
-        name.sub! /\A.*(\\|\/)/, ''
+        name.sub! %r{\A.*(\\|/)}, ""
         # Finally, replace all non alphanumeric, underscore
         # or periods with underscore
-        name.gsub! /[^\w\.\-]/, '_'
+        name.gsub! /[^\w\.\-]/, "_"
       end
     end
 
@@ -75,7 +73,7 @@ module Compression
         raise DestinationFileExistsError, "Destination '#{entry_path}' already exists"
       end
 
-      ::File.open(entry_path, 'wb') do |os|
+      ::File.open(entry_path, "wb") do |os|
         while (buf = entry.read(chunk_size))
           remaining_size -= buf.size
           raise ExtractFailed if remaining_size.negative?

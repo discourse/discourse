@@ -265,7 +265,6 @@ th:
       create: "สร้างบุ๊กมาร์ก"
       edit: "แก้ไขบุ๊กมาร์ก"
       not_bookmarked: "บุ๊กมาร์กโพสต์นี้"
-      remove: "ลบบุ๊กมาร์ก"
       delete: "ลบบุ๊กมาร์ก"
       confirm_delete: "คุณแน่ใจหรือไม่ว่าต้องการลบบุ๊กมาร์กนี้ การเตือนความจำจะถูกลบออกด้วย"
       confirm_clear: "คุณแน่ใจหรือว่าต้องการล้างบุ๊กมาร์กทั้งหมดจากกระทู้นี้"
@@ -311,7 +310,6 @@ th:
     enable: "เปิดใช้งาน"
     disable: "ปิดใช้งาน"
     continue: "ดำเนินการต่อ"
-    undo: "เลิกทำ"
     switch_to_anon: "เข้าสู่โหมดไม่ระบุชื่อ"
     switch_from_anon: "ออกจากโหมดไม่ระบุชื่อ"
     banner:
@@ -506,6 +504,7 @@ th:
         accepted: "ยอมรับแล้ว"
         deny: "ปฏิเสธ"
         denied: "ปฏิเสธแล้ว"
+        undo: "เลิกทำ"
       manage:
         title: "จัดการ"
         name: "ชื่อ"
@@ -1628,6 +1627,7 @@ th:
         close_topics: "ปิดกระทู้"
         archive_topics: "คลังกระทู้"
         move_messages_to_inbox: "ย้ายไปกล่องขาเข้า"
+        notification_level: "การแจ้งเตือน..."
         choose_new_category: "เลือกหมวดหมู่ใหม่ให้กระทู้"
         selected:
           other: "คุณได้เลือก <b>%{count}</b> กระทู้"
@@ -1794,6 +1794,7 @@ th:
         unarchive: "เลิกเก็บกระทู้เข้าคลัง"
         archive: "เก็บกระทู้เข้าคลัง"
         reset_read: "ล้างข้อมูลการอ่าน"
+        make_public: "ทำให้กระทู้เป็นสาธารณะ..."
         make_private: "สร้างข้อความส่วนตัว"
       feature:
         pin: "ปักหมุดกระทู้"
@@ -2040,7 +2041,6 @@ th:
       bookmarks:
         create: "สร้างบุ๊กมาร์ก"
         edit: "แก้ไขบุ๊กมาร์ก"
-        created: "สร้าง"
         updated: "อัปเดตแล้ว"
         name: "ชื่อ"
         name_placeholder: "บุ๊กมาร์กนี้สำหรับสิ่งใด"
@@ -2203,7 +2203,6 @@ th:
     users_lowercase:
       other: "ผู้ใช้"
     category_title: "หมวดหมู่"
-    changed_by: "โดย %{author}"
     raw_email:
       not_available: "ไม่พร้อม!"
     categories_list: "รายชื่อหมวดหมู่"
@@ -2416,6 +2415,7 @@ th:
         save: "บันทึก"
         delete: "ลบ"
         everyone_can_use: "ทุกคนสามารถใช้แท็กได้"
+        parent_tag_placeholder: "ทางเลือก"
       topics:
         none:
           unread: "คุณไม่มีกระทู้ที่ยังไม่ได้อ่าน"
@@ -2471,11 +2471,12 @@ th:
               content: "แอดมิน"
             badges:
               content: "เหรียญ"
+            everything:
+              content: "ทุกสิ่ง"
             faq:
               content: "คำถามที่พบบ่อย"
             groups:
               content: "กลุ่ม"
-              title: "กลุ่มทั้งหมด"
             users:
               content: "ผู้ใช้"
             my_posts:
@@ -2484,7 +2485,7 @@ th:
                 other: "%{count}แบบร่าง"
             review:
               content: "รีวิว"
-              title: "รีวิว"
+    until: "จนถึง:"
   admin_js:
     type_to_filter: "พิมพ์เพื่อกรอง..."
     admin:
@@ -2505,6 +2506,7 @@ th:
         latest_version: "ล่าสุด"
         new_features:
           dismiss: "ซ่อน"
+          learn_more: "เรียนรู้เพิ่มเติม"
         last_checked: "ตรวจล่าสุด"
         refresh_problems: "รีเฟรช"
         no_problems: "ไม่พบปัญหา"
@@ -2776,6 +2778,9 @@ th:
           filters:
             user_placeholder: "ผู้ใช้"
             address_placeholder: "name@example.com"
+      moderation_history:
+        actions:
+          delete_topic: "กระทู้ถูกลบ"
       logs:
         created_at: "สร้าง"
         ip_address: "ไอพี"

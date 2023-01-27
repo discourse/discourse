@@ -10,7 +10,7 @@ class EnableSidebarAndChat < ActiveRecord::Migration[7.0]
     SQL
 
     # keep sidebar legacy and chat disabled for for existing sites
-    if result.first['created_at'].to_datetime < 1.hour.ago
+    if result.first["created_at"].to_datetime < 1.hour.ago
       execute <<~SQL
         INSERT INTO site_settings(name, data_type, value, created_at, updated_at)
         VALUES('chat_enabled', 5, 'f', NOW(), NOW())

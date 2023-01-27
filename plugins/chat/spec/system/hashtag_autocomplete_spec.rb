@@ -32,7 +32,9 @@ describe "Using #hashtag autocompletion to search for and lookup channels",
       count: 3,
     )
     hashtag_results = page.all(".hashtag-autocomplete__link", count: 3)
-    expect(hashtag_results.map(&:text).map { |r| r.gsub("\n", " ") }).to eq(["Random", "Raspberry", "razed (x0)"])
+    expect(hashtag_results.map(&:text).map { |r| r.gsub("\n", " ") }).to eq(
+      ["Random", "Raspberry", "razed (x0)"],
+    )
   end
 
   it "searches for channels as well with # in a topic composer and deprioritises them" do
@@ -44,18 +46,26 @@ describe "Using #hashtag autocompletion to search for and lookup channels",
       count: 3,
     )
     hashtag_results = page.all(".hashtag-autocomplete__link", count: 3)
-    expect(hashtag_results.map(&:text).map { |r| r.gsub("\n", " ") }).to eq(["Raspberry", "razed (x0)", "Random"])
+    expect(hashtag_results.map(&:text).map { |r| r.gsub("\n", " ") }).to eq(
+      ["Raspberry", "razed (x0)", "Random"],
+    )
   end
 
   it "cooks the hashtags for channels, categories, and tags serverside when the chat message is saved to the database" do
     chat_page.visit_channel(channel1)
     expect(chat_channel_page).to have_no_loading_skeleton
-    chat_channel_page.type_in_composer("this is #random and this is #raspberry-beret and this is #razed which is cool")
+    chat_channel_page.type_in_composer(
+      "this is #random and this is #raspberry-beret and this is #razed which is cool",
+    )
     chat_channel_page.click_send_message
 
     message = nil
     try_until_success do
-      message = ChatMessage.find_by(user: user, message: "this is #random and this is #raspberry-beret and this is #razed which is cool")
+      message =
+        ChatMessage.find_by(
+          user: user,
+          message: "this is #random and this is #raspberry-beret and this is #razed which is cool",
+        )
       expect(message).not_to eq(nil)
     end
     expect(chat_channel_page).to have_message(id: message.id)

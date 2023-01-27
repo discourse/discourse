@@ -117,13 +117,14 @@ input.channel-members-view__search-input {
   }
 }
 
-// Channel info edit title modal
-.chat-channel-edit-title-modal__title-input {
+// Channel info edit name modal
+.chat-channel-edit-name-modal__name-input {
   display: flex;
   margin: 0;
+  width: 100%;
 }
 
-.chat-channel-edit-title-modal__description {
+.chat-channel-edit-name-modal__description {
   display: flex;
   padding: 0.5rem 0;
   color: var(--primary-medium);

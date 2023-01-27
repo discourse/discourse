@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class MigrateSiteTextToSiteCustomization < ActiveRecord::Migration[4.2]
-
   def up
     execute <<-SQL
       DO
@@ -28,5 +27,4 @@ class MigrateSiteTextToSiteCustomization < ActiveRecord::Migration[4.2]
 
   def down
   end
-
 end

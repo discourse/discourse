@@ -3,13 +3,7 @@
 class GroupUserSerializer < BasicUserSerializer
   include UserPrimaryGroupMixin
 
-  attributes :name,
-             :title,
-             :last_posted_at,
-             :last_seen_at,
-             :added_at,
-             :timezone,
-             :status
+  attributes :name, :title, :last_posted_at, :last_seen_at, :added_at, :timezone, :status
 
   def timezone
     user.user_option.timezone

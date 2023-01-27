@@ -42,17 +42,17 @@ module PostStreamSerializerMixin
   end
 
   def posts
-    @posts ||= begin
-      (object.posts || []).map do |post|
-        post.topic = object.topic
+    @posts ||=
+      begin
+        (object.posts || []).map do |post|
+          post.topic = object.topic
 
-        serializer = PostSerializer.new(post, scope: scope, root: false)
-        serializer.add_raw = true if @options[:include_raw]
-        serializer.topic_view = object
+          serializer = PostSerializer.new(post, scope: scope, root: false)
+          serializer.add_raw = true if @options[:include_raw]
+          serializer.topic_view = object
 
-        serializer.as_json
+          serializer.as_json
+        end
       end
-    end
   end
-
 end

@@ -224,7 +224,6 @@ sq:
         unbookmark: "Kliko për të hequr të preferuarat nga kjo temë"
     bookmarks:
       not_bookmarked: "shto postimin tek të preferuarat"
-      remove: "Hiqeni nga të prefereruarat"
       save: "Ruaj"
       search: "Kërko"
     drafts:
@@ -239,7 +238,6 @@ sq:
     uploaded: "U ngarkua!"
     enable: "Aktivizo"
     disable: "Çaktivizo"
-    undo: "Çbëj"
     switch_to_anon: "Filloni sesionin anonim"
     switch_from_anon: "Shkëputu nga sesioni anonim"
     banner:
@@ -276,6 +274,7 @@ sq:
       save: "Ruaj"
       cancel: "Anulo"
       filters:
+        all_categories: "(të gjitha kategoritë)"
         type:
           title: "Lloji"
         refresh: "Rifresko"
@@ -354,6 +353,7 @@ sq:
     groups:
       requests:
         reason: "Arsye"
+        undo: "Çbëj"
       manage:
         name: "Emri"
         full_name: "Emri i plotë"
@@ -676,6 +676,7 @@ sq:
       email:
         title: "Email"
         primary_label: "parësor"
+        resent_label: "emaili u dërgua"
         update_email: "Ndrysho email"
         instructions: "Mos e shfaq në publik."
         ok: "Do ju nisim emailin e konfirmimit"
@@ -1170,6 +1171,7 @@ sq:
         close_topics: "Mbyll temat"
         archive_topics: "Arkivo temat"
         move_messages_to_inbox: "Transfero në inbox"
+        notification_level: "Njoftimet..."
         choose_new_category: "Zgjidhni kategorinë e re për temat: "
         selected:
           one: "Keni zgjedhur <b>%{count}</b> temë."
@@ -1314,6 +1316,7 @@ sq:
         unarchive: "Çarkivoje temën"
         archive: "Arkivoje temën"
         reset_read: "Reset Read Data"
+        make_public: "Bëje temën publike..."
       feature:
         pin: "Ngjite temën"
         unpin: "Çngjite temën"
@@ -1489,6 +1492,8 @@ sq:
         revert_to_regular: "Hiq ngjyrën e stafit"
         rebake: "Rindërtoni HTML"
         unhide: "Çfshi"
+        change_owner: "Ndrysho zotëruesin..."
+        grant_badge: "Dhuroni Stemë..."
         delete_topic: "fshi temën"
       actions:
         people:
@@ -1525,7 +1530,6 @@ sq:
           html_part:
             button: "HTML"
       bookmarks:
-        created: "Krijuar"
         name: "Emri"
         options: "Opsione"
     category:
@@ -1610,6 +1614,7 @@ sq:
     flagging:
       title: "Faleminderit për ndihmën që i jepni këtij komuniteti!"
       action: "Sinjalizo postimin"
+      take_action: "Vepro..."
       take_action_options:
         default:
           title: "Vepro"
@@ -1701,7 +1706,6 @@ sq:
       one: "përdorues"
       other: "përdorues"
     category_title: "Kategoria"
-    changed_by: "nga %{author}"
     raw_email:
       not_available: "Not available!"
     categories_list: "Lista Kategorive"
@@ -1969,7 +1973,6 @@ sq:
               content: "Pyetje të shpeshta"
             groups:
               content: "Grupet"
-              title: "Të gjitha grupet"
             users:
               content: "Users"
             my_posts:
@@ -1997,6 +2000,7 @@ sq:
         latest_version: "Të fundit"
         new_features:
           dismiss: "Hiqe"
+          learn_more: "Mëso më shumë"
         last_checked: "Verifikimi i fundit"
         refresh_problems: "Rifresko"
         no_problems: "Nuk u gjet asnjë gabim."
@@ -2070,6 +2074,7 @@ sq:
         user: "Përdorues"
         title: "API"
         created: Krijuar
+        never_used: (asnjëherë)
         generate: "Gjenero"
         revoke: "Revoko"
         all_users: "Gjithë Përdoruesit"
@@ -2168,7 +2173,6 @@ sq:
         button_title: "Dërgo ftesa"
       customize:
         title: "Personalizo"
-        long_title: "Personalizimet"
         preview: "parashiko"
         save: "Ruaj"
         new: "E Re"
@@ -2213,9 +2217,9 @@ sq:
         colors:
           title: "Ngjyrat"
           copy_name_prefix: "Kopje e"
-          undo: "rikthe"
+          undo: "Çbëj"
           undo_title: "Anullo ndryshimet e bëra në këtë skemë, rikthe versionin e ruajtur herën e fundit. "
-          revert: "rikthe"
+          revert: "Rikthe"
           primary:
             name: "parësor"
             description: "Shumica e tekstit, ikonave dhe bordurave. "

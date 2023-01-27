@@ -4,7 +4,11 @@
       {{avatar this.rs.user imageSize="tiny"}}
       {{this.rs.user.username}}
     </UserLink>
-    <UserFlagPercentage @agreed={{this.rs.agree_stats.agreed}} @disagreed={{this.rs.agree_stats.disagreed}} @ignored={{this.rs.agree_stats.ignored}} />
+    <UserFlagPercentage
+      @agreed={{this.rs.agree_stats.agreed}}
+      @disagreed={{this.rs.agree_stats.disagreed}}
+      @ignored={{this.rs.agree_stats.ignored}}
+    />
   </td>
   <td>
     {{d-icon this.rs.score_type.icon}}
@@ -55,11 +59,17 @@
   <tr>
     <td colspan="7">
       <div class="reviewable-conversation">
-        {{#each this.rs.reviewable_conversation.conversation_posts as |p index|}}
+        {{#each
+          this.rs.reviewable_conversation.conversation_posts
+          as |p index|
+        }}
           <ReviewableConversationPost @post={{p}} @index={{index}} />
         {{/each}}
         <div class="controls">
-          <a href={{this.rs.reviewable_conversation.permalink}} class="btn btn-small">
+          <a
+            href={{this.rs.reviewable_conversation.permalink}}
+            class="btn btn-small"
+          >
             {{i18n "review.conversation.view_full"}}
           </a>
         </div>

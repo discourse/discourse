@@ -4,7 +4,9 @@ module PageObjects
   module Pages
     class Chat < PageObjects::Pages::Base
       def prefers_full_page
-        page.execute_script("window.localStorage.setItem('discourse_chat_preferred_mode', '\"FULL_PAGE_CHAT\"');")
+        page.execute_script(
+          "window.localStorage.setItem('discourse_chat_preferred_mode', '\"FULL_PAGE_CHAT\"');",
+        )
       end
 
       def open_from_header
@@ -48,6 +50,14 @@ module PageObjects
         container = find(".chat-message-container[data-id=\"#{message.id}\"")
         container.has_content?(message.message)
         container.has_content?(message.user.username)
+      end
+
+      def new_channel_button
+        find(".new-channel-btn")
+      end
+
+      def has_new_channel_button?
+        has_css?(".new-channel-btn")
       end
     end
   end

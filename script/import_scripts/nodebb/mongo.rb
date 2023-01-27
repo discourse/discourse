@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'mongo'
+require "mongo"
 
 module NodeBB
   class Mongo
@@ -43,8 +43,8 @@ module NodeBB
 
       user["joindate"] = timestamp_to_date(user["joindate"])
       user["lastonline"] = timestamp_to_date(user["lastonline"])
-      user['banned'] = user['banned'].to_s
-      user['uid'] = user['uid'].to_s
+      user["banned"] = user["banned"].to_s
+      user["uid"] = user["uid"].to_s
 
       user
     end
@@ -56,17 +56,17 @@ module NodeBB
         category_keys.each do |category_key|
           category = mongo.find(_key: "category:#{category_key}").first
 
-          category['parentCid'] = category['parentCid'].to_s
-          category['disabled'] = category['disabled'].to_s
-          category['cid'] = category['cid'].to_s
+          category["parentCid"] = category["parentCid"].to_s
+          category["disabled"] = category["disabled"].to_s
+          category["cid"] = category["cid"].to_s
 
-          categories[category['cid']] = category
+          categories[category["cid"]] = category
         end
       end
     end
 
     def topics(offset = 0, page_size = 2000)
-      topic_keys = mongo.find(_key: 'topics:tid').skip(offset).limit(page_size).pluck(:value)
+      topic_keys = mongo.find(_key: "topics:tid").skip(offset).limit(page_size).pluck(:value)
 
       topic_keys.map { |topic_key| topic(topic_key) }
     end
@@ -86,11 +86,11 @@ module NodeBB
     end
 
     def topic_count
-      mongo.find(_key: 'topics:tid').count
+      mongo.find(_key: "topics:tid").count
     end
 
     def posts(offset = 0, page_size = 2000)
-      post_keys = mongo.find(_key: 'posts:pid').skip(offset).limit(page_size).pluck(:value)
+      post_keys = mongo.find(_key: "posts:pid").skip(offset).limit(page_size).pluck(:value)
 
       post_keys.map { |post_key| post(post_key) }
     end
@@ -111,7 +111,7 @@ module NodeBB
     end
 
     def post_count
-      mongo.find(_key: 'posts:pid').count
+      mongo.find(_key: "posts:pid").count
     end
 
     private

@@ -26,8 +26,7 @@ RSpec.describe "Navigating to message", type: :system, js: true do
         Fabricate(
           :post,
           topic: topic_1,
-          raw:
-            "<a href=\"/chat/channel/#{channel_1.id}/-?messageId=#{first_message.id}\">#{link}</a>",
+          raw: "<a href=\"/chat/c/-/#{channel_1.id}?messageId=#{first_message.id}\">#{link}</a>",
         )
       end
 
@@ -43,14 +42,20 @@ RSpec.describe "Navigating to message", type: :system, js: true do
 
     context "when clicking a link to a message from the current channel" do
       before do
-        Fabricate(:chat_message, chat_channel: channel_1, message: "[#{link}](/chat/channel/#{channel_1.id}/-?messageId=#{first_message.id})")
+        Fabricate(
+          :chat_message,
+          chat_channel: channel_1,
+          message: "[#{link}](/chat/c/-/#{channel_1.id}?messageId=#{first_message.id})",
+        )
       end
 
-      it "highglights the correct message" do
+      it "highlights the correct message" do
         chat_page.visit_channel(channel_1)
         click_link(link)
 
-        expect(page).to have_css(".chat-message-container.highlighted[data-id='#{first_message.id}']")
+        expect(page).to have_css(
+          ".chat-message-container.highlighted[data-id='#{first_message.id}']",
+        )
       end
 
       it "highlights the correct message after using the bottom arrow" do
@@ -59,7 +64,9 @@ RSpec.describe "Navigating to message", type: :system, js: true do
         click_link(I18n.t("js.chat.scroll_to_bottom"))
         click_link(link)
 
-        expect(page).to have_css(".chat-message-container.highlighted[data-id='#{first_message.id}']")
+        expect(page).to have_css(
+          ".chat-message-container.highlighted[data-id='#{first_message.id}']",
+        )
       end
     end
 
@@ -67,23 +74,31 @@ RSpec.describe "Navigating to message", type: :system, js: true do
       fab!(:channel_2) { Fabricate(:category_channel) }
 
       before do
-        Fabricate(:chat_message, chat_channel: channel_2, message: "[#{link}](/chat/channel/#{channel_1.id}/-?messageId=#{first_message.id})")
+        Fabricate(
+          :chat_message,
+          chat_channel: channel_2,
+          message: "[#{link}](/chat/c/-/#{channel_1.id}?messageId=#{first_message.id})",
+        )
         channel_2.add(current_user)
       end
 
-      it "highglights the correct message" do
+      it "highlights the correct message" do
         chat_page.visit_channel(channel_2)
         click_link(link)
 
-        expect(page).to have_css(".chat-message-container.highlighted[data-id='#{first_message.id}']")
+        expect(page).to have_css(
+          ".chat-message-container.highlighted[data-id='#{first_message.id}']",
+        )
       end
     end
 
     context "when navigating directly to a message link" do
       it "highglights the correct message" do
-        visit("/chat/channel/#{channel_1.id}/-?messageId=#{first_message.id}")
+        visit("/chat/c/-/#{channel_1.id}?messageId=#{first_message.id}")
 
-        expect(page).to have_css(".chat-message-container.highlighted[data-id='#{first_message.id}']")
+        expect(page).to have_css(
+          ".chat-message-container.highlighted[data-id='#{first_message.id}']",
+        )
       end
     end
   end
@@ -96,8 +111,7 @@ RSpec.describe "Navigating to message", type: :system, js: true do
         Fabricate(
           :post,
           topic: topic_1,
-          raw:
-            "<a href=\"/chat/channel/#{channel_1.id}/-?messageId=#{first_message.id}\">#{link}</a>",
+          raw: "<a href=\"/chat/c/-/#{channel_1.id}?messageId=#{first_message.id}\">#{link}</a>",
         )
       end
 
@@ -113,16 +127,22 @@ RSpec.describe "Navigating to message", type: :system, js: true do
 
     context "when clicking a link to a message from the current channel" do
       before do
-        Fabricate(:chat_message, chat_channel: channel_1, message: "[#{link}](/chat/channel/#{channel_1.id}/-?messageId=#{first_message.id})")
+        Fabricate(
+          :chat_message,
+          chat_channel: channel_1,
+          message: "[#{link}](/chat/c/-/#{channel_1.id}?messageId=#{first_message.id})",
+        )
       end
 
-      it "highglights the correct message" do
+      it "highlights the correct message" do
         visit("/")
         chat_page.open_from_header
         chat_drawer_page.open_channel(channel_1)
         click_link(link)
 
-        expect(page).to have_css(".chat-message-container.highlighted[data-id='#{first_message.id}']")
+        expect(page).to have_css(
+          ".chat-message-container.highlighted[data-id='#{first_message.id}']",
+        )
       end
 
       it "highlights the correct message after using the bottom arrow" do
@@ -133,7 +153,9 @@ RSpec.describe "Navigating to message", type: :system, js: true do
         click_link(I18n.t("js.chat.scroll_to_bottom"))
         click_link(link)
 
-        expect(page).to have_css(".chat-message-container.highlighted[data-id='#{first_message.id}']")
+        expect(page).to have_css(
+          ".chat-message-container.highlighted[data-id='#{first_message.id}']",
+        )
       end
     end
   end

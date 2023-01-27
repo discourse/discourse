@@ -229,6 +229,10 @@ export default Component.extend({
 
   @debounce(100)
   fetchMessages(channel, options = {}) {
+    if (this._selfDeleted) {
+      return;
+    }
+
     this.set("loading", true);
 
     return this.chat.loadCookFunction(this.site.categories).then((cook) => {
@@ -1022,7 +1026,7 @@ export default Component.extend({
         this.set("sendingLoading", false);
       });
 
-    if (this.details.can_load_more_future) {
+    if (this.details?.can_load_more_future) {
       msgCreationPromise.then(() => this._fetchAndScrollToLatest());
     } else {
       const stagedMessage = this._prepareSingleMessage(

@@ -4,7 +4,11 @@
       {{html-safe (i18n "admin.user.penalty_post_actions")}}
     </div>
   </label>
-  <ComboBox @value={{this.postAction}} @content={{this.penaltyActions}} @onChange={{action "penaltyChanged"}} />
+  <ComboBox
+    @value={{this.postAction}}
+    @content={{this.penaltyActions}}
+    @onChange={{action "penaltyChanged"}}
+  />
 </div>
 
 {{#if this.editing}}

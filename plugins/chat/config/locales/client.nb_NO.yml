@@ -50,6 +50,7 @@ nb_NO:
         yesterday: I går
       about_view:
         title: Tittel
+        name: Navn
         description: Beskrivelse
       channel_info:
         back_to_channel: "Forrige"

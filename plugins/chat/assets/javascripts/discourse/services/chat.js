@@ -1,4 +1,3 @@
-import slugifyChannel from "discourse/plugins/chat/discourse/lib/slugify-channel";
 import deprecated from "discourse-common/lib/deprecated";
 import userSearch from "discourse/lib/user-search";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -297,8 +296,8 @@ export default class Chat extends Service {
 
       return this.router.transitionTo(
         "chat.channel",
+        channel.slugifiedTitle,
         channel.id,
-        slugifyChannel(channel),
         { queryParams }
       );
     } else {
@@ -373,11 +372,13 @@ export default class Chat extends Service {
       data.data = JSON.stringify(draft);
     }
 
-    ajax("/chat/drafts", { type: "POST", data, ignoreUnsent: false })
+    ajax("/chat/drafts.json", { type: "POST", data, ignoreUnsent: false })
       .then(() => {
         this.markNetworkAsReliable();
       })
       .catch((error) => {
+        // we ignore a draft which can't be saved because it's too big
+        // and only deal with network error for now
         if (!error.jqXHR?.responseJSON?.errors?.length) {
           this.markNetworkAsUnreliable();
         }

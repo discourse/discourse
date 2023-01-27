@@ -205,7 +205,8 @@ en:
         read_only: "Read Only"
         archived_header: "Channel is archived"
         archived: "Archived"
-        archive_failed: "Archive channel failed. %{completed}/%{total} messages have been archived in <a target=\"_blank\" href=\"%{topic_url}\">the destination topic</a>. Press retry to attempt to complete the archive."
+        archive_failed: "Archive channel failed. %{completed}/%{total} messages have been archived. <a target=\"_blank\" href=\"%{topic_url}\">the destination topic</a>. Press retry to attempt to complete the archive."
+        archive_failed_no_topic: "Archive channel failed. %{completed}/%{total} messages have been archived, the destination topic was not created. Press retry to attempt to complete the archive."
         archive_completed: "See <a target=\"_blank\" href=\"%{topic_url}\">the archive topic</a>"
         closed_header: "Channel is closed"
         closed: "Closed"
@@ -232,6 +233,7 @@ en:
         associated_topic: Linked topic
         associated_category: Linked category
         title: Title
+        name: Name
         description: Description
 
       channel_info:
@@ -242,10 +244,10 @@ en:
           members: Members
           settings: Settings
 
-      channel_edit_title_modal:
-        title: Edit title
-        input_placeholder: Add a title
-        description: Give a short descriptive title to your channel
+      channel_edit_name_modal:
+        title: Edit name
+        input_placeholder: Add a name
+        description: Give a short descriptive name to your channel
 
       channel_edit_description_modal:
         title: Edit description
@@ -287,6 +289,7 @@ en:
         create: "Create channel"
         description: "Description (optional)"
         name: "Channel name"
+        slug: "Channel slug (optional)"
         title: "New channel"
         type: "Type"
         types:
@@ -322,8 +325,8 @@ en:
         channel_wide_mentions_label: "Allow @all and @here mentions"
         channel_wide_mentions_description: "Allow users to notify all members of #%{channel} with @all or only those who are active in the moment with @here"
         auto_join_users_label: "Automatically add users"
-        auto_join_users_info: "Check hourly which users have been active in the last 3 months and, if they have access to the %{category} category, add them to this channel."
-        enable_auto_join_users: "Automatically add all recently active users"
+        auto_join_users_info: "Check hourly which users have been active in the last 3 months. Add them to this channel if they have access to the %{category} category."
+        auto_join_users_info_no_category: "Check hourly which users have been active in the last 3 months. Add them to this channel if they have access to the selected category."
         auto_join_users_warning: "Every user who isn't a member of this channel and has access to the %{category} category will join. Are you sure?"
         desktop_notification_level: "Desktop notifications"
         follow: "Join"
@@ -345,7 +348,7 @@ en:
 
       direct_messages:
         title: "Personal chat"
-        new: "New personal chat"
+        new: "Create a personal chat"
         create: "Go"
         leave: "Leave this personal chat"
         cannot_create: "Sorry, you cannot send direct messages."

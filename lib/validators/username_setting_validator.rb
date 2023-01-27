@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class UsernameSettingValidator
-
   include RegexSettingValidation
 
   def initialize(opts = {})
@@ -17,7 +16,7 @@ class UsernameSettingValidator
     if @regex_fail
       I18n.t(@regex_error)
     else
-      I18n.t('site_settings.errors.invalid_username')
+      I18n.t("site_settings.errors.invalid_username")
     end
   end
 end

@@ -7,29 +7,29 @@ module Onebox
     end
 
     def name
-      @json_ld_data['name']
+      @json_ld_data["name"]
     end
 
     def image
-      @json_ld_data['image']
+      @json_ld_data["image"]
     end
 
     def description
-      @json_ld_data['description']
+      @json_ld_data["description"]
     end
 
     def rating
-      @json_ld_data.dig('aggregateRating', 'ratingValue')
+      @json_ld_data.dig("aggregateRating", "ratingValue")
     end
 
     def genres
-      @json_ld_data['genre']
+      @json_ld_data["genre"]
     end
 
     def duration
-      return nil unless @json_ld_data['duration']
+      return nil unless @json_ld_data["duration"]
 
-      Time.parse(@json_ld_data['duration']).strftime '%H:%M'
+      Time.parse(@json_ld_data["duration"]).strftime "%H:%M"
     end
 
     def to_h
@@ -39,7 +39,7 @@ module Onebox
         description: description,
         rating: rating,
         genres: genres,
-        duration: duration
+        duration: duration,
       }
     end
   end

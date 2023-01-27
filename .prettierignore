@@ -26,7 +26,6 @@ dist/
 tmp/
 
 **/*.rb
-**/*.hbs
 **/*.html
 **/*.json
 **/*.md

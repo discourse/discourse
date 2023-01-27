@@ -26,7 +26,7 @@ describe Chat do
       )
     end
 
-    it "marks uploads with ChatUpload in use" do
+    it "marks uploads with reference to ChatMessage via UploadReference in use" do
       unused_upload
 
       expect { Jobs::CleanUpUploads.new.execute({}) }.to change { Upload.count }.by(-1)
@@ -61,7 +61,7 @@ describe Chat do
       )
     end
 
-    it "marks uploads with ChatUpload in use" do
+    it "marks uploads with reference to ChatMessage via UploadReference in use" do
       draft_upload
       unused_upload
 
@@ -144,7 +144,7 @@ describe Chat do
       ).chat_message
     end
 
-    let(:chat_url) { "#{Discourse.base_url}/chat/channel/#{chat_channel.id}" }
+    let(:chat_url) { "#{Discourse.base_url}/chat/c/-/#{chat_channel.id}" }
 
     context "when inline" do
       it "renders channel" do
@@ -209,7 +209,7 @@ describe Chat do
               <div class="chat-transcript-datetime">
                 <a href="#{chat_url}?messageId=#{chat_message.id}" title="#{chat_message.created_at}">#{chat_message.created_at}</a>
               </div>
-              <a class="chat-transcript-channel" href="/chat/channel/#{chat_channel.id}/-">
+              <a class="chat-transcript-channel" href="/chat/c/-/#{chat_channel.id}">
                 <span class="category-chat-badge" style="color: ##{chat_channel.chatable.color}">
                   <svg class="fa d-icon d-icon-hashtag svg-icon svg-string" xmlns="http://www.w3.org/2000/svg"><use href="#hashtag"></use></svg>
                 </span>
@@ -345,7 +345,7 @@ describe Chat do
       end
     end
 
-    context "when followed public channels exist" do
+    context "when followed direct message channels exist" do
       fab!(:user_2) { Fabricate(:user) }
       fab!(:channel) { Fabricate(:direct_message_channel, users: [user, user_2]) }
 
@@ -356,7 +356,7 @@ describe Chat do
       end
     end
 
-    context "when followed direct message channels exist" do
+    context "when followed public channels exist" do
       fab!(:channel) { Fabricate(:chat_channel) }
 
       before do

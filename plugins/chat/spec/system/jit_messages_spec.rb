@@ -6,6 +6,7 @@ RSpec.describe "JIT messages", type: :system, js: true do
   fab!(:other_user) { Fabricate(:user) }
 
   let(:chat) { PageObjects::Pages::Chat.new }
+  let(:channel) { PageObjects::Pages::ChatChannel.new }
 
   before do
     channel_1.add(current_user)
@@ -15,12 +16,14 @@ RSpec.describe "JIT messages", type: :system, js: true do
 
   context "when mentioning a user not on the channel" do
     it "displays a mention warning" do
+      Jobs.run_immediately!
+
       chat.visit_channel(channel_1)
-      find(".chat-composer-input").fill_in(with: "hi @#{other_user.username}")
-      find(".send-btn").click
+      channel.send_message("hi @#{other_user.username}")
 
       expect(page).to have_content(
         I18n.t("js.chat.mention_warning.without_membership.one", username: other_user.username),
+        wait: 5,
       )
     end
   end
@@ -35,13 +38,14 @@ RSpec.describe "JIT messages", type: :system, js: true do
     end
 
     it "displays a mention warning" do
+      Jobs.run_immediately!
+
       chat.visit_channel(private_channel_1)
-      find(".chat-composer-input").fill_in(with: "hi @#{other_user.username}")
-      find(".chat-composer-input").click
-      find(".send-btn").click
+      channel.send_message("hi @#{other_user.username}")
 
       expect(page).to have_content(
         I18n.t("js.chat.mention_warning.cannot_see.one", username: other_user.username),
+        wait: 5,
       )
     end
   end
@@ -51,12 +55,14 @@ RSpec.describe "JIT messages", type: :system, js: true do
       fab!(:group_1) { Fabricate(:group, mentionable_level: Group::ALIAS_LEVELS[:nobody]) }
 
       it "displays a mention warning" do
+        Jobs.run_immediately!
+
         chat.visit_channel(channel_1)
-        find(".chat-composer-input").fill_in(with: "hi @#{group_1.name}")
-        find(".send-btn").click
+        channel.send_message("hi @#{group_1.name}")
 
         expect(page).to have_content(
           I18n.t("js.chat.mention_warning.group_mentions_disabled.one", group_name: group_1.name),
+          wait: 5,
         )
       end
     end

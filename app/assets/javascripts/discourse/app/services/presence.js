@@ -66,14 +66,18 @@ class PresenceChannel extends EmberObject.extend(Evented) {
     }
 
     this.setProperties({ activeOptions });
-    await this.presenceService._enter(this);
-    this.set("present", true);
+    if (!this.present) {
+      this.set("present", true);
+      await this.presenceService._enter(this);
+    }
   }
 
   // Mark the current user as leaving this channel
   async leave() {
-    await this.presenceService._leave(this);
-    this.set("present", false);
+    if (this.present) {
+      this.set("present", false);
+      await this.presenceService._leave(this);
+    }
   }
 
   async subscribe(initialData = null) {

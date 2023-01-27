@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 module Jobs
-
   class DownloadProfileBackgroundFromUrl < ::Jobs::Base
     sidekiq_options retry: false
 
@@ -15,16 +14,10 @@ module Jobs
       return unless user = User.find_by(id: user_id)
 
       begin
-        UserProfile.import_url_for_user(
-          url,
-          user,
-          is_card_background: args[:is_card_background],
-        )
+        UserProfile.import_url_for_user(url, user, is_card_background: args[:is_card_background])
       rescue Discourse::InvalidParameters => e
-        raise e unless e.message == 'url'
+        raise e unless e.message == "url"
       end
     end
-
   end
-
 end

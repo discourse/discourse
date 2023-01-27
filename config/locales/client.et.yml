@@ -253,7 +253,6 @@ et:
       edit: "Muuda järjehoidjat"
       not_bookmarked: "lisa sellele postitusele järjehoidja"
       created_with_reminder: "Olete selle postituse järjehoidjatesse lisanud meeldetuletusega %{date}. %{name}"
-      remove: "Eemalda järjehoidja"
       delete: "Kustuta järjehoidja"
       confirm_delete: "Kas soovid selle järjehoidja kustutada? Kustutatakse ka meeldetuletus."
       confirm_clear: "Kas soovid kindlasti sellest teemast kustutada kõik oma järjehoidjad?"
@@ -305,7 +304,6 @@ et:
     enable: "Võimalda"
     disable: "Tõkesta"
     continue: "Jätka"
-    undo: "Ennista"
     switch_to_anon: "Sisene anonüümsesse režiimi"
     switch_from_anon: "Välju anonüümsest režiimist"
     banner:
@@ -486,6 +484,7 @@ et:
       requests:
         reason: "Põhjus"
         accepted: "aktsepteeritud"
+        undo: "Ennista"
       manage:
         title: "Halda"
         name: "Nimi"
@@ -950,6 +949,7 @@ et:
         primary: "Peamine e-post"
         secondary: "Teine e-post"
         primary_label: "primaarne"
+        resent_label: "meil saadetud"
         update_email: "Muuda meiliaadressi"
         no_secondary: "Teist e-posti pole"
         instructions: "Ei näidata avalikult."
@@ -1573,9 +1573,11 @@ et:
         dismiss_new: "Ignoreeri uusi"
         toggle: "lülita teemade massiline ära märkimine ümber"
         actions: "Masstoimingud"
+        change_category: "Määra kategooria..."
         close_topics: "Sulge Teemad"
         archive_topics: "Arhiveeri Teemad"
         move_messages_to_inbox: "Liiguta sisendkausta"
+        notification_level: "Teavitus..."
         change_notification_level: "Muuda teavituste taset"
         choose_new_category: "Vali teemadele uus foorum:"
         selected:
@@ -1773,6 +1775,7 @@ et:
         unarchive: "Taasta teema arhiivist"
         archive: "Arhiveeri teema"
         reset_read: "Nulli andmed teema lugemise kohta"
+        make_public: "Loo avalik teema..."
         make_private: "Loo isiklik sõnum"
       feature:
         pin: "Tõsta teema esile"
@@ -2011,6 +2014,8 @@ et:
         revert_to_regular: "Eemalda meeskonna värv"
         rebake: "Rekonstrueeri HTML"
         unhide: "Too nähtavale"
+        change_owner: "Omanikuvahetus..."
+        grant_badge: "Anna märgis..."
         lock_post: "Lukusta postitus"
         delete_topic: "kustuta teema"
       actions:
@@ -2058,7 +2063,6 @@ et:
             button: "HTML"
       bookmarks:
         edit: "Muuda järjehoidjat"
-        created: "Loodud"
         name: "Nimi"
         options: "Võimalused"
         actions:
@@ -2188,6 +2192,7 @@ et:
     flagging:
       title: "Täname, et aitad meie kogukonna viisakust säilitada!"
       action: "Tähista postitus"
+      take_action: "Tegutse..."
       take_action_options:
         default:
           title: "Tegutse"
@@ -2284,7 +2289,6 @@ et:
       one: "kasutaja"
       other: "kasutajad"
     category_title: "Foorum"
-    changed_by: "autor %{author}"
     raw_email:
       title: "Sissetulevad e-kirjad"
       not_available: "Pole saadaval!"
@@ -2488,6 +2492,7 @@ et:
         save: "Salvesta"
         delete: "Kustuta"
         confirm_delete: "Oled kindel, et soovid selle siltide grupi kustutada?"
+        parent_tag_placeholder: "Valikuline"
       topics:
         none:
           unread: "Sul ei ole lugemata teemasid."
@@ -2560,14 +2565,12 @@ et:
               content: "KKK"
             groups:
               content: "Grupid"
-              title: "Kõik grupid"
             users:
               content: "Kasutajad"
             my_posts:
               content: "Minu"
             review:
               content: "Vaata üle"
-              title: "vaata üle"
   admin_js:
     type_to_filter: "filtreerimiseks trüki..."
     admin:
@@ -2592,6 +2595,7 @@ et:
         latest_version: "Viimased"
         new_features:
           dismiss: "Ignoreeri"
+          learn_more: "Uuri veel"
         last_checked: "Viimati kontrollitud"
         refresh_problems: "Värskenda"
         no_problems: "Probleeme ei tuvastatud."
@@ -2688,6 +2692,7 @@ et:
         user: "Kasutaja"
         title: "API"
         created: Loodud
+        never_used: (mitte kunagi)
         generate: "Genereeri"
         revoke: "Tühista "
         all_users: "Kõik kasutajad"
@@ -2839,7 +2844,6 @@ et:
         button_title: "Saada kutsed"
       customize:
         title: "Kohanda"
-        long_title: "Saidi kohandused"
         preview: "eelvaade"
         save: "Salvesta"
         new: "Uus"
@@ -2915,9 +2919,9 @@ et:
           long_title: "Värvipaletid"
           copy_name_prefix: "Koopia sellest"
           delete_confirm: "Kas kustutada see vävripalett?"
-          undo: "ennista"
+          undo: "Ennista"
           undo_title: "Ennista selle värvistiku muudatused alates viimasest salvestamisest."
-          revert: "võta tagasi"
+          revert: "Võta tagasi"
           primary:
             name: "primaarne"
             description: "Enamik tekste, ikoone ja ääri."

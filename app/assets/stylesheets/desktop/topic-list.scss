@@ -89,9 +89,8 @@
   }
   .posters a:first-child .avatar.latest:not(.single) {
     box-shadow: 0 0 3px 1px rgba(var(--tertiary-rgb), 0.35);
-    border: 2px solid rgba(var(--tertiary-rgb), 0.5);
+    border: 1px solid rgba(var(--tertiary-rgb), 0.5);
     position: relative;
-    top: -2px;
     left: -2px;
   }
 

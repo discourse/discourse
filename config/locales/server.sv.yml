@@ -771,10 +771,6 @@ sv:
         other: "nästan %{count} år sedan"
   password_reset:
     no_token: 'Hoppsan! Länken du använde fungerar inte längre. Du kan <a href="%{base_url}/login">logga in</a> nu. Om du har glömt ditt lösenord kan du <a href="%{base_url}/password-reset">begära en länk</a> för att återställa det.'
-    choose_new: "Välj ett nytt lösenord"
-    choose: "Välj ett lösenord"
-    update: "Uppdatera lösenord"
-    save: "Välj lösenord"
     title: "Återställ lösenord"
     success: "Du har lyckats med att byta ditt lösenord och är nu inloggad."
     success_unapproved: "Du lyckades med att byta ditt lösenord."
@@ -970,7 +966,7 @@ sv:
     mailing_list_mode: "Stäng av utskicksläge"
     all: "Skicka mig inga fler e-postmeddelanden från %{sitename}"
     different_user_description: "Du är för tillfället inloggad som en annan användare än den som vi skickade e-post till. Logga ut, eller aktivera anonymt läge, och försök igen."
-    not_found_description: Tyvärr kunde vi inte hitta den avprenumerationen. Kan länken i din e-post vara för gammal och ha löpt ut?"
+    not_found_description: "Tyvärr kunde vi inte hitta den avprenumerationen. Kan länken i din e-post vara för gammal och ha löpt ut?"
     user_not_found_description: "Tyvärr kunde vi inte hitta någon användare för den här prenumerationen. Du försöker troligen avprenumerera ett konto som inte längre finns."
     log_out: "Logga ut"
     submit: "Spara inställningar"
@@ -1433,8 +1429,8 @@ sv:
     title: "Namnet på denna webbplats. Synligt för alla besökare, även anonyma användare."
     site_description: "Beskriv denna webbplats med en mening. Synligt för alla besökare, även anonyma användare."
     short_site_description: "Kort beskrivning med några få ord. Synlig för alla besökare, även anonyma användare."
-    contact_email: "E-postadress till nyckelkontakt som är ansvarig för denna webbplats. Används för kritiska aviseringar, och visas även på <a href='%{base_path}/about' target='_blank'>/about</a> för brådskande ärenden."
-    contact_url: "Kontakt-URL för denna webbplats. Visas på <a href='%{base_path}/about' target='_blank'>/about</a>-sidan för brådskande ärenden."
+    contact_email: "E-postadress till nyckelkontakt som är ansvarig för denna webbplats. Används för kritiska aviseringar, och visas även på <a href='%{base_path}/about' target='_blank'>/about</a>. Synliga för anonyma användare på offentliga webbplatser."
+    contact_url: "Kontakt-URL för denna webbplats. När den finns ersätter den e-postadressen på <a href='%{base_path}/about' target='_blank'>/about</a> och är synlig för anonyma användare på offentliga webbplatser."
     crawl_images: "Hämta bilder från tredjepartskällor för att infoga korrekta bredd- och höjddimensioner."
     download_remote_images_to_local: "Konvertera fjärrbilder (med aktiva länkar) till lokala bilder genom att ladda ner dem. Detta bevarar innehållet även om bilderna tas bort från den fjärranslutna webbplatsen i framtiden."
     download_remote_images_threshold: "Minimalt diskutrymme nödvändigt för att hämta hem externa bilder lokalt (i procent)"
@@ -1589,10 +1585,7 @@ sv:
     max_favorite_badges: "Maximalt antal utmärkelser som användaren kan välja"
     whispers_allowed_groups: "Tillåt privat kommunikation inom ämnen för medlemmar i specificerade grupper."
     allow_index_in_robots_txt: "Ange i robots.txt att den här webbplatsen får indexeras av webbsökmotorer. I undantagsfall kan du permanent <a href='%{base_path}/admin/customize/robots'>åsidosätta robots.txt</a>."
-    blocked_email_domains: "En textfil avgränsad med vertikalstreck med alla e-postdomäner som användare inte tillåts registrera konton med. Exempel: mailinator.com|trashmail.net"
-    allowed_email_domains: "En textfil avgränsad med vertikalstreck med alla e-postdomäner som användare MÅSTE registrera konton med. VARNING: Användare med andra e-postdomäner än de som anges kommer inte att tillåtas!"
     normalize_emails: "Kontrollera om normaliserad e-post är unik. Normaliserad e-post tar bort alla punkter från användarnamnet och allt mellan symbolerna + och @."
-    auto_approve_email_domains: "Användare med e-postadresser som finns i denna lista av domäner kommer automatiskt att godkännas."
     hide_email_address_taken: "Informera inte användarna om att det finns ett konto med en given e-postadress under registreringen eller under flödet för glömda lösenord. Kräv fullständig e-post vid begäran om \"glömt lösenord\"."
     log_out_strict: "Vid utloggning, logga ut ALLA sessioner för den användaren på alla apparater"
     version_checks: "Pinga Discourse Hub för versionuppdateringar och visa nya versionsmeddelanden på instrumentpanelen <a href='%{base_path}/admin' target='_blank'>/admin</a>"
@@ -1877,6 +1870,11 @@ sv:
     block_auto_generated_emails: "Blockera inkommande e-post som identifieras som autogenererat."
     ignore_by_title: "Ignorera inkommande e-post baserat på dess rubrik."
     mailgun_api_key: "Mailgun Secret API-nyckel att använda för att verifiera webhook-meddelanden."
+    sendgrid_verification_key: "Verifieringsnyckel för Sendgrid som används för att verifiera webhook-meddelanden."
+    mailjet_webhook_token: "Token som används för att verifiera webhook-nyttolasten. Den måste skickas som frågeparametern \"t\" för webhook, till exempel: https://example.com/webhook/mailjet?t=supersecret"
+    mandrill_authentication_key: "Mandrill-autentiseringsnyckel som används för att verifiera webhook-meddelanden."
+    postmark_webhook_token: "Token som används för att verifiera webhook-nyttolasten. Den måste skickas som frågeparametern \"t\" för webhook, till exempel: https://example.com/webhook/postmark?t=supersecret"
+    sparkpost_webhook_token: "Token som används för att verifiera webhook-nyttolasten. Den måste skickas som frågeparametern \"t\" för webhook, till exempel: https://example.com/webhook/sparkpost?t=supersecret"
     soft_bounce_score: "Studspoäng har lagt till hos användaren när en tillfällig studs händer."
     hard_bounce_score: "Studspoäng har lagts till på användarens profil när en permanent studs sker."
     bounce_score_threshold: "Max antal studsar innan vi upphör att skicka e-post till en användare"
@@ -2141,6 +2139,7 @@ sv:
     navigation_menu: "Bestäm vilken navigeringsmeny som ska användas. Sidofälts- och rubriknavigering kan anpassas av användare. Det äldre alternativet är tillgängligt för bakåtkompatibilitet."
     default_sidebar_categories: "Valda kategorier kommer att visas under sidofältets sektion Kategorier som standard."
     default_sidebar_tags: "Valda taggar kommer att visas under sidofältets sektion Taggar som standard."
+    enable_new_notifications_menu: "Aktiverar den nya aviseringsmenyn för den gamla navigeringsmenyn."
     enable_new_user_profile_nav_groups: "EXPERIMENTELL: Användare i de valda grupperna visas den nya navigeringsmenyn för användarprofiler."
     enable_experimental_topic_timeline_groups: "EXPERIMENTELLT: Användare i de valda grupperna visas det omstrukturerade ämnets tidslinje"
     enable_experimental_hashtag_autocomplete: "EXPERIMENTELLT: Använd det nya #hashtag-autokompletteringssystemet för kategorier och taggar som renderar det valda objektet annorlunda och har förbättrad sökning"
@@ -2201,6 +2200,7 @@ sv:
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Du kan inte aktivera DiscourseConnect om 2FA är obligatoriskt."
       delete_rejected_email_after_days: "Den här inställningen kan inte vara lägre än inställningen delete_email_logs_after_days eller större än %{max}"
       invalid_uncategorized_category_setting: "Kategorin Okategoriserade kan inte väljas om tillåt okategoriserade ämnen inte är tillåtet"
+      enable_new_notifications_menu_not_legacy_navigation_menu: "Du måste ställa in `navigation_menu` till `legacy` innan du aktiverar den här inställningen."
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.exempel.se"
@@ -3283,6 +3283,17 @@ sv:
         %{context}
 
         %{respond_instructions}
+    user_watching_category_or_tag:
+      title: "Användaren bevakar kategori eller tagg"
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_watching_first_post:
       title: "Användare bevakar första inlägget"
       subject_template: "[%{email_prefix}] %{topic_title}"
@@ -4296,7 +4307,7 @@ sv:
     title: "Discourse-inställningar"
     step:
       introduction:
-        title: "Berätta för oss om ditt forum"
+        title: "Om din webbplats"
         description: "Dessa kommer att visas på din inloggningssida och eventuella offentliga sidor. Du kan alltid ändra dem senare."
         fields:
           title:
@@ -4361,7 +4372,7 @@ sv:
               subcategories_with_featured_topics:
                 label: "Underkategorier med utvalda ämnen"
       branding:
-        title: "Forumets logotyp"
+        title: "Webbplatsens logotyp"
         fields:
           logo:
             label: "Primär logotyp"

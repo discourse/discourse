@@ -38,9 +38,9 @@ export default Component.extend(ModalFunctionality, {
 
     return this.chatApi
       .createChannelArchive(this.chatChannel.id, this._data())
-      .then((result) => {
+      .then(() => {
         this.flash(I18n.t("chat.channel_archive.process_started"), "success");
-        result.target.status = CHANNEL_STATUSES.archived;
+        this.chatChannel.set("status", CHANNEL_STATUSES.archived);
 
         discourseLater(() => {
           this.closeModal();

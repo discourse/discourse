@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe 'Search', type: :system, js: true do
+describe "Search", type: :system, js: true do
   let(:search_page) { PageObjects::Pages::Search.new }
   fab!(:topic) { Fabricate(:topic) }
   fab!(:post) { Fabricate(:post, topic: topic, raw: "This is a test post in a test topic") }
@@ -11,9 +11,7 @@ describe 'Search', type: :system, js: true do
       SearchIndexer.index(topic, force: true)
     end
 
-    after do
-      SearchIndexer.disable
-    end
+    after { SearchIndexer.disable }
 
     it "works and clears search page state", mobile: true do
       visit("/search")

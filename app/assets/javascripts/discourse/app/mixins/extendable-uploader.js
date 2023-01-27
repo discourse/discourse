@@ -74,7 +74,7 @@ export default Mixin.create(UploadDebugging, {
     }
   },
 
-  // TODO (martin) This and _onPreProcessComplete will need to be tweaked
+  // NOTE: This and _onPreProcessComplete will need to be tweaked
   // if we ever add support for "determinate" preprocessors for uppy, which
   // means the progress will have a value rather than a started/complete
   // state ("indeterminate").

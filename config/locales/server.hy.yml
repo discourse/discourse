@@ -534,10 +534,6 @@ hy:
         one: "գրեթե %{count} տարի առաջ"
         other: "գրեթե %{count} տարի առաջ"
   password_reset:
-    choose_new: "Ընտրել նոր գաղտնաբառ"
-    choose: "Ընտրել գաղտնաբառ"
-    update: "Թարմացնել Գաղտնաբառը"
-    save: "Սահմանել Գաղտնաբառ"
     title: "Վերականգնել Գաղտնաբառը"
     success: "Դուք հաջողությամբ փոփոխել եք Ձեր գաղտնաբառը և այժմ մուտքագրված եք:"
     success_unapproved: "Դուք հաջողությամբ փոփոխել եք Ձեր գաղտնաբառը:"
@@ -1161,8 +1157,6 @@ hy:
     enable_rich_text_paste: "Միացնել HTML -ի ավտոմատ փոխարկումը Markdown-ի՝ տեքստը կոմպոզեր տեղափոխելիս: (Փորձնական)"
     email_token_valid_hours: "Մոռացել եմ գաղտնաբառը / ակտիվացնել հաշիվը տոկենները վավեր են (n) ժամ: "
     enable_badges: "Միացնել կրծքանշանների համակարգը"
-    blocked_email_domains: "Էլ. փոստի դոմենների ցանկ՝ բաժանված խողովակի սիմվոլով( | ), որոնցով օգտատերերին չի թույլատրվում գրանցել հաշիվ: Օրինակ՝ mailinator.com|trashmail.net"
-    allowed_email_domains: "Էլ. փոստի դոմենների ցանկ՝ բաժանված խողովակի սիմվոլով( | ), որոնցով օգտատերերը ՊԵՏՔ Է գրանցեն հաշիվներ: ՈՒՇԱԴՐՈՒԹՅՈՒՆ՝ այս ցանկի դոմեններից տարբեր էլ. հասցեներ ունեցող օգտատերերին չի թույլատրվի!"
     log_out_strict: "Ելքագրվելիս դուրս գալ օգտատիրոջ ԲՈԼՈՐ գործընթացներից բոլոր սարքերի վրա:"
     version_checks: "Ստուգել Discourse Hub -ը տարբերակի թարմացումների համար և ցուցադրել նոր տարբերակի հաղորդագրությունները <a href='%{base_path}/admin' target='_blank'>/admin</a> կառավարման հարթակում:"
     new_version_emails: "Ուղարկել էլ. նամակ contact_email հասցեին, երբ հասանելի է Discourse -ի նոր տարբերակ:"
@@ -2338,6 +2332,16 @@ hy:
         %{respond_instructions}
     user_posted:
       title: "Օգտատերը Հրապարակել է"
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_watching_category_or_tag:
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}

@@ -532,17 +532,17 @@ login:
       value: "sso_provider.value_placeholder"
   blocked_email_domains:
     default: "mailinator.com"
-    type: list
+    type: host_list
     list_type: simple
   allowed_email_domains:
     default: ""
-    type: list
+    type: host_list
     list_type: simple
   normalize_emails:
     default: false
   auto_approve_email_domains:
     default: ""
-    type: list
+    type: host_list
     list_type: simple
   hide_email_address_taken:
     client: true
@@ -913,7 +913,6 @@ posting:
   max_mentions_per_post: 10
   max_users_notified_per_group_mention:
     default: 100
-    max: 250
     client: true
   newuser_max_replies_per_topic: 3
   newuser_max_mentions_per_post: 2
@@ -1091,6 +1090,9 @@ posting:
   skip_auto_delete_reply_likes: 5
   review_every_post:
     default: false
+  max_draft_length:
+    default: 400_000
+    hidden: true
 
 email:
   email_time_window_mins:
@@ -1246,6 +1248,21 @@ email:
   mailgun_api_key:
     default: ""
     regex: '^((key-)?\h{32}|\h{32}-\h{8}-\h{8})$'
+    secret: true
+  sendgrid_verification_key:
+    default: ""
+    secret: true
+  mailjet_webhook_token:
+    default: ""
+    secret: true
+  mandrill_authentication_key:
+    default: ""
+    secret: true
+  postmark_webhook_token:
+    default: ""
+    secret: true
+  sparkpost_webhook_token:
+    default: ""
     secret: true
   bounce_score_threshold:
     client: true
@@ -1550,6 +1567,10 @@ files:
     default: false
     client: true
     hidden: true
+  composer_ios_media_optimisation_image_enabled:
+    default: false
+    client: true
+    hidden: true
 
 trust:
   default_trust_level:
@@ -1652,6 +1673,9 @@ trust:
   tl3_requires_likes_received:
     default: 20
   tl3_links_no_follow:
+    default: false
+    client: true
+  tl4_delete_posts_and_topics:
     default: false
     client: true
   trusted_users_can_edit_others:
@@ -1780,6 +1804,8 @@ security:
   suppress_secured_categories_from_admin:
     default: false
     hidden: true
+  include_secure_categories_in_tag_counts:
+    default: false
 
 onebox:
   post_onebox_maxlength:
@@ -2036,7 +2062,7 @@ developer:
     default: true
     client: true
   enable_experimental_hashtag_autocomplete:
-    default: false
+    default: true
     client: true
   experimental_hashtag_search_result_limit:
     default: 20
@@ -2081,6 +2107,9 @@ navigation:
     choices:
       - "default"
       - "unread_new"
+  enable_new_notifications_menu:
+    default: false
+    validator: "EnableNewNotificationsMenuValidator"
 
 embedding:
   embed_by_username:

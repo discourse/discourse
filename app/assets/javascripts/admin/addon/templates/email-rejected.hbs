@@ -13,10 +13,22 @@
     <tbody>
       <tr class="filters">
         <td>{{i18n "admin.email.logs.filters.title"}}</td>
-        <td><TextField @value={{this.filter.from}} @placeholderKey="admin.email.incoming_emails.filters.from_placeholder" /></td>
-        <td><TextField @value={{this.filter.to}} @placeholderKey="admin.email.incoming_emails.filters.to_placeholder" /></td>
-        <td><TextField @value={{this.filter.subject}} @placeholderKey="admin.email.incoming_emails.filters.subject_placeholder" /></td>
-        <td colspan="2"><TextField @value={{this.filter.error}} @placeholderKey="admin.email.incoming_emails.filters.error_placeholder" /></td>
+        <td><TextField
+            @value={{this.filter.from}}
+            @placeholderKey="admin.email.incoming_emails.filters.from_placeholder"
+          /></td>
+        <td><TextField
+            @value={{this.filter.to}}
+            @placeholderKey="admin.email.incoming_emails.filters.to_placeholder"
+          /></td>
+        <td><TextField
+            @value={{this.filter.subject}}
+            @placeholderKey="admin.email.incoming_emails.filters.subject_placeholder"
+          /></td>
+        <td colspan="2"><TextField
+            @value={{this.filter.error}}
+            @placeholderKey="admin.email.incoming_emails.filters.error_placeholder"
+          /></td>
       </tr>
 
       {{#each this.model as |email|}}
@@ -31,7 +43,9 @@
                 </LinkTo>
               {{else}}
                 {{#if email.from_address}}
-                  <a href="mailto:{{email.from_address}}">{{email.from_address}}</a>
+                  <a
+                    href="mailto:{{email.from_address}}"
+                  >{{email.from_address}}</a>
                 {{else}}
                   &mdash;
                 {{/if}}
@@ -48,16 +62,25 @@
           </td>
           <td>{{email.subject}}</td>
           <td class="error">
-            <a href {{on "click" (fn this.handleShowIncomingEmail email.id)}}>{{email.error}}</a>
+            <a
+              href
+              {{on "click" (fn this.handleShowIncomingEmail email.id)}}
+            >{{email.error}}</a>
           </td>
           <td class="email-details">
-            <a href {{on "click" (fn this.handleShowIncomingEmail email.id)}} title={{i18n "admin.email.details_title"}}>
+            <a
+              href
+              {{on "click" (fn this.handleShowIncomingEmail email.id)}}
+              title={{i18n "admin.email.details_title"}}
+            >
               {{d-icon "info-circle"}}
             </a>
           </td>
         </tr>
       {{else}}
-        <tr><td colspan="6">{{i18n "admin.email.incoming_emails.none"}}</td></tr>
+        <tr><td colspan="6">{{i18n
+              "admin.email.incoming_emails.none"
+            }}</td></tr>
       {{/each}}
     </tbody>
   </table>

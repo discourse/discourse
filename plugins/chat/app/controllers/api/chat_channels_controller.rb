@@ -5,16 +5,14 @@ CATEGORY_CHANNEL_EDITABLE_PARAMS = %i[auto_join_users allow_channel_wide_mention
 
 class Chat::Api::ChatChannelsController < Chat::Api
   def index
-    options = { status: params[:status] ? ChatChannel.statuses[params[:status]] : nil }.merge(
-      params.permit(:filter, :limit, :offset),
-    ).symbolize_keys!
+    permitted = params.permit(:filter, :limit, :offset, :status)
 
-    options[:offset] = options[:offset].to_i
-    options[:limit] = (options[:limit] || 25).to_i
+    options = { filter: permitted[:filter], limit: (permitted[:limit] || 25).to_i }
+    options[:offset] = permitted[:offset].to_i
+    options[:status] = ChatChannel.statuses[permitted[:status]] ? permitted[:status] : nil
 
     memberships = Chat::ChatChannelMembershipManager.all_for_user(current_user)
     channels = Chat::ChatChannelFetcher.secured_public_channels(guardian, memberships, options)
-
     serialized_channels =
       channels.map do |channel|
         ChatChannelSerializer.new(
@@ -24,14 +22,10 @@ class Chat::Api::ChatChannelsController < Chat::Api
         )
       end
 
-    pagination_options =
-      options.slice(:offset, :limit, :filter).merge(offset: options[:offset] + options[:limit])
-    pagination_params = pagination_options.map { |k, v| "#{k}=#{v}" }.join("&")
-    render json: serialized_channels,
-           root: "channels",
-           meta: {
-             load_more_url: "/chat/api/channels?#{pagination_params}",
-           }
+    load_more_params = options.merge(offset: options[:offset] + options[:limit]).to_query
+    load_more_url = URI::HTTP.build(path: "/chat/api/channels", query: load_more_params).request_uri
+
+    render json: serialized_channels, root: "channels", meta: { load_more_url: load_more_url }
   end
 
   def destroy
@@ -44,6 +38,13 @@ class Chat::Api::ChatChannelsController < Chat::Api
 
     begin
       ChatChannel.transaction do
+        channel_from_params.update!(
+          slug:
+            "#{Time.now.strftime("%Y%m%d-%H%M")}-#{channel_from_params.slug}-deleted".truncate(
+              SiteSetting.max_topic_title_length,
+              omission: "",
+            ),
+        )
         channel_from_params.trash!(current_user)
         StaffActionLogger.new(current_user).log_custom(
           "chat_channel_delete",
@@ -63,7 +64,7 @@ class Chat::Api::ChatChannelsController < Chat::Api
 
   def create
     channel_params =
-      params.require(:channel).permit(:chatable_id, :name, :description, :auto_join_users)
+      params.require(:channel).permit(:chatable_id, :name, :slug, :description, :auto_join_users)
 
     guardian.ensure_can_create_chat_channel!
     if channel_params[:name].length > SiteSetting.max_topic_title_length
@@ -87,6 +88,7 @@ class Chat::Api::ChatChannelsController < Chat::Api
     channel =
       chatable.create_chat_channel!(
         name: channel_params[:name],
+        slug: channel_params[:slug],
         description: channel_params[:description],
         user_count: 1,
         auto_join_users: auto_join_users,

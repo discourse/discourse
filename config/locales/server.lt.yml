@@ -680,10 +680,6 @@ lt:
         many: "beveik prieš %{count} metų"
         other: "beveik prieš %{count} metų"
   password_reset:
-    choose_new: "Pasirinkite naują slaptažodį"
-    choose: "Pasirinkite slaptažodį"
-    update: "Atnaujinti slaptažodį"
-    save: "Nustatykite slaptažodį"
     title: "Keisti slaptažodį"
     success: "Jūs sėkmingai pasikeitėte savo slaptažodį ir dabar esate prisijungęs."
     success_unapproved: "Jūs sėkmingai pasikeitėte savo slaptažodį."
@@ -2066,6 +2062,16 @@ lt:
 
         %{respond_instructions}
     user_posted:
+      subject_template: "[%{email_prefix}]%{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_watching_category_or_tag:
       subject_template: "[%{email_prefix}]%{topic_title}"
       text_body_template: |
         %{header_instructions}

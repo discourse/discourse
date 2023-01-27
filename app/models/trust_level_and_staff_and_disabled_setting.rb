@@ -6,12 +6,12 @@ class TrustLevelAndStaffAndDisabledSetting < TrustLevelAndStaffSetting
   end
 
   def self.valid_values
-    ['disabled'] + TrustLevel.valid_range.to_a + special_groups
+    ["disabled"] + TrustLevel.valid_range.to_a + special_groups
   end
 
   def self.translation(value)
-    if value == 'disabled'
-      I18n.t('site_settings.disabled')
+    if value == "disabled"
+      I18n.t("site_settings.disabled")
     else
       super
     end
@@ -19,11 +19,11 @@ class TrustLevelAndStaffAndDisabledSetting < TrustLevelAndStaffSetting
 
   def self.matches?(value, user)
     case value
-    when 'disabled'
+    when "disabled"
       false
-    when 'staff'
+    when "staff"
       user.staff?
-    when 'admin'
+    when "admin"
       user.admin?
     else
       user.has_trust_level?(value.to_i) || user.staff?

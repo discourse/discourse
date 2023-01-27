@@ -591,10 +591,6 @@ pt:
         one: "há quase %{count} ano atrás"
         other: "há quase %{count} anos atrás"
   password_reset:
-    choose_new: "Escolha uma nova palavra-passe"
-    choose: "Escolha uma palavra-passe"
-    update: "Atualizar Palavra-passe"
-    save: "Definir Palavra-passe"
     title: "Redefinir Palavra-passe"
     success: "A sua palavra-passe foi alterada com sucesso e está agora ligado."
     success_unapproved: "Palavra-passe modificada com sucesso."
@@ -658,6 +654,7 @@ pt:
       long_form: "sinalizou isto como spam"
     inappropriate:
       title: "Inapropriado"
+      description: 'Este tópico contém conteúdo que uma pessoa razoável consideraria ofensivo, abusivo, uma conduta odiosa ou uma violação de <a href="%{base_path}/guidelines">nossas diretrizes da comunidade</a>.'
       long_form: "sinalizou isto como inapropriado"
     notify_moderators:
       title: "Algo Mais"
@@ -1031,8 +1028,6 @@ pt:
     prioritize_username_in_ux: "Mostrar o nome de utilizador primeiro na página de utilizador, cartão de utilizador e publicações (quando o nome desactivado é mostrado primeiro)"
     email_token_valid_hours: "Os símbolos para palavra-passe esquecida /conta ativada são válidos por (n) horas."
     enable_badges: "Ativar o sistema de distintivos"
-    blocked_email_domains: "Lista de domínios de email que os utilizadores não podem usar para registo de contas. Exemplo: mailinator.com|trashmail.net"
-    allowed_email_domains: "Lista de domínios de email que os utilizadores DEVEM usar para registar contas. AVISO: Utilizadores com domínios de email diferentes dos listados não serão permitidos!"
     log_out_strict: "Ao terminar sessão, saia de TODAS as sessões do utilizador em todos dispositivos"
     new_version_emails: "Enviar um email para o endereço 'contact_email' quando uma nova versão do Discourse estiver disponível."
     invite_expiry_days: "Durante quantos dias as chaves de convite são válidas."
@@ -1755,6 +1750,16 @@ pt:
 
         %{respond_instructions}
     user_posted:
+      text_body_template: |2
+
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_watching_category_or_tag:
       text_body_template: |2
 
         %{header_instructions}
