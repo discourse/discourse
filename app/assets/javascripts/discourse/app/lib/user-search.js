@@ -145,6 +145,14 @@ let debouncedSearch = function (
   );
 };
 
+function lowerCaseIncludes(string, term) {
+  return (
+    string &&
+    term &&
+    string.toLowerCase().includes(term.trim().split(/\s/)[0].toLowerCase())
+  );
+}
+
 function organizeResults(r, options) {
   if (r === CANCELLED_STATUS) {
     return r;
@@ -152,53 +160,53 @@ function organizeResults(r, options) {
 
   const exclude = options.exclude || [];
 
-  const results = [],
-    users = [],
+  const users = [],
     emails = [],
     groups = [];
+  let resultsLength = 0;
 
   if (r.users) {
     r.users.forEach((user) => {
-      if (results.length < options.limit && !exclude.includes(user.username)) {
-        results.push(user);
+      if (resultsLength < options.limit && !exclude.includes(user.username)) {
+        user.isUser = true;
+        user.isMetadataMatch =
+          !lowerCaseIncludes(user.username, options.term) &&
+          !lowerCaseIncludes(user.name, options.term);
         users.push(user);
+        resultsLength += 1;
       }
     });
-
-    users.forEach((user) => {
-      user.isMetadataMatch =
-        !user.username.includes(options.term) &&
-        !user.name?.includes(options.term);
-    });
-
-    users.sort((a, b) =>
-      a.isMetadataMatch === b.isMetadataMatch ? 0 : a.isMetadataMatch ? 1 : -1
-    );
   }
 
   if (options.allowEmails && emailValid(options.term)) {
-    const result = { username: options.term };
-    results.push(result);
-    emails.push(result);
+    emails.push({ username: options.term, isEmail: true });
+    resultsLength += 1;
   }
 
   if (r.groups) {
     r.groups.forEach((group) => {
       if (
         (options.term.toLowerCase() === group.name.toLowerCase() ||
-          results.length < options.limit) &&
+          resultsLength < options.limit) &&
         !exclude.includes(group.name)
       ) {
-        results.push(group);
+        group.isGroup = true;
         groups.push(group);
+        resultsLength += 1;
       }
     });
   }
 
+  const results = [
+    ...users.filter((u) => !u.isMetadataMatch),
+    ...emails,
+    ...groups,
+    ...users.filter((u) => u.isMetadataMatch),
+  ];
+
   results.users = users;
   results.emails = emails;
   results.groups = groups;
-
   return results;
 }
 
