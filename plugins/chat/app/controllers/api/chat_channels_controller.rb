@@ -90,36 +90,37 @@ class Chat::Api::ChatChannelsController < Chat::Api
   end
 
   def update
-    guardian.ensure_can_edit_chat_channel!
-
-    if channel_from_params.direct_message_channel?
-      raise Discourse::InvalidParameters.new(
-              I18n.t("chat.errors.cant_update_direct_message_channel"),
-            )
-    end
-
+    # TODO: Do we want to allow just inspecting the coerced contract data here? So
+    # we could do something like:
+    #
+    # contract = Chat::Service::UpdateChannel.check_contract(params_to_edit)
+    # if contract.auto_join_users
+    #   auto_join_limiter(channel_from_params).performed!
+    # end
+    #
+    # Or maybe we want to allow rate limiting from within services? I don't think so
+    # since it's a controller only thing....
     params_to_edit = editable_params(params, channel_from_params)
     params_to_edit.each { |k, v| params_to_edit[k] = nil if params_to_edit[k].blank? }
-
     if ActiveRecord::Type::Boolean.new.deserialize(params_to_edit[:auto_join_users])
       auto_join_limiter(channel_from_params).performed!
     end
 
-    channel_from_params.update!(params_to_edit)
+    result =
+      Chat::Service::UpdateChannel.call(
+        guardian: guardian,
+        channel: channel_from_params,
+        **params_to_edit,
+      )
 
-    ChatPublisher.publish_chat_channel_edit(channel_from_params, current_user)
-
-    if channel_from_params.category_channel? && channel_from_params.auto_join_users
-      Chat::ChatChannelMembershipManager.new(
-        channel_from_params,
-      ).enforce_automatic_channel_memberships
-    end
-
-    render_serialized(
-      channel_from_params,
-      ChatChannelSerializer,
-      root: "channel",
-      membership: channel_from_params.membership_for(current_user),
+    handle_service_result(
+      result,
+      serializer_object: result.channel,
+      serializer: ChatChannelSerializer,
+      serializer_data: {
+        root: "channel",
+        membership: result.channel.membership_for(current_user),
+      },
     )
   end
 

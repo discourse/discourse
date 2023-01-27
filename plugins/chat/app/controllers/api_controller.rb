@@ -11,8 +11,14 @@ class Chat::Api < Chat::ChatBaseController
     guardian.ensure_can_chat!
   end
 
-  def handle_service_result(result)
-    return { json: success_json } if result.success?
+  def handle_service_result(result, serializer_object: nil, serializer: nil, serializer_data: {})
+    if result.success?
+      if serializer_object && serializer
+        return render_serialized(serializer_object, serializer, **serializer_data)
+      else
+        return { json: success_json } if result.success?
+      end
+    end
 
     raise Discourse::InvalidAccess if result[:"guardian.failed"]
 

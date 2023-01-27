@@ -344,7 +344,13 @@ RSpec.describe Chat::Api::ChatChannelsController do
       before { sign_in(Fabricate(:user)) }
 
       it "returns a 403" do
-        put "/chat/api/channels/#{channel.id}"
+        put "/chat/api/channels/#{channel.id}",
+            params: {
+              channel: {
+                name: "joffrey",
+                description: "cat owner",
+              },
+            }
 
         expect(response.status).to eq(403)
       end
