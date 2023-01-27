@@ -211,6 +211,17 @@ export default Component.extend({
       URL || this.chatStateManager.lastKnownChatURL
     );
 
+    let highlightCb = null;
+
+    if (route.queryParams.messageId) {
+      highlightCb = () => {
+        this.appEvents.trigger(
+          "chat-live-pane:highlight-message",
+          route.queryParams.messageId
+        );
+      };
+    }
+
     switch (route.name) {
       case "chat":
         this.set("view", LIST_VIEW);
@@ -221,23 +232,24 @@ export default Component.extend({
         this.appEvents.trigger("chat:float-toggled", false);
         return;
       case "chat.channel":
-        return this.chatChannelsManager
-          .find(route.params.channelId)
-          .then((channel) => {
-            this.chat.setActiveChannel(channel);
-            this.set("view", CHAT_VIEW);
-            this.appEvents.trigger("chat:float-toggled", false);
-
-            if (route.queryParams.messageId) {
-              schedule("afterRender", () => {
-                this.appEvents.trigger(
-                  "chat-live-pane:highlight-message",
-                  route.queryParams.messageId
-                );
-              });
-            }
-          });
+        return this._openChannel(route, highlightCb);
+      case "chat.channel-legacy":
+        return this._openChannel(route, highlightCb);
     }
+  },
+
+  _openChannel(route, afterRenderFunc = null) {
+    return this.chatChannelsManager
+      .find(route.params.channelId)
+      .then((channel) => {
+        this.chat.setActiveChannel(channel);
+        this.set("view", CHAT_VIEW);
+        this.appEvents.trigger("chat:float-toggled", false);
+
+        if (afterRenderFunc) {
+          schedule("afterRender", afterRenderFunc);
+        }
+      });
   },
 
   @action
