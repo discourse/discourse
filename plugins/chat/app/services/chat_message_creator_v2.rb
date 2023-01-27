@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Chat::ChatMessageCreatorV2 < ServiceBase
+class Chat::ChatMessageCreatorV2
   class ChatMessageCreatorPayload
     attr_accessor :in_reply_to_id, :content, :staged_id, :incoming_chat_webhook, :upload_ids
 
