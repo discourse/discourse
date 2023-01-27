@@ -58,73 +58,15 @@
       </div>
 
       <div id="content"><div id='filecontents'>
-<p>:warning: This plugin is still in active development and may change frequently</p>
+<p>This plugin is still in active development and may change frequently</p>
 
 <h2 id="label-Documentation">Documentation</h2>
 
 <p>The Discourse Chat plugin adds chat functionality to your Discourse so it can natively support both long-form and short-form communication needs of your online community.</p>
 
-<p>For documentation, see <a href="https://meta.discourse.org/t/discourse-chat/230881">Discourse Chat</a></p>
+<p>For user documentation, see <a href="https://meta.discourse.org/t/discourse-chat/230881">Discourse Chat</a>.</p>
 
-<h2 id="label-Plugin+API">Plugin API</h2>
-
-<h3 id="label-registerChatComposerButton">registerChatComposerButton</h3>
-
-<h4 id="label-Usage">Usage</h4>
-
-<pre class="code ruby"><code class="ruby">api.registerChatComposerButton({ id: &quot;foo&quot;, ... });
-</code></pre>
-
-<h4 id="label-Options">Options</h4>
-
-<p>Every option accepts a <code>value</code> or a <code>function</code>, when passing a function <code>this</code> will be the <code>chat-composer</code> component instance. Example of an option using a function:</p>
-
-<pre class="code ruby"><code class="ruby">api.registerChatComposerButton({
-  id: &quot;foo&quot;,
-  displayed() {
-    return this.site.mobileView &amp;&amp; this.canAttachUploads;
-  },
-});
-</code></pre>
-
-<h5 id="label-Required">Required</h5>
-<ul><li>
-<p><code>id</code> unique, used to identify your button, eg: “gifs”</p>
-</li><li>
-<p><code>action</code> callback when the button is pressed, can be an action name or an anonymous function, eg: “onFooClicked” or <code>() =&gt; { console.log(&quot;clicked&quot;) }</code></p>
-</li></ul>
-
-<p>A button requires at least an icon or a label:</p>
-<ul><li>
-<p><code>icon</code>, eg: “times”</p>
-</li><li>
-<p><code>label</code>, text displayed on the button, a translatable key, eg: “foo.bar”</p>
-</li><li>
-<p><code>translatedLabel</code>, text displayed on the button, a string, eg: “Add gifs”</p>
-</li></ul>
-
-<h5 id="label-Optional">Optional</h5>
-<ul><li>
-<p><code>position</code>, can be “inline” or “dropdown”, defaults to “inline”</p>
-</li><li>
-<p><code>title</code>, title attribute of the button, a translatable key, eg: “foo.bar”</p>
-</li><li>
-<p><code>translatedTitle</code>, title attribute of the button, a string, eg: “Add gifs”</p>
-</li><li>
-<p><code>ariaLabel</code>, aria-label attribute of the button, a translatable key, eg: “foo.bar”</p>
-</li><li>
-<p><code>translatedAriaLabel</code>, aria-label attribute of the button, a string, eg: “Add gifs”</p>
-</li><li>
-<p><code>classNames</code>, additional names to add to the button’s class attribute, eg: [“foo”, “bar”]</p>
-</li><li>
-<p><code>displayed</code>, hide/or show the button, expects a boolean</p>
-</li><li>
-<p><code>disabled</code>, sets the disabled attribute on the button, expects a boolean</p>
-</li><li>
-<p><code>priority</code>, an integer defining the order of the buttons, higher comes first, eg: <code>700</code></p>
-</li><li>
-<p><code>dependentKeys</code>, list of property names which should trigger a refresh of the buttons when changed, eg: <code>[&quot;foo.bar&quot;, &quot;bar.baz&quot;]</code></p>
-</li></ul>
+<p>For developer documentation, see <a href="https://discourse.github.io/discourse/">Discourse Documentation</a>.</p>
 </div></div>
 
       

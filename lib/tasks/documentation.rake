@@ -11,7 +11,7 @@ def generate_chat_documentation
     plugins/chat/assets/javascripts/discourse/lib/collection.js
     plugins/chat/assets/javascripts/discourse/services/chat-api.js
   ]
-  `yarn --silent jsdoc -c #{config} #{files.join(" ")} -d #{destination}`
+  `yarn --silent jsdoc --readme plugins/chat/README.md -c #{config} #{files.join(" ")} -d #{destination}`
 
   require "open3"
   require "yard"
