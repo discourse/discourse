@@ -133,6 +133,19 @@
           </div>
         {{/unless}}
 
+        <div class="control-group timezones">
+          <label>{{i18n
+            "discourse_local_dates.create.form.timezones_title"
+            }}</label>
+          <p>{{i18n
+            "discourse_local_dates.create.form.timezones_description"
+            }}</p>
+          <div class="controls">
+            <MultiSelect @valueProperty={{null}} @nameProperty={{null}} @class="timezones-input" @content={{this.allTimezones}}
+              @value={{this.timezones}} @options={{hash allowAny=false maximum=5}} />
+          </div>
+        </div>
+
         <div class="control-group format">
           <label>{{i18n
               "discourse_local_dates.create.form.format_title"
@@ -168,25 +181,6 @@
               </li>
             {{/each}}
           </ul>
-        </div>
-
-        <div class="control-group timezones">
-          <label>{{i18n
-              "discourse_local_dates.create.form.timezones_title"
-            }}</label>
-          <p>{{i18n
-              "discourse_local_dates.create.form.timezones_description"
-            }}</p>
-          <div class="controls">
-            <MultiSelect
-              @valueProperty={{null}}
-              @nameProperty={{null}}
-              @class="timezones-input"
-              @content={{this.allTimezones}}
-              @value={{this.timezones}}
-              @options={{hash allowAny=false maximum=5}}
-            />
-          </div>
         </div>
       </div>
     {{/if}}
