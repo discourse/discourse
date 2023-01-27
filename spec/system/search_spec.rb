@@ -41,30 +41,14 @@ describe "Search", type: :system, js: true do
     before do
       SearchIndexer.enable
       SearchIndexer.index(topic, force: true)
-      SiteSetting.rate_limit_search_anon_user_per_minute = 15
+      SiteSetting.rate_limit_search_anon_user_per_minute = 4
       RateLimiter.enable
     end
 
     after { SearchIndexer.disable }
 
     it "rate limits searches for anonymous users" do
-      queries = %w[
-        one
-        two
-        three
-        four
-        five
-        six
-        seven
-        eight
-        nine
-        ten
-        eleven
-        twelve
-        thirteen
-        fourteen
-        fifteen
-      ]
+      queries = %w[one two three four]
 
       visit("/search?expanded=true")
 
