@@ -19,6 +19,7 @@
     <Input
       class="user-status-description"
       @value={{@status.description}}
+      maxlength="100"
       placeholder={{i18n "user_status.what_are_you_doing"}}
       {{on "input" this.setDefaultEmoji}}
       {{on "focus" this.focus}}
