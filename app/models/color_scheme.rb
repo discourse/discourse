@@ -108,7 +108,7 @@ class ColorScheme < ActiveRecord::Base
       "success" => "d9b2bb",
       "love" => "d9b2bb",
     },
-    "WCAG Light": {
+    "WCAG": {
       "primary" => "000000",
       "primary-medium" => "696969",
       "primary-low-mid" => "909090",
