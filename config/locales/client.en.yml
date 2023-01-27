@@ -5166,6 +5166,12 @@ en:
           love:
             name: "love"
             description: "The like button's color."
+          selected:
+            name: "selected"
+            description: "The background-color of elements such as list-items when they are selected/active."
+          hover:
+            name: "hover"
+            description: "The background-color of elements such as list-items when they are hovered on or have keyboard focus."
         robots:
           title: "Override your site's robots.txt file:"
           warning: "This will permanently override any related site settings."
