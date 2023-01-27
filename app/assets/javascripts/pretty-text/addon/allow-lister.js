@@ -10,7 +10,12 @@ export default class AllowLister {
     this._allowedHrefSchemes = options?.allowedHrefSchemes || [];
     this._allowedIframes = options?.allowedIframes || [];
     this._rawFeatures = [
-      ["default", options?.htmlInlineAllowListOverride || DEFAULT_LIST],
+      [
+        "default",
+        options?.htmlInlineAllowListOverride
+          ? options.htmlInlineAllowListOverride.concat(BASIC_LIST)
+          : DEFAULT_LIST.concat(BASIC_LIST),
+      ],
     ];
 
     this._cache = null;
@@ -112,6 +117,29 @@ export default class AllowLister {
   }
 }
 
+const BASIC_LIST = [
+  "em",
+  "p",
+  "strike",
+  "strong",
+  "blockquote",
+  "br",
+  "code",
+  "pre",
+  "ol",
+  "ul",
+  "img[alt]",
+  "img[role]",
+  "img[height]",
+  "img[title]",
+  "img[width]",
+  "img[data-thumbnail]",
+  // img[src] handled by sanitizer.js
+  "li",
+  "i",
+  "b",
+];
+
 // Only add to `default` when you always want your allowlist to occur. In other words,
 // don't change this for a plugin or a feature that can be disabled
 export const DEFAULT_LIST = [
@@ -136,11 +164,7 @@ export const DEFAULT_LIST = [
   "audio",
   "audio[controls]",
   "audio[preload]",
-  "b",
   "big",
-  "blockquote",
-  "br",
-  "code",
   "dd",
   "del",
   "div",
@@ -157,7 +181,6 @@ export const DEFAULT_LIST = [
   "div[dir]",
   "dl",
   "dt",
-  "em",
   "h1",
   "h2",
   "h3",
@@ -165,7 +188,6 @@ export const DEFAULT_LIST = [
   "h5",
   "h6",
   "hr",
-  "i",
   "iframe",
   "iframe[frameborder]",
   "iframe[height]",
@@ -174,25 +196,14 @@ export const DEFAULT_LIST = [
   "iframe[width]",
   "iframe[allowfullscreen]",
   "iframe[allow]",
-  "img[alt]",
-  "img[role]",
-  "img[height]",
-  "img[title]",
-  "img[width]",
-  "img[data-thumbnail]",
-  // img[src] handled by sanitizer.js
   "ins",
   "kbd",
-  "li",
   "mark",
-  "ol",
   "ol[reversed]",
   "ol[start]",
   "ol[type]",
-  "p",
   "p[lang]",
   "picture",
-  "pre",
   "s",
   "small",
   "span[lang]",
@@ -203,8 +214,6 @@ export const DEFAULT_LIST = [
   "span.placeholder-icon video",
   "span.hashtag",
   "span.mention",
-  "strike",
-  "strong",
   "sub",
   "sup",
   "source[data-orig-src]",
@@ -216,7 +225,6 @@ export const DEFAULT_LIST = [
   "track[kind]",
   // track[src] handled by sanitizer.js
   "track[srclang]",
-  "ul",
   "video",
   // video[autoplay] handled by sanitizer.js
   "video[controls]",
