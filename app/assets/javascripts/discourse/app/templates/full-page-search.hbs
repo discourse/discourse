@@ -163,9 +163,9 @@
                 {{#if this.searchActive}}
                   <h3>{{i18n "search.no_results"}}</h3>
 
-                  {{#if this.model.grouped_search_result.error}}
+                  {{#if this.error}}
                     <div class="warning">
-                      {{this.model.grouped_search_result.error}}
+                      {{this.error}}
                     </div>
                   {{/if}}
 
