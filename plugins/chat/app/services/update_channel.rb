@@ -16,7 +16,7 @@ module Chat
       # @!method call(channel:, guardian:)
       #   @param [ChatChannel] channel
       #   @param [Guardian] guardian
-      #   @return [Chat::Service::Base::Context]
+      #   @return [Context]
 
       before_contract { guardian(:can_edit_chat_channel?) }
 

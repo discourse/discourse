@@ -17,6 +17,7 @@ module Chat
         end
       end
 
+      # @!visibility private
       # Internal class used to hold the contract of the service.
       class Contract
         include ActiveModel::API
@@ -84,6 +85,7 @@ module Chat
         end
       end
 
+      # @!visibility private
       module Helpers
         def guardian(name, *args)
           unless context[:guardian].public_send(name, *args)
@@ -128,12 +130,6 @@ module Chat
         end
       end
 
-      # @!method guardian(key, *args)
-      # Helper to fail the service if the guardian call is invalid
-      #
-      # @example
-      #   guardian(:can_see?, topic)
-
       # @!scope class
       # @!method contract(&block)
       # Checks the validity of the given context. Supports after/before/around callbacks.
@@ -171,6 +167,15 @@ module Chat
       #   after_rollback {}
       #
       #   rollback { context.topic.update!(archived: false) }
+
+      # @!scope instance
+      # @!method guardian(key, *args)
+      # Helper to fail the service if the context’s guardian call is invalid.
+      # @param key [Symbol] the key of the guardian method to call
+      # @param args [Array] the arguments to pass to the guardian method
+      #
+      # @example
+      #   before_contract { guardian(:can_see?, topic) }
 
       # @!visibility private
       def initialize(initial_context = {})

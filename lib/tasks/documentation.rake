@@ -18,7 +18,11 @@ def generate_chat_documentation
   YARD::Templates::Engine.register_template_path(
     File.join(Rails.root, "documentation", "yard-custom-template"),
   )
-  files = %w[plugins/chat/app/services/base.rb plugins/chat/app/services/trash_channel.rb]
+  files = %w[
+    plugins/chat/app/services/base.rb
+    plugins/chat/app/services/trash_channel.rb
+    plugins/chat/app/services/update_channel.rb
+  ]
   cmd =
     "bundle exec yardoc -p documentation/yard-custom-template -t default -r plugins/chat/README.md --output-dir documentation/chat/backend #{files.join(" ")}"
   Open3.popen3(cmd) { |_, stderr| puts stderr.read }

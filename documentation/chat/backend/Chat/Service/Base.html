@@ -81,7 +81,7 @@
   
   <dl>
     <dt>Included in:</dt>
-    <dd><span class='object_link'><a href="TrashChannel.html" title="Chat::Service::TrashChannel (class)">TrashChannel</a></span></dd>
+    <dd><span class='object_link'><a href="TrashChannel.html" title="Chat::Service::TrashChannel (class)">TrashChannel</a></span>, <span class='object_link'><a href="UpdateChannel.html" title="Chat::Service::UpdateChannel (class)">UpdateChannel</a></span></dd>
   </dl>
   
 
@@ -97,11 +97,9 @@
 <p class="children">
   
     
-      <strong class="modules">Modules:</strong> <span class='object_link'><a href="Base/Helpers.html" title="Chat::Service::Base::Helpers (module)">Helpers</a></span>
-    
   
     
-      <strong class="classes">Classes:</strong> <span class='object_link'><a href="Base/Context.html" title="Chat::Service::Base::Context (class)">Context</a></span>, <span class='object_link'><a href="Base/Contract.html" title="Chat::Service::Base::Contract (class)">Contract</a></span>, <span class='object_link'><a href="Base/Failure.html" title="Chat::Service::Base::Failure (class)">Failure</a></span>
+      <strong class="classes">Classes:</strong> <span class='object_link'><a href="Base/Context.html" title="Chat::Service::Base::Context (class)">Context</a></span>, <span class='object_link'><a href="Base/Failure.html" title="Chat::Service::Base::Failure (class)">Failure</a></span>
     
   
 </p>
@@ -219,7 +217,7 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Helper to fail the service if the guardian call is invalid.</p>
+<p>Helper to fail the service if the context’s guardian call is invalid.</p>
 </div></span>
   
 </li>
@@ -279,7 +277,7 @@
 </pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 137</span>
+      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 133</span>
 
 </pre>
     </td>
@@ -328,7 +326,7 @@
 </pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 163</span>
+      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 159</span>
 
 </pre>
     </td>
@@ -377,7 +375,7 @@
 </pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 152</span>
+      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 148</span>
 
 </pre>
     </td>
@@ -403,7 +401,7 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Helper to fail the service if the guardian call is invalid</p>
+<p>Helper to fail the service if the context’s guardian call is invalid.</p>
 
 
   </div>
@@ -414,9 +412,45 @@
     <p class="tag_title">Examples:</p>
     
       
-      <pre class="example code"><code><span class='id identifier rubyid_guardian'>guardian</span><span class='lparen'>(</span><span class='symbol'>:can_see?</span><span class='comma'>,</span> <span class='id identifier rubyid_topic'>topic</span><span class='rparen'>)</span></code></pre>
+      <pre class="example code"><code><span class='id identifier rubyid_before_contract'>before_contract</span> <span class='lbrace'>{</span><span class='id identifier rubyid_ guardian'> guardian</span><span class='lparen'>(</span><span class='symbol'>:can_see?</span><span class='comma'>,</span> <span class='id identifier rubyid_topic'>topic</span><span class='rparen'>)</span> <span class='rbrace'>}</span></code></pre>
     
   </div>
+<p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>key</span>
+      
+      
+        <span class='type'>(<tt>Symbol</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the key of the guardian method to call</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>args</span>
+      
+      
+        <span class='type'>(<tt>Array</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the arguments to pass to the guardian method</p>
+</div>
+      
+    </li>
+  
+</ul>
 
 
 </div><table class="source_code">
@@ -428,7 +462,7 @@
 </pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 131</span>
+      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 171</span>
 
 </pre>
     </td>
