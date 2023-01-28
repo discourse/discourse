@@ -23,6 +23,7 @@ def generate_chat_documentation
     plugins/chat/app/services/base.rb
     plugins/chat/app/services/trash_channel.rb
     plugins/chat/app/services/update_channel.rb
+    plugins/chat/app/services/update_channel_status.rb
   ]
   cmd =
     "bundle exec yardoc -p documentation/yard-custom-template -t default -r plugins/chat/README.md --output-dir documentation/chat/backend #{files.join(" ")}"
