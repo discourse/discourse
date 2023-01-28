@@ -1,6 +1,6 @@
 module.exports = {
   devtool: false,
-  mode: "development",
+  mode: "production",
   output: {
     iife: false,
     libraryTarget: "var",
