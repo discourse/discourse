@@ -12,7 +12,7 @@ class Chat::Api::ChatChannelsStatusController < Chat::Api::ChatChannelsControlle
     if result.success?
       render_serialized(channel_from_params, ChatChannelSerializer, root: "channel")
     else
-      # FIXME: implements failure handling
+      # FIXME: implement failure handling
     end
   end
 end

@@ -17,22 +17,16 @@ module Chat
       #   @return [Context]
 
       before_contract { context.status = context.status&.to_sym }
-      before_contract { guardian(:can_change_channel_status?, context.channel, context.status) }
 
       contract do
         attribute :channel
         validates :channel, presence: true
 
-        attribute :status, :symbol
-        # we only want to use this endpoint for open/closed status changes,
-        # the others are more "special" and are handled by the archive endpoint
-        validates :status,
-                  presence: true,
-                  in:
-                    ChatChannel.statuses.keys.reject { |status|
-                      status == "read_only" || status == "archive"
-                    }
+        attribute :status
+        validates :status, inclusion: { in: ChatChannel.editable_statuses.keys.map(&:to_sym) }
       end
+
+      before_service { guardian(:can_change_channel_status?, context.channel, context.status) }
 
       service { context.channel.public_send("#{context.status}!", context.guardian.user) }
     end
