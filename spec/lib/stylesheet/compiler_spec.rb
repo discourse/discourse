@@ -243,12 +243,13 @@ RSpec.describe Stylesheet::Compiler do
       CSS
     end
 
-    it "returns nil for invalid CSS" do
-      flipped = described_class.rtlify_css(<<~CSS)
-        a {
-          right: 100px;
-      CSS
-      expect(flipped).to eq(nil)
+    it "raises an error for invalid CSS" do
+      expect do
+        described_class.rtlify_css(<<~CSS)
+          a {
+            right: 100px;
+        CSS
+      end.to raise_error(MiniRacer::RuntimeError, /CssSyntaxError/)
     end
   end
 end

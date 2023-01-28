@@ -84,8 +84,6 @@ module Stylesheet
           context
         end
       @context.eval("rtlcss.process(#{src_css.inspect})")
-    rescue MiniRacer::RuntimeError
-      nil
     end
   end
 end
