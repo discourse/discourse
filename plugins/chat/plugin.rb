@@ -210,7 +210,6 @@ after_initialize do
   load File.expand_path("../app/services/chat_publisher.rb", __FILE__)
   load File.expand_path("../app/services/trash_channel.rb", __FILE__)
   load File.expand_path("../app/services/update_channel.rb", __FILE__)
-  load File.expand_path("../app/services/chat_message_creator_v2.rb", __FILE__)
   load File.expand_path("../app/services/update_channel_status.rb", __FILE__)
   load File.expand_path("../app/services/chat_message_destroyer.rb", __FILE__)
   load File.expand_path("../app/controllers/api_controller.rb", __FILE__)
