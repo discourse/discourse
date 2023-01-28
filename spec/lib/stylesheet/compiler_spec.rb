@@ -244,12 +244,13 @@ RSpec.describe Stylesheet::Compiler do
     end
 
     it "raises an error for invalid CSS" do
-      expect do
-        described_class.rtlify_css(<<~CSS)
+      expect do described_class.rtlify_css(<<~CSS) end.to raise_error(
           a {
             right: 100px;
         CSS
-      end.to raise_error(MiniRacer::RuntimeError, /CssSyntaxError/)
+        MiniRacer::RuntimeError,
+        /CssSyntaxError/,
+      )
     end
   end
 end
