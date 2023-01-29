@@ -5,12 +5,8 @@
 #
 # You will need a bunch of CSV files:
 #
-# - Users.csv
-# - Groups.csv
-# - Files.csv
-# - Messages.csv
-# - Tags.csv (not supported in this version)
-# - Admins.csv (not supported in this version)
+# - Users.csv Groups.csv Topics.csv Groups.csv Files.csv Messages.csv
+# (Others included in Yammer export are ignored)
 
 require 'csv'
 require_relative 'base'
@@ -19,42 +15,19 @@ require_relative 'base/generic_database'
 # Call it like this:
 #   RAILS_ENV=production bundle exec ruby script/import_scripts/yammer.rb DIRNAME
 
-module ImportScripts
-  class GenericDatabase
-    def initialize(directory, batch_size:, recreate: false, numeric_keys: false)
-      filename = "#{directory}/index.db"
-      File.delete(filename) if recreate && File.exist?(filename)
-
-      @db = SQLite3::Database.new(filename, results_as_hash: true)
-      @batch_size = batch_size
-      @numeric_keys = numeric_keys
-
-      configure_database
-      create_category_table
-      create_upload_table
-      create_like_table
-      create_user_table
-      create_topic_table
-      create_post_table
-      create_pm_topic_table
-      create_pm_post_table
-    end
-
-  end
-end
-
 class ImportScripts::Yammer < ImportScripts::Base
   BATCH_SIZE = 1000
-  # some topics missing titles, so use this many words from start of first post for title
   NUM_WORDS_IN_TITLE = ENV['NUM_WORDS_IN_TITLE'].to_i || 20
   SKIP_EMPTY_EMAIL = true
-  SKIP_INACTIVE_USERS = false # true risks not being able to import posts from now-inactive users
+  SKIP_INACTIVE_USERS = false
   PARENT_CATEGORY_NAME = ENV['PARENT_CATEGORY_NAME'] || 'Yammer Import'
-  IMPORT_GROUPS_AS_TAGS = false # true to import all topics to one category with groups as tags
+  IMPORT_GROUPS_AS_TAGS = true
+  MERGE_USERS = true
+  # import groups as tags rather than as categories
   if IMPORT_GROUPS_AS_TAGS
     SiteSetting.tagging_enabled = true
   end
-  PM_TAG = ENV['PM_TAG'] || "personal_message" # add this tag to imported PMs. Set to nil to ignore
+  PM_TAG = ENV['PM_TAG'] || "eht"
 
   def initialize(path)
     super()
@@ -212,7 +185,7 @@ class ImportScripts::Yammer < ImportScripts::Base
         raw: raw,
         category_id: row[:group_id],
         closed: row[:closed] == 'TRUE' ? 1 : 0,
-        target_users: row[:participants].gsub("user:", ""),
+        target_users: row[:participants].gsub("user:",""),
         user_id: row[:sender_id],
         created_at: parse_datetime(row[:created_at])
       )
@@ -223,7 +196,7 @@ class ImportScripts::Yammer < ImportScripts::Base
       next if row[:thread_id] == row[:id]
       next unless row[:deleted_at].blank?
       next if row[:in_private_conversation] == 'true'
-      @db.insert_pm_post(
+      @db.insert_post(
         id: row[:id],
         raw: row[:body] + "\n" + row[:attachments],
         topic_id: row[:thread_id],
@@ -237,7 +210,7 @@ class ImportScripts::Yammer < ImportScripts::Base
     csv_parse('Messages') do |row|
       next if row[:thread_id] == row[:id]
       next unless row[:deleted_at].blank?
-      next unless row[:in_private_conversation] == 'true'
+      next unless row[:in_private_conversation] == 'false'
       @db.insert_pm_post(
         id: row[:id],
         raw: row[:body] + "\n" + row[:attachments],
@@ -248,7 +221,7 @@ class ImportScripts::Yammer < ImportScripts::Base
       )
     end
 
-    #@db.delete_unused_users # could be useful for some commmunities
+    #@db.delete_unused_users
     @db.sort_posts_by_created_at
   end
 
@@ -261,8 +234,8 @@ class ImportScripts::Yammer < ImportScripts::Base
     puts '', 'creating categories'
     parent_category = nil
     if !PARENT_CATEGORY_NAME.blank?
-      parent_category = Category.find_by(name: PARENT_CATEGORY_NAME)
-      parent_category = Category.create(name: PARENT_CATEGORY_NAME, user_id: Discourse.system_user.id) unless parent_category
+      parent_category=Category.find_by(name: PARENT_CATEGORY_NAME)
+      parent_category=Category.create(name: PARENT_CATEGORY_NAME, user_id: Discourse.system_user.id) unless parent_category
     end
 
     if IMPORT_GROUPS_AS_TAGS
@@ -302,11 +275,10 @@ class ImportScripts::Yammer < ImportScripts::Base
       next if all_records_exist?(:users, rows.map { |row| row['id'] })
 
       create_users(rows, total: total_count, offset: offset) do |row|
-        # this *should* happen by default; target database may have had multiple users with same email address?
         user = User.find_by_email(row['email'].downcase)
         if user
-          user.custom_fields['import_id'] = row['id']
-          user.custom_fields['matched_existing'] = "yes"
+          user.custom_fields['import_id']=row['id']
+          user.custom_fields['matched_existing']="yes"
           user.save
           add_user(row['id'].to_s, user)
           next
@@ -376,7 +348,7 @@ class ImportScripts::Yammer < ImportScripts::Base
         row['target_users'].split(',').each do |u|
           user_id = user_id_from_imported_user_id(u)
           next unless user_id
-          user = User.find(user_id)
+          user=User.find(user_id)
           target_users.append(user.username)
         end
         target_usernames = target_users.join(',')
@@ -469,10 +441,10 @@ class ImportScripts::Yammer < ImportScripts::Base
   def normalize_raw(raw)
     raw = raw.gsub('\n', '')
     raw.gsub!(/\[\[user:(\d+)\]\]/) do
-      u = Regexp.last_match(1)
-      user_id = user_id_from_imported_user_id(u) || Discourse.system_user.id
+      u=Regexp.last_match(1)
+      user_id=user_id_from_imported_user_id(u) || Discourse.system_user.id
       if user_id
-        user = User.find(user_id)
+        user=User.find(user_id)
         "@#{user.username}"
       else
         u
