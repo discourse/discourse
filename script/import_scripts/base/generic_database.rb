@@ -128,7 +128,7 @@ module ImportScripts
 
       @db.transaction do
         @db.execute(<<-SQL, prepare(post))
-          INSERT OR REPLACE INTO post (id, raw, topic_id, user_id, created_at, reply_to_post_id, url, upload_count)
+          INSERT OR REPLACE INTO pm_post (id, raw, topic_id, user_id, created_at, reply_to_post_id, url, upload_count)
           VALUES (:id, :raw, :topic_id, :user_id, :created_at, :reply_to_post_id, :url, :upload_count)
         SQL
       end
@@ -300,19 +300,6 @@ module ImportScripts
       add_last_column_value(rows, 'rowid')
     end
 
-    def fetch_sorted_pm_posts(last_row_id)
-      rows = @db.execute(<<-SQL, last_row_id)
-        SELECT o.ROWID AS rowid, p.*
-        FROM pm_post p
-          JOIN post_order o ON (p.id = o.post_id)
-        WHERE o.ROWID > :last_row_id
-        ORDER BY o.ROWID
-        LIMIT #{@batch_size}
-      SQL
-
-      add_last_column_value(rows, 'rowid')
-    end
-
     def fetch_post_attachments(post_id)
       @db.execute(<<-SQL, post_id)
         SELECT path
@@ -455,16 +442,16 @@ module ImportScripts
         )
       SQL
 
-      @db.execute 'CREATE INDEX IF NOT EXISTS topic_by_user_id ON topic (user_id)'
+      #@db.execute 'CREATE INDEX IF NOT EXISTS topic_by_user_id ON topic (user_id)'
 
-      @db.execute <<-SQL
-        CREATE TABLE IF NOT EXISTS topic_upload (
-          topic_id #{key_data_type} NOT NULL,
-          path TEXT NOT NULL
-        )
-      SQL
+      # @db.execute <<-SQL
+      #   CREATE TABLE IF NOT EXISTS topic_upload (
+      #     topic_id #{key_data_type} NOT NULL,
+      #     path TEXT NOT NULL
+      #   )
+      # SQL
 
-      @db.execute 'CREATE UNIQUE INDEX IF NOT EXISTS topic_upload_unique ON topic_upload(topic_id, path)'
+      #@db.execute 'CREATE UNIQUE INDEX IF NOT EXISTS topic_upload_unique ON topic_upload(topic_id, path)'
     end
 
     def create_post_table
@@ -504,22 +491,6 @@ module ImportScripts
         )
       SQL
 
-      @db.execute 'CREATE INDEX IF NOT EXISTS post_by_user_id ON post (user_id)'
-
-      @db.execute <<-SQL
-        CREATE TABLE IF NOT EXISTS post_order (
-          post_id #{key_data_type} NOT NULL PRIMARY KEY
-        )
-      SQL
-
-      @db.execute <<-SQL
-        CREATE TABLE IF NOT EXISTS post_upload (
-          post_id #{key_data_type} NOT NULL,
-          path TEXT NOT NULL
-        )
-      SQL
-
-      @db.execute 'CREATE UNIQUE INDEX IF NOT EXISTS post_upload_unique ON post_upload(post_id, path)'
     end
 
     def prepare(hash)
