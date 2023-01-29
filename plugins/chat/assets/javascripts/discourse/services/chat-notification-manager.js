@@ -56,7 +56,7 @@ export default class ChatNotificationManager extends Service {
   }
 
   @bind
-  _pageChanged(path) {
+  _pageChanged() {
     if (this.chatStateManager.isActive) {
       this._chatPresenceChannel.enter({ onlyWhileActive: false });
       this._corePresenceChannel.leave();
