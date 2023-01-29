@@ -24,6 +24,12 @@ cs:
       join: "Přidat se ke skupině"
       mention_warning:
         dismiss: "označit jako přečtené"
+        groups:
+          users_limit:
+            one: "%{count} uživatel"
+            few: "%{count} uživatelů"
+            many: "%{count} uživatelů"
+            other: "%{count} uživatelů"
       reply: "Odpověď"
       edit: "Upravit"
       rebake_message: "Obnovit HTML"
@@ -45,6 +51,7 @@ cs:
         yesterday: Včera
       about_view:
         title: Nadpis
+        name: Jméno
         description: Popis
       channel_info:
         back_to_channel: "Zpět"
@@ -73,6 +80,7 @@ cs:
         save: "Uložit"
         saved: "Uloženo"
         unfollow: "Opustit skupinu"
+        admin_title: "Administrace"
       incoming_webhooks:
         back: "Zpět"
         description: "Popis"

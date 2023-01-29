@@ -6,7 +6,11 @@
   </ul>
   {{#if this.hasMore}}
     <p>
-      <LinkTo @route={{concat "userActivity." @type}} @model={{@user}} class="more">
+      <LinkTo
+        @route={{concat "userActivity." @type}}
+        @model={{@user}}
+        class="more"
+      >
         {{i18n (concat "user.summary.more_" @type)}}
       </LinkTo>
     </p>

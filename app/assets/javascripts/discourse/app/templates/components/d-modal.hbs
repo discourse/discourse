@@ -4,7 +4,12 @@
       <PluginOutlet @name="above-modal-header" @connectorTagName="div" />
       <div class="modal-header {{this.headerClass}}">
         {{#if this.dismissable}}
-          <DButton @icon="times" @action={{route-action "closeModal" "initiatedByCloseButton"}} @class="btn-flat modal-close close" @title="modal.close" />
+          <DButton
+            @icon="times"
+            @action={{route-action "closeModal" "initiatedByCloseButton"}}
+            @class="btn-flat modal-close close"
+            @title="modal.close"
+          />
         {{/if}}
 
         {{#if this.title}}
@@ -20,7 +25,12 @@
         {{#if this.panels}}
           <ul class="modal-tabs">
             {{#each this.panels as |panel|}}
-              <ModalTab @panel={{panel}} @panelsLength={{this.panels.length}} @selectedPanel={{this.selectedPanel}} @onSelectPanel={{this.onSelectPanel}} />
+              <ModalTab
+                @panel={{panel}}
+                @panelsLength={{this.panels.length}}
+                @selectedPanel={{this.selectedPanel}}
+                @onSelectPanel={{this.onSelectPanel}}
+              />
             {{/each}}
           </ul>
         {{/if}}
@@ -32,7 +42,12 @@
 
       {{#each this.errors as |error|}}
         <div class="alert alert-error">
-          <button type="button" class="close" data-dismiss="alert" aria-label={{i18n "modal.dismiss_error"}}>×</button>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="alert"
+            aria-label={{i18n "modal.dismiss_error"}}
+          >×</button>
           {{error}}
         </div>
       {{/each}}

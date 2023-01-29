@@ -19,10 +19,10 @@ RSpec.describe Chat::IncomingChatWebhooksController do
       expect(response.status).to eq(400)
     end
 
-    it "errors when the body is over WEBHOOK_MAX_MESSAGE_LENGTH characters" do
+    it "errors when the body is over chat_maximum_message_length characters" do
       post "/chat/hooks/#{webhook.key}.json",
            params: {
-             text: "$" * (Chat::IncomingChatWebhooksController::WEBHOOK_MAX_MESSAGE_LENGTH + 1),
+             text: "$" * (SiteSetting.chat_maximum_message_length + 1),
            }
       expect(response.status).to eq(400)
     end

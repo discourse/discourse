@@ -62,6 +62,8 @@ export default Controller.extend({
   page: 1,
   resultCount: null,
   searchTypes: null,
+  selected: [],
+  error: null,
 
   init() {
     this._super(...arguments);
@@ -76,7 +78,6 @@ export default Controller.extend({
       },
       { name: I18n.t("search.type.users"), id: SEARCH_TYPE_USERS },
     ]);
-    this.selected = [];
   },
 
   @discourseComputed("resultCount")
@@ -298,6 +299,7 @@ export default Controller.extend({
 
     if (args.page === 1) {
       this.set("bulkSelectEnabled", false);
+
       this.selected.clear();
       this.set("searching", true);
       scrollTop();
@@ -381,6 +383,10 @@ export default Controller.extend({
               model.grouped_search_result = results.grouped_search_result;
               this.set("model", model);
             }
+            this.set("error", null);
+          })
+          .catch((e) => {
+            this.set("error", e.jqXHR.responseJSON?.message);
           })
           .finally(() => {
             this.setProperties({
@@ -390,6 +396,22 @@ export default Controller.extend({
           });
         break;
     }
+  },
+
+  _afterTransition() {
+    this._showFooter();
+    if (Object.keys(this.model).length === 0) {
+      this.reset();
+    }
+  },
+
+  reset() {
+    this.setProperties({
+      searching: false,
+      page: 1,
+      resultCount: null,
+      selected: [],
+    });
   },
 
   @action

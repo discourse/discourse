@@ -15,9 +15,7 @@ RSpec.describe DistributedMemoizer do
   end
 
   it "return the old value once memoized" do
-    memoize do
-      "abc"
-    end
+    memoize { "abc" }
 
     expect(memoize { "world" }).to eq("abc")
   end

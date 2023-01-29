@@ -196,7 +196,7 @@ const DiscourseURL = EmberObject.extend({
       return;
     }
 
-    if (Session.currentProp("requiresRefresh")) {
+    if (Session.currentProp("requiresRefresh") && !this.isComposerOpen) {
       return this.redirectTo(path);
     }
 
@@ -216,7 +216,7 @@ const DiscourseURL = EmberObject.extend({
     const m = /^#(.+)$/.exec(path);
     if (m) {
       this.jumpToElement(m[1]);
-      return;
+      return this.replaceState(path);
     }
 
     const oldPath = this.router.currentURL;
@@ -407,6 +407,10 @@ const DiscourseURL = EmberObject.extend({
   origin() {
     let prefix = getURL("/");
     return window.location.origin + (prefix === "/" ? "" : prefix);
+  },
+
+  get isComposerOpen() {
+    return this.controllerFor("composer")?.visible;
   },
 
   get router() {

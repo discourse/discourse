@@ -41,9 +41,9 @@ export default Component.extend({
   canInteractWithChat: false,
   isHovered: false,
   onHoverMessage: null,
-  mentionWarning: null,
   chatEmojiReactionStore: service("chat-emoji-reaction-store"),
   chatEmojiPickerManager: service("chat-emoji-picker-manager"),
+  chatChannelsManager: service("chat-channels-manager"),
   adminTools: optionalService(),
   _hasSubscribedToAppEvents: false,
   tagName: "",
@@ -213,14 +213,6 @@ export default Component.extend({
       });
     }
 
-    if (this.showSilenceButton) {
-      buttons.push({
-        id: "silence",
-        name: I18n.t("chat.silence"),
-        icon: "microphone-slash",
-      });
-    }
-
     if (this.showDeleteButton) {
       buttons.push({
         id: "deleteMessage",
@@ -256,7 +248,6 @@ export default Component.extend({
       edit: this.edit,
       selectMessage: this.selectMessage,
       flag: this.flag,
-      silence: this.silence,
       deleteMessage: this.deleteMessage,
       restore: this.restore,
       rebakeMessage: this.rebakeMessage,
@@ -394,15 +385,6 @@ export default Component.extend({
   },
 
   @discourseComputed("message")
-  showSilenceButton(message) {
-    return (
-      this.currentUser?.staff &&
-      this.currentUser?.id !== message.user?.id &&
-      !message.chat_webhook_event
-    );
-  },
-
-  @discourseComputed("message")
   canManageDeletion(message) {
     return this.currentUser?.id === message.user?.id
       ? this.details.can_delete_self
@@ -463,25 +445,56 @@ export default Component.extend({
     return Object.values(reactions).some((r) => r.count > 0);
   },
 
-  @discourseComputed("message.mentionWarning.cannot_see")
+  @discourseComputed("message.mentionWarning")
+  mentionWarning() {
+    return this.message.mentionWarning;
+  },
+
+  @discourseComputed("mentionWarning.cannot_see")
   mentionedCannotSeeText(users) {
     return I18n.t("chat.mention_warning.cannot_see", {
-      usernames: users.mapBy("username").join(", "),
+      username: users[0].username,
       count: users.length,
+      others: this._othersTranslation(users.length - 1),
     });
   },
 
-  @discourseComputed("message.mentionWarning.without_membership")
+  @discourseComputed("mentionWarning.without_membership")
   mentionedWithoutMembershipText(users) {
     return I18n.t("chat.mention_warning.without_membership", {
-      usernames: users.mapBy("username").join(", "),
+      username: users[0].username,
       count: users.length,
+      others: this._othersTranslation(users.length - 1),
+    });
+  },
+
+  @discourseComputed("mentionWarning.group_mentions_disabled")
+  groupsWithDisabledMentions(groups) {
+    return I18n.t("chat.mention_warning.group_mentions_disabled", {
+      group_name: groups[0],
+      count: groups.length,
+      others: this._othersTranslation(groups.length - 1),
+    });
+  },
+
+  @discourseComputed("mentionWarning.groups_with_too_many_members")
+  groupsWithTooManyMembers(groups) {
+    return I18n.t("chat.mention_warning.too_many_members", {
+      group_name: groups[0],
+      count: groups.length,
+      others: this._othersTranslation(groups.length - 1),
+    });
+  },
+
+  _othersTranslation(othersCount) {
+    return I18n.t("chat.mention_warning.warning_multiple", {
+      count: othersCount,
     });
   },
 
   @action
   inviteMentioned() {
-    const user_ids = this.message.mentionWarning.without_membership.mapBy("id");
+    const user_ids = this.mentionWarning.without_membership.mapBy("id");
 
     ajax(`/chat/${this.details.chat_channel_id}/invite`, {
       method: "PUT",
@@ -577,13 +590,11 @@ export default Component.extend({
       // so we will fully refresh if we were not members of the channel
       // already
       if (!this.chatChannel.isFollowing || this.chatChannel.isDraft) {
-        this.chat.forceRefreshChannels().then(() => {
-          return this.chat
-            .getChannelBy("id", this.chatChannel.id)
-            .then((reactedChannel) => {
-              this.onSwitchChannel(reactedChannel);
-            });
-        });
+        return this.chatChannelsManager
+          .getChannel(this.chatChannel.id)
+          .then((reactedChannel) => {
+            this.onSwitchChannel(reactedChannel);
+          });
       }
     });
   },
@@ -694,11 +705,6 @@ export default Component.extend({
   },
 
   @action
-  silence() {
-    this.adminTools.showSilenceModal(EmberObject.create(this.message.user));
-  },
-
-  @action
   expand() {
     this.message.set("expanded", true);
   },
@@ -717,11 +723,7 @@ export default Component.extend({
   toggleBookmark() {
     return openBookmarkModal(
       this.message.bookmark ||
-        Bookmark.create({
-          bookmarkable_type: "ChatMessage",
-          bookmarkable_id: this.message.id,
-          user_id: this.currentUser.id,
-        }),
+        Bookmark.createFor(this.currentUser, "ChatMessage", this.message.id),
       {
         onAfterSave: (savedData) => {
           const bookmark = Bookmark.create(savedData);
@@ -784,7 +786,7 @@ export default Component.extend({
 
     const { protocol, host } = window.location;
     let url = getURL(
-      `/chat/channel/${this.details.chat_channel_id}/-?messageId=${this.message.id}`
+      `/chat/c/-/${this.details.chat_channel_id}?messageId=${this.message.id}`
     );
     url = url.indexOf("/") === 0 ? protocol + "//" + host + url : url;
     clipboardCopy(url);

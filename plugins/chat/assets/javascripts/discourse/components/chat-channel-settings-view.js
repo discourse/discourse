@@ -1,11 +1,10 @@
 import Component from "@ember/component";
 import { action, computed } from "@ember/object";
 import { inject as service } from "@ember/service";
-import ChatApi from "discourse/plugins/chat/discourse/lib/chat-api";
 import showModal from "discourse/lib/show-modal";
 import I18n from "I18n";
-import { camelize } from "@ember/string";
-import discourseLater from "discourse-common/lib/later";
+import { Promise } from "rsvp";
+import { reads } from "@ember/object/computed";
 
 const NOTIFICATION_LEVELS = [
   { name: I18n.t("chat.notification_levels.never"), value: "never" },
@@ -19,12 +18,22 @@ const MUTED_OPTIONS = [
 ];
 
 const AUTO_ADD_USERS_OPTIONS = [
-  { name: I18n.t("chat.settings.enable_auto_join_users"), value: true },
-  { name: I18n.t("chat.settings.disable_auto_join_users"), value: false },
+  { name: I18n.t("yes_value"), value: true },
+  { name: I18n.t("no_value"), value: false },
+];
+
+const CHANNEL_WIDE_MENTIONS_OPTIONS = [
+  { name: I18n.t("yes_value"), value: true },
+  {
+    name: I18n.t("no_value"),
+    value: false,
+  },
 ];
 
 export default class ChatChannelSettingsView extends Component {
   @service chat;
+  @service chatApi;
+  @service chatGuardian;
   @service router;
   @service dialog;
   tagName = "";
@@ -33,57 +42,28 @@ export default class ChatChannelSettingsView extends Component {
   notificationLevels = NOTIFICATION_LEVELS;
   mutedOptions = MUTED_OPTIONS;
   autoAddUsersOptions = AUTO_ADD_USERS_OPTIONS;
+  channelWideMentionsOptions = CHANNEL_WIDE_MENTIONS_OPTIONS;
   isSavingNotificationSetting = false;
   savedDesktopNotificationLevel = false;
   savedMobileNotificationLevel = false;
   savedMuted = false;
 
-  _updateAutoJoinUsers(value) {
-    return ChatApi.modifyChatChannel(this.channel.id, {
-      auto_join_users: value,
-    })
-      .then((chatChannel) => {
-        this.channel.set("auto_join_users", chatChannel.auto_join_users);
-      })
-      .catch((event) => {
-        if (event.jqXHR?.responseJSON?.errors) {
-          this.flash(event.jqXHR.responseJSON.errors.join("\n"), "error");
-        }
-      });
+  @reads("channel.isCategoryChannel") togglingChannelWideMentionsAvailable;
+
+  @computed("channel.isCategoryChannel")
+  get autoJoinAvailable() {
+    return (
+      this.siteSettings.max_chat_auto_joined_users > 0 &&
+      this.channel.isCategoryChannel
+    );
   }
 
-  @action
-  saveNotificationSettings(key, value) {
-    if (this.channel[key] === value) {
-      return;
-    }
-
-    const camelizedKey = camelize(`saved_${key}`);
-    this.set(camelizedKey, false);
-
-    const settings = {};
-    settings[key] = value;
-    return ChatApi.updateChatChannelNotificationsSettings(
-      this.channel.id,
-      settings
-    )
-      .then((membership) => {
-        this.channel.current_user_membership.setProperties({
-          muted: membership.muted,
-          desktop_notification_level: membership.desktop_notification_level,
-          mobile_notification_level: membership.mobile_notification_level,
-        });
-        this.set(camelizedKey, true);
-      })
-      .finally(() => {
-        discourseLater(() => {
-          if (this.isDestroying || this.isDestroyed) {
-            return;
-          }
-
-          this.set(camelizedKey, false);
-        }, 2000);
-      });
+  @computed("autoJoinAvailable", "togglingChannelWideMentionsAvailable")
+  get adminSectionAvailable() {
+    return (
+      this.chatGuardian.canEditChatChannel() &&
+      (this.autoJoinAvailable || this.togglingChannelWideMentionsAvailable)
+    );
   }
 
   @computed(
@@ -98,12 +78,31 @@ export default class ChatChannelSettingsView extends Component {
     );
   }
 
-  @computed("channel.isCategoryChannel")
-  get autoJoinAvailable() {
-    return (
-      this.siteSettings.max_chat_auto_joined_users > 0 &&
-      this.channel.isCategoryChannel
-    );
+  @action
+  saveNotificationSettings(key, value) {
+    if (this.channel[key] === value) {
+      return;
+    }
+
+    const settings = {};
+    settings[key] = value;
+    return this.chatApi
+      .updateCurrentUserChannelNotificationsSettings(this.channel.id, settings)
+      .then((result) => {
+        [
+          "muted",
+          "desktop_notification_level",
+          "mobile_notification_level",
+        ].forEach((property) => {
+          if (
+            result.membership[property] !==
+            this.channel.currentUserMembership[property]
+          ) {
+            this.channel.currentUserMembership[property] =
+              result.membership[property];
+          }
+        });
+      });
   }
 
   @action
@@ -133,8 +132,17 @@ export default class ChatChannelSettingsView extends Component {
     }
   }
 
+  @action
+  onToggleChannelWideMentions() {
+    return this._updateChannelProperty(
+      this.channel,
+      "allow_channel_wide_mentions",
+      !this.channel.allow_channel_wide_mentions
+    );
+  }
+
   onDisableAutoJoinUsers() {
-    this._updateAutoJoinUsers(false);
+    return this._updateChannelProperty(this.channel, "auto_join_users", false);
   }
 
   onEnableAutoJoinUsers() {
@@ -142,7 +150,27 @@ export default class ChatChannelSettingsView extends Component {
       message: I18n.t("chat.settings.auto_join_users_warning", {
         category: this.channel.chatable.name,
       }),
-      didConfirm: () => this._updateAutoJoinUsers(true),
+      didConfirm: () =>
+        this._updateChannelProperty(this.channel, "auto_join_users", true),
     });
+  }
+
+  _updateChannelProperty(channel, property, value) {
+    if (channel[property] === value) {
+      return Promise.resolve();
+    }
+
+    const payload = {};
+    payload[property] = value;
+    return this.chatApi
+      .updateChannel(channel.id, payload)
+      .then((result) => {
+        channel.set(property, result.channel[property]);
+      })
+      .catch((event) => {
+        if (event.jqXHR?.responseJSON?.errors) {
+          this.flash(event.jqXHR.responseJSON.errors.join("\n"), "error");
+        }
+      });
   }
 }

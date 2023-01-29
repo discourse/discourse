@@ -31,18 +31,20 @@ class UserOptionSerializer < ApplicationSerializer
              :text_size,
              :text_size_seq,
              :title_count_mode,
+             :bookmark_auto_delete_preference,
              :timezone,
              :skip_new_user_tips,
              :default_calendar,
              :oldest_search_log_date,
-             :seen_popups,
+             :seen_popups
 
   def auto_track_topics_after_msecs
     object.auto_track_topics_after_msecs || SiteSetting.default_other_auto_track_topics_after_msecs
   end
 
   def notification_level_when_replying
-    object.notification_level_when_replying || SiteSetting.default_other_notification_level_when_replying
+    object.notification_level_when_replying ||
+      SiteSetting.default_other_notification_level_when_replying
   end
 
   def new_topic_duration_minutes

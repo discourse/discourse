@@ -70,6 +70,7 @@ hu:
         process_started: "A csatorna törlése megkezdődött. Ez a kérdésablak hamarosan bezárul, és már nem fogja látni a törölt csatornát."
       channels_list_popup:
         browse: "Csatornák böngészése"
+        create: "Új csatorna"
       click_to_join: "Kattintson ide az elérhető csatornák megtekintéséhez."
       close: "Lezárás"
       collapse: "Csevegőfiók összecsukása"
@@ -91,6 +92,7 @@ hu:
         when_away: "Csak ha távol van"
       enable: "Csevegés engedélyezése"
       flag: "Jelölés"
+      emoji: "Emodzsi beszúrása"
       flagged: "Ezt az üzenetet felülvizsgálatra jelentették"
       invalid_access: "Nincs hozzáférése ennek a csevegőcsatornának a megtekintéséhez"
       invitation_notification: "<span>%{username}</span> <span>meghvta Önt, hogy csatlakozzon egy csevegőcsatornához</span>"
@@ -99,17 +101,15 @@ hu:
       join: "Belépés"
       new_messages: "új üzenetek"
       mention_warning:
-        cannot_see:
-          one: "%{usernames} nem fér hozzá ehhez a csatornához, és nem lett értesítve."
-          other: "%{usernames} nem fér hozzá ehhez a csatornához, és nem lettek értesítve."
         dismiss: "elvetés"
         invitations_sent:
           one: "Meghívó elküldve"
           other: "Meghívók elküldve"
         invite: "Meghívás a csatornára"
-        without_membership:
-          one: "%{usernames} nem csatlakozott ehhez a csatornához."
-          other: "%{usernames} nem csatlakozott ehhez a csatornához."
+        groups:
+          users_limit:
+            one: "%{count} felhasználó"
+            other: "%{count} felhasználó"
       aria_roles:
         header: "Csevegés fejléce"
         composer: "Csevegés szerkesztője"
@@ -168,7 +168,6 @@ hu:
         read_only: "Csak olvasható"
         archived_header: "A csatorna archiválva van"
         archived: "Archivált"
-        archive_failed: "A csatorna archiválása nem sikerült.</a>%{completed}/%{total} üzenet archiválva lett a <a target=\"_blank\" href=\"%{topic_url}\">céltémában</a> . Nyomja meg az Újra gombot az archiválás befejezéséhez."
         archive_completed: "Lásd <a target=\"_blank\" href=\"%{topic_url}\">az archív témát</a>"
         closed_header: "A csatorna zárolt"
         closed: "Zárt"
@@ -191,6 +190,7 @@ hu:
         associated_topic: Kapcsolódó téma
         associated_category: Kapcsolódó kategória
         title: Cím
+        name: Név
         description: Leírás
       channel_info:
         back_to_all_channels: "Összes csatorna"
@@ -199,10 +199,6 @@ hu:
           about: Névjegy
           members: Tagok
           settings: Beállítások
-      channel_edit_title_modal:
-        title: Cím szerkesztése
-        input_placeholder: Cím hozzáadása
-        description: Adjon egy rövid, leíró címet a csatornájának
       channel_edit_description_modal:
         title: Leírás szerkesztése
         input_placeholder: Leírás hozzáadása
@@ -235,6 +231,7 @@ hu:
         create: "Csatorna létrehozása"
         description: "Leírás (nem kötelező)"
         name: "Csatorna neve"
+        title: "Új csatorna"
         type: "Típus"
         types:
           category: "Kategória"
@@ -259,8 +256,8 @@ hu:
         mention: "Csak megemlítésnél"
         always: "Összes tevékenységnél"
       settings:
-        enable_auto_join_users: "Az összes nemrég aktív felhasználó automatikus hozzáadása"
-        disable_auto_join_users: "A felhasználók automatikus hozzáadásának leállítása"
+        channel_wide_mentions_label: "Engedélyezve az @all és @here említések"
+        auto_join_users_label: "Felhasználók automatikus hozzáadása"
         desktop_notification_level: "Asztali értesítések"
         follow: "Belépés"
         followed: "Csatlakozott"
@@ -273,11 +270,12 @@ hu:
         save: "Mentés"
         saved: "Mentve"
         unfollow: "Elhagyás"
+        admin_title: "Adminisztrátor"
       admin:
         title: "Csevegés"
       direct_messages:
         title: "Személyes csevegés"
-        new: "Új személyes csevegés"
+        new: "Személyes csevegés létrehozása"
         create: "Ugrás"
         leave: "E személyes csevegés elhagyása"
       incoming_webhooks:
@@ -337,8 +335,16 @@ hu:
       retention_reminders:
         public: "A csatorna előzményei %{days} napig maradnak meg."
         dm: "A személyes csevegési előzményei %{days} napig maradnak meg."
+      flagging:
+        action: "Üzenet megjelölése"
       emoji_picker:
+        favorites: "Gyakran használt"
+        smileys_&_emotion: "Mosolyok és érzelmek"
         objects: "Tárgyak"
+        people_&_body: "Emberek és test"
+        travel_&_places: "Utazás és helyek"
+        animals_&_nature: "Állatok és természet"
+        food_&_drink: "Étel és ital"
         activities: "Tevékenységek"
         flags: "Zászlók"
         symbols: "Szimbólumok"

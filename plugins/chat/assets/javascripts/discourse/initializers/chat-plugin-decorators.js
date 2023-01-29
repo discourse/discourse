@@ -50,9 +50,11 @@ export default {
   },
 
   initialize(container) {
-    const siteSettings = container.lookup("service:site-settings");
-    withPluginApi("0.8.42", (api) =>
-      this.initializeWithPluginApi(api, siteSettings)
-    );
+    if (container.lookup("service:chat").userCanChat) {
+      const siteSettings = container.lookup("service:site-settings");
+      withPluginApi("0.8.42", (api) => {
+        this.initializeWithPluginApi(api, siteSettings);
+      });
+    }
   },
 };

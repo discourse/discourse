@@ -22,6 +22,7 @@ const EMAIL_FREQUENCY_OPTIONS = [
 
 export default class PreferencesChatController extends Controller {
   @service chatAudioManager;
+  subpageTitle = I18n.t("chat.admin.title");
 
   emailFrequencyOptions = EMAIL_FREQUENCY_OPTIONS;
 
@@ -34,7 +35,7 @@ export default class PreferencesChatController extends Controller {
 
   @action
   onChangeChatSound(sound) {
-    if (sound && !isTesting()) {
+    if (sound) {
       this.chatAudioManager.playImmediately(sound);
     }
     this.model.set("user_option.chat_sound", sound);

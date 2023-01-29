@@ -14,6 +14,6 @@ class CategoriesTopicsValidator
   end
 
   def error_message
-    I18n.t('site_settings.errors.invalid_integer_min', min: 5)
+    I18n.t("site_settings.errors.invalid_integer_min", min: 5)
   end
 end

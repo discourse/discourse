@@ -15,17 +15,13 @@ class WebHookEmitter
       request: {
         write_timeout: REQUEST_TIMEOUT,
         read_timeout: REQUEST_TIMEOUT,
-        open_timeout: REQUEST_TIMEOUT
+        open_timeout: REQUEST_TIMEOUT,
       },
     }
 
-    if !@webhook.verify_certificate
-      connection_opts[:ssl] = { verify: false }
-    end
+    connection_opts[:ssl] = { verify: false } if !@webhook.verify_certificate
 
-    conn = Faraday.new(nil, connection_opts) do |f|
-      f.adapter FinalDestination::FaradayAdapter
-    end
+    conn = Faraday.new(nil, connection_opts) { |f| f.adapter FinalDestination::FaradayAdapter }
 
     start = Process.clock_gettime(Process::CLOCK_MONOTONIC, :millisecond)
     error = nil
@@ -36,17 +32,15 @@ class WebHookEmitter
       error = e
     end
     duration = Process.clock_gettime(Process::CLOCK_MONOTONIC, :millisecond) - start
-    event_update_args = {
-      headers: MultiJson.dump(headers),
-      duration: duration,
-    }
+    event_update_args = { headers: MultiJson.dump(headers), duration: duration }
     if response
       event_update_args[:response_headers] = MultiJson.dump(response.headers)
       event_update_args[:response_body] = response.body
       event_update_args[:status] = response.status
     else
       event_update_args[:status] = -1
-      if error.is_a?(Faraday::Error) && error.wrapped_exception.is_a?(FinalDestination::SSRFDetector::DisallowedIpError)
+      if error.is_a?(Faraday::Error) &&
+           error.wrapped_exception.is_a?(FinalDestination::SSRFDetector::DisallowedIpError)
         error = I18n.t("webhooks.payload_url.blocked_or_internal")
       end
       event_update_args[:response_headers] = MultiJson.dump(error: error)

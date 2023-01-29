@@ -25,6 +25,11 @@ bs_BA:
       join: "Učlani se"
       mention_warning:
         dismiss: "odbaci"
+        groups:
+          users_limit:
+            one: "%{count} korisnik"
+            few: "%{count} korisnika"
+            other: "%{count} korisnika"
       reply: "Odgovori"
       edit: "Edit"
       rebake_message: "Popravi HTML"
@@ -45,6 +50,7 @@ bs_BA:
         yesterday: Yesterday
       about_view:
         title: Naslov
+        name: Ime
         description: Opis
       channel_info:
         back_to_channel: "Prethodno"
@@ -73,6 +79,7 @@ bs_BA:
         save: "Save"
         saved: "Spašeno"
         unfollow: "Napusti"
+        admin_title: "Admin"
       incoming_webhooks:
         back: "Prethodno"
         description: "Opis"

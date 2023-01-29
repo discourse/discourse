@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class Chat::IncomingChatWebhooksController < ApplicationController
-  WEBHOOK_MAX_MESSAGE_LENGTH = 2000
   WEBHOOK_MESSAGES_PER_MINUTE_LIMIT = 10
 
   skip_before_action :verify_authenticity_token, :redirect_to_login_if_required
@@ -80,18 +79,21 @@ class Chat::IncomingChatWebhooksController < ApplicationController
   end
 
   def validate_message_length(message)
-    return if message.length <= WEBHOOK_MAX_MESSAGE_LENGTH
+    return if message.length <= SiteSetting.chat_maximum_message_length
     raise Discourse::InvalidParameters.new(
-            "Body cannot be over #{WEBHOOK_MAX_MESSAGE_LENGTH} characters",
+            "Body cannot be over #{SiteSetting.chat_maximum_message_length} characters",
           )
   end
 
+  # The webhook POST body can be in 3 different formats:
+  #
+  # * { text: "message text" }, which is the most basic method, and also mirrors Slack payloads
+  # * { attachments: [ text: "message text" ] }, which is a variant of Slack payloads using legacy attachments
+  # * { payload: "<JSON STRING>", attachments: null, text: null }, where JSON STRING can look
+  #   like the `attachments` example above (along with other attributes), which is fired by OpsGenie
   def validate_payload
-    params.require([:key])
+    params.require(:key)
 
-    # TODO (martin) It is not clear whether the :payload key is actually
-    # present in the webhooks sent from OpsGenie, so once it is confirmed
-    # in production what we are actually getting then we can remove this.
     if !params[:text] && !params[:payload] && !params[:attachments]
       raise Discourse::InvalidParameters
     end
@@ -100,7 +102,7 @@ class Chat::IncomingChatWebhooksController < ApplicationController
   def debug_payload
     return if !SiteSetting.chat_debug_webhook_payloads
     Rails.logger.warn(
-      "Debugging chat webhook payload: " +
+      "Debugging chat webhook payload for endpoint #{params[:key]}: " +
         JSON.dump(
           { payload: params[:payload], attachments: params[:attachments], text: params[:text] },
         ),

@@ -15,6 +15,7 @@ permissions:
 
 jobs:
   build:
+    if: "!(github.event_name == 'push' && github.repository == 'discourse/discourse-private-mirror')"
     name: run
     runs-on: ubuntu-latest
     container: discourse/discourse_test:slim
@@ -66,6 +67,10 @@ jobs:
       - name: Rubocop
         if: ${{ !cancelled() }}
         run: bundle exec rubocop --parallel .
+
+      - name: syntax_tree
+        if: ${{ !cancelled() }}
+        run: bundle exec stree check Gemfile $(git ls-files '*.rb') $(git ls-files '*.rake')
 
       - name: ESLint (core)
         if: ${{ !cancelled() }}

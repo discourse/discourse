@@ -127,16 +127,9 @@ const Topic = RestModel.extend({
 
   @discourseComputed("bumpedAt", "createdAt")
   bumpedAtTitle(bumpedAt, createdAt) {
-    const firstPost = I18n.t("first_post");
-    const lastPost = I18n.t("last_post");
-    const createdAtDate = longDate(createdAt);
-    const bumpedAtDate = longDate(bumpedAt);
-
-    return I18n.messageFormat("topic.bumped_at_title_MF", {
-      FIRST_POST: firstPost,
-      CREATED_AT: createdAtDate,
-      LAST_POST: lastPost,
-      BUMPED_AT: bumpedAtDate,
+    return I18n.t("topic.bumped_at_title", {
+      createdAtDate: longDate(createdAt),
+      bumpedAtDate: longDate(bumpedAt),
     });
   },
 
@@ -474,7 +467,17 @@ const Topic = RestModel.extend({
           "details.can_permanently_delete":
             this.siteSettings.can_permanently_delete && deleted_by.admin,
         });
-        if (!deleted_by.staff) {
+        if (
+          opts.force_destroy ||
+          (!deleted_by.staff &&
+            !deleted_by.groups.some(
+              (group) => group.name === this.category.reviewable_by_group_name
+            ) &&
+            !(
+              this.siteSettings.tl4_delete_posts_and_topics &&
+              deleted_by.trust_level >= 4
+            ))
+        ) {
           DiscourseURL.redirectTo("/");
         }
       })

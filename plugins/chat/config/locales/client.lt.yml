@@ -25,6 +25,12 @@ lt:
       join: "Prisijungti"
       mention_warning:
         dismiss: "praleisti"
+        groups:
+          users_limit:
+            one: "%{count} vartotojas"
+            few: "%{count} vartotojų"
+            many: "%{count} vartotojų"
+            other: "%{count} vartotojų"
       reply: "Atsakyti"
       edit: "Redaguoti"
       rebake_message: "Perkurti HTML"
@@ -46,6 +52,7 @@ lt:
         yesterday: Vakar
       about_view:
         title: Antraštė
+        name: Vardas
         description: Aprašymas
       channel_info:
         back_to_channel: "Atgal"
@@ -74,6 +81,7 @@ lt:
         save: "Išsaugoti"
         saved: "Išsaugota"
         unfollow: "Palikti"
+        admin_title: "Administratorius"
       incoming_webhooks:
         back: "Atgal"
         description: "Aprašymas"

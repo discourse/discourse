@@ -5,8 +5,6 @@ import User from "discourse/models/user";
 import { ajax } from "discourse/lib/ajax";
 import getURL, { samePrefix } from "discourse-common/lib/get-url";
 import { isTesting } from "discourse-common/config/environment";
-import discourseLater from "discourse-common/lib/later";
-import { selectedText } from "discourse/lib/utilities";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import deprecated from "discourse-common/lib/deprecated";
 import { getOwner } from "discourse-common/lib/get-owner";
@@ -22,11 +20,11 @@ export function isValidLink(link) {
     });
   }
 
-  // .hashtag == category/tag link
+  // .hashtag/.hashtag-cooked == category/tag link
   // .back == quote back ^ button
   if (
-    ["lightbox", "no-track-link", "hashtag", "back"].some((name) =>
-      link.classList.contains(name)
+    ["lightbox", "no-track-link", "hashtag", "hashtag-cooked", "back"].some(
+      (name) => link.classList.contains(name)
     )
   ) {
     return false;
@@ -47,17 +45,21 @@ export function isValidLink(link) {
 
   return (
     link.classList.contains("track-link") ||
-    !link.closest(".hashtag, .badge-category, .onebox-result, .onebox-body")
+    !link.closest(
+      ".hashtag, .hashtag-cooked, .badge-category, .onebox-result, .onebox-body"
+    )
   );
 }
 
 export function shouldOpenInNewTab(href) {
   const isInternal = DiscourseURL.isInternal(href);
-  const openExternalInNewTab = User.currentProp("external_links_in_new_tab");
+  const openExternalInNewTab = User.currentProp(
+    "user_option.external_links_in_new_tab"
+  );
   return !isInternal && openExternalInNewTab;
 }
 
-export function openLinkInNewTab(link) {
+export function openLinkInNewTab(event, link) {
   let href = (link.href || link.dataset.href || "").trim();
   if (href === "") {
     return;
@@ -67,23 +69,7 @@ export function openLinkInNewTab(link) {
   newWindow.opener = null;
   newWindow.focus();
 
-  // Hack to prevent changing current window.location.
-  // e.preventDefault() does not work.
-  if (!link.dataset.href) {
-    link.classList.add("no-href");
-    link.dataset.href = link.href;
-    link.dataset.autoRoute = true;
-    link.removeAttribute("href");
-
-    discourseLater(() => {
-      if (link) {
-        link.classList.remove("no-href");
-        link.setAttribute("href", link.dataset.href);
-        delete link.dataset.href;
-        delete link.dataset.autoRoute;
-      }
-    }, 50);
-  }
+  event.preventDefault();
 }
 
 export default {
@@ -93,18 +79,12 @@ export default {
       return true;
     }
 
-    // Cancel click if triggered as part of selection.
-    const selection = window.getSelection();
-    if (selection.type === "Range" || selection.rangeCount > 0) {
-      if (selectedText() !== "") {
-        return true;
-      }
-    }
-
     const link = e.currentTarget;
     const tracking = isValidLink(link);
 
-    // Return early for mentions and group mentions
+    // Return early for mentions and group mentions. This is not in
+    // isValidLink because returning true here allows the group card
+    // to pop up. If we returned false it would not.
     if (
       ["mention", "mention-group"].some((name) => link.classList.contains(name))
     ) {
@@ -181,7 +161,7 @@ export default {
 
     if (!wantsNewWindow(e)) {
       if (shouldOpenInNewTab(href)) {
-        openLinkInNewTab(link);
+        openLinkInNewTab(e, link);
       } else {
         trackPromise.finally(() => {
           if (DiscourseURL.isInternal(href) && samePrefix(href)) {

@@ -1,27 +1,68 @@
-<div class="edit-category {{if this.expandedMenu "expanded-menu"}}">
+<div class="edit-category {{if this.expandedMenu 'expanded-menu'}}">
   <div class="edit-category-title-bar">
     <div class="edit-category-title">
       <h2>{{this.title}}</h2>
       {{#if this.model.id}}
-        <BreadCrumbs @categories={{this.site.categoriesList}} @category={{this.model}} @noSubcategories={{this.model.noSubcategories}} @editingCategory={{true}} @editingCategoryTab={{this.selectedTab}} />
+        <BreadCrumbs
+          @categories={{this.site.categoriesList}}
+          @category={{this.model}}
+          @noSubcategories={{this.model.noSubcategories}}
+          @editingCategory={{true}}
+          @editingCategoryTab={{this.selectedTab}}
+        />
       {{/if}}
     </div>
     {{#unless this.mobileView}}
       {{#if this.model.id}}
-        <DButton @class="category-back" @action={{action "goBack"}} @label="category.back" @icon="caret-left" />
+        <DButton
+          @class="category-back"
+          @action={{action "goBack"}}
+          @label="category.back"
+          @icon="caret-left"
+        />
       {{/if}}
     {{/unless}}
   </div>
 
   <div class="edit-category-nav">
     <ul class="nav nav-stacked">
-      <EditCategoryTab @panels={{this.panels}} @selectedTab={{this.selectedTab}} @params={{this.parentParams}} @tab="general" />
-      <EditCategoryTab @panels={{this.panels}} @selectedTab={{this.selectedTab}} @params={{this.parentParams}} @tab="security" />
-      <EditCategoryTab @panels={{this.panels}} @selectedTab={{this.selectedTab}} @params={{this.parentParams}} @tab="settings" />
-      <EditCategoryTab @panels={{this.panels}} @selectedTab={{this.selectedTab}} @params={{this.parentParams}} @tab="images" />
-      <EditCategoryTab @panels={{this.panels}} @selectedTab={{this.selectedTab}} @params={{this.parentParams}} @tab="topic-template" />
+      <EditCategoryTab
+        @panels={{this.panels}}
+        @selectedTab={{this.selectedTab}}
+        @params={{this.parentParams}}
+        @tab="general"
+      />
+      <EditCategoryTab
+        @panels={{this.panels}}
+        @selectedTab={{this.selectedTab}}
+        @params={{this.parentParams}}
+        @tab="security"
+      />
+      <EditCategoryTab
+        @panels={{this.panels}}
+        @selectedTab={{this.selectedTab}}
+        @params={{this.parentParams}}
+        @tab="settings"
+      />
+      <EditCategoryTab
+        @panels={{this.panels}}
+        @selectedTab={{this.selectedTab}}
+        @params={{this.parentParams}}
+        @tab="images"
+      />
+      <EditCategoryTab
+        @panels={{this.panels}}
+        @selectedTab={{this.selectedTab}}
+        @params={{this.parentParams}}
+        @tab="topic-template"
+      />
       {{#if this.siteSettings.tagging_enabled}}
-        <EditCategoryTab @panels={{this.panels}} @selectedTab={{this.selectedTab}} @params={{this.parentParams}} @tab="tags" />
+        <EditCategoryTab
+          @panels={{this.panels}}
+          @selectedTab={{this.selectedTab}}
+          @params={{this.parentParams}}
+          @tab="tags"
+        />
       {{/if}}
     </ul>
   </div>
@@ -30,7 +71,12 @@
     <h3>{{this.selectedTabTitle}}</h3>
 
     {{#each this.panels as |tab|}}
-      {{component tab selectedTab=this.selectedTab category=this.model registerValidator=(action "registerValidator")}}
+      {{component
+        tab
+        selectedTab=this.selectedTab
+        category=this.model
+        registerValidator=(action "registerValidator")
+      }}
     {{/each}}
   </div>
 
@@ -41,13 +87,31 @@
   {{/if}}
 
   <div class="edit-category-footer">
-    <DButton @id="save-category" @class="btn-primary" @disabled={{this.disabled}} @action={{action "saveCategory"}} @label={{this.saveLabel}} />
+    <DButton
+      @id="save-category"
+      @class="btn-primary"
+      @disabled={{this.disabled}}
+      @action={{action "saveCategory"}}
+      @label={{this.saveLabel}}
+    />
 
     {{#if this.model.can_delete}}
-      <DButton @class="btn-danger" @disabled={{this.deleteDisabled}} @action={{action "deleteCategory"}} @icon="far-trash-alt" @label="category.delete" />
+      <DButton
+        @class="btn-danger"
+        @disabled={{this.deleteDisabled}}
+        @action={{action "deleteCategory"}}
+        @icon="far-trash-alt"
+        @label="category.delete"
+      />
     {{else if this.model.id}}
       <div class="disable-info">
-        <DButton @disabled={{this.deleteDisabled}} @class="btn-default" @action={{action "toggleDeleteTooltip"}} @icon="question-circle" @label="category.delete" />
+        <DButton
+          @disabled={{this.deleteDisabled}}
+          @class="btn-default"
+          @action={{action "toggleDeleteTooltip"}}
+          @icon="question-circle"
+          @label="category.delete"
+        />
       </div>
     {{/if}}
   </div>

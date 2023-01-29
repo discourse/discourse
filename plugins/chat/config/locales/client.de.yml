@@ -7,6 +7,9 @@
 de:
   js:
     admin:
+      site_settings:
+        categories:
+          chat: Chat
       logs:
         staff_actions:
           actions:
@@ -51,6 +54,10 @@ de:
         leave_channel: "Kanal verlassen"
         join: "Beitreten"
         leave: "Verlassen"
+        save_label:
+          mute_channel: "Einstellung für „Kanal stummschalten“ gespeichert"
+          desktop_notification: "Einstellung für Desktop-Benachrichtigungen gespeichert"
+          mobile_notification: "Einstellung für mobile Push-Benachrichtigungen gespeichert"
       channel_archive:
         title: "Kanal archivieren"
         instructions: "<p>Das Archivieren eines Kanals versetzt ihn in den schreibgeschützten Modus und verschiebt alle Nachrichten aus dem Kanal in ein neues oder vorhandenes Thema. Es können keine neuen Nachrichten gesendet und keine bestehenden Nachrichten bearbeitet oder gelöscht werden.</p><p>Möchtest du den Kanal <strong>%{channelTitle}</strong> wirklich archivieren?</p>"
@@ -58,7 +65,7 @@ de:
         retry: "Erneut versuchen"
       channel_open:
         title: "Kanal öffnen"
-        instructions: "Wenn du den Kanal wieder öffnest, können alle Benutzer Nachrichten senden und ihre bestehenden Nachrichten bearbeiten."
+        instructions: "Öffnet den Kanal wieder. Alle Benutzer können Nachrichten senden und ihre bestehenden Nachrichten bearbeiten."
       channel_close:
         title: "Kanal schließen"
         instructions: "Das Schließen des Kanals verhindert, dass Nicht-Teammitglieder neue Nachrichten senden oder bestehende Nachrichten bearbeiten können. Bist du sicher, dass du diesen Kanal schließen möchtest?"
@@ -101,17 +108,46 @@ de:
       join: "Beitreten"
       new_messages: "neue Nachrichten"
       mention_warning:
-        cannot_see:
-          one: "%{usernames} kann nicht auf diesen Kanal zugreifen und wurde nicht benachrichtigt."
-          other: "%{usernames} können nicht auf diesen Kanal zugreifen und wurden nicht benachrichtigt."
         dismiss: "verwerfen"
+        cannot_see:
+          one: "%{username} kann nicht auf diesen Kanal zugreifen und wurde nicht benachrichtigt."
+          other: "%{username} und %{others} können nicht auf diesen Kanal zugreifen und wurden nicht benachrichtigt."
         invitations_sent:
           one: "Einladung gesendet"
           other: "Einladungen gesendet"
         invite: "Zum Kanal einladen"
         without_membership:
-          one: "%{usernames} ist diesem Kanal nicht beigetreten."
-          other: "%{usernames} sind diesem Kanal nicht beigetreten."
+          one: "%{username} ist diesem Kanal nicht beigetreten."
+          other: "%{username} und %{others} sind diesem Kanal nicht beigetreten."
+        group_mentions_disabled:
+          one: "%{group_name} erlaubt keine Erwähnungen"
+          other: "%{group_name} und %{others} erlauben keine Erwähnungen"
+        too_many_members:
+          one: "%{group_name} hat zu viele Mitglieder. Niemand wurde benachrichtigt"
+          other: "%{group_name} und %{others} haben zu viele Mitglieder. Niemand wurde benachrichtigt"
+        warning_multiple:
+          one: "%{count} anderer"
+          other: "%{count} andere"
+        groups:
+          header:
+            some: "Einige Benutzer werden nicht benachrichtigt"
+            all: "Niemand wird benachrichtigt"
+          unreachable:
+            one: "@%{group} erlaubt keine Erwähnungen"
+            other: "@%{group} und @%{group_2} erlauben keine Erwähnungen"
+          unreachable_multiple: "@%{group} und %{count} andere erlauben keine Erwähnungen"
+          too_many_members:
+            one: "Die Erwähnung von @%{group} übersteigt das %{notification_limit} von %{limit}"
+            other: "Die Erwähnung von @%{group} oder @%{group_2} übersteigt das %{notification_limit} von %{limit}"
+          too_many_members_multiple: "Diese %{count} Gruppen übersteigen das %{notification_limit} von %{limit}"
+          users_limit:
+            one: "%{count} Benutzer"
+            other: "%{count} Benutzer"
+          notification_limit: "Benachrichtigungslimit"
+        too_many_mentions: "Diese Nachricht überschreitet das %{notification_limit} von %{limit}"
+        mentions_limit:
+          one: "%{count} Erwähnung"
+          other: "%{count} Erwähnungen"
       aria_roles:
         header: "Chat-Kopfzeile"
         composer: "Chat-Composer"
@@ -170,13 +206,13 @@ de:
         read_only: "Schreibgeschützt"
         archived_header: "Kanal ist archiviert"
         archived: "Archiviert"
-        archive_failed: "Archivieren des Kanals fehlgeschlagen. %{completed}/%{total} Nachrichten wurden im <a target=\"_blank\" href=\"%{topic_url}\">Zielthema</a> archiviert. Drücke auf „Erneut versuchen“, um zu versuchen, die Archivierung abzuschließen."
         archive_completed: "<a target=\"_blank\" href=\"%{topic_url}\">Archivthema</a> anzeigen"
         closed_header: "Kanal ist geschlossen"
         closed: "Geschlossen"
         open_header: "Kanal ist offen"
         open: "Offen"
       browse:
+        back: "Zurück"
         title: Kanäle
         filter_all: Alle
         filter_open: Offen
@@ -192,6 +228,7 @@ de:
         associated_topic: Verknüpftes Thema
         associated_category: Verknüpfte Kategorie
         title: Titel
+        name: Name
         description: Beschreibung
       channel_info:
         back_to_all_channels: "Alle Kanäle"
@@ -200,10 +237,6 @@ de:
           about: Über
           members: Mitglieder
           settings: Einstellungen
-      channel_edit_title_modal:
-        title: Titel bearbeiten
-        input_placeholder: Titel hinzufügen
-        description: Gib deinem Kanal einen kurzen aussagekräftigen Titel
       channel_edit_description_modal:
         title: Beschreibung bearbeiten
         input_placeholder: Beschreibung hinzufügen
@@ -266,8 +299,9 @@ de:
         mention: "Nur für Erwähnungen"
         always: "Für alle Aktivitäten"
       settings:
-        enable_auto_join_users: "Automatisch alle kürzlich aktiven Benutzer hinzufügen"
-        disable_auto_join_users: "Benutzer nicht mehr automatisch hinzufügen"
+        channel_wide_mentions_label: "@all- und @here-Erwähnungen zulassen"
+        channel_wide_mentions_description: "Erlaube Benutzern, alle Mitglieder von #%{channel} mit @all zu benachrichtigen oder nur diejenigen, die gerade aktiv sind, mit @here"
+        auto_join_users_label: "Benutzer automatisch hinzufügen"
         auto_join_users_warning: "Jeder Benutzer, der kein Mitglied dieses Kanals ist und Zugriff auf die Kategorie %{category} hat, wird beitreten. Bist du dir sicher?"
         desktop_notification_level: "Desktop-Benachrichtigungen"
         follow: "Beitreten"
@@ -281,11 +315,13 @@ de:
         save: "Speichern"
         saved: "Gespeichert"
         unfollow: "Verlassen"
+        admin_title: "Administrator"
+        retention_info: "Der Chat-Verlauf wird für %{days} Tage gespeichert."
       admin:
         title: "Chat"
       direct_messages:
         title: "Persönlicher Chat"
-        new: "Neuer persönlicher Chat"
+        new: "Persönlichen Chat erstellen"
         create: "Los"
         leave: "Diesen persönlichen Chat verlassen"
         cannot_create: "Du kannst leider keine Direktnachrichten senden."
@@ -317,7 +353,7 @@ de:
         instructions: "Eingehende Webhooks können von externen Systemen verwendet werden, um Nachrichten als Bot-Benutzer über den Endpunkt <code>/hooks/:key</code> in einem bestimmten Chat-Kanal zu posten. Die Payload besteht aus einem einzigen <code>text</code>-Parameter, der auf 2000 Zeichen begrenzt ist.<br><br>Wir unterstützen auch in begrenztem Umfang Slack-formatierte <code>text</code>-Parameter und extrahieren Links und Erwähnungen basierend auf dem Format unter <a href=\"https://api.slack.com/reference/surfaces/formatting\">https://api.slack.com/reference/surfaces/formatting</a>, aber dazu muss der Endpunkt <code>/hooks/:key/slack</code> verwendet werden."
       selection:
         cancel: "Abbrechen"
-        quote_selection: "Zitat im Thema"
+        quote_selection: "In Thema zitieren"
         copy: "Kopieren"
         move_selection_to_channel: "In Kanal verschieben"
         error: "Beim Verschieben der Chat-Nachrichten ist ein Fehler aufgetreten"

@@ -11,19 +11,30 @@ RSpec.describe Chat::GuardianExtensions do
   let(:guardian) { Guardian.new(user) }
   let(:staff_guardian) { Guardian.new(staff) }
 
-  before do
-    SiteSetting.chat_allowed_groups = chat_group.id
-    chat_group.add(user)
-  end
-
   it "cannot chat if the user is not in the Chat.allowed_group_ids" do
     SiteSetting.chat_allowed_groups = ""
-    expect(guardian.can_chat?(user)).to eq(false)
+    expect(guardian.can_chat?).to eq(false)
   end
 
   it "staff can always chat regardless of chat_allowed_grups" do
     SiteSetting.chat_allowed_groups = ""
-    expect(guardian.can_chat?(staff)).to eq(true)
+    expect(staff_guardian.can_chat?).to eq(true)
+  end
+
+  it "allows TL1 to chat by default and by extension higher trust levels" do
+    Group.refresh_automatic_groups!
+    expect(guardian.can_chat?).to eq(true)
+    user.update!(trust_level: TrustLevel[3])
+    Group.refresh_automatic_groups!
+    expect(guardian.can_chat?).to eq(true)
+  end
+
+  it "allows user in specific group to chat" do
+    SiteSetting.chat_allowed_groups = chat_group.id
+    expect(guardian.can_chat?).to eq(false)
+    chat_group.add(user)
+    user.reload
+    expect(guardian.can_chat?).to eq(true)
   end
 
   describe "chat channel" do
@@ -61,35 +72,55 @@ RSpec.describe Chat::GuardianExtensions do
       expect(staff_guardian.can_change_channel_status?(channel, :read_only)).to eq(true)
     end
 
-    describe "#can_see_chat_channel?" do
+    describe "#can_join_chat_channel?" do
       context "for direct message channels" do
         fab!(:chatable) { Fabricate(:direct_message) }
         fab!(:channel) { Fabricate(:direct_message_channel, chatable: chatable) }
 
         it "returns false if the user is not part of the direct message" do
-          expect(guardian.can_see_chat_channel?(channel)).to eq(false)
+          expect(guardian.can_join_chat_channel?(channel)).to eq(false)
         end
 
         it "returns true if the user is part of the direct message" do
           DirectMessageUser.create!(user: user, direct_message: chatable)
-          expect(guardian.can_see_chat_channel?(channel)).to eq(true)
+          expect(guardian.can_join_chat_channel?(channel)).to eq(true)
         end
       end
 
       context "for category channel" do
-        fab!(:category) { Fabricate(:category, read_restricted: true) }
+        fab!(:group) { Fabricate(:group) }
+        fab!(:group_user) { Fabricate(:group_user, group: group, user: user) }
 
-        before { channel.update(chatable: category) }
+        it "returns true if the user can join the category" do
+          category =
+            Fabricate(
+              :private_category,
+              group: group,
+              permission_type: CategoryGroup.permission_types[:readonly],
+            )
+          channel.update(chatable: category)
+          guardian = Guardian.new(user)
+          expect(guardian.can_join_chat_channel?(channel)).to eq(false)
 
-        it "returns true if the user can see the category" do
-          expect(Guardian.new(user).can_see_chat_channel?(channel)).to eq(false)
-          group = Fabricate(:group)
-          CategoryGroup.create(group: group, category: category)
-          GroupUser.create(group: group, user: user)
+          category =
+            Fabricate(
+              :private_category,
+              group: group,
+              permission_type: CategoryGroup.permission_types[:create_post],
+            )
+          channel.update(chatable: category)
+          guardian = Guardian.new(user)
+          expect(guardian.can_join_chat_channel?(channel)).to eq(true)
 
-          # have to make a new instance of guardian because `user.secure_category_ids`
-          # is memoized there
-          expect(Guardian.new(user).can_see_chat_channel?(channel)).to eq(true)
+          category =
+            Fabricate(
+              :private_category,
+              group: group,
+              permission_type: CategoryGroup.permission_types[:full],
+            )
+          channel.update(chatable: category)
+          guardian = Guardian.new(user)
+          expect(guardian.can_join_chat_channel?(channel)).to eq(true)
         end
       end
     end
@@ -128,6 +159,23 @@ RSpec.describe Chat::GuardianExtensions do
           it "returns true" do
             expect(guardian).to be_able_to_flag_in_chat_channel(private_channel)
           end
+        end
+      end
+    end
+
+    describe "#can_flag_chat_message?" do
+      let!(:message) { Fabricate(:chat_message, chat_channel: channel) }
+      before { SiteSetting.chat_message_flag_allowed_groups = "" }
+
+      context "when user isn't staff" do
+        it "returns false" do
+          expect(guardian.can_flag_chat_message?(message)).to eq(false)
+        end
+      end
+
+      context "when user is staff" do
+        it "returns true" do
+          expect(staff_guardian.can_flag_chat_message?(message)).to eq(true)
         end
       end
     end

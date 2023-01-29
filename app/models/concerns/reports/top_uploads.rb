@@ -8,20 +8,18 @@ module Reports::TopUploads
       report.modes = [:table]
 
       extension_filter = report.filters.dig(:file_extension)
-      report.add_filter('file_extension',
-        type: 'list',
-        default: extension_filter || 'any',
-        choices: (SiteSetting.authorized_extensions.split('|') + Array(extension_filter)).uniq
+      report.add_filter(
+        "file_extension",
+        type: "list",
+        default: extension_filter || "any",
+        choices: (SiteSetting.authorized_extensions.split("|") + Array(extension_filter)).uniq,
       )
 
       report.labels = [
         {
           type: :link,
-          properties: [
-            :file_url,
-            :file_name,
-          ],
-          title: I18n.t("reports.top_uploads.labels.filename")
+          properties: %i[file_url file_name],
+          title: I18n.t("reports.top_uploads.labels.filename"),
         },
         {
           type: :user,
@@ -30,18 +28,14 @@ module Reports::TopUploads
             id: :author_id,
             avatar: :author_avatar_template,
           },
-          title: I18n.t("reports.top_uploads.labels.author")
+          title: I18n.t("reports.top_uploads.labels.author"),
         },
         {
           type: :text,
           property: :extension,
-          title: I18n.t("reports.top_uploads.labels.extension")
+          title: I18n.t("reports.top_uploads.labels.extension"),
         },
-        {
-          type: :bytes,
-          property: :filesize,
-          title: I18n.t("reports.top_uploads.labels.filesize")
-        },
+        { type: :bytes, property: :filesize, title: I18n.t("reports.top_uploads.labels.filesize") },
       ]
 
       report.data = []
@@ -64,12 +58,15 @@ module Reports::TopUploads
       SQL
 
       builder = DB.build(sql)
-      builder.where("up.id > :seeded_id_threshold", seeded_id_threshold: Upload::SEEDED_ID_THRESHOLD)
+      builder.where(
+        "up.id > :seeded_id_threshold",
+        seeded_id_threshold: Upload::SEEDED_ID_THRESHOLD,
+      )
       builder.where("up.created_at >= :start_date", start_date: report.start_date)
       builder.where("up.created_at < :end_date", end_date: report.end_date)
 
       if extension_filter
-        builder.where("up.extension = :extension", extension: extension_filter.sub(/^\./, ''))
+        builder.where("up.extension = :extension", extension: extension_filter.sub(/\A\./, ""))
       end
 
       builder.query.each do |row|

@@ -13,7 +13,10 @@
   />
 {{else}}
   <div class="user-notifications-filter">
-    <NotificationsFilter @value={{this.filter}} @onChange={{action (mut this.filter)}} />
+    <NotificationsFilter
+      @value={{this.filter}}
+      @onChange={{action (mut this.filter)}}
+    />
   </div>
 
   {{#if this.nothingFound}}

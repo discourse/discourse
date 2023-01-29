@@ -22,6 +22,11 @@ sr:
       flag: "Označi Zastavom"
       mention_warning:
         dismiss: "одбаци"
+        groups:
+          users_limit:
+            one: "{count} korisnik"
+            few: "%{count} korisnika"
+            other: "%{count} korisnika"
       reply: "Odgovori"
       edit: "Izmeni"
       rebake_message: "Popravi HTML"
@@ -41,6 +46,7 @@ sr:
         yesterday: Juče
       about_view:
         title: Naslov
+        name: Ime foruma
         description: Opis
       channel_info:
         back_to_channel: "Nazad"
@@ -65,6 +71,7 @@ sr:
         notifications: "Obaveštenja"
         save: "Sačuvaj"
         saved: "Sačuvano"
+        admin_title: "Admin"
       incoming_webhooks:
         back: "Nazad"
         description: "Opis"

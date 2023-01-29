@@ -90,3 +90,4 @@ hu:
         rich_tooltip:
           description: "Leírás"
           header: "Fejléc"
+          hover_to_see: "Vigye az egérmutatót az eszköztipp megtekintéséhez"

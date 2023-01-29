@@ -21,7 +21,7 @@ const chatTranscriptRule = {
     const channelName = tagInfo.attrs.channel;
     const channelId = tagInfo.attrs.channelId;
     const channelLink = channelId
-      ? options.getURL(`/chat/channel/${channelId}/-`)
+      ? options.getURL(`/chat/c/-/${channelId}`)
       : null;
 
     if (!username || !messageIdStart || !messageTimeStart) {
@@ -155,6 +155,7 @@ const chatTranscriptRule = {
 
     // rendering chat message content with limited markdown rule subset
     const token = state.push("html_raw", "", 1);
+
     token.content = customMarkdownCookFn(content);
     state.push("html_raw", "", -1);
 
@@ -246,6 +247,10 @@ export function setup(helper) {
       {
         featuresOverride: chatAdditionalOpts.limited_pretty_text_features,
         markdownItRules,
+        hashtagLookup: opts.discourse.hashtagLookup,
+        hashtagTypesInPriorityOrder:
+          chatAdditionalOpts.hashtag_configurations["chat-composer"],
+        hashtagIcons: opts.discourse.hashtagIcons,
       },
       (customCookFn) => {
         customMarkdownCookFn = customCookFn;

@@ -25,4 +25,8 @@ export default UserActivityStreamRoute.extend({
 
     return { title, body };
   },
+
+  titleToken() {
+    return I18n.t("user.filters.all");
+  },
 });

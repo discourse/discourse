@@ -6,14 +6,14 @@
 
 pt:
   site_settings:
-    poll_enabled: "Permitir sondagens?"
-    poll_maximum_options: "Número máximo de opções permitidas numa sondagem."
+    poll_enabled: "Permitir enquetes?"
+    poll_maximum_options: "Número máximo de opções permitidas em uma enquete."
     poll_edit_window_mins: "O número de minutos depois da criação da publicação durante os quais as sondagens podem ser editadas."
     poll_minimum_trust_level_to_create: "Defina o nível de confiança mínimo necessário para criar sondagens."
     poll_groupable_user_fields: "Um conjunto de nomes de campos de utilizador que podem ser usados para agrupar e filtrar os resultados da sondagem."
     poll_export_data_explorer_query_id: "ID do Data Explorer Query a ser usado para exportar resultados da sondagem (0 para desativar)."
   poll:
-    poll: "sondagem"
+    poll: "enquete"
     invalid_argument: "Valor inválido '%{value}' para o argumento '%{argument}'."
     multiple_polls_without_name: "Existem várias sondagens sem nome. Utilize o atributo '<code>nome</code>' para identificar as suas sondagens de maneira única."
     multiple_polls_with_same_name: "Existem várias sondagens com o mesmo nome: <strong>%{name}</strong>. Utilize o atributo '<code>nome</code>' para identificar as suas sondagens de maneira única."
@@ -40,6 +40,13 @@ pt:
     user_cant_post_in_topic: "Não pode votar porque não pode publicar neste tópico."
     topic_must_be_open_to_vote: "O tópico tem que estar aberto para votação."
     poll_must_be_open_to_vote: "A sondagem deve estar aberta para votação."
+    one_vote_per_user: "Apenas 1 voto é permitido para esta sondagem."
+    max_vote_per_user:
+      one: Apenas %{count} voto é permitido nesta enquete.
+      other: São permitidos no máximo %{count} votos nesta enquete.
+    min_vote_per_user:
+      one: É necessário no mínimo %{count} voto nesta enquete.
+      other: É necessário no mínimo %{count} votos nesta enquete.
     topic_must_be_open_to_toggle_status: "O tópico tem que estar aberto para alternar o estado."
     only_staff_or_op_can_toggle_status: "Apenas um membro da equipa ou o autor original pode alternar o estado da sondagem."
     insufficient_rights_to_create: "Não está autorizado para criar sondagens."

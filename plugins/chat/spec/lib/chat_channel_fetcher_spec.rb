@@ -3,7 +3,7 @@
 describe Chat::ChatChannelFetcher do
   fab!(:category) { Fabricate(:category, name: "support") }
   fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
-  fab!(:category_channel) { Fabricate(:category_channel, chatable: category) }
+  fab!(:category_channel) { Fabricate(:category_channel, chatable: category, slug: "support") }
   fab!(:dm_channel1) { Fabricate(:direct_message) }
   fab!(:dm_channel2) { Fabricate(:direct_message) }
   fab!(:direct_message_channel1) { Fabricate(:direct_message_channel, chatable: dm_channel1) }
@@ -136,6 +136,47 @@ describe Chat::ChatChannelFetcher do
         GroupUser.create!(group: private_category.groups.last, user: user1)
         expect(subject.all_secured_channel_ids(guardian)).to match_array([category_channel.id])
       end
+
+      context "when restricted category" do
+        fab!(:group) { Fabricate(:group) }
+        fab!(:group_user) { Fabricate(:group_user, group: group, user: user1) }
+
+        it "does not include the category channel for member of group with readonly access" do
+          category_channel.update!(
+            chatable:
+              Fabricate(
+                :private_category,
+                group: group,
+                permission_type: CategoryGroup.permission_types[:readonly],
+              ),
+          )
+          expect(subject.all_secured_channel_ids(guardian)).to be_empty
+        end
+
+        it "includes the category channel for member of group with create_post access" do
+          category_channel.update!(
+            chatable:
+              Fabricate(
+                :private_category,
+                group: group,
+                permission_type: CategoryGroup.permission_types[:create_post],
+              ),
+          )
+          expect(subject.all_secured_channel_ids(guardian)).to match_array([category_channel.id])
+        end
+
+        it "includes the category channel for member of group with full access" do
+          category_channel.update!(
+            chatable:
+              Fabricate(
+                :private_category,
+                group: group,
+                permission_type: CategoryGroup.permission_types[:full],
+              ),
+          )
+          expect(subject.all_secured_channel_ids(guardian)).to match_array([category_channel.id])
+        end
+      end
     end
   end
 
@@ -168,6 +209,16 @@ describe Chat::ChatChannelFetcher do
           filter: "cool stuff",
         ).map(&:id),
       ).to match_array([category_channel.id])
+    end
+
+    it "can filter by an array of slugs" do
+      expect(
+        subject.secured_public_channels(guardian, memberships, slugs: ["support"]).map(&:id),
+      ).to match_array([category_channel.id])
+    end
+
+    it "returns nothing if the array of slugs is empty" do
+      expect(subject.secured_public_channels(guardian, memberships, slugs: []).map(&:id)).to eq([])
     end
 
     it "can filter by status" do

@@ -11,6 +11,7 @@ const EMAIL_LEVELS = {
 };
 
 export default Controller.extend({
+  subpageTitle: I18n.t("user.preferences_nav.emails"),
   emailMessagesLevelAway: equal(
     "model.user_option.email_messages_level",
     EMAIL_LEVELS.ONLY_WHEN_AWAY
@@ -82,13 +83,11 @@ export default Controller.extend({
 
   @discourseComputed()
   emailFrequencyInstructions() {
-    if (this.siteSettings.email_time_window_mins) {
-      return I18n.t("user.email.frequency", {
-        count: this.siteSettings.email_time_window_mins,
-      });
-    } else {
-      return I18n.t("user.email.frequency_immediately");
-    }
+    return this.siteSettings.email_time_window_mins
+      ? I18n.t("user.email.frequency", {
+          count: this.siteSettings.email_time_window_mins,
+        })
+      : null;
   },
 
   actions: {

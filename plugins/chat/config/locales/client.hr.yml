@@ -20,6 +20,8 @@ hr:
           descriptions:
             chat:
               create_message: "Izradite chat poruku na određenom kanalu."
+    about:
+      chat_messages_count: "Chat poruke"
     chat:
       dates:
         time_tiny: "h:mm"
@@ -83,20 +85,17 @@ hr:
       join: "Pridružite se"
       new_messages: "nove poruke"
       mention_warning:
-        cannot_see:
-          one: "%{usernames} ne može pristupiti ovom kanalu i nije obaviješten."
-          few: "%{usernames} ne mogu pristupiti ovom kanalu i nisu obaviješteni."
-          other: "%{usernames} ne mogu pristupiti ovom kanalu i nisu obaviješteni."
         dismiss: "skloni"
         invitations_sent:
           one: "Poziv poslan"
           few: "Pozivnice poslane"
           other: "Pozivnice poslane"
         invite: "Pozovite na kanal"
-        without_membership:
-          one: "%{usernames} se nije pridružio ovom kanalu."
-          few: "%{usernames} se nisu pridružili ovom kanalu."
-          other: "%{usernames} se nisu pridružili ovom kanalu."
+        groups:
+          users_limit:
+            one: "%{count} korisnik"
+            few: "%{count} korisnika"
+            other: "%{count} korisnika"
       aria_roles:
         header: "Zaglavlje chata"
         composer: "Skladatelj chata"
@@ -112,6 +111,8 @@ hr:
       title_capitalized: "Čet"
       exit: "natrag"
       channel_status:
+        archive_failed: "Arhiviranje kanala nije uspjelo. %{completed}/%{total} poruke su arhivirane. <a target=\"_blank\" href=\"%{topic_url}\">tema odredišta</a>. Pritisnite ponovno za pokušaj dovršetka arhiviranja."
+        archive_failed_no_topic: "Arhiviranje kanala nije uspjelo. %{completed}/%{total} poruka je arhivirano, odredišna tema nije kreirana. Pritisnite ponovno za pokušaj dovršetka arhiviranja."
         closed: "Zatvoreno"
         open: "Otvori"
       browse:
@@ -124,6 +125,7 @@ hr:
         yesterday: Jučer
       about_view:
         title: Naslov
+        name: Ime
         description: Opis
       channel_info:
         back_to_channel: "Natrag"
@@ -152,6 +154,7 @@ hr:
         save: "Spremi"
         saved: "Spremljeno"
         unfollow: "Napustiti"
+        admin_title: "Administrator"
       admin:
         title: "Čet"
       incoming_webhooks:

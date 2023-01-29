@@ -34,17 +34,18 @@ class WordWatcher
 
   def self.get_cached_words(action)
     if cache_enabled?
-      Discourse.cache.fetch(word_matcher_regexp_key(action), expires_in: 1.day) do
-        words_for_action(action).presence
-      end
+      Discourse
+        .cache
+        .fetch(word_matcher_regexp_key(action), expires_in: 1.day) do
+          words_for_action(action).presence
+        end
     else
       words_for_action(action).presence
     end
   end
 
   def self.serializable_word_matcher_regexp(action)
-    word_matcher_regexp_list(action)
-      .map { |r| { r.source => { case_sensitive: !r.casefold? } } }
+    word_matcher_regexp_list(action).map { |r| { r.source => { case_sensitive: !r.casefold? } } }
   end
 
   # This regexp is run in miniracer, and the client JS app
@@ -64,9 +65,7 @@ class WordWatcher
       grouped_words[group_key] << word
     end
 
-    regexps = grouped_words
-      .select { |_, w| w.present? }
-      .transform_values { |w| w.join("|") }
+    regexps = grouped_words.select { |_, w| w.present? }.transform_values { |w| w.join("|") }
 
     if !SiteSetting.watched_words_regular_expressions?
       regexps.transform_values! do |regexp|
@@ -75,8 +74,7 @@ class WordWatcher
       end
     end
 
-    regexps
-      .map { |c, regexp| Regexp.new(regexp, c == :case_sensitive ? nil : Regexp::IGNORECASE) }
+    regexps.map { |c, regexp| Regexp.new(regexp, c == :case_sensitive ? nil : Regexp::IGNORECASE) }
   rescue RegexpError
     raise if raise_errors
     [] # Admin will be alerted via admin_dashboard_data.rb
@@ -113,7 +111,7 @@ class WordWatcher
     regexps = word_matcher_regexp_list(:censor)
     return html if regexps.blank?
 
-    doc = Nokogiri::HTML5::fragment(html)
+    doc = Nokogiri::HTML5.fragment(html)
     doc.traverse do |node|
       regexps.each do |regexp|
         node.content = censor_text_with_regexp(node.content, regexp) if node.text?
@@ -150,9 +148,7 @@ class WordWatcher
   end
 
   def self.clear_cache!
-    WatchedWord.actions.each do |a, i|
-      Discourse.cache.delete word_matcher_regexp_key(a)
-    end
+    WatchedWord.actions.each { |a, i| Discourse.cache.delete word_matcher_regexp_key(a) }
   end
 
   def requires_approval?
@@ -188,13 +184,15 @@ class WordWatcher
 
       if SiteSetting.watched_words_regular_expressions?
         set = Set.new
-        @raw.scan(regexp).each do |m|
-          if Array === m
-            set.add(m.find(&:present?))
-          elsif String === m
-            set.add(m)
+        @raw
+          .scan(regexp)
+          .each do |m|
+            if Array === m
+              set.add(m.find(&:present?))
+            elsif String === m
+              set.add(m)
+            end
           end
-        end
 
         matches = set.to_a
       else
@@ -214,9 +212,10 @@ class WordWatcher
   end
 
   def word_matches?(word, case_sensitive: false)
-    Regexp
-      .new(WordWatcher.word_to_regexp(word, whole: true), case_sensitive ? nil : Regexp::IGNORECASE)
-      .match?(@raw)
+    Regexp.new(
+      WordWatcher.word_to_regexp(word, whole: true),
+      case_sensitive ? nil : Regexp::IGNORECASE,
+    ).match?(@raw)
   end
 
   def self.replace_text_with_regexp(text, regexp, replacement)

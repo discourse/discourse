@@ -3,6 +3,14 @@
     <div class="control-group">
       <UserStatusPicker @status={{this.status}} />
     </div>
+    {{#unless this.hidePauseNotifications}}
+      <div class="control-group pause-notifications">
+        <label class="checkbox-label">
+          <Input @type="checkbox" @checked={{this.pauseNotifications}} />
+          {{i18n "user_status.pause_notifications"}}
+        </label>
+      </div>
+    {{/unless}}
     <div class="control-group control-group-remove-status">
       <label class="control-label">
         {{i18n "user_status.remove_status"}}
@@ -13,17 +21,23 @@
         @customLabels={{this.customTimeShortcutLabels}}
         @prefilledDatetime={{this.prefilledDateTime}}
         @onTimeSelected={{action "onTimeSelected"}}
-        @_itsatrap={{this._itsatrap}} />
+        @_itsatrap={{this._itsatrap}}
+      />
     </div>
     <div class="modal-footer control-group">
       <DButton
         @label="user_status.save"
         @class="btn-primary"
         @disabled={{not this.statusIsSet}}
-        @action={{action "saveAndClose"}} />
+        @action={{action "saveAndClose"}}
+      />
       <DModalCancel @close={{action "closeModal"}} />
       {{#if this.showDeleteButton}}
-        <DButton @icon="trash-alt" @class="delete-status btn-danger" @action={{action "delete"}} />
+        <DButton
+          @icon="trash-alt"
+          @class="delete-status btn-danger"
+          @action={{action "delete"}}
+        />
       {{/if}}
     </div>
   </ConditionalLoadingSpinner>

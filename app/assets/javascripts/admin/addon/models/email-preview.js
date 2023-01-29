@@ -16,6 +16,7 @@ EmailPreview.reopenClass({
 
   sendDigest(username, lastSeenAt, email) {
     return ajax("/admin/email/send-digest.json", {
+      type: "POST",
       data: { last_seen_at: lastSeenAt || oneWeekAgo(), username, email },
     });
   },

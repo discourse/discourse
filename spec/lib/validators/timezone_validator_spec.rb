@@ -38,9 +38,7 @@ RSpec.describe TimezoneValidator do
       it "adds errors to the record" do
         record.timezone = "Mars"
         record.save
-        expect(record.errors.full_messages).to include(
-          "Timezone 'Mars' is not a valid timezone"
-        )
+        expect(record.errors.full_messages).to include("Timezone 'Mars' is not a valid timezone")
       end
     end
   end

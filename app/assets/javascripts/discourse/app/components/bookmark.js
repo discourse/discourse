@@ -57,10 +57,12 @@ export default Component.extend({
       postDetectedLocalTime: null,
       postDetectedLocalTimezone: null,
       prefilledDatetime: null,
-      userTimezone: this.currentUser.timezone,
+      userTimezone: this.currentUser.user_option.timezone,
       showOptions: false,
       _itsatrap: new ItsATrap(),
-      autoDeletePreference: this.model.autoDeletePreference || 0,
+      autoDeletePreference:
+        this.model.autoDeletePreference ||
+        AUTO_DELETE_PREFERENCES.CLEAR_REMINDER,
     });
 
     this.registerOnCloseHandler(this._onModalClose);
@@ -152,11 +154,6 @@ export default Component.extend({
         return Promise.reject(I18n.t("bookmarks.invalid_custom_datetime"));
       }
     }
-
-    this.currentUser.set(
-      "bookmark_auto_delete_preference",
-      this.autoDeletePreference
-    );
 
     const data = {
       reminder_at: reminderAtISO,

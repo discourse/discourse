@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'has_errors'
+require "has_errors"
 
 class PostActionResult
   include HasErrors

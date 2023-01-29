@@ -17,13 +17,13 @@ class IntegerSettingValidator
 
   def error_message
     if @opts[:min] && @opts[:max]
-      I18n.t('site_settings.errors.invalid_integer_min_max', min: @opts[:min], max: @opts[:max])
+      I18n.t("site_settings.errors.invalid_integer_min_max", min: @opts[:min], max: @opts[:max])
     elsif @opts[:min]
-      I18n.t('site_settings.errors.invalid_integer_min', min: @opts[:min])
+      I18n.t("site_settings.errors.invalid_integer_min", min: @opts[:min])
     elsif @opts[:max]
-      I18n.t('site_settings.errors.invalid_integer_max', max: @opts[:max])
+      I18n.t("site_settings.errors.invalid_integer_max", max: @opts[:max])
     else
-      I18n.t('site_settings.errors.invalid_integer')
+      I18n.t("site_settings.errors.invalid_integer")
     end
   end
 end

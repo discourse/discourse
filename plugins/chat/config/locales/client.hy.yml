@@ -25,6 +25,10 @@ hy:
       join: "Միանալ"
       mention_warning:
         dismiss: "չեղարկել"
+        groups:
+          users_limit:
+            one: "%{count} օգտատեր"
+            other: "%{count} օգտատեր"
       reply: "Պատասխանել"
       edit: "Խմբագրել"
       rebake_message: "Վերակառուցել HTML-ը"
@@ -45,6 +49,7 @@ hy:
         yesterday: Երեկվա
       about_view:
         title: Վերնագիր
+        name: Անուն
         description: Նկարագրությունը
       channel_info:
         back_to_channel: "Ետ"
@@ -73,6 +78,7 @@ hy:
         save: "Պահպանել"
         saved: "Պահված է"
         unfollow: "Լքել"
+        admin_title: "Ադմին"
       incoming_webhooks:
         back: "Ետ"
         description: "Նկարագրությունը"

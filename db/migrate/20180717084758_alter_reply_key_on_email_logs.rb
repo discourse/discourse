@@ -2,7 +2,7 @@
 
 class AlterReplyKeyOnEmailLogs < ActiveRecord::Migration[5.2]
   def up
-    change_column :email_logs, :reply_key, 'uuid USING reply_key::uuid'
+    change_column :email_logs, :reply_key, "uuid USING reply_key::uuid"
   end
 
   def down

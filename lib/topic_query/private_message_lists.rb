@@ -21,7 +21,8 @@ class TopicQuery
 
     def list_private_messages_archive(user)
       list = private_messages_for(user, :user)
-      list = list.joins(:user_archived_messages).where('user_archived_messages.user_id = ?', user.id)
+      list =
+        list.joins(:user_archived_messages).where("user_archived_messages.user_id = ?", user.id)
       create_list(:private_messages, {}, list)
     end
 
@@ -96,9 +97,9 @@ class TopicQuery
 
     def list_private_messages_warnings(user)
       list = private_messages_for(user, :user)
-      list = list.where('topics.subtype = ?', TopicSubtype.moderator_warning)
+      list = list.where("topics.subtype = ?", TopicSubtype.moderator_warning)
       # Exclude official warnings that the user created, instead of received
-      list = list.where('topics.user_id <> ?', user.id)
+      list = list.where("topics.user_id <> ?", user.id)
       create_list(:private_messages, {}, list)
     end
 
@@ -110,21 +111,29 @@ class TopicQuery
       result = result.includes(:tags) if SiteSetting.tagging_enabled
 
       if type == :group
-        result = result.joins(
-          "INNER JOIN topic_allowed_groups tag ON tag.topic_id = topics.id AND tag.group_id IN (SELECT id FROM groups WHERE LOWER(name) = '#{PG::Connection.escape_string(@options[:group_name].downcase)}')"
-        )
+        result =
+          result.joins(
+            "INNER JOIN topic_allowed_groups tag ON tag.topic_id = topics.id AND tag.group_id IN (SELECT id FROM groups WHERE LOWER(name) = '#{PG::Connection.escape_string(@options[:group_name].downcase)}')",
+          )
 
         unless user.admin?
-          result = result.joins("INNER JOIN group_users gu ON gu.group_id = tag.group_id AND gu.user_id = #{user.id.to_i}")
+          result =
+            result.joins(
+              "INNER JOIN group_users gu ON gu.group_id = tag.group_id AND gu.user_id = #{user.id.to_i}",
+            )
         end
       elsif type == :user
-        result = result.where("topics.id IN (SELECT topic_id FROM topic_allowed_users WHERE user_id = ?)", user.id.to_i)
+        result =
+          result.where(
+            "topics.id IN (SELECT topic_id FROM topic_allowed_users WHERE user_id = ?)",
+            user.id.to_i,
+          )
       elsif type == :all
         group_ids = group_with_messages_ids(user)
 
         result =
-        if group_ids.present?
-          result.where(<<~SQL, user.id.to_i, group_ids)
+          if group_ids.present?
+            result.where(<<~SQL, user.id.to_i, group_ids)
             topics.id IN (
               SELECT topic_id
               FROM topic_allowed_users
@@ -134,18 +143,22 @@ class TopicQuery
               WHERE group_id IN (?)
             )
           SQL
-        else
-          result.joins(<<~SQL)
+          else
+            result.joins(<<~SQL)
           INNER JOIN topic_allowed_users tau
             ON tau.topic_id = topics.id
             AND tau.user_id = #{user.id.to_i}
           SQL
-        end
+          end
       end
 
-      result = result.joins("LEFT OUTER JOIN topic_users AS tu ON (topics.id = tu.topic_id AND tu.user_id = #{user.id.to_i})")
-        .order("topics.bumped_at DESC")
-        .private_messages
+      result =
+        result
+          .joins(
+            "LEFT OUTER JOIN topic_users AS tu ON (topics.id = tu.topic_id AND tu.user_id = #{user.id.to_i})",
+          )
+          .order("topics.bumped_at DESC")
+          .private_messages
 
       result = result.limit(options[:per_page]) unless options[:limit] == false
       result = result.visible if options[:visible] || @user.nil? || @user.regular?
@@ -159,38 +172,32 @@ class TopicQuery
 
     def list_private_messages_tag(user)
       list = private_messages_for(user, :all)
-      list = list.joins("JOIN topic_tags tt ON tt.topic_id = topics.id
-                        JOIN tags t ON t.id = tt.tag_id AND t.name = '#{@options[:tags][0]}'")
+      list =
+        list.joins(
+          "JOIN topic_tags tt ON tt.topic_id = topics.id
+                        JOIN tags t ON t.id = tt.tag_id AND t.name = '#{@options[:tags][0]}'",
+        )
       create_list(:private_messages, {}, list)
     end
 
     def filter_private_messages_unread(user, type)
-      list = TopicQuery.unread_filter(
-        private_messages_for(user, type),
-        whisperer: user.whisperer?
-      )
+      list = TopicQuery.unread_filter(private_messages_for(user, type), whisperer: user.whisperer?)
 
       first_unread_pm_at =
         case type
         when :user
           user_first_unread_pm_at(user)
         when :group
-          GroupUser
-            .where(user: user, group: group)
-            .pluck_first(:first_unread_pm_at)
+          GroupUser.where(user: user, group: group).pluck_first(:first_unread_pm_at)
         else
           user_first_unread_pm_at = user_first_unread_pm_at(user)
 
-          group_first_unread_pm_at = GroupUser
-            .where(user: user)
-            .minimum(:first_unread_pm_at)
+          group_first_unread_pm_at = GroupUser.where(user: user).minimum(:first_unread_pm_at)
 
           [user_first_unread_pm_at, group_first_unread_pm_at].compact.min
         end
 
-      if first_unread_pm_at
-        list = list.where("topics.updated_at >= ?", first_unread_pm_at)
-      end
+      list = list.where("topics.updated_at >= ?", first_unread_pm_at) if first_unread_pm_at
 
       list
     end
@@ -198,7 +205,7 @@ class TopicQuery
     def filter_private_message_new(user, type)
       TopicQuery.new_filter(
         private_messages_for(user, type),
-        treat_as_new_topic_start_date: user.user_option.treat_as_new_topic_start_date
+        treat_as_new_topic_start_date: user.user_option.treat_as_new_topic_start_date,
       )
     end
 
@@ -208,12 +215,12 @@ class TopicQuery
       group_id = group.id
       return list if group_id.nil?
 
-      selected_values = list.select_values.empty? ? ['topics.*'] : list.select_values
+      selected_values = list.select_values.empty? ? ["topics.*"] : list.select_values
       selected_values << "COALESCE(tg.last_read_post_number, 0) AS last_read_post_number"
 
-      list
-        .joins("LEFT OUTER JOIN topic_groups tg ON topics.id = tg.topic_id AND tg.group_id = #{group_id}")
-        .select(*selected_values)
+      list.joins(
+        "LEFT OUTER JOIN topic_groups tg ON topics.id = tg.topic_id AND tg.group_id = #{group_id}",
+      ).select(*selected_values)
     end
 
     def filter_archived(list, user, archived: true)
@@ -249,9 +256,10 @@ class TopicQuery
     end
 
     def not_archived(list, user)
-      list.joins("LEFT JOIN user_archived_messages um
-                         ON um.user_id = #{user.id.to_i} AND um.topic_id = topics.id")
-        .where('um.user_id IS NULL')
+      list.joins(
+        "LEFT JOIN user_archived_messages um
+                         ON um.user_id = #{user.id.to_i} AND um.topic_id = topics.id",
+      ).where("um.user_id IS NULL")
     end
 
     def not_archived_in_groups(list)
@@ -269,12 +277,10 @@ class TopicQuery
     end
 
     def group
-      @group ||= begin
-        Group
-          .where('name ilike ?', @options[:group_name])
-          .select(:id, :publish_read_state)
-          .first
-      end
+      @group ||=
+        begin
+          Group.where("name ilike ?", @options[:group_name]).select(:id, :publish_read_state).first
+        end
     end
 
     def user_first_unread_pm_at(user)

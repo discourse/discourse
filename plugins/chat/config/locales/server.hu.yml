@@ -23,13 +23,12 @@ hu:
     chat_channel_archive_complete:
       title: "A csevegőcsatorna archiválása kész"
       subject_template: "A csevegőcsatorna archiválása sikeresen befejeződött"
-      text_body_template: |
-        A(z) **\#%{channel_name}** csevegőcsatorna archiválása sikeresen befejeződött. Az üzenetek átmásolásra kerültek a(z) [ <%{topic_title}](%{topic_url}) témába.
     chat_channel_archive_failed:
       title: "A csevegőcsatorna archiválása sikertelen"
       subject_template: "A csevegőcsatorna archiválása sikertelen"
-      text_body_template: |
-        A(z) **\#%{channel_name}** csevegőcsatorna archiválása nem sikerült. %{messages_archived} üzenet archiválásra került. A részben archivált üzeneteket a(z) [%{topic_title}](%{topic_url}) témába lettek másolva. Keresse fel a(z) %{channel_url} csatornát az újbóli próbálkozáshoz.
+    chat_channel_archive_failed_no_topic:
+      title: "A csevegőcsatorna archiválása sikertelen"
+      subject_template: "A csevegőcsatorna archiválása sikertelen"
   chat:
     deleted_chat_username: törölt
     errors:
@@ -43,6 +42,7 @@ hu:
       duplicate_message: "Nemrég küldött egy azonos tartalmú üzenetet."
       delete_channel_failed: "A csatorna törlése sikertelen, próbálja meg újra."
       minimum_length_not_met: "Az üzenet túl rövid, legalább %{minimum} karaktert kell tartalmaznia."
+      message_too_long: "Az üzenet túl hosszú, az üzenetek legfeljebb %{maximum} karakterekből állhatnak."
       max_reactions_limit_reached: "Új reakciók nem engedélyezettek ezen az üzeneten."
       message_move_invalid_channel: "A forrás- és célcsatornának nyilvános csatornának kell lennie."
       message_move_no_messages_found: "A megadott üzenetazonosítókkal nem találhatók üzenetek."
@@ -92,6 +92,10 @@ hu:
         single_user: "%{user}"
         multi_user: "%{users}"
         multi_user_truncated: "%{users} és még %{leftover} fő"
+    category_channel:
+      errors:
+        slug_contains_non_ascii_chars: "nem ASCII karaktereket tartalmaz"
+        is_already_in_use: "már használatban van"
     personal_chat: "személyes csevegés"
     onebox:
       x_members:
@@ -129,11 +133,7 @@ hu:
         other: "Új csevegőüzenetei érkeztek"
       from: "%{site_name}"
       subject:
-        direct_message:
-          one: "[%{email_prefix}] Új üzenet a következőtől: %{message_title}"
-          other: "[%{email_prefix}] Új üzenetek a következőktől: %{message_title} és %{others}"
-        other_direct_message: "a következőtől: %{message_title}"
-        others: "és még %{count} fő"
+        direct_message_from_1: "[%{email_prefix}] Új üzenet a következőtől: %{username}"
       view_messages:
         one: "Üzenet megtekintése"
         other: "%{count} üzenet megtekintése"

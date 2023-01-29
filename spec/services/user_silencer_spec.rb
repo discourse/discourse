@@ -5,12 +5,11 @@ RSpec.describe UserSilencer do
   fab!(:post) { Fabricate(:post, user: user) }
   fab!(:admin) { Fabricate(:admin) }
 
-  describe 'silence' do
-
+  describe "silence" do
     let(:silencer) { UserSilencer.new(user) }
     subject(:silence_user) { silencer.silence }
 
-    it 'silences the user correctly' do
+    it "silences the user correctly" do
       expect { UserSilencer.silence(user, admin) }.to change { user.reload.silenced? }
 
       # no need to silence as we are already silenced
@@ -22,11 +21,12 @@ RSpec.describe UserSilencer do
       expect(post.hidden).to eq(true)
 
       # history should be right
-      count = UserHistory.where(
-        action: UserHistory.actions[:silence_user],
-        acting_user_id: admin.id,
-        target_user_id: user.id
-      ).count
+      count =
+        UserHistory.where(
+          action: UserHistory.actions[:silence_user],
+          acting_user_id: admin.id,
+          target_user_id: user.id,
+        ).count
 
       expect(count).to eq(1)
     end
@@ -38,7 +38,7 @@ RSpec.describe UserSilencer do
       expect(ActionMailer::Base.deliveries.size).to eq(0)
     end
 
-    it 'does not hide posts for tl1' do
+    it "does not hide posts for tl1" do
       user.update!(trust_level: 1)
 
       UserSilencer.silence(user, admin)
@@ -67,26 +67,24 @@ RSpec.describe UserSilencer do
       expect(old_post.topic).to be_visible
     end
 
-    context 'with a plugin hook' do
+    context "with a plugin hook" do
       before do
-        @override_silence_message = -> (opts) do
+        @override_silence_message = ->(opts) {
           opts[:silence_message_params][:message_title] = "override title"
           opts[:silence_message_params][:message_raw] = "override raw"
-        end
+        }
 
         DiscourseEvent.on(:user_silenced, &@override_silence_message)
       end
 
-      after do
-        DiscourseEvent.off(:user_silenced, &@override_silence_message)
-      end
+      after { DiscourseEvent.off(:user_silenced, &@override_silence_message) }
 
-      it 'allows the message to be overridden' do
+      it "allows the message to be overridden" do
         UserSilencer.silence(user, admin)
         # force a reload in case instance has no posts
         system_user = User.find(Discourse::SYSTEM_USER_ID)
 
-        post = system_user.posts.order('posts.id desc').first
+        post = system_user.posts.order("posts.id desc").first
 
         expect(post.topic.title).to eq("override title")
         expect(post.raw).to eq("override raw")
@@ -94,28 +92,26 @@ RSpec.describe UserSilencer do
     end
   end
 
-  describe 'unsilence' do
-
-    it 'unsilences the user correctly' do
+  describe "unsilence" do
+    it "unsilences the user correctly" do
       user.update!(silenced_till: 1.year.from_now)
 
       expect { UserSilencer.unsilence(user, admin) }.to change { user.reload.silenced? }
 
       # sends a message
-      pm = user.topics_allowed.order('topics.id desc').first
+      pm = user.topics_allowed.order("topics.id desc").first
       title = I18n.t("system_messages.unsilenced.subject_template")
       expect(pm.title).to eq(title)
 
       # logs it
-      count = UserHistory.where(
-        action: UserHistory.actions[:unsilence_user],
-        acting_user_id: admin.id,
-        target_user_id: user.id
-      ).count
+      count =
+        UserHistory.where(
+          action: UserHistory.actions[:unsilence_user],
+          acting_user_id: admin.id,
+          target_user_id: user.id,
+        ).count
 
       expect(count).to eq(1)
     end
-
   end
-
 end

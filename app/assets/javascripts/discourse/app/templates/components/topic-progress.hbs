@@ -4,11 +4,21 @@
 
 {{#if this.showBackButton}}
   <div class="progress-back-container">
-    <DButton @label="topic.timeline.back" @class="btn-primary progress-back" @action={{action "goBack"}} @icon="arrow-down" />
+    <DButton
+      @label="topic.timeline.back"
+      @class="btn-primary progress-back"
+      @action={{action "goBack"}}
+      @icon="arrow-down"
+    />
   </div>
 {{/if}}
 
-<nav title={{i18n "topic.progress.title"}} class={{if this.hideProgress "hidden"}} id="topic-progress" style={{html-safe this.progressStyle}}>
+<nav
+  title={{i18n "topic.progress.title"}}
+  class={{if this.hideProgress "hidden"}}
+  id="topic-progress"
+  style={{html-safe this.progressStyle}}
+>
   <div class="nums">
     <h4>{{this.progressPosition}}</h4>
     <span class={{if this.hugeNumberOfPosts "hidden"}}>
@@ -19,4 +29,8 @@
   <div class="bg"></div>
 </nav>
 
-<PluginOutlet @name="after-topic-progress" @tagName="" @connectorTagName="div" />
+<PluginOutlet
+  @name="after-topic-progress"
+  @tagName=""
+  @connectorTagName="div"
+/>

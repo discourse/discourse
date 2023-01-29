@@ -25,6 +25,9 @@ th:
       join: "เข้าร่วม"
       mention_warning:
         dismiss: "ซ่อน"
+        groups:
+          users_limit:
+            other: "%{count} ผู้ใช้"
       reply: "ตอบ"
       edit: "แก้ไข"
       bookmark_message: "บุ๊คมาร์ค"
@@ -45,6 +48,7 @@ th:
         yesterday: เมื่อวาน
       about_view:
         title: ชื่อเรื่อง
+        name: ชื่อ
         description: รายละเอียด
       channel_info:
         back_to_channel: "กลับ"
@@ -73,6 +77,7 @@ th:
         save: "บันทึก"
         saved: "บันทึกแล้ว"
         unfollow: "ออก"
+        admin_title: "ผู้ดูแลระบบ"
       incoming_webhooks:
         back: "กลับ"
         description: "รายละเอียด"

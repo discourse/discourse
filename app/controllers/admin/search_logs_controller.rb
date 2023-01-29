@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class Admin::SearchLogsController < Admin::StaffController
-
   def index
     period = params[:period] || "all"
     search_type = params[:search_type] || "all"
@@ -22,5 +21,4 @@ class Admin::SearchLogsController < Admin::StaffController
     details[:search_result] = serialize_data(result, GroupedSearchResultSerializer, result: result)
     render_json_dump(term: details)
   end
-
 end

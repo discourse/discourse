@@ -1,8 +1,14 @@
-<LoginModal @loginName={{this.loginName}} @loginPassword={{this.loginPassword}} @secondFactorToken={{this.secondFactorToken}} @action={{action "login"}}>
+<LoginModal
+  @loginName={{this.loginName}}
+  @loginPassword={{this.loginPassword}}
+  @secondFactorToken={{this.secondFactorToken}}
+  @action={{action "login"}}
+>
   <PluginOutlet @name="login-before-modal-body" @connectorTagName="div" />
   <DModalBody @class={{this.modalBodyClasses}}>
     <div class="login-welcome-header">
-      <h1 class="login-title">{{i18n "login.header_title"}}</h1> <img src={{this.wavingHandURL}} alt="" class="waving-hand">
+      <h1 class="login-title">{{i18n "login.header_title"}}</h1>
+      <img src={{this.wavingHandURL}} alt="" class="waving-hand" />
       <p class="login-subheader">{{i18n "login.subheader_title"}}</p>
     </div>
     {{#if this.showLoginButtons}}
@@ -13,8 +19,19 @@
       <form id="login-form" method="post">
         <div id="credentials" class={{this.credentialsClass}}>
           <div class="input-group">
-            <Input @value={{this.loginName}} class={{value-entered this.loginName}} @type="email" id="login-account-name" autocorrect="off" autocapitalize="off" disabled={{this.showSecondFactor}} autofocus="autofocus" />
-            <label class="alt-placeholder" for="login-account-name">{{i18n "login.email_placeholder"}}</label>
+            <Input
+              @value={{this.loginName}}
+              class={{value-entered this.loginName}}
+              @type="email"
+              id="login-account-name"
+              autocorrect="off"
+              autocapitalize="off"
+              disabled={{this.showSecondFactor}}
+              autofocus="autofocus"
+            />
+            <label class="alt-placeholder" for="login-account-name">{{i18n
+                "login.email_placeholder"
+              }}</label>
             {{#if this.showLoginWithEmailLink}}
               <a href id="email-login-link" {{on "click" this.emailLogin}}>
                 {{i18n "email_login.login_link"}}
@@ -22,17 +39,48 @@
             {{/if}}
           </div>
           <div class="input-group">
-            <Input @value={{this.loginPassword}} class={{value-entered this.loginPassword}} @type="password" id="login-account-password" maxlength="200" disabled={{this.showSecondFactor}} />
-            <label class="alt-placeholder" for="login-account-password">{{i18n "login.password"}}</label>
-            <a href id="forgot-password-link" {{on "click" this.handleForgotPassword}}>{{i18n "forgot_password.action"}}</a>
+            <Input
+              @value={{this.loginPassword}}
+              class={{value-entered this.loginPassword}}
+              @type="password"
+              id="login-account-password"
+              maxlength="200"
+              disabled={{this.showSecondFactor}}
+            />
+            <label class="alt-placeholder" for="login-account-password">{{i18n
+                "login.password"
+              }}</label>
+            <a
+              href
+              id="forgot-password-link"
+              {{on "click" this.handleForgotPassword}}
+            >{{i18n "forgot_password.action"}}</a>
           </div>
         </div>
-        <SecondFactorForm @secondFactorMethod={{this.secondFactorMethod}} @secondFactorToken={{this.secondFactorToken}} @class={{this.secondFactorClass}} @backupEnabled={{this.backupEnabled}} @isLogin={{true}}>
+        <SecondFactorForm
+          @secondFactorMethod={{this.secondFactorMethod}}
+          @secondFactorToken={{this.secondFactorToken}}
+          @class={{this.secondFactorClass}}
+          @backupEnabled={{this.backupEnabled}}
+          @isLogin={{true}}
+        >
           {{#if this.showSecurityKey}}
-            <SecurityKeyForm @allowedCredentialIds={{this.securityKeyAllowedCredentialIds}} @challenge={{this.securityKeyChallenge}} @showSecurityKey={{this.showSecurityKey}} @showSecondFactor={{this.showSecondFactor}} @secondFactorMethod={{this.secondFactorMethod}} @otherMethodAllowed={{this.otherMethodAllowed}} @action={{action "authenticateSecurityKey"}}>
-            </SecurityKeyForm>
+            <SecurityKeyForm
+              @allowedCredentialIds={{this.securityKeyAllowedCredentialIds}}
+              @challenge={{this.securityKeyChallenge}}
+              @showSecurityKey={{this.showSecurityKey}}
+              @showSecondFactor={{this.showSecondFactor}}
+              @secondFactorMethod={{this.secondFactorMethod}}
+              @otherMethodAllowed={{this.otherMethodAllowed}}
+              @action={{action "authenticateSecurityKey"}}
+            />
           {{else}}
-            <SecondFactorInput @value={{this.secondFactorToken}} @inputId="login-second-factor" @secondFactorMethod={{this.secondFactorMethod}} @backupEnabled={{this.backupEnabled}} />
+            <SecondFactorInput
+              @value={{this.secondFactorToken}}
+              @inputId="login-second-factor"
+              @secondFactorMethod={{this.secondFactorMethod}}
+              @backupEnabled={{this.backupEnabled}}
+            />
           {{/if}}
         </SecondFactorForm>
       </form>
@@ -42,12 +90,24 @@
 
   <div class="modal-footer">
     {{#if this.canLoginLocal}}
-      {{#unless this.showSecurityKey }}
-        <DButton @action={{action "login"}} @id="login-button" @icon="unlock" @label={{this.loginButtonLabel}} @disabled={{this.loginDisabled}} @class="btn-large btn-primary" />
+      {{#unless this.showSecurityKey}}
+        <DButton
+          @action={{action "login"}}
+          @id="login-button"
+          @icon="unlock"
+          @label={{this.loginButtonLabel}}
+          @disabled={{this.loginDisabled}}
+          @class="btn-large btn-primary"
+        />
       {{/unless}}
 
       {{#if this.showSignupLink}}
-        <DButton @class="btn-large" @id="new-account-link" @action={{route-action "showCreateAccount"}} @label="create_account.title" />
+        <DButton
+          @class="btn-large"
+          @id="new-account-link"
+          @action={{route-action "showCreateAccount"}}
+          @label="create_account.title"
+        />
       {{/if}}
     {{/if}}
   </div>

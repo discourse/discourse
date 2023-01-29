@@ -24,6 +24,11 @@ ro:
       join: "Alătură-te"
       mention_warning:
         dismiss: "renunță"
+        groups:
+          users_limit:
+            one: "%{count} utilizator"
+            few: "%{count} utilizatori"
+            other: "%{count} utilizatori"
       reply: "Răspunde"
       edit: "Modifică"
       rebake_message: "Reconstruieşte HTML"
@@ -45,6 +50,7 @@ ro:
         yesterday: Ieri
       about_view:
         title: Titlu
+        name: Nume
         description: Descriere
       channel_info:
         back_to_channel: "Înapoi"
@@ -73,6 +79,7 @@ ro:
         save: "Salvare"
         saved: "Salvat"
         unfollow: "Părăsește"
+        admin_title: "Administrator"
       incoming_webhooks:
         back: "Înapoi"
         description: "Descriere"

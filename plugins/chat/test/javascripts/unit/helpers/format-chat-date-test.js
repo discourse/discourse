@@ -14,7 +14,7 @@ module("Discourse Chat | Unit | Helpers | format-chat-date", function (hooks) {
 
     assert.equal(
       query(".chat-time").getAttribute("href"),
-      "/chat/channel/1/-?messageId=1"
+      "/chat/c/-/1?messageId=1"
     );
   });
 });

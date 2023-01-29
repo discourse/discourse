@@ -9,7 +9,10 @@ class ReviewablePost < Reviewable
     return unless SiteSetting.review_every_post
     return if post.post_type != Post.types[:regular] || post.topic.private_message?
     return if Reviewable.pending.where(target: post).exists?
-    return if created_or_edited_by.bot? || created_or_edited_by.staff? || created_or_edited_by.has_trust_level?(TrustLevel[4])
+    if created_or_edited_by.bot? || created_or_edited_by.staff? ||
+         created_or_edited_by.has_trust_level?(TrustLevel[4])
+      return
+    end
     system_user = Discourse.system_user
 
     needs_review!(
@@ -17,13 +20,9 @@ class ReviewablePost < Reviewable
       topic: post.topic,
       created_by: system_user,
       reviewable_by_moderator: true,
-      potential_spam: false
+      potential_spam: false,
     ).tap do |reviewable|
-      reviewable.add_score(
-        system_user,
-        ReviewableScore.types[:needs_approval],
-        force_review: true
-      )
+      reviewable.add_score(system_user, ReviewableScore.types[:needs_approval], force_review: true)
     end
   end
 
@@ -31,26 +30,41 @@ class ReviewablePost < Reviewable
     return unless pending?
 
     if post.trashed? && guardian.can_recover_post?(post)
-      build_action(actions, :approve_and_restore, icon: 'check')
+      build_action(actions, :approve_and_restore, icon: "check")
     elsif post.hidden?
-      build_action(actions, :approve_and_unhide, icon: 'check')
+      build_action(actions, :approve_and_unhide, icon: "check")
     else
-      build_action(actions, :approve, icon: 'check')
+      build_action(actions, :approve, icon: "check")
     end
 
-    reject = actions.add_bundle(
-      "#{id}-reject", icon: 'times', label: 'reviewables.actions.reject.bundle_title'
-    )
+    reject =
+      actions.add_bundle(
+        "#{id}-reject",
+        icon: "times",
+        label: "reviewables.actions.reject.bundle_title",
+      )
 
     if post.trashed?
-      build_action(actions, :reject_and_keep_deleted, icon: 'trash-alt', bundle: reject)
+      build_action(actions, :reject_and_keep_deleted, icon: "trash-alt", bundle: reject)
     elsif guardian.can_delete_post_or_topic?(post)
-      build_action(actions, :reject_and_delete, icon: 'trash-alt', bundle: reject)
+      build_action(actions, :reject_and_delete, icon: "trash-alt", bundle: reject)
     end
 
     if guardian.can_suspend?(target_created_by)
-      build_action(actions, :reject_and_suspend, icon: 'ban', bundle: reject, client_action: 'suspend')
-      build_action(actions, :reject_and_silence, icon: 'microphone-slash', bundle: reject, client_action: 'silence')
+      build_action(
+        actions,
+        :reject_and_suspend,
+        icon: "ban",
+        bundle: reject,
+        client_action: "suspend",
+      )
+      build_action(
+        actions,
+        :reject_and_silence,
+        icon: "microphone-slash",
+        bundle: reject,
+        client_action: "silence",
+      )
     end
   end
 
@@ -90,7 +104,15 @@ class ReviewablePost < Reviewable
     @post ||= (target || Post.with_deleted.find_by(id: target_id))
   end
 
-  def build_action(actions, id, icon:, button_class: nil, bundle: nil, client_action: nil, confirm: false)
+  def build_action(
+    actions,
+    id,
+    icon:,
+    button_class: nil,
+    bundle: nil,
+    client_action: nil,
+    confirm: false
+  )
     actions.add(id, bundle: bundle) do |action|
       prefix = "reviewables.actions.#{id}"
       action.icon = icon
@@ -103,7 +125,7 @@ class ReviewablePost < Reviewable
   end
 
   def successful_transition(to_state, recalculate_score: true)
-    create_result(:success, to_state)  do |result|
+    create_result(:success, to_state) do |result|
       result.recalculate_score = recalculate_score
       result.update_flag_stats = { status: to_state, user_ids: [created_by_id] }
     end

@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 class DiscourseConnectProvider < DiscourseConnectBase
-  class BlankSecret < RuntimeError; end
-  class BlankReturnUrl < RuntimeError; end
+  class BlankSecret < RuntimeError
+  end
+  class BlankReturnUrl < RuntimeError
+  end
 
   def self.parse(payload, sso_secret = nil, **init_kwargs)
     parsed_payload = Rack::Utils.parse_query(payload)
@@ -15,11 +17,16 @@ class DiscourseConnectProvider < DiscourseConnectBase
     if sso_secret.blank?
       begin
         host = URI.parse(return_sso_url).host
-        Rails.logger.warn("SSO failed; website #{host} is not in the `discourse_connect_provider_secrets` site settings")
+        Rails.logger.warn(
+          "SSO failed; website #{host} is not in the `discourse_connect_provider_secrets` site settings",
+        )
       rescue StandardError => e
         # going for StandardError cause URI::Error may not be enough, eg it parses to something not
         # responding to host
-        Discourse.warn_exception(e, message: "SSO failed; invalid or missing return_sso_url in SSO payload")
+        Discourse.warn_exception(
+          e,
+          message: "SSO failed; invalid or missing return_sso_url in SSO payload",
+        )
       end
 
       raise BlankSecret
@@ -31,7 +38,7 @@ class DiscourseConnectProvider < DiscourseConnectBase
   def self.lookup_return_sso_url(parsed_payload)
     decoded = Base64.decode64(parsed_payload["sso"])
     decoded_hash = Rack::Utils.parse_query(decoded)
-    decoded_hash['return_sso_url']
+    decoded_hash["return_sso_url"]
   end
 
   def self.lookup_sso_secret(return_sso_url, parsed_payload)
@@ -39,21 +46,23 @@ class DiscourseConnectProvider < DiscourseConnectBase
 
     return_url_host = URI.parse(return_sso_url).host
 
-    provider_secrets = SiteSetting
-      .discourse_connect_provider_secrets
-      .split("\n")
-      .map { |row| row.split("|", 2) }
-      .sort_by { |k, _| k }
-      .reverse
+    provider_secrets =
+      SiteSetting
+        .discourse_connect_provider_secrets
+        .split("\n")
+        .map { |row| row.split("|", 2) }
+        .sort_by { |k, _| k }
+        .reverse
 
     first_domain_match = nil
 
-    pair = provider_secrets.find do |domain, configured_secret|
-      if WildcardDomainChecker.check_domain(domain, return_url_host)
-        first_domain_match ||= configured_secret
-        sign(parsed_payload["sso"], configured_secret) == parsed_payload["sig"]
+    pair =
+      provider_secrets.find do |domain, configured_secret|
+        if WildcardDomainChecker.check_domain(domain, return_url_host)
+          first_domain_match ||= configured_secret
+          sign(parsed_payload["sso"], configured_secret) == parsed_payload["sig"]
+        end
       end
-    end
 
     # falls back to a secret which will fail to validate in DiscourseConnectBase
     # this ensures error flow is correct

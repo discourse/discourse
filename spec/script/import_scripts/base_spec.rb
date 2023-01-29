@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 
-require_relative '../../../script/import_scripts/base'
+require_relative "../../../script/import_scripts/base"
 
 RSpec.describe ImportScripts::Base do
-  before do
-    STDOUT.stubs(:write)
-  end
+  before { STDOUT.stubs(:write) }
 
   class MockSpecImporter < ImportScripts::Base
     def initialize(data)
@@ -21,9 +19,7 @@ RSpec.describe ImportScripts::Base do
 
     def import_users
       users = @import_data[:users]
-      create_users(users) do |row|
-        { email: row[:email], id: row[:id] }
-      end
+      create_users(users) { |row| { email: row[:email], id: row[:id] } }
     end
 
     def import_posts
@@ -36,9 +32,7 @@ RSpec.describe ImportScripts::Base do
 
     def import_bookmarks
       bookmarks = @import_data[:bookmarks]
-      create_bookmarks(bookmarks) do |row|
-        { post_id: row[:post_id], user_id: row[:user_id] }
-      end
+      create_bookmarks(bookmarks) { |row| { post_id: row[:post_id], user_id: row[:user_id] } }
     end
   end
 
@@ -51,7 +45,7 @@ RSpec.describe ImportScripts::Base do
     MockSpecImporter.new(import_data).perform
     expect(Bookmark.where(bookmarkable_type: "Post").count).to eq(5)
     expect(Post.count).to eq(5)
-    expect(User.where('id > 0').count).to eq(1)
+    expect(User.where("id > 0").count).to eq(1)
     expect(SiteSetting.purge_unactivated_users_grace_period_days).to eq(60)
   end
 

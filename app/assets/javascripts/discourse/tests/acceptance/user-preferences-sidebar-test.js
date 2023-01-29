@@ -17,8 +17,7 @@ acceptance("User Preferences - Sidebar", function (needs) {
   });
 
   needs.settings({
-    enable_experimental_sidebar_hamburger: true,
-    enable_sidebar: true,
+    navigation_menu: "sidebar",
     tagging_enabled: true,
   });
 
@@ -51,6 +50,14 @@ acceptance("User Preferences - Sidebar", function (needs) {
         });
       }
     });
+  });
+
+  test("sidebar preferences link is not shown when navigation menu is set to legacy", async function (assert) {
+    this.siteSettings.navigation_menu = "legacy";
+
+    await visit("/u/eviltrout/preferences");
+
+    assert.dom(".nav-sidebar").doesNotExist();
   });
 
   test("user encountering error when adding categories to sidebar", async function (assert) {

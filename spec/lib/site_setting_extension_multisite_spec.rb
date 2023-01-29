@@ -1,28 +1,18 @@
 # frozen_string_literal: true
 
 RSpec.describe SiteSettingExtension, type: :multisite do
-  before do
-    MessageBus.off
-  end
+  before { MessageBus.off }
 
-  after do
-    MessageBus.on
-  end
+  after { MessageBus.on }
 
-  let(:provider_local) do
-    SiteSettings::LocalProcessProvider.new
-  end
+  let(:provider_local) { SiteSettings::LocalProcessProvider.new }
 
-  let(:settings) do
-    new_settings(provider_local)
-  end
+  let(:settings) { new_settings(provider_local) }
 
   it "has no db cross talk" do
     settings.setting(:hello, 1)
     settings.hello = 100
 
-    test_multisite_connection("second") do
-      expect(settings.hello).to eq(1)
-    end
+    test_multisite_connection("second") { expect(settings.hello).to eq(1) }
   end
 end

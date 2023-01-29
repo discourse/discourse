@@ -30,15 +30,15 @@ module("Discourse Chat | Component | chat-live-pane", function (hooks) {
     );
 
     await render(
-      hbs`{{chat-live-pane loadingMorePast=true chat=chat chatChannel=channel}}`
+      hbs`<ChatLivePane @loadingMorePast={{true}} @chat={{this.chat}} @chatChannel={{this.channel}} />`
     );
 
-    assert.ok(exists(".chat-skeleton"));
+    assert.true(exists(".chat-skeleton"));
 
     await render(
-      hbs`{{chat-live-pane loadingMoreFuture=true chat=chat chatChannel=channel}}`
+      hbs`<ChatLivePane @loadingMoreFuture={{true}} @chat={{this.chat}} @chatChannel={{this.channel}} />`
     );
 
-    assert.ok(exists(".chat-skeleton"));
+    assert.true(exists(".chat-skeleton"));
   });
 });

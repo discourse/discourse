@@ -1,14 +1,7 @@
 # frozen_string_literal: true
 
 class NewPostResultSerializer < ApplicationSerializer
-  attributes :action,
-             :post,
-             :errors,
-             :success,
-             :pending_count,
-             :reason,
-             :message,
-             :route_to
+  attributes :action, :post, :errors, :success, :pending_count, :reason, :message, :route_to
 
   has_one :pending_post, serializer: TopicPendingPostSerializer, root: false, embed: :objects
 
@@ -81,5 +74,4 @@ class NewPostResultSerializer < ApplicationSerializer
   def include_message?
     object.message.present?
   end
-
 end

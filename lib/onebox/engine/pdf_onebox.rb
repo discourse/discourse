@@ -6,7 +6,7 @@ module Onebox
       include Engine
       include LayoutSupport
 
-      matches_regexp(/^(https?:)?\/\/.*\.pdf(\?.*)?$/i)
+      matches_regexp(%r{^(https?:)?//.*\.pdf(\?.*)?$}i)
       always_https
 
       private
@@ -14,7 +14,7 @@ module Onebox
       def data
         begin
           size = Onebox::Helpers.fetch_content_length(@url)
-        rescue
+        rescue StandardError
           raise "Unable to read pdf file: #{@url}"
         end
 

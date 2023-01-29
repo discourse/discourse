@@ -129,7 +129,7 @@ describe ChatMessage do
       expect(cooked).to eq(<<~COOKED.chomp)
         <div class="chat-transcript chat-transcript-chained" data-message-id="#{msg1.id}" data-username="chatbbcodeuser" data-datetime="#{msg1.created_at.iso8601}" data-channel-name="testchannel" data-channel-id="#{chat_channel.id}">
         <div class="chat-transcript-meta">
-        Originally sent in <a href="/chat/channel/#{chat_channel.id}/-">testchannel</a>
+        Originally sent in <a href="/chat/c/-/#{chat_channel.id}">testchannel</a>
         </div>
         <div class="chat-transcript-user">
         <div class="chat-transcript-user-avatar">
@@ -138,7 +138,7 @@ describe ChatMessage do
         <div class="chat-transcript-username">
         chatbbcodeuser</div>
         <div class="chat-transcript-datetime">
-        <a href="/chat/channel/#{chat_channel.id}/-?messageId=#{msg1.id}" title="#{msg1.created_at.iso8601}"></a>
+        <a href="/chat/c/-/#{chat_channel.id}?messageId=#{msg1.id}" title="#{msg1.created_at.iso8601}"></a>
         </div>
         </div>
         <div class="chat-transcript-messages">
@@ -235,12 +235,29 @@ describe ChatMessage do
     end
 
     it "supports category-hashtag plugin" do
+      # TODO (martin) Remove when enable_experimental_hashtag_autocomplete is default for all sites
+      SiteSetting.enable_experimental_hashtag_autocomplete = false
+
       category = Fabricate(:category)
 
       cooked = ChatMessage.cook("##{category.slug}")
 
       expect(cooked).to eq(
         "<p><a class=\"hashtag\" href=\"#{category.url}\">#<span>#{category.slug}</span></a></p>",
+      )
+    end
+
+    it "supports hashtag-autocomplete plugin" do
+      SiteSetting.chat_enabled = true
+      SiteSetting.enable_experimental_hashtag_autocomplete = true
+
+      category = Fabricate(:category)
+      user = Fabricate(:user)
+
+      cooked = ChatMessage.cook("##{category.slug}", user_id: user.id)
+
+      expect(cooked).to eq(
+        "<p><a class=\"hashtag-cooked\" href=\"#{category.url}\" data-type=\"category\" data-slug=\"#{category.slug}\"><svg class=\"fa d-icon d-icon-folder svg-icon svg-node\"><use href=\"#folder\"></use></svg><span>#{category.name}</span></a></p>",
       )
     end
 
@@ -292,7 +309,7 @@ describe ChatMessage do
       gif =
         Fabricate(:upload, original_filename: "cat.gif", width: 400, height: 300, extension: "gif")
       message = Fabricate(:chat_message, message: "")
-      ChatUpload.create(chat_message: message, upload: gif)
+      UploadReference.create(target: message, upload: gif)
 
       expect(message.excerpt).to eq "cat.gif"
     end
@@ -374,8 +391,8 @@ describe ChatMessage do
         )
       image2 =
         Fabricate(:upload, original_filename: "meme.jpg", width: 10, height: 10, extension: "jpg")
-      ChatUpload.create(chat_message: message, upload: image)
-      ChatUpload.create(chat_message: message, upload: image2)
+      UploadReference.create!(target: message, upload: image)
+      UploadReference.create!(target: message, upload: image2)
       expect(message.to_markdown).to eq(<<~MSG.chomp)
       hey friend, what's up?!
 
@@ -462,13 +479,20 @@ describe ChatMessage do
       expect { webhook_1.reload }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
-    it "destroys chat_uploads" do
+    it "destroys upload_references and chat_uploads" do
       message_1 = Fabricate(:chat_message)
-      chat_upload_1 = Fabricate(:chat_upload, chat_message: message_1)
+      upload_reference_1 = Fabricate(:upload_reference, target: message_1)
+      upload_1 = Fabricate(:upload)
+      # TODO (martin) Remove this when we remove ChatUpload completely, 2023-04-01
+      DB.exec(<<~SQL)
+        INSERT INTO chat_uploads(upload_id, chat_message_id, created_at, updated_at)
+        VALUES(#{upload_1.id}, #{message_1.id}, NOW(), NOW())
+      SQL
 
       message_1.destroy!
 
-      expect { chat_upload_1.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      expect(DB.query("SELECT * FROM chat_uploads WHERE upload_id = #{upload_1.id}")).to eq([])
+      expect { upload_reference_1.reload }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
     describe "bookmarks" do
@@ -483,5 +507,71 @@ describe ChatMessage do
         expect { bookmark_1.reload }.to raise_error(ActiveRecord::RecordNotFound)
       end
     end
+  end
+
+  describe "#rebake!" do
+    fab!(:chat_message) { Fabricate(:chat_message) }
+
+    describe "hashtags" do
+      fab!(:category) { Fabricate(:category) }
+      fab!(:group) { Fabricate(:group) }
+      fab!(:secure_category) { Fabricate(:private_category, group: group) }
+
+      before do
+        SiteSetting.chat_enabled = true
+        SiteSetting.enable_experimental_hashtag_autocomplete = true
+        SiteSetting.suppress_secured_categories_from_admin = true
+      end
+
+      it "keeps the same hashtags the user has permission to after rebake" do
+        group.add(chat_message.user)
+        chat_message.update!(
+          message:
+            "this is the message ##{category.slug} ##{secure_category.slug} ##{chat_message.chat_channel.slug}",
+        )
+        chat_message.cook
+        chat_message.save!
+
+        expect(chat_message.reload.cooked).to include(secure_category.name)
+
+        chat_message.rebake!
+        expect(chat_message.reload.cooked).to include(secure_category.name)
+      end
+    end
+  end
+
+  describe "#attach_uploads" do
+    fab!(:chat_message) { Fabricate(:chat_message) }
+    fab!(:upload_1) { Fabricate(:upload) }
+    fab!(:upload_2) { Fabricate(:upload) }
+
+    it "creates an UploadReference record for the provided uploads" do
+      chat_message.attach_uploads([upload_1, upload_2])
+      upload_references = UploadReference.where(upload_id: [upload_1, upload_2])
+      expect(chat_upload_count([upload_1, upload_2])).to eq(0)
+      expect(upload_references.count).to eq(2)
+      expect(upload_references.map(&:target_id).uniq).to eq([chat_message.id])
+      expect(upload_references.map(&:target_type).uniq).to eq(["ChatMessage"])
+    end
+
+    it "does nothing if the message record is new" do
+      expect { ChatMessage.new.attach_uploads([upload_1, upload_2]) }.to not_change {
+        chat_upload_count
+      }.and not_change { UploadReference.count }
+    end
+
+    it "does nothing for an empty uploads array" do
+      expect { chat_message.attach_uploads([]) }.to not_change {
+        chat_upload_count
+      }.and not_change { UploadReference.count }
+    end
+  end
+
+  # TODO (martin) Remove this when we remove ChatUpload completely, 2023-04-01
+  def chat_upload_count(uploads = nil)
+    return DB.query_single("SELECT COUNT(*) FROM chat_uploads").first if !uploads
+    DB.query_single(
+      "SELECT COUNT(*) FROM chat_uploads WHERE upload_id IN (#{uploads.map(&:id).join(",")})",
+    ).first
   end
 end

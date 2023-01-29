@@ -138,12 +138,6 @@
       color: var(--primary);
     }
 
-    .valid-mention {
-      padding: 0 4px 1px;
-      border-radius: 8px;
-      display: inline-block;
-    }
-
     img.ytp-thumbnail-image {
       height: 100%;
       max-height: unset;
@@ -219,13 +213,12 @@
 
     .dismiss-mention-warning {
       position: absolute;
-      top: 5px;
+      top: 15px;
       right: 5px;
       cursor: pointer;
     }
 
-    .cannot-see,
-    .without-membership {
+    .warning-item {
       margin: 0.25em 0;
     }
 
@@ -294,7 +287,7 @@
 }
 
 .has-full-page-chat .chat-message .onebox:not(img),
-.topic-chat-float-container .chat-message .onebox {
+.chat-drawer-container .chat-message .onebox {
   margin: 0.5em 0;
   border-width: 2px;
 
@@ -317,7 +310,7 @@
   }
 }
 
-.topic-chat-float-container .chat-message .onebox {
+.chat-drawer-container .chat-message .onebox {
   width: 85%;
   border: 2px solid var(--primary-low);
 

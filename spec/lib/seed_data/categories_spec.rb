@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'seed_data/categories'
+require "seed_data/categories"
 
 RSpec.describe SeedData::Categories do
   subject { SeedData::Categories.with_default_locale }
@@ -15,16 +15,11 @@ RSpec.describe SeedData::Categories do
 
   describe "#create" do
     def permissions(group, type)
-      {
-        group_id: Group::AUTO_GROUPS[group],
-        permission_type: CategoryGroup.permission_types[type]
-      }
+      { group_id: Group::AUTO_GROUPS[group], permission_type: CategoryGroup.permission_types[type] }
     end
 
     it "creates a missing category" do
-      expect { create_category }
-        .to change { Category.count }.by(1)
-        .and change { Topic.count }.by(1)
+      expect { create_category }.to change { Category.count }.by(1).and change { Topic.count }.by(1)
 
       category = Category.last
       expect(category.name).to eq(I18n.t("staff_category_name"))
@@ -41,18 +36,14 @@ RSpec.describe SeedData::Categories do
       before { create_category }
 
       it "does not create another category" do
-        expect { create_category }
-          .to not_change { Category.count }
-          .and not_change { Topic.count }
+        expect { create_category }.to not_change { Category.count }.and not_change { Topic.count }
       end
 
       it "creates a missing 'About Category' topic" do
         category = Category.last
         Topic.delete(category.topic_id)
 
-        expect { create_category }
-          .to not_change { Category.count }
-          .and change { Topic.count }.by(1)
+        expect { create_category }.to not_change { Category.count }.and change { Topic.count }.by(1)
 
         category.reload
         expect(description_post(category).raw).to eq(I18n.t("staff_category_description"))
@@ -65,8 +56,7 @@ RSpec.describe SeedData::Categories do
 
         expect(category.category_groups.count).to eq(0)
 
-        expect { create_category }
-          .to change { CategoryGroup.count }.by(1)
+        expect { create_category }.to change { CategoryGroup.count }.by(1)
 
         category.reload
         expect(category.category_groups.count).to eq(1)
@@ -84,8 +74,7 @@ RSpec.describe SeedData::Categories do
         subcategory.set_permissions(group => :full)
         subcategory.save!
 
-        expect { create_category }
-          .to change { CategoryGroup.count }.by(1)
+        expect { create_category }.to change { CategoryGroup.count }.by(1)
 
         category.reload
         expect(category.category_groups.count).to eq(1)
@@ -96,15 +85,15 @@ RSpec.describe SeedData::Categories do
     it "does not seed the general category for non-new sites" do
       Fabricate(:user) # If the site has human users don't seed
 
-      expect { create_category("general_category_id") }
-        .to not_change { Category.count }
-        .and not_change { Topic.count }
+      expect { create_category("general_category_id") }.to not_change {
+        Category.count
+      }.and not_change { Topic.count }
     end
 
     it "seeds the general category for new sites" do
-      expect { create_category("general_category_id") }
-        .to change { Category.count }
-        .and change { Topic.count }
+      expect { create_category("general_category_id") }.to change { Category.count }.and change {
+              Topic.count
+            }
 
       expect(Category.last.name).to eq("General")
       expect(SiteSetting.default_composer_category).to eq(Category.last.id)
@@ -117,7 +106,7 @@ RSpec.describe SeedData::Categories do
       site_feedback_category = Category.last
       create_category("general_category_id")
       general_category = Category.last
-      site_setting_ids = SiteSetting.default_sidebar_categories.split('|')
+      site_setting_ids = SiteSetting.default_sidebar_categories.split("|")
       create_category("uncategorized_category_id")
 
       expect(site_setting_ids[0].to_i).to eq(staff_category.id)
@@ -135,8 +124,7 @@ RSpec.describe SeedData::Categories do
 
       expect(category.category_groups.first).to have_attributes(permissions(:trust_level_2, :full))
 
-      expect { create_category("lounge_category_id") }
-        .not_to change { CategoryGroup.count }
+      expect { create_category("lounge_category_id") }.not_to change { CategoryGroup.count }
 
       category.reload
       expect(category.category_groups.first).to have_attributes(permissions(:trust_level_2, :full))
@@ -195,9 +183,13 @@ RSpec.describe SeedData::Categories do
       Post.last.revise(Fabricate(:admin), raw: "Hello world")
 
       expected_options = [
-        { id: "uncategorized_category_id", name: I18n.t("uncategorized_category_name"), selected: true },
+        {
+          id: "uncategorized_category_id",
+          name: I18n.t("uncategorized_category_name"),
+          selected: true,
+        },
         { id: "meta_category_id", name: I18n.t("meta_category_name"), selected: true },
-        { id: "general_category_id", name: I18n.t("general_category_name"), selected: false }
+        { id: "general_category_id", name: I18n.t("general_category_name"), selected: false },
       ]
 
       expect(subject.reseed_options).to eq(expected_options)

@@ -30,6 +30,7 @@ te:
         yesterday: నిన్న
       about_view:
         title: శీర్షిక
+        name: పేరు
         description: వివరణ
       channel_info:
         back_to_channel: "వెనుకకు"
@@ -49,6 +50,7 @@ te:
         followed: "చేరినారు"
         notifications: "ప్రకటనలు"
         save: "భద్రపరుచు"
+        admin_title: "అధికారి"
       incoming_webhooks:
         back: "వెనుకకు"
         description: "వివరణ"

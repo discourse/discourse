@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require 'category_badge'
+require "category_badge"
 
 RSpec.describe CategoryBadge do
   it "escapes HTML in category names / descriptions" do
-    c = Fabricate(:category, name: '<b>name</b>', description: '<b>title</b>')
+    c = Fabricate(:category, name: "<b>name</b>", description: "<b>title</b>")
 
     html = CategoryBadge.html_for(c)
 

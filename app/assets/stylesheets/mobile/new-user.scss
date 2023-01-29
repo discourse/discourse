@@ -12,6 +12,11 @@
     }
   }
 
+  // For backwards compatibility with legacy design
+  .user-secondary-navigation {
+    margin-top: 1.5em;
+  }
+
   .user-navigation-secondary {
     font-size: var(--font-up-1);
 
@@ -19,6 +24,62 @@
       flex-wrap: nowrap;
       li {
         flex: 1 0 auto;
+      }
+    }
+  }
+
+  .user-messages-page & {
+    .user-navigation-secondary {
+      display: grid;
+      grid-template-areas:
+        "dropdown controls"
+        "nav-pills nav-pills";
+      grid-template-columns: 1fr auto;
+      font-size: var(--font-up-1);
+      gap: 0.5em;
+
+      .category-breadcrumb {
+        grid-area: dropdown;
+      }
+
+      .horizontal-overflow-nav {
+        grid-area: nav-pills;
+      }
+
+      .navigation-controls {
+        grid-area: controls;
+        font-size: var(--font-down-2);
+
+        .btn {
+          padding: 0.5em 1em;
+        }
+
+        .d-button-label,
+        .select-kit-header-wrapper .name {
+          display: none;
+        }
+        .d-icon {
+          margin: 0;
+        }
+      }
+
+      .user-nav-messages-dropdown {
+        max-width: unset;
+      }
+
+      .combo-box-header {
+        font-size: var(--font-0);
+      }
+    }
+
+    tbody {
+      border-top-width: 1px;
+    }
+
+    .user-content {
+      margin: 0;
+      table {
+        margin-top: -1px; // align under nav border
       }
     }
   }
@@ -59,6 +120,6 @@
 
 .new-user-content-wrapper {
   .user-content {
-    margin-top: 2em;
+    margin-top: 1em;
   }
 }

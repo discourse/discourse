@@ -50,7 +50,7 @@ RSpec.describe Chat::DirectMessagesController do
       it "returns the channel" do
         get "/chat/direct_messages.json", params: { usernames: user1.username }
         expect(response.status).to eq(200)
-        expect(response.parsed_body["chat_channel"]["id"]).to eq(channel.id)
+        expect(response.parsed_body["channel"]["id"]).to eq(channel.id)
       end
 
       context "with more than two users" do
@@ -63,7 +63,7 @@ RSpec.describe Chat::DirectMessagesController do
                 usernames: [user1.username, user.username, user3.username].join(","),
               }
           expect(response.status).to eq(200)
-          expect(response.parsed_body["chat_channel"]["id"]).to eq(channel.id)
+          expect(response.parsed_body["channel"]["id"]).to eq(channel.id)
         end
       end
     end

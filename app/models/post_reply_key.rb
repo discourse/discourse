@@ -11,7 +11,7 @@ class PostReplyKey < ActiveRecord::Base
   validates :reply_key, presence: true
 
   def reply_key
-    super&.delete('-')
+    super&.delete("-")
   end
 
   def self.generate_reply_key

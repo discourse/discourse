@@ -24,6 +24,10 @@ et:
       join: "Liitu"
       mention_warning:
         dismiss: "ignoreeri"
+        groups:
+          users_limit:
+            one: "%{count} kasutaja"
+            other: "%{count} kasutajat"
       reply: "Vasta"
       edit: "Muuda"
       rebake_message: "Rekonstrueeri HTML"
@@ -44,6 +48,7 @@ et:
         yesterday: Eile
       about_view:
         title: Pealkiri
+        name: Nimi
         description: Kirjeldus
       channel_info:
         back_to_channel: "Tagasi"
@@ -72,6 +77,7 @@ et:
         save: "Salvesta"
         saved: "Salvestatud"
         unfollow: "Lahku"
+        admin_title: "Admin"
       incoming_webhooks:
         back: "Tagasi"
         description: "Kirjeldus"

@@ -14,6 +14,8 @@ describe Jobs::EmailChatNotifications do
   end
 
   context "when chat is not enabled" do
+    before { SiteSetting.chat_enabled = false }
+
     it "does nothing" do
       Chat::ChatMailer.expects(:send_unread_mentions_summary).never
 

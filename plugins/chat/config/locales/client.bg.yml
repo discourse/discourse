@@ -23,6 +23,10 @@ bg:
       join: "Влизане"
       mention_warning:
         dismiss: "отмени"
+        groups:
+          users_limit:
+            one: "%{count} потребител"
+            other: "%{count} потребители"
       reply: "Отговорете"
       edit: "Редактирай"
       rebake_message: "Прегенерирай HTML "
@@ -44,6 +48,7 @@ bg:
         yesterday: Вчера
       about_view:
         title: Заглавие
+        name: Име
         description: Описание
       channel_info:
         back_to_channel: "Назад"
@@ -71,6 +76,7 @@ bg:
         save: "Запази "
         saved: "Запазено"
         unfollow: "Напусни"
+        admin_title: "Администратор"
       incoming_webhooks:
         back: "Назад"
         description: "Описание"

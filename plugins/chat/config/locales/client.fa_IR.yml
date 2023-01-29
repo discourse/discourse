@@ -91,9 +91,10 @@ fa_IR:
           one: "دعوت‌نامه ارسال شد"
           other: "دعوت‌نامه‌ها ارسال شد"
         invite: "دعوت به کانال"
-        without_membership:
-          one: "%{usernames} هنوز در این کانال عضو نشده است."
-          other: "%{usernames} هنوز در این کانال عضو نشده است."
+        groups:
+          users_limit:
+            one: "%{count} کاربر"
+            other: "%{count} کاربر"
       aria_roles:
         channels_list: "فهرست کانال‌های گفتگو"
       no_public_channels: "شما هنوز عضو هیچ کانالی نشده‌اید."
@@ -157,6 +158,7 @@ fa_IR:
         associated_topic: موضوع مرتبط
         associated_category: دسته‌بندی مرتبط
         title: عنوان
+        name: نام
         description: توضیح
       channel_info:
         back_to_all_channels: "همه کانال‌ها"
@@ -165,10 +167,6 @@ fa_IR:
           about: درباره
           members: اعضاء
           settings: تنظیمات
-      channel_edit_title_modal:
-        title: ویرایش عنوان
-        input_placeholder: افزودن عنوان
-        description: یک عنوان توصیفی کوتاه به کانال خود بدهید
       channel_edit_description_modal:
         title: ویرایش توضیحات
         input_placeholder: افزودن توضیحات
@@ -216,6 +214,9 @@ fa_IR:
         mention: "فقط برای اشاره کردن"
         always: "برای تمام فعالیت‌ها"
       settings:
+        channel_wide_mentions_label: "اجازه داده به استفاده از اشاره @all و @here"
+        channel_wide_mentions_description: "به کاربران اجازه دهید به همه اعضای #%{channel} با @all یا فقط افرادی که در حال حاضر فعال هستند با @here، آگاه‌سازی کنند."
+        auto_join_users_label: "افزودن خودکار کاربران"
         desktop_notification_level: "آگاه‌سازی‌های دسکتاپ"
         follow: "عضو شدن"
         followed: "عضو شده"
@@ -227,11 +228,13 @@ fa_IR:
         save: "ذخیره کردن"
         saved: "ذخیره شد"
         unfollow: "ترک کردن"
+        admin_title: "مدیر کل"
+        retention_info: "تاریخچه گفتگو به مدت %{days} روز ذخیره خواهد شد."
       admin:
         title: "گفتگو"
       direct_messages:
         title: "گفتگوی شخصی"
-        new: "گفتگوی شخصی جدید"
+        new: "ایجاد گفتگوی شخصی"
         create: "برو"
         cannot_create: "با عرض پوزش، شما نمی‌توانید پیام مستقیم ارسال کنید."
       incoming_webhooks:

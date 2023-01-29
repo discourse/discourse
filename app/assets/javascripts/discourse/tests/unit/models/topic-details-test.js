@@ -1,15 +1,18 @@
 import { module, test } from "qunit";
 import User from "discourse/models/user";
 import { getOwner } from "discourse-common/lib/get-owner";
+import { setupTest } from "ember-qunit";
 
-module("Unit | Model | topic-details", function () {
+module("Unit | Model | topic-details", function (hooks) {
+  setupTest(hooks);
+
   test("defaults", function (assert) {
     const store = getOwner(this).lookup("service:store");
     const topic = store.createRecord("topic", { id: 1234 });
     const details = topic.details;
 
     assert.present(details, "the details are present by default");
-    assert.ok(!details.get("loaded"), "details are not loaded by default");
+    assert.ok(!details.loaded, "details are not loaded by default");
   });
 
   test("updateFromJson", function (assert) {
@@ -22,10 +25,10 @@ module("Unit | Model | topic-details", function () {
     });
 
     assert.strictEqual(
-      details.get("allowed_users.length"),
+      details.allowed_users.length,
       1,
       "it loaded the allowed users"
     );
-    assert.containsInstance(details.get("allowed_users"), User);
+    assert.containsInstance(details.allowed_users, User);
   });
 });

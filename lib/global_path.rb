@@ -10,11 +10,9 @@ module GlobalPath
   end
 
   def upload_cdn_path(p)
-    if SiteSetting.Upload.s3_cdn_url.present?
-      p = Discourse.store.cdn_url(p)
-    end
+    p = Discourse.store.cdn_url(p) if SiteSetting.Upload.s3_cdn_url.present?
 
-    (p =~ /^http/ || p =~ /^\/\//) ? p : cdn_path(p)
+    (p =~ /\Ahttp/ || p =~ %r{\A//}) ? p : cdn_path(p)
   end
 
   def cdn_relative_path(path)

@@ -23,6 +23,7 @@ export default class ChatRoute extends DiscourseRoute {
     const INTERCEPTABLE_ROUTES = [
       "chat.channel.index",
       "chat.channel",
+      "chat.channel-legacy",
       "chat",
       "chat.index",
       "chat.draft-channel",
@@ -37,8 +38,8 @@ export default class ChatRoute extends DiscourseRoute {
 
       let URL = transition.intent.url;
       if (
-        transition.targetName === "chat.channel.index" ||
-        transition.targetName === "chat.channel"
+        transition.targetName.startsWith("chat.channel") ||
+        transition.targetName.startsWith("chat.channel-legacy")
       ) {
         URL ??= this.router.urlFor(
           transition.targetName,
@@ -66,8 +67,6 @@ export default class ChatRoute extends DiscourseRoute {
   }
 
   deactivate() {
-    this.chat.setActiveChannel(null);
-
     schedule("afterRender", () => {
       document.body.classList.remove("has-full-page-chat");
       document.documentElement.classList.remove("has-full-page-chat");
@@ -77,8 +76,13 @@ export default class ChatRoute extends DiscourseRoute {
 
   @action
   willTransition(transition) {
+    if (!transition?.to?.name?.startsWith("chat.channel")) {
+      this.chat.setActiveChannel(null);
+    }
+
     if (!transition?.to?.name?.startsWith("chat.")) {
       this.chatStateManager.storeChatURL();
+      this.chat.updatePresence();
     }
   }
 }

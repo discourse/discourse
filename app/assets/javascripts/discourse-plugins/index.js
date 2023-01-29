@@ -36,7 +36,7 @@ function unColocateConnectors(tree) {
       if (
         match &&
         match.groups.extension === "hbs" &&
-        !match.groups.prefix.endsWith("/templates")
+        match.groups.prefix.split("/").pop() !== "templates"
       ) {
         const { prefix, outlet, name } = match.groups;
         return `${prefix}/templates/connectors/${outlet}/${name}.hbs`;
@@ -44,7 +44,7 @@ function unColocateConnectors(tree) {
       if (
         match &&
         match.groups.extension === "js" &&
-        match.groups.prefix.endsWith("/templates")
+        match.groups.prefix.split("/").pop() === "templates"
       ) {
         // Some plugins are colocating connector JS under `/templates`
         const { prefix, outlet, name } = match.groups;
@@ -56,10 +56,10 @@ function unColocateConnectors(tree) {
   });
 }
 
-function namespaceModules(tree, pluginDirectoryName) {
+function namespaceModules(tree, pluginName) {
   return new Funnel(tree, {
     getDestinationPath: function (relativePath) {
-      return `discourse/plugins/${pluginDirectoryName}/${relativePath}`;
+      return `discourse/plugins/${pluginName}/${relativePath}`;
     },
   });
 }
@@ -176,7 +176,15 @@ module.exports = {
 
     tree = RawHandlebarsCompiler(tree);
 
-    tree = new DiscoursePluginColocatedTemplateProcessor(tree, pluginName);
+    const colocateBase = `discourse/plugins/${pluginName}`;
+    tree = new DiscoursePluginColocatedTemplateProcessor(
+      tree,
+      `${colocateBase}/discourse`
+    );
+    tree = new DiscoursePluginColocatedTemplateProcessor(
+      tree,
+      `${colocateBase}/admin`
+    );
     tree = this.compileTemplates(tree);
 
     tree = this.processedAddonJsFiles(tree);

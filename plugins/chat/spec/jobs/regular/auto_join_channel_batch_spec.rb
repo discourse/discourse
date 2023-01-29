@@ -138,7 +138,7 @@ describe Jobs::AutoJoinChannelBatch do
         end
 
       expect(messages.size).to eq(1)
-      expect(messages.first.data.dig(:chat_channel, :id)).to eq(channel.id)
+      expect(messages.first.data.dig(:channel, :id)).to eq(channel.id)
     end
 
     describe "context when the channel's category is read restricted" do

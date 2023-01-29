@@ -18,7 +18,10 @@ module SplashScreenHelper
   private
 
   def self.load_js
-    File.read("#{Rails.root}/app/assets/javascripts/discourse/dist/assets/splash-screen.js").sub("//# sourceMappingURL=splash-screen.map\n", "")
+    File.read("#{Rails.root}/app/assets/javascripts/discourse/dist/assets/splash-screen.js").sub(
+      "//# sourceMappingURL=splash-screen.map\n",
+      "",
+    )
   rescue Errno::ENOENT
     Rails.logger.error("Unable to load splash screen JS") if Rails.env.production?
     "console.log('Unable to load splash screen JS')"

@@ -33,6 +33,12 @@ uk:
       join: "Приєднатися"
       mention_warning:
         dismiss: "відкласти"
+        groups:
+          users_limit:
+            one: "%{count} користувач"
+            few: "%{count} користувача"
+            many: "%{count} користувача"
+            other: "%{count} користувача"
       reply: "Відповідь"
       edit: "Редагувати"
       rebake_message: "Перебудувати HTML"
@@ -54,6 +60,7 @@ uk:
         yesterday: Вчора
       about_view:
         title: Назва
+        name: Імʼя
         description: Опис
       channel_info:
         back_to_channel: "Назад"
@@ -82,6 +89,7 @@ uk:
         save: "Зберегти"
         saved: "Збережено"
         unfollow: "Покинути"
+        admin_title: "Адміністратор"
       incoming_webhooks:
         back: "Назад"
         description: "Опис"

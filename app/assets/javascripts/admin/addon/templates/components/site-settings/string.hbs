@@ -1,7 +1,11 @@
 {{#if this.setting.textarea}}
   <Textarea @value={{this.value}} class="input-setting-textarea" />
 {{else if this.setting.json_schema}}
-  <DButton @action={{action "launchJsonEditorModal"}} @icon="pencil-alt" @label="admin.site_settings.json_schema.edit" />
+  <DButton
+    @action={{action "launchJsonEditorModal"}}
+    @icon="pencil-alt"
+    @label="admin.site_settings.json_schema.edit"
+  />
 {{else if this.isSecret}}
   <Input @type="password" @value={{this.value}} class="input-setting-string" />
 {{else}}

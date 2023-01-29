@@ -1,10 +1,5 @@
 :root {
-  --chat-mobile-avatar-size: 38px;
-}
-
-.chat-message {
-  // 1px to account for .is-online box-shadow
-  padding: 0.1em 1px;
+  --channel-list-avatar-size: 38px;
 }
 
 .chat-message:not(.user-info-hidden) {
@@ -18,23 +13,6 @@ body.has-full-page-chat {
 
   #main-outlet {
     padding: 0;
-  }
-}
-
-.chat-channel-settings-modal .modal-inner-container {
-  max-width: 90vw;
-  .chat-channel-settings-row {
-    max-width: 100%;
-
-    .chat-channel-preview {
-      display: none;
-    }
-    .chat-channel-title {
-      max-width: 80%;
-    }
-    .controls.save-container {
-      justify-content: end;
-    }
   }
 }
 
@@ -73,19 +51,6 @@ body.has-full-page-chat {
   }
 }
 
-.channels-list .chat-channel-row {
-  .category-chat-private .d-icon {
-    background-color: var(--secondary);
-  }
-
-  .chat-channel-unread-indicator {
-    width: 6px;
-    height: 6px;
-    left: 5px;
-    top: calc(50% - 3px);
-  }
-}
-
 .sidebar-container .channels-list .chat-channel-divider {
   padding-left: 1em;
 }
@@ -97,15 +62,6 @@ body.has-full-page-chat {
 .create-channel-modal {
   .modal-inner-container {
     width: 95%;
-  }
-}
-
-.chat-browse {
-  .chat-channel-settings-row {
-    font-size: var(--font-down-1);
-    .chat-channel-title {
-      grid-template-columns: 15px 1fr;
-    }
   }
 }
 
@@ -132,7 +88,7 @@ html.has-full-page-chat body {
   margin-left: 0;
 }
 
-.header-dropdown-toggle.open-chat {
+.header-dropdown-toggle.chat-header-icon {
   .icon {
     &.active {
       border: 1px solid var(--primary-low);

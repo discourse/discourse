@@ -8,10 +8,9 @@ export default {
   name: "chat-audio",
 
   initialize(container) {
-    const currentUser = container.lookup("service:current-user");
     const chatService = container.lookup("service:chat");
 
-    if (!chatService.userCanChat || !currentUser?.chat_sound) {
+    if (!chatService.userCanChat) {
       return;
     }
 
@@ -20,6 +19,14 @@ export default {
 
     withPluginApi("0.12.1", (api) => {
       api.registerDesktopNotificationHandler((data, siteSettings, user) => {
+        if (user.isInDoNotDisturb()) {
+          return;
+        }
+
+        if (!user.chat_sound) {
+          return;
+        }
+
         if (CHAT_NOTIFICATION_TYPES.includes(data.notification_type)) {
           chatAudioManager.play(user.chat_sound);
         }

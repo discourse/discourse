@@ -10,6 +10,7 @@ da:
   chat:
     deleted_chat_username: slettet
     errors:
+      duplicate_message: "Det er for kort tid siden, at du oprettede en identisk besked."
       max_reactions_limit_reached: "Nye reaktioner er ikke tilladt på denne besked."
       not_accepting_dms: "Beklager, %{username} accepterer ikke meddelelser i øjeblikket."
     reviewables:

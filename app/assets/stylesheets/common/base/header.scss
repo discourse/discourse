@@ -141,7 +141,7 @@
       border-top: 1px solid transparent;
       border-left: 1px solid transparent;
       border-right: 1px solid transparent;
-      .d-icon {
+      > .d-icon {
         color: var(--primary-medium);
       }
     }
@@ -158,7 +158,7 @@
       border-top: 1px solid var(--primary-low);
       border-left: 1px solid var(--primary-low);
       border-right: 1px solid var(--primary-low);
-      .d-icon {
+      > .d-icon {
         color: var(--primary-medium);
       }
       &:after {
@@ -185,14 +185,36 @@
     display: inline-block;
     color: var(--header_primary-low-mid);
   }
+
   .notifications {
     position: relative;
   }
   .ring {
     position: absolute;
-    top: -9px;
+    top: -11px;
+    right: 23.5px;
     z-index: z("base");
     margin-left: 0;
+    background: radial-gradient(transparent, var(--success));
+    border-radius: 100%;
+    width: 20px;
+    height: 20px;
+    transform-origin: center;
+    animation-iteration-count: infinite;
+    animation-duration: 3s;
+    animation-name: ping;
+
+    &.revamped {
+      right: -4px;
+      top: -6px;
+
+      &.regular-notifications {
+        background: radial-gradient(
+          transparent,
+          var(--tertiary-med-or-tertiary)
+        );
+      }
+    }
   }
   .header-dropdown-toggle {
     position: relative;
@@ -203,10 +225,24 @@
     left: 0;
     top: -4px;
     min-width: 0.6em;
-  }
-  .unread-notifications {
     left: auto;
     right: -3px;
+
+    &.with-icon {
+      &.new-pms {
+        background-color: var(--success);
+      }
+      &.new-reviewables {
+        background-color: var(--danger);
+      }
+      .d-icon {
+        color: var(--secondary);
+        font-size: var(--font-down-1);
+        width: 1em;
+      }
+    }
+  }
+  .unread-notifications {
     background-color: var(--tertiary-med-or-tertiary);
   }
   .unread-high-priority-notifications,

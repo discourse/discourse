@@ -10,8 +10,12 @@ describe Chat::DirectMessageChannelCreator do
   before { Group.refresh_automatic_groups! }
 
   context "with an existing direct message channel" do
-    fab!(:dm_chat_channel) { Fabricate(:direct_message_channel, users: [user_1, user_2, user_3]) }
-    fab!(:own_chat_channel) { Fabricate(:direct_message_channel, users: [user_1]) }
+    fab!(:dm_chat_channel) do
+      Fabricate(:direct_message_channel, users: [user_1, user_2, user_3], with_membership: false)
+    end
+    fab!(:own_chat_channel) do
+      Fabricate(:direct_message_channel, users: [user_1], with_membership: false)
+    end
 
     it "doesn't create a new chat channel" do
       existing_channel = nil
@@ -71,7 +75,7 @@ describe Chat::DirectMessageChannelCreator do
       expect(user_3_membership.following).to eq(false)
     end
 
-    it "publishes the new DM channel message bus message for each user" do
+    it "publishes the new DM channel message bus message for each user not following yet" do
       messages =
         MessageBus
           .track_publish do
@@ -81,7 +85,7 @@ describe Chat::DirectMessageChannelCreator do
 
       expect(messages.count).to eq(3)
       expect(messages.first[:data]).to be_kind_of(Hash)
-      expect(messages.map { |m| m.dig(:data, :chat_channel, :id) }).to eq(
+      expect(messages.map { |m| m.dig(:data, :channel, :id) }).to eq(
         [dm_chat_channel.id, dm_chat_channel.id, dm_chat_channel.id],
       )
     end
@@ -161,7 +165,7 @@ describe Chat::DirectMessageChannelCreator do
       chat_channel = ChatChannel.last
       expect(messages.count).to eq(2)
       expect(messages.first[:data]).to be_kind_of(Hash)
-      expect(messages.map { |m| m.dig(:data, :chat_channel, :id) }).to eq(
+      expect(messages.map { |m| m.dig(:data, :channel, :id) }).to eq(
         [chat_channel.id, chat_channel.id],
       )
     end

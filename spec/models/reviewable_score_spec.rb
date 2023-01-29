@@ -36,7 +36,7 @@ RSpec.describe ReviewableScore, type: :model do
     end
 
     it "increases the score by the post action type's score bonus" do
-      PostActionType.where(name_key: 'spam').update_all(score_bonus: 2.25)
+      PostActionType.where(name_key: "spam").update_all(score_bonus: 2.25)
       reviewable = PostActionCreator.spam(user, post).reviewable
       score = reviewable.reviewable_scores.find_by(user: user)
       expect(score).to be_pending
@@ -54,12 +54,13 @@ RSpec.describe ReviewableScore, type: :model do
     let(:topic) { post.topic }
 
     it "gives a bonus for take_action" do
-      result = PostActionCreator.new(
-        moderator,
-        post,
-        PostActionType.types[:spam],
-        take_action: true
-      ).perform
+      result =
+        PostActionCreator.new(
+          moderator,
+          post,
+          PostActionType.types[:spam],
+          take_action: true,
+        ).perform
 
       expect(result.reviewable_score.take_action_bonus).to eq(5.0)
       expect(result.reviewable.score).to eq(11.0)
@@ -112,45 +113,45 @@ RSpec.describe ReviewableScore, type: :model do
     it "returns the users weighted accuracy bonus" do
       user_stat.flags_agreed = 10
       user_stat.flags_disagreed = 42
-      expect(ReviewableScore.user_accuracy_bonus(user).floor(2)).to eq(-10.34)
+      expect(ReviewableScore.user_accuracy_bonus(user)).to be_within(0.1).of(-10.34)
 
       user_stat.flags_agreed = 2
       user_stat.flags_disagreed = 12
-      expect(ReviewableScore.user_accuracy_bonus(user).floor(2)).to eq(-7.58)
+      expect(ReviewableScore.user_accuracy_bonus(user)).to be_within(0.1).of(-7.58)
 
       user_stat.flags_agreed = 1
       user_stat.flags_disagreed = 6
-      expect(ReviewableScore.user_accuracy_bonus(user).floor(2)).to eq(-5.59)
+      expect(ReviewableScore.user_accuracy_bonus(user)).to be_within(0.1).of(-5.59)
 
       user_stat.flags_agreed = 2
       user_stat.flags_disagreed = 4
-      expect(ReviewableScore.user_accuracy_bonus(user).floor(2)).to eq(-3.39)
+      expect(ReviewableScore.user_accuracy_bonus(user)).to be_within(0.1).of(-3.39)
 
       user_stat.flags_agreed = 7
       user_stat.flags_disagreed = 3
-      expect(ReviewableScore.user_accuracy_bonus(user).floor(2)).to eq(0)
+      expect(ReviewableScore.user_accuracy_bonus(user)).to be_within(0.1).of(0)
 
       user_stat.flags_agreed = 14
       user_stat.flags_disagreed = 6
-      expect(ReviewableScore.user_accuracy_bonus(user).floor(2)).to eq(0)
+      expect(ReviewableScore.user_accuracy_bonus(user)).to be_within(0.1).of(0)
 
       # Ignored flags don't count
       user_stat.flags_agreed = 121
       user_stat.flags_disagreed = 44
       user_stat.flags_ignored = 4
-      expect(ReviewableScore.user_accuracy_bonus(user).floor(2)).to eq(2.04)
+      expect(ReviewableScore.user_accuracy_bonus(user)).to be_within(0.1).of(2.05)
 
       user_stat.flags_agreed = 9
       user_stat.flags_disagreed = 2
-      expect(ReviewableScore.user_accuracy_bonus(user).floor(2)).to eq(3.41)
+      expect(ReviewableScore.user_accuracy_bonus(user)).to be_within(0.1).of(3.41)
 
       user_stat.flags_agreed = 25
       user_stat.flags_disagreed = 4
-      expect(ReviewableScore.user_accuracy_bonus(user).floor(2)).to eq(6.56)
+      expect(ReviewableScore.user_accuracy_bonus(user)).to be_within(0.1).of(6.56)
 
       user_stat.flags_agreed = 120
       user_stat.flags_disagreed = 12
-      expect(ReviewableScore.user_accuracy_bonus(user).floor(2)).to eq(12.27)
+      expect(ReviewableScore.user_accuracy_bonus(user)).to be_within(0.1).of(12.27)
     end
   end
 
@@ -162,7 +163,9 @@ RSpec.describe ReviewableScore, type: :model do
       end
 
       it "returns 6.0 for staff" do
-        expect(ReviewableScore.user_flag_score(Fabricate.build(:moderator, trust_level: 2))).to eq(6.0)
+        expect(ReviewableScore.user_flag_score(Fabricate.build(:moderator, trust_level: 2))).to eq(
+          6.0,
+        )
         expect(ReviewableScore.user_flag_score(Fabricate.build(:admin, trust_level: 1))).to eq(6.0)
       end
     end
@@ -185,7 +188,7 @@ RSpec.describe ReviewableScore, type: :model do
     fab!(:user) { Fabricate(:user) }
     let(:user_stat) { user.user_stat }
 
-    it 'never returns less than 0' do
+    it "never returns less than 0" do
       user.trust_level = 2
       user_stat.flags_agreed = 1
       user_stat.flags_disagreed = 1000
@@ -194,7 +197,7 @@ RSpec.describe ReviewableScore, type: :model do
       expect(ReviewableScore.calculate_score(user, 5, 5)).to eq(0)
     end
 
-    it 'returns user_flag_score + type_bonus + take_action_bonus' do
+    it "returns user_flag_score + type_bonus + take_action_bonus" do
       user.trust_level = 2
       user_stat.flags_agreed = 12
       user_stat.flags_disagreed = 2

@@ -25,11 +25,20 @@
 
                   {{#if this.model.description}}
                     {{#if this.model.description_link}}
-                      <a target="_blank" rel="noopener noreferrer" href={{this.model.description_link}} class="info" data-tooltip={{this.model.description}}>
+                      <a
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        href={{this.model.description_link}}
+                        class="info"
+                        data-tooltip={{this.model.description}}
+                      >
                         {{d-icon "question-circle"}}
                       </a>
                     {{else}}
-                      <span class="info" data-tooltip={{this.model.description}}>
+                      <span
+                        class="info"
+                        data-tooltip={{this.model.description}}
+                      >
                         {{d-icon "question-circle"}}
                       </span>
                     {{/if}}
@@ -43,9 +52,13 @@
             <div class="trend {{this.model.trend}}">
               <span class="value" title={{this.model.trendTitle}}>
                 {{#if this.model.average}}
-                  {{number this.model.currentAverage}}{{#if this.model.percent}}%{{/if}}
+                  {{number this.model.currentAverage}}{{#if
+                    this.model.percent
+                  }}%{{/if}}
                 {{else}}
-                  {{number this.model.currentTotal noTitle="true"}}{{#if this.model.percent}}%{{/if}}
+                  {{number this.model.currentTotal noTitle="true"}}{{#if
+                    this.model.percent
+                  }}%{{/if}}
                 {{/if}}
 
                 {{#if this.model.trendIcon}}
@@ -83,10 +96,17 @@
           {{else}}
             {{#if this.hasData}}
               {{#if this.currentMode}}
-                {{component this.modeComponent model=this.model options=this.options}}
+                {{component
+                  this.modeComponent
+                  model=this.model
+                  options=this.options
+                }}
 
                 {{#if this.model.relatedReport}}
-                  <AdminReport @showFilteringUI={{false}} @dataSourceName={{this.model.relatedReport.type}} />
+                  <AdminReport
+                    @showFilteringUI={{false}}
+                    @dataSourceName={{this.model.relatedReport.type}}
+                  />
                 {{/if}}
               {{/if}}
             {{else}}
@@ -102,7 +122,8 @@
                     <a href={{this.model.reportUrl}} class="report-url">
                       <span>
                         {{#if this.model.title}}
-                          {{this.model.title}} —
+                          {{this.model.title}}
+                          —
                         {{/if}}
                         {{i18n "admin.dashboard.reports.no_data"}}
                       </span>
@@ -121,7 +142,12 @@
             {{#if this.showModes}}
               <div class="modes">
                 {{#each this.displayedModes as |displayedMode|}}
-                  <DButton @action={{action "onChangeMode"}} @actionParam={{displayedMode.mode}} @class={{displayedMode.cssClass}} @icon={{displayedMode.icon}} />
+                  <DButton
+                    @action={{action "onChangeMode"}}
+                    @actionParam={{displayedMode.mode}}
+                    @class={{displayedMode.cssClass}}
+                    @icon={{displayedMode.icon}}
+                  />
                 {{/each}}
               </div>
             {{/if}}
@@ -134,7 +160,12 @@
               {{/if}}
               <div class="chart-groupings">
                 {{#each this.chartGroupings as |chartGrouping|}}
-                  <DButton @label={{chartGrouping.label}} @action={{action "changeGrouping" chartGrouping.id}} @class={{chartGrouping.class}} @disabled={{chartGrouping.disabled}} />
+                  <DButton
+                    @label={{chartGrouping.label}}
+                    @action={{action "changeGrouping" chartGrouping.id}}
+                    @class={{chartGrouping.class}}
+                    @disabled={{chartGrouping.disabled}}
+                  />
                 {{/each}}
               </div>
             {{/if}}
@@ -146,7 +177,13 @@
                 </span>
 
                 <div class="input">
-                  <DateTimeInputRange @from={{this.startDate}} @to={{this.endDate}} @onChange={{action "onChangeDateRange"}} @showFromTime={{false}} @showToTime={{false}} />
+                  <DateTimeInputRange
+                    @from={{this.startDate}}
+                    @to={{this.endDate}}
+                    @onChange={{action "onChangeDateRange"}}
+                    @showFromTime={{false}}
+                    @showToTime={{false}}
+                  />
                 </div>
               </div>
             {{/if}}
@@ -154,7 +191,11 @@
             {{#each this.model.available_filters as |filter|}}
               <div class="control">
                 <span class="label">
-                  {{i18n (concat "admin.dashboard.reports.filters." filter.id ".label")}}
+                  {{i18n
+                    (concat
+                      "admin.dashboard.reports.filters." filter.id ".label"
+                    )
+                  }}
                 </span>
 
                 <div class="input">
@@ -162,21 +203,32 @@
                     (concat "report-filters/" filter.type)
                     model=this.model
                     filter=filter
-                    applyFilter=(action "applyFilter")}}
+                    applyFilter=(action "applyFilter")
+                  }}
                 </div>
               </div>
             {{/each}}
 
             <div class="control">
               <div class="input">
-                <DButton @class="btn-default export-csv-btn" @action={{action "exportCsv"}} @label="admin.export_csv.button_text" @icon="download" />
+                <DButton
+                  @class="btn-default export-csv-btn"
+                  @action={{action "exportCsv"}}
+                  @label="admin.export_csv.button_text"
+                  @icon="download"
+                />
               </div>
             </div>
 
             {{#if this.showRefresh}}
               <div class="control">
                 <div class="input">
-                  <DButton @class="refresh-report-btn btn-primary" @action={{action "refreshReport"}} @label="admin.dashboard.reports.refresh_report" @icon="sync" />
+                  <DButton
+                    @class="refresh-report-btn btn-primary"
+                    @action={{action "refreshReport"}}
+                    @label="admin.dashboard.reports.refresh_report"
+                    @icon="sync"
+                  />
                 </div>
               </div>
             {{/if}}

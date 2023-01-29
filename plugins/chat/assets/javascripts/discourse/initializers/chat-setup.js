@@ -13,10 +13,12 @@ export default {
   initialize(container) {
     this.chatService = container.lookup("service:chat");
     this.siteSettings = container.lookup("service:site-settings");
-
     this.appEvents = container.lookup("service:appEvents");
     this.appEvents.on("discourse:focus-changed", this, "_handleFocusChanged");
 
+    if (!this.chatService.userCanChat) {
+      return;
+    }
     withPluginApi("0.12.1", (api) => {
       api.registerChatComposerButton({
         id: "chat-upload-btn",
@@ -43,11 +45,6 @@ export default {
         });
       }
 
-      if (this.siteSettings.enable_experimental_hashtag_autocomplete) {
-        api.registerHashtagSearchParam("category", "chat-composer", 100);
-        api.registerHashtagSearchParam("tag", "chat-composer", 50);
-      }
-
       api.registerChatComposerButton({
         label: "chat.emoji",
         id: "emoji",
@@ -67,8 +64,7 @@ export default {
       api.decorateCookedElement(
         (elem) => {
           const currentUser = getOwner(this).lookup("service:current-user");
-          const currentUserTimezone =
-            currentUser?.resolvedTimezone(currentUser);
+          const currentUserTimezone = currentUser?.user_option?.timezone;
           const chatTranscriptElements =
             elem.querySelectorAll(".chat-transcript");
 
@@ -87,6 +83,8 @@ export default {
                 I18n.t("dates.long_no_year")
               );
             }
+
+            dateTimeEl.dataset.dateFormatted = true;
           });
         },
         { id: "chat-transcript-datetime" }
@@ -101,8 +99,6 @@ export default {
       const currentUser = api.getCurrentUser();
       if (currentUser?.chat_channels) {
         this.chatService.setupWithPreloadedChannels(currentUser.chat_channels);
-      } else {
-        this.chatService.getChannels();
       }
 
       const chatNotificationManager = container.lookup(
@@ -115,31 +111,19 @@ export default {
         this._registeredDocumentTitleCountCallback = true;
       }
 
-      api.addCardClickListenerSelector(".topic-chat-float-container");
+      api.addCardClickListenerSelector(".chat-drawer-outlet");
 
-      api.dispatchWidgetAppEvent(
-        "site-header",
-        "header-chat-link",
-        "chat:rerender-header"
-      );
+      api.addToHeaderIcons("chat-header-icon");
 
-      api.dispatchWidgetAppEvent(
-        "sidebar-header",
-        "header-chat-link",
-        "chat:rerender-header"
-      );
-
-      api.addToHeaderIcons("header-chat-link");
-
-      api.decorateChatMessage(function (chatMessage) {
+      api.decorateChatMessage(function (chatMessage, chatChannel) {
         if (!this.currentUser) {
           return;
         }
 
-        const highlightable = [
-          `@${this.currentUser.username}`,
-          ...MENTION_KEYWORDS.map((k) => `@${k}`),
-        ];
+        const highlightable = [`@${this.currentUser.username}`];
+        if (chatChannel.allow_channel_wide_mentions) {
+          highlightable.push(...MENTION_KEYWORDS.map((k) => `@${k}`));
+        }
 
         chatMessage.querySelectorAll(".mention").forEach((node) => {
           const mention = node.textContent.trim();
@@ -158,12 +142,21 @@ export default {
 
   teardown() {
     this.appEvents.off("discourse:focus-changed", this, "_handleFocusChanged");
+
+    if (!this.chatService.userCanChat) {
+      return;
+    }
+
     _lastForcedRefreshAt = null;
     clearChatComposerButtons();
   },
 
   @bind
   _handleFocusChanged(hasFocus) {
+    if (!this.chatService.userCanChat) {
+      return;
+    }
+
     if (!hasFocus) {
       _lastForcedRefreshAt = Date.now();
       return;
@@ -177,6 +170,5 @@ export default {
     }
 
     _lastForcedRefreshAt = Date.now();
-    this.chatService.refreshTrackingState();
   },
 };

@@ -64,6 +64,7 @@ export function validateUploadedFile(file, opts) {
   let staff = user && user.staff;
 
   if (!authorizesOneOrMoreExtensions(staff, opts.siteSettings)) {
+    dialog.alert(I18n.t("post.errors.no_uploads_authorized"));
     return false;
   }
 

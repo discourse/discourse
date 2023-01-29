@@ -24,6 +24,10 @@ sw:
       join: "Jiunge"
       mention_warning:
         dismiss: "ondosha..."
+        groups:
+          users_limit:
+            one: "Mtumiaji mmoja"
+            other: "%{count} watumiaji"
       reply: "Jibu"
       edit: "Hariri"
       rebake_message: "Tengeneza upya HTML"
@@ -44,6 +48,7 @@ sw:
         yesterday: Jana
       about_view:
         title: Kichwa cha Habari
+        name: Jina
         description: Elezo
       channel_info:
         back_to_channel: "Iliyopita"
@@ -72,6 +77,7 @@ sw:
         save: "Hifadhi"
         saved: "Imehifadhiwa"
         unfollow: "Ondoka"
+        admin_title: "Kiongozi"
       incoming_webhooks:
         back: "Iliyopita"
         description: "Elezo"

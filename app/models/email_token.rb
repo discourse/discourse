@@ -1,14 +1,21 @@
 # frozen_string_literal: true
 
 class EmailToken < ActiveRecord::Base
-  class TokenAccessError < StandardError; end
+  class TokenAccessError < StandardError
+  end
 
   belongs_to :user
 
   validates :user_id, :email, :token_hash, presence: true
 
   scope :unconfirmed, -> { where(confirmed: false) }
-  scope :active, -> { where(expired: false).where('created_at >= ?', SiteSetting.email_token_valid_hours.hours.ago) }
+  scope :active,
+        -> {
+          where(expired: false).where(
+            "created_at >= ?",
+            SiteSetting.email_token_valid_hours.hours.ago,
+          )
+        }
 
   after_initialize do
     if self.token_hash.blank?
@@ -25,9 +32,7 @@ class EmailToken < ActiveRecord::Base
       .update_all(expired: true)
   end
 
-  before_validation do
-    self.email = self.email.downcase if self.email
-  end
+  before_validation { self.email = self.email.downcase if self.email }
 
   before_save do
     if self.scope.blank?
@@ -36,15 +41,10 @@ class EmailToken < ActiveRecord::Base
   end
 
   # TODO(2022-01-01): Remove
-  self.ignored_columns = %w{token}
+  self.ignored_columns = %w[token]
 
   def self.scopes
-    @scopes ||= Enum.new(
-      signup: 1,
-      password_reset: 2,
-      email_login: 3,
-      email_update: 4,
-    )
+    @scopes ||= Enum.new(signup: 1, password_reset: 2, email_login: 3, email_update: 4)
   end
 
   def token
@@ -64,7 +64,7 @@ class EmailToken < ActiveRecord::Base
       user.send_welcome_message = !user.active?
       user.email = email_token.email
       user.active = true
-      user.custom_fields.delete('activation_reminder')
+      user.custom_fields.delete("activation_reminder")
       user.save!
       user.create_reviewable if !skip_reviewable
       user.set_automatic_groups
@@ -80,9 +80,7 @@ class EmailToken < ActiveRecord::Base
   def self.confirmable(token, scope: nil)
     return nil if token.blank?
 
-    relation = unconfirmed.active
-      .includes(:user)
-      .where(token_hash: hash_token(token))
+    relation = unconfirmed.active.includes(:user).where(token_hash: hash_token(token))
 
     # TODO(2022-01-01): All email tokens should have scopes by now
     if !scope
@@ -98,7 +96,7 @@ class EmailToken < ActiveRecord::Base
       type: "signup",
       user_id: email_token.user_id,
       email_token: email_token.token,
-      to_address: to_address
+      to_address: to_address,
     )
   end
 

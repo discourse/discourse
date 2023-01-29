@@ -31,22 +31,21 @@ RSpec.describe ReviewableChatMessage, type: :model do
     reviewable.perform(moderator, :agree_and_restore)
 
     expect(reviewable).to be_approved
-    expect(chat_message.reload.deleted_at).not_to be_present
+    expect(chat_message.reload.deleted_at).to be_nil
   end
 
   it "perform_disagree disagrees with the flag and does nothing" do
     reviewable.perform(moderator, :disagree)
 
     expect(reviewable).to be_rejected
-    expect(chat_message.reload.deleted_at).not_to be_present
   end
 
-  it "perform_disagree_and_restore disagrees with the flag and does nothing" do
+  it "perform_disagree_and_restore disagrees with the flag and restores the message" do
     chat_message.trash!(user)
     reviewable.perform(moderator, :disagree_and_restore)
 
     expect(reviewable).to be_rejected
-    expect(chat_message.reload.deleted_at).to be_present
+    expect(chat_message.reload.deleted_at).to be_nil
   end
 
   it "perform_ignore ignores the flag and does nothing" do
@@ -54,5 +53,29 @@ RSpec.describe ReviewableChatMessage, type: :model do
 
     expect(reviewable).to be_ignored
     expect(chat_message.reload.deleted_at).not_to be_present
+  end
+
+  context "when the flagged message author is silenced" do
+    before do
+      UserSilencer.silence(
+        user,
+        Discourse.system_user,
+        silenced_till: 10.minutes.from_now,
+        reason: I18n.t("chat.errors.auto_silence_from_flags"),
+      )
+    end
+
+    it "perform_disagree unsilences the user" do
+      reviewable.perform(moderator, :disagree)
+
+      expect(user.reload.silenced?).to eq(false)
+    end
+
+    it "perform_disagree_and_restore unsilences the user" do
+      chat_message.trash!(user)
+      reviewable.perform(moderator, :disagree_and_restore)
+
+      expect(user.reload.silenced?).to eq(false)
+    end
   end
 end

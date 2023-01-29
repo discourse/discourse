@@ -19,8 +19,7 @@ acceptance(
   function (needs) {
     needs.settings({
       tagging_enabled: false,
-      enable_experimental_sidebar_hamburger: true,
-      enable_sidebar: true,
+      navigation_menu: "sidebar",
     });
 
     needs.user();
@@ -39,8 +38,7 @@ acceptance(
 acceptance("Sidebar - Logged on user - Tags section", function (needs) {
   needs.settings({
     tagging_enabled: true,
-    enable_experimental_sidebar_hamburger: true,
-    enable_sidebar: true,
+    navigation_menu: "sidebar",
   });
 
   needs.user({

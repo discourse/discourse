@@ -1,13 +1,11 @@
 # frozen_string_literal: true
 
-module SiteSettings; end
+module SiteSettings
+end
 
 class SiteSettings::DbProvider
-
   def initialize(model)
-    model.after_commit do
-      model.notify_changed!
-    end
+    model.after_commit { model.notify_changed! }
 
     @model = model
   end
@@ -23,8 +21,7 @@ class SiteSettings::DbProvider
     return nil unless table_exists?
 
     # Not leaking out AR records, cause I want all editing to happen via this API
-    DB.query("SELECT name, data_type, value FROM #{@model.table_name} WHERE name = ?", name)
-      .first
+    DB.query("SELECT name, data_type, value FROM #{@model.table_name} WHERE name = ?", name).first
   end
 
   def save(name, value, data_type)
@@ -60,5 +57,4 @@ class SiteSettings::DbProvider
     @table_exists ||= {}
     @table_exists[current_site] ||= ActiveRecord::Base.connection.table_exists?(@model.table_name)
   end
-
 end

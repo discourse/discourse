@@ -1,1 +1,5 @@
-<ChatChannelAboutView @channel={{this.model.chatChannel}} @onEditChatChannelTitle={{action "onEditChatChannelTitle"}} @onEditChatChannelDescription={{action "onEditChatChannelDescription"}} />
+<ChatChannelAboutView
+  @channel={{this.model}}
+  @onEditChatChannelName={{action "onEditChatChannelName"}}
+  @onEditChatChannelDescription={{action "onEditChatChannelDescription"}}
+/>

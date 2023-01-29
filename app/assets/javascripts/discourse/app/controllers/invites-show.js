@@ -1,7 +1,7 @@
 import { alias, bool, not, readOnly } from "@ember/object/computed";
 import Controller, { inject as controller } from "@ember/controller";
 import DiscourseURL from "discourse/lib/url";
-import EmberObject from "@ember/object";
+import EmberObject, { action } from "@ember/object";
 import I18n from "I18n";
 import NameValidation from "discourse/mixins/name-validation";
 import PasswordValidation from "discourse/mixins/password-validation";
@@ -31,6 +31,9 @@ export default Controller.extend(
     accountEmail: alias("email"),
     existingUserId: readOnly("model.existing_user_id"),
     existingUserCanRedeem: readOnly("model.existing_user_can_redeem"),
+    existingUserCanRedeemError: readOnly(
+      "model.existing_user_can_redeem_error"
+    ),
     existingUserRedeeming: bool("existingUserId"),
     hiddenEmail: alias("model.hidden_email"),
     emailVerifiedByLink: alias("model.email_verified_by_link"),
@@ -44,6 +47,7 @@ export default Controller.extend(
     inviteImageUrl: getUrl("/images/envelope.svg"),
     isInviteLink: readOnly("model.is_invite_link"),
     rejectedEmails: null,
+    maskPassword: true,
 
     init() {
       this._super(...arguments);
@@ -283,6 +287,11 @@ export default Controller.extend(
         associate_link: url,
         provider: I18n.t(`login.${provider}.name`),
       });
+    },
+
+    @action
+    togglePasswordMask() {
+      this.toggleProperty("maskPassword");
     },
 
     actions: {

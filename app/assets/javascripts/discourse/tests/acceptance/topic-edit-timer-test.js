@@ -11,6 +11,8 @@ import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import I18n from "I18n";
+import { cloneJSON } from "discourse-common/lib/object";
+import topicFixtures from "discourse/tests/fixtures/topic";
 
 acceptance("Topic - Edit timer", function (needs) {
   let clock = null;
@@ -28,10 +30,14 @@ acceptance("Topic - Edit timer", function (needs) {
         category_id: null,
       })
     );
+
+    const topicResponse = cloneJSON(topicFixtures["/t/54077.json"]);
+    topicResponse.details.can_delete = false;
+    server.get("/t/54077.json", () => helper.response(topicResponse));
   });
 
   needs.hooks.beforeEach(() => {
-    const timezone = loggedInUser().timezone;
+    const timezone = loggedInUser().user_option.timezone;
     const tuesday = "2100-06-15T08:00:00";
     clock = fakeTime(tuesday, timezone, true);
   });
@@ -294,7 +300,7 @@ acceptance("Topic - Edit timer", function (needs) {
   test("TL4 can't auto-delete", async function (assert) {
     updateCurrentUser({ moderator: false, admin: false, trust_level: 4 });
 
-    await visit("/t/internationalization-localization");
+    await visit("/t/short-topic-with-two-posts/54077");
     await click(".toggle-admin-menu");
     await click(".admin-topic-timer-update button");
 
@@ -303,6 +309,48 @@ acceptance("Topic - Edit timer", function (needs) {
     await timerType.expand();
 
     assert.ok(!timerType.rowByValue("delete").exists());
+  });
+
+  test("Category Moderator can auto-delete replies", async function (assert) {
+    updateCurrentUser({ moderator: false, admin: false, trust_level: 4 });
+
+    await visit("/t/internationalization-localization");
+    await click(".toggle-admin-menu");
+    await click(".admin-topic-timer-update button");
+
+    const timerType = selectKit(".select-kit.timer-type");
+
+    await timerType.expand();
+
+    assert.ok(timerType.rowByValue("delete_replies").exists());
+  });
+
+  test("TL4 can't auto-delete replies", async function (assert) {
+    updateCurrentUser({ moderator: false, admin: false, trust_level: 4 });
+
+    await visit("/t/short-topic-with-two-posts/54077");
+    await click(".toggle-admin-menu");
+    await click(".admin-topic-timer-update button");
+
+    const timerType = selectKit(".select-kit.timer-type");
+
+    await timerType.expand();
+
+    assert.ok(!timerType.rowByValue("delete_replies").exists());
+  });
+
+  test("Category Moderator can auto-delete", async function (assert) {
+    updateCurrentUser({ moderator: false, admin: false, trust_level: 4 });
+
+    await visit("/t/internationalization-localization");
+    await click(".toggle-admin-menu");
+    await click(".admin-topic-timer-update button");
+
+    const timerType = selectKit(".select-kit.timer-type");
+
+    await timerType.expand();
+
+    assert.ok(timerType.rowByValue("delete").exists());
   });
 
   test("auto delete", async function (assert) {

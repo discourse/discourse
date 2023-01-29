@@ -8,15 +8,14 @@ import {
   until,
   updateRelativeAge,
 } from "discourse/lib/formatter";
-import {
-  discourseModule,
-  fakeTime,
-} from "discourse/tests/helpers/qunit-helpers";
-import { test } from "qunit";
+import { fakeTime } from "discourse/tests/helpers/qunit-helpers";
+import { module, test } from "qunit";
 import domFromString from "discourse-common/lib/dom-from-string";
+import { setupTest } from "ember-qunit";
+import { getOwner } from "discourse-common/lib/get-owner";
 
 function formatMins(mins, opts = {}) {
-  let dt = new Date(new Date() - mins * 60 * 1000);
+  const dt = new Date(new Date() - mins * 60 * 1000);
   return relativeAge(dt, {
     format: opts.format || "tiny",
     leaveAgo: opts.leaveAgo,
@@ -45,7 +44,9 @@ function strip(html) {
   return domFromString(html)[0].innerText;
 }
 
-discourseModule("Unit | Utility | formatter", function (hooks) {
+module("Unit | Utility | formatter", function (hooks) {
+  setupTest(hooks);
+
   hooks.beforeEach(function () {
     this.clock = fakeTime("2012-12-31 12:00");
   });
@@ -55,7 +56,7 @@ discourseModule("Unit | Utility | formatter", function (hooks) {
   });
 
   test("formatting medium length dates", function (assert) {
-    let shortDateYear = shortDateTester("MMM D, 'YY");
+    const shortDateYear = shortDateTester("MMM D, 'YY");
 
     assert.strictEqual(
       strip(formatMins(1.4, { format: "medium", leaveAgo: true })),
@@ -149,8 +150,10 @@ discourseModule("Unit | Utility | formatter", function (hooks) {
   });
 
   test("formatting tiny dates", function (assert) {
-    let shortDateYear = shortDateTester("MMM 'YY");
-    this.siteSettings.relative_date_duration = 14;
+    const siteSettings = getOwner(this).lookup("service:site-settings");
+
+    const shortDateYear = shortDateTester("MMM 'YY");
+    siteSettings.relative_date_duration = 14;
 
     assert.strictEqual(formatMins(0), "1m");
     assert.strictEqual(formatMins(1), "1m");
@@ -185,16 +188,16 @@ discourseModule("Unit | Utility | formatter", function (hooks) {
     assert.strictEqual(formatDays(-500), shortDateYear(-500));
     assert.strictEqual(formatDays(-365 * 2 - 1), shortDateYear(-365 * 2 - 1)); // one leap year
 
-    let originalValue = this.siteSettings.relative_date_duration;
-    this.siteSettings.relative_date_duration = 7;
+    const originalValue = siteSettings.relative_date_duration;
+    siteSettings.relative_date_duration = 7;
     assert.strictEqual(formatDays(7), "7d");
     assert.strictEqual(formatDays(8), shortDate(8));
 
-    this.siteSettings.relative_date_duration = 1;
+    siteSettings.relative_date_duration = 1;
     assert.strictEqual(formatDays(1), "1d");
     assert.strictEqual(formatDays(2), shortDate(2));
 
-    this.siteSettings.relative_date_duration = 0;
+    siteSettings.relative_date_duration = 0;
     assert.strictEqual(formatMins(0), "1m");
     assert.strictEqual(formatMins(1), "1m");
     assert.strictEqual(formatMins(2), "2m");
@@ -203,12 +206,12 @@ discourseModule("Unit | Utility | formatter", function (hooks) {
     assert.strictEqual(formatDays(2), shortDate(2));
     assert.strictEqual(formatDays(366), shortDateYear(366));
 
-    this.siteSettings.relative_date_duration = null;
+    siteSettings.relative_date_duration = null;
     assert.strictEqual(formatDays(1), "1d");
     assert.strictEqual(formatDays(14), "14d");
     assert.strictEqual(formatDays(15), shortDate(15));
 
-    this.siteSettings.relative_date_duration = 14;
+    siteSettings.relative_date_duration = 14;
 
     this.clock.restore();
     this.clock = fakeTime("2012-01-12 12:00");
@@ -225,11 +228,11 @@ discourseModule("Unit | Utility | formatter", function (hooks) {
     assert.strictEqual(formatDays(15), shortDate(15));
     assert.strictEqual(formatDays(20), shortDateYear(20));
 
-    this.siteSettings.relative_date_duration = originalValue;
+    siteSettings.relative_date_duration = originalValue;
   });
 
   test("autoUpdatingRelativeAge", function (assert) {
-    let d = moment().subtract(1, "day").toDate();
+    const d = moment().subtract(1, "day").toDate();
 
     let elem = domFromString(autoUpdatingRelativeAge(d))[0];
     assert.strictEqual(elem.dataset.format, "tiny");
@@ -475,11 +478,11 @@ discourseModule("Unit | Utility | formatter", function (hooks) {
   });
 });
 
-discourseModule("Unit | Utility | formatter | until", function (hooks) {
+module("Unit | Utility | formatter | until", function (hooks) {
+  setupTest(hooks);
+
   hooks.afterEach(function () {
-    if (this.clock) {
-      this.clock.restore();
-    }
+    this.clock?.restore();
   });
 
   test("shows time if until moment is today", function (assert) {
