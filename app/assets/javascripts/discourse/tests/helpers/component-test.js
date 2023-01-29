@@ -7,7 +7,7 @@ import { autoLoadModules } from "discourse/initializers/auto-load-modules";
 import QUnit, { test } from "qunit";
 import { setupRenderingTest as emberSetupRenderingTest } from "ember-qunit";
 import { currentSettings } from "discourse/tests/helpers/site-settings";
-import { testCleanup } from "discourse/tests/helpers/qunit-helpers";
+import { injectServiceIntoService } from "discourse/pre-initializers/inject-discourse-objects";
 
 export function setupRenderingTest(hooks) {
   emberSetupRenderingTest(hooks);
@@ -15,11 +15,7 @@ export function setupRenderingTest(hooks) {
   hooks.beforeEach(function () {
     if (!hooks.usingDiscourseModule) {
       this.siteSettings = currentSettings();
-
-      if (!this.registry) {
-        this.registry = this.owner.__registry__;
-      }
-
+      this.registry ||= this.owner.__registry__;
       this.container = this.owner;
     }
 
@@ -28,39 +24,56 @@ export function setupRenderingTest(hooks) {
 
     const currentUser = User.create({
       username: "eviltrout",
-      timezone: "Australia/Brisbane",
+      name: "Robin Ward",
+      admin: false,
+      moderator: false,
+      groups: [
+        {
+          id: 10,
+          automatic: true,
+          name: "trust_level_0",
+          display_name: "trust_level_0",
+        },
+        {
+          id: 11,
+          automatic: true,
+          name: "trust_level_1",
+          display_name: "trust_level_1",
+        },
+      ],
+      user_option: {
+        timezone: "Australia/Brisbane",
+      },
     });
     this.currentUser = currentUser;
-    this.owner.unregister("current-user:main");
-    this.owner.register("current-user:main", currentUser, {
+    this.owner.unregister("service:current-user");
+    this.owner.register("service:current-user", currentUser, {
       instantiate: false,
     });
-    this.owner.inject("component", "currentUser", "current-user:main");
-    this.owner.inject("service", "currentUser", "current-user:main");
+    this.owner.inject("component", "currentUser", "service:current-user");
+    injectServiceIntoService({
+      app: this.owner.application,
+      property: "currentUser",
+      specifier: "service:current-user",
+    });
 
-    this.owner.unregister("topic-tracking-state:main");
+    this.owner.unregister("service:topic-tracking-state");
     this.owner.register(
-      "topic-tracking-state:main",
+      "service:topic-tracking-state",
       TopicTrackingState.create({ currentUser }),
       { instantiate: false }
     );
-    this.owner.inject(
-      "service",
-      "topicTrackingState",
-      "topic-tracking-state:main"
-    );
+    injectServiceIntoService({
+      app: this.owner.application,
+      property: "topicTrackingState",
+      specifier: "service:topic-tracking-state",
+    });
 
     autoLoadModules(this.owner, this.registry);
     this.owner.lookup("service:store");
 
     $.fn.autocomplete = function () {};
   });
-
-  if (!hooks.usingDiscourseModule) {
-    hooks.afterEach(function () {
-      testCleanup(this.container);
-    });
-  }
 }
 
 export default function (name, hooks, opts) {
@@ -85,7 +98,7 @@ export default function (name, hooks, opts) {
 
   test(name, async function (assert) {
     if (opts.anonymous) {
-      this.owner.unregister("current-user:main");
+      this.owner.unregister("service:current-user");
     }
 
     if (opts.beforeEach) {

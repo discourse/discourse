@@ -17,28 +17,27 @@ const LIKE_ACTION = 2;
 const VIBRATE_DURATION = 5;
 
 const _builders = {};
-let _extraButtons = {};
 export let apiExtraButtons = {};
-let _buttonsToRemove = {};
+let _extraButtons = {};
+let _buttonsToRemoveCallbacks = {};
 
 export function addButton(name, builder) {
   _extraButtons[name] = builder;
 }
 
 export function resetPostMenuExtraButtons() {
-  _buttonsToRemove = {};
-  apiExtraButtons = {};
+  for (const key of Object.keys(apiExtraButtons)) {
+    delete apiExtraButtons[key];
+  }
+
   _extraButtons = {};
+  _buttonsToRemoveCallbacks = {};
 }
 
 export function removeButton(name, callback) {
-  if (callback) {
-    _buttonsToRemove[name] = callback;
-  } else {
-    _buttonsToRemove[name] = () => {
-      return true;
-    };
-  }
+  // 🏌️
+  _buttonsToRemoveCallbacks[name] ??= [];
+  _buttonsToRemoveCallbacks[name].push(callback || (() => true));
 }
 
 function registerButton(name, builder) {
@@ -50,13 +49,9 @@ export function buildButton(name, widget) {
 
   let shouldAddButton = true;
 
-  if (_buttonsToRemove[name]) {
-    shouldAddButton = !_buttonsToRemove[name](
-      attrs,
-      state,
-      siteSettings,
-      settings,
-      currentUser
+  if (_buttonsToRemoveCallbacks[name]) {
+    shouldAddButton = !_buttonsToRemoveCallbacks[name].some((c) =>
+      c(attrs, state, siteSettings, settings, currentUser)
     );
   }
 
@@ -147,41 +142,45 @@ function likeCount(attrs, state) {
 
 registerButton("like-count", likeCount);
 
-registerButton("like", (attrs) => {
-  if (!attrs.showLike) {
-    return likeCount(attrs);
+registerButton(
+  "like",
+  (attrs, _state, _siteSettings, _settings, currentUser) => {
+    if (!attrs.showLike) {
+      return likeCount(attrs);
+    }
+
+    const className = attrs.liked
+      ? "toggle-like has-like fade-out"
+      : "toggle-like like";
+
+    const button = {
+      action: "like",
+      icon: attrs.liked ? "d-liked" : "d-unliked",
+      className,
+      before: "like-count",
+      data: {
+        "post-id": attrs.id,
+      },
+    };
+
+    // If the user has already liked the post and doesn't have permission
+    // to undo that operation, then indicate via the title that they've liked it
+    // and disable the button. Otherwise, set the title even if the user
+    // is anonymous (meaning they don't currently have permission to like);
+    // this is important for accessibility.
+    if (attrs.liked && !attrs.canToggleLike) {
+      button.title = "post.controls.has_liked";
+    } else {
+      button.title = attrs.liked
+        ? "post.controls.undo_like"
+        : "post.controls.like";
+    }
+    if (currentUser && !attrs.canToggleLike) {
+      button.disabled = true;
+    }
+    return button;
   }
-
-  const className = attrs.liked
-    ? "toggle-like has-like fade-out"
-    : "toggle-like like";
-
-  const button = {
-    action: "like",
-    icon: attrs.liked ? "d-liked" : "d-unliked",
-    className,
-    before: "like-count",
-    data: {
-      "post-id": attrs.id,
-    },
-  };
-
-  // If the user has already liked the post and doesn't have permission
-  // to undo that operation, then indicate via the title that they've liked it
-  // and disable the button. Otherwise, set the title even if the user
-  // is anonymous (meaning they don't currently have permission to like);
-  // this is important for accessibility.
-  if (attrs.liked && !attrs.canToggleLike) {
-    button.title = "post.controls.has_liked";
-    button.disabled = true;
-  } else {
-    button.title = attrs.liked
-      ? "post.controls.undo_like"
-      : "post.controls.like";
-  }
-
-  return button;
-});
+);
 
 registerButton("flag-count", (attrs) => {
   let className = "button-count";
@@ -232,6 +231,10 @@ registerButton("reply-small", (attrs) => {
     title: "post.controls.reply",
     icon: "reply",
     className: "reply",
+    translatedAriaLabel: I18n.t("post.sr_reply_to", {
+      post_number: attrs.post_number,
+      username: attrs.username,
+    }),
   };
 
   return args;
@@ -316,6 +319,10 @@ registerButton("reply", (attrs, state, siteSettings, postMenuSettings) => {
     title: "post.controls.reply",
     icon: "reply",
     className: "reply create fade-out",
+    translatedAriaLabel: I18n.t("post.sr_reply_to", {
+      post_number: attrs.post_number,
+      username: attrs.username,
+    }),
   };
 
   if (!attrs.canCreatePost) {
@@ -346,7 +353,7 @@ registerButton(
       if (attrs.bookmarkReminderAt) {
         let formattedReminder = formattedReminderTime(
           attrs.bookmarkReminderAt,
-          currentUser.timezone
+          currentUser.user_option.timezone
         );
         title = "bookmarks.created_with_reminder";
         titleOptions.date = formattedReminder;
@@ -509,7 +516,7 @@ export default createWidget("post-menu", {
         if (
           (attrs.yours && button.attrs && button.attrs.alwaysShowYours) ||
           (attrs.reviewableId && i === "flag") ||
-          hiddenButtons.indexOf(i) === -1
+          !hiddenButtons.includes(i)
         ) {
           visibleButtons.push(button);
         }
@@ -540,13 +547,15 @@ export default createWidget("post-menu", {
     Object.values(_extraButtons).forEach((builder) => {
       let shouldAddButton = true;
 
-      if (_buttonsToRemove[name]) {
-        shouldAddButton = !_buttonsToRemove[name](
-          attrs,
-          this.state,
-          this.siteSettings,
-          this.settings,
-          this.currentUser
+      if (_buttonsToRemoveCallbacks[name]) {
+        shouldAddButton = !_buttonsToRemoveCallbacks[name].some((c) =>
+          c(
+            attrs,
+            this.state,
+            this.siteSettings,
+            this.settings,
+            this.currentUser
+          )
         );
       }
 
@@ -702,6 +711,10 @@ export default createWidget("post-menu", {
   },
 
   showMoreActions() {
+    if (this.currentUser && this.siteSettings.enable_user_tips) {
+      this.currentUser.hideUserTipForever("post_menu");
+    }
+
     this.state.collapsed = false;
     const likesPromise = !this.state.likedUsers.length
       ? this.getWhoLiked()
@@ -721,6 +734,10 @@ export default createWidget("post-menu", {
       keyValueStore &&
         keyValueStore.set({ key: "likedPostId", value: attrs.id });
       return this.sendWidgetAction("showLogin");
+    }
+
+    if (this.currentUser && this.siteSettings.enable_user_tips) {
+      this.currentUser.hideUserTipForever("post_menu");
     }
 
     if (this.capabilities.canVibrate && !isTesting()) {

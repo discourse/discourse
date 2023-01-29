@@ -43,12 +43,12 @@
 .modal-header {
   padding: 10px;
   h3 {
-    font-size: $font-up-2;
+    font-size: var(--font-up-2);
   }
 }
 
 .close {
-  font-size: $font-up-4;
+  font-size: var(--font-up-4);
 }
 
 #choosing-topic {
@@ -105,6 +105,14 @@
 
   &.insert-hyperlink-modal .modal-inner-container {
     overflow: visible;
+  }
+
+  html.keyboard-visible:not(.ios-device) & {
+    height: calc(100% - env(keyboard-inset-height));
+
+    .modal-inner-container {
+      margin: auto;
+    }
   }
 }
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::FeatureTopicUsers do
+RSpec.describe Jobs::FeatureTopicUsers do
   it "raises an error without a topic_id" do
     expect { Jobs::FeatureTopicUsers.new.execute({}) }.to raise_error(Discourse::InvalidParameters)
   end
@@ -9,7 +9,7 @@ describe Jobs::FeatureTopicUsers do
     Jobs::FeatureTopicUsers.new.execute(topic_id: 123)
   end
 
-  context 'with a topic' do
+  context "with a topic" do
     let!(:post) { create_post }
     let(:topic) { post.topic }
     fab!(:coding_horror) { Fabricate(:coding_horror) }
@@ -33,7 +33,7 @@ describe Jobs::FeatureTopicUsers do
     end
   end
 
-  context "participant count" do
+  context "with participant count" do
     let!(:post) { create_post }
     let(:topic) { post.topic }
 

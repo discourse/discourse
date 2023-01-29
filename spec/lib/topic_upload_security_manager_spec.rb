@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe TopicUploadSecurityManager do
+RSpec.describe TopicUploadSecurityManager do
   let(:group) { Fabricate(:group) }
   let(:category) { Fabricate(:category) }
   let!(:topic) { Fabricate(:topic, user: user, category: category) }
@@ -27,10 +27,10 @@ describe TopicUploadSecurityManager do
     context "when the topic category is read restricted" do
       let(:category) { Fabricate(:private_category, group: group) }
 
-      context "when secure media is enabled" do
+      context "when secure uploads is enabled" do
         before do
           setup_s3
-          SiteSetting.secure_media = true
+          SiteSetting.secure_uploads = true
 
           [upload, upload2, upload3].each { |upl| stub_upload(upl) }
         end
@@ -40,16 +40,14 @@ describe TopicUploadSecurityManager do
         end
 
         context "when changing the topic to a non-private category" do
-          before do
-            topic.update(category: Fabricate(:category))
-          end
+          before { topic.update(category: Fabricate(:category)) }
           it "changes the upload secure statuses to false and updates ACLs and rebakes" do
             expect_upload_status_to_change_and_rebake
           end
         end
       end
 
-      context "when secure media is disabled" do
+      context "when secure uploads is disabled" do
         it "changes the upload secure statuses to false and updates ACLs and rebakes" do
           expect_upload_status_to_change_and_rebake
         end
@@ -59,10 +57,10 @@ describe TopicUploadSecurityManager do
     context "when the topic is a private message" do
       let(:topic) { Fabricate(:private_message_topic, category: category, user: user) }
 
-      context "when secure media is enabled" do
+      context "when secure uploads is enabled" do
         before do
           setup_s3
-          SiteSetting.secure_media = true
+          SiteSetting.secure_uploads = true
 
           [upload, upload2, upload3].each { |upl| stub_upload(upl) }
         end
@@ -72,16 +70,14 @@ describe TopicUploadSecurityManager do
         end
 
         context "when making the PM into a public topic" do
-          before do
-            topic.update(archetype: Archetype.default)
-          end
+          before { topic.update(archetype: Archetype.default) }
           it "changes the upload secure statuses to false and updates ACLs and rebakes" do
             expect_upload_status_to_change_and_rebake
           end
         end
       end
 
-      context "when secure media is disabled" do
+      context "when secure uploads is disabled" do
         it "changes the upload secure statuses to false and updates ACLs and rebakes" do
           expect_upload_status_to_change_and_rebake
         end
@@ -89,18 +85,16 @@ describe TopicUploadSecurityManager do
     end
 
     context "when the topic is public" do
-      context "when secure media is enabled" do
+      context "when secure uploads is enabled" do
         before do
           setup_s3
-          SiteSetting.secure_media = true
+          SiteSetting.secure_uploads = true
 
           [upload, upload2, upload3].each { |upl| stub_upload(upl) }
         end
 
         context "when login required is enabled" do
-          before do
-            SiteSetting.login_required = true
-          end
+          before { SiteSetting.login_required = true }
 
           it "does not change any upload statuses or update ACLs or rebake" do
             expect_upload_status_not_to_change
@@ -108,9 +102,7 @@ describe TopicUploadSecurityManager do
         end
 
         context "when login required is not enabled" do
-          before do
-            SiteSetting.login_required = false
-          end
+          before { SiteSetting.login_required = false }
 
           it "changes the upload secure statuses to false and updates ACLs and rebakes" do
             expect_upload_status_to_change_and_rebake
@@ -125,15 +117,13 @@ describe TopicUploadSecurityManager do
 
       before do
         setup_s3
-        SiteSetting.secure_media = true
+        SiteSetting.secure_uploads = true
 
         [upload, upload2, upload3].each { |upl| stub_upload(upl) }
       end
 
       context "when this is the first post the upload has appeared in" do
-        before do
-          UploadReference.create(upload: upload3, target: post4)
-        end
+        before { UploadReference.create(upload: upload3, target: post4) }
 
         it "changes the upload secure status to true and changes the ACL and rebakes the post and sets the access control post" do
           Post.any_instance.expects(:rebake!).once
@@ -142,10 +132,8 @@ describe TopicUploadSecurityManager do
           expect(upload3.reload.access_control_post).to eq(post4)
         end
 
-        context "when secure media is not enabled" do
-          before do
-            SiteSetting.secure_media = false
-          end
+        context "when secure uploads is not enabled" do
+          before { SiteSetting.secure_uploads = false }
 
           it "does not change the upload secure status and does not set the access control post" do
             subject.run

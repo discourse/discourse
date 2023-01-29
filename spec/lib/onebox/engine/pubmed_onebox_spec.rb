@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Onebox::Engine::PubmedOnebox do
+RSpec.describe Onebox::Engine::PubmedOnebox do
   let(:link) { "http://www.ncbi.nlm.nih.gov/pubmed/7288891" }
   let(:xml_link) { "http://www.ncbi.nlm.nih.gov/pubmed/7288891?report=xml&format=text" }
   let(:html) { described_class.new(link).to_html }
@@ -19,7 +19,10 @@ describe Onebox::Engine::PubmedOnebox do
   end
 
   it "has the paper's abstract" do
-    expect(html).to include("The application of maximum likelihood techniques to the estimation of evolutionary trees from nucleic acid sequence data is discussed.") end
+    expect(html).to include(
+      "The application of maximum likelihood techniques to the estimation of evolutionary trees from nucleic acid sequence data is discussed.",
+    )
+  end
 
   it "has the paper's date" do
     expect(html).to include("1981")
@@ -29,14 +32,17 @@ describe Onebox::Engine::PubmedOnebox do
     expect(html).to include(link)
   end
 
-  context "Pubmed electronic print" do
+  describe "Pubmed electronic print" do
     let(:link) { "http://www.ncbi.nlm.nih.gov/pubmed/24737116" }
     let(:xml_link) { "http://www.ncbi.nlm.nih.gov/pubmed/24737116?report=xml&format=text" }
     let(:html) { described_class.new(link).to_html }
 
     before do
       stub_request(:get, link).to_return(status: 200, body: onebox_response("pubmed-electronic"))
-      stub_request(:get, xml_link).to_return(status: 200, body: onebox_response("pubmed-electronic-xml"))
+      stub_request(:get, xml_link).to_return(
+        status: 200,
+        body: onebox_response("pubmed-electronic-xml"),
+      )
     end
 
     it "has the paper's title" do
@@ -56,7 +62,7 @@ describe Onebox::Engine::PubmedOnebox do
     end
   end
 
-  context "regex URI match" do
+  describe "regex URI match" do
     it "matches on specific articles" do
       expect(match("http://www.ncbi.nlm.nih.gov/pubmed/7288891")).to eq true
     end

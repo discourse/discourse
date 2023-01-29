@@ -14,14 +14,12 @@ class TestCachedCounting
   end
 end
 
-describe CachedCounting do
-
+RSpec.describe CachedCounting do
   it "should be default disabled in test" do
     expect(CachedCounting.enabled?).to eq(false)
   end
 
-  context "backing implementation" do
-
+  describe "backing implementation" do
     it "can correctly check for flush to db lock" do
       CachedCounting.clear_flush_to_db_lock!
 
@@ -41,7 +39,6 @@ describe CachedCounting do
       end
 
       it "can dispatch counts to backing class" do
-
         CachedCounting.queue("a,a", TestCachedCounting)
         CachedCounting.queue("a,a", TestCachedCounting)
         CachedCounting.queue("b", TestCachedCounting)
@@ -50,12 +47,11 @@ describe CachedCounting do
         CachedCounting.flush_to_db
 
         expect(TestCachedCounting.data).to eq({ "a,a" => 2, "b" => 1 })
-
       end
     end
   end
 
-  context "active record" do
+  describe "active record" do
     class RailsCacheCounter < ActiveRecord::Base
       include CachedCounting
       self.table_name = "posts"
@@ -78,20 +74,15 @@ describe CachedCounting do
       CachedCounting.enable
     end
 
-    after do
-      CachedCounting.disable
-    end
+    after { CachedCounting.disable }
 
     it "can dispatch data via background thread" do
-
       freeze_time
       d1 = Time.now.utc.to_date
 
       RailsCacheCounter.perform_increment!("a,a")
       RailsCacheCounter.perform_increment!("b")
-      20.times do
-        RailsCacheCounter.perform_increment!("a,a")
-      end
+      20.times { RailsCacheCounter.perform_increment!("a,a") }
 
       freeze_time 2.days.from_now
       d2 = Time.now.utc.to_date
@@ -101,12 +92,7 @@ describe CachedCounting do
 
       CachedCounting.flush
 
-      expected = {
-        ["a,a", d1] => 21,
-        ["b", d1] => 1,
-        ["a,a", d2] => 1,
-        ["d", d2] => 1,
-      }
+      expected = { ["a,a", d1] => 21, ["b", d1] => 1, ["a,a", d2] => 1, ["d", d2] => 1 }
 
       expect(RailsCacheCounter.cache_data).to eq(expected)
     end

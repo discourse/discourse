@@ -2,6 +2,6 @@
 
 module VaryHeader
   def ensure_vary_header
-    response.headers['Vary'] ||= 'Accept' if !params[:format]
+    response.headers["Vary"] ||= "Accept" if !params[:format]
   end
 end

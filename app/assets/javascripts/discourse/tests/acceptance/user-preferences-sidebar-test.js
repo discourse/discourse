@@ -9,31 +9,15 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
-acceptance("User Preferences - Sidebar - Tagging Disabled", function (needs) {
-  needs.settings({
-    tagging_enabled: false,
-  });
-
-  needs.user({
-    experimental_sidebar_enabled: true,
-    sidebar_category_ids: [],
-  });
-
-  test("user should not see tag chooser", async function (assert) {
-    await visit("/u/eviltrout/preferences/sidebar");
-
-    assert.ok(!exists(".tag-chooser"), "tag chooser is not displayed");
-  });
-});
-
 acceptance("User Preferences - Sidebar", function (needs) {
   needs.user({
-    experimental_sidebar_enabled: true,
     sidebar_category_ids: [],
-    sidebar_tag_names: [],
+    sidebar_tags: [],
+    display_sidebar_tags: true,
   });
 
   needs.settings({
+    navigation_menu: "sidebar",
     tagging_enabled: true,
   });
 
@@ -55,9 +39,25 @@ acceptance("User Preferences - Sidebar", function (needs) {
         // This request format will cause an error
         return helper.response(400, {});
       } else {
-        return helper.response({ user: {} });
+        return helper.response({
+          user: {
+            sidebar_tags: [
+              { name: "monkey", pm_only: false },
+              { name: "gazelle", pm_only: false },
+            ],
+            sidebar_list_destination: "unread_new",
+          },
+        });
       }
     });
+  });
+
+  test("sidebar preferences link is not shown when navigation menu is set to legacy", async function (assert) {
+    this.siteSettings.navigation_menu = "legacy";
+
+    await visit("/u/eviltrout/preferences");
+
+    assert.dom(".nav-sidebar").doesNotExist();
   });
 
   test("user encountering error when adding categories to sidebar", async function (assert) {
@@ -85,9 +85,9 @@ acceptance("User Preferences - Sidebar", function (needs) {
       "contains the right request body to update user's sidebar category links"
     );
 
-    assert.ok(exists(".modal-body"), "error message is displayed");
+    assert.ok(exists(".dialog-body"), "error message is displayed");
 
-    await click(".modal .d-button-label");
+    await click(".dialog-footer .btn-primary");
 
     assert.ok(
       !exists(".sidebar-section-categories .sidebar-section-link-howto"),
@@ -100,7 +100,32 @@ acceptance("User Preferences - Sidebar", function (needs) {
     );
   });
 
-  test("user adding categories to sidebar", async function (assert) {
+  test("user adding categories to sidebar when default sidebar categories have not been configured", async function (assert) {
+    await visit("/u/eviltrout/preferences/sidebar");
+
+    assert.notOk(exists(".sidebar-section-categories"));
+
+    const categorySelector = selectKit(".category-selector");
+    await categorySelector.expand();
+    await categorySelector.selectKitSelectRowByName("support");
+    await categorySelector.selectKitSelectRowByName("bug");
+
+    await click(".save-changes");
+
+    assert.ok(
+      exists(".sidebar-section-categories .sidebar-section-link-support"),
+      "support category has been added to sidebar"
+    );
+
+    assert.ok(
+      exists(".sidebar-section-categories .sidebar-section-link-bug"),
+      "bug category has been added to sidebar"
+    );
+  });
+
+  test("user adding categories to sidebar when default sidebar categories have been configured", async function (assert) {
+    this.siteSettings.default_sidebar_categories = "5";
+
     await visit("/");
     await click(".sidebar-section-categories .sidebar-section-header-button");
 
@@ -129,7 +154,7 @@ acceptance("User Preferences - Sidebar", function (needs) {
   });
 
   test("user encountering error when adding tags to sidebar", async function (assert) {
-    updateCurrentUser({ sidebar_tag_names: ["monkey"] });
+    updateCurrentUser({ sidebar_tags: [{ name: "monkey", pm_only: false }] });
 
     await visit("/");
 
@@ -153,9 +178,9 @@ acceptance("User Preferences - Sidebar", function (needs) {
       "contains the right request body to update user's sidebar tag links"
     );
 
-    assert.ok(exists(".modal-body"), "error message is displayed");
+    assert.ok(exists(".dialog-body"), "error message is displayed");
 
-    await click(".modal .d-button-label");
+    await click(".dialog-footer .btn-primary");
 
     assert.ok(
       !exists(".sidebar-section-tags .sidebar-section-link-gazelle"),
@@ -168,7 +193,32 @@ acceptance("User Preferences - Sidebar", function (needs) {
     );
   });
 
-  test("user adding tags to sidebar", async function (assert) {
+  test("user should not see tag chooser when display_sidebar_tags property is false", async function (assert) {
+    updateCurrentUser({ display_sidebar_tags: false });
+
+    await visit("/u/eviltrout/preferences/sidebar");
+
+    assert.ok(!exists(".tag-chooser"), "tag chooser is not displayed");
+  });
+
+  test("user adding tags to sidebar when default tags have not been configured", async function (assert) {
+    await visit("/u/eviltrout/preferences/sidebar");
+
+    const tagChooser = selectKit(".tag-chooser");
+    await tagChooser.expand();
+    await tagChooser.selectKitSelectRowByName("monkey");
+
+    await click(".save-changes");
+
+    assert.ok(
+      exists(".sidebar-section-tags .sidebar-section-link-monkey"),
+      "monkey tag has been added to sidebar"
+    );
+  });
+
+  test("user adding tags to sidebar when default tags have been configured", async function (assert) {
+    this.siteSettings.default_sidebar_tags = "tag1|tag2";
+
     await visit("/");
     await click(".sidebar-section-tags .sidebar-section-header-button");
 

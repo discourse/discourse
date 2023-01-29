@@ -10,6 +10,6 @@ export default Controller.extend(FilterModeMixin, {
 
   @discourseComputed("router.currentRoute.queryParams.f")
   skipCategoriesNavItem(filterParamValue) {
-    return !filterParamValue || filterParamValue !== TRACKED_QUERY_PARAM_VALUE;
+    return filterParamValue === TRACKED_QUERY_PARAM_VALUE;
   },
 });

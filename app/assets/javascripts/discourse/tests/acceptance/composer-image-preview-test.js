@@ -10,8 +10,8 @@ import {
 import { test } from "qunit";
 
 acceptance("Composer - Image Preview", function (needs) {
-  needs.user();
-  needs.settings({ enable_whispers: true });
+  needs.user({});
+  needs.settings({ allow_uncategorized_topics: true });
   needs.site({ can_tag_topics: true });
   needs.pretender((server, helper) => {
     server.post("/uploads/lookup-urls", () => {
@@ -20,12 +20,12 @@ acceptance("Composer - Image Preview", function (needs) {
     server.get("/posts/419", () => {
       return helper.response({ id: 419 });
     });
-    server.get("/u/is_local_username", () => {
+    server.get("/composer/mentions", () => {
       return helper.response({
-        valid: [],
-        valid_groups: ["staff"],
-        mentionable_groups: [{ name: "staff", user_count: 30 }],
-        cannot_see: [],
+        users: [],
+        user_reasons: {},
+        groups: { staff: { user_count: 30 } },
+        group_reasons: {},
         max_users_notified_per_group_mention: 100,
       });
     });
@@ -182,8 +182,8 @@ acceptance("Composer - Image Preview", function (needs) {
       "correct alt text in input"
     );
 
-    await triggerKeyEvent(altTextInput, "keypress", "[".charCodeAt(0));
-    await triggerKeyEvent(altTextInput, "keypress", "]".charCodeAt(0));
+    await triggerKeyEvent(altTextInput, "keypress", "[");
+    await triggerKeyEvent(altTextInput, "keypress", "]");
     assert.equal(query(altTextInput).value, "zorro", "does not input [ ] keys");
 
     await fillIn(altTextInput, "steak");
@@ -298,7 +298,7 @@ acceptance("Composer - Image Preview", function (needs) {
     await click(editAltTextButton);
 
     await fillIn(altTextInput, "tomtom");
-    await triggerKeyEvent(altTextInput, "keypress", 13);
+    await triggerKeyEvent(altTextInput, "keypress", "Enter");
 
     assert.equal(
       query(".d-editor-input").value,
@@ -320,7 +320,7 @@ acceptance("Composer - Image Preview", function (needs) {
     await click(editAltTextButton);
 
     await fillIn(altTextInput, "");
-    await triggerKeyEvent(altTextInput, "keypress", 13);
+    await triggerKeyEvent(altTextInput, "keypress", "Enter");
 
     assert.equal(
       query(".d-editor-input").value,
@@ -332,12 +332,47 @@ acceptance("Composer - Image Preview", function (needs) {
     await click(editAltTextButton);
 
     await fillIn(altTextInput, "tomtom");
-    await triggerKeyEvent(altTextInput, "keypress", 13);
+    await triggerKeyEvent(altTextInput, "keypress", "Enter");
 
     assert.equal(
       query(".d-editor-input").value,
       "![tomtom|200x200](upload://zorro.png)",
       "alt text updated"
+    );
+  });
+
+  test("Image delete button", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+
+    let uploads = [
+      "![image_example_0|666x500](upload://q4iRxcuSAzfnbUaCsbjMXcGrpaK.jpeg)",
+      "![image_example_1|481x480](upload://p1ijebM2iyQcUswBffKwMny3gxu.jpeg)",
+    ];
+
+    await fillIn(".d-editor-input", uploads.join("\n"));
+
+    uploads[0] = ""; // delete the first image.
+
+    //click on the remove button of the first image
+    await click(".button-wrapper[data-image-index='0'] .delete-image-button");
+
+    assert.strictEqual(
+      query(".d-editor-input").value,
+      uploads.join("\n"),
+      "Image should be removed from the editor"
+    );
+
+    assert.equal(
+      query(".d-editor-input").value.includes("image_example_0"),
+      false,
+      "It shouldn't have the first image"
+    );
+
+    assert.equal(
+      query(".d-editor-input").value.includes("image_example_1"),
+      true,
+      "It should have the second image"
     );
   });
 });

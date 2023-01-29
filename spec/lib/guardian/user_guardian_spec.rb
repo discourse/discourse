@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
-describe UserGuardian do
-
+RSpec.describe UserGuardian do
   let :user do
     Fabricate(:user)
   end
@@ -14,9 +13,7 @@ describe UserGuardian do
     Fabricate(:admin)
   end
 
-  let(:user_avatar) do
-    Fabricate(:user_avatar, user: user)
-  end
+  let(:user_avatar) { Fabricate(:user_avatar, user: user) }
 
   let :users_upload do
     Upload.new(user_id: user_avatar.user_id, id: 1)
@@ -32,20 +29,17 @@ describe UserGuardian do
     Upload.new(user_id: 9999, id: 3)
   end
 
-  let(:moderator_upload) do
-    Upload.new(user_id: moderator.id, id: 4)
-  end
+  let(:moderator_upload) { Upload.new(user_id: moderator.id, id: 4) }
 
   let(:trust_level_1) { build(:user, trust_level: 1) }
   let(:trust_level_2) { build(:user, trust_level: 2) }
 
-  describe '#can_pick_avatar?' do
-
+  describe "#can_pick_avatar?" do
     let :guardian do
       Guardian.new(user)
     end
 
-    context 'anon user' do
+    context "with anon user" do
       let(:guardian) { Guardian.new }
 
       it "should return the right value" do
@@ -53,33 +47,25 @@ describe UserGuardian do
       end
     end
 
-    context 'current user' do
+    context "with current user" do
       it "can not set uploads not owned by current user" do
         expect(guardian.can_pick_avatar?(user_avatar, users_upload)).to eq(true)
         expect(guardian.can_pick_avatar?(user_avatar, already_uploaded)).to eq(true)
 
-        UserUpload.create!(
-          upload_id: not_my_upload.id,
-          user_id: not_my_upload.user_id
-        )
+        UserUpload.create!(upload_id: not_my_upload.id, user_id: not_my_upload.user_id)
 
         expect(guardian.can_pick_avatar?(user_avatar, not_my_upload)).to eq(false)
         expect(guardian.can_pick_avatar?(user_avatar, nil)).to eq(true)
       end
 
       it "can handle uploads that are associated but not directly owned" do
-        UserUpload.create!(
-          upload_id: not_my_upload.id,
-          user_id: user_avatar.user_id
-        )
+        UserUpload.create!(upload_id: not_my_upload.id, user_id: user_avatar.user_id)
 
-        expect(guardian.can_pick_avatar?(user_avatar, not_my_upload))
-          .to eq(true)
+        expect(guardian.can_pick_avatar?(user_avatar, not_my_upload)).to eq(true)
       end
     end
 
-    context 'moderator' do
-
+    context "with moderator" do
       let :guardian do
         Guardian.new(moderator)
       end
@@ -93,7 +79,7 @@ describe UserGuardian do
       end
     end
 
-    context 'admin' do
+    context "with admin" do
       let :guardian do
         Guardian.new(admin)
       end
@@ -106,7 +92,6 @@ describe UserGuardian do
   end
 
   describe "#can_see_profile?" do
-
     it "is false for no user" do
       expect(Guardian.new.can_see_profile?(nil)).to eq(false)
     end
@@ -115,7 +100,7 @@ describe UserGuardian do
       expect(Guardian.new.can_see_profile?(user)).to eq(true)
     end
 
-    context "hidden profile" do
+    context "with hidden profile" do
       # Mixing Fabricate.build() and Fabricate() could cause ID clashes, so override :user
       fab!(:user) { Fabricate(:user) }
 
@@ -155,7 +140,7 @@ describe UserGuardian do
         Fabricate(:user_field),
         Fabricate(:user_field, show_on_profile: true),
         Fabricate(:user_field, show_on_user_card: true),
-        Fabricate(:user_field, show_on_user_card: true, show_on_profile: true)
+        Fabricate(:user_field, show_on_user_card: true, show_on_profile: true),
       ]
     end
 
@@ -200,9 +185,7 @@ describe UserGuardian do
       end
 
       context "when user created too many posts" do
-        before do
-          (User::MAX_STAFF_DELETE_POST_COUNT + 1).times { Fabricate(:post, user: user) }
-        end
+        before { (User::MAX_STAFF_DELETE_POST_COUNT + 1).times { Fabricate(:post, user: user) } }
 
         it "is allowed when user created the first post within delete_user_max_post_age days" do
           SiteSetting.delete_user_max_post_age = 2
@@ -216,9 +199,7 @@ describe UserGuardian do
       end
 
       context "when user didn't create many posts" do
-        before do
-          (User::MAX_STAFF_DELETE_POST_COUNT - 1).times { Fabricate(:post, user: user) }
-        end
+        before { (User::MAX_STAFF_DELETE_POST_COUNT - 1).times { Fabricate(:post, user: user) } }
 
         it "is allowed when even when user created the first post before delete_user_max_post_age days" do
           SiteSetting.delete_user_max_post_age = 2
@@ -229,7 +210,7 @@ describe UserGuardian do
       end
     end
 
-    context "delete myself" do
+    context "when deleting myself" do
       let(:guardian) { Guardian.new(user) }
 
       include_examples "can_delete_user examples"
@@ -260,10 +241,15 @@ describe UserGuardian do
       end
 
       it "is allowed when user responded to PM from system user" do
-        topic = Fabricate(:private_message_topic, user: Discourse.system_user, topic_allowed_users: [
-          Fabricate.build(:topic_allowed_user, user: Discourse.system_user),
-          Fabricate.build(:topic_allowed_user, user: user)
-        ])
+        topic =
+          Fabricate(
+            :private_message_topic,
+            user: Discourse.system_user,
+            topic_allowed_users: [
+              Fabricate.build(:topic_allowed_user, user: Discourse.system_user),
+              Fabricate.build(:topic_allowed_user, user: user),
+            ],
+          )
 
         Fabricate(:post, user: user, topic: topic)
         expect(guardian.can_delete_user?(user)).to eq(true)
@@ -273,9 +259,12 @@ describe UserGuardian do
       end
 
       it "is allowed when user created multiple posts in PMs to themselves" do
-        topic = Fabricate(:private_message_topic, user: user, topic_allowed_users: [
-          Fabricate.build(:topic_allowed_user, user: user)
-        ])
+        topic =
+          Fabricate(
+            :private_message_topic,
+            user: user,
+            topic_allowed_users: [Fabricate.build(:topic_allowed_user, user: user)],
+          )
 
         Fabricate(:post, user: user, topic: topic)
         Fabricate(:post, user: user, topic: topic)
@@ -283,10 +272,15 @@ describe UserGuardian do
       end
 
       it "isn't allowed when user created multiple posts in PMs sent to other users" do
-        topic = Fabricate(:private_message_topic, user: user, topic_allowed_users: [
-          Fabricate.build(:topic_allowed_user, user: user),
-          Fabricate.build(:topic_allowed_user, user: Fabricate(:user))
-        ])
+        topic =
+          Fabricate(
+            :private_message_topic,
+            user: user,
+            topic_allowed_users: [
+              Fabricate.build(:topic_allowed_user, user: user),
+              Fabricate.build(:topic_allowed_user, user: Fabricate(:user)),
+            ],
+          )
 
         Fabricate(:post, user: user, topic: topic)
         expect(guardian.can_delete_user?(user)).to eq(true)
@@ -296,12 +290,16 @@ describe UserGuardian do
       end
 
       it "isn't allowed when user created multiple posts in PMs sent to groups" do
-        topic = Fabricate(:private_message_topic, user: user, topic_allowed_users: [
-          Fabricate.build(:topic_allowed_user, user: user)
-        ], topic_allowed_groups: [
-          Fabricate.build(:topic_allowed_group, group: Fabricate(:group)),
-          Fabricate.build(:topic_allowed_group, group: Fabricate(:group))
-        ])
+        topic =
+          Fabricate(
+            :private_message_topic,
+            user: user,
+            topic_allowed_users: [Fabricate.build(:topic_allowed_user, user: user)],
+            topic_allowed_groups: [
+              Fabricate.build(:topic_allowed_group, group: Fabricate(:group)),
+              Fabricate.build(:topic_allowed_group, group: Fabricate(:group)),
+            ],
+          )
 
         Fabricate(:post, user: user, topic: topic)
         expect(guardian.can_delete_user?(user)).to eq(true)
@@ -374,12 +372,12 @@ describe UserGuardian do
   end
 
   describe "#can_see_review_queue?" do
-    it 'returns true when the user is a staff member' do
+    it "returns true when the user is a staff member" do
       guardian = Guardian.new(moderator)
       expect(guardian.can_see_review_queue?).to eq(true)
     end
 
-    it 'returns false for a regular user' do
+    it "returns false for a regular user" do
       guardian = Guardian.new(user)
       expect(guardian.can_see_review_queue?).to eq(false)
     end
@@ -395,7 +393,7 @@ describe UserGuardian do
       expect(guardian.can_see_review_queue?).to eq(true)
     end
 
-    it 'returns false if category group review is disabled' do
+    it "returns false if category group review is disabled" do
       group = Fabricate(:group)
       group.add(user)
       guardian = Guardian.new(user)
@@ -406,7 +404,7 @@ describe UserGuardian do
       expect(guardian.can_see_review_queue?).to eq(false)
     end
 
-    it 'returns false if the reviewable is under a read restricted category' do
+    it "returns false if the reviewable is under a read restricted category" do
       group = Fabricate(:group)
       group.add(user)
       guardian = Guardian.new(user)
@@ -419,38 +417,38 @@ describe UserGuardian do
     end
   end
 
-  describe 'can_upload_profile_header' do
-    it 'returns true if it is an admin' do
+  describe "can_upload_profile_header" do
+    it "returns true if it is an admin" do
       guardian = Guardian.new(admin)
       expect(guardian.can_upload_profile_header?(admin)).to eq(true)
     end
 
-    it 'returns true if the trust level of user matches site setting' do
+    it "returns true if the trust level of user matches site setting" do
       guardian = Guardian.new(trust_level_2)
       SiteSetting.min_trust_level_to_allow_profile_background = 2
       expect(guardian.can_upload_profile_header?(trust_level_2)).to eq(true)
     end
 
-    it 'returns false if the trust level of user does not matches site setting' do
+    it "returns false if the trust level of user does not matches site setting" do
       guardian = Guardian.new(trust_level_1)
       SiteSetting.min_trust_level_to_allow_profile_background = 2
       expect(guardian.can_upload_profile_header?(trust_level_1)).to eq(false)
     end
   end
 
-  describe 'can_upload_user_card_background' do
-    it 'returns true if it is an admin' do
+  describe "can_upload_user_card_background" do
+    it "returns true if it is an admin" do
       guardian = Guardian.new(admin)
       expect(guardian.can_upload_user_card_background?(admin)).to eq(true)
     end
 
-    it 'returns true if the trust level of user matches site setting' do
+    it "returns true if the trust level of user matches site setting" do
       guardian = Guardian.new(trust_level_2)
       SiteSetting.min_trust_level_to_allow_user_card_background = 2
       expect(guardian.can_upload_user_card_background?(trust_level_2)).to eq(true)
     end
 
-    it 'returns false if the trust level of user does not matches site setting' do
+    it "returns false if the trust level of user does not matches site setting" do
       guardian = Guardian.new(trust_level_1)
       SiteSetting.min_trust_level_to_allow_user_card_background = 2
       expect(guardian.can_upload_user_card_background?(trust_level_1)).to eq(false)
@@ -469,7 +467,7 @@ describe UserGuardian do
       expect(Guardian.new(admin_user).can_change_tracking_preferences?(admin_user)).to eq(true)
     end
 
-    context "allow_changing_staged_user_tracking is false" do
+    context "when allow_changing_staged_user_tracking is false" do
       before { SiteSetting.allow_changing_staged_user_tracking = false }
 
       it "is false to staged user" do
@@ -481,7 +479,7 @@ describe UserGuardian do
       end
     end
 
-    context "allow_changing_staged_user_tracking is true" do
+    context "when allow_changing_staged_user_tracking is true" do
       before { SiteSetting.allow_changing_staged_user_tracking = true }
 
       it "is true to staged user" do

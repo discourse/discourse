@@ -1,18 +1,14 @@
 # frozen_string_literal: true
 
-describe AdminUserListSerializer do
+RSpec.describe AdminUserListSerializer do
   fab!(:user) { Fabricate(:user) }
   fab!(:admin) { Fabricate(:admin) }
   let(:guardian) { Guardian.new(admin) }
 
-  let(:serializer) do
-    AdminUserListSerializer.new(user, scope: guardian, root: false)
-  end
+  let(:serializer) { AdminUserListSerializer.new(user, scope: guardian, root: false) }
 
   context "when totp enabled" do
-    before do
-      Fabricate(:user_second_factor_totp, user: user)
-    end
+    before { Fabricate(:user_second_factor_totp, user: user) }
     it "returns the right values" do
       json = serializer.as_json
 
@@ -21,9 +17,7 @@ describe AdminUserListSerializer do
   end
 
   context "when security keys enabled" do
-    before do
-      Fabricate(:user_security_key, user: user)
-    end
+    before { Fabricate(:user_security_key, user: user) }
     it "returns the right values" do
       json = serializer.as_json
 
@@ -31,7 +25,7 @@ describe AdminUserListSerializer do
     end
   end
 
-  context "emails" do
+  describe "emails" do
     fab!(:admin) { Fabricate(:user, admin: true, email: "admin@email.com") }
     fab!(:moderator) { Fabricate(:user, moderator: true, email: "moderator@email.com") }
     fab!(:user) { Fabricate(:user, email: "user@email.com") }
@@ -41,7 +35,7 @@ describe AdminUserListSerializer do
         user,
         scope: Guardian.new(viewed_by),
         root: false,
-        emails_desired: opts && opts[:emails_desired]
+        emails_desired: opts && opts[:emails_desired],
       ).as_json
     end
 

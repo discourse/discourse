@@ -45,6 +45,7 @@
 
       &:hover {
         box-shadow: shadow("card");
+        border-color: var(--primary-low-mid-or-secondary-high);
       }
     }
 
@@ -85,7 +86,7 @@
           span {
             width: 100%;
             word-break: break-word;
-            line-height: $line-height-medium;
+            line-height: var(--line-height-medium);
           }
         }
       }
@@ -107,7 +108,7 @@
     }
 
     .groups-info-name {
-      font-size: $font-up-1;
+      font-size: var(--font-up-1);
       font-weight: bold;
       color: var(--primary);
     }
@@ -147,10 +148,10 @@
   }
   &.groups-notifications-form {
     .control-instructions {
-      color: $primary-medium;
+      color: var(--primary-medium);
       margin-bottom: 10px;
-      font-size: $font-down-1;
-      line-height: $line-height-large;
+      font-size: var(--font-down-1);
+      line-height: var(--line-height-large);
     }
 
     .category-selector,

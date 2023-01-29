@@ -1,11 +1,9 @@
 import { emojiUnescape } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
 import { htmlSafe } from "@ember/template";
-import { helper } from "@ember/component/helper";
+import { registerUnbound } from "discourse-common/lib/helpers";
 
-function emoji(code, options) {
+registerUnbound("emoji", function (code, options) {
   const escaped = escapeExpression(`:${code}:`);
   return htmlSafe(emojiUnescape(escaped, options));
-}
-
-export default helper(emoji);
+});

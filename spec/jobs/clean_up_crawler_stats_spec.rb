@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::CleanUpCrawlerStats do
+RSpec.describe Jobs::CleanUpCrawlerStats do
   subject { Jobs::CleanUpCrawlerStats.new.execute({}) }
 
   it "deletes records older than 30 days old" do

@@ -1,6 +1,10 @@
 // Some basic overrides to https://github.com/MiniProfiler/rack-mini-profiler/blob/master/lib/html/includes.scss
 // which make the badge conform to the current site theme.
 
+.profiler-queries-bg {
+  z-index: z("header") - 2;
+}
+
 div.profiler-results.profiler-top {
   top: var(--header-offset);
   z-index: z("header") - 1;

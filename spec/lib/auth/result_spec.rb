@@ -1,9 +1,11 @@
 # frozen_string_literal: true
-describe Auth::Result do
+RSpec.describe Auth::Result do
   fab!(:initial_email) { "initialemail@example.org" }
   fab!(:initial_username) { "initialusername" }
   fab!(:initial_name) { "Initial Name" }
-  fab!(:user) { Fabricate(:user, email: initial_email, username: initial_username, name: initial_name) }
+  fab!(:user) do
+    Fabricate(:user, email: initial_email, username: initial_username, name: initial_name)
+  end
 
   let(:new_email) { "newemail@example.org" }
   let(:new_username) { "newusername" }

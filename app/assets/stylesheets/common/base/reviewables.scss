@@ -213,7 +213,7 @@
   border-top: 1px solid var(--primary-low);
 
   .topic-statuses {
-    font-size: $font-up-2;
+    font-size: var(--font-up-2);
   }
 
   .reviewable-meta-data {
@@ -221,7 +221,7 @@
     display: flex;
     width: 100%;
     margin-bottom: 0.5em;
-    font-size: $font-down-1;
+    font-size: var(--font-down-1);
     align-items: baseline;
     .reviewable-type {
       margin-right: 0.25em;
@@ -237,7 +237,7 @@
       }
     }
     .score {
-      font-size: $font-down-1;
+      font-size: var(--font-down-1);
     }
   }
 
@@ -304,12 +304,12 @@
   }
 
   .d-icon {
-    font-size: $font-down-1;
+    font-size: var(--font-down-1);
     color: var(--primary-medium);
   }
 
   .badge-notification {
-    line-height: $line-height-medium;
+    line-height: var(--line-height-medium);
     vertical-align: text-top;
   }
 
@@ -350,7 +350,7 @@
 
 .reviewable-score-reason {
   margin: 0.5em 0;
-  max-width: $topic-body-width;
+  max-width: var(--topic-body-width);
   margin-bottom: 0.5em;
 }
 
@@ -358,7 +358,7 @@
   margin: 0.5em 0;
 
   .reviewable-conversation-post {
-    max-width: $topic-body-width;
+    max-width: var(--topic-body-width);
     margin-bottom: 0.5em;
 
     .username {
@@ -375,7 +375,7 @@
 .reviewable-item {
   .show-raw-email {
     color: var(--primary-medium);
-    font-size: $font-down-2;
+    font-size: var(--font-down-2);
   }
   .post-title {
     background-color: yellow;
@@ -405,8 +405,7 @@
   .reviewable-post-header {
     display: flex;
     justify-content: space-between;
-    max-width: $topic-body-width;
-    width: $topic-body-width;
+    width: var(--topic-body-width);
     align-items: center;
 
     .reviewable-reply-to {
@@ -426,7 +425,7 @@
   }
 
   .post-body {
-    max-width: $topic-body-width;
+    max-width: var(--topic-body-width);
     max-height: 300px;
     margin-top: 0.5em;
     overflow-y: auto;
@@ -450,7 +449,7 @@
       font-weight: bold;
       color: var(--primary);
       display: block;
-      font-size: $font-up-2;
+      font-size: var(--font-up-2);
       margin-right: 0.75em;
     }
   }

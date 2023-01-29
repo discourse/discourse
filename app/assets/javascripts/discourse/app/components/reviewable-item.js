@@ -2,13 +2,14 @@ import Category from "discourse/models/category";
 import Component from "@ember/component";
 import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
-import bootbox from "bootbox";
 import { classify, dasherize } from "@ember/string";
 import discourseComputed, { bind } from "discourse-common/utils/decorators";
 import optionalService from "discourse/lib/optional-service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { set } from "@ember/object";
+import { action, set } from "@ember/object";
 import showModal from "discourse/lib/show-modal";
+import { inject as service } from "@ember/service";
+import { getOwner } from "discourse-common/lib/get-owner";
 
 let _components = {};
 
@@ -22,6 +23,7 @@ export function addPluginReviewableParam(reviewableType, param) {
 
 export default Component.extend({
   adminTools: optionalService(),
+  dialog: service(),
   tagName: "",
   updating: null,
   editing: false,
@@ -104,14 +106,12 @@ export default Component.extend({
       return _components[type];
     }
 
-    let dasherized = dasherize(type);
-    let templatePath = `components/${dasherized}`;
-    let template =
-      // eslint-disable-next-line no-undef
-      Ember.TEMPLATES[`${templatePath}`] ||
-      // eslint-disable-next-line no-undef
-      Ember.TEMPLATES[`javascripts/${templatePath}`];
-    _components[type] = template ? dasherized : null;
+    const dasherized = dasherize(type);
+    const owner = getOwner(this);
+    const componentExists =
+      owner.hasRegistration(`component:${dasherized}`) ||
+      owner.hasRegistration(`template:components/${dasherized}`);
+    _components[type] = componentExists ? dasherized : null;
     return _components[type];
   },
 
@@ -121,7 +121,7 @@ export default Component.extend({
   },
 
   @bind
-  _performConfirmed(action) {
+  _performConfirmed(performableAction) {
     let reviewable = this.reviewable;
 
     let performAction = () => {
@@ -140,7 +140,7 @@ export default Component.extend({
       });
 
       return ajax(
-        `/review/${reviewable.id}/perform/${action.id}?version=${version}`,
+        `/review/${reviewable.id}/perform/${performableAction.id}?version=${version}`,
         {
           type: "PUT",
           data,
@@ -151,9 +151,15 @@ export default Component.extend({
 
           // "fast track" to update the current user's reviewable count before the message bus finds out.
           if (performResult.reviewable_count !== undefined) {
-            this.currentUser.set(
-              "reviewable_count",
+            this.currentUser.updateReviewableCount(
               performResult.reviewable_count
+            );
+          }
+
+          if (performResult.unseen_reviewable_count !== undefined) {
+            this.currentUser.set(
+              "unseen_reviewable_count",
+              performResult.unseen_reviewable_count
             );
           }
 
@@ -167,13 +173,16 @@ export default Component.extend({
         .finally(() => this.set("updating", false));
     };
 
-    if (action.client_action) {
-      let actionMethod = this[`client${classify(action.client_action)}`];
+    if (performableAction.client_action) {
+      let actionMethod =
+        this[`client${classify(performableAction.client_action)}`];
       if (actionMethod) {
         return actionMethod.call(this, reviewable, performAction);
       } else {
         // eslint-disable-next-line no-console
-        console.error(`No handler for ${action.client_action} found`);
+        console.error(
+          `No handler for ${performableAction.client_action} found`
+        );
         return;
       }
     } else {
@@ -203,14 +212,16 @@ export default Component.extend({
     }
   },
 
-  actions: {
-    explainReviewable(reviewable) {
-      showModal("explain-reviewable", {
-        title: "review.explain.title",
-        model: reviewable,
-      });
-    },
+  @action
+  explainReviewable(reviewable, event) {
+    event?.preventDefault();
+    showModal("explain-reviewable", {
+      title: "review.explain.title",
+      model: reviewable,
+    });
+  },
 
+  actions: {
     edit() {
       this.set("editing", true);
       this.set("_updates", { payload: {} });
@@ -253,19 +264,18 @@ export default Component.extend({
       set(this._updates, fieldId, event.target.value);
     },
 
-    perform(action) {
+    perform(performableAction) {
       if (this.updating) {
         return;
       }
 
-      let msg = action.get("confirm_message");
-      let requireRejectReason = action.get("require_reject_reason");
-      let customModal = action.get("custom_modal");
-      if (msg) {
-        bootbox.confirm(msg, (answer) => {
-          if (answer) {
-            return this._performConfirmed(action);
-          }
+      const message = performableAction.get("confirm_message");
+      let requireRejectReason = performableAction.get("require_reject_reason");
+      let customModal = performableAction.get("custom_modal");
+      if (message) {
+        this.dialog.confirm({
+          message,
+          didConfirm: () => this._performConfirmed(performableAction),
         });
       } else if (requireRejectReason) {
         showModal("reject-reason-reviewable", {
@@ -273,7 +283,7 @@ export default Component.extend({
           model: this.reviewable,
         }).setProperties({
           performConfirmed: this._performConfirmed,
-          action,
+          action: performableAction,
         });
       } else if (customModal) {
         showModal(customModal, {
@@ -281,10 +291,10 @@ export default Component.extend({
           model: this.reviewable,
         }).setProperties({
           performConfirmed: this._performConfirmed,
-          action,
+          action: performableAction,
         });
       } else {
-        return this._performConfirmed(action);
+        return this._performConfirmed(performableAction);
       }
     },
   },

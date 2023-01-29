@@ -6,7 +6,7 @@ const set =
 
         return {
           has(key) {
-            return Boolean(list.indexOf(key) > -1);
+            return Boolean(list.includes(key));
           },
           add(key) {
             list.push(key);

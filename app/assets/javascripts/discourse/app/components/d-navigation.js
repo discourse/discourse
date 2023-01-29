@@ -1,14 +1,14 @@
 import Component from "@ember/component";
 import FilterModeMixin from "discourse/mixins/filter-mode";
 import NavItem from "discourse/models/nav-item";
-import bootbox from "bootbox";
 import discourseComputed from "discourse-common/utils/decorators";
 import { NotificationLevels } from "discourse/lib/notification-levels";
+import { getOwner } from "discourse-common/lib/get-owner";
 import { inject as service } from "@ember/service";
 
 export default Component.extend(FilterModeMixin, {
   router: service(),
-
+  dialog: service(),
   tagName: "",
 
   // Should be a `readOnly` instead but some themes/plugins still pass
@@ -128,6 +128,17 @@ export default Component.extend(FilterModeMixin, {
     });
   },
 
+  @discourseComputed("filterType")
+  notCategoriesRoute(filterType) {
+    return filterType !== "categories";
+  },
+
+  @discourseComputed()
+  canBulk() {
+    const controller = getOwner(this).lookup("controller:discovery/topics");
+    return controller.canBulkSelect;
+  },
+
   actions: {
     changeCategoryNotificationLevel(notificationLevel) {
       this.category.setNotification(notificationLevel);
@@ -146,7 +157,7 @@ export default Component.extend(FilterModeMixin, {
 
     clickCreateTopicButton() {
       if (this.categoryReadOnlyBanner && !this.hasDraft) {
-        bootbox.alert(this.categoryReadOnlyBanner);
+        this.dialog.alert(this.categoryReadOnlyBanner);
       } else {
         this.createTopic();
       }

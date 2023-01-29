@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-describe SelectableAvatarsModeValidator do
-  describe '#valid_value?' do
+RSpec.describe SelectableAvatarsModeValidator do
+  describe "#valid_value?" do
     subject(:validator) { described_class.new }
 
     it "returns true when disabling" do

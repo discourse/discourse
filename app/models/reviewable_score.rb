@@ -3,15 +3,15 @@
 class ReviewableScore < ActiveRecord::Base
   belongs_to :reviewable
   belongs_to :user
-  belongs_to :reviewed_by, class_name: 'User'
-  belongs_to :meta_topic, class_name: 'Topic'
+  belongs_to :reviewed_by, class_name: "User"
+  belongs_to :meta_topic, class_name: "Topic"
+
+  enum status: { pending: 0, agreed: 1, disagreed: 2, ignored: 3 }
 
   # To keep things simple the types correspond to `PostActionType` for backwards
   # compatibility, but we can add extra reasons for scores.
   def self.types
-    @types ||= PostActionType.flag_types.merge(
-      needs_approval: 9
-    )
+    @types ||= PostActionType.flag_types.merge(needs_approval: 9)
   end
 
   # When extending post action flags, we need to call this method in order to
@@ -24,32 +24,11 @@ class ReviewableScore < ActiveRecord::Base
   def self.add_new_types(type_names)
     next_id = types.values.max + 1
 
-    type_names.each_with_index do |name, idx|
-      @types[name] = next_id + idx
-    end
-  end
-
-  def self.statuses
-    @statuses ||= Enum.new(
-      pending: 0,
-      agreed: 1,
-      disagreed: 2,
-      ignored: 3
-    )
+    type_names.each_with_index { |name, idx| @types[name] = next_id + idx }
   end
 
   def self.score_transitions
-    {
-      approved: statuses[:agreed],
-      rejected: statuses[:disagreed],
-      ignored: statuses[:ignored]
-    }
-  end
-
-  # Generate `pending?`, `rejected?`, etc helper methods
-  statuses.each do |name, id|
-    define_method("#{name}?") { status == id }
-    singleton_class.define_method(name) { where(status: id) }
+    { approved: statuses[:agreed], rejected: statuses[:disagreed], ignored: statuses[:ignored] }
   end
 
   def score_type
@@ -96,22 +75,21 @@ class ReviewableScore < ActiveRecord::Base
     bottom = positive_accuracy ? accuracy_axis : 0.0
     top = positive_accuracy ? 1.0 : accuracy_axis
 
-    absolute_distance = positive_accuracy ?
-                        percent_correct - bottom :
-                        top - percent_correct
+    absolute_distance = positive_accuracy ? percent_correct - bottom : top - percent_correct
 
     axis_distance_multiplier = 1.0 / (top - bottom)
     positivity_multiplier = positive_accuracy ? 1.0 : -1.0
 
-    (absolute_distance * axis_distance_multiplier * positivity_multiplier * (Math.log(total, 4) * 5.0))
-      .round(2)
+    (
+      absolute_distance * axis_distance_multiplier * positivity_multiplier *
+        (Math.log(total, 4) * 5.0)
+    ).round(2)
   end
 
   def reviewable_conversation
     return if meta_topic.blank?
     Reviewable::Conversation.new(meta_topic)
   end
-
 end
 
 # == Schema Information

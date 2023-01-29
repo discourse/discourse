@@ -39,7 +39,7 @@ module("Integration | Component | simple-list", function (hooks) {
     );
 
     await fillIn(".add-value-input", "eviltrout");
-    await triggerKeyEvent(".add-value-input", "keydown", 13); // enter
+    await triggerKeyEvent(".add-value-input", "keydown", "Enter");
 
     assert.strictEqual(
       count(".values .value"),

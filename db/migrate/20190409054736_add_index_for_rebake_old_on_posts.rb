@@ -9,11 +9,14 @@ class AddIndexForRebakeOldOnPosts < ActiveRecord::Migration[5.2]
     end
 
     if !index_exists?(:posts, :index_for_rebake_old)
-      add_index :posts, :id,
-        order: { id: :desc },
-        where: "(baked_version IS NULL OR baked_version < 2) AND deleted_at IS NULL",
-        name: :index_for_rebake_old,
-        algorithm: :concurrently
+      add_index :posts,
+                :id,
+                order: {
+                  id: :desc,
+                },
+                where: "(baked_version IS NULL OR baked_version < 2) AND deleted_at IS NULL",
+                name: :index_for_rebake_old,
+                algorithm: :concurrently
     end
   end
 

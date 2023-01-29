@@ -139,3 +139,24 @@ acceptance("Share url with badges disabled - desktop", function (needs) {
     );
   });
 });
+
+acceptance("With username in share links disabled - desktop", function (needs) {
+  needs.user();
+  needs.settings({ allow_username_in_share_links: false });
+
+  needs.pretender((server, helper) => {
+    server.get("/c/feature/find_by_slug.json", () =>
+      helper.response(200, CategoryFixtures["/c/1/show.json"])
+    );
+  });
+
+  test("topic footer button - username in share links disabled - desktop", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click("#topic-footer-button-share-and-invite");
+
+    assert.notOk(
+      query("input.invite-link").value.includes("?u=eviltrout"),
+      "it doesn't add the username param when username in share links are disabled"
+    );
+  });
+});

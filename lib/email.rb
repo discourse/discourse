@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'mail'
+require "mail"
 
 module Email
   # See https://www.iana.org/assignments/smtp-enhanced-status-codes/smtp-enhanced-status-codes.xhtml#smtp-enhanced-status-codes-1
@@ -21,19 +21,19 @@ module Email
   def self.obfuscate(email)
     return email if !Email.is_valid?(email)
 
-    first, _, last = email.rpartition('@')
+    first, _, last = email.rpartition("@")
 
     # Obfuscate each last part, except tld
-    last = last.split('.')
+    last = last.split(".")
     tld = last.pop
     last.map! { |part| obfuscate_part(part) }
     last << tld
 
-    "#{obfuscate_part(first)}@#{last.join('.')}"
+    "#{obfuscate_part(first)}@#{last.join(".")}"
   end
 
   def self.cleanup_alias(name)
-    name ? name.gsub(/[:<>,"]/, '') : name
+    name ? name.gsub(/[:<>,"]/, "") : name
   end
 
   def self.extract_parts(raw)

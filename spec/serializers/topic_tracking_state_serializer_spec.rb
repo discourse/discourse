@@ -1,10 +1,15 @@
 # frozen_string_literal: true
 
-describe TopicTrackingStateSerializer do
+RSpec.describe TopicTrackingStateSerializer do
   fab!(:user) { Fabricate(:user) }
   fab!(:post) { create_post }
 
-  it 'serializes topic tracking state reports' do
+  before do
+    SiteSetting.navigation_menu = "legacy"
+    SiteSetting.chat_enabled = false if defined?(::Chat)
+  end
+
+  it "serializes topic tracking state reports" do
     report = TopicTrackingState.report(user)
     serialized = described_class.new(report[0], scope: Guardian.new(user), root: false).as_json
 
@@ -26,7 +31,7 @@ describe TopicTrackingStateSerializer do
     DiscourseTagging.tag_topic_by_names(
       post.topic,
       Guardian.new(Discourse.system_user),
-      ['bananas', 'apples']
+      %w[bananas apples],
     )
 
     report = TopicTrackingState.report(user)

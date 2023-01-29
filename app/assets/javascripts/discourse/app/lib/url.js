@@ -19,6 +19,7 @@ const SERVER_SIDE_ONLY = [
   /^\/assets\//,
   /^\/uploads\//,
   /^\/secure-media-uploads\//,
+  /^\/secure-uploads\//,
   /^\/stylesheets\//,
   /^\/site_customizations\//,
   /^\/raw\//,
@@ -44,7 +45,7 @@ export function rewritePath(path) {
 
   let result = params[0];
   rewrites.forEach((rw) => {
-    if ((rw.opts.exceptions || []).some((ex) => path.indexOf(ex) === 0)) {
+    if ((rw.opts.exceptions || []).some((ex) => path.startsWith(ex))) {
       return;
     }
     result = result.replace(rw.regexp, rw.replacement);
@@ -72,29 +73,6 @@ export function groupPath(subPath) {
 let _jumpScheduled = false;
 let _transitioning = false;
 let lockOn = null;
-
-export function jumpToElement(elementId) {
-  if (_jumpScheduled || isEmpty(elementId)) {
-    return;
-  }
-
-  const selector = `#main #${elementId}, a[name=${elementId}]`;
-  _jumpScheduled = true;
-
-  schedule("afterRender", function () {
-    if (lockOn) {
-      lockOn.clearLock();
-    }
-
-    lockOn = new LockOn(selector, {
-      finished() {
-        _jumpScheduled = false;
-        lockOn = null;
-      },
-    });
-    lockOn.lock();
-  });
-}
 
 const DiscourseURL = EmberObject.extend({
   isJumpScheduled() {
@@ -218,7 +196,7 @@ const DiscourseURL = EmberObject.extend({
       return;
     }
 
-    if (Session.currentProp("requiresRefresh")) {
+    if (Session.currentProp("requiresRefresh") && !this.isComposerOpen) {
       return this.redirectTo(path);
     }
 
@@ -237,7 +215,7 @@ const DiscourseURL = EmberObject.extend({
     // Scroll to the same page, different anchor
     const m = /^#(.+)$/.exec(path);
     if (m) {
-      jumpToElement(m[1]);
+      this.jumpToElement(m[1]);
       return this.replaceState(path);
     }
 
@@ -248,7 +226,7 @@ const DiscourseURL = EmberObject.extend({
     // Rewrite /my/* urls
     let myPath = getURL("/my");
     const fullPath = getURL(path);
-    if (fullPath.indexOf(myPath) === 0) {
+    if (fullPath.startsWith(myPath)) {
       const currentUser = User.current();
       if (currentUser) {
         path = fullPath.replace(
@@ -261,7 +239,7 @@ const DiscourseURL = EmberObject.extend({
     }
 
     // handle prefixes
-    if (path.indexOf("/") === 0) {
+    if (path.startsWith("/")) {
       path = withoutPrefix(path);
     }
 
@@ -318,22 +296,22 @@ const DiscourseURL = EmberObject.extend({
   // Determines whether a URL is internal or not
   isInternal(url) {
     if (url && url.length) {
-      if (url.indexOf("//") === 0) {
+      if (url.startsWith("//")) {
         url = "http:" + url;
       }
-      if (url.indexOf("#") === 0) {
+      if (url.startsWith("#")) {
         return true;
       }
-      if (url.indexOf("/") === 0) {
+      if (url.startsWith("/")) {
         return true;
       }
-      if (url.indexOf(this.origin()) === 0) {
+      if (url.startsWith(this.origin())) {
         return true;
       }
-      if (url.replace(/^http/, "https").indexOf(this.origin()) === 0) {
+      if (url.replace(/^http/, "https").startsWith(this.origin())) {
         return true;
       }
-      if (url.replace(/^https/, "http").indexOf(this.origin()) === 0) {
+      if (url.replace(/^https/, "http").startsWith(this.origin())) {
         return true;
       }
     }
@@ -431,6 +409,10 @@ const DiscourseURL = EmberObject.extend({
     return window.location.origin + (prefix === "/" ? "" : prefix);
   },
 
+  get isComposerOpen() {
+    return this.controllerFor("composer")?.visible;
+  },
+
   get router() {
     return this.container.lookup("router:main");
   },
@@ -479,9 +461,33 @@ const DiscourseURL = EmberObject.extend({
     transition._discourse_original_url = path;
 
     const promise = transition.promise || transition;
-    promise.then(() => jumpToElement(elementId));
+    promise.then(() => this.jumpToElement(elementId));
+  },
+
+  jumpToElement(elementId) {
+    if (_jumpScheduled || isEmpty(elementId)) {
+      return;
+    }
+
+    const selector = `#main #${elementId}, a[name=${elementId}]`;
+    _jumpScheduled = true;
+
+    schedule("afterRender", function () {
+      if (lockOn) {
+        lockOn.clearLock();
+      }
+
+      lockOn = new LockOn(selector, {
+        finished() {
+          _jumpScheduled = false;
+          lockOn = null;
+        },
+      });
+      lockOn.lock();
+    });
   },
 });
+
 let _urlInstance = DiscourseURL.create();
 
 export function setURLContainer(container) {
@@ -490,7 +496,7 @@ export function setURLContainer(container) {
 }
 
 export function prefixProtocol(url) {
-  return url.indexOf("://") === -1 && url.indexOf("mailto:") !== 0
+  return !url.includes("://") && !url.startsWith("mailto:")
     ? "https://" + url
     : url;
 }

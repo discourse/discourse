@@ -32,27 +32,27 @@ ru:
       multiple:
         help:
           at_least_min_options:
-            one: "Выберите как минимум %{count} вариант ответа ."
-            few: "Выберите как минимум %{count} варианта ответа ."
-            many: "Выберите как минимум %{count} вариантов ответа ."
-            other: "Выберите как минимум <strong>%{count}</strong> вариантов ответа."
+            one: "Выберите как минимум <strong>%{count}</strong> вариант ответа."
+            few: "Выберите как минимум <strong>%{count}</strong> варианта ответа."
+            many: "Выберите как минимум <strong>%{count}</strong> вариантов ответа."
+            other: "Выберите как минимум <strong>%{count}</strong> варианта ответа."
           up_to_max_options:
             one: "Выберите не более <strong>%{count}</strong> варианта ответа."
             few: "Выберите не более <strong>%{count}</strong> вариантов ответа."
             many: "Выберите не более <strong>%{count}</strong> вариантов ответа."
-            other: "Выберите не более <strong>%{count}</strong> вариантов ответа."
+            other: "Выберите не более <strong>%{count}</strong> варианта ответа."
           x_options:
             one: "Выберите <strong>%{count}</strong> вариант ответа."
             few: "Выберите <strong>%{count}</strong> варианта ответа."
             many: "Выберите <strong>%{count}</strong> вариантов ответа."
-            other: "Выберите <strong>%{count}</strong> вариантов ответа."
+            other: "Выберите <strong>%{count}</strong> варианта ответа."
           between_min_and_max_options: "Выберите варианты ответов в диапазоне от <strong>%{min}</strong> до <strong>%{max}</strong>."
       cast-votes:
         title: "Проголосуйте"
         label: "Проголосовать!"
       show-results:
         title: "Показать результаты опроса"
-        label: "Показать результаты"
+        label: "Показывать результаты"
       remove-vote:
         title: "Удалить свой голос"
         label: "Удалить голос"
@@ -68,11 +68,11 @@ ru:
       open:
         title: "Снова открыть опрос"
         label: "Открыть"
-        confirm: "Вы действительно хотите открыть этот опрос и принимать новые голоса?"
+        confirm: "Действительно открыть этот опрос и принимать новые голоса?"
       close:
         title: "Завершить этот опрос, не принимать новые голоса"
         label: "Завершить"
-        confirm: "Вы действительно хотите завершить этот опрос и больше не принимать голоса?"
+        confirm: "Действительно завершить этот опрос и больше не принимать голоса?"
       automatic_close:
         closes_in: "Закроется через <strong>%{timeLeft}</strong>."
         age: "Закрыто <strong>%{age}</strong>"
@@ -102,7 +102,7 @@ ru:
           multiple: Выбор нескольких вариантов из списка
           number: Шкала из чисел
         poll_result:
-          label: Показывать результаты...
+          label: Показывать результаты…
           always: Всегда
           vote: После голосования
           closed: После закрытия опроса
@@ -114,8 +114,8 @@ ru:
           bar: Гистограмма
           pie: Круговая
         poll_config:
-          max: Минимальный выбор
-          min: Максимальный выбор
+          max: Максимальный выбор
+          min: Минимальный выбор
           step: Шаг
         poll_public:
           label: Показывать проголосовавших (не отмечайте, если голосование анонимное)

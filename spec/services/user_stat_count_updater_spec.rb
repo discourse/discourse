@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe UserStatCountUpdater do
+RSpec.describe UserStatCountUpdater do
   fab!(:user) { Fabricate(:user) }
   fab!(:user_stat) { user.user_stat }
   fab!(:post) { Fabricate(:post) }
@@ -12,11 +12,9 @@ describe UserStatCountUpdater do
     SiteSetting.verbose_user_stat_count_logging = true
   end
 
-  after do
-    Rails.logger = @orig_logger
-  end
+  after { Rails.logger = @orig_logger }
 
-  it 'should log the exception when a negative count is inserted' do
+  it "should log the exception when a negative count is inserted" do
     UserStatCountUpdater.decrement!(post, user_stat: user_stat)
 
     expect(@fake_logger.warnings.last).to match("topic_count")
@@ -28,7 +26,7 @@ describe UserStatCountUpdater do
     expect(@fake_logger.warnings.last).to match(post_2.id.to_s)
   end
 
-  it 'should log the exception when a negative count will be inserted but 0 is used instead' do
+  it "should log the exception when a negative count will be inserted but 0 is used instead" do
     UserStatCountUpdater.set!(user_stat: user_stat, count: -10, count_column: :post_count)
 
     expect(@fake_logger.warnings.last).to match("post_count")

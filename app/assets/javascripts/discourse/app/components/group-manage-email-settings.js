@@ -2,11 +2,12 @@ import Component from "@ember/component";
 import { isEmpty } from "@ember/utils";
 import discourseComputed, { on } from "discourse-common/utils/decorators";
 import I18n from "I18n";
-import bootbox from "bootbox";
+import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
 
 export default Component.extend({
   tagName: "",
+  dialog: service(),
 
   imapSettingsValid: false,
   smtpSettingsValid: false,
@@ -71,16 +72,11 @@ export default Component.extend({
       this.group.smtp_enabled &&
       this._anySmtpFieldsFilled()
     ) {
-      bootbox.confirm(
-        I18n.t("groups.manage.email.smtp_disable_confirm"),
-        (result) => {
-          if (!result) {
-            this.group.set("smtp_enabled", true);
-          } else {
-            this.group.set("imap_enabled", false);
-          }
-        }
-      );
+      this.dialog.confirm({
+        message: I18n.t("groups.manage.email.smtp_disable_confirm"),
+        didConfirm: () => this.group.set("smtp_enabled", true),
+        didCancel: () => this.group.set("imap_enabled", false),
+      });
     }
 
     this.group.set("smtp_enabled", event.target.checked);
@@ -93,14 +89,10 @@ export default Component.extend({
       this.group.imap_enabled &&
       this._anyImapFieldsFilled()
     ) {
-      bootbox.confirm(
-        I18n.t("groups.manage.email.imap_disable_confirm"),
-        (result) => {
-          if (!result) {
-            this.group.set("imap_enabled", true);
-          }
-        }
-      );
+      this.dialog.confirm({
+        message: I18n.t("groups.manage.email.imap_disable_confirm"),
+        didConfirm: () => this.group.set("imap_enabled", true),
+      });
     }
 
     this.group.set("imap_enabled", event.target.checked);

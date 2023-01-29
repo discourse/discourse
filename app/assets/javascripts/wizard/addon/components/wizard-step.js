@@ -1,15 +1,17 @@
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import I18n from "I18n";
-import getUrl from "discourse-common/lib/get-url";
 import { htmlSafe } from "@ember/template";
 import { schedule } from "@ember/runloop";
 import { action } from "@ember/object";
+import { inject as service } from "@ember/service";
 
 const alreadyWarned = {};
 
 export default Component.extend({
-  classNames: ["wizard-step"],
+  router: service(),
+  dialog: service(),
+  classNameBindings: [":wizard-container__step", "stepClass"],
   saving: null,
 
   didInsertElement() {
@@ -18,38 +20,69 @@ export default Component.extend({
   },
 
   @discourseComputed("step.index")
-  showQuitButton: (index) => index === 0,
-
-  @discourseComputed("step.displayIndex", "wizard.totalSteps")
-  showNextButton: (current, total) => current < total,
-
-  @discourseComputed("step.displayIndex", "wizard.totalSteps")
-  showDoneButton: (current, total) => current === total,
-
-  @discourseComputed(
-    "step.index",
-    "step.displayIndex",
-    "wizard.totalSteps",
-    "wizard.completed"
-  )
-  showFinishButton: (index, displayIndex, total, completed) => {
-    return index !== 0 && displayIndex !== total && completed;
+  showBackButton(index) {
+    return index > 0;
   },
 
-  @discourseComputed("step.index")
-  showBackButton: (index) => index > 0,
-
-  @discourseComputed("step.banner")
-  bannerImage(src) {
-    if (!src) {
-      return;
+  @discourseComputed("step.displayIndex", "wizard.totalSteps")
+  showNextButton(current, total) {
+    if (this.showConfigureMore === true) {
+      return false;
     }
-    return getUrl(`/images/wizard/${src}`);
+    return current < total;
   },
 
   @discourseComputed("step.id")
-  bannerAndDescriptionClass(id) {
-    return `wizard-banner-and-description wizard-banner-and-description-${id}`;
+  nextButtonLabel(step) {
+    return `wizard.${step === "ready" ? "configure_more" : "next"}`;
+  },
+
+  @discourseComputed("step.id")
+  nextButtonClass(step) {
+    return step === "ready" ? "configure-more" : "next";
+  },
+
+  @discourseComputed("step.id")
+  showConfigureMore(step) {
+    return step === "ready";
+  },
+
+  @discourseComputed("step.id")
+  showJumpInButton(step) {
+    return ["ready", "styling", "branding"].includes(step);
+  },
+
+  @discourseComputed("step.id")
+  jumpInButtonLabel(step) {
+    return `wizard.${step === "ready" ? "jump_in" : "finish"}`;
+  },
+
+  @discourseComputed("step.id")
+  jumpInButtonClass(step) {
+    return step === "ready" ? "jump-in" : "finish";
+  },
+
+  @discourseComputed("step.id")
+  showFinishButton(step) {
+    return step === "corporate";
+  },
+
+  @discourseComputed("step.id")
+  stepClass(step) {
+    return step;
+  },
+
+  @discourseComputed("step.banner")
+  bannerImage(bannerName) {
+    if (!bannerName) {
+      return;
+    }
+    return bannerName;
+  },
+
+  @discourseComputed()
+  bannerAndDescriptionClass() {
+    return `wizard-container__step-banner`;
   },
 
   @observes("step.id")
@@ -60,7 +93,7 @@ export default Component.extend({
 
   keyPress(event) {
     if (event.key === "Enter") {
-      if (this.showDoneButton) {
+      if (this.showJumpInButton) {
         this.send("quit");
       } else {
         this.send("nextStep");
@@ -89,7 +122,7 @@ export default Component.extend({
   autoFocus() {
     schedule("afterRender", () => {
       const $invalid = $(
-        ".wizard-field.invalid:nth-of-type(1) .wizard-focusable"
+        ".wizard-container__input.invalid:nth-of-type(1) .wizard-focusable"
       );
 
       if ($invalid.length) {
@@ -109,12 +142,14 @@ export default Component.extend({
   },
 
   @action
-  quit() {
-    document.location = getUrl("/");
+  quit(event) {
+    event?.preventDefault();
+    this.router.transitionTo("discovery.latest");
   },
 
   @action
-  exitEarly() {
+  exitEarly(event) {
+    event?.preventDefault();
     const step = this.step;
     step.validate();
 
@@ -123,7 +158,7 @@ export default Component.extend({
 
       step
         .save()
-        .then(() => this.send("quit"))
+        .then((response) => this.goNext(response))
         .finally(() => this.set("saving", false));
     } else {
       this.autoFocus();
@@ -131,7 +166,9 @@ export default Component.extend({
   },
 
   @action
-  backStep() {
+  backStep(event) {
+    event?.preventDefault();
+
     if (this.saving) {
       return;
     }
@@ -140,7 +177,9 @@ export default Component.extend({
   },
 
   @action
-  nextStep() {
+  nextStep(event) {
+    event?.preventDefault();
+
     if (this.saving) {
       return;
     }
@@ -154,16 +193,10 @@ export default Component.extend({
       if (unwarned.length) {
         unwarned.forEach((w) => (alreadyWarned[w] = true));
 
-        return window.bootbox.confirm(
-          unwarned.map((w) => I18n.t(`wizard.${w}`)).join("\n"),
-          I18n.t("no_value"),
-          I18n.t("yes_value"),
-          (confirmed) => {
-            if (confirmed) {
-              this.advance();
-            }
-          }
-        );
+        return this.dialog.confirm({
+          message: unwarned.map((w) => I18n.t(`wizard.${w}`)).join("\n"),
+          didConfirm: () => this.advance(),
+        });
       }
     }
 

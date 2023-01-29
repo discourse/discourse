@@ -6,12 +6,45 @@ import TopicTrackingState from "discourse/models/topic-tracking-state";
 import { buildResolver } from "discourse-common/resolver";
 import { currentSettings } from "discourse/tests/helpers/site-settings";
 import Site from "discourse/models/site";
+import RestModel from "discourse/models/rest";
+import deprecated from "discourse-common/lib/deprecated";
 
 const CatAdapter = RestAdapter.extend({
   primaryKey: "cat_id",
 });
 
+const CachedCatAdapter = RestAdapter.extend({
+  primaryKey: "cat_id",
+  cache: true,
+  apiNameFor() {
+    return "cat";
+  },
+});
+
+const CachedCat = RestModel.extend({
+  init(...args) {
+    // Simulate an implicit injection
+    Object.defineProperty(this, "injectedProperty", {
+      writable: false,
+      enumerable: true,
+      value: "hello world",
+    });
+    this._super(...args);
+  },
+});
+
 export default function (customLookup = () => {}) {
+  deprecated(
+    `create-store helper is deprecated. Please use regular Store service instead, e.g.
+    \`getOwner(this).lookup("service:store")\`
+  `,
+    {
+      since: "2.9.0.beta12",
+      dropFrom: "3.1.0.beta1",
+      id: "discourse.create-store-helper",
+    }
+  );
+
   const resolver = buildResolver("discourse").create({
     namespace: { modulePrefix: "discourse" },
   });
@@ -28,6 +61,11 @@ export default function (customLookup = () => {}) {
             this._catAdapter || CatAdapter.create({ owner: this });
           return this._catAdapter;
         }
+        if (type === "adapter:cached-cat") {
+          this._cachedCatAdapter =
+            this._cachedCatAdapter || CachedCatAdapter.create({ owner: this });
+          return this._cachedCatAdapter;
+        }
         if (type === "adapter:rest") {
           if (!this._restAdapter) {
             this._restAdapter = RestAdapter.create({ owner: this });
@@ -39,15 +77,15 @@ export default function (customLookup = () => {}) {
             this._topicListAdapter || TopicListAdapter.create({ owner: this });
           return this._topicListAdapter;
         }
-        if (type === "key-value-store:main") {
+        if (type === "service:key-value-store") {
           this._kvs = this._kvs || new KeyValueStore();
           return this._kvs;
         }
-        if (type === "topic-tracking-state:main") {
+        if (type === "service:topic-tracking-state") {
           this._tracker = this._tracker || TopicTrackingState.create();
           return this._tracker;
         }
-        if (type === "site-settings:main") {
+        if (type === "service:site-settings") {
           this._settings = this._settings || currentSettings();
           return this._settings;
         }
@@ -56,6 +94,9 @@ export default function (customLookup = () => {}) {
 
       lookupFactory(type) {
         const split = type.split(":");
+        if (type === "model:cached-cat") {
+          return CachedCat;
+        }
         return resolver.resolveOther({
           type: split[0],
           fullNameWithoutType: split[1],

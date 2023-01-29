@@ -73,7 +73,7 @@ export default MultiSelectComponent.extend({
       if (subcategoryIds.size > 1) {
         result.push(
           EmberObject.create({
-            multicategory: [...subcategoryIds],
+            multiCategory: [...subcategoryIds],
             category: result[0],
             title: I18n.t("category_row.plus_subcategories_title", {
               name: result[0].name,
@@ -95,8 +95,8 @@ export default MultiSelectComponent.extend({
   },
 
   select(value, item) {
-    if (item.multicategory) {
-      const items = item.multicategory.map((id) =>
+    if (item.multiCategory) {
+      const items = item.multiCategory.map((id) =>
         Category.findById(parseInt(id, 10))
       );
 

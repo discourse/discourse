@@ -87,3 +87,8 @@ sv:
           title: "Spinnare"
         empty_state:
           title: "Tomt tillstånd"
+        rich_tooltip:
+          title: "Innehållsrik knappbeskrivning"
+          description: "Beskrivning"
+          header: "Sidhuvud"
+          hover_to_see: "Håll muspekaren kvar för att se en knappbeskrivning"

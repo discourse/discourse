@@ -68,6 +68,12 @@ export function sanitizeAsync(text, options) {
   });
 }
 
+export function parseAsync(md, options = {}, env = {}) {
+  return loadMarkdownIt().then(() => {
+    return createPrettyText(options).opts.engine.parse(md, env);
+  });
+}
+
 function loadMarkdownIt() {
   return new Promise((resolve) => {
     let markdownItURL = Session.currentProp("markdownItURL");
@@ -151,7 +157,6 @@ export function excerpt(cooked, length) {
         resultLength += element.textContent.length;
       }
     } else if (element.tagName === "A") {
-      element.innerHTML = element.innerText;
       result += element.outerHTML;
       resultLength += element.innerText.length;
     } else if (element.tagName === "IMG") {

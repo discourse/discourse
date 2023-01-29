@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::TruncateUserFlagStats do
+RSpec.describe Jobs::TruncateUserFlagStats do
   fab!(:user) { Fabricate(:user) }
   fab!(:other_user) { Fabricate(:user) }
 
@@ -15,9 +15,7 @@ describe Jobs::TruncateUserFlagStats do
   end
 
   it "raises an error without user ids" do
-    expect {
-      described_class.new.execute({})
-    }.to raise_error(Discourse::InvalidParameters)
+    expect { described_class.new.execute({}) }.to raise_error(Discourse::InvalidParameters)
   end
 
   it "does nothing if the user doesn't have enough flags" do
@@ -79,5 +77,4 @@ describe Jobs::TruncateUserFlagStats do
     expect(other_user.user_stat.flags_disagreed).to eq(1)
     expect(other_user.user_stat.flags_ignored).to eq(1)
   end
-
 end

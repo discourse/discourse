@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Onebox::Engine::RedditMediaOnebox do
+RSpec.describe Onebox::Engine::RedditMediaOnebox do
   let(:link) { "https://www.reddit.com/r/colors/comments/b4d5xm/literally_nothing_black_edition" }
   let(:html) { described_class.new(link).to_html }
 
@@ -10,7 +10,9 @@ describe Onebox::Engine::RedditMediaOnebox do
   end
 
   it "includes title" do
-    expect(html).to include('<a href="https://www.reddit.com/r/colors/comments/b4d5xm/literally_nothing_black_edition/" target="_blank" rel="nofollow ugc noopener">reddit</a>')
+    expect(html).to include(
+      '<a href="https://www.reddit.com/r/colors/comments/b4d5xm/literally_nothing_black_edition/" target="_blank" rel="nofollow ugc noopener">reddit</a>',
+    )
   end
 
   it "includes image" do

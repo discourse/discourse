@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class CategorySerializer < SiteCategorySerializer
-
   attributes :read_restricted,
              :available_groups,
              :auto_close_hours,
@@ -32,25 +31,25 @@ class CategorySerializer < SiteCategorySerializer
   end
 
   def group_permissions
-    @group_permissions ||= begin
-      perms = object
-        .category_groups
-        .joins(:group)
-        .includes(:group)
-        .merge(Group.visible_groups(scope&.user, "groups.name ASC", include_everyone: true))
-        .map do |cg|
-          {
-            permission_type: cg.permission_type,
-            group_name: cg.group.name
+    @group_permissions ||=
+      begin
+        perms =
+          object
+            .category_groups
+            .joins(:group)
+            .includes(:group)
+            .merge(Group.visible_groups(scope&.user, "groups.name ASC", include_everyone: true))
+            .map { |cg| { permission_type: cg.permission_type, group_name: cg.group.name } }
+
+        if perms.length == 0 && !object.read_restricted
+          perms << {
+            permission_type: CategoryGroup.permission_types[:full],
+            group_name: Group[:everyone]&.name.presence || :everyone,
           }
         end
 
-      if perms.length == 0 && !object.read_restricted
-        perms << { permission_type: CategoryGroup.permission_types[:full], group_name: Group[:everyone]&.name.presence || :everyone }
+        perms
       end
-
-      perms
-    end
   end
 
   def include_group_permissions?
@@ -70,8 +69,11 @@ class CategorySerializer < SiteCategorySerializer
   end
 
   def include_is_special?
-    [SiteSetting.meta_category_id, SiteSetting.staff_category_id, SiteSetting.uncategorized_category_id]
-      .include? object.id
+    [
+      SiteSetting.meta_category_id,
+      SiteSetting.staff_category_id,
+      SiteSetting.uncategorized_category_id,
+    ].include? object.id
   end
 
   def is_special
@@ -101,8 +103,8 @@ class CategorySerializer < SiteCategorySerializer
   def notification_level
     user = scope && scope.user
     object.notification_level ||
-     (user && CategoryUser.where(user: user, category: object).first.try(:notification_level)) ||
-     CategoryUser.default_notification_level
+      (user && CategoryUser.where(user: user, category: object).first.try(:notification_level)) ||
+      CategoryUser.default_notification_level
   end
 
   def custom_fields

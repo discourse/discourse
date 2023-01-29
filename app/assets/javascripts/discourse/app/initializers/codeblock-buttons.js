@@ -8,7 +8,7 @@ export default {
   name: "codeblock-buttons",
 
   initialize(container) {
-    const siteSettings = container.lookup("site-settings:main");
+    const siteSettings = container.lookup("service:site-settings");
 
     withPluginApi("0.8.7", (api) => {
       function _cleanUp() {

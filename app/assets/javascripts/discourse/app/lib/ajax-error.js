@@ -1,5 +1,5 @@
 import I18n from "I18n";
-import bootbox from "bootbox";
+import { getOwner } from "discourse-common/lib/get-owner";
 
 export function extractError(error, defaultMessage) {
   if (error instanceof Error) {
@@ -33,8 +33,14 @@ export function extractError(error, defaultMessage) {
   }
 
   if (parsedJSON) {
-    if (parsedJSON.errors && parsedJSON.errors.length > 0) {
-      parsedError = parsedJSON.errors.join("<br>");
+    if (parsedJSON.errors?.length > 1) {
+      parsedError = I18n.t("multiple_errors", {
+        errors: parsedJSON.errors.map((e, i) => `${i + 1}) ${e}`).join(" "),
+      });
+    } else if (parsedJSON.errors?.length > 0) {
+      parsedError = I18n.t("generic_error_with_reason", {
+        error: parsedJSON.errors[0],
+      });
     } else if (parsedJSON.error) {
       parsedError = parsedJSON.error;
     } else if (parsedJSON.message) {
@@ -64,5 +70,6 @@ export function throwAjaxError(undoCallback) {
 }
 
 export function popupAjaxError(error) {
-  bootbox.alert(extractError(error));
+  const dialog = getOwner(this).lookup("service:dialog");
+  dialog.alert(extractError(error));
 }

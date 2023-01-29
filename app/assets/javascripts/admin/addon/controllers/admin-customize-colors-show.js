@@ -1,11 +1,12 @@
 import Controller from "@ember/controller";
 import I18n from "I18n";
-import bootbox from "bootbox";
 import discourseLater from "discourse-common/lib/later";
 import { action, computed } from "@ember/object";
 import { clipboardCopy } from "discourse/lib/utilities";
+import { inject as service } from "@ember/service";
 
 export default class AdminCustomizeColorsShowController extends Controller {
+  @service dialog;
   onlyOverridden = false;
 
   @computed("model.colors.[]", "onlyOverridden")
@@ -73,18 +74,14 @@ export default class AdminCustomizeColorsShowController extends Controller {
 
   @action
   destroy() {
-    return bootbox.confirm(
-      I18n.t("admin.customize.colors.delete_confirm"),
-      I18n.t("no_value"),
-      I18n.t("yes_value"),
-      (result) => {
-        if (result) {
-          this.model.destroy().then(() => {
-            this.allColors.removeObject(this.model);
-            this.replaceRoute("adminCustomize.colors");
-          });
-        }
-      }
-    );
+    return this.dialog.yesNoConfirm({
+      message: I18n.t("admin.customize.colors.delete_confirm"),
+      didConfirm: () => {
+        return this.model.destroy().then(() => {
+          this.allColors.removeObject(this.model);
+          this.replaceRoute("adminCustomize.colors");
+        });
+      },
+    });
   }
 }

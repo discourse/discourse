@@ -20,27 +20,49 @@ export default Mixin.create({
     this.set("userFields", userFields);
   },
 
-  // Validate required fields
   @discourseComputed("userFields.@each.value")
   userFieldsValidation() {
-    let userFields = this.userFields;
-    if (userFields) {
-      userFields = userFields.filterBy("field.required");
+    if (!this.userFields) {
+      return EmberObject.create({ ok: true });
     }
-    if (!isEmpty(userFields)) {
-      const emptyUserField = userFields.find((uf) => {
-        const val = uf.get("value");
-        return !val || isEmpty(val);
-      });
-      if (emptyUserField) {
-        const userField = emptyUserField.field;
-        return EmberObject.create({
+
+    this.userFields.forEach((userField) => {
+      let validation = EmberObject.create({ ok: true });
+
+      if (
+        userField.field.required &&
+        (!userField.value || isEmpty(userField.value))
+      ) {
+        validation = EmberObject.create({
           failed: true,
-          message: I18n.t("user_fields.required", { name: userField.name }),
-          element: userField.element,
+          reason: I18n.t("user_fields.required", {
+            name: userField.field.name,
+          }),
+          element: userField.field.element,
+        });
+      } else if (
+        this.accountPassword &&
+        userField.field.field_type === "text" &&
+        userField.value &&
+        userField.value
+          .toLowerCase()
+          .includes(this.accountPassword.toLowerCase())
+      ) {
+        validation = EmberObject.create({
+          failed: true,
+          reason: I18n.t("user_fields.same_as_password"),
+          element: userField.field.element,
         });
       }
+
+      userField.set("validation", validation);
+    });
+
+    const invalidUserField = this.userFields.find((f) => f.validation.failed);
+    if (invalidUserField) {
+      return invalidUserField.validation;
     }
+
     return EmberObject.create({ ok: true });
   },
 });

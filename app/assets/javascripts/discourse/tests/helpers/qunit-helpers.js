@@ -11,11 +11,10 @@ import {
   mergeSettings,
 } from "discourse/tests/helpers/site-settings";
 import { forceMobile, resetMobile } from "discourse/lib/mobile";
-import { getApplication, getContext, settled } from "@ember/test-helpers";
+import { getApplication, settled } from "@ember/test-helpers";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { run } from "@ember/runloop";
 import { setupApplicationTest } from "ember-qunit";
-import { Promise } from "rsvp";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
 import { _clearSnapshots } from "select-kit/components/composer-actions";
@@ -63,7 +62,7 @@ import {
   setTestPresence,
 } from "discourse/lib/user-presence";
 import PreloadStore from "discourse/lib/preload-store";
-import { resetDefaultSectionLinks as resetTopicsSectionLinks } from "discourse/lib/sidebar/custom-topics-section-links";
+import { resetDefaultSectionLinks as resetTopicsSectionLinks } from "discourse/lib/sidebar/custom-community-section-links";
 import {
   clearBlockDecorateCallbacks,
   clearTagDecorateCallbacks,
@@ -71,6 +70,14 @@ import {
 } from "discourse/lib/to-markdown";
 import { clearTagsHtmlCallbacks } from "discourse/lib/render-tags";
 import { clearToolbarCallbacks } from "discourse/components/d-editor";
+import { clearExtraHeaderIcons } from "discourse/widgets/header";
+import { resetSidebarSection } from "discourse/lib/sidebar/custom-sections";
+import { resetNotificationTypeRenderers } from "discourse/lib/notification-types-manager";
+import { resetUserMenuTabs } from "discourse/lib/user-menu/tab";
+import { reset as resetLinkLookup } from "discourse/lib/link-lookup";
+import { resetMentions } from "discourse/lib/link-mentions";
+import { resetModelTransformers } from "discourse/lib/model-transformers";
+import { cleanupTemporaryModuleRegistrations } from "./temporary-module-helper";
 
 export function currentUser() {
   return User.create(sessionFixtures["/session/current.json"].current_user);
@@ -107,6 +114,7 @@ export function fakeTime(timeString, timezone = null, advanceTime = false) {
   return sinon.useFakeTimers({
     now: now.valueOf(),
     shouldAdvanceTime: advanceTime,
+    shouldClearNativeTimers: true,
   });
 }
 
@@ -121,14 +129,13 @@ export function withFrozenTime(timeString, timezone, callback) {
 
 let _pretenderCallbacks = {};
 
-export function resetSite(siteSettings, extras) {
-  let siteAttrs = Object.assign(
-    {},
-    siteFixtures["site.json"].site,
-    extras || {}
-  );
-  siteAttrs.siteSettings = siteSettings;
-  PreloadStore.store("site", siteAttrs);
+export function resetSite(extras = {}) {
+  const siteAttrs = {
+    ...siteFixtures["site.json"].site,
+    ...extras,
+  };
+
+  PreloadStore.store("site", cloneJSON(siteAttrs));
   Site.resetCurrent();
 }
 
@@ -154,7 +161,6 @@ export function testCleanup(container, app) {
     });
   }
 
-  localStorage.clear();
   User.resetCurrent();
   resetExtraClasses();
   clearOutletCache();
@@ -197,6 +203,14 @@ export function testCleanup(container, app) {
   clearLegacyResolverOptions();
   clearTagsHtmlCallbacks();
   clearToolbarCallbacks();
+  resetSidebarSection();
+  resetNotificationTypeRenderers();
+  clearExtraHeaderIcons();
+  resetUserMenuTabs();
+  resetLinkLookup();
+  resetModelTransformers();
+  resetMentions();
+  cleanupTemporaryModuleRegistrations();
 }
 
 export function discourseModule(name, options) {
@@ -213,8 +227,6 @@ export function discourseModule(name, options) {
         this.owner = this.container;
         this.siteSettings = currentSettings();
       });
-
-      hooks.afterEach(() => testCleanup(this.container));
 
       this.getController = function (controllerName, properties) {
         let controller = this.container.lookup(`controller:${controllerName}`);
@@ -243,7 +255,6 @@ export function discourseModule(name, options) {
     },
     afterEach() {
       options?.afterEach?.call(this);
-      testCleanup(this.container);
     },
   });
 }
@@ -268,7 +279,11 @@ export function acceptance(name, optionsOrCallback) {
   } else if (typeof optionsOrCallback === "object") {
     deprecated(
       `${name}: The second parameter to \`acceptance\` should be a function that encloses your tests.`,
-      { since: "2.6.0", dropFrom: "2.9.0.beta1" }
+      {
+        since: "2.6.0",
+        dropFrom: "2.9.0.beta1",
+        id: "discourse.qunit.acceptance-function",
+      }
     );
     options = optionsOrCallback;
   }
@@ -303,9 +318,10 @@ export function acceptance(name, optionsOrCallback) {
       if (settingChanges) {
         mergeSettings(settingChanges);
       }
+
       this.siteSettings = currentSettings();
 
-      resetSite(currentSettings(), siteChanges);
+      resetSite(siteChanges);
 
       this.container = getOwner(this);
 
@@ -373,15 +389,6 @@ export function acceptance(name, optionsOrCallback) {
       callback(needs);
 
       setupApplicationTest(hooks);
-
-      hooks.beforeEach(function () {
-        // This hack seems necessary to allow `DiscourseURL` to use the testing router
-        let ctx = getContext();
-        this.container.registry.unregister("router:main");
-        this.container.registry.register("router:main", ctx.owner.router, {
-          instantiate: false,
-        });
-      });
     });
   } else {
     // Old way
@@ -390,6 +397,14 @@ export function acceptance(name, optionsOrCallback) {
 }
 
 export function controllerFor(controller, model) {
+  deprecated(
+    'controllerFor is deprecated. Use the standard `getOwner(this).lookup("controller:NAME")` instead',
+    {
+      id: "controller-for",
+      since: "3.0.0.beta14",
+    }
+  );
+
   controller = getOwner(this).lookup("controller:" + controller);
   if (model) {
     controller.set("model", model);
@@ -405,9 +420,10 @@ export function fixture(selector) {
 }
 
 QUnit.assert.not = function (actual, message) {
-  deprecated("assert.not() is deprecated. Use assert.notOk() instead.", {
+  deprecated("assert.not() is deprecated. Use assert.false() instead.", {
     since: "2.9.0.beta1",
     dropFrom: "2.10.0.beta1",
+    id: "discourse.qunit.assert-not",
   });
 
   this.pushResult({
@@ -443,15 +459,11 @@ QUnit.assert.containsInstance = function (collection, klass, message) {
 };
 
 export async function selectDate(selector, date) {
-  return new Promise((resolve) => {
-    const elem = document.querySelector(selector);
-    elem.value = date;
-    const evt = new Event("input", { bubbles: true, cancelable: false });
-    elem.dispatchEvent(evt);
-    elem.blur();
-
-    resolve();
-  });
+  const elem = document.querySelector(selector);
+  elem.value = date;
+  const evt = new Event("input", { bubbles: true, cancelable: false });
+  elem.dispatchEvent(evt);
+  elem.blur();
 }
 
 export function queryAll(selector, context) {
@@ -484,11 +496,15 @@ export function exists(selector) {
   return count(selector) > 0;
 }
 
-export function publishToMessageBus(channelPath, ...args) {
+export async function publishToMessageBus(channelPath, ...args) {
   args = cloneJSON(args);
-  MessageBus.callbacks
+
+  const promises = MessageBus.callbacks
     .filterBy("channel", channelPath)
-    .forEach((c) => c.func(...args));
+    .map((callback) => callback.func(...args));
+
+  await Promise.allSettled(promises);
+  await settled();
 }
 
 export async function selectText(selector, endOffset = null) {

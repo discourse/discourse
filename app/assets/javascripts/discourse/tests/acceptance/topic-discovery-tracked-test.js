@@ -1,7 +1,6 @@
-import { settled, visit } from "@ember/test-helpers";
+import { visit } from "@ember/test-helpers";
 import I18n from "I18n";
 import { test } from "qunit";
-
 import {
   acceptance,
   exists,
@@ -40,7 +39,7 @@ acceptance("Topic Discovery Tracked", function (needs) {
   });
 
   test("navigation items with tracked filter", async function (assert) {
-    this.container.lookup("topic-tracking-state:main").loadStates([
+    this.container.lookup("service:topic-tracking-state").loadStates([
       {
         topic_id: 1,
         highest_post_number: 1,
@@ -68,6 +67,13 @@ acceptance("Topic Discovery Tracked", function (needs) {
     assert.ok(
       exists("#navigation-bar li.categories"),
       "the categories nav item is displayed when tracked filter is not present"
+    );
+
+    await visit("/categories");
+
+    assert.ok(
+      exists("#navigation-bar li.categories"),
+      "the categories nav item is displayed on categories route when tracked filter is not present"
     );
 
     await visit("/?f=tracked");
@@ -105,7 +111,7 @@ acceptance("Topic Discovery Tracked", function (needs) {
     const category = categories.find((c) => c.id === 1001);
     category.set("notification_level", NotificationLevels.TRACKING);
 
-    this.container.lookup("topic-tracking-state:main").loadStates([
+    this.container.lookup("service:topic-tracking-state").loadStates([
       {
         topic_id: 1,
         highest_post_number: 1,
@@ -198,7 +204,7 @@ acceptance("Topic Discovery Tracked", function (needs) {
     );
 
     // simulate reading topic id 1
-    publishToMessageBus("/unread", {
+    await publishToMessageBus("/unread", {
       topic_id: 1,
       message_type: "read",
       payload: {
@@ -208,7 +214,7 @@ acceptance("Topic Discovery Tracked", function (needs) {
     });
 
     // simulate reading topic id 3
-    publishToMessageBus("/unread", {
+    await publishToMessageBus("/unread", {
       topic_id: 3,
       message_type: "read",
       payload: {
@@ -216,8 +222,6 @@ acceptance("Topic Discovery Tracked", function (needs) {
         highest_post_number: 12,
       },
     });
-
-    await settled();
 
     assert.strictEqual(
       query("#navigation-bar li.unread").textContent.trim(),
@@ -233,7 +237,7 @@ acceptance("Topic Discovery Tracked", function (needs) {
   });
 
   test("visit discovery page filtered by tag with tracked filter", async function (assert) {
-    this.container.lookup("topic-tracking-state:main").loadStates([
+    this.container.lookup("service:topic-tracking-state").loadStates([
       {
         topic_id: 1,
         highest_post_number: 1,
@@ -243,11 +247,11 @@ acceptance("Topic Discovery Tracked", function (needs) {
         notification_level: null,
         created_in_new_period: true,
         treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
-        tags: ["someothertag"],
+        tags: ["some-other-tag"],
       },
     ]);
 
-    await visit("/tag/someothertag");
+    await visit("/tag/some-other-tag");
 
     assert.strictEqual(
       query("#navigation-bar li.unread").textContent.trim(),
@@ -261,7 +265,7 @@ acceptance("Topic Discovery Tracked", function (needs) {
       "displays the right content on new link"
     );
 
-    await visit("/tag/someothertag?f=tracked");
+    await visit("/tag/some-other-tag?f=tracked");
 
     assert.strictEqual(
       query("#navigation-bar li.unread").textContent.trim(),
@@ -281,7 +285,7 @@ acceptance("Topic Discovery Tracked", function (needs) {
     const category = categories.at(-1);
     category.set("notification_level", NotificationLevels.TRACKING);
 
-    this.container.lookup("topic-tracking-state:main").loadStates([
+    this.container.lookup("service:topic-tracking-state").loadStates([
       {
         topic_id: 1,
         highest_post_number: 1,

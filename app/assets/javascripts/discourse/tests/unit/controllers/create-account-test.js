@@ -1,12 +1,14 @@
-import I18n from "I18n";
-import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
-import { test } from "qunit";
+import { module, test } from "qunit";
+import { setupTest } from "ember-qunit";
 import { settled } from "@ember/test-helpers";
+import I18n from "I18n";
 
-discourseModule("Unit | Controller | create-account", function () {
+module("Unit | Controller | create-account", function (hooks) {
+  setupTest(hooks);
+
   test("basicUsernameValidation", function (assert) {
     const testInvalidUsername = (username, expectedReason) => {
-      const controller = this.getController("create-account");
+      const controller = this.owner.lookup("controller:create-account");
       controller.set("accountUsername", username);
 
       let validation = controller.basicUsernameValidation(username);
@@ -25,7 +27,8 @@ discourseModule("Unit | Controller | create-account", function () {
       I18n.t("user.username.too_long")
     );
 
-    const controller = this.getController("create-account", {
+    const controller = this.owner.lookup("controller:create-account");
+    controller.setProperties({
       accountUsername: "porkchops",
       prefilledUsername: "porkchops",
     });
@@ -40,12 +43,12 @@ discourseModule("Unit | Controller | create-account", function () {
   });
 
   test("passwordValidation", async function (assert) {
-    const controller = this.getController("create-account");
+    const controller = this.owner.lookup("controller:create-account");
 
     controller.set("authProvider", "");
     controller.set("accountEmail", "pork@chops.com");
-    controller.set("accountUsername", "porkchops");
-    controller.set("prefilledUsername", "porkchops");
+    controller.set("accountUsername", "porkchops123");
+    controller.set("prefilledUsername", "porkchops123");
     controller.set("accountPassword", "b4fcdae11f9167");
 
     assert.strictEqual(
@@ -65,18 +68,21 @@ discourseModule("Unit | Controller | create-account", function () {
       assert.strictEqual(
         controller.passwordValidation.failed,
         true,
-        "password should be invalid: " + password
+        `password should be invalid: ${password}`
       );
       assert.strictEqual(
         controller.passwordValidation.reason,
         expectedReason,
-        "password validation reason: " + password + ", " + expectedReason
+        `password validation reason: ${password}, ${expectedReason}`
       );
     };
 
     testInvalidPassword("", null);
     testInvalidPassword("x", I18n.t("user.password.too_short"));
-    testInvalidPassword("porkchops", I18n.t("user.password.same_as_username"));
+    testInvalidPassword(
+      "porkchops123",
+      I18n.t("user.password.same_as_username")
+    );
     testInvalidPassword(
       "pork@chops.com",
       I18n.t("user.password.same_as_email")
@@ -87,7 +93,7 @@ discourseModule("Unit | Controller | create-account", function () {
   });
 
   test("authProviderDisplayName", function (assert) {
-    const controller = this.getController("create-account");
+    const controller = this.owner.lookup("controller:create-account");
 
     assert.strictEqual(
       controller.authProviderDisplayName("facebook"),

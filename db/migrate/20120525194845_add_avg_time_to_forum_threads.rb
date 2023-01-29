@@ -10,5 +10,4 @@ class AddAvgTimeToForumThreads < ActiveRecord::Migration[4.2]
   def down
     remove_column :forum_threads, :avg_time
   end
-
 end

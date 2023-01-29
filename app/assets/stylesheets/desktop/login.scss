@@ -140,8 +140,8 @@
     padding: 3em 3em 2.5em;
     .login-welcome-header {
       .login-title {
-        line-height: $line-height-small;
-        font-size: $font-up-6;
+        line-height: var(--line-height-small);
+        font-size: var(--font-up-6);
       }
       p.login-subheader {
         font-size: var(--font-up-1);
@@ -276,8 +276,8 @@
     padding: 3em 2em 1em;
 
     .login-title {
-      font-size: $font-up-6;
-      line-height: $line-height-medium;
+      font-size: var(--font-up-6);
+      line-height: var(--line-height-medium);
     }
     p.login-subheader {
       font-size: var(--font-up-1);
@@ -394,7 +394,6 @@
 }
 
 .password-reset,
-.email-login,
 .invites-show {
   .col-form {
     padding: 0.5em 2em 1em;
@@ -422,8 +421,7 @@
   }
 }
 
-.password-reset,
-.email-login {
+.password-reset {
   .col-form {
     padding-top: 40px;
   }
@@ -474,5 +472,12 @@
     .login-right-side {
       padding: 1em;
     }
+  }
+}
+
+.email-login {
+  width: 550px;
+  .password-reset-img {
+    height: 150px;
   }
 }

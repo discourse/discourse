@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe ExportCsvController do
+RSpec.describe ExportCsvController do
   context "while logged in as normal user" do
     fab!(:user) { Fabricate(:user) }
     before { sign_in(user) }
@@ -76,25 +76,25 @@ describe ExportCsvController do
     end
   end
 
-  context 'while logged in as a moderator' do
+  context "while logged in as a moderator" do
     fab!(:moderator) { Fabricate(:moderator) }
 
     before { sign_in(moderator) }
 
-    describe '#export_entity' do
-      it 'does not allow moderators to export user_list' do
-        post '/export_csv/export_entity.json', params: { entity: 'user_list' }
+    describe "#export_entity" do
+      it "does not allow moderators to export user_list" do
+        post "/export_csv/export_entity.json", params: { entity: "user_list" }
         expect(response.status).to eq(422)
       end
 
-      it 'allows moderator to export other entities' do
-        post "/export_csv/export_entity.json", params: { entity: 'staff_action' }
+      it "allows moderator to export other entities" do
+        post "/export_csv/export_entity.json", params: { entity: "staff_action" }
         expect(response.status).to eq(200)
         expect(Jobs::ExportCsvFile.jobs.size).to eq(1)
 
-        job_data = Jobs::ExportCsvFile.jobs.first['args'].first
-        expect(job_data['entity']).to eq('staff_action')
-        expect(job_data['user_id']).to eq(moderator.id)
+        job_data = Jobs::ExportCsvFile.jobs.first["args"].first
+        expect(job_data["entity"]).to eq("staff_action")
+        expect(job_data["user_id"]).to eq(moderator.id)
       end
     end
   end

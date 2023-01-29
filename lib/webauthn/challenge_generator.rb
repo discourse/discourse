@@ -35,7 +35,7 @@ module Webauthn
       ChallengeSession.new(
         challenge: SecureRandom.hex(30),
         rp_id: Discourse.current_hostname,
-        rp_name: SiteSetting.title
+        rp_name: SiteSetting.title,
       )
     end
   end

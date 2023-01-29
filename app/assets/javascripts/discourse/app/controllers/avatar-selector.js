@@ -1,10 +1,12 @@
 import Controller from "@ember/controller";
+import { action } from "@ember/object";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { ajax } from "discourse/lib/ajax";
 import { allowsImages } from "discourse/lib/uploads";
 import discourseComputed from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { setting } from "discourse/lib/computed";
+import { isTesting } from "discourse-common/config/environment";
 
 export default Controller.extend(ModalFunctionality, {
   gravatarName: setting("gravatar_name"),
@@ -132,6 +134,15 @@ export default Controller.extend(ModalFunctionality, {
     );
   },
 
+  @action
+  selectAvatar(url, event) {
+    event?.preventDefault();
+    this.user
+      .selectAvatar(url)
+      .then(() => window.location.reload())
+      .catch(popupAjaxError);
+  },
+
   actions: {
     uploadComplete() {
       this.set("selected", "custom");
@@ -159,20 +170,17 @@ export default Controller.extend(ModalFunctionality, {
         .finally(() => this.set("gravatarRefreshDisabled", false));
     },
 
-    selectAvatar(url) {
-      this.user
-        .selectAvatar(url)
-        .then(() => window.location.reload())
-        .catch(popupAjaxError);
-    },
-
     saveAvatarSelection() {
       const selectedUploadId = this.selectedUploadId;
       const type = this.selected;
 
       this.user
         .pickAvatar(selectedUploadId, type)
-        .then(() => window.location.reload())
+        .then(() => {
+          if (!isTesting()) {
+            window.location.reload();
+          }
+        })
         .catch(popupAjaxError);
     },
   },

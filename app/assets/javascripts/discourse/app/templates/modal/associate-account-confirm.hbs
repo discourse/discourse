@@ -1,6 +1,9 @@
-<DModalBody @rawTitle={{i18n "user.associated_accounts.confirm_modal_title"
-      provider=(i18n (concat "login." this.model.provider_name ".name"))
-    }}>
+<DModalBody
+  @rawTitle={{i18n
+    "user.associated_accounts.confirm_modal_title"
+    provider=(i18n (concat "login." this.model.provider_name ".name"))
+  }}
+>
   {{#if this.model.error}}
     <div class="alert alert-error">
       {{this.model.error}}
@@ -9,25 +12,39 @@
 
   {{#if this.model.existing_account_description}}
     <p>
-      {{i18n "user.associated_accounts.confirm_description.disconnect"
-          provider=(i18n (concat "login." this.model.provider_name ".name"))
-          account_description=this.model.existing_account_description}}
+      {{i18n
+        "user.associated_accounts.confirm_description.disconnect"
+        provider=(i18n (concat "login." this.model.provider_name ".name"))
+        account_description=this.model.existing_account_description
+      }}
     </p>
   {{/if}}
 
   <p>
     {{#if this.model.account_description}}
-      {{i18n "user.associated_accounts.confirm_description.account_specific"
-          provider=(i18n (concat "login." this.model.provider_name ".name"))
-          account_description=this.model.account_description}}
+      {{i18n
+        "user.associated_accounts.confirm_description.account_specific"
+        provider=(i18n (concat "login." this.model.provider_name ".name"))
+        account_description=this.model.account_description
+      }}
     {{else}}
-      {{i18n "user.associated_accounts.confirm_description.generic"
-          provider=(i18n (concat "login." this.model.provider_name ".name"))}}
+      {{i18n
+        "user.associated_accounts.confirm_description.generic"
+        provider=(i18n (concat "login." this.model.provider_name ".name"))
+      }}
     {{/if}}
   </p>
 </DModalBody>
 
 <div class="modal-footer">
-  <DButton @label="user.associated_accounts.connect" @action={{action "finishConnect"}} @class="btn-primary" @icon="plug" />
-  <DButton @label="user.associated_accounts.cancel" @action={{action "closeModal"}} />
+  <DButton
+    @label="user.associated_accounts.connect"
+    @action={{action "finishConnect"}}
+    @class="btn-primary"
+    @icon="plug"
+  />
+  <DButton
+    @label="user.associated_accounts.cancel"
+    @action={{action "closeModal"}}
+  />
 </div>

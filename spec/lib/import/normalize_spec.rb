@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Import::Normalize do
+RSpec.describe Import::Normalize do
   describe "#normalize_code_blocks" do
     it "normalizes 2 code blocks correctly" do
       markdown = <<MD
@@ -12,7 +12,8 @@ describe Import::Normalize do
         test &nbsp;
         <pre><code>this is a &quot;&quot;</code></pre>
 MD
-      expected = "      &nbsp;\n      \n```\n        I am a te \"\n        \n```\n\n        test &nbsp;\n        \n```\nthis is a \"\"\n```\n\n"
+      expected =
+        "      &nbsp;\n      \n```\n        I am a te \"\n        \n```\n\n        test &nbsp;\n        \n```\nthis is a \"\"\n```\n\n"
       expect(Import::Normalize.normalize_code_blocks(markdown)).to eq(expected)
     end
   end

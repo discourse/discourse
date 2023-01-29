@@ -1,11 +1,26 @@
-<span class='topic-post-badges'>
-  {{~#if newPosts ~}}
-    &nbsp;<a href='{{url}}' class='badge badge-notification unread-posts' title='{{i18n "topic.unread_posts" count=newPosts}}'>{{newPosts}}</a>
+<span class="topic-post-badges">
+  {{~#if newPosts~}}
+    &nbsp;<a
+      href="{{url}}"
+      class="badge badge-notification unread-posts"
+      title="{{i18n 'topic.unread_posts' count=newPosts}}"
+      aria-label="{{i18n 'topic.unread_posts' count=newPosts}}"
+    >{{newPosts}}</a>
   {{~/if}}
-  {{~#if unreadPosts ~}}
-    &nbsp;<a href='{{url}}' class='badge badge-notification unread-posts' title='{{i18n "topic.unread_posts" count=unreadPosts}}'>{{unreadPosts}}</a>
+  {{~#if unreadPosts~}}
+    &nbsp;<a
+      href="{{url}}"
+      class="badge badge-notification unread-posts"
+      title="{{i18n 'topic.unread_posts' count=unreadPosts}}"
+      aria-label="{{i18n 'topic.unread_posts' count=unreadPosts}}"
+    >{{unreadPosts}}</a>
   {{~/if}}
-  {{~#if unseen ~}}
-    &nbsp;<a href='{{url}}' class='badge badge-notification new-topic' title='{{i18n "topic.new"}}'>{{newDotText}}</a>
+  {{~#if unseen~}}
+    &nbsp;<a
+      href="{{url}}"
+      class="badge badge-notification new-topic"
+      title="{{i18n 'topic.new'}}"
+      aria-label="{{i18n 'topic.new'}}"
+    >{{newDotText}}</a>
   {{~/if}}
 </span>

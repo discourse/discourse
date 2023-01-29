@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::ProblemChecks do
+RSpec.describe Jobs::ProblemChecks do
   after do
     Discourse.redis.flushdb
     AdminDashboardData.reset_problem_checks
@@ -22,7 +22,11 @@ describe Jobs::ProblemChecks do
     AdminDashboardData.add_scheduled_problem_check(:test_identifier) do
       [
         AdminDashboardData::Problem.new("big problem"),
-        AdminDashboardData::Problem.new("yuge problem", priority: "high", identifier: "config_is_a_mess")
+        AdminDashboardData::Problem.new(
+          "yuge problem",
+          priority: "high",
+          identifier: "config_is_a_mess",
+        ),
       ]
     end
 
@@ -34,8 +38,16 @@ describe Jobs::ProblemChecks do
   it "does not add the same problem twice if the identifier already exists" do
     AdminDashboardData.add_scheduled_problem_check(:test_identifier) do
       [
-        AdminDashboardData::Problem.new("yuge problem", priority: "high", identifier: "config_is_a_mess"),
-        AdminDashboardData::Problem.new("nasty problem", priority: "high", identifier: "config_is_a_mess")
+        AdminDashboardData::Problem.new(
+          "yuge problem",
+          priority: "high",
+          identifier: "config_is_a_mess",
+        ),
+        AdminDashboardData::Problem.new(
+          "nasty problem",
+          priority: "high",
+          identifier: "config_is_a_mess",
+        ),
       ]
     end
 

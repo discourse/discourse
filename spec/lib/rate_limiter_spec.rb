@@ -1,17 +1,22 @@
 # frozen_string_literal: true
 
-require 'rate_limiter'
+require "rate_limiter"
 
-describe RateLimiter do
-
+RSpec.describe RateLimiter do
   fab!(:user) { Fabricate(:user) }
   fab!(:admin) { Fabricate(:admin) }
   let(:rate_limiter) { RateLimiter.new(user, "peppermint-butler", 2, 60) }
-  let(:apply_staff_rate_limiter) { RateLimiter.new(admin, "peppermint-servant", 5, 40, apply_limit_to_staff: true) }
-  let(:staff_rate_limiter) { RateLimiter.new(user, "peppermind-servant", 5, 40, staff_limit: { max: 10, secs: 80 }) }
-  let(:admin_staff_rate_limiter) { RateLimiter.new(admin, "peppermind-servant", 5, 40, staff_limit: { max: 10, secs: 80 }) }
+  let(:apply_staff_rate_limiter) do
+    RateLimiter.new(admin, "peppermint-servant", 5, 40, apply_limit_to_staff: true)
+  end
+  let(:staff_rate_limiter) do
+    RateLimiter.new(user, "peppermind-servant", 5, 40, staff_limit: { max: 10, secs: 80 })
+  end
+  let(:admin_staff_rate_limiter) do
+    RateLimiter.new(admin, "peppermind-servant", 5, 40, staff_limit: { max: 10, secs: 80 })
+  end
 
-  context 'disabled' do
+  describe "disabled" do
     before do
       rate_limiter.performed!
       rate_limiter.performed!
@@ -28,10 +33,9 @@ describe RateLimiter do
     it "doesn't raise an error on performed!" do
       expect { rate_limiter.performed! }.not_to raise_error
     end
-
   end
 
-  context 'enabled' do
+  describe "enabled" do
     before do
       RateLimiter.enable
       rate_limiter.clear!
@@ -39,10 +43,8 @@ describe RateLimiter do
       admin_staff_rate_limiter.clear!
     end
 
-    context 'aggressive rate limiter' do
-
-      it 'can operate correctly and totally stop limiting' do
-
+    context "with aggressive rate limiter" do
+      it "can operate correctly and totally stop limiting" do
         freeze_time
 
         # 2 requests every 30 seconds
@@ -53,36 +55,26 @@ describe RateLimiter do
         limiter.performed!
         freeze_time 29.seconds.from_now
 
-        expect do
-          limiter.performed!
-        end.to raise_error(RateLimiter::LimitExceeded)
+        expect do limiter.performed! end.to raise_error(RateLimiter::LimitExceeded)
 
-        expect do
-          limiter.performed!
-        end.to raise_error(RateLimiter::LimitExceeded)
+        expect do limiter.performed! end.to raise_error(RateLimiter::LimitExceeded)
 
         # in aggressive mode both these ^^^ count as an attempt
         freeze_time 29.seconds.from_now
 
-        expect do
-          limiter.performed!
-        end.to raise_error(RateLimiter::LimitExceeded)
+        expect do limiter.performed! end.to raise_error(RateLimiter::LimitExceeded)
 
-        expect do
-          limiter.performed!
-        end.to raise_error(RateLimiter::LimitExceeded)
+        expect do limiter.performed! end.to raise_error(RateLimiter::LimitExceeded)
 
         freeze_time 30.seconds.from_now
 
         expect { limiter.performed! }.not_to raise_error
         expect { limiter.performed! }.not_to raise_error
-
       end
     end
 
-    context 'global rate limiter' do
-
-      it 'can operate in global mode' do
+    context "with global rate limiter" do
+      it "can operate in global mode" do
         limiter = RateLimiter.new(nil, "test", 2, 30, global: true)
         limiter.clear!
 
@@ -100,25 +92,22 @@ describe RateLimiter do
         end
         expect(thrown).to be(true)
       end
-
     end
 
-    context 'handles readonly' do
+    context "when handling readonly" do
       before do
         # random IP address in the ULA range that does not exist
-        Discourse.redis.without_namespace.slaveof 'fdec:3f5d:d0b7:4c4b:472b:636a:4370:7ac5', '49999'
+        Discourse.redis.without_namespace.slaveof "fdec:3f5d:d0b7:4c4b:472b:636a:4370:7ac5", "49999"
       end
 
-      after do
-        Discourse.redis.without_namespace.slaveof 'no', 'one'
-      end
+      after { Discourse.redis.without_namespace.slaveof "no", "one" }
 
-      it 'does not explode' do
+      it "does not explode" do
         expect { rate_limiter.performed! }.not_to raise_error
       end
     end
 
-    context 'never done' do
+    context "when never done" do
       it "should perform right away" do
         expect(rate_limiter.can_perform?).to eq(true)
       end
@@ -128,7 +117,7 @@ describe RateLimiter do
       end
     end
 
-    context "remaining" do
+    context "when remaining" do
       it "updates correctly" do
         expect(rate_limiter.remaining).to eq(2)
         rate_limiter.performed!
@@ -138,18 +127,17 @@ describe RateLimiter do
       end
     end
 
-    context 'max is less than or equal to zero' do
-
-      it 'should raise the right error' do
+    context "when max is less than or equal to zero" do
+      it "should raise the right error" do
         [-1, 0, nil].each do |max|
-          expect do
-            RateLimiter.new(user, "a", max, 60).performed!
-          end.to raise_error(RateLimiter::LimitExceeded)
+          expect do RateLimiter.new(user, "a", max, 60).performed! end.to raise_error(
+            RateLimiter::LimitExceeded,
+          )
         end
       end
     end
 
-    context "multiple calls" do
+    context "with multiple calls" do
       before do
         freeze_time
         rate_limiter.performed!
@@ -168,7 +156,7 @@ describe RateLimiter do
         end
       end
 
-      it 'raises no error when the sliding window ended' do
+      it "raises no error when the sliding window ended" do
         freeze_time 60.seconds.from_now
         expect { rate_limiter.performed! }.not_to raise_error
       end
@@ -224,10 +212,8 @@ describe RateLimiter do
         end
       end
 
-      context "rollback!" do
-        before do
-          rate_limiter.rollback!
-        end
+      describe "#rollback!" do
+        before { rate_limiter.rollback! }
 
         it "returns true for can_perform since there is now room" do
           expect(rate_limiter.can_perform?).to eq(true)
@@ -237,8 +223,6 @@ describe RateLimiter do
           expect { rate_limiter.performed! }.not_to raise_error
         end
       end
-
     end
   end
-
 end

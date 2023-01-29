@@ -38,7 +38,7 @@ export default Component.extend({
     }
 
     // Relative urls
-    if (shareUrl.indexOf("/") === 0) {
+    if (shareUrl.startsWith("/")) {
       const location = window.location;
       shareUrl = `${location.protocol}//${location.host}${shareUrl}`;
     }

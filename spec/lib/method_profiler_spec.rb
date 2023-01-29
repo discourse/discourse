@@ -1,14 +1,12 @@
 # frozen_string_literal: true
 
-describe MethodProfiler do
+RSpec.describe MethodProfiler do
   class Sneetch
     def beach
     end
 
     def recurse(count = 5)
-      if count > 0
-        recurse(count - 1)
-      end
+      recurse(count - 1) if count > 0
     end
   end
 
@@ -29,11 +27,13 @@ describe MethodProfiler do
     Sneetch.new.beach
     data = MethodProfiler.transfer
     result = nil
-    Thread.new do
-      MethodProfiler.start(data)
-      Sneetch.new.beach
-      result = MethodProfiler.stop
-    end.join
+    Thread
+      .new do
+        MethodProfiler.start(data)
+        Sneetch.new.beach
+        result = MethodProfiler.stop
+      end
+      .join
 
     expect(result[:at_beach][:calls]).to eq(2)
   end

@@ -3,7 +3,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { click, render } from "@ember/test-helpers";
 import { count, exists, query } from "discourse/tests/helpers/qunit-helpers";
 import { hbs } from "ember-cli-htmlbars";
-import pretender from "discourse/tests/helpers/create-pretender";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
 module("Integration | Component | admin-report", function (hooks) {
   setupRenderingTest(hooks);
@@ -124,19 +124,15 @@ module("Integration | Component | admin-report", function (hooks) {
   });
 
   test("rate limited", async function (assert) {
-    pretender.get("/admin/reports/bulk", () => {
-      return [
-        429,
-        { "Content-Type": "application/json" },
-        {
-          errors: [
-            "You’ve performed this action too many times. Please wait 10 seconds before trying again.",
-          ],
-          error_type: "rate_limit",
-          extras: { wait_seconds: 10 },
-        },
-      ];
-    });
+    pretender.get("/admin/reports/bulk", () =>
+      response(429, {
+        errors: [
+          "You’ve performed this action too many times. Please wait 10 seconds before trying again.",
+        ],
+        error_type: "rate_limit",
+        extras: { wait_seconds: 10 },
+      })
+    );
 
     await render(hbs`<AdminReport @dataSourceName="signups_rate_limited" />`);
 

@@ -118,10 +118,9 @@ export function sanitize(text, allowLister) {
         const forAttr = forTag[name];
 
         if (
-          (forAttr &&
-            (forAttr.indexOf("*") !== -1 || forAttr.indexOf(value) !== -1)) ||
-          (name.indexOf("data-html-") === -1 &&
-            name.indexOf("data-") === 0 &&
+          (forAttr && (forAttr.includes("*") || forAttr.includes(value))) ||
+          (!name.includes("data-html-") &&
+            name.startsWith("data-") &&
             (forTag["data-*"] || testDataAttribute(forTag, name, value))) ||
           (tag === "a" &&
             name === "href" &&
@@ -129,7 +128,7 @@ export function sanitize(text, allowLister) {
           (tag === "iframe" &&
             name === "src" &&
             allowedIframes.some((i) => {
-              return value.toLowerCase().indexOf((i || "").toLowerCase()) === 0;
+              return value.toLowerCase().startsWith((i || "").toLowerCase());
             }))
         ) {
           return attr(name, value);
@@ -157,7 +156,7 @@ export function sanitize(text, allowLister) {
 
         // Heading ids must begin with `heading--`
         if (
-          ["h1", "h2", "h3", "h4", "h5", "h6"].indexOf(tag) !== -1 &&
+          ["h1", "h2", "h3", "h4", "h5", "h6"].includes(tag) &&
           value.match(/^heading\-\-[a-zA-Z0-9\-\_]+$/)
         ) {
           return attr(name, value);

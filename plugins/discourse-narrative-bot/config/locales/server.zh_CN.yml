@@ -222,7 +222,7 @@ zh_CN:
 
           - 或者，按编辑器中的 <kbd><b>B</b></kbd> 或 <kbd><i>I</i></kbd> 按钮
         reply: |-
-          做得好！HTML 和 BBCode 也适用于格式化 - 要了解更多信息，请[试试本教程](https://commonmark.org/help) :nerd:
+          真棒！HTML 和 BBCode 也可用于格式化 – 要了解详情，请[试试此教程](https://commonmark.org/help) :nerd:
         not_found: |-
           哇，我在你的回复中没有找到任何格式。:pencil2:
 
@@ -373,7 +373,7 @@ zh_CN:
           注意，你只有 %{deletion_after} 小时的时间可以取消删除帖子。
       category_hashtag:
         instructions: |-
-          你知道你可以在你的帖子中引用类别和标签吗？例如，你看到过%{category}类别吗？
+          你知道你可以在你的帖子中引用类别和标签吗？例如，你看到过“%{category}”类别吗？
 
           在句子中输入`#`，然后选择任意类别或标签。
         not_found: |-

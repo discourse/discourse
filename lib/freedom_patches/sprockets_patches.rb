@@ -20,7 +20,10 @@ module FreedomPatches
     end
 
     if Rails.env.development? || Rails.env.test?
-      Sprockets.register_bundle_metadata_reducer 'application/javascript', :data, proc { +"" }, method(:concat_javascript_sources)
+      Sprockets.register_bundle_metadata_reducer "application/javascript",
+                                                 :data,
+                                                 proc { +"" },
+                                                 method(:concat_javascript_sources)
     end
   end
 end

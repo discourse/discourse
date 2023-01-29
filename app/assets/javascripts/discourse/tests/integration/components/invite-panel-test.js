@@ -3,7 +3,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { click, render } from "@ember/test-helpers";
 import { exists, query } from "discourse/tests/helpers/qunit-helpers";
 import { hbs } from "ember-cli-htmlbars";
-import pretender from "discourse/tests/helpers/create-pretender";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import User from "discourse/models/user";
 
@@ -11,19 +11,13 @@ module("Integration | Component | invite-panel", function (hooks) {
   setupRenderingTest(hooks);
 
   test("shows the invite link after it is generated", async function (assert) {
-    pretender.get("/u/search/users", () => {
-      return [200, { "Content-Type": "application/json" }, { users: [] }];
-    });
+    pretender.get("/u/search/users", () => response({ users: [] }));
 
-    pretender.post("/invites", () => {
-      return [
-        200,
-        { "Content-Type": "application/json" },
-        {
-          link: "http://example.com/invites/92c297e886a0ca03089a109ccd6be155",
-        },
-      ];
-    });
+    pretender.post("/invites", () =>
+      response({
+        link: "http://example.com/invites/92c297e886a0ca03089a109ccd6be155",
+      })
+    );
 
     this.currentUser.set("details", { can_invite_via_email: true });
     this.set("panel", {

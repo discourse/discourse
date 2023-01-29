@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require 'email_cook'
-require 'pretty_text'
+require "email_cook"
+require "pretty_text"
 
-describe EmailCook do
+RSpec.describe EmailCook do
   it "uses to PrettyText when there is no [plaintext] in raw" do
     raw = "**Hello world!**"
     expect(cook(raw)).to eq(PrettyText.cook(raw))
@@ -109,22 +109,30 @@ describe EmailCook do
 
   it "creates oneboxed link when the line contains only a link" do
     raw = plaintext("https://www.eviltrout.com")
-    expect(cook(raw)).to eq('<a href="https://www.eviltrout.com" class="onebox" target="_blank">https://www.eviltrout.com</a><br>')
+    expect(cook(raw)).to eq(
+      '<a href="https://www.eviltrout.com" class="onebox" target="_blank">https://www.eviltrout.com</a><br>',
+    )
   end
 
   it "autolinks without the beginning of a line" do
     raw = plaintext("my site: https://www.eviltrout.com")
-    expect(cook(raw)).to eq('my site: <a href="https://www.eviltrout.com">https://www.eviltrout.com</a><br>')
+    expect(cook(raw)).to eq(
+      'my site: <a href="https://www.eviltrout.com">https://www.eviltrout.com</a><br>',
+    )
   end
 
   it "autolinks without the end of a line" do
     raw = plaintext("https://www.eviltrout.com is my site")
-    expect(cook(raw)).to eq('<a href="https://www.eviltrout.com">https://www.eviltrout.com</a> is my site<br>')
+    expect(cook(raw)).to eq(
+      '<a href="https://www.eviltrout.com">https://www.eviltrout.com</a> is my site<br>',
+    )
   end
 
   it "links even within a quote" do
     raw = plaintext("> https://www.eviltrout.com is my site")
-    expect(cook(raw)).to eq('<blockquote><a href="https://www.eviltrout.com">https://www.eviltrout.com</a> is my site<br></blockquote>')
+    expect(cook(raw)).to eq(
+      '<blockquote><a href="https://www.eviltrout.com">https://www.eviltrout.com</a> is my site<br></blockquote>',
+    )
   end
 
   it "it works and does not interpret Markdown in plaintext and elided" do

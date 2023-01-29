@@ -9,7 +9,6 @@
   .title {
     max-width: 75%;
     @include ellipsis;
-    -webkit-animation: fadein 0.5s;
     animation: fadein 0.5s;
     // This acts as a placeholder if for some reason the small logo takes a while
     // to load - prevents topic title from shifting after the small logo loads.
@@ -27,8 +26,7 @@
     max-width: 100%;
   }
   #site-text-logo {
-    margin: 0;
-    font-size: $font-up-1;
+    font-size: var(--font-up-1);
   }
   .extra-info-wrapper {
     .extra-info {
@@ -37,7 +35,7 @@
         min-height: 2.25em;
       }
       .header-title {
-        font-size: $font-0;
+        font-size: var(--font-0);
         // the margin-bottom here is fragile, changing it can cause tag alignment issues
         margin: 0 0 0.35em 0;
         .archetype-private_message & {
@@ -68,13 +66,13 @@
   // A rendering bug in safari causes header SVGs to jitter after animations.
   // translateZ() forces gpu rendering which fixes the issue.
   .d-header-icons {
-    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
   }
 }
 
 .d-header-icons {
   .d-icon {
-    line-height: $line-height-medium;
+    line-height: var(--line-height-medium);
   }
   .active .icon {
     &:after {

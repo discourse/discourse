@@ -18,3 +18,31 @@ define("ember-addons/ember-computed-decorators", [
   );
   return decorators;
 });
+
+// Based on https://github.com/emberjs/ember-jquery-legacy
+// The addon has out-of-date dependences, but it's super simple so we can reproduce here instead:
+define("ember-jquery-legacy", ["exports"], function (exports) {
+  exports.normalizeEvent = function (e) {
+    if (e instanceof Event) {
+      return e;
+    }
+    // __originalEvent is a private escape hatch of Ember's EventDispatcher to allow accessing `originalEvent` without
+    // triggering a deprecation message.
+    return e.__originalEvent || e.originalEvent;
+  };
+});
+
+// ember-cached-decorator-polyfill uses a Babel transformation to apply this polyfill in core.
+// Adding that Babel transformation to themes and plugins will be complex, so we use this to
+// patch it at runtime. This can be removed once `@glimmer/tracking` is updated to a version
+// with native `@cached` support.
+const glimmerTracking = require("@glimmer/tracking");
+if (glimmerTracking.cached) {
+  console.error(
+    "@glimmer/tracking natively supports the @cached decorator. The polyfill can be removed."
+  );
+} else {
+  Object.defineProperty(glimmerTracking, "cached", {
+    get: () => require("ember-cached-decorator-polyfill").cached,
+  });
+}

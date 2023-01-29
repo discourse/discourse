@@ -1,12 +1,14 @@
 # frozen_string_literal: true
 
-describe Onebox::Engine::HTML do
+RSpec.describe Onebox::Engine::HTML do
   before do
     @link = "http://amazon.com"
 
     stub_request(:get, @link).to_return(status: 200, body: onebox_response("amazon"))
-    stub_request(:get, "https://www.amazon.com/Seven-Languages-Weeks-Programming-Programmers/dp/193435659X")
-      .to_return(status: 200, body: onebox_response("amazon"))
+    stub_request(
+      :get,
+      "https://www.amazon.com/Seven-Languages-Weeks-Programming-Programmers/dp/193435659X",
+    ).to_return(status: 200, body: onebox_response("amazon"))
   end
 
   describe "#raw" do

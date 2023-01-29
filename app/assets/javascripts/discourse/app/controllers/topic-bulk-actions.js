@@ -4,7 +4,8 @@ import I18n from "I18n";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { Promise } from "rsvp";
 import Topic from "discourse/models/topic";
-import bootbox from "bootbox";
+
+import { inject as service } from "@ember/service";
 
 const _buttons = [];
 
@@ -61,7 +62,7 @@ addBulkButton("deletePostTiming", "defer", {
   icon: "circle",
   class: "btn-default",
   buttonVisible() {
-    return this.currentUser.enable_defer;
+    return this.currentUser.user_option.enable_defer;
   },
 });
 addBulkButton("unlistTopics", "unlist_topics", {
@@ -88,7 +89,7 @@ addBulkButton("showTagTopics", "change_tags", {
   class: "btn-default",
   enabledSetting: "tagging_enabled",
   buttonVisible() {
-    return this.currentUser.staff;
+    return this.currentUser.canManageTopic;
   },
 });
 addBulkButton("showAppendTagTopics", "append_tags", {
@@ -96,7 +97,7 @@ addBulkButton("showAppendTagTopics", "append_tags", {
   class: "btn-default",
   enabledSetting: "tagging_enabled",
   buttonVisible() {
-    return this.currentUser.staff;
+    return this.currentUser.canManageTopic;
   },
 });
 addBulkButton("removeTags", "remove_tags", {
@@ -104,7 +105,7 @@ addBulkButton("removeTags", "remove_tags", {
   class: "btn-default",
   enabledSetting: "tagging_enabled",
   buttonVisible() {
-    return this.currentUser.staff;
+    return this.currentUser.canManageTopic;
   },
 });
 addBulkButton("deleteTopics", "delete", {
@@ -118,7 +119,7 @@ addBulkButton("deleteTopics", "delete", {
 // Modal for performing bulk actions on topics
 export default Controller.extend(ModalFunctionality, {
   userPrivateMessages: controller("user-private-messages"),
-
+  dialog: service(),
   tags: null,
   emptyTags: empty("tags"),
   categoryId: alias("model.category.id"),
@@ -151,7 +152,7 @@ export default Controller.extend(ModalFunctionality, {
 
     return this._processChunks(operation)
       .catch(() => {
-        bootbox.alert(I18n.t("generic_error"));
+        this.dialog.alert(I18n.t("generic_error"));
       })
       .finally(() => {
         this.set("loading", false);
@@ -318,16 +319,12 @@ export default Controller.extend(ModalFunctionality, {
     },
 
     removeTags() {
-      bootbox.confirm(
-        I18n.t("topics.bulk.confirm_remove_tags", {
+      this.dialog.deleteConfirm({
+        message: I18n.t("topics.bulk.confirm_remove_tags", {
           count: this.get("model.topics").length,
         }),
-        (result) => {
-          if (result) {
-            this.performAndRefresh({ type: "remove_tags" });
-          }
-        }
-      );
+        didConfirm: () => this.performAndRefresh({ type: "remove_tags" }),
+      });
     },
   },
 });

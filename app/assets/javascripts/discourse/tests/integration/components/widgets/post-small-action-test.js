@@ -3,6 +3,8 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { render } from "@ember/test-helpers";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { hbs } from "ember-cli-htmlbars";
+import { withPluginApi } from "discourse/lib/plugin-api";
+import { resetPostSmallActionClassesCallbacks } from "discourse/widgets/post-small-action";
 
 module(
   "Integration | Component | Widget | post-small-action",
@@ -16,9 +18,9 @@ module(
         hbs`<MountWidget @widget="post-small-action" @args={{this.args}} />`
       );
 
-      assert.ok(!exists(".small-action-desc > .small-action-delete"));
-      assert.ok(!exists(".small-action-desc > .small-action-recover"));
-      assert.ok(!exists(".small-action-desc > .small-action-edit"));
+      assert.ok(!exists(".small-action-desc .small-action-delete"));
+      assert.ok(!exists(".small-action-desc .small-action-recover"));
+      assert.ok(!exists(".small-action-desc .small-action-edit"));
     });
 
     test("shows edit button if canEdit", async function (assert) {
@@ -29,7 +31,7 @@ module(
       );
 
       assert.ok(
-        exists(".small-action-desc > .small-action-edit"),
+        exists(".small-action-desc .small-action-edit"),
         "it adds the edit small action button"
       );
     });
@@ -55,11 +57,11 @@ module(
       );
 
       assert.ok(
-        !exists(".small-action-desc > .small-action-edit"),
+        !exists(".small-action-desc .small-action-edit"),
         "it does not add the edit small action button"
       );
       assert.ok(
-        exists(".small-action-desc > .small-action-recover"),
+        exists(".small-action-desc .small-action-recover"),
         "it adds the recover small action button"
       );
     });
@@ -72,7 +74,7 @@ module(
       );
 
       assert.ok(
-        exists(".small-action-desc > .small-action-delete"),
+        exists(".small-action-desc .small-action-delete"),
         "it adds the delete small action button"
       );
     });
@@ -85,9 +87,45 @@ module(
       );
 
       assert.ok(
-        exists(".small-action-desc > .small-action-recover"),
+        exists(".small-action-desc .small-action-recover"),
         "it adds the recover small action button"
       );
+    });
+
+    test("`addPostSmallActionClassesCallback` plugin api", async function (assert) {
+      try {
+        withPluginApi("1.6.0", (api) => {
+          api.addPostSmallActionClassesCallback((postAttrs) => {
+            if (postAttrs.canRecover) {
+              return ["abcde"];
+            }
+          });
+        });
+
+        this.set("args", { id: 123, canRecover: false });
+
+        await render(
+          hbs`<MountWidget @widget="post-small-action" @args={{this.args}} />`
+        );
+
+        assert.notOk(
+          exists(".abcde"),
+          "custom CSS class is not added when condition is not met"
+        );
+
+        this.set("args", { id: 123, canRecover: true });
+
+        await render(
+          hbs`<MountWidget @widget="post-small-action" @args={{this.args}} />`
+        );
+
+        assert.ok(
+          exists(".abcde"),
+          "it adds custom CSS class as registered from the plugin API"
+        );
+      } finally {
+        resetPostSmallActionClassesCallbacks();
+      }
     });
   }
 );

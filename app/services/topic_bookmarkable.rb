@@ -12,40 +12,48 @@ class TopicBookmarkable < BaseBookmarkable
   end
 
   def self.preload_associations
-    [:topic_users, :tags, { posts: :user }]
+    [:tags, { first_post: :user }]
+  end
+
+  def self.perform_custom_preload!(topic_bookmarks, guardian)
+    topics = topic_bookmarks.map(&:bookmarkable)
+    topic_user_lookup = TopicUser.lookup_for(guardian.user, topics)
+
+    topics.each { |topic| topic.user_data = topic_user_lookup[topic.id] }
   end
 
   def self.list_query(user, guardian)
     topics = Topic.listable_topics.secured(guardian)
     pms = Topic.private_messages_for_user(user)
-    topic_bookmarks = user
-      .bookmarks_of_type("Topic")
-      .joins("INNER JOIN topics ON topics.id = bookmarks.bookmarkable_id AND bookmarks.bookmarkable_type = 'Topic'")
-      .joins("LEFT JOIN topic_users ON topic_users.topic_id = topics.id")
-      .where("topic_users.user_id = ?", user.id)
+    topic_bookmarks =
+      user
+        .bookmarks_of_type("Topic")
+        .joins(
+          "INNER JOIN topics ON topics.id = bookmarks.bookmarkable_id AND bookmarks.bookmarkable_type = 'Topic'",
+        )
+        .joins("LEFT JOIN topic_users ON topic_users.topic_id = topics.id")
+        .where("topic_users.user_id = ?", user.id)
     guardian.filter_allowed_categories(topic_bookmarks.merge(topics.or(pms)))
   end
 
   def self.search_query(bookmarks, query, ts_query, &bookmarkable_search)
     bookmarkable_search.call(
-      bookmarks
-      .joins("LEFT JOIN posts ON posts.topic_id = topics.id AND posts.post_number = 1")
-      .joins("LEFT JOIN post_search_data ON post_search_data.post_id = posts.id"),
-    "#{ts_query} @@ post_search_data.search_data"
+      bookmarks.joins(
+        "LEFT JOIN posts ON posts.topic_id = topics.id AND posts.post_number = 1",
+      ).joins("LEFT JOIN post_search_data ON post_search_data.post_id = posts.id"),
+      "#{ts_query} @@ post_search_data.search_data",
     )
   end
 
   def self.reminder_handler(bookmark)
-    bookmark.user.notifications.create!(
-      notification_type: Notification.types[:bookmark_reminder],
+    send_reminder_notification(
+      bookmark,
       topic_id: bookmark.bookmarkable_id,
       post_number: 1,
       data: {
         title: bookmark.bookmarkable.title,
-        display_username: bookmark.user.username,
-        bookmark_name: bookmark.name,
-        bookmarkable_url: bookmark.bookmarkable.first_post.url
-      }.to_json
+        bookmarkable_url: bookmark.bookmarkable.first_post.url,
+      },
     )
   end
 

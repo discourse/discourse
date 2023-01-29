@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-describe HostListSettingValidator do
+RSpec.describe HostListSettingValidator do
   subject(:validator) { described_class.new() }
 
-  describe '#valid_value?' do
+  describe "#valid_value?" do
     describe "returns false for values containing *" do
       it { expect(validator.valid_value?("*")).to eq false }
       it { expect(validator.valid_value?("**")).to eq false }
@@ -21,9 +21,7 @@ describe HostListSettingValidator do
 
   describe "#error_message" do
     it "returns invalid domain hostname error" do
-      expect(validator.error_message).to eq(I18n.t(
-        'site_settings.errors.invalid_domain_hostname'
-      ))
+      expect(validator.error_message).to eq(I18n.t("site_settings.errors.invalid_domain_hostname"))
     end
   end
 end

@@ -6,6 +6,7 @@ import {
   exists,
   paste,
   query,
+  queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import {
   getTextareaSelection,
@@ -703,6 +704,18 @@ third line`
       "starting to type an emoji like :grinning:",
       "it works when there is a partial emoji"
     );
+  });
+
+  test("toolbar buttons tabindex", async function (assert) {
+    await render(hbs`<DEditor />`);
+    const buttons = queryAll(".d-editor-button-bar .btn");
+
+    assert.strictEqual(
+      buttons[0].getAttribute("tabindex"),
+      "0",
+      "it makes the first button focusable"
+    );
+    assert.strictEqual(buttons[1].getAttribute("tabindex"), "-1");
   });
 
   testCase("replace-text event by default", async function (assert) {

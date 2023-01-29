@@ -5,6 +5,13 @@
 body.crawler,
 body > noscript {
   font-family: serif;
+
+  &:after,
+  &:before {
+    // common way to show fixed background images
+    display: none;
+  }
+
   a {
     // we want all links to look like links
     color: blue !important;

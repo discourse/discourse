@@ -182,9 +182,17 @@ export default Controller.extend(
       return staff || groups.any((g) => g.owner);
     },
 
+    @discourseComputed("currentUser.staff")
+    canArriveAtTopic(staff) {
+      if (staff && !this.siteSettings.must_approve_users) {
+        return true;
+      }
+      return false;
+    },
+
     @discourseComputed
     timeShortcuts() {
-      const timezone = this.currentUser.timezone;
+      const timezone = this.currentUser.user_option.timezone;
       const shortcuts = timeShortcuts(timezone);
       return [
         shortcuts.laterToday(),

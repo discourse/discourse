@@ -9,15 +9,16 @@ import { action } from "@ember/object";
 import { extraConnectorClass } from "discourse/lib/plugin-connectors";
 import { hbs } from "ember-cli-htmlbars";
 import { test } from "qunit";
+import { registerTemporaryModule } from "discourse/tests/helpers/temporary-module-helper";
 
-const PREFIX = "javascripts/single-test/connectors";
+const PREFIX = "discourse/plugins/some-plugin/templates/connectors";
 
 acceptance("Plugin Outlet - Connector Class", function (needs) {
   needs.hooks.beforeEach(() => {
     extraConnectorClass("user-profile-primary/hello", {
       actions: {
         sayHello() {
-          this.set("hello", "hello!");
+          this.set("hello", `${this.hello || ""}hello!`);
         },
       },
     });
@@ -48,30 +49,22 @@ acceptance("Plugin Outlet - Connector Class", function (needs) {
       },
     });
 
-    // eslint-disable-next-line no-undef
-    Ember.TEMPLATES[
-      `${PREFIX}/user-profile-primary/hello`
-    ] = hbs`<span class='hello-username'>{{model.username}}</span>
-        <button class='say-hello' {{action "sayHello"}}></button>
-        <span class='hello-result'>{{hello}}</span>`;
-    // eslint-disable-next-line no-undef
-    Ember.TEMPLATES[
-      `${PREFIX}/user-profile-primary/hi`
-    ] = hbs`<button class='say-hi' {{action "sayHi"}}></button>
-        <span class='hi-result'>{{hi}}</span>`;
-    // eslint-disable-next-line no-undef
-    Ember.TEMPLATES[
-      `${PREFIX}/user-profile-primary/dont-render`
-    ] = hbs`I'm not rendered!`;
-  });
-
-  needs.hooks.afterEach(() => {
-    // eslint-disable-next-line no-undef
-    delete Ember.TEMPLATES[`${PREFIX}/user-profile-primary/hello`];
-    // eslint-disable-next-line no-undef
-    delete Ember.TEMPLATES[`${PREFIX}/user-profile-primary/hi`];
-    // eslint-disable-next-line no-undef
-    delete Ember.TEMPLATES[`${PREFIX}/user-profile-primary/dont-render`];
+    registerTemporaryModule(
+      `${PREFIX}/user-profile-primary/hello`,
+      hbs`<span class='hello-username'>{{model.username}}</span>
+        <button class='say-hello' {{on "click" (action "sayHello")}}></button>
+        <button class='say-hello-using-this' {{on "click" this.sayHello}}></button>
+        <span class='hello-result'>{{hello}}</span>`
+    );
+    registerTemporaryModule(
+      `${PREFIX}/user-profile-primary/hi`,
+      hbs`<button class='say-hi' {{on "click" (action "sayHi")}}></button>
+        <span class='hi-result'>{{hi}}</span>`
+    );
+    registerTemporaryModule(
+      `${PREFIX}/user-profile-primary/dont-render`,
+      hbs`I'm not rendered!`
+    );
   });
 
   test("Renders a template into the outlet", async function (assert) {
@@ -91,6 +84,12 @@ acceptance("Plugin Outlet - Connector Class", function (needs) {
       query(".hello-result").innerText,
       "hello!",
       "actions delegate properly"
+    );
+    await click(".say-hello-using-this");
+    assert.strictEqual(
+      query(".hello-result").innerText,
+      "hello!hello!",
+      "actions are made available on `this` and are bound correctly"
     );
 
     await click(".say-hi");

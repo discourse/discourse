@@ -1,4 +1,4 @@
-import { alias, and, reads } from "@ember/object/computed";
+import { alias, and } from "@ember/object/computed";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import LoadMore from "discourse/mixins/load-more";
@@ -12,7 +12,7 @@ export default Component.extend(LoadMore, {
   classNameBindings: ["bulkSelectEnabled:sticky-header"],
   showTopicPostBadges: true,
   listTitle: "topic.title",
-  canDoBulkActions: and("currentUser.staff", "selected.length"),
+  canDoBulkActions: and("currentUser.canManageTopic", "selected.length"),
 
   // Overwrite this to perform client side filtering of topics, if desired
   filteredTopics: alias("topics"),
@@ -33,8 +33,6 @@ export default Component.extend(LoadMore, {
   sortable() {
     return !!this.changeSort;
   },
-
-  skipHeader: reads("site.mobileView"),
 
   @discourseComputed("order")
   showLikes(order) {
@@ -178,12 +176,16 @@ export default Component.extend(LoadMore, {
 
     onClick("button.bulk-select-all", function () {
       this.updateAutoAddTopicsToBulkSelect(true);
-      $("input.bulk-select:not(:checked)").click();
+      document
+        .querySelectorAll("input.bulk-select:not(:checked)")
+        .forEach((el) => el.click());
     });
 
     onClick("button.bulk-clear-all", function () {
       this.updateAutoAddTopicsToBulkSelect(false);
-      $("input.bulk-select:checked").click();
+      document
+        .querySelectorAll("input.bulk-select:checked")
+        .forEach((el) => el.click());
     });
 
     onClick("th.sortable", function (element) {

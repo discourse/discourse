@@ -1,4 +1,4 @@
-/* global Ember */
+import Ember from "ember";
 import { classify, dasherize, decamelize } from "@ember/string";
 import deprecated from "discourse-common/lib/deprecated";
 import { findHelper } from "discourse-common/lib/helpers";
@@ -66,7 +66,11 @@ export function buildResolver(baseName) {
       if (fullName === "app-events:main") {
         deprecated(
           "`app-events:main` has been replaced with `service:app-events`",
-          { since: "2.4.0", dropFrom: "2.9.0.beta1" }
+          {
+            since: "2.4.0",
+            dropFrom: "2.9.0.beta1",
+            id: "discourse.app-events-main",
+          }
         );
         return "service:app-events";
       }
@@ -84,7 +88,10 @@ export function buildResolver(baseName) {
         "route:tagsShow": "route:tagShow",
       })) {
         if (fullName === key) {
-          deprecated(`${key} was replaced with ${value}`, { since: "2.6.0" });
+          deprecated(`${key} was replaced with ${value}`, {
+            since: "2.6.0",
+            id: "discourse.legacy-resolver-resolutions",
+          });
           return value;
         }
       }
@@ -194,7 +201,7 @@ export function buildResolver(baseName) {
 
     findConnectorTemplate(parsedName) {
       const full = parsedName.fullNameWithoutType.replace("components/", "");
-      if (full.indexOf("connectors") === 0) {
+      if (full.startsWith("connectors")) {
         return Ember.TEMPLATES[`javascripts/${full}`];
       }
     },
@@ -271,7 +278,7 @@ export function buildResolver(baseName) {
     // (similar to how discourse lays out templates)
     findAdminTemplate(parsedName) {
       let decamelized = decamelize(parsedName.fullNameWithoutType);
-      if (decamelized.indexOf("components") === 0) {
+      if (decamelized.startsWith("components")) {
         let comPath = `admin/templates/${decamelized}`;
         const compTemplate =
           Ember.TEMPLATES[`javascripts/${comPath}`] || Ember.TEMPLATES[comPath];
@@ -285,8 +292,8 @@ export function buildResolver(baseName) {
       }
 
       if (
-        decamelized.indexOf("admin") === 0 ||
-        decamelized.indexOf("javascripts/admin") === 0
+        decamelized.startsWith("admin") ||
+        decamelized.startsWith("javascripts/admin")
       ) {
         decamelized = decamelized.replace(/^admin\_/, "admin/templates/");
         decamelized = decamelized.replace(/^admin\./, "admin/templates/");

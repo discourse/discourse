@@ -83,11 +83,13 @@ export default Component.extend(UtilsMixin, {
 
     if (event.key === "ArrowUp") {
       this.selectKit.highlightLast();
+      event.preventDefault();
       return false;
     }
 
     if (event.key === "ArrowDown") {
       this.selectKit.highlightFirst();
+      event.preventDefault();
       return false;
     }
 

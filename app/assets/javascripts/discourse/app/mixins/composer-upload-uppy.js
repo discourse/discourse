@@ -19,7 +19,7 @@ import {
   validateUploadedFile,
 } from "discourse/lib/uploads";
 import { cacheShortUploadUrl } from "pretty-text/upload-short-url";
-import bootbox from "bootbox";
+import { inject as service } from "@ember/service";
 import { run } from "@ember/runloop";
 import escapeRegExp from "discourse-common/utils/escape-regexp";
 
@@ -36,6 +36,7 @@ import escapeRegExp from "discourse-common/utils/escape-regexp";
 // functionality and event binding.
 //
 export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
+  dialog: service(),
   uploadRootPath: "/uploads",
   uploadTargetBound: false,
   useUploadPlaceholders: true,
@@ -186,7 +187,7 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
         // _not_ been handled by an upload handler.
         const fileCount = Object.keys(unhandledFiles).length;
         if (maxFiles > 0 && fileCount > maxFiles) {
-          bootbox.alert(
+          this.dialog.alert(
             I18n.t("post.errors.too_many_dragged_and_dropped_files", {
               count: maxFiles,
             })
@@ -338,23 +339,20 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
           file.name,
           upload
         );
+
+        if (this.inProgressUploads.length === 0) {
+          this.appEvents.trigger(
+            `${this.composerEventPrefix}:all-uploads-complete`
+          );
+          this._reset();
+        }
       });
     });
 
     this._uppyInstance.on("upload-error", this._handleUploadError);
 
-    this._uppyInstance.on("complete", () => {
-      run(() => {
-        this.appEvents.trigger(
-          `${this.composerEventPrefix}:all-uploads-complete`
-        );
-        this._reset();
-      });
-    });
-
     this._uppyInstance.on("cancel-all", () => {
-      // uppyInstance.reset() also fires cancel-all, so we want to
-      // only do the manual cancelling work if the user clicked cancel
+      // Do the manual cancelling work only if the user clicked cancel
       if (this.userCancelled) {
         Object.values(this.placeholders).forEach((data) => {
           run(() => {
@@ -453,6 +451,15 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
         placeholderData.uploadPlaceholder,
         placeholderData.processingPlaceholder
       );
+
+      // Safari applies user-defined replacements to text inserted programmatically.
+      // One of the most common replacements is ... -> …, so we take care of the case
+      // where that transformation has been applied to the original placeholder
+      this.appEvents.trigger(
+        `${this.composerEventPrefix}:replace-text`,
+        placeholderData.uploadPlaceholder.replace("...", "…"),
+        placeholderData.processingPlaceholder
+      );
     });
 
     this._onPreProcessComplete(
@@ -537,12 +544,13 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
   },
 
   _reset() {
-    this._uppyInstance?.reset();
+    this._uppyInstance?.cancelAll();
     this.setProperties({
       uploadProgress: 0,
       isUploading: false,
       isProcessingUpload: false,
       isCancellable: false,
+      inProgressUploads: [],
     });
     this._resetPreProcessors();
     this.fileInputEl.value = "";

@@ -7,6 +7,7 @@
 # url: https://github.com/discourse/discourse/tree/main/plugins/lazy-yt
 
 hide_plugin if self.respond_to?(:hide_plugin)
+enabled_site_setting :lazy_yt_enabled
 
 require "onebox"
 
@@ -20,11 +21,10 @@ class Onebox::Engine::YoutubeOnebox
   alias_method :yt_onebox_to_html, :to_html
 
   def to_html
-    if video_id && !params['list']
-
-      size_restricted = [params['width'], params['height']].any?
-      video_width = (params['width'] && params['width'].to_i <= 695) ? params['width'] : 690 # embed width
-      video_height = (params['height'] && params['height'].to_i <= 500) ? params['height'] : 388 # embed height
+    if SiteSetting.lazy_yt_enabled && video_id && !params["list"]
+      size_restricted = [params["width"], params["height"]].any?
+      video_width = (params["width"] && params["width"].to_i <= 695) ? params["width"] : 690 # embed width
+      video_height = (params["height"] && params["height"].to_i <= 500) ? params["height"] : 388 # embed height
       size_tags = ["width=\"#{video_width}\"", "height=\"#{video_height}\""]
 
       result = parse_embed_response
@@ -39,12 +39,12 @@ class Onebox::Engine::YoutubeOnebox
       <div class="onebox lazyYT lazyYT-container"
            data-youtube-id="#{video_id}"
            data-youtube-title="#{escaped_title}"
-           #{size_restricted ? size_tags.map { |t| "data-#{t}" }.join(' ') : ""}
+           #{size_restricted ? size_tags.map { |t| "data-#{t}" }.join(" ") : ""}
            data-parameters="#{embed_params}">
         <a href="https://www.youtube.com/watch?v=#{video_id}" target="_blank">
           <img class="ytp-thumbnail-image"
                src="#{thumbnail_url}"
-               #{size_restricted ? size_tags.join(' ') : ""}
+               #{size_restricted ? size_tags.join(" ") : ""}
                title="#{escaped_title}">
         </a>
       </div>
@@ -53,23 +53,22 @@ class Onebox::Engine::YoutubeOnebox
       yt_onebox_to_html
     end
   end
-
 end
 
 after_initialize do
-
   on(:reduce_cooked) do |fragment|
-    fragment.css(".lazyYT").each do |yt|
-      begin
-        youtube_id = yt["data-youtube-id"]
-        parameters = yt["data-parameters"]
-        uri = URI("https://www.youtube.com/embed/#{youtube_id}?autoplay=1&#{parameters}")
-        yt.replace %{<p><a href="#{uri.to_s}">https://#{uri.host}#{uri.path}</a></p>}
-      rescue URI::InvalidURIError
-        # remove any invalid/weird URIs
-        yt.remove
+    fragment
+      .css(".lazyYT")
+      .each do |yt|
+        begin
+          youtube_id = yt["data-youtube-id"]
+          parameters = yt["data-parameters"]
+          uri = URI("https://www.youtube.com/embed/#{youtube_id}?autoplay=1&#{parameters}")
+          yt.replace %{<p><a href="#{uri.to_s}">https://#{uri.host}#{uri.path}</a></p>}
+        rescue URI::InvalidURIError
+          # remove any invalid/weird URIs
+          yt.remove
+        end
       end
-    end
   end
-
 end

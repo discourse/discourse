@@ -9,7 +9,7 @@
     max-width: 100%;
     @include ellipsis;
     vertical-align: text-top;
-    line-height: $line-height-medium;
+    line-height: var(--line-height-medium);
   }
   &.with-topics {
     .subcategories-with-subcategories {
@@ -43,9 +43,8 @@
 
 .category-boxes,
 .category-boxes-with-topics {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
+  display: grid;
+  gap: 1.5em;
   margin-top: 1em;
   margin-bottom: 1em;
   width: 100%;
@@ -78,7 +77,7 @@
       }
     }
 
-    .logo.aspect-image img {
+    .category-logo.aspect-image img {
       display: block;
       width: auto;
       height: 40px;
@@ -86,7 +85,7 @@
     }
 
     @supports (--custom: property) {
-      .logo.aspect-image img {
+      .category-logo.aspect-image img {
         --height: 40px;
         height: var(--height);
         width: calc(var(--height) * var(--aspect-ratio));
@@ -110,16 +109,15 @@
   }
 
   &.no-logos {
-    .logo {
+    .category-logo {
       display: none;
     }
   }
 }
 
 .category-boxes {
+  grid-template-columns: repeat(auto-fit, minmax(15em, 1fr));
   .category-box {
-    width: 23%;
-    margin: 0 1% 1.5em 1%;
     > a {
       width: 100%;
       padding: 0;
@@ -143,7 +141,7 @@
   .description {
     margin-bottom: 1em;
     text-align: center;
-    font-size: $font-0;
+    font-size: var(--font-0);
     color: var(--primary-med-or-secondary-high);
     position: relative;
     @include line-clamp(4);
@@ -160,10 +158,10 @@
   }
 
   h3 {
-    font-size: $font-up-2;
+    font-size: var(--font-up-2);
     margin-bottom: 0.5em;
     margin-top: 0.25em;
-    line-height: $line-height-medium;
+    line-height: var(--line-height-medium);
     text-align: center;
     color: var(--primary);
     overflow: hidden;
@@ -189,7 +187,7 @@
       }
       .category-text-title {
         order: 2;
-        line-height: $line-height-medium;
+        line-height: var(--line-height-medium);
         overflow: hidden;
         margin-bottom: 0.25em;
         word-wrap: break-word;
@@ -241,7 +239,7 @@
         min-width: 0;
         @include ellipsis;
       }
-      .logo img {
+      .category-logo img {
         display: inline-block;
         --height: 20px;
         height: var(--height);
@@ -253,14 +251,13 @@
 }
 
 .category-boxes-with-topics {
+  grid-template-columns: repeat(auto-fit, minmax(18em, 1fr));
   .category-box {
-    width: 31%;
-    margin: 0 1% 1.5em 1%;
     padding: 0;
   }
 
   h3 {
-    font-size: $font-up-2;
+    font-size: var(--font-up-2);
     text-align: center;
     overflow: hidden;
   }
@@ -275,6 +272,9 @@
 
   .featured-topics {
     margin-bottom: 1em;
+    // we absolutely position the parent category's link so the whole box is clickable
+    // to prevent this covering topic links, we need to raise the z-index
+    z-index: 1;
     ul {
       color: var(--primary-medium);
       list-style: none;
@@ -331,7 +331,7 @@
   margin-bottom: 0;
   border-top: 1px solid var(--primary-low);
   .category-description {
-    font-size: $font-down-1;
+    font-size: var(--font-down-1);
   }
   .category-logo.aspect-image {
     --max-height: 75px;
@@ -342,7 +342,7 @@
   > h3 a.category-title-link,
   > h4 a.category-title-link {
     color: var(--primary-medium);
-    font-size: $font-down-1;
+    font-size: var(--font-down-1);
   }
   > .category-description,
   tr.category-description {

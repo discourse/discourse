@@ -92,7 +92,11 @@ module("Integration | Component | Widget | user-menu", function (hooks) {
   });
 
   test("private messages - disabled", async function (assert) {
-    this.siteSettings.enable_personal_messages = false;
+    this.currentUser.setProperties({
+      admin: false,
+      moderator: false,
+      can_send_private_messages: false,
+    });
 
     await render(hbs`<MountWidget @widget="user-menu" />`);
 
@@ -100,7 +104,11 @@ module("Integration | Component | Widget | user-menu", function (hooks) {
   });
 
   test("private messages - enabled", async function (assert) {
-    this.siteSettings.enable_personal_messages = true;
+    this.currentUser.setProperties({
+      admin: false,
+      moderator: false,
+      can_send_private_messages: true,
+    });
 
     await render(hbs`<MountWidget @widget="user-menu" />`);
 

@@ -2,14 +2,17 @@ import Controller from "@ember/controller";
 import I18n from "I18n";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import Permalink from "admin/models/permalink";
-import bootbox from "bootbox";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { observes } from "discourse-common/utils/decorators";
 import { clipboardCopy } from "discourse/lib/utilities";
+import { inject as service } from "@ember/service";
+import { or } from "@ember/object/computed";
 
 export default Controller.extend({
+  dialog: service(),
   loading: false,
   filter: null,
+  showSearch: or("model.length", "filter"),
 
   _debouncedShow() {
     Permalink.findAll(this.filter).then((result) => {
@@ -34,27 +37,23 @@ export default Controller.extend({
     },
 
     destroy(record) {
-      return bootbox.confirm(
-        I18n.t("admin.permalink.delete_confirm"),
-        I18n.t("no_value"),
-        I18n.t("yes_value"),
-        (result) => {
-          if (result) {
-            record.destroy().then(
-              (deleted) => {
-                if (deleted) {
-                  this.model.removeObject(record);
-                } else {
-                  bootbox.alert(I18n.t("generic_error"));
-                }
-              },
-              function () {
-                bootbox.alert(I18n.t("generic_error"));
+      return this.dialog.yesNoConfirm({
+        message: I18n.t("admin.permalink.delete_confirm"),
+        didConfirm: () => {
+          return record.destroy().then(
+            (deleted) => {
+              if (deleted) {
+                this.model.removeObject(record);
+              } else {
+                this.dialog.alert(I18n.t("generic_error"));
               }
-            );
-          }
-        }
-      );
+            },
+            function () {
+              this.dialog.alert(I18n.t("generic_error"));
+            }
+          );
+        },
+      });
     },
   },
 });

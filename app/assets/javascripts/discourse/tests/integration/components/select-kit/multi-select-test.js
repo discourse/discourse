@@ -3,7 +3,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { paste, query } from "discourse/tests/helpers/qunit-helpers";
+import { exists, paste, query } from "discourse/tests/helpers/qunit-helpers";
 
 const DEFAULT_CONTENT = [
   { id: 1, name: "foo" },
@@ -117,5 +117,19 @@ module("Integration | Component | select-kit/multi-select", function (hooks) {
     await paste(query(".filter-input"), "foo|bar");
 
     assert.equal(this.subject.header().value(), "1,2");
+  });
+
+  test("no value property with no content", async function (assert) {
+    setDefaultState(this);
+
+    await render(hbs`
+      <MultiSelect @valueProperty={{null}} />
+    `);
+    await this.subject.expand();
+
+    assert.notOk(
+      exists(".selected-content"),
+      "it doesn’t render an empty content div"
+    );
   });
 });

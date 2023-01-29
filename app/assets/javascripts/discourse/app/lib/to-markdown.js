@@ -82,50 +82,6 @@ export class Tag {
     return klass;
   }
 
-  constructor(prefix = "", suffix = "", inline = false) {
-    this.prefix = prefix;
-    this.suffix = suffix;
-    this.inline = inline;
-  }
-
-  decorate(text) {
-    for (const callback of tagDecorateCallbacks) {
-      const result = callback.call(this, text);
-
-      if (typeof result !== "undefined") {
-        text = result;
-      }
-    }
-
-    if (this.prefix || this.suffix) {
-      text = [this.prefix, text, this.suffix].join("");
-    }
-
-    if (this.inline) {
-      const { prev, next } = this.element;
-
-      if (prev && prev.name !== "#text") {
-        text = " " + text;
-      }
-
-      if (next && next.name !== "#text") {
-        text = text + " ";
-      }
-    }
-
-    return text;
-  }
-
-  toMarkdown() {
-    const text = this.element.innerMarkdown();
-
-    if (text?.trim()) {
-      return this.decorate(text);
-    }
-
-    return text;
-  }
-
   static blocks() {
     return [
       "address",
@@ -359,6 +315,18 @@ export class Tag {
           return text;
         }
 
+        if (attr.class?.includes("hashtag-cooked")) {
+          if (attr["data-ref"]) {
+            return `#${attr["data-ref"]}`;
+          } else {
+            let type = "";
+            if (attr["data-type"]) {
+              type = `::${attr["data-type"]}`;
+            }
+            return `#${attr["data-slug"]}${type}`;
+          }
+        }
+
         let img;
         if (
           ["lightbox", "d-lazyload"].includes(attr.class) &&
@@ -411,6 +379,10 @@ export class Tag {
         }
 
         if (cssClass?.includes("emoji")) {
+          if (cssClass.includes("user-status")) {
+            return "";
+          }
+
           return attr.title || pAttr.title;
         }
 
@@ -643,6 +615,50 @@ export class Tag {
       }
     };
   }
+
+  constructor(prefix = "", suffix = "", inline = false) {
+    this.prefix = prefix;
+    this.suffix = suffix;
+    this.inline = inline;
+  }
+
+  decorate(text) {
+    for (const callback of tagDecorateCallbacks) {
+      const result = callback.call(this, text);
+
+      if (typeof result !== "undefined") {
+        text = result;
+      }
+    }
+
+    if (this.prefix || this.suffix) {
+      text = [this.prefix, text, this.suffix].join("");
+    }
+
+    if (this.inline) {
+      const { prev, next } = this.element;
+
+      if (prev && prev.name !== "#text") {
+        text = " " + text;
+      }
+
+      if (next && next.name !== "#text") {
+        text = text + " ";
+      }
+    }
+
+    return text;
+  }
+
+  toMarkdown() {
+    const text = this.element.innerMarkdown();
+
+    if (text?.trim()) {
+      return this.decorate(text);
+    }
+
+    return text;
+  }
 }
 
 let tagsMap;
@@ -684,6 +700,34 @@ function tagByName(name) {
 }
 
 class Element {
+  static toMarkdown(element, parent, prev, next, metadata) {
+    return new Element(element, parent, prev, next, metadata).toMarkdown();
+  }
+
+  static parseChildren(parent) {
+    return Element.parse(parent.children, parent);
+  }
+
+  static parse(elements, parent = null) {
+    if (elements) {
+      let result = [];
+      let metadata = {};
+
+      for (let i = 0; i < elements.length; i++) {
+        const prev = i === 0 ? null : elements[i - 1];
+        const next = i === elements.length ? null : elements[i + 1];
+
+        result.push(
+          Element.toMarkdown(elements[i], parent, prev, next, metadata)
+        );
+      }
+
+      return result.join("");
+    }
+
+    return "";
+  }
+
   constructor(element, parent, previous, next, metadata) {
     this.name = element.name;
     this.data = element.data;
@@ -761,34 +805,6 @@ class Element {
 
   filterParentNames(names) {
     return this.parentNames.filter((p) => names.includes(p));
-  }
-
-  static toMarkdown(element, parent, prev, next, metadata) {
-    return new Element(element, parent, prev, next, metadata).toMarkdown();
-  }
-
-  static parseChildren(parent) {
-    return Element.parse(parent.children, parent);
-  }
-
-  static parse(elements, parent = null) {
-    if (elements) {
-      let result = [];
-      let metadata = {};
-
-      for (let i = 0; i < elements.length; i++) {
-        const prev = i === 0 ? null : elements[i - 1];
-        const next = i === elements.length ? null : elements[i + 1];
-
-        result.push(
-          Element.toMarkdown(elements[i], parent, prev, next, metadata)
-        );
-      }
-
-      return result.join("");
-    }
-
-    return "";
   }
 }
 

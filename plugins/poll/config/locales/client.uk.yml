@@ -28,7 +28,7 @@ uk:
         closed:
           title: "Результати будуть показані після <strong>закриття</strong> ."
         staff:
-          title: "Результати показуються лише <strong>співробітникам</strong> ."
+          title: "Результати показуються лише <strong>членам команди обслуговування</strong> ."
       multiple:
         help:
           at_least_min_options:
@@ -106,7 +106,7 @@ uk:
           always: Завжди видно
           vote: Тільки після голосування
           closed: Коли опитування закрито
-          staff: Для персоналу тільки
+          staff: Для команди обслуговування
         poll_groups:
           label: Обмежити голосування цими групами
         poll_chart_type:

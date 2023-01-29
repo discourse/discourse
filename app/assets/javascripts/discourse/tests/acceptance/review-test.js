@@ -2,8 +2,10 @@ import {
   acceptance,
   count,
   exists,
+  loggedInUser,
   publishToMessageBus,
   query,
+  updateCurrentUser,
   visible,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
@@ -133,13 +135,17 @@ acceptance("Review", function (needs) {
 
   test("Editing a reviewable", async function (assert) {
     const topic = '.reviewable-item[data-reviewable-id="4321"]';
+
     await visit("/review");
+
     assert.ok(exists(`${topic} .reviewable-action.approve`));
     assert.ok(!exists(`${topic} .category-name`));
+
     assert.strictEqual(
       query(`${topic} .discourse-tag:nth-of-type(1)`).innerText,
       "hello"
     );
+
     assert.strictEqual(
       query(`${topic} .discourse-tag:nth-of-type(2)`).innerText,
       "world"
@@ -152,10 +158,12 @@ acceptance("Review", function (needs) {
 
     await click(`${topic} .reviewable-action.edit`);
     await click(`${topic} .reviewable-action.save-edit`);
+
     assert.ok(
       exists(`${topic} .reviewable-action.approve`),
       "saving without changes is a cancel"
     );
+
     await click(`${topic} .reviewable-action.edit`);
 
     assert.ok(
@@ -165,6 +173,7 @@ acceptance("Review", function (needs) {
 
     await fillIn(".editable-field.payload-raw textarea", "new raw contents");
     await click(`${topic} .reviewable-action.cancel-edit`);
+
     assert.strictEqual(
       query(`${topic} .post-body`).innerText.trim(),
       "existing body",
@@ -173,8 +182,15 @@ acceptance("Review", function (needs) {
 
     await click(`${topic} .reviewable-action.edit`);
     let category = selectKit(`${topic} .category-id .select-kit`);
+
     await category.expand();
     await category.selectRowByValue("6");
+
+    assert.strictEqual(
+      category.header().name(),
+      "support",
+      "displays the right header"
+    );
 
     let tags = selectKit(`${topic} .payload-tags .mini-tag-chooser`);
     requests = [];
@@ -210,7 +226,8 @@ acceptance("Review", function (needs) {
     );
   });
 
-  test("Reviewables can become stale", async function (assert) {
+  test("Reviewables can become stale when redesigned_user_menu_enabled is false", async function (assert) {
+    updateCurrentUser({ redesigned_user_menu_enabled: false });
     await visit("/review");
 
     const reviewable = query(`[data-reviewable-id="1234"]`);
@@ -221,14 +238,42 @@ acceptance("Review", function (needs) {
     );
     assert.ok(!exists(".stale-help"));
 
-    publishToMessageBus("/reviewable_counts", {
+    await publishToMessageBus("/reviewable_counts", {
       review_count: 1,
       updates: {
         1234: { last_performing_username: "foo", status: 1 },
       },
     });
 
-    await visit("/review"); // wait for re-render
+    assert.ok(reviewable.className.includes("reviewable-stale"));
+    assert.strictEqual(count("[data-reviewable-id=1234] .status .approved"), 1);
+    assert.strictEqual(count(".stale-help"), 1);
+    assert.ok(query(".stale-help").innerText.includes("foo"));
+
+    await visit("/");
+    await visit("/review"); // reload review
+
+    assert.strictEqual(count(".stale-help"), 0);
+  });
+
+  test("Reviewables can become stale when redesigned_user_menu_enabled is true", async function (assert) {
+    updateCurrentUser({ redesigned_user_menu_enabled: true });
+    await visit("/review");
+
+    const reviewable = query(`[data-reviewable-id="1234"]`);
+    assert.notOk(reviewable.className.includes("reviewable-stale"));
+    assert.strictEqual(
+      count(`[data-reviewable-id="1234"] .status .pending`),
+      1
+    );
+    assert.ok(!exists(".stale-help"));
+
+    await publishToMessageBus(`/reviewable_counts/${loggedInUser().id}`, {
+      review_count: 1,
+      updates: {
+        1234: { last_performing_username: "foo", status: 1 },
+      },
+    });
 
     assert.ok(reviewable.className.includes("reviewable-stale"));
     assert.strictEqual(count("[data-reviewable-id=1234] .status .approved"), 1);

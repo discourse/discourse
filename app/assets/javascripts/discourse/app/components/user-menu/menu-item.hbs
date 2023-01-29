@@ -1,0 +1,24 @@
+<li class={{this.className}}>
+  <a
+    href={{this.linkHref}}
+    title={{this.linkTitle}}
+    {{on "click" this.onClick}}
+  >
+    {{d-icon this.icon}}
+    <div>
+      {{#if this.label}}
+        <span class={{concat "item-label " this.labelClass}}>
+          {{this.label}}
+        </span>
+      {{/if}}
+      {{#if this.description}}
+        <span
+          class={{concat "item-description " this.descriptionClass}}
+          data-topic-id={{this.topicId}}
+        >
+          {{this.description}}
+        </span>
+      {{/if}}
+    </div>
+  </a>
+</li>

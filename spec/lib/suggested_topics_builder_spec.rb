@@ -1,25 +1,19 @@
 # frozen_string_literal: true
 
-require 'suggested_topics_builder'
+require "suggested_topics_builder"
 
-describe SuggestedTopicsBuilder do
-
+RSpec.describe SuggestedTopicsBuilder do
   fab!(:topic) { Fabricate(:topic) }
   let(:builder) { SuggestedTopicsBuilder.new(topic) }
 
-  before do
-    SiteSetting.suggested_topics = 5
-  end
+  before { SiteSetting.suggested_topics = 5 }
 
-  context "splicing category results" do
-
+  describe "splicing category results" do
     def fake_topic(topic_id, category_id)
       build(:topic, id: topic_id, category_id: category_id)
     end
 
-    let(:builder) do
-      SuggestedTopicsBuilder.new(fake_topic(1, 1))
-    end
+    let(:builder) { SuggestedTopicsBuilder.new(fake_topic(1, 1)) }
 
     it "prioritizes category correctly" do
       builder.splice_results([fake_topic(2, 2)], :high)
@@ -57,8 +51,7 @@ describe SuggestedTopicsBuilder do
     expect(builder).to be_full
   end
 
-  context "adding results" do
-
+  describe "adding results" do
     it "adds nothing with nil results" do
       builder.add_results(nil)
       expect(builder.results_left).to eq(5)
@@ -66,7 +59,7 @@ describe SuggestedTopicsBuilder do
       expect(builder).not_to be_full
     end
 
-    context "adding topics" do
+    context "when adding topics" do
       fab!(:other_topic) { Fabricate(:topic) }
 
       before do
@@ -81,10 +74,9 @@ describe SuggestedTopicsBuilder do
         expect(builder.excluded_topic_ids.include?(topic.id)).to eq(true)
         expect(builder.excluded_topic_ids.include?(other_topic.id)).to eq(true)
       end
-
     end
 
-    context "adding topics that are not open" do
+    context "when adding topics that are not open" do
       fab!(:archived_topic) { Fabricate(:topic, archived: true) }
       fab!(:closed_topic) { Fabricate(:topic, closed: true) }
       fab!(:invisible_topic) { Fabricate(:topic, visible: false) }
@@ -96,7 +88,7 @@ describe SuggestedTopicsBuilder do
       end
     end
 
-    context "category definition topics" do
+    context "when category definition topics" do
       fab!(:category) { Fabricate(:category_with_definition) }
 
       it "doesn't add a category definition topic" do
@@ -106,7 +98,5 @@ describe SuggestedTopicsBuilder do
         expect(builder).not_to be_full
       end
     end
-
   end
-
 end

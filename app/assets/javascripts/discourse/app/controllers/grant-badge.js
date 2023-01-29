@@ -32,7 +32,7 @@ export default Controller.extend(ModalFunctionality, GrantBadgeController, {
     const protocolAndHost =
       window.location.protocol + "//" + window.location.host;
 
-    return url.indexOf("/") === 0 ? protocolAndHost + url : url;
+    return url.startsWith("/") ? protocolAndHost + url : url;
   },
 
   @discourseComputed("saving", "selectedBadgeGrantable")

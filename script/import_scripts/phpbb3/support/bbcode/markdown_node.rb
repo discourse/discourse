@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
-module ImportScripts; end
-module ImportScripts::PhpBB3; end
+module ImportScripts
+end
+module ImportScripts::PhpBB3
+end
 
 module ImportScripts::PhpBB3::BBCode
   LINEBREAK_AUTO = :auto

@@ -1,14 +1,12 @@
 # frozen_string_literal: true
 
-require 'migration/table_dropper'
+require "migration/table_dropper"
 
 class DropGithubUserInfos < ActiveRecord::Migration[6.0]
-  DROPPED_TABLES ||= %i{ github_user_infos }
+  DROPPED_TABLES ||= %i[github_user_infos]
 
   def up
-    DROPPED_TABLES.each do |table|
-      Migration::TableDropper.execute_drop(table)
-    end
+    DROPPED_TABLES.each { |table| Migration::TableDropper.execute_drop(table) }
   end
 
   def down

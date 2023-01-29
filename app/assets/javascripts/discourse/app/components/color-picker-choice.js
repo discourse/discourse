@@ -10,7 +10,7 @@ export default Component.extend({
 
   @discourseComputed("color", "usedColors")
   isUsed(color, usedColors) {
-    return (usedColors || []).indexOf(color.toUpperCase()) >= 0;
+    return (usedColors || []).includes(color.toUpperCase());
   },
 
   @discourseComputed("isUsed")

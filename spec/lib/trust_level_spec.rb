@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 
-describe TrustLevel do
-  describe 'levels' do
-    context "verify enum sequence" do
-      before do
-        @levels = TrustLevel.levels
-      end
+RSpec.describe TrustLevel do
+  describe "levels" do
+    context "when verifying enum sequence" do
+      before { @levels = TrustLevel.levels }
 
       it "'newuser' should be at 0 position" do
         expect(@levels[:newuser]).to eq(0)

@@ -2,13 +2,12 @@ import Component from "@ember/component";
 import { action } from "@ember/object";
 import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
-import bootbox from "bootbox";
+import { inject as service } from "@ember/service";
 
 export default Component.extend({
+  dialog: service(),
   tagName: "",
-
   selectableUserBadges: null,
-
   _selectedUserBadgeId: null,
   _isSaved: false,
   _isSaving: false,
@@ -42,7 +41,7 @@ export default Component.extend({
           this.currentUser.set("title", selectedUserBadge?.badge?.name || "");
         },
         () => {
-          bootbox.alert(I18n.t("generic_error"));
+          this.dialog.alert(I18n.t("generic_error"));
         }
       )
       .finally(() => this.set("_isSaving", false));

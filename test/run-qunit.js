@@ -159,7 +159,7 @@ async function runAllTests() {
       expression: `(${qunit_script})();`,
     });
 
-    if (args[0].indexOf("report_requests=1") > -1) {
+    if (args[0].includes("report_requests=1")) {
       await Runtime.evaluate({
         expression: "QUnit.config.logAllRequests = true",
       });

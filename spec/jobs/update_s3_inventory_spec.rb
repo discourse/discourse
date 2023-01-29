@@ -2,7 +2,7 @@
 
 require "file_store/s3_store"
 
-describe Jobs::UpdateS3Inventory do
+RSpec.describe Jobs::UpdateS3Inventory do
   before do
     setup_s3
     SiteSetting.s3_upload_bucket = "special-bucket"
@@ -20,7 +20,8 @@ describe Jobs::UpdateS3Inventory do
 
     @client.expects(:put_bucket_policy).with(
       bucket: "special-bucket",
-      policy: %Q|{"Version":"2012-10-17","Statement":[{"Sid":"InventoryAndAnalyticsPolicy","Effect":"Allow","Principal":{"Service":"s3.amazonaws.com"},"Action":["s3:PutObject"],"Resource":["arn:aws:s3:::special-bucket/#{path}/*"],"Condition":{"ArnLike":{"aws:SourceArn":"arn:aws:s3:::special-bucket"},"StringEquals":{"s3:x-amz-acl":"bucket-owner-full-control"}}}]}|
+      policy:
+        %Q|{"Version":"2012-10-17","Statement":[{"Sid":"InventoryAndAnalyticsPolicy","Effect":"Allow","Principal":{"Service":"s3.amazonaws.com"},"Action":["s3:PutObject"],"Resource":["arn:aws:s3:::special-bucket/#{path}/*"],"Condition":{"ArnLike":{"aws:SourceArn":"arn:aws:s3:::special-bucket"},"StringEquals":{"s3:x-amz-acl":"bucket-owner-full-control"}}}]}|,
     )
     @client.expects(:put_bucket_inventory_configuration)
     @client.expects(:put_bucket_inventory_configuration).with(
@@ -31,19 +32,21 @@ describe Jobs::UpdateS3Inventory do
           s3_bucket_destination: {
             bucket: "arn:aws:s3:::special-bucket",
             prefix: path,
-            format: "CSV"
-          }
+            format: "CSV",
+          },
         },
         filter: {
-          prefix: id
+          prefix: id,
         },
         is_enabled: true,
         id: id,
         included_object_versions: "Current",
         optional_fields: ["ETag"],
-        schedule: { frequency: "Daily" }
+        schedule: {
+          frequency: "Daily",
+        },
       },
-      use_accelerate_endpoint: false
+      use_accelerate_endpoint: false,
     )
 
     described_class.new.execute(nil)

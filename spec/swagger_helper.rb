@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'json_schemer'
+require "json_schemer"
 
 # Require schema files
 Dir["./spec/requests/api/schemas/*.rb"].each { |file| require file }
@@ -89,7 +89,7 @@ RSpec.configure do |config|
   # Specify a root folder where Swagger JSON files are generated
   # NOTE: If you're using the rswag-api to serve API descriptions, you'll need
   # to ensure that it's configured to serve Swagger from the same folder
-  config.swagger_root = Rails.root.join('openapi').to_s
+  config.swagger_root = Rails.root.join("openapi").to_s
 
   # Define one or more Swagger documents and provide global metadata for each one
   # When you run the 'rswag:specs:swaggerize' rake task, the complete Swagger will
@@ -98,36 +98,37 @@ RSpec.configure do |config|
   # document below. You can override this behavior by adding a swagger_doc tag to the
   # the root example_group in your specs, e.g. describe '...', swagger_doc: 'v2/swagger.json'
   config.swagger_docs = {
-    'openapi.yaml' => {
-      openapi: '3.1.0',
+    "openapi.yaml" => {
+      openapi: "3.1.0",
       info: {
-        title: 'Discourse API Documentation',
-        'x-logo': {
-          url: 'https://docs.discourse.org/logo.svg',
+        title: "Discourse API Documentation",
+        "x-logo": {
+          url: "https://docs.discourse.org/logo.svg",
         },
-        version: 'latest',
+        version: "latest",
         description: api_docs_description,
         license: {
-          name: 'MIT',
-          url: 'https://docs.discourse.org/LICENSE.txt'
-        }
+          name: "MIT",
+          url: "https://docs.discourse.org/LICENSE.txt",
+        },
       },
-      paths: {},
+      paths: {
+      },
       servers: [
         {
-          url: 'https://{defaultHost}',
+          url: "https://{defaultHost}",
           variables: {
             defaultHost: {
-              default: 'discourse.example.com'
-            }
-          }
-        }
+              default: "discourse.example.com",
+            },
+          },
+        },
       ],
       components: {
         schemas: {
-        }
-      }
-    }
+        },
+      },
+    },
   }
 
   # Specify the format of the output Swagger file when running 'rswag:specs:swaggerize'.

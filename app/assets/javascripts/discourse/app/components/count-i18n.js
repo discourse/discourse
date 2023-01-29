@@ -4,7 +4,6 @@ import { htmlSafe } from "@ember/template";
 
 export default Component.extend({
   tagName: "span",
-  rerenderTriggers: ["count", "suffix"],
   i18nCount: null,
 
   didReceiveAttrs() {

@@ -73,21 +73,21 @@ acceptance("Composer - Hyperlink", function (needs) {
 
     await click(".d-editor button.link");
     await fillIn(".modal-body .link-url", "http://google.com");
-    await triggerKeyEvent(".modal-body .link-url", "keyup", 32);
+    await triggerKeyEvent(".modal-body .link-url", "keyup", "Space");
     assert.ok(
       !exists(".internal-link-results"),
       "does not show internal links search dropdown when inputting a url"
     );
 
     await fillIn(".modal-body .link-url", "local");
-    await triggerKeyEvent(".modal-body .link-url", "keyup", 32);
+    await triggerKeyEvent(".modal-body .link-url", "keyup", "Space");
     assert.ok(
       exists(".internal-link-results"),
       "shows internal links search dropdown when entering keywords"
     );
 
-    await triggerKeyEvent(".insert-link", "keydown", 40);
-    await triggerKeyEvent(".insert-link", "keydown", 13);
+    await triggerKeyEvent(".insert-link", "keydown", "ArrowDown");
+    await triggerKeyEvent(".insert-link", "keydown", "Enter");
 
     assert.ok(
       !exists(".internal-link-results"),
@@ -97,6 +97,14 @@ acceptance("Composer - Hyperlink", function (needs) {
     assert.ok(
       query(".link-url").value.includes("http"),
       "replaces link url field with internal link"
+    );
+
+    await triggerKeyEvent(".insert-link", "keydown", "Escape");
+
+    assert.strictEqual(
+      document.activeElement.classList.contains("d-editor-input"),
+      true,
+      "focus stays on composer after dismissing modal using Esc key"
     );
   });
 });

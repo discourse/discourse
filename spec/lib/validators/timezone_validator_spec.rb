@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe TimezoneValidator do
+RSpec.describe TimezoneValidator do
   describe "#valid?" do
     context "when timezone is ok" do
       it "returns true" do
@@ -38,9 +38,7 @@ describe TimezoneValidator do
       it "adds errors to the record" do
         record.timezone = "Mars"
         record.save
-        expect(record.errors.full_messages).to include(
-          "Timezone 'Mars' is not a valid timezone"
-        )
+        expect(record.errors.full_messages).to include("Timezone 'Mars' is not a valid timezone")
       end
     end
   end

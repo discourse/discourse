@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DistributedMemoizer do
+RSpec.describe DistributedMemoizer do
   after do
     Discourse.redis.del(DistributedMemoizer.redis_key("hello"))
     Discourse.redis.del(DistributedMemoizer.redis_lock_key("hello"))
@@ -15,9 +15,7 @@ describe DistributedMemoizer do
   end
 
   it "return the old value once memoized" do
-    memoize do
-      "abc"
-    end
+    memoize { "abc" }
 
     expect(memoize { "world" }).to eq("abc")
   end

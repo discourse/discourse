@@ -1,12 +1,9 @@
 # frozen_string_literal: true
 
-describe CategoryGroup do
-
-  describe '#permission_types' do
-    context "verify enum sequence" do
-      before do
-        @permission_types = CategoryGroup.permission_types
-      end
+RSpec.describe CategoryGroup do
+  describe "#permission_types" do
+    context "when verifying enum sequence" do
+      before { @permission_types = CategoryGroup.permission_types }
 
       it "'full' should be at 1st position" do
         expect(@permission_types[:full]).to eq(1)

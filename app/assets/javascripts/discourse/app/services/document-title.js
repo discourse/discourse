@@ -4,6 +4,7 @@ import updateTabCount from "discourse/lib/update-tab-count";
 
 export default Service.extend({
   appEvents: service(),
+  currentUser: service(),
   contextCount: null,
   notificationCount: null,
   _title: null,
@@ -53,8 +54,8 @@ export default Service.extend({
     this._renderTitle();
   },
 
-  updateNotificationCount(count) {
-    if (!this.session.hasFocus) {
+  updateNotificationCount(count, { forced = false } = {}) {
+    if (!this.session.hasFocus || forced) {
       this.notificationCount = count;
       this._renderFavicon();
       this._renderTitle();
@@ -72,7 +73,7 @@ export default Service.extend({
 
   _displayCount() {
     return this.currentUser &&
-      this.currentUser.title_count_mode === "notifications"
+      this.currentUser.user_option.title_count_mode === "notifications"
       ? this.notificationCount
       : this.contextCount;
   },
@@ -81,12 +82,13 @@ export default Service.extend({
     let title = this._title || this.siteSettings.title;
 
     let displayCount = this._displayCount();
-    let dynamicFavicon = this.currentUser && this.currentUser.dynamic_favicon;
+    let dynamicFavicon = this.currentUser?.user_option.dynamic_favicon;
 
-    if (this.currentUser && this.currentUser.isInDoNotDisturb()) {
+    if (this.currentUser?.isInDoNotDisturb()) {
       document.title = title;
       return;
     }
+
     if (displayCount > 0 && !dynamicFavicon) {
       title = `(${displayCount}) ${title}`;
     }
@@ -95,7 +97,7 @@ export default Service.extend({
   },
 
   _renderFavicon() {
-    if (this.currentUser && this.currentUser.dynamic_favicon) {
+    if (this.currentUser?.user_option.dynamic_favicon) {
       let url = this.siteSettings.site_favicon_url;
 
       // Since the favicon is cached on the browser for a really long time, we

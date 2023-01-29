@@ -13,7 +13,6 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { relativeAge } from "discourse/lib/formatter";
 import round from "discourse/lib/round";
 import showModal from "discourse/lib/show-modal";
-import bootbox from "bootbox";
 import { applyLocalDates } from "discourse/lib/local-dates";
 
 const FETCH_VOTERS_COUNT = 25;
@@ -247,6 +246,7 @@ createWidget("discourse-poll-number-results", {
 createWidget("discourse-poll-container", {
   tagName: "div.poll-container",
   buildKey: (attrs) => `poll-container-${attrs.id}`,
+  services: ["dialog"],
 
   defaultState() {
     return { voters: [] };
@@ -373,7 +373,7 @@ createWidget("discourse-poll-container", {
         if (error) {
           popupAjaxError(error);
         } else {
-          bootbox.alert(I18n.t("poll.error_while_fetching_voters"));
+          this.dialog.alert(I18n.t("poll.error_while_fetching_voters"));
         }
       });
   },
@@ -763,6 +763,7 @@ createWidget("discourse-poll-buttons", {
 export default createWidget("discourse-poll", {
   tagName: "div",
   buildKey: (attrs) => `poll-${attrs.id}`,
+  services: ["dialog"],
 
   buildAttributes(attrs) {
     let cssClasses = "poll";
@@ -875,43 +876,40 @@ export default createWidget("discourse-poll", {
       return;
     }
 
-    bootbox.confirm(
-      I18n.t(this.isClosed() ? "poll.open.confirm" : "poll.close.confirm"),
-      I18n.t("no_value"),
-      I18n.t("yes_value"),
-      (confirmed) => {
-        if (confirmed) {
-          state.loading = true;
-          const status = this.isClosed() ? "open" : "closed";
-
-          ajax("/polls/toggle_status", {
-            type: "PUT",
-            data: {
-              post_id: post.id,
-              poll_name: poll.name,
-              status,
-            },
+    this.dialog.yesNoConfirm({
+      message: I18n.t(
+        this.isClosed() ? "poll.open.confirm" : "poll.close.confirm"
+      ),
+      didConfirm: () => {
+        state.loading = true;
+        const status = this.isClosed() ? "open" : "closed";
+        ajax("/polls/toggle_status", {
+          type: "PUT",
+          data: {
+            post_id: post.id,
+            poll_name: poll.name,
+            status,
+          },
+        })
+          .then(() => {
+            poll.set("status", status);
+            if (poll.results === "on_close") {
+              state.showResults = status === "closed";
+            }
+            this.scheduleRerender();
           })
-            .then(() => {
-              poll.set("status", status);
-              if (poll.results === "on_close") {
-                state.showResults = status === "closed";
-              }
-              this.scheduleRerender();
-            })
-            .catch((error) => {
-              if (error) {
-                popupAjaxError(error);
-              } else {
-                bootbox.alert(I18n.t("poll.error_while_toggling_status"));
-              }
-            })
-            .finally(() => {
-              state.loading = false;
-            });
-        }
-      }
-    );
+          .catch((error) => {
+            if (error) {
+              popupAjaxError(error);
+            } else {
+              this.dialog.alert(I18n.t("poll.error_while_toggling_status"));
+            }
+          })
+          .finally(() => {
+            state.loading = false;
+          });
+      },
+    });
   },
 
   toggleResults() {
@@ -976,7 +974,7 @@ export default createWidget("discourse-poll", {
         if (error) {
           popupAjaxError(error);
         } else {
-          bootbox.alert(I18n.t("poll.error_while_exporting_results"));
+          this.dialog.alert(I18n.t("poll.error_while_exporting_results"));
         }
       });
   },
@@ -1063,7 +1061,7 @@ export default createWidget("discourse-poll", {
         if (error) {
           popupAjaxError(error);
         } else {
-          bootbox.alert(I18n.t("poll.error_while_casting_votes"));
+          this.dialog.alert(I18n.t("poll.error_while_casting_votes"));
         }
       })
       .finally(() => {

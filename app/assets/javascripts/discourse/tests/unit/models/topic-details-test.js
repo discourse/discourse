@@ -1,31 +1,34 @@
 import { module, test } from "qunit";
-import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
+import { getOwner } from "discourse-common/lib/get-owner";
+import { setupTest } from "ember-qunit";
 
-function buildDetails(id, topicParams = {}) {
-  const topic = Topic.create(Object.assign({ id }, topicParams));
-  return topic.get("details");
-}
+module("Unit | Model | topic-details", function (hooks) {
+  setupTest(hooks);
 
-module("Unit | Model | topic-details", function () {
   test("defaults", function (assert) {
-    let details = buildDetails(1234);
+    const store = getOwner(this).lookup("service:store");
+    const topic = store.createRecord("topic", { id: 1234 });
+    const details = topic.details;
+
     assert.present(details, "the details are present by default");
-    assert.ok(!details.get("loaded"), "details are not loaded by default");
+    assert.ok(!details.loaded, "details are not loaded by default");
   });
 
   test("updateFromJson", function (assert) {
-    let details = buildDetails(1234);
+    const store = getOwner(this).lookup("service:store");
+    const topic = store.createRecord("topic", { id: 1234 });
+    const details = topic.details;
 
     details.updateFromJson({
       allowed_users: [{ username: "eviltrout" }],
     });
 
     assert.strictEqual(
-      details.get("allowed_users.length"),
+      details.allowed_users.length,
       1,
       "it loaded the allowed users"
     );
-    assert.containsInstance(details.get("allowed_users"), User);
+    assert.containsInstance(details.allowed_users, User);
   });
 });

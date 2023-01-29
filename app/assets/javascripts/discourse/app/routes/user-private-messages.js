@@ -43,7 +43,6 @@ export default DiscourseRoute.extend({
   @action
   willTransition() {
     this._super(...arguments);
-    this.controllerFor("user").set("pmView", null);
     return true;
   },
 });

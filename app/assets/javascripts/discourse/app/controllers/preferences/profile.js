@@ -2,15 +2,17 @@ import Controller from "@ember/controller";
 import EmberObject from "@ember/object";
 import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
-import bootbox from "bootbox";
 import { cookAsync } from "discourse/lib/text";
 import discourseComputed from "discourse-common/utils/decorators";
 import { isEmpty } from "@ember/utils";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { readOnly } from "@ember/object/computed";
 import showModal from "discourse/lib/show-modal";
+import { inject as service } from "@ember/service";
 
 export default Controller.extend({
+  dialog: service(),
+  subpageTitle: I18n.t("user.preferences_nav.profile"),
   init() {
     this._super(...arguments);
     this.saveAttrNames = [
@@ -50,7 +52,7 @@ export default Controller.extend({
     });
   },
 
-  @discourseComputed("model.default_calendar")
+  @discourseComputed("model.user_option.default_calendar")
   canChangeDefaultCalendar(defaultCalendar) {
     return defaultCalendar !== "none_selected";
   },
@@ -69,27 +71,28 @@ export default Controller.extend({
 
   actions: {
     showFeaturedTopicModal() {
-      showModal("feature-topic-on-profile", {
+      const modal = showModal("feature-topic-on-profile", {
         model: this.model,
         title: "user.feature_topic_on_profile.title",
+      });
+      modal.set("onClose", () => {
+        document.querySelector(".feature-topic-on-profile-btn")?.focus();
       });
     },
 
     clearFeaturedTopicFromProfile() {
-      bootbox.confirm(
-        I18n.t("user.feature_topic_on_profile.clear.warning"),
-        (result) => {
-          if (result) {
-            ajax(`/u/${this.model.username}/clear-featured-topic`, {
-              type: "PUT",
+      this.dialog.yesNoConfirm({
+        message: I18n.t("user.feature_topic_on_profile.clear.warning"),
+        didConfirm: () => {
+          return ajax(`/u/${this.model.username}/clear-featured-topic`, {
+            type: "PUT",
+          })
+            .then(() => {
+              this.model.set("featured_topic", null);
             })
-              .then(() => {
-                this.model.set("featured_topic", null);
-              })
-              .catch(popupAjaxError);
-          }
-        }
-      );
+            .catch(popupAjaxError);
+        },
+      });
     },
 
     useCurrentTimezone() {
@@ -123,12 +126,6 @@ export default Controller.extend({
       return model
         .save(this.saveAttrNames)
         .then(() => {
-          // update the timezone in memory so we can use the new
-          // one if we change routes without reloading the user
-          if (this.currentUser.id === this.model.id) {
-            this.currentUser.timezone = this.model.user_option.timezone;
-          }
-
           cookAsync(model.get("bio_raw"))
             .then(() => {
               model.set("bio_cooked");

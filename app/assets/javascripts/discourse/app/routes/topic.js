@@ -8,21 +8,17 @@ import { isEmpty } from "@ember/utils";
 import { inject as service } from "@ember/service";
 import { setTopicId } from "discourse/lib/topic-list-tracker";
 import showModal from "discourse/lib/show-modal";
+import TopicFlag from "discourse/lib/flag-targets/topic-flag";
+import PostFlag from "discourse/lib/flag-targets/post-flag";
 
 const SCROLL_DELAY = 500;
 
 const TopicRoute = DiscourseRoute.extend({
   screenTrack: service(),
 
-  init() {
-    this._super(...arguments);
-
-    this.setProperties({
-      isTransitioning: false,
-      scheduledReplace: null,
-      lastScrollPos: null,
-    });
-  },
+  scheduledReplace: null,
+  lastScrollPos: null,
+  isTransitioning: false,
 
   redirect() {
     return this.redirectIfLoginRequired();
@@ -94,14 +90,14 @@ const TopicRoute = DiscourseRoute.extend({
   @action
   showFlags(model) {
     let controller = showModal("flag", { model });
-    controller.setProperties({ flagTopic: false });
+    controller.setProperties({ flagTarget: new PostFlag() });
   },
 
   @action
   showFlagTopic() {
     const model = this.modelFor("topic");
     let controller = showModal("flag", { model });
-    controller.setProperties({ flagTopic: true });
+    controller.setProperties({ flagTarget: new TopicFlag() });
   },
 
   @action

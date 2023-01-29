@@ -1,13 +1,7 @@
 # frozen_string_literal: true
 
 class ReviewableExplanationSerializer < ApplicationSerializer
-  attributes(
-    :id,
-    :total_score,
-    :scores,
-    :min_score_visibility,
-    :hide_post_score
-  )
+  attributes(:id, :total_score, :scores, :min_score_visibility, :hide_post_score)
 
   has_many :scores, serializer: ReviewableScoreExplanationSerializer, embed: :objects
 

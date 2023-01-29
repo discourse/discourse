@@ -7,15 +7,32 @@
     <h4>{{i18n "admin.site_text.locale"}} {{this.localeFullName}}</h4>
   </div>
 
-  <ExpandingTextArea @value={{this.buffered.value}} @rows="1" @class="site-text-value" />
+  <ExpandingTextArea
+    @value={{this.buffered.value}}
+    @rows="1"
+    @class="site-text-value"
+  />
 
-  <SaveControls @model={{this.siteText}} @action={{action "saveChanges"}} @saved={{this.saved}} @saveDisabled={{this.saveDisabled}}>
+  <SaveControls
+    @model={{this.siteText}}
+    @action={{action "saveChanges"}}
+    @saved={{this.saved}}
+    @saveDisabled={{this.saveDisabled}}
+  >
     {{#if this.siteText.can_revert}}
-      <DButton @action={{action "revertChanges"}} @label="admin.site_text.revert" @class="revert-site-text" />
+      <DButton
+        @action={{action "revertChanges"}}
+        @label="admin.site_text.revert"
+        @class="revert-site-text"
+      />
     {{/if}}
   </SaveControls>
 
-  <LinkTo @route="adminSiteText.index" @query={{hash locale=this.locale}} class="go-back">
+  <LinkTo
+    @route="adminSiteText.index"
+    @query={{hash locale=this.locale}}
+    class="go-back"
+  >
     {{d-icon "arrow-left"}}
     {{i18n "admin.site_text.go_back"}}
   </LinkTo>

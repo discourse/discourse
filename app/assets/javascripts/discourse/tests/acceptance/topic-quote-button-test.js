@@ -8,6 +8,8 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "I18n";
 import { click, triggerKeyEvent, visit } from "@ember/test-helpers";
+import { cloneJSON } from "discourse-common/lib/object";
+import topicFixtures from "discourse/tests/fixtures/topic";
 import { test } from "qunit";
 
 // This tests are flaky on Firefox. Fails with `calling set on destroyed object`
@@ -16,6 +18,19 @@ acceptance("Topic - Quote button - logged in", function (needs) {
   needs.settings({
     share_quote_visibility: "anonymous",
     share_quote_buttons: "twitter|email",
+  });
+
+  needs.pretender((server, helper) => {
+    server.get("/inline-onebox", () =>
+      helper.response({
+        "inline-oneboxes": [
+          {
+            url: "http://www.example.com/57350945",
+            title: "This is a great title",
+          },
+        ],
+      })
+    );
   });
 
   chromeTest(
@@ -62,6 +77,32 @@ acceptance("Topic - Quote button - logged in", function (needs) {
       );
     }
   );
+});
+
+acceptance("Closed Topic - Quote button - logged in", function (needs) {
+  needs.user();
+
+  needs.pretender((server, helper) => {
+    const topicResponse = cloneJSON(topicFixtures["/t/280/1.json"]);
+    topicResponse.closed = true;
+    topicResponse.details.can_create_post = false;
+
+    server.get("/t/280.json", () => helper.response(topicResponse));
+  });
+
+  chromeTest("Shows quote button in closed topics", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await selectText("#post_1 .cooked p:first-child");
+    assert.ok(exists(".insert-quote"), "it shows the quote button");
+
+    await click(".insert-quote");
+    assert.ok(
+      query(".d-editor-input")
+        .value.trim()
+        .startsWith("Continuing the discussion from"),
+      "quote action defaults to reply as new topic (since topic is closed)"
+    );
+  });
 });
 
 acceptance("Topic - Quote button - anonymous", function (needs) {
@@ -132,7 +173,7 @@ acceptance("Topic - Quote button - keyboard shortcut", function (needs) {
   test("Can use keyboard shortcut to quote selected text", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await selectText("#post_1 .cooked");
-    await triggerKeyEvent(document, "keypress", "q".charCodeAt(0));
+    await triggerKeyEvent(document, "keypress", "Q");
     assert.ok(exists(".d-editor-input"), "the editor is open");
 
     assert.ok(

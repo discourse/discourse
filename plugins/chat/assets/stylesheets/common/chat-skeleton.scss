@@ -1,0 +1,140 @@
+$radius: 10px;
+
+.chat-skeleton {
+  height: auto;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 1em;
+    border-bottom: 1px solid var(--primary-100);
+    box-sizing: border-box;
+  }
+
+  &__header-img {
+    background-color: var(--primary-100);
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    margin-right: 0.5rem;
+  }
+
+  &__header-name {
+    background-color: var(--primary-100);
+    width: 70px;
+    height: 18px;
+    border-radius: $radius;
+  }
+
+  &__body {
+    padding: 1em;
+  }
+
+  &__message {
+    display: grid;
+    grid-template:
+      "avatar poster"
+      "avatar content"
+      ". content";
+    grid-template-columns: auto 1fr;
+
+    &:not(:first-of-type):not(:last-of-type) {
+      margin-top: 1.5em;
+      margin-bottom: 1.5em;
+    }
+  }
+
+  &__message-avatar {
+    grid-area: avatar;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 0.5rem;
+
+    .chat-skeleton__message:nth-of-type(odd) & {
+      background-color: var(--primary-100);
+    }
+    .chat-skeleton__message:nth-of-type(even) & {
+      background-color: var(--primary-200);
+    }
+  }
+
+  &__message-poster {
+    grid-area: poster;
+    margin-top: 0.25rem;
+    margin-bottom: 0.25rem;
+    width: 70px;
+    height: 20px;
+    border-radius: $radius;
+
+    .chat-skeleton__message:nth-of-type(odd) & {
+      background-color: var(--primary-100);
+    }
+    .chat-skeleton__message:nth-of-type(even) & {
+      background-color: var(--primary-200);
+    }
+  }
+
+  &__message-content {
+    grid-area: content;
+    width: 100%;
+  }
+  &__message-msg {
+    height: 13px;
+    border-radius: $radius;
+
+    .chat-skeleton__message:nth-of-type(odd) & {
+      background-color: var(--primary-100);
+    }
+    .chat-skeleton__message:nth-of-type(even) & {
+      background-color: var(--primary-200);
+    }
+
+    &.-line1 {
+      margin-top: 0.5rem;
+      margin-bottom: 0.5em;
+    }
+
+    &.-small {
+      width: 35%;
+    }
+
+    &.-medium {
+      width: 60%;
+    }
+
+    &.-large {
+      width: 85%;
+    }
+  }
+
+  &.-animation {
+    position: relative;
+    overflow: hidden;
+
+    &::after {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      transform: translateX(-100%);
+      background: linear-gradient(
+        90deg,
+        rgba(var(--chat-skeleton-animation-rgb), 0) 0,
+        rgba(var(--chat-skeleton-animation-rgb), 0.2) 20%,
+        rgba(var(--chat-skeleton-animation-rgb), 0.5) 60%,
+        rgba(var(--chat-skeleton-animation-rgb), 0)
+      );
+      animation: shimmer 1.5s infinite;
+      content: "";
+    }
+
+    @keyframes shimmer {
+      100% {
+        transform: translateX(100%);
+      }
+    }
+  }
+}

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe UnicodeUsernameValidator do
+RSpec.describe UnicodeUsernameValidator do
   subject { described_class.new }
 
   it "disallows Unicode usernames when external system avatars are disabled" do

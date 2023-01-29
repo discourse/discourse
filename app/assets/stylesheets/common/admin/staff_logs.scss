@@ -1,28 +1,5 @@
 // Styles for /admin/logs
 
-.web-hook-events {
-  border-bottom: dotted 1px var(--primary-low-mid);
-  .heading-container {
-    width: 100%;
-    background-color: var(--primary-low);
-  }
-  .col.heading {
-    font-weight: bold;
-    padding: 4px 0;
-  }
-  .col {
-    display: inline-block;
-    padding-top: 6px;
-    vertical-align: top;
-    overflow-y: auto;
-    overflow-x: hidden;
-  }
-  .ember-list-item-view {
-    width: 100%;
-    border-top: solid 1px var(--primary-low);
-  }
-}
-
 .log-details-modal {
   pre {
     white-space: pre-wrap;
@@ -124,7 +101,7 @@
       margin-right: 0.25em;
     }
     .deleted-user {
-      font-size: $font-up-2;
+      font-size: var(--font-up-2);
     }
   }
   .created_at {
@@ -193,9 +170,6 @@ table.screened-ip-addresses {
   }
   td.actions {
     text-align: right;
-    .cancel-action {
-      margin-left: 0.5em;
-    }
   }
 }
 
@@ -300,7 +274,7 @@ table.screened-ip-addresses {
 
   .tag {
     background: var(--primary-low);
-    font-size: $font-down-1;
+    font-size: var(--font-down-1);
     margin-right: 0.1em;
     padding: 0.5em;
   }

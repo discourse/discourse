@@ -30,7 +30,7 @@ acceptance("Topic Discovery", function (needs) {
 
     assert.strictEqual(
       query("a[data-user-card=eviltrout] img.avatar").getAttribute("title"),
-      "Evil Trout - Most Posts",
+      "eviltrout - Most Posts",
       "it shows user's full name in avatar title"
     );
 
@@ -110,7 +110,7 @@ acceptance("Topic Discovery", function (needs) {
       "shows the topic unread"
     );
 
-    publishToMessageBus("/latest", {
+    await publishToMessageBus("/latest", {
       message_type: "read",
       topic_id: 11995,
       payload: {
@@ -120,8 +120,6 @@ acceptance("Topic Discovery", function (needs) {
         topic_id: 11995,
       },
     });
-
-    await visit("/"); // We're already there, but use this to wait for re-render
 
     assert.ok(
       exists(".topic-list-item.visited a[data-topic-id='11995']"),
@@ -203,15 +201,11 @@ acceptance("Topic Discovery | Footer", function (needs) {
   });
 
   needs.pretender((server, helper) => {
-    server.get("/c/dev/7/l/latest.json", () => {
+    server.get("/c/dev/7/l/latest.json", (request) => {
       const json = cloneJSON(discoveryFixtures["/c/dev/7/l/latest.json"]);
-      json.topic_list.more_topics_url = "/c/dev/7/l/latest.json?page=2";
-      return helper.response(json);
-    });
-
-    server.get("/c/dev/7/l/latest.json?page=2", () => {
-      const json = cloneJSON(discoveryFixtures["/c/dev/7/l/latest.json"]);
-      json.topic_list.more_topics_url = null;
+      if (!request.queryParams.page) {
+        json.topic_list.more_topics_url = "/c/dev/7/l/latest.json?page=2";
+      }
       return helper.response(json);
     });
   });

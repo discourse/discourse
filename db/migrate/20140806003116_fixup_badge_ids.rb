@@ -7,5 +7,4 @@ class FixupBadgeIds < ActiveRecord::Migration[4.2]
     # badges to bump
     add_column :badges, :system, :boolean, default: false, null: false
   end
-
 end

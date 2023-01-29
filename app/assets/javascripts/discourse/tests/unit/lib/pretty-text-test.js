@@ -4,19 +4,19 @@ import {
   deleteCachedInlineOnebox,
 } from "pretty-text/inline-oneboxer";
 import QUnit, { module, test } from "qunit";
-import Post from "discourse/models/post";
 import { buildQuote } from "discourse/lib/quote";
 import { deepMerge } from "discourse-common/lib/object";
 import { extractDataAttribute } from "pretty-text/engines/discourse-markdown-it";
 import { registerEmoji } from "pretty-text/emoji";
 import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
+import { getOwner } from "discourse-common/lib/get-owner";
 
 const rawOpts = {
   siteSettings: {
     enable_emoji: true,
     enable_emoji_shortcuts: true,
     enable_mentions: true,
-    emoji_set: "google_classic",
+    emoji_set: "twitter",
     external_emoji_url: "",
     highlighted_languages: "json|ruby|javascript",
     default_code_lang: "auto",
@@ -439,6 +439,19 @@ eviltrout</p>
 </blockquote>
 </aside>`,
       "quote has group class"
+    );
+  });
+
+  test("Incomplete quotes", function (assert) {
+    assert.cookedOptions(
+      '[quote=", post: 1"]\na quote\n[/quote]',
+      { topicId: 2 },
+      `<aside class=\"quote no-group\" data-post=\"1\">
+<blockquote>
+<p>a quote</p>
+</blockquote>
+</aside>`,
+      "works with missing username"
     );
   });
 
@@ -865,8 +878,8 @@ eviltrout</p>
 
     assert.cooked(
       "```text\ntext\n```",
-      '<pre><code class="lang-nohighlight">text\n</code></pre>',
-      "handles text by adding nohighlight"
+      '<pre><code class="lang-plaintext">text\n</code></pre>',
+      "handles text by adding plaintext"
     );
 
     assert.cooked(
@@ -895,7 +908,7 @@ eviltrout</p>
 
     assert.cooked(
       "```eviltrout\nhello\n```",
-      '<pre data-code-wrap="eviltrout"><code class="lang-nohighlight">hello\n</code></pre>',
+      '<pre data-code-wrap="eviltrout"><code class="lang-plaintext">hello\n</code></pre>',
       "it converts to custom block unknown code names"
     );
 
@@ -945,7 +958,7 @@ eviltrout</p>
   test("URLs in BBCode tags", function (assert) {
     assert.cooked(
       "[img]http://eviltrout.com/eviltrout.png[/img][img]http://samsaffron.com/samsaffron.png[/img]",
-      '<p><img src="http://eviltrout.com/eviltrout.png" alt/><img src="http://samsaffron.com/samsaffron.png" alt/></p>',
+      '<p><img src="http://eviltrout.com/eviltrout.png" alt role="presentation"/><img src="http://samsaffron.com/samsaffron.png" alt role="presentation"/></p>',
       "images are properly parsed"
     );
 
@@ -974,6 +987,11 @@ eviltrout</p>
       '<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==" alt="Red dot"></p>',
       "It allows data images"
     );
+
+    assert.cooked(
+      "![](http://folksy.com/images/folksy-colour.png)",
+      '<p><img src="http://folksy.com/images/folksy-colour.png" alt role="presentation"></p>'
+    );
   });
 
   test("attachment", function (assert) {
@@ -984,12 +1002,12 @@ eviltrout</p>
     );
   });
 
-  test("attachment - mapped url - secure media disabled", function (assert) {
+  test("attachment - mapped url - secure uploads disabled", function (assert) {
     function lookupUploadUrls() {
       let cache = {};
       cache["upload://o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf"] = {
         short_url: "upload://o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf",
-        url: "/secure-media-uploads/original/3X/c/b/o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf",
+        url: "/secure-uploads/original/3X/c/b/o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf",
         short_path: "/uploads/short-url/blah",
       };
       return cache;
@@ -997,20 +1015,20 @@ eviltrout</p>
     assert.cookedOptions(
       "[test.pdf|attachment](upload://o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf)",
       {
-        siteSettings: { secure_media: false },
+        siteSettings: { secure_uploads: false },
         lookupUploadUrls,
       },
       `<p><a class="attachment" href="/uploads/short-url/blah">test.pdf</a></p>`,
-      "It returns the correct attachment link HTML when the URL is mapped without secure media"
+      "It returns the correct attachment link HTML when the URL is mapped without secure uploads"
     );
   });
 
-  test("attachment - mapped url - secure media enabled", function (assert) {
+  test("attachment - mapped url - secure uploads enabled", function (assert) {
     function lookupUploadUrls() {
       let cache = {};
       cache["upload://o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf"] = {
         short_url: "upload://o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf",
-        url: "/secure-media-uploads/original/3X/c/b/o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf",
+        url: "/secure-uploads/original/3X/c/b/o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf",
         short_path: "/uploads/short-url/blah",
       };
       return cache;
@@ -1018,11 +1036,11 @@ eviltrout</p>
     assert.cookedOptions(
       "[test.pdf|attachment](upload://o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf)",
       {
-        siteSettings: { secure_media: true },
+        siteSettings: { secure_uploads: true },
         lookupUploadUrls,
       },
-      `<p><a class="attachment" href="/secure-media-uploads/original/3X/c/b/o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf">test.pdf</a></p>`,
-      "It returns the correct attachment link HTML when the URL is mapped with secure media"
+      `<p><a class="attachment" href="/secure-uploads/original/3X/c/b/o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf">test.pdf</a></p>`,
+      "It returns the correct attachment link HTML when the URL is mapped with secure uploads"
     );
   });
 
@@ -1039,12 +1057,12 @@ eviltrout</p>
     );
   });
 
-  test("video - mapped url - secure media enabled", function (assert) {
+  test("video - mapped url - secure uploads enabled", function (assert) {
     function lookupUploadUrls() {
       let cache = {};
       cache["upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp4"] = {
         short_url: "upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp4",
-        url: "/secure-media-uploads/original/3X/c/b/test.mp4",
+        url: "/secure-uploads/original/3X/c/b/test.mp4",
         short_path: "/uploads/short-url/blah",
       };
       return cache;
@@ -1052,16 +1070,16 @@ eviltrout</p>
     assert.cookedOptions(
       "![baby shark|video](upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp4)",
       {
-        siteSettings: { secure_media: true },
+        siteSettings: { secure_uploads: true },
         lookupUploadUrls,
       },
       `<p><div class="video-container">
     <video width="100%" height="100%" preload="metadata" controls>
-      <source src="/secure-media-uploads/original/3X/c/b/test.mp4">
-      <a href="/secure-media-uploads/original/3X/c/b/test.mp4">/secure-media-uploads/original/3X/c/b/test.mp4</a>
+      <source src="/secure-uploads/original/3X/c/b/test.mp4">
+      <a href="/secure-uploads/original/3X/c/b/test.mp4">/secure-uploads/original/3X/c/b/test.mp4</a>
     </video>
   </div></p>`,
-      "It returns the correct video HTML when the URL is mapped with secure media, removing data-orig-src"
+      "It returns the correct video HTML when the URL is mapped with secure uploads, removing data-orig-src"
     );
   });
 
@@ -1076,12 +1094,12 @@ eviltrout</p>
     );
   });
 
-  test("audio - mapped url - secure media enabled", function (assert) {
+  test("audio - mapped url - secure uploads enabled", function (assert) {
     function lookupUploadUrls() {
       let cache = {};
       cache["upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp3"] = {
         short_url: "upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp3",
-        url: "/secure-media-uploads/original/3X/c/b/test.mp3",
+        url: "/secure-uploads/original/3X/c/b/test.mp3",
         short_path: "/uploads/short-url/blah",
       };
       return cache;
@@ -1089,14 +1107,14 @@ eviltrout</p>
     assert.cookedOptions(
       "![baby shark|audio](upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp3)",
       {
-        siteSettings: { secure_media: true },
+        siteSettings: { secure_uploads: true },
         lookupUploadUrls,
       },
       `<p><audio preload="metadata" controls>
-    <source src="/secure-media-uploads/original/3X/c/b/test.mp3">
-    <a href="/secure-media-uploads/original/3X/c/b/test.mp3">/secure-media-uploads/original/3X/c/b/test.mp3</a>
+    <source src="/secure-uploads/original/3X/c/b/test.mp3">
+    <a href="/secure-uploads/original/3X/c/b/test.mp3">/secure-uploads/original/3X/c/b/test.mp3</a>
   </audio></p>`,
-      "It returns the correct audio HTML when the URL is mapped with secure media, removing data-orig-src"
+      "It returns the correct audio HTML when the URL is mapped with secure uploads, removing data-orig-src"
     );
   });
 
@@ -1104,7 +1122,7 @@ eviltrout</p>
     assert.cookedOptions(
       "Pleased to meet you, but pleeeease call me later, xyz123",
       {
-        censoredRegexp: "(xyz*|plee+ase)",
+        censoredRegexp: [{ "(xyz*|plee+ase)": { case_sensitive: false } }],
       },
       "<p>Pleased to meet you, but ■■■■■■■■■ call me later, ■■■123</p>",
       "supports censoring"
@@ -1149,7 +1167,7 @@ eviltrout</p>
     );
     assert.cookedPara(
       "[img]http://eviltrout.com/eviltrout.png[/img]",
-      '<img src="http://eviltrout.com/eviltrout.png" alt>',
+      '<img src="http://eviltrout.com/eviltrout.png" alt role="presentation">',
       "links images"
     );
     assert.cookedPara(
@@ -1197,7 +1215,7 @@ eviltrout</p>
     );
     assert.cookedPara(
       "[url=http://www.example.com][img]http://example.com/logo.png[/img][/url]",
-      '<a href="http://www.example.com" data-bbcode="true"><img src="http://example.com/logo.png" alt></a>',
+      '<a href="http://www.example.com" data-bbcode="true"><img src="http://example.com/logo.png" alt role="presentation"></a>',
       "supports [url] with an embedded [img]"
     );
   });
@@ -1256,7 +1274,8 @@ eviltrout</p>
   });
 
   test("quotes", function (assert) {
-    const post = Post.create({
+    const store = getOwner(this).lookup("service:store");
+    const post = store.createRecord("post", {
       cooked: "<p><b>lorem</b> ipsum</p>",
       username: "eviltrout",
       post_number: 1,
@@ -1316,7 +1335,8 @@ eviltrout</p>
   });
 
   test("quoting a quote", function (assert) {
-    const post = Post.create({
+    const store = getOwner(this).lookup("service:store");
+    const post = store.createRecord("post", {
       cooked: new PrettyText(defaultOpts).cook(
         '[quote="sam, post:1, topic:1, full:true"]\nhello\n[/quote]\n*Test*'
       ),
@@ -1506,7 +1526,7 @@ var bar = 'bar';
     assert.cookedOptions(
       ":grin: @sam",
       { featuresOverride: ["emoji"] },
-      `<p><img src="/images/emoji/google_classic/grin.png?v=${v}" title=":grin:" class="emoji" alt=":grin:" loading="lazy" width="20" height="20"> @sam</p>`,
+      `<p><img src="/images/emoji/twitter/grin.png?v=${v}" title=":grin:" class="emoji" alt=":grin:" loading="lazy" width="20" height="20"> @sam</p>`,
       "cooks emojis when only the emoji markdown engine is enabled"
     );
 
@@ -1521,15 +1541,15 @@ var bar = 'bar';
   test("emoji", function (assert) {
     assert.cooked(
       ":smile:",
-      `<p><img src="/images/emoji/google_classic/smile.png?v=${v}" title=":smile:" class="emoji only-emoji" alt=":smile:" loading="lazy" width="20" height="20"></p>`
+      `<p><img src="/images/emoji/twitter/smile.png?v=${v}" title=":smile:" class="emoji only-emoji" alt=":smile:" loading="lazy" width="20" height="20"></p>`
     );
     assert.cooked(
       ":(",
-      `<p><img src="/images/emoji/google_classic/frowning.png?v=${v}" title=":frowning:" class="emoji only-emoji" alt=":frowning:" loading="lazy" width="20" height="20"></p>`
+      `<p><img src="/images/emoji/twitter/frowning.png?v=${v}" title=":frowning:" class="emoji only-emoji" alt=":frowning:" loading="lazy" width="20" height="20"></p>`
     );
     assert.cooked(
       "8-)",
-      `<p><img src="/images/emoji/google_classic/sunglasses.png?v=${v}" title=":sunglasses:" class="emoji only-emoji" alt=":sunglasses:" loading="lazy" width="20" height="20"></p>`
+      `<p><img src="/images/emoji/twitter/sunglasses.png?v=${v}" title=":sunglasses:" class="emoji only-emoji" alt=":sunglasses:" loading="lazy" width="20" height="20"></p>`
     );
   });
 
@@ -1543,7 +1563,7 @@ var bar = 'bar';
     assert.cookedOptions(
       "test:smile:test",
       { siteSettings: { enable_inline_emoji_translation: true } },
-      `<p>test<img src="/images/emoji/google_classic/smile.png?v=${v}" title=":smile:" class="emoji" alt=":smile:" loading="lazy" width="20" height="20">test</p>`
+      `<p>test<img src="/images/emoji/twitter/smile.png?v=${v}" title=":smile:" class="emoji" alt=":smile:" loading="lazy" width="20" height="20">test</p>`
     );
   });
 
@@ -1710,7 +1730,12 @@ var bar = 'bar';
 
   test("watched words replace", function (assert) {
     const opts = {
-      watchedWordsReplace: { "(?:\\W|^)(fun)(?=\\W|$)": "times" },
+      watchedWordsReplace: {
+        "(?:\\W|^)(fun)(?=\\W|$)": {
+          replacement: "times",
+          case_sensitive: false,
+        },
+      },
     };
 
     assert.cookedOptions("test fun funny", opts, "<p>test times funny</p>");
@@ -1719,7 +1744,12 @@ var bar = 'bar';
 
   test("watched words link", function (assert) {
     const opts = {
-      watchedWordsLink: { "(?:\\W|^)(fun)(?=\\W|$)": "https://discourse.org" },
+      watchedWordsLink: {
+        "(?:\\W|^)(fun)(?=\\W|$)": {
+          replacement: "https://discourse.org",
+          case_sensitive: false,
+        },
+      },
     };
 
     assert.cookedOptions(
@@ -1733,7 +1763,9 @@ var bar = 'bar';
     const maxMatches = 100; // same limit as MD watched-words-replace plugin
     const opts = {
       siteSettings: { watched_words_regular_expressions: true },
-      watchedWordsReplace: { "(\\bu?\\b)": "you" },
+      watchedWordsReplace: {
+        "(\\bu?\\b)": { replacement: "you", case_sensitive: false },
+      },
     };
 
     assert.cookedOptions(

@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::Tl3Promotions do
-
+RSpec.describe Jobs::Tl3Promotions do
   def create_qualifying_stats(user)
     user.create_user_stat if user.user_stat.nil?
     user.user_stat.update!(
@@ -9,7 +8,7 @@ describe Jobs::Tl3Promotions do
       topics_entered: 1000,
       posts_read_count: 1000,
       likes_given: 1000,
-      likes_received: 1000
+      likes_received: 1000,
     )
   end
 
@@ -44,7 +43,7 @@ describe Jobs::Tl3Promotions do
     run_job
   end
 
-  context "tl3 user who doesn't qualify for tl3 anymore" do
+  context "with tl3 user who doesn't qualify for tl3 anymore" do
     def create_leader_user
       user = Fabricate(:user, trust_level: TrustLevel[2])
       TrustLevel3Requirements.any_instance.stubs(:requirements_met?).returns(true)
@@ -52,9 +51,7 @@ describe Jobs::Tl3Promotions do
       user
     end
 
-    before do
-      SiteSetting.tl3_promotion_min_duration = 3
-    end
+    before { SiteSetting.tl3_promotion_min_duration = 3 }
 
     it "demotes if was promoted more than X days ago" do
       user = nil
@@ -83,9 +80,7 @@ describe Jobs::Tl3Promotions do
 
     it "doesn't demote if user hasn't lost requirements (low water mark)" do
       user = nil
-      freeze_time(4.days.ago) do
-        user = create_leader_user
-      end
+      freeze_time(4.days.ago) { user = create_leader_user }
 
       TrustLevel3Requirements.any_instance.stubs(:requirements_met?).returns(false)
       TrustLevel3Requirements.any_instance.stubs(:requirements_lost?).returns(false)
@@ -104,7 +99,6 @@ describe Jobs::Tl3Promotions do
       TrustLevel3Requirements.any_instance.stubs(:requirements_lost?).returns(true)
       run_job
       expect(user.reload.trust_level).to eq(TrustLevel[2])
-
     end
 
     it "doesn't demote user if their group_granted_trust_level is 3" do
@@ -121,11 +115,9 @@ describe Jobs::Tl3Promotions do
     end
 
     it "doesn't demote with very high tl3_promotion_min_duration value" do
-      SiteSetting.stubs(:tl3_promotion_min_duration).returns(2000000000)
+      SiteSetting.stubs(:tl3_promotion_min_duration).returns(2_000_000_000)
       user = nil
-      freeze_time(500.days.ago) do
-        user = create_leader_user
-      end
+      freeze_time(500.days.ago) { user = create_leader_user }
       expect(user).to be_on_tl3_grace_period
       TrustLevel3Requirements.any_instance.stubs(:requirements_met?).returns(false)
       TrustLevel3Requirements.any_instance.stubs(:requirements_lost?).returns(true)

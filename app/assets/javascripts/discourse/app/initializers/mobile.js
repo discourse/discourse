@@ -9,9 +9,10 @@ export default {
 
   initialize(container) {
     Mobile.init();
-    const site = container.lookup("site:main");
+    const site = container.lookup("service:site");
 
     site.set("mobileView", Mobile.mobileView);
+    site.set("desktopView", !Mobile.mobileView);
     site.set("isMobileDevice", Mobile.isMobileDevice);
 
     setResolverOption("mobileView", Mobile.mobileView);

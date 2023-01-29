@@ -12,7 +12,6 @@ import {
   click,
   currentURL,
   fillIn,
-  settled,
   triggerKeyEvent,
   visit,
 } from "@ember/test-helpers";
@@ -212,6 +211,7 @@ acceptance("Topic", function (needs) {
   });
 
   test("Deleting a topic", async function (assert) {
+    this.siteSettings.min_topic_views_for_delete_confirm = 10000;
     await visit("/t/internationalization-localization/280");
     await click(".topic-post:nth-of-type(1) button.show-more-actions");
     await click(".widget-button.delete");
@@ -427,8 +427,8 @@ acceptance("Topic featured links", function (needs) {
     async function (assert) {
       await visit("/t/internationalization-localization/280");
       await selectText("#post_5 blockquote");
-      await triggerKeyEvent(document, "keypress", "j".charCodeAt(0));
-      await triggerKeyEvent(document, "keypress", "t".charCodeAt(0));
+      await triggerKeyEvent(document, "keypress", "J");
+      await triggerKeyEvent(document, "keypress", "T");
 
       assert.ok(
         query(".d-editor-input").value.includes(
@@ -664,9 +664,8 @@ acceptance("Topic stats update automatically", function () {
     };
 
     // simulate the topic like_count being changed
-    publishToMessageBus("/topic/280", likesChangedFixture);
+    await publishToMessageBus("/topic/280", likesChangedFixture);
 
-    await settled();
     const newLikes = likesDisplay.textContent;
 
     assert.notEqual(
@@ -701,9 +700,8 @@ acceptance("Topic stats update automatically", function () {
     const oldReplies = repliesDisplay.textContent;
 
     // simulate the topic posts_count being changed
-    publishToMessageBus("/topic/280", postsChangedFixture);
+    await publishToMessageBus("/topic/280", postsChangedFixture);
 
-    await settled();
     const newLikes = repliesDisplay.textContent;
 
     assert.notEqual(
@@ -726,9 +724,7 @@ acceptance("Topic stats update automatically", function () {
     const oldAvatarSrc = avatarImg.src;
 
     // simulate the topic posts_count being changed
-    publishToMessageBus("/topic/280", postsChangedFixture);
-
-    await settled();
+    await publishToMessageBus("/topic/280", postsChangedFixture);
 
     const newAvatarTitle = avatarImg.title;
     const newAvatarSrc = avatarImg.src;
@@ -764,9 +760,7 @@ acceptance("Topic stats update automatically", function () {
     const oldTime = lastRepliedAtDisplay.dataset.time;
 
     // simulate the topic posts_count being changed
-    publishToMessageBus("/topic/280", postsChangedFixture);
-
-    await settled();
+    await publishToMessageBus("/topic/280", postsChangedFixture);
 
     const newTime = lastRepliedAtDisplay.dataset.time;
 

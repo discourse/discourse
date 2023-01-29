@@ -1,12 +1,14 @@
 /* global Pikaday:true */
-import computed, { observes } from "discourse-common/utils/decorators";
+import computed, {
+  debounce,
+  observes,
+} from "discourse-common/utils/decorators";
 import Component from "@ember/component";
-import EmberObject from "@ember/object";
+import EmberObject, { action } from "@ember/object";
 import I18n from "I18n";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import { Promise } from "rsvp";
 import { cookAsync } from "discourse/lib/text";
-import discourseDebounce from "discourse-common/lib/debounce";
 import { isEmpty } from "@ember/utils";
 import loadScript from "discourse/lib/load-script";
 import { notEmpty } from "@ember/object/computed";
@@ -59,25 +61,19 @@ export default Component.extend({
   },
 
   @observes("computedConfig.{from,to,options}", "options", "isValid", "isRange")
-  _renderPreview() {
-    discourseDebounce(
-      this,
-      function () {
-        const markup = this.markup;
-        if (markup) {
-          cookAsync(markup).then((result) => {
-            this.set("currentPreview", result);
-            schedule("afterRender", () => {
-              applyLocalDates(
-                document.querySelectorAll(".preview .discourse-local-date"),
-                this.siteSettings
-              );
-            });
-          });
-        }
-      },
-      INPUT_DELAY
-    );
+  @debounce(INPUT_DELAY)
+  async _renderPreview() {
+    if (this.markup) {
+      const result = await cookAsync(this.markup);
+      this.set("currentPreview", result);
+
+      schedule("afterRender", () => {
+        applyLocalDates(
+          document.querySelectorAll(".preview .discourse-local-date"),
+          this.siteSettings
+        );
+      });
+    }
   },
 
   @computed("date", "toDate", "toTime")
@@ -306,6 +302,12 @@ export default Component.extend({
     return dateTime.isValid() ? dateTime.format("LLLL") : emptyText;
   },
 
+  @action
+  updateFormat(format, event) {
+    event?.preventDefault();
+    this.set("format", format);
+  },
+
   actions: {
     setTime(event) {
       this._setTimeIfValid(event.target.value, "time");
@@ -401,22 +403,22 @@ export default Component.extend({
   },
 
   _setPickerMinDate(date) {
-    if (date && !moment(date, this.dateFormat).isValid()) {
-      date = null;
-    }
-
     schedule("afterRender", () => {
-      this._picker.setMinDate(moment(date, this.dateFormat).toDate());
+      if (moment(date, this.dateFormat).isValid()) {
+        this._picker.setMinDate(moment(date, this.dateFormat).toDate());
+      } else {
+        this._picker.setMinDate(null);
+      }
     });
   },
 
   _setPickerDate(date) {
-    if (date && !moment(date, this.dateFormat).isValid()) {
-      date = null;
-    }
-
     schedule("afterRender", () => {
-      this._picker.setDate(moment.utc(date), true);
+      if (moment(date, this.dateFormat).isValid()) {
+        this._picker.setDate(moment.utc(date), true);
+      } else {
+        this._picker.setDate(null);
+      }
     });
   },
 

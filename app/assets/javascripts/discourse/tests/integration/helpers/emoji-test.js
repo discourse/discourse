@@ -11,4 +11,13 @@ module("Integration | Helper | emoji", function (hooks) {
     await render(hbs`{{emoji "tada"}}`);
     assert.ok(exists(`.emoji[title="tada"]`));
   });
+
+  test("it renders custom title", async function (assert) {
+    const title = "custom title";
+    this.set("title", title);
+
+    await render(hbs`{{emoji "tada" title=this.title}}`);
+
+    assert.ok(exists(`.emoji[title="${title}"]`));
+  });
 });

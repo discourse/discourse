@@ -5,12 +5,17 @@
         {{i18n "groups.membership_request.reason"}}
       </label>
 
-      <ExpandingTextArea @value={{this.reason}} />
+      <ExpandingTextArea @value={{this.reason}} @maxlength="280" />
     </div>
   </DModalBody>
 
   <div class="modal-footer">
-    <DButton @class="btn-primary" @disabled={{this.disableSubmit}} @label="groups.membership_request.submit" @action={{action "requestMember"}} />
+    <DButton
+      @class="btn-primary"
+      @disabled={{this.disableSubmit}}
+      @label="groups.membership_request.submit"
+      @action={{action "requestMember"}}
+    />
 
     <DModalCancel @close={{route-action "closeModal"}} />
     <ConditionalLoadingSpinner @size="small" @condition={{this.loading}} />

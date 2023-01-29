@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe ExternalSystemAvatarsValidator do
+RSpec.describe ExternalSystemAvatarsValidator do
   subject { described_class.new }
 
   it "disallows disabling external system avatars when Unicode usernames are enabled" do

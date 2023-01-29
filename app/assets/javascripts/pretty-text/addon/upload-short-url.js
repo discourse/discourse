@@ -112,11 +112,12 @@ function getAttributeBasedUrl(dataAttribute, cachedUpload, siteSettings) {
     return cachedUpload.url;
   }
 
-  // attachments should use the full /secure-media-uploads/ URL
-  // in this case for permission checks
+  // attachments should use the full /secure-media-uploads/ or
+  // /secure-uploads/ URL in this case for permission checks
   if (
-    siteSettings.secure_media &&
-    cachedUpload.url.indexOf("secure-media-uploads") > -1
+    siteSettings.secure_uploads &&
+    (cachedUpload.url.includes("secure-media-uploads") ||
+      cachedUpload.url.includes("secure-uploads"))
   ) {
     return cachedUpload.url;
   }

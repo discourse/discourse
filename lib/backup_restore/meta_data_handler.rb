@@ -28,8 +28,10 @@ module BackupRestore
       log "  Restored version: #{metadata[:version]}"
 
       if metadata[:version] > @current_version
-        raise MigrationRequiredError.new("You're trying to restore a more recent version of the schema. " \
-          "You should migrate first!")
+        raise MigrationRequiredError.new(
+                "You're trying to restore a more recent version of the schema. " \
+                  "You should migrate first!",
+              )
       end
 
       metadata

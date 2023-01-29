@@ -2,7 +2,6 @@
 
 # mixin for all Guardian methods dealing with post_revisions permissions
 module PostRevisionGuardian
-
   def can_see_post_revision?(post_revision)
     return false unless post_revision
     return false if post_revision.hidden && !can_view_hidden_post_revisions?
@@ -14,6 +13,10 @@ module PostRevisionGuardian
     is_staff?
   end
 
+  def can_permanently_delete_post_revisions?
+    is_staff? && SiteSetting.can_permanently_delete
+  end
+
   def can_show_post_revision?(post_revision)
     is_staff?
   end
@@ -21,5 +24,4 @@ module PostRevisionGuardian
   def can_view_hidden_post_revisions?
     is_staff?
   end
-
 end

@@ -2,7 +2,7 @@
 
 require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 
-require 'csv'
+require "csv"
 
 # Importer for Friends+Me Google+ Exporter (F+MG+E) output.
 #
@@ -32,18 +32,18 @@ require 'csv'
 # Edit values at the top of the script to fit your preferences
 
 class ImportScripts::FMGP < ImportScripts::Base
-
   def initialize
     super
 
     # Set this to the base URL for the site; required for importing videos
     # typically just 'https:' in production
-    @site_base_url = 'http://localhost:3000'
+    @site_base_url = "http://localhost:3000"
     @system_user = Discourse.system_user
-    SiteSetting.max_image_size_kb = 40960
-    SiteSetting.max_attachment_size_kb = 40960
+    SiteSetting.max_image_size_kb = 40_960
+    SiteSetting.max_attachment_size_kb = 40_960
     # handle the same video extension as the rest of Discourse
-    SiteSetting.authorized_extensions = (SiteSetting.authorized_extensions.split("|") + ['mp4', 'mov', 'webm', 'ogv']).uniq.join("|")
+    SiteSetting.authorized_extensions =
+      (SiteSetting.authorized_extensions.split("|") + %w[mp4 mov webm ogv]).uniq.join("|")
     @invalid_bounce_score = 5.0
     @min_title_words = 3
     @max_title_words = 14
@@ -76,7 +76,7 @@ class ImportScripts::FMGP < ImportScripts::Base
     @allowlist = nil
 
     # Tags to apply to every topic; empty Array to not have any tags applied everywhere
-    @globaltags = [ "gplus" ]
+    @globaltags = ["gplus"]
 
     @imagefiles = nil
 
@@ -101,34 +101,30 @@ class ImportScripts::FMGP < ImportScripts::Base
     @first_date = nil
     # every argument is a filename, do the right thing based on the file name
     ARGV.each do |arg|
-      if arg.end_with?('.csv')
+      if arg.end_with?(".csv")
         # CSV files produced by F+MG+E have "URL";"IsDownloaded";"FileName";"FilePath";"FileSize"
-        CSV.foreach(arg, headers: true, col_sep: ';') do |row|
-          @images[row[0]] = {
-            filename: row[2],
-            filepath: row[3],
-            filesize: row[4]
-          }
+        CSV.foreach(arg, headers: true, col_sep: ";") do |row|
+          @images[row[0]] = { filename: row[2], filepath: row[3], filesize: row[4] }
         end
       elsif arg.end_with?("upload-paths.txt")
         @imagefiles = File.open(arg, "w")
-      elsif arg.end_with?('categories.json')
+      elsif arg.end_with?("categories.json")
         @categories_filename = arg
         @categories = load_fmgp_json(arg)
       elsif arg.end_with?("usermap.json")
         @usermap = load_fmgp_json(arg)
-      elsif arg.end_with?('blocklist.json')
+      elsif arg.end_with?("blocklist.json")
         @blocklist = load_fmgp_json(arg).map { |i| i.to_s }.to_set
-      elsif arg.end_with?('allowlist.json')
+      elsif arg.end_with?("allowlist.json")
         @allowlist = load_fmgp_json(arg).map { |i| i.to_s }.to_set
-      elsif arg.end_with?('.json')
+      elsif arg.end_with?(".json")
         @feeds << load_fmgp_json(arg)
-      elsif arg == '--dry-run'
+      elsif arg == "--dry-run"
         @dryrun = true
       elsif arg.start_with?("--last-date=")
-        @last_date = Time.zone.parse(arg.gsub(/.*=/, ''))
+        @last_date = Time.zone.parse(arg.gsub(/.*=/, ""))
       elsif arg.start_with?("--first-date=")
-        @first_date = Time.zone.parse(arg.gsub(/.*=/, ''))
+        @first_date = Time.zone.parse(arg.gsub(/.*=/, ""))
       else
         raise RuntimeError.new("unknown argument #{arg}")
       end
@@ -153,7 +149,6 @@ class ImportScripts::FMGP < ImportScripts::Base
     @blocked_posts = 0
     # count uploaded file size
     @totalsize = 0
-
   end
 
   def execute
@@ -222,7 +217,9 @@ class ImportScripts::FMGP < ImportScripts::Base
       categories_new = "#{@categories_filename}.new"
       File.open(categories_new, "w") do |f|
         f.write(@categories.to_json)
-        raise RuntimeError.new("Category file missing categories for #{incomplete_categories}, edit #{categories_new} and rename it to #{@category_filename} before running the same import")
+        raise RuntimeError.new(
+                "Category file missing categories for #{incomplete_categories}, edit #{categories_new} and rename it to #{@category_filename} before running the same import",
+              )
       end
     end
   end
@@ -233,28 +230,32 @@ class ImportScripts::FMGP < ImportScripts::Base
     @categories.each do |id, cat|
       if cat["parent"].present? && !cat["parent"].empty?
         # Two separate sub-categories can have the same name, so need to identify by parent
-        Category.where(name: cat["category"]).each do |category|
-          parent = Category.where(id: category.parent_category_id).first
-          @cats[id] = category if parent.name == cat["parent"]
-        end
+        Category
+          .where(name: cat["category"])
+          .each do |category|
+            parent = Category.where(id: category.parent_category_id).first
+            @cats[id] = category if parent.name == cat["parent"]
+          end
       else
         if category = Category.where(name: cat["category"]).first
           @cats[id] = category
         elsif @create_categories
           params = {}
-          params[:name] = cat['category']
+          params[:name] = cat["category"]
           params[:id] = id
-          puts "Creating #{cat['category']}"
+          puts "Creating #{cat["category"]}"
           category = create_category(params, id)
           @cats[id] = category
         end
       end
-      raise RuntimeError.new("Could not find category #{cat["category"]} for #{cat}") if @cats[id].nil?
+      if @cats[id].nil?
+        raise RuntimeError.new("Could not find category #{cat["category"]} for #{cat}")
+      end
     end
   end
 
   def import_users
-    puts '', "Importing Google+ post and comment author users..."
+    puts "", "Importing Google+ post and comment author users..."
 
     # collect authors of both posts and comments
     @feeds.each do |feed|
@@ -263,14 +264,10 @@ class ImportScripts::FMGP < ImportScripts::Base
           community["categories"].each do |category|
             category["posts"].each do |post|
               import_author_user(post["author"])
-              if post["message"].present?
-                import_message_users(post["message"])
-              end
+              import_message_users(post["message"]) if post["message"].present?
               post["comments"].each do |comment|
                 import_author_user(comment["author"])
-                if comment["message"].present?
-                  import_message_users(comment["message"])
-                end
+                import_message_users(comment["message"]) if comment["message"].present?
               end
             end
           end
@@ -282,12 +279,7 @@ class ImportScripts::FMGP < ImportScripts::Base
 
     # now create them all
     create_users(@newusers) do |id, u|
-      {
-        id: id,
-        email: u[:email],
-        name: u[:name],
-        post_create_action: u[:post_create_action]
-      }
+      { id: id, email: u[:email], name: u[:name], post_create_action: u[:post_create_action] }
     end
   end
 
@@ -308,7 +300,8 @@ class ImportScripts::FMGP < ImportScripts::Base
 
   def import_google_user(id, name)
     if !@emails[id].present?
-      google_user_info = UserAssociatedAccount.find_by(provider_name: 'google_oauth2', provider_uid: id.to_i)
+      google_user_info =
+        UserAssociatedAccount.find_by(provider_name: "google_oauth2", provider_uid: id.to_i)
       if google_user_info.nil?
         # create new google user on system; expect this user to merge
         # when they later log in with google authentication
@@ -320,36 +313,39 @@ class ImportScripts::FMGP < ImportScripts::Base
         @newusers[id] = {
           email: email,
           name: name,
-          post_create_action: proc do |newuser|
-            newuser.approved = true
-            newuser.approved_by_id = @system_user.id
-            newuser.approved_at = newuser.created_at
-            if @blocklist.include?(id.to_s)
-              now = DateTime.now
-              forever = 1000.years.from_now
-              # you can suspend as well if you want your blocklist to
-              # be hard to recover from
-              #newuser.suspended_at = now
-              #newuser.suspended_till = forever
-              newuser.silenced_till = forever
-            end
-            newuser.save
-            @users[id] = newuser
-            UserAssociatedAccount.create(provider_name: 'google_oauth2', user_id: newuser.id, provider_uid: id)
-            # Do not send email to the invalid email addresses
-            # this can be removed after merging with #7162
-            s = UserStat.where(user_id: newuser.id).first
-            s.bounce_score = @invalid_bounce_score
-            s.reset_bounce_score_after = 1000.years.from_now
-            s.save
-          end
+          post_create_action:
+            proc do |newuser|
+              newuser.approved = true
+              newuser.approved_by_id = @system_user.id
+              newuser.approved_at = newuser.created_at
+              if @blocklist.include?(id.to_s)
+                now = DateTime.now
+                forever = 1000.years.from_now
+                # you can suspend as well if you want your blocklist to
+                # be hard to recover from
+                #newuser.suspended_at = now
+                #newuser.suspended_till = forever
+                newuser.silenced_till = forever
+              end
+              newuser.save
+              @users[id] = newuser
+              UserAssociatedAccount.create(
+                provider_name: "google_oauth2",
+                user_id: newuser.id,
+                provider_uid: id,
+              )
+              # Do not send email to the invalid email addresses
+              # this can be removed after merging with #7162
+              s = UserStat.where(user_id: newuser.id).first
+              s.bounce_score = @invalid_bounce_score
+              s.reset_bounce_score_after = 1000.years.from_now
+              s.save
+            end,
         }
       else
         # user already on system
         u = User.find(google_user_info.user_id)
-        if u.silenced? || u.suspended?
-          @blocklist.add(id)
-        end
+        @blocklist.add(id) if u.silenced? || u.suspended?
         @users[id] = u
         email = u.email
       end
@@ -362,7 +358,7 @@ class ImportScripts::FMGP < ImportScripts::Base
     # - A google+ post is a discourse topic
     # - A google+ comment is a discourse post
 
-    puts '', "Importing Google+ posts and comments..."
+    puts "", "Importing Google+ posts and comments..."
 
     @feeds.each do |feed|
       feed["accounts"].each do |account|
@@ -371,14 +367,16 @@ class ImportScripts::FMGP < ImportScripts::Base
             category["posts"].each do |post|
               # G+ post / Discourse topic
               import_topic(post, category)
-              print("\r#{@topics_imported}/#{@posts_imported} topics/posts (skipped: #{@topics_skipped}/#{@posts_skipped} blocklisted: #{@blocked_topics}/#{@blocked_posts})       ")
+              print(
+                "\r#{@topics_imported}/#{@posts_imported} topics/posts (skipped: #{@topics_skipped}/#{@posts_skipped} blocklisted: #{@blocked_topics}/#{@blocked_posts})       ",
+              )
             end
           end
         end
       end
     end
 
-    puts ''
+    puts ""
   end
 
   def import_topic(post, category)
@@ -431,9 +429,7 @@ class ImportScripts::FMGP < ImportScripts::Base
     return nil if !@frst_date.nil? && created_at < @first_date
 
     user_id = user_id_from_imported_user_id(post_author_id)
-    if user_id.nil?
-      user_id = @users[post["author"]["id"]].id
-    end
+    user_id = @users[post["author"]["id"]].id if user_id.nil?
 
     mapped = {
       id: post["id"],
@@ -472,7 +468,8 @@ class ImportScripts::FMGP < ImportScripts::Base
 
   def title_text(post, created_at)
     words = message_text(post["message"])
-    if words.empty? || words.join("").length < @min_title_characters || words.length < @min_title_words
+    if words.empty? || words.join("").length < @min_title_characters ||
+         words.length < @min_title_words
       # database has minimum length
       # short posts appear not to work well as titles most of the time (in practice)
       return untitled(post["author"]["name"], created_at)
@@ -483,17 +480,13 @@ class ImportScripts::FMGP < ImportScripts::Base
 
     (@min_title_words..(words.length - 1)).each do |i|
       # prefer full stop
-      if words[i].end_with?(".")
-        lastword = i
-      end
+      lastword = i if words[i].end_with?(".")
     end
 
     if lastword.nil?
       # fall back on other punctuation
       (@min_title_words..(words.length - 1)).each do |i|
-        if words[i].end_with?(',', ';', ':', '?')
-          lastword = i
-        end
+        lastword = i if words[i].end_with?(",", ";", ":", "?")
       end
     end
 
@@ -516,9 +509,7 @@ class ImportScripts::FMGP < ImportScripts::Base
     text_types = [0, 3]
     message.each do |fragment|
       if text_types.include?(fragment[0])
-        fragment[1].split().each do |word|
-          words << word
-        end
+        fragment[1].split().each { |word| words << word }
       elsif fragment[0] == 2
         # use the display text of a link
         words << fragment[1]
@@ -543,14 +534,10 @@ class ImportScripts::FMGP < ImportScripts::Base
       lines << "\n#{formatted_link(post["image"]["proxy"])}\n"
     end
     if post["images"].present?
-      post["images"].each do |image|
-        lines << "\n#{formatted_link(image["proxy"])}\n"
-      end
+      post["images"].each { |image| lines << "\n#{formatted_link(image["proxy"])}\n" }
     end
     if post["videos"].present?
-      post["videos"].each do |video|
-        lines << "\n#{formatted_link(video["proxy"])}\n"
-      end
+      post["videos"].each { |video| lines << "\n#{formatted_link(video["proxy"])}\n" }
     end
     if post["link"].present? && post["link"]["url"].present?
       url = post["link"]["url"]
@@ -575,12 +562,8 @@ class ImportScripts::FMGP < ImportScripts::Base
       if fragment[2].nil?
         text
       else
-        if fragment[2]["italic"].present?
-          text = "<i>#{text}</i>"
-        end
-        if fragment[2]["bold"].present?
-          text = "<b>#{text}</b>"
-        end
+        text = "<i>#{text}</i>" if fragment[2]["italic"].present?
+        text = "<b>#{text}</b>" if fragment[2]["bold"].present?
         if fragment[2]["strikethrough"].present?
           # s more likely than del to represent user intent?
           text = "<s>#{text}</s>"
@@ -594,9 +577,7 @@ class ImportScripts::FMGP < ImportScripts::Base
       formatted_link_text(fragment[2], fragment[1])
     elsif fragment[0] == 3
       # reference to a user
-      if @usermap.include?(fragment[2].to_s)
-        return "@#{@usermap[fragment[2].to_s]}"
-      end
+      return "@#{@usermap[fragment[2].to_s]}" if @usermap.include?(fragment[2].to_s)
       if fragment[2].nil?
         # deleted G+ users show up with a null ID
         return "<b>+#{fragment[1]}</b>"
@@ -606,12 +587,18 @@ class ImportScripts::FMGP < ImportScripts::Base
         # user was in this import's authors
         "@#{user.username} "
       else
-        if google_user_info = UserAssociatedAccount.find_by(provider_name: 'google_oauth2', provider_uid: fragment[2])
+        if google_user_info =
+             UserAssociatedAccount.find_by(
+               provider_name: "google_oauth2",
+               provider_uid: fragment[2],
+             )
           # user was not in this import, but has logged in or been imported otherwise
           user = User.find(google_user_info.user_id)
           "@#{user.username} "
         else
-          raise RuntimeError.new("Google user #{fragment[1]} (id #{fragment[2]}) not imported") if !@dryrun
+          if !@dryrun
+            raise RuntimeError.new("Google user #{fragment[1]} (id #{fragment[2]}) not imported")
+          end
           # if you want to fall back to their G+ name, just erase the raise above,
           # but this should not happen
           "<b>+#{fragment[1]}</b>"
@@ -681,6 +668,4 @@ class ImportScripts::FMGP < ImportScripts::Base
   end
 end
 
-if __FILE__ == $0
-  ImportScripts::FMGP.new.perform
-end
+ImportScripts::FMGP.new.perform if __FILE__ == $0

@@ -1,0 +1,164 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "basic_group": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "automatic": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string"
+        },
+        "user_count": {
+          "type": "integer"
+        },
+        "mentionable_level": {
+          "type": "integer"
+        },
+        "messageable_level": {
+          "type": "integer"
+        },
+        "visibility_level": {
+          "type": "integer"
+        },
+        "primary_group": {
+          "type": "boolean"
+        },
+        "title": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "grant_trust_level": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "incoming_email": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "has_messages": {
+          "type": "boolean"
+        },
+        "flair_url": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "flair_bg_color": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "flair_color": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "bio_raw": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "bio_cooked": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "bio_excerpt": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "public_admission": {
+          "type": "boolean"
+        },
+        "public_exit": {
+          "type": "boolean"
+        },
+        "allow_membership_requests": {
+          "type": "boolean"
+        },
+        "full_name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "default_notification_level": {
+          "type": "integer"
+        },
+        "membership_request_template": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "members_visibility_level": {
+          "type": "integer"
+        },
+        "can_see_members": {
+          "type": "boolean"
+        },
+        "can_admin_group": {
+          "type": "boolean"
+        },
+        "can_edit_group": {
+          "type": "boolean"
+        },
+        "publish_read_state": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "automatic",
+        "name",
+        "user_count",
+        "mentionable_level",
+        "messageable_level",
+        "visibility_level",
+        "primary_group",
+        "title",
+        "grant_trust_level",
+        "incoming_email",
+        "has_messages",
+        "flair_url",
+        "flair_bg_color",
+        "flair_color",
+        "bio_raw",
+        "bio_cooked",
+        "bio_excerpt",
+        "public_admission",
+        "public_exit",
+        "allow_membership_requests",
+        "full_name",
+        "default_notification_level",
+        "membership_request_template",
+        "members_visibility_level",
+        "can_see_members",
+        "can_admin_group",
+        "publish_read_state"
+      ]
+    }
+  },
+  "required": [
+    "basic_group"
+  ]
+}

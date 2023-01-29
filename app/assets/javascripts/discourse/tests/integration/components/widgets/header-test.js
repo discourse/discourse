@@ -15,7 +15,7 @@ module("Integration | Component | Widget | header", function (hooks) {
   });
 
   test("sign up / login buttons", async function (assert) {
-    this.owner.unregister("current-user:main");
+    this.owner.unregister("service:current-user");
     this.set("args", { canSignUp: true });
     this.set("showCreateAccount", () => (this.signupShown = true));
     this.set("showLogin", () => (this.loginShown = true));
@@ -40,7 +40,7 @@ module("Integration | Component | Widget | header", function (hooks) {
   });
 
   test("anon when login required", async function (assert) {
-    this.owner.unregister("current-user:main");
+    this.owner.unregister("service:current-user");
     this.set("args", { canSignUp: true });
     this.set("showCreateAccount", () => (this.signupShown = true));
     this.set("showLogin", () => (this.loginShown = true));

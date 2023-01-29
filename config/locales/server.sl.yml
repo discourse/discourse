@@ -279,6 +279,7 @@ sl:
               exceeds_maximum: "ne sme biti daljše od 20 let."
       <<: *errors
   uncategorized_category_name: "Nerazvrščeno"
+  general_category_name: "Splošno"
   staff_category_name: "Osebje"
   staff_category_description: "Privatna kategorija za diskusije osebja foruma. Teme so vidne samo administratorjem in moderatorjem."
   discourse_welcome_topic:
@@ -296,29 +297,6 @@ sl:
       <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
       To temo lahko zaprete z administratorsko :wrench: (zgoraj desno ali spodaj), tako da se odgovori ne bodo nabirali pod to objavo.
-  lounge_welcome:
-    title: "Dobrodošli v loži"
-    body: |2
-
-      Čestitamo! :confetti_ball:
-
-      Če vidite to temo, ste bili nedavno promovirani v **redni** (nivo zaupanja 3).
-
-      Sedaj lahko &hellip;
-
-      * Urejate katerikoli prispevek
-      * Spremenite kategorijo katerekoli teme
-      * Imate samodejno sledenje vašim povezavam ([samodejni nofollow](https://en.wikipedia.org/wiki/Nofollow) je odstranjen)
-      * Dostop do privatne Loža kategorije, ki je dostopna samo uporabnikom na nivoju zaupnja 3 ali višje
-      * Skrivanje spama z samo eno prijavo
-
-      Tukaj je [trenutni seznam vseh rednih uporabnikov](%{base_path}/badges/3/regular). Vsekakor jih pozdravite.
-
-      Hvala, ker ste pomemben del te skupnosti!
-
-      (Za več informacij o nivojih zaupanja [preberite temo][trust]. Samo uporabniki, ki tudi v naprej dosegajo kriterije ostanejo redni uporabniki.)
-
-      [trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
   admin_quick_start_title: "PREBERI ME NAJPREJ: Admin vodnik za hitri začetek"
   category:
     replace_paragraph: "(Zamenjajte ta prvi odstavek s kratkim opisom vaše nove kategorije. Ta opis se bo pojavil v izbiri kategorije, tako da poskrbite, da je krajši od 200 znakov.)"
@@ -480,16 +458,10 @@ sl:
         few: "skoraj %{count} leta nazaj"
         other: "skoraj %{count} let nazaj"
   password_reset:
-    no_token: "Povezava za zamenjavo gesla je potekla. Izberite gumb Prijava in uporabite 'Pozabil sem geslo' da dobite novo povezavo.."
-    choose_new: "Vnesite novo geslo"
-    choose: "Vnesite geslo"
-    update: "Spremenite geslo"
-    save: "Nastavi geslo"
     title: "Zamenjaj geslo"
     success: "Uspešno ste zamenjali geslo in ste sedaj prijavljeni."
     success_unapproved: "Uspešno ste zamenjali geslo."
   email_login:
-    invalid_token: "Povezava za prijavo je potekla. Izberite gumb Prijava in uporabite 'Pozabil sem geslo' da dobite novo povezavo."
     title: "Prijava z e-naslovom"
   user_auth_tokens:
     browser:
@@ -544,7 +516,6 @@ sl:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Neprimerno"
-      description: 'Prispevek vključuje vsebino, ki bi jo razumna oseba označila kot žaljivo, nesramno ali kot kršitev <a href="%{base_path}/guidelines">pravil skupnosti</a>.'
       short_description: 'Kršitev <a href="%{base_path}/guidelines">pravil skupnosti</a>'
     notify_user:
       title: "Pošlji uporabniku @%{username} ZS"
@@ -567,7 +538,6 @@ sl:
       short_description: "To je oglas"
     inappropriate:
       title: "Neprimerno"
-      description: 'Tema vključuje vsebino, ki bi jo razumna oseba označila kot žaljivo, nesramno ali kot kršitev <a href="%{base_path}/guidelines">pravil skupnosti</a>.'
       long_form: "prijavljeno kot neprimerno"
       short_description: 'Kršitev <a href="%{base_path}/guidelines">pravil skupnosti</a>'
     notify_moderators:
@@ -646,6 +616,10 @@ sl:
         post: Prispevek
         editor: Urednik
         edit_reason: Razlog
+    consolidated_api_requests:
+      xaxis:
+        api: "API"
+        user_api: "Uporabniški API"
     topics:
       title: "Tem"
     posts:
@@ -993,7 +967,6 @@ sl:
       (Če je zgornja povezava potekla, izberite "Pozabil sem geslo" pri prijavi z e-naslovom.)
   flag_reasons:
     off_topic: "Vaš prispevek je prijavljen kot **ne ustreza**: skupnost je mnenja, da ne ustreza temi kakor je določena z naslovom in prvim prispevkom."
-    inappropriate: "Vaš prispevek je bil prijavljen kot **ni primeren**: skupnost meni da je žaljiv, nesramen ali krši [pravila skupnosti](%{base_path}/guidelines)."
     spam: "Vaš prispevek je bil prijavljen kot **nezaželen**: skupnost meni da je prispevek oglas ali vsebuje preveč oglaševalske vsebine, da bi bil uporaben in bistven za temo."
     notify_moderators: "Vaš prispevek je bil prijavljen za **pregled osebja**: skupnost meni, da prispevek zahteva poseg člana osebja foruma."
   flags_dispositions:
@@ -1073,18 +1046,9 @@ sl:
     bulk_invite_succeeded:
       title: "Množično povabilo je uspelo"
       subject_template: "Množično povabilo uporabnikov je uspelo"
-      text_body_template: "Vaše datoteka za množično povabilo uporabnikov je bila obdelana, %{sent} poslanih povabil."
     bulk_invite_failed:
       title: "Množično povabilo ni uspelo"
       subject_template: "Množično pobvabilo uporabnikov je končalo z napakami"
-      text_body_template: |
-        Vaša datoteka za množično povabilo uporabnikov je bila obdelana, %{sent} poslanih povabil z %{failed} napakami.
-
-        Tukaj je dnevnik napak:
-
-        ``` text
-        %{logs}
-        ```
     csv_export_succeeded:
       title: "CSV izvoz uspel"
       subject_template: "[%{export_title}] Izvoz podatkov končan"
@@ -1517,6 +1481,16 @@ sl:
         %{respond_instructions}
     user_posted:
       title: "Uporabnik je objavil"
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_watching_category_or_tag:
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -2002,37 +1976,18 @@ sl:
   wizard:
     title: "Postavitev Discourse"
     step:
-      locale:
-        title: "Dobrodošli na vaš Discourse forum!"
-        fields:
-          default_locale:
-            description: "Kateri je vaš privzet jezik skupnosti?"
-      forum_title:
-        title: "Polno ime"
-        description: "Vaše ime je znak, ki se vidi iz razdalje, je <i>prva</i> stvar, ki jo bodo potencialni obiskovalci opazili o vaši skupnosti. Kaj ime in naziv pove o vaši skupnosti?"
+      introduction:
         fields:
           title:
-            label: "Ime skupnosti"
             placeholder: "Mikijev klub"
           site_description:
             placeholder: "Prostor kjer Miki debatira s svojimi prijatelji o zanimivih zadevah "
-          short_site_description:
-            placeholder: "Najboljši klub"
+          default_locale:
+            label: "Jezik"
       privacy:
-        title: "Dostopnost"
         fields:
-          privacy:
-            choices:
-              open:
-                label: "Javno"
-              restricted:
-                label: "Zasebno"
-      contact:
-        fields:
-          contact_email:
-            placeholder: "name@example.com"
-      corporate:
-        title: "Organizacija"
+          login_required:
+            placeholder: "Zasebno"
       styling:
         fields:
           styling_preview:

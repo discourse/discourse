@@ -12,8 +12,10 @@ export default Controller.extend({
 
     if (response?.refresh_required) {
       document.location = getUrl(`/wizard/steps/${next}`);
-    } else if (response?.success) {
+    } else if (response?.success && next) {
       this.transitionToRoute("wizard.step", next);
+    } else if (response?.success) {
+      this.transitionToRoute("discovery.latest");
     }
   },
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Webauthn::ChallengeGenerator do
+RSpec.describe Webauthn::ChallengeGenerator do
   it "generates a Webauthn::ChallengeGenerator::ChallengeSession with correct params" do
     session = Webauthn::ChallengeGenerator.generate
     expect(session).to be_a(Webauthn::ChallengeGenerator::ChallengeSession)
@@ -18,9 +18,13 @@ describe Webauthn::ChallengeGenerator do
         generated_session = Webauthn::ChallengeGenerator.generate
         generated_session.commit_to_session(secure_session, user)
 
-        expect(secure_session["staged-webauthn-challenge-#{user&.id}"]).to eq(generated_session.challenge)
+        expect(secure_session["staged-webauthn-challenge-#{user&.id}"]).to eq(
+          generated_session.challenge,
+        )
         expect(secure_session["staged-webauthn-rp-id-#{user&.id}"]).to eq(generated_session.rp_id)
-        expect(secure_session["staged-webauthn-rp-name-#{user&.id}"]).to eq(generated_session.rp_name)
+        expect(secure_session["staged-webauthn-rp-name-#{user&.id}"]).to eq(
+          generated_session.rp_name,
+        )
       end
     end
   end

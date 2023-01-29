@@ -87,3 +87,7 @@ hu:
           title: "Forgók"
         empty_state:
           title: "Üres állapot"
+        rich_tooltip:
+          description: "Leírás"
+          header: "Fejléc"
+          hover_to_see: "Vigye az egérmutatót az eszköztipp megtekintéséhez"

@@ -3,7 +3,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { render } from "@ember/test-helpers";
 import { query } from "discourse/tests/helpers/qunit-helpers";
 import { hbs } from "ember-cli-htmlbars";
-import pretender from "discourse/tests/helpers/create-pretender";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { resetCache } from "pretty-text/upload-short-url";
 
 module("Integration | Component | cook-text", function (hooks) {
@@ -21,19 +21,15 @@ module("Integration | Component | cook-text", function (hooks) {
   });
 
   test("resolves short URLs", async function (assert) {
-    pretender.post("/uploads/lookup-urls", () => {
-      return [
-        200,
-        { "Content-Type": "application/json" },
-        [
-          {
-            short_url: "upload://a.png",
-            url: "/images/avatar.png",
-            short_path: "/images/d-logo-sketch.png",
-          },
-        ],
-      ];
-    });
+    pretender.post("/uploads/lookup-urls", () =>
+      response([
+        {
+          short_url: "upload://a.png",
+          url: "/images/avatar.png",
+          short_path: "/images/d-logo-sketch.png",
+        },
+      ])
+    );
 
     await render(
       hbs`<CookText @rawText="![an image](upload://a.png)" @class="post-body" />`

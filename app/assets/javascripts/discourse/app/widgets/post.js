@@ -11,7 +11,6 @@ import I18n from "I18n";
 import PostCooked from "discourse/widgets/post-cooked";
 import { Promise } from "rsvp";
 import RawHtml from "discourse/widgets/raw-html";
-import bootbox from "bootbox";
 import { dateNode } from "discourse/helpers/node";
 import { h } from "virtual-dom";
 import hbs from "discourse/widgets/hbs-compiler";
@@ -26,6 +25,7 @@ import { transformBasicPost } from "discourse/lib/transform-post";
 import autoGroupFlairForUser from "discourse/lib/avatar-flair";
 import showModal from "discourse/lib/show-modal";
 import { nativeShare } from "discourse/lib/pwa-utils";
+import { hideUserTip } from "discourse/lib/user-tips";
 
 function transformWithCallbacks(post) {
   let transformed = transformBasicPost(post);
@@ -64,6 +64,7 @@ export function avatarImg(wanted, attrs) {
       title,
       "aria-label": title,
       loading: "lazy",
+      tabindex: "-1",
     },
     className,
   };
@@ -139,6 +140,12 @@ createWidget("reply-to-tab", {
   title: "post.in_reply_to",
   defaultState() {
     return { loading: false };
+  },
+
+  buildAttributes() {
+    return {
+      tabindex: "0",
+    };
   },
 
   html(attrs, state) {
@@ -287,11 +294,22 @@ createWidget("post-meta-data", {
     let postInfo = [];
 
     if (attrs.isWhisper) {
+      const groups = this.site.get("whispers_allowed_groups_names");
+      let title = "";
+
+      if (groups?.length > 0) {
+        title = I18n.t("post.whisper_groups", {
+          groupNames: groups.join(", "),
+        });
+      } else {
+        title = I18n.t("post.whisper");
+      }
+
       postInfo.push(
         h(
           "div.post-info.whisper",
           {
-            attributes: { title: I18n.t("post.whisper") },
+            attributes: { title },
           },
           iconNode("far-eye-slash")
         )
@@ -588,6 +606,10 @@ createWidget("post-contents", {
   },
 
   share() {
+    if (this.currentUser && this.siteSettings.enable_user_tips) {
+      this.currentUser.hideUserTipForever("post_menu");
+    }
+
     const post = this.findAncestorModel();
     nativeShare(this.capabilities, { url: post.shareUrl }).catch(() => {
       const topic = post.topic;
@@ -814,6 +836,7 @@ export function addPostClassesCallback(callback) {
 
 export default createWidget("post", {
   buildKey: (attrs) => `post-${attrs.id}`,
+  services: ["dialog"],
   shadowTree: true,
 
   buildAttributes(attrs) {
@@ -918,8 +941,38 @@ export default createWidget("post", {
     const { remaining, max } = result;
     const threshold = Math.ceil(max * 0.1);
     if (remaining === threshold) {
-      bootbox.alert(I18n.t("post.few_likes_left"));
+      this.dialog.alert(I18n.t("post.few_likes_left"));
       kvs.set({ key: "lastWarnedLikes", value: Date.now() });
     }
+  },
+
+  didRenderWidget() {
+    if (!this.currentUser || !this.siteSettings.enable_user_tips) {
+      return;
+    }
+
+    const reference = document.querySelector(
+      ".post-controls .actions .show-more-actions"
+    );
+
+    this.currentUser.showUserTip({
+      id: "post_menu",
+
+      titleText: I18n.t("user_tips.post_menu.title"),
+      contentText: I18n.t("user_tips.post_menu.content"),
+
+      reference,
+      appendTo: reference?.closest(".post-controls"),
+
+      placement: "top",
+    });
+  },
+
+  destroy() {
+    hideUserTip("post_menu");
+  },
+
+  willRerenderWidget() {
+    hideUserTip("post_menu");
   },
 });

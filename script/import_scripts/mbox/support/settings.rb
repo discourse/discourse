@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'yaml'
+require "yaml"
 
 module ImportScripts::Mbox
   class Settings
@@ -25,32 +25,32 @@ module ImportScripts::Mbox
     attr_reader :elide_equals_in_addresses
 
     def initialize(yaml)
-      @data_dir = yaml['data_dir']
-      @split_regex = Regexp.new(yaml['split_regex']) unless yaml['split_regex'].empty?
+      @data_dir = yaml["data_dir"]
+      @split_regex = Regexp.new(yaml["split_regex"]) unless yaml["split_regex"].empty?
       @batch_size = 1000 # no need to make this actually configurable at the moment
-      @trust_level = yaml['default_trust_level']
-      @prefer_html = yaml['prefer_html']
-      @staged = yaml['staged']
-      @index_only = yaml['index_only']
-      @group_messages_by_subject = yaml['group_messages_by_subject']
+      @trust_level = yaml["default_trust_level"]
+      @prefer_html = yaml["prefer_html"]
+      @staged = yaml["staged"]
+      @index_only = yaml["index_only"]
+      @group_messages_by_subject = yaml["group_messages_by_subject"]
 
-      if yaml['remove_subject_prefixes'].present?
-        prefix_regexes = yaml['remove_subject_prefixes'].map { |p| Regexp.new(p) }
+      if yaml["remove_subject_prefixes"].present?
+        prefix_regexes = yaml["remove_subject_prefixes"].map { |p| Regexp.new(p) }
         @subject_prefix_regex = /^#{Regexp.union(prefix_regexes).source}/i
       end
 
-      @automatically_remove_list_name_prefix = yaml['automatically_remove_list_name_prefix']
-      @show_trimmed_content = yaml['show_trimmed_content']
-      @fix_mailman_via_addresses = yaml['fix_mailman_via_addresses']
-      @elide_equals_in_addresses = yaml['elide_equals_in_addresses']
+      @automatically_remove_list_name_prefix = yaml["automatically_remove_list_name_prefix"]
+      @show_trimmed_content = yaml["show_trimmed_content"]
+      @fix_mailman_via_addresses = yaml["fix_mailman_via_addresses"]
+      @elide_equals_in_addresses = yaml["elide_equals_in_addresses"]
 
       @tags = []
-      if yaml['tags'].present?
-        yaml['tags'].each do |tag_name, value|
+      if yaml["tags"].present?
+        yaml["tags"].each do |tag_name, value|
           prefixes = Regexp.union(value).source
           @tags << {
             regex: /^(?:(?:\[(?:#{prefixes})\])|(?:\((?:#{prefixes})\)))\s*/i,
-            name: tag_name
+            name: tag_name,
           }
         end
       end

@@ -36,7 +36,7 @@ module("Unit | Utility | preload-store", function (hooks) {
   });
 
   test("getAndRemove returns a promise that resolves to the result of the finder's promise", async function (assert) {
-    const finder = () => Promise.resolve("hahahah");
+    const finder = async () => "hahahah";
     const result = await PreloadStore.getAndRemove("joker", finder);
 
     assert.strictEqual(result, "hahahah");

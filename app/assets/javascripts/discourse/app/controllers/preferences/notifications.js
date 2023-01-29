@@ -1,9 +1,12 @@
 import Controller from "@ember/controller";
+import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "I18n";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Controller.extend({
+  subpageTitle: I18n.t("user.preferences_nav.notifications"),
+
   init() {
     this._super(...arguments);
 
@@ -87,6 +90,11 @@ export default Controller.extend({
       },
       { name: I18n.t("user.new_topic_duration.last_here"), value: -2 },
     ];
+  },
+
+  @discourseComputed("currentUser.can_send_private_messages")
+  showMessageSettings() {
+    return this.currentUser?.can_send_private_messages;
   },
 
   actions: {

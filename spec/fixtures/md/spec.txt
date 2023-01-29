@@ -8564,7 +8564,7 @@ My ![foo bar](/path/to/train.jpg  "title"   )
 ```````````````````````````````` example
 ![](/url)
 .
-<p><img src="/url" alt="" /></p>
+<p><img src="/url" alt="" role="presentation" /></p>
 ````````````````````````````````
 
 

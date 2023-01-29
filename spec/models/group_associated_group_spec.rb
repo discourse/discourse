@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe GroupAssociatedGroup do
+RSpec.describe GroupAssociatedGroup do
   let(:user) { Fabricate(:user) }
   let(:group) { Fabricate(:group) }
   let(:group2) { Fabricate(:group) }

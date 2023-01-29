@@ -173,6 +173,7 @@ export const DEFAULT_LIST = [
   "iframe[allowfullscreen]",
   "iframe[allow]",
   "img[alt]",
+  "img[role]",
   "img[height]",
   "img[title]",
   "img[width]",

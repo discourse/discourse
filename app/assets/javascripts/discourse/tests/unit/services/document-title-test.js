@@ -1,22 +1,17 @@
-import {
-  currentUser,
-  discourseModule,
-} from "discourse/tests/helpers/qunit-helpers";
-import DocumentTitle from "discourse/services/document-title";
-import AppEvents from "discourse/services/app-events";
+import { module, test } from "qunit";
+import { setupTest } from "ember-qunit";
+import { getOwner } from "discourse-common/lib/get-owner";
+import { currentUser } from "discourse/tests/helpers/qunit-helpers";
 import Session from "discourse/models/session";
-import { test } from "qunit";
 
-discourseModule("Unit | Service | document-title", function (hooks) {
+module("Unit | Service | document-title", function (hooks) {
+  setupTest(hooks);
+
   hooks.beforeEach(function () {
     const session = Session.current();
     session.hasFocus = true;
 
-    this.documentTitle = DocumentTitle.create({
-      session,
-      appEvents: AppEvents.create(),
-    });
-    this.documentTitle.currentUser = null;
+    this.documentTitle = getOwner(this).lookup("service:document-title");
   });
 
   hooks.afterEach(function () {
@@ -39,7 +34,7 @@ discourseModule("Unit | Service | document-title", function (hooks) {
 
   test("it displays notification counts for logged in users", function (assert) {
     this.documentTitle.currentUser = currentUser();
-    this.documentTitle.currentUser.dynamic_favicon = false;
+    this.documentTitle.currentUser.user_option.dynamic_favicon = false;
     this.documentTitle.setTitle("test notifications");
     this.documentTitle.updateNotificationCount(5);
     assert.strictEqual(document.title, "test notifications");
@@ -57,7 +52,7 @@ discourseModule("Unit | Service | document-title", function (hooks) {
     date.setHours(date.getHours() + 1);
     this.documentTitle.currentUser.do_not_disturb_until = date.toUTCString();
 
-    this.documentTitle.currentUser.dynamic_favicon = false;
+    this.documentTitle.currentUser.user_option.dynamic_favicon = false;
     this.documentTitle.setTitle("test notifications");
     this.documentTitle.updateNotificationCount(5);
     assert.strictEqual(document.title, "test notifications");

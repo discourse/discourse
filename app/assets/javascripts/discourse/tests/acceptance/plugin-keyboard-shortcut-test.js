@@ -13,9 +13,6 @@ acceptance("Plugin Keyboard Shortcuts - Logged In", function (needs) {
   needs.user();
 
   test("a plugin can add a keyboard shortcut", async function (assert) {
-    // Initialize the app (required in the legacy testing env)
-    await visit("/");
-
     withPluginApi("0.8.38", (api) => {
       api.addKeyboardShortcut("]", () => {
         document.querySelector(
@@ -36,9 +33,6 @@ acceptance("Plugin Keyboard Shortcuts - Logged In", function (needs) {
 
 acceptance("Plugin Keyboard Shortcuts - Anonymous", function () {
   test("a plugin can add a keyboard shortcut with an option", async function (assert) {
-    // Initialize the app (required in the legacy testing env)
-    await visit("/");
-
     let spy = sinon.spy(KeyboardShortcuts, "_bindToPath");
     withPluginApi("0.8.38", (api) => {
       api.addKeyboardShortcut("]", () => {}, {

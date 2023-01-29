@@ -8,7 +8,7 @@ export default TextField.extend({
     // https://bugs.chromium.org/p/chromium/issues/detail?id=987293
     // work around issue while leaving a semi useable honeypot for
     // bots that are running full Chrome
-    if (navigator.userAgent.indexOf("Chrome") > -1) {
+    if (navigator.userAgent.includes("Chrome")) {
       this.set("type", "text");
     } else {
       this.set("type", "password");

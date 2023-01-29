@@ -1,0 +1,59 @@
+{{#if this.editing}}
+  <form class="form-horizontal">
+    <div class="control-group">
+      <Input
+        {{on "input" this.onInput}}
+        @value={{this.newUsername}}
+        maxlength={{this.maxLength}}
+        class="input-xxlarge username-preference__input"
+      />
+
+      <div class="instructions">
+        <p>
+          {{#if this.taken}}
+            {{i18n "user.change_username.taken"}}
+          {{/if}}
+          <span>{{this.errorMessage}}</span>
+        </p>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <DButton
+        @action={{this.changeUsername}}
+        @type="submit"
+        @disabled={{this.saveDisabled}}
+        @translatedLabel={{this.saveButtonText}}
+        class="btn-primary username-preference__submit"
+      />
+
+      <DModalCancel @close={{this.toggleEditing}} />
+
+      {{#if this.saved}}{{i18n "saved"}}{{/if}}
+    </div>
+  </form>
+{{else}}
+  <div class="controls">
+    <span
+      class="static username-preference__current-username"
+    >{{@user.username}}</span>
+
+    {{#if @user.can_edit_username}}
+      <DButton
+        @action={{this.toggleEditing}}
+        @actionParam={{@user}}
+        @icon="pencil-alt"
+        @title="user.username.edit"
+        class="btn-small username-preference__edit-username"
+      />
+    {{/if}}
+  </div>
+
+  {{#if this.siteSettings.enable_mentions}}
+    <div class="instructions">
+      {{html-safe
+        (i18n "user.username.short_instructions" username=@user.username)
+      }}
+    </div>
+  {{/if}}
+{{/if}}

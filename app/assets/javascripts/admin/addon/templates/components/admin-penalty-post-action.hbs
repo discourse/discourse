@@ -1,0 +1,18 @@
+<div class="penalty-post-controls">
+  <label>
+    <div class="penalty-post-label">
+      {{html-safe (i18n "admin.user.penalty_post_actions")}}
+    </div>
+  </label>
+  <ComboBox
+    @value={{this.postAction}}
+    @content={{this.penaltyActions}}
+    @onChange={{action "penaltyChanged"}}
+  />
+</div>
+
+{{#if this.editing}}
+  <div class="penalty-post-edit">
+    <Textarea @value={{this.postEdit}} class="post-editor" />
+  </div>
+{{/if}}

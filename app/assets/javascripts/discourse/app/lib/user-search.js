@@ -150,41 +150,38 @@ function organizeResults(r, options) {
     return r;
   }
 
-  let exclude = options.exclude || [],
-    limit = options.limit || 5,
+  const exclude = options.exclude || [];
+
+  const results = [],
     users = [],
     emails = [],
-    groups = [],
-    results = [];
+    groups = [];
 
   if (r.users) {
-    r.users.every(function (u) {
-      if (exclude.indexOf(u.username) === -1) {
-        users.push(u);
-        results.push(u);
+    r.users.forEach((user) => {
+      if (results.length < options.limit && !exclude.includes(user.username)) {
+        results.push(user);
+        users.push(user);
       }
-      return results.length <= limit;
     });
   }
 
   if (options.allowEmails && emailValid(options.term)) {
-    let e = { username: options.term };
-    emails = [e];
-    results.push(e);
+    const result = { username: options.term };
+    results.push(result);
+    emails.push(result);
   }
 
   if (r.groups) {
-    r.groups.every(function (g) {
+    r.groups.forEach((group) => {
       if (
-        options.term.toLowerCase() === g.name.toLowerCase() ||
-        results.length < limit
+        (options.term.toLowerCase() === group.name.toLowerCase() ||
+          results.length < options.limit) &&
+        !exclude.includes(group.name)
       ) {
-        if (exclude.indexOf(g.name) === -1) {
-          groups.push(g);
-          results.push(g);
-        }
+        results.push(group);
+        groups.push(group);
       }
-      return true;
     });
   }
 
@@ -207,7 +204,7 @@ export function skipSearch(term, allowEmails, lastSeenUsers = false) {
   if (lastSeenUsers) {
     return false;
   }
-  if (term.indexOf("@") > -1 && !allowEmails) {
+  if (term.includes("@") && !allowEmails) {
     return true;
   }
 
@@ -277,7 +274,7 @@ export default function userSearch(options) {
       limit,
       function (r) {
         cancel(clearPromise);
-        resolve(organizeResults(r, options));
+        resolve(organizeResults(r, { ...options, limit }));
       }
     );
   });

@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-describe "TopicThumbnail" do
+RSpec.describe "TopicThumbnail" do
   let(:upload1) { Fabricate(:image_upload, width: 50, height: 50) }
   let(:topic) { Fabricate(:topic, image_upload: upload1) }
   let(:upload2) { Fabricate(:image_upload, width: 50, height: 50) }
@@ -63,7 +63,7 @@ describe "TopicThumbnail" do
 
   it "cleans up unneeded sizes" do
     expect(topic.topic_thumbnails.length).to eq(1)
-    topic.topic_thumbnails[0].update_column(:max_width, 999999)
+    topic.topic_thumbnails[0].update_column(:max_width, 999_999)
 
     TopicThumbnail.ensure_consistency!
     topic.reload

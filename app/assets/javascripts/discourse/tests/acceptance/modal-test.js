@@ -1,6 +1,5 @@
 import {
   acceptance,
-  controllerFor,
   count,
   exists,
   query,
@@ -10,6 +9,8 @@ import { test } from "qunit";
 import I18n from "I18n";
 import { hbs } from "ember-cli-htmlbars";
 import showModal from "discourse/lib/show-modal";
+import { registerTemporaryModule } from "../helpers/temporary-module-helper";
+import { getOwner } from "discourse-common/lib/get-owner";
 
 acceptance("Modal", function (needs) {
   let _translations;
@@ -37,7 +38,7 @@ acceptance("Modal", function (needs) {
     await click(".login-button");
     assert.strictEqual(count(".d-modal:visible"), 1, "modal should appear");
 
-    let controller = controllerFor("modal");
+    const controller = getOwner(this).lookup("controller:modal");
     assert.strictEqual(controller.name, "login");
 
     await click(".modal-outer-container");
@@ -50,13 +51,13 @@ acceptance("Modal", function (needs) {
     await click(".login-button");
     assert.strictEqual(count(".d-modal:visible"), 1, "modal should reappear");
 
-    await triggerKeyEvent("#main-outlet", "keydown", 27);
+    await triggerKeyEvent("#main-outlet", "keydown", "Escape");
     assert.ok(!exists(".d-modal:visible"), "ESC should close the modal");
 
-    // eslint-disable-next-line no-undef
-    Ember.TEMPLATES[
-      "modal/not-dismissable"
-    ] = hbs`{{#d-modal-body title="" class="" dismissable=false}}test{{/d-modal-body}}`;
+    registerTemporaryModule(
+      "discourse/templates/modal/not-dismissable",
+      hbs`{{#d-modal-body title="" class="" dismissable=false}}test{{/d-modal-body}}`
+    );
 
     showModal("not-dismissable", {});
     await settled();
@@ -69,7 +70,7 @@ acceptance("Modal", function (needs) {
       1,
       "modal should not disappear when you click outside"
     );
-    await triggerKeyEvent("#main-outlet", "keyup", 27);
+    await triggerKeyEvent("#main-outlet", "keyup", "Escape");
     assert.strictEqual(
       count(".d-modal:visible"),
       1,
@@ -78,8 +79,10 @@ acceptance("Modal", function (needs) {
   });
 
   test("rawTitle in modal panels", async function (assert) {
-    // eslint-disable-next-line no-undef
-    Ember.TEMPLATES["modal/test-raw-title-panels"] = hbs``;
+    registerTemporaryModule(
+      "discourse/templates/modal/test-raw-title-panels",
+      hbs``
+    );
     const panels = [
       { id: "test1", rawTitle: "Test 1" },
       { id: "test2", rawTitle: "Test 2" },
@@ -97,12 +100,11 @@ acceptance("Modal", function (needs) {
   });
 
   test("modal title", async function (assert) {
-    // eslint-disable-next-line no-undef
-    Ember.TEMPLATES["modal/test-title"] = hbs``;
-    // eslint-disable-next-line no-undef
-    Ember.TEMPLATES[
-      "modal/test-title-with-body"
-    ] = hbs`{{#d-modal-body}}test{{/d-modal-body}}`;
+    registerTemporaryModule("discourse/templates/modal/test-title", hbs``);
+    registerTemporaryModule(
+      "discourse/templates/modal/test-title-with-body",
+      hbs`{{#d-modal-body}}test{{/d-modal-body}}`
+    );
 
     await visit("/");
 
@@ -142,7 +144,7 @@ acceptance("Modal Keyboard Events", function (needs) {
     await visit("/t/internationalization-localization/280");
     await click(".toggle-admin-menu");
     await click(".admin-topic-timer-update button");
-    await triggerKeyEvent(".d-modal", "keydown", 13);
+    await triggerKeyEvent(".d-modal", "keydown", "Enter");
 
     assert.strictEqual(
       count("#modal-alert:visible"),
@@ -157,13 +159,13 @@ acceptance("Modal Keyboard Events", function (needs) {
 
     assert.ok(exists(".d-modal:visible"), "modal should be visible");
 
-    await triggerKeyEvent("#main-outlet", "keydown", 27);
+    await triggerKeyEvent("#main-outlet", "keydown", "Escape");
 
     assert.ok(!exists(".d-modal:visible"), "ESC should close the modal");
 
     await click(".topic-body button.reply");
     await click(".d-editor-button-bar .btn.link");
-    await triggerKeyEvent(".d-modal", "keydown", 13);
+    await triggerKeyEvent(".d-modal", "keydown", "Enter");
 
     assert.ok(
       !exists(".d-modal:visible"),

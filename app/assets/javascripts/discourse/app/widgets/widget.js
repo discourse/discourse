@@ -140,13 +140,13 @@ export default class Widget {
     register.deprecateContainer(this);
 
     this.key = this.buildKey ? this.buildKey(attrs) : null;
-    this.site = register.lookup("site:main");
-    this.siteSettings = register.lookup("site-settings:main");
-    this.currentUser = register.lookup("current-user:main");
+    this.site = register.lookup("service:site");
+    this.siteSettings = register.lookup("service:site-settings");
+    this.currentUser = register.lookup("service:current-user");
     this.capabilities = register.lookup("capabilities:main");
     this.store = register.lookup("service:store");
     this.appEvents = register.lookup("service:app-events");
-    this.keyValueStore = register.lookup("key-value-store:main");
+    this.keyValueStore = register.lookup("service:key-value-store");
 
     // We can inject services into widgets by passing a `services` parameter on creation
     (this.services || []).forEach((s) => {
@@ -416,9 +416,11 @@ export default class Widget {
     if (this.clickOutside) {
       properties["widget-click-outside"] = new WidgetClickOutsideHook(this);
     }
+
     if (this.click) {
       properties["widget-click"] = new WidgetClickHook(this);
     }
+
     if (this.doubleClick) {
       properties["widget-double-click"] = new WidgetDoubleClickHook(this);
     }

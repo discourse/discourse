@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 RSpec.describe InlineUploads do
-  before do
-    set_cdn_url "https://awesome.com"
-  end
+  before { set_cdn_url "https://awesome.com" }
 
-  describe '.process' do
-    describe 'local uploads' do
+  describe ".process" do
+    context "with local uploads" do
       fab!(:upload) { Fabricate(:upload) }
       fab!(:upload2) { Fabricate(:upload) }
       fab!(:upload3) { Fabricate(:upload) }
@@ -249,10 +247,8 @@ RSpec.describe InlineUploads do
         MD
       end
 
-      context "subfolder" do
-        before do
-          set_subfolder "/community"
-        end
+      context "with subfolder" do
+        before { set_subfolder "/community" }
 
         it "should correct subfolder images" do
           md = <<~MD
@@ -390,7 +386,7 @@ RSpec.describe InlineUploads do
       end
 
       it "should not be affected by an emoji" do
-        CustomEmoji.create!(name: 'test', upload: upload3)
+        CustomEmoji.create!(name: "test", upload: upload3)
         Emoji.clear_cache
 
         md = <<~MD
@@ -429,9 +425,12 @@ RSpec.describe InlineUploads do
                         </a>
         MD
 
-        md = "<h1></h1>\r\n<a href=\"http://somelink.com\">\r\n        <img src=\"#{upload.url}\" alt=\"test\" width=\"500\" height=\"500\">\r\n</a>"
+        md =
+          "<h1></h1>\r\n<a href=\"http://somelink.com\">\r\n        <img src=\"#{upload.url}\" alt=\"test\" width=\"500\" height=\"500\">\r\n</a>"
 
-        expect(InlineUploads.process(md)).to eq("<h1></h1>\r\n<a href=\"http://somelink.com\">\r\n        <img src=\"#{upload.short_url}\" alt=\"test\" width=\"500\" height=\"500\">\r\n</a>")
+        expect(InlineUploads.process(md)).to eq(
+          "<h1></h1>\r\n<a href=\"http://somelink.com\">\r\n        <img src=\"#{upload.short_url}\" alt=\"test\" width=\"500\" height=\"500\">\r\n</a>",
+        )
       end
 
       it "should correctly update image sources within anchor or paragraph tags" do
@@ -592,7 +591,7 @@ RSpec.describe InlineUploads do
         MD
       end
 
-      it 'should correct full upload url to the shorter version' do
+      it "should correct full upload url to the shorter version" do
         md = <<~MD
         Some random text
 
@@ -634,7 +633,7 @@ RSpec.describe InlineUploads do
         MD
       end
 
-      it 'accepts a block that yields when link does not match an upload in the db' do
+      it "accepts a block that yields when link does not match an upload in the db" do
         url = "#{Discourse.base_url}#{upload.url}"
 
         md = <<~MD
@@ -644,13 +643,11 @@ RSpec.describe InlineUploads do
 
         upload.destroy!
 
-        InlineUploads.process(md, on_missing: lambda { |link|
-          expect(link).to eq(url)
-        })
+        InlineUploads.process(md, on_missing: lambda { |link| expect(link).to eq(url) })
       end
     end
 
-    describe "s3 uploads" do
+    context "with s3 uploads" do
       let(:upload) { Fabricate(:upload_s3) }
       let(:upload2) { Fabricate(:upload_s3) }
       let(:upload3) { Fabricate(:upload) }

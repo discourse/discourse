@@ -57,8 +57,6 @@ id:
   themes:
     bad_color_scheme: "Tidak dapat memperbarui tema, palet warna tidak valid"
     other_error: "Terjadi masalah saat memperbarui tema"
-    compile_error:
-      unrecognized_extension: "Ekstensi file tidak dikenal: %{extension}"
     import_error:
       generic: Terjadi kesalahan saat mengimpor tema itu
       unpack_failed: "Gagal membongkar berkas"
@@ -254,10 +252,7 @@ id:
             hex:
               invalid: "bukan warna yang valid."
       <<: *errors
-  vip_category_name: "Lounge / Santai"
   staff_category_name: "Staf"
-  lounge_welcome:
-    title: "Selamat datang di Lounge"
   category:
     topic_prefix: "Tentang kategori %{category}"
     errors:
@@ -327,10 +322,6 @@ id:
       almost_x_years:
         other: "hampir %{count} tahun yang lalu"
   password_reset:
-    choose_new: "Pilih kata sandi baru"
-    choose: "Pilih kata sandi"
-    update: "Perbaharui Kata Sandi"
-    save: "Atur Kata Sandi"
     title: "Atur Ulang Kata Sandi"
     success: "Anda telah mengubah kata sandi dengan sukses dan sekarang telah login."
     success_unapproved: "Anda telah mengubah kata sandi dengan sukses."
@@ -430,6 +421,8 @@ id:
       labels:
         post: Postingan
         edit_reason: Alasan
+    consolidated_api_requests:
+      yaxis: "Hari"
     dau_by_mau:
       xaxis: "Hari"
     daily_engaged_users:
@@ -584,7 +577,6 @@ id:
     allow_user_locale: "Perbolehkan pengguna untuk memilih bahasa sendiri"
     allow_duplicate_topic_titles: "Perbolehkan topik dengan judul yang sama."
     send_welcome_message: "Kirim semua pengguna ucapan selamat datang dengan panduan awal singkat."
-    maximum_backups: "Jumlah maksimum backup yang disimpan dalam disk. Backup lama akan dihapus secara otomatis."
     dark_mode_none: "Tidak ada"
     email_editable: "Perbolehkan pengguna untuk mengganti alamat email setelah registrasi."
     emoji_set: "Bagaimana dengan emoji Anda?"
@@ -690,19 +682,10 @@ id:
       title: "Kirim Ulang Email Aktivasi"
   wizard:
     step:
-      forum_title:
-        title: "Nama"
       privacy:
-        title: "Mengakses"
         fields:
-          privacy:
-            choices:
-              open:
-                label: "Umum"
-              restricted:
-                label: "Pribadi"
-      corporate:
-        title: "Organisasi"
+          login_required:
+            placeholder: "Pribadi"
       styling:
         fields:
           homepage_style:
