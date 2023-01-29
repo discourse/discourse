@@ -42,21 +42,11 @@ export default Controller.extend({
     }
   },
 
-  @discourseComputed("locale")
-  showFallbackLocaleWarning() {
-    return (
-      this.siteSettings.allow_user_locale &&
-      this.siteSettings.set_locale_from_accept_language_header &&
-      this.fallbackLocaleFullName
-    );
-  },
-
   actions: {
     edit(siteText) {
       this.transitionToRoute("adminSiteText.edit", siteText.get("id"), {
         queryParams: {
           locale: this.locale,
-          localeFullName: this.availableLocales[this.locale],
         },
       });
     },

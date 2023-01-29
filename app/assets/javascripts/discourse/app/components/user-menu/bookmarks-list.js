@@ -3,6 +3,9 @@ import { ajax } from "discourse/lib/ajax";
 import Notification from "discourse/models/notification";
 import showModal from "discourse/lib/show-modal";
 import I18n from "I18n";
+import UserMenuNotificationItem from "discourse/lib/user-menu/notification-item";
+import UserMenuBookmarkItem from "discourse/lib/user-menu/bookmark-item";
+import Bookmark from "discourse/models/bookmark";
 
 export default class UserMenuBookmarksList extends UserMenuNotificationsList {
   get dismissTypes() {
@@ -29,16 +32,12 @@ export default class UserMenuBookmarksList extends UserMenuNotificationsList {
     return "user-menu-bookmarks-tab";
   }
 
-  get itemComponent() {
-    return "user-menu/bookmark-notification-item";
-  }
-
   get emptyStateComponent() {
     return "user-menu/bookmarks-list-empty-state";
   }
 
   get #unreadBookmarkRemindersCount() {
-    const key = `grouped_unread_high_priority_notifications.${this.site.notification_types.bookmark_reminder}`;
+    const key = `grouped_unread_notifications.${this.site.notification_types.bookmark_reminder}`;
     // we're retrieving the value with get() so that Ember tracks the property
     // and re-renders the UI when it changes.
     // we can stop using `get()` when the User model is refactored into native
@@ -46,17 +45,34 @@ export default class UserMenuBookmarksList extends UserMenuNotificationsList {
     return this.currentUser.get(key) || 0;
   }
 
-  fetchItems() {
-    return ajax(`/u/${this.currentUser.username}/user-menu-bookmarks`).then(
-      (data) => {
-        const content = [];
-        data.notifications.forEach((notification) => {
-          content.push(Notification.create(notification));
-        });
-        content.push(...data.bookmarks);
-        return content;
-      }
+  async fetchItems() {
+    const data = await ajax(
+      `/u/${this.currentUser.username}/user-menu-bookmarks`
     );
+    const content = [];
+
+    const notifications = data.notifications.map((n) => Notification.create(n));
+    await Notification.applyTransformations(notifications);
+    notifications.forEach((notification) => {
+      content.push(
+        new UserMenuNotificationItem({
+          notification,
+          currentUser: this.currentUser,
+          siteSettings: this.siteSettings,
+          site: this.site,
+        })
+      );
+    });
+
+    const bookmarks = data.bookmarks.map((b) => Bookmark.create(b));
+    await Bookmark.applyTransformations(bookmarks);
+    content.push(
+      ...bookmarks.map((bookmark) => {
+        return new UserMenuBookmarkItem({ bookmark });
+      })
+    );
+
+    return content;
   }
 
   dismissWarningModal() {

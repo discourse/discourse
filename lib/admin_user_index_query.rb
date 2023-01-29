@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class AdminUserIndexQuery
-
   def initialize(params = {}, klass = User, trust_levels = TrustLevel.levels)
     @params = params
     @query = initialize_query_with_order(klass)
@@ -11,24 +10,22 @@ class AdminUserIndexQuery
   attr_reader :params, :trust_levels
 
   SORTABLE_MAPPING = {
-    'created' => 'created_at',
-    'last_emailed' => "COALESCE(last_emailed_at, to_date('1970-01-01', 'YYYY-MM-DD'))",
-    'seen' => "COALESCE(last_seen_at, to_date('1970-01-01', 'YYYY-MM-DD'))",
-    'username' => 'username',
-    'email' => 'email',
-    'trust_level' => 'trust_level',
-    'days_visited' => 'user_stats.days_visited',
-    'posts_read' => 'user_stats.posts_read_count',
-    'topics_viewed' => 'user_stats.topics_entered',
-    'posts' => 'user_stats.post_count',
-    'read_time' => 'user_stats.time_read'
+    "created" => "created_at",
+    "last_emailed" => "COALESCE(last_emailed_at, to_date('1970-01-01', 'YYYY-MM-DD'))",
+    "seen" => "COALESCE(last_seen_at, to_date('1970-01-01', 'YYYY-MM-DD'))",
+    "username" => "username",
+    "email" => "email",
+    "trust_level" => "trust_level",
+    "days_visited" => "user_stats.days_visited",
+    "posts_read" => "user_stats.posts_read_count",
+    "topics_viewed" => "user_stats.topics_entered",
+    "posts" => "user_stats.post_count",
+    "read_time" => "user_stats.time_read",
   }
 
   def find_users(limit = 100)
     page = params[:page].to_i - 1
-    if page < 0
-      page = 0
-    end
+    page = 0 if page < 0
     find_users_query.limit(limit).offset(page * limit)
   end
 
@@ -37,7 +34,13 @@ class AdminUserIndexQuery
   end
 
   def custom_direction
-    Discourse.deprecate(":ascending is deprecated please use :asc instead", output_in_test: true, drop_from: '2.9.0') if params[:ascending]
+    if params[:ascending]
+      Discourse.deprecate(
+        ":ascending is deprecated please use :asc instead",
+        output_in_test: true,
+        drop_from: "2.9.0",
+      )
+    end
     asc = params[:asc] || params[:ascending]
     asc.present? && asc ? "ASC" : "DESC"
   end
@@ -47,7 +50,7 @@ class AdminUserIndexQuery
 
     custom_order = params[:order]
     if custom_order.present? &&
-      without_dir = SORTABLE_MAPPING[custom_order.downcase.sub(/ (asc|desc)$/, '')]
+         without_dir = SORTABLE_MAPPING[custom_order.downcase.sub(/ (asc|desc)\z/, "")]
       order << "#{without_dir} #{custom_direction}"
     end
 
@@ -61,13 +64,9 @@ class AdminUserIndexQuery
       order << "users.username"
     end
 
-    query = klass
-      .includes(:totps)
-      .order(order.reject(&:blank?).join(","))
+    query = klass.includes(:totps).order(order.reject(&:blank?).join(","))
 
-    unless params[:stats].present? && params[:stats] == false
-      query = query.includes(:user_stat)
-    end
+    query = query.includes(:user_stat) unless params[:stats].present? && params[:stats] == false
 
     query = query.joins(:primary_email) if params[:show_emails] == "true"
 
@@ -77,32 +76,44 @@ class AdminUserIndexQuery
   def filter_by_trust
     levels = trust_levels.map { |key, _| key.to_s }
     if levels.include?(params[:query])
-      @query.where('trust_level = ?', trust_levels[params[:query].to_sym])
+      @query.where("trust_level = ?", trust_levels[params[:query].to_sym])
     end
   end
 
   def filter_by_query_classification
     case params[:query]
-    when 'staff'      then @query.where("admin or moderator")
-    when 'admins'     then @query.where(admin: true)
-    when 'moderators' then @query.where(moderator: true)
-    when 'silenced'   then @query.silenced
-    when 'suspended'  then @query.suspended
-    when 'pending'    then @query.not_suspended.where(approved: false, active: true)
-    when 'staged'     then @query.where(staged: true)
+    when "staff"
+      @query.where("admin or moderator")
+    when "admins"
+      @query.where(admin: true)
+    when "moderators"
+      @query.where(moderator: true)
+    when "silenced"
+      @query.silenced
+    when "suspended"
+      @query.suspended
+    when "pending"
+      @query.not_suspended.where(approved: false, active: true)
+    when "staged"
+      @query.where(staged: true)
     end
   end
 
   def filter_by_search
     if params[:email].present?
-      return @query.joins(:primary_email).where('user_emails.email = ?', params[:email].downcase)
+      return @query.joins(:primary_email).where("user_emails.email = ?", params[:email].downcase)
     end
 
     filter = params[:filter]
     if filter.present?
       filter = filter.strip
-      if ip = IPAddr.new(filter) rescue nil
-        @query.where('ip_address <<= :ip OR registration_ip_address <<= :ip', ip: ip.to_cidr_s)
+      if ip =
+           begin
+             IPAddr.new(filter)
+           rescue StandardError
+             nil
+           end
+        @query.where("ip_address <<= :ip OR registration_ip_address <<= :ip", ip: ip.to_cidr_s)
       else
         @query.filter_by_username_or_email(filter)
       end
@@ -111,14 +122,12 @@ class AdminUserIndexQuery
 
   def filter_by_ip
     if params[:ip].present?
-      @query.where('ip_address = :ip OR registration_ip_address = :ip', ip: params[:ip].strip)
+      @query.where("ip_address = :ip OR registration_ip_address = :ip", ip: params[:ip].strip)
     end
   end
 
   def filter_exclude
-    if params[:exclude].present?
-      @query.where('users.id != ?', params[:exclude])
-    end
+    @query.where("users.id != ?", params[:exclude]) if params[:exclude].present?
   end
 
   # this might not be needed in rails 4 ?
@@ -134,5 +143,4 @@ class AdminUserIndexQuery
     append filter_by_search
     @query
   end
-
 end

@@ -1,11 +1,7 @@
 # frozen_string_literal: true
 
 class WebHookPostSerializer < PostSerializer
-
-  attributes :topic_posts_count,
-             :topic_filtered_posts_count,
-             :topic_archetype,
-             :category_slug
+  attributes :topic_posts_count, :topic_filtered_posts_count, :topic_archetype, :category_slug
 
   def include_topic_title?
     true
@@ -19,7 +15,7 @@ class WebHookPostSerializer < PostSerializer
     true
   end
 
-  %i{
+  %i[
     can_view
     can_edit
     can_delete
@@ -32,11 +28,8 @@ class WebHookPostSerializer < PostSerializer
     flair_bg_color
     flair_color
     notice
-  }.each do |attr|
-    define_method("include_#{attr}?") do
-      false
-    end
-  end
+    mentioned_users
+  ].each { |attr| define_method("include_#{attr}?") { false } }
 
   def topic_posts_count
     object.topic ? object.topic.posts_count : 0
@@ -47,7 +40,7 @@ class WebHookPostSerializer < PostSerializer
   end
 
   def topic_archetype
-    object.topic ? object.topic.archetype : ''
+    object.topic ? object.topic.archetype : ""
   end
 
   def include_category_slug?
@@ -55,7 +48,7 @@ class WebHookPostSerializer < PostSerializer
   end
 
   def category_slug
-    object.topic && object.topic.category ? object.topic.category.slug_for_url : ''
+    object.topic && object.topic.category ? object.topic.category.slug_for_url : ""
   end
 
   def include_readers_count?

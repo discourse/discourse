@@ -2,10 +2,6 @@
 // To style group content differently, use the existing classes with a .group parent class.
 // For example: .group .user-secondary-navigation
 
-span.mention-group {
-  color: var(--primary);
-}
-
 .group-details-container {
   background: var(--primary-very-low);
   padding: 20px;
@@ -48,13 +44,13 @@ span.mention-group {
   }
 
   .group-info-name {
-    font-size: $font-up-3;
+    font-size: var(--font-up-3);
     font-weight: bold;
     color: var(--primary);
   }
 
   .group-info-full-name {
-    font-size: $font-up-2;
+    font-size: var(--font-up-2);
     color: var(--primary-high-or-secondary-low);
   }
 
@@ -155,7 +151,7 @@ table.group-members {
     padding: 0.8em 0;
     text-align: center;
 
-    &.avatar {
+    &.group-member {
       text-align: left;
     }
   }
@@ -165,6 +161,13 @@ table.group-members {
 
     .avatar-flair {
       color: var(--primary);
+    }
+
+    .user-status-message {
+      img.emoji {
+        width: 1em;
+        height: 1em;
+      }
     }
   }
 }

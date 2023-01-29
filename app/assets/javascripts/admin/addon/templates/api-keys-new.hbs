@@ -12,28 +12,49 @@
       {{i18n "admin.api.not_shown_again"}}
     </AdminFormRow>
     <AdminFormRow>
-      <DButton @icon="angle-right" @label="admin.api.continue" @action={{action "continue"}} @class="btn-primary" />
+      <DButton
+        @icon="angle-right"
+        @label="admin.api.continue"
+        @action={{action "continue"}}
+        @class="btn-primary"
+      />
     </AdminFormRow>
   {{else}}
     <AdminFormRow @label="admin.api.description">
-      <Input @value={{this.model.description}} maxlength="255" placeholder={{i18n "admin.api.description_placeholder"}} />
+      <Input
+        @value={{this.model.description}}
+        maxlength="255"
+        placeholder={{i18n "admin.api.description_placeholder"}}
+      />
     </AdminFormRow>
 
     <AdminFormRow @label="admin.api.user_mode">
-      <ComboBox @content={{this.userModes}} @value={{this.userMode}} @onChange={{action "changeUserMode"}} />
+      <ComboBox
+        @content={{this.userModes}}
+        @value={{this.userMode}}
+        @onChange={{action "changeUserMode"}}
+      />
     </AdminFormRow>
 
     {{#if this.showUserSelector}}
       <AdminFormRow @label="admin.api.user">
-        <EmailGroupUserChooser @value={{this.model.username}} @onChange={{action "updateUsername"}} @options={{hash
+        <EmailGroupUserChooser
+          @value={{this.model.username}}
+          @onChange={{action "updateUsername"}}
+          @options={{hash
             maximum=1
             filterPlaceholder="admin.api.user_placeholder"
-          }} />
+          }}
+        />
       </AdminFormRow>
     {{/if}}
 
     <AdminFormRow @label="admin.api.scope_mode">
-      <ComboBox @content={{this.scopeModes}} @value={{this.scopeMode}} @onChange={{action "changeScopeMode"}} />
+      <ComboBox
+        @content={{this.scopeModes}}
+        @value={{this.scopeMode}}
+        @onChange={{action "changeScopeMode"}}
+      />
 
       {{#if (eq this.scopeMode "read_only")}}
         <p>{{i18n "admin.api.scopes.descriptions.global.read"}}</p>
@@ -67,16 +88,31 @@
                 <td><Input @type="checkbox" @checked={{act.selected}} /></td>
                 <td>
                   <div class="scope-name">{{act.name}}</div>
-                  <span class="scope-tooltip" data-tooltip={{i18n (concat "admin.api.scopes.descriptions." resource "." act.key)}}>
+                  <span
+                    class="scope-tooltip"
+                    data-tooltip={{i18n
+                      (concat
+                        "admin.api.scopes.descriptions." resource "." act.key
+                      )
+                    }}
+                  >
                     {{d-icon "question-circle"}}
                   </span>
                 </td>
                 <td>
-                  <DButton @icon="link" @action={{action "showURLs" act.urls}} @class="btn-info" />
+                  <DButton
+                    @icon="link"
+                    @action={{action "showURLs" act.urls}}
+                    @class="btn-info"
+                  />
                 </td>
                 <td>
                   {{#each act.params as |p|}}
-                    <Input maxlength="255" @value={{get act p}} placeholder={{p}} />
+                    <Input
+                      maxlength="255"
+                      @value={{get act p}}
+                      placeholder={{p}}
+                    />
                   {{/each}}
                 </td>
               </tr>
@@ -86,6 +122,12 @@
       </table>
     {{/if}}
 
-    <DButton @icon="check" @label="admin.api.save" @action={{action "save"}} @class="btn-primary" @disabled={{this.saveDisabled}} />
+    <DButton
+      @icon="check"
+      @label="admin.api.save"
+      @action={{action "save"}}
+      @class="btn-primary"
+      @disabled={{this.saveDisabled}}
+    />
   {{/if}}
 </div>

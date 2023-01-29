@@ -51,6 +51,7 @@ export default Controller.extend({
     this._super(...arguments);
 
     this.saveAttrNames = [
+      "allow_private_messages",
       "muted_usernames",
       "allowed_pm_usernames",
       "enable_allowed_pm_users",

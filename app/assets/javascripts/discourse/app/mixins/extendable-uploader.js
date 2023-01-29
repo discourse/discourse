@@ -74,7 +74,7 @@ export default Mixin.create(UploadDebugging, {
     }
   },
 
-  // TODO (martin) This and _onPreProcessComplete will need to be tweaked
+  // NOTE: This and _onPreProcessComplete will need to be tweaked
   // if we ever add support for "determinate" preprocessors for uppy, which
   // means the progress will have a value rather than a started/complete
   // state ("indeterminate").
@@ -139,6 +139,7 @@ export default Mixin.create(UploadDebugging, {
   _addNeedProcessing(fileCount) {
     this._eachPreProcessor((pluginName, status) => {
       status.needProcessing += fileCount;
+      status.allComplete = false;
     });
   },
 
@@ -167,6 +168,7 @@ export default Mixin.create(UploadDebugging, {
     ) {
       preProcessorStatus.allComplete = true;
       preProcessorStatus.needProcessing = 0;
+      preProcessorStatus.completeProcessing = 0;
 
       if (this._allPreprocessorsComplete()) {
         callback(true);

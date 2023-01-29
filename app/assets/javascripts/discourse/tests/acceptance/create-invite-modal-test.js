@@ -191,7 +191,7 @@ acceptance(
     });
 
     needs.hooks.beforeEach(() => {
-      const timezone = loggedInUser().timezone;
+      const timezone = loggedInUser().user_option.timezone;
       clock = fakeTime("2100-05-03T08:00:00", timezone, true); // Monday morning
     });
 
@@ -226,6 +226,20 @@ acceptance(
       ];
 
       assert.deepEqual(options, expected, "options are correct");
+    });
+  }
+);
+
+acceptance(
+  "Invites - Create Invite on Site with must_approve_users Setting",
+  function (needs) {
+    needs.user();
+    needs.settings({ must_approve_users: true });
+
+    test("hides `Arrive at Topic` field on sites with `must_approve_users`", async function (assert) {
+      await visit("/u/eviltrout/invited/pending");
+      await click(".user-invite-buttons .btn:first-child");
+      assert.ok(!exists(".invite-to-topic"));
     });
   }
 );

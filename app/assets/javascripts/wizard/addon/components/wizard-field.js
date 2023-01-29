@@ -7,6 +7,7 @@ export default Component.extend({
     ":wizard-container__field",
     "typeClasses",
     "field.invalid",
+    "field.disabled",
   ],
 
   @discourseComputed("field.type", "field.id")

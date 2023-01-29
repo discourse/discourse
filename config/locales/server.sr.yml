@@ -142,6 +142,7 @@ sr:
               common: "je jedna od 10000 najčešće korišćenih lozinki. Molimo Vas izaberite sigurniju lozinku."
               same_as_username: "je ista kao vaše korisničko ime. Molimo Vas izaberite sigurniju šifru."
       <<: *errors
+  general_category_name: "Opšti"
   staff_category_name: "Osoblje"
   trust_levels:
     admin: "Admin"
@@ -214,7 +215,6 @@ sr:
         few: "pre %{count} mesec dana"
         other: "pre %{count} mesec dana"
   password_reset:
-    save: "Postavi Šifru"
     title: "Resetujte Šifru"
   change_email:
     max_secondary_emails_error: "Dosegli ste maksimalni dozvoljeni broj sekundarne e-pošte."
@@ -266,6 +266,9 @@ sr:
       labels:
         editor: Urednik
         edit_reason: Razlog
+    consolidated_api_requests:
+      xaxis:
+        api: "API"
     topics:
       title: "Teme"
     posts:
@@ -486,8 +489,6 @@ sr:
             placeholder: "Milenino mesto za bleju"
           site_description:
             placeholder: "Mesto gde Milena i njene prijateljice ćaskaju o kul stvarima"
-      ready:
-        title: "Vaš Discource je spreman!"
       finished:
         title: "Vaš Discource je spreman!"
   joined: "Pridružen"

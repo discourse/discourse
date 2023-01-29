@@ -3,12 +3,13 @@ import EmberObject from "@ember/object";
 import I18n from "I18n";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { ajax } from "discourse/lib/ajax";
-import bootbox from "bootbox";
 import { categoryLinkHTML } from "discourse/helpers/category-link";
 import discourseComputed from "discourse-common/utils/decorators";
+import { inject as service } from "@ember/service";
 
 export default Controller.extend(ModalFunctionality, {
   topicController: controller("topic"),
+  dialog: service(),
 
   loading: true,
   pinnedInCategoryCount: 0,
@@ -139,19 +140,16 @@ export default Controller.extend(ModalFunctionality, {
 
   _confirmBeforePinningGlobally() {
     const count = this.pinnedGloballyCount;
+
     if (count < 4) {
       this._forwardAction("pinGlobally");
     } else {
       this.send("hideModal");
-      bootbox.confirm(
-        I18n.t("topic.feature_topic.confirm_pin_globally", { count }),
-        I18n.t("no_value"),
-        I18n.t("yes_value"),
-        (confirmed) =>
-          confirmed
-            ? this._forwardAction("pinGlobally")
-            : this.send("reopenModal")
-      );
+      this.dialog.yesNoConfirm({
+        message: I18n.t("topic.feature_topic.confirm_pin_globally", { count }),
+        didConfirm: () => this._forwardAction("pinGlobally"),
+        didCancel: () => this.send("reopenModal"),
+      });
     }
   },
 

@@ -5799,6 +5799,7 @@ export default {
         avatar_template: "/images/avatar.png",
       },
     },
+    tags: ["foo", "baz"],
   },
   "/t/2481/1.json": {
     post_stream: {

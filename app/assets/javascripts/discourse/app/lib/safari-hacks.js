@@ -131,28 +131,26 @@ function positioningWorkaround(fixedElement) {
     }
   }
 
-  const checkForInputs = function () {
-    discourseDebounce(
-      this,
-      function () {
-        attachTouchStart(fixedElement, lastTouched);
+  function checkForInputs() {
+    attachTouchStart(fixedElement, lastTouched);
 
-        fixedElement
-          .querySelectorAll("input[type=text], textarea")
-          .forEach((el) => {
-            attachTouchStart(el, positioningHack);
-          });
-      },
-      100
-    );
-  };
+    fixedElement
+      .querySelectorAll("input[type=text], textarea")
+      .forEach((el) => {
+        attachTouchStart(el, positioningHack);
+      });
+  }
+
+  function debouncedCheckForInputs() {
+    discourseDebounce(checkForInputs, 100);
+  }
 
   positioningWorkaround.touchstartEvent = function (element) {
     let triggerHack = positioningHack.bind(element);
     triggerHack();
   };
 
-  const observer = new MutationObserver(checkForInputs);
+  const observer = new MutationObserver(debouncedCheckForInputs);
   observer.observe(fixedElement, {
     childList: true,
     subtree: true,

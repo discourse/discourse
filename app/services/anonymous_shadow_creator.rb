@@ -30,9 +30,8 @@ class AnonymousShadowCreator
 
     shadow = user.shadow_user
 
-    if shadow && (shadow.post_count + shadow.topic_count) > 0 &&
-      shadow.last_posted_at &&
-      shadow.last_posted_at < SiteSetting.anonymous_account_duration_minutes.minutes.ago
+    if shadow && (shadow.post_count + shadow.topic_count) > 0 && shadow.last_posted_at &&
+         shadow.last_posted_at < SiteSetting.anonymous_account_duration_minutes.minutes.ago
       shadow = nil
     end
 
@@ -45,23 +44,24 @@ class AnonymousShadowCreator
     username = resolve_username
 
     User.transaction do
-      shadow = User.create!(
-        password: SecureRandom.hex,
-        email: "#{SecureRandom.hex}@anon.#{Discourse.current_hostname}",
-        skip_email_validation: true,
-        name: username, # prevents error when names are required
-        username: username,
-        active: true,
-        trust_level: 1,
-        manual_locked_trust_level: 1,
-        approved: true,
-        approved_at: 1.day.ago,
-        created_at: 1.day.ago # bypass new user restrictions
-      )
+      shadow =
+        User.create!(
+          password: SecureRandom.hex,
+          email: "#{SecureRandom.hex}@anon.#{Discourse.current_hostname}",
+          skip_email_validation: true,
+          name: username, # prevents error when names are required
+          username: username,
+          active: true,
+          trust_level: 1,
+          manual_locked_trust_level: 1,
+          approved: true,
+          approved_at: 1.day.ago,
+          created_at: 1.day.ago, # bypass new user restrictions
+        )
 
       shadow.user_option.update_columns(
         email_messages_level: UserOption.email_level_types[:never],
-        email_digests: false
+        email_digests: false,
       )
 
       shadow.email_tokens.update_all(confirmed: true)

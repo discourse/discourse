@@ -7,8 +7,8 @@ class PostActionType < ActiveRecord::Base
   include AnonCacheInvalidator
 
   def expire_cache
-    ApplicationSerializer.expire_cache_fragment!(/^post_action_types_/)
-    ApplicationSerializer.expire_cache_fragment!(/^post_action_flag_types_/)
+    ApplicationSerializer.expire_cache_fragment!(/\Apost_action_types_/)
+    ApplicationSerializer.expire_cache_fragment!(/\Apost_action_flag_types_/)
   end
 
   class << self
@@ -24,16 +24,14 @@ class PostActionType < ActiveRecord::Base
     end
 
     def ordered
-      order('position asc')
+      order("position asc")
     end
 
     def types
       unless @types
         # NOTE: Previously bookmark was type 1 but that has been superseded
         # by the separate Bookmark model and functionality
-        @types = Enum.new(
-          like: 2
-        )
+        @types = Enum.new(like: 2)
         @types.merge!(flag_settings.flag_types)
       end
 
@@ -85,39 +83,22 @@ class PostActionType < ActiveRecord::Base
 
     def initialize_flag_settings
       @flag_settings = FlagSettings.new
-      @flag_settings.add(
-        3,
-        :off_topic,
-        notify_type: true,
-        auto_action_type: true,
-        )
+      @flag_settings.add(3, :off_topic, notify_type: true, auto_action_type: true)
       @flag_settings.add(
         4,
         :inappropriate,
         topic_type: true,
         notify_type: true,
         auto_action_type: true,
-        )
-      @flag_settings.add(
-        8,
-        :spam,
-        topic_type: true,
-        notify_type: true,
-        auto_action_type: true,
-        )
-      @flag_settings.add(
-        6,
-        :notify_user,
-        topic_type: false,
-        notify_type: false,
-        custom_type: true
       )
+      @flag_settings.add(8, :spam, topic_type: true, notify_type: true, auto_action_type: true)
+      @flag_settings.add(6, :notify_user, topic_type: false, notify_type: false, custom_type: true)
       @flag_settings.add(
         7,
         :notify_moderators,
         topic_type: true,
         notify_type: true,
-        custom_type: true
+        custom_type: true,
       )
     end
   end

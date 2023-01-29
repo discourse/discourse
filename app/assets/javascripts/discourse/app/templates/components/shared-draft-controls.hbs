@@ -6,12 +6,20 @@
 
     <div class="publish-field">
       <label>{{i18n "shared_drafts.destination_category"}}</label>
-      <CategoryChooser @value={{this.topic.destination_category_id}} @onChange={{action "updateDestinationCategory"}} />
+      <CategoryChooser
+        @value={{this.topic.destination_category_id}}
+        @onChange={{action "updateDestinationCategory"}}
+      />
     </div>
 
     <div class="publish-field">
       {{#if this.validCategory}}
-        <DButton @action={{action "publish"}} @label="shared_drafts.publish" @class="btn-primary publish-shared-draft" @icon="far-clipboard" />
+        <DButton
+          @action={{action "publish"}}
+          @label="shared_drafts.publish"
+          @class="btn-primary publish-shared-draft"
+          @icon="far-clipboard"
+        />
       {{/if}}
     </div>
   {{/if}}

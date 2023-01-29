@@ -89,7 +89,7 @@
 
   .tip {
     display: block;
-    font-size: $font-down-1;
+    font-size: var(--font-down-1);
     margin: -0.5em 0 0.5em;
   }
 

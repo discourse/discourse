@@ -1,10 +1,9 @@
 # frozen_string_literal: true
-require 'cbor'
-require 'cose'
+require "cbor"
+require "cose"
 
 module Webauthn
   class SecurityKeyRegistrationService < SecurityKeyBaseValidationService
-
     ##
     # See https://w3c.github.io/webauthn/#sctn-registering-a-new-credential for
     # the registration steps followed here. Memoized methods are called in their
@@ -50,8 +49,14 @@ module Webauthn
       #     https://w3c.github.io/webauthn/#table-attestedCredentialData
       #     See https://www.iana.org/assignments/cose/cose.xhtml#algorithms for supported algorithm
       #     codes.
-      credential_public_key, credential_public_key_bytes, credential_id = extract_public_key_and_credential_from_attestation(auth_data)
-      raise(UnsupportedPublicKeyAlgorithmError, I18n.t('webauthn.validation.unsupported_public_key_algorithm_error')) if ::Webauthn::SUPPORTED_ALGORITHMS.exclude?(credential_public_key.alg)
+      credential_public_key, credential_public_key_bytes, credential_id =
+        extract_public_key_and_credential_from_attestation(auth_data)
+      if ::Webauthn::SUPPORTED_ALGORITHMS.exclude?(credential_public_key.alg)
+        raise(
+          UnsupportedPublicKeyAlgorithmError,
+          I18n.t("webauthn.validation.unsupported_public_key_algorithm_error"),
+        )
+      end
 
       # 14. Verify that the values of the client extension outputs in clientExtensionResults and the authenticator
       #     extension outputs in the extensions in authData are as expected, considering the client extension input
@@ -67,8 +72,12 @@ module Webauthn
       #     name [WebAuthn-Registries].
       # 16. Verify that attStmt is a correct attestation statement, conveying a valid attestation signature,
       #     by using the attestation statement format fmt’s verification procedure given attStmt, authData and hash.
-      if ::Webauthn::VALID_ATTESTATION_FORMATS.exclude?(attestation['fmt']) || attestation['fmt'] != 'none'
-        raise(UnsupportedAttestationFormatError, I18n.t('webauthn.validation.unsupported_attestation_format_error'))
+      if ::Webauthn::VALID_ATTESTATION_FORMATS.exclude?(attestation["fmt"]) ||
+           attestation["fmt"] != "none"
+        raise(
+          UnsupportedAttestationFormatError,
+          I18n.t("webauthn.validation.unsupported_attestation_format_error"),
+        )
       end
 
       #==================================================
@@ -92,7 +101,9 @@ module Webauthn
       #     the registration, e.g. while deleting the older registration.
       encoded_credential_id = Base64.strict_encode64(credential_id)
       endcoded_public_key = Base64.strict_encode64(credential_public_key_bytes)
-      raise(CredentialIdInUseError, I18n.t('webauthn.validation.credential_id_in_use_error')) if UserSecurityKey.exists?(credential_id: encoded_credential_id)
+      if UserSecurityKey.exists?(credential_id: encoded_credential_id)
+        raise(CredentialIdInUseError, I18n.t("webauthn.validation.credential_id_in_use_error"))
+      end
 
       # 20. If the attestation statement attStmt verified successfully and is found to be trustworthy,
       #     then register the new credential with the account that was denoted in options.user, by
@@ -103,10 +114,10 @@ module Webauthn
         credential_id: encoded_credential_id,
         public_key: endcoded_public_key,
         name: @params[:name],
-        factor_type: UserSecurityKey.factor_types[:second_factor]
+        factor_type: UserSecurityKey.factor_types[:second_factor],
       )
     rescue CBOR::UnpackError, CBOR::TypeError, CBOR::MalformedFormatError, CBOR::StackError
-      raise MalformedAttestationError, I18n.t('webauthn.validation.malformed_attestation_error')
+      raise MalformedAttestationError, I18n.t("webauthn.validation.malformed_attestation_error")
     end
 
     private
@@ -116,7 +127,7 @@ module Webauthn
     end
 
     def auth_data
-      @auth_data ||= attestation['authData']
+      @auth_data ||= attestation["authData"]
     end
 
     def extract_public_key_and_credential_from_attestation(auth_data)
@@ -128,9 +139,12 @@ module Webauthn
 
       attested_credential_data_start_position = rp_id_length + flags_length + sign_count_length # 37
       attested_credential_data_length = auth_data.size - attested_credential_data_start_position
-      attested_credential_data = auth_data[
-        attested_credential_data_start_position..(attested_credential_data_start_position + attested_credential_data_length - 1)
-      ]
+      attested_credential_data =
+        auth_data[
+          attested_credential_data_start_position..(
+            attested_credential_data_start_position + attested_credential_data_length - 1
+          )
+        ]
 
       # see https://w3c.github.io/webauthn/#attested-credential-data for lengths
       # of data for extraction
@@ -139,9 +153,10 @@ module Webauthn
       credential_id = attested_credential_data[18..(18 + credential_id_length - 1)]
 
       public_key_start_position = 18 + credential_id_length
-      public_key_bytes = attested_credential_data[
-        public_key_start_position..(public_key_start_position + attested_credential_data.size - 1)
-      ]
+      public_key_bytes =
+        attested_credential_data[
+          public_key_start_position..(public_key_start_position + attested_credential_data.size - 1)
+        ]
       public_key = COSE::Key.deserialize(public_key_bytes)
 
       [public_key, public_key_bytes, credential_id]

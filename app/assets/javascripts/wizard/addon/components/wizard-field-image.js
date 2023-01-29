@@ -8,9 +8,11 @@ import getUrl from "discourse-common/lib/get-url";
 import Uppy from "@uppy/core";
 import DropTarget from "@uppy/drop-target";
 import XHRUpload from "@uppy/xhr-upload";
+import { inject as service } from "@ember/service";
 
 export default Component.extend({
   classNames: ["wizard-container__image-upload"],
+  dialog: service(),
   uploading: false,
 
   @discourseComputed("field.id")
@@ -57,7 +59,7 @@ export default Component.extend({
         message = response.body.errors.join("\n");
       }
 
-      window.bootbox.alert(message);
+      this.dialog.alert(message);
       this.set("uploading", false);
     });
 

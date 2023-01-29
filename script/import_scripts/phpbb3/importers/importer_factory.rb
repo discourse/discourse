@@ -1,16 +1,16 @@
 # frozen_string_literal: true
 
-require_relative 'attachment_importer'
-require_relative 'avatar_importer'
-require_relative 'bookmark_importer'
-require_relative 'category_importer'
-require_relative 'message_importer'
-require_relative 'poll_importer'
-require_relative 'post_importer'
-require_relative 'permalink_importer'
-require_relative 'user_importer'
-require_relative '../support/smiley_processor'
-require_relative '../support/text_processor'
+require_relative "attachment_importer"
+require_relative "avatar_importer"
+require_relative "bookmark_importer"
+require_relative "category_importer"
+require_relative "message_importer"
+require_relative "poll_importer"
+require_relative "post_importer"
+require_relative "permalink_importer"
+require_relative "user_importer"
+require_relative "../support/smiley_processor"
+require_relative "../support/text_processor"
 
 module ImportScripts::PhpBB3
   class ImporterFactory
@@ -36,7 +36,14 @@ module ImportScripts::PhpBB3
     end
 
     def post_importer
-      PostImporter.new(@lookup, text_processor, attachment_importer, poll_importer, permalink_importer, @settings)
+      PostImporter.new(
+        @lookup,
+        text_processor,
+        attachment_importer,
+        poll_importer,
+        permalink_importer,
+        @settings,
+      )
     end
 
     def message_importer
@@ -64,7 +71,8 @@ module ImportScripts::PhpBB3
     end
 
     def text_processor
-      @text_processor ||= TextProcessor.new(@lookup, @database, smiley_processor, @settings, @phpbb_config)
+      @text_processor ||=
+        TextProcessor.new(@lookup, @database, smiley_processor, @settings, @phpbb_config)
     end
 
     def smiley_processor

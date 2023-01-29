@@ -17,6 +17,23 @@ export function disableNameSuppression() {
 createWidget("poster-name-title", {
   tagName: "span.user-title",
 
+  buildClasses(attrs) {
+    let classNames = [];
+
+    classNames.push(attrs.title);
+
+    if (attrs.titleIsGroup) {
+      classNames.push(attrs.primaryGroupName);
+    }
+
+    classNames = classNames.map(
+      (className) =>
+        `user-title--${className.replace(/\s+/g, "-").toLowerCase()}`
+    );
+
+    return classNames;
+  },
+
   html(attrs) {
     let titleContents = attrs.title;
     if (attrs.primaryGroupName && attrs.titleIsGroup) {
@@ -40,6 +57,20 @@ export default createWidget("poster-name", {
   settings: {
     showNameAndGroup: true,
     showGlyph: true,
+  },
+
+  didRenderWidget() {
+    if (this.attrs.user) {
+      this.attrs.user.trackStatus();
+      this.attrs.user.on("status-changed", this, "scheduleRerender");
+    }
+  },
+
+  willRerenderWidget() {
+    if (this.attrs.user) {
+      this.attrs.user.off("status-changed", this, "scheduleRerender");
+      this.attrs.user.stopTrackingStatus();
+    }
   },
 
   // TODO: Allow extensibility
@@ -97,7 +128,7 @@ export default createWidget("poster-name", {
 
     const primaryGroupName = attrs.primary_group_name;
     if (primaryGroupName && primaryGroupName.length) {
-      classNames.push(primaryGroupName);
+      classNames.push(`group--${primaryGroupName}`);
     }
     let nameContents = [this.userLink(attrs, nameFirst ? name : username)];
 
@@ -108,7 +139,9 @@ export default createWidget("poster-name", {
       }
     }
 
-    const afterNameContents = this.afterNameContents(attrs);
+    const afterNameContents =
+      applyDecorators(this, "after-name", attrs, this.state) || [];
+
     nameContents = nameContents.concat(afterNameContents);
 
     const contents = [
@@ -146,15 +179,16 @@ export default createWidget("poster-name", {
       );
     }
 
+    if (this.siteSettings.enable_user_status) {
+      this.addUserStatus(contents, attrs);
+    }
+
     return contents;
   },
 
-  afterNameContents(attrs) {
-    const contents = [];
-    if (this.siteSettings.enable_user_status && attrs.userStatus) {
-      contents.push(this.attach("post-user-status", attrs.userStatus));
+  addUserStatus(contents, attrs) {
+    if (attrs.user && attrs.user.status) {
+      contents.push(this.attach("post-user-status", attrs.user.status));
     }
-    contents.push(...applyDecorators(this, "after-name", attrs, this.state));
-    return contents;
   },
 });

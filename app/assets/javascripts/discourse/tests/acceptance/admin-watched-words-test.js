@@ -58,9 +58,8 @@ acceptance("Admin - Watched Words", function (needs) {
   test("add words", async function (assert) {
     await visit("/admin/customize/watched_words/action/block");
 
-    click(".show-words-checkbox");
-    fillIn(".watched-word-form input", "poutine");
-
+    await click(".show-words-checkbox");
+    await fillIn(".watched-word-form input", "poutine");
     await click(".watched-word-form button");
 
     let found = [];
@@ -74,22 +73,31 @@ acceptance("Admin - Watched Words", function (needs) {
     assert.strictEqual(count(".watched-words-list .case-sensitive"), 0);
   });
 
-  test("add case-sensitve words", async function (assert) {
+  test("add case-sensitive words", async function (assert) {
     await visit("/admin/customize/watched_words/action/block");
-
-    click(".show-words-checkbox");
-    fillIn(".watched-word-form input", "Discourse");
-    click(".case-sensitivity-checkbox");
-
-    await click(".watched-word-form button");
+    const submitButton = query(".watched-word-form button");
+    assert.strictEqual(
+      submitButton.disabled,
+      true,
+      "Add button is disabled by default"
+    );
+    await click(".show-words-checkbox");
+    await fillIn(".watched-word-form input", "Discourse");
+    await click(".case-sensitivity-checkbox");
+    assert.strictEqual(
+      submitButton.disabled,
+      false,
+      "Add button should no longer be disabled after input is filled"
+    );
+    await click(submitButton);
 
     assert
       .dom(".watched-words-list .watched-word")
       .hasText(`Discourse ${I18n.t("admin.watched_words.case_sensitive")}`);
 
-    fillIn(".watched-word-form input", "discourse");
-    click(".case-sensitivity-checkbox");
-    await click(".watched-word-form button");
+    await fillIn(".watched-word-form input", "discourse");
+    await click(".case-sensitivity-checkbox");
+    await click(submitButton);
 
     assert
       .dom(".watched-words-list .watched-word")
@@ -127,6 +135,33 @@ acceptance("Admin - Watched Words", function (needs) {
     await fillIn(".modal-body textarea", "Hello world!");
     assert.strictEqual(query(".modal-body li .match").innerText, "Hello");
     assert.strictEqual(query(".modal-body li .tag").innerText, "greeting");
+  });
+});
+
+acceptance("Admin - Watched Words - Emoji Replacement", function (needs) {
+  needs.user();
+  needs.site({
+    watched_words_replace: {
+      "(?:\\W|^)(betis)(?=\\W|$)": {
+        replacement: ":poop:",
+        case_sensitive: false,
+      },
+    },
+  });
+
+  test("emoji renders successfully after replacement", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click("button.reply-to-post");
+    await fillIn(".d-editor-input", "betis betis betis");
+    const cooked = query(".d-editor-preview p");
+    const cookedChildren = Array.from(cooked.children);
+    const emojis = cookedChildren.filter((child) => child.nodeName === "IMG");
+    assert.strictEqual(emojis.length, 3, "three emojis have been rendered");
+    assert.strictEqual(
+      emojis.every((emoji) => emoji.title === ":poop:"),
+      true,
+      "all emojis are :poop:"
+    );
   });
 });
 

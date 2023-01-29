@@ -77,17 +77,7 @@ export default Component.extend({
     this._super(...arguments);
 
     if (this.includeUnreadIndicator) {
-      this.messageBus.subscribe(this.unreadIndicatorChannel, (data) => {
-        const nodeClassList = document.querySelector(
-          `.indicator-topic-${data.topic_id}`
-        ).classList;
-
-        if (data.show_indicator) {
-          nodeClassList.remove("read");
-        } else {
-          nodeClassList.add("read");
-        }
-      });
+      this.messageBus.subscribe(this.unreadIndicatorChannel, this.onMessage);
     }
 
     schedule("afterRender", () => {
@@ -95,8 +85,7 @@ export default Component.extend({
         const rawTopicLink = this.element.querySelector(".raw-topic-link");
 
         rawTopicLink &&
-          topicTitleDecorators &&
-          topicTitleDecorators.forEach((cb) =>
+          topicTitleDecorators?.forEach((cb) =>
             cb(this.topic, rawTopicLink, "topic-list-item-title")
           );
       }
@@ -106,9 +95,8 @@ export default Component.extend({
   willDestroyElement() {
     this._super(...arguments);
 
-    if (this.includeUnreadIndicator) {
-      this.messageBus.unsubscribe(this.unreadIndicatorChannel);
-    }
+    this.messageBus.unsubscribe(this.unreadIndicatorChannel, this.onMessage);
+
     if (this._shouldFocusLastVisited()) {
       const title = this._titleElement();
       if (title) {
@@ -116,6 +104,15 @@ export default Component.extend({
         title.removeEventListener("blur", this._onTitleBlur);
       }
     }
+  },
+
+  @bind
+  onMessage(data) {
+    const nodeClassList = document.querySelector(
+      `.indicator-topic-${data.topic_id}`
+    ).classList;
+
+    nodeClassList.toggle("read", !data.show_indicator);
   },
 
   @discourseComputed("topic.id")
@@ -256,6 +253,7 @@ export default Component.extend({
       if (wantsNewWindow(e)) {
         return true;
       }
+      e.preventDefault();
       return this.navigateToTopic(topic, e.target.getAttribute("href"));
     }
 
@@ -269,6 +267,7 @@ export default Component.extend({
       if (wantsNewWindow(e)) {
         return true;
       }
+      e.preventDefault();
       return this.navigateToTopic(topic, topic.lastUnreadUrl);
     }
 

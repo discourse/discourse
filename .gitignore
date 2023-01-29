@@ -39,6 +39,7 @@
 !/plugins/discourse-narrative-bot
 !/plugins/discourse-presence
 !/plugins/lazy-yt/
+!/plugins/chat/
 !/plugins/poll/
 !/plugins/styleguide
 /plugins/*/auto_generated/
@@ -48,6 +49,9 @@
 /vendor/bundle/*
 /vendor/data/GeoLite2-City.mmdb
 /vendor/data/GeoLite2-ASN.mmdb
+
+# We provide a .sample but people can use newer versions if they want to
+.ruby-version
 
 # Front-end
 dist

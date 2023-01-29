@@ -98,5 +98,13 @@ acceptance("Composer - Hyperlink", function (needs) {
       query(".link-url").value.includes("http"),
       "replaces link url field with internal link"
     );
+
+    await triggerKeyEvent(".insert-link", "keydown", "Escape");
+
+    assert.strictEqual(
+      document.activeElement.classList.contains("d-editor-input"),
+      true,
+      "focus stays on composer after dismissing modal using Esc key"
+    );
   });
 });

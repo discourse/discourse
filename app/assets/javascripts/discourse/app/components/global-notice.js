@@ -77,6 +77,7 @@ export default Component.extend({
 
   @discourseComputed(
     "site.isReadOnly",
+    "site.isStaffWritesOnly",
     "siteSettings.login_required",
     "siteSettings.disable_emails",
     "siteSettings.global_notice",
@@ -85,6 +86,7 @@ export default Component.extend({
   )
   notices(
     isReadOnly,
+    isStaffWritesOnly,
     loginRequired,
     disableEmails,
     globalNotice,
@@ -111,7 +113,14 @@ export default Component.extend({
       );
     }
 
-    if (isReadOnly) {
+    if (isStaffWritesOnly) {
+      notices.push(
+        Notice.create({
+          text: I18n.t("staff_writes_only_mode.enabled"),
+          id: "alert-staff-writes-only",
+        })
+      );
+    } else if (isReadOnly) {
       notices.push(
         Notice.create({
           text: I18n.t("read_only_mode.enabled"),

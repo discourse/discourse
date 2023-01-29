@@ -1,5 +1,6 @@
 // --------------------------------------------------
 // Variables used throughout the theme
+// this file is injected into every theme CSS file
 // --------------------------------------------------
 
 // Layout dimensions
@@ -79,6 +80,7 @@ $line-height-large: var(--line-height-large) !default;
 $z-layers: (
   "max": 9999,
   "modal": (
+    "dialog": 1700,
     "tooltip": 1600,
     "popover": 1500,
     "dropdown": 1400,
@@ -136,6 +138,7 @@ $box-shadow: (
   "menu-panel": 0 12px 12px rgba(0, 0, 0, 0.15),
   "card": 0 4px 14px rgba(0, 0, 0, 0.15),
   "dropdown": 0 2px 3px 0 rgba(0, 0, 0, 0.2),
+  "dropdown-lite": 0px 2px 12px 0px rgba(0, 0, 0, 0.1),
   "header": 0 2px 4px -1px rgba(0, 0, 0, 0.25),
   "footer-nav": 0 0 2px 0 rgba(0, 0, 0, 0.25),
   "kbd": (

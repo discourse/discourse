@@ -3,7 +3,11 @@
 </div>
 
 <div class="column">
-  <CategoriesTopicList @topics={{this.topics}} @filter="top" @class="top-topic-list" />
+  <CategoriesTopicList
+    @topics={{this.topics}}
+    @filter="top"
+    @class="top-topic-list"
+  />
 </div>
 
 <PluginOutlet @name="extra-categories-column" @connectorTagName="div" />

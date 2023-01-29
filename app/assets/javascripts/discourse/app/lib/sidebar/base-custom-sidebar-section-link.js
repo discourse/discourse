@@ -10,6 +10,13 @@ export default class BaseCustomSidebarSectionLink {
   }
 
   /**
+   * @returns {string} The classnames of the section link.
+   */
+  get classNames() {
+    return "";
+  }
+
+  /**
    * @returns {string} The Ember route which the section link should link to.
    */
   get route() {
@@ -46,6 +53,11 @@ export default class BaseCustomSidebarSectionLink {
   }
 
   /**
+   * @returns {string} CSS class for the content text
+   */
+  get contentCSSClass() {}
+
+  /**
    * @returns {string} Prefix type for the link. Accepted value: icon, image, text
    */
   get prefixType() {}
@@ -68,22 +80,22 @@ export default class BaseCustomSidebarSectionLink {
   /**
    * @returns {string} CSS class for prefix
    */
-  get PrefixCSSClass() {}
+  get prefixCSSClass() {}
 
   /**
    * @returns {string} Suffix type for the link. Accepted value: icon
    */
-  get SuffixType() {}
+  get suffixType() {}
 
   /**
    * @returns {string} Suffix value for the link. Accepted value: icon name
    */
-  get SuffixValue() {}
+  get suffixValue() {}
 
   /**
    * @returns {string} CSS class for suffix
    */
-  get SuffixCSSClass() {}
+  get suffixCSSClass() {}
 
   /**
    * @returns {string} Type of the hover button. Accepted value: icon

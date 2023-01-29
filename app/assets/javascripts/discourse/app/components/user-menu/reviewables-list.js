@@ -3,8 +3,14 @@ import { ajax } from "discourse/lib/ajax";
 import UserMenuReviewable from "discourse/models/user-menu-reviewable";
 import I18n from "I18n";
 import getUrl from "discourse-common/lib/get-url";
+import UserMenuReviewableItem from "discourse/lib/user-menu/reviewable-item";
+import { inject as service } from "@ember/service";
 
 export default class UserMenuReviewablesList extends UserMenuItemsList {
+  @service currentUser;
+  @service siteSettings;
+  @service site;
+
   get showAllHref() {
     return getUrl("/review");
   }
@@ -17,14 +23,15 @@ export default class UserMenuReviewablesList extends UserMenuItemsList {
     return "pending-reviewables";
   }
 
-  get itemComponent() {
-    return "user-menu/reviewable-item";
-  }
-
   fetchItems() {
     return ajax("/review/user-menu-list").then((data) => {
       return data.reviewables.map((item) => {
-        return UserMenuReviewable.create(item);
+        return new UserMenuReviewableItem({
+          reviewable: UserMenuReviewable.create(item),
+          currentUser: this.currentUser,
+          siteSettings: this.siteSettings,
+          site: this.site,
+        });
       });
     });
   }

@@ -3,7 +3,6 @@ import { module, skip, test } from "qunit";
 import ClickTrack from "discourse/lib/click-track";
 import DiscourseURL from "discourse/lib/url";
 import User from "discourse/models/user";
-import discourseLater from "discourse-common/lib/later";
 import pretender from "discourse/tests/helpers/create-pretender";
 import sinon from "sinon";
 import { setPrefix } from "discourse-common/lib/get-url";
@@ -40,7 +39,10 @@ module("Unit | Utility | click-track", function (hooks) {
           <a class="no-track-link" href="http://www.google.com.br">google.com.br</a>
           <a id="same-site" href="http://discuss.domain.com">forum</a>
           <a class="attachment" href="http://discuss.domain.com/uploads/default/1234/1532357280.txt">log.txt</a>
-          <a class="hashtag" href="http://discuss.domain.com">#hashtag</a>
+          <a class="hashtag" href="/c/staff/42">#hashtag</a>
+          <a class="mention" href="/u/joe">@joe</a>
+          <a class="hashtag-cooked" href="/c/staff/42" data-type="category" data-slug="staff"><svg class="fa d-icon d-icon-folder svg-icon svg-node"><use href="#folder"></use></svg><span>staff</span></a>
+          <a class="mention-group" href="/g/support">@support</a>
           <a class="mailto" href="mailto:foo@bar.com">email-me</a>
           <a class="a-without-href">no href</a>
           <aside class="quote">
@@ -135,7 +137,7 @@ module("Unit | Utility | click-track", function (hooks) {
 
   skip("tracks external URLs when opening in another window", async function (assert) {
     assert.expect(3);
-    User.currentProp("external_links_in_new_tab", true);
+    User.currentProp("user_option.external_links_in_new_tab", true);
 
     const done = assert.async();
     pretender.post("/clicks/track", (request) => {
@@ -169,47 +171,23 @@ module("Unit | Utility | click-track", function (hooks) {
   });
 
   test("does not track clicks links in quotes", async function (assert) {
-    User.currentProp("external_links_in_new_tab", true);
+    User.currentProp("user_option.external_links_in_new_tab", true);
     assert.notOk(track(generateClickEventOn(".quote a:last-child")));
     assert.ok(window.open.calledWith("https://google.com/", "_blank"));
   });
 
-  test("does not track clicks on category badges", async function (assert) {
+  test("does not track clicks on hashtags for categories and tags", async function (assert) {
     assert.notOk(track(generateClickEventOn(".hashtag")));
+    assert.notOk(track(generateClickEventOn(".hashtag-cooked")));
+  });
+
+  test("returns true for tracking mentions and group mentions so the card can appear", async function (assert) {
+    assert.ok(track(generateClickEventOn(".mention")));
+    assert.ok(track(generateClickEventOn(".mention-group")));
   });
 
   test("does not track clicks on mailto", async function (assert) {
     assert.ok(track(generateClickEventOn(".mailto")));
-  });
-
-  test("removes the href and put it as a data attribute", async function (assert) {
-    User.currentProp("external_links_in_new_tab", true);
-
-    assert.notOk(track(generateClickEventOn("a")));
-
-    let link = fixture("a");
-    assert.ok(link.classList.contains("no-href"));
-    assert.strictEqual(link.dataset.href, "http://www.google.com/");
-    assert.blank(link.getAttribute("href"));
-    assert.ok(link.dataset.autoRoute);
-    assert.ok(window.open.calledWith("http://www.google.com/", "_blank"));
-  });
-
-  test("restores the href after a while", async function (assert) {
-    assert.expect(2);
-
-    assert.notOk(track(generateClickEventOn("a")));
-
-    assert.timeout(75);
-
-    const done = assert.async();
-    discourseLater(() => {
-      assert.strictEqual(
-        fixture("a").getAttribute("href"),
-        "http://www.google.com"
-      );
-      done();
-    });
   });
 
   function badgeClickCount(assert, id, expected) {

@@ -5,6 +5,7 @@
   grid-template-columns: 1fr 1fr;
   grid-template-rows: auto auto auto;
   grid-gap: 16px;
+  padding-top: 1em;
   .user-primary-navigation {
     grid-column-start: 1;
     grid-row-start: 1;
@@ -102,14 +103,6 @@
     .details {
       margin-bottom: 12px;
 
-      h1 {
-        line-height: $line-height-small;
-      }
-
-      h2 {
-        line-height: $line-height-medium;
-      }
-
       .user-profile-avatar {
         .avatar-flair {
           right: 2px;
@@ -128,14 +121,14 @@
 
       .featured-topic {
         text-align: center;
-        font-size: $font-0;
+        font-size: var(--font-0);
       }
 
       .location-and-website {
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
-        font-size: $font-0;
+        font-size: var(--font-0);
         .d-icon {
           width: 0.8em;
           height: 0.8em;
@@ -207,9 +200,7 @@
     }
 
     .controls {
-      order: 3;
       flex: 1 1 25%;
-      margin-left: auto;
 
       .btn {
         margin-bottom: 16px;
@@ -275,7 +266,7 @@
 
 .user-main .collapsed-info.about .details {
   display: flex;
-  margin-bottom: 16px;
+  margin-bottom: 0;
   .user-profile-avatar {
     margin: 0;
     flex: 0 0 auto;
@@ -391,7 +382,7 @@
     .label {
       display: block;
       color: var(--primary-medium);
-      font-size: $font-down-1;
+      font-size: var(--font-down-1);
       margin: 0.5em 0 0.15em 0;
     }
 
@@ -431,5 +422,15 @@
 
   .user-invite-none {
     margin-top: 1em;
+  }
+}
+.second-factor {
+  .second-factor-item {
+    width: auto;
+    display: flex;
+    justify-content: space-between;
+  }
+  .details {
+    width: 75%;
   }
 }

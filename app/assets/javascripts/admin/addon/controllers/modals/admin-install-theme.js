@@ -24,13 +24,14 @@ export default Controller.extend(ModalFunctionality, {
   keyGenUrl: "/admin/themes/generate_key_pair",
   importUrl: "/admin/themes/import",
   recordType: "theme",
-  checkPrivate: match("uploadUrl", /^ssh\:\/\/.*\@.*\.git$|.*\@.*\:.*\.git$/),
+  checkPrivate: match("uploadUrl", /^ssh:\/\/.+@.+$|.+@.+:.+$/),
   localFile: null,
   uploadUrl: null,
   uploadName: null,
   advancedVisible: false,
   selectedType: alias("themesController.currentTab"),
   component: equal("selectedType", COMPONENTS),
+  urlPlaceholder: "https://github.com/discourse/sample_theme",
 
   init() {
     this._super(...arguments);
@@ -79,32 +80,6 @@ export default Controller.extend(ModalFunctionality, {
     );
   },
 
-  @discourseComputed("privateChecked")
-  urlPlaceholder(privateChecked) {
-    return privateChecked
-      ? "git@github.com:discourse/sample_theme.git"
-      : "https://github.com/discourse/sample_theme";
-  },
-
-  @observes("privateChecked")
-  privateWasChecked() {
-    const checked = this.privateChecked;
-    if (checked && !this._keyLoading) {
-      this._keyLoading = true;
-      ajax(this.keyGenUrl, { type: "POST" })
-        .then((pair) => {
-          this.setProperties({
-            privateKey: pair.private_key,
-            publicKey: pair.public_key,
-          });
-        })
-        .catch(popupAjaxError)
-        .finally(() => {
-          this._keyLoading = false;
-        });
-    }
-  },
-
   @discourseComputed("name")
   nameTooShort(name) {
     return !name || name.length < MIN_NAME_LENGTH;
@@ -119,6 +94,22 @@ export default Controller.extend(ModalFunctionality, {
     }
   },
 
+  @observes("checkPrivate")
+  privateWasChecked() {
+    const checked = this.checkPrivate;
+    if (checked && !this._keyLoading && !this.publicKey) {
+      this._keyLoading = true;
+      ajax(this.keyGenUrl, { type: "POST" })
+        .then((pair) => {
+          this.set("publicKey", pair.public_key);
+        })
+        .catch(popupAjaxError)
+        .finally(() => {
+          this._keyLoading = false;
+        });
+    }
+  },
+
   @discourseComputed("selection", "themeCannotBeInstalled")
   submitLabel(selection, themeCannotBeInstalled) {
     if (themeCannotBeInstalled) {
@@ -130,16 +121,14 @@ export default Controller.extend(ModalFunctionality, {
     }`;
   },
 
-  @discourseComputed("privateChecked", "checkPrivate", "publicKey")
-  showPublicKey(privateChecked, checkPrivate, publicKey) {
-    return privateChecked && checkPrivate && publicKey;
+  @discourseComputed("checkPrivate", "publicKey")
+  showPublicKey(checkPrivate, publicKey) {
+    return checkPrivate && publicKey;
   },
 
   onClose() {
     this.setProperties({
       duplicateRemoteThemeWarning: null,
-      privateChecked: false,
-      privateKey: null,
       localFile: null,
       uploadUrl: null,
       publicKey: null,
@@ -213,11 +202,8 @@ export default Controller.extend(ModalFunctionality, {
         options.data = {
           remote: this.uploadUrl,
           branch: this.branch,
+          public_key: this.publicKey,
         };
-
-        if (this.privateChecked) {
-          options.data.private_key = this.privateKey;
-        }
       }
 
       // User knows that theme cannot be installed, but they want to continue
@@ -239,10 +225,10 @@ export default Controller.extend(ModalFunctionality, {
           this.send("closeModal");
         })
         .then(() => {
-          this.setProperties({ privateKey: null, publicKey: null });
+          this.set("publicKey", null);
         })
         .catch((error) => {
-          if (!this.privateKey || this.themeCannotBeInstalled) {
+          if (!this.publicKey || this.themeCannotBeInstalled) {
             return popupAjaxError(error);
           }
 

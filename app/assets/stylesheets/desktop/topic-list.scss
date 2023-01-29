@@ -36,7 +36,7 @@
 
   button.bulk-select {
     padding: 0;
-    line-height: $line-height-large;
+    line-height: var(--line-height-large);
   }
 
   .topic-list-data.bulk-select {
@@ -80,7 +80,7 @@
         cursor: default;
         color: var(--primary-med-or-secondary-med);
         line-height: $td-posters-more-lh;
-        font-size: $font-down-1;
+        font-size: var(--font-down-1);
       }
     }
   }
@@ -89,9 +89,8 @@
   }
   .posters a:first-child .avatar.latest:not(.single) {
     box-shadow: 0 0 3px 1px rgba(var(--tertiary-rgb), 0.35);
-    border: 2px solid rgba(var(--tertiary-rgb), 0.5);
+    border: 1px solid rgba(var(--tertiary-rgb), 0.5);
     position: relative;
-    top: -2px;
     left: -2px;
   }
 
@@ -110,7 +109,7 @@
     width: auto;
     color: var(--primary-med-or-secondary-med);
     text-align: left;
-    font-size: $font-down-1;
+    font-size: var(--font-down-1);
     margin-top: 5px;
     .fa {
       margin-right: 2px;
@@ -118,16 +117,13 @@
     a {
       color: var(--primary-med-or-secondary-med);
       margin-right: 3px;
-      line-height: $line-height-large;
+      line-height: var(--line-height-large);
     }
   }
   .activity {
     width: 60px;
     &:lang(zh_CN) {
       width: 80px;
-    }
-    span {
-      cursor: pointer;
     }
   }
   .age {
@@ -140,6 +136,12 @@
 
 .topic-list-bottom {
   margin: 20px 0;
+  .footer-message {
+    padding-top: 4px;
+  }
+  .dismiss-container-bottom {
+    float: right;
+  }
 }
 
 // Misc. stuff
@@ -159,12 +161,6 @@
 #list-area {
   h2 {
     margin: 20px 0 10px;
-  }
-  .show-more.has-topics {
-    top: 0;
-    .alert {
-      padding: 16px 35px 16px 14px;
-    }
   }
 }
 
@@ -235,7 +231,7 @@
   // slightly smaller font, tighten spacing on nav pills
   .nav-pills {
     > li > a {
-      font-size: $font-0;
+      font-size: var(--font-0);
       padding: 7px 10px;
     }
   }
@@ -248,26 +244,29 @@
     // smaller table cell spacing
     .topic-list-data {
       padding: 10px;
-      font-size: $font-0;
+      font-size: var(--font-0);
     }
   }
 }
 
-.welcome-topic-banner {
+.container.list-container {
+  position: relative;
+}
+
+.welcome-cta {
+  background-color: var(--secondary);
   border: 1px solid var(--primary-low);
-  box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 0.12);
-  padding: 10px;
+  box-shadow: shadow("menu-panel");
+  border-radius: 4px;
+  padding: 12px 20px;
   display: flex;
   flex-direction: row;
-
-  .col-text {
+  justify-content: space-between;
+  z-index: z("usercard");
+  &__content {
     width: 70%;
   }
-  .col-button {
-    width: 30%;
-    display: flex;
+  &__button {
     align-self: center;
-    justify-content: flex-end;
-    padding-right: 30px;
   }
 }

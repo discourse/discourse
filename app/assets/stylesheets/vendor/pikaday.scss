@@ -116,8 +116,9 @@ $pd-font-family: Arial, sans-serif !default;
     background-size: 75% 75%;
     opacity: .5;
 
-    &:hover {
+    &:hover, &:focus {
         opacity: 1;
+        background: var(--tertiary);
     }
 
     &.is-disabled {
@@ -248,4 +249,10 @@ $pd-font-family: Arial, sans-serif !default;
     background: var(--tertiary);
     box-shadow: none;
     border-radius: 3px;
+}
+
+.pika-day {
+    &:focus {
+        background-color: var(--tertiary-very-low);
+    }
 }

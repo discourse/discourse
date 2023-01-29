@@ -156,7 +156,7 @@ createWidget("user-menu-links", {
 
     glyphs.push(this.bookmarksGlyph());
 
-    if (this.siteSettings.enable_personal_messages || this.currentUser.staff) {
+    if (this.currentUser?.can_send_private_messages) {
       glyphs.push(this.messagesGlyph());
     }
 
@@ -310,6 +310,14 @@ export default createWidget("user-menu", {
       this.clickOutsideMobile(e);
     } else {
       this.sendWidgetAction("toggleUserMenu");
+    }
+  },
+
+  keyDown(e) {
+    if (e.key === "Escape") {
+      this.sendWidgetAction("toggleUserMenu");
+      e.preventDefault();
+      return false;
     }
   },
 

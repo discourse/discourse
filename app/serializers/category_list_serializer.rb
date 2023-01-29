@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
 class CategoryListSerializer < ApplicationSerializer
-
-  attributes :can_create_category,
-             :can_create_topic
+  attributes :can_create_category, :can_create_topic
 
   has_many :categories, serializer: CategoryDetailedSerializer, embed: :objects
 
@@ -14,5 +12,4 @@ class CategoryListSerializer < ApplicationSerializer
   def can_create_topic
     scope.can_create?(Topic)
   end
-
 end

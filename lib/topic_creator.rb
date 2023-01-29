@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class TopicCreator
-
   attr_reader :user, :guardian, :opts
 
   include HasErrors
@@ -24,6 +23,8 @@ class TopicCreator
     # this allows us to add errors
     valid = topic.valid?
 
+    validate_visibility(topic)
+
     category = find_category
     if category.present? && guardian.can_tag?(topic)
       tags = @opts[:tags].presence || []
@@ -31,7 +32,12 @@ class TopicCreator
       valid_tags = guardian.can_create_tag? ? tags : existing_tags
 
       # all add to topic.errors
-      DiscourseTagging.validate_min_required_tags_for_category(guardian, topic, category, valid_tags)
+      DiscourseTagging.validate_min_required_tags_for_category(
+        guardian,
+        topic,
+        category,
+        valid_tags,
+      )
       DiscourseTagging.validate_required_tags_from_group(guardian, topic, category, existing_tags)
       DiscourseTagging.validate_category_restricted_tags(guardian, topic, category, valid_tags)
     end
@@ -46,6 +52,8 @@ class TopicCreator
 
   def create
     topic = Topic.new(setup_topic_params)
+
+    validate_visibility!(topic)
     setup_tags(topic)
 
     if fields = @opts[:custom_fields]
@@ -67,10 +75,23 @@ class TopicCreator
 
   private
 
-  def create_shared_draft(topic)
-    return if @opts[:shared_draft].blank? || @opts[:shared_draft] == 'false'
+  def validate_visibility(topic)
+    if !@opts[:skip_validations] && !topic.visible && !guardian.can_create_unlisted_topic?(topic)
+      topic.errors.add(:base, :unable_to_unlist)
+    end
+  end
 
-    category_id = @opts[:category].blank? ? SiteSetting.shared_drafts_category.to_i : @opts[:category]
+  def validate_visibility!(topic)
+    validate_visibility(topic)
+
+    rollback_from_errors!(topic) if topic.errors.full_messages.present?
+  end
+
+  def create_shared_draft(topic)
+    return if @opts[:shared_draft].blank? || @opts[:shared_draft] == "false"
+
+    category_id =
+      @opts[:category].blank? ? SiteSetting.shared_drafts_category.to_i : @opts[:category]
     SharedDraft.create(topic_id: topic.id, category_id: category_id)
   end
 
@@ -88,9 +109,7 @@ class TopicCreator
   end
 
   def watch_topic(topic)
-    unless @opts[:auto_track] == false
-      topic.notifier.watch_topic!(topic.user_id)
-    end
+    topic.notifier.watch_topic!(topic.user_id) unless @opts[:auto_track] == false
 
     topic.reload.topic_allowed_users.each do |tau|
       next if tau.user_id == -1 || tau.user_id == topic.user_id
@@ -109,10 +128,10 @@ class TopicCreator
       title: @opts[:title],
       user_id: @user.id,
       last_post_user_id: @user.id,
-      visible: @opts[:visible]
+      visible: @opts[:visible],
     }
 
-    [:subtype, :archetype, :meta_data, :import_mode, :advance_draft].each do |key|
+    %i[subtype archetype meta_data import_mode advance_draft].each do |key|
       topic_params[key] = @opts[key] if @opts[key].present?
     end
 
@@ -128,11 +147,11 @@ class TopicCreator
     topic_params[:subtype] = TopicSubtype.moderator_warning if @opts[:is_warning]
 
     category = find_category
-    @guardian.ensure_can_create!(Topic, category) unless (@opts[:skip_validations] || @opts[:archetype] == Archetype.private_message)
-
-    if @opts[:category].present? && category.nil?
-      raise Discourse::InvalidParameters.new(:category)
+    unless (@opts[:skip_validations] || @opts[:archetype] == Archetype.private_message)
+      @guardian.ensure_can_create!(Topic, category)
     end
+
+    raise Discourse::InvalidParameters.new(:category) if @opts[:category].present? && category.nil?
 
     topic_params[:category_id] = category.id if category.present?
     topic_params[:created_at] = convert_time(@opts[:created_at]) if @opts[:created_at].present?
@@ -153,18 +172,19 @@ class TopicCreator
   end
 
   def find_category
-    @category ||= begin
-      # PM can't have a category
-      @opts.delete(:category) if @opts[:archetype].present? && @opts[:archetype] == Archetype.private_message
+    @category ||=
+      begin
+        # PM can't have a category
+        if @opts[:archetype].present? && @opts[:archetype] == Archetype.private_message
+          @opts.delete(:category)
+        end
 
-      if @opts[:shared_draft]
-        return Category.find(SiteSetting.shared_drafts_category)
-      end
+        return Category.find(SiteSetting.shared_drafts_category) if @opts[:shared_draft]
 
-      if (@opts[:category].is_a? Integer) || (@opts[:category] =~ /^\d+$/)
-        Category.find_by(id: @opts[:category])
+        if (@opts[:category].is_a? Integer) || (@opts[:category] =~ /\A\d+\z/)
+          Category.find_by(id: @opts[:category])
+        end
       end
-    end
   end
 
   def setup_tags(topic)
@@ -199,11 +219,12 @@ class TopicCreator
     return unless @opts[:archetype] == Archetype.private_message
     topic.subtype = TopicSubtype.user_to_user unless topic.subtype
 
-    unless @opts[:target_usernames].present? || @opts[:target_emails].present? || @opts[:target_group_names].present?
+    unless @opts[:target_usernames].present? || @opts[:target_emails].present? ||
+             @opts[:target_group_names].present?
       rollback_with!(topic, :no_user_selected)
     end
 
-    if @opts[:target_emails].present? && !@guardian.can_send_private_messages_to_email? then
+    if @opts[:target_emails].present? && !@guardian.can_send_private_messages_to_email?
       rollback_with!(topic, :send_to_email_disabled)
     end
 
@@ -211,32 +232,30 @@ class TopicCreator
     add_emails(topic, @opts[:target_emails])
     add_groups(topic, @opts[:target_group_names])
 
-    if !@added_users.include?(user)
-      topic.topic_allowed_users.build(user_id: @user.id)
-    end
-
+    topic.topic_allowed_users.build(user_id: @user.id) if !@added_users.include?(user)
   end
 
   def save_topic(topic)
     topic.disable_rate_limits! if @opts[:skip_validations]
 
-    unless topic.save(validate: !@opts[:skip_validations])
-      rollback_from_errors!(topic)
-    end
+    rollback_from_errors!(topic) unless topic.save(validate: !@opts[:skip_validations])
   end
 
   def add_users(topic, usernames)
     return unless usernames
 
-    names = usernames.split(',').flatten.map(&:downcase)
+    names = usernames.split(",").flatten.map(&:downcase)
     len = 0
 
-    User.includes(:user_option).where('username_lower in (?)', names).find_each do |user|
-      check_can_send_permission!(topic, user)
-      @added_users << user
-      topic.topic_allowed_users.build(user_id: user.id)
-      len += 1
-    end
+    User
+      .includes(:user_option)
+      .where("username_lower in (?)", names)
+      .find_each do |user|
+        check_can_send_permission!(topic, user)
+        @added_users << user
+        topic.topic_allowed_users.build(user_id: user.id)
+        len += 1
+      end
 
     rollback_with!(topic, :target_user_not_found) unless len == names.length
   end
@@ -245,7 +264,7 @@ class TopicCreator
     return unless emails
 
     begin
-      emails = emails.split(',').flatten
+      emails = emails.split(",").flatten
       len = 0
 
       emails.each do |email|
@@ -266,22 +285,27 @@ class TopicCreator
 
   def add_groups(topic, groups)
     return unless groups
-    names = groups.split(',').flatten.map(&:downcase)
+    names = groups.split(",").flatten.map(&:downcase)
     len = 0
 
-    Group.where('lower(name) in (?)', names).each do |group|
-      check_can_send_permission!(topic, group)
-      topic.topic_allowed_groups.build(group_id: group.id)
-      len += 1
-      group.update_columns(has_messages: true) unless group.has_messages
-    end
+    Group
+      .where("lower(name) in (?)", names)
+      .each do |group|
+        check_can_send_permission!(topic, group)
+        topic.topic_allowed_groups.build(group_id: group.id)
+        len += 1
+        group.update_columns(has_messages: true) unless group.has_messages
+      end
 
     rollback_with!(topic, :target_group_not_found) unless len == names.length
   end
 
   def check_can_send_permission!(topic, obj)
     unless @opts[:skip_validations] ||
-      @guardian.can_send_private_message?(obj, notify_moderators: topic&.subtype == TopicSubtype.notify_moderators)
+             @guardian.can_send_private_message?(
+               obj,
+               notify_moderators: topic&.subtype == TopicSubtype.notify_moderators,
+             )
       rollback_with!(topic, :cant_send_pm)
     end
   end
@@ -292,15 +316,15 @@ class TopicCreator
     if !user && SiteSetting.enable_staged_users
       username = UserNameSuggester.sanitize_username(display_name) if display_name.present?
 
-      user = User.create!(
-        email: email,
-        username: UserNameSuggester.suggest(username.presence || email),
-        name: display_name.presence || User.suggest_name(email),
-        staged: true
-      )
+      user =
+        User.create!(
+          email: email,
+          username: UserNameSuggester.suggest(username.presence || email),
+          name: display_name.presence || User.suggest_name(email),
+          staged: true,
+        )
     end
 
     user
   end
-
 end

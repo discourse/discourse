@@ -8,7 +8,7 @@ RSpec.describe DiscourseConnect do
     SiteSetting.discourse_connect_url = @discourse_connect_url
     SiteSetting.enable_discourse_connect = true
     SiteSetting.discourse_connect_secret = @discourse_connect_secret
-    SiteSetting.reserved_usernames = ''
+    SiteSetting.reserved_usernames = ""
     Jobs.run_immediately!
   end
 
@@ -86,22 +86,22 @@ RSpec.describe DiscourseConnect do
 
     sso.external_id = "    "
 
-    expect do
-      sso.lookup_or_create_user(ip_address)
-    end.to raise_error(DiscourseConnect::BlankExternalId)
+    expect do sso.lookup_or_create_user(ip_address) end.to raise_error(
+      DiscourseConnect::BlankExternalId,
+    )
 
     sso.external_id = nil
 
-    expect do
-      sso.lookup_or_create_user(ip_address)
-    end.to raise_error(DiscourseConnect::BlankExternalId)
+    expect do sso.lookup_or_create_user(ip_address) end.to raise_error(
+      DiscourseConnect::BlankExternalId,
+    )
 
     # going for slight duplication here so our intent is crystal clear
-    %w{none nil Blank null}.each do |word|
+    %w[none nil Blank null].each do |word|
       sso.external_id = word
-      expect do
-        sso.lookup_or_create_user(ip_address)
-      end.to raise_error(DiscourseConnect::BannedExternalId)
+      expect do sso.lookup_or_create_user(ip_address) end.to raise_error(
+        DiscourseConnect::BannedExternalId,
+      )
     end
   end
 
@@ -180,15 +180,15 @@ RSpec.describe DiscourseConnect do
     user = sso.lookup_or_create_user(ip_address)
     staff_group.reload
 
-    expect(mod_group.users.where('users.id = ?', user.id).exists?).to eq(true)
-    expect(staff_group.users.where('users.id = ?', user.id).exists?).to eq(true)
-    expect(admin_group.users.where('users.id = ?', user.id).exists?).to eq(true)
+    expect(mod_group.users.where("users.id = ?", user.id).exists?).to eq(true)
+    expect(staff_group.users.where("users.id = ?", user.id).exists?).to eq(true)
+    expect(admin_group.users.where("users.id = ?", user.id).exists?).to eq(true)
   end
 
   it "can force a list of groups with the groups attribute" do
     user = Fabricate(:user)
-    group1 = Fabricate(:group, name: 'group1')
-    group2 = Fabricate(:group, name: 'group2')
+    group1 = Fabricate(:group, name: "group1")
+    group2 = Fabricate(:group, name: "group2")
 
     sso = new_discourse_sso
     sso.username = "bobsky"
@@ -206,7 +206,7 @@ RSpec.describe DiscourseConnect do
     expect(group2.usernames).to eq("")
 
     group1.add(user)
-    group1.save
+    group1.save!
 
     sso.lookup_or_create_user(ip_address)
     expect(group1.usernames).to eq("")
@@ -216,17 +216,26 @@ RSpec.describe DiscourseConnect do
     sso.lookup_or_create_user(ip_address)
     expect(group1.usernames).to eq("")
     expect(group2.usernames).to eq("")
+
+    group1.add(user)
+    group1.save!
+    group2.add(user)
+    group2.save!
+    sso.groups = "#{group1.name},badname,trust_level_4"
+
+    sso.lookup_or_create_user(ip_address)
+    expect(group1.usernames).to eq(user.username)
+    expect(group2.usernames).to eq("")
   end
 
   it "can specify groups" do
-
     user = Fabricate(:user)
 
-    add_group1 = Fabricate(:group, name: 'group1')
-    add_group2 = Fabricate(:group, name: 'group2')
-    existing_group = Fabricate(:group, name: 'group3')
-    add_group4 = Fabricate(:group, name: 'GROUP4')
-    existing_group2 = Fabricate(:group, name: 'GRoup5')
+    add_group1 = Fabricate(:group, name: "group1")
+    add_group2 = Fabricate(:group, name: "group2")
+    existing_group = Fabricate(:group, name: "group3")
+    add_group4 = Fabricate(:group, name: "GROUP4")
+    existing_group2 = Fabricate(:group, name: "GRoup5")
 
     [existing_group, existing_group2].each do |g|
       g.add(user)
@@ -263,7 +272,113 @@ RSpec.describe DiscourseConnect do
     expect(add_group4.usernames).to eq(user.username)
   end
 
-  it 'behaves properly when auth_overrides_username is set but username is missing or blank' do
+  it "creates group logs when users are added to groups" do
+    user = Fabricate(:user)
+    group = Fabricate(:group, name: "group1")
+
+    sso = new_discourse_sso
+    sso.username = "bobsky"
+    sso.name = "Bob"
+    sso.email = user.email
+    sso.external_id = "A"
+    sso.add_groups = "#{group.name},badname"
+
+    GroupHistory.destroy_all
+
+    sso.lookup_or_create_user(ip_address)
+
+    expect(group.reload.usernames).to eq(user.username)
+    expect(
+      GroupHistory.exists?(
+        target_user_id: user.id,
+        acting_user: Discourse.system_user.id,
+        action: GroupHistory.actions[:add_user_to_group],
+      ),
+    ).to eq(true)
+  end
+
+  it "creates group logs when users are removed from groups" do
+    user = Fabricate(:user)
+    group = Fabricate(:group, name: "group1")
+    group.add(user)
+
+    sso = new_discourse_sso
+    sso.username = "bobsky"
+    sso.name = "Bob"
+    sso.email = user.email
+    sso.external_id = "A"
+    sso.remove_groups = "#{group.name},badname"
+
+    GroupHistory.destroy_all
+
+    sso.lookup_or_create_user(ip_address)
+
+    expect(group.reload.usernames).to be_blank
+    expect(
+      GroupHistory.exists?(
+        target_user_id: user.id,
+        acting_user: Discourse.system_user.id,
+        action: GroupHistory.actions[:remove_user_from_group],
+      ),
+    ).to eq(true)
+  end
+
+  it "creates group logs when users are added to groups when discourse_connect_overrides_groups setting is true" do
+    SiteSetting.discourse_connect_overrides_groups = true
+
+    user = Fabricate(:user)
+    group = Fabricate(:group, name: "group1")
+
+    sso = new_discourse_sso
+    sso.username = "bobsky"
+    sso.name = "Bob"
+    sso.email = user.email
+    sso.external_id = "A"
+    sso.groups = "#{group.name},badname"
+
+    GroupHistory.destroy_all
+
+    sso.lookup_or_create_user(ip_address)
+
+    expect(group.reload.usernames).to eq(user.username)
+    expect(
+      GroupHistory.exists?(
+        target_user_id: user.id,
+        acting_user: Discourse.system_user.id,
+        action: GroupHistory.actions[:add_user_to_group],
+      ),
+    ).to eq(true)
+  end
+
+  it "creates group logs when users are removed from groups when discourse_connect_overrides_groups setting is true" do
+    SiteSetting.discourse_connect_overrides_groups = true
+
+    user = Fabricate(:user)
+    group = Fabricate(:group, name: "group1")
+    group.add(user)
+
+    sso = new_discourse_sso
+    sso.username = "bobsky"
+    sso.name = "Bob"
+    sso.email = user.email
+    sso.external_id = "A"
+    sso.groups = "badname"
+
+    GroupHistory.destroy_all
+
+    sso.lookup_or_create_user(ip_address)
+
+    expect(group.reload.usernames).to be_blank
+    expect(
+      GroupHistory.exists?(
+        target_user_id: user.id,
+        acting_user: Discourse.system_user.id,
+        action: GroupHistory.actions[:remove_user_from_group],
+      ),
+    ).to eq(true)
+  end
+
+  it "behaves properly when auth_overrides_username is set but username is missing or blank" do
     SiteSetting.auth_overrides_username = true
 
     sso = new_discourse_sso
@@ -284,7 +399,7 @@ RSpec.describe DiscourseConnect do
     expect(user.username).to eq "testuser"
 
     # set username in payload to blank
-    sso.username = ''
+    sso.username = ""
     user = sso.lookup_or_create_user(ip_address)
     expect(user.username).to eq "testuser"
   end
@@ -324,7 +439,7 @@ RSpec.describe DiscourseConnect do
     expect(admin.name).to eq "Louis C.K."
   end
 
-  it 'can override username properly when only the case changes' do
+  it "can override username properly when only the case changes" do
     SiteSetting.auth_overrides_username = true
 
     sso = new_discourse_sso
@@ -345,7 +460,7 @@ RSpec.describe DiscourseConnect do
     expect(user.username).to eq "TestUser"
   end
 
-  it 'do not override username when a new username after fixing is the same' do
+  it "do not override username when a new username after fixing is the same" do
     SiteSetting.auth_overrides_username = true
 
     sso = new_discourse_sso
@@ -364,7 +479,7 @@ RSpec.describe DiscourseConnect do
     expect(user.username).to eq "testuser"
   end
 
-  it 'should preserve username when several users login with the same username' do
+  it "should preserve username when several users login with the same username" do
     SiteSetting.auth_overrides_username = true
 
     # if several users have username "bill" on the external site,
@@ -474,7 +589,7 @@ RSpec.describe DiscourseConnect do
     sso.email = "mail@mail.com"
 
     user = sso.lookup_or_create_user(ip_address)
-    expect(user.username).to eq I18n.t('fallback_username')
+    expect(user.username).to eq I18n.t("fallback_username")
   end
 
   it "uses email as a source for username suggestions if enabled" do
@@ -593,7 +708,7 @@ RSpec.describe DiscourseConnect do
     sso = make_sso
     sso.sso_url = "http://tcdev7.wpengine.com/?action=showlogin"
 
-    expect(sso.to_url.split('?').size).to eq 2
+    expect(sso.to_url.split("?").size).to eq 2
 
     url, payload = sso.to_url.split("?")
     expect(url).to eq "http://tcdev7.wpengine.com/"
@@ -603,12 +718,13 @@ RSpec.describe DiscourseConnect do
   end
 
   it "validates nonce" do
-    _ , payload = DiscourseConnect.generate_url(secure_session: secure_session).split("?")
+    _, payload = DiscourseConnect.generate_url(secure_session: secure_session).split("?")
 
     sso = DiscourseConnect.parse(payload, secure_session: secure_session)
     expect(sso.nonce_valid?).to eq true
 
-    other_session_sso = DiscourseConnect.parse(payload, secure_session: SecureSession.new("differentsession"))
+    other_session_sso =
+      DiscourseConnect.parse(payload, secure_session: SecureSession.new("differentsession"))
     expect(other_session_sso.nonce_valid?).to eq false
 
     sso.expire_nonce!
@@ -618,12 +734,13 @@ RSpec.describe DiscourseConnect do
 
   it "allows disabling CSRF protection" do
     SiteSetting.discourse_connect_csrf_protection = false
-    _ , payload = DiscourseConnect.generate_url(secure_session: secure_session).split("?")
+    _, payload = DiscourseConnect.generate_url(secure_session: secure_session).split("?")
 
     sso = DiscourseConnect.parse(payload, secure_session: secure_session)
     expect(sso.nonce_valid?).to eq true
 
-    other_session_sso = DiscourseConnect.parse(payload, secure_session: SecureSession.new("differentsession"))
+    other_session_sso =
+      DiscourseConnect.parse(payload, secure_session: SecureSession.new("differentsession"))
     expect(other_session_sso.nonce_valid?).to eq true
 
     sso.expire_nonce!
@@ -639,9 +756,9 @@ RSpec.describe DiscourseConnect do
     expect(sso.nonce).to_not be_nil
   end
 
-  describe 'nonce error' do
+  describe "nonce error" do
     it "generates correct error message when nonce has already been used" do
-      _ , payload = DiscourseConnect.generate_url(secure_session: secure_session).split("?")
+      _, payload = DiscourseConnect.generate_url(secure_session: secure_session).split("?")
 
       sso = DiscourseConnect.parse(payload, secure_session: secure_session)
       expect(sso.nonce_valid?).to eq true
@@ -651,18 +768,20 @@ RSpec.describe DiscourseConnect do
     end
 
     it "generates correct error message when nonce is expired" do
-      _ , payload = DiscourseConnect.generate_url(secure_session: secure_session).split("?")
+      _, payload = DiscourseConnect.generate_url(secure_session: secure_session).split("?")
 
       sso = DiscourseConnect.parse(payload, secure_session: secure_session)
       expect(sso.nonce_valid?).to eq true
 
       Discourse.cache.delete(sso.used_nonce_key)
-      expect(sso.nonce_error).to eq("Nonce is incorrect, was generated in a different browser session, or has expired")
+      expect(sso.nonce_error).to eq(
+        "Nonce is incorrect, was generated in a different browser session, or has expired",
+      )
     end
 
     it "generates correct error message when nonce is expired, and csrf protection disabled" do
       SiteSetting.discourse_connect_csrf_protection = false
-      _ , payload = DiscourseConnect.generate_url(secure_session: secure_session).split("?")
+      _, payload = DiscourseConnect.generate_url(secure_session: secure_session).split("?")
 
       sso = DiscourseConnect.parse(payload, secure_session: secure_session)
       expect(sso.nonce_valid?).to eq true
@@ -672,8 +791,8 @@ RSpec.describe DiscourseConnect do
     end
   end
 
-  describe 'user locale' do
-    it 'sets default user locale if specified' do
+  describe "user locale" do
+    it "sets default user locale if specified" do
       SiteSetting.allow_user_locale = true
 
       sso = new_discourse_sso
@@ -702,7 +821,7 @@ RSpec.describe DiscourseConnect do
     end
   end
 
-  describe 'trusting emails' do
+  describe "trusting emails" do
     let(:sso) do
       sso = new_discourse_sso
       sso.username = "test"
@@ -713,12 +832,12 @@ RSpec.describe DiscourseConnect do
       sso
     end
 
-    it 'activates users by default' do
+    it "activates users by default" do
       user = sso.lookup_or_create_user(ip_address)
       expect(user.active).to eq(true)
     end
 
-    it 'does not activate user when asked not to' do
+    it "does not activate user when asked not to" do
       sso.require_activation = true
       user = sso.lookup_or_create_user(ip_address)
       expect(user.active).to eq(false)
@@ -727,13 +846,12 @@ RSpec.describe DiscourseConnect do
 
       sso.external_id = "B"
 
-      expect do
-        sso.lookup_or_create_user(ip_address)
-      end.to raise_error(ActiveRecord::RecordInvalid)
-
+      expect do sso.lookup_or_create_user(ip_address) end.to raise_error(
+        ActiveRecord::RecordInvalid,
+      )
     end
 
-    it 'does not deactivate user if email provided is capitalized' do
+    it "does not deactivate user if email provided is capitalized" do
       SiteSetting.email_editable = false
       SiteSetting.auth_overrides_email = true
       sso.require_activation = true
@@ -750,8 +868,7 @@ RSpec.describe DiscourseConnect do
       expect(user.active).to eq(true)
     end
 
-    it 'deactivates accounts that have updated email address' do
-
+    it "deactivates accounts that have updated email address" do
       SiteSetting.email_editable = false
       SiteSetting.auth_overrides_email = true
       sso.require_activation = true
@@ -765,25 +882,23 @@ RSpec.describe DiscourseConnect do
       user = sso.lookup_or_create_user(ip_address)
       expect(user.active).to eq(true)
 
-      user.primary_email.update_columns(email: 'xXx@themovie.com')
+      user.primary_email.update_columns(email: "xXx@themovie.com")
 
       user = sso.lookup_or_create_user(ip_address)
       expect(user.email).to eq(old_email)
       expect(user.active).to eq(false)
-
     end
-
   end
 
-  describe 'welcome emails' do
-    let(:sso) {
+  describe "welcome emails" do
+    let(:sso) do
       sso = new_discourse_sso
       sso.username = "test"
       sso.name = "test"
       sso.email = "test@example.com"
       sso.external_id = "A"
       sso
-    }
+    end
 
     it "sends a welcome email by default" do
       User.any_instance.expects(:enqueue_welcome_message).once
@@ -797,18 +912,18 @@ RSpec.describe DiscourseConnect do
     end
   end
 
-  describe 'setting title for a user' do
-    let(:sso) {
+  describe "setting title for a user" do
+    let(:sso) do
       sso = new_discourse_sso
-      sso.username = 'test'
-      sso.name = 'test'
-      sso.email = 'test@test.com'
-      sso.external_id = '100'
+      sso.username = "test"
+      sso.name = "test"
+      sso.email = "test@test.com"
+      sso.external_id = "100"
       sso.title = "The User's Title"
       sso
-    }
+    end
 
-    it 'sets title correctly' do
+    it "sets title correctly" do
       user = sso.lookup_or_create_user(ip_address)
       expect(user.title).to eq(sso.title)
 
@@ -824,7 +939,7 @@ RSpec.describe DiscourseConnect do
     end
   end
 
-  describe 'setting bio for a user' do
+  describe "setting bio for a user" do
     let(:sso) do
       sso = new_discourse_sso
       sso.username = "test"
@@ -836,7 +951,7 @@ RSpec.describe DiscourseConnect do
       sso
     end
 
-    it 'can set bio if supplied on new users or users with empty bio' do
+    it "can set bio if supplied on new users or users with empty bio" do
       # new account
       user = sso.lookup_or_create_user(ip_address)
       expect(user.user_profile.bio_cooked).to match_html("<p>This <strong>is</strong> the bio</p>")
@@ -848,7 +963,7 @@ RSpec.describe DiscourseConnect do
       expect(user.user_profile.bio_cooked).to match_html("<p>This <strong>is</strong> the bio</p>")
 
       # yes override for blank
-      user.user_profile.update!(bio_raw: '')
+      user.user_profile.update!(bio_raw: "")
 
       user = sso.lookup_or_create_user(ip_address)
       expect(user.user_profile.bio_cooked).to match_html("<p>new profile</p>")
@@ -860,11 +975,9 @@ RSpec.describe DiscourseConnect do
       user = sso.lookup_or_create_user(ip_address)
       expect(user.user_profile.bio_cooked).to match_html("<p>new profile 2</p")
     end
-
   end
 
-  context 'when discourse_connect_overrides_avatar is not enabled' do
-
+  context "when discourse_connect_overrides_avatar is not enabled" do
     it "correctly handles provided avatar_urls" do
       sso = new_discourse_sso
       sso.external_id = 666
@@ -874,7 +987,10 @@ RSpec.describe DiscourseConnect do
       sso.avatar_url = "http://awesome.com/image.png"
       sso.suppress_welcome_message = true
 
-      FileHelper.stubs(:download).returns(file_from_fixtures("logo.png"), file_from_fixtures("logo.png"))
+      FileHelper.stubs(:download).returns(
+        file_from_fixtures("logo.png"),
+        file_from_fixtures("logo.png"),
+      )
       user = sso.lookup_or_create_user(ip_address)
       user.reload
       avatar_id = user.uploaded_avatar_id
@@ -885,7 +1001,10 @@ RSpec.describe DiscourseConnect do
       # junk avatar id should be updated
       old_id = user.uploaded_avatar_id
       Upload.destroy(old_id)
-      FileHelper.stubs(:download).returns(file_from_fixtures("logo.png"), file_from_fixtures("logo.png"))
+      FileHelper.stubs(:download).returns(
+        file_from_fixtures("logo.png"),
+        file_from_fixtures("logo.png"),
+      )
       user = sso.lookup_or_create_user(ip_address)
       user.reload
       avatar_id = user.uploaded_avatar_id
@@ -920,26 +1039,25 @@ RSpec.describe DiscourseConnect do
       # # we better have the same avatar
       # expect(user.uploaded_avatar_id).to eq(avatar_id)
     end
-
   end
 
-  context 'when discourse_connect_overrides_avatar is enabled' do
-    fab!(:sso_record) { Fabricate(:single_sign_on_record, external_avatar_url: "http://example.com/an_image.png") }
+  context "when discourse_connect_overrides_avatar is enabled" do
+    fab!(:sso_record) do
+      Fabricate(:single_sign_on_record, external_avatar_url: "http://example.com/an_image.png")
+    end
 
-    let!(:sso) {
+    let!(:sso) do
       sso = new_discourse_sso
       sso.username = "test"
       sso.name = "test"
       sso.email = sso_record.user.email
       sso.external_id = sso_record.external_id
       sso
-    }
+    end
 
     let(:logo) { file_from_fixtures("logo.png") }
 
-    before do
-      SiteSetting.discourse_connect_overrides_avatar = true
-    end
+    before { SiteSetting.discourse_connect_overrides_avatar = true }
 
     it "deal with no avatar url passed for an existing user with an avatar" do
       Sidekiq::Testing.inline! do
@@ -971,8 +1089,7 @@ RSpec.describe DiscourseConnect do
     end
   end
 
-  context 'when discourse_connect_overrides_profile_background is not enabled' do
-
+  context "when discourse_connect_overrides_profile_background is not enabled" do
     it "correctly handles provided profile_background_urls" do
       sso = new_discourse_sso
       sso.external_id = 666
@@ -990,7 +1107,7 @@ RSpec.describe DiscourseConnect do
 
       # initial creation ...
       expect(profile_background_url).to_not eq(nil)
-      expect(profile_background_url).to_not eq('')
+      expect(profile_background_url).to_not eq("")
 
       FileHelper.stubs(:download) { raise "should not be called" }
       sso.profile_background_url = "https://some.new/avatar.png"
@@ -1003,23 +1120,26 @@ RSpec.describe DiscourseConnect do
     end
   end
 
-  context 'when discourse_connect_overrides_profile_background is enabled' do
-    fab!(:sso_record) { Fabricate(:single_sign_on_record, external_profile_background_url: "http://example.com/an_image.png") }
+  context "when discourse_connect_overrides_profile_background is enabled" do
+    fab!(:sso_record) do
+      Fabricate(
+        :single_sign_on_record,
+        external_profile_background_url: "http://example.com/an_image.png",
+      )
+    end
 
-    let!(:sso) {
+    let!(:sso) do
       sso = new_discourse_sso
       sso.username = "test"
       sso.name = "test"
       sso.email = sso_record.user.email
       sso.external_id = sso_record.external_id
       sso
-    }
+    end
 
     let(:logo) { file_from_fixtures("logo.png") }
 
-    before do
-      SiteSetting.discourse_connect_overrides_profile_background = true
-    end
+    before { SiteSetting.discourse_connect_overrides_profile_background = true }
 
     it "deal with no profile_background_url passed for an existing user with a profile_background" do
       # Deliberately not setting profile_background_url so it should not update
@@ -1043,8 +1163,7 @@ RSpec.describe DiscourseConnect do
     end
   end
 
-  context 'when discourse_connect_overrides_card_background is not enabled' do
-
+  context "when discourse_connect_overrides_card_background is not enabled" do
     it "correctly handles provided card_background_urls" do
       sso = new_discourse_sso
       sso.external_id = 666
@@ -1069,29 +1188,30 @@ RSpec.describe DiscourseConnect do
       user.user_profile.reload
 
       # card_background updated but no override specified ...
-      expect(user.user_profile.card_background_upload.url).to eq(
-        card_background_url
-      )
+      expect(user.user_profile.card_background_upload.url).to eq(card_background_url)
     end
   end
 
-  context 'when discourse_connect_overrides_card_background is enabled' do
-    fab!(:sso_record) { Fabricate(:single_sign_on_record, external_card_background_url: "http://example.com/an_image.png") }
+  context "when discourse_connect_overrides_card_background is enabled" do
+    fab!(:sso_record) do
+      Fabricate(
+        :single_sign_on_record,
+        external_card_background_url: "http://example.com/an_image.png",
+      )
+    end
 
-    let!(:sso) {
+    let!(:sso) do
       sso = new_discourse_sso
       sso.username = "test"
       sso.name = "test"
       sso.email = sso_record.user.email
       sso.external_id = sso_record.external_id
       sso
-    }
+    end
 
     let(:logo) { file_from_fixtures("logo.png") }
 
-    before do
-      SiteSetting.discourse_connect_overrides_card_background = true
-    end
+    before { SiteSetting.discourse_connect_overrides_card_background = true }
 
     it "deal with no card_background_url passed for an existing user with a card_background" do
       # Deliberately not setting card_background_url so it should not update
@@ -1112,7 +1232,7 @@ RSpec.describe DiscourseConnect do
       user = sso.lookup_or_create_user(ip_address)
       user.reload
 
-      expect(user.user_profile.card_background_upload.url).to_not eq('')
+      expect(user.user_profile.card_background_upload.url).to_not eq("")
     end
   end
 

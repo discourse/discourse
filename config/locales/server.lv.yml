@@ -122,6 +122,7 @@ lv:
         bio_raw: "Par Mani"
     errors:
       <<: *errors
+  general_category_name: "Vispārīgi"
   staff_category_name: "Personāls"
   trust_levels:
     admin: "Administrators"
@@ -182,9 +183,6 @@ lv:
         one: "pirms %{count} dienas"
         other: "pirms %{count} dienām"
   password_reset:
-    choose_new: "Izvēlēties jaunu paroli"
-    choose: "Izvēlēties paroli"
-    save: "Iestatīt paroli"
     title: "Atjaunot paroli"
   change_email:
     please_continue: "Turpināt %{site_name}"
@@ -251,6 +249,11 @@ lv:
       labels:
         post: Ieraksts
         edit_reason: Iemesls
+    consolidated_api_requests:
+      xaxis:
+        api: "API"
+        user_api: "Lietotāja API"
+      yaxis: "Diena"
     dau_by_mau:
       xaxis: "Diena"
     daily_engaged_users:
@@ -441,8 +444,6 @@ lv:
         fields:
           login_required:
             placeholder: "Privāts"
-          must_approve_users:
-            placeholder: "Pieprasīt apstiprinājumu"
       styling:
         fields:
           styling_preview:

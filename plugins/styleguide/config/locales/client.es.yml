@@ -86,7 +86,9 @@ es:
         spinners:
           title: "Indicadores de carga"
         empty_state:
-          title: "En caso de vacío"
+          title: "Estado vacío"
         rich_tooltip:
+          title: "Información sobre herramientas enriquecida"
           description: "Descripción"
           header: "Encabezado"
+          hover_to_see: "Pase el cursor para ver una información sobre herramientas"

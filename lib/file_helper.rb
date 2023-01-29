@@ -5,11 +5,10 @@ require "mini_mime"
 require "open-uri"
 
 class FileHelper
-
   def self.log(log_level, message)
     Rails.logger.public_send(
       log_level,
-      "#{RailsMultisite::ConnectionManagement.current_db}: #{message}"
+      "#{RailsMultisite::ConnectionManagement.current_db}: #{message}",
     )
   end
 
@@ -41,29 +40,31 @@ class FileHelper
     attr_accessor :status
   end
 
-  def self.download(url,
-                    max_file_size:,
-                    tmp_file_name:,
-                    follow_redirect: false,
-                    read_timeout: 5,
-                    skip_rate_limit: false,
-                    verbose: false,
-                    validate_uri: true,
-                    retain_on_max_file_size_exceeded: false)
-
+  def self.download(
+    url,
+    max_file_size:,
+    tmp_file_name:,
+    follow_redirect: false,
+    read_timeout: 5,
+    skip_rate_limit: false,
+    verbose: false,
+    validate_uri: true,
+    retain_on_max_file_size_exceeded: false
+  )
     url = "https:" + url if url.start_with?("//")
-    raise Discourse::InvalidParameters.new(:url) unless url =~ /^https?:\/\//
+    raise Discourse::InvalidParameters.new(:url) unless url =~ %r{\Ahttps?://}
 
     tmp = nil
 
-    fd = FinalDestination.new(
-      url,
-      max_redirects: follow_redirect ? 5 : 0,
-      skip_rate_limit: skip_rate_limit,
-      verbose: verbose,
-      validate_uri: validate_uri,
-      timeout: read_timeout
-    )
+    fd =
+      FinalDestination.new(
+        url,
+        max_redirects: follow_redirect ? 5 : 0,
+        skip_rate_limit: skip_rate_limit,
+        verbose: verbose,
+        validate_uri: validate_uri,
+        timeout: read_timeout,
+      )
 
     fd.get do |response, chunk, uri|
       if tmp.nil?
@@ -110,7 +111,7 @@ class FileHelper
   def self.optimize_image!(filename, allow_pngquant: false)
     image_optim(
       allow_pngquant: allow_pngquant,
-      strip_image_metadata: SiteSetting.strip_image_metadata
+      strip_image_metadata: SiteSetting.strip_image_metadata,
     ).optimize_image!(filename)
   end
 
@@ -119,23 +120,26 @@ class FileHelper
     # sometimes up to 200ms searching for binaries and looking at versions
     memoize("image_optim", allow_pngquant, strip_image_metadata) do
       pngquant_options = false
-      if allow_pngquant
-        pngquant_options = { allow_lossy: true }
-      end
+      pngquant_options = { allow_lossy: true } if allow_pngquant
 
       ImageOptim.new(
         # GLOBAL
         timeout: 15,
         skip_missing_workers: true,
         # PNG
-        oxipng: { level: 3, strip: strip_image_metadata },
+        oxipng: {
+          level: 3,
+          strip: strip_image_metadata,
+        },
         optipng: false,
         advpng: false,
         pngcrush: false,
         pngout: false,
         pngquant: pngquant_options,
         # JPG
-        jpegoptim: { strip: strip_image_metadata ? "all" : "none" },
+        jpegoptim: {
+          strip: strip_image_metadata ? "all" : "none",
+        },
         jpegtran: false,
         jpegrecompress: false,
         # Skip looking for gifsicle, svgo binaries
@@ -150,47 +154,47 @@ class FileHelper
   end
 
   def self.supported_gravatar_extensions
-    @@supported_gravatar_images ||= Set.new(%w{jpg jpeg png gif})
+    @@supported_gravatar_images ||= Set.new(%w[jpg jpeg png gif])
   end
 
   def self.supported_images
-    @@supported_images ||= Set.new %w{jpg jpeg png gif svg ico webp}
+    @@supported_images ||= Set.new %w[jpg jpeg png gif svg ico webp]
   end
 
   def self.inline_images
     # SVG cannot safely be shown as a document
-    @@inline_images ||= supported_images - %w{svg}
+    @@inline_images ||= supported_images - %w[svg]
   end
 
   def self.supported_audio
-    @@supported_audio ||= Set.new %w{mp3 ogg oga opus wav m4a m4b m4p m4r aac flac}
+    @@supported_audio ||= Set.new %w[mp3 ogg oga opus wav m4a m4b m4p m4r aac flac]
   end
 
   def self.supported_video
-    @@supported_video ||= Set.new %w{mov mp4 webm ogv m4v 3gp avi mpeg}
+    @@supported_video ||= Set.new %w[mov mp4 webm ogv m4v 3gp avi mpeg]
   end
 
   def self.supported_video_regexp
-    @@supported_video_regexp ||= /\.(#{supported_video.to_a.join("|")})$/i
+    @@supported_video_regexp ||= /\.(#{supported_video.to_a.join("|")})\z/i
   end
 
   def self.supported_audio_regexp
-    @@supported_audio_regexp ||= /\.(#{supported_audio.to_a.join("|")})$/i
+    @@supported_audio_regexp ||= /\.(#{supported_audio.to_a.join("|")})\z/i
   end
 
   def self.supported_images_regexp
-    @@supported_images_regexp ||= /\.(#{supported_images.to_a.join("|")})$/i
+    @@supported_images_regexp ||= /\.(#{supported_images.to_a.join("|")})\z/i
   end
 
   def self.inline_images_regexp
-    @@inline_images_regexp ||= /\.(#{inline_images.to_a.join("|")})$/i
+    @@inline_images_regexp ||= /\.(#{inline_images.to_a.join("|")})\z/i
   end
 
   def self.supported_media_regexp
     @@supported_media_regexp ||=
       begin
         media = supported_images | supported_audio | supported_video
-        /\.(#{media.to_a.join("|")})$/i
+        /\.(#{media.to_a.join("|")})\z/i
       end
   end
 
@@ -198,7 +202,7 @@ class FileHelper
     @@supported_playable_media_regexp ||=
       begin
         media = supported_audio | supported_video
-        /\.(#{media.to_a.join("|")})$/i
+        /\.(#{media.to_a.join("|")})\z/i
       end
   end
 end

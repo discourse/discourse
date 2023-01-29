@@ -17,7 +17,7 @@ import I18n from "I18n";
 import ItsATrap from "@discourse/itsatrap";
 import { Promise } from "rsvp";
 import { SKIP } from "discourse/lib/autocomplete";
-import { categoryHashtagTriggerRule } from "discourse/lib/category-hashtags";
+import { setupHashtagAutocomplete } from "discourse/lib/hashtag-autocomplete";
 import deprecated from "discourse-common/lib/deprecated";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { findRawTemplate } from "discourse-common/lib/raw-templates";
@@ -28,7 +28,6 @@ import { linkSeenMentions } from "discourse/lib/link-mentions";
 import { loadOneboxes } from "discourse/lib/load-oneboxes";
 import loadScript from "discourse/lib/load-script";
 import { resolveCachedShortUrls } from "pretty-text/upload-short-url";
-import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
 import { inject as service } from "@ember/service";
 import showModal from "discourse/lib/show-modal";
 import { siteDir } from "discourse/lib/text-direction";
@@ -50,7 +49,7 @@ let _createCallbacks = [];
 
 class Toolbar {
   constructor(opts) {
-    const { site, siteSettings } = opts;
+    const { siteSettings, capabilities } = opts;
     this.shortcuts = {};
     this.context = null;
 
@@ -106,16 +105,16 @@ class Toolbar {
         }),
     });
 
-    this.addButton({
-      id: "code",
-      group: "insertions",
-      shortcut: "E",
-      preventFocus: true,
-      trimLeading: true,
-      action: (...args) => this.context.send("formatCode", args),
-    });
+    if (!capabilities.touch) {
+      this.addButton({
+        id: "code",
+        group: "insertions",
+        shortcut: "E",
+        preventFocus: true,
+        trimLeading: true,
+        action: (...args) => this.context.send("formatCode", args),
+      });
 
-    if (!site.mobileView) {
       this.addButton({
         id: "bullet",
         group: "extras",
@@ -210,7 +209,9 @@ export function clearToolbarCallbacks() {
 }
 
 export function onToolbarCreate(func) {
-  deprecated("`onToolbarCreate` is deprecated, use the plugin api instead.");
+  deprecated("`onToolbarCreate` is deprecated, use the plugin api instead.", {
+    id: "discourse.d-editor.on-toolbar-create",
+  });
   addToolbarCallback(func);
 }
 
@@ -257,7 +258,7 @@ export default Component.extend(TextareaTextManipulation, {
     this._textarea = this.element.querySelector("textarea.d-editor-input");
     this._$textarea = $(this._textarea);
     this._applyEmojiAutocomplete(this._$textarea);
-    this._applyCategoryHashtagAutocomplete(this._$textarea);
+    this._applyHashtagAutocomplete(this._$textarea);
 
     scheduleOnce("afterRender", this, this._readyNow);
 
@@ -289,10 +290,6 @@ export default Component.extend(TextareaTextManipulation, {
         this,
         "indentSelection"
       );
-    }
-
-    if (isTesting()) {
-      this.element.addEventListener("paste", this.paste);
     }
   },
 
@@ -354,7 +351,7 @@ export default Component.extend(TextareaTextManipulation, {
   @discourseComputed()
   toolbar() {
     const toolbar = new Toolbar(
-      this.getProperties("site", "siteSettings", "showLink")
+      this.getProperties("site", "siteSettings", "showLink", "capabilities")
     );
     toolbar.context = this;
 
@@ -462,29 +459,18 @@ export default Component.extend(TextareaTextManipulation, {
     }
   },
 
-  _applyCategoryHashtagAutocomplete() {
-    const siteSettings = this.siteSettings;
-
-    this._$textarea.autocomplete({
-      template: findRawTemplate("category-tag-autocomplete"),
-      key: "#",
-      afterComplete: (value) => {
-        this.set("value", value);
-        schedule("afterRender", this, this.focusTextArea);
-      },
-      transformComplete: (obj) => {
-        return obj.text;
-      },
-      dataSource: (term) => {
-        if (term.match(/\s/)) {
-          return null;
-        }
-        return searchCategoryTag(term, siteSettings);
-      },
-      triggerRule: (textarea, opts) => {
-        return categoryHashtagTriggerRule(textarea, opts);
-      },
-    });
+  _applyHashtagAutocomplete() {
+    setupHashtagAutocomplete(
+      this.site.hashtag_configurations["topic-composer"],
+      this._$textarea,
+      this.siteSettings,
+      {
+        afterComplete: (value) => {
+          this.set("value", value);
+          schedule("afterRender", this, this.focusTextArea);
+        },
+      }
+    );
   },
 
   _applyEmojiAutocomplete($textarea) {
@@ -708,6 +694,7 @@ export default Component.extend(TextareaTextManipulation, {
           this.applySurround(selected, head, tail, exampleKey, opts),
         applyList: (head, exampleKey, opts) =>
           this._applyList(selected, head, exampleKey, opts),
+        formatCode: (...args) => this.send("formatCode", args),
         addText: (text) => this.addText(selected, text),
         getText: () => this.value,
         toggleDirection: () => this._toggleDirection(),

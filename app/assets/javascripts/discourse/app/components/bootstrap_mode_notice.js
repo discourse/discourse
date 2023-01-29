@@ -1,9 +1,11 @@
-import GlimmerComponent from "@glimmer/component";
+import Component from "@glimmer/component";
 import { htmlSafe } from "@ember/template";
 import I18n from "I18n";
 import { inject as service } from "@ember/service";
+import { action } from "@ember/object";
+import showModal from "discourse/lib/show-modal";
 
-export default class BootstrapModeNotice extends GlimmerComponent {
+export default class BootstrapModeNotice extends Component {
   @service siteSettings;
   @service site;
 
@@ -18,5 +20,10 @@ export default class BootstrapModeNotice extends GlimmerComponent {
     }
 
     return htmlSafe(I18n.t(msg, { count: bootstrapModeMinUsers }));
+  }
+
+  @action
+  inviteUsers() {
+    showModal("create-invite");
   }
 }

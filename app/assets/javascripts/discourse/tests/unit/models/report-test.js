@@ -1,9 +1,12 @@
 import { module, test } from "qunit";
-import Report from "admin/models/report";
 import { setPrefix } from "discourse-common/lib/get-url";
+import { setupTest } from "ember-qunit";
+import { getOwner } from "discourse-common/lib/get-owner";
 
 function reportWithData(data) {
-  return Report.create({
+  const store = getOwner(this).lookup("service:store");
+
+  return store.createRecord("report", {
     type: "topics",
     data: data.map((val, index) => {
       return {
@@ -14,19 +17,24 @@ function reportWithData(data) {
   });
 }
 
-module("Unit | Model | report", function () {
-  test("counts", function (assert) {
-    const report = reportWithData([5, 4, 3, 2, 1, 100, 99, 98, 1000]);
+module("Unit | Model | report", function (hooks) {
+  setupTest(hooks);
 
-    assert.strictEqual(report.get("todayCount"), 5);
-    assert.strictEqual(report.get("yesterdayCount"), 4);
+  test("counts", function (assert) {
+    const report = reportWithData.call(
+      this,
+      [5, 4, 3, 2, 1, 100, 99, 98, 1000]
+    );
+
+    assert.strictEqual(report.todayCount, 5);
+    assert.strictEqual(report.yesterdayCount, 4);
     assert.strictEqual(
       report.valueFor(2, 4),
       6,
       "adds the values for the given range of days, inclusive"
     );
     assert.strictEqual(
-      report.get("lastSevenDaysCount"),
+      report.lastSevenDaysCount,
       307,
       "sums 7 days excluding today"
     );
@@ -40,7 +48,7 @@ module("Unit | Model | report", function () {
   });
 
   test("percentChangeString", function (assert) {
-    const report = reportWithData([]);
+    const report = reportWithData.call(this, []);
 
     assert.strictEqual(
       report.percentChangeString(5, 8),
@@ -73,184 +81,225 @@ module("Unit | Model | report", function () {
   });
 
   test("yesterdayCountTitle with valid values", function (assert) {
-    const title = reportWithData([6, 8, 5, 2, 1]).get("yesterdayCountTitle");
+    const title = reportWithData.call(
+      this,
+      [6, 8, 5, 2, 1]
+    ).yesterdayCountTitle;
     assert.ok(title.includes("+60%"));
     assert.ok(title.match(/Was 5/));
   });
 
   test("yesterdayCountTitle when two days ago was 0", function (assert) {
-    const title = reportWithData([6, 8, 0, 2, 1]).get("yesterdayCountTitle");
+    const title = reportWithData.call(
+      this,
+      [6, 8, 0, 2, 1]
+    ).yesterdayCountTitle;
     assert.ok(!title.includes("%"));
     assert.ok(title.match(/Was 0/));
   });
 
   test("sevenDaysCountTitle", function (assert) {
-    const title = reportWithData([
-      100, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 100, 100,
-    ]).get("sevenDaysCountTitle");
+    const title = reportWithData.call(
+      this,
+      [100, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 100, 100]
+    ).sevenDaysCountTitle;
     assert.ok(title.match(/-50%/));
     assert.ok(title.match(/Was 14/));
   });
 
   test("thirtyDaysCountTitle", function (assert) {
-    let report = reportWithData([5, 5, 5, 5]);
+    const report = reportWithData.call(this, [5, 5, 5, 5]);
     report.set("prev30Days", 10);
-    let title = report.get("thirtyDaysCountTitle");
 
-    assert.ok(title.includes("+50%"));
-    assert.ok(title.match(/Was 10/));
+    assert.ok(report.thirtyDaysCountTitle.includes("+50%"));
+    assert.ok(report.thirtyDaysCountTitle.match(/Was 10/));
 
-    report = reportWithData([5, 5, 5, 5]);
-    report.set("prev_period", 20);
-    title = report.get("thirtyDaysCountTitle");
+    const report2 = reportWithData.call(this, [5, 5, 5, 5]);
+    report2.set("prev_period", 20);
 
-    assert.ok(title.includes("-25%"));
-    assert.ok(title.match(/Was 20/));
+    assert.ok(report2.thirtyDaysCountTitle.includes("-25%"));
+    assert.ok(report2.thirtyDaysCountTitle.match(/Was 20/));
   });
 
   test("sevenDaysTrend", function (assert) {
     let report;
     let trend;
 
-    report = reportWithData([0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]);
-    trend = report.get("sevenDaysTrend");
-    assert.ok(trend === "no-change");
+    report = reportWithData.call(
+      this,
+      [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+    );
+    trend = report.sevenDaysTrend;
+    assert.strictEqual(trend, "no-change");
 
-    report = reportWithData([0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0]);
-    trend = report.get("sevenDaysTrend");
-    assert.ok(trend === "high-trending-up");
+    report = reportWithData.call(
+      this,
+      [0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0]
+    );
+    trend = report.sevenDaysTrend;
+    assert.strictEqual(trend, "high-trending-up");
 
-    report = reportWithData([0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0]);
-    trend = report.get("sevenDaysTrend");
-    assert.ok(trend === "trending-up");
+    report = reportWithData.call(
+      this,
+      [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0]
+    );
+    trend = report.sevenDaysTrend;
+    assert.strictEqual(trend, "trending-up");
 
-    report = reportWithData([0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1]);
-    trend = report.get("sevenDaysTrend");
-    assert.ok(trend === "high-trending-down");
+    report = reportWithData.call(
+      this,
+      [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1]
+    );
+    trend = report.sevenDaysTrend;
+    assert.strictEqual(trend, "high-trending-down");
 
-    report = reportWithData([0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1]);
-    trend = report.get("sevenDaysTrend");
-    assert.ok(trend === "trending-down");
+    report = reportWithData.call(
+      this,
+      [0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1]
+    );
+    trend = report.sevenDaysTrend;
+    assert.strictEqual(trend, "trending-down");
   });
 
   test("yesterdayTrend", function (assert) {
     let report;
     let trend;
 
-    report = reportWithData([0, 1, 1]);
-    trend = report.get("yesterdayTrend");
-    assert.ok(trend === "no-change");
+    report = reportWithData.call(this, [0, 1, 1]);
+    trend = report.yesterdayTrend;
+    assert.strictEqual(trend, "no-change");
 
-    report = reportWithData([0, 1, 0]);
-    trend = report.get("yesterdayTrend");
-    assert.ok(trend === "high-trending-up");
+    report = reportWithData.call(this, [0, 1, 0]);
+    trend = report.yesterdayTrend;
+    assert.strictEqual(trend, "high-trending-up");
 
-    report = reportWithData([0, 1.1, 1]);
-    trend = report.get("yesterdayTrend");
-    assert.ok(trend === "trending-up");
+    report = reportWithData.call(this, [0, 1.1, 1]);
+    trend = report.yesterdayTrend;
+    assert.strictEqual(trend, "trending-up");
 
-    report = reportWithData([0, 0, 1]);
-    trend = report.get("yesterdayTrend");
-    assert.ok(trend === "high-trending-down");
+    report = reportWithData.call(this, [0, 0, 1]);
+    trend = report.yesterdayTrend;
+    assert.strictEqual(trend, "high-trending-down");
 
-    report = reportWithData([0, 1, 1.1]);
-    trend = report.get("yesterdayTrend");
-    assert.ok(trend === "trending-down");
+    report = reportWithData.call(this, [0, 1, 1.1]);
+    trend = report.yesterdayTrend;
+    assert.strictEqual(trend, "trending-down");
   });
 
   test("thirtyDaysTrend", function (assert) {
     let report;
     let trend;
 
-    report = reportWithData([
-      0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-      1, 1, 1, 1, 1, 1,
-    ]);
+    report = reportWithData.call(
+      this,
+      [
+        0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+        1, 1, 1, 1, 1, 1, 1,
+      ]
+    );
     report.set("prev30Days", 30);
-    trend = report.get("thirtyDaysTrend");
-    assert.ok(trend === "no-change");
+    trend = report.thirtyDaysTrend;
+    assert.strictEqual(trend, "no-change");
 
-    report = reportWithData([
-      0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-      1, 1, 1, 1, 1, 1,
-    ]);
+    report = reportWithData.call(
+      this,
+      [
+        0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+        1, 1, 1, 1, 1, 1, 1,
+      ]
+    );
     report.set("prev30Days", 0);
-    trend = report.get("thirtyDaysTrend");
-    assert.ok(trend === "high-trending-up");
+    trend = report.thirtyDaysTrend;
+    assert.strictEqual(trend, "high-trending-up");
 
-    report = reportWithData([
-      0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-      1, 1, 1, 1, 1, 1,
-    ]);
+    report = reportWithData.call(
+      this,
+      [
+        0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+        1, 1, 1, 1, 1, 1, 1,
+      ]
+    );
     report.set("prev30Days", 25);
-    trend = report.get("thirtyDaysTrend");
-    assert.ok(trend === "trending-up");
+    trend = report.thirtyDaysTrend;
+    assert.strictEqual(trend, "trending-up");
 
-    report = reportWithData([
-      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-      0, 0, 0, 0, 0, 0,
-    ]);
+    report = reportWithData.call(
+      this,
+      [
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0,
+      ]
+    );
     report.set("prev30Days", 60);
-    trend = report.get("thirtyDaysTrend");
-    assert.ok(trend === "high-trending-down");
+    trend = report.thirtyDaysTrend;
+    assert.strictEqual(trend, "high-trending-down");
 
-    report = reportWithData([
-      0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-      1, 1, 1, 1, 1, 0,
-    ]);
+    report = reportWithData.call(
+      this,
+      [
+        0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+        1, 1, 1, 1, 1, 1, 0,
+      ]
+    );
     report.set("prev30Days", 35);
-    trend = report.get("thirtyDaysTrend");
-    assert.ok(trend === "trending-down");
+    trend = report.thirtyDaysTrend;
+    assert.strictEqual(trend, "trending-down");
   });
 
   test("higher is better false", function (assert) {
     let report;
     let trend;
 
-    report = reportWithData([0, 1, 0]);
+    report = reportWithData.call(this, [0, 1, 0]);
     report.set("higher_is_better", false);
-    trend = report.get("yesterdayTrend");
-    assert.ok(trend === "high-trending-down");
+    trend = report.yesterdayTrend;
+    assert.strictEqual(trend, "high-trending-down");
 
-    report = reportWithData([0, 1.1, 1]);
+    report = reportWithData.call(this, [0, 1.1, 1]);
     report.set("higher_is_better", false);
-    trend = report.get("yesterdayTrend");
-    assert.ok(trend === "trending-down");
+    trend = report.yesterdayTrend;
+    assert.strictEqual(trend, "trending-down");
 
-    report = reportWithData([0, 0, 1]);
+    report = reportWithData.call(this, [0, 0, 1]);
     report.set("higher_is_better", false);
-    trend = report.get("yesterdayTrend");
-    assert.ok(trend === "high-trending-up");
+    trend = report.yesterdayTrend;
+    assert.strictEqual(trend, "high-trending-up");
 
-    report = reportWithData([0, 1, 1.1]);
+    report = reportWithData.call(this, [0, 1, 1.1]);
     report.set("higher_is_better", false);
-    trend = report.get("yesterdayTrend");
-    assert.ok(trend === "trending-up");
+    trend = report.yesterdayTrend;
+    assert.strictEqual(trend, "trending-up");
   });
 
   test("small variation (-2/+2% change) is no-change", function (assert) {
     let report;
     let trend;
 
-    report = reportWithData([0, 1, 1, 1, 1, 1, 1, 0.9, 1, 1, 1, 1, 1, 1, 1]);
-    trend = report.get("sevenDaysTrend");
-    assert.ok(trend === "no-change");
+    report = reportWithData.call(
+      this,
+      [0, 1, 1, 1, 1, 1, 1, 0.9, 1, 1, 1, 1, 1, 1, 1]
+    );
+    trend = report.sevenDaysTrend;
+    assert.strictEqual(trend, "no-change");
 
-    report = reportWithData([0, 1, 1, 1, 1, 1, 1, 1.1, 1, 1, 1, 1, 1, 1, 1]);
-    trend = report.get("sevenDaysTrend");
-    assert.ok(trend === "no-change");
+    report = reportWithData.call(
+      this,
+      [0, 1, 1, 1, 1, 1, 1, 1.1, 1, 1, 1, 1, 1, 1, 1]
+    );
+    trend = report.sevenDaysTrend;
+    assert.strictEqual(trend, "no-change");
   });
 
   test("average", function (assert) {
     let report;
 
-    report = reportWithData([5, 5, 5, 5, 5, 5, 5, 5]);
+    report = reportWithData.call(this, [5, 5, 5, 5, 5, 5, 5, 5]);
 
     report.set("average", true);
-    assert.ok(report.get("lastSevenDaysCount") === 5);
+    assert.strictEqual(report.lastSevenDaysCount, 5);
 
     report.set("average", false);
-    assert.ok(report.get("lastSevenDaysCount") === 35);
+    assert.strictEqual(report.lastSevenDaysCount, 35);
   });
 
   test("computed labels", function (assert) {
@@ -303,14 +352,15 @@ module("Unit | Model | report", function () {
       { type: "bytes", property: "filesize", title: "Filesize" },
     ];
 
-    const report = Report.create({
+    const store = getOwner(this).lookup("service:store");
+    const report = store.createRecord("report", {
       type: "topics",
       labels,
       data,
     });
 
-    const row = report.get("data.0");
-    const computedLabels = report.get("computedLabels");
+    const row = report.data[0];
+    const computedLabels = report.computedLabels;
 
     const usernameLabel = computedLabels[0];
     assert.strictEqual(usernameLabel.mainProperty, "username");

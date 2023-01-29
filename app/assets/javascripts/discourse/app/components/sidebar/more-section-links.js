@@ -7,9 +7,10 @@ import { bind } from "discourse-common/utils/decorators";
 import Component from "@glimmer/component";
 
 export default class SidebarMoreSectionLinks extends Component {
+  @service router;
+
   @tracked shouldDisplaySectionLinks = false;
   @tracked activeSectionLink;
-  @service router;
 
   #allLinks = [...this.args.sectionLinks, ...this.args.secondarySectionLinks];
 

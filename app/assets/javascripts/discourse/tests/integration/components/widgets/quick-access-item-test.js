@@ -32,5 +32,21 @@ module(
       const contentDiv = query(CONTENT_DIV_SELECTOR);
       assert.strictEqual(contentDiv.innerText, '"quote"');
     });
+
+    test("Renders the notification content with no username when username is not present", async function (assert) {
+      this.set("args", {
+        content: "content",
+        username: undefined,
+      });
+
+      await render(
+        hbs`<MountWidget @widget="quick-access-item" @args={{this.args}} />`
+      );
+
+      const contentDiv = query(CONTENT_DIV_SELECTOR);
+      const usernameSpan = query("li a div span");
+      assert.strictEqual(contentDiv.innerText, "content");
+      assert.strictEqual(usernameSpan.innerText, "");
+    });
   }
 );

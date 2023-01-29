@@ -16,7 +16,7 @@ module("Integration | Component | sidebar | section-link", function (hooks) {
 
     assert.strictEqual(
       query("a").className,
-      "sidebar-section-link sidebar-section-link-test ember-view",
+      "sidebar-section-link sidebar-section-link-test sidebar-row ember-view",
       "has the right class attribute for the link"
     );
   });
@@ -28,7 +28,7 @@ module("Integration | Component | sidebar | section-link", function (hooks) {
 
     assert.strictEqual(
       query("a").className,
-      "sidebar-section-link sidebar-section-link-test 123 abc ember-view",
+      "sidebar-section-link sidebar-section-link-test sidebar-row 123 abc ember-view",
       "has the right class attribute for the link"
     );
   });

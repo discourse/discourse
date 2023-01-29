@@ -14,6 +14,10 @@ acceptance("Wizard", function (needs) {
   test("Wizard starts", async function (assert) {
     await visit("/wizard");
     assert.ok(exists(".wizard-container"));
+    assert.notOk(
+      exists(".d-header-wrap"),
+      "header is not rendered on wizard pages"
+    );
     assert.strictEqual(currentRouteName(), "wizard.step");
   });
 
@@ -35,7 +39,7 @@ acceptance("Wizard", function (needs) {
       !exists(".invalid #full_name"),
       "don't show it as invalid until the user does something"
     );
-    assert.ok(!exists(".wizard-container__button.back"));
+    assert.ok(!exists(".wizard-container__button.btn-back"));
     assert.ok(!exists(".wizard-container__field .error"));
 
     // invalid data
@@ -58,7 +62,16 @@ acceptance("Wizard", function (needs) {
       "shows finish on an intermediate step"
     );
 
-    await click(".wizard-container__button.next");
+    await click(".wizard-container__button.finish");
+    assert.strictEqual(
+      currentURL(),
+      "/latest",
+      "it should transition to the homepage"
+    );
+
+    await visit("/wizard/steps/styling");
+
+    await click(".wizard-container__button.primary.next");
     assert.ok(
       exists(".wizard-container__text-input#company_name"),
       "went to the next step"
@@ -71,7 +84,10 @@ acceptance("Wizard", function (needs) {
       exists(".wizard-container__button.jump-in"),
       "last step shows a jump in button"
     );
-    assert.ok(exists(".wizard-container__link.back"), "shows the back button");
+    assert.ok(
+      exists(".wizard-container__button.btn-back"),
+      "shows the back button"
+    );
     assert.ok(!exists(".wizard-container__step-title"));
     assert.ok(
       !exists(".wizard-container__button.next"),
@@ -82,7 +98,7 @@ acceptance("Wizard", function (needs) {
       "cannot finish on last step"
     );
 
-    await click(".wizard-container__link.back");
+    await click(".wizard-container__button.btn-back");
     assert.ok(exists(".wizard-container__step-title"), "shows the step title");
     assert.ok(
       exists(".wizard-container__button.next"),

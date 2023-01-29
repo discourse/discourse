@@ -44,7 +44,13 @@ export default ComboBoxComponent.extend({
     ) {
       return Category.findUncategorized();
     } else {
-      return this.defaultItem(null, htmlSafe(I18n.t("category.choose")));
+      const defaultCategoryId = parseInt(
+        this.siteSettings.default_composer_category,
+        10
+      );
+      if (!defaultCategoryId || defaultCategoryId < 0) {
+        return this.defaultItem(null, htmlSafe(I18n.t("category.choose")));
+      }
     }
   },
 

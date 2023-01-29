@@ -1,11 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::SuspiciousLogin do
-
   fab!(:user) { Fabricate(:moderator) }
 
   let(:zurich) { { latitude: 47.3686498, longitude: 8.5391825 } } # Zurich, Switzerland
-  let(:bern) { { latitude: 46.947922, longitude: 7.444608 } }  # Bern, Switzerland
+  let(:bern) { { latitude: 46.947922, longitude: 7.444608 } } # Bern, Switzerland
   let(:london) { { latitude: 51.5073509, longitude: -0.1277583 } } # London, United Kingdom
 
   before do
@@ -51,8 +50,6 @@ RSpec.describe Jobs::SuspiciousLogin do
 
     expect(UserAuthTokenLog.where(action: "suspicious").count).to eq(1)
 
-    expect(Jobs::CriticalUserEmail.jobs.first["args"].first["type"])
-      .to eq('suspicious_login')
+    expect(Jobs::CriticalUserEmail.jobs.first["args"].first["type"]).to eq("suspicious_login")
   end
-
 end

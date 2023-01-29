@@ -22,7 +22,7 @@ da:
         vote:
           title: "Resultaterne vil blive vist ved <strong>afstemning</strong>."
         closed:
-          title: "Resultaterne vil blive vist når <strong>lukket</strong>."
+          title: "Resultaterne vil blive vist, når den er <strong>afsluttet</strong>."
         staff:
           title: "Resultaterne vises kun for <strong>personale</strong> medlemmer."
       multiple:
@@ -64,7 +64,7 @@ da:
         label: "Luk"
         confirm: "Er du sikker på, at du vil lukke denne afstemning?"
       automatic_close:
-        closes_in: "Lukker om <strong>%{timeLeft}</strong>."
+        closes_in: "Afsluttes om <strong>%{timeLeft}</strong>."
         age: "Lukket <strong>%{age}</strong>"
       breakdown:
         title: "Afstemningsresultater"
@@ -95,7 +95,7 @@ da:
           label: Vis Resultater...
           always: Altid synlig
           vote: Kun efter afstemning
-          closed: Når afstemningen er lukket
+          closed: Når afstemningen er afsluttet
           staff: Kun personale
         poll_groups:
           label: Begræns afstemning til disse grupper

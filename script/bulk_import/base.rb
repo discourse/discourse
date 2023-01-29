@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-if ARGV.include?('bbcode-to-md')
+if ARGV.include?("bbcode-to-md")
   # Replace (most) bbcode with markdown before creating posts.
   # This will dramatically clean up the final posts in Discourse.
   #
@@ -10,7 +10,7 @@ if ARGV.include?('bbcode-to-md')
   # cd ruby-bbcode-to-md
   # gem build ruby-bbcode-to-md.gemspec
   # gem install ruby-bbcode-to-md-*.gem
-  require 'ruby-bbcode-to-md'
+  require "ruby-bbcode-to-md"
 end
 
 require "pg"
@@ -20,12 +20,12 @@ require "htmlentities"
 
 puts "Loading application..."
 require_relative "../../config/environment"
-require_relative '../import_scripts/base/uploader'
+require_relative "../import_scripts/base/uploader"
 
-module BulkImport; end
+module BulkImport
+end
 
 class BulkImport::Base
-
   NOW ||= "now()"
   PRIVATE_OFFSET ||= 2**30
 
@@ -33,41 +33,41 @@ class BulkImport::Base
 
   CHARSET_MAP = {
     "armscii8" => nil,
-    "ascii"    => Encoding::US_ASCII,
-    "big5"     => Encoding::Big5,
-    "binary"   => Encoding::ASCII_8BIT,
-    "cp1250"   => Encoding::Windows_1250,
-    "cp1251"   => Encoding::Windows_1251,
-    "cp1256"   => Encoding::Windows_1256,
-    "cp1257"   => Encoding::Windows_1257,
-    "cp850"    => Encoding::CP850,
-    "cp852"    => Encoding::CP852,
-    "cp866"    => Encoding::IBM866,
-    "cp932"    => Encoding::Windows_31J,
-    "dec8"     => nil,
-    "eucjpms"  => Encoding::EucJP_ms,
-    "euckr"    => Encoding::EUC_KR,
-    "gb2312"   => Encoding::EUC_CN,
-    "gbk"      => Encoding::GBK,
-    "geostd8"  => nil,
-    "greek"    => Encoding::ISO_8859_7,
-    "hebrew"   => Encoding::ISO_8859_8,
-    "hp8"      => nil,
-    "keybcs2"  => nil,
-    "koi8r"    => Encoding::KOI8_R,
-    "koi8u"    => Encoding::KOI8_U,
-    "latin1"   => Encoding::ISO_8859_1,
-    "latin2"   => Encoding::ISO_8859_2,
-    "latin5"   => Encoding::ISO_8859_9,
-    "latin7"   => Encoding::ISO_8859_13,
-    "macce"    => Encoding::MacCentEuro,
+    "ascii" => Encoding::US_ASCII,
+    "big5" => Encoding::Big5,
+    "binary" => Encoding::ASCII_8BIT,
+    "cp1250" => Encoding::Windows_1250,
+    "cp1251" => Encoding::Windows_1251,
+    "cp1256" => Encoding::Windows_1256,
+    "cp1257" => Encoding::Windows_1257,
+    "cp850" => Encoding::CP850,
+    "cp852" => Encoding::CP852,
+    "cp866" => Encoding::IBM866,
+    "cp932" => Encoding::Windows_31J,
+    "dec8" => nil,
+    "eucjpms" => Encoding::EucJP_ms,
+    "euckr" => Encoding::EUC_KR,
+    "gb2312" => Encoding::EUC_CN,
+    "gbk" => Encoding::GBK,
+    "geostd8" => nil,
+    "greek" => Encoding::ISO_8859_7,
+    "hebrew" => Encoding::ISO_8859_8,
+    "hp8" => nil,
+    "keybcs2" => nil,
+    "koi8r" => Encoding::KOI8_R,
+    "koi8u" => Encoding::KOI8_U,
+    "latin1" => Encoding::ISO_8859_1,
+    "latin2" => Encoding::ISO_8859_2,
+    "latin5" => Encoding::ISO_8859_9,
+    "latin7" => Encoding::ISO_8859_13,
+    "macce" => Encoding::MacCentEuro,
     "macroman" => Encoding::MacRoman,
-    "sjis"     => Encoding::SHIFT_JIS,
-    "swe7"     => nil,
-    "tis620"   => Encoding::TIS_620,
-    "ucs2"     => Encoding::UTF_16BE,
-    "ujis"     => Encoding::EucJP_ms,
-    "utf8"     => Encoding::UTF_8,
+    "sjis" => Encoding::SHIFT_JIS,
+    "swe7" => nil,
+    "tis620" => Encoding::TIS_620,
+    "ucs2" => Encoding::UTF_16BE,
+    "ujis" => Encoding::EucJP_ms,
+    "utf8" => Encoding::UTF_8,
   }
 
   # rubocop:enable Layout/HashAlignment
@@ -82,12 +82,13 @@ class BulkImport::Base
     @encoding = CHARSET_MAP[charset]
     @bbcode_to_md = true if use_bbcode_to_md?
 
-    @markdown = Redcarpet::Markdown.new(
-      Redcarpet::Render::HTML.new(hard_wrap: true),
-      no_intra_emphasis: true,
-      fenced_code_blocks: true,
-      autolink: true
-    )
+    @markdown =
+      Redcarpet::Markdown.new(
+        Redcarpet::Render::HTML.new(hard_wrap: true),
+        no_intra_emphasis: true,
+        fenced_code_blocks: true,
+        autolink: true,
+      )
   end
 
   def run
@@ -99,6 +100,7 @@ class BulkImport::Base
     load_indexes
     execute
     fix_primary_keys
+    execute_after
     puts "Done! Now run the 'import:ensure_consistency' rake task."
   end
 
@@ -131,7 +133,9 @@ class BulkImport::Base
     map = []
     ids = []
 
-    @raw_connection.send_query("SELECT value, #{name}_id FROM #{name}_custom_fields WHERE name = 'import_id'")
+    @raw_connection.send_query(
+      "SELECT value, #{name}_id FROM #{name}_custom_fields WHERE name = 'import_id'",
+    )
     @raw_connection.set_single_row_mode
 
     @raw_connection.get_result.stream_each do |row|
@@ -162,12 +166,14 @@ class BulkImport::Base
     puts "Loading imported topic ids..."
     @topics, imported_topic_ids = imported_ids("topic")
     @last_imported_topic_id = imported_topic_ids.select { |id| id < PRIVATE_OFFSET }.max || -1
-    @last_imported_private_topic_id = imported_topic_ids.select { |id| id > PRIVATE_OFFSET }.max || (PRIVATE_OFFSET - 1)
+    @last_imported_private_topic_id =
+      imported_topic_ids.select { |id| id > PRIVATE_OFFSET }.max || (PRIVATE_OFFSET - 1)
 
     puts "Loading imported post ids..."
     @posts, imported_post_ids = imported_ids("post")
     @last_imported_post_id = imported_post_ids.select { |id| id < PRIVATE_OFFSET }.max || -1
-    @last_imported_private_post_id = imported_post_ids.select { |id| id > PRIVATE_OFFSET }.max || (PRIVATE_OFFSET - 1)
+    @last_imported_private_post_id =
+      imported_post_ids.select { |id| id > PRIVATE_OFFSET }.max || (PRIVATE_OFFSET - 1)
   end
 
   def last_id(klass)
@@ -181,9 +187,7 @@ class BulkImport::Base
     @raw_connection.send_query("SELECT id, #{column} FROM #{name}")
     @raw_connection.set_single_row_mode
 
-    @raw_connection.get_result.stream_each do |row|
-      map[row["id"].to_i] = row[column].to_i
-    end
+    @raw_connection.get_result.stream_each { |row| map[row["id"].to_i] = row[column].to_i }
 
     @raw_connection.get_result
 
@@ -198,13 +202,24 @@ class BulkImport::Base
     puts "Loading users indexes..."
     @last_user_id = last_id(User)
     @last_user_email_id = last_id(UserEmail)
-    @emails = User.unscoped.joins(:user_emails).pluck(:"user_emails.email", :"user_emails.user_id").to_h
+    @emails =
+      User.unscoped.joins(:user_emails).pluck(:"user_emails.email", :"user_emails.user_id").to_h
     @usernames_lower = User.unscoped.pluck(:username_lower).to_set
-    @mapped_usernames = UserCustomField.joins(:user).where(name: "import_username").pluck("user_custom_fields.value", "users.username").to_h
+    @mapped_usernames =
+      UserCustomField
+        .joins(:user)
+        .where(name: "import_username")
+        .pluck("user_custom_fields.value", "users.username")
+        .to_h
 
     puts "Loading categories indexes..."
     @last_category_id = last_id(Category)
-    @category_names = Category.unscoped.pluck(:parent_category_id, :name).map { |pci, name| "#{pci}-#{name}" }.to_set
+    @category_names =
+      Category
+        .unscoped
+        .pluck(:parent_category_id, :name)
+        .map { |pci, name| "#{pci}-#{name}" }
+        .to_set
 
     puts "Loading topics indexes..."
     @last_topic_id = last_id(Topic)
@@ -227,15 +242,32 @@ class BulkImport::Base
     raise NotImplementedError
   end
 
+  def execute_after
+  end
+
   def fix_primary_keys
     puts "Updating primary key sequences..."
-    @raw_connection.exec("SELECT setval('#{Group.sequence_name}', #{@last_group_id})") if @last_group_id > 0
-    @raw_connection.exec("SELECT setval('#{User.sequence_name}', #{@last_user_id})") if @last_user_id > 0
-    @raw_connection.exec("SELECT setval('#{UserEmail.sequence_name}', #{@last_user_email_id})") if @last_user_email_id > 0
-    @raw_connection.exec("SELECT setval('#{Category.sequence_name}', #{@last_category_id})") if @last_category_id > 0
-    @raw_connection.exec("SELECT setval('#{Topic.sequence_name}', #{@last_topic_id})") if @last_topic_id > 0
-    @raw_connection.exec("SELECT setval('#{Post.sequence_name}', #{@last_post_id})") if @last_post_id > 0
-    @raw_connection.exec("SELECT setval('#{PostAction.sequence_name}', #{@last_post_action_id})") if @last_post_action_id > 0
+    if @last_group_id > 0
+      @raw_connection.exec("SELECT setval('#{Group.sequence_name}', #{@last_group_id})")
+    end
+    if @last_user_id > 0
+      @raw_connection.exec("SELECT setval('#{User.sequence_name}', #{@last_user_id})")
+    end
+    if @last_user_email_id > 0
+      @raw_connection.exec("SELECT setval('#{UserEmail.sequence_name}', #{@last_user_email_id})")
+    end
+    if @last_category_id > 0
+      @raw_connection.exec("SELECT setval('#{Category.sequence_name}', #{@last_category_id})")
+    end
+    if @last_topic_id > 0
+      @raw_connection.exec("SELECT setval('#{Topic.sequence_name}', #{@last_topic_id})")
+    end
+    if @last_post_id > 0
+      @raw_connection.exec("SELECT setval('#{Post.sequence_name}', #{@last_post_id})")
+    end
+    if @last_post_action_id > 0
+      @raw_connection.exec("SELECT setval('#{PostAction.sequence_name}', #{@last_post_action_id})")
+    end
   end
 
   def group_id_from_imported_id(id)
@@ -268,63 +300,124 @@ class BulkImport::Base
     post_id && @topic_id_by_post_id[post_id]
   end
 
-  GROUP_COLUMNS ||= %i{
-    id name title bio_raw bio_cooked created_at updated_at
-  }
+  GROUP_COLUMNS ||= %i[id name title bio_raw bio_cooked created_at updated_at]
 
-  USER_COLUMNS ||= %i{
-    id username username_lower name active trust_level admin moderator
-    date_of_birth ip_address registration_ip_address primary_group_id
-    suspended_at suspended_till last_emailed_at created_at updated_at
-  }
+  USER_COLUMNS ||= %i[
+    id
+    username
+    username_lower
+    name
+    active
+    trust_level
+    admin
+    moderator
+    date_of_birth
+    ip_address
+    registration_ip_address
+    primary_group_id
+    suspended_at
+    suspended_till
+    last_emailed_at
+    created_at
+    updated_at
+  ]
 
-  USER_EMAIL_COLUMNS ||= %i{
-    id user_id email primary created_at updated_at
-  }
+  USER_EMAIL_COLUMNS ||= %i[id user_id email primary created_at updated_at]
 
-  USER_STAT_COLUMNS ||= %i{
-    user_id topics_entered time_read days_visited posts_read_count
-    likes_given likes_received new_since read_faq
-    first_post_created_at post_count topic_count bounce_score
-    reset_bounce_score_after digest_attempted_at
-  }
+  USER_STAT_COLUMNS ||= %i[
+    user_id
+    topics_entered
+    time_read
+    days_visited
+    posts_read_count
+    likes_given
+    likes_received
+    new_since
+    read_faq
+    first_post_created_at
+    post_count
+    topic_count
+    bounce_score
+    reset_bounce_score_after
+    digest_attempted_at
+  ]
 
-  USER_PROFILE_COLUMNS ||= %i{
-    user_id location website bio_raw bio_cooked views
-  }
+  USER_PROFILE_COLUMNS ||= %i[user_id location website bio_raw bio_cooked views]
 
-  GROUP_USER_COLUMNS ||= %i{
-    group_id user_id created_at updated_at
-  }
+  GROUP_USER_COLUMNS ||= %i[group_id user_id created_at updated_at]
 
-  CATEGORY_COLUMNS ||= %i{
-    id name name_lower slug user_id description position parent_category_id
-    created_at updated_at
-  }
+  CATEGORY_COLUMNS ||= %i[
+    id
+    name
+    name_lower
+    slug
+    user_id
+    description
+    position
+    parent_category_id
+    created_at
+    updated_at
+  ]
 
-  TOPIC_COLUMNS ||= %i{
-    id archetype title fancy_title slug user_id last_post_user_id category_id
-    visible closed pinned_at views created_at bumped_at updated_at
-  }
+  TOPIC_COLUMNS ||= %i[
+    id
+    archetype
+    title
+    fancy_title
+    slug
+    user_id
+    last_post_user_id
+    category_id
+    visible
+    closed
+    pinned_at
+    views
+    created_at
+    bumped_at
+    updated_at
+  ]
 
-  POST_COLUMNS ||= %i{
-    id user_id last_editor_id topic_id post_number sort_order reply_to_post_number
-    like_count raw cooked hidden word_count created_at last_version_at updated_at
-  }
+  POST_COLUMNS ||= %i[
+    id
+    user_id
+    last_editor_id
+    topic_id
+    post_number
+    sort_order
+    reply_to_post_number
+    like_count
+    raw
+    cooked
+    hidden
+    word_count
+    created_at
+    last_version_at
+    updated_at
+  ]
 
-  POST_ACTION_COLUMNS ||= %i{
-    id post_id user_id post_action_type_id deleted_at created_at updated_at
-    deleted_by_id related_post_id staff_took_action deferred_by_id targets_topic
-    agreed_at agreed_by_id deferred_at disagreed_at disagreed_by_id
-  }
+  POST_ACTION_COLUMNS ||= %i[
+    id
+    post_id
+    user_id
+    post_action_type_id
+    deleted_at
+    created_at
+    updated_at
+    deleted_by_id
+    related_post_id
+    staff_took_action
+    deferred_by_id
+    targets_topic
+    agreed_at
+    agreed_by_id
+    deferred_at
+    disagreed_at
+    disagreed_by_id
+  ]
 
-  TOPIC_ALLOWED_USER_COLUMNS ||= %i{
-    topic_id user_id created_at updated_at
-  }
+  TOPIC_ALLOWED_USER_COLUMNS ||= %i[topic_id user_id created_at updated_at]
 
-  TOPIC_TAG_COLUMNS ||= %i{
-    topic_id tag_id created_at updated_at
-  }
+  TOPIC_TAG_COLUMNS ||= %i[topic_id tag_id created_at updated_at]
 
   def create_groups(rows, &block)
     create_records(rows, "group", GROUP_COLUMNS, &block)
@@ -336,10 +429,7 @@ class BulkImport::Base
     create_records(rows, "user", USER_COLUMNS, &block)
 
     create_custom_fields("user", "username", @imported_usernames.keys) do |username|
-      {
-        record_id: @imported_usernames[username],
-        value: username,
-      }
+      { record_id: @imported_usernames[username], value: username }
     end
   end
 
@@ -385,8 +475,8 @@ class BulkImport::Base
       group[:name] = group_name
     end
 
-    group[:title]      = group[:title].scrub.strip.presence if group[:title].present?
-    group[:bio_raw]    = group[:bio_raw].scrub.strip.presence if group[:bio_raw].present?
+    group[:title] = group[:title].scrub.strip.presence if group[:title].present?
+    group[:bio_raw] = group[:bio_raw].scrub.strip.presence if group[:bio_raw].present?
     group[:bio_cooked] = pre_cook(group[:bio_raw]) if group[:bio_raw].present?
     group[:created_at] ||= NOW
     group[:updated_at] ||= group[:created_at]
@@ -452,7 +542,9 @@ class BulkImport::Base
     user_email[:email] ||= random_email
     user_email[:email].downcase!
     # unique email
-    user_email[:email] = random_email until EmailAddressValidator.valid_value?(user_email[:email]) && !@emails.has_key?(user_email[:email])
+    user_email[:email] = random_email until EmailAddressValidator.valid_value?(
+      user_email[:email],
+    ) && !@emails.has_key?(user_email[:email])
 
     user_email
   end
@@ -535,7 +627,11 @@ class BulkImport::Base
     post[:raw] = (post[:raw] || "").scrub.strip.presence || "<Empty imported post>"
     post[:raw] = process_raw post[:raw]
     if @bbcode_to_md
-      post[:raw] = post[:raw].bbcode_to_md(false, {}, :disable, :quote) rescue post[:raw]
+      post[:raw] = begin
+        post[:raw].bbcode_to_md(false, {}, :disable, :quote)
+      rescue StandardError
+        post[:raw]
+      end
     end
     post[:like_count] ||= 0
     post[:cooked] = pre_cook post[:raw]
@@ -576,22 +672,22 @@ class BulkImport::Base
 
     # [HTML]...[/HTML]
     raw.gsub!(/\[HTML\]/i, "\n\n```html\n")
-    raw.gsub!(/\[\/HTML\]/i, "\n```\n\n")
+    raw.gsub!(%r{\[/HTML\]}i, "\n```\n\n")
 
     # [PHP]...[/PHP]
     raw.gsub!(/\[PHP\]/i, "\n\n```php\n")
-    raw.gsub!(/\[\/PHP\]/i, "\n```\n\n")
+    raw.gsub!(%r{\[/PHP\]}i, "\n```\n\n")
 
     # [HIGHLIGHT="..."]
     raw.gsub!(/\[HIGHLIGHT="?(\w+)"?\]/i) { "\n\n```#{$1.downcase}\n" }
 
     # [CODE]...[/CODE]
     # [HIGHLIGHT]...[/HIGHLIGHT]
-    raw.gsub!(/\[\/?CODE\]/i, "\n\n```\n\n")
-    raw.gsub!(/\[\/?HIGHLIGHT\]/i, "\n\n```\n\n")
+    raw.gsub!(%r{\[/?CODE\]}i, "\n\n```\n\n")
+    raw.gsub!(%r{\[/?HIGHLIGHT\]}i, "\n\n```\n\n")
 
     # [SAMP]...[/SAMP]
-    raw.gsub!(/\[\/?SAMP\]/i, "`")
+    raw.gsub!(%r{\[/?SAMP\]}i, "`")
 
     # replace all chevrons with HTML entities
     # /!\ must be done /!\
@@ -605,61 +701,61 @@ class BulkImport::Base
     raw.gsub!(">", "&gt;")
     raw.gsub!("\u2603", ">")
 
-    raw.gsub!(/\[\/?I\]/i, "*")
-    raw.gsub!(/\[\/?B\]/i, "**")
-    raw.gsub!(/\[\/?U\]/i, "")
+    raw.gsub!(%r{\[/?I\]}i, "*")
+    raw.gsub!(%r{\[/?B\]}i, "**")
+    raw.gsub!(%r{\[/?U\]}i, "")
 
-    raw.gsub!(/\[\/?RED\]/i, "")
-    raw.gsub!(/\[\/?BLUE\]/i, "")
+    raw.gsub!(%r{\[/?RED\]}i, "")
+    raw.gsub!(%r{\[/?BLUE\]}i, "")
 
-    raw.gsub!(/\[AUTEUR\].+?\[\/AUTEUR\]/im, "")
-    raw.gsub!(/\[VOIRMSG\].+?\[\/VOIRMSG\]/im, "")
-    raw.gsub!(/\[PSEUDOID\].+?\[\/PSEUDOID\]/im, "")
+    raw.gsub!(%r{\[AUTEUR\].+?\[/AUTEUR\]}im, "")
+    raw.gsub!(%r{\[VOIRMSG\].+?\[/VOIRMSG\]}im, "")
+    raw.gsub!(%r{\[PSEUDOID\].+?\[/PSEUDOID\]}im, "")
 
     # [IMG]...[/IMG]
-    raw.gsub!(/(?:\s*\[IMG\]\s*)+(.+?)(?:\s*\[\/IMG\]\s*)+/im) { "\n\n#{$1}\n\n" }
+    raw.gsub!(%r{(?:\s*\[IMG\]\s*)+(.+?)(?:\s*\[/IMG\]\s*)+}im) { "\n\n#{$1}\n\n" }
 
     # [IMG=url]
     raw.gsub!(/\[IMG=([^\]]*)\]/im) { "\n\n#{$1}\n\n" }
 
     # [URL=...]...[/URL]
-    raw.gsub!(/\[URL="?(.+?)"?\](.+?)\[\/URL\]/im) { "[#{$2.strip}](#{$1})" }
+    raw.gsub!(%r{\[URL="?(.+?)"?\](.+?)\[/URL\]}im) { "[#{$2.strip}](#{$1})" }
 
     # [URL]...[/URL]
     # [MP3]...[/MP3]
     # [EMAIL]...[/EMAIL]
     # [LEFT]...[/LEFT]
-    raw.gsub!(/\[\/?URL\]/i, "")
-    raw.gsub!(/\[\/?MP3\]/i, "")
-    raw.gsub!(/\[\/?EMAIL\]/i, "")
-    raw.gsub!(/\[\/?LEFT\]/i, "")
+    raw.gsub!(%r{\[/?URL\]}i, "")
+    raw.gsub!(%r{\[/?MP3\]}i, "")
+    raw.gsub!(%r{\[/?EMAIL\]}i, "")
+    raw.gsub!(%r{\[/?LEFT\]}i, "")
 
     # [FONT=blah] and [COLOR=blah]
-    raw.gsub!(/\[FONT=.*?\](.*?)\[\/FONT\]/im, "\\1")
-    raw.gsub!(/\[COLOR=.*?\](.*?)\[\/COLOR\]/im, "\\1")
+    raw.gsub!(%r{\[FONT=.*?\](.*?)\[/FONT\]}im, "\\1")
+    raw.gsub!(%r{\[COLOR=.*?\](.*?)\[/COLOR\]}im, "\\1")
 
-    raw.gsub!(/\[SIZE=.*?\](.*?)\[\/SIZE\]/im, "\\1")
-    raw.gsub!(/\[H=.*?\](.*?)\[\/H\]/im, "\\1")
+    raw.gsub!(%r{\[SIZE=.*?\](.*?)\[/SIZE\]}im, "\\1")
+    raw.gsub!(%r{\[H=.*?\](.*?)\[/H\]}im, "\\1")
 
     # [CENTER]...[/CENTER]
-    raw.gsub!(/\[CENTER\](.*?)\[\/CENTER\]/im, "\\1")
+    raw.gsub!(%r{\[CENTER\](.*?)\[/CENTER\]}im, "\\1")
 
     # [INDENT]...[/INDENT]
-    raw.gsub!(/\[INDENT\](.*?)\[\/INDENT\]/im, "\\1")
-    raw.gsub!(/\[TABLE\](.*?)\[\/TABLE\]/im, "\\1")
-    raw.gsub!(/\[TR\](.*?)\[\/TR\]/im, "\\1")
-    raw.gsub!(/\[TD\](.*?)\[\/TD\]/im, "\\1")
-    raw.gsub!(/\[TD="?.*?"?\](.*?)\[\/TD\]/im, "\\1")
+    raw.gsub!(%r{\[INDENT\](.*?)\[/INDENT\]}im, "\\1")
+    raw.gsub!(%r{\[TABLE\](.*?)\[/TABLE\]}im, "\\1")
+    raw.gsub!(%r{\[TR\](.*?)\[/TR\]}im, "\\1")
+    raw.gsub!(%r{\[TD\](.*?)\[/TD\]}im, "\\1")
+    raw.gsub!(%r{\[TD="?.*?"?\](.*?)\[/TD\]}im, "\\1")
 
     # [STRIKE]
     raw.gsub!(/\[STRIKE\]/i, "<s>")
-    raw.gsub!(/\[\/STRIKE\]/i, "</s>")
+    raw.gsub!(%r{\[/STRIKE\]}i, "</s>")
 
     # [QUOTE]...[/QUOTE]
     raw.gsub!(/\[QUOTE="([^\]]+)"\]/i) { "[QUOTE=#{$1}]" }
 
     # Nested Quotes
-    raw.gsub!(/(\[\/?QUOTE.*?\])/mi) { |q| "\n#{q}\n" }
+    raw.gsub!(%r{(\[/?QUOTE.*?\])}mi) { |q| "\n#{q}\n" }
 
     # raw.gsub!(/\[QUOTE\](.+?)\[\/QUOTE\]/im) { |quote|
     #   quote.gsub!(/\[QUOTE\](.+?)\[\/QUOTE\]/im) { "\n#{$1}\n" }
@@ -682,28 +778,36 @@ class BulkImport::Base
     end
 
     # [YOUTUBE]<id>[/YOUTUBE]
-    raw.gsub!(/\[YOUTUBE\](.+?)\[\/YOUTUBE\]/i) { "\nhttps://www.youtube.com/watch?v=#{$1}\n" }
-    raw.gsub!(/\[DAILYMOTION\](.+?)\[\/DAILYMOTION\]/i) { "\nhttps://www.dailymotion.com/video/#{$1}\n" }
+    raw.gsub!(%r{\[YOUTUBE\](.+?)\[/YOUTUBE\]}i) { "\nhttps://www.youtube.com/watch?v=#{$1}\n" }
+    raw.gsub!(%r{\[DAILYMOTION\](.+?)\[/DAILYMOTION\]}i) do
+      "\nhttps://www.dailymotion.com/video/#{$1}\n"
+    end
 
     # [VIDEO=youtube;<id>]...[/VIDEO]
-    raw.gsub!(/\[VIDEO=YOUTUBE;([^\]]+)\].*?\[\/VIDEO\]/i) { "\nhttps://www.youtube.com/watch?v=#{$1}\n" }
-    raw.gsub!(/\[VIDEO=DAILYMOTION;([^\]]+)\].*?\[\/VIDEO\]/i) { "\nhttps://www.dailymotion.com/video/#{$1}\n" }
+    raw.gsub!(%r{\[VIDEO=YOUTUBE;([^\]]+)\].*?\[/VIDEO\]}i) do
+      "\nhttps://www.youtube.com/watch?v=#{$1}\n"
+    end
+    raw.gsub!(%r{\[VIDEO=DAILYMOTION;([^\]]+)\].*?\[/VIDEO\]}i) do
+      "\nhttps://www.dailymotion.com/video/#{$1}\n"
+    end
 
     # [SPOILER=Some hidden stuff]SPOILER HERE!![/SPOILER]
-    raw.gsub!(/\[SPOILER="?(.+?)"?\](.+?)\[\/SPOILER\]/im) { "\n#{$1}\n[spoiler]#{$2}[/spoiler]\n" }
+    raw.gsub!(%r{\[SPOILER="?(.+?)"?\](.+?)\[/SPOILER\]}im) do
+      "\n#{$1}\n[spoiler]#{$2}[/spoiler]\n"
+    end
 
     # convert list tags to ul and list=1 tags to ol
     # (basically, we're only missing list=a here...)
     # (https://meta.discourse.org/t/phpbb-3-importer-old/17397)
-    raw.gsub!(/\[list\](.*?)\[\/list\]/im, '[ul]\1[/ul]')
-    raw.gsub!(/\[list=1\|?[^\]]*\](.*?)\[\/list\]/im, '[ol]\1[/ol]')
-    raw.gsub!(/\[list\](.*?)\[\/list:u\]/im, '[ul]\1[/ul]')
-    raw.gsub!(/\[list=1\|?[^\]]*\](.*?)\[\/list:o\]/im, '[ol]\1[/ol]')
+    raw.gsub!(%r{\[list\](.*?)\[/list\]}im, '[ul]\1[/ul]')
+    raw.gsub!(%r{\[list=1\|?[^\]]*\](.*?)\[/list\]}im, '[ol]\1[/ol]')
+    raw.gsub!(%r{\[list\](.*?)\[/list:u\]}im, '[ul]\1[/ul]')
+    raw.gsub!(%r{\[list=1\|?[^\]]*\](.*?)\[/list:o\]}im, '[ol]\1[/ol]')
     # convert *-tags to li-tags so bbcode-to-md can do its magic on phpBB's lists:
-    raw.gsub!(/\[\*\]\n/, '')
-    raw.gsub!(/\[\*\](.*?)\[\/\*:m\]/, '[li]\1[/li]')
+    raw.gsub!(/\[\*\]\n/, "")
+    raw.gsub!(%r{\[\*\](.*?)\[/\*:m\]}, '[li]\1[/li]')
     raw.gsub!(/\[\*\](.*?)\n/, '[li]\1[/li]')
-    raw.gsub!(/\[\*=1\]/, '')
+    raw.gsub!(/\[\*=1\]/, "")
 
     raw
   end
@@ -713,6 +817,7 @@ class BulkImport::Base
     imported_ids = []
     process_method_name = "process_#{name}"
     sql = "COPY #{name.pluralize} (#{columns.map { |c| "\"#{c}\"" }.join(",")}) FROM STDIN"
+    rows_created = 0
 
     @raw_connection.copy_data(sql, @encoder) do
       rows.each do |row|
@@ -722,7 +827,10 @@ class BulkImport::Base
           imported_ids << mapped[:imported_id] unless mapped[:imported_id].nil?
           imported_ids |= mapped[:imported_ids] unless mapped[:imported_ids].nil?
           @raw_connection.put_copy_data columns.map { |c| processed[c] } unless processed[:skip]
-          print "\r%7d - %6d/sec" % [imported_ids.size, imported_ids.size.to_f / (Time.now - start)] if imported_ids.size % 5000 == 0
+          rows_created += 1
+          if rows_created % 100 == 0
+            print "\r%7d - %6d/sec" % [rows_created, rows_created.to_f / (Time.now - start)]
+          end
         rescue => e
           puts "\n"
           puts "ERROR: #{e.message}"
@@ -731,27 +839,25 @@ class BulkImport::Base
       end
     end
 
-    if imported_ids.size > 0
-      print "\r%7d - %6d/sec" % [imported_ids.size, imported_ids.size.to_f / (Time.now - start)]
-      puts
+    if rows_created > 0
+      print "\r%7d - %6d/sec\n" % [rows_created, rows_created.to_f / (Time.now - start)]
     end
 
     id_mapping_method_name = "#{name}_id_from_imported_id".freeze
     return unless respond_to?(id_mapping_method_name)
     create_custom_fields(name, "id", imported_ids) do |imported_id|
-      {
-        record_id: send(id_mapping_method_name, imported_id),
-        value: imported_id,
-      }
+      { record_id: send(id_mapping_method_name, imported_id), value: imported_id }
     end
   rescue => e
+    # FIXME: errors catched here stop the rest of the COPY
     puts e.message
     puts e.backtrace.join("\n")
   end
 
   def create_custom_fields(table, name, rows)
     name = "import_#{name}"
-    sql = "COPY #{table}_custom_fields (#{table}_id, name, value, created_at, updated_at) FROM STDIN"
+    sql =
+      "COPY #{table}_custom_fields (#{table}_id, name, value, created_at, updated_at) FROM STDIN"
     @raw_connection.copy_data(sql, @encoder) do
       rows.each do |row|
         next unless cf = yield(row)
@@ -793,7 +899,7 @@ class BulkImport::Base
     cooked = raw
 
     # Convert YouTube URLs to lazyYT DOMs before being transformed into links
-    cooked.gsub!(/\nhttps\:\/\/www.youtube.com\/watch\?v=(\w+)\n/) do
+    cooked.gsub!(%r{\nhttps\://www.youtube.com/watch\?v=(\w+)\n}) do
       video_id = $1
       result = <<-HTML
         <div class="lazyYT" data-youtube-id="#{video_id}" data-width="480" data-height="270" data-parameters="feature=oembed&amp;wmode=opaque"></div>
@@ -803,7 +909,7 @@ class BulkImport::Base
 
     cooked = @markdown.render(cooked).scrub.strip
 
-    cooked.gsub!(/\[QUOTE="?([^,"]+)(?:, post:(\d+), topic:(\d+))?"?\](.+?)\[\/QUOTE\]/im) do
+    cooked.gsub!(%r{\[QUOTE="?([^,"]+)(?:, post:(\d+), topic:(\d+))?"?\](.+?)\[/QUOTE\]}im) do
       username, post_id, topic_id, quote = $1, $2, $3, $4
 
       quote = quote.scrub.strip
@@ -856,5 +962,4 @@ class BulkImport::Base
     return text if @encoding == Encoding::UTF_8
     text && text.encode(@encoding).force_encoding(Encoding::UTF_8)
   end
-
 end

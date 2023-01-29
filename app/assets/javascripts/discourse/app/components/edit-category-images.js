@@ -13,6 +13,11 @@ export default buildCategoryPanel("images").extend({
     return uploadedLogoUrl || "";
   },
 
+  @discourseComputed("category.uploaded_logo_dark.url")
+  logoImageDarkUrl(uploadedLogoDarkUrl) {
+    return uploadedLogoDarkUrl || "";
+  },
+
   actions: {
     logoUploadDone(upload) {
       this._setFromUpload("category.uploaded_logo", upload);
@@ -20,6 +25,14 @@ export default buildCategoryPanel("images").extend({
 
     logoUploadDeleted() {
       this._deleteUpload("category.uploaded_logo");
+    },
+
+    logoDarkUploadDone(upload) {
+      this._setFromUpload("category.uploaded_logo_dark", upload);
+    },
+
+    logoDarkUploadDeleted() {
+      this._deleteUpload("category.uploaded_logo_dark");
     },
 
     backgroundUploadDone(upload) {

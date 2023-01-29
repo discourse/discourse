@@ -156,6 +156,12 @@
                     "null"
                   ]
                 },
+                "uploaded_logo_dark": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
                 "uploaded_background": {
                   "type": [
                     "string",
@@ -199,6 +205,7 @@
                 "topics_all_time",
                 "subcategory_ids",
                 "uploaded_logo",
+                "uploaded_logo_dark",
                 "uploaded_background"
               ]
             }

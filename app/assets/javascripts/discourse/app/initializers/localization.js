@@ -26,7 +26,7 @@ export default {
     // Merge any overrides into our object
     for (const [locale, overrides] of Object.entries(I18n._overrides || {})) {
       for (const [key, value] of Object.entries(overrides)) {
-        const segs = key.replace(/^admin_js\./, "js.admin.").split(".");
+        const segs = key.replace(/^admin_js\./, "js.").split(".");
         let node = I18n.translations[locale] || {};
 
         for (let i = 0; i < segs.length - 1; i++) {

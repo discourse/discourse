@@ -12,6 +12,10 @@ body.widget-dragging {
   cursor: ns-resize;
 }
 
+body.dragging {
+  cursor: ns-resize;
+}
+
 // Common classes
 .boxed {
   height: 100%;
@@ -56,17 +60,17 @@ input,
 button,
 select,
 textarea {
-  font-size: $font-0;
+  font-size: var(--font-0);
   font-weight: normal;
-  line-height: $line-height-medium;
+  line-height: var(--line-height-medium);
 }
 
 select,
 textarea {
   display: inline-block;
   margin-bottom: 9px;
-  font-size: $font-0;
-  line-height: $line-height-large;
+  font-size: var(--font-0);
+  line-height: var(--line-height-large);
   color: var(--primary);
 }
 
@@ -77,7 +81,7 @@ textarea {
 
 select,
 input[type="file"] {
-  line-height: $line-height-large;
+  line-height: var(--line-height-large);
 }
 
 select {

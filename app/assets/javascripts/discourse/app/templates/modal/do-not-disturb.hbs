@@ -1,19 +1,42 @@
-<DModalBody @title="do_not_disturb.title">
+<DModalBody @title="pause_notifications.title">
   <TapTileGrid @activeTile={{this.duration}} as |grid|>
-    <TapTile @class="do-not-disturb-tile" @tileId="30" @activeTile={{grid.activeTile}} @onChange={{action "setDuration"}}>
-      {{i18n "do_not_disturb.options.half_hour"}}
+    <TapTile
+      @class="do-not-disturb-tile"
+      @tileId="30"
+      @activeTile={{grid.activeTile}}
+      @onChange={{action "setDuration"}}
+    >
+      {{i18n "pause_notifications.options.half_hour"}}
     </TapTile>
-    <TapTile @class="do-not-disturb-tile" @tileId="60" @activeTile={{grid.activeTile}} @onChange={{action "setDuration"}}>
-      {{i18n "do_not_disturb.options.one_hour"}}
+    <TapTile
+      @class="do-not-disturb-tile"
+      @tileId="60"
+      @activeTile={{grid.activeTile}}
+      @onChange={{action "setDuration"}}
+    >
+      {{i18n "pause_notifications.options.one_hour"}}
     </TapTile>
-    <TapTile @class="do-not-disturb-tile" @tileId="120" @activeTile={{grid.activeTile}} @onChange={{action "setDuration"}}>
-      {{i18n "do_not_disturb.options.two_hours"}}
+    <TapTile
+      @class="do-not-disturb-tile"
+      @tileId="120"
+      @activeTile={{grid.activeTile}}
+      @onChange={{action "setDuration"}}
+    >
+      {{i18n "pause_notifications.options.two_hours"}}
     </TapTile>
-    <TapTile @class="do-not-disturb-tile" @tileId="tomorrow" @activeTile={{grid.activeTile}} @onChange={{action "setDuration"}}>
-      {{i18n "do_not_disturb.options.tomorrow"}}
+    <TapTile
+      @class="do-not-disturb-tile"
+      @tileId="tomorrow"
+      @activeTile={{grid.activeTile}}
+      @onChange={{action "setDuration"}}
+    >
+      {{i18n "pause_notifications.options.tomorrow"}}
     </TapTile>
   </TapTileGrid>
 
-  <DButton @action={{action "navigateToNotificationSchedule"}} @label="do_not_disturb.set_schedule" />
+  <DButton
+    @action={{action "navigateToNotificationSchedule"}}
+    @label="pause_notifications.set_schedule"
+  />
 
 </DModalBody>

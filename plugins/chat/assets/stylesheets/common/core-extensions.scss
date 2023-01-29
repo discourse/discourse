@@ -1,0 +1,12 @@
+.has-full-page-chat {
+  .create-topics-notice,
+  .bootstrap-mode-notice {
+    display: none;
+  }
+}
+
+.admin-plugins {
+  [data-plugin-name="chat"] {
+    display: none;
+  }
+}

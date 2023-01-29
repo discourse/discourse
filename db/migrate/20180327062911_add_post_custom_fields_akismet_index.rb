@@ -7,8 +7,9 @@
 
 class AddPostCustomFieldsAkismetIndex < ActiveRecord::Migration[5.1]
   def change
-    add_index :post_custom_fields, [:post_id],
-      name: 'idx_post_custom_fields_akismet',
-      where: "name = 'AKISMET_STATE' AND value = 'needs_review'"
+    add_index :post_custom_fields,
+              [:post_id],
+              name: "idx_post_custom_fields_akismet",
+              where: "name = 'AKISMET_STATE' AND value = 'needs_review'"
   end
 end

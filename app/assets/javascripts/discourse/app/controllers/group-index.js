@@ -1,8 +1,10 @@
 import Controller, { inject as controller } from "@ember/controller";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import discourseComputed, {
+  debounce,
+  observes,
+} from "discourse-common/utils/decorators";
 import { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
-import discourseDebounce from "discourse-common/lib/debounce";
 import { gt } from "@ember/object/computed";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
@@ -23,14 +25,9 @@ export default Controller.extend({
   bulkSelection: null,
 
   @observes("filterInput")
+  @debounce(500)
   _setFilter() {
-    discourseDebounce(
-      this,
-      function () {
-        this.set("filter", this.filterInput);
-      },
-      500
-    );
+    this.set("filter", this.filterInput);
   },
 
   @observes("order", "asc", "filter")
@@ -137,17 +134,17 @@ export default Controller.extend({
       case "removeMembers":
         return ajax(`/groups/${this.model.id}/members.json`, {
           type: "DELETE",
-          data: { user_ids: selection.map((u) => u.id).join(",") },
+          data: { user_ids: selection.mapBy("id").join(",") },
         }).then(() => {
           this.model.reloadMembers(this.memberParams, true);
           this.set("isBulk", false);
         });
 
       case "makeOwners":
-        return ajax(`/admin/groups/${this.model.id}/owners.json`, {
+        return ajax(`/groups/${this.model.id}/owners.json`, {
           type: "PUT",
           data: {
-            group: { usernames: selection.map((u) => u.username).join(",") },
+            usernames: selection.mapBy("username").join(","),
           },
         }).then(() => {
           selection.forEach((s) => s.set("owner", true));

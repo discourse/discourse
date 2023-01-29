@@ -1,9 +1,7 @@
 import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import bootbox from "bootbox";
 import discourseComputed from "discourse-common/utils/decorators";
 import ItsATrap from "@discourse/itsatrap";
 import {
@@ -12,26 +10,20 @@ import {
 } from "discourse/lib/time-shortcut";
 
 export default Controller.extend(ModalFunctionality, {
-  userStatusService: service("user-status"),
-
-  emoji: null,
-  description: null,
-  endsAt: null,
-
   showDeleteButton: false,
   prefilledDateTime: null,
   timeShortcuts: null,
   _itsatrap: null,
 
   onShow() {
-    const status = this.currentUser.status;
+    const currentStatus = { ...this.model.status };
     this.setProperties({
-      emoji: status?.emoji,
-      description: status?.description,
-      endsAt: status?.ends_at,
-      showDeleteButton: !!status,
+      status: currentStatus,
+      hidePauseNotifications: this.model.hidePauseNotifications,
+      pauseNotifications: this.model.pauseNotifications,
+      showDeleteButton: !!this.model.status,
       timeShortcuts: this._buildTimeShortcuts(),
-      prefilledDateTime: status?.ends_at,
+      prefilledDateTime: currentStatus?.ends_at,
     });
 
     this.set("_itsatrap", new ItsATrap());
@@ -43,7 +35,7 @@ export default Controller.extend(ModalFunctionality, {
     this.set("timeShortcuts", null);
   },
 
-  @discourseComputed("emoji", "description")
+  @discourseComputed("status.emoji", "status.description")
   statusIsSet(emoji, description) {
     return !!emoji && !!description;
   },
@@ -62,42 +54,39 @@ export default Controller.extend(ModalFunctionality, {
 
   @action
   delete() {
-    this.userStatusService
-      .clear()
+    Promise.resolve(this.model.deleteAction())
       .then(() => this.send("closeModal"))
       .catch((e) => this._handleError(e));
   },
 
   @action
   onTimeSelected(_, time) {
-    this.set("endsAt", time);
+    this.set("status.endsAt", time);
   },
 
   @action
   saveAndClose() {
-    const status = {
-      description: this.description,
-      emoji: this.emoji,
-      ends_at: this.endsAt?.toISOString(),
+    const newStatus = {
+      description: this.status.description,
+      emoji: this.status.emoji,
+      ends_at: this.status.endsAt?.toISOString(),
     };
-    this.userStatusService
-      .set(status)
-      .then(() => {
-        this.send("closeModal");
-      })
+
+    Promise.resolve(this.model.saveAction(newStatus, this.pauseNotifications))
+      .then(() => this.send("closeModal"))
       .catch((e) => this._handleError(e));
   },
 
   _handleError(e) {
     if (typeof e === "string") {
-      bootbox.alert(e);
+      this.dialog.alert(e);
     } else {
       popupAjaxError(e);
     }
   },
 
   _buildTimeShortcuts() {
-    const timezone = this.currentUser.timezone;
+    const timezone = this.currentUser.user_option.timezone;
     const shortcuts = timeShortcuts(timezone);
     return [shortcuts.oneHour(), shortcuts.twoHours(), shortcuts.tomorrow()];
   },

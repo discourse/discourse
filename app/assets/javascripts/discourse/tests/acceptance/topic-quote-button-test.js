@@ -20,6 +20,19 @@ acceptance("Topic - Quote button - logged in", function (needs) {
     share_quote_buttons: "twitter|email",
   });
 
+  needs.pretender((server, helper) => {
+    server.get("/inline-onebox", () =>
+      helper.response({
+        "inline-oneboxes": [
+          {
+            url: "http://www.example.com/57350945",
+            title: "This is a great title",
+          },
+        ],
+      })
+    );
+  });
+
   chromeTest(
     "Does not show the quote share buttons by default",
     async function (assert) {

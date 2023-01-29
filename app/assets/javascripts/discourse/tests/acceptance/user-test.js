@@ -1,15 +1,17 @@
+import I18n from "I18n";
 import EmberObject from "@ember/object";
-import User from "discourse/models/user";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import sinon from "sinon";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
 import {
   acceptance,
   exists,
+  publishToMessageBus,
   query,
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
+import * as logout from "discourse/lib/logout";
 import { click, currentRouteName, visit } from "@ember/test-helpers";
 import { cloneJSON } from "discourse-common/lib/object";
 import { test } from "qunit";
@@ -117,14 +119,16 @@ acceptance(
       await visit("/u/eviltrout");
       assert.strictEqual(
         query(".user-profile-names .username").textContent.trim(),
-        "eviltrout",
+        `eviltrout
+                Robin Ward is an admin`,
         "eviltrout profile is shown"
       );
 
       await visit("/u/e.il.rout");
       assert.strictEqual(
         query(".user-profile-names .username").textContent.trim(),
-        "e.il.rout",
+        `e.il.rout
+                Robin Ward is an admin`,
         "e.il.rout profile is shown"
       );
     });
@@ -162,21 +166,33 @@ acceptance("User - Saving user options", function (needs) {
     disable_mailing_list_mode: false,
   });
 
+  let putRequestData;
+
   needs.pretender((server, helper) => {
-    server.put("/u/eviltrout.json", () => {
-      return helper.response(200, { user: {} });
+    server.put("/u/eviltrout.json", (request) => {
+      putRequestData = helper.parsePostData(request.requestBody);
+      return helper.response({ user: {} });
     });
   });
 
-  test("saving user options", async function (assert) {
-    const spy = sinon.spy(User.current(), "_saveUserData");
+  needs.hooks.afterEach(() => {
+    putRequestData = null;
+  });
 
+  test("saving user options", async function (assert) {
     await visit("/u/eviltrout/preferences/emails");
     await click(".pref-mailing-list-mode input[type='checkbox']");
     await click(".save-changes");
 
-    assert.ok(
-      spy.calledWithMatch({ mailing_list_mode: true }),
+    assert.deepEqual(
+      putRequestData,
+      {
+        digest_after_minutes: "10080",
+        email_digests: "true",
+        email_level: "1",
+        email_messages_level: "0",
+        mailing_list_mode: "true",
+      },
       "sends a PUT request to update the specified user option"
     );
 
@@ -184,8 +200,15 @@ acceptance("User - Saving user options", function (needs) {
     await selectKit("#user-email-messages-level").selectRowByValue(2); // never option
     await click(".save-changes");
 
-    assert.ok(
-      spy.calledWithMatch({ email_messages_level: 2 }),
+    assert.deepEqual(
+      putRequestData,
+      {
+        digest_after_minutes: "10080",
+        email_digests: "true",
+        email_level: "1",
+        email_messages_level: "2",
+        mailing_list_mode: "true",
+      },
       "is able to save a different user_option on a subsequent request"
     );
   });
@@ -305,3 +328,27 @@ acceptance(
     });
   }
 );
+
+acceptance("User - Logout", function (needs) {
+  needs.user({ username: "eviltrout" });
+
+  test("Dialog works", async function (assert) {
+    sinon.stub(logout, "default");
+    await visit("/u/eviltrout");
+    await publishToMessageBus("/logout/19");
+
+    assert.ok(exists(".dialog-body"));
+    assert.ok(
+      !exists(".dialog-footer .btn-default"),
+      "no cancel button present"
+    );
+    assert.strictEqual(
+      query(".dialog-footer .btn-primary").innerText,
+      I18n.t("home"),
+      "primary dialog button is present"
+    );
+
+    await click(".dialog-overlay");
+    assert.ok(logout.default.called, "logout helper was called");
+  });
+});

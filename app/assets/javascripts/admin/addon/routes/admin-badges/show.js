@@ -2,11 +2,13 @@ import Badge from "discourse/models/badge";
 import I18n from "I18n";
 import Route from "@ember/routing/route";
 import { ajax } from "discourse/lib/ajax";
-import bootbox from "bootbox";
 import { action, get } from "@ember/object";
 import showModal from "discourse/lib/show-modal";
+import { inject as service } from "@ember/service";
 
 export default class AdminBadgesShowRoute extends Route {
+  @service dialog;
+
   serialize(m) {
     return { badge_id: get(m, "id") || "new" };
   }
@@ -58,7 +60,7 @@ export default class AdminBadgesShowRoute extends Route {
         badge.set("preview_loading", false);
         // eslint-disable-next-line no-console
         console.error(error);
-        bootbox.alert("Network error");
+        this.dialog.alert("Network error");
       });
   }
 }

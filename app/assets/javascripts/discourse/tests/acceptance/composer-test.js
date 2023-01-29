@@ -1,4 +1,12 @@
-import { click, currentURL, fillIn, settled, visit } from "@ember/test-helpers";
+import {
+  click,
+  currentURL,
+  fillIn,
+  settled,
+  triggerEvent,
+  triggerKeyEvent,
+  visit,
+} from "@ember/test-helpers";
 import { toggleCheckDraftPopup } from "discourse/controllers/composer";
 import { cloneJSON } from "discourse-common/lib/object";
 import TopicFixtures from "discourse/tests/fixtures/topic";
@@ -21,8 +29,8 @@ import {
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import I18n from "I18n";
 import { test } from "qunit";
-import { Promise } from "rsvp";
 import sinon from "sinon";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
 acceptance("Composer", function (needs) {
   needs.user({
@@ -31,22 +39,42 @@ acceptance("Composer", function (needs) {
     whisperer: true,
   });
   needs.settings({
-    enable_whispers: true,
+    general_category_id: 1,
+    default_composer_category: 1,
   });
-  needs.site({ can_tag_topics: true });
+  needs.site({
+    can_tag_topics: true,
+    categories: [
+      {
+        id: 1,
+        name: "General",
+        slug: "general",
+        permission: 1,
+        topic_template: null,
+      },
+      {
+        id: 2,
+        name: "test too",
+        slug: "test-too",
+        permission: 1,
+        topic_template: "",
+      },
+    ],
+  });
   needs.pretender((server, helper) => {
+    server.put("/u/kris.json", () => helper.response({ user: {} }));
     server.post("/uploads/lookup-urls", () => {
       return helper.response([]);
     });
     server.get("/posts/419", () => {
       return helper.response({ id: 419 });
     });
-    server.get("/u/is_local_username", () => {
+    server.get("/composer/mentions", () => {
       return helper.response({
-        valid: [],
-        valid_groups: ["staff"],
-        mentionable_groups: [{ name: "staff", user_count: 30 }],
-        cannot_see: [],
+        users: [],
+        user_reasons: {},
+        groups: { staff: { user_count: 30 } },
+        group_reasons: {},
         max_users_notified_per_group_mention: 100,
       });
     });
@@ -55,6 +83,69 @@ acceptance("Composer", function (needs) {
       topicList.post_stream.posts[2].post_type = 4;
       return helper.response(topicList);
     });
+  });
+
+  needs.hooks.afterEach(() => toggleCheckDraftPopup(false));
+
+  test("Composer is opened", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+    // Check that the default category is selected
+    assert.strictEqual(selectKit(".category-chooser").header().value(), "1");
+
+    assert.strictEqual(
+      document.documentElement.style.getPropertyValue("--composer-height"),
+      "var(--new-topic-composer-height, 400px)",
+      "sets --composer-height to 400px when creating topic"
+    );
+
+    await fillIn(
+      ".d-editor-input",
+      "this is the *content* of a new topic post"
+    );
+    await click(".toggle-minimize");
+    assert.strictEqual(
+      document.documentElement.style.getPropertyValue("--composer-height"),
+      "40px",
+      "sets --composer-height to 40px when composer is minimized to draft mode"
+    );
+
+    await click(".toggle-fullscreen");
+    assert.strictEqual(
+      document.documentElement.style.getPropertyValue("--composer-height"),
+      "var(--new-topic-composer-height, 400px)",
+      "sets --composer-height back to 400px when composer is opened from draft mode"
+    );
+
+    await fillIn(".d-editor-input", "");
+    await click(".toggle-minimize");
+    assert.strictEqual(
+      document.documentElement.style.getPropertyValue("--composer-height"),
+      "",
+      "removes --composer-height property when composer is closed"
+    );
+  });
+
+  test("Composer height adjustment", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+    await triggerEvent(document.querySelector(".grippie"), "mousedown");
+    await triggerEvent(document.querySelector(".grippie"), "mousemove");
+    await triggerEvent(document.querySelector(".grippie"), "mouseup");
+    await visit("/"); // reload page
+    await click("#create-topic");
+
+    const expectedHeight = localStorage.getItem(
+      "__test_discourse_composerHeight"
+    );
+    const actualHeight =
+      document.documentElement.style.getPropertyValue("--composer-height");
+
+    assert.strictEqual(
+      expectedHeight,
+      actualHeight,
+      "Updated height is persistent"
+    );
   });
 
   test("composer controls", async function (assert) {
@@ -86,16 +177,29 @@ acceptance("Composer", function (needs) {
 
     await click("#reply-control button.create");
     assert.ok(
-      !exists(".title-input .popup-tip.bad.hide"),
+      exists(".title-input .popup-tip.bad"),
       "it shows the empty title error"
     );
     assert.ok(
-      !exists(".d-editor-wrapper .popup-tip.bad.hide"),
+      exists(".d-editor-textarea-wrapper .popup-tip.bad"),
       "it shows the empty body error"
     );
 
     await fillIn("#reply-title", "this is my new topic title");
-    assert.ok(exists(".title-input .popup-tip.good"), "the title is now good");
+    assert.ok(
+      exists(".title-input .popup-tip.good.hide"),
+      "the title is now good"
+    );
+
+    await triggerKeyEvent(
+      ".d-editor-textarea-wrapper .popup-tip.bad",
+      "keydown",
+      "Enter"
+    );
+    assert.ok(
+      exists(".d-editor-textarea-wrapper .popup-tip.bad.hide"),
+      "body error is dismissed via keyboard"
+    );
 
     await fillIn(".d-editor-input", "this is the *content* of a post");
     assert.strictEqual(
@@ -134,18 +238,23 @@ acceptance("Composer", function (needs) {
     assert.ok(exists(".d-modal"), "it pops up a confirmation dialog");
 
     await click(".modal-footer .discard-draft");
-    assert.ok(!exists(".bootbox.modal"), "the confirmation can be cancelled");
+    assert.ok(!exists(".modal-body"), "the confirmation can be cancelled");
   });
 
   test("Create a topic with server side errors", async function (assert) {
+    pretender.post("/posts", function () {
+      return response(422, { errors: ["That title has already been taken"] });
+    });
+
     await visit("/");
     await click("#create-topic");
     await fillIn("#reply-title", "this title triggers an error");
     await fillIn(".d-editor-input", "this is the *content* of a post");
     await click("#reply-control button.create");
-    assert.ok(exists(".bootbox.modal"), "it pops up an error message");
-    await click(".bootbox.modal a.btn-primary");
-    assert.ok(!exists(".bootbox.modal"), "it dismisses the error");
+    assert.ok(exists(".dialog-body"), "it pops up an error message");
+
+    await click(".dialog-footer .btn-primary");
+    assert.ok(!exists(".dialog-body"), "it dismisses the error");
     assert.ok(exists(".d-editor-input"), "the composer input is visible");
   });
 
@@ -166,6 +275,17 @@ acceptance("Composer", function (needs) {
   });
 
   test("Create an enqueued Topic", async function (assert) {
+    pretender.post("/posts", function () {
+      return response(200, {
+        success: true,
+        action: "enqueued",
+        pending_post: {
+          id: 1234,
+          raw: "enqueue this content please",
+        },
+      });
+    });
+
     await visit("/");
     await click("#create-topic");
     await fillIn("#reply-title", "Internationalization Localization");
@@ -182,15 +302,16 @@ acceptance("Composer", function (needs) {
     await visit("/");
     await click("#create-topic");
     await fillIn("#reply-title", "This title doesn't matter");
-    await fillIn(".d-editor-input", "custom message");
+    await fillIn(".d-editor-input", "custom message that is a good length");
     await click("#reply-control button.create");
+
     assert.strictEqual(
-      query(".bootbox .modal-body").innerText,
+      query("#dialog-holder .dialog-body").innerText,
       "This is a custom response"
     );
     assert.strictEqual(currentURL(), "/", "it doesn't change routes");
 
-    await click(".bootbox .btn-primary");
+    await click(".dialog-footer .btn-primary");
     assert.strictEqual(
       currentURL(),
       "/faq",
@@ -278,7 +399,10 @@ acceptance("Composer", function (needs) {
     await fillIn(".d-editor-input", "this is the content of the first reply");
 
     await visit("/t/this-is-a-test-topic/9");
-    assert.strictEqual(currentURL(), "/t/this-is-a-test-topic/9");
+    assert.ok(
+      currentURL().startsWith("/t/this-is-a-test-topic/9"),
+      "moves to second topic"
+    );
     await click("#topic-footer-buttons .btn.create");
     assert.ok(
       exists(".discard-draft-modal.modal"),
@@ -287,7 +411,7 @@ acceptance("Composer", function (needs) {
 
     await click(".modal-footer button.keep-editing");
 
-    assert.ok(invisible(".discard-draft-modal.modal"));
+    assert.ok(invisible(".discard-draft-modal.modal"), "hides modal");
     await click("#topic-footer-buttons .btn.create");
     assert.ok(
       exists(".discard-draft-modal.modal"),
@@ -304,8 +428,18 @@ acceptance("Composer", function (needs) {
   });
 
   test("Create an enqueued Reply", async function (assert) {
-    await visit("/t/internationalization-localization/280");
+    pretender.post("/posts", function () {
+      return response(200, {
+        success: true,
+        action: "enqueued",
+        pending_post: {
+          id: 1234,
+          raw: "enqueue this content please",
+        },
+      });
+    });
 
+    await visit("/t/internationalization-localization/280");
     assert.ok(!exists(".pending-posts .reviewable-item"));
 
     await click("#topic-footer-buttons .btn.create");
@@ -322,12 +456,10 @@ acceptance("Composer", function (needs) {
         "enqueue this content please",
       "it doesn't insert the post"
     );
-
     assert.ok(visible(".d-modal"), "it pops up a modal");
 
     await click(".modal-footer button");
     assert.ok(invisible(".d-modal"), "the modal can be dismissed");
-
     assert.ok(exists(".pending-posts .reviewable-item"));
   });
 
@@ -370,34 +502,27 @@ acceptance("Composer", function (needs) {
 
   test("Editing a post stages new content", async function (assert) {
     await visit("/t/internationalization-localization/280");
-    await click(".topic-post:nth-of-type(1) button.show-more-actions");
-    await click(".topic-post:nth-of-type(1) button.edit");
+    await click(".topic-post button.show-more-actions");
+    await click(".topic-post button.edit");
 
     await fillIn(".d-editor-input", "will return empty json");
     await fillIn("#reply-title", "This is the new text for the title");
 
-    // when this promise resolves, the request had already started because
-    // this promise will be resolved by the pretender
-    const promise = new Promise((resolve) => {
-      window.resolveLastPromise = resolve;
+    pretender.put("/posts/:post_id", async () => {
+      // at this point, request is in flight, so post is staged
+      assert.strictEqual(count(".topic-post.staged"), 1);
+      assert.ok(query(".topic-post").classList.contains("staged"));
+      assert.strictEqual(
+        query(".topic-post.staged .cooked").innerText.trim(),
+        "will return empty json"
+      );
+
+      return response(200, {});
     });
 
-    // click to trigger the save, but wait until the request starts
-    click("#reply-control button.create");
-    await promise;
+    await click("#reply-control button.create");
 
-    // at this point, request is in flight, so post is staged
-    assert.strictEqual(count(".topic-post.staged"), 1);
-    assert.ok(query(".topic-post:nth-of-type(1)").className.includes("staged"));
-    assert.strictEqual(
-      query(".topic-post.staged .cooked").innerText.trim(),
-      "will return empty json"
-    );
-
-    // finally, finish request and wait for last render
-    window.resolveLastPromise();
     await visit("/t/internationalization-localization/280");
-
     assert.strictEqual(count(".topic-post.staged"), 0);
   });
 
@@ -721,109 +846,91 @@ acceptance("Composer", function (needs) {
   });
 
   test("Checks for existing draft", async function (assert) {
-    try {
-      toggleCheckDraftPopup(true);
+    toggleCheckDraftPopup(true);
 
-      await visit("/t/internationalization-localization/280");
+    await visit("/t/internationalization-localization/280");
 
-      await click(".topic-post:nth-of-type(1) button.show-more-actions");
-      await click(".topic-post:nth-of-type(1) button.edit");
+    await click(".topic-post:nth-of-type(1) button.show-more-actions");
+    await click(".topic-post:nth-of-type(1) button.edit");
 
-      assert.strictEqual(
-        query(".modal-body").innerText,
-        I18n.t("drafts.abandon.confirm")
-      );
+    assert.strictEqual(
+      query(".dialog-body").innerText,
+      I18n.t("drafts.abandon.confirm")
+    );
 
-      await click(".modal-footer .btn.btn-default");
-    } finally {
-      toggleCheckDraftPopup(false);
-    }
+    await click(".dialog-footer .btn-resume-editing");
   });
 
   test("Can switch states without abandon popup", async function (assert) {
-    try {
-      toggleCheckDraftPopup(true);
+    toggleCheckDraftPopup(true);
 
-      await visit("/t/internationalization-localization/280");
+    await visit("/t/internationalization-localization/280");
 
-      const longText = "a".repeat(256);
+    const longText = "a".repeat(256);
 
-      sinon.stub(Draft, "get").returns(
-        Promise.resolve({
-          draft: null,
-          draft_sequence: 0,
-        })
-      );
+    sinon.stub(Draft, "get").resolves({
+      draft: null,
+      draft_sequence: 0,
+    });
 
-      await click(".btn-primary.create.btn");
+    await click(".btn-primary.create.btn");
 
-      await fillIn(".d-editor-input", longText);
+    await fillIn(".d-editor-input", longText);
 
-      assert.ok(
-        exists(
-          '.action-title a[href="/t/internationalization-localization/280"]'
-        ),
-        "the mode should be: reply to post"
-      );
+    assert.ok(
+      exists(
+        '.action-title a[href="/t/internationalization-localization/280"]'
+      ),
+      "the mode should be: reply to post"
+    );
 
-      await click("article#post_3 button.reply");
+    await click("article#post_3 button.reply");
 
-      const composerActions = selectKit(".composer-actions");
-      await composerActions.expand();
-      await composerActions.selectRowByValue("reply_as_new_topic");
+    const composerActions = selectKit(".composer-actions");
+    await composerActions.expand();
+    await composerActions.selectRowByValue("reply_as_new_topic");
 
-      assert.ok(!exists(".modal-body"), "abandon popup shouldn't come");
+    assert.ok(!exists(".modal-body"), "abandon popup shouldn't come");
 
-      assert.ok(
-        query(".d-editor-input").value.includes(longText),
-        "entered text should still be there"
-      );
+    assert.ok(
+      query(".d-editor-input").value.includes(longText),
+      "entered text should still be there"
+    );
 
-      assert.ok(
-        !exists(
-          '.action-title a[href="/t/internationalization-localization/280"]'
-        ),
-        "mode should have changed"
-      );
-    } finally {
-      toggleCheckDraftPopup(false);
-    }
+    assert.ok(
+      !exists(
+        '.action-title a[href="/t/internationalization-localization/280"]'
+      ),
+      "mode should have changed"
+    );
   });
 
   test("Loading draft also replaces the recipients", async function (assert) {
-    try {
-      toggleCheckDraftPopup(true);
+    toggleCheckDraftPopup(true);
 
-      sinon.stub(Draft, "get").returns(
-        Promise.resolve({
-          draft:
-            '{"reply":"hello","action":"privateMessage","title":"hello","categoryId":null,"archetypeId":"private_message","metaData":null,"recipients":"codinghorror","composerTime":9159,"typingTime":2500}',
-          draft_sequence: 0,
-        })
-      );
+    sinon.stub(Draft, "get").resolves({
+      draft:
+        '{"reply":"hello","action":"privateMessage","title":"hello","categoryId":null,"archetypeId":"private_message","metaData":null,"recipients":"codinghorror","composerTime":9159,"typingTime":2500}',
+      draft_sequence: 0,
+    });
 
-      await visit("/u/charlie");
-      await click("button.compose-pm");
-      await click(".modal .btn-default");
+    await visit("/u/charlie");
+    await click("button.compose-pm");
+    await click(".dialog-footer .btn-resume-editing");
 
-      const privateMessageUsers = selectKit("#private-message-users");
-      assert.strictEqual(privateMessageUsers.header().value(), "codinghorror");
-    } finally {
-      toggleCheckDraftPopup(false);
-    }
+    const privateMessageUsers = selectKit("#private-message-users");
+    assert.strictEqual(privateMessageUsers.header().value(), "codinghorror");
   });
 
   test("Loads tags and category from draft payload", async function (assert) {
     updateCurrentUser({ has_topic_draft: true });
 
-    sinon.stub(Draft, "get").returns(
-      Promise.resolve({
-        draft:
-          '{"reply":"Hey there","action":"createTopic","title":"Draft topic","categoryId":2,"tags":["fun", "times"],"archetypeId":"regular","metaData":null,"composerTime":25269,"typingTime":8100}',
-        draft_sequence: 0,
-        draft_key: NEW_TOPIC_KEY,
-      })
-    );
+    sinon.stub(Draft, "get").resolves({
+      draft:
+        '{"reply":"Hey there","action":"createTopic","title":"Draft topic","categoryId":2,"tags":["fun", "times"],"archetypeId":"regular","metaData":null,"composerTime":25269,"typingTime":8100}',
+      draft_sequence: 0,
+      draft_key: NEW_TOPIC_KEY,
+    });
 
     await visit("/latest");
     assert.strictEqual(
@@ -998,8 +1105,62 @@ acceptance("Composer - Customizations", function (needs) {
   });
 });
 
+acceptance("Composer - Error Extensibility", function (needs) {
+  needs.user();
+  needs.settings({
+    general_category_id: 1,
+    default_composer_category: 1,
+  });
+
+  needs.hooks.beforeEach(() => {
+    withPluginApi("1.5.0", (api) => {
+      api.addComposerSaveErrorCallback((error) => {
+        if (error.match(/PLUGIN_XYZ ERROR/)) {
+          // handle error
+          return true;
+        }
+        return false;
+      });
+    });
+  });
+
+  test("Create a topic with server side errors handled by a plugin", async function (assert) {
+    pretender.post("/posts", function () {
+      return response(422, { errors: ["PLUGIN_XYZ ERROR"] });
+    });
+
+    await visit("/");
+    await click("#create-topic");
+    await fillIn("#reply-title", "this title triggers an error");
+    await fillIn(".d-editor-input", "this is the *content* of a post");
+    await click("#reply-control button.create");
+    assert.notOk(exists(".dialog-body"), "it does not pop up an error message");
+  });
+
+  test("Create a topic with server side errors not handled by a plugin", async function (assert) {
+    pretender.post("/posts", function () {
+      return response(422, { errors: ["PLUGIN_ABC ERROR"] });
+    });
+
+    await visit("/");
+    await click("#create-topic");
+    await fillIn("#reply-title", "this title triggers an error");
+    await fillIn(".d-editor-input", "this is the *content* of a post");
+    await click("#reply-control button.create");
+    assert.ok(exists(".dialog-body"), "it pops up an error message");
+    assert.ok(
+      query(".dialog-body").innerText.match(/PLUGIN_ABC ERROR/),
+      "it contains the server side error text"
+    );
+    await click(".dialog-footer .btn-primary");
+    assert.ok(!exists(".dialog-body"), "it dismisses the error");
+    assert.ok(exists(".d-editor-input"), "the composer input is visible");
+  });
+});
+
 acceptance("Composer - Focus Open and Closed", function (needs) {
   needs.user();
+  needs.settings({ allow_uncategorized_topics: true });
 
   test("Focusing a composer which is not open with create topic", async function (assert) {
     await visit("/t/internationalization-localization/280");
@@ -1093,3 +1254,109 @@ acceptance("Composer - Focus Open and Closed", function (needs) {
     );
   });
 });
+
+// Default Composer Category tests
+acceptance("Composer - Default category", function (needs) {
+  needs.user();
+  needs.settings({
+    general_category_id: 1,
+    default_composer_category: 2,
+  });
+  needs.site({
+    categories: [
+      {
+        id: 1,
+        name: "General",
+        slug: "general",
+        permission: 1,
+        topic_template: null,
+      },
+      {
+        id: 2,
+        name: "test too",
+        slug: "test-too",
+        permission: 1,
+        topic_template: null,
+      },
+    ],
+  });
+
+  test("Default category is selected over general category", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+    assert.strictEqual(selectKit(".category-chooser").header().value(), "2");
+    assert.strictEqual(
+      selectKit(".category-chooser").header().name(),
+      "test too"
+    );
+  });
+});
+
+acceptance("Composer - Uncategorized category", function (needs) {
+  needs.user();
+  needs.settings({
+    general_category_id: -1, // For sites that never had this seeded
+    default_composer_category: -1, // For sites that never had this seeded
+    allow_uncategorized_topics: true,
+  });
+  needs.site({
+    categories: [
+      {
+        id: 1,
+        name: "General",
+        slug: "general",
+        permission: 1,
+        topic_template: null,
+      },
+      {
+        id: 2,
+        name: "test too",
+        slug: "test-too",
+        permission: 1,
+        topic_template: null,
+      },
+    ],
+  });
+
+  test("Uncategorized category is selected", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+    assert.strictEqual(selectKit(".category-chooser").header().value(), null);
+  });
+});
+
+acceptance("Composer - default category not set", function (needs) {
+  needs.user();
+  needs.settings({
+    default_composer_category: "",
+  });
+  needs.site({
+    categories: [
+      {
+        id: 1,
+        name: "General",
+        slug: "general",
+        permission: 1,
+        topic_template: null,
+      },
+      {
+        id: 2,
+        name: "test too",
+        slug: "test-too",
+        permission: 1,
+        topic_template: null,
+      },
+    ],
+  });
+
+  test("Nothing is selected", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+    assert.strictEqual(selectKit(".category-chooser").header().value(), null);
+    assert.strictEqual(
+      selectKit(".category-chooser").header().name(),
+      "category&hellip;"
+    );
+  });
+});
+// END: Default Composer Category tests

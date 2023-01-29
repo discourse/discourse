@@ -1,25 +1,6 @@
 import Controller from "@ember/controller";
-export default Controller.extend({
-  sortProperties: ["count:desc", "id"],
-  tagsForUser: null,
-  sortedByCount: true,
-  sortedByName: false,
+import { tracked } from "@glimmer/tracking";
 
-  actions: {
-    sortByCount() {
-      this.setProperties({
-        sortProperties: ["count:desc", "id"],
-        sortedByCount: true,
-        sortedByName: false,
-      });
-    },
-
-    sortById() {
-      this.setProperties({
-        sortProperties: ["id"],
-        sortedByCount: false,
-        sortedByName: true,
-      });
-    },
-  },
-});
+export default class extends Controller {
+  @tracked tagName = null;
+}

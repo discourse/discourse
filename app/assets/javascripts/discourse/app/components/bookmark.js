@@ -11,12 +11,13 @@ import {
 } from "discourse/lib/time-shortcut";
 import { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
-import bootbox from "bootbox";
 import discourseComputed, { bind } from "discourse-common/utils/decorators";
 import { formattedReminderTime } from "discourse/lib/bookmark";
 import { and, notEmpty } from "@ember/object/computed";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseLater from "discourse-common/lib/later";
+
+import { inject as service } from "@ember/service";
 
 const BOOKMARK_BINDINGS = {
   enter: { handler: "saveAndClose" },
@@ -24,8 +25,8 @@ const BOOKMARK_BINDINGS = {
 };
 
 export default Component.extend({
+  dialog: service(),
   tagName: "",
-
   errorMessage: null,
   selectedReminderType: null,
   _closeWithoutSaving: null,
@@ -56,10 +57,12 @@ export default Component.extend({
       postDetectedLocalTime: null,
       postDetectedLocalTimezone: null,
       prefilledDatetime: null,
-      userTimezone: this.currentUser.timezone,
+      userTimezone: this.currentUser.user_option.timezone,
       showOptions: false,
       _itsatrap: new ItsATrap(),
-      autoDeletePreference: this.model.autoDeletePreference || 0,
+      autoDeletePreference:
+        this.model.autoDeletePreference ||
+        AUTO_DELETE_PREFERENCES.CLEAR_REMINDER,
     });
 
     this.registerOnCloseHandler(this._onModalClose);
@@ -152,11 +155,6 @@ export default Component.extend({
       }
     }
 
-    this.currentUser.set(
-      "bookmark_auto_delete_preference",
-      this.autoDeletePreference
-    );
-
     const data = {
       reminder_at: reminderAtISO,
       name: this.model.name,
@@ -227,7 +225,7 @@ export default Component.extend({
   _handleSaveError(e) {
     this._savingBookmarkManually = false;
     if (typeof e === "string") {
-      bootbox.alert(e);
+      this.dialog.alert(e);
     } else {
       popupAjaxError(e);
     }
@@ -259,7 +257,11 @@ export default Component.extend({
     KeyboardShortcuts.unpause();
   },
 
-  showExistingReminderAt: notEmpty("model.reminderAt"),
+  @discourseComputed("model.reminderAt")
+  showExistingReminderAt(reminderAt) {
+    return reminderAt && Date.parse(reminderAt) > new Date().getTime();
+  },
+
   showDelete: notEmpty("model.id"),
   userHasTimezoneSet: notEmpty("userTimezone"),
   editingExistingBookmark: and("model", "model.id"),
@@ -371,10 +373,9 @@ export default Component.extend({
     };
 
     if (this.existingBookmarkHasReminder) {
-      bootbox.confirm(I18n.t("bookmarks.confirm_delete"), (result) => {
-        if (result) {
-          deleteAction();
-        }
+      this.dialog.deleteConfirm({
+        message: I18n.t("bookmarks.confirm_delete"),
+        didConfirm: () => deleteAction(),
       });
     } else {
       deleteAction();

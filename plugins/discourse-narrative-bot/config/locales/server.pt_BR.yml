@@ -84,6 +84,15 @@ pt_BR:
       "10":
         quote: "Tudo o que a mente humana pode conceber e acreditar, ela pode conquistar."
         author: "Napoleon Hill"
+      "11":
+        quote: "Paz em casa, paz no mundo."
+        author: "Mustafa Kemal Atatürk"
+      "12":
+        quote: "A educação não é uma forma de escapar da pobreza, é uma forma de combatê-la."
+        author: "Julius Nyerere"
+      "13":
+        quote: "Uma jornada de mil milhas deve começar com um único passo."
+        author: "Lao Tzu"
       results: |-
         > :left_speech_bubble: _%{quote}_ &mdash; %{author}
     magic_8_ball:
@@ -367,8 +376,18 @@ pt_BR:
           Você sabia que pode se referir a categorias e etiquetas em sua postagem? Por exemplo, viu a categoria %{category}?
 
           Digite "#" no meio de uma frase e selecione qualquer categoria ou etiqueta.
+        instructions_experimental: |-
+          Você sabia que pode se referir a categorias e etiqueta na sua postagem? Por exemplo, você viu a categoria %{category}?
+
+          Digite "#" dentro de uma frase e selecione qualquer categoria ou etiqueta.
         not_found: |-
           Hmm, eu não vejo uma categoria em nenhum lugar. Observe que "#' não pode ser o primeiro caractere. Você pode copiar isso na sua próxima resposta?
+
+          ```text
+          Eu posso criar um link de categoria via #
+          ```
+        not_found_experimental: |-
+          Hmm, não vejo uma categoria em lugar algum. Você poderia copiar isto na sua próxima resposta?
 
           ```text
           Eu posso criar um link de categoria via #

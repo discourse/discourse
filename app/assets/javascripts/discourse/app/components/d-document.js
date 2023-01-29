@@ -1,7 +1,6 @@
 import Component from "@ember/component";
 import I18n from "I18n";
 import { bind } from "discourse-common/utils/decorators";
-import bootbox from "bootbox";
 import logout from "discourse/lib/logout";
 import { inject as service } from "@ember/service";
 import { setLogoffCallback } from "discourse/lib/ajax";
@@ -14,6 +13,7 @@ export function addPluginDocumentTitleCounter(counterFunction) {
 export default Component.extend({
   tagName: "",
   documentTitle: service(),
+  dialog: service(),
   _showingLogout: false,
 
   didInsertElement() {
@@ -44,16 +44,23 @@ export default Component.extend({
     );
   },
 
-  _updateNotifications() {
+  _updateNotifications(opts) {
     if (!this.currentUser) {
       return;
     }
 
-    const count =
-      pluginCounterFunctions.reduce((sum, fn) => sum + fn(), 0) +
-      this.currentUser.unread_notifications +
-      this.currentUser.unread_high_priority_notifications;
-    this.documentTitle.updateNotificationCount(count);
+    let count = pluginCounterFunctions.reduce((sum, fn) => sum + fn(), 0);
+    if (this.currentUser.redesigned_user_menu_enabled) {
+      count += this.currentUser.all_unread_notifications_count;
+      if (this.currentUser.unseen_reviewable_count) {
+        count += this.currentUser.unseen_reviewable_count;
+      }
+    } else {
+      count +=
+        this.currentUser.unread_notifications +
+        this.currentUser.unread_high_priority_notifications;
+    }
+    this.documentTitle.updateNotificationCount(count, { forced: opts?.forced });
   },
 
   @bind
@@ -74,13 +81,12 @@ export default Component.extend({
 
     this._showingLogout = true;
     this.messageBus.stop();
-    bootbox.dialog(
-      I18n.t("logout"),
-      { label: I18n.t("refresh"), callback: logout },
-      {
-        onEscape: () => logout(),
-        backdrop: "static",
-      }
-    );
+
+    this.dialog.alert({
+      message: I18n.t("logout"),
+      confirmButtonLabel: "refresh",
+      didConfirm: () => logout(),
+      didCancel: () => logout(),
+    });
   },
 });

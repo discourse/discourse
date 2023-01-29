@@ -1,10 +1,9 @@
 # frozen_string_literal: true
 
 module RegexSettingValidation
-
   def initialize_regex_opts(opts = {})
     @regex = Regexp.new(opts[:regex]) if opts[:regex]
-    @regex_error = opts[:regex_error] || 'site_settings.errors.regex_mismatch'
+    @regex_error = opts[:regex_error] || "site_settings.errors.regex_mismatch"
   end
 
   def regex_match?(val)
@@ -15,5 +14,4 @@ module RegexSettingValidation
 
     true
   end
-
 end

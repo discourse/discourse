@@ -11,7 +11,6 @@ export default DiscourseRoute.extend({
     return draftsStream.findItems(this.site).then(() => {
       return {
         stream: draftsStream,
-        isAnotherUsersPage: !this.isCurrentUser(user),
         emptyState: this.emptyState(),
       };
     });
@@ -37,6 +36,10 @@ export default DiscourseRoute.extend({
 
   deactivate() {
     this.appEvents.off("draft:destroyed", this, this.refresh);
+  },
+
+  titleToken() {
+    return I18n.t("user_action_groups.15");
   },
 
   @action

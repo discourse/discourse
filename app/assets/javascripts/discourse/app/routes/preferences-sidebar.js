@@ -1,4 +1,5 @@
 import RestrictedUserRoute from "discourse/routes/restricted-user";
+import Category from "discourse/models/category";
 
 export default RestrictedUserRoute.extend({
   showFooter: true,
@@ -6,12 +7,13 @@ export default RestrictedUserRoute.extend({
   setupController(controller, user) {
     const props = {
       model: user,
-      selectedSidebarCategories: user.sidebarCategories,
+      selectedSidebarCategories: Category.findByIds(user.sidebarCategoryIds),
     };
 
     if (this.siteSettings.tagging_enabled) {
       props.selectedSidebarTagNames = user.sidebarTagNames;
     }
+    props.newSidebarListDestination = user.sidebarListDestination;
 
     controller.setProperties(props);
   },

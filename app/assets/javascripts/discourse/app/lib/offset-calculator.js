@@ -10,6 +10,7 @@ export function minimumOffset() {
     {
       since: "2.8.0.beta10",
       dropFrom: "2.9.0.beta2",
+      id: "discourse.offset-calculator.minimumOffset",
     }
   );
 

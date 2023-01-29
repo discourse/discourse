@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { htmlSafe } from "@ember/template";
 
 export default class SectionLink extends Component {
   willDestroy() {
@@ -8,10 +7,25 @@ export default class SectionLink extends Component {
     }
   }
 
+  didInsert(_element, [args]) {
+    if (args.didInsert) {
+      args.didInsert();
+    }
+  }
+
+  get shouldDisplay() {
+    if (this.args.shouldDisplay === undefined) {
+      return true;
+    }
+
+    return this.args.shouldDisplay;
+  }
+
   get classNames() {
     let classNames = [
       "sidebar-section-link",
       `sidebar-section-link-${this.args.linkName}`,
+      "sidebar-row",
     ];
 
     if (this.args.class) {
@@ -33,13 +47,29 @@ export default class SectionLink extends Component {
     return [];
   }
 
-  get prefixCSS() {
+  get prefixColor() {
     const color = this.args.prefixColor;
 
     if (!color || !color.match(/^\w{6}$/)) {
-      return htmlSafe("");
+      return "";
     }
 
-    return htmlSafe("color: #" + color);
+    return "#" + color;
+  }
+
+  get prefixElementColors() {
+    if (!this.args.prefixElementColors) {
+      return;
+    }
+
+    const prefixElementColors = this.args.prefixElementColors.filter((color) =>
+      color?.slice(0, 6)
+    );
+
+    if (prefixElementColors.length === 1) {
+      prefixElementColors.push(prefixElementColors[0]);
+    }
+
+    return prefixElementColors.map((color) => `#${color} 50%`).join(", ");
   }
 }

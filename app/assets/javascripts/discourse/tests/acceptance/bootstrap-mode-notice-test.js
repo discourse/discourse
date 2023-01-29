@@ -1,9 +1,9 @@
 import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
-import { click, currentURL, visit } from "@ember/test-helpers";
+import { click, currentURL, settled, visit } from "@ember/test-helpers";
 
 acceptance("Bootstrap Mode Notice", function (needs) {
-  needs.user();
+  needs.user({ admin: true });
   needs.site({ wizard_required: true });
   needs.settings({
     bootstrap_mode_enabled: true,
@@ -26,18 +26,21 @@ acceptance("Bootstrap Mode Notice", function (needs) {
     );
 
     await click(".bootstrap-invite-button");
-    assert.strictEqual(
-      currentURL(),
-      "/u/eviltrout/invited/pending",
-      "it transitions to the invite page"
-    );
+    assert.ok(exists(".create-invite-modal"), "opens create invite modal");
 
-    await visit("/");
     await click(".bootstrap-wizard-link");
     assert.strictEqual(
       currentURL(),
       "/wizard/steps/hello-world",
       "it transitions to the wizard page"
+    );
+
+    this.siteSettings.bootstrap_mode_enabled = false;
+    await visit("/");
+    await settled();
+    assert.ok(
+      !exists(".bootstrap-mode-notice"),
+      "removes the notice when bootstrap mode is disabled"
     );
   });
 });

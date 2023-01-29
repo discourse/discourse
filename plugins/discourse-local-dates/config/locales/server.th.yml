@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 th:
+  site_settings:
+    discourse_local_dates_email_format: "รูปแบบที่ใช้แสดงวันที่ในอีเมล"

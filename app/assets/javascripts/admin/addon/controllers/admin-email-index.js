@@ -1,11 +1,15 @@
 import Controller from "@ember/controller";
 import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
-import bootbox from "bootbox";
 import { empty } from "@ember/object/computed";
 import { observes } from "discourse-common/utils/decorators";
+import { inject as service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
+import { escapeExpression } from "discourse/lib/utilities";
 
 export default Controller.extend({
+  dialog: service(),
+
   /**
     Is the "send test email" button disabled?
 
@@ -44,13 +48,17 @@ export default Controller.extend({
         )
         .catch((e) => {
           if (e.jqXHR.responseJSON?.errors) {
-            bootbox.alert(
-              I18n.t("admin.email.error", {
-                server_error: e.jqXHR.responseJSON.errors[0],
-              })
-            );
+            this.dialog.alert({
+              message: htmlSafe(
+                I18n.t("admin.email.error", {
+                  server_error: escapeExpression(
+                    e.jqXHR.responseJSON.errors[0]
+                  ),
+                })
+              ),
+            });
           } else {
-            bootbox.alert(I18n.t("admin.email.test_error"));
+            this.dialog.alert({ message: I18n.t("admin.email.test_error") });
           }
         })
         .finally(() => this.set("sendingEmail", false));

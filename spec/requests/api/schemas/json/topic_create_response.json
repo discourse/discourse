@@ -200,6 +200,11 @@
     },
     "reviewable_score_pending_count": {
       "type": "integer"
+    },
+    "mentioned_users": {
+      "type": "array",
+      "items": {
+      }
     }
   },
   "required": [

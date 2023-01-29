@@ -7,6 +7,7 @@ import { buildResolver } from "discourse-common/resolver";
 import { currentSettings } from "discourse/tests/helpers/site-settings";
 import Site from "discourse/models/site";
 import RestModel from "discourse/models/rest";
+import deprecated from "discourse-common/lib/deprecated";
 
 const CatAdapter = RestAdapter.extend({
   primaryKey: "cat_id",
@@ -33,6 +34,17 @@ const CachedCat = RestModel.extend({
 });
 
 export default function (customLookup = () => {}) {
+  deprecated(
+    `create-store helper is deprecated. Please use regular Store service instead, e.g.
+    \`getOwner(this).lookup("service:store")\`
+  `,
+    {
+      since: "2.9.0.beta12",
+      dropFrom: "3.1.0.beta1",
+      id: "discourse.create-store-helper",
+    }
+  );
+
   const resolver = buildResolver("discourse").create({
     namespace: { modulePrefix: "discourse" },
   });

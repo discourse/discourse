@@ -21,7 +21,10 @@ export default class WelcomeTopicBanner extends Component {
         })
         .postStream.loadPostByPostNumber(1)
         .then((post) => {
-          post.topic.set("draft_key", Composer.EDIT);
+          post.topic.setProperties({
+            draft_key: Composer.EDIT,
+            "details.can_edit": true,
+          });
           topicController.send("editPost", post);
         });
     });

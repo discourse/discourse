@@ -8,16 +8,16 @@ class AddQuotedPosts < ActiveRecord::Migration[4.2]
       t.timestamps null: false
     end
 
-    add_index :quoted_posts, [:post_id, :quoted_post_id], unique: true
-    add_index :quoted_posts, [:quoted_post_id, :post_id], unique: true
+    add_index :quoted_posts, %i[post_id quoted_post_id], unique: true
+    add_index :quoted_posts, %i[quoted_post_id post_id], unique: true
 
     # NOTE this can be done in pg but too much of a headache
     id = 0
-    while id = backfill_batch(id, 1000); end
+    while id = backfill_batch(id, 1000)
+    end
   end
 
   def backfill_batch(start_id, batch_size)
-
     results = execute <<SQL
     SELECT id, cooked
     FROM posts
@@ -34,19 +34,21 @@ SQL
 
       uniq = {}
 
-      doc.css("aside.quote[data-topic]").each do |a|
-        topic_id = a['data-topic'].to_i
-        post_number = a['data-post'].to_i
+      doc
+        .css("aside.quote[data-topic]")
+        .each do |a|
+          topic_id = a["data-topic"].to_i
+          post_number = a["data-post"].to_i
 
-        next if uniq[[topic_id, post_number]]
-        uniq[[topic_id, post_number]] = true
+          next if uniq[[topic_id, post_number]]
+          uniq[[topic_id, post_number]] = true
 
-        execute "INSERT INTO quoted_posts(post_id, quoted_post_id, created_at, updated_at)
+          execute "INSERT INTO quoted_posts(post_id, quoted_post_id, created_at, updated_at)
                  SELECT #{post_id}, id, created_at, updated_at
                  FROM posts
                  WHERE post_number = #{post_number} AND
                        topic_id = #{topic_id}"
-      end
+        end
     end
 
     max_id

@@ -7,3 +7,51 @@
     max-height: calc(100vh - 100px);
   }
 }
+
+// Sidebar-hamburger hybrid
+
+.hamburger-panel .revamped {
+  --d-sidebar-highlight-color: var(--highlight-medium);
+  --d-sidebar-row-horizontal-padding: 0.5rem;
+  --d-sidebar-row-height: 30px;
+  // 1.25rem gets text left-aligned with the hamburger icon
+  --d-sidebar-row-horizontal-padding: 0.66rem;
+  --d-sidebar-row-vertical-padding: 0.33rem;
+
+  .panel-body-content {
+    width: 100%;
+    min-width: 0; // prevent content blowing out width
+  }
+
+  .sidebar-section-wrapper {
+    .sidebar-section-header-button {
+      opacity: 1;
+    }
+
+    .sidebar-section-link.active {
+      font-weight: normal;
+      color: var(--primary-high);
+      background: var(--tertiary-low);
+    }
+
+    .sidebar-section-header-wrapper .select-kit .btn:hover {
+      background: transparent;
+    }
+  }
+
+  .sidebar-section-link-wrapper
+    .sidebar-section-link-hover:hover
+    .sidebar-section-hover-button {
+    background: transparent;
+  }
+
+  .sidebar-footer-wrapper {
+    padding: 0;
+    .sidebar-footer-container {
+      padding: 0;
+      &:before {
+        top: calc(-100% + 2px);
+      }
+    }
+  }
+}

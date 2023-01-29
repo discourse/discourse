@@ -3,10 +3,17 @@ import { ajax } from "discourse/lib/ajax";
 import Notification from "discourse/models/notification";
 import showModal from "discourse/lib/show-modal";
 import I18n from "I18n";
+import UserMenuNotificationItem from "discourse/lib/user-menu/notification-item";
+import UserMenuMessageItem from "discourse/lib/user-menu/message-item";
+import Topic from "discourse/models/topic";
+import { mergeSortedLists } from "discourse/lib/utilities";
+import { inject as service } from "@ember/service";
 
 export default class UserMenuMessagesList extends UserMenuNotificationsList {
+  @service store;
+
   get dismissTypes() {
-    return ["private_message"];
+    return this.filterByTypes;
   }
 
   get showAllHref() {
@@ -18,7 +25,7 @@ export default class UserMenuMessagesList extends UserMenuNotificationsList {
   }
 
   get showDismiss() {
-    return this.#unreadMessaagesNotifications > 0;
+    return this.#unreadMessagesNotifications > 0;
   }
 
   get dismissTitle() {
@@ -29,16 +36,12 @@ export default class UserMenuMessagesList extends UserMenuNotificationsList {
     return "user-menu-messages-tab";
   }
 
-  get itemComponent() {
-    return "user-menu/message-notification-item";
-  }
-
   get emptyStateComponent() {
     return "user-menu/messages-list-empty-state";
   }
 
-  get #unreadMessaagesNotifications() {
-    const key = `grouped_unread_high_priority_notifications.${this.site.notification_types.private_message}`;
+  get #unreadMessagesNotifications() {
+    const key = `grouped_unread_notifications.${this.site.notification_types.private_message}`;
     // we're retrieving the value with get() so that Ember tracks the property
     // and re-renders the UI when it changes.
     // we can stop using `get()` when the User model is refactored into native
@@ -46,17 +49,53 @@ export default class UserMenuMessagesList extends UserMenuNotificationsList {
     return this.currentUser.get(key) || 0;
   }
 
-  fetchItems() {
-    return ajax(
+  async fetchItems() {
+    const data = await ajax(
       `/u/${this.currentUser.username}/user-menu-private-messages`
-    ).then((data) => {
-      const content = [];
-      data.notifications.forEach((notification) => {
-        content.push(Notification.create(notification));
-      });
-      content.push(...data.topics);
-      return content;
+    );
+    const content = [];
+
+    const unreadNotifications = await Notification.initializeNotifications(
+      data.unread_notifications
+    );
+    unreadNotifications.forEach((notification) => {
+      content.push(
+        new UserMenuNotificationItem({
+          notification,
+          currentUser: this.currentUser,
+          siteSettings: this.siteSettings,
+          site: this.site,
+        })
+      );
     });
+
+    const topics = data.topics.map((t) => this.store.createRecord("topic", t));
+    await Topic.applyTransformations(topics);
+
+    const readNotifications = await Notification.initializeNotifications(
+      data.read_notifications
+    );
+
+    mergeSortedLists(readNotifications, topics, (notification, topic) => {
+      const notificationCreatedAt = new Date(notification.created_at);
+      const topicBumpedAt = new Date(topic.bumped_at);
+      return topicBumpedAt > notificationCreatedAt;
+    }).forEach((item) => {
+      if (item instanceof Notification) {
+        content.push(
+          new UserMenuNotificationItem({
+            notification: item,
+            currentUser: this.currentUser,
+            siteSettings: this.siteSettings,
+            site: this.site,
+          })
+        );
+      } else {
+        content.push(new UserMenuMessageItem({ message: item }));
+      }
+    });
+
+    return content;
   }
 
   dismissWarningModal() {
@@ -64,7 +103,7 @@ export default class UserMenuMessagesList extends UserMenuNotificationsList {
     modalController.set(
       "confirmationMessage",
       I18n.t("notifications.dismiss_confirmation.body.messages", {
-        count: this.#unreadMessaagesNotifications,
+        count: this.#unreadMessagesNotifications,
       })
     );
     return modalController;

@@ -1,14 +1,15 @@
 import Component from "@ember/component";
 import I18n from "I18n";
 import Permalink from "admin/models/permalink";
-import bootbox from "bootbox";
 import discourseComputed, { bind } from "discourse-common/utils/decorators";
 import { fmt } from "discourse/lib/computed";
 import { schedule } from "@ember/runloop";
 import { action } from "@ember/object";
+import { inject as service } from "@ember/service";
 
 export default Component.extend({
   tagName: "",
+  dialog: service(),
   formSubmitted: false,
   permalinkType: "topic_id",
   permalinkTypePlaceholder: fmt("permalinkType", "admin.permalink.%@"),
@@ -29,7 +30,7 @@ export default Component.extend({
   @bind
   focusPermalink() {
     schedule("afterRender", () =>
-      this.element.querySelector(".permalink-url")?.focus()
+      document.querySelector(".permalink-url")?.focus()
     );
   },
 
@@ -74,7 +75,12 @@ export default Component.extend({
             } else {
               error = I18n.t("generic_error");
             }
-            bootbox.alert(error, this.focusPermalink);
+
+            this.dialog.alert({
+              message: error,
+              didConfirm: () => this.focusPermalink(),
+              didCancel: () => this.focusPermalink(),
+            });
           }
         );
     }

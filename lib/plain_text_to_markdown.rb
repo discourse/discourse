@@ -25,7 +25,9 @@ class PlainTextToMarkdown
       unless last_line_blank && current_line_blank
         if line.quote_level > 0
           quote_identifiers = ">" * line.quote_level
-          markdown << quote_identifiers << "\n" unless line.quote_level >= last_quote_level || current_line_blank
+          unless line.quote_level >= last_quote_level || current_line_blank
+            markdown << quote_identifiers << "\n"
+          end
           markdown << quote_identifiers
           markdown << " " unless current_line_blank
         else
@@ -98,7 +100,7 @@ class PlainTextToMarkdown
 
   # @param line [Line]
   def remove_quote_level_indicators!(line)
-    match_data = line.text.match(/^(?<indicators>>+)\s?(?<text>.*)/)
+    match_data = line.text.match(/\A(?<indicators>>+)\s?(?<text>.*)/)
 
     if match_data
       line.text = match_data[:text]
@@ -112,7 +114,9 @@ class PlainTextToMarkdown
   def merge_lines(line, previous_line)
     return line if previous_line.nil? || line.text.blank?
     return line if line.text == SIGNATURE_SEPARATOR || previous_line.text == SIGNATURE_SEPARATOR
-    return line unless line.quote_level == previous_line.quote_level && previous_line.text.end_with?(" ")
+    unless line.quote_level == previous_line.quote_level && previous_line.text.end_with?(" ")
+      return line
+    end
 
     previous_line.text = previous_line.text[0...-1] if @delete_flowed_space
     previous_line.text += line.text
@@ -122,8 +126,9 @@ class PlainTextToMarkdown
   # @param line [Line]
   # @param previous_line [Line]
   def classify_line_as_code!(line, previous_line)
-    line.code_block = previous_line.code_block unless previous_line.nil? || previous_line.valid_code_block?
-    return unless line.text =~ /^\s{0,3}```/
+    line.code_block = previous_line.code_block unless previous_line.nil? ||
+      previous_line.valid_code_block?
+    return unless line.text =~ /\A\s{0,3}```/
 
     if line.code_block.present?
       line.code_block.end_line = line
@@ -148,9 +153,9 @@ class PlainTextToMarkdown
     converted_text
   end
 
-  URL_REGEX ||= URI.regexp(%w{http https ftp mailto})
+  URL_REGEX ||= URI.regexp(%w[http https ftp mailto])
   BEFORE ||= Regexp.escape(%Q|([<«"“'‘|)
-  AFTER  ||= Regexp.escape(%Q|)]>»"”'’|)
+  AFTER ||= Regexp.escape(%Q|)]>»"”'’|)
 
   def replace_duplicate_links(text)
     urls = Set.new
@@ -158,14 +163,17 @@ class PlainTextToMarkdown
 
     urls.each do |url|
       escaped = Regexp.escape(url)
-      text.gsub!(Regexp.new(%Q|#{escaped}\s*[#{BEFORE}]?#{escaped}[#{AFTER}]?|, Regexp::IGNORECASE), url)
+      text.gsub!(
+        Regexp.new(%Q|#{escaped}\s*[#{BEFORE}]?#{escaped}[#{AFTER}]?|, Regexp::IGNORECASE),
+        url,
+      )
     end
 
     text
   end
 
   def indent_with_non_breaking_spaces(text)
-    text.sub(/^\s+/) do |s|
+    text.sub(/\A\s+/) do |s|
       # replace tabs with 2 spaces
       s.gsub!("\t", "  ")
 
@@ -178,9 +186,7 @@ class PlainTextToMarkdown
     urls = Set.new
     text.scan(URL_REGEX) { urls << $& }
 
-    hoisted = urls
-      .map { |url| [SecureRandom.hex, url] }
-      .to_h
+    hoisted = urls.map { |url| [SecureRandom.hex, url] }.to_h
 
     hoisted.each { |h, url| text.gsub!(url, h) }
 

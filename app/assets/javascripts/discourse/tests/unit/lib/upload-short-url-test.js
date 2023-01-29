@@ -96,7 +96,7 @@ module("Unit | Utility | pretty-text/upload-short-url", function (hooks) {
     lookup = lookupCachedUploadUrl("upload://a.jpeg");
     assert.deepEqual(lookup, {});
 
-    await resolveAllShortUrls(ajax, { secure_media: false }, fixture());
+    await resolveAllShortUrls(ajax, { secure_uploads: false }, fixture());
     await settled();
 
     lookup = lookupCachedUploadUrl("upload://a.jpeg");
@@ -143,7 +143,7 @@ module("Unit | Utility | pretty-text/upload-short-url", function (hooks) {
 
   test("resolveAllShortUrls - href + src replaced correctly", async function (assert) {
     stubUrls();
-    await resolveAllShortUrls(ajax, { secure_media: false }, fixture());
+    await resolveAllShortUrls(ajax, { secure_uploads: false }, fixture());
     await settled();
 
     let image1 = fixture().querySelector("img");
@@ -167,7 +167,7 @@ module("Unit | Utility | pretty-text/upload-short-url", function (hooks) {
 
   test("resolveAllShortUrls - url with full origin replaced correctly", async function (assert) {
     stubUrls();
-    await resolveAllShortUrls(ajax, { secure_media: false }, fixture());
+    await resolveAllShortUrls(ajax, { secure_uploads: false }, fixture());
     await settled();
     let video = fixture().querySelectorAll("video")[1];
 
@@ -177,25 +177,25 @@ module("Unit | Utility | pretty-text/upload-short-url", function (hooks) {
     );
   });
 
-  test("resolveAllShortUrls - when secure media is enabled use the attachment full URL", async function (assert) {
+  test("resolveAllShortUrls - when secure uploads is enabled use the attachment full URL", async function (assert) {
     stubUrls(
       null,
       [
         {
           short_url: "upload://c.pdf",
-          url: "/secure-media-uploads/default/original/3X/c/b/3.pdf",
+          url: "/secure-uploads/default/original/3X/c/b/3.pdf",
           short_path: "/uploads/short-url/c.pdf",
         },
       ],
       null
     );
-    await resolveAllShortUrls(ajax, { secure_media: true }, fixture());
+    await resolveAllShortUrls(ajax, { secure_uploads: true }, fixture());
     await settled();
 
     let link = fixture().querySelector("a");
     assert.strictEqual(
       link.getAttribute("href"),
-      "/secure-media-uploads/default/original/3X/c/b/3.pdf"
+      "/secure-uploads/default/original/3X/c/b/3.pdf"
     );
   });
 

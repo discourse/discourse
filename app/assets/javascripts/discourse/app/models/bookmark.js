@@ -12,6 +12,7 @@ import getURL from "discourse-common/lib/get-url";
 import { longDate } from "discourse/lib/formatter";
 import { none } from "@ember/object/computed";
 import { capitalize } from "@ember/string";
+import { applyModelTransformations } from "discourse/lib/model-transformers";
 
 export const AUTO_DELETE_PREFERENCES = {
   NEVER: 0,
@@ -88,16 +89,9 @@ const Bookmark = RestModel.extend({
 
   @discourseComputed("bumpedAt", "createdAt")
   bumpedAtTitle(bumpedAt, createdAt) {
-    const firstPost = I18n.t("first_post");
-    const lastPost = I18n.t("last_post");
-    const createdAtDate = longDate(createdAt);
-    const bumpedAtDate = longDate(bumpedAt);
-
-    return I18n.messageFormat("topic.bumped_at_title_MF", {
-      FIRST_POST: firstPost,
-      CREATED_AT: createdAtDate,
-      LAST_POST: lastPost,
-      BUMPED_AT: bumpedAtDate,
+    return I18n.t("topic.bumped_at_title", {
+      createdAtDate: longDate(createdAt),
+      bumpedAtDate: longDate(bumpedAt),
     });
   },
 
@@ -129,7 +123,10 @@ const Bookmark = RestModel.extend({
   @discourseComputed("reminder_at", "currentUser")
   formattedReminder(bookmarkReminderAt, currentUser) {
     return capitalize(
-      formattedReminderTime(bookmarkReminderAt, currentUser.timezone)
+      formattedReminderTime(
+        bookmarkReminderAt,
+        currentUser.user_option.timezone
+      )
     );
   },
 
@@ -143,7 +140,8 @@ const Bookmark = RestModel.extend({
     // for topic level bookmarks we want to jump to the last unread post URL,
     // which the topic-link helper does by default if no linked post number is
     // provided
-    const linkedPostNumber = this.for_topic ? null : this.linked_post_number;
+    const linkedPostNumber =
+      this.bookmarkable_type === "Topic" ? null : this.linked_post_number;
 
     return Topic.create({
       id: this.topic_id,
@@ -166,6 +164,19 @@ Bookmark.reopenClass({
     args.currentUser = args.currentUser || User.current();
     args.user = User.create(args.user);
     return this._super(args);
+  },
+
+  createFor(user, bookmarkableType, bookmarkableId) {
+    return Bookmark.create({
+      bookmarkable_type: bookmarkableType,
+      bookmarkable_id: bookmarkableId,
+      user_id: user.id,
+      auto_delete_preference: user.user_option.bookmark_auto_delete_preference,
+    });
+  },
+
+  async applyTransformations(bookmarks) {
+    await applyModelTransformations("bookmark", bookmarks);
   },
 });
 

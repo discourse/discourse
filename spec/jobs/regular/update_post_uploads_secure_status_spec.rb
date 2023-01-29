@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe Jobs::UpdatePostUploadsSecureStatus do
   fab!(:post) { Fabricate(:post) }
@@ -14,7 +14,7 @@ RSpec.describe Jobs::UpdatePostUploadsSecureStatus do
     before do
       setup_s3
       stub_s3_store
-      SiteSetting.secure_media = true
+      SiteSetting.secure_uploads = true
     end
 
     context "when login_required" do

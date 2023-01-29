@@ -29,6 +29,15 @@ function onChange(pluginApiIdentifiers, mutationFunction) {
   _onChangeCallbacks[pluginApiIdentifiers].push(mutationFunction);
 }
 
+let _replaceContentCallbacks = {};
+function replaceContent(pluginApiIdentifiers, contentFunction) {
+  if (isNone(_replaceContentCallbacks[pluginApiIdentifiers])) {
+    _replaceContentCallbacks[pluginApiIdentifiers] = [];
+  }
+
+  _replaceContentCallbacks[pluginApiIdentifiers].push(contentFunction);
+}
+
 export function applyContentPluginApiCallbacks(content, component) {
   makeArray(component.pluginApiIdentifiers).forEach((key) => {
     (_prependContentCallbacks[key] || []).forEach((c) => {
@@ -41,6 +50,13 @@ export function applyContentPluginApiCallbacks(content, component) {
       const appendedContent = c(component, content);
       if (appendedContent) {
         content = content.concat(makeArray(appendedContent));
+      }
+    });
+
+    (_replaceContentCallbacks[key] || []).forEach((c) => {
+      const replacementContent = c(component, content);
+      if (replacementContent) {
+        content = makeArray(replacementContent);
       }
     });
   });
@@ -68,6 +84,10 @@ export function modifySelectKit(targetedIdentifier) {
       onChange(targetedIdentifier, callback);
       return modifySelectKit(targetedIdentifier);
     },
+    replaceContent: (callback) => {
+      replaceContent(targetedIdentifier, callback);
+      return modifySelectKit(targetedIdentifier);
+    },
   };
 }
 
@@ -75,6 +95,7 @@ export function clearCallbacks() {
   _appendContentCallbacks = {};
   _prependContentCallbacks = {};
   _onChangeCallbacks = {};
+  _replaceContentCallbacks = {};
 }
 
 const EMPTY_ARRAY = Object.freeze([]);

@@ -2,17 +2,25 @@ import UserMenuItemsList from "discourse/components/user-menu/items-list";
 import I18n from "I18n";
 import { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
-import { postRNWebviewMessage } from "discourse/lib/utilities";
+import {
+  mergeSortedLists,
+  postRNWebviewMessage,
+} from "discourse/lib/utilities";
 import showModal from "discourse/lib/show-modal";
 import { inject as service } from "@ember/service";
+import UserMenuNotificationItem from "discourse/lib/user-menu/notification-item";
+import Notification from "discourse/models/notification";
+import UserMenuReviewable from "discourse/models/user-menu-reviewable";
+import UserMenuReviewableItem from "discourse/lib/user-menu/reviewable-item";
 
 export default class UserMenuNotificationsList extends UserMenuItemsList {
   @service currentUser;
+  @service siteSettings;
   @service site;
   @service store;
 
   get filterByTypes() {
-    return null;
+    return this.args.filterByTypes;
   }
 
   get dismissTypes() {
@@ -28,7 +36,11 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
   }
 
   get showDismiss() {
-    return this.items.some((item) => !item.read);
+    return Object.keys(
+      this.currentUser.get("grouped_unread_notifications") || {}
+    ).any((key) => {
+      return this.currentUser.get(`grouped_unread_notifications.${key}`) > 0;
+    });
   }
 
   get dismissTitle() {
@@ -52,27 +64,75 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
     }
   }
 
-  get itemComponent() {
-    return "user-menu/notification-item";
-  }
-
-  fetchItems() {
+  async fetchItems() {
     const params = {
       limit: 30,
       recent: true,
       bump_last_seen_reviewable: true,
-      silent: this.currentUser.enforcedSecondFactor,
     };
+
+    if (this.currentUser.enforcedSecondFactor) {
+      params.silent = true;
+    }
 
     const types = this.filterByTypes;
     if (types?.length > 0) {
       params.filter_by_types = types.join(",");
       params.silent = true;
     }
-    return this.store
-      .findStale("notification", params)
-      .refresh()
-      .then((c) => c.content);
+
+    const content = [];
+    const data = await ajax("/notifications", { data: params });
+
+    const notifications = await Notification.initializeNotifications(
+      data.notifications
+    );
+
+    const reviewables = data.pending_reviewables?.map((r) =>
+      UserMenuReviewable.create(r)
+    );
+
+    if (reviewables?.length) {
+      const firstReadNotificationIndex = notifications.findIndex((n) => n.read);
+      const unreadNotifications = notifications.splice(
+        0,
+        firstReadNotificationIndex
+      );
+      mergeSortedLists(
+        unreadNotifications,
+        reviewables,
+        (notification, reviewable) => {
+          const notificationCreatedAt = new Date(notification.created_at);
+          const reviewableCreatedAt = new Date(reviewable.created_at);
+          return reviewableCreatedAt > notificationCreatedAt;
+        }
+      ).forEach((item) => {
+        const props = {
+          currentUser: this.currentUser,
+          siteSettings: this.siteSettings,
+          site: this.site,
+        };
+        if (item instanceof Notification) {
+          props.notification = item;
+          content.push(new UserMenuNotificationItem(props));
+        } else {
+          props.reviewable = item;
+          content.push(new UserMenuReviewableItem(props));
+        }
+      });
+    }
+
+    notifications.forEach((notification) => {
+      content.push(
+        new UserMenuNotificationItem({
+          notification,
+          currentUser: this.currentUser,
+          siteSettings: this.siteSettings,
+          site: this.site,
+        })
+      );
+    });
+    return content;
   }
 
   dismissWarningModal() {
@@ -100,7 +160,7 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
       ajax("/notifications/mark-read", opts).then(() => {
         if (dismissTypes) {
           const unreadNotificationCountsHash = {
-            ...this.currentUser.grouped_unread_high_priority_notifications,
+            ...this.currentUser.grouped_unread_notifications,
           };
           dismissTypes.forEach((type) => {
             const typeId = this.site.notification_types[type];
@@ -109,16 +169,13 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
             }
           });
           this.currentUser.set(
-            "grouped_unread_high_priority_notifications",
+            "grouped_unread_notifications",
             unreadNotificationCountsHash
           );
         } else {
           this.currentUser.set("all_unread_notifications_count", 0);
           this.currentUser.set("unread_high_priority_notifications", 0);
-          this.currentUser.set(
-            "grouped_unread_high_priority_notifications",
-            {}
-          );
+          this.currentUser.set("grouped_unread_notifications", {});
         }
         this.refreshList();
         postRNWebviewMessage("markRead", "1");

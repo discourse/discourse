@@ -10,7 +10,8 @@ import {
 import { hbs } from "ember-cli-htmlbars";
 import EmberObject from "@ember/object";
 import I18n from "I18n";
-import createStore from "discourse/tests/helpers/create-store";
+import User from "discourse/models/user";
+import { getOwner } from "discourse-common/lib/get-owner";
 
 module("Integration | Component | Widget | post", function (hooks) {
   setupRenderingTest(hooks);
@@ -162,7 +163,7 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   test("like count button", async function (assert) {
-    const store = createStore();
+    const store = getOwner(this).lookup("service:store");
     const topic = store.createRecord("topic", { id: 123 });
     const post = store.createRecord("post", {
       id: 1,
@@ -506,7 +507,7 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   test("expand first post", async function (assert) {
-    const store = createStore();
+    const store = getOwner(this).lookup("service:store");
     this.set("args", { expandablePost: true });
     this.set("post", store.createRecord("post", { id: 1234 }));
 
@@ -920,9 +921,12 @@ module("Integration | Component | Widget | post", function (hooks) {
 
   test("shows user status if enabled in site settings", async function (assert) {
     this.siteSettings.enable_user_status = true;
-    this.set("args", {
-      userStatus: { emoji: "tooth", description: "off to dentist" },
-    });
+    const status = {
+      emoji: "tooth",
+      description: "off to dentist",
+    };
+    const user = User.create({ status });
+    this.set("args", { user });
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
@@ -931,9 +935,12 @@ module("Integration | Component | Widget | post", function (hooks) {
 
   test("doesn't show user status if disabled in site settings", async function (assert) {
     this.siteSettings.enable_user_status = false;
-    this.set("args", {
-      userStatus: { emoji: "tooth", description: "off to dentist" },
-    });
+    const status = {
+      emoji: "tooth",
+      description: "off to dentist",
+    };
+    const user = User.create({ status });
+    this.set("args", { user });
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 

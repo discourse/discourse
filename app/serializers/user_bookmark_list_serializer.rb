@@ -9,12 +9,12 @@ class UserBookmarkListSerializer < ApplicationSerializer
         bm,
         **object.bookmark_serializer_opts,
         scope: scope,
-        root: false
+        root: false,
       )
     end
   end
 
   def include_more_bookmarks_url?
-    @include_more_bookmarks_url ||= object.bookmarks.size == object.per_page
+    @include_more_bookmarks_url ||= object.has_more
   end
 end

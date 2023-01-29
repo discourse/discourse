@@ -6,7 +6,7 @@
 Discourse.git_version
 
 if GlobalSetting.skip_redis?
-  require 'site_settings/local_process_provider'
+  require "site_settings/local_process_provider"
   Rails.cache = Discourse.cache
   Rails.application.config.to_prepare do
     SiteSetting.provider = SiteSettings::LocalProcessProvider.new
@@ -19,7 +19,8 @@ Rails.application.config.to_prepare do
     begin
       SiteSetting.refresh!
 
-      unless String === SiteSetting.push_api_secret_key && SiteSetting.push_api_secret_key.length == 32
+      unless String === SiteSetting.push_api_secret_key &&
+               SiteSetting.push_api_secret_key.length == 32
         SiteSetting.push_api_secret_key = SecureRandom.hex
       end
     rescue ActiveRecord::StatementInvalid

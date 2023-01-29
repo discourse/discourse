@@ -18,6 +18,7 @@ export default class extends Component {
       deprecated("Uses boolean instead of string for scrollTop.", {
         since: "2.8.0.beta9",
         dropFrom: "2.9.0.beta1",
+        id: "discourse.d-section.scroll-top-boolean",
       });
 
       return;

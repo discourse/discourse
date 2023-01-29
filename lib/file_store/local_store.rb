@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 
-require 'file_store/base_store'
+require "file_store/base_store"
 
 module FileStore
-
   class LocalStore < BaseStore
-
     def store_file(file, path)
       copy_file(file, "#{public_dir}#{path}")
       "#{Discourse.base_path}#{path}"
@@ -64,7 +62,13 @@ module FileStore
     def purge_tombstone(grace_period)
       if Dir.exist?(Discourse.store.tombstone_dir)
         Discourse::Utils.execute_command(
-          'find', tombstone_dir, '-mtime', "+#{grace_period}", '-type', 'f', '-delete'
+          "find",
+          tombstone_dir,
+          "-mtime",
+          "+#{grace_period}",
+          "-type",
+          "f",
+          "-delete",
         )
       end
     end
@@ -108,9 +112,13 @@ module FileStore
       FileUtils.mkdir_p(File.join(public_dir, upload_path))
 
       Discourse::Utils.execute_command(
-        'rsync', '-a', '--safe-links', "#{source_path}/", "#{upload_path}/",
+        "rsync",
+        "-a",
+        "--safe-links",
+        "#{source_path}/",
+        "#{upload_path}/",
         failure_message: "Failed to copy uploads.",
-        chdir: public_dir
+        chdir: public_dir,
       )
     end
 
@@ -119,15 +127,14 @@ module FileStore
     def list_missing(model)
       count = 0
       model.find_each do |upload|
-
         # could be a remote image
-        next unless upload.url =~ /^\/[^\/]/
+        next unless upload.url =~ %r{\A/[^/]}
 
         path = "#{public_dir}#{upload.url}"
         bad = true
         begin
           bad = false if File.size(path) != 0
-        rescue
+        rescue StandardError
           # something is messed up
         end
         if bad

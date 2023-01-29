@@ -15,6 +15,7 @@ permissions:
 
 jobs:
   build:
+    if: "!(github.event_name == 'push' && github.repository == 'discourse/discourse-private-mirror')"
     name: run
     runs-on: ubuntu-latest
     container: discourse/discourse_test:slim
@@ -48,14 +49,11 @@ jobs:
 
       - name: Setup licensed
         run: |
-          # gem install licensed
-          # Workaround for https://github.com/github/licensed/issues/521
-          gem install specific_install
-          gem specific_install https://github.com/CvX/licensed.git -b bundler-compat
+          gem install licensed
 
       - name: Get yarn cache directory
         id: yarn-cache-dir
-        run: echo "::set-output name=dir::$(yarn cache dir)"
+        run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
 
       - name: Yarn cache
         uses: actions/cache@v3
@@ -67,7 +65,7 @@ jobs:
             ${{ runner.os }}-yarn-
 
       - name: Check RubyGems Licenses
-        if: ${{ always() }}
+        if: ${{ !cancelled() }}
         run: |
           licensed cache
           licensed status
@@ -76,14 +74,14 @@ jobs:
         run: yarn install
 
       - name: Check Yarn Licenses
-        if: ${{ always() }}
+        if: ${{ !cancelled() }}
         run: |
           yarn global add licensee
           yarn global upgrade licensee
           licensee --errors-only
 
       - name: Check Ember CLI Workspace Licenses
-        if: ${{ always() }}
+        if: ${{ !cancelled() }}
         working-directory: ./app/assets/javascripts
         run: |
           licensee --errors-only

@@ -32,7 +32,6 @@ class TopicListItemSerializer < ListableTopicSerializer
   end
 
   def category_id
-
     # If it's a shared draft, show the destination topic instead
     if object.includes_destination_category && object.shared_draft
       return object.shared_draft.category_id
@@ -50,8 +49,7 @@ class TopicListItemSerializer < ListableTopicSerializer
   end
 
   def include_post_action?(action)
-    object.user_data &&
-      object.user_data.post_action_data &&
+    object.user_data && object.user_data.post_action_data &&
       object.user_data.post_action_data.key?(PostActionType.types[action])
   end
 
@@ -86,5 +84,4 @@ class TopicListItemSerializer < ListableTopicSerializer
   def include_allowed_user_count?
     object.private_message?
   end
-
 end

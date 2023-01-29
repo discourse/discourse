@@ -17,6 +17,21 @@ module("Unit | Utility | key-value-store", function () {
     assert.strictEqual(store.get("bob"), undefined);
   });
 
+  test("is able to remove multiple items at once from the store", function (assert) {
+    const store = new KeyValueStore("example");
+    store.set({ key: "bob", value: "uncle" });
+    store.set({ key: "jane", value: "sister" });
+    store.set({ key: "clark", value: "brother" });
+
+    store.removeKeys((key, value) => {
+      return key.includes("bob") || value === "brother";
+    });
+
+    assert.strictEqual(store.get("bob"), undefined);
+    assert.strictEqual(store.get("jane"), "sister");
+    assert.strictEqual(store.get("clark"), undefined);
+  });
+
   test("is able to nuke the store", function (assert) {
     const store = new KeyValueStore("example");
     store.set({ key: "bob1", value: "uncle" });

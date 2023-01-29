@@ -31,7 +31,7 @@ div.edit-category {
     width: 100%;
     margin-bottom: 0;
     li {
-      font-size: $font-down-1;
+      font-size: var(--font-down-1);
       border-bottom: none;
     }
     a.active::after {

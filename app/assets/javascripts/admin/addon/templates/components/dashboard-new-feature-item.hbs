@@ -3,7 +3,11 @@
   <div class="new-feature-content">
     <div class="header">
       {{#if this.item.link}}
-        <a href={{this.item.link}} target="_blank" rel="noopener noreferrer">{{this.item.title}}</a>
+        <a
+          href={{this.item.link}}
+          target="_blank"
+          rel="noopener noreferrer"
+        >{{this.item.title}}</a>
       {{else}}
         {{this.item.title}}
       {{/if}}

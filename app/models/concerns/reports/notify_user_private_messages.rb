@@ -5,7 +5,7 @@ module Reports::NotifyUserPrivateMessages
 
   class_methods do
     def report_notify_user_private_messages(report)
-      report.icon = 'envelope'
+      report.icon = "envelope"
       private_messages_report report, TopicSubtype.notify_user
     end
   end

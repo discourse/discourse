@@ -22,6 +22,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { resolveShareUrl } from "discourse/helpers/share-url";
 import DiscourseURL, { userPath } from "discourse/lib/url";
 import deprecated from "discourse-common/lib/deprecated";
+import { applyModelTransformations } from "discourse/lib/model-transformers";
 
 export function loadTopicView(topic, args) {
   const data = deepMerge({}, args);
@@ -126,16 +127,9 @@ const Topic = RestModel.extend({
 
   @discourseComputed("bumpedAt", "createdAt")
   bumpedAtTitle(bumpedAt, createdAt) {
-    const firstPost = I18n.t("first_post");
-    const lastPost = I18n.t("last_post");
-    const createdAtDate = longDate(createdAt);
-    const bumpedAtDate = longDate(bumpedAt);
-
-    return I18n.messageFormat("topic.bumped_at_title_MF", {
-      FIRST_POST: firstPost,
-      CREATED_AT: createdAtDate,
-      LAST_POST: lastPost,
-      BUMPED_AT: bumpedAtDate,
+    return I18n.t("topic.bumped_at_title", {
+      createdAtDate: longDate(createdAt),
+      bumpedAtDate: longDate(bumpedAt),
     });
   },
 
@@ -239,13 +233,18 @@ const Topic = RestModel.extend({
 
   @discourseComputed("unread_posts", "new_posts")
   totalUnread(unreadPosts, newPosts) {
-    deprecated("The totalUnread property of the topic model is deprecated");
+    deprecated("The totalUnread property of the topic model is deprecated", {
+      id: "discourse.topic.totalUnread",
+    });
     return unreadPosts || newPosts;
   },
 
   @discourseComputed("unread_posts", "new_posts")
   displayNewPosts(unreadPosts, newPosts) {
-    deprecated("The displayNewPosts property of the topic model is deprecated");
+    deprecated(
+      "The displayNewPosts property of the topic model is deprecated",
+      { id: "discourse.topic.totalUnread" }
+    );
     return unreadPosts || newPosts;
   },
 
@@ -269,15 +268,19 @@ const Topic = RestModel.extend({
       return customUrl;
     }
 
-    if (highestPostNumber <= lastReadPostNumber) {
-      if (this.get("category.navigate_to_first_post_after_read")) {
-        return this.urlForPostNumber(1);
-      } else {
-        return this.urlForPostNumber(lastReadPostNumber + 1);
-      }
-    } else {
-      return this.urlForPostNumber(lastReadPostNumber + 1);
+    if (
+      lastReadPostNumber >= highestPostNumber &&
+      this.get("category.navigate_to_first_post_after_read")
+    ) {
+      return this.urlForPostNumber(1);
     }
+
+    let postNumber = lastReadPostNumber + 1;
+    if (postNumber > highestPostNumber) {
+      postNumber = highestPostNumber;
+    }
+
+    return this.urlForPostNumber(postNumber);
   },
 
   @discourseComputed("highest_post_number", "url")
@@ -464,7 +467,17 @@ const Topic = RestModel.extend({
           "details.can_permanently_delete":
             this.siteSettings.can_permanently_delete && deleted_by.admin,
         });
-        if (!deleted_by.staff) {
+        if (
+          opts.force_destroy ||
+          (!deleted_by.staff &&
+            !deleted_by.groups.some(
+              (group) => group.name === this.category.reviewable_by_group_name
+            ) &&
+            !(
+              this.siteSettings.tl4_delete_posts_and_topics &&
+              deleted_by.trust_level >= 4
+            ))
+        ) {
           DiscourseURL.redirectTo("/");
         }
       })
@@ -865,6 +878,10 @@ Topic.reopenClass({
     data.enabled_until = enabledUntil;
 
     return ajax(`/t/${topicId}/slow_mode`, { type: "PUT", data });
+  },
+
+  async applyTransformations(topics) {
+    await applyModelTransformations("topic", topics);
   },
 });
 

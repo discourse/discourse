@@ -77,7 +77,6 @@ export default (inboxType, path, filter) => {
 
       userPrivateMessagesController.setProperties({
         archive: false,
-        pmView: inboxType,
         group: null,
       });
 

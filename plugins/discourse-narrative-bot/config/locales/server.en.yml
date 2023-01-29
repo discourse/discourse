@@ -45,8 +45,8 @@ en:
       invalid: |-
         I’m sorry, it is mathematically impossible to roll that combination of dice. :confounded:
       not_enough_dice:
-        one: "I only have %{count} die. [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), I know!"
-        other: "I only have %{count} dice. [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), I know!"
+        one: "I only have %{count} die. Shameful, I know!"
+        other: "I only have %{count} dice. Shameful, I know!"
       out_of_range: |-
         Did you know that [the maximum number of sides](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) for a mathematically fair dice is 120?
       results: |-
@@ -401,8 +401,18 @@ en:
           Did you know that you can refer to categories and tags in your post? For example, have you seen the %{category} category?
 
           Type `#` in the middle of a sentence and select any category or tag.
+        instructions_experimental: |-
+          Did you know that you can refer to categories and tags in your post? For example, have you seen the %{category} category?
+
+          Type `#` anywhere in a sentence and select any category or tag.
         not_found: |-
           Hmm, I don’t see a category in there anywhere. Note that `#` can't be the first character. Can you copy this in your next reply?
+
+          ```text
+          I can create a category link via #
+          ```
+        not_found_experimental: |-
+          Hmm, I don’t see a category in there anywhere. Can you copy this in your next reply?
 
           ```text
           I can create a category link via #

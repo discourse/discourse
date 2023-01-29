@@ -424,7 +424,7 @@ export default Component.extend(KeyEnterEscape, {
   embedQuoteButton(canCreatePost, canReplyAsNewTopic) {
     return (
       (canCreatePost || canReplyAsNewTopic) &&
-      this.currentUser?.get("enable_quoting")
+      this.currentUser?.get("user_option.enable_quoting")
     );
   },
 

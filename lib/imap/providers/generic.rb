@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
-require 'net/imap'
+require "net/imap"
 
 module Imap
   module Providers
-    class WriteDisabledError < StandardError; end
+    class WriteDisabledError < StandardError
+    end
 
     class TrashedMailResponse
       attr_accessor :trashed_emails, :trash_uid_validity
@@ -50,12 +51,16 @@ module Imap
       end
 
       def disconnect!
-        imap.logout rescue nil
+        begin
+          imap.logout
+        rescue StandardError
+          nil
+        end
         imap.disconnect
       end
 
       def can?(capability)
-        @capabilities ||= imap.responses['CAPABILITY'][-1] || imap.capability
+        @capabilities ||= imap.responses["CAPABILITY"][-1] || imap.capability
         @capabilities.include?(capability)
       end
 
@@ -67,22 +72,23 @@ module Imap
         elsif opts[:to]
           imap.uid_search("UID 1:#{opts[:to]}")
         else
-          imap.uid_search('ALL')
+          imap.uid_search("ALL")
         end
       end
 
       def labels
-        @labels ||= begin
-          labels = {}
+        @labels ||=
+          begin
+            labels = {}
 
-          list_mailboxes.each do |name|
-            if tag = to_tag(name)
-              labels[tag] = name
+            list_mailboxes.each do |name|
+              if tag = to_tag(name)
+                labels[tag] = name
+              end
             end
-          end
 
-          labels
-        end
+            labels
+          end
       end
 
       def open_mailbox(mailbox_name, write: false)
@@ -98,9 +104,7 @@ module Imap
         @open_mailbox_name = mailbox_name
         @open_mailbox_write = write
 
-        {
-          uid_validity: imap.responses['UIDVALIDITY'][-1]
-        }
+        { uid_validity: imap.responses["UIDVALIDITY"][-1] }
       end
 
       def emails(uids, fields, opts = {})
@@ -114,9 +118,7 @@ module Imap
         fetched.map do |email|
           attributes = {}
 
-          fields.each do |field|
-            attributes[field] = email.attr[field]
-          end
+          fields.each { |field| attributes[field] = email.attr[field] }
 
           attributes
         end
@@ -131,11 +133,11 @@ module Imap
 
       def to_tag(label)
         label = DiscourseTagging.clean_tag(label.to_s)
-        label if label != 'inbox' && label != 'sent'
+        label if label != "inbox" && label != "sent"
       end
 
       def tag_to_flag(tag)
-        :Seen if tag == 'seen'
+        :Seen if tag == "seen"
       end
 
       def tag_to_label(tag)
@@ -150,24 +152,25 @@ module Imap
       def list_mailboxes_with_attributes(attr_filter = nil)
         # Basically, list all mailboxes in the root of the server.
         # ref: https://tools.ietf.org/html/rfc3501#section-6.3.8
-        imap.list('', '*').reject do |m|
-
-          # Noselect cannot be selected with the SELECT command.
-          # technically we could use this for readonly mode when
-          # SiteSetting.imap_write is disabled...maybe a later TODO
-          # ref: https://tools.ietf.org/html/rfc3501#section-7.2.2
-          m.attr.include?(:Noselect)
-        end.select do |m|
-
-          # There are Special-Use mailboxes denoted by an attribute. For
-          # example, some common ones are \Trash or \Sent.
-          # ref: https://tools.ietf.org/html/rfc6154
-          if attr_filter
-            m.attr.include? attr_filter
-          else
-            true
+        imap
+          .list("", "*")
+          .reject do |m|
+            # Noselect cannot be selected with the SELECT command.
+            # technically we could use this for readonly mode when
+            # SiteSetting.imap_write is disabled...maybe a later TODO
+            # ref: https://tools.ietf.org/html/rfc3501#section-7.2.2
+            m.attr.include?(:Noselect)
           end
-        end
+          .select do |m|
+            # There are Special-Use mailboxes denoted by an attribute. For
+            # example, some common ones are \Trash or \Sent.
+            # ref: https://tools.ietf.org/html/rfc6154
+            if attr_filter
+              m.attr.include? attr_filter
+            else
+              true
+            end
+          end
       end
 
       def filter_mailboxes(mailboxes)
@@ -186,16 +189,20 @@ module Imap
 
       # Look for the special Trash XLIST attribute.
       def trash_mailbox
-        Discourse.cache.fetch("imap_trash_mailbox_#{account_digest}", expires_in: 30.minutes) do
-          list_mailboxes(:Trash).first
-        end
+        Discourse
+          .cache
+          .fetch("imap_trash_mailbox_#{account_digest}", expires_in: 30.minutes) do
+            list_mailboxes(:Trash).first
+          end
       end
 
       # Look for the special Junk XLIST attribute.
       def spam_mailbox
-        Discourse.cache.fetch("imap_spam_mailbox_#{account_digest}", expires_in: 30.minutes) do
-          list_mailboxes(:Junk).first
-        end
+        Discourse
+          .cache
+          .fetch("imap_spam_mailbox_#{account_digest}", expires_in: 30.minutes) do
+            list_mailboxes(:Junk).first
+          end
       end
 
       # open the trash mailbox for inspection or writing. after the yield we
@@ -232,14 +239,19 @@ module Imap
 
       def find_trashed_by_message_ids(message_ids)
         trashed_emails = []
-        trash_uid_validity = open_trash_mailbox do
-          trashed_email_uids = find_uids_by_message_ids(message_ids)
-          if trashed_email_uids.any?
-            trashed_emails = emails(trashed_email_uids, ["UID", "ENVELOPE"]).map do |e|
-              BasicMail.new(message_id: Email::MessageIdService.message_id_clean(e['ENVELOPE'].message_id), uid: e['UID'])
+        trash_uid_validity =
+          open_trash_mailbox do
+            trashed_email_uids = find_uids_by_message_ids(message_ids)
+            if trashed_email_uids.any?
+              trashed_emails =
+                emails(trashed_email_uids, %w[UID ENVELOPE]).map do |e|
+                  BasicMail.new(
+                    message_id: Email::MessageIdService.message_id_clean(e["ENVELOPE"].message_id),
+                    uid: e["UID"],
+                  )
+                end
             end
           end
-        end
 
         TrashedMailResponse.new.tap do |resp|
           resp.trashed_emails = trashed_emails
@@ -249,14 +261,19 @@ module Imap
 
       def find_spam_by_message_ids(message_ids)
         spam_emails = []
-        spam_uid_validity = open_spam_mailbox do
-          spam_email_uids = find_uids_by_message_ids(message_ids)
-          if spam_email_uids.any?
-            spam_emails = emails(spam_email_uids, ["UID", "ENVELOPE"]).map do |e|
-              BasicMail.new(message_id: Email::MessageIdService.message_id_clean(e['ENVELOPE'].message_id), uid: e['UID'])
+        spam_uid_validity =
+          open_spam_mailbox do
+            spam_email_uids = find_uids_by_message_ids(message_ids)
+            if spam_email_uids.any?
+              spam_emails =
+                emails(spam_email_uids, %w[UID ENVELOPE]).map do |e|
+                  BasicMail.new(
+                    message_id: Email::MessageIdService.message_id_clean(e["ENVELOPE"].message_id),
+                    uid: e["UID"],
+                  )
+                end
             end
           end
-        end
 
         SpamMailResponse.new.tap do |resp|
           resp.spam_emails = spam_emails
@@ -265,13 +282,14 @@ module Imap
       end
 
       def find_uids_by_message_ids(message_ids)
-        header_message_id_terms = message_ids.map do |msgid|
-          "HEADER Message-ID '#{Email::MessageIdService.message_id_rfc_format(msgid)}'"
-        end
+        header_message_id_terms =
+          message_ids.map do |msgid|
+            "HEADER Message-ID '#{Email::MessageIdService.message_id_rfc_format(msgid)}'"
+          end
 
         # OR clauses are written in Polish notation...so the query looks like this:
         # OR OR HEADER Message-ID XXXX HEADER Message-ID XXXX HEADER Message-ID XXXX
-        or_clauses = 'OR ' * (header_message_id_terms.length - 1)
+        or_clauses = "OR " * (header_message_id_terms.length - 1)
         query = "#{or_clauses}#{header_message_id_terms.join(" ")}"
 
         imap.uid_search(query)
@@ -280,17 +298,16 @@ module Imap
       def trash(uid)
         # MOVE is way easier than doing the COPY \Deleted EXPUNGE dance ourselves.
         # It is supported by Gmail and Outlook.
-        if can?('MOVE')
+        if can?("MOVE")
           trash_move(uid)
         else
-
           # default behaviour for IMAP servers is to add the \Deleted flag
           # then EXPUNGE the mailbox which permanently deletes these messages
           # https://tools.ietf.org/html/rfc3501#section-6.4.3
           #
           # TODO: We may want to add the option at some point to copy to some
           # other mailbox first before doing this (e.g. Trash)
-          store(uid, 'FLAGS', [], ["\\Deleted"])
+          store(uid, "FLAGS", [], ["\\Deleted"])
           imap.expunge
         end
       end

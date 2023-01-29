@@ -1,0 +1,12 @@
+<DSection
+  @pageClass="has-sidebar"
+  @id="d-sidebar"
+  @class="sidebar-container"
+  @scrollTop={{false}}
+>
+  <Sidebar::Sections
+    @currentUser={{this.currentUser}}
+    @collapsableSections={{true}}
+  />
+  <Sidebar::Footer />
+</DSection>

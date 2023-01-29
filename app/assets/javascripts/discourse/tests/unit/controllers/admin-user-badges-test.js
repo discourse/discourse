@@ -1,8 +1,10 @@
+import { module, test } from "qunit";
+import { setupTest } from "ember-qunit";
 import Badge from "discourse/models/badge";
-import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
-import { test } from "qunit";
 
-discourseModule("Unit | Controller | admin-user-badges", function () {
+module("Unit | Controller | admin-user-badges", function (hooks) {
+  setupTest(hooks);
+
   test("grantableBadges", function (assert) {
     const badgeFirst = Badge.create({
       id: 3,
@@ -35,7 +37,8 @@ discourseModule("Unit | Controller | admin-user-badges", function () {
       manually_grantable: false,
     });
 
-    const controller = this.getController("admin-user-badges", {
+    const controller = this.owner.lookup("controller:admin-user-badges");
+    controller.setProperties({
       model: [],
       badges: [
         badgeLast,
@@ -47,9 +50,7 @@ discourseModule("Unit | Controller | admin-user-badges", function () {
     });
 
     const sortedNames = [badgeFirst.name, badgeMiddle.name, badgeLast.name];
-    const badgeNames = controller.get("grantableBadges").map(function (badge) {
-      return badge.name;
-    });
+    const badgeNames = controller.grantableBadges.map((badge) => badge.name);
 
     assert.notOk(
       badgeNames.includes(badgeDisabled),

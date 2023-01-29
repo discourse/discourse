@@ -3,6 +3,9 @@ module.exports = {
   extends: "discourse:recommended",
 
   rules: {
+    "no-action-modifiers": true,
+    "no-args-paths": true,
+    "no-attrs-in-components": true,
     "no-capital-arguments": false, // TODO: we extensively use `args` argument name
     "no-curly-component-invocation": {
       allow: [
@@ -18,5 +21,11 @@ module.exports = {
     "no-implicit-this": {
       allow: ["loading-spinner"],
     },
+    // Begin prettier compatibility
+    "eol-last": false,
+    "self-closing-void-elements": false,
+    "block-indentation": false,
+    quotes: false,
+    // End prettier compatibility
   },
 };

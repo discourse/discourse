@@ -4,7 +4,7 @@ import {
   darkLightDiff,
 } from "wizard/lib/preview";
 
-export default createPreviewComponent(342, 322, {
+export default createPreviewComponent(628, 322, {
   logo: null,
   avatar: null,
 

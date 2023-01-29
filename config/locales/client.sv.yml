@@ -145,41 +145,40 @@ sv:
       email: "Skicka via e-post"
       url: "Kopiera och dela URL"
     action_codes:
-      public_topic: "gjorde det här ämnet publikt %{when}"
-      open_topic: "konverterade detta till ett ämne %{when}"
-      private_topic: "gjorde det här ämnet till ett personligt meddelande %{when}"
-      split_topic: "splitta det här ämnet %{when}"
-      invited_user: "bjöd in %{who} %{when}"
-      invited_group: "bjöd in %{who} %{when}"
+      public_topic: "Gjorde det här ämnet publikt %{when}"
+      open_topic: "Konverterade detta till ett ämne %{when}"
+      private_topic: "Gjorde det här ämnet till ett personligt meddelande %{when}"
+      split_topic: "Dela det här ämnet %{when}"
+      invited_user: "Bjöd in %{who} %{when}"
+      invited_group: "Bjöd in %{who} %{when}"
       user_left: "%{who} tog bort sig själva från detta meddelande %{when}"
-      removed_user: "tog bort %{who} %{when}"
-      removed_group: "tog bort %{who} %{when}"
-      autobumped: "automatiskt positionerad %{when}"
+      removed_user: "Tog bort %{who} %{when}"
+      removed_group: "Tog bort %{who} %{when}"
+      autobumped: "Automatiskt positionerad %{when}"
       autoclosed:
-        enabled: "stängdes %{when}"
-        disabled: "öppnades %{when}"
+        enabled: "Stängdes %{when}"
+        disabled: "Öppnades %{when}"
       closed:
-        enabled: "stängdes %{when}"
-        disabled: "öppnades %{when}"
+        enabled: "Stängdes %{when}"
+        disabled: "Öppnades %{when}"
       archived:
-        enabled: "arkiverades %{when}"
-        disabled: "avarkiverades %{when}"
+        enabled: "Arkiverades %{when}"
+        disabled: "Avarkiverades %{when}"
       pinned:
-        enabled: "fästes %{when}"
-        disabled: "togs ner %{when}"
+        enabled: "Fästes %{when}"
+        disabled: "Togs ner %{when}"
       pinned_globally:
-        enabled: "globalt fäst %{when}"
-        disabled: "togs ner %{when}"
+        enabled: "Globalt fäst %{when}"
+        disabled: "Togs ner %{when}"
       visible:
-        enabled: "listades %{when}"
-        disabled: "avlistades %{when}"
+        enabled: "Listades %{when}"
+        disabled: "Avlistades %{when}"
       banner:
-        enabled: "gjorde detta till en banderoll %{when}. Den kommer att visas högst upp på varje sida tills den blir avfärdad av användaren."
-        disabled: "tog bort denna banderoll %{when}. Den kommer inte längre att visas högst upp på varje sida."
-      forwarded: "vidarebefordrade ovanstående e-post"
+        enabled: "Gjorde detta till en banderoll %{when}. Den kommer att visas högst upp på varje sida tills den blir avfärdad av användaren."
+        disabled: "Tog bort denna banderoll %{when}. Den kommer inte längre att visas högst upp på varje sida."
+      forwarded: "Vidarebefordrade ovanstående e-post"
     topic_admin_menu: "ämnesåtgärder"
     skip_to_main_content: "Hoppa till huvudinnehållet"
-    wizard_required: "Välkommen till din nya Discourse! Låt oss komma igång med hjälp av <a href='%{url}' data-auto-route='true'>konfigureringsguiden</a> ✨"
     emails_are_disabled: "All utgående e-post har blivit globalt inaktiverad av en administratör. Inga e-postaviseringar av något slag kommer att skickas ut."
     emails_are_disabled_non_staff: "Utgående e-post har inaktiverats för användare som inte är anställda."
     software_update_prompt:
@@ -189,6 +188,8 @@ sv:
       one: "Du är i bootstrap-läge för att göra lanseringen av din nya webbplats enklare. Alla nya användare kommer att beviljas förtroendenivå 1 och få dagliga sammanfattningar skickade via e-post. Det här stängs automatiskt av när antalet användare når %{count}."
       other: "Du är i bootstrap-läge för att göra lanseringen av din nya webbplats enklare. Alla nya användare kommer att beviljas förtroendenivå 1 och få dagliga sammanfattningar skickade via e-post. Det här stängs automatiskt av när antalet användare når %{count}."
     bootstrap_mode_disabled: "Bootstrap-läge stängs av om 24 timmar."
+    bootstrap_invite_button_title: "Skicka inbjudningar"
+    bootstrap_wizard_link_title: "Slutför installationsguiden"
     themes:
       default_description: "Standard"
       broken_theme_alert: "Din webbplats kanske inte fungerar eftersom ett tema / komponent har fel."
@@ -225,9 +226,13 @@ sv:
     not_implemented: "Denna funktion har tyvärr inte implementerats än!"
     no_value: "Nej"
     yes_value: "Ja"
+    ok_value: "OK"
+    cancel_value: "Avbryt"
     submit: "Skicka"
+    delete: "Radera"
     generic_error: "Tyvärr, ett fel har inträffat."
     generic_error_with_reason: "Ett fel inträffade: %{error}"
+    multiple_errors: "Flera fel inträffade: %{errors}"
     sign_up: "Registrera"
     log_in: "Logga in"
     age: "Ålder"
@@ -248,7 +253,6 @@ sv:
     conduct: "Uppförandekod"
     mobile_view: "Mobilvy"
     desktop_view: "Desktop-vy"
-    or: "eller"
     now: "nyss"
     read_more: "läs mer"
     more: "Mer"
@@ -289,7 +293,7 @@ sv:
       like_count: "Gillningar"
       topic_count: "Ämnen"
       post_count: "Inlägg"
-      user_count: "Användare"
+      user_count: "Registreringar"
       active_user_count: "Aktiva användare"
       contact: "Kontakta oss"
       contact_info: "Vid brådskande ärenden rörande webbplatsen, kontakta oss på %{contact_info}."
@@ -312,7 +316,6 @@ sv:
       remove_reminder_keep_bookmark: "Ta bort påminnelsen och behåll bokmärket"
       created_with_reminder: "Du har bokmärkt detta inlägg med en påminnelse %{date}. %{name}"
       created_with_reminder_generic: "Du har bokmärkt detta med en påminnelse %{date}. %{name}"
-      remove: "Ta bort bokmärke"
       delete: "Radera bokmärke"
       confirm_delete: "Är du säker på att du vill radera det här bokmärket? Påminnelsen kommer också att raderas."
       confirm_clear: "Är du säker på att du vill radera alla dina bokmärken från ämnet?"
@@ -346,7 +349,6 @@ sv:
       remove_confirmation: "Är du säker på att du vill ta bort detta utkast?"
       new_topic: "Nytt utkast för ämne"
       new_private_message: "Nytt utkast för personligt meddelande"
-      topic_reply: "Svar på utkast"
       abandon:
         confirm: "Du har ett pågående utkast för detta ämne. Vad vill du göra med det?"
         yes_value: "Förkasta"
@@ -383,9 +385,6 @@ sv:
     enable: "Aktivera"
     disable: "Inaktivera"
     continue: "Fortsätt"
-    undo: "Ångra"
-    revert: "Återställ"
-    failed: "Misslyckades"
     switch_to_anon: "Starta anonymt läge"
     switch_from_anon: "Avsluta anonymt läge"
     banner:
@@ -654,6 +653,8 @@ sv:
         reset_to_default: "Återställ till standard"
       group:
         all: "alla grupper"
+      sort:
+        label: "Sortera efter %{criteria}"
     group_histories:
       actions:
         change_group_setting: "Ändra gruppinställningar"
@@ -680,6 +681,7 @@ sv:
         denied: "nekad"
         undone: "förfrågan återkallad"
         handle: "hantera begäran om medlemskap"
+        undo: "Ångra"
       manage:
         title: "Hantera"
         name: "Namn"
@@ -818,6 +820,7 @@ sv:
         group_type: "Grupptyper"
         is_group_user: "Medlem"
         is_group_owner: "Ägare"
+        search_results: "Sökresultat kommer att visas nedan."
       title:
         one: "Grupp"
         other: "Grupper"
@@ -852,6 +855,7 @@ sv:
         no_filter_matches: "Inga medlemmar matchar den sökningen."
       topics: "Ämnen"
       posts: "Inlägg"
+      aria_post_number: "%{title} - inlägg #%{postNumber}"
       mentions: "Omnämnanden"
       messages: "Meddelanden"
       notification_level: "Standardaviseringsnivå för gruppmeddelanden"
@@ -966,6 +970,7 @@ sv:
     user_fields:
       none: "(välj ett alternativ)"
       required: 'Ange ett värde för "%{name}"'
+      same_as_password: "Upprepa inte ditt lösenord i andra fält."
     user:
       said: "%{username}:"
       profile: "Profil"
@@ -1003,7 +1008,7 @@ sv:
       notification_schedule:
         title: "Aviseringsschema"
         label: "Aktivera anpassat aviseringsschema"
-        tip: "Utanför dessa timmar kommer du automatiskt att placeras i \"stör ej\"."
+        tip: "Utanför dessa tider pausas dina aviseringar."
         midnight: "Midnatt"
         none: "Ingen"
         monday: "Måndag"
@@ -1047,11 +1052,16 @@ sv:
         perm_denied_expl: "Du nekade tillåtelse för aviseringar. Tillåt aviseringar via din webbläsares inställningar."
         disable: "Inaktivera aviseringar"
         enable: "Aktivera aviseringar"
-        each_browser_note: 'Obs! Du måste ändra den här inställningen i varje webbläsare du använder. Alla meddelanden kommer att inaktiveras när du är i ”stör ej”, oavsett denna inställning.'
+        each_browser_note: "Obs: Du måste ändra den här inställningen i varje webbläsare du använder. Alla aviseringar kommer att inaktiveras om du pausar aviseringar från användarmenyn, oavsett denna inställning."
         consent_prompt: "Vill du ha realtidsaviseringar när personer svarar på dina inlägg?"
       dismiss: "Avfärda"
       dismiss_notifications: "Avfärda alla"
       dismiss_notifications_tooltip: "Markera alla olästa aviseringar som lästa"
+      dismiss_bookmarks_tooltip: "Markera alla olästa bokmärkespåminnelser som lästa"
+      dismiss_messages_tooltip: "Markera alla olästa personliga meddelanden som lästa"
+      no_likes_title: "Du har inte fått några gillningar än"
+      no_likes_body: >
+        Du kommer att aviseras här varje gång någon gillar ett av dina inlägg så att du kan se vad andra tycker är värdefullt. Andra kommer att se samma sak när du gillar deras inlägg också! <br><br> Aviseringar om gillningar skickas aldrig till dig via e-post, men du kan ställa in hur du får aviseringar om gillningar på webbplatsen i dina <a href='%{preferencesUrl}'>aviseringsinställningar</a>.
       no_messages_title: "Du har inga meddelanden"
       no_messages_body: >
         Behöver du ha en direkt personlig konversation med någon, utanför det normala konversationsflödet? Meddela dem genom att klicka på deras avatar och använd %{icon} meddelandeknappen.<br><br> Om du behöver hjälp kan du <a href='%{aboutUrl}'>meddela någon ur personalen</a>.
@@ -1062,16 +1072,16 @@ sv:
       no_notifications_title: "Du har inga aviseringar än"
       no_notifications_body: >
         Du kommer att aviseras i denna panel om aktivitet som är direkt relevant för dig, bland annat svar på dina ämnen och inlägg, när någon <b>@nämner</b> dig eller citerar dig och svarar på ämnen som du bevakar. Aviseringar kommer också att skickas till din e-postadress när du inte har loggat in på ett tag. <br><br> Leta efter %{icon} för att bestämma vilka specifika ämnen, kategorier och taggar som du vill aviseras om. Se mer i dina <a href='%{preferencesUrl}'>aviseringsinställningar</a>.
+      no_other_notifications_title: "Du har inga andra aviseringar än"
+      no_other_notifications_body: >
+        Du får aviseringar i den här panelen om andra typer av aktiviteter som kan vara relevanta för dig – till exempel när någon länkar till eller redigerar ett av dina inlägg.
       no_notifications_page_title: "Du har inga aviseringar än"
       no_notifications_page_body: >
         Du kommer att aviseras om aktivitet som är direkt relevant för dig, bland annat svar på dina ämnen och inlägg, när någon <b>@nämner</b> dig eller citerar dig och svarar på ämnen du tittar på. Aviseringar kommer också att skickas som e-post när du inte har loggat in på ett tag. <br><br> Leta efter %{icon} för att bestämma vilka specifika ämnen, kategorier och taggar du vill aviseras om. Se mer i dina <a href='%{preferencesUrl}'>aviseringsinställningar</a>.
-      first_notification: "Du har fått din första avisering! Markera den för att börja."
       dynamic_favicon: "Visa räknare i webbläsarens ikon"
       skip_new_user_tips:
         description: "Hoppa över nybörjartips och utmärkelser för ny användare"
-        not_first_time: "Är det inte din första gång?"
-        skip_link: "Hoppa över dessa tips"
-        read_later: "Jag läser det senare."
+      reset_seen_user_tips: "Visa användartips igen"
       theme_default_on_all_devices: "Gör detta till standardtema för alla mina enheter"
       color_scheme_default_on_all_devices: "Ange standardfärgschema(n) för alla mina enheter"
       color_scheme: "Färgschema"
@@ -1091,12 +1101,16 @@ sv:
       enable_quoting: "Aktivera citatsvar för markerad text"
       enable_defer: "Aktivera fördröjning för att markera ämnen som lästa"
       experimental_sidebar:
-        enable: "Aktivera experimentellt sidofält"
+        enable: "Aktivera sidofältet"
         options: "Alternativ"
         categories_section: "Sektion Kategorier"
         categories_section_instruction: "Valda kategorier kommer att visas under sidofältets kategorisektion."
         tags_section: "Sektion Taggar"
         tags_section_instruction: "Valda taggar kommer att visas under sidofältets tagg-sektion."
+        navigation_section: "Navigering"
+        list_destination_instruction: "När det finns nytt innehåll i sidofältet..."
+        list_destination_default: "använd standardlänken och visa en utmärkelse för nya objekt"
+        list_destination_unread_new: "länka till oläst/nytt och visa ett antal nya objekt"
       change: "ändra"
       featured_topic: "Utvalt ämne"
       moderator: "%{user} är en moderator"
@@ -1192,17 +1206,73 @@ sv:
         move_to_archive: "Arkiv"
         failed_to_move: "Misslyckades med att flytta de markerade meddelandena (kanske ligger ditt nätverk nere)"
         tags: "Taggar"
+        all_tags: "Alla taggar"
         warnings: "Officiella varningar"
         read_more_in_group: "Vill du läsa mer? Bläddra bland andra meddelanden i %{groupLink}."
         read_more: "Vill du läsa mer? Bläddra bland andra meddelanden i <a href='%{basePath}/u/%{username}/messages'>personliga meddelanden</a>."
-        read_more_group_pm_MF: "Det { UNREAD, plural, =0 {} one { finns <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># oläst</a> } other { finns <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># olästa</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{och } false {finns } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nytt</a> meddelande} other { {BOTH, select, true{och } false {finns } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nya</a> meddelanden} } kvar, eller bläddra bland andra meddelanden i {groupLink}"
-        read_more_personal_pm_MF: "Det { UNREAD, plural, =0 {} one { finns <a href='{basePath}/u/{username}/messages/personal/unread'># oläst</a> } other { finns <a href='{basePath}/u/{username}/messages/personal/unread'># olästa</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{och } false {finns } other{}} <a href='{basePath}/u/{username}/messages/personal/new'># nytt</a> meddelande} other { {BOTH, select, true{och } false {finns } other{}} <a href='{basePath}/u/{username}/messages/personal/new'># nya</a> meddelanden} } kvar, eller bläddra bland andra <a href='{basePath}/u/{username}/messages'>personliga meddelanden</a>"
+        read_more_group_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Det finns <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># oläst</a>}
+                other {Det finns <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># olästa</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one { och <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nytt</a> meddelande kvar, eller bläddra bland andra meddelanden i {groupLink}}
+                other { och <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nya</a> meddelanden kvar, eller bläddra bland andra meddelanden i {groupLink}}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Det finns <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># oläst</a> meddelande kvar, eller bläddra bland andra meddelanden i {groupLink}}
+                other {Det finns <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># olästa</a> meddelanden kvar, eller bläddra bland andra meddelanden i {groupLink}}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one {Det finns <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nytt</a> meddelande kvar, eller bläddra bland andra meddelanden i {groupLink}}
+                other {Det finns <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nya</a> meddelanden kvar, eller bläddra bland andra meddelanden i {groupLink}}
+              }
+            }
+            other {}
+          }
+        read_more_personal_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Det finns <a href='{basePath}/u/{username}/messages/unread'># oläst</a>}
+                other {Det finns <a href='{basePath}/u/{username}/messages/unread'># olästa</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one { och <a href='{basePath}/u/{username}/messages/new'># new</a> meddelande kvar, eller bläddra bland andra <a href='{basePath}/u/{username}/messages'>personliga meddelanden</a>}
+                other { och <a href='{basePath}/u/{username}/messages/new'># new</a> meddelanden kvar, eller bläddra bland andra <a href='{basePath}/u/{username}/messages'>personliga meddelanden</a>}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Det finns <a href='{basePath}/u/{username}/messages/unread'># oläst</a> meddelande kvar, eller bläddra bland andra <a href='{basePath}/u/{username}/messages'>personliga meddelanden <a href='{basePath}/u/{username}/messages'>personal messages</a>}
+                other {Det finns <a href='{basePath}/u/{username}/messages/unread'># olästa</a> meddelanden kvar, eller bläddra bland andra <a href='{basePath}/u/{username}/messages'>personliga meddelanden <a href='{basePath}/u/{username}/messages'>personal messages</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one {Det finns <a href='{basePath}/u/{username}/messages/new'># new</a> meddelande kvar, eller bläddra bland andra <a href='{basePath}/u/{username}/messages'>personliga meddelanden</a>}
+                other {Det finns <a href='{basePath}/u/{username}/messages/new'># new</a> meddelanden kvar, eller bläddra bland andra <a href='{basePath}/u/{username}/messages'>personliga meddelanden</a>}
+              }
+            }
+            other {}
+          }
       preferences_nav:
         account: "Konto"
         security: "Säkerhet"
         profile: "Profil"
         emails: "E-post"
         notifications: "Aviseringar"
+        tracking: "Följer"
         categories: "Kategorier"
         users: "Användare"
         tags: "Taggar"
@@ -1261,13 +1331,20 @@ sv:
         use: "Använd autentiseringsappen"
         enforced_notice: "Du måste aktivera tvåfaktorsautentisering innan du kan besöka denna sida."
         disable: "Inaktivera"
-        disable_confirm: "Är du säker på att du vill inaktivera alla tvåfaktorsmetoder?"
+        disable_confirm: "Är du säker på att du vill inaktivera tvåfaktorsautentisering?"
+        delete: "Radera"
+        delete_confirm_header: "Dessa tokenbaserade autentiseringsenheter och fysiska säkerhetsnycklar kommer att raderas:"
+        delete_confirm_instruction: "Bekräfta genom att skriva <strong>%{confirm}</strong> i rutan nedan."
+        delete_single_confirm_title: "Radera en autentiseringsenhet"
+        delete_single_confirm_message: "Du raderar %{name}. Du kan inte ångra den här åtgärden. Om du ändrar dig måste du registrera den här autentiseringsenheten igen."
+        delete_backup_codes_confirm_title: "Radera reservkoder"
+        delete_backup_codes_confirm_message: "Du raderar reservkoder. Du kan inte ångra den här åtgärden. Om du ändrar dig måste du generera nya reservkoder."
         save: "Spara"
         edit: "Redigera"
         edit_title: "Redigera autentisering"
         edit_description: "Autentiseringsnamn"
         enable_security_key_description: |
-          När du har din <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">säkerhetsnyckel för hårdvara</a> till hands, tryck på registrera-knappen nedan.
+          När du har din <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">maskinvarusäkerhetsnyckel</a> eller kompatibel mobil enhet till hands, tryck på registrera-knappen nedan.
         totp:
           title: "Bevisbaserad autentisering"
           add: "Lägg till autentisering"
@@ -1275,14 +1352,16 @@ sv:
           name_and_code_required_error: "Du måste ange ett namn samt koden från din app för autentisering."
         security_key:
           register: "Registrera"
-          title: "Säkerhetsnycklar"
-          add: "Lägg till säkerhetsnyckel"
+          title: "Fysiska säkerhetsnycklar"
+          add: "Lägg till fysisk säkerhetsnyckel"
           default_name: "Huvudsäkerhetsnyckel"
+          iphone_default_name: "iPhone"
+          android_default_name: "Android"
           not_allowed_error: "Registreringsprocessen för säkerhetsnyckel dröjde antingen för länge eller avbröts."
           already_added_error: "Du har redan registrerat denna säkerhetsnyckel.\nDu behöver inte registrera den igen."
-          edit: "Ändra säkerhetsnyckel"
+          edit: "Redigera fysisk säkerhetsnyckel"
           save: "Spara"
-          edit_description: "Namn på säkerhetsnyckel"
+          edit_description: "Namn på fysisk säkerhetsnyckel"
           name_required_error: "Du måste ge din säkerhetsnyckel ett namn."
       change_about:
         title: "Ändra Om mig"
@@ -1347,7 +1426,6 @@ sv:
         authenticated: "Din e-postadress har blivit verifierad av %{provider}"
         invite_auth_email_invalid: "Ditt inbjudningsmeddelande matchar inte den e-postadress som autentiserats av %{provider}"
         authenticated_by_invite: "Din e-postadress har verifierats genom inbjudan"
-        frequency_immediately: "Vi kommer att skicka e-post till dig omedelbart om du inte har läst det som vi skickar e-post till dig om."
         frequency:
           one: "Vi skickar bara e-post om du inte synts till den senaste minuten."
           other: "Vi skickar bara e-post om du inte synts till de senaste %{count} minuterna."
@@ -1427,6 +1505,8 @@ sv:
         title: "Titel på bakgrundssidan visar antalet:"
         notifications: "Nya aviseringar"
         contextual: "Nytt sidinnehåll"
+      bookmark_after_notification:
+        title: "Efter att en bokmärkespåminnelse har skickats:"
       like_notification_frequency:
         title: "Avisera vid gillning"
         always: "Alltid"
@@ -1456,6 +1536,7 @@ sv:
       email_in_reply_to: "Inkludera ett utdrag av inlägg som svarats på i e-postmeddelanden"
       other_settings: "Övrigt"
       categories_settings: "Kategorier"
+      topics_settings: "Ämnen"
       new_topic_duration:
         label: "Betrakta ämnen som nya när"
         not_viewed: "Jag har inte tittat på dem än"
@@ -1634,6 +1715,9 @@ sv:
         title: "Stil"
         none: "(ingen)"
         instructions: "ikon som visas bredvid din profilbild"
+      status:
+        title: "Anpassad status"
+        not_set: "Inte inställd"
       primary_group:
         title: "Primär grupp"
         none: "(ingen)"
@@ -1648,8 +1732,26 @@ sv:
       save: "Spara"
       set_custom_status: "Ställ in anpassad status"
       what_are_you_doing: "Vad gör du?"
+      pause_notifications: "Pausa aviseringar"
       remove_status: "Ta bort status"
-      until: "T.o.m.:"
+    user_tips:
+      primary: "Jag förstår!"
+      secondary: "visa mig inte dessa tips"
+      first_notification:
+        title: "Din första avisering!"
+        content: "Aviseringar används för att hålla dig uppdaterad om vad som händer i samhället."
+      topic_timeline:
+        title: "Ämnestidslinje"
+        content: "Bläddra snabbt genom ett inlägg med hjälp av ämnestidslinjen."
+      post_menu:
+        title: "Inläggsmeny"
+        content: "Se hur du annars kan interagera med inlägget genom att klicka på de tre prickarna!"
+      topic_notification_levels:
+        title: "Du följer nu detta ämne"
+        content: "Leta efter den här klockan för att justera dina aviseringsinställningar för specifika ämnen eller hela kategorier."
+      suggested_topics:
+        title: "Fortsätt läsa!"
+        content: "Här är några ämnen som vi tror att du kanske vill läsa härnäst."
     loading: "Laddar..."
     errors:
       prev_page: "medan vi försökte ladda"
@@ -1682,19 +1784,24 @@ sv:
       enabled: "Webbplatsen är i skrivskyddat läge. Du kan fortsätta bläddra på sidan, men att skriva inlägg, gilla och andra interaktioner är inaktiverat för tillfället."
       login_disabled: "Det går inte att logga in medan webbplatsen är i skrivskyddat läge."
       logout_disabled: "Det går inte att logga ut medan webbplatsen är i skrivskyddat läge."
-    too_few_topics_and_posts_notice_MF: >-
-      Låt oss <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">inleda diskussionen!</a> Det {currentTopics, plural, one {finns <strong>#</strong> ämne} other {finns <strong>#</strong> ämnen}} och {currentPosts, plural, one {<strong>#</strong> inlägg} other {<strong>#</strong> inlägg}}. Besökare behöver mer att läsa och svara på – vi rekommenderar åtminstone {requiredTopics, plural, one {<strong>#</strong> ämne} other {<strong>#</strong> ämnen}} och {requiredPosts, plural, one {<strong>#</strong> inlägg} other {<strong>#</strong> inlägg}}. Enbart personal kan se detta meddelande.
-    too_few_topics_notice_MF: >-
-      Låt oss <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">inleda diskussionen!</a> Det {currentTopics, plural, one {finns <strong>#</strong> ämne} other {finns <strong>#</strong> ämnen}}. Besökare behöver mer att läsa och svara på  – vi rekommenderar åtminstone {requiredTopics, plural, one {<strong>#</strong> ämne} other {<strong>#</strong> ämnen}}. Enbart personal kan se detta meddelande.
-    too_few_posts_notice_MF: >-
-      Låt oss <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">inleda diskussionen!</a> Det {currentPosts, plural, one {finns <strong>#</strong> inlägg} other {finns <strong>#</strong> inlägg}}. Besökare behöver mer att läsa och svara på – vi rekommenderar minst {requiredPosts, plural, one {<strong>#</strong> inlägg} other {<strong>#</strong> inlägg}}. Enbart personal kan se detta meddelande.
+    staff_writes_only_mode:
+      enabled: "Webbplatsen är i läget endast för personal. Du kan fortsätta bläddra på sidan, men att skriva inlägg, gilla och andra åtgärder är begränsat till personal."
+    too_few_topics_and_posts_notice_MF: |
+      Låt oss <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">inleda diskussionen!</a> Det {currentTopics, plural, one {finns <strong>#</strong> ämne} other {finns <strong>#</strong> ämnen}} och {currentPosts, plural, one {<strong>#</strong> inlägg} other {<strong>#</strong> inlägg}}. Besökare behöver mer att läsa och svara på – vi rekommenderar åtminstone {requiredTopics, plural, one {<strong>#</strong> ämne} other {<strong>#</strong> ämnen}} och {requiredPosts, plural, one {<strong>#</strong> inlägg} other {<strong>#</strong> inlägg}}. Enbart personal kan se detta meddelande.
+    too_few_topics_notice_MF: |
+      Låt oss <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">inleda diskussionen!</a> Det {currentTopics, plural, one {finns <strong>#</strong> ämne} other {finns <strong>#</strong> ämnen}}. Besökare behöver mer att läsa och svara på – vi rekommenderar minst {requiredTopics, plural, one {<strong>#</strong> ämne} other {<strong>#</strong> ämnen}}. Enbart personal kan se detta meddelande.
+    too_few_posts_notice_MF: |
+      Låt oss <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">inleda diskussionen!</a> Det {currentPosts, plural, one {finns <strong>#</strong> inlägg} other {finns <strong>#</strong> inlägg}}. Besökare behöver mer att läsa och svara på – vi rekommenderar minst {requiredPosts, plural, one {<strong>#</strong> inlägg} other {<strong>#</strong> inlägg}}. Enbart personal kan se detta meddelande.
     logs_error_rate_notice:
-      reached_hour_MF: "<b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, one {# fel/timma} other  {# fel/timma}}</a> har uppnått webbplatsinställningarnas gräns som är {limit, plural, one {# fel/timma} other {# fel/timma}}."
-      reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# fel/minut} other {# fel/minut}}</a> har uppnått webbplatsinställningarnas gräns som är {limit, plural, one {# fel/minut} other {# fel/minut}}."
-      exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# fel/timma} other {# fel/timma}}</a> har överskridit webbplatsinställningarnas gräns som är {limit, plural, one {# fel/timma} other {# fel/timma}}."
-      exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# fel/minut} other {# fel/minut}}</a> har överskridit webbplatsinställningarnas gräns som är {limit, plural, one {# fel/minut} other {# fel/minut}}."
+      reached_hour_MF: |
+        <b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, one {# fel/timma} other  {# fel/timma}}</a> har uppnått webbplatsinställningarnas gräns som är {limit, plural, one {# fel/timma} other {# fel/timma}}.
+      reached_minute_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# fel/minut} other {# fel/minut}}</a> har uppnått webbplatsinställningarnas gräns som är {limit, plural, one {# fel/minut} other {# fel/minut}}.
+      exceeded_hour_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# fel/timma} other {# fel/timma}}</a> har överskridit webbplatsinställningarnas gräns som är {limit, plural, one {# fel/timma} other {# fel/timma}}.
+      exceeded_minute_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# fel/minut} other {# fel/minut}}</a> har överskridit webbplatsinställningarnas gräns som är {limit, plural, one {# fel/minut} other {# fel/minut}}.
     learn_more: "lär dig mer..."
-    first_post: Första inlägget
     mute: Tysta
     unmute: Avtysta
     last_post: Senaste
@@ -1713,13 +1820,14 @@ sv:
       hide_forever: "nej tack"
       hidden_for_session: "Ok, vi frågar dig imorgon. Du kan alltid använda 'Logga in' för att skapa ett konto, också."
       intro: "Hejsan! Det verkar som du gillar diskussionen, men du har ännu inte registrerat dig för ett konto."
-      value_prop: "Trött på att bläddra igenom samma inlägg? när du skapar ett konto kommer du alltid tillbaka där du slutade. Med ett konto kan du också bli notifierad om nya svar, spara bokmärken och använda gillningar för att tacka andra. Vi kan alla arbeta tillsammans för att göra denna gemenskap fantastisk. :heart:"
+      value_prop: "Trött på att bläddra igenom samma inlägg? När du skapar ett konto kommer du alltid tillbaka där du slutade. Med ett konto kan du också bli aviserad om nya svar, spara bokmärken och använda gillningar för att tacka andra. Vi kan alla arbeta tillsammans för att göra denna gemenskap fantastisk. :heart:"
     summary:
       enabled_description: "Sammanfattning över de inlägg som användarna tycker är mest intressanta."
       description:
         one: "Det finns <b>%{count}</b> svar."
         other: "Det finns <b>%{count}</b> svar."
-      description_time_MF: "Det {replyCount, plural, one {finns <b>#</b> svar} other {finns <b>#</b> svar}} med en uppskattad lästid på <b>{readingTime, plural, one {# minut} other {# minuter}}</b>."
+      description_time_MF: |
+        Det {replyCount, plural, one {finns <b>#</b> svar} other {finns <b>#</b> svar}} med en uppskattad lästid på <b>{readingTime, plural, one {# minut} other {# minuter}}</b>.
       enable: "Sammanfatta detta ämne"
       disable: "Visa alla inlägg"
       short_label: "Sammanfatta"
@@ -1738,6 +1846,9 @@ sv:
       leave_message: "Vill du verkligen lämna detta meddelande?"
       remove_allowed_user: "Vill du verkligen ta bort %{name} från det här meddelandet?"
       remove_allowed_group: "Vill du verkligen ta bort %{name} från det här meddelandet?"
+      leave: "Lämna"
+      remove_group: "Ta bort grupp"
+      remove_user: "Ta bort användare"
     email: "E-post"
     username: "Användarnamn"
     last_seen: "Sedd"
@@ -1787,13 +1898,17 @@ sv:
       title: "Logga in"
       username: "Användare"
       password: "Lösenord"
+      show_password: "Visa"
+      hide_password: "Dölj"
+      show_password_title: "Visa lösenord"
+      hide_password_title: "Dölj lösenord"
       second_factor_title: "Tvåfaktorsautentisering"
       second_factor_description: "Ange din autentiseringskod från din app:"
       second_factor_backup: "Logga in med reservkod"
       second_factor_backup_title: "Tvåfaktorsreserv"
       second_factor_backup_description: "Ange en av dina reservkoder:"
       second_factor: "Logga in via autentiseringsappen"
-      security_key_description: "När du har din fysiska säkerhetsnyckel till hands, tryck på knappen Autentisera med säkerhetsnyckel här nedtill."
+      security_key_description: "När du har din fysiska säkerhetsnyckel eller kompatibla mobil enhet beredd, tryck på knappen Autentisera med knappen Säkerhetsnyckel nedanför."
       security_key_alternative: "Prova ett annat sätt"
       security_key_authenticate: "Autentisera med säkerhetsnyckel"
       security_key_not_allowed_error: "Processen för autentiseringssäkerhetsnyckel dröjde antingen för länge eller avbröts."
@@ -1808,6 +1923,7 @@ sv:
       blank_username_or_password: "Ange din e-postadress eller ditt användarnamn och lösenord."
       reset_password: "Återställ lösenord"
       logging_in: "Loggar in..."
+      previous_sign_up: "Har du redan ett konto?"
       or: "Eller"
       authenticating: "Autentiserar..."
       awaiting_activation: "Ditt konto väntar på aktivering, använd Glömt lösenord-länken för att skicka ett nytt aktiveringsmail."
@@ -1866,6 +1982,7 @@ sv:
       success: "Ditt konto har skapats och du är nu inloggad."
       name_label: "Namn"
       password_label: "Lösenord"
+      existing_user_can_redeem: "Lös in din inbjudan till ett ämne eller en grupp."
     password_reset:
       continue: "Fortsätt till %{site_name}"
     emoji_set:
@@ -1967,6 +2084,9 @@ sv:
       similar_topics: "Ditt ämne liknar..."
       drafts_offline: "utkast offline"
       edit_conflict: "redigera konflikt"
+      esc: "esc"
+      esc_label: "Klicka eller tryck på Esc för att avfärda"
+      ok_proceed: "Ok, fortsätt"
       group_mentioned_limit:
         one: "<b>Varning!</b> Du nämnde <a href='%{group_link}'>%{group}</a> och denna grupp har fler medlemmar än vad administratorn tillåter för omnämningar. Begränsningsregeln för omnämnanden är satt till %{count} användare. Ingen kommer därför att aviseras."
         other: "<b>Varning!</b> Du nämnde <a href='%{group_link}'>%{group}</a> och denna grupp har fler medlemmar än vad administratorn tillåter för omnämningar. Begränsningsregeln för omnämnanden är satt till %{count} användare. Ingen kommer därför att aviseras."
@@ -1978,10 +2098,17 @@ sv:
         private: "Du nämnde @%{username} men de kommer inte att meddelas eftersom de inte kan se detta personliga meddelande. Du måste bjuda in dem till detta personliga meddelande."
         muted_topic: "Du nämnde @%{username} men de kommer inte att meddelas eftersom de tystade detta ämne."
         not_allowed: "Du nämnde @%{username} men de kommer inte att meddelas eftersom de inte var inbjudna till detta ämne."
+      cannot_see_group_mention:
+        not_mentionable: "Du kan inte nämna gruppen @%{group}."
+        some_not_allowed:
+          one: "Du nämnde @%{group} men bara %{count} medlem kommer att aviseras eftersom de andra medlemmarna inte kan se detta personliga meddelande. Du måste bjuda in dem till detta personliga meddelande."
+          other: "Du nämnde @%{group} men bara %{count} medlemmar kommer att aviseras eftersom de andra medlemmarna inte kan se detta personliga meddelande. Du måste bjuda in dem till detta personliga meddelande."
+        not_allowed: "Du nämnde @%{group} men ingen av dess medlemmar kommer att aviseras eftersom de inte kan se detta personliga meddelande. Du måste bjuda in dem till detta personliga meddelande."
       here_mention:
         one: "Genom att nämna <b>@%{here}</b>kommer du att meddela %{count} användare – är du säker?"
         other: "Genom att nämna <b>@%{here}</b>kommer du att meddela %{count} användare – är du säker?"
       duplicate_link: "Det verkar som din länk till <b>%{domain}</b> redan har lagts in i ämnet av <b>@%{username}</b> i <a href='%{post_url}'> ett svar den %{ago}</a> – är du säker på att du vill lägga upp den igen?"
+      duplicate_link_same_user: "Det verkar som om du redan har lagt upp en länk till <b>%{domain}</b> i det här ämnet i <a href='%{post_url}'>ett svar på %{ago}</a> - är du säker på att du vill lägga upp det igen?"
       reference_topic_title: "SV: %{title}"
       error:
         title_missing: "Du måste ange en rubrik"
@@ -2058,6 +2185,7 @@ sv:
       abandon: "stäng skaparen och kasta utkast"
       enter_fullscreen: "skaparen i helskärm"
       exit_fullscreen: "avsluta helskärmsläge för skaparen"
+      exit_fullscreen_prompt: "Tryck på <kbd>ESC</kbd> för att lämna helskärmsläget"
       show_toolbar: "visa redigerarens verktygsfält"
       hide_toolbar: "dölj redigerarens verktygsfält"
       modal_ok: "OK"
@@ -2068,6 +2196,9 @@ sv:
         body: "Just nu skickas det här meddelandet bara till dig själv!"
       slow_mode:
         error: "Detta ämne är i långsamt läge. Du publicerade nyligen, och kan publicera igen om %{timeLeft}."
+      user_not_seen_in_a_while:
+        single: "Personen du skickar meddelanden till, <b>%{usernames}</b>, har inte setts här på väldigt länge – %{time_ago}. De kanske inte får ditt meddelande. Kanske vill du söka efter alternativa metoder för att kontakta %{usernames}?"
+        multiple: "Följande personer du skickar meddelanden till, <b>%{usernames}</b>, har inte setts här på väldigt länge – %{time_ago}. De kanske inte får ditt meddelande. Kanske vill du söka efter alternativa metoder för att kontakta dem?"
       admin_options_title: "Valfria personalinställningar för detta ämne"
       composer_actions:
         reply: Svara
@@ -2113,6 +2244,12 @@ sv:
         high_priority:
           one: "%{count} oläst avisering med hög prioritet"
           other: "%{count} olästa aviseringar med hög prioritet"
+        new_message_notification:
+          one: "%{count} avisering om nytt meddelande"
+          other: "%{count} aviseringar om nytt meddelande"
+        new_reviewable:
+          one: "%{count} nytt granskningsbart"
+          other: "%{count} nya granskningsbara"
       title: "aviseringar från @namn-omnämnanden, svar på dina inlägg och ämnen, meddelanden, etc"
       none: "Kan inte ladda aviseringar just nu."
       empty: "Inga aviseringar hittades."
@@ -2126,6 +2263,7 @@ sv:
       bookmark_reminder: "<span>%{username}</span> %{description}"
       replied: "<span>%{username}</span> %{description}"
       posted: "<span>%{username}</span> %{description}"
+      watching_category_or_tag: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username},%{username2}</span>%{description}"
@@ -2157,11 +2295,18 @@ sv:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span>%{description}"
       votes_released: "%{description} - slutförd"
+      new_features: "Nya funktioner tillgängliga!"
       dismiss_confirmation:
         body:
           default:
             one: "Är du säker? Du har %{count} viktig avisering."
             other: "Är du säker? Du har %{count} viktiga aviseringar."
+          bookmarks:
+            one: "Är du säker? Du har %{count} oläst bokmärkespåminnelse."
+            other: "Är du säker? Du har %{count} olästa bokmärkespåminnelser."
+          messages:
+            one: "Är du säker? Du har %{count} oläst personligy meddelande."
+            other: "Är du säker? Du har %{count} olästa personliga meddelanden."
         dismiss: "Avfärda"
         cancel: "Avbryt"
       group_message_summary:
@@ -2189,6 +2334,7 @@ sv:
         invited_to_private_message: "inbjuden till privat meddelande"
         invitee_accepted: "inbjudan accepterad"
         posted: "nytt inlägg"
+        watching_category_or_tag: "nytt inlägg"
         moved_post: "inlägg flyttat"
         linked: "länkat"
         bookmark_reminder: "påminnelse för bokmärke"
@@ -2204,6 +2350,7 @@ sv:
         membership_request_consolidated: "ny begäran om medlemskap"
         reaction: "ny reaktion"
         votes_released: "Röstningen släpptes"
+        new_features: "nya Discourse-funktioner har släppts!"
     upload_selector:
       uploading: "Laddar upp"
       processing: "Bearbetar uppladdning"
@@ -2227,6 +2374,7 @@ sv:
         other: "<span>%{count}%{plus} resultat för</span><span class='term'>%{term}</span>"
       title: "Sök"
       full_page_title: "Sök"
+      results: "resultat"
       no_results: "Inga resultat hittades."
       no_more_results: "Inga fler resultat hittades."
       post_format: "Nr %{post_number} av %{username}"
@@ -2267,10 +2415,11 @@ sv:
       tips:
         category_tag: "filter efter kategori eller tagg"
         author: "filter efter inläggsförfattare"
-        in: "filter efter metadata (t.ex. i: titel, i:personlig, i:fäst)"
+        in: "filter efter metadata (t.ex. in:title, in:personal, in:pinned)"
         status: "filter efter ämnesstatus"
         full_search: "startar helsidesökning"
         full_search_key: "%{modifier} + Enter"
+        me: "visar bara dina inlägg"
       advanced:
         title: Avancerade filter
         posted_by:
@@ -2342,15 +2491,53 @@ sv:
     view_all: "visa alla %{tab}"
     user_menu:
       generic_no_items: "Det finns inga objekt i den här listan."
-      sr_menu_tabs: "Menyflikar"
+      sr_menu_tabs: "Flikar i användarmenyn"
       view_all_notifications: "visa alla aviseringar"
+      view_all_bookmarks: "visa alla bokmärken"
+      view_all_messages: "visa alla personliga meddelanden"
+      tabs:
+        all_notifications: "Alla aviseringar"
+        replies: "Svar"
+        replies_with_unread:
+          one: "Svar - %{count} oläst svar"
+          other: "Svar - %{count} olästa svar"
+        mentions: "Omnämnanden"
+        mentions_with_unread:
+          one: "Omnämnanden - %{count} oläst omnämnande"
+          other: "Omnämnanden - %{count} olästa omnämnanden"
+        likes: "Gillningar"
+        likes_with_unread:
+          one: "Gillningar - %{count} oläst gillning"
+          other: "Gillningar - %{count} olästa gillningar"
+        watching: "Bevakade ämnen"
+        watching_with_unread:
+          one: "Bevakade ämnen - %{count} oläst bevakat ämne"
+          other: "Bevakade ämnen - %{count} olästa bevakade ämnen"
+        messages: "Personliga meddelanden"
+        messages_with_unread:
+          one: "Personliga meddelanden - %{count} oläst meddelande"
+          other: "Personliga meddelanden - %{count} olästa meddelanden"
+        bookmarks: "Bokmärken"
+        bookmarks_with_unread:
+          one: "Bokmärken - %{count} oläst bokmärke"
+          other: "Bokmärken - %{count} olästa bokmärken"
+        review_queue: "Granskningskö"
+        review_queue_with_unread:
+          one: "Granskningskö - %{count} objekt behöver granskas"
+          other: "Granskningskö - %{count} objekt behöver granskas"
+        other_notifications: "Andra aviseringar"
+        other_notifications_with_unread:
+          one: "Andra aviseringar - %{count} oläst avisering"
+          other: "Andra aviseringar - %{count} olästa aviseringar"
+        profile: "Profil"
       reviewable:
         view_all: "visa alla granskningsobjekt"
         queue: "Kö"
         deleted_user: "(raderad användare)"
+        deleted_post: "(raderat inlägg)"
         post_number_with_topic_title: "inlägg nr %{post_number} - %{title}"
         new_post_in_topic: "nytt inlägg i %{title}"
-        suspicious_user: "misstänkt användare %{username}"
+        user_requires_approval: "%{username} kräver godkännande"
         default_item: "granskningsbart objekt nr %{reviewable_id}"
     topics:
       new_messages_marker: "senaste besök"
@@ -2439,9 +2626,6 @@ sv:
       move_to_inbox:
         title: "Flytta till inkorgen"
         help: "Flytta tillbaka meddelandet till inkorgen"
-      edit_message:
-        help: "Redigera första inlägget av meddelandet"
-        title: "Redigera"
       defer:
         help: "Märk som oläst"
         title: "Skjut upp"
@@ -2476,14 +2660,48 @@ sv:
       show_links: "visa länkar som finns i det här ämnet"
       collapse_details: "komprimera ämnesdetaljer"
       expand_details: "expandera ämnesdetaljer"
-      read_more_in_category: "Vill du läsa mer? Bläddra bland andra ämnen i %{catLink} eller %{latestLink}."
-      read_more: "Vill du läsa mer? %{catLink} eller %{latestLink}."
+      read_more_in_category: "Vill du läsa mer? Bläddra bland andra ämnen i %{categoryLink} eller <a href='%{latestLink}'>visa senaste ämnen</a>."
+      read_more: "Vill du läsa mer? <a href='%{categoryLink}'>Bläddra bland alla kategorier</a> eller <a href='%{latestLink}'>visa senaste ämnen</a>."
       unread_indicator: "Ingen medlem har läst det senaste inlägget ännu."
-      read_more_MF: "Det finns { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'># oläst</a> } other { <a href='{basePath}/unread'># olästa</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{och } false {} other{}} <a href='{basePath}/new'># nytt</a> ämne} other { {BOTH, select, true{och } false {} other{}} <a href='{basePath}/new'># nya</a> ämnen} } kvar, eller {CATEGORY, select, true {bläddra bland andra ämnen i {catLink}} false {{latestLink}} other {}}"
-      bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
-      browse_all_categories: Bläddra bland alla kategorier
-      browse_all_tags: Bläddra bland alla taggar
-      view_latest_topics: visa senaste ämnen
+      read_more_MF: |
+        { HAS_UNREAD_AND_NEW, select,
+          true {
+            { UNREAD, plural,
+                 =0 {}
+                one {Det finns <a href="{basePath}/unread"># oläst</a>}
+              other {Det finns <a href="{basePath}/unread"># olästa</a>}
+            }
+            { NEW, plural,
+                 =0 {}
+                one { och <a href="{basePath}/new"># nytt</a> ämne kvar,}
+              other { och <a href="{basePath}/new"># nya</a> ämnen kvar,}
+            }
+          }
+          false {
+            { UNREAD, plural,
+                 =0 {}
+                one {Det finns <a href="{basePath}/unread"># olästa</a> ämnen kvar,}
+              other {Det finns <a href="{basePath}/unread"># olästa</a> ämnen kvar,}
+            }
+            { NEW, plural,
+                 =0 {}
+                one {Det finns <a href="{basePath}/new"># nytt</a> ämne kvar,}
+              other {Det finns <a href="{basePath}/new"># nya</a> ämnen kvar,}
+            }
+          }
+          other {}
+        }
+        { HAS_CATEGORY, select,
+          true { eller bläddra i andra ämnen i {categoryLink}}
+          false { eller <a href="{basePath}/latest">visa senaste ämnen</a>}
+          other {}
+        }
+      bumped_at_title: |
+        Första inlägget: %{createdAtDate}
+        Upplagt: %{bumpedAtDate}
+      browse_all_categories_latest: "<a href='%{basePath}/categories'>Bläddra bland alla kategorier</a> eller <a href='%{basePath}/latest'>visa senaste ämnen</a>."
+      browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Bläddra bland alla kategorier</a>, <a href='%{basePath}/latest'>visa senaste ämnen</a> eller se toppämnen:"
+      browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Bläddra bland alla taggar</a> eller <a href='%{basePath}/latest'>visa senaste ämnen</a>."
       suggest_create_topic: Redo att <a href>starta ett nytt samtal?</a>
       jump_reply_up: hoppa till tidigare svar
       jump_reply_down: hoppa till senare svar
@@ -2861,6 +3079,7 @@ sv:
       gap:
         one: "visa %{count} dolt svar"
         other: "visa %{count} dolda svar"
+      sr_reply_to: "Svara på inlägg #%{post_number} av @%{username}"
       notice:
         new_user: "Detta är första gången som användaren %{user} har skapat ett inlägg — låt oss välkomna hen till vår gemenskap!"
         returning_user: "Det var ett tag sedan vi såg %{user} — senaste inlägget gjordes %{time}."
@@ -2903,6 +3122,7 @@ sv:
           one: "Tyvärr kan du bara ladda upp %{count} fil åt gången."
           other: "Tyvärr kan du bara ladda upp %{count} filer åt gången."
         upload_not_authorized: "Tyvärr tillåts inte filen som du försöker ladda upp (tillåtna filtyper: %{authorized_extensions})."
+        no_uploads_authorized: "Tyvärr, inga filer får laddas upp."
         image_upload_not_allowed_for_new_user: "Tyvärr kan nya användare inte ladda upp bilder."
         attachment_upload_not_allowed_for_new_user: "Tyvärr kan nya användare inte bifoga filer."
         attachment_download_requires_login: "Tyvärr måste du vara inloggad för att kunna ladda ned bifogade filer."
@@ -2914,6 +3134,7 @@ sv:
       via_email: "det här inlägget har gjorts via e-post"
       via_auto_generated_email: "det här inlägget kom i ett autogenererat e-postmeddelande"
       whisper: "det här inlägget är en privat viskning för moderatorer"
+      whisper_groups: "det här inlägget är en privat viskning som endast är synlig för %{groupNames}"
       wiki:
         about: "detta inlägg är en wiki"
       few_likes_left: "Tack för att du sprider kärleken! Du har bara några få gillningar kvar idag."
@@ -2999,7 +3220,7 @@ sv:
       merge:
         confirm:
           one: "Är du säker på att du vill slå ihop dessa inlägg?"
-          other: "Är du säker på att du vill sammanfoga de %{count} inläggen?"
+          other: "Är du säker på att du vill slå ihop dessa %{count} inlägg?"
       revisions:
         controls:
           first: "Första version"
@@ -3038,7 +3259,6 @@ sv:
         create_for_topic: "Skapa bokmärke för ämne"
         edit: "Redigera bokmärke"
         edit_for_topic: "Redigera bokmärke för ämne"
-        created: "Skapade"
         updated: "Uppdaterade"
         name: "Namn"
         name_placeholder: "Vad används detta bokmärke till?"
@@ -3074,6 +3294,7 @@ sv:
       all: "Alla kategorier"
       choose: "kategori&hellip;"
       edit: "Redigera"
+      edit_title: "Redigera denna kategori"
       edit_dialog_title: "Ändra: %{categoryName}"
       view: "Visa ämnen i kategori"
       back: "Tillbaka till kategorin"
@@ -3105,6 +3326,7 @@ sv:
       name: "Kategorinamn"
       description: "Beskrivning"
       logo: "Kategori logotypbild"
+      logo_dark: "Kategorilogotypbild för mörkt läge"
       background_image: "Kategori bakgrundsbild"
       badge_colors: "Utmärkelsefärg"
       background_color: "Bakgrundsfärg"
@@ -3135,6 +3357,7 @@ sv:
       pending_permission_change_alert: "Du har inte lagt till %{group} för denna kategori. Klicka på följande knapp för att lägga till den."
       images: "Bilder"
       email_in: "Egenvald inkommande e-postadress:"
+      email_in_tooltip: "Du kan skilja på flera e-postadresser med tecknet |."
       email_in_allow_strangers: "Ta emot e-post från anonyma användare utan konton"
       email_in_disabled: "Att skapa nya ämnen via e-post är inaktiverat i webbplatsinställningarna. För att aktivera ämnen skapade via e-post "
       email_in_disabled_click: 'aktiverar du inställningen "inkommande e-post".'
@@ -3159,8 +3382,7 @@ sv:
       this_year: "i år"
       position: "Position på kategorisidan:"
       default_position: "Standardposition"
-      position_disabled: "Kategorier kommer att sorteras efter sin aktivitet. För att ställa in sorteringen av kategorier i den här listan "
-      position_disabled_click: 'aktiverar du inställningen "fasta kategoripositioner".'
+      position_disabled: "Kategorier kommer att visas i aktivitetsordning. För att styra ordningen på kategorier i listor, aktivera inställningen <a href='%{url}'>'fasta kategoripositioner'</a>."
       minimum_required_tags: "Minsta antalet taggar som krävs för ett ämne:"
       default_slow_mode: 'Aktivera "Långsamt läge" för nya ämnen i denna kategori.'
       parent: "Överordnad kategori"
@@ -3236,7 +3458,8 @@ sv:
       official_warning: "Officiell varning"
       delete_spammer: "Radera skräppostare"
       flag_for_review: "Sätt i kö för granskning"
-      delete_confirm_MF: "Du håller på att radera {POSTS, plural, one {<b>#</b> inlägg} other {<b>#</b> inlägg}} och {TOPICS, plural, one {<b>#</b> ämne} other {<b>#</b> ämnen}} från den här användaren, ta bort användarens konto, blockera registreringar från användarens IP-adress <b>{ip_address}</b>, och lägga till användarens e-postadress <b>{email}</b> till en permanent blockeringslista. Är du säker på att den här användaren verkligen är en skräppostare?"
+      delete_confirm_MF: |
+        Du håller på att radera {POSTS, plural, one {<b>#</b> inlägg} other {<b>#</b> inlägg}} och {TOPICS, plural, one {<b>#</b> ämne} other {<b>#</b> ämnen}} från den här användaren, ta bort användarens konto, blockera registreringar från användarens IP-adress <b>{ip_address}</b>, och lägga till användarens e-postadress <b>{email}</b> till en permanent blockeringslista. Är du säker på att den här användaren verkligen är en skräppostare?
       yes_delete_spammer: "Ja, radera skräppostare"
       ip_address_missing: "(---)"
       hidden_email_address: "(dold)"
@@ -3338,7 +3561,6 @@ sv:
     category_title: "Kategori"
     history_capped_revisions: "Historik, senaste 100 versionerna"
     history: "Historik"
-    changed_by: "av %{author}"
     raw_email:
       title: "Inkommande e-post"
       not_available: "Ej tillgänglig!"
@@ -3415,7 +3637,6 @@ sv:
         this_month: "Månad"
         this_week: "Vecka"
         today: "Idag"
-        other_periods: "se toppen för:"
     browser_update: 'Tyvärr stöds inte <a href="https://www.discourse.org/faq/#browser">din webbläsare</a>. Vänligen <a href="https://browsehappy.com">byt till en webbläsare som stöds</a> för att se innehåll, logga in och svara.'
     permission_types:
       full: "Skapa / svara / se"
@@ -3630,7 +3851,6 @@ sv:
       tag_list_joiner: ", "
       delete_unused: "Radera oanvända taggar"
       delete_unused_description: "Radera alla taggar som inte är kopplade till något ämne eller personliga meddelanden"
-      cancel_delete_unused: "Avbryt"
       filters:
         without_category: "%{filter} %{tag} ämnen"
         with_category: "%{filter} %{tag} ämnen i %{category}"
@@ -3704,9 +3924,9 @@ sv:
     safe_mode:
       enabled: "Säkert läge är aktiverat och för att lämna säkert läge stänger du detta webbläsarfönster"
     image_removed: "(bild borttagen)"
-    do_not_disturb:
-      title: "Stör ej för..."
-      label: "Stör ej"
+    pause_notifications:
+      title: "Pausa aviseringar för..."
+      label: "Pausa aviseringar"
       remaining: "%{remaining} kvar"
       options:
         half_hour: "30 minuter"
@@ -3728,14 +3948,14 @@ sv:
     user_activity:
       no_activity_title: "Ingen aktivitet än"
       no_activity_body: "Välkommen till vårt forum! Du är helt ny här och har ännu inte bidragit i diskussioner. Du kan börja med att gå till <a href='%{topUrl}'>Topp</a> eller <a href='%{categoriesUrl}'>Kategorier</a> och sätta igång att läsa! Välj %{heartIcon} på inlägg som du gillar eller vill lära dig mer om. I takt med att du deltar kommer din aktivitet att visas här."
-      no_activity_others: "Ingen aktivitet."
       no_replies_title: "Du har inte svarat på några ämnen än"
-      no_replies_others: "Inga svar."
+      no_replies_title_others: "%{username} har inte svarat på några ämnen ännu"
+      no_replies_body: "När du <a href='%{searchUrl}'>upptäcker</a> en intressant konversation som du vill bidra till trycker du på knappen <kbd>Svara</kbd> direkt under ett inlägg för att börja svara på det specifika inlägget. Om du föredrar att svara på det allmänna ämnet snarare än på ett enskilt inlägg eller en enskild person, kan du leta efter knappen <kbd>Svara</kbd> längst ner i ämnet eller under ämnets tidslinje."
       no_drafts_title: "Du har inte startat några utkast"
       no_drafts_body: "Inte riktigt redo att göra ett inlägg? Vi sparar automatiskt ett nytt utkast och visar det i listan här när du börjar skriva ett ämne, svar eller personligt meddelande. Välj avbryt-knappen för att ta bort eller spara ditt utkast för att fortsätta senare."
       no_likes_title: "Du har inte gillat några ämnen än"
+      no_likes_title_others: "%{username} har inte gillat några ämnen ännu"
       no_likes_body: "Ett bra sätt att hoppa in och börja bidra är att börja läsa samtal som redan har ägt rum, och välja %{heartIcon} på inlägg som du gillar!"
-      no_likes_others: "Inga gillade inlägg."
       no_topics_title: "Du har inte startat några ämnen än"
       no_topics_body: "Det är alltid bäst att <a href='%{searchUrl}'>söka</a> efter befintliga samtalsämnen innan du startar ett nytt, men om du är säker på att ämnet du vill ha inte redan finns där, var så god och starta ett nytt eget ämne. Leta efter knappen <kbd>+ Nytt ämne</kbd> längst upp till höger i ämneslistan, kategorin eller taggen för att börja skapa ett nytt ämne inom det området."
       no_topics_title_others: "%{username} har inte startat några ämnen än"
@@ -3750,19 +3970,24 @@ sv:
     second_factor_auth:
       redirect_after_success: "Andra faktorautentiseringen lyckades. Omdirigerar till föregående sida…"
     sidebar:
+      show_sidebar: "Visa sidofältet"
+      hide_sidebar: "Dölj sidofältet"
       unread_count:
         one: "%{count} oläst"
         other: "%{count} olästa"
       new_count:
         one: "%{count} ny"
         other: "%{count} nya"
-      toggle_section: "växla avsnitt"
-      more: "Mer..."
+      toggle_section: "Växla avsnitt"
+      more: "Mer"
+      all_categories: "Alla kategorier"
+      all_tags: "Alla taggar"
       sections:
+        about:
+          header_link_text: "Om"
         messages:
-          header_link_title: "personliga meddelanden"
           header_link_text: "Meddelanden"
-          header_action_title: "skapa ett personligt meddelande"
+          header_action_title: "Skapa ett personligt meddelande"
           links:
             inbox: "Inkorg"
             sent: "Skickat"
@@ -3772,40 +3997,66 @@ sv:
             unread_with_count: "Oläst (%{count})"
             archive: "Arkiv"
         tags:
+          links:
+            add_tags:
+              content: "Lägg till taggar"
+              title: "Du har inte lagt till några taggar. Klicka för att komma igång."
           none: "Du har inte lagt till några taggar."
           click_to_get_started: "Klicka här för att komma igång."
-          header_link_title: "alla taggar"
           header_link_text: "Taggar"
-          header_action_title: "redigera sidofältets taggar"
+          header_action_title: "Redigera ditt sidofälts taggar"
+          configure_defaults: "Konfigurera standardvärden"
         categories:
+          links:
+            add_categories:
+              content: "Lägg till kategorier"
+              title: "Du har inte lagt till några kategorier. Klicka för att komma igång."
           none: "Du har inte lagt till några kategorier."
           click_to_get_started: "Klicka här för att komma igång."
-          header_link_title: "alla kategorier"
           header_link_text: "Kategorier"
-          header_action_title: "redigera sidofältets kategorier"
+          header_action_title: "Redigera ditt sidofälts kategorier"
+          configure_defaults: "Konfigurera standardvärden"
         community:
-          header_link_title: "start"
           header_link_text: "Community"
-          header_action_title: "skapa ett nytt ämne"
+          header_action_title: "Skapa ett ämne"
           links:
+            about:
+              content: "Om"
+              title: "Mer information om denna webbplats"
+            admin:
+              content: "Admin"
+              title: "Webbplatsinställningar och rapporter"
+            badges:
+              content: "Utmärkelser"
+              title: "Alla utmärkelser som kan förtjänas"
             everything:
               content: "Allting"
               title: "Alla ämnen"
-            tracked:
-              content: "Följda"
-              title: "Alla följda ämnen"
+            faq:
+              content: "Vanliga frågor och svar"
+              title: "Riktlinjer för att använda denna webbplats"
             groups:
               content: "Grupper"
-              title: "Alla grupper"
+              title: "Lista över tillgängliga användargrupper"
             users:
               content: "Användare"
-              title: "Alla användare"
+              title: "Lista över alla användare"
             my_posts:
               content: "Mina inlägg"
-              title: "Mina inlägg"
+              title: "Min senaste ämnesaktivitet"
+              title_drafts: "Mina utkast som inte har publicerats"
               draft_count:
                 one: "%{count} utkast"
                 other: "%{count} utkast"
+            review:
+              content: "Granska"
+              title: "Flaggade inlägg och andra objekt i kö"
+              pending_count: "%{count} väntande"
+    welcome_topic_banner:
+      title: "Skapa ditt välkomstämne"
+      description: "Ditt välkomstämne är det första som nya medlemmar kommer att läsa. Tänk på det som din \"snabbpresentation\" eller \"målbeskrivning\". Låt alla veta vem den här gruppen är till för, vad de kan förvänta sig att hitta här och vad du vill att de ska göra först."
+      button_title: "Börja redigera"
+    until: "T.o.m.:"
   admin_js:
     type_to_filter: "skriv för att filtrera..."
     admin:
@@ -3952,6 +4203,9 @@ sv:
               other: "%{count} användare har de nya e-postdomänerna och kommer att läggas till i gruppen."
             automatic_membership_associated_groups: "Användare som är medlemmar i en grupp på en tjänst som listas här kommer automatiskt att läggas till i denna grupp när de loggar in med tjänsten."
             primary_group: "Automatiskt inställd som primär grupp"
+          alert:
+            primary_group: "Eftersom detta är en primär grupp kommer namnet '%{group_name}' att användas i CSS-klasser som kan ses av alla."
+            flair_group: "Eftersom den här gruppen har underikon för sina medlemmar kommer namnet \"%{group_name}\" att vara synligt för alla."
         name_placeholder: "Gruppnamn, inga mellanslag, samma regler som för användarnamn"
         primary: "Primär grupp"
         no_primary: "(ingen primär grupp)"
@@ -3961,10 +4215,10 @@ sv:
         about: "Redigera dina gruppmedlemskap och -namn här."
         group_members: "Gruppmedlemmar"
         delete: "Radera"
-        delete_confirm: "Ta bort den här gruppen?"
+        delete_confirm: "Är du säker på att du vill ta bort den här gruppen?"
         delete_with_messages_confirm:
-          one: "Om du raderar den här gruppen blir %{count} meddelande ägarlöst, och gruppmedlemmarna får inte längre tillgång till det.<br><br>Är du säker?"
-          other: "Om du raderar den här gruppen blir %{count} meddelanden ägarlösa, och gruppmedlemmarna får inte längre tillgång till dem.<br><br>Är du säker?"
+          one: "Om du raderar den här gruppen blir %{count} meddelande ägarlöst, och gruppmedlemmarna får inte längre tillgång till det."
+          other: "Om du raderar den här gruppen blir %{count} meddelanden ägarlösa, och gruppmedlemmarna får inte längre tillgång till dem."
         delete_failed: "Det går inte att ta bort grupp. Om det här är en automatisk grupp så kan den inte raderas."
         delete_automatic_group: Detta är en automatisk grupp och kan inte raderas.
         delete_owner_confirm: "Vill du ta bort användarprivilegier för '%{username}'?"
@@ -4030,7 +4284,7 @@ sv:
             topics:
               read: Läs ett ämne eller ett specifikt inlägg i det. RSS stöds också.
               write: Skapa ett nytt ämne eller inlägg till en befintligt sådan.
-              update: Uppdatera ett ämne. Ändra titel, kategori, taggar, etc.
+              update: Uppdatera ett ämne. Ändra titel, kategori, taggar, status, arketyp, featured_link etc.
               read_lists: Läs ämneslistor som topp, ny, senaste osv. RSS stöds också.
             posts:
               edit: Redigera ett inlägg eller ett specifikt inlägg.
@@ -4049,6 +4303,9 @@ sv:
               anonymize: Anonymisera användarkonton.
               delete: Ta bort användarkonton.
               list: Få en lista över användare.
+            user_status:
+              read: Läs användarstatus.
+              update: Uppdatera användarstatistik.
             email:
               receive_emails: Kombinera detta omfång med e-postmottagaren för att bearbeta inkommande e-post.
             badges:
@@ -4071,14 +4328,13 @@ sv:
         detailed_instruction: "En POST-begäran skickas till angiven URL när vald händelse sker."
         new: "Ny webhook"
         create: "Skapa"
+        edit: "Redigera"
         save: "Spara"
-        destroy: "Radera"
-        description: "Beskrivning"
+        description_label: "Händelseutlösare"
         controls: "Kontroller"
         go_back: "Tillbaka till listan"
         payload_url: "Försändelse-URL"
         payload_url_placeholder: "https://example.com/postreceive"
-        warn_local_payload_url: "Det verkar som du försöker upprätta en webhook till en lokal URL. Händelser levererade till en lokal adress kan orsaka bieffekter eller oväntad funktion. Vill du fortsätta?"
         secret_invalid: "Hemligheten får inte ha några blanka tecken."
         secret_too_short: "Hemligheten bör vara minst 12 tecken."
         secret_placeholder: "En alternativ sträng som används för att generera signatur"
@@ -4155,9 +4411,6 @@ sv:
           headers: "Sidhuvuden"
           payload: "Nyttolast"
           body: "Huvuddel"
-          go_list: "Gå till listan"
-          go_details: "Redigera webhook"
-          go_events: "Gå till händelser"
           ping: "Ping"
           status: "Statuskod"
           event_id: "ID"
@@ -4177,6 +4430,11 @@ sv:
         change_settings_short: "Inställningar"
         howto: "Hur installerar jag tillägg?"
         official: "Officiellt tillägg"
+        broken_route: "Det går inte att konfigurera länken till '%{name}'. Se till att annonsblockerare är inaktiverade och försök ladda om sidan."
+      navigation_menu:
+        sidebar: "Sidofält"
+        header_dropdown: "Rullgardinsmeny för rubrik"
+        legacy: "Äldre"
       backups:
         title: "Säkerhetskopior"
         menu:
@@ -4252,7 +4510,6 @@ sv:
         button_title: "Skicka inbjudningar"
       customize:
         title: "Anpassa"
-        long_title: "Webbplatsanpassningar"
         preview: "förhandsgranska"
         explain_preview: "Visa sidan med detta tema aktiverat"
         save: "Spara"
@@ -4363,9 +4620,10 @@ sv:
           import_web_advanced: "Avancerat..."
           import_file_tip: ".tar.gz-, .zip- eller .dcstyle.json-fil innehåller tema"
           is_private: "Temat är i en privat git-lagringsplats"
+          finish_install: "Slutför temainstallationen"
+          last_attempt: "Installationsprocessen slutfördes inte, det senaste försöket:"
           remote_branch: "Filialnamn (valfritt)"
           public_key: "Ge följande offentliga nyckel tillträde till lagringsplatsen:"
-          public_key_note: "När du har angett en giltig privat lagringsplats URL ovan genereras det en SSH-nyckel som visas här."
           install: "Installera"
           installed: "Installerad"
           install_popular: "Populära"
@@ -4373,6 +4631,8 @@ sv:
           install_git_repo: "Från en git-lagringsplats"
           install_create: "Skapa ny"
           duplicate_remote_theme: "Temakomponenten \"%{name}\" har redan installerats. Är du säker på att du vill installera ytterligare en kopia?"
+          force_install: "Temat kan inte installeras eftersom Git-arkivet är otillgängligt. Är du säker på att du vill fortsätta installera det?"
+          create_placeholder: "Skapa platshållare"
           about_theme: "Om"
           license: "Licens"
           version: "Version:"
@@ -4387,7 +4647,6 @@ sv:
             error: "Det här temat har automatiskt inaktiverats på grund av att det inte är kompatibelt med den här versionen av Discourse."
             minimum: "Kräver Discourse version %{version} eller högre."
             maximum: "Kräver Discourse version %{version} eller lägre."
-          component_of: "Komponent av:"
           update_to_latest: "Uppdatera till senaste"
           check_for_updates: "Sök efter uppdateringar"
           updating: "Uppdaterar..."
@@ -4395,6 +4654,7 @@ sv:
           has_overwritten_history: "Nuvarande temaversion finns inte längre eftersom Git-historiken har skrivits över av en tvingad push."
           add: "Lägg till"
           theme_settings: "Inställningar för tema"
+          overriden_settings_explanation: "Ersatta inställningar markeras med en färgad punkt. Tryck på återställningsknappen för att återställa till standardvärden."
           no_settings: "Detta tema har inga inställningar."
           theme_translations: "Översättningar för tema"
           empty: "Inga objekt"
@@ -4454,9 +4714,9 @@ sv:
           new_name: "Ny färgpalett"
           copy_name_prefix: "Kopia av"
           delete_confirm: "Radera den här färgpaletten?"
-          undo: "ångra"
+          undo: "Ångra"
           undo_title: "Återställ ändringarna för den här färgen till den senast sparade versionen."
-          revert: "återställ"
+          revert: "Återställ"
           revert_title: "Återställ den här färgen till Discourse-standardfärgspaletten."
           primary:
             name: "primär"
@@ -4859,7 +5119,7 @@ sv:
       user:
         suspend_failed: "Någonting gick fel under avstängningen av denna användare %{error}"
         unsuspend_failed: "Någonting gick fel under upplåsningen av denna användare %{error}"
-        suspend_duration: "Hur länge ska användaren vara avstängd?"
+        suspend_duration: "Stäng av användare tills:"
         suspend_reason_label: "Varför stänger du av användaren? Denna text <b>kommer att vara synlig för alla</b> på användarens profilsida, och kommer att visas för användaren när han/hon försöker logga in. Håll den kort."
         suspend_reason_hidden_label: "Varför stänger du av användaren? Denna text kommer att vara synlig för användaren när han/hon försöker logga in. Håll den kort."
         suspend_reason: "Anledning"
@@ -4883,7 +5143,9 @@ sv:
         silence_message: "E-postmeddelande"
         silence_message_placeholder: "(lämna tomt för att skicka standardmeddelande)"
         suspended_until: "(till %{until})"
+        suspend_forever: "Stäng av för alltid"
         cant_suspend: "Denna användare kan inte uteslutas."
+        cant_silence: "Denna användare kan inte tystas."
         delete_posts_failed: "Det uppstod ett problem vid radering av inläggen."
         post_edits: "Publicera redigeringar"
         view_edits: "Visa redigeringar"
@@ -4893,11 +5155,13 @@ sv:
         penalty_post_edit: "Ändra inlägget"
         penalty_post_none: "Gör ingenting"
         penalty_count: "Straffräkning"
-        penalty_history: "Straffhistorik"
+        penalty_history_MF: >-
+          Under de senaste sex månaderna har denna användare <b>stängts av { SUSPENDED, plural, one {# gång} other {# gånger} }</b> och <b>tystats { SILENCED, plural, one {# gång} other {# gånger} }</b>.
         clear_penalty_history:
           title: "Rensa straffhistorik"
           description: "användare med straff kan inte nå FN3"
-        delete_all_posts_confirm_MF: "Du håller på att radera {POSTS, plural, one {# inlägg} other {# inlägg}} och {TOPICS, plural, one {# ämne} other {# ämnen}}. Är du säker?"
+        delete_all_posts_confirm_MF: |
+          Du håller på att radera {POSTS, plural, one {# inlägg} other {# inlägg}} och {TOPICS, plural, one {# ämne} other {# ämnen}}. Är du säker?
         silence: "Tysta"
         unsilence: "Otysta"
         silenced: "Tystad?"
@@ -4906,6 +5170,7 @@ sv:
         suspended: "Avstängd?"
         staged: "Arrangerad?"
         show_admin_profile: "Administratör"
+        manage_user: "Hantera användare"
         show_public_profile: "Visa offentlig profil"
         impersonate: "Imitera"
         action_logs: "Åtgärdslogg"
@@ -5003,7 +5268,8 @@ sv:
         cant_delete_all_too_many_posts:
           one: "Kan inte radera alla inlägg, då användaren har fler än %{count} inlägg. (delete_all_posts_max)"
           other: "Kan inte radera alla inlägg, då användaren har fler än %{count} inlägg. (delete_all_posts_max)"
-        delete_confirm: "Det är generellt att föredra att anonymisera användare snarare än att ta bort dem för att undvika att ta bort innehåll från befintliga diskussioner. <br><br> Är du säker på att du vill ta bort den här användaren? Detta görs permanent!"
+        delete_confirm_title: "Är du SÄKER på att du vill radera den här användaren? Detta är permanent!"
+        delete_confirm: "I allmänhet är det att föredra att anonymisera användare istället för att radera dem, för att undvika att innehåll från befintliga diskussioner tas bort."
         delete_and_block: "Radera och <b>blockera</b> denna e-postadress och IP-adress"
         delete_dont_block: "Radera enbart"
         deleting_user: "Raderar användaren..."
@@ -5039,12 +5305,21 @@ sv:
         trust_level_2_users: "Användare med förtroendenivå 2"
         trust_level_3_requirements: "Krav för förtroendenivå 3"
         trust_level_locked_tip: "förtroendenivå är låst, systemet kommer ej att befordra eller degradera användare"
-        trust_level_unlocked_tip: "förtroendenivå är olåst, systemet kan komma att befordra eller degradera användare"
+        trust_level_unlocked_tip: "förtroendenivån är olåst, systemet kan befordra eller degradera användare"
         lock_trust_level: "Lås förtroendenivå"
         unlock_trust_level: "Lås upp förtroendenivå"
         silenced_count: "Tystad"
         suspended_count: "Avstängd"
         last_six_months: "Senaste 6 månaderna"
+        other_matches:
+          one: "Det finns <b>%{count} annan användare</b> med samma IP-adress. Granska och välj de misstänkta som ska bestraffas tillsammans med %{username}."
+          other: "Det finns <b>%{count} andra användare</b> med samma IP-adress. Granska och välj de misstänkta som ska bestraffas tillsammans med %{username}."
+        other_matches_list:
+          username: "Användarnamn"
+          trust_level: "Förtroendenivå"
+          read_time: "Lästid"
+          topics_entered: "Besökta ämnen"
+          posts: "Inlägg"
         tl3_requirements:
           title: "Krav för förtroendenivå 3"
           table_title:
@@ -5099,23 +5374,23 @@ sv:
         delete_confirm: "Är du säker på att du vill ta bort det här användarfältet?"
         options: "Alternativ"
         required:
-          title: "Krävs vid registrering?"
+          title: "Krävs vid registrering"
           enabled: "krävs"
           disabled: "krävs ej"
         editable:
-          title: "Redigerbar efter registrering?"
+          title: "Redigerbar efter registrering"
           enabled: "redigerbar"
           disabled: "ej redigerbar"
         show_on_profile:
-          title: "Visa på offentlig profil?"
+          title: "Visa på offentlig profil"
           enabled: "visas på profil"
           disabled: "visas ej på profil"
         show_on_user_card:
-          title: "Ska visas på användarkort?"
+          title: "Ska visas på användarkort"
           enabled: "visas på användarkort"
           disabled: "visas inte på användarkort"
         searchable:
-          title: "Sökbart?"
+          title: "Sökbart"
           enabled: "sökbart"
           disabled: "inte sökbart"
         field_types:
@@ -5134,7 +5409,6 @@ sv:
         recommended: "Vi rekommenderar att du anpassar följande texter:"
         show_overriden: "Visa bara överskrivna"
         locale: "Språk:"
-        fallback_locale_warning: "Du redigerar ett språk baserat på %{fallback}. Användare som väljer %{fallback} som sitt gränssnittsspråk kommer inte att se dina ändringar."
         more_than_50_results: "Det blev fler än 50 resultat. Förfina din sökning."
       settings:
         show_overriden: "Visa bara överskrivna"
@@ -5190,6 +5464,7 @@ sv:
           search: "Sök"
           groups: "Grupper"
           dashboard: "Översiktspanel"
+          navigation: "Navigering"
         secret_list:
           invalid_input: "Inmatningsfältet kan inte vara tomt eller innehålla vertikalstreck."
         default_categories:
@@ -5304,7 +5579,7 @@ sv:
       embedding:
         get_started: "Börja genom att lägga till värden, om du vill bädda in Discourse på en annan hemsida. "
         confirm_delete: "Är du säker på att du vill ta bort värden?"
-        sample: "Klistra in följande HTML-kod på din webbplats för att skapa och bädda in discourse-ämnen. Byt ut <b>REPLACE_ME</b> mot den vägledande URL-en för sidan som du bäddar in den i."
+        sample: "Klistra in följande HTML-kod på din webbplats för att skapa och bädda in Discourse-ämnen. Byt ut <b>REPLACE_ME</b> mot den vägledande URL-en för sidan som du bäddar in den i."
         title: "Inbäddning"
         host: "Tillåtna värdar"
         class_name: "Klassnamn"
@@ -5339,6 +5614,7 @@ sv:
         destination: "Mål"
         copy_to_clipboard: "Kopiera permalänk till urklipp"
         delete_confirm: Är du säker på att du vill ta bort den här permalänken?
+        no_permalinks: "Du har inga permalänkar än. Skapa en ny permalänk ovan för att börja se en lista över dina permalänkar här."
         form:
           label: "Ny:"
           add: "Lägg till"
@@ -5362,7 +5638,7 @@ sv:
       configure_more: "Konfigurera mera..."
       step-text: "Steg"
       step: "%{current} av %{total}"
-      upload: "Ladda upp"
+      upload: "Ladda upp fil"
       uploading: "Laddar upp..."
       upload_error: "Tyvärr uppstod det ett fel under uppladdandet av den filen. Försök igen."
       staff_count:

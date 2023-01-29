@@ -3,7 +3,6 @@
 require "migration/base_dropper"
 
 class DbHelper
-
   REMAP_SQL ||= <<~SQL
     SELECT table_name::text, column_name::text, character_maximum_length
       FROM information_schema.columns
@@ -19,24 +18,33 @@ class DbHelper
      WHERE trigger_name LIKE '%_readonly'
   SQL
 
-  TRUNCATABLE_COLUMNS ||= [
-    'topic_links.url'
-  ]
+  TRUNCATABLE_COLUMNS ||= ["topic_links.url"]
 
-  def self.remap(from, to, anchor_left: false, anchor_right: false, excluded_tables: [], verbose: false)
-    like = "#{anchor_left ? '' : "%"}#{from}#{anchor_right ? '' : "%"}"
+  def self.remap(
+    from,
+    to,
+    anchor_left: false,
+    anchor_right: false,
+    excluded_tables: [],
+    verbose: false
+  )
+    like = "#{anchor_left ? "" : "%"}#{from}#{anchor_right ? "" : "%"}"
     text_columns = find_text_columns(excluded_tables)
 
     text_columns.each do |table, columns|
-      set = columns.map do |column|
-        replace = "REPLACE(\"#{column[:name]}\", :from, :to)"
-        replace = truncate(replace, table, column)
-        "\"#{column[:name]}\" = #{replace}"
-      end.join(", ")
+      set =
+        columns
+          .map do |column|
+            replace = "REPLACE(\"#{column[:name]}\", :from, :to)"
+            replace = truncate(replace, table, column)
+            "\"#{column[:name]}\" = #{replace}"
+          end
+          .join(", ")
 
-      where = columns.map do |column|
-        "\"#{column[:name]}\" IS NOT NULL AND \"#{column[:name]}\" LIKE :like"
-      end.join(" OR ")
+      where =
+        columns
+          .map { |column| "\"#{column[:name]}\" IS NOT NULL AND \"#{column[:name]}\" LIKE :like" }
+          .join(" OR ")
 
       rows = DB.exec(<<~SQL, from: from, to: to, like: like)
         UPDATE \"#{table}\"
@@ -50,19 +58,32 @@ class DbHelper
     finish!
   end
 
-  def self.regexp_replace(pattern, replacement, flags: "gi", match: "~*", excluded_tables: [], verbose: false)
+  def self.regexp_replace(
+    pattern,
+    replacement,
+    flags: "gi",
+    match: "~*",
+    excluded_tables: [],
+    verbose: false
+  )
     text_columns = find_text_columns(excluded_tables)
 
     text_columns.each do |table, columns|
-      set = columns.map do |column|
-        replace = "REGEXP_REPLACE(\"#{column[:name]}\", :pattern, :replacement, :flags)"
-        replace = truncate(replace, table, column)
-        "\"#{column[:name]}\" = #{replace}"
-      end.join(", ")
+      set =
+        columns
+          .map do |column|
+            replace = "REGEXP_REPLACE(\"#{column[:name]}\", :pattern, :replacement, :flags)"
+            replace = truncate(replace, table, column)
+            "\"#{column[:name]}\" = #{replace}"
+          end
+          .join(", ")
 
-      where = columns.map do |column|
-        "\"#{column[:name]}\" IS NOT NULL AND \"#{column[:name]}\" #{match} :pattern"
-      end.join(" OR ")
+      where =
+        columns
+          .map do |column|
+            "\"#{column[:name]}\" IS NOT NULL AND \"#{column[:name]}\" #{match} :pattern"
+          end
+          .join(" OR ")
 
       rows = DB.exec(<<~SQL, pattern: pattern, replacement: replacement, flags: flags, match: match)
         UPDATE \"#{table}\"
@@ -78,23 +99,25 @@ class DbHelper
 
   def self.find(needle, anchor_left: false, anchor_right: false, excluded_tables: [])
     found = {}
-    like = "#{anchor_left ? '' : "%"}#{needle}#{anchor_right ? '' : "%"}"
+    like = "#{anchor_left ? "" : "%"}#{needle}#{anchor_right ? "" : "%"}"
 
-    DB.query(REMAP_SQL).each do |r|
-      next if excluded_tables.include?(r.table_name)
+    DB
+      .query(REMAP_SQL)
+      .each do |r|
+        next if excluded_tables.include?(r.table_name)
 
-      rows = DB.query(<<~SQL, like: like)
+        rows = DB.query(<<~SQL, like: like)
         SELECT \"#{r.column_name}\"
           FROM \"#{r.table_name}\"
-         WHERE \""#{r.column_name}"\" LIKE :like
+         WHERE \"#{r.column_name}\" LIKE :like
       SQL
 
-      if rows.size > 0
-        found["#{r.table_name}.#{r.column_name}"] = rows.map do |row|
-          row.public_send(r.column_name)
+        if rows.size > 0
+          found["#{r.table_name}.#{r.column_name}"] = rows.map do |row|
+            row.public_send(r.column_name)
+          end
         end
       end
-    end
 
     found
   end
@@ -112,16 +135,21 @@ class DbHelper
     triggers = DB.query(TRIGGERS_SQL).map(&:trigger_name).to_set
     text_columns = Hash.new { |h, k| h[k] = [] }
 
-    DB.query(REMAP_SQL).each do |r|
-      next if excluded_tables.include?(r.table_name) ||
-        triggers.include?(Migration::BaseDropper.readonly_trigger_name(r.table_name, r.column_name)) ||
-        triggers.include?(Migration::BaseDropper.readonly_trigger_name(r.table_name))
+    DB
+      .query(REMAP_SQL)
+      .each do |r|
+        if excluded_tables.include?(r.table_name) ||
+             triggers.include?(
+               Migration::BaseDropper.readonly_trigger_name(r.table_name, r.column_name),
+             ) || triggers.include?(Migration::BaseDropper.readonly_trigger_name(r.table_name))
+          next
+        end
 
-      text_columns[r.table_name] << {
-        name: r.column_name,
-        max_length: r.character_maximum_length
-      }
-    end
+        text_columns[r.table_name] << {
+          name: r.column_name,
+          max_length: r.character_maximum_length,
+        }
+      end
 
     text_columns
   end

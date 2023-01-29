@@ -283,4 +283,12 @@ acceptance("Second Factor Auth Page", function (needs) {
     );
     assert.equal(callbackCount, 1, "callback request has been performed");
   });
+
+  test("sidebar is disabled on 2FA route", async function (assert) {
+    this.siteSettings.navigation_menu = "sidebar";
+
+    await visit("/session/2fa?nonce=ok110111");
+
+    assert.notOk(exists(".sidebar-container"), "does not display the sidebar");
+  });
 });

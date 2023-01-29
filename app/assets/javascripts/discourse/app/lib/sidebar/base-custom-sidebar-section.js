@@ -14,18 +14,6 @@ export default class BaseCustomSidebarSection {
   }
 
   /**
-   * @returns {string} The Ember route which the section header link should link to.
-   */
-  get route() {}
-
-  /**
-   * @returns {string} Title for the header
-   */
-  get title() {
-    this._notImplemented();
-  }
-
-  /**
    * @returns {string} Text for the header
    */
   get text() {
@@ -46,6 +34,13 @@ export default class BaseCustomSidebarSection {
    * @returns {BaseCustomSidebarSectionLink[]} Links for section
    */
   get links() {}
+
+  /**
+   * @returns {Boolean} Whether or not to show the entire section including heading.
+   */
+  get displaySection() {
+    return true;
+  }
 
   _notImplemented() {
     throw "not implemented";

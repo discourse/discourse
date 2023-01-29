@@ -26,7 +26,7 @@ export default {
         draft_key: "topic_280",
         sequence: 0,
         draft_username: "eviltrout",
-        avatar_template: "/letter_avatar_proxy/v2/letter/p/a87d85/{size}.png",
+        avatar_template: "/user_avatar/localhost/eviltrout/{size}/2_1.png",
         data: '{"reply":"The last reply to this topic was 6 months ago. Your reply will bump the topic to the top of its list.","action":"reply","categoryId":8,"archetypeId":"regular","metaData":null,"composerTime":139499,"typingTime":6100}',
         topic_id: 280,
         username: "zogstrip",
