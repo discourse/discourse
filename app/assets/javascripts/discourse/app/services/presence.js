@@ -553,8 +553,8 @@ export default class PresenceService extends Service {
       this._queuedEvents.unshift(...queue);
       if (e.jqXHR?.status === 429) {
         // Rate limited
-        this._presenceDebounceMs =
-          e.jqXHR.responseJSON.extras.wait_seconds * 1000;
+        const waitSeconds = e.jqXHR.responseJSON?.extras?.wait_seconds
+        this._presenceDebounceMs = (waitSeconds || 10) * 1000;
       } else {
         throw e;
       }
