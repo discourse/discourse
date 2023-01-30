@@ -31,7 +31,7 @@ RSpec.describe(Chat::Service::UpdateChannelStatus) do
     subject(:result) { described_class.call(guardian: guardian, channel: channel, status: :open) }
 
     it "fails" do
-      expect(result).to be_a_failure
+      expect(result).to fail_guardian_check(:can_change_channel_status?)
     end
   end
 

@@ -30,11 +30,27 @@ end
 
 RSpec::Matchers.define :fail_contract_with_error do |error|
   match do |context|
-    context.failure? === true && context[:"contract.failed"] &&
-      context.contract.errors.full_messages.include?(error)
+    context.failure? && context[:"contract.failed"] &&
+      context.contract&.errors&.full_messages&.include?(error)
   end
 
   failure_message do |context|
+    if !context.contract&.errors
+      if context[:"guardian.failed"]
+        return "Expected `#{error}` got guardian failure for check `#{context[:"guardian.failed"]}`"
+      end
+
+      return "Expected `#{error}` got undefined behaviour with no error message."
+    end
+
     "Expected `#{error}` got `#{context.contract.errors.full_messages.join(",")}`"
   end
+end
+
+RSpec::Matchers.define :fail_guardian_check do |error|
+  match do |context|
+    context.failure? && context[:"guardian.failed"] && context[:"guardian.failed"] == error
+  end
+
+  failure_message { |context| "Expected `#{error}` got `#{context[:"guardian.failed"]}`" }
 end
