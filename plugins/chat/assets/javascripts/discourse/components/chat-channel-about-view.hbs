@@ -22,7 +22,7 @@
       {{#if (chat-guardian "can-edit-chat-channel")}}
         <div class="chat-form__label-actions">
           <DButton
-            @class="edit-name-btn btn-flat"
+            @class="edit-name-slug-btn btn-flat"
             @label="chat.channel_settings.edit"
             @action={{if this.onEditChatChannelName this.onEditChatChannelName}}
           />
@@ -32,6 +32,9 @@
     <div class="chat-form__control">
       <div class="channel-info-about-view__name">
         {{replace-emoji this.channel.escapedTitle}}
+      </div>
+      <div class="channel-info-about-view__slug">
+        {{this.channel.slug}}
       </div>
     </div>
   </div>
