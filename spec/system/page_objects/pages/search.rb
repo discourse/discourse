@@ -30,11 +30,11 @@ module PageObjects
       end
 
       def has_search_result?
-        within(".search-results") { page.has_selector?(".fps-result", visible: true) }
+        page.has_selector?(".search-results .fps-result")
       end
 
       def has_warning_message?
-        within(".search-results") { page.has_selector?(".warning", visible: true) }
+        page.has_selector?(".search-results .warning")
       end
 
       def is_search_page
