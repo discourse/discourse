@@ -249,7 +249,7 @@ export default Mixin.create({
         });
       }
 
-      $(this.element).toggleClass("docked-card", this.isDocked);
+      this.element.classList.toggle("docked-card", this.isDocked);
 
       // After the card is shown, focus on the first link
       //
