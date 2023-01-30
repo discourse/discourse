@@ -75,7 +75,7 @@
             <% else %>
               <meta itemprop='dateModified' content='<%= post.created_at.to_formatted_s(:iso8601) %>'>
             <% end %>
-          <span itemprop='position'>#<%= post.post_number %></span>
+          <span itemprop='position'><%= post.post_number %></span>
           </span>
         </div>
         <div class='post' itemprop='articleBody'>
@@ -103,10 +103,7 @@
               <% @topic_view.link_counts[post.id].each_with_index do |link, i| %>
                 <% if link[:reflection] && link[:title].present? %>
                   <div itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
-                    <a href="<%=link[:url]%>" itemscope itemtype='http://schema.org/DiscussionForumPosting' itemprop='item'>
-                      <meta itemprop='url' content='<%=link[:url]%>'>
-                      <span itemprop='name'><%=link[:title]%></span>
-                    </a>
+                    <a itemprop='url' href="<%=link[:url]%>"><%=link[:title]%></a>
                     <meta itemprop='position' content='<%= i+1 %>'>
                   </div>
                 <% end %>

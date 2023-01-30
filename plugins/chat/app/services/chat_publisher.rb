@@ -205,6 +205,7 @@ module ChatPublisher
         chat_channel_id: chat_channel.id,
         name: chat_channel.title(acting_user),
         description: chat_channel.description,
+        slug: chat_channel.slug,
       },
       permissions(chat_channel),
     )

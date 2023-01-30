@@ -244,10 +244,12 @@ en:
           members: Members
           settings: Settings
 
-      channel_edit_name_modal:
-        title: Edit name
+      channel_edit_name_slug_modal:
+        title: Edit channel
         input_placeholder: Add a name
-        description: Give a short descriptive name to your channel
+        slug_description: A channel slug is used in the URL instead of the channel name
+        name: Channel name
+        slug: Channel slug (optional)
 
       channel_edit_description_modal:
         title: Edit description

@@ -11,7 +11,7 @@ RSpec.describe TagsController do
   before { SiteSetting.tagging_enabled = true }
 
   describe "#index" do
-    fab!(:test_tag) { Fabricate(:tag, name: "test") }
+    fab!(:test_tag) { Fabricate(:tag, name: "test", description: "some description") }
     fab!(:topic_tag) do
       Fabricate(:tag, name: "topic-test", public_topic_count: 1, staff_topic_count: 1)
     end
@@ -162,6 +162,97 @@ RSpec.describe TagsController do
     context "with tags_listed_by_group disabled" do
       before { SiteSetting.tags_listed_by_group = false }
       include_examples "retrieves the right tags"
+
+      it "returns the right tags and categories tags for admin user" do
+        category.update!(tags: [test_tag])
+
+        sign_in(admin)
+
+        get "/tags.json"
+
+        expect(response.status).to eq(200)
+
+        tags = response.parsed_body["tags"]
+
+        expect(tags.length).to eq(2)
+
+        expect(tags[0]["name"]).to eq(test_tag.name)
+        expect(tags[0]["text"]).to eq(test_tag.name)
+        expect(tags[0]["description"]).to eq(test_tag.description)
+        expect(tags[0]["count"]).to eq(0)
+        expect(tags[0]["pm_count"]).to eq(0)
+        expect(tags[0]["target_tag"]).to eq(nil)
+
+        expect(tags[1]["name"]).to eq(topic_tag.name)
+
+        categories = response.parsed_body["extras"]["categories"]
+
+        expect(categories[0]["id"]).to eq(category.id)
+        expect(categories[0]["tags"].length).to eq(1)
+        expect(categories[0]["tags"][0]["name"]).to eq(test_tag.name)
+        expect(categories[0]["tags"][0]["text"]).to eq(test_tag.name)
+        expect(categories[0]["tags"][0]["description"]).to eq(test_tag.description)
+        expect(categories[0]["tags"][0]["count"]).to eq(0)
+        expect(categories[0]["tags"][0]["pm_count"]).to eq(0)
+        expect(categories[0]["tags"][0]["target_tag"]).to eq(nil)
+      end
+
+      it "does not result in N+1 queries when there are multiple categories configured with tags for an admin user" do
+        category.update!(tags: [test_tag])
+
+        sign_in(admin)
+
+        # warm up
+        get "/tags.json"
+        expect(response.status).to eq(200)
+
+        tags = response.parsed_body["tags"]
+
+        expect(tags.length).to eq(2)
+        expect(tags.map { |tag| tag["name"] }).to eq([test_tag.name, topic_tag.name])
+
+        initial_sql_queries_count =
+          track_sql_queries do
+            get "/tags.json"
+
+            expect(response.status).to eq(200)
+
+            tags = response.parsed_body["tags"]
+
+            expect(tags.length).to eq(2)
+            expect(tags.map { |tag| tag["name"] }).to eq([test_tag.name, topic_tag.name])
+
+            categories = response.parsed_body["extras"]["categories"]
+
+            expect(categories.length).to eq(1)
+            expect(categories[0]["id"]).to eq(category.id)
+            expect(categories[0]["tags"].map { |tag| tag["name"] }).to eq([test_tag.name])
+          end.length
+
+        category2 = Fabricate(:category, tags: [topic_tag])
+
+        new_sql_queries_count =
+          track_sql_queries do
+            get "/tags.json"
+
+            expect(response.status).to eq(200)
+
+            tags = response.parsed_body["tags"]
+
+            expect(tags.length).to eq(2)
+            expect(tags.map { |tag| tag["name"] }).to eq([test_tag.name, topic_tag.name])
+
+            categories = response.parsed_body["extras"]["categories"]
+
+            expect(categories.length).to eq(2)
+            expect(categories[0]["id"]).to eq(category.id)
+            expect(categories[0]["tags"].map { |tag| tag["name"] }).to eq([test_tag.name])
+            expect(categories[1]["id"]).to eq(category2.id)
+            expect(categories[1]["tags"].map { |tag| tag["name"] }).to eq([topic_tag.name])
+          end.length
+
+        expect(new_sql_queries_count).to eq(initial_sql_queries_count)
+      end
     end
 
     context "with hidden tags" do
