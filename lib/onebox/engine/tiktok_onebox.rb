@@ -23,7 +23,8 @@ module Onebox
       end
 
       def to_html
-        height = oembed_data.thumbnail_width >= oembed_data.thumbnail_height ? 727 : 742
+        video_height = oembed_data.thumbnail_height < 1024 ? 998 : oembed_data.thumbnail_height
+        height = (323.0 / 576) * video_height
 
         <<-HTML
           <iframe
@@ -34,11 +35,12 @@ module Onebox
             seamless="seamless"
             scrolling="no"
             style="
-              min-width: 332px;
+              min-width: 323px;
               height: #{height}px;
+              border: 4px solid #fff;
               border-top: 3px solid #fff;
-              border-radius: 9px;
               background-color: #fff;
+              border-radius: 9px;
               "
           ></iframe>
         HTML
