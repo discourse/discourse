@@ -46,6 +46,9 @@ jobs:
             target: core # Handled by core_frontend_tests job (below)
 
     steps:
+      - name: Set working directory owner
+        run: chown root:root .
+
       - uses: actions/checkout@v3
         with:
           fetch-depth: 1
