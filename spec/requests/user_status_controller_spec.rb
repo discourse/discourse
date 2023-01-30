@@ -162,7 +162,7 @@ RSpec.describe UserStatusController do
             put "/user-status.json", params: { description: status, emoji: emoji, ends_at: ends_at }
           end
 
-        expect(messages.size).to eq(1)
+        expect(messages.map(&:channel)).to contain_exactly("/user-status")
         expect(messages[0].channel).to eq("/user-status")
         expect(messages[0].group_ids).to eq([Group::AUTO_GROUPS[:trust_level_0]])
 
