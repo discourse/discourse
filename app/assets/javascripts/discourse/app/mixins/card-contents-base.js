@@ -2,13 +2,12 @@ import { alias, match } from "@ember/object/computed";
 import { schedule, throttle } from "@ember/runloop";
 import DiscourseURL from "discourse/lib/url";
 import Mixin from "@ember/object/mixin";
+import afterTransition from "discourse/lib/after-transition";
 import { escapeExpression } from "discourse/lib/utilities";
 import { inject as service } from "@ember/service";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { bind } from "discourse-common/utils/decorators";
 import discourseLater from "discourse-common/lib/later";
-import { createPopper } from "@popperjs/core";
-import { headerOffset } from "discourse/lib/offset-calculator";
 
 const DEFAULT_SELECTOR = "#main-outlet";
 
@@ -28,7 +27,6 @@ export default Mixin.create({
   elementId: null, //click detection added for data-{elementId}
   triggeringLinkClass: null, //the <a> classname where this card should appear
   _showCallback: null, //username, $target - load up data for when show is called, should call this._positionCard($target) when it's done.
-  _popperReference: null,
 
   postStream: alias("topic.postStream"),
   viewingTopic: match("router.currentRouteName", /^topic\./),
@@ -38,6 +36,7 @@ export default Mixin.create({
   loading: null,
   cardTarget: null,
   post: null,
+  isFixed: false,
   isDocked: false,
 
   _show(username, target, event) {
@@ -59,10 +58,6 @@ export default Mixin.create({
 
     const currentUsername = this.username;
     if (username === currentUsername || this.loading === username) {
-      // prevents opacity flasing when clicking on same trigger
-      if (username !== currentUsername) {
-        this.element.dataset.popperPlacement = "";
-      }
       this._positionCard($(target));
       return;
     }
@@ -105,7 +100,7 @@ export default Mixin.create({
 
   didInsertElement() {
     this._super(...arguments);
-
+    afterTransition($(this.element), this._hide);
     const id = this.elementId;
     const triggeringLinkClass = this.triggeringLinkClass;
     const previewClickEvent = `click.discourse-preview-${id}-${triggeringLinkClass}`;
@@ -173,7 +168,7 @@ export default Mixin.create({
   },
 
   _topicHeaderTrigger(username, target) {
-    this.setProperties({ isDocked: true });
+    this.setProperties({ isFixed: true, isDocked: true });
     return this._show(username, target);
   },
 
@@ -193,81 +188,110 @@ export default Mixin.create({
   },
 
   _previewClick($target) {
+    this.set("isFixed", true);
     return this._show($target.text().replace(/^@/, ""), $target);
   },
 
   _positionCard(target) {
+    const rtl = $("html").css("direction") === "rtl";
+    if (!target) {
+      return;
+    }
+    const width = $(this.element).width();
+    const height = 175;
+    const isFixed = this.isFixed;
+    const isDocked = this.isDocked;
+
+    let verticalAdjustments = 0;
+
     schedule("afterRender", () => {
-      if (!target) {
-        return;
-      }
+      if (target) {
+        if (!this.site.mobileView) {
+          let position = target.offset();
+          if (target.parents(".d-header").length > 0) {
+            position.top = target.position().top;
+          }
 
-      if (this.site.desktopView) {
-        const avatarOverflowSize = 44;
-        this._popperReference = createPopper(target[0], this.element, {
-          placement: "right",
-          modifiers: [
-            {
-              name: "preventOverflow",
-              options: {
-                padding: {
-                  top: headerOffset() + avatarOverflowSize,
-                  right: 10,
-                  bottom: 10,
-                  left: 10,
-                },
-              },
-            },
-            { name: "eventListeners", enabled: false },
-            { name: "offset", options: { offset: [10, 10] } },
-          ],
-        });
-      } else {
-        document.querySelector(".card-cloak")?.classList.remove("hidden");
-        this._popperReference = createPopper(target[0], this.element, {
-          modifiers: [
-            { name: "eventListeners", enabled: false },
-            {
-              name: "computeStyles",
-              enabled: true,
-              fn({ state }) {
-                // mimics our modal top of the screen positioning
-                state.styles.popper = {
-                  ...state.styles.popper,
-                  position: "fixed",
-                  left: `${
-                    (window.innerWidth - state.rects.popper.width) / 2
-                  }px`,
-                  top: "10%",
-                  transform: "translateY(-10%)",
-                };
+          if (position) {
+            position.bottom = "unset";
 
-                return state;
-              },
-            },
-          ],
-        });
-      }
+            if (rtl) {
+              // The site direction is rtl
+              position.right = $(window).width() - position.left + 10;
+              position.left = "auto";
+              let overage = $(window).width() - 50 - (position.right + width);
+              if (overage < 0) {
+                position.right += overage;
+                position.top += target.height() + 48;
+                verticalAdjustments += target.height() + 48;
+              }
+            } else {
+              // The site direction is ltr
+              position.left += target.width() + 10;
 
-      this.element.classList.toggle("docked-card", this.isDocked);
+              let overage = $(window).width() - 50 - (position.left + width);
+              if (overage < 0) {
+                position.left += overage;
+                position.top += target.height() + 48;
+                verticalAdjustments += target.height() + 48;
+              }
+            }
 
-      // After the card is shown, focus on the first link
-      //
-      // note: we DO NOT use afterRender here cause _positionCard may
-      // run afterwards, if we allowed this to happen the usercard
-      // may be offscreen and we may scroll all the way to it on focus
-      if (event.pointerId === -1) {
-        discourseLater(() => {
-          this.element.querySelector("a")?.focus();
-        }, 350);
+            // It looks better to have the card aligned slightly higher
+            position.top -= 24;
+
+            if (isFixed) {
+              position.top -= $("html").scrollTop();
+              //if content is fixed and will be cut off on the bottom, display it above...
+              if (
+                position.top + height + verticalAdjustments >
+                $(window).height() - 50
+              ) {
+                position.bottom =
+                  $(window).height() -
+                  (target.offset().top - $("html").scrollTop());
+                if (verticalAdjustments > 0) {
+                  position.bottom += 48;
+                }
+                position.top = "unset";
+              }
+            }
+
+            const avatarOverflowSize = 44;
+            if (isDocked && position.top < avatarOverflowSize) {
+              position.top = avatarOverflowSize;
+            }
+
+            $(this.element).css(position);
+          }
+        }
+
+        if (this.site.mobileView) {
+          $(".card-cloak").removeClass("hidden");
+          let position = target.offset();
+          position.top = "10%"; // match modal behaviour
+          position.left = 0;
+          $(this.element).css(position);
+        }
+        $(this.element).toggleClass("docked-card", isDocked);
+
+        // After the card is shown, focus on the first link
+        //
+        // note: we DO NOT use afterRender here cause _positionCard may
+        // run afterwards, if we allowed this to happen the usercard
+        // may be offscreen and we may scroll all the way to it on focus
+        if (event.pointerId === -1) {
+          discourseLater(() => {
+            const firstLink = this.element.querySelector("a");
+            firstLink && firstLink.focus();
+          }, 350);
+        }
       }
     });
   },
 
   @bind
   _hide() {
-    this.element.dataset.popperPlacement = "";
-
     if (!this.visible) {
       $(this.element).css({ left: -9999, top: -9999 });
       if (this.site.mobileView) {
@@ -283,6 +307,7 @@ export default Mixin.create({
       loading: null,
       cardTarget: null,
       post: null,
+      isFixed: false,
       isDocked: false,
     });
 
