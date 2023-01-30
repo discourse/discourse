@@ -306,7 +306,7 @@ class UploadsController < ApplicationController
 
   private
 
-  # We can pre-emptively check size for attachments, but not for images
+  # We can preemptively check size for attachments, but not for images
   # as they may be further reduced in size by UploadCreator (at this point
   # they may have already been reduced in size by preprocessors)
   def file_size_too_big?(file_name, file_size)

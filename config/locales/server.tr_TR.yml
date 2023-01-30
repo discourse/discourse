@@ -1422,6 +1422,8 @@ tr_TR:
     title: "Bu sitenin adı. Anonim kullanıcılar dahil tüm ziyaretçiler tarafından görülebilir."
     site_description: "Bu siteyi bir cümleyle tanımlayın. Anonim kullanıcılar dahil tüm ziyaretçiler tarafından görülebilir."
     short_site_description: "Birkaç kelimelik kısa açıklama. Anonim kullanıcılar dahil tüm ziyaretçiler tarafından görülebilir."
+    contact_email: "Bu siteden sorumlu kilit kişinin e-posta adresi. Kritik bildirimler için kullanılır ve ayrıca acil konular için <a href='%{base_path}/about' target='_blank'>/about</a> adresinde gösterilir. Herkese açık sitelerdeki anonim kullanıcılara görünür."
+    contact_url: "Bu site için iletişim URL'si. Mevcut olduğunda, e-posta adresini <a href='%{base_path}/about' target='_blank'>/about</a> olarak değiştirir ve genel sitelerdeki anonim kullanıcılar tarafından görünür olur."
     crawl_images: "Doğru genişlik ve yükseklik boyutlarını eklemek için uzak URL'lerden görüntüleri alın."
     download_remote_images_to_local: "Uzak (hotlink'li) görüntüleri indirerek yerel görüntülere dönüştürün; Bu işlem, görüntüler gelecekte uzak siteden kaldırılsa bile içeriği korur."
     download_remote_images_threshold: "Uzak görüntüleri yerel olarak indirmek için gereken minimum disk alanı (yüzde olarak)"
@@ -1576,10 +1578,7 @@ tr_TR:
     max_favorite_badges: "Kullanıcının seçebileceği maksimum rozet sayısı"
     whispers_allowed_groups: "Belirli grupların üyeleri için konular dahilinde özel iletişime izin verin."
     allow_index_in_robots_txt: "Robots.txt dosyasında bu sitenin web arama motorları tarafından dizine eklenmesine izin verildiğini belirtin. İstisnai durumlarda kalıcı olarak <a href='%{base_path}/admin/customize/robots'>robots.txt'i geçersiz kılabilirsiniz</a>."
-    blocked_email_domains: "Kullanıcıların hesap açmasına izin verilmeyen e-posta alan adlarının boru ile sınırlandırılmış bir listesi. Örnek: mailinator.com|trashmail.net"
-    allowed_email_domains: "Kullanıcıların hesap açması GEREKEN e-posta alan adlarının boru ile sınırlandırılmış bir listesi. UYARI: Listelenenler dışında e-posta alan adlarına sahip kullanıcılara izin verilmez!"
     normalize_emails: "Normalleştirilmiş e-postanın benzersiz olup olmadığını kontrol edin. Normalleştirilmiş e-posta, kullanıcı adındaki tüm noktaları ve + ve @ sembolleri arasındaki her şeyi kaldırır."
-    auto_approve_email_domains: "Bu alan adları listesinden e-posta adresleri olan kullanıcılar otomatik olarak onaylanır."
     hide_email_address_taken: "Kayıt sırasında veya şifremi unuttum akışı sırasında kullanıcıları belirli bir e-posta adresiyle bir hesabın var olduğu konusunda bilgilendirmeyin. \"Şifremi unuttum\" talepleri için tam e-postayı gerekli kılın."
     log_out_strict: "Çıkış yapılırken, kullanıcının tüm cihazlardaki TÜM oturumlarını kapatın"
     version_checks: "Sürüm güncellemeleri için Discourse Hub'ına ping atın ve yeni sürüm mesajlarını <a href='%{base_path}/admin' target='_blank'>/admin</a> panosunda gösterin"
@@ -3396,6 +3395,7 @@ tr_TR:
 
         %{respond_instructions}
     user_watching_category_or_tag:
+      title: "Kullanıcı İzleme Kategorisi veya Etiketi"
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}

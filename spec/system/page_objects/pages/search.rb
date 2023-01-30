@@ -8,6 +8,11 @@ module PageObjects
         self
       end
 
+      def clear_search_input
+        find("input.full-page-search").set("")
+        self
+      end
+
       def heading_text
         find("h1.search-page-heading").text
       end
@@ -26,6 +31,10 @@ module PageObjects
 
       def has_search_result?
         within(".search-results") { page.has_selector?(".fps-result", visible: true) }
+      end
+
+      def has_warning_message?
+        within(".search-results") { page.has_selector?(".warning", visible: true) }
       end
 
       def is_search_page

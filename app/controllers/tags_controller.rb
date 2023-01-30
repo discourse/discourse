@@ -5,11 +5,12 @@ class TagsController < ::ApplicationController
   include TopicQueryParams
 
   before_action :ensure_tags_enabled
-  before_action :ensure_visible, only: %i[show info]
 
   def self.show_methods
     Discourse.anonymous_filters.map { |f| :"show_#{f}" }
   end
+
+  before_action :ensure_visible, only: [:show, :info, *show_methods]
 
   requires_login except: [:index, :show, :tag_feed, :search, :info, *show_methods]
 
@@ -62,20 +63,22 @@ class TagsController < ::ApplicationController
       unrestricted_tags = DiscourseTagging.filter_visible(tags.where(target_tag_id: nil), guardian)
 
       categories =
-        Category
-          .where("id IN (SELECT category_id FROM category_tags)")
-          .where("id IN (?)", guardian.allowed_category_ids)
-          .includes(:tags)
+        Category.where(
+          "id IN (SELECT category_id FROM category_tags WHERE category_id IN (?))",
+          guardian.allowed_category_ids,
+        ).includes(:none_synonym_tags)
 
       category_tag_counts =
         categories
           .map do |c|
             category_tags =
               self.class.tag_counts_json(
-                DiscourseTagging.filter_visible(c.tags.where(target_tag_id: nil), guardian),
+                DiscourseTagging.filter_visible(c.none_synonym_tags, guardian),
                 guardian,
               )
+
             next if category_tags.empty?
+
             { id: c.id, tags: category_tags }
           end
           .compact

@@ -38,6 +38,13 @@ class Chat::Api::ChatChannelsController < Chat::Api
 
     begin
       ChatChannel.transaction do
+        channel_from_params.update!(
+          slug:
+            "#{Time.now.strftime("%Y%m%d-%H%M")}-#{channel_from_params.slug}-deleted".truncate(
+              SiteSetting.max_topic_title_length,
+              omission: "",
+            ),
+        )
         channel_from_params.trash!(current_user)
         StaffActionLogger.new(current_user).log_custom(
           "chat_channel_delete",

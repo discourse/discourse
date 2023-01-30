@@ -17,7 +17,10 @@ module("Discourse Chat | Component | chat-channel-row", function (hooks) {
 
     assert
       .dom(".chat-channel-row")
-      .hasAttribute("href", `/chat/channel/${this.categoryChatChannel.id}/-`);
+      .hasAttribute(
+        "href",
+        `/chat/c/${this.categoryChatChannel.slugifiedTitle}/${this.categoryChatChannel.id}`
+      );
   });
 
   test("allows tabbing", async function (assert) {

@@ -24,10 +24,7 @@
           <DButton
             @class="edit-name-slug-btn btn-flat"
             @label="chat.channel_settings.edit"
-            @action={{if
-              this.onEditChatChannelName
-              this.onEditChatChannelName
-            }}
+            @action={{if this.onEditChatChannelName this.onEditChatChannelName}}
           />
         </div>
       {{/if}}

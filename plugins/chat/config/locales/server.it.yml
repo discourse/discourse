@@ -23,7 +23,9 @@ it:
     default_emoji_reactions: "Reazioni emoji predefinite per i messaggi di chat. Aggiungi fino a 5 emoji per una reazione rapida."
     direct_message_enabled_groups: "Consenti agli utenti all'interno di questi gruppi di creare chat personali da utente a utente. Nota: lo staff può sempre creare chat personali e gli utenti potranno rispondere alle chat personali avviate da utenti che dispongono dell'autorizzazione per crearle."
     chat_message_flag_allowed_groups: "Gli utenti di questi gruppi possono contrassegnare i messaggi di chat."
+    max_mentions_per_chat_message: "Numero massimo di notifiche @name che un utente può utilizzare in un messaggio di chat."
     chat_max_direct_message_users: "Gli utenti non possono aggiungere più utenti di quelli indicati da questa opzione durante la creazione di un nuovo messaggio diretto. Impostare l'opzione a 0 per consentire solo i messaggi a se stessi. Questa impostazione non si applica allo staff."
+    chat_allow_archiving_channels: "Consenti allo staff di archiviare i messaggi in un argomento alla chiusura di un canale."
     errors:
       chat_default_channel: "Il canale di chat predefinito deve essere un canale pubblico."
       direct_message_enabled_groups_invalid: "Devi specificare almeno un gruppo per questa impostazione. Se non vuoi che nessuno al di fuori dello staff possa inviare messaggi diretti, scegli il gruppo dello staff."
@@ -51,6 +53,7 @@ it:
       duplicate_message: "Hai pubblicato un messaggio identico troppo di recente."
       delete_channel_failed: "Eliminazione del canale non riuscita, riprova."
       minimum_length_not_met: "Il messaggio è troppo breve, deve contenere almeno %{minimum} caratteri."
+      message_too_long: "Il messaggio è troppo lungo. I messaggi devono contenere al massimo %{maximum} caratteri."
       max_reactions_limit_reached: "Non sono consentite nuove reazioni su questo messaggio."
       message_move_invalid_channel: "I canali di origine e di destinazione devono essere canali pubblici."
       message_move_no_messages_found: "Nessun messaggio è stato trovato con gli ID messaggio forniti."
@@ -166,7 +169,16 @@ it:
       from: "%{site_name}"
       subject:
         direct_message_from_1: "[%{email_prefix}] Nuovo messaggio da %{username}"
+        direct_message_from_2: "[%{email_prefix}] Nuovi messaggi da %{username1} e %{username2}"
+        direct_message_from_more:
+          one: "[%{email_prefix}] Nuovo messaggio da %{username} e %{count} altro"
+          other: "[%{email_prefix}] Nuovo messaggio da %{username} e altri %{count}"
         chat_channel_1: "[%{email_prefix}] Nuovo messaggio in %{channel}"
+        chat_channel_2: "[%{email_prefix}] Nuovo messaggio in %{channel1} e %{channel2}"
+        chat_channel_more:
+          one: "[%{email_prefix}] Nuovo messaggio in %{channel} e %{count} altro"
+          other: "[%{email_prefix}] Nuovo messaggio in %{channel} e altri %{count}"
+        chat_channel_and_direct_message: "[%{email_prefix}] Nuovo messaggio in %{channel} e da %{username}"
       unsubscribe: "Questo riepilogo della chat viene inviato da %{site_link} quando non ci sei. Modifica %{email_preferences_link} o %{unsubscribe_link} per annullare l'iscrizione."
       unsubscribe_no_link: "Questo riepilogo della chat viene inviato da %{site_link} quando non ci sei. Modifica %{email_preferences_link}."
       view_messages:

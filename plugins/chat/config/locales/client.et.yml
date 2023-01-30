@@ -48,6 +48,7 @@ et:
         yesterday: Eile
       about_view:
         title: Pealkiri
+        name: Nimi
         description: Kirjeldus
       channel_info:
         back_to_channel: "Tagasi"

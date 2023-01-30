@@ -197,6 +197,7 @@ nl:
         associated_topic: Gelinkt topic
         associated_category: Gelinkte categorie
         title: Titel
+        name: Naam
         description: Beschrijving
       channel_info:
         back_to_all_channels: "Alle kanalen"
@@ -205,10 +206,6 @@ nl:
           about: Over
           members: Leden
           settings: Instellingen
-      channel_edit_title_modal:
-        title: Titel bewerken
-        input_placeholder: Voeg een titel toe
-        description: Geef een korte beschrijvende titel aan je kanaal
       channel_edit_description_modal:
         title: Beschrijving bewerken
         input_placeholder: Voeg een beschrijving toe
@@ -272,8 +269,6 @@ nl:
         always: "Voor alle activiteit"
       settings:
         auto_join_users_label: "Gebruikers automatisch toevoegen"
-        auto_join_users_info: "Controleer elk uur welke gebruikers de afgelopen 3 maanden actief zijn geweest en voeg ze toe aan dit kanaal als ze toegang hebben tot de categorie %{category}."
-        enable_auto_join_users: "Automatisch alle recent actieve gebruikers toevoegen"
         auto_join_users_warning: "Elke gebruiker die geen lid is van dit kanaal en toegang heeft tot de categorie %{category} wordt lid. Weet je het zeker?"
         desktop_notification_level: "Bureaubladmeldingen"
         follow: "Deelnemen"

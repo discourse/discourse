@@ -57,7 +57,7 @@ export default class ChatNotificationManager extends Service {
 
   @bind
   _pageChanged(path) {
-    this.set("_inChat", path.startsWith("/chat/channel/"));
+    this.set("_inChat", path.startsWith("/chat/c/"));
     if (this._inChat) {
       this._chatPresenceChannel.enter({ onlyWhileActive: false });
       this._corePresenceChannel.leave();

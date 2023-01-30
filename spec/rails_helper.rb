@@ -252,6 +252,17 @@ RSpec.configure do |config|
       capybara_config.server_port = 31_337 + ENV["TEST_ENV_NUMBER"].to_i
     end
 
+    module IgnoreUnicornCapturedErrors
+      def raise_server_error!
+        super
+      rescue EOFError, Errno::ECONNRESET, Errno::EPIPE, Errno::ENOTCONN => e
+        # Ignore these exceptions - caused by client. Handled by unicorn in dev/prod
+        # https://github.com/defunkt/unicorn/blob/d947cb91cf/lib/unicorn/http_server.rb#L570-L573
+      end
+    end
+
+    Capybara::Session.class_eval { prepend IgnoreUnicornCapturedErrors }
+
     # The valid values for SELENIUM_BROWSER_LOG_LEVEL are:
     #
     # OFF
