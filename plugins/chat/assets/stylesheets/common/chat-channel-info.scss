@@ -122,12 +122,18 @@ input.channel-members-view__search-input {
   }
 }
 
-// Channel info edit name modal
-.chat-channel-edit-name-slug-modal__name-input,
-.chat-channel-edit-name-slug-modal__slug-input {
-  display: flex;
-  margin: 0;
-  width: 100%;
+// Channel info edit name and slug modal
+.chat-channel-edit-name-slug-modal {
+  .modal-inner-container {
+    width: 300px;
+  }
+
+  &__name-input,
+  &__slug-input {
+    display: flex;
+    margin: 0;
+    width: 100%;
+  }
 }
 
 .chat-channel-edit-name-slug-modal__description {
