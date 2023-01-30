@@ -2192,6 +2192,9 @@ backups:
     client: true
 
 search:
+  enable_search_prefix_matching:
+    default: true
+    hidden: true
   use_pg_headlines_for_excerpt:
     default: false
     hidden: true
