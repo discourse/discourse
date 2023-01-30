@@ -146,11 +146,7 @@ let debouncedSearch = function (
 };
 
 function lowerCaseIncludes(string, term) {
-  return (
-    string &&
-    term &&
-    string.toLowerCase().includes(term.trim().split(/\s/)[0].toLowerCase())
-  );
+  return string && term && string.toLowerCase().includes(term.toLowerCase());
 }
 
 function organizeResults(r, options) {
@@ -159,6 +155,10 @@ function organizeResults(r, options) {
   }
 
   const exclude = options.exclude || [];
+
+  // Sometimes the term passed contains spaces, but the search is limited
+  // to the first word only.
+  const term = options.term?.trim()?.split(/\s/, 1)?.[0];
 
   const users = [],
     emails = [],
@@ -170,8 +170,8 @@ function organizeResults(r, options) {
       if (resultsLength < options.limit && !exclude.includes(user.username)) {
         user.isUser = true;
         user.isMetadataMatch =
-          !lowerCaseIncludes(user.username, options.term) &&
-          !lowerCaseIncludes(user.name, options.term);
+          !lowerCaseIncludes(user.username, term) &&
+          !lowerCaseIncludes(user.name, term);
         users.push(user);
         resultsLength += 1;
       }
