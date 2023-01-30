@@ -223,7 +223,7 @@ export default Mixin.create({
           ],
         });
       } else {
-        $(".card-cloak").removeClass("hidden");
+        document.querySelector(".card-cloak")?.classList.remove("hidden");
         this._popperReference = createPopper(target[0], this.element, {
           modifiers: [
             { name: "eventListeners", enabled: false },
