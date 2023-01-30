@@ -19,8 +19,8 @@ jobs:
   build:
     # if: "!(github.event_name == 'push' && github.repository == 'discourse/discourse-private-mirror')"
     # name: ${{ matrix.target }} ${{ matrix.build_type }} ${{ matrix.ruby }}
-    runs-on: ubuntu-latest
-    # container: discourse/discourse_test:slim
+    runs-on: ubuntu22/20230118.1
+    container: discourse/discourse_test:slim
     timeout-minutes: 20
 
     env:
