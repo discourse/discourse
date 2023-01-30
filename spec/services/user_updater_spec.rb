@@ -551,7 +551,7 @@ RSpec.describe UserUpdater do
     context "when skip_new_user_tips is edited" do
       it "updates seen_popups too" do
         messages =
-          MessageBus.track_publish("/user-tips") do
+          MessageBus.track_publish("/user-tips/#{user.id}") do
             UserUpdater.new(Discourse.system_user, user).update(skip_new_user_tips: true)
           end
 
@@ -573,7 +573,7 @@ RSpec.describe UserUpdater do
     context "when seen_popups is edited" do
       it "publishes a message" do
         messages =
-          MessageBus.track_publish("/user-tips") do
+          MessageBus.track_publish("/user-tips/#{user.id}") do
             UserUpdater.new(Discourse.system_user, user).update(seen_popups: [1])
           end
 
