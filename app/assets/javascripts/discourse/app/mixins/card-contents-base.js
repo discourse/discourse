@@ -9,6 +9,7 @@ import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { bind } from "discourse-common/utils/decorators";
 import discourseLater from "discourse-common/lib/later";
 import { createPopper } from "@popperjs/core";
+import { headerOffset } from "discourse/lib/offset-calculator";
 
 const DEFAULT_SELECTOR = "#main-outlet";
 
@@ -201,10 +202,21 @@ export default Mixin.create({
       }
 
       if (this.site.desktopView) {
+        const avatarOverflowSize = 44;
         this._popperReference = createPopper(target[0], this.element, {
           placement: "right",
           modifiers: [
-            { name: "preventOverflow", options: { padding: 10 } },
+            {
+              name: "preventOverflow",
+              options: {
+                padding: {
+                  top: headerOffset() + avatarOverflowSize,
+                  right: 10,
+                  bottom: 10,
+                  left: 10,
+                },
+              },
+            },
             { name: "eventListeners", enabled: false },
             { name: "offset", options: { offset: [10, 10] } },
           ],
