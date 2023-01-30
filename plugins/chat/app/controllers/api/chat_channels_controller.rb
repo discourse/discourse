@@ -106,22 +106,22 @@ class Chat::Api::ChatChannelsController < Chat::Api
       auto_join_limiter(channel_from_params).performed!
     end
 
-    result =
+    wrap_service(
       Chat::Service::UpdateChannel.call(
         guardian: guardian,
         channel: channel_from_params,
         **params_to_edit,
-      )
+      ),
+    ) do |success, result, controller_response|
+      return render controller_response if !success
 
-    handle_service_result(
-      result,
-      serializer_object: result.channel,
-      serializer: ChatChannelSerializer,
-      serializer_data: {
+      render_serialized(
+        result.channel,
+        ChatChannelSerializer,
         root: "channel",
         membership: result.channel.membership_for(current_user),
-      },
-    )
+      )
+    end
   end
 
   private

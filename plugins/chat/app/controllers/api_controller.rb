@@ -28,4 +28,20 @@ class Chat::Api < Chat::ChatBaseController
 
     { json: failed_json }
   end
+
+  def wrap_service(result)
+    return yield(true, result, nil) if result.success?
+
+    raise Discourse::InvalidAccess if result[:"guardian.failed"]
+
+    if result[:"contract.failed"]
+      yield(
+        false,
+        result,
+        { json: failed_json.merge(errors: contract.errors.full_messages), status: 400 }
+      )
+    end
+
+    yield(false, result, { json: failed_json })
+  end
 end

@@ -2,17 +2,16 @@
 
 class Chat::Api::ChatChannelsStatusController < Chat::Api::ChatChannelsController
   def update
-    result =
+    wrap_service(
       Chat::Service::UpdateChannelStatus.call(
         guardian: guardian,
         channel: channel_from_params,
         status: params.require(:status),
-      )
+      ),
+    ) do |success, result, controller_response|
+      return render controller_response if !success
 
-    if result.success?
-      render_serialized(channel_from_params, ChatChannelSerializer, root: "channel")
-    else
-      # FIXME: implement failure handling
+      render_serialized(result.channel, ChatChannelSerializer, root: "channel")
     end
   end
 end
