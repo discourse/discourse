@@ -37,12 +37,15 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
   color: var(--primary);
   background: var(--secondary) center center;
   background-size: cover;
-  transition: opacity 0.2s;
-  opacity: 0;
   outline: 2px solid transparent;
 
-  &.show {
+  &[data-popper-placement] {
+    opacity: 0;
+  }
+
+  &[data-popper-placement]:not([data-popper-placement=""]) {
     opacity: 1;
+    transition: opacity 0.5s;
   }
 
   .card-content {

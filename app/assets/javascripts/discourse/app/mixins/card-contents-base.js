@@ -2,7 +2,6 @@ import { alias, match } from "@ember/object/computed";
 import { schedule, throttle } from "@ember/runloop";
 import DiscourseURL from "discourse/lib/url";
 import Mixin from "@ember/object/mixin";
-import afterTransition from "discourse/lib/after-transition";
 import { escapeExpression } from "discourse/lib/utilities";
 import { inject as service } from "@ember/service";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
@@ -60,6 +59,10 @@ export default Mixin.create({
 
     const currentUsername = this.username;
     if (username === currentUsername || this.loading === username) {
+      // prevents opacity flasing when clicking on same trigger
+      if (username !== currentUsername) {
+        this.element.dataset.popperPlacement = "";
+      }
       this._positionCard($(target));
       return;
     }
@@ -102,7 +105,7 @@ export default Mixin.create({
 
   didInsertElement() {
     this._super(...arguments);
-    afterTransition($(this.element), this._hide);
+
     const id = this.elementId;
     const triggeringLinkClass = this.triggeringLinkClass;
     const previewClickEvent = `click.discourse-preview-${id}-${triggeringLinkClass}`;
@@ -194,8 +197,6 @@ export default Mixin.create({
   },
 
   _positionCard(target) {
-    this._popperReference?.destroy();
-
     schedule("afterRender", () => {
       if (!target) {
         return;
@@ -265,6 +266,8 @@ export default Mixin.create({
 
   @bind
   _hide() {
+    this.element.dataset.popperPlacement = "";
+
     if (!this.visible) {
       $(this.element).css({ left: -9999, top: -9999 });
       if (this.site.mobileView) {
