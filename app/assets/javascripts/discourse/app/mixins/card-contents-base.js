@@ -84,7 +84,7 @@ export default Mixin.create({
     this.appEvents.trigger("user-card:show", { username });
     this._showCallback(username, $(target)).then((user) => {
       this.appEvents.trigger("user-card:after-show", { user });
-      this._positionCard($(target));
+      this._positionCard($(target), event);
     });
 
     // We bind scrolling on mobile after cards are shown to hide them if user scrolls
@@ -188,7 +188,7 @@ export default Mixin.create({
     return this._show($target.text().replace(/^@/, ""), $target);
   },
 
-  _positionCard(target) {
+  _positionCard(target, event) {
     this._popperReference?.destroy();
 
     schedule("afterRender", () => {
@@ -250,7 +250,7 @@ export default Mixin.create({
       // note: we DO NOT use afterRender here cause _positionCard may
       // run afterwards, if we allowed this to happen the usercard
       // may be offscreen and we may scroll all the way to it on focus
-      if (event.pointerId === -1) {
+      if (event?.pointerId === -1) {
         discourseLater(() => {
           this.element.querySelector("a")?.focus();
         }, 350);
