@@ -75,10 +75,9 @@ export default Component.extend(Scrolling, {
 
   @action
   screenExcerptForExternalLink(event) {
-    if (event.target && event.target.tagName === "A") {
-      let link = event.target;
-      if (shouldOpenInNewTab(link.href)) {
-        openLinkInNewTab(link);
+    if (event?.target?.tagName === "A") {
+      if (shouldOpenInNewTab(event.target.href)) {
+        openLinkInNewTab(event, event.target);
       }
     }
   },

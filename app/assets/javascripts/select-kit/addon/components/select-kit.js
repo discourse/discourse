@@ -188,6 +188,14 @@ export default Component.extend(
       this.handleDeprecations();
     },
 
+    didInsertElement() {
+      this._super(...arguments);
+
+      if (this.selectKit.options.expandedOnInsert) {
+        this._open();
+      }
+    },
+
     click(event) {
       event.preventDefault();
       event.stopPropagation();
@@ -283,6 +291,7 @@ export default Component.extend(
       closeOnChange: true,
       limitMatches: null,
       placement: isDocumentRTL() ? "bottom-end" : "bottom-start",
+      verticalOffset: 3,
       filterComponent: "select-kit/select-kit-filter",
       selectedNameComponent: "selected-name",
       selectedChoiceComponent: "selected-choice",
@@ -295,6 +304,7 @@ export default Component.extend(
       desktopPlacementStrategy: null,
       hiddenValues: null,
       disabled: false,
+      expandedOnInsert: false,
     },
 
     autoFilterable: computed("content.[]", "selectKit.filter", function () {
@@ -898,7 +908,7 @@ export default Component.extend(
             {
               name: "offset",
               options: {
-                offset: [0, 3],
+                offset: [0, this.selectKit.options.verticalOffset],
               },
             },
             {
@@ -1072,7 +1082,11 @@ export default Component.extend(
         discourseSetup &&
         discourseSetup.getAttribute("data-environment") === "development"
       ) {
-        deprecated(text, { since: "v2.4.0", dropFrom: "2.9.0.beta1" });
+        deprecated(text, {
+          since: "v2.4.0",
+          dropFrom: "2.9.0.beta1",
+          id: "discourse.select-kit",
+        });
       }
     },
 

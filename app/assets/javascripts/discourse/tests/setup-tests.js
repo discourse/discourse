@@ -28,10 +28,8 @@ import QUnit from "qunit";
 import { ScrollingDOMMethods } from "discourse/mixins/scrolling";
 import Session from "discourse/models/session";
 import User from "discourse/models/user";
-import Site from "discourse/models/site";
 import bootbox from "bootbox";
 import { buildResolver } from "discourse-common/resolver";
-import { createHelperContext } from "discourse-common/lib/helpers";
 import deprecated from "discourse-common/lib/deprecated";
 import { flushMap } from "discourse/services/store";
 import sinon from "sinon";
@@ -40,6 +38,7 @@ import { clearState as clearPresenceState } from "discourse/tests/helpers/presen
 import { addModuleExcludeMatcher } from "ember-cli-test-loader/test-support/index";
 import SiteSettingService from "discourse/services/site-settings";
 import jQuery from "jquery";
+import { setupDeprecationCounter } from "discourse/tests/helpers/deprecation-counter";
 
 const Plugin = $.fn.modal;
 const Modal = Plugin.Constructor;
@@ -199,6 +198,8 @@ function writeSummaryLine(message) {
 export default function setupTests(config) {
   disableCloaking();
 
+  setupDeprecationCounter(QUnit);
+
   QUnit.config.hidepassed = true;
 
   sinon.config = {
@@ -228,6 +229,7 @@ export default function setupTests(config) {
         {
           since: "2.6.0.beta.4",
           dropFrom: "2.6.0",
+          id: "discourse.qunit.global-exists",
         }
       );
       return exists;
@@ -301,19 +303,8 @@ export default function setupTests(config) {
     }
     User.resetCurrent();
 
-    createHelperContext({
-      get siteSettings() {
-        return app.__container__.lookup("service:site-settings");
-      },
-      capabilities: {},
-      get site() {
-        return app.__container__.lookup("service:site") || Site.current();
-      },
-      registry: app.__registry__,
-    });
-
     PreloadStore.reset();
-    resetSite(settings);
+    resetSite();
 
     sinon.stub(ScrollingDOMMethods, "screenNotFull");
     sinon.stub(ScrollingDOMMethods, "bindOnScroll");

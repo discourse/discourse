@@ -1,0 +1,75 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+te:
+  js:
+    chat:
+      cancel: "రద్దుచేయి"
+      channel_settings:
+        edit: "సవరణ"
+        add: "కలుపు"
+      close: "మూసివేయి"
+      delete: "తొలగించు"
+      muted: "నిశ్శబ్దం"
+      joined: "చేరినారు"
+      flag: "కేతనం"
+      reply: "జవాబు"
+      edit: "సవరణ"
+      rebake_message: "హెచే టీ యం యల్ పునర్నిర్మించు"
+      bookmark_message: "పేజీక"
+      save: "భద్రపరుచు"
+      exit: "వెనుకకు"
+      browse:
+        back: "వెనుకకు"
+        filter_all: అన్ని
+      chat_message_separator:
+        today: ఈరోజు
+        yesterday: నిన్న
+      about_view:
+        title: శీర్షిక
+        name: పేరు
+        description: వివరణ
+      channel_info:
+        back_to_channel: "వెనుకకు"
+        tabs:
+          about: గురించి
+          members: సభ్యులు
+          settings: అమరికలు
+      create_channel:
+        type: "రకం"
+        types:
+          category: "వర్గం"
+          topic: "విషయం"
+      composer:
+        italic_text: "వాలు పాఠ్యం"
+        bold_text: "బొద్దు పాఠ్యం"
+      settings:
+        followed: "చేరినారు"
+        notifications: "ప్రకటనలు"
+        save: "భద్రపరుచు"
+        admin_title: "అధికారి"
+      incoming_webhooks:
+        back: "వెనుకకు"
+        description: "వివరణ"
+        delete: "తొలగించు"
+        emoji: "ఇమోజి"
+        name: "పేరు"
+        save: "భద్రపరుచు"
+        edit: "సవరణ"
+        system: "వ్వవస్థ"
+        url: "యూఆర్ యల్"
+        username: "సభ్యనామం"
+      selection:
+        cancel: "రద్దుచేయి"
+        copy: "నకలు"
+        new_topic:
+          title: "కొత్త విషయానికి జరుపు"
+        existing_topic:
+          title: "ఇప్పటికే ఉన్న విషయానికి జరుపు"
+      emoji_picker:
+        flags: "కేతనాలు"
+      draft_channel_screen:
+        cancel: "రద్దుచేయి"

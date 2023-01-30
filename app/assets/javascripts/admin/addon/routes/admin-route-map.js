@@ -123,7 +123,7 @@ export default function () {
         { path: "/web_hooks", resetNamespace: true },
         function () {
           this.route("show", { path: "/:web_hook_id" });
-          this.route("showEvents", { path: "/:web_hook_id/events" });
+          this.route("edit", { path: "/:web_hook_id/edit" });
         }
       );
     });

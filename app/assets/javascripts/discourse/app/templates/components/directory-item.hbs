@@ -10,5 +10,7 @@
 {{/each}}
 
 {{#if this.showTimeRead}}
-  <td><span class="time-read">{{format-duration this.item.time_read}}</span></td>
+  <td><span class="time-read">{{format-duration
+        this.item.time_read
+      }}</span></td>
 {{/if}}

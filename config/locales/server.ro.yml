@@ -452,11 +452,6 @@ ro:
         few: "cu aproape %{count} ani în urmă"
         other: "cu aproape %{count} de ani în urmă"
   password_reset:
-    no_token: "Ne pare rău, dar link-ul de schimbare a parolei este prea vechi. Selectează butonul Înregistrare și folosește 'Mi-am uitat parola' pentru a obține un nou link."
-    choose_new: "Alege o parolă nouă"
-    choose: "Alege o parolă"
-    update: "Actualizează parola"
-    save: "Setează parola"
     title: "Resetează parola"
     success: "Ți-ai schimbat cu succes parola și acum ești autentificat."
     success_unapproved: "Ți-ai schimbat cu succes parola."
@@ -517,7 +512,6 @@ ro:
       long_form: "Marchează ca spam"
     inappropriate:
       title: "Necorespunzător"
-      description: 'Acest subiect conține conținut pe care o persoană rezonabilă l-ar considera ofensator, abuziv sau o încălcare a <a href="%{base_path}/guidelines">ghidurilor comunității noastre</a>.'
       long_form: "marcat cu marcaj de avertizare ca inadecvat"
     notify_moderators:
       title: "Alt motiv"
@@ -610,6 +604,11 @@ ro:
         post: Postare
         editor: Editor
         edit_reason: Motiv
+    consolidated_api_requests:
+      xaxis:
+        api: "API"
+        user_api: "API Utilizator"
+      yaxis: "Zi"
     dau_by_mau:
       xaxis: "Zi"
     daily_engaged_users:
@@ -826,16 +825,12 @@ ro:
     allow_duplicate_topic_titles: "Permite subiecte cu titluri duplicat sau identice."
     unique_posts_mins: "Câte minute până ce un utilizator poate posta din nou o postare cu același conținut"
     educate_until_posts: "Când utilizatorul începe să scrie primele (n) postări, arată panelul de instruire în spațiul pentru scris postarea."
-    title: "Titlul scurt al site-ului, folosit în tag-ul title."
-    site_description: "Descrie acest site într-o singură frază, așa cum se folosește în tagul meta-descriere."
     crawl_images: "Recuperează imaginile din URL-uri la distanță pentru a insera dimensiunile corecte de înălțime și lățime."
     download_remote_images_threshold: "Spațiul minim necesar pentru descărcarea imaginilor la distanță pe local (în procente)"
     disabled_image_download_domains: "Imaginile la distanță nu vor mai fi descărcate de pe aceste domenii. Listă delimitată de simbolul | (pipe)."
     editing_grace_period: "Pentru (n) secunde după postare, editarea nu va crea o versiune nouă în istoricul postării."
     edit_history_visible_to_public: "Permite tuturor să vadă versiunile precedente ale unei postări editate. Când e dezactivat, ele pot fi văzute doar de membrii echipei."
     delete_removed_posts_after: "Postările șterse de către autor vor fi automat șterse după (n) de ore. Dacă este setat la 0, postările vor fi șterse imediat."
-    max_image_width: "Maximul lățimii unui thumbnail într-o postare"
-    max_image_height: "Maximul înălțimii unui thumbnail într-o postare"
     fixed_category_positions: "Dacă e bifat, veți putea aranja categoriile într-o ordine fixă. Dacă e nebifat, categoriile sunt listate în ordinea activității."
     fixed_category_positions_on_create: "Dacă este bifat, ordonarea categoriilor va fi menținută în dialogul de creare a subiectelor (presupune fixed_category_positions)."
     add_rel_nofollow_to_user_content: 'Adaugă atributul rel nofollow la toate conținuturile transmise de către utilizator, cu excepția link-urilor interne (includiv domeniile părinte). Dacă schimbi această setare, postările trebuie refăcute cu: "rake posts:rebake"'
@@ -882,9 +877,6 @@ ro:
     prioritize_username_in_ux: "Afișează întâi nume utilizator pe pagina utilizator, pe cardul utilizator și în postări (dacă e dezactivat, se afișează întâi numele)"
     email_token_valid_hours: "Tokenul uitat parolă / activează cont sunt valabili pentru (n) ore."
     enable_badges: "Activează sistemul de ecusoane"
-    enable_whispers: "Permite membrilor echipei să comunice privat în cadrul subiectelor."
-    blocked_email_domains: "O listă de domenii de email separate cu simbolul | (pipe) ale căror utilizatori nu au permisiunea să înregistreze conturi. Exemplu: mailinator.com|trashmail.net"
-    allowed_email_domains: "O listă de domenii de email (separate cu simbolul | (pipe)) cu care utilizatorii TREBUIE să se înregistreze. ATENȚIE: utilizatorii cu alte domenii de email decât cele listate nu vor avea permisiunea să se înregistreze."
     log_out_strict: "La ieșire, închide TOATE sesiunile pentru utilizator, pe toate dispozitivele."
     new_version_emails: "Trimite un email la adresa contact_email când o nouă versiune de Discourse este disponibilă."
     invite_expiry_days: "Cât timp sunt valabile cheile de invitație ale utilizatorilor, în zile"
@@ -897,7 +889,6 @@ ro:
     enable_signup_cta: "Arată o notificare către utilizatorii anonimi care revin prin care să le ceri să se înscrie pentru a avea un cont pe site."
     google_oauth2_client_id: "ID client al aplicației tale Google."
     google_oauth2_client_secret: "Secret client al aplicației tale Google."
-    maximum_backups: "Maximul de fișiere backup păstrate. Fișierele backup vechi sunt șterse automat"
     automatic_backups_enabled: "Rulează automat operațiuni de backup după cum este definit la frecvența de backup"
     s3_backup_bucket: "Containerul (bucket) de la distanță care ține backupurile. ATENȚIE: Asgură-te că e un container privat."
     backup_time_of_day: "Ora în format UTC la care să înceapă operațiunea de backup."
@@ -1281,7 +1272,6 @@ ro:
     subject_template: "Setează parolă pentru contul tău %{site_name}"
   flag_reasons:
     off_topic: "Postarea ta a fost marcată cu marcaj de avertizare **în afara subiectului**: comunitatea simte că nu se potrivește subiectului, așa cum e el momentan definit de titlu și de prima postare."
-    inappropriate: "Postarea ta a fost marcată cu marcaj de avertizare **inadecvat**: comunitatea simte că este ofensatoare, abuzivă sau în contradicție cu [ghidul comunității noastre](%{base_path}/guidelines)."
     spam: "Postarea ta a fost marcată cu marcaj de avertizare **spam**: comunitatea crede că reprezintă o reclamă, ceva ce este de natura excesiv de promoțională, în loc să fie o postare utilă sau relevantă pentru subiect după cum se presupune."
     notify_moderators: "Postarea ta a fost marcată cu marcaj de avertizare **în atenția moderatorului**: comunitatea simte că există ceva legat de această postare care necesită intervenția manuală a unui membrul al echipei."
   flags_dispositions:
@@ -1565,6 +1555,16 @@ ro:
 
         %{respond_instructions}
     user_posted:
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_watching_category_or_tag:
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -2118,10 +2118,6 @@ ro:
         fields:
           login_required:
             placeholder: "Privat"
-          must_approve_users:
-            placeholder: "Necesită aprobare"
-      ready:
-        title: "Discourse-ul tău e gata!"
       styling:
         fields:
           styling_preview:
@@ -2138,20 +2134,10 @@ ro:
                 label: "Categorii și subiecte recente"
               categories_and_top_topics:
                 label: "Categorii și discuții în top"
-      branding:
-        fields:
-          logo:
-            label: "Logo-ul principal"
-          large_icon:
-            label: "Iconiță mare"
       corporate:
         fields:
           contact_url:
-            label: "Pagină web"
             placeholder: "https://www.example.com/contact-us"
-            description: "Pagina web generică cu date de contact pentru tine sau organizația ta. Se va afișa pe <a href='%{base_path}/about' target='_blank'>pagina despre noi</a>. "
-          site_contact:
-            label: "Mesaje automate"
       invites:
         title: "Invită membrii echipei"
         description: "Aproape ai încheiat ! Hai să invităm câțiva prieteni să te ajute <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>cu demararea comunității </a> prin discuții și răspunsuri interesante."

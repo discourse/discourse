@@ -9,12 +9,19 @@
           {{icon-or-image this.model}}
           <span class="badge-display-name">{{this.model.name}}</span>
         {{else}}
-          <span class="badge-placeholder">{{i18n "admin.badges.mass_award.no_badge_selected"}}</span>
+          <span class="badge-placeholder">{{i18n
+              "admin.badges.mass_award.no_badge_selected"
+            }}</span>
         {{/if}}
       </div>
       <div class="control-group">
         <h4>{{i18n "admin.badges.mass_award.upload_csv"}}</h4>
-        <input type="file" id="massAwardCSVUpload" accept=".csv" onchange={{action "updateFileSelected"}}>
+        <input
+          type="file"
+          id="massAwardCSVUpload"
+          accept=".csv"
+          onchange={{action "updateFileSelected"}}
+        />
       </div>
       <div class="control-group">
         <label>
@@ -23,12 +30,23 @@
         </label>
         {{#if this.model.multiple_grant}}
           <label class="grant-existing-holders">
-            <Input @type="checkbox" @checked={{this.grantExistingHolders}} class="grant-existing-holders-checkbox" />
+            <Input
+              @type="checkbox"
+              @checked={{this.grantExistingHolders}}
+              class="grant-existing-holders-checkbox"
+            />
             {{i18n "admin.badges.mass_award.grant_existing_holders"}}
           </label>
         {{/if}}
       </div>
-      <DButton @class="btn-primary" @action={{action "massAward"}} @type="submit" @disabled={{this.massAwardButtonDisabled}} @icon="certificate" @label="admin.badges.mass_award.perform" />
+      <DButton
+        @class="btn-primary"
+        @action={{action "massAward"}}
+        @type="submit"
+        @disabled={{this.massAwardButtonDisabled}}
+        @icon="certificate"
+        @label="admin.badges.mass_award.perform"
+      />
       <LinkTo @route="adminBadges.index" class="btn btn-normal">
         {{d-icon "times"}}
         <span>{{i18n "cancel"}}</span>
@@ -48,10 +66,16 @@
       </p>
       {{#if this.unmatchedEntries.length}}
         <p>
-          {{d-icon "exclamation-triangle" class="bulk-award-status-icon failure"}}
+          {{d-icon
+            "exclamation-triangle"
+            class="bulk-award-status-icon failure"
+          }}
           <span>
             {{#if this.unmatchedEntriesTruncated}}
-              {{i18n "admin.badges.mass_award.csv_has_unmatched_users_truncated_list" count=this.unmatchedEntriesCount}}
+              {{i18n
+                "admin.badges.mass_award.csv_has_unmatched_users_truncated_list"
+                count=this.unmatchedEntriesCount
+              }}
             {{else}}
               {{i18n "admin.badges.mass_award.csv_has_unmatched_users"}}
             {{/if}}
@@ -65,6 +89,8 @@
       {{/if}}
     {{/if}}
   {{else}}
-    <span class="badge-required">{{i18n "admin.badges.mass_award.no_badge_selected"}}</span>
+    <span class="badge-required">{{i18n
+        "admin.badges.mass_award.no_badge_selected"
+      }}</span>
   {{/if}}
 </DSection>

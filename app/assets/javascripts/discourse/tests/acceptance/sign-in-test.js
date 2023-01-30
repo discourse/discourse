@@ -23,6 +23,17 @@ acceptance("Signing In", function () {
       "enables the login button"
     );
 
+    // Test password unmasking
+    assert.ok(
+      exists("#login-account-password[type='password']"),
+      "password is masked by default"
+    );
+    await click(".toggle-password-mask");
+    assert.ok(
+      exists("#login-account-password[type='text']"),
+      "password is unmasked after toggle is clicked"
+    );
+
     // Use the correct password
     await fillIn("#login-account-password", "correct");
     await click(".modal-footer .btn-primary");

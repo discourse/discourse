@@ -10,7 +10,6 @@ import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { test } from "qunit";
 import topicFixtures from "discourse/tests/fixtures/topic";
 import { cloneJSON } from "discourse-common/lib/object";
-import User from "discourse/models/user";
 
 async function openBookmarkModal(postNumber = 1) {
   if (exists(`#post_${postNumber} button.show-more-actions`)) {
@@ -169,9 +168,6 @@ acceptance("Bookmarking", function (needs) {
     await selectKit(".bookmark-option-selector").expand();
     await selectKit(".bookmark-option-selector").selectRowByValue(1);
     await click("#save-bookmark");
-
-    assert.equal(User.current().bookmark_auto_delete_preference, "1");
-
     await openEditBookmarkModal();
 
     assert.ok(
@@ -243,7 +239,7 @@ acceptance("Bookmarking", function (needs) {
 
   test("Editing a bookmark", async function (assert) {
     await visit("/t/internationalization-localization/280");
-    let now = moment.tz(loggedInUser().timezone);
+    let now = moment.tz(loggedInUser().user_option.timezone);
     let tomorrow = now.add(1, "day").format("YYYY-MM-DD");
     await openBookmarkModal();
     await fillIn("input#bookmark-name", "Test name");
@@ -269,7 +265,7 @@ acceptance("Bookmarking", function (needs) {
 
   test("Using a post date for the reminder date", async function (assert) {
     await visit("/t/internationalization-localization/280");
-    let postDate = moment.tz("2036-01-15", loggedInUser().timezone);
+    let postDate = moment.tz("2036-01-15", loggedInUser().user_option.timezone);
     let postDateFormatted = postDate.format("YYYY-MM-DD");
     await openBookmarkModal();
     await fillIn("input#bookmark-name", "Test name");
@@ -336,7 +332,6 @@ acceptance("Bookmarking", function (needs) {
 
     // open the modal and accept deleting
     await click("#topic-footer-button-bookmark");
-    // pauseTest();
     await click(yesButton);
 
     assert.ok(

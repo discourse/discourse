@@ -5,9 +5,9 @@ RSpec.describe UserEmail do
 
   describe "Validations" do
     it "allows only one primary email" do
-      expect {
-        Fabricate(:secondary_email, user: user, primary: true)
-      }.to raise_error(ActiveRecord::RecordInvalid)
+      expect { Fabricate(:secondary_email, user: user, primary: true) }.to raise_error(
+        ActiveRecord::RecordInvalid,
+      )
     end
 
     it "allows multiple secondary emails" do
@@ -24,8 +24,8 @@ RSpec.describe UserEmail do
     end
   end
 
-  describe 'normalized_email' do
-    it 'checks if normalized email is unique' do
+  describe "normalized_email" do
+    it "checks if normalized email is unique" do
       SiteSetting.normalize_emails = true
 
       user_email = user.user_emails.create(email: "a.b+c@example.com", primary: false)
@@ -37,7 +37,7 @@ RSpec.describe UserEmail do
       expect(user_email).not_to be_valid
     end
 
-    it 'does not check uniqueness if email normalization is not enabled' do
+    it "does not check uniqueness if email normalization is not enabled" do
       SiteSetting.normalize_emails = false
 
       user_email = user.user_emails.create(email: "a.b+c@example.com", primary: false)

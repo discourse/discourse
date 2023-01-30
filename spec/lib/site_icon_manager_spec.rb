@@ -5,12 +5,12 @@ class GlobalPathInstance
 end
 
 RSpec.describe SiteIconManager do
-  before do
-    SiteIconManager.enable
-  end
+  before { SiteIconManager.enable }
 
   let(:upload) do
-    UploadCreator.new(file_from_fixtures("smallest.png"), 'logo.png').create_for(Discourse.system_user.id)
+    UploadCreator.new(file_from_fixtures("smallest.png"), "logo.png").create_for(
+      Discourse.system_user.id,
+    )
   end
 
   it "works correctly" do
@@ -43,5 +43,4 @@ RSpec.describe SiteIconManager do
     expect(SiteSetting.manifest_icon).to eq(nil)
     expect(SiteSetting.site_manifest_icon_url).to eq(GlobalPathInstance.full_cdn_url(manifest.url))
   end
-
 end

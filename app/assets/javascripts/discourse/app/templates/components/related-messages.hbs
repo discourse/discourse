@@ -1,10 +1,19 @@
-<div id="related-messages" class="suggested-topics" role="complementary" aria-labelledby="related-messages-title">
+<div
+  id="related-messages"
+  class="suggested-topics"
+  role="complementary"
+  aria-labelledby="related-messages-title"
+>
   <h3 class="suggested-topics-title" id="related-messages-title">
     {{i18n "related_messages.title"}}
   </h3>
 
   <div class="topics">
-    <BasicTopicList @hideCategory="true" @showPosters="true" @topics={{this.topic.relatedMessages}} />
+    <BasicTopicList
+      @hideCategory="true"
+      @showPosters="true"
+      @topics={{this.topic.relatedMessages}}
+    />
   </div>
 
   {{#if this.targetUser}}

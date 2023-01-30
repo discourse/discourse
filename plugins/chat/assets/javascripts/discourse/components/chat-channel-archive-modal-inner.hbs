@@ -1,0 +1,30 @@
+<DModalBody @title="chat.channel_archive.title">
+  <div
+    id="chat-channel-archive-modal-inner"
+    class="chat-channel-archive-modal-inner"
+  >
+    <p
+      class="chat-channel-archive-modal-instructions"
+    >{{this.instructionsText}}</p>
+
+    <ChatToTopicSelector
+      @selection={{this.selection}}
+      @topicTitle={{this.topicTitle}}
+      @categoryId={{this.categoryId}}
+      @tags={{this.tags}}
+      @selectedTopicId={{this.selectedTopicId}}
+      @instructionLabels={{this.instructionLabels}}
+      @allowNewMessage={{false}}
+    />
+  </div>
+</DModalBody>
+
+<div class="modal-footer">
+  <DButton
+    @class="btn-primary"
+    @disabled={{this.buttonDisabled}}
+    @action={{action "archiveChannel"}}
+    @label="chat.channel_archive.title"
+    @id="chat-confirm-archive-channel"
+  />
+</div>

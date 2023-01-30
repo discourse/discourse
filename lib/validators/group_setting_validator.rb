@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class GroupSettingValidator
-
   def initialize(opts = {})
     @opts = opts
   end
@@ -11,6 +10,6 @@ class GroupSettingValidator
   end
 
   def error_message
-    I18n.t('site_settings.errors.invalid_group')
+    I18n.t("site_settings.errors.invalid_group")
   end
 end

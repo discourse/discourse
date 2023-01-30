@@ -131,7 +131,8 @@
 .discourse-tags {
   display: inline-flex;
   flex-wrap: wrap;
-  a {
+  a,
+  span {
     margin-right: 0.25em;
   }
 }
@@ -200,24 +201,6 @@ header .discourse-tag {
     padding-right: 5px;
     vertical-align: middle;
     height: 0.9em;
-  }
-}
-
-.hashtag-autocomplete {
-  .hashtag-autocomplete__option {
-    .hashtag-autocomplete__link {
-      align-items: center;
-      color: var(--primary-medium);
-      display: flex;
-
-      .d-icon {
-        padding-right: 0.5em;
-      }
-
-      .hashtag-autocomplete__text {
-        flex: 1;
-      }
-    }
   }
 }
 

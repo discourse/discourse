@@ -1,7 +1,14 @@
 {{#if @prefixType}}
-  <span class={{concat-class "sidebar-section-link-prefix" @prefixType @prefixCSSClass}} style={{html-safe (concat "color: " @prefixColor)}}>
+  <span
+    class={{concat-class
+      "sidebar-section-link-prefix"
+      @prefixType
+      @prefixCSSClass
+    }}
+    style={{if @prefixColor (html-safe (concat "color: " @prefixColor))}}
+  >
     {{#if (eq @prefixType "image")}}
-      <img src={{@prefixValue}} class="prefix-image">
+      <img src={{@prefixValue}} class="prefix-image" />
     {{/if}}
 
     {{#if (eq @prefixType "text")}}
@@ -15,7 +22,14 @@
     {{/if}}
 
     {{#if (eq @prefixType "span")}}
-      <span style={{html-safe (concat "background: linear-gradient(90deg, " @prefixElementColors ")")}} class="prefix-span"></span>
+      <span
+        style={{html-safe
+          (concat
+            "background: linear-gradient(90deg, " @prefixElementColors ")"
+          )
+        }}
+        class="prefix-span"
+      ></span>
     {{/if}}
     {{#if @prefixBadge}}
       {{d-icon @prefixBadge class="prefix-badge"}}

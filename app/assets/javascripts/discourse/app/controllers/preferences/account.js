@@ -157,6 +157,7 @@ export default Controller.extend(CanCheckEmails, {
       modalClass: "user-status",
       model: {
         status,
+        hidePauseNotifications: true,
         saveAction: (s) => this.set("newStatus", s),
         deleteAction: () => this.set("newStatus", null),
       },

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'badge_queries'
+require "badge_queries"
 
 BadgeGrouping.seed do |g|
   g.id = BadgeGrouping::GettingStarted
@@ -45,9 +45,9 @@ SQL
 
 [
   [Badge::BasicUser, "Basic User", BadgeType::Bronze],
-  [Badge::Member,    "Member",     BadgeType::Bronze],
-  [Badge::Regular,   "Regular",    BadgeType::Silver],
-  [Badge::Leader,    "Leader",     BadgeType::Gold],
+  [Badge::Member, "Member", BadgeType::Bronze],
+  [Badge::Regular, "Regular", BadgeType::Silver],
+  [Badge::Leader, "Leader", BadgeType::Gold],
 ].each do |id, name, type|
   Badge.seed do |b|
     b.id = id
@@ -179,9 +179,9 @@ Badge.seed do |b|
 end
 
 [
- [Badge::NiceShare, "Nice Share", BadgeType::Bronze, 25],
- [Badge::GoodShare, "Good Share", BadgeType::Silver, 300],
- [Badge::GreatShare, "Great Share", BadgeType::Gold, 1000],
+  [Badge::NiceShare, "Nice Share", BadgeType::Bronze, 25],
+  [Badge::GoodShare, "Good Share", BadgeType::Silver, 300],
+  [Badge::GreatShare, "Great Share", BadgeType::Gold, 1000],
 ].each do |id, name, level, count|
   Badge.seed do |b|
     b.id = id
@@ -246,12 +246,12 @@ Badge.seed do |b|
 end
 
 [
-  [Badge::NicePost,   "Nice Post",   BadgeType::Bronze, false],
-  [Badge::GoodPost,   "Good Post",   BadgeType::Silver, false],
-  [Badge::GreatPost,  "Great Post",  BadgeType::Gold,   false],
-  [Badge::NiceTopic,  "Nice Topic",  BadgeType::Bronze, true],
-  [Badge::GoodTopic,  "Good Topic",  BadgeType::Silver, true],
-  [Badge::GreatTopic, "Great Topic", BadgeType::Gold,   true],
+  [Badge::NicePost, "Nice Post", BadgeType::Bronze, false],
+  [Badge::GoodPost, "Good Post", BadgeType::Silver, false],
+  [Badge::GreatPost, "Great Post", BadgeType::Gold, false],
+  [Badge::NiceTopic, "Nice Topic", BadgeType::Bronze, true],
+  [Badge::GoodTopic, "Good Topic", BadgeType::Silver, true],
+  [Badge::GreatTopic, "Great Topic", BadgeType::Gold, true],
 ].each do |id, name, type, topic|
   Badge.seed do |b|
     b.id = id
@@ -281,9 +281,9 @@ Badge.seed do |b|
 end
 
 [
- [Badge::PopularLink, "Popular Link", BadgeType::Bronze, 50],
- [Badge::HotLink,     "Hot Link",     BadgeType::Silver, 300],
- [Badge::FamousLink,  "Famous Link",  BadgeType::Gold,   1000],
+  [Badge::PopularLink, "Popular Link", BadgeType::Bronze, 50],
+  [Badge::HotLink, "Hot Link", BadgeType::Silver, 300],
+  [Badge::FamousLink, "Famous Link", BadgeType::Gold, 1000],
 ].each do |id, name, level, count|
   Badge.seed do |b|
     b.id = id
@@ -302,8 +302,8 @@ end
 
 [
   [Badge::Appreciated, "Appreciated", BadgeType::Bronze, 1, 20],
-  [Badge::Respected,   "Respected",   BadgeType::Silver, 2, 100],
-  [Badge::Admired,     "Admired",     BadgeType::Gold,   5, 300],
+  [Badge::Respected, "Respected", BadgeType::Silver, 2, 100],
+  [Badge::Admired, "Admired", BadgeType::Gold, 5, 300],
 ].each do |id, name, level, like_count, post_count|
   Badge.seed do |b|
     b.id = id
@@ -319,9 +319,9 @@ end
 end
 
 [
-  [Badge::ThankYou,   "Thank You",  BadgeType::Bronze, 20, 10],
-  [Badge::GivesBack,  "Gives Back", BadgeType::Silver, 100, 100],
-  [Badge::Empathetic, "Empathetic", BadgeType::Gold,   500, 1000]
+  [Badge::ThankYou, "Thank You", BadgeType::Bronze, 20, 10],
+  [Badge::GivesBack, "Gives Back", BadgeType::Silver, 100, 100],
+  [Badge::Empathetic, "Empathetic", BadgeType::Gold, 500, 1000],
 ].each do |id, name, level, count, ratio|
   Badge.seed do |b|
     b.id = id
@@ -337,9 +337,9 @@ end
 end
 
 [
-  [Badge::OutOfLove,   "Out of Love",   BadgeType::Bronze, 1],
-  [Badge::HigherLove,  "Higher Love",   BadgeType::Silver, 5],
-  [Badge::CrazyInLove, "Crazy in Love", BadgeType::Gold,   20],
+  [Badge::OutOfLove, "Out of Love", BadgeType::Bronze, 1],
+  [Badge::HigherLove, "Higher Love", BadgeType::Silver, 5],
+  [Badge::CrazyInLove, "Crazy in Love", BadgeType::Gold, 20],
 ].each do |id, name, level, count|
   Badge.seed do |b|
     b.id = id
@@ -422,7 +422,7 @@ end
 [
   [Badge::Enthusiast, "Enthusiast", BadgeType::Bronze, 10],
   [Badge::Aficionado, "Aficionado", BadgeType::Silver, 100],
-  [Badge::Devotee,    "Devotee",    BadgeType::Gold,   365],
+  [Badge::Devotee, "Devotee", BadgeType::Gold, 365],
 ].each do |id, name, level, days|
   Badge.seed do |b|
     b.id = id
@@ -437,9 +437,11 @@ end
   end
 end
 
-Badge.where("NOT system AND id < 100").each do |badge|
-  new_id = [Badge.maximum(:id) + 1, 100].max
-  old_id = badge.id
-  badge.update_columns(id: new_id)
-  UserBadge.where(badge_id: old_id).update_all(badge_id: new_id)
-end
+Badge
+  .where("NOT system AND id < 100")
+  .each do |badge|
+    new_id = [Badge.maximum(:id) + 1, 100].max
+    old_id = badge.id
+    badge.update_columns(id: new_id)
+    UserBadge.where(badge_id: old_id).update_all(badge_id: new_id)
+  end

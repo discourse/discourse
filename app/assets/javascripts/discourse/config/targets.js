@@ -10,8 +10,7 @@ const browsers = [
 ];
 
 if (isCI || isProduction) {
-  // https://meta.discourse.org/t/224747
-  browsers.push("Safari 12");
+  browsers.push("Safari 15");
 }
 
 module.exports = {

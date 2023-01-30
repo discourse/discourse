@@ -23,7 +23,7 @@ module("Integration | Component | d-document", function (hooks) {
     const titleBefore = document.title;
     try {
       this.currentUser.redesigned_user_menu_enabled = true;
-      this.currentUser.title_count_mode = "notifications";
+      this.currentUser.user_option.title_count_mode = "notifications";
       await render(hbs`<DDocument />`);
       assert.strictEqual(
         getTitleCount(),
@@ -51,7 +51,7 @@ module("Integration | Component | d-document", function (hooks) {
     const titleBefore = document.title;
     try {
       this.currentUser.redesigned_user_menu_enabled = false;
-      this.currentUser.title_count_mode = "notifications";
+      this.currentUser.user_option.title_count_mode = "notifications";
       await render(hbs`<DDocument />`);
       assert.strictEqual(
         getTitleCount(),

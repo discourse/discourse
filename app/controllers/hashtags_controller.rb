@@ -3,15 +3,16 @@
 class HashtagsController < ApplicationController
   requires_login
 
-  def show
-    raise Discourse::InvalidParameters.new(:slugs) if !params[:slugs].is_a?(Array)
-    render json: HashtagAutocompleteService.new(guardian).lookup(params[:slugs])
+  def lookup
+    if SiteSetting.enable_experimental_hashtag_autocomplete
+      render json: HashtagAutocompleteService.new(guardian).lookup(params[:slugs], params[:order])
+    else
+      render json: HashtagAutocompleteService.new(guardian).lookup_old(params[:slugs])
+    end
   end
 
   def search
-    params.require(:term)
     params.require(:order)
-    raise Discourse::InvalidParameters.new(:order) if !params[:order].is_a?(Array)
 
     results = HashtagAutocompleteService.new(guardian).search(params[:term], params[:order])
 

@@ -2,7 +2,6 @@
 
 class MigrateReviewableFlaggedPosts < ActiveRecord::Migration[5.2]
   def up
-
     # for the migration we'll do 1.0 + trust_level and not take into account user flagging accuracy
     # It should be good enough for old flags whose scores are not as important as pending flags.
     execute(<<~SQL)

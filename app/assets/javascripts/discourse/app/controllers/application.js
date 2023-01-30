@@ -19,8 +19,7 @@ export default Controller.extend({
 
   init() {
     this._super(...arguments);
-    this.showSidebar =
-      this.canDisplaySidebar && !this.keyValueStore.getItem(HIDE_SIDEBAR_KEY);
+    this.showSidebar = this.calculateShowSidebar();
   },
 
   @discourseComputed
@@ -65,13 +64,13 @@ export default Controller.extend({
 
   @discourseComputed(
     "sidebarQueryParamOverride",
-    "siteSettings.enable_sidebar",
+    "siteSettings.navigation_menu",
     "canDisplaySidebar",
     "sidebarDisabledRouteOverride"
   )
   sidebarEnabled(
     sidebarQueryParamOverride,
-    enableSidebar,
+    navigationMenu,
     canDisplaySidebar,
     sidebarDisabledRouteOverride
   ) {
@@ -96,7 +95,15 @@ export default Controller.extend({
       return false;
     }
 
-    return enableSidebar;
+    return navigationMenu === "sidebar";
+  },
+
+  calculateShowSidebar() {
+    return (
+      this.canDisplaySidebar &&
+      !this.keyValueStore.getItem(HIDE_SIDEBAR_KEY) &&
+      !this.site.narrowDesktopView
+    );
   },
 
   @action

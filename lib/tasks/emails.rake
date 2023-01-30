@@ -4,7 +4,7 @@ def process_popmail(popmail)
   begin
     mail_string = popmail.pop
     Email::Receiver.new(mail_string).process
-  rescue
+  rescue StandardError
     putc "!"
   else
     putc "."
@@ -19,9 +19,9 @@ task "emails:import" => :environment do
       exit(1)
     end
 
-    address  = ENV["ADDRESS"].presence || "pop.gmail.com"
-    port     = (ENV["PORT"].presence || 995).to_i
-    ssl      = (ENV["SSL"].presence || "1") == "1"
+    address = ENV["ADDRESS"].presence || "pop.gmail.com"
+    port = (ENV["PORT"].presence || 995).to_i
+    ssl = (ENV["SSL"].presence || "1") == "1"
     username = ENV["USERNAME"].presence
     password = ENV["PASSWORD"].presence
 
@@ -41,9 +41,7 @@ task "emails:import" => :environment do
 
     while mails_left > 0
       pop3.start(username, password) do |pop|
-        pop.delete_all do |p|
-          process_popmail(p)
-        end
+        pop.delete_all { |p| process_popmail(p) }
         mails_left = pop.n_mails
       end
     end
@@ -58,14 +56,13 @@ task "emails:import" => :environment do
 end
 
 desc "Check if SMTP connection is successful and send test message"
-task 'emails:test', [:email] => [:environment] do |_, args|
+task "emails:test", [:email] => [:environment] do |_, args|
   email = args[:email]
   message = "OK"
   begin
     smtp = Discourse::Application.config.action_mailer.smtp_settings
 
-    if smtp[:address].match(/smtp\.gmail\.com/)
-      puts <<~TEXT
+    puts <<~TEXT if smtp[:address].match(/smtp\.gmail\.com/)
         #{smtp}
         ============================== WARNING ==============================
 
@@ -76,7 +73,6 @@ task 'emails:test', [:email] => [:environment] do |_, args|
 
         ========================= CONTINUING TEST ============================
       TEXT
-    end
 
     puts "Testing sending to #{email} using #{smtp[:address]}:#{smtp[:port]}, username:#{smtp[:user_name]} with #{smtp[:authentication]} auth."
 
@@ -85,13 +81,12 @@ task 'emails:test', [:email] => [:environment] do |_, args|
     EmailSettingsValidator.validate_smtp(
       host: smtp[:address],
       port: smtp[:port],
-      domain: smtp[:domain] || 'localhost',
+      domain: smtp[:domain] || "localhost",
       username: smtp[:user_name],
       password: smtp[:password],
-      authentication: smtp[:authentication] || 'plain'
+      authentication: smtp[:authentication] || "plain",
     )
   rescue Exception => e
-
     if e.to_s.match(/execution expired/)
       message = <<~TEXT
         ======================================== ERROR ========================================
@@ -101,11 +96,9 @@ task 'emails:test', [:email] => [:environment] do |_, args|
         If you are using a service like Mailgun or Sendgrid, try using port 2525.
         =======================================================================================
       TEXT
-
     elsif e.to_s.match(/530.*STARTTLS/)
       # We can't run a preliminary test with STARTTLS, we'll just try sending the test email.
       message = "OK"
-
     elsif e.to_s.match(/535/)
       message = <<~TEXT
         ======================================== ERROR ========================================
@@ -118,7 +111,6 @@ task 'emails:test', [:email] => [:environment] do |_, args|
         Check them and try again.
         =======================================================================================
       TEXT
-
     elsif e.to_s.match(/Connection refused/)
       message = <<~TEXT
         ======================================== ERROR ========================================
@@ -133,7 +125,6 @@ task 'emails:test', [:email] => [:environment] do |_, args|
         Check the port and your networking configuration.
         =======================================================================================
       TEXT
-
     elsif e.to_s.match(/service not known/)
       message = <<~TEXT
         ======================================== ERROR ========================================
@@ -146,7 +137,6 @@ task 'emails:test', [:email] => [:environment] do |_, args|
         Check it and try again.
         =======================================================================================
       TEXT
-
     else
       message = <<~TEXT
         ======================================== ERROR ========================================
@@ -210,12 +200,10 @@ task 'emails:test', [:email] => [:environment] do |_, args|
     puts error.message
   end
 
-  if SiteSetting.disable_emails != 'no'
-    puts <<~TEXT
+  puts <<~TEXT if SiteSetting.disable_emails != "no"
 
       ### WARNING
       The `disable_emails` site setting is currently set to #{SiteSetting.disable_emails}.
       Consider changing it to 'no' before performing any further troubleshooting.
     TEXT
-  end
 end

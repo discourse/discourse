@@ -328,9 +328,6 @@ basic:
     default: 2
     min: 0
     max: 6
-  enable_whispers:
-    client: true
-    default: false
   whispers_allowed_groups:
     client: true
     type: group_list
@@ -348,6 +345,12 @@ basic:
   push_notifications_icon:
     default: ""
     type: upload
+  enable_desktop_push_notifications:
+    default: true
+    client: true
+  push_notification_time_window_mins:
+    default: 10
+    min: 0
   short_title:
     default: ""
     max: 12
@@ -379,7 +382,7 @@ basic:
   enable_user_status:
     client: true
     default: false
-  enable_onboarding_popups:
+  enable_user_tips:
     client: true
     default: false
 
@@ -529,17 +532,17 @@ login:
       value: "sso_provider.value_placeholder"
   blocked_email_domains:
     default: "mailinator.com"
-    type: list
+    type: host_list
     list_type: simple
   allowed_email_domains:
     default: ""
-    type: list
+    type: host_list
     list_type: simple
   normalize_emails:
     default: false
   auto_approve_email_domains:
     default: ""
-    type: list
+    type: host_list
     list_type: simple
   hide_email_address_taken:
     client: true
@@ -908,7 +911,9 @@ posting:
     default: true
     client: true
   max_mentions_per_post: 10
-  max_users_notified_per_group_mention: 100
+  max_users_notified_per_group_mention:
+    default: 100
+    client: true
   newuser_max_replies_per_topic: 3
   newuser_max_mentions_per_post: 2
   here_mention:
@@ -1085,6 +1090,9 @@ posting:
   skip_auto_delete_reply_likes: 5
   review_every_post:
     default: false
+  max_draft_length:
+    default: 400_000
+    hidden: true
 
 email:
   email_time_window_mins:
@@ -1240,6 +1248,21 @@ email:
   mailgun_api_key:
     default: ""
     regex: '^((key-)?\h{32}|\h{32}-\h{8}-\h{8})$'
+    secret: true
+  sendgrid_verification_key:
+    default: ""
+    secret: true
+  mailjet_webhook_token:
+    default: ""
+    secret: true
+  mandrill_authentication_key:
+    default: ""
+    secret: true
+  postmark_webhook_token:
+    default: ""
+    secret: true
+  sparkpost_webhook_token:
+    default: ""
     secret: true
   bounce_score_threshold:
     client: true
@@ -1544,6 +1567,10 @@ files:
     default: false
     client: true
     hidden: true
+  composer_ios_media_optimisation_image_enabled:
+    default: false
+    client: true
+    hidden: true
 
 trust:
   default_trust_level:
@@ -1646,6 +1673,9 @@ trust:
   tl3_requires_likes_received:
     default: 20
   tl3_links_no_follow:
+    default: false
+    client: true
+  tl4_delete_posts_and_topics:
     default: false
     client: true
   trusted_users_can_edit_others:
@@ -1771,6 +1801,11 @@ security:
     default: false
     client: true
     hidden: true
+  suppress_secured_categories_from_admin:
+    default: false
+    hidden: true
+  include_secure_categories_in_tag_counts:
+    default: false
 
 onebox:
   post_onebox_maxlength:
@@ -1886,12 +1921,18 @@ rate_limits:
   rate_limit_create_post: 5
   rate_limit_new_user_create_topic: 120
   rate_limit_new_user_create_post: 30
-  rate_limit_search_anon_global:
+  rate_limit_search_anon_global_per_minute:
     hidden: true
     default: 150
-  rate_limit_search_anon_user:
+  rate_limit_search_anon_user_per_minute:
     hidden: true
     default: 15
+  rate_limit_search_anon_global_per_second:
+    hidden: true
+    default: 8
+  rate_limit_search_anon_user_per_second:
+    hidden: true
+    default: 2
   rate_limit_search_user:
     hidden: true
     default: 30
@@ -2026,11 +2067,11 @@ developer:
   enable_safe_mode:
     default: true
     client: true
-  enable_experimental_sidebar_hamburger:
-    default: false
-    client: true
   enable_experimental_hashtag_autocomplete:
-    default: false
+    default: true
+    client: true
+  experimental_hashtag_search_result_limit:
+    default: 20
     client: true
     hidden: true
   enable_new_user_profile_nav_groups:
@@ -2043,11 +2084,20 @@ developer:
   include_associated_account_ids:
     default: false
     hidden: true
-
-sidebar:
-  enable_sidebar:
-    default: true
+  enable_experimental_topic_timeline_groups:
     client: true
+    type: group_list
+    list_type: compact
+    default: ""
+    allow_any: false
+    refresh: true
+
+navigation:
+  navigation_menu:
+    client: true
+    default: "sidebar"
+    type: enum
+    enum: "NavigationMenuSiteSetting"
   default_sidebar_categories:
     type: category_list
     default: ""
@@ -2063,6 +2113,9 @@ sidebar:
     choices:
       - "default"
       - "unread_new"
+  enable_new_notifications_menu:
+    default: false
+    validator: "EnableNewNotificationsMenuValidator"
 
 embedding:
   embed_by_username:
@@ -2136,8 +2189,12 @@ backups:
   include_s3_uploads_in_backups:
     default: false
     hidden: true
+    client: true
 
 search:
+  enable_search_prefix_matching:
+    default: true
+    hidden: true
   use_pg_headlines_for_excerpt:
     default: false
     hidden: true
@@ -2307,7 +2364,7 @@ uncategorized:
   educate_until_posts: 2
   sequential_replies_threshold: 2
   get_a_room_threshold: 3
-  dominating_topic_minimum_percent: 20
+  dominating_topic_minimum_percent: 40
   disable_avatar_education_message: false
   pm_warn_user_last_seen_months_ago: 24
 
@@ -2338,6 +2395,11 @@ uncategorized:
   uncategorized_category_id:
     default: -1
     hidden: true
+  default_composer_category:
+    client: true
+    type: category
+    default: ""
+    validator: "DefaultComposerCategoryValidator"
 
   notify_about_flags_after:
     type: float
@@ -2531,6 +2593,8 @@ user_preferences:
     enum: "PreviousRepliesSiteSetting"
     default: 2
   default_email_in_reply_to:
+    default: false
+  default_hide_profile_and_presence:
     default: false
 
   default_other_new_topic_duration_minutes:

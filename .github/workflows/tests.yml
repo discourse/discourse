@@ -17,9 +17,10 @@ permissions:
 
 jobs:
   build:
-    name: ${{ matrix.target }} ${{ matrix.build_type }}
+    if: "!(github.event_name == 'push' && github.repository == 'discourse/discourse-private-mirror')"
+    name: ${{ matrix.target }} ${{ matrix.build_type }} ${{ matrix.ruby }}
     runs-on: ${{ (matrix.build_type == 'annotations') && 'ubuntu-latest' || 'ubuntu-20.04-8core' }}
-    container: discourse/discourse_test:slim${{ (matrix.build_type == 'frontend' || matrix.build_type == 'system') && '-browsers' || '' }}
+    container: discourse/discourse_test:slim${{ (matrix.build_type == 'frontend' || matrix.build_type == 'system') && '-browsers' || '' }}${{ (matrix.ruby == '3.2') && '-ruby-3.2.0' || '' }}
     timeout-minutes: 20
 
     env:
@@ -28,7 +29,8 @@ jobs:
       RAILS_ENV: test
       PGUSER: discourse
       PGPASSWORD: discourse
-      USES_PARALLEL_DATABASES: ${{ matrix.build_type == 'backend' }}
+      USES_PARALLEL_DATABASES: ${{ matrix.build_type == 'backend' || matrix.build_type == 'system' }}
+      CAPBYARA_DEFAULT_MAX_WAIT_TIME: 4
 
     strategy:
       fail-fast: false
@@ -36,15 +38,17 @@ jobs:
       matrix:
         build_type: [backend, frontend, system, annotations]
         target: [core, plugins]
+        ruby: ['3.1']
         exclude:
           - build_type: annotations
             target: plugins
           - build_type: frontend
             target: core # Handled by core_frontend_tests job (below)
-          - build_type: system
-            target: plugins # Enable once at least 1 plugin has system tests
 
     steps:
+      - name: Set working directory owner
+        run: chown root:root .
+
       - uses: actions/checkout@v3
         with:
           fetch-depth: 1
@@ -68,9 +72,9 @@ jobs:
         uses: actions/cache@v3
         with:
           path: vendor/bundle
-          key: ${{ runner.os }}-gem-${{ hashFiles('**/Gemfile.lock') }}
+          key: ${{ runner.os }}-${{ matrix.ruby }}-gem-${{ hashFiles('**/Gemfile.lock') }}
           restore-keys: |
-            ${{ runner.os }}-gem-
+            ${{ runner.os }}-${{ matrix.ruby }}-gem-
 
       - name: Setup gems
         run: |
@@ -83,7 +87,7 @@ jobs:
 
       - name: Get yarn cache directory
         id: yarn-cache-dir
-        run: echo "::set-output name=dir::$(yarn cache dir)"
+        run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
 
       - name: Yarn cache
         uses: actions/cache@v3
@@ -172,20 +176,24 @@ jobs:
         if: matrix.build_type == 'system'
         run: bin/ember-cli --build
 
+      - name: Setup Webdriver
+        if: matrix.build_type == 'system'
+        run: bin/rails runner "require 'webdrivers'; Webdrivers::Chromedriver.update"
+
       - name: Core System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core'
-        run: bin/system_rspec
+        run: PARALLEL_TEST_PROCESSORS=1 bin/turbo_rspec --verbose spec/system
 
       - name: Plugin System Tests
         if: matrix.build_type == 'system' && matrix.target == 'plugins'
-        run: bin/system_rspec plugins/*/spec/system
+        run: LOAD_PLUGINS=1 PARALLEL_TEST_PROCESSORS=1 bin/turbo_rspec --verbose plugins/*/spec/system
 
       - name: Upload failed system test screenshots
         uses: actions/upload-artifact@v3
         if: matrix.build_type == 'system' && failure()
         with:
           name: failed-system-test-screenshots
-          path: tmp/screenshots/*.png
+          path: tmp/capybara/*.png
 
       - name: Check Annotations
         if: matrix.build_type == 'annotations'
@@ -205,6 +213,7 @@ jobs:
         timeout-minutes: 30
 
   core_frontend_tests:
+    if: "!(github.event_name == 'push' && github.repository == 'discourse/discourse-private-mirror')"
     name: core frontend (${{ matrix.browser }})
     runs-on: ubuntu-20.04-8core
     container:
@@ -223,7 +232,7 @@ jobs:
       TESTEM_FIREFOX_PATH: ${{ (matrix.browser == 'Firefox Evergreen') && '/opt/firefox-evergreen/firefox' }}
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 1
 
@@ -234,7 +243,7 @@ jobs:
 
       - name: Get yarn cache directory
         id: yarn-cache-dir
-        run: echo "::set-output name=dir::$(yarn cache dir)"
+        run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
 
       - name: Yarn cache
         uses: actions/cache@v3

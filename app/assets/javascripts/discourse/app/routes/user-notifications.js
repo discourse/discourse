@@ -1,14 +1,11 @@
 import DiscourseRoute from "discourse/routes/discourse";
 import ViewingActionType from "discourse/mixins/viewing-action-type";
 import { action } from "@ember/object";
+import I18n from "I18n";
 
 export default DiscourseRoute.extend(ViewingActionType, {
   controllerName: "user-notifications",
   queryParams: { filter: { refreshModel: true } },
-
-  renderTemplate() {
-    this.render("user/notifications");
-  },
 
   @action
   didTransition() {
@@ -34,5 +31,9 @@ export default DiscourseRoute.extend(ViewingActionType, {
     controller.set("model", model);
     controller.set("user", this.modelFor("user"));
     this.viewingActionType(-1);
+  },
+
+  titleToken() {
+    return I18n.t("user.notifications");
   },
 });

@@ -1,18 +1,36 @@
 <DSection @pageClass="user-invites" @tagName="">
   {{#if this.canInviteToForum}}
-    <LoadMore @class="user-content" @selector=".user-invite-list tr" @action={{action "loadMore"}}>
+    <LoadMore
+      @class="user-content"
+      @id="user-content"
+      @selector=".user-invite-list tr"
+      @action={{action "loadMore"}}
+    >
       <DSection @class="user-additional-controls">
         {{#if this.showSearch}}
           <div class="user-invite-search">
-            <form><TextField @value={{this.searchTerm}} @placeholderKey="user.invited.search" /></form>
+            <form><TextField
+                @value={{this.searchTerm}}
+                @placeholderKey="user.invited.search"
+              /></form>
           </div>
         {{/if}}
         <DSection @class="user-invite-buttons">
-          <DButton @class="btn-default" @icon="plus" @action={{action "createInvite"}} @label="user.invited.create" />
+          <DButton
+            @class="btn-default"
+            @icon="plus"
+            @action={{action "createInvite"}}
+            @label="user.invited.create"
+          />
           {{#if this.canBulkInvite}}
             {{#if this.siteSettings.allow_bulk_invite}}
               {{#unless this.site.mobileView}}
-                <DButton @class="btn-flat" @icon="upload" @action={{action "createInviteCsv"}} @label="user.invited.bulk_invite.text" />
+                <DButton
+                  @class="btn-flat"
+                  @icon="upload"
+                  @action={{action "createInviteCsv"}}
+                  @label="user.invited.bulk_invite.text"
+                />
               {{/unless}}
             {{/if}}
           {{/if}}
@@ -23,17 +41,30 @@
                   {{i18n "user.invited.removed_all"}}
                 </span>
               {{else}}
-                <DButton @icon="times" @action={{action "destroyAllExpired"}} @label="user.invited.remove_all" />
+                <DButton
+                  @icon="times"
+                  @action={{action "destroyAllExpired"}}
+                  @label="user.invited.remove_all"
+                />
               {{/if}}
             {{/if}}
 
             {{#if this.invitePending}}
               {{#if this.reinvitedAll}}
                 <span class="reinvited-all">
-                  <DButton @icon="check" @disabled={{true}} @label="user.invited.reinvited_all" />
+                  <DButton
+                    @icon="check"
+                    @disabled={{true}}
+                    @label="user.invited.reinvited_all"
+                  />
                 </span>
               {{else if this.hasEmailInvites}}
-                <DButton @class="btn-default" @icon="sync" @action={{action "reinviteAll"}} @label="user.invited.reinvite_all" />
+                <DButton
+                  @class="btn-default"
+                  @icon="sync"
+                  @action={{action "reinviteAll"}}
+                  @label="user.invited.reinvite_all"
+                />
               {{/if}}
             {{/if}}
           {{/if}}
@@ -61,8 +92,14 @@
                 {{#each this.model.invites as |invite|}}
                   <tr>
                     <td>
-                      <LinkTo @route="user" @model={{invite.user}}>{{avatar invite.user imageSize="tiny"}}</LinkTo>
-                      <LinkTo @route="user" @model={{invite.user}}>{{invite.user.username}}</LinkTo>
+                      <LinkTo @route="user" @model={{invite.user}}>{{avatar
+                          invite.user
+                          imageSize="tiny"
+                        }}</LinkTo>
+                      <LinkTo
+                        @route="user"
+                        @model={{invite.user}}
+                      >{{invite.user.username}}</LinkTo>
                     </td>
                     <td>{{format-date invite.redeemed_at}}</td>
                     {{#if this.model.can_see_invite_details}}
@@ -71,9 +108,13 @@
                       <td>{{number invite.user.posts_read_count}}</td>
                       <td>{{format-duration invite.user.time_read}}</td>
                       <td>
-                        <span title={{i18n "user.invited.days_visited"}}>{{html-safe invite.user.days_visited}}</span>
-                          /
-                        <span title={{i18n "user.invited.account_age_days"}}>{{html-safe invite.user.days_since_created}}</span>
+                        <span
+                          title={{i18n "user.invited.days_visited"}}
+                        >{{html-safe invite.user.days_visited}}</span>
+                        /
+                        <span
+                          title={{i18n "user.invited.account_age_days"}}
+                        >{{html-safe invite.user.days_since_created}}</span>
                       </td>
                       <td>{{html-safe invite.invite_source}}</td>
                     {{/if}}
@@ -95,19 +136,33 @@
                 {{#each this.model.invites as |invite|}}
                   <tr>
                     <td class="invite-type">
-                      <div class="label">{{i18n "user.invited.invited_via"}}</div>
+                      <div class="label">{{i18n
+                          "user.invited.invited_via"
+                        }}</div>
                       {{#if invite.email}}
-                        {{d-icon "envelope"}} {{invite.email}}
+                        {{d-icon "envelope"}}
+                        {{invite.email}}
                       {{else}}
-                        {{d-icon "link"}} {{i18n "user.invited.invited_via_link" key=invite.shortKey count=invite.redemption_count max=invite.max_redemptions_allowed}}
+                        {{d-icon "link"}}
+                        {{i18n
+                          "user.invited.invited_via_link"
+                          key=invite.shortKey
+                          count=invite.redemption_count
+                          max=invite.max_redemptions_allowed
+                        }}
                       {{/if}}
 
                       {{#each invite.groups as |g|}}
-                        <p class="invite-extra"><a href="/g/{{g.name}}">{{d-icon "users"}} {{g.name}}</a></p>
+                        <p class="invite-extra"><a href="/g/{{g.name}}">{{d-icon
+                              "users"
+                            }}
+                            {{g.name}}</a></p>
                       {{/each}}
 
                       {{#if invite.topic}}
-                        <p class="invite-extra"><a href={{invite.topic.url}}>{{d-icon "file"}} {{invite.topic.title}}</a></p>
+                        <p class="invite-extra"><a
+                            href={{invite.topic.url}}
+                          >{{d-icon "file"}} {{invite.topic.title}}</a></p>
                       {{/if}}
                     </td>
 
@@ -117,7 +172,9 @@
                     </td>
 
                     <td class="invite-expires-at">
-                      <div class="label">{{i18n "user.invited.expires_at"}}</div>
+                      <div class="label">{{i18n
+                          "user.invited.expires_at"
+                        }}</div>
                       {{#if this.inviteExpired}}
                         {{raw-date invite.expires_at}}
                       {{else if invite.expired}}
@@ -128,8 +185,22 @@
                     </td>
 
                     <td class="invite-actions">
-                      <DButton @class="btn-default" @icon="pencil-alt" @action={{action "editInvite" invite}} @title="user.invited.edit" />
-                      <DButton @icon="trash-alt" @class="cancel" @action={{action "destroyInvite" invite}} @title={{if invite.destroyed "user.invited.removed" "user.invited.remove"}} />
+                      <DButton
+                        @class="btn-default"
+                        @icon="pencil-alt"
+                        @action={{action "editInvite" invite}}
+                        @title="user.invited.edit"
+                      />
+                      <DButton
+                        @icon="trash-alt"
+                        @class="cancel"
+                        @action={{action "destroyInvite" invite}}
+                        @title={{if
+                          invite.destroyed
+                          "user.invited.removed"
+                          "user.invited.remove"
+                        }}
+                      />
                     </td>
                   </tr>
                 {{/each}}

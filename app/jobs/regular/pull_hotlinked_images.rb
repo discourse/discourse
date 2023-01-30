@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
 module Jobs
-
   class PullHotlinkedImages < ::Jobs::Base
-    sidekiq_options queue: 'low'
+    sidekiq_options queue: "low"
 
     def initialize
       @max_size = SiteSetting.max_image_size_kb.kilobytes
@@ -23,8 +22,12 @@ module Jobs
       changed_hotlink_records = false
 
       extract_images_from(post.cooked).each do |node|
-        download_src = original_src = node['src'] || node[PrettyText::BLOCKED_HOTLINKED_SRC_ATTR] || node['href']
-        download_src = "#{SiteSetting.force_https ? "https" : "http"}:#{original_src}" if original_src.start_with?("//")
+        download_src =
+          original_src = node["src"] || node[PrettyText::BLOCKED_HOTLINKED_SRC_ATTR] || node["href"]
+        download_src =
+          "#{SiteSetting.force_https ? "https" : "http"}:#{original_src}" if original_src.start_with?(
+          "//",
+        )
         normalized_src = normalize_src(download_src)
 
         next if !should_download_image?(download_src, post)
@@ -32,10 +35,8 @@ module Jobs
         hotlink_record = hotlinked_map[normalized_src]
 
         if hotlink_record.nil?
-          hotlinked_map[normalized_src] = hotlink_record = PostHotlinkedMedia.new(
-            post: post,
-            url: normalized_src
-          )
+          hotlinked_map[normalized_src] = hotlink_record =
+            PostHotlinkedMedia.new(post: post, url: normalized_src)
           begin
             hotlink_record.upload = attempt_download(download_src, post.user_id)
             hotlink_record.status = :downloaded
@@ -54,13 +55,17 @@ module Jobs
         end
       rescue => e
         raise e if Rails.env.test?
-        log(:error, "Failed to pull hotlinked image (#{download_src}) post: #{@post_id}\n" + e.message + "\n" + e.backtrace.join("\n"))
+        log(
+          :error,
+          "Failed to pull hotlinked image (#{download_src}) post: #{@post_id}\n" + e.message +
+            "\n" + e.backtrace.join("\n"),
+        )
       end
 
       if changed_hotlink_records
         post.trigger_post_process(
           bypass_bump: true,
-          skip_pull_hotlinked_images: true # Avoid an infinite loop of job scheduling
+          skip_pull_hotlinked_images: true, # Avoid an infinite loop of job scheduling
         )
       end
 
@@ -81,14 +86,15 @@ module Jobs
           Rails.logger.warn("Verbose Upload Logging: Downloading hotlinked image from #{src}")
         end
 
-        downloaded = FileHelper.download(
-          src,
-          max_file_size: @max_size,
-          retain_on_max_file_size_exceeded: true,
-          tmp_file_name: "discourse-hotlinked",
-          follow_redirect: true,
-          read_timeout: 15
-        )
+        downloaded =
+          FileHelper.download(
+            src,
+            max_file_size: @max_size,
+            retain_on_max_file_size_exceeded: true,
+            tmp_file_name: "discourse-hotlinked",
+            follow_redirect: true,
+            read_timeout: 15,
+          )
       rescue => e
         if SiteSetting.verbose_upload_logging
           Rails.logger.warn("Verbose Upload Logging: Error '#{e.message}' while downloading #{src}")
@@ -103,9 +109,12 @@ module Jobs
       downloaded
     end
 
-    class ImageTooLargeError < StandardError; end
-    class ImageBrokenError < StandardError; end
-    class UploadCreateError < StandardError; end
+    class ImageTooLargeError < StandardError
+    end
+    class ImageBrokenError < StandardError
+    end
+    class UploadCreateError < StandardError
+    end
 
     def attempt_download(src, user_id)
       # secure-uploads endpoint prevents anonymous downloads, so we
@@ -123,31 +132,32 @@ module Jobs
       if upload.persisted?
         upload
       else
-        log(:info, "Failed to persist downloaded hotlinked image for post: #{@post_id}: #{src} - #{upload.errors.full_messages.join("\n")}")
+        log(
+          :info,
+          "Failed to persist downloaded hotlinked image for post: #{@post_id}: #{src} - #{upload.errors.full_messages.join("\n")}",
+        )
         raise UploadCreateError
       end
     end
 
     def extract_images_from(html)
-      doc = Nokogiri::HTML5::fragment(html)
+      doc = Nokogiri::HTML5.fragment(html)
 
       doc.css("img[src], [#{PrettyText::BLOCKED_HOTLINKED_SRC_ATTR}], a.lightbox[href]") -
-        doc.css("img.avatar") -
-        doc.css(".lightbox img[src]")
+        doc.css("img.avatar") - doc.css(".lightbox img[src]")
     end
 
     def should_download_image?(src, post = nil)
       # make sure we actually have a url
       return false unless src.present?
 
-      local_bases = [
-        Discourse.base_url,
-        Discourse.asset_host,
-        SiteSetting.external_emoji_url.presence
-      ].compact.map { |s| normalize_src(s) }
+      local_bases =
+        [Discourse.base_url, Discourse.asset_host, SiteSetting.external_emoji_url.presence].compact
+          .map { |s| normalize_src(s) }
 
-      if Discourse.store.has_been_uploaded?(src) || normalize_src(src).start_with?(*local_bases) || src =~ /\A\/[^\/]/i
-        return false if !(src =~ /\/uploads\// || Upload.secure_uploads_url?(src))
+      if Discourse.store.has_been_uploaded?(src) || normalize_src(src).start_with?(*local_bases) ||
+           src =~ %r{\A/[^/]}i
+        return false if !(src =~ %r{/uploads/} || Upload.secure_uploads_url?(src))
 
         # Someone could hotlink a file from a different site on the same CDN,
         # so check whether we have it in this database
@@ -182,7 +192,7 @@ module Jobs
     def log(log_level, message)
       Rails.logger.public_send(
         log_level,
-        "#{RailsMultisite::ConnectionManagement.current_db}: #{message}"
+        "#{RailsMultisite::ConnectionManagement.current_db}: #{message}",
       )
     end
 
@@ -202,19 +212,26 @@ module Jobs
       # log the site setting change
       reason = I18n.t("disable_remote_images_download_reason")
       staff_action_logger = StaffActionLogger.new(Discourse.system_user)
-      staff_action_logger.log_site_setting_change("download_remote_images_to_local", true, false, details: reason)
+      staff_action_logger.log_site_setting_change(
+        "download_remote_images_to_local",
+        true,
+        false,
+        details: reason,
+      )
 
       # also send a private message to the site contact user notify_about_low_disk_space
       notify_about_low_disk_space
     end
 
     def notify_about_low_disk_space
-      SystemMessage.create_from_system_user(Discourse.site_contact_user, :download_remote_images_disabled)
+      SystemMessage.create_from_system_user(
+        Discourse.site_contact_user,
+        :download_remote_images_disabled,
+      )
     end
 
     def available_disk_space
       100 - DiskSpace.percent_free("#{Rails.root}/public/uploads")
     end
   end
-
 end

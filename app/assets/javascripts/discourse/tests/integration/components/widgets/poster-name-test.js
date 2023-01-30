@@ -23,7 +23,6 @@ module("Integration | Component | Widget | poster-name", function (hooks) {
     assert.ok(exists("span.username"));
     assert.ok(exists('a[data-user-card="eviltrout"]'));
     assert.strictEqual(query(".username a").innerText, "eviltrout");
-    assert.strictEqual(query(".full-name a").innerText, "Robin Ward");
     assert.strictEqual(query(".user-title").innerText, "Trout Master");
   });
 
@@ -47,7 +46,7 @@ module("Integration | Component | Widget | poster-name", function (hooks) {
     assert.ok(exists("span.moderator"));
     assert.ok(exists(".d-icon-shield-alt"));
     assert.ok(exists("span.new-user"));
-    assert.ok(exists("span.fish"));
+    assert.ok(exists("span.group--fish"));
   });
 
   test("disable display name on posts", async function (assert) {

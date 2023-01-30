@@ -1,27 +1,21 @@
 # frozen_string_literal: true
 
 RSpec.describe SiteSettingsTask do
+  before { Discourse::Application.load_tasks }
 
-  before do
-    Discourse::Application.load_tasks
-  end
-
-  describe 'export' do
-    it 'creates a hash of all site settings' do
+  describe "export" do
+    it "creates a hash of all site settings" do
       sso_url = "https://somewhere.over.com"
       SiteSetting.discourse_connect_url = sso_url
       SiteSetting.enable_discourse_connect = true
       hash = SiteSettingsTask.export_to_hash
 
-      expect(hash).to eq(
-        "enable_discourse_connect" => "true",
-        "discourse_connect_url" => sso_url
-      )
+      expect(hash).to eq("enable_discourse_connect" => "true", "discourse_connect_url" => sso_url)
     end
   end
 
-  describe 'import' do
-    it 'updates site settings' do
+  describe "import" do
+    it "updates site settings" do
       yml = "title: Test"
       log, counts = SiteSettingsTask.import(yml)
       expect(log[0]).to eq "Changed title FROM: Discourse TO: Test"
@@ -33,9 +27,11 @@ RSpec.describe SiteSettingsTask do
       original_default_theme_id = SiteSetting.default_theme_id.inspect
       yml = "default_theme_id: 999999999"
       log, counts = SiteSettingsTask.import(yml)
-      expect(log[0]).to eq "Changed default_theme_id FROM: #{original_default_theme_id} TO: 999999999"
+      expect(
+        log[0],
+      ).to eq "Changed default_theme_id FROM: #{original_default_theme_id} TO: 999999999"
       expect(counts[:updated]).to eq(1)
-      expect(SiteSetting.default_theme_id).to eq(999999999)
+      expect(SiteSetting.default_theme_id).to eq(999_999_999)
     end
 
     it "won't update a setting that doesn't exist" do

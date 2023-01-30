@@ -1,7 +1,13 @@
 import I18n from "I18n";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { click, render, settled, triggerKeyEvent } from "@ember/test-helpers";
+import {
+  click,
+  fillIn,
+  render,
+  settled,
+  triggerKeyEvent,
+} from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { query } from "discourse/tests/helpers/qunit-helpers";
 
@@ -387,5 +393,18 @@ module("Integration | Component | dialog-holder", function (hooks) {
       query(".dialog-footer .btn-primary"),
       ".btn-primary element is not present in the dialog"
     );
+  });
+  test("delete confirm with confirmation phase", async function (assert) {
+    await render(hbs`<DialogHolder />`);
+
+    this.dialog.deleteConfirm({
+      message: "A delete confirm message",
+      confirmPhrase: "test",
+    });
+    await settled();
+
+    assert.strictEqual(query(".btn-danger").disabled, true);
+    await fillIn("#confirm-phrase", "test");
+    assert.strictEqual(query(".btn-danger").disabled, false);
   });
 });

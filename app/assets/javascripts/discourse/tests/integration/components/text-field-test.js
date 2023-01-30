@@ -40,6 +40,20 @@ module("Integration | Component | text-field", function (hooks) {
     assert.strictEqual(query("input").getAttribute("dir"), "ltr");
   });
 
+  test("updates the dir attribute when value changes", async function (assert) {
+    this.siteSettings.support_mixed_text_direction = true;
+
+    await render(
+      hbs`<TextField id="mytextfield" @value="This is a ltr title" />`
+    );
+
+    assert.strictEqual(query("input").getAttribute("dir"), "ltr");
+
+    await fillIn("#mytextfield", "זהו שם עברי עם מקום עברי");
+
+    assert.strictEqual(query("input").getAttribute("dir"), "rtl");
+  });
+
   test("supports onChange", async function (assert) {
     this.called = false;
     this.newValue = null;

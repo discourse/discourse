@@ -172,4 +172,12 @@ module("Unit | Utility | get-url", function () {
 
     assert.strictEqual(getURLWithCDN(url), expected, "at correct path");
   });
+
+  test("getURLWithCDN when URL includes protocol", function (assert) {
+    setupS3CDN("//awesome.cdn/site", "https://awesome.cdn/site");
+
+    let url = "https://awesome.cdn/site/awesome.png";
+
+    assert.strictEqual(getURLWithCDN(url), url, "at correct path");
+  });
 });

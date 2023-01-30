@@ -11,18 +11,16 @@ RSpec.describe UserAuthenticator do
       authenticator_name: "github",
       extra_data: {
         provider: "github",
-        uid: "100"
+        uid: "100",
       },
-      skip_email_validation: false
+      skip_email_validation: false,
     }
   end
 
-  before do
-    SiteSetting.enable_github_logins = true
-  end
+  before { SiteSetting.enable_github_logins = true }
 
   describe "#start" do
-    describe 'without authentication session' do
+    describe "without authentication session" do
       it "should apply the right user attributes" do
         user = User.new
         UserAuthenticator.new(user, {}).start
@@ -85,11 +83,9 @@ RSpec.describe UserAuthenticator do
 
     it "raises an error for non-boolean values" do
       user = Fabricate(:user, email: "user53@discourse.org")
-      session = { authentication: github_auth('string') }
+      session = { authentication: github_auth("string") }
 
-      expect do
-        UserAuthenticator.new(user, session).finish
-      end.to raise_error ArgumentError
+      expect do UserAuthenticator.new(user, session).finish end.to raise_error ArgumentError
     end
   end
 end

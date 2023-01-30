@@ -9,8 +9,7 @@ import Site from "discourse/models/site";
 
 acceptance("Sidebar - Anonymous Tags Section", function (needs) {
   needs.settings({
-    enable_experimental_sidebar_hamburger: true,
-    enable_sidebar: true,
+    navigation_menu: "sidebar",
     suppress_uncategorized_badge: false,
     tagging_enabled: true,
   });

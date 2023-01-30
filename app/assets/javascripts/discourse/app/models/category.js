@@ -337,13 +337,35 @@ const Category = RestModel.extend({
 
   @discourseComputed("id")
   isUncategorizedCategory(id) {
-    return id === Site.currentProp("uncategorized_category_id");
+    return Category.isUncategorized(id);
   },
 });
 
 let _uncategorized;
 
 Category.reopenClass({
+  // Sort subcategories directly under parents
+  sortCategories(categories) {
+    const children = new Map();
+
+    categories.forEach((category) => {
+      const parentId = parseInt(category.parent_category_id, 10) || -1;
+      const group = children.get(parentId) || [];
+      group.pushObject(category);
+
+      children.set(parentId, group);
+    });
+
+    const reduce = (values) =>
+      values.flatMap((c) => [c, reduce(children.get(c.id) || [])]).flat();
+
+    return reduce(children.get(-1));
+  },
+
+  isUncategorized(categoryId) {
+    return categoryId === Site.currentProp("uncategorized_category_id");
+  },
+
   slugEncoded() {
     let siteSettings = getOwner(this).lookup("service:site-settings");
     return siteSettings.slug_generation_method === "encoded";

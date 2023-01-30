@@ -399,11 +399,6 @@ et:
         one: "peaaegu %{count} aasta tagasi"
         other: "peaaegu %{count} aastat tagasi"
   password_reset:
-    no_token: "Vabandust, see parooli uuendamise link on liiga vana. Vajuta sisselogimise nuppu ja kasuta värske lingi saamiseks 'Unustasin parooli'."
-    choose_new: "Vali uus parool"
-    choose: "Vali parool"
-    update: "Uuenda parooli"
-    save: "Määra Parool"
     title: "Uuenda Parool"
     success: "Sinu parooli muutmine õnnestus ja oled nüüd sisse logitud."
     success_unapproved: "Sinu parooli muutmine õnnestus."
@@ -565,6 +560,11 @@ et:
         post: Postitus
         author: Autor
         edit_reason: Põhjus
+    consolidated_api_requests:
+      xaxis:
+        api: "API"
+        user_api: "Kasutaja API"
+      yaxis: "Päev"
     dau_by_mau:
       xaxis: "Päev"
     daily_engaged_users:
@@ -816,6 +816,8 @@ et:
       subject_template: "[%{email_prefix}] %{topic_title}"
     user_posted:
       subject_template: "[%{email_prefix}] %{topic_title}"
+    user_watching_category_or_tag:
+      subject_template: "[%{email_prefix}] %{topic_title}"
     user_watching_first_post:
       subject_template: "[%{email_prefix}] %{topic_title}"
     user_posted_pm_staged:
@@ -1026,10 +1028,6 @@ et:
         fields:
           login_required:
             placeholder: "Privaatne"
-          must_approve_users:
-            placeholder: "Nõua heakskiitu"
-      ready:
-        title: "Sinu Discourse on valmis!"
       styling:
         fields:
           styling_preview:
@@ -1044,19 +1042,10 @@ et:
                 label: "Foorumid esiletõstetud teemadega"
               categories_and_latest_topics:
                 label: "Foorumid ja viimased teemad"
-      branding:
-        fields:
-          logo:
-            label: "Peamine logo"
-          large_icon:
-            label: "Suur ikoon"
       corporate:
         fields:
           contact_url:
-            label: "Veebileht"
             placeholder: "https://www.example.com/contact-us"
-          site_contact:
-            label: "Automaatsed sõnumid"
       invites:
         title: "Kutsu meeskonda"
       finished:

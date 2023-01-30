@@ -1,5 +1,8 @@
 import { alias, not } from "@ember/object/computed";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import discourseComputed, {
+  bind,
+  observes,
+} from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 
 export default Component.extend({
@@ -40,18 +43,11 @@ export default Component.extend({
     this._super(...arguments);
 
     this.topics.forEach((topic) => {
-      const includeUnreadIndicator =
-        typeof topic.unread_by_group_member !== "undefined";
-
-      if (includeUnreadIndicator) {
-        const unreadIndicatorChannel = `/private-messages/unread-indicator/${topic.id}`;
-        this.messageBus.subscribe(unreadIndicatorChannel, (data) => {
-          const nodeClassList = document.querySelector(
-            `.indicator-topic-${data.topic_id}`
-          ).classList;
-
-          nodeClassList.toggle("read", !data.show_indicator);
-        });
+      if (typeof topic.unread_by_group_member !== "undefined") {
+        this.messageBus.subscribe(
+          `/private-messages/unread-indicator/${topic.id}`,
+          this.onMessage
+        );
       }
     });
   },
@@ -59,15 +55,19 @@ export default Component.extend({
   willDestroyElement() {
     this._super(...arguments);
 
-    this.topics.forEach((topic) => {
-      const includeUnreadIndicator =
-        typeof topic.unread_by_group_member !== "undefined";
+    this.messageBus.unsubscribe(
+      "/private-messages/unread-indicator/*",
+      this.onMessage
+    );
+  },
 
-      if (includeUnreadIndicator) {
-        const unreadIndicatorChannel = `/private-messages/unread-indicator/${topic.id}`;
-        this.messageBus.unsubscribe(unreadIndicatorChannel);
-      }
-    });
+  @bind
+  onMessage(data) {
+    const nodeClassList = document.querySelector(
+      `.indicator-topic-${data.topic_id}`
+    ).classList;
+
+    nodeClassList.toggle("read", !data.show_indicator);
   },
 
   @discourseComputed("topics")

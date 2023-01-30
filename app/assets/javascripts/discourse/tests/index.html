@@ -8,12 +8,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta property="og:title" content="Discourse Tests" />
     <meta property="og:url" content="{{rootURL}}" />
+    <meta property="twitter:title" content="Discourse Tests" />
+    <meta property="twitter:url" content="{{rootURL}}" />
+
+    <meta name="color-scheme" content="light dark">
 
     {{content-for "head"}} {{content-for "test-head"}}
 
     <link rel="stylesheet" href="{{rootURL}}assets/vendor.css" />
     <link rel="stylesheet" href="{{rootURL}}assets/test-support.css" />
-    <link rel="stylesheet" href="{{rootURL}}assets/testem.css" />
+    <link rel="stylesheet" href="{{rootURL}}assets/qunit.css" />
+    <link rel="stylesheet" href="{{rootURL}}assets/qunit-custom.css" />
 
     {{content-for "head-footer"}} {{content-for "test-head-footer"}}
 
@@ -23,9 +28,6 @@
         -moz-transition: none !important;
         -o-transition: none !important;
         transition: none !important;
-      }
-      #ember-testing {
-        background-color: white;
       }
       #qunit-fixture {
         position: absolute;
@@ -37,6 +39,7 @@
     </style>
 
     <script src="{{rootURL}}assets/test-i18n.js"></script>
+    <script src="{{rootURL}}assets/test-site-settings.js"></script>
   </head>
   <body>
     {{content-for "body"}} {{content-for "test-body"}}

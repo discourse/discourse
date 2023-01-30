@@ -406,16 +406,10 @@ sw:
         one: "siku %{count} iliyopita"
         other: "siku %{count} zilizopita"
   password_reset:
-    no_token: "Samahani, kiungo hicho cha kuingia kupitia barua pepe ni cha mda sana. Bonyeza kitufe cha Kuingia na tumia 'Nimesahau nywila' ili upate kiungo kipya."
-    choose_new: "Chagua nywila"
-    choose: "Chagua nywila"
-    update: "Sasisha Nywila"
-    save: "Seti Nywila"
     title: "Weka Upya Nywila"
     success: "Umebadilisha nywila yako kwa mafanikio na sasa umeingia."
     success_unapproved: "Umebadilisha nywila yako kwa mafanikio."
   email_login:
-    invalid_token: "Samahani, kiungo hicho cha kuingia kupitia barua pepe ni cha mda sana. Bonyeza kitufe cha Kuingia na tumia 'Nimesahau nywila' ili upate kiungo kipya."
     title: "Ingia kupitia barua pepe"
   change_email:
     confirmed: "Barua pepe yako imesasishwa."
@@ -567,6 +561,11 @@ sw:
         post: Ujumbe
         editor: Mhariri
         edit_reason: Sababu
+    consolidated_api_requests:
+      xaxis:
+        api: "API"
+        user_api: "API ya Mtumiaji"
+      yaxis: "Siku"
     dau_by_mau:
       xaxis: "Siku"
     daily_engaged_users:
@@ -778,14 +777,10 @@ sw:
     allow_duplicate_topic_titles: "Ruhusu mada zenye vichwa vya habari vinavyofanana au vinavyojirudia."
     unique_posts_mins: "Dakika ngapi zipite kabla mtumiaji ajachapisha mada yenye maandishi yale yale tena."
     educate_until_posts: "Mtumiaji akianza kuandika machapisho mapya (n), onyesha paneli ya ufundishaji kwenye sehemu ya kuandika maneno."
-    title: "jina kwenye tovuti, kama linalotumika kwenye kichwa cha lebo."
-    site_description: "Elezea tovuti hii kwenye sentensi moja, kama ilivyo kwenye maelezo ya lebo ya meta"
     editing_grace_period: "Kwa sekundi (n) baada ya kuchapisha, uhariri hautatengeneza nakala mpya kwenye historia ya chapisho."
     staff_edit_locks_post: "Machapisho hayataweza kufanyiwa uhariri kama yakihaririwa na wafanyakazi"
     edit_history_visible_to_public: "Ruhusu kila mtu aone matoleo ya kabla ya chapisho lililofanyiwa uhariri. Ikisitishwa, wasaidizi tu wataweza kuona."
     delete_removed_posts_after: "Machapisho yaliyofutwa na mwandishi yataondolewa baada ya masaa (n). Kama ikiwaset kwenye 0, machapisho yataondolewa hapo hapo."
-    max_image_width: "Kiwango cha juu cha upana wa kijipicha za picha kwenye chapisho"
-    max_image_height: "Kiwango cha juu cha urefu wa kijipicha za picha kwenye chapisho"
     add_rel_nofollow_to_user_content: 'Ongeza rel nofollow kwenye maandishi yote mtumiaji aliyotoa, isipokuwa viungo vya ndani (pamoja na kikoa baba). Ukibadilisha hii, lazima urebake machapisho yote na: "rake machapishi:rebake"'
     allowed_inline_onebox_domains: "Orodha za anwani za mtandao ambazo zitawekwa kwenye boxi kama zikiunganishwa bila kichwa cha habari"
     summary_score_threshold: "Alama ya chini ambayo mada inahitaji kabla ya kuwekwa ndani ya 'Fupisha Hii Mada' "
@@ -803,7 +798,6 @@ sw:
     top_page_default_timeframe: "Chaguo-msingi la mda wa fremu kwa ajili ya kurasa wa juu wa kuangalia."
     email_token_valid_hours: "Nimesahau nywila / tokens za kuanzisha akaunti zina kibali cha masaa (n)"
     enable_badges: "Ruhusu mfumo wa beji"
-    enable_whispers: "Ruhusu mawasiliano binafsi kati ya wasaidizi ndani ya mada."
     new_version_emails: "Tuma barua pepe kwa barua pepe_mawasiliano toleo jipya la Discourse likitolewa."
     invite_expiry_days: "Funguo za mualiko ni sahihi, kwa siku ngapi"
     min_password_length: "Kiwango cha chini cha urefu wa nywila"
@@ -816,7 +810,6 @@ sw:
     google_oauth2_client_id: "Utambulisho wa Mtumiaji kwa ajili ya Programu-timizi ya Google"
     google_oauth2_client_secret: "Siri ya Mtumiaji kwa ajili ya Programu-timizi ya Google"
     enable_backups: "Ruhusu wasimamizi watengeneze machelezo ya jamii"
-    maximum_backups: "Kiwango cha juu cha chelezo kutunza kwenye diski. Machelezo ya mda yatafutwa otomatikali"
     backup_frequency: "idadi ya siku kati ya machelezo."
     rate_limit_create_topic: "Baada ya kutengeneza mada, watumiaji wasubiri sekunde (n) kabla ya kutengeneza mada nyingine."
     rate_limit_create_post: "Baada ya kuchapisha, watumiaji wasubiri sekunde (n) kabla ya kutengeneza mada nyingine."
@@ -1144,7 +1137,6 @@ sw:
     subject_template: "[%{email_prefix}] sasisho linapatikana"
   flag_reasons:
     off_topic: "Mada yako imeripotiwa kuwa **haihusiki**: jumuiya inaona kuwa haiko sawa kuwa mada, kulingana na kichwa cha habari na chapisho lake la kwanza."
-    inappropriate: "Chapisho hili limeripotiwa kuwa **halifai**: jumuiya inaona kuwa ni matusi, ubaguzi, au inakauka [mwongozo wa jumuiya](%{base_path}/mwongozo)."
     spam: "Chapisho lako limeripotiwa kuwa ni **taka**: jumuiya inaona kuwa ni tangazo, kitu ambacho kinatanganaza badala ya kuwa muhimu au na faida kwenye mada kama ilivyotarajiwa."
     notify_moderators: "Chapisho lako limeripotiwa **kupitiwa na msimamizi**: jukwaa limeona kuwa kuna kitu kuhusu chapisho lako kinachohitaji kupitiwa na msaidizi."
   flags_dispositions:
@@ -1589,6 +1581,16 @@ sw:
         %{context}
 
         %{respond_instructions}
+    user_watching_category_or_tag:
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_watching_first_post:
       title: "Mtumiaji Anaangalia Chapisho la Kwanza"
       subject_template: "[%{email_prefix}] %{topic_title}"
@@ -2019,10 +2021,6 @@ sw:
         fields:
           login_required:
             placeholder: "Binafsi"
-          must_approve_users:
-            placeholder: "Inahitaji Uthibitisho"
-      ready:
-        title: "Discourse yako iko Tayari!"
       styling:
         fields:
           styling_preview:
@@ -2039,20 +2037,11 @@ sw:
                 label: "Kategoria na Mada za Hivi Karibuni"
               categories_and_top_topics:
                 label: "Kategoria na Mada za Juu"
-      branding:
-        fields:
-          logo:
-            label: "Nembo Msingi"
-          large_icon:
-            label: "Ikoni Kubwa"
       corporate:
         fields:
           contact_url:
-            label: "Ukurasa wa Tovuti"
             placeholder: "https://www.example.com/contact-us"
-            description: "Ukurasa wa mawasiliano wa shirika lako. Utaonyeshwa kwenye <a href='%{base_path}/about' target='_blank'>kurasa wa kuhusu wewe</a>."
           site_contact:
-            label: "Ujumbe uliotomatiki"
             description: "Ujumbe wote wa kibinafsi utatumwa kutoka kwa mtumiaji huyu, kama ripoti za onyo na ilani ya umalizaji wa chelezo."
       invites:
         title: "Alika Wasaidizi"

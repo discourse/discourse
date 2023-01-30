@@ -15,9 +15,8 @@ class MigrateUserTopicTimersToBookmarkReminders < ActiveRecord::Migration[6.0]
 
     return if topic_timers_to_migrate.empty?
 
-    topic_timer_tuples = topic_timers_to_migrate.map do |tt|
-      "(#{tt.user_id}, #{tt.topic_id})"
-    end.join(", ")
+    topic_timer_tuples =
+      topic_timers_to_migrate.map { |tt| "(#{tt.user_id}, #{tt.topic_id})" }.join(", ")
 
     existing_bookmarks = DB.query(<<~SQL)
       SELECT bookmarks.id, reminder_at, reminder_type,
@@ -29,12 +28,12 @@ class MigrateUserTopicTimersToBookmarkReminders < ActiveRecord::Migration[6.0]
 
     new_bookmarks = []
     topic_timers_to_migrate.each do |tt|
-      bookmark = existing_bookmarks.find do |bm|
-
-        # we only care about existing topic-level bookmarks here
-        # because topic timers are (funnily enough) topic-level
-        bm.topic_id == tt.topic_id && bm.user_id == tt.user_id && bm.post_number == 1
-      end
+      bookmark =
+        existing_bookmarks.find do |bm|
+          # we only care about existing topic-level bookmarks here
+          # because topic timers are (funnily enough) topic-level
+          bm.topic_id == tt.topic_id && bm.user_id == tt.user_id && bm.post_number == 1
+        end
 
       if !bookmark
         # create one
@@ -45,7 +44,7 @@ class MigrateUserTopicTimersToBookmarkReminders < ActiveRecord::Migration[6.0]
           DB.exec(
             "UPDATE bookmarks SET reminder_at = :reminder_at, reminder_type = 6 WHERE id = :bookmark_id",
             reminder_at: tt.execute_at,
-            bookmark_id: bookmark.id
+            bookmark_id: bookmark.id,
           )
         end
 
@@ -69,7 +68,7 @@ class MigrateUserTopicTimersToBookmarkReminders < ActiveRecord::Migration[6.0]
       "UPDATE topic_timers SET deleted_at = :deleted_at, deleted_by_id = :deleted_by WHERE ID IN (:ids)",
       ids: topic_timers_to_migrate_ids,
       deleted_at: Time.zone.now,
-      deleted_by: Discourse.system_user
+      deleted_by: Discourse.system_user,
     )
   end
 

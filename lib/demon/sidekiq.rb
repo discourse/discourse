@@ -3,7 +3,6 @@
 require "demon/base"
 
 class Demon::Sidekiq < ::Demon::Base
-
   def self.prefix
     "sidekiq"
   end
@@ -26,7 +25,7 @@ class Demon::Sidekiq < ::Demon::Base
     Demon::Sidekiq.after_fork&.call
 
     puts "Loading Sidekiq in process id #{Process.pid}"
-    require 'sidekiq/cli'
+    require "sidekiq/cli"
     cli = Sidekiq::CLI.instance
 
     # Unicorn uses USR1 to indicate that log files have been rotated
@@ -38,10 +37,10 @@ class Demon::Sidekiq < ::Demon::Base
 
     options = ["-c", GlobalSetting.sidekiq_workers.to_s]
 
-    [['critical', 8], ['default', 4], ['low', 2], ['ultra_low', 1]].each do |queue_name, weight|
+    [["critical", 8], ["default", 4], ["low", 2], ["ultra_low", 1]].each do |queue_name, weight|
       custom_queue_hostname = ENV["UNICORN_SIDEKIQ_#{queue_name.upcase}_QUEUE_HOSTNAME"]
 
-      if !custom_queue_hostname || custom_queue_hostname.split(',').include?(Discourse.os_hostname)
+      if !custom_queue_hostname || custom_queue_hostname.split(",").include?(Discourse.os_hostname)
         options << "-q"
         options << "#{queue_name},#{weight}"
       end
@@ -49,7 +48,7 @@ class Demon::Sidekiq < ::Demon::Base
 
     # Sidekiq not as high priority as web, in this environment it is forked so a web is very
     # likely running
-    Discourse::Utils.execute_command('renice', '-n', '5', '-p', Process.pid.to_s)
+    Discourse::Utils.execute_command("renice", "-n", "5", "-p", Process.pid.to_s)
 
     cli.parse(options)
     load Rails.root + "config/initializers/100-sidekiq.rb"
@@ -59,5 +58,4 @@ class Demon::Sidekiq < ::Demon::Base
     STDERR.puts e.backtrace.join("\n")
     exit 1
   end
-
 end

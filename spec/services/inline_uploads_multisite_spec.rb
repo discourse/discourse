@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe InlineUploads, type: :multisite do
-  before do
-    set_cdn_url "https://awesome.com"
-  end
+  before { set_cdn_url "https://awesome.com" }
 
   describe ".process" do
     describe "s3 uploads" do

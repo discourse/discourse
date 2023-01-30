@@ -19,13 +19,11 @@ class PostMover
 
     topic = Topic.find_by_id(id)
     if topic.archetype != @original_topic.archetype &&
-       [@original_topic.archetype, topic.archetype].include?(Archetype.private_message)
+         [@original_topic.archetype, topic.archetype].include?(Archetype.private_message)
       raise Discourse::InvalidParameters
     end
 
-    Topic.transaction do
-      move_posts_to topic
-    end
+    Topic.transaction { move_posts_to topic }
     add_allowed_users(participants) if participants.present? && @move_to_pm
     enqueue_jobs(topic)
     topic
@@ -38,20 +36,22 @@ class PostMover
     raise Discourse::InvalidParameters unless post
     archetype = @move_to_pm ? Archetype.private_message : Archetype.default
 
-    topic = Topic.transaction do
-      new_topic = Topic.create!(
-        user: post.user,
-        title: title,
-        category_id: category_id,
-        created_at: post.created_at,
-        archetype: archetype
-      )
-      DiscourseTagging.tag_topic_by_names(new_topic, Guardian.new(user), tags)
-      move_posts_to new_topic
-      watch_new_topic
-      update_topic_excerpt new_topic
-      new_topic
-    end
+    topic =
+      Topic.transaction do
+        new_topic =
+          Topic.create!(
+            user: post.user,
+            title: title,
+            category_id: category_id,
+            created_at: post.created_at,
+            archetype: archetype,
+          )
+        DiscourseTagging.tag_topic_by_names(new_topic, Guardian.new(user), tags)
+        move_posts_to new_topic
+        watch_new_topic
+        update_topic_excerpt new_topic
+        new_topic
+      end
     enqueue_jobs(topic)
     topic
   end
@@ -73,9 +73,15 @@ class PostMover
     # we should only exclude whispers with action_code: 'split_topic'
     # because we use such whispers as a small-action posts when moving posts to the secret message
     # (in this case we don't want everyone to see that posts were moved, that's why we use whispers)
-    original_topic_posts_count = @original_topic.posts
-      .where("post_type = ? or (post_type = ? and action_code != 'split_topic')", Post.types[:regular], Post.types[:whisper])
-      .count
+    original_topic_posts_count =
+      @original_topic
+        .posts
+        .where(
+          "post_type = ? or (post_type = ? and action_code != 'split_topic')",
+          Post.types[:regular],
+          Post.types[:whisper],
+        )
+        .count
     moving_all_posts = original_topic_posts_count == posts.length
 
     create_temp_table
@@ -87,9 +93,7 @@ class PostMover
     update_upload_security_status
     update_bookmarks
 
-    if moving_all_posts
-      close_topic_and_schedule_deletion
-    end
+    close_topic_and_schedule_deletion if moving_all_posts
 
     destination_topic.reload
     destination_topic
@@ -152,19 +156,20 @@ class PostMover
   end
 
   def create_first_post(post)
-    @post_creator = PostCreator.new(
-      post.user,
-      raw: post.raw,
-      topic_id: destination_topic.id,
-      acting_user: user,
-      cook_method: post.cook_method,
-      via_email: post.via_email,
-      raw_email: post.raw_email,
-      skip_validations: true,
-      created_at: post.created_at,
-      guardian: Guardian.new(user),
-      skip_jobs: true
-    )
+    @post_creator =
+      PostCreator.new(
+        post.user,
+        raw: post.raw,
+        topic_id: destination_topic.id,
+        acting_user: user,
+        cook_method: post.cook_method,
+        via_email: post.via_email,
+        raw_email: post.raw_email,
+        skip_validations: true,
+        created_at: post.created_at,
+        guardian: Guardian.new(user),
+        skip_jobs: true,
+      )
     new_post = @post_creator.create!
 
     move_email_logs(post, new_post)
@@ -192,12 +197,10 @@ class PostMover
       reply_to_post_number: @move_map[post.reply_to_post_number],
       topic_id: destination_topic.id,
       sort_order: @move_map[post.post_number],
-      baked_version: nil
+      baked_version: nil,
     }
 
-    unless @move_map[post.reply_to_post_number]
-      update[:reply_to_user_id] = nil
-    end
+    update[:reply_to_user_id] = nil unless @move_map[post.reply_to_post_number]
 
     post.attributes = update
     post.save(validate: false)
@@ -217,7 +220,7 @@ class PostMover
       old_post_number: post.post_number,
       new_topic_id: destination_topic.id,
       new_post_number: @move_map[post.post_number],
-      new_topic_title: destination_topic.title
+      new_topic_title: destination_topic.title,
     }
   end
 
@@ -241,9 +244,7 @@ class PostMover
   end
 
   def move_email_logs(old_post, new_post)
-    EmailLog
-      .where(post_id: old_post.id)
-      .update_all(post_id: new_post.id)
+    EmailLog.where(post_id: old_post.id).update_all(post_id: new_post.id)
   end
 
   def move_notifications
@@ -349,7 +350,7 @@ class PostMover
       old_topic_id: original_topic.id,
       new_topic_id: destination_topic.id,
       old_highest_post_number: destination_topic.highest_post_number,
-      old_highest_staff_post_number: destination_topic.highest_staff_post_number
+      old_highest_staff_post_number: destination_topic.highest_staff_post_number,
     }
 
     DB.exec(<<~SQL, params)
@@ -423,7 +424,10 @@ class PostMover
   def update_statistics
     destination_topic.update_statistics
     original_topic.update_statistics
-    TopicUser.update_post_action_cache(topic_id: [original_topic.id, destination_topic.id], post_id: @post_ids)
+    TopicUser.update_post_action_cache(
+      topic_id: [original_topic.id, destination_topic.id],
+      post_id: @post_ids,
+    )
   end
 
   def update_user_actions
@@ -434,35 +438,42 @@ class PostMover
     move_type_str = PostMover.move_types[@move_type].to_s
     move_type_str.sub!("topic", "message") if @move_to_pm
 
-    message = I18n.with_locale(SiteSetting.default_locale) do
-      I18n.t(
-        "move_posts.#{move_type_str}_moderator_post",
-        count: posts.length,
-        topic_link: posts.first.is_first_post? ?
-          "[#{destination_topic.title}](#{destination_topic.relative_url})" :
-          "[#{destination_topic.title}](#{posts.first.url})"
-      )
-    end
+    message =
+      I18n.with_locale(SiteSetting.default_locale) do
+        I18n.t(
+          "move_posts.#{move_type_str}_moderator_post",
+          count: posts.length,
+          topic_link:
+            (
+              if posts.first.is_first_post?
+                "[#{destination_topic.title}](#{destination_topic.relative_url})"
+              else
+                "[#{destination_topic.title}](#{posts.first.url})"
+              end
+            ),
+        )
+      end
 
     post_type = @move_to_pm ? Post.types[:whisper] : Post.types[:small_action]
     original_topic.add_moderator_post(
-      user, message,
+      user,
+      message,
       post_type: post_type,
       action_code: "split_topic",
-      post_number: @first_post_number_moved
+      post_number: @first_post_number_moved,
     )
   end
 
   def posts
-    @posts ||= begin
-      Post.where(topic: @original_topic, id: post_ids)
-        .where.not(post_type: Post.types[:small_action])
-        .where.not(raw: '')
-        .order(:created_at).tap do |posts|
-
-        raise Discourse::InvalidParameters.new(:post_ids) if posts.empty?
+    @posts ||=
+      begin
+        Post
+          .where(topic: @original_topic, id: post_ids)
+          .where.not(post_type: Post.types[:small_action])
+          .where.not(raw: "")
+          .order(:created_at)
+          .tap { |posts| raise Discourse::InvalidParameters.new(:post_ids) if posts.empty? }
       end
-    end
   end
 
   def update_last_post_stats
@@ -478,9 +489,7 @@ class PostMover
   end
 
   def update_upload_security_status
-    DB.after_commit do
-      Jobs.enqueue(:update_topic_upload_security, topic_id: @destination_topic.id)
-    end
+    DB.after_commit { Jobs.enqueue(:update_topic_upload_security, topic_id: @destination_topic.id) }
   end
 
   def update_bookmarks
@@ -493,9 +502,18 @@ class PostMover
   def watch_new_topic
     if @destination_topic.archetype == Archetype.private_message
       if @original_topic.archetype == Archetype.private_message
-        notification_levels = TopicUser.where(topic_id: @original_topic.id, user_id: posts.pluck(:user_id)).pluck(:user_id, :notification_level).to_h
+        notification_levels =
+          TopicUser
+            .where(topic_id: @original_topic.id, user_id: posts.pluck(:user_id))
+            .pluck(:user_id, :notification_level)
+            .to_h
       else
-        notification_levels = posts.pluck(:user_id).uniq.map { |user_id| [user_id, TopicUser.notification_levels[:watching]] }.to_h
+        notification_levels =
+          posts
+            .pluck(:user_id)
+            .uniq
+            .map { |user_id| [user_id, TopicUser.notification_levels[:watching]] }
+            .to_h
       end
     else
       notification_levels = [[@destination_topic.user_id, TopicUser.notification_levels[:watching]]]
@@ -506,7 +524,10 @@ class PostMover
         user_id,
         @destination_topic.id,
         notification_level: notification_level,
-        notifications_reason_id: TopicUser.notification_reasons[destination_topic.user_id == user_id ? :created_topic : :created_post]
+        notifications_reason_id:
+          TopicUser.notification_reasons[
+            destination_topic.user_id == user_id ? :created_topic : :created_post
+          ],
       )
     end
   end
@@ -514,37 +535,34 @@ class PostMover
   def add_allowed_users(usernames)
     return unless usernames.present?
 
-    names = usernames.split(',').flatten
-    User.where(username: names).find_each do |user|
-      destination_topic.topic_allowed_users.build(user_id: user.id) unless destination_topic.topic_allowed_users.where(user_id: user.id).exists?
-    end
+    names = usernames.split(",").flatten
+    User
+      .where(username: names)
+      .find_each do |user|
+        unless destination_topic.topic_allowed_users.where(user_id: user.id).exists?
+          destination_topic.topic_allowed_users.build(user_id: user.id)
+        end
+      end
     destination_topic.save!
   end
 
   def enqueue_jobs(topic)
     @post_creator.enqueue_jobs if @post_creator
 
-    Jobs.enqueue(
-      :notify_moved_posts,
-      post_ids: post_ids,
-      moved_by_id: user.id
-    )
+    Jobs.enqueue(:notify_moved_posts, post_ids: post_ids, moved_by_id: user.id)
 
-    Jobs.enqueue(
-      :delete_inaccessible_notifications,
-      topic_id: topic.id
-    )
+    Jobs.enqueue(:delete_inaccessible_notifications, topic_id: topic.id)
   end
 
   def close_topic_and_schedule_deletion
-    @original_topic.update_status('closed', true, @user)
+    @original_topic.update_status("closed", true, @user)
 
     days_to_deleting = SiteSetting.delete_merged_stub_topics_after_days
     if days_to_deleting > 0
       @original_topic.set_or_create_timer(
         TopicTimer.types[:delete],
         days_to_deleting * 24,
-        by_user: @user
+        by_user: @user,
       )
     end
   end

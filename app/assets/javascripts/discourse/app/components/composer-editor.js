@@ -10,6 +10,7 @@ import {
 } from "discourse/lib/utilities";
 import discourseComputed, {
   bind,
+  debounce,
   observes,
   on,
 } from "discourse-common/utils/decorators";
@@ -18,7 +19,10 @@ import {
   linkSeenHashtags,
 } from "discourse/lib/link-hashtags";
 import {
-  cannotSee,
+  fetchUnseenHashtagsInContext,
+  linkSeenHashtagsInContext,
+} from "discourse/lib/hashtag-autocomplete";
+import {
   fetchUnseenMentions,
   linkSeenMentions,
 } from "discourse/lib/link-mentions";
@@ -102,8 +106,6 @@ export default Component.extend(ComposerUploadUppy, {
   fileUploadElementId: "file-uploader",
   mobileFileUploaderId: "mobile-file-upload",
 
-  // TODO (martin) Remove this once the chat plugin is using the new composerEventPrefix
-  eventPrefix: "composer",
   composerEventPrefix: "composer",
   uploadType: "composer",
   uppyId: "composer-editor-uppy",
@@ -117,6 +119,12 @@ export default Component.extend(ComposerUploadUppy, {
   uploadMarkdownResolvers,
   uploadPreProcessors,
   uploadHandlers,
+
+  init() {
+    this._super(...arguments);
+    this.warnedCannotSeeMentions = [];
+    this.warnedGroupMentions = [];
+  },
 
   @discourseComputed("composer.requiredCategoryMissing")
   replyPlaceholder(requiredCategoryMissing) {
@@ -181,22 +189,11 @@ export default Component.extend(ComposerUploadUppy, {
           }
         }
       },
+
+      hashtagTypesInPriorityOrder:
+        this.site.hashtag_configurations["topic-composer"],
+      hashtagIcons: this.site.hashtag_icons,
     };
-  },
-
-  @bind
-  _userSearchTerm(term) {
-    const topicId = this.get("topic.id");
-    // maybe this is a brand new topic, so grab category from composer
-    const categoryId =
-      this.get("topic.category_id") || this.get("composer.categoryId");
-
-    return userSearch({
-      term,
-      topicId,
-      categoryId,
-      includeGroups: true,
-    });
   },
 
   @bind
@@ -218,7 +215,13 @@ export default Component.extend(ComposerUploadUppy, {
     if (this.siteSettings.enable_mentions) {
       $input.autocomplete({
         template: findRawTemplate("user-selector-autocomplete"),
-        dataSource: this._userSearchTerm,
+        dataSource: (term) =>
+          userSearch({
+            term,
+            topicId: this.topic?.id,
+            categoryId: this.topic?.category_id || this.composer?.categoryId,
+            includeGroups: true,
+          }),
         key: "@",
         transformComplete: (v) => v.username || v.name,
         afterComplete: this._afterMentionComplete,
@@ -460,85 +463,101 @@ export default Component.extend(ComposerUploadUppy, {
   },
 
   _renderUnseenMentions(preview, unseen) {
-    // 'Create a New Topic' scenario is not supported (per conversation with codinghorror)
-    // https://meta.discourse.org/t/taking-another-1-7-release-task/51986/7
-    fetchUnseenMentions(unseen, this.get("composer.topic.id")).then((r) => {
+    fetchUnseenMentions({
+      names: unseen,
+      topicId: this.get("composer.topic.id"),
+      allowedNames: this.get("composer.targetRecipients")?.split(","),
+    }).then((response) => {
       linkSeenMentions(preview, this.siteSettings);
       this._warnMentionedGroups(preview);
       this._warnCannotSeeMention(preview);
-      this._warnHereMention(r.here_count);
+      this._warnHereMention(response.here_count);
     });
   },
 
   _renderUnseenHashtags(preview) {
-    const unseen = linkSeenHashtags(preview);
+    let unseen;
+    const hashtagContext = this.site.hashtag_configurations["topic-composer"];
+    if (this.siteSettings.enable_experimental_hashtag_autocomplete) {
+      unseen = linkSeenHashtagsInContext(hashtagContext, preview);
+    } else {
+      unseen = linkSeenHashtags(preview);
+    }
+
     if (unseen.length > 0) {
-      fetchUnseenHashtags(unseen).then(() => {
-        linkSeenHashtags(preview);
-      });
+      if (this.siteSettings.enable_experimental_hashtag_autocomplete) {
+        fetchUnseenHashtagsInContext(hashtagContext, unseen).then(() => {
+          linkSeenHashtagsInContext(hashtagContext, preview);
+        });
+      } else {
+        fetchUnseenHashtags(unseen).then(() => {
+          linkSeenHashtags(preview);
+        });
+      }
     }
   },
 
+  @debounce(2000)
   _warnMentionedGroups(preview) {
     schedule("afterRender", () => {
-      let found = this.warnedGroupMentions || [];
-      preview?.querySelectorAll(".mention-group.notify")?.forEach((mention) => {
-        if (this._isInQuote(mention)) {
-          return;
-        }
+      preview
+        .querySelectorAll(".mention-group[data-mentionable-user-count]")
+        .forEach((mention) => {
+          const { name } = mention.dataset;
+          if (
+            this.warnedGroupMentions.includes(name) ||
+            this._isInQuote(mention)
+          ) {
+            return;
+          }
 
-        let name = mention.dataset.name;
-        if (!found.includes(name)) {
-          this.groupsMentioned([
-            {
-              name,
-              user_count: mention.dataset.mentionableUserCount,
-              max_mentions: mention.dataset.maxMentions,
-            },
-          ]);
-          found.push(name);
-        }
-      });
-
-      this.set("warnedGroupMentions", found);
+          this.warnedGroupMentions.push(name);
+          this.groupsMentioned({
+            name,
+            userCount: mention.dataset.mentionableUserCount,
+            maxMentions: mention.dataset.maxMentions,
+          });
+        });
     });
   },
 
+  // add a delay to allow for typing, so you don't open the warning right away
+  // previously we would warn after @bob even if you were about to mention @bob2
+  @debounce(2000)
   _warnCannotSeeMention(preview) {
-    const composerDraftKey = this.get("composer.draftKey");
-
-    if (composerDraftKey === Composer.NEW_PRIVATE_MESSAGE_KEY) {
+    if (this.composer.draftKey === Composer.NEW_PRIVATE_MESSAGE_KEY) {
       return;
     }
 
-    schedule("afterRender", () => {
-      let found = this.warnedCannotSeeMentions || [];
+    preview.querySelectorAll(".mention[data-reason]").forEach((mention) => {
+      const { name } = mention.dataset;
+      if (this.warnedCannotSeeMentions.includes(name)) {
+        return;
+      }
 
-      preview?.querySelectorAll(".mention.cannot-see")?.forEach((mention) => {
-        let name = mention.dataset.name;
-
-        if (!found.includes(name)) {
-          // add a delay to allow for typing, so you don't open the warning right away
-          // previously we would warn after @bob even if you were about to mention @bob2
-          discourseLater(
-            this,
-            () => {
-              if (
-                preview?.querySelectorAll(
-                  `.mention.cannot-see[data-name="${name}"]`
-                )?.length > 0
-              ) {
-                this.cannotSeeMention([{ name, reason: cannotSee[name] }]);
-                found.push(name);
-              }
-            },
-            2000
-          );
-        }
+      this.warnedCannotSeeMentions.push(name);
+      this.cannotSeeMention({
+        name,
+        reason: mention.dataset.reason,
       });
-
-      this.set("warnedCannotSeeMentions", found);
     });
+
+    preview
+      .querySelectorAll(".mention-group[data-reason]")
+      .forEach((mention) => {
+        const { name } = mention.dataset;
+        if (this.warnedCannotSeeMentions.includes(name)) {
+          return;
+        }
+
+        this.warnedCannotSeeMentions.push(name);
+        this.cannotSeeMention({
+          name,
+          reason: mention.dataset.reason,
+          notifiedCount: mention.dataset.notifiedUserCount,
+          isGroup: true,
+        });
+      });
   },
 
   _warnHereMention(hereCount) {
@@ -546,13 +565,7 @@ export default Component.extend(ComposerUploadUppy, {
       return;
     }
 
-    discourseLater(
-      this,
-      () => {
-        this.hereMention(hereCount);
-      },
-      2000
-    );
+    this.hereMention(hereCount);
   },
 
   @bind
@@ -863,8 +876,14 @@ export default Component.extend(ComposerUploadUppy, {
       this._warnMentionedGroups(preview);
       this._warnCannotSeeMention(preview);
 
-      // Paint category and tag hashtags
-      const unseenHashtags = linkSeenHashtags(preview);
+      // Paint category, tag, and other data source hashtags
+      let unseenHashtags;
+      const hashtagContext = this.site.hashtag_configurations["topic-composer"];
+      if (this.siteSettings.enable_experimental_hashtag_autocomplete) {
+        unseenHashtags = linkSeenHashtagsInContext(hashtagContext, preview);
+      } else {
+        unseenHashtags = linkSeenHashtags(preview);
+      }
       if (unseenHashtags.length > 0) {
         discourseDebounce(this, this._renderUnseenHashtags, preview, 450);
       }

@@ -1,9 +1,14 @@
 # frozen_string_literal: true
 
 # we should set the locale before the migration
-task 'set_locale' do
+task "set_locale" do
   begin
-    I18n.locale = (SiteSetting.default_locale || :en) rescue :en
+    I18n.locale =
+      begin
+        (SiteSetting.default_locale || :en)
+      rescue StandardError
+        :en
+      end
   rescue I18n::InvalidLocale
     I18n.locale = :en
   end
@@ -19,21 +24,20 @@ module MultisiteTestHelpers
   end
 end
 
-task 'db:environment:set' => [:load_config]  do |_, args|
+task "db:environment:set" => [:load_config] do |_, args|
   if MultisiteTestHelpers.load_multisite?
     system("RAILS_ENV=test RAILS_DB=discourse_test_multisite rake db:environment:set")
   end
 end
 
-task 'db:force_skip_persist' do
+task "db:force_skip_persist" do
   GlobalSetting.skip_db = true
   GlobalSetting.skip_redis = true
 end
 
-task 'db:create' => [:load_config] do |_, args|
+task "db:create" => [:load_config] do |_, args|
   if MultisiteTestHelpers.create_multisite?
     unless system("RAILS_ENV=test RAILS_DB=discourse_test_multisite rake db:create")
-
       STDERR.puts "-" * 80
       STDERR.puts "ERROR: Could not create multisite DB. A common cause of this is a plugin"
       STDERR.puts "checking the column structure when initializing, which raises an error."
@@ -44,12 +48,12 @@ task 'db:create' => [:load_config] do |_, args|
 end
 
 begin
-  reqs = Rake::Task['db:create'].prerequisites.map(&:to_sym)
-  Rake::Task['db:create'].clear_prerequisites
-  Rake::Task['db:create'].enhance(["db:force_skip_persist"] + reqs)
+  reqs = Rake::Task["db:create"].prerequisites.map(&:to_sym)
+  Rake::Task["db:create"].clear_prerequisites
+  Rake::Task["db:create"].enhance(["db:force_skip_persist"] + reqs)
 end
 
-task 'db:drop' => [:load_config] do |_, args|
+task "db:drop" => [:load_config] do |_, args|
   if MultisiteTestHelpers.create_multisite?
     system("RAILS_DB=discourse_test_multisite RAILS_ENV=test rake db:drop")
   end
@@ -60,15 +64,15 @@ begin
   Rake::Task["db:rollback"].clear
 end
 
-task 'db:rollback' => ['environment', 'set_locale'] do |_, args|
+task "db:rollback" => %w[environment set_locale] do |_, args|
   step = ENV["STEP"] ? ENV["STEP"].to_i : 1
   ActiveRecord::Base.connection.migration_context.rollback(step)
-  Rake::Task['db:_dump'].invoke
+  Rake::Task["db:_dump"].invoke
 end
 
 # our optimized version of multisite migrate, we have many sites and we have seeds
 # this ensures we can run migrations concurrently to save huge amounts of time
-Rake::Task['multisite:migrate'].clear
+Rake::Task["multisite:migrate"].clear
 
 class StdOutDemux
   def initialize(stdout)
@@ -104,17 +108,22 @@ class SeedHelper
 
   def self.filter
     # Allows a plugin to exclude any specified seed data files from running
-    DiscoursePluginRegistry.seedfu_filter.any? ?
-      /^(?!.*(#{DiscoursePluginRegistry.seedfu_filter.to_a.join("|")})).*$/ : nil
+    if DiscoursePluginRegistry.seedfu_filter.any?
+      /\A(?!.*(#{DiscoursePluginRegistry.seedfu_filter.to_a.join("|")})).*\z/
+    else
+      nil
+    end
   end
 end
 
-task 'multisite:migrate' => ['db:load_config', 'environment', 'set_locale'] do |_, args|
-  if ENV["RAILS_ENV"] != "production"
-    raise "Multisite migrate is only supported in production"
-  end
+task "multisite:migrate" => %w[db:load_config environment set_locale] do |_, args|
+  raise "Multisite migrate is only supported in production" if ENV["RAILS_ENV"] != "production"
 
-  DistributedMutex.synchronize('db_migration', redis: Discourse.redis.without_namespace, validity: 1200) do
+  DistributedMutex.synchronize(
+    "db_migration",
+    redis: Discourse.redis.without_namespace,
+    validity: 1200,
+  ) do
     # TODO: Switch to processes for concurrent migrations because Rails migration
     # is not thread safe by default.
     concurrency = 1
@@ -134,35 +143,35 @@ task 'multisite:migrate' => ['db:load_config', 'environment', 'set_locale'] do |
     def execute_concurrently(concurrency, exceptions)
       queue = Queue.new
 
-      RailsMultisite::ConnectionManagement.each_connection do |db|
-        queue << db
-      end
+      RailsMultisite::ConnectionManagement.each_connection { |db| queue << db }
 
       concurrency.times { queue << :done }
 
-      (1..concurrency).map do
-        Thread.new {
-          while true
-            db = queue.pop
-            break if db == :done
+      (1..concurrency)
+        .map do
+          Thread.new do
+            while true
+              db = queue.pop
+              break if db == :done
 
-            RailsMultisite::ConnectionManagement.with_connection(db) do
-              begin
-                yield(db) if block_given?
-              rescue => e
-                exceptions << [db, e]
-              ensure
+              RailsMultisite::ConnectionManagement.with_connection(db) do
                 begin
-                  $stdout.finish_chunk if concurrency > 1
-                rescue => ex
-                  STDERR.puts ex.inspect
-                  STDERR.puts ex.backtrace
+                  yield(db) if block_given?
+                rescue => e
+                  exceptions << [db, e]
+                ensure
+                  begin
+                    $stdout.finish_chunk if concurrency > 1
+                  rescue => ex
+                    STDERR.puts ex.inspect
+                    STDERR.puts ex.backtrace
+                  end
                 end
               end
             end
           end
-        }
-      end.each(&:join)
+        end
+        .each(&:join)
     end
 
     def check_exceptions(exceptions)
@@ -195,29 +204,35 @@ task 'multisite:migrate' => ['db:load_config', 'environment', 'set_locale'] do |
       puts "Seeding #{db}"
       SeedFu.seed(SeedHelper.paths, SeedHelper.filter)
 
-      if !Discourse.skip_post_deployment_migrations? && ENV['SKIP_OPTIMIZE_ICONS'] != '1'
+      if !Discourse.skip_post_deployment_migrations? && ENV["SKIP_OPTIMIZE_ICONS"] != "1"
         SiteIconManager.ensure_optimized!
       end
     end
 
-    if concurrency > 1
-      $stdout = old_stdout
-    end
+    $stdout = old_stdout if concurrency > 1
     check_exceptions(exceptions)
 
-    Rake::Task['db:_dump'].invoke
+    Rake::Task["db:_dump"].invoke
   end
 end
 
 # we need to run seed_fu every time we run rake db:migrate
-task 'db:migrate' => ['load_config', 'environment', 'set_locale'] do |_, args|
-  DistributedMutex.synchronize('db_migration', redis: Discourse.redis.without_namespace, validity: 300) do
+task "db:migrate" => %w[load_config environment set_locale] do |_, args|
+  DistributedMutex.synchronize(
+    "db_migration",
+    redis: Discourse.redis.without_namespace,
+    validity: 300,
+  ) do
     migrations = ActiveRecord::Base.connection.migration_context.migrations
-    now_timestamp = Time.now.utc.strftime('%Y%m%d%H%M%S').to_i
-    epoch_timestamp = Time.at(0).utc.strftime('%Y%m%d%H%M%S').to_i
+    now_timestamp = Time.now.utc.strftime("%Y%m%d%H%M%S").to_i
+    epoch_timestamp = Time.at(0).utc.strftime("%Y%m%d%H%M%S").to_i
 
-    raise "Migration #{migrations.last.version} is timestamped in the future" if migrations.last.version > now_timestamp
-    raise "Migration #{migrations.first.version} is timestamped before the epoch" if migrations.first.version < epoch_timestamp
+    if migrations.last.version > now_timestamp
+      raise "Migration #{migrations.last.version} is timestamped in the future"
+    end
+    if migrations.first.version < epoch_timestamp
+      raise "Migration #{migrations.first.version} is timestamped before the epoch"
+    end
 
     %i[pg_trgm unaccent].each do |extension|
       begin
@@ -233,11 +248,9 @@ task 'db:migrate' => ['load_config', 'environment', 'set_locale'] do |_, args|
     SeedFu.quiet = true
     SeedFu.seed(SeedHelper.paths, SeedHelper.filter)
 
-    if Rails.env.development? && !ENV["RAILS_DB"]
-      Rake::Task['db:schema:cache:dump'].invoke
-    end
+    Rake::Task["db:schema:cache:dump"].invoke if Rails.env.development? && !ENV["RAILS_DB"]
 
-    if !Discourse.skip_post_deployment_migrations? && ENV['SKIP_OPTIMIZE_ICONS'] != '1'
+    if !Discourse.skip_post_deployment_migrations? && ENV["SKIP_OPTIMIZE_ICONS"] != "1"
       SiteIconManager.ensure_optimized!
     end
   end
@@ -247,14 +260,19 @@ task 'db:migrate' => ['load_config', 'environment', 'set_locale'] do |_, args|
   end
 end
 
-task 'test:prepare' => 'environment' do
-  I18n.locale = SiteSetting.default_locale rescue :en
+task "test:prepare" => "environment" do
+  I18n.locale =
+    begin
+      SiteSetting.default_locale
+    rescue StandardError
+      :en
+    end
   SeedFu.seed(DiscoursePluginRegistry.seed_paths)
 end
 
-task 'db:api_test_seed' => 'environment' do
+task "db:api_test_seed" => "environment" do
   puts "Loading test data for discourse_api"
-  load Rails.root + 'db/api_test_seeds.rb'
+  load Rails.root + "db/api_test_seeds.rb"
 end
 
 def print_table(array)
@@ -262,17 +280,15 @@ def print_table(array)
   cols = array[0].keys.length
 
   array.each do |row|
-    row.each_with_index do |(_, val), i|
-      width[i] = [width[i].to_i, val.to_s.length].max
-    end
+    row.each_with_index { |(_, val), i| width[i] = [width[i].to_i, val.to_s.length].max }
   end
 
   array[0].keys.each_with_index do |col, i|
-    print col.to_s.ljust(width[i], ' ')
+    print col.to_s.ljust(width[i], " ")
     if i == cols - 1
       puts
     else
-      print ' | '
+      print " | "
     end
   end
 
@@ -280,19 +296,18 @@ def print_table(array)
 
   array.each do |row|
     row.each_with_index do |(_, val), i|
-      print val.to_s.ljust(width[i], ' ')
+      print val.to_s.ljust(width[i], " ")
       if i == cols - 1
         puts
       else
-        print ' | '
+        print " | "
       end
     end
   end
 end
 
-desc 'Statistics about database'
-task 'db:stats' => 'environment' do
-
+desc "Statistics about database"
+task "db:stats" => "environment" do
   sql = <<~SQL
     select table_name,
     (
@@ -312,8 +327,8 @@ task 'db:stats' => 'environment' do
   print_table(DB.query_hash(sql))
 end
 
-task 'db:ensure_post_migrations' do
-  if ['1', 'true'].include?(ENV['SKIP_POST_DEPLOYMENT_MIGRATIONS'])
+task "db:ensure_post_migrations" do
+  if %w[1 true].include?(ENV["SKIP_POST_DEPLOYMENT_MIGRATIONS"])
     cmd = `cat /proc/#{Process.pid}/cmdline | xargs -0 echo`
     ENV["SKIP_POST_DEPLOYMENT_MIGRATIONS"] = "0"
     exec cmd
@@ -336,23 +351,20 @@ class NormalizedIndex
 end
 
 def normalize_index_names(names)
-  names.map do |name|
-    NormalizedIndex.new(name)
-  end.reject { |i| i.name.include?("ccnew") }
+  names.map { |name| NormalizedIndex.new(name) }.reject { |i| i.name.include?("ccnew") }
 end
 
-desc 'Validate indexes'
-task 'db:validate_indexes', [:arg] => ['db:ensure_post_migrations', 'environment'] do |_, args|
-
+desc "Validate indexes"
+task "db:validate_indexes", [:arg] => %w[db:ensure_post_migrations environment] do |_, args|
   db = TemporaryDb.new
   db.start
   db.migrate
 
   ActiveRecord::Base.establish_connection(
-    adapter: 'postgresql',
-    database: 'discourse',
+    adapter: "postgresql",
+    database: "discourse",
     port: db.pg_port,
-    host: 'localhost'
+    host: "localhost",
   )
 
   expected = DB.query_single <<~SQL
@@ -377,7 +389,6 @@ task 'db:validate_indexes', [:arg] => ['db:ensure_post_migrations', 'environment
   inconsistency_found = false
 
   RailsMultisite::ConnectionManagement.each_connection do |db_name|
-
     puts "Testing indexes on the #{db_name} database", ""
 
     current = DB.query_single <<~SQL
@@ -403,9 +414,7 @@ task 'db:validate_indexes', [:arg] => ['db:ensure_post_migrations', 'environment
       end
     end
 
-    if db_name != "default" && renames.length == 0 && missing.length == 0 && extra.length == 0
-      next
-    end
+    next if db_name != "default" && renames.length == 0 && missing.length == 0 && extra.length == 0
 
     if renames.length > 0
       inconsistency_found = true
@@ -431,9 +440,7 @@ task 'db:validate_indexes', [:arg] => ['db:ensure_post_migrations', 'environment
       inconsistency_found = true
 
       puts "Missing Indexes", ""
-      missing.each do |m|
-        puts m
-      end
+      missing.each { |m| puts m }
       if fix_indexes
         puts "Adding missing indexes..."
         missing.each do |m|
@@ -452,9 +459,7 @@ task 'db:validate_indexes', [:arg] => ['db:ensure_post_migrations', 'environment
       inconsistency_found = true
 
       puts "", "Extra Indexes", ""
-      extra.each do |e|
-        puts e
-      end
+      extra.each { |e| puts e }
 
       if fix_indexes
         puts "Removing extra indexes"
@@ -481,21 +486,22 @@ task 'db:validate_indexes', [:arg] => ['db:ensure_post_migrations', 'environment
     end
   end
 
-  if inconsistency_found && !fix_indexes
-    exit 1
-  end
+  exit 1 if inconsistency_found && !fix_indexes
 end
 
-desc 'Rebuild indexes'
-task 'db:rebuild_indexes' => 'environment' do
-  if Import::backup_tables_count > 0
+desc "Rebuild indexes"
+task "db:rebuild_indexes" => "environment" do
+  if Import.backup_tables_count > 0
     raise "Backup from a previous import exists. Drop them before running this job with rake import:remove_backup, or move them to another schema."
   end
 
   Discourse.enable_readonly_mode
 
   backup_schema = Jobs::Importer::BACKUP_SCHEMA
-  table_names = DB.query_single("select table_name from information_schema.tables where table_schema = 'public'")
+  table_names =
+    DB.query_single(
+      "select table_name from information_schema.tables where table_schema = 'public'",
+    )
 
   begin
     # Move all tables to the backup schema:
@@ -511,13 +517,13 @@ task 'db:rebuild_indexes' => 'environment' do
     # Fetch index definitions from the new db
     index_definitions = {}
     table_names.each do |table_name|
-      index_definitions[table_name] = DB.query_single("SELECT indexdef FROM pg_indexes WHERE tablename = '#{table_name}' and schemaname = 'public';")
+      index_definitions[table_name] = DB.query_single(
+        "SELECT indexdef FROM pg_indexes WHERE tablename = '#{table_name}' and schemaname = 'public';",
+      )
     end
 
     # Drop the new tables
-    table_names.each do |table_name|
-      DB.exec("DROP TABLE public.#{table_name}")
-    end
+    table_names.each { |table_name| DB.exec("DROP TABLE public.#{table_name}") }
 
     # Move the old tables back to the public schema
     table_names.each do |table_name|
@@ -525,7 +531,10 @@ task 'db:rebuild_indexes' => 'environment' do
     end
 
     # Drop their indexes
-    index_names = DB.query_single("SELECT indexname FROM pg_indexes WHERE schemaname = 'public' AND tablename IN ('#{table_names.join("', '")}')")
+    index_names =
+      DB.query_single(
+        "SELECT indexname FROM pg_indexes WHERE schemaname = 'public' AND tablename IN ('#{table_names.join("', '")}')",
+      )
     index_names.each do |index_name|
       begin
         puts index_name
@@ -547,7 +556,7 @@ task 'db:rebuild_indexes' => 'environment' do
         end
       end
     end
-  rescue
+  rescue StandardError
     # Can we roll this back?
     raise
   ensure
@@ -555,14 +564,14 @@ task 'db:rebuild_indexes' => 'environment' do
   end
 end
 
-desc 'Check that the DB can be accessed'
-task 'db:status:json' do
+desc "Check that the DB can be accessed"
+task "db:status:json" do
   begin
-    Rake::Task['environment'].invoke
-    DB.query('SELECT 1')
-  rescue
-    puts({ status: 'error' }.to_json)
+    Rake::Task["environment"].invoke
+    DB.query("SELECT 1")
+  rescue StandardError
+    puts({ status: "error" }.to_json)
   else
-    puts({ status: 'ok' }.to_json)
+    puts({ status: "ok" }.to_json)
   end
 end

@@ -3,7 +3,8 @@
 RSpec.describe TopicViewSerializer do
   def serialize_topic(topic, user_arg)
     topic_view = TopicView.new(topic.id, user_arg)
-    serializer = TopicViewSerializer.new(topic_view, scope: Guardian.new(user_arg), root: false).as_json
+    serializer =
+      TopicViewSerializer.new(topic_view, scope: Guardian.new(user_arg), root: false).as_json
     JSON.parse(MultiJson.dump(serializer)).deep_symbolize_keys!
   end
 
@@ -17,11 +18,11 @@ RSpec.describe TopicViewSerializer do
   fab!(:user_2) { Fabricate(:user) }
   fab!(:admin) { Fabricate(:admin) }
 
-  describe '#featured_link and #featured_link_root_domain' do
-    fab!(:featured_link) { 'http://meta.discourse.org' }
+  describe "#featured_link and #featured_link_root_domain" do
+    fab!(:featured_link) { "http://meta.discourse.org" }
 
-    describe 'when topic featured link is disable' do
-      it 'should return the right attributes' do
+    describe "when topic featured link is disable" do
+      it "should return the right attributes" do
         topic.update!(featured_link: featured_link)
         SiteSetting.topic_featured_link_enabled = false
 
@@ -32,62 +33,61 @@ RSpec.describe TopicViewSerializer do
       end
     end
 
-    describe 'when topic featured link is enabled' do
-      it 'should return the right attributes' do
+    describe "when topic featured link is enabled" do
+      it "should return the right attributes" do
         topic.update!(featured_link: featured_link)
 
         json = serialize_topic(topic, user)
 
         expect(json[:featured_link]).to eq(featured_link)
-        expect(json[:featured_link_root_domain]).to eq('discourse.org')
+        expect(json[:featured_link_root_domain]).to eq("discourse.org")
       end
     end
   end
 
-  describe '#external_id' do
-    describe 'when a topic has an external_id' do
-      before { topic.update!(external_id: '42-asdf') }
+  describe "#external_id" do
+    describe "when a topic has an external_id" do
+      before { topic.update!(external_id: "42-asdf") }
 
-      it 'should return the external_id' do
+      it "should return the external_id" do
         json = serialize_topic(topic, user)
-        expect(json[:external_id]).to eq('42-asdf')
+        expect(json[:external_id]).to eq("42-asdf")
       end
     end
   end
 
-  describe '#image_url' do
+  describe "#image_url" do
     fab!(:image_upload) { Fabricate(:image_upload, width: 5000, height: 5000) }
 
-    describe 'when a topic has an image' do
+    describe "when a topic has an image" do
       before { topic.update!(image_upload_id: image_upload.id) }
 
-      it 'should return the image url' do
+      it "should return the image url" do
         json = serialize_topic(topic, user)
 
         expect(json[:image_url]).to end_with(image_upload.url)
       end
 
-      it 'should have thumbnail jobs enqueued' do
+      it "should have thumbnail jobs enqueued" do
         SiteSetting.create_thumbnails = true
 
         Discourse.redis.del(topic.thumbnail_job_redis_key([]))
         json = nil
 
-        expect do
-          json = serialize_topic(topic, user)
-        end.to change { Jobs::GenerateTopicThumbnails.jobs.size }.by(1)
+        expect do json = serialize_topic(topic, user) end.to change {
+          Jobs::GenerateTopicThumbnails.jobs.size
+        }.by(1)
 
         topic.generate_thumbnails!
 
-        expect do
-          json = serialize_topic(topic, user)
-        end.not_to change { Jobs::GenerateTopicThumbnails.jobs.size }
+        expect do json = serialize_topic(topic, user) end.not_to change {
+          Jobs::GenerateTopicThumbnails.jobs.size
+        }
       end
     end
 
-    describe 'when a topic does not contain an image' do
-      it 'should return a nil image url' do
-
+    describe "when a topic does not contain an image" do
+      it "should return a nil image url" do
         json = serialize_topic(topic, user)
 
         expect(json.has_key? :image_url).to eq(true)
@@ -96,30 +96,26 @@ RSpec.describe TopicViewSerializer do
     end
   end
 
-  describe '#suggested_topics' do
-    before do
-      Group.refresh_automatic_groups!
-    end
+  describe "#suggested_topics" do
+    before { Group.refresh_automatic_groups! }
 
     fab!(:topic2) { Fabricate(:topic) }
 
-    before do
-      TopicUser.update_last_read(user, topic2.id, 0, 0, 0)
-    end
+    before { TopicUser.update_last_read(user, topic2.id, 0, 0, 0) }
 
-    describe 'when loading last chunk' do
-      it 'should include suggested topics' do
+    describe "when loading last chunk" do
+      it "should include suggested topics" do
         json = serialize_topic(topic, user)
 
         expect(json[:suggested_topics].first[:id]).to eq(topic2.id)
       end
     end
 
-    describe 'when not loading last chunk' do
+    describe "when not loading last chunk" do
       fab!(:post) { Fabricate(:post, topic: topic) }
       fab!(:post2) { Fabricate(:post, topic: topic) }
 
-      it 'should not include suggested topics' do
+      it "should not include suggested topics" do
         post
         post2
         topic_view = TopicView.new(topic.id, user, post_ids: [post.id])
@@ -130,37 +126,37 @@ RSpec.describe TopicViewSerializer do
       end
     end
 
-    describe 'with private messages' do
-      before do
-        Group.refresh_automatic_groups!
-      end
+    describe "with private messages" do
+      before { Group.refresh_automatic_groups! }
 
       fab!(:topic) do
-        Fabricate(:private_message_topic,
+        Fabricate(
+          :private_message_topic,
           highest_post_number: 1,
-          topic_allowed_users: [
-            Fabricate.build(:topic_allowed_user, user: user)
-          ]
+          topic_allowed_users: [Fabricate.build(:topic_allowed_user, user: user)],
         )
       end
 
       fab!(:topic2) do
-        Fabricate(:private_message_topic,
+        Fabricate(
+          :private_message_topic,
           highest_post_number: 1,
-          topic_allowed_users: [
-            Fabricate.build(:topic_allowed_user, user: user)
-          ]
+          topic_allowed_users: [Fabricate.build(:topic_allowed_user, user: user)],
         )
       end
 
-      it 'includes suggested topics' do
-        TopicUser.change(user, topic2.id, notification_level: TopicUser.notification_levels[:tracking])
+      it "includes suggested topics" do
+        TopicUser.change(
+          user,
+          topic2.id,
+          notification_level: TopicUser.notification_levels[:tracking],
+        )
 
         json = serialize_topic(topic, user)
         expect(json[:suggested_topics].map { |t| t[:id] }).to contain_exactly(topic2.id)
       end
 
-      it 'does not include suggested topics if all PMs are read' do
+      it "does not include suggested topics if all PMs are read" do
         TopicUser.update_last_read(user, topic2.id, 1, 1, 0)
 
         json = serialize_topic(topic, user)
@@ -169,21 +165,19 @@ RSpec.describe TopicViewSerializer do
     end
   end
 
-  describe '#suggested_group_name' do
+  describe "#suggested_group_name" do
     fab!(:pm) { Fabricate(:private_message_post).topic }
     fab!(:group) { Fabricate(:group) }
 
-    before do
-      Group.refresh_automatic_groups!
-    end
+    before { Group.refresh_automatic_groups! }
 
-    it 'is nil for a regular topic' do
+    it "is nil for a regular topic" do
       json = serialize_topic(topic, user)
 
       expect(json[:suggested_group_name]).to eq(nil)
     end
 
-    it 'is nil if user is an allowed user of the private message' do
+    it "is nil if user is an allowed user of the private message" do
       pm.allowed_users << user
 
       json = serialize_topic(pm, user)
@@ -191,7 +185,7 @@ RSpec.describe TopicViewSerializer do
       expect(json[:suggested_group_name]).to eq(nil)
     end
 
-    it 'returns the right group name if user is part of allowed group in the private message' do
+    it "returns the right group name if user is part of allowed group in the private message" do
       pm.allowed_groups << group
       group.add(user)
 
@@ -201,22 +195,30 @@ RSpec.describe TopicViewSerializer do
     end
   end
 
-  describe 'when tags added to private message topics' do
+  describe "when tags added to private message topics" do
     fab!(:moderator) { Fabricate(:moderator) }
     fab!(:tag) { Fabricate(:tag) }
     fab!(:pm) do
-      Fabricate(:private_message_topic, tags: [tag], topic_allowed_users: [
-        Fabricate.build(:topic_allowed_user, user: moderator),
-        Fabricate.build(:topic_allowed_user, user: user)
-      ])
+      Fabricate(
+        :private_message_topic,
+        tags: [tag],
+        topic_allowed_users: [
+          Fabricate.build(:topic_allowed_user, user: moderator),
+          Fabricate.build(:topic_allowed_user, user: user),
+        ],
+      )
     end
 
     fab!(:group) { Fabricate(:group) }
     fab!(:pm_between_reg_users) do
-      Fabricate(:private_message_topic, tags: [tag], topic_allowed_users: [
-        Fabricate.build(:topic_allowed_user, user: user),
-        Fabricate.build(:topic_allowed_user, user: user_2)
-      ])
+      Fabricate(
+        :private_message_topic,
+        tags: [tag],
+        topic_allowed_users: [
+          Fabricate.build(:topic_allowed_user, user: user),
+          Fabricate.build(:topic_allowed_user, user: user_2),
+        ],
+      )
     end
 
     before do
@@ -257,29 +259,53 @@ RSpec.describe TopicViewSerializer do
     end
   end
 
-  describe 'with hidden tags' do
-    fab!(:hidden_tag) { Fabricate(:tag, name: 'hidden') }
-    fab!(:staff_tag_group) { Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name]) }
-
-    before do
-      topic.tags << hidden_tag
+  describe "with hidden tags" do
+    fab!(:hidden_tag) { Fabricate(:tag, name: "hidden") }
+    fab!(:staff_tag_group) do
+      Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
     end
 
-    it 'returns hidden tag to staff' do
+    before { topic.tags << hidden_tag }
+
+    it "returns hidden tag to staff" do
       json = serialize_topic(topic, admin)
       expect(json[:tags]).to eq([hidden_tag.name])
     end
 
-    it 'does not return hidden tag to non-staff' do
+    it "does not return hidden tag to non-staff" do
       json = serialize_topic(topic, user)
       expect(json[:tags]).to eq([])
     end
   end
 
-  describe 'tags order' do
-    fab!(:tag1) { Fabricate(:tag, name: 'ctag', description: "c description", topic_count: 5) }
-    fab!(:tag2) { Fabricate(:tag, name: 'btag', description: "b description", topic_count: 9) }
-    fab!(:tag3) { Fabricate(:tag, name: 'atag', description: "a description", topic_count: 3) }
+  describe "tags order" do
+    fab!(:tag1) do
+      Fabricate(
+        :tag,
+        name: "ctag",
+        description: "c description",
+        staff_topic_count: 5,
+        public_topic_count: 5,
+      )
+    end
+    fab!(:tag2) do
+      Fabricate(
+        :tag,
+        name: "btag",
+        description: "b description",
+        staff_topic_count: 9,
+        public_topic_count: 9,
+      )
+    end
+    fab!(:tag3) do
+      Fabricate(
+        :tag,
+        name: "atag",
+        description: "a description",
+        staff_topic_count: 3,
+        public_topic_count: 3,
+      )
+    end
 
     before do
       topic.tags << tag1
@@ -287,16 +313,18 @@ RSpec.describe TopicViewSerializer do
       topic.tags << tag3
     end
 
-    it 'tags are automatically sorted by tag popularity' do
+    it "tags are automatically sorted by tag popularity" do
       json = serialize_topic(topic, user)
-      expect(json[:tags]).to eq(%w(btag ctag atag))
-      expect(json[:tags_descriptions]).to eq({ btag: "b description", ctag: "c description", atag: "a description" })
+      expect(json[:tags]).to eq(%w[btag ctag atag])
+      expect(json[:tags_descriptions]).to eq(
+        { btag: "b description", ctag: "c description", atag: "a description" },
+      )
     end
 
-    it 'tags can be sorted alphabetically' do
+    it "tags can be sorted alphabetically" do
       SiteSetting.tags_sort_alphabetically = true
       json = serialize_topic(topic, user)
-      expect(json[:tags]).to eq(%w(atag btag ctag))
+      expect(json[:tags]).to eq(%w[atag btag ctag])
     end
   end
 
@@ -323,15 +351,15 @@ RSpec.describe TopicViewSerializer do
 
   describe "pending posts" do
     context "when the queue is enabled" do
-      before do
-        SiteSetting.approve_post_count = 1
-      end
+      before { SiteSetting.approve_post_count = 1 }
 
       fab!(:queued_post) do
         ReviewableQueuedPost.needs_review!(
           topic: topic,
-          payload: { raw: "hello my raw contents" },
-          created_by: user
+          payload: {
+            raw: "hello my raw contents",
+          },
+          created_by: user,
         )
       end
 
@@ -362,7 +390,12 @@ RSpec.describe TopicViewSerializer do
   context "with details" do
     it "returns the details object" do
       PostCreator.create!(user, topic_id: topic.id, raw: "this is my post content")
-      topic.topic_links.create!(user: user, url: 'https://discourse.org', domain: 'discourse.org', clicks: 100)
+      topic.topic_links.create!(
+        user: user,
+        url: "https://discourse.org",
+        domain: "discourse.org",
+        clicks: 100,
+      )
       json = serialize_topic(topic, admin)
 
       details = json[:details]
@@ -388,7 +421,7 @@ RSpec.describe TopicViewSerializer do
       GroupUser.create(group: group2, user: user)
 
       pm = Fabricate(:private_message_topic)
-      pm.update(archetype: 'private_message')
+      pm.update(archetype: "private_message")
       pm.topic_allowed_groups.create!(group: group)
       pm.topic_allowed_groups.create!(group: group2)
 
@@ -436,11 +469,9 @@ RSpec.describe TopicViewSerializer do
       fab!(:topic) { Fabricate(:topic, category: category) }
       let(:user) { group_user.user }
 
-      before do
-        SiteSetting.enable_category_group_moderation = true
-      end
+      before { SiteSetting.enable_category_group_moderation = true }
 
-      it 'explicitly returns can_edit' do
+      it "explicitly returns can_edit" do
         json = serialize_topic(topic, user)
         expect(json[:details][:can_edit]).to eq(true)
 
@@ -456,9 +487,7 @@ RSpec.describe TopicViewSerializer do
     fab!(:published_page) { Fabricate(:published_page, topic: topic) }
 
     context "when page publishing is disabled" do
-      before do
-        SiteSetting.enable_page_publishing = false
-      end
+      before { SiteSetting.enable_page_publishing = false }
 
       it "doesn't return the published page if not enabled" do
         json = serialize_topic(topic, admin)
@@ -467,9 +496,7 @@ RSpec.describe TopicViewSerializer do
     end
 
     context "when page publishing is enabled" do
-      before do
-        SiteSetting.enable_page_publishing = true
-      end
+      before { SiteSetting.enable_page_publishing = true }
 
       context "when not staff" do
         it "doesn't return the published page" do
@@ -502,16 +529,17 @@ RSpec.describe TopicViewSerializer do
 
   context "when viewing private messages when enable_category_group_moderation is enabled" do
     fab!(:pm_topic) do
-      Fabricate(:private_message_topic, topic_allowed_users: [
-        Fabricate.build(:topic_allowed_user, user: user),
-        Fabricate.build(:topic_allowed_user, user: admin)
-      ])
+      Fabricate(
+        :private_message_topic,
+        topic_allowed_users: [
+          Fabricate.build(:topic_allowed_user, user: user),
+          Fabricate.build(:topic_allowed_user, user: admin),
+        ],
+      )
     end
     fab!(:post) { Fabricate(:post, topic: pm_topic) }
 
-    before do
-      SiteSetting.enable_category_group_moderation = true
-    end
+    before { SiteSetting.enable_category_group_moderation = true }
 
     # Ensure having enable_category_group_moderation turned on doesn't break private messages
     it "should return posts" do
@@ -520,9 +548,9 @@ RSpec.describe TopicViewSerializer do
     end
   end
 
-  describe '#user_last_posted_at' do
-    context 'when the slow mode is disabled' do
-      it 'returns nil' do
+  describe "#user_last_posted_at" do
+    context "when the slow mode is disabled" do
+      it "returns nil" do
         Fabricate(:topic_user, user: user, topic: topic, last_posted_at: 6.hours.ago)
 
         json = serialize_topic(topic, user)
@@ -531,10 +559,10 @@ RSpec.describe TopicViewSerializer do
       end
     end
 
-    context 'when the slow mode is enabled' do
+    context "when the slow mode is enabled" do
       before { topic.update!(slow_mode_seconds: 1000) }
 
-      it 'returns nil if no user is given' do
+      it "returns nil if no user is given" do
         json = serialize_topic(topic, nil)
 
         expect(json[:user_last_posted_at]).to be_nil
@@ -546,7 +574,7 @@ RSpec.describe TopicViewSerializer do
         expect(json[:user_last_posted_at]).to be_nil
       end
 
-      it 'returns the last time the user posted' do
+      it "returns the last time the user posted" do
         Fabricate(:topic_user, user: user, topic: topic, last_posted_at: 6.hours.ago)
         json = serialize_topic(topic, user)
 
@@ -555,11 +583,11 @@ RSpec.describe TopicViewSerializer do
     end
   end
 
-  describe '#requested_group_name' do
+  describe "#requested_group_name" do
     fab!(:pm) { Fabricate(:private_message_post).topic }
     fab!(:group) { Fabricate(:group) }
 
-    it 'should return the right group name when PM is a group membership request' do
+    it "should return the right group name when PM is a group membership request" do
       pm.custom_fields[:requested_group_id] = group.id
       pm.save!
 
@@ -570,40 +598,41 @@ RSpec.describe TopicViewSerializer do
       expect(json[:requested_group_name]).to eq(group.name)
     end
 
-    it 'should not include the attribute for a non group membership request PM' do
+    it "should not include the attribute for a non group membership request PM" do
       json = serialize_topic(pm, pm.first_post.user)
 
       expect(json[:requested_group_name]).to eq(nil)
     end
   end
 
-  describe '#topic_timer' do
-    it 'does not include the attribute when topic does not have a topic timer' do
+  describe "#topic_timer" do
+    it "does not include the attribute when topic does not have a topic timer" do
       json = serialize_topic(topic, user)
 
       expect(json[:topic_timer]).to eq(nil)
     end
 
-    it 'includes the attribute when topic has a public topic timer' do
-      topic_timer = Fabricate(:topic_timer, topic: topic, execute_at: Time.utc(2022, 4, 6, 16, 23, 56))
+    it "includes the attribute when topic has a public topic timer" do
+      topic_timer =
+        Fabricate(:topic_timer, topic: topic, execute_at: Time.utc(2022, 4, 6, 16, 23, 56))
       json = serialize_topic(topic, user)
 
       expect(json[:topic_timer][:id]).to eq(topic_timer.id)
       expect(json[:topic_timer][:based_on_last_post]).to eq(false)
       expect(json[:topic_timer][:category_id]).to eq(nil)
       expect(json[:topic_timer][:duration_minutes]).to eq(nil)
-      expect(json[:topic_timer][:execute_at]).to eq('2022-04-06T16:23:56.000Z')
+      expect(json[:topic_timer][:execute_at]).to eq("2022-04-06T16:23:56.000Z")
       expect(json[:topic_timer][:status_type]).to eq("close")
     end
 
-    it 'does not include the attribute for category topic timer where category is restricted to user' do
+    it "does not include the attribute for category topic timer where category is restricted to user" do
       category = Fabricate(:category, read_restricted: true)
 
-      Fabricate(:topic_timer,
+      Fabricate(
+        :topic_timer,
         topic: topic,
         category_id: category.id,
-        status_type:
-        TopicTimer.types[:publish_to_category]
+        status_type: TopicTimer.types[:publish_to_category],
       )
 
       json = serialize_topic(topic, user)
@@ -611,15 +640,16 @@ RSpec.describe TopicViewSerializer do
       expect(json[:topic_timer]).to eq(nil)
     end
 
-    it 'includes the attribute  for category topic timer where category is not restricted to user' do
+    it "includes the attribute  for category topic timer where category is not restricted to user" do
       category = Fabricate(:category, read_restricted: false)
 
-      topic_timer = Fabricate(:topic_timer,
-        topic: topic,
-        category_id: category.id,
-        status_type:
-        TopicTimer.types[:publish_to_category]
-      )
+      topic_timer =
+        Fabricate(
+          :topic_timer,
+          topic: topic,
+          category_id: category.id,
+          status_type: TopicTimer.types[:publish_to_category],
+        )
 
       json = serialize_topic(topic, user)
 

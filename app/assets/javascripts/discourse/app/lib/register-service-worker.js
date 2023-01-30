@@ -5,15 +5,8 @@ export function registerServiceWorker(
   serviceWorkerURL,
   registerOptions = {}
 ) {
-  const isSecured = document.location.protocol === "https:";
-
-  if (isSecured && "serviceWorker" in navigator) {
-    const caps = container.lookup("capabilities:main");
-    const isAppleBrowser =
-      caps.isSafari ||
-      (caps.isIOS && !window.matchMedia("(display-mode: standalone)").matches);
-
-    if (serviceWorkerURL && !isAppleBrowser) {
+  if (window.isSecureContext && "serviceWorker" in navigator) {
+    if (serviceWorkerURL) {
       navigator.serviceWorker.getRegistrations().then((registrations) => {
         for (let registration of registrations) {
           if (

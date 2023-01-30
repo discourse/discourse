@@ -10,13 +10,11 @@ class SetUseEmailForUsernameAndNameSuggestionsOnExistingSites < ActiveRecord::Mi
     SQL
 
     # make setting enabled for existing sites
-    if result.first['created_at'].to_datetime < 1.hour.ago
-      execute <<~SQL
+    execute <<~SQL if result.first["created_at"].to_datetime < 1.hour.ago
         INSERT INTO site_settings(name, data_type, value, created_at, updated_at)
         VALUES('use_email_for_username_and_name_suggestions', 5, 't', NOW(), NOW())
         ON CONFLICT (name) DO NOTHING
       SQL
-    end
   end
 
   def down

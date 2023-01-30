@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 module UserPrimaryGroupMixin
-
   def self.included(klass)
     klass.attributes :primary_group_name,
                      :flair_name,

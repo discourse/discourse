@@ -8,7 +8,7 @@ export default createWidget("user-status-bubble", {
     let title = attrs.description;
     if (attrs.ends_at) {
       const until = moment
-        .tz(attrs.ends_at, this.currentUser.timezone)
+        .tz(attrs.ends_at, this.currentUser.user_option.timezone)
         .format(I18n.t("dates.long_date_without_year"));
       title += `\n${I18n.t("until")} ${until}`;
     }

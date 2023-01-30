@@ -5,6 +5,7 @@ $invite-mobile-bg: absolute-image-url("/branded-background-mobile.svg");
   color: var(--danger);
   font-size: var(--font-down-1);
   font-weight: bold;
+  margin-top: 0.5em;
 }
 
 .discourse-no-touch #login-form {
@@ -48,7 +49,7 @@ body.invite-page {
     background-repeat: no-repeat;
     background-position: bottom;
   }
-  .d-header {
+  .d-header .panel.clearfix {
     display: none;
   }
 }
@@ -152,13 +153,9 @@ body.invite-page {
       display: flex;
       flex-direction: column;
       margin-bottom: 0.8em;
-      &:last-child {
-        margin-bottom: 2em;
-      }
       input,
       .select-kit-header {
         padding: 0.75em 0.77em;
-        border-radius: 0.25em;
         min-width: 250px;
         box-shadow: none;
         margin-bottom: 0.25em;
@@ -186,7 +183,6 @@ body.invite-page {
         left: 1em;
         top: 10px;
         box-shadow: 0 0 0 0px rgba(var(--tertiary-rgb), 0);
-        border-radius: 0.25em;
         transition: 0.2s ease all;
       }
       .user-field.dropdown label.control-label {
@@ -221,9 +217,11 @@ body.invite-page {
         }
       }
 
-      #forgot-password-link,
-      #email-login-link {
+      #email-login-link,
+      .login__password-links {
         font-size: var(--font-down-1);
+        display: flex;
+        justify-content: space-between;
       }
 
       .tip:not(:empty) + label.more-info {
@@ -235,7 +233,6 @@ body.invite-page {
       input {
         width: 100%;
         padding: 0.75em 0.5em;
-        border-radius: 0.25em;
         min-width: 250px;
         box-shadow: none;
         margin-bottom: 2em;
@@ -252,6 +249,14 @@ body.invite-page {
     .user-fields .input-group {
       .user-field {
         &.text {
+          &.value-entered label.control-label {
+            top: -8px;
+            left: calc(1em - 0.25em);
+            background-color: var(--secondary);
+            padding: 0 0.25em 0 0.25em;
+            font-size: 14px;
+            color: var(--primary-medium);
+          }
           label.control-label {
             color: var(--primary-medium);
             font-size: 16px;
@@ -265,15 +270,6 @@ body.invite-page {
             display: inline-block;
             overflow: hidden;
             text-overflow: ellipsis;
-          }
-          &.value-entered label.control-label,
-          label.control-label.value-entered {
-            top: -8px;
-            left: calc(1em - 0.25em);
-            background-color: var(--secondary);
-            padding: 0 0.25em 0 0.25em;
-            font-size: 14px;
-            color: var(--primary-medium);
           }
         }
         span.name {
@@ -340,8 +336,23 @@ body.invite-page {
       color: var(--primary-medium);
     }
   }
+  #new-account-password {
+    width: 15em;
+  }
+  .tip {
+    margin: 0 0 0.5em;
+  }
+  .toggle-password-mask {
+    margin-left: 0.25em;
+  }
 }
 
+.toggle-password-mask {
+  align-self: start;
+  line-height: 1.4; // aligns with input description text
+}
+
+// admin invite page
 .invites-show {
   display: grid;
   justify-content: center;
@@ -362,8 +373,7 @@ body.invite-page {
   .invite-form {
     margin-bottom: 50px;
     box-shadow: 0 4px 19px 6px rgba(0, 0, 0, 0.05);
-    padding: 1em 3em;
-    max-width: calc(33em - 6em);
+    max-width: calc(30em);
     .tip {
       display: block;
     }
@@ -392,10 +402,6 @@ body.invite-page {
   }
 
   form {
-    margin-top: 24px;
-    button.btn-primary {
-      margin-top: 10px;
-    }
     .controls,
     .input {
       margin-bottom: 10px;
@@ -409,7 +415,28 @@ body.invite-page {
     }
     .tip {
       font-size: var(--font-down-1);
-      margin-bottom: 0.25em;
+      &:not(:empty) {
+        margin-bottom: 0.25em;
+      }
+    }
+  }
+
+  .invitation-cta {
+    display: flex;
+    align-items: center;
+    margin-top: 2em;
+    &__accept {
+      margin-right: 1em;
+    }
+    &__signed-up {
+      margin-right: 0.5em;
+    }
+    &__sign-in {
+      padding: 0;
+      &.btn-flat.btn-text:not([disabled]):active {
+        background-color: transparent;
+        background-image: none;
+      }
     }
   }
 }
@@ -455,4 +482,34 @@ button#new-account-link {
     text-align: center;
     padding-bottom: 1em;
   }
+}
+
+.email-login {
+  border-radius: 10px;
+  background-color: var(--secondary);
+  padding: 20px;
+  margin: 0 auto;
+  .content-wrapper {
+    box-shadow: 0 1px 10px 1px rgba(var(--primary-low-rgb), 1.25);
+    border-radius: 10px;
+    padding: 1em 2.5em 1em 2.5em;
+    .image-wrapper {
+      text-align: center;
+      padding-bottom: 1em;
+    }
+    .email-login-form {
+      text-align: center;
+      .btn-primary {
+        margin-top: 10px;
+      }
+      #security-key {
+        justify-content: center;
+      }
+    }
+  }
+}
+
+.create-account__password-info {
+  display: flex;
+  justify-content: space-between;
 }

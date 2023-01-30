@@ -5,7 +5,11 @@
   </label>
 {{else}}
   <label for={{this.inputId}}>{{i18n this.translationKey}}</label>
-  <Input @value={{this.value}} id={{this.inputId}} placeholder={{this.placeholder}} />
+  <Input
+    @value={{this.value}}
+    id={{this.inputId}}
+    placeholder={{this.placeholder}}
+  />
 {{/if}}
 
 <div class="clearfix"></div>

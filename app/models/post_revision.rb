@@ -39,7 +39,6 @@ class PostRevision < ActiveRecord::Base
   def create_notification
     PostActionNotifier.after_create_post_revision(self)
   end
-
 end
 
 # == Schema Information

@@ -1,14 +1,15 @@
 # frozen_string_literal: true
 
-require 'discourse_plugin_registry'
+require "discourse_plugin_registry"
 
 RSpec.describe DiscoursePluginRegistry do
-  class TestRegistry < DiscoursePluginRegistry; end
+  class TestRegistry < DiscoursePluginRegistry
+  end
 
   let(:registry) { TestRegistry }
   let(:registry_instance) { registry.new }
 
-  describe '.define_register' do
+  describe ".define_register" do
     let(:fresh_registry) { Class.new(TestRegistry) }
 
     let(:plugin_class) do
@@ -22,7 +23,7 @@ RSpec.describe DiscoursePluginRegistry do
 
     let(:plugin) { plugin_class.new }
 
-    it 'works for a set' do
+    it "works for a set" do
       fresh_registry.define_register(:test_things, Set)
       fresh_registry.test_things << "My Thing"
       expect(fresh_registry.test_things).to contain_exactly("My Thing")
@@ -30,7 +31,7 @@ RSpec.describe DiscoursePluginRegistry do
       expect(fresh_registry.test_things.length).to eq(0)
     end
 
-    it 'works for a hash' do
+    it "works for a hash" do
       fresh_registry.define_register(:test_things, Hash)
       fresh_registry.test_things[:test] = "hello world"
       expect(fresh_registry.test_things[:test]).to eq("hello world")
@@ -38,8 +39,8 @@ RSpec.describe DiscoursePluginRegistry do
       expect(fresh_registry.test_things[:test]).to eq(nil)
     end
 
-    describe '.define_filtered_register' do
-      it 'works' do
+    describe ".define_filtered_register" do
+      it "works" do
         fresh_registry.define_filtered_register(:test_things)
         expect(fresh_registry.test_things.length).to eq(0)
 
@@ -54,53 +55,53 @@ RSpec.describe DiscoursePluginRegistry do
     end
   end
 
-  describe '#stylesheets' do
-    it 'defaults to an empty Set' do
+  describe "#stylesheets" do
+    it "defaults to an empty Set" do
       registry.reset!
       expect(registry.stylesheets).to eq(Hash.new)
     end
   end
 
-  describe '#mobile_stylesheets' do
-    it 'defaults to an empty Set' do
+  describe "#mobile_stylesheets" do
+    it "defaults to an empty Set" do
       registry.reset!
       expect(registry.mobile_stylesheets).to eq(Hash.new)
     end
   end
 
-  describe '#javascripts' do
-    it 'defaults to an empty Set' do
+  describe "#javascripts" do
+    it "defaults to an empty Set" do
       registry.reset!
       expect(registry.javascripts).to eq(Set.new)
     end
   end
 
-  describe '#auth_providers' do
-    it 'defaults to an empty Set' do
+  describe "#auth_providers" do
+    it "defaults to an empty Set" do
       registry.reset!
       expect(registry.auth_providers).to eq(Set.new)
     end
   end
 
-  describe '#admin_javascripts' do
-    it 'defaults to an empty Set' do
+  describe "#admin_javascripts" do
+    it "defaults to an empty Set" do
       registry.reset!
       expect(registry.admin_javascripts).to eq(Set.new)
     end
   end
 
-  describe '#seed_data' do
-    it 'defaults to an empty Set' do
+  describe "#seed_data" do
+    it "defaults to an empty Set" do
       registry.reset!
       expect(registry.seed_data).to be_a(Hash)
       expect(registry.seed_data.size).to eq(0)
     end
   end
 
-  describe '.register_html_builder' do
+  describe ".register_html_builder" do
     it "can register and build html" do
       DiscoursePluginRegistry.register_html_builder(:my_html) { "<b>my html</b>" }
-      expect(DiscoursePluginRegistry.build_html(:my_html)).to eq('<b>my html</b>')
+      expect(DiscoursePluginRegistry.build_html(:my_html)).to eq("<b>my html</b>")
       DiscoursePluginRegistry.reset!
       expect(DiscoursePluginRegistry.build_html(:my_html)).to be_blank
     end
@@ -113,41 +114,43 @@ RSpec.describe DiscoursePluginRegistry do
     end
   end
 
-  describe '.register_css' do
+  describe ".register_css" do
     let(:plugin_directory_name) { "hello" }
 
-    before do
-      registry_instance.register_css('hello.css', plugin_directory_name)
-    end
+    before { registry_instance.register_css("hello.css", plugin_directory_name) }
 
-    it 'is not leaking' do
+    it "is not leaking" do
       expect(DiscoursePluginRegistry.new.stylesheets[plugin_directory_name]).to be_nil
     end
 
-    it 'is returned by DiscoursePluginRegistry.stylesheets' do
-      expect(registry_instance.stylesheets[plugin_directory_name].include?('hello.css')).to eq(true)
+    it "is returned by DiscoursePluginRegistry.stylesheets" do
+      expect(registry_instance.stylesheets[plugin_directory_name].include?("hello.css")).to eq(true)
     end
 
     it "won't add the same file twice" do
-      expect { registry_instance.register_css('hello.css', plugin_directory_name) }.not_to change(registry.stylesheets[plugin_directory_name], :size)
+      expect { registry_instance.register_css("hello.css", plugin_directory_name) }.not_to change(
+        registry.stylesheets[plugin_directory_name],
+        :size,
+      )
     end
   end
 
-  describe '.register_js' do
-    before do
-      registry_instance.register_js('hello.js')
-    end
+  describe ".register_js" do
+    before { registry_instance.register_js("hello.js") }
 
-    it 'is returned by DiscoursePluginRegistry.javascripts' do
-      expect(registry_instance.javascripts.include?('hello.js')).to eq(true)
+    it "is returned by DiscoursePluginRegistry.javascripts" do
+      expect(registry_instance.javascripts.include?("hello.js")).to eq(true)
     end
 
     it "won't add the same file twice" do
-      expect { registry_instance.register_js('hello.js') }.not_to change(registry.javascripts, :size)
+      expect { registry_instance.register_js("hello.js") }.not_to change(
+        registry.javascripts,
+        :size,
+      )
     end
   end
 
-  describe '.register_auth_provider' do
+  describe ".register_auth_provider" do
     let(:registry) { DiscoursePluginRegistry }
     let(:auth_provider) do
       provider = Auth::AuthProvider.new
@@ -155,53 +158,42 @@ RSpec.describe DiscoursePluginRegistry do
       provider
     end
 
-    before do
-      registry.register_auth_provider(auth_provider)
-    end
+    before { registry.register_auth_provider(auth_provider) }
 
-    after do
-      registry.reset!
-    end
+    after { registry.reset! }
 
-    it 'is returned by DiscoursePluginRegistry.auth_providers' do
+    it "is returned by DiscoursePluginRegistry.auth_providers" do
       expect(registry.auth_providers.include?(auth_provider)).to eq(true)
     end
-
   end
 
-  describe '.register_service_worker' do
+  describe ".register_service_worker" do
     let(:registry) { DiscoursePluginRegistry }
 
-    before do
-      registry.register_service_worker('hello.js')
-    end
+    before { registry.register_service_worker("hello.js") }
 
-    after do
-      registry.reset!
-    end
+    after { registry.reset! }
 
     it "should register the file once" do
-      2.times { registry.register_service_worker('hello.js') }
+      2.times { registry.register_service_worker("hello.js") }
 
       expect(registry.service_workers.size).to eq(1)
-      expect(registry.service_workers).to include('hello.js')
+      expect(registry.service_workers).to include("hello.js")
     end
   end
 
-  describe '.register_archetype' do
+  describe ".register_archetype" do
     it "delegates archetypes to the Archetype component" do
-      Archetype.expects(:register).with('threaded', hello: 123)
-      registry_instance.register_archetype('threaded', hello: 123)
+      Archetype.expects(:register).with("threaded", { hello: 123 })
+      registry_instance.register_archetype("threaded", hello: 123)
     end
   end
 
-  describe '#register_asset' do
+  describe "#register_asset" do
     let(:registry) { DiscoursePluginRegistry }
     let(:plugin_directory_name) { "my_plugin" }
 
-    after do
-      registry.reset!
-    end
+    after { registry.reset! }
 
     it "does register general css properly" do
       registry.register_asset("test.css", nil, plugin_directory_name)
@@ -227,7 +219,7 @@ RSpec.describe DiscoursePluginRegistry do
 
     it "registers color definitions properly" do
       registry.register_asset("test.css", :color_definitions, plugin_directory_name)
-      expect(registry.color_definition_stylesheets[plugin_directory_name]).to eq('test.css')
+      expect(registry.color_definition_stylesheets[plugin_directory_name]).to eq("test.css")
       expect(registry.stylesheets[plugin_directory_name]).to eq(nil)
     end
 
@@ -246,19 +238,24 @@ RSpec.describe DiscoursePluginRegistry do
     end
   end
 
-  describe '#register_seed_data' do
+  describe "#register_seed_data" do
     let(:registry) { DiscoursePluginRegistry }
 
-    after do
-      registry.reset!
-    end
+    after { registry.reset! }
 
     it "registers seed data properly" do
       registry.register_seed_data("admin_quick_start_title", "Banana Hosting: Quick Start Guide")
-      registry.register_seed_data("admin_quick_start_filename", File.expand_path("../docs/BANANA-QUICK-START.md", __FILE__))
+      registry.register_seed_data(
+        "admin_quick_start_filename",
+        File.expand_path("../docs/BANANA-QUICK-START.md", __FILE__),
+      )
 
-      expect(registry.seed_data["admin_quick_start_title"]).to eq("Banana Hosting: Quick Start Guide")
-      expect(registry.seed_data["admin_quick_start_filename"]).to eq(File.expand_path("../docs/BANANA-QUICK-START.md", __FILE__))
+      expect(registry.seed_data["admin_quick_start_title"]).to eq(
+        "Banana Hosting: Quick Start Guide",
+      )
+      expect(registry.seed_data["admin_quick_start_filename"]).to eq(
+        File.expand_path("../docs/BANANA-QUICK-START.md", __FILE__),
+      )
     end
   end
 end

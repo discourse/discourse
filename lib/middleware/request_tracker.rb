@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'method_profiler'
-require 'middleware/anonymous_cache'
+require "method_profiler"
+require "middleware/anonymous_cache"
 
 class Middleware::RequestTracker
   @@detailed_request_loggers = nil
@@ -15,7 +15,8 @@ class Middleware::RequestTracker
   #     14.15.16.32/27
   #     216.148.1.2
   #
-  STATIC_IP_SKIPPER = ENV['DISCOURSE_MAX_REQS_PER_IP_EXCEPTIONS']&.split&.map { |ip| IPAddr.new(ip) }
+  STATIC_IP_SKIPPER =
+    ENV["DISCOURSE_MAX_REQS_PER_IP_EXCEPTIONS"]&.split&.map { |ip| IPAddr.new(ip) }
 
   # register callbacks for detailed request loggers called on every request
   # example:
@@ -30,9 +31,7 @@ class Middleware::RequestTracker
 
   def self.unregister_detailed_request_logger(callback)
     @@detailed_request_loggers.delete(callback)
-    if @@detailed_request_loggers.length == 0
-      @detailed_request_loggers = nil
-    end
+    @detailed_request_loggers = nil if @@detailed_request_loggers.length == 0
   end
 
   # used for testing
@@ -64,10 +63,11 @@ class Middleware::RequestTracker
   end
 
   def self.log_request(data)
-    status = data[:status]
-    track_view = data[:track_view]
-
-    if track_view
+    if data[:is_api]
+      ApplicationRequest.increment!(:api)
+    elsif data[:is_user_api]
+      ApplicationRequest.increment!(:user_api)
+    elsif data[:track_view]
       if data[:is_crawler]
         ApplicationRequest.increment!(:page_view_crawler)
         WebCrawlerRequest.increment!(data[:user_agent])
@@ -82,6 +82,7 @@ class Middleware::RequestTracker
 
     ApplicationRequest.increment!(:http_total)
 
+    status = data[:status]
     if status >= 500
       ApplicationRequest.increment!(:http_5xx)
     elsif data[:is_background]
@@ -105,10 +106,14 @@ class Middleware::RequestTracker
     env_track_view = env["HTTP_DISCOURSE_TRACK_VIEW"]
     track_view = status == 200
     track_view &&= env_track_view != "0" && env_track_view != "false"
-    track_view &&= env_track_view || (request.get? && !request.xhr? && headers["Content-Type"] =~ /text\/html/)
+    track_view &&=
+      env_track_view || (request.get? && !request.xhr? && headers["Content-Type"] =~ %r{text/html})
     track_view = !!track_view
     has_auth_cookie = Auth::DefaultCurrentUserProvider.find_v0_auth_cookie(request).present?
     has_auth_cookie ||= Auth::DefaultCurrentUserProvider.find_v1_auth_cookie(env).present?
+
+    is_api ||= !!env[Auth::DefaultCurrentUserProvider::API_KEY_ENV]
+    is_user_api ||= !!env[Auth::DefaultCurrentUserProvider::USER_API_KEY_ENV]
 
     is_message_bus = request.path.start_with?("#{Discourse.base_path}/message-bus/")
     is_topic_timings = request.path.start_with?("#{Discourse.base_path}/topics/timings")
@@ -117,16 +122,31 @@ class Middleware::RequestTracker
       status: status,
       is_crawler: helper.is_crawler?,
       has_auth_cookie: has_auth_cookie,
+      is_api: is_api,
+      is_user_api: is_user_api,
       is_background: is_message_bus || is_topic_timings,
-      background_type: is_message_bus ? "message-bus" : "topic-timings",
       is_mobile: helper.is_mobile?,
       track_view: track_view,
       timing: timing,
-      queue_seconds: env['REQUEST_QUEUE_SECONDS']
+      queue_seconds: env["REQUEST_QUEUE_SECONDS"],
     }
 
+    if h[:is_background]
+      h[:background_type] = if is_message_bus
+        if request.query_string.include?("dlp=t")
+          "message-bus-dlp"
+        elsif env["HTTP_DONT_CHUNK"]
+          "message-bus-dontchunk"
+        else
+          "message-bus"
+        end
+      else
+        "topic-timings"
+      end
+    end
+
     if h[:is_crawler]
-      user_agent = env['HTTP_USER_AGENT']
+      user_agent = env["HTTP_USER_AGENT"]
       if user_agent && (user_agent.encoding != Encoding::UTF_8)
         user_agent = user_agent.encode("utf-8")
         user_agent.scrub!
@@ -143,7 +163,12 @@ class Middleware::RequestTracker
 
   def log_request_info(env, result, info, request = nil)
     # we got to skip this on error ... its just logging
-    data = self.class.get_data(env, result, info, request) rescue nil
+    data =
+      begin
+        self.class.get_data(env, result, info, request)
+      rescue StandardError
+        nil
+      end
 
     if data
       if result && (headers = result[1])
@@ -159,15 +184,16 @@ class Middleware::RequestTracker
   end
 
   def self.populate_request_queue_seconds!(env)
-    if !env['REQUEST_QUEUE_SECONDS']
-      if queue_start = env['HTTP_X_REQUEST_START']
-        queue_start = if queue_start.start_with?("t=")
-          queue_start.split("t=")[1].to_f
-        else
-          queue_start.to_f / 1000.0
-        end
+    if !env["REQUEST_QUEUE_SECONDS"]
+      if queue_start = env["HTTP_X_REQUEST_START"]
+        queue_start =
+          if queue_start.start_with?("t=")
+            queue_start.split("t=")[1].to_f
+          else
+            queue_start.to_f / 1000.0
+          end
         queue_time = (Time.now.to_f - queue_start)
-        env['REQUEST_QUEUE_SECONDS'] = queue_time
+        env["REQUEST_QUEUE_SECONDS"] = queue_time
       end
     end
   end
@@ -192,9 +218,9 @@ class Middleware::RequestTracker
       TEXT
       headers = {
         "Retry-After" => available_in.to_s,
-        "Discourse-Rate-Limit-Error-Code" => error_code
+        "Discourse-Rate-Limit-Error-Code" => error_code,
       }
-      return [429, headers, [message]]
+      return 429, headers, [message]
     end
     env["discourse.request_tracker"] = self
 
@@ -215,21 +241,21 @@ class Middleware::RequestTracker
           headers["X-Sql-Calls"] = sql[:calls].to_s
           headers["X-Sql-Time"] = "%0.6f" % sql[:duration]
         end
-        if queue = env['REQUEST_QUEUE_SECONDS']
+        if queue = env["REQUEST_QUEUE_SECONDS"]
           headers["X-Queue-Time"] = "%0.6f" % queue
         end
       end
     end
 
     if env[Auth::DefaultCurrentUserProvider::BAD_TOKEN] && (headers = result[1])
-      headers['Discourse-Logged-Out'] = '1'
+      headers["Discourse-Logged-Out"] = "1"
     end
 
     result
   ensure
-    if (limiters = env['DISCOURSE_RATE_LIMITERS']) && env['DISCOURSE_IS_ASSET_PATH']
+    if (limiters = env["DISCOURSE_RATE_LIMITERS"]) && env["DISCOURSE_IS_ASSET_PATH"]
       limiters.each(&:rollback!)
-      env['DISCOURSE_ASSET_RATE_LIMITERS'].each do |limiter|
+      env["DISCOURSE_ASSET_RATE_LIMITERS"].each do |limiter|
         begin
           limiter.performed!
         rescue RateLimiter::LimitExceeded
@@ -237,25 +263,19 @@ class Middleware::RequestTracker
         end
       end
     end
-    if !env["discourse.request_tracker.skip"]
-      log_request_info(env, result, info, request)
-    end
+    log_request_info(env, result, info, request) if !env["discourse.request_tracker.skip"]
   end
 
   def log_later(data)
     Scheduler::Defer.later("Track view") do
-      unless Discourse.pg_readonly_mode?
-        self.class.log_request(data)
-      end
+      self.class.log_request(data) unless Discourse.pg_readonly_mode?
     end
   end
 
   def find_auth_cookie(env)
     min_allowed_timestamp = Time.now.to_i - (UserAuthToken::ROTATE_TIME_MINS + 1) * 60
     cookie = Auth::DefaultCurrentUserProvider.find_v1_auth_cookie(env)
-    if cookie && cookie[:issued_at] >= min_allowed_timestamp
-      cookie
-    end
+    cookie if cookie && cookie[:issued_at] >= min_allowed_timestamp
   end
 
   def is_private_ip?(ip)
@@ -266,10 +286,12 @@ class Middleware::RequestTracker
   end
 
   def rate_limit(request, cookie)
-    warn = GlobalSetting.max_reqs_per_ip_mode == "warn" ||
-      GlobalSetting.max_reqs_per_ip_mode == "warn+block"
-    block = GlobalSetting.max_reqs_per_ip_mode == "block" ||
-      GlobalSetting.max_reqs_per_ip_mode == "warn+block"
+    warn =
+      GlobalSetting.max_reqs_per_ip_mode == "warn" ||
+        GlobalSetting.max_reqs_per_ip_mode == "warn+block"
+    block =
+      GlobalSetting.max_reqs_per_ip_mode == "block" ||
+        GlobalSetting.max_reqs_per_ip_mode == "warn+block"
 
     return if !block && !warn
 
@@ -284,54 +306,56 @@ class Middleware::RequestTracker
 
     ip_or_id = ip
     limit_on_id = false
-    if cookie && cookie[:user_id] && cookie[:trust_level] && cookie[:trust_level] >= GlobalSetting.skip_per_ip_rate_limit_trust_level
+    if cookie && cookie[:user_id] && cookie[:trust_level] &&
+         cookie[:trust_level] >= GlobalSetting.skip_per_ip_rate_limit_trust_level
       ip_or_id = cookie[:user_id]
       limit_on_id = true
     end
 
-    limiter10 = RateLimiter.new(
-      nil,
-      "global_ip_limit_10_#{ip_or_id}",
-      GlobalSetting.max_reqs_per_ip_per_10_seconds,
-      10,
-      global: !limit_on_id,
-      aggressive: true,
-      error_code: limit_on_id ? "id_10_secs_limit" : "ip_10_secs_limit"
-    )
+    limiter10 =
+      RateLimiter.new(
+        nil,
+        "global_ip_limit_10_#{ip_or_id}",
+        GlobalSetting.max_reqs_per_ip_per_10_seconds,
+        10,
+        global: !limit_on_id,
+        aggressive: true,
+        error_code: limit_on_id ? "id_10_secs_limit" : "ip_10_secs_limit",
+      )
 
-    limiter60 = RateLimiter.new(
-      nil,
-      "global_ip_limit_60_#{ip_or_id}",
-      GlobalSetting.max_reqs_per_ip_per_minute,
-      60,
-      global: !limit_on_id,
-      error_code: limit_on_id ? "id_60_secs_limit" : "ip_60_secs_limit",
-      aggressive: true
-    )
+    limiter60 =
+      RateLimiter.new(
+        nil,
+        "global_ip_limit_60_#{ip_or_id}",
+        GlobalSetting.max_reqs_per_ip_per_minute,
+        60,
+        global: !limit_on_id,
+        error_code: limit_on_id ? "id_60_secs_limit" : "ip_60_secs_limit",
+        aggressive: true,
+      )
 
-    limiter_assets10 = RateLimiter.new(
-      nil,
-      "global_ip_limit_10_assets_#{ip_or_id}",
-      GlobalSetting.max_asset_reqs_per_ip_per_10_seconds,
-      10,
-      error_code: limit_on_id ? "id_assets_10_secs_limit" : "ip_assets_10_secs_limit",
-      global: !limit_on_id
-    )
+    limiter_assets10 =
+      RateLimiter.new(
+        nil,
+        "global_ip_limit_10_assets_#{ip_or_id}",
+        GlobalSetting.max_asset_reqs_per_ip_per_10_seconds,
+        10,
+        error_code: limit_on_id ? "id_assets_10_secs_limit" : "ip_assets_10_secs_limit",
+        global: !limit_on_id,
+      )
 
-    request.env['DISCOURSE_RATE_LIMITERS'] = [limiter10, limiter60]
-    request.env['DISCOURSE_ASSET_RATE_LIMITERS'] = [limiter_assets10]
+    request.env["DISCOURSE_RATE_LIMITERS"] = [limiter10, limiter60]
+    request.env["DISCOURSE_ASSET_RATE_LIMITERS"] = [limiter_assets10]
 
     if !limiter_assets10.can_perform?
       if warn
-        Discourse.warn("Global asset IP rate limit exceeded for #{ip}: 10 second rate limit", uri: request.env["REQUEST_URI"])
+        Discourse.warn(
+          "Global asset IP rate limit exceeded for #{ip}: 10 second rate limit",
+          uri: request.env["REQUEST_URI"],
+        )
       end
 
-      if block
-        return [
-          limiter_assets10.seconds_to_wait(Time.now.to_i),
-          limiter_assets10.error_code
-        ]
-      end
+      return limiter_assets10.seconds_to_wait(Time.now.to_i), limiter_assets10.error_code if block
     end
 
     begin
@@ -344,7 +368,10 @@ class Middleware::RequestTracker
       nil
     rescue RateLimiter::LimitExceeded => e
       if warn
-        Discourse.warn("Global IP rate limit exceeded for #{ip}: #{type} second rate limit", uri: request.env["REQUEST_URI"])
+        Discourse.warn(
+          "Global IP rate limit exceeded for #{ip}: #{type} second rate limit",
+          uri: request.env["REQUEST_URI"],
+        )
       end
       if block
         [e.available_in, e.error_code]

@@ -14,10 +14,6 @@ export default DiscourseRoute.extend({
     return AdminUser.find(get(params, "user_id"));
   },
 
-  renderTemplate() {
-    this.render({ into: "admin" });
-  },
-
   afterModel(adminUser) {
     return adminUser.loadDetails().then(function () {
       adminUser.setOriginalTrustLevel();

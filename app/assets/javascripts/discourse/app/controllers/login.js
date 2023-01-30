@@ -41,6 +41,7 @@ export default Controller.extend(ModalFunctionality, {
   showLoginButtons: true,
   showSecondFactor: false,
   awaitingApproval: false,
+  maskPassword: true,
 
   canLoginLocal: setting("enable_local_logins"),
   canLoginLocalWithEmail: setting("enable_local_logins_via_email"),
@@ -58,6 +59,7 @@ export default Controller.extend(ModalFunctionality, {
       showSecurityKey: false,
       showLoginButtons: true,
       awaitingApproval: false,
+      maskPassword: true,
     });
   },
 
@@ -188,6 +190,11 @@ export default Controller.extend(ModalFunctionality, {
     this.send("showForgotPassword");
   },
 
+  @action
+  togglePasswordMask() {
+    this.toggleProperty("maskPassword");
+  },
+
   actions: {
     forgotPassword() {
       this.handleForgotPassword();
@@ -231,6 +238,7 @@ export default Controller.extend(ModalFunctionality, {
                 secondFactorRequired: true,
                 showLoginButtons: false,
                 backupEnabled: result.backup_enabled,
+                totpEnabled: result.totp_enabled,
                 showSecondFactor: result.totp_enabled,
                 showSecurityKey: result.security_key_enabled,
                 secondFactorMethod: result.security_key_enabled

@@ -17,10 +17,7 @@ class AdminConfirmation
     @token = SecureRandom.hex
     Discourse.redis.setex("admin-confirmation:#{@target_user.id}", 3.hours.to_i, @token)
 
-    payload = {
-      target_user_id: @target_user.id,
-      performed_by: @performed_by.id
-    }
+    payload = { target_user_id: @target_user.id, performed_by: @performed_by.id }
     Discourse.redis.setex("admin-confirmation-token:#{@token}", 3.hours.to_i, payload.to_json)
 
     Jobs.enqueue(
@@ -28,7 +25,7 @@ class AdminConfirmation
       to_address: @performed_by.email,
       target_email: @target_user.email,
       target_username: @target_user.username,
-      token: @token
+      token: @token,
     )
   end
 
@@ -51,8 +48,8 @@ class AdminConfirmation
     return nil unless json
 
     parsed = JSON.parse(json)
-    target_user = User.find(parsed['target_user_id'].to_i)
-    performed_by = User.find(parsed['performed_by'].to_i)
+    target_user = User.find(parsed["target_user_id"].to_i)
+    performed_by = User.find(parsed["performed_by"].to_i)
 
     ac = AdminConfirmation.new(target_user, performed_by)
     ac.token = token

@@ -4,7 +4,13 @@ import {
   exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
+import {
+  click,
+  fillIn,
+  settled,
+  triggerKeyEvent,
+  visit,
+} from "@ember/test-helpers";
 import I18n from "I18n";
 import searchFixtures from "discourse/tests/fixtures/search-fixtures";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -67,7 +73,7 @@ acceptance("Search - Anonymous", function (needs) {
       query(
         ".search-menu .results ul.search-menu-initial-options li:first-child .search-item-slug"
       ).innerText.trim(),
-      `dev ${I18n.t("search.in_topics_posts")}`,
+      `dev${I18n.t("search.in_topics_posts")}`,
       "shows topic search as first dropdown item"
     );
 
@@ -333,7 +339,10 @@ acceptance("Search - Anonymous", function (needs) {
 
 acceptance("Search - Authenticated", function (needs) {
   needs.user();
-  needs.settings({ log_search_queries: true });
+  needs.settings({
+    log_search_queries: true,
+    allow_uncategorized_topics: true,
+  });
 
   needs.pretender((server, helper) => {
     server.get("/search/query", (request) => {
@@ -365,6 +374,17 @@ acceptance("Search - Authenticated", function (needs) {
 
       return helper.response(searchFixtures["search/query"]);
     });
+
+    server.get("/inline-onebox", () =>
+      helper.response({
+        "inline-oneboxes": [
+          {
+            url: "http://www.something.com",
+            title: searchFixtures["search/query"].topics[0].title,
+          },
+        ],
+      })
+    );
   });
 
   test("Right filters are shown in full page search", async function (assert) {
@@ -476,6 +496,7 @@ acceptance("Search - Authenticated", function (needs) {
       "href"
     );
     await triggerKeyEvent(".search-menu", "keydown", "A");
+    await settled();
 
     assert.strictEqual(
       query("#reply-control textarea").value,
@@ -507,6 +528,30 @@ acceptance("Search - Authenticated", function (needs) {
     assert.ok(exists(query(`${container} ul li`)), "has a list of items");
     await triggerKeyEvent("#search-term", "keydown", "Enter");
     assert.ok(exists(query(`.search-menu`)), "search dropdown is visible");
+  });
+
+  test("search while composer is open", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click(".reply");
+    await fillIn(".d-editor-input", "a link");
+    await click("#search-button");
+    await fillIn("#search-term", "dev");
+
+    await triggerKeyEvent("#search-term", "keydown", "Enter");
+    await triggerKeyEvent(".search-menu", "keydown", "ArrowDown");
+    await triggerKeyEvent("#search-term", "keydown", 65); // maps to lowercase a
+
+    assert.ok(
+      query(".d-editor-input").value.includes("a link"),
+      "still has the original composer content"
+    );
+
+    assert.ok(
+      query(".d-editor-input").value.includes(
+        searchFixtures["search/query"].topics[0].slug
+      ),
+      "adds link from search to composer"
+    );
   });
 
   test("Shows recent search results", async function (assert) {
@@ -712,6 +757,47 @@ acceptance("Search - assistant", function (needs) {
       return helper.response(searchFixtures["search/query"]);
     });
 
+    server.get("/tag/dev/notifications", () => {
+      return helper.response({
+        tag_notification: { id: "dev", notification_level: 2 },
+      });
+    });
+
+    server.get("/tags/c/bug/1/dev/l/latest.json", () => {
+      return helper.response({
+        users: [],
+        primary_groups: [],
+        topic_list: {
+          can_create_topic: true,
+          draft: null,
+          draft_key: "new_topic",
+          draft_sequence: 1,
+          per_page: 30,
+          tags: [
+            {
+              id: 1,
+              name: "dev",
+              topic_count: 1,
+            },
+          ],
+          topics: [],
+        },
+      });
+    });
+
+    server.get("/tags/intersection/dev/foo.json", () => {
+      return helper.response({
+        topic_list: {
+          can_create_topic: true,
+          draft: null,
+          draft_key: "new_topic",
+          draft_sequence: 1,
+          per_page: 30,
+          topics: [],
+        },
+      });
+    });
+
     server.get("/u/search/users", () => {
       return helper.response({
         users: [
@@ -765,11 +851,90 @@ acceptance("Search - assistant", function (needs) {
       query(
         ".search-menu .results ul.search-menu-assistant .search-item-prefix"
       ).innerText,
-      "sam "
+      "sam"
     );
 
     await click(firstCategory);
     assert.strictEqual(query("#search-term").value, `sam #${firstResultSlug}`);
+  });
+
+  test("Shows category / tag combination shortcut when both are present", async function (assert) {
+    await visit("/tags/c/bug/dev");
+    await click("#search-button");
+
+    assert.strictEqual(
+      query(".search-menu .results ul.search-menu-assistant .category-name")
+        .innerText,
+      "bug",
+      "Category is displayed"
+    );
+
+    assert.strictEqual(
+      query(".search-menu .results ul.search-menu-assistant .search-item-tag")
+        .innerText,
+      "dev",
+      "Tag is displayed"
+    );
+  });
+
+  test("Updates tag / category combination search suggestion when typing", async function (assert) {
+    await visit("/tags/c/bug/dev");
+    await click("#search-button");
+    await fillIn("#search-term", "foo bar");
+
+    assert.strictEqual(
+      query(
+        ".search-menu .results ul.search-menu-assistant .search-item-prefix"
+      ).innerText,
+      "foo bar",
+      "Input is applied to search query"
+    );
+
+    assert.strictEqual(
+      query(".search-menu .results ul.search-menu-assistant .category-name")
+        .innerText,
+      "bug"
+    );
+
+    assert.strictEqual(
+      query(".search-menu .results ul.search-menu-assistant .search-item-tag")
+        .innerText,
+      "dev",
+      "Tag is displayed"
+    );
+  });
+
+  test("Shows tag combination shortcut when visiting tag intersection", async function (assert) {
+    await visit("/tags/intersection/dev/foo");
+    await click("#search-button");
+
+    assert.strictEqual(
+      query(".search-menu .results ul.search-menu-assistant .search-item-tag")
+        .innerText,
+      "tags:dev+foo",
+      "Tags are displayed"
+    );
+  });
+
+  test("Updates tag intersection search suggestion when typing", async function (assert) {
+    await visit("/tags/intersection/dev/foo");
+    await click("#search-button");
+    await fillIn("#search-term", "foo bar");
+
+    assert.strictEqual(
+      query(
+        ".search-menu .results ul.search-menu-assistant .search-item-prefix"
+      ).innerText,
+      "foo bar",
+      "Input is applied to search query"
+    );
+
+    assert.strictEqual(
+      query(".search-menu .results ul.search-menu-assistant .search-item-tag")
+        .innerText,
+      "tags:dev+foo",
+      "Tags are displayed"
+    );
   });
 
   test("shows in: shortcuts", async function (assert) {

@@ -2,10 +2,13 @@
 
 RSpec.describe Onebox::Engine::GitlabBlobOnebox do
   before do
-    @link = "https://gitlab.com/discourse/onebox/blob/master/lib/onebox/engine/gitlab_blob_onebox.rb"
+    @link =
+      "https://gitlab.com/discourse/onebox/blob/master/lib/onebox/engine/gitlab_blob_onebox.rb"
 
-    stub_request(:get, "https://gitlab.com/discourse/onebox/raw/master/lib/onebox/engine/gitlab_blob_onebox.rb")
-      .to_return(status: 200, body: onebox_response(described_class.onebox_name))
+    stub_request(
+      :get,
+      "https://gitlab.com/discourse/onebox/raw/master/lib/onebox/engine/gitlab_blob_onebox.rb",
+    ).to_return(status: 200, body: onebox_response(described_class.onebox_name))
   end
 
   include_context "with engines"

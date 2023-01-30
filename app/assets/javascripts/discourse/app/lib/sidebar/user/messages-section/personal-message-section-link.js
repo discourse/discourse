@@ -4,11 +4,12 @@ import MessageSectionLink from "discourse/lib/sidebar/user/messages-section/mess
 
 export default class PersonalMessageSectionLink extends MessageSectionLink {
   routeNames = new Set([
-    "userPrivateMessages.index",
-    "userPrivateMessages.unread",
-    "userPrivateMessages.sent",
-    "userPrivateMessages.new",
-    "userPrivateMessages.archive",
+    "userPrivateMessages.user",
+    "userPrivateMessages.user.index",
+    "userPrivateMessages.user.unread",
+    "userPrivateMessages.user.sent",
+    "userPrivateMessages.user.new",
+    "userPrivateMessages.user.archive",
   ]);
 
   get name() {
@@ -21,9 +22,9 @@ export default class PersonalMessageSectionLink extends MessageSectionLink {
 
   get route() {
     if (this._isInbox) {
-      return "userPrivateMessages.index";
+      return "userPrivateMessages.user.index";
     } else {
-      return `userPrivateMessages.${this.type}`;
+      return `userPrivateMessages.user.${this.type}`;
     }
   }
 

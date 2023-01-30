@@ -7,8 +7,11 @@ import UserMenuNotificationItem from "discourse/lib/user-menu/notification-item"
 import UserMenuMessageItem from "discourse/lib/user-menu/message-item";
 import Topic from "discourse/models/topic";
 import { mergeSortedLists } from "discourse/lib/utilities";
+import { inject as service } from "@ember/service";
 
 export default class UserMenuMessagesList extends UserMenuNotificationsList {
+  @service store;
+
   get dismissTypes() {
     return this.filterByTypes;
   }
@@ -22,7 +25,7 @@ export default class UserMenuMessagesList extends UserMenuNotificationsList {
   }
 
   get showDismiss() {
-    return this.#unreadMessaagesNotifications > 0;
+    return this.#unreadMessagesNotifications > 0;
   }
 
   get dismissTitle() {
@@ -37,7 +40,7 @@ export default class UserMenuMessagesList extends UserMenuNotificationsList {
     return "user-menu/messages-list-empty-state";
   }
 
-  get #unreadMessaagesNotifications() {
+  get #unreadMessagesNotifications() {
     const key = `grouped_unread_notifications.${this.site.notification_types.private_message}`;
     // we're retrieving the value with get() so that Ember tracks the property
     // and re-renders the UI when it changes.
@@ -66,7 +69,7 @@ export default class UserMenuMessagesList extends UserMenuNotificationsList {
       );
     });
 
-    const topics = data.topics.map((t) => Topic.create(t));
+    const topics = data.topics.map((t) => this.store.createRecord("topic", t));
     await Topic.applyTransformations(topics);
 
     const readNotifications = await Notification.initializeNotifications(
@@ -100,7 +103,7 @@ export default class UserMenuMessagesList extends UserMenuNotificationsList {
     modalController.set(
       "confirmationMessage",
       I18n.t("notifications.dismiss_confirmation.body.messages", {
-        count: this.#unreadMessaagesNotifications,
+        count: this.#unreadMessagesNotifications,
       })
     );
     return modalController;

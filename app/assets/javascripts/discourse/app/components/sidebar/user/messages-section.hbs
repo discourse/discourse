@@ -1,10 +1,16 @@
 <Sidebar::Section
   @sectionName="messages"
   @headerActionIcon="plus"
-  @headerActions={{array (hash action=(fn (route-action "composePrivateMessage") null null))}}
+  @headerActions={{array
+    (hash
+      action=(fn (route-action "composePrivateMessage") null null)
+      title=(i18n "sidebar.sections.messages.header_action_title")
+    )
+  }}
   @headerActionsIcon="plus"
   @headerLinkText={{i18n "sidebar.sections.messages.header_link_text"}}
-  @collapsable={{@collapsable}}>
+  @collapsable={{@collapsable}}
+>
 
   {{#each this.personalMessagesSectionLinks as |personalMessageSectionLink|}}
     {{#if personalMessageSectionLink.shouldDisplay}}
@@ -16,7 +22,8 @@
         @prefixType={{personalMessageSectionLink.prefixType}}
         @prefixValue={{personalMessageSectionLink.prefixValue}}
         @currentWhen={{personalMessageSectionLink.currentWhen}}
-        @content={{personalMessageSectionLink.text}} />
+        @content={{personalMessageSectionLink.text}}
+      />
     {{/if}}
   {{/each}}
 
@@ -31,7 +38,8 @@
           @prefixValue={{groupMessageSectionLink.prefixValue}}
           @models={{groupMessageSectionLink.models}}
           @currentWhen={{groupMessageSectionLink.currentWhen}}
-          @content={{groupMessageSectionLink.text}} />
+          @content={{groupMessageSectionLink.text}}
+        />
       {{/if}}
     {{/each}}
   {{/if}}
