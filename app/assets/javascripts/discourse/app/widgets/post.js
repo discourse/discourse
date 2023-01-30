@@ -64,6 +64,7 @@ export function avatarImg(wanted, attrs) {
       title,
       "aria-label": title,
       loading: "lazy",
+      tabindex: "-1",
     },
     className,
   };

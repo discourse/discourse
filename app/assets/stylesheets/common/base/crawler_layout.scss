@@ -191,6 +191,9 @@ body > noscript {
     [itemprop="position"] {
       float: left;
       margin-right: 0.5em;
+      &:before {
+        content: "#";
+      }
     }
   }
 

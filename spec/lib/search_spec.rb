@@ -2580,4 +2580,25 @@ RSpec.describe Search do
       expect(result.categories.length).to eq(0)
     end
   end
+
+  context "when enable_search_prefix_matching is disabled" do
+    before do
+      SearchIndexer.enable
+      SiteSetting.enable_search_prefix_matching = false
+    end
+
+    fab!(:post) do
+      Fabricate(:post, topic: topic, raw: "this body of the post contains abracadabra")
+    end
+
+    it "omits prefix search results" do
+      SearchIndexer.index(post, force: true)
+
+      result = Search.execute("abra")
+      expect(result.posts.length).to eq(0)
+
+      result = Search.execute("abracadabra")
+      expect(result.posts.length).to eq(1)
+    end
+  end
 end

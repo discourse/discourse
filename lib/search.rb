@@ -1237,7 +1237,8 @@ class Search
   end
 
   def self.set_tsquery_weight_filter(term, weight_filter)
-    "'#{self.escape_string(term)}':*#{weight_filter}"
+    optional_star = SiteSetting.enable_search_prefix_matching ? "*" : ""
+    "'#{self.escape_string(term)}':#{optional_star}#{weight_filter}"
   end
 
   def self.escape_string(term)

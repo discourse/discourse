@@ -6,6 +6,7 @@ import {
   fakeTime,
   loggedInUser,
   query,
+  queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { setCaretPosition } from "discourse/lib/utilities";
 
@@ -42,6 +43,17 @@ acceptance("Composer - editor mentions", function (needs) {
             name: "Some User",
             avatar_template:
               "https://avatars.discourse.org/v3/letter/t/41988e/{size}.png",
+          },
+          {
+            username: "foo",
+            avatar_template:
+              "https://avatars.discourse.org/v3/letter/t/41988e/{size}.png",
+          },
+        ],
+        groups: [
+          {
+            name: "user_group",
+            full_name: "Group",
           },
         ],
       });
@@ -155,6 +167,31 @@ acceptance("Composer - editor mentions", function (needs) {
       query(".autocomplete .relative-date").textContent.trim(),
       "1h",
       "status expiration time is shown"
+    );
+  });
+
+  test("metadata matches are moved to the end", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+
+    await fillIn(".d-editor-input", "abc @");
+    await triggerKeyEvent(".d-editor-input", "keyup", "@");
+    await fillIn(".d-editor-input", "abc @u");
+    await triggerKeyEvent(".d-editor-input", "keyup", "U");
+
+    assert.deepEqual(
+      [...queryAll(".ac-user .username")].map((e) => e.innerText),
+      ["user", "user2", "user_group", "foo"]
+    );
+
+    await fillIn(".d-editor-input", "abc @");
+    await triggerKeyEvent(".d-editor-input", "keyup", "@");
+    await fillIn(".d-editor-input", "abc @f");
+    await triggerKeyEvent(".d-editor-input", "keyup", "F");
+
+    assert.deepEqual(
+      [...queryAll(".ac-user .username")].map((e) => e.innerText),
+      ["foo", "user_group", "user", "user2"]
     );
   });
 });
