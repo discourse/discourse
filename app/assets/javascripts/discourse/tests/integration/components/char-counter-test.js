@@ -27,18 +27,18 @@ module("Integration | Component | char-counter", function (hooks) {
     assert.strictEqual(
       "/50",
       this.element.innerText,
-      "initial value apperas as expected"
+      "initial value appears as expected"
     );
     await fillIn("textarea", "Hello World, this is a longer string");
 
     assert.strictEqual(
       "36/50",
       this.element.innerText,
-      "updated value apperas as expected"
+      "updated value appears as expected"
     );
   });
 
-  test("updating value with textarea updates counter", async function (assert) {
+  test("exceeding max applies classes", async function (assert) {
     this.max = 10;
     this.value = "Hello World";
 
