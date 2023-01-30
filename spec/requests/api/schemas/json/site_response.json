@@ -118,6 +118,18 @@
         },
         "question_answer_user_commented": {
           "type": "integer"
+        },
+        "following": {
+          "type": "integer"
+        },
+        "following_created_topic": {
+          "type": "integer"
+        },
+        "following_replied": {
+          "type": "integer"
+        },
+        "circles_activity": {
+          "type": "integer"
         }
       },
       "required": [
@@ -746,6 +758,9 @@
       "items": {
 
       }
+    },
+    "whispers_allowed_groups_names" : {
+      "type": "array"
     }
   },
   "required": [

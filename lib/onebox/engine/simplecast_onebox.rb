@@ -6,7 +6,7 @@ module Onebox
       include Engine
       include StandardEmbed
 
-      matches_regexp(/https?:\/\/(.+)?simplecast.com\/(episodes|s)\/.*/)
+      matches_regexp(%r{https?://(.+)?simplecast.com/(episodes|s)/.*})
       always_https
       requires_iframe_origins("https://player.simplecast.com")
 

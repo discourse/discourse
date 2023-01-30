@@ -524,10 +524,6 @@ nb_NO:
         one: "nesten %{count} år siden"
         other: "nesten %{count} år siden"
   password_reset:
-    choose_new: "Velg et nytt passord"
-    choose: "Velg et passord"
-    update: "Oppdater passord"
-    save: "Sett passord"
     title: "Tilbakestill passord"
     success: "Du har endret passordet og er nå logget inn."
     success_unapproved: "Du har endret ditt passord."
@@ -1404,8 +1400,6 @@ nb_NO:
         fields:
           login_required:
             placeholder: "Privat"
-          must_approve_users:
-            placeholder: "Krev godkjenning"
       styling:
         fields:
           styling_preview:
@@ -1422,16 +1416,6 @@ nb_NO:
                 label: "Kategorier og siste emner"
               categories_and_top_topics:
                 label: "Kategorier og toppemner"
-      branding:
-        fields:
-          logo:
-            label: "Primær logo"
-      corporate:
-        fields:
-          contact_url:
-            label: "Nettside"
-          site_contact:
-            label: "Automatiserte meldinger"
   joined: "Medlem fra"
   discourse_push_notifications:
     popup:

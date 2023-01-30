@@ -1,7 +1,6 @@
 import Component from "@ember/component";
 import { action, computed } from "@ember/object";
 import { inject as service } from "@ember/service";
-import ChatApi from "discourse/plugins/chat/discourse/lib/chat-api";
 import showModal from "discourse/lib/show-modal";
 import I18n from "I18n";
 import { Promise } from "rsvp";
@@ -33,6 +32,7 @@ const CHANNEL_WIDE_MENTIONS_OPTIONS = [
 
 export default class ChatChannelSettingsView extends Component {
   @service chat;
+  @service chatApi;
   @service chatGuardian;
   @service router;
   @service dialog;
@@ -86,16 +86,23 @@ export default class ChatChannelSettingsView extends Component {
 
     const settings = {};
     settings[key] = value;
-    return ChatApi.updateChatChannelNotificationsSettings(
-      this.channel.id,
-      settings
-    ).then((membership) => {
-      this.channel.current_user_membership.setProperties({
-        muted: membership.muted,
-        desktop_notification_level: membership.desktop_notification_level,
-        mobile_notification_level: membership.mobile_notification_level,
+    return this.chatApi
+      .updateCurrentUserChannelNotificationsSettings(this.channel.id, settings)
+      .then((result) => {
+        [
+          "muted",
+          "desktop_notification_level",
+          "mobile_notification_level",
+        ].forEach((property) => {
+          if (
+            result.membership[property] !==
+            this.channel.currentUserMembership[property]
+          ) {
+            this.channel.currentUserMembership[property] =
+              result.membership[property];
+          }
+        });
       });
-    });
   }
 
   @action
@@ -155,9 +162,10 @@ export default class ChatChannelSettingsView extends Component {
 
     const payload = {};
     payload[property] = value;
-    return ChatApi.modifyChatChannel(channel.id, payload)
-      .then((updatedChannel) => {
-        channel.set(property, updatedChannel[property]);
+    return this.chatApi
+      .updateChannel(channel.id, payload)
+      .then((result) => {
+        channel.set(property, result.channel[property]);
       })
       .catch((event) => {
         if (event.jqXHR?.responseJSON?.errors) {

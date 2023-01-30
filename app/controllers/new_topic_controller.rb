@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
 class NewTopicController < ApplicationController
-  def index; end
+  def index
+  end
 end

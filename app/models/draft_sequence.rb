@@ -9,8 +9,7 @@ class DraftSequence < ActiveRecord::Base
 
     return 0 if !User.human_user_id?(user_id)
 
-    sequence =
-      DB.query_single(<<~SQL, user_id: user_id, draft_key: key).first
+    sequence = DB.query_single(<<~SQL, user_id: user_id, draft_key: key).first
         INSERT INTO draft_sequences (user_id, draft_key, sequence)
         VALUES (:user_id, :draft_key, 1)
         ON CONFLICT (user_id, draft_key) DO
@@ -21,7 +20,12 @@ class DraftSequence < ActiveRecord::Base
         RETURNING sequence
       SQL
 
-    DB.exec("DELETE FROM drafts WHERE user_id = :user_id AND draft_key = :draft_key AND sequence < :sequence", draft_key: key, user_id: user_id, sequence: sequence)
+    DB.exec(
+      "DELETE FROM drafts WHERE user_id = :user_id AND draft_key = :draft_key AND sequence < :sequence",
+      draft_key: key,
+      user_id: user_id,
+      sequence: sequence,
+    )
 
     UserStat.update_draft_count(user_id)
 
@@ -37,7 +41,12 @@ class DraftSequence < ActiveRecord::Base
     return 0 if !User.human_user_id?(user_id)
 
     # perf critical path
-    r, _ = DB.query_single('select sequence from draft_sequences where user_id = ? and draft_key = ?', user_id, key)
+    r, _ =
+      DB.query_single(
+        "select sequence from draft_sequences where user_id = ? and draft_key = ?",
+        user_id,
+        key,
+      )
     r.to_i
   end
 end

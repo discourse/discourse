@@ -51,6 +51,7 @@ sl:
         yesterday: Včeraj
       about_view:
         title: Naziv
+        name: Ime
         description: Opis
       channel_info:
         back_to_channel: "Nazaj"

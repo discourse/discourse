@@ -11,11 +11,18 @@ import {
 } from "discourse/lib/uploads";
 import I18n from "I18n";
 import User from "discourse/models/user";
-import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
 import sinon from "sinon";
-import { test } from "qunit";
+import { module, test } from "qunit";
+import { setupTest } from "ember-qunit";
+import { getOwner } from "discourse-common/lib/get-owner";
 
-discourseModule("Unit | Utility | uploads", function () {
+module("Unit | Utility | uploads", function (hooks) {
+  setupTest(hooks);
+
+  hooks.beforeEach(function () {
+    this.siteSettings = getOwner(this).lookup("service:site-settings");
+  });
+
   test("validateUploadedFiles", function (assert) {
     assert.notOk(
       validateUploadedFiles(null, { siteSettings: this.siteSettings }),

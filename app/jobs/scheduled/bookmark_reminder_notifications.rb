@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 module Jobs
-
   # Runs periodically to send out bookmark reminders, capped at 300 at a time.
   # Any leftovers will be caught in the next run, because the reminder_at column
   # is set to NULL once a reminder has been sent.
@@ -18,10 +17,10 @@ module Jobs
     end
 
     def execute(args = nil)
-      bookmarks = Bookmark.pending_reminders.includes(:user).order('reminder_at ASC')
-      bookmarks.limit(BookmarkReminderNotifications.max_reminder_notifications_per_run).each do |bookmark|
-        BookmarkReminderNotificationHandler.new(bookmark).send_notification
-      end
+      bookmarks = Bookmark.pending_reminders.includes(:user).order("reminder_at ASC")
+      bookmarks
+        .limit(BookmarkReminderNotifications.max_reminder_notifications_per_run)
+        .each { |bookmark| BookmarkReminderNotificationHandler.new(bookmark).send_notification }
     end
   end
 end

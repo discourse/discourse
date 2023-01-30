@@ -30,7 +30,13 @@ module SidekiqHelpers
 
     expect(matched_job).to(
       eq(expectation),
-      expectation ? "No enqueued job with #{expected} found" : "Enqueued job with #{expected} found"
+      (
+        if expectation
+          "No enqueued job with #{expected} found"
+        else
+          "Enqueued job with #{expected} found"
+        end
+      ),
     )
   end
 
@@ -46,9 +52,7 @@ module SidekiqHelpers
   #   post.update!(raw: 'new raw')
   # end
   def expect_not_enqueued_with(job:, args: {}, at: nil)
-    expect_enqueued_with(job: job, args: args, at: at, expectation: false) do
-      yield if block_given?
-    end
+    expect_enqueued_with(job: job, args: args, at: at, expectation: false) { yield if block_given? }
   end
 
   # Checks whether a job has been enqueued with the given arguments
@@ -88,15 +92,16 @@ module SidekiqHelpers
       job_args.merge!(at: job["at"]) if job["at"]
       job_args.merge!(enqueued_at: job["enqueued_at"]) if job["enqueued_at"]
 
-      matched_job ||= args.all? do |key, value|
-        value = value.to_s if value.is_a?(Symbol)
+      matched_job ||=
+        args.all? do |key, value|
+          value = value.to_s if value.is_a?(Symbol)
 
-        if key == :at
-          value.to_f == (job_args[:at] || job_args[:enqueued_at]).to_f
-        else
-          value == job_args[key]
+          if key == :at
+            value.to_f == (job_args[:at] || job_args[:enqueued_at]).to_f
+          else
+            value == job_args[key]
+          end
         end
-      end
     end
 
     matched_job

@@ -12,9 +12,7 @@ module SeedData
 
     def create(site_setting_names: nil, include_welcome_topics: true)
       I18n.with_locale(@locale) do
-        topics(site_setting_names, include_welcome_topics).each do |params|
-          create_topic(**params)
-        end
+        topics(site_setting_names, include_welcome_topics).each { |params| create_topic(**params) }
       end
     end
 
@@ -30,16 +28,14 @@ module SeedData
 
     def reseed_options
       I18n.with_locale(@locale) do
-        topics.map do |params|
-          post = find_post(params[:site_setting_name])
-          next unless post
+        topics
+          .map do |params|
+            post = find_post(params[:site_setting_name])
+            next unless post
 
-          {
-            id: params[:site_setting_name],
-            name: post.topic.title,
-            selected: unchanged?(post)
-          }
-        end.compact
+            { id: params[:site_setting_name], name: post.topic.title, selected: unchanged?(post) }
+          end
+          .compact
       end
     end
 
@@ -51,58 +47,58 @@ module SeedData
       topics = [
         # Terms of Service
         {
-          site_setting_name: 'tos_topic_id',
-          title: I18n.t('tos_topic.title'),
-          raw: I18n.t('tos_topic.body',
-                      company_name: setting_value('company_name'),
-                      base_url: Discourse.base_url,
-                      contact_email: setting_value('contact_email'),
-                      governing_law: setting_value('governing_law'),
-                      city_for_disputes: setting_value('city_for_disputes')
-          ),
+          site_setting_name: "tos_topic_id",
+          title: I18n.t("tos_topic.title"),
+          raw:
+            I18n.t(
+              "tos_topic.body",
+              company_name: setting_value("company_name"),
+              base_url: Discourse.base_url,
+              contact_email: setting_value("contact_email"),
+              governing_law: setting_value("governing_law"),
+              city_for_disputes: setting_value("city_for_disputes"),
+            ),
           category: staff_category,
-          static_first_reply: true
+          static_first_reply: true,
         },
-
         # FAQ/Guidelines
         {
-          site_setting_name: 'guidelines_topic_id',
-          title: I18n.t('guidelines_topic.title'),
-          raw: I18n.t('guidelines_topic.body', base_path: Discourse.base_path),
+          site_setting_name: "guidelines_topic_id",
+          title: I18n.t("guidelines_topic.title"),
+          raw: I18n.t("guidelines_topic.body", base_path: Discourse.base_path),
           category: staff_category,
-          static_first_reply: true
+          static_first_reply: true,
         },
-
         # Privacy Policy
         {
-          site_setting_name: 'privacy_topic_id',
-          title: I18n.t('privacy_topic.title'),
-          raw: I18n.t('privacy_topic.body'),
+          site_setting_name: "privacy_topic_id",
+          title: I18n.t("privacy_topic.title"),
+          raw: I18n.t("privacy_topic.body"),
           category: staff_category,
-          static_first_reply: true
-        }
+          static_first_reply: true,
+        },
       ]
 
       if include_welcome_topics
         # Welcome Topic
         if general_category = Category.find_by(id: SiteSetting.general_category_id)
           topics << {
-            site_setting_name: 'welcome_topic_id',
-            title: I18n.t('discourse_welcome_topic.title'),
-            raw: I18n.t('discourse_welcome_topic.body', base_path: Discourse.base_path),
+            site_setting_name: "welcome_topic_id",
+            title: I18n.t("discourse_welcome_topic.title"),
+            raw: I18n.t("discourse_welcome_topic.body", base_path: Discourse.base_path),
             category: general_category,
-            after_create: proc do |post|
-              post.topic.update_pinned(true, true)
-            end
+            after_create: proc { |post| post.topic.update_pinned(true, true) },
           }
         end
 
         # Admin Quick Start Guide
         topics << {
-          site_setting_name: 'admin_quick_start_topic_id',
-          title: DiscoursePluginRegistry.seed_data['admin_quick_start_title'] || I18n.t('admin_quick_start_title'),
+          site_setting_name: "admin_quick_start_topic_id",
+          title:
+            DiscoursePluginRegistry.seed_data["admin_quick_start_title"] ||
+              I18n.t("admin_quick_start_title"),
           raw: admin_quick_start_raw,
-          category: staff_category
+          category: staff_category,
         }
       end
 
@@ -113,18 +109,26 @@ module SeedData
       topics
     end
 
-    def create_topic(site_setting_name:, title:, raw:, category: nil, static_first_reply: false, after_create: nil)
+    def create_topic(
+      site_setting_name:,
+      title:,
+      raw:,
+      category: nil,
+      static_first_reply: false,
+      after_create: nil
+    )
       topic_id = SiteSetting.get(site_setting_name)
       return if topic_id > 0 || Topic.find_by(id: topic_id)
 
-      post = PostCreator.create!(
-        Discourse.system_user,
-        title: title,
-        raw: raw,
-        skip_jobs: true,
-        skip_validations: true,
-        category: category&.id
-      )
+      post =
+        PostCreator.create!(
+          Discourse.system_user,
+          title: title,
+          raw: raw,
+          skip_jobs: true,
+          skip_validations: true,
+          category: category&.id,
+        )
 
       if static_first_reply
         PostCreator.create!(
@@ -132,7 +136,7 @@ module SeedData
           raw: first_reply_raw(title),
           skip_jobs: true,
           skip_validations: true,
-          topic_id: post.topic_id
+          topic_id: post.topic_id,
         )
       end
 
@@ -174,7 +178,7 @@ module SeedData
     end
 
     def first_reply_raw(topic_title)
-      I18n.t('static_topic_first_reply', page_name: topic_title)
+      I18n.t("static_topic_first_reply", page_name: topic_title)
     end
 
     def admin_quick_start_raw
@@ -182,7 +186,7 @@ module SeedData
 
       if !quick_start_filename || !File.exist?(quick_start_filename)
         # TODO Make the quick start guide translatable
-        quick_start_filename = File.join(Rails.root, 'docs', 'ADMIN-QUICK-START-GUIDE.md')
+        quick_start_filename = File.join(Rails.root, "docs", "ADMIN-QUICK-START-GUIDE.md")
       end
 
       File.read(quick_start_filename)

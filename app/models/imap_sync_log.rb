@@ -12,14 +12,18 @@ class ImapSyncLog < ActiveRecord::Base
   def self.log(message, level, group_id = nil, db = true)
     now = Time.now.strftime("%Y-%m-%d %H:%M:%S.%L")
 
-    new_log = if db
-      create(message: message, level: ImapSyncLog.levels[level], group_id: group_id)
-    end
+    new_log = (create(message: message, level: ImapSyncLog.levels[level], group_id: group_id) if db)
 
     if ENV["DEBUG_IMAP"]
-      Rails.logger.send(:warn, "#{level[0].upcase}, [#{now}] [IMAP] (group_id #{group_id}) #{message}")
+      Rails.logger.send(
+        :warn,
+        "#{level[0].upcase}, [#{now}] [IMAP] (group_id #{group_id}) #{message}",
+      )
     else
-      Rails.logger.send(level, "#{level[0].upcase}, [#{now}] [IMAP] (group_id #{group_id}) #{message}")
+      Rails.logger.send(
+        level,
+        "#{level[0].upcase}, [#{now}] [IMAP] (group_id #{group_id}) #{message}",
+      )
     end
 
     new_log

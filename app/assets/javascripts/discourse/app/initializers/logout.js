@@ -12,12 +12,23 @@ export default {
   initialize(container) {
     this.messageBus = container.lookup("service:message-bus");
     this.dialog = container.lookup("service:dialog");
+    this.currentUser = container.lookup("service:current-user");
 
-    this.messageBus.subscribe("/logout", this.onMessage);
+    if (this.currentUser) {
+      this.messageBus.subscribe(
+        `/logout/${this.currentUser.id}`,
+        this.onMessage
+      );
+    }
   },
 
   teardown() {
-    this.messageBus.unsubscribe("/logout", this.onMessage);
+    if (this.currentUser) {
+      this.messageBus.unsubscribe(
+        `/logout/${this.currentUser.id}`,
+        this.onMessage
+      );
+    }
   },
 
   @bind

@@ -21,7 +21,7 @@ class ChatChannel < ActiveRecord::Base
             },
             presence: true,
             allow_nil: true
-  validate :ensure_slug_ok
+  validate :ensure_slug_ok, if: :slug_changed?
   before_validation :generate_auto_slug
 
   scope :public_channels,
@@ -76,11 +76,11 @@ class ChatChannel < ActiveRecord::Base
   end
 
   def url
-    "#{Discourse.base_url}/chat/channel/#{self.id}/#{self.slug || "-"}"
+    "#{Discourse.base_url}/chat/c/#{self.slug || "-"}/#{self.id}"
   end
 
   def relative_url
-    "#{Discourse.base_path}/chat/channel/#{self.id}/#{self.slug || "-"}"
+    "#{Discourse.base_path}/chat/c/#{self.slug || "-"}/#{self.id}"
   end
 
   def self.ensure_consistency!
@@ -89,7 +89,6 @@ class ChatChannel < ActiveRecord::Base
 
   # TODO (martin) Move UpdateUserCountsForChatChannels into here
   def self.update_counts
-
     # NOTE: ChatChannel#messages_count is not updated every time
     # a message is created or deleted in a channel, so it should not
     # be displayed in the UI. It is updated eventually via Jobs::ChatPeriodicalUpdates

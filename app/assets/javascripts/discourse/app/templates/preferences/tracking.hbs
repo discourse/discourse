@@ -6,24 +6,35 @@
     @considerNewTopicOptions={{this.considerNewTopicOptions}}
     @model={{this.model}}
     @autoTrackDurations={{this.autoTrackDurations}}
-    @notificationLevelsForReplying={{this.notificationLevelsForReplying}} />
+    @notificationLevelsForReplying={{this.notificationLevelsForReplying}}
+  />
 </div>
 
 <div class="user-preferences__tracking-categories-tags-wrapper">
-  <UserPreferences::Categories
-    @canSee={{this.canSee}}
-    @model={{this.model}}
-    @selectedCategories={{this.selectedCategories}}
-    @hideMutedTags={{this.hideMutedTags}}
-    @siteSettings={{this.siteSettings}} />
+  <div>
+    <UserPreferences::Categories
+      @canSee={{this.canSee}}
+      @model={{this.model}}
+      @selectedCategories={{this.selectedCategories}}
+      @hideMutedTags={{this.hideMutedTags}}
+      @siteSettings={{this.siteSettings}}
+    />
+  </div>
 
-  <UserPreferences::Tags
-    @model={{this.model}}
-    @selectedTags={{this.selectedTags}}
-    @save={{this.save}}
-    @siteSettings={{this.siteSettings}} />
+  <div>
+    <UserPreferences::Tags
+      @model={{this.model}}
+      @selectedTags={{this.selectedTags}}
+      @save={{this.save}}
+      @siteSettings={{this.siteSettings}}
+    />
+  </div>
 </div>
 
 {{#if this.canSave}}
-  <SaveControls @model={{this.model}} @action={{this.save}} @saved={{this.saved}} />
+  <SaveControls
+    @model={{this.model}}
+    @action={{this.save}}
+    @saved={{this.saved}}
+  />
 {{/if}}

@@ -1,5 +1,8 @@
 {{#if this.routeParam}}
-  <LinkTo @route={{this.route}} @model={{this.routeParam}}>{{this.contents}}</LinkTo>
+  <LinkTo
+    @route={{this.route}}
+    @model={{this.routeParam}}
+  >{{this.contents}}</LinkTo>
 {{else if this.route}}
   <LinkTo @route={{this.route}}>{{this.contents}}</LinkTo>
 {{else}}

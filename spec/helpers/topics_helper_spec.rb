@@ -1,13 +1,14 @@
 # frozen_string_literal: true
 
 RSpec.describe TopicsHelper do
-
   describe "#categories_breadcrumb" do
     let(:user) { Fabricate(:user) }
 
     let(:category) { Fabricate(:category_with_definition) }
     let(:subcategory) { Fabricate(:category_with_definition, parent_category_id: category.id) }
-    let(:subsubcategory) { Fabricate(:category_with_definition, parent_category_id: subcategory.id) }
+    let(:subsubcategory) do
+      Fabricate(:category_with_definition, parent_category_id: subcategory.id)
+    end
 
     it "works with sub-sub-categories" do
       SiteSetting.max_category_nesting = 3

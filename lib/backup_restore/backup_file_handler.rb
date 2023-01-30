@@ -11,7 +11,7 @@ module BackupRestore
       @filename = filename
       @current_db = current_db
       @root_tmp_directory = root_tmp_directory
-      @is_archive = !(@filename =~ /\.sql\.gz$/)
+      @is_archive = !(@filename =~ /\.sql\.gz\z/)
       @store_location = location
     end
 
@@ -69,15 +69,22 @@ module BackupRestore
       path_transformation =
         case tar_implementation
         when :gnu
-          ['--transform', 's|var/www/discourse/public/uploads/|uploads/|']
+          %w[--transform s|var/www/discourse/public/uploads/|uploads/|]
         when :bsd
-          ['-s', '|var/www/discourse/public/uploads/|uploads/|']
+          %w[-s |var/www/discourse/public/uploads/|uploads/|]
         end
 
       log "Unzipping archive, this may take a while..."
       Discourse::Utils.execute_command(
-        'tar', '--extract', '--gzip', '--file', @archive_path, '--directory', @tmp_directory,
-        *path_transformation, failure_message: "Failed to decompress archive."
+        "tar",
+        "--extract",
+        "--gzip",
+        "--file",
+        @archive_path,
+        "--directory",
+        @tmp_directory,
+        *path_transformation,
+        failure_message: "Failed to decompress archive.",
       )
     end
 
@@ -86,15 +93,19 @@ module BackupRestore
         if @is_archive
           # for compatibility with backups from Discourse v1.5 and below
           old_dump_path = File.join(@tmp_directory, OLD_DUMP_FILENAME)
-          File.exist?(old_dump_path) ? old_dump_path : File.join(@tmp_directory, BackupRestore::DUMP_FILE)
+          if File.exist?(old_dump_path)
+            old_dump_path
+          else
+            File.join(@tmp_directory, BackupRestore::DUMP_FILE)
+          end
         else
           File.join(@tmp_directory, @filename)
         end
 
-      if File.extname(@db_dump_path) == '.gz'
+      if File.extname(@db_dump_path) == ".gz"
         log "Extracting dump file..."
         Compression::Gzip.new.decompress(@tmp_directory, @db_dump_path, available_size)
-        @db_dump_path.delete_suffix!('.gz')
+        @db_dump_path.delete_suffix!(".gz")
       end
 
       @db_dump_path
@@ -105,17 +116,18 @@ module BackupRestore
     end
 
     def tar_implementation
-      @tar_version ||= begin
-        tar_version = Discourse::Utils.execute_command('tar', '--version')
+      @tar_version ||=
+        begin
+          tar_version = Discourse::Utils.execute_command("tar", "--version")
 
-        if tar_version.include?("GNU tar")
-          :gnu
-        elsif tar_version.include?("bsdtar")
-          :bsd
-        else
-          raise "Unknown tar implementation: #{tar_version}"
+          if tar_version.include?("GNU tar")
+            :gnu
+          elsif tar_version.include?("bsdtar")
+            :bsd
+          else
+            raise "Unknown tar implementation: #{tar_version}"
+          end
         end
-      end
     end
   end
 end

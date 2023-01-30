@@ -2,15 +2,15 @@
 
 RSpec.describe Jobs::ProcessPost do
   it "returns when the post cannot be found" do
-    expect { Jobs::ProcessPost.new.perform(post_id: 1, sync_exec: true) }.not_to raise_error
+    expect { Jobs::ProcessPost.new.execute(post_id: 1) }.not_to raise_error
   end
 
-  context 'with a post' do
+  context "with a post" do
     fab!(:post) { Fabricate(:post) }
 
-    it 'does not erase posts when CookedPostProcessor malfunctions' do
+    it "does not erase posts when CookedPostProcessor malfunctions" do
       # Look kids, an actual reason why you want to use mocks
-      CookedPostProcessor.any_instance.expects(:html).returns(' ')
+      CookedPostProcessor.any_instance.expects(:html).returns(" ")
       cooked = post.cooked
 
       post.reload
@@ -19,7 +19,7 @@ RSpec.describe Jobs::ProcessPost do
       Jobs::ProcessPost.new.execute(post_id: post.id, cook: true)
     end
 
-    it 'recooks if needed' do
+    it "recooks if needed" do
       cooked = post.cooked
 
       post.update_columns(cooked: "frogs")
@@ -29,8 +29,9 @@ RSpec.describe Jobs::ProcessPost do
       expect(post.cooked).to eq(cooked)
     end
 
-    it 'processes posts' do
-      post = Fabricate(:post, raw: "<img src='#{Discourse.base_url_no_prefix}/awesome/picture.png'>")
+    it "processes posts" do
+      post =
+        Fabricate(:post, raw: "<img src='#{Discourse.base_url_no_prefix}/awesome/picture.png'>")
       expect(post.cooked).to match(/http/)
       stub_image_size
 
@@ -47,8 +48,16 @@ RSpec.describe Jobs::ProcessPost do
     end
 
     it "extracts links to quoted posts" do
-      quoted_post = Fabricate(:post, raw: "This is a post with a link to https://www.discourse.org", post_number: 42)
-      post.update_columns(raw: "This quote is the best\n\n[quote=\"#{quoted_post.user.username}, topic:#{quoted_post.topic_id}, post:#{quoted_post.post_number}\"]\n#{quoted_post.excerpt}\n[/quote]")
+      quoted_post =
+        Fabricate(
+          :post,
+          raw: "This is a post with a link to https://www.discourse.org",
+          post_number: 42,
+        )
+      post.update_columns(
+        raw:
+          "This quote is the best\n\n[quote=\"#{quoted_post.user.username}, topic:#{quoted_post.topic_id}, post:#{quoted_post.post_number}\"]\n#{quoted_post.excerpt}\n[/quote]",
+      )
       stub_image_size
       # when creating a quote, we also create the reflexion link
       expect { Jobs::ProcessPost.new.execute(post_id: post.id) }.to change { TopicLink.count }.by(2)
@@ -102,9 +111,7 @@ RSpec.describe Jobs::ProcessPost do
     end
 
     context "when download_remote_images_to_local? is enabled" do
-      before do
-        SiteSetting.download_remote_images_to_local = true
-      end
+      before { SiteSetting.download_remote_images_to_local = true }
 
       it "enqueues" do
         expect_enqueued_with(job: :pull_hotlinked_images, args: { post_id: post.id }) do
@@ -117,6 +124,5 @@ RSpec.describe Jobs::ProcessPost do
         expect(Jobs::PullHotlinkedImages.jobs.size).to eq(0)
       end
     end
-
   end
 end

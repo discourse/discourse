@@ -3,9 +3,13 @@
 module PageObjects
   module Pages
     class Search < PageObjects::Pages::Base
-
       def type_in_search(input)
         find("input.full-page-search").send_keys(input)
+        self
+      end
+
+      def clear_search_input
+        find("input.full-page-search").set("")
         self
       end
 
@@ -26,15 +30,16 @@ module PageObjects
       end
 
       def has_search_result?
-        within(".search-results") do
-          page.has_selector?(".fps-result", visible: true)
-        end
+        within(".search-results") { page.has_selector?(".fps-result", visible: true) }
+      end
+
+      def has_warning_message?
+        within(".search-results") { page.has_selector?(".warning", visible: true) }
       end
 
       def is_search_page
         has_css?("body.search-page")
       end
-
     end
   end
 end

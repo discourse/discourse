@@ -32,7 +32,7 @@ class Chat::ChatController < Chat::ChatBaseController
   def enable_chat
     chat_channel = ChatChannel.with_deleted.find_by(chatable: @chatable)
 
-    guardian.ensure_can_see_chat_channel!(chat_channel) if chat_channel
+    guardian.ensure_can_join_chat_channel!(chat_channel) if chat_channel
 
     if chat_channel && chat_channel.trashed?
       chat_channel.recover!
@@ -40,7 +40,7 @@ class Chat::ChatController < Chat::ChatBaseController
       return render_json_error I18n.t("chat.already_enabled")
     else
       chat_channel = @chatable.chat_channel
-      guardian.ensure_can_see_chat_channel!(chat_channel)
+      guardian.ensure_can_join_chat_channel!(chat_channel)
     end
 
     success = chat_channel.save
@@ -61,7 +61,7 @@ class Chat::ChatController < Chat::ChatBaseController
 
   def disable_chat
     chat_channel = ChatChannel.with_deleted.find_by(chatable: @chatable)
-    guardian.ensure_can_see_chat_channel!(chat_channel)
+    guardian.ensure_can_join_chat_channel!(chat_channel)
     return render json: success_json if chat_channel.trashed?
     chat_channel.trash!(current_user)
 
@@ -110,7 +110,9 @@ class Chat::ChatController < Chat::ChatBaseController
 
     return render_json_error(chat_message_creator.error) if chat_message_creator.failed?
 
-    @user_chat_channel_membership.update(last_read_message_id: chat_message_creator.chat_message.id)
+    @user_chat_channel_membership.update!(
+      last_read_message_id: chat_message_creator.chat_message.id,
+    )
 
     if @chat_channel.direct_message_channel?
       # If any of the channel users is ignoring, muting, or preventing DMs from
@@ -123,14 +125,15 @@ class Chat::ChatController < Chat::ChatBaseController
         ).allowing_actor_communication
 
       if user_ids_allowing_communication.any?
-        @chat_channel
-          .user_chat_channel_memberships
-          .where(user_id: user_ids_allowing_communication)
-          .update_all(following: true)
         ChatPublisher.publish_new_channel(
           @chat_channel,
           @chat_channel.chatable.users.where(id: user_ids_allowing_communication),
         )
+
+        @chat_channel
+          .user_chat_channel_memberships
+          .where(user_id: user_ids_allowing_communication)
+          .update_all(following: true)
       end
     end
 
@@ -285,8 +288,8 @@ class Chat::ChatController < Chat::ChatBaseController
   end
 
   def message_link
-    return render_404 if @message.blank? || @message.deleted_at.present?
-    return render_404 if @message.chat_channel.blank?
+    raise Discourse::NotFound if @message.blank? || @message.deleted_at.present?
+    raise Discourse::NotFound if @message.chat_channel.blank?
     set_channel_and_chatable_with_access_check(chat_channel_id: @message.chat_channel_id)
     render json:
              success_json.merge(
@@ -346,7 +349,7 @@ class Chat::ChatController < Chat::ChatBaseController
         .where(id: params[:user_ids])
     users.each do |user|
       guardian = Guardian.new(user)
-      if guardian.can_chat? && guardian.can_see_chat_channel?(@chat_channel)
+      if guardian.can_chat? && guardian.can_join_chat_channel?(@chat_channel)
         data = {
           message: "chat.invitation_notification",
           chat_channel_id: @chat_channel.id,
@@ -398,34 +401,6 @@ class Chat::ChatController < Chat::ChatBaseController
     render json: success_json.merge(markdown: markdown)
   end
 
-  def move_messages_to_channel
-    params.require(:message_ids)
-    params.require(:destination_channel_id)
-
-    raise Discourse::InvalidAccess if !guardian.can_move_chat_messages?(@chat_channel)
-    destination_channel =
-      Chat::ChatChannelFetcher.find_with_access_check(params[:destination_channel_id], guardian)
-
-    begin
-      message_ids = params[:message_ids].map(&:to_i)
-      moved_messages =
-        Chat::MessageMover.new(
-          acting_user: current_user,
-          source_channel: @chat_channel,
-          message_ids: message_ids,
-        ).move_to_channel(destination_channel)
-    rescue Chat::MessageMover::NoMessagesFound, Chat::MessageMover::InvalidChannel => err
-      return render_json_error(err.message)
-    end
-
-    render json:
-             success_json.merge(
-               destination_channel_id: destination_channel.id,
-               destination_channel_title: destination_channel.title(current_user),
-               first_moved_message_id: moved_messages.first.id,
-             )
-  end
-
   def flag
     RateLimiter.new(current_user, "flag_chat_message", 4, 1.minutes).performed!
 
@@ -457,9 +432,10 @@ class Chat::ChatController < Chat::ChatBaseController
 
   def set_draft
     if params[:data].present?
-      ChatDraft.find_or_initialize_by(user: current_user, chat_channel_id: @chat_channel.id).update(
-        data: params[:data],
-      )
+      ChatDraft.find_or_initialize_by(
+        user: current_user,
+        chat_channel_id: @chat_channel.id,
+      ).update!(data: params[:data])
     else
       ChatDraft.where(user: current_user, chat_channel_id: @chat_channel.id).destroy_all
     end

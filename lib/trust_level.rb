@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-class InvalidTrustLevel < StandardError; end
+class InvalidTrustLevel < StandardError
+end
 
 class TrustLevel
   def self.[](level)

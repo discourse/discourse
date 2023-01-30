@@ -87,6 +87,10 @@ export function addPostSmallActionClassesCallback(callback) {
   addPostSmallActionClassesCallbacks.push(callback);
 }
 
+export function resetPostSmallActionClassesCallbacks() {
+  addPostSmallActionClassesCallbacks.length = 0;
+}
+
 export default createWidget("post-small-action", {
   buildKey: (attrs) => `post-small-act-${attrs.id}`,
   tagName: "div.small-action.onscreen-post",
@@ -97,13 +101,15 @@ export default createWidget("post-small-action", {
 
   buildClasses(attrs) {
     let classNames = [];
+
     if (attrs.deleted) {
       classNames.push("deleted");
     }
 
-    if (addPostSmallActionClassesCallbacks) {
+    if (addPostSmallActionClassesCallbacks.length > 0) {
       addPostSmallActionClassesCallbacks.forEach((callback) => {
         const additionalClasses = callback.call(this, attrs);
+
         if (additionalClasses) {
           classNames.push(...additionalClasses);
         }

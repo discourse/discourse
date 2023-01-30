@@ -543,10 +543,6 @@ el:
         one: "σχεδόν %{count} χρόνο πριν"
         other: "σχεδόν %{count} χρόνια πριν"
   password_reset:
-    choose_new: "Επιλέξτε νέο κωδικό πρόσβασης"
-    choose: "Επιλέξτε έναν κωδικό πρόσβασης"
-    update: "Ενημέρωση κωδικού πρόσβασης"
-    save: "Θέσε Κωδικό Πρόσβασης"
     title: "Επαναφορά κωδικού πρόσβασης"
     success: "Αλλάξατε επιτυχώς τον κωδικό πρόσβασής σας και έχετε συνδεθεί."
     success_unapproved: "Αλλάξατε επιτυχώς τον κωδικό πρόσβασής σας"
@@ -986,9 +982,6 @@ el:
     prioritize_username_in_ux: "Δίξε το όνομα χρήστη πρώτα στη σελίδα του χρήστη, την κάρτα χρήστη και στις δημοσιεύσεις (όταν είναι ανενεργό, φαίνεται πρώτα το όνομα)"
     email_token_valid_hours: "Τα tokens ανάκτησης κωδικού / ενεργοποίησης λογαριασμού παραμένουν έγκυρα για (ν) ώρες."
     enable_badges: "Ενεργοποίηση συστήματος παρασήμων"
-    enable_whispers: "Επιτρέπεται στο προσωπικό η ιδιωτική επικοινωνία μεταξύ νημάτων"
-    blocked_email_domains: "Μία λίστα με διευθύνσεις email τις οποίες οι χρήστες δεν μπορούν να χρησιμοποιήσουν για να δημιουργήσουν λογαριασμό. Πχ: mailinator.com|trashmail.net"
-    allowed_email_domains: "Μία λίστα με διευθύνσεις email τις οποίες οι χρήστες ΘΑ ΠΡΕΠΕΙ να χρησιμοποιήσουν για να δημιουργήσουν λογαριασμό. ΠΡΟΣΟΧΗ: οι χρήστες με διευθύνσεις email οι οποίες δεν βρίσκονται σε αυτή τη λίστα δεν θα μπορούν να δημιουργήσουν λογαριασμό."
     log_out_strict: "Όταν αποσυνδεθείτε, ΟΛΕΣ οι δραστηριότητες σας σε ΟΛΕΣ τις συσκευές θα αποσυνδεθούν"
     new_version_emails: "Αποστολή email στην contact_email διεύθυνση όταν μια νέα έκδοση του Discourse είναι διαθέσιμη."
     invite_expiry_days: "Για πόσο καιρό οι κύριες προσκλήσεις ισχύουν, σε μέρες "
@@ -1996,6 +1989,17 @@ el:
         %{context}
 
         %{respond_instructions}
+    user_watching_category_or_tag:
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |2
+
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_watching_first_post:
       title: "Χρήστης που επιτηρεί την πρώτη ανάρτηση"
       subject_template: "[%{email_prefix}] %{topic_title}"
@@ -2530,10 +2534,6 @@ el:
         fields:
           login_required:
             placeholder: "Ιδιωτική"
-          must_approve_users:
-            placeholder: "Απαιτεί Έγκριση"
-      ready:
-        title: "Το Discourse σου είναι έτοιμο!"
       styling:
         fields:
           styling_preview:
@@ -2550,18 +2550,11 @@ el:
                 label: "Κατηγορίες και Τελευταία Νήματα"
               categories_and_top_topics:
                 label: "Κατηγορίες και κορυφαία θέματα"
-      branding:
-        fields:
-          logo:
-            label: "Κυρίως Λογότυπο"
       corporate:
         fields:
           contact_url:
-            label: "Ιστοσελίδα"
             placeholder: "https://www.example.com/contact-us"
-            description: "Ιστοσελίδα γενικής επικοινωνίας με εσάς και τον οργανισμό σας. Θα εμφανίζεται στην επιλογή <a href='%{base_path}/about' target='_blank'>σχετικά με τη σελίδα</a>."
           site_contact:
-            label: "Αυτόματα Μηνύματα"
             description: "Όλα τα αυτοματοποιημένα συστημικά μηνύματα, όπως οι προειδοποιήσεις σημάνσεων και η ειδοποίηση ολοκλήρωσης των αντιγράφων ασφαλείας, θα στέλνονται από αυτόν τον χρήστη."
       invites:
         title: "Πρόσκληση Συνεργάτη"

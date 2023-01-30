@@ -109,10 +109,45 @@ tr_TR:
       new_messages: "yeni mesajlar"
       mention_warning:
         dismiss: "kapat"
+        cannot_see:
+          one: "%{username} bu kanala erişemiyor ve bildirim almadı."
+          other: "%{username} ve %{others} bu kanala erişemiyor ve bildirim almadı."
         invitations_sent:
           one: "Davet gönderildi"
           other: "Davet gönderildi"
         invite: "Kanala davet et"
+        without_membership:
+          one: "%{username} bu kanala katılmadı."
+          other: "%{username} ve %{others} bu kanala katılmadı."
+        group_mentions_disabled:
+          one: "%{group_name} bahsetmeye izin vermiyor"
+          other: "%{group_name} ve %{others} bahsetmeye izin vermiyor"
+        too_many_members:
+          one: "%{group_name} çok fazla üyeye sahip. Kimseye bildirim gönderilmedi"
+          other: "%{group_name} ve %{others} çok fazla üyeye sahip. Kimseye bildirim gönderilmedi"
+        warning_multiple:
+          one: "%{count} tane daha"
+          other: "%{count} tane daha"
+        groups:
+          header:
+            some: "Bazı kullanıcılara bildirim gönderilmeyecek"
+            all: "Kimseye bildirim gönderilmeyecek"
+          unreachable:
+            one: "@%{group} bahsetmeye izin vermiyor"
+            other: "@%{group} ve @%{group_2} bahsetmeye izin vermiyor"
+          unreachable_multiple: "@%{group} ve %{count} grup daha bahsetmeye izin vermiyor"
+          too_many_members:
+            one: "@%{group} adlı gruptan bahsetmek %{limit} %{notification_limit} değerini aşıyor"
+            other: "Hem @%{group} hem de @%{group_2} adlı gruplardan bahsetmek %{limit} %{notification_limit} değerini aşıyor"
+          too_many_members_multiple: "Bu %{count} grup %{limit} %{notification_limit} değerini aşıyor."
+          users_limit:
+            one: "%{count} kullanıcı"
+            other: "%{count} kullanıcı"
+          notification_limit: "bildirim limiti"
+        too_many_mentions: "Bu mesaj, %{limit} %{notification_limit} değerini aşıyor"
+        mentions_limit:
+          one: "%{count} bahsetme"
+          other: "%{count} bahsetme"
       aria_roles:
         header: "Sohbet başlığı"
         composer: "Sohbet oluşturucu"
@@ -171,7 +206,6 @@ tr_TR:
         read_only: "Salt Okunur"
         archived_header: "Kanal arşivlendi"
         archived: "Arşivlendi"
-        archive_failed: "Kanal arşivlemesi başarısız oldu. %{completed}/%{total} mesaj <a target=\"_blank\" href=\"%{topic_url}\">hedef konuya</a> arşivlendi. Arşivi tamamlamayı denemek için tekrar deneye basın."
         archive_completed: "<a target=\"_blank\" href=\"%{topic_url}\">Arşiv konusuna</a> bakın"
         closed_header: "Kanal kapalı"
         closed: "Kapalı"
@@ -194,6 +228,7 @@ tr_TR:
         associated_topic: Bağlantılı konu
         associated_category: Bağlantılı kategori
         title: Başlık
+        name: Ad
         description: Açıklama
       channel_info:
         back_to_all_channels: "Tüm kanallar"
@@ -202,10 +237,6 @@ tr_TR:
           about: Hakkında
           members: Üyeler
           settings: Ayarlar
-      channel_edit_title_modal:
-        title: Başlığı düzenle
-        input_placeholder: Başlık ekle
-        description: Kanalınıza kısa bir açıklayıcı başlık ekleyin
       channel_edit_description_modal:
         title: Açıklamayı düzenle
         input_placeholder: Açıklama ekle
@@ -268,9 +299,9 @@ tr_TR:
         mention: "Sadece bahsetmeler için"
         always: "Tüm aktiviteler için"
       settings:
+        channel_wide_mentions_label: "@all ve @here bahsetmelerine izin ver"
+        channel_wide_mentions_description: "Kullanıcıların @all ile #%{channel} kanalının tüm üyelerine veya @here ile yalnızca o anda aktif olanlara bildirim göndermelerine izin verin"
         auto_join_users_label: "Kullanıcıları otomatik olarak ekle"
-        auto_join_users_info: "Son 3 ayda hangi kullanıcıların aktif olduğunu saatlik olarak kontrol edin ve %{category} adlı kategoriye erişimleri varsa bu kanala ekleyin."
-        enable_auto_join_users: "Son zamanlarda aktif olan tüm kullanıcıları otomatik olarak ekle"
         auto_join_users_warning: "Bu kanala üye olmayan ve %{category} adlı kategoriye erişimi olan her kullanıcı katılacak. Emin misiniz?"
         desktop_notification_level: "Masaüstü bildirimleri"
         follow: "Katıl"
@@ -290,7 +321,7 @@ tr_TR:
         title: "Sohbet"
       direct_messages:
         title: "Kişisel sohbet"
-        new: "Yeni kişisel sohbet"
+        new: "Kişisel sohbet oluşturun"
         create: "Git"
         leave: "Bu kişisel sohbetten ayrıl"
         cannot_create: "Üzgünüz, doğrudan mesaj gönderemezsiniz."

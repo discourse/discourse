@@ -32,6 +32,7 @@ class Chat::ChatMessageUpdater
       @chat_message.save!
       update_uploads(upload_info)
       revision = save_revision!
+      @chat_message.reload
       ChatPublisher.publish_edit!(@chat_channel, @chat_message)
       Jobs.enqueue(:process_chat_message, { chat_message_id: @chat_message.id })
       Chat::ChatNotifier.notify_edit(chat_message: @chat_message, timestamp: revision.created_at)
@@ -82,7 +83,8 @@ class Chat::ChatMessageUpdater
   def update_uploads(upload_info)
     return unless upload_info[:changed]
 
-    ChatUpload.where(chat_message: @chat_message).destroy_all
+    DB.exec("DELETE FROM chat_uploads WHERE chat_message_id = #{@chat_message.id}")
+    UploadReference.where(target: @chat_message).destroy_all
     @chat_message.attach_uploads(upload_info[:uploads])
   end
 

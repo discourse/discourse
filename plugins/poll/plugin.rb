@@ -30,7 +30,8 @@ after_initialize do
       isolate_namespace DiscoursePoll
     end
 
-    class Error < StandardError; end
+    class Error < StandardError
+    end
   end
 
   require_relative "app/controllers/polls_controller.rb"
@@ -49,13 +50,11 @@ after_initialize do
     put "/vote" => "polls#vote"
     delete "/vote" => "polls#remove_vote"
     put "/toggle_status" => "polls#toggle_status"
-    get "/voters" => 'polls#voters'
-    get "/grouped_poll_results" => 'polls#grouped_poll_results'
+    get "/voters" => "polls#voters"
+    get "/grouped_poll_results" => "polls#grouped_poll_results"
   end
 
-  Discourse::Application.routes.append do
-    mount ::DiscoursePoll::Engine, at: "/polls"
-  end
+  Discourse::Application.routes.append { mount ::DiscoursePoll::Engine, at: "/polls" }
 
   allow_new_queued_post_payload_attribute("is_poll")
   register_post_custom_field_type(DiscoursePoll::HAS_POLLS, :boolean)
@@ -74,18 +73,14 @@ after_initialize do
         post = self
 
         Poll.transaction do
-          polls.values.each do |poll|
-            DiscoursePoll::Poll.create!(post.id, poll)
-          end
+          polls.values.each { |poll| DiscoursePoll::Poll.create!(post.id, poll) }
           post.custom_fields[DiscoursePoll::HAS_POLLS] = true
           post.save_custom_fields(true)
         end
       end
     end
 
-    User.class_eval do
-      has_many :poll_votes, dependent: :delete_all
-    end
+    User.class_eval { has_many :poll_votes, dependent: :delete_all }
   end
 
   validate(:post, :validate_polls) do |force = nil|
@@ -115,9 +110,7 @@ after_initialize do
     if !DiscoursePoll::PollsValidator.new(post).validate_polls
       result = NewPostResult.new(:poll, false)
 
-      post.errors.full_messages.each do |message|
-        result.add_error(message)
-      end
+      post.errors.full_messages.each { |message| result.add_error(message) }
 
       result
     else
@@ -127,9 +120,7 @@ after_initialize do
   end
 
   on(:approved_post) do |queued_post, created_post|
-    if queued_post.payload["is_poll"]
-      created_post.validate_polls(true)
-    end
+    created_post.validate_polls(true) if queued_post.payload["is_poll"]
   end
 
   on(:reduce_cooked) do |fragment, post|
@@ -137,22 +128,27 @@ after_initialize do
       fragment.css(".poll, [data-poll-name]").each(&:remove)
     else
       post_url = post.full_url
-      fragment.css(".poll, [data-poll-name]").each do |poll|
-        poll.replace "<p><a href='#{post_url}'>#{I18n.t("poll.email.link_to_poll")}</a></p>"
-      end
+      fragment
+        .css(".poll, [data-poll-name]")
+        .each do |poll|
+          poll.replace "<p><a href='#{post_url}'>#{I18n.t("poll.email.link_to_poll")}</a></p>"
+        end
     end
   end
 
   on(:reduce_excerpt) do |doc, options|
     post = options[:post]
 
-    replacement = post&.url.present? ?
-      "<a href='#{UrlHelper.normalized_encode(post.url)}'>#{I18n.t("poll.poll")}</a>" :
-      I18n.t("poll.poll")
+    replacement =
+      (
+        if post&.url.present?
+          "<a href='#{UrlHelper.normalized_encode(post.url)}'>#{I18n.t("poll.poll")}</a>"
+        else
+          I18n.t("poll.poll")
+        end
+      )
 
-    doc.css("div.poll").each do |poll|
-      poll.replace(replacement)
-    end
+    doc.css("div.poll").each { |poll| poll.replace(replacement) }
   end
 
   on(:post_created) do |post, _opts, user|
@@ -162,7 +158,13 @@ after_initialize do
     next if post.is_first_post?
     next if post.custom_fields[DiscoursePoll::HAS_POLLS].blank?
 
-    polls = ActiveModel::ArraySerializer.new(post.polls, each_serializer: PollSerializer, root: false, scope: guardian).as_json
+    polls =
+      ActiveModel::ArraySerializer.new(
+        post.polls,
+        each_serializer: PollSerializer,
+        root: false,
+        scope: guardian,
+      ).as_json
     post.publish_message!("/polls/#{post.topic_id}", post_id: post.id, polls: polls)
   end
 
@@ -171,63 +173,70 @@ after_initialize do
   end
 
   add_to_class(:topic_view, :polls) do
-    @polls ||= begin
-      polls = {}
+    @polls ||=
+      begin
+        polls = {}
 
-      post_with_polls = @post_custom_fields.each_with_object([]) do |fields, obj|
-        obj << fields[0] if fields[1][DiscoursePoll::HAS_POLLS]
-      end
-
-      if post_with_polls.present?
-        Poll
-          .where(post_id: post_with_polls)
-          .each do |p|
-            polls[p.post_id] ||= []
-            polls[p.post_id] << p
+        post_with_polls =
+          @post_custom_fields.each_with_object([]) do |fields, obj|
+            obj << fields[0] if fields[1][DiscoursePoll::HAS_POLLS]
           end
-      end
 
-      polls
-    end
+        if post_with_polls.present?
+          Poll
+            .where(post_id: post_with_polls)
+            .each do |p|
+              polls[p.post_id] ||= []
+              polls[p.post_id] << p
+            end
+        end
+
+        polls
+      end
   end
 
   add_to_serializer(:post, :preloaded_polls, false) do
-    @preloaded_polls ||= if @topic_view.present?
-      @topic_view.polls[object.id]
-    else
-      Poll.includes(:poll_options).where(post: object)
-    end
+    @preloaded_polls ||=
+      if @topic_view.present?
+        @topic_view.polls[object.id]
+      else
+        Poll.includes(:poll_options).where(post: object)
+      end
   end
 
-  add_to_serializer(:post, :include_preloaded_polls?) do
-    false
-  end
+  add_to_serializer(:post, :include_preloaded_polls?) { false }
 
   add_to_serializer(:post, :polls, false) do
     preloaded_polls.map { |p| PollSerializer.new(p, root: false, scope: self.scope) }
   end
 
-  add_to_serializer(:post, :include_polls?) do
-    SiteSetting.poll_enabled && preloaded_polls.present?
-  end
+  add_to_serializer(:post, :include_polls?) { SiteSetting.poll_enabled && preloaded_polls.present? }
 
   add_to_serializer(:post, :polls_votes, false) do
-    preloaded_polls.map do |poll|
-      user_poll_votes =
-        poll
-          .poll_votes
-          .where(user_id: scope.user.id)
-          .joins(:poll_option)
-          .pluck("poll_options.digest")
+    preloaded_polls
+      .map do |poll|
+        user_poll_votes =
+          poll
+            .poll_votes
+            .where(user_id: scope.user.id)
+            .joins(:poll_option)
+            .pluck("poll_options.digest")
 
-      [poll.name, user_poll_votes]
-    end.to_h
+        [poll.name, user_poll_votes]
+      end
+      .to_h
   end
 
   add_to_serializer(:post, :include_polls_votes?) do
-    SiteSetting.poll_enabled &&
-    scope.user&.id.present? &&
-    preloaded_polls.present? &&
-    preloaded_polls.any? { |p| p.has_voted?(scope.user) }
+    SiteSetting.poll_enabled && scope.user&.id.present? && preloaded_polls.present? &&
+      preloaded_polls.any? { |p| p.has_voted?(scope.user) }
+  end
+
+  register_search_advanced_filter(/in:polls/) do |posts, match|
+    if SiteSetting.poll_enabled
+      posts.joins(:polls)
+    else
+      posts
+    end
   end
 end

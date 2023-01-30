@@ -5,7 +5,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 export default Component.extend({
   tagName: "",
 
-  @discourseComputed("type")
+  @discourseComputed("penaltyType")
   penaltyField(penaltyType) {
     if (penaltyType === "suspend") {
       return "can_be_suspended";

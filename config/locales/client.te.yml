@@ -166,7 +166,6 @@ te:
         unbookmark: "ఈ అంశంపై అన్ని పేజీకలను తొలగించడానికి నొక్కండి"
     bookmarks:
       not_bookmarked: "ఈ టపాకు పేజీక ఉంచు"
-      remove: "పేజీక తొలగించండి"
       save: "భద్రపరచు"
       search: "వెతుకు"
     drafts:
@@ -181,9 +180,6 @@ te:
     uploaded: "ఎగుమతైంది!"
     enable: "చేతనం"
     disable: "అచేతనం"
-    undo: "రద్దు"
-    revert: "తిద్దు"
-    failed: "విఫలం"
     banner:
       edit: "సవరించు"
     choose_topic:
@@ -262,6 +258,7 @@ te:
     groups:
       requests:
         reason: "కారణం"
+        undo: "రద్దు"
       manage:
         name: "పేరు"
         full_name: "పూర్తి పేరు"
@@ -501,6 +498,7 @@ te:
       email:
         title: "ఈమెయిల్"
         primary_label: "ప్రాథమిక"
+        resent_label: "ఈమెయిల్ పంపిన"
         update_email: "ఈమెయిల్ మార్చు"
         ok: "ద్రువపరుచుటకు మీకు ఈమెయిల్ పంపాము"
         invalid: "దయచేసి చెల్లుబాటులోని ఈమెయిల్ చిరునామా రాయండి"
@@ -686,6 +684,7 @@ te:
     login:
       username: "వాడుకరి"
       password: "సంకేతపదం"
+      show_password: "చూపు"
       caps_lock_warning: "క్యాప్స్ లాక్ ఆన్ అయి ఉంది"
       error: "తెలీని దోషం"
       blank_username_or_password: "దయచేసి మీ ఈమెయిల్ లేదా సభ్యనామం మరియు సంకేతపదం రాయండి"
@@ -1068,7 +1067,6 @@ te:
           side_by_side_markdown:
             title: "ముడి మూల తేడాను పక్కపక్కన చూపు"
       bookmarks:
-        created: "సృష్టించిన"
         name: "పేరు"
         options: "ఎంపికలు"
     category:
@@ -1201,7 +1199,6 @@ te:
       one: "వాడుకరి"
       other: "వాడుకరులు"
     category_title: "వర్గం"
-    changed_by: " %{author} రాసిన"
     raw_email:
       not_available: "అందుబాటులో లేదు!"
     categories_list: "వర్గాల జాబితా"
@@ -1341,7 +1338,7 @@ te:
     footer_nav:
       back: "వెనుకకు"
       share: "పంచు"
-    do_not_disturb:
+    pause_notifications:
       options:
         custom: "అనురూప"
     trust_levels:
@@ -1555,7 +1552,6 @@ te:
         button_title: "ఆహ్వానాలు పంపు"
       customize:
         title: "కస్టమైజ్"
-        long_title: "సైట్ కస్టమైజేషనులు"
         preview: "మునుజూపు"
         save: "భద్రపరుచు"
         new: "కొత్త"
@@ -1791,7 +1787,6 @@ te:
       user:
         suspend_failed: "ఈ సభ్యుడిని సస్పెండ్ చేసేప్పుడు ఏదో తేడా జరిగింది. %{error}"
         unsuspend_failed: "ఈ వినియోగదారు వలన ఏదో తొలగింపబడని తప్పు జరిగింది %{error}"
-        suspend_duration: "వినియోగదారు ఎంతకాలం నిలిపివేయబడ్డాడు?"
         suspend_reason_label: "మీరు ఎందుకు తొలగించబడ్డారు? ఈ పాఠ్యం <b> వినియోగదారును ప్రొఫైల్ పుట మీద ప్రతివారికి </b> కనబడుతుంది, మరియు వినియోగదారుడు లాగిన్‌కు ప్రయత్నించినపుడు చూస్తారు.చిన్నదిగా ఉంచండి."
         suspend_reason: "కారణం"
         suspended_by: "సస్పెండు చేసినవారు"
@@ -2048,7 +2043,6 @@ te:
     wizard:
       back: "వెనుకకు"
       next: "తదుపరి"
-      upload: "ఎక్కించు"
       uploading: "ఎగుమతవుతోంది..."
       upload_error: "క్షమించాలి. దస్త్రం ఎగుమతించుటలో దోషం. దయచేసి మరలా ప్రయత్నించండి. "
       invites:

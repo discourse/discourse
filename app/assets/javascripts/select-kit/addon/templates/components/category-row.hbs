@@ -9,7 +9,10 @@
   </div>
 
   {{#if this.shouldDisplayDescription}}
-    <div class="category-desc" aria-hidden="true">{{dir-span this.descriptionText  htmlSafe="true"}}</div>
+    <div class="category-desc" aria-hidden="true">{{dir-span
+        this.descriptionText
+        htmlSafe="true"
+      }}</div>
   {{/if}}
 {{else}}
   {{html-safe this.label}}

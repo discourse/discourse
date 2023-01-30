@@ -126,38 +126,37 @@ da:
       email: "Send via e-mail"
       url: "Kopiér og del URL"
     action_codes:
-      public_topic: "offentliggjorde dette emne %{when}"
-      open_topic: "konverterede dette til et emne %{when}"
-      private_topic: "gjorde dette emne til en privat besked %{when}"
-      split_topic: "delte dette emne op %{when}"
+      public_topic: "Offentliggjorde dette emne %{when}"
+      open_topic: "Konverterede dette til et emne %{when}"
+      private_topic: "Gjorde dette emne til en privat besked %{when}"
+      split_topic: "Delte dette emne op %{when}"
       invited_user: "Inviterede %{who} %{when}"
-      invited_group: "inviterede %{who} %{when}"
+      invited_group: "Inviterede %{who} %{when}"
       user_left: "%{who} fjernede sig selv fra denne besked %{when}"
-      removed_user: "fjernede %{who} %{when}"
-      removed_group: "fjernede %{who} %{when}"
-      autobumped: "automatisk 'bumpet' %{when}"
+      removed_user: "Fjernede %{who} %{when}"
+      removed_group: "Fjernede %{who} %{when}"
+      autobumped: "Automatisk 'bumpet' %{when}"
       autoclosed:
-        enabled: "lukket %{when}"
-        disabled: "åbnet %{when}"
+        enabled: "Lukket %{when}"
+        disabled: "Åbnet %{when}"
       closed:
-        enabled: "lukket %{when}"
-        disabled: "åbnet %{when}"
+        enabled: "Lukket %{when}"
+        disabled: "Åbnet %{when}"
       archived:
-        enabled: "arkiveret %{when}"
-        disabled: "fjernet fra arkivet %{when}"
+        enabled: "Arkiveret %{when}"
+        disabled: "Fjernet fra arkivet %{when}"
       pinned:
-        enabled: "fastgjort %{when}"
-        disabled: "frigjort %{when}"
+        enabled: "Fastgjort %{when}"
+        disabled: "Frigjort %{when}"
       pinned_globally:
-        enabled: "globalt fastgjort %{when}"
-        disabled: "frigjort %{when}"
+        enabled: "Globalt fastgjort %{when}"
+        disabled: "Frigjort %{when}"
       visible:
-        enabled: "listet %{when}"
-        disabled: "unoteret %{when}"
+        enabled: "Listet %{when}"
+        disabled: "Unoteret %{when}"
       banner:
-        enabled: "lavede dette til et banner %{when}. Emnet bliver vist på toppen af alle sider indtil det bliver afskediget af brugeren."
-        disabled: "fjernede banneret %{when}. Det vil ikke længere vises i toppen af alle sider."
-      forwarded: "videresendte ovenstående e-mail"
+        enabled: "Lavede dette til et banner %{when}. Emnet bliver vist på toppen af alle sider indtil det bliver afskediget af brugeren."
+        disabled: "Fjernede banneret %{when}. Det vil ikke længere vises i toppen af alle sider."
     topic_admin_menu: "emnehandlinger"
     emails_are_disabled: "Alle udgående emails er blevet globalt deaktiveret af en administrator. Ingen email notifikationer af nogen slags vil blive sendt."
     software_update_prompt:
@@ -290,7 +289,6 @@ da:
       remove_reminder_keep_bookmark: "Fjern påmindelse og behold bogmærke"
       created_with_reminder: "Du har sat et bogmærke med en påmindelse for dette indlæg %{date}. %{name}"
       created_with_reminder_generic: "Du har bogmærket dette med en påmindelse %{date}. %{name}"
-      remove: "Fjern bogmærke"
       delete: "Slet Bogmærke"
       confirm_delete: "Er du sikker på, at du vil slette dette bogmærke? Påmindelsen vil også blive slettet."
       confirm_clear: "Er du sikker på, at du vil rydde alle dine bogmærker fra dette emne?"
@@ -358,9 +356,6 @@ da:
     enable: "Aktivér"
     disable: "Deaktivér"
     continue: "Fortsæt"
-    undo: "Fortryd"
-    revert: "Gendan"
-    failed: "Fejlet"
     switch_to_anon: "Gå i anonym tilstand"
     switch_from_anon: "Afslut anonym tilstand"
     banner:
@@ -654,6 +649,7 @@ da:
         denied: "Nægtet"
         undone: "anmodning fortrudt"
         handle: "håndter medlemskabsanmodning"
+        undo: "Fortryd"
       manage:
         title: "Administrér"
         name: "Navn"
@@ -974,7 +970,6 @@ da:
       notification_schedule:
         title: "Tidsplan for notifikation"
         label: "Aktiver brugerdefineret meddelelsesplan"
-        tip: "Uden for disse timer vil du automatisk blive sat til 'forstyr ikke '."
         midnight: "Midnat"
         none: "Ingen"
         monday: "Mandag"
@@ -1018,7 +1013,6 @@ da:
         perm_denied_expl: "Du nægtede adgang for notifikationer. Tillad notifikationer via indstillingerne i din browser."
         disable: "Deaktiver notifikationer"
         enable: "Aktiver notifikationer"
-        each_browser_note: 'Bemærk: Du skal ændre denne indstilling i hver browser, du bruger. Alle meddelelser deaktiveres, når de er i "forstyr ikke", uanset denne indstilling.'
         consent_prompt: "Ønsker du live notifikationer, når folk svarer på dine indlæg?"
       dismiss: "Ignorer Alle"
       dismiss_notifications: "Skjul Alle"
@@ -1744,6 +1738,7 @@ da:
       title: "Log ind"
       username: "Bruger"
       password: "Adgangskode"
+      show_password: "Vis"
       second_factor_title: "To-faktor godkendelse"
       second_factor_description: "Indtast venligst godkendelseskoden fra din app:"
       second_factor_backup: "Log ind ved hjælp af en backup kode"
@@ -2069,6 +2064,7 @@ da:
       bookmark_reminder: "<span>%{username}</span> %{description}"
       replied: "<span>%{username}</span> %{description}"
       posted: "<span>%{username}</span> %{description}"
+      watching_category_or_tag: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
@@ -2128,6 +2124,7 @@ da:
         invited_to_private_message: "inviteret til privat besked"
         invitee_accepted: "invitation accepteret"
         posted: "nyt indlæg"
+        watching_category_or_tag: "nyt indlæg"
         moved_post: "indlæg flyttet"
         linked: "linket"
         bookmark_reminder: "bogmærke påmindelse"
@@ -2535,6 +2532,7 @@ da:
         open: "Åbn emne"
         close: "Luk emne"
         multi_select: "Vælg indlæg..."
+        slow_mode: "Indstil langsom tilstand..."
         timed_update: "Indstil timerfunktion for emne..."
         pin: "Fastgør Emne..."
         unpin: "Fjern fastgøring af Emne..."
@@ -2851,6 +2849,8 @@ da:
         delete_topic_confirm_modal_no: "Nej, behold dette emne"
         delete_topic_error: "Der opstod en fejl under sletning af dette emne"
         delete_topic: "slet emne"
+        add_post_notice: "Tilføj Hjælperteam Notits..."
+        change_post_notice: "Ændre Personale Meddelelse..."
         delete_post_notice: "Slet Personale Meddelelse"
         remove_timer: "fjern timer"
         edit_timer: "rediger timer"
@@ -2918,7 +2918,6 @@ da:
         create_for_topic: "Opret bogmærke til emnet"
         edit: "Rediger bogmærke"
         edit_for_topic: "Rediger bogmærke til emnet"
-        created: "Oprettet"
         updated: "Opdateret"
         name: "Navn"
         name_placeholder: "Hvad er dette bogmærke til?"
@@ -3206,7 +3205,6 @@ da:
     category_title: "Kategori"
     history_capped_revisions: "Historik, seneste 100 revisioner"
     history: "Historik"
-    changed_by: "af %{author}"
     raw_email:
       title: "Indgående e-mail"
       not_available: "Ikke tilgængelig!"
@@ -3554,9 +3552,7 @@ da:
     safe_mode:
       enabled: "Sikker tilstand er slået til - for at forlade sikker tilstand, så luk dette browservindue"
     image_removed: "(billede fjernet)"
-    do_not_disturb:
-      title: "Forstyr ikke i ..."
-      label: "Forstyr ikke"
+    pause_notifications:
       remaining: "%{remaining} tilbage"
       options:
         half_hour: "30 minutter"
@@ -3624,7 +3620,9 @@ da:
           header_link_text: "Tags"
           configure_defaults: "Konfigurer standardindstillinger"
         categories:
+          click_to_get_started: "Klik her for at komme i gang."
           header_link_text: "Kategorier"
+          configure_defaults: "Konfigurer standardindstillinger"
         community:
           header_link_text: "Fællesskab"
           links:
@@ -3634,11 +3632,12 @@ da:
               content: "Admin"
             badges:
               content: "Emblemer"
+            everything:
+              content: "Alting"
             faq:
               content: "OSS"
             groups:
               content: "Grupper"
-              title: "Alle grupper"
             users:
               content: "Brugere"
             my_posts:
@@ -3646,7 +3645,6 @@ da:
               title_drafts: "Mine uopslåede kladder"
             review:
               content: "Anmeldelse"
-              title: "anmeldelse"
     until: "Indtil:"
   admin_js:
     type_to_filter: "skriv for at filtrere…"
@@ -4065,7 +4063,6 @@ da:
         button_title: "Send Invitationer"
       customize:
         title: "Tilpasning"
-        long_title: "Tilpasning af site"
         preview: "forhåndsvisning"
         explain_preview: "Se sitet med dette tema slået til"
         save: "Gem"
@@ -4200,7 +4197,6 @@ da:
             error: "Dette tema er automatisk deaktiveret, fordi det ikke er kompatibelt med denne version af Discourse."
             minimum: "Kræver Discourse version %{version} eller nyere."
             maximum: "Kræver Discourse version %{version} eller under."
-          component_of: "Komponent af:"
           update_to_latest: "Opdatér til seneste"
           check_for_updates: "Tjek efter opdateringer"
           updating: "Opdaterer..."
@@ -4267,9 +4263,9 @@ da:
           new_name: "Ny farvepalet"
           copy_name_prefix: "Kopi af"
           delete_confirm: "Slet denne farvepalet?"
-          undo: "fortryd"
+          undo: "Fortryd"
           undo_title: "Fortryd dine ændringer til denne farve, siden sidste gang den blev gemt."
-          revert: "gendan"
+          revert: "Gendan"
           revert_title: "Nulstil denne farve til Discourses standard farvepalet."
           primary:
             name: "Primær"
@@ -4664,7 +4660,6 @@ da:
       user:
         suspend_failed: "Noget gik galt ved suspenderingen af denne bruger %{error}"
         unsuspend_failed: "Noget gik galt ved ophævningen af denne brugers suspendering %{error}"
-        suspend_duration: "Hvor lang tid skal brugeren være suspenderet?"
         suspend_reason_label: "Hvorfor suspenderer du? Denne tekst <b>er synlig for alle</b> på brugerens profilside, og vises til brugeren når de prøver at logge ind. Fat dig i korthed."
         suspend_reason_hidden_label: "Hvorfor suspenderer du? Teksten er synlig for  denne bruger, når de prøver et log ind. Fat dig i korthed."
         suspend_reason: "Begrundelse"
@@ -4698,7 +4693,6 @@ da:
         penalty_post_edit: "Rediger indlægget"
         penalty_post_none: "Gøre ingenting"
         penalty_count: "Straffetælling"
-        penalty_history: "Straf Historik"
         clear_penalty_history:
           title: "Ryd straffehistorie"
           description: "brugere med straffe kan ikke nå TL3"
@@ -5160,7 +5154,6 @@ da:
       next: "Næste"
       step-text: "Trin"
       step: "%{current} af %{total}"
-      upload: "Overfør"
       uploading: "Overfører…"
       upload_error: "Beklager, der opstod en fejl under overførsel af filen. Prøv venligst igen."
       staff_count:

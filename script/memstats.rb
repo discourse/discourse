@@ -28,7 +28,7 @@
 #------------------------------------------------------------------------------
 
 class Mapping
-  FIELDS = %w[ size rss shared_clean shared_dirty private_clean private_dirty swap pss ]
+  FIELDS = %w[size rss shared_clean shared_dirty private_clean private_dirty swap pss]
   attr_reader :address_start
   attr_reader :address_end
   attr_reader :perms
@@ -48,15 +48,10 @@ class Mapping
   attr_accessor :pss
 
   def initialize(lines)
-
-    FIELDS.each do |field|
-      self.public_send("#{field}=", 0)
-    end
+    FIELDS.each { |field| self.public_send("#{field}=", 0) }
 
     parse_first_line(lines.shift)
-    lines.each do |l|
-      parse_field_line(l)
-    end
+    lines.each { |l| parse_field_line(l) }
   end
 
   def parse_first_line(line)
@@ -71,7 +66,7 @@ class Mapping
 
   def parse_field_line(line)
     parts = line.strip.split
-    field = parts[0].downcase.sub(':', '')
+    field = parts[0].downcase.sub(":", "")
     if respond_to? "#{field}="
       value = Float(parts[1]).to_i
       self.public_send("#{field}=", value)
@@ -82,26 +77,21 @@ end
 def consume_mapping(map_lines, totals)
   m = Mapping.new(map_lines)
 
-  Mapping::FIELDS.each do |field|
-    totals[field] += m.public_send(field)
-  end
+  Mapping::FIELDS.each { |field| totals[field] += m.public_send(field) }
   m
 end
 
 def create_memstats_not_available(totals)
-  Mapping::FIELDS.each do |field|
-    totals[field] += Float::NAN
-  end
+  Mapping::FIELDS.each { |field| totals[field] += Float::NAN }
 end
 
-abort 'usage: memstats [pid]' unless ARGV.first
+abort "usage: memstats [pid]" unless ARGV.first
 pid = ARGV.shift.to_i
 totals = Hash.new(0)
 mappings = []
 
 begin
   File.open("/proc/#{pid}/smaps") do |smaps|
-
     map_lines = []
 
     loop do
@@ -111,9 +101,7 @@ begin
       when /\w+:\s+/
         map_lines << line
       when /[0-9a-f]+:[0-9a-f]+\s+/
-        if map_lines.size > 0 then
-          mappings << consume_mapping(map_lines, totals)
-        end
+        mappings << consume_mapping(map_lines, totals) if map_lines.size > 0
         map_lines.clear
         map_lines << line
       else
@@ -121,7 +109,7 @@ begin
       end
     end
   end
-rescue
+rescue StandardError
   create_memstats_not_available(totals)
 end
 
@@ -132,23 +120,19 @@ end
 
 def get_commandline(pid)
   commandline = File.read("/proc/#{pid}/cmdline").split("\0")
-  if commandline.first =~ /java$/ then
+  if commandline.first =~ /java$/
     loop { break if commandline.shift == "-jar" }
     return "[java] #{commandline.shift}"
   end
-  commandline.join(' ')
+  commandline.join(" ")
 end
 
-if ARGV.include? '--yaml'
-  require 'yaml'
-  puts Hash[*totals.map do |k, v|
-    [k + '_kb', v]
-  end.flatten].to_yaml
+if ARGV.include? "--yaml"
+  require "yaml"
+  puts Hash[*totals.map do |k, v| [k + "_kb", v] end.flatten].to_yaml
 else
   puts "#{"Process:".ljust(20)} #{pid}"
   puts "#{"Command Line:".ljust(20)} #{get_commandline(pid)}"
   puts "Memory Summary:"
-  totals.keys.sort.each do |k|
-    puts "  #{k.ljust(20)} #{format_number(totals[k]).rjust(12)} kB"
-  end
+  totals.keys.sort.each { |k| puts "  #{k.ljust(20)} #{format_number(totals[k]).rjust(12)} kB" }
 end

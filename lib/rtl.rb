@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class Rtl
-
   attr_reader :user
 
   def initialize(user)
@@ -21,11 +20,10 @@ class Rtl
   end
 
   def rtl_locales
-    %w(he ar ur fa_IR)
+    %w[he ar ur fa_IR]
   end
 
   def css_class
-    enabled? ? 'rtl' : ''
+    enabled? ? "rtl" : ""
   end
-
 end

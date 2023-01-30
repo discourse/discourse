@@ -1,4 +1,12 @@
-<button aria-label={{i18n "select_kit.delete_item" name=this.itemName}} id="{{this.id}}-choice" data-value={{this.itemValue}} data-name={{this.itemName}} type="button" {{on "click" (fn this.selectKit.deselect this.item)}} class="btn btn-default selected-choice {{this.extraClass}}">
+<button
+  aria-label={{i18n "select_kit.delete_item" name=this.itemName}}
+  id="{{this.id}}-choice"
+  data-value={{this.itemValue}}
+  data-name={{this.itemName}}
+  type="button"
+  {{on "click" (fn this.selectKit.deselect this.item)}}
+  class="btn btn-default selected-choice {{this.extraClass}}"
+>
   {{d-icon "times"}}
   {{#if (has-block)}}
     {{yield}}

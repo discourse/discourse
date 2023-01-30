@@ -197,6 +197,7 @@ en:
 
     topic_admin_menu: "topic actions"
     skip_to_main_content: "Skip to main content"
+    skip_user_nav: "Skip to profile content"
 
     emails_are_disabled: "All outgoing email has been globally disabled by an administrator. No email notifications of any kind will be sent."
     emails_are_disabled_non_staff: "Outgoing email has been disabled for non-staff users."
@@ -346,7 +347,6 @@ en:
       remove_reminder_keep_bookmark: "Remove reminder and keep bookmark"
       created_with_reminder: "You've bookmarked this post with a reminder %{date}. %{name}"
       created_with_reminder_generic: "You've bookmarked this with a reminder %{date}. %{name}"
-      remove: "Remove Bookmark"
       delete: "Delete Bookmark"
       confirm_delete: "Are you sure you want to delete this bookmark? The reminder will also be deleted."
       confirm_clear: "Are you sure you want to clear all your bookmarks from this topic?"
@@ -429,7 +429,6 @@ en:
     enable: "Enable"
     disable: "Disable"
     continue: "Continue"
-    undo: "Undo"
 
     switch_to_anon: "Enter Anonymous Mode"
     switch_from_anon: "Exit Anonymous Mode"
@@ -747,6 +746,7 @@ en:
         denied: "denied"
         undone: "request undone"
         handle: "handle membership request"
+        undo: "Undo"
       manage:
         title: "Manage"
         name: "Name"
@@ -1122,7 +1122,7 @@ en:
         perm_denied_expl: "You denied permission for notifications. Allow notifications via your browser settings."
         disable: "Disable Notifications"
         enable: "Enable Notifications"
-        each_browser_note: 'Note: You have to change this setting on every browser you use. All notifications will be disabled when in "do not disturb", regardless of this setting.'
+        each_browser_note: "Note: You have to change this setting on every browser you use. All notifications will be disabled if you pause notifications from user menu, regardless of this setting."
         consent_prompt: "Do you want live notifications when people reply to your posts?"
       dismiss: "Dismiss"
       dismiss_notifications: "Dismiss All"
@@ -2124,6 +2124,10 @@ en:
       title: "Log in"
       username: "User"
       password: "Password"
+      show_password: "Show"
+      hide_password: "Hide"
+      show_password_title: "Show password"
+      hide_password_title: "Hide password"
       second_factor_title: "Two-Factor Authentication"
       second_factor_description: "Please enter the authentication code from your app:"
       second_factor_backup: "Log in using a backup code"
@@ -3443,6 +3447,7 @@ en:
       via_email: "this post arrived via email"
       via_auto_generated_email: "this post arrived via an auto generated email"
       whisper: "this post is a private whisper for moderators"
+      whisper_groups: "this post is a private whisper only visible to %{groupNames}"
 
       wiki:
         about: "this post is a wiki"
@@ -3544,6 +3549,8 @@ en:
           last: "Last revision"
           hide: "Hide revision"
           show: "Show revision"
+          destroy: "Delete revisions"
+          destroy_confirm: "Are you sure you want to delete all of the revisions on this post? This action is permanent."
           revert: "Revert to revision %{revision}"
           edit_wiki: "Edit Wiki"
           edit_post: "Edit Post"
@@ -3576,10 +3583,10 @@ en:
         create_for_topic: "Create bookmark for topic"
         edit: "Edit bookmark"
         edit_for_topic: "Edit bookmark for topic"
-        created: "Created"
         updated: "Updated"
         name: "Name"
         name_placeholder: "What is this bookmark for?"
+        name_input_label: "Bookmark name"
         set_reminder: "Remind me"
         options: "Options"
         actions:
@@ -3803,7 +3810,9 @@ en:
         inappropriate: "It's Inappropriate"
         spam: "It's Spam"
       custom_placeholder_notify_user: "Be specific, be constructive, and always be kind."
+      notify_user_textarea_label: "Message for the user"
       custom_placeholder_notify_moderators: "Let us know specifically what you are concerned about, and provide relevant links and examples where possible."
+      notify_moderators_textarea_label: "Message for the moderators"
       custom_message:
         at_least:
           one: "enter at least %{count} character"
@@ -3902,7 +3911,6 @@ en:
     category_title: "Category"
     history_capped_revisions: "History, last 100 revisions"
     history: "History"
-    changed_by: "by %{author}"
 
     raw_email:
       title: "Incoming Email"
@@ -3984,8 +3992,6 @@ en:
         today: "Today"
 
     browser_update: 'Unfortunately, <a href="https://www.discourse.org/faq/#browser">your browser is unsupported</a>. Please <a href="https://browsehappy.com">switch to a supported browser</a> to view rich content, log in and reply.'
-
-    safari_13_warning: This site will soon remove support for iOS and Safari versions 13 and below. A simplified read-only version will remain available. (<a href="https://meta.discourse.org/t/224747">more information</a>)
 
     permission_types:
       full: "Create / Reply / See"
@@ -4350,7 +4356,7 @@ en:
       new_count:
         one: "%{count} new"
         other: "%{count} new"
-      toggle_section: "toggle section"
+      toggle_section: "Toggle section"
       more: "More"
       all_categories: "All categories"
       all_tags: "All tags"
@@ -4359,7 +4365,7 @@ en:
           header_link_text: "About"
         messages:
           header_link_text: "Messages"
-          header_action_title: "create a personal message"
+          header_action_title: "Create a personal message"
           links:
             inbox: "Inbox"
             sent: "Sent"
@@ -4376,7 +4382,7 @@ en:
           none: "You have not added any tags."
           click_to_get_started: "Click here to get started."
           header_link_text: "Tags"
-          header_action_title: "edit your sidebar tags"
+          header_action_title: "Edit your sidebar tags"
           configure_defaults: "Configure defaults"
         categories:
           links:
@@ -4386,29 +4392,33 @@ en:
           none: "You have not added any categories."
           click_to_get_started: "Click here to get started."
           header_link_text: "Categories"
-          header_action_title: "edit your sidebar categories"
+          header_action_title: "Edit your sidebar categories"
           configure_defaults: "Configure defaults"
         community:
           header_link_text: "Community"
-          header_action_title: "create a new topic"
+          header_action_title: "Create a topic"
           links:
             about:
               content: "About"
+              title: "More details about this site"
             admin:
               content: "Admin"
+              title: "Site settings and reports"
             badges:
               content: "Badges"
+              title: "All the badges available to earn"
             everything:
               content: "Everything"
               title: "All topics"
             faq:
               content: "FAQ"
+              title: "Guidelines for using this site"
             groups:
               content: "Groups"
-              title: "All groups"
+              title: "List of available user groups"
             users:
               content: "Users"
-              title: "All users"
+              title: "List of all users"
             my_posts:
               content: "My Posts"
               title: "My recent topic activity"
@@ -4418,7 +4428,7 @@ en:
                 other: "%{count} drafts"
             review:
               content: "Review"
-              title: "review"
+              title: "Flagged posts and other queued items"
               pending_count: "%{count} pending"
 
     welcome_topic_banner:
@@ -4582,6 +4592,9 @@ en:
               other: "%{count} users have the new email domains and will be added to the group."
             automatic_membership_associated_groups: "Users who are members of a group on a service listed here will be automatically added to this group when they log in with the service."
             primary_group: "Automatically set as primary group"
+          alert:
+            primary_group: "Since this is a primary group, the name '%{group_name}' will be used in CSS classes which can be viewed by anyone."
+            flair_group: "Since this group has flair for its members, the name '%{group_name}' will be visible to anyone."
         name_placeholder: "Group name, no spaces, same as username rule"
         primary: "Primary Group"
         no_primary: "(no primary group)"
@@ -4661,8 +4674,9 @@ en:
             topics:
               read: Read a topic or a specific post in it. RSS is also supported.
               write: Create a new topic or post to an existing one.
-              update: Update a topic. Change the title, category, tags, etc.
+              update: Update a topic. Change the title, category, tags, status, archetype, featured_link etc.
               read_lists: Read topic lists like top, new, latest, etc. RSS is also supported.
+              status: "Update a topic's status. Status: closed, archive, visisble, pinned. Enabled: true, false. Specify a category_id here and in the request payload to only allow status changes on topics in that category."
             posts:
               edit: Edit any post or a specific one.
             categories:
@@ -4678,6 +4692,7 @@ en:
               update: Update user profile information.
               log_out: Log out all sessions for a user.
               anonymize: Anonymize user accounts.
+              suspend: Suspend user accounts.
               delete: Delete user accounts.
               list: Get a list of users.
             user_status:
@@ -4685,6 +4700,8 @@ en:
               update: Update user status.
             email:
               receive_emails: Combine this scope with the mail-receiver to process incoming emails.
+            invites:
+              create: Send email invites or generate invite links.
             badges:
               create: Create a new badge.
               show: Obtain information about a badge.
@@ -4693,6 +4710,9 @@ en:
               list_user_badges: List user badges.
               assign_badge_to_user: Assign a badge to a user.
               revoke_badge_from_user: Revoke a badge from a user.
+            search:
+              show: Search using the `/search.json?q=term` endpoint.
+              query: Search using the /search/query?term=term` endpoint.
             wordpress:
               publishing: Necessary for the WP Discourse plugin publishing features (required).
               commenting: Necessary for the WP Discourse plugin commenting features.
@@ -4893,7 +4913,6 @@ en:
 
       customize:
         title: "Customize"
-        long_title: "Site Customizations"
         preview: "preview"
         explain_preview: "See the site with this theme enabled"
         save: "Save"
@@ -5099,9 +5118,9 @@ en:
           new_name: "New Color Palette"
           copy_name_prefix: "Copy of"
           delete_confirm: "Delete this color palette?"
-          undo: "undo"
+          undo: "Undo"
           undo_title: "Undo your changes to this color since the last time it was saved."
-          revert: "revert"
+          revert: "Revert"
           revert_title: "Reset this color to Discourse's default color palette."
           primary:
             name: "primary"
@@ -5148,6 +5167,12 @@ en:
           love:
             name: "love"
             description: "The like button's color."
+          selected:
+            name: "selected"
+            description: "The background-color of elements such as list-items when they are selected/active."
+          hover:
+            name: "hover"
+            description: "The background-color of elements such as list-items when they are hovered on or have keyboard focus."
         robots:
           title: "Override your site's robots.txt file:"
           warning: "This will permanently override any related site settings."
@@ -5281,6 +5306,7 @@ en:
           no_previous: "There is no previous value."
           deleted: "No new value. The record was deleted."
           actions:
+            permanently_delete_post_revisions: "permanently delete post revisions"
             delete_user: "delete user"
             change_trust_level: "change trust level"
             change_username: "change username"
@@ -5516,7 +5542,7 @@ en:
       user:
         suspend_failed: "Something went wrong suspending this user %{error}"
         unsuspend_failed: "Something went wrong unsuspending this user %{error}"
-        suspend_duration: "How long will the user be suspended for?"
+        suspend_duration: "Suspend user until:"
         suspend_reason_label: "Why are you suspending? This text <b>will be visible to everyone</b> on this user's profile page, and will be shown to the user when they try to log in. Keep it short."
         suspend_reason_hidden_label: "Why are you suspending? This text will be shown to the user when they try to log in. Keep it short."
         suspend_reason: "Reason"
@@ -5540,7 +5566,9 @@ en:
         silence_message: "Email Message"
         silence_message_placeholder: "(leave blank to send default message)"
         suspended_until: "(until %{until})"
+        suspend_forever: "Suspend forever"
         cant_suspend: "This user cannot be suspended."
+        cant_silence: "This user cannot be silenced."
 
         delete_posts_failed: "There was a problem deleting the posts."
         post_edits: "Post Edits"
@@ -5551,7 +5579,19 @@ en:
         penalty_post_edit: "Edit the post"
         penalty_post_none: "Do nothing"
         penalty_count: "Penalty Count"
-        penalty_history: "Penalty History"
+
+        # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
+        penalty_history_MF: >-
+          In the past 6 months this user has been <b>suspended
+          { SUSPENDED, plural,
+                  one {# time}
+                other {# times}
+          }</b> and <b>silenced
+          { SILENCED, plural,
+                  one {# time}
+                other {# times}
+          }</b>.
+
         clear_penalty_history:
           title: "Clear Penalty History"
           description: "users with penalties cannot reach TL3"
@@ -5721,8 +5761,8 @@ en:
         suspended_count: "Suspended"
         last_six_months: "Last 6 months"
         other_matches:
-          one: "There is %{count} other user with the same IP address. Review and select the suspicious ones to suspend along with %{username}."
-          other: "There are %{count} other users with the same IP address. Review and select the suspicious ones to suspend along with %{username}."
+          one: "There is <b>%{count} other user</b> with the same IP address. Review and select the suspicious ones to penalize along with %{username}."
+          other: "There are <b>%{count} other users</b> with the same IP address. Review and select the suspicious ones to penalize along with %{username}."
         other_matches_list:
           username: "Username"
           trust_level: "Trust Level"
@@ -6056,10 +6096,10 @@ en:
       finish: "Exit setup"
       back: "Back"
       next: "Next"
-      configure_more: "Configure More..."
+      configure_more: "Configure more..."
       step-text: "Step"
       step: "%{current} of %{total}"
-      upload: "Upload"
+      upload: "Upload file"
       uploading: "Uploading..."
       upload_error: "Sorry, there was an error uploading that file. Please try again."
 

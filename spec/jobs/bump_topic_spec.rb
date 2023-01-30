@@ -31,5 +31,4 @@ RSpec.describe Jobs::BumpTopic do
 
     expect(topic.reload.public_topic_timer).to eq(nil)
   end
-
 end

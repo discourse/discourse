@@ -2,7 +2,6 @@
 
 class AddUserExtras < ActiveRecord::Migration[4.2]
   def up
-
     # NOTE: our user table is getting bloated, we probably want to split it for performance
     # put lesser used columns into a user_extras table and frequently used ones here.
     add_column :users, :likes_given, :integer, null: false, default: 0
@@ -27,7 +26,7 @@ FROM (
 WHERE X.user_id = u.id
 SQL
 
-  execute <<SQL
+    execute <<SQL
 UPDATE users u
 SET
     likes_received = Y.likes_received
@@ -43,7 +42,7 @@ FROM (
 WHERE Y.user_id = u.id
 SQL
 
-  execute <<SQL
+    execute <<SQL
 UPDATE users u
 SET
     topic_reply_count = Z.topic_reply_count
@@ -60,7 +59,6 @@ FROM (
 WHERE
   Z.user_id = u.id
 SQL
-
   end
 
   def down

@@ -4,17 +4,22 @@ module PageObjects
   module Pages
     class Topic < PageObjects::Pages::Base
       def initialize
-        setup_component_classes!(
-          post_show_more_actions: ".show-more-actions",
-          post_action_button_bookmark: ".bookmark.with-reminder",
-          reply_button: ".topic-footer-main-buttons > .create",
-          composer: "#reply-control",
-          composer_textarea: "#reply-control .d-editor .d-editor-input",
-        )
+        @composer_component = PageObjects::Components::Composer.new
       end
 
       def visit_topic(topic)
         page.visit "/t/#{topic.id}"
+        self
+      end
+
+      def open_new_topic
+        page.visit "/"
+        find("button#create-topic").click
+        self
+      end
+
+      def open_new_message
+        page.visit "/new-message"
         self
       end
 
@@ -34,7 +39,11 @@ module PageObjects
 
       def post_by_number(post_or_number)
         post_or_number = post_or_number.is_a?(Post) ? post_or_number.post_number : post_or_number
-        find("#post_#{post_or_number}")
+        find(".topic-post:not(.staged) #post_#{post_or_number}")
+      end
+
+      def post_by_number_selector(post_number)
+        ".topic-post:not(.staged) #post_#{post_number}"
       end
 
       def has_post_more_actions?(post)
@@ -74,6 +83,7 @@ module PageObjects
 
       def click_reply_button
         find(".topic-footer-main-buttons > .create").click
+        has_expanded_composer?
       end
 
       def has_expanded_composer?
@@ -81,15 +91,27 @@ module PageObjects
       end
 
       def type_in_composer(input)
-        find("#reply-control .d-editor .d-editor-input").send_keys(input)
+        @composer_component.type_content(input)
+      end
+
+      def fill_in_composer(input)
+        @composer_component.fill_content(input)
       end
 
       def clear_composer
-        find("#reply-control .d-editor .d-editor-input").set("")
+        @composer_component.clear_content
+      end
+
+      def has_composer_content?(content)
+        @composer_component.has_content?(content)
       end
 
       def send_reply
-        within("#reply-control") { find(".save-or-cancel .create").click }
+        find("#reply-control .save-or-cancel .create").click
+      end
+
+      def fill_in_composer_title(title)
+        @composer_component.fill_title(title)
       end
 
       private

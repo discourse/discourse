@@ -16,14 +16,20 @@ class InlineUploads
       end
     end
 
-    cooked_fragment = Nokogiri::HTML5::fragment(PrettyText.cook(markdown, disable_emojis: true))
+    cooked_fragment = Nokogiri::HTML5.fragment(PrettyText.cook(markdown, disable_emojis: true))
     link_occurrences = []
 
     cooked_fragment.traverse do |node|
       if node.name == "img"
         # Do nothing
-      elsif !(node.children.count == 1 && (node.children[0].name != "img" && node.children[0].children.blank?)) &&
-        !(node.name == "a" && node.children.count > 1 && !node_children_names(node).include?("img"))
+      elsif !(
+            node.children.count == 1 &&
+              (node.children[0].name != "img" && node.children[0].children.blank?)
+          ) &&
+            !(
+              node.name == "a" && node.children.count > 1 &&
+                !node_children_names(node).include?("img")
+            )
         next
       end
 
@@ -55,7 +61,7 @@ class InlineUploads
     end
 
     regexps = [
-      /(https?:\/\/[a-zA-Z0-9\.\/-]+\/#{Discourse.store.upload_path}#{UPLOAD_REGEXP_PATTERN})/,
+      %r{(https?://[a-zA-Z0-9\./-]+/#{Discourse.store.upload_path}#{UPLOAD_REGEXP_PATTERN})},
     ]
 
     if Discourse.store.external?
@@ -103,41 +109,38 @@ class InlineUploads
     raw_matches
       .sort { |a, b| a[3] <=> b[3] }
       .each do |match, link, replace_with, _index|
+        node_info = link_occurrences.shift
+        next unless node_info&.dig(:is_valid)
 
-      node_info = link_occurrences.shift
-      next unless node_info&.dig(:is_valid)
-
-      if link.include?(node_info[:link])
-        begin
-          uri = URI(link)
-        rescue URI::Error
-        end
-
-        if !Discourse.store.external?
-          host = uri&.host
-
-          hosts = [Discourse.current_hostname]
-
-          if cdn_url = GlobalSetting.cdn_url
-            hosts << URI(GlobalSetting.cdn_url).hostname
+        if link.include?(node_info[:link])
+          begin
+            uri = URI(link)
+          rescue URI::Error
           end
 
-          if host && !hosts.include?(host)
-            next
+          if !Discourse.store.external?
+            host = uri&.host
+
+            hosts = [Discourse.current_hostname]
+
+            if cdn_url = GlobalSetting.cdn_url
+              hosts << URI(GlobalSetting.cdn_url).hostname
+            end
+
+            next if host && !hosts.include?(host)
           end
-        end
 
-        upload = Upload.get_from_url(link)
+          upload = Upload.get_from_url(link)
 
-        if upload
-          replace_with.sub!(PLACEHOLDER, upload.short_url)
-          replace_with.sub!(PATH_PLACEHOLDER, upload.short_path)
-          markdown.sub!(match, replace_with)
-        else
-          on_missing.call(link) if on_missing
+          if upload
+            replace_with.sub!(PLACEHOLDER, upload.short_url)
+            replace_with.sub!(PATH_PLACEHOLDER, upload.short_path)
+            markdown.sub!(match, replace_with)
+          else
+            on_missing.call(link) if on_missing
+          end
         end
       end
-    end
 
     markdown.scan(/(__(\h{40})__)/) do |match|
       upload = Upload.find_by(sha1: match[1])
@@ -161,7 +164,7 @@ class InlineUploads
   end
 
   def self.match_bbcode_img(markdown, external_src: false)
-    markdown.scan(/(\[img\]\s*([^\[\]\s]+)\s*\[\/img\])/i) do |match|
+    markdown.scan(%r{(\[img\]\s*([^\[\]\s]+)\s*\[/img\])}i) do |match|
       if (external_src || (matched_uploads(match[1]).present?)) && block_given?
         yield(match[0], match[1], +"![](#{PLACEHOLDER})", $~.offset(0)[0])
       end
@@ -182,9 +185,9 @@ class InlineUploads
   end
 
   def self.match_anchor(markdown, external_href: false)
-    markdown.scan(/((<a[^<]+>)([^<\a>]*?)<\/a>)/i) do |match|
-      node = Nokogiri::HTML5::fragment(match[0]).children[0]
-      href =  node.attributes["href"]&.value
+    markdown.scan(%r{((<a[^<]+>)([^<\a>]*?)</a>)}i) do |match|
+      node = Nokogiri::HTML5.fragment(match[0]).children[0]
+      href = node.attributes["href"]&.value
 
       if href && (external_href || matched_uploads(href).present?)
         has_attachment = node.attributes["class"]&.value
@@ -198,8 +201,8 @@ class InlineUploads
   end
 
   def self.match_img(markdown, external_src: false, uploads: nil)
-    markdown.scan(/(<(?!img)[^<>]+\/?>)?(\s*)(<img [^>\n]+>)/i) do |match|
-      node = Nokogiri::HTML5::fragment(match[2].strip).children[0]
+    markdown.scan(%r{(<(?!img)[^<>]+/?>)?(\s*)(<img [^>\n]+>)}i) do |match|
+      node = Nokogiri::HTML5.fragment(match[2].strip).children[0]
       src = node&.attributes&.[]("src")&.value
 
       if src && (external_src || matched_uploads(src).present?)
@@ -215,22 +218,20 @@ class InlineUploads
   end
 
   def self.replace_hotlinked_image_urls(raw:, &blk)
-    replace = Proc.new do |match, match_src, replacement, _index|
-      upload = blk.call(match_src)
-      next if !upload
+    replace =
+      Proc.new do |match, match_src, replacement, _index|
+        upload = blk.call(match_src)
+        next if !upload
 
-      replacement =
-        if replacement.include?(InlineUploads::PLACEHOLDER)
-          replacement.sub(InlineUploads::PLACEHOLDER, upload.short_url)
-        elsif replacement.include?(InlineUploads::PATH_PLACEHOLDER)
-          replacement.sub(InlineUploads::PATH_PLACEHOLDER, upload.short_path)
-        end
+        replacement =
+          if replacement.include?(InlineUploads::PLACEHOLDER)
+            replacement.sub(InlineUploads::PLACEHOLDER, upload.short_url)
+          elsif replacement.include?(InlineUploads::PATH_PLACEHOLDER)
+            replacement.sub(InlineUploads::PATH_PLACEHOLDER, upload.short_path)
+          end
 
-      raw = raw.gsub(
-        match,
-        replacement
-      )
-    end
+        raw = raw.gsub(match, replacement)
+      end
 
     # there are 6 ways to insert an image in a post
     # HTML tag - <img src="http://...">
@@ -245,40 +246,41 @@ class InlineUploads
     # Markdown inline - ![alt](http://... "image title")
     InlineUploads.match_md_inline_img(raw, external_src: true, &replace)
 
-    raw = raw.gsub(/^(https?:\/\/\S+)(\s?)$/) do |match|
-      if upload = blk.call(match)
-        "![](#{upload.short_url})"
-      else
-        match
+    raw =
+      raw.gsub(%r{^(https?://\S+)(\s?)$}) do |match|
+        if upload = blk.call(match)
+          "![](#{upload.short_url})"
+        else
+          match
+        end
       end
-    end
 
     raw
   end
 
   def self.matched_uploads(node)
     upload_path = Discourse.store.upload_path
-    base_url = Discourse.base_url.sub(/https?:\/\//, "(https?://)")
+    base_url = Discourse.base_url.sub(%r{https?://}, "(https?://)")
 
     regexps = [
-      /(upload:\/\/([a-zA-Z0-9]+)[a-zA-Z0-9\.]*)/,
-      /(\/uploads\/short-url\/([a-zA-Z0-9]+)[a-zA-Z0-9\.]*)/,
-      /(#{base_url}\/uploads\/short-url\/([a-zA-Z0-9]+)[a-zA-Z0-9\.]*)/,
-      /(#{GlobalSetting.relative_url_root}\/#{upload_path}#{UPLOAD_REGEXP_PATTERN})/,
-      /(#{base_url}\/#{upload_path}#{UPLOAD_REGEXP_PATTERN})/,
+      %r{(upload://([a-zA-Z0-9]+)[a-zA-Z0-9\.]*)},
+      %r{(/uploads/short-url/([a-zA-Z0-9]+)[a-zA-Z0-9\.]*)},
+      %r{(#{base_url}/uploads/short-url/([a-zA-Z0-9]+)[a-zA-Z0-9\.]*)},
+      %r{(#{GlobalSetting.relative_url_root}/#{upload_path}#{UPLOAD_REGEXP_PATTERN})},
+      %r{(#{base_url}/#{upload_path}#{UPLOAD_REGEXP_PATTERN})},
     ]
 
-    if GlobalSetting.cdn_url && (cdn_url = GlobalSetting.cdn_url.sub(/https?:\/\//, "(https?://)"))
-      regexps << /(#{cdn_url}\/#{upload_path}#{UPLOAD_REGEXP_PATTERN})/
+    if GlobalSetting.cdn_url && (cdn_url = GlobalSetting.cdn_url.sub(%r{https?://}, "(https?://)"))
+      regexps << %r{(#{cdn_url}/#{upload_path}#{UPLOAD_REGEXP_PATTERN})}
       if GlobalSetting.relative_url_root.present?
-        regexps << /(#{cdn_url}#{GlobalSetting.relative_url_root}\/#{upload_path}#{UPLOAD_REGEXP_PATTERN})/
+        regexps << %r{(#{cdn_url}#{GlobalSetting.relative_url_root}/#{upload_path}#{UPLOAD_REGEXP_PATTERN})}
       end
     end
 
     if Discourse.store.external?
       if Rails.configuration.multisite
-        regexps << /((https?:)?#{SiteSetting.Upload.s3_base_url}\/#{upload_path}#{UPLOAD_REGEXP_PATTERN})/
-        regexps << /(#{SiteSetting.Upload.s3_cdn_url}\/#{upload_path}#{UPLOAD_REGEXP_PATTERN})/
+        regexps << %r{((https?:)?#{SiteSetting.Upload.s3_base_url}/#{upload_path}#{UPLOAD_REGEXP_PATTERN})}
+        regexps << %r{(#{SiteSetting.Upload.s3_cdn_url}/#{upload_path}#{UPLOAD_REGEXP_PATTERN})}
       else
         regexps << /((https?:)?#{SiteSetting.Upload.s3_base_url}#{UPLOAD_REGEXP_PATTERN})/
         regexps << /(#{SiteSetting.Upload.s3_cdn_url}#{UPLOAD_REGEXP_PATTERN})/
@@ -289,9 +291,7 @@ class InlineUploads
     node = node.to_s
 
     regexps.each do |regexp|
-      node.scan(/(^|[\n\s"'\(>])#{regexp}($|[\n\s"'\)<])/) do |matched|
-        matches << matched[1]
-      end
+      node.scan(/(^|[\n\s"'\(>])#{regexp}($|[\n\s"'\)<])/) { |matched| matches << matched[1] }
     end
 
     matches
@@ -304,9 +304,7 @@ class InlineUploads
       return names
     end
 
-    node.children.each do |child|
-      names = node_children_names(child, names)
-    end
+    node.children.each { |child| names = node_children_names(child, names) }
 
     names
   end

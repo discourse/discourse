@@ -21,13 +21,16 @@ class MoveCategoryLastSeenAtToNewTable < ActiveRecord::Migration[6.0]
       ORDER BY topics.created_at DESC
       LIMIT :max_new_topics
     SQL
-    sql = DB.sql_fragment(sql,
-                          now: DateTime.now,
-                          last_visit: User::NewTopicDuration::LAST_VISIT,
-                          always: User::NewTopicDuration::ALWAYS,
-                          default_duration: SiteSetting.default_other_new_topic_duration_minutes,
-                          min_date: Time.at(SiteSetting.min_new_topics_time).to_datetime,
-                          max_new_topics: SiteSetting.max_new_topics)
+    sql =
+      DB.sql_fragment(
+        sql,
+        now: DateTime.now,
+        last_visit: User::NewTopicDuration::LAST_VISIT,
+        always: User::NewTopicDuration::ALWAYS,
+        default_duration: SiteSetting.default_other_new_topic_duration_minutes,
+        min_date: Time.at(SiteSetting.min_new_topics_time).to_datetime,
+        max_new_topics: SiteSetting.max_new_topics,
+      )
     DB.exec(sql)
   end
 

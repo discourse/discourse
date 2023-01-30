@@ -1,16 +1,16 @@
 # frozen_string_literal: true
 
 RSpec.describe TagHashtagDataSource do
-  fab!(:tag1) { Fabricate(:tag, name: "fact", topic_count: 0) }
-  fab!(:tag2) { Fabricate(:tag, name: "factor", topic_count: 5) }
-  fab!(:tag3) { Fabricate(:tag, name: "factory", topic_count: 4) }
-  fab!(:tag4) { Fabricate(:tag, name: "factorio", topic_count: 3) }
-  fab!(:tag5) { Fabricate(:tag, name: "factz", topic_count: 1) }
+  fab!(:tag1) { Fabricate(:tag, name: "fact", public_topic_count: 0) }
+  fab!(:tag2) { Fabricate(:tag, name: "factor", public_topic_count: 5) }
+  fab!(:tag3) { Fabricate(:tag, name: "factory", public_topic_count: 4) }
+  fab!(:tag4) { Fabricate(:tag, name: "factorio", public_topic_count: 3) }
+  fab!(:tag5) { Fabricate(:tag, name: "factz", public_topic_count: 1) }
   fab!(:user) { Fabricate(:user) }
   let(:guardian) { Guardian.new(user) }
 
   describe "#search" do
-    it "orders tag results by exact search match, then topic count, then name" do
+    it "orders tag results by exact search match, then public topic count, then name" do
       expect(described_class.search(guardian, "fact", 5).map(&:slug)).to eq(
         %w[fact factor factory factorio factz],
       )
@@ -31,9 +31,9 @@ RSpec.describe TagHashtagDataSource do
       )
     end
 
-    it "includes the topic count for the text of the tag" do
-      expect(described_class.search(guardian, "fact", 5).map(&:text)).to eq(
-        ["fact x 0", "factor x 5", "factory x 4", "factorio x 3", "factz x 1"],
+    it "includes the public topic count for the text of the tag in secondary text" do
+      expect(described_class.search(guardian, "fact", 5).map(&:secondary_text)).to eq(
+        %w[x0 x5 x4 x3 x1],
       )
     end
 
@@ -41,10 +41,18 @@ RSpec.describe TagHashtagDataSource do
       SiteSetting.tagging_enabled = false
       expect(described_class.search(guardian, "fact", 5)).to be_empty
     end
+
+    it "returns tags that are children of a TagGroup" do
+      parent_tag = Fabricate(:tag, name: "sidebar")
+      child_tag = Fabricate(:tag, name: "sidebar-v1")
+      tag_group = Fabricate(:tag_group, parent_tag: parent_tag, name: "Sidebar TG")
+      TagGroupMembership.create!(tag: child_tag, tag_group: tag_group)
+      expect(described_class.search(guardian, "sidebar-v", 5).map(&:slug)).to eq(%w[sidebar-v1])
+    end
   end
 
   describe "#search_without_term" do
-    it "returns distinct tags sorted by topic_count" do
+    it "returns distinct tags sorted by public topic count" do
       expect(described_class.search_without_term(guardian, 5).map(&:slug)).to eq(
         %w[factor factory factorio factz fact],
       )

@@ -717,10 +717,6 @@ ja:
         other: "ほぼ %{count} 年前"
   password_reset:
     no_token: 'おっとっと！使用したリンクは機能しなくなっています。今すぐ<a href="%{base_url}/login">ログイン</a>しましょう。パスワードを忘れた場合は、リセットするための<a href="%{base_url}/password-reset">リンクをリクエスト</a>できます。'
-    choose_new: "新しいパスワードを選択する"
-    choose: "パスワードを選択する"
-    update: "パスワードを更新"
-    save: "パスワードを設定"
     title: "パスワードをリセット"
     success: "パスワードを変更し、ログインしました。"
     success_unapproved: "パスワードを変更しました。"
@@ -1042,6 +1038,11 @@ ja:
         editor: 編集者
         author: 作成者
         edit_reason: 理由
+    consolidated_api_requests:
+      xaxis:
+        api: "API"
+        user_api: "ユーザー API"
+      yaxis: "日"
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "日"
@@ -1363,8 +1364,6 @@ ja:
     allow_duplicate_topic_titles_category: "カテゴリが異なる場合、同一の重複したタイトルを持つトピックを許可する。allow_duplicate_topic_titles は無効にする必要があります。"
     unique_posts_mins: "同じコンテンツを投稿できるまでの時間 (分)"
     educate_until_posts: "最初の (n) 件の新規投稿を入力し始めたときに、新規ユーザーチュートリアルのパネルをポップアップ表示します。"
-    contact_email: "このサイトの責任者の主要連絡先のメールアドレス。重要な通知に使用され、緊急事項の <a href='%{base_path}/about' target='_blank'>/about</a> にも表示されます。"
-    contact_url: "このサイトの連絡先 URL。緊急事項の <a href='%{base_path}/about' target='_blank'>/about</a> ページに表示されます。"
     crawl_images: "リモート URL から画像を取得して、正しい幅と高さの寸法を挿入する。"
     download_remote_images_to_local: "リモート (ホットリンク) 画像をダウンロードしてローカル画像に変換します。これにより、サイトから画像が削除された場合でも、コンテンツが保持されます。"
     download_remote_images_threshold: "リモート画像をダウンロードするために必要なディスクの最低空き容量 (パーセント表示)"
@@ -1515,13 +1514,9 @@ ja:
     email_token_valid_hours: "「パスワードを忘れました」またはアカウントアクティベーションのトークンを有効にする時間 (n)"
     enable_badges: "バッジ機能を有効にする"
     max_favorite_badges: "ユーザーが選択できるバッジの最大数"
-    enable_whispers: "トピック内でのスタッフの非公開コミュニケーションを許可する。"
     whispers_allowed_groups: "特定のグループのメンバーに、トピック内での非公開コミュニケーションを許可します。"
     allow_index_in_robots_txt: "このサイトがウェブ検索エンジンによるインデックス作成を許可していることを robots.txt に指定します。例外的なケースでは、永続的に <a href='%{base_path}/admin/customize/robots'>robots.txt をオーバーライド</a>できます。"
-    blocked_email_domains: "ユーザーがアカウント登録をすることができないメールドメインの、パイプ区切りのリスト。例: mailinator.com|trashmail.net"
-    allowed_email_domains: "ユーザー登録に必要なメールドメインのパイプ区切りのリスト。警告: 指定したメールドメイン以外のユーザーの登録は許可されません！"
     normalize_emails: "正規化されたメールアドレスが一意であるかをチェックします。正規化されたメールアドレスでは、ユーザー名のすべてのドットと、+ と @ 記号の間のすべてが削除されます。"
-    auto_approve_email_domains: "このドメインリストのメールアドレスを持つユーザーは自動的に承認されます。"
     hide_email_address_taken: "サインアップ中やパスワード忘れのフローの際に、指定したメールアドレスでアカウントが存在することをユーザーに知らせません。'パスワード忘れ' のリクエストでは、完全なメールアドレスが必要です。"
     log_out_strict: "ログアウトした際に、そのユーザーの全デバイスのセッションをログアウトする"
     version_checks: "Discourse に Ping してバージョン更新を確認し、<a href='%{base_path}/admin' target='_blank'>/admin</a> ダッシュボードに新しいバージョンに関するメッセージを表示する"
@@ -1875,6 +1870,7 @@ ja:
     enable_user_directory: "閲覧用のユーザーディレクトリを提供"
     enable_group_directory: "閲覧用のグループディレクトリを提供"
     enable_category_group_moderation: "グループが特定のカテゴリのコンテンツに介入することを許可する"
+    group_in_subject: "メールの件名の %%{optional_pm} を PM の最初のグループの名前に設定する。「<a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>標準メールの件名のフォーマットをカスタマイズする</a>」をご覧ください。"
     allow_anonymous_posting: "ユーザーに匿名モードへの切り替えを許可"
     anonymous_posting_min_trust_level: "匿名で投稿するために必要な最低信頼レベル"
     anonymous_account_duration_minutes: "匿名性を守るため、N 分毎に各ユーザーの匿名アカウントを作成しなおします。例 : 600 に設定すると、最終投稿から 600 分が経過し、さらにユーザーが匿名に切り替えると、新しい匿名アカウントが作成されます。"
@@ -1924,7 +1920,6 @@ ja:
     display_name_on_posts: "投稿に、@username に加えてユーザーのフルネームを表示します。"
     show_time_gap_days: "2 つの投稿の作成日の間が指定された日数以上の場合、トピックに時間の差を表示します。"
     short_progress_text_threshold: "トピック内の投稿数が指定された数字を超えると、プログレスバーに現在の投稿番号のみを表示します。プログレスバーの幅を変更すると、この値を変更する必要がある場合があります。"
-    default_code_lang: "コードブロックに適用されるデフォルトのプログラミング言語シンタックスハイライト (auto、nohighlight、ruby、python など)。この値は、`highlighted languages` サイト設定にも含まれている必要があります。"
     warn_reviving_old_topic_age: "最後の返信が指定された日数より古いトピックに返信し始めると、警告を表示します。0 に設定すると無効になります。"
     autohighlight_all_code: "明示的に言語を指定しなくても、すべての整形済みのコードブロックにコードハイライトを強制的に適用します。"
     highlighted_languages: "シンタックスハイライトルールが含まれる。(警告: 多くの言語を含めすぎると、パフォーマンスに影響を与える可能性があります) デモは、<a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> をご覧ください。"
@@ -3308,6 +3303,16 @@ ja:
         %{context}
 
         %{respond_instructions}
+    user_watching_category_or_tag:
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_watching_first_post:
       title: "ユーザーが最初の投稿をウォッチ中です"
       subject_template: "[%{email_prefix}] %{topic_title}"
@@ -4179,7 +4184,6 @@ ja:
     title: "Discourse のセットアップ"
     step:
       introduction:
-        title: "コミュニティーについて教えてください"
         fields:
           title:
             label: "コミュニティー名"
@@ -4187,29 +4191,24 @@ ja:
           site_description:
             label: "コミュニティーについて一文で説明してください"
             placeholder: "純子と純子の仲間がワイワイする場所"
-          contact_email:
-            label: "連絡先"
-            placeholder: "example@user.com"
-            description: "このコミュニティーの責任者またはグループ。重要な更新に使用され、緊急連絡先として<a href='%{base_path}/about' target='_blank'>あなたの紹介ページ</a>に表示されます。"
           default_locale:
             label: "言語"
       privacy:
-        title: "メンバーのエクスペリエンス"
         fields:
           login_required:
             placeholder: "非公開"
             extra_description: "ログインユーザーのみがこのコミュニティーにアクセスできる"
           invite_only:
-            placeholder: "招待のみ"
             extra_description: "ユーザーは信頼できるユーザーまたはスタッフから招待される必要がありますが、そうでない場合は、ユーザー自身が登録できます。"
           must_approve_users:
-            placeholder: "要承認"
             extra_description: "ユーザーはスタッフの承認が必要です"
+          chat_enabled:
+            placeholder: "チャットを有効にする"
+          enable_sidebar:
+            placeholder: "サイドバーを有効にする"
       ready:
-        title: "あなたの Discourse の準備が整いました！"
         description: "以上です！コミュニティーを設定するための基本を完了しました。後は、コミュニティーにアクセスして見て回り、ウェルカムトピックを書いて招待状を送信しましょう！<br><br>お楽しみください！"
       styling:
-        title: "外観"
         fields:
           color_scheme:
             label: "色スキーム"
@@ -4240,37 +4239,19 @@ ja:
                 label: "トピック付きのカテゴリボックス"
               subcategories_with_featured_topics:
                 label: "注目のトピックを含むサブカテゴリ"
-      branding:
-        title: "ロゴのカスタマイズ"
-        fields:
-          logo:
-            label: "プライマリーロゴ"
-            description: "サイトの左上にあるロゴです。高さ 120、縦横比 3:1を超える広幅の長方形の画像を使用してください。"
-          logo_small:
-            label: "正方形のロゴ"
-            description: "正方形バージョンのロゴ。下にスクロールしたときに左上に、またソーシャルプラットフォームで共有したときに表示されます。512x512 以上のサイズが最適です。"
       corporate:
-        title: "あなたの組織"
         fields:
-          company_name:
-            label: "会社名"
-            placeholder: "組織の例"
-            description: "利用規約ページに使用されます。会社が存在しない場合はスキップしてください。"
           governing_law:
-            label: "準拠法"
             placeholder: "カリフォルニア州法"
-            description: "利用規約ページに使用されます。会社が存在しない場合はスキップしてください。"
           contact_url:
-            label: "ウェブページ"
             placeholder: "https://www.example.com/contact-us"
-            description: "あなたまたは組織の代表連絡先ウェブページ。<a href='%{base_path}/about' target='_blank'>あなたの自己紹介ページ</a>に表示されます。"
           city_for_disputes:
-            label: "紛争都市"
             placeholder: "カリフォルニア州サンフランシスコ"
-            description: "利用規約ページに使用されます。会社が存在しない場合はスキップしてください。"
           site_contact:
-            label: "自動メッセージ"
             description: "通報の警告やバックアップ完了の通知など、Discourse のすべての自動個人メッセージはこのユーザーから送信されます。"
+          contact_email:
+            label: "連絡先"
+            placeholder: "example@user.com"
       invites:
         title: "スタッフの招待"
         description: "ほぼ完了です！コミュニティーを始動させるために、興味深いトピックや返信で<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>ディスカッションを生み出せる</a>人を何人が招待しましょう。"

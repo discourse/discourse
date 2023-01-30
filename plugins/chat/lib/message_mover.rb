@@ -125,10 +125,10 @@ class Chat::MessageMover
     SQL
 
     DB.exec(<<~SQL)
-      UPDATE chat_uploads cu
-      SET chat_message_id = mm.new_chat_message_id
+      UPDATE upload_references uref
+      SET target_id = mm.new_chat_message_id
       FROM moved_chat_messages mm
-      WHERE cu.chat_message_id = mm.old_chat_message_id
+      WHERE uref.target_id = mm.old_chat_message_id AND uref.target_type = 'ChatMessage'
     SQL
 
     DB.exec(<<~SQL)

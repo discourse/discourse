@@ -201,38 +201,37 @@ uk:
       email: "Надіслати електронною поштою"
       url: "Скопіювати та поширити посилання"
     action_codes:
-      public_topic: "робить цю тему публічною %{when}"
+      public_topic: "Робить цю тему публічною %{when}"
       open_topic: "Перетворив це на тему %{when}"
-      private_topic: "зробив цю тему особистим повідомленням %{when}"
-      split_topic: "розділив цю тему %{when}"
-      invited_user: "запросив %{who} %{when}"
-      invited_group: "запросив %{who} %{when}"
+      private_topic: "Зробив цю тему особистим повідомленням %{when}"
+      split_topic: "Розділив цю тему %{when}"
+      invited_user: "Запросив %{who} %{when}"
+      invited_group: "Запросив %{who} %{when}"
       user_left: "%{who} вилучив себе з цього повідомлення %{when}"
-      removed_user: "вилучив %{who} %{when}"
-      removed_group: "вилучив %{who} %{when}"
-      autobumped: "автоматично піднято %{when}"
+      removed_user: "Вилучив %{who} %{when}"
+      removed_group: "Вилучив %{who} %{when}"
+      autobumped: "Автоматично піднято %{when}"
       autoclosed:
-        enabled: "закрито %{when}"
-        disabled: "відкрито %{when}"
+        enabled: "Закрито %{when}"
+        disabled: "Відкрито %{when}"
       closed:
-        enabled: "закрито %{when}"
-        disabled: "відкрито %{when}"
+        enabled: "Закрито %{when}"
+        disabled: "Відкрито %{when}"
       archived:
-        enabled: "заархівовано %{when}"
-        disabled: "розархівовано %{when}"
+        enabled: "Заархівовано %{when}"
+        disabled: "Розархівовано %{when}"
       pinned:
-        enabled: "закріплено %{when}"
-        disabled: "відкріплено %{when}"
+        enabled: "Закріплено %{when}"
+        disabled: "Відкріплено %{when}"
       pinned_globally:
-        enabled: "закріплено глобально %{when}"
-        disabled: "відкріплено %{when}"
+        enabled: "Закріплено глобально %{when}"
+        disabled: "Відкріплено %{when}"
       visible:
-        enabled: "додано у список %{when}"
-        disabled: "вилучено зі списку %{when}"
+        enabled: "Додано у список %{when}"
+        disabled: "Вилучено зі списку %{when}"
       banner:
-        enabled: "робить це банером %{when}. Він зʼявлятиметься угорі кожної сторінки, поки користувач його не прибере."
-        disabled: "вилучає цей банер %{when}. Він більше не зʼявлятиметься угорі кожної сторінки."
-      forwarded: "переслано вищевказаний електронний лист"
+        enabled: "Робить це банером %{when}. Він зʼявлятиметься угорі кожної сторінки, поки користувач його не прибере."
+        disabled: "Вилучає цей банер %{when}. Він більше не зʼявлятиметься угорі кожної сторінки."
     topic_admin_menu: "дії теми"
     skip_to_main_content: "Перейти до основного вмісту"
     emails_are_disabled: "Надсилання повідомлень електронною поштою було глобально вимкнено адміністратором. Жодне сповіщення електронною поштою не буде надіслано."
@@ -380,7 +379,6 @@ uk:
       remove_reminder_keep_bookmark: "Вилучити нагадування, але зберегти закладку"
       created_with_reminder: "Ви додали цей допис у закладку із нагадуванням %{date}. %{name}"
       created_with_reminder_generic: "Ви створили закладку із нагадуванням %{date}. %{name}"
-      remove: "Вилучити закладку"
       delete: "Видалити закладку"
       confirm_delete: "Ви впевнені, що хочете видалити цю закладку? Нагадування також буде видалено."
       confirm_clear: "Ви впевнені, що хочете вилучити всі закладки з цієї теми?"
@@ -460,9 +458,6 @@ uk:
     enable: "Увімкнути"
     disable: "Вимкнути"
     continue: "Продовжити"
-    undo: "Скасувати"
-    revert: "Повернути"
-    failed: "Помилка"
     switch_to_anon: "Увійти в анонімний режим"
     switch_from_anon: "Полишити анонімний режим"
     banner:
@@ -787,6 +782,7 @@ uk:
         denied: "відмовлено"
         undone: "запит скасовано"
         handle: "обробляти запит на вступ"
+        undo: "Скасувати"
       manage:
         title: "Керувати"
         name: "Імʼя"
@@ -1125,7 +1121,6 @@ uk:
       notification_schedule:
         title: "Розклад сповіщень"
         label: "Увімкнути власний розклад сповіщень"
-        tip: "За межами цих годин ви будете автоматично у режимі «не турбувати»."
         midnight: "Опівночі"
         none: "Немає"
         monday: "Понеділок"
@@ -1169,7 +1164,6 @@ uk:
         perm_denied_expl: "Ви заборонили сповіщення. Дозвольте сповіщення у налаштуваннях свого оглядача."
         disable: "Вимкнути сповіщення"
         enable: "Увімкнути сповіщення"
-        each_browser_note: 'Примітка. Вам потрібно змінити це налаштування в кожному оглядачі, який ви використовуєте. У режимі «не турбувати» всі сповіщення буде вимкнено незалежно від цього налаштування.'
         consent_prompt: "Хочете отримувати сповіщення в реальному часі, коли люди відповідають на ваші дописи?"
       dismiss: "Відкинути"
       dismiss_notifications: "Відхилити всі"
@@ -1974,6 +1968,7 @@ uk:
       title: "Увійти"
       username: "Користувач"
       password: "Пароль"
+      show_password: "Показати"
       second_factor_title: "Двофакторна автентифікація"
       second_factor_description: "Введіть код автентифікації з вашого додатка:"
       second_factor_backup: "Увійти за допомогою запасного коду"
@@ -2353,6 +2348,7 @@ uk:
       bookmark_reminder: "<span>%{username}</span> %{description}"
       replied: "<span>%{username}</span> %{description}"
       posted: "<span>%{username}</span> %{description}"
+      watching_category_or_tag: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
@@ -2438,6 +2434,7 @@ uk:
         invited_to_private_message: "запрошений в приватне повідомлення"
         invitee_accepted: "запрошення прийнято"
         posted: "новий допис"
+        watching_category_or_tag: "новий допис"
         moved_post: "допис переміщено"
         linked: "пов’язаний"
         bookmark_reminder: "Нагадування про закладку"
@@ -3425,7 +3422,6 @@ uk:
         create_for_topic: "Створіть закладку для теми"
         edit: "Редагувати закладку"
         edit_for_topic: "Редагувати закладку для теми"
-        created: "Створено"
         updated: "Оновлено"
         name: "Назва"
         name_placeholder: "Для чого ця закладка?"
@@ -3745,7 +3741,6 @@ uk:
     category_title: "Розділ"
     history_capped_revisions: "Історія та останні 100 змін"
     history: "Історія"
-    changed_by: "%{author}"
     raw_email:
       title: "Вхідне повідомлення"
       not_available: "Не доступно!"
@@ -3835,7 +3830,6 @@ uk:
         this_week: "Тиждень"
         today: "Today"
     browser_update: 'На жаль, <a href="https://www.discourse.org/faq/#browser">ваш браузер не підтримується</a>. Будь ласка, <a href="https://browsehappy.com">перейдіть на підтримуваний браузер</a> , щоб повноцінно переглянути вміст, увійти та відповісти.'
-    safari_13_warning: Цей сайт незабаром перестане підтримувати версії iOS і Safari 13 і нижче. Спрощена версія "тільки для читання" залишиться доступною. (<a href="https://meta.discourse.org/t/224747">більше інформації</a>)
     permission_types:
       full: "Створювати / Відповідати / Бачити"
       create_post: "Відповісти / Див"
@@ -4148,9 +4142,7 @@ uk:
     safe_mode:
       enabled: "Включено безпечний режим, щоб вийти з безпечного режиму, закрийте поточне вікно браузера"
     image_removed: "(зображення видалено)"
-    do_not_disturb:
-      title: "Не турбувати…"
-      label: "Не турбувати"
+    pause_notifications:
       remaining: "%{remaining} залишилось"
       options:
         half_hour: "30 хвилин"
@@ -4204,7 +4196,6 @@ uk:
         few: "%{count} нових"
         many: "%{count} нова"
         other: "%{count} нова"
-      toggle_section: "Переключити розділ"
       more: "Більше"
       all_categories: "Всі розділи"
       all_tags: "Всі теґи"
@@ -4213,7 +4204,6 @@ uk:
           header_link_text: "Про"
         messages:
           header_link_text: "Повідомлення"
-          header_action_title: "створити особисте повідомлення"
           links:
             inbox: "Вхідні"
             sent: "Надіслано"
@@ -4230,7 +4220,6 @@ uk:
           none: "Ви не додали жодного теґу."
           click_to_get_started: "Натисніть тут, щоб почати."
           header_link_text: "Теґи"
-          header_action_title: "Редагувати теґи бічної панелі"
           configure_defaults: "Налаштувати типові значення"
         categories:
           links:
@@ -4240,11 +4229,9 @@ uk:
           none: "Ви не додали жодного розділу."
           click_to_get_started: "Натисніть тут, щоб почати."
           header_link_text: "Розділи"
-          header_action_title: "редагувати розділи бічної панелі"
           configure_defaults: "Налаштувати типові значення"
         community:
           header_link_text: "Спільнота"
-          header_action_title: "створити нову тему"
           links:
             about:
               content: "Про"
@@ -4259,10 +4246,8 @@ uk:
               content: "Часті запитання"
             groups:
               content: "Групи"
-              title: "Усі групи"
             users:
               content: "Користувачі"
-              title: "Всі користувачі"
             my_posts:
               content: "Мої дописи"
               draft_count:
@@ -4272,7 +4257,6 @@ uk:
                 other: "%{count} чернеток"
             review:
               content: "Переглянути"
-              title: "переглянути"
               pending_count: "%{count} очікує на розгляд"
     welcome_topic_banner:
       title: "Створіть тему привітання"
@@ -4503,7 +4487,6 @@ uk:
             topics:
               read: Читати тему або певні дописи в ній. Також підтримується RSS.
               write: Створіть нову тему чи допис в наявній.
-              update: Оновіть тему. Змініть назву, розділ, теґи тощо.
               read_lists: Читайте списки тем, як топ, нові, останні тощо. RSS також підтримується.
             posts:
               edit: Редагуйте будь-який допис або якийсь конкретний.
@@ -4727,7 +4710,6 @@ uk:
         button_title: "Надіслати запрошення"
       customize:
         title: "Customize"
-        long_title: "Site Customizations"
         preview: "preview"
         explain_preview: "Попередній перегляд сайту з активованим стилем"
         save: "Зберегти"
@@ -4865,7 +4847,6 @@ uk:
             error: "Ця тема була автоматично відключена, тому що вона не сумісна з цією версією Discourse."
             minimum: "Потрібна версія Discourse %{version} або вище."
             maximum: "Потрібна версія Discourse %{version} або нижче."
-          component_of: "Компонент:"
           update_to_latest: "Оновити до останьої"
           check_for_updates: "Перевірити оновлення"
           updating: "Оновлення…"
@@ -4935,7 +4916,7 @@ uk:
           new_name: "Нова Колірна Палітра"
           copy_name_prefix: "Копіювати з"
           delete_confirm: "видалити цю колірну палітру?"
-          undo: "скасувати"
+          undo: "Скасувати"
           undo_title: "Скасувати ваші зміни цього кольору з часу останнього збереження."
           revert: "Повернути"
           revert_title: "Скиньте цей колір на колірну палітру Discourse за замовчуванням."
@@ -5342,7 +5323,6 @@ uk:
       user:
         suspend_failed: "Щось трапилося під час призупинення цього користувача: %{error}"
         unsuspend_failed: "Щось трапилося під час скасування призупинення цього користувача: %{error}"
-        suspend_duration: "На який термін призупинити діяльність цього користувача?"
         suspend_reason_label: "Чому Ви призупиняєте цього користувача? Цей текст <b>буде видимим для всіх</b> на сторінці профілю цього користувача, і його буде показано користувачу при спробі увійти в систему. Будьте лаконічні."
         suspend_reason_hidden_label: "Чому ви призупиняєте користувача? Цей текст буде показаний користувачеві, коли він спробує увійти в систему. Будьте лаконічним."
         suspend_reason: "Причина"
@@ -5376,7 +5356,6 @@ uk:
         penalty_post_edit: "Редагувати допис"
         penalty_post_none: "Нічого не робити"
         penalty_count: "Кількість порушень"
-        penalty_history: "Історія порушень"
         clear_penalty_history:
           title: "Очистити Історію Штрафів"
           description: "користувачі зі штрафами не можуть досягти TL3"
@@ -5861,10 +5840,8 @@ uk:
       finish: "Вийти з налаштування"
       back: "Назад"
       next: "Далі"
-      configure_more: "Більше налаштувань…"
       step-text: "Крок"
       step: "%{current} з %{total}"
-      upload: "Вивантажити"
       uploading: "Надсилання…"
       upload_error: "Даруйте, під час завантаження цього файлу трапилася помилка. Будь ласка, спробуйте ще раз."
       staff_count:

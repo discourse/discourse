@@ -7,10 +7,14 @@ class ExternalUploadManager
 
   UPLOAD_TYPES_EXCLUDED_FROM_UPLOAD_PROMOTION = ["backup"].freeze
 
-  class ChecksumMismatchError < StandardError; end
-  class DownloadFailedError < StandardError; end
-  class CannotPromoteError < StandardError; end
-  class SizeMismatchError < StandardError; end
+  class ChecksumMismatchError < StandardError
+  end
+  class DownloadFailedError < StandardError
+  end
+  class CannotPromoteError < StandardError
+  end
+  class SizeMismatchError < StandardError
+  end
 
   attr_reader :external_upload_stub
 
@@ -24,51 +28,54 @@ class ExternalUploadManager
 
   def self.create_direct_upload(current_user:, file_name:, file_size:, upload_type:, metadata: {})
     store = store_for_upload_type(upload_type)
-    url = store.signed_url_for_temporary_upload(
-      file_name, metadata: metadata
-    )
+    url = store.signed_url_for_temporary_upload(file_name, metadata: metadata)
     key = store.s3_helper.path_from_url(url)
 
-    upload_stub = ExternalUploadStub.create!(
-      key: key,
-      created_by: current_user,
-      original_filename: file_name,
-      upload_type: upload_type,
-      filesize: file_size
-    )
+    upload_stub =
+      ExternalUploadStub.create!(
+        key: key,
+        created_by: current_user,
+        original_filename: file_name,
+        upload_type: upload_type,
+        filesize: file_size,
+      )
 
     { url: url, key: key, unique_identifier: upload_stub.unique_identifier }
   end
 
   def self.create_direct_multipart_upload(
-    current_user:, file_name:, file_size:, upload_type:, metadata: {}
+    current_user:,
+    file_name:,
+    file_size:,
+    upload_type:,
+    metadata: {}
   )
     content_type = MiniMime.lookup_by_filename(file_name)&.content_type
     store = store_for_upload_type(upload_type)
-    multipart_upload = store.create_multipart(
-      file_name, content_type, metadata: metadata
-    )
+    multipart_upload = store.create_multipart(file_name, content_type, metadata: metadata)
 
-    upload_stub = ExternalUploadStub.create!(
-      key: multipart_upload[:key],
-      created_by: current_user,
-      original_filename: file_name,
-      upload_type: upload_type,
-      external_upload_identifier: multipart_upload[:upload_id],
-      multipart: true,
-      filesize: file_size
-    )
+    upload_stub =
+      ExternalUploadStub.create!(
+        key: multipart_upload[:key],
+        created_by: current_user,
+        original_filename: file_name,
+        upload_type: upload_type,
+        external_upload_identifier: multipart_upload[:upload_id],
+        multipart: true,
+        filesize: file_size,
+      )
 
     {
       external_upload_identifier: upload_stub.external_upload_identifier,
       key: upload_stub.key,
-      unique_identifier: upload_stub.unique_identifier
+      unique_identifier: upload_stub.unique_identifier,
     }
   end
 
   def self.store_for_upload_type(upload_type)
     if upload_type == "backup"
-      if !SiteSetting.enable_backups? || SiteSetting.backup_location != BackupLocationSiteSetting::S3
+      if !SiteSetting.enable_backups? ||
+           SiteSetting.backup_location != BackupLocationSiteSetting::S3
         raise Discourse::InvalidAccess.new
       end
       BackupRestore::BackupStore.create
@@ -98,9 +105,11 @@ class ExternalUploadManager
     if external_size != external_upload_stub.filesize
       ExternalUploadManager.ban_user_from_external_uploads!(
         user: external_upload_stub.created_by,
-        ban_minutes: SIZE_MISMATCH_BAN_MINUTES
+        ban_minutes: SIZE_MISMATCH_BAN_MINUTES,
       )
-      raise SizeMismatchError.new("expected: #{external_upload_stub.filesize}, actual: #{external_size}")
+      raise SizeMismatchError.new(
+              "expected: #{external_upload_stub.filesize}, actual: #{external_size}",
+            )
     end
 
     if UPLOAD_TYPES_EXCLUDED_FROM_UPLOAD_PROMOTION.include?(external_upload_stub.upload_type)
@@ -108,7 +117,7 @@ class ExternalUploadManager
     else
       promote_to_upload
     end
-  rescue
+  rescue StandardError
     if !SiteSetting.enable_upload_debug_mode
       # We don't need to do anything special to abort multipart uploads here,
       # because at this point (calling promote_to_upload!), the multipart
@@ -137,22 +146,18 @@ class ExternalUploadManager
       raise DownloadFailedError if tempfile.blank?
 
       actual_sha1 = Upload.generate_digest(tempfile)
-      if external_sha1 && external_sha1 != actual_sha1
-        raise ChecksumMismatchError
-      end
+      raise ChecksumMismatchError if external_sha1 && external_sha1 != actual_sha1
     end
 
-    # TODO (martin): See if these additional opts will be needed
-    # - check if retain_hours is needed
     opts = {
       type: external_upload_stub.upload_type,
       existing_external_upload_key: external_upload_stub.key,
       external_upload_too_big: external_size > DOWNLOAD_LIMIT,
-      filesize: external_size
+      filesize: external_size,
     }.merge(@upload_create_opts)
 
     UploadCreator.new(tempfile, external_upload_stub.original_filename, opts).create_for(
-      external_upload_stub.created_by_id
+      external_upload_stub.created_by_id,
     )
   ensure
     tempfile&.close!
@@ -163,7 +168,7 @@ class ExternalUploadManager
     @store.move_existing_stored_upload(
       existing_external_upload_key: external_upload_stub.key,
       original_filename: external_upload_stub.original_filename,
-      content_type: content_type
+      content_type: content_type,
     )
     Struct.new(:errors).new([])
   end
@@ -190,7 +195,7 @@ class ExternalUploadManager
       url,
       max_file_size: DOWNLOAD_LIMIT,
       tmp_file_name: "discourse-upload-#{type}",
-      follow_redirect: true
+      follow_redirect: true,
     )
   end
 end

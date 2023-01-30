@@ -126,38 +126,37 @@ nb_NO:
       email: "Send via e-post"
       url: "Kopier og del URL"
     action_codes:
-      public_topic: "gjorde dette emnet offentlig %{when}"
-      open_topic: "konverterte dette til et emne %{when}"
-      private_topic: "gjorde dette emnet om til en personlig melding %{when}"
-      split_topic: "del opp dette emnet %{when}"
-      invited_user: "inviterte %{who} %{when}"
-      invited_group: "inviterte %{who} %{when}"
+      public_topic: "Gjorde dette emnet offentlig %{when}"
+      open_topic: "Konverterte dette til et emne %{when}"
+      private_topic: "Gjorde dette emnet om til en personlig melding %{when}"
+      split_topic: "Del opp dette emnet %{when}"
+      invited_user: "Inviterte %{who} %{when}"
+      invited_group: "Inviterte %{who} %{when}"
       user_left: "%{who} fjernet seg selv fra denne meldingen %{when}"
-      removed_user: "fjernet %{who} %{when}"
-      removed_group: "fjernet %{who} %{when}"
-      autobumped: "automatisk flyttet øverst %{when}"
+      removed_user: "Fjernet %{who} %{when}"
+      removed_group: "Fjernet %{who} %{when}"
+      autobumped: "Automatisk flyttet øverst %{when}"
       autoclosed:
-        enabled: "lukket %{when}"
-        disabled: "åpnet %{when}"
+        enabled: "Lukket %{when}"
+        disabled: "Åpnet %{when}"
       closed:
-        enabled: "lukket %{when}"
-        disabled: "åpnet %{when}"
+        enabled: "Lukket %{when}"
+        disabled: "Åpnet %{when}"
       archived:
-        enabled: "arkivert %{when}"
-        disabled: "arkivering opphevet %{when}"
+        enabled: "Arkivert %{when}"
+        disabled: "Arkivering opphevet %{when}"
       pinned:
-        enabled: "festet %{when}"
-        disabled: "feste fjernet %{when}"
+        enabled: "Festet %{when}"
+        disabled: "Feste fjernet %{when}"
       pinned_globally:
-        enabled: "festet globalt %{when}"
-        disabled: "feste fjernet %{when}"
+        enabled: "Festet globalt %{when}"
+        disabled: "Feste fjernet %{when}"
       visible:
-        enabled: "gjort synlig %{when}"
-        disabled: "skjult %{when}"
+        enabled: "Gjort synlig %{when}"
+        disabled: "Skjult %{when}"
       banner:
-        enabled: "gjorde dette til et banner %{when}. Det vil vises på toppen av hver side inntil brukeren lukker det."
-        disabled: "fjernet dette banneret %{when}. Det vil ikke lenger vises på toppen av hver side."
-      forwarded: "videresendte e-posten voer"
+        enabled: "Gjorde dette til et banner %{when}. Det vil vises på toppen av hver side inntil brukeren lukker det."
+        disabled: "Fjernet dette banneret %{when}. Det vil ikke lenger vises på toppen av hver side."
     topic_admin_menu: "handlinger for tråd"
     skip_to_main_content: "Gå til hovedinnhold"
     emails_are_disabled: "All utgående e-post har blitt deaktivert globalt av en administrator. Ingen e-postvarslinger vil bli sendt."
@@ -279,7 +278,6 @@ nb_NO:
       edit: "Rediger bokmerke"
       not_bookmarked: "bokmerk dette innlegget"
       created_with_reminder: "Du har bokmerket dette innlegget med en påminnelse %{date} %{name}"
-      remove: "Fjern bokmerke"
       delete: "Slett bokmerke"
       confirm_delete: "Er du sikker på at du vil slette denne bokmerket? Påminnelsen vil også bli slettet."
       confirm_clear: "Er du sikker på at du vil fjerne alle favoritter fra dette emnet?"
@@ -342,9 +340,6 @@ nb_NO:
     enable: "Aktiver"
     disable: "Deaktiver"
     continue: "Fortsett"
-    undo: "Angre"
-    revert: "Reverser"
-    failed: "Mislykket"
     switch_to_anon: "Start inkognitomodus"
     switch_from_anon: "Avslutt inkognitomodus"
     banner:
@@ -635,6 +630,7 @@ nb_NO:
         denied: "nektet"
         undone: "forespørsel, angret"
         handle: "Behandler forespørsel om medlemskap"
+        undo: "Angre"
       manage:
         title: "Behandle"
         name: "Navn"
@@ -882,9 +878,15 @@ nb_NO:
       topic_sentence:
         one: "%{count} emne"
         other: "%{count} emner"
+      topic_stat:
+        one: "%{number} / %{unit}"
+        other: "%{number} / %{unit}"
       topic_stat_unit:
         week: "uke"
         month: "måned"
+      topic_stat_all_time:
+        one: "%{number} totalt"
+        other: "%{number} totalt"
       n_more: "Kategorier (ytterligere%{count})..."
     ip_lookup:
       title: Slå opp IP-adresse
@@ -942,7 +944,6 @@ nb_NO:
       notification_schedule:
         title: "Tidsplan for varsling"
         label: "Aktiver egendefinert meldingsplan"
-        tip: "Utenfor disse timene vil du bli satt i «ikke forstyrr» automatisk."
         midnight: "Midnatt"
         none: "Ingen"
         monday: "Mandag"
@@ -984,7 +985,6 @@ nb_NO:
         perm_denied_expl: "Du tillot ikke varsler. Tillat varsler via innstillingene i din nettleser."
         disable: "Slå av varslinger"
         enable: "Slå på varslinger"
-        each_browser_note: 'Merk: Denne innstillingen må endres for hver nettleser som brukes. Alle varsler vil bli deaktivert når du er i "ikke forstyrr", uavhengig av denne innstillingen.'
         consent_prompt: "Ønsker du å motta skrivebordsvarsler når andre svarer på dine innlegg?"
       dismiss: "Avslå"
       dismiss_notifications: "Forkast alle"
@@ -1676,6 +1676,7 @@ nb_NO:
       title: "Logg inn"
       username: "Bruker"
       password: "Passord"
+      show_password: "Vis"
       second_factor_title: "To-faktor autentisering"
       second_factor_description: "Skriv inn verifiseringskoden fra din app:"
       second_factor_backup: "Logg inn ved hjelp av en sikkerhetskode"
@@ -1967,6 +1968,7 @@ nb_NO:
       bookmark_reminder: "<span>%{username}</span> %{description}"
       replied: "<span>%{username}</span> %{description}"
       posted: "<span>%{username}</span> %{description}"
+      watching_category_or_tag: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
@@ -2022,6 +2024,7 @@ nb_NO:
         invited_to_private_message: "invitert til privat melding"
         invitee_accepted: "invitasjonen akseptert"
         posted: "nytt innlegg"
+        watching_category_or_tag: "nytt innlegg"
         moved_post: "innlegg flyttet"
         linked: "knyttet"
         bookmark_reminder: "påminnelse for bokmerke"
@@ -2160,14 +2163,22 @@ nb_NO:
           one: "Avvis %{count} uleste"
           other: "Avvis %{count} uleste"
         dismiss_button: "Forkast…"
+        dismiss_button_with_selected:
+          one: "Avvis (%{count})…"
+          other: "Avvis (%{count})…"
         dismiss_tooltip: "Forkast kun nye innlegg eller slutt å overvåke emner"
         also_dismiss_topics: "Slutt å overvåke disse emnene slik at de aldri igjen vises til meg som ulest"
         dismiss_new: "Forkast nye"
+        dismiss_new_with_selected:
+          one: "Avvis Ny (%{count})"
+          other: "Avvis Ny (%{count})"
         toggle: "slå på/av massevelging av emner"
         actions: "Massehandlinger"
+        change_category: "Velg kategori..."
         close_topics: "Lukk emner"
         archive_topics: "Arkiver emner"
         move_messages_to_inbox: "Flytt til innboks"
+        notification_level: "Varsler..."
         change_notification_level: "Endre varslingsnivå"
         choose_new_category: "Velg den nye kategorien for emnene:"
         selected:
@@ -2396,12 +2407,14 @@ nb_NO:
         open: "Åpne emne"
         close: "Lukk emne"
         multi_select: "Velg innlegg…"
+        slow_mode: "Sett sakte modus..."
         timed_update: "Sett opp tidsbestemt handling for emne…"
         pin: "Fest emne…"
         unpin: "Løsne emne…"
         unarchive: "Opphev arkivering av emne"
         archive: "Arkiver emne"
         reset_read: "Tilbakestill lesedata"
+        make_public: "Gjør til offentlig emne..."
         make_private: "Gjør om til personlig melding"
         reset_bump_date: "Tilbakestille dato emnet ble flyttet øverst"
       feature:
@@ -2685,6 +2698,8 @@ nb_NO:
         rebake: "Generer HTML på nytt"
         publish_page: "Side Publisering"
         unhide: "Vis"
+        change_owner: "Endre eierskap..."
+        grant_badge: "Tildel merke..."
         lock_post: "Lås innlegg"
         lock_post_description: "forhindre innleggsskriveren fra å redigere dette innlegget"
         unlock_post: "Lås opp innlegg"
@@ -2698,6 +2713,8 @@ nb_NO:
         delete_topic_confirm_modal_no: "Nei, behold dette emnet"
         delete_topic_error: "Det oppstod en feil under sletting av emnet"
         delete_topic: "slett emne"
+        add_post_notice: "Legg til medarbeider varsel..."
+        change_post_notice: "Merknad om endring av personalet..."
         delete_post_notice: "Slett personalmerknad"
         remove_timer: "Fjern timer"
         edit_timer: "rediger timeren"
@@ -2761,7 +2778,6 @@ nb_NO:
       bookmarks:
         create: "Opprett bokmerke"
         edit: "Rediger bokmerke"
-        created: "Opprettet"
         updated: "Oppdatert"
         name: "Navn"
         name_placeholder: "Hva er bokmerket etter?"
@@ -3043,7 +3059,6 @@ nb_NO:
       other: "brukere"
     category_title: "Kategori"
     history_capped_revisions: "Historikk, siste 100 revisjoner"
-    changed_by: "av %{author}"
     raw_email:
       title: "Innkommende e-post"
       not_available: "Ikke tilgjengelig!"
@@ -3374,9 +3389,7 @@ nb_NO:
     safe_mode:
       enabled: "Sikkert modus er påskrudd, for å skru av sikkert modus, lukk dette nettleservinduet"
     image_removed: "(bilde fjernet)"
-    do_not_disturb:
-      title: "Ikke forstyrr for..."
-      label: "Ikke forstyrr"
+    pause_notifications:
       remaining: "%{remaining} gjenstående"
       options:
         half_hour: "30 minutter"
@@ -3432,18 +3445,19 @@ nb_NO:
               content: "Administrator"
             badges:
               content: "Merker"
+            everything:
+              content: "Alt"
             faq:
               content: "O-S-S"
             groups:
               content: "Grupper"
-              title: "Alle grupper"
             users:
               content: "Brukere"
             my_posts:
               content: "Mine innlegg"
             review:
               content: "Gjennomgang"
-              title: "gjennomgang"
+    until: "Inntil:"
   admin_js:
     type_to_filter: "skriv for å filtrere…"
     admin:
@@ -3606,6 +3620,8 @@ nb_NO:
         user: "Bruker"
         title: "API"
         created: Opprettet
+        updated: Oppdatert
+        never_used: (aldri)
         generate: "Generer API-nøkkel"
         revoke: "Trekk tilbake"
         all_users: "Alle brukere"
@@ -3795,7 +3811,6 @@ nb_NO:
         button_title: "Send invitasjoner"
       customize:
         title: "Tilpasse"
-        long_title: "Nettstedstilpasninger"
         preview: "forhåndsvisning"
         explain_preview: "Se siden iført denne drakten"
         save: "Lagre"
@@ -3887,6 +3902,7 @@ nb_NO:
             no_overwrite: "Ugyldig variabelnavn. Kan ikke overskrive en eksisterende variabel."
             must_be_unique: "Ugyldig variabelnavn. Må være unikt."
           upload: "Last opp"
+          discard: "Forkast"
           css_html: "Egendefinert CSS/HTML"
           edit_css_html: "Rediger CSS/HTML"
           edit_css_html_help: "Du har ikke redigert noe CSS eller HTML"
@@ -3894,6 +3910,7 @@ nb_NO:
           import_web_tip: "Pakkebrønn inneholdende drakt"
           is_private: "Drakten er i et privat git repository"
           public_key: "Gi den følgende public keyen tilgang til repoet:"
+          install: "Installer"
           installed: "Installert"
           install_popular: "Populært"
           about_theme: "Om"
@@ -3901,6 +3918,7 @@ nb_NO:
           version: "Versjon:"
           enable: "Aktiver"
           disable: "Deaktiver"
+          disabled: "Denne komponenten har blitt deaktivert."
           update_to_latest: "Oppdater til seneste"
           check_for_updates: "Se etter oppdateringer"
           updating: "Oppdaterer…"
@@ -3934,9 +3952,9 @@ nb_NO:
         colors:
           title: "Farger"
           copy_name_prefix: "Kopi av"
-          undo: "angre"
+          undo: "Angre"
           undo_title: "Fjern endringer av denne fargen siden sist den ble lagret."
-          revert: "gå tilbake"
+          revert: "Reverser"
           primary:
             name: "primær"
             description: "Det meste av tekst, ikoner og kanter."
@@ -4287,7 +4305,6 @@ nb_NO:
       user:
         suspend_failed: "Noe gikk galt ved utestenging av denne brukeren %{error}"
         unsuspend_failed: "Noe gikk galt ved opphevelse av utestenging av denne brukeren %{error}"
-        suspend_duration: "Hvor lenge skal brukeren være utestengt? (dager)"
         suspend_reason_label: "Hvorfor stenger du ute brukeren? Denne teksten <b>vil være synlig for alle</b> på denne brukerens profilside og vil bli vist til brukeren når vedkommende forsøker å logge inn. Fatt deg i korthet."
         suspend_reason_hidden_label: "Hvorfor stenger du ute brukeren? Denne teksten vil bli vist til brukeren når vedkommende prøver å logge inn. Fatt deg i korthet."
         suspend_reason: "Begrunnelse"
@@ -4549,7 +4566,9 @@ nb_NO:
           dashboard: "Dashbord"
           navigation: "Navigasjon"
         default_categories:
+          modal_description: "Ønsker du å bruke denne endringens historikk? Dette vil endre innstillinger for %{count} eksisterende brukere."
           modal_yes: "Ja"
+          modal_no: "Nei, bare gjelder endring fremover"
       badges:
         title: Merker
         new_badge: Nytt merke
@@ -4668,7 +4687,6 @@ nb_NO:
       next: "Neste"
       step-text: "Steg"
       step: "%{current} av %{total}"
-      upload: "Last opp"
       uploading: "Laster opp…"
       upload_error: "Beklager, det skjedde en feil ved opplastingen av den filen. Vennligst prøv igjen."
       staff_count:

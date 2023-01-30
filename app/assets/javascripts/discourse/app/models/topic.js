@@ -467,7 +467,17 @@ const Topic = RestModel.extend({
           "details.can_permanently_delete":
             this.siteSettings.can_permanently_delete && deleted_by.admin,
         });
-        if (!deleted_by.staff) {
+        if (
+          opts.force_destroy ||
+          (!deleted_by.staff &&
+            !deleted_by.groups.some(
+              (group) => group.name === this.category.reviewable_by_group_name
+            ) &&
+            !(
+              this.siteSettings.tl4_delete_posts_and_topics &&
+              deleted_by.trust_level >= 4
+            ))
+        ) {
           DiscourseURL.redirectTo("/");
         }
       })

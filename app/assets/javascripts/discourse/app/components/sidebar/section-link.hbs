@@ -1,7 +1,16 @@
 {{#if this.shouldDisplay}}
-  <li class="sidebar-section-link-wrapper" {{did-insert this.didInsert this.args}}>
+  <li
+    class="sidebar-section-link-wrapper"
+    {{did-insert this.didInsert this.args}}
+  >
     {{#if @href}}
-      <a href={{@href}} rel="noopener noreferrer" target="_blank" class={{this.classNames}} title={{@title}}>
+      <a
+        href={{@href}}
+        rel="noopener noreferrer"
+        target="_blank"
+        class={{this.classNames}}
+        title={{@title}}
+      >
         <Sidebar::SectionLinkPrefix
           @prefixType={{@prefixType}}
           @prefixValue={{@prefixValue}}
@@ -34,7 +43,12 @@
           @prefixBadge={{@prefixBadge}}
         />
 
-        <span class={{concat-class "sidebar-section-link-content-text" @contentCSSClass}}>
+        <span
+          class={{concat-class
+            "sidebar-section-link-content-text"
+            @contentCSSClass
+          }}
+        >
           {{@content}}
         </span>
 
@@ -45,7 +59,13 @@
         {{/if}}
 
         {{#if @suffixValue}}
-          <span class={{concat-class "sidebar-section-link-suffix" @suffixType @suffixCSSClass}}>
+          <span
+            class={{concat-class
+              "sidebar-section-link-suffix"
+              @suffixType
+              @suffixCSSClass
+            }}
+          >
             {{#if (eq @suffixType "icon")}}
               {{d-icon @suffixValue}}
             {{/if}}
@@ -59,7 +79,7 @@
               title={{@hoverTitle}}
               class="sidebar-section-hover-button"
               {{on "click" @hoverAction}}
-              >
+            >
               {{#if (eq @hoverType "icon")}}
                 {{d-icon @hoverValue class="hover-icon"}}
               {{/if}}

@@ -9,7 +9,7 @@ class UserBookmarkListSerializer < ApplicationSerializer
         bm,
         **object.bookmark_serializer_opts,
         scope: scope,
-        root: false
+        root: false,
       )
     end
   end

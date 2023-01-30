@@ -1,8 +1,13 @@
 export default function () {
   this.route("chat", { path: "/chat" }, function () {
+    // TODO(roman): Remove after the 3.1 release
+    this.route("channel-legacy", {
+      path: "/channel/:channelId/:channelTitle",
+    });
+
     this.route(
       "channel",
-      { path: "/channel/:channelId/:channelTitle" },
+      { path: "/c/:channelTitle/:channelId/" },
       function () {
         this.route("info", { path: "/info" }, function () {
           this.route("about", { path: "/about" });
@@ -20,6 +25,5 @@ export default function () {
       this.route("archived", { path: "/archived" });
     });
     this.route("message", { path: "/message/:messageId" });
-    this.route("channelByName", { path: "/chat_channels/:channelName" });
   });
 }

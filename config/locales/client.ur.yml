@@ -157,7 +157,6 @@ ur:
       banner:
         enabled: "اِس کو بینر بنا لیا %{when}۔ یہ ہر صفحے کے سب سے اوپر دکھایا جائے گا جب تک صارف اِسے برخاست نہیں کر دیتا۔"
         disabled: "اِس بینر کو ہٹا دیا %{when}۔ یہ اب ہر صفحے کے سب سے اوپر دکھایا نہیں جائے گا۔"
-      forwarded: "مندرجہ بالا ای میل بھیجیں"
     topic_admin_menu: "موضوع کے ایکشنز"
     skip_to_main_content: "مرکزی مواد پر جائیں"
     emails_are_disabled: "ای میل کو منتظم کی طرف سے غیر فعال کر دیا گیا ہے. کسی بھی قسم کی ای میل نہیں بھیجی جائیں گی۔"
@@ -292,7 +291,6 @@ ur:
       not_bookmarked: "اِس پوسٹ کو بُک مارک کریں"
       remove_reminder_keep_bookmark: "یاد دہانی کو ہٹا دیں اور بک مارک کو بچا کر رکھیں"
       created_with_reminder: "آپ نے اس پوسٹ کو ایک یاد دہانی %{date}, %{name} کے ساتھ بک مارک کیا ہے۔"
-      remove: "بُک مارک ہٹائیں"
       delete: "بک مارک مٹائیں"
       confirm_delete: "کیا آپ واقعی اس بُک مارک کو مٹانا چاہتے ہیں؟ یاد دہانی بھی مٹادی جائے گی۔"
       confirm_clear: "کیا آپ کو یقین ہے کہ آپ اِس ٹاپک سے اپنے تمام بُک مارکس ہٹانا چاہتے ہیں؟"
@@ -361,9 +359,6 @@ ur:
     enable: "فعال کریں"
     disable: "غیر فعال کریں"
     continue: "جاری رکھی"
-    undo: "کالعدم کریں"
-    revert: "رِیوَرٹ"
-    failed: "عمل ناکام رہا"
     switch_to_anon: "گمنام موڈ میں داخل ہوں"
     switch_from_anon: "گمنام موڈ سے باہر نکلیں"
     banner:
@@ -655,6 +650,7 @@ ur:
         denied: "انکار کر دیا"
         undone: "درخواست کالعدم"
         handle: "رکنیت کی درخواست سے نمٹیں"
+        undo: "کالعدم کریں"
       manage:
         title: "مَینَیج"
         name: "نام"
@@ -978,7 +974,6 @@ ur:
       notification_schedule:
         title: "اطلاع کا نظام الاوقات"
         label: "حسب ضرورت نوٹیفکیشن نظام الاوقات کو فعال کریں"
-        tip: "ان گھنٹوں کے باہر آپ کو خود کار طریقے سے 'پریشان نہ کرنا' میں ڈال دیا جائے گا."
         midnight: "آدھی رات"
         none: "کوئی نہیں"
         monday: "پیر"
@@ -1022,7 +1017,6 @@ ur:
         perm_denied_expl: "آپ نے اطلاعات کے لئے اجازت دینے سے انکار کر دیا۔ اپنے براؤزر کی سیٹِنگ سے اطلاعات کی اجازت دیں۔"
         disable: "اطلاعات غیر فعال کریں"
         enable: "اطلاعات فعال کریں"
-        each_browser_note: 'نوٹ: آپ کو اپنے استعمال کردہ ہر براؤزر پر اس ترتیب کو تبدیل کرنا ہوگا۔ اس ترتیب سے قطع نظر "ڈسٹرب نہ کریں" میں ہونے پر تمام اطلاعات کو غیر فعال کر دیا جائے گا۔'
         consent_prompt: "جب لوگ آپ کی پوسٹس کا جواب دیں تو کیا آپ لائیو اطلاعات چاہتے ہیں؟"
       dismiss: "بر خاست کریں"
       dismiss_notifications: "سب بر خاست کریں"
@@ -1732,6 +1726,7 @@ ur:
       title: "لاگ ان"
       username: "صارف"
       password: "پاسورڈ"
+      show_password: "دکھائیں"
       second_factor_title: "دو عنصری کی تصدیق"
       second_factor_description: "براہ مہربانی اپنی اَیپ میں سے توثیقی کَوڈ درج کریں:"
       second_factor_backup: "بیک اپ کوڈ کا استعمال کرتے ہوئے لاگ ان کریں"
@@ -2054,6 +2049,7 @@ ur:
       bookmark_reminder: "<span>%{username}</span> %{description}"
       replied: "<span>%{username}</span> %{description}"
       posted: "<span>%{username}</span> %{description}"
+      watching_category_or_tag: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
@@ -2116,6 +2112,7 @@ ur:
         invited_to_private_message: "ذاتی پیغام کیلئے دعوت دی گئی"
         invitee_accepted: "دعوت قبول کر لی گئی"
         posted: "نئی پوسٹ"
+        watching_category_or_tag: "نئی پوسٹ"
         moved_post: "پوسٹ منتقل کر دی گئی"
         linked: "لنک کردہ"
         bookmark_reminder: "بک مارک یاد دہانی"
@@ -2193,6 +2190,7 @@ ur:
       tips:
         category_tag: "زمرہ یا ٹیگ کے لحاظ سے فلٹرز"
         author: "پوسٹ مصنف کے ذریعہ فلٹرز"
+        in: "میٹا ڈیٹا کےذریعہ سے فلٹرز (مثلاً ان: عنوان، ان:ذاتی، ان:پن کیاہوا)"
         status: "موضوع کی حیثیت کے لحاظ سے فلٹرز"
         full_search: "مکمل صفحہ کی تلاش کا آغاز"
         full_search_key: "%{modifier} + درج کریں"
@@ -2925,7 +2923,6 @@ ur:
         create_for_topic: "موضوع کے لیے بُک مارک بنائیں"
         edit: "بک مارک میں ترمیم"
         edit_for_topic: "موضوع کے لیے بک مارک میں ترمیم"
-        created: "بنایا گیا"
         updated: "اپ ڈیٹ کیا"
         name: "نام"
         name_placeholder: "یہ بک مارک کس لیے ہے؟"
@@ -3221,7 +3218,6 @@ ur:
     category_title: "زمرہ"
     history_capped_revisions: "تاریخی، آخری 100 ترمیم"
     history: "تاریخی"
-    changed_by: "%{author} کی طرف سے"
     raw_email:
       title: "آنے والی اِیمیل"
       not_available: "دستیاب نہیں ہے!"
@@ -3577,9 +3573,7 @@ ur:
     safe_mode:
       enabled: "سیف موڈ فعال ہے، سیف موڈ سے باہر نکلنے کے لئے اِس براؤزر وِنڈو کو بند کریں"
     image_removed: "(تصویر ہٹا دی گئی)"
-    do_not_disturb:
-      title: "کے لئے پریشان مت کرو..."
-      label: "پریشان مت کرو"
+    pause_notifications:
       remaining: "%{remaining} باقی رہتا ہے..."
       options:
         half_hour: "30 منٹ"
@@ -3652,18 +3646,19 @@ ur:
               content: "ایڈمن"
             badges:
               content: "بَیج"
+            everything:
+              content: "تمام"
             faq:
               content: "عمومی سوالات"
             groups:
               content: "گروپس"
-              title: "تمام گروپس"
             users:
               content: "صارفین"
             my_posts:
               content: "میری پوسٹ"
             review:
               content: "جائزہ لیں"
-              title: "جائزہ لیں"
+    until: "جب تک:"
   admin_js:
     type_to_filter: "فِلٹر کرنے کے لئے ٹائپ کریں..."
     admin:
@@ -3884,7 +3879,6 @@ ur:
             topics:
               read: اس میں کوئی موضوع یا کوئی مخصوص پوسٹ پڑھیں۔ آر ایس ایس کی بھی حمایت حاصل ہے۔
               write: ایک نیا موضوع بنائیں یا موجودہ موضوع پر پوسٹ کریں۔
-              update: ایک موضوع کو اپ ڈیٹ کریں۔ عنوان، زمرہ، ٹیگز وغیرہ تبدیل کریں۔
               read_lists: ٹاپک، نیا، تازہ ترین، وغیرہ جیسے عنوانات کی فہرستیں پڑھیں۔ RSS بھی تعاون یافتہ ہے۔
             posts:
               edit: کسی بھی پوسٹ یا مخصوص میں ترمیم کریں۔
@@ -4096,7 +4090,6 @@ ur:
         button_title: "دعوت بھیجیں"
       customize:
         title: "مرضی کے مطابق بنائیں"
-        long_title: "ویب سائٹ کو اپنی مرضی کے حساب سے بنانے کیلئے اختیارات"
         preview: "پیشگی دیکھیں"
         explain_preview: "اِس تِھیم کے ساتھ سائٹ ملاحظہ کریں"
         save: "محفوظ کریں"
@@ -4230,7 +4223,6 @@ ur:
             error: "یہ تِھیم خود کار طریقے سے غیر فعال کر دی گئی ہے کیونکہ یہ ڈِسکورس کے اِس ورژن کیلئے ناموافق ہے۔"
             minimum: "ڈِسکورس ورژن %{version} یا اُس سے اوپر ضروری ہے۔"
             maximum: "ڈِسکورس ورژن %{version} یا اُس سے نیچے ضروری ہے۔"
-          component_of: "جس کا کمپنَینٹ:"
           update_to_latest: "تازہ ترین ورژن تک اِپ ڈَیٹ کریں"
           check_for_updates: "اپ ڈیٹ کے لیے چیک کریں"
           updating: "اَپ ڈَیٹ کیا جا رہا ہے..."
@@ -4696,7 +4688,6 @@ ur:
       user:
         suspend_failed: "اِس صارف کو معطل کرتے ہوے کچھ غلط ہو گیا %{error}"
         unsuspend_failed: "اِس صارف کی معطلی ختم کرتے ہوے کچھ غلط ہو گیا %{error}"
-        suspend_duration: "صارف کب تک معطل رہے گا؟"
         suspend_reason_label: "آپ معطل کیوں کر رہے ہیں؟ یہ ٹَیکسٹ اِس صارف کے پروفائل پیج پر <b>ہر کسی کے لیے ظاہر ہو گا</b>، اور جب صارف لاگ اِن کرنے کی کوشش کریں گے تو اُنہیں دکھایا جائے گا۔ اِسے مختصر رکھیں۔"
         suspend_reason_hidden_label: "آپ کیوں معطل کر رہے ہیں؟ صارف جب لاگ اِن کرنے کی کوشش کرے گا تو اُسے یہ ٹیکسٹ دکھایا جائے گا۔ اِسے مختصر رکھیں۔"
         suspend_reason: "وجہ"
@@ -4730,7 +4721,6 @@ ur:
         penalty_post_edit: "پوسٹ میں ترمیم کریں"
         penalty_post_none: "کچھ نہ کریں"
         penalty_count: "سزا شمار"
-        penalty_history: "سزا کی تاریخ"
         clear_penalty_history:
           title: "سزا ہِسٹری صاف کریں"
           description: "سزاوں والے صارفین TL3 تک نہیں پہنچ سکتے"
@@ -5193,7 +5183,6 @@ ur:
       next: "اگلا"
       step-text: "قدم"
       step: "%{total} میں سے %{current}"
-      upload: "اَپ لوڈ"
       uploading: "اَپ لوڈ کیا جا رہا ہے..."
       upload_error: "معذرت، یہ فائل اَپ لوڈ کرنے میں ایک خرابی کا سامنا کرنا پڑا۔ براہ مہربانی دوبارہ کوشش کریں۔"
       staff_count:

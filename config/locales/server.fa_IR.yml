@@ -501,10 +501,6 @@ fa_IR:
         one: "تقریبا %{count} سال قبل"
         other: "تقریبا %{count} سال قبل"
   password_reset:
-    choose_new: "رمز‌عبور جدید را وارد کنید"
-    choose: "رمز‌عبور وارد کنید"
-    update: "به‌روز کردن رمز‌عبور"
-    save: "تنظیم رمز‌عبور"
     title: "بازیابی رمز‌عبور"
     success: "شما با موفقیت رمز‌عبورتان را تغییر دادید و الان وارد سیستم هستید. "
     success_unapproved: "شما با موفقیت رمز‌عبورتان را تغییر دادید."
@@ -629,7 +625,6 @@ fa_IR:
     unwatch_category: "موضوعات دسته‌بندی %{category} را مشاهده نکنید"
     mailing_list_mode: "غیرفعال سازی حالت فهرست ایمیل"
     different_user_description: "در حال حاضر با نام کاربری متفاوتی با آن که برایتان ایمیل شده است وارد شده‌اید. لطفا خارج شوید یا در حالت ناشناس وارد شده و دوباره تلاش کنید."
-    not_found_description: با عرض پوزش، نتوانستیم آن اشتراک را پیدا کنیم. ممکن است پیوند ایمیل شما خیلی قدیمی باشد و منقضی شده باشد؟
     log_out: "خروج"
     digest_frequency:
       never: "هیچوقت"
@@ -976,9 +971,6 @@ fa_IR:
     prioritize_username_in_ux: "نام کاربری را در ابتدا در صفحه‌ی کاربر، کارت کاربر یا نوشته‌هایش نمایش بده(وقتی غیر‌فعال باشد نام در ابتدا نمایش داده می‌شود)"
     email_token_valid_hours: "رمز عبور فراموش شده/ حساب کاربری فعال تا (n) ساعت اعتبار دارد."
     enable_badges: "فعال سازی سیستم نشان‌دهی"
-    enable_whispers: "به همکاران اجازه ارتباط خوصی در موضوعات داده شود"
-    blocked_email_domains: "لیست pipe-delimit دامنه های ایمیل که کاربران اجازه ندارند با آن حساب کاربری ثبت‌نام کنند. برای مثال: mailinator.com|trashmail.net"
-    allowed_email_domains: "لیست pipe-delimit دامنه های ایمیل که کاربران اجازه باید با آن حساب کاربری ثبت نام کنند. اخطار: کاربرانی با دامنه‌های ایمیلی به غیر از آن‌هایی که در لیست هستند اجازه ندارند. "
     log_out_strict: "وقتی از سیستم خارج می شود، کاربر را از تمام session‌ها بر روی تمام دستگاه‌ها خارج کن "
     new_version_emails: "ارسال ایمیل به contact_email address وقتی نسخه جدید Discourse موجود است. "
     invite_expiry_days: "کلید دعوتنامه فراخوان برای چه مدت اعتبار دارد، واحد روز"
@@ -1857,6 +1849,16 @@ fa_IR:
         %{context}
 
         %{respond_instructions}
+    user_watching_category_or_tag:
+      subject_template: "«%{email_prefix}» %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_watching_first_post:
       title: "کاربر در حال مشاهده‌ی نوشته‌ی اول است"
       subject_template: "«%{email_prefix}» %{topic_title}"
@@ -1897,10 +1899,10 @@ fa_IR:
     digest:
       why: "یک گزارش کوتاه از %{site_link} از آخرین باری که بازدید کردید در %{last_seen_at}"
       since_last_visit: "از آخرین بازدید شما"
-      new_topics: "موضوعات جدید"
+      new_topics: "موضوع جدید"
       unread_notifications: "اطلاعیه‌های خوانده نشده"
       liked_received: "پسند‌های دریافت شده"
-      new_users: "کاربران جدید"
+      new_users: "کاربر جدید"
       popular_topics: "موضوعات محبوب"
       follow_topic: "دنبال کردن موضوع"
       join_the_discussion: "بیشتر بخوانید"
@@ -2265,7 +2267,7 @@ fa_IR:
     title: "راه اندازی Discourse"
     step:
       introduction:
-        title: "در مورد انجمن خود به ما بگویید"
+        title: "درباره سایت شما"
         fields:
           title:
             label: "نام انجمن"
@@ -2273,22 +2275,19 @@ fa_IR:
           site_description:
             label: "انجمن خود را در یک جمله توصیف کنید"
             placeholder: "محلی برای آموزش انواع زبان‌های برنامه نویسی"
-          contact_email:
-            placeholder: "example@user.com"
           default_locale:
             label: "زبان"
       privacy:
-        title: "تجربه اعضا"
         fields:
           login_required:
             placeholder: "خصوصی"
             extra_description: "فقط کاربرانی که در حسای‌کاربردی خود وارد شده‌اند، می‌توانند به این انجمن دسترسی داشته باشند"
-          must_approve_users:
-            placeholder: "نیازمند تصویب"
           chat_enabled:
             placeholder: "فعال کردن گفتگو"
+          enable_sidebar:
+            placeholder: "فعال کردن نوار کناری"
       ready:
-        title: "Discourse شما آماده‌ست!"
+        title: "سایت شما آماده است!"
       styling:
         fields:
           styling_preview:
@@ -2308,19 +2307,23 @@ fa_IR:
               categories_and_top_topics:
                 label: "دسته بندی ها و مباحث داغ"
       branding:
-        title: "سفارشی کردن لوگوها"
+        title: "لوگوی سایت"
         fields:
           logo:
-            label: "لوگو اصلی"
+            label: "لوگوی اصلی"
+            description: "اندازه پیشنهادی: 600*200"
+          logo_small:
+            label: "لوگو مربع"
       corporate:
         title: "سازمان شما"
         fields:
+          company_name:
+            label: "نام شرکت"
           contact_url:
             label: "صفحه وب"
             placeholder: "https://www.example.com/contact-us"
-            description: "صفحه تماس عمومی شما در <a href='%{base_path}/about' target='_blank'>صفحه درباره ما</a> نمایش داده می‌شود."
-          site_contact:
-            label: "پیام‌های خودکار"
+          contact_email:
+            placeholder: "example@user.com"
       invites:
         title: "دعوت همکاران"
       finished:

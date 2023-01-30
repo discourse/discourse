@@ -9,7 +9,9 @@
     {{/if}}
 
     {{#if this.field.description}}
-      <div class="wizard-container__description">{{html-safe this.field.description}}</div>
+      <div class="wizard-container__description">{{html-safe
+          this.field.description
+        }}</div>
     {{/if}}
   </label>
 {{/if}}
@@ -25,9 +27,13 @@
 </div>
 
 {{#if this.field.errorDescription}}
-  <div class="wizard-container__description error">{{html-safe this.field.errorDescription}}</div>
+  <div class="wizard-container__description error">{{html-safe
+      this.field.errorDescription
+    }}</div>
 {{/if}}
 
 {{#if this.field.extra_description}}
-  <div class="wizard-container__description extra">{{html-safe this.field.extra_description}}</div>
+  <div class="wizard-container__description extra">{{html-safe
+      this.field.extra_description
+    }}</div>
 {{/if}}

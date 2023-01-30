@@ -3,17 +3,16 @@
 require_relative "base"
 require "pg"
 require "htmlentities"
-require 'ruby-bbcode-to-md'
+require "ruby-bbcode-to-md"
 
 class BulkImport::PhpBB < BulkImport::Base
-
   SUSPENDED_TILL ||= Date.new(3000, 1, 1)
-  TABLE_PREFIX ||= ENV['TABLE_PREFIX'] || "phpbb_"
+  TABLE_PREFIX ||= ENV["TABLE_PREFIX"] || "phpbb_"
 
   def initialize
     super
 
-    charset  = ENV["DB_CHARSET"] || "utf8"
+    charset = ENV["DB_CHARSET"] || "utf8"
     database = ENV["DB_NAME"] || "flightaware"
     password = ENV["DB_PASSWORD"] || "discourse"
 
@@ -57,7 +56,7 @@ class BulkImport::PhpBB < BulkImport::Base
       {
         imported_id: row["group_id"],
         name: normalize_text(row["group_name"]),
-        bio_raw: normalize_text(row["group_desc"])
+        bio_raw: normalize_text(row["group_desc"]),
       }
     end
   end
@@ -85,15 +84,28 @@ class BulkImport::PhpBB < BulkImport::Base
         username: normalize_text(row["username"]),
         email: row["user_email"],
         created_at: Time.zone.at(row["user_regdate"].to_i),
-        last_seen_at: row["user_lastvisit"] == 0 ? Time.zone.at(row["user_regdate"].to_i) : Time.zone.at(row["user_lastvisit"].to_i),
+        last_seen_at:
+          (
+            if row["user_lastvisit"] == 0
+              Time.zone.at(row["user_regdate"].to_i)
+            else
+              Time.zone.at(row["user_lastvisit"].to_i)
+            end
+          ),
         trust_level: row["user_posts"] == 0 ? TrustLevel[0] : TrustLevel[1],
         date_of_birth: parse_birthday(row["user_birthday"]),
-        primary_group_id: group_id_from_imported_id(row["group_id"])
+        primary_group_id: group_id_from_imported_id(row["group_id"]),
       }
       u[:ip_address] = row["user_ip"][/\b(?:\d{1,3}\.){3}\d{1,3}\b/] if row["user_ip"].present?
       if row["ban_start"]
         u[:suspended_at] = Time.zone.at(row["ban_start"].to_i)
-        u[:suspended_till] = row["ban_end"].to_i > 0 ? Time.zone.at(row["ban_end"].to_i) : SUSPENDED_TILL
+        u[:suspended_till] = (
+          if row["ban_end"].to_i > 0
+            Time.zone.at(row["ban_end"].to_i)
+          else
+            SUSPENDED_TILL
+          end
+        )
       end
       u
     end
@@ -114,7 +126,7 @@ class BulkImport::PhpBB < BulkImport::Base
         imported_id: row["user_id"],
         imported_user_id: row["user_id"],
         email: row["user_email"],
-        created_at: Time.zone.at(row["user_regdate"].to_i)
+        created_at: Time.zone.at(row["user_regdate"].to_i),
       }
     end
   end
@@ -149,7 +161,14 @@ class BulkImport::PhpBB < BulkImport::Base
     create_user_profiles(user_profiles) do |row|
       {
         user_id: user_id_from_imported_id(row["user_id"]),
-        website: (URI.parse(row["user_website"]).to_s rescue nil),
+        website:
+          (
+            begin
+              URI.parse(row["user_website"]).to_s
+            rescue StandardError
+              nil
+            end
+          ),
         location: row["user_from"],
       }
     end
@@ -158,17 +177,16 @@ class BulkImport::PhpBB < BulkImport::Base
   def import_categories
     puts "Importing categories..."
 
-    categories = psql_query(<<-SQL
+    categories = psql_query(<<-SQL).to_a
         SELECT forum_id, parent_id, forum_name, forum_desc
           FROM #{TABLE_PREFIX}forums
          WHERE forum_id > #{@last_imported_category_id}
       ORDER BY parent_id, left_id
     SQL
-    ).to_a
 
     return if categories.empty?
 
-    parent_categories   = categories.select { |c| c["parent_id"].to_i == 0 }
+    parent_categories = categories.select { |c| c["parent_id"].to_i == 0 }
     children_categories = categories.select { |c| c["parent_id"].to_i != 0 }
 
     puts "Importing parent categories..."
@@ -176,7 +194,7 @@ class BulkImport::PhpBB < BulkImport::Base
       {
         imported_id: row["forum_id"],
         name: normalize_text(row["forum_name"]),
-        description: normalize_text(row["forum_desc"])
+        description: normalize_text(row["forum_desc"]),
       }
     end
 
@@ -186,7 +204,7 @@ class BulkImport::PhpBB < BulkImport::Base
         imported_id: row["forum_id"],
         name: normalize_text(row["forum_name"]),
         description: normalize_text(row["forum_desc"]),
-        parent_category_id: category_id_from_imported_id(row["parent_id"])
+        parent_category_id: category_id_from_imported_id(row["parent_id"]),
       }
     end
   end
@@ -209,7 +227,7 @@ class BulkImport::PhpBB < BulkImport::Base
         category_id: category_id_from_imported_id(row["forum_id"]),
         user_id: user_id_from_imported_id(row["topic_poster"]),
         created_at: Time.zone.at(row["topic_time"].to_i),
-        views: row["topic_views"]
+        views: row["topic_views"],
       }
     end
   end
@@ -261,7 +279,7 @@ class BulkImport::PhpBB < BulkImport::Base
         imported_id: row["msg_id"].to_i + PRIVATE_OFFSET,
         title: normalize_text(title),
         user_id: user_id_from_imported_id(row["author_id"].to_i),
-        created_at: Time.zone.at(row["message_time"].to_i)
+        created_at: Time.zone.at(row["message_time"].to_i),
       }
     end
   end
@@ -271,13 +289,12 @@ class BulkImport::PhpBB < BulkImport::Base
 
     allowed_users = []
 
-    psql_query(<<-SQL
+    psql_query(<<-SQL).each do |row|
         SELECT msg_id, author_id, to_address
           FROM #{TABLE_PREFIX}privmsgs
          WHERE msg_id > (#{@last_imported_private_topic_id - PRIVATE_OFFSET})
       ORDER BY msg_id
     SQL
-    ).each do |row|
       next unless topic_id = topic_id_from_imported_id(row["msg_id"].to_i + PRIVATE_OFFSET)
 
       user_ids = get_message_recipients(row["author_id"], row["to_address"])
@@ -287,12 +304,7 @@ class BulkImport::PhpBB < BulkImport::Base
       end
     end
 
-    create_topic_allowed_users(allowed_users) do |row|
-      {
-        topic_id: row[0],
-        user_id: row[1]
-      }
-    end
+    create_topic_allowed_users(allowed_users) { |row| { topic_id: row[0], user_id: row[1] } }
   end
 
   def import_private_posts
@@ -316,13 +328,13 @@ class BulkImport::PhpBB < BulkImport::Base
         topic_id: topic_id,
         user_id: user_id_from_imported_id(row["author_id"].to_i),
         created_at: Time.zone.at(row["message_time"].to_i),
-        raw: process_raw_text(row["message_text"])
+        raw: process_raw_text(row["message_text"]),
       }
     end
   end
 
   def get_message_recipients(from, to)
-    user_ids = to.split(':')
+    user_ids = to.split(":")
     user_ids.map! { |u| u[2..-1].to_i }
     user_ids.push(from.to_i)
     user_ids.uniq!
@@ -332,15 +344,29 @@ class BulkImport::PhpBB < BulkImport::Base
 
   def extract_pm_title(title)
     pm_title = CGI.unescapeHTML(title)
-    pm_title = title.gsub(/^Re\s*:\s*/i, "") rescue nil
+    pm_title =
+      begin
+        title.gsub(/^Re\s*:\s*/i, "")
+      rescue StandardError
+        nil
+      end
     pm_title
   end
 
   def parse_birthday(birthday)
     return if birthday.blank?
-    date_of_birth = Date.strptime(birthday.gsub(/[^\d-]+/, ""), "%m-%d-%Y") rescue nil
+    date_of_birth =
+      begin
+        Date.strptime(birthday.gsub(/[^\d-]+/, ""), "%m-%d-%Y")
+      rescue StandardError
+        nil
+      end
     return if date_of_birth.nil?
-    date_of_birth.year < 1904 ? Date.new(1904, date_of_birth.month, date_of_birth.day) : date_of_birth
+    if date_of_birth.year < 1904
+      Date.new(1904, date_of_birth.month, date_of_birth.day)
+    else
+      date_of_birth
+    end
   end
 
   def psql_query(sql)
@@ -352,34 +378,36 @@ class BulkImport::PhpBB < BulkImport::Base
     text = raw.dup
     text = CGI.unescapeHTML(text)
 
-    text.gsub!(/:(?:\w{8})\]/, ']')
+    text.gsub!(/:(?:\w{8})\]/, "]")
 
     # Some links look like this: <!-- m --><a class="postlink" href="http://www.onegameamonth.com">http://www.onegameamonth.com</a><!-- m -->
-    text.gsub!(/<!-- \w --><a(?:.+)href="(\S+)"(?:.*)>(.+)<\/a><!-- \w -->/i, '[\2](\1)')
+    text.gsub!(%r{<!-- \w --><a(?:.+)href="(\S+)"(?:.*)>(.+)</a><!-- \w -->}i, '[\2](\1)')
 
     # phpBB shortens link text like this, which breaks our markdown processing:
     #   [http://answers.yahoo.com/question/index ... 223AAkkPli](http://answers.yahoo.com/question/index?qid=20070920134223AAkkPli)
     #
     # Work around it for now:
-    text.gsub!(/\[http(s)?:\/\/(www\.)?/i, '[')
+    text.gsub!(%r{\[http(s)?://(www\.)?}i, "[")
 
     # convert list tags to ul and list=1 tags to ol
     # list=a is not supported, so handle it like list=1
     # list=9 and list=x have the same result as list=1 and list=a
-    text.gsub!(/\[list\](.*?)\[\/list:u\]/mi, '[ul]\1[/ul]')
-    text.gsub!(/\[list=.*?\](.*?)\[\/list:o\]/mi, '[ol]\1[/ol]')
+    text.gsub!(%r{\[list\](.*?)\[/list:u\]}mi, '[ul]\1[/ul]')
+    text.gsub!(%r{\[list=.*?\](.*?)\[/list:o\]}mi, '[ol]\1[/ol]')
 
     # convert *-tags to li-tags so bbcode-to-md can do its magic on phpBB's lists:
-    text.gsub!(/\[\*\](.*?)\[\/\*:m\]/mi, '[li]\1[/li]')
+    text.gsub!(%r{\[\*\](.*?)\[/\*:m\]}mi, '[li]\1[/li]')
 
     # [QUOTE="<username>"] -- add newline
     text.gsub!(/(\[quote="[a-zA-Z\d]+"\])/i) { "#{$1}\n" }
 
     # [/QUOTE] -- add newline
-    text.gsub!(/(\[\/quote\])/i) { "\n#{$1}" }
+    text.gsub!(%r{(\[/quote\])}i) { "\n#{$1}" }
 
     # :) is encoded as <!-- s:) --><img src="{SMILIES_PATH}/icon_e_smile.gif" alt=":)" title="Smile" /><!-- s:) -->
-    text.gsub!(/<!-- s(\S+) --><img src="\{SMILIES_PATH\}\/(.+?)" alt="(.*?)" title="(.*?)" \/><!-- s(?:\S+) -->/) do
+    text.gsub!(
+      /<!-- s(\S+) --><img src="\{SMILIES_PATH\}\/(.+?)" alt="(.*?)" title="(.*?)" \/><!-- s(?:\S+) -->/,
+    ) do
       smiley = $1
       @smiley_map.fetch(smiley) do
         # upload_smiley(smiley, $2, $3, $4) || smiley_as_text(smiley)
@@ -405,33 +433,30 @@ class BulkImport::PhpBB < BulkImport::Base
 
   def add_default_smilies
     {
-      [':D', ':-D', ':grin:'] => ':smiley:',
-      [':)', ':-)', ':smile:'] => ':slight_smile:',
-      [';)', ';-)', ':wink:'] => ':wink:',
-      [':(', ':-(', ':sad:'] => ':frowning:',
-      [':o', ':-o', ':eek:'] => ':astonished:',
-      [':shock:'] => ':open_mouth:',
-      [':?', ':-?', ':???:'] => ':confused:',
-      ['8-)', ':cool:'] => ':sunglasses:',
-      [':lol:'] => ':laughing:',
-      [':x', ':-x', ':mad:'] => ':angry:',
-      [':P', ':-P', ':razz:'] => ':stuck_out_tongue:',
-      [':oops:'] => ':blush:',
-      [':cry:'] => ':cry:',
-      [':evil:'] => ':imp:',
-      [':twisted:'] => ':smiling_imp:',
-      [':roll:'] => ':unamused:',
-      [':!:'] => ':exclamation:',
-      [':?:'] => ':question:',
-      [':idea:'] => ':bulb:',
-      [':arrow:'] => ':arrow_right:',
-      [':|', ':-|'] => ':neutral_face:',
-      [':geek:'] => ':nerd:'
-    }.each do |smilies, emoji|
-      smilies.each { |smiley| @smiley_map[smiley] = emoji }
-    end
+      %w[:D :-D :grin:] => ":smiley:",
+      %w[:) :-) :smile:] => ":slight_smile:",
+      %w[;) ;-) :wink:] => ":wink:",
+      %w[:( :-( :sad:] => ":frowning:",
+      %w[:o :-o :eek:] => ":astonished:",
+      [":shock:"] => ":open_mouth:",
+      %w[:? :-? :???:] => ":confused:",
+      %w[8-) :cool:] => ":sunglasses:",
+      [":lol:"] => ":laughing:",
+      %w[:x :-x :mad:] => ":angry:",
+      %w[:P :-P :razz:] => ":stuck_out_tongue:",
+      [":oops:"] => ":blush:",
+      [":cry:"] => ":cry:",
+      [":evil:"] => ":imp:",
+      [":twisted:"] => ":smiling_imp:",
+      [":roll:"] => ":unamused:",
+      [":!:"] => ":exclamation:",
+      [":?:"] => ":question:",
+      [":idea:"] => ":bulb:",
+      [":arrow:"] => ":arrow_right:",
+      %w[:| :-|] => ":neutral_face:",
+      [":geek:"] => ":nerd:",
+    }.each { |smilies, emoji| smilies.each { |smiley| @smiley_map[smiley] = emoji } }
   end
-
 end
 
 BulkImport::PhpBB.new.run

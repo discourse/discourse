@@ -13,5 +13,4 @@ class AddCreatedByToForumThreads < ActiveRecord::Migration[4.2]
   def down
     remove_column :forum_threads, :user_id
   end
-
 end

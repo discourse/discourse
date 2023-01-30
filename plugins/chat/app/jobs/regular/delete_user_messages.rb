@@ -5,8 +5,9 @@ module Jobs
     def execute(args)
       return if args[:user_id].nil?
 
-      ChatMessageDestroyer.new
-        .destroy_in_batches(ChatMessage.with_deleted.where(user_id: args[:user_id]))
+      ChatMessageDestroyer.new.destroy_in_batches(
+        ChatMessage.with_deleted.where(user_id: args[:user_id]),
+      )
     end
   end
 end

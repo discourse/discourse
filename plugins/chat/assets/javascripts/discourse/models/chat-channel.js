@@ -1,15 +1,17 @@
 import RestModel from "discourse/models/rest";
 import I18n from "I18n";
-import { computed } from "@ember/object";
 import User from "discourse/models/user";
 import UserChatChannelMembership from "discourse/plugins/chat/discourse/models/user-chat-channel-membership";
 import { ajax } from "discourse/lib/ajax";
 import { escapeExpression } from "discourse/lib/utilities";
+import { tracked } from "@glimmer/tracking";
+import slugifyChannel from "discourse/plugins/chat/discourse/lib/slugify-channel";
 
 export const CHATABLE_TYPES = {
   directMessageChannel: "DirectMessage",
   categoryChannel: "Category",
 };
+
 export const CHANNEL_STATUSES = {
   open: "open",
   readOnly: "read_only",
@@ -38,13 +40,10 @@ export function channelStatusIcon(channelStatus) {
   switch (channelStatus) {
     case CHANNEL_STATUSES.closed:
       return "lock";
-      break;
     case CHANNEL_STATUSES.readOnly:
       return "comment-slash";
-      break;
     case CHANNEL_STATUSES.archived:
       return "archive";
-      break;
   }
 }
 
@@ -60,62 +59,59 @@ const READONLY_STATUSES = [
 ];
 
 export default class ChatChannel extends RestModel {
-  isDraft = false;
-  lastSendReadMessageId = null;
+  @tracked currentUserMembership = null;
+  @tracked isDraft = false;
+  @tracked title;
+  @tracked description;
+  @tracked chatableType;
+  @tracked status;
 
-  @computed("title")
   get escapedTitle() {
     return escapeExpression(this.title);
   }
 
-  @computed("description")
   get escapedDescription() {
     return escapeExpression(this.description);
   }
 
-  @computed("chatable_type")
+  get slugifiedTitle() {
+    return this.slug || slugifyChannel(this);
+  }
+
+  get routeModels() {
+    return [this.slugifiedTitle, this.id];
+  }
+
   get isDirectMessageChannel() {
     return this.chatable_type === CHATABLE_TYPES.directMessageChannel;
   }
 
-  @computed("chatable_type")
   get isCategoryChannel() {
     return this.chatable_type === CHATABLE_TYPES.categoryChannel;
   }
 
-  @computed("status")
   get isOpen() {
     return !this.status || this.status === CHANNEL_STATUSES.open;
   }
 
-  @computed("status")
   get isReadOnly() {
     return this.status === CHANNEL_STATUSES.readOnly;
   }
 
-  @computed("status")
   get isClosed() {
     return this.status === CHANNEL_STATUSES.closed;
   }
 
-  @computed("status")
   get isArchived() {
     return this.status === CHANNEL_STATUSES.archived;
   }
 
-  @computed("isArchived", "isOpen")
   get isJoinable() {
     return this.isOpen && !this.isArchived;
   }
 
-  @computed("memberships_count")
-  get membershipsCount() {
-    return this.memberships_count;
-  }
-
-  @computed("current_user_membership.following")
   get isFollowing() {
-    return this.current_user_membership.following;
+    return this.currentUserMembership.following;
   }
 
   canModifyMessages(user) {
@@ -127,12 +123,12 @@ export default class ChatChannel extends RestModel {
   }
 
   updateMembership(membership) {
-    this.current_user_membership.setProperties({
-      following: membership.following,
-      muted: membership.muted,
-      desktop_notification_level: membership.desktop_notification_level,
-      mobile_notification_level: membership.mobile_notification_level,
-    });
+    this.currentUserMembership.following = membership.following;
+    this.currentUserMembership.muted = membership.muted;
+    this.currentUserMembership.desktop_notification_level =
+      membership.desktop_notification_level;
+    this.currentUserMembership.mobile_notification_level =
+      membership.mobile_notification_level;
   }
 
   updateLastReadMessage(messageId) {
@@ -143,7 +139,7 @@ export default class ChatChannel extends RestModel {
     return ajax(`/chat/${this.id}/read/${messageId}.json`, {
       method: "PUT",
     }).then(() => {
-      this.set("lastSendReadMessageId", messageId);
+      this.currentUserMembership.last_read_message_id = messageId;
     });
   }
 }
@@ -151,11 +147,12 @@ export default class ChatChannel extends RestModel {
 ChatChannel.reopenClass({
   create(args) {
     args = args || {};
+
     this._initUserModels(args);
     this._initUserMembership(args);
 
-    args.lastSendReadMessageId =
-      args.current_user_membership?.last_read_message_id;
+    args.chatableType = args.chatable_type;
+    args.membershipsCount = args.memberships_count;
 
     return this._super(args);
   },
@@ -170,11 +167,11 @@ ChatChannel.reopenClass({
   },
 
   _initUserMembership(args) {
-    if (args.current_user_membership instanceof UserChatChannelMembership) {
+    if (args.currentUserMembership instanceof UserChatChannelMembership) {
       return;
     }
 
-    args.current_user_membership = UserChatChannelMembership.create(
+    args.currentUserMembership = UserChatChannelMembership.create(
       args.current_user_membership || {
         following: false,
         muted: false,
@@ -182,6 +179,8 @@ ChatChannel.reopenClass({
         unread_mentions: 0,
       }
     );
+
+    delete args.current_user_membership;
   },
 });
 

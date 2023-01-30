@@ -124,37 +124,36 @@ gl:
       email: "Enviar por correo"
       url: "Copiar e compartir o URL"
     action_codes:
-      public_topic: "faga este tema público o %{when}"
-      private_topic: "faga deste tema unha mensaxe privada o %{when}"
-      split_topic: "divida tema %{when}"
-      invited_user: "convidou a %{who} %{when}"
-      invited_group: "convidou ao %{who} o %{when}"
+      public_topic: "Faga este tema público o %{when}"
+      private_topic: "Faga deste tema unha mensaxe privada o %{when}"
+      split_topic: "Divida tema %{when}"
+      invited_user: "Convidou ao %{who} o %{when}"
+      invited_group: "Convidou ao %{who} o %{when}"
       user_left: "%{who} retiráronse por si mesmos desta mensaxe %{when}"
-      removed_user: "retirou a %{who} %{when}"
-      removed_group: "retirou ao %{who} o %{when}"
-      autobumped: "promovido automaticamente %{when}"
+      removed_user: "Retirou ao %{who} o %{when}"
+      removed_group: "Retirou ao %{who} o %{when}"
+      autobumped: "Promovido automaticamente %{when}"
       autoclosed:
-        enabled: "pechado o %{when}"
-        disabled: "aberto o %{when}"
+        enabled: "Pechado o %{when}"
+        disabled: "Aberto o %{when}"
       closed:
-        enabled: "pechado o %{when}"
-        disabled: "aberto o %{when}"
+        enabled: "Pechado o %{when}"
+        disabled: "Aberto o %{when}"
       archived:
-        enabled: "arquivado o %{when}"
-        disabled: "desarquivado o %{when}"
+        enabled: "Arquivado o %{when}"
+        disabled: "Desarquivado o %{when}"
       pinned:
-        enabled: "fixado o %{when}"
-        disabled: "desprendido o %{when}"
+        enabled: "Fixado o %{when}"
+        disabled: "Desprendido o %{when}"
       pinned_globally:
-        enabled: "fixado globalmente o %{when}"
-        disabled: "desprendido o %{when}"
+        enabled: "Fixado globalmente o %{when}"
+        disabled: "Desprendido o %{when}"
       visible:
-        enabled: "listado o %{when}"
-        disabled: "retirado da lista o %{when}"
+        enabled: "Listado o %{when}"
+        disabled: "Retirado da lista o %{when}"
       banner:
-        enabled: "faga disto un báner %{when}. Aparecerá na banda superior de todas as páxinas ata que sexa desbotado polo usuario."
-        disabled: "eliminou este báner %{when}. Xa non aparecerá máis na banda superior de todas as páxinas."
-      forwarded: "reenviou a mensaxe de correo anterior"
+        enabled: "Faga disto un báner %{when}. Aparecerá na banda superior de todas as páxinas ata que sexa desbotado polo usuario."
+        disabled: "Eliminou este báner %{when}. Xa non aparecerá máis na banda superior de todas as páxinas."
     topic_admin_menu: "accións do tema"
     emails_are_disabled: "Todos as mensaxes de correo saíntes foron desactivadas globalmente por un administrador. Non se enviará ningún tipo de notificación por correo electrónico."
     software_update_prompt:
@@ -271,7 +270,6 @@ gl:
       edit: "Editar marcador"
       not_bookmarked: "marcar esta publicación"
       created_with_reminder: "Fixou como marcador esta publicación cun recordatorio %{date}. %{name}"
-      remove: "Retirar marcador"
       delete: "Eliminar marcador"
       confirm_delete: "Confirma a eliminación deste marcador? O recordatorio tamén se eliminará."
       confirm_clear: "Confirma o borrado de todos os marcadores deste tema?"
@@ -331,9 +329,6 @@ gl:
     enable: "Activar"
     disable: "Desactivar"
     continue: "Continuar"
-    undo: "Desfacer"
-    revert: "Reverter"
-    failed: "Fallou"
     switch_to_anon: "Entrar no modo anónimo"
     switch_from_anon: "Saír do modo anónimo"
     banner:
@@ -618,6 +613,7 @@ gl:
         denied: "rexeitado"
         undone: "petición retirada"
         handle: "xestionar a petición de incorporación"
+        undo: "Desfacer"
       manage:
         title: "Xestionar"
         name: "Nome"
@@ -914,7 +910,6 @@ gl:
       notification_schedule:
         title: "Calendario de notificacións"
         label: "Activar o calendario personalizado de notificacións"
-        tip: "Fóra destas horas, vostede terá posto automaticamente en «non molestar»"
         midnight: "Medianoite"
         none: "Ningunha"
         monday: "Luns"
@@ -956,7 +951,6 @@ gl:
         perm_denied_expl: "Denegou o permiso para recibir notificacións no navegador. Permita as notificacións na configuración do navegador."
         disable: "Desactivar as notificacións"
         enable: "Activar as notificacións"
-        each_browser_note: 'Nota: Ten que cambiar este axuste en todos os navegadores que use. Desactivaranse todas as notificacións cando estea en «non molestar», independentemente deste axuste.'
         consent_prompt: "Quere recibir notificacións ao vivo cando a xente lea as súas publicacións?"
       dismiss: "Desbotar"
       dismiss_notifications: "Desbotar todo"
@@ -1405,6 +1399,7 @@ gl:
           edit_title: "Editar convite"
           instructions: "Compartir esta ligazón para conceder acceso a este sitio:"
           copy_link: "copiar a ligazón"
+          expired_at_time: "Caduca o %{time}"
           show_advanced: "Amosar opcións avanzadas"
           hide_advanced: "Agochar opcións avanzadas"
           add_to_groups: "Engadir aos grupos"
@@ -1634,6 +1629,7 @@ gl:
       subheader_title: "Iniciar sesión na súa conta"
       username: "Usuario"
       password: "Contrasinal"
+      show_password: "Amosar"
       second_factor_title: "Autenticación de dobre paso"
       second_factor_description: "Escriba o código de autenticación da súa app:"
       second_factor_backup: "Iniciar sesión cun código de copia de seguranza"
@@ -1933,6 +1929,7 @@ gl:
       bookmark_reminder: "<span>%{username}</span> %{description}"
       replied: "<span>%{username}</span> %{description}"
       posted: "<span>%{username}</span> %{description}"
+      watching_category_or_tag: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
@@ -1991,6 +1988,7 @@ gl:
         invited_to_private_message: "convidado a unha mensaxe privada"
         invitee_accepted: "convite aceptado"
         posted: "nova publicación"
+        watching_category_or_tag: "nova publicación"
         moved_post: "publicación movida"
         linked: "ligado"
         bookmark_reminder: "recordatorio do marcador"
@@ -2130,9 +2128,11 @@ gl:
         dismiss_new: "Desbotar novas"
         toggle: "cambiar a selección en bloque dos temas"
         actions: "Accións en bloque"
+        change_category: "Estabelecer categoría..."
         close_topics: "Pechar temas"
         archive_topics: "Arquivar temas"
         move_messages_to_inbox: "Mover á caixa de entrada"
+        notification_level: "Notificacións..."
         change_notification_level: "Cambiar o nivel de notificacións"
         choose_new_category: "Seleccionar a nova categoría dos temas:"
         selected:
@@ -2356,12 +2356,14 @@ gl:
         open: "Abrir tema"
         close: "Pechar tema"
         multi_select: "Seleccionar publicacións…"
+        slow_mode: "Estabelecer modo lento..."
         timed_update: "Estabelecer temporizador do tema..."
         pin: "Fixar tema…"
         unpin: "Desprender tema…"
         unarchive: "Desarquivar tema"
         archive: "Arquivar tema"
         reset_read: "Restabelecer datos de lecturas"
+        make_public: "Facer público o tema..."
         make_private: "Facer privada a mensaxe"
         reset_bump_date: "Restabelecer data de promoción"
       feature:
@@ -2644,6 +2646,8 @@ gl:
         rebake: "Reconstruír HTML"
         publish_page: "Publicación da páxina"
         unhide: "Non agochar"
+        change_owner: "Cambiar propietario..."
+        grant_badge: "Conceder insignia..."
         lock_post: "Bloquear publicación"
         lock_post_description: "evitar que o autor edite esta publicación"
         unlock_post: "Desbloquear a publicación"
@@ -2657,6 +2661,8 @@ gl:
         delete_topic_confirm_modal_no: "Non, manter este tema"
         delete_topic_error: "Produciuse un erro ao eliminar este tema"
         delete_topic: "eliminar tema"
+        add_post_notice: "Engadir aviso do equipo..."
+        change_post_notice: "Cambiar o aviso do equipo..."
         delete_post_notice: "Eliminar o aviso do equipo"
         remove_timer: "retirar o temporizador"
         edit_timer: "editar temporizador"
@@ -2720,7 +2726,6 @@ gl:
       bookmarks:
         create: "Crear marcador"
         edit: "Editar marcador"
-        created: "Creado"
         updated: "Actualizado"
         name: "Nome"
         name_placeholder: "Para que serve este marcador?"
@@ -2999,7 +3004,6 @@ gl:
       one: "usuario"
       other: "usuarios"
     category_title: "Categoría"
-    changed_by: "de %{author}"
     raw_email:
       title: "Correo entrante"
       not_available: "Non dispoñíbel!"
@@ -3290,6 +3294,7 @@ gl:
         everyone_can_use: "Todos poden usar as etiquetas"
         usable_only_by_groups: "As etiquetas son visíbeis para todos, pero só os seguintes grupos poden usalas"
         visible_only_to_groups: "As etiquetas só son visíbeis para os seguintes grupos"
+        parent_tag_placeholder: "Opcional"
       topics:
         none:
           unread: "Non ten temas sen ler."
@@ -3315,9 +3320,7 @@ gl:
     safe_mode:
       enabled: "O modo seguro está activado; para saír do modo seguro peche esta xanela do navegador"
     image_removed: "(imaxe retirada)"
-    do_not_disturb:
-      title: "Non molestar durante..."
-      label: "Non molestar"
+    pause_notifications:
       remaining: "queda %{remaining}"
       options:
         half_hour: "30 minutos"
@@ -3368,18 +3371,19 @@ gl:
               content: "Administración"
             badges:
               content: "Insignias"
+            everything:
+              content: "Todo"
             faq:
               content: "PMF"
             groups:
               content: "Grupos"
-              title: "Todos os grupos"
             users:
               content: "Usuarios"
             my_posts:
               content: "As miñas publicacións"
             review:
               content: "Revisar"
-              title: "revisar"
+    until: "Ata:"
   admin_js:
     type_to_filter: "escriba para filtrar..."
     admin:
@@ -3775,7 +3779,6 @@ gl:
         button_title: "Enviar convites"
       customize:
         title: "Personalizar"
-        long_title: "Personalización do sitio"
         preview: "visualizar"
         explain_preview: "Ver o sitio con este tema activado"
         save: "Gardar"
@@ -3907,7 +3910,6 @@ gl:
             error: "Este tema foi desactivado automaticamente porque non é compatíbel coa versión actual de Discourse."
             minimum: "Require a versión %{version} de Discourse ou unha superior."
             maximum: "Require a versión %{version} de Discourse ou unha inferior."
-          component_of: "Compoñente de:"
           update_to_latest: "Actualizar o tema"
           check_for_updates: "Buscar actualizacións"
           updating: "Actualizando..."
@@ -3970,9 +3972,9 @@ gl:
           new_name: "Nova paleta de cores"
           copy_name_prefix: "Copiar de"
           delete_confirm: "Eliminar esta paleta de cores?"
-          undo: "desfacer"
+          undo: "Desfacer"
           undo_title: "Desfai os teus cambio nesta cor desde a última vez que a gardaches."
-          revert: "reverter"
+          revert: "Reverter"
           revert_title: "Restabelece esta cor na paleta de cores predeterminada de Discourse."
           primary:
             name: "primario"
@@ -4357,7 +4359,6 @@ gl:
       user:
         suspend_failed: "Algo fallou ao suspender este usuario %{error}"
         unsuspend_failed: "Algo foi mal levantando a suspensión deste usuario %{error}"
-        suspend_duration: "Canto tempo estará suspendido o usuario?"
         suspend_reason_label: "Cal é o motivo da suspensión? Este texto <b>será visíbel para todo o mundo</b> na páxina do perfil deste usuario e amosaráselle ao usuario cando tente iniciar sesión. Procure ser breve."
         suspend_reason_hidden_label: "Cal é o motivo da suspensión? Este texto amosaráselle ao usuario cando tente iniciar sesión. Procure ser breve."
         suspend_reason: "Razón"
@@ -4829,7 +4830,6 @@ gl:
       next: "Seguinte"
       step-text: "Paso"
       step: "%{current} de %{total}"
-      upload: "Cargar"
       uploading: "Cargando..."
       upload_error: "Sentímolo pero produciuse un erro ao cargar ese ficheiro. Ténteo de novo."
       staff_count:

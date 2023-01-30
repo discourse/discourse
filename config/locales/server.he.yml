@@ -724,6 +724,7 @@ he:
       many: "%{count} לייקים"
       other: "%{count} לייקים"
     cannot_permanently_delete:
+      many_posts: "בנושא יש פוסטים שלא נמחקו. נא למחוק אותם לצמיתות בטרם מחיקת נושא לצמיתות."
       wait_or_different_admin: "עליך להמתין %{time_left} בטרם מחיקת הפוסט הזה לצמיתות או שעל מנהל או מנהלת אחרים לעשות זאת."
   rate_limiter:
     slow_down: "ביצעת את הפעולה הזאת יותר מדי פעמים, נא לנסות שוב מאוחר יותר."
@@ -872,10 +873,6 @@ he:
         other: "לפני %{count} שנים כמעט"
   password_reset:
     no_token: 'אוי ויי! הקישור בו השתמשת לא פעיל עוד. אפשר <a href="%{base_url}/login">להיכנס</a> כעת. אם שכחת את הסיסמה שלך, אפשר <a href="%{base_url}/password-reset">לבקש קישור</a> כדי לאפס אותה.'
-    choose_new: "נא לבחור בסיסמה חדשה"
-    choose: "בחירת סיסמה"
-    update: "עדכון סיסמה"
-    save: "הגדרת סיסמה"
     title: "איפוס סיסמה"
     success: "החלפת את הסיסמה בהצלחה וכעת נכנסת לאתר."
     success_unapproved: "החלפת את הסיסמה בהצלחה."
@@ -967,6 +964,7 @@ he:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "לא ראוי"
+      description: 'פוסט זה מכיל תוכן שלדעת אדם מן השורה נחשב לפוגעני, נצלני, שטוף שנאה או הפרה של <a href="%{base_path}/guidelines">הנחיות הקהילה שלנו</a>.'
       short_description: 'הפרה של <a href="%{base_path}/guidelines">הנחיות הקהילה שלנו</a>'
     notify_user:
       title: "שליחת הודעה ל־‎@%{username}"
@@ -1032,6 +1030,7 @@ he:
       short_description: "זו פרסומת"
     inappropriate:
       title: "לא ראוי"
+      description: 'נושא זה מכיל תוכן שלדעת אדם מן השורה נחשב לפוגעני, נצלני, שטוף שנאה או הפרה של <a href="%{base_path}/guidelines">הנחיות הקהילה שלנו</a>.'
       long_form: "דוגלל כלא ראוי"
       short_description: 'הפרה של <a href="%{base_path}/guidelines">הנחיות הקהילה שלנו</a>'
     notify_moderators:
@@ -1069,7 +1068,7 @@ he:
     mailing_list_mode: "כבו את מצב ״רשימת תפוצה״"
     all: "לא לשלוח לי הודעות דוא״ל מאת %{sitename}"
     different_user_description: "נכנסת כמשתמש אחר מזה שאליו נשלחה הודעת דוא״ל. נא להתנתק או לעבור למצב אלמוני ולנסות שוב."
-    not_found_description: לא הצלחנו למצוא את המינוי הזה, עמך הסליחה. יכול להיות שהקישור בהודעה שקיבלת ישן מדי או שתוקפו פג?"
+    not_found_description: "לא הצלחנו למצוא את המינוי הזה, עמך הסליחה. יכול להיות שהקישור בהודעה שקיבלת ישן מדי או שתוקפו פג?"
     user_not_found_description: "לא הצלחנו למצוא משתמש למינוי הזה, עמך הסליחה. כנראה שניסית לבטל את המינוי לחשבון שלא קיים עוד."
     log_out: "התנתקות"
     submit: "שמירת העדפות"
@@ -1534,8 +1533,8 @@ he:
     title: "שם האתר הזה. גלוי לכלל המבקרים כולל משתמשים אלמוניים."
     site_description: "תיאור האתר הזה במשפט אחד. גלוי לכלל המבקרים כולל משתמשים אלמוניים."
     short_site_description: "תיאור קצר במספר מילים. גלוי לכלל המבקרים כולל משתמשים אלמוניים."
-    contact_email: "כתובת דוא״ל של איש קשר מוביל שאחראי על האתר הזה. משמש להתראות קריטיות, וגם יוצג ב־<a href='%{base_path}/about' target='_blank'>‎/about</a> לנושאים דחופים."
-    contact_url: "כתובת יצירת הקשר של האתר הזה. מופיעה בעמוד <a href='%{base_path}/about' target='_blank'>‎/about</a> לנושאים דחופים."
+    contact_email: "כתובת דוא״ל של איש קשר מוביל שאחראי על האתר הזה. משמש להתראות קריטיות, וגם יוצג ב־<a href='%{base_path}/about' target='_blank'>‎/about</a>. חשוף בפני משתמשים אלמוניים באתרים ציבוריים."
+    contact_url: "כתובת ליצירת קשר עבור אתר זה. כאשר קיימת, מופיעה במקום כתובת דוא״ל ב־<a href='%{base_path}/about' target='_blank'>/about</a> וחשופה בפני משתמשים אלמוניים באתרים ציבוריים."
     crawl_images: "לקבל תמונות מכתובות מרוחקות כדי לציין את ממדי הרוחב והגובה הנכונים."
     download_remote_images_to_local: "המרת תמונות מרוחקות (בקישור חם) למקומיות על ידי הורדתן. פעולה זו משמרת את התוכן אפילו אם התמונות נמחקות מהאתר המרוחק בעתיד."
     download_remote_images_threshold: "שטח האחסון המזערי (באחוזים) הנדרש להורדת תמונות כדי לאחסן אותן מקומית"
@@ -1688,13 +1687,9 @@ he:
     email_token_valid_hours: "סיסמאות שכחת סיסמה / הפעלת חשבון תקפים במשך (n) שעות."
     enable_badges: "הפעלת מערכת העיטורים"
     max_favorite_badges: "מספר העיטורים המרבי שמשתמש יכול לבחור"
-    enable_whispers: "אפשרו לצוות לקיים תקשורת פרטית בתוך נושאים."
     whispers_allowed_groups: "לאפשר תקשורת פרטית בתוך נושאים לחברים מקבוצות מסוימות."
     allow_index_in_robots_txt: "יש לציין ב־robots.txt שמותר לאתר הזה להצטרף למאגר של מנועי החיפוש. במקרים יוצאי דופן, ניתן <a href='%{base_path}/admin/customize/robots'>לדרוס את robots.txt</a> באופן קבוע."
-    blocked_email_domains: "רשימה מופרדת בקווים אנכיים (|) של שמות תחום דוא״ל שאסור להירשם דרכם. למשל: mailinator.com|trashmail.net"
-    allowed_email_domains: "רשימה מופרדת בקווים אנכיים (|) של שמות תחום דוא״ל שמולם חייבים המשתמשים להיות רשומים. אזהרה: משתמשים שכתובת הדוא״ל שלהם אינה רשומה תחת שמות התחום שברשימה לא יורשו!"
     normalize_emails: "לבדוק אם הדוא״ל המנורמל הוא ייחודי. כתובת דוא״ל מנורמלת מסירה את כל הנקודות משם המשתמש וכל מה שבין הסימנים + ו־@."
-    auto_approve_email_domains: "משתמשים עם כתובות דוא״ל מרשימת שמות התחום האלה יאושרו אוטומטית."
     hide_email_address_taken: "לא להודיע למשתמשים שקיים חשבון עם כתובת דוא״ל שסופקה במהלך רישום או במהלך איפוס ססמה. בנוסף, לדרוש כתובת דוא״ל מלאה לבקשות ‚שכחתי ססמה’."
     log_out_strict: "בהתנתקות, נתקו את כל ההפעלות של המשתמש/ת בכל המכשירים"
     version_checks: "לדגום את Discourse Hub כדי למצוא עדכוני גרסאות ולהציג הודעות של גרסאות חדשות בלוח הניהול <a href='%{base_path}/admin' target='_blank'>‎/admin</a>"
@@ -1758,6 +1753,7 @@ he:
     discord_trusted_guilds: 'לאפשר רק למשתמש מגילדות ה־Discord האלה להיכנס באמצעות Discord. עליך להשתמש במזהה המספרי של הגילדה. למידע נוסף, יש לעיין בהנחיות ש<a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">כאן</a>. שדה ריק משמעו כל גילדה שהיא.'
     enable_backups: "לאפשר למנהלים ליצור גיבויים של הפורום"
     allow_restore: "לאפשר שחזור, מה שיכול להחליף את כל (!) המידע באתר! יש להשבית אלא אם כן בכוונתך לשחזר גיבוי"
+    maximum_backups: "המספר המקסימלי של גיבויים לשמירה. גיבויים ישנים יותר ימחקו אוטומטית"
     automatic_backups_enabled: "הרץ גיבויים אוטומטים כמו שמוגדר בתדירות הגיבויים"
     backup_frequency: "מספר הימים בין גיבויים."
     s3_backup_bucket: "הדלי המרוחק שבו לשמור גיבויים. אזהרה: שימו לב שהוא דלי פרטי."
@@ -2098,7 +2094,6 @@ he:
     display_name_on_posts: "הצגת שמם המלא של משתמשים בפוסטים שלהם, בנוסף ל@שם_המשתמש שלהם."
     show_time_gap_days: "אם שני פוסטים נוצרים בהפרש כזה של ימים זה מזה, להציג את הפרש הזמן בנושא."
     short_progress_text_threshold: "לאחר שמספר הפוסטים בנושא עוברים את המספר הזה, מד ההתקדמות יציג רק את המספר של הפוסט הנוכחי. אם תשנו את רוחב מד ההתקדמות, ייתכן שתצטרכו לשנות ערך זה."
-    default_code_lang: "שפת התכנות כברירת המחדל להדגשת תחביר שחלה על מקטעי קוד (auto,‏ nohighlight,‏ ruby,‏ python וכו׳). ערך זה חייב להיות גם בהגדרת האתר `highlighted languages` (שפות מודגשות)."
     warn_reviving_old_topic_age: "כשמשתמש מתחיל להגיב לנושא בו התגובה האחרונה נכתבה לפני למעלה מכמות זו של ימים, תופיע אזהרה. 0 להשבתה."
     autohighlight_all_code: "לחייב שימוש בקוד הדגשה לכל קוד מעוצב מראש (preformatted code blocks) אפילו אם הם אינם מציינים את השפה."
     highlighted_languages: "כללי הדגשת תחביר להכללה. (אזהרה: הכללה של שפות רבות מדי פוגעת בביצועים) להדגמה: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a>"
@@ -2215,6 +2210,7 @@ he:
     shared_drafts_min_trust_level: "לאפשר למשתמשים לראות ולערוך טיוטות משותפות."
     push_notifications_prompt: "הצגת בקשה להסכמת המשתמש."
     push_notifications_icon: "סמל העיטור שמופיע בפינת ההתרעה. מומלץ PNG בצבעים אחידים עם שקיפות בגודל 96 × 96."
+    enable_desktop_push_notifications: "הפעלת התראות בדחיפה לשולחן העבודה"
     base_font: "גופן בסיס לשימוש רוב הטקסט באתר. ערכות עיצוב יכולות לדרוס אותו באמצעות מאפיין ה־CSS‏ ‎`--font-family`‎."
     heading_font: "גופן לשימוש כותרות באתר. ערכות עיצוב יכולות לדרוס אותו באמצעות המאפיין ‎`--heading-font-family`‎"
     enable_sitemap: "ליצור מפת אתר עבור האתר שלך ולכלול אותה בקובץ robots.txt."
@@ -2239,8 +2235,10 @@ he:
     navigation_menu: "קביעת תפריט הניווט לשימוש. המשתמשים יכולים להתאים את הניווט מסרגל הצד והכותרת. האפשרות הישנה זמינה לטובת תאימות לאחור."
     default_sidebar_categories: "הקטגוריות הנבחרות תוצגנה תחת סעיף הקטגוריות של סרגל הצד כברירת מחדל."
     default_sidebar_tags: "התגיות הנבחרות תוצגנה תחת סעיף התגיות של סרגל הצד כברירת מחדל."
+    enable_new_notifications_menu: "מפעיל את תפריט ההתראות החדש בתפריט הניווט הישן."
     enable_new_user_profile_nav_groups: "ניסיוני: משתמשים בקבוצות שנבחרו יופיעו בתפריט הניווט החדש של פרופיל המשתמש"
     enable_experimental_topic_timeline_groups: "ניסיוני: בפני המשתמשים בקבוצות שנבחרו יופיע ציר הזמן המחודש של הנושא"
+    enable_experimental_hashtag_autocomplete: "ניסיוני: ניתן להשתמש במערכת אוטומטית להשלמת #תגיות עבור קטגוריות ותגיות שמעבדת את הפריט הנבחר באופן שונה והחיפוש בה משופר"
     errors:
       invalid_css_color: "צבע שגוי. נא למלא את שם הצבע או ערך הקסדצימלי."
       invalid_email: "כתובת דוא״ל שגויה."
@@ -2298,6 +2296,7 @@ he:
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "אי אפשר להפעיל את DiscourseConnect אם נאכף אימות דו־שלבי."
       delete_rejected_email_after_days: "הגדרה זו לא יכולה להיות קטנה מ־delete_email_logs_after_days (ימים שלאחריהם למחוק יומני דוא״ל) או גדולה מ־%{max}"
       invalid_uncategorized_category_setting: "אי אפשר לבחור בקטגוריה שאינה בין הקטגוריות אם הרשאת נושאים שאינם בקטגוריה אסורה"
+      enable_new_notifications_menu_not_legacy_navigation_menu: "יש להגדיר את `navigation_menu` לערך `legacy` בטרם הפעלת הגדרה זו."
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -3551,6 +3550,16 @@ he:
         %{context}
 
         %{respond_instructions}
+    user_watching_category_or_tag:
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_watching_first_post:
       title: "משתמש/ת צופה בפוסט ראשון"
       subject_template: "[%{email_prefix}] %{topic_title}"
@@ -4452,7 +4461,8 @@ he:
     title: "הקמת Discourse"
     step:
       introduction:
-        title: "נשמח לשמוע על הקהילה שלך"
+        title: "על האתר שלך"
+        description: "אלה יוצגו בכניסה שלך ובכל עמוד ציבורי. ניתן לשנות אותם בכל עת."
         fields:
           title:
             label: "שם הקהילה"
@@ -4460,10 +4470,6 @@ he:
           site_description:
             label: "תיאור הקהילה שלך במשפט קצר"
             placeholder: "מקום לג׳יין וחבריה לשוחח על דברים מגניבים"
-          contact_email:
-            label: "נקודת קשר"
-            placeholder: "example@user.com"
-            description: "יחיד או קבוצה שאחראים על הקהילה הזאת. משמש לעדכונים משמעותיים ומופיע תחת <a href='%{base_path}/about' target='_blank'>עמוד ‚על אודות’</a> שלך כקשר למקרי חירום."
           default_locale:
             label: "שפה"
       privacy:
@@ -4473,15 +4479,19 @@ he:
             placeholder: "פרטי"
             extra_description: "רק משתמשים שנכנסו למערכת יכולים לגשת לקהילה הזו"
           invite_only:
-            placeholder: "הזמנה בלבד"
+            placeholder: "בהזמנה בלבד"
             extra_description: "משתמשים חייבים לקבל הזמנה ממשתמשים מהימנים או מהסגל, אחרת משתמשים יוכלו להירשם בעצמם"
           must_approve_users:
-            placeholder: "דרישת אישור"
+            placeholder: "לדרוש אישור"
             extra_description: "המשתמשים חייבים לעבור את אישור הסגל"
           chat_enabled:
             placeholder: "הפעלת צ׳אט"
+            extra_description: "יצירת חיבור מיידי לחבריך בזמן אמת"
+          enable_sidebar:
+            placeholder: "הפעלת סרגל צד"
+            extra_description: "גישה למרחבים המועדפים עליך בקלות"
       ready:
-        title: "ה־Discourse שלך מוכן!"
+        title: "האתר שלך מוכן!"
         description: "זהו זה! סיימת את ההגדרות הראשוניות של הקהילה שלך. עכשיו אפשר לצלול פנימה ולחקור קצת את המערכת, לכתוב נושא לקבלת פנים ולשלוח הזמנות!<br><br>שיהיה בכיף!"
       styling:
         title: "מראה ותחושה"
@@ -4516,36 +4526,37 @@ he:
               subcategories_with_featured_topics:
                 label: "תת־קטגוריות עם נושאים מובילים"
       branding:
-        title: "לוגואים משלך"
+        title: "לוגו האתר"
         fields:
           logo:
-            label: "לוגו ראשי"
-            description: "הלוגו בפינה הימנית העליונה של האתר שלך. יש להשתמש בתמונה מלבנית רחבה בגובה של 120 ויחס תצוגה שעולה על 3:1."
+            label: "לוגו עיקרי"
+            description: "גודל מומלץ: ‎600 × 200"
           logo_small:
             label: "לוגו ריבועי"
-            description: "גרסה ריבועית של הלוגו שלך. מופיע בפינה הימנית העליונה בעת גלילה כלפי מטה ובעת שיתוף ברשתות חברתיות. מומלץ שיהיה גדול מ־512×512."
+            description: "גודל מומלץ: 512 × 512. משמש גם כסמל המועדפים (favicon) וסמל יישומון מסך בית בנייד."
       corporate:
         title: "הארגון שלך"
+        description: "המידע הבא ישמש בדפי התנאים וההגבלות והמידע עליך. אפשר לדלג אם לא מדובר בחברה."
         fields:
           company_name:
             label: "שם החברה"
-            placeholder: "ארגון לדוגמה"
-            description: "נוסף לעמוד תנאי השירות שלך. אפשר לדלג אם לא קיימת חברה."
+            placeholder: "עמותת לקט ישראל"
           governing_law:
             label: "החוק המחייב"
             placeholder: "החוקים של קליפורניה"
-            description: "נוסף לעמוד תנאי השירות שלך. אפשר לדלג אם לא קיימת חברה."
           contact_url:
-            label: "דף ווב"
+            label: "דף אינטרנט"
             placeholder: "https://www.example.com/contact-us"
-            description: "דף יצירת קשר כללי איתכם או עם הארגון שלכם. יוצג ב<a href='%{base_path}/about' target='_blank'>דף האודות שלכם</a>."
           city_for_disputes:
             label: "עיר המחלוקת"
             placeholder: "סן פרנסיסקו, קליפורניה"
-            description: "נוסף לעמוד תנאי השירות שלך. אפשר לדלג אם לא קיימת חברה."
           site_contact:
             label: "הודעות אוטומטיות"
             description: "כל ההודעות האישיות האוטומטיות שנשלחות על ידי Discourse נשלחות מהמשתמש הזה, כגון אזהרות על סימוני דגלים והתראות על השלמת גיבוי."
+          contact_email:
+            label: "נקודת קשר"
+            placeholder: "example@user.com"
+            description: "כתובת דוא״ל של איש קשר מוביל שאחראי על האתר הזה. משמש להתראות קריטיות, וגם מופיע ב<a href='%{base_path}/about' target='_blank'>‎עמוד המידע על האתר שלך</a> לנושאים דחופים."
       invites:
         title: "הזמנת סגל"
         description: "כמעט סיימת! אולי נזמין כמה אנשים כדי <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>לעורר דיונים</a> עם נושאים מעניינים ותגובות שיניעו קדימה את הקהילה שלך."

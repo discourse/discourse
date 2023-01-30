@@ -414,9 +414,6 @@ be:
         many: "%{Count} дзён таму"
         other: " %{Count} дзён таму"
   password_reset:
-    choose_new: "Абярыце новы пароль"
-    choose: "% Менш, чым {лік} хвілін таму........................................................."
-    save: "ўсталяваць пароль"
     title: "скінуць пароль"
   user_auth_tokens:
     browser:
@@ -977,9 +974,6 @@ be:
     enable_rich_text_paste: "Ўключыць аўтаматычны HTML для пераўтварэння Markdown пры ўстаўцы тэксту ў кампазітар. (Эксперыментальны)"
     email_token_valid_hours: "Забыліся на пароль"
     enable_badges: "Уключыць сістэму жэтона"
-    enable_whispers: "Дазволіць супрацоўнік асабістых зносін у рамках тэмы."
-    blocked_email_domains: "Труба косак спіс паштовых даменаў, якія не могуць рэгістраваць ўліковыя запісы с. Прыклад: mailinator.com | trashmail.net"
-    allowed_email_domains: "Труба косак спіс паштовых даменаў, якія карыстальнікі павінны зарэгістраваць рахунку. УВАГА: Карыстальнікі з электроннымі, выдатнымі ад пералічаных даменаў не будуць дазволеныя!"
     log_out_strict: "Пры ўваходзе ў сістэму з, выйдзіце з усіх сеансаў для карыстальніка на ўсіх прыладах"
     version_checks: "Ping Дыскурс канцэнтратар для абнаўлення версій і паказаць новыя версіі паведамленняў на старонцы <A HREF = '% {базовый_путь}"
     new_version_emails: "Адправіць па электроннай пошце па адрасе contact_email, калі новая версія дыскурсе даступная."
@@ -1854,6 +1848,16 @@ be:
         %{context}
 
         %{respond_instructions}
+    user_watching_category_or_tag:
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_watching_first_post:
       title: "Карыстальнік Гледзячы першы пост"
       subject_template: "[%{email_prefix}] %{topic_title}"
@@ -2368,8 +2372,6 @@ be:
           login_required:
             placeholder: "прыватны"
             extra_description: "Толькі зарэгістраваныя карыстальнікі могуць атрымаць доступ да гэтай супольнасці"
-      ready:
-        title: "Ваш Дыскурс гатова!"
       styling:
         fields:
           styling_preview:
@@ -2386,28 +2388,15 @@ be:
                 label: "Катэгорыі і Апошнія тэмы"
               categories_and_top_topics:
                 label: "Катэгорыі і асноўныя тэмы"
-      branding:
-        fields:
-          logo:
-            label: "першасны Logo"
-          logo_small:
-            label: "плошчу лагатыпа"
       corporate:
         fields:
-          company_name:
-            label: "Назва кампаніі"
-            placeholder: "прыклад арганізацыі"
           governing_law:
-            label: "Правам, якія рэгулююць"
             placeholder: "Каліфарнійскі закон"
           contact_url:
-            label: "Вэб-старонка"
             placeholder: "https:"
           city_for_disputes:
-            label: "Горад для спрэчак"
             placeholder: "Сан - Францыска, Каліфорнія"
           site_contact:
-            label: "аўтаматычныя паведамленні"
             description: "Усё аўтаматызавана Дыскурс асабістыя паведамленні будуць адпраўляцца ад гэтага карыстальніка, такія як папярэджання сцяга і рэзервовага капіявання апавяшчэння аб завяршэнні."
       invites:
         title: "запрасіць Staff"

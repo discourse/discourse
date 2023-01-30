@@ -12,7 +12,7 @@ module SystemHelpers
   end
 
   def sign_in(user)
-    visit "/session/#{user.encoded_username}/become"
+    visit "/session/#{user.encoded_username}/become.json?redirect=false"
   end
 
   def sign_out
@@ -22,8 +22,10 @@ module SystemHelpers
   def setup_system_test
     SiteSetting.login_required = false
     SiteSetting.content_security_policy = false
-    SiteSetting.force_hostname = "#{Capybara.server_host}:#{Capybara.server_port}"
+    SiteSetting.force_hostname = Capybara.server_host
+    SiteSetting.port = Capybara.server_port
     SiteSetting.external_system_avatars_enabled = false
+    SiteSetting.disable_avatar_education_message = true
   end
 
   def try_until_success(timeout: 2, frequency: 0.01)
@@ -37,9 +39,24 @@ module SystemHelpers
     retry
   end
 
+  def wait_for_attribute(
+    element,
+    attribute,
+    value,
+    timeout: Capybara.default_max_wait_time,
+    frequency: 0.01
+  )
+    try_until_success(timeout: timeout, frequency: frequency) do
+      expect(element[attribute.to_sym]).to eq(value)
+    end
+  end
+
   def resize_window(width: nil, height: nil)
     original_size = page.driver.browser.manage.window.size
-    page.driver.browser.manage.window.resize_to(width || original_size.width, height || original_size.height)
+    page.driver.browser.manage.window.resize_to(
+      width || original_size.width,
+      height || original_size.height,
+    )
     yield
   ensure
     page.driver.browser.manage.window.resize_to(original_size.width, original_size.height)
@@ -50,9 +67,7 @@ module SystemHelpers
 
     ENV["TZ"] = timezone
 
-    Capybara.using_session(timezone) do
-      freeze_time(&example)
-    end
+    Capybara.using_session(timezone) { freeze_time(&example) }
 
     ENV["TZ"] = previous_browser_timezone
   end

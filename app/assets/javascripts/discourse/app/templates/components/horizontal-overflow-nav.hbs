@@ -1,7 +1,10 @@
-{{!-- template-lint-disable no-down-event-binding --}}
-{{!-- template-lint-disable no-invalid-interactive --}}
+{{! template-lint-disable no-down-event-binding }}
+{{! template-lint-disable no-invalid-interactive }}
 
-<div class="horizontal-overflow-nav {{if this.hasScroll "has-scroll"}}">
+<nav
+  class="horizontal-overflow-nav {{if this.hasScroll 'has-scroll'}}"
+  aria-label={{@ariaLabel}}
+>
   {{#if this.hasScroll}}
     <a
       role="button"
@@ -9,7 +12,10 @@
       {{on "mouseup" this.stopScroll}}
       {{on "mouseleave" this.stopScroll}}
       data-direction="left"
-      class={{concat-class "horizontal-overflow-nav__scroll-left" (if this.hideLeftScroll "disabled")}}
+      class={{concat-class
+        "horizontal-overflow-nav__scroll-left"
+        (if this.hideLeftScroll "disabled")
+      }}
     >
       {{d-icon "chevron-left"}}
     </a>
@@ -32,9 +38,12 @@
       {{on "mousedown" this.horizontalScroll}}
       {{on "mouseup" this.stopScroll}}
       {{on "mouseleave" this.stopScroll}}
-      class={{concat-class "horizontal-overflow-nav__scroll-right" (if this.hideRightScroll "disabled")}}
+      class={{concat-class
+        "horizontal-overflow-nav__scroll-right"
+        (if this.hideRightScroll "disabled")
+      }}
     >
       {{d-icon "chevron-right"}}
     </a>
   {{/if}}
-</div>
+</nav>

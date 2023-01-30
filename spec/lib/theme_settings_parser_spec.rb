@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 
-require 'theme_settings_parser'
+require "theme_settings_parser"
 
 RSpec.describe ThemeSettingsParser do
-  after do
-    ThemeField.destroy_all
-  end
+  after { ThemeField.destroy_all }
 
   def types
     ThemeSetting.types
@@ -21,9 +19,9 @@ RSpec.describe ThemeSettingsParser do
       yaml = File.read("#{Rails.root}/spec/fixtures/theme_settings/valid_settings.yaml")
       field = ThemeField.create!(theme_id: 1, target_id: 3, name: "yaml", value: yaml)
 
-      ThemeSettingsParser.new(field).load do |name, default, type, opts|
-        @settings << setting(name, default, type, opts)
-      end
+      ThemeSettingsParser
+        .new(field)
+        .load { |name, default, type, opts| @settings << setting(name, default, type, opts) }
     end
 
     def setting(name, default, type, opts = {})
@@ -38,14 +36,14 @@ RSpec.describe ThemeSettingsParser do
   let(:loader) { Loader.new }
 
   it "guesses types correctly" do
-    expect(loader.find_by_name(:boolean_setting)[:type]).to     eq(types[:bool])
-    expect(loader.find_by_name(:boolean_setting_02)[:type]).to  eq(types[:bool])
-    expect(loader.find_by_name(:string_setting)[:type]).to      eq(types[:string])
-    expect(loader.find_by_name(:integer_setting)[:type]).to     eq(types[:integer])
-    expect(loader.find_by_name(:integer_setting_03)[:type]).to  eq(types[:integer])
-    expect(loader.find_by_name(:float_setting)[:type]).to       eq(types[:float])
-    expect(loader.find_by_name(:list_setting)[:type]).to        eq(types[:list])
-    expect(loader.find_by_name(:enum_setting)[:type]).to        eq(types[:enum])
+    expect(loader.find_by_name(:boolean_setting)[:type]).to eq(types[:bool])
+    expect(loader.find_by_name(:boolean_setting_02)[:type]).to eq(types[:bool])
+    expect(loader.find_by_name(:string_setting)[:type]).to eq(types[:string])
+    expect(loader.find_by_name(:integer_setting)[:type]).to eq(types[:integer])
+    expect(loader.find_by_name(:integer_setting_03)[:type]).to eq(types[:integer])
+    expect(loader.find_by_name(:float_setting)[:type]).to eq(types[:float])
+    expect(loader.find_by_name(:list_setting)[:type]).to eq(types[:list])
+    expect(loader.find_by_name(:enum_setting)[:type]).to eq(types[:enum])
   end
 
   describe "description locale" do

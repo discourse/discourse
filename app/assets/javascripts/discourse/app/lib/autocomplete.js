@@ -94,6 +94,7 @@ export default function (options) {
   let completeEnd = null;
   let me = this;
   let div = null;
+  let scrollElement = null;
   let prevTerm = null;
 
   // By default, when the autocomplete popup is rendered it has the
@@ -118,28 +119,29 @@ export default function (options) {
   }
 
   function scrollAutocomplete() {
-    if (!div) {
+    if (!scrollElement && !div) {
       return;
     }
 
-    const divElement = div[0];
+    const scrollingElement =
+      scrollElement?.length > 0 ? scrollElement[0] : div[0];
     const selectedElement = getSelectedOptionElement();
     const selectedElementTop = selectedElement.offsetTop;
     const selectedElementBottom =
       selectedElementTop + selectedElement.clientHeight;
 
-    // the top of the item is above the top of the div, so scroll UP
-    if (selectedElementTop <= divElement.scrollTop) {
-      divElement.scrollTo(0, selectedElementTop);
+    // the top of the item is above the top of the scrollElement, so scroll UP
+    if (selectedElementTop <= scrollingElement.scrollTop) {
+      scrollingElement.scrollTo(0, selectedElementTop);
 
       // the bottom of the item is below the bottom of the div, so scroll DOWN
     } else if (
       selectedElementBottom >=
-      divElement.scrollTop + divElement.clientHeight
+      scrollingElement.scrollTop + scrollingElement.clientHeight
     ) {
-      divElement.scrollTo(
+      scrollingElement.scrollTo(
         0,
-        divElement.scrollTop + selectedElement.clientHeight
+        scrollingElement.scrollTop + selectedElement.clientHeight
       );
     }
   }
@@ -151,6 +153,7 @@ export default function (options) {
       div.hide().remove();
     }
     div = null;
+    scrollElement = null;
     completeStart = null;
     autocompleteOptions = null;
     prevTerm = null;
@@ -373,6 +376,10 @@ export default function (options) {
       me.parents(options.appendSelector).append(div);
     } else {
       me.parent().append(div);
+    }
+
+    if (options.scrollElementSelector) {
+      scrollElement = div.find(options.scrollElementSelector);
     }
 
     if (isInput || options.treatAsTextarea) {

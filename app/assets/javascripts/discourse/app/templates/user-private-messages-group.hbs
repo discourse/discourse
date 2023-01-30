@@ -1,32 +1,45 @@
 <UserNav::MessagesSecondaryNav>
-  <li class="messages-group-latest">
-    <LinkTo @route="userPrivateMessages.group.index" @model={{this.groupName}}>
-      {{d-icon "envelope"}}
-      <span>{{i18n "categories.latest"}}</span>
-    </LinkTo>
-  </li>
+
+  <DNavigationItem
+    @route="userPrivateMessages.group.index"
+    @class="user-nav__messages-group-latest"
+    @model={{this.groupName}}
+    @ariaCurrentContext="subNav"
+  >
+    {{d-icon "envelope"}}
+    <span>{{i18n "categories.latest"}}</span>
+  </DNavigationItem>
 
   {{#if this.viewingSelf}}
-    <li class="messages-group-new">
-      <LinkTo @route="userPrivateMessages.group.new" @model={{this.groupName}} class="new">
-        {{d-icon "exclamation-circle"}}
-        <span>{{this.newLinkText}}</span>
-      </LinkTo>
-    </li>
+    <DNavigationItem
+      @route="userPrivateMessages.group.new"
+      @model={{this.groupName}}
+      @class="user-nav__messages-group-new"
+      @ariaCurrentContext="subNav"
+    >
+      {{d-icon "exclamation-circle"}}
+      <span>{{this.newLinkText}}</span>
+    </DNavigationItem>
 
-    <li class="messages-group-unread">
-      <LinkTo @route="userPrivateMessages.group.unread" @model={{this.groupName}} class="unread">
-        {{d-icon "plus-circle"}}
-        <span>{{this.unreadLinkText}}</span>
-      </LinkTo>
-    </li>
+    <DNavigationItem
+      @route="userPrivateMessages.group.unread"
+      @model={{this.groupName}}
+      @class="user-nav__messages-group-unread"
+      @ariaCurrentContext="subNav"
+    >
+      {{d-icon "plus-circle"}}
+      <span>{{this.unreadLinkText}}</span>
+    </DNavigationItem>
 
-    <li class="messages-group-archive">
-      <LinkTo @route="userPrivateMessages.group.archive" @model={{this.groupName}}>
-        {{d-icon "archive"}}
-        <span>{{i18n "user.messages.archive"}}</span>
-      </LinkTo>
-    </li>
+    <DNavigationItem
+      @route="userPrivateMessages.group.archive"
+      @class="user-nav__messages-group-archive"
+      @model={{this.groupName}}
+      @ariaCurrentContext="subNav"
+    >
+      {{d-icon "archive"}}
+      <span>{{i18n "user.messages.archive"}}</span>
+    </DNavigationItem>
   {{/if}}
 </UserNav::MessagesSecondaryNav>
 

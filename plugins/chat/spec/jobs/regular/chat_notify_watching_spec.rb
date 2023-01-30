@@ -163,7 +163,9 @@ RSpec.describe Jobs::ChatNotifyWatching do
   end
 
   context "for a direct message channel" do
-    fab!(:channel) { Fabricate(:direct_message_channel, users: [user1, user2, user3]) }
+    fab!(:channel) do
+      Fabricate(:direct_message_channel, users: [user1, user2, user3], with_membership: false)
+    end
     fab!(:membership1) do
       Fabricate(:user_chat_channel_membership, user: user1, chat_channel: channel)
     end

@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe TopicViewItem do
-
   def add(topic_id, ip, user_id = nil)
     skip_redis = true
     TopicViewItem.add(topic_id, ip, user_id, nil, skip_redis)
@@ -20,8 +19,8 @@ RSpec.describe TopicViewItem do
   it "increases a users view count" do
     user = Fabricate(:user)
 
-    add(1,  "1.1.1.1", user.id)
-    add(1,  "1.1.1.1", user.id)
+    add(1, "1.1.1.1", user.id)
+    add(1, "1.1.1.1", user.id)
 
     user.user_stat.reload
     expect(user.user_stat.topics_entered).to eq(1)
@@ -36,5 +35,4 @@ RSpec.describe TopicViewItem do
     add(topic.id, "1.2.3.4", nil)
     expect(TopicViewItem.find_by(topic_id: topic.id, user_id: nil).ip_address).to eq("1.2.3.4")
   end
-
 end

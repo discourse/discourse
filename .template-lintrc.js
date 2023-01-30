@@ -21,5 +21,11 @@ module.exports = {
     "no-implicit-this": {
       allow: ["loading-spinner"],
     },
+    // Begin prettier compatibility
+    "eol-last": false,
+    "self-closing-void-elements": false,
+    "block-indentation": false,
+    quotes: false,
+    // End prettier compatibility
   },
 };
