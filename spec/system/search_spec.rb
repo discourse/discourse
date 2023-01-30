@@ -58,7 +58,7 @@ describe "Search", type: :system, js: true do
         search_page.click_search_button
       end
 
-      # Rate limit error should kick in after 15 queries
+      # Rate limit error should kick in after 4 queries
       expect(search_page).to have_warning_message
     end
   end
