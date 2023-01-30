@@ -2580,4 +2580,34 @@ RSpec.describe Search do
       expect(result.categories.length).to eq(0)
     end
   end
+
+  context "when max_duplicate_search_index_terms limits duplication" do
+    before { SearchIndexer.enable }
+
+    after { SearchIndexer.disable }
+
+    it "correctly ranks topics" do
+      SiteSetting.max_duplicate_search_index_terms = 5
+
+      topic1 = Fabricate(:topic, title: "this is a topic about sam")
+      post1 = Fabricate(:post, topic: topic1, raw: "this topic is a story about some person")
+
+      topic2 = Fabricate(:topic, title: "this is a topic about bob")
+      post2 =
+        Fabricate(
+          :post,
+          topic: topic2,
+          raw: "this topic is a story about some person #{"sam " * 100}",
+        )
+
+      SearchIndexer.index(post1, force: true)
+      SearchIndexer.index(post2, force: true)
+
+      result = Search.execute("sam")
+      expect(result.posts.length).to eq(2)
+
+      # title match should win cause we limited duplication
+      expect(result.posts.pluck(:id)).to eq([post1.id, post2.id])
+    end
+  end
 end
