@@ -158,7 +158,7 @@ RSpec.describe UserStatusController do
         ends_at = "2100-01-01T18:00:00Z"
 
         messages =
-          MessageBus.track_publish do
+          MessageBus.track_publish("/user-status") do
             put "/user-status.json", params: { description: status, emoji: emoji, ends_at: ends_at }
           end
 
@@ -207,7 +207,7 @@ RSpec.describe UserStatusController do
       end
 
       it "publishes to message bus" do
-        messages = MessageBus.track_publish { delete "/user-status.json" }
+        messages = MessageBus.track_publish("/user-status") { delete "/user-status.json" }
 
         expect(messages.size).to eq(1)
         expect(messages[0].channel).to eq("/user-status")
