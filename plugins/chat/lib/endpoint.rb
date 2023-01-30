@@ -1,0 +1,93 @@
+# frozen_string_literal: true
+#
+# = Chat::Endpoint
+#
+# This class is to be used via its helper `with_service` in a controller. Its
+# main purpose is to ease how actions can be run upon a service completion.
+# Since a service will likely return the same kind of things over and over,
+# this allows us to not have to repeat the same boilerplate code in every
+# controller.
+#
+# There are several available actions and we can add new ones very easily:
+#
+#   * on_success: will execute the provided block if the service succeeds
+#   * on_failure: will execute the provided block if the service fails
+#   * on_failed_policy(name): will execute the provided block if the policy
+#     named `name` fails
+#   * on_failed_contract(name): will execute the provided block if the contract
+#     named `name` fails
+#
+# A concrete example:
+#
+#   # in a controller
+#   def create
+#     with_service MyService do
+#       on_success do
+#         flash[:notice] = "Success!"
+#         redirect_to a_path
+#       end
+#       on_failed_policy(:a_named_policy) { redirect_to root_path }
+#       on_failure                        { render :new }
+#     end
+#   end
+#
+# The actions will be evaluated in the order they appear. So even if the
+# service will ultimately fail with a failed policy, in this example only the
+# `on_failed_policy` action will be executed and not the `on_failure` one. If
+# we had the `on_failure` action before then it would have been executed but
+# then the `on_failed_policy` wouldn't be reached ever.
+#
+class Chat::Endpoint
+  NULL_RESULT = OpenStruct.new(failure?: false)
+  AVAILABLE_ACTIONS = {
+    on_success: -> { result.success? },
+    on_failure: -> { result.failure? },
+    on_failed_policy: ->(name = "default") { failure_for?("result.policy.#{name}") },
+    on_failed_contract: ->(name = "default") { failure_for?("result.contract.#{name}") },
+  }.with_indifferent_access.freeze
+
+  attr_reader :service, :controller
+
+  delegate :result, to: :controller
+
+  def initialize(service, controller)
+    @service = service
+    @controller = controller
+    @actions = []
+  end
+
+  def self.call(service, &block)
+    controller = eval("self", block.binding, __FILE__, __LINE__)
+    new(service, controller).call(&block)
+  end
+
+  def call(&block)
+    instance_eval(&block)
+    controller.instance_eval("@_result = #{service}.call(params)", __FILE__, __LINE__ - 1)
+    (actions.detect { |condition, _| condition.call } || [-> {}]).last.call
+  end
+
+  private
+
+  attr_reader :actions
+
+  def failure_for?(key)
+    (controller.result[key] || NULL_RESULT).failure?
+  end
+
+  def add_action(name, *args, &block)
+    actions << [
+      -> { instance_exec(*args, &AVAILABLE_ACTIONS[name]) },
+      -> { controller.instance_eval(&block) },
+    ]
+  end
+
+  def method_missing(method_name, *args, &block)
+    return super unless AVAILABLE_ACTIONS[method_name]
+    add_action(method_name, *args, &block)
+  end
+
+  def respond_to_missing?(method_name, include_private = false)
+    AVAILABLE_ACTIONS[method_name] || super
+  end
+end

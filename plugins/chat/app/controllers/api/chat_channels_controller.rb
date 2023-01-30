@@ -29,9 +29,16 @@ class Chat::Api::ChatChannelsController < Chat::Api
   end
 
   def destroy
-    render handle_service_result(
-             Chat::Service::TrashChannel.call(guardian: guardian, channel: channel_from_params),
-           )
+    # TODO: handle custom params in a better way
+    params.merge!(guardian: guardian, channel: channel_from_params)
+    with_service Chat::Service::TrashChannel do
+      on_success { render(json: success_json) }
+      on_failed_policy(:invalid_access) { raise Discourse::InvalidAccess }
+      on_failed_contract do
+        render(json: failed_json.merge(errors: result[:contract].errors.full_messages), status: 400)
+      end
+      on_failure { render(json: failed_json) }
+    end
   end
 
   def create

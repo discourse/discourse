@@ -46,9 +46,14 @@ module Chat
         #   context.fail!("failure": "something went wrong")
         # @return [Context]
         def fail!(context = {})
+          fail(context)
+          raise Failure, self
+        end
+
+        def fail(context = {})
           merge(context)
           @failure = true
-          raise Failure, self
+          self
         end
 
         # Rolls back the services called in reverse order.
@@ -195,10 +200,17 @@ module Chat
           if self.class.contract_block
             contract_class = Class.new(Contract)
             contract_class.class_eval(&self.class.contract_block)
-            @contract = contract_class.new(self.context.to_h.except(:guardian))
+            @contract =
+              contract_class.new(
+                self.context.to_h.slice(*contract_class.attribute_names.map(&:to_sym)),
+              )
             self.context[:contract] = contract
 
-            context.fail!("contract.failed" => true) unless contract.valid?
+            context["result.contract.default"] = Context.build
+            unless contract.valid?
+              context.fail!("contract.failed" => true)
+              context["result.contract.default"].fail(errors: contract.errors)
+            end
             context.merge(contract.attributes)
           end
         end

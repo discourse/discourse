@@ -4,11 +4,19 @@ class Chat::Api < Chat::ChatBaseController
   before_action :ensure_logged_in
   before_action :ensure_can_chat
 
+  def result
+    @_result
+  end
+
   private
 
   def ensure_can_chat
     raise Discourse::NotFound unless SiteSetting.chat_enabled
     guardian.ensure_can_chat!
+  end
+
+  def with_service(service, &block)
+    Chat::Endpoint.call(service, &block)
   end
 
   def handle_service_result(result, serializer_object: nil, serializer: nil, serializer_data: {})
