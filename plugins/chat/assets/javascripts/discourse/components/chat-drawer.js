@@ -221,15 +221,15 @@ export default Component.extend({
         this.appEvents.trigger("chat:float-toggled", false);
         return;
       case "chat.channel":
-        return this._openChannel(route);
+        return this._openChannel(route.params.channelId);
       case "chat.channel.near-message":
         return this._openChannel(
-          route,
+          route.parent.params.channelId,
           this._highlightCb(route.params.messageId)
         );
       case "chat.channel-legacy":
         return this._openChannel(
-          route,
+          route.params.channelId,
           this._highlightCb(route.queryParams.messageId)
         );
     }
@@ -243,18 +243,16 @@ export default Component.extend({
     }
   },
 
-  _openChannel(route, afterRenderFunc = null) {
-    return this.chatChannelsManager
-      .find(route.params.channelId)
-      .then((channel) => {
-        this.chat.setActiveChannel(channel);
-        this.set("view", CHAT_VIEW);
-        this.appEvents.trigger("chat:float-toggled", false);
+  _openChannel(channelId, afterRenderFunc = null) {
+    return this.chatChannelsManager.find(channelId).then((channel) => {
+      this.chat.setActiveChannel(channel);
+      this.set("view", CHAT_VIEW);
+      this.appEvents.trigger("chat:float-toggled", false);
 
-        if (afterRenderFunc) {
-          schedule("afterRender", afterRenderFunc);
-        }
-      });
+      if (afterRenderFunc) {
+        schedule("afterRender", afterRenderFunc);
+      }
+    });
   },
 
   @action

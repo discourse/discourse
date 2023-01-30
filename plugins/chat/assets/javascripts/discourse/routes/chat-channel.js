@@ -22,7 +22,7 @@ export default class ChatChannelRoute extends DiscourseRoute {
         ...model.routeModels,
         messageId
       );
-      this.controller("messageId", null);
+      this.controller.set("messageId", null);
     }
 
     // Rewrite URL with slug in the child route to preseve
