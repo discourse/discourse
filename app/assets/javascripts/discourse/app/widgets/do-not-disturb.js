@@ -12,9 +12,7 @@ export default createWidget("do-not-disturb", {
 
   html() {
     const isOn = this.currentUser.isInDoNotDisturb();
-    const button = this._menuButton(isOn);
-
-    return [button];
+    return [this._menuButton(isOn)];
   },
 
   click() {
