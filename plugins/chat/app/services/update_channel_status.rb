@@ -14,7 +14,7 @@ module Chat
       #   @param [ChatChannel] channel
       #   @param [Guardian] guardian
       #   @param [String] status
-      #   @return [Context]
+      #   @return [Chat::Service::Base::Context]
 
       before_contract { context.status = context.status&.to_sym }
 
