@@ -42,7 +42,7 @@
     "bootstrap": "3.4.1",
     "bootstrap-json": "1.0.0",
     "broccoli-asset-rev": "^3.0.0",
-    "deepmerge": "^4.2.2",
+    "deepmerge": "^4.3.0",
     "dialog-holder": "1.0.0",
     "discourse-common": "1.0.0",
     "discourse-ensure-deprecation-order": "1.0.0",
