@@ -26,19 +26,19 @@ RSpec.describe "topics/show.html.erb" do
       topic_id: post.topic_id,
       post_id: post.id,
       user_id: post.user_id,
-      url: 'https://example.com/',
-      domain: 'example.com',
+      url: "https://example.com/",
+      domain: "example.com",
       link_topic_id: Fabricate(:topic).id,
       reflection: true,
     )
     assign(:topic_view, TopicView.new(topic))
     assign(:tags, [])
 
-    render template: 'topics/show', formats: [:html]
+    render template: "topics/show", formats: [:html]
 
-    links_list = Nokogiri::HTML5::fragment(rendered).css('.crawler-linkback-list')
+    links_list = Nokogiri::HTML5.fragment(rendered).css(".crawler-linkback-list")
     first_item = links_list.css('[itemprop="itemListElement"]')
-    expect(first_item.css('[itemprop="position"]')[0]['content']).to eq('1')
-    expect(first_item.css('[itemprop="url"]')[0]['href']).to eq('https://example.com/')
+    expect(first_item.css('[itemprop="position"]')[0]["content"]).to eq("1")
+    expect(first_item.css('[itemprop="url"]')[0]["href"]).to eq("https://example.com/")
   end
 end
