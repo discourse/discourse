@@ -2202,6 +2202,9 @@ search:
   search_ranking_normalization:
     default: "0"
     hidden: true
+  search_ranking_weights:
+    default: ""
+    hidden: true
   min_search_term_length:
     client: true
     default: 3
