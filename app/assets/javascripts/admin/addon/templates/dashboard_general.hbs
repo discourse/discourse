@@ -1,9 +1,7 @@
 <ConditionalLoadingSpinner @condition={{this.isLoading}}>
-  <PluginOutlet
-    @name="admin-dashboard-general-top"
-    @tagName="span"
-    @connectorTagName="div"
-  />
+  <span>
+    <PluginOutlet @name="admin-dashboard-general-top" @connectorTagName="div" />
+  </span>
 
   {{#if this.isCommunityHealthVisible}}
     <div class="community-health section">
@@ -197,9 +195,10 @@
     {{/if}}
   </div>
 
-  <PluginOutlet
-    @name="admin-dashboard-general-bottom"
-    @tagName="span"
-    @connectorTagName="div"
-  />
+  <span>
+    <PluginOutlet
+      @name="admin-dashboard-general-bottom"
+      @connectorTagName="div"
+    />
+  </span>
 </ConditionalLoadingSpinner>

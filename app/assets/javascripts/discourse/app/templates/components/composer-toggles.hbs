@@ -1,9 +1,7 @@
 <div class="composer-controls">
-  <PluginOutlet
-    @name="before-composer-toggles"
-    @tagName="span"
-    @connectorTagName="div"
-  />
+  <span>
+    <PluginOutlet @name="before-composer-toggles" @connectorTagName="div" />
+  </span>
 
   {{#if this.site.mobileView}}
     <DButton

@@ -12,9 +12,10 @@
   {{/if}}
 </div>
 
-<PluginOutlet
-  @name="topic-category"
-  @tagName="span"
-  @connectorTagName="div"
-  @args={{hash topic=this.topic category=this.topic.category}}
-/>
+<span>
+  <PluginOutlet
+    @name="topic-category"
+    @connectorTagName="div"
+    @args={{hash topic=this.topic category=this.topic.category}}
+  />
+</span>

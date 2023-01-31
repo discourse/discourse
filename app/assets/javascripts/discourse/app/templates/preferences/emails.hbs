@@ -52,12 +52,13 @@
     @checked={{this.model.user_option.email_in_reply_to}}
   />
 
-  <PluginOutlet
-    @name="user-preferences-emails-pref-email-settings"
-    @tagName="span"
-    @connectorTagName="div"
-    @args={{hash model=this.model save=(action "save")}}
-  />
+  <span>
+    <PluginOutlet
+      @name="user-preferences-emails-pref-email-settings"
+      @connectorTagName="div"
+      @args={{hash model=this.model save=(action "save")}}
+    />
+  </span>
 </div>
 
 {{#unless this.siteSettings.disable_digest_emails}}
@@ -112,21 +113,23 @@
   </div>
 {{/unless}}
 
-<PluginOutlet
-  @name="user-preferences-emails"
-  @tagName="span"
-  @connectorTagName="div"
-  @args={{hash model=this.model save=(action "save")}}
-/>
+<span>
+  <PluginOutlet
+    @name="user-preferences-emails"
+    @connectorTagName="div"
+    @args={{hash model=this.model save=(action "save")}}
+  />
+</span>
 
 <br />
 
-<PluginOutlet
-  @name="user-custom-controls"
-  @tagName="span"
-  @connectorTagName="div"
-  @args={{hash model=this.model}}
-/>
+<span>
+  <PluginOutlet
+    @name="user-custom-controls"
+    @connectorTagName="div"
+    @args={{hash model=this.model}}
+  />
+</span>
 
 <SaveControls
   @model={{this.model}}

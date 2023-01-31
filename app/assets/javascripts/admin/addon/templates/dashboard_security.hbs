@@ -1,9 +1,10 @@
 <div class="sections">
-  <PluginOutlet
-    @name="admin-dashboard-security-top"
-    @tagName="span"
-    @connectorTagName="div"
-  />
+  <span>
+    <PluginOutlet
+      @name="admin-dashboard-security-top"
+      @connectorTagName="div"
+    />
+  </span>
 
   <div class="main-section">
     <AdminReport
@@ -16,10 +17,11 @@
       @filters={{this.lastWeekfilters}}
     />
 
-    <PluginOutlet
-      @name="admin-dashboard-security-bottom"
-      @tagName="span"
-      @connectorTagName="div"
-    />
+    <span>
+      <PluginOutlet
+        @name="admin-dashboard-security-bottom"
+        @connectorTagName="div"
+      />
+    </span>
   </div>
 </div>

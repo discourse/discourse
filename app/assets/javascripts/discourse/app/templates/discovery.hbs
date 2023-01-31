@@ -8,11 +8,9 @@
   {{/unless}}
 </div>
 
-<PluginOutlet
-  @name="discovery-list-controls-above"
-  @tagName="span"
-  @connectorTagName="div"
-/>
+<span>
+  <PluginOutlet @name="discovery-list-controls-above" @connectorTagName="div" />
+</span>
 
 <div class="list-controls">
   <PluginOutlet
@@ -26,7 +24,9 @@
 
 <ConditionalLoadingSpinner @condition={{this.loading}} />
 
-<PluginOutlet @name="discovery-above" @tagName="span" @connectorTagName="div" />
+<span>
+  <PluginOutlet @name="discovery-above" @connectorTagName="div" />
+</span>
 
 {{#if this.showEditWelcomeTopicBanner}}
   <WelcomeTopicBanner />
@@ -50,7 +50,6 @@
       <div id="list-area">
         <PluginOutlet
           @name="discovery-list-container-top"
-          @tagName=""
           @connectorTagName="span"
           @args={{hash category=this.category listLoading=this.loading}}
         />
@@ -60,4 +59,6 @@
   </div>
 </div>
 
-<PluginOutlet @name="discovery-below" @tagName="span" @connectorTagName="div" />
+<span>
+  <PluginOutlet @name="discovery-below" @connectorTagName="div" />
+</span>

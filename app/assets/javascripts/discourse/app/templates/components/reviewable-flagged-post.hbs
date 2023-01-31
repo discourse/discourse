@@ -21,12 +21,13 @@
         {{html-safe this.reviewable.cooked}}
       {{/if}}
     </div>
-    <PluginOutlet
-      @name="after-reviewable-flagged-post-body"
-      @tagName="span"
-      @connectorTagName="div"
-      @args={{hash model=this.reviewable}}
-    />
+    <span>
+      <PluginOutlet
+        @name="after-reviewable-flagged-post-body"
+        @connectorTagName="div"
+        @args={{hash model=this.reviewable}}
+      />
+    </span>
     {{yield}}
   </div>
 </div>

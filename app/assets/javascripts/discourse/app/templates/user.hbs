@@ -146,12 +146,13 @@
                   class="user-profile-names__title"
                 >{{this.model.title}}</div>
               {{/if}}
-              <PluginOutlet
-                @name="user-post-names"
-                @tagName="span"
-                @connectorTagName="div"
-                @args={{hash model=this.model}}
-              />
+              <span>
+                <PluginOutlet
+                  @name="user-post-names"
+                  @connectorTagName="div"
+                  @args={{hash model=this.model}}
+                />
+              </span>
             </div>
 
             {{#if this.showFeaturedTopic}}
@@ -196,12 +197,13 @@
                   {{/if}}
                 </div>
               {{/if}}
-              <PluginOutlet
-                @name="user-location-and-website"
-                @tagName="span"
-                @connectorTagName="div"
-                @args={{hash model=this.model}}
-              />
+              <span>
+                <PluginOutlet
+                  @name="user-location-and-website"
+                  @connectorTagName="div"
+                  @args={{hash model=this.model}}
+                />
+              </span>
             </div>
 
             <div class="bio">
@@ -250,24 +252,26 @@
                   {{/if}}
                 {{/each}}
 
-                <PluginOutlet
-                  @name="user-profile-public-fields"
-                  @tagName="span"
-                  @connectorTagName="div"
-                  @args={{hash
-                    publicUserFields=this.publicUserFields
-                    model=this.model
-                  }}
-                />
+                <span>
+                  <PluginOutlet
+                    @name="user-profile-public-fields"
+                    @connectorTagName="div"
+                    @args={{hash
+                      publicUserFields=this.publicUserFields
+                      model=this.model
+                    }}
+                  />
+                </span>
               </div>
             {{/if}}
 
-            <PluginOutlet
-              @name="user-profile-primary"
-              @tagName="span"
-              @connectorTagName="div"
-              @args={{hash model=this.model}}
-            />
+            <span>
+              <PluginOutlet
+                @name="user-profile-primary"
+                @connectorTagName="div"
+                @args={{hash model=this.model}}
+              />
+            </span>
           </div>
 
           <section class="controls">

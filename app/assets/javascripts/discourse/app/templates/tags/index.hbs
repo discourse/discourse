@@ -11,12 +11,13 @@
   </div>
 </div>
 
-<PluginOutlet
-  @name="tags-below-title"
-  @connectorTagName="div"
-  @tagName="div"
-  @args={{hash model=this.model}}
-/>
+<div>
+  <PluginOutlet
+    @name="tags-below-title"
+    @connectorTagName="div"
+    @args={{hash model=this.model}}
+  />
+</div>
 
 <div class="tag-sort-options">
   {{i18n "tagging.sort_by"}}

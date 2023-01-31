@@ -56,12 +56,13 @@
   </div>
 {{/if}}
 
-<PluginOutlet
-  @name="user-custom-controls"
-  @tagName="span"
-  @connectorTagName="div"
-  @args={{hash model=this.model}}
-/>
+<span>
+  <PluginOutlet
+    @name="user-custom-controls"
+    @connectorTagName="div"
+    @args={{hash model=this.model}}
+  />
+</span>
 
 <SaveControls
   @model={{this.model}}

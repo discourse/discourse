@@ -8,12 +8,13 @@
     {{/if}}
   {{/if}}
 
-  <PluginOutlet
-    @name="category-heading"
-    @tagName="span"
-    @connectorTagName="div"
-    @args={{hash category=this.category}}
-  />
+  <span>
+    <PluginOutlet
+      @name="category-heading"
+      @connectorTagName="div"
+      @args={{hash category=this.category}}
+    />
+  </span>
 </section>
 
 <DSection @class="navigation-container category-navigation">

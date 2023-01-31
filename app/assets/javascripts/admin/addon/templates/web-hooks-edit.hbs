@@ -115,12 +115,13 @@
       </div>
     </div>
 
-    <PluginOutlet
-      @name="web-hook-fields"
-      @tagName="span"
-      @connectorTagName="div"
-      @args={{hash model=this.model}}
-    />
+    <span>
+      <PluginOutlet
+        @name="web-hook-fields"
+        @connectorTagName="div"
+        @args={{hash model=this.model}}
+      />
+    </span>
 
     <label>
       <Input
