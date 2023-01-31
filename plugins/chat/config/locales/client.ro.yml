@@ -50,6 +50,7 @@ ro:
         yesterday: Ieri
       about_view:
         title: Titlu
+        name: Nume
         description: Descriere
       channel_info:
         back_to_channel: "Înapoi"

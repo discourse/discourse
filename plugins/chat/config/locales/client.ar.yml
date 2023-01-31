@@ -254,7 +254,8 @@ ar:
         read_only: "للقراءة فقط"
         archived_header: "القناة مؤرشفة"
         archived: "مؤرشفة"
-        archive_failed: "فشلت أرشفة القناة. تمت أرشفة %{completed}/%{total} من الرسائل في <a target=\"_blank\" href=\"%{topic_url}\">الموضوع المستهدف</a>. اضغط على إعادة المحاولة لمحاولة إكمال الأرشيف."
+        archive_failed: "فشلت أرشفة القناة. تمت أرشفة %{completed}/%{total} من الرسائل. <a target=\"_blank\" href=\"%{topic_url}\">موضوع الوجهة</a>. اضغط على \"إعادة المحاولة\" لمحاولة إكمال الأرشيف."
+        archive_failed_no_topic: "فشلت أرشفة القناة. تمت أرشفة %{completed}/%{total} من الرسائل، ولم يتم إنشاء موضوع الوجهة. اضغط على \"إعادة المحاولة\" لمحاولة إكمال الأرشيف."
         archive_completed: "راجع <a target=\"_blank\" href=\"%{topic_url}\">موضوع الأرشيف</a>"
         closed_header: "القناة مغلقة"
         closed: "مغلقة"
@@ -277,6 +278,7 @@ ar:
         associated_topic: الموضوع المرتبط
         associated_category: الفئة المرتبطة
         title: العنوان
+        name: الاسم
         description: الوصف
       channel_info:
         back_to_all_channels: "كل القنوات"
@@ -285,10 +287,6 @@ ar:
           about: نبذة
           members: الأعضاء
           settings: الإعدادات
-      channel_edit_title_modal:
-        title: تعديل العنوان
-        input_placeholder: إضافة عنوان
-        description: أعط عنوانًا وصفيًا قصيرًا لقناتك
       channel_edit_description_modal:
         title: تعديل الوصف
         input_placeholder: أضِف وصفًا

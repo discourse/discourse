@@ -52,6 +52,7 @@ lt:
         yesterday: Vakar
       about_view:
         title: Antraštė
+        name: Vardas
         description: Aprašymas
       channel_info:
         back_to_channel: "Atgal"

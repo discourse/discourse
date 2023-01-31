@@ -35,6 +35,7 @@ be:
         yesterday: учора
       about_view:
         title: Загаловак
+        name: імя
         description: Апісанне
       channel_info:
         back_to_channel: "Назад"

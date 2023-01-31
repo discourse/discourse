@@ -670,6 +670,7 @@ nl:
       one: "%{count} like"
       other: "%{count} likes"
     cannot_permanently_delete:
+      many_posts: "Dit topic bevat verwijderde berichten. Verwijder ze permanent voordat je het topic permanent verwijdert."
       wait_or_different_admin: "Je moet %{time_left} wachten voordat je dit bericht definitief verwijdert, of een andere beheerder moet het doen."
   rate_limiter:
     slow_down: "Je hebt deze actie te vaak uitgevoerd; probeer het later opnieuw."
@@ -861,6 +862,7 @@ nl:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Ongepast"
+      description: 'Dit bericht bevat inhoud die een redelijk persoon als beledigend, kwetsend, hatelijk gedrag of een overtreding van <a href="%{base_path}/guidelines">onze communityrichtlijnen</a> zou beschouwen.'
       short_description: 'Een overtreding van <a href="%{base_path}/guidelines">onze communityrichtlijnen</a>'
     notify_user:
       title: "@%{username} een bericht sturen"
@@ -926,6 +928,7 @@ nl:
       short_description: "Dit is een advertentie"
     inappropriate:
       title: "Ongepast"
+      description: 'Dit topic bevat inhoud die een redelijk persoon als beledigend, kwetsend, hatelijk gedrag of een overtreding van <a href="%{base_path}/guidelines">onze communityrichtlijnen</a> zou beschouwen.'
       long_form: "heeft dit als ongepast gemarkeerd"
       short_description: 'Een overtreding van <a href="%{base_path}/guidelines">onze communityrichtlijnen</a>'
     notify_moderators:
@@ -1001,6 +1004,7 @@ nl:
       write: "Alles schrijven"
       one_time_password: "Token voor eenmalige aanmelding maken"
       bookmarks_calendar: "Bladwijzerherinneringen lezen"
+      user_status: "Gebruikersstatus lezen en bijwerken"
     invalid_public_key: "Sorry, de openbare sleutel is ongeldig."
     invalid_auth_redirect: "Sorry, deze auth_redirect-host is niet toegestaan."
     invalid_token: "Ontbrekend, ongeldig of verlopen token."
@@ -1422,6 +1426,11 @@ nl:
     allow_duplicate_topic_titles_category: "Topics met identieke, dubbele titels toestaan als de categorie anders is. allow_duplicate_topic_titles moet uitgeschakeld zijn."
     unique_posts_mins: "Hoeveel minuten iemand moet wachten voordat deze een bericht met dezelfde inhoud mag plaatsen"
     educate_until_posts: "De pop-up voor nieuwe gebruikers weergeven als een gebruiker begint met het typen van de eerste (n) nieuwe berichten in de berichteditor."
+    title: "De naam van deze site. Zichtbaar voor alle bezoekers, inclusief anonieme gebruikers."
+    site_description: "Beschrijf deze site in één zin. Zichtbaar voor alle bezoekers, inclusief anonieme gebruikers."
+    short_site_description: "Korte beschrijving in een paar woorden. Zichtbaar voor alle bezoekers, inclusief anonieme gebruikers."
+    contact_email: "E-mailadres van de belangrijkste contactpersoon die verantwoordelijk is voor deze website. Wordt gebruikt voor kritieke meldingen en wordt weergegeven op de <a href='%{base_path}/about' target='_blank'>/over</a>-pagina. Zichtbaar voor anonieme gebruiker op openbare sites."
+    contact_url: "Contact-URL voor deze site. Vervangt, indien aanwezig, het e-mailadres op <a href='%{base_path}/about' target='_blank'>/over</a> en is zichtbaar voor anonieme gebruikers op openbare sites."
     crawl_images: "Afbeeldingen van externe URL's ophalen om de juiste breedte- en hoogteafmetingen in te voegen"
     download_remote_images_to_local: "Externe afbeeldingen (gehotlinkt) converteren naar lokale afbeeldingen door ze te downloaden; Zo blijft de inhoud behouden, ook als de afbeeldingen in de toekomst van de externe website worden verwijderd."
     download_remote_images_threshold: "Minimaal vereiste schijfruimte om externe afbeeldingen lokaal te downloaden (percentage)"
@@ -1437,6 +1446,8 @@ nl:
     edit_history_visible_to_public: "Toestaan dat iedereen vorige versies van een bewerkt bericht kan zien. Als dit is uitgeschakeld, kunnen alleen medewerkers dat bekijken."
     delete_removed_posts_after: "Door de schrijver verwijderde berichten worden na (n) uur automatisch verwijderd. Als dit ingesteld is op 0, worden berichten direct verwijderd."
     notify_users_after_responses_deleted_on_flagged_post: "Wanneer een bericht wordt gemarkeerd en vervolgens wordt verwijderd, worden alle gebruikers die op het bericht hebben gereageerd en waarvan de reacties zijn verwijderd hiervan op de hoogte gesteld."
+    max_image_width: "Maximale miniatuurbreedte van afbeeldingen in een bericht. Afbeeldingen met een grotere breedte worden verkleind en in een lightbox geplaatst."
+    max_image_height: "Maximale miniatuurhoogte van afbeeldingen in een bericht. Afbeeldingen met een grotere hoogte worden verkleind en in een lightbox geplaatst."
     responsive_post_image_sizes: "Grootte van Lightbox-voorbeeldafbeeldingen mag op hoge-DPI-schermen met de volgende pixelverhoudingen worden aangepast. Verwijder alle waarden om responsieve afbeeldingen uit te schakelen."
     fixed_category_positions: "Wanneer aangevinkt, kun je categorieën in een vaste volgorde schikken. Wanneer niet aangevinkt, worden categorieën op activiteit vermeld."
     fixed_category_positions_on_create: "Wanneer aangevinkt, wordt de categorievolgorde aangehouden bij het maken van een topic (vereist fixed_category_positions)."
@@ -1574,10 +1585,7 @@ nl:
     max_favorite_badges: "Maximaal aantal badges dat een gebruiker kan selecteren"
     whispers_allowed_groups: "Sta privécommunicatie binnen topics toe voor leden van bepaalde groepen."
     allow_index_in_robots_txt: "Geef in robots.txt op dat deze website door webzoekmachines mag worden geïndexeerd. In uitzonderlijke gevallen kun je <a href='%{base_path}/admin/customize/robots'>robots.txt</a> blijvend negeren."
-    blocked_email_domains: "Een lijst gescheiden door pijpsymbolen van e-maildomeinen waarvan gebruikers geen accounts mogen registreren. Voorbeeld: mailinator.com|trashmail.net"
-    allowed_email_domains: "Een lijst gescheiden door pijpsymbolen van e-maildomeinen waarvan gebruikers accounts MOETEN registreren. WAARSCHUWING: gebruikers met andere dan de vermelde e-maildomeinen worden niet toegestaan!"
     normalize_emails: "Controleren of het genormaliseerde e-mailadres uniek is. Normalisering van e-mailadressen verwijdert alle punten uit de gebruikersnaam en alles tussen de symbolen + en @."
-    auto_approve_email_domains: "Gebruikers met e-mailadressen van deze lijst met domeinen worden automatisch goedgekeurd."
     hide_email_address_taken: "Laat gebruikers niet weten dat er een account bestaat met een bepaald e-mailadres bij het registreren. bij het herstellen van een wachtwoord. Volledig e-mailadres wordt vereist voor wachtwoordherstelverzoeken."
     log_out_strict: "Bij het afmelden ALLE sessies voor de gebruiker op alle apparaten afmelden"
     version_checks: "De Discourse Hub pingen voor versie-updates en berichten over nieuwe versies weergeven op het <a href='%{base_path}/admin' target='_blank'>/admin</a>-dashboard"
@@ -1641,6 +1649,7 @@ nl:
     discord_trusted_guilds: 'Alleen leden van deze Discord-guilds mogen zich aanmelden via Discord. Gebruik de numerieke ID voor de guild. Bekijk de instructies <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">hier</a> voor meer informatie. Laat dit leeg om alle guilds toe te staan.'
     enable_backups: "Beheerders mogen back-ups van het forum maken"
     allow_restore: "Herstellen van gegevens toestaan, waarbij ALLE websitegegevens kunnen worden overschreven! Laat dit op 'onwaar' staan, tenzij je een back-up wilt herstellen."
+    maximum_backups: "Het maximale aantal back-ups om te bewaren. Oudere back-ups worden automatisch verwijderd."
     automatic_backups_enabled: "Automatische back-ups uitvoeren volgens de opgegeven back-upfrequentie."
     backup_frequency: "Het aantal dagen tussen back-ups."
     s3_backup_bucket: "De externe bucket om back-ups te bewaren. WAARSCHUWING: Zorg dat het een privébucket is."
@@ -1815,6 +1824,7 @@ nl:
     faq_url: "Als je ergens anders een FAQ hebt gehost die je wilt gebruiken, geef hier dan de volledige URL op."
     tos_url: "Als je ergens anders een document met Algemene voorwaarden hebt gehost, geef hier dan de volledige URL op."
     privacy_policy_url: "Als je ergens anders een document met een Privacybeleid hebt gehost, geef hier dan de volledige URL op."
+    log_anonymizer_details: "Of de gegevens van een gebruiker in de log moeten worden bewaard nadat ze zijn geanonimiseerd."
     newuser_spam_host_threshold: "Hoe vaak een nieuwe gebruiker een link naar dezelfde host kan plaatsen binnen de 'newuser_spam_host_threshold' berichten ervan voordat deze als spam wordt beschouwd."
     allowed_spam_host_domains: "Een lijst met domeinen die niet op spam worden gecontroleerd. Nieuwe gebruikers kunnen onbeperkt links naar deze domeinen plaatsen."
     staff_like_weight: "Hoeveel gewicht om aan likes van medewerkers te geven (likes die niet van medewerkers zijn, hebben een gewicht van 1)."
@@ -1981,6 +1991,7 @@ nl:
     display_name_on_posts: "Volledige naam van een gebruiker weergeven bij berichten, naast de @gebruikersnaam."
     show_time_gap_days: "Als twee berichten dit aantal dagen na elkaar zijn gemaakt, een tijdsgat in het topic weergeven."
     short_progress_text_threshold: "Als het aantal berichten in een topic hoger is dan dit getal, geeft de voortgangsbalk alleen het nummer van het huidige bericht weer. Als je de breedte van de voortgangsbalk wijzigt, moet je deze waarde mogelijk ook te wijzigen."
+    default_code_lang: "Standaard syntaxmarkering van programmeertaal toegepast op codeblokken (automatisch, tekst, Ruby, Python enz.). Deze waarde moet ook aanwezig zijn in de website-instelling 'gemarkeerde talen'."
     warn_reviving_old_topic_age: "Wanneer iemand begint te antwoorden op een topic waarin het laatste antwoord ouder is dan dit aantal dagen, wordt een waarschuwing weergegeven. Schakel uit door dit op 0 te zetten."
     autohighlight_all_code: "Toepassen van codemarkering bij alle vooraf opgemaakte codeblokken afdwingen, zelfs als de codetaal niet expliciet is opgeven."
     highlighted_languages: "Opgenomen regels voor syntaxismarkering. (Waarschuwing: het opnemen van te veel talen kan prestaties beïnvloeden); bekijk <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> voor een demo."
@@ -2097,6 +2108,8 @@ nl:
     shared_drafts_min_trust_level: "Gebruikers mogen gedeelde concepten zien en bewerken."
     push_notifications_prompt: "Prompt voor gebruikerstoestemming weergeven."
     push_notifications_icon: "Het badgepictogram dat in de meldingshoek wordt weergegeven. Een eenkleurige PNG van 96×96 met transparantie wordt aanbevolen."
+    enable_desktop_push_notifications: "Desktopmeldingen inschakelen"
+    push_notification_time_window_mins: "Wacht (n) minuten voordat u een pushmelding stuurt. Dit voorkomt dat pushmeldingen naar een actieve online gebruiker worden gestuurd."
     base_font: "Basislettertype om te gebruiken voor de meeste tekst op de website. Thema's kunnen worden overschreven via de aangepaste CSS-eigenschap '--font-family'."
     heading_font: "Te gebruiken lettertypen voor kopteksten op de website. Thema's kunnen worden overschreven via de aangepaste CSS-eigenschap '--heading-font-family'."
     enable_sitemap: "Genereer een sitemap voor je website en neem deze op in het bestand robots.txt."
@@ -2118,10 +2131,12 @@ nl:
     use_name_for_username_suggestions: "Gebruik de volledige naam van een gebruiker bij het voorstellen van gebruikersnamen."
     suggest_weekends_in_date_pickers: "Neem weekenden (zaterdag en zondag) op in suggesties voor datumkiezers (schakel dit uit als je Discourse alleen op weekdagen gebruikt, maandag t/m vrijdag)."
     splash_screen: "Geeft een tijdelijk laadscherm weer terwijl website-items worden geladen"
+    navigation_menu: "Bepaal welk navigatiemenu u wilt gebruiken. Zijbalk- en kopnavigatie kunnen door gebruikers worden aangepast. Een legacyoptie is beschikbaar voor terugwaartse compatibiliteit."
     default_sidebar_categories: "Geselecteerde categorieën worden standaard weergegeven onder de sectie Categorieën van de zijbalk."
     default_sidebar_tags: "Geselecteerde tags worden standaard weergegeven onder de sectie Tags van de zijbalk."
     enable_new_user_profile_nav_groups: "EXPERIMENTEEL: gebruikers van de geselecteerde groepen krijgen het nieuwe navigatiemenu voor gebruikersprofielen te zien"
     enable_experimental_topic_timeline_groups: "EXPERIMENTEEL: gebruikers in de geselecteerde groepen krijgen de tijdlijn van het geherformuleerde topic te zien"
+    enable_experimental_hashtag_autocomplete: "EXPERIMENTEEL: gebruik het nieuwe automatische #hashtag-aanvulsysteem voor categorieën en tags dat het geselecteerde item anders weergeeft en de zoekfunctie verbetert"
     errors:
       invalid_css_color: "Ongeldige kleur. Voer een kleurnaam of hexadecimale waarde in."
       invalid_email: "Ongeldig e-mailadres."
@@ -2568,10 +2583,12 @@ nl:
       %{notes}
   flag_reasons:
     off_topic: "Je bericht is gemarkeerd als **off-topic**: de community vindt dat het niet goed bij het topic past, zoals momenteel bepaald door de titel en het eerste bericht."
+    inappropriate: "Je bericht is gemarkeerd als **ongepast**: de community vindt het bericht beledigend, grof, hatelijk gedrag of een schending van [onze communityrichtlijnen](%{base_path}/guidelines)."
     spam: "Je bericht is gemarkeerd als **spam**: de community vindt dat het bericht een advertentie is, dat wil zeggen overdreven promotioneel van aard in plaats van nuttig of relevant voor het topic, zoals verwacht."
     notify_moderators: "Je bericht is gemarkeerd voor **aandacht van een moderator**: de community vindt dat iets in het bericht handmatige interventie door een medewerker vereist."
     responder:
       off_topic: "Het is gemarkeerd als **off-topic**: de community vindt dat het niet goed bij het topic past, zoals momenteel bepaald door de titel en het eerste bericht."
+      inappropriate: "Het bericht is gemarkeerd als **ongepast**: de community vindt het bericht beledigend, grof, hatelijk gedrag of een schending van [onze communityrichtlijnen](%{base_path}/guidelines)."
       spam: "Het bericht is gemarkeerd als **spam**: de community vindt dat het bericht een advertentie is, dat wil zeggen overdreven promotioneel van aard in plaats van nuttig of relevant voor het topic, zoals verwacht."
       notify_moderators: "Het bericht is gemarkeerd als **aandacht van een moderator**: de community vindt dat iets in het bericht handmatige interventie door een medewerker vereist."
   flags_dispositions:
@@ -3398,6 +3415,7 @@ nl:
 
         %{respond_instructions}
     user_watching_category_or_tag:
+      title: "Gebruiker observeert categorie of tag"
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -3902,6 +3920,178 @@ nl:
       Ja, juridisch jargon is saai, maar we moeten onszelf &ndash; en bij uitbreiding jou en je gegevens &ndash; beschermen tegen onvriendelijke mensen. We hebben [Gebruiksvoorwaarden](%{base_path}/tos) die jouw (en ons) gedrag en rechten beschrijft met betrekking tot inhoud, privacy en wetten. Om deze dienst te gebruiken, moet je akkoord gaan met onze [Gebruiksvoorwaarden](%{base_path}/tos).
   tos_topic:
     title: "Gebruiksvoorwaarden"
+    body: |
+      Deze voorwaarden regelen het gebruik van het internetforum op <%{base_url}>. Om het forum te gebruiken, moet u akkoord gaan met deze voorwaarden van %{bedrijfsnaam}, het bedrijf dat het forum beheert.
+
+      Het bedrijf kan andere producten en diensten aanbieden, onder andere voorwaarden. Deze voorwaarden zijn alleen van toepassing op het gebruik van het forum.
+
+      Ga naar:
+
+      - [Belangrijke termen](#heading--important-terms)
+      - [Uw toestemming om het forum te gebruiken](#heading--permission)
+      - [Voorwaarden voor het gebruik van het forum](#heading--conditions)
+      - [Acceptabel gebruik](#heading--acceptable-use)
+      - [Contentnormen](#heading--content-standards)
+      - [Handhaving](#heading--enforcement)
+      - [Uw account](#heading--your-account)
+      - [Uw content](#heading--your-content)
+      - [Uw verantwoordelijkheid](#heading--responsibility)
+      - [Disclaimers](#heading--disclaimers)
+      - [Beperking van de aansprakelijkheid](#heading--liability)
+      - [Feedback](#heading--feedback)
+      - [Beëindiging](#heading--termination)
+      - [Geschillen](#heading--disputes)
+      - [Algemene voorwaarden](#heading--general)
+      - [Contact](#heading--contact)
+      - [Wijzigingen](#heading--changes)
+
+      <h2 id="heading--important-terms"><a href="#heading--important-terms">Belangrijke voorwaarden</a></h2>
+
+      ***Deze voorwaarden bevatten een aantal belangrijke bepalingen die uw rechten en verantwoordelijkheden beïnvloeden, zoals de disclaimers in [Disclaimers](#heading--disclaimers), beperking van de aansprakelijkheid van het bedrijf jegens u in [Beperking van de aansprakelijkheid](#heading--liability), uw akkoord om het bedrijf te vrijwaren van schade veroorzaakt door uw misbruik van het forum in [Uw verantwoordelijkheid](#heading--responsibility) en een overeenkomst om geschillen te arbitreren in [Geschillen](#heading--disputes).***
+
+      <h2 id="heading--permission"><a href="#heading--permission">Uw toestemming om het forum te gebruiken</a></h2>
+
+      Het bedrijf geeft u toestemming om het forum te gebruiken onder deze voorwaarden. Iedereen moet akkoord gaan met deze voorwaarden om het forum te kunnen gebruiken.
+
+      <h2 id="heading--conditions"><a href="#heading--conditions">Voorwaarden voor het gebruik van het forum</a></h2>
+
+      Uw toestemming om het forum te gebruiken is onderworpen aan de volgende voorwaarden:
+
+      1. U moet ten minste dertien jaar oud zijn.
+
+      2. U mag het forum niet langer gebruiken als het bedrijf rechtstreeks contact met u opneemt om te zeggen dat u dat niet mag.
+
+      3. U moet het forum gebruiken in overeenstemming met [Acceptabel gebruik](#heading--acceptable-use) en [Contentnormen](#heading--content-standards).
+
+      <h2 id="heading--acceptable-use"><a href="#heading--acceptable-use">Acceptabel gebruik</a></h2>
+
+      1. U mag de wet niet overtreden via het forum.
+
+      2. U mag het account van een ander op het forum niet gebruiken of proberen te gebruiken zonder diens specifieke toestemming.
+
+      3. U mag geen gebruikersnamen of andere unieke identificaties op het forum kopen, verkopen of anderszins verhandelen.
+
+      4. U mag geen advertenties, kettingbrieven of andere verzoeken via het forum versturen, of het forum gebruiken om adressen of andere persoonsgegevens te verzamelen voor commerciële mailinglijsten of databases.
+
+      5. U mag de toegang tot het forum niet automatiseren of het forum monitoren, zoals met een webcrawler, browserplug-in of -add-on, of een ander computerprogramma dat geen webbrowser is. U kunt het forum crawlen om het te indexeren voor een openbare zoekmachine, als u die beheert.
+
+      6. U mag het forum niet gebruiken om e-mail te versturen naar distributielijsten, nieuwsgroepen of aliassen voor groeps-e-mail.
+
+      7. U mag niet ten onrechte suggereren dat u verbonden bent met of gesteund wordt door het bedrijf.
+
+      8. U mag geen hyperlink naar afbeeldingen of andere niet-hypertext content van het forum op andere webpagina's plaatsen.
+
+      9. U mag geen aanduidingen van eigendomsrecht verwijderen uit materiaal dat u van het forum downloadt.
+
+      10. U mag geen enkel deel van het forum op andere websites tonen met '<iframe>'.
+
+      11. U mag geen beveiligings- of toegangsbeperkingen van het forum uitschakelen, vermijden of omzeilen.
+
+      12. U mag de infrastructuur van het forum niet belasten met een onredelijke hoeveelheid verzoeken of verzoeken die een onredelijke belasting vormen voor de informatiesystemen die aan het forum ten grondslag liggen.
+
+      13. U mag zich via het forum niet voordoen als iemand anders.
+
+      14. U mag niemand aanmoedigen of helpen in strijd met deze voorwaarden.
+
+      <h2 id="heading--content-standards"><a href="#heading--content-standards">Contentnormen</a></h2>
+
+      1. U mag geen content naar het forum sturen die illegaal, aanstootgevend of anderszins schadelijk is voor anderen. Dit omvat content die intimiderend, ongepast, beledigend of haatdragend is.
+
+      2. U mag geen content naar het forum sturen die de wet overtreedt, inbreuk maakt op iemands intellectuele-eigendomsrechten, iemands privacy schendt of inbreuk maakt op overeenkomsten die u met anderen hebt gesloten.
+
+      3. U mag geen content naar het forum sturen die schadelijke computercode bevat, zoals computervirussen of spyware.
+
+      4. U mag geen content naar het forum sturen als louter plaatshouder, om een bepaald adres, gebruikersnaam of andere unieke identificatie vast te houden.
+
+      5. U mag het forum niet gebruiken om informatie bekend te maken waarvoor u niet het recht hebt deze bekend te maken, zoals vertrouwelijke of persoonlijke informatie van anderen.
+
+      <h2 id="heading--enforcement"><a href="#heading--enforcement">Handhaving</a></h2>
+
+      Het bedrijf kan schendingen van deze voorwaarden onderzoeken en vervolgen in de ruimste zin van het recht. Het bedrijf kan wetshandhavingsinstanties inlichten en met hen samenwerken bij de vervolging van schendingen van de wet en deze voorwaarden.
+
+      Het bedrijf behoudt zich het recht voor om de inhoud van het forum om welke reden dan ook te wijzigen, te bewerken en te verwijderen. Als u denkt dat iemand in strijd met deze voorwaarden inhoud op het forum heeft geplaatst, [neem dan onmiddellijk contact met ons op](#heading--contact).
+
+      <h2 id="heading--your-account"><a href="#heading--your-account">Uw account</a></h2>
+
+      U moet een account maken en zich aanmelden om sommige functies van het forum te kunnen gebruiken.
+
+      Om een account te maken, moet u enkele gegevens over uzelf verstrekken. Als u een account maakt, gaat u ermee akkoord om ten minste een geldig e-mailadres op te geven en dat adres up-to-date te houden. U kunt uw account te allen tijde beëindigen door een e-mail te sturen naar <%{contact_email}>.
+
+      U gaat ermee akkoord verantwoordelijk te zijn voor alle acties die met uw account worden ondernomen, ongeacht of u daarvoor toestemming hebt gegeven of niet, totdat u uw account beëindigt of het bedrijf ervan in kennis stelt dat uw account is gecompromitteerd. U gaat ermee akkoord het bedrijf onmiddellijk op de hoogte te stellen als u vermoedt dat uw account is gecompromitteerd. U gaat ermee akkoord een veilig wachtwoord voor uw account te kiezen en dit geheim te houden.
+
+      Het bedrijf kan uw account op het forum beperken, opschorten of beëindigen in overeenstemming met zijn beleid voor het behandelen van auteursrechtengerelateerde verwijderingsverzoeken, of als het bedrijf redelijkerwijs van mening is dat u een regel in deze voorwaarden hebt overtreden.
+
+      <h2 id="heading--your-content"><a href="#heading--your-content">Uw content</a></h2>
+
+      Niets in deze voorwaarden geeft het bedrijf eigendomsrechten op de intellectuele eigendommen die u deelt met het forum, zoals uw accountinformatie, berichten of andere content die indient bij het forum. Niets in deze voorwaarden geeft u enig eigendomsrecht op de intellectuele eigendommen van het bedrijf.
+
+      Tussen u en het bedrijf blijft u als enige verantwoordelijk voor de content die indient bij het forum. U gaat ermee akkoord dat u niet ten onrechte impliceert dat content die u indient bij het forum, wordt gesponsord of goedgekeurd door het bedrijf. Deze voorwaarden verplichten het bedrijf niet tot het opslaan, onderhouden of verstrekken van kopieën van content die u indient en tot het wijzigen ervan, overeenkomstig deze voorwaarden.
+
+      Content die indient bij het forum is van u en u beslist welke toestemming u anderen daarvoor geeft. U geeft het bedrijf echter ten minste een licentie om content die u bij het forum indient te verstrekken aan andere gebruikers van het forum. Die speciale licentie staat het bedrijf toe om content die u indient bij het forum te kopiëren, te publiceren en te analyseren.
+
+      Wanneer content die u indient bij het forum wordt verwijderd, door u of door het bedrijf, eindigt de speciale licentie van het bedrijf wanneer de laatste kopie verdwijnt uit de back-ups, caches en andere systemen van het bedrijf. Andere licenties die u toepast op content die u indient, zoals [Creative Commons](https://creativecommons.org)-licenties, kunnen blijven bestaan nadat uw content is verwijderd. Deze licenties kunnen anderen, of het bedrijf zelf, het recht geven om uw content opnieuw te delen via het forum.
+
+      Anderen die content ontvangen die u indient bij het forum kunnen de voorwaarden schenden waarop u uw content in licentie geeft. U gaat ermee akkoord dat het bedrijf niet aansprakelijk is jegens u voor deze schendingen of de gevolgen ervan.
+
+      <h2 id="heading--responsibility"><a href="#heading--responsibility">Uw verantwoordelijkheid</a></h2>
+
+      U gaat ermee akkoord het bedrijf te vrijwaren van rechtsvorderingen van anderen in verband met schending van deze voorwaarden door u of door anderen die uw account op het forum gebruiken. U en het bedrijf komen overeen om de andere partij zo snel mogelijk in kennis te stellen van alle rechtsvorderingen waarvoor u het bedrijf zou moeten vrijwaren. Als het bedrijf u niet onmiddellijk in kennis stelt van een rechtsvordering, hoeft u het bedrijf niet schadeloos te stellen voor schade die u met een tijdige kennisgeving had kunnen verdedigen of beperken. U gaat ermee akkoord dat u het bedrijf toestaat het onderzoek, de verdediging en de schikking van rechtsvorderingen waarvoor u het bedrijf zou moeten vrijwaren te controleren en dat u meewerkt met deze inspanningen. Het bedrijf gaat ermee akkoord niet in te stemmen met enige schikking die uw schuld toegeeft of u verplichtingen oplegt zonder uw voorafgaande instemming.
+
+      <h2 id="heading--disclaimers"><a href="#heading--disclaimers">Disclaimers</a></h2>
+
+      ***U aanvaardt alle risico's van het gebruik van het forum en de inhoud daarvan. Voor zover toegestaan door de wet leveren het bedrijf en zijn leveranciers het forum zoals het is, zonder enige garantie.***
+
+      Het forum kan hyperlinks naar forums en diensten van anderen plaatsen en deze integreren. Het bedrijf geeft geen enkele garantie over diensten die door anderen worden beheerd of content die zij kunnen leveren. Op het gebruik van diensten die door anderen worden uitgevoerd, kunnen andere voorwaarden van toepassing zijn tussen u en degene die de dienst beheert.
+
+      <h2 id="heading--liability"><a href="#heading--liability">Beperking van de aansprakelijkheid</a></h2>
+
+      ***Noch het bedrijf noch zijn leveranciers zijn jegens u aansprakelijk voor contractbreukschade die hun personeel redelijkerwijs niet kon voorzien toen u akkoord ging met deze voorwaarden.***
+
+      ***Voor zover toegestaan door de wet is de totale aansprakelijkheid jegens u voor vorderingen van welke aard dan ook die verband houden met het forum of de inhoud ervan beperkt tot $ 50.***
+
+      <h2 id="heading--feedback"><a href="#heading--feedback">Feedback</a></h2>
+
+      Het bedrijf verwelkomt uw feedback en suggesties voor het forum. Zie de sectie [Contact](#heading--contact) hieronder voor manieren om met ons in contact te komen.
+
+      U gaat ermee akkoord dat het bedrijf vrij is om te handelen naar de feedback en suggesties die u geeft en dat het bedrijf u niet hoeft te melden dat uw feedback is gebruikt, uw toestemming hoeft te vragen om deze te gebruiken of u hoeft te betalen. U gaat ermee akkoord geen feedback of suggesties in te dienen die volgens u vertrouwelijk of eigendomsrechtelijk zijn voor u of voor anderen.
+
+      <h2 id="heading--termination"><a href="#heading--termination">Beëindiging</a></h2>
+
+      Zowel u als het bedrijf kunnen te allen tijde de in deze voorwaarden beschreven overeenkomst beëindigen. Wanneer onze overeenkomst eindigt, eindigt ook uw toestemming om het forum te gebruiken.
+
+      De volgende bepalingen blijven van kracht na beëindiging van onze overeenkomst: [Uw content](#heading--your-content), [Feedback](#heading--feedback), [Uw verantwoordelijkheid](#heading--responsibility), [Disclaimers](#heading--disclaimers), [Beperking van de aansprakelijkheid](#heading--liability) en [Algemene voorwaarden](#heading--general).
+
+      <h2 id="heading--disputes"><a href="#heading--disputes">Geschillen</a></h2>
+
+      %{governing_law} is van toepassing op elk geschil met betrekking tot deze voorwaarden of uw gebruik van het forum.
+
+      U en het bedrijf komen overeen om alleen bij een staats- of federale rechtbank in %{city_for_disputes} gerechtelijke bevelen te verzoeken met betrekking tot deze voorwaarden. Noch u noch het bedrijf zal bezwaar maken tegen de rechtsbevoegdheid, het forum of de locatie van deze rechtbanken.
+
+      ***U en het bedrijf zullen elk geschil oplossen door middel van bindende arbitrage door de American Arbitration Association. De arbitrage volgt het handelsarbitragereglement en de aanvullende procedures voor consumentengeschillen van de AAA. Arbitrage zal plaatsvinden in %{city_for_disputes}. U zult elk geschil als individu regelen en niet als onderdeel van een collectieve actie of een andere representatieve procedure, hetzij als eiser of als lid van een groep. Geen enkele arbiter zal een geschil consolideren met een andere arbitrage zonder toestemming van het bedrijf.***
+
+      Elke arbitrage-uitspraak omvat de kosten van de arbitrage, redelijke advocatenhonoraria en redelijke kosten voor getuigen. U en het bedrijf kunnen arbitrage starten bij elke bevoegde rechtbank.
+
+      <h2 id="heading--general"><a href="#heading--general">Algemene voorwaarden</a></h2>
+
+      Indien een bepaling van deze voorwaarden niet afdwingbaar is zoals die geschreven is, maar gewijzigd kan worden om die afdwingbaar te maken, moet die bepaling worden gewijzigd in de minimale mate die nodig is om die afdwingbaar te maken. Anders moet die bepaling worden geschrapt.
+
+      U mag uw overeenkomst met het bedrijf niet overdragen. Het bedrijf kan uw overeenkomst overdragen aan een vestiging van het bedrijf, een ander bedrijf dat de controle over het bedrijf verkrijgt, of een ander bedrijf dat activa van het bedrijf koopt die verband houden met het forum. Elke poging tot overdracht in strijd met deze voorwaarden heeft geen rechtsgevolgen.
+
+      Noch de uitoefening van enig recht uit hoofde van deze overeenkomst, noch het afzien van het optreden tegen een schending van deze overeenkomst, ziet af van optreden tegen enige andere schending van deze overeenkomst.
+
+      Deze voorwaarden belichamen alle voorwaarden van overeenkomst tussen u en het bedrijf betreffende het gebruik van het forum. Deze voorwaarden vervangen volledig alle andere overeenkomsten betreffende uw gebruik van het forum, al dan niet schriftelijk.
+
+      <h2 id="heading--contact"><a href="#heading--contact">Contact</a></h2>
+
+      U kunt het bedrijf onder deze voorwaarden informeren en vragen sturen naar het bedrijf op <%{contact_email}>.
+
+      Het bedrijf kan u onder deze voorwaarden informeren via het e-mailadres dat u voor uw account op het forum hebt opgegeven, of door een bericht te plaatsen op de startpagina van het forum of op de pagina van uw account.
+
+      <h2 id="heading--changes"><a href="#heading--changes">Wijzigingen</a></h2>
+
+      Het bedrijf heeft deze voorwaarden voor het laatst bijgewerkt op 12 juli 2018 en kan deze voorwaarden opnieuw bijwerken. Het bedrijf zal alle updates op het forum plaatsen. Voor updates die belangrijke wijzigingen bevatten, gaat het bedrijf ermee akkoord u een e-mail te sturen, indien u een account hebt gemaakt en een geldig e-mailadres hebt opgegeven. Het bedrijf kan ook updates aankondigen met speciale berichten of meldingen op het forum.
+
+      Zodra u bericht krijgt over een update van deze voorwaarden, moet u akkoord gaan met de nieuwe voorwaarden om het forum te kunnen blijven gebruiken.
   privacy_topic:
     title: "Privacybeleid"
     body: |
@@ -4300,6 +4490,8 @@ nl:
     title: "Discourse instellen"
     step:
       introduction:
+        title: "Over je site"
+        description: "Deze worden weergegeven op je aanmeldpagina en eventuele openbare pagina's. Je kunt ze later altijd wijzigen."
         fields:
           title:
             label: "Communitynaam"
@@ -4310,21 +4502,28 @@ nl:
           default_locale:
             label: "Taal"
       privacy:
+        title: "Lidervaring"
         fields:
           login_required:
             placeholder: "Privé"
             extra_description: "Alleen aangemelde gebruikers hebben toegang tot deze community"
           invite_only:
+            placeholder: "Alleen op uitnodiging"
             extra_description: "Gebruikers moeten worden uitgenodigd door vertrouwde gebruikers of medewerkers, anders kunnen gebruikers zich zelf registreren"
           must_approve_users:
+            placeholder: "Goedkeuring vereisen"
             extra_description: "Gebruikers moeten worden goedgekeurd door medewerkers"
           chat_enabled:
             placeholder: "Chat inschakelen"
+            extra_description: "Ga in realtime in gesprek met je leden"
           enable_sidebar:
             placeholder: "Zijbalk inschakelen"
+            extra_description: "Krijg eenvoudig toegang tot je favoriete spaces"
       ready:
+        title: "Je site is klaar!"
         description: "Dat was het! Je hebt de basis van het opzetten van je community voltooid. Je kunt nu beginnen en rondkijken, een welkomsttopic schrijven en uitnodigingen sturen!<br><br>Veel plezier!"
       styling:
+        title: "Look en feel"
         fields:
           color_scheme:
             label: "Kleurenschema"
@@ -4355,19 +4554,38 @@ nl:
                 label: "Categorievakken met topics"
               subcategories_with_featured_topics:
                 label: "Subcategorieën met uitgelichte topics"
-      corporate:
+      branding:
+        title: "Sitelogo"
         fields:
+          logo:
+            label: "Primair logo"
+            description: "Aanbevolen grootte: 600 x 200"
+          logo_small:
+            label: "Vierkant logo"
+            description: "Aanbevolen grootte: 512 x 512. Wordt ook gebruikt als favorieten- en app-pictogram voor het mobiele startscherm."
+      corporate:
+        title: "Je organisatie"
+        description: "De volgende informatie wordt gebruiken op je Gebruiksvoorwaarden- en Over-pagina. Sla dit gerust over als er geen bedrijf is."
+        fields:
+          company_name:
+            label: "Bedrijfsnaam"
+            placeholder: "Acme-organisatie"
           governing_law:
+            label: "Toepasselijk recht"
             placeholder: "Californische wet"
           contact_url:
+            label: "Webpagina"
             placeholder: "https://www.example.com/contact-us"
           city_for_disputes:
+            label: "Plaats voor geschillen"
             placeholder: "San Francisco, Californië"
           site_contact:
+            label: "Geautomatiseerde berichten"
             description: "Alle geautomatiseerde persoonlijke berichten op Discourse worden verzonden door deze gebruiker, zoals markeringswaarschuwingen en back-upvoltooiingsmeldingen."
           contact_email:
             label: "Contactpunt"
             placeholder: "voorbeeld@gebruiker.com"
+            description: "E-mailadres van de belangrijkste contactpersoon die verantwoordelijk is voor deze site. Wordt gebruikt voor kritieke meldingen en wordt weergegeven op je <a href='%{base_path}/about' target='_blank'>Over-pagina</a> voor dringende kwesties."
       invites:
         title: "Medewerker uitnodigen"
         description: "Je bent bijna klaar! Nodig wat mensen uit om te helpen met het <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>opstarten van je discussies</a> met interessante topics en berichten om je community op te zetten."

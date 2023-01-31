@@ -60,6 +60,7 @@ uk:
         yesterday: Вчора
       about_view:
         title: Назва
+        name: Імʼя
         description: Опис
       channel_info:
         back_to_channel: "Назад"

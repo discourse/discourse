@@ -34,13 +34,12 @@ de:
     chat_channel_archive_complete:
       title: "Chat-Kanal-Archivierung abgeschlossen"
       subject_template: "Chat-Kanal-Archivierung erfolgreich abgeschlossen"
-      text_body_template: |
-        Die Archivierung des Chat-Kanals **\#%{channel_name}** wurde erfolgreich abgeschlossen. Die Nachrichten wurden in das Thema [%{topic_title}](%{topic_url}) kopiert.
     chat_channel_archive_failed:
       title: "Chat-Kanal-Archivierung fehlgeschlagen"
       subject_template: "Chat-Kanal-Archivierung fehlgeschlagen"
-      text_body_template: |
-        Die Archivierung des Chat-Kanals **\#%{channel_name}** ist fehlgeschlagen. %{messages_archived} Nachrichten wurden archiviert. Teilweise archivierte Nachrichten wurden in das Thema [%{topic_title}](%{topic_url}) kopiert. Besuche den Kanal unter %{channel_url}, um es erneut zu versuchen.
+    chat_channel_archive_failed_no_topic:
+      title: "Chat-Kanal-Archivierung fehlgeschlagen"
+      subject_template: "Chat-Kanal-Archivierung fehlgeschlagen"
   chat:
     deleted_chat_username: gelöscht
     errors:

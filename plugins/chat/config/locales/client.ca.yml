@@ -50,6 +50,7 @@ ca:
         yesterday: Ahir
       about_view:
         title: Títol
+        name: Nom
         description: Descripció
       channel_info:
         back_to_channel: "Enrere"

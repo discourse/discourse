@@ -181,7 +181,6 @@ pl_PL:
         read_only: "Tylko do odczytu"
         archived_header: "Kanał został zarchiwizowany"
         archived: "Zarchiwizowany"
-        archive_failed: "Archiwizacja kanału nie powiodła się. %{completed}/%{total} wiadomości zostało zarchiwizowanych w <a target=\"_blank\" href=\"%{topic_url}\">temacie docelowym</a>. Naciśnij przycisk ponów, aby spróbować zakończyć archiwizację."
         closed_header: "Kanał jest zamknięty"
         closed: "Zamknięta"
         open_header: "Kanał jest otwarty"
@@ -203,6 +202,7 @@ pl_PL:
         associated_topic: Powiązany temat
         associated_category: Połączona kategoria
         title: Tytuł
+        name: Nazwa
         description: Opis
       channel_info:
         back_to_all_channels: "Wszystkie kanały"
@@ -211,10 +211,6 @@ pl_PL:
           about: O stronie
           members: Członkowie
           settings: Ustawienia
-      channel_edit_title_modal:
-        title: Edytuj tytuł
-        input_placeholder: Dodaj tytuł
-        description: Nadaj swojemu kanałowi krótki opisowy tytuł
       channel_edit_description_modal:
         title: Edytuj opis
         input_placeholder: Dodaj opis

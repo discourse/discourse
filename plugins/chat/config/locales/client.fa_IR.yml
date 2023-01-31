@@ -158,6 +158,7 @@ fa_IR:
         associated_topic: موضوع مرتبط
         associated_category: دسته‌بندی مرتبط
         title: عنوان
+        name: نام
         description: توضیح
       channel_info:
         back_to_all_channels: "همه کانال‌ها"
@@ -166,10 +167,6 @@ fa_IR:
           about: درباره
           members: اعضاء
           settings: تنظیمات
-      channel_edit_title_modal:
-        title: ویرایش عنوان
-        input_placeholder: افزودن عنوان
-        description: یک عنوان توصیفی کوتاه به کانال خود بدهید
       channel_edit_description_modal:
         title: ویرایش توضیحات
         input_placeholder: افزودن توضیحات

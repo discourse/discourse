@@ -35,12 +35,21 @@ ar:
       title: "اكتمل أرشيف قناة الدردشة"
       subject_template: "اكتمل أرشيف قناة الدردشة بنجاح"
       text_body_template: |
-        اكتملت أرشفة قناة الدردشة **\#%{channel_name}** بنجاح. وتم نسخ الرسائل إلى الموضوع [%{topic_title}](%{topic_url}).
+        اكتملت أرشفة قناة الدردشة %{channel_hashtag_or_name} بنجاح. تم نسخ الرسائل في الموضوع [%{topic_title}](%{topic_url}).
     chat_channel_archive_failed:
       title: "فشلت أرشفة قناة الدردشة"
       subject_template: "فشلت أرشفة قناة الدردشة"
       text_body_template: |
-        فشلت أرشفة قناة الدردشة **\#%{channel_name}**. تم وضع الرسائل %{messages_archived} في الأرشيف. تم نسخ الرسائل المؤرشفة جزئيًا في الموضوع [%{topic_title}](%{topic_url}). انتقل إلى القناة في %{channel_url} لإعادة المحاولة.
+        فشلت أرشفة قناة الدردشة %{channel_hashtag_or_name}. تمت أرشفة %{messages_archived} من الرسائل. تم نسخ الرسائل المؤرشفة جزئيًا في الموضوع [%{topic_title}](%{topic_url}). انتقل إلى القناة في %{channel_url} لإعادة المحاولة.
+    chat_channel_archive_failed_no_topic:
+      title: "فشلت أرشفة قناة الدردشة"
+      subject_template: "فشلت أرشفة قناة الدردشة"
+      text_body_template: |
+        فشلت أرشفة قناة الدردشة %{channel_hashtag_or_name}. لم تتم أرشفة أي رسائل. لم يتم إنشاء الموضوع بنجاح للأسباب التالية:
+
+          %{topic_validation_errors}
+
+        انتقل إلى القناة في %{channel_url} لإعادة المحاولة.
   chat:
     deleted_chat_username: تم الحذف
     errors:

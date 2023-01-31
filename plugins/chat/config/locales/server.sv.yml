@@ -35,12 +35,21 @@ sv:
       title: "Arkivering av chattkanalen är färdigt"
       subject_template: "Arkivering av chattkanalen slutfördes framgångsrikt"
       text_body_template: |
-        Arkivering av chattkanalen **\#%{channel_name}** har slutförts. Meddelandena har kopierats till ämnet [%{topic_title}](%{topic_url}).
+        Arkiveringen av chattkanalen %{channel_hashtag_or_name} har slutförts. Meddelanden kopierades till ämnet [%{topic_title}](%{topic_url}).
     chat_channel_archive_failed:
       title: "Arkivering av chattkanalen misslyckades"
       subject_template: "Arkivering av chattkanalen misslyckades"
       text_body_template: |
-        Arkivering av chatt kanalen **\#%{channel_name}** misslyckades. %{messages_archived} meddelanden har arkiverats. Delvis arkiverade meddelanden kopierades till ämnet [%{topic_title}](%{topic_url}). Besök kanalen på %{channel_url} för att försöka igen.
+        Arkivering av chattkanalen %{channel_hashtag_or_name} misslyckades. %{messages_archived} meddelanden har arkiverats. Delvis arkiverade meddelanden kopierades till ämnet [%{topic_title}](%{topic_url}). Besök kanalen kl. %{channel_url} för att försöka igen.
+    chat_channel_archive_failed_no_topic:
+      title: "Arkivering av chattkanalen misslyckades"
+      subject_template: "Arkivering av chattkanalen misslyckades"
+      text_body_template: |
+        Arkivering av chattkanalen %{channel_hashtag_or_name} misslyckades. Inga meddelanden har arkiverats. Ämnet kunde inte skapas, av följande skäl:
+
+          %{topic_validation_errors}
+
+        Besök kanalen på %{channel_url} för att försöka igen.
   chat:
     deleted_chat_username: raderat
     errors:
@@ -55,6 +64,7 @@ sv:
       delete_channel_failed: "Det gick inte att ta bort kanalen, försök igen."
       minimum_length_not_met: "Meddelandet är för kort, måste ha minst %{minimum} tecken."
       message_too_long: "Meddelandet är för långt, måste ha högst %{maximum} tecken."
+      draft_too_long: "Utkastet är för långt."
       max_reactions_limit_reached: "Nya reaktioner är inte tillåtna för detta meddelande."
       message_move_invalid_channel: "Käll- och destinationskanalen måste vara offentliga kanaler."
       message_move_no_messages_found: "Inga meddelanden hittades med de angivna meddelande-ID:n."

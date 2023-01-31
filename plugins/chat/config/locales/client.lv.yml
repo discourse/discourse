@@ -51,6 +51,7 @@ lv:
         yesterday: Vakar
       about_view:
         title: Virsraksts
+        name: Vārds
         description: Apraksts
       channel_info:
         back_to_channel: "Atpakaļ"

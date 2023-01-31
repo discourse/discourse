@@ -35,12 +35,21 @@ fr:
       title: "Archivage du canal de discussion terminé"
       subject_template: "L'archivage du canal de discussion est terminé"
       text_body_template: |
-        L'archivage du canal de discussion **\#%{channel_name}** a bien été effectué. Les messages ont été copiés dans le sujet [%{topic_title}](%{topic_url}).
+        L'archivage du canal de discussion %{channel_hashtag_or_name} a bien été effectué. Les messages ont été copiés dans le sujet [%{topic_title}](%{topic_url}).
     chat_channel_archive_failed:
       title: "Échec de l'archivage du canal de discussion"
       subject_template: "Échec de l'archivage du canal de discussion"
       text_body_template: |
-        L'archivage du canal de discussion **\#%{channel_name}** a échoué. Les messages de %{messages_archived} ont été archivés. Les messages partiellement archivés ont été copiés dans le sujet [%{topic_title}](%{topic_url}). Visitez le canal à l'adresse %{channel_url} pour réessayer.
+        L'archivage du canal de discussion %{channel_hashtag_or_name} a échoué. Les messages de %{messages_archived} ont été archivés. Les messages partiellement archivés ont été copiés dans le sujet [%{topic_title}](%{topic_url}). Visitez le canal à l'adresse %{channel_url} pour réessayer.
+    chat_channel_archive_failed_no_topic:
+      title: "Échec de l'archivage du canal de discussion"
+      subject_template: "Échec de l'archivage du canal de discussion"
+      text_body_template: |
+        L'archivage du canal de discussion %{channel_hashtag_or_name} a échoué. Aucun message n'a été archivé. Le sujet n'a pas été créé pour les raisons suivantes :
+
+          %{topic_validation_errors}
+
+        Visitez le canal à l'adresse %{channel_url} pour réessayer.
   chat:
     deleted_chat_username: supprimé
     errors:

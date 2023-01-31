@@ -34,13 +34,12 @@ zh_CN:
     chat_channel_archive_complete:
       title: "聊天频道归档完成"
       subject_template: "聊天频道归档成功完成"
-      text_body_template: |
-        聊天频道**\#%{channel_name}**归档已成功完成。消息已被复制到话题[%{topic_title}](%{topic_url})中。
     chat_channel_archive_failed:
       title: "聊天频道归档失败"
       subject_template: "聊天频道归档失败"
-      text_body_template: |
-        聊天频道**#%{channel_name}**归档失败。%{messages_archived} 条消息已被归档。部分归档的消息已被复制到话题[%{topic_title}](%{topic_url})。请访问 %{channel_url} 下的频道以重试。
+    chat_channel_archive_failed_no_topic:
+      title: "聊天频道归档失败"
+      subject_template: "聊天频道归档失败"
   chat:
     deleted_chat_username: 已删除
     errors:

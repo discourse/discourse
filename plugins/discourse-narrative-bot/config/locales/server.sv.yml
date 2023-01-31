@@ -378,12 +378,22 @@ sv:
           Visste du att du kan hänvisa till kategorier och taggar i dina inlägg? Har du till exempel sett kategorin %{category}?
 
           Skriv `#` i mitten på en mening och välj en kategori eller tagg.
+        instructions_experimental: |-
+          Visste du att du kan hänvisa till kategorier och taggar i dina inlägg? Har du till exempel sett kategorin %{category}?
+
+          Skriv `#` var som helst i en mening och välj en kategori eller tagg.
         not_found: |-
           Hmm, jag ser ingen kategori någonstans. Notera att `#` inte kan vara det första tecknet.  Kan du kopiera detta i ditt nästa svar?
 
           ```text
           Jag kan skapa en kategorilänk genom #
           ...
+        not_found_experimental: |-
+          Hmm, jag ser ingen kategori någonstans där. Kan du kopiera denna i ditt nästa svar?
+
+          ```text
+          Jag kan skapa en kategorilänk genom #
+          ```
         reply: |-
           Utmärkt! Kom ihåg att detta fungerar både för kategorier _och_ taggar, om taggar har aktiverats.
       change_topic_notification_level:

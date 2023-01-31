@@ -48,6 +48,7 @@ bg:
         yesterday: Вчера
       about_view:
         title: Заглавие
+        name: Име
         description: Описание
       channel_info:
         back_to_channel: "Назад"
