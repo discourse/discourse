@@ -776,7 +776,7 @@ createWidget("post-article", {
         this.attach("post-avatar", attrs),
         this.attach(
           "post-body",
-          Object.assign({}, attrs, { repliesAbove: state.repliesAbove })
+          { ...attrs, repliesAbove: state.repliesAbove }
         ),
       ])
     );
