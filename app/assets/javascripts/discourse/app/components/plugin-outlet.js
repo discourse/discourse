@@ -56,10 +56,8 @@ export default class PluginOutletComponent extends GlimmerComponentWithDeprecate
     },
   };
 
-  constructor() {
-    super(...arguments);
-
-    this.connectors = renderedConnectorsFor(
+  get connectors() {
+    return renderedConnectorsFor(
       this.args.name,
       this.outletArgsWithDeprecations,
       this.context
