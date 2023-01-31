@@ -46,12 +46,13 @@
         </section>
       {{/if}}
 
-      <PluginOutlet
-        @name="about-after-admins"
-        @tagName="span"
-        @connectorTagName="section"
-        @args={{hash model=this.model}}
-      />
+      <span>
+        <PluginOutlet
+          @name="about-after-admins"
+          @connectorTagName="section"
+          @args={{hash model=this.model}}
+        />
+      </span>
 
       {{#if this.model.moderators}}
         <section class="about moderators">
@@ -64,12 +65,13 @@
         </section>
       {{/if}}
 
-      <PluginOutlet
-        @name="about-after-moderators"
-        @tagName="span"
-        @connectorTagName="section"
-        @args={{hash model=this.model}}
-      />
+      <span>
+        <PluginOutlet
+          @name="about-after-moderators"
+          @connectorTagName="section"
+          @args={{hash model=this.model}}
+        />
+      </span>
 
       {{#if this.model.category_moderators.length}}
         {{#each this.model.category_moderators as |cm|}}

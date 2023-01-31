@@ -1,8 +1,9 @@
 <UserPreferences::UserApiKeys @model={{@model}} />
 
-<PluginOutlet
-  @name="user-preferences-apps"
-  @tagName="span"
-  @connectorTagName="div"
-  @args={{hash model=this.model}}
-/>
+<span>
+  <PluginOutlet
+    @name="user-preferences-apps"
+    @connectorTagName="div"
+    @args={{hash model=this.model}}
+  />
+</span>

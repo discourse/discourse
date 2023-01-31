@@ -41,12 +41,13 @@
       {{#if this.post.topic}}
         {{discourse-tags this.post.topic}}
       {{/if}}
-      <PluginOutlet
-        @name="full-page-search-category"
-        @tagName="span"
-        @connectorTagName="div"
-        @args={{hash post=this.post}}
-      />
+      <span>
+        <PluginOutlet
+          @name="full-page-search-category"
+          @connectorTagName="div"
+          @args={{hash post=this.post}}
+        />
+      </span>
     </div>
   </div>
 

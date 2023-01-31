@@ -4,11 +4,12 @@
   @action={{action "createAccount"}}
 >
   {{#unless this.complete}}
-    <PluginOutlet
-      @name="create-account-before-modal-body"
-      @tagName="span"
-      @connectorTagName="div"
-    />
+    <span>
+      <PluginOutlet
+        @name="create-account-before-modal-body"
+        @connectorTagName="div"
+      />
+    </span>
     <DModalBody
       @class={{this.modalBodyClasses}}
       @preventModalAlertHiding={{true}}

@@ -94,12 +94,13 @@
     {{/if}}
   </div>
 
-  <PluginOutlet
-    @name="groups-form-membership-below-automatic"
-    @tagName="span"
-    @connectorTagName="div"
-    @args={{hash model=this.model}}
-  />
+  <span>
+    <PluginOutlet
+      @name="groups-form-membership-below-automatic"
+      @connectorTagName="div"
+      @args={{hash model=this.model}}
+    />
+  </span>
 
   <div class="control-group">
     <label class="control-label">{{i18n

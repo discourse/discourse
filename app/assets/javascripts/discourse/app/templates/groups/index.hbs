@@ -102,12 +102,13 @@
                       {{/if}}
                     </GroupMembershipButton>
 
-                    <PluginOutlet
-                      @name="group-index-box-after"
-                      @tagName="span"
-                      @connectorTagName="div"
-                      @args={{hash model=group}}
-                    />
+                    <span>
+                      <PluginOutlet
+                        @name="group-index-box-after"
+                        @connectorTagName="div"
+                        @args={{hash model=group}}
+                      />
+                    </span>
                   </div>
                 </div>
               </LinkTo>

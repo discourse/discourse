@@ -13,11 +13,12 @@
     <DiscourseBanner @user={{this.currentUser}} @banner={{this.site.banner}} />
   </div>
 
-  <PluginOutlet
-    @name="discovery-list-controls-above"
-    @tagName="span"
-    @connectorTagName="div"
-  />
+  <span>
+    <PluginOutlet
+      @name="discovery-list-controls-above"
+      @connectorTagName="div"
+    />
+  </span>
 
   <div class="list-controls">
     <PluginOutlet
@@ -61,12 +62,13 @@
     />
   {{/if}}
 
-  <PluginOutlet
-    @name="discovery-list-container-top"
-    @tagName="span"
-    @connectorTagName="div"
-    @args={{hash category=this.category}}
-  />
+  <span>
+    <PluginOutlet
+      @name="discovery-list-container-top"
+      @connectorTagName="div"
+      @args={{hash category=this.category}}
+    />
+  </span>
 
   <TopicDismissButtons
     @position="top"
@@ -77,11 +79,9 @@
     @resetNew={{action "resetNew"}}
   />
 
-  <PluginOutlet
-    @name="discovery-above"
-    @tagName="span"
-    @connectorTagName="div"
-  />
+  <span>
+    <PluginOutlet @name="discovery-above" @connectorTagName="div" />
+  </span>
 
   <div class="container list-container">
     <div class="row">
@@ -178,9 +178,7 @@
     </div>
   </div>
 
-  <PluginOutlet
-    @name="discovery-below"
-    @tagName="span"
-    @connectorTagName="div"
-  />
+  <span>
+    <PluginOutlet @name="discovery-below" @connectorTagName="div" />
+  </span>
 </DSection>

@@ -37,12 +37,13 @@
         @showTooltip={{@showStatusTooltip}}
       />
     {{/if}}
-    <PluginOutlet
-      @name="after-user-name"
-      @tagName="span"
-      @connectorTagName="span"
-      @args={{hash user=this.user}}
-    />
+    <span>
+      <PluginOutlet
+        @name="after-user-name"
+        @connectorTagName="span"
+        @args={{hash user=this.user}}
+      />
+    </span>
   </div>
   <div class="title">{{@user.title}}</div>
 
@@ -54,9 +55,10 @@
 
 </div>
 
-<PluginOutlet
-  @name="after-user-info"
-  @tagName="span"
-  @connectorTagName="div"
-  @args={{hash user=this.user}}
-/>
+<span>
+  <PluginOutlet
+    @name="after-user-info"
+    @connectorTagName="div"
+    @args={{hash user=this.user}}
+  />
+</span>

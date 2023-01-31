@@ -81,9 +81,10 @@
     href="https://meta.discourse.org/t/install-a-plugin/19157"
   >{{i18n "admin.plugins.howto"}}</a></p>
 
-<PluginOutlet
-  @name="admin-below-plugins-index"
-  @tagName="span"
-  @connectorTagName="div"
-  @args={{hash model=this.model}}
-/>
+<span>
+  <PluginOutlet
+    @name="admin-below-plugins-index"
+    @connectorTagName="div"
+    @args={{hash model=this.model}}
+  />
+</span>

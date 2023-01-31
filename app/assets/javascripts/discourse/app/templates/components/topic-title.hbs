@@ -2,10 +2,11 @@
   <div class="title-wrapper">
     {{yield}}
   </div>
-  <PluginOutlet
-    @name="topic-title"
-    @tagName="span"
-    @connectorTagName="div"
-    @args={{hash model=this.model}}
-  />
+  <span>
+    <PluginOutlet
+      @name="topic-title"
+      @connectorTagName="div"
+      @args={{hash model=this.model}}
+    />
+  </span>
 </div>

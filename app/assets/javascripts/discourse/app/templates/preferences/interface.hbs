@@ -1,9 +1,10 @@
-<PluginOutlet
-  @name="user-preferences-interface-top"
-  @tagName="span"
-  @connectorTagName="div"
-  @args={{hash model=this.model save=(action "save")}}
-/>
+<span>
+  <PluginOutlet
+    @name="user-preferences-interface-top"
+    @connectorTagName="div"
+    @args={{hash model=this.model save=(action "save")}}
+  />
+</span>
 
 {{#if this.showThemeSelector}}
   <div class="control-group theme">
@@ -233,21 +234,23 @@
   {{/if}}
 </fieldset>
 
-<PluginOutlet
-  @name="user-preferences-interface"
-  @tagName="span"
-  @connectorTagName="div"
-  @args={{hash model=this.model save=(action "save")}}
-/>
+<span>
+  <PluginOutlet
+    @name="user-preferences-interface"
+    @connectorTagName="div"
+    @args={{hash model=this.model save=(action "save")}}
+  />
+</span>
 
 <br />
 
-<PluginOutlet
-  @name="user-custom-controls"
-  @tagName="span"
-  @connectorTagName="div"
-  @args={{hash model=this.model}}
-/>
+<span>
+  <PluginOutlet
+    @name="user-custom-controls"
+    @connectorTagName="div"
+    @args={{hash model=this.model}}
+  />
+</span>
 
 <SaveControls
   @model={{this.model}}

@@ -59,12 +59,13 @@
       </div>
     {{/if}}
   {{/if}}
-  <PluginOutlet
-    @name="before-topic-list"
-    @tagName="span"
-    @connectorTagName="div"
-    @args={{hash category=this.category}}
-  />
+  <span>
+    <PluginOutlet
+      @name="before-topic-list"
+      @connectorTagName="div"
+      @args={{hash category=this.category}}
+    />
+  </span>
 
   {{#if this.hasTopics}}
     <TopicList
@@ -95,12 +96,13 @@
     />
   {{/if}}
 
-  <PluginOutlet
-    @name="after-topic-list"
-    @tagName="span"
-    @connectorTagName="div"
-    @args={{hash category=this.category}}
-  />
+  <span>
+    <PluginOutlet
+      @name="after-topic-list"
+      @connectorTagName="div"
+      @args={{hash category=this.category}}
+    />
+  </span>
 </DiscoveryTopicsList>
 
 <footer class="topic-list-bottom">

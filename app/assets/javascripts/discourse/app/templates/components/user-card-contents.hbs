@@ -43,12 +43,13 @@
 
           <UserAvatarFlair @user={{this.user}} />
 
-          <PluginOutlet
-            @name="user-card-avatar-flair"
-            @connectorTagName="div"
-            @args={{hash user=this.user}}
-            @tagName="div"
-          />
+          <div>
+            <PluginOutlet
+              @name="user-card-avatar-flair"
+              @connectorTagName="div"
+              @args={{hash user=this.user}}
+            />
+          </div>
         </div>
         <div class="names">
           <h1
@@ -117,12 +118,13 @@
               {{format-date this.user.status.ends_at format="tiny"}}
             </h3>
           {{/if}}
-          <PluginOutlet
-            @name="user-card-post-names"
-            @connectorTagName="div"
-            @args={{hash user=this.user}}
-            @tagName="div"
-          />
+          <div>
+            <PluginOutlet
+              @name="user-card-post-names"
+              @connectorTagName="div"
+              @args={{hash user=this.user}}
+            />
+          </div>
         </div>
         <ul class="usercard-controls">
           {{#if this.user.can_send_private_message_to_user}}
@@ -139,7 +141,6 @@
             @name="user-card-below-message-button"
             @connectorTagName="li"
             @args={{hash user=this.user close=(action "close")}}
-            @tagName=""
           />
           {{#if this.showFilter}}
             <li>
@@ -171,12 +172,13 @@
               />
             </li>
           {{/if}}
-          <PluginOutlet
-            @name="user-card-additional-buttons"
-            @connectorTagName="div"
-            @args={{hash user=this.user close=(action "close")}}
-            @tagName="li"
-          />
+          <li>
+            <PluginOutlet
+              @name="user-card-additional-buttons"
+              @connectorTagName="div"
+              @args={{hash user=this.user close=(action "close")}}
+            />
+          </li>
         </ul>
         <PluginOutlet
           @name="user-card-additional-controls"
@@ -278,12 +280,13 @@
                 <span>{{this.formattedUserLocalTime}}</span>
               </span>
             {{/if}}
-            <PluginOutlet
-              @name="user-card-location-and-website"
-              @tagName="span"
-              @connectorTagName="div"
-              @args={{hash user=this.user}}
-            />
+            <span>
+              <PluginOutlet
+                @name="user-card-location-and-website"
+                @connectorTagName="div"
+                @args={{hash user=this.user}}
+              />
+            </span>
           </div>
         </div>
       {{/if}}

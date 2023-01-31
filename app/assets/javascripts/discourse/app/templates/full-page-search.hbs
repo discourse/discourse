@@ -137,12 +137,13 @@
       {{/if}}
     {{/if}}
 
-    <PluginOutlet
-      @name="full-page-search-below-search-info"
-      @tagName="span"
-      @connectorTagName="div"
-      @args={{hash search=this.searchTerm}}
-    />
+    <span>
+      <PluginOutlet
+        @name="full-page-search-below-search-info"
+        @connectorTagName="div"
+        @args={{hash search=this.searchTerm}}
+      />
+    </span>
 
     {{#if this.searching}}
       {{loading-spinner size="medium"}}

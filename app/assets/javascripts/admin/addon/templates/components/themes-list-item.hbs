@@ -1,10 +1,11 @@
 <div class="inner-wrapper">
-  <PluginOutlet
-    @name="admin-customize-themes-list-item"
-    @tagName="span"
-    @connectorTagName="span"
-    @args={{hash theme=this.theme}}
-  />
+  <span>
+    <PluginOutlet
+      @name="admin-customize-themes-list-item"
+      @connectorTagName="span"
+      @args={{hash theme=this.theme}}
+    />
+  </span>
 
   <div class="info">
     <span class="name">

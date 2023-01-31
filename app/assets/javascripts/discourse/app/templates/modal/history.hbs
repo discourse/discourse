@@ -158,12 +158,13 @@
       </div>
     {{/if}}
 
-    <PluginOutlet
-      @name="post-revisions"
-      @tagName="span"
-      @connectorTagName="div"
-      @args={{hash model=this.model}}
-    />
+    <span>
+      <PluginOutlet
+        @name="post-revisions"
+        @connectorTagName="div"
+        @args={{hash model=this.model}}
+      />
+    </span>
 
     <LinksRedirect @class="row">
       {{html-safe this.bodyDiff}}

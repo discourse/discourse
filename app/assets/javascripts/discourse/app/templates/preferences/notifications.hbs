@@ -32,12 +32,13 @@
     <div class="instructions">{{i18n
         "user.desktop_notifications.each_browser_note"
       }}</div>
-    <PluginOutlet
-      @name="user-preferences-desktop-notifications"
-      @tagName="span"
-      @connectorTagName="div"
-      @args={{hash model=this.model save=(action "save")}}
-    />
+    <span>
+      <PluginOutlet
+        @name="user-preferences-desktop-notifications"
+        @connectorTagName="div"
+        @args={{hash model=this.model save=(action "save")}}
+      />
+    </span>
   </div>
 {{/unless}}
 
@@ -49,21 +50,23 @@
   {{/unless}}
 {{/if}}
 
-<PluginOutlet
-  @name="user-preferences-notifications"
-  @tagName="span"
-  @connectorTagName="div"
-  @args={{hash model=this.model save=(action "save")}}
-/>
+<span>
+  <PluginOutlet
+    @name="user-preferences-notifications"
+    @connectorTagName="div"
+    @args={{hash model=this.model save=(action "save")}}
+  />
+</span>
 
 <br />
 
-<PluginOutlet
-  @name="user-custom-controls"
-  @tagName="span"
-  @connectorTagName="div"
-  @args={{hash model=this.model}}
-/>
+<span>
+  <PluginOutlet
+    @name="user-custom-controls"
+    @connectorTagName="div"
+    @args={{hash model=this.model}}
+  />
+</span>
 
 <SaveControls
   @model={{this.model}}

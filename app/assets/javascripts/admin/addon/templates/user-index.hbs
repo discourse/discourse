@@ -259,12 +259,13 @@
   </section>
 {{/if}}
 
-<PluginOutlet
-  @name="admin-user-details"
-  @tagName="span"
-  @connectorTagName="div"
-  @args={{hash model=this.model}}
-/>
+<span>
+  <PluginOutlet
+    @name="admin-user-details"
+    @connectorTagName="div"
+    @args={{hash model=this.model}}
+  />
+</span>
 
 <section class="details">
   <h1>{{i18n "admin.user.permissions"}}</h1>
@@ -857,12 +858,13 @@
   </section>
 {{/if}}
 
-<PluginOutlet
-  @name="after-user-details"
-  @tagName="span"
-  @connectorTagName="div"
-  @args={{hash model=this.model}}
-/>
+<span>
+  <PluginOutlet
+    @name="after-user-details"
+    @connectorTagName="div"
+    @args={{hash model=this.model}}
+  />
+</span>
 
 <section>
   <hr />

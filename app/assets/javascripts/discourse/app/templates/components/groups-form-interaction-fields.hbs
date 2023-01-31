@@ -105,12 +105,13 @@
       @placeholderKey="admin.groups.manage.interaction.incoming_email_placeholder"
     />
 
-    <PluginOutlet
-      @name="group-email-in"
-      @tagName="span"
-      @connectorTagName="div"
-      @args={{hash model=this.model}}
-    />
+    <span>
+      <PluginOutlet
+        @name="group-email-in"
+        @connectorTagName="div"
+        @args={{hash model=this.model}}
+      />
+    </span>
   </div>
 {{/if}}
 
@@ -129,9 +130,10 @@
   />
 </div>
 
-<PluginOutlet
-  @name="groups-interaction-custom-options"
-  @tagName="span"
-  @connectorTagName="div"
-  @args={{hash model=this.model}}
-/>
+<span>
+  <PluginOutlet
+    @name="groups-interaction-custom-options"
+    @connectorTagName="div"
+    @args={{hash model=this.model}}
+  />
+</span>

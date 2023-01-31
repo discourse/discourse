@@ -27,9 +27,10 @@
   </h3>
 </div>
 
-<PluginOutlet
-  @name="below-suggested-topics"
-  @tagName="span"
-  @connectorTagName="div"
-  @args={{hash topic=this.topic}}
-/>
+<span>
+  <PluginOutlet
+    @name="below-suggested-topics"
+    @connectorTagName="div"
+    @args={{hash topic=this.topic}}
+  />
+</span>
