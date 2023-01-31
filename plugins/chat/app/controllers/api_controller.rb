@@ -26,7 +26,7 @@ class Chat::Api < Chat::ChatBaseController
   end
 
   def run_service(service)
-    @_result = service.call(params.to_unsafe_h.merge(guardian: guardian, **@extra_params))
+    @_result = service.call(params.to_unsafe_h.merge(guardian: guardian, **@extra_params.to_h))
   end
 
   def handle_service_result(result, serializer_object: nil, serializer: nil, serializer_data: {})
