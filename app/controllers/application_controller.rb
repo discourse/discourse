@@ -651,15 +651,10 @@ class ApplicationController < ActionController::Base
     )
 
     report = TopicTrackingState.report(current_user)
+    serializer = TopicTrackingStateSerializer.new(report, scope: guardian, root: false)
 
-    serializer =
-      ActiveModel::ArraySerializer.new(
-        report,
-        each_serializer: TopicTrackingStateSerializer,
-        scope: guardian,
-      )
-
-    store_preloaded("topicTrackingStates", MultiJson.dump(serializer))
+    store_preloaded("topicTrackingStates", MultiJson.dump(serializer.as_json[:data]))
+    store_preloaded("topicTrackingStateMeta", MultiJson.dump(serializer.as_json[:meta]))
   end
 
   def custom_html_json
