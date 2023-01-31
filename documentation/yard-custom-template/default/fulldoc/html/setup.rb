@@ -1,4 +1,6 @@
-# order was not deterministic for identic method names defined with @!method
+# frozen_string_literal: true
+
+# Order was not deterministic for identic method names defined with @!method
 # so we sort the list on path instead
 def generate_method_list
   @items =
