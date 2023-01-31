@@ -774,10 +774,10 @@ createWidget("post-article", {
     rows.push(
       h("div.row", [
         this.attach("post-avatar", attrs),
-        this.attach(
-          "post-body",
-          { ...attrs, repliesAbove: state.repliesAbove }
-        ),
+        this.attach("post-body", {
+          ...attrs,
+          repliesAbove: state.repliesAbove,
+        }),
       ])
     );
     return rows;
