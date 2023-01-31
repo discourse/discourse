@@ -527,7 +527,7 @@ module PrettyText
         if iframe["data-original-href"].present?
           vimeo_url = UrlHelper.normalized_encode(iframe["data-original-href"])
         else
-          vimeo_id = iframe["src"].split("/").last
+          vimeo_id = iframe["src"].split("/").last.sub("?h=", "/")
           vimeo_url = "https://vimeo.com/#{vimeo_id}"
         end
         iframe.replace Nokogiri::HTML5.fragment("<p><a href='#{vimeo_url}'>#{vimeo_url}</a></p>")
