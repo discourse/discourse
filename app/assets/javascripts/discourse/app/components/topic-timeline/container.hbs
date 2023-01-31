@@ -38,7 +38,7 @@
   <div class="timeline-controls">
     <PluginOutlet
       @name="timeline-controls-before"
-      @args={{hash model=@model}}
+      @outletArgs={{hash model=@model}}
     />
     <TopicAdminMenuButton
       @topic={{@model}}
@@ -178,7 +178,7 @@
     {{/if}}
     <PluginOutlet
       @name="timeline-footer-controls-after"
-      @args={{hash model=@model}}
+      @outletArgs={{hash model=@model}}
     />
   </div>
 {{/if}}

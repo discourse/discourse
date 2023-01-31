@@ -2,7 +2,7 @@
   <PluginOutlet
     @name="user-preferences-interface-top"
     @connectorTagName="div"
-    @args={{hash model=this.model save=(action "save")}}
+    @outletArgs={{hash model=this.model save=(action "save")}}
   />
 </span>
 
@@ -238,7 +238,7 @@
   <PluginOutlet
     @name="user-preferences-interface"
     @connectorTagName="div"
-    @args={{hash model=this.model save=(action "save")}}
+    @outletArgs={{hash model=this.model save=(action "save")}}
   />
 </span>
 
@@ -248,7 +248,7 @@
   <PluginOutlet
     @name="user-custom-controls"
     @connectorTagName="div"
-    @args={{hash model=this.model}}
+    @outletArgs={{hash model=this.model}}
   />
 </span>
 

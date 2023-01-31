@@ -28,7 +28,7 @@
     {{/if}}
     <PluginOutlet
       @name="admin-user-controls-after"
-      @args={{hash model=this.model}}
+      @outletArgs={{hash model=this.model}}
     />
   </div>
 
@@ -50,7 +50,10 @@
     />
   </div>
 
-  <PluginOutlet @name="admin-user-below-names" @args={{hash user=this.model}} />
+  <PluginOutlet
+    @name="admin-user-below-names"
+    @outletArgs={{hash user=this.model}}
+  />
 
   {{#if this.canCheckEmails}}
     <div class="display-row email">
@@ -263,7 +266,7 @@
   <PluginOutlet
     @name="admin-user-details"
     @connectorTagName="div"
-    @args={{hash model=this.model}}
+    @outletArgs={{hash model=this.model}}
   />
 </span>
 
@@ -862,7 +865,7 @@
   <PluginOutlet
     @name="after-user-details"
     @connectorTagName="div"
-    @args={{hash model=this.model}}
+    @outletArgs={{hash model=this.model}}
   />
 </span>
 

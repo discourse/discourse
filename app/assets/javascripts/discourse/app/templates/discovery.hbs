@@ -39,7 +39,7 @@
         {{outlet "header-list-container"}}
         <PluginOutlet
           @name="header-list-container-bottom"
-          @args={{hash category=this.category}}
+          @outletArgs={{hash category=this.category}}
         />
       </div>
     </div>
@@ -51,7 +51,7 @@
         <PluginOutlet
           @name="discovery-list-container-top"
           @connectorTagName="span"
-          @args={{hash category=this.category listLoading=this.loading}}
+          @outletArgs={{hash category=this.category listLoading=this.loading}}
         />
         {{outlet "list-container"}}
       </div>

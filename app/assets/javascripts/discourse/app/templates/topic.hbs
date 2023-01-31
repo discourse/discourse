@@ -28,7 +28,10 @@
     <PluginOutlet
       @name="topic-above-post-stream"
       @connectorTagName="div"
-      @args={{hash model=this.model editFirstPost=(action "editFirstPost")}}
+      @outletArgs={{hash
+        model=this.model
+        editFirstPost=(action "editFirstPost")
+      }}
     />
   </span>
 
@@ -77,7 +80,7 @@
               <PluginOutlet
                 @name="edit-topic"
                 @connectorTagName="div"
-                @args={{hash model=this.model buffered=this.buffered}}
+                @outletArgs={{hash model=this.model buffered=this.buffered}}
               />
             </span>
 
@@ -150,7 +153,7 @@
 
             <PluginOutlet
               @name="topic-title-suffix"
-              @args={{hash model=this.model}}
+              @outletArgs={{hash model=this.model}}
             />
           </h1>
 
@@ -217,7 +220,7 @@
         <PluginOutlet
           @name="topic-navigation"
           @connectorTagName="div"
-          @args={{hash topic=this.model}}
+          @outletArgs={{hash topic=this.model}}
         />
 
         {{#if info.renderTimeline}}
@@ -296,7 +299,10 @@
               <PluginOutlet
                 @name="before-topic-progress"
                 @connectorTagName="div"
-                @args={{hash model=this.model jumpToPost=(action "jumpToPost")}}
+                @outletArgs={{hash
+                  model=this.model
+                  jumpToPost=(action "jumpToPost")
+                }}
               />
             </span>
             <TopicAdminMenuButton
@@ -335,7 +341,7 @@
               <PluginOutlet
                 @name="topic-above-posts"
                 @connectorTagName="div"
-                @args={{hash model=this.model}}
+                @outletArgs={{hash model=this.model}}
               />
             </span>
 
@@ -526,7 +532,7 @@
             <PluginOutlet
               @name="topic-above-footer-buttons"
               @connectorTagName="div"
-              @args={{hash model=this.model}}
+              @outletArgs={{hash model=this.model}}
             />
           </span>
 
@@ -568,7 +574,7 @@
         <PluginOutlet
           @name="topic-above-suggested"
           @connectorTagName="div"
-          @args={{hash model=this.model}}
+          @outletArgs={{hash model=this.model}}
         />
       </span>
       <div

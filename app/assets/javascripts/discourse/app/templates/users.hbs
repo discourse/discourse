@@ -6,7 +6,7 @@
           <PluginOutlet
             @name="users-top"
             @connectorTagName="div"
-            @args={{hash model=this.model}}
+            @outletArgs={{hash model=this.model}}
           />
         </span>
         <div class="directory-controls">
@@ -56,7 +56,7 @@
             {{/if}}
             <PluginOutlet
               @name="users-directory-controls"
-              @args={{hash model=this.model}}
+              @outletArgs={{hash model=this.model}}
             />
           </div>
         </div>
