@@ -270,11 +270,8 @@ zh_CN:
       edit_bookmark: "编辑书签"
       clear_bookmarks: "清除书签"
       help:
-        bookmark: "点击以将此话题的第一个帖子加入书签"
-        edit_bookmark: "点击以编辑有关此话题的书签"
         edit_bookmark_for_topic: "点击以编辑此话题的书签"
         unbookmark: "点击以移除此话题中的所有书签"
-        unbookmark_with_reminder: "点击以移除此话题中的所有书签和提醒。"
     bookmarks:
       created: "您已将此帖子加入书签。%{name}"
       created_generic: "您已将此加入书签。%{name}"
@@ -4570,6 +4567,8 @@ zh_CN:
           love:
             name: "爱"
             description: "点赞按钮的颜色。"
+          selected:
+            name: "已选择"
         robots:
           title: "替换您的站点的 robots.txt 文件："
           warning: "这将永久替换任何相关的站点设置。"

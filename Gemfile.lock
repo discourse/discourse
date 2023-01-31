@@ -425,7 +425,7 @@ GEM
       nokogiri (>= 1.6.0)
     ruby2_keywords (0.0.5)
     rubyzip (2.3.2)
-    sanitize (6.0.0)
+    sanitize (6.0.1)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
     sassc (2.0.1)

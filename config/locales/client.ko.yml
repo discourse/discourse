@@ -268,11 +268,9 @@ ko:
       edit_bookmark: "북마크 편집"
       clear_bookmarks: "북마크 지우기"
       help:
-        bookmark: "이 주제의 첫 번째 게시물을 북마크하려면 클릭하세요"
-        edit_bookmark: "이 주제의 북마크를 편집하려면 클릭하세요"
         edit_bookmark_for_topic: "이 주제의 북마크를 편집하려면 클릭하세요"
         unbookmark: "이 주제의 모든 북마크를 제거하려면 클릭하세요"
-        unbookmark_with_reminder: "이 주제의 모든 북마크 및 미리 알림을 제거하려면 클릭하세요"
+        unbookmark_with_reminder: "이 항목의 모든 북마크 및 미리 알림을 제거하려면 클릭하십시오"
     bookmarks:
       created: "이 게시물을 북마크했습니다. %{name}"
       create: "북마크 만들기"
@@ -4257,6 +4255,8 @@ ko:
           love:
             name: "하트"
             description: "좋아요 버튼 색입니다."
+          selected:
+            name: "선택됨"
         robots:
           title: "사이트의 robots.txt 파일 오버라이드:"
           warning: "관련된 모든 사이트 설정이 영구적으로 오버라이드됩니다."

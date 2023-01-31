@@ -2603,6 +2603,35 @@ RSpec.describe Search do
     end
   end
 
+  context "when prioritize_exact_search_match is enabled" do
+    before { SearchIndexer.enable }
+
+    after { SearchIndexer.disable }
+
+    it "correctly ranks topics" do
+      SiteSetting.prioritize_exact_search_title_match = true
+
+      topic1 = Fabricate(:topic, title: "saml saml saml is the best")
+      post1 = Fabricate(:post, topic: topic1, raw: "this topic is a story about saml")
+
+      topic2 = Fabricate(:topic, title: "sam has ideas about lots of things")
+      post2 = Fabricate(:post, topic: topic2, raw: "this topic is not about saml saml saml")
+
+      topic3 = Fabricate(:topic, title: "jane has ideas about lots of things")
+      post3 = Fabricate(:post, topic: topic3, raw: "sam sam sam sam lets add sams")
+
+      SearchIndexer.index(post1, force: true)
+      SearchIndexer.index(post2, force: true)
+      SearchIndexer.index(post3, force: true)
+
+      result = Search.execute("sam")
+      expect(result.posts.length).to eq(3)
+
+      # title match should win cause we limited duplication
+      expect(result.posts.pluck(:id)).to eq([post2.id, post1.id, post3.id])
+    end
+  end
+
   context "when max_duplicate_search_index_terms limits duplication" do
     before { SearchIndexer.enable }
 

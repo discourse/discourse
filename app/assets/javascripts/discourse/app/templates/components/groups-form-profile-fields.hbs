@@ -44,10 +44,11 @@
 {{#if this.canEdit}}
   {{yield}}
 
-  <PluginOutlet
-    @name="group-edit"
-    @tagName="span"
-    @connectorTagName="div"
-    @args={{hash group=this.model}}
-  />
+  <span>
+    <PluginOutlet
+      @name="group-edit"
+      @connectorTagName="div"
+      @outletArgs={{hash group=this.model}}
+    />
+  </span>
 {{/if}}

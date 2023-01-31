@@ -27,12 +27,13 @@
         aria-label={{I18n this.saveLabel}}
         class="reply-area {{if this.canEditTags 'with-tags' 'without-tags'}}"
       >
-        <PluginOutlet
-          @name="composer-open"
-          @tagName="span"
-          @connectorTagName="div"
-          @args={{hash model=this.model}}
-        />
+        <span>
+          <PluginOutlet
+            @name="composer-open"
+            @connectorTagName="div"
+            @outletArgs={{hash model=this.model}}
+          />
+        </span>
 
         <div class="reply-to">
           {{#unless this.model.viewFullscreen}}
@@ -46,7 +47,7 @@
 
               <PluginOutlet
                 @name="composer-action-after"
-                @args={{hash model=this.model}}
+                @outletArgs={{hash model=this.model}}
               />
 
               {{#unless this.site.mobileView}}
@@ -80,7 +81,7 @@
 
           <PluginOutlet
             @name="before-composer-controls"
-            @args={{hash model=this.model}}
+            @outletArgs={{hash model=this.model}}
           />
 
           <ComposerToggles
@@ -123,7 +124,7 @@
           <div class="composer-fields">
             <PluginOutlet
               @name="before-composer-fields"
-              @args={{hash model=this.model}}
+              @outletArgs={{hash model=this.model}}
             />
             {{#unless this.model.viewFullscreen}}
               {{#if this.model.canEditTitle}}
@@ -191,7 +192,7 @@
 
                   <PluginOutlet
                     @name="after-title-and-category"
-                    @args={{hash
+                    @outletArgs={{hash
                       model=this.model
                       tagValidation=this.tagValidation
                       canEditTags=this.canEditTags
@@ -201,29 +202,35 @@
                 </div>
               {{/if}}
 
-              <PluginOutlet
-                @name="composer-fields"
-                @tagName="span"
-                @connectorTagName="div"
-                @args={{hash model=this.model showPreview=this.showPreview}}
-              />
+              <span>
+                <PluginOutlet
+                  @name="composer-fields"
+                  @connectorTagName="div"
+                  @outletArgs={{hash
+                    model=this.model
+                    showPreview=this.showPreview
+                  }}
+                />
+              </span>
             {{/unless}}
           </div>
         </ComposerEditor>
 
-        <PluginOutlet
-          @name="composer-after-composer-editor"
-          @tagName="span"
-          @args={{hash model=this.model}}
-        />
+        <span>
+          <PluginOutlet
+            @name="composer-after-composer-editor"
+            @outletArgs={{hash model=this.model}}
+          />
+        </span>
 
         <div class="submit-panel">
-          <PluginOutlet
-            @name="composer-fields-below"
-            @tagName="span"
-            @connectorTagName="div"
-            @args={{hash model=this.model}}
-          />
+          <span>
+            <PluginOutlet
+              @name="composer-fields-below"
+              @connectorTagName="div"
+              @outletArgs={{hash model=this.model}}
+            />
+          </span>
 
           <div class="save-or-cancel">
             <ComposerSaveButton
@@ -304,19 +311,21 @@
               {{/if}}
             </div>
 
-            <PluginOutlet
-              @name="composer-after-save-or-cancel"
-              @tagName="span"
-              @args={{hash model=this.model}}
-            />
+            <span>
+              <PluginOutlet
+                @name="composer-after-save-or-cancel"
+                @outletArgs={{hash model=this.model}}
+              />
+            </span>
           </div>
 
           {{#if this.site.mobileView}}
-            <PluginOutlet
-              @name="composer-mobile-buttons-bottom"
-              @tagName="span"
-              @args={{hash model=this.model}}
-            />
+            <span>
+              <PluginOutlet
+                @name="composer-mobile-buttons-bottom"
+                @outletArgs={{hash model=this.model}}
+              />
+            </span>
 
             {{#if this.allowUpload}}
               <a

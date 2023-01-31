@@ -16,7 +16,7 @@ import { isTesting } from "discourse-common/config/environment";
 import getURL from "discourse-common/lib/get-url";
 
 const PRESENCE_INTERVAL_S = 30;
-const PRESENCE_DEBOUNCE_MS = isTesting() ? 0 : 500;
+const DEFAULT_PRESENCE_DEBOUNCE_MS = isTesting() ? 0 : 500;
 const PRESENCE_THROTTLE_MS = isTesting() ? 0 : 1000;
 
 const PRESENCE_GET_RETRY_MS = 5000;
@@ -251,6 +251,8 @@ class PresenceChannelState extends EmberObject.extend(Evented) {
 }
 
 export default class PresenceService extends Service {
+  _presenceDebounceMs = DEFAULT_PRESENCE_DEBOUNCE_MS;
+
   init() {
     super.init(...arguments);
     this._queuedEvents = [];
@@ -276,6 +278,7 @@ export default class PresenceService extends Service {
     super.willDestroy(...arguments);
     window.removeEventListener("beforeunload", this._beaconLeaveAll);
     removeOnPresenceChange(this._throttledUpdateServer);
+    cancel(this._debounceTimer);
   }
 
   // Get a PresenceChannel object representing a single channel
@@ -543,11 +546,15 @@ export default class PresenceService extends Service {
           e.promiseProxy.resolve();
         }
       });
+
+      this._presenceDebounceMs = DEFAULT_PRESENCE_DEBOUNCE_MS;
     } catch (e) {
       // Put the failed events back in the queue for next time
       this._queuedEvents.unshift(...queue);
       if (e.jqXHR?.status === 429) {
-        // Rate limited. No need to raise, we'll try again later
+        // Rate limited
+        const waitSeconds = e.jqXHR.responseJSON?.extras?.wait_seconds || 10;
+        this._presenceDebounceMs = waitSeconds * 1000;
       } else {
         throw e;
       }
@@ -585,7 +592,12 @@ export default class PresenceService extends Service {
       return;
     } else if (this._queuedEvents.length > 0) {
       this._cancelTimer();
-      debounce(this, this._throttledUpdateServer, PRESENCE_DEBOUNCE_MS);
+      cancel(this._debounceTimer);
+      this._debounceTimer = debounce(
+        this,
+        this._throttledUpdateServer,
+        this._presenceDebounceMs
+      );
     } else if (
       !this._nextUpdateTimer &&
       this._presentChannels.length > 0 &&

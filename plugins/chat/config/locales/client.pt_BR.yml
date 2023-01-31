@@ -118,7 +118,7 @@ pt_BR:
         invite: "convidar para canal"
         without_membership:
           one: "%{username} não entrou neste canal."
-          other: "%{username} e %{others} não se entraram neste canal."
+          other: "%{username} e %{others} não entraram neste canal."
         group_mentions_disabled:
           one: "%{group_name} não permite menções"
           other: "%{group_name} e %{others} não permitem menções"
@@ -239,6 +239,8 @@ pt_BR:
           about: Sobre
           members: Membros
           settings: Definições
+      channel_edit_name_slug_modal:
+        name: Nome do canal
       channel_edit_description_modal:
         title: Editar descrição
         input_placeholder: Adicione uma descrição

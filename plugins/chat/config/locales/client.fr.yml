@@ -239,6 +239,8 @@ fr:
           about: À propos
           members: Membres
           settings: Paramètres
+      channel_edit_name_slug_modal:
+        name: Nom du canal
       channel_edit_description_modal:
         title: Modifier la description
         input_placeholder: Ajouter une description

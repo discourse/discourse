@@ -311,7 +311,6 @@ sl:
       title: "Zaznamek"
       clear_bookmarks: "Odstrani zaznamke"
       help:
-        bookmark: "ustvari zaznamek prvega prispevka v tej temi"
         unbookmark: "odstrani vse zaznamke v tej temi"
     bookmarks:
       created: "To objavo ste dodali med zaznamke. %{name}"
@@ -3742,6 +3741,8 @@ sl:
             name: "nevarnost"
           success:
             name: "uspeh"
+          selected:
+            name: "izbran"
         email_style:
           css: "CSS"
       email:

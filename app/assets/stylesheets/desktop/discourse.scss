@@ -155,6 +155,8 @@ input {
   }
 
   .controls {
+    display: flex;
+    align-items: center;
     margin-left: 160px;
   }
 }

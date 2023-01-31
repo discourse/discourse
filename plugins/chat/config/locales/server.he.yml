@@ -64,6 +64,7 @@ he:
       delete_channel_failed: "מחיקת הערוץ נכשלה, נא לנסות שוב."
       minimum_length_not_met: "ההודעה קצרה מדי, היא חייבת להיות ארוכה מ־%{minimum} תווים"
       message_too_long: "ההודעה ארוכה מדי, היא חייבת להיות באורך של עד %{maximum} תווים לכל היותר."
+      draft_too_long: "הטיוטה ארוכה מדי."
       max_reactions_limit_reached: "רגשות חדשים אסורים בהודעה זו."
       message_move_invalid_channel: "ערוצי המקור והיעד חייבים להיות ערוצים ציבוריים."
       message_move_no_messages_found: "לא נמצאו הודעות עם מזהי ההודעות שסופקו."

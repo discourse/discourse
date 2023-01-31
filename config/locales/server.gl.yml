@@ -1788,8 +1788,6 @@ gl:
     automatically_unpin_topics: "Soltar os temas automaticamente cando o usuario chega ao fondo."
     read_time_word_count: "Número de palabras por minuto para calcular o tempo estimado de lectura."
     topic_page_title_includes_category: "A <a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>etiqueta do título</a> da páxina do tema inclúe o nome da categoría."
-    native_app_install_banner_ios: "Amosa o anuncio da aplicación DiscourseHub en dispositivos iOS a usuarios habituais (nivel de confianza 1 e superior)."
-    native_app_install_banner_android: "Amosa o anuncio da aplicación DiscourseHub en dispositivos Android a usuarios habituais (nivel de confianza 1 e superior)."
     app_association_android: "Contido do <a href='%{base_path}/.well-known/assetlinks.json'>punto de chegada .well-known/assetlinks.json</a>, utilizado para a API Google's Digital Asset Links."
     app_association_ios: "Contido de <a href='%{base_path}/apple-app-site-association'>punto de chegada de apple-app-site-association</a> , utilizado para crear ligazóns universais entre este sitio e as aplicacións de iOS."
     share_anonymized_statistics: "Compartir estatísticas de uso anonimizadas."
@@ -3394,88 +3392,6 @@ gl:
     title: "Termos do servizo"
   privacy_topic:
     title: "Política de privacidade"
-    body: |
-      <a name="collect"></a>
-
-      ## [Que información recollemos?](#collect)
-
-      Recollemos información súa cando se rexistra no noso sitio e compilamos datos cando participa no foro lendo, escribindo e avaliando o contido que se comparte aquí.
-
-      Cando se rexistre no noso sitio, pediráselle que introduza o seu nome e enderezo de correo electrónico. No entanto, pode visitar o sitio sen rexistrarse. O seu enderezo de correo electrónico comprobarase mediante un correo electrónico que contén unha ligazón de único uso. Se esa ligazón se visita, sabemos que vostede controla ese enderezo de correo electrónico.
-
-      Cando se rexistra e publica, rexistramos o enderezo IP desde o que se realizou o envío. Tamén podemos conservar os rexistros do servidor que inclúen o enderezo IP de cada solicitude ao noso servidor.
-
-      <a name="use"></a>
-
-      ##[Que facemos coa súa información?](#use)
-
-      Calquera información que compilemos de vostede pode ser utilizada dunha das seguintes maneiras:
-
-      * Para personalizar a súa experiencia &mdash; a súa información axúdanos a responder mellor ás súas necesidades individuais.
-      * Para mellorar o noso sitio web&mdash; esforzámonos a cotío por mellorar as propostas do noso sitio baseándonos na información e nos comentarios que recibimos de vostede.
-      * Para mellorar o servizo de atención ao cliente &mdash; a súa información axúdanos a responder máis eficazmente ás peticións de servizo ao cliente e ás súas necesidades de asistencia.
-      * Para enviar correos electrónicos periódicos &mdash; O enderezo de correo electrónico que nos proporcione pode utilizarse para enviarlle información, notificacións que solicite sobre cambios en temas ou en resposta ao seu nome de usuario, respostas a consultas e/ou outras peticións e cuestións.
-
-      <a name="protect"></a>
-
-      ## [Como protexemos esta información súa?](#protect)
-
-      Implementamos una variedade de medidas de seguranza para asegurar a súa información persoal cando entra, envía ou accede á súa información persoal.
-
-      <a name="data-retention"></a>
-
-      ## [Cal é súa política de retención de datos?](#data-retention)
-
-      Faremos en boa fe, esforzos para..:
-
-      * Conservar os rexistros do servidor que conteñan o enderezo IP de todas as solicitudes a este servidor non máis de 90 días.
-      * Conservar os enderezos IP asociados aos usuarios rexistrados e ás súas mensaxes non máis de 5 anos.
-
-      <a name="cookies"></a>
-
-      ## [Usamos rastros?](#cookies)
-
-      Si. As rastros son pequenos ficheiros que un sitio ou o seu fornecedor de servizos transfire ao disco duro do seu computador a través do seu navegador web (se o permite). Estas rastros permiten que o sitio recoñeza o seu navegador e, se ten unha conta rexistrada, a asocie coa súa conta rexistrada.
-
-      Utilizamos rastros para comprender e gardar as súas preferencias para futuras visitas e compilar datos agregados sobre o tráfico do sitio e a interacción nel, de modo que poidamos ofrecer mellores experiencias e ferramentas no futuro. Podemos contratar fornecedores de servizos de terceiros para que nos axuden a comprender mellor os visitantes do noso sitio. Estes fornecedores de servizos non están autorizados a utilizar a información compilada no noso nome, agás que sexa para axudarnos a levar a cabo e mellorar o noso obxectivo.
-
-      <a name="disclose"></a>
-
-      ## [Revelamos algunha información a terceiros?](#disclose)
-
-      Non vendemos, comerciamos nin transferimos a terceiros a súa información persoal identificábel. Isto non inclúe os terceiros de confianza que nos axudan a operar o noso sitio, a levar a cabo o noso obxectivo ou a prestarlle servizos, sempre e cando esas partes acorden manter esta información confidencial. Tamén podemos revelar a súa información cando creamos que é apropiado para cumprir coa lei, facer cumprir as políticas do noso sito ou protexer os nosos dereitos e os doutros, propiedade ou seguranza. No entanto, a información que non sexa de identificación persoal dos visitantes pode ser fornecida a outras partes para mercadotecnia, publicidade ou outros usos.
-
-      <a name="third-party"></a>
-
-      ## [Ligazóns de terceiros](#third-party)
-
-      Ocasionalmente, ao noso criterio, podemos incluír ou ofrecer produtos ou servizos de terceiros no noso sitio. Estes sitios de terceiros teñen políticas de privacidade separadas e independentes. Polo tanto, non temos ningunha responsabilidade sobre o contido e as actividades destes sitios ligados. Aínda así, buscamos protexer a integridade do noso sitio e agradecemos calquera comentario sobre estes sitios.
-
-      <a name="coppa"></a>
-
-      ## [Cumprimento da Lei de protección da privacidade dos menores na Internet](#coppa)
-
-      O noso sitio, produtos e servizos están dirixidos a persoas que teñen polo menos 13 anos de idade ou máis. Se este servidor está nos EE.UU., e vostede é menor de 13 anos, segundo os requisitos de COPPA ([Children's Online Privacy Protection Act](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)), non utilice este sitio.
-
-      <a name="online"></a>
-
-      ## [Política de privacidade en liña soamente](#online)
-
-      Esta política de privacidade en liña aplícase só á información recollida a través do noso sitio e non á información recollida sen conexión en liña.
-
-      <a name="consent"></a>
-
-      ## [O seu consentimento](#consent)
-
-      Ao utilizar o sitio, acepta a política de privacidade do noso sitio web.
-
-      <a name="changes"></a>
-
-      ## [Cambios na nosa política de privacidade](#changes)
-
-      De decidirmos cambios na nosa política de privacidade, publicarémolos nesta páxina.
-
-      Este documento ten licenza CC-BY-SA. A súa última actualización é de do 31 de maio de 2013.
   badges:
     mass_award:
       errors:

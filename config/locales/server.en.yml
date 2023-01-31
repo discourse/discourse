@@ -2459,6 +2459,7 @@ en:
       delete_rejected_email_after_days: "This setting cannot be set lower than the delete_email_logs_after_days setting or greater than %{max}"
       invalid_uncategorized_category_setting: "The Uncategorized category cannot be selected if allow uncategorized topics is not allowed"
       enable_new_notifications_menu_not_legacy_navigation_menu: "You must set `navigation_menu` to `legacy` before enabling this setting."
+      invalid_search_ranking_weights: "Value is invalid for search_ranking_weights site setting. Example: '{0.1,0.2,0.3,1.0}'. Note that maximum value for each weight is 1.0."
 
     placeholder:
       discourse_connect_provider_secrets:
@@ -4372,7 +4373,11 @@ en:
   tos_topic:
     title: "Terms of Service"
     body: |
-      These terms govern use of the Internet forum at <%{base_url}>. To use the forum, you must agree to these terms with %{company_name}, the company that runs the forum.
+      <h2 id="heading--change-me"><a href="#heading--change-me">Change Me</a></h2>
+
+      Forum Admin, please find below an example starting template for a privacy policy that you should customise to meet your site's needs.
+
+      These terms do not, but might one day, govern use of the Internet forum at <%{base_url}>. In that event, to use the forum, you must agree to these terms with %{company_name}, the company that runs the forum.
 
       The company may offer other products and services, under different terms. These terms apply only to use of the forum.
 
@@ -4540,13 +4545,15 @@ en:
 
       <h2 id="heading--changes"><a href="#heading--changes">Changes</a></h2>
 
-      The company last updated these terms on July 12, 2018, and may update these terms again. The company will post all updates to the forum. For updates that contain substantial changes, the company agrees to e-mail you, if you've created an account and provided a valid e-mail address. The company may also announce updates with special messages or alerts on the forum.
+      The company last updated these terms on [INSERT LAST UPDATE DATE HERE], and may update these terms again. The company will post all updates to the forum. For updates that contain substantial changes, the company agrees to e-mail you, if you've created an account and provided a valid e-mail address. The company may also announce updates with special messages or alerts on the forum.
 
       Once you get notice of an update to these terms, you must agree to the new terms in order to keep using the forum.
 
   privacy_topic:
     title: "Privacy Policy"
     body: |
+      ## [Forum Admin, please find below an example starting template for a privacy policy that you should customise to your site.]
+
       <a name="collect"></a>
 
       ## [What information do we collect?](#collect)
@@ -4580,8 +4587,7 @@ en:
 
       We will make a good faith effort to:
 
-      * Retain server logs containing the IP address of all requests to this server no more than 90 days.
-      * Retain the IP addresses associated with registered users and their posts no more than 5 years.
+      * Retain server logs containing the IP address of all requests to this server no more than [NUMBER OF DAYS] days.
 
       <a name="cookies"></a>
 
@@ -4627,7 +4633,7 @@ en:
 
       If we decide to change our privacy policy, we will post those changes on this page.
 
-      This document is CC-BY-SA. It was last updated May 31, 2013.
+      This document is CC-BY-SA. It was last updated [INSERT LAST UPDATE DATE HERE].
 
   badges:
     mass_award:

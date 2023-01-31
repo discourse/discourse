@@ -211,6 +211,12 @@ pl_PL:
           about: O stronie
           members: Członkowie
           settings: Ustawienia
+      channel_edit_name_slug_modal:
+        title: Edytuj kanał
+        input_placeholder: Dodaj nazwę
+        slug_description: Slug kanału jest używany w adresie URL zamiast nazwy kanału
+        name: Nazwa kanału
+        slug: Slug kanału (opcjonalnie)
       channel_edit_description_modal:
         title: Edytuj opis
         input_placeholder: Dodaj opis

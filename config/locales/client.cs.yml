@@ -331,11 +331,9 @@ cs:
       edit_bookmark: "Upravit záložku"
       clear_bookmarks: "Odstranit záložky"
       help:
-        bookmark: "Kliknutím vložíte záložku na první příspěvek tohoto tématu"
-        edit_bookmark: "Kliknutím upravíte záložku tohoto tématu"
         edit_bookmark_for_topic: "Kliknutím upravíte záložku pro toto téma"
         unbookmark: "Kliknutím odstraníte všechny záložky v tématu"
-        unbookmark_with_reminder: "Kliknutím odeberete všechny záložky a připomenutí v tomto tématu."
+        unbookmark_with_reminder: "Kliknutím odeberete všechny záložky a připomenutí v tomto tématu"
     bookmarks:
       created: "Tento příspěvek jste přidali do záložek. %{name}"
       created_generic: "Toto jste si přidali do záložek. %{name}"
@@ -3383,6 +3381,8 @@ cs:
           love:
             name: "láska"
             description: "Barva tlačítka \"Líbí se\"."
+          selected:
+            name: "vybrané"
         email_style:
           css: "CSS"
       email:

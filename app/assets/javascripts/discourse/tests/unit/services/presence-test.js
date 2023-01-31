@@ -477,4 +477,24 @@ module("Unit | Service | presence | entering and leaving", function (hooks) {
       "skips sending empty updates to the server"
     );
   });
+
+  test("don't spam requests when server returns 429", function (assert) {
+    const done = assert.async();
+    let requestCount = 0;
+    pretender.post("/presence/update", async () => {
+      requestCount++;
+      return response(429, { extras: { wait_seconds: 2 } });
+    });
+
+    const presenceService = getOwner(this).lookup("service:presence");
+    presenceService.currentUser = currentUser();
+    const channel = presenceService.getChannel("/test/ch1");
+
+    setTimeout(function () {
+      assert.strictEqual(requestCount, 1);
+      done();
+    }, 500);
+
+    channel.enter();
+  });
 });

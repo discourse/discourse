@@ -302,10 +302,8 @@ sr:
       edit_bookmark: "Uredi marker"
       clear_bookmarks: "Očisti markere"
       help:
-        bookmark: "Klikni da markiraš prvi post u ovoj temi"
-        edit_bookmark: "Klikni da bi obirsao sve markere sa ove teme"
         unbookmark: "Klikni da bi obirsao sve markere sa ove teme"
-        unbookmark_with_reminder: "Klikni da bi obirsao sve markere sa ove teme."
+        unbookmark_with_reminder: "Klikni da bi obirsao sve markere sa ove teme"
     bookmarks:
       created: "Obeležili ste ovu poruku. %{name}"
       not_bookmarked: "obeleži ovu poruku"
