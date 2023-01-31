@@ -27,15 +27,10 @@ module Chat
         validates :channel, presence: true
 
         attribute :status
-        validates :status,
-                  inclusion: {
-                    in: ChatChannel.editable_statuses.keys.map(&:to_sym)
-                  }
+        validates :status, inclusion: { in: ChatChannel.editable_statuses.keys.map(&:to_sym) }
       end
 
-      service do
-        context.channel.public_send("#{context.status}!", context.guardian.user)
-      end
+      service { context.channel.public_send("#{context.status}!", context.guardian.user) }
     end
   end
 end

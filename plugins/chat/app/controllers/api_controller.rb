@@ -19,33 +19,19 @@ class Chat::Api < Chat::ChatBaseController
     Chat::Endpoint.call(service, &block)
   end
 
-  def handle_service_result(
-    result,
-    serializer_object: nil,
-    serializer: nil,
-    serializer_data: {}
-  )
+  def handle_service_result(result, serializer_object: nil, serializer: nil, serializer_data: {})
     if result.success?
       if serializer_object && serializer
-        return(
-          render_serialized(serializer_object, serializer, **serializer_data)
-        )
+        return(render_serialized(serializer_object, serializer, **serializer_data))
       else
         return { json: success_json } if result.success?
       end
     end
 
-    if result[:"result.policy.invalid_access"].failure?
-      raise Discourse::InvalidAccess
-    end
+    raise Discourse::InvalidAccess if result[:"result.policy.invalid_access"].failure?
 
     if result[:"contract.failed"]
-      return(
-        {
-          json: failed_json.merge(errors: contract.errors.full_messages),
-          status: 400
-        }
-      )
+      return({ json: failed_json.merge(errors: contract.errors.full_messages), status: 400 })
     end
 
     { json: failed_json }
@@ -54,18 +40,13 @@ class Chat::Api < Chat::ChatBaseController
   def wrap_service(result)
     return yield(true, result, nil) if result.success?
 
-    if result[:"result.policy.invalid_access"].failure?
-      raise Discourse::InvalidAccess
-    end
+    raise Discourse::InvalidAccess if result[:"result.policy.invalid_access"].failure?
 
     if result[:"contract.failed"]
       yield(
         false,
         result,
-        {
-          json: failed_json.merge(errors: contract.errors.full_messages),
-          status: 400
-        }
+        { json: failed_json.merge(errors: contract.errors.full_messages), status: 400 }
       )
     end
 

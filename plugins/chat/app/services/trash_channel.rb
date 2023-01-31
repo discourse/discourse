@@ -50,8 +50,8 @@ module Chat
           DELETE_CHANNEL_LOG_KEY,
           {
             chat_channel_id: context.channel.id,
-            chat_channel_name: context.channel.title(context.guardian.user)
-          }
+            chat_channel_name: context.channel.title(context.guardian.user),
+          },
         )
       end
 
@@ -62,7 +62,7 @@ module Chat
       def generate_deleted_slug
         "#{Time.now.strftime("%Y%m%d-%H%M")}-#{context.channel.slug}-deleted".truncate(
           SiteSetting.max_topic_title_length,
-          omission: ""
+          omission: "",
         )
       end
     end
