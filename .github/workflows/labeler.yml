@@ -9,6 +9,7 @@ permissions:
 
 jobs:
   triage:
+    if: github.actor != 'discourse-translator-bot'
     runs-on: ubuntu-latest
 
     steps:
