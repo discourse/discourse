@@ -33,9 +33,9 @@
 #
 # The actions will be evaluated in the order they appear. So even if the
 # service will ultimately fail with a failed policy, in this example only the
-# `on_failed_policy` action will be executed and not the `on_failure` one. If
-# we had the `on_failure` action before then it would have been executed but
-# then the `on_failed_policy` wouldn't be reached ever.
+# `on_failed_policy` action will be executed and not the `on_failure` one.
+# The only exception to this being `on_failure` as it will always be executed
+# last.
 #
 class Chat::Endpoint
   NULL_RESULT = OpenStruct.new(failure?: false)
@@ -53,7 +53,7 @@ class Chat::Endpoint
   def initialize(service, controller)
     @service = service
     @controller = controller
-    @actions = []
+    @actions = {}
   end
 
   def self.call(service, &block)
@@ -63,8 +63,14 @@ class Chat::Endpoint
 
   def call(&block)
     instance_eval(&block)
-    controller.instance_eval("@_result = #{service}.call(params)", __FILE__, __LINE__ - 1)
-    (actions.detect { |condition, _| condition.call } || [-> {}]).last.call
+    controller.instance_eval("run_service(#{service})", __FILE__, __LINE__ - 1)
+    # Always have `on_failure` as the last action
+    (
+      actions
+        .except(:on_failure)
+        .merge(actions.slice(:on_failure))
+        .detect { |name, (condition, _)| condition.call } || [-> {}]
+    ).flatten.last.call
   end
 
   private
@@ -76,7 +82,7 @@ class Chat::Endpoint
   end
 
   def add_action(name, *args, &block)
-    actions << [
+    actions[[name, *args].join("_").to_sym] = [
       -> { instance_exec(*args, &AVAILABLE_ACTIONS[name]) },
       -> { controller.instance_eval(&block) },
     ]

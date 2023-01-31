@@ -107,7 +107,7 @@
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
     
-<p>Service responsible for updating a chat channel’s name and description.</p>
+<p>Service responsible for updating a chat channel’s name, slug, and description.</p>
 
 <p>For a CategoryChannel, the settings for auto_join_users and allow_channel_wide_mentions are also editable.</p>
 
@@ -125,6 +125,7 @@
  <span class='label'>guardian:</span> <span class='id identifier rubyid_guardian'>guardian</span><span class='comma'>,</span>
  <span class='label'>name:</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>SuperChannel</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span>
  <span class='label'>description:</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>This is the best channel</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span>
+ <span class='label'>slug:</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>super-channel</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span>
 <span class='rparen'>)</span></code></pre>
     
   </div>
@@ -275,6 +276,15 @@
         </li>
       
         <li>
+          <span class="name">slug</span>
+          <span class="type">(<tt>String</tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+        </li>
+      
+        <li>
           <span class="name">auto_join_users</span>
           <span class="type">(<tt>Boolean</tt>)</span>
           <span class="default">
@@ -323,10 +333,10 @@
       <pre class="lines">
 
 
-32</pre>
+34</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/update_channel.rb', line 32</span>
+      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/update_channel.rb', line 34</span>
 
 <span class='id identifier rubyid_before_contract'>before_contract</span> <span class='lbrace'>{</span> <span class='id identifier rubyid_guardian'>guardian</span><span class='lparen'>(</span><span class='symbol'>:can_edit_chat_channel?</span><span class='rparen'>)</span> <span class='rbrace'>}</span></pre>
     </td>

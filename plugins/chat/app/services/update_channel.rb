@@ -13,6 +13,7 @@ module Chat
     #   guardian: guardian,
     #   name: "SuperChannel",
     #   description: "This is the best channel",
+    #   slug: "super-channel",
     #  )
     #
     class UpdateChannel
@@ -30,7 +31,7 @@ module Chat
       #   @option params_to_edit [String] allow_channel_wide_mentions Allow the use of @here and @all in the channel.
       #   @return [Chat::Service::Base::Context]
 
-      before_contract { guardian(:can_edit_chat_channel?) }
+      policy(:invalid_access) { guardian.can_edit_chat_channel? }
 
       before_contract do
         if @initial_context.key?(:name) && context.name.blank?
@@ -42,14 +43,16 @@ module Chat
         if @initial_context.key?(:description) && context.description.blank?
           context.description = nil
         else
-          context.description = (context.description || context.channel.description).presence
+          context.description =
+            (context.description || context.channel.description).presence
         end
 
         context.slug = (context.slug || context.channel.slug).presence
 
         if context.channel.category_channel?
           context.auto_join_users ||= context.channel.auto_join_users
-          context.allow_channel_wide_mentions ||= context.channel.allow_channel_wide_mentions
+          context.allow_channel_wide_mentions ||=
+            context.channel.allow_channel_wide_mentions
         end
       end
 
@@ -67,7 +70,10 @@ module Chat
 
         def only_category_channel_allowed
           if channel.direct_message_channel?
-            errors.add(:base, I18n.t("chat.errors.cant_update_direct_message_channel"))
+            errors.add(
+              :base,
+              I18n.t("chat.errors.cant_update_direct_message_channel")
+            )
           end
         end
       end
@@ -85,12 +91,16 @@ module Chat
       end
 
       def params_to_edit
-        params = { name: context.name, description: context.description, slug: context.slug }
+        params = {
+          name: context.name,
+          description: context.description,
+          slug: context.slug
+        }
 
         if context.channel.category_channel?
           params.merge!(
             auto_join_users: context.auto_join_users,
-            allow_channel_wide_mentions: context.allow_channel_wide_mentions,
+            allow_channel_wide_mentions: context.allow_channel_wide_mentions
           )
         end
 
@@ -99,14 +109,17 @@ module Chat
 
       def publish_channel_update
         # FIXME: this should become a dedicated service
-        ChatPublisher.publish_chat_channel_edit(context.channel, context.guardian.user)
+        ChatPublisher.publish_chat_channel_edit(
+          context.channel,
+          context.guardian.user
+        )
       end
 
       def auto_join_users_if_needed
         # FIXME: this should become a dedicated service
         if context.channel.category_channel? && context.channel.auto_join_users
           Chat::ChatChannelMembershipManager.new(
-            context.channel,
+            context.channel
           ).enforce_automatic_channel_memberships
         end
       end

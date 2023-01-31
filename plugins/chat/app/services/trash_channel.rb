@@ -18,7 +18,7 @@ module Chat
 
       DELETE_CHANNEL_LOG_KEY = "chat_channel_delete"
 
-      before_contract { guardian(:can_delete_chat_channel?) }
+      policy(:invalid_access) { guardian.can_delete_chat_channel? }
 
       contract do
         attribute :channel

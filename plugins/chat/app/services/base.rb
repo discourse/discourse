@@ -50,6 +50,11 @@ module Chat
           raise Failure, self
         end
 
+        # Marks the service as failed without raising an exception.
+        # @param context [Hash, Context] the context to merge into the current one
+        # @example
+        #   context.fail("failure": "something went wrong")
+        # @return [Context]
         def fail(context = {})
           merge(context)
           @failure = true
@@ -90,23 +95,15 @@ module Chat
         end
       end
 
-      # @!visibility private
-      module Helpers
-        def guardian(name, *args)
-          unless context[:guardian].public_send(name, *args)
-            context.fail!("guardian.failed" => name)
-          end
-        end
-      end
-
       included do
         extend ActiveModel::Callbacks
-        include Helpers
 
         attr_reader :context
         attr_reader :contract
 
-        define_model_callbacks :service, :contract
+        define_model_callbacks :service, :contract, :policies
+
+        delegate :guardian, to: :context
       end
 
       class_methods do
@@ -133,11 +130,36 @@ module Chat
         def rollback(&block)
           @rollback_block = block
         end
+
+        def policy(name = :default, &block)
+          policies << [name, block]
+        end
+
+        def policies
+          @policies ||= []
+        end
       end
 
       # @!scope class
+      # @!method policy(name = :default, &block)
+      # Evaluates a set of conditions related to the given context. If the
+      # block doesn’t return a truthy value, then the policy will fail.
+      # Supports after/before/around callbacks.
+      # More than one policy can be defined and named. When that’s the case,
+      # policies are evaluated in their definition order.
+      #
+      # @example
+      #   before_policies {}
+      #   around_policies {}
+      #   after_policies {}
+      #
+      #   policy(:invalid_access) do
+      #     guardian.can_delete_chat_channel?
+      #   end
+
+      # @!scope class
       # @!method contract(&block)
-      # Checks the validity of the given context. Supports after/before/around callbacks.
+      # Checks the validity of the input parameters. Supports after/before/around callbacks.
       # Implements ActiveModel::Validations and ActiveModel::Attributes.
       #
       # @example
@@ -184,14 +206,7 @@ module Chat
 
       # @!visibility private
       def initialize(initial_context = {})
-        @initial_context =
-          (
-            if initial_context.is_a?(ActionController::Parameters)
-              initial_context.to_unsafe_h
-            else
-              initial_context
-            end
-          ).with_indifferent_access
+        @initial_context = initial_context.with_indifferent_access
         @context = Context.build(initial_context)
       end
 
@@ -204,34 +219,48 @@ module Chat
       end
 
       def run!
-        run_callbacks :contract do
-          if self.class.contract_block
-            contract_class = Class.new(Contract)
-            contract_class.class_eval(&self.class.contract_block)
-            @contract =
-              contract_class.new(
-                self.context.to_h.slice(*contract_class.attribute_names.map(&:to_sym)),
-              )
-            self.context[:contract] = contract
-
-            context["result.contract.default"] = Context.build
-            unless contract.valid?
-              context.fail!("contract.failed" => true)
-              context["result.contract.default"].fail(errors: contract.errors)
-            end
-            context.merge(contract.attributes)
-          end
-        end
-
-        run_callbacks :service do
-          instance_eval(&self.class.service_block) if self.class.service_block
-          context.called!(self)
-        end
+        run_policies
+        run_contract
+        run_service
       rescue ActiveRecord::Rollback
         context.rollback!
       rescue StandardError
         context.rollback!
         raise
+      end
+
+      def run_policies
+        run_callbacks :policies do
+          self.class.policies.each do |name, block|
+            context.fail!("result.policy.#{name}": Context.build.fail) unless instance_eval(&block)
+          end
+        end
+      end
+
+      def run_contract
+        run_callbacks :contract do
+          if self.class.contract_block
+            contract_class = Class.new(Contract)
+            contract_class.class_eval(&self.class.contract_block)
+            @contract =
+              contract_class.new(context.to_h.slice(*contract_class.attribute_names.map(&:to_sym)))
+            context[:contract] = contract
+
+            context["result.contract.default"] = Context.build
+            unless contract.valid?
+              context["result.contract.default"].fail(errors: contract.errors)
+              context.fail!("contract.failed": true)
+            end
+            context.merge(contract.attributes)
+          end
+        end
+      end
+
+      def run_service
+        run_callbacks :service do
+          instance_eval(&self.class.service_block) if self.class.service_block
+          context.called!(self)
+        end
       end
     end
   end

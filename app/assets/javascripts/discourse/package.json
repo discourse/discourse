@@ -110,7 +110,6 @@
   "devDependencies": {
     "ember-cached-decorator-polyfill": "^1.0.1",
     "ember-cli-deprecation-workflow": "^2.1.0",
-    "ember-exam": "^8.0.0",
-    "tidy-jsdoc": "^1.4.1"
+    "ember-exam": "^8.0.0"
   }
 }
