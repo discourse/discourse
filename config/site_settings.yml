@@ -2213,6 +2213,7 @@ search:
   search_ranking_weights:
     default: ""
     hidden: true
+    validator: "SearchRankingWeightsValidator"
   min_search_term_length:
     client: true
     default: 3
