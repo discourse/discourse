@@ -92,24 +92,15 @@ module Chat
         end
       end
 
-      # @!visibility private
-      module Helpers
-        def guardian(name, *args)
-          unless context[:guardian].public_send(name, *args)
-            context.fail!("guardian.failed" => name)
-          end
-          true
-        end
-      end
-
       included do
         extend ActiveModel::Callbacks
-        include Helpers
 
         attr_reader :context
         attr_reader :contract
 
         define_model_callbacks :service, :contract, :policies
+
+        delegate :guardian, to: :context
       end
 
       class_methods do

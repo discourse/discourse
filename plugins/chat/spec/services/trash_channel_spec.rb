@@ -10,7 +10,7 @@ RSpec.describe(Chat::Service::TrashChannel) do
 
     it "fails" do
       expect(result).to be_a_failure
-      expect(result[:"guardian.failed"]).to eq(:can_delete_chat_channel?)
+      expect(result[:"result.policy.invalid_access"]).to be_a_failure
     end
   end
 
