@@ -29,9 +29,7 @@ class Chat::Api::ChatChannelsController < Chat::Api
   end
 
   def destroy
-    # TODO: handle custom params in a better way
-    params.merge!(guardian: guardian, channel: channel_from_params)
-    with_service(Chat::Service::TrashChannel)
+    with_service(Chat::Service::TrashChannel, extra_params: { channel: channel_from_params })
   end
 
   def create

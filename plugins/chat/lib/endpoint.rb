@@ -42,12 +42,8 @@ class Chat::Endpoint
   AVAILABLE_ACTIONS = {
     on_success: -> { result.success? },
     on_failure: -> { result.failure? },
-    on_failed_policy: ->(name = "default") do
-      failure_for?("result.policy.#{name}")
-    end,
-    on_failed_contract: ->(name = "default") do
-      failure_for?("result.contract.#{name}")
-    end
+    on_failed_policy: ->(name = "default") { failure_for?("result.policy.#{name}") },
+    on_failed_contract: ->(name = "default") { failure_for?("result.contract.#{name}") },
   }.with_indifferent_access.freeze
 
   attr_reader :service, :controller
@@ -67,11 +63,7 @@ class Chat::Endpoint
 
   def call(&block)
     instance_eval(&block)
-    controller.instance_eval(
-      "@_result = #{service}.call(params)",
-      __FILE__,
-      __LINE__ - 1
-    )
+    controller.instance_eval("run_service(#{service})", __FILE__, __LINE__ - 1)
     # Always have `on_failure` as the last action
     (
       actions
@@ -92,7 +84,7 @@ class Chat::Endpoint
   def add_action(name, *args, &block)
     actions[[name, *args].join("_").to_sym] = [
       -> { instance_exec(*args, &AVAILABLE_ACTIONS[name]) },
-      -> { controller.instance_eval(&block) }
+      -> { controller.instance_eval(&block) },
     ]
   end
 

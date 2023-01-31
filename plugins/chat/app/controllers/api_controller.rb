@@ -15,13 +15,18 @@ class Chat::Api < Chat::ChatBaseController
     guardian.ensure_can_chat!
   end
 
-  def with_service(service, default_actions: true, &block)
+  def with_service(service, default_actions: true, extra_params: {}, &block)
+    @extra_params = extra_params
     merged_block =
       proc do
         instance_eval(&controller.method(:default_actions_for_service).call) if default_actions
         instance_eval(&(block || proc {}))
       end
     Chat::Endpoint.call(service, &merged_block)
+  end
+
+  def run_service(service)
+    @_result = service.call(params.to_unsafe_h.merge(guardian: guardian, **@extra_params))
   end
 
   def handle_service_result(result, serializer_object: nil, serializer: nil, serializer_data: {})
@@ -33,9 +38,9 @@ class Chat::Api < Chat::ChatBaseController
       end
     end
 
-    raise Discourse::InvalidAccess if result[:"result.policy.invalid_access"].failure?
+    raise Discourse::InvalidAccess if result[:"result.policy.invalid_access"]&.failure?
 
-    if result[:"contract.failed"]
+    if result[:"result.contract.default"]&.failure?
       return({ json: failed_json.merge(errors: contract.errors.full_messages), status: 400 })
     end
 
@@ -45,9 +50,9 @@ class Chat::Api < Chat::ChatBaseController
   def wrap_service(result)
     return yield(true, result, nil) if result.success?
 
-    raise Discourse::InvalidAccess if result[:"result.policy.invalid_access"].failure?
+    raise Discourse::InvalidAccess if result[:"result.policy.invalid_access"]&.failure?
 
-    if result[:"contract.failed"]
+    if result[:"result.contract.default"]&.failure?
       yield(
         false,
         result,
@@ -64,7 +69,10 @@ class Chat::Api < Chat::ChatBaseController
       on_failure { render(json: failed_json, status: 422) }
       on_failed_policy(:invalid_access) { raise Discourse::InvalidAccess }
       on_failed_contract do
-        render(json: failed_json.merge(errors: result[:contract].errors.full_messages), status: 400)
+        render(
+          json: failed_json.merge(errors: result[:"result.contract.default"].errors.full_messages),
+          status: 400,
+        )
       end
     end
   end

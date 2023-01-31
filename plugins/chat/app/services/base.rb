@@ -184,14 +184,7 @@ module Chat
 
       # @!visibility private
       def initialize(initial_context = {})
-        @initial_context =
-          (
-            if initial_context.is_a?(ActionController::Parameters)
-              initial_context.to_unsafe_h
-            else
-              initial_context
-            end
-          ).with_indifferent_access
+        @initial_context = initial_context.with_indifferent_access
         @context = Context.build(initial_context)
       end
 
@@ -204,21 +197,32 @@ module Chat
       end
 
       def run!
+        run_policies
+        run_contract
+        run_service
+      rescue ActiveRecord::Rollback
+        context.rollback!
+      rescue StandardError
+        context.rollback!
+        raise
+      end
+
+      def run_policies
         run_callbacks :policies do
           self.class.policies.each do |name, block|
             context.fail!("result.policy.#{name}": Context.build.fail) unless instance_eval(&block)
           end
         end
+      end
 
+      def run_contract
         run_callbacks :contract do
           if self.class.contract_block
             contract_class = Class.new(Contract)
             contract_class.class_eval(&self.class.contract_block)
             @contract =
-              contract_class.new(
-                self.context.to_h.slice(*contract_class.attribute_names.map(&:to_sym)),
-              )
-            self.context[:contract] = contract
+              contract_class.new(context.to_h.slice(*contract_class.attribute_names.map(&:to_sym)))
+            context[:contract] = contract
 
             context["result.contract.default"] = Context.build
             unless contract.valid?
@@ -228,16 +232,13 @@ module Chat
             context.merge(contract.attributes)
           end
         end
+      end
 
+      def run_service
         run_callbacks :service do
           instance_eval(&self.class.service_block) if self.class.service_block
           context.called!(self)
         end
-      rescue ActiveRecord::Rollback
-        context.rollback!
-      rescue StandardError
-        context.rollback!
-        raise
       end
     end
   end
