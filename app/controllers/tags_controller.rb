@@ -396,16 +396,22 @@ class TagsController < ::ApplicationController
 
         next if topic_count == 0 && t.pm_topic_count > 0 && !show_pm_tags
 
-        {
+        attrs = {
           id: t.name,
           text: t.name,
           name: t.name,
           description: t.description,
           count: topic_count,
-          pm_count: show_pm_tags ? t.pm_topic_count : 0,
+          pm_only: topic_count == 0 && t.pm_topic_count > 0,
           target_tag:
             t.target_tag_id ? target_tags.find { |x| x.id == t.target_tag_id }&.name : nil,
         }
+
+        if show_pm_tags && SiteSetting.display_personal_messages_tag_counts
+          attrs[:pm_count] = t.pm_topic_count
+        end
+
+        attrs
       end
       .compact
   end
