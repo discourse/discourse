@@ -376,8 +376,18 @@ pt_BR:
           Você sabia que pode se referir a categorias e etiquetas em sua postagem? Por exemplo, viu a categoria %{category}?
 
           Digite "#" no meio de uma frase e selecione qualquer categoria ou etiqueta.
+        instructions_experimental: |-
+          Você sabia que pode se referir a categorias e etiquetas na sua postagem? Por exemplo, você viu a categoria %{category}?
+
+          Digite "#" dentro de uma frase e selecione qualquer categoria ou etiqueta.
         not_found: |-
           Hmm, eu não vejo uma categoria em nenhum lugar. Observe que "#' não pode ser o primeiro caractere. Você pode copiar isso na sua próxima resposta?
+
+          ```text
+          Eu posso criar um link de categoria via #
+          ```
+        not_found_experimental: |-
+          Hmm, não vejo uma categoria em lugar algum. Você poderia copiar isto na sua próxima resposta?
 
           ```text
           Eu posso criar um link de categoria via #

@@ -49,6 +49,7 @@ gl:
         yesterday: Onte
       about_view:
         title: Título
+        name: Nome
         description: Descrición
       channel_info:
         back_to_channel: "Volver"

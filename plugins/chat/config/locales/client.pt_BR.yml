@@ -118,7 +118,7 @@ pt_BR:
         invite: "convidar para canal"
         without_membership:
           one: "%{username} não entrou neste canal."
-          other: "%{username} e %{others} não se entraram neste canal."
+          other: "%{username} e %{others} não entraram neste canal."
         group_mentions_disabled:
           one: "%{group_name} não permite menções"
           other: "%{group_name} e %{others} não permitem menções"
@@ -206,7 +206,8 @@ pt_BR:
         read_only: "Somente leitura"
         archived_header: "O canal está arquivado"
         archived: "Arquivados"
-        archive_failed: "Falha no canal de arquivamento. %{completed}/%{total} mensagens foram arquivadas <a target=\"_blank\" href=\"%{topic_url}\">no tópico de destino</a>. Pressione repetir para tentar concluir o arquivo."
+        archive_failed: "Falha no canal de arquivamento. %{completed}/%{total} mensagens foram arquivadas. <a target=\"_blank\" href=\"%{topic_url}\">tópico de destino</a>. Pressione repetir para tentar concluir o arquivo."
+        archive_failed_no_topic: "Falha no canal de arquivamento. %{completed}/%{total} mensagens foram arquivadas. O tópico de destino não foi criado. Pressione repetir para tentar concluir o arquivo."
         archive_completed: "Veja <a target=\"_blank\" href=\"%{topic_url}\">o tópico de arquivo</a>"
         closed_header: "Canal fechado"
         closed: "Fechados"
@@ -229,6 +230,7 @@ pt_BR:
         associated_topic: Tópico vinculado
         associated_category: Categoria vinculada
         title: Título
+        name: Nome
         description: Descrição
       channel_info:
         back_to_all_channels: "Todos os canais"
@@ -237,10 +239,6 @@ pt_BR:
           about: Sobre
           members: Membros
           settings: Definições
-      channel_edit_title_modal:
-        title: Editar título
-        input_placeholder: Adicione um título
-        description: Dê um breve título descritivo ao seu canal
       channel_edit_description_modal:
         title: Editar descrição
         input_placeholder: Adicione uma descrição

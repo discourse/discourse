@@ -49,6 +49,7 @@ hy:
         yesterday: Երեկվա
       about_view:
         title: Վերնագիր
+        name: Անուն
         description: Նկարագրությունը
       channel_info:
         back_to_channel: "Ետ"

@@ -206,7 +206,8 @@ sv:
         read_only: "Endast läsning"
         archived_header: "Kanalen är arkiverad"
         archived: "Arkiverad"
-        archive_failed: "Arkivering av kanalen misslyckades. %{completed}/%{total} meddelanden har arkiverats i <a target=\"_blank\" href=\"%{topic_url}\">destinationsämnet</a>. Tryck på försök igen för att försöka slutföra arkivet."
+        archive_failed: "Arkivkanalen misslyckades. %{completed}/%{total} meddelanden har arkiverats. <a target=\"_blank\" href=\"%{topic_url}\">målämnet</a>. Tryck på försök igen för att försöka slutföra arkiveringen."
+        archive_failed_no_topic: "Arkivkanalen misslyckades. %{completed}/%{total} meddelanden har arkiverats. Målämnet skapades inte. Tryck på försök igen för att försöka slutföra arkiveringen."
         archive_completed: "Se det <a target=\"_blank\" href=\"%{topic_url}\">arkiverade ämnet</a>"
         closed_header: "Kanalen är stängd"
         closed: "Stängd"
@@ -229,6 +230,7 @@ sv:
         associated_topic: Länkat ämne
         associated_category: Länkad kategori
         title: Rubrik
+        name: Namn
         description: Beskrivning
       channel_info:
         back_to_all_channels: "Alla kanaler"
@@ -237,10 +239,10 @@ sv:
           about: Om
           members: Medlemmar
           settings: Inställningar
-      channel_edit_title_modal:
-        title: Redigera titel
-        input_placeholder: Lägg till en titel
-        description: Ge en kort beskrivande titel till din kanal
+      channel_edit_name_modal:
+        title: Redigera namn
+        input_placeholder: Lägg till ett namn
+        description: Ge din kanal ett kort beskrivande namn
       channel_edit_description_modal:
         title: Redigera beskrivning
         input_placeholder: Lägg till en beskrivning

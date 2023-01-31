@@ -215,7 +215,6 @@ he:
         read_only: "לקריאה בלבד"
         archived_header: "הערוץ בארכיון"
         archived: "בארכיון"
-        archive_failed: "העברת הערוץ לארכיון נכשלה. %{completed}/%{total} הודעות הועברו לארכיון תחת <a target=\"_blank\" href=\"%{topic_url}\">נושא היעד</a>. נא לנסות להשלים את ההעברה לארכיון פעם נוספת."
         archive_completed: "אפשר לעיין ב<a target=\"_blank\" href=\"%{topic_url}\">ארכיון הנושא</a>"
         closed_header: "הערוץ סגור"
         closed: "סגורה"
@@ -238,6 +237,7 @@ he:
         associated_topic: נושא מקושר
         associated_category: קטגוריה מקושרת
         title: כותרת
+        name: שם
         description: תיאור
       channel_info:
         back_to_all_channels: "כל הערוצים"
@@ -246,10 +246,10 @@ he:
           about: אודות
           members: חברים
           settings: הגדרות
-      channel_edit_title_modal:
-        title: עריכת כותרת
-        input_placeholder: הוספת כותרת
-        description: נא לספק כותרת ברורה לערוץ שלך
+      channel_edit_name_modal:
+        title: עריכת שם
+        input_placeholder: הוספת שם
+        description: נא להעניק שם מפורט אך קצר לערוץ שלך
       channel_edit_description_modal:
         title: עריכת תיאור
         input_placeholder: הוספת תיאור

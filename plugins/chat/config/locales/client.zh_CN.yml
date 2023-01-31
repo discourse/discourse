@@ -194,7 +194,6 @@ zh_CN:
         read_only: "只读"
         archived_header: "频道已被归档"
         archived: "已归档"
-        archive_failed: "频道归档失败。%{completed} 条（共 %{total} 条）消息已被归档到<a target=\"_blank\" href=\"%{topic_url}\">目标话题</a>。按“重试”，尝试完成存档。"
         archive_completed: "请参阅<a target=\"_blank\" href=\"%{topic_url}\">归档话题</a>"
         closed_header: "频道已被关闭"
         closed: "已关闭"
@@ -217,6 +216,7 @@ zh_CN:
         associated_topic: 链接的话题
         associated_category: 链接的类别
         title: 标题
+        name: 名称
         description: 描述
       channel_info:
         back_to_all_channels: "所有频道"
@@ -225,10 +225,6 @@ zh_CN:
           about: 关于
           members: 成员
           settings: 设置
-      channel_edit_title_modal:
-        title: 编辑标题
-        input_placeholder: 添加标题
-        description: 为您的频道提供简短的描述性标题
       channel_edit_description_modal:
         title: 编辑描述
         input_placeholder: 添加描述

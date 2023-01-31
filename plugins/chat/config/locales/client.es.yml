@@ -206,7 +206,6 @@ es:
         read_only: "Solo lectura"
         archived_header: "El canal está archivado"
         archived: "Archivado"
-        archive_failed: "La archivación del canal ha fallado. Se han archivado %{completed}/%{total} mensajes en <a target=\"_blank\" href=\"%{topic_url}\">el tema de destino</a>. Pulsa reintentar para intentar completar el archivo."
         archive_completed: "Ver <a target=\"_blank\" href=\"%{topic_url}\">el tema del archivo</a>"
         closed_header: "El canal está cerrado"
         closed: "Cerrado"
@@ -229,6 +228,7 @@ es:
         associated_topic: Tema vinculado
         associated_category: Categoría vinculada
         title: Título
+        name: Nombre
         description: Descripción
       channel_info:
         back_to_all_channels: "Todos los canales"
@@ -237,10 +237,6 @@ es:
           about: Acerca de
           members: Miembros
           settings: Ajustes
-      channel_edit_title_modal:
-        title: Editar título
-        input_placeholder: Añade un título
-        description: Pon un título corto y descriptivo a tu canal
       channel_edit_description_modal:
         title: Editar descripción
         input_placeholder: Añade una descripción

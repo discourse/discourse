@@ -377,11 +377,21 @@ pt:
           Sabia que pode se referir a categorias e tags no seu post? Por exemplo, viu a categoria %{category}?
 
           Digite `#` no meio de uma frase e selecione qualquer categoria ou tag.
+        instructions_experimental: |-
+          Sabia que pode referenciar categorias e tags no seu post? Por exemplo, já viu a categoria %{category}?
+
+          Digite `#` em qualquer lugar de uma frase e selecione qualquer categoria ou tag.
         not_found: |-
           Hmm, não vejo uma categoria em qualquer lugar. Observe que `#` não pode ser o primeiro caractere. Você poderia copiar isso em sua próxima resposta?
 
           ```text
           Eu posso criar um link de categoria através de #
+          ```
+        not_found_experimental: |-
+          Hmm, não vejo uma categoria aí em nenhum lado. Pode copiar isto na sua próxima resposta?
+
+          ```texto
+          Posso criar um link de categoria via #
           ```
         reply: |-
           Excelente! Lembre-se de que isso funciona para ambas categorias _and_ tags, se as tags estiverem ativadas.

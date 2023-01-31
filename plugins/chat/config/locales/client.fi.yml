@@ -206,7 +206,6 @@ fi:
         read_only: "Vain luku"
         archived_header: "Kanava on arkistoitu"
         archived: "Arkistoitu"
-        archive_failed: "Kanavan arkistointi epäonnistui. %{completed}/%{total} viestiä on arkistoitu <a target=\"_blank\" href=\"%{topic_url}\">kohdeketjuun</a>. Yritä arkistoinnin viimeistelyä uudelleen painamalla Yritä uudelleen -painiketta."
         archive_completed: "Katso <a target=\"_blank\" href=\"%{topic_url}\">arkistoketju</a>"
         closed_header: "Kanava on suljettu"
         closed: "Suljettu"
@@ -229,6 +228,7 @@ fi:
         associated_topic: Linkitetty ketju
         associated_category: Linkitetty alue
         title: Otsikko
+        name: Nimi
         description: Kuvaus
       channel_info:
         back_to_all_channels: "Kaikki kanavat"
@@ -237,10 +237,6 @@ fi:
           about: Tietoja
           members: Jäsenet
           settings: Asetukset
-      channel_edit_title_modal:
-        title: Muokkaa otsikkoa
-        input_placeholder: Lisää otsikko
-        description: Anna kanavallesi lyhyt kuvaava otsikko
       channel_edit_description_modal:
         title: Muokkaa kuvausta
         input_placeholder: Lisää kuvaus

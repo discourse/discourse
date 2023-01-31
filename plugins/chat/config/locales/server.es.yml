@@ -34,13 +34,12 @@ es:
     chat_channel_archive_complete:
       title: "Archivado del canal de chat completado"
       subject_template: "El archivado del canal de chat se ha completado con éxito"
-      text_body_template: |
-        El archivado del canal de chat **\#%{channel_name}** se completó con éxito. Los mensajes se copiaron en el tema [%{topic_title}](%{topic_url}).
     chat_channel_archive_failed:
       title: "No se pudo archivar el canal"
       subject_template: "No se pudo archivar el canal"
-      text_body_template: |
-        El archivo del canal de chat **\#%{channel_name}** ha fallado. Se han archivado los mensajes de %{messages_archived}. Los mensajes parcialmente archivados se han copiado en el tema [%{topic_title}](%{topic_url}). Visita el canal en %{channel_url} para volver a intentarlo.
+    chat_channel_archive_failed_no_topic:
+      title: "No se pudo archivar el canal"
+      subject_template: "No se pudo archivar el canal"
   chat:
     deleted_chat_username: eliminado
     errors:

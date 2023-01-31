@@ -5663,7 +5663,7 @@ pt_BR:
       configure_more: "Configurar mais..."
       step-text: "Intervalo"
       step: "%{current} de %{total}"
-      upload: "Subir arquivo"
+      upload: "Carregar arquivo"
       uploading: "Enviando..."
       upload_error: "Desculpe, houve um erro ao enviar o arquivo. Tente novamente."
       staff_count:

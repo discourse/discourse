@@ -34,13 +34,12 @@ fi:
     chat_channel_archive_complete:
       title: "Chat-kanavan arkistointi on valmis"
       subject_template: "Chat-kanavan arkistointi on valmis"
-      text_body_template: |
-        Chat-kanavan **\#%{channel_name}** arkistointi on valmis. Viestit kopioitiin ketjuun [%{topic_title}](%{topic_url}).
     chat_channel_archive_failed:
       title: "Chat-kanavan arkistointi epäonnistui"
       subject_template: "Chat-kanavan arkistointi epäonnistui"
-      text_body_template: |
-        Chat-kanavan **\#%{channel_name}** arkistointi epäonnistui. %{messages_archived} viestiä on arkistoitu. Osittain arkistoidut viestit kopioitiin ketjuun [%{topic_title}](%{topic_url}). Yritä uudelleen vierailemalla kanavalla osoitteessa %{channel_url}.
+    chat_channel_archive_failed_no_topic:
+      title: "Chat-kanavan arkistointi epäonnistui"
+      subject_template: "Chat-kanavan arkistointi epäonnistui"
   chat:
     deleted_chat_username: poistettu
     errors:

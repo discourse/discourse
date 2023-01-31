@@ -378,12 +378,22 @@ fr:
           Saviez-vous que vous pouviez faire référence aux catégories et étiquettes dans vos messages ? Par exemple, avez-vous vu la catégorie %{category} ?
 
           Saisissez « # » au milieu d'une phrase et sélectionnez n'importe quelle catégorie ou étiquette.
+        instructions_experimental: |-
+          Saviez-vous que vous pouviez faire référence aux catégories et étiquettes dans vos messages ? Par exemple, avez-vous vu la catégorie %{category} ?
+
+          Saisissez « # » dans une phrase et sélectionnez la catégorie ou l'étiquette de votre choix.
         not_found: |-
           Hum, je ne vois de catégorie nulle part. Notez que « # » ne peut pas être le premier caractère. Pouvez-vous copier ceci dans votre prochaine réponse ?
 
           « texte
           Je peux créer un lien de catégorie via #
           »
+        not_found_experimental: |-
+          Hum, je ne vois aucune catégorie ici. Pouvez-vous copier ceci dans votre prochaine réponse ?
+
+          ```text
+          Je peux créer un lien de catégorie via #
+          ```
         reply: |-
           Excellent ! Retenez que ceci fonctionne pour les catégories _et_ les étiquettes, si les étiquettes sont activées.
       change_topic_notification_level:

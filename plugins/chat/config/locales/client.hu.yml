@@ -168,7 +168,6 @@ hu:
         read_only: "Csak olvasható"
         archived_header: "A csatorna archiválva van"
         archived: "Archivált"
-        archive_failed: "A csatorna archiválása nem sikerült.</a>%{completed}/%{total} üzenet archiválva lett a <a target=\"_blank\" href=\"%{topic_url}\">céltémában</a> . Nyomja meg az Újra gombot az archiválás befejezéséhez."
         archive_completed: "Lásd <a target=\"_blank\" href=\"%{topic_url}\">az archív témát</a>"
         closed_header: "A csatorna zárolt"
         closed: "Zárt"
@@ -191,6 +190,7 @@ hu:
         associated_topic: Kapcsolódó téma
         associated_category: Kapcsolódó kategória
         title: Cím
+        name: Név
         description: Leírás
       channel_info:
         back_to_all_channels: "Összes csatorna"
@@ -199,10 +199,6 @@ hu:
           about: Névjegy
           members: Tagok
           settings: Beállítások
-      channel_edit_title_modal:
-        title: Cím szerkesztése
-        input_placeholder: Cím hozzáadása
-        description: Adjon egy rövid, leíró címet a csatornájának
       channel_edit_description_modal:
         title: Leírás szerkesztése
         input_placeholder: Leírás hozzáadása

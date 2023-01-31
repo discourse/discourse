@@ -23,6 +23,7 @@ ja:
     default_emoji_reactions: "チャットメッセージのデフォルトの絵文字リアクション。即時にリアクションするための絵文字を最大 5 個追加できます。"
     direct_message_enabled_groups: "これらのグループのユーザーがユーザー間のパーソナルチャットを作成することを許可します。注意: スタッフはいつでもパーソナルチャットを作成でき、ユーザーは作成権限のあるユーザーが開始したパーソナルチャットに返信できます。"
     chat_message_flag_allowed_groups: "これらのグループのユーザーは、チャットメッセージを通報できます。"
+    max_mentions_per_chat_message: "ユーザーがチャットメッセージで @name 通知を行える最大回数。"
     chat_max_direct_message_users: "ユーザーは、新しいダイレクトメッセージを作成する際に、この数を超えるユーザーを追加できません。自分宛のメッセージのみを許可する場合は 0 に設定します。スタッフはこの設定から除外されます。"
     chat_allow_archiving_channels: "チャンネルを閉じる時に、スタッフがメッセージをトピックにアーカイブすることを許可します。"
     errors:
@@ -33,13 +34,12 @@ ja:
     chat_channel_archive_complete:
       title: "チャットチャンネルのアーカイブ完了"
       subject_template: "チャットチャンネルのアーカイブが正常に完了しました"
-      text_body_template: |
-        チャットチャンネル **\#%{channel_name}** のアーカイブが正常に完了しました。メッセージはトピック [%{topic_title}](%{topic_url}) にコピーされました。
     chat_channel_archive_failed:
       title: "チャットチャンネルのアーカイブ失敗"
       subject_template: "チャットチャンネルのアーカイブに失敗しました"
-      text_body_template: |
-        チャットチャンネル **\#%{channel_name}** のアーカイブに失敗しました。%{messages_archived} 件のメッセージがアーカイブされました。部分的にアーカイブされたメッセージは、トピック [%{topic_title}](%{topic_url}) にコピーされました。%{channel_url} よりチャンネルにアクセスして、再試行してください。
+    chat_channel_archive_failed_no_topic:
+      title: "チャットチャンネルのアーカイブ失敗"
+      subject_template: "チャットチャンネルのアーカイブに失敗しました"
   chat:
     deleted_chat_username: 削除済み
     errors:
@@ -53,6 +53,7 @@ ja:
       duplicate_message: "同一のメッセージを最近投稿しました。"
       delete_channel_failed: "チャンネルの削除に失敗しました。もう一度お試しください。"
       minimum_length_not_met: "メッセージが短すぎます。最低 %{minimum} 文字が必要です。"
+      message_too_long: "メッセージが長すぎます。メッセージは最大 %{maximum} 文字までです。"
       max_reactions_limit_reached: "このメッセージでは、新しいリアクションは許可されていません。"
       message_move_invalid_channel: "移動元と移動先のチャンネルは公開チャンネルである必要があります。"
       message_move_no_messages_found: "指定されたメッセージ ID を持つメッセージは見つかりませんでした。"
@@ -161,6 +162,16 @@ ja:
       description:
         other: "新しいチャットメッセージがあります"
       from: "%{site_name}"
+      subject:
+        direct_message_from_1: "[%{email_prefix}] %{username} からの新しいメッセージがあります"
+        direct_message_from_2: "[%{email_prefix}] %{username1} と他 %{username2} 人からの新しいメッセージ"
+        direct_message_from_more:
+          other: "[%{email_prefix}] %{username} と他 %{count} 人からの新しいメッセージ"
+        chat_channel_1: "[%{email_prefix}] %{channel} の新しいメッセージ"
+        chat_channel_2: "[%{email_prefix}] %{channel1} と %{channel2} の新しいメッセージ"
+        chat_channel_more:
+          other: "[%{email_prefix}] %{channel} と他 %{count} チャンネルの新しいメッセージ"
+        chat_channel_and_direct_message: "[%{email_prefix}] %{channel} に %{username} からの新しいメッセージがあります"
       unsubscribe: "このチャットの要約は、あなたが退席中のときに %{site_link} から送信されます。%{email_preferences_link} を変更するか、%{unsubscribe_link} から購読を停止します。"
       unsubscribe_no_link: "このチャットの要約は、あなたが退席中のときに %{site_link} から送信されます。%{email_preferences_link} を変更します。"
       view_messages:

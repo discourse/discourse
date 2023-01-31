@@ -111,6 +111,8 @@ hr:
       title_capitalized: "Čet"
       exit: "natrag"
       channel_status:
+        archive_failed: "Arhiviranje kanala nije uspjelo. %{completed}/%{total} poruke su arhivirane. <a target=\"_blank\" href=\"%{topic_url}\">tema odredišta</a>. Pritisnite ponovno za pokušaj dovršetka arhiviranja."
+        archive_failed_no_topic: "Arhiviranje kanala nije uspjelo. %{completed}/%{total} poruka je arhivirano, odredišna tema nije kreirana. Pritisnite ponovno za pokušaj dovršetka arhiviranja."
         closed: "Zatvoreno"
         open: "Otvori"
       browse:
@@ -123,6 +125,7 @@ hr:
         yesterday: Jučer
       about_view:
         title: Naslov
+        name: Ime
         description: Opis
       channel_info:
         back_to_channel: "Natrag"

@@ -207,6 +207,7 @@ fr:
         archived_header: "Le canal est archivé"
         archived: "Archivé"
         archive_failed: "Échec de l'archivage du canal. %{completed}/%{total} messages ont été archivés dans <a target=\"_blank\" href=\"%{topic_url}\">le sujet de destination</a>. Appuyez sur Réessayer pour tenter de terminer l'archivage."
+        archive_failed_no_topic: "Échec de l'archivage du canal. %{completed}/%{total} messages ont été archivés, le sujet de destination n'a pas été créé. Appuyez sur Réessayer pour tenter de terminer l'archivage."
         archive_completed: "Voir <a target=\"_blank\" href=\"%{topic_url}\">le sujet de l'archive</a>"
         closed_header: "Le canal est fermé"
         closed: "Fermé"
@@ -229,6 +230,7 @@ fr:
         associated_topic: Sujet lié
         associated_category: Catégorie liée
         title: Titre
+        name: Nom
         description: Description
       channel_info:
         back_to_all_channels: "Tous les canaux"
@@ -237,10 +239,6 @@ fr:
           about: À propos
           members: Membres
           settings: Paramètres
-      channel_edit_title_modal:
-        title: Modifier le titre
-        input_placeholder: Ajouter un titre
-        description: Ajoutez un court titre descriptif à votre canal
       channel_edit_description_modal:
         title: Modifier la description
         input_placeholder: Ajouter une description

@@ -30,6 +30,7 @@ te:
         yesterday: నిన్న
       about_view:
         title: శీర్షిక
+        name: పేరు
         description: వివరణ
       channel_info:
         back_to_channel: "వెనుకకు"

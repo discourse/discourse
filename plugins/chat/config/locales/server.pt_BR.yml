@@ -35,12 +35,21 @@ pt_BR:
       title: "Arquivamento do Canal de Chat Concluído"
       subject_template: "Arquivo do canal de chat concluído com sucesso"
       text_body_template: |
-        O arquivamento do canal de chat **\#%{channel_name}** foi concluído com êxito. As mensagens foram copiadas para o tópico [%{topic_title}](%{topic_url}).
+        O arquivamento do canal de chat %{channel_hashtag_or_name} foi concluído com êxito. As mensagens foram copiadas para o tópico [%{topic_title}](%{topic_url}).
     chat_channel_archive_failed:
       title: "Falha no Arquivamento do Canal de Chat"
       subject_template: "Falha no arquivamento do canal de chat"
       text_body_template: |
-        Falha ao realizar o arquivamento do canal de chat **\#%{channel_name}**. %{messages_archived} mensagens foram arquivadas. As mensagens parcialmente arquivadas foram copiadas para o tópico [%{topic_title}](%{topic_url}). Visite o canal em %{channel_url} para tentar novamente.
+        Falha ao realizar o arquivamento do canal de chat %{channel_hashtag_or_name}. %{messages_archived} mensagens foram arquivadas. As mensagens parcialmente arquivadas foram copiadas para o tópico [%{topic_title}](%{topic_url}). Visite o canal em %{channel_url} para tentar novamente.
+    chat_channel_archive_failed_no_topic:
+      title: "Falha no Arquivamento do Canal de Chat"
+      subject_template: "Falha no arquivamento do canal de chat"
+      text_body_template: |
+        Falha ao arquivar o canal de chat %{channel_hashtag_or_name} . Nenhuma mensagem foi arquivada. O tópico não foi criado com sucesso pelas seguintes razões:
+
+          %{topic_validation_errors}
+
+        Visite o canal em %{channel_url} para tentar novamente.
   chat:
     deleted_chat_username: excluído
     errors:
