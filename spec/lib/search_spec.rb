@@ -113,6 +113,28 @@ RSpec.describe Search do
         expect(Search.execute("oeuvre").posts).to contain_exactly(post_2)
       end
     end
+
+    context "when search_ranking_weights site setting has been configured" do
+      fab!(:topic) { Fabricate(:topic, title: "Some random topic title start") }
+      fab!(:topic2) { Fabricate(:topic, title: "Some random topic title") }
+      fab!(:post1) { Fabricate(:post, raw: "start", topic: topic) }
+      fab!(:post2) { Fabricate(:post, raw: "#{"start " * 100}", topic: topic2) }
+
+      before do
+        SearchIndexer.enable
+        [post1, post2].each { |post| SearchIndexer.index(post, force: true) }
+      end
+
+      after { SearchIndexer.disable }
+
+      it "should apply the custom ranking weights correctly" do
+        expect(Search.execute("start").posts).to eq([post2, post1])
+
+        SiteSetting.search_ranking_weights = "{0.00001,0.2,0.4,1.0}"
+
+        expect(Search.execute("start").posts).to eq([post1, post2])
+      end
+    end
   end
 
   context "with apostrophes" do
