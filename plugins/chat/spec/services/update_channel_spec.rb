@@ -34,7 +34,7 @@ RSpec.describe Chat::Service::UpdateChannel do
     end
   end
 
-  context "when the name and description are provided by a valid user" do
+  context "when the name, slug, and description are provided by a valid user" do
     fab!(:current_user) { Fabricate(:admin) }
 
     subject(:result) do
@@ -43,12 +43,14 @@ RSpec.describe Chat::Service::UpdateChannel do
         channel: channel,
         name: "cool channel",
         description: "a channel description",
+        slug: "snail",
       )
     end
 
     it "works" do
       expect(result).to be_a_success
       expect(result.channel.name).to eq("cool channel")
+      expect(result.channel.slug).to eq("snail")
       expect(result.channel.description).to eq("a channel description")
     end
 
@@ -56,8 +58,37 @@ RSpec.describe Chat::Service::UpdateChannel do
       message =
         MessageBus.track_publish(ChatPublisher::CHANNEL_EDITS_MESSAGE_BUS_CHANNEL) { result }.first
       expect(message.data).to eq(
-        { chat_channel_id: channel.id, name: channel.name, description: channel.description },
+        {
+          chat_channel_id: channel.id,
+          name: channel.name,
+          description: channel.description,
+          slug: channel.slug,
+        },
       )
+    end
+  end
+
+  context "when the name is blank" do
+    fab!(:current_user) { Fabricate(:admin) }
+
+    subject(:result) { described_class.call(guardian: guardian, channel: channel, name: " ") }
+
+    it "nils out the name" do
+      expect(result).to be_a_success
+      expect(result.channel.name).to eq(nil)
+    end
+  end
+
+  context "when the description is blank" do
+    fab!(:current_user) { Fabricate(:admin) }
+
+    subject(:result) do
+      described_class.call(guardian: guardian, channel: channel, description: " ")
+    end
+
+    it "nils out the description" do
+      expect(result).to be_a_success
+      expect(result.channel.description).to eq(nil)
     end
   end
 

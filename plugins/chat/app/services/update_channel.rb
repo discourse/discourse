@@ -2,7 +2,7 @@
 
 module Chat
   module Service
-    # Service responsible for updating a chat channel's name and description.
+    # Service responsible for updating a chat channel's name, slug, and description.
     #
     # For a CategoryChannel, the settings for auto_join_users and allow_channel_wide_mentions
     # are also editable.
@@ -24,6 +24,7 @@ module Chat
       #   @param [Hash] params_to_edit
       #   @option params_to_edit [String] name
       #   @option params_to_edit [String] description
+      #   @option params_to_edit [String] slug
       #   @option params_to_edit [Boolean] auto_join_users Only valid for {CategoryChannel}. Whether active users
       #    with permission to see the category should automatically join the channel.
       #   @option params_to_edit [String] allow_channel_wide_mentions Allow the use of @here and @all in the channel.
@@ -32,8 +33,19 @@ module Chat
       before_contract { guardian(:can_edit_chat_channel?) }
 
       before_contract do
-        context.name = (context.name || context.channel.name).presence
-        context.description = (context.description || context.channel.description).presence
+        if @initial_context.key?(:name) && context.name.blank?
+          context.name = nil
+        else
+          context.name = (context.name || context.channel.name).presence
+        end
+
+        if @initial_context.key?(:description) && context.description.blank?
+          context.description = nil
+        else
+          context.description = (context.description || context.channel.description).presence
+        end
+
+        context.slug = (context.slug || context.channel.slug).presence
 
         if context.channel.category_channel?
           context.auto_join_users ||= context.channel.auto_join_users
@@ -47,6 +59,7 @@ module Chat
 
         attribute :name
         attribute :description
+        attribute :slug
         attribute :auto_join_users, :boolean, default: false
         attribute :allow_channel_wide_mentions, :boolean, default: true
 
@@ -72,7 +85,7 @@ module Chat
       end
 
       def params_to_edit
-        params = { name: context.name, description: context.description }
+        params = { name: context.name, description: context.description, slug: context.slug }
 
         if context.channel.category_channel?
           params.merge!(

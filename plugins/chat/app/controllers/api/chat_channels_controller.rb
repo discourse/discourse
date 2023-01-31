@@ -97,16 +97,6 @@ class Chat::Api::ChatChannelsController < Chat::Api
   end
 
   def update
-    # TODO: Do we want to allow just inspecting the coerced contract data here? So
-    # we could do something like:
-    #
-    # contract = Chat::Service::UpdateChannel.check_contract(params_to_edit)
-    # if contract.auto_join_users
-    #   auto_join_limiter(channel_from_params).performed!
-    # end
-    #
-    # Or maybe we want to allow rate limiting from within services? I don't think so
-    # since it's a controller only thing....
     params_to_edit = editable_params(params, channel_from_params)
     params_to_edit.each { |k, v| params_to_edit[k] = nil if params_to_edit[k].blank? }
     if ActiveRecord::Type::Boolean.new.deserialize(params_to_edit[:auto_join_users])

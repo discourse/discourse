@@ -371,7 +371,7 @@ RSpec.describe Chat::Api::ChatChannelsController do
       it "nullifies the field and doesn’t store an empty string" do
         put "/chat/api/channels/#{channel.id}", params: { channel: { name: "  " } }
 
-        expect(channel.reload.name).to eq("something")
+        expect(channel.reload.name).to eq(nil)
       end
 
       it "doesn’t nullify the description" do
@@ -392,7 +392,7 @@ RSpec.describe Chat::Api::ChatChannelsController do
       it "nullifies the field and doesn’t store an empty string" do
         put "/chat/api/channels/#{channel.id}", params: { channel: { description: "  " } }
 
-        expect(channel.reload.description).to eq("something")
+        expect(channel.reload.description).to eq(nil)
       end
 
       it "doesn’t nullify the name" do

@@ -184,6 +184,14 @@ module Chat
 
       # @!visibility private
       def initialize(initial_context = {})
+        @initial_context =
+          (
+            if initial_context.is_a?(ActionController::Parameters)
+              initial_context.to_unsafe_h
+            else
+              initial_context
+            end
+          ).with_indifferent_access
         @context = Context.build(initial_context)
       end
 
