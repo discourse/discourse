@@ -2192,6 +2192,9 @@ backups:
     client: true
 
 search:
+  max_duplicate_search_index_terms:
+    default: -1
+    hidden: true
   use_pg_headlines_for_excerpt:
     default: false
     hidden: true
