@@ -45,9 +45,6 @@ da:
       trigger: "Kast"
       invalid: |-
         Jeg beklager, det er matematisk umuligt at kaste den kombination af terninger. :confounded:
-      not_enough_dice:
-        one: "Jeg har kun %{count} terning. [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), jeg ved det!"
-        other: "Jeg har kun %{count} terninger. [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), jeg ved det!"
       out_of_range: |-
         Vidste du, at [det maksimale antal sider](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) for en matematisk retfærdig terning er 120?
       results: |-

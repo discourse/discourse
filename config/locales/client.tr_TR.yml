@@ -302,11 +302,9 @@ tr_TR:
       edit_bookmark: "Yer İmini Düzenle"
       clear_bookmarks: "Yer İmlerini Temizle"
       help:
-        bookmark: "Bu konudaki ilk gönderiyi yer imlerine eklemek için tıklayın"
-        edit_bookmark: "Bu konudaki yer imini düzenlemek için tıklayın"
         edit_bookmark_for_topic: "Bu konunun yer imini düzenlemek için tıklayın"
         unbookmark: "Bu konudaki tüm yer imlerini kaldırmak için tıklayın"
-        unbookmark_with_reminder: "Bu konudaki tüm yer imlerini ve anımsatıcıları kaldırmak için tıklayın."
+        unbookmark_with_reminder: "Bu konudaki tüm yer imlerini ve anımsatıcıları kaldırmak için tıklayın"
     bookmarks:
       created: "Bu gönderiyi yer imlerine eklediniz. %{name}"
       created_generic: "Bunu yer imlerine eklediniz. %{name}"
@@ -4757,6 +4755,8 @@ tr_TR:
           love:
             name: "sevgi"
             description: "Beğen düğmesinin rengi."
+          selected:
+            name: "seçili"
         robots:
           title: "Sitenizin robots.txt dosyasını geçersiz kılın:"
           warning: "Bu, ilgili tüm site ayarlarını kalıcı olarak geçersiz kılar."

@@ -262,7 +262,6 @@ gl:
       title: "Marcador"
       clear_bookmarks: "Limpar marcadores"
       help:
-        bookmark: "Prema para engadir aos marcadores a publicación inicial deste tema"
         unbookmark: "Prema para retirar todos os marcadores deste tema"
     bookmarks:
       created: "Fixou como marcador esta publicación. %{name}"
@@ -4016,6 +4015,8 @@ gl:
           love:
             name: "amor"
             description: "Cor do botón gústame."
+          selected:
+            name: "seleccionado"
         robots:
           title: "Sobrescribir o ficheiro robots.txt do sitio:"
           warning: "Isto sobrescribirá definitivamente calquera configuración relativa ao sitio."

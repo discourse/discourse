@@ -284,7 +284,6 @@ sk:
       title: "Záložka"
       clear_bookmarks: "Odstrániť záložku"
       help:
-        bookmark: "Kliknutím vložíte záložku na prvý príspevok tejto témy"
         unbookmark: "Kliknutím odstánite všetky záložky v tejto téme"
     bookmarks:
       not_bookmarked: "Vytvor záložku na tento príspevok"
@@ -2631,6 +2630,8 @@ sk:
           love:
             name: "obľúbené"
             description: "Farba tlačidla \"Páči sa\""
+          selected:
+            name: "vybraté"
         email_style:
           css: "CSS"
       email:

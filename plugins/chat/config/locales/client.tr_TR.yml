@@ -237,6 +237,8 @@ tr_TR:
           about: Hakkında
           members: Üyeler
           settings: Ayarlar
+      channel_edit_name_slug_modal:
+        name: Kanal adı
       channel_edit_description_modal:
         title: Açıklamayı düzenle
         input_placeholder: Açıklama ekle

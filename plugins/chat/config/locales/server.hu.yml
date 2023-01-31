@@ -43,6 +43,7 @@ hu:
       delete_channel_failed: "A csatorna törlése sikertelen, próbálja meg újra."
       minimum_length_not_met: "Az üzenet túl rövid, legalább %{minimum} karaktert kell tartalmaznia."
       message_too_long: "Az üzenet túl hosszú, az üzenetek legfeljebb %{maximum} karakterekből állhatnak."
+      draft_too_long: "A vázlat túl hosszú."
       max_reactions_limit_reached: "Új reakciók nem engedélyezettek ezen az üzeneten."
       message_move_invalid_channel: "A forrás- és célcsatornának nyilvános csatornának kell lennie."
       message_move_no_messages_found: "A megadott üzenetazonosítókkal nem találhatók üzenetek."

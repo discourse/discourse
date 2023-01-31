@@ -328,11 +328,9 @@ lt:
       edit_bookmark: "Redaguoti žymę"
       clear_bookmarks: "Pašalinti žymes"
       help:
-        bookmark: "Paspausk, kad pažymėtum pirmą įrašą šioje temoje"
-        edit_bookmark: "Spustelėkite, jei norite redaguoti šios temos žymę"
         edit_bookmark_for_topic: "Spustelėkite, jei norite redaguoti šios temos žymę"
         unbookmark: "Paspausk, kad pašalintum visas žymęs šioje temoje"
-        unbookmark_with_reminder: "Spustelėkite, kad pašalintumėte visas šios temos žymes ir priminimus."
+        unbookmark_with_reminder: "Spustelėkite, kad pašalintumėte visas šios temos žymes ir priminimus"
     bookmarks:
       created: "Jūs pažymėjote šį įrašą. %{name}"
       create: "Sukurti žymę"
@@ -4360,6 +4358,8 @@ lt:
           love:
             name: "patinka"
             description: "Mygtuko \"Patinka\" spalva."
+          selected:
+            name: "pasirinktas"
         robots:
           title: "Nepaisykite savo svetainės robots.txt failo:"
           warning: "Tai visam laikui pakeis visus susijusius svetainės nustatymus."

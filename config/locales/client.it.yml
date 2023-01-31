@@ -302,11 +302,9 @@ it:
       edit_bookmark: "Modifica Segnalibro"
       clear_bookmarks: "Cancella Segnalibri"
       help:
-        bookmark: "Clicca per aggiungere un segnalibro al primo messaggio di questo argomento"
-        edit_bookmark: "Clicca per modificare il segnalibro a questo argomento"
         edit_bookmark_for_topic: "Fai clic per modificare il segnalibro per quest'argomento"
         unbookmark: "Clicca per rimuovere tutti i segnalibri a questo argomento"
-        unbookmark_with_reminder: "Clicca per rimuovere tutti i segnalibri e i promemoria a questo argomento."
+        unbookmark_with_reminder: "Clicca per rimuovere tutti i segnalibri e i promemoria a questo argomento"
     bookmarks:
       created: "Hai aggiunto questo messaggio ai segnalibri %{name}"
       created_generic: "L'hai aggiunto ai segnalibri. %{name}"
@@ -4769,6 +4767,8 @@ it:
           love:
             name: "Mi piace"
             description: "Il colore del pulsante \"Mi piace\"."
+          selected:
+            name: "selezionato"
         robots:
           title: "Sostituisci il file robots.txt del tuo sito:"
           warning: "Questo sostituirà in modo permanente tutte le impostazioni relative al sito."

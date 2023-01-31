@@ -276,11 +276,9 @@ fa_IR:
       edit_bookmark: "ویرایش نشانک"
       clear_bookmarks: "پاک کردن نشانک‌ها"
       help:
-        bookmark: "کلیک کنید تا به اولین نوشته این موضوع نشانک بزنید"
-        edit_bookmark: "برای ویرایش نشانک مربوط در این موضوع کلیک کنید"
         edit_bookmark_for_topic: "برای ویرایش نشانک مربوط به این موضوع کلیک کنید"
         unbookmark: "کلیک کنید تا همهٔ نشانک‌های این موضوع را حذف کنید"
-        unbookmark_with_reminder: "برای حذف همه نشانک‌ها و یادآورها در این موضوع کلیک کنید."
+        unbookmark_with_reminder: "برای حذف همه نشانک‌ها و یادآورها در این موضوع کلیک کنید"
     bookmarks:
       created: "شما این نوشته را نشانک کردید. %{name}"
       created_generic: "شما این را نشانک گذاری کرده‌اید. %{name}"
@@ -2798,6 +2796,7 @@ fa_IR:
         updated: "به روز شده"
         name: "نام"
         name_placeholder: "این نشانک برای چی است؟"
+        name_input_label: "نام نشانک"
         set_reminder: "به من یادآوری کن"
         options: "گزینه‌ها"
         actions:
@@ -3923,6 +3922,8 @@ fa_IR:
           love:
             name: "دوست داشتن"
             description: "رنگ دکمه‌ی پسند"
+          selected:
+            name: "انتخاب شده"
         email_style:
           html: "قالب HTML"
           css: "سی اس اس"

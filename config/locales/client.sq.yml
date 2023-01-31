@@ -220,7 +220,6 @@ sq:
       title: "Të preferuarat"
       clear_bookmarks: "Pastro të preferuarat"
       help:
-        bookmark: "Kliko për të shtuar tek të preferuarat e tua postimin e parë të kësaj teme."
         unbookmark: "Kliko për të hequr të preferuarat nga kjo temë"
     bookmarks:
       not_bookmarked: "shto postimin tek të preferuarat"

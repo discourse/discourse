@@ -162,7 +162,6 @@ te:
       title: "పేజీక"
       clear_bookmarks: "పేజీక లను తుడిచివేయి"
       help:
-        bookmark: "ఈ అంశంపై మొదటి టపాకి పేజీకలను పెట్టండి"
         unbookmark: "ఈ అంశంపై అన్ని పేజీకలను తొలగించడానికి నొక్కండి"
     bookmarks:
       not_bookmarked: "ఈ టపాకు పేజీక ఉంచు"

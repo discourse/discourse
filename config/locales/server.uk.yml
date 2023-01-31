@@ -2061,8 +2061,6 @@ uk:
     automatically_unpin_topics: "Автоматично відкріплювати теми, коли користувач досягає кінця."
     read_time_word_count: "Кількість слів за хвилину для обчислення орієнтовного часу читання."
     topic_page_title_includes_category: "На сторінці теми <a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>теґ title</a> сторінки містить назву розділу."
-    native_app_install_banner_ios: "Показує банер програми DiscourseHub на пристроях iOS звичайним користувачам (рівень довіри 1 і вище)."
-    native_app_install_banner_android: "Показує банер програми DiscourseHub на пристроях Android звичайним користувачам (рівень довіри 1 і вище)."
     app_association_android: "Вміст кінцевої точки <a href='%{base_path}/.well-known/assetlinks.json'>.well-known/assetlinks.json</a>, що використовується для Google Digital Asset Links API."
     app_association_ios: "Вміст кінцевої точки <a href='%{base_path}/apple-app-site-association'>apple-app-site-association</a>, що використовується для створення універсальних посилань між цим сайтом і програмами iOS."
     share_anonymized_statistics: "Діліться анонімною статистикою використання."

@@ -224,7 +224,6 @@ sw:
       title: "Alamisho"
       clear_bookmarks: "Futa Maalamisho"
       help:
-        bookmark: "Bonyeza kualamisha chapisho la kwanza kwenye mada hii"
         unbookmark: "Bofya kuondoa mialamisho yote kwenye mada hii"
     bookmarks:
       not_bookmarked: "alamisha chapisho hili"
@@ -2690,6 +2689,8 @@ sw:
           love:
             name: "upendo"
             description: "Rangi ya kitufe cha upendo."
+          selected:
+            name: "imechaguliwa"
         email_style:
           css: "CSS"
       email:

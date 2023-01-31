@@ -237,6 +237,8 @@ es:
           about: Acerca de
           members: Miembros
           settings: Ajustes
+      channel_edit_name_slug_modal:
+        name: Nombre del canal
       channel_edit_description_modal:
         title: Editar descripción
         input_placeholder: Añade una descripción

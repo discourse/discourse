@@ -306,8 +306,6 @@ ro:
       edit_bookmark: "Editați marcajul"
       clear_bookmarks: "Șterge semnele de carte"
       help:
-        bookmark: "Click pentru a adăuga semn de carte la subiectul acesta"
-        edit_bookmark: "Faceți clic pentru a edita marcajul pe acest subiect"
         edit_bookmark_for_topic: "Faceți clic pentru a edita marcajul pentru acest subiect"
         unbookmark: "Click pentru a șterge semnele de carte"
     bookmarks:
@@ -3384,6 +3382,8 @@ ro:
           love:
             name: "apreciere"
             description: "Culoarea butonului de apreciere."
+          selected:
+            name: "selectat"
         email_style:
           css: "CSS"
           reset: "Resetare la valorile implicite"

@@ -199,6 +199,10 @@ hu:
           about: Névjegy
           members: Tagok
           settings: Beállítások
+      channel_edit_name_slug_modal:
+        title: Csatorna szerkesztése
+        input_placeholder: Név hozzáadása
+        name: Csatorna neve
       channel_edit_description_modal:
         title: Leírás szerkesztése
         input_placeholder: Leírás hozzáadása

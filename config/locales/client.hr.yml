@@ -334,11 +334,9 @@ hr:
       edit_bookmark: "Uredi oznaku"
       clear_bookmarks: "Očisti oznake"
       help:
-        bookmark: "Kliknite za označavanje prvog posta u ovoj temi"
-        edit_bookmark: "Kliknite za uređivanje oznake na ovu temu"
         edit_bookmark_for_topic: "Kliknite za uređivanje oznake na ovu temu"
         unbookmark: "Klikni za uklananje svih oznaka u ovoj temi"
-        unbookmark_with_reminder: "Kliknite da biste uklonili sve oznake i podsjetnike u ovoj temi."
+        unbookmark_with_reminder: "Kliknite da biste uklonili sve oznake i podsjetnike u ovoj temi"
     bookmarks:
       created: "Označili ste ovu objavu %{name}"
       created_generic: "Označili ste ovo. %{name}"
@@ -3662,7 +3660,9 @@ hr:
         inappropriate: "Neprikladno je."
         spam: "Nepoželjno je."
       custom_placeholder_notify_user: "Budite specifični, konstruktivni i ljubazni."
+      notify_user_textarea_label: "Poruka za korisnika"
       custom_placeholder_notify_moderators: "Recite nam točno što vas brine, i gdje je moguće dajte relevantne poveznice i primjere."
+      notify_moderators_textarea_label: "Poruka za moderatore"
       custom_message:
         at_least:
           one: "unesite barem %{count} znak"
@@ -4975,6 +4975,8 @@ hr:
           love:
             name: "like"
             description: "Boja gumba za like."
+          selected:
+            name: "odabran"
         robots:
           title: "Nadjačaj datoteku robots.txt vaše web stranice:"
           warning: "To će trajno nadjačati sve povezane postavke web lokacije."

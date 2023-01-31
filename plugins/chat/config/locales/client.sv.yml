@@ -239,6 +239,9 @@ sv:
           about: Om
           members: Medlemmar
           settings: Inställningar
+      channel_edit_name_slug_modal:
+        input_placeholder: Lägg till ett namn
+        slug: Dynamiskt kanalfält (valfritt)
       channel_edit_description_modal:
         title: Redigera beskrivning
         input_placeholder: Lägg till en beskrivning
@@ -275,6 +278,7 @@ sv:
         create: "Skapa kanal"
         description: "Beskrivning (valfritt)"
         name: "Kanalnamn"
+        slug: "Dynamiskt kanalfält (valfritt)"
         title: "Ny kanal"
         type: "Typ"
         types:
@@ -304,6 +308,8 @@ sv:
         channel_wide_mentions_label: "Tillåt @all och @here omnämnanden"
         channel_wide_mentions_description: "Tillåt användare att avisera alla #%{channel}-medlemmar med @all eller bara de som är aktiva för tillfället med @here"
         auto_join_users_label: "Lägg till användare automatiskt"
+        auto_join_users_info: "Kontrollera varje timme vilka användare som har varit aktiva under de senaste 3 månaderna. Lägg till dem till den här kanalen om de har tillgång till kategorin %{category}."
+        auto_join_users_info_no_category: "Kontrollera varje timme vilka användare som har varit aktiva under de senaste 3 månaderna. Lägg till dem till den här kanalen om de har tillgång till vald kategori."
         auto_join_users_warning: "Varje användare som inte är medlem i den här kanalen och har tillgång till kategorin %{category} kommer att gå med. Är du säker?"
         desktop_notification_level: "Skrivbordsaviseringar"
         follow: "Gå med"

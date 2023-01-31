@@ -366,11 +366,9 @@ ru:
       edit_bookmark: "Изменить закладку"
       clear_bookmarks: "Очистить закладки"
       help:
-        bookmark: "Добавить первую запись темы в закладки"
-        edit_bookmark: "Изменить закладку в этой теме"
         edit_bookmark_for_topic: "Изменить закладку для этой темы"
         unbookmark: "Удалить все закладки в этой теме"
-        unbookmark_with_reminder: "Удалить все закладки и напоминания из этой темы."
+        unbookmark_with_reminder: "Удалить все закладки и напоминания из этой темы"
     bookmarks:
       created: "Вы добавили эту запись в закладки: «%{name}»"
       created_generic: "Добавлено в закладки: «%{name}»"
@@ -5203,6 +5201,8 @@ ru:
           love:
             name: "лайки"
             description: "Цвет кнопки «Лайк»."
+          selected:
+            name: "выбрано"
         robots:
           title: "Изменить настройки в файле robots.txt:"
           warning: "Это повлияет на соответствующие настройки сайта."

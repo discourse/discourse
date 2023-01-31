@@ -302,11 +302,9 @@ es:
       edit_bookmark: "Editar marcador"
       clear_bookmarks: "Quitar marcadores"
       help:
-        bookmark: "Haz clic para añadir a marcadores la primera publicación de este tema"
-        edit_bookmark: "Haga clic para editar el marcador sobre este tema"
         edit_bookmark_for_topic: "Haz clic para editar el marcador de este tema"
         unbookmark: "Haz clic para eliminar todos los marcadores de este tema"
-        unbookmark_with_reminder: "Haz clic para eliminar todos los marcadores y recordatorios de este tema."
+        unbookmark_with_reminder: "Haz clic para eliminar todos los marcadores y recordatorios de este tema"
     bookmarks:
       created: "Has guardado esta publicación en marcadores. %{name}"
       created_generic: "Has añadido esto a marcadores. %{name}"
@@ -4767,6 +4765,8 @@ es:
           love:
             name: "me encanta"
             description: "El color del botón de me gusta"
+          selected:
+            name: "seleccionado"
         robots:
           title: "Sobrescribe el archivo robots.txt de tu sitio:"
           warning: "Esto sobrescribirá permanentemente cualquier configuración del sitio relacionada."
