@@ -16,6 +16,8 @@ const GET_DEPRECATION_MSG =
   "Plugin outlet context is no longer an EmberObject - using `get()` is deprecated.";
 const TAG_NAME_DEPRECATION_MSG =
   "The `tagName` argument to PluginOutlet is deprecated. If a wrapper element is required, define it manually around the outlet call.";
+const ARGS_DEPRECATION_MSG =
+  "PluginOutlet arguments should now be passed using `@outletArgs=` instead of `@args=`";
 
 /**
    A plugin outlet is an extension point for templates where other templates can
@@ -64,6 +66,12 @@ export default class PluginOutletComponent extends GlimmerComponentWithDeprecate
     if (this.args.tagName) {
       deprecated(`${TAG_NAME_DEPRECATION_MSG} (outlet: ${this.args.name})`, {
         id: "discourse.plugin-outlet-tag-name",
+      });
+    }
+
+    if (this.args.args) {
+      deprecated(`${ARGS_DEPRECATION_MSG} (outlet: ${this.args.name})`, {
+        id: "discourse.plugin-outlet-args",
       });
     }
 
