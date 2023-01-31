@@ -1,7 +1,7 @@
 {{#if this.visible}}
   <PluginOutlet
     @name="before-user-card-content"
-    @args={{hash user=this.user}}
+    @outletArgs={{hash user=this.user}}
   />
   <div class="card-content">
     {{#if this.loading}}
@@ -47,7 +47,7 @@
             <PluginOutlet
               @name="user-card-avatar-flair"
               @connectorTagName="div"
-              @args={{hash user=this.user}}
+              @outletArgs={{hash user=this.user}}
             />
           </div>
         </div>
@@ -91,7 +91,7 @@
           <PluginOutlet
             @name="user-card-after-username"
             @connectorTagName="div"
-            @args={{hash
+            @outletArgs={{hash
               user=this.user
               showUser=(fn this.handleShowUser this.user)
             }}
@@ -122,7 +122,7 @@
             <PluginOutlet
               @name="user-card-post-names"
               @connectorTagName="div"
-              @args={{hash user=this.user}}
+              @outletArgs={{hash user=this.user}}
             />
           </div>
         </div>
@@ -140,7 +140,7 @@
           <PluginOutlet
             @name="user-card-below-message-button"
             @connectorTagName="li"
-            @args={{hash user=this.user close=(action "close")}}
+            @outletArgs={{hash user=this.user close=(action "close")}}
           />
           {{#if this.showFilter}}
             <li>
@@ -176,14 +176,14 @@
             <PluginOutlet
               @name="user-card-additional-buttons"
               @connectorTagName="div"
-              @args={{hash user=this.user close=(action "close")}}
+              @outletArgs={{hash user=this.user close=(action "close")}}
             />
           </li>
         </ul>
         <PluginOutlet
           @name="user-card-additional-controls"
           @connectorTagName="div"
-          @args={{hash user=this.user close=(action "close")}}
+          @outletArgs={{hash user=this.user close=(action "close")}}
         />
       </div>
 
@@ -284,7 +284,7 @@
               <PluginOutlet
                 @name="user-card-location-and-website"
                 @connectorTagName="div"
-                @args={{hash user=this.user}}
+                @outletArgs={{hash user=this.user}}
               />
             </span>
           </div>
@@ -331,14 +331,14 @@
             <PluginOutlet
               @name="user-card-metadata"
               @connectorTagName="div"
-              @args={{hash user=this.user}}
+              @outletArgs={{hash user=this.user}}
             />
           </div>
         {{/unless}}
         <PluginOutlet
           @name="user-card-after-metadata"
           @connectorTagName="div"
-          @args={{hash user=this.user}}
+          @outletArgs={{hash user=this.user}}
         />
       </div>
 
@@ -369,7 +369,7 @@
       <PluginOutlet
         @name="user-card-before-badges"
         @connectorTagName="div"
-        @args={{hash user=this.user}}
+        @outletArgs={{hash user=this.user}}
       />
 
       {{#if this.showBadges}}

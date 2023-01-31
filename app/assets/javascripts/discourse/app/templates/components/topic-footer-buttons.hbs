@@ -58,7 +58,7 @@
 
   <PluginOutlet
     @name="topic-footer-main-buttons-before-create"
-    @args={{hash topic=this.topic}}
+    @outletArgs={{hash topic=this.topic}}
     @connectorTagName="span"
   />
 
@@ -74,7 +74,7 @@
 
   <PluginOutlet
     @name="after-topic-footer-main-buttons"
-    @args={{hash topic=this.topic}}
+    @outletArgs={{hash topic=this.topic}}
     @connectorTagName="span"
   />
 </div>
@@ -97,6 +97,6 @@
 
 <PluginOutlet
   @name="after-topic-footer-buttons"
-  @args={{hash topic=this.topic}}
+  @outletArgs={{hash topic=this.topic}}
   @connectorTagName="span"
 />

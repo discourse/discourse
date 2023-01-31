@@ -69,7 +69,7 @@ module("Integration | Component | plugin-outlet", function (hooks) {
   test("Renders a template into the outlet", async function (assert) {
     this.set("shouldDisplay", false);
     await render(
-      hbs`<PluginOutlet @name="test-name" @args={{hash shouldDisplay=this.shouldDisplay}} />`
+      hbs`<PluginOutlet @name="test-name" @outletArgs={{hash shouldDisplay=this.shouldDisplay}} />`
     );
     assert.strictEqual(count(".hello-username"), 1, "renders the hello outlet");
     assert.false(
@@ -101,7 +101,7 @@ module("Integration | Component | plugin-outlet", function (hooks) {
   test("Reevaluates shouldRender for argument changes", async function (assert) {
     this.set("shouldDisplay", false);
     await render(
-      hbs`<PluginOutlet @name="test-name" @args={{hash shouldDisplay=this.shouldDisplay}} />`
+      hbs`<PluginOutlet @name="test-name" @outletArgs={{hash shouldDisplay=this.shouldDisplay}} />`
     );
     assert.false(
       exists(".conditional-render"),
@@ -116,7 +116,7 @@ module("Integration | Component | plugin-outlet", function (hooks) {
   test("Reevaluates shouldRender for other autotracked changes", async function (assert) {
     this.set("shouldDisplay", false);
     await render(
-      hbs`<PluginOutlet @name="test-name" @args={{hash shouldDisplay=this.shouldDisplay}} />`
+      hbs`<PluginOutlet @name="test-name" @outletArgs={{hash shouldDisplay=this.shouldDisplay}} />`
     );
     assert.false(
       exists(".conditional-render"),
@@ -131,7 +131,7 @@ module("Integration | Component | plugin-outlet", function (hooks) {
   test("Other outlets are not re-rendered", async function (assert) {
     this.set("shouldDisplay", false);
     await render(
-      hbs`<PluginOutlet @name="test-name" @args={{hash shouldDisplay=this.shouldDisplay}} />`
+      hbs`<PluginOutlet @name="test-name" @outletArgs={{hash shouldDisplay=this.shouldDisplay}} />`
     );
 
     const otherOutletElement = query(".hello-username");

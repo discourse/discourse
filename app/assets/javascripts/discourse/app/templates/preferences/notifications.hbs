@@ -36,7 +36,7 @@
       <PluginOutlet
         @name="user-preferences-desktop-notifications"
         @connectorTagName="div"
-        @args={{hash model=this.model save=(action "save")}}
+        @outletArgs={{hash model=this.model save=(action "save")}}
       />
     </span>
   </div>
@@ -54,7 +54,7 @@
   <PluginOutlet
     @name="user-preferences-notifications"
     @connectorTagName="div"
-    @args={{hash model=this.model save=(action "save")}}
+    @outletArgs={{hash model=this.model save=(action "save")}}
   />
 </span>
 
@@ -64,7 +64,7 @@
   <PluginOutlet
     @name="user-custom-controls"
     @connectorTagName="div"
-    @args={{hash model=this.model}}
+    @outletArgs={{hash model=this.model}}
   />
 </span>
 

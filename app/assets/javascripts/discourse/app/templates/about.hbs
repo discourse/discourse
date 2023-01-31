@@ -34,7 +34,7 @@
       <PluginOutlet
         @name="about-after-description"
         @connectorTagName="section"
-        @args={{hash model=this.model}}
+        @outletArgs={{hash model=this.model}}
       />
 
       {{#if this.model.admins}}
@@ -50,7 +50,7 @@
         <PluginOutlet
           @name="about-after-admins"
           @connectorTagName="section"
-          @args={{hash model=this.model}}
+          @outletArgs={{hash model=this.model}}
         />
       </span>
 
@@ -69,7 +69,7 @@
         <PluginOutlet
           @name="about-after-moderators"
           @connectorTagName="section"
-          @args={{hash model=this.model}}
+          @outletArgs={{hash model=this.model}}
         />
       </span>
 

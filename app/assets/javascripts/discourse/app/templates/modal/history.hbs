@@ -8,7 +8,7 @@
       </LinkTo>
       <PluginOutlet
         @name="revision-user-details-after"
-        @args={{hash model=this.model}}
+        @outletArgs={{hash model=this.model}}
       />
       <span class="date">{{bound-date this.model.created_at}}</span>
       {{#if this.model.edit_reason}}
@@ -162,7 +162,7 @@
       <PluginOutlet
         @name="post-revisions"
         @connectorTagName="div"
-        @args={{hash model=this.model}}
+        @outletArgs={{hash model=this.model}}
       />
     </span>
 
