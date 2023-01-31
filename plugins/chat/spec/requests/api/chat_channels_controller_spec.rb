@@ -402,6 +402,21 @@ RSpec.describe Chat::Api::ChatChannelsController do
       end
     end
 
+    context "when user provides an empty slug" do
+      fab!(:user) { Fabricate(:admin) }
+      fab!(:channel) do
+        Fabricate(:category_channel, name: "something else", description: "something")
+      end
+
+      before { sign_in(user) }
+
+      it "does not nullify the slug" do
+        put "/chat/api/channels/#{channel.id}", params: { channel: { slug: " " } }
+
+        expect(channel.reload.slug).to eq("something-else")
+      end
+    end
+
     context "when channel is a direct message channel" do
       fab!(:user) { Fabricate(:admin) }
       fab!(:channel) { Fabricate(:direct_message_channel) }
@@ -426,11 +441,13 @@ RSpec.describe Chat::Api::ChatChannelsController do
             params: {
               channel: {
                 name: "joffrey",
+                slug: "cat-king",
                 description: "cat owner",
               },
             }
 
         expect(channel.reload.name).to eq("joffrey")
+        expect(channel.reload.slug).to eq("cat-king")
         expect(channel.reload.description).to eq("cat owner")
       end
 
@@ -445,7 +462,12 @@ RSpec.describe Chat::Api::ChatChannelsController do
                 }
           end
 
-        expect(messages[0].data[:chat_channel_id]).to eq(channel.id)
+        message = messages[0]
+        channel.reload
+        expect(message.data[:chat_channel_id]).to eq(channel.id)
+        expect(message.data[:name]).to eq(channel.name)
+        expect(message.data[:slug]).to eq(channel.slug)
+        expect(message.data[:description]).to eq(channel.description)
       end
 
       it "returns a valid chat channel" do

@@ -64,19 +64,24 @@ class TagsController < ::ApplicationController
 
       categories =
         Category
-          .where("id IN (SELECT category_id FROM category_tags)")
-          .where("id IN (?)", guardian.allowed_category_ids)
-          .includes(:tags)
+          .where(
+            "id IN (SELECT category_id FROM category_tags WHERE category_id IN (?))",
+            guardian.allowed_category_ids,
+          )
+          .includes(:none_synonym_tags)
+          .order(:id)
 
       category_tag_counts =
         categories
           .map do |c|
             category_tags =
               self.class.tag_counts_json(
-                DiscourseTagging.filter_visible(c.tags.where(target_tag_id: nil), guardian),
+                DiscourseTagging.filter_visible(c.none_synonym_tags, guardian),
                 guardian,
               )
+
             next if category_tags.empty?
+
             { id: c.id, tags: category_tags }
           end
           .compact

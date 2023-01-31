@@ -332,11 +332,11 @@ en:
       edit_bookmark: "Edit Bookmark"
       clear_bookmarks: "Clear Bookmarks"
       help:
-        bookmark: "Click to bookmark the first post on this topic"
-        edit_bookmark: "Click to edit the bookmark on this topic"
+        bookmark: "Click to bookmark this topic"
+        edit_bookmark: "Click to edit the bookmark on a post in this topic"
         edit_bookmark_for_topic: "Click to edit the bookmark for this topic"
         unbookmark: "Click to remove all bookmarks in this topic"
-        unbookmark_with_reminder: "Click to remove all bookmarks and reminders in this topic."
+        unbookmark_with_reminder: "Click to remove all bookmarks and reminders in this topic"
 
     bookmarks:
       created: "You've bookmarked this post. %{name}"
@@ -4676,6 +4676,7 @@ en:
               write: Create a new topic or post to an existing one.
               update: Update a topic. Change the title, category, tags, status, archetype, featured_link etc.
               read_lists: Read topic lists like top, new, latest, etc. RSS is also supported.
+              status: "Update a topic's status. Status: closed, archive, visisble, pinned. Enabled: true, false. Specify a category_id here and in the request payload to only allow status changes on topics in that category."
             posts:
               edit: Edit any post or a specific one.
             categories:
@@ -5166,6 +5167,12 @@ en:
           love:
             name: "love"
             description: "The like button's color."
+          selected:
+            name: "selected"
+            description: "The background-color of elements such as list-items when they are selected/active."
+          hover:
+            name: "hover"
+            description: "The background-color of elements such as list-items when they are hovered on or have keyboard focus."
         robots:
           title: "Override your site's robots.txt file:"
           warning: "This will permanently override any related site settings."

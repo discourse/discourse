@@ -1134,6 +1134,7 @@ class Search
     elsif !is_topic_search
       rank = <<~SQL
       TS_RANK_CD(
+        #{SiteSetting.search_ranking_weights.present? ? "'#{SiteSetting.search_ranking_weights}'," : ""}
         post_search_data.search_data,
         #{@term.blank? ? "" : ts_query(weight_filter: weights)},
         #{SiteSetting.search_ranking_normalization}|32

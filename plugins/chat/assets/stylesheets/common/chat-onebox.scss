@@ -18,6 +18,7 @@
       align-items: center;
       color: var(--primary-medium);
       display: flex;
+      flex-wrap: wrap;
 
       .avatar {
         aspect-ratio: 30 / 30;

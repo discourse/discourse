@@ -2197,9 +2197,9 @@ en:
 
     topic_page_title_includes_category: "Topic page <a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>title tag</a> includes the category name."
 
-    native_app_install_banner_ios: "Displays DiscourseHub app banner on iOS devices to regular users (trust level 1 and up)."
+    native_app_install_banner_ios: "Displays DiscourseHub app banner on iOS devices to basic users (trust level 1) and up."
 
-    native_app_install_banner_android: "Displays DiscourseHub app banner on Android devices to regular users (trust level 1 and up)."
+    native_app_install_banner_android: "Displays DiscourseHub app banner on Android devices to basic users (trust level 1) and up."
 
     app_association_android: "Contents of <a href='%{base_path}/.well-known/assetlinks.json'>.well-known/assetlinks.json</a> endpoint, used for Google's Digital Asset Links API."
     app_association_ios: "Contents of <a href='%{base_path}/apple-app-site-association'>apple-app-site-association</a> endpoint, used to create Universal Links between this site and iOS apps."

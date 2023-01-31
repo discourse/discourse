@@ -37,10 +37,7 @@ RSpec.describe "Sidebar navigation menu", type: :system, js: true do
     it "channel link has the correct href" do
       visit("/")
 
-      expect(page).to have_link(
-        channel_1.name,
-        href: "/chat/channel/#{channel_1.id}/#{channel_1.slug}",
-      )
+      expect(page).to have_link(channel_1.name, href: "/chat/c/#{channel_1.slug}/#{channel_1.id}")
     end
 
     context "when the category is private" do

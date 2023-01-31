@@ -1,4 +1,3 @@
-import slugifyChannel from "discourse/plugins/chat/discourse/lib/slugify-channel";
 import deprecated from "discourse-common/lib/deprecated";
 import userSearch from "discourse/lib/user-search";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -297,8 +296,8 @@ export default class Chat extends Service {
 
       return this.router.transitionTo(
         "chat.channel",
+        channel.slugifiedTitle,
         channel.id,
-        slugifyChannel(channel),
         { queryParams }
       );
     } else {
