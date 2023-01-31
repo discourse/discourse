@@ -14,6 +14,8 @@ const PARENT_VIEW_DEPRECATION_MSG =
   "parentView should not be used within plugin outlets. Use the available outlet arguments, or inject a service which can provide the context you need.";
 const GET_DEPRECATION_MSG =
   "Plugin outlet context is no longer an EmberObject - using `get()` is deprecated.";
+const TAG_NAME_DEPRECATION_MSG =
+  "The `tagName` argument to PluginOutlet is deprecated. If a wrapper element is required, define it manually around the outlet call.";
 
 /**
    A plugin outlet is an extension point for templates where other templates can
@@ -55,6 +57,18 @@ export default class PluginOutletComponent extends GlimmerComponentWithDeprecate
       return get(this, ...arguments);
     },
   };
+
+  constructor() {
+    const result = super(...arguments);
+
+    if (this.args.tagName) {
+      deprecated(`${TAG_NAME_DEPRECATION_MSG} (outlet: ${this.args.name})`, {
+        id: "discourse.plugin-outlet-tag-name",
+      });
+    }
+
+    return result;
+  }
 
   get connectors() {
     return renderedConnectorsFor(
