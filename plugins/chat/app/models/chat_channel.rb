@@ -164,6 +164,7 @@ end
 #  user_count_stale             :boolean          default(FALSE), not null
 #  slug                         :string
 #  type                         :string
+#  threading_enabled            :boolean          default(FALSE), not null
 #
 # Indexes
 #
