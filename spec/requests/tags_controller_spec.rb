@@ -11,10 +11,22 @@ RSpec.describe TagsController do
   before { SiteSetting.tagging_enabled = true }
 
   describe "#index" do
-    fab!(:test_tag) { Fabricate(:tag, name: "test") }
+    fab!(:test_tag) { Fabricate(:tag, name: "test", description: "some description") }
+
     fab!(:topic_tag) do
-      Fabricate(:tag, name: "topic-test", public_topic_count: 1, staff_topic_count: 1)
+      Fabricate(
+        :tag,
+        name: "topic-test",
+        public_topic_count: 1,
+        staff_topic_count: 1,
+        pm_topic_count: 5,
+      )
     end
+
+    fab!(:pm_only_tag) do
+      Fabricate(:tag, public_topic_count: 0, staff_topic_count: 0, pm_topic_count: 1)
+    end
+
     fab!(:synonym) { Fabricate(:tag, name: "synonym", target_tag: topic_tag) }
 
     shared_examples "retrieves the right tags" do
@@ -27,13 +39,63 @@ RSpec.describe TagsController do
 
         tags = response.parsed_body["tags"]
 
+        serialized_tag = tags.find { |t| t["id"] == test_tag.name }
+
+        expect(serialized_tag["count"]).to eq(0)
+        expect(serialized_tag["pm_count"]).to eq(nil)
+        expect(serialized_tag["pm_only"]).to eq(false)
+
+        serialized_tag = tags.find { |t| t["id"] == topic_tag.name }
+
+        expect(serialized_tag["count"]).to eq(1)
+        expect(serialized_tag["pm_count"]).to eq(nil)
+        expect(serialized_tag["pm_only"]).to eq(false)
+      end
+
+      it "does not include pm_count attribute when user cannot tag PM topics even if display_personal_messages_tag_counts site setting has been enabled" do
+        SiteSetting.display_personal_messages_tag_counts = true
+
+        sign_in(admin)
+
+        get "/tags.json"
+
+        expect(response.status).to eq(200)
+
+        tags = response.parsed_body["tags"]
+
         expect(tags[0]["name"]).to eq(test_tag.name)
-        expect(tags[0]["count"]).to eq(0)
-        expect(tags[0]["pm_count"]).to eq(0)
+        expect(tags[0]["pm_count"]).to eq(nil)
 
         expect(tags[1]["name"]).to eq(topic_tag.name)
-        expect(tags[1]["count"]).to eq(1)
-        expect(tags[1]["pm_count"]).to eq(0)
+        expect(tags[1]["pm_count"]).to eq(nil)
+      end
+
+      it "includes pm_count attribute when user can tag PM topics and display_personal_messages_tag_counts site setting has been enabled" do
+        SiteSetting.display_personal_messages_tag_counts = true
+        SiteSetting.pm_tags_allowed_for_groups = Group::AUTO_GROUPS[:admins]
+
+        sign_in(admin)
+
+        get "/tags.json"
+
+        expect(response.status).to eq(200)
+
+        tags = response.parsed_body["tags"]
+
+        serialized_tag = tags.find { |t| t["id"] == test_tag.name }
+
+        expect(serialized_tag["pm_count"]).to eq(0)
+        expect(serialized_tag["pm_only"]).to eq(false)
+
+        serialized_tag = tags.find { |t| t["id"] == topic_tag.name }
+
+        expect(serialized_tag["pm_count"]).to eq(5)
+        expect(serialized_tag["pm_only"]).to eq(false)
+
+        serialized_tag = tags.find { |t| t["id"] == pm_only_tag.name }
+
+        expect(serialized_tag["pm_count"]).to eq(1)
+        expect(serialized_tag["pm_only"]).to eq(true)
       end
 
       it "only retrieve tags that have been used in public topics for non-staff user" do
@@ -48,7 +110,7 @@ RSpec.describe TagsController do
 
         expect(tags[0]["name"]).to eq(topic_tag.name)
         expect(tags[0]["count"]).to eq(1)
-        expect(tags[0]["pm_count"]).to eq(0)
+        expect(tags[0]["pm_count"]).to eq(nil)
       end
     end
 
@@ -66,17 +128,17 @@ RSpec.describe TagsController do
       context "when enabled" do
         before do
           SiteSetting.pm_tags_allowed_for_groups = "1|2|3"
+          SiteSetting.display_personal_messages_tag_counts = true
           sign_in(admin)
         end
 
         it "shows topic tags and pm tags" do
           get "/tags.json"
           tags = response.parsed_body["tags"]
-          expect(tags.length).to eq(2)
 
           serialized_tag = tags.find { |t| t["id"] == topic_tag.name }
           expect(serialized_tag["count"]).to eq(2)
-          expect(serialized_tag["pm_count"]).to eq(0)
+          expect(serialized_tag["pm_count"]).to eq(5)
 
           serialized_tag = tags.find { |t| t["id"] == test_tag.name }
           expect(serialized_tag["count"]).to eq(0)

@@ -1788,6 +1788,8 @@ security:
     hidden: true
   include_secure_categories_in_tag_counts:
     default: false
+  display_personal_messages_tag_counts:
+    default: false
 
 onebox:
   post_onebox_maxlength:
