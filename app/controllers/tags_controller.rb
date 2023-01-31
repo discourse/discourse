@@ -63,10 +63,13 @@ class TagsController < ::ApplicationController
       unrestricted_tags = DiscourseTagging.filter_visible(tags.where(target_tag_id: nil), guardian)
 
       categories =
-        Category.where(
-          "id IN (SELECT category_id FROM category_tags WHERE category_id IN (?))",
-          guardian.allowed_category_ids,
-        ).includes(:none_synonym_tags)
+        Category
+          .where(
+            "id IN (SELECT category_id FROM category_tags WHERE category_id IN (?))",
+            guardian.allowed_category_ids,
+          )
+          .includes(:none_synonym_tags)
+          .order(:id)
 
       category_tag_counts =
         categories
