@@ -84,48 +84,51 @@ const TopicTrackingState = EmberObject.extend({
    * @method establishChannels
    */
   establishChannels(meta) {
+    meta ??= {};
+    const messageBusDefaultNewMessageId = -1;
+
     this.messageBus.subscribe(
       "/latest",
       this._processChannelPayload,
-      meta ? meta["/latest"] : -1
+      meta["/latest"] || messageBusDefaultNewMessageId
     );
 
     if (this.currentUser) {
       this.messageBus.subscribe(
         "/new",
         this._processChannelPayload,
-        meta ? meta["/new"] : -1
+        meta["/new"] || messageBusDefaultNewMessageId
       );
 
       this.messageBus.subscribe(
         `/unread`,
         this._processChannelPayload,
-        meta ? meta["/unread"] : -1
+        meta["/unread"] || messageBusDefaultNewMessageId
       );
 
       this.messageBus.subscribe(
         `/unread/${this.currentUser.id}`,
         this._processChannelPayload,
-        meta ? meta[`/unread/${this.currentUser.id}`] : -1
+        meta[`/unread/${this.currentUser.id}`] || messageBusDefaultNewMessageId
       );
     }
 
     this.messageBus.subscribe(
       "/delete",
       this.onDeleteMessage,
-      meta ? meta["/delete"] : -1
+      meta["/delete"] || messageBusDefaultNewMessageId
     );
 
     this.messageBus.subscribe(
       "/recover",
       this.onRecoverMessage,
-      meta ? meta["/recover"] : -1
+      meta["/recover"] || messageBusDefaultNewMessageId
     );
 
     this.messageBus.subscribe(
       "/destroy",
       this.onDestroyMessage,
-      meta ? meta["/destroy"] : -1
+      meta["/destroy"] || messageBusDefaultNewMessageId
     );
   },
 
@@ -1035,10 +1038,13 @@ const TopicTrackingState = EmberObject.extend({
 });
 
 export function startTracking(tracking) {
-  tracking.loadStates(PreloadStore.get("topicTrackingStates"));
-  tracking.establishChannels(PreloadStore.get("topicTrackingStateMeta"));
-  PreloadStore.remove("topicTrackingStates");
-  PreloadStore.remove("topicTrackingStateMeta");
+  PreloadStore.getAndRemove("topicTrackingStates").then((data) =>
+    tracking.loadStates(data)
+  );
+
+  PreloadStore.getAndRemove("topicTrackingStateMeta").then((meta) =>
+    tracking.establishChannels(meta)
+  );
 }
 
 export default TopicTrackingState;

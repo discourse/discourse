@@ -4,27 +4,20 @@ class TopicTrackingStateSerializer < ApplicationSerializer
   attributes :data, :meta
 
   def data
-    object.each do |item|
+    object.map do |item|
       TopicTrackingStateItemSerializer.new(item, scope: scope, root: false).as_json
     end
   end
 
   def meta
-    channels = [
-      TopicTrackingState::PUBLISH_LATEST_MESSAGE_BUS_CHANNEL,
-      TopicTrackingState::PUBLISH_RECOVER_MESSAGE_BUS_CHANNEL,
-      TopicTrackingState::PUBLISH_DELETE_MESSAGE_BUS_CHANNEL,
-      TopicTrackingState::PUBLISH_DESTROY_MESSAGE_BUS_CHANNEL,
-    ]
-
-    if !scope.anonymous?
-      channels.push(
-        TopicTrackingState::PUBLISH_NEW_MESSAGE_BUS_CHANNEL,
-        TopicTrackingState::PUBLISH_UNREAD_MESSAGE_BUS_CHANNEL,
-        TopicTrackingState.unread_channel_key(scope.user.id),
-      )
-    end
-
-    MessageBus.last_ids(*channels)
+    MessageBus.last_ids(
+      TopicTrackingState::LATEST_MESSAGE_BUS_CHANNEL,
+      TopicTrackingState::RECOVER_MESSAGE_BUS_CHANNEL,
+      TopicTrackingState::DELETE_MESSAGE_BUS_CHANNEL,
+      TopicTrackingState::DESTROY_MESSAGE_BUS_CHANNEL,
+      TopicTrackingState::NEW_MESSAGE_BUS_CHANNEL,
+      TopicTrackingState::UNREAD_MESSAGE_BUS_CHANNEL,
+      TopicTrackingState.unread_channel_key(scope.user.id),
+    )
   end
 end
