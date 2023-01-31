@@ -246,7 +246,6 @@ et:
       title: "Järjehoidja"
       clear_bookmarks: "Kustuta järjehoidjad"
       help:
-        bookmark: "Kliki selle teema esimesele postitusele järjehoidja lisamiseks"
         unbookmark: "Kliki selle teema kõigi järjehoidjate eemaldamiseks"
     bookmarks:
       created: "Oled selle postituse järjehoidjatesse lisanud. %{name}"
@@ -2952,6 +2951,8 @@ et:
           love:
             name: "armastus"
             description: "Meeldimise nupu värvus."
+          selected:
+            name: "valitud"
         email_style:
           css: "CSS"
       email:

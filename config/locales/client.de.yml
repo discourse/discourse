@@ -302,11 +302,9 @@ de:
       edit_bookmark: "Lesezeichen bearbeiten"
       clear_bookmarks: "Lesezeichen entfernen"
       help:
-        bookmark: "Klicke hier, um den ersten Beitrag in diesem Thema mit einem Lesezeichen zu versehen."
-        edit_bookmark: "Klicke, um das Lesezeichen zu diesem Thema zu bearbeiten"
         edit_bookmark_for_topic: "Klicke, um das Lesezeichen für dieses Thema zu bearbeiten"
         unbookmark: "Klicke hier, um alle Lesezeichen in diesem Thema zu entfernen."
-        unbookmark_with_reminder: "Klicke, um alle Lesezeichen und Erinnerungen in diesem Thema zu entfernen."
+        unbookmark_with_reminder: "Klicke, um alle Lesezeichen und Erinnerungen in diesem Thema zu entfernen"
     bookmarks:
       created: "Du hast diesen Beitrag mit einem Lesezeichen versehen. %{name}"
       created_generic: "Du hast dies mit einem Lesezeichen versehen: %{name}"
@@ -4781,6 +4779,8 @@ de:
           love:
             name: "Liebe"
             description: "Die Farbe der „Gefällt mir“-Schaltfläche."
+          selected:
+            name: "ausgewählt"
         robots:
           title: "Überschreibe die robots.txt-Datei deiner Website:"
           warning: "Dies wird sämtliche zugehörigen Website-Einstellungen dauerhaft überschreiben."

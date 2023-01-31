@@ -264,11 +264,9 @@ id:
       edit_bookmark: "Edit Bookmark"
       clear_bookmarks: "Bersihkan Penandaan"
       help:
-        bookmark: "Klik untuk membuat penandaan pos pertama di topik ini"
-        edit_bookmark: "Klik untuk menyunting penanda pada topik ini"
         edit_bookmark_for_topic: "Klik untuk menyunting penanda pada topik ini"
         unbookmark: "Klik untuk menghapus semua penandaan di topik ini"
-        unbookmark_with_reminder: "Klik untuk menghapus semua penanda dan pengingat pada topik ini."
+        unbookmark_with_reminder: "Klik untuk menghapus semua penanda dan pengingat pada topik ini"
     bookmarks:
       created: "Anda telah menandai kiriman ini. %{name}"
       created_generic: "Anda telah menandai ini. %{name}"

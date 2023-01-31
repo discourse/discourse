@@ -282,7 +282,6 @@ bs_BA:
       title: "Zabilješka"
       clear_bookmarks: "Odstrani zabilješku"
       help:
-        bookmark: "Klikni kako bi dodao zabilješku na prvu objavu u temi"
         unbookmark: "Klikni za uklanjanje svih zabilješki sa ove teme"
     bookmarks:
       created: "Zabilježili ste ovu objavu. %{name}"
@@ -3653,6 +3652,8 @@ bs_BA:
           love:
             name: "love"
             description: "The like button's color."
+          selected:
+            name: "označeno"
         robots:
           title: "Poništite datoteku robots.txt web-lokacije:"
           warning: "Ovo će trajno poništiti sve srodne postavke web-lokacije."

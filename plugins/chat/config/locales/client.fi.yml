@@ -237,6 +237,8 @@ fi:
           about: Tietoja
           members: Jäsenet
           settings: Asetukset
+      channel_edit_name_slug_modal:
+        name: Kanavan nimi
       channel_edit_description_modal:
         title: Muokkaa kuvausta
         input_placeholder: Lisää kuvaus

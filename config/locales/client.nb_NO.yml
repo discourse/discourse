@@ -268,10 +268,8 @@ nb_NO:
       edit_bookmark: "Rediger bokmerke"
       clear_bookmarks: "Fjern bokmerker"
       help:
-        bookmark: "Klikk for å bokmerke det første innlegget i dette emnet"
-        edit_bookmark: "Klikk for å redigere bokmerket på dette emnet"
         unbookmark: "Klikk for å fjerne alle bokmerker i dette emnet"
-        unbookmark_with_reminder: "Klikk for å fjerne alle bokmerkene og påminnelsene i dette emnet."
+        unbookmark_with_reminder: "Klikk for å fjerne alle bokmerkene og påminnelsene i dette emnet"
     bookmarks:
       created: "Du har bokmerket dette innlegget. %{name}"
       create: "Opprett bokmerke"
@@ -3985,6 +3983,8 @@ nb_NO:
           love:
             name: "liker"
             description: "Fargen til Liker-knappen."
+          selected:
+            name: "valgt"
         robots:
           title: "Overstyr nettstedets robots.txt fil:"
           warning: "Dette vil permanent overstyre alle relaterte nettstedsinnstillinger."

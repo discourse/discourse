@@ -257,7 +257,6 @@ th:
       edit_bookmark: "แก้ไขบุ๊กมาร์ก"
       clear_bookmarks: "ล้างบุ๊กมาร์ก"
       help:
-        bookmark: "คลิกเพื่อ บุ๊คมาร์ค ที่โพสแรกของกระทู้นี้"
         unbookmark: "คลิกเพื่อลบบุ๊กมาร์กทั้งหมดในกระทู้นี้"
     bookmarks:
       created: "คุณได้บุ๊กมาร์กโพสต์นี้ %{name}"
@@ -2732,6 +2731,8 @@ th:
             name: "หลัก"
           success:
             name: "สำเร็จ"
+          selected:
+            name: "เลือกแล้ว"
         email_style:
           css: "CSS"
           save_error_with_reason: "การเปลี่ยนแปลงไม่ได้ถูกบันทึก %{error}"

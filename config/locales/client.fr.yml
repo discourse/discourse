@@ -302,11 +302,9 @@ fr:
       edit_bookmark: "Modifier le signet"
       clear_bookmarks: "Retirer les signets"
       help:
-        bookmark: "Cliquez pour mettre un signet sur le premier message de ce sujet"
-        edit_bookmark: "Cliquez pour modifier le signet sur ce sujet"
         edit_bookmark_for_topic: "Cliquez pour modifier le signet associé à ce sujet"
         unbookmark: "Cliquez pour retirer tous les signets de ce sujet"
-        unbookmark_with_reminder: "Cliquez pour retirer tous les signets et rappels de ce sujet."
+        unbookmark_with_reminder: "Cliquez pour retirer tous les signets et rappels de ce sujet"
     bookmarks:
       created: "Vous avez mis un signet à ce message. %{name}"
       created_generic: "Vous avez mis ceci en signet. %{name}"
@@ -4782,6 +4780,8 @@ fr:
           love:
             name: "aimer"
             description: "La couleur du bouton « J'aime »."
+          selected:
+            name: "sélectionné"
         robots:
           title: "Remplacez le fichier robots.txt de votre site :"
           warning: "Cela remplacera définitivement tous les paramètres associés."

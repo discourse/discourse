@@ -275,11 +275,9 @@ da:
       edit_bookmark: "Rediger Bogmærke"
       clear_bookmarks: "Fjern bogmærker"
       help:
-        bookmark: "Klik for at sætte et bogmærke i det første indlæg i denne tråd"
-        edit_bookmark: "Klik for at redigere bogmærket for dette emne"
         edit_bookmark_for_topic: "Klik for at redigere bogmærket for dette emne"
         unbookmark: "Klik for at fjerne alle bogmærker i dette emne"
-        unbookmark_with_reminder: "Klik for at fjerne alle bogmærker og påmindelser i dette emne."
+        unbookmark_with_reminder: "Klik for at fjerne alle bogmærker og påmindelser i dette emne"
     bookmarks:
       created: "Du har sat et bogmærke for dette indlæg. %{name}"
       created_generic: "Du har bogmærket dette. %{name}"
@@ -4307,6 +4305,8 @@ da:
           love:
             name: "kærlighed"
             description: "Like knappens farve."
+          selected:
+            name: "valgte"
         robots:
           title: "Tilsidesæt dit websteds robots.txt-fil:"
           warning: "Dette vil tilsidesætte alle relaterede sideindstillinger permanent."

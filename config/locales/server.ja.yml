@@ -474,6 +474,7 @@ ja:
       前の返信を編集する際に、テキストをハイライトして<b>引用して返信</b>ボタンを選択すると、返信に引用を追加することができます。
 
       短い個別の返信を多数読むよりも、詳細な返信を数件読む方が、トピックをフォローしやすくなります。
+    dominating_topic: このトピックにたくさん投稿されましたね！ここに返信して互いに話し合うチャンスを他の人にも与えることを検討してください。
     get_a_room: '@%{reply_username} に %{count} 回返信しましたが、個人メッセージを送信できることをご存知ですか？'
     too_many_replies: |
       ### このトピックへの返信数の制限に達しました
@@ -513,6 +514,7 @@ ja:
               target_user_not_found: "このメッセージの宛先の 1 人が見つかりませんでした。"
               unable_to_update: "トピックを更新中にエラーが発生しました。"
               unable_to_tag: "トピックにタグ付け中にエラーが発生しました。"
+              unable_to_unlist: "非表示のトピックを作成することはできません。"
             featured_link:
               invalid: "は無効です。URL には http:// または https:// を含める必要があります。"
         user:
@@ -641,6 +643,7 @@ ja:
     has_likes:
       other: "「いいね！」 %{count}"
     cannot_permanently_delete:
+      many_posts: "このトピックには削除されていない投稿があります。トピックを永久に削除する前に、それらのトピックを永久に削除してください。"
       wait_or_different_admin: "%{time_left} 待ってからこの投稿を永久に削除するか、別の管理者が削除する必要があります。"
   rate_limiter:
     slow_down: "この操作の実行回数が多すぎます。後でもう一度お試しください。"
@@ -808,6 +811,7 @@ ja:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "不適切"
+      description: 'この投稿には一般的な人が攻撃的、虐待的、ヘイト行為、または<a href="%{base_path}/guidelines">コミュニティーガイドライン</a>に違反すると見なすコンテンツが含まれています。'
       short_description: '<a href="%{base_path}/guidelines">コミュニティーガイドライン</a>の違反'
     notify_user:
       title: "@%{username} にメッセージを送る"
@@ -873,6 +877,7 @@ ja:
       short_description: "これは広告です"
     inappropriate:
       title: "不適切"
+      description: 'このトピックには一般的な人が攻撃的、虐待的、ヘイト行為、または<a href="%{base_path}/guidelines">コミュニティーガイドライン</a>に違反すると見なすコンテンツが含まれています。'
       long_form: "不適切として通報"
       short_description: '<a href="%{base_path}/guidelines">コミュニティーガイドライン</a>の違反'
     notify_moderators:
@@ -910,6 +915,8 @@ ja:
     mailing_list_mode: "メーリンリストモードをオフにする"
     all: "%{sitename} からメールを送信しない"
     different_user_description: "メールで送信したものとは異なるユーザーとしてログインしています。 ログアウトするか、匿名モードを開始して、もう一度お試しください。"
+    not_found_description: "その購読は見つかりませんでした。メールのリンクが古すぎるか期限切れになっています。"
+    user_not_found_description: "この購読のユーザーが見つかりませんでした。おそらく、もう存在しないアカウントの購読を解除しようとしています。"
     log_out: "ログアウト"
     submit: "設定を保存"
     digest_frequency:
@@ -946,6 +953,7 @@ ja:
       write: "すべて書き込み"
       one_time_password: "ワンタイムログイントークンの作成"
       bookmarks_calendar: "ブックマークリマインダーの読み取り"
+      user_status: "ユーザーステータスの読み取りと更新"
     invalid_public_key: "公開鍵は無効です。"
     invalid_auth_redirect: "この auth_redirect ホストは許可されていません。"
     invalid_token: "欠落しているか、無効または期限切れのトークンです。"
@@ -1039,10 +1047,12 @@ ja:
         author: 作成者
         edit_reason: 理由
     consolidated_api_requests:
+      title: "統合された API リクエスト"
       xaxis:
         api: "API"
         user_api: "ユーザー API"
       yaxis: "日"
+      description: "通常の API キーとユーザー API キーの API リクエスト。"
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "日"
@@ -1364,6 +1374,11 @@ ja:
     allow_duplicate_topic_titles_category: "カテゴリが異なる場合、同一の重複したタイトルを持つトピックを許可する。allow_duplicate_topic_titles は無効にする必要があります。"
     unique_posts_mins: "同じコンテンツを投稿できるまでの時間 (分)"
     educate_until_posts: "最初の (n) 件の新規投稿を入力し始めたときに、新規ユーザーチュートリアルのパネルをポップアップ表示します。"
+    title: "このサイトの名前。匿名ユーザーを含むすべての訪問者に表示されます。"
+    site_description: "このサイトを一文で説明してください。匿名ユーザーを含むすべての訪問者に表示されます。"
+    short_site_description: "短い言葉で簡単に説明してください。匿名ユーザーを含むすべての訪問者に表示されます。"
+    contact_email: "このサイトの責任者の主要連絡先のメールアドレス。重要な通知に使用され、<a href='%{base_path}/about' target='_blank'>サイト情報</a>にも表示されます。公開サイトの匿名ユーザーにも表示されます。"
+    contact_url: "このサイトの連絡先 URL。存在する場合、<a href='%{base_path}/about' target='_blank'>サイト情報</a>のメールアドレスを置き換え、公開サイトの匿名ユーザーにも表示されます。"
     crawl_images: "リモート URL から画像を取得して、正しい幅と高さの寸法を挿入する。"
     download_remote_images_to_local: "リモート (ホットリンク) 画像をダウンロードしてローカル画像に変換します。これにより、サイトから画像が削除された場合でも、コンテンツが保持されます。"
     download_remote_images_threshold: "リモート画像をダウンロードするために必要なディスクの最低空き容量 (パーセント表示)"
@@ -1379,6 +1394,8 @@ ja:
     edit_history_visible_to_public: "編集した投稿の前のバージョンをすべてのユーザーが閲覧することを許可する。無効である場合、スタッフメンバーのみが閲覧できます。"
     delete_removed_posts_after: "作成者が削除した投稿は (n) 時間後に自動的に削除される。0 に設置すると、投稿は直ちに削除されます。"
     notify_users_after_responses_deleted_on_flagged_post: "投稿にフラグが立てられてから削除されると、投稿に返信した後にそれが削除されたすべてのユーザーに通知されます。"
+    max_image_width: "投稿内の画像サムネイルの最大幅。これより大きい画像はサイズ変更され、ライトボックス化されます。"
+    max_image_height: "投稿内の画像サムネイルの最大高さ。これより大きい画像はサイズ変更され、ライトボックス化されます。"
     responsive_post_image_sizes: "ライトボックスのプレビュー画像のサイズを変更して、次のピクセル比の DPI の高いスクリーンを可能にします。レスポンシブ画像を無効にするには、すべての値を削除します。"
     fixed_category_positions: "オンにすると、カテゴリを固定された順に並べ替えられるようになります。オフにすると、アクティビティ順に並べ替えられます。"
     fixed_category_positions_on_create: "オンにすると、カテゴリの順序はトピック作成ダイアログで管理されるようになります (fixed_category_positions が必要)。"
@@ -1580,6 +1597,7 @@ ja:
     discord_trusted_guilds: 'これらの Discord ギルドのメンバーのみに Discord を介してログインすることを許可する。ギルドの番号 ID を使用してください。詳細については、<a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">こちら</a>の手順をご覧ください。すべてのギルドを許可する場合は、空のままにします。'
     enable_backups: "管理者によるフォーラムのバックアップ作成を許可する"
     allow_restore: "復元を許可。サイトの全データが置き換えられます！バックアップを復元する予定がない場合は無効のままにしてください"
+    maximum_backups: "保存するバックアップの最大量。古いバックアップは自動的に削除されます"
     automatic_backups_enabled: "バックアップ頻度の定義に従って自動バックアップを実行する"
     backup_frequency: "バックアップ間の日数。"
     s3_backup_bucket: "バックアップを保持するリモートバケット。警告: 必ずプライベートバケットになっていることを確認してください"
@@ -1754,6 +1772,7 @@ ja:
     faq_url: "使用する FAQ が他の場所でホスティングされている場合、その完全な URL をここに指定します。"
     tos_url: "使用する利用規約が他の場所でホスティングされている場合、その完全な URL をここに指定します。"
     privacy_policy_url: "使用するプライバシーポリシーが他の場所でホスティングされている場合、その完全な URL をここに指定します。"
+    log_anonymizer_details: "匿名化された後に、ユーザーの詳細をログに保持するかどうか。"
     newuser_spam_host_threshold: "`newuser_spam_host_threshold` 投稿内で新規ユーザーが迷惑とみなされる前に、同じホストにリンクを投稿できる回数。"
     allowed_spam_host_domains: "スパムホスト検査から除外するドメインのリスト。新規ユーザーはこれらのドメインへのリンクを使って投稿を作成することができます。"
     staff_like_weight: "スタッフの「いいね！」に与えられる重み (スタッフ以外の「いいね！」には 1 の重みがあります。)"
@@ -1906,8 +1925,6 @@ ja:
     automatically_unpin_topics: "ユーザーが最後に達したら、自動的にトピックの固定表示を解除する。"
     read_time_word_count: "推定読了時間を計算するための 1 分あたりの語数。"
     topic_page_title_includes_category: "トピックページの<a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>タイトルタグ</a>にはカテゴリ名が含まれます。"
-    native_app_install_banner_ios: "iOS デバイスの DiscourseHub アプリバナーを通常のユーザー (信頼レベル 1 以上) に表示する。"
-    native_app_install_banner_android: "Android デバイスの DiscourseHub アプリバナーを通常のユーザー (信頼レベル 1 以上) に表示する。"
     app_association_android: "Google の Digital Asset Links API に使用される <a href='%{base_path}/.well-known/assetlinks.json'>.well-known/assetlinks.json</a> エンドポイントのコンテンツ。"
     app_association_ios: "このサイトと iOS アプリの間にユニバーサルリンクを作成するために使用される <a href='%{base_path}/apple-app-site-association'>apple-app-site-association</a> エンドポイントのコンテンツ。"
     share_anonymized_statistics: "匿名化された使用統計を共有する。"
@@ -1920,6 +1937,7 @@ ja:
     display_name_on_posts: "投稿に、@username に加えてユーザーのフルネームを表示します。"
     show_time_gap_days: "2 つの投稿の作成日の間が指定された日数以上の場合、トピックに時間の差を表示します。"
     short_progress_text_threshold: "トピック内の投稿数が指定された数字を超えると、プログレスバーに現在の投稿番号のみを表示します。プログレスバーの幅を変更すると、この値を変更する必要がある場合があります。"
+    default_code_lang: "コードブロックに適用されるデフォルトのプログラミング言語シンタックスハイライト (auto、text、ruby、python など)。この値は、`highlighted languages` サイト設定にも含まれている必要があります。"
     warn_reviving_old_topic_age: "最後の返信が指定された日数より古いトピックに返信し始めると、警告を表示します。0 に設定すると無効になります。"
     autohighlight_all_code: "明示的に言語を指定しなくても、すべての整形済みのコードブロックにコードハイライトを強制的に適用します。"
     highlighted_languages: "シンタックスハイライトルールが含まれる。(警告: 多くの言語を含めすぎると、パフォーマンスに影響を与える可能性があります) デモは、<a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> をご覧ください。"
@@ -2036,6 +2054,8 @@ ja:
     shared_drafts_min_trust_level: "ユーザーが共有下書きを閲覧して編集することを許可する。"
     push_notifications_prompt: "ユーザー同意プロンプトを表示する。"
     push_notifications_icon: "通知コーナーに表示されるバッジアイコン。透明度が適用された 96x96 のモノクロ PNG が推奨されます。"
+    enable_desktop_push_notifications: "デスクトッププッシュ通知を有効にする"
+    push_notification_time_window_mins: "プッシュ通知を送信するまで (n) 分待ちます。プッシュ通知がアクティブなオンラインユーザーに送信されないようにするのに役立ちます。"
     base_font: "サイトのほとんどのテキストに使用されるベースフォント。テーマは `--font-family` CSS カスタムプロパティを介してオーバーライドできます。"
     heading_font: "サイトの見出しに使用されるフォント。テーマは `--heading-font-family` CSS カスタムプロパティを介してオーバーライドできます。"
     enable_sitemap: "サイトのサイトマップを生成し、robots.txt ファイルに含めます。"
@@ -2057,9 +2077,12 @@ ja:
     use_name_for_username_suggestions: "ユーザー名を提案する際に、ユーザーの氏名を使用します。"
     suggest_weekends_in_date_pickers: "日付ピッカーの候補に週末 (土曜日と日曜日) を含めます (月曜日から金曜日の平日にのみ Discourse を使用する場合は、これを無効にします)。"
     splash_screen: "サイトアセットの読み込み中に一時的なローディング画面を表示します"
+    navigation_menu: "使用するナビゲーションメニューを決定します。サイドバーとヘッダーナビゲーションはユーザーがカスタマイズできます。下位互換性を得るには、レガシーオプションを使用できます。"
     default_sidebar_categories: "選択されたカテゴリは、デフォルトでサイドバーのカテゴリセクションに表示されます。"
     default_sidebar_tags: "選択されたタグは、デフォルトでサイドバーのタグセクションに表示されます。"
     enable_new_user_profile_nav_groups: "実験的: 選択されたグループのユーザーは、新しいユーザープロファイルナビゲーションメニューに表示されます。"
+    enable_experimental_topic_timeline_groups: "実験的: 選択されたグループのユーザーに、リファクタリングされたトピックタイムラインを表示します"
+    enable_experimental_hashtag_autocomplete: "実験的: 選択した項目を異なる方法で表示し、改善された検索機能を備えた新しい #hashtag 自動補完システムをカテゴリとタグに使用します。"
     errors:
       invalid_css_color: "無効な色です。色名または 16 進数値を入力してください。"
       invalid_email: "無効なメールアドレスです。"
@@ -2480,10 +2503,12 @@ ja:
       %{notes}
   flag_reasons:
     off_topic: "あなたの投稿は「話題に関係ない」として通報されました。コミュニティーはあなたの投稿がタイトルと最初の投稿で定義されているトピックにふさわしくないと判断しました。"
+    inappropriate: "あなたの投稿は**不適切**として通報されました。コミュニティーは投稿が攻撃的、虐待的、ヘイト行為、または[コミュニティーガイドライン](%{base_path}/guidelines)に違反すると感じています。"
     spam: "あなたの投稿は「迷惑」として通報されました。コミュニティーはあなたの投稿に営利目的、宣伝目的の性質があり、トピックに意図される有用性または関連性がないと判断しました。"
     notify_moderators: "あなたの投稿は「モデレーターの注意要」として通報されました。コミュニティーはあなたの投稿にスタッフメンバーによる手動介入が必要であると判断しました。"
     responder:
       off_topic: "投稿は**話題に関係ない**として通報されました。コミュニティーはあなたの投稿がタイトルと最初の投稿で定義されているトピックにふさわしくないと判断しました。"
+      inappropriate: "投稿は**不適切**として通報されました。コミュニティーは投稿が攻撃的、虐待的、ヘイト行為、または[コミュニティーガイドライン](%{base_path}/guidelines)に違反すると感じています。"
       spam: "投稿は**迷惑**として通報されました。コミュニティーはあなたの投稿に営利目的、宣伝目的の性質があり、トピックに意図される有用性または関連性がないと判断しました。"
       notify_moderators: "投稿は**モデレーターの注意要**として通報されました。コミュニティーはあなたの投稿にスタッフメンバーによる手動介入が必要であると判断しました。"
   flags_dispositions:
@@ -3304,6 +3329,7 @@ ja:
 
         %{respond_instructions}
     user_watching_category_or_tag:
+      title: "ユーザーがウォッチ中のカテゴリまたはタグ"
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -3794,88 +3820,6 @@ ja:
     title: "利用規約"
   privacy_topic:
     title: "プライバシーポリシー"
-    body: |
-      <a name="collect"></a>
-
-      ## [どのような情報を収集していますか？](#collect)
-
-      あなたがこのサイトに登録したときと、フォーラムに参加してここで共有されたコンテンツを読んだり、書き込んだり、評価したりしたときに、データを収集しています。
-
-      このサイトに登録する際には、あなたの名前とメールアドレスの入力を求めることがあります。ただし、登録をすることなくこのサイトを利用することも可能です。あなたのメールアドレスは、一意のリンクを含んだメールを介して確認されます。あなたがそのリンクを使用されると、あなたがそのメールアドレスを管理していることがわかります。
-
-      アカウントを登録し、投稿を行った際には、その投稿を発信した IP アドレスが記録されます。また、このサーバーが受信するすべてのリクエストの IP アドレスもサーバーログに保管されます。
-
-      <a name="use"></a>
-
-      ## [収集した情報は何に使いますか？](#use)
-
-      このサイトで収集された情報は、次のいくつかの方法で使用されます。
-
-      * エクスペリエンスのパーソナル化 &mdash; あなたの情報は、あなた個人のニーズへの対応を改善する上で役立てられます。
-      * サイトの改善・最適化 &mdash; あなたから受け取った情報やフィードバックに基づいて、サイトが提供するサービスの改善を行っています。
-      * カスタマーサービスの改善 &mdash; あなたの情報は、あなたのカスタマーサービスリクエストやサポートのニーズに効果的に対応するために役立てられます。
-      * 定期メールの送信 &mdash; 提供されたメールアドレスを使って、情報、トピックへの変更の通知、あなたのユーザー名への返信の通知、お問い合わせ・リクエスト・ご質問に対する応答の通知を送信するために使用されます。
-
-      <a name="protect"></a>
-
-      ## [自分の情報はどのように保護されていますか？](#protect)
-
-      このサービスは、あなたが個人情報を入力、送信、またはそれにアクセスする際に、その個人情報の安全性を維持するための様々なセキュリティ保護手段を講じています。
-
-      <a name="data-retention"></a>
-
-      ## [どのようなデータ保管ポリシーを導入していますか？](#data-retention)
-
-      このサービスは次のことを行います:
-
-      * このサーバーに送信されるすべてのリクエストの IP アドレスが記載されたサーバーログは最長 90 日間保管されます。
-      * 登録ユーザーとその投稿に関連付けられた IP アドレスは最長 5 年間保管されます。
-
-      <a name="cookies"></a>
-
-      ## [Cookie を使用していますか？](#cookies)
-
-      はい。Cookie は、あなたがウェブブラウザ上で許可している場合に、サイトまたはそのサービスプロバイダーからあなたのコンピューターのハードドライブに転送される小さなファイルです。サイトはこれらの Cookie を使ってあなたのブラウザを識別し、登録アカウントがある場合は、それをあなたの登録アカウントに関連付けることができます。
-
-      Cookie を使用して、あなたの設定を認識し、以降でアクセスした際に使用できるように保存しています。また、より優れたサイトエクスペリエンスとツールを提供していけるように、サイトのトラフィックや操作に関する集計データをコンパイルしています。サイト訪問者をさらに理解できるように、第三者のサービスプロバイダーと契約することもあります。これらのサービスプロバイダーは、サイト運営を改善する支援を提供する場合を除き、サイトに代わって収集した情報を使用することはできません。
-
-      <a name="disclose"></a>
-
-      ## [外部に情報を開示していますか？](#disclose)
-
-      私たちは、個人を特定できる情報を外部へ販売、取引、または他の方法で譲渡することはありません。これには、このサイトの運営、業務の遂行、またはサービスの提供を支援する、この情報の機密性を維持することに同意した信頼できる第三者は含まれません。また、法令遵守、サイトポリシーの施行、このサービスや他の人の権利、財産または安全の保護のために適切であると判断した場合には、あなたの情報を公開する場合があります。ただし、マーケティングや広告、その他の目的で匿名での訪問者情報を他者へ提供することができます。
-
-      <a name="third-party"></a>
-
-      ## [サードパーティのリンク](#third-party)
-
-      時折、このサービスの方針に基づいてこのサイトで第三者の製品やサービスを提供することがあります。これらの第三者のサイトには、個別の独立したプライバシーポリシーがあります。従って、これらのリンク先のサイトに関するコンテンツや活動に関しては一切責任を負いません。それにもかかわらず、サイトの完全性を保護するように努め、これらのサイトに関するフィードバックは非常に重要なものであると認識しております。
-
-      <a name="coppa"></a>
-
-      ## [子供のオンラインプライバシー保護法の順守](#coppa)
-
-      このサイト、製品、サービスはすべて 13 歳以上の人を対象としております。このサーバーが米国にあり、ユーザーが 13 歳未満の場合は、COPPA ([Children's Online Privacy Protection Act](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)) の要件に従って、このサイトの使用をご遠慮いただきます。
-
-      <a name="online"></a>
-
-      ## [オンライン限定のプライバシーポリシー](#online)
-
-      このオンラインプライバシーポリシーは、このサイトを通じて収集された情報のみに適用され、オフラインで収集される情報には適用されません。
-
-      <a name="consent"></a>
-
-      ## [あなたの同意](#consent)
-
-      このサービスを使用することにより、このサイトのプライバシーポリシーに同意するものとします。
-
-      <a name="changes"></a>
-
-      ## [プライバシーポリシーの変更](#changes)
-
-      プライバシーポリシーを変更する場合は、このページに変更内容を掲載します。
-
-      この文章のライセンスはCC-BY-SAです。最終更新: 2013 年 5 月 31 日
   badges:
     mass_award:
       errors:
@@ -4184,6 +4128,8 @@ ja:
     title: "Discourse のセットアップ"
     step:
       introduction:
+        title: "サイトについて"
+        description: "これらは、ログインとすべての公開ページに表示されます。後でいつでも変更できます。"
         fields:
           title:
             label: "コミュニティー名"
@@ -4194,21 +4140,28 @@ ja:
           default_locale:
             label: "言語"
       privacy:
+        title: "メンバーのエクスペリエンス"
         fields:
           login_required:
             placeholder: "非公開"
             extra_description: "ログインユーザーのみがこのコミュニティーにアクセスできる"
           invite_only:
+            placeholder: "招待のみ"
             extra_description: "ユーザーは信頼できるユーザーまたはスタッフから招待される必要がありますが、そうでない場合は、ユーザー自身が登録できます。"
           must_approve_users:
+            placeholder: "要承認"
             extra_description: "ユーザーはスタッフの承認が必要です"
           chat_enabled:
             placeholder: "チャットを有効にする"
+            extra_description: "メンバーとリアルタイムで交流"
           enable_sidebar:
             placeholder: "サイドバーを有効にする"
+            extra_description: "お気に入りのスペースに簡単にアクセス"
       ready:
+        title: "サイトの準備が整いました！"
         description: "以上です！コミュニティーを設定するための基本を完了しました。後は、コミュニティーにアクセスして見て回り、ウェルカムトピックを書いて招待状を送信しましょう！<br><br>お楽しみください！"
       styling:
+        title: "外観"
         fields:
           color_scheme:
             label: "色スキーム"
@@ -4239,19 +4192,38 @@ ja:
                 label: "トピック付きのカテゴリボックス"
               subcategories_with_featured_topics:
                 label: "注目のトピックを含むサブカテゴリ"
-      corporate:
+      branding:
+        title: "サイトのロゴ"
         fields:
+          logo:
+            label: "プライマリーロゴ"
+            description: "推奨サイズ: 600 x 200"
+          logo_small:
+            label: "正方形のロゴ"
+            description: "推奨サイズ: 512 x 512。ファビコンやモバイルホーム画面のアプリアイコンとしても使用されます。"
+      corporate:
+        title: "あなたの組織"
+        description: "次の情報は、利用規約と会社情報のページに使用されます。会社が存在しない場合は、スキップしてください。"
+        fields:
+          company_name:
+            label: "会社名"
+            placeholder: "Acme 組織"
           governing_law:
+            label: "準拠法"
             placeholder: "カリフォルニア州法"
           contact_url:
+            label: "ウェブページ"
             placeholder: "https://www.example.com/contact-us"
           city_for_disputes:
+            label: "紛争都市"
             placeholder: "カリフォルニア州サンフランシスコ"
           site_contact:
+            label: "自動メッセージ"
             description: "通報の警告やバックアップ完了の通知など、Discourse のすべての自動個人メッセージはこのユーザーから送信されます。"
           contact_email:
             label: "連絡先"
             placeholder: "example@user.com"
+            description: "このサイトの責任者の主要連絡先のメールアドレス。重要な通知に使用され、緊急事項の<a href='%{base_path}/about' target='_blank'>サイト情報</a>に表示されます。"
       invites:
         title: "スタッフの招待"
         description: "ほぼ完了です！コミュニティーを始動させるために、興味深いトピックや返信で<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>ディスカッションを生み出せる</a>人を何人が招待しましょう。"

@@ -108,14 +108,35 @@ ja:
       new_messages: "新しいメッセージ"
       mention_warning:
         dismiss: "閉じる"
+        cannot_see:
+          other: "%{username} と他 %{others} 人はこのチャンネルにアクセスできないため通知されませんでした。"
         invitations_sent:
           other: "招待状を送信しました"
         invite: "チャンネルに招待する"
+        without_membership:
+          other: "%{username} と他 %{others} 人はこのチャンネルに参加していません。"
+        group_mentions_disabled:
+          other: "%{group_name} と他 %{others} グループはメンションを許可していません"
+        too_many_members:
+          other: "%{group_name} と他 %{others} グループのメンバーが多すぎます。誰にも通知されませんでした"
         warning_multiple:
           other: "他 %{count} 件"
         groups:
+          header:
+            some: "一部のユーザーには通知されません"
+            all: "誰にも通知されません"
+          unreachable:
+            other: "@%{group} と @%{group_2} はメンションを許可していません"
+          unreachable_multiple: "@%{group} と他 %{count} グループはメンションを許可していません"
+          too_many_members:
+            other: "@%{group} と @%{group_2} の両方をメンションすると、%{limit}の%{notification_limit}を超過します"
+          too_many_members_multiple: "これらの %{count} グループは、%{limit}の%{notification_limit}を超過しています"
           users_limit:
             other: "%{count} 人のユーザー"
+          notification_limit: "通知制限"
+        too_many_mentions: "このメッセージは %{limit}の%{notification_limit}を超過しています"
+        mentions_limit:
+          other: "%{count} メンション"
       aria_roles:
         header: "チャットヘッダー"
         composer: "チャット作成ツール"
@@ -204,6 +225,8 @@ ja:
           about: 紹介
           members: メンバー
           settings: 設定
+      channel_edit_name_slug_modal:
+        name: チャンネル名
       channel_edit_description_modal:
         title: 説明を編集する
         input_placeholder: 説明を追加する
@@ -263,6 +286,8 @@ ja:
         mention: "メンションのみ"
         always: "すべてのアクティビティ"
       settings:
+        channel_wide_mentions_label: "@all と @here メンションを許可する"
+        channel_wide_mentions_description: "@all で #%{channel} の全メンバーに通知するか、@here で現在アクティブなメンバーのみに通知することを許可します"
         auto_join_users_label: "自動的にユーザーを追加する"
         auto_join_users_warning: "このチャンネルのメンバーでなく、%{category} カテゴリにアクセスできるすべてのユーザーが参加します。よろしいですか？"
         desktop_notification_level: "デスクトップ通知"
@@ -283,6 +308,7 @@ ja:
         title: "チャット"
       direct_messages:
         title: "パーソナルチャット"
+        new: "パーソナルチャットを作成"
         create: "開始"
         leave: "このパーソナルチャットから退出する"
         cannot_create: "ダイレクトメッセージを送信できません。"

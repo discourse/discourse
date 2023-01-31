@@ -1830,8 +1830,6 @@ ko:
     automatically_unpin_topics: "주제 하단에 도달하면 주제를 자동으로 고정 해제합니다."
     read_time_word_count: "추정 읽은 시간 계산을 위한 1분당 워드 카운트입니다."
     topic_page_title_includes_category: "주제 페이지 <a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>제목 태그</a>에는 카테고리 이름이 포함됩니다."
-    native_app_install_banner_ios: "iOS 디바이스의 DiscourseHub 앱 배너를 일반 사용자(신뢰 레벨 1 이상)에게 표시합니다."
-    native_app_install_banner_android: "일반 사용자(신뢰 레벨 1 이상)에게 Android 디바이스에 DiscourseHub 앱 배너를 표시합니다."
     app_association_android: "Google의 Digital Asset Links API에 사용되는 <a href='%{base_path}/.well-known/assetlinks.json'>.well-known/assetlinks.json</a> 엔드포인트의 콘텐츠입니다."
     app_association_ios: "이 사이트와 iOS 앱 간의 범용 링크를 만드는 데 사용되는 <a href='%{base_path}/apple-app-site-association'>apple-app-site-association</a> 엔드포인트의 콘텐츠입니다."
     share_anonymized_statistics: "익명화된 사용 통계 공유"

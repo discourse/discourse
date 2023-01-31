@@ -302,11 +302,9 @@ pt_BR:
       edit_bookmark: "Editar favorito"
       clear_bookmarks: "Limpar favoritos"
       help:
-        bookmark: "Clique para adicionar a primeira postagem deste tópico aos favoritos"
-        edit_bookmark: "Clique para editar o favorito neste tópico"
         edit_bookmark_for_topic: "Clique para editar o favorito para este tópico"
         unbookmark: "Clique para remover todos os favoritos neste tópico"
-        unbookmark_with_reminder: "Clique para remover todos os favoritos e lembretes neste tópico."
+        unbookmark_with_reminder: "Clique para remover todos os favoritos e lembretes neste tópico"
     bookmarks:
       created: "Você marcou esta postagem como favorita. %{name}"
       created_generic: "Você favoritou isso. %{name}"
@@ -4308,7 +4306,7 @@ pt_BR:
             topics:
               read: Leia um tópico ou uma postagem específica nele. RSS também é compatível.
               write: Crie um novo tópico ou poste em algum que já existe.
-              update: Atualize um tópico. Altere o título, categoria, etiquetas, status, arquétipo, feature_link etc.
+              update: Atualize um tópico. Altere o título, categoria, etiquetas, status, arquétipo, featured_link etc.
               read_lists: Leia listas de tópico como melhores, novidades, mais recentes. RSS também é compatível.
             posts:
               edit: Edite qualquer postagem ou especifique uma.
@@ -4782,6 +4780,8 @@ pt_BR:
           love:
             name: "curtir"
             description: "A cor do botão curtir."
+          selected:
+            name: "selecionado(a)"
         robots:
           title: "Substituir o arquivo robots.txt do seu site:"
           warning: "Isso vai substituir permanentemente qualquer configuração relacionada do site."
@@ -5662,7 +5662,7 @@ pt_BR:
       configure_more: "Configurar mais..."
       step-text: "Intervalo"
       step: "%{current} de %{total}"
-      upload: "Subir arquivo"
+      upload: "Carregar arquivo"
       uploading: "Enviando..."
       upload_error: "Desculpe, houve um erro ao enviar o arquivo. Tente novamente."
       staff_count:
