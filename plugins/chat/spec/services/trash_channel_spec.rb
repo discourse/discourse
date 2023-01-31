@@ -1,50 +1,40 @@
 # frozen_string_literal: true
 
 RSpec.describe(Chat::Service::TrashChannel) do
+  subject(:result) { described_class.call(guardian: guardian) }
+
   let(:guardian) { Guardian.new(current_user) }
 
   context "when user is not allowed to perform the action" do
     fab!(:current_user) { Fabricate(:user) }
 
-    subject(:result) { described_class.call(guardian: guardian) }
-
-    it "fails" do
-      expect(result).to be_a_failure
-      expect(result[:"result.policy.invalid_access"]).to be_a_failure
-    end
+    it { is_expected.to fail_a_policy(:invalid_access) }
   end
 
   context "when channel is not provided" do
     fab!(:current_user) { Fabricate(:admin) }
 
-    subject(:result) { described_class.call(guardian: guardian) }
-
-    it "fails" do
-      expect(result).to fail_contract_with_error("Channel " + I18n.t("errors.messages.blank"))
-    end
+    it { is_expected.to fail_a_contract.with_error("Channel #{I18n.t("errors.messages.blank")}") }
   end
 
   context "when user is allowed to perform the action" do
-    fab!(:current_user) { Fabricate(:admin) }
-
     subject(:result) { described_class.call(channel: Fabricate(:chat_channel), guardian: guardian) }
+
+    fab!(:current_user) { Fabricate(:admin) }
 
     it "succeeds" do
       expect(result).to succeed
     end
 
     it "trashes the channel" do
-      expect(result[:channel].trashed?).to eq(true)
+      expect(result[:channel]).to be_trashed
     end
 
     it "logs the action" do
       expect { result }.to change { UserHistory.count }.by(1)
-
-      user_history = UserHistory.last
-      expect(user_history.custom_type).to eq ("chat_channel_delete")
-      expect(user_history.details).to eq(
-        "chat_channel_id: #{result[:channel].id}\nchat_channel_name: #{result[:channel].title(guardian.user)}",
-      )
+      expect(UserHistory.last).to have_attributes custom_type: "chat_channel_delete",
+                      details:
+                        "chat_channel_id: #{result[:channel].id}\nchat_channel_name: #{result[:channel].title(guardian.user)}"
     end
 
     it "changes the slug to prevent colisions" do

@@ -50,6 +50,11 @@ module Chat
           raise Failure, self
         end
 
+        # Marks the service as failed without raising an exception.
+        # @param context [Hash, Context] the context to merge into the current one
+        # @example
+        #   context.fail("failure": "something went wrong")
+        # @return [Context]
         def fail(context = {})
           merge(context)
           @failure = true
@@ -136,8 +141,25 @@ module Chat
       end
 
       # @!scope class
+      # @!method policy(name = :default, &block)
+      # Evaluates a set of conditions related to the given context. If the
+      # block doesn’t return a truthy value, then the policy will fail.
+      # Supports after/before/around callbacks.
+      # More than one policy can be defined and named. When that’s the case,
+      # policies are evaluated in their definition order.
+      #
+      # @example
+      #   before_policies {}
+      #   around_policies {}
+      #   after_policies {}
+      #
+      #   policy(:invalid_access) do
+      #     guardian.can_delete_chat_channel?
+      #   end
+
+      # @!scope class
       # @!method contract(&block)
-      # Checks the validity of the given context. Supports after/before/around callbacks.
+      # Checks the validity of the input parameters. Supports after/before/around callbacks.
       # Implements ActiveModel::Validations and ActiveModel::Attributes.
       #
       # @example
@@ -226,8 +248,8 @@ module Chat
 
             context["result.contract.default"] = Context.build
             unless contract.valid?
-              context.fail!("contract.failed" => true)
               context["result.contract.default"].fail(errors: contract.errors)
+              context.fail!("contract.failed": true)
             end
             context.merge(contract.attributes)
           end
