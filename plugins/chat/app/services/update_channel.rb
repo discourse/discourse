@@ -13,6 +13,7 @@ module Chat
     #   guardian: guardian,
     #   name: "SuperChannel",
     #   description: "This is the best channel",
+    #   slug: "super-channel",
     #  )
     #
     class UpdateChannel
