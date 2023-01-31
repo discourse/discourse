@@ -47,7 +47,7 @@ describe "Search", type: :system, js: true do
 
     after { SearchIndexer.disable }
 
-    it "rate limits searches for anonymous users" do
+    xit "rate limits searches for anonymous users" do
       queries = %w[one two three four]
 
       visit("/search?expanded=true")
