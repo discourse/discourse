@@ -13,7 +13,7 @@ module("Integration | Component | char-counter", function (hooks) {
     await render(
       hbs`<CharCounter @value={{this.value}} @max={{this.max}}></CharCounter>`
     );
-    assert.strictEqual("11/12", this.element.innerText);
+    assert.strictEqual("11/12", this.element.innerText.trim());
   });
 
   test("updating value with textarea updates counter", async function (assert) {
