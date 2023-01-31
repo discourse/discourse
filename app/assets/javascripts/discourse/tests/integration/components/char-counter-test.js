@@ -20,9 +20,7 @@ module("Integration | Component | char-counter", function (hooks) {
     this.max = 50;
 
     await render(
-      hbs`<CharCounter @value={{this.charCounterContent}} @max={{this.max}}>
-      <textarea {{on "input" (action (mut this.charCounterContent) value="target.value")}}></textarea>
-      </CharCounter>`
+      hbs`<CharCounter @value={{this.charCounterContent}} @max={{this.max}}><textarea {{on "input" (action (mut this.charCounterContent) value="target.value")}}></textarea></CharCounter>`
     );
     assert.strictEqual(
       "/50",
