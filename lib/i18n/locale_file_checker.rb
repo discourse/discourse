@@ -19,8 +19,8 @@ class LocaleFileChecker
 
       @relative_locale_path =
         Pathname.new(locale_path).relative_path_from(Pathname.new(Rails.root)).to_s
-      @locale_yaml = YAML.load_file(locale_path)
-      @reference_yaml = YAML.load_file(reference_path)
+      @locale_yaml = YAML.load_file(locale_path, aliases: true)
+      @reference_yaml = YAML.load_file(reference_path, aliases: true)
 
       next if @locale_yaml.blank? || @locale_yaml.first[1].blank?
 
