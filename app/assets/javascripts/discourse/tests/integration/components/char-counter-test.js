@@ -24,14 +24,14 @@ module("Integration | Component | char-counter", function (hooks) {
     );
     assert.strictEqual(
       "/50",
-      this.element.innerText,
+      this.element.innerText.trim(),
       "initial value appears as expected"
     );
     await fillIn("textarea", "Hello World, this is a longer string");
 
     assert.strictEqual(
       "36/50",
-      this.element.innerText,
+      this.element.innerText.trim(),
       "updated value appears as expected"
     );
   });
