@@ -100,8 +100,8 @@ export function applyDefaultHandlers(pretender) {
     return response({
       tags: [
         { id: "eviltrout", count: 1 },
-        { id: "planned", text: "planned", count: 7, pm_count: 0 },
-        { id: "private", text: "private", count: 0, pm_count: 7 },
+        { id: "planned", text: "planned", count: 7, pm_only: false },
+        { id: "private", text: "private", count: 0, pm_only: true },
       ],
       extras: {
         tag_groups: [
@@ -109,24 +109,24 @@ export function applyDefaultHandlers(pretender) {
             id: 2,
             name: "Ford Cars",
             tags: [
-              { id: "Escort", text: "Escort", count: 1, pm_count: 0 },
-              { id: "focus", text: "focus", count: 3, pm_count: 0 },
+              { id: "Escort", text: "Escort", count: 1, pm_only: false },
+              { id: "focus", text: "focus", count: 3, pm_only: false },
             ],
           },
           {
             id: 1,
             name: "Honda Cars",
             tags: [
-              { id: "civic", text: "civic", count: 4, pm_count: 0 },
-              { id: "accord", text: "accord", count: 2, pm_count: 0 },
+              { id: "civic", text: "civic", count: 4, pm_only: false },
+              { id: "accord", text: "accord", count: 2, pm_only: false },
             ],
           },
           {
             id: 1,
             name: "Makes",
             tags: [
-              { id: "ford", text: "ford", count: 5, pm_count: 0 },
-              { id: "honda", text: "honda", count: 6, pm_count: 0 },
+              { id: "ford", text: "ford", count: 5, pm_only: false },
+              { id: "honda", text: "honda", count: 6, pm_only: false },
             ],
           },
         ],

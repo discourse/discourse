@@ -1806,6 +1806,8 @@ security:
     hidden: true
   include_secure_categories_in_tag_counts:
     default: false
+  display_personal_messages_tag_counts:
+    default: false
 
 onebox:
   post_onebox_maxlength:
@@ -2192,6 +2194,9 @@ backups:
     client: true
 
 search:
+  max_duplicate_search_index_terms:
+    default: -1
+    hidden: true
   use_pg_headlines_for_excerpt:
     default: false
     hidden: true
