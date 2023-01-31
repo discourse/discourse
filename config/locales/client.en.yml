@@ -3373,8 +3373,8 @@ en:
       sr_collapse_replies: "Collapse embedded replies"
       sr_date: "Post date"
       sr_expand_replies:
-        one: "This post has %{count} reply."
-        other: "This post has %{count} replies."
+        one: "This post has %{count} reply"
+        other: "This post has %{count} replies"
       expand_collapse: "expand/collapse"
       sr_below_embedded_posts_description: "post #%{post_number} replies"
       sr_embedded_reply_description: "reply by @%{username} to post #%{post_number}"
