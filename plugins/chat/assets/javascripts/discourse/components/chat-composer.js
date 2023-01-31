@@ -223,6 +223,7 @@ export default Component.extend(TextareaTextManipulation, {
     this._super(...arguments);
 
     if (
+      !this.value &&
       !this.editingMessage &&
       this.draft &&
       this.chatChannel?.canModifyMessages(this.currentUser)
