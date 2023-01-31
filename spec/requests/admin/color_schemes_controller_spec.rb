@@ -34,7 +34,7 @@ RSpec.describe Admin::ColorSchemesController do
 
       it "serializes default colors even when not present in database" do
         scheme = ColorScheme.create_from_base({ name: "my color scheme" })
-        scheme.colors.find_by(name: "primary").destroy
+        scheme.colors.find_by(name: "primary").destroy!
         scheme_name = scheme.name
 
         get "/admin/color_schemes.json"
