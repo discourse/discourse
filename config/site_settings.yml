@@ -2194,6 +2194,9 @@ backups:
     client: true
 
 search:
+  prioritize_exact_search_title_match:
+    default: false
+    hidden: true
   max_duplicate_search_index_terms:
     default: -1
     hidden: true
