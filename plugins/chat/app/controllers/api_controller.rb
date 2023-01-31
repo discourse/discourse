@@ -15,8 +15,14 @@ class Chat::Api < Chat::ChatBaseController
     guardian.ensure_can_chat!
   end
 
-  def with_service(service, &block)
-    Chat::Endpoint.call(service, &block)
+  def with_service(service, default_actions: true, &block)
+    default_block = default_actions_for_service
+    merged_block =
+      proc do |instance|
+        instance.instance_eval(&default_block) if default_actions
+        instance.instance_eval(&(block || proc {}))
+      end
+    Chat::Endpoint.call(service, &merged_block)
   end
 
   def handle_service_result(result, serializer_object: nil, serializer: nil, serializer_data: {})
@@ -51,5 +57,16 @@ class Chat::Api < Chat::ChatBaseController
     end
 
     yield(false, result, { json: failed_json })
+  end
+
+  def default_actions_for_service
+    proc do
+      on_success { render(json: success_json) }
+      on_failure { render(json: failed_json, status: 422) }
+      on_failed_policy(:invalid_access) { raise Discourse::InvalidAccess }
+      on_failed_contract do
+        render(json: failed_json.merge(errors: result[:contract].errors.full_messages), status: 400)
+      end
+    end
   end
 end
