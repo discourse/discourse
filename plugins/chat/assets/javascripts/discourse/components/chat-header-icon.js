@@ -1,25 +1,31 @@
 import { inject as service } from "@ember/service";
 import Component from "@glimmer/component";
+import getURL from "discourse-common/lib/get-url";
 
 export default class ChatHeaderIcon extends Component {
   @service currentUser;
   @service site;
   @service chatStateManager;
+  @service router;
 
   get currentUserInDnD() {
     return this.currentUser.isInDoNotDisturb();
   }
 
   get href() {
-    if (this.chatStateManager.isFullPageActive && this.site.mobileView) {
-      return "/chat";
+    if (this.chatStateManager.isFullPageActive) {
+      if (this.site.mobileView) {
+        return getURL("/chat");
+      } else {
+        return getURL(this.router.currentURL);
+      }
     }
 
     if (this.chatStateManager.isDrawerActive) {
-      return "/chat";
-    } else {
-      return this.chatStateManager.lastKnownChatURL || "/chat";
+      return getURL("/chat");
     }
+
+    return getURL(this.chatStateManager.lastKnownChatURL || "/chat");
   }
 
   get isActive() {
