@@ -6,7 +6,7 @@ import { Promise } from "rsvp";
 /**
  * Handles a paginated API response.
  */
-class Collection {
+export default class Collection {
   @tracked items = [];
   @tracked meta = {};
   @tracked loading = false;
@@ -117,7 +117,3 @@ class Collection {
     return ajax(url, { type: "GET" });
   }
 }
-
-module.exports = {
-  default: Collection,
-};
