@@ -3,7 +3,7 @@ import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
 
-export default class ChatNearMessageRoute extends DiscourseRoute {
+export default class ChatChannelNearMessage extends DiscourseRoute {
   @service chat;
   @service router;
 
@@ -26,6 +26,8 @@ export default class ChatNearMessageRoute extends DiscourseRoute {
 
   @action
   didTransition() {
+    this.controllerFor("chat-channel").set("messageId", null);
+
     const { messageId } = this.paramsFor(this.routeName);
     const { channelId } = this.paramsFor("chat.channel");
 

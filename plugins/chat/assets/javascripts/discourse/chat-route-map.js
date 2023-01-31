@@ -6,6 +6,7 @@ export default function () {
     });
 
     this.route("channel", { path: "/c/:channelTitle/:channelId" }, function () {
+      this.route("from-params", { path: "/" });
       this.route("near-message", { path: "/:messageId" });
 
       this.route("info", { path: "/info" }, function () {

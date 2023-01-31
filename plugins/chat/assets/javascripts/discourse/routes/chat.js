@@ -21,10 +21,10 @@ export default class ChatRoute extends DiscourseRoute {
     }
 
     const INTERCEPTABLE_ROUTES = [
-      "chat.channel.index",
       "chat.channel",
-      "chat.channel-legacy",
+      "chat.channel.from-params",
       "chat.channel.near-message",
+      "chat.channel-legacy",
       "chat",
       "chat.index",
       "chat.draft-channel",
@@ -38,10 +38,7 @@ export default class ChatRoute extends DiscourseRoute {
       transition.abort();
 
       let URL = transition.intent.url;
-      if (
-        transition.targetName.startsWith("chat.channel") ||
-        transition.targetName.startsWith("chat.channel-legacy")
-      ) {
+      if (transition.targetName.startsWith("chat.channel")) {
         URL ??= this.router.urlFor(
           transition.targetName,
           ...transition.intent.contexts

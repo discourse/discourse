@@ -52,7 +52,7 @@ export default {
             }
 
             get route() {
-              return "chat.channel";
+              return "chat.channel.from-params";
             }
 
             get models() {
@@ -215,7 +215,7 @@ export default {
             }
 
             get route() {
-              return "chat.channel";
+              return "chat.channel.from-params";
             }
 
             get models() {
