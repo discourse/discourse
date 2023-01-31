@@ -61,7 +61,9 @@ module Chat
         def rollback!
           return false if @rolled_back
           _called.reverse_each do |service|
-            service.instance_eval(&self.class.rollback_block) if self.class.rollback_block
+            if self.class.rollback_block
+              service.instance_eval(&self.class.rollback_block)
+            end
           end
           @rolled_back = true
         end
@@ -96,6 +98,7 @@ module Chat
           unless context[:guardian].public_send(name, *args)
             context.fail!("guardian.failed" => name)
           end
+          true
         end
       end
 
@@ -106,7 +109,7 @@ module Chat
         attr_reader :context
         attr_reader :contract
 
-        define_model_callbacks :service, :contract
+        define_model_callbacks :service, :contract, :policies
       end
 
       class_methods do
@@ -132,6 +135,14 @@ module Chat
 
         def rollback(&block)
           @rollback_block = block
+        end
+
+        def policy(name = :default, &block)
+          policies << [name, block]
+        end
+
+        def policies
+          @policies ||= []
         end
       end
 
@@ -204,13 +215,23 @@ module Chat
       end
 
       def run!
+        run_callbacks :policies do
+          self.class.policies.each do |name, block|
+            unless instance_eval(&block)
+              context.fail!("result.policy.#{name}": Context.build.fail)
+            end
+          end
+        end
+
         run_callbacks :contract do
           if self.class.contract_block
             contract_class = Class.new(Contract)
             contract_class.class_eval(&self.class.contract_block)
             @contract =
               contract_class.new(
-                self.context.to_h.slice(*contract_class.attribute_names.map(&:to_sym)),
+                self.context.to_h.slice(
+                  *contract_class.attribute_names.map(&:to_sym)
+                )
               )
             self.context[:contract] = contract
 

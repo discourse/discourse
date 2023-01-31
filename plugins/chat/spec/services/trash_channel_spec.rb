@@ -20,14 +20,21 @@ RSpec.describe(Chat::Service::TrashChannel) do
     subject(:result) { described_class.call(guardian: guardian) }
 
     it "fails" do
-      expect(result).to fail_contract_with_error("Channel " + I18n.t("errors.messages.blank"))
+      expect(result).to fail_contract_with_error(
+        "Channel " + I18n.t("errors.messages.blank")
+      )
     end
   end
 
   context "when user is allowed to perform the action" do
     fab!(:current_user) { Fabricate(:admin) }
 
-    subject(:result) { described_class.call(channel: Fabricate(:chat_channel), guardian: guardian) }
+    subject(:result) do
+      described_class.call(
+        channel: Fabricate(:chat_channel),
+        guardian: guardian
+      )
+    end
 
     it "succeeds" do
       expect(result).to succeed
@@ -43,7 +50,7 @@ RSpec.describe(Chat::Service::TrashChannel) do
       user_history = UserHistory.last
       expect(user_history.custom_type).to eq ("chat_channel_delete")
       expect(user_history.details).to eq(
-        "chat_channel_id: #{result[:channel].id}\nchat_channel_name: #{result[:channel].title(guardian.user)}",
+        "chat_channel_id: #{result[:channel].id}\nchat_channel_name: #{result[:channel].title(guardian.user)}"
       )
     end
 
