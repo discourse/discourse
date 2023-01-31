@@ -107,7 +107,7 @@
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
     
-<p>Service responsible for updating a chat channel’s name and description.</p>
+<p>Service responsible for updating a chat channel’s name, slug, and description.</p>
 
 <p>For a CategoryChannel, the settings for auto_join_users and allow_channel_wide_mentions are also editable.</p>
 
@@ -275,6 +275,15 @@
         </li>
       
         <li>
+          <span class="name">slug</span>
+          <span class="type">(<tt>String</tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+        </li>
+      
+        <li>
           <span class="name">auto_join_users</span>
           <span class="type">(<tt>Boolean</tt>)</span>
           <span class="default">
@@ -323,10 +332,10 @@
       <pre class="lines">
 
 
-32</pre>
+33</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/update_channel.rb', line 32</span>
+      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/update_channel.rb', line 33</span>
 
 <span class='id identifier rubyid_before_contract'>before_contract</span> <span class='lbrace'>{</span> <span class='id identifier rubyid_guardian'>guardian</span><span class='lparen'>(</span><span class='symbol'>:can_edit_chat_channel?</span><span class='rparen'>)</span> <span class='rbrace'>}</span></pre>
     </td>
