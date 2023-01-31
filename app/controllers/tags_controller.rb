@@ -42,6 +42,7 @@ class TagsController < ::ApplicationController
     if SiteSetting.tags_listed_by_group
       ungrouped_tags = Tag.where("tags.id NOT IN (SELECT tag_id FROM tag_group_memberships)")
       ungrouped_tags = ungrouped_tags.used_tags_in_regular_topics(guardian) unless show_all_tags
+      ungrouped_tags = ungrouped_tags.order(:id)
 
       grouped_tag_counts =
         TagGroup
@@ -60,6 +61,7 @@ class TagsController < ::ApplicationController
       @extras = { tag_groups: grouped_tag_counts }
     else
       tags = show_all_tags ? Tag.all : Tag.used_tags_in_regular_topics(guardian)
+      tags = tags.order(:id)
       unrestricted_tags = DiscourseTagging.filter_visible(tags.where(target_tag_id: nil), guardian)
 
       categories =
