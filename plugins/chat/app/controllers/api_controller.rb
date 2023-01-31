@@ -16,11 +16,10 @@ class Chat::Api < Chat::ChatBaseController
   end
 
   def with_service(service, default_actions: true, &block)
-    default_block = default_actions_for_service
     merged_block =
-      proc do |instance|
-        instance.instance_eval(&default_block) if default_actions
-        instance.instance_eval(&(block || proc {}))
+      proc do
+        instance_eval(&controller.method(:default_actions_for_service).call) if default_actions
+        instance_eval(&(block || proc {}))
       end
     Chat::Endpoint.call(service, &merged_block)
   end
