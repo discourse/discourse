@@ -448,13 +448,27 @@ class ColorScheme < ActiveRecord::Base
   end
 
   def resolved_colors
-    resolved = ColorScheme.base_colors.dup
-    if base_scheme_id && base_scheme_id != "Light"
-      if scheme = CUSTOM_SCHEMES[base_scheme_id.to_sym]
-        scheme.each { |name, value| resolved[name] = value }
-      end
-    end
-    colors.each { |c| resolved[c.name] = c.hex }
+    from_base = base_colors.except("hover", "selected")
+    from_db = colors.map { |c| [c.name, c.hex] }.to_h
+
+    resolved = from_base.merge(from_db)
+
+    # Equivalent to primary-100 in light mode, or primary-low in dark mode
+    resolved["hover"] ||= ColorMath.dark_light_diff(
+      resolved["primary"],
+      resolved["secondary"],
+      0.94,
+      -0.78,
+    )
+
+    # Equivalent to primary-low in light mode, or primary-100 in dark mode
+    resolved["selected"] ||= ColorMath.dark_light_diff(
+      resolved["primary"],
+      resolved["secondary"],
+      0.9,
+      -0.8,
+    )
+
     resolved
   end
 
@@ -495,20 +509,14 @@ class ColorScheme < ActiveRecord::Base
   def is_dark?
     return if colors.to_a.empty?
 
-    primary_b = brightness(colors_by_name["primary"].hex)
-    secondary_b = brightness(colors_by_name["secondary"].hex)
+    primary_b = ColorMath.brightness(resolved_colors["primary"])
+    secondary_b = ColorMath.brightness(resolved_colors["secondary"])
 
     primary_b > secondary_b
   end
 
   def is_wcag?
     base_scheme_id&.start_with?("WCAG")
-  end
-
-  # Equivalent to dc-color-brightness() in variables.scss
-  def brightness(color)
-    rgb = color.scan(/../).map { |c| c.to_i(16) }
-    (rgb[0].to_i * 299 + rgb[1].to_i * 587 + rgb[2].to_i * 114) / 1000.0
   end
 end
 
