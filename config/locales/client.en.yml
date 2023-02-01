@@ -2976,8 +2976,8 @@ en:
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Browse all tags</a> or <a href='%{basePath}/latest'>view latest topics</a>."
 
       suggest_create_topic: Ready to <a href>start a new conversation?</a>
-      jump_reply_up: jump to earlier reply
-      jump_reply_down: jump to later reply
+      jump_reply: "Jump to post's original location"
+      jump_reply_aria: "Jump to @%{username}'s post in its original location"
       deleted: "The topic has been deleted"
 
       slow_mode_update:
