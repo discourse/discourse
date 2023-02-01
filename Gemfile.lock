@@ -186,7 +186,7 @@ GEM
       hana (~> 1.3)
       regexp_parser (~> 2.0)
       uri_template (~> 0.7)
-    jwt (2.6.0)
+    jwt (2.7.0)
     kgio (2.11.4)
     libv8-node (16.10.0.0)
     libv8-node (16.10.0.0-aarch64-linux)
