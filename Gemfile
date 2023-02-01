@@ -105,6 +105,7 @@ gem "pg"
 gem "mini_sql"
 gem "pry-rails", require: false
 gem "pry-byebug", require: false
+gem "rtlcss_wrapper", require: false
 gem "rake"
 
 gem "thor", require: false

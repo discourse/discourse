@@ -65,25 +65,14 @@ module Stylesheet
       result = engine.render
 
       if options[:rtl]
-        [rtlify_css(result) || result, nil]
+        require "rtlcss_wrapper"
+        [RtlcssWrapper.flip_css(result), nil]
       else
         source_map = engine.source_map
         source_map.force_encoding("UTF-8")
 
         [result, source_map]
       end
-    end
-
-    def self.rtlify_css(src_css)
-      @context ||=
-        begin
-          context = MiniRacer::Context.new
-          context.eval(
-            File.read("#{Rails.root}/app/assets/javascripts/rtlcss-miniracer/dist/main.js"),
-          )
-          context
-        end
-      @context.eval("rtlcss.process(#{src_css.inspect})")
     end
   end
 end

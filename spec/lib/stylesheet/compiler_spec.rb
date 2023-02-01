@@ -215,42 +215,10 @@ RSpec.describe Stylesheet::Compiler do
     end
   end
 
-  describe ".rtlify_css" do
-    it "flips CSS correctly" do
-      flipped = described_class.rtlify_css(<<~CSS)
-        a {
-          right: 100px;
-          margin-left: 50px;
-          padding: 0.33rem calc(var(--d-sidebar-row-horizontal-padding) / 3);
-          background: linear-gradient(
-            to bottom,
-            rgba(var(--secondary-rgb), 0),
-            rgba(var(--secondary-rgb), 100%)
-          );
-        }
-      CSS
-      expect(flipped.strip).to eq(<<~CSS.strip)
-        a {
-          left: 100px;
-          margin-right: 50px;
-          padding: 0.33rem calc(var(--d-sidebar-row-horizontal-padding) / 3);
-          background: linear-gradient(
-            to bottom,
-            rgba(var(--secondary-rgb), 0),
-            rgba(var(--secondary-rgb), 100%)
-          );
-        }
-      CSS
-    end
-
-    it "raises an error for invalid CSS" do
-      expect do described_class.rtlify_css(<<~CSS) end.to raise_error(
-          a {
-            right: 100px;
-        CSS
-        MiniRacer::RuntimeError,
-        /CssSyntaxError/,
-      )
+  describe ".compile" do
+    it "produces RTL CSS when rtl option is given" do
+      css, _ = Stylesheet::Compiler.compile("a{right:1px}", "test.scss", rtl: true)
+      expect(css).to eq("a{left:1px}")
     end
   end
 end
