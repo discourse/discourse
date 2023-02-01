@@ -27,7 +27,7 @@ RSpec.describe "Quoting chat message transcripts", type: :system, js: true do
 
   def select_message_mobile(message)
     chat_channel_page.message_by_id(message.id).click(delay: 0.5)
-    find(".chat-message-action-item[data-id=\"selectMessage\"]", wait: 5).click
+    find(".chat-message-action-item[data-id=\"selectMessage\"] button", wait: 5).click
   end
 
   def cdp_allow_clipboard_access!
