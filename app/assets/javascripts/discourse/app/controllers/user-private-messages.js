@@ -45,7 +45,6 @@ export default class extends Controller {
 
     for (let i = this.messagesDropdownContent.length - 1; i >= 0; i--) {
       const row = this.messagesDropdownContent[i];
-
       if (this.router.currentURL.includes(row.id)) {
         value = row.id;
         break;
@@ -59,7 +58,10 @@ export default class extends Controller {
   get messagesDropdownContent() {
     const content = [
       {
-        id: this.router.urlFor("userPrivateMessages.user", this.model.username),
+        id: this.router.urlFor(
+          "userPrivateMessages.user",
+          this.model.username_lower
+        ),
         name: I18n.t("user.messages.inbox"),
       },
     ];
@@ -78,7 +80,10 @@ export default class extends Controller {
 
     if (this.pmTaggingEnabled) {
       content.push({
-        id: this.router.urlFor("userPrivateMessages.tags", this.model.username),
+        id: this.router.urlFor(
+          "userPrivateMessages.tags",
+          this.model.username_lower
+        ),
         name: I18n.t("user.messages.tags"),
         icon: "tags",
       });
@@ -86,7 +91,7 @@ export default class extends Controller {
 
     customUserNavMessagesDropdownRows.forEach((row) => {
       content.push({
-        id: this.router.urlFor(row.routeName, this.model.username),
+        id: this.router.urlFor(row.routeName, this.model.username_lower),
         name: row.name,
         icon: row.icon,
       });
