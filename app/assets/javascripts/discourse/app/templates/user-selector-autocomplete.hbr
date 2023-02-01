@@ -4,7 +4,7 @@
       {{#if item.isUser}}
         <li>
           <a href title="{{item.name}}" class="{{item.cssClasses}}">
-            {{avatar user imageSize="tiny"}}
+            {{avatar item imageSize="tiny"}}
             <span class='username'>{{format-username item.username}}</span>
             {{#if item.name}}
               <span class='name'>{{item.name}}</span>
