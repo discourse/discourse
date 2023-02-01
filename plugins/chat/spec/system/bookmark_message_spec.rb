@@ -54,6 +54,13 @@ RSpec.describe "Bookmark message", type: :system, js: true do
       chat.visit_channel(category_channel_1)
       expect(channel).to have_no_loading_skeleton
 
+      i = 0.5
+      try_until_success(timeout: 20) do
+        chat_channel_page.message_by_id(message_1.id).click(delay: i)
+        first(".bookmark-btn")
+        i += 0.1
+      end
+
       channel.message_by_id(message_1.id).click(delay: 0.5)
       find(".bookmark-btn", wait: 5).click
 
