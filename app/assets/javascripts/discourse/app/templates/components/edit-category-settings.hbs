@@ -4,11 +4,12 @@
       <label for="category-position">
         {{i18n "category.position"}}
       </label>
-      <TextField
-        @value={{this.category.position}}
+      <NumberField
+        @number={{this.category.position}}
         @id="category-position"
         @class="position-input"
         @type="number"
+        @min="0"
       />
     </section>
   {{/if}}
@@ -34,10 +35,11 @@
         {{i18n "category.num_featured_topics"}}
       {{/if}}
     </label>
-    <TextField
-      @value={{this.category.num_featured_topics}}
+    <NumberField
+      @number={{this.category.num_featured_topics}}
       @id="category-number-featured-topics"
       @type="number"
+      @min="1"
     />
   </section>
 
@@ -185,10 +187,11 @@
     <label for="category-number-daily-bump">
       {{i18n "category.num_auto_bump_daily"}}
     </label>
-    <TextField
-      @value={{this.category.custom_fields.num_auto_bump_daily}}
+    <NumberField
+      @number={{this.category.custom_fields.num_auto_bump_daily}}
       @id="category-number-daily-bump"
       @type="number"
+      @min="0"
     />
   </section>
 </section>
