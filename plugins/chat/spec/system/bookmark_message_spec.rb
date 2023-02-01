@@ -56,13 +56,11 @@ RSpec.describe "Bookmark message", type: :system, js: true do
 
       i = 0.5
       try_until_success(timeout: 20) do
-        chat_channel_page.message_by_id(message_1.id).click(delay: i)
+        channel.message_by_id(message_1.id).click(delay: i)
         first(".bookmark-btn")
         i += 0.1
       end
-
-      channel.message_by_id(message_1.id).click(delay: 0.5)
-      find(".bookmark-btn", wait: 5).click
+      find(".bookmark-btn").click
 
       bookmark_modal.fill_name("Check this out later")
       bookmark_modal.select_preset_reminder(:next_month)
