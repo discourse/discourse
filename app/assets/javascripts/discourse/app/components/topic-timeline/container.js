@@ -200,12 +200,6 @@ export default class TopicTimelineScrollArea extends Component {
         this.before + SCROLLER_HEIGHT - 5 < this.lastReadTop ||
         this.before > this.lastReadTop + 25;
     }
-
-    if (this.hasBackPosition) {
-      this.lastReadTop = Math.round(
-        this.lastReadPercentage * scrollareaHeight()
-      );
-    }
   }
 
   @debounce(50)

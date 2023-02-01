@@ -96,11 +96,11 @@
         onClick={{this.updatePercentage}}
       ></div>
 
-      {{#if this.hasBackPosition}}
+      {{#if (and this.hasBackPosition this.showButton)}}
         <div class="timeline-last-read" style={{this.lastReadStyle}}>
           {{d-icon "minus" class="progress"}}
           {{#if this.showButton}}
-            <TopicTimeline::BackButton @onClick={{this.goBack}} />
+            <TopicTimeline::BackButton @goBack={{this.goBack}} />
           {{/if}}
         </div>
       {{/if}}
