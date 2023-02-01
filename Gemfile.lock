@@ -315,7 +315,6 @@ GEM
     public_suffix (5.0.1)
     puma (6.0.2)
       nio4r (~> 2.0)
-    r2 (0.2.7)
     racc (1.6.2)
     rack (2.2.6.2)
     rack-mini-profiler (3.0.0)
@@ -398,6 +397,8 @@ GEM
       json-schema (>= 2.2, < 4.0)
       railties (>= 3.1, < 7.1)
       rspec-core (>= 2.14)
+    rtlcss_wrapper (0.1.0)
+      mini_racer (~> 0.6.3)
     rubocop (1.44.1)
       json (~> 2.3)
       parallel (~> 1.10)
@@ -600,7 +601,6 @@ DEPENDENCIES
   pry-byebug
   pry-rails
   puma
-  r2
   rack
   rack-mini-profiler
   rack-protection
@@ -621,6 +621,7 @@ DEPENDENCIES
   rspec-rails
   rss
   rswag-specs
+  rtlcss_wrapper
   rubocop-discourse
   ruby-prof
   ruby-readability
