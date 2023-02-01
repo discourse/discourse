@@ -30,7 +30,7 @@ RSpec.describe "Quoting chat message transcripts", type: :system, js: true do
       chat_channel_page.message_by_id(message.id).find(".chat-message-selector").click
     else
       chat_channel_page.message_by_id(message.id).click(delay: 0.5)
-      find(".chat-message-action-item[data-id=\"selectMessage\"]").click
+      find(".chat-message-action-item[data-id=\"selectMessage\"]", wait: 5).click
     end
   end
 
