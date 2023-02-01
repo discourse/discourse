@@ -245,7 +245,7 @@ RSpec.configure do |config|
     end
 
     Capybara.threadsafe = true
-    Capybara.disable_animation = true
+    Capybara.disable_animation = false
 
     Capybara.configure do |capybara_config|
       capybara_config.server_host = "localhost"
