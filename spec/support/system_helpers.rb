@@ -32,7 +32,9 @@ module SystemHelpers
     start ||= Time.zone.now
     backoff ||= frequency
     yield
-  rescue RSpec::Expectations::ExpectationNotMetError
+  rescue RSpec::Expectations::ExpectationNotMetError,
+         Capybara::ExpectationNotMet,
+         Capybara::ElementNotFound
     raise if Time.zone.now >= start + timeout.seconds
     sleep backoff
     backoff += frequency
