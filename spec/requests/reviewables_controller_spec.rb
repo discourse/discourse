@@ -300,6 +300,16 @@ RSpec.describe ReviewablesController do
         expect(reviewables[0]["pending"]).to eq(true)
       end
 
+      it "responds with current user's reviewables count" do
+        reviewable = Fabricate(:reviewable)
+
+        get "/review/user-menu-list.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["reviewables"].length).to eq(1)
+        expect(response.parsed_body["reviewable_count"]).to eq(1)
+      end
+
       it "responds with pending reviewables only" do
         Fabricate(:reviewable, status: Reviewable.statuses[:approved])
         pending1 = Fabricate(:reviewable, status: Reviewable.statuses[:pending])
