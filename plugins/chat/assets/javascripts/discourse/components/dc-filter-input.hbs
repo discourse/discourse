@@ -11,6 +11,7 @@
 
   <Input
     class="dc-filter-input"
+    @value={{@initialFilter}}
     {{on "input" (if @filterAction @filterAction (noop))}}
     {{on "focusin" (action (mut this.isFocused) true)}}
     {{on "focusout" (action (mut this.isFocused) false)}}

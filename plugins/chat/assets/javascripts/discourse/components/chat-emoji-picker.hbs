@@ -13,6 +13,7 @@
   <div class="chat-emoji-picker__filter-container">
     <DcFilterInput
       @class="chat-emoji-picker__filter"
+      @initialFilter={{this.chatEmojiPickerManager.initialFilter}}
       @filterAction={{this.didInputFilter}}
       @icons={{hash left="search"}}
       placeholder={{i18n "chat.emoji_picker.search_placeholder"}}
@@ -107,6 +108,7 @@
 
     <div
       class="chat-emoji-picker__scrollable-content"
+      {{did-insert this.applyInitialFilter}}
       {{chat/emoji-picker-scroll-listener}}
     >
       <div

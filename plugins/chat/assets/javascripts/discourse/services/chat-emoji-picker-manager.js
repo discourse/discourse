@@ -23,6 +23,7 @@ export default class ChatEmojiPickerManager extends Service {
   @tracked emojis = null;
   @tracked visibleSections = DEFAULT_VISIBLE_SECTIONS;
   @tracked lastVisibleSection = DEFAULT_LAST_SECTION;
+  @tracked initialFilter = null;
   @tracked element = null;
   @tracked callback;
 
@@ -35,6 +36,7 @@ export default class ChatEmojiPickerManager extends Service {
   closeExisting() {
     this.callback = null;
     this.opened = false;
+    this.initialFilter = null;
     this.visibleSections = DEFAULT_VISIBLE_SECTIONS;
     this.lastVisibleSection = DEFAULT_LAST_SECTION;
   }
@@ -51,6 +53,7 @@ export default class ChatEmojiPickerManager extends Service {
 
       this.visibleSections = DEFAULT_VISIBLE_SECTIONS;
       this.lastVisibleSection = DEFAULT_LAST_SECTION;
+      this.initialFilter = null;
       this.closing = false;
       this.opened = false;
     }, TRANSITION_TIME);
