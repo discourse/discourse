@@ -52,8 +52,14 @@ RSpec.describe "Bookmark message", type: :system, js: true do
   context "when mobile", mobile: true do
     it "allows to bookmark a message" do
       chat.visit_channel(category_channel_1)
+      expect(channel).to have_no_loading_skeleton
 
-      channel.message_by_id(message_1.id).click(delay: 0.5)
+      i = 0.5
+      try_until_success(timeout: 20) do
+        channel.message_by_id(message_1.id).click(delay: i)
+        first(".bookmark-btn")
+        i += 0.1
+      end
       find(".bookmark-btn").click
 
       bookmark_modal.fill_name("Check this out later")

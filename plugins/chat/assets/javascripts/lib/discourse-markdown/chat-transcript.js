@@ -122,7 +122,7 @@ const chatTranscriptRule = {
     } else {
       let linkToken = state.push("link_open", "a", 1);
       linkToken.attrs = [
-        ["href", `${channelLink}?messageId=${messageIdStart}`],
+        ["href", `${channelLink}/${messageIdStart}`],
         ["title", messageTimeStart],
       ];
 

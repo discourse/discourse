@@ -26,7 +26,7 @@ export default {
                 });
                 return `/chat/c/${slug || "-"}/${
                   this.notification.data.chat_channel_id
-                }?messageId=${this.notification.data.chat_message_id}`;
+                }/${this.notification.data.chat_message_id}`;
               }
 
               get linkTitle() {
@@ -61,7 +61,7 @@ export default {
                 });
                 return `/chat/c/${slug || "-"}/${
                   this.notification.data.chat_channel_id
-                }?messageId=${this.notification.data.chat_message_id}`;
+                }/${this.notification.data.chat_message_id}`;
               }
 
               get linkTitle() {

@@ -26,7 +26,7 @@ RSpec.describe "Navigating to message", type: :system, js: true do
         Fabricate(
           :post,
           topic: topic_1,
-          raw: "<a href=\"/chat/c/-/#{channel_1.id}?messageId=#{first_message.id}\">#{link}</a>",
+          raw: "<a href=\"/chat/c/-/#{channel_1.id}/#{first_message.id}\">#{link}</a>",
         )
       end
 
@@ -45,7 +45,7 @@ RSpec.describe "Navigating to message", type: :system, js: true do
         Fabricate(
           :chat_message,
           chat_channel: channel_1,
-          message: "[#{link}](/chat/c/-/#{channel_1.id}?messageId=#{first_message.id})",
+          message: "[#{link}](/chat/c/-/#{channel_1.id}/#{first_message.id})",
         )
       end
 
@@ -77,7 +77,7 @@ RSpec.describe "Navigating to message", type: :system, js: true do
         Fabricate(
           :chat_message,
           chat_channel: channel_2,
-          message: "[#{link}](/chat/c/-/#{channel_1.id}?messageId=#{first_message.id})",
+          message: "[#{link}](/chat/c/-/#{channel_1.id}/#{first_message.id})",
         )
         channel_2.add(current_user)
       end
@@ -94,7 +94,7 @@ RSpec.describe "Navigating to message", type: :system, js: true do
 
     context "when navigating directly to a message link" do
       it "highglights the correct message" do
-        visit("/chat/c/-/#{channel_1.id}?messageId=#{first_message.id}")
+        visit("/chat/c/-/#{channel_1.id}/#{first_message.id}")
 
         expect(page).to have_css(
           ".chat-message-container.highlighted[data-id='#{first_message.id}']",
@@ -111,7 +111,7 @@ RSpec.describe "Navigating to message", type: :system, js: true do
         Fabricate(
           :post,
           topic: topic_1,
-          raw: "<a href=\"/chat/c/-/#{channel_1.id}?messageId=#{first_message.id}\">#{link}</a>",
+          raw: "<a href=\"/chat/c/-/#{channel_1.id}/#{first_message.id}\">#{link}</a>",
         )
       end
 
@@ -130,7 +130,7 @@ RSpec.describe "Navigating to message", type: :system, js: true do
         Fabricate(
           :chat_message,
           chat_channel: channel_1,
-          message: "[#{link}](/chat/c/-/#{channel_1.id}?messageId=#{first_message.id})",
+          message: "[#{link}](/chat/c/-/#{channel_1.id}/#{first_message.id})",
         )
       end
 

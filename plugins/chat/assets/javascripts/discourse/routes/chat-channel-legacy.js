@@ -9,8 +9,13 @@ export default class ChatChannelLegacyRoute extends DiscourseRoute {
       this.routeName
     );
 
-    this.router.replaceWith("chat.channel", channelTitle, channelId, {
-      queryParams: { messageId },
-    });
+    this.router.replaceWith(
+      "chat.channel.from-params",
+      channelTitle,
+      channelId,
+      {
+        queryParams: { messageId },
+      }
+    );
   }
 }

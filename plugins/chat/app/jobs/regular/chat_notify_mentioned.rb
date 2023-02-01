@@ -65,7 +65,7 @@ module Jobs
         username: @creator.username,
         tag: Chat::ChatNotifier.push_notification_tag(:mention, @chat_channel.id),
         excerpt: @chat_message.push_notification_excerpt,
-        post_url: "#{@chat_channel.relative_url}?messageId=#{@chat_message.id}",
+        post_url: "#{@chat_channel.relative_url}/#{@chat_message.id}",
       }
 
       translation_prefix =

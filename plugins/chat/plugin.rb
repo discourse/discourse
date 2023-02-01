@@ -265,16 +265,8 @@ after_initialize do
 
   if Oneboxer.respond_to?(:register_local_handler)
     Oneboxer.register_local_handler("chat/chat") do |url, route|
-      queryParams =
-        begin
-          CGI.parse(URI.parse(url).query)
-        rescue StandardError
-          {}
-        end
-      messageId = queryParams["messageId"]&.first
-
-      if messageId.present?
-        message = ChatMessage.find_by(id: messageId)
+      if route[:message_id].present?
+        message = ChatMessage.find_by(id: route[:message_id])
         next if !message
 
         chat_channel = message.chat_channel
@@ -334,16 +326,8 @@ after_initialize do
 
   if InlineOneboxer.respond_to?(:register_local_handler)
     InlineOneboxer.register_local_handler("chat/chat") do |url, route|
-      queryParams =
-        begin
-          CGI.parse(URI.parse(url).query)
-        rescue StandardError
-          {}
-        end
-      messageId = queryParams["messageId"]&.first
-
-      if messageId.present?
-        message = ChatMessage.find_by(id: messageId)
+      if route[:message_id].present?
+        message = ChatMessage.find_by(id: route[:message_id])
         next if !message
 
         chat_channel = message.chat_channel
@@ -655,6 +639,7 @@ after_initialize do
 
     base_c_route = "/c/:channel_title/:channel_id"
     get base_c_route => "chat#respond", :as => "channel"
+    get "#{base_c_route}/:message_id" => "chat#respond"
 
     %w[info info/about info/members info/settings].each do |route|
       get "#{base_c_route}/#{route}" => "chat#respond"

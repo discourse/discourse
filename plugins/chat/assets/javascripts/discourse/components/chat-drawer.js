@@ -211,17 +211,6 @@ export default Component.extend({
       URL || this.chatStateManager.lastKnownChatURL
     );
 
-    let highlightCb = null;
-
-    if (route.queryParams.messageId) {
-      highlightCb = () => {
-        this.appEvents.trigger(
-          "chat-live-pane:highlight-message",
-          route.queryParams.messageId
-        );
-      };
-    }
-
     switch (route.name) {
       case "chat":
         this.set("view", LIST_VIEW);
@@ -231,25 +220,42 @@ export default Component.extend({
         this.set("view", DRAFT_CHANNEL_VIEW);
         this.appEvents.trigger("chat:float-toggled", false);
         return;
-      case "chat.channel":
-        return this._openChannel(route, highlightCb);
+      case "chat.channel.from-params":
+        return this._openChannel(
+          route.parent.params.channelId,
+          this._highlightCb(route.queryParams.messageId)
+        );
+      case "chat.channel.near-message":
+        return this._openChannel(
+          route.parent.params.channelId,
+          this._highlightCb(route.params.messageId)
+        );
       case "chat.channel-legacy":
-        return this._openChannel(route, highlightCb);
+        return this._openChannel(
+          route.params.channelId,
+          this._highlightCb(route.queryParams.messageId)
+        );
     }
   },
 
-  _openChannel(route, afterRenderFunc = null) {
-    return this.chatChannelsManager
-      .find(route.params.channelId)
-      .then((channel) => {
-        this.chat.setActiveChannel(channel);
-        this.set("view", CHAT_VIEW);
-        this.appEvents.trigger("chat:float-toggled", false);
+  _highlightCb(messageId) {
+    if (messageId) {
+      return () => {
+        this.appEvents.trigger("chat-live-pane:highlight-message", messageId);
+      };
+    }
+  },
 
-        if (afterRenderFunc) {
-          schedule("afterRender", afterRenderFunc);
-        }
-      });
+  _openChannel(channelId, afterRenderFunc = null) {
+    return this.chatChannelsManager.find(channelId).then((channel) => {
+      this.chat.setActiveChannel(channel);
+      this.set("view", CHAT_VIEW);
+      this.appEvents.trigger("chat:float-toggled", false);
+
+      if (afterRenderFunc) {
+        schedule("afterRender", afterRenderFunc);
+      }
+    });
   },
 
   @action

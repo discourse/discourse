@@ -14,9 +14,7 @@ registerUnbound("format-chat-date", function (message, details, mode) {
   let url = "";
 
   if (details) {
-    url = getURL(
-      `/chat/c/-/${details.chat_channel_id}?messageId=${message.id}`
-    );
+    url = getURL(`/chat/c/-/${details.chat_channel_id}/${message.id}`);
   }
 
   let title = date.format(I18n.t("dates.long_with_year"));

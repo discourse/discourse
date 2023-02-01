@@ -41,7 +41,7 @@ describe "chat bbcode quoting in posts" do
       <div class="chat-transcript-username">
       martin</div>
       <div class="chat-transcript-datetime">
-      <a href="/chat/c/-/1234?messageId=2321" title="2022-01-25T05:40:39Z"></a>
+      <a href="/chat/c/-/1234/2321" title="2022-01-25T05:40:39Z"></a>
       </div>
       </div>
       <div class="chat-transcript-messages">
@@ -63,7 +63,7 @@ describe "chat bbcode quoting in posts" do
       <div class="chat-transcript-username">
       martin</div>
       <div class="chat-transcript-datetime">
-      <a href="/chat/c/-/1234?messageId=2321" title="2022-01-25T05:40:39Z"></a>
+      <a href="/chat/c/-/1234/2321" title="2022-01-25T05:40:39Z"></a>
       </div>
       <a class="chat-transcript-channel" href="/chat/c/-/1234">
       #Cool Cats Club</a>
@@ -87,7 +87,7 @@ describe "chat bbcode quoting in posts" do
       <div class="chat-transcript-username">
       martin</div>
       <div class="chat-transcript-datetime">
-      <a href="/chat/c/-/1234?messageId=2321" title="2022-01-25T05:40:39Z"></a>
+      <a href="/chat/c/-/1234/2321" title="2022-01-25T05:40:39Z"></a>
       </div>
       <a class="chat-transcript-channel" href="/chat/c/-/1234">
       #Cool Cats Club</a>
@@ -137,7 +137,7 @@ describe "chat bbcode quoting in posts" do
       <div class="chat-transcript-username">
       martin</div>
       <div class="chat-transcript-datetime">
-      <a href="/chat/c/-/1234?messageId=2321" title="2022-01-25T05:40:39Z"></a>
+      <a href="/chat/c/-/1234/2321" title="2022-01-25T05:40:39Z"></a>
       </div>
       <a class="chat-transcript-channel" href="/chat/c/-/1234">
       #Cool Cats Club</a>
@@ -242,7 +242,7 @@ martin</div>
 <div class="chat-transcript-username">
 #{message1.user.username}</div>
 <div class="chat-transcript-datetime">
-<a href="/chat/c/-/#{channel.id}?messageId=#{message1.id}" title="#{message1.created_at.iso8601}"></a>
+<a href="/chat/c/-/#{channel.id}/#{message1.id}" title="#{message1.created_at.iso8601}"></a>
 </div>
 <a class="chat-transcript-channel" href="/chat/c/-/#{channel.id}">
 ##{channel.name}</a>
@@ -256,7 +256,7 @@ martin</div>
 <div class="chat-transcript-username">
 #{message2.user.username}</div>
 <div class="chat-transcript-datetime">
-<a href="/chat/c/-/#{channel.id}?messageId=#{message2.id}" title="#{message1.created_at.iso8601}"></a>
+<a href="/chat/c/-/#{channel.id}/#{message2.id}" title="#{message1.created_at.iso8601}"></a>
 </div>
 <a class="chat-transcript-channel" href="/chat/c/-/#{channel.id}">
 ##{channel.name}</a>
