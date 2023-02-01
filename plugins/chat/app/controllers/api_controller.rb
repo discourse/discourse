@@ -29,40 +29,6 @@ class Chat::Api < Chat::ChatBaseController
     @_result = service.call(params.to_unsafe_h.merge(guardian: guardian, **@extra_params.to_h))
   end
 
-  def handle_service_result(result, serializer_object: nil, serializer: nil, serializer_data: {})
-    if result.success?
-      if serializer_object && serializer
-        return(render_serialized(serializer_object, serializer, **serializer_data))
-      else
-        return { json: success_json } if result.success?
-      end
-    end
-
-    raise Discourse::InvalidAccess if result[:"result.policy.invalid_access"]&.failure?
-
-    if result[:"result.contract.default"]&.failure?
-      return({ json: failed_json.merge(errors: contract.errors.full_messages), status: 400 })
-    end
-
-    { json: failed_json }
-  end
-
-  def wrap_service(result)
-    return yield(true, result, nil) if result.success?
-
-    raise Discourse::InvalidAccess if result[:"result.policy.invalid_access"]&.failure?
-
-    if result[:"result.contract.default"]&.failure?
-      yield(
-        false,
-        result,
-        { json: failed_json.merge(errors: contract.errors.full_messages), status: 400 }
-      )
-    end
-
-    yield(false, result, { json: failed_json })
-  end
-
   def default_actions_for_service
     proc do
       on_success { render(json: success_json) }

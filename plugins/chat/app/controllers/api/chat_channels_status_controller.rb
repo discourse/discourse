@@ -2,16 +2,12 @@
 
 class Chat::Api::ChatChannelsStatusController < Chat::Api::ChatChannelsController
   def update
-    wrap_service(
-      Chat::Service::UpdateChannelStatus.call(
-        guardian: guardian,
+    with_service(
+      Chat::Service::UpdateChannelStatus,
+      extra_params: {
         channel: channel_from_params,
         status: params.require(:status),
-      ),
-    ) do |success, result, controller_response|
-      return render controller_response if !success
-
-      render_serialized(result.channel, ChatChannelSerializer, root: "channel")
-    end
+      },
+    ) { on_success { render_serialized(@_result.channel, ChatChannelSerializer, root: "channel") } }
   end
 end
