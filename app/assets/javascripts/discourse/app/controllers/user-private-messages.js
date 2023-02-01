@@ -45,6 +45,7 @@ export default class extends Controller {
 
     for (let i = this.messagesDropdownContent.length - 1; i >= 0; i--) {
       const row = this.messagesDropdownContent[i];
+
       if (this.router.currentURL.includes(row.id)) {
         value = row.id;
         break;
