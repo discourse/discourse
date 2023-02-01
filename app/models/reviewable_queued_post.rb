@@ -25,17 +25,21 @@ class ReviewableQueuedPost < Reviewable
           a.confirm_message = "reviewables.actions.approve_post.confirm_closed"
         end
       else
-        actions.add(:approve_post) do |a|
-          a.icon = "check"
-          a.label = "reviewables.actions.approve_post.title"
+        unless rejected?
+          actions.add(:approve_post) do |a|
+            a.icon = "check"
+            a.label = "reviewables.actions.approve_post.title"
+          end
         end
       end
     end
 
     unless rejected?
-      actions.add(:reject_post) do |a|
-        a.icon = "times"
-        a.label = "reviewables.actions.reject_post.title"
+      if pending?
+        actions.add(:reject_post) do |a|
+          a.icon = "times"
+          a.label = "reviewables.actions.reject_post.title"
+        end
       end
     end
 
@@ -45,17 +49,19 @@ class ReviewableQueuedPost < Reviewable
   end
 
   def build_editable_fields(fields, guardian, args)
-    # We can edit category / title if it's a new topic
-    if topic_id.blank?
-      # Only staff can edit category for now, since in theory a category group reviewer could
-      # post in a category they don't have access to.
-      fields.add("category_id", :category) if guardian.is_staff?
+    if pending?
+      # We can edit category / title if it's a new topic
+      if topic_id.blank?
+        # Only staff can edit category for now, since in theory a category group reviewer could
+        # post in a category they don't have access to.
+        fields.add("category_id", :category) if guardian.is_staff?
 
-      fields.add("payload.title", :text)
-      fields.add("payload.tags", :tags)
+        fields.add("payload.title", :text)
+        fields.add("payload.tags", :tags)
+      end
+
+      fields.add("payload.raw", :editor)
     end
-
-    fields.add("payload.raw", :editor)
   end
 
   def create_options
