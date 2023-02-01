@@ -62,15 +62,15 @@ RSpec.describe "Quoting chat message transcripts", type: :system, js: true do
     selector =
       case button
       when "quote"
-        "#chat-quote-btn"
+        "chat-quote-btn"
       when "copy"
-        "#chat-copy-btn"
+        "chat-copy-btn"
       when "cancel"
-        "#chat-cancel-selection-btn"
+        "chat-cancel-selection-btn"
       when "move"
-        "#chat-move-to-channel-btn"
+        "chat-move-to-channel-btn"
       end
-    within(".chat-selection-management-buttons") { find(selector).click }
+    find_button(selector, disabled: false, wait: 5).click
   end
 
   def copy_messages_to_clipboard(messages)
@@ -78,7 +78,7 @@ RSpec.describe "Quoting chat message transcripts", type: :system, js: true do
     messages.each { |message| select_message_desktop(message) }
     expect(chat_channel_page).to have_selection_management
     click_selection_button("copy")
-    expect(page).to have_content("Chat quote copied to clipboard")
+    expect(page).to have_selector(".chat-copy-success")
     clip_text = read_clipboard
     expect(clip_text.chomp).to eq(generate_transcript(messages, current_user))
     clip_text
