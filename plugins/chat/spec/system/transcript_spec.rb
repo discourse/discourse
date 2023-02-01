@@ -26,12 +26,8 @@ RSpec.describe "Quoting chat message transcripts", type: :system, js: true do
   end
 
   def select_message_mobile(message)
-    if page.has_css?(".chat-message-container.selecting-messages")
-      chat_channel_page.message_by_id(message.id).find(".chat-message-selector").click
-    else
-      chat_channel_page.message_by_id(message.id).click(delay: 0.5)
-      find(".chat-message-action-item[data-id=\"selectMessage\"]", wait: 5).click
-    end
+    chat_channel_page.message_by_id(message.id).click(delay: 0.5)
+    find(".chat-message-action-item[data-id=\"selectMessage\"]", wait: 5).click
   end
 
   def cdp_allow_clipboard_access!
@@ -227,6 +223,7 @@ RSpec.describe "Quoting chat message transcripts", type: :system, js: true do
       it "first navigates to the channel's category before opening the topic composer with the quote prefilled",
          mobile: true do
         chat_page.visit_channel(chat_channel_1)
+
         expect(chat_channel_page).to have_no_loading_skeleton
 
         select_message_mobile(message_1)
