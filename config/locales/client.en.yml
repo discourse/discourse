@@ -4304,7 +4304,6 @@ en:
         one_hour: "1 hour"
         two_hours: "2 hours"
         tomorrow: "Until tomorrow"
-        custom: "Custom"
       set_schedule: "Set a notification schedule"
 
     trust_levels:
