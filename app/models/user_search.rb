@@ -169,24 +169,26 @@ class UserSearch
         .each { |id| users << id }
     end
 
-    # 6. similar usernames
-    if @term.present?
-      scoped_users
-        .where("username_lower <-> '#{@term}' < 0.8")
-        .order("username_lower <-> '#{@term}' ASC")
-        .limit(@limit - users.size)
-        .pluck(:id)
-        .each { |id| users << id }
-    end
+    if SiteSetting.user_search_similar_results
+      # 6. similar usernames
+      if @term.present?
+        scoped_users
+          .where("username_lower <-> '#{@term}' < 1")
+          .order("username_lower <-> '#{@term}' ASC")
+          .limit(@limit - users.size)
+          .pluck(:id)
+          .each { |id| users << id }
+      end
 
-    # 7. similar names
-    if SiteSetting.enable_names? && @term.present?
-      scoped_users
-        .where("name <-> '#{@term}' < 0.8")
-        .order("name <-> '#{@term}' ASC")
-        .limit(@limit - users.size)
-        .pluck(:id)
-        .each { |id| users << id }
+      # 7. similar names
+      if SiteSetting.enable_names? && @term.present?
+        scoped_users
+          .where("name <-> '#{@term}' < 1")
+          .order("name <-> '#{@term}' ASC")
+          .limit(@limit - users.size)
+          .pluck(:id)
+          .each { |id| users << id }
+      end
     end
 
     users.to_a

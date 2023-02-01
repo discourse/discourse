@@ -10,7 +10,15 @@ class AddTrigramIndexesToUsers < ActiveRecord::Migration[7.0]
       using: "gist",
       opclass: :gist_trgm_ops,
       algorithm: :concurrently,
+      name: "index_users_on_username_lower_trgm",
     )
-    add_index(:users, :name, using: "gist", opclass: :gist_trgm_ops, algorithm: :concurrently)
+    add_index(
+      :users,
+      :name,
+      using: "gist",
+      opclass: :gist_trgm_ops,
+      algorithm: :concurrently,
+      name: "index_users_on_name_trgm",
+    )
   end
 end
