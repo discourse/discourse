@@ -4159,8 +4159,6 @@ en:
       ## [Welcome to %{title}](#welcome)
       An account is required. Please ask an existing member for an invite or log in to continue.
 
-  deleted: "deleted"
-
   image: "image"
 
   upload:
