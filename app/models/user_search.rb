@@ -173,8 +173,8 @@ class UserSearch
       # 6. similar usernames
       if @term.present?
         scoped_users
-          .where("username_lower <-> '#{@term}' < 1")
-          .order("username_lower <-> '#{@term}' ASC")
+          .where("username_lower <-> ? < 1", @term)
+          .order(["username_lower <-> ? ASC", @term])
           .limit(@limit - users.size)
           .pluck(:id)
           .each { |id| users << id }
@@ -183,8 +183,8 @@ class UserSearch
       # 7. similar names
       if SiteSetting.enable_names? && @term.present?
         scoped_users
-          .where("name <-> '#{@term}' < 1")
-          .order("name <-> '#{@term}' ASC")
+          .where("name <-> ? < 1", @term)
+          .order(["name <-> ? ASC", @term])
           .limit(@limit - users.size)
           .pluck(:id)
           .each { |id| users << id }
