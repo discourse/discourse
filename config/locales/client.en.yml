@@ -2373,8 +2373,6 @@ en:
 
       save_edit: "Save Edit"
       overwrite_edit: "Overwrite Edit"
-      reply_original: "Reply on Original Topic"
-      reply_here: "Reply Here"
       reply: "Reply"
       cancel: "Cancel"
       create_topic: "Create Topic"

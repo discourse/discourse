@@ -31,6 +31,10 @@ import { isTesting } from "discourse-common/config/environment";
 import { inject as service } from "@ember/service";
 import { shortDate } from "discourse/lib/formatter";
 import showModal from "discourse/lib/show-modal";
+import { categoryBadgeHTML } from "discourse/helpers/category-link";
+import renderTags from "discourse/lib/render-tags";
+import { htmlSafe } from "@ember/template";
+import { iconHTML } from "discourse-common/lib/icon-library";
 
 async function loadDraft(store, opts = {}) {
   let { draft, draftKey, draftSequence } = opts;
@@ -929,11 +933,44 @@ export default Controller.extend({
     // --> pop the window up
     if (!force && composer.replyingToTopic) {
       const currentTopic = this.topicModel;
+      const originalTopic = this.model.topic;
 
       if (!currentTopic) {
         this.save(true);
         return;
       }
+
+      let topicLabelContent = function (topicOption) {
+        let topicClosed = topicOption.closed
+          ? `<span class="topic-status">${iconHTML("lock")}</span>`
+          : "";
+        let topicPinned = topicOption.pinned
+          ? `<span class="topic-status">${iconHTML("thumbtack")}</span>`
+          : "";
+        let topicBookmarked = topicOption.bookmarked
+          ? `<span class="topic-status">${iconHTML("bookmark")}</span>`
+          : "";
+        let topicPM =
+          topicOption.archetype === "private_message"
+            ? `<span class="topic-status">${iconHTML("envelope")}</span>`
+            : "";
+
+        return `<div class='topic-title'>
+                  <div class="topic-title__top-line">
+                    <span class='topic-statuses'>
+                      ${topicPM}${topicBookmarked}${topicClosed}${topicPinned}
+                    </span>
+                    <span class='fancy-title'>
+                      ${topicOption.fancyTitle}
+                    </span>
+                  </div>
+                  <div class="topic-title__bottom-line">
+                    ${categoryBadgeHTML(topicOption.category, {
+                      link: false,
+                    })}${htmlSafe(renderTags(topicOption))}
+                  </div>
+                </div>`;
+      };
 
       if (
         currentTopic.id !== composer.get("topic.id") &&
@@ -943,21 +980,13 @@ export default Controller.extend({
           title: I18n.t("composer.posting_not_on_topic"),
           buttons: [
             {
-              label:
-                I18n.t("composer.reply_original") +
-                "<br/><div class='topic-title overflow-ellipsis'>" +
-                this.get("model.topic.fancyTitle") +
-                "</div>",
-              class: "btn-primary btn-reply-on-original",
+              label: topicLabelContent(originalTopic),
+              class: "btn-primary btn-reply-where btn-reply-on-original",
               action: () => this.save(true),
             },
             {
-              label:
-                I18n.t("composer.reply_here") +
-                "<br/><div class='topic-title overflow-ellipsis'>" +
-                currentTopic.get("fancyTitle") +
-                "</div>",
-              class: "btn-reply-here",
+              label: topicLabelContent(currentTopic),
+              class: "btn-reply-where btn-reply-here",
               action: () => {
                 composer.setProperties({ topic: currentTopic, post: null });
                 this.save(true);
@@ -965,7 +994,7 @@ export default Controller.extend({
             },
             {
               label: I18n.t("composer.cancel"),
-              class: "btn-flat btn-text btn-reply-where-cancel",
+              class: "btn-flat btn-text btn-reply-where__cancel",
             },
           ],
           class: "reply-where-modal",
