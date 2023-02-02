@@ -98,6 +98,14 @@ export default function () {
           }
         );
         this.route(
+          "adminCustomizeFormTemplates",
+          { path: "/form_templates", resetNamespace: true },
+          function () {
+            this.route("index", { path: "/" });
+            this.route("action", { path: "/action/:action_id" });
+          }
+        );
+        this.route(
           "adminWatchedWords",
           { path: "/watched_words", resetNamespace: true },
           function () {

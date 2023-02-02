@@ -5493,6 +5493,24 @@ en:
           found_matches: "Found matches:"
           no_matches: "No matches found"
 
+      form_templates:
+        nav_title: "Templates"
+        title: "Form Templates"
+        help: "Create a template structure that can be used to create new topics, posts, and messages."
+        new_template: "New Template"
+        list_table:
+          headings:
+            name: "Name"
+            actions: "Actions"
+          actions:
+            view: "View Template"
+            edit: "Edit Template"
+            delete: "Delete Template"
+        view_template:
+          close: "Close"
+          edit: "Edit"
+          delete: "Delete"
+
       impersonate:
         title: "Impersonate"
         help: "Use this tool to impersonate a user account for debugging purposes. You will have to log out once finished."
