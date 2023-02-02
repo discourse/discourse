@@ -1,4 +1,0 @@
-plugins/chat/app/services/base.rb e819f8fda8a172756d34b3916e55caa30408c9cc
-plugins/chat/app/services/trash_channel.rb c1b7cd31d045b400274904bbef16d3015620f874
-plugins/chat/app/services/update_channel.rb 999ce19b7437b53f6ba2a6becbe6d3ac52c24f11
-plugins/chat/app/services/update_channel_status.rb c0cb6d5d20dee281326992610d161bc94185947f
