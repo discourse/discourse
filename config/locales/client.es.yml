@@ -2712,8 +2712,6 @@ es:
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Explorar todas las categorías</a>, <a href='%{basePath}/latest'>ver los temas más recientes</a> o ver la parte superior:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Explorar todas las etiquetas</a> o <a href='%{basePath}/latest'>ver los temas más recientes</a>."
       suggest_create_topic: '¿Listo para <a href>iniciar una nueva conversación?</a>'
-      jump_reply_up: saltar a la primera respuesta
-      jump_reply_down: saltar a la última respuesta
       deleted: "El tema ha sido eliminado"
       slow_mode_update:
         title: "Modo lento"
@@ -3078,9 +3076,6 @@ es:
       collapse: "contraer"
       sr_collapse_replies: "Contraer respuestas inscrustadas"
       sr_date: "Fecha de publicación"
-      sr_expand_replies:
-        one: "Esta publicación tiene %{count} respuesta. Haz clic para expandir"
-        other: "Esta publicación tiene %{count} respuestas. Haz clic para expandir"
       expand_collapse: "expandir/contraer"
       sr_below_embedded_posts_description: "respuestas de la publicación n.º %{post_number}"
       sr_embedded_reply_description: "respuesta de @%{username} a la publicación n.º %{post_number}"

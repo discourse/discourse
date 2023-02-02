@@ -2364,8 +2364,6 @@ ko:
       read_more_in_category: "더 읽고 싶으신가요? %{categoryLink}의 다른 토픽을 살펴보거나 <a href='%{latestLink}'>최신 토픽</a>을 확인해 보세요."
       unread_indicator: "아직 이 주제의 마지막 게시물을 읽은 회원이 없습니다."
       suggest_create_topic: <a href>새 대화를 시작</a>할 준비가 되었나요?
-      jump_reply_up: 이전 댓글로 이동
-      jump_reply_down: 다음 댓글로 이동
       deleted: "글이 삭제되었습니다."
       slow_mode_update:
         title: "느린 모드"

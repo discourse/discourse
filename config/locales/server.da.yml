@@ -2368,14 +2368,6 @@ da:
         Se venligst vores [Retningslinjer](%{base_url}/guidelines) for yderligere vejledning.
     user_automatically_silenced:
       subject_template: "Ny bruger %{username} er blevet gjort tavs af fællesskabsanmeldelse"
-      text_body_template: |
-        Dette er en automatisk besked.
-
-        Den nye bruger [%{username}](%{user_url}) blev automatisk gjort lydløs, fordi flere brugere anmeldte %{username}'s indlæg.
-
-        Venligst [gennemse anmeldelsen](%{base_url}/admin/flags). Hvis %{username} fejlagtigt blev gjort lydløs pga. indlæg, skal du klikke på Mådeholdt (silenced) knappen på [admin siden for denne bruger](%{user_url}).
-
-        Denne tærskel kan ændres via webstedsindstillingerne 'silence_new_user'.
     spam_post_blocked:
       title: "Spam-indlæg blokeret"
       subject_template: "Ny bruger %{username} indlæg blokeret på grund af gentagne links"

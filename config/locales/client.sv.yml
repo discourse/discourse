@@ -303,6 +303,8 @@ sv:
       edit_bookmark: "Redigera bokmärke"
       clear_bookmarks: "Töm bokmärken"
       help:
+        bookmark: "Klicka för att bokmärka detta ämne"
+        edit_bookmark: "Klicka för att redigera bokmärket på ett inlägg i detta ämne"
         edit_bookmark_for_topic: "Klicka för att redigera bokmärket för detta ämne"
         unbookmark: "Klicka för att radera alla bokmärken i ämnet"
         unbookmark_with_reminder: "Klicka för att ta bort alla bokmärken och påminnelser i detta ämne"
@@ -2702,8 +2704,6 @@ sv:
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Bläddra bland alla kategorier</a>, <a href='%{basePath}/latest'>visa senaste ämnen</a> eller se toppämnen:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Bläddra bland alla taggar</a> eller <a href='%{basePath}/latest'>visa senaste ämnen</a>."
       suggest_create_topic: Redo att <a href>starta ett nytt samtal?</a>
-      jump_reply_up: hoppa till tidigare svar
-      jump_reply_down: hoppa till senare svar
       deleted: "Ämnet har raderats"
       slow_mode_update:
         title: "Långsamt läge"
@@ -3069,8 +3069,8 @@ sv:
       sr_collapse_replies: "Förminska inbäddade svar"
       sr_date: "Datum för inlägg"
       sr_expand_replies:
-        one: "Detta inlägg har %{count} svar. Klicka för att utvidga"
-        other: "Detta inlägg har %{count} svar. Klicka för att utvidga"
+        one: "Detta inlägg har %{count} svar"
+        other: "Detta inlägg har %{count} svar"
       expand_collapse: "utvidga/förminska"
       sr_below_embedded_posts_description: "inlägg #%{post_number} svar"
       sr_embedded_reply_description: "svar från @%{username} på inlägg #%{post_number}"

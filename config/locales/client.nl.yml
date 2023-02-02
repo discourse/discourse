@@ -2725,8 +2725,6 @@ nl:
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Blader door alle categorieën</a>, <a href='%{basePath}/latest'>bekijk de nieuwste topics</a> of zie de top:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Blader door alle tags</a> of <a href='%{basePath}/latest'>bekijk de nieuwste topics</a>."
       suggest_create_topic: Klaar om <a href>een nieuw gesprek te beginnen?</a>
-      jump_reply_up: naar eerder antwoord springen
-      jump_reply_down: naar later antwoord springen
       deleted: "Het topic is verwijderd"
       slow_mode_update:
         title: "Langzame modus"
@@ -3091,9 +3089,6 @@ nl:
       collapse: "samenvouwen"
       sr_collapse_replies: "Ingesloten antwoorden samenvouwen"
       sr_date: "Plaatsingsdatum"
-      sr_expand_replies:
-        one: "Dit bericht heeft %{count} reactie. Klik om uit te vouwen"
-        other: "Dit bericht heeft %{count} reacties. Klik om uit te vouwen"
       expand_collapse: "uitvouwen/samenvouwen"
       sr_below_embedded_posts_description: "antwoorden op bericht %{post_number}"
       sr_embedded_reply_description: "antwoord van @%{username} op bericht %{post_number}"

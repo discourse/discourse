@@ -3265,8 +3265,6 @@ ar:
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>استعرض كل الفئات</a> أو <a href='%{basePath}/latest'>شاهد آخر الموضوعات</a>، أو انظر أبرز:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>استعرض كل الوسوم</a> أو <a href='%{basePath}/latest'>شاهد آخر الموضوعات</a>."
       suggest_create_topic: هل أنت مستعد <a href>لبدء محادثة جديدة؟</a>
-      jump_reply_up: الانتقال إلى الرد السابق
-      jump_reply_down: الانتقال إلى الرد التالي
       deleted: "لقد تم حذف الموضوع"
       slow_mode_update:
         title: "الوضع البطيء"
@@ -3691,13 +3689,6 @@ ar:
       collapse: "طي"
       sr_collapse_replies: "طي الردود المضمَّنة"
       sr_date: "تاريخ المنشور"
-      sr_expand_replies:
-        zero: "هناك %{count} رد على هذا المنشور. انقر للتوسيع"
-        one: "هناك رد واحد (%{count}) على هذا المنشور. انقر للتوسيع"
-        two: "هناك ردَّان (%{count}) على هذا المنشور. انقر للتوسيع"
-        few: "هناك %{count} ردود على هذا المنشور. انقر للتوسيع"
-        many: "هناك %{count} ردًا على هذا المنشور. انقر للتوسيع"
-        other: "هناك %{count} رد على هذا المنشور. انقر للتوسيع"
       expand_collapse: "توسيع/طي"
       sr_below_embedded_posts_description: "ردود المنشور #%{post_number}"
       sr_embedded_reply_description: "رد بواسطة @%{username} على المنشور #%{post_number}"

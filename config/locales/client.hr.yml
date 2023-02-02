@@ -2857,8 +2857,6 @@ hr:
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Pregledajte sve kategorije</a>, <a href='%{basePath}/latest'>pogledajte najnovije teme</a> ili pogledajte vrh:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Pregledajte sve oznake</a> ili <a href='%{basePath}/latest'>pogledajte najnovije teme</a>."
       suggest_create_topic: Spremni za <a href>započeti novi razgovor?</a>
-      jump_reply_up: skoči na raniji odgovor
-      jump_reply_down: skoči na kasniji odgovor
       deleted: "Tema je obrisana."
       slow_mode_update:
         title: "Usporeni način rada"
@@ -3238,10 +3236,6 @@ hr:
       collapse: "sakrij"
       sr_collapse_replies: "Sažmi ugrađene odgovore"
       sr_date: "Datum objave"
-      sr_expand_replies:
-        one: "Ovaj post ima %{count} odgovora. Kliknite za proširenje"
-        few: "Ovaj post ima %{count} odgovora. Kliknite za proširenje"
-        other: "Ovaj post ima %{count} odgovora. Kliknite za proširenje"
       expand_collapse: "proširi/sruši"
       sr_below_embedded_posts_description: "objavi #%{post_number} odgovora"
       sr_embedded_reply_description: "odgovorite sa @%{username} na objavu broj%{post_number}"

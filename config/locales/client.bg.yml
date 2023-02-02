@@ -2143,8 +2143,6 @@ bg:
       back_to_list: "Назад към Списъка с теми"
       options: "Настройки на темата"
       show_links: "покажи връзките в тази тема"
-      jump_reply_up: към по ранен отговор
-      jump_reply_down: към по-късен отговор
       deleted: "Темата беше изтрита"
       slow_mode_update:
         title: "Бавен режим"

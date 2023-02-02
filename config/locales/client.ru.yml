@@ -3005,8 +3005,6 @@ ru:
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Просмотрите все категории</a>, <a href='%{basePath}/latest'>ознакомьтесь с последними</a> или самыми популярными темами:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Просмотрите все теги</a> или <a href='%{basePath}/latest'>ознакомьтесь с последними темами</a>."
       suggest_create_topic: Готовы <a href>начать новое обсуждение</a>?
-      jump_reply_up: Перейти к более ранним ответам
-      jump_reply_down: Перейти к более поздним ответам
       deleted: "Тема удалена"
       slow_mode_update:
         title: "Замедленный режим"
@@ -3401,11 +3399,6 @@ ru:
       collapse: "свернуть"
       sr_collapse_replies: "Свернуть встроенные ответы"
       sr_date: "Дата записи"
-      sr_expand_replies:
-        one: "На эту запись есть %{count} ответ. Нажмите для просмотра."
-        few: "На эту запись есть %{count} ответа. Нажмите для просмотра."
-        many: "На эту запись есть %{count} ответов. Нажмите для просмотра."
-        other: "На эту запись есть %{count} ответа. Нажмите для просмотра."
       expand_collapse: "развернуть/свернуть"
       sr_below_embedded_posts_description: "ответы на запись #%{post_number}"
       sr_embedded_reply_description: "ответ пользователя @%{username} на запись #%{post_number}"

@@ -3103,14 +3103,6 @@ tr_TR:
     user_automatically_silenced:
       title: "Kullanıcı Otomatik Olarak Susturuldu"
       subject_template: "Yeni kullanıcı %{username} topluluk bayraklarıyla susturuldu"
-      text_body_template: |
-        Bu otomatik bir mesajdır.
-
-        Yeni kullanıcı [%{username}](%{user_url}) otomatik olarak susturuldu çünkü birden fazla kullanıcı %{username} adlı kullanıcının gönderilerine bayrak ekledi.
-
-        Lütfen [bayrakları inceleyin](%{base_url}/admin/flags). %{username} adlı kullanıcının gönderileri yanlışlıkla susturulduysa [bu kullanıcının yönetici sayfasındaki](%{user_url}) susturmayı kaldır düğmesine tıklayın.
-
-        Bu eşik, "silence_new_user" site ayarları aracılığıyla değiştirilebilir.
     spam_post_blocked:
       title: "Spam Gönderi Engellendi"
       subject_template: "%{username} adlı yeni kullanıcının gönderileri tekrarlanan bağlantılar nedeniyle engellendi"

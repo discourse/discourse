@@ -2344,8 +2344,6 @@ fa_IR:
       read_more: "می‌خواهید بیشتر بخوانید؟ <a href='%{categoryLink}'>همه دسته‌‌بندی‌ها را مرور کنید</a> یا <a href='%{latestLink}'>آخرین موضوعات را مشاهده کنید</a>."
       unread_indicator: "هیچ کاربری آخرین فرستهٔ این مبحث را نخوانده است."
       suggest_create_topic: برای <a href>شروع یک موضوع جدید آماده‌اید؟</a>
-      jump_reply_up: رفتن به جدید ترین پاسخ
-      jump_reply_down: رفتن به پاسخ بعدی
       deleted: "موضوع پاک شده است"
       slow_mode_update:
         title: "حالت آهسته"
@@ -2642,6 +2640,7 @@ fa_IR:
       ignored: "محتوای نادیده گرفته‌شد"
       wiki_last_edited_on: "آخرین ویرایش ویکی در %{dateTime} انجام شده"
       last_edited_on: "آخرین ویرایش نوشته در %{dateTime} انجام شده"
+      edit_history: "تاریخچه ویرایش نوشته"
       reply_as_new_topic: "پاسخگویی به عنوان یک موضوع لینک شده"
       reply_as_new_private_message: "پاسخ به عنوان پیام جدید به همین دریافت کنندگان"
       continue_discussion: "ادامه دادن بحث از %{postLink}:"
@@ -2650,6 +2649,9 @@ fa_IR:
       show_hidden: "دیدن محتوای نادیده گرفته‌شد"
       collapse: "جمع کردن"
       sr_date: "تاریخ ارسال"
+      sr_expand_replies:
+        one: "این نوشته %{count} پاسخ دارد"
+        other: "این نوشته %{count} پاسخ دارد"
       expand_collapse: "باز کردن/بستن"
       locked: "یکی از دست‌اندرکاران انجمن این پست را جهت جلوگیری از ویرایش قفل کرده است"
       gap:

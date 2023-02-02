@@ -2040,8 +2040,6 @@ bs_BA:
       back_to_list: "Vrati se na Listu Tema"
       options: "Opcije Teme"
       show_links: "pokaži linkove unutar ove teme"
-      jump_reply_up: jump to earlier reply
-      jump_reply_down: jump to later reply
       deleted: "Ova tema je obrisana"
       slow_mode_update:
         enable: "Omogući"

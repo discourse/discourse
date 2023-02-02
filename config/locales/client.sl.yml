@@ -2229,8 +2229,6 @@ sl:
       options: "Možnosti teme"
       show_links: "pokaži povezave v tej temi"
       unread_indicator: "Noben član ni še prebral zadnjega prispevka v tej temi."
-      jump_reply_up: pojdi na prejšni odgovor
-      jump_reply_down: pojdi na naslednji odgovor
       deleted: "Tema je bila izbrisana"
       slow_mode_update:
         title: "Počasni način"

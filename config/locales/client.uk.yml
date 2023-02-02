@@ -2798,8 +2798,6 @@ uk:
       expand_details: "розгорнути детальну інформацію"
       unread_indicator: "Поки що ніхто з учасників не прочитав останній допис цієї теми."
       suggest_create_topic: Готові <a href>почати нову розмову?</a>
-      jump_reply_up: перейти до попередньої відповіді
-      jump_reply_down: перейти до пізнішої відповіді
       deleted: "Тему було видалено"
       slow_mode_update:
         title: "Повільний режим"
@@ -3194,11 +3192,6 @@ uk:
       collapse: "згорнути"
       sr_collapse_replies: "Згорнути відповіді на допис"
       sr_date: "Дата допису"
-      sr_expand_replies:
-        one: "Цей допис має %{count} відповідь. Натисніть, щоб переглянути"
-        few: "Цей допис має %{count} відповіді. Натисніть, щоб переглянути"
-        many: "Цей допис має %{count} відповідей. Натисніть, щоб переглянути"
-        other: "Цей допис має %{count} відповідей. Натисніть, щоб переглянути"
       expand_collapse: "розгорнути/згорнути"
       sr_below_embedded_posts_description: "Відповіді на допис #%{post_number}"
       sr_embedded_reply_description: "відповідь @%{username} на допис #%{post_number}"

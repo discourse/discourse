@@ -2270,8 +2270,8 @@ fr:
           one: "%{count} notification de nouveau message"
           other: "%{count} notifications de nouveaux messages"
         new_reviewable:
-          one: "%{count} nouveau message à examiner"
-          other: "%{count} nouveaux messages à examiner"
+          one: "%{count} nouvel élément à examiner"
+          other: "%{count} nouveaux éléments à examiner"
       title: "notifications des mentions de votre nom d'utilisateur, des réponses à vos messages et sujets, etc."
       none: "Impossible de charger les notifications pour le moment."
       empty: "Aucune notification trouvée."
@@ -2725,8 +2725,6 @@ fr:
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Parcourez toutes les catégories</a>, <a href='%{basePath}/latest'>consultez les derniers sujets</a> ou consultez les principaux sujets :"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Parcourez toutes les étiquettes</a> ou <a href='%{basePath}/latest'>consultez les derniers sujets</a>."
       suggest_create_topic: Prêt à <a href>démarrer une nouvelle conversation ?</a>
-      jump_reply_up: accéder aux réponses précédentes
-      jump_reply_down: accéder aux réponses ultérieures
       deleted: "Ce sujet a été supprimé"
       slow_mode_update:
         title: "Mode ralenti"
@@ -3091,9 +3089,6 @@ fr:
       collapse: "réduire"
       sr_collapse_replies: "Masquer les réponses"
       sr_date: "Date de publication"
-      sr_expand_replies:
-        one: "Ce message a reçu %{count} réponse. Cliquez pour développer l'affichage"
-        other: "Ce message a reçu %{count} réponses. Cliquez pour développer l'affichage"
       expand_collapse: "développer/réduire"
       sr_below_embedded_posts_description: "réponses à la publication #%{post_number}"
       sr_embedded_reply_description: "réponse de @%{username} au message #%{post_number}"

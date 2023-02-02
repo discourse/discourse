@@ -3133,14 +3133,6 @@ fr:
     user_automatically_silenced:
       title: "Utilisateur automatiquement mis en sourdine"
       subject_template: "Nouvel utilisateur %{username} mis en sourdine suite à des signalements de la communauté"
-      text_body_template: |
-        Ce message vous est envoyé de manière automatisée.
-
-        Le nouvel utilisateur [%{username}](%{user_url}) a été automatiquement mis en sourdine car plusieurs utilisateurs ont signalé des messages publiés par %{username}.
-
-        Nous vous invitons à [examiner ces signalements](%{base_url}/admin/flags). Si %{username} a été mis en sourdine de façon injustifiée, utilisez le bouton d'annulation de la mise en sourdine situé sur la [page d'administration de cet utilisateur](%{user_url}).
-
-        Le seuil de signalements déclenchant l'envoi de ce message peut être modifié avec le paramètre « silence_new_user ».
     spam_post_blocked:
       title: "Message spam bloqué"
       subject_template: "Les messages du nouvel utilisateur %{username} sont bloqués pour des liens répétés"

@@ -2830,14 +2830,6 @@ ko:
     user_automatically_silenced:
       title: "사용자가 자동 차단됨"
       subject_template: "커뮤니티 신고로 신규 유저 %{username} 님이 차단됨"
-      text_body_template: |
-        자동 메시지입니다.
-
-        여러 사용자가 %{username} 님의 게시물을 신고하여 신규 사용자 [%{username}](%{user_url})님이 자동 차단되었습니다.
-
-        [신고를 검토](%{base_url}/admin/flags)하고, %{username} 님의 게시 차단이 잘못되었다고 판단되는 경우 [이 사용자의 관리 페이지](%{user_url})에서 차단 해제 버튼을 클릭하세요.
-
-        한계치는 `silence_new_user` 사이트 설정에서 변경할 수 있습니다.
     spam_post_blocked:
       title: "스팸 게시글 차단됨"
       subject_template: "신규 사용자 %{username} 님의 게시물이 연속된 링크로 인해 차단됨"

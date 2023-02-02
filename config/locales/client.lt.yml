@@ -2447,8 +2447,6 @@ lt:
       expand_details: "išplėsti temos informaciją"
       unread_indicator: "Nė vienas narys dar neperskaitė paskutinio šios temos įrašo."
       suggest_create_topic: Pasirengę <a href>pradėti naują pokalbį?</a>
-      jump_reply_up: Pereiti į ankstesnį atsakymą
-      jump_reply_down: Pereitį į sekantį atsakymą
       deleted: "Tema buvo ištrinta"
       slow_mode_update:
         title: "Lėtas režimas"

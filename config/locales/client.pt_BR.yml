@@ -2725,8 +2725,6 @@ pt_BR:
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Navegue por todas as categorias</a>, <a href='%{basePath}/latest'>veja os tópicos mais recentes</a> ou veja os principais:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Navegue por todas as etiquetas</a> ou <a href='%{basePath}/latest'>visualize os tópicos mais recentes</a>."
       suggest_create_topic: Tudo pronto para <a href>começar uma nova conversa?</a>
-      jump_reply_up: pular para a primeira resposta
-      jump_reply_down: pular para a última resposta
       deleted: "Este tópico foi excluído"
       slow_mode_update:
         title: "Modo lento"
@@ -3091,9 +3089,6 @@ pt_BR:
       collapse: "recolher"
       sr_collapse_replies: "Recolher respostas incorporadas"
       sr_date: "Data da postagem"
-      sr_expand_replies:
-        one: "Esta postagem tem %{count} resposta. Clique para expandir"
-        other: "Esta postagem tem %{count} respostas. Clique para expandir"
       expand_collapse: "expandir/recolher"
       sr_below_embedded_posts_description: "poste #%{post_number} respostas"
       sr_embedded_reply_description: "resposta por @%{username} à postagem #%{post_number}"

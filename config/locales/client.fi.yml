@@ -2725,8 +2725,6 @@ fi:
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Selaa kaikkia alueita</a>, <a href='%{basePath}/latest'>katso viimeisimmät ketjut</a> tai katso suosituimmat:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Selaa kaikkia tunnisteita</a> tai <a href='%{basePath}/latest'>katso viimeisimmät ketjut</a>."
       suggest_create_topic: Valmiina <a href>aloittamaan uuden keskustelun?</a>
-      jump_reply_up: siirry aiempaan vastaukseen
-      jump_reply_down: siirry myöhempään vastaukseen
       deleted: "Tämä ketju on poistettu"
       slow_mode_update:
         title: "Hidas tila"
@@ -3091,9 +3089,6 @@ fi:
       collapse: "kutista"
       sr_collapse_replies: "Kutista upotetut vastaukset"
       sr_date: "Viestin päivämäärä"
-      sr_expand_replies:
-        one: "Tällä viestillä on %{count} vastaus. Laajenna klikkaamalla."
-        other: "Tällä viestillä on %{count} vastausta. Laajenna klikkaamalla."
       expand_collapse: "laajenna/kutista"
       sr_below_embedded_posts_description: "viestin %{post_number} vastaukset"
       sr_embedded_reply_description: "käyttäjän %{username} vastaus viestiin %{post_number}"

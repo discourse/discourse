@@ -1959,8 +1959,6 @@ zh_TW:
       options: "話題選項"
       show_links: "在話題裡顯示連結"
       suggest_create_topic: 準備好 <a href>開始新的對話了嗎？</a>
-      jump_reply_up: 跳到更早的回覆
-      jump_reply_down: 跳到更晚的回覆
       deleted: "此話題已被刪除"
       slow_mode_update:
         title: "慢速模式"

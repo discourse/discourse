@@ -1660,8 +1660,6 @@ et:
       options: "Teema Suvandid"
       show_links: "näita viiteid selles teemas"
       unread_indicator: "Ükski liige pole veel selle teema viimast postitust lugenud."
-      jump_reply_up: hüppa varasema vastuse juurde
-      jump_reply_down: hüppa hilisema vastuse juurde
       deleted: "See teema on kustutatud"
       slow_mode_update:
         title: "Aeglane režiim"

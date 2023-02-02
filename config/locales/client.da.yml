@@ -2390,8 +2390,6 @@ da:
       show_links: "vis links i dette emne"
       unread_indicator: "Intet medlem har læst det sidste indlæg i dette emne endnu."
       suggest_create_topic: Klar til <a href>at starte en ny samtale?</a>
-      jump_reply_up: hop til tidligere svar
-      jump_reply_down: hop til senere svar
       deleted: "Emnet er blevet slettet"
       slow_mode_update:
         title: "Langsom Tilstand"

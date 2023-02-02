@@ -2381,8 +2381,6 @@ pt:
       expand_details: "expandir detalhes do tópico"
       unread_indicator: "Nenhum membro leu o último post deste tópico ainda."
       suggest_create_topic: Pronto para <a href>iniciar uma nova conversa?</a>
-      jump_reply_up: avançar para resposta mais recente
-      jump_reply_down: avançar para resposta mais antiga
       deleted: "Este tópico foi eliminado"
       slow_mode_update:
         title: "Modo lento"

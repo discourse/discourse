@@ -2389,8 +2389,6 @@ ur:
       expand_details: "موضوع کی تفصیلات کو پھیلائیں"
       unread_indicator: "کسی ممبر نے ابھی تک اِس ٹاپک کی آخری پوسٹ نہیں پڑھی ہے۔"
       suggest_create_topic: <a href>نئی گفتگو شروع</a> کرنے کے لیے تیار ہیں؟
-      jump_reply_up: اِس سے پرانے جواب پر جائیں
-      jump_reply_down: اِس سے نئے جواب پر جائیں
       deleted: "ٹاپک مٹادیا گیا ہے"
       slow_mode_update:
         title: "سست موڈ"

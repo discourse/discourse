@@ -2829,8 +2829,6 @@ pl_PL:
       read_more: "Chcesz przeczytać więcej? <a href='%{categoryLink}'>Przeglądaj wszystkie kategorie</a> lub <a href='%{latestLink}'>przeglądaj najnowsze tematy</a>."
       unread_indicator: "Nikt jeszcze nie czytał ostatniego postu w tym temacie."
       suggest_create_topic: Gotowy na <a href>rozpoczęcie nowej rozmowy?</a>
-      jump_reply_up: skocz do wcześniejszej odpowiedzi
-      jump_reply_down: skocz do późniejszej odpowiedzi
       deleted: "Temat został usunięty"
       slow_mode_update:
         title: "Tryb powolny"
@@ -3225,11 +3223,6 @@ pl_PL:
       collapse: "zawalić się"
       sr_collapse_replies: "Zwiń osadzone odpowiedzi"
       sr_date: "Data wysłania"
-      sr_expand_replies:
-        one: "Ten post ma %{count} odpowiedź. Kliknij, aby rozwinąć"
-        few: "Ten post ma %{count} odpowiedzi. Kliknij, aby rozwinąć"
-        many: "Ten post ma %{count} odpowiedzi. Kliknij, aby rozwinąć"
-        other: "Ten post ma %{count} odpowiedzi. Kliknij, aby rozwinąć"
       expand_collapse: "rozwiń/zwiń"
       sr_below_embedded_posts_description: "post #%{post_number} odpowiedzi"
       sr_embedded_reply_description: "odpowiedź od @%{username} na post #%{post_number}"

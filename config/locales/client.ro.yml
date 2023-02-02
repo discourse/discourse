@@ -2044,8 +2044,6 @@ ro:
       options: "Opțiuni pentru subiect"
       show_links: "arată link-urile din acest subiect"
       suggest_create_topic: Ești gata să <a href>începi o nouă conversație?</a>
-      jump_reply_up: sări la un răspuns mai vechi
-      jump_reply_down: sări la un răspuns mai nou
       deleted: "Subiectul a fost șters"
       slow_mode_update:
         title: "Modul lent"

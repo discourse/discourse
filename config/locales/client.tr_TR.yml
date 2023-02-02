@@ -2701,8 +2701,6 @@ tr_TR:
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Tüm kategorilere göz atın</a>, <a href='%{basePath}/latest'>en son konuları görüntüleyin</a> veya en üste bakın:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Tüm etiketlere göz atın</a> veya <a href='%{basePath}/latest'>en son konuları görüntüleyin</a>."
       suggest_create_topic: <a href>Yeni bir konuşma başlatmaya</a> hazır mısınız?
-      jump_reply_up: önceki yanıta geç
-      jump_reply_down: sonraki yanıta geç
       deleted: "Konu silindi"
       slow_mode_update:
         title: "Yavaş Mod"
@@ -3067,9 +3065,6 @@ tr_TR:
       collapse: "daralt"
       sr_collapse_replies: "Gömülü yanıtları daralt"
       sr_date: "Gönderi tarihi"
-      sr_expand_replies:
-        one: "Bu gönderide %{count} yanıt var. Genişletmek için tıklayın"
-        other: "Bu gönderide %{count} yanıt var. Genişletmek için tıklayın"
       expand_collapse: "genişlet/daralt"
       sr_below_embedded_posts_description: "#%{post_number} numaralı gönderiye gelen yanıtlar"
       sr_embedded_reply_description: "#%{post_number} numaralı gönderiye @%{username} adlı kullanıcının yanıtı"

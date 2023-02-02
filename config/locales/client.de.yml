@@ -2725,8 +2725,6 @@ de:
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Durchstöbere alle Kategorien</a>, <a href='%{basePath}/latest'>sieh dir die aktuellen Themen</a> oder die Top-Themen an:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Durchstöbere alle Schlagwörter</a> oder <a href='%{basePath}/latest'>sieh dir die aktuellen Themen an</a>."
       suggest_create_topic: Bereit, <a href>eine neue Unterhaltung zu beginnen?</a>
-      jump_reply_up: zur vorherigen Antwort springen
-      jump_reply_down: zur nachfolgenden Antwort springen
       deleted: "Das Thema wurde gelöscht"
       slow_mode_update:
         title: "Langsamer Modus"
@@ -3091,9 +3089,6 @@ de:
       collapse: "zuklappen"
       sr_collapse_replies: "Eingebettete Antworten einklappen"
       sr_date: "Beitragsdatum"
-      sr_expand_replies:
-        one: "Dieser Beitrag hat %{count} Antwort. Zum Erweitern klicken"
-        other: "Dieser Beitrag hat %{count} Antworten. Zum Erweitern klicken"
       expand_collapse: "erweitern/zuklappen"
       sr_below_embedded_posts_description: "Beitrag #%{post_number} Antworten"
       sr_embedded_reply_description: "Antwort von @%{username} auf Beitrag #%{post_number}"

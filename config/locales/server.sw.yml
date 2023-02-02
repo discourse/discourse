@@ -1384,14 +1384,6 @@ sw:
     user_automatically_silenced:
       title: "Mtumiaji Amenyamazishwa"
       subject_template: "Mtumiaji mpya %{username} amenyamazishwa na bendera za jumuia"
-      text_body_template: |
-        Ujumbe huu ni otomatiki.
-
-        Mtumiaji mpya [%{username}](%{user_url}) alinyamazishwa kwa sababu watumiaji wengi wameripoti (ma)chapisho ya %{username}.
-
-        Tafadhali [kagua ripoti](%{base_url}/admin/flags), Kama %{username} alinyamazishwa kimakosa, bonyeza kitufe cha kuondoa ukimya kwenye [ukurasa wa kiongozi kwa ajili ya mtumiaji](%{user_url}).
-
-        Kizingiti hiki kinaweza kubadilishwa kwenye mipangilio ya `nyamazisha_mtumiaji_mpya` kwenye tovuti.
     spam_post_blocked:
       title: "Chapisho Taka Limezuiliwa"
       subject_template: "Machapisho ya mtumiaji mpya %{username} yamezuiliwa kwa sababu ya viungo vinavyojirudia"

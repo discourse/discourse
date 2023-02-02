@@ -2189,7 +2189,6 @@ ca:
     user_automatically_silenced:
       title: "Usuari silenciat automàticament"
       subject_template: "El nou usuari %{username} ha estat silenciat per banderes de la comunitat"
-      text_body_template: "Això és un missatge automàtic. \n\nEl nou usuari [%{username}](%{user_url}) ha estat silenciat automàticament perquè diversos usuaris han marcat amb bandera les publicacions de %{username}. \n\n[Reviseu les banderes](%{base_url}/admin/flags). Si %{username} ha estat silenciat de manera incorrecta, feu clic en el botó de 'Desfés el silenciament' en [la pàgina d'administració per a aquest usuari](%{user_url}). \n\nAquest llindar es pot canviar mitjançant el paràmetre de configuració del lloc web `silence_new_user`.\n"
     spam_post_blocked:
       title: "Publicació de brossa blocada"
       subject_template: "L'usuari nou %{username} té entrades blocades a causa d'enllaços repetits."

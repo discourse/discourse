@@ -2263,8 +2263,6 @@ nb_NO:
       expand_details: "utvid emnebeskrivelse"
       unread_indicator: "Ingen medlem har lest den siste posten i dette emnet ennå."
       suggest_create_topic: Klar til å <a href>starte en ny samtale?</a>
-      jump_reply_up: hopp til tidligere svar
-      jump_reply_down: hopp til senere svar
       deleted: "Emnet ble slettet"
       slow_mode_update:
         title: "Langsom Modus"

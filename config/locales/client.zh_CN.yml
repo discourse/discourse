@@ -2584,8 +2584,6 @@ zh_CN:
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>浏览所有类别</a>、<a href='%{basePath}/latest'>查看最新话题</a>或查看热门话题："
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>浏览所有标签</a>或<a href='%{basePath}/latest'>查看最新话题</a>。"
       suggest_create_topic: 准备好<a href>开始新对话</a>了吗？
-      jump_reply_up: 跳转到较早的回复
-      jump_reply_down: 跳转到较晚的回复
       deleted: "该话题已被删除"
       slow_mode_update:
         title: "慢速模式"
@@ -2935,8 +2933,6 @@ zh_CN:
       collapse: "收起"
       sr_collapse_replies: "收起嵌入式回复"
       sr_date: "发布日期"
-      sr_expand_replies:
-        other: "此帖子有 %{count} 个回复。点击展开"
       expand_collapse: "展开/收起"
       sr_below_embedded_posts_description: "帖子#%{post_number} 回复"
       sr_embedded_reply_description: "@%{username} 回复帖子 #%{post_number}"
