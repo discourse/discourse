@@ -173,24 +173,19 @@ class UserSearch
 
     return users.to_a if users.size >= @limit
 
-    if SiteSetting.user_search_similar_results
-      # 6. similar usernames
-      if @term.present?
+    # 6. similar usernames / names
+    if @term.present? && SiteSetting.user_search_similar_results
+      if SiteSetting.enable_names?
         scoped_users
-          .where("username_lower <-> ? < 1", @term)
-          .order(["username_lower <-> ? ASC", @term])
+          .where("username_lower <-> ? < 1 OR name <-> ? < 1", @term, @term)
+          .order(["LEAST(username_lower <-> ?, name <-> ?) ASC", @term, @term])
           .limit(@limit - users.size)
           .pluck(:id)
           .each { |id| users << id }
-      end
-
-      return users.to_a if users.size >= @limit
-
-      # 7. similar names
-      if SiteSetting.enable_names? && @term.present?
+      else
         scoped_users
-          .where("name <-> ? < 1", @term)
-          .order(["name <-> ? ASC", @term])
+          .where("username_lower <-> ? < 1", @term)
+          .order(["username_lower <-> ? ASC", @term])
           .limit(@limit - users.size)
           .pluck(:id)
           .each { |id| users << id }
