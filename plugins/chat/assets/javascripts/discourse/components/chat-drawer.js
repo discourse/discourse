@@ -125,11 +125,9 @@ export default Component.extend({
   },
 
   computeDrawerStyle() {
-    let style = "";
-    const { width, height } = this.chatDrawerSize.getSize();
-    style += `width: ${escapeExpression(width || 0)}px;`;
-    style += `height: ${escapeExpression(height || 0)}px;`;
     const { width, height } = this.chatDrawerSize.size;
+    let style = `width: ${escapeExpression((width || "0").toString())}px;`;
+    style += `height: ${escapeExpression((height || "0").toString())}px;`;
     this.set("drawerStyle", htmlSafe(style));
   },
 
