@@ -175,7 +175,7 @@ class UserSearch
 
     # 6. similar usernames / names
     if @term.present? && SiteSetting.user_search_similar_results
-      if SiteSetting.enable_names? && @term.present?
+      if SiteSetting.enable_names?
         scoped_users
           .where("username_lower <-> ? < 1 OR name <-> ? < 1", @term, @term)
           .order(["LEAST(username_lower <-> ?, name <-> ?) ASC", @term, @term])
