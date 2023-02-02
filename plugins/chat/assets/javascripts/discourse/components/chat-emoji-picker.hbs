@@ -14,11 +14,14 @@
     <DcFilterInput
       @class="chat-emoji-picker__filter"
       @value={{this.chatEmojiPickerManager.initialFilter}}
-      @filterAction={{this.didInputFilter}}
+      @filterAction={{action this.didInputFilter value="target.value"}}
       @icons={{hash left="search"}}
       placeholder={{i18n "chat.emoji_picker.search_placeholder"}}
       autofocus={{true}}
       {{did-insert this.focusFilter}}
+      {{did-insert
+        (fn this.didInputFilter this.chatEmojiPickerManager.initialFilter)
+      }}
     >
       <div
         class="chat-emoji-picker__fitzpatrick-scale"

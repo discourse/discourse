@@ -195,18 +195,13 @@ export default class ChatEmojiPicker extends Component {
   }
 
   @action
-  didInputFilter(event) {
-    if (!event.target.value.length) {
+  didInputFilter(value) {
+    if (!value?.length) {
       this.filteredEmojis = null;
       return;
     }
 
-    discourseDebounce(
-      this,
-      this.debouncedDidInputFilter,
-      event.target.value,
-      INPUT_DELAY
-    );
+    discourseDebounce(this, this.debouncedDidInputFilter, value, INPUT_DELAY);
   }
 
   @action

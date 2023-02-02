@@ -108,6 +108,16 @@ RSpec.describe "Chat composer", type: :system, js: true do
 
       expect(find(".chat-emoji-picker .dc-filter-input").value).to eq("gri")
     end
+
+    it "filters with the prefilled input" do
+      chat.visit_channel(channel_1)
+      find(".chat-composer-input").fill_in(with: ":fr")
+
+      click_link(I18n.t("js.composer.more_emoji"))
+
+      expect(page).to have_selector(".chat-emoji-picker [data-emoji='fr']")
+      expect(page).to have_no_selector(".chat-emoji-picker [data-emoji='grinning']")
+    end
   end
 
   context "when typing on keyboard" do
