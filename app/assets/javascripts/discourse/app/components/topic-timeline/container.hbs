@@ -82,7 +82,7 @@
       <TopicTimeline::Scroller
         @current={{this.current}}
         @total={{this.total}}
-        @goBack={{this.goBack}}
+        @onGoBack={{this.onGoBack}}
         @fullscreen={{@fullscreen}}
         @showDockedButton={{this.showDockedButton}}
         @date={{this.date}}
@@ -99,9 +99,7 @@
       {{#if (and this.hasBackPosition this.showButton)}}
         <div class="timeline-last-read" style={{this.lastReadStyle}}>
           {{d-icon "minus" class="progress"}}
-          {{#if this.showButton}}
-            <TopicTimeline::BackButton @goBack={{this.goBack}} />
-          {{/if}}
+          <TopicTimeline::BackButton @onGoBack={{this.goBack}} />
         </div>
       {{/if}}
     </div>
