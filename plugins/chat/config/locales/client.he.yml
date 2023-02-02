@@ -111,6 +111,11 @@ he:
       new_messages: "הודעות חדשות"
       mention_warning:
         dismiss: "התעלמות"
+        cannot_see:
+          one: "ל־%{username} אין גישה לערוץ הזה ולא נשלחה הודעה."
+          two: "ל־%{username} ולעוד %{others} אין גישה לערוץ הזה ולא נשלחו הודעות."
+          many: "ל־%{username} ולעוד %{others} אין גישה לערוץ הזה ולא נשלחו הודעות."
+          other: "ל־%{username} ולעוד %{others} אין גישה לערוץ הזה ולא נשלחו הודעות."
         invitations_sent:
           one: "נשלחה הזמנה"
           two: "נשלחו הזמנות"

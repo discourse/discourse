@@ -2272,8 +2272,8 @@ fr:
           one: "%{count} notification de nouveau message"
           other: "%{count} notifications de nouveaux messages"
         new_reviewable:
-          one: "%{count} nouveau message à examiner"
-          other: "%{count} nouveaux messages à examiner"
+          one: "%{count} nouvel élément à examiner"
+          other: "%{count} nouveaux éléments à examiner"
       title: "notifications des mentions de votre nom d'utilisateur, des réponses à vos messages et sujets, etc."
       none: "Impossible de charger les notifications pour le moment."
       empty: "Aucune notification trouvée."
