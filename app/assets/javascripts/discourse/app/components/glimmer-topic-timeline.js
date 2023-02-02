@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import optionalService from "discourse/lib/optional-service";
 import { inject as service } from "@ember/service";
+import { bind } from "discourse-common/utils/decorators";
 
 export default class GlimmerTopicTimeline extends Component {
   @service site;
@@ -55,14 +56,10 @@ export default class GlimmerTopicTimeline extends Component {
     );
   }
 
-  get class() {
+  get classes() {
     const classes = [];
     if (this.args.fullscreen) {
-      if (this.addShowClass) {
-        classes.push("timeline-fullscreen show");
-      } else {
-        classes.push("timeline-fullscreen");
-      }
+      classes.push("timeline-fullscreen");
     }
 
     if (this.dockAt) {
@@ -75,12 +72,15 @@ export default class GlimmerTopicTimeline extends Component {
     return classes.join(" ");
   }
 
-  get addShowClass() {
-    return this.args.fullscreen && !this.args.addShowClass;
-  }
-
   get createdAt() {
     return new Date(this.args.model.created_at);
+  }
+
+  @bind
+  addShowClass(element) {
+    if (this.args.fullscreen && !this.args.addShowClass) {
+      element.classList.add("show");
+    }
   }
 
   willDestroy() {
