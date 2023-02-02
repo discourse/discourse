@@ -8,6 +8,7 @@ class SearchIndexer
   USER_INDEX_VERSION = 3
   TAG_INDEX_VERSION = 3
   REINDEX_VERSION = 0
+  TS_VECTOR_PARSE_REGEX = /('([^']*|'')*'\:)(([0-9]+[A-D]?,?)+)/
 
   def self.disable
     @disabled = true
@@ -61,7 +62,7 @@ class SearchIndexer
             term, _, remaining = lexeme.partition(".")
             break if remaining.blank?
 
-            additional_words << term
+            additional_words << [term, positions]
 
             array << "'#{remaining}':#{positions}"
             lexeme = remaining
@@ -73,11 +74,20 @@ class SearchIndexer
 
     extra_domain_word_terms =
       if additional_words.length > 0
-        # Note: postions are off, keeping them 100 correct is very complex
-        # cause some words may stem back to nothing due to being stop words
-        # we do not have any <=> searches so the possible pollution here is not
-        # too big
-        DB.query_single("SELECT to_tsvector(?, ?)", stemmer, additional_words.uniq.join(" ")).first
+        DB
+          .query_single(
+            "SELECT to_tsvector(?, ?)",
+            stemmer,
+            additional_words.map { |term, _| term }.join(" "),
+          )
+          .first
+          .scan(TS_VECTOR_PARSE_REGEX)
+          .map do |term, _, indexes|
+            new_indexes =
+              indexes.split(",").map { |index| additional_words[index.to_i - 1][1] }.join(",")
+            "#{term}#{new_indexes}"
+          end
+          .join(" ")
       end
 
     tsvector = "#{tsvector} #{additional_lexemes.join(" ")} #{extra_domain_word_terms}"
@@ -85,7 +95,7 @@ class SearchIndexer
     if (max_dupes = SiteSetting.max_duplicate_search_index_terms) > 0
       reduced = []
       tsvector
-        .scan(/('([^']*|'')*'\:)(([0-9]+[A-D]?,?)+)/)
+        .scan(TS_VECTOR_PARSE_REGEX)
         .each do |term, _, indexes|
           family_counts = Hash.new(0)
           new_index_array = []
