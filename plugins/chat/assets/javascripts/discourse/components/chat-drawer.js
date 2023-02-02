@@ -49,6 +49,7 @@ export default Component.extend({
     this.appEvents.on("composer:opened", this, "_checkSize");
     this.appEvents.on("composer:resized", this, "_checkSize");
     this.appEvents.on("composer:div-resizing", this, "_dynamicCheckSize");
+    window.addEventListener("resize", this._checkSize);
     this.appEvents.on(
       "composer:resize-started",
       this,

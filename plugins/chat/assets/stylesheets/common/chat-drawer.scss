@@ -38,10 +38,10 @@ body.composer-open .chat-drawer-outlet-container {
 .chat-drawer {
   align-self: flex-end;
   width: 400px;
-  min-width: 300px;
+  min-width: 250px !important; // important to override inline styles
   max-width: calc(100vw - (var(--composer-right, 20px) * 3));
   max-height: 85vh;
-  min-height: 110px;
+  min-height: 300px !important; // important to override inline styles
 
   .chat-drawer-container {
     background: var(--secondary);
@@ -54,13 +54,14 @@ body.composer-open .chat-drawer-outlet-container {
     display: flex;
     flex-direction: column;
     position: relative;
+    overflow: hidden;
   }
 
   .chat-drawer-resizer {
     cursor: nwse-resize;
     position: absolute;
-    top: -1px;
-    left: -1px;
+    top: -5px;
+    left: -5px;
     width: 15px;
     height: 15px;
   }

@@ -3,6 +3,8 @@ import KeyValueStore from "discourse/lib/key-value-store";
 
 export default class ChatDrawerSize extends Service {
   STORE_NAMESPACE = "discourse_chat_drawer_size_";
+  MIN_HEIGHT = 300;
+  MIN_WIDTH = 250;
 
   store = new KeyValueStore(this.STORE_NAMESPACE);
 
@@ -14,7 +16,17 @@ export default class ChatDrawerSize extends Service {
   }
 
   setSize({ width, height }) {
-    this.store.setObject({ key: "width", value: width });
-    this.store.setObject({ key: "height", value: height });
+    this.store.setObject({
+      key: "width",
+      value: this.#min(width, this.MIN_WIDTH),
+    });
+    this.store.setObject({
+      key: "height",
+      value: this.#min(height, this.MIN_HEIGHT),
+    });
+  }
+
+  #min(number, min) {
+    return Math.max(number, min);
   }
 }
