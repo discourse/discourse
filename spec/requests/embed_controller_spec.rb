@@ -212,6 +212,30 @@ RSpec.describe EmbedController do
       expect(response.body).to include(".test-osama-15")
     end
 
+    it "includes HTML from embedded_header field" do
+      theme = Fabricate(:theme)
+      theme.set_default!
+
+      ThemeField.create!(
+        theme_id: theme.id,
+        name: "embedded_header",
+        target_id: 0,
+        type_id: 0,
+        value: "<strong class='custom-text'>hey there!</strong>\n",
+      )
+
+      topic_embed = Fabricate(:topic_embed, embed_url: embed_url)
+      post = Fabricate(:post, topic: topic_embed.topic)
+
+      get "/embed/comments", params: { embed_url: embed_url }, headers: headers
+
+      html = Nokogiri::HTML5.fragment(response.body)
+      custom_header = html.at(".custom-text")
+
+      expect(custom_header.name).to eq("strong")
+      expect(custom_header.text).to eq("hey there!")
+    end
+
     context "with success" do
       after do
         expect(response.status).to eq(200)
