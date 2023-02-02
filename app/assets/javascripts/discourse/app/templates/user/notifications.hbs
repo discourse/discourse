@@ -56,12 +56,13 @@
           {{i18n "user_action_groups.11"}}
         </LinkTo>
       </li>
-      <PluginOutlet
-        @name="user-notifications-bottom"
-        @tagName="span"
-        @connectorTagName="li"
-        @args={{hash model=this.model}}
-      />
+      <span>
+        <PluginOutlet
+          @name="user-notifications-bottom"
+          @connectorTagName="li"
+          @outletArgs={{hash model=this.model}}
+        />
+      </span>
     </MobileNav>
 
   </DSection>
@@ -80,7 +81,7 @@
   {{/if}}
 {{/if}}
 
-<section class="user-content">
+<section class="user-content" id="user-content">
   <LoadMore
     @class="notification-history user-stream"
     @selector=".user-stream .notification"

@@ -311,7 +311,6 @@ sl:
       title: "Zaznamek"
       clear_bookmarks: "Odstrani zaznamke"
       help:
-        bookmark: "ustvari zaznamek prvega prispevka v tej temi"
         unbookmark: "odstrani vse zaznamke v tej temi"
     bookmarks:
       created: "To objavo ste dodali med zaznamke. %{name}"
@@ -1416,6 +1415,7 @@ sl:
         invite:
           new_title: "Ustvari povabilo"
           instructions: "Delite to povezavo in takoj omogočite dostop do te strani:"
+          expires_in_time: "Poteče čez %{time}"
           show_advanced: "Pokaži dodatne možnosti"
           add_to_groups: "Dodaj v skupine"
           expires_at: "Poteče po"
@@ -2131,9 +2131,11 @@ sl:
         dismiss_new: "Opusti nove"
         toggle: "preklopi množično izbiro tem"
         actions: "Množična dejanja"
+        change_category: "Določi kategorijo..."
         close_topics: "Zapri teme"
         archive_topics: "Arhiviraj teme"
         move_messages_to_inbox: "Prestavi v Prejeto"
+        notification_level: "Obvestila..."
         change_notification_level: "Spremeni raven obveščanja"
         choose_new_category: "Izberi novo kategorijo za temo:"
         selected:
@@ -2364,12 +2366,14 @@ sl:
         open: "Odpri temo"
         close: "Zapri temo"
         multi_select: "Izberite prispevke..."
+        slow_mode: "Nastavi počasni način..."
         timed_update: "Nastavi opomnik teme..."
         pin: "Pripni temo"
         unpin: "Odpni temo"
         unarchive: "Odarhiviraj temo"
         archive: "Arhiviraj temo"
         reset_read: "Ponastavi podatke o branosti"
+        make_public: "Spremeni v javno temo..."
         make_private: "Spremeni v ZS"
         reset_bump_date: "Ponastavi izpostavljanje"
       feature:
@@ -2664,6 +2668,8 @@ sl:
         rebake: "Obnovi HTML"
         publish_page: "Objavljanje strani"
         unhide: "Ponovni prikaži"
+        change_owner: "Spremeni lastnika..."
+        grant_badge: "Podeli značko..."
         lock_post: "Zakleni prispevek"
         lock_post_description: "onemogoči avtorju da ureja prispevek"
         unlock_post: "Odkleni prispevek"
@@ -2676,6 +2682,8 @@ sl:
           few: "Ta tema ima trenutno več kot %{count} oglede in je morda priljubljena tarča iskanja. Ali ste prepričani, da želite to temo v celoti izbrisati, namesto da bi jo z urejanjem poskusili izboljšati?"
           other: "Ta tema ima trenutno več kot %{count} ogledov in je morda priljubljena tarča iskanja. Ali ste prepričani, da želite to temo v celoti izbrisati, namesto da bi jo z urejanjem poskusili izboljšati?"
         delete_topic: "izbriši temo"
+        add_post_notice: "Dodaj obvestilo osebja..."
+        change_post_notice: "Spremeni obvestilo osebja..."
         delete_post_notice: "Odstrani obvestilo osebja"
         remove_timer: "odstrani opomnik"
         edit_timer: "uredi časovnik"
@@ -2876,6 +2884,7 @@ sl:
     flagging:
       title: "Hvala, da pomagate ohraniti prijazno skupnost!"
       action: "Prijavi prispevek"
+      take_action: "Ukrepaj..."
       take_action_options:
         default:
           title: "Ukrepaj"
@@ -3316,6 +3325,7 @@ sl:
         everyone_can_use: "Oznake lahko uporablja kdorkoli"
         usable_only_by_groups: "Oznake so vidne vsem, vendar jih lahko uporabljajo le naslednje skupine"
         visible_only_to_groups: "Oznake so vidne le naslednjim skupinam"
+        parent_tag_placeholder: "Neobvezno"
       topics:
         none:
           unread: "Nimate neprebranih tem."
@@ -3395,6 +3405,8 @@ sl:
               content: "Admin"
             badges:
               content: "Značke"
+            everything:
+              content: "Vse"
             faq:
               content: "Pravila skupnosti"
             groups:
@@ -3405,6 +3417,7 @@ sl:
               content: "Moji prispevki"
             review:
               content: "Pregled"
+    until: "Do:"
   admin_js:
     type_to_filter: "vnesite za filter..."
     admin:
@@ -3563,6 +3576,7 @@ sl:
         user: "Uporabnik"
         title: "API"
         created: Ustvarjeno
+        never_used: (nikoli)
         generate: "Ustvari"
         revoke: "Prekliči"
         all_users: "Vsi uporabniki"
@@ -3727,6 +3741,8 @@ sl:
             name: "nevarnost"
           success:
             name: "uspeh"
+          selected:
+            name: "izbran"
         email_style:
           css: "CSS"
       email:

@@ -98,7 +98,7 @@ class ShrinkUploadedImage
       elsif !post.topic || post.topic.trashed?
         log "A deleted topic"
       elsif post.cooked.include?(original_upload.sha1)
-        if post.raw.include?("#{Discourse.base_url.sub(%r{^https?://}i, "")}/t/")
+        if post.raw.include?("#{Discourse.base_url.sub(%r{\Ahttps?://}i, "")}/t/")
           log "Updating a topic onebox"
         else
           log "Updating an external onebox"

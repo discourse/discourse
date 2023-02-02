@@ -16,7 +16,8 @@ export default class AdminCustomizeColorsShowController extends Component {
   tagName = "";
   chatChannel = null;
   selectedMessageIds = null;
-  showChatQuoteSuccess = false;
+  chatCopySuccess = false;
+  showChatCopySuccess = false;
   cancelSelecting = null;
   canModerate = false;
 
@@ -100,12 +101,15 @@ export default class AdminCustomizeColorsShowController extends Component {
   @action
   async copyMessages() {
     try {
+      this.set("chatCopySuccess", false);
+
       if (!isTesting()) {
         // clipboard API throws errors in tests
         await clipboardCopyAsync(this.generateQuote);
+        this.set("chatCopySuccess", true);
       }
 
-      this.set("showChatQuoteSuccess", true);
+      this.set("showChatCopySuccess", true);
 
       schedule("afterRender", () => {
         const element = document.querySelector(".chat-selection-message");
@@ -114,7 +118,7 @@ export default class AdminCustomizeColorsShowController extends Component {
             return;
           }
 
-          this.set("showChatQuoteSuccess", false);
+          this.set("showChatCopySuccess", false);
         });
       });
     } catch (error) {

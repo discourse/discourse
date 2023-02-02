@@ -561,13 +561,18 @@ class PostSerializer < BasicPostSerializer
   end
 
   def mentioned_users
-    if @topic_view && (mentions = @topic_view.mentions[object.id])
-      users = mentions.map { |username| @topic_view.mentioned_users[username] }.compact
-    else
-      users = User.where(username: object.mentions)
-    end
+    users =
+      if @topic_view && (mentioned_users = @topic_view.mentioned_users[object.id])
+        mentioned_users
+      else
+        User.where(username: object.mentions)
+      end
 
     users.map { |user| BasicUserWithStatusSerializer.new(user, root: false) }
+  end
+
+  def include_mentioned_users?
+    SiteSetting.enable_user_status
   end
 
   private

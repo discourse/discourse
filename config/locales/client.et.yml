@@ -246,7 +246,6 @@ et:
       title: "Järjehoidja"
       clear_bookmarks: "Kustuta järjehoidjad"
       help:
-        bookmark: "Kliki selle teema esimesele postitusele järjehoidja lisamiseks"
         unbookmark: "Kliki selle teema kõigi järjehoidjate eemaldamiseks"
     bookmarks:
       created: "Oled selle postituse järjehoidjatesse lisanud. %{name}"
@@ -949,6 +948,7 @@ et:
         primary: "Peamine e-post"
         secondary: "Teine e-post"
         primary_label: "primaarne"
+        resent_label: "meil saadetud"
         update_email: "Muuda meiliaadressi"
         no_secondary: "Teist e-posti pole"
         instructions: "Ei näidata avalikult."
@@ -1572,9 +1572,11 @@ et:
         dismiss_new: "Ignoreeri uusi"
         toggle: "lülita teemade massiline ära märkimine ümber"
         actions: "Masstoimingud"
+        change_category: "Määra kategooria..."
         close_topics: "Sulge Teemad"
         archive_topics: "Arhiveeri Teemad"
         move_messages_to_inbox: "Liiguta sisendkausta"
+        notification_level: "Teavitus..."
         change_notification_level: "Muuda teavituste taset"
         choose_new_category: "Vali teemadele uus foorum:"
         selected:
@@ -1772,6 +1774,7 @@ et:
         unarchive: "Taasta teema arhiivist"
         archive: "Arhiveeri teema"
         reset_read: "Nulli andmed teema lugemise kohta"
+        make_public: "Loo avalik teema..."
         make_private: "Loo isiklik sõnum"
       feature:
         pin: "Tõsta teema esile"
@@ -2010,6 +2013,8 @@ et:
         revert_to_regular: "Eemalda meeskonna värv"
         rebake: "Rekonstrueeri HTML"
         unhide: "Too nähtavale"
+        change_owner: "Omanikuvahetus..."
+        grant_badge: "Anna märgis..."
         lock_post: "Lukusta postitus"
         delete_topic: "kustuta teema"
       actions:
@@ -2186,6 +2191,7 @@ et:
     flagging:
       title: "Täname, et aitad meie kogukonna viisakust säilitada!"
       action: "Tähista postitus"
+      take_action: "Tegutse..."
       take_action_options:
         default:
           title: "Tegutse"
@@ -2485,6 +2491,7 @@ et:
         save: "Salvesta"
         delete: "Kustuta"
         confirm_delete: "Oled kindel, et soovid selle siltide grupi kustutada?"
+        parent_tag_placeholder: "Valikuline"
       topics:
         none:
           unread: "Sul ei ole lugemata teemasid."
@@ -2587,6 +2594,7 @@ et:
         latest_version: "Viimased"
         new_features:
           dismiss: "Ignoreeri"
+          learn_more: "Uuri veel"
         last_checked: "Viimati kontrollitud"
         refresh_problems: "Värskenda"
         no_problems: "Probleeme ei tuvastatud."
@@ -2683,6 +2691,7 @@ et:
         user: "Kasutaja"
         title: "API"
         created: Loodud
+        never_used: (mitte kunagi)
         generate: "Genereeri"
         revoke: "Tühista "
         all_users: "Kõik kasutajad"
@@ -2942,6 +2951,8 @@ et:
           love:
             name: "armastus"
             description: "Meeldimise nupu värvus."
+          selected:
+            name: "valitud"
         email_style:
           css: "CSS"
       email:

@@ -11,7 +11,7 @@ module BackupRestore
       @filename = filename
       @current_db = current_db
       @root_tmp_directory = root_tmp_directory
-      @is_archive = !(@filename =~ /\.sql\.gz$/)
+      @is_archive = !(@filename =~ /\.sql\.gz\z/)
       @store_location = location
     end
 

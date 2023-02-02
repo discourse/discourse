@@ -466,6 +466,33 @@ class PostsController < ApplicationController
     render body: nil
   end
 
+  def permanently_delete_revisions
+    guardian.ensure_can_permanently_delete_post_revisions!
+
+    post = find_post_from_params
+    raise Discourse::InvalidParameters.new(:post) if post.blank?
+    raise Discourse::NotFound unless post.revisions.present?
+
+    RateLimiter.new(
+      current_user,
+      "admin_permanently_delete_post_revisions",
+      20,
+      1.minute,
+      apply_limit_to_staff: true,
+    ).performed!
+
+    ActiveRecord::Base.transaction do
+      updated_at = Time.zone.now
+      post.revisions.destroy_all
+      post.update(version: 1, public_version: 1, last_version_at: updated_at)
+      StaffActionLogger.new(current_user).log_permanently_delete_post_revisions(post)
+    end
+
+    post.rebake!
+
+    render body: nil
+  end
+
   def show_revision
     post_revision = find_post_revision_from_params
     guardian.ensure_can_show_post_revision!(post_revision)

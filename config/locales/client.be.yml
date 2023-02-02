@@ -77,6 +77,8 @@ be:
       close: "схаваць"
     emails_are_disabled: "Адпраўка паведамленняў па электроннай пошце было глабальна адключана адміністратарам. Ні адно апавяшчэнне па электроннай пошце не будзе даслана."
     bootstrap_invite_button_title: "Адправіць запрашэнні"
+    themes:
+      default_description: "Default"
     s3:
       regions:
         ap_northeast_1: "Азія (Токіа)"
@@ -159,7 +161,6 @@ be:
       title: "Абранае"
       clear_bookmarks: "Выдаліць з абранага"
       help:
-        bookmark: "Націсніце каб закласці першы паведамленне ў гэтай тэме"
         unbookmark: "Націсніце каб выдаліць усе закладкі ў гэтай тэме"
     bookmarks:
       not_bookmarked: "закладка гэты пост"
@@ -545,6 +546,7 @@ be:
       email:
         title: "Электронная пошта"
         primary_label: "асноўнай"
+        resent_label: "Ліст адпраўлены"
         update_email: "Змяненне адрасы электроннай пошты"
         invalid: "Калі ласка, увядзіце верны email"
       associated_accounts:
@@ -930,6 +932,7 @@ be:
         close_topics: "Закрыць тэму"
         archive_topics: "Заархіваваныя тэмы"
         move_messages_to_inbox: "Перамясціць у тэчцы Уваходныя"
+        notification_level: "Натыфікацыі..."
       none:
         unread: "У вас няма непрачытаных тэм."
         new: "У вас няма новых тэм."
@@ -1080,6 +1083,7 @@ be:
         like: "упадабаць гэты пост"
         edit_action: "Рэдагаваць"
         more: "Болей"
+        grant_badge: "даць Значок..."
         delete_topic: "выдаліць тэму"
       actions:
         people:
@@ -1173,6 +1177,7 @@ be:
         email: "Электронная пошта"
     flagging:
       action: "Пазначыць запіс"
+      take_action: "прыняць меры..."
       take_action_options:
         default:
           title: "прыняць меры"
@@ -1459,6 +1464,7 @@ be:
         user: "Карыстальнік"
         title: "API"
         created: створаны
+        never_used: (ніколі)
         generate: "згенераваць"
         revoke: "Адклікнуць"
         all_users: "Усе карыстальнікі"
@@ -1655,6 +1661,9 @@ be:
             user_placeholder: "username"
             address_placeholder: "name@example.com"
             type_placeholder: "digest, signup ..."
+      moderation_history:
+        actions:
+          delete_topic: "Тэма выдаленая"
       logs:
         title: "Логі"
         action: "дзеянне"

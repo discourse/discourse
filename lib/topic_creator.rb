@@ -181,7 +181,7 @@ class TopicCreator
 
         return Category.find(SiteSetting.shared_drafts_category) if @opts[:shared_draft]
 
-        if (@opts[:category].is_a? Integer) || (@opts[:category] =~ /^\d+$/)
+        if (@opts[:category].is_a? Integer) || (@opts[:category] =~ /\A\d+\z/)
           Category.find_by(id: @opts[:category])
         end
       end

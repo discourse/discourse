@@ -214,4 +214,11 @@ RSpec.describe Stylesheet::Compiler do
       expect(refs).to eq([])
     end
   end
+
+  describe ".compile" do
+    it "produces RTL CSS when rtl option is given" do
+      css, _ = Stylesheet::Compiler.compile("a{right:1px}", "test.scss", rtl: true)
+      expect(css).to eq("a{left:1px}")
+    end
+  end
 end

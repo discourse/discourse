@@ -129,6 +129,7 @@ ko:
         filter_placeholder: 회원 찾기
       about_view:
         title: 제목
+        name: 그룹명
         description: 내용
       channel_info:
         back_to_all_channels: "모든 채널"
@@ -137,9 +138,8 @@ ko:
           about: 소개
           members: 회원
           settings: 설정
-      channel_edit_title_modal:
-        title: 제목 수정
-        input_placeholder: 제목 추가
+      channel_edit_name_slug_modal:
+        name: 채널명
       channel_edit_description_modal:
         title: 설명 수정
         input_placeholder: 설명 추가

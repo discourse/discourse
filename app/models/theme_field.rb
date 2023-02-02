@@ -94,7 +94,7 @@ class ThemeField < ActiveRecord::Base
       .css('script[type="text/x-handlebars"]')
       .each do |node|
         name = node["name"] || node["data-template-name"] || "broken"
-        is_raw = name =~ /\.(raw|hbr)$/
+        is_raw = name =~ /\.(raw|hbr)\z/
         hbs_template = node.inner_html
 
         begin
@@ -523,63 +523,63 @@ class ThemeField < ActiveRecord::Base
   FILE_MATCHERS = [
     ThemeFileMatcher.new(
       regex:
-        %r{^(?<target>(?:mobile|desktop|common))/(?<name>(?:head_tag|header|after_header|body_tag|footer))\.html$},
+        %r{\A(?<target>(?:mobile|desktop|common))/(?<name>(?:head_tag|header|after_header|body_tag|footer))\.html\z},
       targets: %i[mobile desktop common],
       names: %w[head_tag header after_header body_tag footer],
       types: :html,
       canonical: ->(h) { "#{h[:target]}/#{h[:name]}.html" },
     ),
     ThemeFileMatcher.new(
-      regex: %r{^(?<target>(?:mobile|desktop|common))/(?:\k<target>)\.scss$},
+      regex: %r{\A(?<target>(?:mobile|desktop|common))/(?:\k<target>)\.scss\z},
       targets: %i[mobile desktop common],
       names: "scss",
       types: :scss,
       canonical: ->(h) { "#{h[:target]}/#{h[:target]}.scss" },
     ),
     ThemeFileMatcher.new(
-      regex: %r{^common/embedded\.scss$},
+      regex: %r{\Acommon/embedded\.scss\z},
       targets: :common,
       names: "embedded_scss",
       types: :scss,
       canonical: ->(h) { "common/embedded.scss" },
     ),
     ThemeFileMatcher.new(
-      regex: %r{^common/color_definitions\.scss$},
+      regex: %r{\Acommon/color_definitions\.scss\z},
       targets: :common,
       names: "color_definitions",
       types: :scss,
       canonical: ->(h) { "common/color_definitions.scss" },
     ),
     ThemeFileMatcher.new(
-      regex: %r{^(?:scss|stylesheets)/(?<name>.+)\.scss$},
+      regex: %r{\A(?:scss|stylesheets)/(?<name>.+)\.scss\z},
       targets: :extra_scss,
       names: nil,
       types: :scss,
       canonical: ->(h) { "stylesheets/#{h[:name]}.scss" },
     ),
     ThemeFileMatcher.new(
-      regex: %r{^javascripts/(?<name>.+)$},
+      regex: %r{\Ajavascripts/(?<name>.+)\z},
       targets: :extra_js,
       names: nil,
       types: :js,
       canonical: ->(h) { "javascripts/#{h[:name]}" },
     ),
     ThemeFileMatcher.new(
-      regex: %r{^test/(?<name>.+)$},
+      regex: %r{\Atest/(?<name>.+)\z},
       targets: :tests_js,
       names: nil,
       types: :js,
       canonical: ->(h) { "test/#{h[:name]}" },
     ),
     ThemeFileMatcher.new(
-      regex: /^settings\.ya?ml$/,
+      regex: /\Asettings\.ya?ml\z/,
       names: "yaml",
       types: :yaml,
       targets: :settings,
       canonical: ->(h) { "settings.yml" },
     ),
     ThemeFileMatcher.new(
-      regex: %r{^locales/(?<name>(?:#{I18n.available_locales.join("|")}))\.yml$},
+      regex: %r{\Alocales/(?<name>(?:#{I18n.available_locales.join("|")}))\.yml\z},
       names: I18n.available_locales.map(&:to_s),
       types: :yaml,
       targets: :translations,

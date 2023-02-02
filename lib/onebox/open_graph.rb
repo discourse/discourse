@@ -32,8 +32,8 @@ module Onebox
       doc
         .css("meta")
         .each do |m|
-          if (m["property"] && m["property"][/^(?:og|article|product):(.+)$/i]) ||
-               (m["name"] && m["name"][/^(?:og|article|product):(.+)$/i])
+          if (m["property"] && m["property"][/\A(?:og|article|product):(.+)\z/i]) ||
+               (m["name"] && m["name"][/\A(?:og|article|product):(.+)\z/i])
             value = (m["content"] || m["value"]).to_s
             next if Onebox::Helpers.blank?(value)
             key = $1.tr("-:", "_").to_sym

@@ -12,26 +12,30 @@ class TagHashtagDataSource
     "tag"
   end
 
-  def self.tag_to_hashtag_item(tag)
-    tag = Tag.new(tag.slice(:id, :name, :description).merge(topic_count: tag[:count])) if tag.is_a?(
-      Hash,
-    )
+  def self.tag_to_hashtag_item(tag, guardian)
+    topic_count_column = Tag.topic_count_column(guardian)
+
+    tag =
+      Tag.new(
+        tag.slice(:id, :name, :description).merge(topic_count_column => tag[:count]),
+      ) if tag.is_a?(Hash)
 
     HashtagAutocompleteService::HashtagItem.new.tap do |item|
       item.text = tag.name
-      item.secondary_text = "x#{tag.topic_count}"
+      item.secondary_text = "x#{tag.public_send(topic_count_column)}"
       item.description = tag.description
       item.slug = tag.name
       item.relative_url = tag.url
       item.icon = icon
     end
   end
+  private_class_method :tag_to_hashtag_item
 
   def self.lookup(guardian, slugs)
     return [] if !SiteSetting.tagging_enabled
     DiscourseTagging
       .filter_visible(Tag.where_name(slugs), guardian)
-      .map { |tag| tag_to_hashtag_item(tag) }
+      .map { |tag| tag_to_hashtag_item(tag, guardian) }
   end
 
   def self.search(
@@ -60,9 +64,9 @@ class TagHashtagDataSource
       )
 
     TagsController
-      .tag_counts_json(tags_with_counts)
+      .tag_counts_json(tags_with_counts, guardian)
       .take(limit)
-      .map { |tag| tag_to_hashtag_item(tag) }
+      .map { |tag| tag_to_hashtag_item(tag, guardian) }
   end
 
   def self.search_sort(search_results, _)
@@ -82,8 +86,8 @@ class TagHashtagDataSource
       )
 
     TagsController
-      .tag_counts_json(tags_with_counts)
+      .tag_counts_json(tags_with_counts, guardian)
       .take(limit)
-      .map { |tag| tag_to_hashtag_item(tag) }
+      .map { |tag| tag_to_hashtag_item(tag, guardian) }
   end
 end

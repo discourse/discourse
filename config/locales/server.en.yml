@@ -1651,6 +1651,8 @@ en:
     content_security_policy_frame_ancestors: "Restrict who can embed this site in iframes via CSP. Control allowed hosts on <a href='%{base_path}/admin/customize/embedding'>Embedding</a>"
     content_security_policy_script_src: "Additional allowlisted script sources. The current host and CDN are included by default. See <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigate XSS Attacks with Content Security Policy.</a>"
     invalidate_inactive_admin_email_after_days: "Admin accounts that have not visited the site in this number of days will need to re-validate their email address before logging in. Set to 0 to disable."
+    include_secure_categories_in_tag_counts: "When enabled, count of topics for a tag will include topics that are in read restricted categories for all users. When disabled, normal users are only shown a count of topics for a tag where all the topics are in public categories."
+    display_personal_messages_tag_counts: "When enabled, count of personal messages tagged with a given tag will be displayed."
     top_menu: "Determine which items appear in the homepage navigation, and in what order. Example latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "Determine which items appear on the post menu, and in what order. Example like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "The menu items to hide by default in the post menu unless an expansion ellipsis is clicked on."
@@ -1682,10 +1684,10 @@ en:
     whispers_allowed_groups: "Allow private communication within topics for members of specified groups."
 
     allow_index_in_robots_txt: "Specify in robots.txt that this site is allowed to be indexed by web search engines. In exceptional cases you can permanently <a href='%{base_path}/admin/customize/robots'>override robots.txt</a>."
-    blocked_email_domains: "A pipe-delimited list of email domains that users are not allowed to register accounts with. Example: mailinator.com|trashmail.net"
-    allowed_email_domains: "A pipe-delimited list of email domains that users MUST register accounts with. WARNING: Users with email domains other than those listed will not be allowed!"
+    blocked_email_domains: "A pipe-delimited list of email domains that users are not allowed to register accounts with. Subdomains are automatically handled for the specified domains. Wildcard symbols * and ? are not supported. Example: mailinator.com|trashmail.net"
+    allowed_email_domains: "A pipe-delimited list of email domains that users MUST register accounts with. Subdomains are automatically handled for the specified domains. Wildcard symbols * and ? are not supported. WARNING: Users with email domains other than those listed will not be allowed!"
     normalize_emails: "Check if normalized email is unique. Normalized email removes all dots from the username and everything between + and @ symbols."
-    auto_approve_email_domains: "Users with email addresses from this list of domains will be automatically approved."
+    auto_approve_email_domains: "Users with email addresses from this list of domains will be automatically approved. Subdomains are automatically handled for the specified domains. Wildcard symbols * and ? are not supported."
     hide_email_address_taken: "Don't inform users that an account exists with a given email address during signup or during forgot password flow. Require full email for 'forgotten password' requests."
     log_out_strict: "When logging out, log out ALL sessions for the user on all devices"
     version_checks: "Ping the Discourse Hub for version updates and show new version messages on the <a href='%{base_path}/admin' target='_blank'>/admin</a> dashboard"
@@ -1893,6 +1895,7 @@ en:
     tl3_requires_likes_given: "The minimum number of likes that must be given in the last (tl3 time period) days to qualify for promotion to trust level 3."
     tl3_requires_likes_received: "The minimum number of likes that must be received in the last (tl3 time period) days to qualify for promotion to trust level 3."
     tl3_links_no_follow: "Do not remove rel=nofollow from links posted by trust level 3 users."
+    tl4_delete_posts_and_topics: "Allow TL4 users to delete posts and topics created by other users. TL4 users will also be able to see deleted topics and posts."
     trusted_users_can_edit_others: "Allow users with high trust levels to edit content from other users"
 
     min_trust_to_create_topic: "The minimum trust level required to create a new topic."
@@ -2195,9 +2198,9 @@ en:
 
     topic_page_title_includes_category: "Topic page <a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>title tag</a> includes the category name."
 
-    native_app_install_banner_ios: "Displays DiscourseHub app banner on iOS devices to regular users (trust level 1 and up)."
+    native_app_install_banner_ios: "Displays DiscourseHub app banner on iOS devices to basic users (trust level 1) and up."
 
-    native_app_install_banner_android: "Displays DiscourseHub app banner on Android devices to regular users (trust level 1 and up)."
+    native_app_install_banner_android: "Displays DiscourseHub app banner on Android devices to basic users (trust level 1) and up."
 
     app_association_android: "Contents of <a href='%{base_path}/.well-known/assetlinks.json'>.well-known/assetlinks.json</a> endpoint, used for Google's Digital Asset Links API."
     app_association_ios: "Contents of <a href='%{base_path}/apple-app-site-association'>apple-app-site-association</a> endpoint, used to create Universal Links between this site and iOS apps."
@@ -2456,6 +2459,7 @@ en:
       delete_rejected_email_after_days: "This setting cannot be set lower than the delete_email_logs_after_days setting or greater than %{max}"
       invalid_uncategorized_category_setting: "The Uncategorized category cannot be selected if allow uncategorized topics is not allowed"
       enable_new_notifications_menu_not_legacy_navigation_menu: "You must set `navigation_menu` to `legacy` before enabling this setting."
+      invalid_search_ranking_weights: "Value is invalid for search_ranking_weights site setting. Example: '{0.1,0.2,0.3,1.0}'. Note that maximum value for each weight is 1.0."
 
     placeholder:
       discourse_connect_provider_secrets:
@@ -2678,6 +2682,7 @@ en:
       must_not_contain_two_special_chars_in_seq: "must not contain a sequence of 2 or more special chars (.-_)"
       must_not_end_with_confusing_suffix: "must not end with a confusing suffix like .json or .png etc."
     email:
+      blank: "can't be blank."
       invalid: "is invalid."
       not_allowed: "is not allowed from that email provider. Please use another email address."
       blocked: "is not allowed."
@@ -3476,7 +3481,7 @@ en:
 
         The new user [%{username}](%{user_url}) was automatically silenced because multiple users flagged %{username}'s post(s).
 
-        Please [review the flags](%{base_url}/admin/flags). If %{username} was incorrectly silenced from posting, click the unsilence button on [the admin page for this user](%{user_url}).
+        Please [review the flags](%{base_url}/review). If %{username} was incorrectly silenced from posting, click the unsilence button on [the admin page for this user](%{user_url}).
 
         This threshold can be changed via the `silence_new_user` site settings.
 
@@ -4368,7 +4373,11 @@ en:
   tos_topic:
     title: "Terms of Service"
     body: |
-      These terms govern use of the Internet forum at <%{base_url}>. To use the forum, you must agree to these terms with %{company_name}, the company that runs the forum.
+      <h2 id="heading--change-me"><a href="#heading--change-me">Change Me</a></h2>
+
+      Forum Admin, please find below an example starting template for a privacy policy that you should customise to meet your site's needs.
+
+      These terms do not, but might one day, govern use of the Internet forum at <%{base_url}>. In that event, to use the forum, you must agree to these terms with %{company_name}, the company that runs the forum.
 
       The company may offer other products and services, under different terms. These terms apply only to use of the forum.
 
@@ -4536,13 +4545,15 @@ en:
 
       <h2 id="heading--changes"><a href="#heading--changes">Changes</a></h2>
 
-      The company last updated these terms on July 12, 2018, and may update these terms again. The company will post all updates to the forum. For updates that contain substantial changes, the company agrees to e-mail you, if you've created an account and provided a valid e-mail address. The company may also announce updates with special messages or alerts on the forum.
+      The company last updated these terms on [INSERT LAST UPDATE DATE HERE], and may update these terms again. The company will post all updates to the forum. For updates that contain substantial changes, the company agrees to e-mail you, if you've created an account and provided a valid e-mail address. The company may also announce updates with special messages or alerts on the forum.
 
       Once you get notice of an update to these terms, you must agree to the new terms in order to keep using the forum.
 
   privacy_topic:
     title: "Privacy Policy"
     body: |
+      ## [Forum Admin, please find below an example starting template for a privacy policy that you should customise to your site.]
+
       <a name="collect"></a>
 
       ## [What information do we collect?](#collect)
@@ -4576,8 +4587,7 @@ en:
 
       We will make a good faith effort to:
 
-      * Retain server logs containing the IP address of all requests to this server no more than 90 days.
-      * Retain the IP addresses associated with registered users and their posts no more than 5 years.
+      * Retain server logs containing the IP address of all requests to this server no more than [NUMBER OF DAYS] days.
 
       <a name="cookies"></a>
 
@@ -4623,7 +4633,7 @@ en:
 
       If we decide to change our privacy policy, we will post those changes on this page.
 
-      This document is CC-BY-SA. It was last updated May 31, 2013.
+      This document is CC-BY-SA. It was last updated [INSERT LAST UPDATE DATE HERE].
 
   badges:
     mass_award:

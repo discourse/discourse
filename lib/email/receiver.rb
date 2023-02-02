@@ -381,7 +381,7 @@ module Email
       @mail[:precedence].to_s[/list|junk|bulk|auto_reply/i] ||
         @mail[:from].to_s[/(mailer[\-_]?daemon|post[\-_]?master|no[\-_]?reply)@/i] ||
         @mail[:subject].to_s[
-          /^\s*(Auto:|Automatic reply|Autosvar|Automatisk svar|Automatisch antwoord|Abwesenheitsnotiz|Risposta Non al computer|Automatisch antwoord|Auto Response|Respuesta automática|Fuori sede|Out of Office|Frånvaro|Réponse automatique)/i
+          /\A\s*(Auto:|Automatic reply|Autosvar|Automatisk svar|Automatisch antwoord|Abwesenheitsnotiz|Risposta Non al computer|Automatisch antwoord|Auto Response|Respuesta automática|Fuori sede|Out of Office|Frånvaro|Réponse automatique)/i
         ] ||
         @mail.header.to_s[
           /auto[\-_]?(response|submitted|replied|reply|generated|respond)|holidayreply|machinegenerated/i
@@ -393,7 +393,7 @@ module Email
       when "X-Spam-Flag"
         @mail[:x_spam_flag].to_s[/YES/i]
       when "X-Spam-Status"
-        @mail[:x_spam_status].to_s[/^Yes, /i]
+        @mail[:x_spam_status].to_s[/\AYes, /i]
       when "X-SES-Spam-Verdict"
         @mail[:x_ses_spam_verdict].to_s[/FAIL/i]
       else
@@ -639,7 +639,7 @@ module Email
           .uniq
 
       @previous_replies_regex ||=
-        /^--[- ]\n\*(?:#{strings.map { |x| Regexp.escape(x) }.join("|")})\*\n/im
+        /\A--[- ]\n\*(?:#{strings.map { |x| Regexp.escape(x) }.join("|")})\*\n/im
     end
 
     def reply_above_line_regex
@@ -747,12 +747,12 @@ module Email
 
       if value[/<[^>]+>/]
         from_address = value[/<([^>]+)>/, 1]
-        from_display_name = value[/^([^<]+)/, 1]
+        from_display_name = value[/\A([^<]+)/, 1]
       end
 
       if (from_address.blank? || !from_address["@"]) && value[/\[mailto:[^\]]+\]/]
         from_address = value[/\[mailto:([^\]]+)\]/, 1]
-        from_display_name = value[/^([^\[]+)/, 1]
+        from_display_name = value[/\A([^\[]+)/, 1]
       end
 
       [from_address&.downcase, from_display_name&.strip]
@@ -1016,7 +1016,7 @@ module Email
     end
 
     def has_been_forwarded?
-      subject[/^[[:blank:]]*(fwd?|tr)[[:blank:]]?:/i] && embedded_email_raw.present?
+      subject[/\A[[:blank:]]*(fwd?|tr)[[:blank:]]?:/i] && embedded_email_raw.present?
     end
 
     def embedded_email_raw

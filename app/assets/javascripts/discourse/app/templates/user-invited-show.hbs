@@ -2,6 +2,7 @@
   {{#if this.canInviteToForum}}
     <LoadMore
       @class="user-content"
+      @id="user-content"
       @selector=".user-invite-list tr"
       @action={{action "loadMore"}}
     >

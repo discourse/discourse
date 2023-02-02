@@ -48,8 +48,8 @@ class UrlHelper
   end
 
   def self.absolute(url, cdn = Discourse.asset_host)
-    cdn = "https:#{cdn}" if cdn && cdn =~ %r{^//}
-    url =~ %r{^/[^/]} ? (cdn || Discourse.base_url_no_prefix) + url : url
+    cdn = "https:#{cdn}" if cdn && cdn =~ %r{\A//}
+    url =~ %r{\A/[^/]} ? (cdn || Discourse.base_url_no_prefix) + url : url
   end
 
   def self.absolute_without_cdn(url)
@@ -57,7 +57,7 @@ class UrlHelper
   end
 
   def self.schemaless(url)
-    url.sub(/^http:/i, "")
+    url.sub(/\Ahttp:/i, "")
   end
 
   def self.secure_proxy_without_cdn(url)

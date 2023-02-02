@@ -1,8 +1,15 @@
 # frozen_string_literal: true
 
+# TODO (martin) DEPRECATED: Remove this model once UploadReference has been
+# in place for a couple of months, 2023-04-01
+#
+# NOTE: Do not use this model anymore, chat messages are linked to uploads via
+# the UploadReference table now, just like everything else.
 class ChatUpload < ActiveRecord::Base
   belongs_to :chat_message
   belongs_to :upload
+
+  deprecate *public_instance_methods(false)
 end
 
 # == Schema Information

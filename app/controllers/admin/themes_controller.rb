@@ -108,7 +108,7 @@ class Admin::ThemesController < Admin::AdminController
           render json: @theme, status: :created
         rescue RemoteTheme::ImportError => e
           if params[:force]
-            theme_name = params[:remote].gsub(/.git$/, "").split("/").last
+            theme_name = params[:remote].gsub(/.git\z/, "").split("/").last
 
             remote_theme = RemoteTheme.new
             remote_theme.private_key = private_key

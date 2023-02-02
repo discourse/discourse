@@ -29,9 +29,9 @@ module Jobs
       @raw_quote_regex = /(\[quote\s*=\s*["'']?)#{@old_username}(\,?[^\]]*\])/i
 
       cooked_username = PrettyText::Helpers.format_username(@old_username)
-      @cooked_mention_username_regex = /^@#{cooked_username}$/i
+      @cooked_mention_username_regex = /\A@#{cooked_username}\z/i
       @cooked_mention_user_path_regex =
-        %r{^/u(?:sers)?/#{UrlHelper.encode_component(cooked_username)}$}i
+        %r{\A/u(?:sers)?/#{UrlHelper.encode_component(cooked_username)}\z}i
       @cooked_quote_username_regex = /(?<=\s)#{cooked_username}(?=:)/i
 
       update_posts
@@ -48,8 +48,7 @@ module Jobs
 
       Post
         .with_deleted
-        .joins(mentioned("posts.id"))
-        .where("a.user_id = :user_id", user_id: @user_id)
+        .where("raw ILIKE ?", "%@#{@old_username}%")
         .find_each do |post|
           update_post(post)
           updated_post_ids << post.id
@@ -64,8 +63,7 @@ module Jobs
 
     def update_revisions
       PostRevision
-        .joins(mentioned("post_revisions.post_id"))
-        .where("a.user_id = :user_id", user_id: @user_id)
+        .where("modifications SIMILAR TO ?", "%(raw|cooked)%@#{@old_username}%")
         .find_each { |revision| update_revision(revision) }
 
       PostRevision

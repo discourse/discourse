@@ -67,12 +67,13 @@
             }}</DNavigationItem>
         {{/if}}
 
-        <PluginOutlet
-          @name="user-activity-bottom"
-          @tagName="span"
-          @connectorTagName="li"
-          @args={{hash model=this.model}}
-        />
+        <span>
+          <PluginOutlet
+            @name="user-activity-bottom"
+            @connectorTagName="li"
+            @outletArgs={{hash model=this.model}}
+          />
+        </span>
       </MobileNav>
     </nav>
   </DSection>
@@ -89,6 +90,6 @@
   {{/if}}
 {{/if}}
 
-<section class="user-content">
+<section class="user-content" id="user-content">
   {{outlet}}
 </section>

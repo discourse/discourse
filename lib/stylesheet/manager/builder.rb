@@ -35,7 +35,7 @@ class Stylesheet::Manager::Builder
       end
     end
 
-    rtl = @target.to_s =~ /_rtl$/
+    rtl = @target.to_s =~ /_rtl\z/
     css, source_map =
       with_load_paths do |load_paths|
         Stylesheet::Compiler.compile_asset(

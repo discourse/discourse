@@ -323,17 +323,19 @@ module DiscourseTagging
 
     outer_join = category.nil? || category.allow_global_tags || !category_has_restricted_tags
 
+    topic_count_column = Tag.topic_count_column(guardian)
+
     distinct_clause =
       if opts[:order_popularity]
-        "DISTINCT ON (topic_count, name)"
+        "DISTINCT ON (#{topic_count_column}, name)"
       elsif opts[:order_search_results] && opts[:term].present?
-        "DISTINCT ON (lower(name) = lower(:cleaned_term), topic_count, name)"
+        "DISTINCT ON (lower(name) = lower(:cleaned_term), #{topic_count_column}, name)"
       else
         ""
       end
 
     sql << <<~SQL
-      SELECT #{distinct_clause} t.id, t.name, t.topic_count, t.pm_topic_count, t.description,
+      SELECT #{distinct_clause} t.id, t.name, t.#{topic_count_column}, t.pm_topic_count, t.description,
         tgr.tgm_id as tgm_id, tgr.tag_group_id as tag_group_id, tgr.parent_tag_id as parent_tag_id,
         tgr.one_per_topic as one_per_topic, t.target_tag_id
       FROM tags t
@@ -479,9 +481,9 @@ module DiscourseTagging
     end
 
     if opts[:order_popularity]
-      builder.order_by("topic_count DESC, name")
+      builder.order_by("#{topic_count_column} DESC, name")
     elsif opts[:order_search_results] && !term.blank?
-      builder.order_by("lower(name) = lower(:cleaned_term) DESC, topic_count DESC, name")
+      builder.order_by("lower(name) = lower(:cleaned_term) DESC, #{topic_count_column} DESC, name")
     end
 
     result = builder.query(builder_params).uniq { |t| t.id }

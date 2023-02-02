@@ -173,7 +173,7 @@ class Emoji
       emojis.each do |name, url|
         result << Emoji.new.tap do |e|
           e.name = name
-          url = (Discourse.base_path + url) if url[%r{^/[^/]}]
+          url = (Discourse.base_path + url) if url[%r{\A/[^/]}]
           e.url = url
           e.group = group || DEFAULT_GROUP
         end

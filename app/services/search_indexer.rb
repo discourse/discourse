@@ -50,11 +50,11 @@ class SearchIndexer
       .reduce(additional_lexemes) do |array, (lexeme, _, positions)|
         count = 0
 
-        if lexeme !~ /^(\d+\.)?(\d+\.)*(\*|\d+)$/
+        if lexeme !~ /\A(\d+\.)?(\d+\.)*(\*|\d+)\z/
           loop do
             count += 1
             break if count >= 10 # Safeguard here to prevent infinite loop when a term has many dots
-            term, _, remaining = lexeme.partition(".")
+            _term, _, remaining = lexeme.partition(".")
             break if remaining.blank?
             array << "'#{remaining}':#{positions}"
             lexeme = remaining
@@ -65,6 +65,28 @@ class SearchIndexer
       end
 
     tsvector = "#{tsvector} #{additional_lexemes.join(" ")}"
+
+    if (max_dupes = SiteSetting.max_duplicate_search_index_terms) > 0
+      reduced = []
+      tsvector
+        .scan(/('([^']*|'')*'\:)(([0-9]+[A-D]?,?)+)/)
+        .each do |term, _, indexes|
+          family_counts = Hash.new(0)
+          new_index_array = []
+
+          indexes
+            .split(",")
+            .each do |index|
+              family = nil
+              family = index[-1] if index[-1].match?(/[A-D]/)
+              if (family_counts[family] += 1) <= max_dupes
+                new_index_array << index
+              end
+            end
+          reduced << "#{term.strip}#{new_index_array.join(",")}"
+        end
+      tsvector = reduced.join(" ")
+    end
 
     indexed_data =
       if table.to_s == "post"

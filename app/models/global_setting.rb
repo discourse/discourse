@@ -5,7 +5,7 @@ class GlobalSetting
     define_singleton_method(key) { provider.lookup(key, default) }
   end
 
-  VALID_SECRET_KEY ||= /^[0-9a-f]{128}$/
+  VALID_SECRET_KEY ||= /\A[0-9a-f]{128}\z/
   # this is named SECRET_TOKEN as opposed to SECRET_KEY_BASE
   # for legacy reasons
   REDIS_SECRET_KEY ||= "SECRET_TOKEN"
@@ -251,7 +251,7 @@ class GlobalSetting
   class BaseProvider
     def self.coerce(setting)
       return setting == "true" if setting == "true" || setting == "false"
-      return $1.to_i if setting.to_s.strip =~ /^([0-9]+)$/
+      return $1.to_i if setting.to_s.strip =~ /\A([0-9]+)\z/
       setting
     end
 
@@ -283,7 +283,7 @@ class GlobalSetting
         .result()
         .split("\n")
         .each do |line|
-          if line =~ /^\s*([a-z_]+[a-z0-9_]*)\s*=\s*(\"([^\"]*)\"|\'([^\']*)\'|[^#]*)/
+          if line =~ /\A\s*([a-z_]+[a-z0-9_]*)\s*=\s*(\"([^\"]*)\"|\'([^\']*)\'|[^#]*)/
             @data[$1.strip.to_sym] = ($4 || $3 || $2).strip
           end
         end
@@ -314,7 +314,7 @@ class GlobalSetting
     end
 
     def keys
-      ENV.keys.select { |k| k =~ /^DISCOURSE_/ }.map { |k| k[10..-1].downcase.to_sym }
+      ENV.keys.select { |k| k =~ /\ADISCOURSE_/ }.map { |k| k[10..-1].downcase.to_sym }
     end
   end
 

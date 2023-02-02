@@ -65,11 +65,11 @@
   <PluginOutlet
     @name="user-preferences-tags"
     @connectorTagName="div"
-    @args={{hash model=@model save=@save}}
+    @outletArgs={{hash model=@model save=@save}}
   />
   <PluginOutlet
     @name="user-custom-controls"
     @connectorTagName="div"
-    @args={{hash model=@model}}
+    @outletArgs={{hash model=@model}}
   />
 {{/if}}

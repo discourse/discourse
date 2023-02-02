@@ -1,7 +1,7 @@
 <PluginOutlet
   @name="above-user-profile"
   @connectorTagName="div"
-  @args={{hash model=this.model}}
+  @outletArgs={{hash model=this.model}}
 />
 <div
   class="container
@@ -10,6 +10,9 @@
     {{this.primaryGroup}}"
 >
   <DSection @class="user-main">
+    <a href="#user-content" id="skip-link" class="skip-link__user-nav">
+      {{i18n "skip_user_nav"}}
+    </a>
     <section
       class="{{if this.collapsedInfo 'collapsed-info'}}
         about
@@ -108,68 +111,15 @@
         <div class="primary">
           <PluginOutlet
             @name="before-user-profile-avatar"
-            @args={{hash model=this.model}}
+            @outletArgs={{hash model=this.model}}
           />
           <UserProfileAvatar @user={{this.model}} @tagName="" />
-          <section class="controls">
-            <ul>
-              {{#if this.model.can_send_private_message_to_user}}
-                <li>
-                  <DButton
-                    @class="btn-primary compose-pm"
-                    @action={{route-action "composePrivateMessage" this.model}}
-                    @icon="envelope"
-                    @label="user.private_message"
-                  />
-                </li>
-              {{/if}}
-
-              {{#if this.canMuteOrIgnoreUser}}
-                <li>
-                  <UserNotificationsDropdown
-                    @user={{this.model}}
-                    @value={{this.userNotificationLevel}}
-                    @updateNotificationLevel={{action
-                      "updateNotificationLevel"
-                    }}
-                  />
-                </li>
-              {{/if}}
-
-              {{#if this.displayTopLevelAdminButton}}
-                <li><a
-                    href={{this.model.adminPath}}
-                    class="btn btn-default"
-                  >{{d-icon "wrench"}}<span class="d-button-label">{{i18n
-                        "admin.user.show_admin_profile"
-                      }}</span></a></li>
-              {{/if}}
-
-              <PluginOutlet
-                @name="user-profile-controls"
-                @connectorTagName="li"
-                @args={{hash model=this.model}}
-              />
-
-              {{#if this.canExpandProfile}}
-                <li>
-                  <DButton
-                    @ariaExpanded={{this.collapsedInfoState.isExpanded}}
-                    @ariaLabel={{this.collapsedInfoState.ariaLabel}}
-                    @ariaControls="collapsed-info-panel"
-                    @class="btn-default"
-                    @label={{concat "user." this.collapsedInfoState.label}}
-                    @icon={{this.collapsedInfoState.icon}}
-                    @action={{action this.collapsedInfoState.action}}
-                  />
-                </li>
-              {{/if}}
-            </ul>
-          </section>
-
           <div class="primary-textual">
             <div class="user-profile-names">
-              <h1 class={{if this.nameFirst "full-name" "username"}}>
+              <div
+                class="{{if this.nameFirst 'full-name' 'username'}}
+                  user-profile-names__primary"
+              >
                 {{if
                   this.nameFirst
                   this.model.name
@@ -179,28 +129,37 @@
                 {{#if this.model.status}}
                   <UserStatusMessage @status={{this.model.status}} />
                 {{/if}}
-              </h1>
-              <h2 class={{if this.nameFirst "username" "full-name"}}>{{#if
+              </div>
+              <div
+                class="{{if this.nameFirst 'username' 'full-name'}}
+                  user-profile-names__secondary"
+              >{{#if
                   this.nameFirst
-                }}{{this.model.username}}{{else}}{{this.model.name}}{{/if}}</h2>
+                }}{{this.model.username}}{{else}}{{this.model.name}}{{/if}}</div>
               {{#if this.model.staged}}
-                <h2 class="staged">{{i18n "user.staged"}}</h2>
+                <div class="staged user-profile-names__secondary">{{i18n
+                    "user.staged"
+                  }}</div>
               {{/if}}
               {{#if this.model.title}}
-                <h3>{{this.model.title}}</h3>
+                <div
+                  class="user-profile-names__title"
+                >{{this.model.title}}</div>
               {{/if}}
-              <PluginOutlet
-                @name="user-post-names"
-                @tagName="span"
-                @connectorTagName="div"
-                @args={{hash model=this.model}}
-              />
+              <span>
+                <PluginOutlet
+                  @name="user-post-names"
+                  @connectorTagName="div"
+                  @outletArgs={{hash model=this.model}}
+                />
+              </span>
             </div>
 
             {{#if this.showFeaturedTopic}}
-              <h3 class="featured-topic">
-                <span>{{i18n "user.featured_topic"}}</span>
-                <LinkTo
+              <div class="featured-topic user-profile__featured-topic">
+                <span title={{i18n "user.featured_topic"}}>
+                  {{d-icon "book"~}}
+                </span><LinkTo
                   @route="topic"
                   @models={{array
                     this.model.featured_topic.slug
@@ -209,19 +168,20 @@
                 >{{html-safe
                     (replace-emoji this.model.featured_topic.fancy_title)
                   }}</LinkTo>
-              </h3>
+              </div>
             {{/if}}
 
-            <h3 class="location-and-website">
+            <div
+              class="location-and-website user-profile__location-and-website"
+            >
               {{#if this.model.location}}<div
                   class="user-profile-location"
-                >{{d-icon "map-marker-alt"}}
+                >{{d-icon "map-marker-alt"~}}
                   {{this.model.location}}</div>{{/if}}
               {{#if this.model.website_name}}
-                <div class="user-profile-website">
-                  {{d-icon "globe"}}
-                  {{#if this.linkWebsite}}
-                    {{! template-lint-disable  }}
+                <div class="user-profile-website">{{d-icon "globe"~}}
+                  {{#if this.linkWebsite~}}
+                    {{~! template-lint-disable ~}}
                     <a
                       href={{this.model.website}}
                       rel="noopener {{unless
@@ -237,13 +197,14 @@
                   {{/if}}
                 </div>
               {{/if}}
-              <PluginOutlet
-                @name="user-location-and-website"
-                @tagName="span"
-                @connectorTagName="div"
-                @args={{hash model=this.model}}
-              />
-            </h3>
+              <span>
+                <PluginOutlet
+                  @name="user-location-and-website"
+                  @connectorTagName="div"
+                  @outletArgs={{hash model=this.model}}
+                />
+              </span>
+            </div>
 
             <div class="bio">
               {{#if this.model.suspended}}
@@ -291,29 +252,87 @@
                   {{/if}}
                 {{/each}}
 
-                <PluginOutlet
-                  @name="user-profile-public-fields"
-                  @tagName="span"
-                  @connectorTagName="div"
-                  @args={{hash
-                    publicUserFields=this.publicUserFields
-                    model=this.model
-                  }}
-                />
+                <span>
+                  <PluginOutlet
+                    @name="user-profile-public-fields"
+                    @connectorTagName="div"
+                    @outletArgs={{hash
+                      publicUserFields=this.publicUserFields
+                      model=this.model
+                    }}
+                  />
+                </span>
               </div>
             {{/if}}
 
-            <PluginOutlet
-              @name="user-profile-primary"
-              @tagName="span"
-              @connectorTagName="div"
-              @args={{hash model=this.model}}
-            />
+            <span>
+              <PluginOutlet
+                @name="user-profile-primary"
+                @connectorTagName="div"
+                @outletArgs={{hash model=this.model}}
+              />
+            </span>
           </div>
+
+          <section class="controls">
+            <ul>
+              {{#if this.model.can_send_private_message_to_user}}
+                <li>
+                  <DButton
+                    @class="btn-primary compose-pm"
+                    @action={{route-action "composePrivateMessage" this.model}}
+                    @icon="envelope"
+                    @label="user.private_message"
+                  />
+                </li>
+              {{/if}}
+
+              {{#if this.canMuteOrIgnoreUser}}
+                <li>
+                  <UserNotificationsDropdown
+                    @user={{this.model}}
+                    @value={{this.userNotificationLevel}}
+                    @updateNotificationLevel={{action
+                      "updateNotificationLevel"
+                    }}
+                  />
+                </li>
+              {{/if}}
+
+              {{#if this.displayTopLevelAdminButton}}
+                <li><a
+                    href={{this.model.adminPath}}
+                    class="btn btn-default"
+                  >{{d-icon "wrench"}}<span class="d-button-label">{{i18n
+                        "admin.user.show_admin_profile"
+                      }}</span></a></li>
+              {{/if}}
+
+              <PluginOutlet
+                @name="user-profile-controls"
+                @connectorTagName="li"
+                @outletArgs={{hash model=this.model}}
+              />
+
+              {{#if this.canExpandProfile}}
+                <li>
+                  <DButton
+                    @ariaExpanded={{this.collapsedInfoState.isExpanded}}
+                    @ariaLabel={{this.collapsedInfoState.ariaLabel}}
+                    @ariaControls="collapsed-info-panel"
+                    @class="btn-default"
+                    @label={{concat "user." this.collapsedInfoState.label}}
+                    @icon={{this.collapsedInfoState.icon}}
+                    @action={{action this.collapsedInfoState.action}}
+                  />
+                </li>
+              {{/if}}
+            </ul>
+          </section>
         </div>
         <PluginOutlet
           @name="user-profile-above-collapsed-info"
-          @args={{hash model=this.model collapsedInfo=this.collapsedInfo}}
+          @outletArgs={{hash model=this.model collapsedInfo=this.collapsedInfo}}
         />
         {{#unless this.collapsedInfo}}
           <div class="secondary" id="collapsed-info-panel">
@@ -402,9 +421,8 @@
             </dl>
             <PluginOutlet
               @name="user-profile-secondary"
-              @tagName="span"
               @connectorTagName="div"
-              @args={{hash model=this.model}}
+              @outletArgs={{hash model=this.model}}
             />
           </div>
         {{/unless}}
@@ -473,7 +491,7 @@
             <PluginOutlet
               @name="user-main-nav"
               @connectorTagName="li"
-              @args={{hash model=this.model}}
+              @outletArgs={{hash model=this.model}}
             />
 
             {{#if this.model.can_edit}}

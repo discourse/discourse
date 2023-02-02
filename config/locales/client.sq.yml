@@ -220,7 +220,6 @@ sq:
       title: "Të preferuarat"
       clear_bookmarks: "Pastro të preferuarat"
       help:
-        bookmark: "Kliko për të shtuar tek të preferuarat e tua postimin e parë të kësaj teme."
         unbookmark: "Kliko për të hequr të preferuarat nga kjo temë"
     bookmarks:
       not_bookmarked: "shto postimin tek të preferuarat"
@@ -274,6 +273,7 @@ sq:
       save: "Ruaj"
       cancel: "Anulo"
       filters:
+        all_categories: "(të gjitha kategoritë)"
         type:
           title: "Lloji"
         refresh: "Rifresko"
@@ -675,6 +675,7 @@ sq:
       email:
         title: "Email"
         primary_label: "parësor"
+        resent_label: "emaili u dërgua"
         update_email: "Ndrysho email"
         instructions: "Mos e shfaq në publik."
         ok: "Do ju nisim emailin e konfirmimit"
@@ -1169,6 +1170,7 @@ sq:
         close_topics: "Mbyll temat"
         archive_topics: "Arkivo temat"
         move_messages_to_inbox: "Transfero në inbox"
+        notification_level: "Njoftimet..."
         choose_new_category: "Zgjidhni kategorinë e re për temat: "
         selected:
           one: "Keni zgjedhur <b>%{count}</b> temë."
@@ -1313,6 +1315,7 @@ sq:
         unarchive: "Çarkivoje temën"
         archive: "Arkivoje temën"
         reset_read: "Reset Read Data"
+        make_public: "Bëje temën publike..."
       feature:
         pin: "Ngjite temën"
         unpin: "Çngjite temën"
@@ -1488,6 +1491,8 @@ sq:
         revert_to_regular: "Hiq ngjyrën e stafit"
         rebake: "Rindërtoni HTML"
         unhide: "Çfshi"
+        change_owner: "Ndrysho zotëruesin..."
+        grant_badge: "Dhuroni Stemë..."
         delete_topic: "fshi temën"
       actions:
         people:
@@ -1608,6 +1613,7 @@ sq:
     flagging:
       title: "Faleminderit për ndihmën që i jepni këtij komuniteti!"
       action: "Sinjalizo postimin"
+      take_action: "Vepro..."
       take_action_options:
         default:
           title: "Vepro"
@@ -1993,6 +1999,7 @@ sq:
         latest_version: "Të fundit"
         new_features:
           dismiss: "Hiqe"
+          learn_more: "Mëso më shumë"
         last_checked: "Verifikimi i fundit"
         refresh_problems: "Rifresko"
         no_problems: "Nuk u gjet asnjë gabim."
@@ -2066,6 +2073,7 @@ sq:
         user: "Përdorues"
         title: "API"
         created: Krijuar
+        never_used: (asnjëherë)
         generate: "Gjenero"
         revoke: "Revoko"
         all_users: "Gjithë Përdoruesit"

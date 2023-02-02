@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-CHANNEL_EDITABLE_PARAMS = %i[name description]
+CHANNEL_EDITABLE_PARAMS = %i[name description slug]
 CATEGORY_CHANNEL_EDITABLE_PARAMS = %i[auto_join_users allow_channel_wide_mentions]
 
 class Chat::Api::ChatChannelsController < Chat::Api
@@ -38,6 +38,13 @@ class Chat::Api::ChatChannelsController < Chat::Api
 
     begin
       ChatChannel.transaction do
+        channel_from_params.update!(
+          slug:
+            "#{Time.now.strftime("%Y%m%d-%H%M")}-#{channel_from_params.slug}-deleted".truncate(
+              SiteSetting.max_topic_title_length,
+              omission: "",
+            ),
+        )
         channel_from_params.trash!(current_user)
         StaffActionLogger.new(current_user).log_custom(
           "chat_channel_delete",
@@ -57,7 +64,7 @@ class Chat::Api::ChatChannelsController < Chat::Api
 
   def create
     channel_params =
-      params.require(:channel).permit(:chatable_id, :name, :description, :auto_join_users)
+      params.require(:channel).permit(:chatable_id, :name, :slug, :description, :auto_join_users)
 
     guardian.ensure_can_create_chat_channel!
     if channel_params[:name].length > SiteSetting.max_topic_title_length
@@ -81,6 +88,7 @@ class Chat::Api::ChatChannelsController < Chat::Api
     channel =
       chatable.create_chat_channel!(
         name: channel_params[:name],
+        slug: channel_params[:slug],
         description: channel_params[:description],
         user_count: 1,
         auto_join_users: auto_join_users,

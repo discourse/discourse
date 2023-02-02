@@ -1,47 +1,45 @@
 <div class='autocomplete ac-user'>
   <ul>
-    {{#each options.users as |user|}}
-      <li>
-        <a href title="{{user.name}}" class="{{user.cssClasses}}">
-          {{avatar user imageSize="tiny"}}
-          <span class='username'>{{format-username user.username}}</span>
-          {{#if user.name}}
-            <span class='name'>{{user.name}}</span>
-          {{/if}}
-          {{#if user.status}}
-            {{emoji user.status.emoji}}
-            <span class='status-description' title='{{user.status.description}}'>
-              {{user.status.description}}
-            </span>
-            {{#if user.status.ends_at}}
-              {{format-age user.status.ends_at}}
+    {{#each options as |item|}}
+      {{#if item.isUser}}
+        <li>
+          <a href title="{{item.name}}" class="{{item.cssClasses}}">
+            {{avatar item imageSize="tiny"}}
+            <span class='username'>{{format-username item.username}}</span>
+            {{#if item.name}}
+              <span class='name'>{{item.name}}</span>
             {{/if}}
-          {{/if}}
-        </a>
-      </li>
-    {{/each}}
+            {{#if item.status}}
+              {{emoji item.status.emoji}}
+              <span class='status-description' title='{{item.status.description}}'>
+                {{item.status.description}}
+              </span>
+              {{#if item.status.ends_at}}
+                {{format-age item.status.ends_at}}
+              {{/if}}
+            {{/if}}
+          </a>
+        </li>
+      {{/if}}
 
-    {{#if options.emails}}
-      {{#each options.emails as |email|}}
+      {{#if item.isEmail}}
         <li>
-          <a href title="{{email.username}}">
+          <a href title="{{item.username}}">
             {{d-icon 'envelope'}}
-            <span class='username'>{{format-username email.username}}</span>
+            <span class='username'>{{format-username item.username}}</span>
           </a>
         </li>
-      {{/each}}
-    {{/if}}
+      {{/if}}
 
-    {{#if options.groups}}
-      {{#each options.groups as |group|}}
+      {{#if item.isGroup}}
         <li>
-          <a href title="{{group.full_name}}">
+          <a href title="{{item.full_name}}">
             {{d-icon "users"}}
-            <span class='username'>{{group.name}}</span>
-            <span class='name'>{{group.full_name}}</span>
+            <span class='username'>{{item.name}}</span>
+            <span class='name'>{{item.full_name}}</span>
           </a>
         </li>
-      {{/each}}
-    {{/if}}
+      {{/if}}
+    {{/each}}
   </ul>
 </div>

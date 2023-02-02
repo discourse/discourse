@@ -21,9 +21,9 @@ class TopicLinkClick < ActiveRecord::Base
     uri = UrlHelper.relaxed_parse(url)
     urls = Set.new
     urls << url
-    if url =~ /^http/
-      urls << url.sub(/^https/, "http")
-      urls << url.sub(/^http:/, "https:")
+    if url =~ /\Ahttp/
+      urls << url.sub(/\Ahttps/, "http")
+      urls << url.sub(/\Ahttp:/, "https:")
       urls << UrlHelper.schemaless(url)
     end
     urls << UrlHelper.absolute_without_cdn(url)
@@ -90,7 +90,7 @@ class TopicLinkClick < ActiveRecord::Base
     # If no link is found...
     unless link.present?
       # ... return the url for relative links or when using the same host
-      return url if url =~ %r{^/[^/]} || uri.try(:host) == Discourse.current_hostname
+      return url if url =~ %r{\A/[^/]} || uri.try(:host) == Discourse.current_hostname
 
       # If we have it somewhere else on the site, just allow the redirect.
       # This is likely due to a onebox of another topic.

@@ -243,7 +243,7 @@ module SiteSettings::Validations
 
   def validate_cors_origins(new_val)
     return if new_val.blank?
-    return unless new_val.split("|").any?(%r{/$})
+    return unless new_val.split("|").any?(%r{/\z})
     validate_error :cors_origins_should_not_have_trailing_slash
   end
 

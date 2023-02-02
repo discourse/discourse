@@ -499,6 +499,7 @@ fi:
       Voit muokata edellistä viestiäsi ja lisätä siihen lainauksen maalaamalla lainattavan viestin tekstiä ja klikkaamalla ilmestyvää <b>lainaa</b>-painiketta.
 
       On helpompaa lukea ketjua, jossa on vähemmän pidempiä vastauksia kuin sellaista, jossa on paljon lyhyitä yksittäisiä vastauksia.
+    dominating_topic: Olet kirjoittanut paljon tähän ketjuun! Voisit antaa muille mahdollisuuden vastata täällä ja keskustella asioista myös keskenään.
     get_a_room: Olet vastannut käyttäjälle @%{reply_username} %{count} kertaa, tiesitkö, että voit lähettää hänelle yksityisviestin?
     too_many_replies: |
       ### Olet kirjoittanut enimmäismäärän vastauksia tähän ketjuun
@@ -538,6 +539,7 @@ fi:
               target_user_not_found: "Yhtä käyttäjää, jolle lähetät tämän viestin, ei löydy."
               unable_to_update: "Ketjun päivittäminen epäonnistui."
               unable_to_tag: "Tunnisteen asettaminen ketjuun epäonnistui."
+              unable_to_unlist: "Et voi luoda listaamatonta ketjua."
             featured_link:
               invalid: "ei ole kelvollinen. URL-osoitteen tulisi sisältää http:// tai https://."
         user:
@@ -668,6 +670,7 @@ fi:
       one: "%{count} tykkäys"
       other: "%{count} tykkäystä"
     cannot_permanently_delete:
+      many_posts: "Tässä ketjussa on poistamattomia viestejä. Poista ne pysyvästi ennen kuin poistat ketjun pysyvästi."
       wait_or_different_admin: "Sinun täytyy odottaa %{time_left} ennen kuin poistat tämän viestin pysyvästi, tai toisen järjestelmänvalvojan on tehtävä se."
   rate_limiter:
     slow_down: "Olet suorittanut toiminnon liian monta kertaa. Kokeile myöhemmin uudelleen."
@@ -859,6 +862,7 @@ fi:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Sopimaton"
+      description: 'Tässä viestissä on sisältöä, jota kohtuullinen henkilö pitäisi loukkaavana, herjaavana, vihamielisenä toimintana tai <a href="%{base_path}/guidelines">yhteisön sääntöjen</a> vastaisena.'
       short_description: '<a href="%{base_path}/guidelines">Yhteisön sääntöjen</a> vastainen'
     notify_user:
       title: "Lähetä käyttäjälle @%{username} viesti."
@@ -924,6 +928,7 @@ fi:
       short_description: "Tämä on mainos"
     inappropriate:
       title: "Sopimaton"
+      description: 'Tässä ketjussa on sisältöä, jota kohtuullinen henkilö pitäisi loukkaavana, herjaavana, vihamielisenä toimintana tai <a href="%{base_path}/guidelines">yhteisön sääntöjen</a> vastaisena.'
       long_form: "liputti tämän sopimattomaksi"
       short_description: '<a href="%{base_path}/guidelines">Yhteisön sääntöjen</a> vastainen'
     notify_moderators:
@@ -961,6 +966,8 @@ fi:
     mailing_list_mode: "Poistu postituslistatilasta"
     all: "Älä lähetä minulle sähköpostia sivustolta %{sitename}"
     different_user_description: "Olet kirjautunut sisään eri käyttäjänä kuin käyttäjä, jolle sähköposti lähetettiin. Kirjaudu ulos tai siirry anonyymitilaan ja yritä sitten uudelleen."
+    not_found_description: "Tilausta ei löytynyt. Kenties sinulle lähetetty linkki on vanhentunut?"
+    user_not_found_description: "Tälle tilaukselle ei löytynyt käyttäjää. Yrität todennäköisesti peruuttaa sellaisen tilin tilausta, jota ei enää ole olemassa."
     log_out: "Kirjaudu ulos"
     submit: "Tallenna asetukset"
     digest_frequency:
@@ -997,6 +1004,7 @@ fi:
       write: "Kaikkiin kirjoittaminen"
       one_time_password: "Kertakäyttöisen kirjautumiskoodin luominen"
       bookmarks_calendar: "Kirjanmerkkimuistutusten lukeminen"
+      user_status: "Käyttäjän tilan lukeminen ja päivittäminen"
     invalid_public_key: "Julkinen avain ei kelpaa."
     invalid_auth_redirect: "Tämä auth_redirect host ei ole sallittu."
     invalid_token: "Tunniste puuttuu, ei kelpaa tai on vanhentunut."
@@ -1090,10 +1098,12 @@ fi:
         author: Kirjoittaja
         edit_reason: Syy
     consolidated_api_requests:
+      title: "Konsolidoidut API-pyynnöt"
       xaxis:
         api: "API"
         user_api: "Käyttäjä-API"
       yaxis: "Päivä"
+      description: "API-pyynnöt tavallisille API-avaimille ja käyttäjän API-avaimille."
     dau_by_mau:
       title: "PAK/KAK"
       xaxis: "Päivä"
@@ -1416,6 +1426,11 @@ fi:
     allow_duplicate_topic_titles_category: "Salli ketjut, joilla on identtiset otsikot, jos ketjut on eri alueella. Asetuksen allow_duplicate_topic_titles on oltava pois käytöstä."
     unique_posts_mins: "Kuinka monen minuutin kuluttua käyttäjä voi lähettää uudestaan samansisältöisen viestin"
     educate_until_posts: "Näytä uuden käyttäjän ohje, kun käyttäjä alkaa kirjoittamaan ensimmäistä (n) viestiään viestikenttään."
+    title: "Tämän sivuston nimi. Näkyy kaikille vierailijoille, mukaan lukien anonyymit käyttäjät."
+    site_description: "Kuvaile tätä sivustoa yhdellä lauseella. Näkyy kaikille vierailijoille, mukaan lukien anonyymit käyttäjät."
+    short_site_description: "Lyhyt muutaman sanan kuvaus. Näkyy kaikille vierailijoille, mukaan lukien anonyymit käyttäjät."
+    contact_email: "Sivustosta vastaavan henkilön sähköpostiosoite. Siihen lähetetään kriittiset ilmoitukset, ja se näkyy myös <a href='%{base_path}/about' target='_blank'>/about</a>-sivulla. Näkyy anonyymeille käyttäjille julkisilla sivustoilla."
+    contact_url: "Tämän sivuston yhteydenotto-URL. Kun tämä on asetettu, se korvaa sähköpostiosoitteen <a href='%{base_path}/about' target='_blank'>/about</a>-sivulla ja näkyy anonyymeille käyttäjille julkisilla sivustoilla."
     crawl_images: "Lataa linkatut kuvat kuvan mittojen määrittamiseksi."
     download_remote_images_to_local: "Muunna etäkuvat (linkitetyt) paikallisiksi kuviksi lataamalle ne. Tämä säilyttää sisällön myös silloin, jos kuvat poistetaan etäsivustolta tulevaisuudessa."
     download_remote_images_threshold: "Vähin vapaa tila, jotta linkatut kuvat ladataan paikallisesti (prosenteissa)"
@@ -1431,6 +1446,8 @@ fi:
     edit_history_visible_to_public: "Salli kaikkien nähdä muokatun viestin edelliset versiot. Jos asetus poistetaan käytöstä, vain henkilökunta näkee versiot."
     delete_removed_posts_after: "Kirjoittajan poistamat viestit poistetaan automaattisesti (n) tunnin kuluttua. Jos arvoksi asetetaan 0, viestit poistetaan välittömästi."
     notify_users_after_responses_deleted_on_flagged_post: "Kun viesti liputetaan ja poistetaan tämän jälkeen, kaikille viestiin vastanneille käyttäjille, joiden vastaukset on poistettu, ilmoitetaan."
+    max_image_width: "Viestin kuvien pikkukuvan enimmäisleveys. Leveämpien kuvien kokoa muutetaan ja ne näytetään lightboxissa."
+    max_image_height: "Viestin kuvien pikkukuvan enimmäiskorkeus. Korkeampien kuvien kokoa muutetaan, ja ne näytetään lightboxissa."
     responsive_post_image_sizes: "Muuta lightbox-esikatselukuvien kokoa seuraavien pikselisuhteiden suuren DPI:n näyttöjä varten. Poista kaikki arvot poistaaksesi responsiiviset kuvat käytöstä."
     fixed_category_positions: "Jos tämä on valittuna, voit muokata alueiden järjestystä. Jos tätä ei valita, alueet järjestetään aktiivisuuden mukaan."
     fixed_category_positions_on_create: "Jos tämä on valittuna, alueiden järjestys pysyy samana uuden ketjun aloittamisen dialogissa (edellyttää fixed_category_positions-asetusta)."
@@ -1568,10 +1585,7 @@ fi:
     max_favorite_badges: "Enimmäismäärä kunniamerkkejä, jonka käyttäjä voi valita"
     whispers_allowed_groups: "Salli tiettyjen ryhmien jäsenten yksityinen viestintä ketjuissa."
     allow_index_in_robots_txt: "Määritä robots.txt-tiedostossa, että hakurobotit saavat indeksoida tätä sivustoa. Poikkeuksellisissa tapauksissa voit <a href='%{base_path}/admin/customize/robots'>ohittaa robots.txt:n</a> pysyvästi."
-    blocked_email_domains: "Pystyviivalla eroteltu luettelo sähköpostiverkkotunnuksista, joilla käyttäjät eivät voi luoda tiliä. Esimerkiksi mailinator.com|trashmail.net"
-    allowed_email_domains: "Pystyviivalla eroteltu luettelo sähköpostiverkkotunnuksista, joilla käyttäjien TÄYTYY luoda tilinsä. VAROITUS: käyttäjiä, joiden sähköpostiverkkotunnus ei ole luettelossa, ei sallita!"
     normalize_emails: "Tarkista, onko normalisoitu sähköpostiosoite yksilöllinen. Normalisoitu sähköpostiosoite poistaa kaikki pisteet käyttäjätunnuksesta ja kaiken +- ja @-symbolien väliltä."
-    auto_approve_email_domains: "Käyttäjät, joilla on sähköpostiosoite tästä verkkotunnusten luettelosta, hyväksytään automaattisesti."
     hide_email_address_taken: "Älä ilmoita käyttäjille rekisteröitymisen tai unohtuneen salasanan palautuksen aikana, että annetulla sähköpostiosoitteella on olemassa tili. Vaadi täydellinen sähköpostiosoite unohtuneen salasanan pyynnöissä."
     log_out_strict: "Kun kirjaudutaan ulos, kirjaa käyttäjä ulos KAIKILTA laitteilta"
     version_checks: "Pingaa Discourse Hubia päivityksistä ja näytä ilmoitus <a href='%{base_path}/admin' target='_blank'>/ylläpitäjän</a> hallintapaneelissa, kun uusi versio on saatavilla"
@@ -1635,6 +1649,7 @@ fi:
     discord_trusted_guilds: 'Salli vain näiden Discord-kiltojen jäsenten kirjautua Discordin avulla. Käytä killan numeerista tunnusta. Jos tarvitset lisätietoa, ohjeet löytyy <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">täältä</a>. Jätä tyhjäksi, jos et halua rajoittaa killan perusteella.'
     enable_backups: "Salli ylläpitäjien tehdä varmuuskopioita foorumista"
     allow_restore: "Salli palautus, joka korvaa KAIKEN sivuston datan! Jätä pois käytöstä, jos et aio palauttaa sivuston varmuuskopiota."
+    maximum_backups: "Säilytettävien varmuuskopioiden enimmäismäärä. Vanhemmat varmuuskopiot poistetaan automaattisesti."
     automatic_backups_enabled: "Tee automaattinen varmuuskopiointi varmuuskopiotiheydessä määritetyn mukaisesti"
     backup_frequency: "Kuinka monen päivän välein otetaan varmuuskopio."
     s3_backup_bucket: "Etäsäilö, johon varmuuskopiot ladataan. VAROITUS: varmista, että se on yksityinen."
@@ -1809,6 +1824,7 @@ fi:
     faq_url: "Jos haluat käyttää sivuston ulkopuolella ylläpidettyä UKK-listaa, syötä URL tähän."
     tos_url: "Jos haluat ylläpitää käyttöehtoja sivuston ulkopuolella, syötä URL tähän."
     privacy_policy_url: "Jos haluat ylläpitää tietosuojaselostetta sivuston ulkopuolella, syötä URL tähän."
+    log_anonymizer_details: "Säilytetäänkö käyttäjän tiedot lokissa anonymisoinnin jälkeen."
     newuser_spam_host_threshold: "Kuinka monta kertaa uusi käyttäjä voi linkittää samalle sivustolle `newuser_spam_host_posts` viestissään, ennen kuin se tulkitaan roskapostin lähettämiseksi."
     allowed_spam_host_domains: "Lista verkkotunnuksista, joita ei oteta huomioon roskapostin tunnistamisessa. Uusilla käyttäjillä ei ole rajoituksia linkkaamisessa näihin tunnuksiin."
     staff_like_weight: "Kuinka paljon painoa annetaan henkilökunnan tykkäyksille (muiden kuin henkilökunnan tykkäysten paino on 1)"
@@ -1961,8 +1977,6 @@ fi:
     automatically_unpin_topics: "Poista ketjun kiinnitys automaattisesti, kun käyttäjä on sen lopussa."
     read_time_word_count: "Sanamäärä minuutissa, jota käytetään lukuajan arviointiin."
     topic_page_title_includes_category: "Ketjusivun <a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>otsikkotunniste</a> sisältää alueen nimen."
-    native_app_install_banner_ios: "Näyttää DiscourseHub-sovelluksen bannerin iOS-laitteilla tavallisille käyttäjille (luottamustasosta 1 ylöspäin)."
-    native_app_install_banner_android: "Näyttää DiscourseHub-sovelluksen bannerin Android-laitteilla tavallisille käyttäjille (luottamustasosta 1 ylöspäin)."
     app_association_android: "<a href='%{base_path}/.well-known/assetlinks.json'>.well-known/assetlinks.json</a>-päätepisteen sisältö, käytetään Googlen Digital Asset Links APIssa."
     app_association_ios: "Contents of <a href='%{base_path}/apple-app-site-association'>apple-app-site-association</a>-päätepisteen sisältö, käytetään universaalien linkkien luomiseen tämän sivuston ja iOS-sovellusten välille."
     share_anonymized_statistics: "Julkaise yksilöimättömät käyttötilastot."
@@ -1975,6 +1989,7 @@ fi:
     display_name_on_posts: "Näytä käyttäjän koko nimi viesteissä @käyttäjätunnuksen lisäksi."
     show_time_gap_days: "Jos kahden viestin välissä on kulunut näin monta päivää, näytä aikaväli ketjussa."
     short_progress_text_threshold: "Kuinka monen viestin jälkeen ketjun edistyspalkissa näytetään vain nykyisen viestin numero. Jos muutat palkin leveyttä, voit joutua muuttamaan tätä arvoa."
+    default_code_lang: "Oletusarvoinen ohjelmointikielen syntaksin korostus, jota käytetään koodilohkoissa (auto, text, ruby, python jne.). Tämä arvo täytyy esiintyä myös \"highlighted languages\" -sivustoasetuksessa."
     warn_reviving_old_topic_age: "Kun käyttäjä alkaa kirjoittamaan vastausta ketjuun, jonka uusin viesti on tätä vanhempi päivissä, näytetään varoitus. Poista käytöstä asettamalla arvoksi 0."
     autohighlight_all_code: "Pakota koodin korostus kaikkiin esimuotoiltuihin koodilohkoihin, vaikka käyttäjä ei määrittelisi kieltä."
     highlighted_languages: "Mitä syntaksikorostussääntöjä on käytössä. (Varoitus: liian monen kielen käyttöönotto voi vaikuttaa suorituskykyyn.) Ks. demo: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a>"
@@ -2091,6 +2106,8 @@ fi:
     shared_drafts_min_trust_level: "Salli käyttäjien nähdä ja muokata jaettuja luonnoksia."
     push_notifications_prompt: "Näytä käyttäjäsuostumuspyyntö."
     push_notifications_icon: "Ilmoituskulmassa näkyvä kunniamerkkikuvake. Suosittelemme yksiväristä läpinäkyvää PNG:tä, jonka koko on 96×96."
+    enable_desktop_push_notifications: "Ota työpöydän ponnahdusilmoitukset käyttöön"
+    push_notification_time_window_mins: "Odota (n) minuuttia ennen ponnahdusilmoituksen lähettämistä. Auttaa estämään ponnahdusilmoitusten lähettämisen aktiiviselle online-käyttäjälle."
     base_font: "Perusfontti, jota käytetään suurimmalle osalle sivuston tekstistä. Teemat voivat ohittaa valinnan mukautetulla CSS-määritteellä \"--font-family\"."
     heading_font: "Fontti, jota käytetään sivuston otsikoissa. Teemat voivat ohittaa valinnan mukautetulla CSS-määritteellä \"--heading-font-family\"."
     enable_sitemap: "Luo sivustokartta sivustollesi ja sisällytä se robots.txt-tiedostoon."
@@ -2112,9 +2129,12 @@ fi:
     use_name_for_username_suggestions: "Käytä käyttäjän koko nimeä käyttäjätunnusten ehdottamiseen."
     suggest_weekends_in_date_pickers: "Sisällytä viikonloput (lauantai ja sunnuntai) päivämäärävalitsimen ehdotuksiin (poista tämä käytöstä, jos käytät Discoursea vain arkipäivisin maanantaista perjantaihin)."
     splash_screen: "Näyttää väliaikaisen latausnäytön sivuston resurssien latautuessa"
+    navigation_menu: "Määritä käytettävä navigointivalikko. Sivupalkin ja yläpalkin navigointi ovat käyttäjien mukautettavissa. Vanha vaihtoehto on käytettävissä yhteensopivuuden varmistamiseksi vanhojen versioiden kanssa."
     default_sidebar_categories: "Valitut alueet näkyvät sivupalkin Alueet-osiossa oletuksena."
     default_sidebar_tags: "Valitut tunnisteet näkyvät sivupalkin Tunnisteet-osiossa oletuksena."
     enable_new_user_profile_nav_groups: "KOKEELLINEN: valittujen ryhmien käyttäjille näytetään uusi käyttäjäprofiilin navigointivalikko"
+    enable_experimental_topic_timeline_groups: "KOKEELLINEN: valittujen ryhmien käyttäjille näytetään uudelleenmuotoiltu ketjun aikajana"
+    enable_experimental_hashtag_autocomplete: "KOKEELLINEN: käytä alueille ja tunnisteille uutta automaattista #hashtag-täydennysjärjestelmää, jotka hahmontaa valitun kohteen eri tavalla ja on parantanut hakua"
     errors:
       invalid_css_color: "Virheellinen väri. Anna värin nimi tai heksadesimaaliarvo."
       invalid_email: "Sähköpostiosoite ei kelpaa."
@@ -2561,10 +2581,12 @@ fi:
       %{notes}
   flag_reasons:
     off_topic: "Viestisi merkittiin **eksyvän aiheesta**: koetaan, ettei se ei kuulu ketjun aiheeseen, jonka määrittelevät sen aloitusviesti ja otsikko."
+    inappropriate: "Viestisi liputettiin **sopimattomaksi**: se koetaan loukkaavaksi, herjaavaksi, vihamieliseksi toiminnaksi tai [yhteisön sääntöjen](%{base_path}/guidelines) vastaiseksi."
     spam: "Viestisi merkittiin **roskapostiksi**: sen koetaan olevan luonteeltaan mainostamista eikä hyödyllinen tai asiallinen lisä keskusteluun."
     notify_moderators: "Viestisi merkittiin **valvojien tiedoksi**: siinä koetaan olevan jotain, mihin henkilökunnan pitäisi puuttua."
     responder:
       off_topic: "Viestisi merkittiin **eksyvän aiheesta**: koetaan, ettei se ei kuulu ketjun aiheeseen, jonka määrittelevät sen aloitusviesti ja otsikko."
+      inappropriate: "Viesti liputettiin **sopimattomaksi**: se koetaan loukkaavaksi, herjaavaksi, vihamieliseksi toiminnaksi tai [yhteisön sääntöjen](%{base_path}/guidelines) vastaiseksi."
       spam: "Viesti merkittiin **roskapostiksi**: sen koetaan olevan luonteeltaan mainostamista eikä hyödyllinen tai asiallinen lisä keskusteluun."
       notify_moderators: "Viesti merkittiin **valvojien tiedoksi**: siinä koetaan olevan jotain, mihin henkilökunnan pitäisi puuttua."
   flags_dispositions:
@@ -3388,6 +3410,7 @@ fi:
 
         %{respond_instructions}
     user_watching_category_or_tag:
+      title: "Käyttäjän tarkkailualue tai -tunniste"
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -3888,88 +3911,6 @@ fi:
     title: "Käyttöehdot"
   privacy_topic:
     title: "Tietosuojaseloste"
-    body: |
-      <a name="collect"></a>
-
-      ## [Mitä tietoja keräämme?](#collect)
-
-      Tallennamme tietoa sinusta, kun rekisteröidyt sivustolle, ja keräämme tietoa toimistasi palstalla: lukemisestasi, kirjoittamisestasi ja siitä, miten reagoit täällä jaettuun sisältöön.
-
-      Kun rekisteröidyt sivustolle, sinua voidaan pyytää antamaan nimesi ja sähköpostiosoitteesi. Voit kuitenkin halutessasi vierailla sivustolla rekisteröitymättä. Sähköpostiosoitteesi varmistetaan ainutkertaisen linkin sisältävän sähköpostiviestin avulla. Kun linkkiä klikataan, tiedämme sinun hallinnoivan antamaasi sähköpostiosoitetta.
-
-      Kun olet rekisteröitynyt ja kirjoitat, tallennamme IP-osoitteen, josta viesti lähtee. Voimme myös ylläpitää palvelinlokia, joka sisältää jokaista palvelimellemme lähetettyä pyyntöä vastaavan IP-osoitteen.
-
-      <a name="use"></a>
-
-      ## [Mihin käytämme sinusta kerättyä tietoa?](#use)
-
-      Mitä tahansa sinusta kerättyä tietoa voidaan käyttää jollakin näistä tavoista:
-
-      * Tarjotaksemme yksilöllisen kokemuksen &mdash; tietojen avulla vastaamme sinun henkilökohtaisiin tarpeisiisi.
-      * Parantaaksemme sivustoa &mdash; pyrimme jatkuvasti parantamaan sivuston toimintaa kerätyn tiedon ja käyttäjäpalautteen perusteella.
-      * Parantaaksemme asiakaspalvelua &mdash; tiedot auttavat tarjoamaan tehokkaampaa asiakaspalvelua ja teknistä tukea.
-      * Lähettääksemme ajoittain sähköpostiviestejä &mdash; antamaasi sähköpostiosoitteeseen voidaan lähettää tietoa, valitsemiasi ilmoituksia tapahtumista eri ketjuissa tai käyttäjänimeesi liittyen tai vastineita tiedusteluihisi, pyyntöihisi tai kysymyksiisi.
-
-      <a name="protect"></a>
-
-      ## [Miten suojaamme tietojasi?](#protect)
-
-      Meillä on liuta erilaisia turvallisuuskäytänteitä, joilla pidämme henkilötietosi turvassa kun syötät, tallennat tai tarkastelet tietoa.
-
-      <a name="data-retention"></a>
-
-      ## [Miten tietoja säilötään?](#data-retention)
-
-      Pyrimme parhaamme mukaan:
-
-      * Säilömään kaikkia pyyntöjä vastaavan IP-osoitteen sisältävän palvelinlokin enintään 90 päivän ajan.
-      * Säilömään rekisteröityneeseen käyttäjään ja hänen viesteihinsä liittyvät IP-osoitteet enintään 5 vuoden ajan.
-
-      <a name="cookies"></a>
-
-      ## [Käytämmekö evästeitä?](#cookies)
-
-      Kyllä. Evästeet ovat pieniä tiedostoja, jotka sivusto tai sen palveluntarjoaja siirtää tietokoneesi kiintolevylle verkkoselaimesi kautta (jos sallit sen). Nämä evästeet mahdollistavat selaimesi tunnistamisen, ja jos olet rekisteröitynyt käyttäjä, sen yhdistämisen käyttäjätunnukseesi.
-
-      Evästeiden avulla tunnistamme ja tallennamme asetuksia tulevia vierailuja varten ja keräämme yleisluontoista tietoa sivuston liikennemääristä ja sivustolla liikkumisesta, jotta voimme tarjota tulevaisuudessa paremman käyttökokemuksen ja hyödyllisiä toimintoja. Voimme tehdä yhteistyötä kolmansien osapuolien kanssa ymmärtääksemme paremmin sivustolla vierailevia. Näillä palveluntarjoajilla ei ole lupaa käyttää keräämäämme tietoa muuhun kuin palvelumme kehittämiseen.
-
-      <a name="disclose"></a>
-
-      ## [Paljastammeko tietoa ulkopuolisille tahoille?](#disclose)
-
-      Emme myy, vaihda tai muutoin käy kauppaa ulkopuolisten tahojen kanssa yksilöllisesti tunnistettavilla tiedoilla. Tähän poikkeus on luotetut kolmannet osapuolet, jotka auttavat sivustomme ja toimintamme pyörittämisessä tai sinun palvelemisessa; vaadimme näitä tahoja pitämään tiedot luottamuksellisina. Voimme myös jakaa tietojasi, jos uskomme sen olevan tarpeen lain, sivustomme käytäntöjen, omien tai muiden tahojen oikeuksien tai omaisuuden tai turvallisuuden kannalta. Yksilöimättömiä tietoja voidaan kuitenkin jakaa muiden tahojen kanssa kaupankäynnin tai markkinoinnin avuksi tai muuhun käyttöön.
-
-      <a name="third-party"></a>
-
-      ## [Linkit kolmansien tahojen sivustoille](#third-party)
-
-      Joissain tapauksissa, harkintamme mukaan, voimme sallia tai tarjota kolmannen osapuolen tuotteita tai palveluita sivustollamme. Näillä kolmannen osapuolen sivustoilla on erilliset itsenäiset tietosuojaselosteensa. Emme ole vastuussa sisällöstä tai toiminnasta näillä linkitetyillä sivustoilla. Joka tapauksessa pyrimme vaalimaan sivustomme kunniallisuutta ja otamme ilolla vastaan kaikenlaisen palautteen näitä sivustoja koskien.
-
-      <a name="coppa"></a>
-
-      ## [Lapsen yksilönsuoja internetissä -lain noudattaminen](#coppa)
-
-      Sivustomme, tuotteemme ja palvelumme on suunnattu 13-vuotiaille ja sitä vanhemmille. Jos tämä palvelin on Yhdysvalloissa ja olet alle 13-vuotias, COPPA-lain ([Children's Online Privacy Protection Act](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)) nojalla älä käytä tätä sivustoa.
-
-      <a name="online"></a>
-
-      ## [Tietosuojaseloste koskee vain internetiä](#online)
-
-      Tämä tietosuojaseloste koskee vain sivustomme kautta kerättyä tietoa eikä siten koske verkon ulkopuolelta kerättyä tietoa.
-
-      <a name="consent"></a>
-
-      ## [Suostumuksesi](#consent)
-
-      Käyttämällä sivustoa hyväksyt sivustomme tietosuojaselosteen.
-
-      <a name="changes"></a>
-
-      ## [Muutokset tietosuojaselosteeseen](#changes)
-
-      Jos päätämme muuttaa tietosuojaselostettamme, muutokset ovat nähtävissä tällä sivulla.
-
-      Tämä tiedosto on CC-BY-SA-lisensoitu. Viimeksi päivitetty 31.5.2013.
   badges:
     mass_award:
       errors:
@@ -4284,6 +4225,8 @@ fi:
     title: "Discoursen asennus"
     step:
       introduction:
+        title: "Tietoa sivustostasi"
+        description: "Nämä näkyvät kirjautumisessasi ja kaikilla julkisilla sivuilla. Voit aina muuttaa niitä myöhemmin."
         fields:
           title:
             label: "Yhteisön nimi"
@@ -4294,21 +4237,28 @@ fi:
           default_locale:
             label: "Kieli"
       privacy:
+        title: "Jäsenkokemus"
         fields:
           login_required:
             placeholder: "Yksityinen"
             extra_description: "Vain kirjautuneilla käyttäjillä on pääsy yhteisöön"
           invite_only:
+            placeholder: "Vain kutsusta"
             extra_description: "Luotettujen käyttäjien tai henkilökunnan on kutsuttava käyttäjät, muutoin käyttäjät voivat rekisteröityä itse"
           must_approve_users:
+            placeholder: "Vaadi hyväksyntä"
             extra_description: "Henkilökunnan täytyy hyväksyä käyttäjät"
           chat_enabled:
             placeholder: "Ota chat käyttöön"
+            extra_description: "Pidä yhteyttä jäseniisi reaaliajassa"
           enable_sidebar:
             placeholder: "Ota sivupalkki käyttöön"
+            extra_description: "Helppo pääsy suosikkitiloihisi"
       ready:
+        title: "Sivustosi on valmis!"
         description: "Olet nyt tehnyt perusasioat yhteisösi määrittämiseksi. Nyt voit alkaa tutustumaan paikkoihin, kirjoittaa tervetuloketjun ja lähettää kutsuja!<br><br>Pidä hauskaa!"
       styling:
+        title: "Ulkoasu ja tuntuma"
         fields:
           color_scheme:
             label: "Värimalli"
@@ -4339,19 +4289,38 @@ fi:
                 label: "Alueet laatikoissa, joissa ketjuja"
               subcategories_with_featured_topics:
                 label: "Ala-alueet, joissa on esiteltyjä ketjuja"
-      corporate:
+      branding:
+        title: "Sivuston logo"
         fields:
+          logo:
+            label: "Ensisijainen logo"
+            description: "Suositeltu koko: 600 x 200"
+          logo_small:
+            label: "Neliölogo"
+            description: "Suositeltu koko: 512 x 512. Käytetään myös faviconina ja mobiilialoitusnäytön sovelluskuvakkeena."
+      corporate:
+        title: "Organisaatiosi"
+        description: "Seuraavia tietoja käytetään käyttöehdoissasi ja tietosivuillasi. Jos yritystä ei ole, voit ohittaa nämä."
+        fields:
+          company_name:
+            label: "Yrityksen nimi"
+            placeholder: "Esimerkkiorganisaatio"
           governing_law:
+            label: "Sovellettava lainsäädäntö"
             placeholder: "Kalifornian laki"
           contact_url:
+            label: "Verkkosivu"
             placeholder: "https://www.esimerkki.fi/ota-yhteytta"
           city_for_disputes:
+            label: "Kaupunki, jonka oikeudessa riidat ratkotaan"
             placeholder: "San Francisco, Kalifornia"
           site_contact:
+            label: "Automaattiset viestit"
             description: "Kaikki Discoursen automaattiset yksityisviestit lähetetään tältä käyttäjältä, kuten varoitukset merkinnöistä ja ilmoitukset valmistuneista varmuuskopioista."
           contact_email:
             label: "Yhteyshenkilö"
             placeholder: "esimerkki@käyttäjä.com"
+            description: "Sivustosta vastaavan henkilön sähköpostiosoite. Siihen lähetetään kriittiset ilmoitukset, ja se näkyy myös <a href='%{base_path}/about' target='_blank'>tietosivullasi</a> kiireellisiä yhteydenottoja varten."
       invites:
         title: "Kutsu henkilökuntaa"
         description: "Melkein valmista! Kutsu vielä joitakin ihmisiä <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>pohjustamaan keskusteluita</a> mielenkiintoisilla aiheilla ja vastauksilla, jotta yhteisösi pääsee alkuun."

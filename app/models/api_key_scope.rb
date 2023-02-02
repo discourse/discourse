@@ -45,6 +45,10 @@ class ApiKeyScope < ActiveRecord::Base
               category_id: :category_slug_path_with_id,
             },
           },
+          status: {
+            actions: %w[topics#status],
+            params: %i[topic_id category_id status enabled],
+          },
         },
         posts: {
           edit: {
@@ -101,6 +105,9 @@ class ApiKeyScope < ActiveRecord::Base
           anonymize: {
             actions: %w[admin/users#anonymize],
           },
+          suspend: {
+            actions: %w[admin/users#suspend],
+          },
           delete: {
             actions: %w[admin/users#destroy],
           },
@@ -119,6 +126,11 @@ class ApiKeyScope < ActiveRecord::Base
         email: {
           receive_emails: {
             actions: %w[admin/email#handle_mail admin/email#smtp_should_reject],
+          },
+        },
+        invites: {
+          create: {
+            actions: %w[invites#create],
           },
         },
         badges: {
@@ -144,6 +156,16 @@ class ApiKeyScope < ActiveRecord::Base
           },
           revoke_badge_from_user: {
             actions: %w[user_badges#destroy],
+          },
+        },
+        search: {
+          show: {
+            actions: %w[search#show],
+            params: %i[q page],
+          },
+          query: {
+            actions: %w[search#query],
+            params: %i[term],
           },
         },
         wordpress: {

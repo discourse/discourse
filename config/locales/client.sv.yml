@@ -179,6 +179,7 @@ sv:
       forwarded: "Vidarebefordrade ovanstående e-post"
     topic_admin_menu: "ämnesåtgärder"
     skip_to_main_content: "Hoppa till huvudinnehållet"
+    skip_user_nav: "Hoppa till profilinnehållet"
     emails_are_disabled: "All utgående e-post har blivit globalt inaktiverad av en administratör. Inga e-postaviseringar av något slag kommer att skickas ut."
     emails_are_disabled_non_staff: "Utgående e-post har inaktiverats för användare som inte är anställda."
     software_update_prompt:
@@ -302,11 +303,9 @@ sv:
       edit_bookmark: "Redigera bokmärke"
       clear_bookmarks: "Töm bokmärken"
       help:
-        bookmark: "Klicka för att bokmärka första inlägget i ämnet"
-        edit_bookmark: "Klicka för att redigera bokmärket för detta ämne"
         edit_bookmark_for_topic: "Klicka för att redigera bokmärket för detta ämne"
         unbookmark: "Klicka för att radera alla bokmärken i ämnet"
-        unbookmark_with_reminder: "Klicka för att ta bort alla bokmärken och påminnelser i detta ämne."
+        unbookmark_with_reminder: "Klicka för att ta bort alla bokmärken och påminnelser i detta ämne"
     bookmarks:
       created: "Du har bokmärkt detta inlägg. %{name}"
       created_generic: "Du har bokmärkt detta. %{name}"
@@ -1052,7 +1051,7 @@ sv:
         perm_denied_expl: "Du nekade tillåtelse för aviseringar. Tillåt aviseringar via din webbläsares inställningar."
         disable: "Inaktivera aviseringar"
         enable: "Aktivera aviseringar"
-        each_browser_note: 'Obs: Du måste ändra den här inställningen i varje webbläsare du använder. Alla aviseringar kommer att inaktiveras om du pausar aviseringar från användarmenyn, oavsett denna inställning.'
+        each_browser_note: "Obs: Du måste ändra den här inställningen i varje webbläsare du använder. Alla aviseringar kommer att inaktiveras om du pausar aviseringar från användarmenyn, oavsett denna inställning."
         consent_prompt: "Vill du ha realtidsaviseringar när personer svarar på dina inlägg?"
       dismiss: "Avfärda"
       dismiss_notifications: "Avfärda alla"
@@ -3229,6 +3228,8 @@ sv:
           last: "Senaste versionen"
           hide: "Göm version"
           show: "Visa version"
+          destroy: "Ta bort versioner"
+          destroy_confirm: "Är du säker på att du vill ta bort alla versioner av det här inlägget? Denna åtgärd är permanent."
           revert: "Återgå till version %{revision}"
           edit_wiki: "Uppdatera Wiki"
           edit_post: "Ändra inlägg"
@@ -3262,6 +3263,7 @@ sv:
         updated: "Uppdaterade"
         name: "Namn"
         name_placeholder: "Vad används detta bokmärke till?"
+        name_input_label: "Namn på bokmärke"
         set_reminder: "Påminn mig"
         options: "Alternativ"
         actions:
@@ -3472,7 +3474,9 @@ sv:
         inappropriate: "Det är olämpligt"
         spam: "Det är skräppost"
       custom_placeholder_notify_user: "Var specifik, var konstruktiv och var alltid trevlig."
+      notify_user_textarea_label: "Meddelande till användaren"
       custom_placeholder_notify_moderators: "Låt oss veta i detalj vad du är bekymrad över, och skicka om möjligt med relevanta länkar och exempel."
+      notify_moderators_textarea_label: "Meddelande till moderatorerna"
       custom_message:
         at_least:
           one: "skriv åtminstone %{count} tecken"
@@ -3638,7 +3642,6 @@ sv:
         this_week: "Vecka"
         today: "Idag"
     browser_update: 'Tyvärr stöds inte <a href="https://www.discourse.org/faq/#browser">din webbläsare</a>. Vänligen <a href="https://browsehappy.com">byt till en webbläsare som stöds</a> för att se innehåll, logga in och svara.'
-    safari_13_warning: Webbplatsen har fullt stöd för redigering av innehåll med webbläsare på iOS 12.5 och 13 till januari 2023. Därefter krävs iOS 14 eller senare. Äldre versioner av iOS kan då endast läsa förenklat innehåll. (<a href="https://meta.discourse.org/t/224747">mer information</a>)
     permission_types:
       full: "Skapa / svara / se"
       create_post: "Svara / se"
@@ -4285,8 +4288,9 @@ sv:
             topics:
               read: Läs ett ämne eller ett specifikt inlägg i det. RSS stöds också.
               write: Skapa ett nytt ämne eller inlägg till en befintligt sådan.
-              update: Uppdatera ett ämne. Ändra titel, kategori, taggar, etc.
+              update: Uppdatera ett ämne. Ändra titel, kategori, taggar, status, arketyp, featured_link etc.
               read_lists: Läs ämneslistor som topp, ny, senaste osv. RSS stöds också.
+              status: "Uppdatera ett ämnes status. Status: stängt, arkiv, synligt, fäst. Aktiverad: sant, falskt. Ange ett kategori-id här och i förfrågans nyttolast för att endast tillåta statusändringar för ämnen i den kategorin."
             posts:
               edit: Redigera ett inlägg eller ett specifikt inlägg.
             categories:
@@ -4302,6 +4306,7 @@ sv:
               update: Uppdatera information om användarprofil.
               log_out: Logga ut alla sessioner för en användare.
               anonymize: Anonymisera användarkonton.
+              suspend: Stäng av användarkonton.
               delete: Ta bort användarkonton.
               list: Få en lista över användare.
             user_status:
@@ -4309,6 +4314,8 @@ sv:
               update: Uppdatera användarstatistik.
             email:
               receive_emails: Kombinera detta omfång med e-postmottagaren för att bearbeta inkommande e-post.
+            invites:
+              create: Skicka e-postinbjudningar eller generera inbjudningslänkar.
             badges:
               create: Skapa ett nytt märke.
               show: Hämta information om ett märke.
@@ -4317,6 +4324,9 @@ sv:
               list_user_badges: Lista användarens märken.
               assign_badge_to_user: Tilldela ett märke till en användare.
               revoke_badge_from_user: Återkalla ett märke från en användare.
+            search:
+              show: Sök med slutpunkten `/search.json?q=term`.
+              query: Sök med slutpunkten /search/query?term=term`.
             wordpress:
               publishing: Nödvändigt för WP Discourse-tilläggets publiceringsfunktioner (krävs).
               commenting: Nödvändigt för WP Discourse-tilläggets kommentarsfunktioner.
@@ -4759,6 +4769,12 @@ sv:
           love:
             name: "älska"
             description: "Gillaknappens färg."
+          selected:
+            name: "markerad"
+            description: "Bakgrundsfärgen för element som listobjekt när de är markerade/aktiva."
+          hover:
+            name: "hovra"
+            description: "Bakgrundsfärgen för element som listobjekt när de hovras eller har tangentbordsfokus."
         robots:
           title: "Åsidosätt din sidas robots.txt-fil:"
           warning: "Detta kommer att permanent åsidosätta alla relaterade webbplatsinställningar."
@@ -4889,6 +4905,7 @@ sv:
           no_previous: "Det finns inget tidigare värde."
           deleted: "Inget nytt värde. Registreringen raderades."
           actions:
+            permanently_delete_post_revisions: "radera inläggsversioner permanent"
             delete_user: "radera användare"
             change_trust_level: "ändra förtroendenivå"
             change_username: "ändra användarnamn"

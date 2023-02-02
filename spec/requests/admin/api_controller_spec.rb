@@ -428,6 +428,8 @@ RSpec.describe Admin::ApiController do
           "global",
           "badges",
           "categories",
+          "search",
+          "invites",
           "wordpress",
         )
       end

@@ -109,14 +109,45 @@ fr:
       new_messages: "nouveaux messages"
       mention_warning:
         dismiss: "rejeter"
+        cannot_see:
+          one: "%{username} ne peut pas accéder à ce canal et n'a pas été averti(e)."
+          other: "%{username} et %{others} ne peuvent pas accéder à ce canal et n'ont pas été avertis."
         invitations_sent:
           one: "Invitation envoyée"
           other: "Invitations envoyées"
         invite: "Inviter à rejoindre le canal"
+        without_membership:
+          one: "%{username} n'a pas rejoint ce canal."
+          other: "%{username} et %{others} n'ont pas rejoint ce canal."
+        group_mentions_disabled:
+          one: "%{group_name} n'autorise pas les mentions"
+          other: "%{group_name} et %{others} n'autorisent pas les mentions"
+        too_many_members:
+          one: "%{group_name} a trop de membres. Personne n'a reçu de notification"
+          other: "%{group_name} et %{others} ont trop de membres. Personne n'a reçu de notification"
+        warning_multiple:
+          one: "%{count} autre"
+          other: "%{count} autres"
         groups:
+          header:
+            some: "Certains utilisateurs ne recevront pas de notification"
+            all: "Personne ne recevra de notification"
+          unreachable:
+            one: "@%{group} n'autorise pas les mentions"
+            other: "@%{group} et @%{group_2} n'autorisent pas les mentions"
+          unreachable_multiple: "@%{group} et %{count} autres groupes n'autorisent pas les mentions"
+          too_many_members:
+            one: "Mentionner @%{group} dépasse la %{notification_limit} de %{limit}"
+            other: "Mentionner @%{group} et @%{group_2} dépasse la %{notification_limit} de %{limit}"
+          too_many_members_multiple: "Ces %{count} groupes dépassent la %{notification_limit} de %{limit}"
           users_limit:
             one: "%{count} utilisateur"
             other: "%{count} utilisateurs"
+          notification_limit: "limite de notification"
+        too_many_mentions: "Ce message dépasse la %{notification_limit} de %{limit}"
+        mentions_limit:
+          one: "%{count} mention"
+          other: "%{count} mentions"
       aria_roles:
         header: "En-tête de discussion"
         composer: "Compositeur de discussion"
@@ -176,6 +207,7 @@ fr:
         archived_header: "Le canal est archivé"
         archived: "Archivé"
         archive_failed: "Échec de l'archivage du canal. %{completed}/%{total} messages ont été archivés dans <a target=\"_blank\" href=\"%{topic_url}\">le sujet de destination</a>. Appuyez sur Réessayer pour tenter de terminer l'archivage."
+        archive_failed_no_topic: "Échec de l'archivage du canal. %{completed}/%{total} messages ont été archivés, le sujet de destination n'a pas été créé. Appuyez sur Réessayer pour tenter de terminer l'archivage."
         archive_completed: "Voir <a target=\"_blank\" href=\"%{topic_url}\">le sujet de l'archive</a>"
         closed_header: "Le canal est fermé"
         closed: "Fermé"
@@ -198,6 +230,7 @@ fr:
         associated_topic: Sujet lié
         associated_category: Catégorie liée
         title: Titre
+        name: Nom
         description: Description
       channel_info:
         back_to_all_channels: "Tous les canaux"
@@ -206,10 +239,8 @@ fr:
           about: À propos
           members: Membres
           settings: Paramètres
-      channel_edit_title_modal:
-        title: Modifier le titre
-        input_placeholder: Ajouter un titre
-        description: Ajoutez un court titre descriptif à votre canal
+      channel_edit_name_slug_modal:
+        name: Nom du canal
       channel_edit_description_modal:
         title: Modifier la description
         input_placeholder: Ajouter une description
@@ -272,9 +303,9 @@ fr:
         mention: "Seulement pour les mentions"
         always: "Pour toutes les activités"
       settings:
+        channel_wide_mentions_label: "Autoriser les mentions @all et @here"
+        channel_wide_mentions_description: "Autoriser les utilisateurs à notifier tous les membres de #%{channel} avec @all ou uniquement ceux qui sont actifs en ce moment avec @here"
         auto_join_users_label: "Ajouter automatiquement des utilisateurs"
-        auto_join_users_info: "Vérifier toutes les heures quels utilisateurs ont été actifs au cours des 3 derniers mois et, s'ils ont accès à la catégorie %{category}, les ajouter à ce canal."
-        enable_auto_join_users: "Ajouter automatiquement tous les utilisateurs récemment actifs"
         auto_join_users_warning: "Chaque utilisateur qui n'est pas membre de ce canal et qui a accès à la catégorie %{category} le rejoindra. Voulez-vous continuer ?"
         desktop_notification_level: "Notifications sur le bureau"
         follow: "Rejoindre"
@@ -294,6 +325,7 @@ fr:
         title: "Discussion"
       direct_messages:
         title: "Discussion privée"
+        new: "Créer une conversation personnelle"
         create: "Valider"
         leave: "Quitter cette discussion privée"
         cannot_create: "Nous sommes désolés, vous ne pouvez pas envoyer de messages privés."

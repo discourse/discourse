@@ -119,6 +119,7 @@ class UserHistory < ActiveRecord::Base
         watched_word_create: 97,
         watched_word_destroy: 98,
         delete_group: 99,
+        permanently_delete_post_revisions: 100,
       )
   end
 
@@ -213,6 +214,7 @@ class UserHistory < ActiveRecord::Base
       watched_word_create
       watched_word_destroy
       delete_group
+      permanently_delete_post_revisions
     ]
   end
 

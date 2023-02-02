@@ -51,6 +51,14 @@ module PageObjects
         container.has_content?(message.message)
         container.has_content?(message.user.username)
       end
+
+      def new_channel_button
+        find(".new-channel-btn")
+      end
+
+      def has_new_channel_button?
+        has_css?(".new-channel-btn")
+      end
     end
   end
 end

@@ -7,9 +7,9 @@ class Admin::ReportsController < Admin::StaffController
         ApplicationRequest
           .req_types
           .keys
-          .select { |r| r =~ /^page_view_/ && r !~ /mobile/ }
+          .select { |r| r =~ /\Apage_view_/ && r !~ /mobile/ }
           .map { |r| r + "_reqs" } +
-        Report.singleton_methods.grep(/^report_(?!about|storage_stats)/)
+        Report.singleton_methods.grep(/\Areport_(?!about|storage_stats)/)
 
     reports =
       reports_methods.map do |name|
@@ -61,7 +61,7 @@ class Admin::ReportsController < Admin::StaffController
   def show
     report_type = params[:type]
 
-    raise Discourse::NotFound unless report_type =~ /^[a-z0-9\_]+$/
+    raise Discourse::NotFound unless report_type =~ /\A[a-z0-9\_]+\z/
 
     args = parse_params(params)
 

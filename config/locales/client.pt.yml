@@ -179,6 +179,7 @@ pt:
       forwarded: "Encaminhou o e-mail acima"
     topic_admin_menu: "ações do tópico"
     skip_to_main_content: "Saltar para o conteúdo principal"
+    skip_user_nav: "Saltar para o conteúdo do perfil"
     emails_are_disabled: "Todos os envios de e-mail foram globalmente desativados por um administrador. Nenhum e-mail de notificação será enviado."
     emails_are_disabled_non_staff: "O envio de e-mail foi desativado para usuários que não são da equipe."
     software_update_prompt:
@@ -299,10 +300,8 @@ pt:
       edit_bookmark: "Editar Favorito"
       clear_bookmarks: "Remover Marcadores"
       help:
-        bookmark: "Clique para adicionar um marcador à primeira publicação neste tópico"
-        edit_bookmark: "Clique para editar o favorito neste tópico"
         unbookmark: "Clique para remover todos os marcadores deste tópico"
-        unbookmark_with_reminder: "Clique para remover todos os favoritos e lembretes neste tópico."
+        unbookmark_with_reminder: "Clique para remover todos os favoritos e lembretes neste tópico"
     bookmarks:
       created: "Adicionou este post aos favoritos. %{name}"
       create: "Criar favorito"
@@ -2531,6 +2530,7 @@ pt:
         unarchive: "Desarquivar Tópico"
         archive: "Arquivar Tópico"
         reset_read: "Repor Data de Leitura"
+        make_public: "Criar tópico publico..."
         make_private: "Tornar Mensagem Pessoal"
         reset_bump_date: "Reset à Data do Bump"
       feature:
@@ -2813,6 +2813,7 @@ pt:
         publish_page: "Publicação de Página"
         unhide: "Mostrar"
         change_owner: "Alterar Proprietário..."
+        grant_badge: "Atribuir Crachá..."
         lock_post: "Bloquear Post"
         lock_post_description: "impedir o autor de editar esta publicação"
         unlock_post: "Desbloquear Post"
@@ -2823,6 +2824,8 @@ pt:
         delete_topic_confirm_modal_no: "Não, mantenha este tópico"
         delete_topic_error: "Ocorreu um erro ao excluir este tópico"
         delete_topic: "eliminar tópico"
+        add_post_notice: "Adicionar Nota da Equipe..."
+        change_post_notice: "Alterar Aviso da Equipa..."
         delete_post_notice: "Apagar Aviso da Equipa"
         remove_timer: "remover timer"
         edit_timer: "editar temporizador"
@@ -2854,6 +2857,8 @@ pt:
           last: "Última revisão"
           hide: "Esconder revisão"
           show: "Mostrar revisão"
+          destroy: "Apagar revisões"
+          destroy_confirm: "Tem certeza de que deseja apagar todas as revisões deste post? Esta ação é permanente."
           revert: "Reverter para a versão %{revision}"
           edit_wiki: "Editar Wiki"
           edit_post: "Editar Mensagem"
@@ -3064,7 +3069,9 @@ pt:
         inappropriate: "É inapropriado"
         spam: "É Spam"
       custom_placeholder_notify_user: "Seja específico, seja construtivo e seja sempre amável."
+      notify_user_textarea_label: "Mensagem para o utilizador"
       custom_placeholder_notify_moderators: "Diga-nos especificamente quais são as suas preocupações, e forneça-nos hiperligações relevantes e exemplo se possível."
+      notify_moderators_textarea_label: "Mensagem para os moderadores"
       custom_message:
         at_least:
           one: "insira pelo menos %{count} caráter"
@@ -3435,6 +3442,7 @@ pt:
       topics:
         none:
           unread: "Não tem tópicos por ler."
+          unseen: "Não tem tópicos por ler."
           new: "Não tem novos tópicos."
           read: "Ainda não leu nenhum tópico."
           posted: "Ainda não publicou em qualquer tópico."
@@ -3458,6 +3466,7 @@ pt:
       enabled: "O modo de segurança está activado, para sair do modo de segurança feche esta janela do navegador"
     image_removed: "(imagem removida)"
     pause_notifications:
+      label: "Pausar notificações"
       remaining: "%{remaining} restante"
       options:
         half_hour: "30 minutos"
@@ -3509,6 +3518,8 @@ pt:
               content: "Administrador"
             badges:
               content: "Crachás"
+            everything:
+              content: "Tudo"
             faq:
               content: "FAQ"
             groups:
@@ -3519,6 +3530,7 @@ pt:
               content: "As Minhas publicações"
             review:
               content: "Revisão"
+    until: "Até:"
   admin_js:
     type_to_filter: "digite para filtrar..."
     admin:
@@ -3728,8 +3740,15 @@ pt:
             topics:
               read: Ler um tópico ou um post específico nele. RSS também é suportado.
               write: Criar um novo tópico ou poste em um já existente.
+              update: Atualize um tópico. Altere o título, categoria, tags, status, arquétipo, feature_link etc.
             users:
               show: Obter informações sobre um utilizador.
+              suspend: Suspender contas de utilizador.
+            invites:
+              create: Envie convites por e-mail ou gere links de convite.
+            search:
+              show: Pesquise usando o endpoint `/search.json?q=term`.
+              query: Pesquise usando o endpoint /search/query?term=term`.
       web_hooks:
         title: "Webhooks"
         none: "Não existem webhooks neste momento."
@@ -3805,6 +3824,8 @@ pt:
         change_settings: "Alterar Configurações"
         change_settings_short: "Configurações"
         howto: "Como instalo plugins?"
+      navigation_menu:
+        sidebar: "Barra Lateral"
       backups:
         title: "Fazer Cópias de Segurança"
         menu:
@@ -4056,6 +4077,8 @@ pt:
           love:
             name: "amor"
             description: "A cor do botão 'gosto'."
+          selected:
+            name: "selecionado"
         robots:
           title: "Substitua o arquivo robots.txt do seu site:"
           warning: "Isso substituirá permanentemente todas as configurações de site relacionadas."
@@ -4133,6 +4156,9 @@ pt:
             address_placeholder: "nome@exemplo.com"
             type_placeholder: "resumo, subscrever..."
             reply_key_placeholder: "chave de resposta"
+      moderation_history:
+        actions:
+          delete_topic: "Tópico eliminado"
       logs:
         title: "Logs"
         action: "Ação"

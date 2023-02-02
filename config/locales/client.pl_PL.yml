@@ -366,11 +366,9 @@ pl_PL:
       edit_bookmark: "Edytuj zakładkę"
       clear_bookmarks: "Wyczyść zakładki"
       help:
-        bookmark: "Kliknij, aby dodać pierwszy post tematu do zakładek"
-        edit_bookmark: "Kliknij, aby edytować zakładkę w tym temacie"
         edit_bookmark_for_topic: "Kliknij, aby edytować zakładkę dla tego tematu"
         unbookmark: "Kliknij, aby usunąć wszystkie zakładki z tego tematu"
-        unbookmark_with_reminder: "Kliknij, aby usunąć wszystkie zakładki i przypomnienia w tym temacie."
+        unbookmark_with_reminder: "Kliknij, aby usunąć wszystkie zakładki i przypomnienia w tym temacie"
     bookmarks:
       created: "Dodano post do zakładek. %{name}"
       created_generic: "Dodałeś to do zakładek. %{name}"
@@ -1166,6 +1164,7 @@ pl_PL:
         perm_denied_expl: "Odmówiłeś/łaś dostępu dla powiadomień. Pozwól na powiadomienia w ustawieniach przeglądarki."
         disable: "Wyłącz powiadomienia"
         enable: "Włącz powiadomienia"
+        each_browser_note: "Uwaga: musisz zmienić to ustawienie w każdej używanej przeglądarce. Wszystkie powiadomienia zostaną wyłączone, jeśli wstrzymasz powiadomienia z menu użytkownika, niezależnie od tego ustawienia."
         consent_prompt: "Czy chcesz otrzymywać natychmiastowe powiadomienia, gdy ktoś odpowiada na twoje posty?"
       dismiss: "Odrzuć"
       dismiss_notifications: "Odrzuć wszystkie"
@@ -2355,6 +2354,11 @@ pl_PL:
           few: "%{count} powiadomienia o nowej wiadomości"
           many: "%{count} powiadomień o nowych wiadomościach"
           other: "%{count} powiadomień o nowych wiadomościach"
+        new_reviewable:
+          one: "%{count} nowy do sprawdzenia"
+          few: "%{count} nowe do sprawdzenia"
+          many: "%{count} nowych do sprawdzenia"
+          other: "%{count} nowych do sprawdzenia"
       title: "powiadomienia o wywołanej @nazwie, odpowiedzi do twoich wpisów i tematów, prywatne wiadomości, itp"
       none: "Nie udało się załadować listy powiadomień."
       empty: "Nie znaleziono powiadomień."
@@ -3853,7 +3857,6 @@ pl_PL:
         this_week: "Tydzień"
         today: "Dzisiaj"
     browser_update: 'Niestety, <a href="https://www.discourse.org/faq/#browser">twoja przeglądarka nie jest obsługiwana</a>. Proszę <a href="https://browsehappy.com">przełączyć się na obsługiwaną przeglądarkę</a>, aby móc oglądać bogatą zawartość, zalogować się i odpowiedzieć.'
-    safari_13_warning: Ta strona wkrótce przestanie obsługiwać systemy iOS i Safari w wersji 13 i niższej. Nadal będzie dostępna uproszczona wersja tylko do odczytu. (<a href="https://meta.discourse.org/t/224747">więcej informacji</a>)
     permission_types:
       full: "tworzyć / odpowiadać / przeglądać"
       create_post: "odpowiadać / przeglądać"
@@ -4195,6 +4198,7 @@ pl_PL:
       no_drafts_title: "Nie rozpocząłeś żadnych szkiców"
       no_drafts_body: "Nie jesteś gotowy do opublikowania? Automatycznie zapiszemy nową wersję roboczą i wyświetlimy ją tutaj za każdym razem, gdy zaczniesz pisać temat, odpowiedź lub wiadomość osobistą. Wybierz przycisk anulowania, aby odrzucić lub zapisać wersję roboczą, aby kontynuować później."
       no_likes_title: "Nie polubiłeś jeszcze żadnych tematów"
+      no_likes_title_others: "%{username} nie polubił jeszcze żadnego tematu"
       no_likes_body: "Świetnym sposobem na włączenie się do dyskusji i rozpoczęcie współtworzenia jest rozpoczęcie czytania rozmów, które już miały miejsce, i kliknięcie %{heartIcon} przy postach, które Ci się podobają!"
       no_topics_title: "Nie rozpocząłeś jeszcze żadnych tematów"
       no_topics_body: "Zawsze najlepiej jest <a href='%{searchUrl}'>przeszukać</a> stronę w poszukiwaniu istniejących tematów konwersacji przed rozpoczęciem nowej, ale jeśli masz pewność, że temat, którego szukasz nie istnieje, śmiało rozpocznij nowy temat. Poszukaj przycisku <kbd>+ Nowy temat</kbd> w prawym górnym rogu listy tematów, kategorii lub tagu, aby rozpocząć tworzenie nowego tematu w tym obszarze."
@@ -4230,6 +4234,7 @@ pl_PL:
           header_link_text: "O stronie"
         messages:
           header_link_text: "Wiadomości"
+          header_action_title: "Utwórz osobistą wiadomość"
           links:
             inbox: "Skrzynka odbiorcza"
             sent: "Wysłane"
@@ -4246,6 +4251,7 @@ pl_PL:
           none: "Nie dodałeś żadnych tagów."
           click_to_get_started: "Kliknij tutaj, aby rozpocząć."
           header_link_text: "Etykiety"
+          header_action_title: "Edytuj tagi paska bocznego"
           configure_defaults: "Skonfiguruj ustawienia domyślne"
         categories:
           links:
@@ -4255,25 +4261,33 @@ pl_PL:
           none: "Nie dodałeś żadnych kategorii."
           click_to_get_started: "Kliknij tutaj, aby rozpocząć."
           header_link_text: "Kategorie"
+          header_action_title: "Edytuj kategorie paska bocznego"
           configure_defaults: "Skonfiguruj ustawienia domyślne"
         community:
           header_link_text: "Społeczność"
+          header_action_title: "Utwórz temat"
           links:
             about:
               content: "O stronie"
+              title: "Więcej szczegółów na temat tej witryny"
             admin:
               content: "Administracja"
+              title: "Ustawienia witryny i raporty"
             badges:
               content: "Odznaki"
+              title: "Wszystkie odznaki dostępne do zdobycia"
             everything:
               content: "Wszystko"
               title: "Wszystkie tematy"
             faq:
               content: "FAQ"
+              title: "Wskazówki dotyczące korzystania z tej witryny"
             groups:
               content: "Grupy"
+              title: "Lista dostępnych grup użytkowników"
             users:
               content: "Użytkownicy"
+              title: "Lista wszystkich użytkowników"
             my_posts:
               content: "Wysłane"
               title: "Moja ostatnia aktywność w temacie"
@@ -4520,7 +4534,6 @@ pl_PL:
             topics:
               read: Przeczytaj temat lub konkretny post w nim. Obsługiwany jest również format RSS.
               write: Utwórz nowy temat lub post w istniejącym.
-              update: Zaktualizuj temat. Zmień tytuł, kategorię, tagi itp.
               read_lists: Czytaj listy tematów, takie jak najpopularniejsze, nowe, najnowsze itp. Obsługiwany jest również format RSS.
             posts:
               edit: Edytuj dowolny post lub konkretny.
@@ -4672,6 +4685,7 @@ pl_PL:
         broken_route: "Nie można skonfigurować łącza do '%{name}'. Upewnij się, że blokery reklam są wyłączone i spróbuj ponownie załadować stronę."
       navigation_menu:
         sidebar: "Pasek boczny"
+        legacy: "Przestarzały"
       backups:
         title: "Kopie zapasowe"
         menu:
@@ -4997,6 +5011,8 @@ pl_PL:
           love:
             name: "polubienie"
             description: "Kolor przycisku polubień"
+          selected:
+            name: "zaznaczone"
         robots:
           title: "Nadpisz plik robots.txt swojej witryny:"
           warning: "To ustawienie permanentnie nadpisze wszystkie powiązane ustawienia witryny."
@@ -5082,6 +5098,7 @@ pl_PL:
             address_placeholder: "nazwa@example.com"
             type_placeholder: "streszczenie, rejestracja…"
             reply_key_placeholder: "klucz odpowiedzi"
+            smtp_transaction_response_placeholder: "SMTP ID"
       moderation_history:
         performed_by: "Wykonane przez"
         no_results: "Brak dostępnej historii moderacji."

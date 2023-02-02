@@ -40,9 +40,7 @@ export default Component.extend(ModalFunctionality, {
     this.set("deleting", true);
 
     return this.chatApi
-      .destroyChannel(this.chatChannel.id, {
-        name_confirmation: this.channelNameConfirmation,
-      })
+      .destroyChannel(this.chatChannel.id, this.channelNameConfirmation)
       .then(() => {
         this.set("confirmed", true);
         this.flash(I18n.t("chat.channel_delete.process_started"), "success");

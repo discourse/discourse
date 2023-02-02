@@ -958,6 +958,7 @@ class Topic < ActiveRecord::Base
 
   def changed_to_category(new_category)
     return true if new_category.blank? || Category.exists?(topic_id: id)
+
     if new_category.id == SiteSetting.uncategorized_category_id &&
          !SiteSetting.allow_uncategorized_topics
       return false
@@ -971,6 +972,15 @@ class Topic < ActiveRecord::Base
 
         if old_category
           Category.where(id: old_category.id).update_all("topic_count = topic_count - 1")
+
+          count =
+            if old_category.read_restricted && !new_category.read_restricted
+              1
+            elsif !old_category.read_restricted && new_category.read_restricted
+              -1
+            end
+
+          Tag.update_counters(self.tags, { public_topic_count: count }) if count
         end
 
         # when a topic changes category we may have to start watching it
@@ -1190,7 +1200,7 @@ class Topic < ActiveRecord::Base
       else
         !!invite_to_topic(invited_by, target_user, group_ids, guardian)
       end
-    elsif username_or_email =~ /^.+@.+$/ && guardian.can_invite_via_email?(self)
+    elsif username_or_email =~ /\A.+@.+\z/ && guardian.can_invite_via_email?(self)
       !!Invite.generate(
         invited_by,
         email: username_or_email,
@@ -1781,12 +1791,15 @@ class Topic < ActiveRecord::Base
 
   def convert_to_public_topic(user, category_id: nil)
     public_topic = TopicConverter.new(self, user).convert_to_public_topic(category_id)
+    Tag.update_counters(public_topic.tags, { public_topic_count: 1 }) if !category.read_restricted
     add_small_action(user, "public_topic") if public_topic
     public_topic
   end
 
   def convert_to_private_message(user)
+    read_restricted = category.read_restricted
     private_topic = TopicConverter.new(self, user).convert_to_private_message
+    Tag.update_counters(private_topic.tags, { public_topic_count: -1 }) if !read_restricted
     add_small_action(user, "private_topic") if private_topic
     private_topic
   end
@@ -1882,8 +1895,6 @@ class Topic < ActiveRecord::Base
   def incoming_email_addresses(group: nil, received_before: Time.zone.now)
     email_addresses = Set.new
 
-    # TODO(martin) Look at improving this N1, it will just get slower the
-    # more replies/incoming emails there are for the topic.
     self
       .incoming_email
       .where("created_at <= ?", received_before)

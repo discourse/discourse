@@ -32,11 +32,25 @@ module SystemHelpers
     start ||= Time.zone.now
     backoff ||= frequency
     yield
-  rescue RSpec::Expectations::ExpectationNotMetError
+  rescue RSpec::Expectations::ExpectationNotMetError,
+         Capybara::ExpectationNotMet,
+         Capybara::ElementNotFound
     raise if Time.zone.now >= start + timeout.seconds
     sleep backoff
     backoff += frequency
     retry
+  end
+
+  def wait_for_attribute(
+    element,
+    attribute,
+    value,
+    timeout: Capybara.default_max_wait_time,
+    frequency: 0.01
+  )
+    try_until_success(timeout: timeout, frequency: frequency) do
+      expect(element[attribute.to_sym]).to eq(value)
+    end
   end
 
   def resize_window(width: nil, height: nil)
@@ -55,8 +69,15 @@ module SystemHelpers
 
     ENV["TZ"] = timezone
 
-    Capybara.using_session(timezone) { freeze_time(&example) }
+    using_session(timezone) { freeze_time(&example) }
 
     ENV["TZ"] = previous_browser_timezone
+  end
+
+  # When using parallelism, Capybara's `using_session` method can cause
+  # intermittent failures as two sessions can be created with the same name
+  # in different tests and be run at the same time.
+  def using_session(name, &block)
+    Capybara.using_session(name.to_s + self.method_name, &block)
   end
 end

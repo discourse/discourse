@@ -17,7 +17,7 @@ class ScreenedUrl < ActiveRecord::Base
 
   def normalize
     self.url = ScreenedUrl.normalize_url(self.url) if self.url
-    self.domain = self.domain.downcase.sub(/^www\./, "") if self.domain
+    self.domain = self.domain.downcase.sub(/\Awww\./, "") if self.domain
   end
 
   def self.watch(url, domain, opts = {})
@@ -30,8 +30,8 @@ class ScreenedUrl < ActiveRecord::Base
 
   def self.normalize_url(url)
     normalized = url.gsub(%r{http(s?)://}i, "")
-    normalized.gsub!(%r{(/)+$}, "") # trim trailing slashes
-    normalized.gsub!(%r{^([^/]+)(?:/)?}) { |m| m.downcase } # downcase the domain part of the url
+    normalized.gsub!(%r{(/)+\z}, "") # trim trailing slashes
+    normalized.gsub!(%r{\A([^/]+)(?:/)?}) { |m| m.downcase } # downcase the domain part of the url
     normalized
   end
 end

@@ -83,7 +83,7 @@ class TopicsController < ApplicationController
 
     # Special case: a slug with a number in front should look by slug first before looking
     # up that particular number
-    if params[:id] && params[:id] =~ /^\d+[^\d\\]+$/
+    if params[:id] && params[:id] =~ /\A\d+[^\d\\]+\z/
       topic = Topic.find_by_slug(params[:id])
       return redirect_to_correct_topic(topic, opts[:post_number]) if topic
     end
@@ -649,7 +649,9 @@ class TopicsController < ApplicationController
     force_destroy = ActiveModel::Type::Boolean.new.cast(params[:force_destroy])
 
     if force_destroy
-      if !guardian.can_permanently_delete?(topic)
+      if !topic
+        raise Discourse::InvalidAccess
+      elsif !guardian.can_permanently_delete?(topic)
         return render_json_error topic.cannot_permanently_delete_reason(current_user), status: 403
       end
     else

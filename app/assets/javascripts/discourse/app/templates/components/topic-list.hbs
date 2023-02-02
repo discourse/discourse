@@ -18,7 +18,7 @@
 
 <PluginOutlet
   @name="before-topic-list-body"
-  @args={{hash
+  @outletArgs={{hash
     topics=this.topics
     selected=this.selected
     bulkSelectEnabled=this.bulkSelectEnabled
@@ -54,7 +54,7 @@
     }}
     <PluginOutlet
       @name="after-topic-list-item"
-      @args={{hash topic=topic index=index}}
+      @outletArgs={{hash topic=topic index=index}}
       @connectorTagName="tr"
     />
   {{/each}}
@@ -62,7 +62,7 @@
 
 <PluginOutlet
   @name="after-topic-list-body"
-  @args={{hash
+  @outletArgs={{hash
     topics=this.topics
     selected=this.selected
     bulkSelectEnabled=this.bulkSelectEnabled

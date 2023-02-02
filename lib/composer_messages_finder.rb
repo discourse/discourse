@@ -8,7 +8,7 @@ class ComposerMessagesFinder
   end
 
   def self.check_methods
-    @check_methods ||= instance_methods.find_all { |m| m =~ /^check\_/ }
+    @check_methods ||= instance_methods.find_all { |m| m =~ /\Acheck\_/ }
   end
 
   def find

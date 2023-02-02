@@ -215,7 +215,6 @@ he:
         read_only: "לקריאה בלבד"
         archived_header: "הערוץ בארכיון"
         archived: "בארכיון"
-        archive_failed: "העברת הערוץ לארכיון נכשלה. %{completed}/%{total} הודעות הועברו לארכיון תחת <a target=\"_blank\" href=\"%{topic_url}\">נושא היעד</a>. נא לנסות להשלים את ההעברה לארכיון פעם נוספת."
         archive_completed: "אפשר לעיין ב<a target=\"_blank\" href=\"%{topic_url}\">ארכיון הנושא</a>"
         closed_header: "הערוץ סגור"
         closed: "סגורה"
@@ -238,6 +237,7 @@ he:
         associated_topic: נושא מקושר
         associated_category: קטגוריה מקושרת
         title: כותרת
+        name: שם
         description: תיאור
       channel_info:
         back_to_all_channels: "כל הערוצים"
@@ -246,10 +246,12 @@ he:
           about: אודות
           members: חברים
           settings: הגדרות
-      channel_edit_title_modal:
-        title: עריכת כותרת
-        input_placeholder: הוספת כותרת
-        description: נא לספק כותרת ברורה לערוץ שלך
+      channel_edit_name_slug_modal:
+        title: עריכת ערוץ
+        input_placeholder: הוספת שם
+        slug_description: במזהה הייצוגי נעשה שימוש בכתובת במקום בשם הערוץ
+        name: שם הערוץ
+        slug: מזהה ייצוגי של הערוץ (רשות)
       channel_edit_description_modal:
         title: עריכת תיאור
         input_placeholder: הוספת תיאור
@@ -292,6 +294,7 @@ he:
         create: "יצירת ערוץ"
         description: "תיאור (רשות)"
         name: "שם הערוץ"
+        slug: "מזהה ייצוגי של הערוץ (רשות)"
         title: "ערוץ חדש"
         type: "סוג"
         types:
@@ -320,8 +323,8 @@ he:
       settings:
         channel_wide_mentions_label: "לאפשר אזכורים של ‎@all (כולם) ו־‎@here (כאן)"
         auto_join_users_label: "להוסיף משתמשים אוטומטית"
-        auto_join_users_info: "לבדוק כל שעה אילו משתמשים היו פעילים ב־3 החודשים האחרונים ואם יש להם גישה לקטגוריה %{category}, להוסיף אותם לערוץ הזה."
-        enable_auto_join_users: "להוסיף אוטומטית את כל המשתמשים שהיו פעילים לאחרונה"
+        auto_join_users_info: "לבדוק כל שעה אילו משתמשים היו פעילים ב־3 החודשים האחרונים. להוסיף אותם לערוץ אם יש להם גישה לקטגוריה %{category}."
+        auto_join_users_info_no_category: "לבדוק כל שעה אילו משתמשים היו פעילים ב־3 החודשים האחרונים. להוסיף אותם לערוץ אם יש להם גישה לקטגוריה הנבחרת."
         auto_join_users_warning: "כל משתמש שאינו חבר בערוץ הזה ויש לו גישה לקטגוריה %{category} יצטרף. זה בסדר?"
         desktop_notification_level: "התראות שולחן עבודה"
         follow: "הצטרף"

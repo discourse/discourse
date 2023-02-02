@@ -47,7 +47,7 @@ class ThemeJavascriptsController < ApplicationController
 
   def show_tests
     digest = params[:digest]
-    raise Discourse::NotFound if !digest.match?(/^\h{40}$/)
+    raise Discourse::NotFound if !digest.match?(/\A\h{40}\z/)
 
     theme = Theme.find_by(id: params[:theme_id])
     raise Discourse::NotFound if theme.blank?

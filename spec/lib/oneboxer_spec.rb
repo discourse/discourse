@@ -198,6 +198,66 @@ RSpec.describe Oneboxer do
         "<p><a href=\"#{Discourse.base_url}/new?%27class=black\">http://test.localhost/new?%27class=black</a></p>",
       )
     end
+
+    it "escapes URLs of local audio uploads" do
+      result =
+        described_class.onebox_raw(
+          "#{Discourse.base_url}/uploads/default/original/1X/a1c31803be81b85ecafc4f77b1008eee9b3b82f4.wav#'<>",
+        )
+      expect(result[:onebox]).to eq(<<~HTML)
+        <audio  controls>
+          <source src='http://test.localhost/uploads/default/original/1X/a1c31803be81b85ecafc4f77b1008eee9b3b82f4.wav#&apos;%3C%3E'>
+          <a href='http://test.localhost/uploads/default/original/1X/a1c31803be81b85ecafc4f77b1008eee9b3b82f4.wav#&apos;%3C%3E'>
+            http://test.localhost/uploads/default/original/1X/a1c31803be81b85ecafc4f77b1008eee9b3b82f4.wav#&apos;%3C%3E
+          </a>
+        </audio>
+      HTML
+      expect(result[:preview]).to eq(<<~HTML)
+        <audio  controls>
+          <source src='http://test.localhost/uploads/default/original/1X/a1c31803be81b85ecafc4f77b1008eee9b3b82f4.wav#&apos;%3C%3E'>
+          <a href='http://test.localhost/uploads/default/original/1X/a1c31803be81b85ecafc4f77b1008eee9b3b82f4.wav#&apos;%3C%3E'>
+            http://test.localhost/uploads/default/original/1X/a1c31803be81b85ecafc4f77b1008eee9b3b82f4.wav#&apos;%3C%3E
+          </a>
+        </audio>
+      HTML
+    end
+
+    it "escapes URLs of local video uploads" do
+      result =
+        described_class.onebox_raw(
+          "#{Discourse.base_url}/uploads/default/original/1X/a1c31803be81b85ecafc4f77b1008eee9b3b82f4.mp4#'<>",
+        )
+      expect(result[:onebox]).to eq(<<~HTML)
+        <div class="onebox video-onebox">
+          <video  width="100%" height="100%" controls="">
+            <source src='http://test.localhost/uploads/default/original/1X/a1c31803be81b85ecafc4f77b1008eee9b3b82f4.mp4#&apos;%3C%3E'>
+            <a href='http://test.localhost/uploads/default/original/1X/a1c31803be81b85ecafc4f77b1008eee9b3b82f4.mp4#&apos;%3C%3E'>
+              http://test.localhost/uploads/default/original/1X/a1c31803be81b85ecafc4f77b1008eee9b3b82f4.mp4#&apos;%3C%3E
+            </a>
+          </video>
+        </div>
+      HTML
+      expect(result[:preview]).to eq(<<~HTML)
+        <div class="onebox video-onebox">
+          <video  width="100%" height="100%" controls="">
+            <source src='http://test.localhost/uploads/default/original/1X/a1c31803be81b85ecafc4f77b1008eee9b3b82f4.mp4#&apos;%3C%3E'>
+            <a href='http://test.localhost/uploads/default/original/1X/a1c31803be81b85ecafc4f77b1008eee9b3b82f4.mp4#&apos;%3C%3E'>
+              http://test.localhost/uploads/default/original/1X/a1c31803be81b85ecafc4f77b1008eee9b3b82f4.mp4#&apos;%3C%3E
+            </a>
+          </video>
+        </div>
+      HTML
+    end
+
+    it "escapes URLs of generic local links" do
+      result = described_class.onebox_raw("#{Discourse.base_url}/g/somegroup#'onerror='")
+      expect(result[:onebox]).to eq(
+        "<a href='http://test.localhost/g/somegroup#&apos;onerror=&apos;'>http://test.localhost/g/somegroup#&apos;onerror=&apos;</a>",
+      )
+      expect(result[:preview]).to eq(
+        "<a href='http://test.localhost/g/somegroup#&apos;onerror=&apos;'>http://test.localhost/g/somegroup#&apos;onerror=&apos;</a>",
+      )
+    end
   end
 
   describe ".external_onebox" do

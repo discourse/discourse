@@ -1,0 +1,7 @@
+// jsdoc doesn't accept paths starting with _ (which is the case on github runners)
+// so we need to alter the default config
+{
+  "source": {
+    "excludePattern": ""
+  }
+}

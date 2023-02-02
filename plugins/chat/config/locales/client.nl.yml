@@ -109,14 +109,45 @@ nl:
       new_messages: "nieuwe berichten"
       mention_warning:
         dismiss: "negeren"
+        cannot_see:
+          one: "%{username} heeft geen toegang tot dit kanaal en is niet geïnformeerd."
+          other: "%{username} hebben geen toegang tot dit kanaal en zijn niet geïnformeerd."
         invitations_sent:
           one: "Uitnodiging gestuurd"
           other: "Uitnodigingen gestuurd"
         invite: "Uitnodigen voor kanaal"
+        without_membership:
+          one: "%{username} neemt niet deel aan dit kanaal."
+          other: "%{username} en %{others} nemen niet deel aan dit kanaal."
+        group_mentions_disabled:
+          one: "%{group_name} staat geen vermeldingen toe"
+          other: "%{group_name} en %{others} staan geen vermeldingen toe"
+        too_many_members:
+          one: "%{group_name} heeft te veel leden. Niemand is geïnformeerd"
+          other: "%{group_name} en %{others} hebben te veel leden. Niemand is geïnformeerd"
+        warning_multiple:
+          one: "%{count} ander"
+          other: "%{count} anderen"
         groups:
+          header:
+            some: "Sommige gebruikers worden niet geïnformeerd"
+            all: "Niemand wordt geïnformeerd"
+          unreachable:
+            one: "@%{group} staat geen vermeldingen toe"
+            other: "@%{group} en %{group_2} staan geen vermeldingen toe"
+          unreachable_multiple: "@%{group} en %{count} andere groepen staan geen vermeldingen toe"
+          too_many_members:
+            one: "Het noemen van @%{group} overschrijdt de %{notification_limit} van %{limit}"
+            other: "Het noemen van zowel @%{group} als @%{group_2} overschrijdt de %{notification_limit} van %{limit}"
+          too_many_members_multiple: "Deze %{count} groepen overschrijden de %{notification_limit} van %{limit}"
           users_limit:
             one: "%{count} gebruiker"
             other: "%{count} gebruikers"
+          notification_limit: "meldingslimiet"
+        too_many_mentions: "Dit bericht overschrijdt de %{notification_limit} van %{limit}"
+        mentions_limit:
+          one: "%{count} vermelding"
+          other: "%{count} vermeldingen"
       aria_roles:
         header: "Chatkop"
         composer: "Chateditor"
@@ -175,7 +206,6 @@ nl:
         read_only: "Alleen-lezen"
         archived_header: "Kanaal is gearchiveerd"
         archived: "Gearchiveerd"
-        archive_failed: "Archiveren van kanaal mislukt. %{completed}/%{total} berichten zijn gearchiveerd in <a target=\"_blank\" href=\"%{topic_url}\">het bestemmingstopic</a>. Druk op Opnieuw proberen om te proberen de archivering te voltooien."
         archive_completed: "Zie <a target=\"_blank\" href=\"%{topic_url}\">het archieftopic</a>"
         closed_header: "Kanaal is gesloten"
         closed: "Gesloten"
@@ -198,6 +228,7 @@ nl:
         associated_topic: Gelinkt topic
         associated_category: Gelinkte categorie
         title: Titel
+        name: Naam
         description: Beschrijving
       channel_info:
         back_to_all_channels: "Alle kanalen"
@@ -206,10 +237,8 @@ nl:
           about: Over
           members: Leden
           settings: Instellingen
-      channel_edit_title_modal:
-        title: Titel bewerken
-        input_placeholder: Voeg een titel toe
-        description: Geef een korte beschrijvende titel aan je kanaal
+      channel_edit_name_slug_modal:
+        name: Kanaalnaam
       channel_edit_description_modal:
         title: Beschrijving bewerken
         input_placeholder: Voeg een beschrijving toe
@@ -272,9 +301,9 @@ nl:
         mention: "Alleen voor vermeldingen"
         always: "Voor alle activiteit"
       settings:
+        channel_wide_mentions_label: "Sta vermeldingen van @all en @here toe"
+        channel_wide_mentions_description: "Sta gebruikers toe om alle leden van #%{channel} te informeren met @all of alleen degenen die op dat moment actief zijn met @here"
         auto_join_users_label: "Gebruikers automatisch toevoegen"
-        auto_join_users_info: "Controleer elk uur welke gebruikers de afgelopen 3 maanden actief zijn geweest en voeg ze toe aan dit kanaal als ze toegang hebben tot de categorie %{category}."
-        enable_auto_join_users: "Automatisch alle recent actieve gebruikers toevoegen"
         auto_join_users_warning: "Elke gebruiker die geen lid is van dit kanaal en toegang heeft tot de categorie %{category} wordt lid. Weet je het zeker?"
         desktop_notification_level: "Bureaubladmeldingen"
         follow: "Deelnemen"
@@ -294,6 +323,7 @@ nl:
         title: "Chat"
       direct_messages:
         title: "Privéchat"
+        new: "Maak een persoonlijke chat"
         create: "Gaan"
         leave: "Deze privéchat verlaten"
         cannot_create: "Sorry, je kunt geen directe berichten sturen."

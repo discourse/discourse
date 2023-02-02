@@ -130,6 +130,10 @@ sr:
           one: "%{count} дан раније"
           few: "%{count} дана раније"
           other: "%{count} дана раније"
+        x_months:
+          one: "pre %{count} mesec dana"
+          few: "pre %{count} mesec dana"
+          other: "pre %{count} mesec dana"
       later:
         x_days:
           one: "%{count} дан касније"
@@ -298,10 +302,8 @@ sr:
       edit_bookmark: "Uredi marker"
       clear_bookmarks: "Očisti markere"
       help:
-        bookmark: "Klikni da markiraš prvi post u ovoj temi"
-        edit_bookmark: "Klikni da bi obirsao sve markere sa ove teme"
         unbookmark: "Klikni da bi obirsao sve markere sa ove teme"
-        unbookmark_with_reminder: "Klikni da bi obirsao sve markere sa ove teme."
+        unbookmark_with_reminder: "Klikni da bi obirsao sve markere sa ove teme"
     bookmarks:
       created: "Obeležili ste ovu poruku. %{name}"
       not_bookmarked: "obeleži ovu poruku"
@@ -451,6 +453,8 @@ sr:
       types:
         reviewable_user:
           title: "Korisnik"
+        reviewable_post:
+          title: "Post"
       approval:
         title: "Potrebno odobrenje"
         description: "Primili smo tvoj novi post ali on najpre mora biti odobren od strane moderatora. Budi strpljiv."
@@ -611,7 +615,7 @@ sr:
       "12": "Poslato"
       "13": "Primljeno"
       "14": "U toku"
-      "15": "Drafts"
+      "15": "Нацрти"
     categories:
       all: "sve kategorije"
       all_subcategories: "sve"
@@ -682,6 +686,7 @@ sr:
       trust_level: "Nivo poverenja"
       notifications: "Obaveštenja"
       statistics: "Statistike"
+      dismiss: "Одбаци"
       dismiss_notifications_tooltip: "Označi sve nepročitana obavestenja kao pročitana"
       color_schemes:
         regular: "Stalni član"
@@ -786,6 +791,7 @@ sr:
       email:
         title: "E-mail"
         primary_label: "primarna"
+        resent_label: "email je poslat"
         update_email: "Promeni e-mail"
         ok: "Poslaćemo vam e-mail za potvrdu"
         invalid: "Molimo unesite validnu e-mail adresu"
@@ -884,6 +890,9 @@ sr:
         create: "Pozovi"
         invite_link:
           success: "Link pozivnice je uspešno kreiran!"
+        invite:
+          show_advanced: "Прикажи напредне опције"
+          hide_advanced: "Сакриј напредне опције"
       password:
         title: "Šifra"
         too_short: "Vaša šifra je prekratka."
@@ -954,8 +963,12 @@ sr:
         title: "Profilna Slika"
       title:
         title: "Naslov"
+        none: "(ništa)"
+      flair:
+        none: "(ništa)"
       primary_group:
         title: "Primarna Grupa"
+        none: "(ništa)"
       filters:
         all: "Sve"
       stream:
@@ -1195,11 +1208,13 @@ sr:
         select_all: "Izaberi sve"
         defer: "Odloži"
         delete: "Obriši Teme"
+        dismiss: "Одбаци"
         dismiss_new: "Odbaci Novo"
         toggle: "uključi/isključi grupni odabir tema"
         actions: "Grupne aktivnosti"
         close_topics: "Zatvori Teme"
         archive_topics: "Arhiviraj teme"
+        notification_level: "Obaveštenja..."
         choose_new_category: "Izaberite novu kategoriju za vašu temu."
         selected:
           one: "Odabrali ste <b>%{count}</b> temu."
@@ -1283,6 +1298,7 @@ sr:
         replies_short: "%{current} / %{total}"
       progress:
         title: napredak teme
+        jump_prompt_to_date: "до датума"
         jump_prompt_or: "ili"
       notifications:
         reasons:
@@ -1324,6 +1340,7 @@ sr:
         unarchive: "Vrati temu iz arhiva"
         archive: "Arhiviraj temu"
         reset_read: "Poništi podatke o pročitanom"
+        make_public: "Napravi javnu temu..."
       feature:
         pin: "Zakači temu"
         unpin: "Otkači temu"
@@ -1447,6 +1464,7 @@ sr:
         revert_to_regular: "Ukloni Boje Osoblja"
         rebake: "Popravi HTML"
         unhide: "Poništi sakrivanje"
+        grant_badge: "Dodeli Značku..."
         delete_topic: "obriši temu"
       actions:
         by_you:
@@ -1546,6 +1564,7 @@ sr:
     flagging:
       title: "Hvala što pomažete u održavanju naše zajednice pristojnom."
       action: "Označi Poruku Zastavom"
+      take_action: "Preduzmi Akciju..."
       take_action_options:
         default:
           title: "Preduzmi Akciju"
@@ -1743,6 +1762,7 @@ sr:
         few: "+još %{count} član"
         other: "+još %{count} član"
       select_badge_for_title: Odaberi značku koju češ koristit kao titulu
+      none: "(ništa)"
       badge_grouping:
         getting_started:
           name: Početak
@@ -1788,6 +1808,7 @@ sr:
     footer_nav:
       back: "Nazad"
       share: "Podeli"
+      dismiss: "Одбаци"
     pause_notifications:
       options:
         custom: "Posebna"
@@ -1859,6 +1880,9 @@ sr:
         version_check_pending: "Čini se da ste nedavno nadogradili. Fantastično!"
         installed_version: "Instalirano"
         latest_version: "Poslednje"
+        new_features:
+          dismiss: "Одбаци"
+          learn_more: "Saznaj više"
         last_checked: "Zadnje provereno"
         refresh_problems: "Osveži"
         no_problems: "Nisu pronađeni problemi."
@@ -1917,6 +1941,7 @@ sr:
         user: "Korisnik"
         title: "API"
         created: Napravljeno
+        never_used: (nikad)
         generate: "Generiši"
         revoke: "Povuci"
         all_users: "Svi korisnici"
@@ -2493,6 +2518,7 @@ sr:
         topic_id: "ID Teme"
         topic_title: "Tema"
         post_id: "ID Poruke"
+        post_title: "Post"
         category_title: "Kategorija"
         form:
           label: "Novo:"

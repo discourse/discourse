@@ -40,13 +40,13 @@ class UsernameValidator
     errors.empty?
   end
 
-  CONFUSING_EXTENSIONS ||= /\.(js|json|css|htm|html|xml|jpg|jpeg|png|gif|bmp|ico|tif|tiff|woff)$/i
+  CONFUSING_EXTENSIONS ||= /\.(js|json|css|htm|html|xml|jpg|jpeg|png|gif|bmp|ico|tif|tiff|woff)\z/i
   MAX_CHARS ||= 60
 
   ASCII_INVALID_CHAR_PATTERN ||= /[^\w.-]/
   UNICODE_INVALID_CHAR_PATTERN ||= /[^\p{Alnum}\p{M}._-]/
-  INVALID_LEADING_CHAR_PATTERN ||= /^[^\p{Alnum}\p{M}_]+/
-  INVALID_TRAILING_CHAR_PATTERN ||= /[^\p{Alnum}\p{M}]+$/
+  INVALID_LEADING_CHAR_PATTERN ||= /\A[^\p{Alnum}\p{M}_]+/
+  INVALID_TRAILING_CHAR_PATTERN ||= /[^\p{Alnum}\p{M}]+\z/
   REPEATED_SPECIAL_CHAR_PATTERN ||= /[-_.]{2,}/
 
   private

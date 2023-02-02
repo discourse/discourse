@@ -80,7 +80,7 @@ class ContentSecurityPolicy
 
           uri.query = nil # CSP should not include query part of url
 
-          uri_string = uri.to_s.sub(%r{^//}, "") # Protocol-less CSP should not have // at beginning of URL
+          uri_string = uri.to_s.sub(%r{\A//}, "") # Protocol-less CSP should not have // at beginning of URL
 
           auto_script_src_extension[:script_src] << uri_string
         rescue URI::Error

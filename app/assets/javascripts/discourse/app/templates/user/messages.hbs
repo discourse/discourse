@@ -154,12 +154,13 @@
         {{/if}}
       {{/if}}
 
-      <PluginOutlet
-        @name="user-messages-nav"
-        @tagName="span"
-        @connectorTagName="li"
-        @args={{hash model=this.model}}
-      />
+      <span>
+        <PluginOutlet
+          @name="user-messages-nav"
+          @connectorTagName="li"
+          @outletArgs={{hash model=this.model}}
+        />
+      </span>
     </MobileNav>
   </DSection>
 
@@ -184,7 +185,7 @@
   {{/unless}}
 {{/if}}
 
-<section class="user-content">
+<section class="user-content" id="user-content">
   {{#unless this.currentUser.redesigned_user_page_nav_enabled}}
     <div class="list-actions">
       {{#if this.site.mobileView}}

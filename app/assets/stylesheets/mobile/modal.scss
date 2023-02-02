@@ -106,6 +106,14 @@
   &.insert-hyperlink-modal .modal-inner-container {
     overflow: visible;
   }
+
+  html.keyboard-visible:not(.ios-device) & {
+    height: calc(100% - env(keyboard-inset-height));
+
+    .modal-inner-container {
+      margin: auto;
+    }
+  }
 }
 
 .modal .modal-body.reorder-categories {

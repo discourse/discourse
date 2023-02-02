@@ -52,7 +52,7 @@ class FileHelper
     retain_on_max_file_size_exceeded: false
   )
     url = "https:" + url if url.start_with?("//")
-    raise Discourse::InvalidParameters.new(:url) unless url =~ %r{^https?://}
+    raise Discourse::InvalidParameters.new(:url) unless url =~ %r{\Ahttps?://}
 
     tmp = nil
 
@@ -175,26 +175,26 @@ class FileHelper
   end
 
   def self.supported_video_regexp
-    @@supported_video_regexp ||= /\.(#{supported_video.to_a.join("|")})$/i
+    @@supported_video_regexp ||= /\.(#{supported_video.to_a.join("|")})\z/i
   end
 
   def self.supported_audio_regexp
-    @@supported_audio_regexp ||= /\.(#{supported_audio.to_a.join("|")})$/i
+    @@supported_audio_regexp ||= /\.(#{supported_audio.to_a.join("|")})\z/i
   end
 
   def self.supported_images_regexp
-    @@supported_images_regexp ||= /\.(#{supported_images.to_a.join("|")})$/i
+    @@supported_images_regexp ||= /\.(#{supported_images.to_a.join("|")})\z/i
   end
 
   def self.inline_images_regexp
-    @@inline_images_regexp ||= /\.(#{inline_images.to_a.join("|")})$/i
+    @@inline_images_regexp ||= /\.(#{inline_images.to_a.join("|")})\z/i
   end
 
   def self.supported_media_regexp
     @@supported_media_regexp ||=
       begin
         media = supported_images | supported_audio | supported_video
-        /\.(#{media.to_a.join("|")})$/i
+        /\.(#{media.to_a.join("|")})\z/i
       end
   end
 
@@ -202,7 +202,7 @@ class FileHelper
     @@supported_playable_media_regexp ||=
       begin
         media = supported_audio | supported_video
-        /\.(#{media.to_a.join("|")})$/i
+        /\.(#{media.to_a.join("|")})\z/i
       end
   end
 end

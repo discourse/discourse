@@ -328,7 +328,7 @@ class DiscourseConnect < DiscourseConnectBase
   def change_external_attributes_and_override(sso_record, user)
     @email_changed = false
 
-    if SiteSetting.auth_overrides_email && user.email != Email.downcase(email)
+    if SiteSetting.auth_overrides_email && email.present? && user.email != Email.downcase(email)
       user.email = email
       user.active = false if require_activation
       @email_changed = true

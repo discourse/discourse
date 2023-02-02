@@ -93,6 +93,8 @@ en_GB:
     admin:
       dashboard:
         exception_error: Sorry, an error occurred whilst executing the query
+        reports:
+          no_data: "No data to display."
       api:
         scopes:
           descriptions:

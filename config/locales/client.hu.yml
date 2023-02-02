@@ -301,11 +301,11 @@ hu:
       edit_bookmark: "Könyvjelző szerkesztése"
       clear_bookmarks: "Könyvjelzők törlése"
       help:
-        bookmark: "Kattintson a téma első bejegyzésének könyvjelzőzéséhez"
-        edit_bookmark: "Kattintson a témán szereplő könyvjelző szerkesztéséhez"
+        bookmark: "Kattintson a téma könyvjelzővé tételéhez"
+        edit_bookmark: "Kattintson a témában lévő hozzászólás könyvjelzőjének szerkesztéséhez."
         edit_bookmark_for_topic: "Kattintson a témához tartozó könyvjelző szerkesztéséhez"
         unbookmark: "Kattintson a téma valamennyi könyvjelzőjének törléséhez"
-        unbookmark_with_reminder: "Kattintson a téma valamennyi könyvjelzőjének és emlékeztetőjének törléséhez."
+        unbookmark_with_reminder: "Kattintson ide a téma összes könyvjelzőjének és emlékeztetőjének eltávolításához."
     bookmarks:
       created: "Könyvjelzőzte ezt a bejegyzést. %{name}"
       created_generic: "Könyvjelzőzte ezt. %{name}"
@@ -1050,7 +1050,7 @@ hu:
         perm_denied_expl: "Letiltotta a figyelmeztetéseket. Engedélyezze őket a böngésző beállításaiban."
         disable: "Értesítések kikapcsolása"
         enable: "Értesítések bekapcsolása"
-        each_browser_note: 'Megjegyzés: Ezt a beállítást minden használt böngészőben módosítania kell. Ettől a beállítástól függetlenül minden értesítés le lesz tiltva, ha szünetelteti az értesítéseket a felhasználói menüből.'
+        each_browser_note: "Megjegyzés: Ezt a beállítást minden használt böngészőben módosítania kell. Ettől a beállítástól függetlenül minden értesítés le lesz tiltva, ha szünetelteti az értesítéseket a felhasználói menüből."
         consent_prompt: "Szeretne élő értesítéseket kapni, ha valaki válaszol a hozzászólásaira?"
       dismiss: "Elvetés"
       dismiss_notifications: "Összes elvetése"
@@ -2765,6 +2765,7 @@ hu:
           one: "Jelenleg %{count} kítűzött témája van. A túl sok kiemelt téma megzavarhatja az új vagy névtelen felhasználókat. Biztos, hogy kitűz egy újabb témát ebben a kategóriában?"
           other: "Jelenleg %{count} kítűzött témája van. A túl sok kiemelt téma megzavarhatja az új vagy névtelen felhasználókat. Biztos, hogy kitűz egy újabb témát ebben a kategóriában?"
         unpin_globally: "Távolítsa el ezt a témát az összes téma listájának tetejéről."
+        global_pin_note: "A felhasználók saját maguk számára feloldhatják a témát."
         not_pinned_globally: "Nincsenek globálisan rögzített témák."
         already_pinned_globally:
           one: "Jelenleg globálisan kitűzött témák: <strong class='badge badge-notification unread'>%{count}</strong>"
@@ -2970,6 +2971,7 @@ hu:
         convert_to_moderator: "Stábszín hozzáadása"
         revert_to_regular: "Stábszín eltávolítása"
         rebake: "HTML újjáépítése"
+        publish_page: "Oldal közzététele"
         unhide: "Elrejtés visszavonása"
         change_owner: "Tulajdonjog módosítása..."
         grant_badge: "Jelvény adományozása..."
@@ -3296,6 +3298,9 @@ hu:
         lower_title_with_count:
           one: "%{count} olvasatlan"
           other: "%{count} olvasatlan"
+      unseen:
+        title: "Nem látott"
+        lower_title: "nem látott"
       new:
         lower_title_with_count:
           one: "%{count} új"
@@ -3491,6 +3496,9 @@ hu:
       manage_groups: "Címke csoport kezelése"
       upload: "Címkék feltöltése"
       upload_successful: "A címkék sikeresen feltöltve"
+      delete_unused_confirmation_more_tags:
+        one: "%{tags} és még %{count}"
+        other: "%{tags} és még %{count}"
       delete_no_unused_tags: "Nincsenek fel nem használt címkék."
       tag_list_joiner: ", "
       delete_unused: "A nem használt címkék törlése"
@@ -3560,6 +3568,7 @@ hu:
       enabled: "A biztonságos mód be van kapcsolva, hogy kilépj a biztonságos módból lépj ki ebből a keresési lapból"
     image_removed: "(kép eltávolítva)"
     pause_notifications:
+      label: "Értesítések szüneteltetése"
       remaining: "%{remaining} van hátra"
       options:
         half_hour: "30 percig"
@@ -3880,7 +3889,7 @@ hu:
             topics:
               read: Olvasson el egy témát vagy egy adott hozzászólást. Az RSS is támogatva van.
               write: Hozzon létre új témát, vagy írjon egy meglévő témához.
-              update: Téma frissítése. A cím, kategória, címkék stb. módosítása.
+              update: Téma frissítése. Módosíthatja a címet, kategóriát, címkéket, státuszt, archetípust, featured_linket stb.
               read_lists: Témalisták olvasása, mint a top, új, legújabb, stb. Az RSS is támogatva van.
             posts:
               edit: Bármelyik hozzászólás vagy egy adott hozzászólás szerkesztése.
@@ -4238,6 +4247,8 @@ hu:
           love:
             name: "szerelem"
             description: "A kedvelés gomb színe."
+          selected:
+            name: "kiválasztott"
         email_style:
           title: "E-mail stílus"
           heading: "E-mail stílus testreszabása"
@@ -4346,6 +4357,7 @@ hu:
           no_previous: "Nincsen előzőleges érték"
           deleted: "Nincs új érték. A feljegyzés törölve lett"
           actions:
+            permanently_delete_post_revisions: "véglegesen törölni a hozzászólás módosításait"
             delete_user: "felhasználó törlése"
             change_trust_level: "bizalmi szint megváltoztatása"
             change_username: "Felhasználónév módosítása"
@@ -4463,6 +4475,7 @@ hu:
           censor: "Cenzúra"
           require_approval: "Jóváhagyást igényel"
           flag: "Jelölés"
+          replace: "Csere"
           silence: "Elnémítás"
           link: "Hivatkozás"
         action_descriptions:
@@ -4725,7 +4738,9 @@ hu:
           dashboard: "Vezérlőpult"
           navigation: "Navigáció"
         default_categories:
+          modal_description: "Szeretné visszamenőleg alkalmazni ezt a változtatást? Ez %{count} felhasználó beállítását fogja módosítani."
           modal_yes: "Igen"
+          modal_no: "Nem, csak mostantól alkalmazza a változtatást"
       badges:
         title: Jelvények
         new_badge: Új jelvény
@@ -4826,6 +4841,7 @@ hu:
         action:
           label: "Szöveg cseréje…"
         modal:
+          title: "Szöveg cseréje"
           categories: "Kategóriák"
           topics: "Témák"
           replace: "Csere"

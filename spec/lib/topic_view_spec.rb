@@ -750,8 +750,8 @@ RSpec.describe TopicView do
   end
 
   describe "page_title" do
-    fab!(:tag1) { Fabricate(:tag) }
-    fab!(:tag2) { Fabricate(:tag, topic_count: 2) }
+    fab!(:tag1) { Fabricate(:tag, staff_topic_count: 0, public_topic_count: 0) }
+    fab!(:tag2) { Fabricate(:tag, staff_topic_count: 2, public_topic_count: 2) }
     fab!(:op_post) { Fabricate(:post, topic: topic) }
     fab!(:post1) { Fabricate(:post, topic: topic) }
     fab!(:whisper) { Fabricate(:post, topic: topic, post_type: Post.types[:whisper]) }

@@ -4,7 +4,7 @@
 class EmailCook
   def self.raw_regexp
     @raw_regexp ||=
-      %r{^\[plaintext\]$\n(.*)\n^\[/plaintext\]$(?:\s^\[attachments\]$\n(.*)\n^\[/attachments\]$)?(?:\s^\[elided\]$\n(.*)\n^\[/elided\]$)?}m
+      %r{\A\[plaintext\]$\n(.*)\n^\[/plaintext\]$(?:\s^\[attachments\]$\n(.*)\n^\[/attachments\]$)?(?:\s^\[elided\]$\n(.*)\n^\[/elided\]$)?}m
   end
 
   def initialize(raw)
@@ -14,7 +14,7 @@ class EmailCook
 
   def add_quote(result, buffer)
     if buffer.present?
-      return if buffer =~ /\A(<br>)+\z$/
+      return if buffer =~ /\A(<br>)+\z\z/
       result << "<blockquote>#{buffer}</blockquote>"
     end
   end
@@ -22,7 +22,7 @@ class EmailCook
   def link_string!(line, unescaped_line)
     unescaped_line = unescaped_line.strip
     line.gsub!(/\S+/) do |str|
-      if str.match?(%r{^(https?://)[\S]+$}i)
+      if str.match?(%r{\A(https?://)[\S]+\z}i)
         begin
           url = URI.parse(str).to_s
           if unescaped_line == url
@@ -48,11 +48,11 @@ class EmailCook
 
     text.each_line do |line|
       # replace indentation with non-breaking spaces
-      line.sub!(/^\s{2,}/) { |s| "\u00A0" * s.length }
+      line.sub!(/\A\s{2,}/) { |s| "\u00A0" * s.length }
 
-      if line =~ /^\s*>/
+      if line =~ /\A\s*>/
         in_quote = true
-        line.sub!(/^[\s>]*/, "")
+        line.sub!(/\A[\s>]*/, "")
 
         unescaped_line = line
         line = CGI.escapeHTML(line)

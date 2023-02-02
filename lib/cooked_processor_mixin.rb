@@ -174,7 +174,7 @@ module CookedProcessorMixin
     return @size_cache[url] if @size_cache.has_key?(url)
 
     absolute_url = url
-    absolute_url = Discourse.base_url_no_prefix + absolute_url if absolute_url =~ %r{^/[^/]}
+    absolute_url = Discourse.base_url_no_prefix + absolute_url if absolute_url =~ %r{\A/[^/]}
 
     return unless absolute_url
 

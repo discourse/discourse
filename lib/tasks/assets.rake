@@ -307,7 +307,7 @@ task "assets:precompile" => "assets:precompile:before" do
       concurrent? do |proc|
         manifest
           .files
-          .select { |k, v| k =~ /\.js$/ }
+          .select { |k, v| k =~ /\.js\z/ }
           .each do |file, info|
             path = "#{assets_path}/#{file}"
             _file = (d = File.dirname(file)) == "." ? "_#{file}" : "#{d}/_#{File.basename(file)}"

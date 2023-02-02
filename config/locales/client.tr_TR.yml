@@ -302,11 +302,9 @@ tr_TR:
       edit_bookmark: "Yer İmini Düzenle"
       clear_bookmarks: "Yer İmlerini Temizle"
       help:
-        bookmark: "Bu konudaki ilk gönderiyi yer imlerine eklemek için tıklayın"
-        edit_bookmark: "Bu konudaki yer imini düzenlemek için tıklayın"
         edit_bookmark_for_topic: "Bu konunun yer imini düzenlemek için tıklayın"
         unbookmark: "Bu konudaki tüm yer imlerini kaldırmak için tıklayın"
-        unbookmark_with_reminder: "Bu konudaki tüm yer imlerini ve anımsatıcıları kaldırmak için tıklayın."
+        unbookmark_with_reminder: "Bu konudaki tüm yer imlerini ve anımsatıcıları kaldırmak için tıklayın"
     bookmarks:
       created: "Bu gönderiyi yer imlerine eklediniz. %{name}"
       created_generic: "Bunu yer imlerine eklediniz. %{name}"
@@ -1052,6 +1050,7 @@ tr_TR:
         perm_denied_expl: "Bildirim izinlerini reddettiniz. Bildirimlere tarayıcı ayarlarınızdan izin verebilirsiniz."
         disable: "Bildirimleri Devre Dışı Bırak"
         enable: "Bildirimleri Etkinleştir"
+        each_browser_note: "Not: Kullandığınız her tarayıcıda bu ayarı değiştirmeniz gerekir. Bu ayardan bağımsız olarak, kullanıcı menüsünden bildirimleri duraklattığınızda tüm bildirimler devre dışı bırakılır."
         consent_prompt: "Gönderilerinize yanıt verildiğinde canlı bildirim almak ister misiniz?"
       dismiss: "Kapat"
       dismiss_notifications: "Tümünü Kapat"
@@ -3637,7 +3636,6 @@ tr_TR:
         this_week: "Hafta"
         today: "Bugün"
     browser_update: 'Ne yazık ki <a href="https://www.discourse.org/faq/#browser">tarayıcınız desteklenmiyor</a>. Lütfen zengin içeriği görüntülemek, giriş yapmak ve yanıtlamak için <a href="https://browsehappy.com">desteklenen bir tarayıcıya geçin.</a>'
-    safari_13_warning: Bu site yakında iOS ve Safari sürüm 13 ve altını desteklemeyecek. Basitleştirilmiş ve salt okunur bir sürüm kullanılabilir olmaya devam edecek. (<a href="https://meta.discourse.org/t/224747">daha fazla bilgi</a>)
     permission_types:
       full: "Oluştur / Yanıtla / Bak"
       create_post: "Yanıtla / Bak"
@@ -3978,6 +3976,7 @@ tr_TR:
       new_count:
         one: "%{count} yeni"
         other: "%{count} yeni"
+      toggle_section: "Bölümü değiştir"
       more: "Daha fazla"
       all_categories: "Tüm kategoriler"
       all_tags: "Tüm etiketler"
@@ -3986,6 +3985,7 @@ tr_TR:
           header_link_text: "Hakkında"
         messages:
           header_link_text: "Mesajlar"
+          header_action_title: "Kişisel mesaj oluşturun"
           links:
             inbox: "Gelen Kutusu"
             sent: "Gönderilen"
@@ -4002,6 +4002,7 @@ tr_TR:
           none: "Etiket eklemediniz."
           click_to_get_started: "Başlamak için buraya tıklayın."
           header_link_text: "Etiketler"
+          header_action_title: "Kenar çubuğu etiketlerinizi düzenleyin"
           configure_defaults: "Varsayılanları yapılandır"
         categories:
           links:
@@ -4011,25 +4012,33 @@ tr_TR:
           none: "Kategori eklemediniz."
           click_to_get_started: "Başlamak için buraya tıklayın."
           header_link_text: "Kategoriler"
+          header_action_title: "Kenar çubuğu kategorilerinizi düzenleyin"
           configure_defaults: "Varsayılanları yapılandır"
         community:
           header_link_text: "Topluluk"
+          header_action_title: "Yeni konu oluşturun"
           links:
             about:
               content: "Hakkında"
+              title: "Bu site hakkında daha fazla bilgi"
             admin:
               content: "Yönetici"
+              title: "Site ayarları ve raporları"
             badges:
               content: "Rozetler"
+              title: "Kazanılabilecek tüm rozetler"
             everything:
               content: "Her şey"
               title: "Tüm konular"
             faq:
               content: "SSS"
+              title: "Bu siteyi kullanmak için yönergeler"
             groups:
               content: "Gruplar"
+              title: "Mevcut kullanıcı gruplarının listesi"
             users:
               content: "Kullanıcılar"
+              title: "Tüm kullanıcıların listesi"
             my_posts:
               content: "Gönderilerim"
               title: "Son konu etkinliğim"
@@ -4039,6 +4048,7 @@ tr_TR:
                 other: "%{count} taslak"
             review:
               content: "İncele"
+              title: "Bayrak eklenen gönderiler ve diğer sıraya alınmış ögeler"
               pending_count: "%{count} beklemede"
     welcome_topic_banner:
       title: "Karşılama Konunuzu oluşturun"
@@ -4191,6 +4201,9 @@ tr_TR:
               other: "%{count} kullanıcı yeni e-posta alan adlarına sahip ve gruba eklenecek."
             automatic_membership_associated_groups: "Burada listelenen bir hizmette bir grubun üyesi olan kullanıcılar, hizmete giriş yaptıklarında otomatik olarak bu gruba eklenir."
             primary_group: "Otomatik olarak birincil grup olarak ayarla"
+          alert:
+            primary_group: "Bu birincil bir grup olduğundan, herkes tarafından görüntülenebilen CSS sınıflarında \"%{group_name}\" adı kullanılacak."
+            flair_group: "Bu grubun üyelerine karşı becerisi olduğu için \"%{group_name}\" adı herkes tarafından görünür olacak."
         name_placeholder: "Grup adı, boşluk yok, kullanıcı adı kuralıyla aynı şekilde"
         primary: "Birincil grup"
         no_primary: "(birincil grup yok)"
@@ -4269,7 +4282,6 @@ tr_TR:
             topics:
               read: Bir konuyu veya içindeki belirli bir gönderiyi okuyun. RSS de desteklenir.
               write: Yeni bir konu oluşturun veya mevcut bir konuya gönderin.
-              update: Bir konuyu güncelleyin. Başlığı, kategoriyi, etiketleri vb. değiştirin.
               read_lists: En iyi, yeni, en son vb. gibi konu listelerini okuyun. RSS de desteklenir.
             posts:
               edit: Herhangi bir gönderiyi veya belirli bir gönderiyi düzenleyin.
@@ -4743,6 +4755,8 @@ tr_TR:
           love:
             name: "sevgi"
             description: "Beğen düğmesinin rengi."
+          selected:
+            name: "seçili"
         robots:
           title: "Sitenizin robots.txt dosyasını geçersiz kılın:"
           warning: "Bu, ilgili tüm site ayarlarını kalıcı olarak geçersiz kılar."

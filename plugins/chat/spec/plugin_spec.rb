@@ -26,7 +26,7 @@ describe Chat do
       )
     end
 
-    it "marks uploads with ChatUpload in use" do
+    it "marks uploads with reference to ChatMessage via UploadReference in use" do
       unused_upload
 
       expect { Jobs::CleanUpUploads.new.execute({}) }.to change { Upload.count }.by(-1)
@@ -61,7 +61,7 @@ describe Chat do
       )
     end
 
-    it "marks uploads with ChatUpload in use" do
+    it "marks uploads with reference to ChatMessage via UploadReference in use" do
       draft_upload
       unused_upload
 
@@ -144,7 +144,7 @@ describe Chat do
       ).chat_message
     end
 
-    let(:chat_url) { "#{Discourse.base_url}/chat/channel/#{chat_channel.id}" }
+    let(:chat_url) { "#{Discourse.base_url}/chat/c/-/#{chat_channel.id}" }
 
     context "when inline" do
       it "renders channel" do
@@ -155,10 +155,9 @@ describe Chat do
       end
 
       it "renders messages" do
-        results =
-          InlineOneboxer.new(["#{chat_url}?messageId=#{chat_message.id}"], skip_cache: true).process
+        results = InlineOneboxer.new(["#{chat_url}/#{chat_message.id}"], skip_cache: true).process
         expect(results).to be_present
-        expect(results[0][:url]).to eq("#{chat_url}?messageId=#{chat_message.id}")
+        expect(results[0][:url]).to eq("#{chat_url}/#{chat_message.id}")
         expect(results[0][:title]).to eq(
           "Message ##{chat_message.id} by #{chat_message.user.username} – ##{chat_channel.name}",
         )
@@ -197,7 +196,7 @@ describe Chat do
       end
 
       it "renders messages" do
-        expect(Oneboxer.preview("#{chat_url}?messageId=#{chat_message.id}")).to match_html <<~HTML
+        expect(Oneboxer.preview("#{chat_url}/#{chat_message.id}")).to match_html <<~HTML
           <div class="chat-transcript" data-message-id="#{chat_message.id}" data-username="#{user.username}" data-datetime="#{chat_message.created_at.iso8601}" data-channel-name="#{chat_channel.name}" data-channel-id="#{chat_channel.id}">
           <div class="chat-transcript-user">
             <div class="chat-transcript-user-avatar">
@@ -207,9 +206,9 @@ describe Chat do
             </div>
             <div class="chat-transcript-username">#{user.username}</div>
               <div class="chat-transcript-datetime">
-                <a href="#{chat_url}?messageId=#{chat_message.id}" title="#{chat_message.created_at}">#{chat_message.created_at}</a>
+                <a href="#{chat_url}/#{chat_message.id}" title="#{chat_message.created_at}">#{chat_message.created_at}</a>
               </div>
-              <a class="chat-transcript-channel" href="/chat/channel/#{chat_channel.id}/-">
+              <a class="chat-transcript-channel" href="/chat/c/-/#{chat_channel.id}">
                 <span class="category-chat-badge" style="color: ##{chat_channel.chatable.color}">
                   <svg class="fa d-icon d-icon-hashtag svg-icon svg-string" xmlns="http://www.w3.org/2000/svg"><use href="#hashtag"></use></svg>
                 </span>

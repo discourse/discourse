@@ -386,7 +386,7 @@ class UploadCreator
   end
 
   def convert_heif_to_jpeg?
-    File.extname(@filename).downcase.match?(/\.hei(f|c)$/)
+    File.extname(@filename).downcase.match?(/\.hei(f|c)\z/)
   end
 
   def convert_heif!
@@ -593,7 +593,7 @@ class UploadCreator
   def should_optimize?
     # GIF is too slow (plus, we'll soon be converting them to MP4)
     # Optimizing SVG is useless
-    return false if @file.path =~ /\.(gif|svg)$/i
+    return false if @file.path =~ /\.(gif|svg)\z/i
     # Safeguard for large PNGs
     return pixels < 2_000_000 if @file.path =~ /\.png/i
     # Everything else is fine!

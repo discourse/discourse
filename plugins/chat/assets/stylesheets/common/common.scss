@@ -380,8 +380,6 @@ body.has-full-page-chat {
 }
 
 .full-page-chat {
-  font-family: "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
   display: grid;
   grid-template-columns: var(--full-page-sidebar-width) 1fr;
 
@@ -525,43 +523,6 @@ body.has-full-page-chat {
   margin-bottom: 0;
 }
 
-.create-channel-modal {
-  .modal-inner-container {
-    width: 500px;
-  }
-  .choose-topic-results-list {
-    max-height: 200px;
-    overflow-y: scroll;
-  }
-  .select-kit.combo-box,
-  .create-channel-name-input,
-  .create-channel-description-input,
-  #choose-topic-title {
-    width: 100%;
-    margin-bottom: 0;
-  }
-  .category-chooser {
-    .select-kit-selected-name.selected-name.choice {
-      color: var(
-        --primary-high
-      ); // Make consistent with color of placeholder text when choosing topic
-    }
-  }
-
-  .create-channel-hint {
-    font-size: 0.8em;
-    margin-top: 0.2em;
-  }
-
-  .create-channel-label,
-  label[for="choose-topic-title"] {
-    margin: 1em 0 0.35em;
-  }
-  .chat-channel-title {
-    margin: 1em 0 0 0;
-  }
-}
-
 .chat-message-collapser,
 .chat-message-text {
   > p {
@@ -677,8 +638,7 @@ html.has-full-page-chat {
       );
     }
   }
-}
-
-[data-popper-reference-hidden] {
-  visibility: hidden;
+  [data-popper-reference-hidden] {
+    visibility: hidden;
+  }
 }

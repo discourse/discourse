@@ -60,7 +60,7 @@ class Reviewable < ActiveRecord::Base
   end
 
   def self.valid_type?(type)
-    return false unless type =~ /^Reviewable[A-Za-z]+$/
+    return false unless type =~ /\AReviewable[A-Za-z]+\z/
     type.constantize <= Reviewable
   rescue NameError
     false

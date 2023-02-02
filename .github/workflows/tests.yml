@@ -29,7 +29,7 @@ jobs:
       RAILS_ENV: test
       PGUSER: discourse
       PGPASSWORD: discourse
-      USES_PARALLEL_DATABASES: ${{ matrix.build_type == 'backend' }}
+      USES_PARALLEL_DATABASES: ${{ matrix.build_type == 'backend' || matrix.build_type == 'system' }}
       CAPBYARA_DEFAULT_MAX_WAIT_TIME: 4
 
     strategy:
@@ -38,18 +38,17 @@ jobs:
       matrix:
         build_type: [backend, frontend, system, annotations]
         target: [core, plugins]
-        ruby: ['3.1', '3.2']
+        ruby: ['3.1']
         exclude:
           - build_type: annotations
             target: plugins
           - build_type: frontend
             target: core # Handled by core_frontend_tests job (below)
-          - build_type: frontend
-            ruby: '3.2'
-          - build_type: annotations
-            ruby: '3.2'
 
     steps:
+      - name: Set working directory owner
+        run: chown root:root .
+
       - uses: actions/checkout@v3
         with:
           fetch-depth: 1
@@ -177,13 +176,17 @@ jobs:
         if: matrix.build_type == 'system'
         run: bin/ember-cli --build
 
+      - name: Setup Webdriver
+        if: matrix.build_type == 'system'
+        run: bin/rails runner "require 'webdrivers'; Webdrivers::Chromedriver.update"
+
       - name: Core System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core'
-        run: bin/rspec spec/system --format documentation --profile
+        run: PARALLEL_TEST_PROCESSORS=1 bin/turbo_rspec --verbose spec/system
 
       - name: Plugin System Tests
         if: matrix.build_type == 'system' && matrix.target == 'plugins'
-        run: LOAD_PLUGINS=1 bin/rspec plugins/*/spec/system --format documentation --profile
+        run: LOAD_PLUGINS=1 PARALLEL_TEST_PROCESSORS=1 bin/turbo_rspec --verbose plugins/*/spec/system
 
       - name: Upload failed system test screenshots
         uses: actions/upload-artifact@v3

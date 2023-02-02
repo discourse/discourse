@@ -1347,6 +1347,13 @@ RSpec.describe Guardian do
       expect(Guardian.new(user).can_recover_topic?(topic)).to be_falsey
     end
 
+    it "returns true when tl4 can delete posts and topics" do
+      PostDestroyer.new(moderator, topic.first_post).destroy
+      expect(Guardian.new(trust_level_4).can_recover_topic?(topic)).to be_falsey
+      SiteSetting.tl4_delete_posts_and_topics = true
+      expect(Guardian.new(trust_level_4).can_recover_topic?(topic.reload)).to be_truthy
+    end
+
     context "as a moderator" do
       describe "when post has been deleted" do
         it "should return the right value" do
@@ -2195,6 +2202,12 @@ RSpec.describe Guardian do
         expect(Guardian.new(topic.user).can_delete?(topic)).to be_falsey
       end
 
+      it "returns true when tl4 can delete posts and topics" do
+        expect(Guardian.new(trust_level_4).can_delete?(topic)).to be_falsey
+        SiteSetting.tl4_delete_posts_and_topics = true
+        expect(Guardian.new(trust_level_4).can_delete?(topic)).to be_truthy
+      end
+
       it "returns false if topic was created > 24h ago" do
         topic.update!(posts_count: 1, created_at: 48.hours.ago)
         expect(Guardian.new(topic.user).can_delete?(topic)).to be_falsey
@@ -2239,6 +2252,12 @@ RSpec.describe Guardian do
         expect(Guardian.new(trust_level_2).can_delete?(post)).to be_falsey
         expect(Guardian.new(trust_level_3).can_delete?(post)).to be_falsey
         expect(Guardian.new(trust_level_4).can_delete?(post)).to be_falsey
+      end
+
+      it "returns true when tl4 can delete posts and topics" do
+        expect(Guardian.new(trust_level_4).can_delete?(post)).to be_falsey
+        SiteSetting.tl4_delete_posts_and_topics = true
+        expect(Guardian.new(trust_level_4).can_delete?(post)).to be_truthy
       end
 
       it "returns false when self deletions are disabled" do
@@ -2381,6 +2400,22 @@ RSpec.describe Guardian do
       it "returns true if it's yours" do
         expect(Guardian.new(user).can_delete?(post_action)).to be_truthy
       end
+    end
+  end
+
+  describe "#can_see_deleted_posts?" do
+    it "returns true if the user is an admin" do
+      expect(Guardian.new(admin).can_see_deleted_posts?(post.topic.category)).to be_truthy
+    end
+
+    it "returns true if the user is a moderator of category" do
+      expect(Guardian.new(moderator).can_see_deleted_posts?(post.topic.category)).to be_truthy
+    end
+
+    it "returns true when tl4 can delete posts and topics" do
+      expect(Guardian.new(trust_level_4).can_see_deleted_posts?(post)).to be_falsey
+      SiteSetting.tl4_delete_posts_and_topics = true
+      expect(Guardian.new(trust_level_4).can_see_deleted_posts?(post)).to be_truthy
     end
   end
 

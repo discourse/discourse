@@ -12,8 +12,8 @@
           </LinkTo>
         {{else}}
           <LinkTo
-            @route="chat.channel"
-            @models={{array this.model.id (slugify-channel this.model)}}
+            @route="chat.channel.from-params"
+            @models={{this.model.routeModels}}
             class="chat-full-page-header__back-btn no-text btn-flat btn"
             title={{i18n "chat.channel_info.back_to_channel"}}
           >
@@ -38,7 +38,7 @@
         >
           <LinkTo
             @route={{concat "chat.channel.info." tab}}
-            @models={{array this.model.id (slugify-channel this.model)}}
+            @models={{this.model.routeModels}}
             class="chat-tabs-list__link"
           >
             <span>{{i18n (concat "chat.channel_info.tabs." tab)}}</span>

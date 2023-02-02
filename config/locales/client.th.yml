@@ -257,7 +257,6 @@ th:
       edit_bookmark: "แก้ไขบุ๊กมาร์ก"
       clear_bookmarks: "ล้างบุ๊กมาร์ก"
       help:
-        bookmark: "คลิกเพื่อ บุ๊คมาร์ค ที่โพสแรกของกระทู้นี้"
         unbookmark: "คลิกเพื่อลบบุ๊กมาร์กทั้งหมดในกระทู้นี้"
     bookmarks:
       created: "คุณได้บุ๊กมาร์กโพสต์นี้ %{name}"
@@ -1627,6 +1626,7 @@ th:
         close_topics: "ปิดกระทู้"
         archive_topics: "คลังกระทู้"
         move_messages_to_inbox: "ย้ายไปกล่องขาเข้า"
+        notification_level: "การแจ้งเตือน..."
         choose_new_category: "เลือกหมวดหมู่ใหม่ให้กระทู้"
         selected:
           other: "คุณได้เลือก <b>%{count}</b> กระทู้"
@@ -1793,6 +1793,7 @@ th:
         unarchive: "เลิกเก็บกระทู้เข้าคลัง"
         archive: "เก็บกระทู้เข้าคลัง"
         reset_read: "ล้างข้อมูลการอ่าน"
+        make_public: "ทำให้กระทู้เป็นสาธารณะ..."
         make_private: "สร้างข้อความส่วนตัว"
       feature:
         pin: "ปักหมุดกระทู้"
@@ -2413,6 +2414,7 @@ th:
         save: "บันทึก"
         delete: "ลบ"
         everyone_can_use: "ทุกคนสามารถใช้แท็กได้"
+        parent_tag_placeholder: "ทางเลือก"
       topics:
         none:
           unread: "คุณไม่มีกระทู้ที่ยังไม่ได้อ่าน"
@@ -2468,6 +2470,8 @@ th:
               content: "แอดมิน"
             badges:
               content: "เหรียญ"
+            everything:
+              content: "ทุกสิ่ง"
             faq:
               content: "คำถามที่พบบ่อย"
             groups:
@@ -2480,6 +2484,7 @@ th:
                 other: "%{count}แบบร่าง"
             review:
               content: "รีวิว"
+    until: "จนถึง:"
   admin_js:
     type_to_filter: "พิมพ์เพื่อกรอง..."
     admin:
@@ -2500,6 +2505,7 @@ th:
         latest_version: "ล่าสุด"
         new_features:
           dismiss: "ซ่อน"
+          learn_more: "เรียนรู้เพิ่มเติม"
         last_checked: "ตรวจล่าสุด"
         refresh_problems: "รีเฟรช"
         no_problems: "ไม่พบปัญหา"
@@ -2725,6 +2731,8 @@ th:
             name: "หลัก"
           success:
             name: "สำเร็จ"
+          selected:
+            name: "เลือกแล้ว"
         email_style:
           css: "CSS"
           save_error_with_reason: "การเปลี่ยนแปลงไม่ได้ถูกบันทึก %{error}"
@@ -2771,6 +2779,9 @@ th:
           filters:
             user_placeholder: "ผู้ใช้"
             address_placeholder: "name@example.com"
+      moderation_history:
+        actions:
+          delete_topic: "กระทู้ถูกลบ"
       logs:
         created_at: "สร้าง"
         ip_address: "ไอพี"

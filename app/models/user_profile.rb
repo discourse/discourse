@@ -45,7 +45,7 @@ class UserProfile < ActiveRecord::Base
 
   def bio_excerpt(length = 350, opts = {})
     return nil if bio_cooked.blank?
-    excerpt = PrettyText.excerpt(bio_cooked, length, opts).sub(/<br>$/, "")
+    excerpt = PrettyText.excerpt(bio_cooked, length, opts).sub(/<br>\z/, "")
     return excerpt if excerpt.blank? || (user.has_trust_level?(TrustLevel[1]) && !user.suspended?)
     PrettyText.strip_links(excerpt)
   end

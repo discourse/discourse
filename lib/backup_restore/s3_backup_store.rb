@@ -173,7 +173,7 @@ module BackupRestore
             path = Regexp.quote(path)
           end
 
-          %r{^#{path}[^/]*\.t?gz$}i
+          %r{\A#{path}[^/]*\.t?gz\z}i
         end
     end
 

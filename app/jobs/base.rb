@@ -29,7 +29,7 @@ module Jobs
   end
 
   def self.num_email_retry_jobs
-    Sidekiq::RetrySet.new.count { |job| job.klass =~ /Email$/ }
+    Sidekiq::RetrySet.new.count { |job| job.klass =~ /Email\z/ }
   end
 
   class Base

@@ -126,3 +126,16 @@ Fabricator(:user_chat_channel_membership_for_dm, from: :user_chat_channel_member
   desktop_notification_level 2
   mobile_notification_level 2
 end
+
+Fabricator(:chat_draft) do
+  user
+  chat_channel
+
+  transient :value, "chat draft message"
+  transient :uploads, []
+  transient :reply_to_msg
+
+  data do |attrs|
+    { value: attrs[:value], replyToMsg: attrs[:reply_to_msg], uploads: attrs[:uploads] }.to_json
+  end
+end

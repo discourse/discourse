@@ -36,6 +36,7 @@ export default Controller.extend({
   preferencesController: controller("preferences"),
   makeColorSchemeDefault: true,
   canPreviewColorScheme: propertyEqual("model.id", "currentUser.id"),
+  subpageTitle: I18n.t("user.preferences_nav.interface"),
 
   init() {
     this._super(...arguments);

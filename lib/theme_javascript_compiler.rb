@@ -200,7 +200,7 @@ class ThemeJavascriptCompiler
   end
 
   def raw_template_name(name)
-    name = name.sub(/\.(raw|hbr)$/, "")
+    name = name.sub(/\.(raw|hbr)\z/, "")
     name.inspect
   end
 
@@ -228,7 +228,7 @@ class ThemeJavascriptCompiler
 
   def append_module(script, name, include_variables: true)
     original_filename = name
-    name = "discourse/theme-#{@theme_id}/#{name.gsub(%r{^discourse/}, "")}"
+    name = "discourse/theme-#{@theme_id}/#{name.gsub(%r{\Adiscourse/}, "")}"
 
     script = "#{theme_settings}#{script}" if include_variables
     transpiler = DiscourseJsProcessor::Transpiler.new

@@ -268,11 +268,9 @@ ko:
       edit_bookmark: "북마크 편집"
       clear_bookmarks: "북마크 지우기"
       help:
-        bookmark: "이 주제의 첫 번째 게시물을 북마크하려면 클릭하세요"
-        edit_bookmark: "이 주제의 북마크를 편집하려면 클릭하세요"
         edit_bookmark_for_topic: "이 주제의 북마크를 편집하려면 클릭하세요"
         unbookmark: "이 주제의 모든 북마크를 제거하려면 클릭하세요"
-        unbookmark_with_reminder: "이 주제의 모든 북마크 및 미리 알림을 제거하려면 클릭하세요"
+        unbookmark_with_reminder: "이 항목의 모든 북마크 및 미리 알림을 제거하려면 클릭하십시오"
     bookmarks:
       created: "이 게시물을 북마크했습니다. %{name}"
       create: "북마크 만들기"
@@ -1798,6 +1796,7 @@ ko:
       categories_and_top_topics: "카테고리 및 주요 글"
       categories_boxes: "서브카테고리가 있는 박스"
       categories_boxes_with_topics: "추천 주제의 박스"
+      subcategories_with_featured_topics: "추천 글이 포함된 하위 카테고리"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -3178,6 +3177,9 @@ ko:
         help: "읽지 않은 게시물을 포함한 현재 구독 또는 추적 중인 주제"
         lower_title_with_count:
           other: "%{count} unread"
+      unseen:
+        title: "읽지 않음"
+        lower_title: "읽지 않음"
       new:
         lower_title_with_count:
           other: "%{count} new"
@@ -3219,7 +3221,6 @@ ko:
         this_week: "주"
         today: "오늘"
     browser_update: '<a href="https://www.discourse.org/faq/#browser">브라우저 버전이 너무 낮아 이 사이트에서 작동하지 않습니다</a>. <a href="https://browsehappy.com">브라우저를 업그레이드</a>하여 서식 있는 콘텐츠를 표시하고 로그인하여 댓글도 달아보세요.'
-    safari_13_warning: 이 사이트는 곧 iOS 및 Safari 버전 13 이하에 대한 지원을 중단할 예정입니다. 단순화된 읽기 전용 버전은 계속 사용할 수 있습니다. (<a href="https://meta.discourse.org/t/224747">더 보기</a>)
     permission_types:
       full: "생성 / 댓글 / 보기"
       create_post: "댓글 / 보기"
@@ -3559,6 +3560,7 @@ ko:
               content: "카테고리 추가"
           click_to_get_started: "시작하려면 여기를 클릭하십시오."
           header_link_text: "카테고리"
+          configure_defaults: "기본값 구성"
         community:
           header_link_text: "커뮤니티"
           links:
@@ -3586,6 +3588,7 @@ ko:
     welcome_topic_banner:
       title: "환영 글 만들기"
       button_title: "편집 시작"
+    until: "까지:"
   admin_js:
     type_to_filter: "필터링하려면 입력..."
     admin:
@@ -4252,6 +4255,8 @@ ko:
           love:
             name: "하트"
             description: "좋아요 버튼 색입니다."
+          selected:
+            name: "선택됨"
         robots:
           title: "사이트의 robots.txt 파일 오버라이드:"
           warning: "관련된 모든 사이트 설정이 영구적으로 오버라이드됩니다."

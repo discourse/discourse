@@ -128,7 +128,7 @@ module FileStore
       count = 0
       model.find_each do |upload|
         # could be a remote image
-        next unless upload.url =~ %r{^/[^/]}
+        next unless upload.url =~ %r{\A/[^/]}
 
         path = "#{public_dir}#{upload.url}"
         bad = true

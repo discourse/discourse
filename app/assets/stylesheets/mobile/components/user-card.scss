@@ -3,7 +3,6 @@ $avatar_width: 120px;
 // shared styles for user and group cards
 .user-card,
 .group-card {
-  position: fixed;
   // mobile cards should always be on top of everything - 1102
   z-index: z("mobile-composer") + 2;
   max-width: 95vw;

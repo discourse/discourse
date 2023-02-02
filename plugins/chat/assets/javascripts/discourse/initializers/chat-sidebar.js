@@ -1,5 +1,4 @@
 import { htmlSafe } from "@ember/template";
-import slugifyChannel from "discourse/plugins/chat/discourse/lib/slugify-channel";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import I18n from "I18n";
 import { bind } from "discourse-common/utils/decorators";
@@ -32,7 +31,7 @@ export default {
             }
 
             get name() {
-              return dasherize(slugifyChannel(this.channel));
+              return dasherize(this.channel.slugifiedTitle);
             }
 
             @computed("chatService.activeChannel")
@@ -53,11 +52,11 @@ export default {
             }
 
             get route() {
-              return "chat.channel";
+              return "chat.channel.from-params";
             }
 
             get models() {
-              return [this.channel.id, slugifyChannel(this.channel)];
+              return this.channel.routeModels;
             }
 
             get text() {
@@ -195,7 +194,7 @@ export default {
             }
 
             get name() {
-              return slugifyChannel(this.channel);
+              return this.channel.slugifiedTitle;
             }
 
             @computed("chatService.activeChannel")
@@ -216,11 +215,11 @@ export default {
             }
 
             get route() {
-              return "chat.channel";
+              return "chat.channel.from-params";
             }
 
             get models() {
-              return [this.channel.id, slugifyChannel(this.channel)];
+              return this.channel.routeModels;
             }
 
             get title() {

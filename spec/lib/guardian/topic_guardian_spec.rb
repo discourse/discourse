@@ -75,6 +75,27 @@ RSpec.describe TopicGuardian do
     end
   end
 
+  describe "#can_see_deleted_topics?" do
+    it "returns true for staff" do
+      expect(Guardian.new(admin).can_see_deleted_topics?(topic.category)).to eq(true)
+    end
+
+    it "returns true for group moderator" do
+      SiteSetting.enable_category_group_moderation = true
+      expect(Guardian.new(user).can_see_deleted_topics?(topic.category)).to eq(false)
+      category.update!(reviewable_by_group_id: group.id)
+      group.add(user)
+      topic.update!(category: category)
+      expect(Guardian.new(user).can_see_deleted_topics?(topic.category)).to eq(true)
+    end
+
+    it "returns true when tl4 can delete posts and topics" do
+      expect(Guardian.new(tl4_user).can_see_deleted_topics?(topic.category)).to eq(false)
+      SiteSetting.tl4_delete_posts_and_topics = true
+      expect(Guardian.new(tl4_user).can_see_deleted_topics?(topic.category)).to eq(true)
+    end
+  end
+
   describe "#can_edit_topic?" do
     context "when the topic is a shared draft" do
       let(:tl2_user) { Fabricate(:user, trust_level: TrustLevel[2]) }

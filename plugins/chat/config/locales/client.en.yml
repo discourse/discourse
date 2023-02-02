@@ -244,10 +244,12 @@ en:
           members: Members
           settings: Settings
 
-      channel_edit_name_modal:
-        title: Edit name
+      channel_edit_name_slug_modal:
+        title: Edit channel
         input_placeholder: Add a name
-        description: Give a short descriptive name to your channel
+        slug_description: A channel slug is used in the URL instead of the channel name
+        name: Channel name
+        slug: Channel slug (optional)
 
       channel_edit_description_modal:
         title: Edit description
@@ -289,6 +291,7 @@ en:
         create: "Create channel"
         description: "Description (optional)"
         name: "Channel name"
+        slug: "Channel slug (optional)"
         title: "New channel"
         type: "Type"
         types:
@@ -324,8 +327,8 @@ en:
         channel_wide_mentions_label: "Allow @all and @here mentions"
         channel_wide_mentions_description: "Allow users to notify all members of #%{channel} with @all or only those who are active in the moment with @here"
         auto_join_users_label: "Automatically add users"
-        auto_join_users_info: "Check hourly which users have been active in the last 3 months and, if they have access to the %{category} category, add them to this channel."
-        enable_auto_join_users: "Automatically add all recently active users"
+        auto_join_users_info: "Check hourly which users have been active in the last 3 months. Add them to this channel if they have access to the %{category} category."
+        auto_join_users_info_no_category: "Check hourly which users have been active in the last 3 months. Add them to this channel if they have access to the selected category."
         auto_join_users_warning: "Every user who isn't a member of this channel and has access to the %{category} category will join. Are you sure?"
         desktop_notification_level: "Desktop notifications"
         follow: "Join"

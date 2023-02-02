@@ -1,6 +1,7 @@
 import DiscourseRoute from "discourse/routes/discourse";
 import Invite from "discourse/models/invite";
 import { action } from "@ember/object";
+import I18n from "I18n";
 
 export default DiscourseRoute.extend({
   model(params) {
@@ -25,6 +26,10 @@ export default DiscourseRoute.extend({
       filter: this.inviteFilter,
       searchTerm: "",
     });
+  },
+
+  titleToken() {
+    return I18n.t("user.invited." + this.inviteFilter + "_tab");
   },
 
   @action

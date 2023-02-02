@@ -79,12 +79,13 @@
         </li>
       {{/if}}
 
-      <PluginOutlet
-        @name="user-preferences-nav-under-interface"
-        @tagName="span"
-        @connectorTagName="div"
-        @args={{hash model=this.model}}
-      />
+      <span>
+        <PluginOutlet
+          @name="user-preferences-nav-under-interface"
+          @connectorTagName="div"
+          @outletArgs={{hash model=this.model}}
+        />
+      </span>
 
       {{#if this.model.userApiKeys}}
         <li class="nav-apps">
@@ -94,23 +95,25 @@
         </li>
       {{/if}}
 
-      <PluginOutlet
-        @name="user-preferences-nav"
-        @tagName="span"
-        @connectorTagName="li"
-        @args={{hash model=this.model}}
-      />
+      <span>
+        <PluginOutlet
+          @name="user-preferences-nav"
+          @connectorTagName="li"
+          @outletArgs={{hash model=this.model}}
+        />
+      </span>
     </MobileNav>
   </DSection>
 {{/if}}
 
-<section class="user-content user-preferences">
-  <PluginOutlet
-    @name="above-user-preferences"
-    @tagName="span"
-    @connectorTagName="div"
-    @args={{hash model=this.model}}
-  />
+<section class="user-content user-preferences" id="user-content">
+  <span>
+    <PluginOutlet
+      @name="above-user-preferences"
+      @connectorTagName="div"
+      @outletArgs={{hash model=this.model}}
+    />
+  </span>
 
   <form class="form-vertical">
     {{outlet}}

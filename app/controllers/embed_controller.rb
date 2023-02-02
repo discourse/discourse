@@ -28,11 +28,11 @@ class EmbedController < ApplicationController
     end
 
     if @embed_id = params[:discourse_embed_id]
-      raise Discourse::InvalidParameters.new(:embed_id) unless @embed_id =~ /^de\-[a-zA-Z0-9]+$/
+      raise Discourse::InvalidParameters.new(:embed_id) unless @embed_id =~ /\Ade\-[a-zA-Z0-9]+\z/
     end
 
     if @embed_class = params[:embed_class]
-      unless @embed_class =~ /^[a-zA-Z0-9\-_]+$/
+      unless @embed_class =~ /\A[a-zA-Z0-9\-_]+\z/
         raise Discourse::InvalidParameters.new(:embed_class)
       end
     end
@@ -139,7 +139,7 @@ class EmbedController < ApplicationController
     by_url = {}
 
     if embed_urls.present?
-      urls = embed_urls.map { |u| u.sub(/#discourse-comments$/, "").sub(%r{/$}, "") }
+      urls = embed_urls.map { |u| u.sub(/#discourse-comments\z/, "").sub(%r{/\z}, "") }
       topic_embeds = TopicEmbed.where(embed_url: urls).includes(:topic).references(:topic)
 
       topic_embeds.each do |te|

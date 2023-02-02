@@ -220,24 +220,42 @@ export default Component.extend({
         this.set("view", DRAFT_CHANNEL_VIEW);
         this.appEvents.trigger("chat:float-toggled", false);
         return;
-      case "chat.channel":
-        return this.chatChannelsManager
-          .find(route.params.channelId)
-          .then((channel) => {
-            this.chat.setActiveChannel(channel);
-            this.set("view", CHAT_VIEW);
-            this.appEvents.trigger("chat:float-toggled", false);
-
-            if (route.queryParams.messageId) {
-              schedule("afterRender", () => {
-                this.appEvents.trigger(
-                  "chat-live-pane:highlight-message",
-                  route.queryParams.messageId
-                );
-              });
-            }
-          });
+      case "chat.channel.from-params":
+        return this._openChannel(
+          route.parent.params.channelId,
+          this._highlightCb(route.queryParams.messageId)
+        );
+      case "chat.channel.near-message":
+        return this._openChannel(
+          route.parent.params.channelId,
+          this._highlightCb(route.params.messageId)
+        );
+      case "chat.channel-legacy":
+        return this._openChannel(
+          route.params.channelId,
+          this._highlightCb(route.queryParams.messageId)
+        );
     }
+  },
+
+  _highlightCb(messageId) {
+    if (messageId) {
+      return () => {
+        this.appEvents.trigger("chat-live-pane:highlight-message", messageId);
+      };
+    }
+  },
+
+  _openChannel(channelId, afterRenderFunc = null) {
+    return this.chatChannelsManager.find(channelId).then((channel) => {
+      this.chat.setActiveChannel(channel);
+      this.set("view", CHAT_VIEW);
+      this.appEvents.trigger("chat:float-toggled", false);
+
+      if (afterRenderFunc) {
+        schedule("afterRender", afterRenderFunc);
+      }
+    });
   },
 
   @action
@@ -306,7 +324,7 @@ export default Component.extend({
         return "/chat/draft-channel";
       case CHAT_VIEW:
         if (channel) {
-          return `/chat/channel/${channel.id}/${channel.slug || "-"}`;
+          return `/chat/c/${channel.slug || "-"}/${channel.id}`;
         } else {
           return "/chat";
         }

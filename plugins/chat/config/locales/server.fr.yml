@@ -23,7 +23,9 @@ fr:
     default_emoji_reactions: "Réactions émoji par défaut pour les messages de discussion. Ajoutez jusqu'à 5 émojis pour une réaction rapide."
     direct_message_enabled_groups: "Permettre aux utilisateurs de ces groupes de créer des discussions privées entre utilisateurs. Remarque : les responsables peuvent toujours créer des conversations privées et les utilisateurs pourront répondre aux conversations privées initiées par les utilisateurs qui sont autorisés à les créer."
     chat_message_flag_allowed_groups: "Les utilisateurs de ces groupes sont autorisés à signaler les messages de discussion."
+    max_mentions_per_chat_message: "Nombre maximum de notifications @name qu'un utilisateur peut utiliser dans un message de discussion."
     chat_max_direct_message_users: "Les utilisateurs ne peuvent pas ajouter plus que ce nombre d'autres utilisateurs lors de la création d'un nouveau message privé. Fixez cette valeur à 0 pour n'autoriser les messages que pour vous-même. Les responsables ne sont pas soumis à ce paramètre."
+    chat_allow_archiving_channels: "Autoriser le personnel à archiver les messages dans un sujet lors de la fermeture d'un canal."
     errors:
       chat_default_channel: "Le canal de discussion par défaut doit être un canal public."
       direct_message_enabled_groups_invalid: "Vous devez spécifier au moins un groupe pour ce paramètre. Si vous ne souhaitez pas que quiconque, à l'exception des responsables, envoie des messages privés, choisissez le groupe des responsables."
@@ -33,12 +35,21 @@ fr:
       title: "Archivage du canal de discussion terminé"
       subject_template: "L'archivage du canal de discussion est terminé"
       text_body_template: |
-        L'archivage du canal de discussion **\#%{channel_name}** a bien été effectué. Les messages ont été copiés dans le sujet [%{topic_title}](%{topic_url}).
+        L'archivage du canal de discussion %{channel_hashtag_or_name} a bien été effectué. Les messages ont été copiés dans le sujet [%{topic_title}](%{topic_url}).
     chat_channel_archive_failed:
       title: "Échec de l'archivage du canal de discussion"
       subject_template: "Échec de l'archivage du canal de discussion"
       text_body_template: |
-        L'archivage du canal de discussion **\#%{channel_name}** a échoué. Les messages de %{messages_archived} ont été archivés. Les messages partiellement archivés ont été copiés dans le sujet [%{topic_title}](%{topic_url}). Visitez le canal à l'adresse %{channel_url} pour réessayer.
+        L'archivage du canal de discussion %{channel_hashtag_or_name} a échoué. Les messages de %{messages_archived} ont été archivés. Les messages partiellement archivés ont été copiés dans le sujet [%{topic_title}](%{topic_url}). Visitez le canal à l'adresse %{channel_url} pour réessayer.
+    chat_channel_archive_failed_no_topic:
+      title: "Échec de l'archivage du canal de discussion"
+      subject_template: "Échec de l'archivage du canal de discussion"
+      text_body_template: |
+        L'archivage du canal de discussion %{channel_hashtag_or_name} a échoué. Aucun message n'a été archivé. Le sujet n'a pas été créé pour les raisons suivantes :
+
+          %{topic_validation_errors}
+
+        Visitez le canal à l'adresse %{channel_url} pour réessayer.
   chat:
     deleted_chat_username: supprimé
     errors:
@@ -52,6 +63,7 @@ fr:
       duplicate_message: "Vous avez publié un message identique trop récemment."
       delete_channel_failed: "Échec de la suppression du canal, veuillez réessayer."
       minimum_length_not_met: "Le message est trop court. Il doit comporter au moins %{minimum} caractères."
+      message_too_long: "Le message est trop long, les messages doivent comporter au maximum %{maximum} caractères."
       max_reactions_limit_reached: "Les nouvelles réactions ne sont pas autorisées sur ce message."
       message_move_invalid_channel: "Le canal source et le canal de destination doivent être des canaux publics."
       message_move_no_messages_found: "Aucun message n'a été trouvé avec les ID de message fournis."
@@ -167,7 +179,16 @@ fr:
       from: "%{site_name}"
       subject:
         direct_message_from_1: "[%{email_prefix}] Nouveau message de %{username}"
+        direct_message_from_2: "[%{email_prefix}] Nouveaux messages de %{username1} et de %{username2}"
+        direct_message_from_more:
+          one: "[%{email_prefix}] Nouveaux messages de %{username} et de %{count} autre utilisateur"
+          other: "[%{email_prefix}] Nouveaux messages de %{username} et de %{count} autres utilisateurs"
         chat_channel_1: "[%{email_prefix}] Nouveau message dans %{channel}"
+        chat_channel_2: "[%{email_prefix}] Nouveaux messages dans %{channel1} et %{channel2}"
+        chat_channel_more:
+          one: "[%{email_prefix}] Nouveaux messages dans %{channel} et %{count} autre canal"
+          other: "[%{email_prefix}] Nouveaux messages dans %{channel} et %{count} autres canaux"
+        chat_channel_and_direct_message: "[%{email_prefix}] Nouveau message dans %{channel} de la part de %{username}"
       unsubscribe: "Ce résumé de discussion est envoyé à partir de %{site_link} lorsque vous vous absentez. Changez vos %{email_preferences_link} ou %{unsubscribe_link} pour vous désabonner."
       unsubscribe_no_link: "Ce résumé de discussion est envoyé à partir de %{site_link} lorsque vous vous absentez. Changez vos %{email_preferences_link}."
       view_messages:

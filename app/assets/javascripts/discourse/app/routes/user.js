@@ -1,5 +1,4 @@
 import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "I18n";
 import User from "discourse/models/user";
 import { action } from "@ember/object";
 import { bind } from "discourse-common/utils/decorators";
@@ -98,9 +97,7 @@ export default DiscourseRoute.extend({
 
   titleToken() {
     const username = this.modelFor("user").username;
-    if (username) {
-      return [I18n.t("user.profile"), username];
-    }
+    return username ? username : null;
   },
 
   @action

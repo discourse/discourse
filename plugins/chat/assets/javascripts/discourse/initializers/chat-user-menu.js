@@ -24,11 +24,9 @@ export default {
                   title: this.notification.data.chat_channel_title,
                   slug: this.notification.data.chat_channel_slug,
                 });
-                return `/chat/channel/${
+                return `/chat/c/${slug || "-"}/${
                   this.notification.data.chat_channel_id
-                }/${slug || "-"}?messageId=${
-                  this.notification.data.chat_message_id
-                }`;
+                }/${this.notification.data.chat_message_id}`;
               }
 
               get linkTitle() {
@@ -61,11 +59,9 @@ export default {
                   title: this.notification.data.chat_channel_title,
                   slug: this.notification.data.chat_channel_slug,
                 });
-                return `/chat/channel/${
+                return `/chat/c/${slug || "-"}/${
                   this.notification.data.chat_channel_id
-                }/${slug || "-"}?messageId=${
-                  this.notification.data.chat_message_id
-                }`;
+                }/${this.notification.data.chat_message_id}`;
               }
 
               get linkTitle() {
