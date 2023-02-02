@@ -18,19 +18,21 @@ module Chat
 
       DELETE_CHANNEL_LOG_KEY = "chat_channel_delete"
 
-      delegate :channel, to: :context
-
-      policy :invalid_access
-      contract do
+      class DefaultContract < Contract
         attribute :channel
         validates :channel, presence: true
       end
-      step :service
+
+      delegate :channel, to: :context
+
+      policy :invalid_access
+      contract
+      step :trash_channel
       step :enqueue_delete_channel_relations_job
 
       private
 
-      def service
+      def trash_channel
         ChatChannel.transaction do
           prevents_slug_collision
           soft_delete_channel

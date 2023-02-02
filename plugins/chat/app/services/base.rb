@@ -76,11 +76,12 @@ module Chat
       end
 
       class Step
-        attr_reader :name, :block
+        attr_reader :name, :block, :class_name
 
-        def initialize(name, &block)
+        def initialize(name, class_name: nil, &block)
           @name = name
           @block = block
+          @class_name = class_name
         end
 
         def call(instance, context)
@@ -97,14 +98,11 @@ module Chat
 
       class ContractStep < Step
         def call(instance, context)
-          contract_class = Class.new(Contract)
-          contract_class.class_eval(&block)
-          contract =
-            contract_class.new(context.to_h.slice(*contract_class.attribute_names.map(&:to_sym)))
-          context[:"contract.default"] = contract
+          contract = class_name.new(context.to_h.slice(*class_name.attribute_names.map(&:to_sym)))
+          context[:"contract.#{name}"] = contract
 
           unless contract.valid?
-            context.fail!("result.contract.default": Context.build.fail(errors: contract.errors))
+            context.fail!("result.contract.#{name}": Context.build.fail(errors: contract.errors))
           end
         end
       end
@@ -126,8 +124,8 @@ module Chat
           new(context).tap(&:run!).context
         end
 
-        def contract(name = :default, &block)
-          steps << ContractStep.new(name, &block)
+        def contract(name = :default, class_name: self::DefaultContract)
+          steps << ContractStep.new(name, class_name: class_name)
         end
 
         def policy(name = :default, &block)

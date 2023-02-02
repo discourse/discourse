@@ -23,7 +23,7 @@ RSpec.describe(Chat::Service::TrashChannel) do
     fab!(:current_user) { Fabricate(:admin) }
 
     it "succeeds" do
-      expect(result).to succeed
+      expect(result).to be_a_success
     end
 
     it "trashes the channel" do
