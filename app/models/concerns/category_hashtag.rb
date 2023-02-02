@@ -46,18 +46,20 @@ module CategoryHashtag
           # is no child then the "parent" part of the slug is just the
           # entire slug we look for.
           #
-          # Otherwise if the child slug is present, we find the parent
-          # by its slug then find the child by its slug and its parent's
-          # ID to make sure they match.
+          # Otherwise if the child slug is present, we find the child
+          # by its slug then find the parent by its slug and the child's
+          # parent ID to make sure they match.
           if child_slug.present?
-            parent_category = categories.find { |cat| cat.slug.casecmp?(parent_slug) }
-            if parent_category.present?
-              categories.find do |cat|
-                cat.slug.downcase == child_slug && cat.parent_category_id == parent_category.id
+            categories.find do |cat|
+              if cat.slug.casecmp?(child_slug) && cat.parent_category_id
+                categories.find do |parent_category|
+                  parent_category.id == cat.parent_category_id &&
+                    parent_category.slug.casecmp?(parent_slug)
+                end
               end
             end
           else
-            categories.find { |cat| cat.slug.downcase == parent_slug && cat.top_level? }
+            categories.find { |cat| cat.slug.casecmp?(parent_slug) && cat.top_level? }
           end
         end
         .compact

@@ -32,7 +32,11 @@ class CategoryHashtagDataSource
   end
 
   def self.lookup(guardian, slugs)
-    user_categories = Category.secured(guardian).includes(:parent_category)
+    user_categories =
+      Category
+        .secured(guardian)
+        .includes(:parent_category)
+        .order("parent_category_id ASC NULLS FIRST, id ASC")
     Category
       .query_loaded_from_slugs(slugs, user_categories)
       .map { |category| category_to_hashtag_item(category) }
