@@ -18,7 +18,7 @@ module Chat
 
       delegate :channel, :status, to: :context
 
-      before_policies { context.status = context.status&.to_sym }
+      step { context.status = context.status&.to_sym }
 
       policy(:invalid_access) { guardian.can_change_channel_status?(channel, status) }
 

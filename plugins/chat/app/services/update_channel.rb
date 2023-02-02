@@ -35,7 +35,7 @@ module Chat
 
       policy(:invalid_access) { guardian.can_edit_chat_channel? }
 
-      before_contract do
+      step do
         if @initial_context.key?(:name) && context.name.blank?
           context.name = nil
         else
