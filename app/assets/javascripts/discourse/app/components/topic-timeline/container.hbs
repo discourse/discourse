@@ -146,8 +146,7 @@
     {{#if @fullscreen}}
       <button
         type="button"
-        {{! we need to keep this a widget-button to not close the modal when opening form }}
-        class="widget-button btn btn-text jump-to-post"
+        class="timeline-open-jump-to-post-prompt-btn btn btn-text jump-to-post"
         title={{i18n "topic.progress.jump_prompt_long"}}
         {{on "click" @jumpToPostPrompt}}
       >
