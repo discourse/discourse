@@ -169,8 +169,8 @@ RSpec.describe SearchIndexer do
 
       expect(post.post_search_data.raw_data).to eq("https://meta.discourse.org/some.png")
 
-      expect(post.post_search_data.search_data).to eq(
-        "'/some.png':12 'discourse.org':11 'meta.discourse.org':11 'meta.discourse.org/some.png':10 'org':11 'test':8A 'titl':4A 'uncategor':9B",
+      expect(post.post_search_data.search_data).to eq_ts_vector(
+        "'/some.png':12 'discourse.org':11 'meta.discourse.org':11 'meta.discourse.org/some.png':10 'org':11 'test':8A 'titl':4A 'uncategor':9B 'meta':11 'discours':11",
       )
     end
 
@@ -194,8 +194,8 @@ RSpec.describe SearchIndexer do
       topic = Fabricate(:topic, category: category, title: "this is a test topic")
 
       post = Fabricate(:post, topic: topic, raw: <<~RAW)
-      a https://abc.com?bob=1, http://efg.com.au?bill=1 b hij.net/xyz=1
-      www.klm.net/?IGNORE=1 <a href="http://abc.de.nop.co.uk?IGNORE=1&ignore2=2">test</a>
+      a https://car.com?bob=1, http://efg.com.au?bill=1 b hij.net/xyz=1
+      www.klm.net/?IGNORE=1 <a href="http://abc.de.nop.co.uk?IGNORE=1&ignore2=2">test</a> https://cars.com
       RAW
 
       post.rebake!
@@ -208,11 +208,11 @@ RSpec.describe SearchIndexer do
       # more context to say "hey, this part of <a href>...</a> was a guess by autolinker.
       # A blanket treating of non-urls without this logic is risky.
       expect(post.post_search_data.raw_data).to eq(
-        "a https://abc.com , http://efg.com.au b http://hij.net/xyz=1 hij.net/xyz=1 http://www.klm.net/ www.klm.net/?IGNORE=1 http://abc.de.nop.co.uk test",
+        "a https://car.com , http://efg.com.au b http://hij.net/xyz=1 hij.net/xyz=1 http://www.klm.net/ www.klm.net/?IGNORE=1 http://abc.de.nop.co.uk test https://cars.com",
       )
 
-      expect(post.post_search_data.search_data).to eq(
-        "'/?ignore=1':21 '/xyz=1':14,17 'abc.com':9 'abc.de.nop.co.uk':22 'au':10 'awesom':6B 'b':11 'categori':7B 'co.uk':22 'com':9 'com.au':10 'de.nop.co.uk':22 'efg.com.au':10 'hij.net':13,16 'hij.net/xyz=1':12,15 'klm.net':18,20 'net':13,16,18,20 'nop.co.uk':22 'test':4A,23 'topic':5A 'uk':22 'www.klm.net':18,20 'www.klm.net/?ignore=1':19",
+      expect(post.post_search_data.search_data).to eq_ts_vector(
+        "'/?ignore=1':21 '/xyz=1':14,17 'car.com':9 'cars.com':24 'abc.de.nop.co.uk':22 'au':10 'awesom':6B 'b':11 'categori':7B 'co.uk':22 'com':9,10,24 'com.au':10 'de.nop.co.uk':22 'efg.com.au':10 'hij.net':13,16 'hij.net/xyz=1':12,15 'klm.net':18,20 'net':13,16,18,20 'nop.co.uk':22 'test':4A,23 'topic':5A 'uk':22 'www.klm.net':18,20 'www.klm.net/?ignore=1':19 'car':9,24 'co':22 'de':22 'efg':10 'hij':13,16 'klm':18,20 'nop':22 'www':18,20 'abc':22",
       )
     end
 
@@ -260,8 +260,8 @@ RSpec.describe SearchIndexer do
         "link to an external page: https://google.com/ link to an audio file: #{I18n.t("search.audio")} link to a video file: #{I18n.t("search.video")} link to an invalid URL: http:error]",
       )
 
-      expect(post.post_search_data.search_data).to eq(
-        "'/audio.m4a':23 '/content/somethingelse.mov':31 'audio':19 'com':15,22,30 'error':38 'extern':13 'file':20,28 'google.com':15 'http':37 'invalid':35 'link':10,16,24,32 'page':14 'somesite.com':22,30 'somesite.com/audio.m4a':21 'somesite.com/content/somethingelse.mov':29 'test':8A 'titl':4A 'uncategor':9B 'url':36 'video':27",
+      expect(post.post_search_data.search_data).to eq_ts_vector(
+        "'/audio.m4a':23 '/content/somethingelse.mov':31 'audio':19 'com':15,22,30 'error':38 'extern':13 'file':20,28 'google.com':15 'http':37 'invalid':35 'link':10,16,24,32 'page':14 'somesite.com':22,30 'somesite.com/audio.m4a':21 'somesite.com/content/somethingelse.mov':29 'test':8A 'titl':4A 'uncategor':9B 'url':36 'video':27 'googl':15 'somesit':22,30",
       )
     end
 
@@ -310,6 +310,7 @@ RSpec.describe SearchIndexer do
       contents = <<~TEXT
         #{"sam " * 10}
         <a href="https://something.com/path:path'path?term='hello'">url</a>
+        <a href="https://somethings.com/path:path'path?term='hello'">url</a>
       TEXT
 
       post.update!(raw: contents)
@@ -318,11 +319,9 @@ RSpec.describe SearchIndexer do
       post_search_data.reload
 
       terms =
-        "'/path:path''path':22 'com':21 'sam':10,11,12,13,14 'something.com':21 'something.com/path:path''path':20 'test':8A 'titl':4A 'uncategor':9B 'url':23".split(
-          " ",
-        ).sort
+        "'/path:path''path':22,26 'com':21,25 'sam':10,11,12,13,14 'something.com':21 'something.com/path:path''path':20 'test':8A 'titl':4A 'uncategor':9B 'url':23,27 'someth':21,25 'somethings.com':25 'somethings.com/path:path''path':24"
 
-      expect(post_search_data.search_data.split(" ").sort).to contain_exactly(*terms)
+      expect(post_search_data.search_data).to eq_ts_vector(terms)
     end
   end
 
