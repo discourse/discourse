@@ -1,5 +1,8 @@
 import Component from "@ember/component";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import discourseComputed, {
+  bind,
+  observes,
+} from "discourse-common/utils/decorators";
 import { action } from "@ember/object";
 import {
   CHAT_VIEW,
@@ -65,6 +68,8 @@ export default Component.extend({
     if (!this.chat.userCanChat) {
       return;
     }
+
+    window.removeEventListener("resize", this._checkSize);
 
     if (this.appEvents) {
       this.appEvents.off("chat:open-url", this, "openURL");
@@ -135,6 +140,7 @@ export default Component.extend({
     this.chat.openChannel(channel, messageId);
   },
 
+  @bind
   _dynamicCheckSize() {
     if (!this.chatStateManager.isDrawerActive) {
       return;
