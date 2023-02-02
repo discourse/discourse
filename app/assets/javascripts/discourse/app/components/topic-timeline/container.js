@@ -45,6 +45,7 @@ export default class TopicTimelineScrollArea extends Component {
       this.appEvents.on("composer:opened", this.calculatePosition);
       this.appEvents.on("composer:resized", this.calculatePosition);
       this.appEvents.on("composer:closed", this.calculatePosition);
+      this.appEvents.on("post-stream:posted", this.calculatePosition);
     }
 
     this.calculatePosition();
@@ -55,8 +56,7 @@ export default class TopicTimelineScrollArea extends Component {
       return true;
     }
 
-    const streamLength = this.args.model.postStream?.stream?.length;
-    if (streamLength === 1) {
+    if (this.total === 1) {
       const postsWrapper = document.querySelector(".posts-wrapper");
       if (postsWrapper && postsWrapper.offsetHeight < 1000) {
         return false;
@@ -302,6 +302,7 @@ export default class TopicTimelineScrollArea extends Component {
       this.appEvents.off("composer:resized", this.calculatePosition);
       this.appEvents.off("composer:closed", this.calculatePosition);
       this.appEvents.off("topic:current-post-scrolled", this.postScrolled);
+      this.appEvents.off("post-stream:posted", this.calculatePosition);
     }
   }
 
