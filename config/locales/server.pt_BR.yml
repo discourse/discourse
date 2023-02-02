@@ -2135,7 +2135,6 @@ pt_BR:
     default_sidebar_categories: "As categorias selecionadas serão exibidas abaixo da seção de Categorias do Painel Lateral por padrão."
     default_sidebar_tags: "As etiquetas selecionadas serão exibidas na seção de Etiquetas da barra lateral por padrão."
     enable_new_notifications_menu: "Ativa o novo menu de notificações para o menu de navegação legado."
-    enable_new_user_profile_nav_groups: "EXPERIMENTAL: os usuários dos grupos selecionados verão o novo menu de navegação do perfil de usuário"
     enable_experimental_hashtag_autocomplete: "EXPERIMENTAL: Use o novo sistema de complementação automática #hashtag para categorias e etiquetas que renderiza o item selecionado de maneira diferente e que tem melhorado a busca"
     errors:
       invalid_css_color: "Cor inválida. Digite o nome da cor ou valor hexadecimal."

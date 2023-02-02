@@ -2135,7 +2135,6 @@ fr:
     default_sidebar_categories: "Les catégories sélectionnées seront affichées par défaut dans la section Catégories de la barre latérale."
     default_sidebar_tags: "Les étiquettes sélectionnées seront affichées par défaut dans la section Étiquettes de la barre latérale."
     enable_new_notifications_menu: "Active le nouveau menu de notifications pour l'ancien menu de navigation."
-    enable_new_user_profile_nav_groups: "EXPÉRIMENTAL : les utilisateurs des groupes sélectionnés verront apparaître le nouveau menu de navigation du profil utilisateur"
     enable_experimental_hashtag_autocomplete: "EXPÉRIMENTAL : utilisez le nouveau système de saisie semi-automatique #hashtag pour les catégories et les balises, il affiche différemment l'élément sélectionné et améliore la recherche"
     errors:
       invalid_css_color: "Couleur non valide. Indiquez un nom de couleur ou une valeur hexadécimale."

@@ -2064,13 +2064,6 @@ developer:
     default: 20
     client: true
     hidden: true
-  enable_new_user_profile_nav_groups:
-    client: true
-    type: group_list
-    list_type: compact
-    default: ""
-    allow_any: false
-    refresh: true
   include_associated_account_ids:
     default: false
     hidden: true

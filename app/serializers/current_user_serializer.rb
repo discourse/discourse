@@ -293,12 +293,9 @@ class CurrentUserSerializer < BasicUserSerializer
     redesigned_user_menu_enabled
   end
 
+  # TODO(tgxworld): Return true for now until reliance on this attribute has been removed on the client side
   def redesigned_user_page_nav_enabled
-    if SiteSetting.enable_new_user_profile_nav_groups.present?
-      object.in_any_groups?(SiteSetting.enable_new_user_profile_nav_groups_map)
-    else
-      false
-    end
+    true
   end
 
   def custom_sidebar_sections_enabled

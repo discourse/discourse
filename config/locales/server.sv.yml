@@ -2144,7 +2144,6 @@ sv:
     default_sidebar_categories: "Valda kategorier kommer att visas under sidofältets sektion Kategorier som standard."
     default_sidebar_tags: "Valda taggar kommer att visas under sidofältets sektion Taggar som standard."
     enable_new_notifications_menu: "Aktiverar den nya aviseringsmenyn för den gamla navigeringsmenyn."
-    enable_new_user_profile_nav_groups: "EXPERIMENTELL: Användare i de valda grupperna visas den nya navigeringsmenyn för användarprofiler."
     enable_experimental_hashtag_autocomplete: "EXPERIMENTELLT: Använd det nya #hashtag-autokompletteringssystemet för kategorier och taggar som renderar det valda objektet annorlunda och har förbättrad sökning"
     errors:
       invalid_css_color: "Ogiltig färg. Ange ett färgnamn eller ett hexvärde."

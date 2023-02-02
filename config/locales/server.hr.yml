@@ -1459,7 +1459,6 @@ hr:
     navigation_menu: "Odredite koji navigacijski izbornik koristiti. Bočnu traku i navigaciju u zaglavlju korisnici mogu prilagoditi. Naslijeđena opcija dostupna je za kompatibilnost s prethodnim verzijama."
     default_sidebar_categories: "Odabrane kategorije će prema zadanim postavkama biti prikazane u odjeljku Kategorije na bočnoj traci."
     default_sidebar_tags: "Odabrane oznake će prema zadanim postavkama biti prikazane u odjeljku Oznake bočne trake."
-    enable_new_user_profile_nav_groups: "EKSPERIMENTALNO: Korisnicima odabranih grupa bit će prikazan novi navigacijski izbornik korisničkog profila"
     enable_experimental_hashtag_autocomplete: "EKSPERIMENTALNO: Upotrijebite novi #hashtag sustav automatskog dovršavanja za kategorije i oznake koji drugačije prikazuje odabranu stavku i ima poboljšano pretraživanje"
     errors:
       invalid_css_color: "Nevažeća boja. Unesite naziv boje ili hex vrijednost."
