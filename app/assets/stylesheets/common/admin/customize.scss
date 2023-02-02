@@ -923,3 +923,27 @@ table.permalinks {
     }
   }
 }
+
+.form-templates {
+  &--info {
+    margin-top: 1rem;
+  }
+
+  &--table {
+    .admin-list-item .action {
+      text-align: right;
+    }
+  }
+
+  .btn-primary {
+    margin-top: 1rem;
+  }
+}
+
+.admin-customize-form-template-view-modal {
+  .modal-footer {
+    .btn:last-child {
+      margin-left: auto;
+    }
+  }
+}

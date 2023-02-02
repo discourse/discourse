@@ -1,0 +1,21 @@
+<DModalBody @rawTitle={{this.model.name}}>
+  <pre><code class="hljs language-yaml">{{this.model.template}}</code></pre>
+</DModalBody>
+<div class="modal-footer">
+  <DButton
+    class="btn-primary"
+    @action={{this.editTemplate}}
+    @icon="pencil-alt"
+    @label="admin.form_templates.view_template.edit"
+  />
+  <DButton
+    class="btn-danger"
+    @action={{this.deleteTemplate}}
+    @icon="trash-alt"
+    @label="admin.form_templates.view_template.delete"
+  />
+  <DButton
+    @action={{route-action "closeModal"}}
+    @label="admin.form_templates.view_template.close"
+  />
+</div>
