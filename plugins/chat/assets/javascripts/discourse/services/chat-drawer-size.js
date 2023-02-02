@@ -8,14 +8,14 @@ export default class ChatDrawerSize extends Service {
 
   store = new KeyValueStore(this.STORE_NAMESPACE);
 
-  getSize() {
+  get size() {
     return {
       width: this.store.getObject("width") || 0,
       height: this.store.getObject("height") || 0,
     };
   }
 
-  setSize({ width, height }) {
+  set size({ width, height }) {
     this.store.setObject({
       key: "width",
       value: this.#min(width, this.MIN_WIDTH),
