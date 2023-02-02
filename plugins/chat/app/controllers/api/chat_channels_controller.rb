@@ -94,7 +94,10 @@ class Chat::Api::ChatChannelsController < Chat::Api
       auto_join_limiter(channel_from_params).performed!
     end
 
-    with_service(Chat::Service::UpdateChannel, **params_to_edit) do
+    with_service(
+      Chat::Service::UpdateChannel,
+      **params_to_edit.merge(channel: channel_from_params),
+    ) do
       on_success do
         render_serialized(
           result.channel,
