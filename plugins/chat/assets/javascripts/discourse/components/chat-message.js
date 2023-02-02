@@ -518,8 +518,8 @@ export default Component.extend({
   startReactionForMessageActions() {
     this.chatEmojiPickerManager.startFromMessageActions(
       this.message,
-      this.site.desktopView,
-      this.selectReaction
+      this.selectReaction,
+      { desktop: this.site.desktopView }
     );
   },
 
@@ -527,8 +527,8 @@ export default Component.extend({
   startReactionForReactionList() {
     this.chatEmojiPickerManager.startFromMessageReactionList(
       this.message,
-      this.site.desktopView,
-      this.selectReaction
+      this.selectReaction,
+      { desktop: this.site.desktopView }
     );
   },
 

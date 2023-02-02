@@ -464,7 +464,9 @@ export default Component.extend(TextareaTextManipulation, {
           return `${v.code}:`;
         } else {
           $textarea.autocomplete({ cancel: true });
-          this.set("emojiPickerIsActive", true);
+          this.chatEmojiPickerManager.startFromComposer(this.emojiSelected, {
+            filter: v.term,
+          });
           return "";
         }
       },
