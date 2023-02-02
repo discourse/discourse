@@ -54,7 +54,7 @@ class SearchIndexer
           loop do
             count += 1
             break if count >= 10 # Safeguard here to prevent infinite loop when a term has many dots
-            term, _, remaining = lexeme.partition(".")
+            _term, _, remaining = lexeme.partition(".")
             break if remaining.blank?
             array << "'#{remaining}':#{positions}"
             lexeme = remaining
@@ -69,8 +69,8 @@ class SearchIndexer
     if (max_dupes = SiteSetting.max_duplicate_search_index_terms) > 0
       reduced = []
       tsvector
-        .scan(/([^\:]+\:)(([0-9]+[A-D]?,?)+)/)
-        .each do |term, indexes|
+        .scan(/('([^']*|'')*'\:)(([0-9]+[A-D]?,?)+)/)
+        .each do |term, _, indexes|
           family_counts = Hash.new(0)
           new_index_array = []
 
