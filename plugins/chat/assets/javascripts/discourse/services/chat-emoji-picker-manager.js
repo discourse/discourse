@@ -71,27 +71,32 @@ export default class ChatEmojiPickerManager extends Service {
     this.close();
   }
 
-  startFromMessageReactionList(message, isDesktop, callback) {
+  startFromMessageReactionList(message, callback, options = {}) {
     const trigger = document.querySelector(
       `.chat-message-container[data-id="${message.id}"] .chat-message-react-btn`
     );
-    this.startFromMessage(callback, isDesktop, trigger);
+    this.startFromMessage(callback, trigger, options);
   }
 
-  startFromMessageActions(message, isDesktop, callback) {
+  startFromMessageActions(message, callback, options = {}) {
     const trigger = document.querySelector(
       `.chat-message-actions-container[data-id="${message.id}"] .chat-message-actions`
     );
-    this.startFromMessage(callback, isDesktop, trigger);
+    this.startFromMessage(callback, trigger, options);
   }
 
-  startFromMessage(callback, isDesktop, trigger) {
+  startFromMessage(
+    callback,
+    trigger,
+    options = { filter: null, desktop: true }
+  ) {
+    this.initialFilter = options.filter;
     this.context = "chat-message";
     this.element = document.querySelector(".chat-message-emoji-picker-anchor");
     this.open(callback);
     this._popper?.destroy();
 
-    if (isDesktop) {
+    if (options.desktop) {
       schedule("afterRender", () => {
         this._popper = createPopper(trigger, this.element, {
           placement: "top",
@@ -115,7 +120,8 @@ export default class ChatEmojiPickerManager extends Service {
     }
   }
 
-  startFromComposer(callback) {
+  startFromComposer(callback, options = { filter: null }) {
+    this.initialFilter = options.filter;
     this.context = "chat-composer";
     this.element = document.querySelector(".chat-composer-emoji-picker-anchor");
     this.open(callback);
@@ -143,7 +149,6 @@ export default class ChatEmojiPickerManager extends Service {
       .then((emojis) => {
         this.emojis = emojis;
       })
-
       .catch(popupAjaxError)
       .finally(() => {
         this.loading = false;

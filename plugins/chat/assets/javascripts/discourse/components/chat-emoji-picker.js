@@ -324,28 +324,6 @@ export default class ChatEmojiPicker extends Component {
   }
 
   @action
-  applyInitialFilter() {
-    let filter = this.chatEmojiPickerManager.initialFilter;
-
-    if (!filter) {
-      return;
-    }
-
-    filter = filter.toLowerCase();
-    schedule("afterRender", () => {
-      document.querySelector(".chat-emoji-picker__filter input").value = filter;
-    });
-
-    this.filteredEmojis = this.flatEmojis.filter(
-      (emoji) =>
-        emoji.name.toLowerCase().includes(filter) ||
-        emoji.search_aliases?.any((alias) =>
-          alias.toLowerCase().includes(filter)
-        )
-    );
-  }
-
-  @action
   didSelectEmoji(event) {
     if (!event.target.classList.contains("emoji")) {
       return;
