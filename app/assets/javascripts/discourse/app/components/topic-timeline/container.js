@@ -27,6 +27,8 @@ export default class TopicTimelineScrollArea extends Component {
   @tracked total;
   @tracked date;
   @tracked lastReadPercentage = null;
+  @tracked lastRead;
+  @tracked lastReadTop;
   @tracked before;
   @tracked after;
   @tracked timelineScrollareaStyle;
@@ -171,8 +173,8 @@ export default class TopicTimelineScrollArea extends Component {
 
     this.date = date;
 
-    const lastReadId = topic.last_read_post_id;
     const lastReadNumber = topic.last_read_post_number;
+    const lastReadId = topic.last_read_post_id;
 
     if (lastReadId && lastReadNumber) {
       const idx = postStream.stream.indexOf(lastReadId) + 1;
@@ -199,12 +201,6 @@ export default class TopicTimelineScrollArea extends Component {
       this.showButton =
         this.before + SCROLLER_HEIGHT - 5 < this.lastReadTop ||
         this.before > this.lastReadTop + 25;
-    }
-
-    if (this.hasBackPosition) {
-      this.lastReadTop = Math.round(
-        this.lastReadPercentage * scrollareaHeight()
-      );
     }
   }
 
