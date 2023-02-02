@@ -4,10 +4,8 @@ class Chat::Api::ChatChannelsStatusController < Chat::Api::ChatChannelsControlle
   def update
     with_service(
       Chat::Service::UpdateChannelStatus,
-      extra_params: {
-        channel: channel_from_params,
-        status: params.require(:status),
-      },
+      channel: channel_from_params,
+      status: params.require(:status),
     ) { on_success { render_serialized(result.channel, ChatChannelSerializer, root: "channel") } }
   end
 end

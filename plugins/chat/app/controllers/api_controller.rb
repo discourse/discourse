@@ -15,8 +15,8 @@ class Chat::Api < Chat::ChatBaseController
     guardian.ensure_can_chat!
   end
 
-  def with_service(service, default_actions: true, extra_params: {}, &block)
-    @extra_params = extra_params
+  def with_service(service, default_actions: true, **dependencies, &block)
+    @dependencies = dependencies
     merged_block =
       proc do
         instance_eval(&controller.method(:default_actions_for_service).call) if default_actions
@@ -26,7 +26,7 @@ class Chat::Api < Chat::ChatBaseController
   end
 
   def run_service(service)
-    @_result = service.call(params.to_unsafe_h.merge(guardian: guardian, **@extra_params.to_h))
+    @_result = service.call(params.to_unsafe_h.merge(guardian: guardian, **@dependencies.to_h))
   end
 
   def default_actions_for_service

@@ -29,7 +29,7 @@ class Chat::Api::ChatChannelsController < Chat::Api
   end
 
   def destroy
-    with_service(Chat::Service::TrashChannel, extra_params: { channel: channel_from_params })
+    with_service(Chat::Service::TrashChannel, channel: channel_from_params)
   end
 
   def create
@@ -94,7 +94,7 @@ class Chat::Api::ChatChannelsController < Chat::Api
       auto_join_limiter(channel_from_params).performed!
     end
 
-    with_service(Chat::Service::UpdateChannel, extra_params: params_to_edit) do
+    with_service(Chat::Service::UpdateChannel, **params_to_edit) do
       on_success do
         render_serialized(
           result.channel,
