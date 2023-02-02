@@ -1,47 +1,25 @@
 {{#if this.can_see_invite_details}}
-  {{#if this.currentUser.redesigned_user_page_nav_enabled}}
-    <DSection @pageClass="user-invites" />
+  <DSection @pageClass="user-invites" />
 
-    <div class="user-navigation user-navigation-secondary">
-      <HorizontalOverflowNav @ariaLabel="User secondary - invites">
-        <NavItem
-          @route="userInvited.show"
-          @routeParam="pending"
-          @i18nLabel={{this.pendingLabel}}
-        />
-        <NavItem
-          @route="userInvited.show"
-          @routeParam="expired"
-          @i18nLabel={{this.expiredLabel}}
-        />
-        <NavItem
-          @route="userInvited.show"
-          @routeParam="redeemed"
-          @i18nLabel={{this.redeemedLabel}}
-        />
-      </HorizontalOverflowNav>
-    </div>
-  {{else}}
-    <DSection @class="user-secondary-navigation" @pageClass="user-invites">
-      <MobileNav @class="invites-nav" @desktopClass="nav-stacked action-list">
-        <NavItem
-          @route="userInvited.show"
-          @routeParam="pending"
-          @i18nLabel={{this.pendingLabel}}
-        />
-        <NavItem
-          @route="userInvited.show"
-          @routeParam="expired"
-          @i18nLabel={{this.expiredLabel}}
-        />
-        <NavItem
-          @route="userInvited.show"
-          @routeParam="redeemed"
-          @i18nLabel={{this.redeemedLabel}}
-        />
-      </MobileNav>
-    </DSection>
-  {{/if}}
+  <div class="user-navigation user-navigation-secondary">
+    <HorizontalOverflowNav @ariaLabel="User secondary - invites">
+      <NavItem
+        @route="userInvited.show"
+        @routeParam="pending"
+        @i18nLabel={{this.pendingLabel}}
+      />
+      <NavItem
+        @route="userInvited.show"
+        @routeParam="expired"
+        @i18nLabel={{this.expiredLabel}}
+      />
+      <NavItem
+        @route="userInvited.show"
+        @routeParam="redeemed"
+        @i18nLabel={{this.redeemedLabel}}
+      />
+    </HorizontalOverflowNav>
+  </div>
 {{/if}}
 
 {{outlet}}

@@ -1,110 +1,15 @@
-{{#if this.currentUser.redesigned_user_page_nav_enabled}}
-  <DSection @pageClass="user-preferences" />
-  <div class="user-navigation user-navigation-secondary">
-    <HorizontalOverflowNav @ariaLabel="User secondary - preferences">
-      <UserNav::PreferencesNav
-        @currentUser={{this.currentUser}}
-        @model={{this.model}}
-        @siteSettings={{this.siteSettings}}
-        @ariaCurrentContext="subNav"
-      />
-    </HorizontalOverflowNav>
-  </div>
-{{else}}
-  <DSection @pageClass="user-preferences" @class="user-secondary-navigation">
-    <MobileNav
-      @class="preferences-nav"
-      @desktopClass="preferences-list action-list nav-stacked"
-    >
-      <li class="nav-account">
-        <LinkTo @route="preferences.account">
-          {{i18n "user.preferences_nav.account"}}
-        </LinkTo>
-      </li>
-      <li class="nav-security">
-        <LinkTo @route="preferences.security">
-          {{i18n "user.preferences_nav.security"}}
-        </LinkTo>
-      </li>
-      <li class="nav-profile">
-        <LinkTo @route="preferences.profile">
-          {{i18n "user.preferences_nav.profile"}}
-        </LinkTo>
-      </li>
-      <li class="nav-emails">
-        <LinkTo @route="preferences.emails">
-          {{i18n "user.preferences_nav.emails"}}
-        </LinkTo>
-      </li>
-      <li class="nav-notifications">
-        <LinkTo @route="preferences.notifications">
-          {{i18n "user.preferences_nav.notifications"}}
-        </LinkTo>
-      </li>
-      {{#if this.model.can_change_tracking_preferences}}
-        <li class="indent nav-categories">
-          <LinkTo @route="preferences.categories">
-            {{i18n "user.preferences_nav.categories"}}
-          </LinkTo>
-        </li>
-      {{/if}}
-      <li class="indent nav-users">
-        <LinkTo @route="preferences.users">
-          {{i18n "user.preferences_nav.users"}}
-        </LinkTo>
-      </li>
-      {{#if
-        (and
-          this.model.can_change_tracking_preferences
-          this.siteSettings.tagging_enabled
-        )
-      }}
-        <li class="indent nav-tags">
-          <LinkTo @route="preferences.tags">
-            {{i18n "user.preferences_nav.tags"}}
-          </LinkTo>
-        </li>
-      {{/if}}
-      <li class="nav-interface">
-        <LinkTo @route="preferences.interface">
-          {{i18n "user.preferences_nav.interface"}}
-        </LinkTo>
-      </li>
+<DSection @pageClass="user-preferences" />
 
-      {{#if (not (eq this.siteSettings.navigation_menu "legacy"))}}
-        <li class="indent nav-sidebar">
-          <LinkTo @route="preferences.sidebar">
-            {{i18n "user.preferences_nav.sidebar"}}
-          </LinkTo>
-        </li>
-      {{/if}}
-
-      <span>
-        <PluginOutlet
-          @name="user-preferences-nav-under-interface"
-          @connectorTagName="div"
-          @outletArgs={{hash model=this.model}}
-        />
-      </span>
-
-      {{#if this.model.userApiKeys}}
-        <li class="nav-apps">
-          <LinkTo @route="preferences.apps">
-            {{i18n "user.preferences_nav.apps"}}
-          </LinkTo>
-        </li>
-      {{/if}}
-
-      <span>
-        <PluginOutlet
-          @name="user-preferences-nav"
-          @connectorTagName="li"
-          @outletArgs={{hash model=this.model}}
-        />
-      </span>
-    </MobileNav>
-  </DSection>
-{{/if}}
+<div class="user-navigation user-navigation-secondary">
+  <HorizontalOverflowNav @ariaLabel="User secondary - preferences">
+    <UserNav::PreferencesNav
+      @currentUser={{this.currentUser}}
+      @model={{this.model}}
+      @siteSettings={{this.siteSettings}}
+      @ariaCurrentContext="subNav"
+    />
+  </HorizontalOverflowNav>
+</div>
 
 <section class="user-content user-preferences" id="user-content">
   <span>

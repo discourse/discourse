@@ -62,291 +62,294 @@ acceptance(
   }
 );
 
-function testUserPrivateMessagesWithGroupMessages(needs, customUserProps) {
-  let fetchedNew;
-  let fetchUserNew;
-  let fetchedGroupNew;
+acceptance(
+  "User Private Messages - user with group messages",
+  function (needs) {
+    let fetchedNew;
+    let fetchUserNew;
+    let fetchedGroupNew;
 
-  needs.user({
-    id: 5,
-    username: "charlie",
-    groups: [{ id: 14, name: "awesome_group", has_messages: true }],
-    ...(customUserProps || {}),
-  });
-
-  needs.site({
-    can_tag_pms: true,
-  });
-
-  needs.hooks.afterEach(() => {
-    fetchedNew = false;
-    fetchedGroupNew = false;
-    fetchUserNew = false;
-  });
-
-  needs.pretender((server, helper) => {
-    server.get("/tags/personal_messages/:username.json", () => {
-      return helper.response({ tags: [{ id: "tag1" }] });
+    needs.user({
+      id: 5,
+      username: "charlie",
+      groups: [{ id: 14, name: "awesome_group", has_messages: true }],
     });
 
-    server.get("/t/13.json", () => {
-      const response = cloneJSON(fixturesByUrl["/t/12/1.json"]);
-      response.suggested_group_name = "awesome_group";
-      return helper.response(response);
+    needs.site({
+      can_tag_pms: true,
     });
 
-    server.get("/topics/private-messages/:username.json", () => {
-      return helper.response({
-        topic_list: {
-          topics: [
-            {
-              id: 1,
-              posters: [],
-              notification_level: NotificationLevels.TRACKING,
-              unread_posts: 1,
-              last_read_post_number: 1,
-              highest_post_number: 2,
-            },
-            {
-              id: 2,
-              posters: [],
-            },
-            {
-              id: 3,
-              posters: [],
-            },
-          ],
-        },
+    needs.hooks.afterEach(() => {
+      fetchedNew = false;
+      fetchedGroupNew = false;
+      fetchUserNew = false;
+    });
+
+    needs.pretender((server, helper) => {
+      server.get("/tags/personal_messages/:username.json", () => {
+        return helper.response({ tags: [{ id: "tag1" }] });
       });
-    });
 
-    [
-      "/topics/private-messages-new/:username.json",
-      "/topics/private-messages-unread/:username.json",
-      "/topics/private-messages-archive/:username.json",
-      "/topics/private-messages-group/:username/:group_name/new.json",
-      "/topics/private-messages-group/:username/:group_name/unread.json",
-      "/topics/private-messages-group/:username/:group_name/archive.json",
-      "/topics/private-messages-tags/:username/:tag_name",
-    ].forEach((url) => {
-      server.get(url, () => {
-        let topics;
-
-        if (fetchedNew || fetchedGroupNew || fetchUserNew) {
-          topics = [];
-        } else {
-          topics = [
-            { id: 1, posters: [] },
-            { id: 2, posters: [] },
-            { id: 3, posters: [] },
-          ];
-        }
-
-        return helper.response({
-          topic_list: {
-            topics,
-          },
-        });
+      server.get("/t/13.json", () => {
+        const response = cloneJSON(fixturesByUrl["/t/12/1.json"]);
+        response.suggested_group_name = "awesome_group";
+        return helper.response(response);
       });
-    });
 
-    server.get(
-      "/topics/private-messages-group/:username/:group_name.json",
-      () => {
+      server.get("/topics/private-messages/:username.json", () => {
         return helper.response({
           topic_list: {
             topics: [
-              { id: 1, posters: [] },
-              { id: 2, posters: [] },
+              {
+                id: 1,
+                posters: [],
+                notification_level: NotificationLevels.TRACKING,
+                unread_posts: 1,
+                last_read_post_number: 1,
+                highest_post_number: 2,
+              },
+              {
+                id: 2,
+                posters: [],
+              },
+              {
+                id: 3,
+                posters: [],
+              },
             ],
           },
         });
-      }
-    );
+      });
 
-    server.put("/topics/pm-reset-new", (request) => {
-      const requestBody = request.requestBody;
-      // No easy way to do this https://github.com/pretenderjs/pretender/issues/159
-      if (requestBody === "inbox=group&group_name=awesome_group") {
-        fetchedGroupNew = true;
-      }
+      [
+        "/topics/private-messages-new/:username.json",
+        "/topics/private-messages-unread/:username.json",
+        "/topics/private-messages-archive/:username.json",
+        "/topics/private-messages-group/:username/:group_name/new.json",
+        "/topics/private-messages-group/:username/:group_name/unread.json",
+        "/topics/private-messages-group/:username/:group_name/archive.json",
+        "/topics/private-messages-tags/:username/:tag_name",
+      ].forEach((url) => {
+        server.get(url, () => {
+          let topics;
 
-      if (requestBody === "inbox=user") {
-        fetchUserNew = true;
-      }
+          if (fetchedNew || fetchedGroupNew || fetchUserNew) {
+            topics = [];
+          } else {
+            topics = [
+              { id: 1, posters: [] },
+              { id: 2, posters: [] },
+              { id: 3, posters: [] },
+            ];
+          }
 
-      if (requestBody === "inbox=all") {
-        fetchedNew = true;
-      }
+          return helper.response({
+            topic_list: {
+              topics,
+            },
+          });
+        });
+      });
 
-      return helper.response({ topic_ids: [1, 2, 3] });
-    });
+      server.get(
+        "/topics/private-messages-group/:username/:group_name.json",
+        () => {
+          return helper.response({
+            topic_list: {
+              topics: [
+                { id: 1, posters: [] },
+                { id: 2, posters: [] },
+              ],
+            },
+          });
+        }
+      );
 
-    server.put("/topics/bulk", (request) => {
-      const requestBody = request.requestBody;
+      server.put("/topics/pm-reset-new", (request) => {
+        const requestBody = request.requestBody;
+        // No easy way to do this https://github.com/pretenderjs/pretender/issues/159
+        if (requestBody === "inbox=group&group_name=awesome_group") {
+          fetchedGroupNew = true;
+        }
 
-      if (requestBody.includes("private_message_inbox=all")) {
-        fetchedNew = true;
-      }
+        if (requestBody === "inbox=user") {
+          fetchUserNew = true;
+        }
 
-      if (
-        requestBody.includes(
-          "private_message_inbox=group&group_name=awesome_group"
-        )
-      ) {
-        fetchedGroupNew = true;
-      }
+        if (requestBody === "inbox=all") {
+          fetchedNew = true;
+        }
 
-      if (requestBody.includes("private_message_inbox=user")) {
-        fetchUserNew = true;
-      }
+        return helper.response({ topic_ids: [1, 2, 3] });
+      });
 
-      return helper.response({
-        topic_ids: [1, 2, 3],
+      server.put("/topics/bulk", (request) => {
+        const requestBody = request.requestBody;
+
+        if (requestBody.includes("private_message_inbox=all")) {
+          fetchedNew = true;
+        }
+
+        if (
+          requestBody.includes(
+            "private_message_inbox=group&group_name=awesome_group"
+          )
+        ) {
+          fetchedGroupNew = true;
+        }
+
+        if (requestBody.includes("private_message_inbox=user")) {
+          fetchUserNew = true;
+        }
+
+        return helper.response({
+          topic_ids: [1, 2, 3],
+        });
       });
     });
-  });
 
-  const publishReadToMessageBus = function (opts = {}) {
-    return publishToMessageBus(
-      `/private-message-topic-tracking-state/user/${opts.userId || 5}`,
-      {
-        topic_id: opts.topicId,
-        message_type: "read",
-        payload: {
-          last_read_post_number: 2,
-          highest_post_number: 2,
-          notification_level: 2,
-        },
-      }
-    );
-  };
-
-  const publishUnreadToMessageBus = function (opts = {}) {
-    return publishToMessageBus(
-      `/private-message-topic-tracking-state/user/${opts.userId || 5}`,
-      {
-        topic_id: opts.topicId,
-        message_type: "unread",
-        payload: {
-          last_read_post_number: 1,
-          highest_post_number: 2,
-          notification_level: 2,
-          group_ids: opts.groupIds || [],
-        },
-      }
-    );
-  };
-
-  const publishNewToMessageBus = function (opts = {}) {
-    return publishToMessageBus(
-      `/private-message-topic-tracking-state/user/${opts.userId || 5}`,
-      {
-        topic_id: opts.topicId,
-        message_type: "new_topic",
-        payload: {
-          last_read_post_number: null,
-          highest_post_number: 1,
-          group_ids: opts.groupIds || [],
-        },
-      }
-    );
-  };
-
-  const publishGroupArchiveToMessageBus = function (opts) {
-    return publishToMessageBus(
-      `/private-message-topic-tracking-state/group/${opts.groupIds[0]}`,
-      {
-        topic_id: opts.topicId,
-        message_type: "group_archive",
-        payload: {
-          group_ids: opts.groupIds,
-          acting_user_id: opts.actingUserId,
-        },
-      }
-    );
-  };
-
-  const publishGroupUnreadToMessageBus = function (opts) {
-    return publishToMessageBus(
-      `/private-message-topic-tracking-state/group/${opts.groupIds[0]}`,
-      {
-        topic_id: opts.topicId,
-        message_type: "unread",
-        payload: {
-          last_read_post_number: 1,
-          highest_post_number: 2,
-          notification_level: 2,
-          group_ids: opts.groupIds || [],
-        },
-      }
-    );
-  };
-
-  const publishGroupNewToMessageBus = function (opts) {
-    return publishToMessageBus(
-      `/private-message-topic-tracking-state/group/${opts.groupIds[0]}`,
-      {
-        topic_id: opts.topicId,
-        message_type: "new_topic",
-        payload: {
-          last_read_post_number: null,
-          highest_post_number: 1,
-          group_ids: opts.groupIds || [],
-        },
-      }
-    );
-  };
-
-  test("incoming group archive message acted by current user", async function (assert) {
-    await visit("/u/charlie/messages");
-
-    await publishGroupArchiveToMessageBus({
-      groupIds: [14],
-      topicId: 1,
-      actingUserId: 5,
-    });
-
-    assert.ok(
-      !exists(".show-mores"),
-      `does not display the topic incoming info`
-    );
-  });
-
-  test("incoming group archive message on inbox and archive filter", async function (assert) {
-    for (const url of [
-      "/u/charlie/messages/group/awesome_group",
-      "/u/charlie/messages/group/awesome_group/archive",
-    ]) {
-      await visit(url);
-
-      await publishGroupArchiveToMessageBus({ groupIds: [14], topicId: 1 });
-
-      assert.ok(
-        exists(".show-mores"),
-        `${url} displays the topic incoming info`
+    const publishReadToMessageBus = function (opts = {}) {
+      return publishToMessageBus(
+        `/private-message-topic-tracking-state/user/${opts.userId || 5}`,
+        {
+          topic_id: opts.topicId,
+          message_type: "read",
+          payload: {
+            last_read_post_number: 2,
+            highest_post_number: 2,
+            notification_level: 2,
+          },
+        }
       );
-    }
+    };
 
-    for (const url of ["/u/charlie/messages", "/u/charlie/messages/archive"]) {
-      await visit(url);
+    const publishUnreadToMessageBus = function (opts = {}) {
+      return publishToMessageBus(
+        `/private-message-topic-tracking-state/user/${opts.userId || 5}`,
+        {
+          topic_id: opts.topicId,
+          message_type: "unread",
+          payload: {
+            last_read_post_number: 1,
+            highest_post_number: 2,
+            notification_level: 2,
+            group_ids: opts.groupIds || [],
+          },
+        }
+      );
+    };
 
-      await publishGroupArchiveToMessageBus({ groupIds: [14], topicId: 1 });
+    const publishNewToMessageBus = function (opts = {}) {
+      return publishToMessageBus(
+        `/private-message-topic-tracking-state/user/${opts.userId || 5}`,
+        {
+          topic_id: opts.topicId,
+          message_type: "new_topic",
+          payload: {
+            last_read_post_number: null,
+            highest_post_number: 1,
+            group_ids: opts.groupIds || [],
+          },
+        }
+      );
+    };
+
+    const publishGroupArchiveToMessageBus = function (opts) {
+      return publishToMessageBus(
+        `/private-message-topic-tracking-state/group/${opts.groupIds[0]}`,
+        {
+          topic_id: opts.topicId,
+          message_type: "group_archive",
+          payload: {
+            group_ids: opts.groupIds,
+            acting_user_id: opts.actingUserId,
+          },
+        }
+      );
+    };
+
+    const publishGroupUnreadToMessageBus = function (opts) {
+      return publishToMessageBus(
+        `/private-message-topic-tracking-state/group/${opts.groupIds[0]}`,
+        {
+          topic_id: opts.topicId,
+          message_type: "unread",
+          payload: {
+            last_read_post_number: 1,
+            highest_post_number: 2,
+            notification_level: 2,
+            group_ids: opts.groupIds || [],
+          },
+        }
+      );
+    };
+
+    const publishGroupNewToMessageBus = function (opts) {
+      return publishToMessageBus(
+        `/private-message-topic-tracking-state/group/${opts.groupIds[0]}`,
+        {
+          topic_id: opts.topicId,
+          message_type: "new_topic",
+          payload: {
+            last_read_post_number: null,
+            highest_post_number: 1,
+            group_ids: opts.groupIds || [],
+          },
+        }
+      );
+    };
+
+    test("incoming group archive message acted by current user", async function (assert) {
+      await visit("/u/charlie/messages");
+
+      await publishGroupArchiveToMessageBus({
+        groupIds: [14],
+        topicId: 1,
+        actingUserId: 5,
+      });
 
       assert.ok(
         !exists(".show-mores"),
-        `${url} does not display the topic incoming info`
+        `does not display the topic incoming info`
       );
-    }
-  });
+    });
 
-  test("incoming unread and new messages on all filter", async function (assert) {
-    await visit("/u/charlie/messages");
+    test("incoming group archive message on inbox and archive filter", async function (assert) {
+      for (const url of [
+        "/u/charlie/messages/group/awesome_group",
+        "/u/charlie/messages/group/awesome_group/archive",
+      ]) {
+        await visit(url);
 
-    await publishUnreadToMessageBus({ topicId: 1 });
-    await publishNewToMessageBus({ topicId: 2 });
+        await publishGroupArchiveToMessageBus({ groupIds: [14], topicId: 1 });
 
-    if (customUserProps?.redesigned_user_page_nav_enabled) {
+        assert.ok(
+          exists(".show-mores"),
+          `${url} displays the topic incoming info`
+        );
+      }
+
+      for (const url of [
+        "/u/charlie/messages",
+        "/u/charlie/messages/archive",
+      ]) {
+        await visit(url);
+
+        await publishGroupArchiveToMessageBus({ groupIds: [14], topicId: 1 });
+
+        assert.ok(
+          !exists(".show-mores"),
+          `${url} does not display the topic incoming info`
+        );
+      }
+    });
+
+    test("incoming unread and new messages on all filter", async function (assert) {
+      await visit("/u/charlie/messages");
+
+      await publishUnreadToMessageBus({ topicId: 1 });
+      await publishNewToMessageBus({ topicId: 2 });
+
       assert.strictEqual(
         query(".user-nav__messages-new").innerText.trim(),
         I18n.t("user.messages.new_with_count", { count: 1 }),
@@ -358,72 +361,42 @@ function testUserPrivateMessagesWithGroupMessages(needs, customUserProps) {
         I18n.t("user.messages.unread_with_count", { count: 1 }),
         "displays the right count"
       );
-    } else {
-      assert.strictEqual(
-        query(".messages-nav li a.new").innerText.trim(),
-        I18n.t("user.messages.new_with_count", { count: 1 }),
-        "displays the right count"
-      );
+    });
 
-      assert.strictEqual(
-        query(".messages-nav li a.unread").innerText.trim(),
-        I18n.t("user.messages.unread_with_count", { count: 1 }),
-        "displays the right count"
-      );
-    }
-  });
+    test("incoming new messages while viewing new", async function (assert) {
+      await visit("/u/charlie/messages/new");
 
-  test("incoming new messages while viewing new", async function (assert) {
-    await visit("/u/charlie/messages/new");
+      await publishNewToMessageBus({ topicId: 1 });
 
-    await publishNewToMessageBus({ topicId: 1 });
-
-    if (customUserProps?.redesigned_user_page_nav_enabled) {
       assert.strictEqual(
         query(".messages-nav .user-nav__messages-new").innerText.trim(),
         I18n.t("user.messages.new_with_count", { count: 1 }),
         "displays the right count"
       );
-    } else {
-      assert.strictEqual(
-        query(".messages-nav li a.new").innerText.trim(),
-        I18n.t("user.messages.new_with_count", { count: 1 }),
-        "displays the right count"
-      );
-    }
 
-    assert.ok(exists(".show-mores"), "displays the topic incoming info");
-  });
+      assert.ok(exists(".show-mores"), "displays the topic incoming info");
+    });
 
-  test("incoming unread messages while viewing unread", async function (assert) {
-    await visit("/u/charlie/messages/unread");
+    test("incoming unread messages while viewing unread", async function (assert) {
+      await visit("/u/charlie/messages/unread");
 
-    await publishUnreadToMessageBus();
+      await publishUnreadToMessageBus();
 
-    if (customUserProps?.redesigned_user_page_nav_enabled) {
       assert.strictEqual(
         query(".messages-nav .user-nav__messages-unread").innerText.trim(),
         I18n.t("user.messages.unread_with_count", { count: 1 }),
         "displays the right count"
       );
-    } else {
-      assert.strictEqual(
-        query(".messages-nav li a.unread").innerText.trim(),
-        I18n.t("user.messages.unread_with_count", { count: 1 }),
-        "displays the right count"
-      );
-    }
 
-    assert.ok(exists(".show-mores"), "displays the topic incoming info");
-  });
+      assert.ok(exists(".show-mores"), "displays the topic incoming info");
+    });
 
-  test("incoming unread and new messages while viewing group unread", async function (assert) {
-    await visit("/u/charlie/messages/group/awesome_group/unread");
+    test("incoming unread and new messages while viewing group unread", async function (assert) {
+      await visit("/u/charlie/messages/group/awesome_group/unread");
 
-    await publishUnreadToMessageBus({ groupIds: [14], topicId: 1 });
-    await publishNewToMessageBus({ groupIds: [14], topicId: 2 });
+      await publishUnreadToMessageBus({ groupIds: [14], topicId: 1 });
+      await publishNewToMessageBus({ groupIds: [14], topicId: 2 });
 
-    if (customUserProps?.redesigned_user_page_nav_enabled) {
       assert.strictEqual(
         query(
           ".messages-nav .user-nav__messages-group-unread"
@@ -453,321 +426,275 @@ function testUserPrivateMessagesWithGroupMessages(needs, customUserProps) {
         I18n.t("user.messages.new"),
         "displays the right count"
       );
-    } else {
-      assert.strictEqual(
-        query(".messages-nav a.unread").innerText.trim(),
-        I18n.t("user.messages.unread_with_count", { count: 1 }),
-        "displays the right count"
+    });
+
+    test("incoming messages is not tracked on non user messages route", async function (assert) {
+      await visit("/u/charlie/messages");
+      await visit("/t/13");
+
+      await publishNewToMessageBus({ topicId: 1, userId: 5 });
+
+      await visit("/u/charlie/messages");
+
+      assert.ok(
+        !exists(".show-mores"),
+        "does not display the topic incoming info"
       );
+    });
 
-      assert.strictEqual(
-        query(".messages-nav  a.new").innerText.trim(),
-        I18n.t("user.messages.new_with_count", { count: 1 }),
-        "displays the right count"
-      );
-
-      assert.ok(exists(".show-mores"), "displays the topic incoming info");
-
+    test("dismissing all unread messages", async function (assert) {
       await visit("/u/charlie/messages/unread");
 
-      assert.strictEqual(
-        query(".messages-nav  a.unread").innerText.trim(),
-        I18n.t("user.messages.unread"),
-        "displays the right count"
-      );
+      await publishUnreadToMessageBus({ topicId: 1, userId: 5 });
+      await publishUnreadToMessageBus({ topicId: 2, userId: 5 });
+      await publishUnreadToMessageBus({ topicId: 3, userId: 5 });
 
       assert.strictEqual(
-        query(".messages-nav  a.new").innerText.trim(),
-        I18n.t("user.messages.new"),
-        "displays the right count"
+        count(".topic-list-item"),
+        3,
+        "displays the right topic list"
       );
-    }
-  });
 
-  test("incoming messages is not tracked on non user messages route", async function (assert) {
-    await visit("/u/charlie/messages");
-    await visit("/t/13");
+      await click(".btn.dismiss-read");
+      await click("#dismiss-read-confirm");
 
-    await publishNewToMessageBus({ topicId: 1, userId: 5 });
-
-    await visit("/u/charlie/messages");
-
-    assert.ok(
-      !exists(".show-mores"),
-      "does not display the topic incoming info"
-    );
-  });
-
-  test("dismissing all unread messages", async function (assert) {
-    await visit("/u/charlie/messages/unread");
-
-    await publishUnreadToMessageBus({ topicId: 1, userId: 5 });
-    await publishUnreadToMessageBus({ topicId: 2, userId: 5 });
-    await publishUnreadToMessageBus({ topicId: 3, userId: 5 });
-
-    assert.strictEqual(
-      count(".topic-list-item"),
-      3,
-      "displays the right topic list"
-    );
-
-    await click(".btn.dismiss-read");
-    await click("#dismiss-read-confirm");
-
-    if (customUserProps?.redesigned_user_page_nav_enabled) {
       assert.strictEqual(
         query(".user-nav__messages-unread").innerText.trim(),
         I18n.t("user.messages.unread"),
         "displays the right count"
       );
-    } else {
+
       assert.strictEqual(
-        query(".messages-nav li a.unread").innerText.trim(),
-        I18n.t("user.messages.unread"),
-        "displays the right count"
+        count(".topic-list-item"),
+        0,
+        "displays the right topic list"
       );
-    }
+    });
 
-    assert.strictEqual(
-      count(".topic-list-item"),
-      0,
-      "displays the right topic list"
-    );
-  });
+    test("dismissing personal unread messages", async function (assert) {
+      await visit("/u/charlie/messages/unread");
 
-  test("dismissing personal unread messages", async function (assert) {
-    await visit("/u/charlie/messages/unread");
+      assert.strictEqual(
+        count(".topic-list-item"),
+        3,
+        "displays the right topic list"
+      );
 
-    assert.strictEqual(
-      count(".topic-list-item"),
-      3,
-      "displays the right topic list"
-    );
+      await click(".btn.dismiss-read");
+      await click("#dismiss-read-confirm");
 
-    await click(".btn.dismiss-read");
-    await click("#dismiss-read-confirm");
+      assert.strictEqual(
+        count(".topic-list-item"),
+        0,
+        "displays the right topic list"
+      );
+    });
 
-    assert.strictEqual(
-      count(".topic-list-item"),
-      0,
-      "displays the right topic list"
-    );
-  });
+    test("dismissing group unread messages", async function (assert) {
+      await visit("/u/charlie/messages/group/awesome_group/unread");
 
-  test("dismissing group unread messages", async function (assert) {
-    await visit("/u/charlie/messages/group/awesome_group/unread");
+      assert.strictEqual(
+        count(".topic-list-item"),
+        3,
+        "displays the right topic list"
+      );
 
-    assert.strictEqual(
-      count(".topic-list-item"),
-      3,
-      "displays the right topic list"
-    );
+      await click(".btn.dismiss-read");
+      await click("#dismiss-read-confirm");
 
-    await click(".btn.dismiss-read");
-    await click("#dismiss-read-confirm");
+      assert.strictEqual(
+        count(".topic-list-item"),
+        0,
+        "displays the right topic list"
+      );
+    });
 
-    assert.strictEqual(
-      count(".topic-list-item"),
-      0,
-      "displays the right topic list"
-    );
-  });
+    test("dismissing new messages", async function (assert) {
+      await visit("/u/charlie/messages/new");
 
-  test("dismissing new messages", async function (assert) {
-    await visit("/u/charlie/messages/new");
+      await publishNewToMessageBus({ topicId: 1, userId: 5 });
+      await publishNewToMessageBus({ topicId: 2, userId: 5 });
+      await publishNewToMessageBus({ topicId: 3, userId: 5 });
 
-    await publishNewToMessageBus({ topicId: 1, userId: 5 });
-    await publishNewToMessageBus({ topicId: 2, userId: 5 });
-    await publishNewToMessageBus({ topicId: 3, userId: 5 });
+      assert.strictEqual(
+        count(".topic-list-item"),
+        3,
+        "displays the right topic list"
+      );
 
-    assert.strictEqual(
-      count(".topic-list-item"),
-      3,
-      "displays the right topic list"
-    );
+      await click(".btn.dismiss-read");
 
-    await click(".btn.dismiss-read");
-
-    if (customUserProps?.redesigned_user_page_nav_enabled) {
       assert.strictEqual(
         query(".messages-nav .user-nav__messages-new").innerText.trim(),
         I18n.t("user.messages.new"),
         "displays the right count"
       );
-    } else {
+
       assert.strictEqual(
-        query(".messages-nav li a.new").innerText.trim(),
-        I18n.t("user.messages.new"),
-        "displays the right count"
+        count(".topic-list-item"),
+        0,
+        "displays the right topic list"
       );
-    }
+    });
 
-    assert.strictEqual(
-      count(".topic-list-item"),
-      0,
-      "displays the right topic list"
-    );
-  });
+    test("dismissing personal new messages", async function (assert) {
+      await visit("/u/charlie/messages/new");
 
-  test("dismissing personal new messages", async function (assert) {
-    await visit("/u/charlie/messages/new");
+      assert.strictEqual(
+        count(".topic-list-item"),
+        3,
+        "displays the right topic list"
+      );
 
-    assert.strictEqual(
-      count(".topic-list-item"),
-      3,
-      "displays the right topic list"
-    );
+      await click(".btn.dismiss-read");
 
-    await click(".btn.dismiss-read");
+      assert.strictEqual(
+        count(".topic-list-item"),
+        0,
+        "displays the right topic list"
+      );
+    });
 
-    assert.strictEqual(
-      count(".topic-list-item"),
-      0,
-      "displays the right topic list"
-    );
-  });
+    test("dismissing new group messages", async function (assert) {
+      await visit("/u/charlie/messages/group/awesome_group/new");
 
-  test("dismissing new group messages", async function (assert) {
-    await visit("/u/charlie/messages/group/awesome_group/new");
+      assert.strictEqual(
+        count(".topic-list-item"),
+        3,
+        "displays the right topic list"
+      );
 
-    assert.strictEqual(
-      count(".topic-list-item"),
-      3,
-      "displays the right topic list"
-    );
+      await click(".btn.dismiss-read");
 
-    await click(".btn.dismiss-read");
+      assert.strictEqual(
+        count(".topic-list-item"),
+        0,
+        "displays the right topic list"
+      );
+    });
 
-    assert.strictEqual(
-      count(".topic-list-item"),
-      0,
-      "displays the right topic list"
-    );
-  });
+    test("viewing messages when highest read cache has been set for a topic", async function (assert) {
+      try {
+        setHighestReadCache(1, 2);
 
-  test("viewing messages when highest read cache has been set for a topic", async function (assert) {
-    try {
-      setHighestReadCache(1, 2);
+        await visit("/u/charlie/messages");
 
+        assert.strictEqual(
+          query(".topic-post-badges").textContent.trim(),
+          "",
+          "does not display unread posts count badge"
+        );
+      } finally {
+        resetHighestReadCache();
+      }
+    });
+
+    test("viewing messages", async function (assert) {
       await visit("/u/charlie/messages");
 
       assert.strictEqual(
-        query(".topic-post-badges").textContent.trim(),
-        "",
-        "does not display unread posts count badge"
+        count(".topic-list-item"),
+        3,
+        "displays the right topic list"
       );
-    } finally {
-      resetHighestReadCache();
-    }
-  });
 
-  test("viewing messages", async function (assert) {
-    await visit("/u/charlie/messages");
+      assert.strictEqual(
+        query(`tr[data-topic-id="1"] .topic-post-badges`).textContent.trim(),
+        "1",
+        "displays the right unread posts count badge"
+      );
 
-    assert.strictEqual(
-      count(".topic-list-item"),
-      3,
-      "displays the right topic list"
-    );
+      await visit("/u/charlie/messages/group/awesome_group");
 
-    assert.strictEqual(
-      query(`tr[data-topic-id="1"] .topic-post-badges`).textContent.trim(),
-      "1",
-      "displays the right unread posts count badge"
-    );
+      assert.strictEqual(
+        count(".topic-list-item"),
+        2,
+        "displays the right topic list"
+      );
 
-    await visit("/u/charlie/messages/group/awesome_group");
+      assert.ok(
+        exists(".group-notifications-button"),
+        "displays the group notifications button"
+      );
+    });
 
-    assert.strictEqual(
-      count(".topic-list-item"),
-      2,
-      "displays the right topic list"
-    );
+    test("suggested messages without new or unread", async function (assert) {
+      await visit("/t/12");
 
-    assert.ok(
-      exists(".group-notifications-button"),
-      "displays the group notifications button"
-    );
-  });
+      assert.strictEqual(
+        query(".suggested-topics-message").innerText.trim(),
+        "Want to read more? Browse other messages in personal messages.",
+        "displays the right browse more message"
+      );
+    });
 
-  test("suggested messages without new or unread", async function (assert) {
-    await visit("/t/12");
+    test("suggested messages with new and unread", async function (assert) {
+      await visit("/t/12");
 
-    assert.strictEqual(
-      query(".suggested-topics-message").innerText.trim(),
-      "Want to read more? Browse other messages in personal messages.",
-      "displays the right browse more message"
-    );
-  });
+      await publishNewToMessageBus({ userId: 5, topicId: 1 });
 
-  test("suggested messages with new and unread", async function (assert) {
-    await visit("/t/12");
+      assert.strictEqual(
+        query(".suggested-topics-message").innerText.trim(),
+        "There is 1 new message remaining, or browse other personal messages",
+        "displays the right browse more message"
+      );
 
-    await publishNewToMessageBus({ userId: 5, topicId: 1 });
+      await publishUnreadToMessageBus({ userId: 5, topicId: 2 });
 
-    assert.strictEqual(
-      query(".suggested-topics-message").innerText.trim(),
-      "There is 1 new message remaining, or browse other personal messages",
-      "displays the right browse more message"
-    );
+      assert.strictEqual(
+        query(".suggested-topics-message").innerText.trim(),
+        "There is 1 unread and 1 new message remaining, or browse other personal messages",
+        "displays the right browse more message"
+      );
 
-    await publishUnreadToMessageBus({ userId: 5, topicId: 2 });
+      await publishReadToMessageBus({ userId: 5, topicId: 2 });
 
-    assert.strictEqual(
-      query(".suggested-topics-message").innerText.trim(),
-      "There is 1 unread and 1 new message remaining, or browse other personal messages",
-      "displays the right browse more message"
-    );
+      assert.strictEqual(
+        query(".suggested-topics-message").innerText.trim(),
+        "There is 1 new message remaining, or browse other personal messages",
+        "displays the right browse more message"
+      );
+    });
 
-    await publishReadToMessageBus({ userId: 5, topicId: 2 });
+    test("suggested messages for group messages without new or unread", async function (assert) {
+      await visit("/t/13");
 
-    assert.strictEqual(
-      query(".suggested-topics-message").innerText.trim(),
-      "There is 1 new message remaining, or browse other personal messages",
-      "displays the right browse more message"
-    );
-  });
+      assert.ok(
+        query(".suggested-topics-message")
+          .innerText.trim()
+          .match(
+            /Want to read more\? Browse other messages in\s+awesome_group\./
+          ),
+        "displays the right browse more message"
+      );
+    });
 
-  test("suggested messages for group messages without new or unread", async function (assert) {
-    await visit("/t/13");
+    test("suggested messages for group messages with new and unread", async function (assert) {
+      await visit("/t/13");
 
-    assert.ok(
-      query(".suggested-topics-message")
-        .innerText.trim()
-        .match(
-          /Want to read more\? Browse other messages in\s+awesome_group\./
-        ),
-      "displays the right browse more message"
-    );
-  });
+      await publishGroupNewToMessageBus({ groupIds: [14], topicId: 1 });
 
-  test("suggested messages for group messages with new and unread", async function (assert) {
-    await visit("/t/13");
+      assert.ok(
+        query(".suggested-topics-message")
+          .innerText.trim()
+          .match(
+            /There is 1 new message remaining, or browse other messages in\s+awesome_group/
+          ),
+        "displays the right browse more message"
+      );
 
-    await publishGroupNewToMessageBus({ groupIds: [14], topicId: 1 });
+      await publishGroupUnreadToMessageBus({ groupIds: [14], topicId: 2 });
 
-    assert.ok(
-      query(".suggested-topics-message")
-        .innerText.trim()
-        .match(
-          /There is 1 new message remaining, or browse other messages in\s+awesome_group/
-        ),
-      "displays the right browse more message"
-    );
+      assert.ok(
+        query(".suggested-topics-message")
+          .innerText.trim()
+          .match(
+            /There is 1 unread and 1 new message remaining, or browse other messages in\s+awesome_group/
+          ),
+        "displays the right browse more message"
+      );
+    });
 
-    await publishGroupUnreadToMessageBus({ groupIds: [14], topicId: 2 });
-
-    assert.ok(
-      query(".suggested-topics-message")
-        .innerText.trim()
-        .match(
-          /There is 1 unread and 1 new message remaining, or browse other messages in\s+awesome_group/
-        ),
-      "displays the right browse more message"
-    );
-  });
-
-  if (customUserProps?.redesigned_user_page_nav_enabled) {
     test("navigating between user messages route with dropdown", async function (assert) {
       await visit("/u/charlie/messages");
 
@@ -779,11 +706,7 @@ function testUserPrivateMessagesWithGroupMessages(needs, customUserProps) {
         "User personal inbox is selected in dropdown"
       );
 
-      if (customUserProps?.redesigned_user_page_nav_enabled) {
-        await click(".user-nav__messages-sent");
-      } else {
-        await click(".messages-sent");
-      }
+      await click(".user-nav__messages-sent");
 
       assert.strictEqual(
         messagesDropdown.header().name(),
@@ -806,11 +729,7 @@ function testUserPrivateMessagesWithGroupMessages(needs, customUserProps) {
         "Group inbox is selected in dropdown"
       );
 
-      if (customUserProps?.redesigned_user_page_nav_enabled) {
-        await click(".user-nav__messages-group-new");
-      } else {
-        await click(".messages-group-new");
-      }
+      await click(".user-nav__messages-group-new");
 
       assert.strictEqual(
         messagesDropdown.header().name(),
@@ -864,22 +783,6 @@ function testUserPrivateMessagesWithGroupMessages(needs, customUserProps) {
       } finally {
         resetCustomUserNavMessagesDropdownRows();
       }
-    });
-  }
-}
-
-acceptance(
-  "User Private Messages - user with group messages",
-  function (needs) {
-    return testUserPrivateMessagesWithGroupMessages(needs);
-  }
-);
-
-acceptance(
-  "User Private Messages - user with group messages - redesigned user page nav enabled",
-  function (needs) {
-    return testUserPrivateMessagesWithGroupMessages(needs, {
-      redesigned_user_page_nav_enabled: true,
     });
   }
 );

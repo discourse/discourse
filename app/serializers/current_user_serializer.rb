@@ -64,7 +64,6 @@ class CurrentUserSerializer < BasicUserSerializer
              :status,
              :grouped_unread_notifications,
              :redesigned_user_menu_enabled,
-             :redesigned_user_page_nav_enabled,
              :redesigned_topic_timeline_enabled,
              :display_sidebar_tags,
              :sidebar_tags,
@@ -290,14 +289,6 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def include_new_personal_messages_notifications_count?
     redesigned_user_menu_enabled
-  end
-
-  def redesigned_user_page_nav_enabled
-    if SiteSetting.enable_new_user_profile_nav_groups.present?
-      object.in_any_groups?(SiteSetting.enable_new_user_profile_nav_groups_map)
-    else
-      false
-    end
   end
 
   def redesigned_topic_timeline_enabled

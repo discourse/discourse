@@ -29,9 +29,7 @@
 </div>
 
 {{#if this.currentUser.can_send_private_messages}}
-  {{#if this.currentUser.redesigned_user_page_nav_enabled}}
-    <UserPreferences::AllowPrivateMessages @model={{this.model}} />
-  {{/if}}
+  <UserPreferences::AllowPrivateMessages @model={{this.model}} />
 
   <div class="control-group user-allow-pm">
     <div class="controls">
