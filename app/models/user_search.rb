@@ -160,6 +160,8 @@ class UserSearch
         .each { |id| users << id }
     end
 
+    return users.to_a if users.size >= @limit
+
     # 5. last seen users (for search auto-suggestions)
     if @last_seen_users
       scoped_users
@@ -168,6 +170,8 @@ class UserSearch
         .pluck(:id)
         .each { |id| users << id }
     end
+
+    return users.to_a if users.size >= @limit
 
     if SiteSetting.user_search_similar_results
       # 6. similar usernames
@@ -179,6 +183,8 @@ class UserSearch
           .pluck(:id)
           .each { |id| users << id }
       end
+
+      return users.to_a if users.size >= @limit
 
       # 7. similar names
       if SiteSetting.enable_names? && @term.present?
