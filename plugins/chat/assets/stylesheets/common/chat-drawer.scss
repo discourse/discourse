@@ -39,7 +39,7 @@ body.composer-open .chat-drawer-outlet-container {
   align-self: flex-end;
   width: 400px;
   min-width: 250px !important; // important to override inline styles
-  max-width: calc(100vw - (var(--composer-right, 20px) * 3));
+  max-width: calc(100% - var(--composer-right));
   max-height: 85vh;
   min-height: 300px !important; // important to override inline styles
 
