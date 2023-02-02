@@ -307,15 +307,22 @@ RSpec.describe SearchIndexer do
     it "limits number of repeated terms when max_duplicate_search_index_terms site setting has been configured" do
       SiteSetting.max_duplicate_search_index_terms = 5
 
-      contents = "I am #{"sam " * 10}"
+      contents = <<~TEXT
+        #{"sam " * 10}
+        <a href="https://something.com/path:path'path?term='hello'">url</a>
+      TEXT
+
       post.update!(raw: contents)
 
       post_search_data = post.post_search_data
       post_search_data.reload
 
-      expect(post_search_data.search_data).to eq(
-        "'sam':12,13,14,15,16 'test':8A 'titl':4A 'uncategor':9B",
-      )
+      terms =
+        "'/path:path''path':22 'com':21 'sam':10,11,12,13,14 'something.com':21 'something.com/path:path''path':20 'test':8A 'titl':4A 'uncategor':9B 'url':23".split(
+          " ",
+        ).sort
+
+      expect(post_search_data.search_data.split(" ").sort).to contain_exactly(*terms)
     end
   end
 
