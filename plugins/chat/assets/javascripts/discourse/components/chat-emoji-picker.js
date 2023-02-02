@@ -237,6 +237,15 @@ export default class ChatEmojiPicker extends Component {
   }
 
   @action
+  onSectionsKeyDown(event) {
+    if (event.key === "Enter") {
+      this.didSelectEmoji(event);
+    } else {
+      this.didNavigateSection(event);
+    }
+  }
+
+  @action
   didNavigateSection(event) {
     const sectionsEmojis = (section) => [...section.querySelectorAll(".emoji")];
     const focusSectionsLastEmoji = (section) => {
@@ -252,7 +261,7 @@ export default class ChatEmojiPicker extends Component {
     };
     const allEmojis = () => [
       ...document.querySelectorAll(
-        ".chat-emoji-picker__scrollable-content .emoji"
+        ".chat-emoji-picker__section:not(.hidden) .emoji"
       ),
     ];
 

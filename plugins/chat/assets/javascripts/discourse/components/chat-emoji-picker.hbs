@@ -113,34 +113,36 @@
       <div
         class="chat-emoji-picker__sections"
         {{on "click" this.didSelectEmoji}}
-        {{on "keydown" this.didSelectEmoji}}
+        {{on "keydown" this.onSectionsKeyDown}}
         role="button"
       >
         {{#if (gte this.filteredEmojis.length 0)}}
-          {{#each this.filteredEmojis as |emoji|}}
-            <img
-              width="32"
-              height="32"
-              class="emoji"
-              src={{tonable-emoji-url
-                emoji
-                this.chatEmojiReactionStore.diversity
-              }}
-              tabindex="0"
-              data-emoji={{emoji.name}}
-              data-tonable={{if emoji.tonable "true"}}
-              alt={{emoji.name}}
-              title={{tonable-emoji-title
-                emoji
-                this.chatEmojiReactionStore.diversity
-              }}
-              loading="lazy"
-            />
-          {{else}}
-            <p class="chat-emoji-picker__no-reults">
-              {{i18n "chat.emoji_picker.no_results"}}
-            </p>
-          {{/each}}
+          <div class="chat-emoji-picker__section filtered">
+            {{#each this.filteredEmojis as |emoji|}}
+              <img
+                width="32"
+                height="32"
+                class="emoji"
+                src={{tonable-emoji-url
+                  emoji
+                  this.chatEmojiReactionStore.diversity
+                }}
+                tabindex="0"
+                data-emoji={{emoji.name}}
+                data-tonable={{if emoji.tonable "true"}}
+                alt={{emoji.name}}
+                title={{tonable-emoji-title
+                  emoji
+                  this.chatEmojiReactionStore.diversity
+                }}
+                loading="lazy"
+              />
+            {{else}}
+              <p class="chat-emoji-picker__no-reults">
+                {{i18n "chat.emoji_picker.no_results"}}
+              </p>
+            {{/each}}
+          </div>
         {{/if}}
 
         {{#each-in this.groups as |section emojis|}}
@@ -155,7 +157,6 @@
               (concat "chat.emoji_picker." section)
               translatedFallback=section
             }}
-            {{on "keydown" this.didNavigateSection}}
           >
             <h2 class="chat-emoji-picker__section-title">
               {{i18n
