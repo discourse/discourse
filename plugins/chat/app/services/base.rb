@@ -90,6 +90,21 @@ module Chat
         end
       end
 
+      class ModelStep < Step
+        attr_reader :key
+
+        def initialize(name, class_name:, key:)
+          @key = key
+          super name, class_name: class_name
+        end
+
+        def call(instance, context)
+          model = class_name.find_by(id: context[key])
+          context[name] = model
+          context.fail!("result.#{name}": Context.build.fail) unless model
+        end
+      end
+
       class PolicyStep < Step
         def call(instance, context)
           context.fail!("result.policy.#{name}": Context.build.fail) unless super
@@ -122,6 +137,10 @@ module Chat
 
         def call!(context = {})
           new(context).tap(&:run!).context
+        end
+
+        def model(class_name, name: :model, key: :id)
+          steps << ModelStep.new(name, key: key, class_name: class_name)
         end
 
         def contract(name = :default, class_name: self::DefaultContract)

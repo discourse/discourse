@@ -3,49 +3,80 @@
 RSpec.describe Chat::Endpoint do
   class SuccessService
     include Chat::Service::Base
-
-    service {}
   end
 
   class FailureService
     include Chat::Service::Base
 
-    service { context.fail! }
+    step(:fail_step)
+
+    def fail_step
+      context.fail!
+    end
   end
 
   class FailedPolicyService
     include Chat::Service::Base
 
-    policy(:test) { false }
+    policy(:test)
 
-    service {}
+    def test
+      false
+    end
   end
 
   class SuccessPolicyService
     include Chat::Service::Base
 
-    policy(:test) { true }
+    policy(:test)
 
-    service {}
+    def test
+      true
+    end
   end
 
   class FailedContractService
     include Chat::Service::Base
 
-    contract do
+    class DefaultContract < Contract
       attribute :test
       validates :test, presence: true
     end
 
-    service {}
+    contract
   end
 
   class SuccessContractService
     include Chat::Service::Base
 
-    contract {}
+    class DefaultContract < Contract
+    end
 
-    service {}
+    contract
+  end
+
+  class FailureWithModelService
+    include Chat::Service::Base
+
+    class FakeModel
+      def self.find_by(**)
+        nil
+      end
+    end
+
+    model FakeModel
+  end
+
+  class SuccessWithModelService
+    include Chat::Service::Base
+
+    class FakeModel
+      def self.find_by(**)
+        :model_found
+      end
+    end
+
+    model FakeModel
   end
 
   describe ".call(service, &block)" do
@@ -168,6 +199,30 @@ RSpec.describe Chat::Endpoint do
 
         it "does not run the provided block" do
           expect(endpoint).not_to eq :contract_failure
+        end
+      end
+    end
+
+    context "when using the on_model_not_found action" do
+      let(:actions) { <<-BLOCK }
+          ->(*) do
+            on_model_not_found { :no_model }
+          end
+        BLOCK
+
+      context "when the service failed without a model" do
+        let(:service) { FailureWithModelService }
+
+        it "runs the provided block" do
+          expect(endpoint).to eq :no_model
+        end
+      end
+
+      context "when the service does not fail with a model" do
+        let(:service) { SuccessWithModelService }
+
+        it "does not run the provided block" do
+          expect(endpoint).not_to eq :no_model
         end
       end
     end

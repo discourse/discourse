@@ -77,12 +77,26 @@ module Chat
       end
     end
 
+    class FailToFindModel < FailAction
+      def action
+        "result.#{@name}"
+      end
+
+      def description
+        "fail to find a model"
+      end
+    end
+
     def fail_a_policy(name)
       FailPolicy.new(name)
     end
 
     def fail_a_contract(name = "default")
       FailContract.new(name)
+    end
+
+    def fail_to_find_a_model(name = "model")
+      FailToFindModel.new(name)
     end
   end
 end

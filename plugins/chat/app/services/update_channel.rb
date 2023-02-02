@@ -33,8 +33,6 @@ module Chat
 
       class DefaultContract < Contract
         attribute :channel
-        validates :channel, presence: true
-
         attribute :name
         attribute :description
         attribute :slug
@@ -52,6 +50,7 @@ module Chat
 
       delegate :channel, :name, :description, :slug, to: :context
 
+      model ChatChannel, name: :channel, key: :channel_id
       policy :invalid_access
       step :map_data
       contract
@@ -62,7 +61,7 @@ module Chat
       private
 
       def invalid_access
-        guardian.can_edit_chat_channel?
+        guardian.can_preview_chat_channel?(channel) && guardian.can_edit_chat_channel?
       end
 
       def map_data

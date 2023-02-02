@@ -18,15 +18,10 @@ module Chat
 
       DELETE_CHANNEL_LOG_KEY = "chat_channel_delete"
 
-      class DefaultContract < Contract
-        attribute :channel
-        validates :channel, presence: true
-      end
-
       delegate :channel, to: :context
 
+      model ChatChannel, name: :channel, key: :channel_id
       policy :invalid_access
-      contract
       step :trash_channel
       step :enqueue_delete_channel_relations_job
 
@@ -41,7 +36,7 @@ module Chat
       end
 
       def invalid_access
-        guardian.can_delete_chat_channel?
+        guardian.can_preview_chat_channel?(channel) && guardian.can_delete_chat_channel?
       end
 
       def soft_delete_channel

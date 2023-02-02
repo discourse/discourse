@@ -2,10 +2,9 @@
 
 class Chat::Api::ChatChannelsStatusController < Chat::Api::ChatChannelsController
   def update
-    with_service(
-      Chat::Service::UpdateChannelStatus,
-      channel: channel_from_params,
-      status: params.require(:status),
-    ) { on_success { render_serialized(result.channel, ChatChannelSerializer, root: "channel") } }
+    with_service(Chat::Service::UpdateChannelStatus) do
+      on_success { render_serialized(result.channel, ChatChannelSerializer, root: "channel") }
+      on_model_not_found(:channel) { raise ActiveRecord::RecordNotFound }
+    end
   end
 end

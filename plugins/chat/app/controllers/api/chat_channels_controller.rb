@@ -29,7 +29,9 @@ class Chat::Api::ChatChannelsController < Chat::Api
   end
 
   def destroy
-    with_service(Chat::Service::TrashChannel, channel: channel_from_params)
+    with_service Chat::Service::TrashChannel do
+      on_model_not_found(:channel) { raise ActiveRecord::RecordNotFound }
+    end
   end
 
   def create
@@ -94,10 +96,7 @@ class Chat::Api::ChatChannelsController < Chat::Api
       auto_join_limiter(channel_from_params).performed!
     end
 
-    with_service(
-      Chat::Service::UpdateChannel,
-      **params_to_edit.merge(channel: channel_from_params),
-    ) do
+    with_service(Chat::Service::UpdateChannel, **params_to_edit) do
       on_success do
         render_serialized(
           result.channel,
@@ -106,6 +105,7 @@ class Chat::Api::ChatChannelsController < Chat::Api
           membership: result.channel.membership_for(current_user),
         )
       end
+      on_model_not_found(:channel) { raise ActiveRecord::RecordNotFound }
     end
   end
 

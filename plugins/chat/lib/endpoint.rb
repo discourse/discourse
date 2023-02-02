@@ -16,6 +16,8 @@
 #     named `name` fails
 #   * on_failed_contract(name): will execute the provided block if the contract
 #     named `name` fails
+#   * on_model_not_found: will execute the provided block if the service fails
+#     and its model is not present
 #
 # A concrete example:
 #
@@ -44,6 +46,7 @@ class Chat::Endpoint
     on_failure: -> { result.failure? },
     on_failed_policy: ->(name = "default") { failure_for?("result.policy.#{name}") },
     on_failed_contract: ->(name = "default") { failure_for?("result.contract.#{name}") },
+    on_model_not_found: ->(name = "model") { failure_for?("result.#{name}") },
   }.with_indifferent_access.freeze
 
   attr_reader :service, :controller

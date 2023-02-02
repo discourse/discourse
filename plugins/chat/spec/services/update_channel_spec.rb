@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe Chat::Service::UpdateChannel do
-  subject(:result) { described_class.call(guardian: guardian, channel: channel, status: "open") }
+  subject(:result) do
+    described_class.call(guardian: guardian, channel_id: channel.id, status: "open")
+  end
 
   fab!(:channel) { Fabricate(:chat_channel) }
 
@@ -9,7 +11,7 @@ RSpec.describe Chat::Service::UpdateChannel do
 
   context "when the user cannot edit the channel" do
     subject(:result) do
-      described_class.call(guardian: guardian, channel: channel, name: "cool channel")
+      described_class.call(guardian: guardian, channel_id: channel.id, name: "cool channel")
     end
 
     fab!(:current_user) { Fabricate(:user) }
@@ -19,7 +21,7 @@ RSpec.describe Chat::Service::UpdateChannel do
 
   context "when the user tries to edit a DM channel" do
     subject(:result) do
-      described_class.call(guardian: guardian, channel: dm_channel, name: "cool channel")
+      described_class.call(guardian: guardian, channel_id: dm_channel.id, name: "cool channel")
     end
 
     fab!(:current_user) { Fabricate(:admin) }
@@ -38,7 +40,7 @@ RSpec.describe Chat::Service::UpdateChannel do
     subject(:result) do
       described_class.call(
         guardian: guardian,
-        channel: channel,
+        channel_id: channel.id,
         name: "cool channel",
         description: "a channel description",
         slug: "snail",
@@ -64,16 +66,16 @@ RSpec.describe Chat::Service::UpdateChannel do
       expect(message.data).to eq(
         {
           chat_channel_id: channel.id,
-          name: channel.name,
-          description: channel.description,
-          slug: channel.slug,
+          name: "cool channel",
+          description: "a channel description",
+          slug: "snail",
         },
       )
     end
   end
 
   context "when the name is blank" do
-    subject(:result) { described_class.call(guardian: guardian, channel: channel, name: " ") }
+    subject(:result) { described_class.call(guardian: guardian, channel_id: channel.id, name: " ") }
 
     fab!(:current_user) { Fabricate(:admin) }
 
@@ -85,7 +87,7 @@ RSpec.describe Chat::Service::UpdateChannel do
 
   context "when the description is blank" do
     subject(:result) do
-      described_class.call(guardian: guardian, channel: channel, description: " ")
+      described_class.call(guardian: guardian, channel_id: channel.id, description: " ")
     end
 
     fab!(:current_user) { Fabricate(:admin) }
@@ -100,7 +102,7 @@ RSpec.describe Chat::Service::UpdateChannel do
     subject(:result) do
       described_class.call(
         guardian: guardian,
-        channel: channel,
+        channel_id: channel.id,
         auto_join_users: true,
         allow_channel_wide_mentions: true,
       )
