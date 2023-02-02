@@ -394,14 +394,9 @@ class UsersController < ApplicationController
     guardian.ensure_can_edit!(user)
 
     report = TopicTrackingState.report(user)
-    serializer =
-      ActiveModel::ArraySerializer.new(
-        report,
-        each_serializer: TopicTrackingStateSerializer,
-        scope: guardian,
-      )
+    serializer = TopicTrackingStateSerializer.new(report, scope: guardian, root: false)
 
-    render json: MultiJson.dump(serializer)
+    render json: MultiJson.dump(serializer.as_json[:data])
   end
 
   def private_message_topic_tracking_state

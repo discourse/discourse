@@ -202,6 +202,7 @@ pl_PL:
         associated_topic: Powiązany temat
         associated_category: Połączona kategoria
         title: Tytuł
+        name: Nazwa
         description: Opis
       channel_info:
         back_to_all_channels: "Wszystkie kanały"
@@ -210,10 +211,12 @@ pl_PL:
           about: O stronie
           members: Członkowie
           settings: Ustawienia
-      channel_edit_title_modal:
-        title: Edytuj tytuł
-        input_placeholder: Dodaj tytuł
-        description: Nadaj swojemu kanałowi krótki opisowy tytuł
+      channel_edit_name_slug_modal:
+        title: Edytuj kanał
+        input_placeholder: Dodaj nazwę
+        slug_description: Slug kanału jest używany w adresie URL zamiast nazwy kanału
+        name: Nazwa kanału
+        slug: Slug kanału (opcjonalnie)
       channel_edit_description_modal:
         title: Edytuj opis
         input_placeholder: Dodaj opis
@@ -268,7 +271,6 @@ pl_PL:
       settings:
         channel_wide_mentions_description: "Zezwalaj użytkownikom na powiadamianie wszystkich członków #%{channel} za pomocą @all lub tylko tych, którzy są aktywni w danym momencie za pomocą @here"
         auto_join_users_label: "Automatycznie dodawaj użytkowników"
-        enable_auto_join_users: "Automatycznie dodawaj wszystkich ostatnio aktywnych użytkowników"
         desktop_notification_level: "Powiadomienia na pulpicie"
         follow: "Dołącz"
         followed: "Dołączył"

@@ -36,4 +36,30 @@ describe "Search", type: :system, js: true do
       expect(search_page.heading_text).to eq("Search")
     end
   end
+
+  describe "when using full page search on desktop" do
+    before do
+      SearchIndexer.enable
+      SearchIndexer.index(topic, force: true)
+      SiteSetting.rate_limit_search_anon_user_per_minute = 4
+      RateLimiter.enable
+    end
+
+    after { SearchIndexer.disable }
+
+    xit "rate limits searches for anonymous users" do
+      queries = %w[one two three four]
+
+      visit("/search?expanded=true")
+
+      queries.each do |query|
+        search_page.clear_search_input
+        search_page.type_in_search(query)
+        search_page.click_search_button
+      end
+
+      # Rate limit error should kick in after 4 queries
+      expect(search_page).to have_warning_message
+    end
+  end
 end

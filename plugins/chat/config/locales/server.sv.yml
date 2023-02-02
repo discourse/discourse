@@ -64,6 +64,7 @@ sv:
       delete_channel_failed: "Det gick inte att ta bort kanalen, försök igen."
       minimum_length_not_met: "Meddelandet är för kort, måste ha minst %{minimum} tecken."
       message_too_long: "Meddelandet är för långt, måste ha högst %{maximum} tecken."
+      draft_too_long: "Utkastet är för långt."
       max_reactions_limit_reached: "Nya reaktioner är inte tillåtna för detta meddelande."
       message_move_invalid_channel: "Käll- och destinationskanalen måste vara offentliga kanaler."
       message_move_no_messages_found: "Inga meddelanden hittades med de angivna meddelande-ID:n."

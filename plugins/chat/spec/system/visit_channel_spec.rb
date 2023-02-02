@@ -61,7 +61,7 @@ RSpec.describe "Visit channel", type: :system, js: true do
 
       context "when channel is not found" do
         it "shows an error" do
-          visit("/chat/channel/999/-")
+          visit("/chat/c/-/999")
 
           expect(page).to have_content("Not Found") # this is not a translated key
         end
@@ -69,7 +69,7 @@ RSpec.describe "Visit channel", type: :system, js: true do
 
       context "when loading a non existing message of a channel" do
         it "shows an error" do
-          visit("/chat/channel/#{category_channel_1.id}/-?messageId=-999")
+          visit("/chat/c/-/#{category_channel_1.id}/-999")
 
           expect(page).to have_content(I18n.t("not_found"))
         end
@@ -151,10 +151,10 @@ RSpec.describe "Visit channel", type: :system, js: true do
 
           context "when URL doesn’t contain slug" do
             it "redirects to correct URL" do
-              visit("/chat/channel/#{category_channel_1.id}/-")
+              visit("/chat/c/-/#{category_channel_1.id}")
 
               expect(page).to have_current_path(
-                "/chat/channel/#{category_channel_1.id}/#{category_channel_1.slug}",
+                "/chat/c/#{category_channel_1.slug}/#{category_channel_1.id}",
               )
             end
           end
@@ -179,10 +179,10 @@ RSpec.describe "Visit channel", type: :system, js: true do
 
           context "when URL doesn’t contain slug" do
             it "redirects to correct URL" do
-              visit("/chat/channel/#{dm_channel_1.id}/-")
+              visit("/chat/c/-/#{dm_channel_1.id}")
 
               expect(page).to have_current_path(
-                "/chat/channel/#{dm_channel_1.id}/#{Slug.for(dm_channel_1.title(current_user))}",
+                "/chat/c/#{Slug.for(dm_channel_1.title(current_user))}/#{dm_channel_1.id}",
               )
             end
           end

@@ -34,19 +34,20 @@ export default {
         }
       );
     }
-
-    api.decorateChatMessage(
-      (element) => {
-        element
-          .querySelectorAll(".lazyYT:not(.lazyYT-video-loaded)")
-          .forEach((iframe) => {
-            $(iframe).lazyYT();
-          });
-      },
-      {
-        id: "lazy-yt",
-      }
-    );
+    if (siteSettings.lazy_yt_enabled) {
+      api.decorateChatMessage(
+        (element) => {
+          element
+            .querySelectorAll(".lazyYT:not(.lazyYT-video-loaded)")
+            .forEach((iframe) => {
+              $(iframe).lazyYT();
+            });
+        },
+        {
+          id: "lazy-yt",
+        }
+      );
+    }
   },
 
   initialize(container) {

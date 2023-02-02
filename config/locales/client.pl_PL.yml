@@ -366,11 +366,9 @@ pl_PL:
       edit_bookmark: "Edytuj zakładkę"
       clear_bookmarks: "Wyczyść zakładki"
       help:
-        bookmark: "Kliknij, aby dodać pierwszy post tematu do zakładek"
-        edit_bookmark: "Kliknij, aby edytować zakładkę w tym temacie"
         edit_bookmark_for_topic: "Kliknij, aby edytować zakładkę dla tego tematu"
         unbookmark: "Kliknij, aby usunąć wszystkie zakładki z tego tematu"
-        unbookmark_with_reminder: "Kliknij, aby usunąć wszystkie zakładki i przypomnienia w tym temacie."
+        unbookmark_with_reminder: "Kliknij, aby usunąć wszystkie zakładki i przypomnienia w tym temacie"
     bookmarks:
       created: "Dodano post do zakładek. %{name}"
       created_generic: "Dodałeś to do zakładek. %{name}"
@@ -1166,7 +1164,7 @@ pl_PL:
         perm_denied_expl: "Odmówiłeś/łaś dostępu dla powiadomień. Pozwól na powiadomienia w ustawieniach przeglądarki."
         disable: "Wyłącz powiadomienia"
         enable: "Włącz powiadomienia"
-        each_browser_note: 'Uwaga: musisz zmienić to ustawienie w każdej używanej przeglądarce. Wszystkie powiadomienia zostaną wyłączone, jeśli wstrzymasz powiadomienia z menu użytkownika, niezależnie od tego ustawienia.'
+        each_browser_note: "Uwaga: musisz zmienić to ustawienie w każdej używanej przeglądarce. Wszystkie powiadomienia zostaną wyłączone, jeśli wstrzymasz powiadomienia z menu użytkownika, niezależnie od tego ustawienia."
         consent_prompt: "Czy chcesz otrzymywać natychmiastowe powiadomienia, gdy ktoś odpowiada na twoje posty?"
       dismiss: "Odrzuć"
       dismiss_notifications: "Odrzuć wszystkie"
@@ -5013,6 +5011,8 @@ pl_PL:
           love:
             name: "polubienie"
             description: "Kolor przycisku polubień"
+          selected:
+            name: "zaznaczone"
         robots:
           title: "Nadpisz plik robots.txt swojej witryny:"
           warning: "To ustawienie permanentnie nadpisze wszystkie powiązane ustawienia witryny."

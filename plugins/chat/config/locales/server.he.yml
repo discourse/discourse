@@ -34,12 +34,22 @@ he:
     chat_channel_archive_complete:
       title: "העברת ערוץ הצ׳אט לארכיון הושלמה"
       subject_template: "העברת ערוץ הצ׳אט לארכיון הושלמה בהצלחה"
+      text_body_template: |
+        העברת הערוץ %{channel_hashtag_or_name} לארכיון הושלמה בהצלחה. ההודעות הועתקו לנושא [%{topic_title}](%{topic_url}).
     chat_channel_archive_failed:
       title: "העברת הצ׳אט לארכיון נכשלה"
       subject_template: "העברת הצ׳אט לארכיון נכשלה"
+      text_body_template: |
+        העברת הערוץ %{channel_hashtag_or_name} לארכיון נכשלה. %{messages_archived} הודעות הועברו לארכיון. הודעות שהועברו לארכיון למחצה הועתקו לנושא [%{topic_title}](%{topic_url}). יש לבקר בערוץ דרך %{channel_url} כדי לנסות שוב.
     chat_channel_archive_failed_no_topic:
       title: "העברת הצ׳אט לארכיון נכשלה"
       subject_template: "העברת הצ׳אט לארכיון נכשלה"
+      text_body_template: |
+        העברת ערוץ הצ׳אט %{channel_hashtag_or_name} לארכיון נכשלה. אף הודעה לא הועברה לארכיון. הנושא לא נוצר כראוי מהסיבות הבאות:
+
+          %{topic_validation_errors}
+
+        ניתן לבקר בערוץ דרך %{channel_url} כדי לנסות שוב.
   chat:
     deleted_chat_username: נמחק
     errors:
@@ -54,6 +64,7 @@ he:
       delete_channel_failed: "מחיקת הערוץ נכשלה, נא לנסות שוב."
       minimum_length_not_met: "ההודעה קצרה מדי, היא חייבת להיות ארוכה מ־%{minimum} תווים"
       message_too_long: "ההודעה ארוכה מדי, היא חייבת להיות באורך של עד %{maximum} תווים לכל היותר."
+      draft_too_long: "הטיוטה ארוכה מדי."
       max_reactions_limit_reached: "רגשות חדשים אסורים בהודעה זו."
       message_move_invalid_channel: "ערוצי המקור והיעד חייבים להיות ערוצים ציבוריים."
       message_move_no_messages_found: "לא נמצאו הודעות עם מזהי ההודעות שסופקו."

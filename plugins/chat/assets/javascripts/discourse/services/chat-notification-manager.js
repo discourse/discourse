@@ -11,8 +11,8 @@ import { bind, observes } from "discourse-common/utils/decorators";
 export default class ChatNotificationManager extends Service {
   @service presence;
   @service chat;
+  @service chatStateManager;
 
-  _inChat = false;
   _subscribedToCore = true;
   _subscribedToChat = false;
   _countChatInDocTitle = true;
@@ -56,9 +56,8 @@ export default class ChatNotificationManager extends Service {
   }
 
   @bind
-  _pageChanged(path) {
-    this.set("_inChat", path.startsWith("/chat/channel/"));
-    if (this._inChat) {
+  _pageChanged() {
+    if (this.chatStateManager.isActive) {
       this._chatPresenceChannel.enter({ onlyWhileActive: false });
       this._corePresenceChannel.leave();
     } else {
@@ -85,7 +84,7 @@ export default class ChatNotificationManager extends Service {
       this._chatPresenceChannel.count > 0 &&
       this._corePresenceChannel.count > 0;
     if (oneTabForEachOpen) {
-      this._inChat
+      this.chatStateManager.isActive
         ? this._subscribeToChat({ only: true })
         : this._subscribeToCore({ only: true });
     } else {
@@ -119,7 +118,7 @@ export default class ChatNotificationManager extends Service {
       this.messageBus.subscribe(this._coreAlertChannel(), this.onMessage);
     }
 
-    if (this.only && this._subscribedToChat) {
+    if (opts.only && this._subscribedToChat) {
       this.messageBus.unsubscribe(this._chatAlertChannel(), this.onMessage);
       this.set("_subscribedToChat", false);
     }

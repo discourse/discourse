@@ -474,6 +474,7 @@ zh_CN:
       您可以突出显示文本并选择出现的<b>引用回复</b>按钮，对您之前的回复进行编辑以添加引用。
 
       这样，每个人都可以更轻松地阅读具有少量嵌套回复的话题，而不是查看大量的个别回复。
+    dominating_topic: 您在此话题中发布了很多内容！考虑一下让其他人有机会在这里进行回复并互相讨论。
     get_a_room: 您已回复 @%{reply_username} %{count} 次，您知道您可以向他们发送个人消息吗？
     too_many_replies: |
       ### 您已达到此话题的回复上限
@@ -513,6 +514,7 @@ zh_CN:
               target_user_not_found: "未找到您要向其发送此消息的其中一个用户。"
               unable_to_update: "更新该话题时出错。"
               unable_to_tag: "给话题添加标签时出错。"
+              unable_to_unlist: "抱歉，您不能创建取消公开的话题。"
             featured_link:
               invalid: "无效。URL 应包括 http:// 或 https://。"
         user:
@@ -641,6 +643,7 @@ zh_CN:
     has_likes:
       other: "%{count} 个赞"
     cannot_permanently_delete:
+      many_posts: "此话题有未删除的帖子。请先永久删除这些帖子，然后再永久删除话题。"
       wait_or_different_admin: "您必须等待 %{time_left}才能永久删除此帖子，否则必须由其他管理员执行此操作。"
   rate_limiter:
     slow_down: "您执行此操作的次数过多，请稍后再试。"
@@ -808,6 +811,7 @@ zh_CN:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "不当言论"
+      description: '这篇帖子包含的内容会被一个有理性的人认为具有冒犯性、侮辱性、属于仇恨行为或违反<a href="%{base_path}/guidelines">我们的社区准则</a>。'
       short_description: '违反了<a href="%{base_path}/guidelines">我们的社区准则</a>'
     notify_user:
       title: "向 @%{username} 发送消息"
@@ -873,6 +877,7 @@ zh_CN:
       short_description: "这是广告"
     inappropriate:
       title: "不当言论"
+      description: '此话题包含的内容会被一个有理性的人认为具有冒犯性、侮辱性、属于仇恨行为或违反<a href="%{base_path}/guidelines">我们的社区准则</a>。'
       long_form: "将此话题举报为不当言论"
       short_description: '违反了<a href="%{base_path}/guidelines">我们的社区准则</a>'
     notify_moderators:
@@ -910,6 +915,8 @@ zh_CN:
     mailing_list_mode: "关闭邮寄名单模式"
     all: "不要从 %{sitename} 向我发送任何邮件"
     different_user_description: "您当前登录的用户与我们通过电子邮件联系的用户不同。请退出，或进入匿名模式，然后重试。"
+    not_found_description: "抱歉，我们找不到该订阅。可能您电子邮件中的链接太旧，已过期？"
+    user_not_found_description: "抱歉，我们找不到此订阅的用户。您可能正在尝试取消订阅不再存在的帐户。"
     log_out: "退出"
     submit: "保存偏好设置"
     digest_frequency:
@@ -946,6 +953,7 @@ zh_CN:
       write: "写入所有"
       one_time_password: "创建一次性登录令牌"
       bookmarks_calendar: "读取书签提醒"
+      user_status: "读取和更新用户状态"
     invalid_public_key: "抱歉，该公钥无效。"
     invalid_auth_redirect: "抱歉，此 auth_redirect 主机不被允许。"
     invalid_token: "令牌缺失、无效或已过期。"
@@ -1039,10 +1047,12 @@ zh_CN:
         author: 作者
         edit_reason: 原因
     consolidated_api_requests:
+      title: "合并的 API 请求"
       xaxis:
         api: "API"
         user_api: "用户 API"
       yaxis: "天"
+      description: "对常规 API 密钥和用户 API 密钥的 API 请求。"
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "天"
@@ -1364,6 +1374,11 @@ zh_CN:
     allow_duplicate_topic_titles_category: "如果类别不同，允许有相同或重复标题的话题。必须禁用 allow_duplicate_topic_titles。"
     unique_posts_mins: "用户可以再次发布相同内容的帖子前需要等待的分钟数"
     educate_until_posts: "当用户开始输入他们的前几 (n) 个新帖子时，在编辑器中显示弹出式新用户教育面板。"
+    title: "此站点的名称。对包括匿名用户在内的所有访客可见。"
+    site_description: "用一句话描述此站点。对包括匿名用户在内的所有访客可见。"
+    short_site_description: "几个字的简短描述。对包括匿名用户在内的所有访客可见。"
+    contact_email: "负责此站点的主要联系人的电子邮件地址，用于重要通知，也会显示在 <a href='%{base_path}/about' target='_blank'>/about</a> 上。对公共站点上的匿名用户可见。"
+    contact_url: "此站点的联系 URL。如果存在，将替换 <a href='%{base_path}/about' target='_blank'>/about</a> 上的电子邮件地址，并对公共站点上的匿名用户可见。"
     crawl_images: "从远程 URL 检索图片以插入正确的宽度和高度尺寸。"
     download_remote_images_to_local: "通过下载将远程（热链接）图片转换为本地图片；即使图片将来从远程站点移除，这也会保留内容。"
     download_remote_images_threshold: "将远程图片下载到本地所需的最小磁盘空间（百分比）"
@@ -1379,6 +1394,8 @@ zh_CN:
     edit_history_visible_to_public: "允许所有人查看被编辑过的帖子的先前版本。禁用时，只有管理人员可以查看。"
     delete_removed_posts_after: "被作者移除的帖子将在 (n) 小时后自动删除。如果设置为 0，帖子将被立即删除。"
     notify_users_after_responses_deleted_on_flagged_post: "当帖子由于被举报而遭到移除时，所有回复帖子并且回复被移除的用户都会收到通知。"
+    max_image_width: "帖子中图像的最大缩略图宽度。具有更大宽度的图像将进行大小和光效的调整。"
+    max_image_height: "帖子中图像的最大缩略图高度。具有更大高度的图像将进行大小和光效的调整。"
     responsive_post_image_sizes: "调整灯箱预览图片的大小以允许以下像素比率的高 DPI 屏幕。移除所有值将禁用自适应图片。"
     fixed_category_positions: "如果选中，您将能够按固定顺序排列类别。如果取消选中，则按活动顺序列出类别。"
     fixed_category_positions_on_create: "如果选中，将在话题创建对话框中维护类别排序（需要 fixed_category_positions）。"
@@ -1516,10 +1533,7 @@ zh_CN:
     max_favorite_badges: "用户可以选择的最大徽章数"
     whispers_allowed_groups: "允许指定群组的成员在话题内进行不公开交流。"
     allow_index_in_robots_txt: "在 robots.txt 中指定此站点允许被网络搜索引擎索引。在特殊情况下，您可以永久<a href='%{base_path}/admin/customize/robots'>替换 robots.txt</a>。"
-    blocked_email_domains: "不允许用户用于注册帐户的以 | 分隔的电子邮件网域列表。示例：mailinator.com|trashmail.net"
-    allowed_email_domains: "用户注册帐户时必须使用的以 | 分隔的电子邮件网域列表。警告：不允许使用除所列网域以外的电子邮件网域的用户！"
     normalize_emails: "检查规范化电子邮件是否唯一。规范化电子邮件移除了用户名中的所有点以及 + 和 @ 符号之间的所有内容。"
-    auto_approve_email_domains: "使用此网域列表中电子邮件地址的用户将自动获得批准。"
     hide_email_address_taken: "在注册或忘记密码的过程中，不要告知用户存在一个使用给定电子邮件地址的帐户。对于“忘记密码”请求，需要完整的电子邮件。"
     log_out_strict: "退出时，退出用户在所有设备上的会话"
     version_checks: "Ping Discourse Hub 以获取版本更新并在 <a href='%{base_path}/admin' target='_blank'>/admin</a> 信息中心上显示新版本消息"
@@ -1583,6 +1597,7 @@ zh_CN:
     discord_trusted_guilds: '只允许这些 Discord 公会的成员通过 Discord 登录。使用公会的数字 ID。有关详情，请查看<a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">此处</a>的说明。留空则允许任意公会。'
     enable_backups: "允许管理员创建论坛备份"
     allow_restore: "允许恢复，这可以替换所有站点数据！除非您计划恢复备份，否则请保持禁用状态"
+    maximum_backups: "要保留的最大备份数。系统将自动删除较旧的备份"
     automatic_backups_enabled: "按照定义的备份频率运行自动备份"
     backup_frequency: "备份之间的天数。"
     s3_backup_bucket: "存放备份的远程存储桶。警告：确认它是私有存储桶。"
@@ -1757,6 +1772,7 @@ zh_CN:
     faq_url: "如果您想使用在别处托管的常见问题解答，请在此处提供完整 URL。"
     tos_url: "如果您想使用在别处托管的《服务条款》文档，请在此处提供完整 URL。"
     privacy_policy_url: "如果您想使用在别处托管的《隐私政策》文档，请在此处提供完整 URL。"
+    log_anonymizer_details: "在匿名化后，是否在日志中保留用户的详细信息。"
     newuser_spam_host_threshold: "在被视为垃圾信息之前，新用户可以在他们的 `newuser_spam_host_threshold` 帖子中发布指向同一主机的链接的次数。"
     allowed_spam_host_domains: "从垃圾信息主机测试中排除的网域列表。新用户永远不会被限制创建带有这些网域链接的帖子。"
     staff_like_weight: "管理人员赞的权重（非管理人员赞的权重为 1）。"
@@ -1909,8 +1925,6 @@ zh_CN:
     automatically_unpin_topics: "当用户到达底部时自动取消置顶话题。"
     read_time_word_count: "每分钟可阅读的字数，用于估算阅读时间。"
     topic_page_title_includes_category: "话题页面<a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>标题标签</a>包含类别名称。"
-    native_app_install_banner_ios: "在 iOS 设备上向普通用户（信任级别为 1 及以上）显示 DiscourseHub 应用横幅。"
-    native_app_install_banner_android: "在 Android 设备上向普通用户（信任级别为 1 及以上）显示 DisroseHUB 应用横幅。"
     app_association_android: "端点 <a href='%{base_path}/.well-known/assetlinks.json'>.well-known/assetlinks.json</a> 的内容，用于 Google 的 Digital Asset Links API。"
     app_association_ios: "端点 <a href='%{base_path}/apple-app-site-association'>apple-app-site-association </a> 的内容，用于在创建此站点与 iOS 应用之间通用链接。"
     share_anonymized_statistics: "共享匿名使用统计信息。"
@@ -1923,6 +1937,7 @@ zh_CN:
     display_name_on_posts: "在帖子中显示用户的全名以及他们的用户名。"
     show_time_gap_days: "如果两个帖子间隔此天数，在话题中显示时间间隔。"
     short_progress_text_threshold: "当一个话题的帖子数量超过此数值后，进度条将只显示当前帖子数量。如果更改进度条的宽度，则可能需要更改此值。"
+    default_code_lang: "应用于代码块（auto、text、ruby、python 等）的默认编程语言语法高亮显示。此值还必须存在于 `highlighted languages` 站点设置中。"
     warn_reviving_old_topic_age: "当有人开始回复上次回复时间超过此天数的话题时，将显示警告。设置为 0 将禁用。"
     autohighlight_all_code: "即使未显式声明语言，也强制向所有预格式化代码块应用代码高亮显示。"
     highlighted_languages: "包括语法高亮显示规则。（警告：包含太多语言可能会影响性能）请参阅：<a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> 查看演示"
@@ -2039,6 +2054,8 @@ zh_CN:
     shared_drafts_min_trust_level: "允许用户查看和编辑共享草稿。"
     push_notifications_prompt: "显示用户同意提示。"
     push_notifications_icon: "出现在通知角的徽章图标。建议使用具有透明度的 96×96 单色 PNG。"
+    enable_desktop_push_notifications: "启用桌面推送通知"
+    push_notification_time_window_mins: "在发送推送通知前等待 (n) 分钟。有助于避免向活跃的在线用户发送推送通知。"
     base_font: "用于站点上大多数文本的基字体。可以通过 `--font-family` CSS 自定义属性替换主题。"
     heading_font: "用于站点上标题的字体。可以通过 `--heading-font-family` CSS 自定义属性替换主题。"
     enable_sitemap: "为您的站点生成站点地图并将其包含在 robots.txt 文件中。"
@@ -2060,9 +2077,12 @@ zh_CN:
     use_name_for_username_suggestions: "建议用户名时使用用户的全名。"
     suggest_weekends_in_date_pickers: "在日期选择器建议中包括周末（周六和周日）（如果您仅在工作日（周一至周五）使用 Discourse，请禁用此选项）。"
     splash_screen: "在加载站点资源时显示临时加载屏幕"
+    navigation_menu: "确定要使用的导航菜单。边栏和标题导航可由用户自定义。旧版选项用于向后兼容。"
     default_sidebar_categories: "所选类别将默认显示在边栏的“类别”版块下。"
     default_sidebar_tags: "所选标签将默认显示在边栏的“标签”版块下。"
     enable_new_user_profile_nav_groups: "实验性：将向所选群组的用户显示新的用户个人资料导航菜单"
+    enable_experimental_topic_timeline_groups: "实验性：所选群组的用户将看到重构的话题时间线"
+    enable_experimental_hashtag_autocomplete: "实验性：对类别和标签使用新的 #hashtag 自动补全系统，以不同方式呈现所选条目，并改进了搜索"
     errors:
       invalid_css_color: "颜色无效。输入颜色名称或十六进制值。"
       invalid_email: "无效的电子邮件地址。"
@@ -2486,10 +2506,12 @@ zh_CN:
       %{notes}
   flag_reasons:
     off_topic: "您的帖子被举报为**偏离话题**：鉴于话题标题和第一个帖子，社区认为它不适合该话题。"
+    inappropriate: "您的帖子被举报为**不当言论**：社区认为它具有冒犯性、侮辱性、属于仇恨行为或违反了[我们的社区准则](%{base_path}/guidelines)。"
     spam: "您的帖子被举报为**垃圾信息**：社区认为它是广告，像是在过度地推广着什么，而不是预期中与话题有关的内容。"
     notify_moderators: "您的帖子被举报为**需要版主注意**：社区认为帖子需要管理人员手动干预。"
     responder:
       off_topic: "该帖子被举报为**偏离话题**：鉴于话题标题和第一个帖子，社区认为它不适合该话题。"
+      inappropriate: "这篇帖子被举报为**不当言论**：社区认为它具有冒犯性、侮辱性、属于仇恨行为或违反了[我们的社区准则](%{base_path}/guidelines)。"
       spam: "该帖子被举报为**垃圾信息**：社区认为这是一个广告，本质上是过度宣传的东西，而不是像预期的那样有用或与话题相关。"
       notify_moderators: "该帖子被举报为**需要版主注意**：社区认为帖子需要管理人员手动干预。"
   flags_dispositions:
@@ -3310,6 +3332,7 @@ zh_CN:
 
         %{respond_instructions}
     user_watching_category_or_tag:
+      title: "用户关注类别或标签"
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -3810,88 +3833,6 @@ zh_CN:
     title: "服务条款"
   privacy_topic:
     title: "隐私政策"
-    body: |
-      <a name="collect"></a>
-
-      ## [我们收集什么信息？](#collect)
-
-      当您在我们的站点注册时，我们会从您那里收集信息，并在您通过阅读、编辑和评估分享的内容参与论坛时收集数据。
-
-      在我们的站点上注册时，您可能会被要求输入您的姓名和电子邮件地址 但是，您可以在不注册的情况下访问我们的网站。您的电子邮件地址将通过包含唯一链接的电子邮件进行验证。如果该链接被访问，我们就知道您控制着该电子邮件地址。
-
-      注册和发帖时，我们会记录发布帖子时的 IP 地址。我们也可能保留服务器日志，其中包括向我们的服务器发送的每一个请求。
-
-      <a name="use"></a>
-
-      ## [我们如何使用您的信息？](#use)
-
-      我们从您那里收集的任何信息可能通过以下方式之一使用：
-
-      * 个性化您的个人体验 - 您的信息将帮助我们更好地满足您的个人需求。
-      * 改进我们的站点 - 我们基于从您那里收到的信息和反馈不断改进我们的站点。
-      * 改善我们的客户服务 - 您的信息将帮助我们更有效地响应客户服务请求和支持需求。
-      * 发送定期电子邮件 - 您提供的电子邮件地址可用于向您发送信息、您请求的有关话题更改的通知，响应您的用户名，回复查询和/或其他请求或问题。
-
-      <a name="protect"></a>
-
-      ## [我们如何保护您的信息？](#protect)
-
-      我们实现了一系列安全措施，在您输入、提交或者访问您个人信息时保障您的个人信息的安全。
-
-      <a name="data-retention"></a>
-
-      ## [数据保留政策是什么？](#data-retention)
-
-      我们会善意地：
-
-      * 将包含对此服务器的所有请求的 IP 地址的服务器日志保留不超过 90 天。
-      * 将与注册用户及其帖子相关联的 IP 地址保留不超过 5 年。
-
-      <a name="cookies"></a>
-
-      ## [我们使用 Cookie 吗？](#cookies)
-
-      是的。Cookie 是站点或其服务提供商通过网络浏览器存储在您计算机硬盘上的小文件（如果您同意）。这些 Cookie 使站点可以识别您的浏览器，并且如果您注册了帐户，将其与您的注册帐户关联。
-
-      我们使用 Cookie 来了解和保存您对未来访问的偏好，并编译有关站点流量和站点互动的汇总数据，以便我们在未来提供更好的站点体验和工具。我们可能使用服务提供商来帮助我们更好地理解我们的站点访客。这些服务提供商不会被允许代表我们使用收集的信息，除非可以帮助我们开展和改进我们的业务。
-
-      <a name="disclose"></a>
-
-      ## [我们是否将任何信息透露给外界？](#disclose)
-
-      我们不会出售、交易或以其他方式将您的个人身份信息转让给外界。这不包括协助我们运营我们的站点、开展我们的业务或为您提供服务的受信任第三方，前提是这些第三方同意对这些信息保密。当我们认为发布您的信息是为了遵守法律、执行我们的网站政策或保护我们或其他人的权利、财产或安全时，我们也可能会发布您的信息。但是，我们可能会将非个人身份访问者信息提供给其他方用于营销、广告或其他用途。
-
-      <a name="third-party"></a>
-
-      ## [第三方链接](#third-party)
-
-      有时，根据我们的判断，我们可能会在我们的网站上包含或提供第三方产品或服务。这些第三方网站有单独和独立的隐私政策。因此，我们对这些链接网站的内容和活动不承担任何责任或义务。尽管如此，我们仍力求保护我们网站的完整性，并欢迎对这些网站的任何反馈。
-
-      <a name="coppa"></a>
-
-      ## [儿童在线隐私保护法案合规](#coppa)
-
-      我们的网站、产品和服务均面向年满 13 岁或以上的人。如果此服务器在美国，并且您未满 13 岁，则根据 COPPA（[儿童在线隐私保护法案](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)）要求，请勿使用本网站。
-
-      <a name="online"></a>
-
-      ## [仅在线隐私政策](#online)
-
-      本在线隐私政策仅适用于通过我们网站收集的信息，不适用于离线收集的信息。
-
-      <a name="consent"></a>
-
-      ## [您的同意](#consent)
-
-      使用我们的网站，即表示您同意我们网站的隐私政策。
-
-      <a name="changes"></a>
-
-      ## [隐私政策的变更](#changes)
-
-      如果我们决定更改我们的隐私政策，我们将在此页面上发布这些变更。
-
-      本文档根据 CC-BY-SA 发布。最后更新时间为 2013 年 5 月 31 日。
   badges:
     mass_award:
       errors:
@@ -4200,6 +4141,8 @@ zh_CN:
     title: "Discourse 设置"
     step:
       introduction:
+        title: "关于您的站点"
+        description: "这些内容将显示在您的登录页面和所有公共页面上。您以后可以随时进行更改。"
         fields:
           title:
             label: "社区名称"
@@ -4210,21 +4153,28 @@ zh_CN:
           default_locale:
             label: "语言"
       privacy:
+        title: "成员体验"
         fields:
           login_required:
             placeholder: "不公开"
             extra_description: "只有登录用户才能访问此社区"
           invite_only:
+            placeholder: "仅限邀请"
             extra_description: "用户必须由受信任的用户或管理人员邀请，否则用户可以自行注册"
           must_approve_users:
+            placeholder: "需要批准"
             extra_description: "用户必须得到管理人员的批准"
           chat_enabled:
             placeholder: "启用聊天"
+            extra_description: "与您的成员实时互动"
           enable_sidebar:
             placeholder: "启用边栏"
+            extra_description: "轻松访问您最喜欢的空间"
       ready:
+        title: "您的站点已准备就绪！"
         description: "就是这样！您已经完成建立社区的基础工作。现在，您可以进去看一看，撰写一个欢迎话题，然后发送邀请！<br><br>玩得开心！"
       styling:
+        title: "外观"
         fields:
           color_scheme:
             label: "配色方案"
@@ -4255,19 +4205,38 @@ zh_CN:
                 label: "包含话题的类别框"
               subcategories_with_featured_topics:
                 label: "包含精选话题的子类别"
-      corporate:
+      branding:
+        title: "站点徽标"
         fields:
+          logo:
+            label: "主要徽标"
+            description: "推荐大小：600 x 200"
+          logo_small:
+            label: "方形徽标"
+            description: "推荐大小：512 x 512。也用作站点图标和移动主屏幕应用图标。"
+      corporate:
+        title: "您的组织"
+        description: "以下信息将用于您的“服务条款”和“关于”页面。如果没有公司，请尽管跳过。"
+        fields:
+          company_name:
+            label: "公司名称"
+            placeholder: "Acme 组织"
           governing_law:
+            label: "适用法律"
             placeholder: "加州法律"
           contact_url:
+            label: "网页"
             placeholder: "https://www.example.com/contact-us"
           city_for_disputes:
+            label: "争议城市"
             placeholder: "加利福尼亚州旧金山"
           site_contact:
+            label: "自动消息"
             description: "所有自动 Discourse 个人消息都将从此用户发送，例如举报警告和备份完成通知。"
           contact_email:
             label: "联系人"
             placeholder: "example@user.com"
+            description: "负责此站点的主要联系人的电子邮件地址，用于重要通知，也会在<a href='%{base_path}/about' target='_blank'>您的关于页面</a>上列出以供紧急联系。"
       invites:
         title: "邀请管理人员"
         description: "即将完成！让我们邀请一些人来使用有趣的话题和回复帮助<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>培育您的讨论</a>以启动您的社区。"

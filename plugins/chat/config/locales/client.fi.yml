@@ -109,14 +109,45 @@ fi:
       new_messages: "uusia viestejä"
       mention_warning:
         dismiss: "hylkää"
+        cannot_see:
+          one: "%{username} ei voi käyttää tätä kanavaa, eikä hänelle ilmoitettu."
+          other: "%{username} ja %{others} eivät voi käyttää tätä kanavaa, eikä heille ilmoitettu."
         invitations_sent:
           one: "Kutsu lähetetty"
           other: "Kutsut lähetettiin"
         invite: "Kutsu kanavalle"
+        without_membership:
+          one: "%{username} ei ole liittynyt tälle kanavalle."
+          other: "%{username} ja %{others} eivät ole liittyneet tälle kanavalle."
+        group_mentions_disabled:
+          one: "%{group_name} ei salli mainintoja"
+          other: "%{group_name} ja %{others} eivät salli mainintoja"
+        too_many_members:
+          one: "Ryhmässä %{group_name} on liian monta jäsentä. Kukaan ei saanut ilmoitusta."
+          other: "Ryhmä %{group_name} ja %{others} sisältävät liikaa jäseniä. Kukaan ei saanut ilmoitusta."
+        warning_multiple:
+          one: "%{count} muu"
+          other: "%{count} muuta"
         groups:
+          header:
+            some: "Osa käyttäjistä ei saa ilmoitusta"
+            all: "Kukaan ei saa ilmoitusta"
+          unreachable:
+            one: "@%{group} ei salli mainintoja"
+            other: "@%{group} ja @%{group_2} eivät salli mainintoja"
+          unreachable_multiple: "@%{group} ja %{count} muuta eivät salli mainintoja"
+          too_many_members:
+            one: "Ryhmän @%{group} mainitseminen ylittää %{notification_limit}: %{limit}"
+            other: "Ryhmien @%{group} ja @%{group_2} mainitseminen ylittää %{notification_limit}: %{limit}"
+          too_many_members_multiple: "Nämä %{count} ryhmää ylittää %{notification_limit}: %{limit}"
           users_limit:
             one: "%{count} käyttäjä"
             other: "%{count} käyttäjää"
+          notification_limit: "ilmoitusrajan"
+        too_many_mentions: "Tämä viesti ylittää %{notification_limit}: %{limit}"
+        mentions_limit:
+          one: "%{count} maininta"
+          other: "%{count} mainintaa"
       aria_roles:
         header: "Chatin ylätunniste"
         composer: "Chatin tekstieditori"
@@ -197,6 +228,7 @@ fi:
         associated_topic: Linkitetty ketju
         associated_category: Linkitetty alue
         title: Otsikko
+        name: Nimi
         description: Kuvaus
       channel_info:
         back_to_all_channels: "Kaikki kanavat"
@@ -205,10 +237,8 @@ fi:
           about: Tietoja
           members: Jäsenet
           settings: Asetukset
-      channel_edit_title_modal:
-        title: Muokkaa otsikkoa
-        input_placeholder: Lisää otsikko
-        description: Anna kanavallesi lyhyt kuvaava otsikko
+      channel_edit_name_slug_modal:
+        name: Kanavan nimi
       channel_edit_description_modal:
         title: Muokkaa kuvausta
         input_placeholder: Lisää kuvaus
@@ -271,9 +301,9 @@ fi:
         mention: "Vain maininnoissa"
         always: "Kaikessa toiminnassa"
       settings:
+        channel_wide_mentions_label: "Salli @all- ja @here-maininnat"
+        channel_wide_mentions_description: "Salli käyttäjien ilmoittaa kaikille kanavan #%{channel} käyttäjille @all-maininnalla tai niille, jotka ovat aktiivisia kyseisellä hetkellä, @here-maininnalla"
         auto_join_users_label: "Lisää käyttäjiä automaattisesti"
-        auto_join_users_info: "Tarkista tunnin välein, ketkä käyttäjistä ovat olleet aktiivisia viimeisten kolmen kuukauden aikana, ja jos heillä on pääsy alueelle %{category}, lisää heidät tälle kanavalle."
-        enable_auto_join_users: "Lisää automaattisesti kaikki hiljattain aktiiviset käyttäjät"
         auto_join_users_warning: "Jokainen käyttäjä, joka ei ole tämän kanavan jäsen ja jolla on pääsy alueelle %{category}, liittyy. Oletko varma?"
         desktop_notification_level: "Työpöytäilmoitukset"
         follow: "Liity"
@@ -293,6 +323,7 @@ fi:
         title: "Chat"
       direct_messages:
         title: "Henkilökohtainen chat"
+        new: "Luo yksityis-chat"
         create: "Siirry"
         leave: "Poistu tästä henkilökohtaisesta chatista"
         cannot_create: "Valitettavasti et voi lähettää yksityisviestejä."

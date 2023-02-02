@@ -5,6 +5,7 @@ import UserChatChannelMembership from "discourse/plugins/chat/discourse/models/u
 import { ajax } from "discourse/lib/ajax";
 import { escapeExpression } from "discourse/lib/utilities";
 import { tracked } from "@glimmer/tracking";
+import slugifyChannel from "discourse/plugins/chat/discourse/lib/slugify-channel";
 
 export const CHATABLE_TYPES = {
   directMessageChannel: "DirectMessage",
@@ -71,6 +72,14 @@ export default class ChatChannel extends RestModel {
 
   get escapedDescription() {
     return escapeExpression(this.description);
+  }
+
+  get slugifiedTitle() {
+    return this.slug || slugifyChannel(this);
+  }
+
+  get routeModels() {
+    return [this.slugifiedTitle, this.id];
   }
 
   get isDirectMessageChannel() {

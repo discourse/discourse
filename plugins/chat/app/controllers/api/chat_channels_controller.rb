@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-CHANNEL_EDITABLE_PARAMS = %i[name description]
+CHANNEL_EDITABLE_PARAMS = %i[name description slug]
 CATEGORY_CHANNEL_EDITABLE_PARAMS = %i[auto_join_users allow_channel_wide_mentions]
 
 class Chat::Api::ChatChannelsController < Chat::Api

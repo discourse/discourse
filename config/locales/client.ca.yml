@@ -273,11 +273,9 @@ ca:
       edit_bookmark: "Edita el marcador"
       clear_bookmarks: "Neteja preferits"
       help:
-        bookmark: "Feu clic per a marcar com a preferit la primera publicació d'aquest tema"
-        edit_bookmark: "Feu clic per editar el marcador sobre aquest tema"
         edit_bookmark_for_topic: "Cliqueu per editar el marcador d'aquest tema"
         unbookmark: "Feu clic per a eliminar tots els preferits d'aquest tema"
-        unbookmark_with_reminder: "Feu clic per eliminar tots els marcadors i recordatoris d’aquest tema."
+        unbookmark_with_reminder: "Feu clic per eliminar tots els marcadors i recordatoris d’aquest tema"
     bookmarks:
       created: "Heu marcat com a preferida aquesta publicació. %{name}"
       create: "Crea un marcador"
@@ -3490,6 +3488,8 @@ ca:
           love:
             name: "amor"
             description: "El color del botó M'agrada"
+          selected:
+            name: "seleccionat"
         robots:
           title: "Substitueix el fitxer robots.txt del lloc web:"
           warning: "Això substituirà permanentment qualsevol configuració del lloc web relacionada."

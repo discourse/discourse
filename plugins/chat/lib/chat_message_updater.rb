@@ -83,7 +83,8 @@ class Chat::ChatMessageUpdater
   def update_uploads(upload_info)
     return unless upload_info[:changed]
 
-    ChatUpload.where(chat_message: @chat_message).destroy_all
+    DB.exec("DELETE FROM chat_uploads WHERE chat_message_id = #{@chat_message.id}")
+    UploadReference.where(target: @chat_message).destroy_all
     @chat_message.attach_uploads(upload_info[:uploads])
   end
 

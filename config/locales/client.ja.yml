@@ -148,6 +148,7 @@ ja:
       banner:
         enabled: "%{when}にこれをバナーにしました。ユーザーが閉じるまで各ページの上部に表示されます。"
         disabled: "%{when}にこのバナーを削除しました。今後ページの上部に表示されることはありません。"
+      forwarded: "上記のメールを転送しました"
     topic_admin_menu: "トピックの操作"
     skip_to_main_content: "メインコンテンツにスキップ"
     emails_are_disabled: "メールの送信は管理者によって無効化されています。メール通知は一切送信されません。"
@@ -269,11 +270,8 @@ ja:
       edit_bookmark: "ブックマークを編集"
       clear_bookmarks: "ブックマークをクリア"
       help:
-        bookmark: "クリックしてこのトピックの最初の投稿をブックマークします"
-        edit_bookmark: "クリックしてこのトピックのブックマークを編集します"
         edit_bookmark_for_topic: "クリックしてこのトピックのブックマークを編集します"
         unbookmark: "クリックしてこのトピック内のすべてのブックマークを削除します"
-        unbookmark_with_reminder: "クリックしてこのトピック内のすべてのブックマークとリマインダーを削除します。"
     bookmarks:
       created: "この投稿をブックマークしました。%{name}"
       created_generic: "これをブックマークしました。%{name}"
@@ -950,6 +948,7 @@ ja:
       notification_schedule:
         title: "通知スケジュール"
         label: "カスタム通知スケジュールを有効にする"
+        tip: "この時間外は、通知が停止されます。"
         midnight: "深夜"
         none: "なし"
         monday: "月曜日"
@@ -993,12 +992,16 @@ ja:
         perm_denied_expl: "通知へのアクセスが拒否されました。ブラウザの設定から通知を許可してください。"
         disable: "通知を無効にする"
         enable: "通知を有効にする"
+        each_browser_note: "注意: 使用するすべてのブラウザでこの設定を変更する必要があります。ユーザーメニューから通知を一時停止にした場合、この設定に関係なくすべての通知が無効になります。"
         consent_prompt: "あなたの投稿に返信があったときライブ通知しますか？"
       dismiss: "閉じる"
       dismiss_notifications: "すべて閉じる"
       dismiss_notifications_tooltip: "すべての未読の通知を既読にします"
       dismiss_bookmarks_tooltip: "未読のブックマークリマインダーをすべて既読にします"
       dismiss_messages_tooltip: "個人メッセージの未読の通知をすべて既読にします"
+      no_likes_title: "まだ「いいね！」を受け取っていません"
+      no_likes_body: >
+        誰かがあなたの投稿の 1 つに「いいね！」するとここで通知されるため、他の人が評価するものを確認することができます。あなたが他の人の投稿に「いいね！」する場合も、その人に通知されます！<br><br>「いいね！」はメールでは通知されませんが、サイトの<a href='%{preferencesUrl}'>通知設定</a>で「いいね！」に関する通知の受信方法を調整することができます。
       no_messages_title: "メッセージはありません"
       no_messages_body: >
         通常の会話の外で、誰かと直接個人的に話す必要がありますか？相手のアバターを選択して、%{icon} メッセージボタンを使うと、その人にメッセージを送信できます。<br><br> ヘルプが必要な場合は、<a href='%{aboutUrl}'>スタッフメンバーにメッセージを送信</a>してください。
@@ -1146,6 +1149,54 @@ ja:
         warnings: "運営スタッフからの警告"
         read_more_in_group: "もっと読みますか？%{groupLink} で他のメッセージを閲覧できます。"
         read_more: "もっと読みますか？<a href='%{basePath}/u/%{username}/messages'>個人メッセージ</a>で他のメッセージを閲覧できます。"
+        read_more_group_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                other {残り <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># 件の未読</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                other {と <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># 件の新着</a>メッセージがあります。または {groupLink} で他のメッセージを閲覧してください}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                other {残り <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># 件の未読</a>メッセージがあります。または {groupLink} で他のメッセージを閲覧してください}
+              }
+              { NEW, plural,
+                   =0 {}
+                other {残り <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># 件の新着</a>メッセージがあります。または {groupLink} で他のメッセージを閲覧してください}
+              }
+            }
+            other {}
+          }
+        read_more_personal_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                other {残り <a href='{basePath}/u/{username}/messages/unread'># 件の未読</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                other {と <a href='{basePath}/u/{username}/messages/new'># 件の新着</a>メッセージがあります。または他の<a href='{basePath}/u/{username}/messages'>個人メッセージ</a>を閲覧してください}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                other {残り <a href='{basePath}/u/{username}/messages/unread'># 件の未読</a>メッセージがあります。または他の<a href='{basePath}/u/{username}/messages'>個人メッセージ</a>を閲覧してください}
+              }
+              { NEW, plural,
+                   =0 {}
+                other {残り <a href='{basePath}/u/{username}/messages/new'># 件の新着</a>メッセージがあります。または他の<a href='{basePath}/u/{username}/messages'>個人メッセージ</a>を閲覧してください}
+              }
+            }
+            other {}
+          }
       preferences_nav:
         account: "アカウント"
         security: "セキュリティ"
@@ -1208,7 +1259,14 @@ ja:
         use: "認証アプリを使用する"
         enforced_notice: "このサイトにアクセスするには二要素認証を有効にする必要があります。"
         disable: "無効化"
+        disable_confirm: "二要素認証を無効にしてもよろしいですか？"
         delete: "削除"
+        delete_confirm_header: "これらのトークンベース認証と物理セキュリティキーは削除されます:"
+        delete_confirm_instruction: "確認するには、下のボックスに <strong>%{confirm}</strong> を入力します。"
+        delete_single_confirm_title: "認証アプリの削除"
+        delete_single_confirm_message: "%{name} を削除しようとしています。この操作を元に戻すことはできません。変更する場合は、この認証アプリをもう一度登録する必要があります。"
+        delete_backup_codes_confirm_title: "バックアップコードの削除"
+        delete_backup_codes_confirm_message: "バックアップコードを削除しようとしています。この操作を元に戻すことはできません。変更する場合は、このバックアップコードをもう一度生成する必要があります。"
         save: "保存"
         edit: "編集"
         edit_title: "認証アプリの編集"
@@ -1374,6 +1432,8 @@ ja:
         title: "バックグラウンドのページのタイトルに表示する件数:"
         notifications: "新しい通知"
         contextual: "新しいページのコンテンツ"
+      bookmark_after_notification:
+        title: "ブックマークのリマインダー通知が送信された後:"
       like_notification_frequency:
         title: "「いいね！」された時に通知する"
         always: "常時"
@@ -1590,6 +1650,7 @@ ja:
       save: "保存"
       set_custom_status: "カスタムステータスを設定する"
       what_are_you_doing: "何をしていますか？"
+      pause_notifications: "通知を停止する"
       remove_status: "ステータスを削除する"
     user_tips:
       primary: "了解！"
@@ -1643,6 +1704,28 @@ ja:
       logout_disabled: "閲覧専用モードのため、ログアウトできません。"
     staff_writes_only_mode:
       enabled: "このサイトはスタッフ専用モードになっています。このまま閲覧できますが、返信や「いいね！」、その他の操作はスタッフメンバーのみに制限されています。"
+    too_few_topics_and_posts_notice_MF: |
+      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">ディスカッションを始めましょう！</a>現在、{ currentTopics, plural,
+          other {<strong>#</strong> 件のトピック}
+      }と{ currentPosts, plural,
+          other {<strong>#</strong> 件の投稿}
+      }があります。訪問者が読んで返信するトピックと投稿がもっと必要です。少なくとも { requiredTopics, plural,
+          other {<strong>#</strong> 件のトピック}
+      }と { requiredPosts, plural,
+          other {<strong>#</strong> 件の投稿}
+      }を用意することをお勧めします。このメッセージはスタッフのみに表示されます。
+    too_few_topics_notice_MF: |
+      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">ディスカッションを始めましょう！</a>現在、{ currentTopics, plural,
+          other {<strong>#</strong> 件のトピック}
+      }があります。訪問者が読んで返信できるトピックがもっと必要です。少なくとも { requiredTopics, plural,
+          other {<strong>#</strong> 件のトピック}
+      }を用意することをお勧めします。このメッセージはスタッフのみに表示されます。
+    too_few_posts_notice_MF: |
+      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">ディスカッションを始めましょう！</a>現在、{ currentPosts, plural,
+          other {<strong>#</strong> 件の投稿}
+      }があります。訪問者が読んで返信できる投稿がもっと必要です。少なくとも { requiredPosts, plural,
+          other {<strong>#</strong> 件の投稿}
+      }を用意することをお勧めします。このメッセージはスタッフのみに表示されます。
     logs_error_rate_notice:
       reached_hour_MF: |
         <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {1 時間当たりのエラー件数 (#)}}</a> がサイトで設定されている{limit, plural, other {エラー件数 (#)}} の制限に達しました。
@@ -1748,6 +1831,9 @@ ja:
       username: "ユーザー"
       password: "パスワード"
       show_password: "表示"
+      hide_password: "非表示"
+      show_password_title: "パスワードを表示"
+      hide_password_title: "パスワードを非表示"
       second_factor_title: "二要素認証"
       second_factor_description: "アプリから認証コードを入力してください:"
       second_factor_backup: "バックアップ コードを使用してログインする"
@@ -1769,6 +1855,7 @@ ja:
       blank_username_or_password: "あなたのメールまたはユーザー名、およびパスワードを入力してください。"
       reset_password: "パスワードをリセット"
       logging_in: "サインイン中..."
+      previous_sign_up: "すでにアカウントをお持ちですか？"
       or: "または"
       authenticating: "認証中..."
       awaiting_activation: "あなたのアカウントはアクティベーション待ちの状態です。もう一度アクティベーションメールを送信するには「パスワードを忘れました」リンクをクリックしてください。"
@@ -1935,9 +2022,15 @@ ja:
         private: "@%{username} をメンションしましたが、この個人メッセージを見ることができないため通知されません。この個人メッセージに招待してください。"
         muted_topic: "@%{username} をメンションしましたが、このユーザーがこのトピックをミュートしているため、通知されません。"
         not_allowed: "@%{username} をメンションしましたが、このユーザーはトピックに招待されていないため、通知されません。"
+      cannot_see_group_mention:
+        not_mentionable: "グループ @%{group} をメンションできません。"
+        some_not_allowed:
+          other: "@%{group} をメンションしましたが、通知されるのは %{count} メンバーのみです。他のメンバーはこの個人メッセージを見ることはできません。それらのメンバーをこの個人メッセージに招待してください。"
+        not_allowed: "@%{group} をメンションしましたが、どのメンバーもこの個人メッセージを見ることができないため通知されません。この個人メッセージに招待してください。"
       here_mention:
         other: "<b>@%{here}</b> をメンションして %{count} 人のユーザーに通知しようとしています。よろしいですか？"
       duplicate_link: "<b>%{domain}</b> へのリンクは、すでに <b>@%{username}</b> が <a href='%{post_url}'>%{ago}</a> 前に投稿しています。もう一度投稿してもよろしいですか？"
+      duplicate_link_same_user: "<a href='%{post_url}'>%{ago} の返信</a>で、このトピックに <b>%{domain}</b> へのリンクをすでに投稿しているようです。もう一度投稿してもよろしいですか？"
       reference_topic_title: "RE: %{title}"
       error:
         title_missing: "タイトルを入力してください。"
@@ -2066,6 +2159,10 @@ ja:
           other: "%{count} 件の未読メッセージ"
         high_priority:
           other: "%{count} 件の優先度の高い未読通知"
+        new_message_notification:
+          other: "%{count} 件の新着メッセージ通知"
+        new_reviewable:
+          other: "%{count} 件の新しいレビュー待ち項目"
       title: "@ユーザー名のメンション、投稿やトピックへの返信、メッセージなどの通知"
       none: "現在、通知を読み込めません。"
       empty: "通知はありません。"
@@ -2107,6 +2204,7 @@ ja:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}、%{username2}</span> %{description}"
       votes_released: "%{description} - 完了"
+      new_features: "新機能が公開されました！"
       dismiss_confirmation:
         body:
           default:
@@ -2157,6 +2255,7 @@ ja:
         membership_request_consolidated: "新しいメンバーシップリクエスト"
         reaction: "新しいリアクション"
         votes_released: "投票がリリースされました"
+        new_features: "新しい Discourse 機能がリリースされました！"
     upload_selector:
       uploading: "アップロード中"
       processing: "アップロードを処理中"
@@ -2446,7 +2545,44 @@ ja:
       show_links: "このトピック内のリンクを表示する"
       collapse_details: "トピックの詳細を折りたたむ"
       expand_details: "トピックの詳細を展開する"
+      read_more_in_category: "もっと読みますか？%{categoryLink} で他のトピックを閲覧するか、<a href='%{latestLink}'>最新のトピックを表示</a>してください。"
+      read_more: "もっと読みますか？<a href='%{categoryLink}'>すべてのカテゴリを閲覧</a>するか、<a href='%{latestLink}'>最新のトピックを表示</a>してください。"
       unread_indicator: "このトピックの最後の投稿を読んだメンバーはまだいません。"
+      read_more_MF: |
+        { HAS_UNREAD_AND_NEW, select,
+          true {
+            { UNREAD, plural,
+                 =0 {}
+              other {残り <a href="{basePath}/unread"># 件の未読</a>}
+            }
+            { NEW, plural,
+                 =0 {}
+              other {と <a href="{basePath}/new"># 件の新規</a>トピックがあります。}
+            }
+          }
+          false {
+            { UNREAD, plural,
+                 =0 {}
+              other {残り <a href="{basePath}/unread"># 件の未読</a>トピックがあります。}
+            }
+            { NEW, plural,
+                 =0 {}
+              other {残り <a href="{basePath}/new"># 件の新規</a>トピックがあります。}
+            }
+          }
+          other {}
+        }
+        { HAS_CATEGORY, select,
+          true {または、{categoryLink} で他のトピックを閲覧してください}
+          false {または、<a href="{basePath}/latest">最新のトピックを表示</a>してください}
+          other {}
+        }
+      bumped_at_title: |
+        最初の投稿: %{createdAtDate}
+        投稿: %{bumpedAtDate}
+      browse_all_categories_latest: "<a href='%{basePath}/categories'>すべてのカテゴリを閲覧</a>するか<a href='%{basePath}/latest'>最新のトピックを表示</a>します。"
+      browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>すべてのカテゴリを閲覧</a>するか、<a href='%{basePath}/latest'>最新のトピックを表示</a>するか、トップを見ます。"
+      browse_all_tags_or_latest: "<a href='%{basePath}/tags'>すべてのタグを閲覧</a>するか<a href='%{basePath}/latest'>最新のトピックを表示</a>します。"
       suggest_create_topic: <a href>新しい会話を開始しますか？</a>
       jump_reply_up: 以前の返信へジャンプ
       jump_reply_down: 以後の返信へジャンプ
@@ -2842,6 +2978,7 @@ ja:
         too_many_dragged_and_dropped_files:
           other: "一度にアップロードできるファイルは %{count} 個までです。"
         upload_not_authorized: "アップロードしようとしているファイルは許可されていません (許可されている拡張子: %{authorized_extensions})。"
+        no_uploads_authorized: "アップロードが許可されたファイルはありません。"
         image_upload_not_allowed_for_new_user: "新規ユーザーは画像をアップロードできません。"
         attachment_upload_not_allowed_for_new_user: "新規ユーザーはファイルを添付できません。"
         attachment_download_requires_login: "添付ファイルをダウンロードするには、ログインする必要があります。"
@@ -2853,6 +2990,7 @@ ja:
       via_email: "これはメールで投稿されました"
       via_auto_generated_email: "この投稿は自動生成メール経由で届きました"
       whisper: "この投稿はモデレーターの非公開のささやきです"
+      whisper_groups: "この投稿は %{groupNames} にのみ表示される非公開のささやきです"
       wiki:
         about: "この投稿はウィキです"
       few_likes_left: "愛を共有してくれてありがとう！今日は後数個しか「いいね！」できません。"
@@ -3066,6 +3204,7 @@ ja:
       pending_permission_change_alert: "このカテゴリに %{group} を追加していません。このボタンをクリックして追加してください。"
       images: "画像"
       email_in: "カスタム受信メールアドレス:"
+      email_in_tooltip: "複数のメールアドレスは「|」文字で区切ることができます。"
       email_in_allow_strangers: "登録されていない匿名のユーザーからのメールを受け取る"
       email_in_disabled: "メールによる新しいトピックの投稿は、サイトの設定で無効になっています。メールによる新しいトピックの投稿を有効にするには、 "
       email_in_disabled_click: '"email in" 設定を有効にする。'
@@ -3605,6 +3744,8 @@ ja:
       enabled: "セーフモードが有効になっています。セーフモードを終了するには、このブラウザウィンドウを閉じてください。"
     image_removed: "(画像は削除されました)"
     pause_notifications:
+      title: "次の通知を停止する..."
+      label: "通知を停止する"
       remaining: "残り %{remaining}"
       options:
         half_hour: "30 分"
@@ -3648,10 +3789,13 @@ ja:
     second_factor_auth:
       redirect_after_success: "二要素認証に成功しました。前のページにリダイレクトします..."
     sidebar:
+      show_sidebar: "サイドバーを表示"
+      hide_sidebar: "サイドバーを非表示"
       unread_count:
         other: "未読 %{count}"
       new_count:
         other: "新規 %{count}"
+      toggle_section: "セクションの切り替え"
       more: "もっと"
       all_categories: "すべてのカテゴリ"
       all_tags: "すべてのタグ"
@@ -3660,6 +3804,7 @@ ja:
           header_link_text: "サイト情報"
         messages:
           header_link_text: "メッセージ"
+          header_action_title: "個人メッセージを作成"
           links:
             inbox: "受信トレイ"
             sent: "送信済み"
@@ -3676,6 +3821,7 @@ ja:
           none: "追加したタグはまだありません"
           click_to_get_started: "ここをクリックして開始してください。"
           header_link_text: "タグ"
+          header_action_title: "サイドバーのタグを編集"
           configure_defaults: "デフォルトの構成"
         categories:
           links:
@@ -3685,31 +3831,42 @@ ja:
           none: "追加したカテゴリはありません"
           click_to_get_started: "ここをクリックして開始してください。"
           header_link_text: "カテゴリ"
+          header_action_title: "サイドバーのカテゴリを編集"
           configure_defaults: "デフォルトの構成"
         community:
           header_link_text: "コミュニティー"
+          header_action_title: "トピックの作成"
           links:
             about:
               content: "サイト情報"
+              title: "このサイトの詳細"
             admin:
               content: "管理者"
+              title: "サイトの設定とレポート"
             badges:
               content: "バッジ"
+              title: "獲得可能なすべてのバッジ"
             everything:
               content: "すべて"
               title: "すべてのトピック"
             faq:
               content: "FAQ"
+              title: "このサイトの利用に関するガイドライン"
             groups:
               content: "グループ"
+              title: "使用可能なユーザーグループのリスト"
             users:
               content: "ユーザー"
+              title: "すべてのユーザーのリスト"
             my_posts:
               content: "自分の投稿"
+              title: "最近のトピックアクティビティ"
+              title_drafts: "未投稿の下書き"
               draft_count:
                 other: "%{count} 下書き"
             review:
               content: "レビュー"
+              title: "通報された投稿とその他の待機中の項目"
               pending_count: "保留中 %{count}"
     welcome_topic_banner:
       title: "ウェルカムトピックを作成しましょう"
@@ -3860,6 +4017,9 @@ ja:
               other: "%{count} 人のユーザーが新しいメールドメインを持っており、グループに追加されます。"
             automatic_membership_associated_groups: "ここに表示されているサービスのグループメンバーであるユーザーは、サービスにログインすると、自動的にこのグループに追加されます。"
             primary_group: "自動的にプライマリーグループとして設定する"
+          alert:
+            primary_group: "これはプライマリーグループであるため、CSS クラスに誰もが表示できる '%{group_name}' という名前が使用されます。"
+            flair_group: "このグループにはメンバーのフレアがあるため、'%{group_name}' と言う名前は誰にでも表示されます。"
         name_placeholder: "グループ名、スペースなし、ユーザー名のルールと同じ"
         primary: "プライマリーグループ"
         no_primary: "(プライマリーグループなし)"
@@ -3869,6 +4029,9 @@ ja:
         about: "グループのメンバーシップとグループ名を編集"
         group_members: "グループメンバー"
         delete: "削除"
+        delete_confirm: "このグループを削除してもよろしいですか？"
+        delete_with_messages_confirm:
+          other: "このグループを削除すると %{count} 件のメッセージが孤立し、グループメンバーがアクセスできなくなります。"
         delete_failed: "グループを削除できません。自動作成グループを削除することはできません。"
         delete_automatic_group: これは自動グループであるため削除できません。
         delete_owner_confirm: "'%{username}' のオーナー権限を削除しますか？"
@@ -3952,6 +4115,9 @@ ja:
               anonymize: ユーザーのアカウントを匿名化します。
               delete: ユーザーのアカウントを削除します。
               list: ユーザーのリストを取得します。
+            user_status:
+              read: ユーザーステータスを読み取ります。
+              update: ユーザーステータスを更新します。
             email:
               receive_emails: このスコープを mail-receiver と組み合わせて、受信メールを処理します。
             badges:
@@ -3976,6 +4142,7 @@ ja:
         create: "作成"
         edit: "編集"
         save: "保存"
+        description_label: "イベントトリガー"
         controls: "コントロール"
         go_back: "リストに戻る"
         payload_url: "ペイロード URL"
@@ -4076,6 +4243,8 @@ ja:
         broken_route: "'%{name}' へのリンクを構成できません。広告ブロッカーが無効になっていることを確認し、ページを再読み込みしてみてください。"
       navigation_menu:
         sidebar: "サイドバー"
+        header_dropdown: "ヘッダードロップダウン"
+        legacy: "レガシー"
       backups:
         title: "バックアップ"
         menu:
@@ -4398,6 +4567,8 @@ ja:
           love:
             name: "ラブ"
             description: "「いいね！」ボタンの色。"
+          selected:
+            name: "選択済み"
         robots:
           title: "サイトの robots.txt ファイルをオーバーライド:"
           warning: "これにより、関連するすべてのサイト設定が永久にオーバーライドされます。"
@@ -4758,6 +4929,7 @@ ja:
       user:
         suspend_failed: "このユーザーを凍結中にエラーが発生しました: %{error}"
         unsuspend_failed: "このユーザーの凍結を解除中にエラーが発生しました: %{error}"
+        suspend_duration: "次の期間までユーザーを凍結する:"
         suspend_reason_label: "凍結する理由を説明してください。ここに書いた理由は、このユーザーのプロファイルページで<b>全員に閲覧可能</b>となります。またこのユーザーがログインを試みた際にも表示されます。手短に説明してください。"
         suspend_reason_hidden_label: "なぜ凍結していますか？このテキストはユーザーがログインしようとするときに表示されます。簡潔に説明してください。"
         suspend_reason: "理由"
@@ -4781,7 +4953,9 @@ ja:
         silence_message: "メールメッセージ"
         silence_message_placeholder: "(デフォルトのメッセージを送信する場合は空白のままにします)"
         suspended_until: "(%{until} まで)"
+        suspend_forever: "永久に凍結する"
         cant_suspend: "このユーザーを凍結できません。"
+        cant_silence: "このユーザーを投稿禁止にできません。"
         delete_posts_failed: "投稿を削除中に問題が発生しました。"
         post_edits: "投稿の編集"
         view_edits: "編集を表示"
@@ -4791,6 +4965,8 @@ ja:
         penalty_post_edit: "投稿を編集する"
         penalty_post_none: "何もしない"
         penalty_count: "ペナルティ数"
+        penalty_history_MF: >-
+          過去 6 か月において、このユーザーは<b>{ SUSPENDED, plural, one {# 回} other {# 回} }凍結</b>され、<b>{ SILENCED, plural, one {# 回} other {# 回} }投稿禁止</b>にされました。
         clear_penalty_history:
           title: "ペナルティ履歴をクリア"
           description: "ペナルティのあるユーザーは TL3 に昇格されません"
@@ -4942,10 +5118,13 @@ ja:
         silenced_count: "投稿禁止"
         suspended_count: "凍結"
         last_six_months: "過去 6 か月"
+        other_matches:
+          other: "同じ IP アドレスを使用する<b>ユーザーが他に %{count} 人</b>います。確認し、%{username} とともにペナルティを課す不審なユーザーを選択してください。"
         other_matches_list:
           username: "ユーザー名"
           trust_level: "信頼レベル"
           read_time: "閲覧時間"
+          topics_entered: "閲覧したトピック"
           posts: "投稿"
         tl3_requirements:
           title: "信頼レベル 3 の要件"
@@ -5260,8 +5439,10 @@ ja:
       finish: "セットアップを終了"
       back: "戻る"
       next: "次へ"
+      configure_more: "さらに構成..."
       step-text: "手順"
       step: "%{current} / %{total}"
+      upload: "ファイルのアップロード"
       uploading: "アップロード中..."
       upload_error: "ファイルのアップロード中にエラーが発生しました。もう一度お試しください。"
       staff_count:

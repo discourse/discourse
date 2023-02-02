@@ -238,16 +238,19 @@ RSpec.describe Chat::Api::ChatChannelsController do
         end
 
         it "generates a valid new slug to prevent collisions" do
-          SiteSetting.max_topic_title_length = 15
+          SiteSetting.max_topic_title_length = 20
+          channel_1 = Fabricate(:chat_channel, name: "a" * SiteSetting.max_topic_title_length)
           freeze_time(DateTime.parse("2022-07-08 09:30:00"))
           old_slug = channel_1.slug
 
-          delete "/chat/api/channels/#{channel_1.id}",
-                 params: {
-                   channel: {
-                     name_confirmation: channel_1.title(current_user),
-                   },
-                 }
+          delete(
+            "/chat/api/channels/#{channel_1.id}",
+            params: {
+              channel: {
+                name_confirmation: channel_1.title(current_user),
+              },
+            },
+          )
 
           expect(response.status).to eq(200)
           expect(channel_1.reload.slug).to eq(
@@ -428,6 +431,21 @@ RSpec.describe Chat::Api::ChatChannelsController do
       end
     end
 
+    context "when user provides an empty slug" do
+      fab!(:user) { Fabricate(:admin) }
+      fab!(:channel) do
+        Fabricate(:category_channel, name: "something else", description: "something")
+      end
+
+      before { sign_in(user) }
+
+      it "does not nullify the slug" do
+        put "/chat/api/channels/#{channel.id}", params: { channel: { slug: " " } }
+
+        expect(channel.reload.slug).to eq("something-else")
+      end
+    end
+
     context "when channel is a direct message channel" do
       fab!(:user) { Fabricate(:admin) }
       fab!(:channel) { Fabricate(:direct_message_channel) }
@@ -452,11 +470,13 @@ RSpec.describe Chat::Api::ChatChannelsController do
             params: {
               channel: {
                 name: "joffrey",
+                slug: "cat-king",
                 description: "cat owner",
               },
             }
 
         expect(channel.reload.name).to eq("joffrey")
+        expect(channel.reload.slug).to eq("cat-king")
         expect(channel.reload.description).to eq("cat owner")
       end
 
@@ -471,7 +491,12 @@ RSpec.describe Chat::Api::ChatChannelsController do
                 }
           end
 
-        expect(messages[0].data[:chat_channel_id]).to eq(channel.id)
+        message = messages[0]
+        channel.reload
+        expect(message.data[:chat_channel_id]).to eq(channel.id)
+        expect(message.data[:name]).to eq(channel.name)
+        expect(message.data[:slug]).to eq(channel.slug)
+        expect(message.data[:description]).to eq(channel.description)
       end
 
       it "returns a valid chat channel" do

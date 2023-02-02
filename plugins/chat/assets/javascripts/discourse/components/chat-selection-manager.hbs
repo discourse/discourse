@@ -1,4 +1,9 @@
-<div class="chat-selection-management">
+<div
+  class={{concat-class
+    "chat-selection-management"
+    (if this.chatCopySuccess "chat-copy-success")
+  }}
+>
   <div class="chat-selection-management-buttons">
     <DButton
       @id="chat-quote-btn"
@@ -44,7 +49,7 @@
     />
   </div>
 
-  {{#if this.showChatQuoteSuccess}}
+  {{#if this.showChatCopySuccess}}
     <div class="chat-selection-message">
       {{i18n "chat.quote.copy_success"}}
     </div>

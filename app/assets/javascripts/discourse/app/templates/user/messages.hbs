@@ -154,12 +154,13 @@
         {{/if}}
       {{/if}}
 
-      <PluginOutlet
-        @name="user-messages-nav"
-        @tagName="span"
-        @connectorTagName="li"
-        @args={{hash model=this.model}}
-      />
+      <span>
+        <PluginOutlet
+          @name="user-messages-nav"
+          @connectorTagName="li"
+          @outletArgs={{hash model=this.model}}
+        />
+      </span>
     </MobileNav>
   </DSection>
 

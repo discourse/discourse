@@ -2,11 +2,9 @@
   <WatchRead @action={{action "markFaqRead"}} @path={{this.model.path}}>
     <div class="contents clearfix body-page">
 
-      <PluginOutlet
-        @name="above-static"
-        @tagName="span"
-        @connectorTagName="div"
-      />
+      <span>
+        <PluginOutlet @name="above-static" @connectorTagName="div" />
+      </span>
 
       {{html-safe this.model.html}}
 

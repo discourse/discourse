@@ -23,7 +23,9 @@ es:
     default_emoji_reactions: "Reacciones emoji por defecto para los mensajes de chat. Añade hasta 5 emojis para una reacción rápida."
     direct_message_enabled_groups: "Permite a los usuarios de estos grupos crear Chats Personales de usuario a usuario. Nota: el personal siempre puede crear Chats Personales, y los usuarios podrán responder a los Chats Personales iniciados por los usuarios que tienen permiso para crearlos."
     chat_message_flag_allowed_groups: "Los usuarios de estos grupos pueden marcar los mensajes del chat."
+    max_mentions_per_chat_message: "Número máximo de notificaciones de @name que un usuario puede usar en un mensaje de chat."
     chat_max_direct_message_users: "Los usuarios no pueden añadir más de este número de otros usuarios al crear un nuevo mensaje directo. Establece el valor 0 para permitir solo los mensajes a uno mismo. El personal está exento de este ajuste."
+    chat_allow_archiving_channels: "Permitir al personal archivar mensajes en un tema al cerrar un canal."
     errors:
       chat_default_channel: "El canal de chat por defecto debe ser un canal público."
       direct_message_enabled_groups_invalid: "Debes especificar al menos un grupo para esta configuración. Si no quieres que nadie, excepto el personal, envíe mensajes directos, elige el grupo del personal."
@@ -51,6 +53,7 @@ es:
       duplicate_message: "Tú también publicaste un mensaje idéntico hace poco."
       delete_channel_failed: "No se pudo eliminar el canal, inténtalo de nuevo."
       minimum_length_not_met: "El mensaje es demasiado corto, debe tener un mínimo de %{minimum} caracteres."
+      message_too_long: "El mensaje es demasiado largo, los mensajes deben tener un máximo de %{maximum} caracteres."
       max_reactions_limit_reached: "No se permiten nuevas reacciones en este mensaje."
       message_move_invalid_channel: "El canal de origen y el de destino deben ser canales públicos."
       message_move_no_messages_found: "No se ha encontrado ningún mensaje con los identificadores de mensaje proporcionados."
@@ -166,7 +169,16 @@ es:
       from: "%{site_name}"
       subject:
         direct_message_from_1: "[%{email_prefix}] Nuevo mensaje de %{username}"
+        direct_message_from_2: "[%{email_prefix}] Nuevo mensaje de %{username1} y %{username2}"
+        direct_message_from_more:
+          one: "[%{email_prefix}] Nuevo mensaje de %{username} y %{count}"
+          other: "[%{email_prefix}] Nuevo mensaje de %{username} y otros %{count}"
         chat_channel_1: "[%{email_prefix}] Nuevo mensaje en %{channel}"
+        chat_channel_2: "[%{email_prefix}] Nuevo mensaje en %{channel1} y %{channel2}"
+        chat_channel_more:
+          one: "[%{email_prefix}] Nuevo mensaje en %{channel} y %{count}"
+          other: "[%{email_prefix}] Nuevo mensaje en %{channel} y otros %{count}"
+        chat_channel_and_direct_message: "[%{email_prefix}] Nuevo mensaje en %{channel} y de %{username}"
       unsubscribe: "Este resumen del chat se envía desde %{site_link} cuando estás fuera. Cambia tu %{email_preferences_link}, o %{unsubscribe_link} para darte de baja."
       unsubscribe_no_link: "Este resumen del chat se envía desde %{site_link} cuando estás fuera. Cambia tu %{email_preferences_link}."
       view_messages:

@@ -33,7 +33,7 @@ export default Component.extend({
             { name: "eventListeners", options: { scroll: false } },
             {
               name: "offset",
-              options: { offset: [0, MSG_ACTIONS_VERTICAL_PADDING] },
+              options: { offset: [-2, MSG_ACTIONS_VERTICAL_PADDING] },
             },
           ],
         }

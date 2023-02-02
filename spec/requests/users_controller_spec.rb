@@ -2871,7 +2871,7 @@ RSpec.describe UsersController do
         end
 
         it "doesn't clear user status if it wasn't sent in the payload" do
-          new_status = { emoji: "off to dentist", description: "tooth" }
+          new_status = { emoji: "tooth", description: "off to dentist" }
           user.set_status!(new_status[:description], new_status[:emoji])
           user.reload
 

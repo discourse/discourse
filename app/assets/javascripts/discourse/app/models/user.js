@@ -368,9 +368,9 @@ const User = RestModel.extend({
   },
 
   isBasic: equal("trust_level", 0),
-  isLeader: equal("trust_level", 3),
-  isElder: equal("trust_level", 4),
-  canManageTopic: or("staff", "isElder"),
+  isRegular: equal("trust_level", 3),
+  isLeader: equal("trust_level", 4),
+  canManageTopic: or("staff", "isLeader"),
 
   @discourseComputed("previous_visit_at")
   previousVisitAt(previous_visit_at) {

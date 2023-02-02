@@ -179,6 +179,7 @@ pt:
       forwarded: "Encaminhou o e-mail acima"
     topic_admin_menu: "ações do tópico"
     skip_to_main_content: "Saltar para o conteúdo principal"
+    skip_user_nav: "Saltar para o conteúdo do perfil"
     emails_are_disabled: "Todos os envios de e-mail foram globalmente desativados por um administrador. Nenhum e-mail de notificação será enviado."
     emails_are_disabled_non_staff: "O envio de e-mail foi desativado para usuários que não são da equipe."
     software_update_prompt:
@@ -299,10 +300,8 @@ pt:
       edit_bookmark: "Editar Favorito"
       clear_bookmarks: "Remover Marcadores"
       help:
-        bookmark: "Clique para adicionar um marcador à primeira publicação neste tópico"
-        edit_bookmark: "Clique para editar o favorito neste tópico"
         unbookmark: "Clique para remover todos os marcadores deste tópico"
-        unbookmark_with_reminder: "Clique para remover todos os favoritos e lembretes neste tópico."
+        unbookmark_with_reminder: "Clique para remover todos os favoritos e lembretes neste tópico"
     bookmarks:
       created: "Adicionou este post aos favoritos. %{name}"
       create: "Criar favorito"
@@ -2858,6 +2857,8 @@ pt:
           last: "Última revisão"
           hide: "Esconder revisão"
           show: "Mostrar revisão"
+          destroy: "Apagar revisões"
+          destroy_confirm: "Tem certeza de que deseja apagar todas as revisões deste post? Esta ação é permanente."
           revert: "Reverter para a versão %{revision}"
           edit_wiki: "Editar Wiki"
           edit_post: "Editar Mensagem"
@@ -3068,7 +3069,9 @@ pt:
         inappropriate: "É inapropriado"
         spam: "É Spam"
       custom_placeholder_notify_user: "Seja específico, seja construtivo e seja sempre amável."
+      notify_user_textarea_label: "Mensagem para o utilizador"
       custom_placeholder_notify_moderators: "Diga-nos especificamente quais são as suas preocupações, e forneça-nos hiperligações relevantes e exemplo se possível."
+      notify_moderators_textarea_label: "Mensagem para os moderadores"
       custom_message:
         at_least:
           one: "insira pelo menos %{count} caráter"
@@ -3737,8 +3740,15 @@ pt:
             topics:
               read: Ler um tópico ou um post específico nele. RSS também é suportado.
               write: Criar um novo tópico ou poste em um já existente.
+              update: Atualize um tópico. Altere o título, categoria, tags, status, arquétipo, feature_link etc.
             users:
               show: Obter informações sobre um utilizador.
+              suspend: Suspender contas de utilizador.
+            invites:
+              create: Envie convites por e-mail ou gere links de convite.
+            search:
+              show: Pesquise usando o endpoint `/search.json?q=term`.
+              query: Pesquise usando o endpoint /search/query?term=term`.
       web_hooks:
         title: "Webhooks"
         none: "Não existem webhooks neste momento."
@@ -4067,6 +4077,8 @@ pt:
           love:
             name: "amor"
             description: "A cor do botão 'gosto'."
+          selected:
+            name: "selecionado"
         robots:
           title: "Substitua o arquivo robots.txt do seu site:"
           warning: "Isso substituirá permanentemente todas as configurações de site relacionadas."

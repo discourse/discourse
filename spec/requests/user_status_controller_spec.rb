@@ -75,6 +75,31 @@ RSpec.describe UserStatusController do
         expect(response.status).to eq(400)
       end
 
+      it "validates emoji" do
+        put "/user-status.json",
+            params: {
+              emoji: "invalid_emoji_name",
+              description: "off to dentist",
+            }
+        expect(response.status).to eq(422)
+      end
+
+      it "limits description’s length" do
+        put "/user-status.json",
+            params: {
+              emoji: "tooth",
+              description: "x" * UserStatus::MAX_DESCRIPTION_LENGTH,
+            }
+        expect(response.status).to eq(200)
+
+        put "/user-status.json",
+            params: {
+              emoji: "tooth",
+              description: "x" * (UserStatus::MAX_DESCRIPTION_LENGTH + 1),
+            }
+        expect(response.status).to eq(422)
+      end
+
       it "sets user status" do
         status = "off to dentist"
         status_emoji = "tooth"
@@ -133,11 +158,11 @@ RSpec.describe UserStatusController do
         ends_at = "2100-01-01T18:00:00Z"
 
         messages =
-          MessageBus.track_publish do
+          MessageBus.track_publish("/user-status") do
             put "/user-status.json", params: { description: status, emoji: emoji, ends_at: ends_at }
           end
 
-        expect(messages.size).to eq(1)
+        expect(messages.map(&:channel)).to contain_exactly("/user-status")
         expect(messages[0].channel).to eq("/user-status")
         expect(messages[0].group_ids).to eq([Group::AUTO_GROUPS[:trust_level_0]])
 
@@ -182,7 +207,7 @@ RSpec.describe UserStatusController do
       end
 
       it "publishes to message bus" do
-        messages = MessageBus.track_publish { delete "/user-status.json" }
+        messages = MessageBus.track_publish("/user-status") { delete "/user-status.json" }
 
         expect(messages.size).to eq(1)
         expect(messages[0].channel).to eq("/user-status")

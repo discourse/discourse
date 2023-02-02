@@ -1132,13 +1132,13 @@ class Search
         posts = posts.order("posts.like_count DESC")
       end
     elsif !is_topic_search
-      rank = <<~SQL
-      TS_RANK_CD(
-        post_search_data.search_data,
-        #{@term.blank? ? "" : ts_query(weight_filter: weights)},
-        #{SiteSetting.search_ranking_normalization}|32
-      )
-      SQL
+      exact_rank = nil
+
+      if SiteSetting.prioritize_exact_search_title_match
+        exact_rank = ts_rank_cd(weight_filter: "A", prefix_match: false)
+      end
+
+      rank = ts_rank_cd(weight_filter: weights)
 
       if type_filter != "private_messages"
         category_search_priority = <<~SQL
@@ -1169,6 +1169,22 @@ class Search
         )
         SQL
 
+        posts =
+          if aggregate_search
+            posts.order("MAX(#{category_search_priority}) DESC")
+          else
+            posts.order("#{category_search_priority} DESC")
+          end
+
+        if @term.present? && exact_rank
+          posts =
+            if aggregate_search
+              posts.order("MAX(#{exact_rank} * #{category_priority_weights}) DESC")
+            else
+              posts.order("#{exact_rank} * #{category_priority_weights} DESC")
+            end
+        end
+
         data_ranking =
           if @term.blank?
             "(#{category_priority_weights})"
@@ -1178,9 +1194,9 @@ class Search
 
         posts =
           if aggregate_search
-            posts.order("MAX(#{category_search_priority}) DESC", "MAX(#{data_ranking}) DESC")
+            posts.order("MAX(#{data_ranking}) DESC")
           else
-            posts.order("#{category_search_priority} DESC", "#{data_ranking} DESC")
+            posts.order("#{data_ranking} DESC")
           end
       end
 
@@ -1210,6 +1226,17 @@ class Search
     posts.limit(limit)
   end
 
+  def ts_rank_cd(weight_filter:, prefix_match: true)
+    <<~SQL
+      TS_RANK_CD(
+        #{SiteSetting.search_ranking_weights.present? ? "'#{SiteSetting.search_ranking_weights}'," : ""}
+        post_search_data.search_data,
+        #{@term.blank? ? "" : ts_query(weight_filter: weight_filter, prefix_match: prefix_match)},
+        #{SiteSetting.search_ranking_normalization}|32
+      )
+      SQL
+  end
+
   def categories_ignored(posts)
     posts.where(<<~SQL, Searchable::PRIORITIES[:ignore])
     (categories.search_priority IS NULL OR categories.search_priority IS NOT NULL AND categories.search_priority <> ?)
@@ -1224,8 +1251,11 @@ class Search
     self.class.default_ts_config
   end
 
-  def self.ts_query(term:, ts_config: nil, joiner: nil, weight_filter: nil)
-    to_tsquery(ts_config: ts_config, term: set_tsquery_weight_filter(term, weight_filter))
+  def self.ts_query(term:, ts_config: nil, joiner: nil, weight_filter: nil, prefix_match: true)
+    to_tsquery(
+      ts_config: ts_config,
+      term: set_tsquery_weight_filter(term, weight_filter, prefix_match: prefix_match),
+    )
   end
 
   def self.to_tsquery(ts_config: nil, term:, joiner: nil)
@@ -1236,8 +1266,8 @@ class Search
     tsquery
   end
 
-  def self.set_tsquery_weight_filter(term, weight_filter)
-    "'#{self.escape_string(term)}':*#{weight_filter}"
+  def self.set_tsquery_weight_filter(term, weight_filter, prefix_match: true)
+    "'#{self.escape_string(term)}':#{prefix_match ? "*" : ""}#{weight_filter}"
   end
 
   def self.escape_string(term)
@@ -1250,11 +1280,16 @@ class Search
     PG::Connection.escape_string(term).gsub('\\', '\\\\\\')
   end
 
-  def ts_query(ts_config = nil, weight_filter: nil)
+  def ts_query(ts_config = nil, weight_filter: nil, prefix_match: true)
     @ts_query_cache ||= {}
     @ts_query_cache[
-      "#{ts_config || default_ts_config} #{@term} #{weight_filter}"
-    ] ||= Search.ts_query(term: @term, ts_config: ts_config, weight_filter: weight_filter)
+      "#{ts_config || default_ts_config} #{@term} #{weight_filter} #{prefix_match}"
+    ] ||= Search.ts_query(
+      term: @term,
+      ts_config: ts_config,
+      weight_filter: weight_filter,
+      prefix_match: prefix_match,
+    )
   end
 
   def wrap_rows(query)

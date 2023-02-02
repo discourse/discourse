@@ -43,9 +43,9 @@ module(
       const data = this.args.data;
       assert.strictEqual(
         query(".chat-invitation a").getAttribute("href"),
-        `/chat/channel/${data.chat_channel_id}/${slugifyChannel({
+        `/chat/c/${slugifyChannel({
           title: data.chat_channel_title,
-        })}?messageId=${data.chat_message_id}`
+        })}/${data.chat_channel_id}/${data.chat_message_id}`
       );
     });
   }

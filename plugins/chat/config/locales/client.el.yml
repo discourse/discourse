@@ -49,6 +49,7 @@ el:
         yesterday: Χτες
       about_view:
         title: Τίτλος
+        name: Όνομα
         description: Περιγραφή
       channel_info:
         back_to_channel: "Πίσω"

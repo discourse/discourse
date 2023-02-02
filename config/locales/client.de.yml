@@ -176,6 +176,7 @@ de:
       banner:
         enabled: "Hat dieses Banner erstellt, %{when}. Es wird oberhalb jeder Seite angezeigt, bis es vom Benutzer weggeklickt wird."
         disabled: "Hat dieses Banner entfernt, %{when}. Es wird nicht mehr oberhalb jeder Seite angezeigt."
+      forwarded: "Hat die obige E-Mail weitergeleitet"
     topic_admin_menu: "Themen-Administration"
     skip_to_main_content: "Zum Hauptinhalt springen"
     emails_are_disabled: "Die ausgehende E-Mail-Kommunikation wurde von einem Administrator global deaktiviert. Es werden keinerlei Benachrichtigungen per E-Mail verschickt."
@@ -301,11 +302,9 @@ de:
       edit_bookmark: "Lesezeichen bearbeiten"
       clear_bookmarks: "Lesezeichen entfernen"
       help:
-        bookmark: "Klicke hier, um den ersten Beitrag in diesem Thema mit einem Lesezeichen zu versehen."
-        edit_bookmark: "Klicke, um das Lesezeichen zu diesem Thema zu bearbeiten"
         edit_bookmark_for_topic: "Klicke, um das Lesezeichen für dieses Thema zu bearbeiten"
         unbookmark: "Klicke hier, um alle Lesezeichen in diesem Thema zu entfernen."
-        unbookmark_with_reminder: "Klicke, um alle Lesezeichen und Erinnerungen in diesem Thema zu entfernen."
+        unbookmark_with_reminder: "Klicke, um alle Lesezeichen und Erinnerungen in diesem Thema zu entfernen"
     bookmarks:
       created: "Du hast diesen Beitrag mit einem Lesezeichen versehen. %{name}"
       created_generic: "Du hast dies mit einem Lesezeichen versehen: %{name}"
@@ -1051,12 +1050,16 @@ de:
         perm_denied_expl: "Du hast das Anzeigen von Benachrichtigungen verboten. Aktiviere die Benachrichtigungen über deine Browser-Einstellungen."
         disable: "Benachrichtigungen deaktivieren"
         enable: "Benachrichtigungen aktivieren"
+        each_browser_note: "Hinweis: Du musst diese Einstellung in jedem Browser, den du verwendest, ändern. Alle Benachrichtigungen werden unabhängig von dieser Einstellung deaktiviert, wenn du die Benachrichtigungen im Benutzermenü pausierst."
         consent_prompt: "Möchtest du Live-Benachrichtigungen erhalten, wenn jemand auf deine Beiträge antwortet?"
       dismiss: "Alles gelesen"
       dismiss_notifications: "Alles gelesen"
       dismiss_notifications_tooltip: "Alle ungelesenen Benachrichtigungen als gelesen markieren"
       dismiss_bookmarks_tooltip: "Markiere alle ungelesenen Lesezeichen-Erinnerungen als gelesen"
       dismiss_messages_tooltip: "Markiere alle ungelesenen persönlichen Nachrichten als gelesen"
+      no_likes_title: "Du hast noch keine „Gefällt mir“-Angaben erhalten"
+      no_likes_body: >
+        Du wirst hier jedes Mal benachrichtigt, wenn jemand einem deiner Beiträge ein „Gefällt mir“ gibt, damit du sehen kannst, was andere für nützlich halten. Andere sehen das auch, wenn du ihren Beiträgen ein „Gefällt mir“ gibst! <br><br> Benachrichtigungen über „Gefällt mir“-Angaben werden dir nie per E-Mail zugeschickt, aber du kannst in deinen <a href='%{preferencesUrl}'>Benachrichtigungseinstellungen</a> festlegen, wie du Benachrichtigungen über „Gefällt mir“-Angaben auf der Website erhältst.
       no_messages_title: "Du hast keine Nachrichten"
       no_messages_body: >
         Benötigst du ein direktes persönliches Gespräch mit jemandem außerhalb des normalen Gesprächsflusses? Sende der Person eine Nachricht, indem du ihren Avatar auswählst und die Schaltfläche %{icon} verwendest.<br><br> Wenn du Hilfe benötigst, kannst du eine <a href='%{aboutUrl}'>Nachricht an ein Team-Mitglied senden</a>.
@@ -1206,6 +1209,62 @@ de:
         warnings: "Offizielle Warnungen"
         read_more_in_group: "Möchtest du mehr lesen? Entdecke andere Nachrichten in %{groupLink}."
         read_more: "Möchtest du mehr lesen? Durchsuche andere Nachrichten in <a href='%{basePath}/u/%{username}/messages'>persönliche Nachrichten</a>."
+        read_more_group_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                  one {<a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># ungelesene Nachricht</a>}
+                other {<a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># ungelesene Nachrichten</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one { und <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># neue</a> Nachricht verbleibend. Oder durchstöbere andere Nachrichten in {groupLink}}
+                other { und <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># neue</a> Nachrichten verbleibend. Oder durchstöbere andere Nachrichten in {groupLink}}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                  one {<a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># ungelesene</a> Nachricht verbleibend. Oder durchstöbere andere Nachrichten in {groupLink}}
+                other {<a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># ungelesene</a> Nachrichten verbleibend. Oder durchstöbere andere Nachrichten in {groupLink}}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one {<a href='{basePath}/u/{username}/messages/group/{groupName}/new'># neue</a> Nachricht verbleibend. Oder durchstöbere andere Nachrichten in {groupLink}}
+                other {<a href='{basePath}/u/{username}/messages/group/{groupName}/new'># neue</a> Nachrichten verbleibend. Oder durchstöbere andere Nachrichten in {groupLink}}
+              }
+            }
+            other {}
+          }
+        read_more_personal_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                  one {<a href='{basePath}/u/{username}/messages/unread'># ungelesene Nachricht</a>}
+                other {<a href='{basePath}/u/{username}/messages/unread'># ungelesene Nachricht</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one { und <a href='{basePath}/u/{username}/messages/new'># neue</a> Nachricht verbleibend. Oder durchstöbere andere <a href='{basePath}/u/{username}/messages'>persönliche Nachrichten</a>}
+                other { und <a href='{basePath}/u/{username}/messages/new'># neue</a> Nachrichten verbleibend. Oder durchstöbere andere <a href='{basePath}/u/{username}/messages'>persönliche Nachrichten</a>}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                  one {<a href='{basePath}/u/{username}/messages/unread'># ungelesene</a> Nachricht verbleibend. Oder durchstöbere andere <a href='{basePath}/u/{username}/messages'>persönliche Nachrichten</a>}
+                other {<a href='{basePath}/u/{username}/messages/unread'># ungelesene</a> Nachrichten verbleibend. Oder durchstöbere andere <a href='{basePath}/u/{username}/messages'>persönliche Nachrichten</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one {<a href='{basePath}/u/{username}/messages/new'># neue</a> Nachricht verbleibend. Oder durchstöbere andere <a href='{basePath}/u/{username}/messages'>persönliche Nachrichten</a>}
+                other {<a href='{basePath}/u/{username}/messages/new'># neue</a> Nachrichten verbleibend. Oder durchstöbere andere <a href='{basePath}/u/{username}/messages'>persönliche Nachrichten</a>}
+              }
+            }
+            other {}
+          }
       preferences_nav:
         account: "Konto"
         security: "Sicherheit"
@@ -1270,7 +1329,14 @@ de:
         use: "Benutze die Authentifizierungs-App"
         enforced_notice: "Du musst die Zwei-Faktor-Authentifizierung aktivieren, um auf die Website zugreifen zu können."
         disable: "Deaktivieren"
+        disable_confirm: "Bist du sicher, dass du die Zwei-Faktor-Authentifizierung deaktivieren willst?"
         delete: "Löschen"
+        delete_confirm_header: "Diese tokenbasierten Authentifikatoren und physischen Sicherheitsschlüssel werden gelöscht:"
+        delete_confirm_instruction: "Gib zur Bestätigung <strong>%{confirm}</strong> in das Feld unten ein."
+        delete_single_confirm_title: "Löschen eines Authentifikators"
+        delete_single_confirm_message: "Du löschst %{name}. Du kannst diese Aktion nicht rückgängig machen. Wenn du deine Meinung änderst, musst du den Authentifikator erneut registrieren."
+        delete_backup_codes_confirm_title: "Wiederherstellungscodes löschen"
+        delete_backup_codes_confirm_message: "Du löschst Wiederherstellungscodes. Du kannst diese Aktion nicht rückgängig machen. Wenn du deine Meinung änderst, musst du die Wiederherstellungscodes neu erstellen."
         save: "Speichern"
         edit: "Bearbeiten"
         edit_title: "Authentifikator bearbeiten"
@@ -1437,6 +1503,8 @@ de:
         title: "Hintergrund-Seitentitel zeigt Anzahl von:"
         notifications: "Neue Benachrichtigungen"
         contextual: "Neuer Seiteninhalt"
+      bookmark_after_notification:
+        title: "Nachdem eine Lesezeichen-Erinnerungsbenachrichtigung gesendet wurde:"
       like_notification_frequency:
         title: "Benachrichtigung für erhaltene „Gefällt mir“ anzeigen"
         always: "Immer"
@@ -1716,6 +1784,36 @@ de:
       logout_disabled: "Die Abmeldung ist deaktiviert, während sich die Website im Nur-Lesen-Modus befindet."
     staff_writes_only_mode:
       enabled: "Diese Website befindet sich im Nur-Team-Modus. Du kannst weiterhin Inhalte lesen, aber das Antworten, Vergeben von „Gefällt mir“ und Durchführen einiger weiterer Aktionen ist derzeit nur für Team-Mitglieder möglich."
+    too_few_topics_and_posts_notice_MF: |
+      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">Beginnen wir die Diskussion!</a> Es { currentTopics, plural,
+          one {gibt <strong>#</strong> Thema}
+        other {gibt <strong>#</strong> Themen}
+      } und { currentPosts, plural,
+          one {<strong>#</strong> Beitrag}
+        other {<strong>#</strong> Beiträge}
+      }. Besucher brauchen mehr zum Lesen und Beantworten – wir empfehlen mindestens { requiredTopics, plural,
+          one {<strong>#</strong> Thema}
+        other {<strong>#</strong> Themen}
+      } und { requiredPosts, plural,
+          one {<strong>#</strong> Beitrag}
+        other {<strong>#</strong> Beiträge}
+      }. Nur das Team kann diese Nachricht sehen.
+    too_few_topics_notice_MF: |
+      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">Beginnen wir die Diskussion!</a> Es { currentTopics, plural,
+          one {gibt <strong>#</strong> Thema}
+        other {gibt <strong>#</strong> Themen}
+      }. Besucher brauchen mehr zum Lesen und Beantworten – wir empfehlen mindestens { requiredTopics, plural,
+          one {<strong>#</strong> Thema}
+        other {<strong>#</strong> Themen}
+      }. Nur das Team kann diese Nachricht sehen.
+    too_few_posts_notice_MF: |
+      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">Beginnen wir die Diskussion!</a> Es { currentPosts, plural,
+          one {gibt <strong>#</strong> Beitrag}
+        other {gibt <strong>#</strong> Beiträge}
+      }. Besucher brauchen mehr zum Lesen und Beantworten – wir empfehlen mindestens { requiredPosts, plural,
+          one {<strong>#</strong> Beitrag}
+        other {<strong>#</strong> Beiträge}
+      }. Nur das Team kann diese Nachricht sehen.
     logs_error_rate_notice:
       reached_hour_MF: |
         <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# Fehler/Stunde} other {# Fehler/Stunde}}</a> hat die Grenze der Website-Einstellung von {limit, plural, one {# Fehler/Stunde} other {# Fehlern/Stunde}} erreicht.
@@ -1823,6 +1921,9 @@ de:
       username: "Benutzername"
       password: "Passwort"
       show_password: "Anzeigen"
+      hide_password: "Ausblenden"
+      show_password_title: "Passwort anzeigen"
+      hide_password_title: "Passwort ausblenden"
       second_factor_title: "Zwei-Faktor-Authentifizierung"
       second_factor_description: "Bitte gib den Authentifizierungscode aus deiner App ein:"
       second_factor_backup: "Anmeldung mit einem Wiederherstellungscode"
@@ -1844,6 +1945,7 @@ de:
       blank_username_or_password: "Bitte gib deine E-Mail-Adresse oder deinen Benutzernamen und dein Passwort ein."
       reset_password: "Passwort zurücksetzen"
       logging_in: "Anmeldung läuft …"
+      previous_sign_up: "Du hast bereits ein Konto?"
       or: "Oder"
       authenticating: "Authentifiziere …"
       awaiting_activation: "Dein Konto ist noch nicht aktiviert. Verwende den „Passwort vergessen“-Link, um eine weitere E-Mail mit Anweisungen zur Aktivierung zu erhalten."
@@ -2018,10 +2120,17 @@ de:
         private: "Du hast @%{username} erwähnt, aber diese Person wird nicht benachrichtigt, da sie diese persönliche Nachricht nicht sehen kann. Lade sie zu dieser persönlichen Nachricht ein."
         muted_topic: "Du hast @%{username} erwähnt, aber diese Person wird nicht benachrichtigt, weil sie dieses Thema stummgeschaltet hat."
         not_allowed: "Du hast @%{username} erwähnt, aber diese Person wird nicht benachrichtigt, weil sie nicht zu diesem Thema eingeladen wurde."
+      cannot_see_group_mention:
+        not_mentionable: "Du kannst die Gruppe @%{group} nicht erwähnen."
+        some_not_allowed:
+          one: "Du hast @%{group} erwähnt, aber nur %{count} Mitglied wird benachrichtigt, weil die anderen Mitglieder diese persönliche Nachricht nicht sehen können. Du musst sie zu dieser persönlichen Nachricht einladen."
+          other: "Du hast @%{group} erwähnt, aber nur %{count} Mitglieder werden benachrichtigt, weil die anderen Mitglieder diese persönliche Nachricht nicht sehen können. Du musst sie zu dieser persönlichen Nachricht einladen."
+        not_allowed: "Du hast @%{group} erwähnt, aber keines der Mitglieder wird benachrichtigt, weil sie diese persönliche Nachricht nicht sehen können. Du musst sie zu dieser persönlichen Nachricht einladen."
       here_mention:
         one: "Indem du <b>@%{here}</b> erwähnst, bist du im Begriff, %{count} Benutzer zu benachrichtigen – bist du sicher?"
         other: "Indem du <b>@%{here}</b> erwähnst, bist du im Begriff, %{count} Benutzer zu benachrichtigen – bist du sicher?"
       duplicate_link: "Es sieht so aus, als ob dein Link zu <b>%{domain}</b> bereits im Thema von <b>@%{username}</b> in <a href='%{post_url}'>einer Antwort vor %{ago}</a> geteilt wurde – bist du sicher, dass du ihn noch einmal teilen möchtest?"
+      duplicate_link_same_user: "Es sieht so aus, als hättest du bereits einen Link zu <b>%{domain}</b> in diesem Thema in <a href='%{post_url}'>einer Antwort am %{ago}</a> gepostet – bist du sicher, dass du ihn erneut posten willst?"
       reference_topic_title: "AW: %{title}"
       error:
         title_missing: "Titel ist erforderlich"
@@ -2157,6 +2266,12 @@ de:
         high_priority:
           one: "%{count} ungelesene Benachrichtigung hoher Priorität"
           other: "%{count} ungelesene Benachrichtigungen hoher Priorität"
+        new_message_notification:
+          one: "%{count} neue Nachrichtenbenachrichtigung"
+          other: "%{count} neue Nachrichtenbenachrichtigungen"
+        new_reviewable:
+          one: "%{count} neu zur Überprüfung"
+          other: "%{count} neu zur Überprüfung"
       title: "Benachrichtigungen über namentliche Erwähnungen mit @, Antworten auf deine Beiträge und Themen, Nachrichten usw."
       none: "Die Benachrichtigungen können derzeit nicht geladen werden."
       empty: "Keine Benachrichtigungen gefunden."
@@ -2202,6 +2317,7 @@ de:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} – abgeschlossen"
+      new_features: "Neue Funktionen verfügbar!"
       dismiss_confirmation:
         body:
           default:
@@ -2256,6 +2372,7 @@ de:
         membership_request_consolidated: "Neue Mitgliedschaftsanfragen"
         reaction: "neue Reaktion"
         votes_released: "Abstimmung wurde freigegeben"
+        new_features: "neue Discourse-Funktionen wurden veröffentlicht!"
     upload_selector:
       uploading: "Wird hochgeladen"
       processing: "Upload wird verarbeitet"
@@ -2324,6 +2441,7 @@ de:
         status: "filtern nach Themenstatus"
         full_search: "startet die Ganzseitensuche"
         full_search_key: "%{modifier} + Eingabetaste"
+        me: "zeigt nur deine Beiträge"
       advanced:
         title: Erweiterte Filter
         posted_by:
@@ -2564,7 +2682,48 @@ de:
       show_links: "zeige Links innerhalb dieses Themas"
       collapse_details: "Themendetails einklappen"
       expand_details: "Themendetails erweitern"
+      read_more_in_category: "Willst du mehr lesen? Durchstöbere andere Themen in %{categoryLink} oder <a href='%{latestLink}'>sieh dir die aktuellen Themen an</a>."
+      read_more: "Willst du mehr lesen? <a href='%{categoryLink}'>Durchstöbere alle Kategorien</a> oder <a href='%{latestLink}'>sieh dir die aktuellen Themen an</a>."
       unread_indicator: "Kein Mitglied hat den letzten Beitrag dieses Themas bisher gelesen."
+      read_more_MF: |
+        { HAS_UNREAD_AND_NEW, select,
+          true {
+            { UNREAD, plural,
+                 =0 {}
+                one {<a href="{basePath}/unread"># ungelesenes</a> Thema}
+              other {<a href="{basePath}/unread"># ungelesene</a> Themen}
+            }
+            { NEW, plural,
+                 =0 {}
+                one { und <a href="{basePath}/new"># neues</a> Thema verbleibend.}
+              other { und <a href="{basePath}/new"># neue</a> Themen verbleibend.}
+            }
+          }
+          false {
+            { UNREAD, plural,
+                 =0 {}
+                one {<a href="{basePath}/unread"># ungelesenes</a> Thema verbleibend.}
+              other {<a href="{basePath}/unread"># ungelesene</a> Themen verbleibend.}
+            }
+            { NEW, plural,
+                 =0 {}
+                one {<a href="{basePath}/new"># neues</a> Thema verbleibend.}
+              other {<a href="{basePath}/new"># neue</a> Themen verbleibend.}
+            }
+          }
+          other {}
+        }
+        { HAS_CATEGORY, select,
+          true { Oder durchstöbere andere Themen in {categoryLink}}
+          false { Oder <a href="{basePath}/latest">sieh dir die aktuellen Themen an</a>}
+          other {}
+        }
+      bumped_at_title: |
+        Erster Beitrag: %{createdAtDate}
+        Gepostet: %{bumpedAtDate}
+      browse_all_categories_latest: "<a href='%{basePath}/categories'>Durchstöbere alle Kategorien</a> oder <a href='%{basePath}/latest'>sieh dir die aktuellen Themen an</a>."
+      browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Durchstöbere alle Kategorien</a>, <a href='%{basePath}/latest'>sieh dir die aktuellen Themen</a> oder die Top-Themen an:"
+      browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Durchstöbere alle Schlagwörter</a> oder <a href='%{basePath}/latest'>sieh dir die aktuellen Themen an</a>."
       suggest_create_topic: Bereit, <a href>eine neue Unterhaltung zu beginnen?</a>
       jump_reply_up: zur vorherigen Antwort springen
       jump_reply_down: zur nachfolgenden Antwort springen
@@ -2985,6 +3144,7 @@ de:
           one: "Es kann leider nur %{count} Datei gleichzeitig hochgeladen werden."
           other: "Es können leider nur %{count} Dateien gleichzeitig hochgeladen werden."
         upload_not_authorized: "Entschuldige, die Datei, die du hochladen möchtest, ist nicht erlaubt (erlaubte Dateiendungen sind: %{authorized_extensions})."
+        no_uploads_authorized: "Es dürfen keine Dateien hochgeladen werden."
         image_upload_not_allowed_for_new_user: "Entschuldige, neue Benutzer dürfen keine Bilder hochladen."
         attachment_upload_not_allowed_for_new_user: "Entschuldige, neue Benutzer dürfen keine Anhänge hochladen."
         attachment_download_requires_login: "Entschuldige, du musst angemeldet sein, um Anhänge herunterladen zu können."
@@ -2996,6 +3156,7 @@ de:
       via_email: "dieser Beitrag ist per E-Mail eingetroffen"
       via_auto_generated_email: "dieser Beitrag ist per automatisch generierter E-Mail eingegangen"
       whisper: "dies ist ein privater geflüsterter Beitrag für Moderatoren"
+      whisper_groups: "dieser Beitrag ist ein privater geflüsterter Beitrag, der nur für %{groupNames} sichtbar ist"
       wiki:
         about: "dieser Beitrag ist ein Wiki"
       few_likes_left: "Danke fürs Teilen der Liebe! Du hast für heute nur noch wenige „Gefällt mir“ übrig."
@@ -3218,6 +3379,7 @@ de:
       pending_permission_change_alert: "Du hast %{group} nicht zu dieser Kategorie hinzugefügt; klicke diese Schaltfläche, um sie zuzufügen."
       images: "Bilder"
       email_in: "Benutzerdefinierte Adresse für eingehende E-Mails:"
+      email_in_tooltip: "Du kannst mehrere E-Mail-Adressen mit dem Zeichen | trennen."
       email_in_allow_strangers: "Akzeptiere E-Mails von anonymen Benutzern."
       email_in_disabled: "Das Erstellen von neuen Themen per E-Mail ist in den Website-Einstellungen deaktiviert. Um das Erstellen von neuen Themen per E-Mail zu erlauben, "
       email_in_disabled_click: 'Aktiviere die Einstellung „email in“.'
@@ -3830,12 +3992,15 @@ de:
     second_factor_auth:
       redirect_after_success: "Die Zwei-Faktor-Authentifizierung war erfolgreich. Weiterleitung zur vorherigen Seite …"
     sidebar:
+      show_sidebar: "Seitenleiste anzeigen"
+      hide_sidebar: "Seitenleiste ausblenden"
       unread_count:
         one: "%{count} ungelesen"
         other: "%{count} ungelesen"
       new_count:
         one: "%{count} neu"
         other: "%{count} neu"
+      toggle_section: "Abschnitt umschalten"
       more: "Mehr"
       all_categories: "Alle Kategorien"
       all_tags: "Alle Schlagwörter"
@@ -3844,6 +4009,7 @@ de:
           header_link_text: "Über uns"
         messages:
           header_link_text: "Nachrichten"
+          header_action_title: "Eine persönliche Nachricht erstellen"
           links:
             inbox: "Posteingang"
             sent: "Gesendet"
@@ -3860,6 +4026,7 @@ de:
           none: "Du hast keine Schlagwörter hinzugefügt."
           click_to_get_started: "Klicke hier, um zu beginnen."
           header_link_text: "Schlagwörter"
+          header_action_title: "Bearbeite die Schlagwörter in deiner Seitenleiste"
           configure_defaults: "Standardeinstellungen konfigurieren"
         categories:
           links:
@@ -3869,32 +4036,43 @@ de:
           none: "Du hast keine Kategorien hinzugefügt."
           click_to_get_started: "Klicke hier, um zu beginnen."
           header_link_text: "Kategorien"
+          header_action_title: "Bearbeite die Kategorien in deiner Seitenleiste"
           configure_defaults: "Standardeinstellungen konfigurieren"
         community:
           header_link_text: "Community"
+          header_action_title: "Thema erstellen"
           links:
             about:
               content: "Über uns"
+              title: "Weitere Details zu dieser Website"
             admin:
               content: "Admin-Panel"
+              title: "Website-Einstellungen und -Berichte"
             badges:
               content: "Abzeichen"
+              title: "Alle Abzeichen, die es zu verdienen gibt"
             everything:
               content: "Alles"
               title: "Alle Themen"
             faq:
               content: "FAQ"
+              title: "Richtlinien für die Nutzung dieser Website"
             groups:
               content: "Gruppen"
+              title: "Liste der verfügbaren Benutzergruppen"
             users:
               content: "Benutzer"
+              title: "Liste aller Benutzer"
             my_posts:
               content: "Meine Beiträge"
+              title: "Meine aktuelle Themenaktivität"
+              title_drafts: "Meine nicht geposteten Entwürfe"
               draft_count:
                 one: "%{count} Entwurf"
                 other: "%{count} Entwürfe"
             review:
               content: "Überprüfen"
+              title: "Gemeldete Beiträge und andere Elemente in der Warteschlange"
               pending_count: "%{count} ausstehend"
     welcome_topic_banner:
       title: "Erstelle dein Willkommensthema"
@@ -4047,6 +4225,9 @@ de:
               other: "%{count} Benutzer haben die neuen E-Mail-Domains und werden der Gruppe hinzugefügt."
             automatic_membership_associated_groups: "Benutzer, die Mitglied einer Gruppe eines hier aufgeführten Dienstes sind, werden dieser Gruppe automatisch hinzugefügt, wenn sie sich mittels dieses Dienstes anmelden."
             primary_group: "Automatisch als primäre Gruppe festlegen"
+          alert:
+            primary_group: "Da es sich um eine primäre Gruppe handelt, wird der Name „%{group_name}“ in CSS-Klassen verwendet, die von jedem eingesehen werden können."
+            flair_group: "Da diese Gruppe Flair für ihre Mitglieder hat, wird der Name „%{group_name}“ für jeden sichtbar sein."
         name_placeholder: "Gruppenname, keine Leerzeichen, gleiche Regel wie beim Benutzernamen"
         primary: "Primäre Gruppe"
         no_primary: "(keine primäre Gruppe)"
@@ -4056,6 +4237,10 @@ de:
         about: "Hier kannst du Gruppenzugehörigkeiten und Gruppennamen bearbeiten."
         group_members: "Gruppenmitglieder"
         delete: "Löschen"
+        delete_confirm: "Bist du sicher, dass du diese Gruppe löschen willst?"
+        delete_with_messages_confirm:
+          one: "Wenn du diese Gruppe löschst, wird %{count} Nachricht verwaist sein, die Gruppenmitglieder haben keinen Zugriff mehr darauf."
+          other: "Wenn du diese Gruppe löschst, werden %{count} Nachrichten verwaist sein, die Gruppenmitglieder haben keinen Zugriff mehr darauf."
         delete_failed: "Gruppe konnte nicht gelöscht werden. Wenn dies eine automatische Gruppe ist, kann sie nicht gelöscht werden."
         delete_automatic_group: Dies ist eine automatische Gruppe und sie kann nicht gelöscht werden.
         delete_owner_confirm: "Eigentümerrechte für „%{username}“ entfernen?"
@@ -4139,6 +4324,9 @@ de:
               anonymize: Benutzerkonten anonymisieren.
               delete: Benutzerkonten löschen.
               list: Benutzerliste abrufen.
+            user_status:
+              read: Benutzerstatus lesen.
+              update: Benutzerstatus aktualisieren.
             email:
               receive_emails: Kombiniere diesen Bereich mit dem E-Mail-Empfänger, um eingehende E-Mails zu verarbeiten.
             badges:
@@ -4163,6 +4351,7 @@ de:
         create: "Erstellen"
         edit: "Bearbeiten"
         save: "Speichern"
+        description_label: "Ereignisauslöser"
         controls: "Kontrollelemente"
         go_back: "Zurück zur Liste"
         payload_url: "Payload-URL"
@@ -4265,6 +4454,8 @@ de:
         broken_route: "Link zu „%{name}“ kann nicht konfiguriert werden. Vergewissere dich, dass Werbeblocker deaktiviert sind, und versuche, die Seite neu zu laden."
       navigation_menu:
         sidebar: "Seitenleiste"
+        header_dropdown: "Kopfzeilen-Drop-down"
+        legacy: "Legacy"
       backups:
         title: "Backups"
         menu:
@@ -4588,6 +4779,8 @@ de:
           love:
             name: "Liebe"
             description: "Die Farbe der „Gefällt mir“-Schaltfläche."
+          selected:
+            name: "ausgewählt"
         robots:
           title: "Überschreibe die robots.txt-Datei deiner Website:"
           warning: "Dies wird sämtliche zugehörigen Website-Einstellungen dauerhaft überschreiben."
@@ -4949,6 +5142,7 @@ de:
       user:
         suspend_failed: "Beim Sperren dieses Benutzers ist etwas schiefgegangen %{error}"
         unsuspend_failed: "Beim Entsperren dieses Benutzers ist etwas schiefgegangen %{error}"
+        suspend_duration: "Benutzer sperren bis:"
         suspend_reason_label: "Was ist der Grund für die Sperre? Dieser Text ist auf der Profilseite des Benutzers <b>für jeden sichtbar</b> und wird dem Benutzer angezeigt, wenn sich dieser anmelden will. Fasse dich kurz."
         suspend_reason_hidden_label: "Was ist der Grund für die Sperre? Dieser Text wird dem Benutzer angezeigt, wenn er versucht, sich anzumelden. Fasse dich kurz."
         suspend_reason: "Grund"
@@ -4972,7 +5166,9 @@ de:
         silence_message: "E-Mail-Nachricht"
         silence_message_placeholder: "(leer lassen, um Standardnachricht zu schicken)"
         suspended_until: "(bis %{until})"
+        suspend_forever: "Für immer sperren"
         cant_suspend: "Der Benutzer kann nicht gesperrt werden."
+        cant_silence: "Dieser Benutzer kann nicht stummgeschaltet werden."
         delete_posts_failed: "Es gab ein Problem beim Löschen der Beiträge."
         post_edits: "Beitragsbearbeitungen"
         view_edits: "Bearbeitungen anzeigen"
@@ -4982,6 +5178,8 @@ de:
         penalty_post_edit: "Beitrag bearbeiten"
         penalty_post_none: "Nichts tun"
         penalty_count: "Anzahl der Strafen"
+        penalty_history_MF: >-
+          In den letzten 6 Monaten wurde dieser Benutzer <b>{ SUSPENDED, plural, one {# Mal} other {# Mal} } gesperrt</b> und <b>{ SILENCED, plural, one {# Mal} other {# Mal} } stummgeschaltet</b>.
         clear_penalty_history:
           title: "Lösche die Strafenhistorie"
           description: "Benutzer mit Strafen können VS3 nicht erreichen"
@@ -5136,10 +5334,14 @@ de:
         silenced_count: "Stummgeschaltet"
         suspended_count: "Gesperrt"
         last_six_months: "Letzte 6 Monate"
+        other_matches:
+          one: "Es gibt <b>%{count} anderen Benutzer</b> mit der gleichen IP-Adresse. Überprüfe ihn und wähle einen verdächtigen Benutzer aus, um ihn zusammen mit %{username} zu bestrafen."
+          other: "Es gibt <b>%{count} andere Benutzer</b> mit der gleichen IP-Adresse. Überprüfe sie und wähle verdächtige Benutzer aus, um sie zusammen mit %{username} zu bestrafen."
         other_matches_list:
           username: "Benutzername"
           trust_level: "Vertrauensstufe"
           read_time: "Lesezeit"
+          topics_entered: "Besuchte Themen"
           posts: "Beiträge"
         tl3_requirements:
           title: "Anforderungen für Vertrauensstufe 3"
@@ -5456,8 +5658,10 @@ de:
       finish: "Installation verlassen"
       back: "Zurück"
       next: "Nächstes"
+      configure_more: "Mehr konfigurieren …"
       step-text: "Schritt"
       step: "%{current} von %{total}"
+      upload: "Datei hochladen"
       uploading: "Wird hochgeladen …"
       upload_error: "Entschuldige, es gab einen Fehler beim Hochladen der Datei. Bitte versuche es noch einmal."
       staff_count:

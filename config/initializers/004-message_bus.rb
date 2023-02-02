@@ -105,8 +105,6 @@ MessageBus.on_middleware_error do |env, e|
     [403, {}, ["Invalid Access"]]
   elsif RateLimiter::LimitExceeded === e
     [429, { "Retry-After" => e.available_in.to_s }, [e.description]]
-  elsif Errno::EPIPE === e
-    [422, {}, ["Closed by Client"]]
   end
 end
 

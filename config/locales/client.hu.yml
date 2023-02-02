@@ -301,11 +301,11 @@ hu:
       edit_bookmark: "Könyvjelző szerkesztése"
       clear_bookmarks: "Könyvjelzők törlése"
       help:
-        bookmark: "Kattintson a téma első bejegyzésének könyvjelzőzéséhez"
-        edit_bookmark: "Kattintson a témán szereplő könyvjelző szerkesztéséhez"
+        bookmark: "Kattintson a téma könyvjelzővé tételéhez"
+        edit_bookmark: "Kattintson a témában lévő hozzászólás könyvjelzőjének szerkesztéséhez."
         edit_bookmark_for_topic: "Kattintson a témához tartozó könyvjelző szerkesztéséhez"
         unbookmark: "Kattintson a téma valamennyi könyvjelzőjének törléséhez"
-        unbookmark_with_reminder: "Kattintson a téma valamennyi könyvjelzőjének és emlékeztetőjének törléséhez."
+        unbookmark_with_reminder: "Kattintson ide a téma összes könyvjelzőjének és emlékeztetőjének eltávolításához."
     bookmarks:
       created: "Könyvjelzőzte ezt a bejegyzést. %{name}"
       created_generic: "Könyvjelzőzte ezt. %{name}"
@@ -1050,7 +1050,7 @@ hu:
         perm_denied_expl: "Letiltotta a figyelmeztetéseket. Engedélyezze őket a böngésző beállításaiban."
         disable: "Értesítések kikapcsolása"
         enable: "Értesítések bekapcsolása"
-        each_browser_note: 'Megjegyzés: Ezt a beállítást minden használt böngészőben módosítania kell. Ettől a beállítástól függetlenül minden értesítés le lesz tiltva, ha szünetelteti az értesítéseket a felhasználói menüből.'
+        each_browser_note: "Megjegyzés: Ezt a beállítást minden használt böngészőben módosítania kell. Ettől a beállítástól függetlenül minden értesítés le lesz tiltva, ha szünetelteti az értesítéseket a felhasználói menüből."
         consent_prompt: "Szeretne élő értesítéseket kapni, ha valaki válaszol a hozzászólásaira?"
       dismiss: "Elvetés"
       dismiss_notifications: "Összes elvetése"
@@ -4247,6 +4247,8 @@ hu:
           love:
             name: "szerelem"
             description: "A kedvelés gomb színe."
+          selected:
+            name: "kiválasztott"
         email_style:
           title: "E-mail stílus"
           heading: "E-mail stílus testreszabása"
@@ -4355,6 +4357,7 @@ hu:
           no_previous: "Nincsen előzőleges érték"
           deleted: "Nincs új érték. A feljegyzés törölve lett"
           actions:
+            permanently_delete_post_revisions: "véglegesen törölni a hozzászólás módosításait"
             delete_user: "felhasználó törlése"
             change_trust_level: "bizalmi szint megváltoztatása"
             change_username: "Felhasználónév módosítása"

@@ -1895,8 +1895,6 @@ class Topic < ActiveRecord::Base
   def incoming_email_addresses(group: nil, received_before: Time.zone.now)
     email_addresses = Set.new
 
-    # TODO(martin) Look at improving this N1, it will just get slower the
-    # more replies/incoming emails there are for the topic.
     self
       .incoming_email
       .where("created_at <= ?", received_before)

@@ -45,9 +45,6 @@ de:
       trigger: "würfeln"
       invalid: |-
         Es tut mir leid, aber das Würfeln dieser Kombination ist mathematisch unmöglich. :confounded:
-      not_enough_dice:
-        one: "Ich habe nur %{count} Würfel. [Beschämend](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), ich weiß!"
-        other: "Ich habe nur %{count} Würfel. [Beschämend](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), ich weiß!"
       out_of_range: |-
         Wusstest du, dass ein fairer Würfel aus [maximal 120 Seiten](http://www.spiegel.de/wissenschaft/mensch/d120-groesster-wuerfel-der-welt-hat-120-seiten-a-1099170.html) besteht?
       results: |-

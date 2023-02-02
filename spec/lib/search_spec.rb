@@ -113,6 +113,28 @@ RSpec.describe Search do
         expect(Search.execute("oeuvre").posts).to contain_exactly(post_2)
       end
     end
+
+    context "when search_ranking_weights site setting has been configured" do
+      fab!(:topic) { Fabricate(:topic, title: "Some random topic title start") }
+      fab!(:topic2) { Fabricate(:topic, title: "Some random topic title") }
+      fab!(:post1) { Fabricate(:post, raw: "start", topic: topic) }
+      fab!(:post2) { Fabricate(:post, raw: "#{"start " * 100}", topic: topic2) }
+
+      before do
+        SearchIndexer.enable
+        [post1, post2].each { |post| SearchIndexer.index(post, force: true) }
+      end
+
+      after { SearchIndexer.disable }
+
+      it "should apply the custom ranking weights correctly" do
+        expect(Search.execute("start").posts).to eq([post2, post1])
+
+        SiteSetting.search_ranking_weights = "{0.00001,0.2,0.4,1.0}"
+
+        expect(Search.execute("start").posts).to eq([post1, post2])
+      end
+    end
   end
 
   context "with apostrophes" do
@@ -2578,6 +2600,65 @@ RSpec.describe Search do
     it "does not fail when parsed term is empty" do
       result = Search.execute("#cat ", type_filter: "exclude_topics")
       expect(result.categories.length).to eq(0)
+    end
+  end
+
+  context "when prioritize_exact_search_match is enabled" do
+    before { SearchIndexer.enable }
+
+    after { SearchIndexer.disable }
+
+    it "correctly ranks topics" do
+      SiteSetting.prioritize_exact_search_title_match = true
+
+      topic1 = Fabricate(:topic, title: "saml saml saml is the best")
+      post1 = Fabricate(:post, topic: topic1, raw: "this topic is a story about saml")
+
+      topic2 = Fabricate(:topic, title: "sam has ideas about lots of things")
+      post2 = Fabricate(:post, topic: topic2, raw: "this topic is not about saml saml saml")
+
+      topic3 = Fabricate(:topic, title: "jane has ideas about lots of things")
+      post3 = Fabricate(:post, topic: topic3, raw: "sam sam sam sam lets add sams")
+
+      SearchIndexer.index(post1, force: true)
+      SearchIndexer.index(post2, force: true)
+      SearchIndexer.index(post3, force: true)
+
+      result = Search.execute("sam")
+      expect(result.posts.length).to eq(3)
+
+      # title match should win cause we limited duplication
+      expect(result.posts.pluck(:id)).to eq([post2.id, post1.id, post3.id])
+    end
+  end
+
+  context "when max_duplicate_search_index_terms limits duplication" do
+    before { SearchIndexer.enable }
+
+    after { SearchIndexer.disable }
+
+    it "correctly ranks topics" do
+      SiteSetting.max_duplicate_search_index_terms = 5
+
+      topic1 = Fabricate(:topic, title: "this is a topic about sam")
+      post1 = Fabricate(:post, topic: topic1, raw: "this topic is a story about some person")
+
+      topic2 = Fabricate(:topic, title: "this is a topic about bob")
+      post2 =
+        Fabricate(
+          :post,
+          topic: topic2,
+          raw: "this topic is a story about some person #{"sam " * 100}",
+        )
+
+      SearchIndexer.index(post1, force: true)
+      SearchIndexer.index(post2, force: true)
+
+      result = Search.execute("sam")
+      expect(result.posts.length).to eq(2)
+
+      # title match should win cause we limited duplication
+      expect(result.posts.pluck(:id)).to eq([post1.id, post2.id])
     end
   end
 end

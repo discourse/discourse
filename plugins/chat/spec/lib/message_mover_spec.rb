@@ -112,7 +112,7 @@ describe Chat::MessageMover do
 
     it "updates references for reactions, uploads, revisions, mentions, etc." do
       reaction = Fabricate(:chat_message_reaction, chat_message: message1)
-      upload = Fabricate(:chat_upload, chat_message: message1)
+      upload = Fabricate(:upload_reference, target: message1)
       mention = Fabricate(:chat_mention, chat_message: message2, user: acting_user)
       revision = Fabricate(:chat_message_revision, chat_message: message3)
       webhook_event = Fabricate(:chat_webhook_event, chat_message: message3)
@@ -121,7 +121,7 @@ describe Chat::MessageMover do
       moved_messages =
         ChatMessage.where(chat_channel: destination_channel).order("created_at ASC, id ASC").last(3)
       expect(reaction.reload.chat_message_id).to eq(moved_messages.first.id)
-      expect(upload.reload.chat_message_id).to eq(moved_messages.first.id)
+      expect(upload.reload.target_id).to eq(moved_messages.first.id)
       expect(mention.reload.chat_message_id).to eq(moved_messages.second.id)
       expect(revision.reload.chat_message_id).to eq(moved_messages.third.id)
       expect(webhook_event.reload.chat_message_id).to eq(moved_messages.third.id)

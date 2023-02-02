@@ -113,6 +113,13 @@ ar:
       new_messages: "رسائل جديدة"
       mention_warning:
         dismiss: "تجاهل"
+        cannot_see:
+          zero: "لا يمكن للمستخدم %{username} و%{others} مستخدم آخر الوصول إلى هذه القناة ولن يتلقوا إشعارات."
+          one: "لا يمكن للمستخدم %{username} ومستخدم (%{others}) آخر الوصول إلى هذه القناة ولن يتلقيا إشعارات."
+          two: "لا يمكن للمستخدم %{username} ومستخدمَين (%{others}) آخرين الوصول إلى هذه القناة ولن يتلقوا إشعارات."
+          few: "لا يمكن للمستخدم %{username} و%{others} مستخدمين آخر الوصول إلى هذه القناة ولن يتلقوا إشعارات."
+          many: "لا يمكن للمستخدم %{username} و%{others} مستخدمًا آخر الوصول إلى هذه القناة ولن يتلقوا إشعارات."
+          other: "لا يمكن للمستخدم %{username} و%{others} مستخدم آخر الوصول إلى هذه القناة ولن يتلقوا إشعارات."
         invitations_sent:
           zero: "تم إرسال دعوات"
           one: "تم إرسال دعوة"
@@ -121,14 +128,70 @@ ar:
           many: "تم إرسال دعوات"
           other: "تم إرسال دعوات"
         invite: "دعوة إلى القناة"
+        without_membership:
+          zero: "لم ينضم %{username} إلى هذه القناة."
+          one: "لم ينضم %{username} و%{others} مستخدم آخر إلى هذه القناة."
+          two: "لم ينضم %{username} ومستخدمان (%{others}) آخران إلى هذه القناة."
+          few: "لم ينضم %{username} و%{others} مستخدمين آخرين إلى هذه القناة."
+          many: "لم ينضم %{username} و%{others} مستخدمًا آخر إلى هذه القناة."
+          other: "لم ينضم %{username} و%{others} مستخدم آخر إلى هذه القناة."
+        group_mentions_disabled:
+          zero: "لا تسمح المجموعة %{group_name} و%{others} مجموعة أخرى بالإشارات."
+          one: "لا تسمح المجموعة %{group_name} بالإشارات."
+          two: "لا تسمح المجموعة %{group_name} ومجموعتان (%{others}) أخرتان بالإشارات."
+          few: "لا تسمح المجموعة %{group_name} و%{others} مجموعات أخرى بالإشارات."
+          many: "لا تسمح المجموعة %{group_name} و%{others} مجموعةً أخرى بالإشارات."
+          other: "لا تسمح المجموعة %{group_name} و%{others} مجموعة أخرى بالإشارات."
+        too_many_members:
+          zero: "تحتوي المجموعة %{group_name} و%{others} مجموعة أخرى على أعضاء كثيرين. لم يتلقَّ أحد الإشعارات"
+          one: "تحتوي المجموعة %{group_name} ومجموعة (%{others}) أخرى على أعضاء كثيرين. لم يتلقَّ أحد الإشعارات"
+          two: "تحتوي المجموعة %{group_name} ومجموعتان (%{others}) أخرتان على أعضاء كثيرين. لم يتلقَّ أحد الإشعارات"
+          few: "تحتوي المجموعة %{group_name} و%{others} مجموعات أخرى على أعضاء كثيرين. لم يتلقَّ أحد الإشعارات"
+          many: "تحتوي المجموعة %{group_name} و%{others} مجموعةً أخرى على أعضاء كثيرين. لم يتلقَّ أحد الإشعارات"
+          other: "تحتوي المجموعة %{group_name} و%{others} مجموعة أخرى على أعضاء كثيرين. لم يتلقَّ أحد الإشعارات"
+        warning_multiple:
+          zero: "%{count} آخر"
+          one: "%{count} آخر"
+          two: "%{count} آخران"
+          few: "%{count} آخرين"
+          many: "%{count} آخرين"
+          other: "%{count} آخرين"
         groups:
+          header:
+            some: "لن يتلقى بعض المستخدمين الإشعارات"
+            all: "لن يتلقى أحد الإشعارات"
+          unreachable:
+            zero: "لا تسمح المجموعة @%{group} و@%{group_2} بالإشارات"
+            one: "لا تسمح المجموعة @%{group} بالإشارات"
+            two: "لا تسمح المجموعة @%{group} و@%{group_2} بالإشارات"
+            few: "لا تسمح المجموعة @%{group} و@%{group_2} بالإشارات"
+            many: "لا تسمح المجموعة @%{group} و@%{group_2} بالإشارات"
+            other: "لا تسمح المجموعة @%{group} و@%{group_2} بالإشارات"
+          unreachable_multiple: "لا تسمح المجموعة @%{group} و%{count} من المجموعات الأخرى بالإشارات"
+          too_many_members:
+            zero: "تتجاوز الإشارة إلى @%{group} أو @%{group_2} حد الإشعارات البالغ %{notification_limit} من %{limit}"
+            one: "تتجاوز الإشارة إلى @%{group} حد الإشعارات البالغ %{notification_limit} من %{limit}"
+            two: "تتجاوز الإشارة إلى @%{group} أو @%{group_2} حد الإشعارات البالغ %{notification_limit} من %{limit}"
+            few: "تتجاوز الإشارة إلى @%{group} أو @%{group_2} حد الإشعارات البالغ %{notification_limit} من %{limit}"
+            many: "تتجاوز الإشارة إلى @%{group} أو @%{group_2} حد الإشعارات البالغ %{notification_limit} من %{limit}"
+            other: "تتجاوز الإشارة إلى @%{group} أو @%{group_2} حد الإشعارات البالغ %{notification_limit} من %{limit}"
+          too_many_members_multiple: "تتجاوز هذه المجموعات البالغ عددها %{count} حد الإشعارات البالغ %{notification_limit} من %{limit}"
           users_limit:
-            zero: "%{count} مستخدمًا"
+            zero: "%{count} مستخدم"
             one: "مستخدم واحد (%{count})"
             two: "مستخدمان (%{count})"
             few: "%{count} مستخدمين"
             many: "%{count} مستخدمًا"
             other: "%{count} مستخدم"
+          notification_limit: "حد الإشعارات"
+        too_many_mentions: "تتجاوز هذه الرسالة حد الإشعارات البالغ %{notification_limit} من %{limit}"
+        mentions_limit:
+          zero: "%{count} إشارة"
+          one: "إشارة واحدة (%{count})"
+          two: "إشارتان (%{count})"
+          few: "%{count} إشارات"
+          many: "%{count} إشارةً"
+          other: "%{count} إشارة"
       aria_roles:
         header: "رأس الدردشة"
         composer: "أداة إنشاء الدردشة"
@@ -191,6 +254,8 @@ ar:
         read_only: "للقراءة فقط"
         archived_header: "القناة مؤرشفة"
         archived: "مؤرشفة"
+        archive_failed: "فشلت أرشفة القناة. تمت أرشفة %{completed}/%{total} من الرسائل. <a target=\"_blank\" href=\"%{topic_url}\">موضوع الوجهة</a>. اضغط على \"إعادة المحاولة\" لمحاولة إكمال الأرشيف."
+        archive_failed_no_topic: "فشلت أرشفة القناة. تمت أرشفة %{completed}/%{total} من الرسائل، ولم يتم إنشاء موضوع الوجهة. اضغط على \"إعادة المحاولة\" لمحاولة إكمال الأرشيف."
         archive_completed: "راجع <a target=\"_blank\" href=\"%{topic_url}\">موضوع الأرشيف</a>"
         closed_header: "القناة مغلقة"
         closed: "مغلقة"
@@ -213,6 +278,7 @@ ar:
         associated_topic: الموضوع المرتبط
         associated_category: الفئة المرتبطة
         title: العنوان
+        name: الاسم
         description: الوصف
       channel_info:
         back_to_all_channels: "كل القنوات"
@@ -221,10 +287,6 @@ ar:
           about: نبذة
           members: الأعضاء
           settings: الإعدادات
-      channel_edit_title_modal:
-        title: تعديل العنوان
-        input_placeholder: إضافة عنوان
-        description: أعط عنوانًا وصفيًا قصيرًا لقناتك
       channel_edit_description_modal:
         title: تعديل الوصف
         input_placeholder: أضِف وصفًا
@@ -299,7 +361,9 @@ ar:
         mention: "للإشارات فقط"
         always: "للنشاط بأكمله"
       settings:
-        enable_auto_join_users: "إضافة كل المستخدمين النشطين مؤخرًا تلقائيًا"
+        channel_wide_mentions_label: "السماح بإشارات @الكل و@هنا"
+        channel_wide_mentions_description: "السماح للمستخدمين بإرسال إشعارات إلى جميع أعضاء #%{channel} باستخدام @الكل، أو المستخدمين النشطين في الوقت الحالي فقط باستخدام @هنا"
+        auto_join_users_label: "إضافة المستخدمين تلقائيًا"
         auto_join_users_warning: "سينضم كل المستخدمين الذين ليسوا أعضاءً في هذه القناة ولديهم وصول إلى فئة %{category}. هل أنت متأكد؟"
         desktop_notification_level: "إشعارات سطح المكتب"
         follow: "الانضمام"
@@ -314,10 +378,12 @@ ar:
         saved: "تم الحفظ"
         unfollow: "مغادرة"
         admin_title: "مسؤول"
+        retention_info: "سيتم الاحتفاظ بسجل الدردشة لمدة %{days} من الأيام."
       admin:
         title: "الدردشة"
       direct_messages:
         title: "الدردشة الشخصية"
+        new: "إنشاء دردشة شخصية"
         create: "إنشاء"
         leave: "مغادرة هذه الدردشة الشخصية"
         cannot_create: "عذرًا، لا يمكنك إرسال الرسائل المباشرة."
@@ -336,7 +402,7 @@ ar:
         none: "لم يتم إنشاء خطافات ويب واردة حالية."
         no_emoji: "لم يتم تحديد رمز تعبيري"
         post_to: "نشر إلى"
-        reset_emoji: "إعادة ضبط الرمز التعبيري"
+        reset_emoji: "إعادة تعيين الرمز التعبيري"
         save: "حفظ"
         edit: "تعديل"
         select_emoji: "اختيار الرمز التعبيري"
@@ -345,7 +411,7 @@ ar:
         url: "عنوان URL"
         url_instructions: "يحتوي عنوان URL هذا على قيمة سرية - احتفظ بها في مكانٍ آمن."
         username: "اسم المستخدم"
-        username_instructions: "اسم المستخدم لبرنامج الروبوت الذي ينشر على القناة. يتم ضبطه افتراضيًا على \"النظام\" عند تركه فارغة."
+        username_instructions: "اسم المستخدم لبرنامج الروبوت الذي ينشر على القناة. يتم تعيينه افتراضيًا إلى \"النظام\" عند تركه فارغة."
         instructions: "يمكن استخدام خطافات الويب الواردة بواسطة أنظمة خارجية لنشر الرسائل في قناة دردشة مخصَّصة كمستخدم برنامج روبوت عبر نقطة النهاية <code>/hooks/:key</code>. يتألف الحمل من معلمة <code>نصية</code> فردية، وهي مقيَّدة إلى 2000 حرف.<br><br>نحن ندعم أيضًا المعلمات <code>النصية</code> بتنسيق Slack، مع استخراج الروابط والإشارات بناءً على التنسيق في <a href=\"https://api.slack.com/reference/surfaces/formatting\">https://api.slack.com/reference/surfaces/formatting</a>، لكن يجب استخدام نقطة النهاية <code>/hooks/:key/slack</code> من أجل ذلك."
       selection:
         cancel: "إلغاء"
@@ -456,7 +522,7 @@ ar:
               label: رسالة
             sender:
               label: المرسل
-              description: يتم ضبطه افتراضيًا على النظام
+              description: يتم تعيينه افتراضيًا إلى النظام
     review:
       transcript:
         view: "عرض نص الرسائل السابقة"
@@ -488,7 +554,7 @@ ar:
     user_menu:
       no_chat_notifications_title: "ليس لديك أي إشعارات دردشة حتى الآن"
       no_chat_notifications_body: >
-        سيتم إرسال إشعار إليك في هذه اللوحة عندما يراسلك أحدهم مباشرةً أو يشير إليك <b>@mention</b> في الدردشة. سيتم أيضًا إرسال الإشعارات إلى بريدك الإلكتروني في حال عدم تسجيلك الدخول لفترة من الوقت. <br><br> انقر على العنوان الموجود أعلى أي قناة دردشة لضبط التنبيهات التي تتلقاها في تلك القناة. للمزيد من المعلومات، راجع <a href='%{preferencesUrl}'>تفضيلات الإشعارات</a>.
+        سيتم إرسال إشعار إليك في هذه اللوحة عندما يراسلك أحدهم مباشرةً أو يشير إليك <b>@mention</b> في الدردشة. سيتم أيضًا إرسال الإشعارات إلى بريدك الإلكتروني في حال عدم تسجيلك الدخول لفترة من الوقت. <br><br> انقر على العنوان الموجود أعلى أي قناة دردشة لتعيين التنبيهات التي تتلقاها في تلك القناة. للمزيد من المعلومات، راجع <a href='%{preferencesUrl}'>تفضيلات الإشعارات</a>.
       tabs:
         chat_notifications: "إشعارات الدردشة"
         chat_notifications_with_unread:

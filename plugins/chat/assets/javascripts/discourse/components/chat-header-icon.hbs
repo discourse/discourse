@@ -1,21 +1,11 @@
-{{#if (and this.chatStateManager.isFullPageActive this.site.desktopView)}}
-  <span class={{concat-class "icon" (if this.isActive "active")}}>
-    {{d-icon "comment"}}
+<a
+  href={{this.href}}
+  tabindex="0"
+  class={{concat-class "icon" (if this.isActive "active")}}
+>
+  {{d-icon "comment"}}
 
-    {{#unless this.currentUserInDnD}}
-      <ChatHeaderIconUnreadIndicator />
-    {{/unless}}
-  </span>
-{{else}}
-  <a
-    href={{this.href}}
-    tabindex="0"
-    class={{concat-class "icon" (if this.isActive "active")}}
-  >
-    {{d-icon "comment"}}
-
-    {{#unless this.currentUserInDnD}}
-      <ChatHeaderIconUnreadIndicator />
-    {{/unless}}
-  </a>
-{{/if}}
+  {{#unless this.currentUserInDnD}}
+    <ChatHeaderIconUnreadIndicator />
+  {{/unless}}
+</a>

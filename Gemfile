@@ -18,7 +18,7 @@ else
   # this allows us to include the bits of rails we use without pieces we do not.
   #
   # To issue a rails update bump the version number here
-  rails_version = "7.0.4"
+  rails_version = "7.0.4.1"
   gem "actionmailer", rails_version
   gem "actionpack", rails_version
   gem "actionview", rails_version
@@ -105,7 +105,7 @@ gem "pg"
 gem "mini_sql"
 gem "pry-rails", require: false
 gem "pry-byebug", require: false
-gem "r2", require: false
+gem "rtlcss_wrapper", require: false
 gem "rake"
 
 gem "thor", require: false

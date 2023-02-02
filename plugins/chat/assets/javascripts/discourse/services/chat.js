@@ -1,4 +1,3 @@
-import slugifyChannel from "discourse/plugins/chat/discourse/lib/slugify-channel";
 import deprecated from "discourse-common/lib/deprecated";
 import userSearch from "discourse/lib/user-search";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -278,7 +277,8 @@ export default class Chat extends Service {
 
   async _openFoundChannelAtMessage(channel, messageId = null) {
     if (
-      this.router.currentRouteName === "chat.channel.index" &&
+      (this.router.currentRouteName === "chat.channel.from-params" ||
+        this.router.currentRouteName === "chat.channel.near-message") &&
       this.activeChannel?.id === channel.id
     ) {
       this.setActiveChannel(channel);
@@ -293,14 +293,18 @@ export default class Chat extends Service {
       this.site.mobileView ||
       this.chatStateManager.isFullPagePreferred
     ) {
-      const queryParams = messageId ? { messageId } : {};
-
-      return this.router.transitionTo(
-        "chat.channel",
-        channel.id,
-        slugifyChannel(channel),
-        { queryParams }
-      );
+      if (messageId) {
+        return this.router.transitionTo(
+          "chat.channel.near-message",
+          ...channel.routeModels,
+          messageId
+        );
+      } else {
+        return this.router.transitionTo(
+          "chat.channel.from-params",
+          ...channel.routeModels
+        );
+      }
     } else {
       this._fireOpenFloatAppEvent(channel, messageId);
       return Promise.resolve();
@@ -373,11 +377,13 @@ export default class Chat extends Service {
       data.data = JSON.stringify(draft);
     }
 
-    ajax("/chat/drafts", { type: "POST", data, ignoreUnsent: false })
+    ajax("/chat/drafts.json", { type: "POST", data, ignoreUnsent: false })
       .then(() => {
         this.markNetworkAsReliable();
       })
       .catch((error) => {
+        // we ignore a draft which can't be saved because it's too big
+        // and only deal with network error for now
         if (!error.jqXHR?.responseJSON?.errors?.length) {
           this.markNetworkAsUnreliable();
         }

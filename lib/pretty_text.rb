@@ -469,8 +469,19 @@ module PrettyText
     DiscourseEvent.trigger(:reduce_excerpt, doc, options)
     strip_image_wrapping(doc)
     strip_oneboxed_media(doc)
+
+    if SiteSetting.enable_experimental_hashtag_autocomplete && options[:plain_hashtags]
+      convert_hashtag_links_to_plaintext(doc)
+    end
+
     html = doc.to_html
     ExcerptParser.get_excerpt(html, max_length, options)
+  end
+
+  def self.convert_hashtag_links_to_plaintext(doc)
+    doc
+      .css("a.hashtag-cooked")
+      .each { |hashtag| hashtag.replace("##{hashtag.attributes["data-slug"]}") }
   end
 
   def self.strip_links(string)
@@ -516,7 +527,7 @@ module PrettyText
         if iframe["data-original-href"].present?
           vimeo_url = UrlHelper.normalized_encode(iframe["data-original-href"])
         else
-          vimeo_id = iframe["src"].split("/").last
+          vimeo_id = iframe["src"].split("/").last.sub("?h=", "/")
           vimeo_url = "https://vimeo.com/#{vimeo_id}"
         end
         iframe.replace Nokogiri::HTML5.fragment("<p><a href='#{vimeo_url}'>#{vimeo_url}</a></p>")

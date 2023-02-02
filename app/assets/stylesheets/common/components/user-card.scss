@@ -37,14 +37,8 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
   color: var(--primary);
   background: var(--secondary) center center;
   background-size: cover;
-  transition: opacity 0.2s, transform 0.2s;
-  opacity: 0;
   outline: 2px solid transparent;
-  @include transform(scale(0.9));
-  &.show {
-    opacity: 1;
-    @include transform(scale(1));
-  }
+
   .card-content {
     padding: 10px;
     background: rgba(var(--secondary-rgb), 0.85);
@@ -307,6 +301,7 @@ h3.user-status {
   }
 
   .relative-date {
+    flex: 1 0 auto;
     text-align: left;
     font-size: var(--font-down-3);
     padding-top: 0.5em;

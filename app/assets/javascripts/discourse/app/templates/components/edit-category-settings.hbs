@@ -342,12 +342,13 @@
       </label>
     </section>
 
-    <PluginOutlet
-      @name="category-email-in"
-      @tagName="span"
-      @connectorTagName="div"
-      @args={{hash category=this.category}}
-    />
+    <span>
+      <PluginOutlet
+        @name="category-email-in"
+        @connectorTagName="div"
+        @outletArgs={{hash category=this.category}}
+      />
+    </span>
   {{/if}}
 
   {{#unless this.emailInEnabled}}
@@ -360,8 +361,9 @@
   {{/unless}}
 </section>
 
-<PluginOutlet
-  @name="category-custom-settings"
-  @args={{hash category=this.category}}
-  @tagName="section"
-/>
+<section>
+  <PluginOutlet
+    @name="category-custom-settings"
+    @outletArgs={{hash category=this.category}}
+  />
+</section>

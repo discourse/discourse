@@ -235,6 +235,7 @@ he:
       forwarded: "העברת ההודעה שלעיל"
     topic_admin_menu: "פעולות על נושא"
     skip_to_main_content: "דילוג לתוכן הראשי"
+    skip_user_nav: "דילוג לתוכן הפרופיל"
     emails_are_disabled: "כל הדוא״ל היוצא נוטרל באופן גורף על ידי מנהל אתר. שום הודעת דוא״ל, מכל סוג שהוא, לא תשלח."
     emails_are_disabled_non_staff: "דוא״ל יוצא הושבת עבור משתמשים שאינם מהסגל."
     software_update_prompt:
@@ -366,11 +367,11 @@ he:
       edit_bookmark: "עריכת סימנייה"
       clear_bookmarks: "מחיקת סימניות"
       help:
-        bookmark: "יש ללחוץ כדי ליצור סימנייה לפוסט הראשון בנושא זה"
-        edit_bookmark: "יש ללחוץ כדי לערוך את הסימניה בנושא זה"
+        bookmark: "יש ללחוץ כדי להוסיף סימנייה לנושא הזה"
+        edit_bookmark: "יש ללחוץ כדי לערוך את הסימנייה לפוסט בנושא זה"
         edit_bookmark_for_topic: "יש ללחוץ כדי לערוך את הסימניה לנושא זה"
         unbookmark: "יש ללחוץ כדי להסיר את כל הסימניות בנושא זה"
-        unbookmark_with_reminder: "יש ללחוץ כדי להסיר את כל הסימניות והתזכורות בנושא זה."
+        unbookmark_with_reminder: "יש ללחוץ כדי להסיר את כל הסימניות והתזכורות בנושא זה"
     bookmarks:
       created: "הוספת את הפוסט הזה לסימניות. %{name}"
       created_generic: "הוספת את זה לסימניות. %{name}"
@@ -1166,7 +1167,7 @@ he:
         perm_denied_expl: "דחית הרשאה לקבלת התראות. יש לאפשר התראות בהגדרות הדפדפן שלך."
         disable: "השבתת התראות"
         enable: "הפעלת התראות"
-        each_browser_note: 'הערה: עליך לשנות הגדרה זו בכל דפדפן שמשמש אותך. כל ההודעות יושבתו אם בחרת להשהות התראות מתפריט המשתמש, ללא קשר להגדרה זו.'
+        each_browser_note: "הערה: עליך לשנות הגדרה זו בכל דפדפן שמשמש אותך. כל ההודעות יושבתו אם בחרת להשהות התראות מתפריט המשתמש, ללא קשר להגדרה זו."
         consent_prompt: "לקבל התראות חיות כשמתקבלות תגובות לפוסטים שלך?"
       dismiss: "דחה"
       dismiss_notifications: "להתעלם מהכול"
@@ -2806,6 +2807,7 @@ he:
       show_links: "הצג קישורים בתוך הנושא הזה"
       collapse_details: "צמצום פרטי הנושא"
       expand_details: "הרחבת פרטי הנושא"
+      read_more_in_category: "רוצה לקרוא עוד? אפשר לעיין בנושאים שתחת %{categoryLink} או <a href='%{latestLink}'>להציג את הנושאים האחרונים</a>."
       read_more: "מעניין אותך לקרוא עוד? אפשר <a href='%{categoryLink}'>לעיין בכל הקטגוריות</a> או <a href='%{latestLink}'>לצפות בנושאים העדכניים ביותר</a>."
       unread_indicator: "אף אחד מהחברים לא קרא את הפוסט האחרון של הנושא הזה עדיין."
       bumped_at_title: |
@@ -3409,6 +3411,8 @@ he:
           last: "מהדורה אחרונה"
           hide: "הסתרת שינויים"
           show: "הצגת שינויים"
+          destroy: "מחיקת מהדורות"
+          destroy_confirm: "למחוק את כל המהדורות של הפוסט הזה? זו פעולה בלתי הפיכה."
           revert: "החזרה לגרסה %{revision}"
           edit_wiki: "עריכת וויקי"
           edit_post: "עריכת פוסט"
@@ -3442,6 +3446,7 @@ he:
         updated: "עודכן"
         name: "שם"
         name_placeholder: "עבור מה הסימנייה?"
+        name_input_label: "שם סימנייה"
         set_reminder: "להזכיר לי"
         options: "אפשרויות"
         actions:
@@ -3652,7 +3657,9 @@ he:
         inappropriate: "לא ראוי"
         spam: "זהו ספאם"
       custom_placeholder_notify_user: "היו ממוקדים, חיובים ותמיד אדיבים."
+      notify_user_textarea_label: "הודעה למשתמש"
       custom_placeholder_notify_moderators: "נשמח לשמוע בדיוק מה מטריד אותך ולספק קישורים מתאימים ודוגמאות היכן שניתן."
+      notify_moderators_textarea_label: "הודעה למפקחים"
       custom_message:
         at_least:
           one: "הכניסו לפחות תו אחד"
@@ -4534,6 +4541,7 @@ he:
               write: יצירת נושא חדש או פרסום לאחד קיים.
               update: עדכון נושא. אפשר לערוך את הכותרת, הקטגוריה, התגיות, המצב, סוג שימוש, קישור מובילים וכו׳.
               read_lists: לקרוא רשימת נושאים כמו מובילים, חדשים, אחרונים וכו׳. יש גם תמיכה ב־RSS.
+              status: "עדכון מצב של נושא. מצב: סגור, ארכיון, גלוי, נעוץ. זמין: אמת, שקר. יש לציין כאן category_id (מזהה קטגוריה) ובמטען של הבקשה כדי לאפשר שינויי מצב בלבד על נושאים בקטגוריה הזאת."
             posts:
               edit: לערוך כל פוסט שהוא או אחד מסוים.
             categories:
@@ -4549,6 +4557,7 @@ he:
               update: עדכון פרטי פרופיל המשתמש.
               log_out: להוציא משתמש מכל ההפעלות שלו.
               anonymize: הפיכת חשבונות משתמשים לאלמוניים.
+              suspend: השעיית חשבונות משתמשים.
               delete: מחיקת חשבונות משתמשים.
               list: קבלת רשימת משתמשים.
             user_status:
@@ -4556,6 +4565,8 @@ he:
               update: עדכון מצב המשתמש.
             email:
               receive_emails: לשלב את התחום הזה עם מקבל הודעות הדוא״ל כדי לעבד הודעות דוא״ל נכנסות.
+            invites:
+              create: לשלוח הזמנות בדוא״ל או לייצר קישורי הצטרפות.
             badges:
               create: יצירת עיטור חדש.
               show: קבלת מידע על עיטור.
@@ -4564,6 +4575,9 @@ he:
               list_user_badges: הצגת עיטורי המשתמש.
               assign_badge_to_user: הקצאת עיטור למשתמש.
               revoke_badge_from_user: שלילת עיטור ממשתמש.
+            search:
+              show: לחפש באמצעות נקודת הקצה ‎`/search.json?q=term`.
+              query: לחפש באמצעות נקודת הקצה `‎/search/query?term=term`.
             wordpress:
               publishing: הכרחי לטובת יכולות הפרסום של תוסף ה־Discourse של WordPress (חובה).
               commenting: הכרחי לטובת יכולות התגובות של תוסף ה־Discourse של WordPress.
@@ -5010,6 +5024,12 @@ he:
           love:
             name: "חבב"
             description: "צבע הרקע של הכפתור \"חבב\""
+          selected:
+            name: "נבחרים"
+            description: "צבע הרקע של רכיבים כגון פריטי רשימות כשהם נבחרים/פעילים."
+          hover:
+            name: "ריחוף"
+            description: "צבע הרקע של רכיבים כגון פריטי רשימות כשעוברים מעליהם עם העכבר או שהמיקוד עובר אליהם מהמקלדת."
         robots:
           title: "דריסת קובץ ה־robots.txt של האתר שלך:"
           warning: "הגדרה זו תדרוס הגדרות אתר כלשהן שקשורות לכך."
@@ -5140,6 +5160,7 @@ he:
           no_previous: "אין ערך קודם."
           deleted: "אין ערך חדש. הרשומה נמחקה."
           actions:
+            permanently_delete_post_revisions: "מחיקת המהדורות של הפוסט לצמיתות"
             delete_user: "מחיקת משתמש"
             change_trust_level: "שנוי דרגת אמון"
             change_username: "שינוי שם משתמש/ת"

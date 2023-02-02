@@ -192,6 +192,40 @@ RSpec.describe DraftsController do
 
       expect(response.status).to eq(409)
     end
+
+    context "when data is too big" do
+      let(:user) { Fabricate(:user) }
+      let(:data) { "a" * (SiteSetting.max_draft_length + 1) }
+
+      before do
+        SiteSetting.max_draft_length = 500
+        sign_in(user)
+      end
+
+      it "returns an error" do
+        post "/drafts.json",
+             params: {
+               draft_key: "xyz",
+               data: { reply: data }.to_json,
+               sequence: 0,
+             }
+        expect(response).to have_http_status :bad_request
+      end
+    end
+
+    context "when data is not too big" do
+      context "when data is not proper JSON" do
+        let(:user) { Fabricate(:user) }
+        let(:data) { "not-proper-json" }
+
+        before { sign_in(user) }
+
+        it "returns an error" do
+          post "/drafts.json", params: { draft_key: "xyz", data: data, sequence: 0 }
+          expect(response).to have_http_status :bad_request
+        end
+      end
+    end
   end
 
   describe "#destroy" do

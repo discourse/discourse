@@ -80,7 +80,7 @@
 .user-main {
   .about {
     width: 100%;
-    margin-bottom: 15px;
+    margin-bottom: 0;
 
     &.has-background {
       .user-profile-image {
@@ -163,6 +163,7 @@
       .primary {
         width: 100%;
         position: relative;
+        display: flex;
 
         .bio {
           max-height: 300px;
@@ -176,7 +177,7 @@
 
       .user-profile-avatar {
         position: relative;
-        float: left;
+        align-self: flex-start;
         .avatar-flair {
           bottom: 8px;
           right: 16px;
@@ -185,6 +186,7 @@
     }
 
     .controls {
+      margin-left: auto;
       ul {
         list-style-type: none;
         margin-top: 0;
@@ -752,6 +754,11 @@
   .btn.edit {
     min-height: auto;
   }
+}
+
+.primary-textual {
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .primary-textual .staged,

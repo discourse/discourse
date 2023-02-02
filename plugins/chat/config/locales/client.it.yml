@@ -109,14 +109,45 @@ it:
       new_messages: "nuovi messaggi"
       mention_warning:
         dismiss: "ignora"
+        cannot_see:
+          one: "%{username} non può accedere a questo canale e non è stato avvisato."
+          other: "%{username} e %{others} non possono accedere a questo canale e non sono stati avvisati."
         invitations_sent:
           one: "Invito inviato"
           other: "Inviti inviati"
         invite: "Invita al canale"
+        without_membership:
+          one: "%{username} non ha partecipato a questo canale."
+          other: "%{username} e %{others} non hanno partecipato a questo canale."
+        group_mentions_disabled:
+          one: "%{group_name} non consente menzioni"
+          other: "%{group_name} e %{others} non consentono menzioni"
+        too_many_members:
+          one: "%{group_name} ha troppi membri. Nessuno è stato avvisato"
+          other: "%{group_name} e %{others} hanno troppi membri. Nessuno è stato avvisato"
+        warning_multiple:
+          one: "%{count} altro"
+          other: "%{count} altri"
         groups:
+          header:
+            some: "Alcuni utenti non riceveranno notifiche"
+            all: "Nessuno verrà avvisato"
+          unreachable:
+            one: "@%{group} non consente menzioni"
+            other: "@%{group} e @%{group_2} non consentono menzioni"
+          unreachable_multiple: "@%{group} e altri %{count} non consentono menzioni"
+          too_many_members:
+            one: "La menzione di @%{group} supera il %{notification_limit} di %{limit}"
+            other: "Menzionando sia @%{group} che @%{group_2} si supera il %{notification_limit} di %{limit}"
+          too_many_members_multiple: "Questi %{count} gruppi superano il %{notification_limit} di %{limit}"
           users_limit:
             one: "%{count} utente"
             other: "%{count} utenti"
+          notification_limit: "limite di notifica"
+        too_many_mentions: "Questo messaggio supera il %{notification_limit} di %{limit}"
+        mentions_limit:
+          one: "%{count} menzione"
+          other: "%{count} menzioni"
       aria_roles:
         header: "Intestazione della chat"
         composer: "Compositore di chat"
@@ -197,6 +228,7 @@ it:
         associated_topic: Argomento collegato
         associated_category: Categoria collegata
         title: Titolo
+        name: Nome
         description: Descrizione
       channel_info:
         back_to_all_channels: "Tutti i canali"
@@ -205,10 +237,8 @@ it:
           about: Informazioni
           members: Membri
           settings: Impostazioni
-      channel_edit_title_modal:
-        title: Modifica titolo
-        input_placeholder: Aggiungi un titolo
-        description: Assegna un breve titolo descrittivo al tuo canale
+      channel_edit_name_slug_modal:
+        name: Nome del canale
       channel_edit_description_modal:
         title: Modifica descrizione
         input_placeholder: Aggiungi una descrizione
@@ -271,7 +301,9 @@ it:
         mention: "Solo per le menzioni"
         always: "Per tutte le attività"
       settings:
-        enable_auto_join_users: "Aggiungi automaticamente tutti gli utenti attivi di recente"
+        channel_wide_mentions_label: "Consenti le menzioni @all e @here"
+        channel_wide_mentions_description: "Consenti agli utenti di avvisare tutti i membri di #%{channel} con @all o solo quelli che sono attivi al momento con @here"
+        auto_join_users_label: "Aggiunta automatica utenti"
         auto_join_users_warning: "Tutti gli utenti che non sono membri di questo canale e hanno accesso alla categoria %{category} parteciperanno. Vuoi procedere?"
         desktop_notification_level: "Notifiche sul desktop"
         follow: "Partecipa"
@@ -285,11 +317,13 @@ it:
         save: "Salva"
         saved: "Salvato"
         unfollow: "Esci"
-        admin_title: "Amministrazione"
+        admin_title: "Amministratore"
+        retention_info: "La cronologia delle chat verrà salvata per %{days} giorni."
       admin:
         title: "Chat"
       direct_messages:
         title: "Chat personale"
+        new: "Crea una chat personale"
         create: "Vai"
         leave: "Lascia questa chat personale"
         cannot_create: "Spiacenti, non puoi inviare messaggi diretti."

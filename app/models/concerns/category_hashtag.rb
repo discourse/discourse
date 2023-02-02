@@ -9,8 +9,8 @@ module CategoryHashtag
     # TODO (martin) Remove this when enable_experimental_hashtag_autocomplete
     # becomes the norm, it is reimplemented below for CategoryHashtagDataSourcee
     def query_from_hashtag_slug(category_slug)
-      slug_path = category_slug.split(SEPARATOR)
-      return nil if slug_path.empty? || slug_path.size > 2
+      slug_path = split_slug_path(category_slug)
+      return if slug_path.blank?
 
       slug_path.map! { |slug| CGI.escape(slug) } if SiteSetting.slug_generation_method == "encoded"
 
@@ -34,7 +34,9 @@ module CategoryHashtag
       category_slugs
         .map(&:downcase)
         .map do |slug|
-          slug_path = slug.split(":")
+          slug_path = split_slug_path(slug)
+          next if slug_path.blank?
+
           if SiteSetting.slug_generation_method == "encoded"
             slug_path.map! { |slug| CGI.escape(slug) }
           end
@@ -59,6 +61,12 @@ module CategoryHashtag
           end
         end
         .compact
+    end
+
+    def split_slug_path(slug)
+      slug_path = slug.split(SEPARATOR)
+      return if slug_path.empty? || slug_path.size > 2
+      slug_path
     end
   end
 end

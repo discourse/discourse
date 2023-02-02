@@ -100,6 +100,10 @@ class Upload < ActiveRecord::Base
     self.url
   end
 
+  def to_markdown
+    UploadMarkdown.new(self).to_markdown
+  end
+
   def thumbnail(width = self.thumbnail_width, height = self.thumbnail_height)
     optimized_images.find_by(width: width, height: height)
   end

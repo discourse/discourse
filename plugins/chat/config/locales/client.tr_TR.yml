@@ -228,6 +228,7 @@ tr_TR:
         associated_topic: Bağlantılı konu
         associated_category: Bağlantılı kategori
         title: Başlık
+        name: Ad
         description: Açıklama
       channel_info:
         back_to_all_channels: "Tüm kanallar"
@@ -236,10 +237,8 @@ tr_TR:
           about: Hakkında
           members: Üyeler
           settings: Ayarlar
-      channel_edit_title_modal:
-        title: Başlığı düzenle
-        input_placeholder: Başlık ekle
-        description: Kanalınıza kısa bir açıklayıcı başlık ekleyin
+      channel_edit_name_slug_modal:
+        name: Kanal adı
       channel_edit_description_modal:
         title: Açıklamayı düzenle
         input_placeholder: Açıklama ekle
@@ -305,8 +304,6 @@ tr_TR:
         channel_wide_mentions_label: "@all ve @here bahsetmelerine izin ver"
         channel_wide_mentions_description: "Kullanıcıların @all ile #%{channel} kanalının tüm üyelerine veya @here ile yalnızca o anda aktif olanlara bildirim göndermelerine izin verin"
         auto_join_users_label: "Kullanıcıları otomatik olarak ekle"
-        auto_join_users_info: "Son 3 ayda hangi kullanıcıların aktif olduğunu saatlik olarak kontrol edin ve %{category} adlı kategoriye erişimleri varsa bu kanala ekleyin."
-        enable_auto_join_users: "Son zamanlarda aktif olan tüm kullanıcıları otomatik olarak ekle"
         auto_join_users_warning: "Bu kanala üye olmayan ve %{category} adlı kategoriye erişimi olan her kullanıcı katılacak. Emin misiniz?"
         desktop_notification_level: "Masaüstü bildirimleri"
         follow: "Katıl"
@@ -326,6 +323,7 @@ tr_TR:
         title: "Sohbet"
       direct_messages:
         title: "Kişisel sohbet"
+        new: "Kişisel sohbet oluşturun"
         create: "Git"
         leave: "Bu kişisel sohbetten ayrıl"
         cannot_create: "Üzgünüz, doğrudan mesaj gönderemezsiniz."

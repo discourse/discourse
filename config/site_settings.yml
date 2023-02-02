@@ -1090,6 +1090,9 @@ posting:
   skip_auto_delete_reply_likes: 5
   review_every_post:
     default: false
+  max_draft_length:
+    default: 400_000
+    hidden: true
 
 email:
   email_time_window_mins:
@@ -1803,6 +1806,8 @@ security:
     hidden: true
   include_secure_categories_in_tag_counts:
     default: false
+  display_personal_messages_tag_counts:
+    default: false
 
 onebox:
   post_onebox_maxlength:
@@ -1918,12 +1923,18 @@ rate_limits:
   rate_limit_create_post: 5
   rate_limit_new_user_create_topic: 120
   rate_limit_new_user_create_post: 30
-  rate_limit_search_anon_global:
+  rate_limit_search_anon_global_per_minute:
     hidden: true
     default: 150
-  rate_limit_search_anon_user:
+  rate_limit_search_anon_user_per_minute:
     hidden: true
     default: 15
+  rate_limit_search_anon_global_per_second:
+    hidden: true
+    default: 8
+  rate_limit_search_anon_user_per_second:
+    hidden: true
+    default: 2
   rate_limit_search_user:
     hidden: true
     default: 30
@@ -2183,6 +2194,12 @@ backups:
     client: true
 
 search:
+  prioritize_exact_search_title_match:
+    default: false
+    hidden: true
+  max_duplicate_search_index_terms:
+    default: -1
+    hidden: true
   use_pg_headlines_for_excerpt:
     default: false
     hidden: true
@@ -2193,6 +2210,10 @@ search:
   search_ranking_normalization:
     default: "0"
     hidden: true
+  search_ranking_weights:
+    default: ""
+    hidden: true
+    validator: "SearchRankingWeightsValidator"
   min_search_term_length:
     client: true
     default: 3

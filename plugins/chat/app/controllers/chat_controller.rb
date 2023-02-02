@@ -432,9 +432,10 @@ class Chat::ChatController < Chat::ChatBaseController
 
   def set_draft
     if params[:data].present?
-      ChatDraft.find_or_initialize_by(user: current_user, chat_channel_id: @chat_channel.id).update(
-        data: params[:data],
-      )
+      ChatDraft.find_or_initialize_by(
+        user: current_user,
+        chat_channel_id: @chat_channel.id,
+      ).update!(data: params[:data])
     else
       ChatDraft.where(user: current_user, chat_channel_id: @chat_channel.id).destroy_all
     end

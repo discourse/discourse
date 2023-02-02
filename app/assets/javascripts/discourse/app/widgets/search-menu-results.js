@@ -676,7 +676,7 @@ createWidget("search-menu-initial-options", {
       slug: term,
       extraHint: I18n.t("search.enter_hint"),
       label: [
-        h("span.keyword", `${term} `),
+        h("span.keyword", `${term}`),
         opts.withLabel
           ? h("span.label-suffix", I18n.t("search.in_topics_posts"))
           : null,

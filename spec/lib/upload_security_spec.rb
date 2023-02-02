@@ -217,6 +217,16 @@ RSpec.describe UploadSecurity do
         end
       end
 
+      describe "when the upload is first used for a post in a secure context that is later deleted" do
+        it "returns false" do
+          create_secure_post_reference
+          post_in_secure_context.trash!
+          CustomEmoji.create(name: "meme", upload: upload)
+
+          expect(subject.should_be_secure?).to eq(false)
+        end
+      end
+
       describe "when the upload is first used for a site setting" do
         it "returns false" do
           SiteSetting.favicon = upload

@@ -216,7 +216,7 @@ module Email
       correct_first_body_margin
       correct_footer_style
       correct_footer_style_highlight_first
-      decorate_hashtags
+      strip_hashtag_link_icons
       reset_tables
 
       html_lang = SiteSetting.default_locale.sub("_", "-")
@@ -396,7 +396,7 @@ module Email
         end
     end
 
-    def decorate_hashtags
+    def strip_hashtag_link_icons
       @fragment
         .search(".hashtag-cooked")
         .each do |hashtag|

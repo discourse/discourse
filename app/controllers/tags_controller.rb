@@ -5,11 +5,12 @@ class TagsController < ::ApplicationController
   include TopicQueryParams
 
   before_action :ensure_tags_enabled
-  before_action :ensure_visible, only: %i[show info]
 
   def self.show_methods
     Discourse.anonymous_filters.map { |f| :"show_#{f}" }
   end
+
+  before_action :ensure_visible, only: [:show, :info, *show_methods]
 
   requires_login except: [:index, :show, :tag_feed, :search, :info, *show_methods]
 
@@ -41,6 +42,7 @@ class TagsController < ::ApplicationController
     if SiteSetting.tags_listed_by_group
       ungrouped_tags = Tag.where("tags.id NOT IN (SELECT tag_id FROM tag_group_memberships)")
       ungrouped_tags = ungrouped_tags.used_tags_in_regular_topics(guardian) unless show_all_tags
+      ungrouped_tags = ungrouped_tags.order(:id)
 
       grouped_tag_counts =
         TagGroup
@@ -59,23 +61,29 @@ class TagsController < ::ApplicationController
       @extras = { tag_groups: grouped_tag_counts }
     else
       tags = show_all_tags ? Tag.all : Tag.used_tags_in_regular_topics(guardian)
+      tags = tags.order(:id)
       unrestricted_tags = DiscourseTagging.filter_visible(tags.where(target_tag_id: nil), guardian)
 
       categories =
         Category
-          .where("id IN (SELECT category_id FROM category_tags)")
-          .where("id IN (?)", guardian.allowed_category_ids)
-          .includes(:tags)
+          .where(
+            "id IN (SELECT category_id FROM category_tags WHERE category_id IN (?))",
+            guardian.allowed_category_ids,
+          )
+          .includes(:none_synonym_tags)
+          .order(:id)
 
       category_tag_counts =
         categories
           .map do |c|
             category_tags =
               self.class.tag_counts_json(
-                DiscourseTagging.filter_visible(c.tags.where(target_tag_id: nil), guardian),
+                DiscourseTagging.filter_visible(c.none_synonym_tags, guardian),
                 guardian,
               )
+
             next if category_tags.empty?
+
             { id: c.id, tags: category_tags }
           end
           .compact
@@ -395,16 +403,22 @@ class TagsController < ::ApplicationController
 
         next if topic_count == 0 && t.pm_topic_count > 0 && !show_pm_tags
 
-        {
+        attrs = {
           id: t.name,
           text: t.name,
           name: t.name,
           description: t.description,
           count: topic_count,
-          pm_count: show_pm_tags ? t.pm_topic_count : 0,
+          pm_only: topic_count == 0 && t.pm_topic_count > 0,
           target_tag:
             t.target_tag_id ? target_tags.find { |x| x.id == t.target_tag_id }&.name : nil,
         }
+
+        if show_pm_tags && SiteSetting.display_personal_messages_tag_counts
+          attrs[:pm_count] = t.pm_topic_count
+        end
+
+        attrs
       end
       .compact
   end

@@ -56,6 +56,10 @@ ru:
         leave_channel: "Покинуть канал"
         join: "Подписаться"
         leave: "Отписаться"
+        save_label:
+          mute_channel: "Настройка отключения уведомлений для канала сохранена"
+          desktop_notification: "Настройка уведомлений для настольных устройств сохранена"
+          mobile_notification: "Настройка уведомлений для мобильных устройств сохранена"
       channel_archive:
         title: "Архивировать канал"
         instructions: "<p>Архивация канала переводит его в режим только для чтения и перемещает все сообщения из канала в новую или существующую тему. В этом режиме нельзя отправлять новые сообщения, а существующие сообщения нельзя редактировать или удалять.</p><p>Действительно заархивировать канал <strong>%{channelTitle}</strong>?</p>"
@@ -107,18 +111,65 @@ ru:
       new_messages: "Новые сообщения"
       mention_warning:
         dismiss: "Отклонить"
+        cannot_see:
+          one: "%{username} и еще %{others} не имеют доступа к этому каналу и не были уведомлены."
+          few: "%{username} и еще %{others} не имеют доступа к этому каналу и не были уведомлены."
+          many: "%{username} и еще %{others} не имеют доступа к этому каналу и не были уведомлены."
+          other: "%{username} и еще %{others} не имеют доступа к этому каналу и не были уведомлены."
         invitations_sent:
           one: "Приглашение отправлено"
           few: "Приглашения отправлены"
           many: "Приглашений отправлены"
           other: "Приглашений отправлены"
         invite: "Пригласить в канал"
+        without_membership:
+          one: "%{username} и еще %{others} не являются участниками канала."
+          few: "%{username} и еще %{others} не являются участниками канала."
+          many: "%{username} и еще %{others} не являются участниками канала."
+          other: "%{username} и еще %{others} не являются участниками канала."
+        group_mentions_disabled:
+          one: "Группа «%{group_name}» и еще %{others} не разрешают упоминания"
+          few: "Группа «%{group_name}» и еще %{others} не разрешают упоминания"
+          many: "Группа «%{group_name}» и еще %{others} не разрешают упоминания"
+          other: "Группа «%{group_name}» и еще %{others} не разрешают упоминания"
+        too_many_members:
+          one: "В группе «%{group_name}» и еще %{others} слишком много участников. Никто не был уведомлен."
+          few: "В группе «%{group_name}» и еще %{others} слишком много участников. Никто не был уведомлен."
+          many: "В группе «%{group_name}» и еще %{others} слишком много участников. Никто не был уведомлен."
+          other: "В группе «%{group_name}» и еще %{others} слишком много участников. Никто не был уведомлен."
+        warning_multiple:
+          one: "еще %{count}"
+          few: "еще %{count}"
+          many: "еще %{count}"
+          other: "еще %{count}"
         groups:
+          header:
+            some: "Некоторые пользователи не будут уведомлены"
+            all: "Никто не будет уведомлен"
+          unreachable:
+            one: "Группа «@%{group}» не разрешает упоминания"
+            few: "Группы «@%{group}» и «@%{group_2}» не разрешают упоминания"
+            many: "Группы «@%{group}» и «@%{group_2}» не разрешают упоминания"
+            other: "Группы «@%{group}» и «@%{group_2}» не разрешают упоминания"
+          unreachable_multiple: "Группа «@%{group}» и еще %{count} не разрешают упоминания"
+          too_many_members:
+            one: "Упоминание группы «@%{group}» превышает %{notification_limit} (%{limit})"
+            few: "Упоминание групп «@%{group}» и «%{group_2}» превышает %{notification_limit} (%{limit})"
+            many: "Упоминание групп «@%{group}» и «%{group_2}» превышает %{notification_limit} (%{limit})"
+            other: "Упоминание групп «@%{group}» и «%{group_2}» превышает %{notification_limit} (%{limit})"
+          too_many_members_multiple: "Группы (%{count}) превышают %{notification_limit} (%{limit})"
           users_limit:
             one: "%{count} пользователь"
             few: "%{count} пользователя"
             many: "%{count} пользователей"
             other: "%{count} пользователя"
+          notification_limit: "лимит уведомлений"
+        too_many_mentions: "Сообщение превышает %{notification_limit} (%{limit})"
+        mentions_limit:
+          one: "%{count} упоминание"
+          few: "%{count} упоминания"
+          many: "%{count} упоминаний"
+          other: "%{count} упоминания"
       aria_roles:
         header: "Заголовок чата"
         composer: "Редактор чата"
@@ -201,6 +252,7 @@ ru:
         associated_topic: Связанная тема
         associated_category: Связанная категория
         title: Название
+        name: Название
         description: Описание
       channel_info:
         back_to_all_channels: "Все каналы"
@@ -209,10 +261,8 @@ ru:
           about: Информация
           members: Участники
           settings: Настройки
-      channel_edit_title_modal:
-        title: Изменить название
-        input_placeholder: Добавьте название
-        description: Дайте короткое описательное название вашему каналу
+      channel_edit_name_slug_modal:
+        name: Название канала
       channel_edit_description_modal:
         title: Изменить описание
         input_placeholder: Добавить описание
@@ -281,7 +331,9 @@ ru:
         mention: "Только для упоминаний"
         always: "Для всех действий"
       settings:
-        enable_auto_join_users: "Автоматически добавлять всех активных пользователей"
+        channel_wide_mentions_label: "Разрешить упоминания @all и @here"
+        channel_wide_mentions_description: "Разрешить пользователям уведомлять всех в канале #%{channel} (@all) и только активных участников (@here)"
+        auto_join_users_label: "Автоматически добавлять пользователей"
         auto_join_users_warning: "Любой пользователь, не являющийся участником этого канала, но имеющий доступ к разделу %{category}, будет автоматически подключён. Продолжить?"
         desktop_notification_level: "Уведомления на рабочем столе"
         follow: "Подписаться"
@@ -296,10 +348,12 @@ ru:
         saved: "Сохранено"
         unfollow: "Отписаться"
         admin_title: "Администрирование"
+        retention_info: "История чата будет храниться %{days} сут."
       admin:
         title: "Чат"
       direct_messages:
         title: "Личный чат"
+        new: "Создать личный чат"
         create: "Создать"
         leave: "Выйти из личного чата"
         cannot_create: "Вы не можете отправлять прямые сообщения."
@@ -385,6 +439,7 @@ ru:
         people_&_body: "Люди и части тел"
         travel_&_places: "Путешествия и места"
         animals_&_nature: "Животные и природа"
+        food_&_drink: "Еда и напитки"
         activities: "Деятельность"
         flags: "Флаги"
         symbols: "Символы"
