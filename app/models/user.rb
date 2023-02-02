@@ -2222,12 +2222,14 @@ end
 #
 # Indexes
 #
-#  idx_users_admin                    (id) WHERE admin
-#  idx_users_moderator                (id) WHERE moderator
-#  index_users_on_last_posted_at      (last_posted_at)
-#  index_users_on_last_seen_at        (last_seen_at)
-#  index_users_on_secure_identifier   (secure_identifier) UNIQUE
-#  index_users_on_uploaded_avatar_id  (uploaded_avatar_id)
-#  index_users_on_username            (username) UNIQUE
-#  index_users_on_username_lower      (username_lower) UNIQUE
+#  idx_users_admin                     (id) WHERE admin
+#  idx_users_moderator                 (id) WHERE moderator
+#  index_users_on_last_posted_at       (last_posted_at)
+#  index_users_on_last_seen_at         (last_seen_at)
+#  index_users_on_name_trgm            (name) USING gist
+#  index_users_on_secure_identifier    (secure_identifier) UNIQUE
+#  index_users_on_uploaded_avatar_id   (uploaded_avatar_id)
+#  index_users_on_username             (username) UNIQUE
+#  index_users_on_username_lower       (username_lower) UNIQUE
+#  index_users_on_username_lower_trgm  (username_lower) USING gist
 #
