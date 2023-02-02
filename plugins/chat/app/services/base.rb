@@ -75,6 +75,40 @@ module Chat
         end
       end
 
+      class Step
+        attr_reader :name, :block
+
+        def initialize(name, &block)
+          @name = name
+          @block = block
+        end
+
+        def call(instance, context)
+          block = instance.method(name) unless block
+          instance.instance_exec(&block)
+        end
+      end
+
+      class PolicyStep < Step
+        def call(instance, context)
+          context.fail!("result.policy.#{name}": Context.build.fail) unless super
+        end
+      end
+
+      class ContractStep < Step
+        def call(instance, context)
+          contract_class = Class.new(Contract)
+          contract_class.class_eval(&block)
+          contract =
+            contract_class.new(context.to_h.slice(*contract_class.attribute_names.map(&:to_sym)))
+          context[:"contract.default"] = contract
+
+          unless contract.valid?
+            context.fail!("result.contract.default": Context.build.fail(errors: contract.errors))
+          end
+        end
+      end
+
       included do
         attr_reader :context, :contract
 
@@ -93,19 +127,15 @@ module Chat
         end
 
         def contract(name = :default, &block)
-          steps << [:contract, name, block]
-        end
-
-        def service(&block)
-          steps << [:step, :service, block]
+          steps << ContractStep.new(name, &block)
         end
 
         def policy(name = :default, &block)
-          steps << [:policy, name, block]
+          steps << PolicyStep.new(name, &block)
         end
 
-        def step(&block)
-          steps << [:step, :step, block]
+        def step(name, &block)
+          steps << Step.new(name, &block)
         end
 
         def steps
@@ -158,24 +188,7 @@ module Chat
       end
 
       def run!
-        self.class.steps.each do |type, name, block|
-          case type
-          when :policy
-            context.fail!("result.policy.#{name}": Context.build.fail) unless instance_eval(&block)
-          when :contract
-            contract_class = Class.new(Contract)
-            contract_class.class_eval(&block)
-            @contract =
-              contract_class.new(context.to_h.slice(*contract_class.attribute_names.map(&:to_sym)))
-            context[:"contract.default"] = contract
-
-            unless contract.valid?
-              context.fail!("result.contract.default": Context.build.fail(errors: contract.errors))
-            end
-          when :step
-            instance_eval(&block)
-          end
-        end
+        self.class.steps.each { |step| step.call(self, context) }
       end
     end
   end

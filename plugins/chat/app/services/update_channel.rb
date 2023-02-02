@@ -34,8 +34,32 @@ module Chat
       delegate :channel, :name, :description, :slug, to: :context
 
       policy(:invalid_access) { guardian.can_edit_chat_channel? }
+      step :map_data
+      contract do
+        attribute :channel
+        validates :channel, presence: true
 
-      step do
+        attribute :name
+        attribute :description
+        attribute :slug
+        attribute :auto_join_users, :boolean, default: false
+        attribute :allow_channel_wide_mentions, :boolean, default: true
+
+        validate :only_category_channel_allowed
+
+        def only_category_channel_allowed
+          if channel.direct_message_channel?
+            errors.add(:base, I18n.t("chat.errors.cant_update_direct_message_channel"))
+          end
+        end
+      end
+      step :update_channel
+      step :publish_channel_update
+      step :auto_join_users_if_needed
+
+      private
+
+      def map_data
         if @initial_context.key?(:name) && context.name.blank?
           context.name = nil
         else
@@ -55,33 +79,6 @@ module Chat
           context.allow_channel_wide_mentions ||= context.channel.allow_channel_wide_mentions
         end
       end
-
-      contract do
-        attribute :channel
-        validates :channel, presence: true
-
-        attribute :name
-        attribute :description
-        attribute :slug
-        attribute :auto_join_users, :boolean, default: false
-        attribute :allow_channel_wide_mentions, :boolean, default: true
-
-        validate :only_category_channel_allowed
-
-        def only_category_channel_allowed
-          if channel.direct_message_channel?
-            errors.add(:base, I18n.t("chat.errors.cant_update_direct_message_channel"))
-          end
-        end
-      end
-
-      service do
-        update_channel
-        publish_channel_update
-        auto_join_users_if_needed
-      end
-
-      private
 
       def update_channel
         channel.update!(params_to_edit)

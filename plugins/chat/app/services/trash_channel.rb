@@ -20,24 +20,27 @@ module Chat
 
       delegate :channel, to: :context
 
-      policy(:invalid_access) { guardian.can_delete_chat_channel? }
-
+      policy :invalid_access
       contract do
         attribute :channel
         validates :channel, presence: true
       end
+      step :service
+      step :enqueue_delete_channel_relations_job
 
-      service do
+      private
+
+      def service
         ChatChannel.transaction do
           prevents_slug_collision
           soft_delete_channel
           log_channel_deletion
         end
-
-        enqueue_delete_channel_relations_job
       end
 
-      private
+      def invalid_access
+        guardian.can_delete_chat_channel?
+      end
 
       def soft_delete_channel
         channel.trash!(guardian.user)

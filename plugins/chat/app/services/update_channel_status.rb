@@ -18,10 +18,8 @@ module Chat
 
       delegate :channel, :status, to: :context
 
-      step { context.status = context.status&.to_sym }
-
+      step :status_to_sym
       policy(:invalid_access) { guardian.can_change_channel_status?(channel, status) }
-
       contract do
         attribute :channel
         validates :channel, presence: true
@@ -29,8 +27,17 @@ module Chat
         attribute :status
         validates :status, inclusion: { in: ChatChannel.editable_statuses.keys.map(&:to_sym) }
       end
+      step :change_status
 
-      service { channel.public_send("#{status}!", guardian.user) }
+      private
+
+      def status_to_sym
+        context.status = context.status&.to_sym
+      end
+
+      def change_status
+        channel.public_send("#{status}!", guardian.user)
+      end
     end
   end
 end
