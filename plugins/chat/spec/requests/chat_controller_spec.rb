@@ -611,7 +611,7 @@ RSpec.describe Chat::ChatController do
     end
 
     before do
-      ChatMessage.create(user: user, message: "this is a message", chat_channel: chat_channel)
+      ChatMessage.create!(user: user, message: "this is a message", chat_channel: chat_channel)
     end
 
     describe "for category" do
