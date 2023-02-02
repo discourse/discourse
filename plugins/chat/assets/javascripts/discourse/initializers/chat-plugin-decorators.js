@@ -34,17 +34,15 @@ export default {
         }
       );
     }
-    if (siteSettings.lazy_yt_enabled) {
+
+    if (siteSettings.lazy_videos_enabled) {
+      const lazyVideos = api.container.lookup("service:lazy-videos");
       api.decorateChatMessage(
         (element) => {
-          element
-            .querySelectorAll(".lazyYT:not(.lazyYT-video-loaded)")
-            .forEach((iframe) => {
-              $(iframe).lazyYT();
-            });
+          lazyVideos.decorateLazyContainers(element);
         },
         {
-          id: "lazy-yt",
+          id: "discourse-lazy-videos",
         }
       );
     }

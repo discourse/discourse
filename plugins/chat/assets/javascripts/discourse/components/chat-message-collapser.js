@@ -35,8 +35,8 @@ export default class ChatMessageCollapser extends Component {
   get cookedBodies() {
     const elements = Array.prototype.slice.call(domFromString(this.cooked));
 
-    if (hasYoutube(elements)) {
-      return this.youtubeCooked(elements);
+    if (hasLazyVideo(elements)) {
+      return this.lazyVideoCooked(elements);
     }
 
     if (hasImageOnebox(elements)) {
@@ -54,17 +54,16 @@ export default class ChatMessageCollapser extends Component {
     return [];
   }
 
-  youtubeCooked(elements) {
+  lazyVideoCooked(elements) {
     return elements.reduce((acc, e) => {
-      if (youtubePredicate(e)) {
-        const id = e.dataset.youtubeId;
-        const link = `https://www.youtube.com/watch?v=${escapeExpression(id)}`;
-        const title = escapeExpression(e.dataset.youtubeTitle);
+      if (lazyVideoPredicate(e)) {
+        const link = escapeExpression(e.dataset.videoUrl || "");
+        const title = escapeExpression(e.dataset.videoTitle || "");
         const header = htmlSafe(
           `<a target="_blank" class="chat-message-collapser-link" rel="noopener noreferrer" href="${link}">${title}</a>`
         );
         const body = document.createElement("div");
-        body.className = "chat-message-collapser-youtube";
+        body.className = "chat-message-collapser-lazy-video";
         body.appendChild(e);
 
         acc.push({ header, body, needsCollapser: true });
@@ -132,16 +131,12 @@ export default class ChatMessageCollapser extends Component {
   }
 }
 
-function youtubePredicate(e) {
-  return (
-    e.classList.length &&
-    e.classList.contains("onebox") &&
-    e.classList.contains("lazyYT-container")
-  );
+function lazyVideoPredicate(e) {
+  return e.classList.length && e.classList.contains("lazy-video-container");
 }
 
-function hasYoutube(elements) {
-  return elements.some((e) => youtubePredicate(e));
+function hasLazyVideo(elements) {
+  return elements.some((e) => lazyVideoPredicate(e));
 }
 
 function animatedImagePredicate(e) {
@@ -205,7 +200,7 @@ export function isCollapsible(cooked, uploads) {
   const elements = Array.prototype.slice.call(domFromString(cooked));
 
   return (
-    hasYoutube(elements) ||
+    hasLazyVideo(elements) ||
     hasImageOnebox(elements) ||
     hasUploads(uploads) ||
     hasImage(elements) ||
