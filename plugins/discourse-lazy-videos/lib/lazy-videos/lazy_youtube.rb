@@ -1,0 +1,36 @@
+# frozen_string_literal: true
+
+require "onebox"
+
+class Onebox::Engine::YoutubeOnebox
+  include Onebox::Engine
+  alias_method :default_onebox_to_html, :to_html
+
+  def to_html
+    if SiteSetting.lazy_videos_enabled && SiteSetting.lazy_youtube_enabled && video_id &&
+         !params["list"]
+      result = parse_embed_response
+      result ||= get_opengraph.data
+
+      thumbnail_url = "https://img.youtube.com/vi/#{video_id}/maxresdefault.jpg" || result[:image]
+      escaped_title = ERB::Util.html_escape(video_title)
+      video_url = "https://www.youtube.com/watch?v=#{video_id}"
+
+      <<~HTML
+        <div class="youtube-onebox lazy-video-container"
+          data-video-id="#{video_id}"
+          data-video-title="#{escaped_title}"
+          data-video-url="#{video_url}"
+          data-provider-name="youtube">
+          <a href="#{video_url}" target="_blank">
+            <img class="youtube-thumbnail"
+              src="#{thumbnail_url}"
+              title="#{escaped_title}">
+          </a>
+        </div>
+      HTML
+    else
+      default_onebox_to_html
+    end
+  end
+end
