@@ -969,7 +969,7 @@ RSpec.describe Search do
 
     it "aggregates searches in a topic by returning the post with the lowest post number" do
       post = Fabricate(:post, topic: topic, raw: "this is a play post")
-      post2 = Fabricate(:post, topic: topic, raw: "play play playing played play")
+      _post2 = Fabricate(:post, topic: topic, raw: "play play playing played play")
       post3 = Fabricate(:post, raw: "this is a play post")
 
       5.times { Fabricate(:post, topic: topic, raw: "play playing played") }
@@ -1876,7 +1876,7 @@ RSpec.describe Search do
         )
       post2 = Fabricate(:post, raw: "test URL post with")
 
-      expect(Search.execute("test post with 'a URL).posts").posts).to eq([post2, post])
+      expect(Search.execute("test post URL l").posts).to eq([post2, post])
       expect(Search.execute(%{"test post with 'a URL"}).posts).to eq([post])
       expect(Search.execute(%{"https://some.site.com/search?q=test.test.test"}).posts).to eq([post])
       expect(
@@ -2311,11 +2311,11 @@ RSpec.describe Search do
 
     it "escapes the term correctly" do
       expect(Search.ts_query(term: 'Title with trailing backslash\\')).to eq(
-        "TO_TSQUERY('english', '''Title with trailing backslash\\\\\\\\'':*')",
+        "REPLACE(TO_TSQUERY('english', '''Title with trailing backslash\\\\\\\\'':*')::text, '<->', '&')::tsquery",
       )
 
       expect(Search.ts_query(term: "Title with trailing quote'")).to eq(
-        "TO_TSQUERY('english', '''Title with trailing quote'''''':*')",
+        "REPLACE(TO_TSQUERY('english', '''Title with trailing quote'''''':*')::text, '<->', '&')::tsquery",
       )
     end
   end
