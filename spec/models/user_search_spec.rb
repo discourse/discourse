@@ -274,6 +274,7 @@ RSpec.describe UserSearch do
       codinghorror = Fabricate(:user, username: "codinghorror", name: "Jeff Atwood")
       pfaffman = Fabricate(:user, username: "pfaffman")
       zogstrip = Fabricate(:user, username: "zogstrip", name: "Régis Hanol")
+      roman = Fabricate(:user, username: "roman", name: "Roman Rizzi")
 
       SiteSetting.user_search_similar_results = false
       expect(UserSearch.new("rafel").search).to be_blank
@@ -296,6 +297,14 @@ RSpec.describe UserSearch do
       expect(UserSearch.new("atwod").search).to include(codinghorror)
       expect(UserSearch.new("regis").search).to include(zogstrip)
       expect(UserSearch.new("reg").search).to include(zogstrip)
+    end
+
+    it "orders the results by similarity" do
+      zogstrip = Fabricate(:user, username: "zogstrip", name: "Régis Hanol")
+      roman = Fabricate(:user, username: "roman", name: "Roman Rizzi")
+      SiteSetting.user_search_similar_results = true
+
+      expect(UserSearch.new("regis").search.first).to eq(zogstrip)
     end
   end
 end
