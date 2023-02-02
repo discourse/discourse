@@ -629,6 +629,14 @@ createWidget("post-contents", {
       controller.setProperties({ topic, post });
     });
   },
+
+  init() {
+    this.postContentsDestroyCallbacks = [];
+  },
+
+  destroy() {
+    this.postContentsDestroyCallbacks.forEach((c) => c());
+  },
 });
 
 createWidget("post-notice", {
