@@ -18,6 +18,8 @@ module Chat
 
       DELETE_CHANNEL_LOG_KEY = "chat_channel_delete"
 
+      delegate :channel, to: :context
+
       policy(:invalid_access) { guardian.can_delete_chat_channel? }
 
       contract do
@@ -38,29 +40,26 @@ module Chat
       private
 
       def soft_delete_channel
-        context.channel.trash!(context.guardian.user)
+        channel.trash!(guardian.user)
       end
 
       def enqueue_delete_channel_relations_job
-        Jobs.enqueue(:chat_channel_delete, chat_channel_id: context.channel.id)
+        Jobs.enqueue(:chat_channel_delete, chat_channel_id: channel.id)
       end
 
       def log_channel_deletion
-        StaffActionLogger.new(context.guardian.user).log_custom(
+        StaffActionLogger.new(guardian.user).log_custom(
           DELETE_CHANNEL_LOG_KEY,
-          {
-            chat_channel_id: context.channel.id,
-            chat_channel_name: context.channel.title(context.guardian.user),
-          },
+          { chat_channel_id: channel.id, chat_channel_name: channel.title(guardian.user) },
         )
       end
 
       def prevents_slug_collision
-        context.channel.update!(slug: generate_deleted_slug)
+        channel.update!(slug: generate_deleted_slug)
       end
 
       def generate_deleted_slug
-        "#{Time.now.strftime("%Y%m%d-%H%M")}-#{context.channel.slug}-deleted".truncate(
+        "#{Time.now.strftime("%Y%m%d-%H%M")}-#{channel.slug}-deleted".truncate(
           SiteSetting.max_topic_title_length,
           omission: "",
         )

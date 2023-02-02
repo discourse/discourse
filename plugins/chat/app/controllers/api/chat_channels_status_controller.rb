@@ -8,6 +8,6 @@ class Chat::Api::ChatChannelsStatusController < Chat::Api::ChatChannelsControlle
         channel: channel_from_params,
         status: params.require(:status),
       },
-    ) { on_success { render_serialized(@_result.channel, ChatChannelSerializer, root: "channel") } }
+    ) { on_success { render_serialized(result.channel, ChatChannelSerializer, root: "channel") } }
   end
 end

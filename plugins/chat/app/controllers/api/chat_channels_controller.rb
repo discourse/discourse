@@ -97,10 +97,10 @@ class Chat::Api::ChatChannelsController < Chat::Api
     with_service(Chat::Service::UpdateChannel, extra_params: params_to_edit) do
       on_success do
         render_serialized(
-          @_result.channel,
+          result.channel,
           ChatChannelSerializer,
           root: "channel",
-          membership: @_result.channel.membership_for(current_user),
+          membership: result.channel.membership_for(current_user),
         )
       end
     end

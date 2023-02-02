@@ -244,14 +244,11 @@ module Chat
             contract_class.class_eval(&self.class.contract_block)
             @contract =
               contract_class.new(context.to_h.slice(*contract_class.attribute_names.map(&:to_sym)))
-            context[:contract] = contract
+            context[:"contract.default"] = contract
 
-            context["result.contract.default"] = Context.build
             unless contract.valid?
-              context["result.contract.default"].fail(errors: contract.errors)
-              context.fail!("contract.failed": true)
+              context.fail!("result.contract.default": Context.build.fail(errors: contract.errors))
             end
-            context.merge(contract.attributes)
           end
         end
       end

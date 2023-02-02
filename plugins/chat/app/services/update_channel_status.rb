@@ -16,11 +16,11 @@ module Chat
       #   @param [String] status
       #   @return [Chat::Service::Base::Context]
 
+      delegate :channel, :status, to: :context
+
       before_policies { context.status = context.status&.to_sym }
 
-      policy(:invalid_access) do
-        guardian.can_change_channel_status?(context.channel, context.status)
-      end
+      policy(:invalid_access) { guardian.can_change_channel_status?(channel, status) }
 
       contract do
         attribute :channel
@@ -30,7 +30,7 @@ module Chat
         validates :status, inclusion: { in: ChatChannel.editable_statuses.keys.map(&:to_sym) }
       end
 
-      service { context.channel.public_send("#{context.status}!", context.guardian.user) }
+      service { channel.public_send("#{status}!", guardian.user) }
     end
   end
 end
