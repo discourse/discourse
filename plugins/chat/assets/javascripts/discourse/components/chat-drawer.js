@@ -178,15 +178,18 @@ export default Component.extend({
       return;
     }
 
-    const drawer = document.querySelector(".chat-drawer");
-    if (!drawer) {
+    const drawerContainer = document.querySelector(
+      ".chat-drawer-outlet-container"
+    );
+    if (!drawerContainer) {
       return;
     }
 
     const composer = document.getElementById("reply-control");
     const composerIsClosed = composer.classList.contains("closed");
     const minRightMargin = 15;
-    drawer.style.setProperty(
+
+    drawerContainer.style.setProperty(
       "--composer-right",
       (composerIsClosed
         ? minRightMargin
