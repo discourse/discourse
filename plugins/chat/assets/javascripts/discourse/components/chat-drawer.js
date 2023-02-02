@@ -174,7 +174,7 @@ export default Component.extend({
   },
 
   _performCheckSize() {
-    if (!this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying || this.isDestroyed) {
       return;
     }
 
