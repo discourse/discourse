@@ -967,6 +967,18 @@ RSpec.describe Search do
       expect(result.posts.pluck(:id)).to eq([post2.id, post.id])
     end
 
+    it "can find posts by searching for a url prefix" do
+      post = Fabricate(:post, raw: "checkout the amazing domain https://happy.sappy.com")
+
+      results = Search.execute("happy")
+      expect(results.posts.count).to eq(1)
+      expect(results.posts.first.id).to eq(post.id)
+
+      results = Search.execute("sappy")
+      expect(results.posts.count).to eq(1)
+      expect(results.posts.first.id).to eq(post.id)
+    end
+
     it "aggregates searches in a topic by returning the post with the lowest post number" do
       post = Fabricate(:post, topic: topic, raw: "this is a play post")
       _post2 = Fabricate(:post, topic: topic, raw: "play play playing played play")

@@ -45,6 +45,10 @@ class SearchIndexer
     tsvector = DB.query_single("SELECT #{ranked_index}", indexed_data)[0]
     additional_lexemes = []
 
+    # we also want to index parts of a domain name
+    # that way stemmed single word searches will match
+    additional_words = []
+
     tsvector
       .scan(/'(([a-zA-Z0-9]+\.)+[a-zA-Z0-9]+)'\:([\w+,]+)/)
       .reduce(additional_lexemes) do |array, (lexeme, _, positions)|
@@ -54,8 +58,11 @@ class SearchIndexer
           loop do
             count += 1
             break if count >= 10 # Safeguard here to prevent infinite loop when a term has many dots
-            _term, _, remaining = lexeme.partition(".")
+            term, _, remaining = lexeme.partition(".")
             break if remaining.blank?
+
+            additional_words << term
+
             array << "'#{remaining}':#{positions}"
             lexeme = remaining
           end
@@ -64,7 +71,16 @@ class SearchIndexer
         array
       end
 
-    tsvector = "#{tsvector} #{additional_lexemes.join(" ")}"
+    extra_domain_word_terms =
+      if additional_words.length > 0
+        # Note: postions are off, keeping them 100 correct is very complex
+        # cause some words may stem back to nothing due to being stop words
+        # we do not have any <=> searches so the possible pollution here is not
+        # too big
+        DB.query_single("SELECT to_tsvector(?, ?)", stemmer, additional_words.uniq.join(" ")).first
+      end
+
+    tsvector = "#{tsvector} #{additional_lexemes.join(" ")} #{extra_domain_word_terms}"
 
     if (max_dupes = SiteSetting.max_duplicate_search_index_terms) > 0
       reduced = []

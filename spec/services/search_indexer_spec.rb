@@ -169,8 +169,8 @@ RSpec.describe SearchIndexer do
 
       expect(post.post_search_data.raw_data).to eq("https://meta.discourse.org/some.png")
 
-      expect(post.post_search_data.search_data).to eq(
-        "'/some.png':12 'discourse.org':11 'meta.discourse.org':11 'meta.discourse.org/some.png':10 'org':11 'test':8A 'titl':4A 'uncategor':9B",
+      expect(post.post_search_data.search_data).to eq_ts_vector(
+        "'/some.png':12 'discourse.org':11 'meta.discourse.org':11 'meta.discourse.org/some.png':10 'org':11 'test':8A 'titl':4A 'uncategor':9B 'meta':1 'discours':2",
       )
     end
 
@@ -211,8 +211,8 @@ RSpec.describe SearchIndexer do
         "a https://abc.com , http://efg.com.au b http://hij.net/xyz=1 hij.net/xyz=1 http://www.klm.net/ www.klm.net/?IGNORE=1 http://abc.de.nop.co.uk test",
       )
 
-      expect(post.post_search_data.search_data).to eq(
-        "'/?ignore=1':21 '/xyz=1':14,17 'abc.com':9 'abc.de.nop.co.uk':22 'au':10 'awesom':6B 'b':11 'categori':7B 'co.uk':22 'com':9 'com.au':10 'de.nop.co.uk':22 'efg.com.au':10 'hij.net':13,16 'hij.net/xyz=1':12,15 'klm.net':18,20 'net':13,16,18,20 'nop.co.uk':22 'test':4A,23 'topic':5A 'uk':22 'www.klm.net':18,20 'www.klm.net/?ignore=1':19",
+      expect(post.post_search_data.search_data).to eq_ts_vector(
+        "'/?ignore=1':21 '/xyz=1':14,17 'abc.com':9 'abc.de.nop.co.uk':22 'au':10 'awesom':6B 'b':11 'categori':7B 'co.uk':22 'com':6,9 'com.au':10 'de.nop.co.uk':22 'efg.com.au':10 'hij.net':13,16 'hij.net/xyz=1':12,15 'klm.net':18,20 'net':13,16,18,20 'nop.co.uk':22 'test':4A,23 'topic':5A 'uk':22 'www.klm.net':18,20 'www.klm.net/?ignore=1':19 'abc':1 'co':4 'de':2 'efg':5 'hij':7 'klm':9 'nop':3 'www':8",
       )
     end
 
@@ -260,8 +260,8 @@ RSpec.describe SearchIndexer do
         "link to an external page: https://google.com/ link to an audio file: #{I18n.t("search.audio")} link to a video file: #{I18n.t("search.video")} link to an invalid URL: http:error]",
       )
 
-      expect(post.post_search_data.search_data).to eq(
-        "'/audio.m4a':23 '/content/somethingelse.mov':31 'audio':19 'com':15,22,30 'error':38 'extern':13 'file':20,28 'google.com':15 'http':37 'invalid':35 'link':10,16,24,32 'page':14 'somesite.com':22,30 'somesite.com/audio.m4a':21 'somesite.com/content/somethingelse.mov':29 'test':8A 'titl':4A 'uncategor':9B 'url':36 'video':27",
+      expect(post.post_search_data.search_data).to eq_ts_vector(
+        "'/audio.m4a':23 '/content/somethingelse.mov':31 'audio':19 'com':15,22,30 'error':38 'extern':13 'file':20,28 'google.com':15 'http':37 'invalid':35 'link':10,16,24,32 'page':14 'somesite.com':22,30 'somesite.com/audio.m4a':21 'somesite.com/content/somethingelse.mov':29 'test':8A 'titl':4A 'uncategor':9B 'url':36 'video':27 'googl':1 'somesit':2",
       )
     end
 
@@ -318,7 +318,7 @@ RSpec.describe SearchIndexer do
       post_search_data.reload
 
       terms =
-        "'/path:path''path':22 'com':21 'sam':10,11,12,13,14 'something.com':21 'something.com/path:path''path':20 'test':8A 'titl':4A 'uncategor':9B 'url':23".split(
+        "'/path:path''path':22 'com':21 'sam':10,11,12,13,14 'something.com':21 'something.com/path:path''path':20 'test':8A 'titl':4A 'uncategor':9B 'url':23 'someth':1".split(
           " ",
         ).sort
 
