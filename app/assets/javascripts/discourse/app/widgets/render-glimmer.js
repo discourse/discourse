@@ -1,4 +1,4 @@
-import Component from "@glimmer/component";
+import templateOnly from "@ember/component/template-only";
 import { setComponentTemplate } from "@ember/component";
 import { tracked } from "@glimmer/tracking";
 import { assert } from "@ember/debug";
@@ -129,7 +129,8 @@ export default class RenderGlimmer {
   connectComponent() {
     const { element, template, widget } = this;
 
-    const component = class extends Component {};
+    const component = templateOnly();
+    component.name = "Widgets/RenderGlimmer";
     setComponentTemplate(template, component);
 
     this._componentInfo = {
