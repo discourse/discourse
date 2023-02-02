@@ -12,6 +12,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { inject as service } from "@ember/service";
 import { next } from "@ember/runloop";
 import showModal from "discourse/lib/show-modal";
+import { exportUserArchive } from "discourse/lib/export-csv";
 
 export default Controller.extend(CanCheckEmails, {
   dialog: service(),
@@ -243,6 +244,13 @@ export default Controller.extend(CanCheckEmails, {
 
     connectAccount(method) {
       method.doLogin({ reconnect: true });
+    },
+
+    exportUserArchive() {
+      this.dialog.yesNoConfirm({
+        message: I18n.t("user.download_archive.confirm"),
+        didConfirm: () => exportUserArchive(),
+      });
     },
   },
 });

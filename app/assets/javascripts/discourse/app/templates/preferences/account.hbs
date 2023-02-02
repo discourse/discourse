@@ -263,6 +263,21 @@
   </div>
 {{/if}}
 
+<div class="control-group pref-data-export">
+  <label class="control-label">{{i18n "user.download_archive.title"}}</label>
+  <div class="controls">
+    <DButton
+      @action={{action "exportUserArchive"}}
+      @class="btn-default"
+      @label="user.download_archive.button_text"
+      @icon="download"
+    />
+  </div>
+  <div class="instructions">
+    {{i18n "user.download_archive.description"}}
+  </div>
+</div>
+
 <span>
   <PluginOutlet
     @name="user-preferences-account"
