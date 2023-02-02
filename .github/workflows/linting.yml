@@ -87,8 +87,10 @@ jobs:
           yarn pprettier --list-different \
             "app/assets/stylesheets/**/*.scss" \
             "app/assets/javascripts/**/*.js" \
+            "app/assets/javascripts/**/*.hbs" \
             "plugins/**/assets/stylesheets/**/*.scss" \
-            "plugins/**/assets/javascripts/**/*.js"
+            "plugins/**/assets/javascripts/**/*.js" \
+            "plugins/**/assets/javascripts/**/*.hbs" \
 
       - name: Ember template lint
         if: ${{ !cancelled() }}
