@@ -196,7 +196,7 @@ export default class ChatEmojiPicker extends Component {
 
   @action
   didInputFilter(value) {
-    if (!value.length) {
+    if (!value?.length) {
       this.filteredEmojis = null;
       return;
     }
