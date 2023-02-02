@@ -5615,7 +5615,6 @@ en:
         show_admin_profile: "Admin"
         manage_user: "Manage user"
         show_public_profile: "Show Public Profile"
-        impersonate: "Impersonate"
         action_logs: "Action Logs"
         ip_lookup: "IP Lookup"
         log_out: "Log Out"
