@@ -327,6 +327,54 @@ RSpec.describe UsernameChanger do
           )
         end
 
+        it "replaces mentions of oneself in posts" do
+          post = create_post_and_change_username(raw: "Hello @#{user.username}", user: user)
+
+          expect(post.raw).to eq("Hello @bar")
+          expect(post.cooked).to eq(%Q(<p>Hello <a class="mention" href="/u/bar">@bar</a></p>))
+        end
+
+        it "replaces mentions of oneself in revisions" do
+          revisions = [
+            { raw: "Hello Foo" },
+            { title: "new topic title" },
+            { raw: "Hello @#{user.username}!" },
+            { raw: "Hello @#{user.username}!!" },
+          ]
+
+          post =
+            create_post_and_change_username(raw: "Hello @#{user.username}", revisions: revisions)
+
+          expect(post.raw).to eq("Hello @bar!!")
+          expect(post.cooked).to eq(%Q(<p>Hello <a class="mention" href="/u/bar">@bar</a>!!</p>))
+
+          expect(post.revisions.count).to eq(4)
+
+          expect(post.revisions[0].modifications["raw"][0]).to eq("Hello @bar")
+          expect(post.revisions[0].modifications["cooked"][0]).to eq(
+            %Q(<p>Hello <a class="mention" href="/u/bar">@bar</a></p>),
+          )
+          expect(post.revisions[0].modifications["cooked"][1]).to eq("<p>Hello Foo</p>")
+
+          expect(post.revisions[1].modifications).to include("title")
+
+          expect(post.revisions[2].modifications["raw"][0]).to eq("Hello Foo")
+          expect(post.revisions[2].modifications["raw"][1]).to eq("Hello @bar!")
+          expect(post.revisions[2].modifications["cooked"][0]).to eq("<p>Hello Foo</p>")
+          expect(post.revisions[2].modifications["cooked"][1]).to eq(
+            %Q(<p>Hello <a class="mention" href="/u/bar">@bar</a>!</p>),
+          )
+
+          expect(post.revisions[3].modifications["raw"][0]).to eq("Hello @bar!")
+          expect(post.revisions[3].modifications["raw"][1]).to eq("Hello @bar!!")
+          expect(post.revisions[3].modifications["cooked"][0]).to eq(
+            %Q(<p>Hello <a class="mention" href="/u/bar">@bar</a>!</p>),
+          )
+          expect(post.revisions[3].modifications["cooked"][1]).to eq(
+            %Q(<p>Hello <a class="mention" href="/u/bar">@bar</a>!!</p>),
+          )
+        end
+
         context "when using Unicode usernames" do
           before { SiteSetting.unicode_usernames = true }
           let(:user) { Fabricate(:user, username: "թռչուն") }

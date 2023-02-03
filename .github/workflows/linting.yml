@@ -22,6 +22,9 @@ jobs:
     timeout-minutes: 30
 
     steps:
+      - name: Set working directory owner
+        run: chown root:root .
+
       - uses: actions/checkout@v3
         with:
           fetch-depth: 1
@@ -70,7 +73,9 @@ jobs:
 
       - name: syntax_tree
         if: ${{ !cancelled() }}
-        run: bundle exec stree check Gemfile $(git ls-files '*.rb') $(git ls-files '*.rake')
+        run: |
+          set -E
+          bundle exec stree check Gemfile $(git ls-files '*.rb') $(git ls-files '*.rake')
 
       - name: ESLint (core)
         if: ${{ !cancelled() }}
@@ -87,8 +92,10 @@ jobs:
           yarn pprettier --list-different \
             "app/assets/stylesheets/**/*.scss" \
             "app/assets/javascripts/**/*.js" \
+            "app/assets/javascripts/**/*.hbs" \
             "plugins/**/assets/stylesheets/**/*.scss" \
-            "plugins/**/assets/javascripts/**/*.js"
+            "plugins/**/assets/javascripts/**/*.js" \
+            "plugins/**/assets/javascripts/**/*.hbs" \
 
       - name: Ember template lint
         if: ${{ !cancelled() }}

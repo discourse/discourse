@@ -48,8 +48,7 @@ module Jobs
 
       Post
         .with_deleted
-        .joins(mentioned("posts.id"))
-        .where("a.user_id = :user_id", user_id: @user_id)
+        .where("raw ILIKE ?", "%@#{@old_username}%")
         .find_each do |post|
           update_post(post)
           updated_post_ids << post.id
@@ -64,8 +63,7 @@ module Jobs
 
     def update_revisions
       PostRevision
-        .joins(mentioned("post_revisions.post_id"))
-        .where("a.user_id = :user_id", user_id: @user_id)
+        .where("modifications SIMILAR TO ?", "%(raw|cooked)%@#{@old_username}%")
         .find_each { |revision| update_revision(revision) }
 
       PostRevision

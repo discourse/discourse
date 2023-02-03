@@ -58,18 +58,12 @@ RSpec.describe ImportScripts::Base do
   describe "#create_post" do
     let(:importer) { described_class.new }
     fab!(:user) { Fabricate(:user) }
-    let(:post_params) {
-      {
-        user_id: user.id,
-        raw: "Test post [b]content[/b]",
-        title: "Test topic for post"
-      }
-    }
+    let(:post_params) do
+      { user_id: user.id, raw: "Test post [b]content[/b]", title: "Test topic for post" }
+    end
 
     it "creates a Post" do
-      expect {
-        importer.create_post(post_params, 123)
-      }.to change { Post.count }.by(1)
+      expect { importer.create_post(post_params, 123) }.to change { Post.count }.by(1)
     end
 
     if ENV["IMPORT"] == "1"

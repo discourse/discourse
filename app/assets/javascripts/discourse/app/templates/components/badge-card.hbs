@@ -34,6 +34,10 @@
 {{/if}}
 
 <div class="badge-contents">
+  <PluginOutlet
+    @name="badge-contents-top"
+    @outletArgs={{hash badge=this.badge url=this.url}}
+  />
   <a
     href={{this.url}}
     class="badge-icon {{this.badge.badgeTypeClassName}}"

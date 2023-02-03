@@ -745,7 +745,7 @@ RSpec.describe Search do
         end
 
         it "returns nothing if user is not a group member" do
-          pm = create_pm(users: [current, participant], group: group)
+          _pm = create_pm(users: [current, participant], group: group)
 
           results =
             Search.execute("group_messages:#{group.name}", guardian: Guardian.new(non_participant))
@@ -757,7 +757,7 @@ RSpec.describe Search do
         end
 
         it "returns nothing if group has messages disabled" do
-          pm = create_pm(users: [current, participant], group: group)
+          _pm = create_pm(users: [current, participant], group: group)
           group.update!(has_messages: false)
 
           results = Search.execute("group_messages:#{group.name}", guardian: Guardian.new(current))
@@ -967,9 +967,21 @@ RSpec.describe Search do
       expect(result.posts.pluck(:id)).to eq([post2.id, post.id])
     end
 
+    it "can find posts by searching for a url prefix" do
+      post = Fabricate(:post, raw: "checkout the amazing domain https://happy.sappy.com")
+
+      results = Search.execute("happy")
+      expect(results.posts.count).to eq(1)
+      expect(results.posts.first.id).to eq(post.id)
+
+      results = Search.execute("sappy")
+      expect(results.posts.count).to eq(1)
+      expect(results.posts.first.id).to eq(post.id)
+    end
+
     it "aggregates searches in a topic by returning the post with the lowest post number" do
       post = Fabricate(:post, topic: topic, raw: "this is a play post")
-      post2 = Fabricate(:post, topic: topic, raw: "play play playing played play")
+      _post2 = Fabricate(:post, topic: topic, raw: "play play playing played play")
       post3 = Fabricate(:post, raw: "this is a play post")
 
       5.times { Fabricate(:post, topic: topic, raw: "play playing played") }
@@ -1660,7 +1672,7 @@ RSpec.describe Search do
 
       it "can filter by posts in the user's bookmarks" do
         expect(search_with_bookmarks.posts.map(&:id)).to eq([])
-        bm = Fabricate(:bookmark, user: user, bookmarkable: bookmark_post1)
+        Fabricate(:bookmark, user: user, bookmarkable: bookmark_post1)
         expect(search_with_bookmarks.posts.map(&:id)).to match_array([bookmark_post1.id])
       end
     end
@@ -1876,7 +1888,7 @@ RSpec.describe Search do
         )
       post2 = Fabricate(:post, raw: "test URL post with")
 
-      expect(Search.execute("test post with 'a URL).posts").posts).to eq([post2, post])
+      expect(Search.execute("test post URL l").posts).to eq([post2, post])
       expect(Search.execute(%{"test post with 'a URL"}).posts).to eq([post])
       expect(Search.execute(%{"https://some.site.com/search?q=test.test.test"}).posts).to eq([post])
       expect(
@@ -2311,11 +2323,11 @@ RSpec.describe Search do
 
     it "escapes the term correctly" do
       expect(Search.ts_query(term: 'Title with trailing backslash\\')).to eq(
-        "TO_TSQUERY('english', '''Title with trailing backslash\\\\\\\\'':*')",
+        "REPLACE(TO_TSQUERY('english', '''Title with trailing backslash\\\\\\\\'':*')::text, '<->', '&')::tsquery",
       )
 
       expect(Search.ts_query(term: "Title with trailing quote'")).to eq(
-        "TO_TSQUERY('english', '''Title with trailing quote'''''':*')",
+        "REPLACE(TO_TSQUERY('english', '''Title with trailing quote'''''':*')::text, '<->', '&')::tsquery",
       )
     end
   end
@@ -2490,7 +2502,7 @@ RSpec.describe Search do
       expect(results.posts.length).to eq(Search.per_facet)
       expect(results.more_posts).to eq(nil) # not 6 posts yet
 
-      post6 = Fabricate(:post, raw: "hello post #6")
+      _post6 = Fabricate(:post, raw: "hello post #6")
 
       results = Search.execute("hello", search_type: :header)
       expect(results.posts.length).to eq(Search.per_facet)
