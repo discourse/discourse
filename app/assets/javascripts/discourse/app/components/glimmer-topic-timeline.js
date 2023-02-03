@@ -8,43 +8,16 @@ import I18n from "I18n";
 export default class GlimmerTopicTimeline extends Component {
   @service site;
   @service siteSettings;
-  @service currentUser;
 
-  @tracked dockAt = null;
-  @tracked dockBottom = null;
   @tracked enteredIndex = this.args.enteredIndex;
 
   adminTools = optionalService();
-  intersectionObserver = null;
 
   constructor() {
     super(...arguments);
 
     if (this.args.prevEvent) {
       this.enteredIndex = this.args.prevEvent.postIndex - 1;
-    }
-
-    if (!this.site.mobileView) {
-      this.intersectionObserver = new IntersectionObserver((entries) => {
-        for (const entry of entries) {
-          const bounds = entry.boundingClientRect;
-
-          if (entry.target.id === "topic-bottom") {
-            this.topicBottom = bounds.y + window.scrollY;
-          } else {
-            this.topicTop = bounds.y + window.scrollY;
-          }
-        }
-      });
-
-      const elements = [
-        document.querySelector(".container.posts"),
-        document.querySelector("#topic-bottom"),
-      ];
-
-      for (let i = 0; i < elements.length; i++) {
-        this.intersectionObserver.observe(elements[i]);
-      }
     }
   }
 
@@ -57,20 +30,10 @@ export default class GlimmerTopicTimeline extends Component {
     );
   }
 
-  get classes() {
-    const classes = [];
+  get addFullscreenClass() {
     if (this.args.fullscreen) {
-      classes.push("timeline-fullscreen");
+      return "timeline-fullscreen";
     }
-
-    if (this.dockAt) {
-      classes.push("timeline-docked");
-      if (this.dockBottom) {
-        classes.push("timeline-docked-bottom");
-      }
-    }
-
-    return classes.join(" ");
   }
 
   get createdAt() {
@@ -94,12 +57,5 @@ export default class GlimmerTopicTimeline extends Component {
       appendTo: element,
       placement: "left",
     });
-  }
-
-  willDestroy() {
-    if (!this.site.mobileView) {
-      this.intersectionObserver?.disconnect();
-      this.intersectionObserver = null;
-    }
   }
 }
