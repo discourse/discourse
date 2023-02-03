@@ -1163,6 +1163,8 @@ class Search
           ELSE
             CASE WHEN topics.closed
             THEN 0.9
+            WHEN topics.archived
+            THEN 0.85
             ELSE 1
             END
           END
