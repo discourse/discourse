@@ -27,7 +27,6 @@ export default class DiscourseTooltip extends Component {
       const parent = viewBounds.parentElement;
       const interactive = this.interactive;
       this._tippyInstance = tippy(parent, {
-        hideOnClick: !interactive,
         interactive,
         content: element,
         trigger: this.capabilities.touch ? "click" : "mouseenter",
