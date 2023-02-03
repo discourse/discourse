@@ -953,7 +953,8 @@ RSpec.describe Search do
         Fabricate(
           :post,
           raw: "My weekly update",
-          topic: Fabricate(:topic, title: "A topic that will be archived", archived: true),
+          topic:
+            Fabricate(:topic, title: "A topic that will be archived", archived: true, closed: true),
         )
 
       closed_post =
