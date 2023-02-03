@@ -2179,8 +2179,7 @@ class User < ActiveRecord::Base
   end
 
   def validate_status!(status)
-    model = UserStatus.new(status)
-    raise(ActiveRecord::RecordInvalid.new(model)) if model.invalid?
+    UserStatus.new(status).validate!
   end
 end
 
