@@ -1,8 +1,5 @@
 <div
-  class={{concat-class
-    "timeline-container"
-    (if @fullscreen "timeline-fullscreen")
-  }}
+  class={{concat-class "timeline-container" this.classes}}
   {{did-insert this.addShowClass}}
 >
   <div class="topic-timeline" {{did-insert this.addUserTip}}>
@@ -30,6 +27,8 @@
       @convertToPublicTopic={{@convertToPublicTopic}}
       @convertToPrivateMessage={{@convertToPrivateMessage}}
       @replyToPost={{@replyToPost}}
+      @setDocked={{this.setDocked}}
+      @setDockedBottom={{this.setDockedBottom}}
     />
   </div>
 </div>

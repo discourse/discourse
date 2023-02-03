@@ -36,8 +36,6 @@ export default class TopicTimelineScrollArea extends Component {
   @tracked timelineScrollareaStyle;
   @tracked dragging = false;
   @tracked excerpt = "";
-  @tracked dockAt = null;
-  @tracked dockBottom = null;
 
   intersectionObserver = null;
 
@@ -76,6 +74,7 @@ export default class TopicTimelineScrollArea extends Component {
     }
 
     this.calculatePosition();
+    this.dockCheck();
   }
 
   get displayTimeLineScrollArea() {
@@ -326,17 +325,14 @@ export default class TopicTimelineScrollArea extends Component {
     }
 
     if (this.dockAt !== prevDockAt) {
-      const timelineContainer = document.querySelector(".timeline-container");
       if (this.dockAt) {
-        timelineContainer.classList.add("timeline-docked");
+        this.args.setDocked(true);
         if (this.dockBottom) {
-          timelineContainer.classList.add("timeline-docked-bottom");
+          this.args.setDockedBottom(true);
         }
       } else {
-        timelineContainer.classList.remove(
-          "timeline-docked",
-          "timeline-docked-bottom"
-        );
+        this.args.setDocked(false);
+        this.args.setDockedBottom(false);
       }
     }
   }
