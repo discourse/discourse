@@ -399,6 +399,12 @@ RSpec.describe Reviewable, type: :model do
       )
     end
 
+    it "triggers a notification on approve -> edit to update status" do
+      reviewable = Fabricate(:reviewable_queued_post, status: Reviewable.statuses[:approved])
+
+      expect { reviewable.perform(moderator, :edit_post) }.to raise_error(Reviewable::InvalidAction)
+    end
+
     it "triggers a notification on reject -> approve to update status" do
       reviewable = Fabricate(:reviewable_queued_post, status: Reviewable.statuses[:rejected])
 
