@@ -16,12 +16,13 @@ export default Controller.extend({
   @discourseComputed("embedding.base_url")
   embeddingCode(baseUrl) {
     const html = `<div id='discourse-comments'></div>
+<meta name='discourse-username' content='DISCOURSE_USERNAME'>
 
 <script type="text/javascript">
   DiscourseEmbed = {
     discourseUrl: '${baseUrl}/',
-    discourseEmbedUrl: 'REPLACE_ME',
-    // className: 'REPLACE_ME',
+    discourseEmbedUrl: 'EMBED_URL',
+    // className: 'CLASS_NAME',
   };
 
   (function() {
