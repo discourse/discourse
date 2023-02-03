@@ -17,19 +17,6 @@ module Chat
         end
       end
 
-      # @!visibility private
-      # Internal class used to hold the contract of the service.
-      class Contract
-        include ActiveModel::API
-        include ActiveModel::Attributes
-        include ActiveModel::AttributeMethods
-
-        # @!visibility private
-        def self.model_name
-          ActiveModel::Name.new(self, nil, "contract")
-        end
-      end
-
       # Simple structure to hold the context of the service during its whole lifecycle.
       class Context < OpenStruct
         def success?
@@ -126,6 +113,15 @@ module Chat
         attr_reader :context, :contract
 
         delegate :guardian, to: :context
+
+        # @!visibility private
+        # Internal class used to setup the base contract of the service.
+        self::Contract =
+          Class.new do
+            include ActiveModel::API
+            include ActiveModel::Attributes
+            include ActiveModel::AttributeMethods
+          end
       end
 
       class_methods do
@@ -143,7 +139,7 @@ module Chat
           steps << ModelStep.new(name, key: key, class_name: class_name)
         end
 
-        def contract(name = :default, class_name: self::DefaultContract)
+        def contract(name = :default, class_name: self::Contract)
           steps << ContractStep.new(name, class_name: class_name)
         end
 

@@ -31,7 +31,15 @@ module Chat
       #   @option params_to_edit [String] allow_channel_wide_mentions Allow the use of @here and @all in the channel.
       #   @return [Chat::Service::Base::Context]
 
-      class DefaultContract < Contract
+      model ChatChannel, name: :channel, key: :channel_id
+      policy :check_channel_permission
+      step :map_data
+      contract
+      step :update_channel
+      step :publish_channel_update
+      step :auto_join_users_if_needed
+
+      class Contract
         attribute :channel
         attribute :name
         attribute :description
@@ -40,7 +48,6 @@ module Chat
         attribute :allow_channel_wide_mentions, :boolean, default: true
 
         validate :only_category_channel_allowed
-
         def only_category_channel_allowed
           if channel.direct_message_channel?
             errors.add(:base, I18n.t("chat.errors.cant_update_direct_message_channel"))
@@ -50,17 +57,9 @@ module Chat
 
       delegate :channel, :name, :description, :slug, to: :context
 
-      model ChatChannel, name: :channel, key: :channel_id
-      policy :invalid_access
-      step :map_data
-      contract
-      step :update_channel
-      step :publish_channel_update
-      step :auto_join_users_if_needed
-
       private
 
-      def invalid_access
+      def check_channel_permission
         guardian.can_preview_chat_channel?(channel) && guardian.can_edit_chat_channel?
       end
 

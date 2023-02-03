@@ -16,22 +16,22 @@ module Chat
       #   @param [String] status
       #   @return [Chat::Service::Base::Context]
 
-      class DefaultContract < Contract
+      model ChatChannel, name: :channel, key: :channel_id
+      step :status_to_sym
+      contract
+      policy :check_channel_permission
+      step :change_status
+
+      class Contract
         attribute :status
         validates :status, inclusion: { in: ChatChannel.editable_statuses.keys.map(&:to_sym) }
       end
 
       delegate :channel, :status, to: :context
 
-      model ChatChannel, name: :channel, key: :channel_id
-      step :status_to_sym
-      contract
-      policy :invalid_access
-      step :change_status
-
       private
 
-      def invalid_access
+      def check_channel_permission
         guardian.can_preview_chat_channel?(channel) &&
           guardian.can_change_channel_status?(channel, status)
       end

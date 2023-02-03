@@ -16,7 +16,7 @@ RSpec.describe Chat::Service::UpdateChannel do
 
     fab!(:current_user) { Fabricate(:user) }
 
-    it { is_expected.to fail_a_policy(:invalid_access) }
+    it { is_expected.to fail_a_policy(:check_channel_permission) }
   end
 
   context "when the user tries to edit a DM channel" do

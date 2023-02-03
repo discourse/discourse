@@ -38,7 +38,7 @@ RSpec.describe Chat::Endpoint do
   class FailedContractService
     include Chat::Service::Base
 
-    class DefaultContract < Contract
+    class Contract
       attribute :test
       validates :test, presence: true
     end
@@ -49,7 +49,7 @@ RSpec.describe Chat::Endpoint do
   class SuccessContractService
     include Chat::Service::Base
 
-    class DefaultContract < Contract
+    class Contract
     end
 
     contract

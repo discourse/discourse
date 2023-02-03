@@ -32,7 +32,7 @@ RSpec.describe(Chat::Service::UpdateChannelStatus) do
 
     fab!(:current_user) { Fabricate(:user) }
 
-    it { is_expected.to fail_a_policy(:invalid_access) }
+    it { is_expected.to fail_a_policy(:check_channel_permission) }
   end
 
   context "when status is not allowed" do
@@ -56,7 +56,7 @@ RSpec.describe(Chat::Service::UpdateChannelStatus) do
 
     fab!(:current_user) { Fabricate(:admin) }
 
-    it { is_expected.to fail_a_policy(:invalid_access) }
+    it { is_expected.to fail_a_policy(:check_channel_permission) }
   end
 
   context "when status is allowed" do
