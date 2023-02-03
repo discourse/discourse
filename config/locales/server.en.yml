@@ -3574,9 +3574,6 @@ en:
       one: "Heads up: We send a maximum of %{count} daily email. Check the site to see the ones that might be held back."
       other: "Heads up: We send a maximum of %{count} daily emails. Check the site to see the ones that might be held back. PS thanks for being popular!"
     in_reply_to: "In Reply To"
-    unsubscribe:
-      title: "Unsubscribe"
-      description: "Not interested in getting these emails? No problem! Click below to unsubscribe instantly:"
 
     header_instructions: ""
     reply_by_email: "[Visit Topic](%{base_url}%{url}) or reply to this email to respond."
@@ -3905,7 +3902,6 @@ en:
       liked_received: "Likes Received"
       new_users: "New Users"
       popular_topics: "Popular Topics"
-      follow_topic: "Follow this topic"
       join_the_discussion: "Read More"
       popular_posts: "Popular Posts"
       more_new: "New for you"
@@ -4158,10 +4154,6 @@ en:
     welcome_message_invite_only: |
       ## [Welcome to %{title}](#welcome)
       An account is required. Please ask an existing member for an invite or log in to continue.
-
-  deleted: "deleted"
-
-  image: "image"
 
   upload:
     edit_reason: "downloaded local copies of images"
