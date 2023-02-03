@@ -6,4 +6,9 @@ export default class AdminCustomizeFormTemplatesIndex extends Controller {
   newTemplate() {
     this.transitionToRoute("adminCustomizeFormTemplates.new");
   }
+
+  @action
+  reload() {
+    this.send("reloadModel");
+  }
 }

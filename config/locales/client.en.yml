@@ -5512,13 +5512,14 @@ en:
           delete: "Delete"
         new_template_form:
           submit: "Save"
+          cancel: "Cancel"
           name:
             label: "Template Name"
             placeholder: "Template Name"
           template:
             label: "Template"
             placeholder: "Create a YAML template here..."
-
+        delete_confirm: "Are you sure you would like to delete %{template_name} template?"
       impersonate:
         title: "Impersonate"
         help: "Use this tool to impersonate a user account for debugging purposes. You will have to log out once finished."

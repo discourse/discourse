@@ -938,6 +938,13 @@ table.permalinks {
   .btn-primary {
     margin-top: 1rem;
   }
+
+  &--form {
+    textarea {
+      width: 500px;
+      height: 200px;
+    }
+  }
 }
 
 .admin-customize-form-template-view-modal {
@@ -945,12 +952,5 @@ table.permalinks {
     .btn:last-child {
       margin-left: auto;
     }
-  }
-}
-
-.new-form-template {
-  textarea {
-    width: 500px;
-    height: 200px;
   }
 }

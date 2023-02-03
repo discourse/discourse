@@ -1,0 +1,55 @@
+<div class="form-templates--form">
+  <div class="control-group">
+    <label for="template-name">
+      {{i18n "admin.form_templates.new_template_form.name.label"}}
+    </label>
+    <TextField
+      @value={{this.templateName}}
+      @name="template-name"
+      @placeholderKey="admin.form_templates.new_template_form.name.placeholder"
+    />
+  </div>
+  {{! TODO fix AceEditor not appearing visually }}
+  {{! <AceEditor
+      @content=""
+      @mode="yaml"
+    /> }}
+
+  <div class="control-group">
+    <label for="template-contents">
+      {{i18n "admin.form_templates.new_template_form.template.label"}}
+    </label>
+    <Textarea
+      @value={{this.templateContents}}
+      placeholder={{i18n
+        "admin.form_templates.new_template_form.template.placeholder"
+      }}
+      name="template-contents"
+    />
+  </div>
+
+  <div class="footer-buttons">
+    <DButton
+      @class="btn-primary"
+      @label="admin.form_templates.new_template_form.submit"
+      @title="admin.form_templates.new_template_form.submit"
+      @icon="check"
+      @action={{action this.onSubmit}}
+      @disabled={{this.formSubmitted}}
+    />
+    <DButton
+      @class="btn-danger"
+      @label="admin.form_templates.view_template.delete"
+      @title="admin.form_templates.view_template.delete"
+      @icon="trash-alt"
+      @action={{action this.onDelete}}
+    />
+    <DButton
+      @label="admin.form_templates.new_template_form.cancel"
+      @title="admin.form_templates.new_template_form.cancel"
+      @icon="times"
+      @action={{action this.onCancel}}
+    />
+
+  </div>
+</div>

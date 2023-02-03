@@ -9,11 +9,13 @@
     <DButton
       @title="admin.form_templates.list_table.actions.edit"
       @icon="pencil-alt"
+      @action={{this.editTemplate}}
     />
     <DButton
       @title="admin.form_templates.list_table.actions.delete"
       @icon="far-trash-alt"
       @class="btn-danger"
+      @action={{this.deleteTemplate}}
     />
   </td>
 </tr>
