@@ -459,8 +459,11 @@ module Oneboxer
         name: name,
         bio: user.user_profile.bio_excerpt(230),
         location: Onebox::Helpers.sanitize(user.user_profile.location),
-        joined: I18n.t("joined"),
-        created_at: user.created_at.strftime(I18n.t("datetime_formats.formats.date_only")),
+        joined:
+          I18n.t(
+            "onebox.discourse.user_joined_community",
+            date: user.created_at.strftime(I18n.t("datetime_formats.formats.date_only")),
+          ),
         website: user.user_profile.website,
         website_name: UserSerializer.new(user).website_name,
         original_url: url,

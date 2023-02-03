@@ -5074,7 +5074,9 @@ en:
   search_logs:
     graph_title: "Search Count"
 
-  joined: "Joined"
+  onebox:
+    discourse:
+      user_joined_community: "Joined %{date}"
 
   discourse_push_notifications:
     popup:
