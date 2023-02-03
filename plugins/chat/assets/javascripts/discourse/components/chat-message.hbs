@@ -8,6 +8,7 @@
 <div
   {{will-destroy this.teardownChatMessage}}
   {{did-insert this.decorateCookedMessage}}
+  {{did-insert this.refreshStatusOnMentions}}
   {{did-update this.decorateCookedMessage @message.id}}
   {{did-update this.decorateCookedMessage @message.version}}
   {{on "touchmove" this.handleTouchMove passive=true}}

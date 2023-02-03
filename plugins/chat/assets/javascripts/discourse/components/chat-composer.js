@@ -17,6 +17,7 @@ import I18n from "I18n";
 import { translations } from "pretty-text/emoji/data";
 import { setupHashtagAutocomplete } from "discourse/lib/hashtag-autocomplete";
 import { isEmpty, isPresent } from "@ember/utils";
+import User from "discourse/models/user";
 
 export default class ChatComposer extends Component {
   @service capabilities;
@@ -372,7 +373,11 @@ export default class ChatComposer extends Component {
       width: "100%",
       treatAsTextarea: true,
       autoSelectFirstSuggestion: true,
-      transformComplete: (v) => v.username || v.name,
+      transformComplete: (userData) => {
+        const user = User.create(userData);
+        this.currentMessage.mentionedUsers.set(user.id, user);
+        return user.username || user.name;
+      },
       dataSource: (term) => {
         return userSearch({ term, includeGroups: true }).then((result) => {
           if (result?.users?.length > 0) {
