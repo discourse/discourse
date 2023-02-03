@@ -1,0 +1,43 @@
+<div class="new-form-template">
+  <FormTemplate::InfoHeader />
+
+  <form>
+    <div class="control-group">
+      <label for="template-name">
+        {{i18n "admin.form_templates.new_template_form.name.label"}}
+      </label>
+      <TextField
+        @value={{this.templateName}}
+        @name="template-name"
+        @placeholderKey="admin.form_templates.new_template_form.name.placeholder"
+      />
+    </div>
+    {{! TODO fix AceEditor not appearing visually }}
+    {{! <AceEditor
+      @content=""
+      @mode="yaml"
+    /> }}
+
+    <div class="control-group">
+      <label for="template-contents">
+        {{i18n "admin.form_templates.new_template_form.template.label"}}
+      </label>
+      <Textarea
+        @value={{this.templateContents}}
+        placeholder={{i18n
+          "admin.form_templates.new_template_form.template.placeholder"
+        }}
+        name="template-contents"
+      />
+    </div>
+
+    <DButton
+      @class="btn-primary"
+      @label="admin.form_templates.new_template_form.submit"
+      @title="admin.form_templates.new_template_form.submit"
+      @icon="check"
+      @action={{action "onSubmit"}}
+      @disabled={{this.formSubmitted}}
+    />
+  </form>
+</div>

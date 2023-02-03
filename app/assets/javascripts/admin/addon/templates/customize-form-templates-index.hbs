@@ -1,9 +1,5 @@
 <div class="form-templates">
-  <div class="form-templates--info">
-    <h2>{{i18n "admin.form_templates.title"}}</h2>
-    <p class="desc">{{i18n "admin.form_templates.help"}}</p>
-    {{this.test}}
-  </div>
+  <FormTemplate::InfoHeader />
 
   <table class="form-templates--table grid">
     <thead>
@@ -24,8 +20,9 @@
   <DButton
     @class="btn-primary"
     @label="admin.form_templates.new_template"
+    @title="admin.form_templates.new_template"
     @icon="plus"
-    {{!-- @action={{action "chooseFiles"}} --}}
-    {{!-- @disabled={{this.uploading}} --}}
+    @action={{action this.newTemplate}}
   />
+
 </div>

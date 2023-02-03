@@ -5510,6 +5510,14 @@ en:
           close: "Close"
           edit: "Edit"
           delete: "Delete"
+        new_template_form:
+          submit: "Save"
+          name:
+            label: "Template Name"
+            placeholder: "Template Name"
+          template:
+            label: "Template"
+            placeholder: "Create a YAML template here..."
 
       impersonate:
         title: "Impersonate"

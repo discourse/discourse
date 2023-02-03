@@ -1,5 +1,7 @@
 <DModalBody @rawTitle={{this.model.name}}>
+  {{! TODO: Make syntax highlight work correctly }}
   <pre><code class="hljs language-yaml">{{this.model.template}}</code></pre>
+  {{! ? TODO: Perhaps add what places (ex. categories) the templates are active in }}
 </DModalBody>
 <div class="modal-footer">
   <DButton
