@@ -2,7 +2,7 @@
   class={{concat "timeline-container " this.classes}}
   {{did-insert this.addShowClass}}
 >
-  <div class="topic-timeline">
+  <div class="topic-timeline" {{did-insert this.addUserTip}}>
     <TopicTimeline::Container
       @model={{@model}}
       @enteredIndex={{this.enteredIndex}}
