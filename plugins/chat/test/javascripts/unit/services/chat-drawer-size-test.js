@@ -6,8 +6,8 @@ module("Discourse Chat | Unit | Service | chat-drawer-size", function (hooks) {
     this.subject = getOwner(this).lookup("service:chat-drawer-size");
   });
 
-  test("get size", async function (assert) {
-    assert.deepEqual(this.subject.size, { width: 0, height: 0 });
+  test("get size (with default)", async function (assert) {
+    assert.deepEqual(this.subject.size, { width: 400, height: 530 });
   });
 
   test("set size", async function (assert) {
