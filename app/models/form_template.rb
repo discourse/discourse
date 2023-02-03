@@ -3,6 +3,7 @@
 class FormTemplate < ActiveRecord::Base
   validates :name, presence: true, uniqueness: true, length: { maximum: 100 }
   validates :template, presence: true
+  validates_with FormTemplateYamlValidator
 end
 
 # == Schema Information
