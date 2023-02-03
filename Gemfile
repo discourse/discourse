@@ -229,10 +229,9 @@ gem "logstash-event", require: false
 gem "logstash-logger", require: false
 gem "logster"
 
-# NOTE: later versions of sassc are causing a segfault, possibly dependent on processer architecture
-# and until resolved should be locked at 2.0.1
-gem "sassc", git: "https://github.com/tablecheck/sassc-ruby", branch: "embedded-sass-merge"
-gem "sassc-rails"
+# Those are forks of sassc and sassc-rails with dart-sass support
+gem 'dartsass-ruby'
+gem 'dartsass-sprockets'
 
 gem "rotp", require: false
 
