@@ -1,5 +1,8 @@
 import Component from "@ember/component";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import discourseComputed, {
+  bind,
+  observes,
+} from "discourse-common/utils/decorators";
 import { action } from "@ember/object";
 import {
   CHAT_VIEW,
@@ -9,6 +12,8 @@ import {
 import { equal } from "@ember/object/computed";
 import { cancel, next, schedule, throttle } from "@ember/runloop";
 import { inject as service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
+import { escapeExpression } from "discourse/lib/utilities";
 
 export default Component.extend({
   tagName: "",
@@ -17,6 +22,7 @@ export default Component.extend({
   draftChannelView: equal("view", DRAFT_CHANNEL_VIEW),
   chat: service(),
   router: service(),
+  chatDrawerSize: service(),
   chatChannelsManager: service(),
   chatStateManager: service(),
   loading: false,
@@ -25,6 +31,7 @@ export default Component.extend({
   rafTimer: null,
   view: null,
   hasUnreadMessages: false,
+  drawerStyle: null,
 
   didInsertElement() {
     this._super(...arguments);
@@ -45,12 +52,15 @@ export default Component.extend({
     this.appEvents.on("composer:opened", this, "_checkSize");
     this.appEvents.on("composer:resized", this, "_checkSize");
     this.appEvents.on("composer:div-resizing", this, "_dynamicCheckSize");
+    window.addEventListener("resize", this._checkSize);
     this.appEvents.on(
       "composer:resize-started",
       this,
       "_startDynamicCheckSize"
     );
     this.appEvents.on("composer:resize-ended", this, "_clearDynamicCheckSize");
+
+    this.computeDrawerStyle();
   },
 
   willDestroyElement() {
@@ -58,6 +68,8 @@ export default Component.extend({
     if (!this.chat.userCanChat) {
       return;
     }
+
+    window.removeEventListener("resize", this._checkSize);
 
     if (this.appEvents) {
       this.appEvents.off("chat:open-url", this, "openURL");
@@ -117,10 +129,18 @@ export default Component.extend({
     return "chat.channel.info.settings";
   },
 
+  computeDrawerStyle() {
+    const { width, height } = this.chatDrawerSize.size;
+    let style = `width: ${escapeExpression((width || "0").toString())}px;`;
+    style += `height: ${escapeExpression((height || "0").toString())}px;`;
+    this.set("drawerStyle", htmlSafe(style));
+  },
+
   openChannelAtMessage(channel, messageId) {
     this.chat.openChannel(channel, messageId);
   },
 
+  @bind
   _dynamicCheckSize() {
     if (!this.chatStateManager.isDrawerActive) {
       return;
@@ -155,32 +175,28 @@ export default Component.extend({
     this._checkSize();
   },
 
+  @bind
   _checkSize() {
-    if (!this.chatStateManager.isDrawerActive) {
-      return;
-    }
-
     this.sizeTimer = throttle(this, this._performCheckSize, 150);
   },
 
   _performCheckSize() {
-    if (!this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying || this.isDestroyed) {
       return;
     }
 
-    if (!this.chatStateManager.isDrawerActive) {
-      return;
-    }
-
-    const drawer = document.querySelector(".chat-drawer");
-    if (!drawer) {
+    const drawerContainer = document.querySelector(
+      ".chat-drawer-outlet-container"
+    );
+    if (!drawerContainer) {
       return;
     }
 
     const composer = document.getElementById("reply-control");
     const composerIsClosed = composer.classList.contains("closed");
     const minRightMargin = 15;
-    drawer.style.setProperty(
+
+    drawerContainer.style.setProperty(
       "--composer-right",
       (composerIsClosed
         ? minRightMargin
@@ -269,6 +285,7 @@ export default Component.extend({
 
   @action
   toggleExpand() {
+    this.computeDrawerStyle();
     this.chatStateManager.didToggleDrawer();
     this.appEvents.trigger(
       "chat:toggle-expand",
@@ -278,9 +295,15 @@ export default Component.extend({
 
   @action
   close() {
+    this.computeDrawerStyle();
     this.chatStateManager.didCloseDrawer();
     this.chat.setActiveChannel(null);
     this.appEvents.trigger("chat:float-toggled", true);
+  },
+
+  @action
+  didResize(element, { width, height }) {
+    this.chatDrawerSize.size = { width, height };
   },
 
   @action
