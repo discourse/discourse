@@ -25,11 +25,9 @@ class ReviewableQueuedPost < Reviewable
           a.confirm_message = "reviewables.actions.approve_post.confirm_closed"
         end
       else
-        unless rejected?
-          actions.add(:approve_post) do |a|
-            a.icon = "check"
-            a.label = "reviewables.actions.approve_post.title"
-          end
+        actions.add(:approve_post) do |a|
+          a.icon = "check"
+          a.label = "reviewables.actions.approve_post.title"
         end
       end
     end

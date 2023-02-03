@@ -394,14 +394,9 @@ RSpec.describe Reviewable, type: :model do
     it "triggers a notification on approve -> reject to update status" do
       reviewable = Fabricate(:reviewable_queued_post, status: Reviewable.statuses[:approved])
 
-      expect do reviewable.perform(moderator, :reject_post) end.to change {
-        Jobs::NotifyReviewable.jobs.size
-      }.by(1)
-
-      job = Jobs::NotifyReviewable.jobs.last
-
-      expect(job["args"].first["reviewable_id"]).to eq(reviewable.id)
-      expect(job["args"].first["updated_reviewable_ids"]).to contain_exactly(reviewable.id)
+      expect { reviewable.perform(moderator, :reject_post) }.to raise_error(
+        Reviewable::InvalidAction,
+      )
     end
 
     it "triggers a notification on reject -> approve to update status" do
