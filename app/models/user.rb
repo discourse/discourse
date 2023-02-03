@@ -1798,6 +1798,8 @@ class User < ActiveRecord::Base
     }
     validate_status!(status)
     UserStatus.upsert(status)
+
+    user_status.reload
     publish_user_status(user_status)
   end
 
