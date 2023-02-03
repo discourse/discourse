@@ -99,7 +99,7 @@
     
   
     
-      <strong class="classes">Classes:</strong> <span class='object_link'><a href="Base/Context.html" title="Chat::Service::Base::Context (class)">Context</a></span>, <span class='object_link'><a href="Base/Failure.html" title="Chat::Service::Base::Failure (class)">Failure</a></span>
+      <strong class="classes">Classes:</strong> <span class='object_link'><a href="Base/Context.html" title="Chat::Service::Base::Context (class)">Context</a></span>, <span class='object_link'><a href="Base/ContractStep.html" title="Chat::Service::Base::ContractStep (class)">ContractStep</a></span>, <span class='object_link'><a href="Base/Failure.html" title="Chat::Service::Base::Failure (class)">Failure</a></span>, <span class='object_link'><a href="Base/ModelStep.html" title="Chat::Service::Base::ModelStep (class)">ModelStep</a></span>, <span class='object_link'><a href="Base/PolicyStep.html" title="Chat::Service::Base::PolicyStep (class)">PolicyStep</a></span>, <span class='object_link'><a href="Base/Step.html" title="Chat::Service::Base::Step (class)">Step</a></span>
     
   
 </p>
@@ -136,7 +136,7 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Checks the validity of the given context.</p>
+<p>Checks the validity of the input parameters.</p>
 </div></span>
   
 </li>
@@ -145,7 +145,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#rollback-class_method" title="rollback (class method)">.<strong>rollback</strong>(&amp;block)  &#x21d2; Object </a>
+      <a href="#policy-class_method" title="policy (class method)">.<strong>policy</strong>(name = :default, &amp;block)  &#x21d2; Object </a>
     
 
     
@@ -160,7 +160,7 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Called when the service fails, in reverse order of the services called.</p>
+<p>Evaluates a set of conditions related to the given context.</p>
 </div></span>
   
 </li>
@@ -192,39 +192,6 @@
       
     </ul>
   
-    <h2>
-      Instance Method Summary
-      <small><a href="#" class="summary_toggle">collapse</a></small>
-    </h2>
-
-    <ul class="summary">
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#guardian-instance_method" title="#guardian (instance method)">#<strong>guardian</strong>(key, *args)  &#x21d2; Object </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'>
-<p>Helper to fail the service if the context’s guardian call is invalid.</p>
-</div></span>
-  
-</li>
-
-      
-    </ul>
-  
 
 
   
@@ -245,7 +212,7 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Checks the validity of the given context. Supports after/before/around callbacks. Implements ActiveModel::Validations and ActiveModel::Attributes.</p>
+<p>Checks the validity of the input parameters. Implements ActiveModel::Validations and ActiveModel::Attributes.</p>
 
 
   </div>
@@ -256,11 +223,7 @@
     <p class="tag_title">Examples:</p>
     
       
-      <pre class="example code"><code><span class='id identifier rubyid_before_contract'>before_contract</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
-<span class='id identifier rubyid_around_contract'>around_contract</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
-<span class='id identifier rubyid_after_contract'>after_contract</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
-
-<span class='id identifier rubyid_contract'>contract</span> <span class='kw'>do</span>
+      <pre class="example code"><code><span class='id identifier rubyid_contract'>contract</span> <span class='kw'>do</span>
   <span class='id identifier rubyid_attribute'>attribute</span> <span class='symbol'>:name</span>
   <span class='id identifier rubyid_validates'>validates</span> <span class='symbol'>:name</span><span class='comma'>,</span> <span class='label'>presence:</span> <span class='kw'>true</span>
 <span class='kw'>end</span></code></pre>
@@ -277,7 +240,7 @@
 </pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 138</span>
+      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 171</span>
 
 </pre>
     </td>
@@ -286,9 +249,9 @@
 </div>
     
       <div class="method_details ">
-  <h3 class="signature " id="rollback-class_method">
+  <h3 class="signature " id="policy-class_method">
   
-    .<strong>rollback</strong>(&amp;block)  &#x21d2; <tt>Object</tt> 
+    .<strong>policy</strong>(name = :default, &amp;block)  &#x21d2; <tt>Object</tt> 
   
 
   
@@ -297,7 +260,7 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Called when the service fails, in reverse order of the services called. Supports after/before/around callbacks.</p>
+<p>Evaluates a set of conditions related to the given context. If the block doesn’t return a truthy value, then the policy will fail. More than one policy can be defined and named. When that’s the case, policies are evaluated in their definition order.</p>
 
 
   </div>
@@ -308,11 +271,9 @@
     <p class="tag_title">Examples:</p>
     
       
-      <pre class="example code"><code><span class='id identifier rubyid_before_rollback'>before_rollback</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
-<span class='id identifier rubyid_around_rollback'>around_rollback</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
-<span class='id identifier rubyid_after_rollback'>after_rollback</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
-
-<span class='id identifier rubyid_rollback'>rollback</span> <span class='lbrace'>{</span> <span class='id identifier rubyid_context'>context</span><span class='period'>.</span><span class='id identifier rubyid_topic'>topic</span><span class='period'>.</span><span class='id identifier rubyid_update!'>update!</span><span class='lparen'>(</span><span class='label'>archived:</span> <span class='kw'>false</span><span class='rparen'>)</span> <span class='rbrace'>}</span></code></pre>
+      <pre class="example code"><code><span class='id identifier rubyid_policy'>policy</span><span class='lparen'>(</span><span class='symbol'>:invalid_access</span><span class='rparen'>)</span> <span class='kw'>do</span>
+  <span class='id identifier rubyid_guardian'>guardian</span><span class='period'>.</span><span class='id identifier rubyid_can_delete_chat_channel?'>can_delete_chat_channel?</span>
+<span class='kw'>end</span></code></pre>
     
   </div>
 
@@ -326,7 +287,7 @@
 </pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 164</span>
+      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 159</span>
 
 </pre>
     </td>
@@ -346,7 +307,7 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Holds the business logic of the service. Supports after/before/around callbacks.</p>
+<p>Holds the business logic of the service.</p>
 
 
   </div>
@@ -357,11 +318,7 @@
     <p class="tag_title">Examples:</p>
     
       
-      <pre class="example code"><code><span class='id identifier rubyid_before_service'>before_service</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
-<span class='id identifier rubyid_around_service'>around_service</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
-<span class='id identifier rubyid_after_service'>after_service</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
-
-<span class='id identifier rubyid_service'>service</span> <span class='lbrace'>{</span> <span class='id identifier rubyid_context'>context</span><span class='period'>.</span><span class='id identifier rubyid_topic'>topic</span><span class='period'>.</span><span class='id identifier rubyid_update!'>update!</span><span class='lparen'>(</span><span class='label'>archived:</span> <span class='kw'>true</span><span class='rparen'>)</span> <span class='rbrace'>}</span></code></pre>
+      <pre class="example code"><code><span class='id identifier rubyid_service'>service</span> <span class='lbrace'>{</span> <span class='id identifier rubyid_context'>context</span><span class='period'>.</span><span class='id identifier rubyid_topic'>topic</span><span class='period'>.</span><span class='id identifier rubyid_update!'>update!</span><span class='lparen'>(</span><span class='label'>archived:</span> <span class='kw'>true</span><span class='rparen'>)</span> <span class='rbrace'>}</span></code></pre>
     
   </div>
 
@@ -375,94 +332,7 @@
 </pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 153</span>
-
-</pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-  </div>
-
-  <div id="instance_method_details" class="method_details_list">
-    <h2>Instance Method Details</h2>
-
-    
-      <div class="method_details first">
-  <h3 class="signature first" id="guardian-instance_method">
-  
-    #<strong>guardian</strong>(key, *args)  &#x21d2; <tt>Object</tt> 
-  
-
-  
-
-  
-</h3><div class="docstring">
-  <div class="discussion">
-    
-<p>Helper to fail the service if the context’s guardian call is invalid.</p>
-
-
-  </div>
-</div>
-<div class="tags">
-  
-  <div class="examples">
-    <p class="tag_title">Examples:</p>
-    
-      
-      <pre class="example code"><code><span class='id identifier rubyid_before_contract'>before_contract</span> <span class='lbrace'>{</span><span class='id identifier rubyid_ guardian'> guardian</span><span class='lparen'>(</span><span class='symbol'>:can_see?</span><span class='comma'>,</span> <span class='id identifier rubyid_topic'>topic</span><span class='rparen'>)</span> <span class='rbrace'>}</span></code></pre>
-    
-  </div>
-<p class="tag_title">Parameters:</p>
-<ul class="param">
-  
-    <li>
-      
-        <span class='name'>key</span>
-      
-      
-        <span class='type'>(<tt>Symbol</tt>)</span>
-      
-      
-      
-        &mdash;
-        <div class='inline'>
-<p>the key of the guardian method to call</p>
-</div>
-      
-    </li>
-  
-    <li>
-      
-        <span class='name'>args</span>
-      
-      
-        <span class='type'>(<tt>Array</tt>)</span>
-      
-      
-      
-        &mdash;
-        <div class='inline'>
-<p>the arguments to pass to the guardian method</p>
-</div>
-      
-    </li>
-  
-</ul>
-
-
-</div><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 176</span>
+      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 182</span>
 
 </pre>
     </td>
