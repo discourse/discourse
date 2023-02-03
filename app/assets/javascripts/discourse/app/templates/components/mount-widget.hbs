@@ -1,5 +1,5 @@
 {{#each this._childComponents as |info|}}
-  {{#in-element info.element}}
+  {{#in-element info.element insertBefore=null}}
     <info.component @data={{info.data}} />
   {{/in-element}}
 {{/each}}

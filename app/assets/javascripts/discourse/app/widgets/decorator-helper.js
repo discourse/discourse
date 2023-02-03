@@ -118,24 +118,31 @@ class DecoratorHelper {
    * import { hbs } from "ember-cli-htmlbars";
    *
    * api.decorateCookedElement((cooked, helper) => {
+   *   // Generate a new element with glimmer rendered inside
    *   const glimmerElement = helper.renderGlimmer(
    *     "div.my-wrapper-class",
    *     hbs`<DButton @icon={{@data.param}} @translatedLabel="Hello world from Glimmer Component"/>`,
    *     { param: "user-plus" }
    *   );
    *   cooked.appendChild(glimmerElement);
+   *
+   *   // Or append to an existing element
+   *   helper.renderGlimmer(
+   *     cooked.querySelector(".some-container"),
+   *     hbs`I will be appended to some-container`
+   *   );
    * }, { onlyStream: true, id: "my-id" });
    * ```
    *
    */
-  renderGlimmer(tagName, template, data) {
+  renderGlimmer(renderInto, template, data) {
     if (!this.widget.postContentsDestroyCallbacks) {
       throw "renderGlimmer can only be used in the context of a post";
     }
 
     const renderGlimmer = new RenderGlimmer(
       this.widget,
-      tagName,
+      renderInto,
       template,
       data
     );
