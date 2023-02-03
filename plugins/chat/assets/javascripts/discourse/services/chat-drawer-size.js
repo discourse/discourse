@@ -10,8 +10,8 @@ export default class ChatDrawerSize extends Service {
 
   get size() {
     return {
-      width: this.store.getObject("width") || 0,
-      height: this.store.getObject("height") || 0,
+      width: this.store.getObject("width") || 400,
+      height: this.store.getObject("height") || 530,
     };
   }
 
