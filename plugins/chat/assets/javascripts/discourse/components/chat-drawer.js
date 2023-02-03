@@ -175,6 +175,7 @@ export default Component.extend({
     this._checkSize();
   },
 
+  @bind
   _checkSize() {
     this.sizeTimer = throttle(this, this._performCheckSize, 150);
   },
