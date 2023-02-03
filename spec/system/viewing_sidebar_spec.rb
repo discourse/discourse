@@ -17,6 +17,7 @@ describe "Viewing sidebar", type: :system, js: true do
 
       expect(sidebar).to be_visible
       expect(sidebar).to have_category_section_link(category_sidebar_section_link.linkable)
+      expect(page).not_to have_css(".hamburger-dropdown")
     end
   end
 end

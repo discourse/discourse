@@ -324,8 +324,8 @@ createWidget("header-icons", {
     });
 
     if (
-      this.siteSettings.navigation_menu === "legacy" ||
-      !attrs.sidebarEnabled ||
+      (!attrs.sidebarEnabled &&
+        this.siteSettings.navigation_menu === "legacy") ||
       this.site.mobileView
     ) {
       icons.push(hamburger);
