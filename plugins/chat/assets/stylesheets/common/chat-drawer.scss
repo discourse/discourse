@@ -2,12 +2,39 @@ body.composer-open .chat-drawer-outlet-container {
   bottom: 11px; // prevent height of grippie from obscuring ...is typing indicator
 }
 
+.chat-drawer-resizer {
+  position: absolute;
+  top: -5px;
+  width: 15px;
+  height: 15px;
+}
+
+html:not(.rtl) {
+  .chat-drawer-resizer {
+    cursor: nwse-resize;
+    left: -5px;
+  }
+}
+
+html.rtl {
+  .chat-drawer-resizer {
+    cursor: nesw-resize;
+    right: -5px;
+  }
+}
+
 .chat-drawer-outlet-container {
   // higher than timeline, lower than composer, lower than user card (bump up below)
   z-index: z("usercard");
   position: fixed;
   right: var(--composer-right, 20px);
   left: 0;
+
+  .rtl & {
+    left: var(--composer-right, 20px);
+    right: 0;
+  }
+
   margin: 0;
   padding: 0;
   display: flex;
@@ -55,15 +82,6 @@ body.composer-open .chat-drawer-outlet-container {
     flex-direction: column;
     position: relative;
     overflow: hidden;
-  }
-
-  .chat-drawer-resizer {
-    cursor: nwse-resize;
-    position: absolute;
-    top: -5px;
-    left: -5px;
-    width: 15px;
-    height: 15px;
   }
 
   &.is-expanded {

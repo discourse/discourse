@@ -83,9 +83,14 @@ export default class ResizableNode extends Modifier {
   */
   @bind
   _resizeThrottled(event) {
-    const width = Math.ceil(
-      this._originalWidth - (event.pageX - this._originalMouseX)
-    );
+    let width = this._originalWidth;
+    let diffWidth = event.pageX - this._originalMouseX;
+    if (document.documentElement.classList.contains("rtl")) {
+      width = Math.ceil(width + diffWidth);
+    } else {
+      width = Math.ceil(width - diffWidth);
+    }
+
     const height = Math.ceil(
       this._originalHeight - (event.pageY - this._originalMouseY)
     );
