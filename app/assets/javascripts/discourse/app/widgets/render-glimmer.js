@@ -78,25 +78,30 @@ export default class RenderGlimmer {
   /**
    * Create a RenderGlimmer instance
    * @param widget - the widget instance which is rendering this content
-   * @param tagName - tagName for the wrapper element (e.g. `div.my-class`)
+   * @param renderInto - a string describing a new wrapper element (e.g. `div.my-class`),
+   *  or an existing HTML element to append content into.
    * @param template - a glimmer template compiled via ember-cli-htmlbars
    * @param data - will be made available at `@data` in your template
    */
-  constructor(widget, tagName, template, data) {
+  constructor(widget, renderInto, template, data) {
     assert(
       "`template` should be a template compiled via `ember-cli-htmlbars`",
       template.name === "factory"
     );
-    this.tagName = tagName;
+    this.renderInto = renderInto;
     this.widget = widget;
     this.template = template;
     this.data = data;
   }
 
   init() {
-    const [type, ...classNames] = this.tagName.split(".");
-    this.element = document.createElement(type);
-    this.element.classList.add(...classNames);
+    if (this.renderInto instanceof Element) {
+      this.element = this.renderInto;
+    } else {
+      const [type, ...classNames] = this.renderInto.split(".");
+      this.element = document.createElement(type);
+      this.element.classList.add(...classNames);
+    }
     this.connectComponent();
     return this.element;
   }
@@ -110,7 +115,7 @@ export default class RenderGlimmer {
   update(prev) {
     if (
       prev.template.__id !== this.template.__id ||
-      prev.tagName !== this.tagName
+      prev.renderInto !== this.renderInto
     ) {
       // Totally different component, but the widget framework guessed it was the
       // same widget. Destroy old component and re-init the new one.
