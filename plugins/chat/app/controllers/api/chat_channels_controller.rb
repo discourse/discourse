@@ -29,9 +29,7 @@ class Chat::Api::ChatChannelsController < Chat::Api
   end
 
   def destroy
-    with_service Chat::Service::TrashChannel do
-      on_model_not_found(:channel) { raise ActiveRecord::RecordNotFound }
-    end
+    with_service(Chat::Service::TrashChannel)
   end
 
   def create
@@ -105,7 +103,6 @@ class Chat::Api::ChatChannelsController < Chat::Api
           membership: result.channel.membership_for(current_user),
         )
       end
-      on_model_not_found(:channel) { raise ActiveRecord::RecordNotFound }
     end
   end
 

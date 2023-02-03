@@ -5,16 +5,17 @@ module Chat
     # Service responsible for trashing a chat channel.
     # Note the slug is modified to prevent collisions.
     #
+    # @!method call(channel:, guardian:)
+    # @scope class
+    #   @param [ChatChannel] channel
+    #   @param [Guardian] guardian
+    #   @return [Chat::Service::Base::Context]
+    #
     # @example
     #  Chat::Service::TrashChannel.call(channel: channel, guardian: guardian)
     #
     class TrashChannel
       include Base
-
-      # @!method call(channel:, guardian:)
-      #   @param [ChatChannel] channel
-      #   @param [Guardian] guardian
-      #   @return [Chat::Service::Base::Context]
 
       DELETE_CHANNEL_LOG_KEY = "chat_channel_delete"
 
