@@ -19,6 +19,7 @@ import { setupHashtagAutocomplete } from "discourse/lib/hashtag-autocomplete";
 import { isEmpty, isPresent } from "@ember/utils";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import { Promise } from "rsvp";
+import User from "discourse/models/user";
 
 export default class ChatComposer extends Component {
   @service capabilities;
@@ -412,7 +413,11 @@ export default class ChatComposer extends Component {
       width: "100%",
       treatAsTextarea: true,
       autoSelectFirstSuggestion: true,
-      transformComplete: (v) => v.username || v.name,
+      transformComplete: (userData) => {
+        const user = User.create(userData);
+        this.currentMessage.mentionedUsers.set(user.id, user);
+        return user.username || user.name;
+      },
       dataSource: (term) => {
         return userSearch({ term, includeGroups: true }).then((result) => {
           if (result?.users?.length > 0) {
