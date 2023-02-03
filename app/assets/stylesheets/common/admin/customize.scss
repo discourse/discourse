@@ -940,9 +940,34 @@ table.permalinks {
   }
 
   &--form {
+    input {
+      width: 300px;
+    }
+
     textarea {
-      width: 500px;
+      width: 100%;
       height: 200px;
+    }
+  }
+
+  &--quick-insert-field-buttons {
+    display: flex;
+    align-items: center;
+
+    span {
+      margin-right: 0.25rem;
+    }
+
+    .btn {
+      &:hover,
+      &:focus {
+        background-color: var(--primary-low);
+        color: var(--primary);
+      }
+
+      &:not(:last-child) {
+        border-right: 1px solid var(--primary-low);
+      }
     }
   }
 }

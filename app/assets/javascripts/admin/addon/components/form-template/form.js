@@ -5,14 +5,15 @@ import { inject as service } from "@ember/service";
 import { tracked } from "@glimmer/tracking";
 import I18n from "I18n";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { templateFormFields } from "admin/lib/template-form-fields";
 
 export default class FormTemplateForm extends Component {
   @service router;
   @service dialog;
   @tracked formSubmitted = false;
+  @tracked templateContents = this.args.model?.template || "";
   isEditing = this.args.model?.id ? true : false;
   templateName = this.args.model?.name || null;
-  templateContents = this.args.model?.template || null;
 
   @action
   onSubmit() {
@@ -77,6 +78,19 @@ export default class FormTemplateForm extends Component {
           .catch(popupAjaxError);
       },
     });
+  }
+
+  @action
+  onInsertField(type) {
+    const structure = templateFormFields.find(
+      (field) => field.type === type
+    ).structure;
+
+    if (this.templateContents.length === 0) {
+      this.templateContents += structure;
+    } else {
+      this.templateContents += `\n${structure}`;
+    }
   }
 
   #handleErrors(e) {

@@ -5515,11 +5515,19 @@ en:
           cancel: "Cancel"
           name:
             label: "Template Name"
-            placeholder: "Template Name"
+            placeholder: "Enter a name for this template..."
           template:
             label: "Template"
             placeholder: "Create a YAML template here..."
         delete_confirm: "Are you sure you would like to delete %{template_name} template?"
+        quick_insert_fields:
+          add_new_field: "Add"
+          checkbox: "Checkbox"
+          short_answer: "Short answer"
+          long_answer: "Long answer"
+          dropdown: "Dropdown"
+          upload: "Upload a file"
+          multiple_choice: "Multiple choice"
       impersonate:
         title: "Impersonate"
         help: "Use this tool to impersonate a user account for debugging purposes. You will have to log out once finished."

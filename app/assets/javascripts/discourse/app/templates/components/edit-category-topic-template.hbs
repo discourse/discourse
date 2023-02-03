@@ -1,4 +1,21 @@
-<DEditor
-  @value={{this.category.topic_template}}
-  @showLink={{this.showInsertLinkButton}}
-/>
+<div class="control-group">
+  <ComboBox
+    @content={{this.templates}}
+    @value={{this.selectedTemplate}}
+    @valueProperty="name"
+    @onChange={{action (mut this.selectedTemplate)}}
+  />
+</div>
+
+{{#if (eq this.selectedTemplate "Freeform")}}
+  <DEditor
+    @value={{this.category.topic_template}}
+    @showLink={{this.showInsertLinkButton}}
+  />
+{{else}}
+  <pre>
+    <code class="yaml hljs language-yaml">{{this.templateContents}}</code>
+  </pre>
+  {{! TODO(keegan): Fix <HiglightedCode> only rendering once }}
+  {{!-- <HighlightedCode @lang="yaml" @code={{this.templateContents}} /> --}}
+{{/if}}

@@ -1,8 +1,5 @@
 <div class="form-templates--form">
   <div class="control-group">
-    <label for="template-name">
-      {{i18n "admin.form_templates.new_template_form.name.label"}}
-    </label>
     <TextField
       @value={{this.templateName}}
       @name="template-name"
@@ -15,10 +12,64 @@
       @mode="yaml"
     /> }}
 
+  <div class="control-group form-templates--quick-insert-field-buttons">
+    <span>
+      {{I18n "admin.form_templates.quick_insert_fields.add_new_field"}}
+    </span>
+    <DButton
+      @class="btn-flat btn-icon-text"
+      @icon="check-square"
+      @label="admin.form_templates.quick_insert_fields.checkbox"
+      @title="admin.form_templates.quick_insert_fields.checkbox"
+      @action={{this.onInsertField}}
+      @actionParam="checkbox"
+    />
+    <DButton
+      @class="btn-flat btn-icon-text"
+      @icon="grip-lines"
+      @label="admin.form_templates.quick_insert_fields.short_answer"
+      @title="admin.form_templates.quick_insert_fields.short_answer"
+      @action={{this.onInsertField}}
+      @actionParam="input"
+    />
+    <DButton
+      @class="btn-flat btn-icon-text"
+      @icon="align-left"
+      @label="admin.form_templates.quick_insert_fields.long_answer"
+      @title="admin.form_templates.quick_insert_fields.long_answer"
+      @action={{this.onInsertField}}
+      @actionParam="textarea"
+    />
+
+    <DButton
+      @class="btn-flat btn-icon-text"
+      @icon="chevron-circle-down"
+      @label="admin.form_templates.quick_insert_fields.dropdown"
+      @title="admin.form_templates.quick_insert_fields.dropdown"
+      @action={{this.onInsertField}}
+      @actionParam="dropdown"
+    />
+
+    <DButton
+      @class="btn-flat btn-icon-text"
+      @icon="cloud-upload-alt"
+      @label="admin.form_templates.quick_insert_fields.upload"
+      @title="admin.form_templates.quick_insert_fields.upload"
+      @action={{this.onInsertField}}
+      @actionParam="upload"
+    />
+
+    <DButton
+      @class="btn-flat btn-icon-text"
+      @icon="bullseye"
+      @label="admin.form_templates.quick_insert_fields.multiple_choice"
+      @title="admin.form_templates.quick_insert_fields.multiple_choice"
+      @action={{this.onInsertField}}
+      @actionParam="multiselect"
+    />
+  </div>
+
   <div class="control-group">
-    <label for="template-contents">
-      {{i18n "admin.form_templates.new_template_form.template.label"}}
-    </label>
     <Textarea
       @value={{this.templateContents}}
       placeholder={{i18n
@@ -37,13 +88,17 @@
       @action={{action this.onSubmit}}
       @disabled={{this.formSubmitted}}
     />
-    <DButton
-      @class="btn-danger"
-      @label="admin.form_templates.view_template.delete"
-      @title="admin.form_templates.view_template.delete"
-      @icon="trash-alt"
-      @action={{action this.onDelete}}
-    />
+
+    {{#if this.isEditing}}
+      <DButton
+        @class="btn-danger"
+        @label="admin.form_templates.view_template.delete"
+        @title="admin.form_templates.view_template.delete"
+        @icon="trash-alt"
+        @action={{action this.onDelete}}
+      />
+    {{/if}}
+
     <DButton
       @label="admin.form_templates.new_template_form.cancel"
       @title="admin.form_templates.new_template_form.cancel"
