@@ -34,7 +34,7 @@
   </div>
 {{/if}}
 
-{{#if (and (not @fullscreen) @currentUser)}}
+{{#if (and (not @fullscreen) this.currentUser)}}
   <div class="timeline-controls">
     <PluginOutlet
       @name="timeline-controls-before"
@@ -130,7 +130,7 @@
       </button>
     {{/if}}
 
-    {{#if (and @currentUser (not @fullscreen))}}
+    {{#if (and this.currentUser (not @fullscreen))}}
       {{#if this.canCreatePost}}
         <button
           type="button"
@@ -156,7 +156,7 @@
       </button>
     {{/if}}
 
-    {{#if @currentUser}}
+    {{#if this.currentUser}}
       <TopicNotificationsButton
         @notificationLevel={{@model.details.notification_level}}
         @topic={{@model}}
