@@ -30,6 +30,21 @@ export default class ChatApi extends Service {
   }
 
   /**
+   * Get a thread by its ID.
+   * @param {number} threadId - The ID of the thread.
+   * @returns {Promise}
+   *
+   * @example
+   *
+   *    this.chatApi.thread(1).then(thread => { ... })
+   */
+  thread(threadId) {
+    return this.#getRequest(`/threads/${threadId}`).then((result) =>
+      this.chatChannelsManager.storeThread(result.thread)
+    );
+  }
+
+  /**
    * List all accessible category channels of the current user.
    * @returns {module:Collection}
    *

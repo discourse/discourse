@@ -190,5 +190,7 @@ class Chat::ChatMessageCreator
       FROM thread_updater
       WHERE thread_id IS NULL AND chat_messages.id = thread_updater.id
     SQL
+
+    @chat_message.thread_id = thread.id
   end
 end

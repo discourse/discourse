@@ -68,6 +68,7 @@ register_asset "stylesheets/common/chat-skeleton.scss"
 register_asset "stylesheets/colors.scss", :color_definitions
 register_asset "stylesheets/common/reviewable-chat-message.scss"
 register_asset "stylesheets/common/chat-mention-warnings.scss"
+register_asset "stylesheets/common/chat-thread-pane.scss"
 register_asset "stylesheets/common/chat-channel-settings-saved-indicator.scss"
 
 register_svg_icon "comments"
@@ -153,6 +154,7 @@ after_initialize do
   load File.expand_path("../app/serializers/chat_channel_serializer.rb", __FILE__)
   load File.expand_path("../app/serializers/chat_channel_index_serializer.rb", __FILE__)
   load File.expand_path("../app/serializers/chat_channel_search_serializer.rb", __FILE__)
+  load File.expand_path("../app/serializers/chat_thread_serializer.rb", __FILE__)
   load File.expand_path("../app/serializers/chat_view_serializer.rb", __FILE__)
   load File.expand_path(
          "../app/serializers/user_with_custom_fields_and_status_serializer.rb",
@@ -229,6 +231,7 @@ after_initialize do
   load File.expand_path("../app/controllers/api/category_chatables_controller.rb", __FILE__)
   load File.expand_path("../app/controllers/api/hints_controller.rb", __FILE__)
   load File.expand_path("../app/controllers/api/chat_chatables_controller.rb", __FILE__)
+  load File.expand_path("../app/controllers/api/chat_threads_controller.rb", __FILE__)
   load File.expand_path("../app/queries/chat_channel_memberships_query.rb", __FILE__)
 
   if Discourse.allow_dev_populate?
@@ -596,6 +599,8 @@ after_initialize do
 
       # Hints for JIT warnings.
       get "/mentions/groups" => "hints#check_group_mentions", :format => :json
+
+      get "/threads/:thread_id" => "chat_threads#show"
     end
 
     # direct_messages_controller routes
@@ -640,6 +645,7 @@ after_initialize do
     base_c_route = "/c/:channel_title/:channel_id"
     get base_c_route => "chat#respond", :as => "channel"
     get "#{base_c_route}/:message_id" => "chat#respond"
+    get "#{base_c_route}/t/:thread_id" => "chat#respond"
 
     %w[info info/about info/members info/settings].each do |route|
       get "#{base_c_route}/#{route}" => "chat#respond"

@@ -1,6 +1,7 @@
 import Service, { inject as service } from "@ember/service";
 import Promise from "rsvp";
 import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
+import ChatThread from "discourse/plugins/chat/discourse/models/chat-thread";
 import { tracked } from "@glimmer/tracking";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -18,6 +19,7 @@ export default class ChatChannelsManager extends Service {
   @service chatApi;
   @service currentUser;
   @tracked _cached = new TrackedObject();
+  @tracked _cachedThreads = new TrackedObject();
 
   async find(id, options = { fetchIfNotFound: true }) {
     const existingChannel = this.#findStale(id);
@@ -25,6 +27,20 @@ export default class ChatChannelsManager extends Service {
       return Promise.resolve(existingChannel);
     } else if (options.fetchIfNotFound) {
       return this.#find(id);
+    } else {
+      return Promise.resolve();
+    }
+  }
+
+  // TODO (martin) Maybe we should make a ChatThreadManager as well?
+  // Or have one defined for each channel? We need to keep track of all
+  // threads in channel and have a way to load their messages, and cache.
+  async findThread(id, options = { fetchIfNotFound: true }) {
+    const existingThread = this.#findStaleThread(id);
+    if (existingThread) {
+      return Promise.resolve(existingThread);
+    } else if (options.fetchIfNotFound) {
+      return this.#findThread(id);
     } else {
       return Promise.resolve();
     }
@@ -40,6 +56,17 @@ export default class ChatChannelsManager extends Service {
     if (!model) {
       model = ChatChannel.create(channelObject);
       this.#cache(model);
+    }
+
+    return model;
+  }
+
+  storeThread(threadObject) {
+    let model = this.#findStaleThread(threadObject.id);
+
+    if (!model) {
+      model = ChatThread.create(threadObject);
+      this.#cacheThread(model);
     }
 
     return model;
@@ -125,12 +152,30 @@ export default class ChatChannelsManager extends Service {
       });
   }
 
+  async #findThread(id) {
+    return this.chatApi
+      .thread(id)
+      .catch(popupAjaxError)
+      .then((thread) => {
+        this.#cacheThread(thread);
+        return thread;
+      });
+  }
+
   #cache(channel) {
     this._cached[channel.id] = channel;
   }
 
+  #cacheThread(thread) {
+    this._cachedThreads[thread.id] = thread;
+  }
+
   #findStale(id) {
     return this._cached[id];
+  }
+
+  #findStaleThread(id) {
+    return this._cachedThreads[id];
   }
 
   #sortDirectMessageChannels(channels) {

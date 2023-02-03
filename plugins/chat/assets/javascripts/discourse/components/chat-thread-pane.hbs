@@ -1,0 +1,10 @@
+<div class={{concat-class
+  "chat-thread-pane"
+  (if @thread "chat-thread-pane--active-thread")
+  }}>
+  <p>Thread ID {{@thread.id}}, started by {{@thread.original_message_user.username}}</p>
+
+  <p>Excerpt: {{@thread.original_message_excerpt}}</p>
+
+  <p><a href onclick={{action "closeThread"}}>Close thread</a></p>
+</div>

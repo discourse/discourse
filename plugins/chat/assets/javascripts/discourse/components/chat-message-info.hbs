@@ -28,6 +28,13 @@
     {{format-chat-date @message @details}}
   </span>
 
+  {{!-- TODO (martin): Remove this before merge. --}}
+  {{#if @message.thread_id}}
+  <span class="chat-message-info__thread_id">
+    THREAD ID: {{@message.thread_id}}
+  </span>
+  {{/if}}
+
   {{#if @message.bookmark}}
     <span class="chat-message-info__bookmark">
       <BookmarkIcon @bookmark={{@message.bookmark}} />

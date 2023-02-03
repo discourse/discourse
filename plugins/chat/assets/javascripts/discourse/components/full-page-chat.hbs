@@ -1,7 +1,12 @@
 {{#if this.chat.activeChannel}}
   <ChatLivePane
     @chatChannel={{this.chat.activeChannel}}
+    @thread={{this.chat.activeThread}}
     @onBackClick={{action "navigateToIndex"}}
     @onSwitchChannel={{action "switchChannel"}}
+  />
+  <ChatThreadPane
+    @channel={{this.chat.activeChannel}}
+    @thread={{this.chat.activeThread}}
   />
 {{/if}}

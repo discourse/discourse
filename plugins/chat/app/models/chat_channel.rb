@@ -9,6 +9,7 @@ class ChatChannel < ActiveRecord::Base
              foreign_key: "chatable_id"
 
   has_many :chat_messages
+  has_many :threads, class_name: "ChatThread", foreign_key: :channel_id
   has_many :user_chat_channel_memberships
 
   has_one :chat_channel_archive

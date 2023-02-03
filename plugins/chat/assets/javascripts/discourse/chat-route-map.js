@@ -14,6 +14,8 @@ export default function () {
         this.route("members", { path: "/members" });
         this.route("settings", { path: "/settings" });
       });
+
+      this.route("thread", { path: "/t/:threadId" });
     });
 
     this.route("draft-channel", { path: "/draft-channel" });

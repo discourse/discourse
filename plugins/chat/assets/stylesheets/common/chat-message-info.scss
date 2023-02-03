@@ -33,7 +33,8 @@
   }
 }
 
-.chat-message-info__date {
+.chat-message-info__date,
+.chat-message-info__thread_id {
   color: var(--primary-high);
   font-size: var(--font-down-1);
 
@@ -47,6 +48,9 @@
   & + .chat-message-info__flag {
     margin-left: 0.25em;
   }
+}
+.chat-message-info__thread_id {
+  color: red;
 }
 
 .chat-message-info__flag {

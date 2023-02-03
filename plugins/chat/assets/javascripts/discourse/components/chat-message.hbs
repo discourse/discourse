@@ -82,9 +82,10 @@
     {{else}}
       <div class={{this.chatMessageClasses}}>
         {{#if this.message.in_reply_to}}
+        {{!-- TOOD: Maybe split this into ChatMessageReplyTo component? --}}
           <div
             role="button"
-            onclick={{action "viewReply"}}
+            onclick={{action "viewReplyOrThread"}}
             class="chat-reply is-direct-reply"
           >
             {{d-icon "share" title="chat.in_reply_to"}}

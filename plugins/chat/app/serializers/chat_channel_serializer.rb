@@ -20,7 +20,8 @@ class ChatChannelSerializer < ApplicationSerializer
              :archive_topic_id,
              :memberships_count,
              :current_user_membership,
-             :meta
+             :meta,
+             :threading_enabled
 
   def initialize(object, opts)
     super(object, opts)
@@ -113,6 +114,10 @@ class ChatChannelSerializer < ApplicationSerializer
             MessageBus.last_id(ChatPublisher.new_mentions_message_bus_channel(object.id)),
       },
     }
+  end
+
+  def threading_enabled
+    SiteSetting.enable_experimental_chat_threaded_discussions && object.threading_enabled
   end
 
   alias_method :include_archive_topic_id?, :include_archive_status?

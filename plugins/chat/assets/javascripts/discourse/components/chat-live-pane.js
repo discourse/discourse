@@ -789,6 +789,7 @@ export default Component.extend({
           id: data.chat_message.id,
           staged_id: null,
           excerpt: data.chat_message.excerpt,
+          thread_id: data.chat_message.thread_id,
         });
 
         // some markdown is cooked differently on the server-side, e.g.

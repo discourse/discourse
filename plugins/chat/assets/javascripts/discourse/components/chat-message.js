@@ -49,6 +49,7 @@ export default Component.extend({
   tagName: "",
   chat: service(),
   dialog: service(),
+  router: service(),
   chatMessageActionsMobileAnchor: null,
   chatMessageActionsDesktopAnchor: null,
   chatMessageEmojiPickerAnchor: null,
@@ -678,8 +679,15 @@ export default Component.extend({
   },
 
   @action
-  viewReply() {
-    this.replyMessageClicked(this.message.in_reply_to);
+  viewReplyOrThread() {
+    // TODO (martin) Clean this up, hack
+    if (this.chatChannel.threading_enabled) {
+      return this.router.transitionTo("chat.channel.thread", {
+        threadId: this.message.thread_id,
+      });
+    } else {
+      this.replyMessageClicked(this.message.in_reply_to);
+    }
   },
 
   @action

@@ -36,6 +36,7 @@ export default class Chat extends Service {
   @service chatChannelsManager;
 
   activeChannel = null;
+  activeThread = null;
   cook = null;
   presenceChannel = null;
   sidebarActive = false;
@@ -118,6 +119,10 @@ export default class Chat extends Service {
 
   setActiveChannel(channel) {
     this.set("activeChannel", channel);
+  }
+
+  setActiveThread(thread) {
+    this.set("activeThread", thread);
   }
 
   loadCookFunction(categories) {
@@ -269,6 +274,14 @@ export default class Chat extends Service {
     return this.chatChannelsManager.find(channelId).then((channel) => {
       return this._openFoundChannelAtMessage(channel, messageId);
     });
+  }
+
+  async openThreadSidebar(channelId, threadId) {
+    const channel = await this.chatChannelsManager.find(channelId);
+    this.setActiveChannel(channel);
+
+    const thread = await this.chatChannelsManager.findThread(threadId);
+    this.setActiveThread(thread);
   }
 
   async openChannel(channel) {
