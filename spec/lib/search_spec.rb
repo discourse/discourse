@@ -948,15 +948,23 @@ RSpec.describe Search do
       expect(result.blurb(result.posts.first)).to eq(expected_blurb)
     end
 
-    it "applies a small penalty to closed topic when ranking" do
-      post =
+    it "applies a small penalty to closed topics and archived topics when ranking" do
+      archived_post =
+        Fabricate(
+          :post,
+          raw: "My weekly update",
+          topic:
+            Fabricate(:topic, title: "A topic that will be archived", archived: true, closed: true),
+        )
+
+      closed_post =
         Fabricate(
           :post,
           raw: "My weekly update",
           topic: Fabricate(:topic, title: "A topic that will be closed", closed: true),
         )
 
-      post2 =
+      open_post =
         Fabricate(
           :post,
           raw: "My weekly update",
@@ -964,7 +972,7 @@ RSpec.describe Search do
         )
 
       result = Search.execute("weekly update")
-      expect(result.posts.pluck(:id)).to eq([post2.id, post.id])
+      expect(result.posts.pluck(:id)).to eq([open_post.id, closed_post.id, archived_post.id])
     end
 
     it "can find posts by searching for a url prefix" do
