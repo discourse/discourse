@@ -7,7 +7,7 @@ RSpec.describe "Drawer", type: :system, js: true do
 
   before do
     chat_system_bootstrap
-    sign_in((current_user))
+    sign_in(current_user)
   end
 
   context "when opening" do
