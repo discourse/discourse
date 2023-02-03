@@ -24,5 +24,14 @@ RSpec.describe "Drawer", type: :system, js: true do
       expect(page.find(".chat-drawer").native.style("width")).to eq("500px")
       expect(page.find(".chat-drawer").native.style("height")).to eq("500px")
     end
+
+    it "has a default size" do
+      visit("/")
+
+      chat_page.open_from_header
+
+      expect(page.find(".chat-drawer").native.style("width")).to eq("400px")
+      expect(page.find(".chat-drawer").native.style("height")).to eq("530px")
+    end
   end
 end
