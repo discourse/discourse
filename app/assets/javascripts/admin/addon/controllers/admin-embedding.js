@@ -21,7 +21,7 @@ export default Controller.extend({
   DiscourseEmbed = {
     discourseUrl: '${baseUrl}/',
     discourseEmbedUrl: 'REPLACE_ME',
-    // className: 'REPLACE_ME_TOO',
+    // className: 'REPLACE_ME',
   };
 
   (function() {

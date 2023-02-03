@@ -34,6 +34,18 @@ class TopicRetriever
     # It's possible another process or job found the embed already. So if that happened bail out.
     return if TopicEmbed.where(embed_url: @embed_url).exists?
 
-    TopicEmbed.import_remote(@embed_url)
+    if @opts[:author_username].present?
+      Discourse.deprecate(
+        "discourse_username parameter has been deprecated. Prefer passing author name using a <meta> tag.",
+        since: "3.1.0.beta1",
+        drop_from: "3.2",
+      )
+    end
+
+    username =
+      @opts[:author_username].present || SiteSetting.embed_by_username.presence ||
+        SiteSetting.site_contact_username.presence || Discourse.system_user.username
+
+    TopicEmbed.import_remote(@embed_url, user: User.find_by(username_lower: username.downcase))
   end
 end
