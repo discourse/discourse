@@ -263,20 +263,22 @@
   </div>
 {{/if}}
 
-<div class="control-group pref-data-export">
-  <label class="control-label">{{i18n "user.download_archive.title"}}</label>
-  <div class="controls">
-    <DButton
-      @action={{action "exportUserArchive"}}
-      @class="btn-default btn-request-archive"
-      @label="user.download_archive.button_text"
-      @icon="download"
-    />
+{{#if this.canDownloadPosts}}
+  <div class="control-group pref-data-export">
+    <label class="control-label">{{i18n "user.download_archive.title"}}</label>
+    <div class="controls">
+      <DButton
+        @action={{action "exportUserArchive"}}
+        @class="btn-default btn-request-archive"
+        @label="user.download_archive.button_text"
+        @icon="download"
+      />
+    </div>
+    <div class="instructions">
+      {{i18n "user.download_archive.description"}}
+    </div>
   </div>
-  <div class="instructions">
-    {{i18n "user.download_archive.description"}}
-  </div>
-</div>
+{{/if}}
 
 <span>
   <PluginOutlet

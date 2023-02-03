@@ -1,12 +1,17 @@
 import Controller, { inject as controller } from "@ember/controller";
 import I18n from "I18n";
+import { alias } from "@ember/object/computed";
+import { exportUserArchive } from "discourse/lib/export-csv";
 import { inject as service } from "@ember/service";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 
 export default Controller.extend({
   dialog: service(),
   application: controller(),
+  user: controller(),
   userActionType: null,
+
+  canDownloadPosts: alias("user.viewingSelf"),
 
   @observes("userActionType", "model.stream.itemsLoaded")
   _showFooter() {
@@ -36,5 +41,14 @@ export default Controller.extend({
     return count > 0
       ? I18n.t("pending_posts.label_with_count", { count })
       : I18n.t("pending_posts.label");
+  },
+
+  actions: {
+    exportUserArchive() {
+      this.dialog.yesNoConfirm({
+        message: I18n.t("user.download_archive.confirm"),
+        didConfirm: () => exportUserArchive(),
+      });
+    },
   },
 });
