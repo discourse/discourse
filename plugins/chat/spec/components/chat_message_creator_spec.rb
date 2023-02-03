@@ -394,6 +394,63 @@ describe Chat::ChatMessageCreator do
         expect(message.thread.original_message_user).to eq(reply_message.user)
       end
 
+      context "when the thread_id is provided" do
+        fab!(:existing_thread) { Fabricate(:chat_thread, channel: public_chat_channel) }
+
+        it "does not create a thread when one is passed in" do
+          message = nil
+          expect {
+            message =
+              Chat::ChatMessageCreator.create(
+                chat_channel: public_chat_channel,
+                user: user1,
+                content: "this is a message",
+                thread_id: existing_thread.id,
+              ).chat_message
+          }.not_to change { ChatThread.count }
+
+          expect(message.reload.thread).to eq(existing_thread)
+        end
+
+        it "errors when the thread ID is for a different channel" do
+          other_channel_thread = Fabricate(:chat_thread, channel: Fabricate(:chat_channel))
+          result =
+            Chat::ChatMessageCreator.create(
+              chat_channel: public_chat_channel,
+              user: user1,
+              content: "this is a message",
+              thread_id: other_channel_thread.id,
+            )
+          expect(result.error.message).to eq(I18n.t("chat.errors.thread_invalid_for_channel"))
+        end
+
+        it "errors when the thread does not match the in_reply_to thread" do
+          reply_message.update!(thread: existing_thread)
+          result =
+            Chat::ChatMessageCreator.create(
+              chat_channel: public_chat_channel,
+              user: user1,
+              content: "this is a message",
+              in_reply_to_id: reply_message.id,
+              thread_id: Fabricate(:chat_thread, channel: public_chat_channel).id,
+            )
+          expect(result.error.message).to eq(I18n.t("chat.errors.thread_does_not_match_parent"))
+        end
+
+        it "errors when the root message does not have a thread ID" do
+          reply_message.update!(thread: nil)
+          result =
+            Chat::ChatMessageCreator.create(
+              chat_channel: public_chat_channel,
+              user: user1,
+              content: "this is a message",
+              in_reply_to_id: reply_message.id,
+              thread_id: existing_thread.id,
+            )
+          expect(result.error.message).to eq(I18n.t("chat.errors.thread_does_not_match_parent"))
+        end
+      end
+
       context "for missing root messages" do
         fab!(:root_message) do
           Fabricate(
@@ -482,6 +539,69 @@ describe Chat::ChatMessageCreator do
           expect(old_message_2.reload.thread).to eq(message.thread)
           expect(old_message_3.reload.thread).to eq(message.thread)
           expect(message.thread.chat_messages.count).to eq(5)
+          message =
+            Chat::ChatMessageCreator.create(
+              chat_channel: public_chat_channel,
+              user: user1,
+              content: "this is a message",
+              in_reply_to_id: reply_message.id,
+            ).chat_message
+        end
+
+        context "when a thread already exists and the thread_id is passed in" do
+          let!(:last_message) do
+            Chat::ChatMessageCreator.create(
+              chat_channel: public_chat_channel,
+              user: user1,
+              content: "this is a message",
+              in_reply_to_id: reply_message.id,
+            ).chat_message
+          end
+          let!(:existing_thread) { last_message.reload.thread }
+
+          it "does not create a new thread" do
+            thread_count = ChatThread.count
+
+            message =
+              Chat::ChatMessageCreator.create(
+                chat_channel: public_chat_channel,
+                user: user1,
+                content: "this is a message again",
+                in_reply_to_id: last_message.id,
+                thread_id: existing_thread.id,
+              ).chat_message
+
+            expect(ChatThread.count).to eq(thread_count)
+            expect(message.reload.thread).to eq(existing_thread)
+            expect(message.reload.in_reply_to.thread).to eq(existing_thread)
+            expect(message.thread.chat_messages.count).to eq(6)
+          end
+
+          it "errors when the thread does not match the root thread" do
+            old_message_1.update!(thread: Fabricate(:chat_thread, channel: public_chat_channel))
+            result =
+              Chat::ChatMessageCreator.create(
+                chat_channel: public_chat_channel,
+                user: user1,
+                content: "this is a message",
+                in_reply_to_id: reply_message.id,
+                thread_id: existing_thread.id,
+              )
+            expect(result.error.message).to eq(I18n.t("chat.errors.thread_does_not_match_parent"))
+          end
+
+          it "errors when the root message does not have a thread ID" do
+            old_message_1.update!(thread: nil)
+            result =
+              Chat::ChatMessageCreator.create(
+                chat_channel: public_chat_channel,
+                user: user1,
+                content: "this is a message",
+                in_reply_to_id: reply_message.id,
+                thread_id: existing_thread.id,
+              )
+            expect(result.error.message).to eq(I18n.t("chat.errors.thread_does_not_match_parent"))
+          end
         end
 
         context "when there are hundreds of messages in a reply chain already" do
@@ -502,13 +622,17 @@ describe Chat::ChatMessageCreator do
 
           xit "works" do
             thread_count = ChatThread.count
-            message =
-              Chat::ChatMessageCreator.create(
-                chat_channel: public_chat_channel,
-                user: user1,
-                content: "this is a message",
-                in_reply_to_id: @last_message_in_chain.id,
-              ).chat_message
+
+            message = nil
+            puts Benchmark.measure {
+                   message =
+                     Chat::ChatMessageCreator.create(
+                       chat_channel: public_chat_channel,
+                       user: user1,
+                       content: "this is a message",
+                       in_reply_to_id: @last_message_in_chain.id,
+                     ).chat_message
+                 }
 
             expect(ChatThread.count).to eq(thread_count + 1)
             expect(message.reload.thread).not_to eq(nil)

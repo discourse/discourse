@@ -11,6 +11,7 @@ class Chat::ChatMessageCreator
   def initialize(
     chat_channel:,
     in_reply_to_id: nil,
+    thread_id: nil,
     user:,
     content:,
     staged_id: nil,
@@ -28,6 +29,7 @@ class Chat::ChatMessageCreator
     @staged_id = staged_id
     @incoming_chat_webhook = incoming_chat_webhook
     @upload_ids = upload_ids || []
+    @thread_id = thread_id
     @error = nil
 
     @chat_message =
@@ -46,6 +48,8 @@ class Chat::ChatMessageCreator
       uploads = get_uploads
       validate_message!(has_uploads: uploads.any?)
       validate_reply_chain!
+      validate_existing_thread!
+      @chat_message.thread_id = @existing_thread&.id
       @chat_message.cook
       @chat_message.save!
       create_chat_webhook_event
@@ -114,6 +118,24 @@ class Chat::ChatMessageCreator
     raise StandardError.new(I18n.t("chat.errors.root_message_not_found")) if @root_message&.trashed?
   end
 
+  def validate_existing_thread!
+    return if @thread_id.blank?
+    @existing_thread = ChatThread.find(@thread_id)
+
+    if @existing_thread.channel_id != @chat_channel.id
+      raise StandardError.new(I18n.t("chat.errors.thread_invalid_for_channel"))
+    end
+
+    reply_to_thread_mismatch =
+      @chat_message.in_reply_to&.thread_id &&
+        @chat_message.in_reply_to.thread_id != @existing_thread.id
+    root_message_has_no_thread = @root_message && @root_message.thread_id.blank?
+    root_message_thread_mismatch = @root_message && @root_message.thread_id != @existing_thread.id
+    if reply_to_thread_mismatch || root_message_has_no_thread || root_message_thread_mismatch
+      raise StandardError.new(I18n.t("chat.errors.thread_does_not_match_parent"))
+    end
+  end
+
   def validate_message!(has_uploads:)
     @chat_message.validate_message(has_uploads: has_uploads)
     if @chat_message.errors.present?
@@ -137,6 +159,7 @@ class Chat::ChatMessageCreator
 
   def create_thread
     return if @in_reply_to_id.blank?
+    return if @chat_message.thread_id.present?
 
     thread =
       @root_message.thread ||
