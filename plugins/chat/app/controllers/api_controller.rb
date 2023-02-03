@@ -34,7 +34,6 @@ class Chat::Api < Chat::ChatBaseController
       on_success { render(json: success_json) }
       on_failure { render(json: failed_json, status: 422) }
       on_failed_policy(:invalid_access) { raise Discourse::InvalidAccess }
-      on_model_not_found { raise ActiveRecord::RecordNotFound }
       on_failed_contract do
         render(
           json: failed_json.merge(errors: result[:"result.contract.default"].errors.full_messages),

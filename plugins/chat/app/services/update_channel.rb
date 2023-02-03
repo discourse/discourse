@@ -26,7 +26,7 @@ module Chat
       #   @option params_to_edit [String] name
       #   @option params_to_edit [String] description
       #   @option params_to_edit [String] slug
-      #   @option params_to_edit [Boolean] auto_join_users Only valid for [CategoryChannel]. Whether active users
+      #   @option params_to_edit [Boolean] auto_join_users Only valid for {CategoryChannel}. Whether active users
       #    with permission to see the category should automatically join the channel.
       #   @option params_to_edit [String] allow_channel_wide_mentions Allow the use of @here and @all in the channel.
       #   @return [Chat::Service::Base::Context]

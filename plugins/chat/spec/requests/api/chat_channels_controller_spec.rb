@@ -176,18 +176,6 @@ RSpec.describe Chat::Api::ChatChannelsController do
       end
     end
 
-    context "when the channel doesn’t exist" do
-      fab!(:current_user) { Fabricate(:user) }
-
-      before { sign_in(current_user) }
-
-      it "returns a not found error" do
-        delete "/chat/api/channels/-999"
-
-        expect(response.status).to eq(403)
-      end
-    end
-
     context "when user is admin" do
       fab!(:current_user) { Fabricate(:admin) }
 
