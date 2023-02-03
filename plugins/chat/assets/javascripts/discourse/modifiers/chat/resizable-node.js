@@ -66,6 +66,21 @@ export default class ResizableNode extends Modifier {
     throttle(this, this._resizeThrottled, event, 24);
   }
 
+  /*
+    The bulk of the logic is to calculate the new width and height of the element
+    based on the current mouse position: width is calculated by subtracting
+    the difference between the current event.pageX and the original this._originalMouseX
+    from the original this._originalWidth, and rounding up to the nearest integer.
+    height is calculated in a similar way using event.pageY and this._originalMouseY.
+
+    In this example (B) is the current element top/left and (A) is x/y of the mouse after dragging:
+
+    A------
+    |     |
+    |  B--|
+    |  |  |
+    -------
+  */
   @bind
   _resizeThrottled(event) {
     const width = Math.ceil(
