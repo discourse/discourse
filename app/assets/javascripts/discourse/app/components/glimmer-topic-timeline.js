@@ -6,7 +6,6 @@ import { bind } from "discourse-common/utils/decorators";
 import I18n from "I18n";
 
 export default class GlimmerTopicTimeline extends Component {
-  @service site;
   @service siteSettings;
 
   @tracked enteredIndex = this.args.enteredIndex;
@@ -28,12 +27,6 @@ export default class GlimmerTopicTimeline extends Component {
       this.args.model.has_summary &&
       !this.args.model.postStream.summary
     );
-  }
-
-  get addFullscreenClass() {
-    if (this.args.fullscreen) {
-      return "timeline-fullscreen";
-    }
   }
 
   get createdAt() {
