@@ -15,6 +15,7 @@ class ChatMessageDestroyer
     ChatMessage.transaction do
       message.trash!(actor)
       ChatMention.where(chat_message: message).destroy_all
+      DiscourseEvent.trigger(:chat_message_deleted, message, message.chat_channel, actor)
 
       # FIXME: We should do something to prevent the blue/green bubble
       # of other channel members from getting out of sync when a message
