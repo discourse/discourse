@@ -84,7 +84,7 @@ class Admin::BackupsController < Admin::AdminController
       StaffActionLogger.new(current_user).log_backup_download(backup)
 
       if store.remote?
-        redirect_to backup.source
+        redirect_to backup.source, allow_other_host: true
       else
         headers["Content-Length"] = File.size(backup.source).to_s
         send_file backup.source
