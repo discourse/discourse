@@ -6,11 +6,6 @@
       @placeholderKey="admin.form_templates.new_template_form.name.placeholder"
     />
   </div>
-  {{! TODO fix AceEditor not appearing visually }}
-  {{! <AceEditor
-      @content=""
-      @mode="yaml"
-    /> }}
 
   <div class="control-group form-templates--quick-insert-field-buttons">
     <span>
@@ -40,7 +35,6 @@
       @action={{this.onInsertField}}
       @actionParam="textarea"
     />
-
     <DButton
       @class="btn-flat btn-icon-text"
       @icon="chevron-circle-down"
@@ -49,7 +43,6 @@
       @action={{this.onInsertField}}
       @actionParam="dropdown"
     />
-
     <DButton
       @class="btn-flat btn-icon-text"
       @icon="cloud-upload-alt"
@@ -58,7 +51,6 @@
       @action={{this.onInsertField}}
       @actionParam="upload"
     />
-
     <DButton
       @class="btn-flat btn-icon-text"
       @icon="bullseye"
@@ -70,6 +62,7 @@
   </div>
 
   <div class="control-group">
+    {{! TODO(@keegan): Switch to <AceEditor /> after fixing visibility issues }}
     <Textarea
       @value={{this.templateContents}}
       placeholder={{i18n
