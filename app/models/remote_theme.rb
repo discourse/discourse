@@ -13,7 +13,16 @@ class RemoteTheme < ActiveRecord::Base
   class ImportError < StandardError
   end
 
-  ALLOWED_FIELDS = %w[scss embedded_scss head_tag header after_header body_tag footer]
+  ALLOWED_FIELDS = %w[
+    scss
+    embedded_scss
+    embedded_header
+    head_tag
+    header
+    after_header
+    body_tag
+    footer
+  ]
 
   GITHUB_REGEXP = %r{\Ahttps?://github\.com/}
   GITHUB_SSH_REGEXP = %r{\Assh://git@github\.com:}

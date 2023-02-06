@@ -5097,6 +5097,9 @@ en:
           embedded_scss:
             text: "Embedded CSS"
             title: "Enter custom CSS to deliver with embedded version of comments"
+          embedded_header:
+            text: "Embedded Header"
+            title: "Enter HTML to display above the embedded version of comments"
           color_definitions:
             text: "Color Definitions"
             title: "Enter custom color definitions (advanced users only)"
