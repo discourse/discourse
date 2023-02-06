@@ -2,6 +2,7 @@ import templateOnly from "@ember/component/template-only";
 import { setComponentTemplate } from "@ember/component";
 import { tracked } from "@glimmer/tracking";
 import { assert } from "@ember/debug";
+import { createWidgetFrom } from "discourse/widgets/widget";
 
 /*
 
@@ -89,7 +90,9 @@ export default class RenderGlimmer {
       template.name === "factory"
     );
     this.renderInto = renderInto;
-    this.widget = widget;
+    if (widget) {
+      this.widget = widget;
+    }
     this.template = template;
     this.data = data;
   }
@@ -108,7 +111,9 @@ export default class RenderGlimmer {
 
   destroy() {
     if (this._componentInfo) {
-      this.widget._findView().unmountChildComponent(this._componentInfo);
+      this.parentMountWidgetComponent.unmountChildComponent(
+        this._componentInfo
+      );
     }
   }
 
@@ -132,7 +137,7 @@ export default class RenderGlimmer {
   }
 
   connectComponent() {
-    const { element, template, widget } = this;
+    const { element, template } = this;
 
     const component = templateOnly();
     component.name = "Widgets/RenderGlimmer";
@@ -143,9 +148,39 @@ export default class RenderGlimmer {
       component,
       @tracked data: this.data,
     };
-    const parentMountWidgetComponent = widget._findView();
-    parentMountWidgetComponent.mountChildComponent(this._componentInfo);
+
+    this.parentMountWidgetComponent.mountChildComponent(this._componentInfo);
+  }
+
+  get parentMountWidgetComponent() {
+    return this.widget?._findView() || this._emberView;
   }
 }
 
 RenderGlimmer.prototype.type = "Widget";
+
+/**
+ * Define a widget shim which renders a Glimmer template. Designed for incrementally migrating
+ * a widget-based UI to Glimmer. Widget attrs will be made available to your template at `@data`.
+ * For more details, see documentation for the RenderGlimmer class.
+ * @param name - the widget's name (which can then be used in `.attach` elsewhere)
+ * @param tagName - a string describing a new wrapper element (e.g. `div.my-class`)
+ * @param template - a glimmer template compiled via ember-cli-htmlbars
+ */
+export function registerWidgetShim(name, tagName, template) {
+  const RenderGlimmerShim = class MyClass extends RenderGlimmer {
+    constructor(attrs) {
+      super(null, tagName, template, attrs);
+      return this;
+    }
+
+    get widget() {
+      return this.parentWidget;
+    }
+
+    didRenderWidget() {}
+    willRerenderWidget() {}
+  };
+
+  createWidgetFrom(RenderGlimmerShim, name, {});
+}
