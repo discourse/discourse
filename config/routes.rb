@@ -233,7 +233,7 @@ Discourse::Application.routes.draw do
       scope "/customize", constraints: AdminConstraint.new do
         resources :user_fields, constraints: AdminConstraint.new
         resources :emojis, constraints: AdminConstraint.new
-        resources :form_templates, constraints: AdminConstraint.new
+        resources :form_templates, constraints: AdminConstraint.new, path: "/form-templates"
 
         get "themes/:id/:target/:field_name/edit" => "themes#index"
         get "themes/:id" => "themes#index"

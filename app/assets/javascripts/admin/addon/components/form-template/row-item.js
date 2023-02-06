@@ -33,7 +33,7 @@ export default class FormTemplateRowItem extends Component {
         template_name: this.args.template.name,
       }),
       didConfirm: () => {
-        ajax(`/admin/customize/form_templates/${this.args.template.id}.json`, {
+        ajax(`/admin/customize/form-templates/${this.args.template.id}.json`, {
           type: "DELETE",
         })
           .then(() => {

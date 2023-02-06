@@ -3,7 +3,7 @@ import { ajax } from "discourse/lib/ajax";
 
 export default class AdminCustomizeFormTemplatesEdit extends DiscourseRoute {
   model(params) {
-    return ajax(`/admin/customize/form_templates/${params.id}.json`).then(
+    return ajax(`/admin/customize/form-templates/${params.id}.json`).then(
       (model) => {
         return model.form_template;
       }

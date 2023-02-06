@@ -14,7 +14,7 @@ export default buildCategoryPanel("topic-template", {
     this._super(...arguments);
 
     //TODO(keegan): Use an better approach to get templates listed here
-    ajax(`/admin/customize/form_templates.json`).then((result) => {
+    ajax(`/admin/customize/form-templates.json`).then((result) => {
       this.set("templates", [
         { id: 0, name: "Freeform" },
         ...result.form_templates,

@@ -29,7 +29,7 @@ export default class FormTemplateForm extends Component {
     if (this.isEditing) {
       postData["id"] = this.args.model.id;
 
-      ajax(`/admin/customize/form_templates/${this.args.model.id}.json`, {
+      ajax(`/admin/customize/form-templates/${this.args.model.id}.json`, {
         type: "PUT",
         data: postData,
       })
@@ -42,7 +42,7 @@ export default class FormTemplateForm extends Component {
           this.formSubmitted = false;
         });
     } else {
-      ajax("/admin/customize/form_templates.json", {
+      ajax("/admin/customize/form-templates.json", {
         type: "POST",
         data: postData,
       })
@@ -69,7 +69,7 @@ export default class FormTemplateForm extends Component {
         template_name: this.args.model.name,
       }),
       didConfirm: () => {
-        ajax(`/admin/customize/form_templates/${this.args.model.id}.json`, {
+        ajax(`/admin/customize/form-templates/${this.args.model.id}.json`, {
           type: "DELETE",
         })
           .then(() => {

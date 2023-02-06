@@ -23,7 +23,7 @@ export default class AdminCustomizeFormTemplateView extends Controller.extend(
         template_name: this.model.name,
       }),
       didConfirm: () => {
-        ajax(`/admin/customize/form_templates/${this.model.id}.json`, {
+        ajax(`/admin/customize/form-templates/${this.model.id}.json`, {
           type: "DELETE",
         })
           .then(() => {
