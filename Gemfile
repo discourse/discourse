@@ -229,7 +229,7 @@ gem "logstash-event", require: false
 gem "logstash-logger", require: false
 gem "logster"
 
-# Those are forks of sassc and sassc-rails with dart-sass support
+# These are forks of sassc and sassc-rails with dart-sass support
 gem "dartsass-ruby"
 gem "dartsass-sprockets"
 
