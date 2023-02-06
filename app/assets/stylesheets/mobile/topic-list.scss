@@ -162,11 +162,6 @@
   }
 
   .topic-item-stats {
-    .category,
-    .discourse-tags {
-      // disabling clicks because these targets are too small on mobile
-      pointer-events: none;
-    }
     position: relative;
     display: flex;
     align-items: baseline;
@@ -183,6 +178,43 @@
     a,
     a:visited {
       color: var(--primary-med-or-secondary-med);
+    }
+  }
+
+  .topic-item-stats {
+    span.relative-date {
+      vertical-align: text-top;
+    }
+  }
+
+  .topic-item-stats__category-tags {
+    margin-right: 0.5em;
+    .category,
+    .discourse-tags {
+      display: inline;
+      // disabling clicks because these targets are too small on mobile
+      pointer-events: none;
+    }
+
+    .badge-wrapper {
+      vertical-align: bottom;
+    }
+
+    .badge-wrapper {
+      &.bullet {
+        + .discourse-tags {
+          .discourse-tag {
+            vertical-align: bottom;
+          }
+        }
+      }
+      &.box {
+        + .discourse-tags {
+          .discourse-tag {
+            vertical-align: text-bottom;
+          }
+        }
+      }
     }
   }
 
