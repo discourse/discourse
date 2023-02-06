@@ -62,6 +62,28 @@ module Chat
         end
       end
 
+      module StepsHelpers
+        def model(class_name, name: :model, key: :id)
+          steps << ModelStep.new(name, key: key, class_name: class_name)
+        end
+
+        def contract(name = :default, class_name: self::Contract)
+          steps << ContractStep.new(name, class_name: class_name)
+        end
+
+        def policy(name = :default)
+          steps << PolicyStep.new(name)
+        end
+
+        def step(name)
+          steps << Step.new(name)
+        end
+
+        def transaction(&block)
+          steps << TransactionStep.new(&block)
+        end
+      end
+
       class Step
         attr_reader :name, :class_name
 
@@ -111,15 +133,13 @@ module Chat
       end
 
       class TransactionStep < Step
+        include StepsHelpers
+
         attr_reader :steps
 
         def initialize(&block)
           @steps = []
           instance_exec(&block)
-        end
-
-        def step(name)
-          steps << Step.new(name)
         end
 
         def call(instance, context)
@@ -141,7 +161,7 @@ module Chat
       end
 
       class_methods do
-        attr_reader :steps
+        include StepsHelpers
 
         def call(context = {})
           new(context).tap(&:run).context
@@ -149,26 +169,6 @@ module Chat
 
         def call!(context = {})
           new(context).tap(&:run!).context
-        end
-
-        def model(class_name, name: :model, key: :id)
-          steps << ModelStep.new(name, key: key, class_name: class_name)
-        end
-
-        def contract(name = :default, class_name: self::Contract)
-          steps << ContractStep.new(name, class_name: class_name)
-        end
-
-        def policy(name = :default)
-          steps << PolicyStep.new(name)
-        end
-
-        def step(name)
-          steps << Step.new(name)
-        end
-
-        def transaction(&block)
-          steps << TransactionStep.new(&block)
         end
 
         def steps

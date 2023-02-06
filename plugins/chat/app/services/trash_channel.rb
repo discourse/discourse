@@ -47,15 +47,15 @@ module Chat
         channel.trash!(guardian.user)
       end
 
-      def enqueue_delete_channel_relations_job(channel:, **)
-        Jobs.enqueue(:chat_channel_delete, chat_channel_id: channel.id)
-      end
-
       def log_channel_deletion(guardian:, channel:, **)
         StaffActionLogger.new(guardian.user).log_custom(
           DELETE_CHANNEL_LOG_KEY,
           { chat_channel_id: channel.id, chat_channel_name: channel.title(guardian.user) },
         )
+      end
+
+      def enqueue_delete_channel_relations_job(channel:, **)
+        Jobs.enqueue(:chat_channel_delete, chat_channel_id: channel.id)
       end
     end
   end
