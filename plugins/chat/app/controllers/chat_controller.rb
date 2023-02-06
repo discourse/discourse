@@ -160,25 +160,25 @@ class Chat::ChatController < Chat::ChatBaseController
   end
 
   def update_user_last_read
-    membership =
-      Chat::ChatChannelMembershipManager.new(@chat_channel).find_for_user(
-        current_user,
-        following: true,
-      )
-    raise Discourse::NotFound if membership.nil?
+    # membership =
+    #   Chat::ChatChannelMembershipManager.new(@chat_channel).find_for_user(
+    #     current_user,
+    #     following: true,
+    #   )
+    # raise Discourse::NotFound if membership.nil?
 
-    if membership.last_read_message_id && params[:message_id].to_i < membership.last_read_message_id
-      raise Discourse::InvalidParameters.new(:message_id)
-    end
+    # if membership.last_read_message_id && params[:message_id].to_i < membership.last_read_message_id
+    #   raise Discourse::InvalidParameters.new(:message_id)
+    # end
 
-    unless ChatMessage.with_deleted.exists?(
-             chat_channel_id: @chat_channel.id,
-             id: params[:message_id],
-           )
-      raise Discourse::NotFound
-    end
+    # unless ChatMessage.with_deleted.exists?(
+    #          chat_channel_id: @chat_channel.id,
+    #          id: params[:message_id],
+    #        )
+    #   raise Discourse::NotFound
+    # end
 
-    membership.update!(last_read_message_id: params[:message_id])
+    # membership.update!(last_read_message_id: params[:message_id])
 
     Notification
       .where(notification_type: Notification.types[:chat_mention])

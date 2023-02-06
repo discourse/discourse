@@ -105,8 +105,8 @@ module Chat
         def call(instance, context)
           context[name] = super
           raise ArgumentError unless context[name]
-        rescue ArgumentError
-          context.fail!("result.#{name}": Context.build.fail)
+        rescue ArgumentError => exception
+          context.fail!("result.#{name}": Context.build.fail({ exception: exception }))
         end
       end
 

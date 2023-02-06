@@ -59,9 +59,11 @@ Fabricator(:chat_message) do
 end
 
 Fabricator(:chat_mention) do
+  transient :notification_type
+
   chat_message { Fabricate(:chat_message) }
   user { Fabricate(:user) }
-  notification { Fabricate(:notification) }
+  notification { |attrs| Fabricate(:notification, notification_type: attrs[:notification_type]) }
 end
 
 Fabricator(:chat_message_reaction) do
