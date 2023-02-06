@@ -433,7 +433,6 @@ module("Integration | Component | Widget | base", function (hooks) {
     );
     const elementOneBefore = startElements[0];
 
-    array.pop(); // Remove ElementTwo
     array.unshift("PrependedElement");
 
     await click(".rerender");
@@ -441,7 +440,7 @@ module("Integration | Component | Widget | base", function (hooks) {
     const endElements = Array.from(document.querySelectorAll("span.val"));
     assert.deepEqual(
       endElements.map((e) => e.innerText),
-      ["PrependedElement", "ElementOne"]
+      ["PrependedElement", "ElementOne", "ElementTwo"]
     );
     const elementOneAfter = endElements[1];
 
