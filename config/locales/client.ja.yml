@@ -118,7 +118,7 @@ ja:
       url: "URL をコピーして共有"
     action_codes:
       public_topic: "トピックを公開しました: %{when}"
-      open_topic: "はこれをトピックに変換しました: %{when}"
+      open_topic: "これをトピックに変換しました: %{when}"
       private_topic: "このトピックを個人メッセージにしました: %{when}"
       split_topic: "このトピックを分割しました: %{when}"
       invited_user: "%{who} を招待しました: %{when}"
@@ -126,7 +126,7 @@ ja:
       user_left: "%{who} は %{when} にこのメッセージから退出しました"
       removed_user: "%{who} を削除しました: %{when}"
       removed_group: "%{who} を削除しました: %{when}"
-      autobumped: "自動的にトップに上げられました: %{when}"
+      autobumped: "自動的にバンプされました: %{when}"
       autoclosed:
         enabled: "クローズされました: %{when}"
         disabled: "オープンされました: %{when}"
@@ -916,11 +916,6 @@ ja:
       profile: "プロファイル"
       mute: "ミュート"
       edit: "プロファイルを編集"
-      download_archive:
-        button_text: "すべてダウンロード"
-        confirm: "投稿をダウンロードしてもよろしいですか？"
-        success: "ダウンロードが始まりました。処理が完了するとメッセージで通知されます。"
-        rate_limit_error: "投稿のダウンロードは 1 日に 1 回のみ可能です。明日再度お試しください。"
       new_private_message: "新規メッセージ"
       private_message: "メッセージ"
       private_messages: "メッセージ"
@@ -2584,8 +2579,6 @@ ja:
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>すべてのカテゴリを閲覧</a>するか、<a href='%{basePath}/latest'>最新のトピックを表示</a>するか、トップを見ます。"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>すべてのタグを閲覧</a>するか<a href='%{basePath}/latest'>最新のトピックを表示</a>します。"
       suggest_create_topic: <a href>新しい会話を開始しますか？</a>
-      jump_reply_up: 以前の返信へジャンプ
-      jump_reply_down: 以後の返信へジャンプ
       deleted: "トピックは削除されました"
       slow_mode_update:
         title: "低速モード"
@@ -2935,8 +2928,6 @@ ja:
       collapse: "折りたたむ"
       sr_collapse_replies: "埋め込まれた返信を折りたたむ"
       sr_date: "投稿日"
-      sr_expand_replies:
-        other: "この投稿には %{count} 件の返信があります。クリックして展開"
       expand_collapse: "展開/折りたたむ"
       sr_below_embedded_posts_description: "投稿 #%{post_number} の返信"
       sr_embedded_reply_description: "投稿 #%{post_number} に対する @%{username} からの返信"
@@ -3746,13 +3737,11 @@ ja:
     pause_notifications:
       title: "次の通知を停止する..."
       label: "通知を停止する"
-      remaining: "残り %{remaining}"
       options:
         half_hour: "30 分"
         one_hour: "１時間"
         two_hours: "２時間"
         tomorrow: "明日まで"
-        custom: "カスタム"
       set_schedule: "通知スケジュールを設定する"
     trust_levels:
       names:
@@ -3800,6 +3789,9 @@ ja:
       all_categories: "すべてのカテゴリ"
       all_tags: "すべてのタグ"
       sections:
+        custom:
+          save: "保存"
+          delete: "削除"
         about:
           header_link_text: "サイト情報"
         messages:
@@ -4982,7 +4974,6 @@ ja:
         show_admin_profile: "管理者"
         manage_user: "ユーザーの管理"
         show_public_profile: "公開プロファイルを表示"
-        impersonate: "代理操作"
         action_logs: "操作ログ"
         ip_lookup: "IP アドレスを検索"
         log_out: "ログアウト"

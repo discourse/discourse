@@ -2368,14 +2368,6 @@ da:
         Se venligst vores [Retningslinjer](%{base_url}/guidelines) for yderligere vejledning.
     user_automatically_silenced:
       subject_template: "Ny bruger %{username} er blevet gjort tavs af fællesskabsanmeldelse"
-      text_body_template: |
-        Dette er en automatisk besked.
-
-        Den nye bruger [%{username}](%{user_url}) blev automatisk gjort lydløs, fordi flere brugere anmeldte %{username}'s indlæg.
-
-        Venligst [gennemse anmeldelsen](%{base_url}/admin/flags). Hvis %{username} fejlagtigt blev gjort lydløs pga. indlæg, skal du klikke på Mådeholdt (silenced) knappen på [admin siden for denne bruger](%{user_url}).
-
-        Denne tærskel kan ændres via webstedsindstillingerne 'silence_new_user'.
     spam_post_blocked:
       title: "Spam-indlæg blokeret"
       subject_template: "Ny bruger %{username} indlæg blokeret på grund af gentagne links"
@@ -2426,9 +2418,6 @@ da:
   user_notifications:
     previous_discussion: "Tidligere Svar"
     in_reply_to: "Som svar på"
-    unsubscribe:
-      title: "Frameld"
-      description: "Ønsker du ikke at modtage disse e-mails? Intet problem! Klik herunder for at framelde med det samme:"
     reply_by_email: "[Besøg emnet](%{base_url}%{url}) eller svar på denne email for at svare."
     reply_by_email_pm: "[Besøg Meddelelse](%{base_url}%{url}) eller svar på denne e-mail for at svare %{participants}."
     only_reply_by_email: "Besvar denne mail for at svare."
@@ -2706,7 +2695,6 @@ da:
       liked_received: "Modtagne \"Synes godt om\""
       new_users: "Nye Brugere"
       popular_topics: "Populære Emner"
-      follow_topic: "Følg dette emne"
       join_the_discussion: "Læs mere"
       popular_posts: "Populære Indlæg"
       more_new: "Nyt for dig"
@@ -2883,8 +2871,6 @@ da:
     welcome_message: |
       ## [Velkommen til %{title}](#welcome)
       En konto er påkrævet. Opret venligst en konto eller log ind for at fortsætte.
-  deleted: "slettet"
-  image: "billede"
   upload:
     unauthorized: "Beklager, filen, som du forsøger at overføre er ikke godkendt (godkente filendelser: %{authorized_extensions})."
     pasted_image_filename: "Indsat billede"
@@ -3313,7 +3299,6 @@ da:
         title: "Discourse er gjort klar til dig!"
   search_logs:
     graph_title: "Antal søgninger"
-  joined: "Tilmeldt"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} nævnte dig i "%{topic}" - %{site_title}'

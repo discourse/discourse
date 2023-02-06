@@ -563,31 +563,11 @@ cs:
         title: "Proč odmítáte tohoto uživatele?"
         send_email: "Odeslat e-mail o odmítnutí"
     relative_time_picker:
-      minutes:
-        one: "minuta"
-        few: "minut"
-        many: "minut"
-        other: "minut"
-      hours:
-        one: "hodina"
-        few: "hodin"
-        many: "hodin"
-        other: "hodin"
       days:
         one: "den"
         few: "dní"
         many: "dní"
         other: "dnů"
-      months:
-        one: "měsíc"
-        few: "měsíců"
-        many: "měsíců"
-        other: "měsíců"
-      years:
-        one: "rok"
-        few: "let"
-        many: "let"
-        other: "let"
       relative: "Relativní"
     time_shortcut:
       later_today: "Později dnes"
@@ -859,19 +839,9 @@ cs:
         few: "%{count} témata"
         many: "%{count} témat"
         other: "%{count} témat"
-      topic_stat:
-        one: "%{number} / %{unit}"
-        few: "%{number} / %{unit}"
-        many: "%{number} / %{unit}"
-        other: "%{number} / %{unit}"
       topic_stat_unit:
         week: "týden"
         month: "měsíc"
-      topic_stat_all_time:
-        one: "Celkem %{number}"
-        few: "Celkem %{number}"
-        many: "Celkem %{number}"
-        other: "Celkem %{number}"
       n_more: "Kategorie (%{count} dalších)..."
     ip_lookup:
       title: Vyhledávání podle IP adresy
@@ -898,11 +868,6 @@ cs:
       profile: "Profil"
       mute: "Ignorovat"
       edit: "Upravit nastavení"
-      download_archive:
-        button_text: "Stáhnout vše"
-        confirm: "Jste si jistí, že chcete stáhnout všechny své příspěvky?"
-        success: "Stahování zahájeno, až bude dokončeno, přijde ti zpráva."
-        rate_limit_error: "Příspěvky mohou být staženy jen jednou za den. Zkus to, prosím, zítra."
       new_private_message: "Nová zpráva"
       private_message: "Zpráva"
       private_messages: "Zprávy"
@@ -944,7 +909,6 @@ cs:
       collapse_profile: "Sbalit"
       bookmarks: "Záložky"
       bio: "O mně"
-      timezone: "Časové pásmo"
       invited_by: "Pozvánka od"
       trust_level: "Důvěryhodnost"
       notifications: "Oznámení"
@@ -1049,11 +1013,6 @@ cs:
           many: "Nepřečtená (%{count})"
           other: "Nepřečtená (%{count})"
         new: "Nová"
-        new_with_count:
-          one: "Nové"
-          few: "Nová (%{count})"
-          many: "Nové"
-          other: "Nové"
         archive: "Archív"
         groups: "Moje skupiny"
         move_to_inbox: "Přesunout do doručených"
@@ -1912,11 +1871,9 @@ cs:
         dismiss_new: "Označit jako přečtené vše nové"
         toggle: "hromadný výběr témat"
         actions: "Hromadné akce"
-        change_category: "Nastavit kategorii..."
         close_topics: "Zavřít téma"
         archive_topics: "Archivovat témata"
         move_messages_to_inbox: "Přesunout do doručených"
-        notification_level: "Upozornění..."
         choose_new_category: "Zvolte novou kategorii pro témata:"
         selected:
           one: "Vybrali jste <b>%{count}</b> téma."
@@ -2001,8 +1958,6 @@ cs:
       back_to_list: "Zpátky na seznam témat"
       options: "Možnosti"
       show_links: "zobrazit odkazy v tomto tématu"
-      jump_reply_up: přejít na předchozí odpověď
-      jump_reply_down: přejít na následující odpověď
       deleted: "Téma bylo smazáno"
       slow_mode_update:
         enable: "Zapnout"
@@ -2109,7 +2064,6 @@ cs:
         unarchive: "Navrátit z archivu"
         archive: "Archivovat téma"
         reset_read: "Vynulovat počet čtení"
-        make_public: "Vytvořit Veřejné Téma..."
         make_private: "Vytvořit soukromou zprávu "
         reset_bump_date: "Resetovat datum zvýraznění"
       feature:
@@ -2346,8 +2300,6 @@ cs:
         revert_to_regular: "Zrušit zvýraznění"
         rebake: "Obnovit HTML"
         unhide: "Odkrýt"
-        change_owner: "Změnit autora..."
-        grant_badge: "Udělit odznak..."
         lock_post: "Uzamknout příspěvek "
         lock_post_description: "Zabránit přispěvatelům v úpravách tohoto příspěvku"
         unlock_post: "Odemknout příspěvek"
@@ -2411,15 +2363,8 @@ cs:
             title: "Zobrazit html část emailu"
             button: "HTML"
       bookmarks:
-        create: "Vytvořit záložku"
-        edit: "Upravit záložku"
         name: "Jméno"
         options: "Možnosti"
-        actions:
-          delete_bookmark:
-            name: "Smazat záložku"
-          edit_bookmark:
-            name: "Upravit záložku"
     category:
       none: "(bez kategorie)"
       all: "Všechny kategorie"
@@ -2530,7 +2475,6 @@ cs:
     flagging:
       title: "Děkujeme, že pomáháte udržovat komunitu zdvořilou!"
       action: "Nahlásit příspěvek"
-      take_action: "Zakročit..."
       take_action_options:
         default:
           title: "Zakročit"
@@ -2890,7 +2834,6 @@ cs:
         delete: "Smazat"
         confirm_delete: "Jste si jistí, že chcete smazat tuto skupinu štítků?"
         everyone_can_use: "Tagy mohou být použity kýmkoliv"
-        parent_tag_placeholder: "Volitelné"
       topics:
         none:
           unread: "Nemáte žádná nepřečtená témata."
@@ -2912,10 +2855,6 @@ cs:
       dismiss: "Označit jako přečtené"
     safe_mode:
       enabled: "Bezpečný režim je povolený, k jeho zakázání zavři toto okno prohlížeče"
-    pause_notifications:
-      remaining: "%{remaining} zbývá"
-      options:
-        custom: "Přizpůsobené"
     trust_levels:
       names:
         newuser: "nový uživatel"
@@ -2937,6 +2876,9 @@ cs:
       more: "Více"
       all_categories: "Všechny kategorie"
       sections:
+        custom:
+          save: "Uložit"
+          delete: "Smazat"
         about:
           header_link_text: "O fóru"
         messages:
@@ -2961,8 +2903,6 @@ cs:
               content: "Administrace"
             badges:
               content: "Odznaky"
-            everything:
-              content: "Vše"
             faq:
               content: "FAQ"
             groups:
@@ -2971,7 +2911,6 @@ cs:
               content: "Uživatelé"
             my_posts:
               content: "Mé příspěvky"
-    until: "dokud:"
   admin_js:
     type_to_filter: "text pro filtrování..."
     admin:
@@ -2997,7 +2936,6 @@ cs:
         latest_version: "Poslední verze"
         new_features:
           dismiss: "Označit jako přečtené"
-          learn_more: "Více informací"
         last_checked: "Naposledy zkontrolováno"
         refresh_problems: "Obnovit"
         no_problems: "Nenalezeny žádné problémy."
@@ -3091,7 +3029,6 @@ cs:
         user: "Uživatel"
         title: "API"
         created: Vytvořený
-        never_used: (nikdy)
         generate: "Vygenerovat API klíč"
         revoke: "zrušit"
         all_users: "Všichni uživatelé"
@@ -3670,7 +3607,6 @@ cs:
         staged: "Staged?"
         show_admin_profile: "Administrace"
         show_public_profile: "Zobrazit veřejný profil"
-        impersonate: "Vydávat se za uživatele"
         action_logs: "Logy akcí"
         ip_lookup: "Vyhledávání IP adresy"
         log_out: "Odhlásit se"

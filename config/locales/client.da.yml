@@ -936,11 +936,6 @@ da:
       profile: "Profil"
       mute: "Ignorer"
       edit: "Redigér indstillinger"
-      download_archive:
-        button_text: "Hent alle"
-        confirm: "Er du sikker på, at du vil hente dine indlæg?"
-        success: "Hentningen er startet. Du vil blive notificeret via en besked, når processen er færdig."
-        rate_limit_error: "Indlæg kan hentes én gang om dagen, prøv igen i morgen."
       new_private_message: "Ny Besked"
       private_message: "Besked"
       private_messages: "Beskeder"
@@ -2390,8 +2385,6 @@ da:
       show_links: "vis links i dette emne"
       unread_indicator: "Intet medlem har læst det sidste indlæg i dette emne endnu."
       suggest_create_topic: Klar til <a href>at starte en ny samtale?</a>
-      jump_reply_up: hop til tidligere svar
-      jump_reply_down: hop til senere svar
       deleted: "Emnet er blevet slettet"
       slow_mode_update:
         title: "Langsom Tilstand"
@@ -2530,7 +2523,6 @@ da:
         open: "Åbn emne"
         close: "Luk emne"
         multi_select: "Vælg indlæg..."
-        slow_mode: "Indstil langsom tilstand..."
         timed_update: "Indstil timerfunktion for emne..."
         pin: "Fastgør Emne..."
         unpin: "Fjern fastgøring af Emne..."
@@ -2847,8 +2839,6 @@ da:
         delete_topic_confirm_modal_no: "Nej, behold dette emne"
         delete_topic_error: "Der opstod en fejl under sletning af dette emne"
         delete_topic: "slet emne"
-        add_post_notice: "Tilføj Hjælperteam Notits..."
-        change_post_notice: "Ændre Personale Meddelelse..."
         delete_post_notice: "Slet Personale Meddelelse"
         remove_timer: "fjern timer"
         edit_timer: "rediger timer"
@@ -3551,13 +3541,11 @@ da:
       enabled: "Sikker tilstand er slået til - for at forlade sikker tilstand, så luk dette browservindue"
     image_removed: "(billede fjernet)"
     pause_notifications:
-      remaining: "%{remaining} tilbage"
       options:
         half_hour: "30 minutter"
         one_hour: "1 time"
         two_hours: "2 timer"
         tomorrow: "Indtil i morgen"
-        custom: "Tilpasset"
       set_schedule: "Indstil en Tidsplan for notifikation"
     trust_levels:
       names:
@@ -3598,6 +3586,9 @@ da:
       all_categories: "Alle kategorier"
       all_tags: "Alle mærker"
       sections:
+        custom:
+          save: "Gem"
+          delete: "Slet"
         about:
           header_link_text: "Om"
         messages:
@@ -3618,9 +3609,7 @@ da:
           header_link_text: "Tags"
           configure_defaults: "Konfigurer standardindstillinger"
         categories:
-          click_to_get_started: "Klik her for at komme i gang."
           header_link_text: "Kategorier"
-          configure_defaults: "Konfigurer standardindstillinger"
         community:
           header_link_text: "Fællesskab"
           links:
@@ -3630,8 +3619,6 @@ da:
               content: "Admin"
             badges:
               content: "Emblemer"
-            everything:
-              content: "Alting"
             faq:
               content: "OSS"
             groups:
@@ -4708,7 +4695,6 @@ da:
         show_admin_profile: "Admin"
         manage_user: "Administrer bruger"
         show_public_profile: "Vis offentlig profil"
-        impersonate: "Impersonate"
         action_logs: "Aktivitetslog"
         ip_lookup: "IP opslag"
         log_out: "Log ud"
