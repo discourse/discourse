@@ -18,8 +18,6 @@ module Chat
 
       DELETE_CHANNEL_LOG_KEY = "chat_channel_delete"
 
-      delegate :channel, to: :context
-
       model ChatChannel, name: :channel, key: :channel_id
       policy :invalid_access
       step :trash_channel
@@ -27,41 +25,40 @@ module Chat
 
       private
 
-      def trash_channel
+      def trash_channel(...)
         ChatChannel.transaction do
-          prevents_slug_collision
-          soft_delete_channel
-          log_channel_deletion
+          prevents_slug_collision(...)
+          soft_delete_channel(...)
+          log_channel_deletion(...)
         end
       end
 
-      def invalid_access
+      def invalid_access(guardian:, channel:, **)
         guardian.can_preview_chat_channel?(channel) && guardian.can_delete_chat_channel?
       end
 
-      def soft_delete_channel
+      def soft_delete_channel(guardian:, channel:, **)
         channel.trash!(guardian.user)
       end
 
-      def enqueue_delete_channel_relations_job
+      def enqueue_delete_channel_relations_job(channel:, **)
         Jobs.enqueue(:chat_channel_delete, chat_channel_id: channel.id)
       end
 
-      def log_channel_deletion
+      def log_channel_deletion(guardian:, channel:, **)
         StaffActionLogger.new(guardian.user).log_custom(
           DELETE_CHANNEL_LOG_KEY,
           { chat_channel_id: channel.id, chat_channel_name: channel.title(guardian.user) },
         )
       end
 
-      def prevents_slug_collision
-        channel.update!(slug: generate_deleted_slug)
-      end
-
-      def generate_deleted_slug
-        "#{Time.now.strftime("%Y%m%d-%H%M")}-#{channel.slug}-deleted".truncate(
-          SiteSetting.max_topic_title_length,
-          omission: "",
+      def prevents_slug_collision(channel:, **)
+        channel.update!(
+          slug:
+            "#{Time.current.strftime("%Y%m%d-%H%M")}-#{channel.slug}-deleted".truncate(
+              SiteSetting.max_topic_title_length,
+              omission: "",
+            ),
         )
       end
     end

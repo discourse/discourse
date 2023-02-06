@@ -71,7 +71,10 @@ module Chat
         end
 
         def call(instance, context)
-          instance.instance_exec(&instance.method(name))
+          method = instance.method(name)
+          args = {}
+          args = context.to_h unless method.arity.zero?
+          instance.instance_exec(**args, &method)
         end
       end
 
@@ -108,9 +111,7 @@ module Chat
       end
 
       included do
-        attr_reader :context, :contract
-
-        delegate :guardian, to: :context
+        attr_reader :context
 
         # @!visibility private
         # Internal class used to setup the base contract of the service.

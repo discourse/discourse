@@ -106,6 +106,8 @@ class Chat::Api::ChatChannelsController < Chat::Api
         )
       end
       on_model_not_found(:channel) { raise ActiveRecord::RecordNotFound }
+      on_failed_policy(:check_channel_permission) { raise Discourse::InvalidAccess }
+      on_failed_policy(:no_direct_message_channel) { raise Discourse::InvalidAccess }
     end
   end
 

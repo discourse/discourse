@@ -9,7 +9,7 @@ module Chat
     #
     # @example
     #  Chat::Service::UpdateChannel.call(
-    #   channel: channel,
+    #   channel_id: 2,
     #   guardian: guardian,
     #   name: "SuperChannel",
     #   description: "This is the best channel",
@@ -19,8 +19,8 @@ module Chat
     class UpdateChannel
       include Base
 
-      # @!method call(channel:, guardian:, **params_to_edit)
-      #   @param [ChatChannel] channel
+      # @!method call(channel_id:, guardian:, **params_to_edit)
+      #   @param [Integer] channel_id
       #   @param [Guardian] guardian
       #   @param [Hash] params_to_edit
       #   @option params_to_edit [String] name
@@ -32,80 +32,81 @@ module Chat
       #   @return [Chat::Service::Base::Context]
 
       model ChatChannel, name: :channel, key: :channel_id
+      policy :no_direct_message_channel
       policy :check_channel_permission
       step :map_data
       contract
+      step :assign_contract
+      step :prepare_params
       step :update_channel
       step :publish_channel_update
       step :auto_join_users_if_needed
 
       class Contract
-        attribute :channel
         attribute :name
         attribute :description
         attribute :slug
         attribute :auto_join_users, :boolean, default: false
         attribute :allow_channel_wide_mentions, :boolean, default: true
-
-        validate :only_category_channel_allowed
-        def only_category_channel_allowed
-          if channel.direct_message_channel?
-            errors.add(:base, I18n.t("chat.errors.cant_update_direct_message_channel"))
-          end
-        end
       end
-
-      delegate :channel, :name, :description, :slug, to: :context
 
       private
 
-      def check_channel_permission
+      def no_direct_message_channel(channel:, **)
+        !channel.direct_message_channel?
+      end
+
+      def check_channel_permission(guardian:, channel:, **)
         guardian.can_preview_chat_channel?(channel) && guardian.can_edit_chat_channel?
       end
 
-      def map_data
-        if @initial_context.key?(:name) && context.name.blank?
+      def map_data(channel:, **)
+        if context.to_h.key?(:name) && context.name.blank?
           context.name = nil
         else
-          context.name = (context.name || context.channel.name).presence
+          context.name = (context.name || channel.name).presence
         end
 
-        if @initial_context.key?(:description) && context.description.blank?
+        if context.to_h.key?(:description) && context.description.blank?
           context.description = nil
         else
-          context.description = (context.description || context.channel.description).presence
+          context.description = (context.description || channel.description).presence
         end
 
-        context.slug = (context.slug || context.channel.slug).presence
+        context.slug = (context.slug || channel.slug).presence
 
-        if context.channel.category_channel?
-          context.auto_join_users ||= context.channel.auto_join_users
-          context.allow_channel_wide_mentions ||= context.channel.allow_channel_wide_mentions
+        if channel.category_channel?
+          context.auto_join_users ||= channel.auto_join_users
+          context.allow_channel_wide_mentions ||= channel.allow_channel_wide_mentions
         end
       end
 
-      def update_channel
+      def assign_contract
+        context[:contract] = context[:"contract.default"]
+      end
+
+      def prepare_params(channel:, contract:, **)
+        attributes = contract.attributes.symbolize_keys
+        context[:params_to_edit] = attributes.slice(:name, :description, :slug)
+        if channel.category_channel?
+          context[:params_to_edit].merge!(
+            attributes.slice(:auto_join_users, :allow_channel_wide_mentions),
+          )
+        end
+      end
+
+      def update_channel(channel:, params_to_edit:, **)
         channel.update!(params_to_edit)
       end
 
-      def params_to_edit
-        params = { name: name, description: description, slug: slug }
-
-        if channel.category_channel?
-          params.merge!(context.to_h.slice(:auto_join_users, :allow_channel_wide_mentions))
-        end
-
-        params
-      end
-
-      def publish_channel_update
+      def publish_channel_update(channel:, guardian:, **)
         # FIXME: this should become a dedicated service
         ChatPublisher.publish_chat_channel_edit(channel, guardian.user)
       end
 
-      def auto_join_users_if_needed
+      def auto_join_users_if_needed(channel:, **)
         # FIXME: this should become a dedicated service
-        if channel.category_channel? && channel.auto_join_users
+        if channel.category_channel? && channel.auto_join_users?
           Chat::ChatChannelMembershipManager.new(channel).enforce_automatic_channel_memberships
         end
       end

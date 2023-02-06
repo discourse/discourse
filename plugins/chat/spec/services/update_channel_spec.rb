@@ -29,11 +29,7 @@ RSpec.describe Chat::Service::UpdateChannel do
       Fabricate(:direct_message_channel, users: [current_user, Fabricate(:user)])
     end
 
-    it do
-      is_expected.to fail_a_contract.with_error(
-        I18n.t("chat.errors.cant_update_direct_message_channel"),
-      )
-    end
+    it { is_expected.to fail_a_policy(:no_direct_message_channel) }
   end
 
   context "when the name, slug, and description are provided by a valid user" do

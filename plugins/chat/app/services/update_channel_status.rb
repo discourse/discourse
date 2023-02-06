@@ -5,42 +5,35 @@ module Chat
     # Service responsible for updating a chat channel status.
     #
     # @example
-    #  Chat::Service::UpdateChannelStatus.call(channel: channel, guardian: guardian, status: "open")
+    #  Chat::Service::UpdateChannelStatus.call(channel_id: 2, guardian: guardian, status: "open")
     #
     class UpdateChannelStatus
       include Base
 
-      # @!method call(channel:, guardian:, status:)
-      #   @param [ChatChannel] channel
+      # @!method call(channel_id:, guardian:, status:)
+      #   @param [Integer] channel_id
       #   @param [Guardian] guardian
       #   @param [String] status
       #   @return [Chat::Service::Base::Context]
 
       model ChatChannel, name: :channel, key: :channel_id
-      step :status_to_sym
       contract
       policy :check_channel_permission
       step :change_status
 
       class Contract
         attribute :status
-        validates :status, inclusion: { in: ChatChannel.editable_statuses.keys.map(&:to_sym) }
+        validates :status, inclusion: { in: ChatChannel.editable_statuses.keys }
       end
-
-      delegate :channel, :status, to: :context
 
       private
 
-      def check_channel_permission
+      def check_channel_permission(guardian:, channel:, status:, **)
         guardian.can_preview_chat_channel?(channel) &&
-          guardian.can_change_channel_status?(channel, status)
+          guardian.can_change_channel_status?(channel, status.to_sym)
       end
 
-      def status_to_sym
-        context.status = context.status&.to_sym
-      end
-
-      def change_status
+      def change_status(channel:, status:, guardian:, **)
         channel.public_send("#{status}!", guardian.user)
       end
     end
