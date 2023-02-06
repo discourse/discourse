@@ -63,17 +63,15 @@ module Chat
       end
 
       class Step
-        attr_reader :name, :block, :class_name
+        attr_reader :name, :class_name
 
-        def initialize(name, class_name: nil, &block)
+        def initialize(name, class_name: nil)
           @name = name
-          @block = block
           @class_name = class_name
         end
 
         def call(instance, context)
-          block = instance.method(name) unless block
-          instance.instance_exec(&block)
+          instance.instance_exec(&instance.method(name))
         end
       end
 
@@ -143,12 +141,12 @@ module Chat
           steps << ContractStep.new(name, class_name: class_name)
         end
 
-        def policy(name = :default, &block)
-          steps << PolicyStep.new(name, &block)
+        def policy(name = :default)
+          steps << PolicyStep.new(name)
         end
 
-        def step(name, &block)
-          steps << Step.new(name, &block)
+        def step(name)
+          steps << Step.new(name)
         end
 
         def steps
