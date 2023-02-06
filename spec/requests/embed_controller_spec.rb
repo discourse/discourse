@@ -192,7 +192,7 @@ RSpec.describe EmbedController do
 
       before { Jobs.run_immediately! }
 
-      it "doesn't raises an error with no referer" do
+      it "doesn't raise an error with no referer" do
         get "/embed/comments", params: { embed_url: embed_url }
 
         expect(response.body).not_to match(I18n.t("embed.error"))
