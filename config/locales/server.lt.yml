@@ -1931,9 +1931,6 @@ lt:
   user_notifications:
     previous_discussion: "Ankstesni atsakymai"
     in_reply_to: "Atsakant į"
-    unsubscribe:
-      title: "Nebeprenumeruoti"
-      description: "Nenorite gauti šių el. laiškų? Jokiu problemu! Spustelėkite žemiau, jei norite iš karto atsisakyti prenumeratos:"
     only_reply_by_email: "Norėdami atsakyti, atsakykite į šį el. laišką."
     visit_link_to_respond_pm: "[Apsilankykite žinutėje] (%{base_url}%{url}), kad atsakytumėte į %{participants}."
     posted_by: "Paskelbė %{username} %{post_date}"
@@ -2135,7 +2132,6 @@ lt:
       liked_received: "Gauta patikimų"
       new_users: "Nauji nariai"
       popular_topics: "Populiarios temos"
-      follow_topic: "Sekti šią temą"
       join_the_discussion: "Skaityti daugiau"
       popular_posts: "Populiarūs įrašai"
       more_new: "Jūs dar neskaitėte"
@@ -2319,8 +2315,6 @@ lt:
     welcome_message: |
       ## [Sveiki atvykę į %{title}] (#sveiki atvykę)
       Būtina paskyra. Jei norite tęsti, sukurkite paskyrą arba prisijunkite.
-  deleted: "ištrintas"
-  image: "paveikslėlis"
   upload:
     edit_reason: "atsiųsti mano pranešimų archyvą"
     pasted_image_filename: "Įklijuotas vaizdas"
@@ -2709,7 +2703,6 @@ lt:
         title: "Jūsų Discourse paruoštas!"
   search_logs:
     graph_title: "Ieškoti kontakto"
-  joined: "Prisijungė"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} paminėjo tave "%{topic}" - %{site_title}'

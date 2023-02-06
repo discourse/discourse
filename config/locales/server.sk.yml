@@ -1216,9 +1216,6 @@ sk:
   subject_pm: "[PM]"
   user_notifications:
     previous_discussion: "Prechádzajúce odpovede"
-    unsubscribe:
-      title: "Odhlásiť"
-      description: "Nezaujímajú Vás už tieto emaily? Žiadny problém! Pre okamžité odhlásenie kliknite nižšie: "
     posted_by: "Príspevok od %{username} dňa %{post_date}"
     user_posted_pm_staged:
       subject_template: "%{optional_re}%{topic_title}"
@@ -1241,8 +1238,6 @@ sk:
     see_more: "Viac"
     search_title: "Prehľadať tieto stránky"
     search_button: "Hľadať"
-  deleted: "vymazané"
-  image: "Obrázok"
   upload:
     edit_reason: "stiahnuté lokálne kópie obrázkov"
     unauthorized: "Ľutujeme, súbor, ktorý sa pokúšate nahrať nemá povolenú príponu (povolené prípony sú: %{authorized_extensions})."
@@ -1392,7 +1387,6 @@ sk:
             placeholder: "https://www.example.com/contact-us"
       invites:
         title: "Pozvite členov"
-  joined: "Vytvorený"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} Vás zmienil v "%{topic}" - %{site_title}'

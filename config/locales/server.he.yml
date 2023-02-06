@@ -1690,6 +1690,7 @@ he:
     whispers_allowed_groups: "לאפשר תקשורת פרטית בתוך נושאים לחברים מקבוצות מסוימות."
     allow_index_in_robots_txt: "יש לציין ב־robots.txt שמותר לאתר הזה להצטרף למאגר של מנועי החיפוש. במקרים יוצאי דופן, ניתן <a href='%{base_path}/admin/customize/robots'>לדרוס את robots.txt</a> באופן קבוע."
     normalize_emails: "לבדוק אם הדוא״ל המנורמל הוא ייחודי. כתובת דוא״ל מנורמלת מסירה את כל הנקודות משם המשתמש וכל מה שבין הסימנים + ו־@."
+    auto_approve_email_domains: "משתמשים עם כתובות דוא״ל מרשימת שמות התחום האלה יאושרו אוטומטית. שמות תת־תחומים יטופלו אוטומטית לשמות התחום שצוינו. אין תמיכה בתווי הכללה כגון * ו־?."
     hide_email_address_taken: "לא להודיע למשתמשים שקיים חשבון עם כתובת דוא״ל שסופקה במהלך רישום או במהלך איפוס ססמה. בנוסף, לדרוש כתובת דוא״ל מלאה לבקשות ‚שכחתי ססמה’."
     log_out_strict: "בהתנתקות, נתקו את כל ההפעלות של המשתמש/ת בכל המכשירים"
     version_checks: "לדגום את Discourse Hub כדי למצוא עדכוני גרסאות ולהציג הודעות של גרסאות חדשות בלוח הניהול <a href='%{base_path}/admin' target='_blank'>‎/admin</a>"
@@ -1858,6 +1859,7 @@ he:
     tl3_requires_likes_given: "מספר הלייקים המזערי שיש להעניק במשך (פרק זמן בדרגת אמון 3) הימים האחרונים כדי לעמוד בתנאי הקידום לדרגת אמון 3."
     tl3_requires_likes_received: "מספר הלייקים המזערי שיש לקבל במשך (פרק זמן בדרגת אמון 3) הימים האחרונים כדי לעמוד בתנאי הקידום לדרגת אמון 3."
     tl3_links_no_follow: "מניעת הסרת rel=nofollow מקישורים שמפורסמים על ידי משתמשים בדרגת אמון 3."
+    tl4_delete_posts_and_topics: "לאפשר למשתמשים בדרגת אמון 4 למחוק פוסטים ונושאים שנוצרו על ידי משתמשים אחרים. משתמשים בדרגת אמון 4 יוכלו גם לצפות בנושאים ובפוסטים שנמחקו."
     trusted_users_can_edit_others: "לאפשר למשתמשים בדרגת אמון גבוהה לערוך תוכן של משתמשים אחרים"
     min_trust_to_create_topic: "דרגת האמון המזערית הנדרשת ליצירת נושא חדש."
     allow_flagging_staff: "אם אפשרות זו פעילה, משתמשים יכולים לסמן בדגל פוסטים שפורסמו על ידי חשבונות סגל."
@@ -1974,6 +1976,11 @@ he:
     block_auto_generated_emails: "לחסום הודעות דוא״ל נכנסות שזוהו ככאלו שנוצרו אוטומטית."
     ignore_by_title: "להתעלם מהודעות דוא״ל נכנסות לפי הכותרת שלהן."
     mailgun_api_key: "מפתח API סודי של Mailgun לאימות של הודעות webhook."
+    sendgrid_verification_key: "מפתח התיקוף של Sendgrid משמש לתיקוף הודעות התליה."
+    mailjet_webhook_token: "אסימון המשמש לתיקוף מטען של התליה. חובה להעביר אותו בתור המשתנה ‚t’ בשאילתה של ההתליה, למשל: https://example.com/webhook/mailjet?t=supersecret"
+    mandrill_authentication_key: "מפתח האימות של Mandrill משמש לאימות הודעות התליה."
+    postmark_webhook_token: "אסימון המשמש לתיקוף מטען של התליה. חובה להעביר אותו בתור המשתנה ‚t’ בשאילתה של ההתליה, למשל: https://example.com/webhook/postmark?t=supersecret"
+    sparkpost_webhook_token: "אסימון המשמש לתיקוף מטען של התליה. חובה להעביר אותו בתור המשתנה ‚t’ בשאילתה של ההתליה, למשל: https://example.com/webhook/sparkpost?t=supersecret"
     soft_bounce_score: "ניקוד-החזר מתווסף למשתמש כאשר מתרחשת החזרה זמנית."
     hard_bounce_score: "ניקוד-החזר מתווסף למשתמש כאשר מתרחשת החזרה קבועה."
     bounce_score_threshold: "ניקוד-החזר מקסימלי לפני שנפסיק לשלוח מיילים למשתמש."
@@ -2297,6 +2304,7 @@ he:
       delete_rejected_email_after_days: "הגדרה זו לא יכולה להיות קטנה מ־delete_email_logs_after_days (ימים שלאחריהם למחוק יומני דוא״ל) או גדולה מ־%{max}"
       invalid_uncategorized_category_setting: "אי אפשר לבחור בקטגוריה שאינה בין הקטגוריות אם הרשאת נושאים שאינם בקטגוריה אסורה"
       enable_new_notifications_menu_not_legacy_navigation_menu: "יש להגדיר את `navigation_menu` לערך `legacy` בטרם הפעלת הגדרה זו."
+      invalid_search_ranking_weights: "הערך שגוי להגדרת האתר search_ranking_weights (משקלי דירוג חיפוש). למשל: ‚{0.1,0.2,0.3,1.0}’. נא לשים לב שהערך המרבי לכל משקל הוא 1.0."
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -3273,7 +3281,7 @@ he:
 
         המשתמש החדש [%{username}](%{user_url}) הושתק אוטומטית כיוון שמספר משתמשים סימנו את הפוסט/ים של %{username} בדגל.
 
-        נא [לסקור את הסימונים](%{base_url}/admin/flags). אם ההשתקה של %{username} אינה מוצדקת, יש ללחוץ על כפתור ביטול ההשתקה ב[עמוד הניהול עבור המשתמש הזה](%{user_url}).
+        נא [לסקור את הסימונים](%{base_url}/review). אם ההשתקה של %{username} אינה מוצדקת, יש ללחוץ על כפתור ביטול ההשתקה ב[עמוד הניהול עבור המשתמש הזה](%{user_url}).
 
         ניתן לשנות את הסף הזה בעזרת שינוי `silence_new_user` (השתקת משתמשים חדשים) בהגדרות האתר.
     spam_post_blocked:
@@ -3360,9 +3368,6 @@ he:
       many: "לתשומת לבך: אנו שולחים %{count} הודעות דוא״ל בכל יום לכל היותר. מומלץ לבדוק באתר אם יש כאלו שהוחזקו. דרך אגב, תודה על הפופולריות שלך!"
       other: "לתשומת לבך: אנו שולחים %{count} הודעות דוא״ל בכל יום לכל היותר. מומלץ לבדוק באתר אם יש כאלו שהוחזקו. דרך אגב, תודה על הפופולריות שלך!"
     in_reply_to: "בתגובה ל"
-    unsubscribe:
-      title: "ביטול מנוי"
-      description: "לא מעניין אותך לקבל את ההודעות האלו? אין בעיה! לחיצה למטה תסיר את המנוי שלך מיידית:"
     reply_by_email: "[בקרו בנושא](%{base_url}%{url}) או ענו למייל זה כדי להגיב."
     reply_by_email_pm: "יש [לבקר בהודעה](%{base_url}%{url}) או להשיב להודעת דוא״ל זו כדי להגיב אל %{participants}."
     only_reply_by_email: "השיבו למייל זה כדי לענות."
@@ -3645,7 +3650,6 @@ he:
       liked_received: "לייקים שהתקבלו"
       new_users: "משתמשים חדשים"
       popular_topics: "נושאים פופולאריים"
-      follow_topic: "עיקבו אחרי נושא זה"
       join_the_discussion: "קראו עוד"
       popular_posts: "פוסטים פופולאריים"
       more_new: "חדש בשבילך"
@@ -3851,8 +3855,6 @@ he:
     welcome_message_invite_only: |
       ## [ברוך בואך אל %{title}](#welcome)
       נדרש חשבון. נא לבקש מחבר קיים לשלוח לך הזמנה או להיכנס כדי להמשיך.
-  deleted: "נמחק"
-  image: "תמונה"
   upload:
     edit_reason: "עותקים מקומיים של תמונות שהורדו"
     unauthorized: "הקובץ שמועמד להעלאה אינו מורשה (סיומות מורשות: %{authorized_extensions}), עמך הסליחה."
@@ -4487,7 +4489,9 @@ he:
           <p>רצוי להתפרע והמון הצלחה <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>בבניית הקהילה החדשה שלך!</a></p>
   search_logs:
     graph_title: "מניין חיפושים"
-  joined: "הצטרפו"
+  onebox:
+    discourse:
+      user_joined_community: "מועד הצטרפות: %{date}"
   discourse_push_notifications:
     popup:
       mentioned: ' אוזכרת על ידי %{username} בנושא „%{topic}” - %{site_title}'
