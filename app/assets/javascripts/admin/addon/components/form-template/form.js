@@ -1,11 +1,11 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import { ajax } from "discourse/lib/ajax";
 import { inject as service } from "@ember/service";
 import { tracked } from "@glimmer/tracking";
 import I18n from "I18n";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { templateFormFields } from "admin/lib/template-form-fields";
+import FormTemplate from "admin/models/form-template";
 
 export default class FormTemplateForm extends Component {
   @service router;
@@ -29,10 +29,7 @@ export default class FormTemplateForm extends Component {
     if (this.isEditing) {
       postData["id"] = this.args.model.id;
 
-      ajax(`/admin/customize/form-templates/${this.args.model.id}.json`, {
-        type: "PUT",
-        data: postData,
-      })
+      FormTemplate.updateTemplate(this.args.model.id, postData)
         .then(() => {
           this.formSubmitted = false;
           this.router.transitionTo("adminCustomizeFormTemplates.index");
@@ -42,10 +39,7 @@ export default class FormTemplateForm extends Component {
           this.formSubmitted = false;
         });
     } else {
-      ajax("/admin/customize/form-templates.json", {
-        type: "POST",
-        data: postData,
-      })
+      FormTemplate.createTemplate(postData)
         .then(() => {
           this.formSubmitted = false;
           this.router.transitionTo("adminCustomizeFormTemplates.index");
@@ -69,9 +63,7 @@ export default class FormTemplateForm extends Component {
         template_name: this.args.model.name,
       }),
       didConfirm: () => {
-        ajax(`/admin/customize/form-templates/${this.args.model.id}.json`, {
-          type: "DELETE",
-        })
+        FormTemplate.deleteTemplate(this.args.model.id)
           .then(() => {
             this.router.transitionTo("adminCustomizeFormTemplates.index");
           })
@@ -107,8 +99,5 @@ export default class FormTemplateForm extends Component {
     this.dialog.alert({
       message: error,
     });
-
-    // todo remove later only for testing:
-    // console.error("error: ", e);
   }
 }
