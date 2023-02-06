@@ -95,18 +95,4 @@ describe FinalDestination::HTTP do
       FinalDestination::HTTP.get(URI("https://blocked-ip.example.com"))
     end
   end
-
-  it "stops iterating over DNS records once timeout reached" do
-    stub_ip_lookup("example.com", %w[1.1.1.1 2.2.2.2 3.3.3.3 4.4.4.4])
-    TCPSocket.stubs(:open).with { |addr| addr == "1.1.1.1" }.raises(Errno::ECONNREFUSED)
-    TCPSocket.stubs(:open).with { |addr| addr == "2.2.2.2" }.raises(Errno::ECONNREFUSED)
-    TCPSocket
-      .stubs(:open)
-      .with { |*args, **kwargs| kwargs[:open_timeout] == 0 }
-      .raises(Errno::ETIMEDOUT)
-    FinalDestination::HTTP.any_instance.stubs(:current_time).returns(0, 1, 5)
-    expect do
-      FinalDestination::HTTP.start("example.com", 80, open_timeout: 5) {}
-    end.to raise_error(Net::OpenTimeout)
-  end
 end

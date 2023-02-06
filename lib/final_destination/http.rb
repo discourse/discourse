@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class FinalDestination::HTTP < Net::HTTP
+  attr_accessor :connection_attempt_timeout
+
   def connect
     original_open_timeout = @open_timeout
     return super if @ipaddr
@@ -21,7 +23,7 @@ class FinalDestination::HTTP < Net::HTTP
         raise Net::OpenTimeout.new("Operation timed out - FinalDestination::HTTP")
       end
 
-      @open_timeout = remaining_time
+      @open_timeout = [remaining_time, connection_attempt_timeout].compact.min
       return super
     rescue SystemCallError, Net::OpenTimeout => e
       debug "[FinalDestination] Error connecting to #{ip}... #{e.message}"

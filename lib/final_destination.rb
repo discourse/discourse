@@ -10,6 +10,7 @@ require "url_helper"
 class FinalDestination
   MAX_REQUEST_TIME_SECONDS = 10
   MAX_REQUEST_SIZE_BYTES = 5_242_880 # 1024 * 1024 * 5
+  DEFAULT_CONNECTION_ATTEMPT_TIMEOUT = 5
 
   def self.clear_https_cache!(domain)
     key = redis_https_key(domain)
@@ -33,7 +34,7 @@ class FinalDestination
   DEFAULT_USER_AGENT =
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Safari/605.1.15"
 
-  attr_reader :status, :cookie, :status_code, :content_type, :ignored
+  attr_reader :status, :cookie, :status_code, :content_type, :ignored, :connection_attempt_timeout
 
   def initialize(url, opts = nil)
     @url = url
@@ -69,6 +70,8 @@ class FinalDestination
     @limited_ips = []
     @verbose = @opts[:verbose] || false
     @timeout = @opts[:timeout] || nil
+    @connection_attempt_timeout =
+      @opts[:connection_attempt_timeout] || DEFAULT_CONNECTION_ATTEMPT_TIMEOUT
     @preserve_fragment_url = @preserve_fragment_url_hosts.any? { |host| hostname_matches?(host) }
     @validate_uri = @opts.fetch(:validate_uri) { true }
     @user_agent =
@@ -123,13 +126,7 @@ class FinalDestination
     status_code, response_headers = nil
 
     catch(:done) do
-      FinalDestination::HTTP.start(
-        @uri.host,
-        @uri.port,
-        use_ssl: @uri.is_a?(URI::HTTPS),
-        open_timeout: timeout,
-      ) do |http|
-        http.read_timeout = timeout
+      safe_session(@uri) do |http|
         http.request_get(@uri.request_uri, request_headers) do |resp|
           status_code = resp.code.to_i
           response_headers = resp.to_hash
@@ -513,6 +510,7 @@ class FinalDestination
       uri.port,
       use_ssl: (uri.scheme == "https"),
       open_timeout: timeout,
+      connection_attempt_timeout: connection_attempt_timeout,
     ) do |http|
       http.read_timeout = timeout
       yield http
