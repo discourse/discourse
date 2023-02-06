@@ -10,14 +10,11 @@ class Chat::ChatController < Chat::ChatBaseController
   # Other endpoints use set_channel_and_chatable_with_access_check, but
   # these endpoints require a standalone find because they need to be
   # able to get deleted channels and recover them.
-  before_action :find_chatable, only: %i[enable_chat disable_chat]
   before_action :find_chat_message,
                 only: %i[delete restore lookup_message edit_message rebake message_link]
   before_action :set_channel_and_chatable_with_access_check,
                 except: %i[
                   respond
-                  enable_chat
-                  disable_chat
                   message_link
                   lookup_message
                   set_user_chat_status
@@ -27,55 +24,6 @@ class Chat::ChatController < Chat::ChatBaseController
 
   def respond
     render
-  end
-
-  def enable_chat
-    chat_channel = ChatChannel.with_deleted.find_by(chatable: @chatable)
-
-    guardian.ensure_can_join_chat_channel!(chat_channel) if chat_channel
-
-    if chat_channel && chat_channel.trashed?
-      chat_channel.recover!
-    elsif chat_channel
-      return render_json_error I18n.t("chat.already_enabled")
-    else
-      chat_channel = @chatable.chat_channel
-      guardian.ensure_can_join_chat_channel!(chat_channel)
-    end
-
-    success = chat_channel.save
-    if success && chat_channel.chatable_has_custom_fields?
-      @chatable.custom_fields[Chat::HAS_CHAT_ENABLED] = true
-      @chatable.save!
-    end
-
-    if success
-      membership = Chat::ChatChannelMembershipManager.new(channel).follow(user)
-      render_serialized(chat_channel, ChatChannelSerializer, membership: membership)
-    else
-      render_json_error(chat_channel)
-    end
-
-    Chat::ChatChannelMembershipManager.new(channel).follow(user)
-  end
-
-  def disable_chat
-    chat_channel = ChatChannel.with_deleted.find_by(chatable: @chatable)
-    guardian.ensure_can_join_chat_channel!(chat_channel)
-    return render json: success_json if chat_channel.trashed?
-    chat_channel.trash!(current_user)
-
-    success = chat_channel.save
-    if success
-      if chat_channel.chatable_has_custom_fields?
-        @chatable.custom_fields.delete(Chat::HAS_CHAT_ENABLED)
-        @chatable.save!
-      end
-
-      render json: success_json
-    else
-      render_json_error(chat_channel)
-    end
   end
 
   def create_message

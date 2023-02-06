@@ -93,7 +93,6 @@ GlobalSetting.add_default(:allow_unsecure_chat_uploads, false)
 after_initialize do
   module ::Chat
     PLUGIN_NAME = "chat"
-    HAS_CHAT_ENABLED = "has_chat_enabled"
 
     class Engine < ::Rails::Engine
       engine_name PLUGIN_NAME
@@ -239,8 +238,6 @@ after_initialize do
 
   UserNotifications.append_view_path(File.expand_path("../app/views", __FILE__))
 
-  register_category_custom_field_type(Chat::HAS_CHAT_ENABLED, :boolean)
-
   UserUpdater::OPTION_ATTR.push(:chat_enabled)
   UserUpdater::OPTION_ATTR.push(:only_chat_push_notifications)
   UserUpdater::OPTION_ATTR.push(:chat_sound)
@@ -251,8 +248,6 @@ after_initialize do
 
   reloadable_patch do |plugin|
     ReviewableScore.add_new_types([:needs_review])
-
-    Site.preloaded_category_custom_fields << Chat::HAS_CHAT_ENABLED
 
     Guardian.prepend Chat::GuardianExtensions
     UserNotifications.prepend Chat::UserNotificationsExtension
@@ -616,8 +611,6 @@ after_initialize do
     get "/browse/open" => "chat#respond"
     get "/browse/archived" => "chat#respond"
     get "/draft-channel" => "chat#respond"
-    post "/enable" => "chat#enable_chat"
-    post "/disable" => "chat#disable_chat"
     post "/dismiss-retention-reminder" => "chat#dismiss_retention_reminder"
     get "/:chat_channel_id/messages" => "chat#messages"
     get "/message/:message_id" => "chat#message_link"
