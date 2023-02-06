@@ -86,5 +86,13 @@ RSpec.describe ChatMessageDestroyer do
       expect(message_data[:deleted_id]).to eq(message_1.id)
       expect(message_data[:deleted_at]).to be_present
     end
+
+    it "triggers a DiscourseEvent" do
+      delete_event =
+        DiscourseEvent.track_events { described_class.new.trash_message(message_1, actor) }.first
+
+      expect(delete_event[:event_name]).to eq(:chat_message_trashed)
+      expect(delete_event[:params]).to eq([message_1, message_1.chat_channel, actor])
+    end
   end
 end
