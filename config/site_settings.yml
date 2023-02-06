@@ -2093,6 +2093,10 @@ developer:
     default: ""
     allow_any: false
     refresh: true
+  experimental_form_templates:
+    client: true
+    default: false
+    hidden: true
 
 navigation:
   navigation_menu:

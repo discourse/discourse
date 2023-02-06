@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Admin::FormTemplatesController < Admin::StaffController
+  before_action :ensure_form_templates_enabled
+
   def index
     form_templates = FormTemplate.all
     render_serialized(form_templates, FormTemplateSerializer, root: "form_templates")
@@ -33,7 +35,6 @@ class Admin::FormTemplatesController < Admin::StaffController
   end
 
   def update
-    puts "Edit Called with #{params}"
     template = FormTemplate.find(params[:id])
 
     if template.update(name: params[:name], template: params[:template])
@@ -48,5 +49,11 @@ class Admin::FormTemplatesController < Admin::StaffController
     template.destroy
 
     render json: success_json
+  end
+
+  private
+
+  def ensure_form_templates_enabled
+    raise Discourse::InvalidAccess.new unless SiteSetting.experimental_form_templates
   end
 end

@@ -104,7 +104,6 @@ export default function () {
             this.route("index", { path: "/" });
             this.route("new", { path: "/new" });
             this.route("edit", { path: "/:id" });
-            // this.route("action", { path: "/action/:action_id" });
           }
         );
         this.route(
