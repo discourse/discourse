@@ -940,17 +940,17 @@ export default Controller.extend({
         return;
       }
 
-      let topicLabelContent = function (topicOption) {
-        let topicClosed = topicOption.closed
+      const topicLabelContent = function (topicOption) {
+        const topicClosed = topicOption.closed
           ? `<span class="topic-status">${iconHTML("lock")}</span>`
           : "";
-        let topicPinned = topicOption.pinned
+        const topicPinned = topicOption.pinned
           ? `<span class="topic-status">${iconHTML("thumbtack")}</span>`
           : "";
-        let topicBookmarked = topicOption.bookmarked
+        const topicBookmarked = topicOption.bookmarked
           ? `<span class="topic-status">${iconHTML("bookmark")}</span>`
           : "";
-        let topicPM =
+        const topicPM =
           topicOption.archetype === "private_message"
             ? `<span class="topic-status">${iconHTML("envelope")}</span>`
             : "";
