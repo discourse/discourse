@@ -191,8 +191,10 @@ after_initialize do
   load File.expand_path("../lib/slack_compatibility.rb", __FILE__)
   load File.expand_path("../lib/post_notification_handler.rb", __FILE__)
   load File.expand_path("../lib/secure_uploads_compatibility.rb", __FILE__)
-  load File.expand_path("../app/jobs/regular/auto_manage_channel_memberships.rb", __FILE__)
+  load File.expand_path("../lib/auto_remove_membership_event_handler.rb", __FILE__)
+  load File.expand_path("../app/jobs/regular/auto_join_channel_memberships.rb", __FILE__)
   load File.expand_path("../app/jobs/regular/auto_join_channel_batch.rb", __FILE__)
+  load File.expand_path("../app/jobs/regular/auto_remove_channel_memberships.rb", __FILE__)
   load File.expand_path("../app/jobs/regular/process_chat_message.rb", __FILE__)
   load File.expand_path("../app/jobs/regular/chat_channel_archive.rb", __FILE__)
   load File.expand_path("../app/jobs/regular/chat_channel_delete.rb", __FILE__)
@@ -476,6 +478,16 @@ after_initialize do
     if name == :secure_uploads && old_value == false && new_value == true
       Chat::SecureUploadsCompatibility.update_settings
     end
+
+    if name == :chat_allowed_groups
+      Chat::AutoRemoveMembershipEventHandler.new(
+        event_type: :chat_allowed_groups_changedd,
+        event_data: {
+          old_allowed_groups: old_value,
+          new_allowed_groups: new_value,
+        },
+      ).call!
+    end
   end
 
   on(:post_alerter_after_save_post) do |post, new_record, notified|
@@ -559,14 +571,35 @@ after_initialize do
     end
   end
 
+  on(:user_removed_from_group) do |user, group|
+    Chat::AutoRemoveMembershipEventHandler.new(
+      event_type: :user_removed_from_group,
+      event_data: {
+        user: user,
+        group: group,
+      },
+    ).call!
+  end
+
   on(:category_updated) do |category|
     # TODO(roman): remove early return after 2.9 release.
     # There's a bug on core where this event is triggered with an `#update` result (true/false)
     return if !category.is_a?(Category)
-    category_channel = ChatChannel.find_by(auto_join_users: true, chatable: category)
+    category_channel = ChatChannel.find_by(chatable: category)
 
     if category_channel
-      Chat::ChatChannelMembershipManager.new(category_channel).enforce_automatic_channel_memberships
+      if category_channel&.auto_join_users
+        Chat::ChatChannelMembershipManager.new(
+          category_channel,
+        ).enforce_automatic_channel_memberships
+      end
+
+      Chat::AutoRemoveMembershipEventHandler.new(
+        event_type: :category_updated,
+        event_data: {
+          channel: category_channel,
+        },
+      ).call!
     end
   end
 

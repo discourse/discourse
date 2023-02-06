@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 module Jobs
-  class AutoManageChannelMemberships < ::Jobs::Base
+  class AutoJoinChannelMemberships < ::Jobs::Base
     def execute(args)
       channel =
         ChatChannel.includes(:chatable).find_by(

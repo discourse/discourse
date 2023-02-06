@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe Jobs::AutoManageChannelMemberships do
+describe Jobs::AutoJoinChannelMemberships do
   let(:user) { Fabricate(:user, last_seen_at: 15.minutes.ago) }
   let(:category) { Fabricate(:category, user: user) }
   let(:channel) { Fabricate(:category_channel, auto_join_users: true, chatable: category) }

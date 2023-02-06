@@ -65,12 +65,27 @@ class Chat::ChatChannelMembershipManager
   end
 
   def enforce_automatic_channel_memberships
-    Jobs.enqueue(:auto_manage_channel_memberships, chat_channel_id: channel.id)
+    Jobs.enqueue(:auto_join_channel_memberships, chat_channel_id: channel.id)
   end
 
   def enforce_automatic_user_membership(user)
     Jobs.enqueue(
       :auto_join_channel_batch,
+      chat_channel_id: channel.id,
+      starts_at: user.id,
+      ends_at: user.id,
+    )
+  end
+
+  def enforce_automatic_removal(event)
+    allowed_events = %i[chat_allowed_groups_changed user_removed_from_group category_updated]
+    return if !allowed_events.include?(event)
+    Jobs.enqueue(:auto_remove_channel_memberships, chat_channel_id: channel.id)
+  end
+
+  def enforce_automatic_user_removal(user)
+    Jobs.enqueue(
+      :auto_remove_channel_membership_batch,
       chat_channel_id: channel.id,
       starts_at: user.id,
       ends_at: user.id,
