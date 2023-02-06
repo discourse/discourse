@@ -12,7 +12,7 @@ end
 #
 #  id         :bigint           not null, primary key
 #  name       :string           not null
-#  template   :string           not null
+#  template   :text             not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #
