@@ -110,6 +110,23 @@ module Chat
         end
       end
 
+      class TransactionStep < Step
+        attr_reader :steps
+
+        def initialize(&block)
+          @steps = []
+          instance_exec(&block)
+        end
+
+        def step(name)
+          steps << Step.new(name)
+        end
+
+        def call(instance, context)
+          ActiveRecord::Base.transaction { steps.each { |step| step.call(instance, context) } }
+        end
+      end
+
       included do
         attr_reader :context
 
@@ -148,6 +165,10 @@ module Chat
 
         def step(name)
           steps << Step.new(name)
+        end
+
+        def transaction(&block)
+          steps << TransactionStep.new(&block)
         end
 
         def steps
