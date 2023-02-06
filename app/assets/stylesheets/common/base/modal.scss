@@ -351,6 +351,8 @@
 
     .topic-title__bottom-line {
       margin-top: 0.15em;
+      display: flex;
+      align-items: baseline;
       .discourse-tags {
         font-size: var(--font-down-1);
       }
