@@ -1,13 +1,9 @@
 import DiscourseRoute from "discourse/routes/discourse";
-import { ajax } from "discourse/lib/ajax";
 import { action } from "@ember/object";
+import FormTemplate from "admin/models/form-template";
 export default class AdminCustomizeFormTemplatesIndex extends DiscourseRoute {
   model() {
-    return ajax("/admin/customize/form-templates.json").then((model) => {
-      return model.form_templates.sort(
-        (a, b) => parseFloat(a.id) - parseFloat(b.id)
-      );
-    });
+    return FormTemplate.findAll();
   }
 
   setupController(controller, model) {
