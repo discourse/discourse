@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class SidebarUrl < ActiveRecord::Base
+  validates :icon, presence: true
   validates :name, presence: true
   validates :value, presence: true
   validate :path_validator
@@ -24,4 +25,5 @@ end
 #  value      :string           not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  icon       :string
 #
