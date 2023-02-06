@@ -17,12 +17,19 @@ module Chat
                :available_flags,
                :thread_id,
                :thread_reply_count,
-               :chat_channel_id
+               :chat_channel_id,
+               :mentioned_users
 
     has_one :user, serializer: Chat::MessageUserSerializer, embed: :objects
     has_one :chat_webhook_event, serializer: Chat::WebhookEventSerializer, embed: :objects
     has_one :in_reply_to, serializer: Chat::InReplyToSerializer, embed: :objects
     has_many :uploads, serializer: ::UploadSerializer, embed: :objects
+
+    def mentioned_users
+      User
+        .where(id: object.chat_mentions.pluck(:user_id))
+        .map { |user| BasicUserWithStatusSerializer.new(user, root: false) }
+    end
 
     def channel
       @channel ||= @options.dig(:chat_channel) || object.chat_channel
