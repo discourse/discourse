@@ -238,7 +238,7 @@ export default Component.extend({
         return;
       case "chat.channel":
         return this._openChannel(
-          route.parent.params.channelId,
+          route.params.channelId,
           this._highlightCb(route.queryParams.messageId)
         );
       case "chat.channel.near-message":
