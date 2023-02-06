@@ -14,7 +14,6 @@ class Admin::FormTemplatesController < Admin::StaffController
   def create
     params.require(:name)
     params.require(:template)
-    # TODO: ensure template param is a valid JSON?
 
     template = FormTemplate.new(name: params[:name], template: params[:template])
 
