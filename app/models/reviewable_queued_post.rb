@@ -32,12 +32,10 @@ class ReviewableQueuedPost < Reviewable
       end
     end
 
-    unless rejected?
-      if pending?
-        actions.add(:reject_post) do |a|
-          a.icon = "times"
-          a.label = "reviewables.actions.reject_post.title"
-        end
+    if pending?
+      actions.add(:reject_post) do |a|
+        a.icon = "times"
+        a.label = "reviewables.actions.reject_post.title"
       end
     end
 
