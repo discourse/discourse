@@ -1789,14 +1789,17 @@ class User < ActiveRecord::Base
   end
 
   def set_status!(description, emoji, ends_at = nil)
-    status = { description: description, emoji: emoji, set_at: Time.zone.now, ends_at: ends_at }
+    status = {
+      description: description,
+      emoji: emoji,
+      set_at: Time.zone.now,
+      ends_at: ends_at,
+      user_id: id,
+    }
+    validate_status!(status)
+    UserStatus.upsert(status)
 
-    if user_status
-      user_status.update!(status)
-    else
-      self.user_status = UserStatus.create!(status)
-    end
-
+    reload_user_status
     publish_user_status(user_status)
   end
 
@@ -2173,6 +2176,10 @@ class User < ActiveRecord::Base
           up.id IS NULL
       )
     SQL
+  end
+
+  def validate_status!(status)
+    UserStatus.new(status).validate!
   end
 end
 
