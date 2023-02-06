@@ -16,7 +16,7 @@ module Chat
       #   @param [String] status
       #   @return [Chat::Service::Base::Context]
 
-      model ChatChannel, name: :channel, key: :channel_id
+      model :channel, :fetch_channel
       contract
       policy :check_channel_permission
       step :change_status
@@ -27,6 +27,10 @@ module Chat
       end
 
       private
+
+      def fetch_channel(channel_id:, **)
+        ChatChannel.find_by(id: channel_id)
+      end
 
       def check_channel_permission(guardian:, channel:, status:, **)
         guardian.can_preview_chat_channel?(channel) &&

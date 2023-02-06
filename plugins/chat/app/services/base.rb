@@ -63,8 +63,8 @@ module Chat
       end
 
       module StepsHelpers
-        def model(class_name, name: :model, key: :id)
-          steps << ModelStep.new(name, key: key, class_name: class_name)
+        def model(name = :model, step_name = :"fetch_#{name}")
+          steps << ModelStep.new(name, step_name)
         end
 
         def contract(name = :default, class_name: self::Contract)
@@ -85,15 +85,16 @@ module Chat
       end
 
       class Step
-        attr_reader :name, :class_name
+        attr_reader :name, :method_name, :class_name
 
-        def initialize(name, class_name: nil)
+        def initialize(name, method_name = name, class_name: nil)
           @name = name
+          @method_name = method_name
           @class_name = class_name
         end
 
         def call(instance, context)
-          method = instance.method(name)
+          method = instance.method(method_name)
           args = {}
           args = context.to_h unless method.arity.zero?
           instance.instance_exec(**args, &method)
@@ -101,17 +102,11 @@ module Chat
       end
 
       class ModelStep < Step
-        attr_reader :key
-
-        def initialize(name, class_name:, key:)
-          @key = key
-          super name, class_name: class_name
-        end
-
         def call(instance, context)
-          model = class_name.find_by(id: context[key])
-          context[name] = model
-          context.fail!("result.#{name}": Context.build.fail) unless model
+          context[name] = super
+          raise ArgumentError unless context[name]
+        rescue ArgumentError
+          context.fail!("result.#{name}": Context.build.fail)
         end
       end
 

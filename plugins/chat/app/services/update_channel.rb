@@ -31,7 +31,7 @@ module Chat
       #   @option params_to_edit [String] allow_channel_wide_mentions Allow the use of @here and @all in the channel.
       #   @return [Chat::Service::Base::Context]
 
-      model ChatChannel, name: :channel, key: :channel_id
+      model :channel, :fetch_channel
       policy :no_direct_message_channel
       policy :check_channel_permission
       step :map_data
@@ -51,6 +51,10 @@ module Chat
       end
 
       private
+
+      def fetch_channel(channel_id:, **)
+        ChatChannel.find_by(id: channel_id)
+      end
 
       def no_direct_message_channel(channel:, **)
         !channel.direct_message_channel?

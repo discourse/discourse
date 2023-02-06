@@ -8,7 +8,7 @@ RSpec.describe Chat::Endpoint do
   class FailureService
     include Chat::Service::Base
 
-    step(:fail_step)
+    step :fail_step
 
     def fail_step
       context.fail!
@@ -18,7 +18,7 @@ RSpec.describe Chat::Endpoint do
   class FailedPolicyService
     include Chat::Service::Base
 
-    policy(:test)
+    policy :test
 
     def test
       false
@@ -28,7 +28,7 @@ RSpec.describe Chat::Endpoint do
   class SuccessPolicyService
     include Chat::Service::Base
 
-    policy(:test)
+    policy :test
 
     def test
       true
@@ -58,25 +58,25 @@ RSpec.describe Chat::Endpoint do
   class FailureWithModelService
     include Chat::Service::Base
 
-    class FakeModel
-      def self.find_by(**)
-        nil
-      end
-    end
+    model :fake_model, :fetch_fake_model
 
-    model FakeModel
+    private
+
+    def fetch_fake_model
+      nil
+    end
   end
 
   class SuccessWithModelService
     include Chat::Service::Base
 
-    class FakeModel
-      def self.find_by(**)
-        :model_found
-      end
-    end
+    model :fake_model, :fetch_fake_model
 
-    model FakeModel
+    private
+
+    def fetch_fake_model
+      :model_found
+    end
   end
 
   describe ".call(service, &block)" do
@@ -206,7 +206,7 @@ RSpec.describe Chat::Endpoint do
     context "when using the on_model_not_found action" do
       let(:actions) { <<-BLOCK }
           ->(*) do
-            on_model_not_found { :no_model }
+            on_model_not_found(:fake_model) { :no_model }
           end
         BLOCK
 

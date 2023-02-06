@@ -6,19 +6,19 @@ module Chat
     # Note the slug is modified to prevent collisions.
     #
     # @example
-    #  Chat::Service::TrashChannel.call(channel: channel, guardian: guardian)
+    #  Chat::Service::TrashChannel.call(channel_id: 2, guardian: guardian)
     #
     class TrashChannel
       include Base
 
-      # @!method call(channel:, guardian:)
-      #   @param [ChatChannel] channel
+      # @!method call(channel_id:, guardian:)
+      #   @param [Integer] channel_id
       #   @param [Guardian] guardian
       #   @return [Chat::Service::Base::Context]
 
       DELETE_CHANNEL_LOG_KEY = "chat_channel_delete"
 
-      model ChatChannel, name: :channel, key: :channel_id
+      model :channel, :fetch_channel
       policy :invalid_access
       transaction do
         step :prevents_slug_collision
@@ -28,6 +28,10 @@ module Chat
       step :enqueue_delete_channel_relations_job
 
       private
+
+      def fetch_channel(channel_id:, **)
+        ChatChannel.find_by(id: channel_id)
+      end
 
       def invalid_access(guardian:, channel:, **)
         guardian.can_preview_chat_channel?(channel) && guardian.can_delete_chat_channel?
