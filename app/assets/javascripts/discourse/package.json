@@ -94,7 +94,7 @@
     "terser": "^5.16.1",
     "tippy.js": "^6.3.7",
     "util": "^0.12.5",
-    "virtual-dom": "git+https://github.com/balval/virtual-dom.git",
+    "@discourse/virtual-dom": "^2.1.2-0",
     "webpack": "^5.75.0",
     "wizard": "1.0.0",
     "xss": "^1.0.14"
