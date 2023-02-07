@@ -98,6 +98,10 @@ RSpec.describe(Chat::Service::UpdateUserLastRead) do
 
     before { Jobs.run_immediately! }
 
+    it "sets the service result as successful" do
+      expect(result).to be_a_success
+    end
+
     it "updates the last_read message id" do
       expect { result }.to change { membership.reload.last_read_message_id }.to(message_1.id)
     end

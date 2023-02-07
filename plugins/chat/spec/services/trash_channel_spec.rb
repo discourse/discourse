@@ -25,7 +25,9 @@ RSpec.describe(Chat::Service::TrashChannel) do
     context "when user is allowed to perform the action" do
       fab!(:current_user) { Fabricate(:admin) }
 
-      it { is_expected.to be_a_success }
+      it "sets the service result as successful" do
+        expect(result).to be_a_success
+      end
 
       it "trashes the channel" do
         expect(result[:channel]).to be_trashed

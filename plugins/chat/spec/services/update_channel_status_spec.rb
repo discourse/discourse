@@ -42,7 +42,9 @@ RSpec.describe(Chat::Service::UpdateChannelStatus) do
   context "when status is allowed" do
     let(:status) { "closed" }
 
-    it { is_expected.to be_a_success }
+    it "sets the service result as successful" do
+      expect(result).to be_a_success
+    end
 
     it "changes the status" do
       result
