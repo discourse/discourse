@@ -1208,7 +1208,7 @@ const User = RestModel.extend({
 
   hideUserTipForever(userTipId) {
     const userTips = Site.currentProp("user_tips");
-    if (!userTips || this.skip_new_user_tips) {
+    if (!userTips || this.user_option?.skip_new_user_tips) {
       return;
     }
 
