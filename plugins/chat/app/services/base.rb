@@ -104,14 +104,15 @@ module Chat
       class ModelStep < Step
         def call(instance, context)
           context[name] = super
-          raise ArgumentError unless context[name]
+          raise ArgumentError, "Model not found" unless context[name]
         rescue ArgumentError => exception
-          context.fail!("result.#{name}": Context.build.fail({ exception: exception }))
+          context.fail!("result.#{name}": Context.build.fail(exception: exception))
         end
       end
 
       class PolicyStep < Step
         def call(instance, context)
+          context["result.policy.#{name}"] = Context.build
           context.fail!("result.policy.#{name}": Context.build.fail) unless super
         end
       end
@@ -121,6 +122,7 @@ module Chat
           contract = class_name.new(context.to_h.slice(*class_name.attribute_names.map(&:to_sym)))
           context[:"contract.#{name}"] = contract
 
+          context["result.contract.#{name}"] = Context.build
           unless contract.valid?
             context.fail!("result.contract.#{name}": Context.build.fail(errors: contract.errors))
           end
@@ -204,7 +206,7 @@ module Chat
       # @!visibility private
       def initialize(initial_context = {})
         @initial_context = initial_context.with_indifferent_access
-        @context = Context.build(initial_context)
+        @context = Context.build(initial_context.merge(__steps__: self.class.steps))
       end
 
       private

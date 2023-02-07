@@ -1,7 +1,8 @@
 # frozen_string_literal: true
+
 module Chat
   module ServiceMatchers
-    class FailAction
+    class FailStep
       attr_reader :name, :result
 
       def initialize(name)
@@ -10,66 +11,86 @@ module Chat
 
       def matches?(result)
         @result = result
-        action_exists? && action_failed? && service_failed?
+        step_exists? && step_failed? && service_failed?
       end
 
-      def action_exists?
-        result[action].present?
+      def failure_message
+        message =
+          if !step_exists?
+            "Expected #{type} '#{name}' (key: '#{step}') was not found in the result object."
+          elsif !step_failed?
+            "Expected #{type} '#{name}' (key: '#{step}') to fail but it succeeded."
+          else
+            "expected the service to fail but it succeeded."
+          end
+        error_message_with_inspection(message)
       end
 
-      def action_failed?
-        result[action].failure?
+      def failure_message_when_negated
+        message = "Expected #{type} '#{name}' (key: '#{step}') to succeed but it failed."
+        error_message_with_inspection(message)
+      end
+
+      private
+
+      def step_exists?
+        result[step].present?
+      end
+
+      def step_failed?
+        result[step].failure?
       end
 
       def service_failed?
         result.failure?
       end
 
-      def failure_message
-        return "expected action '#{action}' does not exist" unless action_exists?
-        return "expected action '#{action}' to fail" unless action_failed?
-        "expected the service to fail but it succeeded"
+      def type
+        "step"
+      end
+
+      def error_message_with_inspection(message)
+        inspector = StepsInspector.new(result)
+        "#{message}\n\n#{inspector.inspect}\n\n#{inspector.error}"
       end
     end
 
-    class FailContract < FailAction
+    class FailContract < FailStep
       attr_reader :error_message
 
-      def action
-        "result.contract.#{@name}"
+      def step
+        "result.contract.#{name}"
+      end
+
+      def type
+        "contract"
       end
 
       def matches?(service)
-        super && has_error? && matches_error?
+        super && has_error?
       end
 
       def has_error?
-        result[action].errors.present?
+        result[step].errors.present?
       end
 
       def failure_message
-        return "expected contract '#{action}' to have errors" unless has_error?
+        return "expected contract '#{step}' to have errors" unless has_error?
         super
       end
 
       def description
         "fail a contract"
       end
-
-      def with_error(error)
-        @error_message = error
-        self
-      end
-
-      def matches_error?
-        return true if error_message.blank?
-        result[action].errors.full_messages.include?(error_message)
-      end
     end
 
-    class FailPolicy < FailAction
-      def action
-        "result.policy.#{@name}"
+    class FailPolicy < FailStep
+      def type
+        "policy"
+      end
+
+      def step
+        "result.policy.#{name}"
       end
 
       def description
@@ -77,9 +98,13 @@ module Chat
       end
     end
 
-    class FailToFindModel < FailAction
-      def action
-        "result.#{@name}"
+    class FailToFindModel < FailStep
+      def type
+        "model"
+      end
+
+      def step
+        "result.#{name}"
       end
 
       def description

@@ -28,7 +28,7 @@ RSpec.describe(Chat::Service::UpdateChannelStatus) do
       context "when status is '#{na_status}'" do
         let(:status) { na_status }
 
-        it { is_expected.to be_a_failure }
+        it { is_expected.to fail_a_contract }
       end
     end
   end
