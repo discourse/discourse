@@ -80,7 +80,7 @@ module Chat
       end
 
       def description
-        "fail a contract"
+        "fail a contract named '#{name}'"
       end
     end
 
@@ -94,7 +94,7 @@ module Chat
       end
 
       def description
-        "fail a policy"
+        "fail a policy named '#{name}'"
       end
     end
 
@@ -108,7 +108,7 @@ module Chat
       end
 
       def description
-        "fail to find a model"
+        "fail to find a model named '#{name}'"
       end
     end
 
