@@ -257,6 +257,7 @@ task "javascript:update" => "clean_up" do
         mode-html
         mode-scss
         mode-sql
+        mode-yaml
         theme-chrome
         theme-chaos
         worker-html
