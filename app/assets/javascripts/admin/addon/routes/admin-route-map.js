@@ -101,7 +101,6 @@ export default function () {
           "adminCustomizeFormTemplates",
           { path: "/form-templates", resetNamespace: true },
           function () {
-            this.route("index", { path: "/" });
             this.route("new", { path: "/new" });
             this.route("edit", { path: "/:id" });
           }

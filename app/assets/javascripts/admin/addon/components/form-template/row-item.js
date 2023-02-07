@@ -5,6 +5,7 @@ import { inject as service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import I18n from "I18n";
+
 export default class FormTemplateRowItem extends Component {
   @service router;
   @service dialog;

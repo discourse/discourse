@@ -10,13 +10,13 @@
     @label="admin.form_templates.view_template.edit"
   />
   <DButton
+    @action={{route-action "closeModal"}}
+    @label="admin.form_templates.view_template.close"
+  />
+  <DButton
     class="btn-danger"
     @action={{this.deleteTemplate}}
     @icon="trash-alt"
     @label="admin.form_templates.view_template.delete"
-  />
-  <DButton
-    @action={{route-action "closeModal"}}
-    @label="admin.form_templates.view_template.close"
   />
 </div>

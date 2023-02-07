@@ -6,6 +6,7 @@ module SvgSprite
       %w[
         adjust
         address-book
+        align-left
         ambulance
         anchor
         angle-double-down

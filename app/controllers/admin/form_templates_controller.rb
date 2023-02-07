@@ -15,12 +15,11 @@ class Admin::FormTemplatesController < Admin::StaffController
     params.require(:name)
     params.require(:template)
 
-    template = FormTemplate.new(name: params[:name], template: params[:template])
-
-    if template.save
+    begin
+      template = FormTemplate.create!(name: params[:name], template: params[:template])
       render_serialized(template, FormTemplateSerializer, root: "form_template")
-    else
-      render_json_error(template)
+    rescue FormTemplate::NotAllowed => err
+      render_json_error(err.message)
     end
   end
 
@@ -36,16 +35,17 @@ class Admin::FormTemplatesController < Admin::StaffController
   def update
     template = FormTemplate.find(params[:id])
 
-    if template.update(name: params[:name], template: params[:template])
+    begin
+      template = template.update!(name: params[:name], template: params[:template])
       render_serialized(template, FormTemplateSerializer, root: "form_template")
-    else
-      render_json_error(template)
+    rescue FormTemplate::NotAllowed => err
+      render_json_error(err.message)
     end
   end
 
   def destroy
     template = FormTemplate.find(params[:id])
-    template.destroy
+    template.destroy!
 
     render json: success_json
   end

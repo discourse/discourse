@@ -11,9 +11,9 @@ export default class FormTemplateForm extends Component {
   @service router;
   @service dialog;
   @tracked formSubmitted = false;
-  @tracked templateContents = this.args.model?.template || "";
+  @tracked templateContent = this.args.model?.template || "";
   isEditing = this.args.model?.id ? true : false;
-  templateName = this.args.model?.name || null;
+  templateName = this.args.model?.name;
 
   @action
   onSubmit() {
@@ -23,7 +23,7 @@ export default class FormTemplateForm extends Component {
 
     const postData = {
       name: this.templateName,
-      template: this.templateContents,
+      template: this.templateContent,
     };
 
     if (this.isEditing) {
@@ -35,7 +35,7 @@ export default class FormTemplateForm extends Component {
           this.router.transitionTo("adminCustomizeFormTemplates.index");
         })
         .catch((e) => {
-          this.#handleErrors(e);
+          popupAjaxError(e);
           this.formSubmitted = false;
         });
     } else {
@@ -45,7 +45,7 @@ export default class FormTemplateForm extends Component {
           this.router.transitionTo("adminCustomizeFormTemplates.index");
         })
         .catch((e) => {
-          this.#handleErrors(e);
+          popupAjaxError(e);
           this.formSubmitted = false;
         });
     }
@@ -74,30 +74,12 @@ export default class FormTemplateForm extends Component {
 
   @action
   onInsertField(type) {
-    const structure = templateFormFields.find(
-      (field) => field.type === type
-    ).structure;
+    const structure = templateFormFields.findBy("type", type).structure;
 
-    if (this.templateContents.length === 0) {
-      this.templateContents += structure;
+    if (this.templateContent.length === 0) {
+      this.templateContent += structure;
     } else {
-      this.templateContents += `\n${structure}`;
+      this.templateContent += `\n${structure}`;
     }
-  }
-
-  #handleErrors(e) {
-    let error;
-
-    if (e?.jqXHR?.responseJSON?.errors) {
-      error = I18n.t("generic_error_with_reason", {
-        error: e.jqXHR.responseJSON.errors.join(". "),
-      });
-    } else {
-      error = I18n.t("generic_error");
-    }
-
-    this.dialog.alert({
-      message: error,
-    });
   }
 }

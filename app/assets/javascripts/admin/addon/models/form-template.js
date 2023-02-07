@@ -26,9 +26,7 @@ FormTemplate.reopenClass({
 
   findAll() {
     return ajax(`/admin/customize/form-templates.json`).then((model) => {
-      return model.form_templates.sort(
-        (a, b) => parseFloat(a.id) - parseFloat(b.id)
-      );
+      return model.form_templates.sort((a, b) => a.id - b.id);
     });
   },
 

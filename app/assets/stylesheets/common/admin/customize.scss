@@ -930,13 +930,11 @@ table.permalinks {
   }
 
   &--table {
+    margin-bottom: 1rem;
+
     .admin-list-item .action {
       text-align: right;
     }
-  }
-
-  .btn-primary {
-    margin-top: 1rem;
   }
 
   &--form {
@@ -966,6 +964,14 @@ table.permalinks {
       font-family: inherit;
       font-size: var(--font-up-1);
       color: var(--primary-high);
+    }
+
+    .footer-buttons {
+      display: flex;
+      gap: 0.5rem;
+      .btn-danger {
+        margin-left: auto;
+      }
     }
   }
 

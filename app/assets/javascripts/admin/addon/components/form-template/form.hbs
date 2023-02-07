@@ -1,5 +1,8 @@
 <div class="form-templates--form">
   <div class="control-group">
+    <label for="template-name">
+      {{i18n "admin.form_templates.new_template_form.name.label"}}
+    </label>
     <TextField
       @value={{this.templateName}}
       @name="template-name"
@@ -15,7 +18,6 @@
       @class="btn-flat btn-icon-text"
       @icon="check-square"
       @label="admin.form_templates.quick_insert_fields.checkbox"
-      @title="admin.form_templates.quick_insert_fields.checkbox"
       @action={{this.onInsertField}}
       @actionParam="checkbox"
     />
@@ -23,7 +25,6 @@
       @class="btn-flat btn-icon-text"
       @icon="grip-lines"
       @label="admin.form_templates.quick_insert_fields.short_answer"
-      @title="admin.form_templates.quick_insert_fields.short_answer"
       @action={{this.onInsertField}}
       @actionParam="input"
     />
@@ -31,7 +32,6 @@
       @class="btn-flat btn-icon-text"
       @icon="align-left"
       @label="admin.form_templates.quick_insert_fields.long_answer"
-      @title="admin.form_templates.quick_insert_fields.long_answer"
       @action={{this.onInsertField}}
       @actionParam="textarea"
     />
@@ -39,7 +39,6 @@
       @class="btn-flat btn-icon-text"
       @icon="chevron-circle-down"
       @label="admin.form_templates.quick_insert_fields.dropdown"
-      @title="admin.form_templates.quick_insert_fields.dropdown"
       @action={{this.onInsertField}}
       @actionParam="dropdown"
     />
@@ -47,7 +46,6 @@
       @class="btn-flat btn-icon-text"
       @icon="cloud-upload-alt"
       @label="admin.form_templates.quick_insert_fields.upload"
-      @title="admin.form_templates.quick_insert_fields.upload"
       @action={{this.onInsertField}}
       @actionParam="upload"
     />
@@ -55,42 +53,38 @@
       @class="btn-flat btn-icon-text"
       @icon="bullseye"
       @label="admin.form_templates.quick_insert_fields.multiple_choice"
-      @title="admin.form_templates.quick_insert_fields.multiple_choice"
       @action={{this.onInsertField}}
       @actionParam="multiselect"
     />
   </div>
 
   <div class="control-group">
-    <AceEditor @content={{this.templateContents}} @mode="yaml" />
+    <AceEditor @content={{this.templateContent}} @mode="yaml" />
   </div>
 
   <div class="footer-buttons">
     <DButton
       @class="btn-primary"
       @label="admin.form_templates.new_template_form.submit"
-      @title="admin.form_templates.new_template_form.submit"
       @icon="check"
-      @action={{action this.onSubmit}}
+      @action={{this.onSubmit}}
       @disabled={{this.formSubmitted}}
+    />
+
+    <DButton
+      @label="admin.form_templates.new_template_form.cancel"
+      @icon="times"
+      @action={{this.onCancel}}
     />
 
     {{#if this.isEditing}}
       <DButton
         @class="btn-danger"
         @label="admin.form_templates.view_template.delete"
-        @title="admin.form_templates.view_template.delete"
         @icon="trash-alt"
-        @action={{action this.onDelete}}
+        @action={{this.onDelete}}
       />
     {{/if}}
-
-    <DButton
-      @label="admin.form_templates.new_template_form.cancel"
-      @title="admin.form_templates.new_template_form.cancel"
-      @icon="times"
-      @action={{action this.onCancel}}
-    />
 
   </div>
 </div>
