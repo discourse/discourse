@@ -481,7 +481,7 @@ after_initialize do
 
     if name == :chat_allowed_groups
       Chat::AutoRemoveMembershipEventHandler.new(
-        event_type: :chat_allowed_groups_changedd,
+        event_type: :chat_allowed_groups_changed,
         event_data: {
           old_allowed_groups: old_value,
           new_allowed_groups: new_value,
