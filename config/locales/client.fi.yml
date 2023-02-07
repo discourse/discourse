@@ -2147,8 +2147,6 @@ fi:
         topic_template_not_modified: "Lisää ketjuun tietoja ja yksityiskohtia muokkaamalla ketjun mallipohjaa."
       save_edit: "Tallenna muokkaus"
       overwrite_edit: "Korvaa muokkaus"
-      reply_original: "Vastaa alkuperäiseen ketjuun"
-      reply_here: "Vastaa tänne"
       reply: "Vastaa"
       cancel: "Peruuta"
       create_topic: "Aloita ketju"

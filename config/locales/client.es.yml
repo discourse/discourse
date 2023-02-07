@@ -2134,8 +2134,6 @@ es:
         topic_template_not_modified: "Añade detalles y especificaciones a tu tema editando la plantilla de tema."
       save_edit: "Guardar edición"
       overwrite_edit: "Sobrescribir edición"
-      reply_original: "Responder en el tema original"
-      reply_here: "Responder aquí"
       reply: "Responder"
       cancel: "Cancelar"
       create_topic: "Crear tema"

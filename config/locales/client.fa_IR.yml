@@ -1887,8 +1887,6 @@ fa_IR:
         category_missing: "باید یک دسته‌بندی انتخاب کنید"
       save_edit: "ذخیره ویرایش"
       overwrite_edit: "بازنویسی ویرایش"
-      reply_original: "پاسخ دادن در موضوع اصلی"
-      reply_here: "در اینجا پاسخ دهید"
       reply: "پاسخ"
       cancel: "لغو کردن"
       create_topic: "ایجاد موضوع"

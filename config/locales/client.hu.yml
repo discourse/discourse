@@ -2053,8 +2053,6 @@ hu:
         topic_template_not_modified: "Adjon hozzá részleteket és konkrétumokat a témájához a témasablon szerkesztésével."
       save_edit: "Módosítások mentése"
       overwrite_edit: "Módosítások felülírása"
-      reply_original: "Válasz az eredeti témára"
-      reply_here: "Válasz ide"
       reply: "Válasz"
       cancel: "Mégse"
       create_topic: "Téma létrehozása"

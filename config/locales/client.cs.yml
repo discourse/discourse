@@ -1612,8 +1612,6 @@ cs:
         category_missing: "Musíte vybrat kategorii"
       save_edit: "Uložit změnu"
       overwrite_edit: "Přepsat úpravu"
-      reply_original: "Odpovědět na původní téma"
-      reply_here: "Odpovědět sem"
       reply: "Odpovědět"
       cancel: "Zrušit"
       create_topic: "Vytvořit téma"

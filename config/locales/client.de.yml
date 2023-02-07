@@ -2147,8 +2147,6 @@ de:
         topic_template_not_modified: "Bitte füge Details und Spezifikationen zu deinem Thema hinzu, indem du die Themenvorlage anpasst."
       save_edit: "Bearbeitung speichern"
       overwrite_edit: "Bearbeitung überschreiben"
-      reply_original: "Auf das ursprüngliche Thema antworten"
-      reply_here: "Hier antworten"
       reply: "Antworten"
       cancel: "Abbrechen"
       create_topic: "Thema erstellen"

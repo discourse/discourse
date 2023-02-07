@@ -1665,8 +1665,6 @@ bs_BA:
         topic_template_not_modified: "Molimo da dodate detalje i specifikacije za vašu temu tako što ćete izmijeniti template teme."
       save_edit: "Sačuvaj izmjene"
       overwrite_edit: "Overwrite Edit"
-      reply_original: "Odgovori na Originalnu temu"
-      reply_here: "Odgovori Ovdje"
       reply: "Odgovori"
       cancel: "Odustani"
       create_topic: "Pokreni temu"

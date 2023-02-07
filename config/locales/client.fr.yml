@@ -2147,8 +2147,6 @@ fr:
         topic_template_not_modified: "Veuillez ajouter des détails à votre sujet en modifiant le modèle de sujet."
       save_edit: "Enregistrer les modifications"
       overwrite_edit: "Écraser la modification"
-      reply_original: "Répondre dans le sujet d'origine"
-      reply_here: "Répondre ici"
       reply: "Répondre"
       cancel: "Annuler"
       create_topic: "Créer le sujet"

@@ -1086,8 +1086,6 @@ sr:
         title_missing: "Naslov je obavezan"
         category_missing: "Morate odabrati kategoriju"
       save_edit: "Sačuvaj izmenu"
-      reply_original: "Odgovori na originalnu temu"
-      reply_here: "Odgovori ovde"
       reply: "Odgovori"
       cancel: "Odustani"
       create_topic: "Kreiraj temu"

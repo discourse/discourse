@@ -2147,8 +2147,6 @@ pt_BR:
         topic_template_not_modified: "Adicione detalhes e especificações ao seu tópico editando o modelo do tópico."
       save_edit: "Salvar edição"
       overwrite_edit: "Sobrescrever edição"
-      reply_original: "Responder no tópico original"
-      reply_here: "Responder aqui"
       reply: "Responder"
       cancel: "Cancelar"
       create_topic: "Criar tópico"

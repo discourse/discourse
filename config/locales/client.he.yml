@@ -2248,8 +2248,6 @@ he:
         topic_template_not_modified: "נא להוסיף פרטים ותיאורים מדויקים לנושא שלך על ידי עריכת תבנית הנושא."
       save_edit: "שמירת עריכה"
       overwrite_edit: "שכתוב על עריכה"
-      reply_original: "תגובה לנושא המקורי"
-      reply_here: "תגובה כאן"
       reply: "תגובה"
       cancel: "ביטול"
       create_topic: "יצירת נושא"

@@ -2543,8 +2543,6 @@ ar:
         topic_template_not_modified: "يُرجى إضافة التفاصيل والمواصفات المحدَّدة إلى موضوعك من خلال تعديل نموذج الموضوع."
       save_edit: "حفظ التعديل"
       overwrite_edit: "استبدال التعديل"
-      reply_original: "كتابة رد على الموضوع الأصلي"
-      reply_here: "الرد هنا"
       reply: "الرد"
       cancel: "إلغاء"
       create_topic: "إنشاء موضوع"

@@ -728,8 +728,6 @@ te:
         title_missing: "శీర్షిక తప్పనిసరి"
         category_missing: "మీరు ఒక వర్గాన్ని ఎంచుకోవాలి"
       save_edit: "దాచి సవరించు"
-      reply_original: "మూల విషయంకు జవాబివ్వు"
-      reply_here: "ఇక్కడ జవాబివ్వు"
       reply: "జవాబు"
       cancel: "రద్దుచేయి"
       title_placeholder: "ఈ చర్చ దేనిగురించో ఒక లైనులో చెప్పండి?"
