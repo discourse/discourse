@@ -26,6 +26,7 @@ register_asset "stylesheets/common/chat-channel-preview-card.scss"
 register_asset "stylesheets/common/chat-channel-info.scss"
 register_asset "stylesheets/common/chat-draft-channel.scss"
 register_asset "stylesheets/common/chat-tabs.scss"
+register_asset "stylesheets/common/chat-thread-panel.scss"
 register_asset "stylesheets/common/chat-form.scss"
 register_asset "stylesheets/common/d-progress-bar.scss"
 register_asset "stylesheets/common/incoming-chat-webhooks.scss"
@@ -228,6 +229,7 @@ after_initialize do
        )
   load File.expand_path("../app/controllers/api/category_chatables_controller.rb", __FILE__)
   load File.expand_path("../app/controllers/api/hints_controller.rb", __FILE__)
+  load File.expand_path("../app/controllers/api/chat_threads_controller.rb", __FILE__)
   load File.expand_path("../app/controllers/api/chat_chatables_controller.rb", __FILE__)
   load File.expand_path("../app/queries/chat_channel_memberships_query.rb", __FILE__)
 
@@ -596,6 +598,8 @@ after_initialize do
 
       # Hints for JIT warnings.
       get "/mentions/groups" => "hints#check_group_mentions", :format => :json
+
+      get "/threads/:thread_id" => "chat_threads#show"
     end
 
     # direct_messages_controller routes
@@ -647,6 +651,8 @@ after_initialize do
 
     # /channel -> /c redirects
     get "/channel/:channel_id", to: redirect("/chat/c/-/%{channel_id}")
+
+    get "#{base_c_route}/t/:thread_id" => "chat#respond"
 
     base_channel_route = "/channel/:channel_id/:channel_title"
     redirect_base = "/chat/c/%{channel_title}/%{channel_id}"

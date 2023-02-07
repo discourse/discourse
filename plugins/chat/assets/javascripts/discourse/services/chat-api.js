@@ -13,6 +13,7 @@ import Collection from "../lib/collection";
  */
 export default class ChatApi extends Service {
   @service chatChannelsManager;
+  @service chatThreadsManager;
 
   /**
    * Get a channel by its ID.
@@ -26,6 +27,21 @@ export default class ChatApi extends Service {
   channel(channelId) {
     return this.#getRequest(`/channels/${channelId}`).then((result) =>
       this.chatChannelsManager.store(result.channel)
+    );
+  }
+
+  /**
+   * Get a thread by its ID.
+   * @param {number} threadId - The ID of the thread.
+   * @returns {Promise}
+   *
+   * @example
+   *
+   *    this.chatApi.thread(1).then(thread => { ... })
+   */
+  thread(threadId) {
+    return this.#getRequest(`/threads/${threadId}`).then((result) =>
+      this.chatThreadsManager.store(result.thread)
     );
   }
 

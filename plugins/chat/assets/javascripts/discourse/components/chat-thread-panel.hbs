@@ -1,0 +1,16 @@
+<div
+  class={{concat-class
+    "chat-thread-panel"
+    (if this.chat.activeThread "chat-thread-pane--active-thread")
+  }}
+>
+  <p>Thread ID
+    {{this.chat.activeThread.id}}, started by
+    {{this.chat.activeThread.original_message_user.username}}</p>
+
+  <p>Excerpt: {{this.chat.activeThread.original_message_excerpt}}</p>
+
+  <LinkTo @route="chat.channel" @models={{this.chat.activeChannel.routeModels}}>
+    Close Thread
+  </LinkTo>
+</div>

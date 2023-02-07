@@ -590,6 +590,7 @@ html.has-full-page-chat {
 
       #main-chat-outlet {
         min-height: 0;
+        display: flex;
       }
     }
   }

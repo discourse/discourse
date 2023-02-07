@@ -80,6 +80,15 @@
         />
       </div>
     {{else}}
+      {{#if this.message.in_reply_to}}
+        <LinkTo
+          @route={{"chat.channel.thread"}}
+          @model={{this.message.id}}
+          class="chat-thread-link"
+        >
+          View Thread
+        </LinkTo>
+      {{/if}}
       <div class={{this.chatMessageClasses}}>
         {{#if this.message.in_reply_to}}
           <div
