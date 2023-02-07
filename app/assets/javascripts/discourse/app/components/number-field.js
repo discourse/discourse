@@ -2,22 +2,34 @@ import I18n from "I18n";
 import TextField from "discourse/components/text-field";
 import discourseComputed from "discourse-common/utils/decorators";
 
+const ALLOWED_KEYS = [
+  "Enter",
+  "Backspace",
+  "Tab",
+  "Delete",
+  "ArrowLeft",
+  "ArrowUp",
+  "ArrowRight",
+  "ArrowDown",
+  "0",
+  "1",
+  "2",
+  "3",
+  "4",
+  "5",
+  "6",
+  "7",
+  "8",
+  "9",
+];
+
 export default TextField.extend({
   classNameBindings: ["invalid"],
 
   keyDown: function (e) {
-    const key = e.which;
-
     return (
-      key === 13 || // Enter
-      key === 8 || // Backspace
-      key === 9 || // Tab
-      key === 46 || // Delete
-      ((key === 109 || key === 189) && // Negative sign
-        parseInt(this.get("min"), 10) < 0) ||
-      (key >= 35 && key <= 40) || // Cursor keys
-      (key >= 48 && key <= 57) || // Numbers
-      (key >= 96 && key <= 105) // Numpad
+      ALLOWED_KEYS.includes(e.key) ||
+      (e.key === "-" && parseInt(this.get("min"), 10) < 0)
     );
   },
 
