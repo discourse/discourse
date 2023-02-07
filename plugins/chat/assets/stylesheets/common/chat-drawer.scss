@@ -29,6 +29,7 @@ html.rtl {
   position: fixed;
   right: var(--composer-right, 20px);
   left: 0;
+  max-height: calc(100% - var(--header-offset) - 15px);
 
   .rtl & {
     left: var(--composer-right, 20px);
@@ -66,7 +67,6 @@ html.rtl {
   width: 400px;
   min-width: 250px !important; // important to override inline styles
   max-width: calc(100% - var(--composer-right));
-  max-height: calc(100vh - var(--header-offset) - 15px);
   min-height: 300px !important; // important to override inline styles
 
   .chat-drawer-container {
