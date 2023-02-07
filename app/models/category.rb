@@ -46,6 +46,8 @@ class Category < ActiveRecord::Base
   has_many :topic_timers, dependent: :destroy
   has_many :upload_references, as: :target, dependent: :destroy
 
+  has_one :category_setting, dependent: :destroy
+
   has_and_belongs_to_many :web_hooks
 
   validates :user_id, presence: true
