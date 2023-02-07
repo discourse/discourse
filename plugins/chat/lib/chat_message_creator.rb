@@ -103,12 +103,16 @@ class Chat::ChatMessageCreator
 
         UNION ALL
 
-        -- get all parents of the message
+        -- get the chain of direct parents of the message
+        -- following in_reply_to_id
         SELECT cm.id, cm.in_reply_to_id
         FROM root_message_finder rm
         JOIN chat_messages cm ON rm.in_reply_to_id = cm.id
       )
       SELECT id FROM root_message_finder
+
+      -- this makes it so only the root parent ID is returned, we can
+      -- exclude this to return all parents in the chain
       WHERE in_reply_to_id IS NULL;
     SQL
 
