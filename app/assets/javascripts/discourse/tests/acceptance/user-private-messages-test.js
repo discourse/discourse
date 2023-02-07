@@ -19,6 +19,7 @@ import {
 } from "discourse/lib/topic-list-tracker";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { resetCustomUserNavMessagesDropdownRows } from "discourse/controllers/user-private-messages";
+import userFixtures from "discourse/tests/fixtures/user-fixtures";
 
 acceptance(
   "User Private Messages - user with no group messages",
@@ -1043,6 +1044,31 @@ acceptance(
       await visit("/u/eviltrout/messages");
       await click(".new-private-message");
       assert.ok(!exists("#reply-control .mini-tag-chooser"));
+    });
+  }
+);
+
+acceptance(
+  "User Private Messages - user with uppercase username",
+  function (needs) {
+    needs.user({
+      redesigned_user_page_nav_enabled: true,
+    });
+
+    needs.pretender((server, helper) => {
+      const response = cloneJSON(userFixtures["/u/charlie.json"]);
+      response.user.username = "chArLIe";
+      server.get("/u/charlie.json", () => helper.response(response));
+    });
+
+    test("viewing inbox", async function (assert) {
+      await visit("/u/charlie/messages");
+
+      assert.strictEqual(
+        query(".user-nav-messages-dropdown .selected-name").textContent.trim(),
+        "Inbox",
+        "menu defaults to Inbox"
+      );
     });
   }
 );

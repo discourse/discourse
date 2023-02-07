@@ -81,6 +81,7 @@ class ReviewablesController < ApplicationController
           Reviewable.user_menu_list_for(current_user),
           current_user,
         ).as_json,
+      reviewable_count: current_user.reviewable_count,
     }
     render_json_dump(json, rest_serializer: true)
   end

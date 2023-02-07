@@ -135,14 +135,20 @@
 
         <div class="control-group timezones">
           <label>{{i18n
-            "discourse_local_dates.create.form.timezones_title"
+              "discourse_local_dates.create.form.timezones_title"
             }}</label>
           <p>{{i18n
-            "discourse_local_dates.create.form.timezones_description"
+              "discourse_local_dates.create.form.timezones_description"
             }}</p>
           <div class="controls">
-            <MultiSelect @valueProperty={{null}} @nameProperty={{null}} @class="timezones-input" @content={{this.allTimezones}}
-              @value={{this.timezones}} @options={{hash allowAny=false maximum=5}} />
+            <MultiSelect
+              @valueProperty={{null}}
+              @nameProperty={{null}}
+              @class="timezones-input"
+              @content={{this.allTimezones}}
+              @value={{this.timezones}}
+              @options={{hash allowAny=false maximum=5}}
+            />
           </div>
         </div>
 

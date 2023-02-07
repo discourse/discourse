@@ -909,11 +909,6 @@ ko:
       profile: "프로필"
       mute: "뮤트"
       edit: "환경설정 편집"
-      download_archive:
-        button_text: "모두 다운로드"
-        confirm: "게시물을 다운로드할까요?"
-        success: "다운로드가 시작되었습니다. 다운로드 과정이 완료되면 메시지로 알림이 전송됩니다."
-        rate_limit_error: "게시물은 하루에 한 번만 다운로드할 수 있습니다. 내일 다시 시도하세요."
       new_private_message: "새 메시지"
       private_message: "메시지"
       private_messages: "메시지"
@@ -1796,7 +1791,6 @@ ko:
       categories_and_top_topics: "카테고리 및 주요 글"
       categories_boxes: "서브카테고리가 있는 박스"
       categories_boxes_with_topics: "추천 주제의 박스"
-      subcategories_with_featured_topics: "추천 글이 포함된 하위 카테고리"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -1898,8 +1892,6 @@ ko:
         topic_template_not_modified: "주제 템플릿을 편집하여 주제에 상세 정보와 세부 사항을 추가하세요."
       save_edit: "편집 저장"
       overwrite_edit: "편집 덮어쓰기"
-      reply_original: "원래 주제에 댓글 달기"
-      reply_here: "여기에 댓글을 작성하세요"
       reply: "댓글 달기"
       cancel: "취소"
       create_topic: "주제 생성"
@@ -2364,8 +2356,6 @@ ko:
       read_more_in_category: "더 읽고 싶으신가요? %{categoryLink}의 다른 토픽을 살펴보거나 <a href='%{latestLink}'>최신 토픽</a>을 확인해 보세요."
       unread_indicator: "아직 이 주제의 마지막 게시물을 읽은 회원이 없습니다."
       suggest_create_topic: <a href>새 대화를 시작</a>할 준비가 되었나요?
-      jump_reply_up: 이전 댓글로 이동
-      jump_reply_down: 다음 댓글로 이동
       deleted: "글이 삭제되었습니다."
       slow_mode_update:
         title: "느린 모드"
@@ -3177,9 +3167,6 @@ ko:
         help: "읽지 않은 게시물을 포함한 현재 구독 또는 추적 중인 주제"
         lower_title_with_count:
           other: "%{count} unread"
-      unseen:
-        title: "읽지 않음"
-        lower_title: "읽지 않음"
       new:
         lower_title_with_count:
           other: "%{count} new"
@@ -3491,13 +3478,11 @@ ko:
       enabled: "안전 모드가 활성화되었습니다. 안전 모드를 종료하려면 이 브라우저 창을 닫으세요."
     image_removed: "(이미지 제거됨)"
     pause_notifications:
-      remaining: "%{remaining} 남음"
       options:
         half_hour: "30분"
         one_hour: "1시간"
         two_hours: "2시간"
         tomorrow: "내일까지"
-        custom: "사용자 정의"
       set_schedule: "알림 일정 설정"
     trust_levels:
       names:
@@ -3534,6 +3519,9 @@ ko:
       all_categories: "모든 카테고리"
       all_tags: "모든 태그"
       sections:
+        custom:
+          save: "저장"
+          delete: "삭제하기"
         about:
           header_link_text: "소개"
         messages:
@@ -3560,7 +3548,6 @@ ko:
               content: "카테고리 추가"
           click_to_get_started: "시작하려면 여기를 클릭하십시오."
           header_link_text: "카테고리"
-          configure_defaults: "기본값 구성"
         community:
           header_link_text: "커뮤니티"
           links:
@@ -3588,7 +3575,6 @@ ko:
     welcome_topic_banner:
       title: "환영 글 만들기"
       button_title: "편집 시작"
-    until: "까지:"
   admin_js:
     type_to_filter: "필터링하려면 입력..."
     admin:
@@ -4665,7 +4651,6 @@ ko:
         show_admin_profile: "관리자"
         manage_user: "사용자 관리"
         show_public_profile: "공개 프로필 표시"
-        impersonate: "가장"
         action_logs: "작업 로그"
         ip_lookup: "IP Lookup"
         log_out: "로그아웃"

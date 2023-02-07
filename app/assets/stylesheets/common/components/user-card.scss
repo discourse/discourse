@@ -1,3 +1,5 @@
+@use "sass:math";
+
 $card_width: 580px;
 $avatar_width: 120px;
 $avatar_margin: -50px; // negative margin makes avatars extend above cards
@@ -265,7 +267,7 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
       color: var(--primary);
       .d-icon {
         margin: auto;
-        font-size: $avatar_width / 1.5;
+        font-size: math.div($avatar_width, 1.5);
       }
       &.rounded {
         border-radius: 50%;

@@ -232,7 +232,14 @@ export default Controller.extend(CanCheckEmails, {
               queryParams: { nonce },
             });
           } else {
-            popupAjaxError(error);
+            const htmlMessage = error.jqXHR?.responseJSON.html_message;
+            if (htmlMessage) {
+              this.dialog.alert({
+                message: htmlSafe(error.jqXHR?.responseJSON.error),
+              });
+            } else {
+              popupAjaxError(error);
+            }
           }
         });
     },

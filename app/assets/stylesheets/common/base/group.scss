@@ -2,6 +2,8 @@
 // To style group content differently, use the existing classes with a .group parent class.
 // For example: .group .user-secondary-navigation
 
+@use "sass:math";
+
 .group-details-container {
   background: var(--primary-very-low);
   padding: 20px;
@@ -55,7 +57,7 @@
   }
 
   $size: 50px;
-  $icon-size: $size / 1.8;
+  $icon-size: math.div($size, 1.8);
 
   .avatar-flair-image {
     width: $size;

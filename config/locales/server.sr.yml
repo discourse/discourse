@@ -421,7 +421,6 @@ sr:
   page_not_found:
     see_more: "Više"
     search_button: "Pretraži"
-  image: "slika"
   color_schemes:
     default_theme_name: "zadato"
   csv_export:
@@ -491,7 +490,6 @@ sr:
             placeholder: "Mesto gde Milena i njene prijateljice ćaskaju o kul stvarima"
       finished:
         title: "Vaš Discource je spreman!"
-  joined: "Pridružen"
   reviewables:
     priorities:
       medium: "Srednje"

@@ -24,7 +24,7 @@ module(
 
     test("startFromMessageReactionList", async function (assert) {
       const callback = () => {};
-      this.manager.startFromMessageReactionList({ id: 1 }, false, callback);
+      this.manager.startFromMessageReactionList({ id: 1 }, callback);
 
       assert.ok(this.manager.loading);
       assert.ok(this.manager.opened);
@@ -44,7 +44,7 @@ module(
 
     test("startFromMessageActions", async function (assert) {
       const callback = () => {};
-      this.manager.startFromMessageReactionList({ id: 1 }, false, callback);
+      this.manager.startFromMessageReactionList({ id: 1 }, callback);
 
       assert.ok(this.manager.loading);
       assert.ok(this.manager.opened);
@@ -102,6 +102,14 @@ module(
 
       assert.deepEqual(this.manager.emojis, emojisReponse());
       assert.strictEqual(this.manager.loading, false);
+    });
+
+    test("startFromComposer with filter option", async function (assert) {
+      const callback = () => {};
+      this.manager.startFromComposer(callback, { filter: "foofilter" });
+      await settled();
+
+      assert.strictEqual(this.manager.initialFilter, "foofilter");
     });
 
     test("closeExisting", async function (assert) {

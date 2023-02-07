@@ -1161,7 +1161,9 @@ class Search
           WHEN #{Searchable::PRIORITIES[:high]}
           THEN #{SiteSetting.category_search_priority_high_weight}
           ELSE
-            CASE WHEN topics.closed
+            CASE WHEN topics.archived
+            THEN 0.85
+            WHEN topics.closed
             THEN 0.9
             ELSE 1
             END
@@ -1262,6 +1264,9 @@ class Search
     ts_config = ActiveRecord::Base.connection.quote(ts_config) if ts_config
     escaped_term = wrap_unaccent("'#{escape_string(term)}'")
     tsquery = "TO_TSQUERY(#{ts_config || default_ts_config}, #{escaped_term})"
+    # PG 14 and up default to using the followed by operator
+    # this restores the old behavior
+    tsquery = "REPLACE(#{tsquery}::text, '<->', '&')::tsquery"
     tsquery = "REPLACE(#{tsquery}::text, '&', '#{escape_string(joiner)}')::tsquery" if joiner
     tsquery
   end

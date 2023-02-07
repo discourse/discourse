@@ -1625,9 +1625,6 @@ pt:
   user_notifications:
     previous_discussion: "Respostas Anteriores"
     in_reply_to: "Em Resposta A"
-    unsubscribe:
-      title: "Cancelar a Subscrição"
-      description: "Não está interessado em receber estes emails? Não há problema! Clique em baixo para cancelar a subscrição instantaneamente:"
     reply_by_email: "[Visitar Tópico](%{base_url}%{url}) ou responda a este email para responder."
     only_reply_by_email: "Responda a este email para responder."
     visit_link_to_respond: "[Visitar Tópico](%{base_url}%{url}) para responder."
@@ -1807,7 +1804,6 @@ pt:
       liked_received: "Gostos Recebidos"
       new_users: "Novos Utilizadores"
       popular_topics: "Tópicos Populares"
-      follow_topic: "Acompanhar este tópico"
       join_the_discussion: "Ler Mais"
       popular_posts: "Publicações Populares"
       click_here: "clique aqui"
@@ -1840,8 +1836,6 @@ pt:
     see_more: "Mais"
     search_title: "Pesquisar neste sítio"
     search_button: "Pesquisar"
-  deleted: "eliminado"
-  image: "imagem"
   upload:
     edit_reason: "cópias das imagens locais transferidas"
     unauthorized: "Pedimos desculpa, o ficheiro que está a tentar carregar não está autorizado (extensões autorizadas: %{authorized_extensions})."
@@ -2122,7 +2116,6 @@ pt:
         title: "Convidar Equipa de Apoio"
       finished:
         title: "O seu Discourse está Pronto!"
-  joined: "Juntou-se"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} mencionou-o em "%{topic}" - %{site_title}'

@@ -3103,14 +3103,6 @@ tr_TR:
     user_automatically_silenced:
       title: "Kullanıcı Otomatik Olarak Susturuldu"
       subject_template: "Yeni kullanıcı %{username} topluluk bayraklarıyla susturuldu"
-      text_body_template: |
-        Bu otomatik bir mesajdır.
-
-        Yeni kullanıcı [%{username}](%{user_url}) otomatik olarak susturuldu çünkü birden fazla kullanıcı %{username} adlı kullanıcının gönderilerine bayrak ekledi.
-
-        Lütfen [bayrakları inceleyin](%{base_url}/admin/flags). %{username} adlı kullanıcının gönderileri yanlışlıkla susturulduysa [bu kullanıcının yönetici sayfasındaki](%{user_url}) susturmayı kaldır düğmesine tıklayın.
-
-        Bu eşik, "silence_new_user" site ayarları aracılığıyla değiştirilebilir.
     spam_post_blocked:
       title: "Spam Gönderi Engellendi"
       subject_template: "%{username} adlı yeni kullanıcının gönderileri tekrarlanan bağlantılar nedeniyle engellendi"
@@ -3189,9 +3181,6 @@ tr_TR:
       one: "Dikkat edin: Günlük en fazla %{count} e-posta gönderiyoruz. Bekletilenleri görmek için siteyi kontrol edin."
       other: "Dikkat edin: Günlük en fazla %{count} e-posta gönderiyoruz. Bekletilebilecek olanları görmek için siteyi kontrol edin. Not: Popüler olduğunuz için teşekkürler!"
     in_reply_to: "Yanıt Olarak"
-    unsubscribe:
-      title: "Aboneliği İptal Et"
-      description: "Bu e-postaları almak istemiyor musunuz? Sorun değil! Anında abonelikten çıkmak için aşağıya tıklayın:"
     reply_by_email: "Yanıt vermek için [konuyu ziyaret edin](%{base_url}%{url}) veya bu e-postaya yanıt verin."
     reply_by_email_pm: "%{participants} adlı katılımcıya yanıt vermek için [mesajı ziyaret edin](%{base_url}%{url}) veya bu e-postaya yanıt verin."
     only_reply_by_email: "Yanıt vermek için bu e-postayı yanıtlayın."
@@ -3488,7 +3477,6 @@ tr_TR:
       liked_received: "Alınan Beğeniler"
       new_users: "Yeni Kullanıcılar"
       popular_topics: "Popüler Konular"
-      follow_topic: "Bu konuyu takip et"
       join_the_discussion: "Devamını Okuyun"
       popular_posts: "Popüler Gönderiler"
       more_new: "Sizin için yeni"
@@ -3666,8 +3654,6 @@ tr_TR:
     welcome_message_invite_only: |
       ##[%{title} başlığına hoş geldiniz](#hoşgeldiniz)
       Bir hesap gerekli. Lütfen devam etmek mevcut bir üyeden davet isteyin veya giriş yapın.
-  deleted: "silindi"
-  image: "görüntü"
   upload:
     edit_reason: "görüntülerin yerel kopyaları indirildi"
     unauthorized: "Üzgünüz, yüklemeye çalıştığınız dosyaya izin verilmiyor (izin verilen uzantılar: %{authorized_extensions})."
@@ -4292,7 +4278,6 @@ tr_TR:
           <p>İyi eğlenceler ve <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'> yeni topluluğunuzu oluştururken</a></p> iyi şanslar!
   search_logs:
     graph_title: "Arama Sayısı"
-  joined: "Katıldı"
   discourse_push_notifications:
     popup:
       mentioned: '%{username}, "%{topic}" konusunda sizden bahsetti - %{site_title}'

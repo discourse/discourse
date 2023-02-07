@@ -385,8 +385,7 @@ export default function (options) {
     if (isInput || options.treatAsTextarea) {
       _autoCompletePopper && _autoCompletePopper.destroy();
       _autoCompletePopper = createPopper(me[0], div[0], {
-        placement: "bottom-start",
-        strategy: "fixed",
+        placement: `${Site.currentProp("mobileView") ? "top" : "bottom"}-start`,
         modifiers: [
           {
             name: "offset",

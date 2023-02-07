@@ -81,6 +81,7 @@ export default Mixin.create({
       post,
     });
 
+    document.querySelector(".card-cloak")?.classList.remove("hidden");
     this.appEvents.trigger("user-card:show", { username });
     this._showCallback(username, $(target)).then((user) => {
       this.appEvents.trigger("user-card:after-show", { user });
@@ -217,7 +218,6 @@ export default Mixin.create({
           ],
         });
       } else {
-        document.querySelector(".card-cloak")?.classList.remove("hidden");
         this._popperReference = createPopper(target[0], this.element, {
           modifiers: [
             { name: "eventListeners", enabled: false },

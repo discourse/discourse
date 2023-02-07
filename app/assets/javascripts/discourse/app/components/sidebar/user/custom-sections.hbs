@@ -1,0 +1,33 @@
+<div class="sidebar-custom-sections">
+  {{#each this.currentUser.sidebarSections as |section|}}
+    <Sidebar::Section
+      @sectionName={{section.slug}}
+      @headerLinkText={{section.title}}
+      @collapsable={{true}}
+      @headerActions={{array
+        (hash
+          action=(action this.editSection section)
+          title=(i18n "sidebar.sections.custom.edit")
+        )
+      }}
+      @headerActionsIcon="pencil-alt"
+    >
+      {{#each section.links as |link|}}
+        <Sidebar::SectionLink
+          @linkName={{link.name}}
+          @href={{link.value}}
+          @target="_self"
+          @content={{link.name}}
+          @class={{link.class}}
+        />
+      {{/each}}
+    </Sidebar::Section>
+  {{/each}}
+
+  <DButton
+    @icon="plus"
+    @action={{action this.addSection}}
+    @class="btn-flat add-section"
+    @title="sidebar.sections.custom.add"
+  />
+</div>

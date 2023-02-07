@@ -6,6 +6,8 @@
 // Layout dimensions
 // --------------------------------------------------
 
+@use "sass:math";
+
 $small-width: 800px !default;
 $medium-width: 995px !default;
 $large-width: 1110px !default;
@@ -165,7 +167,7 @@ $box-shadow: (
 
 // Uses an approximation of sRGB blending, GAMMA=2 instead of GAMMA=2.2
 @function srgb-scale($foreground, $background, $percent) {
-  $ratio: ($percent / 100%);
+  $ratio: math.div($percent, 100%);
   $iratio: 1 - $ratio;
   $f_r2: red($foreground) * red($foreground);
   $f_g2: green($foreground) * green($foreground);

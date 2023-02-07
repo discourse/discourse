@@ -407,6 +407,8 @@ const User = RestModel.extend({
     });
   },
 
+  sidebarSections: alias("sidebar_sections"),
+
   sidebarTagNames: mapBy("sidebarTags", "name"),
   sidebarListDestination: readOnly("sidebar_list_destination"),
 

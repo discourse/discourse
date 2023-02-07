@@ -69,7 +69,9 @@ class CurrentUserSerializer < BasicUserSerializer
              :display_sidebar_tags,
              :sidebar_tags,
              :sidebar_category_ids,
-             :sidebar_list_destination
+             :sidebar_list_destination,
+             :sidebar_sections,
+             :custom_sidebar_sections_enabled
 
   delegate :user_stat, to: :object, private: true
   delegate :any_posts, :draft_count, :pending_posts_count, :read_faq?, to: :user_stat
@@ -305,6 +307,13 @@ class CurrentUserSerializer < BasicUserSerializer
       object.in_any_groups?(
         SiteSetting.enable_experimental_topic_timeline_groups.split("|").map(&:to_i),
       )
+    else
+      false
+    end
+  end
+  def custom_sidebar_sections_enabled
+    if SiteSetting.enable_custom_sidebar_sections.present?
+      object.in_any_groups?(SiteSetting.enable_custom_sidebar_sections_map)
     else
       false
     end

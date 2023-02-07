@@ -6,6 +6,7 @@ module Trashable
   included do
     default_scope { where(deleted_at: nil) }
     scope :with_deleted, -> { unscope(where: :deleted_at) }
+    scope :only_deleted, -> { with_deleted.where.not(deleted_at: nil) }
 
     belongs_to :deleted_by, class_name: "User"
   end
