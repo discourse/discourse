@@ -14,6 +14,32 @@ export default class FormTemplateForm extends Component {
   @tracked templateContent = this.args.model?.template || "";
   isEditing = this.args.model?.id ? true : false;
   templateName = this.args.model?.name;
+  quickInsertFields = [
+    {
+      type: "checkbox",
+      icon: "check-square",
+    },
+    {
+      type: "input",
+      icon: "grip-lines",
+    },
+    {
+      type: "textarea",
+      icon: "align-left",
+    },
+    {
+      type: "dropdown",
+      icon: "chevron-circle-down",
+    },
+    {
+      type: "upload",
+      icon: "cloud-upload-alt",
+    },
+    {
+      type: "multiselect",
+      icon: "bullseye",
+    },
+  ];
 
   @action
   onSubmit() {

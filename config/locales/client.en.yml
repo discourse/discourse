@@ -5523,11 +5523,11 @@ en:
         quick_insert_fields:
           add_new_field: "Add"
           checkbox: "Checkbox"
-          short_answer: "Short answer"
-          long_answer: "Long answer"
+          input: "Short answer"
+          textarea: "Long answer"
           dropdown: "Dropdown"
           upload: "Upload a file"
-          multiple_choice: "Multiple choice"
+          multiselect: "Multiple choice"
       impersonate:
         title: "Impersonate"
         help: "Use this tool to impersonate a user account for debugging purposes. You will have to log out once finished."

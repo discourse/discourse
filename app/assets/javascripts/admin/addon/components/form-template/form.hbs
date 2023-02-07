@@ -14,48 +14,15 @@
     <span>
       {{I18n "admin.form_templates.quick_insert_fields.add_new_field"}}
     </span>
-    <DButton
-      @class="btn-flat btn-icon-text"
-      @icon="check-square"
-      @label="admin.form_templates.quick_insert_fields.checkbox"
-      @action={{this.onInsertField}}
-      @actionParam="checkbox"
-    />
-    <DButton
-      @class="btn-flat btn-icon-text"
-      @icon="grip-lines"
-      @label="admin.form_templates.quick_insert_fields.short_answer"
-      @action={{this.onInsertField}}
-      @actionParam="input"
-    />
-    <DButton
-      @class="btn-flat btn-icon-text"
-      @icon="align-left"
-      @label="admin.form_templates.quick_insert_fields.long_answer"
-      @action={{this.onInsertField}}
-      @actionParam="textarea"
-    />
-    <DButton
-      @class="btn-flat btn-icon-text"
-      @icon="chevron-circle-down"
-      @label="admin.form_templates.quick_insert_fields.dropdown"
-      @action={{this.onInsertField}}
-      @actionParam="dropdown"
-    />
-    <DButton
-      @class="btn-flat btn-icon-text"
-      @icon="cloud-upload-alt"
-      @label="admin.form_templates.quick_insert_fields.upload"
-      @action={{this.onInsertField}}
-      @actionParam="upload"
-    />
-    <DButton
-      @class="btn-flat btn-icon-text"
-      @icon="bullseye"
-      @label="admin.form_templates.quick_insert_fields.multiple_choice"
-      @action={{this.onInsertField}}
-      @actionParam="multiselect"
-    />
+    {{#each this.quickInsertFields as |field|}}
+      <DButton
+        @class="btn-flat btn-icon-text"
+        @icon={{field.icon}}
+        @label="admin.form_templates.quick_insert_fields.{{field.type}}"
+        @action={{this.onInsertField}}
+        @actionParam={{field.type}}
+      />
+    {{/each}}
   </div>
 
   <div class="control-group">
@@ -85,6 +52,5 @@
         @action={{this.onDelete}}
       />
     {{/if}}
-
   </div>
 </div>
