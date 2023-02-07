@@ -1520,8 +1520,6 @@ hy:
         topic_template_not_modified: "Դետալները գրանցել թեմայի մեջ և խմբագրել ձևանմուշը: "
       save_edit: "Պահել Խմբագրումը"
       overwrite_edit: "Վերասահմանել Խմբագրումը"
-      reply_original: "Պատասխանել Սկզբնական Թեմային"
-      reply_here: "Պատասխանել Այստեղ"
       reply: "Պատասխանել"
       cancel: "Չեղարկել"
       create_topic: "Ստեղծել Թեմա"

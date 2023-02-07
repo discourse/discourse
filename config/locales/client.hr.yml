@@ -2242,8 +2242,6 @@ hr:
         topic_template_not_modified: "Uređivanjem predloška teme dodajte detalje i pojedinosti svojoj temi."
       save_edit: "Spremi izmjenu"
       overwrite_edit: "Prebriši Uređivanje"
-      reply_original: "Odgovori na originalnu temu"
-      reply_here: "Odgovori ovdje"
       reply: "Odgovori"
       cancel: "Odustani"
       create_topic: "Pokreni temu"

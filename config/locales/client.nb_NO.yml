@@ -1838,8 +1838,6 @@ nb_NO:
         topic_template_not_modified: "Vennligst legg til detaljer og spesifikasjoner for emnet ditt ved å redigere emnemalen."
       save_edit: "Lagre endring"
       overwrite_edit: "Overskriv Rediger"
-      reply_original: "Svar på det opprinnelige emnet"
-      reply_here: "Svar her"
       reply: "Svar"
       cancel: "Avbryt"
       create_topic: "Opprett emne"

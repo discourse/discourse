@@ -1680,8 +1680,6 @@ ro:
         try_like: "Ai încercat butonul %{heart}?"
         category_missing: "Trebuie să alegi o categorie"
       save_edit: "Salvează editarea"
-      reply_original: "Răspunde la subiectul inițial"
-      reply_here: "Răspunde aici"
       reply: "Răspunde"
       cancel: "Anulează"
       create_topic: "Creează un subiect"

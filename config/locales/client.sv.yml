@@ -2133,8 +2133,6 @@ sv:
         topic_template_not_modified: "Lägg till detaljer och specifikationer till ditt ämne genom att redigera ämnesmallen."
       save_edit: "Spara ändring"
       overwrite_edit: "Överskriv redigering"
-      reply_original: "Svara på ursprungsämnet"
-      reply_here: "Svara här"
       reply: "Svara"
       cancel: "Avbryt"
       create_topic: "Skapa ämne"

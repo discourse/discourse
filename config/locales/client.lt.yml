@@ -1852,8 +1852,6 @@ lt:
         topic_template_not_modified: "Redaguodami temos šabloną, pridėkite prie temos išsamią informaciją ir specifiką."
       save_edit: "Išsaugoti pakeitimus"
       overwrite_edit: "Perrašyti Redaguoti"
-      reply_original: "Atsakyti į Originalią Temą"
-      reply_here: "Atsakyti"
       reply: "Atsakyti"
       cancel: "Atšaukti"
       create_topic: "Sukurti Temą"

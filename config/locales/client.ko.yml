@@ -1892,8 +1892,6 @@ ko:
         topic_template_not_modified: "주제 템플릿을 편집하여 주제에 상세 정보와 세부 사항을 추가하세요."
       save_edit: "편집 저장"
       overwrite_edit: "편집 덮어쓰기"
-      reply_original: "원래 주제에 댓글 달기"
-      reply_here: "여기에 댓글을 작성하세요"
       reply: "댓글 달기"
       cancel: "취소"
       create_topic: "주제 생성"

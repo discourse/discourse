@@ -2147,8 +2147,6 @@ nl:
         topic_template_not_modified: "Voeg details en specifieke informatie toe aan je topic door het topicsjabloon te bewerken."
       save_edit: "Bewerking opslaan"
       overwrite_edit: "Bewerking overschrijven"
-      reply_original: "Antwoorden op oorspronkelijke topic"
-      reply_here: "Hier antwoorden"
       reply: "Antwoorden"
       cancel: "Annuleren"
       create_topic: "Topic maken"

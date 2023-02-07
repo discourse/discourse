@@ -1928,8 +1928,6 @@ pt:
         topic_template_not_modified: "Adicione detalhes e especificações ao tópico, editando o modelo de tópico."
       save_edit: "Guardar Edição"
       overwrite_edit: "Guardar Edição"
-      reply_original: "Responder no Tópico Original"
-      reply_here: "Responda Aqui"
       reply: "Responder"
       cancel: "Cancelar"
       create_topic: "Criar Tópico"
