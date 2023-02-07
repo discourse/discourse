@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
 class SidebarUrl < ActiveRecord::Base
-  validates :icon, presence: true
-  validates :name, presence: true
-  validates :value, presence: true
+  validates :icon, presence: true, length: { maximum: 40 }
+  validates :name, presence: true, length: { maximum: 80 }
+  validates :value, presence: true, length: { maximum: 200 }
+
   validate :path_validator
 
   def path_validator
@@ -21,9 +22,9 @@ end
 # Table name: sidebar_urls
 #
 #  id         :bigint           not null, primary key
-#  name       :string           not null
-#  value      :string           not null
+#  name       :string(80)       not null
+#  value      :string(200)      not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
-#  icon       :string
+#  icon       :string(40)       not null
 #

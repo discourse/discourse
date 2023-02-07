@@ -26,7 +26,7 @@ class Section {
   }
 
   get validTitle() {
-    return !isEmpty(this.title);
+    return !isEmpty(this.title) && this.title.length <= 30;
   }
 
   get titleCssClass() {
@@ -61,7 +61,7 @@ class SectionLink {
   }
 
   get validIcon() {
-    return !isEmpty(this.icon);
+    return !isEmpty(this.icon) && this.icon.length <= 40;
   }
 
   get iconCssClass() {
@@ -69,7 +69,7 @@ class SectionLink {
   }
 
   get validName() {
-    return !isEmpty(this.name);
+    return !isEmpty(this.name) && this.name.length <= 80;
   }
 
   get nameCssClass() {
@@ -81,6 +81,7 @@ class SectionLink {
       !isEmpty(this.value) &&
       (this.value.startsWith(this.protocolAndHost) ||
         this.value.startsWith("/")) &&
+      this.value.length <= 200 &&
       this.path &&
       this.router.recognize(this.path).name !== "unknown"
     );
