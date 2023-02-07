@@ -166,7 +166,7 @@ it:
         disabled: "Archiviazione annullata %{when}"
       pinned:
         enabled: "Appuntato %{when}"
-        disabled: "Sbloccato%{when}"
+        disabled: "Sbloccato %{when}"
       pinned_globally:
         enabled: "Appuntato globalmente %{when}"
         disabled: "Sbloccato %{when}"
