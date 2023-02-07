@@ -62,14 +62,7 @@
   </div>
 
   <div class="control-group">
-    {{! TODO(@keegan): Switch to <AceEditor /> after fixing visibility issues }}
-    <Textarea
-      @value={{this.templateContents}}
-      placeholder={{i18n
-        "admin.form_templates.new_template_form.template.placeholder"
-      }}
-      name="template-contents"
-    />
+    <AceEditor @content={{this.templateContents}} @mode="yaml" />
   </div>
 
   <div class="footer-buttons">
