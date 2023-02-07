@@ -2043,8 +2043,6 @@ ja:
         topic_template_not_modified: "トピックテンプレートを編集して、トピックに詳細を追加してください。"
       save_edit: "編集内容を保存"
       overwrite_edit: "上書き編集"
-      reply_original: "オリジナルトピックへ返信"
-      reply_here: "ここに返信"
       reply: "返信"
       cancel: "キャンセル"
       create_topic: "トピックを作成"

@@ -236,9 +236,9 @@ export default Component.extend({
         this.set("view", DRAFT_CHANNEL_VIEW);
         this.appEvents.trigger("chat:float-toggled", false);
         return;
-      case "chat.channel.from-params":
+      case "chat.channel":
         return this._openChannel(
-          route.parent.params.channelId,
+          route.params.channelId,
           this._highlightCb(route.queryParams.messageId)
         );
       case "chat.channel.near-message":

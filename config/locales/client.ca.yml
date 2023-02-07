@@ -1603,8 +1603,6 @@ ca:
         topic_template_not_modified: "Afegiu detalls i especificacions al tema editant la plantilla."
       save_edit: "Desa l'edició"
       overwrite_edit: "Sobreescriu l'edició"
-      reply_original: "Respon en el tema original"
-      reply_here: "Respon aquí"
       reply: "Respon"
       cancel: "Cancel·la"
       create_topic: "Crea un tema"

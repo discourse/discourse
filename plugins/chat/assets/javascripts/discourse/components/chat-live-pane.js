@@ -574,6 +574,8 @@ export default Component.extend({
       return;
     }
 
+    this.set("targetMessageId", messageId);
+
     if (this.messageLookup[messageId]) {
       // We have the message rendered. highlight and scrollTo
       this.scrollToMessage(messageId, {
@@ -582,7 +584,6 @@ export default Component.extend({
         autoExpand: true,
       });
     } else {
-      this.set("targetMessageId", messageId);
       this.fetchMessages(this.chatChannel);
     }
   },

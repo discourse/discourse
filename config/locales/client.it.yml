@@ -166,7 +166,7 @@ it:
         disabled: "Archiviazione annullata %{when}"
       pinned:
         enabled: "Appuntato %{when}"
-        disabled: "Sbloccato%{when}"
+        disabled: "Sbloccato %{when}"
       pinned_globally:
         enabled: "Appuntato globalmente %{when}"
         disabled: "Sbloccato %{when}"
@@ -2135,8 +2135,6 @@ it:
         topic_template_not_modified: "Aggiungi dettagli e specificità al tuo argomento modificando il modello di argomento."
       save_edit: "Salva Modifiche"
       overwrite_edit: "Sovrascrivi modifica"
-      reply_original: "Rispondi all'Argomento Originale"
-      reply_here: "Rispondi Qui"
       reply: "Rispondi"
       cancel: "Annulla"
       create_topic: "Crea Argomento"

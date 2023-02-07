@@ -277,7 +277,7 @@ export default class Chat extends Service {
 
   async _openFoundChannelAtMessage(channel, messageId = null) {
     if (
-      (this.router.currentRouteName === "chat.channel.from-params" ||
+      (this.router.currentRouteName === "chat.channel" ||
         this.router.currentRouteName === "chat.channel.near-message") &&
       this.activeChannel?.id === channel.id
     ) {
@@ -300,10 +300,7 @@ export default class Chat extends Service {
           messageId
         );
       } else {
-        return this.router.transitionTo(
-          "chat.channel.from-params",
-          ...channel.routeModels
-        );
+        return this.router.transitionTo("chat.channel", ...channel.routeModels);
       }
     } else {
       this._fireOpenFloatAppEvent(channel, messageId);

@@ -2123,8 +2123,6 @@ tr_TR:
         topic_template_not_modified: "Lütfen konu şablonunu düzenleyerek daha fazla ayrıntı ekleyin."
       save_edit: "Düzenlemeyi Kaydet"
       overwrite_edit: "Düzenlemenin Üzerine Yaz"
-      reply_original: "Asıl Konuda yanıtla"
-      reply_here: "Buradan Yanıtla"
       reply: "Yanıtla"
       cancel: "İptal et"
       create_topic: "Konu Oluştur"

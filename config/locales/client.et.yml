@@ -1353,8 +1353,6 @@ et:
         category_missing: "Pead valima foorumi"
       save_edit: "Salvesta muudatused"
       overwrite_edit: "Kirjuta muutmine üle"
-      reply_original: "Vasta algsesse teemasse"
-      reply_here: "Vasta siin"
       reply: "Vasta"
       cancel: "Tühista"
       create_topic: "Loo teema"

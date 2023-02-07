@@ -164,7 +164,7 @@ RSpec.describe Stylesheet::Compiler do
 
       expect(css).to include("--header_background: #f8745c")
       expect(css).to include("--header_primary: #88af8e")
-      expect(css).to include("--header_background-rgb: 248,116,92")
+      expect(css).to include("--header_background-rgb: 248, 116, 92")
     end
 
     context "with a plugin" do

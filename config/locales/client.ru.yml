@@ -2353,8 +2353,6 @@ ru:
         topic_template_not_modified: "Впишите подробности темы в шаблон."
       save_edit: "Сохранить"
       overwrite_edit: "Перезаписать"
-      reply_original: "Ответить в первоначальной теме"
-      reply_here: "Ответить в текущей теме"
       reply: "Ответить"
       cancel: "Отмена"
       create_topic: "Создать тему"

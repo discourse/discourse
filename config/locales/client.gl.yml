@@ -1810,8 +1810,6 @@ gl:
         topic_template_not_modified: "Engada detalles e aspectos específicos ao tema editando o modelo de tema."
       save_edit: "Gardar a edición"
       overwrite_edit: "Sobrescribir a edición"
-      reply_original: "Responder no tema orixinal"
-      reply_here: "Responder aquí"
       reply: "Responder"
       cancel: "Cancelar"
       create_topic: "Crear tema"

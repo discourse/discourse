@@ -1937,8 +1937,6 @@ da:
         topic_template_not_modified: "Tilføj venligst detaljer og specifikationer til dit emne ved at redigere emneskabelonen."
       save_edit: "Gem ændringer"
       overwrite_edit: "Overskriv redigering"
-      reply_original: "Svar på det oprindelige emne"
-      reply_here: "Svar her"
       reply: "Svar"
       cancel: "Annuller"
       create_topic: "Opret emne"

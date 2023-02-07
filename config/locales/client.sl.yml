@@ -1819,8 +1819,6 @@ sl:
         topic_template_not_modified: "Dodajte podrobnosti in značilnosti v vašo temo tako da uredite predlogo teme."
       save_edit: "Shrani spremembe"
       overwrite_edit: "Prepiši spremembo"
-      reply_original: "Odgovori v izvorni temi"
-      reply_here: "Odgovori tu"
       reply: "Odgovori"
       cancel: "Prekliči"
       create_topic: "Objavi temo"

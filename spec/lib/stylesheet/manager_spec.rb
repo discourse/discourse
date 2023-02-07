@@ -680,8 +680,8 @@ RSpec.describe Stylesheet::Manager do
           manager: manager,
         ).compile(force: true)
 
-      expect(stylesheet).not_to include("--primary: #c00;")
-      expect(stylesheet).to include("--primary: #222;") # from base scheme
+      expect(stylesheet).not_to include("--primary: #CC0000;")
+      expect(stylesheet).to include("--primary: #222222;") # from base scheme
     end
 
     it "uses the correct scheme when a valid scheme id is used" do
@@ -726,7 +726,7 @@ RSpec.describe Stylesheet::Manager do
       stylesheet2 = builder2.compile
 
       expect(stylesheet).not_to eq(stylesheet2)
-      expect(stylesheet2).to include("--primary: #c00;")
+      expect(stylesheet2).to include("--primary: #CC0000;")
     end
 
     it "includes updated font definitions" do

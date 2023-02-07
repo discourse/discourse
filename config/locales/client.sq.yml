@@ -1025,8 +1025,6 @@ sq:
         title_missing: "Titulli është i nevojshëm"
         category_missing: "Duhet të zgjidhni një kategori"
       save_edit: "Ruani modifikimet"
-      reply_original: "Përgjigjuni temës origjinale"
-      reply_here: "Përgjigju këtu"
       reply: "Përgjigju"
       cancel: "Anulo"
       create_topic: "Krijo temën"

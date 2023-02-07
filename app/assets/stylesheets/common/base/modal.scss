@@ -760,3 +760,14 @@
     top: 21px;
   }
 }
+
+.json-editor-btn-delete {
+  @extend .btn-danger;
+  @extend .no-text;
+}
+
+.json-editor-btn-collapse {
+  @extend .no-text;
+  @extend .btn-flat;
+  @extend .btn-small;
+}

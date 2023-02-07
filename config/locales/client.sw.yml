@@ -1207,8 +1207,6 @@ sw:
         title_missing: "Kichwa cha habari ni muhimu"
         category_missing: "Ni sharti uchague kategoria"
       save_edit: "Hifadhi Uhariri"
-      reply_original: "Jibu kwenye Mada ya Kwanza"
-      reply_here: "Jibu hapa"
       reply: "Jibu"
       cancel: "Ghairi"
       create_topic: "Unda mada"

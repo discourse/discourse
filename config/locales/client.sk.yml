@@ -1280,8 +1280,6 @@ sk:
         title_missing: "Názov je povinný"
         category_missing: "Musíte vybrať kategóriu"
       save_edit: "Uložiť úpravy"
-      reply_original: "Odpovedať na pôvodnú tému"
-      reply_here: "Odpovedať tu"
       reply: "Odpovedať"
       cancel: "Zrušiť"
       create_topic: "Vytvoriť tému"

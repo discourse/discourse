@@ -1896,8 +1896,6 @@ vi:
         topic_template_not_modified: "Vui lòng thêm chi tiết và cụ thể cho chủ đề của bạn bằng cách chỉnh sửa mẫu chủ đề."
       save_edit: "Lưu chỉnh sửa"
       overwrite_edit: "Ghi đè Chỉnh sửa"
-      reply_original: "Trả lời cho bài viết gốc"
-      reply_here: "Trả lời đây "
       reply: "Trả lời "
       cancel: "Huỷ"
       create_topic: "Tạo chủ đề"

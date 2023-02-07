@@ -460,7 +460,7 @@ class ThemeField < ActiveRecord::Base
       else
         self.error = nil unless error.nil?
       end
-    rescue SassC::SyntaxError => e
+    rescue SassC::SyntaxError, SassC::NotRenderedError => e
       self.error = e.message unless self.destroyed?
     end
     self.compiler_version = Theme.compiler_version

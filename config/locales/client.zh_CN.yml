@@ -2043,8 +2043,6 @@ zh_CN:
         topic_template_not_modified: "请通过编辑话题模板为您的话题添加详细信息和细节。"
       save_edit: "保存编辑"
       overwrite_edit: "覆盖编辑"
-      reply_original: "回复原始话题"
-      reply_here: "在此回复"
       reply: "回复"
       cancel: "取消"
       create_topic: "创建话题"

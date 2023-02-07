@@ -1375,8 +1375,6 @@ th:
         tags_missing:
           other: "คุณต้องเลือกอย่างน้อย %{count} แท็ก"
       save_edit: "บันทึกการแก้ไข"
-      reply_original: "ตอบบนกระทู้ต้นฉบับ"
-      reply_here: "ตอบที่นี่"
       reply: "ตอบกลับ"
       cancel: "ยกเลิก"
       create_topic: "สร้างกระทู้"
