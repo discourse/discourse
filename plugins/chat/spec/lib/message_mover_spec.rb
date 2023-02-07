@@ -193,6 +193,33 @@ describe Chat::MessageMover do
           expect(new_thread.original_message).to eq(message4)
         end
       end
+
+      context "when multiple thread original messages are moved" do
+        it "works the same as when one is" do
+          message4 =
+            Fabricate(:chat_message, chat_channel: source_channel, message: "the fourth message")
+          message5 =
+            Fabricate(
+              :chat_message,
+              chat_channel: source_channel,
+              in_reply_to: message5,
+              message: "the fifth message",
+            )
+          other_thread =
+            Fabricate(:chat_thread, channel: source_channel, original_message: message4)
+          message4.update!(thread: other_thread)
+          message5.update!(thread: other_thread)
+          expect { move!([message1.id, message4.id]) }.to change { ChatThread.count }.by(2)
+
+          new_threads = ChatThread.order(:created_at).last(2)
+          expect(message3.reload.thread_id).to eq(new_threads.first.id)
+          expect(message5.reload.thread_id).to eq(new_threads.second.id)
+          expect(new_threads.first.channel).to eq(source_channel)
+          expect(new_threads.second.channel).to eq(source_channel)
+          expect(new_threads.first.original_message).to eq(message2)
+          expect(new_threads.second.original_message).to eq(message5)
+        end
+      end
     end
   end
 end
