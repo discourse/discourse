@@ -762,12 +762,12 @@
 }
 
 .json-editor-btn-delete {
-  @extend .btn-danger !optional;
-  @extend .no-text !optional;
+  @extend .btn-danger;
+  @extend .no-text;
 }
 
 .json-editor-btn-collapse {
-  @extend .no-text !optional;
-  @extend .btn-flat !optional;
-  @extend .btn-small !optional;
+  @extend .no-text;
+  @extend .btn-flat;
+  @extend .btn-small;
 }
