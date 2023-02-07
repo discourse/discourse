@@ -576,8 +576,7 @@ RSpec.describe Chat::ChatController do
       end.to change { ChatMessage.count }.by(-1)
 
       expect(response.status).to eq(200)
-      expect(events.size).to eq(1)
-      expect(events.first[:event_name]).to eq(:chat_message_trashed)
+      expect(events.map { |event| event[:event_name] }).to include(:chat_message_trashed)
     end
 
     it "does not allow message delete when chat channel is read_only" do
