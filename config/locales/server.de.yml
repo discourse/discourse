@@ -3124,14 +3124,6 @@ de:
     user_automatically_silenced:
       title: "Benutzer automatisch stummgeschaltet"
       subject_template: "Neuer Benutzer %{username} wurde wegen Community-Meldungen stummgeschaltet"
-      text_body_template: |
-        Dies ist eine automatische Nachricht.
-
-        Der neue Benutzer [%{username}](%{user_url}) wurde automatisch stummgeschaltet, weil mehrere Benutzer Beiträge von %{username} gemeldet haben.
-
-        Bitte [überprüfe die Meldungen](%{base_url}/admin/flags). Wenn %{username} fälschlich stummgeschaltet wurde, so klicke die „Stummschaltung aufheben“-Schaltfläche auf der [Administrationsseite dieses Benutzers](%{user_url}).
-
-        Der Schwellenwert kann über die Einstellung `silence_new_user` geändert werden.
     spam_post_blocked:
       title: "Spam-Beitrag blockiert"
       subject_template: "Beiträge des neuen Benutzers %{username} wegen mehrfacher Verlinkung blockiert"
@@ -3210,9 +3202,6 @@ de:
       one: "Achtung: Wir senden maximal %{count} E-Mail pro Tag. Überprüfe die Website, um möglicherweise zurückgehaltene E-Mails zu sehen."
       other: "Achtung: Wir senden maximal %{count} E-Mails pro Tag. Überprüfe die Website, um möglicherweise zurückgehaltene E-Mails zu sehen. PS: Danke, dass du so beliebt bist!"
     in_reply_to: "Als Antwort auf"
-    unsubscribe:
-      title: "Abbestellen"
-      description: "Nicht interessiert an diesen E-Mails? Kein Problem! Klicke unten, um sie sofort abzubestellen:"
     reply_by_email: "[Rufe das Thema auf](%{base_url}%{url}) oder antworte auf diese E-Mail, um zu antworten."
     reply_by_email_pm: "[Rufe die Nachricht auf](%{base_url}%{url}) oder antworte auf diese E-Mail, um %{participants} zu antworten."
     only_reply_by_email: "Antworte auf diese E-Mail, um zu antworten."
@@ -3509,7 +3498,6 @@ de:
       liked_received: "Erhaltene „Gefällt mir“"
       new_users: "Neue Benutzer"
       popular_topics: "Beliebte Themen"
-      follow_topic: "Diesem Thema folgen"
       join_the_discussion: "Mehr lesen"
       popular_posts: "Beliebte Beiträge"
       more_new: "Neu für dich"
@@ -3711,8 +3699,6 @@ de:
     welcome_message_invite_only: |
       ## [Willkommen bei %{title}](#welcome)
       Ein Konto ist erforderlich. Bitte frage ein existierendes Mitglied nach einer Einladung oder melde dich an, um fortzufahren.
-  deleted: "gelöscht"
-  image: "Bild"
   upload:
     edit_reason: "lokale Kopien von Bildern heruntergeladen"
     unauthorized: "Entschuldige, die Datei, die du hochladen möchtest, ist nicht erlaubt (erlaubte Dateiendungen sind: %{authorized_extensions})."
@@ -4337,7 +4323,6 @@ de:
           <p>Viel Spaß und viel Erfolg <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>beim Aufbau deiner neuen Community!</a></p>
   search_logs:
     graph_title: "Anzahl Suchen"
-  joined: "Beigetreten"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} hat dich erwähnt in „%{topic}“ – %{site_title}'

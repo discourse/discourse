@@ -28,12 +28,22 @@ acceptance("Acceptance | decorateCookedElement", function () {
         if (helper.getModel().post_number !== 1) {
           return;
         }
+        cooked.innerHTML =
+          "<div class='existing-wrapper'>Some existing content</div>";
+
+        // Create new wrapper element and append
         cooked.appendChild(
           helper.renderGlimmer(
             "div.glimmer-wrapper",
             hbs`<@data.component />`,
             { component: DemoComponent }
           )
+        );
+
+        // Append to existing element
+        helper.renderGlimmer(
+          cooked.querySelector(".existing-wrapper"),
+          hbs` with more content from glimmer`
         );
       });
     });
@@ -42,6 +52,12 @@ acceptance("Acceptance | decorateCookedElement", function () {
 
     assert.dom("div.glimmer-wrapper").exists();
     assert.dom("span.glimmer-component-content").exists();
+
+    assert.dom("div.existing-wrapper").exists();
+    assert
+      .dom("div.existing-wrapper")
+      .hasText("Some existing content with more content from glimmer");
+
     assert.deepEqual(DemoComponent.eventLog, ["created"]);
 
     await visit("/");

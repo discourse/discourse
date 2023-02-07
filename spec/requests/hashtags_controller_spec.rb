@@ -275,6 +275,8 @@ RSpec.describe HashtagsController do
 
             qux = Fabricate(:category_with_definition, slug: "qux")
             quxbar = Fabricate(:category_with_definition, slug: "bar", parent_category_id: qux.id)
+            quxbarbaz =
+              Fabricate(:category_with_definition, slug: "baz", parent_category_id: quxbar.id)
 
             invalid_slugs = [":"]
             child_slugs = %w[bar baz]

@@ -670,11 +670,6 @@ sk:
       profile: "Profil"
       mute: "Ignorovať"
       edit: "Upraviť nastavenia"
-      download_archive:
-        button_text: "Stiahnuť všetko"
-        confirm: "Si si istý, že si chceš uložiť svoje príspevky na disk?"
-        success: "Sťahovanie bolo spustené, o jeho ukončení budeš informovaný správou."
-        rate_limit_error: "Príspevky možu byť stiahnuté len raz za deň. Skús opäť zajtra prosím."
       new_private_message: "Nová správa"
       private_message: "Správa"
       private_messages: "Správy"
@@ -887,7 +882,6 @@ sk:
         primary: "Primárny e-mail"
         secondary: "Sekundárne e-maily"
         primary_label: "primárny"
-        resent_label: "email odoslaný"
         update_email: "Zmeniť email"
         no_secondary: "Žiadne sekundárne e-maily"
         ok: "Pošleme vám email pre potvrdenie"
@@ -1441,7 +1435,6 @@ sk:
         close_topics: "Uzavrieť tému"
         archive_topics: "Archivuj témy"
         move_messages_to_inbox: "Presuň do prijatej pošty"
-        notification_level: "Upozornenia..."
         choose_new_category: "Vyberte pre tému novú kategóriu:"
         selected:
           one: "Označíli ste <b>%{count}</b> tému."
@@ -1522,8 +1515,6 @@ sk:
       back_to_list: "Naspäť na zoznam tém"
       options: "Možnosti tém"
       show_links: "zobrazovať odkazy v tejto téme"
-      jump_reply_up: prejsť na predchádzajúcu odpoveď
-      jump_reply_down: prejsť na nasledujúcu odpoveď
       deleted: "Téma bola vymazaná"
       slow_mode_update:
         enable: "Zapnúť"
@@ -1605,7 +1596,6 @@ sk:
         unarchive: "Zruš archiváciu témy"
         archive: "Archívuj tému"
         reset_read: "Zrušiť načítané údaje"
-        make_public: "Spraviť verejnou témou..."
       feature:
         pin: "Pripni tému"
         unpin: "Odopni tému"
@@ -1808,8 +1798,6 @@ sk:
         revert_to_regular: "Odobrať farbu personálu"
         rebake: "Pregenerovať HTML"
         unhide: "Odokryť"
-        change_owner: "Zmeniť vlastníctvo..."
-        grant_badge: "Udeliť odznak..."
         lock_post: "Zamknúť príspevok"
         unlock_post: "Odblokovať príspevok"
         delete_topic: "odstrániť tému"
@@ -1931,7 +1919,6 @@ sk:
     flagging:
       title: "Ďakujeme, že pomáhate udržiavať slušnosť v našej komunite!"
       action: "Označ príspevok"
-      take_action: "Vykonať akciu..."
       take_action_options:
         default:
           title: "Vykonať akciu"
@@ -2245,7 +2232,6 @@ sk:
         save: "Uložiť"
         delete: "Vymazať"
         confirm_delete: "Ste si istý, že chcete zmazať túto skupinu štítkov?"
-        parent_tag_placeholder: "Nepovinné"
       topics:
         none:
           unread: "Nemáte žiadnu neprečítanú tému"
@@ -2261,10 +2247,6 @@ sk:
       back: "Späť"
       share: "Zdieľať"
       dismiss: "Zahodiť"
-    pause_notifications:
-      remaining: "%{remaining} zostáva"
-      options:
-        custom: "Vlastné"
     trust_levels:
       names:
         newuser: "nový používateľ"
@@ -2286,6 +2268,9 @@ sk:
       more: "Viac"
       all_categories: "Všetky kategórie"
       sections:
+        custom:
+          save: "Uložiť"
+          delete: "Odstrániť"
         about:
           header_link_text: "O stránke"
         messages:
@@ -2342,7 +2327,6 @@ sk:
         latest_version: "Najnovšie"
         new_features:
           dismiss: "Zahodiť"
-          learn_more: "Zistiť viac"
         last_checked: "Naposledy overené"
         refresh_problems: "Obnoviť"
         no_problems: "Nenašli sa žiadne problémy."
@@ -2431,7 +2415,6 @@ sk:
         user: "Používateľ"
         title: "API"
         created: Vytvorené
-        never_used: (nikdy)
         generate: "Generovať"
         revoke: "Zrušiť"
         all_users: "Všetci používatelia"
@@ -2853,7 +2836,6 @@ sk:
         staged: "Dočasný?"
         show_admin_profile: "Admin"
         show_public_profile: "Ukázať verejný profil"
-        impersonate: "Privlastniť"
         ip_lookup: "Vyhľadávanie IP"
         log_out: "Odhlásiť sa"
         logged_out: "Používateľ bol odhlásený na všetkých zariadeniach"

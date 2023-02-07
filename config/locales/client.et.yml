@@ -711,11 +711,6 @@ et:
       profile: "Profiil"
       mute: "Vaigista"
       edit: "Muuda Eelistusi"
-      download_archive:
-        button_text: "Laadi kõik alla"
-        confirm: "Oled kindel, et soovid enda postitused alla laadida?"
-        success: "Allalaadimine käivitatud. Protsessi lõppemisel saadetakse Sulle teade."
-        rate_limit_error: "Postitusi saab alla laadida üks kord ööpäevas. Palun proovi homme uuesti."
       new_private_message: "Uus sõnum"
       private_message: "Sõnum"
       private_messages: "Sõnumid"
@@ -948,7 +943,6 @@ et:
         primary: "Peamine e-post"
         secondary: "Teine e-post"
         primary_label: "primaarne"
-        resent_label: "meil saadetud"
         update_email: "Muuda meiliaadressi"
         no_secondary: "Teist e-posti pole"
         instructions: "Ei näidata avalikult."
@@ -1572,11 +1566,9 @@ et:
         dismiss_new: "Ignoreeri uusi"
         toggle: "lülita teemade massiline ära märkimine ümber"
         actions: "Masstoimingud"
-        change_category: "Määra kategooria..."
         close_topics: "Sulge Teemad"
         archive_topics: "Arhiveeri Teemad"
         move_messages_to_inbox: "Liiguta sisendkausta"
-        notification_level: "Teavitus..."
         change_notification_level: "Muuda teavituste taset"
         choose_new_category: "Vali teemadele uus foorum:"
         selected:
@@ -1660,8 +1652,6 @@ et:
       options: "Teema Suvandid"
       show_links: "näita viiteid selles teemas"
       unread_indicator: "Ükski liige pole veel selle teema viimast postitust lugenud."
-      jump_reply_up: hüppa varasema vastuse juurde
-      jump_reply_down: hüppa hilisema vastuse juurde
       deleted: "See teema on kustutatud"
       slow_mode_update:
         title: "Aeglane režiim"
@@ -1774,7 +1764,6 @@ et:
         unarchive: "Taasta teema arhiivist"
         archive: "Arhiveeri teema"
         reset_read: "Nulli andmed teema lugemise kohta"
-        make_public: "Loo avalik teema..."
         make_private: "Loo isiklik sõnum"
       feature:
         pin: "Tõsta teema esile"
@@ -2013,8 +2002,6 @@ et:
         revert_to_regular: "Eemalda meeskonna värv"
         rebake: "Rekonstrueeri HTML"
         unhide: "Too nähtavale"
-        change_owner: "Omanikuvahetus..."
-        grant_badge: "Anna märgis..."
         lock_post: "Lukusta postitus"
         delete_topic: "kustuta teema"
       actions:
@@ -2191,7 +2178,6 @@ et:
     flagging:
       title: "Täname, et aitad meie kogukonna viisakust säilitada!"
       action: "Tähista postitus"
-      take_action: "Tegutse..."
       take_action_options:
         default:
           title: "Tegutse"
@@ -2491,7 +2477,6 @@ et:
         save: "Salvesta"
         delete: "Kustuta"
         confirm_delete: "Oled kindel, et soovid selle siltide grupi kustutada?"
-        parent_tag_placeholder: "Valikuline"
       topics:
         none:
           unread: "Sul ei ole lugemata teemasid."
@@ -2512,12 +2497,10 @@ et:
     safe_mode:
       enabled: "Kaitstud režiim on aktiivne, väljumiseks sulge see brauseri aken."
     pause_notifications:
-      remaining: "%{remaining} jäänud"
       options:
         half_hour: "30 minutit"
         one_hour: "1 tund"
         two_hours: "2 tundi"
-        custom: "Individuaalne"
     trust_levels:
       names:
         newuser: "uus kasutaja"
@@ -2535,6 +2518,9 @@ et:
       more: "Veel"
       all_categories: "Kõik foorumid"
       sections:
+        custom:
+          save: "Salvesta"
+          delete: "Kustuta"
         about:
           header_link_text: "Teave"
         messages:
@@ -2594,7 +2580,6 @@ et:
         latest_version: "Viimased"
         new_features:
           dismiss: "Ignoreeri"
-          learn_more: "Uuri veel"
         last_checked: "Viimati kontrollitud"
         refresh_problems: "Värskenda"
         no_problems: "Probleeme ei tuvastatud."
@@ -2691,7 +2676,6 @@ et:
         user: "Kasutaja"
         title: "API"
         created: Loodud
-        never_used: (mitte kunagi)
         generate: "Genereeri"
         revoke: "Tühista "
         all_users: "Kõik kasutajad"
@@ -3213,7 +3197,6 @@ et:
         staged: "Ettevalmistamisel?"
         show_admin_profile: "Admin"
         show_public_profile: "Näita avalikku profiili"
-        impersonate: "Kehasta"
         action_logs: "Toimingute logi"
         ip_lookup: "IP otsimine"
         log_out: "Logi välja"

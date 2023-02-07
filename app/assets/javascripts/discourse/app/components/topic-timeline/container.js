@@ -8,6 +8,7 @@ import { inject as service } from "@ember/service";
 import { bind, debounce } from "discourse-common/utils/decorators";
 import { actionDescriptionHtml } from "discourse/widgets/post-small-action";
 import domUtils from "discourse-common/utils/dom-utils";
+import { headerOffset } from "discourse/lib/offset-calculator";
 
 export const SCROLLER_HEIGHT = 50;
 const MIN_SCROLLAREA_HEIGHT = 170;
@@ -17,6 +18,7 @@ const LAST_READ_HEIGHT = 20;
 export default class TopicTimelineScrollArea extends Component {
   @service appEvents;
   @service siteSettings;
+  @service currentUser;
 
   @tracked showButton = false;
   @tracked current;
@@ -35,6 +37,8 @@ export default class TopicTimelineScrollArea extends Component {
   @tracked dragging = false;
   @tracked excerpt = "";
 
+  intersectionObserver = null;
+
   constructor() {
     super(...arguments);
 
@@ -48,7 +52,29 @@ export default class TopicTimelineScrollArea extends Component {
       this.appEvents.on("post-stream:posted", this.calculatePosition);
     }
 
+    this.intersectionObserver = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        const bounds = entry.boundingClientRect;
+
+        if (entry.target.id === "topic-bottom") {
+          this.topicBottom = bounds.y + window.scrollY;
+        } else {
+          this.topicTop = bounds.y + window.scrollY;
+        }
+      }
+    });
+
+    const elements = [
+      document.querySelector(".container.posts"),
+      document.querySelector("#topic-bottom"),
+    ];
+
+    for (let i = 0; i < elements.length; i++) {
+      this.intersectionObserver.observe(elements[i]);
+    }
+
     this.calculatePosition();
+    this.dockCheck();
   }
 
   get displayTimeLineScrollArea() {
@@ -269,11 +295,46 @@ export default class TopicTimelineScrollArea extends Component {
     this.current = e.postIndex;
     this.percentage = e.percent;
     this.calculatePosition();
+    this.dockCheck();
   }
 
   @action
   goBack() {
     this.args.jumpToIndex(this.lastRead);
+  }
+
+  dockCheck() {
+    const timeline = document.querySelector(".timeline-container");
+    const timelineHeight = (timeline && timeline.offsetHeight) || 400;
+
+    const prevDockAt = this.dockAt;
+    const positionTop = headerOffset() + window.pageYOffset;
+    const currentPosition = positionTop + timelineHeight;
+
+    this.dockBottom = false;
+    if (positionTop < this.topicTop) {
+      this.dockAt = parseInt(this.topicTop, 10);
+    } else if (currentPosition > this.topicBottom) {
+      this.dockAt = parseInt(this.topicBottom - timelineHeight, 10);
+      this.dockBottom = true;
+      if (this.dockAt < 0) {
+        this.dockAt = 0;
+      }
+    } else {
+      this.dockAt = null;
+    }
+
+    if (this.dockAt !== prevDockAt) {
+      if (this.dockAt) {
+        this.args.setDocked(true);
+        if (this.dockBottom) {
+          this.args.setDockedBottom(true);
+        }
+      } else {
+        this.args.setDocked(false);
+        this.args.setDockedBottom(false);
+      }
+    }
   }
 
   commit() {
@@ -298,6 +359,9 @@ export default class TopicTimelineScrollArea extends Component {
 
   willDestroy() {
     if (!this.args.mobileView) {
+      this.intersectionObserver?.disconnect();
+      this.intersectionObserver = null;
+
       this.appEvents.off("composer:opened", this.calculatePosition);
       this.appEvents.off("composer:resized", this.calculatePosition);
       this.appEvents.off("composer:closed", this.calculatePosition);

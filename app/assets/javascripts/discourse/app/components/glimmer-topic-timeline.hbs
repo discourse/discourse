@@ -1,8 +1,8 @@
 <div
-  class={{concat "timeline-container " this.classes}}
+  class={{concat-class "timeline-container" this.classes}}
   {{did-insert this.addShowClass}}
 >
-  <div class="topic-timeline">
+  <div class="topic-timeline" {{did-insert this.addUserTip}}>
     <TopicTimeline::Container
       @model={{@model}}
       @enteredIndex={{this.enteredIndex}}
@@ -13,7 +13,6 @@
       @jumpToPostPrompt={{@jumpToPostPrompt}}
       @fullscreen={{@fullscreen}}
       @mobileView={{@mobileView}}
-      @currentUser={{this.currentUser}}
       @toggleMultiSelect={{@toggleMultiSelect}}
       @showTopicSlowModeUpdate={{@showTopicSlowModeUpdate}}
       @deleteTopic={{@deleteTopic}}
@@ -28,6 +27,8 @@
       @convertToPublicTopic={{@convertToPublicTopic}}
       @convertToPrivateMessage={{@convertToPrivateMessage}}
       @replyToPost={{@replyToPost}}
+      @setDocked={{this.setDocked}}
+      @setDockedBottom={{this.setDockedBottom}}
     />
   </div>
 </div>

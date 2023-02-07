@@ -337,7 +337,7 @@ class ThemeField < ActiveRecord::Base
   end
 
   def self.html_fields
-    @html_fields ||= %w[body_tag head_tag header footer after_header]
+    @html_fields ||= %w[body_tag head_tag header footer after_header embedded_header]
   end
 
   def self.scss_fields

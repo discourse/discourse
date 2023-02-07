@@ -567,10 +567,17 @@ RSpec.describe Chat::ChatController do
     it "Allows admin to delete others' messages" do
       sign_in(admin)
 
-      expect { delete "/chat/#{chat_channel.id}/#{ChatMessage.last.id}.json" }.to change {
-        ChatMessage.count
-      }.by(-1)
+      events = nil
+      expect do
+        events =
+          DiscourseEvent.track_events do
+            delete "/chat/#{chat_channel.id}/#{ChatMessage.last.id}.json"
+          end
+      end.to change { ChatMessage.count }.by(-1)
+
       expect(response.status).to eq(200)
+      expect(events.size).to eq(1)
+      expect(events.first[:event_name]).to eq(:chat_message_trashed)
     end
 
     it "does not allow message delete when chat channel is read_only" do
@@ -611,7 +618,7 @@ RSpec.describe Chat::ChatController do
     end
 
     before do
-      ChatMessage.create(user: user, message: "this is a message", chat_channel: chat_channel)
+      ChatMessage.create!(user: user, message: "this is a message", chat_channel: chat_channel)
     end
 
     describe "for category" do

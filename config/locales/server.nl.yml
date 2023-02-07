@@ -3123,14 +3123,6 @@ nl:
     user_automatically_silenced:
       title: "Gebruiker automatisch gedempt"
       subject_template: "Nieuwe gebruiker %{username} gedempt wegens markeringen door community"
-      text_body_template: |
-        Dit is een automatisch bericht.
-
-        De nieuwe gebruiker [%{username}](%{user_url}) is automatisch gedempt, omdat meerdere gebruikers een of meer berichten van %{username} hebben gemarkeerd.
-
-        [Beoordeel de markeringen](%{base_url}/admin/flags). Als %{username} ten onrechte is gedempt, klik dan op de knop voor opheffen van het dempen op [de beheerpagina van deze gebruiker](%{user_url}).
-
-        Deze drempel kan worden gewijzigd via de 'silence_new_user'-website-instellingen.
     spam_post_blocked:
       title: "Spambericht geblokkeerd"
       subject_template: "Berichten van nieuwe gebruiker %{username} geblokkeerd vanwege herhaalde links"
@@ -3209,9 +3201,6 @@ nl:
       one: "Let op: we sturen maximaal %{count} e-mail per dag. Kijk op de site om te zien welke mogelijk worden tegengehouden."
       other: "Let op: we sturen maximaal %{count} e-mails per dag. Kijk op de site om te zien welke mogelijk worden tegengehouden."
     in_reply_to: "In antwoord op"
-    unsubscribe:
-      title: "Uitschrijven"
-      description: "Niet geïnteresseerd in deze e-mails? Geen probleem! Klik hieronder om direct uitgeschreven te worden:"
     reply_by_email: "[Bezoek het topic](%{base_url}%{url}) of beantwoord deze e-mail om te reageren."
     reply_by_email_pm: "[Bezoek het bericht](%{base_url}%{url}) of beantwoord deze e-mail om op %{participants} te reageren."
     only_reply_by_email: "Beantwoord deze e-mail om te reageren."
@@ -3508,7 +3497,6 @@ nl:
       liked_received: "Ontvangen likes"
       new_users: "Nieuwe gebruikers"
       popular_topics: "Populaire topics"
-      follow_topic: "Dit topic volgen"
       join_the_discussion: "Meer lezen"
       popular_posts: "Populaire berichten"
       more_new: "Nieuw voor u"
@@ -3716,8 +3704,6 @@ nl:
     welcome_message_invite_only: |
       ## [Welkom bij %{title}](#welkom)
       Een account is vereist. Vraag een bestaand lid om een uitnodiging of meld je aan om verder te gaan.
-  deleted: "verwijderd"
-  image: "afbeelding"
   upload:
     edit_reason: "lokale kopieën van afbeeldingen gedownload"
     unauthorized: "Sorry, het bestand dat je probeert te uploaden is niet toegestaan (toegestane extensies: %{authorized_extensions})."
@@ -4342,7 +4328,6 @@ nl:
           <p>Veel plezier en succes met het <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>bouwen van je nieuwe community!</a></p>
   search_logs:
     graph_title: "Aantal zoekopdrachten"
-  joined: "Lid sinds"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} heeft je genoemd in ''%{topic}'' - %{site_title}'

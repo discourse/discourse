@@ -1427,9 +1427,6 @@ ro:
   user_notifications:
     previous_discussion: "Răspunsurile precedente"
     in_reply_to: "Ca răspuns la"
-    unsubscribe:
-      title: "Dezabonare"
-      description: "Nu ești interesat în a primi aceste email-uri? Nicio problemă! Fă click dedesubt pentru a te dezabona imediat:"
     reply_by_email: "[Vizitează subiect](%{base_url}%{url}) sau dă reply la acest email pentru a răspunde."
     only_reply_by_email: "Dă reply la acest email pentru a răspunde."
     visit_link_to_respond: "[Vizitează subiect](%{base_url}%{url}) pentru a răspunde."
@@ -1610,7 +1607,6 @@ ro:
       liked_received: "Aprecieri primite"
       new_users: "Utilizatori noi"
       popular_topics: "Subiecte notorii"
-      follow_topic: "Urmărește acest subiect"
       join_the_discussion: "Citește mai mult"
       popular_posts: "Postări notorii"
       unsubscribe: "Acest rezumat este transmis de pe %{site_link} când a trecut ceva vreme de când nu te-am mai văzut. Poți schimba %{email_preferences_link} sau, pentru a te dezabona, %{unsubscribe_link}"
@@ -1679,8 +1675,6 @@ ro:
     see_more: "Mai multe"
     search_title: "Caută în site"
     search_button: "Caută"
-  deleted: "șters"
-  image: "imagine"
   upload:
     edit_reason: "copii locale ale imaginilor descărcate"
     unauthorized: "Ne pare rău, fișierul pe care-l încerci să-l încarci nu este autorizat (extensii autorizate: %{authorized_extensions})."
@@ -2062,7 +2056,6 @@ ro:
         description: "Aproape ai încheiat ! Hai să invităm câțiva prieteni să te ajute <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>cu demararea comunității </a> prin discuții și răspunsuri interesante."
       finished:
         title: "Discourse-ul tău e gata!"
-  joined: "Înscris"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} te-a menționat în discuția "%{topic}" - %{site_title}'

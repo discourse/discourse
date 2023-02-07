@@ -2,6 +2,7 @@ import templateOnly from "@ember/component/template-only";
 import { setComponentTemplate } from "@ember/component";
 import { tracked } from "@glimmer/tracking";
 import { assert } from "@ember/debug";
+import { createWidgetFrom } from "discourse/widgets/widget";
 
 /*
 
@@ -78,39 +79,48 @@ export default class RenderGlimmer {
   /**
    * Create a RenderGlimmer instance
    * @param widget - the widget instance which is rendering this content
-   * @param tagName - tagName for the wrapper element (e.g. `div.my-class`)
+   * @param renderInto - a string describing a new wrapper element (e.g. `div.my-class`),
+   *  or an existing HTML element to append content into.
    * @param template - a glimmer template compiled via ember-cli-htmlbars
    * @param data - will be made available at `@data` in your template
    */
-  constructor(widget, tagName, template, data) {
+  constructor(widget, renderInto, template, data) {
     assert(
       "`template` should be a template compiled via `ember-cli-htmlbars`",
       template.name === "factory"
     );
-    this.tagName = tagName;
-    this.widget = widget;
+    this.renderInto = renderInto;
+    if (widget) {
+      this.widget = widget;
+    }
     this.template = template;
     this.data = data;
   }
 
   init() {
-    const [type, ...classNames] = this.tagName.split(".");
-    this.element = document.createElement(type);
-    this.element.classList.add(...classNames);
+    if (this.renderInto instanceof Element) {
+      this.element = this.renderInto;
+    } else {
+      const [type, ...classNames] = this.renderInto.split(".");
+      this.element = document.createElement(type);
+      this.element.classList.add(...classNames);
+    }
     this.connectComponent();
     return this.element;
   }
 
   destroy() {
     if (this._componentInfo) {
-      this.widget._findView().unmountChildComponent(this._componentInfo);
+      this.parentMountWidgetComponent.unmountChildComponent(
+        this._componentInfo
+      );
     }
   }
 
   update(prev) {
     if (
       prev.template.__id !== this.template.__id ||
-      prev.tagName !== this.tagName
+      prev.renderInto !== this.renderInto
     ) {
       // Totally different component, but the widget framework guessed it was the
       // same widget. Destroy old component and re-init the new one.
@@ -127,7 +137,7 @@ export default class RenderGlimmer {
   }
 
   connectComponent() {
-    const { element, template, widget } = this;
+    const { element, template } = this;
 
     const component = templateOnly();
     component.name = "Widgets/RenderGlimmer";
@@ -138,9 +148,39 @@ export default class RenderGlimmer {
       component,
       @tracked data: this.data,
     };
-    const parentMountWidgetComponent = widget._findView();
-    parentMountWidgetComponent.mountChildComponent(this._componentInfo);
+
+    this.parentMountWidgetComponent.mountChildComponent(this._componentInfo);
+  }
+
+  get parentMountWidgetComponent() {
+    return this.widget?._findView() || this._emberView;
   }
 }
 
 RenderGlimmer.prototype.type = "Widget";
+
+/**
+ * Define a widget shim which renders a Glimmer template. Designed for incrementally migrating
+ * a widget-based UI to Glimmer. Widget attrs will be made available to your template at `@data`.
+ * For more details, see documentation for the RenderGlimmer class.
+ * @param name - the widget's name (which can then be used in `.attach` elsewhere)
+ * @param tagName - a string describing a new wrapper element (e.g. `div.my-class`)
+ * @param template - a glimmer template compiled via ember-cli-htmlbars
+ */
+export function registerWidgetShim(name, tagName, template) {
+  const RenderGlimmerShim = class MyClass extends RenderGlimmer {
+    constructor(attrs) {
+      super(null, tagName, template, attrs);
+      return this;
+    }
+
+    get widget() {
+      return this.parentWidget;
+    }
+
+    didRenderWidget() {}
+    willRerenderWidget() {}
+  };
+
+  createWidgetFrom(RenderGlimmerShim, name, {});
+}
