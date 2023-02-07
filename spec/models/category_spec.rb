@@ -7,6 +7,12 @@ RSpec.describe Category do
   it { is_expected.to validate_presence_of :user_id }
   it { is_expected.to validate_presence_of :name }
 
+  it do
+    is_expected.to validate_numericality_of(:default_slow_mode_seconds).is_greater_than(
+      0,
+    ).only_integer
+  end
+
   it "validates uniqueness of name" do
     Fabricate(:category_with_definition)
     is_expected.to validate_uniqueness_of(:name).scoped_to(:parent_category_id).case_insensitive
