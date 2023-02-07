@@ -411,7 +411,7 @@ module("Integration | Component | Widget | base", function (hooks) {
         result.push(
           h(
             "div",
-            attrs.array.map((val) => h(`span.val.${val}`, val))
+            attrs.array.map((val) => h(`span.val.${val}`, {key: val}, val))
           )
         );
         return result;
@@ -433,16 +433,16 @@ module("Integration | Component | Widget | base", function (hooks) {
     );
     const elementOneBefore = startElements[0];
 
-    array.unshift("PrependedElement");
+    array.unshift("PrependedElementOne", "PrependedElementTwo", "PrependedElementThree");
 
     await click(".rerender");
 
     const endElements = Array.from(document.querySelectorAll("span.val"));
     assert.deepEqual(
       endElements.map((e) => e.innerText),
-      ["PrependedElement", "ElementOne", "ElementTwo"]
+      ["PrependedElementOne", "PrependedElementTwo", "PrependedElementThree", "ElementOne", "ElementTwo"]
     );
-    const elementOneAfter = endElements[1];
+    const elementOneAfter = endElements[3];
 
     assert.strictEqual(elementOneBefore, elementOneAfter);
   });
