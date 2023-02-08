@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "FileUtils"
+require "fileutils"
 
 task "documentation" do
   generate_chat_documentation
