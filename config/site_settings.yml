@@ -2086,13 +2086,10 @@ developer:
   include_associated_account_ids:
     default: false
     hidden: true
-  enable_experimental_topic_timeline_groups:
+  enable_experimental_topic_timeline:
     client: true
-    type: group_list
-    list_type: compact
-    default: ""
-    allow_any: false
-    refresh: true
+    default: false
+    hidden: true
 
 navigation:
   navigation_menu:
