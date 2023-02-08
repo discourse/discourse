@@ -37,6 +37,14 @@
       />
     {{/if}}
 
+    {{#if this.messageCapabilities.hasThread}}
+      <DButton
+        @class="btn-flat chat-message-thread-btn"
+        @action={{this.messageActions.showThread}}
+        @icon="puzzle-piece"
+      />
+    {{/if}}
+
     {{#if this.secondaryButtons.length}}
       <DropdownSelectBox
         @class="more-buttons"

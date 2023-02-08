@@ -1,0 +1,8 @@
+.chat-thread-pane {
+  background-color: #aee6bd;
+  display: none;
+
+  &--active-thread {
+    display: block;
+  }
+}

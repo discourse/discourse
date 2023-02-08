@@ -17,7 +17,16 @@
       <ChannelsList />
     {{/if}}
 
-    <div id="main-chat-outlet">
+    <div
+      id="main-chat-outlet"
+      class={{concat-class
+        "main-chat-outlet"
+        (if
+          this.chatStateManager.isSidePanelExpanded
+          "main-chat-outlet--side-panel-expanded"
+        )
+      }}
+    >
       {{outlet}}
     </div>
   </div>

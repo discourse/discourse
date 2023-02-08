@@ -1,0 +1,7 @@
+.chat-side-panel {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  box-sizing: border-box;
+  border-left: 1px solid var(--primary-medium);
+}

@@ -1,0 +1,34 @@
+<div class="chat-thread">
+  <div class="chat-thread__header">
+    <div class="chat-thread__info" id="info-desktop">
+      <div class="chat-thread__title">
+        <h2>{{this.title}}</h2>
+
+        <LinkTo
+          class="chat-thread__close"
+          @route="chat.channel"
+          @models={{this.chat.activeChannel.routeModels}}
+        >
+          {{d-icon "times"}}
+        </LinkTo>
+      </div>
+
+      <p class="chat-thread__om">
+        {{replace-emoji this.thread.original_message.excerpt}}
+      </p>
+
+      <div class="chat-thread__op">
+        <ChatMessageAvatar
+          class="chat-thread__op-avatar"
+          @message={{this.thread.original_message}}
+        />
+        <span
+          class="chat-thread__op-username"
+        >{{this.thread.original_message_user.username}}</span>
+      </div>
+
+      <div class="chat-thread__messages">
+      </div>
+    </div>
+  </div>
+</div>

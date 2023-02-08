@@ -3,6 +3,7 @@ import { inject as service } from "@ember/service";
 
 export default class ChatController extends Controller {
   @service chat;
+  @service chatStateManager;
 
   get shouldUseChatSidebar() {
     if (this.site.mobileView) {
