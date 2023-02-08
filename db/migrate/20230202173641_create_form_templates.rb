@@ -3,8 +3,8 @@
 class CreateFormTemplates < ActiveRecord::Migration[7.0]
   def change
     create_table :form_templates do |t|
-      t.string :name, null: false
-      t.text :template, null: false
+      t.string :name, null: false, limit: 100
+      t.text :template, null: false, limit: 2000
 
       t.timestamps null: false
     end
