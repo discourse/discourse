@@ -34,6 +34,9 @@ module Chat
     # whatever reason a key isn’t found in the current context, then Ruby will
     # raise an exception when the method is called.
     #
+    # Regarding contract classes, they have automatically {ActiveModel} modules
+    # included so all the {ActiveModel} API is available.
+    #
     # @example An example from the {TrashChannel} service
     #   class TrashChannel
     #     include Base
