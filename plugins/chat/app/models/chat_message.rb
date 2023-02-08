@@ -22,7 +22,7 @@ class ChatMessage < ActiveRecord::Base
   # TODO (martin) Remove this when we drop the ChatUpload table
   has_many :chat_uploads, dependent: :destroy
   has_one :chat_webhook_event, dependent: :destroy
-  has_one :chat_mention, dependent: :destroy
+  has_many :chat_mentions, dependent: :destroy
 
   scope :in_public_channel,
         -> {
