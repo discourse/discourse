@@ -201,6 +201,7 @@ describe Jobs::AutoJoinChannelBatch do
 
   def assert_users_follows_channel(channel, users)
     new_memberships = UserChatChannelMembership.where(user: users, chat_channel: channel)
+    expect(new_memberships.length).to eq(users.length)
     expect(new_memberships.all?(&:following)).to eq(true)
   end
 
