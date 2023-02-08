@@ -141,7 +141,7 @@ export default Controller.extend({
     const model = this.model;
     const title = I18n.t("admin.groups.delete_confirm", { group: model.name });
 
-    let membersWarning = model.members.length
+    const membersWarning = model.members.length
       ? `<p>
           ${iconHTML("users")}
           ${I18n.t("admin.groups.delete_details", {
@@ -150,7 +150,7 @@ export default Controller.extend({
          </p>`
       : "";
 
-    let messageWarning =
+    const messageWarning =
       model.has_messages && model.message_count > 0
         ? `<p>${iconHTML("envelope")} 
             ${I18n.t("admin.groups.delete_with_messages_confirm", {
@@ -159,12 +159,12 @@ export default Controller.extend({
           </p>`
         : "";
 
-    let undoWarning = `<p> 
+    const undoWarning = `<p> 
         ${iconHTML("exclamation-triangle")}  
         ${I18n.t("admin.groups.delete_warning")}
         </p>`;
 
-    let message = htmlSafe(
+    const message = htmlSafe(
       `${membersWarning} ${messageWarning} ${undoWarning}`
     );
 
