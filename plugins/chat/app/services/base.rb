@@ -363,7 +363,7 @@ module Chat
       #   def save_channel(channel:, **)
       #     fail!("something went wrong") unless channel.save
       #   end
-      #
+
       # @!scope class
       # @!method transaction(&block)
       # @param block [Proc] a block containing steps to be run inside a transaction

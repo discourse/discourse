@@ -115,6 +115,8 @@
 
 <p>The methods defined on the service are automatically provided with the whole context passed as keyword arguments. This allows to define in a very explicit way what dependencies are used by the method. If for whatever reason a key isn’t found in the current context, then Ruby will raise an exception when the method is called.</p>
 
+<p>Regarding contract classes, they have automatically ActiveModel modules included so all the ActiveModel API is available.</p>
+
 
   </div>
 </div>
@@ -219,7 +221,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#contract-class_method" title="contract (class method)">.<strong>contract</strong>(&amp;block)  &#x21d2; Object </a>
+      <a href="#contract-class_method" title="contract (class method)">.<strong>contract</strong>(name = :default, class_name: self::Contract)  &#x21d2; Object </a>
     
 
     
@@ -243,7 +245,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#policy-class_method" title="policy (class method)">.<strong>policy</strong>(name = :default, &amp;block)  &#x21d2; Object </a>
+      <a href="#model-class_method" title="model (class method)">.<strong>model</strong>(name = :model, step_name = :&quot;fetch_#{name}&quot;)  &#x21d2; Object </a>
     
 
     
@@ -258,7 +260,7 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Evaluates a set of conditions related to the given context.</p>
+<p>Evaluates arbitrary code to build or fetch a model (typically from the DB).</p>
 </div></span>
   
 </li>
@@ -267,7 +269,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#service-class_method" title="service (class method)">.<strong>service</strong>(&amp;block)  &#x21d2; Object </a>
+      <a href="#policy-class_method" title="policy (class method)">.<strong>policy</strong>(name = :default)  &#x21d2; Object </a>
     
 
     
@@ -282,7 +284,55 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Holds the business logic of the service.</p>
+<p>Performs checks related to the state of the system.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#step-class_method" title="step (class method)">.<strong>step</strong>(name)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Runs arbitrary code.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#transaction-class_method" title="transaction (class method)">.<strong>transaction</strong>(&amp;block)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Runs steps inside a DB transaction.</p>
 </div></span>
   
 </li>
@@ -301,7 +351,7 @@
       <div class="method_details first">
   <h3 class="signature first" id="contract-class_method">
   
-    .<strong>contract</strong>(&amp;block)  &#x21d2; <tt>Object</tt> 
+    .<strong>contract</strong>(name = :default, class_name: self::Contract)  &#x21d2; <tt>Object</tt> 
   
 
   
@@ -312,6 +362,8 @@
     
 <p>Checks the validity of the input parameters. Implements ActiveModel::Validations and ActiveModel::Attributes.</p>
 
+<p>It stores the resulting contract in <tt>context [“contract.default”]</tt> by default (can be customized by providing the <code>name</code> argument).</p>
+
 
   </div>
 </div>
@@ -321,12 +373,54 @@
     <p class="tag_title">Examples:</p>
     
       
-      <pre class="example code"><code><span class='id identifier rubyid_contract'>contract</span> <span class='kw'>do</span>
+      <pre class="example code"><code><span class='id identifier rubyid_contract'>contract</span>
+
+<span class='kw'>class</span> <span class='const'>Contract</span>
   <span class='id identifier rubyid_attribute'>attribute</span> <span class='symbol'>:name</span>
   <span class='id identifier rubyid_validates'>validates</span> <span class='symbol'>:name</span><span class='comma'>,</span> <span class='label'>presence:</span> <span class='kw'>true</span>
 <span class='kw'>end</span></code></pre>
     
   </div>
+<p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>name</span>
+      
+      
+        <span class='type'>(<tt>Symbol</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>:default</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>name for this contract</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>class_name</span>
+      
+      
+        <span class='type'>(<tt>Class</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>self::Contract</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>a class defining the contract</p>
+</div>
+      
+    </li>
+  
+</ul>
 
 
 </div><table class="source_code">
@@ -338,7 +432,100 @@
 </pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 288</span>
+      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 326</span>
+
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="model-class_method">
+  
+    .<strong>model</strong>(name = :model, step_name = :&quot;fetch_#{name}&quot;)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Evaluates arbitrary code to build or fetch a model (typically from the DB). If the step returns a falsy value, then the step will fail.</p>
+
+<p>It stores the resulting model in <code>context[:model]</code> by default (can be customized by providing the <code>name</code> argument).</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+  <div class="examples">
+    <p class="tag_title">Examples:</p>
+    
+      
+      <pre class="example code"><code><span class='id identifier rubyid_model'>model</span> <span class='symbol'>:channel</span><span class='comma'>,</span> <span class='symbol'>:fetch_channel</span>
+
+<span class='id identifier rubyid_private'>private</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_fetch_channel'>fetch_channel</span><span class='lparen'>(</span><span class='label'>channel_id:</span><span class='comma'>,</span> <span class='op'>**</span><span class='rparen'>)</span>
+  <span class='const'>ChatChannel</span><span class='period'>.</span><span class='id identifier rubyid_find_by'>find_by</span><span class='lparen'>(</span><span class='label'>id:</span> <span class='id identifier rubyid_channel_id'>channel_id</span><span class='rparen'>)</span>
+<span class='kw'>end</span></code></pre>
+    
+  </div>
+<p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>name</span>
+      
+      
+        <span class='type'>(<tt>Symbol</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>:model</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>name of the model</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>step_name</span>
+      
+      
+        <span class='type'>(<tt>Symbol</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>:&quot;fetch_#{name}&quot;</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>name of the method to call for this step</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 292</span>
 
 </pre>
     </td>
@@ -349,7 +536,7 @@
       <div class="method_details ">
   <h3 class="signature " id="policy-class_method">
   
-    .<strong>policy</strong>(name = :default, &amp;block)  &#x21d2; <tt>Object</tt> 
+    .<strong>policy</strong>(name = :default)  &#x21d2; <tt>Object</tt> 
   
 
   
@@ -358,7 +545,7 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Evaluates a set of conditions related to the given context. If the block doesn’t return a truthy value, then the policy will fail. More than one policy can be defined and named. When that’s the case, policies are evaluated in their definition order.</p>
+<p>Performs checks related to the state of the system. If the step doesn’t return a truthy value, then the policy will fail.</p>
 
 
   </div>
@@ -369,11 +556,37 @@
     <p class="tag_title">Examples:</p>
     
       
-      <pre class="example code"><code><span class='id identifier rubyid_policy'>policy</span><span class='lparen'>(</span><span class='symbol'>:invalid_access</span><span class='rparen'>)</span> <span class='kw'>do</span>
-  <span class='id identifier rubyid_guardian'>guardian</span><span class='period'>.</span><span class='id identifier rubyid_can_delete_chat_channel?'>can_delete_chat_channel?</span>
+      <pre class="example code"><code><span class='id identifier rubyid_policy'>policy</span> <span class='symbol'>:no_direct_message_channel</span>
+
+<span class='id identifier rubyid_private'>private</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_no_direct_message_channel'>no_direct_message_channel</span><span class='lparen'>(</span><span class='label'>channel:</span><span class='comma'>,</span> <span class='op'>**</span><span class='rparen'>)</span>
+  <span class='op'>!</span><span class='id identifier rubyid_channel'>channel</span><span class='period'>.</span><span class='id identifier rubyid_direct_message_channel?'>direct_message_channel?</span>
 <span class='kw'>end</span></code></pre>
     
   </div>
+<p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>name</span>
+      
+      
+        <span class='type'>(<tt>Symbol</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>:default</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>name for this policy</p>
+</div>
+      
+    </li>
+  
+</ul>
 
 
 </div><table class="source_code">
@@ -385,7 +598,7 @@
 </pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 276</span>
+      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 311</span>
 
 </pre>
     </td>
@@ -394,9 +607,9 @@
 </div>
     
       <div class="method_details ">
-  <h3 class="signature " id="service-class_method">
+  <h3 class="signature " id="step-class_method">
   
-    .<strong>service</strong>(&amp;block)  &#x21d2; <tt>Object</tt> 
+    .<strong>step</strong>(name)  &#x21d2; <tt>Object</tt> 
   
 
   
@@ -405,7 +618,7 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Holds the business logic of the service.</p>
+<p>Runs arbitrary code. To mark a step as failed, a call to #fail! needs to be made explicitly.</p>
 
 
   </div>
@@ -416,9 +629,48 @@
     <p class="tag_title">Examples:</p>
     
       
-      <pre class="example code"><code><span class='id identifier rubyid_service'>service</span> <span class='lbrace'>{</span> <span class='id identifier rubyid_context'>context</span><span class='period'>.</span><span class='id identifier rubyid_topic'>topic</span><span class='period'>.</span><span class='id identifier rubyid_update!'>update!</span><span class='lparen'>(</span><span class='label'>archived:</span> <span class='kw'>true</span><span class='rparen'>)</span> <span class='rbrace'>}</span></code></pre>
+      <pre class="example code"><code><span class='id identifier rubyid_step'>step</span> <span class='symbol'>:update_channel</span>
+
+<span class='id identifier rubyid_private'>private</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_update_channel'>update_channel</span><span class='lparen'>(</span><span class='label'>channel:</span><span class='comma'>,</span> <span class='label'>params_to_edit:</span><span class='comma'>,</span> <span class='op'>**</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_channel'>channel</span><span class='period'>.</span><span class='id identifier rubyid_update!'>update!</span><span class='lparen'>(</span><span class='id identifier rubyid_params_to_edit'>params_to_edit</span><span class='rparen'>)</span>
+<span class='kw'>end</span></code></pre>
+    
+      
+        <p class="example_title"><div class='inline'>
+<p>using #fail! in a step</p>
+</div></p>
+      
+      <pre class="example code"><code><span class='id identifier rubyid_step'>step</span> <span class='symbol'>:save_channel</span>
+
+<span class='id identifier rubyid_private'>private</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_save_channel'>save_channel</span><span class='lparen'>(</span><span class='label'>channel:</span><span class='comma'>,</span> <span class='op'>**</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_fail!'>fail!</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>something went wrong</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span> <span class='kw'>unless</span> <span class='id identifier rubyid_channel'>channel</span><span class='period'>.</span><span class='id identifier rubyid_save'>save</span>
+<span class='kw'>end</span></code></pre>
     
   </div>
+<p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>name</span>
+      
+      
+        <span class='type'>(<tt>Symbol</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the name of this step</p>
+</div>
+      
+    </li>
+  
+</ul>
 
 
 </div><table class="source_code">
@@ -430,7 +682,76 @@
 </pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 299</span>
+      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 344</span>
+
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="transaction-class_method">
+  
+    .<strong>transaction</strong>(&amp;block)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Runs steps inside a DB transaction.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+  <div class="examples">
+    <p class="tag_title">Examples:</p>
+    
+      
+      <pre class="example code"><code><span class='id identifier rubyid_transaction'>transaction</span> <span class='kw'>do</span>
+  <span class='id identifier rubyid_step'>step</span> <span class='symbol'>:prevents_slug_collision</span>
+  <span class='id identifier rubyid_step'>step</span> <span class='symbol'>:soft_delete_channel</span>
+  <span class='id identifier rubyid_step'>step</span> <span class='symbol'>:log_channel_deletion</span>
+<span class='kw'>end</span></code></pre>
+    
+  </div>
+<p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>block</span>
+      
+      
+        <span class='type'>(<tt>Proc</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>a block containing steps to be run inside a transaction</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 367</span>
 
 </pre>
     </td>
