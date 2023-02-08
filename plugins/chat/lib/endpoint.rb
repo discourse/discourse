@@ -28,7 +28,7 @@
 #         redirect_to a_path
 #       end
 #       on_failed_policy(:a_named_policy) { redirect_to root_path }
-#       on_failure                        { render :new }
+#       on_failure { render :new }
 #     end
 #   end
 #

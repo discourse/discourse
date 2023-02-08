@@ -2,6 +2,93 @@
 
 module Chat
   module Service
+    # Module to be included to provide steps DSL to any class. This allows to
+    # create easy to understand services as the whole service cycle is visible
+    # simply by reading the beginning of its class.
+    #
+    # Steps are executed in the order they’re defined. They will use their name
+    # to execute the corresponding method defined in the service class.
+    #
+    # Currently, there are 5 types of steps:
+    #
+    # * +model(name = :model)+: used to instantiate a model (either by building
+    #   it or fetching it from the DB). If a falsy value is returned, then the
+    #   step will fail. Otherwise the resulting object will be assigned in
+    #   +context[name]+ (+context[:model]+ by default).
+    # * +policy(name = :default)+: used to perform a check on the state of the
+    #   system. Typically used to run guardians. If a falsy value is returned,
+    #   the step will fail.
+    # * +contract(name = :default)+: used to validate the input parameters,
+    #   typically provided by a user calling an endpoint. A special embedded
+    #   +Contract+ class has to be defined to holds the validations. If the
+    #   validations fail, the step will fail. Otherwise, the resulting contract
+    #   will be available in +context[:"contract.default"]+.
+    # * +step(name)+: used to run small snippets of arbitrary code. The step
+    #   doesn’t care about its return value, so to mark the service as failed,
+    #   {#fail!} has to be called explicitly.
+    # * +transaction+: used to wrap other steps inside a DB transaction.
+    #
+    # The methods defined on the service are automatically provided with
+    # the whole context passed as keyword arguments. This allows to define in a
+    # very explicit way what dependencies are used by the method. If for
+    # whatever reason a key isn’t found in the current context, then Ruby will
+    # raise an exception when the method is called.
+    #
+    # @example An example from the {TrashChannel} service
+    #   class TrashChannel
+    #     include Base
+    #
+    #     model :channel, :fetch_channel
+    #     policy :invalid_access
+    #     transaction do
+    #       step :prevents_slug_collision
+    #       step :soft_delete_channel
+    #       step :log_channel_deletion
+    #     end
+    #     step :enqueue_delete_channel_relations_job
+    #
+    #     private
+    #
+    #     def fetch_channel(channel_id:, **)
+    #       ChatChannel.find_by(id: channel_id)
+    #     end
+    #
+    #     def invalid_access(guardian:, channel:, **)
+    #       guardian.can_preview_chat_channel?(channel) && guardian.can_delete_chat_channel?
+    #     end
+    #
+    #     def prevents_slug_collision(channel:, **)
+    #       …
+    #     end
+    #
+    #     def soft_delete_channel(guardian:, channel:, **)
+    #       …
+    #     end
+    #
+    #     def log_channel_deletion(guardian:, channel:, **)
+    #       …
+    #     end
+    #
+    #     def enqueue_delete_channel_relations_job(channel:, **)
+    #       …
+    #     end
+    #   end
+    # @example An example from the {UpdateChannelStatus} service which uses a contract
+    #   class UpdateChannelStatus
+    #     include Base
+    #
+    #     model :channel, :fetch_channel
+    #     contract
+    #     policy :check_channel_permission
+    #     step :change_status
+    #
+    #     class Contract
+    #       attribute :status
+    #       validates :status, inclusion: { in: ChatChannel.editable_statuses.keys }
+    #     end
+    #
+    #     …
+    #   end
     module Base
       extend ActiveSupport::Concern
 
@@ -19,15 +106,19 @@ module Chat
 
       # Simple structure to hold the context of the service during its whole lifecycle.
       class Context < OpenStruct
+        # @return [Boolean] returns +true+ if the conext is set as successful (default)
         def success?
           !failure?
         end
 
+        # @return [Boolean] returns +true+ if the context is set as failed
+        # @see #fail!
+        # @see #fail
         def failure?
           @failure || false
         end
 
-        # Marks the service as failed.
+        # Marks the context as failed.
         # @param context [Hash, Context] the context to merge into the current one
         # @example
         #   context.fail!("failure": "something went wrong")
@@ -37,7 +128,7 @@ module Chat
           raise Failure, self
         end
 
-        # Marks the service as failed without raising an exception.
+        # Marks the context as failed without raising an exception.
         # @param context [Hash, Context] the context to merge into the current one
         # @example
         #   context.fail("failure": "something went wrong")
@@ -62,6 +153,8 @@ module Chat
         end
       end
 
+      # Internal module to define available steps as DSL
+      # @!visibility private
       module StepsHelpers
         def model(name = :model, step_name = :"fetch_#{name}")
           steps << ModelStep.new(name, step_name)
@@ -84,6 +177,7 @@ module Chat
         end
       end
 
+      # @!visibility private
       class Step
         attr_reader :name, :method_name, :class_name
 
@@ -101,6 +195,7 @@ module Chat
         end
       end
 
+      # @!visibility private
       class ModelStep < Step
         def call(instance, context)
           context[name] = super
@@ -110,6 +205,7 @@ module Chat
         end
       end
 
+      # @!visibility private
       class PolicyStep < Step
         def call(instance, context)
           context["result.policy.#{name}"] = Context.build
@@ -117,6 +213,7 @@ module Chat
         end
       end
 
+      # @!visibility private
       class ContractStep < Step
         def call(instance, context)
           contract = class_name.new(context.to_h.slice(*class_name.attribute_names.map(&:to_sym)))
@@ -129,6 +226,7 @@ module Chat
         end
       end
 
+      # @!visibility private
       class TransactionStep < Step
         include StepsHelpers
 
@@ -146,6 +244,8 @@ module Chat
 
       included do
         attr_reader :context
+
+        delegate :fail!, to: :context
 
         # @!visibility private
         # Internal class used to setup the base contract of the service.
