@@ -175,6 +175,27 @@ describe Jobs::AutoJoinChannelBatch do
 
         assert_users_follows_channel(channel, [user, another_user])
       end
+
+      it "doesn't join users with read-only access to the category" do
+        another_user = Fabricate(:user, last_seen_at: 15.minutes.ago)
+        non_chatters_group = Fabricate(:group)
+        readonly_channel = Fabricate(:category_channel, chatable: category, auto_join_users: true)
+        Fabricate(
+          :category_group,
+          category: category,
+          group: non_chatters_group,
+          permission_type: CategoryGroup.permission_types[:readonly],
+        )
+        non_chatters_group.add(another_user)
+
+        subject.execute(
+          chat_channel_id: readonly_channel.id,
+          starts_at: another_user.id,
+          ends_at: another_user.id,
+        )
+
+        assert_user_skipped(readonly_channel, another_user)
+      end
     end
   end
 

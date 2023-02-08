@@ -93,6 +93,37 @@ RSpec.describe "Visit channel", type: :system, js: true do
         end
       end
 
+      context "when category channel is read-only" do
+        fab!(:readonly_category_1) { Fabricate(:private_category, group: Fabricate(:group)) }
+        fab!(:readonly_group_1) { Fabricate(:group, users: [current_user]) }
+        fab!(:readonly_category_channel_1) do
+          Fabricate(:private_category_channel, group: readonly_group_1)
+        end
+        fab!(:message_1) { Fabricate(:chat_message, chat_channel: readonly_category_channel_1) }
+
+        before do
+          Fabricate(
+            :category_group,
+            category: readonly_category_1,
+            group: readonly_group_1,
+            permission_type: CategoryGroup.permission_types[:readonly],
+          )
+        end
+
+        it "doesn't allow user to join it" do
+          chat.visit_channel(readonly_category_channel_1)
+
+          expect(page).not_to have_content(I18n.t("js.chat.channel_settings.join_channel"))
+        end
+
+        it "shows a preview of the channel" do
+          chat.visit_channel(readonly_category_channel_1)
+
+          expect(page).to have_content(readonly_category_channel_1.name)
+          expect(chat).to have_message(message_1)
+        end
+      end
+
       context "when current user is not member of the channel" do
         context "when category channel" do
           fab!(:message_1) { Fabricate(:chat_message, chat_channel: category_channel_1) }
