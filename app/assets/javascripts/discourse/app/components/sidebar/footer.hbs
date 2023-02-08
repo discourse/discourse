@@ -3,12 +3,14 @@
     <div class="sidebar-footer-actions">
       <PluginOutlet @name="sidebar-footer-actions" />
 
-      <DButton
-        @icon="plus"
-        @action={{action this.addSection}}
-        @class="btn-flat add-section"
-        @title="sidebar.sections.custom.add"
-      />
+      {{#if this.currentUser.custom_sidebar_sections_enabled}}
+        <DButton
+          @icon="plus"
+          @action={{action this.addSection}}
+          @class="btn-flat add-section"
+          @title="sidebar.sections.custom.add"
+        />
+      {{/if}}
 
       {{#if
         (or
