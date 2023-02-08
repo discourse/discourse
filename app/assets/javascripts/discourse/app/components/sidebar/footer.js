@@ -7,6 +7,7 @@ import showModal from "discourse/lib/show-modal";
 export default class SidebarFooter extends Component {
   @service site;
   @service siteSettings;
+  @service currentUser;
 
   get capabilities() {
     return getOwner(this).lookup("capabilities:main");
