@@ -6,6 +6,7 @@
     <TextField
       @value={{this.templateName}}
       @name="template-name"
+      @class="form-templates--form-name-input"
       @placeholderKey="admin.form_templates.new_template_form.name.placeholder"
     />
   </div>
@@ -16,7 +17,7 @@
     </span>
     {{#each this.quickInsertFields as |field|}}
       <DButton
-        @class="btn-flat btn-icon-text"
+        @class="btn-flat btn-icon-text quick-insert-{{field.type}}"
         @icon={{field.icon}}
         @label="admin.form_templates.quick_insert_fields.{{field.type}}"
         @action={{this.onInsertField}}

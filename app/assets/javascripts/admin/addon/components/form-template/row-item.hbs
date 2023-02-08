@@ -4,17 +4,19 @@
     <DButton
       @title="admin.form_templates.list_table.actions.view"
       @icon="far-eye"
+      @class="btn-view-template"
       @action={{this.viewTemplate}}
     />
     <DButton
       @title="admin.form_templates.list_table.actions.edit"
       @icon="pencil-alt"
+      @class="btn-edit-template"
       @action={{this.editTemplate}}
     />
     <DButton
       @title="admin.form_templates.list_table.actions.delete"
       @icon="far-trash-alt"
-      @class="btn-danger"
+      @class="btn-danger btn-delete-template"
       @action={{this.deleteTemplate}}
     />
   </td>
