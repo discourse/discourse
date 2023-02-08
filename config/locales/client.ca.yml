@@ -836,11 +836,6 @@ ca:
       profile: "Perfil"
       mute: "Silencia"
       edit: "Edita preferències"
-      download_archive:
-        button_text: "Descarrega-ho tot"
-        confirm: "Esteu segur que voleu descarregar les vostres publicacions?"
-        success: "Descàrrega iniciada. Quan el procés s'acabi, us ho notificarem amb un missatge."
-        rate_limit_error: "Les publicacions es poden descarregar una vegada al dia. Torneu a provar-ho demà."
       new_private_message: "Missatge nou"
       private_message: "Missatge"
       private_messages: "Missatges"
@@ -1608,8 +1603,6 @@ ca:
         topic_template_not_modified: "Afegiu detalls i especificacions al tema editant la plantilla."
       save_edit: "Desa l'edició"
       overwrite_edit: "Sobreescriu l'edició"
-      reply_original: "Respon en el tema original"
-      reply_here: "Respon aquí"
       reply: "Respon"
       cancel: "Cancel·la"
       create_topic: "Crea un tema"
@@ -1888,11 +1881,9 @@ ca:
         dismiss_new: "Descarta'n els nous"
         toggle: "commuta la selecció massiva de temes"
         actions: "Accions massives"
-        change_category: "Defineix categoria..."
         close_topics: "Tanca temes"
         archive_topics: "Arxiva temes"
         move_messages_to_inbox: "Mou a la safata d'entrada"
-        notification_level: "Notificacions..."
         choose_new_category: "Seleccioneu la categoria nova per als temes:"
         selected:
           one: "He seleccionat <b>%{count}</b> tema."
@@ -1967,8 +1958,6 @@ ca:
       options: "Opcions del tema"
       show_links: "mostra enllaços dins d'aquest tema"
       unread_indicator: "Cap membre encara no ha llegit la darrera publicació d'aquest tema."
-      jump_reply_up: salta a la resposta anterior
-      jump_reply_down: salta a la resposta posterior
       deleted: "El tema ha estat suprimit"
       slow_mode_update:
         enable: "Activa"
@@ -2076,7 +2065,6 @@ ca:
         unarchive: "Desarxiva tema"
         archive: "Arxiva tema"
         reset_read: "Restableix data de lectura"
-        make_public: "Fes públic el tema..."
         make_private: "Converteix en missatge personal"
         reset_bump_date: "Restableix la data d'elevació"
       feature:
@@ -2319,8 +2307,6 @@ ca:
         revert_to_regular: "Elimina el color de l'equip responsable"
         rebake: "Refés HTML"
         unhide: "Desfés amagar"
-        change_owner: "Canvia la propietat..."
-        grant_badge: "Atorga insígnia..."
         lock_post: "Bloca la publicació"
         lock_post_description: "impedeix que l'autor editi aquesta publicació"
         unlock_post: "Desbloca la publicació"
@@ -2328,7 +2314,6 @@ ca:
         delete_topic_disallowed_modal: "No teniu permís per a suprimir aquest tema. Si realment voleu que se suprimeixi, envieu una bandera perquè un moderador hi pari atenció juntament amb una argumentació."
         delete_topic_disallowed: "no teniu permís per a suprimir aquest tema"
         delete_topic: "suprimeix el tema"
-        add_post_notice: "Afegeix un avís a l'equip responsable..."
         remove_timer: "elimina el temporitzador"
       actions:
         people:
@@ -2381,14 +2366,9 @@ ca:
             title: "Mostra la part HTML del correu electrònic"
             button: "HTML"
       bookmarks:
-        create: "Crea un marcador"
-        edit: "Edita el marcador"
         updated: "Actualitzat"
         name: "Nom"
         options: "Opcions"
-        actions:
-          edit_bookmark:
-            name: "Edita el marcador"
     category:
       none: "(sense categoria)"
       all: "Totes les categories"
@@ -2514,7 +2494,6 @@ ca:
     flagging:
       title: "Gràcies per ajudar a mantenir endreçada la comunitat!"
       action: "Marca la publicació amb bandera "
-      take_action: "Actua..."
       take_action_options:
         default:
           title: "Actua"
@@ -2859,7 +2838,6 @@ ca:
         delete: "Suprimeix"
         confirm_delete: "Esteu segur que voleu suprimir aquest grup d'etiquetes?"
         everyone_can_use: "Etiquetes que poden ser utilitzades per tothom"
-        parent_tag_placeholder: "Opcional"
       topics:
         none:
           unread: "No teniu temes no llegits."
@@ -2881,10 +2859,6 @@ ca:
       dismiss: "Descarta-ho"
     safe_mode:
       enabled: "El mode segur està activat. Per a sortir-ne tanqueu aquesta finestra del navegador."
-    pause_notifications:
-      remaining: "%{remaining} restant"
-      options:
-        custom: "Personalitzat"
     trust_levels:
       names:
         newuser: "usuari nou"
@@ -2902,6 +2876,9 @@ ca:
       more: "Més"
       all_categories: "Totes les categories"
       sections:
+        custom:
+          save: "Desa"
+          delete: "Suprimeix"
         about:
           header_link_text: "Quant a"
         messages:
@@ -2927,8 +2904,6 @@ ca:
               content: "Administració"
             badges:
               content: "Insígnies"
-            everything:
-              content: "Qualsevol cosa"
             faq:
               content: "PMF"
             groups:
@@ -2939,7 +2914,6 @@ ca:
               content: "Les meves publicacions"
             review:
               content: "Revisa"
-    until: "Fins a:"
   admin_js:
     type_to_filter: "escriu per a filtrar..."
     admin:
@@ -2969,7 +2943,6 @@ ca:
         problems_found: "Uns quants consells basats en la configuració actual del lloc web."
         new_features:
           dismiss: "Descarta-ho"
-          learn_more: "Per a saber-ne més"
         last_checked: "Comprovat per darrera vegada"
         refresh_problems: "Actualitza"
         no_problems: "No s'han trobat problemes."
@@ -3842,7 +3815,6 @@ ca:
         staged: "Fictici?"
         show_admin_profile: "Administració"
         show_public_profile: "Mostra el perfil públic"
-        impersonate: "Suplanta"
         action_logs: "Registres d'accions (logs)"
         ip_lookup: "Cerca IP"
         log_out: "Tanca la sessió"

@@ -16,6 +16,19 @@
 # all of the references associated to a chat message (e.g. reactions, bookmarks,
 # notifications, revisions, mentions, uploads) will be updated to the new
 # message IDs via a moved_chat_messages temporary table.
+#
+# Reply chains are a little complex. No reply chains are preserved when moving
+# messages into a new channel. Remaining messages that referenced moved ones
+# have their in_reply_to_id cleared so the data makes sense.
+#
+# Threads are even more complex. No threads are preserved when moving messages
+# into a new channel, they end up as just a flat series of messages that are
+# not in a chain. If the original message of a thread and N other messages
+# in that thread, then any messages left behind just get placed into a new
+# thread. Message moving will be disabled in the thread UI while
+# enable_experimental_chat_threaded_discussions is present, its too complicated
+# to have end users reason about for now, and we may want a standalone
+# "Move Thread" UI later on.
 class Chat::MessageMover
   class NoMessagesFound < StandardError
   end
@@ -51,6 +64,8 @@ class Chat::MessageMover
       bulk_insert_movement_metadata
       update_references
       delete_source_messages
+      update_reply_references
+      update_thread_references
     end
 
     add_moved_placeholder(destination_channel, moved_messages.first)
@@ -60,7 +75,10 @@ class Chat::MessageMover
   private
 
   def find_messages(message_ids, channel)
-    ChatMessage.where(id: message_ids, chat_channel_id: channel.id).order("created_at ASC, id ASC")
+    ChatMessage
+      .includes(thread: %i[original_message original_message_user])
+      .where(id: message_ids, chat_channel_id: channel.id)
+      .order("created_at ASC, id ASC")
   end
 
   def create_temp_table
@@ -154,7 +172,13 @@ class Chat::MessageMover
   end
 
   def delete_source_messages
-    @source_messages.update_all(deleted_at: Time.zone.now, deleted_by_id: @acting_user.id)
+    # We do this so @source_messages is not nulled out, which is the
+    # case when using update_all here.
+    DB.exec(<<~SQL, source_message_ids: @source_message_ids, deleted_by_id: @acting_user.id)
+      UPDATE chat_messages
+      SET deleted_at = NOW(), deleted_by_id = :deleted_by_id
+      WHERE id IN (:source_message_ids)
+    SQL
     ChatPublisher.publish_bulk_delete!(@source_channel, @source_message_ids)
   end
 
@@ -171,5 +195,48 @@ class Chat::MessageMover
           first_moved_message_url: first_moved_message.url,
         ),
     )
+  end
+
+  def update_reply_references
+    DB.exec(<<~SQL, deleted_reply_to_ids: @source_message_ids)
+      UPDATE chat_messages
+      SET in_reply_to_id = NULL
+      WHERE in_reply_to_id IN (:deleted_reply_to_ids)
+    SQL
+  end
+
+  def update_thread_references
+    threads_to_update = []
+    @source_messages
+      .select { |message| message.thread_id.present? }
+      .each do |message_with_thread|
+        # If one of the messages we are moving is the original message in a thread,
+        # then all the remaining messages for that thread must be moved to a new one,
+        # otherwise they will be pointing to a thread in a different channel.
+        if message_with_thread.thread.original_message_id == message_with_thread.id
+          threads_to_update << message_with_thread.thread
+        end
+      end
+
+    threads_to_update.each do |thread|
+      # NOTE: We may want to do something different with the old empty thread at some
+      # point when we add an explicit thread move UI, for now we can just delete it,
+      # since it will not contain any important data.
+      if thread.chat_messages.empty?
+        thread.destroy!
+        next
+      end
+
+      ChatThread.transaction do
+        original_message = thread.chat_messages.first
+        new_thread =
+          ChatThread.create!(
+            original_message: original_message,
+            original_message_user: original_message.user,
+            channel: @source_channel,
+          )
+        thread.chat_messages.update_all(thread_id: new_thread.id)
+      end
+    end
   end
 end

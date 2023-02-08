@@ -1088,11 +1088,6 @@ pl_PL:
       profile: "Profil"
       mute: "Wycisz"
       edit: "Edytuj ustawienia"
-      download_archive:
-        button_text: "Pobierz Wszystko"
-        confirm: "Czy na pewno chcesz pobrać swoje posty?"
-        success: "Rozpoczęto eksport: otrzymasz wiadomość, gdy proces zostanie zakończony."
-        rate_limit_error: "Posty mogą być pobierane raz dziennie, spróbuj ponownie jutro."
       new_private_message: "Nowa wiadomość"
       private_message: "Wiadomość"
       private_messages: "Wiadomości"
@@ -2230,8 +2225,6 @@ pl_PL:
         topic_template_not_modified: "Dodaj szczegóły i szczegóły do swojego tematu, edytując szablon tematu."
       save_edit: "Zapisz zmiany"
       overwrite_edit: "Zastąp edycję"
-      reply_original: "Odpowiedz na Oryginalny Temat"
-      reply_here: "Odpowiedz tutaj"
       reply: "Odpowiedz"
       cancel: "Anuluj"
       create_topic: "Utwórz temat"
@@ -2829,8 +2822,6 @@ pl_PL:
       read_more: "Chcesz przeczytać więcej? <a href='%{categoryLink}'>Przeglądaj wszystkie kategorie</a> lub <a href='%{latestLink}'>przeglądaj najnowsze tematy</a>."
       unread_indicator: "Nikt jeszcze nie czytał ostatniego postu w tym temacie."
       suggest_create_topic: Gotowy na <a href>rozpoczęcie nowej rozmowy?</a>
-      jump_reply_up: skocz do wcześniejszej odpowiedzi
-      jump_reply_down: skocz do późniejszej odpowiedzi
       deleted: "Temat został usunięty"
       slow_mode_update:
         title: "Tryb powolny"
@@ -3225,11 +3216,6 @@ pl_PL:
       collapse: "zawalić się"
       sr_collapse_replies: "Zwiń osadzone odpowiedzi"
       sr_date: "Data wysłania"
-      sr_expand_replies:
-        one: "Ten post ma %{count} odpowiedź. Kliknij, aby rozwinąć"
-        few: "Ten post ma %{count} odpowiedzi. Kliknij, aby rozwinąć"
-        many: "Ten post ma %{count} odpowiedzi. Kliknij, aby rozwinąć"
-        other: "Ten post ma %{count} odpowiedzi. Kliknij, aby rozwinąć"
       expand_collapse: "rozwiń/zwiń"
       sr_below_embedded_posts_description: "post #%{post_number} odpowiedzi"
       sr_embedded_reply_description: "odpowiedź od @%{username} na post #%{post_number}"
@@ -4172,13 +4158,11 @@ pl_PL:
     pause_notifications:
       title: "Wstrzymaj powiadomienia na..."
       label: "Wstrzymaj powiadomienia"
-      remaining: "%{remaining} pozostało"
       options:
         half_hour: "30 minut"
         one_hour: "1 godzina"
         two_hours: "2 godziny"
         tomorrow: "Do jutra"
-        custom: "Niestandardowe"
       set_schedule: "Ustaw harmonogram powiadomień"
     trust_levels:
       names:
@@ -4230,6 +4214,9 @@ pl_PL:
       all_categories: "Wszystkie kategorie"
       all_tags: "Wszystkie tagi"
       sections:
+        custom:
+          save: "Zapisz"
+          delete: "Usuń"
         about:
           header_link_text: "O stronie"
         messages:
@@ -5426,7 +5413,6 @@ pl_PL:
         show_admin_profile: "Administrator"
         manage_user: "Zarządzaj użytkownikiem"
         show_public_profile: "Pokaż profil publiczny"
-        impersonate: "Podszywaj się"
         action_logs: "Logi akcji"
         ip_lookup: "Wyszukiwanie IP"
         log_out: "Wyloguj"

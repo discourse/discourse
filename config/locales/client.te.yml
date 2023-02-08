@@ -377,9 +377,6 @@ te:
       profile: "ప్రవర"
       mute: "నిశ్శబ్దం"
       edit: "అభిరుచులు సవరించు"
-      download_archive:
-        confirm: "మీరు నిజంగా మీ టపాల దిగుమతి కోరుకుంటున్నారా ?"
-        rate_limit_error: "టపాలు కేవలం రోజుకు ఒకసారి మాత్రమే దిగుమతించుకోగలరు. దయచేసి రేపు ప్రయత్నించండి."
       private_messages: "సందేశాలు"
       user_notifications:
         filters:
@@ -497,7 +494,6 @@ te:
       email:
         title: "ఈమెయిల్"
         primary_label: "ప్రాథమిక"
-        resent_label: "ఈమెయిల్ పంపిన"
         update_email: "ఈమెయిల్ మార్చు"
         ok: "ద్రువపరుచుటకు మీకు ఈమెయిల్ పంపాము"
         invalid: "దయచేసి చెల్లుబాటులోని ఈమెయిల్ చిరునామా రాయండి"
@@ -732,8 +728,6 @@ te:
         title_missing: "శీర్షిక తప్పనిసరి"
         category_missing: "మీరు ఒక వర్గాన్ని ఎంచుకోవాలి"
       save_edit: "దాచి సవరించు"
-      reply_original: "మూల విషయంకు జవాబివ్వు"
-      reply_here: "ఇక్కడ జవాబివ్వు"
       reply: "జవాబు"
       cancel: "రద్దుచేయి"
       title_placeholder: "ఈ చర్చ దేనిగురించో ఒక లైనులో చెప్పండి?"
@@ -878,8 +872,6 @@ te:
       back_to_list: "విషయాల జాబితాకు మరలు"
       options: "విషయపు ఐచ్చికాలు"
       show_links: "ఈ విషయంలో లంకెలు చూపు"
-      jump_reply_up: పాత జవాబుకు వెళ్లు
-      jump_reply_down: తరువాతి జవాబుకు వెళ్లు
       deleted: "ఈ విషయం తొలగించబడింది"
       slow_mode_update:
         enable: "చేతనం"
@@ -1337,9 +1329,6 @@ te:
     footer_nav:
       back: "వెనుకకు"
       share: "పంచు"
-    pause_notifications:
-      options:
-        custom: "అనురూప"
     trust_levels:
       names:
         newuser: "కొత్త సభ్యుడు"
@@ -1356,6 +1345,9 @@ te:
         other: "%{count} కొత్త"
       more: "ఇంకా"
       sections:
+        custom:
+          save: "భద్రపరుచు"
+          delete: "తొలగించు"
         about:
           header_link_text: "గురించి"
         messages:
@@ -1795,7 +1787,6 @@ te:
         suspended: "సస్పెండయ్యాడా? "
         show_admin_profile: "అధికారి"
         show_public_profile: "ప్రజా ప్రవర చూపు"
-        impersonate: "పరకాయప్రవేశం చేయి"
         ip_lookup: "ఐపీ లుకప్"
         log_out: "లాగవుట్"
         logged_out: "వినియోగదారుడు అన్ని పరికరాలు లాగవుట్ చేశారు"

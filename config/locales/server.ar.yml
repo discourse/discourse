@@ -3388,14 +3388,6 @@ ar:
     user_automatically_silenced:
       title: "تم كتم المستخدم تلقائيًا"
       subject_template: "تم كتم المستخدم الجديد %{username} بسبب بلاغات المجتمع"
-      text_body_template: |
-        هذه رسالة تلقائية.
-
-        تم كتم المستخدم الجديد [%{username}](%{user_url}) تلقائيًا بسبب تلقي منشورات %{username} الكثير من البلاغات من المستخدمين.
-
-        يُرجى [مراجعة البلاغات](%{base_url}/admin/flags). إذا تم كتم %{username} بشكلٍ غير صحيح من النشر، فانقر على زر إلغاء الكتم على [صفحة المسؤول لهذا المستخدم](%{user_url}).
-
-        يمكن تغيير هذا الحد من خلال إعدادات الموقع `silence_new_user`.
     spam_post_blocked:
       title: "تم حظر المنشور غير المرغوب فيه"
       subject_template: "تم حظر منشورات المستخدم الجديد %{username} بسبب الروابط المتكررة"
@@ -3486,9 +3478,6 @@ ar:
       many: "تنبيه: نحن نُرسل يوميًا %{count} رسالة إلكترونية كحدٍ أقصى. تحقَّق من الموقع لمعرفة الرسائل التي قد يتم احتجازها. شكرًا على كونك مشهورًا!"
       other: "تنبيه: نحن نُرسل يوميًا %{count} رسالة إلكترونية كحدٍ أقصى. تحقَّق من الموقع لمعرفة الرسائل التي قد يتم احتجازها. شكرًا على كونك مشهورًا!"
     in_reply_to: "ردًا على"
-    unsubscribe:
-      title: "إلغاء الاشتراك"
-      description: "لست مهتمًا بالحصول على هذه الرسائل الإلكترونية؟ لا مشكلة! انقر أدناه لإلغاء الاشتراك على الفور:"
     reply_by_email: "يمكنك [زيارة الموضوع](%{base_url}%{url}) أو الرد على هذه الرسالة الإلكترونية للرد."
     reply_by_email_pm: "[انتقل إلى الرسالة](%{base_url}%{url}) أو قم بالرد على هذه الرسالة الإلكتروني للرد على %{participants}."
     only_reply_by_email: "قم بالرد على هذه الرسالة للرد."
@@ -3789,7 +3778,6 @@ ar:
       liked_received: "تسجيلات الإعجاب المتلقاة"
       new_users: "المستخدمون الجُدد"
       popular_topics: "الموضوعات الرائجة"
-      follow_topic: "تابع هذا الموضوع"
       join_the_discussion: "قراءة المزيد"
       popular_posts: "المنشورات الرائجة"
       more_new: "الجديد لك"
@@ -3981,8 +3969,6 @@ ar:
     welcome_message_invite_only: |
       ## [مرحبًا بك في %{title}](#welcome)
       مطلوب حساب. يُرجى مطالبة أحد الأعضاء الحاليين بدعوة أو تسجيل الدخول للمتابعة.
-  deleted: "تم الحذف"
-  image: "صورة"
   upload:
     edit_reason: "تم تنزيل نسخ محلية من الصور"
     unauthorized: "عذرًا، الملف الذي تحاول تحميله غير مسموح به (الامتدادات المسموح بها: %{authorized_extensions})."
@@ -4534,7 +4520,6 @@ ar:
           <p>استمتع، وحظًا سعيدًا في <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>بناء مجتمعك الجديد!</a></p>
   search_logs:
     graph_title: "عدد مرات البحث"
-  joined: "تاريخ الانضمام"
   discourse_push_notifications:
     popup:
       mentioned: 'أشار %{username} إليك في "%{topic}" - %{site_title}'

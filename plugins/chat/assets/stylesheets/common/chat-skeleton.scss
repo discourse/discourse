@@ -3,32 +3,8 @@ $radius: 10px;
 .chat-skeleton {
   height: auto;
 
-  &__header {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    padding: 1em;
-    border-bottom: 1px solid var(--primary-100);
-    box-sizing: border-box;
-  }
-
-  &__header-img {
-    background-color: var(--primary-100);
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
-    margin-right: 0.5rem;
-  }
-
-  &__header-name {
-    background-color: var(--primary-100);
-    width: 70px;
-    height: 18px;
-    border-radius: $radius;
-  }
-
   &__body {
-    padding: 1em;
+    padding: 0.5em 1em;
   }
 
   &__message {
@@ -52,10 +28,10 @@ $radius: 10px;
     border-radius: 50%;
     margin-right: 0.5rem;
 
-    .chat-skeleton__message:nth-of-type(odd) & {
+    .chat-skeleton__body:nth-of-type(odd) & {
       background-color: var(--primary-100);
     }
-    .chat-skeleton__message:nth-of-type(even) & {
+    .chat-skeleton__body:nth-of-type(even) & {
       background-color: var(--primary-200);
     }
   }
@@ -68,10 +44,10 @@ $radius: 10px;
     height: 20px;
     border-radius: $radius;
 
-    .chat-skeleton__message:nth-of-type(odd) & {
+    .chat-skeleton__body:nth-of-type(odd) & {
       background-color: var(--primary-100);
     }
-    .chat-skeleton__message:nth-of-type(even) & {
+    .chat-skeleton__body:nth-of-type(even) & {
       background-color: var(--primary-200);
     }
   }
@@ -83,29 +59,13 @@ $radius: 10px;
   &__message-msg {
     height: 13px;
     border-radius: $radius;
+    margin: 5px 0;
 
-    .chat-skeleton__message:nth-of-type(odd) & {
+    .chat-skeleton__body:nth-of-type(odd) & {
       background-color: var(--primary-100);
     }
-    .chat-skeleton__message:nth-of-type(even) & {
+    .chat-skeleton__body:nth-of-type(even) & {
       background-color: var(--primary-200);
-    }
-
-    &.-line1 {
-      margin-top: 0.5rem;
-      margin-bottom: 0.5em;
-    }
-
-    &.-small {
-      width: 35%;
-    }
-
-    &.-medium {
-      width: 60%;
-    }
-
-    &.-large {
-      width: 85%;
     }
   }
 

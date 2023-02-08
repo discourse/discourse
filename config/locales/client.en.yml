@@ -2375,8 +2375,6 @@ en:
 
       save_edit: "Save Edit"
       overwrite_edit: "Overwrite Edit"
-      reply_original: "Reply on Original Topic"
-      reply_here: "Reply Here"
       reply: "Reply"
       cancel: "Cancel"
       create_topic: "Create Topic"
@@ -4370,9 +4368,10 @@ en:
           delete: "Delete"
           delete_confirm: "Are you sure you want to delete this section?"
           links:
-            name: "Link name"
-            points_to: "Points to"
-            add: "Add link"
+            icon: "Icon"
+            name: "Name"
+            value: "Link"
+            add: "Add another link"
             delete: "Delete link"
         about:
           header_link_text: "About"
@@ -5097,6 +5096,9 @@ en:
           embedded_scss:
             text: "Embedded CSS"
             title: "Enter custom CSS to deliver with embedded version of comments"
+          embedded_header:
+            text: "Embedded Header"
+            title: "Enter HTML to display above the embedded version of comments"
           color_definitions:
             text: "Color Definitions"
             title: "Enter custom color definitions (advanced users only)"

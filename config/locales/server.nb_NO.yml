@@ -1133,8 +1133,6 @@ nb_NO:
   subject_pm: "[privat samtale]"
   user_notifications:
     previous_discussion: "Tidligere svar"
-    unsubscribe:
-      title: "Avmeld"
     user_invited_to_private_message_pm_group:
       title: "Bruker inviterte gruppe til privat samtale"
     user_invited_to_private_message_pm:
@@ -1169,7 +1167,6 @@ nb_NO:
       liked_received: "Likes mottatt"
       new_users: "Nye brukere"
       popular_topics: "Populære emner"
-      follow_topic: "Følg dette emnet"
       join_the_discussion: "Les mer"
       popular_posts: "Populære innlegg"
       more_new: "Nytt for deg"
@@ -1187,8 +1184,6 @@ nb_NO:
     see_more: "Mer"
     search_title: "Søk i denne siden"
     search_button: "Søk"
-  deleted: "slettet"
-  image: "bilde"
   upload:
     edit_reason: "Last ned lokal kopi av bilder"
     unauthorized: "Beklager, filen du prøver å legge til er ikke autorisert\n(authorized extensions: %{authorized_extensions})."
@@ -1334,7 +1329,6 @@ nb_NO:
                 label: "Kategorier og siste emner"
               categories_and_top_topics:
                 label: "Kategorier og toppemner"
-  joined: "Medlem fra"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} nevnte deg i "%{topic}" - %{site_title}'

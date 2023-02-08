@@ -34,7 +34,7 @@ export default Component.extend({
           enable_array_copy: true,
           disable_edit_json: true,
           disable_properties: true,
-          disable_collapse: true,
+          disable_collapse: false,
           remove_button_labels: true,
           show_errors: "never",
           startval: this.model.value ? JSON.parse(this.model.value) : null,
@@ -77,6 +77,8 @@ class DiscourseJsonSchemaEditorIconlib {
       moveup: "arrow-up",
       movedown: "arrow-down",
       copy: "copy",
+      collapse: "chevron-down",
+      expand: "chevron-up",
     };
   }
 
