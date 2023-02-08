@@ -5250,3 +5250,7 @@ en:
     payload_url:
       blocked_or_internal: "Payload URL cannot be used because it resolves to a blocked or internal IP"
       unsafe: "Payload URL cannot be used because it's unsafe"
+
+  form_templates:
+    errors:
+      invalid_yaml: "is not a valid YAML string"

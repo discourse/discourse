@@ -2090,6 +2090,10 @@ developer:
     client: true
     default: false
     hidden: true
+  experimental_form_templates:
+    client: true
+    default: false
+    hidden: true
 
 navigation:
   navigation_menu:

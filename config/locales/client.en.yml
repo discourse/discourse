@@ -5508,6 +5508,41 @@ en:
           found_matches: "Found matches:"
           no_matches: "No matches found"
 
+      form_templates:
+        nav_title: "Templates"
+        title: "Form Templates"
+        help: "Create a template structure that can be used to create new topics, posts, and messages."
+        new_template: "New Template"
+        list_table:
+          headings:
+            name: "Name"
+            actions: "Actions"
+          actions:
+            view: "View Template"
+            edit: "Edit Template"
+            delete: "Delete Template"
+        view_template:
+          close: "Close"
+          edit: "Edit"
+          delete: "Delete"
+        new_template_form:
+          submit: "Save"
+          cancel: "Cancel"
+          name:
+            label: "Template Name"
+            placeholder: "Enter a name for this template..."
+          template:
+            label: "Template"
+            placeholder: "Create a YAML template here..."
+        delete_confirm: "Are you sure you would like to delete this template?"
+        quick_insert_fields:
+          add_new_field: "Add"
+          checkbox: "Checkbox"
+          input: "Short answer"
+          textarea: "Long answer"
+          dropdown: "Dropdown"
+          upload: "Upload a file"
+          multiselect: "Multiple choice"
       impersonate:
         title: "Impersonate"
         help: "Use this tool to impersonate a user account for debugging purposes. You will have to log out once finished."
