@@ -4368,9 +4368,10 @@ en:
           delete: "Delete"
           delete_confirm: "Are you sure you want to delete this section?"
           links:
-            name: "Link name"
-            points_to: "Points to"
-            add: "Add link"
+            icon: "Icon"
+            name: "Name"
+            value: "Link"
+            add: "Add another link"
             delete: "Delete link"
         about:
           header_link_text: "About"

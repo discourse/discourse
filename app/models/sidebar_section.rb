@@ -10,7 +10,7 @@ class SidebarSection < ActiveRecord::Base
 
   accepts_nested_attributes_for :sidebar_urls, allow_destroy: true
 
-  validates :title, presence: true, uniqueness: { scope: %i[user_id] }
+  validates :title, presence: true, uniqueness: { scope: %i[user_id] }, length: { maximum: 30 }
 end
 
 # == Schema Information
@@ -19,7 +19,7 @@ end
 #
 #  id         :bigint           not null, primary key
 #  user_id    :integer          not null
-#  title      :string           not null
+#  title      :string(30)       not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #
