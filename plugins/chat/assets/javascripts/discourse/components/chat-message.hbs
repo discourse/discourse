@@ -14,7 +14,7 @@
       @secondaryButtons={{this.secondaryButtons}}
       @messageActions={{this.messageActions}}
       @messageCapabilities={{this.messageCapabilities}}
-      @onHoverMessage={{this.onHoverMessage}}
+      @onHoverMessage={{@onHoverMessage}}
     />
   {{/in-element}}
 {{/if}}
@@ -37,6 +37,7 @@
 
 <div
   {{will-destroy this.teardownChatMessage}}
+  {{did-insert this.setMessageActionsAnchors}}
   {{did-insert this.decorateCookedMessage}}
   {{did-update this.decorateCookedMessage @message.id}}
   {{on "touchmove" this.handleTouchMove passive=true}}

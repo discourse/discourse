@@ -45,7 +45,6 @@ export default class ChatMessage extends Component {
 
   @tracked chatMessageActionsMobileAnchor = null;
   @tracked chatMessageActionsDesktopAnchor = null;
-  @tracked chatMessageEmojiPickerAnchor = null;
 
   @optionalService adminTools;
 
@@ -69,15 +68,6 @@ export default class ChatMessage extends Component {
     }
 
     this.cachedFavoritesReactions = this.chatEmojiReactionStore.favorites;
-
-    schedule("afterRender", () => {
-      this.chatMessageActionsDesktopAnchor = document.querySelector(
-        ".chat-message-actions-desktop-anchor"
-      );
-      this.chatMessageEmojiPickerAnchor = document.querySelector(
-        ".chat-message-actions-mobile-anchor"
-      );
-    });
   }
 
   get deletedAndCollapsed() {
@@ -90,6 +80,18 @@ export default class ChatMessage extends Component {
 
   get collapsed() {
     return !this.args.message?.expanded;
+  }
+
+  @action
+  setMessageActionsAnchors() {
+    schedule("afterRender", () => {
+      this.chatMessageActionsDesktopAnchor = document.querySelector(
+        ".chat-message-actions-desktop-anchor"
+      );
+      this.chatMessageActionsMobileAnchor = document.querySelector(
+        ".chat-message-actions-mobile-anchor"
+      );
+    });
   }
 
   @action
