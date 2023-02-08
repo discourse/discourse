@@ -5533,7 +5533,7 @@ en:
           template:
             label: "Template"
             placeholder: "Create a YAML template here..."
-        delete_confirm: "Are you sure you would like to delete %{template_name} template?"
+        delete_confirm: "Are you sure you would like to delete this template?"
         quick_insert_fields:
           add_new_field: "Add"
           checkbox: "Checkbox"

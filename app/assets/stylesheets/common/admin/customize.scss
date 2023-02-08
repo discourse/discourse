@@ -986,12 +986,6 @@ table.permalinks {
     }
 
     .btn {
-      &:hover,
-      &:focus {
-        background-color: var(--primary-low);
-        color: var(--primary);
-      }
-
       &:not(:last-child) {
         border-right: 1px solid var(--primary-low);
       }

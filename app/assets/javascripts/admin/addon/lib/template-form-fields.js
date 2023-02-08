@@ -1,3 +1,4 @@
+// TODO(@keegan): Add translations for template strings
 export const templateFormFields = [
   {
     type: "checkbox",

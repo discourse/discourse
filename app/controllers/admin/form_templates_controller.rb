@@ -5,7 +5,7 @@ class Admin::FormTemplatesController < Admin::StaffController
 
   def index
     form_templates = FormTemplate.all
-    render_serialized(form_templates, FormTemplateSerializer, root: "form_templates")
+    render_serialized(form_templates, AdminFormTemplateSerializer, root: "form_templates")
   end
 
   def new
@@ -17,7 +17,7 @@ class Admin::FormTemplatesController < Admin::StaffController
 
     begin
       template = FormTemplate.create!(name: params[:name], template: params[:template])
-      render_serialized(template, FormTemplateSerializer, root: "form_template")
+      render_serialized(template, AdminFormTemplateSerializer, root: "form_template")
     rescue FormTemplate::NotAllowed => err
       render_json_error(err.message)
     end
@@ -25,7 +25,7 @@ class Admin::FormTemplatesController < Admin::StaffController
 
   def show
     template = FormTemplate.find(params[:id])
-    render_serialized(template, FormTemplateSerializer, root: "form_template")
+    render_serialized(template, AdminFormTemplateSerializer, root: "form_template")
   end
 
   def edit
@@ -37,7 +37,7 @@ class Admin::FormTemplatesController < Admin::StaffController
 
     begin
       template.update!(name: params[:name], template: params[:template])
-      render_serialized(template, FormTemplateSerializer, root: "form_template")
+      render_serialized(template, AdminFormTemplateSerializer, root: "form_template")
     rescue FormTemplate::NotAllowed => err
       render_json_error(err.message)
     end
