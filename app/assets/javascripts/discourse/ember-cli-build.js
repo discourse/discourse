@@ -108,6 +108,10 @@ module.exports = function (defaults) {
       ],
     },
 
+    "ember-cli-babel": {
+      throwUnlessParallelizable: true,
+    },
+
     // We need to build tests in prod for theme tests
     tests: true,
 

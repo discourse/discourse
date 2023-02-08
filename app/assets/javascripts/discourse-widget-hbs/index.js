@@ -1,9 +1,8 @@
 "use strict";
 
-const WidgetHbsCompiler =
-  require("../../../../lib/javascripts/widget-hbs-compiler").WidgetHbsCompiler;
-
-const glimmer = require("@glimmer/syntax");
+const widgetHbsCompilerPath = require.resolve(
+  "../../../../lib/javascripts/widget-hbs-compiler"
+);
 
 module.exports = {
   name: require("./package").name,
@@ -15,9 +14,12 @@ module.exports = {
     addonOptions.babel.plugins = addonOptions.babel.plugins || [];
     let babelPlugins = addonOptions.babel.plugins;
 
-    WidgetHbsCompiler.cacheKey = () => "discourse-widget-hbs";
-    WidgetHbsCompiler.glimmer = glimmer;
-    babelPlugins.push(WidgetHbsCompiler);
+    babelPlugins.push({
+      _parallelBabel: {
+        requireFile: widgetHbsCompilerPath,
+        useMethod: "WidgetHbsCompiler",
+      },
+    });
   },
 
   _getAddonOptions() {
