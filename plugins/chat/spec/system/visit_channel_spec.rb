@@ -94,17 +94,14 @@ RSpec.describe "Visit channel", type: :system, js: true do
       end
 
       context "when category channel is read-only" do
-        fab!(:readonly_category_1) { Fabricate(:private_category, group: Fabricate(:group)) }
         fab!(:readonly_group_1) { Fabricate(:group, users: [current_user]) }
-        fab!(:readonly_category_channel_1) do
-          Fabricate(:private_category_channel, group: readonly_group_1)
-        end
+        fab!(:readonly_category_channel_1) { Fabricate(:category_channel, chatable: category) }
         fab!(:message_1) { Fabricate(:chat_message, chat_channel: readonly_category_channel_1) }
 
         before do
           Fabricate(
             :category_group,
-            category: readonly_category_1,
+            category: category,
             group: readonly_group_1,
             permission_type: CategoryGroup.permission_types[:readonly],
           )
