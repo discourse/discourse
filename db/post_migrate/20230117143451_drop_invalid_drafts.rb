@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class DropInvalidDrafts < ActiveRecord::Migration[7.0]
+class DropInvalidDrafts < ActiveRecord::Migration[6.1]
   def up
     execute <<~SQL
     DELETE FROM drafts

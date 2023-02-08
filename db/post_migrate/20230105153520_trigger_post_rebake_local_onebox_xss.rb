@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class TriggerPostRebakeLocalOneboxXss < ActiveRecord::Migration[7.0]
+class TriggerPostRebakeLocalOneboxXss < ActiveRecord::Migration[6.1]
   def up
     val =
       DB.query_single(
