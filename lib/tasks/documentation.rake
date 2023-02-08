@@ -32,6 +32,7 @@ def generate_chat_documentation
   )
   files = %w[
     plugins/chat/app/services/base.rb
+    plugins/chat/app/services/update_user_last_read.rb
     plugins/chat/app/services/trash_channel.rb
     plugins/chat/app/services/update_channel.rb
     plugins/chat/app/services/update_channel_status.rb
