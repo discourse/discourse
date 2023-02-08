@@ -93,8 +93,8 @@ class Chat::ChatMessageCreator
   def validate_reply_chain!
     return if @in_reply_to_id.blank?
 
-    @root_message_id = DB.query_single(<<~SQL).last
-      WITH RECURSIVE root_message_finder( id, in_reply_to_id )
+    @original_message_id = DB.query_single(<<~SQL).last
+      WITH RECURSIVE original_message_finder( id, in_reply_to_id )
       AS (
         -- start with the message id we want to find the parents of
         SELECT id, in_reply_to_id
@@ -106,20 +106,24 @@ class Chat::ChatMessageCreator
         -- get the chain of direct parents of the message
         -- following in_reply_to_id
         SELECT cm.id, cm.in_reply_to_id
-        FROM root_message_finder rm
+        FROM original_message_finder rm
         JOIN chat_messages cm ON rm.in_reply_to_id = cm.id
       )
-      SELECT id FROM root_message_finder
+      SELECT id FROM original_message_finder
 
       -- this makes it so only the root parent ID is returned, we can
       -- exclude this to return all parents in the chain
       WHERE in_reply_to_id IS NULL;
     SQL
 
-    raise StandardError.new(I18n.t("chat.errors.root_message_not_found")) if @root_message_id.blank?
+    if @original_message_id.blank?
+      raise StandardError.new(I18n.t("chat.errors.original_message_not_found"))
+    end
 
-    @root_message = ChatMessage.with_deleted.find_by(id: @root_message_id)
-    raise StandardError.new(I18n.t("chat.errors.root_message_not_found")) if @root_message&.trashed?
+    @original_message = ChatMessage.with_deleted.find_by(id: @original_message_id)
+    if @original_message&.trashed?
+      raise StandardError.new(I18n.t("chat.errors.original_message_not_found"))
+    end
   end
 
   def validate_existing_thread!
@@ -133,9 +137,11 @@ class Chat::ChatMessageCreator
     reply_to_thread_mismatch =
       @chat_message.in_reply_to&.thread_id &&
         @chat_message.in_reply_to.thread_id != @existing_thread.id
-    root_message_has_no_thread = @root_message && @root_message.thread_id.blank?
-    root_message_thread_mismatch = @root_message && @root_message.thread_id != @existing_thread.id
-    if reply_to_thread_mismatch || root_message_has_no_thread || root_message_thread_mismatch
+    original_message_has_no_thread = @original_message && @original_message.thread_id.blank?
+    original_message_thread_mismatch =
+      @original_message && @original_message.thread_id != @existing_thread.id
+    if reply_to_thread_mismatch || original_message_has_no_thread ||
+         original_message_thread_mismatch
       raise StandardError.new(I18n.t("chat.errors.thread_does_not_match_parent"))
     end
   end
@@ -166,7 +172,7 @@ class Chat::ChatMessageCreator
     return if @chat_message.thread_id.present?
 
     thread =
-      @root_message.thread ||
+      @original_message.thread ||
         ChatThread.create!(
           original_message: @chat_message.in_reply_to,
           original_message_user: @chat_message.in_reply_to.user,
@@ -181,7 +187,7 @@ class Chat::ChatMessageCreator
       WITH RECURSIVE thread_updater AS (
         SELECT cm.id, cm.in_reply_to_id
         FROM chat_messages cm
-        WHERE cm.in_reply_to_id IS NULL AND cm.id = #{@root_message_id}
+        WHERE cm.in_reply_to_id IS NULL AND cm.id = #{@original_message_id}
 
         UNION ALL
 

@@ -452,7 +452,7 @@ describe Chat::ChatMessageCreator do
       end
 
       context "for missing root messages" do
-        fab!(:root_message) do
+        fab!(:original_message) do
           Fabricate(
             :chat_message,
             chat_channel: public_chat_channel,
@@ -461,10 +461,10 @@ describe Chat::ChatMessageCreator do
           )
         end
 
-        before { reply_message.update!(in_reply_to: root_message) }
+        before { reply_message.update!(in_reply_to: original_message) }
 
         it "raises an error when the root message has been trashed" do
-          root_message.trash!
+          original_message.trash!
           result =
             Chat::ChatMessageCreator.create(
               chat_channel: public_chat_channel,
@@ -472,11 +472,11 @@ describe Chat::ChatMessageCreator do
               content: "this is a message",
               in_reply_to_id: reply_message.id,
             )
-          expect(result.error.message).to eq(I18n.t("chat.errors.root_message_not_found"))
+          expect(result.error.message).to eq(I18n.t("chat.errors.original_message_not_found"))
         end
 
         it "uses the next message in the chain as the root when the root is deleted" do
-          root_message.destroy!
+          original_message.destroy!
           Chat::ChatMessageCreator.create(
             chat_channel: public_chat_channel,
             user: user1,

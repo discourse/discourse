@@ -219,18 +219,24 @@ class Chat::MessageMover
       end
 
     threads_to_update.each do |thread|
-      # NOTE: We may want to do something with the old empty thread at some
-      # point, maybe close or delete it. For now just leave it dangling.
-      next if thread.chat_messages.empty?
+      # NOTE: We may want to do something different with the old empty thread at some
+      # point when we add an explicit thread move UI, for now we can just delete it,
+      # since it will not contain any important data.
+      if thread.chat_messages.empty?
+        thread.destroy!
+        next
+      end
 
-      original_message = thread.chat_messages.first
-      new_thread =
-        ChatThread.create(
-          original_message: original_message,
-          original_message_user: original_message.user,
-          channel: @source_channel,
-        )
-      thread.chat_messages.update_all(thread_id: new_thread.id)
+      ChatThread.transaction do
+        original_message = thread.chat_messages.first
+        new_thread =
+          ChatThread.create!(
+            original_message: original_message,
+            original_message_user: original_message.user,
+            channel: @source_channel,
+          )
+        thread.chat_messages.update_all(thread_id: new_thread.id)
+      end
     end
   end
 end

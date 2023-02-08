@@ -73,7 +73,7 @@ en:
       over_chat_max_direct_message_users:
         one: "You can only create a direct message with yourself."
         other: "You can't create a direct message with more than %{count} other users."
-      root_message_not_found: "The ancestor of the message you are replying cannot be found or has been deleted."
+      original_message_not_found: "The ancestor of the message you are replying cannot be found or has been deleted."
     reviewables:
       message_already_handled: "Thanks, but we've already reviewed this message and determined it does not need to be flagged again."
       actions:

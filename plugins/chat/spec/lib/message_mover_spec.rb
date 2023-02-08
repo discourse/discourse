@@ -160,6 +160,11 @@ describe Chat::MessageMover do
         expect(moved_messages.pluck(:thread_id).uniq).to eq([nil])
       end
 
+      it "deletes the empty thread" do
+        move!
+        expect(ChatThread.exists?(id: thread.id)).to eq(false)
+      end
+
       it "clears in_reply_to_id for remaining messages when the messages they were replying to are moved but leaves the thread_id" do
         message3.update!(in_reply_to: message2)
         message2.update!(in_reply_to: message1)
