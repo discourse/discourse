@@ -49,18 +49,17 @@
   class={{concat-class
     "chat-message-container"
     (if @isHovered "is-hovered")
-    (if this.selectingMessages "selecting-messages")
+    (if @selectingMessages "selecting-messages")
   }}
   data-id={{or @message.id @message.stagedId}}
   data-staged-id={{if @message.staged @message.stagedId}}
 >
   {{#if this.show}}
-    {{#if this.selectingMessages}}
+    {{#if @selectingMessages}}
       <Input
         @type="checkbox"
         class="chat-message-selector"
         @checked={{@message.selected}}
-        {{on "click" this.toggledChecked}}
       />
     {{/if}}
 
@@ -152,7 +151,7 @@
                   />
                 {{/each-in}}
 
-                {{#if this.canInteractWithChat}}
+                {{#if @canInteractWithChat}}
                   {{#unless this.site.mobileView}}
                     <DButton
                       @class="chat-message-react-btn"

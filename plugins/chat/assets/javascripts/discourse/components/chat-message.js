@@ -388,7 +388,7 @@ export default class ChatMessage extends Component {
   }
 
   get mentionWarning() {
-    return this.args.message?.mentionWarning;
+    return this.args.message.get("mentionWarning");
   }
 
   get mentionedCannotSeeText() {
