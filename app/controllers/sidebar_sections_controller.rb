@@ -42,7 +42,7 @@ class SidebarSectionsController < ApplicationController
   end
 
   def links_params
-    params.permit(links: %i[name value id _destroy])["links"]
+    params.permit(links: %i[icon name value id _destroy])["links"]
   end
 
   def check_if_member_of_group

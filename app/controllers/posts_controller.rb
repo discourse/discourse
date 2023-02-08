@@ -183,26 +183,25 @@ class PostsController < ApplicationController
   end
 
   def create
-    @manager_params = create_params
-    @manager_params[:first_post_checks] = !is_api?
-    @manager_params[:advance_draft] = !is_api?
+    manager_params = create_params
+    manager_params[:first_post_checks] = !is_api?
+    manager_params[:advance_draft] = !is_api?
 
-    manager = NewPostManager.new(current_user, @manager_params)
+    manager = NewPostManager.new(current_user, manager_params)
 
-    if is_api?
-      memoized_payload =
-        DistributedMemoizer.memoize(signature_for(@manager_params), 120) do
-          result = manager.perform
-          MultiJson.dump(serialize_data(result, NewPostResultSerializer, root: false))
-        end
+    json =
+      if is_api?
+        memoized_payload =
+          DistributedMemoizer.memoize(signature_for(manager_params), 120) do
+            MultiJson.dump(serialize_data(manager.perform, NewPostResultSerializer, root: false))
+          end
 
-      parsed_payload = JSON.parse(memoized_payload)
-      backwards_compatible_json(parsed_payload, parsed_payload["success"])
-    else
-      result = manager.perform
-      json = serialize_data(result, NewPostResultSerializer, root: false)
-      backwards_compatible_json(json, result.success?)
-    end
+        JSON.parse(memoized_payload)
+      else
+        serialize_data(manager.perform, NewPostResultSerializer, root: false)
+      end
+
+    backwards_compatible_json(json)
   end
 
   def update
@@ -725,9 +724,13 @@ class PostsController < ApplicationController
   # We can't break the API for making posts. The new, queue supporting API
   # doesn't return the post as the root JSON object, but as a nested object.
   # If a param is present it uses that result structure.
-  def backwards_compatible_json(json_obj, success)
+  def backwards_compatible_json(json_obj)
     json_obj.symbolize_keys!
-    if params[:nested_post].blank? && json_obj[:errors].blank? && json_obj[:action] != :enqueued
+
+    success = json_obj[:success]
+
+    if params[:nested_post].blank? && json_obj[:errors].blank? &&
+         json_obj[:action].to_s != "enqueued"
       json_obj = json_obj[:post]
     end
 
