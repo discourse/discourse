@@ -479,7 +479,7 @@ GEM
     syntax_tree (5.2.0)
       prettier_print (>= 1.2.0)
     syntax_tree-disable_ternary (1.0.0)
-    test-prof (1.1.0)
+    test-prof (1.2.0)
     thor (1.2.1)
     tilt (2.0.11)
     timeout (0.3.1)
