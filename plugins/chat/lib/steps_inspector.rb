@@ -11,7 +11,7 @@ module Chat
       attr_reader :step, :result, :nesting_level
 
       delegate :name, to: :step
-      delegate :failure?, :success?, to: :step_result, allow_nil: true
+      delegate :failure?, :success?, :error, to: :step_result, allow_nil: true
 
       def self.for(step, result, nesting_level: 0)
         class_name =
@@ -35,10 +35,6 @@ module Chat
         ""
       end
 
-      def error
-        ""
-      end
-
       def steps
         [self]
       end
@@ -50,20 +46,12 @@ module Chat
       private
 
       def step_result
-        nil
+        result["result.#{type}.#{name}"]
       end
     end
 
     # @!visibility private
     class Model < Step
-      def step_result
-        result[:"result.#{name}"]
-      end
-
-      def success?
-        result[name]
-      end
-
       def error
         step_result.exception.full_message
       end
@@ -71,10 +59,6 @@ module Chat
 
     # @!visibility private
     class Contract < Step
-      def step_result
-        result[:"result.contract.#{name}"]
-      end
-
       def error
         step_result.errors.inspect
       end
@@ -82,9 +66,6 @@ module Chat
 
     # @!visibility private
     class Policy < Step
-      def step_result
-        result[:"result.policy.#{name}"]
-      end
     end
 
     # @!visibility private
@@ -95,6 +76,10 @@ module Chat
 
       def inspect
         "#{"  " * nesting_level}[#{type}]"
+      end
+
+      def step_result
+        nil
       end
     end
 

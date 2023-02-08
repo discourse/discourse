@@ -194,7 +194,18 @@ module Chat
           method = instance.method(method_name)
           args = {}
           args = context.to_h unless method.arity.zero?
+          context[result_key] = Context.build
           instance.instance_exec(**args, &method)
+        end
+
+        private
+
+        def type
+          self.class.name.split("::").last.downcase.sub(/^(\w+)step$/, "\\1")
+        end
+
+        def result_key
+          "result.#{type}.#{name}"
         end
       end
 
@@ -204,15 +215,18 @@ module Chat
           context[name] = super
           raise ArgumentError, "Model not found" unless context[name]
         rescue ArgumentError => exception
-          context.fail!("result.#{name}": Context.build.fail(exception: exception))
+          context[result_key].fail(exception: exception)
+          context.fail!
         end
       end
 
       # @!visibility private
       class PolicyStep < Step
         def call(instance, context)
-          context["result.policy.#{name}"] = Context.build
-          context.fail!("result.policy.#{name}": Context.build.fail) unless super
+          unless super
+            context[result_key].fail
+            context.fail!
+          end
         end
       end
 
@@ -220,11 +234,11 @@ module Chat
       class ContractStep < Step
         def call(instance, context)
           contract = class_name.new(context.to_h.slice(*class_name.attribute_names.map(&:to_sym)))
-          context[:"contract.#{name}"] = contract
-
-          context["result.contract.#{name}"] = Context.build
+          context["contract.#{name}"] = contract
+          context[result_key] = Context.build
           unless contract.valid?
-            context.fail!("result.contract.#{name}": Context.build.fail(errors: contract.errors))
+            context[result_key].fail(errors: contract.errors)
+            context.fail!
           end
         end
       end
@@ -247,8 +261,6 @@ module Chat
 
       included do
         attr_reader :context
-
-        delegate :fail!, to: :context
 
         # @!visibility private
         # Internal class used to setup the base contract of the service.
@@ -322,6 +334,12 @@ module Chat
 
       def run!
         self.class.steps.each { |step| step.call(self, context) }
+      end
+
+      def fail!(message)
+        step_name = caller_locations(1, 1)[0].label
+        context["result.step.#{step_name}"].fail(error: message)
+        context.fail!
       end
     end
   end

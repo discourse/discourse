@@ -104,7 +104,7 @@ module Chat
       end
 
       def step
-        "result.#{name}"
+        "result.model.#{name}"
       end
 
       def description
@@ -122,6 +122,14 @@ module Chat
 
     def fail_to_find_a_model(name = "model")
       FailToFindModel.new(name)
+    end
+
+    def inspect_steps(result)
+      inspector = Chat::StepsInspector.new(result)
+      puts "Steps:"
+      puts inspector.inspect
+      puts "\nFirst error:"
+      puts inspector.error
     end
   end
 end

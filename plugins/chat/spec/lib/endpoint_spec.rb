@@ -11,7 +11,7 @@ RSpec.describe Chat::Endpoint do
     step :fail_step
 
     def fail_step
-      context.fail!
+      fail!("error")
     end
   end
 
@@ -48,9 +48,6 @@ RSpec.describe Chat::Endpoint do
 
   class SuccessContractService
     include Chat::Service::Base
-
-    class Contract
-    end
 
     contract
   end

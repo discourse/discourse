@@ -47,7 +47,7 @@ class Chat::Endpoint
     on_failure: -> { result.failure? },
     on_failed_policy: ->(name = "default") { failure_for?("result.policy.#{name}") },
     on_failed_contract: ->(name = "default") { failure_for?("result.contract.#{name}") },
-    on_model_not_found: ->(name = "model") { failure_for?("result.#{name}") },
+    on_model_not_found: ->(name = "model") { failure_for?("result.model.#{name}") },
   }.with_indifferent_access.freeze
 
   # @!visibility private
