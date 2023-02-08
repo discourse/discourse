@@ -36,7 +36,7 @@ class Admin::FormTemplatesController < Admin::StaffController
     template = FormTemplate.find(params[:id])
 
     begin
-      template = template.update!(name: params[:name], template: params[:template])
+      template.update!(name: params[:name], template: params[:template])
       render_serialized(template, FormTemplateSerializer, root: "form_template")
     rescue FormTemplate::NotAllowed => err
       render_json_error(err.message)

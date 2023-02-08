@@ -110,6 +110,7 @@ RSpec.describe Admin::FormTemplatesController do
       it "updates a form template" do
         put "/admin/customize/form-templates/#{form_template.id}.json",
             params: {
+              id: form_template.id,
               name: "Updated Template",
               template: "New yaml: true",
             }
