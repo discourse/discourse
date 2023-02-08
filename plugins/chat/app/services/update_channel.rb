@@ -42,6 +42,7 @@ module Chat
       step :publish_channel_update
       step :auto_join_users_if_needed
 
+      # @!visibility private
       class Contract
         attribute :name
         attribute :description

@@ -81,7 +81,7 @@
   
   <dl>
     <dt>Included in:</dt>
-    <dd><span class='object_link'><a href="TrashChannel.html" title="Chat::Service::TrashChannel (class)">TrashChannel</a></span>, <span class='object_link'><a href="UpdateChannel.html" title="Chat::Service::UpdateChannel (class)">UpdateChannel</a></span>, <span class='object_link'><a href="UpdateChannelStatus.html" title="Chat::Service::UpdateChannelStatus (class)">UpdateChannelStatus</a></span></dd>
+    <dd><span class='object_link'><a href="TrashChannel.html" title="Chat::Service::TrashChannel (class)">TrashChannel</a></span>, <span class='object_link'><a href="UpdateChannel.html" title="Chat::Service::UpdateChannel (class)">UpdateChannel</a></span>, <span class='object_link'><a href="UpdateChannelStatus.html" title="Chat::Service::UpdateChannelStatus (class)">UpdateChannelStatus</a></span>, <span class='object_link'><a href="UpdateUserLastRead.html" title="Chat::Service::UpdateUserLastRead (class)">UpdateUserLastRead</a></span></dd>
   </dl>
   
 
@@ -93,13 +93,111 @@
   
 </div>
 
-<h2>Defined Under Namespace</h2>
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    
+<p>Module to be included to provide steps DSL to any class. This allows to create easy to understand services as the whole service cycle is visible simply by reading the beginning of its class.</p>
+
+<p>Steps are executed in the order they’re defined. They will use their name to execute the corresponding method defined in the service class.</p>
+
+<p>Currently, there are 5 types of steps:</p>
+<ul><li>
+<p><tt>model(name = :model)</tt>: used to instantiate a model (either by building it or fetching it from the DB). If a falsy value is returned, then the step will fail. Otherwise the resulting object will be assigned in <code>context[name]</code> (<code>context[:model]</code> by default).</p>
+</li><li>
+<p><tt>policy(name = :default)</tt>: used to perform a check on the state of the system. Typically used to run guardians. If a falsy value is returned, the step will fail.</p>
+</li><li>
+<p><tt>contract(name = :default)</tt>: used to validate the input parameters, typically provided by a user calling an endpoint. A special embedded <code>Contract</code> class has to be defined to holds the validations. If the validations fail, the step will fail. Otherwise, the resulting contract will be available in <tt><a href=":"contract.default"">context</a></tt>.</p>
+</li><li>
+<p><tt>step(name)</tt>: used to run small snippets of arbitrary code. The step doesn’t care about its return value, so to mark the service as failed, #fail! has to be called explicitly.</p>
+</li><li>
+<p><code>transaction</code>: used to wrap other steps inside a DB transaction.</p>
+</li></ul>
+
+<p>The methods defined on the service are automatically provided with the whole context passed as keyword arguments. This allows to define in a very explicit way what dependencies are used by the method. If for whatever reason a key isn’t found in the current context, then Ruby will raise an exception when the method is called.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+  <div class="examples">
+    <p class="tag_title">Examples:</p>
+    
+      
+        <p class="example_title"><div class='inline'>
+<p>An example from the <span class='object_link'><a href="TrashChannel.html" title="Chat::Service::TrashChannel (class)">TrashChannel</a></span> service</p>
+</div></p>
+      
+      <pre class="example code"><code><span class='kw'>class</span> <span class='const'><span class='object_link'><a href="TrashChannel.html" title="Chat::Service::TrashChannel (class)">TrashChannel</a></span></span>
+  <span class='id identifier rubyid_include'>include</span> <span class='const'>Base</span>
+
+  <span class='id identifier rubyid_model'>model</span> <span class='symbol'>:channel</span><span class='comma'>,</span> <span class='symbol'>:fetch_channel</span>
+  <span class='id identifier rubyid_policy'>policy</span> <span class='symbol'>:invalid_access</span>
+  <span class='id identifier rubyid_transaction'>transaction</span> <span class='kw'>do</span>
+    <span class='id identifier rubyid_step'>step</span> <span class='symbol'>:prevents_slug_collision</span>
+    <span class='id identifier rubyid_step'>step</span> <span class='symbol'>:soft_delete_channel</span>
+    <span class='id identifier rubyid_step'>step</span> <span class='symbol'>:log_channel_deletion</span>
+  <span class='kw'>end</span>
+  <span class='id identifier rubyid_step'>step</span> <span class='symbol'>:enqueue_delete_channel_relations_job</span>
+
+  <span class='id identifier rubyid_private'>private</span>
+
+  <span class='kw'>def</span> <span class='id identifier rubyid_fetch_channel'>fetch_channel</span><span class='lparen'>(</span><span class='label'>channel_id:</span><span class='comma'>,</span> <span class='op'>**</span><span class='rparen'>)</span>
+    <span class='const'>ChatChannel</span><span class='period'>.</span><span class='id identifier rubyid_find_by'>find_by</span><span class='lparen'>(</span><span class='label'>id:</span> <span class='id identifier rubyid_channel_id'>channel_id</span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
+
+  <span class='kw'>def</span> <span class='id identifier rubyid_invalid_access'>invalid_access</span><span class='lparen'>(</span><span class='label'>guardian:</span><span class='comma'>,</span> <span class='label'>channel:</span><span class='comma'>,</span> <span class='op'>**</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_guardian'>guardian</span><span class='period'>.</span><span class='id identifier rubyid_can_preview_chat_channel?'>can_preview_chat_channel?</span><span class='lparen'>(</span><span class='id identifier rubyid_channel'>channel</span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_guardian'>guardian</span><span class='period'>.</span><span class='id identifier rubyid_can_delete_chat_channel?'>can_delete_chat_channel?</span>
+  <span class='kw'>end</span>
+
+  <span class='kw'>def</span> <span class='id identifier rubyid_prevents_slug_collision'>prevents_slug_collision</span><span class='lparen'>(</span><span class='label'>channel:</span><span class='comma'>,</span> <span class='op'>**</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_…'>…</span>
+  <span class='kw'>end</span>
+
+  <span class='kw'>def</span> <span class='id identifier rubyid_soft_delete_channel'>soft_delete_channel</span><span class='lparen'>(</span><span class='label'>guardian:</span><span class='comma'>,</span> <span class='label'>channel:</span><span class='comma'>,</span> <span class='op'>**</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_…'>…</span>
+  <span class='kw'>end</span>
+
+  <span class='kw'>def</span> <span class='id identifier rubyid_log_channel_deletion'>log_channel_deletion</span><span class='lparen'>(</span><span class='label'>guardian:</span><span class='comma'>,</span> <span class='label'>channel:</span><span class='comma'>,</span> <span class='op'>**</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_…'>…</span>
+  <span class='kw'>end</span>
+
+  <span class='kw'>def</span> <span class='id identifier rubyid_enqueue_delete_channel_relations_job'>enqueue_delete_channel_relations_job</span><span class='lparen'>(</span><span class='label'>channel:</span><span class='comma'>,</span> <span class='op'>**</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_…'>…</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></code></pre>
+    
+      
+        <p class="example_title"><div class='inline'>
+<p>An example from the <span class='object_link'><a href="UpdateChannelStatus.html" title="Chat::Service::UpdateChannelStatus (class)">UpdateChannelStatus</a></span> service which uses a contract</p>
+</div></p>
+      
+      <pre class="example code"><code><span class='kw'>class</span> <span class='const'><span class='object_link'><a href="UpdateChannelStatus.html" title="Chat::Service::UpdateChannelStatus (class)">UpdateChannelStatus</a></span></span>
+  <span class='id identifier rubyid_include'>include</span> <span class='const'>Base</span>
+
+  <span class='id identifier rubyid_model'>model</span> <span class='symbol'>:channel</span><span class='comma'>,</span> <span class='symbol'>:fetch_channel</span>
+  <span class='id identifier rubyid_contract'>contract</span>
+  <span class='id identifier rubyid_policy'>policy</span> <span class='symbol'>:check_channel_permission</span>
+  <span class='id identifier rubyid_step'>step</span> <span class='symbol'>:change_status</span>
+
+  <span class='kw'>class</span> <span class='const'>Contract</span>
+    <span class='id identifier rubyid_attribute'>attribute</span> <span class='symbol'>:status</span>
+    <span class='id identifier rubyid_validates'>validates</span> <span class='symbol'>:status</span><span class='comma'>,</span> <span class='label'>inclusion:</span> <span class='lbrace'>{</span> <span class='label'>in:</span> <span class='const'>ChatChannel</span><span class='period'>.</span><span class='id identifier rubyid_editable_statuses'>editable_statuses</span><span class='period'>.</span><span class='id identifier rubyid_keys'>keys</span> <span class='rbrace'>}</span>
+  <span class='kw'>end</span>
+
+  <span class='id identifier rubyid_…'>…</span>
+<span class='kw'>end</span></code></pre>
+    
+  </div>
+
+
+</div><h2>Defined Under Namespace</h2>
 <p class="children">
   
     
   
     
-      <strong class="classes">Classes:</strong> <span class='object_link'><a href="Base/Context.html" title="Chat::Service::Base::Context (class)">Context</a></span>, <span class='object_link'><a href="Base/ContractStep.html" title="Chat::Service::Base::ContractStep (class)">ContractStep</a></span>, <span class='object_link'><a href="Base/Failure.html" title="Chat::Service::Base::Failure (class)">Failure</a></span>, <span class='object_link'><a href="Base/ModelStep.html" title="Chat::Service::Base::ModelStep (class)">ModelStep</a></span>, <span class='object_link'><a href="Base/PolicyStep.html" title="Chat::Service::Base::PolicyStep (class)">PolicyStep</a></span>, <span class='object_link'><a href="Base/Step.html" title="Chat::Service::Base::Step (class)">Step</a></span>
+      <strong class="classes">Classes:</strong> <span class='object_link'><a href="Base/Context.html" title="Chat::Service::Base::Context (class)">Context</a></span>, <span class='object_link'><a href="Base/Failure.html" title="Chat::Service::Base::Failure (class)">Failure</a></span>
     
   
 </p>
@@ -240,7 +338,7 @@
 </pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 171</span>
+      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 288</span>
 
 </pre>
     </td>
@@ -287,7 +385,7 @@
 </pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 159</span>
+      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 276</span>
 
 </pre>
     </td>
@@ -332,7 +430,7 @@
 </pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 182</span>
+      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 299</span>
 
 </pre>
     </td>

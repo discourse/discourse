@@ -4,7 +4,7 @@
     <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>
-  Class: Chat::Service::UpdateChannel
+  Class: Chat::Service::UpdateUserLastRead
   
     &mdash; Documentation by YARD 0.9.28
   
@@ -15,7 +15,7 @@
   <link rel="stylesheet" href="../../css/common.css" type="text/css" />
 
 <script type="text/javascript">
-  pathId = "Chat::Service::UpdateChannel";
+  pathId = "Chat::Service::UpdateUserLastRead";
   relpath = '../../';
 </script>
 
@@ -39,7 +39,7 @@
     <a href="../../_index.html">Index (U)</a> &raquo;
     <span class='title'><span class='object_link'><a href="../../Chat.html" title="Chat (module)">Chat</a></span></span> &raquo; <span class='title'><span class='object_link'><a href="../Service.html" title="Chat::Service (module)">Service</a></span></span>
      &raquo; 
-    <span class="title">UpdateChannel</span>
+    <span class="title">UpdateUserLastRead</span>
   
 </div>
 
@@ -59,7 +59,7 @@
         <div class="clear"></div>
       </div>
 
-      <div id="content"><h1>Class: Chat::Service::UpdateChannel
+      <div id="content"><h1>Class: Chat::Service::UpdateUserLastRead
   
   
   
@@ -74,7 +74,7 @@
         <ul class="fullTree">
           <li>Object</li>
           
-            <li class="next">Chat::Service::UpdateChannel</li>
+            <li class="next">Chat::Service::UpdateUserLastRead</li>
           
         </ul>
         <a href="#" class="inheritanceTree">show all</a>
@@ -99,7 +99,7 @@
   
   <dl>
     <dt>Defined in:</dt>
-    <dd>plugins/chat/app/services/update_channel.rb</dd>
+    <dd>plugins/chat/app/services/update_user_last_read.rb</dd>
   </dl>
   
 </div>
@@ -107,9 +107,7 @@
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
     
-<p>Service responsible for updating a chat channel’s name, slug, and description.</p>
-
-<p>For a CategoryChannel, the settings for auto_join_users and allow_channel_wide_mentions are also editable.</p>
+<p>Service responsible for updating the last read message id of a membership.</p>
 
 
   </div>
@@ -120,13 +118,7 @@
     <p class="tag_title">Examples:</p>
     
       
-      <pre class="example code"><code><span class='const'><span class='object_link'><a href="../../Chat.html" title="Chat (module)">Chat</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Service.html" title="Chat::Service (module)">Service</a></span></span><span class='op'>::</span><span class='const'>UpdateChannel</span><span class='period'>.</span><span class='id identifier rubyid_call'><span class='object_link'><a href="#call-instance_method" title="Chat::Service::UpdateChannel#call (method)">call</a></span></span><span class='lparen'>(</span>
- <span class='label'>channel_id:</span> <span class='int'>2</span><span class='comma'>,</span>
- <span class='label'>guardian:</span> <span class='id identifier rubyid_guardian'>guardian</span><span class='comma'>,</span>
- <span class='label'>name:</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>SuperChannel</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span>
- <span class='label'>description:</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>This is the best channel</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span>
- <span class='label'>slug:</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>super-channel</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span>
-<span class='rparen'>)</span></code></pre>
+      <pre class="example code"><code><span class='const'><span class='object_link'><a href="../../Chat.html" title="Chat (module)">Chat</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Service.html" title="Chat::Service (module)">Service</a></span></span><span class='op'>::</span><span class='const'>UpdateUserLastRead</span><span class='period'>.</span><span class='id identifier rubyid_call'><span class='object_link'><a href="#call-instance_method" title="Chat::Service::UpdateUserLastRead#call (method)">call</a></span></span><span class='lparen'>(</span><span class='label'>user_id:</span> <span class='int'>1</span><span class='comma'>,</span> <span class='label'>channel_id:</span> <span class='int'>2</span><span class='comma'>,</span> <span class='label'>guardian:</span> <span class='id identifier rubyid_guardian'>guardian</span><span class='rparen'>)</span></code></pre>
     
   </div>
 
@@ -149,7 +141,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#call-instance_method" title="#call (instance method)">#<strong>call</strong>(channel_id: , guardian: , **params_to_edit)  &#x21d2; Chat::Service::Base::Context </a>
+      <a href="#call-instance_method" title="#call (instance method)">#<strong>call</strong>(user_id: , channel_id: , guardian: )  &#x21d2; Chat::Service::Base::Context </a>
     
 
     
@@ -192,7 +184,7 @@
       <div class="method_details first">
   <h3 class="signature first" id="call-instance_method">
   
-    #<strong>call</strong>(channel_id: , guardian: , **params_to_edit)  &#x21d2; <tt><span class='object_link'><a href="Base/Context.html" title="Chat::Service::Base::Context (class)">Chat::Service::Base::Context</a></span></tt> 
+    #<strong>call</strong>(user_id: , channel_id: , guardian: )  &#x21d2; <tt><span class='object_link'><a href="Base/Context.html" title="Chat::Service::Base::Context (class)">Chat::Service::Base::Context</a></span></tt> 
   
 
   
@@ -207,6 +199,19 @@
 <div class="tags">
   <p class="tag_title">Parameters:</p>
 <ul class="param">
+  
+    <li>
+      
+        <span class='name'>user_id</span>
+      
+      
+        <span class='type'>(<tt>Integer</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt></tt>)</em>
+      
+      
+    </li>
   
     <li>
       
@@ -234,84 +239,7 @@
       
     </li>
   
-    <li>
-      
-        <span class='name'>params_to_edit</span>
-      
-      
-        <span class='type'>(<tt>Hash</tt>)</span>
-      
-      
-      
-    </li>
-  
 </ul>
-
-  
-    
-    
-    
-    
-    
-    
-    <p class="tag_title">Options Hash (<tt>**params_to_edit</tt>):</p>
-    <ul class="option">
-      
-        <li>
-          <span class="name">name</span>
-          <span class="type">(<tt>String</tt>)</span>
-          <span class="default">
-            
-          </span>
-          
-        </li>
-      
-        <li>
-          <span class="name">description</span>
-          <span class="type">(<tt>String</tt>)</span>
-          <span class="default">
-            
-          </span>
-          
-        </li>
-      
-        <li>
-          <span class="name">slug</span>
-          <span class="type">(<tt>String</tt>)</span>
-          <span class="default">
-            
-          </span>
-          
-        </li>
-      
-        <li>
-          <span class="name">auto_join_users</span>
-          <span class="type">(<tt>Boolean</tt>)</span>
-          <span class="default">
-            
-          </span>
-          
-            &mdash; <div class='inline'>
-<p>Only valid for CategoryChannel. Whether active users with permission to see the category should automatically join the channel.</p>
-</div>
-          
-        </li>
-      
-        <li>
-          <span class="name">allow_channel_wide_mentions</span>
-          <span class="type">(<tt>String</tt>)</span>
-          <span class="default">
-            
-          </span>
-          
-            &mdash; <div class='inline'>
-<p>Allow the use of @here and @all in the channel.</p>
-</div>
-          
-        </li>
-      
-    </ul>
-  
 
 <p class="tag_title">Returns:</p>
 <ul class="return">
@@ -333,12 +261,12 @@
       <pre class="lines">
 
 
-34</pre>
+19</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/update_channel.rb', line 34</span>
+      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/update_user_last_read.rb', line 19</span>
 
-<span class='id identifier rubyid_model'>model</span> <span class='symbol'>:channel</span><span class='comma'>,</span> <span class='symbol'>:fetch_channel</span></pre>
+<span class='id identifier rubyid_model'>model</span> <span class='symbol'>:membership</span><span class='comma'>,</span> <span class='symbol'>:fetch_active_membership</span></pre>
     </td>
   </tr>
 </table>

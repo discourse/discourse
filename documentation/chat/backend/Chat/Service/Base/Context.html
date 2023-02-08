@@ -145,7 +145,7 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Marks the service as failed without raising an exception.</p>
+<p>Marks the context as failed without raising an exception.</p>
 </div></span>
   
 </li>
@@ -169,7 +169,7 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Marks the service as failed.</p>
+<p>Marks the context as failed.</p>
 </div></span>
   
 </li>
@@ -192,7 +192,9 @@
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>Returns <code>true</code> if the context is set as failed.</p>
+</div></span>
   
 </li>
 
@@ -214,7 +216,9 @@
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>Returns <code>true</code> if the conext is set as successful (default).</p>
+</div></span>
   
 </li>
 
@@ -241,7 +245,7 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Marks the service as failed without raising an exception.</p>
+<p>Marks the context as failed without raising an exception.</p>
 
 
   </div>
@@ -298,14 +302,14 @@
       <pre class="lines">
 
 
-45
-46
-47
-48
-49</pre>
+136
+137
+138
+139
+140</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 45</span>
+      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 136</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_fail'>fail</span><span class='lparen'>(</span><span class='id identifier rubyid_context'>context</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_merge'>merge</span><span class='lparen'>(</span><span class='id identifier rubyid_context'>context</span><span class='rparen'>)</span>
@@ -329,7 +333,7 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Marks the service as failed.</p>
+<p>Marks the context as failed.</p>
 
 
   </div>
@@ -399,13 +403,13 @@
       <pre class="lines">
 
 
-35
-36
-37
-38</pre>
+126
+127
+128
+129</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 35</span>
+      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 126</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_fail!'>fail!</span><span class='lparen'>(</span><span class='id identifier rubyid_context'>context</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_fail'>fail</span><span class='lparen'>(</span><span class='id identifier rubyid_context'>context</span><span class='rparen'>)</span>
@@ -428,6 +432,8 @@
 </h3><div class="docstring">
   <div class="discussion">
     
+<p>Returns <code>true</code> if the context is set as failed</p>
+
 
   </div>
 </div>
@@ -443,9 +449,23 @@
       
       
       
+        &mdash;
+        <div class='inline'>
+<p>returns <code>true</code> if the context is set as failed</p>
+</div>
+      
     </li>
   
 </ul>
+
+  <p class="tag_title">See Also:</p>
+  <ul class="see">
+    
+      <li><span class='object_link'><a href="#fail!-instance_method" title="Chat::Service::Base::Context#fail! (method)">#fail!</a></span></li>
+    
+      <li><span class='object_link'><a href="#fail-instance_method" title="Chat::Service::Base::Context#fail (method)">#fail</a></span></li>
+    
+  </ul>
 
 </div><table class="source_code">
   <tr>
@@ -453,12 +473,12 @@
       <pre class="lines">
 
 
-26
-27
-28</pre>
+117
+118
+119</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 26</span>
+      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 117</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_failure?'>failure?</span>
   <span class='ivar'>@failure</span> <span class='op'>||</span> <span class='kw'>false</span>
@@ -480,6 +500,8 @@
 </h3><div class="docstring">
   <div class="discussion">
     
+<p>Returns <code>true</code> if the conext is set as successful (default)</p>
+
 
   </div>
 </div>
@@ -495,6 +517,11 @@
       
       
       
+        &mdash;
+        <div class='inline'>
+<p>returns <code>true</code> if the conext is set as successful (default)</p>
+</div>
+      
     </li>
   
 </ul>
@@ -505,12 +532,12 @@
       <pre class="lines">
 
 
-22
-23
-24</pre>
+110
+111
+112</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 22</span>
+      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 110</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_success?'>success?</span>
   <span class='op'>!</span><span class='id identifier rubyid_failure?'>failure?</span>

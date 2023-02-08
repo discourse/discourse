@@ -118,7 +118,7 @@
     <p class="tag_title">Examples:</p>
     
       
-      <pre class="example code"><code><span class='const'><span class='object_link'><a href="../../Chat.html" title="Chat (module)">Chat</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Service.html" title="Chat::Service (module)">Service</a></span></span><span class='op'>::</span><span class='const'>TrashChannel</span><span class='period'>.</span><span class='id identifier rubyid_call'><span class='object_link'><a href="#call-instance_method" title="Chat::Service::TrashChannel#call (method)">call</a></span></span><span class='lparen'>(</span><span class='label'>channel:</span> <span class='id identifier rubyid_channel'>channel</span><span class='comma'>,</span> <span class='label'>guardian:</span> <span class='id identifier rubyid_guardian'>guardian</span><span class='rparen'>)</span></code></pre>
+      <pre class="example code"><code><span class='const'><span class='object_link'><a href="../../Chat.html" title="Chat (module)">Chat</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Service.html" title="Chat::Service (module)">Service</a></span></span><span class='op'>::</span><span class='const'>TrashChannel</span><span class='period'>.</span><span class='id identifier rubyid_call'><span class='object_link'><a href="#call-instance_method" title="Chat::Service::TrashChannel#call (method)">call</a></span></span><span class='lparen'>(</span><span class='label'>channel_id:</span> <span class='int'>2</span><span class='comma'>,</span> <span class='label'>guardian:</span> <span class='id identifier rubyid_guardian'>guardian</span><span class='rparen'>)</span></code></pre>
     
   </div>
 
@@ -157,7 +157,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#call-instance_method" title="#call (instance method)">#<strong>call</strong>(channel: , guardian: )  &#x21d2; Object </a>
+      <a href="#call-instance_method" title="#call (instance method)">#<strong>call</strong>(channel_id: , guardian: )  &#x21d2; Chat::Service::Base::Context </a>
     
 
     
@@ -171,9 +171,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>Service responsible for trashing a chat channel.</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'></div></span>
   
 </li>
 
@@ -202,7 +200,7 @@
       <div class="method_details first">
   <h3 class="signature first" id="call-instance_method">
   
-    #<strong>call</strong>(channel: , guardian: )  &#x21d2; <tt>Object</tt> 
+    #<strong>call</strong>(channel_id: , guardian: )  &#x21d2; <tt><span class='object_link'><a href="Base/Context.html" title="Chat::Service::Base::Context (class)">Chat::Service::Base::Context</a></span></tt> 
   
 
   
@@ -211,21 +209,54 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Service responsible for trashing a chat channel. Note the slug is modified to prevent collisions.</p>
-
 
   </div>
 </div>
 <div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
   
-  <div class="examples">
-    <p class="tag_title">Examples:</p>
-    
+    <li>
       
-      <pre class="example code"><code><span class='const'><span class='object_link'><a href="../../Chat.html" title="Chat (module)">Chat</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Service.html" title="Chat::Service (module)">Service</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="" title="Chat::Service::TrashChannel (class)">TrashChannel</a></span></span><span class='period'>.</span><span class='id identifier rubyid_call'>call</span><span class='lparen'>(</span><span class='label'>channel:</span> <span class='id identifier rubyid_channel'>channel</span><span class='comma'>,</span> <span class='label'>guardian:</span> <span class='id identifier rubyid_guardian'>guardian</span><span class='rparen'>)</span></code></pre>
-    
-  </div>
+        <span class='name'>channel_id</span>
+      
+      
+        <span class='type'>(<tt>Integer</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt></tt>)</em>
+      
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>guardian</span>
+      
+      
+        <span class='type'>(<tt>Guardian</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt></tt>)</em>
+      
+      
+    </li>
+  
+</ul>
 
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="Base/Context.html" title="Chat::Service::Base::Context (class)">Chat::Service::Base::Context</a></span></tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
 
 </div><table class="source_code">
   <tr>
@@ -233,114 +264,12 @@
       <pre class="lines">
 
 
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-27
-28
-29
-30
-31
-32
-33
-34
-35
-36
-37
-38
-39
-40
-41
-42
-43
-44
-45
-46
-47
-48
-49
-50
-51
-52
-53
-54
-55
-56
-57
-58
-59
-60
-61
-62
-63
-64
-65
-66
-67
-68</pre>
+19</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/trash_channel.rb', line 17</span>
+      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/trash_channel.rb', line 19</span>
 
-<span class='kw'>class</span> <span class='const'><span class='object_link'><a href="" title="Chat::Service::TrashChannel (class)">TrashChannel</a></span></span>
-  <span class='id identifier rubyid_include'>include</span> <span class='const'><span class='object_link'><a href="Base.html" title="Chat::Service::Base (module)">Base</a></span></span>
-
-  <span class='const'><span class='object_link'><a href="#DELETE_CHANNEL_LOG_KEY-constant" title="Chat::Service::TrashChannel::DELETE_CHANNEL_LOG_KEY (constant)">DELETE_CHANNEL_LOG_KEY</a></span></span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>chat_channel_delete</span><span class='tstring_end'>&quot;</span></span>
-
-  <span class='id identifier rubyid_delegate'>delegate</span> <span class='symbol'>:channel</span><span class='comma'>,</span> <span class='label'>to:</span> <span class='symbol'>:context</span>
-
-  <span class='id identifier rubyid_model'>model</span> <span class='const'>ChatChannel</span><span class='comma'>,</span> <span class='label'>name:</span> <span class='symbol'>:channel</span><span class='comma'>,</span> <span class='label'>key:</span> <span class='symbol'>:channel_id</span>
-  <span class='id identifier rubyid_policy'>policy</span> <span class='symbol'>:invalid_access</span>
-  <span class='id identifier rubyid_step'>step</span> <span class='symbol'>:trash_channel</span>
-  <span class='id identifier rubyid_step'>step</span> <span class='symbol'>:enqueue_delete_channel_relations_job</span>
-
-  <span class='id identifier rubyid_private'>private</span>
-
-  <span class='kw'>def</span> <span class='id identifier rubyid_trash_channel'>trash_channel</span>
-    <span class='const'>ChatChannel</span><span class='period'>.</span><span class='id identifier rubyid_transaction'>transaction</span> <span class='kw'>do</span>
-      <span class='id identifier rubyid_prevents_slug_collision'>prevents_slug_collision</span>
-      <span class='id identifier rubyid_soft_delete_channel'>soft_delete_channel</span>
-      <span class='id identifier rubyid_log_channel_deletion'>log_channel_deletion</span>
-    <span class='kw'>end</span>
-  <span class='kw'>end</span>
-
-  <span class='kw'>def</span> <span class='id identifier rubyid_invalid_access'>invalid_access</span>
-    <span class='id identifier rubyid_guardian'>guardian</span><span class='period'>.</span><span class='id identifier rubyid_can_preview_chat_channel?'>can_preview_chat_channel?</span><span class='lparen'>(</span><span class='id identifier rubyid_channel'>channel</span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_guardian'>guardian</span><span class='period'>.</span><span class='id identifier rubyid_can_delete_chat_channel?'>can_delete_chat_channel?</span>
-  <span class='kw'>end</span>
-
-  <span class='kw'>def</span> <span class='id identifier rubyid_soft_delete_channel'>soft_delete_channel</span>
-    <span class='id identifier rubyid_channel'>channel</span><span class='period'>.</span><span class='id identifier rubyid_trash!'>trash!</span><span class='lparen'>(</span><span class='id identifier rubyid_guardian'>guardian</span><span class='period'>.</span><span class='id identifier rubyid_user'>user</span><span class='rparen'>)</span>
-  <span class='kw'>end</span>
-
-  <span class='kw'>def</span> <span class='id identifier rubyid_enqueue_delete_channel_relations_job'>enqueue_delete_channel_relations_job</span>
-    <span class='const'>Jobs</span><span class='period'>.</span><span class='id identifier rubyid_enqueue'>enqueue</span><span class='lparen'>(</span><span class='symbol'>:chat_channel_delete</span><span class='comma'>,</span> <span class='label'>chat_channel_id:</span> <span class='id identifier rubyid_channel'>channel</span><span class='period'>.</span><span class='id identifier rubyid_id'>id</span><span class='rparen'>)</span>
-  <span class='kw'>end</span>
-
-  <span class='kw'>def</span> <span class='id identifier rubyid_log_channel_deletion'>log_channel_deletion</span>
-    <span class='const'>StaffActionLogger</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_guardian'>guardian</span><span class='period'>.</span><span class='id identifier rubyid_user'>user</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_log_custom'>log_custom</span><span class='lparen'>(</span>
-      <span class='const'><span class='object_link'><a href="#DELETE_CHANNEL_LOG_KEY-constant" title="Chat::Service::TrashChannel::DELETE_CHANNEL_LOG_KEY (constant)">DELETE_CHANNEL_LOG_KEY</a></span></span><span class='comma'>,</span>
-      <span class='lbrace'>{</span> <span class='label'>chat_channel_id:</span> <span class='id identifier rubyid_channel'>channel</span><span class='period'>.</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='label'>chat_channel_name:</span> <span class='id identifier rubyid_channel'>channel</span><span class='period'>.</span><span class='id identifier rubyid_title'>title</span><span class='lparen'>(</span><span class='id identifier rubyid_guardian'>guardian</span><span class='period'>.</span><span class='id identifier rubyid_user'>user</span><span class='rparen'>)</span> <span class='rbrace'>}</span><span class='comma'>,</span>
-    <span class='rparen'>)</span>
-  <span class='kw'>end</span>
-
-  <span class='kw'>def</span> <span class='id identifier rubyid_prevents_slug_collision'>prevents_slug_collision</span>
-    <span class='id identifier rubyid_channel'>channel</span><span class='period'>.</span><span class='id identifier rubyid_update!'>update!</span><span class='lparen'>(</span><span class='label'>slug:</span> <span class='id identifier rubyid_generate_deleted_slug'>generate_deleted_slug</span><span class='rparen'>)</span>
-  <span class='kw'>end</span>
-
-  <span class='kw'>def</span> <span class='id identifier rubyid_generate_deleted_slug'>generate_deleted_slug</span>
-    <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='const'>Time</span><span class='period'>.</span><span class='id identifier rubyid_now'>now</span><span class='period'>.</span><span class='id identifier rubyid_strftime'>strftime</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>%Y%m%d-%H%M</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='embexpr_end'>}</span><span class='tstring_content'>-</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_channel'>channel</span><span class='period'>.</span><span class='id identifier rubyid_slug'>slug</span><span class='embexpr_end'>}</span><span class='tstring_content'>-deleted</span><span class='tstring_end'>&quot;</span></span><span class='period'>.</span><span class='id identifier rubyid_truncate'>truncate</span><span class='lparen'>(</span>
-      <span class='const'>SiteSetting</span><span class='period'>.</span><span class='id identifier rubyid_max_topic_title_length'>max_topic_title_length</span><span class='comma'>,</span>
-      <span class='label'>omission:</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span>
-    <span class='rparen'>)</span>
-  <span class='kw'>end</span>
-<span class='kw'>end</span></pre>
+<span class='const'><span class='object_link'><a href="#DELETE_CHANNEL_LOG_KEY-constant" title="Chat::Service::TrashChannel::DELETE_CHANNEL_LOG_KEY (constant)">DELETE_CHANNEL_LOG_KEY</a></span></span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>chat_channel_delete</span><span class='tstring_end'>&quot;</span></span></pre>
     </td>
   </tr>
 </table>

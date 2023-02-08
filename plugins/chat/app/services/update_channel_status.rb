@@ -21,6 +21,7 @@ module Chat
       policy :check_channel_permission
       step :change_status
 
+      # @!visibility private
       class Contract
         attribute :status
         validates :status, inclusion: { in: ChatChannel.editable_statuses.keys }
