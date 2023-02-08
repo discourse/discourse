@@ -1371,9 +1371,12 @@ acceptance("Composer - current time", function (needs) {
     assert.ok(exists(".d-editor-input"), "the composer input is visible");
     await fillIn(".d-editor-input", "and the time now is: ");
 
+    const mac = /Mac|iPod|iPhone|iPad/.test(navigator.platform);
+
     await triggerKeyEvent(".d-editor-input", "keydown", ".", {
       shiftKey: true,
-      metaKey: true,
+      ctrlKey: !mac,
+      metaKey: mac,
     });
 
     const time = moment().format("HH:mm:ss");
