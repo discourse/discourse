@@ -40,7 +40,7 @@
   overflow-y: auto;
   width: 80vw;
   max-width: 1500px;
-  max-height: 85vh !important; // overrides a default modal!important for extra space
+  max-height: 85vh !important; // overrides a default modal !important for extra space
 
   .keyboard-shortcuts-help__container {
     columns: auto 20em;
