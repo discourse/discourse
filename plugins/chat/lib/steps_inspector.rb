@@ -1,7 +1,12 @@
 # frozen_string_literal: true
 
 module Chat
+  # = Chat::StepsInspector
+  #
+  # This class takes a {Chat::Service::Base::Context} object and inspects it.
+  # It will output a list of steps and what is their known state.
   class StepsInspector
+    # @!visibility private
     class Step
       attr_reader :step, :result, :nesting_level
 
@@ -49,6 +54,7 @@ module Chat
       end
     end
 
+    # @!visibility private
     class Model < Step
       def step_result
         result[:"result.#{name}"]
@@ -63,6 +69,7 @@ module Chat
       end
     end
 
+    # @!visibility private
     class Contract < Step
       def step_result
         result[:"result.contract.#{name}"]
@@ -73,12 +80,14 @@ module Chat
       end
     end
 
+    # @!visibility private
     class Policy < Step
       def step_result
         result[:"result.policy.#{name}"]
       end
     end
 
+    # @!visibility private
     class Transaction < Step
       def steps
         [self, *step.steps.map { Step.for(_1, result, nesting_level: nesting_level + 1).steps }]
@@ -96,6 +105,13 @@ module Chat
       @result = result
     end
 
+    # Inspect the provided result object.
+    # Example output:
+    #   [1/4] [model] 'channel' ✅
+    #   [2/4] [contract] 'default' ✅
+    #   [3/4] [policy] 'check_channel_permission' ❌
+    #   [4/4] [step] 'change_status'
+    # @return [String] the steps of the result object with their state
     def inspect
       steps
         .map
@@ -103,6 +119,7 @@ module Chat
         .join("\n")
     end
 
+    # @return [String, nil] the first available error, if any.
     def error
       steps.detect(&:failure?)&.error
     end
