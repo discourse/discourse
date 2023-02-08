@@ -260,6 +260,7 @@ module Chat
       end
 
       included do
+        # The global context which is available from any step.
         attr_reader :context
 
         # @!visibility private
@@ -289,34 +290,91 @@ module Chat
       end
 
       # @!scope class
-      # @!method policy(name = :default, &block)
-      # Evaluates a set of conditions related to the given context. If the
-      # block doesn’t return a truthy value, then the policy will fail.
-      # More than one policy can be defined and named. When that’s the case,
-      # policies are evaluated in their definition order.
+      # @!method model(name = :model, step_name = :"fetch_#{name}")
+      # @param name [Symbol] name of the model
+      # @param step_name [Symbol] name of the method to call for this step
+      # Evaluates arbitrary code to build or fetch a model (typically from the
+      # DB). If the step returns a falsy value, then the step will fail.
+      #
+      # It stores the resulting model in +context[:model]+ by default (can be
+      # customized by providing the +name+ argument).
       #
       # @example
-      #   policy(:invalid_access) do
-      #     guardian.can_delete_chat_channel?
+      #   model :channel, :fetch_channel
+      #
+      #   private
+      #
+      #   def fetch_channel(channel_id:, **)
+      #     ChatChannel.find_by(id: channel_id)
       #   end
 
       # @!scope class
-      # @!method contract(&block)
+      # @!method policy(name = :default)
+      # @param name [Symbol] name for this policy
+      # Performs checks related to the state of the system. If the
+      # step doesn’t return a truthy value, then the policy will fail.
+      #
+      # @example
+      #   policy :no_direct_message_channel
+      #
+      #   private
+      #
+      #   def no_direct_message_channel(channel:, **)
+      #     !channel.direct_message_channel?
+      #   end
+
+      # @!scope class
+      # @!method contract(name = :default, class_name: self::Contract)
+      # @param name [Symbol] name for this contract
+      # @param class_name [Class] a class defining the contract
       # Checks the validity of the input parameters.
       # Implements ActiveModel::Validations and ActiveModel::Attributes.
       #
+      # It stores the resulting contract in +context ["contract.default"]+ by
+      # default (can be customized by providing the +name+ argument).
+      #
       # @example
-      #   contract do
+      #   contract
+      #
+      #   class Contract
       #     attribute :name
       #     validates :name, presence: true
       #   end
 
       # @!scope class
-      # @!method service(&block)
-      # Holds the business logic of the service.
+      # @!method step(name)
+      # @param name [Symbol] the name of this step
+      # Runs arbitrary code. To mark a step as failed, a call to {#fail!} needs
+      # to be made explicitly.
       #
       # @example
-      #   service { context.topic.update!(archived: true) }
+      #   step :update_channel
+      #
+      #   private
+      #
+      #   def update_channel(channel:, params_to_edit:, **)
+      #     channel.update!(params_to_edit)
+      #   end
+      # @example using {#fail!} in a step
+      #   step :save_channel
+      #
+      #   private
+      #
+      #   def save_channel(channel:, **)
+      #     fail!("something went wrong") unless channel.save
+      #   end
+      #
+      # @!scope class
+      # @!method transaction(&block)
+      # @param block [Proc] a block containing steps to be run inside a transaction
+      # Runs steps inside a DB transaction.
+      #
+      # @example
+      #   transaction do
+      #     step :prevents_slug_collision
+      #     step :soft_delete_channel
+      #     step :log_channel_deletion
+      #   end
 
       # @!visibility private
       def initialize(initial_context = {})
