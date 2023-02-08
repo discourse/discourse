@@ -24,8 +24,4 @@ export default class SidebarUserCustomSections extends Component {
   editSection(section) {
     showModal("sidebar-section-form", { model: section });
   }
-
-  addSection() {
-    showModal("sidebar-section-form");
-  }
 }
