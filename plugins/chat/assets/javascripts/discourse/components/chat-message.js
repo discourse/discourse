@@ -6,8 +6,7 @@ import I18n from "I18n";
 import getURL from "discourse-common/lib/get-url";
 import optionalService from "discourse/lib/optional-service";
 import { afterRender, bind } from "discourse-common/utils/decorators";
-import EmberObject, { action, computed } from "@ember/object";
-import { and, not } from "@ember/object/computed";
+import EmberObject, { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { cancel, schedule } from "@ember/runloop";
 import { clipboardCopy } from "discourse/lib/utilities";
@@ -52,12 +51,6 @@ export default class ChatMessage extends Component {
 
   cachedFavoritesReactions = null;
 
-  @and("args.message.deleted_at", "collapsed") deletedAndCollapsed;
-
-  @and("args.message.hidden", "collapsed") hiddenAndCollapsed;
-
-  @not("args.message.expanded") collapsed;
-
   _hasSubscribedToAppEvents = false;
   _loadingReactions = [];
 
@@ -85,6 +78,18 @@ export default class ChatMessage extends Component {
         ".chat-message-actions-mobile-anchor"
       );
     });
+  }
+
+  get deletedAndCollapsed() {
+    return this.args.message?.deleted_at && this.collapsed;
+  }
+
+  get hiddenAndCollapsed() {
+    return this.args.message?.hidden && this.collapsed;
+  }
+
+  get collapsed() {
+    return !this.args.message?.expanded;
   }
 
   @action
@@ -128,7 +133,6 @@ export default class ChatMessage extends Component {
     });
   }
 
-  @computed("args.message.{id,stagedId}")
   get messageContainer() {
     const id = this.args.message?.id || this.args.message?.stagedId;
     return (
@@ -167,14 +171,6 @@ export default class ChatMessage extends Component {
     );
   }
 
-  @computed(
-    "args.selectingMessages",
-    "canFlagMessage",
-    "showDeleteButton",
-    "showRestoreButton",
-    "showEditButton",
-    "showRebakeButton"
-  )
   get secondaryButtons() {
     const buttons = [];
 
@@ -259,13 +255,12 @@ export default class ChatMessage extends Component {
     };
   }
 
-  @computed("args.message", "args.details.can_moderate")
   get show() {
     return (
       !this.args.message?.deleted_at ||
-      this.currentUser.id === this.args.message?.user.id ||
+      this.currentUser.id === this.args.message?.user?.id ||
       this.currentUser.staff ||
-      this.args.details?.canModerate
+      this.args.details?.can_moderate
     );
   }
 
@@ -357,7 +352,6 @@ export default class ChatMessage extends Component {
     );
   }
 
-  @computed("canManageDeletion")
   get showDeleteButton() {
     return (
       this.canManageDeletion &&
@@ -366,7 +360,6 @@ export default class ChatMessage extends Component {
     );
   }
 
-  @computed("canManageDeletion")
   get showRestoreButton() {
     return (
       this.canManageDeletion &&
@@ -392,12 +385,10 @@ export default class ChatMessage extends Component {
     );
   }
 
-  @computed("args.message.mentionWarning")
   get mentionWarning() {
     return this.args.message?.mentionWarning;
   }
 
-  @computed("mentionWarning.cannot_see")
   get mentionedCannotSeeText() {
     return I18n.t("chat.mention_warning.cannot_see", {
       username: this.mentionWarning?.cannot_see?.[0]?.username,
@@ -408,7 +399,6 @@ export default class ChatMessage extends Component {
     });
   }
 
-  @computed("mentionWarning.without_membership")
   get mentionedWithoutMembershipText() {
     return I18n.t("chat.mention_warning.without_membership", {
       username: this.mentionWarning?.without_membership?.[0]?.username,
@@ -419,7 +409,6 @@ export default class ChatMessage extends Component {
     });
   }
 
-  @computed("mentionWarning.group_mentions_disabled")
   get groupsWithDisabledMentions() {
     return I18n.t("chat.mention_warning.group_mentions_disabled", {
       group_name: this.mentionWarning?.group_mentions_disabled?.[0],
@@ -430,7 +419,6 @@ export default class ChatMessage extends Component {
     });
   }
 
-  @computed("mentionWarning.groups_with_too_many_members")
   get groupsWithTooManyMembers() {
     return I18n.t("chat.mention_warning.too_many_members", {
       group_name: this.mentionWarning.groups_with_too_many_members?.[0],
@@ -766,7 +754,6 @@ export default class ChatMessage extends Component {
     }, 250);
   }
 
-  @computed
   get emojiReactions() {
     const favorites = this.cachedFavoritesReactions;
 
