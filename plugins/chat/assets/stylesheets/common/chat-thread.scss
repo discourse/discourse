@@ -6,7 +6,6 @@
   box-sizing: border-box;
 
   &__header {
-    padding: 0 1.5em;
   }
 
   &__close {
@@ -18,6 +17,7 @@
   }
 
   &__info {
+    padding-inline: 1.5rem;
     padding-bottom: 1rem;
     border-bottom: 1px solid var(--primary-low);
   }
