@@ -5,6 +5,8 @@ require "rails_helper"
 describe ChatMessage do
   fab!(:message) { Fabricate(:chat_message, message: "hey friend, what's up?!") }
 
+  it { is_expected.to have_many(:chat_mentions).dependent(:destroy) }
+
   describe ".cook" do
     it "does not support HTML tags" do
       cooked = ChatMessage.cook("<h1>test</h1>")
