@@ -1,8 +1,11 @@
 .chat-side-panel {
   grid-area: threads;
-  display: flex;
-  flex-direction: column;
   min-height: 100%;
   box-sizing: border-box;
   border-left: 1px solid var(--primary-medium);
+
+  &__list {
+    flex-grow: 1;
+    padding: 0 1.5em 1em;
+  }
 }
