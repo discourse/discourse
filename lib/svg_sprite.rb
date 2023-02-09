@@ -426,7 +426,8 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
     false
   end
 
-  def self.icon_picker_search(keyword)
+  def self.icon_picker_search(keyword, available = false)
+    icons = all_icons(SiteSetting.default_theme_id) if available
     results = Set.new
 
     sprite_sources(SiteSetting.default_theme_id).each do |item|
@@ -436,6 +437,7 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
         .css("symbol")
         .each do |sym|
           icon_id = prepare_symbol(sym, item[:filename])
+          next if available && !icons.include?(icon_id)
           if keyword.empty? || icon_id.include?(keyword)
             sym.attributes["id"].value = icon_id
             sym.css("title").each(&:remove)

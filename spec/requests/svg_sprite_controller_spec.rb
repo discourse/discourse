@@ -99,6 +99,21 @@ RSpec.describe SvgSpriteController do
       expect(data.length).to eq(1)
       expect(data[0]["id"]).to eq("fab-500px")
     end
+
+    it "should display only available" do
+      sign_in(Fabricate(:user))
+
+      get "/svg-sprite/picker-search"
+      data = response.parsed_body
+      beer_icon = response.parsed_body.find { |i| i["id"] == "beer" }
+      expect(beer_icon).to be_present
+
+      get "/svg-sprite/picker-search", params: { available: "true" }
+      data = response.parsed_body
+      beer_icon = response.parsed_body.find { |i| i["id"] == "beer" }
+      expect(beer_icon).to be nil
+      expect(data[0]["id"]).to eq("ad")
+    end
   end
 
   describe "#svg_icon" do

@@ -36,7 +36,10 @@ export default MultiSelectComponent.extend({
       return this._cachedIconsList;
     } else {
       return ajax("/svg-sprite/picker-search", {
-        data: { filter },
+        data: {
+          filter,
+          available: this.available,
+        },
       }).then((icons) => {
         icons = icons.map(this._processIcon);
         if (filter === "") {
