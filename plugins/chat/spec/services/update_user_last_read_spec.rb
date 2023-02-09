@@ -1,42 +1,44 @@
 # frozen_string_literal: true
 
 RSpec.describe(Chat::Service::UpdateUserLastRead) do
+  subject(:result) { described_class.call(params) }
+
+  fab!(:current_user) { Fabricate(:user) }
+  fab!(:channel) { Fabricate(:chat_channel) }
+  fab!(:membership) do
+    Fabricate(:user_chat_channel_membership, user: current_user, chat_channel: channel)
+  end
+  fab!(:message_1) { Fabricate(:chat_message, chat_channel: membership.chat_channel) }
+
   let(:guardian) { Guardian.new(current_user) }
+  let(:params) do
+    {
+      guardian: guardian,
+      user_id: current_user.id,
+      channel_id: channel.id,
+      message_id: message_1.id,
+    }
+  end
 
   context "when channel_id is not provided" do
-    subject(:result) { described_class.call(guardian: guardian, user_id: current_user.id) }
-    fab!(:current_user) { Fabricate(:admin) }
+    before { params.delete(:channel_id) }
 
     it { is_expected.to fail_to_find_a_model(:membership) }
   end
 
   context "when user_id is not provided" do
-    subject(:result) { described_class.call(guardian: guardian, channel_id: channel.id) }
-    fab!(:current_user) { Fabricate(:admin) }
-    fab!(:channel) { Fabricate(:chat_channel) }
+    before { params.delete(:user_id) }
 
     it { is_expected.to fail_to_find_a_model(:membership) }
   end
 
   context "when user has no membership" do
-    subject(:result) do
-      described_class.call(guardian: guardian, user_id: current_user.id, channel_id: channel.id)
-    end
-    fab!(:current_user) { Fabricate(:admin) }
-    fab!(:channel) { Fabricate(:chat_channel) }
+    before { membership.destroy! }
 
     it { is_expected.to fail_to_find_a_model(:membership) }
   end
 
   context "when user can’t access the channel" do
-    subject(:result) do
-      described_class.call(
-        guardian: guardian,
-        user_id: current_user.id,
-        channel_id: membership.chat_channel.id,
-      )
-    end
-    fab!(:current_user) { Fabricate(:user) }
     fab!(:membership) do
       Fabricate(
         :user_chat_channel_membership,
@@ -45,57 +47,30 @@ RSpec.describe(Chat::Service::UpdateUserLastRead) do
       )
     end
 
+    before { params[:channel_id] = membership.chat_channel.id }
+
     it { is_expected.to fail_a_policy(:invalid_access) }
   end
 
   context "when message_id is older than membership's last_read_message_id" do
-    subject(:result) do
-      described_class.call(
-        guardian: guardian,
-        user_id: current_user.id,
-        channel_id: membership.chat_channel.id,
-        message_id: -2,
-      )
+    before do
+      params[:message_id] = -2
+      membership.update!(last_read_message_id: -1)
     end
-    fab!(:current_user) { Fabricate(:user) }
-    fab!(:membership) { Fabricate(:user_chat_channel_membership, user: current_user) }
-
-    before { membership.update!(last_read_message_id: -1) }
 
     it { is_expected.to fail_a_policy(:ensure_message_id_recency) }
   end
 
   context "when message doesn’t exist" do
-    subject(:result) do
-      described_class.call(
-        guardian: guardian,
-        user_id: current_user.id,
-        channel_id: membership.chat_channel.id,
-        message_id: 2,
-      )
+    before do
+      params[:message_id] = 2
+      membership.update!(last_read_message_id: 1)
     end
-    fab!(:current_user) { Fabricate(:user) }
-    fab!(:membership) { Fabricate(:user_chat_channel_membership, user: current_user) }
-
-    before { membership.update!(last_read_message_id: 1) }
 
     it { is_expected.to fail_a_policy(:ensure_message_exists) }
   end
 
   context "when params are valid" do
-    subject(:result) do
-      described_class.call(
-        guardian: guardian,
-        user_id: current_user.id,
-        channel_id: membership.chat_channel.id,
-        message_id: message_1.id,
-      )
-    end
-
-    fab!(:current_user) { Fabricate(:user) }
-    fab!(:membership) { Fabricate(:user_chat_channel_membership, user: current_user) }
-    fab!(:message_1) { Fabricate(:chat_message, chat_channel: membership.chat_channel) }
-
     before { Jobs.run_immediately! }
 
     it "sets the service result as successful" do

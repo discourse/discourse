@@ -5,14 +5,15 @@ module Chat
     # Service responsible for updating the last read message id of a membership.
     #
     # @example
-    #  Chat::Service::UpdateUserLastRead.call(user_id: 1, channel_id: 2, guardian: guardian)
+    #  Chat::Service::UpdateUserLastRead.call(user_id: 1, channel_id: 2, message_id: 3, guardian: guardian)
     #
     class UpdateUserLastRead
       include Base
 
-      # @!method call(user_id:, channel_id:, guardian:)
+      # @!method call(user_id:, channel_id:, message_id:, guardian:)
       #   @param [Integer] user_id
       #   @param [Integer] channel_id
+      #   @param [Integer] message_id
       #   @param [Guardian] guardian
       #   @return [Chat::Service::Base::Context]
 
@@ -34,8 +35,28 @@ module Chat
 
       private
 
-      def publish_new_last_read_to_clients(guardian:, channel_id:, message_id:, **)
-        ChatPublisher.publish_user_tracking_state(guardian.user, channel_id, message_id)
+      def fetch_active_membership(user_id:, channel_id:, **)
+        UserChatChannelMembership.includes(:user, :chat_channel).find_by(
+          user_id: user_id,
+          chat_channel_id: channel_id,
+          following: true,
+        )
+      end
+
+      def invalid_access(guardian:, membership:, **)
+        guardian.can_join_chat_channel?(membership.chat_channel)
+      end
+
+      def ensure_message_id_recency(message_id:, membership:, **)
+        !membership.last_read_message_id || message_id >= membership.last_read_message_id
+      end
+
+      def ensure_message_exists(channel_id:, message_id:, **)
+        ChatMessage.with_deleted.exists?(chat_channel_id: channel_id, id: message_id)
+      end
+
+      def update_last_read_message_id(message_id:, membership:, **)
+        membership.update!(last_read_message_id: message_id)
       end
 
       def mark_associated_mentions_as_read(membership:, message_id:, **)
@@ -50,28 +71,8 @@ module Chat
           .update_all(read: true)
       end
 
-      def update_last_read_message_id(message_id:, membership:, **)
-        membership.update!(last_read_message_id: message_id)
-      end
-
-      def fetch_active_membership(user_id:, channel_id:, **)
-        UserChatChannelMembership.includes(:user, :chat_channel).find_by(
-          user_id: user_id,
-          chat_channel_id: channel_id,
-          following: true,
-        )
-      end
-
-      def ensure_message_id_recency(message_id:, membership:, **)
-        !membership.last_read_message_id || message_id >= membership.last_read_message_id
-      end
-
-      def ensure_message_exists(channel_id:, message_id:, **)
-        ChatMessage.with_deleted.exists?(chat_channel_id: channel_id, id: message_id)
-      end
-
-      def invalid_access(guardian:, membership:, **)
-        guardian.can_join_chat_channel?(membership.chat_channel)
+      def publish_new_last_read_to_clients(guardian:, channel_id:, message_id:, **)
+        ChatPublisher.publish_user_tracking_state(guardian.user, channel_id, message_id)
       end
     end
   end
