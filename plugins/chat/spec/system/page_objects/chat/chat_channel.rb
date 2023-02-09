@@ -51,6 +51,11 @@ module PageObjects
         find("[data-value='flag']").click
       end
 
+      def open_message_thread(message)
+        hover_message(message)
+        find(".chat-message-thread-btn").click
+      end
+
       def select_message(message)
         hover_message(message)
         click_more_buttons(message)

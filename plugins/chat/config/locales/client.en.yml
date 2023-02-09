@@ -67,7 +67,7 @@ en:
       channel_delete:
         title: "Delete Channel"
         instructions: "<p>Deletes the <strong>%{name}</strong> channel and chat history. All messages and related data, such as reactions and uploads, will be permanently deleted. If you want to preserve the channel history and decomission it, you may want to archive the channel instead.</p>
-        <p>Are you sure you want to <strong>permanently delete</strong> the channel? To confirm, type the name of the channel in the box below.</p>"
+          <p>Are you sure you want to <strong>permanently delete</strong> the channel? To confirm, type the name of the channel in the box below.</p>"
         confirm: "I understand the consequences, delete the channel"
         confirm_channel_name: "Enter channel name"
         process_started: "The process to delete the channel has started. This modal will close shortly, you will no longer see the deleted channel anywhere."
@@ -444,6 +444,7 @@ en:
 
       threads:
         op_said: "OP said:"
+        open: "Open Thread"
 
       draft_channel_screen:
         header: "New Message"
