@@ -138,17 +138,16 @@ export default Controller.extend({
 
     const model = this.model;
     const title = I18n.t("admin.groups.delete_confirm");
-    let message = null;
+    let messageComponent = null;
 
     if (model.has_messages && model.message_count > 0) {
-      message = I18n.t("admin.groups.delete_with_messages_confirm", {
-        count: model.message_count,
-      });
+      messageComponent = "dialog-messages/group-delete";
     }
 
     this.dialog.deleteConfirm({
       title,
-      message,
+      messageComponent,
+      messageComponentModel: model,
       didConfirm: () => {
         model
           .destroy()

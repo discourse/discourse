@@ -20,19 +20,12 @@
         </div>
       {{/if}}
 
-      {{#if (or this.dialog.message this.dialog.confirmPhrase)}}
+      {{#if (or this.dialog.message this.dialog.messageComponent)}}
         <div class="dialog-body">
-          {{#if this.dialog.message}}
+          {{#if this.dialog.messageComponent}}
+            {{component this.dialog.messageComponent model=this.dialog.messageComponentModel}}
+          {{else if this.dialog.message}}
             <p>{{this.dialog.message}}</p>
-          {{/if}}
-          {{#if this.dialog.confirmPhrase}}
-            <TextField
-              @value={{this.dialog.confirmPhraseInput}}
-              {{on "input" this.dialog.onConfirmPhraseInput}}
-              @id="confirm-phrase"
-              @autocorrect="off"
-              @autocapitalize="off"
-            />
           {{/if}}
         </div>
       {{/if}}
