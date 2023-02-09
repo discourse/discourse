@@ -15,7 +15,12 @@
 </ul>
 
 <p>
-  {{html-safe (i18n "user.second_factor.delete_confirm_instruction" confirm=this.disabledString)}}
+  {{html-safe
+    (i18n
+      "user.second_factor.delete_confirm_instruction"
+      confirm=this.disabledString
+    )
+  }}
 </p>
 
 <TextField
