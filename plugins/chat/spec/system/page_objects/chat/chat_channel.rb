@@ -3,6 +3,8 @@
 module PageObjects
   module Pages
     class ChatChannel < PageObjects::Pages::Base
+      include SystemHelpers
+
       def type_in_composer(input)
         find(".chat-composer-input").send_keys(input)
       end
@@ -32,8 +34,17 @@ module PageObjects
         click_more_buttons(message)
       end
 
-      def expand_message_actions_mobile(message, delay: 1)
+      def expand_message_actions_mobile(message, delay: 2)
         message_by_id(message.id).click(delay: delay)
+      end
+
+      def click_message_action_mobile(message, message_action)
+        i = 0.5
+        try_until_success(timeout: 20) do
+          expand_message_actions_mobile(message, delay: i)
+          first(".chat-message-action-item[data-id=\"#{message_action}\"]")
+        end
+        find(".chat-message-action-item[data-id=\"#{message_action}\"] button").click
       end
 
       def hover_message(message)
@@ -58,11 +69,6 @@ module PageObjects
       def open_message_thread(message)
         hover_message(message)
         find(".chat-message-thread-btn").click
-      end
-
-      def open_message_thread_mobile(message)
-        expand_message_actions_mobile(message)
-        find(".chat-message-action-item[data-id=\"openThread\"]").click
       end
 
       def select_message(message)

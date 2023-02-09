@@ -238,7 +238,7 @@ export default Component.extend({
       });
     }
 
-    if (this.openThread) {
+    if (this.hasThread) {
       buttons.push({
         id: "openThread",
         name: I18n.t("chat.threads.open"),
