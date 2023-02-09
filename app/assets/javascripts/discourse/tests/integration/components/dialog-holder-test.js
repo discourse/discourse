@@ -399,7 +399,6 @@ module("Integration | Component | dialog-holder", function (hooks) {
     await render(hbs`<DialogHolder />`);
 
     this.dialog.deleteConfirm({
-      message: "A delete confirm message",
       bodyComponent: "dialog-messages/second-factor-confirm-phrase",
       confirmButtonDisabled: true,
     });
@@ -410,5 +409,26 @@ module("Integration | Component | dialog-holder", function (hooks) {
     assert.strictEqual(query(".btn-danger").disabled, true);
     await fillIn("#confirm-phrase", "Disable");
     assert.strictEqual(query(".btn-danger").disabled, false);
+  });
+
+  test("delete confirm with a component and model", async function (assert) {
+    await render(hbs`<DialogHolder />`);
+    const message_count = 5;
+
+    this.dialog.deleteConfirm({
+      bodyComponent: "dialog-messages/group-delete",
+      bodyComponentModel: {
+        message_count,
+      },
+    });
+    await settled();
+
+    assert.strictEqual(
+      query(".dialog-body").innerText.trim(),
+      I18n.t("admin.groups.delete_with_messages_confirm", {
+        count: message_count,
+      }),
+      "correct message is shown in dialog"
+    );
   });
 });
