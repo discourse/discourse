@@ -58,7 +58,14 @@ describe "Single thread in side panel", type: :system, js: true do
     it "shows the excerpt of the thread original message" do
       chat_page.visit_channel(channel)
       channel_page.open_message_thread(thread.original_message)
-      expect(open_thread).to have_header_content(thread.original_message.excerpt)
+      expect(open_thread).to have_header_content(thread.excerpt)
+    end
+
+    it "shows the avatar and username of the original message user" do
+      chat_page.visit_channel(channel)
+      channel_page.open_message_thread(thread.original_message)
+      expect(open_thread.op).to have_css(".chat-user-avatar img.avatar")
+      expect(open_thread.op).to have_content(thread.original_message_user.username)
     end
   end
 end

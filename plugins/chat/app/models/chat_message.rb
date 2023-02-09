@@ -82,7 +82,7 @@ class ChatMessage < ActiveRecord::Base
     UploadReference.insert_all!(ref_record_attrs)
   end
 
-  def excerpt
+  def excerpt(max_length: 50)
     # just show the URL if the whole message is a URL, because we cannot excerpt oneboxes
     return message if UrlHelper.relaxed_parse(message).is_a?(URI)
 
@@ -90,7 +90,7 @@ class ChatMessage < ActiveRecord::Base
     return uploads.first.original_filename if cooked.blank? && uploads.present?
 
     # this may return blank for some complex things like quotes, that is acceptable
-    PrettyText.excerpt(cooked, 50, { text_entities: true })
+    PrettyText.excerpt(cooked, max_length, { text_entities: true })
   end
 
   def cooked_for_excerpt

@@ -444,6 +444,7 @@ en:
 
       threads:
         op_said: "OP said:"
+        started_by: "Started by"
         open: "Open Thread"
 
       draft_channel_screen:

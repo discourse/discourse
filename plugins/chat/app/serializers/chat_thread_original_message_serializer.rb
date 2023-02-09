@@ -6,6 +6,6 @@ class ChatThreadOriginalMessageSerializer < ApplicationSerializer
   has_one :chat_webhook_event, serializer: ChatWebhookEventSerializer, embed: :objects
 
   def excerpt
-    WordWatcher.censor(object.excerpt)
+    WordWatcher.censor(object.excerpt(max_length: ChatThread::EXCERPT_LENGTH))
   end
 end
