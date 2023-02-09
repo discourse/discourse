@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ChatThread < ActiveRecord::Base
+  EXCERPT_LENGTH = 150
+
   belongs_to :channel, foreign_key: "channel_id", class_name: "ChatChannel"
   belongs_to :original_message_user, foreign_key: "original_message_user_id", class_name: "User"
   belongs_to :original_message, foreign_key: "original_message_id", class_name: "ChatMessage"
@@ -18,6 +20,10 @@ class ChatThread < ActiveRecord::Base
 
   def relative_url
     "#{channel.relative_url}/t/#{self.id}"
+  end
+
+  def excerpt
+    original_message.excerpt(max_length: EXCERPT_LENGTH)
   end
 end
 

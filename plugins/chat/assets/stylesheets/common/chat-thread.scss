@@ -25,6 +25,20 @@
     margin-top: 0;
   }
 
+  &__op {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    &-started-by {
+      margin-right: 0.5rem;
+    }
+
+    .chat-message-avatar {
+      width: var(--message-left-width);
+    }
+  }
+
   &__title {
     display: flex;
     align-items: center;

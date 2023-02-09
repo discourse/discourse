@@ -18,6 +18,9 @@
       </p>
 
       <div class="chat-thread__op">
+        <span class="chat-thread__op-started-by">{{i18n
+            "chat.threads.started_by"
+          }}</span>
         <ChatMessageAvatar
           class="chat-thread__op-avatar"
           @message={{this.thread.original_message}}
