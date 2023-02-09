@@ -30,6 +30,7 @@ module Jobs
         last_seen_at: 3.months.ago,
         channel_category: channel.chatable_id,
         mode: UserChatChannelMembership.join_modes[:automatic],
+        permission_type: CategoryGroup.permission_types[:create_post],
       }
 
       new_member_ids = DB.query_single(create_memberships_query(category), query_args)
@@ -58,7 +59,8 @@ module Jobs
 
       query += <<~SQL if category.read_restricted?
           INNER JOIN group_users gu ON gu.user_id = users.id
-          LEFT OUTER JOIN category_groups cg ON cg.group_id = gu.group_id
+          LEFT OUTER JOIN category_groups cg ON cg.group_id = gu.group_id AND
+          cg.permission_type <= :permission_type
         SQL
 
       query += <<~SQL
@@ -66,7 +68,7 @@ module Jobs
           users.staged IS FALSE AND users.active AND
           NOT EXISTS(SELECT 1 FROM anonymous_users a WHERE a.user_id = users.id) AND
           (suspended_till IS NULL OR suspended_till <= :suspended_until) AND
-          (last_seen_at > :last_seen_at) AND
+          (last_seen_at IS NULL OR last_seen_at > :last_seen_at) AND
           uo.chat_enabled AND
           uccm.id IS NULL
       SQL

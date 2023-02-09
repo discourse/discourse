@@ -177,12 +177,14 @@ describe Jobs::AutoJoinChannelBatch do
       end
 
       it "doesn't join users with read-only access to the category" do
+        restricted_category = Fabricate(:category, read_restricted: true)
         another_user = Fabricate(:user, last_seen_at: 15.minutes.ago)
         non_chatters_group = Fabricate(:group)
-        readonly_channel = Fabricate(:category_channel, chatable: category, auto_join_users: true)
+        readonly_channel =
+          Fabricate(:category_channel, chatable: restricted_category, auto_join_users: true)
         Fabricate(
           :category_group,
-          category: category,
+          category: restricted_category,
           group: non_chatters_group,
           permission_type: CategoryGroup.permission_types[:readonly],
         )
