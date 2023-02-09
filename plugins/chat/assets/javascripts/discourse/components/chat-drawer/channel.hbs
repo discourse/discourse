@@ -1,0 +1,58 @@
+<div
+  role="region"
+  aria-label={{i18n "chat.aria_roles.header"}}
+  class="chat-drawer-header"
+>
+  {{#if this.chatStateManager.isDrawerExpanded}}
+    <LinkTo
+      title={{i18n "chat.return_to_list"}}
+      class="chat-drawer-header__return-to-channels-btn"
+      @route="chat"
+    >
+      {{d-icon "chevron-left"}}
+    </LinkTo>
+  {{/if}}
+
+  {{#if this.chat.activeChannel}}
+    {{#if this.chatStateManager.isDrawerExpanded}}
+      <LinkTo
+        @route={{this.infoTabRoute}}
+        @models={{this.chat.activeChannel.routeModels}}
+        class="chat-drawer-header__title"
+      >
+        <div class="chat-drawer-header__top-line">
+          <ChatChannelTitle @channel={{this.chat.activeChannel}} />
+        </div>
+      </LinkTo>
+    {{else}}
+      <div
+        role="button"
+        {{on "click" @toggleExpand}}
+        class="chat-drawer-header__title"
+      >
+        <div class="chat-drawer-header__top-line">
+          <ChatChannelTitle @channel={{this.chat.activeChannel}}>
+            {{#if this.unreadCount}}
+              <span class="chat-unread-count">{{this.unreadCount}}</span>
+            {{/if}}
+          </ChatChannelTitle>
+        </div>
+      </div>
+    {{/if}}
+  {{/if}}
+</div>
+
+{{#if this.chatStateManager.isDrawerExpanded}}
+  <div
+    class="chat-drawer-content"
+    {{did-insert this.fetchChannel}}
+    {{did-update this.fetchChannel @params.channelId}}
+  >
+    {{#if this.chat.activeChannel}}
+      <ChatLivePane
+        @targetMessageId={{readonly @params.messageId}}
+        @chatChannel={{this.chat.activeChannel}}
+      />
+    {{/if}}
+  </div>
+{{/if}}

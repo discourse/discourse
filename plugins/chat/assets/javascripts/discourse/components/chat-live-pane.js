@@ -45,7 +45,6 @@ export default Component.extend({
   loadingMorePast: false,
   loadingMoreFuture: false,
   hoveredMessageId: null,
-  onSwitchChannel: null,
 
   allPastMessagesLoaded: false,
   sendingLoading: false,
@@ -1056,7 +1055,7 @@ export default Component.extend({
           upload_ids: (uploads || []).mapBy("id"),
         },
       }).then(() => {
-        this.onSwitchChannel(c);
+        this.router.transitionTo("chat.channel", "-", c.id);
       })
     );
   },

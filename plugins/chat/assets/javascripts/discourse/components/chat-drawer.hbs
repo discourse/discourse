@@ -1,137 +1,20 @@
-{{#if this.chatStateManager.isDrawerActive}}
-  <div
-    data-chat-channel-id={{this.chat.activeChannel.id}}
-    class={{concat-class
-      "chat-drawer"
-      (if this.chatStateManager.isDrawerExpanded "is-expanded")
-    }}
-    {{chat/resizable-node ".chat-drawer-resizer" this.didResize}}
-    style={{this.drawerStyle}}
-  >
-    <div class="chat-drawer-container">
-      <div class="chat-drawer-resizer"></div>
-      <div
-        role="region"
-        aria-label={{i18n "chat.aria_roles.header"}}
-        class="chat-drawer-header"
-      >
-        {{#if
-          (and this.draftChannelView this.chatStateManager.isDrawerExpanded)
-        }}
-          <div class="chat-drawer-header__left-actions">
-            <div class="chat-drawer-header__top-line">
-              <LinkTo
-                title={{i18n "chat.return_to_list"}}
-                class="chat-drawer-header__return-to-channels-btn"
-                @route="chat"
-              >
-                {{d-icon "chevron-left"}}
-              </LinkTo>
-            </div>
-          </div>
-
-          <span class="chat-drawer-header__title">
-            <div class="chat-drawer-header__top-line">
-              {{i18n "chat.direct_message_creator.title"}}
-            </div>
-          </span>
-        {{else if this.chatView}}
-          {{#if this.chatStateManager.isDrawerExpanded}}
-            <LinkTo
-              title={{i18n "chat.return_to_list"}}
-              class="chat-drawer-header__return-to-channels-btn"
-              @route="chat"
-            >
-              {{d-icon "chevron-left"}}
-            </LinkTo>
-          {{/if}}
-
-          {{#if this.chat.activeChannel}}
-            {{#if this.chatStateManager.isDrawerExpanded}}
-              <LinkTo
-                @route={{this.infoTabRoute}}
-                @models={{this.chat.activeChannel.routeModels}}
-                class="chat-drawer-header__title"
-              >
-                <div class="chat-drawer-header__top-line">
-                  <ChatChannelTitle @channel={{this.chat.activeChannel}} />
-                </div>
-              </LinkTo>
-            {{else}}
-              <div
-                role="button"
-                {{on "click" (action "toggleExpand")}}
-                class="chat-drawer-header__title"
-              >
-                <div class="chat-drawer-header__top-line">
-                  <ChatChannelTitle @channel={{this.chat.activeChannel}}>
-                    {{#if this.unreadCount}}
-                      <span
-                        class="chat-unread-count"
-                      >{{this.unreadCount}}</span>
-                    {{/if}}
-                  </ChatChannelTitle>
-                </div>
-              </div>
-            {{/if}}
-          {{/if}}
-        {{else}}
-          <span class="chat-drawer-header__title">
-            <div class="chat-drawer-header__top-line">
-              {{i18n "chat.heading"}}
-            </div>
-          </span>
-        {{/if}}
-
-        <div class="chat-drawer-header__right-actions">
-          <div class="chat-drawer-header__top-line {{this.topLineClass}}">
-            {{#if this.chatStateManager.isDrawerExpanded}}
-              <DButton
-                @icon="discourse-expand"
-                class="btn-flat btn-link chat-drawer-header__full-screen-btn"
-                @title={{"chat.open_full_page"}}
-                @action={{this.openInFullPage}}
-              />
-            {{/if}}
-
-            <FlatButton
-              @icon={{this.expandIcon}}
-              @class="chat-drawer-header__expand-btn"
-              @action={{action "toggleExpand"}}
-              @title="chat.collapse"
-            />
-
-            {{#if this.showClose}}
-              <FlatButton
-                @icon="times"
-                @action={{action "close"}}
-                @title="chat.close"
-                @class="chat-drawer-header__close-btn"
-              />
-            {{/if}}
-          </div>
-        </div>
-      </div>
-
-      {{#if this.chatStateManager.isDrawerExpanded}}
-        <div class="chat-drawer-content">
-          {{#if (and this.chatView this.chat.activeChannel)}}
-            <ChatLivePane
-              @chatChannel={{this.chat.activeChannel}}
-              @onSwitchChannel={{action "switchChannel"}}
-            />
-          {{else if this.draftChannelView}}
-            <ChatDraftChannelScreen
-              @onSwitchChannel={{action "switchChannel"}}
-            />
-          {{else}}
-            <ChannelsList
-              @onOpenView={{action "openURL"}}
-              @onSelect={{action "switchChannel"}}
-            />
-          {{/if}}
-        </div>
-      {{/if}}
-    </div>
+<div
+  data-chat-channel-id={{this.chat.activeChannel.id}}
+  class={{concat-class
+    "chat-drawer"
+    (if this.chatStateManager.isDrawerExpanded "is-expanded")
+  }}
+  {{chat/resizable-node ".chat-drawer-resizer" this.didResize}}
+  style={{this.drawerStyle}}
+>
+  <div class="chat-drawer-container">
+    <div class="chat-drawer-resizer"></div>
+    <this.chatDrawerRouter.component
+      @params={{this.chatDrawerRouter.params}}
+      @openURL={{this.openURL}}
+      @openInFullPage={{this.openInFullPage}}
+      @toggleExpand={{this.toggleExpand}}
+      @close={{this.close}}
+    />
   </div>
-{{/if}}
+</div>

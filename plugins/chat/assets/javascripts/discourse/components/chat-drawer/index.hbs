@@ -1,0 +1,48 @@
+<div
+  role="region"
+  aria-label={{i18n "chat.aria_roles.header"}}
+  class="chat-drawer-header"
+>
+  <span class="chat-drawer-header__title">
+    <div class="chat-drawer-header__top-line">
+      {{i18n "chat.heading"}}
+    </div>
+  </span>
+
+  <div class="chat-drawer-header__right-actions">
+    <div class="chat-drawer-header__top-line">
+      {{#if this.chatStateManager.isDrawerExpanded}}
+        <DButton
+          @icon="discourse-expand"
+          class="btn-flat btn-link chat-drawer-header__full-screen-btn"
+          @title={{"chat.open_full_page"}}
+          @action={{@openInFullPage}}
+        />
+      {{/if}}
+
+      <FlatButton
+        @icon={{if
+          this.chatStateManager.isDrawerExpanded
+          "angle-double-down"
+          "angle-double-up"
+        }}
+        @class="chat-drawer-header__expand-btn"
+        @action={{@toggleExpand}}
+        @title="chat.collapse"
+      />
+
+      <FlatButton
+        @icon="times"
+        @action={{@close}}
+        @title="chat.close"
+        @class="chat-drawer-header__close-btn"
+      />
+    </div>
+  </div>
+</div>
+
+{{#if this.chatStateManager.isDrawerExpanded}}
+  <div class="chat-drawer-content">
+    <ChannelsList />
+  </div>
+{{/if}}
