@@ -296,29 +296,7 @@
   
 </ul>
 
-</div><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-139
-140
-141
-142
-143</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 139</span>
-
-<span class='kw'>def</span> <span class='id identifier rubyid_fail'>fail</span><span class='lparen'>(</span><span class='id identifier rubyid_context'>context</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_merge'>merge</span><span class='lparen'>(</span><span class='id identifier rubyid_context'>context</span><span class='rparen'>)</span>
-  <span class='ivar'>@failure</span> <span class='op'>=</span> <span class='kw'>true</span>
-  <span class='kw'>self</span>
-<span class='kw'>end</span></pre>
-    </td>
-  </tr>
-</table>
+</div>
 </div>
     
       <div class="method_details ">
@@ -397,27 +375,7 @@
   
 </ul>
 
-</div><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-129
-130
-131
-132</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 129</span>
-
-<span class='kw'>def</span> <span class='id identifier rubyid_fail!'>fail!</span><span class='lparen'>(</span><span class='id identifier rubyid_context'>context</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_fail'>fail</span><span class='lparen'>(</span><span class='id identifier rubyid_context'>context</span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_raise'>raise</span> <span class='const'><span class='object_link'><a href="Failure.html" title="Chat::Service::Base::Failure (class)">Failure</a></span></span><span class='comma'>,</span> <span class='kw'>self</span>
-<span class='kw'>end</span></pre>
-    </td>
-  </tr>
-</table>
+</div>
 </div>
     
       <div class="method_details ">
@@ -467,25 +425,7 @@
     
   </ul>
 
-</div><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-120
-121
-122</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 120</span>
-
-<span class='kw'>def</span> <span class='id identifier rubyid_failure?'>failure?</span>
-  <span class='ivar'>@failure</span> <span class='op'>||</span> <span class='kw'>false</span>
-<span class='kw'>end</span></pre>
-    </td>
-  </tr>
-</table>
+</div>
 </div>
     
       <div class="method_details ">
@@ -526,25 +466,7 @@
   
 </ul>
 
-</div><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-113
-114
-115</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File 'plugins/chat/app/services/base.rb', line 113</span>
-
-<span class='kw'>def</span> <span class='id identifier rubyid_success?'>success?</span>
-  <span class='op'>!</span><span class='id identifier rubyid_failure?'>failure?</span>
-<span class='kw'>end</span></pre>
-    </td>
-  </tr>
-</table>
+</div>
 </div>
     
   </div>
