@@ -865,6 +865,25 @@ RSpec.describe PostsController do
         expect(response.body).to eq(original)
       end
 
+      it "returns a valid JSON response when the post is enqueued" do
+        SiteSetting.approve_unless_trust_level = 4
+
+        master_key = Fabricate(:api_key).key
+
+        post "/posts.json",
+             params: {
+               raw: "this is test post #{SecureRandom.alphanumeric}",
+               title: "tthis is a test title #{SecureRandom.alphanumeric}",
+             },
+             headers: {
+               HTTP_API_USERNAME: user.username,
+               HTTP_API_KEY: master_key,
+             }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["action"]).to eq("enqueued")
+      end
+
       it "allows to create posts in import_mode" do
         Jobs.run_immediately!
         NotificationEmailer.enable

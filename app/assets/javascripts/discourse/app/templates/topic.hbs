@@ -224,7 +224,7 @@
         />
 
         {{#if info.renderTimeline}}
-          {{#if this.currentUser.redesigned_topic_timeline_enabled}}
+          {{#if this.siteSettings.enable_experimental_topic_timeline}}
             <GlimmerTopicTimeline
               @info={{info}}
               @model={{this.model}}
