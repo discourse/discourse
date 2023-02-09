@@ -224,6 +224,9 @@ module SiteSettingExtension
 
     defaults
       .all(default_locale)
+      .filter do |setting_name, _|
+        !plugins[setting_name] || Discourse.plugins_by_name[plugins[setting_name]].configurable?
+      end
       .reject { |setting_name, _| !include_hidden && hidden_settings.include?(setting_name) }
       .map do |s, v|
         type_hash = type_supervisor.type_hash(s)
@@ -544,6 +547,11 @@ module SiteSettingExtension
       end
     else
       define_singleton_method clean_name do
+        if plugins[name]
+          plugin = Discourse.plugins_by_name[plugins[name]]
+          return false if !plugin.configurable? && plugin.enabled_site_setting == name
+        end
+
         if (c = current[name]).nil?
           refresh!
           current[name]
