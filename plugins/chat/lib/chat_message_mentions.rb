@@ -18,6 +18,18 @@ class Chat::ChatMessageMentions
                 :parsed_direct_mentions,
                 :parsed_group_mentions
 
+  def all_mentioned_users_ids
+    @all_mentioned_users_ids ||=
+      begin
+        user_ids = global_mentions.pluck(:id)
+        user_ids.concat(direct_mentions.pluck(:id))
+        user_ids.concat(group_mentions.pluck(:id))
+        user_ids.concat(here_mentions.pluck(:id))
+        user_ids.uniq!
+        user_ids
+      end
+  end
+
   def global_mentions
     return User.none unless @has_global_mention
     channel_members.where.not(username_lower: @parsed_direct_mentions)

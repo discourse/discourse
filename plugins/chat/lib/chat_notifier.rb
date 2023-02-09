@@ -66,6 +66,10 @@ class Chat::ChatNotifier
   ### Public API
 
   def notify_new
+    if @mentions.all_mentioned_users_ids.present?
+      @chat_message.create_mentions(@mentions.all_mentioned_users_ids)
+    end
+
     to_notify = list_users_to_notify
     mentioned_user_ids = to_notify.extract!(:all_mentioned_user_ids)[:all_mentioned_user_ids]
 
@@ -82,6 +86,8 @@ class Chat::ChatNotifier
   end
 
   def notify_edit
+    @chat_message.update_mentions(@mentions.all_mentioned_users_ids)
+
     existing_notifications =
       ChatMention.includes(:user, :notification).where(chat_message: @chat_message)
     already_notified_user_ids = existing_notifications.map(&:user_id)

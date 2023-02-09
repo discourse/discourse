@@ -226,7 +226,26 @@ class ChatMessage < ActiveRecord::Base
     "/chat/message/#{self.id}"
   end
 
+  def create_mentions(user_ids)
+    User.where(id: user_ids).each { |user| ChatMention.create!(chat_message: self, user: user) }
+  end
+
+  def update_mentions(mentioned_user_ids)
+    old_mentions = chat_mentions.pluck(:user_id)
+    updated_mentions = mentioned_user_ids
+    mentions_to_drop = old_mentions - updated_mentions
+    mentions_to_add = updated_mentions - old_mentions
+
+    delete_mentions(mentions_to_drop)
+    create_mentions(mentions_to_add)
+  end
+
   private
+
+  def delete_mentions(user_ids)
+    mentions_to_drop = chat_mentions.filter { |m| user_ids.include?(m.user.id) }
+    chat_mentions.delete(mentions_to_drop)
+  end
 
   def message_too_short?
     message.length < SiteSetting.chat_minimum_message_length

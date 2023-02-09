@@ -570,6 +570,68 @@ describe ChatMessage do
     end
   end
 
+  describe "#create_mentions" do
+    fab!(:message) { Fabricate(:chat_message) }
+    fab!(:user1) { Fabricate(:user) }
+    fab!(:user2) { Fabricate(:user) }
+
+    it "creates mentions for passed user ids" do
+      mentioned_user_ids = [user1.id, user2.id]
+      message.create_mentions(mentioned_user_ids)
+      message.reload
+
+      expect(message.chat_mentions.pluck(:user_id)).to contain_exactly(*mentioned_user_ids)
+    end
+
+    it "ignores duplicates in passed user ids" do
+      mentioned_user_ids = [user1.id, user1.id, user1.id, user1.id, user1.id]
+      message.create_mentions(mentioned_user_ids)
+      message.reload
+
+      expect(message.chat_mentions.pluck(:user_id)).to contain_exactly(user1.id)
+    end
+  end
+
+  describe "#update_mentions" do
+    fab!(:message) { Fabricate(:chat_message) }
+    fab!(:user1) { Fabricate(:user) }
+    fab!(:user2) { Fabricate(:user) }
+    fab!(:user3) { Fabricate(:user) }
+    fab!(:user4) { Fabricate(:user) }
+    let(:already_mentioned) { [user1.id, user2.id] }
+
+    before { message.create_mentions(already_mentioned) }
+
+    it "creates newly added mentions" do
+      existing_mention_ids = message.chat_mentions.pluck(:id)
+
+      mentioned_user_ids = [*already_mentioned, user3.id, user4.id]
+      message.update_mentions(mentioned_user_ids)
+      message.reload
+
+      expect(message.chat_mentions.pluck(:user_id)).to contain_exactly(*mentioned_user_ids)
+      expect(message.chat_mentions.pluck(:id)).to include(*existing_mention_ids) # existing mentions weren't recreated
+    end
+
+    it "drops removed mentions" do
+      message.update_mentions([user1.id]) # user 2 is not mentioned anymore
+      message.reload
+
+      expect(message.chat_mentions.pluck(:user_id)).to contain_exactly(user1.id)
+    end
+
+    it "changes nothing if passed mentions are identical to existing mentions" do
+      existing_mention_ids = message.chat_mentions.pluck(:id)
+
+      mentioned_user_ids = [*already_mentioned]
+      message.update_mentions(mentioned_user_ids)
+      message.reload
+
+      expect(message.chat_mentions.pluck(:user_id)).to contain_exactly(*mentioned_user_ids)
+      expect(message.chat_mentions.pluck(:id)).to include(*existing_mention_ids) # the mentions weren't recreated
+    end
+  end
+
   # TODO (martin) Remove this when we remove ChatUpload completely, 2023-04-01
   def chat_upload_count(uploads = nil)
     return DB.query_single("SELECT COUNT(*) FROM chat_uploads").first if !uploads
