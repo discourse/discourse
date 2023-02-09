@@ -6,13 +6,23 @@
   padding-top: 0.75em;
 }
 
-body.has-full-page-chat {
+html.has-full-page-chat {
   .footer-nav {
     display: none !important;
   }
 
-  #main-outlet {
+  body #main-outlet {
     padding: 0;
+
+    .main-chat-outlet {
+      &.has-side-panel-expanded {
+        grid-template-columns: 1fr;
+
+        .chat-live-pane {
+          display: none;
+        }
+      }
+    }
   }
 }
 

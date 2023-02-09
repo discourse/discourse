@@ -1,0 +1,6 @@
+.chat-side-panel {
+  grid-area: threads;
+  min-height: 100%;
+  box-sizing: border-box;
+  border-left: 1px solid var(--primary-medium);
+}
