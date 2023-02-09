@@ -21,10 +21,7 @@
       id="main-chat-outlet"
       class={{concat-class
         "main-chat-outlet"
-        (if
-          this.chatStateManager.isSidePanelExpanded
-          "main-chat-outlet--side-panel-expanded"
-        )
+        (if this.chatStateManager.isSidePanelExpanded "has-side-panel-expanded")
       }}
     >
       {{outlet}}

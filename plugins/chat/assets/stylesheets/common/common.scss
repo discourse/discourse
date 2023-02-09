@@ -595,7 +595,7 @@ html.has-full-page-chat {
         grid-template-areas: "main threads";
         grid-template-columns: 1fr;
 
-        &--side-panel-expanded {
+        &.has-side-panel-expanded {
           grid-template-columns: 3fr 2fr;
         }
       }
