@@ -71,6 +71,7 @@ register_asset "stylesheets/common/chat-mention-warnings.scss"
 register_asset "stylesheets/common/chat-channel-settings-saved-indicator.scss"
 register_asset "stylesheets/common/chat-thread.scss"
 register_asset "stylesheets/common/chat-side-panel.scss"
+register_asset "stylesheets/mobile/chat-side-panel.scss", :mobile
 
 register_svg_icon "comments"
 register_svg_icon "comment-slash"
