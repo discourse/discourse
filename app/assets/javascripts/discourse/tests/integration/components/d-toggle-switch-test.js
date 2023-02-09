@@ -15,7 +15,7 @@ module("Integration | Component | d-toggle-switch", function (hooks) {
 
     assert.ok(exists(".d-toggle-switch"), "it renders a toggle switch");
     assert.strictEqual(
-      query(".d-toggle-switch__checkbox").ariaChecked,
+      query(".d-toggle-switch__checkbox").getAttribute("aria-checked"),
       "false"
     );
   });
@@ -26,7 +26,10 @@ module("Integration | Component | d-toggle-switch", function (hooks) {
     await render(hbs`<DToggleSwitch @state={{this.state}}/>`);
 
     assert.ok(exists(".d-toggle-switch"), "it renders a toggle switch");
-    assert.strictEqual(query(".d-toggle-switch__checkbox").ariaChecked, "true");
+    assert.strictEqual(
+      query(".d-toggle-switch__checkbox").getAttribute("aria-checked"),
+      "true"
+    );
   });
 
   test("it renders a checkmark icon when enabled", async function (assert) {
