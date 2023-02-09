@@ -79,6 +79,11 @@
     .icon-picker {
       width: 350px;
     }
+
+    &__toggle-badge {
+      position: absolute;
+      right: 0;
+    }
   }
   .current-badge {
     .ace-wrapper {
