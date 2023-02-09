@@ -32,6 +32,10 @@ module PageObjects
         click_more_buttons(message)
       end
 
+      def expand_message_actions_mobile(message, delay: 1)
+        message_by_id(message.id).click(delay: delay)
+      end
+
       def hover_message(message)
         message_by_id(message.id).hover
       end
@@ -54,6 +58,11 @@ module PageObjects
       def open_message_thread(message)
         hover_message(message)
         find(".chat-message-thread-btn").click
+      end
+
+      def open_message_thread_mobile(message)
+        expand_message_actions_mobile(message)
+        find(".chat-message-action-item[data-id=\"openThread\"]").click
       end
 
       def select_message(message)

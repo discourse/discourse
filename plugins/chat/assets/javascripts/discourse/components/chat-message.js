@@ -238,6 +238,14 @@ export default Component.extend({
       });
     }
 
+    if (this.openThread) {
+      buttons.push({
+        id: "openThread",
+        name: I18n.t("chat.threads.open"),
+        icon: "puzzle-piece",
+      });
+    }
+
     return buttons;
   },
 
@@ -253,7 +261,7 @@ export default Component.extend({
       restore: this.restore,
       rebakeMessage: this.rebakeMessage,
       toggleBookmark: this.toggleBookmark,
-      showThread: this.showThread,
+      openThread: this.openThread,
       startReactionForMessageActions: this.startReactionForMessageActions,
     };
   },
@@ -732,7 +740,7 @@ export default Component.extend({
   },
 
   @action
-  showThread() {
+  openThread() {
     this.router.transitionTo("chat.channel.thread", this.message.thread_id);
   },
 

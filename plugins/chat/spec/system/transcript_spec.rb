@@ -28,7 +28,7 @@ RSpec.describe "Quoting chat message transcripts", type: :system, js: true do
   def select_message_mobile(message)
     i = 0.5
     try_until_success(timeout: 20) do
-      chat_channel_page.message_by_id(message.id).click(delay: i)
+      chat_channel_page.expand_message_actions_mobile(message, delay: 1)
       first(".chat-message-action-item[data-id=\"selectMessage\"]")
     end
     find(".chat-message-action-item[data-id=\"selectMessage\"] button").click
