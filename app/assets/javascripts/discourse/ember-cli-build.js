@@ -56,6 +56,9 @@ module.exports = function (defaults) {
       enabled: true,
     },
     autoImport: {
+      alias: {
+        "virtual-dom": "@discourse/virtual-dom",
+      },
       forbidEval: true,
       insertScriptsAt: "ember-auto-import-scripts",
       webpack: {
