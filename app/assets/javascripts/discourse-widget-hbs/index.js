@@ -1,8 +1,6 @@
 "use strict";
 
-const widgetHbsCompilerPath = require.resolve(
-  "../../../../lib/javascripts/widget-hbs-compiler"
-);
+const widgetHbsCompilerPath = require.resolve("./lib/widget-hbs-compiler");
 
 module.exports = {
   name: require("./package").name,
