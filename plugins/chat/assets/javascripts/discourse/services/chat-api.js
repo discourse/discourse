@@ -31,17 +31,18 @@ export default class ChatApi extends Service {
   }
 
   /**
-   * Get a thread by its ID.
+   * Get a thread in a channel by its ID.
+   * @param {number} channelId - The ID of the channel.
    * @param {number} threadId - The ID of the thread.
    * @returns {Promise}
    *
    * @example
    *
-   *    this.chatApi.thread(1).then(thread => { ... })
+   *    this.chatApi.thread(5, 1).then(thread => { ... })
    */
-  thread(threadId) {
-    return this.#getRequest(`/threads/${threadId}`).then((result) =>
-      this.chatThreadsManager.store(result.thread)
+  thread(channelId, threadId) {
+    return this.#getRequest(`/channels/${channelId}/threads/${threadId}`).then(
+      (result) => this.chatThreadsManager.store(result.thread)
     );
   }
 

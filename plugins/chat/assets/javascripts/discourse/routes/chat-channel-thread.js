@@ -8,11 +8,14 @@ export default class ChatChannelThread extends DiscourseRoute {
   @service chat;
 
   async model(params) {
-    return this.chatThreadsManager.find(params.threadId);
+    return this.chatThreadsManager.find(
+      this.chat.activeChannel.id,
+      params.threadId
+    );
   }
 
   afterModel(model) {
-    this.chat.setActiveThread(model);
+    this.chat.activeThread = model;
     this.chatStateManager.openSidePanel();
   }
 }

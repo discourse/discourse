@@ -7,8 +7,8 @@ module PageObjects
         find(".chat-thread__header")
       end
 
-      def op
-        header.find(".chat-thread__op")
+      def omu
+        header.find(".chat-thread__omu")
       end
 
       def has_header_content?(content)

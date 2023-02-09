@@ -64,8 +64,8 @@ describe "Single thread in side panel", type: :system, js: true do
     it "shows the avatar and username of the original message user" do
       chat_page.visit_channel(channel)
       channel_page.open_message_thread(thread.original_message)
-      expect(open_thread.op).to have_css(".chat-user-avatar img.avatar")
-      expect(open_thread.op).to have_content(thread.original_message_user.username)
+      expect(open_thread.omu).to have_css(".chat-user-avatar img.avatar")
+      expect(open_thread.omu).to have_content(thread.original_message_user.username)
     end
 
     context "when using mobile" do

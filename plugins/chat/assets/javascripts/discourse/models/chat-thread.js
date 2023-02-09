@@ -71,7 +71,9 @@ export default class ChatThread extends RestModel {
 ChatThread.reopenClass({
   create(args) {
     args = args || {};
-    args.original_message_user = User.create(args.original_message_user);
+    if (!args.original_message_user instanceof User) {
+      args.original_message_user = User.create(args.original_message_user);
+    }
     args.original_message.user = args.original_message_user;
     return this._super(args);
   },

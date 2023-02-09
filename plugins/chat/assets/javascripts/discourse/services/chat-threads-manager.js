@@ -19,12 +19,12 @@ export default class ChatThreadsManager extends Service {
   @service currentUser;
   @tracked _cached = new TrackedObject();
 
-  async find(id, options = { fetchIfNotFound: true }) {
-    const existingThread = this.#findStale(id);
+  async find(channelId, threadId, options = { fetchIfNotFound: true }) {
+    const existingThread = this.#findStale(threadId);
     if (existingThread) {
       return Promise.resolve(existingThread);
     } else if (options.fetchIfNotFound) {
-      return this.#find(id);
+      return this.#find(channelId, threadId);
     } else {
       return Promise.resolve();
     }
@@ -50,9 +50,9 @@ export default class ChatThreadsManager extends Service {
     return model;
   }
 
-  async #find(id) {
+  async #find(channelId, threadId) {
     return this.chatApi
-      .thread(id)
+      .thread(channelId, threadId)
       .catch(popupAjaxError)
       .then((thread) => {
         this.#cache(thread);

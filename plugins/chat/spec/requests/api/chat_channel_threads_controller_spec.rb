@@ -19,7 +19,7 @@ RSpec.describe Chat::Api::ChatChannelThreadsController do
 
       it "returns 404" do
         thread.destroy!
-        get "/chat/api/threads/#{thread.id}"
+        get "/chat/api/channels/#{thread.channel_id}/threads/#{thread.id}"
         expect(response.status).to eq(404)
       end
     end
@@ -28,16 +28,25 @@ RSpec.describe Chat::Api::ChatChannelThreadsController do
       fab!(:thread) { Fabricate(:chat_thread, original_message: Fabricate(:chat_message)) }
 
       it "works" do
-        get "/chat/api/threads/#{thread.id}"
+        get "/chat/api/channels/#{thread.channel_id}/threads/#{thread.id}"
         expect(response.status).to eq(200)
         expect(response.parsed_body["thread"]["id"]).to eq(thread.id)
+      end
+
+      context "when the channel_id does not match the thread id" do
+        fab!(:other_channel) { Fabricate(:chat_channel) }
+
+        it "returns 404" do
+          get "/chat/api/channels/#{other_channel.id}/threads/#{thread.id}"
+          expect(response.status).to eq(404)
+        end
       end
 
       context "when enable_experimental_chat_threaded_discussions is disabled" do
         before { SiteSetting.enable_experimental_chat_threaded_discussions = false }
 
         it "returns 404" do
-          get "/chat/api/threads/#{thread.id}"
+          get "/chat/api/channels/#{thread.channel_id}/threads/#{thread.id}"
           expect(response.status).to eq(404)
         end
       end
@@ -48,7 +57,7 @@ RSpec.describe Chat::Api::ChatChannelThreadsController do
         end
 
         it "returns 403" do
-          get "/chat/api/threads/#{thread.id}"
+          get "/chat/api/channels/#{thread.channel_id}/threads/#{thread.id}"
           expect(response.status).to eq(403)
         end
       end
@@ -57,7 +66,7 @@ RSpec.describe Chat::Api::ChatChannelThreadsController do
         before { SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:trust_level_4] }
 
         it "returns 403" do
-          get "/chat/api/threads/#{thread.id}"
+          get "/chat/api/channels/#{thread.channel_id}/threads/#{thread.id}"
           expect(response.status).to eq(403)
         end
       end

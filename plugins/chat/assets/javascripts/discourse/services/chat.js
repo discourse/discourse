@@ -36,7 +36,7 @@ export default class Chat extends Service {
   @service chatChannelsManager;
 
   activeChannel = null;
-  activeThread = null;
+  #activeThread = null;
   cook = null;
   presenceChannel = null;
   sidebarActive = false;
@@ -121,8 +121,12 @@ export default class Chat extends Service {
     this.set("activeChannel", channel);
   }
 
-  setActiveThread(thread) {
-    this.set("activeThread", thread);
+  get activeThread() {
+    return this.#activeThread;
+  }
+
+  set activeThread(thread) {
+    this.#activeThread = thread;
   }
 
   loadCookFunction(categories) {

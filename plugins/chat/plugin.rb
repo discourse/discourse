@@ -602,7 +602,7 @@ after_initialize do
       # Hints for JIT warnings.
       get "/mentions/groups" => "hints#check_group_mentions", :format => :json
 
-      get "/threads/:thread_id" => "chat_channel_threads#show"
+      get "/channels/:channel_id/threads/:thread_id" => "chat_channel_threads#show"
     end
 
     # direct_messages_controller routes

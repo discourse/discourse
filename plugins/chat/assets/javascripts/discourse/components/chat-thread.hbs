@@ -17,16 +17,16 @@
         {{replace-emoji this.thread.original_message.excerpt}}
       </p>
 
-      <div class="chat-thread__op">
+      <div class="chat-thread__omu">
         <span class="chat-thread__started-by">{{i18n
             "chat.threads.started_by"
           }}</span>
         <ChatMessageAvatar
-          class="chat-thread__op-avatar"
+          class="chat-thread__omu-avatar"
           @message={{this.thread.original_message}}
         />
         <span
-          class="chat-thread__op-username"
+          class="chat-thread__omu-username"
         >{{this.thread.original_message_user.username}}</span>
       </div>
     </div>
