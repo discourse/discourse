@@ -34,8 +34,7 @@ module Chat
       model :channel, :fetch_channel
       policy :no_direct_message_channel
       policy :check_channel_permission
-      contract use_default_values_from: :channel
-      step :assign_contract
+      contract default_values_from: :channel
       step :update_channel
       step :publish_channel_update
       step :auto_join_users_if_needed
@@ -70,10 +69,6 @@ module Chat
 
       def check_channel_permission(guardian:, channel:, **)
         guardian.can_preview_chat_channel?(channel) && guardian.can_edit_chat_channel?
-      end
-
-      def assign_contract
-        context[:contract] = context[:"contract.default"]
       end
 
       def update_channel(channel:, contract:, **)

@@ -22,7 +22,7 @@ module Chat
     #   typically provided by a user calling an endpoint. A special embedded
     #   +Contract+ class has to be defined to holds the validations. If the
     #   validations fail, the step will fail. Otherwise, the resulting contract
-    #   will be available in +context[:"contract.default"]+.
+    #   will be available in +context[:contract]+.
     # * +step(name)+: used to run small snippets of arbitrary code. The step
     #   doesn’t care about its return value, so to mark the service as failed,
     #   {#fail!} has to be called explicitly.
@@ -163,11 +163,11 @@ module Chat
           steps << ModelStep.new(name, step_name)
         end
 
-        def contract(name = :default, class_name: self::Contract, use_default_values_from: nil)
+        def contract(name = :default, class_name: self::Contract, default_values_from: nil)
           steps << ContractStep.new(
             name,
             class_name: class_name,
-            use_default_values_from: use_default_values_from,
+            default_values_from: default_values_from,
           )
         end
 
@@ -238,9 +238,9 @@ module Chat
       class ContractStep < Step
         attr_reader :default_values_from
 
-        def initialize(name, method_name = name, class_name: nil, use_default_values_from: nil)
+        def initialize(name, method_name = name, class_name: nil, default_values_from: nil)
           super(name, method_name, class_name: class_name)
-          @default_values_from = use_default_values_from
+          @default_values_from = default_values_from
         end
 
         def call(instance, context)
@@ -248,12 +248,19 @@ module Chat
           default_values = {}
           default_values = context[default_values_from].slice(*attributes) if default_values_from
           contract = class_name.new(default_values.merge(context.to_h.slice(*attributes)))
-          context["contract.#{name}"] = contract
+          context[contract_name] = contract
           context[result_key] = Context.build
           unless contract.valid?
             context[result_key].fail(errors: contract.errors)
             context.fail!
           end
+        end
+
+        private
+
+        def contract_name
+          return :contract if name.to_sym == :default
+          :"#{name}_contract"
         end
       end
 
@@ -339,15 +346,15 @@ module Chat
       #   end
 
       # @!scope class
-      # @!method contract(name = :default, class_name: self::Contract, use_default_values_from: nil)
+      # @!method contract(name = :default, class_name: self::Contract, default_values_from: nil)
       # @param name [Symbol] name for this contract
       # @param class_name [Class] a class defining the contract
-      # @param use_default_values_from [Symbol] name of the model to get default values from
+      # @param default_values_from [Symbol] name of the model to get default values from
       # Checks the validity of the input parameters.
       # Implements ActiveModel::Validations and ActiveModel::Attributes.
       #
-      # It stores the resulting contract in +context ["contract.default"]+ by
-      # default (can be customized by providing the +name+ argument).
+      # It stores the resulting contract in +context[:contract]+ by default
+      # (can be customized by providing the +name+ argument).
       #
       # @example
       #   contract
