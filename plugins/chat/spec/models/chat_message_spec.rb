@@ -292,7 +292,7 @@ describe ChatMessage do
             "wow check out these birbs https://twitter.com/EffinBirds/status/1518743508378697729",
         )
       expect(message.excerpt).to eq(
-        "wow check out these birbs <a href=\"https://twitter.com/EffinBirds/status/1518743508378697729\" class=\"inline-onebox-loading\" rel=\"noopener nofollow ugc\">https://twitter.com/Effi&hellip;</a>",
+        "wow check out these birbs <a href=\"https://twitter.com/EffinBirds/status/1518743508378697729\" class=\"inline-onebox-loading\" rel=\"noopener nofollow ugc\">https://twitter.com/Effi...</a>",
       )
     end
 
