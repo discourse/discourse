@@ -395,7 +395,7 @@ module("Integration | Component | dialog-holder", function (hooks) {
     );
   });
 
-  test("delete confirm with confirmation phrase message", async function (assert) {
+  test("delete confirm with confirmation phrase component", async function (assert) {
     await render(hbs`<DialogHolder />`);
 
     this.dialog.deleteConfirm({
