@@ -29,7 +29,7 @@ describe "Admin Customize Form Templates", type: :system, js: true do
     it "should prefill form data" do
       visit("/admin/customize/form-templates/#{form_template.id}")
       expect(form_template_page).to have_name_value(form_template.name)
-      # difficult to test the ace editor content (todo later)
+      # TODO(@keegan) difficult to test the ace editor content, todo later
     end
   end
 
