@@ -373,4 +373,6 @@ const WidgetHbsCompiler = function (babel) {
   };
 };
 
+WidgetHbsCompiler.cacheKey = () => "discourse-widget-hbs";
+
 exports.WidgetHbsCompiler = WidgetHbsCompiler;
