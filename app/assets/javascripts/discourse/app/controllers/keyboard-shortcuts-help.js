@@ -194,6 +194,10 @@ export default Controller.extend(ModalFunctionality, {
             keys1: [SHIFT, "F11"],
             keysDelimiter: PLUS,
           }),
+          insertCurrentTime: buildShortcut("composing.insert_current_time", {
+            keys1: [META, SHIFT, "."],
+            keysDelimiter: PLUS,
+          }),
         },
       },
       bookmarks: {
