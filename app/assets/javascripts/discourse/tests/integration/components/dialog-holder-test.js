@@ -400,7 +400,7 @@ module("Integration | Component | dialog-holder", function (hooks) {
 
     this.dialog.deleteConfirm({
       message: "A delete confirm message",
-      messageComponent: "dialog-messages/second-factor-confirm-phrase",
+      bodyComponent: "dialog-messages/second-factor-confirm-phrase",
       confirmButtonDisabled: true,
     });
     await settled();

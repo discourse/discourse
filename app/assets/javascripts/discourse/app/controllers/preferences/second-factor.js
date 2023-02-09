@@ -130,8 +130,8 @@ export default Controller.extend(CanCheckEmails, {
 
       this.dialog.deleteConfirm({
         title: I18n.t("user.second_factor.disable_confirm"),
-        messageComponent: "dialog-messages/second-factor-confirm-phrase",
-        messageComponentModel: {
+        bodyComponent: "dialog-messages/second-factor-confirm-phrase",
+        bodyComponentModel: {
           totps: this.totps,
           security_keys: this.security_keys,
         },

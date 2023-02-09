@@ -3,18 +3,19 @@ import A11yDialog from "a11y-dialog";
 import { bind } from "discourse-common/utils/decorators";
 
 export default Service.extend({
-  message: null,
-  messageComponent: null,
-  messageComponentModel: null,
-  type: null,
   dialogInstance: null,
-
+  message: null,
   title: null,
   titleElementId: null,
+  type: null,
+
+  bodyComponent: null,
+  bodyComponentModel: null,
 
   confirmButtonIcon: null,
   confirmButtonLabel: null,
   confirmButtonClass: null,
+  confirmButtonDisabled: false,
   cancelButtonLabel: null,
   cancelButtonClass: null,
   shouldDisplayCancel: null,
@@ -28,17 +29,18 @@ export default Service.extend({
   dialog(params) {
     const {
       message,
-      messageComponent,
-      messageComponentModel,
+      bodyComponent,
+      bodyComponentModel,
       type,
       title,
 
+      confirmButtonClass = "btn-primary",
       confirmButtonIcon,
       confirmButtonLabel = "ok_value",
       confirmButtonDisabled = false,
-      confirmButtonClass = "btn-primary",
-      cancelButtonLabel = "cancel_value",
+
       cancelButtonClass = "btn-default",
+      cancelButtonLabel = "cancel_value",
       shouldDisplayCancel,
 
       didConfirm,
@@ -50,20 +52,21 @@ export default Service.extend({
 
     this.setProperties({
       message,
-      messageComponent,
-      messageComponentModel,
+      bodyComponent,
+      bodyComponentModel,
       type,
       dialogInstance: new A11yDialog(element),
 
       title,
       titleElementId: title !== null ? "dialog-title" : null,
 
-      confirmButtonDisabled,
       confirmButtonClass,
-      confirmButtonLabel,
+      confirmButtonDisabled,
       confirmButtonIcon,
-      cancelButtonLabel,
+      confirmButtonLabel,
+
       cancelButtonClass,
+      cancelButtonLabel,
       shouldDisplayCancel,
 
       didConfirm,
@@ -133,18 +136,20 @@ export default Service.extend({
   reset() {
     this.setProperties({
       message: null,
-      messageComponent: null,
-      messageComponentModel: null,
+      bodyComponent: null,
+      bodyComponentModel: null,
       type: null,
       dialogInstance: null,
 
       title: null,
       titleElementId: null,
 
-      confirmButtonLabel: null,
+      confirmButtonDisabled: false,
       confirmButtonIcon: null,
-      cancelButtonLabel: null,
+      confirmButtonLabel: null,
+
       cancelButtonClass: null,
+      cancelButtonLabel: null,
       shouldDisplayCancel: null,
 
       didConfirm: null,

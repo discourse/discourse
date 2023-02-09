@@ -20,10 +20,10 @@
         </div>
       {{/if}}
 
-      {{#if (or this.dialog.message this.dialog.messageComponent)}}
+      {{#if (or this.dialog.message this.dialog.bodyComponent)}}
         <div class="dialog-body">
-          {{#if this.dialog.messageComponent}}
-            {{component this.dialog.messageComponent model=this.dialog.messageComponentModel}}
+          {{#if this.dialog.bodyComponent}}
+            {{component this.dialog.bodyComponent model=this.dialog.bodyComponentModel}}
           {{else if this.dialog.message}}
             <p>{{this.dialog.message}}</p>
           {{/if}}
