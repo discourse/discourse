@@ -9,7 +9,7 @@ module("Integration | Component | d-toggle-switch", function (hooks) {
   setupRenderingTest(hooks);
 
   test("it renders a toggle button in a disabled state", async function (assert) {
-    this.state = false;
+    this.set("state", false);
 
     await render(hbs`<DToggleSwitch @state={{this.state}}/>`);
 
@@ -21,7 +21,7 @@ module("Integration | Component | d-toggle-switch", function (hooks) {
   });
 
   test("it renders a toggle button in a enabled state", async function (assert) {
-    this.state = true;
+    this.set("state", true);
 
     await render(hbs`<DToggleSwitch @state={{this.state}}/>`);
 
@@ -30,7 +30,7 @@ module("Integration | Component | d-toggle-switch", function (hooks) {
   });
 
   test("it renders a checkmark icon when enabled", async function (assert) {
-    this.state = true;
+    this.set("state", true);
 
     await render(hbs`<DToggleSwitch @state={{this.state}}/>`);
     assert.ok(exists(".d-toggle-switch__checkbox-slider .d-icon-check"));
@@ -38,7 +38,7 @@ module("Integration | Component | d-toggle-switch", function (hooks) {
 
   test("it renders a label for the button", async function (assert) {
     I18n.translations[I18n.locale].js.test = { fooLabel: "foo" };
-    this.state = true;
+    this.set("state", true);
     await render(
       hbs`<DToggleSwitch @state={{this.state}}/ @label={{this.label}} @translatedLabel={{this.translatedLabel}} />`
     );
