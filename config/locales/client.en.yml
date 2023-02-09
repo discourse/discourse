@@ -4059,6 +4059,7 @@ en:
         title: "Composing"
         return: "%{shortcut} Return to composer"
         fullscreen: "%{shortcut} Fullscreen composer"
+        insert_current_time: "%{shortcut} Insert current time"
       bookmarks:
         title: "Bookmarking"
         enter: "%{shortcut} Save and close"
@@ -6012,7 +6013,8 @@ en:
         allow_title: Allow badge to be used as a title
         multiple_grant: Can be granted multiple times
         listable: Show badge on the public badges page
-        enabled: Enable badge
+        enabled: enabled
+        disabled: disabled
         icon: Icon
         image: Image
         graphic: Graphic

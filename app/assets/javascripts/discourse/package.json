@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@babel/core": "^7.20.12",
-    "@babel/standalone": "^7.20.14",
+    "@babel/standalone": "^7.20.15",
     "@discourse/backburner.js": "^2.7.1-0",
     "@discourse/itsatrap": "^2.0.10",
     "@ember-compat/tracked-built-ins": "^0.9.1",
@@ -94,7 +94,7 @@
     "terser": "^5.16.3",
     "tippy.js": "^6.3.7",
     "util": "^0.12.5",
-    "virtual-dom": "^2.1.1",
+    "@discourse/virtual-dom": "^2.1.2-0",
     "webpack": "^5.75.0",
     "wizard": "1.0.0",
     "xss": "^1.0.14"
