@@ -2,6 +2,7 @@ import {
   convertIconClass,
   disableMissingIconWarning,
   enableMissingIconWarning,
+  isExistingIconId,
 } from "discourse-common/lib/icon-library";
 import MultiSelectComponent from "select-kit/components/multi-select";
 import { computed } from "@ember/object";
@@ -39,12 +40,19 @@ export default MultiSelectComponent.extend({
         data: { filter },
       }).then((icons) => {
         icons = icons.map(this._processIcon);
+        if (this.onlyAvailable) {
+          icons = icons.filter(this._iconExists);
+        }
         if (filter === "") {
           this._cachedIconsList = icons;
         }
         return icons;
       });
     }
+  },
+
+  _iconExists(icon) {
+    return isExistingIconId(icon.id);
   },
 
   _processIcon(icon) {
