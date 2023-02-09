@@ -163,8 +163,12 @@ module Chat
           steps << ModelStep.new(name, step_name)
         end
 
-        def contract(name = :default, class_name: self::Contract)
-          steps << ContractStep.new(name, class_name: class_name)
+        def contract(name = :default, class_name: self::Contract, use_default_values_from: nil)
+          steps << ContractStep.new(
+            name,
+            class_name: class_name,
+            use_default_values_from: use_default_values_from,
+          )
         end
 
         def policy(name = :default)
@@ -232,8 +236,18 @@ module Chat
 
       # @!visibility private
       class ContractStep < Step
+        attr_reader :default_values_from
+
+        def initialize(name, method_name = name, class_name: nil, use_default_values_from: nil)
+          super(name, method_name, class_name: class_name)
+          @default_values_from = use_default_values_from
+        end
+
         def call(instance, context)
-          contract = class_name.new(context.to_h.slice(*class_name.attribute_names.map(&:to_sym)))
+          attributes = class_name.attribute_names.map(&:to_sym)
+          default_values = {}
+          default_values = context[default_values_from].slice(*attributes) if default_values_from
+          contract = class_name.new(default_values.merge(context.to_h.slice(*attributes)))
           context["contract.#{name}"] = contract
           context[result_key] = Context.build
           unless contract.valid?
@@ -270,6 +284,7 @@ module Chat
             include ActiveModel::API
             include ActiveModel::Attributes
             include ActiveModel::AttributeMethods
+            include ActiveModel::Validations::Callbacks
           end
       end
 
@@ -324,9 +339,10 @@ module Chat
       #   end
 
       # @!scope class
-      # @!method contract(name = :default, class_name: self::Contract)
+      # @!method contract(name = :default, class_name: self::Contract, use_default_values_from: nil)
       # @param name [Symbol] name for this contract
       # @param class_name [Class] a class defining the contract
+      # @param use_default_values_from [Symbol] name of the model to get default values from
       # Checks the validity of the input parameters.
       # Implements ActiveModel::Validations and ActiveModel::Attributes.
       #

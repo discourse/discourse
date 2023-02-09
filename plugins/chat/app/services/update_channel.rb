@@ -23,32 +23,39 @@ module Chat
       #   @param [Integer] channel_id
       #   @param [Guardian] guardian
       #   @param [Hash] params_to_edit
-      #   @option params_to_edit [String] name
-      #   @option params_to_edit [String] description
-      #   @option params_to_edit [String] slug
+      #   @option params_to_edit [String,nil] name
+      #   @option params_to_edit [String,nil] description
+      #   @option params_to_edit [String,nil] slug
       #   @option params_to_edit [Boolean] auto_join_users Only valid for {CategoryChannel}. Whether active users
       #    with permission to see the category should automatically join the channel.
-      #   @option params_to_edit [String] allow_channel_wide_mentions Allow the use of @here and @all in the channel.
+      #   @option params_to_edit [Boolean] allow_channel_wide_mentions Allow the use of @here and @all in the channel.
       #   @return [Chat::Service::Base::Context]
 
       model :channel, :fetch_channel
       policy :no_direct_message_channel
       policy :check_channel_permission
-      step :map_data
-      contract
+      contract use_default_values_from: :channel
       step :assign_contract
-      step :prepare_params
       step :update_channel
       step :publish_channel_update
       step :auto_join_users_if_needed
 
       # @!visibility private
       class Contract
-        attribute :name
-        attribute :description
-        attribute :slug
+        attribute :name, :string
+        attribute :description, :string
+        attribute :slug, :string
         attribute :auto_join_users, :boolean, default: false
         attribute :allow_channel_wide_mentions, :boolean, default: true
+
+        before_validation do
+          assign_attributes(
+            attributes
+              .symbolize_keys
+              .slice(:name, :description, :slug)
+              .transform_values(&:presence),
+          )
+        end
       end
 
       private
@@ -65,43 +72,12 @@ module Chat
         guardian.can_preview_chat_channel?(channel) && guardian.can_edit_chat_channel?
       end
 
-      def map_data(channel:, **)
-        if context.to_h.key?(:name) && context.name.blank?
-          context.name = nil
-        else
-          context.name = (context.name || channel.name).presence
-        end
-
-        if context.to_h.key?(:description) && context.description.blank?
-          context.description = nil
-        else
-          context.description = (context.description || channel.description).presence
-        end
-
-        context.slug = (context.slug || channel.slug).presence
-
-        if channel.category_channel?
-          context.auto_join_users ||= channel.auto_join_users
-          context.allow_channel_wide_mentions ||= channel.allow_channel_wide_mentions
-        end
-      end
-
       def assign_contract
         context[:contract] = context[:"contract.default"]
       end
 
-      def prepare_params(channel:, contract:, **)
-        attributes = contract.attributes.symbolize_keys
-        context[:params_to_edit] = attributes.slice(:name, :description, :slug)
-        if channel.category_channel?
-          context[:params_to_edit].merge!(
-            attributes.slice(:auto_join_users, :allow_channel_wide_mentions),
-          )
-        end
-      end
-
-      def update_channel(channel:, params_to_edit:, **)
-        channel.update!(params_to_edit)
+      def update_channel(channel:, contract:, **)
+        channel.update!(contract.attributes)
       end
 
       def publish_channel_update(channel:, guardian:, **)
@@ -111,9 +87,8 @@ module Chat
 
       def auto_join_users_if_needed(channel:, **)
         # FIXME: this should become a dedicated service
-        if channel.category_channel? && channel.auto_join_users?
-          Chat::ChatChannelMembershipManager.new(channel).enforce_automatic_channel_memberships
-        end
+        return unless channel.auto_join_users?
+        Chat::ChatChannelMembershipManager.new(channel).enforce_automatic_channel_memberships
       end
     end
   end
