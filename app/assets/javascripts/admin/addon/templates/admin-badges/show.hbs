@@ -1,4 +1,13 @@
 <DSection @class="current-badge content-body">
+  <div class="control-group current-badge__toggle-badge">
+    <DToggleSwitch
+      @state={{this.buffered.enabled}}
+      @label={{this.badgeEnabledLabel}}
+      @action={{this.toggleBadge}}
+      {{on "click" this.toggleBadge}}
+    />
+  </div>
+
   <form class="form-horizontal">
     <div class="control-group">
       <label for="name">{{i18n "admin.badges.name"}}</label>
@@ -251,13 +260,6 @@
             disabled={{this.readOnly}}
           />
           {{i18n "admin.badges.show_posts"}}
-        </label>
-      </div>
-
-      <div>
-        <label>
-          <Input @type="checkbox" @checked={{this.buffered.enabled}} />
-          {{i18n "admin.badges.enabled"}}
         </label>
       </div>
     </div>
