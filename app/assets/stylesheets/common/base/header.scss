@@ -117,6 +117,8 @@
     float: left;
   }
   .icon {
+    box-sizing: content-box;
+    appearance: none;
     position: relative;
     display: flex;
     align-items: center;
