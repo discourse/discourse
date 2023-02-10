@@ -66,8 +66,8 @@ Fabricator(:chat_mention) do
   user { Fabricate(:user) }
   chat_message { Fabricate(:chat_message) }
   notification do |attrs|
-    # All this setup should be in a service we can simplify use
-    # at the moment the logic is all split in a job
+    # All this setup should be in a service we could just call here
+    # At the moment the logic is all split in a job
     channel = attrs[:chat_message].chat_channel
 
     payload = {
