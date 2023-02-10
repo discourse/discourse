@@ -518,11 +518,11 @@ acceptance("Prioritize Full Name", function (needs) {
 
   test("Reply to post use full name", async function (assert) {
     await visit("/t/short-topic-with-two-posts/54079");
-    await click("article#post_2 button.reply");
+    await click("article#post_3 button.reply");
 
     assert.strictEqual(
-      query(".action-title .user-link").innerText.trim(),
-      "james, john, the third"
+      query(".action-title .user-link").innerHTML.trim(),
+      "&lt;h1&gt;Tim Stone&lt;/h1&gt;"
     );
   });
 
