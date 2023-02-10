@@ -36,6 +36,8 @@ export default class Chat extends Service {
   @service site;
   @service chatChannelsManager;
 
+  @tracked activeThread = null;
+
   activeChannel = null;
   cook = null;
   presenceChannel = null;
@@ -43,8 +45,6 @@ export default class Chat extends Service {
   isNetworkUnreliable = false;
 
   @and("currentUser.has_chat_enabled", "siteSettings.chat_enabled") userCanChat;
-
-  @tracked _activeThread = null;
 
   @computed("currentUser.staff", "currentUser.groups.[]")
   get userCanDirectMessage() {
@@ -121,14 +121,6 @@ export default class Chat extends Service {
 
   setActiveChannel(channel) {
     this.set("activeChannel", channel);
-  }
-
-  get activeThread() {
-    return this._activeThread;
-  }
-
-  set activeThread(thread) {
-    this._activeThread = thread;
   }
 
   loadCookFunction(categories) {
