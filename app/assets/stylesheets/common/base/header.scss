@@ -46,11 +46,18 @@
     display: flex;
     align-items: center;
     height: 100%;
-    overflow: hidden;
     a,
     a:visited {
       color: var(--header_primary);
-      min-width: 0;
+    }
+
+    &:not(.title--minimized) {
+      // allows large logos to be hidden if there are too many other header elements
+      // this prioritizes nav elements, especially in cases of high zoom levels
+      overflow: hidden;
+      a {
+        min-width: 0;
+      }
     }
   }
 
