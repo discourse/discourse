@@ -33,12 +33,10 @@ export function htmlStatus(status) {
   let icon = data.icon ? iconHTML(data.icon) : "";
 
   return `
-    <span class='status'>
       <span class="${data.name}">
         ${icon}
         ${I18n.t("review.statuses." + data.name + ".title")}
       </span>
-    </span>
   `;
 }
 
