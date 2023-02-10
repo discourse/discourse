@@ -195,7 +195,7 @@ export default Component.extend({
 
   @action
   openURL(URL = null) {
-    this.chat.setActiveChannel(null);
+    this.chat.activeChannel = null;
     this.chatStateManager.didOpenDrawer(URL);
     this.chatDrawerRouter.stateFor(this._routeFromURL(URL));
   },
@@ -215,7 +215,7 @@ export default Component.extend({
   openInFullPage() {
     this.chatStateManager.storeAppURL();
     this.chatStateManager.prefersFullPage();
-    this.chat.setActiveChannel(null);
+    this.chat.activeChannel = null;
 
     return this.router.transitionTo(this.chatStateManager.lastKnownChatURL);
   },
@@ -234,7 +234,7 @@ export default Component.extend({
   close() {
     this.computeDrawerStyle();
     this.chatStateManager.didCloseDrawer();
-    this.chat.setActiveChannel(null);
+    this.chat.activeChannel = null;
   },
 
   @action
