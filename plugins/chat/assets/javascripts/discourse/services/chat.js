@@ -1,4 +1,5 @@
 import deprecated from "discourse-common/lib/deprecated";
+import { tracked } from "@glimmer/tracking";
 import userSearch from "discourse/lib/user-search";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import Service, { inject as service } from "@ember/service";
@@ -36,13 +37,14 @@ export default class Chat extends Service {
   @service chatChannelsManager;
 
   activeChannel = null;
-  #activeThread = null;
   cook = null;
   presenceChannel = null;
   sidebarActive = false;
   isNetworkUnreliable = false;
 
   @and("currentUser.has_chat_enabled", "siteSettings.chat_enabled") userCanChat;
+
+  @tracked _activeThread = null;
 
   @computed("currentUser.staff", "currentUser.groups.[]")
   get userCanDirectMessage() {
@@ -122,11 +124,11 @@ export default class Chat extends Service {
   }
 
   get activeThread() {
-    return this.#activeThread;
+    return this._activeThread;
   }
 
   set activeThread(thread) {
-    this.#activeThread = thread;
+    this._activeThread = thread;
   }
 
   loadCookFunction(categories) {
