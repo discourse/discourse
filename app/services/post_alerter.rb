@@ -468,7 +468,7 @@ class PostAlerter
     end
 
     # Make sure the user can see the post
-    return unless Guardian.new(user).can_see?(post)
+    return unless Guardian.new(user).can_notify_post?(post)
 
     return if user.staged? && topic.category&.mailinglist_mirror?
 
