@@ -35,8 +35,8 @@ export default class Chat extends Service {
   @service router;
   @service site;
   @service chatChannelsManager;
-
-  @tracked activeThread = null;  
+  @tracked activeChannel = null;
+  @tracked activeThread = null;
   cook = null;
   presenceChannel = null;
   sidebarActive = false;
