@@ -120,6 +120,7 @@ after_initialize do
          "../app/controllers/admin/admin_incoming_chat_webhooks_controller.rb",
          __FILE__,
        )
+  load File.expand_path("../app/helpers/with_service_helper.rb", __FILE__)
   load File.expand_path("../app/controllers/chat_base_controller.rb", __FILE__)
   load File.expand_path("../app/controllers/chat_controller.rb", __FILE__)
   load File.expand_path("../app/controllers/emojis_controller.rb", __FILE__)

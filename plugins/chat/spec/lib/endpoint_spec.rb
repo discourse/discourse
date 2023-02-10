@@ -77,7 +77,7 @@ RSpec.describe Chat::Endpoint do
   end
 
   describe ".call(service, &block)" do
-    subject(:endpoint) { described_class.call(service, &actions_block) }
+    subject(:endpoint) { described_class.call(service, controller, &actions_block) }
 
     let(:result) { controller.result }
     let(:actions_block) { controller.instance_eval(actions) }

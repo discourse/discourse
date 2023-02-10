@@ -51,29 +51,29 @@ class Chat::Endpoint
   }.with_indifferent_access.freeze
 
   # @!visibility private
-  attr_reader :service, :controller
+  attr_reader :service, :controller, :dependencies
 
   delegate :result, to: :controller
 
   # @!visibility private
-  def initialize(service, controller)
+  def initialize(service, controller, **dependencies)
     @service = service
     @controller = controller
+    @dependencies = dependencies
     @actions = {}
   end
 
   # @param service [Class] a class including {Chat::Service::Base}
   # @param block [Proc] a block containing the steps to match on
   # @return [void]
-  def self.call(service, &block)
-    controller = eval("self", block.binding, __FILE__, __LINE__)
-    new(service, controller).call(&block)
+  def self.call(service, controller, **dependencies, &block)
+    new(service, controller, **dependencies).call(&block)
   end
 
   # @!visibility private
   def call(&block)
     instance_eval(&block)
-    controller.instance_eval("run_service(#{service})", __FILE__, __LINE__ - 1)
+    controller.run_service(service, dependencies)
     # Always have `on_failure` as the last action
     (
       actions
