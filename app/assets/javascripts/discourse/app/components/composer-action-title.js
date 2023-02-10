@@ -12,6 +12,7 @@ import { alias } from "@ember/object/computed";
 import discourseComputed from "discourse-common/utils/decorators";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import { htmlSafe } from "@ember/template";
+import { escape } from "pretty-text/sanitizer";
 
 const TITLES = {
   [PRIVATE_MESSAGE]: "topic.private_message",
@@ -84,7 +85,9 @@ export default Component.extend({
   },
 
   _formatReplyToUserPost(avatar, link) {
-    const htmlLink = `<a class="user-link" href="${link.href}">${link.anchor}</a>`;
+    const htmlLink = `<a class="user-link" href="${link.href}">${escape(
+      link.anchor
+    )}</a>`;
     return htmlSafe(`${avatar}${htmlLink}`);
   },
 });
