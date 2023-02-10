@@ -23,10 +23,7 @@
       {{#if (or this.dialog.message this.dialog.bodyComponent)}}
         <div class="dialog-body">
           {{#if this.dialog.bodyComponent}}
-            {{component
-              this.dialog.bodyComponent
-              model=this.dialog.bodyComponentModel
-            }}
+            <this.dialog.bodyComponent @model={{this.dialog.bodyComponentModel}} />
           {{else if this.dialog.message}}
             <p>{{this.dialog.message}}</p>
           {{/if}}

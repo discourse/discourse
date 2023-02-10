@@ -4,6 +4,7 @@ import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import { capitalize } from "@ember/string";
 import { inject as service } from "@ember/service";
+import GroupDeleteDialog from "discourse/components/dialog-messages/group-delete";
 
 const Tab = EmberObject.extend({
   init() {
@@ -141,7 +142,7 @@ export default Controller.extend({
     let bodyComponent = null;
 
     if (model.has_messages && model.message_count > 0) {
-      bodyComponent = "dialog-messages/group-delete";
+      bodyComponent = GroupDeleteDialog;
     }
 
     this.dialog.deleteConfirm({

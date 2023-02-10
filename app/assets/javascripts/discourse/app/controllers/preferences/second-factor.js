@@ -10,6 +10,7 @@ import { findAll } from "discourse/models/login-method";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import showModal from "discourse/lib/show-modal";
 import { inject as service } from "@ember/service";
+import SecondFactorConfirmPhrase from "discourse/components/dialog-messages/second-factor-confirm-phrase";
 
 export default Controller.extend(CanCheckEmails, {
   dialog: service(),
@@ -130,7 +131,7 @@ export default Controller.extend(CanCheckEmails, {
 
       this.dialog.deleteConfirm({
         title: I18n.t("user.second_factor.disable_confirm"),
-        bodyComponent: "dialog-messages/second-factor-confirm-phrase",
+        bodyComponent: SecondFactorConfirmPhrase,
         bodyComponentModel: {
           totps: this.totps,
           security_keys: this.security_keys,

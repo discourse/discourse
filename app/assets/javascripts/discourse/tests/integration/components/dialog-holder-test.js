@@ -10,6 +10,8 @@ import {
 } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { query } from "discourse/tests/helpers/qunit-helpers";
+import GroupDeleteDialogMessage from "discourse/components/dialog-messages/group-delete";
+import SecondFactorConfirmPhrase from "discourse/components/dialog-messages/second-factor-confirm-phrase";
 
 module("Integration | Component | dialog-holder", function (hooks) {
   setupRenderingTest(hooks);
@@ -399,7 +401,7 @@ module("Integration | Component | dialog-holder", function (hooks) {
     await render(hbs`<DialogHolder />`);
 
     this.dialog.deleteConfirm({
-      bodyComponent: "dialog-messages/second-factor-confirm-phrase",
+      bodyComponent: SecondFactorConfirmPhrase,
       confirmButtonDisabled: true,
     });
     await settled();
@@ -416,7 +418,7 @@ module("Integration | Component | dialog-holder", function (hooks) {
     const message_count = 5;
 
     this.dialog.deleteConfirm({
-      bodyComponent: "dialog-messages/group-delete",
+      bodyComponent: GroupDeleteDialogMessage,
       bodyComponentModel: {
         message_count,
       },
