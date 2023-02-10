@@ -974,11 +974,6 @@ de:
       profile: "Profil"
       mute: "Stummschalten"
       edit: "Einstellungen bearbeiten"
-      download_archive:
-        button_text: "Alle herunterladen"
-        confirm: "Möchtest du wirklich deine Beiträge herunterladen?"
-        success: "Der Export wurde gestartet. Du erhältst eine Nachricht, sobald der Vorgang abgeschlossen ist."
-        rate_limit_error: "Beiträge können pro Tag nur einmal heruntergeladen werden. Bitte versuch es morgen wieder."
       new_private_message: "Neue Nachricht"
       private_message: "Nachricht"
       private_messages: "Nachrichten"
@@ -2152,8 +2147,6 @@ de:
         topic_template_not_modified: "Bitte füge Details und Spezifikationen zu deinem Thema hinzu, indem du die Themenvorlage anpasst."
       save_edit: "Bearbeitung speichern"
       overwrite_edit: "Bearbeitung überschreiben"
-      reply_original: "Auf das ursprüngliche Thema antworten"
-      reply_here: "Hier antworten"
       reply: "Antworten"
       cancel: "Abbrechen"
       create_topic: "Thema erstellen"
@@ -2396,7 +2389,7 @@ de:
         other: "<span>%{count}%{plus} Ergebnisse für </span><span class='term'>%{term}</span>"
       title: "Suche"
       full_page_title: "Suche"
-      results: "ergebnisse"
+      results: "Ergebnisse"
       no_results: "Keine Ergebnisse gefunden."
       no_more_results: "Es wurden keine weiteren Ergebnisse gefunden."
       post_format: "#%{post_number} von %{username}"
@@ -2725,8 +2718,6 @@ de:
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Durchstöbere alle Kategorien</a>, <a href='%{basePath}/latest'>sieh dir die aktuellen Themen</a> oder die Top-Themen an:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Durchstöbere alle Schlagwörter</a> oder <a href='%{basePath}/latest'>sieh dir die aktuellen Themen an</a>."
       suggest_create_topic: Bereit, <a href>eine neue Unterhaltung zu beginnen?</a>
-      jump_reply_up: zur vorherigen Antwort springen
-      jump_reply_down: zur nachfolgenden Antwort springen
       deleted: "Das Thema wurde gelöscht"
       slow_mode_update:
         title: "Langsamer Modus"
@@ -3091,9 +3082,6 @@ de:
       collapse: "zuklappen"
       sr_collapse_replies: "Eingebettete Antworten einklappen"
       sr_date: "Beitragsdatum"
-      sr_expand_replies:
-        one: "Dieser Beitrag hat %{count} Antwort. Zum Erweitern klicken"
-        other: "Dieser Beitrag hat %{count} Antworten. Zum Erweitern klicken"
       expand_collapse: "erweitern/zuklappen"
       sr_below_embedded_posts_description: "Beitrag #%{post_number} Antworten"
       sr_embedded_reply_description: "Antwort von @%{username} auf Beitrag #%{post_number}"
@@ -3947,15 +3935,13 @@ de:
       enabled: "Der abgesicherte Modus ist aktiviert. Schließe das Browserfenster, um ihn zu verlassen."
     image_removed: "(Bild entfernt)"
     pause_notifications:
-      title: "Benachrichtigungen pausieren für..."
+      title: "Benachrichtigungen pausieren für …"
       label: "Benachrichtigungen pausieren"
-      remaining: "%{remaining} verbleibend"
       options:
         half_hour: "30 Minuten"
         one_hour: "1 Stunde"
         two_hours: "2 Stunden"
         tomorrow: "Bis morgen"
-        custom: "Benutzerdefiniert"
       set_schedule: "Zeitplan für Benachrichtigungen festlegen"
     trust_levels:
       names:
@@ -4005,6 +3991,9 @@ de:
       all_categories: "Alle Kategorien"
       all_tags: "Alle Schlagwörter"
       sections:
+        custom:
+          save: "Speichern"
+          delete: "Löschen"
         about:
           header_link_text: "Über uns"
         messages:
@@ -4836,7 +4825,7 @@ de:
         last_seen_user: "Zuletzt gesehener Benutzer:"
         no_result: "Für diese Zusammenfassung wurden keine Ergebnisse gefunden."
         reply_key: "Antwort-Schlüssel"
-        post_link_with_smtp: "Beitrag & SMTP-Details"
+        post_link_with_smtp: "Beitrag und SMTP-Details"
         skipped_reason: "Grund des Überspringens"
         incoming_emails:
           from_address: "Von"
@@ -5195,7 +5184,6 @@ de:
         show_admin_profile: "Administration"
         manage_user: "Benutzer verwalten"
         show_public_profile: "Zeige öffentliches Profil"
-        impersonate: "Nutzersicht"
         action_logs: "Aktionsprotokolle"
         ip_lookup: "IP-Abfrage"
         log_out: "Abmelden"

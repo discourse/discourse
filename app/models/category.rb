@@ -73,6 +73,12 @@ class Category < ActiveRecord::Base
   validate :ensure_slug
   validate :permissions_compatibility_validator
 
+  validates :default_slow_mode_seconds,
+            numericality: {
+              only_integer: true,
+              greater_than: 0,
+            },
+            allow_nil: true
   validates :auto_close_hours,
             numericality: {
               greater_than: 0,

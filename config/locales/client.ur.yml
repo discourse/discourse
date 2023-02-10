@@ -939,11 +939,6 @@ ur:
       profile: "پروفائل"
       mute: "خاموش کردیں"
       edit: "ترجیحات میں ترمیم کردیں"
-      download_archive:
-        button_text: "تمام ڈاؤن لوڈ کریں"
-        confirm: "کیا آپ واقعی اپنی پوسٹس ڈاؤن لوڈ کرنا چاہتے ہیں؟"
-        success: "ڈاؤن لوڈ کا آغاز کر دیا گیا ہے، عمل مکمل ہونے پر آپ کو پیغام کے ذریعے مطلع کر دیا جائے گا۔"
-        rate_limit_error: "پوسٹس فی دن ایک بار ہی ڈاؤن لوڈ کی جا سکتی ہیں، براہ مہربانی کل دوبارہ کوشش کریں۔"
       new_private_message: "نیا پیغام"
       private_message: "پیغام"
       private_messages: "پیغامات"
@@ -1926,8 +1921,6 @@ ur:
         topic_template_not_modified: "براہ مہربانی ٹاپک ٹَیمپلیٹ میں ترمیم کرکے اپنے ٹاپک میں تفصیلات اور مخصوصیات شامل کریں۔"
       save_edit: "ترمیم محفوظ کریں"
       overwrite_edit: "دوسری ترمیم کے اوپر لکھ ڈالیں"
-      reply_original: "حقیقی ٹاپک پر جواب دیں"
-      reply_here: "یہاں جواب دیں"
       reply: "جواب"
       cancel: "منسوخ"
       create_topic: "ٹاپک بنائیں"
@@ -2187,7 +2180,6 @@ ur:
       tips:
         category_tag: "زمرہ یا ٹیگ کے لحاظ سے فلٹرز"
         author: "پوسٹ مصنف کے ذریعہ فلٹرز"
-        in: "میٹا ڈیٹا کےذریعہ سے فلٹرز (مثلاً ان: عنوان، ان:ذاتی، ان:پن کیاہوا)"
         status: "موضوع کی حیثیت کے لحاظ سے فلٹرز"
         full_search: "مکمل صفحہ کی تلاش کا آغاز"
         full_search_key: "%{modifier} + درج کریں"
@@ -2389,8 +2381,6 @@ ur:
       expand_details: "موضوع کی تفصیلات کو پھیلائیں"
       unread_indicator: "کسی ممبر نے ابھی تک اِس ٹاپک کی آخری پوسٹ نہیں پڑھی ہے۔"
       suggest_create_topic: <a href>نئی گفتگو شروع</a> کرنے کے لیے تیار ہیں؟
-      jump_reply_up: اِس سے پرانے جواب پر جائیں
-      jump_reply_down: اِس سے نئے جواب پر جائیں
       deleted: "ٹاپک مٹادیا گیا ہے"
       slow_mode_update:
         title: "سست موڈ"
@@ -3571,13 +3561,11 @@ ur:
       enabled: "سیف موڈ فعال ہے، سیف موڈ سے باہر نکلنے کے لئے اِس براؤزر وِنڈو کو بند کریں"
     image_removed: "(تصویر ہٹا دی گئی)"
     pause_notifications:
-      remaining: "%{remaining} باقی رہتا ہے..."
       options:
         half_hour: "30 منٹ"
         one_hour: "1 گھنٹہ"
         two_hours: "2 گھنٹے"
         tomorrow: "کل تک"
-        custom: "اپنی مرضی کا"
       set_schedule: "اطلاع کا شیڈول مرتب کریں"
     trust_levels:
       names:
@@ -3618,6 +3606,9 @@ ur:
       more: "مزید"
       all_categories: "تمام زُمرَہ جات"
       sections:
+        custom:
+          save: "محفوظ کریں"
+          delete: "مٹائیں"
         about:
           header_link_text: "بارے میں"
         messages:
@@ -3643,8 +3634,6 @@ ur:
               content: "ایڈمن"
             badges:
               content: "بَیج"
-            everything:
-              content: "تمام"
             faq:
               content: "عمومی سوالات"
             groups:
@@ -3655,7 +3644,6 @@ ur:
               content: "میری پوسٹ"
             review:
               content: "جائزہ لیں"
-    until: "جب تک:"
   admin_js:
     type_to_filter: "فِلٹر کرنے کے لئے ٹائپ کریں..."
     admin:
@@ -4733,7 +4721,6 @@ ur:
         staged: "سٹَیجڈ؟"
         show_admin_profile: "ایڈمن"
         show_public_profile: "پبلک پروفائل دکھائیں"
-        impersonate: "نقالی"
         action_logs: "عوامل کے لاگز"
         ip_lookup: "IP کا سراغ"
         log_out: "لاگ آُوٹ"

@@ -267,4 +267,44 @@ RSpec.describe UserSearch do
       expect(results[2]).to eq("mrorange")
     end
   end
+
+  context "when using SiteSetting.user_search_similar_results" do
+    it "should find the user even with a typo if the setting is enabled" do
+      rafael = Fabricate(:user, username: "rafael", name: "Rafael Silva")
+      codinghorror = Fabricate(:user, username: "codinghorror", name: "Jeff Atwood")
+      pfaffman = Fabricate(:user, username: "pfaffman")
+      zogstrip = Fabricate(:user, username: "zogstrip", name: "Régis Hanol")
+      roman = Fabricate(:user, username: "roman", name: "Roman Rizzi")
+
+      SiteSetting.user_search_similar_results = false
+      expect(UserSearch.new("rafel").search).to be_blank
+      expect(UserSearch.new("codding").search).to be_blank
+      expect(UserSearch.new("pffman").search).to be_blank
+
+      SiteSetting.user_search_similar_results = true
+      expect(UserSearch.new("rafel").search).to include(rafael)
+      expect(UserSearch.new("codding").search).to include(codinghorror)
+      expect(UserSearch.new("pffman").search).to include(pfaffman)
+
+      SiteSetting.user_search_similar_results = false
+      expect(UserSearch.new("silvia").search).to be_blank
+      expect(UserSearch.new("atwod").search).to be_blank
+      expect(UserSearch.new("regis").search).to be_blank
+      expect(UserSearch.new("reg").search).to be_blank
+
+      SiteSetting.user_search_similar_results = true
+      expect(UserSearch.new("silvia").search).to include(rafael)
+      expect(UserSearch.new("atwod").search).to include(codinghorror)
+      expect(UserSearch.new("regis").search).to include(zogstrip)
+      expect(UserSearch.new("reg").search).to include(zogstrip)
+    end
+
+    it "orders the results by similarity" do
+      zogstrip = Fabricate(:user, username: "zogstrip", name: "Régis Hanol")
+      roman = Fabricate(:user, username: "roman", name: "Roman Rizzi")
+      SiteSetting.user_search_similar_results = true
+
+      expect(UserSearch.new("regis").search.first).to eq(zogstrip)
+    end
+  end
 end

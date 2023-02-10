@@ -10,36 +10,16 @@ const { parsePluginClientSettings } = require("./lib/site-settings-plugin");
 const discourseScss = require("./lib/discourse-scss");
 const generateScriptsTree = require("./lib/scripts");
 const funnel = require("broccoli-funnel");
-
-const SILENCED_WARN_PREFIXES = [
-  "Setting the `jquery-integration` optional feature flag",
-  "The Ember Classic edition has been deprecated",
-  "Setting the `template-only-glimmer-components` optional feature flag to `false`",
-  "DEPRECATION: Invoking the `<LinkTo>` component with positional arguments is deprecated",
-];
+const DeprecationSilencer = require("./lib/deprecation-silencer");
 
 module.exports = function (defaults) {
   let discourseRoot = resolve("../../../..");
   let vendorJs = discourseRoot + "/vendor/assets/javascripts/";
 
-  // Silence the warnings listed in SILENCED_WARN_PREFIXES
+  // Silence deprecations which we are aware of - see `lib/deprecation-silencer.js`
   const ui = defaults.project.ui;
-  const oldWriteWarning = ui.writeWarnLine.bind(ui);
-  ui.writeWarnLine = (message, ...args) => {
-    if (!SILENCED_WARN_PREFIXES.some((prefix) => message.startsWith(prefix))) {
-      return oldWriteWarning(message, ...args);
-    }
-  };
-
-  // Silence warnings which go straight to console.warn (e.g. template compiler deprecations)
-  /* eslint-disable no-console */
-  const oldConsoleWarn = console.warn.bind(console);
-  console.warn = (message, ...args) => {
-    if (!SILENCED_WARN_PREFIXES.some((prefix) => message.startsWith(prefix))) {
-      return oldConsoleWarn(message, ...args);
-    }
-  };
-  /* eslint-enable no-console */
+  DeprecationSilencer.silenceUiWarn(ui);
+  DeprecationSilencer.silenceConsoleWarn();
 
   const isProduction = EmberApp.env().includes("production");
   const isTest = EmberApp.env().includes("test");
@@ -56,6 +36,9 @@ module.exports = function (defaults) {
       enabled: true,
     },
     autoImport: {
+      alias: {
+        "virtual-dom": "@discourse/virtual-dom",
+      },
       forbidEval: true,
       insertScriptsAt: "ember-auto-import-scripts",
       webpack: {
@@ -106,6 +89,14 @@ module.exports = function (defaults) {
         "**/highlightjs/*",
         "**/javascripts/*",
       ],
+    },
+
+    "ember-cli-babel": {
+      throwUnlessParallelizable: true,
+    },
+
+    babel: {
+      plugins: [DeprecationSilencer.generateBabelPlugin()],
     },
 
     // We need to build tests in prod for theme tests

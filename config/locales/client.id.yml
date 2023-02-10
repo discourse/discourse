@@ -832,9 +832,6 @@ id:
       profile: "Profil"
       mute: "Redam"
       edit: "Ubah Preferensi"
-      download_archive:
-        button_text: "Unduh Semua"
-        confirm: "Anda yakin ingin mengunduh pos-pos Anda?"
       new_private_message: "Pesan Baru"
       private_message: "pesan"
       private_messages: "Messages"
@@ -1056,8 +1053,6 @@ id:
         title: "Surel"
         primary: "Email Utama"
         secondary: "Email Sekunder"
-        primary_label: "utama"
-        resent_label: "surel terkirim"
         update_email: "Ganti Alamat Surel"
         no_secondary: "Tidak ada email sekunder"
         instructions: "Jangan pernah tunjukkan ke publik."
@@ -1173,13 +1168,9 @@ id:
         time_read: "Waktu Baca"
         days_visited: "Hari Berkunjung"
         account_age_days: "Umur akun dalam hari"
-        create: "Undang"
         valid_for: "Tautan undangan hanya berlaku untuk alamat surel: %{email}"
         invite_link:
           success: "Tautan undangan telah sukses dibuat!"
-        invite:
-          show_advanced: "Tampilkan Opsi Lanjutan"
-          hide_advanced: "Sembunyikan Opsi Lanjutan"
         bulk_invite:
           error: "Maaf, file harus dalam format CSV"
       password:
@@ -1414,8 +1405,6 @@ id:
         tags_missing:
           other: "Anda harus memilih setidaknya %{count} label"
       save_edit: "Simpah Ubahan"
-      reply_original: "Balas pada Topik Asal"
-      reply_here: "Balas Disini"
       reply: "Balas"
       cancel: "Batal"
       create_topic: "Buat Topik"
@@ -1506,7 +1495,6 @@ id:
       title: "Cari"
       full_page_title: "Cari"
       results: "hasil"
-      post_format: "#%{post_number} oleh %{username}"
       search_google_button: "Google"
       search_button: "Cari"
       categories: "Kategori"
@@ -1533,7 +1521,6 @@ id:
         select_all: "Pilih Semua"
         dismiss: "Bubar"
         move_messages_to_inbox: "Pindah ke Kotak Masuk"
-        notification_level: "Pemberitahuan..."
         choose_new_tags: "Silahkan pilih tag baru untuk topik-topik ini:"
       none:
         new: "Anda tidak memiliki topik baru"
@@ -1561,16 +1548,13 @@ id:
       back_to_list: "Kembali ke Daftar Topik"
       options: "Opsi Topik"
       show_links: "tampilkan pranala dalam topik ini"
-      jump_reply_up: lompat ke balasan sebelumnya
       slow_mode_update:
         enable: "Aktifkan"
         remove: "Nonaktifkan"
       topic_status_update:
         when: "Ketika:"
-        time_frame_required: "Silakan pilih kerangka waktu"
         duration: "Durasi"
       progress:
-        jump_prompt_to_date: "sampai saat ini"
         jump_prompt_or: "atau"
       notifications:
         reasons:
@@ -1603,7 +1587,6 @@ id:
         title: "Balas"
       share:
         help: "share link ke topik ini"
-        invite_users: "Undang"
       invite_private:
         group_name: "nama grup"
       invite_reply:
@@ -1642,17 +1625,9 @@ id:
         controls:
           first: "Revisi pertama"
       bookmarks:
-        create: "Buat penanda"
-        edit: "Sunting penanda"
         name: "Nama"
         options: "Pilihan"
-        actions:
-          delete_bookmark:
-            name: "Hapus penanda"
-          edit_bookmark:
-            name: "Sunting penanda"
     category:
-      all: "Semua kategori"
       edit: "Ubah"
       settings: "Pengaturan"
       tags: "Label"
@@ -1678,7 +1653,6 @@ id:
         options:
           normal: "normal"
           ignore: "Abaikan"
-          low: "Rendah"
           high: "Tinggi"
       sort_options:
         default: "asal"
@@ -1695,8 +1669,6 @@ id:
       notify_action: "Pesan"
     post_links:
       about: "perluas tautan untuk artikel ini"
-      title:
-        other: "%{count} lainnya"
     topic_statuses:
       warning:
         help: "Ini adalah peringatan resmi."
@@ -1761,8 +1733,6 @@ id:
       actions:
         title: "Aksi"
     badges:
-      more_badges:
-        other: "+%{count} lainnya"
       none: "(kosong)"
       badge_grouping:
         trust_level:
@@ -1796,7 +1766,6 @@ id:
         name_placeholder: "Nama"
         save: "Simpan"
         delete: "Hapus"
-        parent_tag_placeholder: "Opsional"
       topics:
         none:
           new: "Anda tidak memiliki topik baru"
@@ -1813,8 +1782,10 @@ id:
       new_count:
         other: "%{count} baru"
       more: "Selengkapnya"
-      all_categories: "Semua kategori"
       sections:
+        custom:
+          save: "Simpan"
+          delete: "Hapus"
         about:
           header_link_text: "Tentang"
         messages:
@@ -1836,8 +1807,6 @@ id:
               content: "Tentang"
             admin:
               content: "Admin"
-            everything:
-              content: "Semuanya"
             faq:
               content: "FAQ"
             groups:
@@ -1846,7 +1815,6 @@ id:
               content: "Pengguna"
             review:
               content: "Ulasan"
-    until: "Sampai:"
   admin_js:
     type_to_filter: "ketik untuk memfilter..."
     admin:
@@ -1865,7 +1833,6 @@ id:
         moderators: "Moderator:"
         private_messages_title: "Pesan"
         report_filter_any: "apa saja"
-        disabled: Dinonaktifkan
         filter_reports: Filter laporan
         reports:
           last_7_days: "7 terakhir"
@@ -1900,7 +1867,6 @@ id:
       api:
         user: "Pengguna"
         created: Dibuat
-        never_used: (tidak pernah)
         revoke: "Cabut"
         show_details: Detil
         save: Simpan
@@ -1913,7 +1879,6 @@ id:
         active: "Aktif"
         delivery_status:
           failed: "Gagal"
-          disabled: "Dinonaktifkan"
         events:
           request: "Pinta"
           body: "Konten"
@@ -1994,9 +1959,6 @@ id:
           filters:
             title: "Filter"
             user_placeholder: "nama pengguna"
-      moderation_history:
-        actions:
-          delete_topic: "Topik Dihapus"
       logs:
         title: "Log"
         action: "Aksi"
@@ -2076,8 +2038,6 @@ id:
           confirmation:
             cancel: "Batal"
         delete_and_block: "Hapus dan <b>block</b> email dan alamat IP ini"
-        reset_bounce_score:
-          label: "Reset"
         other_matches_list:
           username: "Nama Pengguna"
           trust_level: "Level Kepercayaan"
@@ -2103,7 +2063,6 @@ id:
       site_text:
         edit: "ubah"
       settings:
-        reset: "reset"
         none: "Tak ada"
       site_settings:
         title: "Pengaturan"

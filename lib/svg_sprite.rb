@@ -6,6 +6,7 @@ module SvgSprite
       %w[
         adjust
         address-book
+        align-left
         ambulance
         anchor
         angle-double-down
@@ -34,6 +35,7 @@ module SvgSprite
         book-reader
         bookmark
         briefcase
+        bullseye
         calendar-alt
         caret-down
         caret-left
@@ -45,11 +47,13 @@ module SvgSprite
         check
         check-circle
         check-square
+        chevron-circle-down
         chevron-down
         chevron-left
         chevron-right
         chevron-up
         circle
+        cloud-upload-alt
         code
         cog
         columns
@@ -134,6 +138,7 @@ module SvgSprite
         gift
         globe
         globe-americas
+        grip-lines
         hand-point-right
         hands-helping
         heart

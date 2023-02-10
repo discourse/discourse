@@ -518,8 +518,8 @@ export default Component.extend({
   startReactionForMessageActions() {
     this.chatEmojiPickerManager.startFromMessageActions(
       this.message,
-      this.site.desktopView,
-      this.selectReaction
+      this.selectReaction,
+      { desktop: this.site.desktopView }
     );
   },
 
@@ -527,8 +527,8 @@ export default Component.extend({
   startReactionForReactionList() {
     this.chatEmojiPickerManager.startFromMessageReactionList(
       this.message,
-      this.site.desktopView,
-      this.selectReaction
+      this.selectReaction,
+      { desktop: this.site.desktopView }
     );
   },
 
@@ -786,7 +786,7 @@ export default Component.extend({
 
     const { protocol, host } = window.location;
     let url = getURL(
-      `/chat/c/-/${this.details.chat_channel_id}?messageId=${this.message.id}`
+      `/chat/c/-/${this.details.chat_channel_id}/${this.message.id}`
     );
     url = url.indexOf("/") === 0 ? protocol + "//" + host + url : url;
     clipboardCopy(url);

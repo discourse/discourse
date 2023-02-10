@@ -2398,7 +2398,6 @@ en:
     default_sidebar_tags: "Selected tags will be displayed under Sidebar's Tags section by default."
     enable_new_notifications_menu: "Enables the new notifications menu for the legacy navigation menu."
     enable_new_user_profile_nav_groups: "EXPERIMENTAL: Users of the selected groups will be shown the new user profile navigation menu"
-    enable_experimental_topic_timeline_groups: "EXPERIMENTAL: Users of the selected groups will be shown the refactored topic timeline"
     enable_experimental_hashtag_autocomplete: "EXPERIMENTAL: Use the new #hashtag autocompletion system for categories and tags that renders the selected item differently and has improved search"
 
     errors:
@@ -3481,7 +3480,7 @@ en:
 
         The new user [%{username}](%{user_url}) was automatically silenced because multiple users flagged %{username}'s post(s).
 
-        Please [review the flags](%{base_url}/admin/flags). If %{username} was incorrectly silenced from posting, click the unsilence button on [the admin page for this user](%{user_url}).
+        Please [review the flags](%{base_url}/review). If %{username} was incorrectly silenced from posting, click the unsilence button on [the admin page for this user](%{user_url}).
 
         This threshold can be changed via the `silence_new_user` site settings.
 
@@ -3574,9 +3573,6 @@ en:
       one: "Heads up: We send a maximum of %{count} daily email. Check the site to see the ones that might be held back."
       other: "Heads up: We send a maximum of %{count} daily emails. Check the site to see the ones that might be held back. PS thanks for being popular!"
     in_reply_to: "In Reply To"
-    unsubscribe:
-      title: "Unsubscribe"
-      description: "Not interested in getting these emails? No problem! Click below to unsubscribe instantly:"
 
     header_instructions: ""
     reply_by_email: "[Visit Topic](%{base_url}%{url}) or reply to this email to respond."
@@ -3905,7 +3901,6 @@ en:
       liked_received: "Likes Received"
       new_users: "New Users"
       popular_topics: "Popular Topics"
-      follow_topic: "Follow this topic"
       join_the_discussion: "Read More"
       popular_posts: "Popular Posts"
       more_new: "New for you"
@@ -4158,10 +4153,6 @@ en:
     welcome_message_invite_only: |
       ## [Welcome to %{title}](#welcome)
       An account is required. Please ask an existing member for an invite or log in to continue.
-
-  deleted: "deleted"
-
-  image: "image"
 
   upload:
     edit_reason: "downloaded local copies of images"
@@ -5074,7 +5065,9 @@ en:
   search_logs:
     graph_title: "Search Count"
 
-  joined: "Joined"
+  onebox:
+    discourse:
+      user_joined_community: "Joined %{date}"
 
   discourse_push_notifications:
     popup:
@@ -5257,3 +5250,7 @@ en:
     payload_url:
       blocked_or_internal: "Payload URL cannot be used because it resolves to a blocked or internal IP"
       unsafe: "Payload URL cannot be used because it's unsafe"
+
+  form_templates:
+    errors:
+      invalid_yaml: "is not a valid YAML string"

@@ -81,7 +81,7 @@ class SidebarSiteSettingsBackfiller
       FROM users
       WHERE users.id NOT IN (
         SELECT
-          sidebar_section_links.user_id
+          DISTINCT(sidebar_section_links.user_id)
         FROM sidebar_section_links
         WHERE sidebar_section_links.linkable_type = '#{@linkable_klass.to_s}'
         AND sidebar_section_links.linkable_id IN (#{@added_ids.join(",")})

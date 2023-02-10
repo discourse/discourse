@@ -5,8 +5,11 @@
       "chat-drawer"
       (if this.chatStateManager.isDrawerExpanded "is-expanded")
     }}
+    {{chat/resizable-node ".chat-drawer-resizer" this.didResize}}
+    style={{this.drawerStyle}}
   >
     <div class="chat-drawer-container">
+      <div class="chat-drawer-resizer"></div>
       <div
         role="region"
         aria-label={{i18n "chat.aria_roles.header"}}

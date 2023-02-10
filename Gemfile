@@ -105,7 +105,7 @@ gem "pg"
 gem "mini_sql"
 gem "pry-rails", require: false
 gem "pry-byebug", require: false
-gem "r2", require: false
+gem "rtlcss_wrapper", require: false
 gem "rake"
 
 gem "thor", require: false
@@ -230,10 +230,9 @@ gem "logstash-event", require: false
 gem "logstash-logger", require: false
 gem "logster"
 
-# NOTE: later versions of sassc are causing a segfault, possibly dependent on processer architecture
-# and until resolved should be locked at 2.0.1
-gem "sassc", "2.0.1", require: false
-gem "sassc-rails"
+# These are forks of sassc and sassc-rails with dart-sass support
+gem "dartsass-ruby"
+gem "dartsass-sprockets"
 
 gem "rotp", require: false
 

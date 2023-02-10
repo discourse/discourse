@@ -906,11 +906,6 @@ vi:
       profile: "Tiểu sử"
       mute: "Im lặng"
       edit: "Tùy chỉnh"
-      download_archive:
-        button_text: "Tải tất c"
-        confirm: "Bạn có chắc chắn muốn download các bài viết của mình?"
-        success: "Quá trình tải về đã bắt đầu, bạn sẽ được thông báo qua tin nhắn khi quá trình hoàn tất."
-        rate_limit_error: "Bài viết chỉ được tải về một lần mỗi người, hãy thử lại vào ngày mai."
       new_private_message: "Tin nhắn mới"
       private_message: "Tin nhắn"
       private_messages: "Tin nhắn"
@@ -1901,8 +1896,6 @@ vi:
         topic_template_not_modified: "Vui lòng thêm chi tiết và cụ thể cho chủ đề của bạn bằng cách chỉnh sửa mẫu chủ đề."
       save_edit: "Lưu chỉnh sửa"
       overwrite_edit: "Ghi đè Chỉnh sửa"
-      reply_original: "Trả lời cho bài viết gốc"
-      reply_here: "Trả lời đây "
       reply: "Trả lời "
       cancel: "Huỷ"
       create_topic: "Tạo chủ đề"
@@ -2381,8 +2374,6 @@ vi:
       expand_details: "mở rộng chi tiết chủ đề"
       unread_indicator: "Chưa có thành viên nào đọc bài cuối cùng của chủ đề này."
       suggest_create_topic: Bạn đã sẵn sàng để <a href>đầu một cuộc trò chuyện mới chưa?</a>
-      jump_reply_up: nhảy đến những trả lời trước đó
-      jump_reply_down: nhảy tới những trả lời sau đó
       deleted: "Chủ đề này đã bị xóa"
       slow_mode_update:
         title: "Chế độ chậm"
@@ -2731,8 +2722,6 @@ vi:
       collapse: "Thu nhỏ"
       sr_collapse_replies: "Thu gọn các câu trả lời đã nhúng"
       sr_date: "Ngày đăng"
-      sr_expand_replies:
-        other: "Bài đăng này có %{count} câu trả lời. Bấm để mở rộng"
       expand_collapse: "mở/đóng"
       locked: "MOD đã khóa bài đăng này không được chỉnh sửa"
       gap:
@@ -3524,13 +3513,11 @@ vi:
       enabled: "Chế độ an toàn được bật, để thoát khỏi chế độ an toàn, hãy đóng cửa sổ trình duyệt này"
     image_removed: "(hình ảnh đã bị xóa)"
     pause_notifications:
-      remaining: "còn lại %{remaining}"
       options:
         half_hour: "30 phút"
         one_hour: "1 tiếng"
         two_hours: "2 tiếng"
         tomorrow: "Cho tới ngày mai"
-        custom: "Tùy biến"
       set_schedule: "Đặt lịch thông báo"
     trust_levels:
       names:
@@ -3571,8 +3558,10 @@ vi:
         other: "%{count} mới"
       more: "Thêm"
       all_categories: "Tất cả danh mục"
-      all_tags: "Tất cả các thẻ"
       sections:
+        custom:
+          save: "Lưu lại"
+          delete: "Xóa"
         about:
           header_link_text: "Giới thiệu"
         messages:
@@ -4657,7 +4646,6 @@ vi:
         staged: "Cấp bậc?"
         show_admin_profile: "Quản trị"
         show_public_profile: "Hiển thị hồ sơ công khai"
-        impersonate: "Mạo danh"
         action_logs: "Nhật ký hành động"
         ip_lookup: "Tìm kiếm địa chỉ IP"
         log_out: "Đăng xuất"

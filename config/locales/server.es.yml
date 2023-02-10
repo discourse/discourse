@@ -3125,14 +3125,6 @@ es:
     user_automatically_silenced:
       title: "Usuario silenciado automáticamente"
       subject_template: "Usuario nuevo %{username} silenciado por denuncias de la comunidad"
-      text_body_template: |
-        Este es un mensaje automatizado.
-
-        El usuario nuevo [%{username}](%{user_url}) se silenció automáticamente porque múltiples usuarios han denunciado mensaje(s) de %{username}.
-
-        Por favor, [comprueba las denuncias](%{base_url}/admin/flags). Si %{username} se silenció incorrectamente, haz clic en el botón de quitar silencio en la [página de administración del usuario](%{user_url}).
-
-        Esto puede ser cambiado con el ajuste «silence_new_user» en la configuración del sitio.
     spam_post_blocked:
       title: "Publicación con spam bloqueada"
       subject_template: "Publicaciones del usuario nuevo %{username} bloqueadas debido a la repetición de enlaces."
@@ -3211,9 +3203,6 @@ es:
       one: "ADVERTENCIA: has superado el límite de %{count} correo electrónico diario. Revisa el sitio para ver las otras notificaciones que no te han llegado."
       other: "Advertencia: enviamos un máximo de %{count} correos electrónicos por día. PD: ¡Gracias por ser tan popular!"
     in_reply_to: "En respuesta a"
-    unsubscribe:
-      title: "Cancelar suscripción"
-      description: "¿No estás interesado en recibir estos correos? ¡No hay problema! Haz clic abajo para darte de baja de inmediatamente:"
     reply_by_email: "[Visita el tema](%{base_url}%{url}) o responde a este correo electrónico para publicar."
     reply_by_email_pm: "[Visita el mensaje](%{base_url}%{url}) o responde a este correo electrónico para contestar a %{participants}."
     only_reply_by_email: "Responde a este correo electrónico para comentar."
@@ -3510,7 +3499,6 @@ es:
       liked_received: "Me gusta recibidos"
       new_users: "Usuarios nuevos"
       popular_topics: "Temas populares"
-      follow_topic: "Seguir este tema"
       join_the_discussion: "Leer más"
       popular_posts: "Publicaciones populares"
       more_new: "Nuevo para ti"
@@ -3711,8 +3699,6 @@ es:
     welcome_message_invite_only: |
       ## [Te damos la bienvenida a %{title}](#welcome)
       Se necesita una cuenta para utilizar el sitio. Solicita a uno de los miembros actuales que te invite o inicia sesión para continuar.
-  deleted: "eliminado"
-  image: "imagen"
   upload:
     edit_reason: "copias locales de imágenes descargadas"
     unauthorized: "Lo sentimos, el archivo que estás intentando subir no está permitido (extensiones autorizadas: %{authorized_extensions})."
@@ -4337,7 +4323,6 @@ es:
           <p>Pásalo bien, y ¡buena suerte <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>construyendo tu nueva comunidad!</a></p>
   search_logs:
     graph_title: "Análisis de búsquedas"
-  joined: "Registrado"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} te mencionó en «%{topic}» - %{site_title}'

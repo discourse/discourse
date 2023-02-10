@@ -1047,10 +1047,12 @@ en:
       mute: "Mute"
       edit: "Edit Preferences"
       download_archive:
-        button_text: "Download All"
-        confirm: "Are you sure you want to download your posts?"
-        success: "Download initiated, you will be notified via message when the process is complete."
-        rate_limit_error: "Posts can be downloaded once per day, please try again tomorrow."
+        title: "Export your data"
+        description: "Download an archive of your account activity and preferences."
+        button_text: "Request archive"
+        confirm: "Do you really want to download an archive of your account activity and preferences?"
+        success: "We've started collecting your archive, you will receive a message when the process is complete."
+        rate_limit_error: "Account archives can be downloaded once per day, please try again tomorrow."
       new_private_message: "New Message"
       private_message: "Message"
       private_messages: "Messages"
@@ -2373,8 +2375,6 @@ en:
 
       save_edit: "Save Edit"
       overwrite_edit: "Overwrite Edit"
-      reply_original: "Reply on Original Topic"
-      reply_here: "Reply Here"
       reply: "Reply"
       cancel: "Cancel"
       create_topic: "Create Topic"
@@ -2976,8 +2976,8 @@ en:
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Browse all tags</a> or <a href='%{basePath}/latest'>view latest topics</a>."
 
       suggest_create_topic: Ready to <a href>start a new conversation?</a>
-      jump_reply_up: jump to earlier reply
-      jump_reply_down: jump to later reply
+      jump_reply: "Jump to post's original location"
+      jump_reply_aria: "Jump to @%{username}'s post in its original location"
       deleted: "The topic has been deleted"
 
       slow_mode_update:
@@ -3362,6 +3362,7 @@ en:
       ignored: "Ignored content"
       wiki_last_edited_on: "wiki last edited on %{dateTime}"
       last_edited_on: "post last edited on %{dateTime}"
+      edit_history: "post edit history"
       reply_as_new_topic: "Reply as linked Topic"
       reply_as_new_private_message: "Reply as new message to the same recipients"
       continue_discussion: "Continuing the discussion from %{postLink}:"
@@ -4058,6 +4059,7 @@ en:
         title: "Composing"
         return: "%{shortcut} Return to composer"
         fullscreen: "%{shortcut} Fullscreen composer"
+        insert_current_time: "%{shortcut} Insert current time"
       bookmarks:
         title: "Bookmarking"
         enter: "%{shortcut} Save and close"
@@ -4298,13 +4300,11 @@ en:
     pause_notifications:
       title: "Pause notifications for..."
       label: "Pause notifications"
-      remaining: "%{remaining} remaining"
       options:
         half_hour: "30 minutes"
         one_hour: "1 hour"
         two_hours: "2 hours"
         tomorrow: "Until tomorrow"
-        custom: "Custom"
       set_schedule: "Set a notification schedule"
 
     trust_levels:
@@ -4361,6 +4361,19 @@ en:
       all_categories: "All categories"
       all_tags: "All tags"
       sections:
+        custom:
+          add: "Add custom section"
+          edit: "Edit custom section"
+          name: "Section title"
+          save: "Save"
+          delete: "Delete"
+          delete_confirm: "Are you sure you want to delete this section?"
+          links:
+            icon: "Icon"
+            name: "Name"
+            value: "Link"
+            add: "Add another link"
+            delete: "Delete link"
         about:
           header_link_text: "About"
         messages:
@@ -5084,6 +5097,9 @@ en:
           embedded_scss:
             text: "Embedded CSS"
             title: "Enter custom CSS to deliver with embedded version of comments"
+          embedded_header:
+            text: "Embedded Header"
+            title: "Enter HTML to display above the embedded version of comments"
           color_definitions:
             text: "Color Definitions"
             title: "Enter custom color definitions (advanced users only)"
@@ -5493,6 +5509,41 @@ en:
           found_matches: "Found matches:"
           no_matches: "No matches found"
 
+      form_templates:
+        nav_title: "Templates"
+        title: "Form Templates"
+        help: "Create a template structure that can be used to create new topics, posts, and messages."
+        new_template: "New Template"
+        list_table:
+          headings:
+            name: "Name"
+            actions: "Actions"
+          actions:
+            view: "View Template"
+            edit: "Edit Template"
+            delete: "Delete Template"
+        view_template:
+          close: "Close"
+          edit: "Edit"
+          delete: "Delete"
+        new_template_form:
+          submit: "Save"
+          cancel: "Cancel"
+          name:
+            label: "Template Name"
+            placeholder: "Enter a name for this template..."
+          template:
+            label: "Template"
+            placeholder: "Create a YAML template here..."
+        delete_confirm: "Are you sure you would like to delete this template?"
+        quick_insert_fields:
+          add_new_field: "Add"
+          checkbox: "Checkbox"
+          input: "Short answer"
+          textarea: "Long answer"
+          dropdown: "Dropdown"
+          upload: "Upload a file"
+          multiselect: "Multiple choice"
       impersonate:
         title: "Impersonate"
         help: "Use this tool to impersonate a user account for debugging purposes. You will have to log out once finished."
@@ -5616,7 +5667,6 @@ en:
         show_admin_profile: "Admin"
         manage_user: "Manage user"
         show_public_profile: "Show Public Profile"
-        impersonate: "Impersonate"
         action_logs: "Action Logs"
         ip_lookup: "IP Lookup"
         log_out: "Log Out"
@@ -5963,7 +6013,8 @@ en:
         allow_title: Allow badge to be used as a title
         multiple_grant: Can be granted multiple times
         listable: Show badge on the public badges page
-        enabled: Enable badge
+        enabled: enabled
+        disabled: disabled
         icon: Icon
         image: Image
         graphic: Graphic

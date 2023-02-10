@@ -136,9 +136,16 @@
     .mention.highlighted {
       background: var(--tertiary-low);
       color: var(--primary);
+      display: inline-block;
+      font-size: 0.93em;
+      font-weight: normal;
+      padding: 0 0.3em 0.07em;
+      border-radius: 0.6em;
+      text-decoration: none;
     }
 
-    img.ytp-thumbnail-image {
+    img.ytp-thumbnail-image,
+    img.youtube-thumbnail {
       height: 100%;
       max-height: unset;
 

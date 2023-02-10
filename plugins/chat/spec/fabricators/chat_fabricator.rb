@@ -180,3 +180,14 @@ Fabricator(:chat_draft) do
     { value: attrs[:value], replyToMsg: attrs[:reply_to_msg], uploads: attrs[:uploads] }.to_json
   end
 end
+
+Fabricator(:chat_thread) do
+  before_create do |thread, transients|
+    thread.original_message_user = original_message.user
+    thread.channel = original_message.chat_channel
+  end
+
+  transient :channel
+
+  original_message { |attrs| Fabricate(:chat_message, chat_channel: attrs[:channel]) }
+end

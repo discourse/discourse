@@ -856,11 +856,6 @@ bs_BA:
       profile: "Profil"
       mute: "Mutiraj"
       edit: "Uredi Postavke"
-      download_archive:
-        button_text: "Preuzmi sve"
-        confirm: "Da li ste sigurni da želite preuzeti svoju objavu?"
-        success: "Preuzimanje je započeto, bit će te obavješteni porukom kada proces bude završen."
-        rate_limit_error: "Objava može biti preuzeta samo jedanput na dan, molimo vas da pokušate sutra ponovo."
       new_private_message: "Nova poruka"
       private_message: "Poruka"
       private_messages: "Poruke"
@@ -1670,8 +1665,6 @@ bs_BA:
         topic_template_not_modified: "Molimo da dodate detalje i specifikacije za vašu temu tako što ćete izmijeniti template teme."
       save_edit: "Sačuvaj izmjene"
       overwrite_edit: "Overwrite Edit"
-      reply_original: "Odgovori na Originalnu temu"
-      reply_here: "Odgovori Ovdje"
       reply: "Odgovori"
       cancel: "Odustani"
       create_topic: "Pokreni temu"
@@ -1956,11 +1949,9 @@ bs_BA:
         dismiss_new: "Odpusti Nove"
         toggle: "preklopi masovno označavanje tema"
         actions: "Masovno odrađene akcije"
-        change_category: "Postavi kategoriju..."
         close_topics: "Zatvori teme"
         archive_topics: "Arhiviraj teme"
         move_messages_to_inbox: "Idi u inbox"
-        notification_level: "Obavijest..."
         choose_new_category: "Izaberi novu kategoriju za temu:"
         selected:
           one: "Označili ste <b>%{count}</b> temu."
@@ -2040,8 +2031,6 @@ bs_BA:
       back_to_list: "Vrati se na Listu Tema"
       options: "Opcije Teme"
       show_links: "pokaži linkove unutar ove teme"
-      jump_reply_up: jump to earlier reply
-      jump_reply_down: jump to later reply
       deleted: "Ova tema je obrisana"
       slow_mode_update:
         enable: "Omogući"
@@ -2150,7 +2139,6 @@ bs_BA:
         unarchive: "Vrati temu iz arhiva"
         archive: "Arhiviraj temu"
         reset_read: "Reset Read Data"
-        make_public: "Napiši temu javno..."
         make_private: "Pretvori u privatnu poruku"
         reset_bump_date: "Resetuj datum bumpa"
       feature:
@@ -2407,8 +2395,6 @@ bs_BA:
         revert_to_regular: "Ukloni boje osoblja"
         rebake: "Popravi HTML"
         unhide: "Unhide"
-        change_owner: "Izmijeni vlasništvo..."
-        grant_badge: "Grant Badge..."
         lock_post: "Zaključaj objavu"
         lock_post_description: "spriječi objavljivača ove objave da izmijeni objavu"
         unlock_post: "Odključaj objavu"
@@ -2416,7 +2402,6 @@ bs_BA:
         delete_topic_disallowed_modal: "Nemate dozvolu za brisanje ove teme. Ako zaista želite da bude obrisan, pošaljite kaznu za pažnju moderatora zajedno s obrazloženjem."
         delete_topic_disallowed: "nemate dozvolu za brisanje ove teme"
         delete_topic: "obriši temu"
-        add_post_notice: "Dodaj obavještenje moderatora..."
         remove_timer: "ukloni tajmer"
       actions:
         people:
@@ -2608,7 +2593,6 @@ bs_BA:
     flagging:
       title: "Zašto prijavljujete ovaj post?"
       action: "Prijavi objavu"
-      take_action: "Poduzmi Akciju..."
       take_action_options:
         default:
           title: "Poduzmi Akciju"
@@ -3019,7 +3003,6 @@ bs_BA:
         delete: "Delete"
         confirm_delete: "Jeste li sigurni da želite izbrisati ovu grupu oznaka?"
         everyone_can_use: "Oznake mogu koristiti svi"
-        parent_tag_placeholder: "Opciono"
       topics:
         none:
           unread: "Nemate više nepročitanih tema."
@@ -3043,10 +3026,6 @@ bs_BA:
     safe_mode:
       enabled: "Bezbedan režim je omogućen, da biste izašli iz bezbednog režima, zatvorite ovaj prozor pregledača"
     image_removed: "(slika uklonjena)"
-    pause_notifications:
-      remaining: "%{remaining} preostalo"
-      options:
-        custom: "Custom"
     trust_levels:
       names:
         newuser: "novi korisnik"
@@ -3066,6 +3045,9 @@ bs_BA:
       more: "Još"
       all_categories: "Sve kategorije"
       sections:
+        custom:
+          save: "Save"
+          delete: "Delete"
         about:
           header_link_text: "O nama"
         messages:
@@ -3091,8 +3073,6 @@ bs_BA:
               content: "Admin"
             badges:
               content: "Bedž"
-            everything:
-              content: "Sve"
             faq:
               content: "Česta pitanja"
             groups:
@@ -3103,7 +3083,6 @@ bs_BA:
               content: "Moje objave"
             review:
               content: "Pregled"
-    until: "Sve do:"
   admin_js:
     type_to_filter: "kucaj da sortiraš..."
     admin:
@@ -3133,7 +3112,6 @@ bs_BA:
         problems_found: "Neki saveti na osnovu vaših trenutnih postavki sajta"
         new_features:
           dismiss: "Odpusti"
-          learn_more: "Saznaj više"
         last_checked: "Zadnje pogledani"
         refresh_problems: "Osvježi"
         no_problems: "No problems were found."
@@ -4002,7 +3980,6 @@ bs_BA:
         staged: "Staged?"
         show_admin_profile: "Admin"
         show_public_profile: "Show Public Profile"
-        impersonate: "Impersonate"
         action_logs: "Logovi akcija"
         ip_lookup: "IP Lookup"
         log_out: "Log Out"

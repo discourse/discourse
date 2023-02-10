@@ -240,7 +240,10 @@ sv:
           members: Medlemmar
           settings: Inställningar
       channel_edit_name_slug_modal:
+        title: Redigera kanal
         input_placeholder: Lägg till ett namn
+        slug_description: Ett dynamiskt kanalfält används i URL:en istället för kanalnamnet
+        name: Kanalnamn
         slug: Dynamiskt kanalfält (valfritt)
       channel_edit_description_modal:
         title: Redigera beskrivning

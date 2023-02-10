@@ -3127,14 +3127,6 @@ pt_BR:
     user_automatically_silenced:
       title: "Usuário(a) silenciado(a) automaticamente"
       subject_template: "O(a) novo(a) usuário(a) %{username} silenciado(a) devido aos sinalizadores da comunidade"
-      text_body_template: |
-        Esta é uma mensagem automática.
-
-        O(a) novo(a) usuário(a) [%{username}](%{user_url}) foi silenciado(a) automaticamente porque usuários(as) sinalizaram suas postagens de %{username}.
-
-        Por favor, [revise os sinalizadores](%{base_url}/admin/flags). Se o(a) usuário(a) %{username} tiver sido silenciado(a) por engano para não postar, clique no botão de remover silenciamento na [página de administração do(a) usuário(a)](%{user_url}).
-
-        Este limite pode ser alterado pela configuração do site "silence_new_user".
     spam_post_blocked:
       title: "Postagem de spam bloqueada"
       subject_template: "Postagens de novo(a) usuário(a )%{username} bloqueadas devido a links repetidos"
@@ -3213,9 +3205,6 @@ pt_BR:
       one: "Atenção: enviamos no máximo %{count} e-mail diário. Verifique no site para ver os que podem não ter sido enviados."
       other: "Atenção: enviamos no máximo %{count} e-mails diários. Verifique no site para ver os que podem não ter sido enviados. PS: obrigado pelos acessos!"
     in_reply_to: "Em resposta a"
-    unsubscribe:
-      title: "Cancelar associação"
-      description: "Não tem interesse em receber estes e-mails? Não tem problema! Clique abaixo para se cancelar a associação imediatamente:"
     reply_by_email: "[Acesse o tópico](%{base_url}%{url}) ou responda a este e-mail para responder."
     reply_by_email_pm: "[Acesse a mensagem](%{base_url}%{url}) ou responda a este e-mail para responder a %{participants}."
     only_reply_by_email: "Responda a este email para responder."
@@ -3512,7 +3501,6 @@ pt_BR:
       liked_received: "Curtidas recebidas"
       new_users: "Usuários(as) novos(as)"
       popular_topics: "Tópicos mais acessados"
-      follow_topic: "Seguir este tópico"
       join_the_discussion: "Leia mais"
       popular_posts: "Publicações mais acessadas"
       more_new: "Novo para você"
@@ -3709,8 +3697,6 @@ pt_BR:
     welcome_message_invite_only: |
       ## [Boas-vindas ao %{title}](#boas-vindas)
       É preciso ter uma conta. Peça que a um membro um convite ou entre com uma conta para continuar.
-  deleted: "excluído(a)"
-  image: "imagem"
   upload:
     edit_reason: "cópias locais de imagens baixadas"
     unauthorized: "Desculpe, o arquivo que você está tentando enviar não é autorizado (extensões autorizadas: %{authorized_extensions})."
@@ -4335,7 +4321,6 @@ pt_BR:
           <p>Divirta-se e boa sorte <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>construindo a sua nova comunidade!</a></p>
   search_logs:
     graph_title: "Contagem de pesquisa"
-  joined: "Ingressou"
   discourse_push_notifications:
     popup:
       mentioned: 'Você foi mencionado(a) por %{username} em "%{topic}" - %{site_title}'

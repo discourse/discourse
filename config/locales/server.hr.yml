@@ -1771,8 +1771,6 @@ hr:
       title: "Problemi nadzorne ploče"
       subject_template: "Novi savjeti na vašoj nadzornoj ploči"
   user_notifications:
-    unsubscribe:
-      title: "Odjava"
     user_quoted:
       title: "Korisnik je citirao"
     digest:
@@ -1799,8 +1797,6 @@ hr:
     welcome_message_invite_only: |
       ## [Dobrodošli na %{title}] (#welcome)
       Nužno je prijaviti se korisničkim računom. Molimo upitajte postojećeg korisnika za pozivnicu ili se prijavite za nastavak.
-  deleted: "izbrisao"
-  image: "slika"
   upload:
     unauthorized: "Nažalost, datoteka koju pokušavate prenijeti nije autorizirana (autorizirana proširenja: %{authorized_extensions})."
   color_schemes:
@@ -1903,7 +1899,6 @@ hr:
         fields:
           contact_url:
             placeholder: "https://www.example.com/contact-us"
-  joined: "Prijavljen"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} vas je spomenuo u "%{topic}" - %{site_title}'

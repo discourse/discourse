@@ -1,3 +1,5 @@
+@use "sass:math";
+
 $flair-size: 18px;
 
 .select-kit.flair-chooser {
@@ -15,14 +17,14 @@ $flair-size: 18px;
       width: $flair-size;
 
       &.rounded {
-        background-size: ($flair-size / 1.4) ($flair-size / 1.4);
+        background-size: math.div($flair-size, 1.4) math.div($flair-size, 1.4);
         border-radius: 50%;
       }
 
       .d-icon {
         display: block;
-        height: ($flair-size / 1.8);
-        width: ($flair-size / 1.8);
+        height: math.div($flair-size, 1.8);
+        width: math.div($flair-size, 1.8);
       }
     }
 

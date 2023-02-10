@@ -5,6 +5,8 @@ require "rails_helper"
 describe ChatMessage do
   fab!(:message) { Fabricate(:chat_message, message: "hey friend, what's up?!") }
 
+  it { is_expected.to have_many(:chat_mentions).dependent(:destroy) }
+
   describe ".cook" do
     it "does not support HTML tags" do
       cooked = ChatMessage.cook("<h1>test</h1>")
@@ -138,7 +140,7 @@ describe ChatMessage do
         <div class="chat-transcript-username">
         chatbbcodeuser</div>
         <div class="chat-transcript-datetime">
-        <a href="/chat/c/-/#{chat_channel.id}?messageId=#{msg1.id}" title="#{msg1.created_at.iso8601}"></a>
+        <a href="/chat/c/-/#{chat_channel.id}/#{msg1.id}" title="#{msg1.created_at.iso8601}"></a>
         </div>
         </div>
         <div class="chat-transcript-messages">

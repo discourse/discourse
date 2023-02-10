@@ -30,6 +30,10 @@ export function queryRegistry(name) {
   return _registry[name];
 }
 
+export function deleteFromRegistry(name) {
+  return delete _registry[name];
+}
+
 const _decorators = {};
 
 export function decorateWidget(widgetName, cb) {

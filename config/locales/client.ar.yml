@@ -266,13 +266,13 @@ ar:
       user_left: "أزال %{who} نفسه من هذه الرسالة في %{when}"
       removed_user: "أزال %{who} ‏في %{when}"
       removed_group: "أزال %{who} ‏في %{when}"
-      autobumped: "رُفِع تلقائيًا في %{when}"
+      autobumped: "تم رفعه تلقائيًا في %{when}"
       autoclosed:
         enabled: "تم إغلاقه في %{when}"
-        disabled: "فُتح %{when}"
+        disabled: "تم فتحه في %{when}"
       closed:
         enabled: "تم إغلاقه في %{when}"
-        disabled: "فُتح %{when}"
+        disabled: "تم فتحه في %{when}"
       archived:
         enabled: "تمت أرشفته في %{when}"
         disabled: "تم إلغاء أرشفته في %{when}"
@@ -283,8 +283,8 @@ ar:
         enabled: "تم تثبيته بشكلٍ عام في %{when}"
         disabled: "تم إلغاء تثبيته في %{when}"
       visible:
-        enabled: "تم الإدراج في %{when}"
-        disabled: "تم إلغاء الإدراج في %{when}"
+        enabled: "تم إدراجه في %{when}"
+        disabled: "تم إلغاء إدراجه في %{when}"
       banner:
         enabled: "حوَّل هذا الموضوع إلى بانر في %{when}. سيظهر أعلى كل صفحة حتى يُزيله المستخدم."
         disabled: "أزال هذا البانر في %{when}. ولن يظهر بعد الآن في أعلى كل صفحة."
@@ -446,7 +446,7 @@ ar:
       confirm_delete: "هل تريد بالتأكيد حذف هذه الإشارة المرجعية؟ سيتم حذف التذكير أيضًا."
       confirm_clear: "هل تريد بالتأكيد مسح كل إشاراتك المرجعية من هذا الموضوع؟"
       save: "حفظ"
-      no_timezone: 'لم تحدد منطقتك الزمنية بعد. ولن تتمكن من تعيين التذكيرات. حدِّد منطقة زمنية <a href="%{basePath}/my/preferences/profile">في ملفك الشخصي</a>.'
+      no_timezone: 'لم تقم بتعيين منطقة زمنية بعد. ولن تتمكن من تعيين التذكيرات. قم بتعيين منطقة زمنية <a href="%{basePath}/my/preferences/profile">في ملفك الشخصي</a>.'
       invalid_custom_datetime: "التاريخ والوقت الذين أدخلتهما غير صالحين، يُرجى إعادة المحاولة."
       list_permission_denied: "ليس لديك إذن بعرض الإشارات المرجعية لهذا المستخدم."
       no_user_bookmarks: "ليس لديك منشورات موضوع عليها إشارة مرجعية. تتيح لك الإشارات المرجعية الرجوع إلى المنشورات التي تريدها بسرعة."
@@ -462,7 +462,7 @@ ar:
         today_with_time: "اليوم في الساعة %{time}"
         tomorrow_with_time: "غدًا في الساعة %{time}"
         at_time: "بتاريخ %{date_time}"
-        existing_reminder: "لقد عيَّنت تذكيرًا لهذه الإشارة المرجعية، وسيتم إرساله إليك في %{at_date_time}"
+        existing_reminder: "لديك تذكير معيَّن لهذه الإشارة المرجعية، وسيتم إرساله إليك في %{at_date_time}"
     copy_codeblock:
       copied: "تم النسخ!"
       copy: "نسخ الرمز إلى الحافظة"
@@ -1202,11 +1202,6 @@ ar:
       profile: "الملف الشخصي"
       mute: "كتم"
       edit: "تعديل التفضيلات"
-      download_archive:
-        button_text: "تنزيل الكل"
-        confirm: "هل تريد بالتأكيد تنزيل منشوراتك؟"
-        success: "لقد بدأ التنزيل، وسنُرسل إليك رسالة إشعار عند اكتمال العملية."
-        rate_limit_error: "يمكن تنزيل المنشورات مرة واحدة يوميًا. يُرجى إعادة المحاولة غدًا."
       new_private_message: "رسالة جديدة"
       private_message: "رسالة"
       private_messages: "الرسائل"
@@ -1343,7 +1338,7 @@ ar:
       admin: "‏%{user} مسؤول في الموقع"
       moderator_tooltip: "هذا المستخدم مشرف في الموقع"
       admin_tooltip: "هذا المستخدم مسؤول في الموقع"
-      silenced_tooltip: "تم إسكات هذا المستخدم"
+      silenced_tooltip: "أُسكت هذا العضو"
       suspended_notice: "هذا المستخدم معلَّق حتى تاريخ %{date}."
       suspended_permanently: "هذا المستخدم معلَّق."
       suspended_reason: "السبب: "
@@ -2023,7 +2018,7 @@ ar:
         instructions: "يتم عرض الرمز بجوار صورة ملفك الشخصي"
       status:
         title: "حالة مخصَّصة"
-        not_set: "غير محدَّد"
+        not_set: "غير معيَّن"
       primary_group:
         title: "المجموعة الأساسية"
         none: "(لا يوجد)"
@@ -2548,8 +2543,6 @@ ar:
         topic_template_not_modified: "يُرجى إضافة التفاصيل والمواصفات المحدَّدة إلى موضوعك من خلال تعديل نموذج الموضوع."
       save_edit: "حفظ التعديل"
       overwrite_edit: "استبدال التعديل"
-      reply_original: "كتابة رد على الموضوع الأصلي"
-      reply_here: "الرد هنا"
       reply: "الرد"
       cancel: "إلغاء"
       create_topic: "إنشاء موضوع"
@@ -3265,8 +3258,6 @@ ar:
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>استعرض كل الفئات</a> أو <a href='%{basePath}/latest'>شاهد آخر الموضوعات</a>، أو انظر أبرز:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>استعرض كل الوسوم</a> أو <a href='%{basePath}/latest'>شاهد آخر الموضوعات</a>."
       suggest_create_topic: هل أنت مستعد <a href>لبدء محادثة جديدة؟</a>
-      jump_reply_up: الانتقال إلى الرد السابق
-      jump_reply_down: الانتقال إلى الرد التالي
       deleted: "لقد تم حذف الموضوع"
       slow_mode_update:
         title: "الوضع البطيء"
@@ -3691,13 +3682,6 @@ ar:
       collapse: "طي"
       sr_collapse_replies: "طي الردود المضمَّنة"
       sr_date: "تاريخ المنشور"
-      sr_expand_replies:
-        zero: "هناك %{count} رد على هذا المنشور. انقر للتوسيع"
-        one: "هناك رد واحد (%{count}) على هذا المنشور. انقر للتوسيع"
-        two: "هناك ردَّان (%{count}) على هذا المنشور. انقر للتوسيع"
-        few: "هناك %{count} ردود على هذا المنشور. انقر للتوسيع"
-        many: "هناك %{count} ردًا على هذا المنشور. انقر للتوسيع"
-        other: "هناك %{count} رد على هذا المنشور. انقر للتوسيع"
       expand_collapse: "توسيع/طي"
       sr_below_embedded_posts_description: "ردود المنشور #%{post_number}"
       sr_embedded_reply_description: "رد بواسطة @%{username} على المنشور #%{post_number}"
@@ -4096,7 +4080,7 @@ ar:
           description: "سنُرسل إليك إشعارًا بالموضوعات الجديدة في هذه الفئة، ولكن ليس الردود على الموضوعات."
         tracking:
           title: "التتبُّع"
-          description: "ستتتبَّع تلقائيًا كل الموضوعات في هذه الفئة. وسيتم إرسال إشعار إليك إذا أشار إليك شخص ما @name أو ردَّ عليك، وسيتم عرض عدد الردود الجديدة."
+          description: "ستتتبَّع تلقائيًا كل الموضوعات في هذه الفئة. وسيتم إرسال إشعار إليك إذا أشار شخص ما إلى @اسمك أو ردَّ عليك، وسيتم عرض عدد الردود الجديدة."
         regular:
           title: "عادية"
           description: "سنُرسل إليك إشعارًا إذا أشار أحد إلى @اسمك أو ردَّ عليك."
@@ -4737,14 +4721,12 @@ ar:
     pause_notifications:
       title: "إيقاف الإشعارات مؤقتًا لمدة..."
       label: "إيقاف الإشعارات مؤقتًا"
-      remaining: "بقي %{remaining}..."
       options:
         half_hour: "30 دقيقة"
         one_hour: "ساعة واحدة"
         two_hours: "ساعتان"
         tomorrow: "حتى الغد"
-        custom: "مخصَّصة"
-      set_schedule: "تعيين جدول الإشعارات"
+      set_schedule: "تعيين جدول للإشعارات"
     trust_levels:
       names:
         newuser: "مستخدم جديد"
@@ -4801,6 +4783,9 @@ ar:
       all_categories: "كل الفئات"
       all_tags: "كل الوسوم"
       sections:
+        custom:
+          save: "حفظ"
+          delete: "حذف"
         about:
           header_link_text: "نبذة"
         messages:
@@ -4823,7 +4808,7 @@ ar:
           click_to_get_started: "انقر هنا للبدء."
           header_link_text: "الوسوم"
           header_action_title: "تعديل وسوم الشريط الجانبي"
-          configure_defaults: "تعيين الإعدادات الافتراضية"
+          configure_defaults: "تكوين الإعدادات الافتراضية"
         categories:
           links:
             add_categories:
@@ -4833,7 +4818,7 @@ ar:
           click_to_get_started: "انقر هنا للبدء."
           header_link_text: "الفئات"
           header_action_title: "تعديل فئات الشريط الجانبي"
-          configure_defaults: "تعيين الإعدادات الافتراضية"
+          configure_defaults: "تكوين الإعدادات الافتراضية"
         community:
           header_link_text: "المجتمع"
           header_action_title: "إنشاء موضوع"
@@ -5562,7 +5547,7 @@ ar:
           delete_confirm: "هل تريد حذف لوحة الألوان هذه؟"
           undo: "تراجع"
           undo_title: "يمكنك التراجع عن التغييرات التي أجريتها على هذا اللون منذ آخر مرة تم حفظه."
-          revert: "تراجع"
+          revert: "عودة"
           revert_title: "إعادة تعيين هذا اللون إلى لوحة ألوان Discourse الافتراضية"
           primary:
             name: "الأساسي"
@@ -6024,7 +6009,6 @@ ar:
         show_admin_profile: "مسؤول"
         manage_user: "إدارة المستخدم"
         show_public_profile: "إظهار الملف الشخصي العام"
-        impersonate: "انتحال"
         action_logs: "سجلات الإجراءات"
         ip_lookup: "البحث عن عنوان IP"
         log_out: "تسجيل الخروج"

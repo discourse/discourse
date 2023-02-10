@@ -482,7 +482,7 @@ acceptance("User Status - new user menu", function (needs) {
 
   needs.user({
     id: userId,
-    timezone: userTimezone,
+    "user_option.timezone": userTimezone,
     redesigned_user_menu_enabled: true,
   });
 

@@ -82,6 +82,7 @@ class User < ActiveRecord::Base
   has_many :muted_user_records, class_name: "MutedUser", dependent: :delete_all
   has_many :ignored_user_records, class_name: "IgnoredUser", dependent: :delete_all
   has_many :do_not_disturb_timings, dependent: :delete_all
+  has_many :sidebar_sections, dependent: :destroy
   has_one :user_status, dependent: :destroy
 
   # dependent deleting handled via before_destroy (special cases)
@@ -1789,14 +1790,17 @@ class User < ActiveRecord::Base
   end
 
   def set_status!(description, emoji, ends_at = nil)
-    status = { description: description, emoji: emoji, set_at: Time.zone.now, ends_at: ends_at }
+    status = {
+      description: description,
+      emoji: emoji,
+      set_at: Time.zone.now,
+      ends_at: ends_at,
+      user_id: id,
+    }
+    validate_status!(status)
+    UserStatus.upsert(status)
 
-    if user_status
-      user_status.update!(status)
-    else
-      self.user_status = UserStatus.create!(status)
-    end
-
+    reload_user_status
     publish_user_status(user_status)
   end
 
@@ -2174,6 +2178,10 @@ class User < ActiveRecord::Base
       )
     SQL
   end
+
+  def validate_status!(status)
+    UserStatus.new(status).validate!
+  end
 end
 
 # == Schema Information
@@ -2222,12 +2230,14 @@ end
 #
 # Indexes
 #
-#  idx_users_admin                    (id) WHERE admin
-#  idx_users_moderator                (id) WHERE moderator
-#  index_users_on_last_posted_at      (last_posted_at)
-#  index_users_on_last_seen_at        (last_seen_at)
-#  index_users_on_secure_identifier   (secure_identifier) UNIQUE
-#  index_users_on_uploaded_avatar_id  (uploaded_avatar_id)
-#  index_users_on_username            (username) UNIQUE
-#  index_users_on_username_lower      (username_lower) UNIQUE
+#  idx_users_admin                     (id) WHERE admin
+#  idx_users_moderator                 (id) WHERE moderator
+#  index_users_on_last_posted_at       (last_posted_at)
+#  index_users_on_last_seen_at         (last_seen_at)
+#  index_users_on_name_trgm            (name) USING gist
+#  index_users_on_secure_identifier    (secure_identifier) UNIQUE
+#  index_users_on_uploaded_avatar_id   (uploaded_avatar_id)
+#  index_users_on_username             (username) UNIQUE
+#  index_users_on_username_lower       (username_lower) UNIQUE
+#  index_users_on_username_lower_trgm  (username_lower) USING gist
 #
