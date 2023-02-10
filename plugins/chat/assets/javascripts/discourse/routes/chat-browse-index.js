@@ -5,7 +5,7 @@ export default class ChatBrowseIndexRoute extends DiscourseRoute {
   @service chat;
 
   activate() {
-    this.chat.setActiveChannel(null);
+    this.chat.activeChannel = null;
   }
 
   afterModel() {

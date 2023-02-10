@@ -91,6 +91,7 @@ export default Component.extend(TextareaTextManipulation, {
 
     this._textarea = this.element.querySelector(".chat-composer-input");
     this._$textarea = $(this._textarea);
+    this._applyUserAutocomplete(this._$textarea);
     this._applyCategoryHashtagAutocomplete(this._$textarea);
     this._applyEmojiAutocomplete(this._$textarea);
     this.appEvents.on("chat:focus-composer", this, "_focusTextArea");
@@ -302,7 +303,6 @@ export default Component.extend(TextareaTextManipulation, {
 
   @bind
   _handleTextareaInput() {
-    this._applyUserAutocomplete();
     this.onValueChange?.(this.value, this._uploads, this.replyToMsg);
   },
 
@@ -344,9 +344,9 @@ export default Component.extend(TextareaTextManipulation, {
     this.resizeTextarea();
   },
 
-  _applyUserAutocomplete() {
+  _applyUserAutocomplete($textarea) {
     if (this.siteSettings.enable_mentions) {
-      $(this._textarea).autocomplete({
+      $textarea.autocomplete({
         template: findRawTemplate("user-selector-autocomplete"),
         key: "@",
         width: "100%",
@@ -360,7 +360,7 @@ export default Component.extend(TextareaTextManipulation, {
                 this.chat.presenceChannel.users?.mapBy("username");
               result.users.forEach((user) => {
                 if (presentUserNames.includes(user.username)) {
-                  user.cssClasses = "mention-user-is-online";
+                  user.cssClasses = "is-online";
                 }
               });
             }

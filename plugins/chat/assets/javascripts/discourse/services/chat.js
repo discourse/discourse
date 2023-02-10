@@ -36,9 +36,7 @@ export default class Chat extends Service {
   @service site;
   @service chatChannelsManager;
 
-  @tracked activeThread = null;
-
-  activeChannel = null;
+  @tracked activeThread = null;  
   cook = null;
   presenceChannel = null;
   sidebarActive = false;
@@ -117,10 +115,6 @@ export default class Chat extends Service {
     if (this.userCanChat) {
       this.chatSubscriptionsManager.stopChannelsSubscriptions();
     }
-  }
-
-  setActiveChannel(channel) {
-    this.set("activeChannel", channel);
   }
 
   loadCookFunction(categories) {
@@ -284,12 +278,12 @@ export default class Chat extends Service {
         this.router.currentRouteName === "chat.channel.near-message") &&
       this.activeChannel?.id === channel.id
     ) {
-      this.setActiveChannel(channel);
+      this.activeChannel = channel;
       this._fireOpenMessageAppEvent(messageId);
       return Promise.resolve();
     }
 
-    this.setActiveChannel(channel);
+    this.activeChannel = channel;
 
     if (
       this.chatStateManager.isFullPageActive ||
