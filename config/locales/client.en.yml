@@ -588,13 +588,13 @@ en:
         pending:
           title: "Pending"
         approved:
-          title: "Approved"
+          title: "Flag approved"
         rejected:
-          title: "Rejected"
+          title: "Flag rejected"
         ignored:
-          title: "Ignored"
+          title: "Flag ignored"
         deleted:
-          title: "Deleted"
+          title: "Topic or post deleted"
         reviewed:
           title: "(all reviewed)"
         all:
