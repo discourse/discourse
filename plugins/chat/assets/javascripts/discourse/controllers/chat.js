@@ -29,7 +29,10 @@ export default class ChatController extends Controller {
       modifierClasses.push("has-side-panel-expanded");
     }
 
-    if (this.router.currentRouteName.startsWith("chat.channel.info")) {
+    if (
+      !this.router.currentRouteName.startsWith("chat.channel.info") &&
+      !this.router.currentRouteName.startsWith("chat.browse")
+    ) {
       modifierClasses.push("chat-blah");
     }
 
