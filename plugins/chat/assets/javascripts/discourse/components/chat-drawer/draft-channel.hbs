@@ -1,26 +1,14 @@
-<div
-  role="region"
-  aria-label={{i18n "chat.aria_roles.header"}}
-  class="chat-drawer-header"
->
-  <div class="chat-drawer-header__left-actions">
-    <div class="chat-drawer-header__top-line">
-      <LinkTo
-        title={{i18n "chat.return_to_list"}}
-        class="chat-drawer-header__return-to-channels-btn"
-        @route="chat"
-      >
-        {{d-icon "chevron-left"}}
-      </LinkTo>
-    </div>
-  </div>
+<ChatDrawer::Header>
+  <ChatDrawer::BackButton />
 
   <span class="chat-drawer-header__title">
     <div class="chat-drawer-header__top-line">
       {{i18n "chat.direct_message_creator.title"}}
     </div>
   </span>
-</div>
+
+  <ChatDrawer::RightActions @drawerActions={{@drawerActions}} />
+</ChatDrawer::Header>
 
 {{#if this.chatStateManager.isDrawerExpanded}}
   <div class="chat-drawer-content">

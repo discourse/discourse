@@ -9,36 +9,7 @@
     </div>
   </span>
 
-  <div class="chat-drawer-header__right-actions">
-    <div class="chat-drawer-header__top-line">
-      {{#if this.chatStateManager.isDrawerExpanded}}
-        <DButton
-          @icon="discourse-expand"
-          class="btn-flat btn-link chat-drawer-header__full-screen-btn"
-          @title={{"chat.open_full_page"}}
-          @action={{@openInFullPage}}
-        />
-      {{/if}}
-
-      <FlatButton
-        @icon={{if
-          this.chatStateManager.isDrawerExpanded
-          "angle-double-down"
-          "angle-double-up"
-        }}
-        @class="chat-drawer-header__expand-btn"
-        @action={{@toggleExpand}}
-        @title="chat.collapse"
-      />
-
-      <FlatButton
-        @icon="times"
-        @action={{@close}}
-        @title="chat.close"
-        @class="chat-drawer-header__close-btn"
-      />
-    </div>
-  </div>
+  <ChatDrawer::RightActions @drawerActions={{@drawerActions}} />
 </div>
 
 {{#if this.chatStateManager.isDrawerExpanded}}

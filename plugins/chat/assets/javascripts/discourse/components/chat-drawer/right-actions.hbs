@@ -1,0 +1,15 @@
+<div class="chat-drawer-header__right-actions">
+  <div class="chat-drawer-header__top-line">
+    <ChatDrawer::FullPageButton
+      @openInFullPage={{@drawerActions.openInFullPage}}
+      @isDrawerExpanded={{this.chatStateManager.isDrawerExpanded}}
+    />
+
+    <ChatDrawer::ToggleExpandButton
+      @toggleExpand={{@drawerActions.toggleExpand}}
+      @isDrawerExpanded={{this.chatStateManager.isDrawerExpanded}}
+    />
+
+    <ChatDrawer::CloseButton @close={{@drawerActions.close}} />
+  </div>
+</div>

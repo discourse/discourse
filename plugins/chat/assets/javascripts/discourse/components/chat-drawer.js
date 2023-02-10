@@ -1,8 +1,5 @@
 import Component from "@ember/component";
-import discourseComputed, {
-  bind,
-  observes,
-} from "discourse-common/utils/decorators";
+import { bind, observes } from "discourse-common/utils/decorators";
 import { action } from "@ember/object";
 import { cancel, throttle } from "@ember/runloop";
 import { inject as service } from "@ember/service";
@@ -99,20 +96,6 @@ export default Component.extend({
     this.appEvents.trigger("chat:rerender-header");
   },
 
-  @discourseComputed("chatStateManager.isDrawerExpanded", "chat.activeChannel")
-  displayMembers(expanded, channel) {
-    return expanded && !channel?.isDirectMessageChannel;
-  },
-
-  @discourseComputed("displayMembers")
-  infoTabRoute(displayMembers) {
-    if (displayMembers) {
-      return "chat.channel.info.members";
-    }
-
-    return "chat.channel.info.settings";
-  },
-
   computeDrawerStyle() {
     const { width, height } = this.chatDrawerSize.size;
     let style = `width: ${escapeExpression((width || "0").toString())}px;`;
@@ -122,6 +105,14 @@ export default Component.extend({
 
   openChannelAtMessage(channel, messageId) {
     this.chat.openChannel(channel, messageId);
+  },
+
+  get drawerActions() {
+    return {
+      openInFullPage: this.openInFullPage,
+      close: this.close,
+      toggleExpand: this.toggleExpand,
+    };
   },
 
   @bind
@@ -186,11 +177,6 @@ export default Component.extend({
         ? minRightMargin
         : Math.max(minRightMargin, composer.offsetLeft)) + "px"
     );
-  },
-
-  @discourseComputed("chat.activeChannel.currentUserMembership.unread_count")
-  unreadCount(count) {
-    return count || 0;
   },
 
   @action

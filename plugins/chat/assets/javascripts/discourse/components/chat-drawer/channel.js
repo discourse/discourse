@@ -17,7 +17,7 @@ export default class ChatDrawerChannel extends Component {
     return this.chatChannelsManager
       .find(this.args.params.channelId)
       .then((channel) => {
-        this.chat.setActiveChannel(channel);
+        this.chat.activeChannel = channel;
       });
   }
 }

@@ -1,20 +1,24 @@
-<div
-  data-chat-channel-id={{this.chat.activeChannel.id}}
-  class={{concat-class
-    "chat-drawer"
-    (if this.chatStateManager.isDrawerExpanded "is-expanded")
-  }}
-  {{chat/resizable-node ".chat-drawer-resizer" this.didResize}}
-  style={{this.drawerStyle}}
->
-  <div class="chat-drawer-container">
-    <div class="chat-drawer-resizer"></div>
-    <this.chatDrawerRouter.component
-      @params={{this.chatDrawerRouter.params}}
-      @openURL={{this.openURL}}
-      @openInFullPage={{this.openInFullPage}}
-      @toggleExpand={{this.toggleExpand}}
-      @close={{this.close}}
-    />
+{{#if this.chatStateManager.isDrawerActive}}
+
+  <div
+    data-chat-channel-id={{this.chat.activeChannel.id}}
+    class={{concat-class
+      "chat-drawer"
+      (if this.chatStateManager.isDrawerExpanded "is-expanded")
+    }}
+    {{chat/resizable-node ".chat-drawer-resizer" this.didResize}}
+    style={{this.drawerStyle}}
+  >
+    <div class="chat-drawer-container">
+      <div class="chat-drawer-resizer"></div>
+      <this.chatDrawerRouter.component
+        @params={{this.chatDrawerRouter.params}}
+        @openURL={{this.openURL}}
+        @openInFullPage={{this.openInFullPage}}
+        @toggleExpand={{this.toggleExpand}}
+        @close={{this.close}}
+        @drawerActions={{this.drawerActions}}
+      />
+    </div>
   </div>
-</div>
+{{/if}}

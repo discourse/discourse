@@ -3,43 +3,14 @@
   aria-label={{i18n "chat.aria_roles.header"}}
   class="chat-drawer-header"
 >
-  {{#if this.chatStateManager.isDrawerExpanded}}
-    <LinkTo
-      title={{i18n "chat.return_to_list"}}
-      class="chat-drawer-header__return-to-channels-btn"
-      @route="chat"
-    >
-      {{d-icon "chevron-left"}}
-    </LinkTo>
-  {{/if}}
+  <ChatDrawer::BackButton />
 
-  {{#if this.chat.activeChannel}}
-    {{#if this.chatStateManager.isDrawerExpanded}}
-      <LinkTo
-        @route={{this.infoTabRoute}}
-        @models={{this.chat.activeChannel.routeModels}}
-        class="chat-drawer-header__title"
-      >
-        <div class="chat-drawer-header__top-line">
-          <ChatChannelTitle @channel={{this.chat.activeChannel}} />
-        </div>
-      </LinkTo>
-    {{else}}
-      <div
-        role="button"
-        {{on "click" @toggleExpand}}
-        class="chat-drawer-header__title"
-      >
-        <div class="chat-drawer-header__top-line">
-          <ChatChannelTitle @channel={{this.chat.activeChannel}}>
-            {{#if this.unreadCount}}
-              <span class="chat-unread-count">{{this.unreadCount}}</span>
-            {{/if}}
-          </ChatChannelTitle>
-        </div>
-      </div>
-    {{/if}}
-  {{/if}}
+  <ChatDrawer::ChannelTitle
+    @channel={{this.chat.activeChannel}}
+    @drawerActions={{@drawerActions}}
+  />
+
+  <ChatDrawer::RightActions @drawerActions={{@drawerActions}} />
 </div>
 
 {{#if this.chatStateManager.isDrawerExpanded}}
