@@ -209,8 +209,8 @@
 }
 
 .reviewable-item {
-  padding-top: 2em;
-  border-top: 1px solid var(--primary-low);
+  background: var(--primary-very-low);
+  padding: 1.5rem;
 
   .topic-statuses {
     font-size: var(--font-up-2);
@@ -225,6 +225,17 @@
     align-items: baseline;
     .reviewable-type {
       margin-right: 0.25em;
+      padding: 0.25em 0.5em;
+      text-transform: uppercase;
+      font-size: var(--font-down-2);
+      color: var(--secondary);
+      border-radius: 8px;
+      &.-flag {
+        background-color: var(--danger-medium);
+      }
+      &.-queue {
+        background-color: var(--tertiary);
+      }
     }
     .reply-count {
       margin-left: 1em;
@@ -244,7 +255,9 @@
   .reviewable-contents {
     display: flex;
     flex-wrap: wrap;
-    margin-bottom: 2em;
+    margin: 1.5firem 0;
+    background: var(--secondary);
+    padding: 1rem;
   }
 
   .reviewable-actions {
@@ -373,6 +386,7 @@
 }
 
 .reviewable-item {
+  margin-block: 3rem;
   .show-raw-email {
     color: var(--primary-medium);
     font-size: var(--font-down-2);

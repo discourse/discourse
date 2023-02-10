@@ -3,7 +3,12 @@
   class="reviewable-item {{this.customClasses}}"
 >
   <div class="reviewable-meta-data">
-    <span class="reviewable-type">{{this.reviewable.humanType}}</span>
+    <span
+      class={{concat-class
+        "reviewable-type"
+        (if (this.reviewable.humanType) "-flag" "-queue")
+      }}
+    >{{this.reviewable.humanType}}</span>
     {{#if this.reviewable.reply_count}}
       <span class="reply-count">{{i18n
           "review.replies"
@@ -65,6 +70,12 @@
       {{/component}}
     {{/if}}
   </div>
+  <h3>Is this post
+    {{#each this.reviewable.reviewable_scores as |rs|}}
+      {{rs.score_type.title}}
+    {{/each}}
+    ?
+  </h3>
   <div class="reviewable-actions">
     {{#if this.reviewable.last_performing_username}}
       <div class="stale-help">{{html-safe
