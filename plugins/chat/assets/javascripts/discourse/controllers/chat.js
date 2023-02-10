@@ -33,7 +33,7 @@ export default class ChatController extends Controller {
       !this.router.currentRouteName.startsWith("chat.channel.info") &&
       !this.router.currentRouteName.startsWith("chat.browse")
     ) {
-      modifierClasses.push("chat-blah");
+      modifierClasses.push("chat-view");
     }
 
     return modifierClasses.join(" ");

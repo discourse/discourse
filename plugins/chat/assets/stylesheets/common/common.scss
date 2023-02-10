@@ -590,14 +590,6 @@ html.has-full-page-chat {
 
       .main-chat-outlet {
         min-height: 0;
-        display: grid;
-        grid-template-rows: 1fr;
-        grid-template-areas: "main threads";
-        grid-template-columns: 1fr;
-
-        &.has-side-panel-expanded {
-          grid-template-columns: 3fr 2fr;
-        }
       }
     }
   }
