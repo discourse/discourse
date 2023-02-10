@@ -46,9 +46,11 @@
     display: flex;
     align-items: center;
     height: 100%;
+    overflow: hidden;
     a,
     a:visited {
       color: var(--header_primary);
+      min-width: 0;
     }
   }
 
