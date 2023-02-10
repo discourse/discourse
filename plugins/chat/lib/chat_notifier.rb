@@ -12,17 +12,8 @@
 # For various reasons a mention may not notify a user:
 #
 # * The target user of the mention is ignoring or muting the user who created the message
-# * The target user either cannot chat or cannot see the chat channel, in which case
-#   they are defined as `unreachable`
-# * The target user is not a member of the channel, in which case they are defined
-#   as `welcome_to_join`
 # * In the case of global @here and @all mentions users with the preference
 #   `ignore_channel_wide_mention` set to true will not be notified
-#
-# For any users that fall under the `unreachable` or `welcome_to_join` umbrellas
-# we send a MessageBus message to the UI and to inform the creating user. The
-# creating user can invite any `welcome_to_join` users to the channel. Target
-# users who are ignoring or muting the creating user _do not_ fall into this bucket.
 #
 # The ignore/mute filtering is also applied via the ChatNotifyWatching job,
 # which prevents desktop / push notifications being sent.
@@ -72,8 +63,6 @@ class Chat::ChatNotifier
       ChatPublisher.publish_new_mention(member_id, @chat_channel.id, @chat_message.id)
     end
 
-    notify_creator_of_inaccessible_mentions(to_notify)
-
     notify_mentioned_users(to_notify)
     notify_watching_users(except: mentioned_user_ids << @user.id)
 
@@ -97,8 +86,6 @@ class Chat::ChatNotifier
 
     needs_notification_ids = mentioned_user_ids - already_notified_user_ids
     return if needs_notification_ids.blank?
-
-    notify_creator_of_inaccessible_mentions(to_notify)
 
     notify_mentioned_users(to_notify, already_notified_user_ids: already_notified_user_ids)
 
@@ -198,27 +185,16 @@ class Chat::ChatNotifier
     end
   end
 
-  def group_users_to_notify(users)
-    potential_participants, unreachable =
-      users.partition do |user|
-        guardian = Guardian.new(user)
-        guardian.can_chat? && guardian.can_join_chat_channel?(@chat_channel)
-      end
-
-    participants, welcome_to_join =
-      potential_participants.partition do |participant|
-        participant.user_chat_channel_memberships.any? do |m|
+  def select_channel_participants(users)
+    users.select do |user|
+      guardian = Guardian.new(user)
+      guardian.can_chat? && guardian.can_join_chat_channel?(@chat_channel) &&
+        user.user_chat_channel_memberships.any? do |m|
           predicate = m.chat_channel_id == @chat_channel.id
           predicate = predicate && m.following == true if @chat_channel.public_channel?
           predicate
         end
-      end
-
-    {
-      already_participating: participants || [],
-      welcome_to_join: welcome_to_join || [],
-      unreachable: unreachable || [],
-    }
+    end
   end
 
   def expand_direct_mentions(to_notify, already_covered_ids, skip)
@@ -231,11 +207,7 @@ class Chat::ChatNotifier
           .where.not(id: already_covered_ids)
     end
 
-    grouped = group_users_to_notify(direct_mentions)
-
-    to_notify[:direct_mentions] = grouped[:already_participating].map(&:id)
-    to_notify[:welcome_to_join] = grouped[:welcome_to_join]
-    to_notify[:unreachable] = grouped[:unreachable]
+    to_notify[:direct_mentions] = select_channel_participants(direct_mentions).map(&:id)
     already_covered_ids.concat(to_notify[:direct_mentions])
   end
 
@@ -256,15 +228,10 @@ class Chat::ChatNotifier
     mentionable_groups =
       Group.mentionable(@user, include_public: false).where(id: visible_groups.map(&:id))
 
-    mentions_disabled = visible_groups - mentionable_groups
-
-    too_many_members, mentionable =
-      mentionable_groups.partition do |group|
+    mentionable =
+      mentionable_groups.reject do |group|
         group.user_count > SiteSetting.max_users_notified_per_group_mention
       end
-
-    to_notify[:group_mentions_disabled] = mentions_disabled
-    to_notify[:too_many_members] = too_many_members
 
     mentionable.each { |g| to_notify[g.name.downcase] = [] }
 
@@ -275,9 +242,7 @@ class Chat::ChatNotifier
         .where(groups: mentionable)
         .where.not(id: already_covered_ids)
 
-    grouped = group_users_to_notify(reached_by_group)
-
-    grouped[:already_participating].each do |user|
+    select_channel_participants(reached_by_group).each do |user|
       # When a user is a member of multiple mentioned groups,
       # the most far to the left should take precedence.
       ordered_group_names = group_name_mentions & mentionable.map { |mg| mg.name.downcase }
@@ -287,51 +252,6 @@ class Chat::ChatNotifier
       to_notify[group_name] << user.id
       already_covered_ids << user.id
     end
-
-    to_notify[:welcome_to_join] = to_notify[:welcome_to_join].concat(grouped[:welcome_to_join])
-    to_notify[:unreachable] = to_notify[:unreachable].concat(grouped[:unreachable])
-  end
-
-  def notify_creator_of_inaccessible_mentions(to_notify)
-    mentions =
-      to_notify.extract!(
-        :unreachable,
-        :welcome_to_join,
-        :too_many_members,
-        :group_mentions_disabled,
-      )
-    return if mentions.values.all?(&:blank?)
-
-    warnings = [
-      inaccessible_mention_payload(:cannot_see, mentions[:unreachable]) { |user| user.username },
-      inaccessible_mention_payload(
-        :without_membership,
-        mentions[:welcome_to_join],
-        include_ids: true,
-      ) { |user| user.username },
-      inaccessible_mention_payload(:too_many_members, mentions[:too_many_members]) do |group|
-        group.name
-      end,
-      inaccessible_mention_payload(
-        :group_mentions_disabled,
-        mentions[:group_mentions_disabled],
-      ) { |group| group.name },
-    ].compact
-
-    ChatPublisher.publish_inaccessible_mentions(@user.id, @chat_message, warnings)
-  end
-
-  def inaccessible_mention_payload(type, inaccessible_mentions, include_ids: false)
-    return if inaccessible_mentions.blank?
-    payload = { type: type, mentions: [] }
-
-    payload[:mention_target_ids] = [] if include_ids
-
-    inaccessible_mentions.reduce(payload) do |memo, target|
-      memo[:mentions] << yield(target)
-      memo[:mention_target_ids] << target.id if include_ids
-      memo
-    end
   end
 
   # Filters out users from global, here, group, and direct mentions that are
@@ -339,20 +259,11 @@ class Chat::ChatNotifier
   # a notification via the ChatNotifyMentioned job and are not prompted for
   # invitation by the creator.
   def filter_users_ignoring_or_muting_creator(to_notify, already_covered_ids)
-    screen_targets = already_covered_ids.concat(to_notify[:welcome_to_join].map(&:id))
+    return if already_covered_ids.blank?
 
-    return if screen_targets.blank?
-
-    screener = UserCommScreener.new(acting_user: @user, target_user_ids: screen_targets)
-    to_notify
-      .except(:unreachable, :welcome_to_join)
-      .each do |key, user_ids|
-        to_notify[key] = user_ids.reject { |user_id| screener.ignoring_or_muting_actor?(user_id) }
-      end
-
-    # :welcome_to_join contains users because it's serialized by MB.
-    to_notify[:welcome_to_join] = to_notify[:welcome_to_join].reject do |user|
-      screener.ignoring_or_muting_actor?(user.id)
+    screener = UserCommScreener.new(acting_user: @user, target_user_ids: already_covered_ids)
+    to_notify.each do |key, user_ids|
+      to_notify[key] = user_ids.reject { |user_id| screener.ignoring_or_muting_actor?(user_id) }
     end
 
     already_covered_ids.reject! do |already_covered|

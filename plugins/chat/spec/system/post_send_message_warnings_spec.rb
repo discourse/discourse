@@ -16,14 +16,13 @@ RSpec.describe "Post-send message warnings for mentions", type: :system, js: tru
 
   context "when mentioning a user not on the channel" do
     it "displays a mention warning" do
-      Jobs.run_immediately!
-
       chat.visit_channel(channel_1)
+
       channel.send_message("hi @#{other_user.username}")
 
       expect(page).to have_content(
-        I18n.t("js.chat.mention_warning.without_membership.one", username: other_user.username),
-        wait: 5,
+        I18n.t("js.chat.mention_warning.without_membership.one", mention: other_user.username),
+        wait: 10,
       )
     end
   end
@@ -38,14 +37,13 @@ RSpec.describe "Post-send message warnings for mentions", type: :system, js: tru
     end
 
     it "displays a mention warning" do
-      Jobs.run_immediately!
-
       chat.visit_channel(private_channel_1)
+
       channel.send_message("hi @#{other_user.username}")
 
       expect(page).to have_content(
-        I18n.t("js.chat.mention_warning.cannot_see.one", username: other_user.username),
-        wait: 5,
+        I18n.t("js.chat.mention_warning.cannot_see.one", mention: other_user.username),
+        wait: 10,
       )
     end
   end
@@ -55,14 +53,13 @@ RSpec.describe "Post-send message warnings for mentions", type: :system, js: tru
       fab!(:group_1) { Fabricate(:group, mentionable_level: Group::ALIAS_LEVELS[:nobody]) }
 
       it "displays a mention warning" do
-        Jobs.run_immediately!
-
         chat.visit_channel(channel_1)
+
         channel.send_message("hi @#{group_1.name}")
 
         expect(page).to have_content(
-          I18n.t("js.chat.mention_warning.group_mentions_disabled.one", group_name: group_1.name),
-          wait: 5,
+          I18n.t("js.chat.mention_warning.group_mentions_disabled.one", mention: group_1.name),
+          wait: 10,
         )
       end
     end

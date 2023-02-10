@@ -58,6 +58,7 @@ class Chat::ChatMessageCreator
       ChatDraft.where(user_id: @user.id, chat_channel_id: @chat_channel.id).destroy_all
       ChatPublisher.publish_new!(@chat_channel, @chat_message, @staged_id)
       Jobs.enqueue(:process_chat_message, { chat_message_id: @chat_message.id })
+      Chat::MessageMentionWarnings.new.dispatch(@chat_message)
       Chat::ChatNotifier.notify_new(
         chat_message: @chat_message,
         timestamp: @chat_message.created_at,
