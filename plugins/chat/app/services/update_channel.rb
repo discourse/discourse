@@ -76,12 +76,10 @@ module Chat
       end
 
       def publish_channel_update(channel:, guardian:, **)
-        # FIXME: this should become a dedicated service
         ChatPublisher.publish_chat_channel_edit(channel, guardian.user)
       end
 
       def auto_join_users_if_needed(channel:, **)
-        # FIXME: this should become a dedicated service
         return unless channel.auto_join_users?
         Chat::ChatChannelMembershipManager.new(channel).enforce_automatic_channel_memberships
       end
