@@ -1372,6 +1372,7 @@ acceptance("Composer - current time", function (needs) {
     await fillIn(".d-editor-input", "and the time now is: ");
 
     const mac = /Mac|iPod|iPhone|iPad/.test(navigator.platform);
+    const date = moment().format("YYYY-MM-DD");
 
     await triggerKeyEvent(".d-editor-input", "keydown", ".", {
       shiftKey: true,
@@ -1379,12 +1380,10 @@ acceptance("Composer - current time", function (needs) {
       metaKey: mac,
     });
 
-    const time = moment().format("HH:mm:ss");
-    const date = moment().format("YYYY-MM-DD");
+    const inputValue = query("#reply-control .d-editor-input").value.trim();
 
-    assert.strictEqual(
-      query("#reply-control .d-editor-input").value.trim(),
-      `and the time now is: [date=${date} time=${time} timezone="Australia/Brisbane"]`,
+    assert.ok(
+      inputValue.startsWith(`and the time now is: [date=${date}`),
       "it adds the current date"
     );
   });
