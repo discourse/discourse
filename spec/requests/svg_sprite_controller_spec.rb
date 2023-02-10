@@ -112,7 +112,7 @@ RSpec.describe SvgSpriteController do
       data = response.parsed_body
       beer_icon = response.parsed_body.find { |i| i["id"] == "beer" }
       expect(beer_icon).to be nil
-      expect(data[0]["id"]).to eq("ad")
+      expect(data.length).to eq(200)
     end
   end
 
