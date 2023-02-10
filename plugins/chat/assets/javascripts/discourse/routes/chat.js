@@ -75,7 +75,7 @@ export default class ChatRoute extends DiscourseRoute {
   @action
   willTransition(transition) {
     if (!transition?.to?.name?.startsWith("chat.channel")) {
-      this.chat.setActiveChannel(null);
+      this.chat.activeChannel = null;
     }
 
     if (!transition?.to?.name?.startsWith("chat.")) {

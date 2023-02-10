@@ -12,7 +12,7 @@ export default function withChatChannel(extendedClass) {
 
     afterModel(model) {
       this.controllerFor("chat-channel").set("targetMessageId", null);
-      this.chat.setActiveChannel(model);
+      this.chat.activeChannel = model;
 
       let { messageId } = this.paramsFor(this.routeName);
       // messageId query param backwards-compatibility
