@@ -9,8 +9,15 @@ export default class ChatChannelRoute extends DiscourseRoute {
   @service chatStateManager;
 
   @action
-  willTransition() {
+  willTransition(transition) {
+    this.chat.activeThread = null;
     this.chatStateManager.closeSidePanel();
+
+    if (!transition?.to?.name?.startsWith("chat.")) {
+      this.chatStateManager.storeChatURL();
+      this.chat.setActiveChannel(null);
+      this.chat.updatePresence();
+    }
   }
 
   beforeModel() {
