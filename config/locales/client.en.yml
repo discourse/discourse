@@ -3629,7 +3629,7 @@ en:
       back: "Back to category"
       general: "General"
       settings: "Settings"
-      topic_template: "Topic Template"
+      topic_template: "Template"
       tags: "Tags"
       tags_allowed_tags: "Restrict these tags to this category:"
       tags_allowed_tag_groups: "Restrict these tag groups to this category:"
@@ -5544,6 +5544,8 @@ en:
           dropdown: "Dropdown"
           upload: "Upload a file"
           multiselect: "Multiple choice"
+        template_chooser:
+          freeform: "Freeform"
       impersonate:
         title: "Impersonate"
         help: "Use this tool to impersonate a user account for debugging purposes. You will have to log out once finished."

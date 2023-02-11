@@ -1145,6 +1145,7 @@ end
 #  allow_unlimited_owner_edits_on_first_post :boolean          default(FALSE), not null
 #  default_slow_mode_seconds                 :integer
 #  uploaded_logo_dark_id                     :integer
+#  form_template                             :json
 #
 # Indexes
 #

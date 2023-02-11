@@ -390,6 +390,7 @@ class CategoriesController < ApplicationController
             :slug,
             :allow_badges,
             :topic_template,
+            :form_template,
             :sort_order,
             :sort_ascending,
             :topic_featured_link_allowed,
