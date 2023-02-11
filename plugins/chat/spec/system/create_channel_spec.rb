@@ -69,7 +69,7 @@ RSpec.describe "Create channel", type: :system, js: true do
       end
     end
 
-    context "when category has a malicous group name" do
+    context "when category has a malicious group name" do
       fab!(:group_1) do
         group = Group.new(name: "<script>e</script>")
         group.save(validate: false)
