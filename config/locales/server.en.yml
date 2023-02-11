@@ -2456,7 +2456,7 @@ en:
       search_tokenize_japanese_enabled: "You must disable 'search_tokenize_japanese' before enabling this setting."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "You cannot enable DiscourseConnect if 2FA is enforced."
       delete_rejected_email_after_days: "This setting cannot be set lower than the delete_email_logs_after_days setting or greater than %{max}"
-      invalid_uncategorized_category_setting: "The Uncategorized category cannot be selected if allow uncategorized topics is not allowed"
+      invalid_uncategorized_category_setting: "The \"Uncategorized\" category cannot be selected if 'allow uncategorized topics' is not enabled."
       enable_new_notifications_menu_not_legacy_navigation_menu: "You must set `navigation_menu` to `legacy` before enabling this setting."
       invalid_search_ranking_weights: "Value is invalid for search_ranking_weights site setting. Example: '{0.1,0.2,0.3,1.0}'. Note that maximum value for each weight is 1.0."
 
