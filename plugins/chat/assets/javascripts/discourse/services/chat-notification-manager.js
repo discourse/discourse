@@ -55,8 +55,17 @@ export default class ChatNotificationManager extends Service {
       return;
     }
 
+    this._chatPresenceChannel.off(
+      "change",
+      this._subscribeToCorrectNotifications
+    );
     this._chatPresenceChannel.unsubscribe();
     this._chatPresenceChannel.leave();
+
+    this._corePresenceChannel.off(
+      "change",
+      this._subscribeToCorrectNotifications
+    );
     this._corePresenceChannel.unsubscribe();
     this._corePresenceChannel.leave();
   }
