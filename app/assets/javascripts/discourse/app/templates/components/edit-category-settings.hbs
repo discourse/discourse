@@ -356,10 +356,14 @@
 
   {{#unless this.emailInEnabled}}
     <section class="field email-in-disabled">
-      {{i18n "category.email_in_disabled"}}
-      <a href={{get-url "/admin/site_settings/category/email"}}>{{i18n
-          "category.email_in_disabled_click"
-        }}</a>
+      {{html-safe
+        (i18n
+          "category.email_in_disabled"
+          setting_url=(get-url
+            "/admin/site_settings/category/all_results?filter=email_in"
+          )
+        )
+      }}
     </section>
   {{/unless}}
 </section>
