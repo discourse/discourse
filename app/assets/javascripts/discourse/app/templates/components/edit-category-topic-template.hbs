@@ -1,22 +1,30 @@
-<div class="control-group">
-  <ComboBox
-    @content={{this.templates}}
-    @value={{this.selectedTemplate}}
-    @valueProperty="name"
-    @onChange={{this.changeTemplate}}
-  />
-</div>
+{{#if this.siteSettings.experimental_form_templates}}
+  <div class="control-group">
+    <ComboBox
+      @content={{this.templates}}
+      @value={{this.selectedTemplate}}
+      @valueProperty="name"
+      @onChange={{this.changeTemplate}}
+    />
+  </div>
 
-{{#if (eq this.selectedTemplate this.freeformTemplate.name)}}
+  {{#if (eq this.selectedTemplate this.freeformTemplate.name)}}
+    <DEditor
+      @value={{this.category.topic_template}}
+      @showLink={{this.showInsertLinkButton}}
+    />
+  {{else}}
+    <pre>
+      <code class="yaml hljs language-yaml">{{this.templateContent}}</code>
+    </pre>
+
+    {{! TODO(@keegan): Fix <HiglightedCode> only rendering once }}
+    {{!-- <HighlightedCode @lang="yaml" @code={{this.templateContent}} /> --}}
+  {{/if}}
+
+{{else}}
   <DEditor
     @value={{this.category.topic_template}}
     @showLink={{this.showInsertLinkButton}}
   />
-{{else}}
-  <pre>
-    <code class="yaml hljs language-yaml">{{this.templateContent}}</code>
-  </pre>
-
-  {{! TODO(@keegan): Fix <HiglightedCode> only rendering once }}
-  {{!-- <HighlightedCode @lang="yaml" @code={{this.templateContent}} /> --}}
 {{/if}}
