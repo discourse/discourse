@@ -583,33 +583,33 @@ export default function (options) {
     let backSpace = opts && opts.backSpace;
     let completeTermOption = opts && opts.completeTerm;
 
-    let c = caretPosition(element);
+    let caretPos = caretPosition(element);
 
     if (backSpace) {
-      c -= 1;
+      caretPos -= 1;
     }
 
     let start = null;
     let end = null;
 
-    let initial = c;
+    let initialCaretPos = caretPos;
 
-    while (prevIsGood && c >= 0) {
-      c -= 1;
-      prev = element.value[c];
+    while (prevIsGood && caretPos >= 0) {
+      caretPos -= 1;
+      prev = element.value[caretPos];
 
       stopFound = prev === options.key;
 
       if (stopFound) {
-        prev = element.value[c - 1];
+        prev = element.value[caretPos - 1];
 
         if (
           checkTriggerRule({ backSpace }) &&
           (prev === undefined || allowedLettersRegex.test(prev))
         ) {
-          start = c;
-          term = element.value.substring(c + 1, initial);
-          end = c + term.length;
+          start = caretPos;
+          term = element.value.substring(caretPos + 1, initialCaretPos);
+          end = caretPos + term.length;
 
           break;
         }
