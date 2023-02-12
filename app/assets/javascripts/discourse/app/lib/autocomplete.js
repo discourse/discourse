@@ -234,7 +234,11 @@ export default function (options) {
         if (term) {
           let text = me.val();
 
-          // resync in case of drift (upload for example)
+          // After completion is done our position for completeStart may have
+          // drifted. This can happen if the TEXTAREA changed out-of-band between
+          // the time autocomplete was first displayed and the time of completion
+          // Specifically this may happen due to uploads which inject a placeholder
+          // which is later replaced with a different length string.
           let pos = guessCompletePosition({ completeTerm: true });
 
           if (
