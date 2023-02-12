@@ -108,7 +108,7 @@ RSpec.describe SvgSpriteController do
       beer_icon = response.parsed_body.find { |i| i["id"] == "beer" }
       expect(beer_icon).to be_present
 
-      get "/svg-sprite/picker-search", params: { available: "true" }
+      get "/svg-sprite/picker-search", params: { only_available: "true" }
       data = response.parsed_body
       beer_icon = response.parsed_body.find { |i| i["id"] == "beer" }
       expect(beer_icon).to be nil

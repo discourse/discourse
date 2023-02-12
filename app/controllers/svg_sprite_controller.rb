@@ -46,11 +46,11 @@ class SvgSpriteController < ApplicationController
 
   def icon_picker_search
     RailsMultisite::ConnectionManagement.with_hostname(params[:hostname]) do
-      params.permit(:filter, :available)
+      params.permit(:filter, :only_available)
       filter = params[:filter] || ""
-      available = params[:available]
+      only_available = params[:only_available]
 
-      icons = SvgSprite.icon_picker_search(filter, available)
+      icons = SvgSprite.icon_picker_search(filter, only_available)
       render json: icons.take(200), root: false
     end
   end
