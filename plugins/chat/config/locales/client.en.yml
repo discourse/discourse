@@ -106,25 +106,26 @@ en:
       new_messages: "new messages"
       mention_warning:
         dismiss: "dismiss"
-        cannot_see:
-          one: "%{username} cannot access this channel and was not notified."
-          other: "%{username} and %{others} cannot access this channel and were not notified."
+        cannot_see: "%{username} can't access this channel and was not notified."
+        cannot_see_multiple:
+          one: "%{username} and %{count} other user cannot access this channel and were not notified."
+          other: "%{username} and %{count} other users cannot access this channel and were not notified."
         invitations_sent:
           one: "Invitation sent"
           other: "Invitations sent"
         invite: "Invite to channel"
-        without_membership:
-          one: "%{username} has not joined this channel."
-          other: "%{username} and %{others} have not joined this channel."
-        group_mentions_disabled:
-          one: "%{group_name} doesn't allow mentions"
-          other: "%{group_name} and %{others} doesn't allow mentions"
-        too_many_members:
-          one: "%{group_name} has too many members. No one was notified"
-          other: "%{group_name} and %{others} have too many members. No one was notified"
-        warning_multiple:
-          one: "%{count} other"
-          other: "%{count} others"
+        without_membership: "%{username} has not joined this channel."
+        without_membership_multiple:
+          one: "%{username} and %{count} other user have not joined this channel."
+          other: "%{username} and %{count} other users have not joined this channel."
+        group_mentions_disabled: "%{group_name} doesn't allow mentions."
+        group_mentions_disabled_multiple:
+          one: "%{group_name} and %{count} other group don't allow mentions."
+          other: "%{group_name} and %{count} other groups don't allow mentions."
+        too_many_members: "%{group_name} has too many members. No one was notified."
+        too_many_members_multiple:
+          one: "%{group_name} and %{count} other group have too many members. No one was notified."
+          other: "%{group_name} and %{count} other groups have too many members. No one was notified."
 
         groups:
           header:
