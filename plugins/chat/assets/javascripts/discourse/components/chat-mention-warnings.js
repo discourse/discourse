@@ -112,17 +112,21 @@ export default class ChatMentionWarnings extends Component {
       return;
     }
 
-    if (this.unreachableGroupMentionsCount <= 2) {
-      return I18n.t("chat.mention_warning.groups.unreachable", {
-        group: this.unreachableGroupMentions[0],
-        group_2: this.unreachableGroupMentions[1],
-        count: this.unreachableGroupMentionsCount,
-      });
-    } else {
-      return I18n.t("chat.mention_warning.groups.unreachable_multiple", {
-        group: this.unreachableGroupMentions[0],
-        count: this.unreachableGroupMentionsCount - 1, //N others
-      });
+    switch (this.unreachableGroupMentionsCount) {
+      case 1:
+        return I18n.t("chat.mention_warning.groups.unreachable_1", {
+          group: this.unreachableGroupMentions[0],
+        });
+      case 2:
+        return I18n.t("chat.mention_warning.groups.unreachable_2", {
+          group1: this.unreachableGroupMentions[0],
+          group2: this.unreachableGroupMentions[1],
+        });
+      default:
+        return I18n.t("chat.mention_warning.groups.unreachable_multiple", {
+          group: this.unreachableGroupMentions[0],
+          count: this.unreachableGroupMentionsCount - 1,
+        });
     }
   }
 

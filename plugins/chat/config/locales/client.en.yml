@@ -130,10 +130,11 @@ en:
           header:
             some: "Some users won't be notified"
             all: "Nobody will be notified"
-          unreachable:
-            one: "@%{group} doesn't allow mentions"
-            other: "@%{group} and @%{group_2} doesn't allow mentions"
-          unreachable_multiple: "@%{group} and %{count} others doesn't allow mentions"
+          unreachable_1: "@%{group} doesn't allow mentions."
+          unreachable_2: "@%{group1} and @%{group2} don't allow mentions."
+          unreachable_multiple:
+            one: "@%{group} and %{count} other group don't allow mentions."
+            other: "@%{group} and %{count} other groups don't allow mentions."
           too_many_members_MF: |
             { groupCount, plural,
                  =1 {
