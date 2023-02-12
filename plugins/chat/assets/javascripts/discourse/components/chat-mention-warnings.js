@@ -80,31 +80,22 @@ export default class ChatMentionWarnings extends Component {
       return;
     }
 
-    let notificationLimit = I18n.t(
-      "chat.mention_warning.groups.notification_limit"
-    );
-
-    if (this.currentUser.staff) {
-      notificationLimit = htmlSafe(
-        `<a
-          target="_blank"
-          href="/admin/site_settings/category/plugins?filter=max_mentions_per_chat_message"
-        >
-          ${notificationLimit}
-        </a>`
+    if (this.currentUser.admin) {
+      return htmlSafe(
+        I18n.t("chat.mention_warning.too_many_mentions_admin", {
+          count: this.siteSettings.max_mentions_per_chat_message,
+          siteSettingUrl: getURL(
+            "/admin/site_settings/category/plugins?filter=max_mentions_per_chat_message"
+          ),
+        })
+      );
+    } else {
+      return htmlSafe(
+        I18n.t("chat.mention_warning.too_many_mentions", {
+          count: this.siteSettings.max_mentions_per_chat_message,
+        })
       );
     }
-
-    const settingLimit = I18n.t("chat.mention_warning.mentions_limit", {
-      count: this.siteSettings.max_mentions_per_chat_message,
-    });
-
-    return htmlSafe(
-      I18n.t("chat.mention_warning.too_many_mentions", {
-        notification_limit: notificationLimit,
-        limit: settingLimit,
-      })
-    );
   }
 
   get unreachableBody() {

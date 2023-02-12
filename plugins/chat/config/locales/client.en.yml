@@ -189,10 +189,13 @@ en:
                       }
                     }
             }
-        too_many_mentions: "This message exceeds the %{notification_limit} of %{limit}"
-        mentions_limit:
-          one: "%{count} mention"
-          other: "%{count} mentions"
+        too_many_mentions:
+          one: "This message exceeds the notification limit of %{count} mention."
+          other: "This message exceeds the notification limit of %{count} mentions."
+        too_many_mentions_admin:
+          one: 'This message exceeds the <a href="%{siteSettingUrl}" target="_blank">notification limit</a> of %{count} mention.'
+          other: 'This message exceeds the <a href="%{siteSettingUrl}" target="_blank">notification limit</a> of %{count} mentions.'
+
       aria_roles:
         header: "Chat header"
         composer: "Chat composer"
