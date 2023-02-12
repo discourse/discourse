@@ -1,12 +1,11 @@
 import Service, { inject as service } from "@ember/service";
-import discourseDebounce from "discourse-common/lib/debounce";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { isTesting } from "discourse-common/config/environment";
 import {
   alertChannel,
   onNotification,
 } from "discourse/lib/desktop-notifications";
-import { bind, observes } from "discourse-common/utils/decorators";
+import { bind } from "discourse-common/utils/decorators";
 
 export default class ChatNotificationManager extends Service {
   @service presence;
@@ -36,6 +35,17 @@ export default class ChatNotificationManager extends Service {
     withPluginApi("0.12.1", (api) => {
       api.onPageChange(this._pageChanged);
     });
+
+    this._pageChanged();
+
+    this._chatPresenceChannel.on(
+      "change",
+      this._subscribeToCorrectNotifications
+    );
+    this._corePresenceChannel.on(
+      "change",
+      this._subscribeToCorrectNotifications
+    );
   }
 
   willDestroy() {
@@ -45,8 +55,17 @@ export default class ChatNotificationManager extends Service {
       return;
     }
 
+    this._chatPresenceChannel.off(
+      "change",
+      this._subscribeToCorrectNotifications
+    );
     this._chatPresenceChannel.unsubscribe();
     this._chatPresenceChannel.leave();
+
+    this._corePresenceChannel.off(
+      "change",
+      this._subscribeToCorrectNotifications
+    );
     this._corePresenceChannel.unsubscribe();
     this._corePresenceChannel.leave();
   }
@@ -66,11 +85,6 @@ export default class ChatNotificationManager extends Service {
     }
   }
 
-  @observes("_chatPresenceChannel.count", "_corePresenceChannel.count")
-  _channelCountsChanged() {
-    discourseDebounce(this, this._subscribeToCorrectNotifications, 2000);
-  }
-
   _coreAlertChannel() {
     return alertChannel(this.currentUser);
   }
@@ -79,6 +93,7 @@ export default class ChatNotificationManager extends Service {
     return `/chat${alertChannel(this.currentUser)}`;
   }
 
+  @bind
   _subscribeToCorrectNotifications() {
     const oneTabForEachOpen =
       this._chatPresenceChannel.count > 0 &&
