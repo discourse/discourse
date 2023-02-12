@@ -66,7 +66,7 @@ en:
         instructions: "Closing the channel prevents non-staff users from sending new messages or editing existing messages. Are you sure you want to close this channel?"
       channel_delete:
         title: "Delete Channel"
-        instructions: "<p>Deletes the <strong>%{name}</strong> channel and chat history. All messages and related data, such as reactions and uploads, will be permanently deleted. If you want to preserve the channel history and decomission it, you may want to archive the channel instead.</p>
+        instructions: "<p>Deletes the <strong>%{name}</strong> channel and chat history. All messages and related data, such as reactions and uploads, will be permanently deleted. If you want to preserve the channel history and decommission it, you may want to archive the channel instead.</p>
         <p>Are you sure you want to <strong>permanently delete</strong> the channel? To confirm, type the name of the channel in the box below.</p>"
         confirm: "I understand the consequences, delete the channel"
         confirm_channel_name: "Enter channel name"
