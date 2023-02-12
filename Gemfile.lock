@@ -476,7 +476,7 @@ GEM
       sprockets (>= 3.0.0)
     sshkey (2.0.0)
     stackprof (0.2.23)
-    syntax_tree (5.3.0)
+    syntax_tree (6.0.0)
       prettier_print (>= 1.2.0)
     syntax_tree-disable_ternary (1.0.0)
     test-prof (1.2.0)
