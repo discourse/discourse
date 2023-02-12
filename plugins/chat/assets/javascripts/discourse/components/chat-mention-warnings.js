@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import I18n from "I18n";
 import { htmlSafe } from "@ember/template";
 import { inject as service } from "@ember/service";
+import getURL from "discourse-common/lib/get-url";
 
 export default class ChatMentionWarnings extends Component {
   @service siteSettings;
@@ -85,8 +86,8 @@ export default class ChatMentionWarnings extends Component {
 
     if (this.currentUser.staff) {
       notificationLimit = htmlSafe(
-        `<a 
-          target="_blank" 
+        `<a
+          target="_blank"
           href="/admin/site_settings/category/plugins?filter=max_mentions_per_chat_message"
         >
           ${notificationLimit}
@@ -130,44 +131,18 @@ export default class ChatMentionWarnings extends Component {
       return;
     }
 
-    let notificationLimit = I18n.t(
-      "chat.mention_warning.groups.notification_limit"
+    return htmlSafe(
+      I18n.messageFormat("chat.mention_warning.groups.too_many_members_MF", {
+        groupCount: this.overMembersLimitMentionsCount,
+        isAdmin: this.currentUser.admin,
+        siteSettingUrl: getURL(
+          "/admin/site_settings/category/plugins?filter=max_users_notified_per_group_mention"
+        ),
+        notificationLimit:
+          this.siteSettings.max_users_notified_per_group_mention,
+        group1: this.overMembersLimitGroupMentions[0],
+        group2: this.overMembersLimitGroupMentions[1],
+      })
     );
-
-    if (this.currentUser.staff) {
-      notificationLimit = htmlSafe(
-        `<a 
-          target="_blank" 
-          href="/admin/site_settings/category/plugins?filter=max_users_notified_per_group_mention"
-        >
-          ${notificationLimit}
-        </a>`
-      );
-    }
-
-    const settingLimit = I18n.t("chat.mention_warning.groups.users_limit", {
-      count: this.siteSettings.max_users_notified_per_group_mention,
-    });
-
-    if (this.hasOverMembersLimitGroupMentions <= 2) {
-      return htmlSafe(
-        I18n.t("chat.mention_warning.groups.too_many_members", {
-          group: this.overMembersLimitGroupMentions[0],
-          group_2: this.overMembersLimitGroupMentions[1],
-          count: this.overMembersLimitMentionsCount,
-          notification_limit: notificationLimit,
-          limit: settingLimit,
-        })
-      );
-    } else {
-      return htmlSafe(
-        I18n.t("chat.mention_warning.groups.too_many_members_multiple", {
-          group: this.overMembersLimitGroupMentions[0],
-          count: this.overMembersLimitMentionsCount - 1, //N others
-          notification_limit: notificationLimit,
-          limit: settingLimit,
-        })
-      );
-    }
   }
 }

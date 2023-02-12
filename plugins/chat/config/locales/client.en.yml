@@ -126,7 +126,6 @@ en:
         too_many_members_multiple:
           one: "%{group_name} and %{count} other group have too many members. No one was notified."
           other: "%{group_name} and %{count} other groups have too many members. No one was notified."
-
         groups:
           header:
             some: "Some users won't be notified"
@@ -135,14 +134,60 @@ en:
             one: "@%{group} doesn't allow mentions"
             other: "@%{group} and @%{group_2} doesn't allow mentions"
           unreachable_multiple: "@%{group} and %{count} others doesn't allow mentions"
-          too_many_members:
-            one: "Mentioning @%{group} exceeds the %{notification_limit} of %{limit}"
-            other: "Mentioning both @%{group} or @%{group_2} exceeds the %{notification_limit} of %{limit}"
-          too_many_members_multiple: "These %{count} groups exceed the %{notification_limit} of %{limit}"
-          users_limit:
-            one: "%{count} user"
-            other: "%{count} users"
-          notification_limit: "notification limit"
+          too_many_members_MF: |
+            { groupCount, plural,
+                 =1 {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {Mentioning @{group1} exceeds the <a href="{siteSettingUrl}" target="_blank">notification limit</a> of # user.}
+                              other {Mentioning @{group1} exceeds the <a href="{siteSettingUrl}" target="_blank">notification limit</a> of # users.}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {Mentioning @{group1} exceeds the notification limit of # user.}
+                              other {Mentioning @{group1} exceeds the notification limit of # users.}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+                 =2 {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {Mentioning @{group1} and @{group2} exceeds the <a href="{siteSettingUrl}" target="_blank">notification limit</a> of # user.}
+                            other {Mentioning @{group1} and @{group2} exceeds the <a href="{siteSettingUrl}" target="_blank">notification limit</a> of # users.}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {Mentioning @{group1} and @{group2} exceeds the notification limit of # user.}
+                            other {Mentioning @{group1} and @{group2} exceeds the notification limit of # users.}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+              other {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {Mentioning these {groupCount} groups exceeds the <a href="{siteSettingUrl}" target="_blank">notification limit</a> of # user.}
+                            other {Mentioning these {groupCount} groups exceeds the <a href="{siteSettingUrl}" target="_blank">notification limit</a> of # users.}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {Mentioning these {groupCount} groups exceeds the notification limit of # user.}
+                            other {Mentioning these {groupCount} groups exceeds the notification limit of # users.}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+            }
         too_many_mentions: "This message exceeds the %{notification_limit} of %{limit}"
         mentions_limit:
           one: "%{count} mention"
