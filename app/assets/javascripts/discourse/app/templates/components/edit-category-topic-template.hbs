@@ -1,6 +1,7 @@
 {{#if this.siteSettings.experimental_form_templates}}
   <div class="control-group">
     <ComboBox
+      @class="select-category-template"
       @content={{this.templates}}
       @value={{this.selectedTemplate}}
       @valueProperty="name"
