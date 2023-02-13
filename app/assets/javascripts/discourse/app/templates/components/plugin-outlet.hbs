@@ -5,24 +5,40 @@
   }}
   <this.wrapperComponent @tagName={{@tagName}}>
     {{#each this.connectors as |c|}}
-      <PluginConnector
-        @connector={{c}}
-        @args={{this.outletArgs}}
-        @deprecatedArgs={{@deprecatedArgs}}
-        @class={{c.classNames}}
-        @tagName={{or @connectorTagName ""}}
-      />
+      {{#if c.componentClass}}
+        <c.componentClass @outletArgs={{this.outletArgsWithDeprecations}} />
+      {{else if @defaultGlimmer}}
+        <c.templateOnly @outletArgs={{this.outletArgsWithDeprecations}} />
+      {{else}}
+        <PluginConnector
+          @connector={{c}}
+          @args={{this.outletArgs}}
+          @deprecatedArgs={{@deprecatedArgs}}
+          @outletArgs={{this.outletArgsWithDeprecations}}
+          @class={{c.classicClassNames}}
+          @tagName={{or @connectorTagName ""}}
+          @layout={{c.template}}
+        />
+      {{/if}}
     {{/each}}
   </this.wrapperComponent>
 {{else}}
   {{! The modern path: no wrapper element = no classic component }}
   {{#each this.connectors as |c|}}
-    <PluginConnector
-      @connector={{c}}
-      @args={{this.outletArgs}}
-      @deprecatedArgs={{@deprecatedArgs}}
-      @class={{c.classNames}}
-      @tagName={{or @connectorTagName ""}}
-    />
+    {{#if c.componentClass}}
+      <c.componentClass @outletArgs={{this.outletArgsWithDeprecations}} />
+    {{else if @defaultGlimmer}}
+      <c.templateOnly @outletArgs={{this.outletArgsWithDeprecations}} />
+    {{else}}
+      <PluginConnector
+        @connector={{c}}
+        @args={{this.outletArgs}}
+        @deprecatedArgs={{@deprecatedArgs}}
+        @outletArgs={{this.outletArgsWithDeprecations}}
+        @class={{c.classicClassNames}}
+        @tagName={{or @connectorTagName ""}}
+        @layout={{c.template}}
+      />
+    {{/if}}
   {{/each}}
 {{/if}}

@@ -59,7 +59,7 @@ class StylesheetsController < ApplicationController
     cache_path = Stylesheet::Manager.cache_fullpath
     location = "#{cache_path}/#{target}#{underscore_digest}#{extension}"
 
-    stylesheet_time = query.pluck_first(:created_at)
+    stylesheet_time = query.pick(:created_at)
 
     handle_missing_cache(location, target, digest) if !stylesheet_time
 
@@ -68,7 +68,7 @@ class StylesheetsController < ApplicationController
     end
 
     unless File.exist?(location)
-      if current = query.pluck_first(source_map ? :source_map : :content)
+      if current = query.pick(source_map ? :source_map : :content)
         FileUtils.mkdir_p(cache_path)
         File.write(location, current)
       else
