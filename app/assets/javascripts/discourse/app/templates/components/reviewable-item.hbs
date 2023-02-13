@@ -70,12 +70,14 @@
       {{/component}}
     {{/if}}
   </div>
-  <h3>Is this post
-    {{#each this.reviewable.reviewable_scores as |rs|}}
-      {{rs.score_type.title}}
-    {{/each}}
-    ?
-  </h3>
+  {{#if (eq this.reviewable.humanType "Flagged Post")}}
+    <h3 class="reviewable-item__context-question">Is this post
+      {{#each this.reviewable.reviewable_scores as |rs|}}
+        {{rs.score_type.title}}
+      {{/each}}
+      ?
+    </h3>
+  {{/if}}
   <div class="reviewable-actions">
     {{#if this.reviewable.last_performing_username}}
       <div class="stale-help">{{html-safe
