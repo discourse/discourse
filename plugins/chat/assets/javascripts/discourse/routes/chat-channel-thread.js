@@ -9,7 +9,7 @@ export default class ChatChannelThread extends DiscourseRoute {
 
   async model(params) {
     return this.chatThreadsManager.find(
-      this.chat.activeChannel.id,
+      this.modelFor("chat.channel").id,
       params.threadId
     );
   }

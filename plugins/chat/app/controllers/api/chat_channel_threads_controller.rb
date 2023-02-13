@@ -12,9 +12,7 @@ class Chat::Api::ChatChannelThreadsController < Chat::Api
         .includes(:channel)
         .includes(original_message_user: :user_status)
         .includes(original_message: :chat_webhook_event)
-        .find(params[:thread_id])
-
-    raise Discourse::NotFound if thread.channel_id != params[:channel_id].to_i
+        .find_by!(id: params[:thread_id], channel_id: params[:channel_id])
 
     guardian.ensure_can_preview_chat_channel!(thread.channel)
 
