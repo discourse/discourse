@@ -106,7 +106,7 @@
 </li><li>
 <p><tt>policy(name = :default)</tt>: used to perform a check on the state of the system. Typically used to run guardians. If a falsy value is returned, the step will fail.</p>
 </li><li>
-<p><tt>contract(name = :default)</tt>: used to validate the input parameters, typically provided by a user calling an endpoint. A special embedded <code>Contract</code> class has to be defined to holds the validations. If the validations fail, the step will fail. Otherwise, the resulting contract will be available in <code>context[:contract]</code>.</p>
+<p><tt>contract(name = :default)</tt>: used to validate the input parameters, typically provided by a user calling an endpoint. A special embedded <code>Contract</code> class has to be defined to holds the validations. If the validations fail, the step will fail. Otherwise, the resulting contract will be available in <tt><a href=":"contract.default"">context</a></tt>.</p>
 </li><li>
 <p><tt>step(name)</tt>: used to run small snippets of arbitrary code. The step doesn’t care about its return value, so to mark the service as failed, #fail! has to be called explicitly.</p>
 </li><li>
@@ -221,7 +221,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#contract-class_method" title="contract (class method)">.<strong>contract</strong>(name = :default, class_name: self::Contract, default_values_from: nil)  &#x21d2; Object </a>
+      <a href="#contract-class_method" title="contract (class method)">.<strong>contract</strong>(name = :default, class_name: self::Contract, use_default_values_from: nil)  &#x21d2; Object </a>
     
 
     
@@ -351,7 +351,7 @@
       <div class="method_details first">
   <h3 class="signature first" id="contract-class_method">
   
-    .<strong>contract</strong>(name = :default, class_name: self::Contract, default_values_from: nil)  &#x21d2; <tt>Object</tt> 
+    .<strong>contract</strong>(name = :default, class_name: self::Contract, use_default_values_from: nil)  &#x21d2; <tt>Object</tt> 
   
 
   
@@ -362,7 +362,7 @@
     
 <p>Checks the validity of the input parameters. Implements ActiveModel::Validations and ActiveModel::Attributes.</p>
 
-<p>It stores the resulting contract in <code>context[:contract]</code> by default (can be customized by providing the <code>name</code> argument).</p>
+<p>It stores the resulting contract in <tt>context [“contract.default”]</tt> by default (can be customized by providing the <code>name</code> argument).</p>
 
 
   </div>
@@ -422,7 +422,7 @@
   
     <li>
       
-        <span class='name'>default_values_from</span>
+        <span class='name'>use_default_values_from</span>
       
       
         <span class='type'>(<tt>Symbol</tt>)</span>
