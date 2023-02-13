@@ -1,16 +1,7 @@
-<div
-  role="region"
-  aria-label={{i18n "chat.aria_roles.header"}}
-  class="chat-drawer-header"
->
-  <span class="chat-drawer-header__title">
-    <div class="chat-drawer-header__top-line">
-      {{i18n "chat.heading"}}
-    </div>
-  </span>
-
-  <ChatDrawer::RightActions @drawerActions={{@drawerActions}} />
-</div>
+<ChatDrawer::Header>
+  <ChatDrawer::Header::Title @title="chat.heading" />
+  <ChatDrawer::Header::RightActions @drawerActions={{@drawerActions}} />
+</ChatDrawer::Header>
 
 {{#if this.chatStateManager.isDrawerExpanded}}
   <div class="chat-drawer-content">

@@ -1,13 +1,7 @@
 <ChatDrawer::Header>
-  <ChatDrawer::BackButton />
-
-  <span class="chat-drawer-header__title">
-    <div class="chat-drawer-header__top-line">
-      {{i18n "chat.direct_message_creator.title"}}
-    </div>
-  </span>
-
-  <ChatDrawer::RightActions @drawerActions={{@drawerActions}} />
+  <ChatDrawer::Header::LeftActions />
+  <ChatDrawer::Header::Title @title="chat.direct_message_creator.title" />
+  <ChatDrawer::Header::RightActions @drawerActions={{@drawerActions}} />
 </ChatDrawer::Header>
 
 {{#if this.chatStateManager.isDrawerExpanded}}

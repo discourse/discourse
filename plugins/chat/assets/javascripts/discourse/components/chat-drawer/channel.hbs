@@ -1,17 +1,13 @@
-<div
-  role="region"
-  aria-label={{i18n "chat.aria_roles.header"}}
-  class="chat-drawer-header"
->
-  <ChatDrawer::BackButton />
+<ChatDrawer::Header>
+  <ChatDrawer::Header::LeftActions />
 
-  <ChatDrawer::ChannelTitle
+  <ChatDrawer::Header::ChannelTitle
     @channel={{this.chat.activeChannel}}
     @drawerActions={{@drawerActions}}
   />
 
-  <ChatDrawer::RightActions @drawerActions={{@drawerActions}} />
-</div>
+  <ChatDrawer::Header::RightActions @drawerActions={{@drawerActions}} />
+</ChatDrawer::Header>
 
 {{#if this.chatStateManager.isDrawerExpanded}}
   <div
