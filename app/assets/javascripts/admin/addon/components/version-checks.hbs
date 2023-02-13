@@ -130,10 +130,16 @@
       </div>
     </div>
   {{/if}}
+
   <CustomHtml
     @name="upgrade-header"
     @versionCheck={{this.versionCheck}}
     @tagName="div"
     @classNames="upgrade-header"
+  />
+
+  <PluginOutlet
+    @name="admin-upgrade-header"
+    @outletArgs={{hash versionCheck=this.versionCheck}}
   />
 </div>
