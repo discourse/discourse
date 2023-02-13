@@ -95,6 +95,14 @@ createWidget("header-notifications", {
               titleOptions: {
                 count: user.new_personal_messages_notifications_count,
               },
+              attributes: {
+                "aria-label": I18n.t(
+                  "notifications.tooltip.new_message_notification",
+                  {
+                    count: user.new_personal_messages_notifications_count,
+                  }
+                ),
+              },
             })
           );
         } else if (user.unseen_reviewable_count) {
@@ -106,6 +114,11 @@ createWidget("header-notifications", {
               omitSpan: true,
               title: "notifications.tooltip.new_reviewable",
               titleOptions: { count: user.unseen_reviewable_count },
+              attributes: {
+                "aria-label": I18n.t("notifications.tooltip.new_reviewable", {
+                  count: user.unseen_reviewable_count,
+                }),
+              },
             })
           );
         } else if (user.all_unread_notifications_count) {
@@ -118,6 +131,9 @@ createWidget("header-notifications", {
               omitSpan: true,
               title: "notifications.tooltip.regular",
               titleOptions: { count: user.all_unread_notifications_count },
+              attributes: {
+                "aria-label": I18n.t("user.notifications"),
+              },
             })
           );
         }
@@ -214,7 +230,7 @@ createWidget(
 
       html(attrs) {
         return h(
-          "a.icon",
+          "button.icon.btn-flat",
           {
             attributes: {
               "aria-haspopup": true,
@@ -247,7 +263,7 @@ createWidget(
         }
 
         return h(
-          "a.icon.btn-flat",
+          "button.icon.btn-flat",
           {
             attributes: {
               "aria-expanded": attrs.active,
