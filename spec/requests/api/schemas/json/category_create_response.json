@@ -74,6 +74,12 @@
             "null"
           ]
         },
+        "form_template": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
         "has_children": {
           "type": [
             "string",
@@ -270,6 +276,7 @@
         "notification_level",
         "can_edit",
         "topic_template",
+        "form_template",
         "has_children",
         "sort_order",
         "sort_ascending",
