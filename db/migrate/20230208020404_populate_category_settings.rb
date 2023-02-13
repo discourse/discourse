@@ -16,15 +16,15 @@ class PopulateCategorySettings < ActiveRecord::Migration[7.0]
         category_id,
         MAX(
           CASE WHEN (name = 'require_topic_approval')
-          THEN value ELSE NULL END
+          THEN NULLIF(value, '') ELSE NULL END
         )::boolean AS require_topic_approval,
         MAX(
           CASE WHEN (name = 'require_reply_approval')
-          THEN value ELSE NULL END
+          THEN NULLIF(value, '') ELSE NULL END
         )::boolean AS require_reply_approval,
         MAX(
           CASE WHEN (name = 'num_auto_bump_daily')
-          THEN value ELSE NULL END
+          THEN NULLIF(value, '') ELSE NULL END
         )::integer AS num_auto_bump_daily,
         NOW() AS created_at,
         NOW() AS updated_at
