@@ -2,15 +2,17 @@
 
 class ActiveRecord::Relation
   def pluck_first(*attributes)
-    limit(1).pluck(*attributes).first
+    Discourse.deprecate("`#pluck_first` is deprecated, use `#pick` instead.")
+    pick(*attributes)
   end
 
   def pluck_first!(*attributes)
-    items = limit(1).pluck(*attributes)
+    Discourse.deprecate("`#pluck_first!` is deprecated without replacement.")
+    items = pick(*attributes)
 
-    raise_record_not_found_exception! if items.empty?
+    raise_record_not_found_exception! if items.nil?
 
-    items.first
+    items
   end
 end
 

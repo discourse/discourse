@@ -542,7 +542,9 @@ class PostsController < ApplicationController
         post_revision.modifications["category_id"][0] != topic.category.id
     end
     return render_json_error(I18n.t("revert_version_same")) unless changes.length > 0
-    changes[:edit_reason] = "reverted to version ##{post_revision.number.to_i - 1}"
+    changes[:edit_reason] = I18n.with_locale(SiteSetting.default_locale) do
+      I18n.t("reverted_to_version", version: post_revision.number.to_i - 1)
+    end
 
     revisor = PostRevisor.new(post, topic)
     revisor.revise!(current_user, changes)
@@ -613,7 +615,7 @@ class PostsController < ApplicationController
         bookmarkable_id: params[:post_id],
         bookmarkable_type: "Post",
         user_id: current_user.id,
-      ).pluck_first(:id)
+      ).pick(:id)
     destroyed_bookmark = BookmarkManager.new(current_user).destroy(bookmark_id)
 
     render json:

@@ -348,7 +348,7 @@ class Notification < ActiveRecord::Base
   end
 
   def post_id
-    Post.where(topic: topic_id, post_number: post_number).pluck_first(:id)
+    Post.where(topic: topic_id, post_number: post_number).pick(:id)
   end
 
   protected

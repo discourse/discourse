@@ -24,7 +24,7 @@ class WebCrawlerRequest < ActiveRecord::Base
   protected
 
   def self.request_id(date:, user_agent:, retries: 0)
-    id = where(date: date, user_agent: user_agent).pluck_first(:id)
+    id = where(date: date, user_agent: user_agent).pick(:id)
     id ||= create!({ date: date, user_agent: user_agent }.merge(count: 0)).id
   rescue StandardError # primary key violation
     if retries == 0

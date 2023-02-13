@@ -48,7 +48,7 @@ class TrustLevel
       .where(action: UserHistory.actions[:change_trust_level])
       .where(target_user_id: user.id)
       .order(created_at: :desc)
-      .pluck_first(:new_value)
+      .pick(:new_value)
       .to_i
   end
 end

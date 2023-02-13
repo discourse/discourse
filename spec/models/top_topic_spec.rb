@@ -62,11 +62,11 @@ RSpec.describe TopTopic do
       TopTopic.refresh!
       top_topics = TopTopic.all
 
-      expect(top_topics.where(topic_id: topic_1.id).pluck_first(:yearly_score)).to eq(27)
-      expect(top_topics.where(topic_id: topic_2.id).pluck_first(:yearly_score)).to be_within(
+      expect(top_topics.where(topic_id: topic_1.id).pick(:yearly_score)).to eq(27)
+      expect(top_topics.where(topic_id: topic_2.id).pick(:yearly_score)).to be_within(
         0.0000000001,
       ).of(18.301029995664)
-      expect(top_topics.where(topic_id: topic_3.id).pluck_first(:yearly_score)).to be_within(
+      expect(top_topics.where(topic_id: topic_3.id).pick(:yearly_score)).to be_within(
         0.0000000001,
       ).of(10.602059991328)
 
@@ -84,11 +84,11 @@ RSpec.describe TopTopic do
       TopTopic.refresh!
       top_topics = TopTopic.all
 
-      expect(top_topics.where(topic_id: topic_1.id).pluck_first(:yearly_score)).to eq(27)
-      expect(top_topics.where(topic_id: topic_2.id).pluck_first(:yearly_score)).to be_within(
+      expect(top_topics.where(topic_id: topic_1.id).pick(:yearly_score)).to eq(27)
+      expect(top_topics.where(topic_id: topic_2.id).pick(:yearly_score)).to be_within(
         0.0000000001,
       ).of(18.301029995664)
-      expect(top_topics.where(topic_id: topic_3.id).pluck_first(:yearly_score)).to be_within(
+      expect(top_topics.where(topic_id: topic_3.id).pick(:yearly_score)).to be_within(
         0.0000000001,
       ).of(11.2041199826559)
 
@@ -106,11 +106,11 @@ RSpec.describe TopTopic do
       TopTopic.refresh!
       top_topics = TopTopic.all
 
-      expect(top_topics.where(topic_id: topic_1.id).pluck_first(:yearly_score)).to eq(69)
-      expect(top_topics.where(topic_id: topic_2.id).pluck_first(:yearly_score)).to be_within(
+      expect(top_topics.where(topic_id: topic_1.id).pick(:yearly_score)).to eq(69)
+      expect(top_topics.where(topic_id: topic_2.id).pick(:yearly_score)).to be_within(
         0.0000000001,
       ).of(33.301029995664)
-      expect(top_topics.where(topic_id: topic_3.id).pluck_first(:yearly_score)).to be_within(
+      expect(top_topics.where(topic_id: topic_3.id).pick(:yearly_score)).to be_within(
         0.0000000001,
       ).of(10.602059991328)
 
@@ -128,11 +128,11 @@ RSpec.describe TopTopic do
       TopTopic.refresh!
       top_topics = TopTopic.all
 
-      expect(top_topics.where(topic_id: topic_1.id).pluck_first(:yearly_score)).to eq(30)
-      expect(top_topics.where(topic_id: topic_2.id).pluck_first(:yearly_score)).to be_within(
+      expect(top_topics.where(topic_id: topic_1.id).pick(:yearly_score)).to eq(30)
+      expect(top_topics.where(topic_id: topic_2.id).pick(:yearly_score)).to be_within(
         0.0000000001,
       ).of(21.301029995664)
-      expect(top_topics.where(topic_id: topic_3.id).pluck_first(:yearly_score)).to be_within(
+      expect(top_topics.where(topic_id: topic_3.id).pick(:yearly_score)).to be_within(
         0.0000000001,
       ).of(10.602059991328)
 
@@ -144,11 +144,11 @@ RSpec.describe TopTopic do
       TopTopic.refresh!
       top_topics = TopTopic.all
 
-      expect(top_topics.where(topic_id: topic_1.id).pluck_first(:yearly_score)).to eq(27)
-      expect(top_topics.where(topic_id: topic_2.id).pluck_first(:yearly_score)).to be_within(
+      expect(top_topics.where(topic_id: topic_1.id).pick(:yearly_score)).to eq(27)
+      expect(top_topics.where(topic_id: topic_2.id).pick(:yearly_score)).to be_within(
         0.0000000001,
       ).of(18.301029995664)
-      expect(top_topics.where(topic_id: topic_3.id).pluck_first(:yearly_score)).to be_within(
+      expect(top_topics.where(topic_id: topic_3.id).pick(:yearly_score)).to be_within(
         0.0000000001,
       ).of(10.602059991328)
     end

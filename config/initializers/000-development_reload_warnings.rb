@@ -20,7 +20,7 @@ if Rails.env.development? && !Rails.configuration.cache_classes && Discourse.run
 
       not_autoloaded =
         files.filter_map do |file|
-          autoloaded = Rails.autoloaders.main.autoloads.key? file
+          autoloaded = Rails.autoloaders.main.__autoloads.key? file
           Pathname.new(file).relative_path_from(Rails.root) if !autoloaded
         end
 
