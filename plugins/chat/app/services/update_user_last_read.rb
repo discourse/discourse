@@ -17,9 +17,9 @@ module Chat
       #   @param [Guardian] guardian
       #   @return [Chat::Service::Base::Context]
 
+      contract
       model :membership, :fetch_active_membership
       policy :invalid_access
-      contract
       policy :ensure_message_id_recency
       policy :ensure_message_exists
       step :update_last_read_message_id
@@ -31,6 +31,8 @@ module Chat
         attribute :message_id, :integer
         attribute :user_id, :integer
         attribute :channel_id, :integer
+
+        validates :message_id, :user_id, :channel_id, presence: true
       end
 
       private

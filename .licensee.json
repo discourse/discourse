@@ -11,7 +11,8 @@
   "packages": {
     "@fortawesome/fontawesome-free": "*",
     "ember-template-lint-plugin-discourse": "*",
-    "squoosh": "2.0.0"
+    "squoosh": "2.0.0",
+    "taffydb": "2.6.2"
   },
   "corrections": true
 }
