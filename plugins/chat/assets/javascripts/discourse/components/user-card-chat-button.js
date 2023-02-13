@@ -1,4 +1,4 @@
-import Component from "@glimmer/component";
+import Component from "@ember/component";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 
@@ -9,7 +9,11 @@ export default class UserCardChatButton extends Component {
 
   @action
   startChatting() {
-    this.router.transitionTo("chat.draft-channel");
-    this.appEvents.trigger("card:close");
+    this.chat
+      .upsertDmChannelForUsernames([this.user.username])
+      .then((chatChannel) => {
+        this.chat.openChannel(chatChannel);
+        this.appEvents.trigger("card:close");
+      });
   }
 }
