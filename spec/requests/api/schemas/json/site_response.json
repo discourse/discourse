@@ -565,6 +565,12 @@
                 "null"
               ]
             },
+            "form_template": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
             "has_children": {
               "type": "boolean"
             },
