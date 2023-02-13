@@ -426,7 +426,7 @@ module("Integration | Component | dialog-holder", function (hooks) {
     await settled();
 
     assert.strictEqual(
-      query(".dialog-body").innerText.trim(),
+      query(".dialog-body p:first-child").innerText.trim(),
       I18n.t("admin.groups.delete_with_messages_confirm", {
         count: message_count,
       }),
