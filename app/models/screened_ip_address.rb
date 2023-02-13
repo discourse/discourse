@@ -147,7 +147,7 @@ class ScreenedIpAddress < ActiveRecord::Base
               .where("masklen(ip_address) IN (?)", from_masklen)
 
           sum_match_count, max_last_match_at, min_created_at =
-            old_ips.pluck_first("SUM(match_count), MAX(last_match_at), MIN(created_at)")
+            old_ips.pick("SUM(match_count), MAX(last_match_at), MIN(created_at)")
 
           ScreenedIpAddress.create!(
             ip_address: subnet,

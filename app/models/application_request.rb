@@ -39,9 +39,7 @@ class ApplicationRequest < ActiveRecord::Base
   def self.req_id(date, req_type, retries = 0)
     req_type_id = req_types[req_type]
 
-    # a poor man's upsert
-    id = where(date: date, req_type: req_type_id).pluck_first(:id)
-    id ||= create!(date: date, req_type: req_type_id, count: 0).id
+    create_or_find_by!(date: date, req_type: req_type_id).id
   rescue StandardError # primary key violation
     if retries == 0
       req_id(date, req_type, 1)
