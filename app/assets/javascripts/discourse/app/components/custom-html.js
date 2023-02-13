@@ -1,6 +1,7 @@
 import Component from "@ember/component";
 import { getCustomHTML } from "discourse/helpers/custom-html";
 import { getOwner } from "discourse-common/lib/get-owner";
+import { hbs } from "ember-cli-htmlbars";
 import deprecated from "discourse-common/lib/deprecated";
 
 export default Component.extend({
@@ -13,7 +14,7 @@ export default Component.extend({
 
     if (html) {
       this.set("html", html);
-      this.set("layoutName", "components/custom-html-container");
+      this.set("layout", hbs`{{this.html}}`);
     } else {
       const template = getOwner(this).lookup(`template:${name}`);
       if (template) {
@@ -21,7 +22,7 @@ export default Component.extend({
           "Defining an hbs template for CustomHTML rendering is deprecated. Use plugin outlets instead.",
           { id: "discourse.custom_html_template" }
         );
-        this.set("layoutName", name);
+        this.set("layout", template);
       }
     }
   },
