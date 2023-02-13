@@ -467,7 +467,7 @@ class PostAlerter
       return
     end
 
-    return if !Guardian.new(user).can_notify_post?(post)
+    return if !Guardian.new(user).can_receive_post_notifications?(post)
 
     return if user.staged? && topic.category&.mailinglist_mirror?
 

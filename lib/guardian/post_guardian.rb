@@ -249,7 +249,7 @@ module PostGuardian
       !post_action.post&.topic&.archived?
   end
 
-  def can_notify_post?(post)
+  def can_receive_post_notifications?(post)
     return false if !authenticated?
 
     if is_admin? && SiteSetting.suppress_secured_categories_from_admin
