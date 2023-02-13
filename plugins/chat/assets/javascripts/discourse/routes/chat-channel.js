@@ -15,7 +15,7 @@ export default class ChatChannelRoute extends DiscourseRoute {
 
     if (!transition?.to?.name?.startsWith("chat.")) {
       this.chatStateManager.storeChatURL();
-      this.chat.setActiveChannel(null);
+      this.chat.activeChannel = null;
       this.chat.updatePresence();
     }
   }
