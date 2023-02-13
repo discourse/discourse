@@ -255,7 +255,7 @@
   .reviewable-contents {
     display: flex;
     flex-wrap: wrap;
-    margin: 1.5firem 0;
+    margin: 1.5rem 0 1rem;
     background: var(--secondary);
     padding: 1rem;
   }
@@ -267,6 +267,15 @@
 
     button {
       white-space: nowrap;
+
+      &.approve-post {
+        background-color: var(--success);
+        color: var(--primary);
+      }
+      &.reject-post {
+        background-color: var(--danger);
+        color: var(--primary);
+      }
     }
 
     .reviewable-action,
@@ -466,6 +475,10 @@
       font-size: var(--font-up-2);
       margin-right: 0.75em;
     }
+  }
+
+  &__context-question {
+    margin-top: 1rem;
   }
 }
 
