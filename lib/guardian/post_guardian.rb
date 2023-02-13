@@ -255,7 +255,7 @@ module PostGuardian
     if is_admin? && SiteSetting.suppress_secured_categories_from_admin
       topic = post.topic
       if !topic.private_message? && topic.category.read_restricted
-        return secure_category_ids.include?(post.topic.category_id)
+        return secure_category_ids.include?(topic.category_id)
       end
     end
     can_see_post?(post)

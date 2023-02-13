@@ -202,25 +202,24 @@ RSpec.describe PostActionNotifier do
   end
 
   context "with private message" do
+    fab!(:private_message) do
+      Fabricate(:topic, archetype: Archetype.private_message, category_id: nil)
+    end
     fab!(:user) { Fabricate(:user) }
-    fab!(:mention_post) { Fabricate(:post, user: user, raw: "Hello @eviltrout") }
-    let(:topic) do
-      topic = mention_post.topic
-      topic.update_columns archetype: Archetype.private_message, category_id: nil
-      topic
+    fab!(:mention_post) do
+      Fabricate(:post, topic: private_message, user: user, raw: "Hello @eviltrout")
     end
 
     it "won't notify someone who can't see the post" do
-      expect {
-        Guardian.any_instance.expects(:can_see?).with(instance_of(Post)).returns(false)
-        mention_post
-        PostAlerter.post_created(mention_post)
-      }.not_to change(evil_trout.notifications, :count)
+      expect { PostAlerter.post_created(mention_post) }.not_to change(
+        evil_trout.notifications,
+        :count,
+      )
     end
 
     it "creates like notifications" do
       other_user = Fabricate(:user)
-      topic.allowed_users << user << other_user
+      private_message.allowed_users << user << other_user
       expect { PostActionCreator.like(other_user, mention_post) }.to change(
         user.notifications,
         :count,
