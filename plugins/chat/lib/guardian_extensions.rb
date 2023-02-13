@@ -61,6 +61,7 @@ module Chat::GuardianExtensions
     return false if chat_channel.status.to_sym == target_status.to_sym
     return false if !is_staff?
 
+    # FIXME: This logic shouldn't be handled in guardian
     case target_status
     when :closed
       chat_channel.open?

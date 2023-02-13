@@ -1,5 +1,3 @@
-/** @module ChatApi */
-
 import Service, { inject as service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import UserChatChannelMembership from "discourse/plugins/chat/discourse/models/user-chat-channel-membership";
@@ -8,7 +6,7 @@ import Collection from "../lib/collection";
 /**
  * Chat API service. Provides methods to interact with the chat API.
  *
- * @class
+ * @module ChatApi
  * @implements {@ember/service}
  */
 export default class ChatApi extends Service {
@@ -31,7 +29,7 @@ export default class ChatApi extends Service {
 
   /**
    * List all accessible category channels of the current user.
-   * @returns {module:Collection}
+   * @returns {Collection}
    *
    * @example
    *
@@ -70,17 +68,14 @@ export default class ChatApi extends Service {
   /**
    * Destroys a channel.
    * @param {number} channelId - The ID of the channel.
-   * @param {string} channelName - The name of the channel to be destroyed, used as confirmation.
    * @returns {Promise}
    *
    * @example
    *
-   *    this.chatApi.destroyChannel(1, "foo").then(() => { ... })
+   *    this.chatApi.destroyChannel(1).then(() => { ... })
    */
-  destroyChannel(channelId, channelName) {
-    return this.#deleteRequest(`/channels/${channelId}`, {
-      channel: { name_confirmation: channelName },
-    });
+  destroyChannel(channelId) {
+    return this.#deleteRequest(`/channels/${channelId}`);
   }
 
   /**
@@ -174,7 +169,7 @@ export default class ChatApi extends Service {
   /**
    * Lists members of a channel.
    * @param {number} channelId - The ID of the channel.
-   * @returns {module:Collection}
+   * @returns {Collection}
    */
   listChannelMemberships(channelId) {
     return new Collection(

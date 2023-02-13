@@ -2,17 +2,10 @@
 
 class Chat::Api::ChatChannelsStatusController < Chat::Api::ChatChannelsController
   def update
-    status = params.require(:status)
-
-    # we only want to use this endpoint for open/closed status changes,
-    # the others are more "special" and are handled by the archive endpoint
-    if !ChatChannel.statuses.keys.include?(status) || status == "read_only" || status == "archive"
-      raise Discourse::InvalidParameters
+    with_service(Chat::Service::UpdateChannelStatus) do
+      on_success { render_serialized(result.channel, ChatChannelSerializer, root: "channel") }
+      on_model_not_found(:channel) { raise ActiveRecord::RecordNotFound }
+      on_failed_policy(:check_channel_permission) { raise Discourse::InvalidAccess }
     end
-
-    guardian.ensure_can_change_channel_status!(channel_from_params, status.to_sym)
-    channel_from_params.public_send("#{status}!", current_user)
-
-    render_serialized(channel_from_params, ChatChannelSerializer, root: "channel")
   end
 end
