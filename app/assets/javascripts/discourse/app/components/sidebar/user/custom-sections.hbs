@@ -1,0 +1,28 @@
+<div class="sidebar-custom-sections">
+  {{#each this.sections as |section|}}
+    <Sidebar::Section
+      @sectionName={{section.slug}}
+      @headerLinkText={{section.title}}
+      @collapsable={{true}}
+      @headerActions={{array
+        (hash
+          action=(action this.editSection section)
+          title=(i18n "sidebar.sections.custom.edit")
+        )
+      }}
+      @headerActionsIcon="pencil-alt"
+    >
+      {{#each section.links as |link|}}
+        <Sidebar::SectionLink
+          @linkName={{link.name}}
+          @route={{link.route}}
+          @models={{link.models}}
+          @query={{link.query}}
+          @content={{replace-emoji link.name}}
+          @prefixType="icon"
+          @prefixValue={{link.icon}}
+        />
+      {{/each}}
+    </Sidebar::Section>
+  {{/each}}
+</div>

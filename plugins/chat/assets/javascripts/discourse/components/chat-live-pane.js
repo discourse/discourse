@@ -37,12 +37,6 @@ const FETCH_MORE_MESSAGES_THROTTLE_MS = isTesting() ? 0 : 500;
 const PAST = "past";
 const FUTURE = "future";
 
-const MENTION_RESULT = {
-  invalid: -1,
-  unreachable: 0,
-  over_members_limit: 1,
-};
-
 export default Component.extend({
   classNameBindings: [":chat-live-pane", "sendingLoading", "loading"],
   chatChannel: null,
@@ -72,14 +66,6 @@ export default Component.extend({
   _lastSelectedMessage: null,
   targetMessageId: null,
   hasNewMessages: null,
-
-  // Track mention hints to display warnings
-  unreachableGroupMentions: null, // Array
-  overMembersLimitGroupMentions: null, // Array
-  tooManyMentions: false,
-  mentionsCount: null,
-  // Complimentary structure to avoid repeating mention checks.
-  _mentionWarningsSeen: null, // Hash
 
   chat: service(),
   chatChannelsManager: service(),
@@ -588,6 +574,8 @@ export default Component.extend({
       return;
     }
 
+    this.set("targetMessageId", messageId);
+
     if (this.messageLookup[messageId]) {
       // We have the message rendered. highlight and scrollTo
       this.scrollToMessage(messageId, {
@@ -596,7 +584,6 @@ export default Component.extend({
         autoExpand: true,
       });
     } else {
-      this.set("targetMessageId", messageId);
       this.fetchMessages(this.chatChannel);
     }
   },
@@ -1324,81 +1311,6 @@ export default Component.extend({
     if (!this.chatChannel.directMessageChannelDraft) {
       this._reportReplyingPresence(value);
     }
-  },
-
-  @action
-  updateMentions(mentions) {
-    const mentionsCount = mentions?.length;
-    this.set("mentionsCount", mentionsCount);
-
-    if (mentionsCount > 0) {
-      if (mentionsCount > this.siteSettings.max_mentions_per_chat_message) {
-        this.set("tooManyMentions", true);
-      } else {
-        this.set("tooManyMentions", false);
-        const newMentions = mentions.filter(
-          (mention) => !(mention in this._mentionWarningsSeen)
-        );
-
-        if (newMentions?.length > 0) {
-          this._recordNewWarnings(newMentions, mentions);
-        } else {
-          this._rebuildWarnings(mentions);
-        }
-      }
-    } else {
-      this.set("tooManyMentions", false);
-      this.set("unreachableGroupMentions", []);
-      this.set("overMembersLimitGroupMentions", []);
-    }
-  },
-
-  _recordNewWarnings(newMentions, mentions) {
-    ajax("/chat/api/mentions/groups.json", {
-      data: { mentions: newMentions },
-    })
-      .then((newWarnings) => {
-        newWarnings.unreachable.forEach((warning) => {
-          this._mentionWarningsSeen[warning] = MENTION_RESULT["unreachable"];
-        });
-
-        newWarnings.over_members_limit.forEach((warning) => {
-          this._mentionWarningsSeen[warning] =
-            MENTION_RESULT["over_members_limit"];
-        });
-
-        newWarnings.invalid.forEach((warning) => {
-          this._mentionWarningsSeen[warning] = MENTION_RESULT["invalid"];
-        });
-
-        this._rebuildWarnings(mentions);
-      })
-      .catch(this._rebuildWarnings(mentions));
-  },
-
-  _rebuildWarnings(mentions) {
-    const newWarnings = mentions.reduce(
-      (memo, mention) => {
-        if (
-          mention in this._mentionWarningsSeen &&
-          !(this._mentionWarningsSeen[mention] === MENTION_RESULT["invalid"])
-        ) {
-          if (
-            this._mentionWarningsSeen[mention] === MENTION_RESULT["unreachable"]
-          ) {
-            memo[0].push(mention);
-          } else {
-            memo[1].push(mention);
-          }
-        }
-
-        return memo;
-      },
-      [[], []]
-    );
-
-    this.set("unreachableGroupMentions", newWarnings[0]);
-    this.set("overMembersLimitGroupMentions", newWarnings[1]);
   },
 
   @action

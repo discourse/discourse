@@ -164,7 +164,7 @@ RSpec.describe Stylesheet::Compiler do
 
       expect(css).to include("--header_background: #f8745c")
       expect(css).to include("--header_primary: #88af8e")
-      expect(css).to include("--header_background-rgb: 248,116,92")
+      expect(css).to include("--header_background-rgb: 248, 116, 92")
     end
 
     context "with a plugin" do
@@ -212,6 +212,13 @@ RSpec.describe Stylesheet::Compiler do
         end
 
       expect(refs).to eq([])
+    end
+  end
+
+  describe ".compile" do
+    it "produces RTL CSS when rtl option is given" do
+      css, _ = Stylesheet::Compiler.compile("a{right:1px}", "test.scss", rtl: true)
+      expect(css).to eq("a{left:1px}")
     end
   end
 end

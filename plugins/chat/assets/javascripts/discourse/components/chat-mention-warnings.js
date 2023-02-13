@@ -6,17 +6,30 @@ import { inject as service } from "@ember/service";
 export default class ChatMentionWarnings extends Component {
   @service siteSettings;
   @service currentUser;
+  @service chatComposerWarningsTracker;
 
-  get unreachableGroupMentionsCount() {
-    return this.args?.unreachableGroupMentions.length;
+  get unreachableGroupMentions() {
+    return this.chatComposerWarningsTracker.unreachableGroupMentions;
   }
 
-  get overMembersLimitMentionsCount() {
-    return this.args?.overMembersLimitGroupMentions.length;
+  get overMembersLimitGroupMentions() {
+    return this.chatComposerWarningsTracker.overMembersLimitGroupMentions;
   }
 
   get hasTooManyMentions() {
-    return this.args?.tooManyMentions;
+    return this.chatComposerWarningsTracker.tooManyMentions;
+  }
+
+  get mentionsCount() {
+    return this.chatComposerWarningsTracker.mentionsCount;
+  }
+
+  get unreachableGroupMentionsCount() {
+    return this.unreachableGroupMentions.length;
+  }
+
+  get overMembersLimitMentionsCount() {
+    return this.overMembersLimitGroupMentions.length;
   }
 
   get hasUnreachableGroupMentions() {
@@ -54,10 +67,7 @@ export default class ChatMentionWarnings extends Component {
   }
 
   get warningHeaderText() {
-    if (
-      this.args?.mentionsCount <= this.warningsCount ||
-      this.hasTooManyMentions
-    ) {
+    if (this.mentionsCount <= this.warningsCount || this.hasTooManyMentions) {
       return I18n.t("chat.mention_warning.groups.header.all");
     } else {
       return I18n.t("chat.mention_warning.groups.header.some");
@@ -103,13 +113,13 @@ export default class ChatMentionWarnings extends Component {
 
     if (this.unreachableGroupMentionsCount <= 2) {
       return I18n.t("chat.mention_warning.groups.unreachable", {
-        group: this.args.unreachableGroupMentions[0],
-        group_2: this.args.unreachableGroupMentions[1],
+        group: this.unreachableGroupMentions[0],
+        group_2: this.unreachableGroupMentions[1],
         count: this.unreachableGroupMentionsCount,
       });
     } else {
       return I18n.t("chat.mention_warning.groups.unreachable_multiple", {
-        group: this.args.unreachableGroupMentions[0],
+        group: this.unreachableGroupMentions[0],
         count: this.unreachableGroupMentionsCount - 1, //N others
       });
     }
@@ -142,8 +152,8 @@ export default class ChatMentionWarnings extends Component {
     if (this.hasOverMembersLimitGroupMentions <= 2) {
       return htmlSafe(
         I18n.t("chat.mention_warning.groups.too_many_members", {
-          group: this.args.overMembersLimitGroupMentions[0],
-          group_2: this.args.overMembersLimitGroupMentions[1],
+          group: this.overMembersLimitGroupMentions[0],
+          group_2: this.overMembersLimitGroupMentions[1],
           count: this.overMembersLimitMentionsCount,
           notification_limit: notificationLimit,
           limit: settingLimit,
@@ -152,7 +162,7 @@ export default class ChatMentionWarnings extends Component {
     } else {
       return htmlSafe(
         I18n.t("chat.mention_warning.groups.too_many_members_multiple", {
-          group: this.args.overMembersLimitGroupMentions[0],
+          group: this.overMembersLimitGroupMentions[0],
           count: this.overMembersLimitMentionsCount - 1, //N others
           notification_limit: notificationLimit,
           limit: settingLimit,

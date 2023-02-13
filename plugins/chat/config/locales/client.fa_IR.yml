@@ -167,6 +167,10 @@ fa_IR:
           about: درباره
           members: اعضاء
           settings: تنظیمات
+      channel_edit_name_slug_modal:
+        title: ویرایش کانال
+        input_placeholder: افزودن نام
+        name: نام کانال
       channel_edit_description_modal:
         title: ویرایش توضیحات
         input_placeholder: افزودن توضیحات

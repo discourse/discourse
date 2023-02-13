@@ -21,6 +21,7 @@
             <NumberField
               @number={{readonly cat.position}}
               @change={{action "change" cat}}
+              @min="0"
             />
             <DButton
               @class="btn-default no-text"

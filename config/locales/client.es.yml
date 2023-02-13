@@ -302,11 +302,9 @@ es:
       edit_bookmark: "Editar marcador"
       clear_bookmarks: "Quitar marcadores"
       help:
-        bookmark: "Haz clic para añadir a marcadores la primera publicación de este tema"
-        edit_bookmark: "Haga clic para editar el marcador sobre este tema"
         edit_bookmark_for_topic: "Haz clic para editar el marcador de este tema"
         unbookmark: "Haz clic para eliminar todos los marcadores de este tema"
-        unbookmark_with_reminder: "Haz clic para eliminar todos los marcadores y recordatorios de este tema."
+        unbookmark_with_reminder: "Haz clic para eliminar todos los marcadores y recordatorios de este tema"
     bookmarks:
       created: "Has guardado esta publicación en marcadores. %{name}"
       created_generic: "Has añadido esto a marcadores. %{name}"
@@ -976,11 +974,6 @@ es:
       profile: "Perfil"
       mute: "Silenciar"
       edit: "Editar preferencias"
-      download_archive:
-        button_text: "Descargar todo"
-        confirm: "¿Seguro de que quieres descargar tus publicaciones?"
-        success: "Descarga iniciada, se te notificará por mensaje cuando el proceso se haya completado."
-        rate_limit_error: "Solo se pueden descargar las publicaciones una vez al día. Inténtalo de nuevo mañana."
       new_private_message: "Nuevo mensaje"
       private_message: "Mensaje"
       private_messages: "Mensajes"
@@ -2141,8 +2134,6 @@ es:
         topic_template_not_modified: "Añade detalles y especificaciones a tu tema editando la plantilla de tema."
       save_edit: "Guardar edición"
       overwrite_edit: "Sobrescribir edición"
-      reply_original: "Responder en el tema original"
-      reply_here: "Responder aquí"
       reply: "Responder"
       cancel: "Cancelar"
       create_topic: "Crear tema"
@@ -2714,8 +2705,6 @@ es:
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Explorar todas las categorías</a>, <a href='%{basePath}/latest'>ver los temas más recientes</a> o ver la parte superior:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Explorar todas las etiquetas</a> o <a href='%{basePath}/latest'>ver los temas más recientes</a>."
       suggest_create_topic: '¿Listo para <a href>iniciar una nueva conversación?</a>'
-      jump_reply_up: saltar a la primera respuesta
-      jump_reply_down: saltar a la última respuesta
       deleted: "El tema ha sido eliminado"
       slow_mode_update:
         title: "Modo lento"
@@ -3080,9 +3069,6 @@ es:
       collapse: "contraer"
       sr_collapse_replies: "Contraer respuestas inscrustadas"
       sr_date: "Fecha de publicación"
-      sr_expand_replies:
-        one: "Esta publicación tiene %{count} respuesta. Haz clic para expandir"
-        other: "Esta publicación tiene %{count} respuestas. Haz clic para expandir"
       expand_collapse: "expandir/contraer"
       sr_below_embedded_posts_description: "respuestas de la publicación n.º %{post_number}"
       sr_embedded_reply_description: "respuesta de @%{username} a la publicación n.º %{post_number}"
@@ -3938,13 +3924,11 @@ es:
     pause_notifications:
       title: "Pausar notificaciones para..."
       label: "Pausar notificaciones"
-      remaining: "%{remaining} restante"
       options:
         half_hour: "30 minutos"
         one_hour: "1 hora"
         two_hours: "2 horas"
         tomorrow: "Hasta mañana"
-        custom: "Personalizado"
       set_schedule: "Establecer un horario de notificaciones"
     trust_levels:
       names:
@@ -3994,6 +3978,9 @@ es:
       all_categories: "Todas las categorías"
       all_tags: "Todas las etiquetas"
       sections:
+        custom:
+          save: "Guardar"
+          delete: "Eliminar"
         about:
           header_link_text: "Acerca de"
         messages:
@@ -4767,6 +4754,8 @@ es:
           love:
             name: "me encanta"
             description: "El color del botón de me gusta"
+          selected:
+            name: "seleccionado"
         robots:
           title: "Sobrescribe el archivo robots.txt de tu sitio:"
           warning: "Esto sobrescribirá permanentemente cualquier configuración del sitio relacionada."
@@ -5181,7 +5170,6 @@ es:
         show_admin_profile: "Administrador"
         manage_user: "Administrar usuario"
         show_public_profile: "Ver perfil público"
-        impersonate: "Suplantar"
         action_logs: "Registros de acciones"
         ip_lookup: "Búsqueda de IP"
         log_out: "Cerrar sesión"

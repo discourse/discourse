@@ -1925,8 +1925,6 @@ zh_CN:
     automatically_unpin_topics: "当用户到达底部时自动取消置顶话题。"
     read_time_word_count: "每分钟可阅读的字数，用于估算阅读时间。"
     topic_page_title_includes_category: "话题页面<a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>标题标签</a>包含类别名称。"
-    native_app_install_banner_ios: "在 iOS 设备上向普通用户（信任级别为 1 及以上）显示 DiscourseHub 应用横幅。"
-    native_app_install_banner_android: "在 Android 设备上向普通用户（信任级别为 1 及以上）显示 DisroseHUB 应用横幅。"
     app_association_android: "端点 <a href='%{base_path}/.well-known/assetlinks.json'>.well-known/assetlinks.json</a> 的内容，用于 Google 的 Digital Asset Links API。"
     app_association_ios: "端点 <a href='%{base_path}/apple-app-site-association'>apple-app-site-association </a> 的内容，用于在创建此站点与 iOS 应用之间通用链接。"
     share_anonymized_statistics: "共享匿名使用统计信息。"
@@ -3048,14 +3046,6 @@ zh_CN:
     user_automatically_silenced:
       title: "用户被自动禁言"
       subject_template: "新用户 %{username} 因社区举报被禁言"
-      text_body_template: |
-        这是一封自动发送的邮件。
-
-        由于多个用户举报了 %{username} 的帖子，新用户 [%{username}](%{user_url}) 已被自动禁言。
-
-        请[审核举报](%{base_url}/admin/flags)。如果 %{username} 被意外禁言，请点击[此用户管理页面](%{user_url})上的取消禁言按钮。
-
-        此阈值可以通过 `silence_new_user` 站点设置更改。
     spam_post_blocked:
       title: "垃圾信息帖子被屏蔽"
       subject_template: "新用户 %{username} 的帖子因重复链接被屏蔽"
@@ -3131,9 +3121,6 @@ zh_CN:
     reached_limit:
       other: "注意：我们每天最多发送 %{count} 封电子邮件。检查站点以查看可能被阻止的电子邮件。PS：您很受欢迎！"
     in_reply_to: "回复给"
-    unsubscribe:
-      title: "退订"
-      description: "不再对这些电子邮件感兴趣？没问题！点击下面的按钮可以立即退订："
     reply_by_email: "[访问话题](%{base_url}%{url})或者回复此电子邮件以进行回复。"
     reply_by_email_pm: "[访问消息](%{base_url}%{url})或者回复此电子邮件以回复 %{participants}。"
     only_reply_by_email: "回复此电子邮件以进行回复。"
@@ -3429,7 +3416,6 @@ zh_CN:
       liked_received: "获赞"
       new_users: "新用户"
       popular_topics: "热门话题"
-      follow_topic: "关注此话题"
       join_the_discussion: "阅读更多"
       popular_posts: "热门帖子"
       more_new: "新摘要"
@@ -3631,8 +3617,6 @@ zh_CN:
     welcome_message_invite_only: |
       ## [欢迎来到%{title}](#welcome)
       需要一个帐户。请向现有成员请求邀请或登录以继续。
-  deleted: "已删除"
-  image: "图片"
   upload:
     edit_reason: "下载图片的本地副本"
     unauthorized: "抱歉，您尝试上传的文件不被允许（允许的扩展名：%{authorized_extensions}）。"
@@ -3833,91 +3817,8 @@ zh_CN:
       是的，法律术语很无聊，但是我们必须保护自己，进而保护您和您的数据免受不友好的人带来的伤害。我们提供了[服务条款](%{base_path}/tos)来描述您（和我们）关于内容、隐私和法律的行为和权利。要使用此服务，您必须同意遵守我们的[服务条款](%{base_path}/tos)。
   tos_topic:
     title: "服务条款"
-    body: "这些条款用于管理 <%{base_url}> 上互联网论坛的使用。要使用该论坛，您必须同意运营该论坛的公司 %{company_name} 设定的这些条款。\n\n该公司提供的其他产品和服务可能适用不同的条款。这些条款仅适用于论坛的使用。\n\n跳转到：\n\n- [重要条款](#heading--important-terms)\n- [您使用论坛的权限](#heading--permission)\n- [使用论坛的条件](#heading--conditions)\n- [可接受的使用](#heading--acceptable-use)\n- [内容标准](#heading--content-standards)\n- [执行](#heading--enforcement)\n- [您的帐户](#heading--your-account)\n- [您的内容](#heading--your-content)\n- [您的责任](#heading--responsibility)\n- [免责声明](#heading--disclaimers)\n- [责任限制](#heading--liability)\n- [反馈](#heading--feedback)\n- [终止](#heading--termination)\n- [争议](#heading--disputes)\n- [一般条款](#heading--general)\n- [联系](#heading--contact)\n- [变更](#heading--changes)\n\n<h2 id=\"heading--important-terms\"><a href=\"#heading--important-terms\">重要条款</a></h2>\n\n***这些条款包括一些影响您的权利和责任的重要条款，例如[免责声明](#heading-disclaimers)中的免责声明，[责任限制](#heading--liability)中公司对您的责任的限制，[使用责任](#heading-responsibility)中您同意对因滥用论坛而造成的损害赔偿公司，以及[争议](#heading--disputes)中仲裁争议的协议***。\n\n<h2 id=\"heading--permission\"><a href=\"#heading--permission\">您使用论坛的权限</a></h2>\n\n在遵守这些条款的前提下，公司授予您使用论坛的权限。每个人都需要同意这些条款才能使用论坛。\n\n<h2 id=\"heading--conditions\"><a href=\"#heading--conditions\">使用论坛的条件</a></h2>\n\n您使用论坛的权限受以下条件限制：\n\n1. 您必须至少达到十三岁。\n\n2. 如果公司直接与您联系，告知您不能再使用该论坛，则您将无法再使用该论坛。\n\n3. 您必须按照[可接受的使用](#heading--accepted-use)和[内容标准](#heading--content-standards)使用论坛。\n\n<h2 id=\"heading--acceptable-use\"><a href=\"#heading--acceptable-use\">可接受的使用</a></h2>\n\n1. 使用论坛时，您不能违法。\n\n2. 未经特别许可，您不能在论坛上使用或尝试使用他人的帐户。\n\n3. 您不得在论坛上购买、出售或以其他方式交易用户名或其他唯一标识符。\n\n4. 您不得通过论坛发送广告、连锁信或其他请求，或使用论坛为商业邮寄名单或数据库收集地址或其他个人数据。\n\n5. 您不得使用网络爬虫、浏览器插件或附加组件或者网络浏览器以外的其他计算机程序自动访问论坛或监控论坛。如果您运行搜索引擎，您可以抓取论坛，为公开的搜索引擎编制索引。\n\n6. 您不得使用论坛将电子邮件发送到分发名单、新闻组或群组邮件别名。\n\n7. 您不得虚假暗示您与本公司有关联或得到认可。\n\n8. 您不得在其他网页上超链接到论坛上的图片或其他非超文本内容。\n\n9. 您不得在从论坛下载的材料中移除任何显示专有所有权的标记。\n\n10. 您不得使用 `<iframe>` 在其他站点上显示论坛的任何部分。\n\n11. 您不得禁用、避免或绕过论坛的任何安全或访问限制。\n\n12. 您不得对论坛的基础架构施加不合理的请求量，或者发起旨在对论坛底层信息系统施加不合理负担的请求。\n\n13. 您不得通过论坛冒充他人。\n\n14. 您不得鼓励或帮助违反这些条款的任何人。\n\n<h2 id=\"heading--content-standards\"><a href=\"#heading--content-standards\">内容标准</a></h2>\n\n1. 您不得向论坛提交非法、冒犯或以其他方式伤害他人的内容。这包括具有骚扰性、侮辱性、不恰当或属于仇恨行为的内容。\n\n2. 您不得向论坛提交违反法律、侵犯任何人的知识产权、侵犯任何人的隐私或违反与他人协议的内容。\n\n3. 您不得向论坛提交包含恶意计算机代码的内容，例如计算机病毒或间谍软件。\n\n4. 您不得将内容仅作为占位符提交至论坛，以占用特定地址、用户名或其他唯一标识符。\n\n5. 您不得使用论坛披露您无权披露的信息，例如他人的机密或个人信息。\n\n<h2 id=\"heading--enforcement\"><a href=\"#heading--enforcement\">执行</a></h2>\n\n公司可以在最大程度上调查和起诉违反这些条款的行为。公司可能通知执法机关并与其合作起诉违反法律和这些条款的行为。 \n\n公司保留以任何原因更改、编辑和删除论坛内容的权利。如果您认为有人向论坛提交了违反这些条款的内容，请[立即与我们联系](#heading--contact)。\n\n<h2 id=\"heading--your-account\"><a href=\"#heading--your-account\">您的帐户</a></h2>\n\n您必须创建并登录帐户才能使用论坛的某些功能。\n\n要创建帐户，您必须提供有关您自己的一些信息。如果您创建帐户，则表示您同意至少提供有效的电子邮件地址，并使该地址保持最新状态。您可以随时通过发送电子邮件至 <%{contact_email}> 关闭您的帐户。 \n\n您同意，无论您是否授权，您对使用您的帐户执行的所有操作负责，直到您关闭帐户或通知公司您的帐户已被入侵。如果您怀疑自己的帐户已被入侵，您同意立即通知公司。您同意为您的帐户选择安全的密码，并保密。\n\n公司可能会根据处理与版权相关的删除请求政策，限制、暂停或关闭您在论坛上的帐户，或者如果公司合理地认为您违反了这些条款中的任何规则，公司也会相应地执行上述处理。\n\n<h2 id=\"heading--your-content\"><a href=\"#heading--your-content\">您的内容</a></h2>\n\n这些条款中的任何内容均未向公司授予您与论坛共享的知识产权（例如您的帐户信息、帖子或提交至论坛的其他内容）的任何所有权。这些条款中的任何内容也未授予您对公司知识产权的任何所有权。\n\n在您和公司之间，您仍然对您提交至论坛的内容负全部责任。您同意不会错误地暗示您提交至论坛的内容是由公司赞助或批准的。这些条款并不要求公司根据这些条款存储、维护或提供您提交的内容的副本，以及对其进行更改。 \n\n您提交至论坛的内容属于您，由您决定授予其他人的权限。但至少，您授权公司向论坛的其他用户提供您提交至论坛的内容。该特殊许可允许公司复制、发布和分析您提交至论坛的内容。 \n\n当您提交的内容从论坛中移除时（无论是由您还是由公司移除），当最后一个副本从公司的备份、缓存和其他系统中消失时，公司的特殊许可将终止。您提交的内容的其他许可，例如 [Creative Commons](https://creativecommons.org) 许可，可能会在您的内容被移除后继续有效。这些许可可能会授予其他人或本公司再次通过论坛分享您的内容的权利。\n\n收到您提交至论坛的内容的其他人可能会违反您对内容进行许可的条款。您同意公司不对这些违规行为或其后果承担责任。\n\n<h2 id=\"heading--responsibility\"><a href=\"#heading--responsibility\">您的责任</a></h2>\n\n您同意就其他人因您违反这些条款或他们因使用您在论坛上的帐户而违反这些条款而提出的法律索赔赔偿公司。您和公司都同意将您可能需要向公司赔偿的任何法律索赔尽快通知对方。如果公司未能及时将法律索赔通知您，则对于您本可以在获得及时通知后进行抗辩或减轻的损害部分，您无需向公司赔偿。对于您必须向公司赔偿的法律索赔，您同意允许公司控制对该法律索赔的调查、辩护和和解，并配合这些努力。本公司同意，在未经您事先同意的情况下，不会同意任何为您承认过错或向您强加义务的和解。\n\n<h2 id=\"heading--disclaimers\"><a href=\"#heading--disclaimers\">免责声明</a></h2>\n\n***您接受使用论坛和论坛内容的所有风险。在法律允许的范围内，公司及其供应商按原样提供论坛，不作任何保证。***\n\n论坛可以超链接并集成其他人运行的论坛和服务。公司不对其他人提供的服务或他们可能提供的内容作出任何保证。使用其他人运行的服务可能受您与运行服务的相关方之间的其他条款约束。\n\n<h2 id=\"heading--liability\"><a href=\"#heading--liability\">责任限制</a></h2>\n\n***公司及其供应商均不对他们的人员在您同意这些条款时无法合理预见的违约损害承担责任。*** \n\n***在法律允许的范围内，对于与论坛或论坛内容相关的任何类型的索赔，您的总责任将被限制在 50 美元以内。***\n\n<h2 id=\"heading--feedback\"><a href=\"#heading--feedback\">反馈</a></h2>\n\n公司欢迎您对论坛提出意见和建议。 请参阅下面的[联系](#heading--contact)部分，了解与我们取得联系的方式。\n\n您同意公司可以根据您提供的反馈和建议自由行事，并且公司不必向您通知您的反馈已被使用、获得您的使用许可或付款给您。您同意不会提交您认为可能是您或他人的机密或专有的反馈或建议。\n\n<h2 id=\"heading--termination\"><a href=\"#heading--termination\">终止</a></h2>\n\n您或公司可以随时终止这些条款中的协议。当我们的协议终止时，您使用论坛的许可也将终止。\n\n以下条款在我们的协议结束后将仍然有效：[您的内容](#heading--your-content)、[反馈](#heading--feedback)、[您的责任](#heading--responsibility)、[免责声明](#heading--disclaimers)、[责任限制](#heading--liability)和[一般条款](#heading--general)。\n\n<h2 id=\"heading--disputes\"><a href=\"#heading--disputes\">争议</a></h2>\n\n%{governing_law} 将管辖与这些条款或您对论坛的使用相关的任何争议。\n\n您和公司同意仅在%{city_for_disputes}的州或联邦法院寻求与这些条款相关的禁令。您和公司都不会反对这些法院的管辖权、法庭或审判地。\n\n***除了根据《计算机欺诈和滥用法案》寻求禁令或提出索赔外，您和公司将通过具有约束力的美国仲裁协会仲裁来解决任何争议。仲裁将遵循 AAA 的商业仲裁规则和消费者相关争议的补充程序。仲裁将在%{city_for_disputes}举行。您将作为个人解决任何争议，而不是作为集体诉讼或其他代表诉讼的一部分，无论是作为原告还是集体成员。未经公司许可，任何仲裁员均不得将任何争议与任何其他仲裁合并。***\n\n任何仲裁裁决将包括仲裁费用、合理的律师费和证人的合理费用。您和公司可以在任何有管辖权的法院进行仲裁裁决。 \n\n<h2 id=\"heading--general\"><a href=\"#heading--general\">一般条款</a></h2>\n\n如果这些条款中的某条规定按书面形式不可执行，但可以更改以使其可执行，则应对该规定进行必要的最小程度的修改以使其具有可执行性。否则，应删除该条款。\n\n您不得转让您与公司的协议。公司可将您的协议转让给公司的任何关联公司、获得公司控制权的任何其他公司，或购买与论坛相关的公司资产的任何其他公司。任何违反这些条款的尝试转让均不具有法律效力。\n\n行使本协议项下的任何权利或放弃任何违反本协议的行为，均不构成放弃任何其他违反本协议的行为。\n\n这些条款体现了您和公司之间关于论坛使用的所有协议条款。这些条款完全取代有关您使用论坛的任何其他书面或非书面协议。\n\n<h2 id=\"heading--contact\"><a href=\"#heading--contact\">联系</a></h2>\n\n您可以根据这些条款通知公司，并发送电子邮件至 <%{contact_email}> 向公司发送问题。\n\n公司可能会根据这些条款，使用您在论坛上为您的帐户提供的电子邮件地址，或通过向论坛首页或您的帐户页面发布消息来通知您。 \n\n<h2 id=\"heading--changes\"><a href=\"#heading--changes\">变更</a></h2>\n\n公司最后更新这些条款的日期为 2018 年 7 月 12 日，并可能再次更新这些条款。公司会将所有更新发布到论坛。对于包含重大变更的更新，如果您已创建帐户并提供了有效的电子邮件地址，公司同意向您发送电子邮件。公司还可能在论坛上通过特殊消息或提醒宣布更新。\n\n收到这些条款的更新通知后，您必须同意新条款才能继续使用论坛。\n"
   privacy_topic:
     title: "隐私政策"
-    body: |
-      <a name="collect"></a>
-
-      ## [我们收集什么信息？](#collect)
-
-      当您在我们的站点注册时，我们会从您那里收集信息，并在您通过阅读、编辑和评估分享的内容参与论坛时收集数据。
-
-      在我们的站点上注册时，您可能会被要求输入您的姓名和电子邮件地址 但是，您可以在不注册的情况下访问我们的网站。您的电子邮件地址将通过包含唯一链接的电子邮件进行验证。如果该链接被访问，我们就知道您控制着该电子邮件地址。
-
-      注册和发帖时，我们会记录发布帖子时的 IP 地址。我们也可能保留服务器日志，其中包括向我们的服务器发送的每一个请求。
-
-      <a name="use"></a>
-
-      ## [我们如何使用您的信息？](#use)
-
-      我们从您那里收集的任何信息可能通过以下方式之一使用：
-
-      * 个性化您的个人体验 - 您的信息将帮助我们更好地满足您的个人需求。
-      * 改进我们的站点 - 我们基于从您那里收到的信息和反馈不断改进我们的站点。
-      * 改善我们的客户服务 - 您的信息将帮助我们更有效地响应客户服务请求和支持需求。
-      * 发送定期电子邮件 - 您提供的电子邮件地址可用于向您发送信息、您请求的有关话题更改的通知，响应您的用户名，回复查询和/或其他请求或问题。
-
-      <a name="protect"></a>
-
-      ## [我们如何保护您的信息？](#protect)
-
-      我们实现了一系列安全措施，在您输入、提交或者访问您个人信息时保障您的个人信息的安全。
-
-      <a name="data-retention"></a>
-
-      ## [数据保留政策是什么？](#data-retention)
-
-      我们会善意地：
-
-      * 将包含对此服务器的所有请求的 IP 地址的服务器日志保留不超过 90 天。
-      * 将与注册用户及其帖子相关联的 IP 地址保留不超过 5 年。
-
-      <a name="cookies"></a>
-
-      ## [我们使用 Cookie 吗？](#cookies)
-
-      是的。Cookie 是站点或其服务提供商通过网络浏览器存储在您计算机硬盘上的小文件（如果您同意）。这些 Cookie 使站点可以识别您的浏览器，并且如果您注册了帐户，将其与您的注册帐户关联。
-
-      我们使用 Cookie 来了解和保存您对未来访问的偏好，并编译有关站点流量和站点互动的汇总数据，以便我们在未来提供更好的站点体验和工具。我们可能使用服务提供商来帮助我们更好地理解我们的站点访客。这些服务提供商不会被允许代表我们使用收集的信息，除非可以帮助我们开展和改进我们的业务。
-
-      <a name="disclose"></a>
-
-      ## [我们是否将任何信息透露给外界？](#disclose)
-
-      我们不会出售、交易或以其他方式将您的个人身份信息转让给外界。这不包括协助我们运营我们的站点、开展我们的业务或为您提供服务的受信任第三方，前提是这些第三方同意对这些信息保密。当我们认为发布您的信息是为了遵守法律、执行我们的网站政策或保护我们或其他人的权利、财产或安全时，我们也可能会发布您的信息。但是，我们可能会将非个人身份访问者信息提供给其他方用于营销、广告或其他用途。
-
-      <a name="third-party"></a>
-
-      ## [第三方链接](#third-party)
-
-      有时，根据我们的判断，我们可能会在我们的网站上包含或提供第三方产品或服务。这些第三方网站有单独和独立的隐私政策。因此，我们对这些链接网站的内容和活动不承担任何责任或义务。尽管如此，我们仍力求保护我们网站的完整性，并欢迎对这些网站的任何反馈。
-
-      <a name="coppa"></a>
-
-      ## [儿童在线隐私保护法案合规](#coppa)
-
-      我们的网站、产品和服务均面向年满 13 岁或以上的人。如果此服务器在美国，并且您未满 13 岁，则根据 COPPA（[儿童在线隐私保护法案](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)）要求，请勿使用本网站。
-
-      <a name="online"></a>
-
-      ## [仅在线隐私政策](#online)
-
-      本在线隐私政策仅适用于通过我们网站收集的信息，不适用于离线收集的信息。
-
-      <a name="consent"></a>
-
-      ## [您的同意](#consent)
-
-      使用我们的网站，即表示您同意我们网站的隐私政策。
-
-      <a name="changes"></a>
-
-      ## [隐私政策的变更](#changes)
-
-      如果我们决定更改我们的隐私政策，我们将在此页面上发布这些变更。
-
-      本文档根据 CC-BY-SA 发布。最后更新时间为 2013 年 5 月 31 日。
   badges:
     mass_award:
       errors:
@@ -4334,7 +4235,6 @@ zh_CN:
           <p>玩得开心，并顺利<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>建立您的新社区</a>！</p>
   search_logs:
     graph_title: "搜索计数"
-  joined: "加入日期："
   discourse_push_notifications:
     popup:
       mentioned: '%{username} 在“%{topic}”中提及了您 - %{site_title}'

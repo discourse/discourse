@@ -4,8 +4,7 @@ import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import { capitalize } from "@ember/string";
 import { inject as service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
-import { iconHTML } from "discourse-common/lib/icon-library";
+import GroupDeleteDialog from "discourse/components/dialog-messages/group-delete";
 
 const Tab = EmberObject.extend({
   init() {
@@ -139,38 +138,11 @@ export default Controller.extend({
     this.set("destroying", true);
 
     const model = this.model;
-    const title = I18n.t("admin.groups.delete_confirm", { group: model.name });
-
-    const membersWarning = model.members.length
-      ? `<p>
-          ${iconHTML("users")}
-          ${I18n.t("admin.groups.delete_details", {
-            count: model.members.length,
-          })} 
-         </p>`
-      : "";
-
-    const messageWarning =
-      model.has_messages && model.message_count > 0
-        ? `<p>${iconHTML("envelope")} 
-            ${I18n.t("admin.groups.delete_with_messages_confirm", {
-              count: model.message_count,
-            })}
-          </p>`
-        : "";
-
-    const undoWarning = `<p> 
-        ${iconHTML("exclamation-triangle")}  
-        ${I18n.t("admin.groups.delete_warning")}
-        </p>`;
-
-    const message = htmlSafe(
-      `${membersWarning} ${messageWarning} ${undoWarning}`
-    );
 
     this.dialog.deleteConfirm({
-      title,
-      message,
+      title: I18n.t("admin.groups.delete_confirm", { group: model.name }),
+      bodyComponent: GroupDeleteDialog,
+      bodyComponentModel: model,
       didConfirm: () => {
         model
           .destroy()

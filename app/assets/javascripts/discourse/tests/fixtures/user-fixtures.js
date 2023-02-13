@@ -3118,8 +3118,8 @@ export default {
         text_size: "normal",
         text_size_seq: 0,
         title_count_mode: "notifications",
+        timezone: "Asia/Tokyo",
       },
-      timezone: "Asia/Tokyo",
     },
   },
   "/u/%E3%83%A9%E3%82%A4%E3%82%AA%E3%83%B3/summary.json": {

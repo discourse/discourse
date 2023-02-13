@@ -45,9 +45,6 @@ tr_TR:
       trigger: "zar at"
       invalid: |-
         Üzgünüm, bu zar kombinasyonunu tutturmak matematiksel olarak imkansız. :confounded:
-      not_enough_dice:
-        one: "Sadece %{count} zarım var. [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), biliyorum!"
-        other: "Sadece %{count} zarım var. [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), biliyorum!"
       out_of_range: |-
         Matematiksel olarak adil bir zar için [maksimum kenar sayısının](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) 120 olduğunu biliyor muydunuz?
       results: |-

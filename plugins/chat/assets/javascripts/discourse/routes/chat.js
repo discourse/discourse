@@ -21,8 +21,10 @@ export default class ChatRoute extends DiscourseRoute {
     }
 
     const INTERCEPTABLE_ROUTES = [
-      "chat.channel.index",
       "chat.channel",
+      "chat.channel.index",
+      "chat.channel.near-message",
+      "chat.channel-legacy",
       "chat",
       "chat.index",
       "chat.draft-channel",
@@ -73,7 +75,7 @@ export default class ChatRoute extends DiscourseRoute {
   @action
   willTransition(transition) {
     if (!transition?.to?.name?.startsWith("chat.channel")) {
-      this.chat.setActiveChannel(null);
+      this.chat.activeChannel = null;
     }
 
     if (!transition?.to?.name?.startsWith("chat.")) {

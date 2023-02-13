@@ -14,7 +14,13 @@
 
   <div class="create-channel-control">
     <label for="channel-slug" class="create-channel-label">
-      {{i18n "chat.create_channel.slug"}}
+      {{i18n "chat.create_channel.slug"}}&nbsp;
+      <span>
+        {{d-icon "info-circle"}}
+        <DTooltip>{{i18n
+            "chat.channel_edit_name_slug_modal.slug_description"
+          }}</DTooltip>
+      </span>
     </label>
     <Input
       name="channel-slug"

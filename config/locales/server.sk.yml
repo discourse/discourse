@@ -1216,9 +1216,6 @@ sk:
   subject_pm: "[PM]"
   user_notifications:
     previous_discussion: "Prechádzajúce odpovede"
-    unsubscribe:
-      title: "Odhlásiť"
-      description: "Nezaujímajú Vás už tieto emaily? Žiadny problém! Pre okamžité odhlásenie kliknite nižšie: "
     posted_by: "Príspevok od %{username} dňa %{post_date}"
     user_posted_pm_staged:
       subject_template: "%{optional_re}%{topic_title}"
@@ -1241,8 +1238,6 @@ sk:
     see_more: "Viac"
     search_title: "Prehľadať tieto stránky"
     search_button: "Hľadať"
-  deleted: "vymazané"
-  image: "Obrázok"
   upload:
     edit_reason: "stiahnuté lokálne kópie obrázkov"
     unauthorized: "Ľutujeme, súbor, ktorý sa pokúšate nahrať nemá povolenú príponu (povolené prípony sú: %{authorized_extensions})."
@@ -1288,7 +1283,6 @@ sk:
     title: "Podmienky používania"
   privacy_topic:
     title: "Ochrana súkromia"
-    body: "<a name=\"collect\"></a>\n\n## [Aký druh údajov získavame?](#collect)\n\nPo tom, ako sa zaregistrujete na tejto webovej lokalite, získavame vaše údaje, keď sa zúčastňujete fóra čítaním, prispievaním, písaním a hodnotením zdieľaného obsahu. \nPri registrácií na našej webovej lokalite vás môžeme požiadať o zadanie vášho mena a e-mailovej adresy. Našu webovú lokalitu je možné navštevovať aj bez registrácie. Vaša e-mailová adresa bude overená potvrdzovacím e-mailom, ktorý bude obsahovať jednorazový odkaz. Kliknutím naň potvrdíte, že ste používateľom zadanej e-mailovej adresy. \nPri registrácií a uverejňovaní príspevkov zaznamenávame IP adresu, z ktorej bol príspevok odoslaný. Rovnako môžeme uchovať údaje zo serverov, ktoré obsahujú IP adresu pre každú žiadosť odoslanú na náš server.\n\n<a name=\"use\"></a>\n\n## [Na čo tieto údaje využívame?](#use)\n\nAkékoľvek údaje, ktoré o vás získame, môžu byť využité nasledovne:\n\n* Na personalizáciu obsahu – údaje o vás nám pomáhajú lepšie reagovať na vaše individuálne potreby\n* Na vylepšenie webovej lokality – neustále pracujeme na zlepšovaní ponuky našej webovej lokality na základe vašich údajov a spätnej väzby\n* Na zlepšenie zákazníckych služieb – vaše údaje nám pomáhajú efektívnejšie reagovať na používateľské požiadavky a prípadnú zákaznícku podporu\n* Na odosielanie pravidelných e-mailov – vami uvedená e-mailová adresa môže byť použitá na rozposielanie informácií, vami zvolených upozornení na zmeny v obsahu jednotlivých tém, prípadne na správy smerujúce na vaše používateľské konto, odpovede na vaše otázky alebo požiadavky. \n\n<a name=\"protect\"></a>\n\n## [Ako u nás funguje ochrana údajov?](#protect)\n\nVyužívame rôzne ochranné opatrenia, aby sme zaručili ochranu vašich osobných údajov po tom, ako ich uvediete alebo si k nim vyžiadate prístup.\n\n<a name=\"data-retention\"></a>\n\n## [Ako osobné údaje uchovávame?](#data-retention)\n\nBudeme sa snažiť: \nUchovať údaje zo servera, ktoré obsahujú IP adresu všetkých žiadostí na tento server, maximálne po dobu 90 dní.\nUchovať IP adresy spojené s registrovanými používateľmi a ich príspevkami maximálne po dobu 5 rokov. \n\n<a name=\"cookies\"></a>\n\n## [Používame cookies?](#cookies)\n\nÁno. Cookies sú malé súbory, ktoré webová lokalita alebo jej poskytovateľ služieb uloží na harddisk vášho počítača pomocou internetového prehliadača (pokiaľ to povolíte). Cookies umožňujú webovej lokalite rozpoznať váš prehliadač a pokiaľ máte založený účet, tak ho s ním prepoja. \nPoužívame cookies by sme mohli identifikovať a uložiť vaše preferencie pre budúce návštevy webovej lokality a zhromaždiť súbor údajov o návštevnosti a interakciách webovej lokality, aby sme v budúcnosti mohli zabezpečiť lepšiu používateľskú skúsenosť a nástroje. Môžeme tiež kontaktovať poskytovateľa služieb, ktorý nám ako tretia strana pomôže lepšie porozumieť preferenciám návštevníkom našej webovej lokality. Takýto poskytovateľ služieb má dovolené v našom mene narábať s nami získanými údajmi výhradne za účelom zlepšenia našich služieb. \n\n<a name=\"disclose\"></a>\n\n## [Sprístupňujeme informácie tretím stranám?](#disclose)\n\nNeobchodujeme, nevymieňame a žiadnym iným spôsobom neposúvame tretím stranám informácie, ktoré je možné priradiť k vašej osobe. Výnimkou sú dôverné tretie strany, ktoré nám pomáhajú s prevádzkovaním našej webovej aktivity, našimi aktivitami alebo s poskytovaním služieb používateľom a ktoré sa zaviazali, že s týmito údajmi budú zaobchádzať dôverne. Informácie môžeme uverejniť v prípadoch, keď je to v súlade so zákonom, vymáhaním pravidiel našich stránok, s ochranou našich práv alebo práv iných, ako aj s ochranou majetku a bezpečnosti. Údaje, ktoré nemožno spojiť s konkrétnou osobou môžu byť poskytnuté tretím stranám na marketingové, reklamné alebo iné účely. \n\n<a name=\"third-party\"></a>\n\n## [Prepojenia tretích strán](#third-party)\n\nPríležitostne a podľa nášho uváženia môžeme na našej webovej lokalite uverejňovať produkty a služby tretích strán. Tieto tretie strany majú svoje vlastné, nezávislé podmienky o ochrane údajov a preto nenesieme žiadnu zodpovednosť za obsah a aktivity týchto strán. V každom prípade nám však ide o ochranu integrity našej webovej lokality a preto uvítame akúkoľvek spätnú väzbu týkajúcu sa týchto strán. \n\n<a name=\"coppa\"></a>\n\n## [Rešpektovanie zákona o ochrane súkromia detí v rámci online režimov](#coppa)\n\nVšetky produkty a služby na našej webovej lokalite sú určené osobám vo veku minimálne 13 rokov. Pokiaľ je tento server v USA a vy máte menej ako 13 rokov, vzhľadom na [Zákon o ochrane súkromia detí v rámci online režimov](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act) nesmiete používať túto webovú lokalitu. \n\n<a name=\"online\"></a>\n\n## [Súkromie je chránené len online](#online)\n\nTieto pravidlá ochrany súkromia online platia iba pre informácie, ktoré zozbierala naša webová lokalita a nevzťahuje sa na informácie zozbierané v offline režime.\n\n<a name=\"consent\"></a>\n\n## [Váš súhlas](#consent)\n\nPoužívaním našich stránok súhlasíte s našimi pravidlami o ochrane súkromia. \n\n<a name=\"changes\"></a>\n\n## [Zmeny pravidiel o ochrane súkromia](#changes)\n\nAk sa rozhodneme zaviesť akékoľvek zmeny v oblasti ochrany súkromia, uverejníme túto informáciu na našej webovej lokalite. \nTento dokument je zverejnený s licenciou CC-BY-SA. Posledná úprava bola vykonaná dňa 31. mája 2013.\n"
   badges:
     editor:
       name: Editor
@@ -1393,7 +1387,6 @@ sk:
             placeholder: "https://www.example.com/contact-us"
       invites:
         title: "Pozvite členov"
-  joined: "Vytvorený"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} Vás zmienil v "%{topic}" - %{site_title}'

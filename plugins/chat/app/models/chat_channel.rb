@@ -36,6 +36,10 @@ class ChatChannel < ActiveRecord::Base
   delegate :empty?, to: :chat_messages, prefix: true
 
   class << self
+    def editable_statuses
+      statuses.filter { |k, _| !%w[read_only archived].include?(k) }
+    end
+
     def public_channel_chatable_types
       ["Category"]
     end
@@ -76,11 +80,11 @@ class ChatChannel < ActiveRecord::Base
   end
 
   def url
-    "#{Discourse.base_url}/chat/channel/#{self.id}/#{self.slug || "-"}"
+    "#{Discourse.base_url}/chat/c/#{self.slug || "-"}/#{self.id}"
   end
 
   def relative_url
-    "#{Discourse.base_path}/chat/channel/#{self.id}/#{self.slug || "-"}"
+    "#{Discourse.base_path}/chat/c/#{self.slug || "-"}/#{self.id}"
   end
 
   def self.ensure_consistency!
@@ -164,6 +168,7 @@ end
 #  user_count_stale             :boolean          default(FALSE), not null
 #  slug                         :string
 #  type                         :string
+#  threading_enabled            :boolean          default(FALSE), not null
 #
 # Indexes
 #

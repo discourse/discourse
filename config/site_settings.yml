@@ -1806,6 +1806,8 @@ security:
     hidden: true
   include_secure_categories_in_tag_counts:
     default: false
+  display_personal_messages_tag_counts:
+    default: false
 
 onebox:
   post_onebox_maxlength:
@@ -1921,12 +1923,18 @@ rate_limits:
   rate_limit_create_post: 5
   rate_limit_new_user_create_topic: 120
   rate_limit_new_user_create_post: 30
-  rate_limit_search_anon_global:
+  rate_limit_search_anon_global_per_minute:
     hidden: true
     default: 150
-  rate_limit_search_anon_user:
+  rate_limit_search_anon_user_per_minute:
     hidden: true
     default: 15
+  rate_limit_search_anon_global_per_second:
+    hidden: true
+    default: 8
+  rate_limit_search_anon_user_per_second:
+    hidden: true
+    default: 2
   rate_limit_search_user:
     hidden: true
     default: 30
@@ -2078,13 +2086,14 @@ developer:
   include_associated_account_ids:
     default: false
     hidden: true
-  enable_experimental_topic_timeline_groups:
+  enable_experimental_topic_timeline:
     client: true
-    type: group_list
-    list_type: compact
-    default: ""
-    allow_any: false
-    refresh: true
+    default: false
+    hidden: true
+  experimental_form_templates:
+    client: true
+    default: false
+    hidden: true
 
 navigation:
   navigation_menu:
@@ -2110,6 +2119,14 @@ navigation:
   enable_new_notifications_menu:
     default: false
     validator: "EnableNewNotificationsMenuValidator"
+  enable_custom_sidebar_sections:
+    client: true
+    type: group_list
+    list_type: compact
+    default: ""
+    allow_any: false
+    refresh: true
+    hidden: true
 
 embedding:
   embed_by_username:
@@ -2186,6 +2203,15 @@ backups:
     client: true
 
 search:
+  user_search_similar_results:
+    default: false
+    hidden: true
+  prioritize_exact_search_title_match:
+    default: false
+    hidden: true
+  max_duplicate_search_index_terms:
+    default: -1
+    hidden: true
   use_pg_headlines_for_excerpt:
     default: false
     hidden: true
@@ -2196,6 +2222,10 @@ search:
   search_ranking_normalization:
     default: "0"
     hidden: true
+  search_ranking_weights:
+    default: ""
+    hidden: true
+    validator: "SearchRankingWeightsValidator"
   min_search_term_length:
     client: true
     default: 3

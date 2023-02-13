@@ -29,7 +29,7 @@
           >{{this.post.user.title}}</span>{{/if}}
         <PluginOutlet
           @name="group-post-additional-member-info"
-          @args={{hash user=this.post.user}}
+          @outletArgs={{hash user=this.post.user}}
         />
       </div>
     {{/if}}

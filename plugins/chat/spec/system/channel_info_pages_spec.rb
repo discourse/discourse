@@ -31,7 +31,7 @@ RSpec.describe "Info pages", type: :system, js: true do
         find(".chat-channel-title-wrapper").click
         find(".chat-full-page-header__back-btn").click
 
-        expect(page).to have_current_path(chat.channel_path(channel_1.id, channel_1.slug))
+        expect(page).to have_current_path(chat.channel_path(channel_1.slug, channel_1.id))
       end
     end
   end

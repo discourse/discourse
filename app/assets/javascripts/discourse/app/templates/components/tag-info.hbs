@@ -131,11 +131,12 @@
       </section>
     {{/if}}
     {{#if this.canAdminTag}}
-      <PluginOutlet
-        @name="tag-custom-settings"
-        @args={{hash tag=this.tagInfo}}
-        @tagName="section"
-      />
+      <section>
+        <PluginOutlet
+          @name="tag-custom-settings"
+          @outletArgs={{hash tag=this.tagInfo}}
+        />
+      </section>
       <div class="tag-actions">
         <DButton
           @class="btn-default"

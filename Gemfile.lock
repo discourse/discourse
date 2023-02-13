@@ -88,7 +88,7 @@ GEM
       rack (>= 0.9.0)
     binding_of_caller (1.0.0)
       debug_inspector (>= 0.0.1)
-    bootsnap (1.15.0)
+    bootsnap (1.16.0)
       msgpack (~> 1.2)
     builder (3.2.4)
     bullet (7.0.7)
@@ -121,6 +121,14 @@ GEM
     crass (1.0.6)
     css_parser (1.14.0)
       addressable
+    dartsass-ruby (3.0.1)
+      sass-embedded (~> 1.54)
+    dartsass-sprockets (3.0.0)
+      dartsass-ruby (~> 3.0)
+      railties (>= 4.0.0)
+      sprockets (> 3.0)
+      sprockets-rails
+      tilt
     date (3.3.3)
     debug_inspector (1.1.0)
     diff-lcs (1.5.0)
@@ -138,7 +146,7 @@ GEM
       regexp_parser (~> 2.2)
     email_reply_trimmer (0.1.13)
     erubi (1.12.0)
-    excon (0.97.2)
+    excon (0.99.0)
     execjs (2.8.1)
     exifr (1.3.10)
     fabrication (2.30.0)
@@ -157,8 +165,11 @@ GEM
     ffi (1.15.5)
     fspath (3.1.2)
     gc_tracer (1.5.1)
-    globalid (1.0.1)
+    globalid (1.1.0)
       activesupport (>= 5.0)
+    google-protobuf (3.21.12)
+    google-protobuf (3.21.12-x86_64-darwin)
+    google-protobuf (3.21.12-x86_64-linux)
     guess_html_encoding (0.0.11)
     hana (1.3.7)
     hashdiff (1.0.1)
@@ -186,7 +197,7 @@ GEM
       hana (~> 1.3)
       regexp_parser (~> 2.0)
       uri_template (~> 0.7)
-    jwt (2.6.0)
+    jwt (2.7.0)
     kgio (2.11.4)
     libv8-node (16.10.0.0)
     libv8-node (16.10.0.0-aarch64-linux)
@@ -206,7 +217,7 @@ GEM
     logstash-event (1.2.02)
     logstash-logger (0.26.1)
       logstash-event (~> 1.2)
-    logster (2.11.3)
+    logster (2.11.4)
     loofah (2.19.1)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
@@ -246,16 +257,16 @@ GEM
     net-smtp (0.3.3)
       net-protocol
     nio4r (2.5.8)
-    nokogiri (1.14.0)
+    nokogiri (1.14.1)
       mini_portile2 (~> 2.8.0)
       racc (~> 1.4)
-    nokogiri (1.14.0-aarch64-linux)
+    nokogiri (1.14.1-aarch64-linux)
       racc (~> 1.4)
-    nokogiri (1.14.0-arm64-darwin)
+    nokogiri (1.14.1-arm64-darwin)
       racc (~> 1.4)
-    nokogiri (1.14.0-x86_64-darwin)
+    nokogiri (1.14.1-x86_64-darwin)
       racc (~> 1.4)
-    nokogiri (1.14.0-x86_64-linux)
+    nokogiri (1.14.1-x86_64-linux)
       racc (~> 1.4)
     oauth (1.1.0)
       oauth-tty (~> 1.0, >= 1.0.1)
@@ -297,9 +308,9 @@ GEM
       openssl (> 2.0, < 3.1)
     optimist (3.0.1)
     parallel (1.22.1)
-    parallel_tests (4.1.0)
+    parallel_tests (4.2.0)
       parallel
-    parser (3.2.0.0)
+    parser (3.2.1.0)
       ast (~> 2.4.1)
     pg (1.4.5)
     prettier_print (1.2.0)
@@ -313,9 +324,8 @@ GEM
     pry-rails (0.3.9)
       pry (>= 0.10.4)
     public_suffix (5.0.1)
-    puma (6.0.2)
+    puma (6.1.0)
       nio4r (~> 2.0)
-    r2 (0.2.7)
     racc (1.6.2)
     rack (2.2.6.2)
     rack-mini-profiler (3.0.0)
@@ -354,10 +364,10 @@ GEM
       msgpack (>= 0.4.3)
       optimist (>= 3.0.0)
     rchardet (1.8.0)
-    redis (4.8.0)
+    redis (4.8.1)
     redis-namespace (1.10.0)
       redis (>= 4)
-    regexp_parser (2.6.2)
+    regexp_parser (2.7.0)
     request_store (1.5.1)
       rack (>= 1.4)
     rexml (3.2.5)
@@ -371,7 +381,7 @@ GEM
       rspec-core (~> 3.12.0)
       rspec-expectations (~> 3.12.0)
       rspec-mocks (~> 3.12.0)
-    rspec-core (3.12.0)
+    rspec-core (3.12.1)
       rspec-support (~> 3.12.0)
     rspec-expectations (3.12.2)
       diff-lcs (>= 1.2.0, < 2.0)
@@ -398,7 +408,9 @@ GEM
       json-schema (>= 2.2, < 4.0)
       railties (>= 3.1, < 7.1)
       rspec-core (>= 2.14)
-    rubocop (1.44.0)
+    rtlcss_wrapper (0.1.0)
+      mini_racer (~> 0.6.3)
+    rubocop (1.44.1)
       json (~> 2.3)
       parallel (~> 1.10)
       parser (>= 3.2.0.0)
@@ -418,25 +430,27 @@ GEM
     rubocop-rspec (2.18.1)
       rubocop (~> 1.33)
       rubocop-capybara (~> 2.17)
-    ruby-prof (1.4.5)
+    ruby-prof (1.5.0)
     ruby-progressbar (1.11.0)
     ruby-readability (0.7.0)
       guess_html_encoding (>= 0.0.4)
       nokogiri (>= 1.6.0)
     ruby2_keywords (0.0.5)
     rubyzip (2.3.2)
-    sanitize (6.0.0)
+    sanitize (6.0.1)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
-    sassc (2.0.1)
-      ffi (~> 1.9)
-      rake
-    sassc-rails (2.1.2)
-      railties (>= 4.0.0)
-      sassc (>= 2.0)
-      sprockets (> 3.0)
-      sprockets-rails
-      tilt
+    sass-embedded (1.58.0)
+      google-protobuf (~> 3.21)
+      rake (>= 10.0.0)
+    sass-embedded (1.58.0-aarch64-linux-gnu)
+      google-protobuf (~> 3.21)
+    sass-embedded (1.58.0-arm64-darwin)
+      google-protobuf (~> 3.21)
+    sass-embedded (1.58.0-x86_64-darwin)
+      google-protobuf (~> 3.21)
+    sass-embedded (1.58.0-x86_64-linux-gnu)
+      google-protobuf (~> 3.21)
     selenium-webdriver (4.8.0)
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
@@ -462,14 +476,14 @@ GEM
       sprockets (>= 3.0.0)
     sshkey (2.0.0)
     stackprof (0.2.23)
-    syntax_tree (5.2.0)
+    syntax_tree (6.0.0)
       prettier_print (>= 1.2.0)
     syntax_tree-disable_ternary (1.0.0)
-    test-prof (1.1.0)
+    test-prof (1.2.0)
     thor (1.2.1)
     tilt (2.0.11)
     timeout (0.3.1)
-    tzinfo (2.0.5)
+    tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     uglifier (4.2.0)
       execjs (>= 0.3.0, < 3)
@@ -502,7 +516,9 @@ GEM
     xpath (3.2.0)
       nokogiri (~> 1.8)
     yaml-lint (0.1.2)
-    zeitwerk (2.6.6)
+    yard (0.9.28)
+      webrick (~> 1.7.0)
+    zeitwerk (2.6.7)
 
 PLATFORMS
   aarch64-linux
@@ -539,6 +555,8 @@ DEPENDENCIES
   cose
   cppjieba_rb
   css_parser
+  dartsass-ruby
+  dartsass-sprockets
   diffy
   digest
   discourse-fonts
@@ -600,7 +618,6 @@ DEPENDENCIES
   pry-byebug
   pry-rails
   puma
-  r2
   rack
   rack-mini-profiler
   rack-protection
@@ -621,13 +638,12 @@ DEPENDENCIES
   rspec-rails
   rss
   rswag-specs
+  rtlcss_wrapper
   rubocop-discourse
   ruby-prof
   ruby-readability
   rubyzip
   sanitize
-  sassc (= 2.0.1)
-  sassc-rails
   selenium-webdriver
   shoulda-matchers
   sidekiq
@@ -649,6 +665,7 @@ DEPENDENCIES
   webrick
   xorcist
   yaml-lint
+  yard
 
 BUNDLED WITH
-   2.4.1
+   2.4.4

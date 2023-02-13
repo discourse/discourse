@@ -432,6 +432,7 @@ en:
   too_late_to_edit: "That post was created too long ago. It can no longer be edited or deleted."
   edit_conflict: "That post was edited by another user and your changes can no longer be saved."
   revert_version_same: "The current version is same as the version you are trying to revert to."
+  reverted_to_version: "reverted to version #%{version}"
   cannot_edit_on_slow_mode: "This topic is in slow mode. To encourage thoughtful, considered discussion, editing old posts in this topic is not currently allowed during slow mode."
 
   excerpt_image: "image"
@@ -1652,6 +1653,7 @@ en:
     content_security_policy_script_src: "Additional allowlisted script sources. The current host and CDN are included by default. See <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigate XSS Attacks with Content Security Policy.</a>"
     invalidate_inactive_admin_email_after_days: "Admin accounts that have not visited the site in this number of days will need to re-validate their email address before logging in. Set to 0 to disable."
     include_secure_categories_in_tag_counts: "When enabled, count of topics for a tag will include topics that are in read restricted categories for all users. When disabled, normal users are only shown a count of topics for a tag where all the topics are in public categories."
+    display_personal_messages_tag_counts: "When enabled, count of personal messages tagged with a given tag will be displayed."
     top_menu: "Determine which items appear in the homepage navigation, and in what order. Example latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "Determine which items appear on the post menu, and in what order. Example like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "The menu items to hide by default in the post menu unless an expansion ellipsis is clicked on."
@@ -2197,9 +2199,9 @@ en:
 
     topic_page_title_includes_category: "Topic page <a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>title tag</a> includes the category name."
 
-    native_app_install_banner_ios: "Displays DiscourseHub app banner on iOS devices to regular users (trust level 1 and up)."
+    native_app_install_banner_ios: "Displays DiscourseHub app banner on iOS devices to basic users (trust level 1) and up."
 
-    native_app_install_banner_android: "Displays DiscourseHub app banner on Android devices to regular users (trust level 1 and up)."
+    native_app_install_banner_android: "Displays DiscourseHub app banner on Android devices to basic users (trust level 1) and up."
 
     app_association_android: "Contents of <a href='%{base_path}/.well-known/assetlinks.json'>.well-known/assetlinks.json</a> endpoint, used for Google's Digital Asset Links API."
     app_association_ios: "Contents of <a href='%{base_path}/apple-app-site-association'>apple-app-site-association</a> endpoint, used to create Universal Links between this site and iOS apps."
@@ -2397,7 +2399,6 @@ en:
     default_sidebar_tags: "Selected tags will be displayed under Sidebar's Tags section by default."
     enable_new_notifications_menu: "Enables the new notifications menu for the legacy navigation menu."
     enable_new_user_profile_nav_groups: "EXPERIMENTAL: Users of the selected groups will be shown the new user profile navigation menu"
-    enable_experimental_topic_timeline_groups: "EXPERIMENTAL: Users of the selected groups will be shown the refactored topic timeline"
     enable_experimental_hashtag_autocomplete: "EXPERIMENTAL: Use the new #hashtag autocompletion system for categories and tags that renders the selected item differently and has improved search"
 
     errors:
@@ -2456,8 +2457,9 @@ en:
       search_tokenize_japanese_enabled: "You must disable 'search_tokenize_japanese' before enabling this setting."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "You cannot enable DiscourseConnect if 2FA is enforced."
       delete_rejected_email_after_days: "This setting cannot be set lower than the delete_email_logs_after_days setting or greater than %{max}"
-      invalid_uncategorized_category_setting: "The Uncategorized category cannot be selected if allow uncategorized topics is not allowed"
+      invalid_uncategorized_category_setting: "The \"Uncategorized\" category cannot be selected if 'allow uncategorized topics' is not enabled."
       enable_new_notifications_menu_not_legacy_navigation_menu: "You must set `navigation_menu` to `legacy` before enabling this setting."
+      invalid_search_ranking_weights: "Value is invalid for search_ranking_weights site setting. Example: '{0.1,0.2,0.3,1.0}'. Note that maximum value for each weight is 1.0."
 
     placeholder:
       discourse_connect_provider_secrets:
@@ -2667,7 +2669,6 @@ en:
     activated_by_staff: "Activated by staff"
     new_user_typed_too_fast: "New user typed too fast"
     content_matches_auto_silence_regex: "Content matches auto silence regex"
-    content_matches_auto_block_regex: "Content matches auto block regex"
     username:
       short: "must be at least %{min} characters"
       long: "must be no more than %{max} characters"
@@ -3479,7 +3480,7 @@ en:
 
         The new user [%{username}](%{user_url}) was automatically silenced because multiple users flagged %{username}'s post(s).
 
-        Please [review the flags](%{base_url}/admin/flags). If %{username} was incorrectly silenced from posting, click the unsilence button on [the admin page for this user](%{user_url}).
+        Please [review the flags](%{base_url}/review). If %{username} was incorrectly silenced from posting, click the unsilence button on [the admin page for this user](%{user_url}).
 
         This threshold can be changed via the `silence_new_user` site settings.
 
@@ -3572,9 +3573,6 @@ en:
       one: "Heads up: We send a maximum of %{count} daily email. Check the site to see the ones that might be held back."
       other: "Heads up: We send a maximum of %{count} daily emails. Check the site to see the ones that might be held back. PS thanks for being popular!"
     in_reply_to: "In Reply To"
-    unsubscribe:
-      title: "Unsubscribe"
-      description: "Not interested in getting these emails? No problem! Click below to unsubscribe instantly:"
 
     header_instructions: ""
     reply_by_email: "[Visit Topic](%{base_url}%{url}) or reply to this email to respond."
@@ -3903,7 +3901,6 @@ en:
       liked_received: "Likes Received"
       new_users: "New Users"
       popular_topics: "Popular Topics"
-      follow_topic: "Follow this topic"
       join_the_discussion: "Read More"
       popular_posts: "Popular Posts"
       more_new: "New for you"
@@ -4157,10 +4154,6 @@ en:
       ## [Welcome to %{title}](#welcome)
       An account is required. Please ask an existing member for an invite or log in to continue.
 
-  deleted: "deleted"
-
-  image: "image"
-
   upload:
     edit_reason: "downloaded local copies of images"
     unauthorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
@@ -4371,7 +4364,11 @@ en:
   tos_topic:
     title: "Terms of Service"
     body: |
-      These terms govern use of the Internet forum at <%{base_url}>. To use the forum, you must agree to these terms with %{company_name}, the company that runs the forum.
+      <h2 id="heading--change-me"><a href="#heading--change-me">Change Me</a></h2>
+
+      Forum Admin, please find below an example starting template for a privacy policy that you should customise to meet your site's needs.
+
+      These terms do not, but might one day, govern use of the Internet forum at <%{base_url}>. In that event, to use the forum, you must agree to these terms with %{company_name}, the company that runs the forum.
 
       The company may offer other products and services, under different terms. These terms apply only to use of the forum.
 
@@ -4539,13 +4536,15 @@ en:
 
       <h2 id="heading--changes"><a href="#heading--changes">Changes</a></h2>
 
-      The company last updated these terms on July 12, 2018, and may update these terms again. The company will post all updates to the forum. For updates that contain substantial changes, the company agrees to e-mail you, if you've created an account and provided a valid e-mail address. The company may also announce updates with special messages or alerts on the forum.
+      The company last updated these terms on [INSERT LAST UPDATE DATE HERE], and may update these terms again. The company will post all updates to the forum. For updates that contain substantial changes, the company agrees to e-mail you, if you've created an account and provided a valid e-mail address. The company may also announce updates with special messages or alerts on the forum.
 
       Once you get notice of an update to these terms, you must agree to the new terms in order to keep using the forum.
 
   privacy_topic:
     title: "Privacy Policy"
     body: |
+      ## [Forum Admin, please find below an example starting template for a privacy policy that you should customise to your site.]
+
       <a name="collect"></a>
 
       ## [What information do we collect?](#collect)
@@ -4579,8 +4578,7 @@ en:
 
       We will make a good faith effort to:
 
-      * Retain server logs containing the IP address of all requests to this server no more than 90 days.
-      * Retain the IP addresses associated with registered users and their posts no more than 5 years.
+      * Retain server logs containing the IP address of all requests to this server no more than [NUMBER OF DAYS] days.
 
       <a name="cookies"></a>
 
@@ -4626,7 +4624,7 @@ en:
 
       If we decide to change our privacy policy, we will post those changes on this page.
 
-      This document is CC-BY-SA. It was last updated May 31, 2013.
+      This document is CC-BY-SA. It was last updated [INSERT LAST UPDATE DATE HERE].
 
   badges:
     mass_award:
@@ -5067,7 +5065,9 @@ en:
   search_logs:
     graph_title: "Search Count"
 
-  joined: "Joined"
+  onebox:
+    discourse:
+      user_joined_community: "Joined %{date}"
 
   discourse_push_notifications:
     popup:
@@ -5250,3 +5250,7 @@ en:
     payload_url:
       blocked_or_internal: "Payload URL cannot be used because it resolves to a blocked or internal IP"
       unsafe: "Payload URL cannot be used because it's unsafe"
+
+  form_templates:
+    errors:
+      invalid_yaml: "is not a valid YAML string"

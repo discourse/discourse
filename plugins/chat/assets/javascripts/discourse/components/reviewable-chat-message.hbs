@@ -1,8 +1,11 @@
 <div class="flagged-post-header">
   <LinkTo
-    @route="chat.channel"
-    @models={{array this.chatChannel.id this.chatChannel.title}}
-    @query={{hash messageId=@reviewable.target_id}}
+    @route="chat.channel.near-message"
+    @models={{array
+      this.chatChannel.slugifiedTitle
+      this.chatChannel.id
+      @reviewable.target_id
+    }}
   >
     <ChatChannelTitle @channel={{this.chatChannel}} />
   </LinkTo>

@@ -45,9 +45,6 @@ ur:
       trigger: "رول"
       invalid: |-
         معذرت، پانسہ کے اس مجموعہ کو چلانا ریاضی کے اصولوں کے حساب سے ناممکن ہے۔ :confounded:
-      not_enough_dice:
-        one: "میرے پاس صرف %{count} دانہ ہے۔ [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php)، میں جانتا ہوں!"
-        other: "میرے پاس صرف %{count} دانے ہیں۔ [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php)، میں جانتا ہوں!"
       out_of_range: |-
         کیا آپ جانتے تھے کہ ریاضی کے حساب سے منصفانہ پانسہ کیلئے [اطراف کی زیادہ سے زیادہ تعداد] (https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) 120 ہے؟
       results: |-

@@ -178,6 +178,34 @@ RSpec.describe SiteSettingExtension do
     end
   end
 
+  describe "DiscourseEvent for login_required changed to true" do
+    before do
+      SiteSetting.login_required = false
+      SiteSetting.bootstrap_mode_min_users = 50
+      SiteSetting.bootstrap_mode_enabled = true
+    end
+
+    it "lowers bootstrap mode min users for private sites" do
+      SiteSetting.login_required = true
+
+      expect(SiteSetting.bootstrap_mode_min_users).to eq(10)
+    end
+  end
+
+  describe "DiscourseEvent for login_required changed to false" do
+    before do
+      SiteSetting.login_required = true
+      SiteSetting.bootstrap_mode_min_users = 50
+      SiteSetting.bootstrap_mode_enabled = true
+    end
+
+    it "resets bootstrap mode min users for public sites" do
+      SiteSetting.login_required = false
+
+      expect(SiteSetting.bootstrap_mode_min_users).to eq(50)
+    end
+  end
+
   describe "int setting" do
     before do
       settings.setting(:test_setting, 77)

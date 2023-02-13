@@ -649,7 +649,9 @@ class TopicsController < ApplicationController
     force_destroy = ActiveModel::Type::Boolean.new.cast(params[:force_destroy])
 
     if force_destroy
-      if !guardian.can_permanently_delete?(topic)
+      if !topic
+        raise Discourse::InvalidAccess
+      elsif !guardian.can_permanently_delete?(topic)
         return render_json_error topic.cannot_permanently_delete_reason(current_user), status: 403
       end
     else
@@ -841,7 +843,7 @@ class TopicsController < ApplicationController
 
     if params[:title].present?
       # when creating a new topic, ensure the 1st post is a regular post
-      if Post.where(topic: topic, id: post_ids).order(:post_number).pluck_first(:post_type) !=
+      if Post.where(topic: topic, id: post_ids).order(:post_number).pick(:post_type) !=
            Post.types[:regular]
         return(
           render_json_error(

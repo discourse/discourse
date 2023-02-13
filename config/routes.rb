@@ -233,6 +233,7 @@ Discourse::Application.routes.draw do
       scope "/customize", constraints: AdminConstraint.new do
         resources :user_fields, constraints: AdminConstraint.new
         resources :emojis, constraints: AdminConstraint.new
+        resources :form_templates, constraints: AdminConstraint.new, path: "/form-templates"
 
         get "themes/:id/:target/:field_name/edit" => "themes#index"
         get "themes/:id" => "themes#index"
@@ -1064,7 +1065,7 @@ Discourse::Application.routes.draw do
 
     resources :associated_groups, only: %i[index], constraints: AdminConstraint.new
 
-    get "slugs/generate", to: "slugs#generate"
+    post "slugs", to: "slugs#generate"
 
     # aliases so old API code works
     delete "admin/groups/:id/members" => "groups#remove_member", :constraints => AdminConstraint.new
@@ -1587,6 +1588,8 @@ Discourse::Application.routes.draw do
     get "user-status" => "user_status#get"
     put "user-status" => "user_status#set"
     delete "user-status" => "user_status#clear"
+
+    resources :sidebar_sections, only: %i[create update destroy]
 
     get "*url", to: "permalinks#show", constraints: PermalinkConstraint.new
   end

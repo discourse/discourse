@@ -26,12 +26,12 @@ RSpec.describe "Quoting chat message transcripts", type: :system, js: true do
   end
 
   def select_message_mobile(message)
-    if page.has_css?(".chat-message-container.selecting-messages")
-      chat_channel_page.message_by_id(message.id).find(".chat-message-selector").click
-    else
-      chat_channel_page.message_by_id(message.id).click(delay: 0.5)
-      find(".chat-message-action-item[data-id=\"selectMessage\"]").click
+    i = 0.5
+    try_until_success(timeout: 20) do
+      chat_channel_page.message_by_id(message.id).click(delay: i)
+      first(".chat-message-action-item[data-id=\"selectMessage\"]")
     end
+    find(".chat-message-action-item[data-id=\"selectMessage\"] button").click
   end
 
   def cdp_allow_clipboard_access!
@@ -62,15 +62,15 @@ RSpec.describe "Quoting chat message transcripts", type: :system, js: true do
     selector =
       case button
       when "quote"
-        "#chat-quote-btn"
+        "chat-quote-btn"
       when "copy"
-        "#chat-copy-btn"
+        "chat-copy-btn"
       when "cancel"
-        "#chat-cancel-selection-btn"
+        "chat-cancel-selection-btn"
       when "move"
-        "#chat-move-to-channel-btn"
+        "chat-move-to-channel-btn"
       end
-    within(".chat-selection-management-buttons") { find(selector).click }
+    find_button(selector, disabled: false, wait: 5).click
   end
 
   def copy_messages_to_clipboard(messages)
@@ -78,7 +78,7 @@ RSpec.describe "Quoting chat message transcripts", type: :system, js: true do
     messages.each { |message| select_message_desktop(message) }
     expect(chat_channel_page).to have_selection_management
     click_selection_button("copy")
-    expect(page).to have_content("Chat quote copied to clipboard")
+    expect(page).to have_selector(".chat-copy-success")
     clip_text = read_clipboard
     expect(clip_text.chomp).to eq(generate_transcript(messages, current_user))
     clip_text
@@ -227,6 +227,7 @@ RSpec.describe "Quoting chat message transcripts", type: :system, js: true do
       it "first navigates to the channel's category before opening the topic composer with the quote prefilled",
          mobile: true do
         chat_page.visit_channel(chat_channel_1)
+
         expect(chat_channel_page).to have_no_loading_skeleton
 
         select_message_mobile(message_1)

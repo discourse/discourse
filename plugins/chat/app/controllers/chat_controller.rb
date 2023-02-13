@@ -260,13 +260,9 @@ class Chat::ChatController < Chat::ChatBaseController
   def delete
     guardian.ensure_can_delete_chat!(@message, @chatable)
 
-    updated = @message.trash!(current_user)
-    if updated
-      ChatPublisher.publish_delete!(@chat_channel, @message)
-      render json: success_json
-    else
-      render_json_error(@message)
-    end
+    ChatMessageDestroyer.new.trash_message(@message, current_user)
+
+    head :ok
   end
 
   def restore

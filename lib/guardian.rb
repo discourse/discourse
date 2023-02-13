@@ -1,26 +1,28 @@
 # frozen_string_literal: true
 
+require "guardian/bookmark_guardian"
 require "guardian/category_guardian"
 require "guardian/ensure_magic"
+require "guardian/group_guardian"
 require "guardian/post_guardian"
-require "guardian/bookmark_guardian"
+require "guardian/post_revision_guardian"
+require "guardian/sidebar_guardian"
+require "guardian/tag_guardian"
 require "guardian/topic_guardian"
 require "guardian/user_guardian"
-require "guardian/post_revision_guardian"
-require "guardian/group_guardian"
-require "guardian/tag_guardian"
 
 # The guardian is responsible for confirming access to various site resources and operations
 class Guardian
-  include EnsureMagic
-  include CategoryGuardian
-  include PostGuardian
   include BookmarkGuardian
+  include CategoryGuardian
+  include EnsureMagic
+  include GroupGuardian
+  include PostGuardian
+  include PostRevisionGuardian
+  include SidebarGuardian
+  include TagGuardian
   include TopicGuardian
   include UserGuardian
-  include PostRevisionGuardian
-  include GroupGuardian
-  include TagGuardian
 
   class AnonymousUser
     def blank?
@@ -366,8 +368,7 @@ class Guardian
 
   def can_use_flair_group?(user, group_id = nil)
     return false if !user || !group_id || !user.group_ids.include?(group_id.to_i)
-    flair_icon, flair_upload_id =
-      Group.where(id: group_id.to_i).pluck_first(:flair_icon, :flair_upload_id)
+    flair_icon, flair_upload_id = Group.where(id: group_id.to_i).pick(:flair_icon, :flair_upload_id)
     flair_icon.present? || flair_upload_id.present?
   end
 

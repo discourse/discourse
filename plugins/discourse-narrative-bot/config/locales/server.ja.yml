@@ -45,8 +45,6 @@ ja:
       trigger: "サイコロを振る"
       invalid: |-
         ごめんなさい。このサイコロの組み合わせを出すのは数学的に無理です。:confounded:
-      not_enough_dice:
-        other: "サイコロは %{count} 個しかありません。[Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php)"
       out_of_range: |-
         数学的に公正なサイコロの[目の最大数](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice)は 120 であることを知っていますか？
       results: |-

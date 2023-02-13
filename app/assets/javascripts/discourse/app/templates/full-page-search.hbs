@@ -137,12 +137,13 @@
       {{/if}}
     {{/if}}
 
-    <PluginOutlet
-      @name="full-page-search-below-search-info"
-      @tagName="span"
-      @connectorTagName="div"
-      @args={{hash search=this.searchTerm}}
-    />
+    <span>
+      <PluginOutlet
+        @name="full-page-search-below-search-info"
+        @connectorTagName="div"
+        @outletArgs={{hash search=this.searchTerm}}
+      />
+    </span>
 
     {{#if this.searching}}
       {{loading-spinner size="medium"}}
@@ -159,15 +160,15 @@
             />
 
             <ConditionalLoadingSpinner @condition={{this.loading}}>
+              {{#if this.error}}
+                <div class="warning">
+                  {{this.error}}
+                </div>
+              {{/if}}
+
               {{#unless this.hasResults}}
                 {{#if this.searchActive}}
                   <h3>{{i18n "search.no_results"}}</h3>
-
-                  {{#if this.model.grouped_search_result.error}}
-                    <div class="warning">
-                      {{this.model.grouped_search_result.error}}
-                    </div>
-                  {{/if}}
 
                   {{#if this.showSuggestion}}
                     <div class="no-results-suggestion">

@@ -2061,8 +2061,6 @@ uk:
     automatically_unpin_topics: "Автоматично відкріплювати теми, коли користувач досягає кінця."
     read_time_word_count: "Кількість слів за хвилину для обчислення орієнтовного часу читання."
     topic_page_title_includes_category: "На сторінці теми <a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>теґ title</a> сторінки містить назву розділу."
-    native_app_install_banner_ios: "Показує банер програми DiscourseHub на пристроях iOS звичайним користувачам (рівень довіри 1 і вище)."
-    native_app_install_banner_android: "Показує банер програми DiscourseHub на пристроях Android звичайним користувачам (рівень довіри 1 і вище)."
     app_association_android: "Вміст кінцевої точки <a href='%{base_path}/.well-known/assetlinks.json'>.well-known/assetlinks.json</a>, що використовується для Google Digital Asset Links API."
     app_association_ios: "Вміст кінцевої точки <a href='%{base_path}/apple-app-site-association'>apple-app-site-association</a>, що використовується для створення універсальних посилань між цим сайтом і програмами iOS."
     share_anonymized_statistics: "Діліться анонімною статистикою використання."
@@ -3212,14 +3210,6 @@ uk:
     user_automatically_silenced:
       title: "Користувача автоматично заблоковано"
       subject_template: "Новий користувач %{username} заблокований позначками спільноти"
-      text_body_template: |
-        Це автоматичне повідомлення.
-
-        Новий користувач [%{username}](%{user_url}) був автоматично заблокований, оскільки кілька користувачів позначили дописи %{username}.
-
-        Будь ласка, [перегляньте позначки](%{base_url}/admin/flags). Якщо %{username} було помилково заблоковано, натисніть кнопку зняття блокування на [сторінці керування цього користувача](%{user_url}).
-
-        Цей поріг можна змінити в налаштуваннях сайту `silence_new_user`.
     spam_post_blocked:
       title: "Заблоковано за спам-повідомлення"
       subject_template: "Повідомлення користувача %{username} заблоковані через повторні посилання"
@@ -3302,9 +3292,6 @@ uk:
       many: "Попередження: щодня ми надсилаємо максимум %{count} листів. Перевірте сайт, щоб побачити ті, які можуть бути затримані."
       other: "Попередження: щодня ми надсилаємо максимум %{count} листів. Перевірте сайт, щоб побачити ті, які можуть бути затримані."
     in_reply_to: "У відповідь на"
-    unsubscribe:
-      title: "Відписатися"
-      description: "Не зацікавлені в отриманні цих листів? Немає проблем! Натисніть нижче, щоб відписатися назавжди:"
     reply_by_email: "[Відвідайте тему](%{base_url}%{url}) або надішліть відповідь на цей електронний лист, щоб відповісти."
     reply_by_email_pm: "[Відвідайте повідомлення](%{base_url}%{url}) або дайте відповідь на це повідомлення електронною поштою, щоб відповісти на %{participants}."
     only_reply_by_email: "Надіслати відповідь на це повідомлення електронною поштою."
@@ -3587,7 +3574,6 @@ uk:
       liked_received: "Отримані вподобання"
       new_users: "Нові користувачі"
       popular_topics: "Популярні теми"
-      follow_topic: "Слідкуйте за цією темою"
       join_the_discussion: "Читати більше"
       popular_posts: "Популярні дописи"
       more_new: "Нове для вас"
@@ -3795,8 +3781,6 @@ uk:
       ## [Ласкаво просимо до %{title}](#welcome)
       Потрібно зареєструватися. Створіть обліковий запис або увійдіть, щоб продовжити.
     welcome_message_invite_only: "## [Ласкаво просимо до %{title}](#welcome) \nПотрібен обліковий запис. Будь ласка, попросіть когось з учасників запросити вас, або увійдіть, щоб продовжити.\n"
-  deleted: "видалено"
-  image: "зображення"
   upload:
     edit_reason: "завантажені локальні копії зображень"
     unauthorized: "На жаль, ви не можете завантажити файл даного типу (список дозволених типів файлів: %{authorized_extensions})."
@@ -4305,7 +4289,6 @@ uk:
           <p>Насолоджуйтесь, бажаємо успіхів <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>у створенні вашої нової спільноти!</a></p>
   search_logs:
     graph_title: "Кількість пошуків"
-  joined: "Приєднався(лась)"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} згадав вас у "%{topic}" - %{site_title}'

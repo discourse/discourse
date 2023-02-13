@@ -1,5 +1,8 @@
 <div class="sidebar-sections">
   <Sidebar::User::CommunitySection @collapsable={{@collapsableSections}} />
+  {{#if this.currentUser.custom_sidebar_sections_enabled}}
+    <Sidebar::User::CustomSections />
+  {{/if}}
   <Sidebar::User::CategoriesSection @collapsable={{@collapsableSections}} />
 
   {{#if this.currentUser.display_sidebar_tags}}

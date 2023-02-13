@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-CHANNEL_EDITABLE_PARAMS = %i[name description]
+CHANNEL_EDITABLE_PARAMS = %i[name description slug]
 CATEGORY_CHANNEL_EDITABLE_PARAMS = %i[auto_join_users allow_channel_wide_mentions]
 
 class Chat::Api::ChatChannelsController < Chat::Api
@@ -29,37 +29,9 @@ class Chat::Api::ChatChannelsController < Chat::Api
   end
 
   def destroy
-    confirmation = params.require(:channel).require(:name_confirmation)&.downcase
-    guardian.ensure_can_delete_chat_channel!
-
-    if channel_from_params.title(current_user).downcase != confirmation
-      raise Discourse::InvalidParameters.new(:name_confirmation)
+    with_service Chat::Service::TrashChannel do
+      on_model_not_found(:channel) { raise ActiveRecord::RecordNotFound }
     end
-
-    begin
-      ChatChannel.transaction do
-        channel_from_params.update!(
-          slug:
-            "#{Time.now.strftime("%Y%m%d-%H%M")}-#{channel_from_params.slug}-deleted".truncate(
-              SiteSetting.max_topic_title_length,
-              omission: "",
-            ),
-        )
-        channel_from_params.trash!(current_user)
-        StaffActionLogger.new(current_user).log_custom(
-          "chat_channel_delete",
-          {
-            chat_channel_id: channel_from_params.id,
-            chat_channel_name: channel_from_params.title(current_user),
-          },
-        )
-      end
-    rescue ActiveRecord::Rollback
-      return render_json_error(I18n.t("chat.errors.delete_channel_failed"))
-    end
-
-    Jobs.enqueue(:chat_channel_delete, { chat_channel_id: channel_from_params.id })
-    render json: success_json
   end
 
   def create
@@ -118,37 +90,25 @@ class Chat::Api::ChatChannelsController < Chat::Api
   end
 
   def update
-    guardian.ensure_can_edit_chat_channel!
-
-    if channel_from_params.direct_message_channel?
-      raise Discourse::InvalidParameters.new(
-              I18n.t("chat.errors.cant_update_direct_message_channel"),
-            )
-    end
-
     params_to_edit = editable_params(params, channel_from_params)
     params_to_edit.each { |k, v| params_to_edit[k] = nil if params_to_edit[k].blank? }
-
     if ActiveRecord::Type::Boolean.new.deserialize(params_to_edit[:auto_join_users])
       auto_join_limiter(channel_from_params).performed!
     end
 
-    channel_from_params.update!(params_to_edit)
-
-    ChatPublisher.publish_chat_channel_edit(channel_from_params, current_user)
-
-    if channel_from_params.category_channel? && channel_from_params.auto_join_users
-      Chat::ChatChannelMembershipManager.new(
-        channel_from_params,
-      ).enforce_automatic_channel_memberships
+    with_service(Chat::Service::UpdateChannel, **params_to_edit) do
+      on_success do
+        render_serialized(
+          result.channel,
+          ChatChannelSerializer,
+          root: "channel",
+          membership: result.channel.membership_for(current_user),
+        )
+      end
+      on_model_not_found(:channel) { raise ActiveRecord::RecordNotFound }
+      on_failed_policy(:check_channel_permission) { raise Discourse::InvalidAccess }
+      on_failed_policy(:no_direct_message_channel) { raise Discourse::InvalidAccess }
     end
-
-    render_serialized(
-      channel_from_params,
-      ChatChannelSerializer,
-      root: "channel",
-      membership: channel_from_params.membership_for(current_user),
-    )
   end
 
   private

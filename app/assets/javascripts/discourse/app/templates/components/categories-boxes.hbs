@@ -1,7 +1,7 @@
 {{#each this.categories as |c|}}
   <PluginOutlet
     @name="category-box-before-each-box"
-    @args={{hash category=c}}
+    @outletArgs={{hash category=c}}
   />
 
   <div
@@ -91,15 +91,18 @@
 
       <PluginOutlet
         @name="category-box-below-each-category"
-        @args={{hash category=c}}
+        @outletArgs={{hash category=c}}
       />
     </div>
   </div>
 
-  <PluginOutlet @name="category-box-after-each-box" @args={{hash category=c}} />
+  <PluginOutlet
+    @name="category-box-after-each-box"
+    @outletArgs={{hash category=c}}
+  />
 {{/each}}
 
 <PluginOutlet
   @name="category-boxes-after-boxes"
-  @args={{hash category=this.c}}
+  @outletArgs={{hash category=this.c}}
 />

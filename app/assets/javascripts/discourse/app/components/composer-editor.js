@@ -197,21 +197,6 @@ export default Component.extend(ComposerUploadUppy, {
   },
 
   @bind
-  _userSearchTerm(term) {
-    const topicId = this.get("topic.id");
-    // maybe this is a brand new topic, so grab category from composer
-    const categoryId =
-      this.get("topic.category_id") || this.get("composer.categoryId");
-
-    return userSearch({
-      term,
-      topicId,
-      categoryId,
-      includeGroups: true,
-    });
-  },
-
-  @bind
   _afterMentionComplete(value) {
     this.composer.set("reply", value);
 
@@ -230,7 +215,13 @@ export default Component.extend(ComposerUploadUppy, {
     if (this.siteSettings.enable_mentions) {
       $input.autocomplete({
         template: findRawTemplate("user-selector-autocomplete"),
-        dataSource: this._userSearchTerm,
+        dataSource: (term) =>
+          userSearch({
+            term,
+            topicId: this.topic?.id,
+            categoryId: this.topic?.category_id || this.composer?.categoryId,
+            includeGroups: true,
+          }),
         key: "@",
         transformComplete: (v) => v.username || v.name,
         afterComplete: this._afterMentionComplete,

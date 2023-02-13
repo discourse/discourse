@@ -91,6 +91,7 @@ require_relative "app/core_ext/plugin_instance.rb"
 GlobalSetting.add_default(:allow_unsecure_chat_uploads, false)
 
 after_initialize do
+  # Namespace for classes and modules parts of chat plugin
   module ::Chat
     PLUGIN_NAME = "chat"
     HAS_CHAT_ENABLED = "has_chat_enabled"
@@ -119,6 +120,7 @@ after_initialize do
          "../app/controllers/admin/admin_incoming_chat_webhooks_controller.rb",
          __FILE__,
        )
+  load File.expand_path("../app/helpers/with_service_helper.rb", __FILE__)
   load File.expand_path("../app/controllers/chat_base_controller.rb", __FILE__)
   load File.expand_path("../app/controllers/chat_controller.rb", __FILE__)
   load File.expand_path("../app/controllers/emojis_controller.rb", __FILE__)
@@ -134,6 +136,7 @@ after_initialize do
   load File.expand_path("../app/models/chat_message_reaction.rb", __FILE__)
   load File.expand_path("../app/models/chat_message_revision.rb", __FILE__)
   load File.expand_path("../app/models/chat_mention.rb", __FILE__)
+  load File.expand_path("../app/models/chat_thread.rb", __FILE__)
   load File.expand_path("../app/models/chat_upload.rb", __FILE__)
   load File.expand_path("../app/models/chat_webhook_event.rb", __FILE__)
   load File.expand_path("../app/models/direct_message_channel.rb", __FILE__)
@@ -162,6 +165,7 @@ after_initialize do
   load File.expand_path("../app/serializers/admin_chat_index_serializer.rb", __FILE__)
   load File.expand_path("../app/serializers/user_chat_message_bookmark_serializer.rb", __FILE__)
   load File.expand_path("../app/serializers/reviewable_chat_message_serializer.rb", __FILE__)
+  load File.expand_path("../app/services/base.rb", __FILE__)
   load File.expand_path("../lib/chat_channel_fetcher.rb", __FILE__)
   load File.expand_path("../lib/chat_channel_hashtag_data_source.rb", __FILE__)
   load File.expand_path("../lib/chat_mailer.rb", __FILE__)
@@ -190,6 +194,8 @@ after_initialize do
   load File.expand_path("../lib/slack_compatibility.rb", __FILE__)
   load File.expand_path("../lib/post_notification_handler.rb", __FILE__)
   load File.expand_path("../lib/secure_uploads_compatibility.rb", __FILE__)
+  load File.expand_path("../lib/endpoint.rb", __FILE__)
+  load File.expand_path("../lib/steps_inspector.rb", __FILE__)
   load File.expand_path("../app/jobs/regular/auto_manage_channel_memberships.rb", __FILE__)
   load File.expand_path("../app/jobs/regular/auto_join_channel_batch.rb", __FILE__)
   load File.expand_path("../app/jobs/regular/process_chat_message.rb", __FILE__)
@@ -206,7 +212,11 @@ after_initialize do
   load File.expand_path("../app/jobs/scheduled/auto_join_users.rb", __FILE__)
   load File.expand_path("../app/jobs/scheduled/chat_periodical_updates.rb", __FILE__)
   load File.expand_path("../app/services/chat_publisher.rb", __FILE__)
+  load File.expand_path("../app/services/trash_channel.rb", __FILE__)
+  load File.expand_path("../app/services/update_channel.rb", __FILE__)
+  load File.expand_path("../app/services/update_channel_status.rb", __FILE__)
   load File.expand_path("../app/services/chat_message_destroyer.rb", __FILE__)
+  load File.expand_path("../app/services/update_user_last_read.rb", __FILE__)
   load File.expand_path("../app/controllers/api_controller.rb", __FILE__)
   load File.expand_path("../app/controllers/api/chat_channels_controller.rb", __FILE__)
   load File.expand_path("../app/controllers/api/chat_current_user_channels_controller.rb", __FILE__)
@@ -264,16 +274,8 @@ after_initialize do
 
   if Oneboxer.respond_to?(:register_local_handler)
     Oneboxer.register_local_handler("chat/chat") do |url, route|
-      queryParams =
-        begin
-          CGI.parse(URI.parse(url).query)
-        rescue StandardError
-          {}
-        end
-      messageId = queryParams["messageId"]&.first
-
-      if messageId.present?
-        message = ChatMessage.find_by(id: messageId)
+      if route[:message_id].present?
+        message = ChatMessage.find_by(id: route[:message_id])
         next if !message
 
         chat_channel = message.chat_channel
@@ -333,16 +335,8 @@ after_initialize do
 
   if InlineOneboxer.respond_to?(:register_local_handler)
     InlineOneboxer.register_local_handler("chat/chat") do |url, route|
-      queryParams =
-        begin
-          CGI.parse(URI.parse(url).query)
-        rescue StandardError
-          {}
-        end
-      messageId = queryParams["messageId"]&.first
-
-      if messageId.present?
-        message = ChatMessage.find_by(id: messageId)
+      if route[:message_id].present?
+        message = ChatMessage.find_by(id: route[:message_id])
         next if !message
 
         chat_channel = message.chat_channel
@@ -631,12 +625,6 @@ after_initialize do
     get "/browse/open" => "chat#respond"
     get "/browse/archived" => "chat#respond"
     get "/draft-channel" => "chat#respond"
-    get "/channel/:channel_id" => "chat#respond"
-    get "/channel/:channel_id/:channel_title" => "chat#respond", :as => "channel"
-    get "/channel/:channel_id/:channel_title/info" => "chat#respond"
-    get "/channel/:channel_id/:channel_title/info/about" => "chat#respond"
-    get "/channel/:channel_id/:channel_title/info/members" => "chat#respond"
-    get "/channel/:channel_id/:channel_title/info/settings" => "chat#respond"
     post "/enable" => "chat#enable_chat"
     post "/disable" => "chat#disable_chat"
     post "/dismiss-retention-reminder" => "chat#dismiss_retention_reminder"
@@ -657,6 +645,26 @@ after_initialize do
     post "/:chat_channel_id" => "chat#create_message"
     put "/flag" => "chat#flag"
     get "/emojis" => "emojis#index"
+
+    base_c_route = "/c/:channel_title/:channel_id"
+    get base_c_route => "chat#respond", :as => "channel"
+    get "#{base_c_route}/:message_id" => "chat#respond"
+
+    %w[info info/about info/members info/settings].each do |route|
+      get "#{base_c_route}/#{route}" => "chat#respond"
+    end
+
+    # /channel -> /c redirects
+    get "/channel/:channel_id", to: redirect("/chat/c/-/%{channel_id}")
+
+    base_channel_route = "/channel/:channel_id/:channel_title"
+    redirect_base = "/chat/c/%{channel_title}/%{channel_id}"
+
+    get base_channel_route, to: redirect(redirect_base)
+
+    %w[info info/about info/members info/settings].each do |route|
+      get "#{base_channel_route}/#{route}", to: redirect("#{redirect_base}/#{route}")
+    end
   end
 
   Discourse::Application.routes.append do

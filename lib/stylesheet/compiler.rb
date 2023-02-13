@@ -60,13 +60,14 @@ module Stylesheet
           theme_field: options[:theme_field],
           color_scheme_id: options[:color_scheme_id],
           load_paths: load_paths,
+          validate_source_map_path: false,
         )
 
       result = engine.render
 
       if options[:rtl]
-        require "r2"
-        [R2.r2(result), nil]
+        require "rtlcss_wrapper"
+        [RtlcssWrapper.flip_css(result), nil]
       else
         source_map = engine.source_map
         source_map.force_encoding("UTF-8")

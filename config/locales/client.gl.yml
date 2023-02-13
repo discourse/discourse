@@ -262,7 +262,6 @@ gl:
       title: "Marcador"
       clear_bookmarks: "Limpar marcadores"
       help:
-        bookmark: "Prema para engadir aos marcadores a publicación inicial deste tema"
         unbookmark: "Prema para retirar todos os marcadores deste tema"
     bookmarks:
       created: "Fixou como marcador esta publicación. %{name}"
@@ -879,11 +878,6 @@ gl:
       profile: "Perfil"
       mute: "Silenciar"
       edit: "Editar preferencias"
-      download_archive:
-        button_text: "Descargar todo"
-        confirm: "Confirma a descarga das súas publicacións?"
-        success: "Iniciouse a descarga, notificarémoslle cunha mensaxe o remate do proceso."
-        rate_limit_error: "Só se poden descargar as publicacións unha vez por día. Ténteo de novo mañá."
       new_private_message: "Nova mensaxe"
       private_message: "Mensaxe"
       private_messages: "Mensaxes"
@@ -1399,7 +1393,6 @@ gl:
           edit_title: "Editar convite"
           instructions: "Compartir esta ligazón para conceder acceso a este sitio:"
           copy_link: "copiar a ligazón"
-          expired_at_time: "Caduca o %{time}"
           show_advanced: "Amosar opcións avanzadas"
           hide_advanced: "Agochar opcións avanzadas"
           add_to_groups: "Engadir aos grupos"
@@ -1817,8 +1810,6 @@ gl:
         topic_template_not_modified: "Engada detalles e aspectos específicos ao tema editando o modelo de tema."
       save_edit: "Gardar a edición"
       overwrite_edit: "Sobrescribir a edición"
-      reply_original: "Responder no tema orixinal"
-      reply_here: "Responder aquí"
       reply: "Responder"
       cancel: "Cancelar"
       create_topic: "Crear tema"
@@ -2128,11 +2119,9 @@ gl:
         dismiss_new: "Desbotar novas"
         toggle: "cambiar a selección en bloque dos temas"
         actions: "Accións en bloque"
-        change_category: "Estabelecer categoría..."
         close_topics: "Pechar temas"
         archive_topics: "Arquivar temas"
         move_messages_to_inbox: "Mover á caixa de entrada"
-        notification_level: "Notificacións..."
         change_notification_level: "Cambiar o nivel de notificacións"
         choose_new_category: "Seleccionar a nova categoría dos temas:"
         selected:
@@ -2219,8 +2208,6 @@ gl:
       options: "Opcións de temas"
       show_links: "amosar as ligazóns a este tema"
       unread_indicator: "Ningún membro leu aínda a última publicación neste tema."
-      jump_reply_up: ir a unha resposta anterior
-      jump_reply_down: ir a unha resposta posterior
       deleted: "Eliminouse o tema"
       slow_mode_update:
         title: "Modo lento"
@@ -2356,14 +2343,12 @@ gl:
         open: "Abrir tema"
         close: "Pechar tema"
         multi_select: "Seleccionar publicacións…"
-        slow_mode: "Estabelecer modo lento..."
         timed_update: "Estabelecer temporizador do tema..."
         pin: "Fixar tema…"
         unpin: "Desprender tema…"
         unarchive: "Desarquivar tema"
         archive: "Arquivar tema"
         reset_read: "Restabelecer datos de lecturas"
-        make_public: "Facer público o tema..."
         make_private: "Facer privada a mensaxe"
         reset_bump_date: "Restabelecer data de promoción"
       feature:
@@ -2646,8 +2631,6 @@ gl:
         rebake: "Reconstruír HTML"
         publish_page: "Publicación da páxina"
         unhide: "Non agochar"
-        change_owner: "Cambiar propietario..."
-        grant_badge: "Conceder insignia..."
         lock_post: "Bloquear publicación"
         lock_post_description: "evitar que o autor edite esta publicación"
         unlock_post: "Desbloquear a publicación"
@@ -2661,8 +2644,6 @@ gl:
         delete_topic_confirm_modal_no: "Non, manter este tema"
         delete_topic_error: "Produciuse un erro ao eliminar este tema"
         delete_topic: "eliminar tema"
-        add_post_notice: "Engadir aviso do equipo..."
-        change_post_notice: "Cambiar o aviso do equipo..."
         delete_post_notice: "Eliminar o aviso do equipo"
         remove_timer: "retirar o temporizador"
         edit_timer: "editar temporizador"
@@ -3294,7 +3275,6 @@ gl:
         everyone_can_use: "Todos poden usar as etiquetas"
         usable_only_by_groups: "As etiquetas son visíbeis para todos, pero só os seguintes grupos poden usalas"
         visible_only_to_groups: "As etiquetas só son visíbeis para os seguintes grupos"
-        parent_tag_placeholder: "Opcional"
       topics:
         none:
           unread: "Non ten temas sen ler."
@@ -3321,13 +3301,11 @@ gl:
       enabled: "O modo seguro está activado; para saír do modo seguro peche esta xanela do navegador"
     image_removed: "(imaxe retirada)"
     pause_notifications:
-      remaining: "queda %{remaining}"
       options:
         half_hour: "30 minutos"
         one_hour: "1 hora"
         two_hours: "2 horas"
         tomorrow: "Ata mañá"
-        custom: "Personalizado"
       set_schedule: "Estabelecer un calendario de notificacións"
     trust_levels:
       names:
@@ -3346,6 +3324,9 @@ gl:
       more: "Máis"
       all_categories: "Todas as categorías"
       sections:
+        custom:
+          save: "Gardar"
+          delete: "Eliminar"
         about:
           header_link_text: "Verbo de"
         messages:
@@ -3371,8 +3352,6 @@ gl:
               content: "Administración"
             badges:
               content: "Insignias"
-            everything:
-              content: "Todo"
             faq:
               content: "PMF"
             groups:
@@ -3383,7 +3362,6 @@ gl:
               content: "As miñas publicacións"
             review:
               content: "Revisar"
-    until: "Ata:"
   admin_js:
     type_to_filter: "escriba para filtrar..."
     admin:
@@ -4016,6 +3994,8 @@ gl:
           love:
             name: "amor"
             description: "Cor do botón gústame."
+          selected:
+            name: "seleccionado"
         robots:
           title: "Sobrescribir o ficheiro robots.txt do sitio:"
           warning: "Isto sobrescribirá definitivamente calquera configuración relativa ao sitio."
@@ -4404,7 +4384,6 @@ gl:
         staged: "Transitorio?"
         show_admin_profile: "Administración"
         show_public_profile: "Amosar o perfil público"
-        impersonate: "Suplantar"
         action_logs: "Rexistros de accións"
         ip_lookup: "Busca de IP"
         log_out: "Saír da sesión"

@@ -334,11 +334,9 @@ hr:
       edit_bookmark: "Uredi oznaku"
       clear_bookmarks: "Očisti oznake"
       help:
-        bookmark: "Kliknite za označavanje prvog posta u ovoj temi"
-        edit_bookmark: "Kliknite za uređivanje oznake na ovu temu"
         edit_bookmark_for_topic: "Kliknite za uređivanje oznake na ovu temu"
         unbookmark: "Klikni za uklananje svih oznaka u ovoj temi"
-        unbookmark_with_reminder: "Kliknite da biste uklonili sve oznake i podsjetnike u ovoj temi."
+        unbookmark_with_reminder: "Kliknite da biste uklonili sve oznake i podsjetnike u ovoj temi"
     bookmarks:
       created: "Označili ste ovu objavu %{name}"
       created_generic: "Označili ste ovo. %{name}"
@@ -1033,11 +1031,6 @@ hr:
       profile: "Profil"
       mute: "Utišaj"
       edit: "Uredi postavke"
-      download_archive:
-        button_text: "Preuzmi sve"
-        confirm: "Želite li preuzeti objave?"
-        success: "Preuzimanje započeto, biti ćete obaviješteni porukom kada proces bude završen."
-        rate_limit_error: "Objave mogu biti preuzimane jednom na dan, molimo pokušajte sutra."
       new_private_message: "Nova poruka"
       private_message: "Poruka"
       private_messages: "Poruke"
@@ -2249,8 +2242,6 @@ hr:
         topic_template_not_modified: "Uređivanjem predloška teme dodajte detalje i pojedinosti svojoj temi."
       save_edit: "Spremi izmjenu"
       overwrite_edit: "Prebriši Uređivanje"
-      reply_original: "Odgovori na originalnu temu"
-      reply_here: "Odgovori ovdje"
       reply: "Odgovori"
       cancel: "Odustani"
       create_topic: "Pokreni temu"
@@ -2859,8 +2850,6 @@ hr:
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Pregledajte sve kategorije</a>, <a href='%{basePath}/latest'>pogledajte najnovije teme</a> ili pogledajte vrh:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Pregledajte sve oznake</a> ili <a href='%{basePath}/latest'>pogledajte najnovije teme</a>."
       suggest_create_topic: Spremni za <a href>započeti novi razgovor?</a>
-      jump_reply_up: skoči na raniji odgovor
-      jump_reply_down: skoči na kasniji odgovor
       deleted: "Tema je obrisana."
       slow_mode_update:
         title: "Usporeni način rada"
@@ -3240,10 +3229,6 @@ hr:
       collapse: "sakrij"
       sr_collapse_replies: "Sažmi ugrađene odgovore"
       sr_date: "Datum objave"
-      sr_expand_replies:
-        one: "Ovaj post ima %{count} odgovora. Kliknite za proširenje"
-        few: "Ovaj post ima %{count} odgovora. Kliknite za proširenje"
-        other: "Ovaj post ima %{count} odgovora. Kliknite za proširenje"
       expand_collapse: "proširi/sruši"
       sr_below_embedded_posts_description: "objavi #%{post_number} odgovora"
       sr_embedded_reply_description: "odgovorite sa @%{username} na objavu broj%{post_number}"
@@ -3662,7 +3647,9 @@ hr:
         inappropriate: "Neprikladno je."
         spam: "Nepoželjno je."
       custom_placeholder_notify_user: "Budite specifični, konstruktivni i ljubazni."
+      notify_user_textarea_label: "Poruka za korisnika"
       custom_placeholder_notify_moderators: "Recite nam točno što vas brine, i gdje je moguće dajte relevantne poveznice i primjere."
+      notify_moderators_textarea_label: "Poruka za moderatore"
       custom_message:
         at_least:
           one: "unesite barem %{count} znak"
@@ -4145,13 +4132,11 @@ hr:
     pause_notifications:
       title: "Pauziraj obavijesti za..."
       label: "Pauziraj obavijesti"
-      remaining: "%{remaining} preostalih"
       options:
         half_hour: "30 minuta"
         one_hour: "1 sat"
         two_hours: "2 sata"
         tomorrow: "Do sutra"
-        custom: "Posebna"
       set_schedule: "Postavite raspored obavijesti"
     trust_levels:
       names:
@@ -4203,6 +4188,9 @@ hr:
       all_categories: "Sve kategorije"
       all_tags: "Sve oznake"
       sections:
+        custom:
+          save: "Spremi"
+          delete: "Pobriši"
         about:
           header_link_text: "O nama"
         messages:
@@ -4265,6 +4253,10 @@ hr:
               content: "Moje objave"
               title: "Moja nedavna aktivnost vezana uz temu"
               title_drafts: "Moje neobjavljene skice"
+              draft_count:
+                one: "%{count} nacrt"
+                few: "%{count} nacrti"
+                other: "%{count} nacrti"
             review:
               content: "Osvrt"
               title: "Označene objave i druge stavke u redu čekanja"
@@ -4975,6 +4967,8 @@ hr:
           love:
             name: "like"
             description: "Boja gumba za like."
+          selected:
+            name: "odabran"
         robots:
           title: "Nadjačaj datoteku robots.txt vaše web stranice:"
           warning: "To će trajno nadjačati sve povezane postavke web lokacije."
@@ -5390,7 +5384,6 @@ hr:
         show_admin_profile: "Administrator"
         manage_user: "Upravljanje korisnikom"
         show_public_profile: "Pokaži javni profil"
-        impersonate: "Predstavi se kao"
         action_logs: "Dnevnici akcija"
         ip_lookup: "IP pregled"
         log_out: "Odjava"

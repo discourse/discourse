@@ -145,37 +145,37 @@ tr_TR:
       email: "E-posta ile gönder"
       url: "URL'yi kopyala ve paylaş"
     action_codes:
-      public_topic: "Bu konuyu %{when} tarihinde herkese açık yaptı"
-      open_topic: "Bunu %{when} tarihinde bir konuya dönüştürdü"
-      private_topic: "Bu konuyu %{when} tarihinde bir kişisel mesaj yaptı"
-      split_topic: "Bu konuyu %{when} tarihinde ayırdı"
-      invited_user: "%{when} Tarihinde %{who} adlı kullanıcıyı davet etti"
-      invited_group: "%{when} Tarihinde %{who} adlı kullanıcıyı davet etti"
+      public_topic: "Bu konuyu herkese açık yaptı, %{when}"
+      open_topic: "Bunu bir konuya dönüştürdü, %{when}"
+      private_topic: "Bu konuyu kişisel mesaj yaptı, %{when}"
+      split_topic: "Bu konuyu böldü, %{when}"
+      invited_user: "%{who} adlı kullanıcıyı davet etti, %{when}"
+      invited_group: "%{who} adlı kullanıcıyı davet etti, %{when}"
       user_left: "%{who}, %{when} tarihinde bu mesajdan kendini çıkardı"
-      removed_user: "%{who} Adlı kişiyi %{when} tarihinde çıkardı"
-      removed_group: "%{who} Adlı kişiyi %{when} tarihinde çıkardı"
-      autobumped: "%{when} Tarihinde otomatik olarak üste sıçradı"
+      removed_user: "%{who} adlı kullanıcıyı çıkardı, %{when}"
+      removed_group: "%{who} adlı kullanıcıyı çıkardı, %{when}"
+      autobumped: "Otomatik olarak üste sıçradı, %{when}"
       autoclosed:
-        enabled: "%{when} Tarihinde kapattı"
-        disabled: "%{when} Tarihinde açtı"
+        enabled: "Kapattı, %{when}"
+        disabled: "Açtı, %{when}"
       closed:
-        enabled: "%{when} Tarihinde kapattı"
-        disabled: "%{when} Tarihinde açtı"
+        enabled: "Kapatıldı, %{when}"
+        disabled: "Açıldı, %{when}"
       archived:
-        enabled: "%{when} Tarihinde arşivlendi"
-        disabled: "%{when} Tarihinde arşivden çıkarıldı"
+        enabled: "Arşivlendi, %{when}"
+        disabled: "Arşivden çıkarıldı, %{when}"
       pinned:
-        enabled: "%{when} Tarihinde sabitlendi"
-        disabled: "%{when} Tarihinde sabitlenmesi kaldırıldı"
+        enabled: "Sabitlendi, %{when}"
+        disabled: "Sabitlemesi kaldırıldı, %{when}"
       pinned_globally:
-        enabled: "%{when} Tarihinde küresel olarak sabitlendi"
-        disabled: "%{when} Tarihinde sabitlenmesi kaldırıldı"
+        enabled: "Küresel olarak sabitlendi, %{when}"
+        disabled: "Sabitlemesi kaldırıldı, %{when}"
       visible:
-        enabled: "%{when} Tarihinde listelendi"
-        disabled: "%{when} Tarihinde listeden çıkarıldı"
+        enabled: "Listelendi, %{when}"
+        disabled: "Listeden kaldırıldı, %{when}"
       banner:
-        enabled: "%{when} Tarihinde bunu bir banner yaptı. Kullanıcı tarafından kapatılana kadar her sayfanın en üstünde görünecek."
-        disabled: "%{when} Tarihinde bu banner'ı kaldırdı. Bundan sonra her sayfanın en üstünde görünmeyecek."
+        enabled: "Bunu banner yaptı, %{when}. Kullanıcı tarafından kapatılana kadar her sayfanın en üstünde görünecek."
+        disabled: "Bu banner'ı kaldırdı, %{when}. Bundan sonra her sayfanın en üstünde görünmeyecek."
       forwarded: "Yukarıdaki e-postayı iletti"
     topic_admin_menu: "konu eylemleri"
     skip_to_main_content: "Ana içeriğe atla"
@@ -302,11 +302,9 @@ tr_TR:
       edit_bookmark: "Yer İmini Düzenle"
       clear_bookmarks: "Yer İmlerini Temizle"
       help:
-        bookmark: "Bu konudaki ilk gönderiyi yer imlerine eklemek için tıklayın"
-        edit_bookmark: "Bu konudaki yer imini düzenlemek için tıklayın"
         edit_bookmark_for_topic: "Bu konunun yer imini düzenlemek için tıklayın"
         unbookmark: "Bu konudaki tüm yer imlerini kaldırmak için tıklayın"
-        unbookmark_with_reminder: "Bu konudaki tüm yer imlerini ve anımsatıcıları kaldırmak için tıklayın."
+        unbookmark_with_reminder: "Bu konudaki tüm yer imlerini ve anımsatıcıları kaldırmak için tıklayın"
     bookmarks:
       created: "Bu gönderiyi yer imlerine eklediniz. %{name}"
       created_generic: "Bunu yer imlerine eklediniz. %{name}"
@@ -976,11 +974,6 @@ tr_TR:
       profile: "Profil"
       mute: "Sessiz"
       edit: "Tercihleri Düzenle"
-      download_archive:
-        button_text: "Tümünü İndir"
-        confirm: "Gönderilerinizi indirmek istediğinize emin misiniz?"
-        success: "İndirme işlemi başlatıldı. İşlem tamamlandığında mesaj yoluyla bildirim alırsınız."
-        rate_limit_error: "Gönderiler günde bir kez indirilebilir, lütfen yarın tekrar deneyin."
       new_private_message: "Yeni Mesaj"
       private_message: "Mesaj"
       private_messages: "Mesajlar"
@@ -1008,7 +1001,7 @@ tr_TR:
       notification_schedule:
         title: "Bildirim Zamanlaması"
         label: "Özel bildirim zamanlamasını etkinleştir"
-        tip: "Bu saatler dışında bildirimleriniz duraklatılacaktır."
+        tip: "Bu saatler dışında bildirimleriniz duraklatılacak."
         midnight: "Gece yarısı"
         none: "Yok"
         monday: "Pazartesi"
@@ -2130,8 +2123,6 @@ tr_TR:
         topic_template_not_modified: "Lütfen konu şablonunu düzenleyerek daha fazla ayrıntı ekleyin."
       save_edit: "Düzenlemeyi Kaydet"
       overwrite_edit: "Düzenlemenin Üzerine Yaz"
-      reply_original: "Asıl Konuda yanıtla"
-      reply_here: "Buradan Yanıtla"
       reply: "Yanıtla"
       cancel: "İptal et"
       create_topic: "Konu Oluştur"
@@ -2703,8 +2694,6 @@ tr_TR:
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Tüm kategorilere göz atın</a>, <a href='%{basePath}/latest'>en son konuları görüntüleyin</a> veya en üste bakın:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Tüm etiketlere göz atın</a> veya <a href='%{basePath}/latest'>en son konuları görüntüleyin</a>."
       suggest_create_topic: <a href>Yeni bir konuşma başlatmaya</a> hazır mısınız?
-      jump_reply_up: önceki yanıta geç
-      jump_reply_down: sonraki yanıta geç
       deleted: "Konu silindi"
       slow_mode_update:
         title: "Yavaş Mod"
@@ -3069,9 +3058,6 @@ tr_TR:
       collapse: "daralt"
       sr_collapse_replies: "Gömülü yanıtları daralt"
       sr_date: "Gönderi tarihi"
-      sr_expand_replies:
-        one: "Bu gönderide %{count} yanıt var. Genişletmek için tıklayın"
-        other: "Bu gönderide %{count} yanıt var. Genişletmek için tıklayın"
       expand_collapse: "genişlet/daralt"
       sr_below_embedded_posts_description: "#%{post_number} numaralı gönderiye gelen yanıtlar"
       sr_embedded_reply_description: "#%{post_number} numaralı gönderiye @%{username} adlı kullanıcının yanıtı"
@@ -3927,13 +3913,11 @@ tr_TR:
     pause_notifications:
       title: "Şunlar için bildirimleri duraklat..."
       label: "Bildirimleri duraklat"
-      remaining: "%{remaining} kaldı"
       options:
         half_hour: "30 dakika"
         one_hour: "1 saat"
         two_hours: "2 saat"
         tomorrow: "Yarına kadar"
-        custom: "Özel"
       set_schedule: "Bildirim zamanlaması ayarla"
     trust_levels:
       names:
@@ -3983,6 +3967,9 @@ tr_TR:
       all_categories: "Tüm kategoriler"
       all_tags: "Tüm etiketler"
       sections:
+        custom:
+          save: "Kaydet"
+          delete: "Sil"
         about:
           header_link_text: "Hakkında"
         messages:
@@ -4757,6 +4744,8 @@ tr_TR:
           love:
             name: "sevgi"
             description: "Beğen düğmesinin rengi."
+          selected:
+            name: "seçili"
         robots:
           title: "Sitenizin robots.txt dosyasını geçersiz kılın:"
           warning: "Bu, ilgili tüm site ayarlarını kalıcı olarak geçersiz kılar."
@@ -5171,7 +5160,6 @@ tr_TR:
         show_admin_profile: "Yönetici"
         manage_user: "Kullanıcıyı yönet"
         show_public_profile: "Herkese Açık Profili Göster"
-        impersonate: "Kimliğine Bürün"
         action_logs: "Eylem Günlükleri"
         ip_lookup: "IP Arama"
         log_out: "Çıkış Yap"

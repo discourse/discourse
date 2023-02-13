@@ -64,7 +64,7 @@ RSpec.describe PostAlerter do
       PostAlerter.post_created(reply2)
 
       # we get a green notification for a reply
-      expect(Notification.where(user_id: pm.user_id).pluck_first(:notification_type)).to eq(
+      expect(Notification.where(user_id: pm.user_id).pick(:notification_type)).to eq(
         Notification.types[:private_message],
       )
 
@@ -104,7 +104,7 @@ RSpec.describe PostAlerter do
       )
       PostAlerter.post_created(op)
 
-      expect(Notification.where(user_id: user.id).pluck_first(:notification_type)).to eq(
+      expect(Notification.where(user_id: user.id).pick(:notification_type)).to eq(
         Notification.types[:private_message],
       )
     end

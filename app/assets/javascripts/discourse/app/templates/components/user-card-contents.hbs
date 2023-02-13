@@ -1,7 +1,7 @@
 {{#if this.visible}}
   <PluginOutlet
     @name="before-user-card-content"
-    @args={{hash user=this.user}}
+    @outletArgs={{hash user=this.user}}
   />
   <div class="card-content">
     {{#if this.loading}}
@@ -43,12 +43,13 @@
 
           <UserAvatarFlair @user={{this.user}} />
 
-          <PluginOutlet
-            @name="user-card-avatar-flair"
-            @connectorTagName="div"
-            @args={{hash user=this.user}}
-            @tagName="div"
-          />
+          <div>
+            <PluginOutlet
+              @name="user-card-avatar-flair"
+              @connectorTagName="div"
+              @outletArgs={{hash user=this.user}}
+            />
+          </div>
         </div>
         <div class="names">
           <h1
@@ -90,7 +91,7 @@
           <PluginOutlet
             @name="user-card-after-username"
             @connectorTagName="div"
-            @args={{hash
+            @outletArgs={{hash
               user=this.user
               showUser=(fn this.handleShowUser this.user)
             }}
@@ -117,12 +118,13 @@
               {{format-date this.user.status.ends_at format="tiny"}}
             </h3>
           {{/if}}
-          <PluginOutlet
-            @name="user-card-post-names"
-            @connectorTagName="div"
-            @args={{hash user=this.user}}
-            @tagName="div"
-          />
+          <div>
+            <PluginOutlet
+              @name="user-card-post-names"
+              @connectorTagName="div"
+              @outletArgs={{hash user=this.user}}
+            />
+          </div>
         </div>
         <ul class="usercard-controls">
           {{#if this.user.can_send_private_message_to_user}}
@@ -138,8 +140,7 @@
           <PluginOutlet
             @name="user-card-below-message-button"
             @connectorTagName="li"
-            @args={{hash user=this.user close=(action "close")}}
-            @tagName=""
+            @outletArgs={{hash user=this.user close=(action "close")}}
           />
           {{#if this.showFilter}}
             <li>
@@ -171,17 +172,18 @@
               />
             </li>
           {{/if}}
-          <PluginOutlet
-            @name="user-card-additional-buttons"
-            @connectorTagName="div"
-            @args={{hash user=this.user close=(action "close")}}
-            @tagName="li"
-          />
+          <li>
+            <PluginOutlet
+              @name="user-card-additional-buttons"
+              @connectorTagName="div"
+              @outletArgs={{hash user=this.user close=(action "close")}}
+            />
+          </li>
         </ul>
         <PluginOutlet
           @name="user-card-additional-controls"
           @connectorTagName="div"
-          @args={{hash user=this.user close=(action "close")}}
+          @outletArgs={{hash user=this.user close=(action "close")}}
         />
       </div>
 
@@ -278,12 +280,13 @@
                 <span>{{this.formattedUserLocalTime}}</span>
               </span>
             {{/if}}
-            <PluginOutlet
-              @name="user-card-location-and-website"
-              @tagName="span"
-              @connectorTagName="div"
-              @args={{hash user=this.user}}
-            />
+            <span>
+              <PluginOutlet
+                @name="user-card-location-and-website"
+                @connectorTagName="div"
+                @outletArgs={{hash user=this.user}}
+              />
+            </span>
           </div>
         </div>
       {{/if}}
@@ -328,14 +331,14 @@
             <PluginOutlet
               @name="user-card-metadata"
               @connectorTagName="div"
-              @args={{hash user=this.user}}
+              @outletArgs={{hash user=this.user}}
             />
           </div>
         {{/unless}}
         <PluginOutlet
           @name="user-card-after-metadata"
           @connectorTagName="div"
-          @args={{hash user=this.user}}
+          @outletArgs={{hash user=this.user}}
         />
       </div>
 
@@ -366,7 +369,7 @@
       <PluginOutlet
         @name="user-card-before-badges"
         @connectorTagName="div"
-        @args={{hash user=this.user}}
+        @outletArgs={{hash user=this.user}}
       />
 
       {{#if this.showBadges}}

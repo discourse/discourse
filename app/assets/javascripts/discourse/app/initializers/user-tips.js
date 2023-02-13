@@ -13,11 +13,19 @@ export default {
     this.messageBus = container.lookup("service:message-bus");
     this.site = container.lookup("service:site");
 
-    this.messageBus.subscribe("/user-tips", this.onMessage);
+    this.messageBus.subscribe(
+      `/user-tips/${this.currentUser.id}`,
+      this.onMessage
+    );
   },
 
   teardown() {
-    this.messageBus?.unsubscribe("/user-tips", this.onMessage);
+    if (this.currentUser) {
+      this.messageBus?.unsubscribe(
+        `/user-tips/${this.currentUser.id}`,
+        this.onMessage
+      );
+    }
   },
 
   @bind

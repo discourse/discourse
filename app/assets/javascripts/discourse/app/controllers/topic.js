@@ -674,7 +674,10 @@ export default Controller.extend(bufferedProperty("model"), {
     deletePost(post, opts) {
       if (post.get("post_number") === 1) {
         return this.deleteTopic(opts);
-      } else if (!post.can_delete) {
+      } else if (
+        (!opts?.force_destroy && !post.can_delete) ||
+        (opts?.force_destroy && !post.can_permanently_delete)
+      ) {
         return false;
       }
 

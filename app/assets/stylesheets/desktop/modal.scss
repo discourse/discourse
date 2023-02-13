@@ -123,8 +123,3 @@
     max-width: 100vw; // prevent overflow if user font-size is enormous
   }
 }
-
-.json-editor-btn-delete {
-  @extend .btn-danger !optional;
-  @extend .no-text !optional;
-}

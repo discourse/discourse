@@ -10,6 +10,8 @@ class ChatMessage < ActiveRecord::Base
   belongs_to :user
   belongs_to :in_reply_to, class_name: "ChatMessage"
   belongs_to :last_editor, class_name: "User"
+  belongs_to :thread, class_name: "ChatThread"
+
   has_many :replies, class_name: "ChatMessage", foreign_key: "in_reply_to_id", dependent: :nullify
   has_many :revisions, class_name: "ChatMessageRevision", dependent: :destroy
   has_many :reactions, class_name: "ChatMessageReaction", dependent: :destroy
@@ -20,7 +22,7 @@ class ChatMessage < ActiveRecord::Base
   # TODO (martin) Remove this when we drop the ChatUpload table
   has_many :chat_uploads, dependent: :destroy
   has_one :chat_webhook_event, dependent: :destroy
-  has_one :chat_mention, dependent: :destroy
+  has_many :chat_mentions, dependent: :destroy
 
   scope :in_public_channel,
         -> {
@@ -255,6 +257,7 @@ end
 #  cooked          :text
 #  cooked_version  :integer
 #  last_editor_id  :integer          not null
+#  thread_id       :integer
 #
 # Indexes
 #
@@ -262,4 +265,5 @@ end
 #  index_chat_messages_on_chat_channel_id_and_created_at  (chat_channel_id,created_at)
 #  index_chat_messages_on_chat_channel_id_and_id          (chat_channel_id,id) WHERE (deleted_at IS NULL)
 #  index_chat_messages_on_last_editor_id                  (last_editor_id)
+#  index_chat_messages_on_thread_id                       (thread_id)
 #

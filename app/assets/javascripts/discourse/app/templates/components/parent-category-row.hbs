@@ -1,7 +1,7 @@
 {{#unless this.isHidden}}
   <PluginOutlet
     @name="category-list-above-each-category"
-    @args={{hash category=this.category}}
+    @outletArgs={{hash category=this.category}}
   />
 
   <tr
@@ -32,7 +32,7 @@
       <PluginOutlet
         @name="below-category-title-link"
         @connectorTagName="div"
-        @args={{hash category=this.category}}
+        @outletArgs={{hash category=this.category}}
       />
 
       {{#if this.category.description_excerpt}}

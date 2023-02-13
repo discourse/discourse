@@ -2,14 +2,40 @@ body.composer-open .chat-drawer-outlet-container {
   bottom: 11px; // prevent height of grippie from obscuring ...is typing indicator
 }
 
+.chat-drawer-resizer {
+  position: absolute;
+  top: -5px;
+  width: 15px;
+  height: 15px;
+}
+
+html:not(.rtl) {
+  .chat-drawer-resizer {
+    cursor: nwse-resize;
+    left: -5px;
+  }
+}
+
+html.rtl {
+  .chat-drawer-resizer {
+    cursor: nesw-resize;
+    right: -5px;
+  }
+}
+
 .chat-drawer-outlet-container {
-  font-family: "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
   // higher than timeline, lower than composer, lower than user card (bump up below)
   z-index: z("usercard");
   position: fixed;
   right: var(--composer-right, 20px);
   left: 0;
+  max-height: calc(100% - var(--header-offset) - 15px);
+
+  .rtl & {
+    left: var(--composer-right, 20px);
+    right: 0;
+  }
+
   margin: 0;
   padding: 0;
   display: flex;
@@ -31,7 +57,6 @@ body.composer-open .chat-drawer-outlet-container {
   }
 
   box-sizing: border-box;
-  max-height: 90vh;
   padding-bottom: var(--composer-height, 0);
   transition: all 100ms ease-in;
   transition-property: bottom, padding-bottom;
@@ -39,6 +64,10 @@ body.composer-open .chat-drawer-outlet-container {
 
 .chat-drawer {
   align-self: flex-end;
+  width: 400px;
+  min-width: 250px !important; // important to override inline styles
+  max-width: calc(100% - var(--composer-right));
+  min-height: 300px !important; // important to override inline styles
 
   .chat-drawer-container {
     background: var(--secondary);
@@ -50,13 +79,19 @@ body.composer-open .chat-drawer-outlet-container {
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
+    position: relative;
+    overflow: hidden;
   }
 
   &.is-expanded {
     .chat-drawer-container {
-      max-height: $float-height;
-      height: calc(85vh - var(--composer-height, 0px));
+      height: 100%;
     }
+  }
+
+  &:not(.is-expanded) {
+    min-height: 0 !important;
+    height: auto !important;
   }
 
   .chat-live-pane {

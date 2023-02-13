@@ -171,8 +171,8 @@ fi:
         enabled: "Kiinnitetty sivuston laajuisesti %{when}"
         disabled: "Kiinnitys poistettu %{when}"
       visible:
-        enabled: "Lisätty näkyville %{when}"
-        disabled: "Poistettu näkyvistä %{when}"
+        enabled: "Listattu %{when}"
+        disabled: "Listaus peruttu %{when}"
       banner:
         enabled: "Asetettu banneriksi %{when}. Se näytetään jokaisen sivun ylälaidassa, kunnes käyttäjä kuittaa sen nähdyksi."
         disabled: "Poistettu banneri näkyvistä %{when}. Sitä ei enää näytetä jokaisen sivun ylälaidassa."
@@ -302,11 +302,9 @@ fi:
       edit_bookmark: "Muokkaa kirjanmerkkiä"
       clear_bookmarks: "Tyhjennä kirjanmerkit"
       help:
-        bookmark: "Klikkaa lisätäksesi ketjun ensimmäisen viestin kirjanmerkkeihin"
-        edit_bookmark: "Klikkaa muokataksesi tämän ketjun kirjanmerkkiä"
         edit_bookmark_for_topic: "Klikkaa muokataksesi tämän ketjun kirjanmerkkiä"
         unbookmark: "Klikkaa poistaaksesi kaikki tämän ketjun kirjanmerkit"
-        unbookmark_with_reminder: "Klikkaa poistaaksesi kaikki tämän ketjun kirjanmerkit ja muistutukset."
+        unbookmark_with_reminder: "Klikkaa poistaaksesi kaikki tämän ketjun kirjanmerkit ja muistutukset"
     bookmarks:
       created: "Olet kirjanmerkinnyt tämän viestin. %{name}"
       created_generic: "Olet kirjanmerkinnyt tämän. %{name}"
@@ -323,7 +321,7 @@ fi:
       no_timezone: 'Et ole valinnut aikavyöhykettä, joten et voi asettaa muistutuksia. Aseta se <a href="%{basePath}/my/preferences/profile">profiilisivullasi</a>.'
       invalid_custom_datetime: "Antamasi päivämäärä ja kellonaika ei kelpaa, yritä uudelleen."
       list_permission_denied: "Et voi nähdä tämän käyttäjän kirjanmerkkejä."
-      no_user_bookmarks: "Kirjanmerkeissäsi ei ole mitään. Kirjanmerkitsemällä viestejä löydät ne myöhemmin helposti."
+      no_user_bookmarks: "Kirjanmerkeissäsi ei ole mitään. Kirjanmerkitsemällä viestin löydät sen myöhemmin helposti."
       auto_delete_preference:
         label: "Kun sinulle on ilmoitettu"
         never: "Säilytä kirjanmerkki"
@@ -456,7 +454,7 @@ fi:
       topic: "Ketju:"
       filtered_topic: "Olet suodattanut käsiteltävän sisällön yhdestä ketjusta."
       filtered_user: "Käyttäjä"
-      filtered_reviewed_by: "Käsittelijä"
+      filtered_reviewed_by: "Käsittelijä:"
       show_all_topics: "näytä kaikki ketjut"
       deleted_post: "(viesti poistettu)"
       deleted_user: "(käyttäjä poistettu)"
@@ -976,11 +974,6 @@ fi:
       profile: "Profiili"
       mute: "Vaimenna"
       edit: "Muokkaa asetuksia"
-      download_archive:
-        button_text: "Lataa kaikki"
-        confirm: "Haluatko varmasti ladata viestisi?"
-        success: "Lataus aloitettu. Saat ilmoituksen yksityisviestinä, kun prosessi on valmis."
-        rate_limit_error: "Viestit voi ladata kerran vuorokaudessa. Yritä huomenna uudelleen."
       new_private_message: "Uusi viesti"
       private_message: "Viesti"
       private_messages: "Viestit"
@@ -2154,8 +2147,6 @@ fi:
         topic_template_not_modified: "Lisää ketjuun tietoja ja yksityiskohtia muokkaamalla ketjun mallipohjaa."
       save_edit: "Tallenna muokkaus"
       overwrite_edit: "Korvaa muokkaus"
-      reply_original: "Vastaa alkuperäiseen ketjuun"
-      reply_here: "Vastaa tänne"
       reply: "Vastaa"
       cancel: "Peruuta"
       create_topic: "Aloita ketju"
@@ -2727,8 +2718,6 @@ fi:
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Selaa kaikkia alueita</a>, <a href='%{basePath}/latest'>katso viimeisimmät ketjut</a> tai katso suosituimmat:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Selaa kaikkia tunnisteita</a> tai <a href='%{basePath}/latest'>katso viimeisimmät ketjut</a>."
       suggest_create_topic: Valmiina <a href>aloittamaan uuden keskustelun?</a>
-      jump_reply_up: siirry aiempaan vastaukseen
-      jump_reply_down: siirry myöhempään vastaukseen
       deleted: "Tämä ketju on poistettu"
       slow_mode_update:
         title: "Hidas tila"
@@ -3093,9 +3082,6 @@ fi:
       collapse: "kutista"
       sr_collapse_replies: "Kutista upotetut vastaukset"
       sr_date: "Viestin päivämäärä"
-      sr_expand_replies:
-        one: "Tällä viestillä on %{count} vastaus. Laajenna klikkaamalla."
-        other: "Tällä viestillä on %{count} vastausta. Laajenna klikkaamalla."
       expand_collapse: "laajenna/kutista"
       sr_below_embedded_posts_description: "viestin %{post_number} vastaukset"
       sr_embedded_reply_description: "käyttäjän %{username} vastaus viestiin %{post_number}"
@@ -3951,13 +3937,11 @@ fi:
     pause_notifications:
       title: "Keskeytä ilmoitukset..."
       label: "Keskeytä ilmoitukset"
-      remaining: "%{remaining} jäljellä"
       options:
         half_hour: "30 minuuttiin"
         one_hour: "1 tuntiin"
         two_hours: "2 tuntiin"
         tomorrow: "Ennen huomista"
-        custom: "Mukautettu"
       set_schedule: "Aseta ilmoitusten aikataulu"
     trust_levels:
       names:
@@ -4007,6 +3991,9 @@ fi:
       all_categories: "Kaikki alueet"
       all_tags: "Kaikki tunnisteet"
       sections:
+        custom:
+          save: "Tallenna"
+          delete: "Poista"
         about:
           header_link_text: "Tietoa"
         messages:
@@ -4780,6 +4767,8 @@ fi:
           love:
             name: "tykkäys"
             description: "Tykkäyspainikkeen väri."
+          selected:
+            name: "valittu"
         robots:
           title: "Ohita sivustosi robots.txt-tiedosto:"
           warning: "Tämä ohittaa pysyvästi kaikki asiaankuuluvat sivuston asetukset."
@@ -4912,7 +4901,7 @@ fi:
           actions:
             delete_user: "poista käyttäjä"
             change_trust_level: "muuta luottamustasoa"
-            change_username: "vaihda käyttäjätunnus"
+            change_username: "muuta käyttäjätunnusta"
             change_site_setting: "muuta sivuston asetusta"
             change_theme: "vaihda teema"
             delete_theme: "poista teema"
@@ -5194,7 +5183,6 @@ fi:
         show_admin_profile: "Ylläpito"
         manage_user: "Hallitse käyttäjää"
         show_public_profile: "Näytä julkinen profiili"
-        impersonate: "Esiinny käyttäjänä"
         action_logs: "Toimintaloki"
         ip_lookup: "IP-haku"
         log_out: "Kirjaa ulos"

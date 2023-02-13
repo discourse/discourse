@@ -1,11 +1,14 @@
 import {
-  acceptance,
+  currentUser,
   publishToMessageBus,
 } from "discourse/tests/helpers/qunit-helpers";
-import { test } from "qunit";
+import { module, test } from "qunit";
 import { PresenceChannelNotFound } from "discourse/services/presence";
 import { setTestPresence } from "discourse/lib/user-presence";
 import sinon from "sinon";
+import { setupTest } from "ember-qunit";
+import { getOwner } from "discourse-common/lib/get-owner";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
 function usersFixture() {
   return [
@@ -30,35 +33,37 @@ function usersFixture() {
   ];
 }
 
-acceptance("Presence - Subscribing", function (needs) {
-  needs.pretender((server, helper) => {
-    server.get("/presence/get", async (request) => {
+module("Unit | Service | presence | subscribing", function (hooks) {
+  setupTest(hooks);
+
+  hooks.beforeEach(function () {
+    pretender.get("/presence/get", async (request) => {
       const channels = request.queryParams.channels;
-      const response = {};
+      const result = {};
 
       channels.forEach((c) => {
         if (c.startsWith("/test/")) {
-          response[c] = {
+          result[c] = {
             count: 3,
             last_message_id: 1,
             users: usersFixture(),
           };
         } else if (c.startsWith("/count-only/")) {
-          response[c] = {
+          result[c] = {
             count: 3,
             last_message_id: 1,
           };
         } else {
-          response[c] = null;
+          result[c] = null;
         }
       });
 
-      return helper.response(200, response);
+      return response(result);
     });
   });
 
   test("subscribing and receiving updates", async function (assert) {
-    let presenceService = this.container.lookup("service:presence");
+    let presenceService = getOwner(this).lookup("service:presence");
     let channel = presenceService.getChannel("/test/ch1");
     let changes = 0;
     const countChanges = () => changes++;
@@ -101,7 +106,7 @@ acceptance("Presence - Subscribing", function (needs) {
   });
 
   test("fetches data when no initial state", async function (assert) {
-    let presenceService = this.container.lookup("service:presence");
+    let presenceService = getOwner(this).lookup("service:presence");
     let channel = presenceService.getChannel("/test/ch1");
 
     await channel.subscribe();
@@ -147,7 +152,7 @@ acceptance("Presence - Subscribing", function (needs) {
   });
 
   test("raises error when subscribing to nonexistent channel", async function (assert) {
-    let presenceService = this.container.lookup("service:presence");
+    let presenceService = getOwner(this).lookup("service:presence");
     let channel = presenceService.getChannel("/nonexistent/ch1");
 
     assert.rejects(
@@ -158,7 +163,7 @@ acceptance("Presence - Subscribing", function (needs) {
   });
 
   test("can subscribe to count_only channel", async function (assert) {
-    let presenceService = this.container.lookup("service:presence");
+    let presenceService = getOwner(this).lookup("service:presence");
     let channel = presenceService.getChannel("/count-only/ch1");
 
     await channel.subscribe();
@@ -195,25 +200,21 @@ acceptance("Presence - Subscribing", function (needs) {
   });
 
   test("can share data between multiple PresenceChannel objects", async function (assert) {
-    let presenceService = this.container.lookup("service:presence");
+    let presenceService = getOwner(this).lookup("service:presence");
     let channel = presenceService.getChannel("/test/ch1");
     let channelDup = presenceService.getChannel("/test/ch1");
 
     await channel.subscribe();
-    assert.strictEqual(channel.subscribed, true, "channel is subscribed");
+    assert.true(channel.subscribed, "channel is subscribed");
     assert.strictEqual(channel.count, 3, "channel has the correct count");
     assert.strictEqual(channel.users.length, 3, "channel has users");
 
-    assert.strictEqual(
-      channelDup.subscribed,
-      false,
-      "channelDup is not subscribed"
-    );
+    assert.false(channelDup.subscribed, "channelDup is not subscribed");
     assert.strictEqual(channelDup.count, undefined, "channelDup has no count");
     assert.strictEqual(channelDup.users, undefined, "channelDup has users");
 
     await channelDup.subscribe();
-    assert.strictEqual(channelDup.subscribed, true, "channelDup can subscribe");
+    assert.true(channelDup.subscribed, "channelDup can subscribe");
     assert.ok(
       channelDup._presenceState,
       "channelDup has a valid internal state"
@@ -225,7 +226,7 @@ acceptance("Presence - Subscribing", function (needs) {
     );
 
     await channel.unsubscribe();
-    assert.strictEqual(channel.subscribed, false, "channel can unsubscribe");
+    assert.false(channel.subscribed, "channel can unsubscribe");
     assert.strictEqual(
       channelDup._presenceState,
       presenceService._presenceChannelStates.get(channel.name),
@@ -233,7 +234,7 @@ acceptance("Presence - Subscribing", function (needs) {
     );
 
     await channelDup.unsubscribe();
-    assert.strictEqual(channel.subscribed, false, "channelDup can unsubscribe");
+    assert.false(channel.subscribed, "channelDup can unsubscribe");
     assert.strictEqual(
       presenceService._presenceChannelStates.get(channel.name),
       undefined,
@@ -242,8 +243,8 @@ acceptance("Presence - Subscribing", function (needs) {
   });
 });
 
-acceptance("Presence - Entering and Leaving", function (needs) {
-  needs.user();
+module("Unit | Service | presence | entering and leaving", function (hooks) {
+  setupTest(hooks);
 
   let responseStartPromise;
   let resolveResponseStartPromise;
@@ -251,42 +252,41 @@ acceptance("Presence - Entering and Leaving", function (needs) {
 
   const requests = [];
 
-  needs.hooks.beforeEach(() => {
+  hooks.beforeEach(function () {
     responseStartPromise = new Promise(
       (resolve) => (resolveResponseStartPromise = resolve)
     );
-  });
 
-  needs.hooks.afterEach(() => {
-    requests.clear();
-    responseWaitPromise = null;
-    responseStartPromise = null;
-  });
-
-  needs.pretender((server, helper) => {
-    server.post("/presence/update", async (request) => {
+    pretender.post("/presence/update", async (request) => {
       resolveResponseStartPromise();
       await responseWaitPromise;
 
       const body = new URLSearchParams(request.requestBody);
       requests.push(body);
 
-      const response = {};
+      const result = {};
       const channelsRequested = body.getAll("present_channels[]");
       channelsRequested.forEach((c) => {
         if (c.startsWith("/test/")) {
-          response[c] = true;
+          result[c] = true;
         } else {
-          response[c] = false;
+          result[c] = false;
         }
       });
 
-      return helper.response(response);
+      return response(result);
     });
   });
 
+  hooks.afterEach(function () {
+    requests.clear();
+    responseWaitPromise = null;
+    responseStartPromise = null;
+  });
+
   test("can join and leave channels", async function (assert) {
-    const presenceService = this.container.lookup("service:presence");
+    const presenceService = getOwner(this).lookup("service:presence");
+    presenceService.currentUser = currentUser();
     const channel = presenceService.getChannel("/test/ch1");
 
     await channel.enter();
@@ -312,7 +312,8 @@ acceptance("Presence - Entering and Leaving", function (needs) {
   });
 
   test("join should be a no-op if already present", async function (assert) {
-    const presenceService = this.container.lookup("service:presence");
+    const presenceService = getOwner(this).lookup("service:presence");
+    presenceService.currentUser = currentUser();
     const channel = presenceService.getChannel("/test/ch1");
 
     await channel.enter();
@@ -327,7 +328,8 @@ acceptance("Presence - Entering and Leaving", function (needs) {
   });
 
   test("leave should be a no-op if not present", async function (assert) {
-    const presenceService = this.container.lookup("service:presence");
+    const presenceService = getOwner(this).lookup("service:presence");
+    presenceService.currentUser = currentUser();
     const channel = presenceService.getChannel("/test/ch1");
 
     await channel.enter();
@@ -350,7 +352,8 @@ acceptance("Presence - Entering and Leaving", function (needs) {
       (resolve) => (resolveServerResponse = resolve)
     );
 
-    const presenceService = this.container.lookup("service:presence");
+    const presenceService = getOwner(this).lookup("service:presence");
+    presenceService.currentUser = currentUser();
     const channel = presenceService.getChannel("/test/ch1");
 
     const enterPromise = channel.enter();
@@ -374,7 +377,8 @@ acceptance("Presence - Entering and Leaving", function (needs) {
   });
 
   test("raises an error when entering a non-existent channel", async function (assert) {
-    const presenceService = this.container.lookup("service:presence");
+    const presenceService = getOwner(this).lookup("service:presence");
+    presenceService.currentUser = currentUser();
     const channel = presenceService.getChannel("/blah/does-not-exist");
     await assert.rejects(
       channel.enter(),
@@ -384,45 +388,47 @@ acceptance("Presence - Entering and Leaving", function (needs) {
   });
 
   test("deduplicates calls from multiple PresenceChannel instances", async function (assert) {
-    const presenceService = this.container.lookup("service:presence");
+    const presenceService = getOwner(this).lookup("service:presence");
+    presenceService.currentUser = currentUser();
     const channel = presenceService.getChannel("/test/ch1");
     const channelDup = presenceService.getChannel("/test/ch1");
 
     await channel.enter();
-    assert.strictEqual(channel.present, true, "channel is present");
-    assert.strictEqual(channelDup.present, false, "channelDup is absent");
-    assert.ok(
+    assert.true(channel.present, "channel is present");
+    assert.false(channelDup.present, "channelDup is absent");
+    assert.true(
       presenceService._presentChannels.has("/test/ch1"),
       "service shows present"
     );
 
     await channelDup.enter();
-    assert.strictEqual(channel.present, true, "channel is present");
-    assert.strictEqual(channelDup.present, true, "channelDup is present");
-    assert.ok(
+    assert.true(channel.present, "channel is present");
+    assert.true(channelDup.present, "channelDup is present");
+    assert.true(
       presenceService._presentChannels.has("/test/ch1"),
       "service shows present"
     );
 
     await channel.leave();
-    assert.strictEqual(channel.present, false, "channel is absent");
-    assert.strictEqual(channelDup.present, true, "channelDup is present");
-    assert.ok(
+    assert.false(channel.present, "channel is absent");
+    assert.true(channelDup.present, "channelDup is present");
+    assert.true(
       presenceService._presentChannels.has("/test/ch1"),
       "service shows present"
     );
 
     await channelDup.leave();
-    assert.strictEqual(channel.present, false, "channel is absent");
-    assert.strictEqual(channel.present, false, "channelDup is absent");
-    assert.notOk(
+    assert.false(channel.present, "channel is absent");
+    assert.false(channel.present, "channelDup is absent");
+    assert.false(
       presenceService._presentChannels.has("/test/ch1"),
       "service shows absent"
     );
   });
 
   test("handles the onlyWhileActive flag", async function (assert) {
-    const presenceService = this.container.lookup("service:presence");
+    const presenceService = getOwner(this).lookup("service:presence");
+    presenceService.currentUser = currentUser();
     const channel = presenceService.getChannel("/test/ch1");
     await channel.enter();
     requests.pop(); // Throw away this request
@@ -451,7 +457,7 @@ acceptance("Presence - Entering and Leaving", function (needs) {
       ["/test/ch2"],
       "ch2 remained present"
     );
-    assert.ok(
+    assert.true(
       request.getAll("leave_channels[]").includes("/test/ch1"),
       "left ch1"
     );
@@ -459,7 +465,7 @@ acceptance("Presence - Entering and Leaving", function (needs) {
     await channel2.leave();
     assert.strictEqual(requests.length, 1, "updated the server");
     request = requests.pop();
-    assert.ok(
+    assert.true(
       request.getAll("leave_channels[]").includes("/test/ch2"),
       "left ch2"
     );
@@ -470,5 +476,25 @@ acceptance("Presence - Entering and Leaving", function (needs) {
       0,
       "skips sending empty updates to the server"
     );
+  });
+
+  test("don't spam requests when server returns 429", function (assert) {
+    const done = assert.async();
+    let requestCount = 0;
+    pretender.post("/presence/update", async () => {
+      requestCount++;
+      return response(429, { extras: { wait_seconds: 2 } });
+    });
+
+    const presenceService = getOwner(this).lookup("service:presence");
+    presenceService.currentUser = currentUser();
+    const channel = presenceService.getChannel("/test/ch1");
+
+    setTimeout(function () {
+      assert.strictEqual(requestCount, 1);
+      done();
+    }, 500);
+
+    channel.enter();
   });
 });

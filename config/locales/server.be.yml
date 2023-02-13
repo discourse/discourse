@@ -1203,8 +1203,6 @@ be:
     disable_system_edit_notifications: "Адключае рэдагаваць апавяшчэння карыстальніка сістэмы, калі «download_remote_images_to_local» актыўна."
     automatically_unpin_topics: "Аўтаматычна распушчае мацаваньне тэмы, калі карыстальнік дасягае дна."
     read_time_word_count: "Колькасць слоў у хвіліну для разліку разліковага часу чытання."
-    native_app_install_banner_ios: "Адлюстроўвае DiscourseHub прыкладанне банэр на IOS прылад для звычайных карыстальнікаў (мэтавай ўзровень 1 і вышэй)."
-    native_app_install_banner_android: "Адлюстроўвае DiscourseHub прыкладання банера на Android прылад для звычайных карыстальнікаў (мэтавай ўзровень 1 і вышэй)."
     share_anonymized_statistics: "Доля ананімнай статыстыкі выкарыстання."
     auto_handle_queued_age: "Аўтаматычна апрацоўваць запісы, якія чакаюць быць перагледжаны пасля гэтага шмат дзён. Сцягі будуць ігнаравацца. Паведамленні і якія знаходзяцца ў чарзе карыстальнікі будуць адпрэчаны. Усталюйце 0, каб адключыць гэтую функцыю."
     svg_icon_subset: "Даданне дадатковых FontAwesome 5 абразкоў, якія вы хацелі б уключыць у вашых актывах. Выкарыстоўвайце прэфікс «fa-» для цвёрдых абразкоў, «далёка» для звычайных абразкоў і «FAB-» для значкоў брэнда."
@@ -1644,8 +1642,6 @@ be:
     user_automatically_silenced:
       title: "Карыстальнік аўтаматычна глушыцелем"
       subject_template: "Новы карыстальнік% {імя карыстальніка} прыціхлі абшчына сцягамі"
-      text_body_template: |
-        Гэта аўтаматычнае паведамленне.Новы карыстальнік [% {імя карыстальніка}] (% {user_url}) быў аўтаматычна прыціхлі, таму што некалькі карыстальнікаў заўважана% {імя карыстальніка} пост (ы) 's.Калі ласка [праглядзець сцягі] (% {base_url}
     spam_post_blocked:
       title: "Спам паведамленне Blocked"
       subject_template: "Новы карыстальнік% {імя карыстальніка} паведамленняў заблякаваныя з-за паўтаральных звёнаў"
@@ -1693,9 +1689,6 @@ be:
   user_notifications:
     previous_discussion: "папярэднія адказы"
     in_reply_to: "У адказ на"
-    unsubscribe:
-      title: "Адмовіцца ад падпіскі"
-      description: "Не зацікаўленыя ў атрыманні гэтых лістоў? Няма праблем! Націсніце ніжэй, каб адмовіцца ад падпіскі імгненна:"
     reply_by_email: "[Visit Topic](%{base_url}%{url}) or reply to this email to respond."
     reply_by_email_pm: "[Visit Message](%{base_url}%{url}) or reply to this email to respond to %{participants}."
     only_reply_by_email: "Адказаць на гэтае паведамленне, каб адказаць."
@@ -1910,7 +1903,6 @@ be:
       liked_received: "сімпатыі"
       new_users: "новыя карыстальнікі"
       popular_topics: "папулярныя тэмы"
-      follow_topic: "Сачыць за тэмай"
       join_the_discussion: "Чытаць далей"
       popular_posts: "Папулярныя паведамленні"
       more_new: "Новае для вас"
@@ -2015,8 +2007,6 @@ be:
       ## [Сардэчна запрашаем% {назву}] (# вітаецца)Рахунак. Калі ласка, стварыце ўліковы запіс або ўвайсці ў сістэму, каб працягнуць.
     welcome_message_invite_only: |
       ## [Сардэчна запрашаем% {назву}] (# вітаецца)Рахунак. Калі ласка, звярніцеся існуючы элемент для запрашэння або ўвайсці ў сістэму, каб працягнуць.
-  deleted: "аддалены"
-  image: "малюнак"
   upload:
     edit_reason: "загружаныя лакальныя копіі малюнкаў"
     unauthorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
@@ -2089,8 +2079,6 @@ be:
     title: "Ўмовы абслугоўвання"
   privacy_topic:
     title: "Палітыка прыватнасці"
-    body: |
-      <a name="collect"> <
   badges:
     editor:
       name: рэдактар
@@ -2406,7 +2394,6 @@ be:
         title: "Ваш Дыскурс гатова!"
   search_logs:
     graph_title: "пошук граф"
-  joined: "рэгістрацыя"
   discourse_push_notifications:
     popup:
       mentioned: '% {Імя карыстальніка} згадаў вас у "% {} тэме" -% {SITE_TITLE}'

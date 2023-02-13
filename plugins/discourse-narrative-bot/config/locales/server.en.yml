@@ -45,8 +45,8 @@ en:
       invalid: |-
         I’m sorry, it is mathematically impossible to roll that combination of dice. :confounded:
       not_enough_dice:
-        one: "I only have %{count} die. [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), I know!"
-        other: "I only have %{count} dice. [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), I know!"
+        one: "I only have %{count} die. Shameful, I know!"
+        other: "I only have %{count} dice. Shameful, I know!"
       out_of_range: |-
         Did you know that [the maximum number of sides](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) for a mathematically fair dice is 120?
       results: |-

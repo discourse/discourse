@@ -145,6 +145,10 @@ let debouncedSearch = function (
   );
 };
 
+function lowerCaseIncludes(string, term) {
+  return string && term && string.toLowerCase().includes(term.toLowerCase());
+}
+
 function organizeResults(r, options) {
   if (r === CANCELLED_STATUS) {
     return r;
@@ -152,38 +156,53 @@ function organizeResults(r, options) {
 
   const exclude = options.exclude || [];
 
-  const results = [],
-    users = [],
+  // Sometimes the term passed contains spaces, but the search is limited
+  // to the first word only.
+  const term = options.term?.trim()?.split(/\s/, 1)?.[0];
+
+  const users = [],
     emails = [],
     groups = [];
+  let resultsLength = 0;
 
   if (r.users) {
     r.users.forEach((user) => {
-      if (results.length < options.limit && !exclude.includes(user.username)) {
-        results.push(user);
+      if (resultsLength < options.limit && !exclude.includes(user.username)) {
+        user.isUser = true;
+        user.isMetadataMatch =
+          !lowerCaseIncludes(user.username, term) &&
+          !lowerCaseIncludes(user.name, term);
         users.push(user);
+        resultsLength += 1;
       }
     });
   }
 
   if (options.allowEmails && emailValid(options.term)) {
-    const result = { username: options.term };
-    results.push(result);
-    emails.push(result);
+    emails.push({ username: options.term, isEmail: true });
+    resultsLength += 1;
   }
 
   if (r.groups) {
     r.groups.forEach((group) => {
       if (
         (options.term.toLowerCase() === group.name.toLowerCase() ||
-          results.length < options.limit) &&
+          resultsLength < options.limit) &&
         !exclude.includes(group.name)
       ) {
-        results.push(group);
+        group.isGroup = true;
         groups.push(group);
+        resultsLength += 1;
       }
     });
   }
+
+  const results = [
+    ...users.filter((u) => !u.isMetadataMatch),
+    ...emails,
+    ...groups,
+    ...users.filter((u) => u.isMetadataMatch),
+  ];
 
   results.users = users;
   results.emails = emails;

@@ -357,6 +357,321 @@ describe Chat::ChatMessageCreator do
       }.to change { ChatMention.count }.by(1)
     end
 
+    describe "replies" do
+      fab!(:reply_message) do
+        Fabricate(:chat_message, chat_channel: public_chat_channel, user: user2)
+      end
+      fab!(:unrelated_message_1) { Fabricate(:chat_message, chat_channel: public_chat_channel) }
+      fab!(:unrelated_message_2) { Fabricate(:chat_message, chat_channel: public_chat_channel) }
+
+      it "links the message that the user is replying to" do
+        message =
+          Chat::ChatMessageCreator.create(
+            chat_channel: public_chat_channel,
+            user: user1,
+            content: "this is a message",
+            in_reply_to_id: reply_message.id,
+          ).chat_message
+
+        expect(message.in_reply_to_id).to eq(reply_message.id)
+      end
+
+      it "creates a thread and includes the original message and the reply" do
+        message = nil
+        expect {
+          message =
+            Chat::ChatMessageCreator.create(
+              chat_channel: public_chat_channel,
+              user: user1,
+              content: "this is a message",
+              in_reply_to_id: reply_message.id,
+            ).chat_message
+        }.to change { ChatThread.count }.by(1)
+
+        expect(message.reload.thread).not_to eq(nil)
+        expect(message.in_reply_to.thread).to eq(message.thread)
+        expect(message.thread.original_message).to eq(reply_message)
+        expect(message.thread.original_message_user).to eq(reply_message.user)
+      end
+
+      context "when the thread_id is provided" do
+        fab!(:existing_thread) { Fabricate(:chat_thread, channel: public_chat_channel) }
+
+        it "does not create a thread when one is passed in" do
+          message = nil
+          expect {
+            message =
+              Chat::ChatMessageCreator.create(
+                chat_channel: public_chat_channel,
+                user: user1,
+                content: "this is a message",
+                thread_id: existing_thread.id,
+              ).chat_message
+          }.not_to change { ChatThread.count }
+
+          expect(message.reload.thread).to eq(existing_thread)
+        end
+
+        it "errors when the thread ID is for a different channel" do
+          other_channel_thread = Fabricate(:chat_thread, channel: Fabricate(:chat_channel))
+          result =
+            Chat::ChatMessageCreator.create(
+              chat_channel: public_chat_channel,
+              user: user1,
+              content: "this is a message",
+              thread_id: other_channel_thread.id,
+            )
+          expect(result.error.message).to eq(I18n.t("chat.errors.thread_invalid_for_channel"))
+        end
+
+        it "errors when the thread does not match the in_reply_to thread" do
+          reply_message.update!(thread: existing_thread)
+          result =
+            Chat::ChatMessageCreator.create(
+              chat_channel: public_chat_channel,
+              user: user1,
+              content: "this is a message",
+              in_reply_to_id: reply_message.id,
+              thread_id: Fabricate(:chat_thread, channel: public_chat_channel).id,
+            )
+          expect(result.error.message).to eq(I18n.t("chat.errors.thread_does_not_match_parent"))
+        end
+
+        it "errors when the root message does not have a thread ID" do
+          reply_message.update!(thread: nil)
+          result =
+            Chat::ChatMessageCreator.create(
+              chat_channel: public_chat_channel,
+              user: user1,
+              content: "this is a message",
+              in_reply_to_id: reply_message.id,
+              thread_id: existing_thread.id,
+            )
+          expect(result.error.message).to eq(I18n.t("chat.errors.thread_does_not_match_parent"))
+        end
+      end
+
+      context "for missing root messages" do
+        fab!(:original_message) do
+          Fabricate(
+            :chat_message,
+            chat_channel: public_chat_channel,
+            user: user2,
+            created_at: 1.day.ago,
+          )
+        end
+
+        before { reply_message.update!(in_reply_to: original_message) }
+
+        it "raises an error when the root message has been trashed" do
+          original_message.trash!
+          result =
+            Chat::ChatMessageCreator.create(
+              chat_channel: public_chat_channel,
+              user: user1,
+              content: "this is a message",
+              in_reply_to_id: reply_message.id,
+            )
+          expect(result.error.message).to eq(I18n.t("chat.errors.original_message_not_found"))
+        end
+
+        it "uses the next message in the chain as the root when the root is deleted" do
+          original_message.destroy!
+          Chat::ChatMessageCreator.create(
+            chat_channel: public_chat_channel,
+            user: user1,
+            content: "this is a message",
+            in_reply_to_id: reply_message.id,
+          )
+          expect(reply_message.reload.thread).not_to eq(nil)
+        end
+      end
+
+      context "when there is an existing reply chain" do
+        fab!(:old_message_1) do
+          Fabricate(
+            :chat_message,
+            chat_channel: public_chat_channel,
+            user: user1,
+            created_at: 6.hours.ago,
+          )
+        end
+        fab!(:old_message_2) do
+          Fabricate(
+            :chat_message,
+            chat_channel: public_chat_channel,
+            user: user2,
+            in_reply_to: old_message_1,
+            created_at: 4.hours.ago,
+          )
+        end
+        fab!(:old_message_3) do
+          Fabricate(
+            :chat_message,
+            chat_channel: public_chat_channel,
+            user: user1,
+            in_reply_to: old_message_2,
+            created_at: 1.hour.ago,
+          )
+        end
+
+        before do
+          reply_message.update!(
+            created_at: old_message_3.created_at + 1.hour,
+            in_reply_to: old_message_3,
+          )
+        end
+
+        it "creates a thread and updates all the messages in the chain" do
+          thread_count = ChatThread.count
+          message =
+            Chat::ChatMessageCreator.create(
+              chat_channel: public_chat_channel,
+              user: user1,
+              content: "this is a message",
+              in_reply_to_id: reply_message.id,
+            ).chat_message
+
+          expect(ChatThread.count).to eq(thread_count + 1)
+          expect(message.reload.thread).not_to eq(nil)
+          expect(message.reload.in_reply_to.thread).to eq(message.thread)
+          expect(old_message_1.reload.thread).to eq(message.thread)
+          expect(old_message_2.reload.thread).to eq(message.thread)
+          expect(old_message_3.reload.thread).to eq(message.thread)
+          expect(message.thread.chat_messages.count).to eq(5)
+          message =
+            Chat::ChatMessageCreator.create(
+              chat_channel: public_chat_channel,
+              user: user1,
+              content: "this is a message",
+              in_reply_to_id: reply_message.id,
+            ).chat_message
+        end
+
+        context "when a thread already exists and the thread_id is passed in" do
+          let!(:last_message) do
+            Chat::ChatMessageCreator.create(
+              chat_channel: public_chat_channel,
+              user: user1,
+              content: "this is a message",
+              in_reply_to_id: reply_message.id,
+            ).chat_message
+          end
+          let!(:existing_thread) { last_message.reload.thread }
+
+          it "does not create a new thread" do
+            thread_count = ChatThread.count
+
+            message =
+              Chat::ChatMessageCreator.create(
+                chat_channel: public_chat_channel,
+                user: user1,
+                content: "this is a message again",
+                in_reply_to_id: last_message.id,
+                thread_id: existing_thread.id,
+              ).chat_message
+
+            expect(ChatThread.count).to eq(thread_count)
+            expect(message.reload.thread).to eq(existing_thread)
+            expect(message.reload.in_reply_to.thread).to eq(existing_thread)
+            expect(message.thread.chat_messages.count).to eq(6)
+          end
+
+          it "errors when the thread does not match the root thread" do
+            old_message_1.update!(thread: Fabricate(:chat_thread, channel: public_chat_channel))
+            result =
+              Chat::ChatMessageCreator.create(
+                chat_channel: public_chat_channel,
+                user: user1,
+                content: "this is a message",
+                in_reply_to_id: reply_message.id,
+                thread_id: existing_thread.id,
+              )
+            expect(result.error.message).to eq(I18n.t("chat.errors.thread_does_not_match_parent"))
+          end
+
+          it "errors when the root message does not have a thread ID" do
+            old_message_1.update!(thread: nil)
+            result =
+              Chat::ChatMessageCreator.create(
+                chat_channel: public_chat_channel,
+                user: user1,
+                content: "this is a message",
+                in_reply_to_id: reply_message.id,
+                thread_id: existing_thread.id,
+              )
+            expect(result.error.message).to eq(I18n.t("chat.errors.thread_does_not_match_parent"))
+          end
+        end
+
+        context "when there are hundreds of messages in a reply chain already" do
+          before do
+            previous_message = nil
+            1000.times do |i|
+              previous_message =
+                Fabricate(
+                  :chat_message,
+                  chat_channel: public_chat_channel,
+                  user: [user1, user2].sample,
+                  in_reply_to: previous_message,
+                  created_at: i.hours.ago,
+                )
+            end
+            @last_message_in_chain = previous_message
+          end
+
+          xit "works" do
+            thread_count = ChatThread.count
+
+            message = nil
+            puts Benchmark.measure {
+                   message =
+                     Chat::ChatMessageCreator.create(
+                       chat_channel: public_chat_channel,
+                       user: user1,
+                       content: "this is a message",
+                       in_reply_to_id: @last_message_in_chain.id,
+                     ).chat_message
+                 }
+
+            expect(ChatThread.count).to eq(thread_count + 1)
+            expect(message.reload.thread).not_to eq(nil)
+            expect(message.reload.in_reply_to.thread).to eq(message.thread)
+            expect(message.thread.chat_messages.count).to eq(1001)
+          end
+        end
+
+        context "if the root message alread had a thread" do
+          fab!(:old_thread) { Fabricate(:chat_thread, original_message: old_message_1) }
+          fab!(:incorrect_thread) { Fabricate(:chat_thread, channel: public_chat_channel) }
+
+          before do
+            old_message_1.update!(thread: old_thread)
+            old_message_3.update!(thread: incorrect_thread)
+          end
+
+          it "does not change any messages in the chain, assumes they have the correct thread ID" do
+            thread_count = ChatThread.count
+            message =
+              Chat::ChatMessageCreator.create(
+                chat_channel: public_chat_channel,
+                user: user1,
+                content: "this is a message",
+                in_reply_to_id: reply_message.id,
+              ).chat_message
+
+            expect(ChatThread.count).to eq(thread_count)
+            expect(message.reload.thread).to eq(old_thread)
+            expect(message.reload.in_reply_to.thread).to eq(old_thread)
+            expect(old_message_1.reload.thread).to eq(old_thread)
+            expect(old_message_2.reload.thread).to eq(old_thread)
+            expect(old_message_3.reload.thread).to eq(incorrect_thread)
+            expect(message.thread.chat_messages.count).to eq(4)
+          end
+        end
+      end
+    end
+
     describe "group mentions" do
       it "creates chat mentions for group mentions where the group is mentionable" do
         expect {

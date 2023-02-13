@@ -368,9 +368,9 @@ const User = RestModel.extend({
   },
 
   isBasic: equal("trust_level", 0),
-  isLeader: equal("trust_level", 3),
-  isElder: equal("trust_level", 4),
-  canManageTopic: or("staff", "isElder"),
+  isRegular: equal("trust_level", 3),
+  isLeader: equal("trust_level", 4),
+  canManageTopic: or("staff", "isLeader"),
 
   @discourseComputed("previous_visit_at")
   previousVisitAt(previous_visit_at) {
@@ -406,6 +406,8 @@ const User = RestModel.extend({
       return a.name.localeCompare(b.name);
     });
   },
+
+  sidebarSections: alias("sidebar_sections"),
 
   sidebarTagNames: mapBy("sidebarTags", "name"),
   sidebarListDestination: readOnly("sidebar_list_destination"),
@@ -1177,7 +1179,7 @@ const User = RestModel.extend({
 
   showUserTip(options) {
     const userTips = Site.currentProp("user_tips");
-    if (!userTips || this.skip_new_user_tips) {
+    if (!userTips || this.user_option?.skip_new_user_tips) {
       return;
     }
 
@@ -1189,7 +1191,7 @@ const User = RestModel.extend({
       return;
     }
 
-    const seenUserTips = this.seen_popups || [];
+    const seenUserTips = this.user_option?.seen_popups || [];
     if (
       seenUserTips.includes(-1) ||
       seenUserTips.includes(userTips[options.id])
@@ -1206,7 +1208,7 @@ const User = RestModel.extend({
 
   hideUserTipForever(userTipId) {
     const userTips = Site.currentProp("user_tips");
-    if (!userTips || this.skip_new_user_tips) {
+    if (!userTips || this.user_option?.skip_new_user_tips) {
       return;
     }
 
@@ -1226,7 +1228,7 @@ const User = RestModel.extend({
     }
 
     // Update list of seen user tips.
-    let seenUserTips = this.seen_popups || [];
+    let seenUserTips = this.user_option?.seen_popups || [];
     if (userTipId) {
       if (seenUserTips.includes(userTips[userTipId])) {
         return;

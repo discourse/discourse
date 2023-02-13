@@ -8,6 +8,7 @@ class SearchIndexer
   USER_INDEX_VERSION = 3
   TAG_INDEX_VERSION = 3
   REINDEX_VERSION = 0
+  TS_VECTOR_PARSE_REGEX = /('([^']*|'')*'\:)(([0-9]+[A-D]?,?)+)/
 
   def self.disable
     @disabled = true
@@ -45,6 +46,10 @@ class SearchIndexer
     tsvector = DB.query_single("SELECT #{ranked_index}", indexed_data)[0]
     additional_lexemes = []
 
+    # we also want to index parts of a domain name
+    # that way stemmed single word searches will match
+    additional_words = []
+
     tsvector
       .scan(/'(([a-zA-Z0-9]+\.)+[a-zA-Z0-9]+)'\:([\w+,]+)/)
       .reduce(additional_lexemes) do |array, (lexeme, _, positions)|
@@ -56,6 +61,9 @@ class SearchIndexer
             break if count >= 10 # Safeguard here to prevent infinite loop when a term has many dots
             term, _, remaining = lexeme.partition(".")
             break if remaining.blank?
+
+            additional_words << [term, positions]
+
             array << "'#{remaining}':#{positions}"
             lexeme = remaining
           end
@@ -64,7 +72,47 @@ class SearchIndexer
         array
       end
 
-    tsvector = "#{tsvector} #{additional_lexemes.join(" ")}"
+    extra_domain_word_terms =
+      if additional_words.length > 0
+        DB
+          .query_single(
+            "SELECT to_tsvector(?, ?)",
+            stemmer,
+            additional_words.map { |term, _| term }.join(" "),
+          )
+          .first
+          .scan(TS_VECTOR_PARSE_REGEX)
+          .map do |term, _, indexes|
+            new_indexes =
+              indexes.split(",").map { |index| additional_words[index.to_i - 1][1] }.join(",")
+            "#{term}#{new_indexes}"
+          end
+          .join(" ")
+      end
+
+    tsvector = "#{tsvector} #{additional_lexemes.join(" ")} #{extra_domain_word_terms}"
+
+    if (max_dupes = SiteSetting.max_duplicate_search_index_terms) > 0
+      reduced = []
+      tsvector
+        .scan(TS_VECTOR_PARSE_REGEX)
+        .each do |term, _, indexes|
+          family_counts = Hash.new(0)
+          new_index_array = []
+
+          indexes
+            .split(",")
+            .each do |index|
+              family = nil
+              family = index[-1] if index[-1].match?(/[A-D]/)
+              if (family_counts[family] += 1) <= max_dupes
+                new_index_array << index
+              end
+            end
+          reduced << "#{term.strip}#{new_index_array.join(",")}"
+        end
+      tsvector = reduced.join(" ")
+    end
 
     indexed_data =
       if table.to_s == "post"

@@ -5,8 +5,11 @@
       "chat-drawer"
       (if this.chatStateManager.isDrawerExpanded "is-expanded")
     }}
+    {{chat/resizable-node ".chat-drawer-resizer" this.didResize}}
+    style={{this.drawerStyle}}
   >
     <div class="chat-drawer-container">
+      <div class="chat-drawer-resizer"></div>
       <div
         role="region"
         aria-label={{i18n "chat.aria_roles.header"}}
@@ -47,10 +50,7 @@
             {{#if this.chatStateManager.isDrawerExpanded}}
               <LinkTo
                 @route={{this.infoTabRoute}}
-                @models={{array
-                  this.chat.activeChannel.id
-                  (slugify-channel this.chat.activeChannel)
-                }}
+                @models={{this.chat.activeChannel.routeModels}}
                 class="chat-drawer-header__title"
               >
                 <div class="chat-drawer-header__top-line">

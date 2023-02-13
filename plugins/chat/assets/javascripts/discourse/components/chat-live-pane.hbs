@@ -15,8 +15,8 @@
       {{/if}}
 
       <LinkTo
-        @route={{this.infoTabRoute}}
-        @models={{array this.chatChannel.id (slugify-channel this.chatChannel)}}
+        @route="chat.channel.info"
+        @models={{this.chatChannel.routeModels}}
         class="chat-channel-title-wrapper"
       >
         <ChatChannelTitle @channel={{this.chatChannel}} />
@@ -40,12 +40,7 @@
 
 <ChatRetentionReminder @chatChannel={{this.chatChannel}} />
 
-<ChatMentionWarnings
-  @unreachableGroupMentions={{this.unreachableGroupMentions}}
-  @overMembersLimitGroupMentions={{this.overMembersLimitGroupMentions}}
-  @tooManyMentions={{this.tooManyMentions}}
-  @mentionsCount={{this.mentionsCount}}
-/>
+<ChatMentionWarnings />
 
 <div class="chat-message-actions-mobile-anchor"></div>
 <div
@@ -147,7 +142,6 @@
       @onEditLastMessageRequested={{this.editLastMessageRequested}}
       @onValueChange={{action "composerValueChanged"}}
       @chatChannel={{this.chatChannel}}
-      @onMentionUpdates={{this.updateMentions}}
     />
   {{else}}
     <ChatChannelPreviewCard @channel={{this.chatChannel}} />

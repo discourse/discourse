@@ -430,7 +430,7 @@ class Search
   advanced_filter(/\Ain:wiki\z/i) { |posts, match| posts.where(wiki: true) }
 
   advanced_filter(/\Abadge:(.*)\z/i) do |posts, match|
-    badge_id = Badge.where("name ilike ? OR id = ?", match, match.to_i).pluck_first(:id)
+    badge_id = Badge.where("name ilike ? OR id = ?", match, match.to_i).pick(:id)
     if badge_id
       posts.where(
         "posts.user_id IN (SELECT ub.user_id FROM user_badges ub WHERE ub.badge_id = ?)",
@@ -480,7 +480,7 @@ class Search
   end
 
   advanced_filter(/\Acreated:@(.*)\z/i) do |posts, match|
-    user_id = User.where(username: match.downcase).pluck_first(:id)
+    user_id = User.where(username: match.downcase).pick(:id)
     posts.where(user_id: user_id, post_number: 1)
   end
 
@@ -563,12 +563,12 @@ class Search
             parent_category_id:
               Category.where("lower(slug) = ?", category_slug.downcase).select(:id),
           )
-          .pluck_first(:id)
+          .pick(:id)
       else
         Category
           .where("lower(slug) = ?", category_slug.downcase)
           .order("case when parent_category_id is null then 0 else 1 end")
-          .pluck_first(:id)
+          .pick(:id)
       end
 
     if category_id
@@ -579,7 +579,7 @@ class Search
       posts.where("topics.category_id IN (?)", category_ids)
     else
       # try a possible tag match
-      tag_id = Tag.where_name(category_slug).pluck_first(:id)
+      tag_id = Tag.where_name(category_slug).pick(:id)
       if (tag_id)
         posts.where(<<~SQL, tag_id)
           topics.id IN (
@@ -625,7 +625,7 @@ class Search
       group_query = cb.call(group_query, @term, @guardian)
     end
 
-    group_id = group_query.pluck_first(:id)
+    group_id = group_query.pick(:id)
 
     if group_id
       posts.where(
@@ -644,7 +644,7 @@ class Search
         .members_visible_groups(@guardian.user)
         .where(has_messages: true)
         .where("name ilike ? OR (id = ? AND id > 0)", match, match.to_i)
-        .pluck_first(:id)
+        .pick(:id)
 
     if group_id
       posts.where(
@@ -661,7 +661,7 @@ class Search
       User
         .where(staged: false)
         .where("username_lower = ? OR id = ?", match.downcase, match.to_i)
-        .pluck_first(:id)
+        .pick(:id)
     if user_id
       posts.where("posts.user_id = ?", user_id)
     else
@@ -672,7 +672,7 @@ class Search
   advanced_filter(/\A\@(\S+)\z/i) do |posts, match|
     username = User.normalize_username(match)
 
-    user_id = User.not_staged.where(username_lower: username).pluck_first(:id)
+    user_id = User.not_staged.where(username_lower: username).pick(:id)
 
     user_id = @guardian.user&.id if !user_id && username == "me"
 
@@ -1132,13 +1132,13 @@ class Search
         posts = posts.order("posts.like_count DESC")
       end
     elsif !is_topic_search
-      rank = <<~SQL
-      TS_RANK_CD(
-        post_search_data.search_data,
-        #{@term.blank? ? "" : ts_query(weight_filter: weights)},
-        #{SiteSetting.search_ranking_normalization}|32
-      )
-      SQL
+      exact_rank = nil
+
+      if SiteSetting.prioritize_exact_search_title_match
+        exact_rank = ts_rank_cd(weight_filter: "A", prefix_match: false)
+      end
+
+      rank = ts_rank_cd(weight_filter: weights)
 
       if type_filter != "private_messages"
         category_search_priority = <<~SQL
@@ -1161,13 +1161,31 @@ class Search
           WHEN #{Searchable::PRIORITIES[:high]}
           THEN #{SiteSetting.category_search_priority_high_weight}
           ELSE
-            CASE WHEN topics.closed
+            CASE WHEN topics.archived
+            THEN 0.85
+            WHEN topics.closed
             THEN 0.9
             ELSE 1
             END
           END
         )
         SQL
+
+        posts =
+          if aggregate_search
+            posts.order("MAX(#{category_search_priority}) DESC")
+          else
+            posts.order("#{category_search_priority} DESC")
+          end
+
+        if @term.present? && exact_rank
+          posts =
+            if aggregate_search
+              posts.order("MAX(#{exact_rank} * #{category_priority_weights}) DESC")
+            else
+              posts.order("#{exact_rank} * #{category_priority_weights} DESC")
+            end
+        end
 
         data_ranking =
           if @term.blank?
@@ -1178,9 +1196,9 @@ class Search
 
         posts =
           if aggregate_search
-            posts.order("MAX(#{category_search_priority}) DESC", "MAX(#{data_ranking}) DESC")
+            posts.order("MAX(#{data_ranking}) DESC")
           else
-            posts.order("#{category_search_priority} DESC", "#{data_ranking} DESC")
+            posts.order("#{data_ranking} DESC")
           end
       end
 
@@ -1210,6 +1228,17 @@ class Search
     posts.limit(limit)
   end
 
+  def ts_rank_cd(weight_filter:, prefix_match: true)
+    <<~SQL
+      TS_RANK_CD(
+        #{SiteSetting.search_ranking_weights.present? ? "'#{SiteSetting.search_ranking_weights}'," : ""}
+        post_search_data.search_data,
+        #{@term.blank? ? "" : ts_query(weight_filter: weight_filter, prefix_match: prefix_match)},
+        #{SiteSetting.search_ranking_normalization}|32
+      )
+      SQL
+  end
+
   def categories_ignored(posts)
     posts.where(<<~SQL, Searchable::PRIORITIES[:ignore])
     (categories.search_priority IS NULL OR categories.search_priority IS NOT NULL AND categories.search_priority <> ?)
@@ -1224,20 +1253,26 @@ class Search
     self.class.default_ts_config
   end
 
-  def self.ts_query(term:, ts_config: nil, joiner: nil, weight_filter: nil)
-    to_tsquery(ts_config: ts_config, term: set_tsquery_weight_filter(term, weight_filter))
+  def self.ts_query(term:, ts_config: nil, joiner: nil, weight_filter: nil, prefix_match: true)
+    to_tsquery(
+      ts_config: ts_config,
+      term: set_tsquery_weight_filter(term, weight_filter, prefix_match: prefix_match),
+    )
   end
 
   def self.to_tsquery(ts_config: nil, term:, joiner: nil)
     ts_config = ActiveRecord::Base.connection.quote(ts_config) if ts_config
     escaped_term = wrap_unaccent("'#{escape_string(term)}'")
     tsquery = "TO_TSQUERY(#{ts_config || default_ts_config}, #{escaped_term})"
+    # PG 14 and up default to using the followed by operator
+    # this restores the old behavior
+    tsquery = "REPLACE(#{tsquery}::text, '<->', '&')::tsquery"
     tsquery = "REPLACE(#{tsquery}::text, '&', '#{escape_string(joiner)}')::tsquery" if joiner
     tsquery
   end
 
-  def self.set_tsquery_weight_filter(term, weight_filter)
-    "'#{self.escape_string(term)}':*#{weight_filter}"
+  def self.set_tsquery_weight_filter(term, weight_filter, prefix_match: true)
+    "'#{self.escape_string(term)}':#{prefix_match ? "*" : ""}#{weight_filter}"
   end
 
   def self.escape_string(term)
@@ -1250,11 +1285,16 @@ class Search
     PG::Connection.escape_string(term).gsub('\\', '\\\\\\')
   end
 
-  def ts_query(ts_config = nil, weight_filter: nil)
+  def ts_query(ts_config = nil, weight_filter: nil, prefix_match: true)
     @ts_query_cache ||= {}
     @ts_query_cache[
-      "#{ts_config || default_ts_config} #{@term} #{weight_filter}"
-    ] ||= Search.ts_query(term: @term, ts_config: ts_config, weight_filter: weight_filter)
+      "#{ts_config || default_ts_config} #{@term} #{weight_filter} #{prefix_match}"
+    ] ||= Search.ts_query(
+      term: @term,
+      ts_config: ts_config,
+      weight_filter: weight_filter,
+      prefix_match: prefix_match,
+    )
   end
 
   def wrap_rows(query)

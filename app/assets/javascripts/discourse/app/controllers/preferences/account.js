@@ -1,7 +1,7 @@
-import { gt, not, or } from "@ember/object/computed";
+import { alias, gt, not, or } from "@ember/object/computed";
 import { propertyNotEqual, setting } from "discourse/lib/computed";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
-import Controller from "@ember/controller";
+import Controller, { inject as controller } from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
 import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
@@ -12,9 +12,13 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { inject as service } from "@ember/service";
 import { next } from "@ember/runloop";
 import showModal from "discourse/lib/show-modal";
+import { exportUserArchive } from "discourse/lib/export-csv";
 
 export default Controller.extend(CanCheckEmails, {
   dialog: service(),
+  user: controller(),
+  canDownloadPosts: alias("user.viewingSelf"),
+
   init() {
     this._super(...arguments);
 
@@ -243,6 +247,13 @@ export default Controller.extend(CanCheckEmails, {
 
     connectAccount(method) {
       method.doLogin({ reconnect: true });
+    },
+
+    exportUserArchive() {
+      this.dialog.yesNoConfirm({
+        message: I18n.t("user.download_archive.confirm"),
+        didConfirm: () => exportUserArchive(),
+      });
     },
   },
 });

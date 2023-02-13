@@ -55,7 +55,7 @@
       <PluginOutlet
         @name="after-d-editor"
         @connectorTagName="div"
-        @args={{this.outletArgs}}
+        @outletArgs={{this.outletArgs}}
       />
     </div>
   </div>
@@ -68,13 +68,13 @@
         {{html-safe this.preview}}
       {{/unless}}
     </div>
-    <PluginOutlet
-      @name="editor-preview"
-      @tagName="span"
-      @connectorTagName="div"
-      @classNames="d-editor-plugin"
-      @args={{this.outletArgs}}
-    />
+    <span class="d-editor-plugin">
+      <PluginOutlet
+        @name="editor-preview"
+        @connectorTagName="div"
+        @outletArgs={{this.outletArgs}}
+      />
+    </span>
   </div>
 </div>
 

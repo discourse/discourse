@@ -300,6 +300,16 @@ RSpec.describe ReviewablesController do
         expect(reviewables[0]["pending"]).to eq(true)
       end
 
+      it "responds with current user's reviewables count" do
+        reviewable = Fabricate(:reviewable)
+
+        get "/review/user-menu-list.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["reviewables"].length).to eq(1)
+        expect(response.parsed_body["reviewable_count"]).to eq(1)
+      end
+
       it "responds with pending reviewables only" do
         Fabricate(:reviewable, status: Reviewable.statuses[:approved])
         pending1 = Fabricate(:reviewable, status: Reviewable.statuses[:pending])
@@ -653,6 +663,9 @@ RSpec.describe ReviewablesController do
       fab!(:reviewable_post) { Fabricate(:reviewable_queued_post) }
       fab!(:reviewable_topic) { Fabricate(:reviewable_queued_post_topic) }
       fab!(:moderator) { Fabricate(:moderator) }
+      fab!(:reviewable_approved_post) do
+        Fabricate(:reviewable_queued_post, status: Reviewable.statuses[:approved])
+      end
 
       before { sign_in(moderator) }
 
@@ -728,6 +741,19 @@ RSpec.describe ReviewablesController do
         json = response.parsed_body
         expect(json["payload"]["raw"]).to eq("new raw content")
         expect(json["version"] > 0).to eq(true)
+      end
+
+      it "prevents you from updating an approved post" do
+        put "/review/#{reviewable_approved_post.id}.json?version=#{reviewable_approved_post.version}",
+            params: {
+              reviewable: {
+                payload: {
+                  raw: "new raw content",
+                },
+              },
+            }
+
+        expect(response.code).to eq("403")
       end
 
       it "allows you to update a queued post (for new topic)" do
