@@ -29,12 +29,6 @@ export default Component.extend({
     this._checkSize();
     this.appEvents.on("chat:open-url", this, "openURL");
     this.appEvents.on("chat:toggle-close", this, "close");
-    this.appEvents.on("chat:open-channel", this, "switchChannel");
-    this.appEvents.on(
-      "chat:open-channel-at-message",
-      this,
-      "openChannelAtMessage"
-    );
     this.appEvents.on("composer:closed", this, "_checkSize");
     this.appEvents.on("composer:opened", this, "_checkSize");
     this.appEvents.on("composer:resized", this, "_checkSize");
@@ -61,12 +55,6 @@ export default Component.extend({
     if (this.appEvents) {
       this.appEvents.off("chat:open-url", this, "openURL");
       this.appEvents.off("chat:toggle-close", this, "close");
-      this.appEvents.off("chat:open-channel", this, "switchChannel");
-      this.appEvents.off(
-        "chat:open-channel-at-message",
-        this,
-        "openChannelAtMessage"
-      );
       this.appEvents.off("composer:closed", this, "_checkSize");
       this.appEvents.off("composer:opened", this, "_checkSize");
       this.appEvents.off("composer:resized", this, "_checkSize");
@@ -101,10 +89,6 @@ export default Component.extend({
     let style = `width: ${escapeExpression((width || "0").toString())}px;`;
     style += `height: ${escapeExpression((height || "0").toString())}px;`;
     this.set("drawerStyle", htmlSafe(style));
-  },
-
-  openChannelAtMessage(channel, messageId) {
-    this.chat.openChannel(channel, messageId);
   },
 
   get drawerActions() {
