@@ -5134,50 +5134,53 @@ en:
 
     actions:
       agree:
-        title: "Agree..."
+        title: "Yes"
       agree_and_keep:
-        title: "Keep Post"
+        title: "Keep post"
         description: "Agree with flag and keep the post unchanged."
       agree_and_keep_hidden:
-        title: "Keep Post Hidden"
+        title: "Yes, keep post hidden"
         description: "Agree with flag and leave the post hidden."
       agree_and_suspend:
-        title: "Suspend User"
+        title: "Suspend user"
         description: "Agree with flag and suspend the user."
       agree_and_silence:
-        title: "Silence User"
+        title: "Silence user"
         description: "Agree with flag and silence the user."
       agree_and_restore:
-        title: "Restore Post"
+        title: "Restore post"
         description: "Restore the post so that all users can see it."
       agree_and_hide:
-        title: "Hide Post"
-        description: "Hide this post and automatically send the user a message urging them to edit it."
+        title: "Hide post"
+        description: "Agree with flag and hide this post + automatically send the user a message urging them to edit it."
       delete_single:
         title: "Delete"
       delete:
         title: "Delete..."
       delete_and_ignore:
-        title: "Delete Post and Ignore"
-        description: "Delete post; if the first post, delete the topic as well"
+        title: "Ignore flag and delete post"
+        description: "Remove flag from queue without consequences and delete post; if the first post, delete the topic as well. "
       delete_and_ignore_replies:
-        title: "Delete Post + Replies and Ignore"
-        description: "Delete post and all of its replies; if the first post, delete the topic as well"
+        title: "ignore flag, delete post + replies"
+        description: "Remove flag from queue without consequences, delete post and all of its replies; if the first post, delete the topic as well"
         confirm: "Are you sure you want to delete the replies to the post as well?"
       delete_and_agree:
-        title: "Delete Post and Agree"
-        description: "Delete post; if the first post, delete the topic as well"
+        title: "Delete post"
+        description: "Agree with flag and delete this post; if the first post, delete the topic as well."
       delete_and_agree_replies:
-        title: "Delete Post + Replies and Agree"
-        description: "Delete post and all of its replies; if the first post, delete the topic as well"
+        title: "Delete post + replies"
+        description: "Delete post and all of its replies; if the first post, delete the topic as well."
         confirm: "Are you sure you want to delete the replies to the post as well?"
       disagree_and_restore:
-        title: "Disagree and Restore Post"
+        title: "No, restore post"
         description: "Restore the post so that all users can see it."
       disagree:
-        title: "Disagree"
+        title: "No"
       ignore:
         title: "Ignore"
+      ignore_and_do_nothing:
+        title: "Ignore flag and do nothing"
+        description: "Remove flag from queue without taking any action. Hidden posts will stay hidden and be handled by the auto-tools."
       approve:
         title: "Approve"
       approve_post:
