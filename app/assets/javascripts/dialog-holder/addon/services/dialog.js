@@ -1,21 +1,21 @@
 import Service from "@ember/service";
 import A11yDialog from "a11y-dialog";
 import { bind } from "discourse-common/utils/decorators";
-import { isBlank } from "@ember/utils";
 
 export default Service.extend({
-  message: null,
-  type: null,
   dialogInstance: null,
-
+  message: null,
   title: null,
   titleElementId: null,
+  type: null,
+
+  bodyComponent: null,
+  bodyComponentModel: null,
 
   confirmButtonIcon: null,
   confirmButtonLabel: null,
   confirmButtonClass: null,
-  confirmPhrase: null,
-  confirmPhraseInput: null,
+  confirmButtonDisabled: false,
   cancelButtonLabel: null,
   cancelButtonClass: null,
   shouldDisplayCancel: null,
@@ -29,15 +29,18 @@ export default Service.extend({
   dialog(params) {
     const {
       message,
+      bodyComponent,
+      bodyComponentModel,
       type,
       title,
 
+      confirmButtonClass = "btn-primary",
       confirmButtonIcon,
       confirmButtonLabel = "ok_value",
-      confirmButtonClass = "btn-primary",
-      cancelButtonLabel = "cancel_value",
+      confirmButtonDisabled = false,
+
       cancelButtonClass = "btn-default",
-      confirmPhrase,
+      cancelButtonLabel = "cancel_value",
       shouldDisplayCancel,
 
       didConfirm,
@@ -45,25 +48,25 @@ export default Service.extend({
       buttons,
     } = params;
 
-    let confirmButtonDisabled = !isBlank(confirmPhrase);
-
     const element = document.getElementById("dialog-holder");
 
     this.setProperties({
       message,
+      bodyComponent,
+      bodyComponentModel,
       type,
       dialogInstance: new A11yDialog(element),
 
       title,
       titleElementId: title !== null ? "dialog-title" : null,
 
-      confirmButtonDisabled,
       confirmButtonClass,
-      confirmButtonLabel,
+      confirmButtonDisabled,
       confirmButtonIcon,
-      confirmPhrase,
-      cancelButtonLabel,
+      confirmButtonLabel,
+
       cancelButtonClass,
+      cancelButtonLabel,
       shouldDisplayCancel,
 
       didConfirm,
@@ -133,19 +136,21 @@ export default Service.extend({
   reset() {
     this.setProperties({
       message: null,
+      bodyComponent: null,
+      bodyComponentModel: null,
       type: null,
       dialogInstance: null,
 
       title: null,
       titleElementId: null,
 
-      confirmButtonLabel: null,
+      confirmButtonDisabled: false,
       confirmButtonIcon: null,
-      cancelButtonLabel: null,
+      confirmButtonLabel: null,
+
       cancelButtonClass: null,
+      cancelButtonLabel: null,
       shouldDisplayCancel: null,
-      confirmPhrase: null,
-      confirmPhraseInput: null,
 
       didConfirm: null,
       didCancel: null,
@@ -176,10 +181,7 @@ export default Service.extend({
   },
 
   @bind
-  onConfirmPhraseInput() {
-    this.set(
-      "confirmButtonDisabled",
-      this.confirmPhrase && this.confirmPhraseInput !== this.confirmPhrase
-    );
+  enableConfirmButton() {
+    this.set("confirmButtonDisabled", false);
   },
 });
