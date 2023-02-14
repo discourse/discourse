@@ -45,4 +45,17 @@ RSpec.describe "Coding style" do
       check_offenses(migration_files, "TableDropper.execute_drop", "DROPPED_TABLES")
     end
   end
+
+  describe "non-colocated component templates" do
+    {
+      "discourse" => "app/assets/javascripts/discourse/app/templates/components",
+      "admin" => "app/assets/javascripts/admin/addon/templates/components",
+      "chat/discourse" => "plugins/chat/assets/javascripts/discourse/templates/components",
+      "chat/admin" => "plugins/chat/assets/javascripts/admin/templates/components",
+    }.each_pair do |name, dir|
+      it "do not exist for #{name}" do
+        expect(list_files(dir)).to eq([])
+      end
+    end
+  end
 end
