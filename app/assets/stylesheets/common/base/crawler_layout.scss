@@ -127,6 +127,10 @@ body > noscript {
       td.main-link {
         padding-right: 1em;
       }
+      p.excerpt {
+        font-size: var(--font-down-1);
+        word-break: break-word;
+      }
     }
   }
 
