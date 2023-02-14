@@ -5,19 +5,17 @@
       {{this.rs.user.username}}
     </UserLink>
   </td>
-  <td>
-    {{d-icon this.rs.score_type.icon}}
-    {{this.title}}
-  </td>
+
   <td>
     {{format-date this.rs.created_at format="tiny"}}
   </td>
 
-  {{#if this.showStatus}}
-    <td class="reviewable-score-spacer">
-      {{d-icon "angle-double-right"}}
-    </td>
+  <td>
+    {{d-icon this.rs.score_type.icon}}
+    {{this.title}}
+  </td>
 
+  {{#if this.showStatus}}
     <td class="reviewed-by">
       {{#if this.rs.reviewed_by}}
         <UserLink @user={{this.rs.reviewed_by}}>
@@ -30,13 +28,15 @@
     </td>
 
     <td>
-      {{reviewable-status this.rs.status}}
-    </td>
-    <td>
       {{#if this.rs.reviewed_by}}
         {{format-date this.rs.reviewed_at format="tiny"}}
       {{/if}}
     </td>
+
+    <td>
+      {{reviewable-status this.rs.status}}
+    </td>
+
   {{else}}
     <td colspan="4"></td>
   {{/if}}

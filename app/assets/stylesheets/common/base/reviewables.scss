@@ -230,10 +230,10 @@
       font-size: var(--font-down-2);
       color: var(--secondary);
       border-radius: 8px;
-      &.-flag {
+      &.-flagged-post {
         background-color: var(--danger-medium);
       }
-      &.-queue {
+      &.-queued-post {
         background-color: var(--tertiary);
       }
     }
@@ -310,6 +310,10 @@
   min-width: 50%;
   color: var(--primary-high);
 
+  th {
+    white-space: nowrap;
+  }
+
   .reviewed-by {
     .date {
       margin-left: 0.5em;
@@ -335,6 +339,16 @@
     vertical-align: text-top;
   }
 
+  .approved,
+  .approved svg {
+    color: var(--success);
+  }
+
+  .rejected,
+  .rejected svg {
+    color: var(--danger);
+  }
+
   tbody {
     border-width: 1px;
     td {
@@ -357,15 +371,12 @@
     > tr > th,
     > tr > td {
       &:not(:empty) {
-        padding: 0.5em 1em 0.5em 0;
+        padding: 0.5em;
       }
       @include breakpoint("mobile-large") {
         @include ellipsis;
         padding-right: 0.5em;
       }
-    }
-    .reviewable-score-spacer {
-      padding-right: 1em;
     }
   }
 }
