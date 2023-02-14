@@ -24,6 +24,7 @@ module ChatPublisher
         message_id: chat_message.id,
         user_id: chat_message.user.id,
         username: chat_message.user.username,
+        thread_id: chat_message.thread_id,
       },
       permissions,
     )

@@ -442,6 +442,11 @@ en:
         search_placeholder: "Search by emoji name and alias..."
         no_results: "No results"
 
+      threads:
+        op_said: "OP said:"
+        started_by: "Started by"
+        open: "Open Thread"
+
       draft_channel_screen:
         header: "New Message"
         cancel: "Cancel"

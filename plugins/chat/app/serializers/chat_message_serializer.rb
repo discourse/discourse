@@ -13,7 +13,8 @@ class ChatMessageSerializer < ApplicationSerializer
              :edited,
              :reactions,
              :bookmark,
-             :available_flags
+             :available_flags,
+             :thread_id
 
   has_one :user, serializer: BasicUserWithStatusSerializer, embed: :objects
   has_one :chat_webhook_event, serializer: ChatWebhookEventSerializer, embed: :objects

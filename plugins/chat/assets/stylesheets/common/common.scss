@@ -588,7 +588,7 @@ html.has-full-page-chat {
         padding-bottom: env(safe-area-inset-bottom);
       }
 
-      #main-chat-outlet {
+      .main-chat-outlet {
         min-height: 0;
       }
     }
