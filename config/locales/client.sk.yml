@@ -1880,8 +1880,6 @@ sk:
       images: "Obrázky"
       email_in: "Vlastná e-mailová adresa pre príchodziu poštu:"
       email_in_allow_strangers: "Prijímať emaily od anonymných používateľov bez účtu"
-      email_in_disabled: "Vkladanie nových tém cez email je zablokované v Nastaveniach stránky. Ak chcete povoliť vkladanie nových téme cez email,"
-      email_in_disabled_click: 'povoľte nastavenie "email in"'
       allow_badges_label: "Povoliť získavanie odznakov v tejto kategórii"
       edit_permissions: "Upraviť práva"
       review_group_name: "názov skupiny"
@@ -2269,6 +2267,9 @@ sk:
         custom:
           save: "Uložiť"
           delete: "Odstrániť"
+          links:
+            icon: "Ikona"
+            name: "Meno"
         about:
           header_link_text: "O stránke"
         messages:
@@ -2782,6 +2783,22 @@ sk:
           add: "Pridať"
         test:
           button_label: "Test"
+      form_templates:
+        nav_title: "Šablóny"
+        list_table:
+          headings:
+            name: "Meno"
+            actions: "Akcie"
+        view_template:
+          close: "Zavrieť"
+          edit: "Upraviť"
+          delete: "Odstrániť"
+        new_template_form:
+          submit: "Uložiť"
+          cancel: "Zrušiť"
+        quick_insert_fields:
+          add_new_field: "Pridať"
+          dropdown: "Zoznam"
       impersonate:
         title: "Privlastniť"
         help: "Použite tento nástroj na privlastnenie si používateľského účtu na účely debugovania. Po skončení sa budete musieť odhlásiť."
@@ -3064,7 +3081,8 @@ sk:
         allow_title: Povoliť použitie odznaku namiesto názvu
         multiple_grant: Môže byť udelené viacnásobne
         listable: Zobraziť odznak na stránke verejných odznakov
-        enabled: Povoliť odznak
+        enabled: povolené
+        disabled: vypnuté
         icon: Ikona
         image: Obrázok
         query: Požiadavka na Odznak (SQL)

@@ -38,9 +38,6 @@ nl:
       browse_all_channels: "Alle kanalen bekijken"
       move_to_channel:
         title: "Berichten verplaatsen naar kanaal"
-        instructions:
-          one: "Je gaat <strong>%{count}</strong> bericht verplaatsen. Selecteer een bestemmingskanaal. Er wordt een vervangend bericht gemaakt in het kanaal <strong>%{channelTitle}</strong> om aan te geven dat dit bericht is verplaatst."
-          other: "Je gaat <strong>%{count}</strong> berichten verplaatsen. Selecteer een bestemmingskanaal. Er wordt een vervangend bericht gemaakt in het kanaal <strong>%{channelTitle}</strong> om aan te geven dat deze berichten zijn verplaatst."
         confirm_move: "Berichten verplaatsen"
       channel_settings:
         title: "Kanaalinstellingen"
@@ -71,7 +68,6 @@ nl:
         instructions: "Door het kanaal te sluiten, kunnen niet-medewerkers geen nieuwe berichten sturen of bestaande berichten bewerken. Weet je zeker dat je dit kanaal wilt sluiten?"
       channel_delete:
         title: "Kanaal verwijderen"
-        instructions: "<p>Verwijdert de het kanaal <strong>%{name}</strong> en de chatgeschiedenis. Alle berichten en gerelateerde gegevens, zoals antwoorden en uploads, worden definitief verwijderd. Als je de kanaalgeschiedenis wilt behouden en buiten gebruik wilt stellen, kun je het kanaal in plaats daarvan archiveren.</p> <p>Weet je zeker dat je het kanaal <strong>permanent wilt verwijderen</strong>? Typ ter bevestiging de naam van het kanaal in het onderstaande vak.</p>"
         confirm: "Ik begrijp de gevolgen, verwijder het kanaal"
         confirm_channel_name: "Voer kanaalnaam in"
         process_started: "Het proces om het kanaal te verwijderen is gestart. Dit venster wordt over enkele ogenblikken gesloten, je ziet het verwijderde kanaal nergens meer."

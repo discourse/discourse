@@ -1502,8 +1502,6 @@ sr:
       images: "Slike"
       email_in: "Prilagođena adresa dolaznog e-maila."
       email_in_allow_strangers: "Prihvati emailove anonimnih korisnika bez naloga"
-      email_in_disabled: "Objavljivanje novih tema preko emaila je onemogućeno u podešavanjima stranice. Da omogućite objavljivanje tema preko emaila,"
-      email_in_disabled_click: 'omogućite "pošalji email u" podešavanjima.'
       allow_badges_label: "Dozvoli dodjeljivanje značaka u ovoj kategoriji."
       edit_permissions: "Izmeni dozvole"
       review_group_name: "ime grupe"
@@ -1799,6 +1797,9 @@ sr:
         custom:
           save: "Sačuvaj"
           delete: "Obriši"
+          links:
+            icon: "Ikona"
+            name: "Ime foruma"
         about:
           header_link_text: "O nama"
         messages:
@@ -2184,6 +2185,20 @@ sr:
           flag: "Označi Zastavom"
         form:
           add: "Dodaj"
+      form_templates:
+        list_table:
+          headings:
+            name: "Ime foruma"
+            actions: "Akcije"
+        view_template:
+          close: "Zatvori"
+          edit: "Izmeni"
+          delete: "Obriši"
+        new_template_form:
+          submit: "Sačuvaj"
+          cancel: "Odustani"
+        quick_insert_fields:
+          add_new_field: "Dodaj"
       impersonate:
         title: "Predstavi se kao"
         help: "Koristite ovaj alat da se predstavite kao određeni korisnički nalog za potrebe ispravljanja grešaka. Moraćete se odjaviti kad završite."
@@ -2438,7 +2453,6 @@ sr:
         allow_title: Dopusti da se značka koristi kao titula
         multiple_grant: Može biti dodeljena više puta
         listable: Prikaži značku na javnoj stranici sa značkama
-        enabled: Omogući značku
         icon: Ikona
         image: Slika
         query: Upitnik Značke (SQL)

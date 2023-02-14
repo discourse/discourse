@@ -78,6 +78,7 @@ sv:
       over_chat_max_direct_message_users:
         one: "Du kan bara skapa ett direktmeddelande med dig själv."
         other: "Du kan inte skapa ett direktmeddelande med fler än %{count} andra användare."
+      original_message_not_found: "Det första meddelandet i meddelandekedjan som du svarar på kan inte hittas eller har tagits bort."
     reviewables:
       message_already_handled: "Tack, men vi har redan granskat det här meddelandet och beslutat att det inte behöver flaggas igen."
       actions:

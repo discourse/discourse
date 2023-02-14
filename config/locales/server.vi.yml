@@ -1510,7 +1510,6 @@ vi:
       other: "Tự động vô hiệu hóa sau %{count} ngày không hoạt động"
     activated_by_staff: "Kích hoạt bởi nhân viên"
     new_user_typed_too_fast: "Người dùng mới nhập quá nhanh"
-    content_matches_auto_block_regex: "Nội dung khớp với regex khối tự động"
     username:
       short: "phải dài ít nhất %{min} ký tự"
       long: "không được dài hơn %{max} ký tự"

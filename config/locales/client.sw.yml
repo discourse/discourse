@@ -1892,8 +1892,6 @@ sw:
       images: "Picha"
       email_in: "Barua Pepe inayoingia:"
       email_in_allow_strangers: "Pokea barua pepe kutoka kwa watumiaji wasiojulikana ambao hawana akaunti"
-      email_in_disabled: "Uchapishaji wa mada mpya kupitia barua pepe umesitishwa kwenye Mipangilio ya Tovuti. Kuruhusu uchapishaji wa mada mpya kupitia barua pepe,"
-      email_in_disabled_click: 'ruhusu mpangilio wa "barua pepe ndani"'
       num_featured_topics: "Idadi ya mada zitakazo onyeshwa ndani ya ukurasa wa kategoria:"
       all_topics_wiki: "Hifadhi mada mpya kama chaguo msingi"
       sort_order: "Orodha ya Maneno Imepangwa Kulingana Na:"
@@ -2248,6 +2246,9 @@ sw:
         custom:
           save: "Hifadhi"
           delete: "Futa"
+          links:
+            icon: "ikoni"
+            name: "Jina"
         about:
           header_link_text: "Kuhusu"
         messages:
@@ -2886,6 +2887,22 @@ sw:
         test:
           button_label: "Majaribio"
           no_matches: "Hakuna uwiano uliopatikana"
+      form_templates:
+        nav_title: "Violezo"
+        list_table:
+          headings:
+            name: "Jina"
+            actions: "Vitendo"
+        view_template:
+          close: "Funga"
+          edit: "Hariri"
+          delete: "Futa"
+        new_template_form:
+          submit: "Hifadhi"
+          cancel: "Ghairi"
+        quick_insert_fields:
+          add_new_field: "ongeza"
+          dropdown: "Shusha Chini"
       impersonate:
         title: "Iga Utambulisho"
         help: "Tumia kifaa hiki kuiga utambulisho wa mtumiaji ili uweze kutatua matatizo. Itabidi utoke ukishamaliza."
@@ -3210,7 +3227,8 @@ sw:
         allow_title: Ruhusu beji iweze kutumika kama cheo
         multiple_grant: Inaweza kutolewa mara nyingi
         listable: Onyesha beji kwenye karatasi ya beji ya umma
-        enabled: Ruhusu beji
+        enabled: imeruhusiwa
+        disabled: imezuiwa
         icon: ikoni
         image: Picha
         query: Maswala ya Beji (SQL)

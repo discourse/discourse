@@ -2403,8 +2403,6 @@ zh_TW:
       images: "圖片"
       email_in: "自訂外來電郵地址:"
       email_in_allow_strangers: "接受非使用者的電郵"
-      email_in_disabled: "\"用電子郵件張貼新的話題\"功能已被關閉。若要使用此功能，"
-      email_in_disabled_click: '請啟用"email in"功能'
       mailinglist_mirror: "以類別來區分郵件列表"
       show_subcategory_list: "在此分類中，將子分類顯示在話題上方。"
       num_featured_topics: "分類頁面中顯示的話題數量："
@@ -2840,6 +2838,9 @@ zh_TW:
         custom:
           save: "保存"
           delete: "刪除"
+          links:
+            icon: "圖示"
+            name: "名字"
         about:
           header_link_text: "關於"
         messages:
@@ -3654,6 +3655,22 @@ zh_TW:
           upload_successful: "上傳成功，文字已被添加。"
         test:
           no_matches: "找不到符合的項目"
+      form_templates:
+        nav_title: "模板"
+        list_table:
+          headings:
+            name: "名字"
+            actions: "動作"
+        view_template:
+          close: "關閉"
+          edit: "編輯"
+          delete: "刪除"
+        new_template_form:
+          submit: "保存"
+          cancel: "取消"
+        quick_insert_fields:
+          add_new_field: "加入"
+          dropdown: "下拉"
       impersonate:
         title: "檢視角度"
         help: "使用此工具以使用者的檢視角度進行除錯。完成後將需登出。"
@@ -4004,7 +4021,8 @@ zh_TW:
         allow_title: 允許使用徽章作為稱號
         multiple_grant: 可多次授予
         listable: 在徽章頁面上顯示徽章
-        enabled: 啟用徽章
+        enabled: 啟用
+        disabled: 停用
         icon: 圖示
         image: 圖片
         read_only_setting_help: "自訂文字"

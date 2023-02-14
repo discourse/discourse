@@ -3195,8 +3195,6 @@ ja:
       email_in: "カスタム受信メールアドレス:"
       email_in_tooltip: "複数のメールアドレスは「|」文字で区切ることができます。"
       email_in_allow_strangers: "登録されていない匿名のユーザーからのメールを受け取る"
-      email_in_disabled: "メールによる新しいトピックの投稿は、サイトの設定で無効になっています。メールによる新しいトピックの投稿を有効にするには、 "
-      email_in_disabled_click: '"email in" 設定を有効にする。'
       mailinglist_mirror: "カテゴリはメーリングリストを反映"
       show_subcategory_list: "このカテゴリのトピックの上にサブカテゴリのリストを表示します。"
       read_only_banner: "ユーザーがこのカテゴリにトピックを作成できない場合のバナーテキスト:"
@@ -3790,6 +3788,10 @@ ja:
         custom:
           save: "保存"
           delete: "削除"
+          links:
+            icon: "アイコン"
+            name: "名前"
+            value: "リンク"
         about:
           header_link_text: "サイト情報"
         messages:
@@ -4872,6 +4874,22 @@ ja:
           description: "テキストを入力して、ウォッチ語に一致しているかどうかを確認します"
           found_matches: "見つかった一致:"
           no_matches: "一致する項目が見つかりませんでした"
+      form_templates:
+        nav_title: "テンプレート"
+        list_table:
+          headings:
+            name: "名前"
+            actions: "操作"
+        view_template:
+          close: "クローズ"
+          edit: "編集"
+          delete: "削除"
+        new_template_form:
+          submit: "保存"
+          cancel: "キャンセル"
+        quick_insert_fields:
+          add_new_field: "追加"
+          dropdown: "ドロップダウン"
       impersonate:
         title: "代理操作"
         help: "このツールを使用して、デバッグ目的でユーザーアカウントを代理操作します。作業を終了したら、ログアウトしてください。"
@@ -5303,7 +5321,7 @@ ja:
         allow_title: バッジをタグラインとして使用することを許可する
         multiple_grant: 何度でも付与できる
         listable: バッジの公開ページにバッジを表示する
-        enabled: バッジを有効にする
+        disabled: 無効
         icon: アイコン
         image: 画像
         graphic: グラフィック

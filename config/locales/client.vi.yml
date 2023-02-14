@@ -2980,8 +2980,6 @@ vi:
       images: "Hình ảnh"
       email_in: "Tùy chỉnh địa chỉ nhận thư điện tử "
       email_in_allow_strangers: "Nhận thư điện tử từ người gửi vô danh không tài khoản"
-      email_in_disabled: "Tạo chủ đề mới thông qua email đã được tắt trong thiết lập. Để bật tính năng này, "
-      email_in_disabled_click: 'kích hoạt thiết lập thư điện tử'
       mailinglist_mirror: "Danh mục phản ánh một danh sách gửi thư"
       show_subcategory_list: "Hiển thị danh sách danh mục phụ ở trên các chủ đề trong danh mục này."
       read_only_banner: "Văn bản biểu ngữ khi người dùng không thể tạo chủ đề trong danh mục này:"
@@ -3562,6 +3560,10 @@ vi:
         custom:
           save: "Lưu lại"
           delete: "Xóa"
+          links:
+            icon: "Biểu tượng"
+            name: "Tên"
+            value: "Liên kết"
         about:
           header_link_text: "Giới thiệu"
         messages:
@@ -4561,6 +4563,22 @@ vi:
           upload_successful: "Tải lên thành công. Các từ đã được thêm vào."
         test:
           no_matches: "Không tìm thấy"
+      form_templates:
+        nav_title: "Templates"
+        list_table:
+          headings:
+            name: "Tên"
+            actions: "Hành động"
+        view_template:
+          close: "Đóng"
+          edit: "Sửa"
+          delete: "Xóa"
+        new_template_form:
+          submit: "Lưu lại"
+          cancel: "Huỷ"
+        quick_insert_fields:
+          add_new_field: "Thêm"
+          dropdown: "Xổ xuống"
       impersonate:
         title: "Mạo danh"
         help: "Sử dụng công cụ này để mạo danh một tài khoản thành viên cho mục đích gỡ lỗi, bạn sẽ phải đăng xuất sau khi hoàn tất."
@@ -4963,7 +4981,7 @@ vi:
         allow_title: Cho phép huy hiệu được sử dụng như là tên
         multiple_grant: Có thể được cấp nhiều lần
         listable: Hiện huy hiệu trên trang huy hiệu công khai
-        enabled: Bật huy hiệu
+        disabled: vô hiệu hóa
         icon: Biểu tượng
         image: Hình ảnh
         graphic: Đồ họa

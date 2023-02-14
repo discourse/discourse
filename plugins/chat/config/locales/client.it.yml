@@ -38,9 +38,6 @@ it:
       browse_all_channels: "Sfoglia tutti i canali"
       move_to_channel:
         title: "Sposta i messaggi sul canale"
-        instructions:
-          one: "Stai spostando <strong>%{count}</strong> messaggio. Seleziona un canale di destinazione. Verrà creato un messaggio segnaposto nel canale <strong>%{channelTitle}</strong> per indicare che questo messaggio è stato spostato."
-          other: "Stai spostando <strong>%{count}</strong> messaggi. Seleziona un canale di destinazione. Verrà creato un messaggio segnaposto nel canale <strong>%{channelTitle}</strong> per indicare che questi messaggi sono stati spostati."
         confirm_move: "Sposta messaggi"
       channel_settings:
         title: "Impostazioni del canale"
@@ -71,7 +68,6 @@ it:
         instructions: "La chiusura del canale impedisce agli utenti non appartenenti allo staff di inviare nuovi messaggi o modificare quelli esistenti. Sei sicuro di voler chiudere questo canale?"
       channel_delete:
         title: "Elimina canale"
-        instructions: "<p>Elimina il canale <strong>%{name}</strong> e la cronologia delle chat. Tutti i messaggi e i dati correlati, come reazioni e caricamenti, verranno eliminati in modo permanente. Se vuoi conservare la cronologia del canale e rimuoverla, puoi invece archiviare il canale.</p> <p>Sei sicuro di voler <strong>eliminare definitivamente</strong> il canale? Per confermare, digita il nome del canale nella casella sottostante.</p>"
         confirm: "Ho capito le conseguenze, procedi all'eliminazione del canale"
         confirm_channel_name: "Inserisci il nome del canale"
         process_started: "Il processo di eliminazione del canale è iniziato. Questo avviso si chiuderà a breve, non vedrai più il canale eliminato da nessuna parte."

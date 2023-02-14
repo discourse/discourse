@@ -3545,8 +3545,7 @@ he:
       email_in: "כתובת דואר נכנס מותאמת אישית:"
       email_in_tooltip: "אפשר להפריד בין כתובות דוא״ל עם התו |."
       email_in_allow_strangers: "קבלת דוא״ל ממשתמשים אלמוניים ללא חשבונות במערכת הפורומים"
-      email_in_disabled: "האפשרות לשליחת נושאים חדשים בדוא״ל הושבתה בהגדרות האתר. כדי להפעיל פרסום של נושאים חדשים דרך דוא״ל,"
-      email_in_disabled_click: 'הפעלת ההגדרה „דוא״ל נכנס”.'
+      email_in_disabled: "פרסום נושאים חדשים בדוא״ל מושבת. כדי לאפשר פרסום נושאים חדשים בדוא״ל, יש להפעיל את ההגדרה <a href='%{setting_url}'>‚דוא״ל נכנס’</a>."
       mailinglist_mirror: "קטגוריה שמשקפת רשימת תפוצה"
       show_subcategory_list: "הצגת רשימת קטגוריות משנה מעל נושאים בקטגוריה זו."
       read_only_banner: "טקסט כרזה כאשר משתמש לא יכול ליצור נושא בקטגוריה הזו:"
@@ -3917,6 +3916,7 @@ he:
         title: "חיבור"
         return: "%{shortcut} חזרה לכתיבת פוסט"
         fullscreen: "%{shortcut} כתיבת פוסט במסך מלא"
+        insert_current_time: "%{shortcut} הוספת השעה הנוכחית"
       bookmarks:
         title: "ניהול סימניות"
         enter: "%{shortcut} שמירה וסגירה"
@@ -4230,8 +4230,18 @@ he:
       all_tags: "כל התגיות"
       sections:
         custom:
+          add: "הוספת מקטע משלך"
+          edit: "עריכת מקטע משלך"
+          name: "כותרת מקטע"
           save: "שמירה"
           delete: "מחיקה"
+          delete_confirm: "למחוק את המקטע הזה?"
+          links:
+            icon: "סמליל"
+            name: "שם"
+            value: "קישור"
+            add: "הוספת קישור נוסף"
+            delete: "מחיקת קישור"
         about:
           header_link_text: "אודות"
         messages:
@@ -4594,6 +4604,7 @@ he:
         create: "יצירה"
         edit: "עריכה"
         save: "שמירה"
+        description_label: "הקפצות לאירועים"
         controls: "מכוונים"
         go_back: "חזרה לרשימה"
         payload_url: "URL של התוכן"
@@ -4700,6 +4711,7 @@ he:
         broken_route: "לא ניתן להגדיר את הקישור אל ‚%{name}’. כדאי לוודא שחוסמי פרסומות מושבתים ואז לנסות לטעון את הדף מחדש."
       navigation_menu:
         sidebar: "סרגל צד"
+        header_dropdown: "שורת כותרת נגללת"
         legacy: "מיושן"
       backups:
         title: "גיבויים"
@@ -4948,6 +4960,9 @@ he:
           embedded_scss:
             text: "CSS משולב"
             title: "הכניסו CSS מותאם לשליחה עם הגרסה המשולבת של ההערות"
+          embedded_header:
+            text: "כותרת מוטבעת"
+            title: "נא למלא HTML כדי להציג מעל הגרסה המוטבעת של הערות"
           color_definitions:
             text: "ערכות צבע"
             title: "למלא ערכות צבע מותאמות אישית (משתמשים מתקדמים בלבד)"
@@ -5349,6 +5364,41 @@ he:
           description: "נא להקליד טקסט להלן כדי לבדוק התאמות מול מילים שבמעקב"
           found_matches: "נמצאו התאמות:"
           no_matches: "לא נמצאו התאמות"
+      form_templates:
+        nav_title: "תבניות"
+        title: "תבניות טפסים"
+        help: "יצירת מבנה תבנית בו ניתן להשתמש ליצירת נושאים, פוסטים והודעות חדשים."
+        new_template: "תבנית חדשה"
+        list_table:
+          headings:
+            name: "שם"
+            actions: "פעולות"
+          actions:
+            view: "הצגת תבנית"
+            edit: "עריכת תבנית"
+            delete: "מחיקת תבנית"
+        view_template:
+          close: "סגירה"
+          edit: "עריכה"
+          delete: "מחיקה"
+        new_template_form:
+          submit: "שמירה"
+          cancel: "ביטול"
+          name:
+            label: "שם התבנית"
+            placeholder: "נא למלא שם לתבנית…"
+          template:
+            label: "תבנית"
+            placeholder: "יצירת תבנית YAML כאן…"
+        delete_confirm: "למחוק את התבנית הזאת?"
+        quick_insert_fields:
+          add_new_field: "הוספה"
+          checkbox: "תיבת סימון"
+          input: "תשובה קצרה"
+          textarea: "תשובה ארוכה"
+          dropdown: "נפתח"
+          upload: "העלאת קובץ"
+          multiselect: "מגוון אפשרויות"
       impersonate:
         title: "התחזות"
         help: "ניתן להשתמש בכלי הזה כדי להתחזות לחשבון משתמש למטרות טיפול בשגיאות. יהיה עליך לצאת לאחר הסיום."
@@ -5788,7 +5838,8 @@ he:
         allow_title: לאפשר להשתמש בעיטור ככותרת
         multiple_grant: יכולים להינתן מספר פעמים
         listable: הצגת עיטורים בעמוד העיטורים הפומבי
-        enabled: הפעלת עיטור
+        enabled: פעיל
+        disabled: מושבת
         icon: סמליל
         image: תמונה
         graphic: גרפיקה

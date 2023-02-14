@@ -1341,6 +1341,9 @@ be:
         custom:
           save: "захаваць"
           delete: "выдаляць"
+          links:
+            icon: "Абразка"
+            name: "імя"
         about:
           header_link_text: "Аб тэме"
         messages:
@@ -1743,6 +1746,21 @@ be:
         form:
           add: "дадаць"
           success: "поспех"
+      form_templates:
+        nav_title: "шаблоны"
+        list_table:
+          headings:
+            name: "імя"
+            actions: "дзеянні"
+        view_template:
+          close: "зачыніць"
+          edit: "рэдагаваць"
+          delete: "выдаляць"
+        new_template_form:
+          submit: "захаваць"
+          cancel: "адмяніць"
+        quick_insert_fields:
+          add_new_field: "дадаць"
       impersonate:
         title: "ўвасобіцца"
         not_found: "Карыстача не ўдалося знайсці."
@@ -1951,6 +1969,7 @@ be:
         no_user_badges: " %{Name} не атрымліваў ні аднаго."
         no_badges: Тут няма значкоў, якія могуць быць прадастаўлены.
         allow_title: Дазволіць выкарыстанне значкоў як званняў
+        disabled: адключана
         icon: Абразка
         image: Выява
         trigger: Трыггер старту

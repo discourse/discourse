@@ -2470,8 +2470,6 @@ ro:
       images: "Imagini"
       email_in: "Adresa email de primire preferențială:"
       email_in_allow_strangers: "Acceptă emailuri de la utilizatori anonimi fără cont"
-      email_in_disabled: "Postarea subiectelor noi prin email este dezactivată din setările siteului. Pentru a activa postarea subiectelor noi prin email,"
-      email_in_disabled_click: 'activează opțiunea "primire email ".'
       sort_order: "Sortează lista de subiecte după:"
       default_view: "Listă implicită de subiecte:"
       allow_badges_label: "Permite acordarea de ecusoane în această categorie"
@@ -2918,6 +2916,9 @@ ro:
         custom:
           save: "Salvare"
           delete: "Șterge"
+          links:
+            icon: "Pictogramă"
+            name: "Nume"
         about:
           header_link_text: "Despre"
         messages:
@@ -3529,6 +3530,22 @@ ro:
         test:
           button_label: "Test"
           no_matches: "Nu s-au găsit potriviri"
+      form_templates:
+        nav_title: "Șabloane"
+        list_table:
+          headings:
+            name: "Nume"
+            actions: "Acțiuni"
+        view_template:
+          close: "Închide sondajul"
+          edit: "Modifică"
+          delete: "Șterge"
+        new_template_form:
+          submit: "Salvare"
+          cancel: "Anulare"
+        quick_insert_fields:
+          add_new_field: "Adaugă"
+          dropdown: "Meniu derulant"
       impersonate:
         title: "Joacă rolul utilizatorului"
         help: "Folosește această unealtă pentru a imita un cont de utilizator pentru depanare. Va trebui să te deconectezi după ce termini."
@@ -3840,7 +3857,8 @@ ro:
         allow_title: Permite ca ecusonul să fie folosit ca titlu
         multiple_grant: Poate fi acordat de mai multe ori
         listable: Arată ecuson pe pagina publică a ecusoanelor
-        enabled: Activează ecuson
+        enabled: activat
+        disabled: dezactivat
         icon: Pictogramă
         image: Imagine
         query: Interogare ecusoane (SQL)
