@@ -4580,6 +4580,7 @@ he:
         create: "יצירה"
         edit: "עריכה"
         save: "שמירה"
+        description_label: "הקפצות לאירועים"
         controls: "מכוונים"
         go_back: "חזרה לרשימה"
         payload_url: "URL של התוכן"
@@ -4686,6 +4687,7 @@ he:
         broken_route: "לא ניתן להגדיר את הקישור אל ‚%{name}’. כדאי לוודא שחוסמי פרסומות מושבתים ואז לנסות לטעון את הדף מחדש."
       navigation_menu:
         sidebar: "סרגל צד"
+        header_dropdown: "שורת כותרת נגללת"
         legacy: "מיושן"
       backups:
         title: "גיבויים"
