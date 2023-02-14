@@ -4,6 +4,7 @@ require "rails_helper"
 
 RSpec.describe Chat::Api::ChatChannelThreadsController do
   fab!(:current_user) { Fabricate(:user) }
+  fab!(:public_channel) { Fabricate(:chat_channel, threading_enabled: true) }
 
   before do
     SiteSetting.chat_enabled = true
@@ -15,7 +16,12 @@ RSpec.describe Chat::Api::ChatChannelThreadsController do
 
   describe "show" do
     context "when thread does not exist" do
-      fab!(:thread) { Fabricate(:chat_thread, original_message: Fabricate(:chat_message)) }
+      fab!(:thread) do
+        Fabricate(
+          :chat_thread,
+          original_message: Fabricate(:chat_message, chat_channel: public_channel),
+        )
+      end
 
       it "returns 404" do
         thread.destroy!
@@ -25,7 +31,12 @@ RSpec.describe Chat::Api::ChatChannelThreadsController do
     end
 
     context "when thread exists" do
-      fab!(:thread) { Fabricate(:chat_thread, original_message: Fabricate(:chat_message)) }
+      fab!(:thread) do
+        Fabricate(
+          :chat_thread,
+          original_message: Fabricate(:chat_message, chat_channel: public_channel),
+        )
+      end
 
       it "works" do
         get "/chat/api/channels/#{thread.channel_id}/threads/#{thread.id}"
@@ -38,6 +49,15 @@ RSpec.describe Chat::Api::ChatChannelThreadsController do
 
         it "returns 404" do
           get "/chat/api/channels/#{other_channel.id}/threads/#{thread.id}"
+          expect(response.status).to eq(404)
+        end
+      end
+
+      context "when channel does not have threading enabled" do
+        before { thread.channel.update!(threading_enabled: false) }
+
+        it "returns 404" do
+          get "/chat/api/channels/#{thread.channel_id}/threads/#{thread.id}"
           expect(response.status).to eq(404)
         end
       end

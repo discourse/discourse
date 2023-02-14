@@ -221,6 +221,7 @@ after_initialize do
   load File.expand_path("../app/services/update_channel_status.rb", __FILE__)
   load File.expand_path("../app/services/chat_message_destroyer.rb", __FILE__)
   load File.expand_path("../app/services/update_user_last_read.rb", __FILE__)
+  load File.expand_path("../app/services/lookup_thread.rb", __FILE__)
   load File.expand_path("../app/controllers/api_controller.rb", __FILE__)
   load File.expand_path("../app/controllers/api/chat_channels_controller.rb", __FILE__)
   load File.expand_path("../app/controllers/api/chat_current_user_channels_controller.rb", __FILE__)
