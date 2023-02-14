@@ -267,9 +267,10 @@ export default class ChatMessage extends Component {
     };
   }
 
-  @discourseComputed("message.thread_id")
-  hasThread() {
-    return this.chatChannel.threading_enabled && this.message.thread_id;
+  get hasThread() {
+    return (
+      this.args.chatChannel.threading_enabled && this.args.message.thread_id
+    );
   }
 
   get show() {
