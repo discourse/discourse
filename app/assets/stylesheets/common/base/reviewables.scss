@@ -263,6 +263,7 @@
   .reviewable-actions {
     display: flex;
     flex-wrap: wrap;
+    gap: 1rem;
     width: 100%;
 
     button {
@@ -489,7 +490,7 @@
   }
 
   &__context-question {
-    margin-top: 1rem;
+    margin-block: 1rem;
   }
 }
 
