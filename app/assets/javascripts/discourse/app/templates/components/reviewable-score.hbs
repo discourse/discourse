@@ -4,11 +4,6 @@
       {{avatar this.rs.user imageSize="tiny"}}
       {{this.rs.user.username}}
     </UserLink>
-    <UserFlagPercentage
-      @agreed={{this.rs.agree_stats.agreed}}
-      @disagreed={{this.rs.agree_stats.disagreed}}
-      @ignored={{this.rs.agree_stats.ignored}}
-    />
   </td>
   <td>
     {{d-icon this.rs.score_type.icon}}
