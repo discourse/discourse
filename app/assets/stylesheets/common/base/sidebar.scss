@@ -143,6 +143,15 @@
   input.warning {
     border: 1px solid var(--danger);
   }
+  .checkbox-label {
+    clear: both;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    cursor: pointer;
+    input {
+      width: auto;
+    }
+  }
   .row-wrapper {
     display: grid;
     grid-template-columns: auto auto auto 2em;

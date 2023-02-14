@@ -4367,6 +4367,7 @@ en:
           save: "Save"
           delete: "Delete"
           delete_confirm: "Are you sure you want to delete this section?"
+          public: "Make this section public and visible to everyone"
           links:
             icon: "Icon"
             name: "Name"

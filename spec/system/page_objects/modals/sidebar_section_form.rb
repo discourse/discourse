@@ -12,6 +12,10 @@ module PageObjects
         fill_in "link-url", with: url, match: :first
       end
 
+      def mark_as_public
+        find(".modal .checkbox-label").click
+      end
+
       def remove_last_link
         all(".delete-link").last.click
       end

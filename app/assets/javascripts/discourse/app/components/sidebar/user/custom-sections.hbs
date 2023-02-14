@@ -4,12 +4,7 @@
       @sectionName={{section.slug}}
       @headerLinkText={{section.title}}
       @collapsable={{true}}
-      @headerActions={{array
-        (hash
-          action=(action this.editSection section)
-          title=(i18n "sidebar.sections.custom.edit")
-        )
-      }}
+      @headerActions={{section.headerActions}}
       @headerActionsIcon="pencil-alt"
     >
       {{#each section.links as |link|}}

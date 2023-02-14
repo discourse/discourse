@@ -3,6 +3,7 @@
 class SidebarSectionsController < ApplicationController
   requires_login
   before_action :check_if_member_of_group
+  before_action :check_access_if_public
 
   def create
     sidebar_section =
@@ -38,7 +39,7 @@ class SidebarSectionsController < ApplicationController
   end
 
   def section_params
-    params.permit(:id, :title)
+    params.permit(:id, :title, :public)
   end
 
   def links_params
@@ -50,6 +51,14 @@ class SidebarSectionsController < ApplicationController
     if !SiteSetting.enable_custom_sidebar_sections.present? ||
          !current_user.in_any_groups?(SiteSetting.enable_custom_sidebar_sections_map)
       raise Discourse::InvalidAccess
+    end
+  end
+
+  private
+
+  def check_access_if_public
+    if params[:public] && !@guardian.can_create_public_sidebar_section?
+      raise Discourse::InvalidAccess.new
     end
   end
 end

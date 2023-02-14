@@ -69,6 +69,12 @@
       @icon="plus"
       @label="sidebar.sections.custom.links.add"
     />
+    {{#if this.currentUser.staff}}
+      <label class="checkbox-label">
+        <Input @type="checkbox" @checked={{this.model.public}} />
+        {{i18n "sidebar.sections.custom.public"}}
+      </label>
+    {{/if}}
   </form>
 </DModalBody>
 

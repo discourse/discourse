@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
-import { action } from "@ember/object";
 import showModal from "discourse/lib/show-modal";
 import { inject as service } from "@ember/service";
 import RouteInfoHelper from "discourse/lib/sidebar/route-info-helper";
+import I18n from "I18n";
 
 export default class SidebarUserCustomSections extends Component {
   @service currentUser;
@@ -10,6 +10,16 @@ export default class SidebarUserCustomSections extends Component {
 
   get sections() {
     this.currentUser.sidebarSections.forEach((section) => {
+      if (!section.public || this.currentUser.staff) {
+        section.headerActions = [
+          {
+            action: () => {
+              return showModal("sidebar-section-form", { model: section });
+            },
+            title: I18n.t("sidebar.sections.custom.edit"),
+          },
+        ];
+      }
       section.links.forEach((link) => {
         const routeInfoHelper = new RouteInfoHelper(this.router, link.value);
         link.route = routeInfoHelper.route;
@@ -18,10 +28,5 @@ export default class SidebarUserCustomSections extends Component {
       });
     });
     return this.currentUser.sidebarSections;
-  }
-
-  @action
-  editSection(section) {
-    showModal("sidebar-section-form", { model: section });
   }
 }

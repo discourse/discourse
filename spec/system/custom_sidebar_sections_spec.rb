@@ -2,6 +2,7 @@
 
 describe "Custom sidebar sections", type: :system, js: true do
   fab!(:user) { Fabricate(:user) }
+  fab!(:admin) { Fabricate(:admin) }
   let(:section_modal) { PageObjects::Modals::SidebarSectionForm.new }
   let(:sidebar) { PageObjects::Components::Sidebar.new }
 
@@ -9,6 +10,7 @@ describe "Custom sidebar sections", type: :system, js: true do
     ### TODO remove when enable_custom_sidebar_sections SiteSetting is removed
     group = Fabricate(:group)
     Fabricate(:group_user, group: group, user: user)
+    Fabricate(:group_user, group: group, user: admin)
     SiteSetting.enable_custom_sidebar_sections = group.id.to_s
     sign_in user
   end
@@ -55,6 +57,22 @@ describe "Custom sidebar sections", type: :system, js: true do
     expect(page).not_to have_link("Sidebar Categories")
   end
 
+  it "does not allow the user to edit public section" do
+    sidebar_section = Fabricate(:sidebar_section, title: "Public section", user: user, public: true)
+    sidebar_url_1 = Fabricate(:sidebar_url, name: "Sidebar Tags", value: "/tags")
+    Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url_1)
+    sidebar_url_2 = Fabricate(:sidebar_url, name: "Sidebar Categories", value: "/categories")
+    Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url_2)
+
+    visit("/latest")
+
+    expect(page).to have_button("Public section")
+    find(".sidebar-section-public-section").hover
+    expect(page).not_to have_css(
+      ".sidebar-section-public-section button.sidebar-section-header-button",
+    )
+  end
+
   it "allows the user to delete custom section" do
     sidebar_section = Fabricate(:sidebar_section, title: "My section", user: user)
     sidebar_url_1 = Fabricate(:sidebar_url, name: "tags", value: "/tags")
@@ -68,5 +86,31 @@ describe "Custom sidebar sections", type: :system, js: true do
     section_modal.confirm_delete
 
     expect(page).not_to have_button("My section")
+  end
+
+  it "allows admin to created, edit and delete public section" do
+    sign_in admin
+    visit("/latest")
+    sidebar.open_new_custom_section
+
+    section_modal.fill_name("Public section")
+    section_modal.fill_link("Sidebar Tags", "/tags")
+    section_modal.mark_as_public
+    section_modal.save
+
+    expect(page).to have_button("Public section")
+    expect(page).to have_link("Sidebar Tags")
+
+    sidebar.edit_custom_section("Public section")
+    section_modal.fill_name("Edited public section")
+    section_modal.save
+
+    expect(page).to have_button("Edited public section")
+
+    sidebar.edit_custom_section("Edited public section")
+    section_modal.delete
+    section_modal.confirm_delete
+
+    expect(page).not_to have_button("Edited public section")
   end
 end
