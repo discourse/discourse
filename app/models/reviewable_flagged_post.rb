@@ -136,7 +136,7 @@ class ReviewableFlaggedPost < Reviewable
     # end
   end
 
-  def perform_ignore(performed_by, args)
+  def perform_ignore_and_do_nothing(performed_by, args)
     actions =
       PostAction
         .active

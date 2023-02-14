@@ -600,6 +600,11 @@ en:
         all:
           title: "(everything)"
 
+      context_question:
+        is_this_post: "Is this post %{reviewable_human_score_types}?"
+        delimiter: "or"
+        something_else_wrong: "Is there something else wrong with this post?"
+
       types:
         reviewable_flagged_post:
           title: "Flagged Post"
