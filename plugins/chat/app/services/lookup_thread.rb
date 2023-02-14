@@ -28,8 +28,10 @@ module Chat
 
       # @!visibility private
       class Contract
-        attribute :thread_id, presence: true
-        attribute :channel_id, presence: true
+        attribute :thread_id
+        attribute :channel_id
+
+        validates :thread_id, :channel_id, presence: true
       end
 
       private
@@ -38,12 +40,12 @@ module Chat
         SiteSetting.enable_experimental_chat_threaded_discussions
       end
 
-      def fetch_thread(thread_id:, channel_id:, **)
-        ChatThread
-          .includes(:channel)
-          .includes(original_message_user: :user_status)
-          .includes(original_message: :chat_webhook_event)
-          .find_by!(id: thread_id, channel_id: channel_id)
+      def fetch_thread(contract:, **)
+        ChatThread.includes(
+          :channel,
+          original_message_user: :user_status,
+          original_message: :chat_webhook_event,
+        ).find_by(id: contract.thread_id, channel_id: contract.channel_id)
       end
 
       def invalid_access(guardian:, thread:, **)
