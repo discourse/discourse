@@ -609,7 +609,7 @@ export default Component.extend({
         return this.chatChannelsManager
           .getChannel(this.chatChannel.id)
           .then((reactedChannel) => {
-            this.onSwitchChannel(reactedChannel);
+            this.router.transitionTo("chat.channel", "-", reactedChannel.id);
           });
       }
     });
