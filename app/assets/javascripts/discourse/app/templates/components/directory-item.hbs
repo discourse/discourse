@@ -1,16 +1,56 @@
-<td><UserInfo @user={{this.item.user}} /></td>
-{{#each this.columns as |column|}}
-  <td>
-    {{#if (directory-column-is-user-field column=column)}}
-      {{directory-item-user-field-value item=this.item column=column}}
-    {{else}}
-      {{directory-item-value item=this.item column=column}}
-    {{/if}}
-  </td>
-{{/each}}
+{{#if this.site.mobileView}}
+  <td><UserInfo @user={{this.item.user}} /></td>
+  {{#each this.columns as |column|}}
+    <td>
+      {{#if (directory-column-is-user-field column=column)}}
+        {{directory-item-user-field-value item=this.item column=column}}
+      {{else}}
+        {{directory-item-value item=this.item column=column}}
+      {{/if}}
+    </td>
+  {{/each}}
 
-{{#if this.showTimeRead}}
-  <td><span class="time-read">{{format-duration
-        this.item.time_read
-      }}</span></td>
+  {{#if this.showTimeRead}}
+    <td><span class="time-read">{{format-duration
+          this.item.time_read
+        }}</span></td>
+  {{/if}}
+{{else}}
+  <UserInfo @user={{this.item.user}} />
+
+  {{#each this.columns as |column|}}
+    {{#if (directory-column-is-user-field column=column)}}
+      {{#if (get this.item.user.user_fields column.user_field_id)}}
+        <div class="user-stat">
+          <span class="value user-field">
+            {{directory-item-user-field-value item=this.item column=column}}
+          </span>
+          <span class="label">
+            {{column.name}}
+          </span>
+        </div>
+      {{/if}}
+
+    {{else}}
+      <div class="user-stat">
+        <span class="value">
+          {{directory-item-value item=this.item column=column}}
+        </span>
+        <span class="label">
+          {{#if column.icon}}
+            {{d-icon column.icon}}
+          {{/if}}
+          {{mobile-directory-item-label item=this.item column=column}}
+        </span>
+      </div>
+    {{/if}}
+  {{/each}}
+
+  {{#if this.showTimeRead}}
+    <UserStat
+      @value={{this.item.time_read}}
+      @label="directory.time_read"
+      @type="duration"
+    />
+  {{/if}}
 {{/if}}
