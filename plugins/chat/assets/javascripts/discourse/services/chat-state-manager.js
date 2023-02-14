@@ -34,7 +34,6 @@ export default class ChatStateManager extends Service {
     this._store.setObject({ key: PREFERRED_MODE_KEY, value: DRAWER_CHAT });
   }
 
-
   openSidePanel() {
     this.set("isSidePanelExpanded", true);
   }
