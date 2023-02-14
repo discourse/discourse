@@ -1,5 +1,15 @@
 {{#if this.reviewable.reviewable_scores}}
   <table class="reviewable-scores">
+    <thead>
+      <tr>
+        <th>{{i18n "review.scores.submitted_by"}}</th>
+        <th>{{i18n "review.scores.type"}}</th>
+        <th>{{i18n "review.scores.date"}}</th>
+        <th>{{i18n "review.scores.reviewed_by"}}</th>
+        <th>{{i18n "review.scores.status"}}</th>
+        <th>{{i18n "review.scores.reviewed_timestamp"}}</th>
+      </tr>
+    </thead>
     <tbody>
       {{#each this.reviewable.reviewable_scores as |rs|}}
         <ReviewableScore @rs={{rs}} @reviewable={{this.reviewable}} />

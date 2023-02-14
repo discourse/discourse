@@ -579,10 +579,12 @@ en:
         about: "This score is calculated based on the trust level of the reporter, the accuracy of their previous flags, and the priority of the item being reported."
         score: "Score"
         date: "Date"
-        type: "Type"
+        type: "Reason"
         status: "Status"
-        submitted_by: "Submitted By"
-        reviewed_by: "Reviewed By"
+        submitted_by: "Submitted by"
+        reviewed_by: "Reviewed by"
+        # flag_type: Reason"
+        reviewed_timestamp: "Reviewed on"
 
       statuses:
         pending:
