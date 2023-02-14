@@ -35,7 +35,7 @@ export default function (helpers) {
             index: 2,
             fields: [
               { id: "company_name", type: "text", required: true },
-              { id: "theme_preview", type: "component" },
+              { id: "styling_preview", type: "component" },
             ],
             previous: "styling",
           },
