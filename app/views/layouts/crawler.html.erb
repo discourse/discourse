@@ -9,23 +9,20 @@
     <%= theme_lookup("head_tag") %>
     <%= render_google_universal_analytics_code %>
     <%= yield :head %>
-    <% if show_browser_update? %>
-      <style>.buorg {position:absolute; z-index:111111; width:100%; top:0px; left:0px; background:#FDF2AB; text-align:left; font-family: sans-serif; color:#000; font-size: 14px;} .buorg div {padding: 8px;} .buorg a, .buorg a:visited {color:#E25600; text-decoration: underline;} @media print { .buorg { display: none !important; } }</style>
-    <% end %>
     <%= build_plugin_html 'server:before-head-close-crawler' %>
   </head>
   <body class="crawler">
     <%= theme_lookup("header") %>
     <%= render partial: "layouts/noscript_header" %>
     <div id="main-outlet" class="wrap" role="main">
+      <% if show_browser_update? %>
+        <div class="buorg"><div><%= I18n.t("js.browser_update").html_safe %></div></div>
+      <% end %>
       <%= yield %>
     </div>
     <%= render partial: "layouts/noscript_footer" %>
     <%= theme_lookup("footer") %>
     <%= theme_lookup("body_tag") %>
-    <% if show_browser_update? %>
-      <div class="buorg"><div><%= I18n.t("js.browser_update").html_safe %></div></div>
-    <% end %>
   </body>
   <%= yield :after_body %>
 </html>
