@@ -42,6 +42,7 @@ export default class ChatMessage extends Component {
   @service chatEmojiReactionStore;
   @service chatEmojiPickerManager;
   @service chatChannelsManager;
+  @service router;
 
   @tracked chatMessageActionsMobileAnchor = null;
   @tracked chatMessageActionsDesktopAnchor = null;
@@ -694,7 +695,10 @@ export default class ChatMessage extends Component {
 
   @action
   openThread() {
-    this.router.transitionTo("chat.channel.thread", this.message.thread_id);
+    this.router.transitionTo(
+      "chat.channel.thread",
+      this.args.message.thread_id
+    );
   }
 
   @action
