@@ -4616,10 +4616,14 @@ en:
         about: "Edit your group membership and names here"
         group_members: "Group members"
         delete: "Delete"
-        delete_confirm: "Are you sure you want to delete this group?"
+        delete_confirm: "Are you sure you want to delete %{group}?"
+        delete_details:
+          one: "%{count} person will lose access to this group"
+          other: "%{count} people will lose access to this group"
         delete_with_messages_confirm:
-          one: "Deleting this group will cause %{count} message to be orphaned, group members will no longer have access to it."
-          other: "Deleting this group will cause %{count} messages to be orphaned, group members will no longer have access to them."
+          one: "%{count} message will become inaccessible to group members"
+          other: "%{count} messages will become inaccessible to group members"
+        delete_warning: "Deleted groups can not be recovered"
         delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
         delete_automatic_group: This is an automatic group and cannot be deleted.
         delete_owner_confirm: "Remove owner privilege for '%{username}'?"
