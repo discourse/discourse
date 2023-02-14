@@ -26,6 +26,9 @@
         "avatar_template": { "type": "string" },
         "username": { "type": "string" }
       }
+    },
+    "meta": {
+      "can_join_chat_channel": { "type": "boolean" }
     }
   }
 }
