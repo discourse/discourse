@@ -1,0 +1,8 @@
+{{#if this.chatStateManager.isDrawerExpanded}}
+  <DButton
+    @icon="discourse-expand"
+    class="btn-flat btn-link chat-drawer-header__full-screen-btn"
+    @title={{"chat.open_full_page"}}
+    @action={{@openInFullPage}}
+  />
+{{/if}}

@@ -12,9 +12,10 @@ export default function withChatChannel(extendedClass) {
 
     afterModel(model) {
       this.controllerFor("chat-channel").set("targetMessageId", null);
-      this.chat.setActiveChannel(model);
+      this.chat.activeChannel = model;
 
-      let { messageId } = this.paramsFor(this.routeName);
+      let { messageId, channelTitle } = this.paramsFor(this.routeName);
+
       // messageId query param backwards-compatibility
       if (messageId) {
         this.router.replaceWith(
@@ -24,7 +25,6 @@ export default function withChatChannel(extendedClass) {
         );
       }
 
-      const { channelTitle } = this.paramsFor("chat.channel");
       if (channelTitle && channelTitle !== model.slugifiedTitle) {
         const nearMessageParams = this.paramsFor("chat.channel.near-message");
         if (nearMessageParams.messageId) {

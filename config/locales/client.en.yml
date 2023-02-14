@@ -3688,8 +3688,7 @@ en:
       email_in: "Custom incoming email address:"
       email_in_tooltip: "You can separate multiple email addresses with the | character."
       email_in_allow_strangers: "Accept emails from anonymous users with no accounts"
-      email_in_disabled: "Posting new topics via email is disabled in the Site Settings. To enable posting new topics via email, "
-      email_in_disabled_click: 'enable the "email in" setting.'
+      email_in_disabled: "Posting new topics via email is disabled. To enable posting new topics via email, enable the <a href='%{setting_url}'>'email in'</a> setting."
       mailinglist_mirror: "Category mirrors a mailing list"
       show_subcategory_list: "Show subcategory list above topics in this category."
       read_only_banner: "Banner text when a user cannot create a topic in this category:"
@@ -4059,6 +4058,7 @@ en:
         title: "Composing"
         return: "%{shortcut} Return to composer"
         fullscreen: "%{shortcut} Fullscreen composer"
+        insert_current_time: "%{shortcut} Insert current time"
       bookmarks:
         title: "Bookmarking"
         enter: "%{shortcut} Save and close"
@@ -4724,7 +4724,7 @@ en:
               revoke_badge_from_user: Revoke a badge from a user.
             search:
               show: Search using the `/search.json?q=term` endpoint.
-              query: Search using the /search/query?term=term` endpoint.
+              query: Search using the `/search/query?term=term` endpoint.
             wordpress:
               publishing: Necessary for the WP Discourse plugin publishing features (required).
               commenting: Necessary for the WP Discourse plugin commenting features.
@@ -5508,6 +5508,41 @@ en:
           found_matches: "Found matches:"
           no_matches: "No matches found"
 
+      form_templates:
+        nav_title: "Templates"
+        title: "Form Templates"
+        help: "Create a template structure that can be used to create new topics, posts, and messages."
+        new_template: "New Template"
+        list_table:
+          headings:
+            name: "Name"
+            actions: "Actions"
+          actions:
+            view: "View Template"
+            edit: "Edit Template"
+            delete: "Delete Template"
+        view_template:
+          close: "Close"
+          edit: "Edit"
+          delete: "Delete"
+        new_template_form:
+          submit: "Save"
+          cancel: "Cancel"
+          name:
+            label: "Template Name"
+            placeholder: "Enter a name for this template..."
+          template:
+            label: "Template"
+            placeholder: "Create a YAML template here..."
+        delete_confirm: "Are you sure you would like to delete this template?"
+        quick_insert_fields:
+          add_new_field: "Add"
+          checkbox: "Checkbox"
+          input: "Short answer"
+          textarea: "Long answer"
+          dropdown: "Dropdown"
+          upload: "Upload a file"
+          multiselect: "Multiple choice"
       impersonate:
         title: "Impersonate"
         help: "Use this tool to impersonate a user account for debugging purposes. You will have to log out once finished."
@@ -5977,7 +6012,8 @@ en:
         allow_title: Allow badge to be used as a title
         multiple_grant: Can be granted multiple times
         listable: Show badge on the public badges page
-        enabled: Enable badge
+        enabled: enabled
+        disabled: disabled
         icon: Icon
         image: Image
         graphic: Graphic

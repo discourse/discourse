@@ -10,19 +10,6 @@ module SiteSettings::DeprecatedSettings
     ["default_categories_regular", "default_categories_normal", true, "3.0"],
     ["min_trust_to_send_messages", "personal_message_enabled_groups", false, "3.0"],
     ["enable_personal_messages", "personal_message_enabled_groups", false, "3.0"],
-    ["secure_media", "secure_uploads", true, "3.0"],
-    [
-      "secure_media_allow_embed_images_in_emails",
-      "secure_uploads_allow_embed_images_in_emails",
-      true,
-      "3.0",
-    ],
-    [
-      "secure_media_max_email_embed_image_size_kb",
-      "secure_uploads_max_email_embed_image_size_kb",
-      true,
-      "3.0",
-    ],
   ]
 
   def setup_deprecated_methods

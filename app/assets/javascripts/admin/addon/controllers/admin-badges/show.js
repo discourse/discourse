@@ -1,7 +1,6 @@
 import Controller, { inject as controller } from "@ember/controller";
 import { observes } from "discourse-common/utils/decorators";
 import I18n from "I18n";
-
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { next } from "@ember/runloop";
@@ -24,6 +23,14 @@ export default class AdminBadgesShowController extends Controller.extend(
   @tracked saving = false;
   @tracked savingStatus = "";
   @tracked selectedGraphicType = null;
+
+  get badgeEnabledLabel() {
+    if (this.buffered.get("enabled")) {
+      return "admin.badges.enabled";
+    } else {
+      return "admin.badges.disabled";
+    }
+  }
 
   get badgeTypes() {
     return this.adminBadges.badgeTypes;
@@ -237,5 +244,12 @@ export default class AdminBadgesShowController extends Controller.extend(
           });
       },
     });
+  }
+
+  @action
+  toggleBadge() {
+    this.model
+      .save({ enabled: !this.buffered.get("enabled") })
+      .catch(popupAjaxError);
   }
 }

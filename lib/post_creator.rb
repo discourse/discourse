@@ -328,9 +328,8 @@ class PostCreator
     if PostCreator.track_post_stats
       sequence = DraftSequence.current(@user, draft_key)
       revisions =
-        Draft.where(sequence: sequence, user_id: @user.id, draft_key: draft_key).pluck_first(
-          :revisions,
-        ) || 0
+        Draft.where(sequence: sequence, user_id: @user.id, draft_key: draft_key).pick(:revisions) ||
+          0
 
       @post.build_post_stat(
         drafts_saved: revisions,

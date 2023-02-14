@@ -217,6 +217,8 @@ export function createData(store) {
       { disabled: true, text: "disabled" },
     ],
 
+    toggleSwitchState: true,
+
     navItems: ["latest", "categories", "top"].map((name) => {
       let item = NavItem.fromText(name);
 

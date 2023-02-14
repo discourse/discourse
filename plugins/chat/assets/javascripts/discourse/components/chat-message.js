@@ -230,6 +230,14 @@ export default class ChatMessage extends Component {
       });
     }
 
+    if (this.hasThread) {
+      buttons.push({
+        id: "openThread",
+        name: I18n.t("chat.threads.open"),
+        icon: "puzzle-piece",
+      });
+    }
+
     return buttons;
   }
 
@@ -245,6 +253,7 @@ export default class ChatMessage extends Component {
       restore: this.restore,
       rebakeMessage: this.rebakeMessage,
       toggleBookmark: this.toggleBookmark,
+      openThread: this.openThread,
       startReactionForMessageActions: this.startReactionForMessageActions,
     };
   }
@@ -254,7 +263,13 @@ export default class ChatMessage extends Component {
       canReact: this.canReact,
       canReply: this.canReply,
       canBookmark: this.showBookmarkButton,
+      hasThread: this.canReply && this.hasThread,
     };
+  }
+
+  @discourseComputed("message.thread_id")
+  hasThread() {
+    return this.chatChannel.threading_enabled && this.message.thread_id;
   }
 
   get show() {
@@ -541,7 +556,7 @@ export default class ChatMessage extends Component {
         return this.args.chatChannelsManager
           .getChannel(this.args.chatChannel.id)
           .then((reactedChannel) => {
-            this.args.onSwitchChannel(reactedChannel);
+            this.router.transitionTo("chat.channel", "-", reactedChannel.id);
           });
       }
     });
@@ -628,9 +643,15 @@ export default class ChatMessage extends Component {
     this.args.setReplyTo(this.args.message.id);
   }
 
-  @action
-  viewReply() {
-    this.args.replyMessageClicked(this.args.message.in_reply_to);
+  viewReplyOrThread() {
+    if (this.hasThread) {
+      this.router.transitionTo(
+        "chat.channel.thread",
+        this.args.message.thread_id
+      );
+    } else {
+      this.args.replyMessageClicked(this.args.message.in_reply_to);
+    }
   }
 
   @action
@@ -668,6 +689,11 @@ export default class ChatMessage extends Component {
         type: "PUT",
       }
     ).catch(popupAjaxError);
+  }
+
+  @action
+  openThread() {
+    this.router.transitionTo("chat.channel.thread", this.message.thread_id);
   }
 
   @action

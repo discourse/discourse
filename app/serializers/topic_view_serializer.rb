@@ -283,7 +283,7 @@ class TopicViewSerializer < ApplicationSerializer
           owner: true,
         },
       )
-      .pluck_first(:name)
+      .pick(:name)
   end
 
   def include_requested_group_name?

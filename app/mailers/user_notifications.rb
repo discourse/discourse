@@ -504,7 +504,7 @@ class UserNotifications < ActionMailer::Base
     user_name = notification_data[:original_username]
 
     if post && SiteSetting.enable_names && SiteSetting.display_name_on_email_from
-      name = User.where(id: notification_data[:original_user_id] || post.user_id).pluck_first(:name)
+      name = User.where(id: notification_data[:original_user_id] || post.user_id).pick(:name)
       user_name = name unless name.blank?
     end
 
@@ -589,7 +589,7 @@ class UserNotifications < ActionMailer::Base
       # subcategory case
       if !category.parent_category_id.nil?
         show_category_in_subject =
-          "#{Category.where(id: category.parent_category_id).pluck_first(:name)}/#{show_category_in_subject}"
+          "#{Category.where(id: category.parent_category_id).pick(:name)}/#{show_category_in_subject}"
       end
     else
       show_category_in_subject = nil

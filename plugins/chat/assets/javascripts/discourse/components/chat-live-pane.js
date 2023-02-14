@@ -45,7 +45,6 @@ export default Component.extend({
   loadingMorePast: false,
   loadingMoreFuture: false,
   hoveredMessageId: null,
-  onSwitchChannel: null,
 
   allPastMessagesLoaded: false,
   sendingLoading: false,
@@ -776,7 +775,14 @@ export default Component.extend({
           id: data.chat_message.id,
           staged_id: null,
           excerpt: data.chat_message.excerpt,
+          thread_id: data.chat_message.thread_id,
         });
+
+        const inReplyToMsg =
+          this.messageLookup[data.chat_message.in_reply_to?.id];
+        if (inReplyToMsg && !inReplyToMsg.thread_id) {
+          inReplyToMsg.set("thread_id", data.chat_message.thread_id);
+        }
 
         // some markdown is cooked differently on the server-side, e.g.
         // quotes, avatar images etc.
@@ -986,57 +992,58 @@ export default Component.extend({
     }
 
     this.set("_nextStagedMessageId", this._nextStagedMessageId + 1);
-    const cooked = this.cook(message);
-    const stagedId = this._nextStagedMessageId;
-    let data = {
-      message,
-      cooked,
-      staged_id: stagedId,
-      upload_ids: uploads.map((upload) => upload.id),
-    };
-    if (this.replyToMsg) {
-      data.in_reply_to_id = this.replyToMsg.id;
-    }
+    return this.chat.loadCookFunction(this.site.categories).then((cook) => {
+      const cooked = cook(message);
+      const stagedId = this._nextStagedMessageId;
+      let data = {
+        message,
+        cooked,
+        staged_id: stagedId,
+        upload_ids: uploads.map((upload) => upload.id),
+      };
+      if (this.replyToMsg) {
+        data.in_reply_to_id = this.replyToMsg.id;
+      }
 
-    // Start ajax request but don't return here, we want to stage the message instantly when all messages are loaded.
-    // Otherwise, we'll fetch latest and scroll to the one we just created.
-    // Return a resolved promise below.
-    const msgCreationPromise = this.chatApi
-      .sendMessage(this.chatChannel.id, data)
-      .catch((error) => {
-        this._onSendError(data.staged_id, error);
-      })
-      .finally(() => {
-        if (this._selfDeleted) {
-          return;
-        }
-        this.set("sendingLoading", false);
-      });
+      // Start ajax request but don't return here, we want to stage the message instantly when all messages are loaded.
+      // Otherwise, we'll fetch latest and scroll to the one we just created.
+      // Return a resolved promise below.
+      const msgCreationPromise = this.chatApi
+        .sendMessage(this.chatChannel.id, data)
+        .catch((error) => {
+          this._onSendError(data.staged_id, error);
+        })
+        .finally(() => {
+          if (this._selfDeleted) {
+            return;
+          }
+          this.set("sendingLoading", false);
+        });
 
-    if (this.details?.can_load_more_future) {
-      msgCreationPromise.then(() => this._fetchAndScrollToLatest());
-    } else {
-      const stagedMessage = this._prepareSingleMessage(
-        // We need to add the user and created at for presentation of staged message
-        {
-          message,
-          cooked,
-          stagedId,
-          uploads: cloneJSON(uploads),
-          staged: true,
-          user: this.currentUser,
-          in_reply_to: this.replyToMsg,
-          created_at: new Date(),
-        },
-        this.messages[this.messages.length - 1]
-      );
-      this.messages.pushObject(stagedMessage);
-      this._stickScrollToBottom();
-    }
+      if (this.details?.can_load_more_future) {
+        msgCreationPromise.then(() => this._fetchAndScrollToLatest());
+      } else {
+        const stagedMessage = this._prepareSingleMessage(
+          // We need to add the user and created at for presentation of staged message
+          {
+            message,
+            cooked,
+            stagedId,
+            uploads: cloneJSON(uploads),
+            staged: true,
+            user: this.currentUser,
+            in_reply_to: this.replyToMsg,
+            created_at: new Date(),
+          },
+          this.messages[this.messages.length - 1]
+        );
+        this.messages.pushObject(stagedMessage);
+        this._stickScrollToBottom();
+      }
 
-    this._resetAfterSend();
-    this.appEvents.trigger("chat-composer:reply-to-set", null);
-    return Promise.resolve();
+      this._resetAfterSend();
+      this.appEvents.trigger("chat-composer:reply-to-set", null);
+    });
   },
 
   async _upsertChannelWithMessage(channel, message, uploads) {
@@ -1056,7 +1063,7 @@ export default Component.extend({
           upload_ids: (uploads || []).mapBy("id"),
         },
       }).then(() => {
-        this.onSwitchChannel(c);
+        this.router.transitionTo("chat.channel", "-", c.id);
       })
     );
   },

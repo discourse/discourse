@@ -188,7 +188,7 @@ class TopicQuery
         when :user
           user_first_unread_pm_at(user)
         when :group
-          GroupUser.where(user: user, group: group).pluck_first(:first_unread_pm_at)
+          GroupUser.where(user: user, group: group).pick(:first_unread_pm_at)
         else
           user_first_unread_pm_at = user_first_unread_pm_at(user)
 
@@ -284,7 +284,7 @@ class TopicQuery
     end
 
     def user_first_unread_pm_at(user)
-      UserStat.where(user: user).pluck_first(:first_unread_pm_at)
+      UserStat.where(user: user).pick(:first_unread_pm_at)
     end
 
     def group_with_messages_ids(user)

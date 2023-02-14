@@ -14,6 +14,7 @@ export default class ChatStateManager extends Service {
   @service router;
   isDrawerExpanded = false;
   isDrawerActive = false;
+  isSidePanelExpanded = false;
   @tracked _chatURL = null;
   @tracked _appURL = null;
 
@@ -33,12 +34,20 @@ export default class ChatStateManager extends Service {
     this._store.setObject({ key: PREFERRED_MODE_KEY, value: DRAWER_CHAT });
   }
 
-  didOpenDrawer(URL = null) {
+  openSidePanel() {
+    this.set("isSidePanelExpanded", true);
+  }
+
+  closeSidePanel() {
+    this.set("isSidePanelExpanded", false);
+  }
+
+  didOpenDrawer(url = null) {
     this.set("isDrawerActive", true);
     this.set("isDrawerExpanded", true);
 
-    if (URL) {
-      this.storeChatURL(URL);
+    if (url) {
+      this.storeChatURL(url);
     }
 
     this.chat.updatePresence();
@@ -90,12 +99,12 @@ export default class ChatStateManager extends Service {
     return this.isFullPageActive || this.isDrawerActive;
   }
 
-  storeAppURL(URL = null) {
-    this._appURL = URL || this.router.currentURL;
+  storeAppURL(url = null) {
+    this._appURL = url || this.router.currentURL;
   }
 
-  storeChatURL(URL = null) {
-    this._chatURL = URL || this.router.currentURL;
+  storeChatURL(url = null) {
+    this._chatURL = url || this.router.currentURL;
   }
 
   get lastKnownAppURL() {

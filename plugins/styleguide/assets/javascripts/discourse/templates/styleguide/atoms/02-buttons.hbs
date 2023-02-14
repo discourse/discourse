@@ -153,3 +153,13 @@
     />
   {{/each}}
 </StyleguideExample>
+
+<StyleguideExample @title="DToggleSwitch">
+  <DToggleSwitch
+    @state={{this.dummy.toggleSwitchState}}
+    {{on
+      "click"
+      (fn (mut this.dummy.toggleSwitchState) (not this.dummy.toggleSwitchState))
+    }}
+  />
+</StyleguideExample>
