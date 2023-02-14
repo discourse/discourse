@@ -775,7 +775,14 @@ export default Component.extend({
           id: data.chat_message.id,
           staged_id: null,
           excerpt: data.chat_message.excerpt,
+          thread_id: data.chat_message.thread_id,
         });
+
+        const inReplyToMsg =
+          this.messageLookup[data.chat_message.in_reply_to?.id];
+        if (inReplyToMsg && !inReplyToMsg.thread_id) {
+          inReplyToMsg.set("thread_id", data.chat_message.thread_id);
+        }
 
         // some markdown is cooked differently on the server-side, e.g.
         // quotes, avatar images etc.

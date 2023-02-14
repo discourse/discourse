@@ -45,6 +45,15 @@ RSpec.describe PostAlerter do
   fab!(:user) { Fabricate(:user) }
   fab!(:tl2_user) { Fabricate(:user, trust_level: TrustLevel[2]) }
 
+  fab!(:private_category) do
+    Fabricate(
+      :private_category,
+      group: group,
+      email_in: "test@test.com",
+      email_in_allow_strangers: true,
+    )
+  end
+
   def create_post_with_alerts(args = {})
     post = Fabricate(:post, args)
     PostAlerter.post_created(post)
@@ -609,22 +618,13 @@ RSpec.describe PostAlerter do
       group_member = Fabricate(:user)
       group.add(group_member)
 
-      private_category =
-        Fabricate(
-          :private_category,
-          group: group,
-          email_in: "test@test.com",
-          email_in_allow_strangers: true,
-        )
-
       staged_user_post = create_post(user: staged_user, category: private_category)
 
-      linking =
-        create_post(
-          user: group_member,
-          category: private_category,
-          raw: "my magic topic\n##{Discourse.base_url}#{staged_user_post.url}",
-        )
+      create_post(
+        user: group_member,
+        category: private_category,
+        raw: "my magic topic\n##{Discourse.base_url}#{staged_user_post.url}",
+      )
 
       staged_user.reload
       expect(
@@ -1392,6 +1392,17 @@ RSpec.describe PostAlerter do
       )
     end
 
+    it "does not notify admins when suppress_secured_categories_from_admin is enabled" do
+      SiteSetting.suppress_secured_categories_from_admin = true
+
+      topic = Fabricate(:topic, category: private_category)
+      post = Fabricate(:post, raw: "hello @#{admin.username} how are you today?", topic: topic)
+
+      PostAlerter.post_created(post)
+
+      expect(admin.notifications.count).to eq(0)
+    end
+
     it "doesn't notify regular user about whispered reply" do
       _post = Fabricate(:post, user: user, topic: topic)
 
@@ -1638,14 +1649,6 @@ RSpec.describe PostAlerter do
 
         group.add(group_member)
         group.add(staged_member)
-
-        private_category =
-          Fabricate(
-            :private_category,
-            group: group,
-            email_in: "test@test.com",
-            email_in_allow_strangers: false,
-          )
 
         level = CategoryUser.notification_levels[:watching]
         CategoryUser.set_notification_level_for_category(group_member, level, private_category.id)

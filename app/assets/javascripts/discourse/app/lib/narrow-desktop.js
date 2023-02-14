@@ -10,7 +10,7 @@ const NarrowDesktop = {
   },
 
   isNarrowDesktopView(width) {
-    return width < 1000;
+    return width < 768;
   },
 };
 

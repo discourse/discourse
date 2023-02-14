@@ -19,6 +19,7 @@ describe "Custom sidebar sections", type: :system, js: true do
 
     expect(section_modal).to be_visible
     expect(section_modal).to have_disabled_save
+    expect(find("#discourse-modal-title")).to have_content("Add custom section")
 
     section_modal.fill_name("My section")
 
@@ -41,6 +42,8 @@ describe "Custom sidebar sections", type: :system, js: true do
     visit("/latest")
 
     sidebar.edit_custom_section("My section")
+    expect(find("#discourse-modal-title")).to have_content("Edit custom section")
+
     section_modal.fill_name("Edited section")
     section_modal.fill_link("Edited Tags", "/tags")
     section_modal.remove_last_link

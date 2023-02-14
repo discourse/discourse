@@ -20,7 +20,12 @@ class ChatChannelSerializer < ApplicationSerializer
              :archive_topic_id,
              :memberships_count,
              :current_user_membership,
-             :meta
+             :meta,
+             :threading_enabled
+
+  def threading_enabled
+    SiteSetting.enable_experimental_chat_threaded_discussions && object.threading_enabled
+  end
 
   def initialize(object, opts)
     super(object, opts)

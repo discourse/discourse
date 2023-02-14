@@ -14,6 +14,7 @@ export default class ChatStateManager extends Service {
   @service router;
   isDrawerExpanded = false;
   isDrawerActive = false;
+  isSidePanelExpanded = false;
   @tracked _chatURL = null;
   @tracked _appURL = null;
 
@@ -31,6 +32,15 @@ export default class ChatStateManager extends Service {
 
   prefersDrawer() {
     this._store.setObject({ key: PREFERRED_MODE_KEY, value: DRAWER_CHAT });
+  }
+
+
+  openSidePanel() {
+    this.set("isSidePanelExpanded", true);
+  }
+
+  closeSidePanel() {
+    this.set("isSidePanelExpanded", false);
   }
 
   didOpenDrawer(url = null) {

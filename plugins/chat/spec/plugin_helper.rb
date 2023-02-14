@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "faker"
+
 module ChatSystemHelpers
   def chat_system_bootstrap(user = Fabricate(:admin), channels_for_membership = [])
     # ensures we have one valid registered admin/user
@@ -19,6 +21,31 @@ module ChatSystemHelpers
 
     # this is reset after each test
     Bookmark.register_bookmarkable(ChatMessageBookmarkable)
+  end
+
+  def chat_thread_chain_bootstrap(channel:, users:, messages_count: 4)
+    last_user = nil
+    last_message = nil
+
+    messages_count.times do |i|
+      in_reply_to = i.zero? ? nil : last_message.id
+      thread_id = i.zero? ? nil : last_message.thread_id
+      last_user = last_user.present? ? (users - [last_user]).sample : users.sample
+      creator =
+        Chat::ChatMessageCreator.new(
+          chat_channel: channel,
+          in_reply_to_id: in_reply_to,
+          thread_id: thread_id,
+          user: last_user,
+          content: Faker::Lorem.paragraph,
+        )
+      creator.create
+
+      raise creator.error if creator.error
+      last_message = creator.chat_message
+    end
+
+    last_message.thread
   end
 end
 

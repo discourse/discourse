@@ -203,6 +203,12 @@ export default Controller.extend(ModalFunctionality, {
     return this.model.links.filter((link) => !link._destroy);
   },
 
+  get header() {
+    return this.model.id
+      ? "sidebar.sections.custom.edit"
+      : "sidebar.sections.custom.add";
+  },
+
   actions: {
     addLink() {
       this.model.links.pushObject(new SectionLink({ router: this.router }));

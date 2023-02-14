@@ -116,3 +116,4 @@ chat:
   enable_experimental_chat_threaded_discussions:
     default: false
     hidden: true
+    client: true

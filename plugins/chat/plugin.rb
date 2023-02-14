@@ -69,6 +69,8 @@ register_asset "stylesheets/colors.scss", :color_definitions
 register_asset "stylesheets/common/reviewable-chat-message.scss"
 register_asset "stylesheets/common/chat-mention-warnings.scss"
 register_asset "stylesheets/common/chat-channel-settings-saved-indicator.scss"
+register_asset "stylesheets/common/chat-thread.scss"
+register_asset "stylesheets/common/chat-side-panel.scss"
 
 register_svg_icon "comments"
 register_svg_icon "comment-slash"
@@ -155,6 +157,8 @@ after_initialize do
   load File.expand_path("../app/serializers/chat_channel_serializer.rb", __FILE__)
   load File.expand_path("../app/serializers/chat_channel_index_serializer.rb", __FILE__)
   load File.expand_path("../app/serializers/chat_channel_search_serializer.rb", __FILE__)
+  load File.expand_path("../app/serializers/chat_thread_original_message_serializer.rb", __FILE__)
+  load File.expand_path("../app/serializers/chat_thread_serializer.rb", __FILE__)
   load File.expand_path("../app/serializers/chat_view_serializer.rb", __FILE__)
   load File.expand_path(
          "../app/serializers/user_with_custom_fields_and_status_serializer.rb",
@@ -237,6 +241,7 @@ after_initialize do
        )
   load File.expand_path("../app/controllers/api/category_chatables_controller.rb", __FILE__)
   load File.expand_path("../app/controllers/api/hints_controller.rb", __FILE__)
+  load File.expand_path("../app/controllers/api/chat_channel_threads_controller.rb", __FILE__)
   load File.expand_path("../app/controllers/api/chat_chatables_controller.rb", __FILE__)
   load File.expand_path("../app/queries/chat_channel_memberships_query.rb", __FILE__)
 
@@ -605,6 +610,8 @@ after_initialize do
 
       # Hints for JIT warnings.
       get "/mentions/groups" => "hints#check_group_mentions", :format => :json
+
+      get "/channels/:channel_id/threads/:thread_id" => "chat_channel_threads#show"
     end
 
     # direct_messages_controller routes
@@ -656,6 +663,8 @@ after_initialize do
 
     # /channel -> /c redirects
     get "/channel/:channel_id", to: redirect("/chat/c/-/%{channel_id}")
+
+    get "#{base_c_route}/t/:thread_id" => "chat#respond"
 
     base_channel_route = "/channel/:channel_id/:channel_title"
     redirect_base = "/chat/c/%{channel_title}/%{channel_id}"
