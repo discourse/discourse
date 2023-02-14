@@ -50,11 +50,10 @@ class ReviewableFlaggedPost < Reviewable
       build_action(actions, :agree_and_hide, icon: "far-eye-slash", bundle: agree)
     end
 
-    # if post.hidden?
-    #   build_action(actions, :agree_and_keep_hidden, icon: "thumbs-up", bundle: agree)
-    # else
-    #   build_action(actions, :agree_and_keep, icon: "thumbs-up", bundle: agree)
-    # end
+    if post.hidden?
+      build_action(actions, :agree_and_keep_hidden, icon: "thumbs-up", bundle: agree)
+      build_action(actions, :delete_and_agree, icon: "far-trash-alt", bundle: agree)
+    end
 
     build_action(actions, :delete_and_agree, icon: "far-trash-alt", bundle: agree)
 
@@ -99,9 +98,9 @@ class ReviewableFlaggedPost < Reviewable
         label: "reviewables.actions.ignore.title",
       )
 
-    # this doesnt exist yet, needs to be made + icon is not available somehow
-    build_action(actions, :ignore_and_do_nothing, icon: "external-link-alt", bundle: ignore)
-
+    if !post.hidden?
+      build_action(actions, :ignore_and_do_nothing, icon: "external-link-alt", bundle: ignore)
+    end
     build_action(actions, :delete_and_ignore, icon: "far-trash-alt", bundle: ignore)
 
     delete_user_actions(actions) if potential_spam? && guardian.can_delete_user?(target_created_by)

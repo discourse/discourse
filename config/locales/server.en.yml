@@ -2454,7 +2454,7 @@ en:
       search_tokenize_japanese_enabled: "You must disable 'search_tokenize_japanese' before enabling this setting."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "You cannot enable DiscourseConnect if 2FA is enforced."
       delete_rejected_email_after_days: "This setting cannot be set lower than the delete_email_logs_after_days setting or greater than %{max}"
-      invalid_uncategorized_category_setting: "The \"Uncategorized\" category cannot be selected if 'allow uncategorized topics' is not enabled."
+      invalid_uncategorized_category_setting: 'The "Uncategorized" category cannot be selected if ''allow uncategorized topics'' is not enabled.'
       enable_new_notifications_menu_not_legacy_navigation_menu: "You must set `navigation_menu` to `legacy` before enabling this setting."
       invalid_search_ranking_weights: "Value is invalid for search_ranking_weights site setting. Example: '{0.1,0.2,0.3,1.0}'. Note that maximum value for each weight is 1.0."
 
@@ -5136,8 +5136,8 @@ en:
         title: "Keep post"
         description: "Agree with flag and keep the post unchanged."
       agree_and_keep_hidden:
-        title: "Yes, keep post hidden"
-        description: "Agree with flag and leave the post hidden."
+        title: "Keep post hidden"
+        description: "Agree with flag and keep the post hidden."
       agree_and_suspend:
         title: "Suspend user"
         description: "Agree with flag and suspend the user."
@@ -5156,16 +5156,16 @@ en:
         title: "Delete..."
       delete_and_ignore:
         title: "Ignore flag and delete post"
-        description: "Remove flag from queue without consequences and delete post; if the first post, delete the topic as well. "
+        description: "Ignore the flag by removing it from the queue without consequences and delete post; if the first post, delete the topic as well. "
       delete_and_ignore_replies:
-        title: "ignore flag, delete post + replies"
-        description: "Remove flag from queue without consequences, delete post and all of its replies; if the first post, delete the topic as well"
+        title: "Delete post and replies"
+        description: "Ignore the flag by removing it from the queue without consequences, delete post and all of its replies; if the first post, delete the topic as well"
         confirm: "Are you sure you want to delete the replies to the post as well?"
       delete_and_agree:
         title: "Delete post"
         description: "Agree with flag and delete this post; if the first post, delete the topic as well."
       delete_and_agree_replies:
-        title: "Delete post + replies"
+        title: "Delete post and replies"
         description: "Delete post and all of its replies; if the first post, delete the topic as well."
         confirm: "Are you sure you want to delete the replies to the post as well?"
       disagree_and_restore:
@@ -5176,8 +5176,8 @@ en:
       ignore:
         title: "Ignore"
       ignore_and_do_nothing:
-        title: "Ignore flag and do nothing"
-        description: "Remove flag from queue without taking any action. Hidden posts will stay hidden and be handled by the auto-tools."
+        title: "Do nothing"
+        description: "Ignore the flag by removing it from the queue without taking any action. Hidden posts will stay hidden and be handled by the auto-tools."
       approve:
         title: "Approve"
       approve_post:
