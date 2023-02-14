@@ -50,6 +50,15 @@
     a:visited {
       color: var(--header_primary);
     }
+
+    &:not(.title--minimized) {
+      // allows large logos to be hidden if there are too many other header elements
+      // this prioritizes nav elements, especially in cases of high zoom levels
+      overflow: hidden;
+      a {
+        min-width: 0;
+      }
+    }
   }
 
   #site-logo {
