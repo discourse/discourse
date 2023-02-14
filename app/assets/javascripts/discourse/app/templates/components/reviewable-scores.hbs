@@ -5,9 +5,11 @@
         <th>{{i18n "review.scores.submitted_by"}}</th>
         <th>{{i18n "review.scores.date"}}</th>
         <th>{{i18n "review.scores.type"}}</th>
-        <th>{{i18n "review.scores.reviewed_by"}}</th>
-        <th>{{i18n "review.scores.reviewed_timestamp"}}</th>
-        <th>{{i18n "review.scores.status"}}</th>
+        {{#if (not-eq this.reviewable.status 0)}}
+          <th>{{i18n "review.scores.reviewed_by"}}</th>
+          <th>{{i18n "review.scores.reviewed_timestamp"}}</th>
+          <th>{{i18n "review.scores.status"}}</th>
+        {{/if}}
       </tr>
     </thead>
     <tbody>
