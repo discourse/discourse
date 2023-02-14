@@ -4,10 +4,7 @@
 >
   <div class="reviewable-meta-data">
     <span
-      class={{concat-class
-        "reviewable-type"
-        (if (this.reviewable.humanType) "-flag" "-queue")
-      }}
+      class={{concat-class "reviewable-type" this.reviewable.humanTypeCssClass}}
     >{{this.reviewable.humanType}}</span>
     {{#if this.reviewable.reply_count}}
       <span class="reply-count">{{i18n
@@ -65,19 +62,17 @@
         this.reviewableComponent
         reviewable=this.reviewable
         tagName=""
-      }}
-        <ReviewableScores @reviewable={{this.reviewable}} @tagName="" />
-      {{/component}}
+      }}{{/component}}
     {{/if}}
   </div>
-  {{#if (eq this.reviewable.humanType "Flagged Post")}}
-    <h3 class="reviewable-item__context-question">Is this post
-      {{#each this.reviewable.reviewable_scores as |rs|}}
-        {{rs.score_type.title}}
-      {{/each}}
-      ?
+  <ReviewableScores @reviewable={{this.reviewable}} @tagName="" />
+
+  {{#if (eq this.reviewable.type "ReviewableFlaggedPost")}}
+    <h3 class="reviewable-item__context-question">
+      {{this.reviewable.flaggedPostContextQuestion}}
     </h3>
   {{/if}}
+
   <div class="reviewable-actions">
     {{#if this.reviewable.last_performing_username}}
       <div class="stale-help">{{html-safe

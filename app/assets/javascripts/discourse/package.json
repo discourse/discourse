@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@babel/core": "^7.20.12",
-    "@babel/standalone": "^7.20.14",
+    "@babel/standalone": "^7.20.15",
     "@discourse/backburner.js": "^2.7.1-0",
     "@discourse/itsatrap": "^2.0.10",
     "@ember-compat/tracked-built-ins": "^0.9.1",
@@ -72,7 +72,7 @@
     "ember-rfc176-data": "^0.3.18",
     "ember-source": "~3.28.11",
     "ember-test-selectors": "^6.0.0",
-    "eslint": "^8.33.0",
+    "eslint": "^8.34.0",
     "eslint-plugin-qunit": "^7.3.4",
     "handlebars": "^4.7.7",
     "html-entities": "^2.3.3",

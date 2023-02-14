@@ -180,6 +180,7 @@ group :development do
   gem "better_errors", platform: :mri, require: !!ENV["BETTER_ERRORS"]
   gem "binding_of_caller"
   gem "yaml-lint"
+  gem "yard"
 end
 
 if ENV["ALLOW_DEV_POPULATE"] == "1"

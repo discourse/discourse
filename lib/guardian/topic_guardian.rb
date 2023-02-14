@@ -143,7 +143,7 @@ module TopicGuardian
 
   def can_recover_topic?(topic)
     if is_staff? || (topic&.category && is_category_group_moderator?(topic.category)) ||
-         (SiteSetting.tl4_delete_posts_and_topics && user.has_trust_level?(TrustLevel[4]))
+         (SiteSetting.tl4_delete_posts_and_topics && user&.has_trust_level?(TrustLevel[4]))
       !!(topic && topic.deleted_at)
     else
       topic && can_recover_post?(topic.ordered_posts.first)
@@ -212,7 +212,7 @@ module TopicGuardian
 
   def can_see_deleted_topics?(category)
     is_staff? || is_category_group_moderator?(category) ||
-      (SiteSetting.tl4_delete_posts_and_topics && user.has_trust_level?(TrustLevel[4]))
+      (SiteSetting.tl4_delete_posts_and_topics && user&.has_trust_level?(TrustLevel[4]))
   end
 
   # Accepts an array of `Topic#id` and returns an array of `Topic#id` which the user can see.

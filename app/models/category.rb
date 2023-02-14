@@ -46,6 +46,8 @@ class Category < ActiveRecord::Base
   has_many :topic_timers, dependent: :destroy
   has_many :upload_references, as: :target, dependent: :destroy
 
+  has_one :category_setting, dependent: :destroy
+
   has_and_belongs_to_many :web_hooks
 
   validates :user_id, presence: true
@@ -788,9 +790,8 @@ class Category < ActiveRecord::Base
 
   def self.query_parent_category(parent_slug)
     encoded_parent_slug = CGI.escape(parent_slug) if SiteSetting.slug_generation_method == "encoded"
-    self.where(slug: (encoded_parent_slug || parent_slug), parent_category_id: nil).pluck_first(
-      :id,
-    ) || self.where(id: parent_slug.to_i).pluck_first(:id)
+    self.where(slug: (encoded_parent_slug || parent_slug), parent_category_id: nil).pick(:id) ||
+      self.where(id: parent_slug.to_i).pick(:id)
   end
 
   def self.query_category(slug_or_id, parent_category_id)

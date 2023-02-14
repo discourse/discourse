@@ -69,6 +69,8 @@ register_asset "stylesheets/colors.scss", :color_definitions
 register_asset "stylesheets/common/reviewable-chat-message.scss"
 register_asset "stylesheets/common/chat-mention-warnings.scss"
 register_asset "stylesheets/common/chat-channel-settings-saved-indicator.scss"
+register_asset "stylesheets/common/chat-thread.scss"
+register_asset "stylesheets/common/chat-side-panel.scss"
 
 register_svg_icon "comments"
 register_svg_icon "comment-slash"
@@ -91,6 +93,7 @@ require_relative "app/core_ext/plugin_instance.rb"
 GlobalSetting.add_default(:allow_unsecure_chat_uploads, false)
 
 after_initialize do
+  # Namespace for classes and modules parts of chat plugin
   module ::Chat
     PLUGIN_NAME = "chat"
     HAS_CHAT_ENABLED = "has_chat_enabled"
@@ -119,6 +122,7 @@ after_initialize do
          "../app/controllers/admin/admin_incoming_chat_webhooks_controller.rb",
          __FILE__,
        )
+  load File.expand_path("../app/helpers/with_service_helper.rb", __FILE__)
   load File.expand_path("../app/controllers/chat_base_controller.rb", __FILE__)
   load File.expand_path("../app/controllers/chat_controller.rb", __FILE__)
   load File.expand_path("../app/controllers/emojis_controller.rb", __FILE__)
@@ -153,6 +157,8 @@ after_initialize do
   load File.expand_path("../app/serializers/chat_channel_serializer.rb", __FILE__)
   load File.expand_path("../app/serializers/chat_channel_index_serializer.rb", __FILE__)
   load File.expand_path("../app/serializers/chat_channel_search_serializer.rb", __FILE__)
+  load File.expand_path("../app/serializers/chat_thread_original_message_serializer.rb", __FILE__)
+  load File.expand_path("../app/serializers/chat_thread_serializer.rb", __FILE__)
   load File.expand_path("../app/serializers/chat_view_serializer.rb", __FILE__)
   load File.expand_path(
          "../app/serializers/user_with_custom_fields_and_status_serializer.rb",
@@ -163,6 +169,7 @@ after_initialize do
   load File.expand_path("../app/serializers/admin_chat_index_serializer.rb", __FILE__)
   load File.expand_path("../app/serializers/user_chat_message_bookmark_serializer.rb", __FILE__)
   load File.expand_path("../app/serializers/reviewable_chat_message_serializer.rb", __FILE__)
+  load File.expand_path("../app/services/base.rb", __FILE__)
   load File.expand_path("../lib/chat_channel_fetcher.rb", __FILE__)
   load File.expand_path("../lib/chat_channel_hashtag_data_source.rb", __FILE__)
   load File.expand_path("../lib/chat_mailer.rb", __FILE__)
@@ -191,6 +198,8 @@ after_initialize do
   load File.expand_path("../lib/slack_compatibility.rb", __FILE__)
   load File.expand_path("../lib/post_notification_handler.rb", __FILE__)
   load File.expand_path("../lib/secure_uploads_compatibility.rb", __FILE__)
+  load File.expand_path("../lib/endpoint.rb", __FILE__)
+  load File.expand_path("../lib/steps_inspector.rb", __FILE__)
   load File.expand_path("../app/jobs/regular/auto_manage_channel_memberships.rb", __FILE__)
   load File.expand_path("../app/jobs/regular/auto_join_channel_batch.rb", __FILE__)
   load File.expand_path("../app/jobs/regular/process_chat_message.rb", __FILE__)
@@ -207,7 +216,11 @@ after_initialize do
   load File.expand_path("../app/jobs/scheduled/auto_join_users.rb", __FILE__)
   load File.expand_path("../app/jobs/scheduled/chat_periodical_updates.rb", __FILE__)
   load File.expand_path("../app/services/chat_publisher.rb", __FILE__)
+  load File.expand_path("../app/services/trash_channel.rb", __FILE__)
+  load File.expand_path("../app/services/update_channel.rb", __FILE__)
+  load File.expand_path("../app/services/update_channel_status.rb", __FILE__)
   load File.expand_path("../app/services/chat_message_destroyer.rb", __FILE__)
+  load File.expand_path("../app/services/update_user_last_read.rb", __FILE__)
   load File.expand_path("../app/controllers/api_controller.rb", __FILE__)
   load File.expand_path("../app/controllers/api/chat_channels_controller.rb", __FILE__)
   load File.expand_path("../app/controllers/api/chat_current_user_channels_controller.rb", __FILE__)
@@ -228,6 +241,7 @@ after_initialize do
        )
   load File.expand_path("../app/controllers/api/category_chatables_controller.rb", __FILE__)
   load File.expand_path("../app/controllers/api/hints_controller.rb", __FILE__)
+  load File.expand_path("../app/controllers/api/chat_channel_threads_controller.rb", __FILE__)
   load File.expand_path("../app/controllers/api/chat_chatables_controller.rb", __FILE__)
   load File.expand_path("../app/queries/chat_channel_memberships_query.rb", __FILE__)
 
@@ -596,6 +610,8 @@ after_initialize do
 
       # Hints for JIT warnings.
       get "/mentions/groups" => "hints#check_group_mentions", :format => :json
+
+      get "/channels/:channel_id/threads/:thread_id" => "chat_channel_threads#show"
     end
 
     # direct_messages_controller routes
@@ -647,6 +663,8 @@ after_initialize do
 
     # /channel -> /c redirects
     get "/channel/:channel_id", to: redirect("/chat/c/-/%{channel_id}")
+
+    get "#{base_c_route}/t/:thread_id" => "chat#respond"
 
     base_channel_route = "/channel/:channel_id/:channel_title"
     redirect_base = "/chat/c/%{channel_title}/%{channel_id}"

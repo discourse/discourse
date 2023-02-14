@@ -49,6 +49,7 @@ export default Component.extend({
   tagName: "",
   chat: service(),
   dialog: service(),
+  router: service(),
   chatMessageActionsMobileAnchor: null,
   chatMessageActionsDesktopAnchor: null,
   chatMessageEmojiPickerAnchor: null,
@@ -237,6 +238,14 @@ export default Component.extend({
       });
     }
 
+    if (this.hasThread) {
+      buttons.push({
+        id: "openThread",
+        name: I18n.t("chat.threads.open"),
+        icon: "puzzle-piece",
+      });
+    }
+
     return buttons;
   },
 
@@ -252,6 +261,7 @@ export default Component.extend({
       restore: this.restore,
       rebakeMessage: this.rebakeMessage,
       toggleBookmark: this.toggleBookmark,
+      openThread: this.openThread,
       startReactionForMessageActions: this.startReactionForMessageActions,
     };
   },
@@ -261,7 +271,13 @@ export default Component.extend({
       canReact: this.canReact,
       canReply: this.canReply,
       canBookmark: this.showBookmarkButton,
+      hasThread: this.canReply && this.hasThread,
     };
+  },
+
+  @discourseComputed("message.thread_id")
+  hasThread() {
+    return this.chatChannel.threading_enabled && this.message.thread_id;
   },
 
   @discourseComputed("message", "details.can_moderate")
@@ -678,8 +694,12 @@ export default Component.extend({
   },
 
   @action
-  viewReply() {
-    this.replyMessageClicked(this.message.in_reply_to);
+  viewReplyOrThread() {
+    if (this.hasThread) {
+      this.router.transitionTo("chat.channel.thread", this.message.thread_id);
+    } else {
+      this.replyMessageClicked(this.message.in_reply_to);
+    }
   },
 
   @action
@@ -717,6 +737,11 @@ export default Component.extend({
         type: "PUT",
       }
     ).catch(popupAjaxError);
+  },
+
+  @action
+  openThread() {
+    this.router.transitionTo("chat.channel.thread", this.message.thread_id);
   },
 
   @action

@@ -1,5 +1,8 @@
 :root {
   --d-sidebar-width: #{$d-sidebar-width};
+  @include breakpoint(large) {
+    --d-sidebar-width: #{$d-sidebar-narrow-width};
+  }
   --d-sidebar-animation-time: 0.25s;
   --d-sidebar-animation-ease: ease-in-out;
   --d-sidebar-row-height: 30px;

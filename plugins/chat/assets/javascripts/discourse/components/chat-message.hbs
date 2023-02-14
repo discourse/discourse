@@ -84,7 +84,7 @@
         {{#if this.message.in_reply_to}}
           <div
             role="button"
-            onclick={{action "viewReply"}}
+            onclick={{action "viewReplyOrThread"}}
             class="chat-reply is-direct-reply"
           >
             {{d-icon "share" title="chat.in_reply_to"}}

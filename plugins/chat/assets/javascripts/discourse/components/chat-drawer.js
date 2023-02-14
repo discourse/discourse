@@ -220,7 +220,7 @@ export default Component.extend({
 
   @action
   openURL(URL = null) {
-    this.chat.setActiveChannel(null);
+    this.chat.activeChannel = null;
     this.chatStateManager.didOpenDrawer(URL);
 
     const route = this._buildRouteFromURL(
@@ -264,7 +264,7 @@ export default Component.extend({
 
   _openChannel(channelId, afterRenderFunc = null) {
     return this.chatChannelsManager.find(channelId).then((channel) => {
-      this.chat.setActiveChannel(channel);
+      this.chat.activeChannel = channel;
       this.set("view", CHAT_VIEW);
       this.appEvents.trigger("chat:float-toggled", false);
 
@@ -278,7 +278,7 @@ export default Component.extend({
   openInFullPage() {
     this.chatStateManager.storeAppURL();
     this.chatStateManager.prefersFullPage();
-    this.chat.setActiveChannel(null);
+    this.chat.activeChannel = null;
 
     return this.router.transitionTo(this.chatStateManager.lastKnownChatURL);
   },
@@ -297,7 +297,7 @@ export default Component.extend({
   close() {
     this.computeDrawerStyle();
     this.chatStateManager.didCloseDrawer();
-    this.chat.setActiveChannel(null);
+    this.chat.activeChannel = null;
     this.appEvents.trigger("chat:float-toggled", true);
   },
 
@@ -315,7 +315,7 @@ export default Component.extend({
         return;
       }
 
-      this.chat.setActiveChannel(channel);
+      this.chat.activeChannel = channel;
 
       if (!channel) {
         const URL = this._buildURLFromState(LIST_VIEW);

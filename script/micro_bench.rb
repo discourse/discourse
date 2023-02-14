@@ -14,7 +14,7 @@ Benchmark.ips do |b|
 
   b.report("pluck with limit") { User.limit(1).pluck(:name).first }
 
-  b.report("pluck with pluck_first") { User.pluck_first(:name) }
+  b.report("pluck with pick") { User.pick(:name) }
 
   b.report("raw") { conn.exec("SELECT name FROM users LIMIT 1").getvalue(0, 0) }
 end
