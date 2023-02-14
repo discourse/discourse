@@ -100,7 +100,7 @@ class ReviewableFlaggedPost < Reviewable
       )
 
     # this doesnt exist yet, needs to be made + icon is not available somehow
-    build_action(actions, :ignore_and_do_nothing, icon: "times", bundle: ignore)
+    build_action(actions, :ignore_and_do_nothing, icon: "external-link-alt", bundle: ignore)
 
     build_action(actions, :delete_and_ignore, icon: "far-trash-alt", bundle: ignore)
 
