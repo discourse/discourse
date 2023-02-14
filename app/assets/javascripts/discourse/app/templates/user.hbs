@@ -179,9 +179,10 @@
                 >{{d-icon "map-marker-alt"~}}
                   {{this.model.location}}</div>{{/if}}
               {{#if this.model.website_name}}
-                <div class="user-profile-website">{{d-icon "globe"~}}
+                <div class="user-profile-website">
+                  {{! template-lint-disable link-rel-noopener }}
+                  {{d-icon "globe"~}}
                   {{#if this.linkWebsite~}}
-                    {{~! template-lint-disable ~}}
                     <a
                       href={{this.model.website}}
                       rel="noopener {{unless
@@ -195,6 +196,7 @@
                       title={{this.model.website}}
                     >{{this.model.website_name}}</span>
                   {{/if}}
+                  {{! template-lint-enable link-rel-noopener }}
                 </div>
               {{/if}}
               <span>
