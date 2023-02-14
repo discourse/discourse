@@ -1,6 +1,6 @@
 {{! template-lint-disable no-invalid-interactive }}
 
-<ChatMessageSeparator @message={{this.message}} />
+<ChatMessageSeparator @message={{@message}} />
 
 {{#if
   (and
@@ -9,12 +9,12 @@
 }}
   {{#in-element this.chatMessageActionsMobileAnchor}}
     <ChatMessageActionsMobile
-      @message={{this.message}}
+      @message={{@message}}
       @emojiReactions={{this.emojiReactions}}
       @secondaryButtons={{this.secondaryButtons}}
       @messageActions={{this.messageActions}}
       @messageCapabilities={{this.messageCapabilities}}
-      @onHoverMessage={{this.onHoverMessage}}
+      @onHoverMessage={{@onHoverMessage}}
     />
   {{/in-element}}
 {{/if}}
@@ -26,7 +26,7 @@
 }}
   {{#in-element this.chatMessageActionsDesktopAnchor}}
     <ChatMessageActionsDesktop
-      @message={{this.message}}
+      @message={{@message}}
       @emojiReactions={{this.emojiReactions}}
       @secondaryButtons={{this.secondaryButtons}}
       @messageActions={{this.messageActions}}
@@ -36,30 +36,30 @@
 {{/if}}
 
 <div
+  {{will-destroy this.teardownChatMessage}}
+  {{did-insert this.setMessageActionsAnchors}}
+  {{did-insert this.decorateCookedMessage}}
+  {{did-update this.decorateCookedMessage @message.id}}
   {{on "touchmove" this.handleTouchMove passive=true}}
   {{on "touchstart" this.handleTouchStart passive=true}}
   {{on "touchend" this.handleTouchEnd passive=true}}
-  {{on
-    "mouseenter"
-    (fn this.onHoverMessage this.message (hash desktopOnly=true))
-  }}
-  {{on "mouseleave" (fn this.onHoverMessage null (hash desktopOnly=true))}}
+  {{on "mouseenter" (fn @onHoverMessage @message (hash desktopOnly=true))}}
+  {{on "mouseleave" (fn @onHoverMessage null (hash desktopOnly=true))}}
   {{chat/track-message-visibility}}
   class={{concat-class
     "chat-message-container"
-    (if this.isHovered "is-hovered")
-    (if this.selectingMessages "selecting-messages")
+    (if @isHovered "is-hovered")
+    (if @selectingMessages "selecting-messages")
   }}
-  data-id={{or this.message.id this.message.stagedId}}
-  data-staged-id={{if this.message.staged this.message.stagedId}}
+  data-id={{or @message.id @message.stagedId}}
+  data-staged-id={{if @message.staged @message.stagedId}}
 >
   {{#if this.show}}
-    {{#if this.selectingMessages}}
+    {{#if @selectingMessages}}
       <Input
         @type="checkbox"
         class="chat-message-selector"
-        @checked={{this.message.selected}}
-        {{on "click" (action "toggleChecked")}}
+        @checked={{@message.selected}}
       />
     {{/if}}
 
@@ -67,7 +67,7 @@
       <div class="chat-message-deleted">
         <DButton
           @class="btn-flat chat-message-expand"
-          @action={{action "expand"}}
+          @action={{this.expand}}
           @label="chat.deleted"
         />
       </div>
@@ -75,30 +75,41 @@
       <div class="chat-message-hidden">
         <DButton
           @class="btn-flat chat-message-expand"
-          @action={{action "expand"}}
+          @action={{this.expand}}
           @label="chat.hidden"
         />
       </div>
     {{else}}
-      <div class={{this.chatMessageClasses}}>
-        {{#if this.message.in_reply_to}}
+      <div
+        class={{concat-class
+          "chat-message"
+          (if @message.staged "chat-message-staged")
+          (if @message.deleted_at "deleted")
+          (if @message.in_reply_to "is-reply")
+          (if this.hideUserInfo "user-info-hidden")
+          (if @message.error "errored")
+          (if @message.bookmark "chat-message-bookmarked")
+          (if @isHovered "chat-message-selected")
+        }}
+      >
+        {{#if @message.in_reply_to}}
           <div
             role="button"
-            onclick={{action "viewReplyOrThread"}}
+            onclick={{action this.viewReplyOrThread}}
             class="chat-reply is-direct-reply"
           >
             {{d-icon "share" title="chat.in_reply_to"}}
 
-            {{#if this.message.in_reply_to.chat_webhook_event.emoji}}
+            {{#if @message.in_reply_to.chat_webhook_event.emoji}}
               <ChatEmojiAvatar
-                @emoji={{this.message.in_reply_to.chat_webhook_event.emoji}}
+                @emoji={{@message.in_reply_to.chat_webhook_event.emoji}}
               />
             {{else}}
-              <ChatUserAvatar @user={{this.message.in_reply_to.user}} />
+              <ChatUserAvatar @user={{@message.in_reply_to.user}} />
             {{/if}}
 
             <span class="chat-reply__excerpt">
-              {{replace-emoji this.message.in_reply_to.excerpt}}
+              {{replace-emoji @message.in_reply_to.excerpt}}
             </span>
           </div>
         {{/if}}
@@ -115,9 +126,9 @@
           {{/unless}}
 
           <ChatMessageText
-            @cooked={{this.message.cooked}}
-            @uploads={{this.message.uploads}}
-            @edited={{this.message.edited}}
+            @cooked={{@message.cooked}}
+            @uploads={{@message.uploads}}
+            @edited={{@message.edited}}
           >
             {{#if this.hasReactions}}
               <div class="chat-message-reaction-list">
@@ -127,7 +138,7 @@
                   </div>
                 {{/if}}
 
-                {{#each-in this.message.reactions as |emoji reactionAttrs|}}
+                {{#each-in @message.reactions as |emoji reactionAttrs|}}
                   <ChatMessageReaction
                     @reaction={{hash
                       emoji=emoji
@@ -135,16 +146,16 @@
                       count=reactionAttrs.count
                       reacted=reactionAttrs.reacted
                     }}
-                    @react={{action "react"}}
+                    @react={{this.react}}
                     @showUsersList={{true}}
                   />
                 {{/each-in}}
 
-                {{#if this.canInteractWithChat}}
+                {{#if @canInteractWithChat}}
                   {{#unless this.site.mobileView}}
                     <DButton
                       @class="chat-message-react-btn"
-                      @action={{action "startReactionForReactionList"}}
+                      @action={{this.startReactionForReactionList}}
                       @icon="discourse-emojis"
                       @title="chat.react"
                     />
@@ -154,14 +165,14 @@
             {{/if}}
           </ChatMessageText>
 
-          {{#if this.message.error}}
+          {{#if @message.error}}
             <div class="chat-send-error">
-              {{#if (eq this.message.error "network_error")}}
+              {{#if (eq @message.error "network_error")}}
                 <DButton
                   class="retry-staged-message-btn"
-                  @action={{fn this.resendStagedMessage this.message}}
+                  @action={{fn @resendStagedMessage @message}}
+                  @icon="exclamation-circle"
                 >
-                  {{d-icon "exclamation-circle"}}
                   <span class="retry-staged-message-btn__title">
                     {{i18n "chat.retry_staged_message.title"}}
                   </span>
@@ -170,7 +181,7 @@
                   </span>
                 </DButton>
               {{else}}
-                {{this.message.error}}
+                {{@message.error}}
               {{/if}}
             </div>
           {{/if}}
@@ -189,14 +200,14 @@
                 <FlatButton
                   @class="dismiss-mention-warning"
                   @title="chat.mention_warning.dismiss"
-                  @action={{action "dismissMentionWarning"}}
+                  @action={{this.dismissMentionWarning}}
                   @icon="times"
                 />
 
                 {{#if this.mentionWarning.cannot_see}}
-                  <p
-                    class="warning-item cannot-see"
-                  >{{this.mentionedCannotSeeText}}</p>
+                  <p class="warning-item cannot-see">
+                    {{this.mentionedCannotSeeText}}
+                  </p>
                 {{/if}}
 
                 {{#if this.mentionWarning.without_membership}}
@@ -205,16 +216,16 @@
                     <a
                       class="invite-link"
                       href
-                      onclick={{action "inviteMentioned"}}
+                      onclick={{this.inviteMentioned}}
                     >
                       {{i18n "chat.mention_warning.invite"}}
                     </a>
                   </p>
                 {{/if}}
                 {{#if this.mentionWarning.group_mentions_disabled}}
-                  <p
-                    class="warning-item"
-                  >{{this.groupsWithDisabledMentions}}</p>
+                  <p class="warning-item">
+                    {{this.groupsWithDisabledMentions}}
+                  </p>
                 {{/if}}
 
                 {{#if this.mentionWarning.groups_with_too_many_members}}
