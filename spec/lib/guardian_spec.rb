@@ -820,6 +820,42 @@ RSpec.describe Guardian do
     end
   end
 
+  describe "can_receive_post_notifications?" do
+    it "returns false with a nil object" do
+      expect(Guardian.new.can_receive_post_notifications?(nil)).to be_falsey
+      expect(Guardian.new(user).can_receive_post_notifications?(nil)).to be_falsey
+    end
+
+    it "does not allow anonymous to be notified" do
+      expect(Guardian.new.can_receive_post_notifications?(post)).to be_falsey
+    end
+
+    it "allows public categories" do
+      expect(Guardian.new(trust_level_0).can_receive_post_notifications?(post)).to be_truthy
+      expect(Guardian.new(admin).can_receive_post_notifications?(post)).to be_truthy
+    end
+
+    it "diallows secure categories with no access" do
+      secure_category = Fabricate(:category, read_restricted: true)
+      post.topic.update!(category_id: secure_category.id)
+
+      expect(Guardian.new(trust_level_0).can_receive_post_notifications?(post)).to be_falsey
+      expect(Guardian.new(admin).can_receive_post_notifications?(post)).to be_truthy
+
+      SiteSetting.suppress_secured_categories_from_admin = true
+
+      expect(Guardian.new(admin).can_receive_post_notifications?(post)).to be_falsey
+
+      secure_category.set_permissions(group => :write)
+      secure_category.save!
+
+      group.add(admin)
+      group.save!
+
+      expect(Guardian.new(admin).can_receive_post_notifications?(post)).to be_truthy
+    end
+  end
+
   describe "can_see?" do
     it "returns false with a nil object" do
       expect(Guardian.new.can_see?(nil)).to be_falsey
