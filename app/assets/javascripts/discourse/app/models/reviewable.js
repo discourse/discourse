@@ -32,7 +32,7 @@ const Reviewable = RestModel.extend({
 
   @discourseComputed("humanType")
   humanTypeCssClass(humanType) {
-    return dasherize(humanType);
+    return "-" + dasherize(humanType);
   },
 
   @discourseComputed
