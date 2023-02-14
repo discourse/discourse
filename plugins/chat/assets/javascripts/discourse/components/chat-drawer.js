@@ -164,14 +164,14 @@ export default Component.extend({
   },
 
   @action
-  openURL(URL = null) {
+  openURL(url = null) {
     this.chat.activeChannel = null;
-    this.chatStateManager.didOpenDrawer(URL);
-    this.chatDrawerRouter.stateFor(this._routeFromURL(URL));
+    this.chatStateManager.didOpenDrawer(url);
+    this.chatDrawerRouter.stateFor(this._routeFromURL(url));
   },
 
-  _routeFromURL(URL) {
-    let route = this.router.recognize(URL || "/");
+  _routeFromURL(url) {
+    let route = this.router.recognize(url || "/");
 
     // ember might recognize the index subroute
     if (route.localName === "index") {
