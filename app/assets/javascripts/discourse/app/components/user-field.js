@@ -1,34 +1,18 @@
-import Component from "@ember/component";
-import discourseComputed from "discourse-common/utils/decorators";
-import { fmt } from "discourse/lib/computed";
+import Component from "@glimmer/component";
+import UserFieldConfirm from "./user-fields/confirm";
+import UserFieldDropdown from "./user-fields/dropdown";
+import UserFieldMultiselect from "./user-fields/multiselect";
+import UserFieldText from "./user-fields/text";
 
-export default Component.extend({
-  classNameBindings: [":user-field", "field.field_type", "customFieldClass"],
-  layoutName: fmt("field.field_type", "components/user-fields/%@"),
+const COMPONENTS = {
+  confirm: UserFieldConfirm,
+  dropdown: UserFieldDropdown,
+  multiselect: UserFieldMultiselect,
+  text: UserFieldText,
+};
 
-  didInsertElement() {
-    this._super(...arguments);
-
-    let element = this.element.querySelector(
-      ".user-field.dropdown .select-kit-header"
-    );
-    element = element || this.element.querySelector("input");
-    this.field.element = element;
-  },
-
-  @discourseComputed
-  noneLabel() {
-    return "user_fields.none";
-  },
-
-  @discourseComputed("field.name")
-  customFieldClass(fieldName) {
-    if (fieldName) {
-      fieldName = fieldName
-        .replace(/\s+/g, "-")
-        .replace(/[!\"#$%&'\(\)\*\+,\.\/:;<=>\?\@\[\\\]\^`\{\|\}~]/g, "")
-        .toLowerCase();
-      return fieldName && `user-field-${fieldName}`;
-    }
-  },
-});
+export default class UserFieldComponent extends Component {
+  get userFieldComponent() {
+    return COMPONENTS[this.args.field.field_type];
+  }
+}

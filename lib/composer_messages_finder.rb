@@ -206,7 +206,7 @@ class ComposerMessagesFinder
       topic_id: @details[:topic_id],
     )
 
-    reply_username = User.where(id: last_x_replies[0]).pluck_first(:username)
+    reply_username = User.where(id: last_x_replies[0]).pick(:username)
 
     {
       id: "get_a_room",

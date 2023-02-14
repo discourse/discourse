@@ -49,4 +49,7 @@ module ChatSystemHelpers
   end
 end
 
-RSpec.configure { |config| config.include ChatSystemHelpers, type: :system }
+RSpec.configure do |config|
+  config.include ChatSystemHelpers, type: :system
+  config.include Chat::ServiceMatchers
+end

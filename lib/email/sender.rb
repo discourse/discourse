@@ -122,7 +122,7 @@ module Email
           if from_address.blank?
             nil
           else
-            Group.where(email_username: from_address, smtp_enabled: true).pluck_first(:id)
+            Group.where(email_username: from_address, smtp_enabled: true).pick(:id)
           end
         )
 

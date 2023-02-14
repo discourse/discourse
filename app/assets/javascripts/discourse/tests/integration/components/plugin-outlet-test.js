@@ -7,6 +7,9 @@ import { extraConnectorClass } from "discourse/lib/plugin-connectors";
 import { hbs } from "ember-cli-htmlbars";
 import { registerTemporaryModule } from "discourse/tests/helpers/temporary-module-helper";
 import { getOwner } from "discourse-common/lib/get-owner";
+import Component from "@glimmer/component";
+import templateOnly from "@ember/component/template-only";
+import { withSilencedDeprecationsAsync } from "discourse-common/lib/deprecated";
 
 const PREFIX = "discourse/plugins/some-plugin/templates/connectors";
 
@@ -147,3 +150,143 @@ module("Integration | Component | plugin-outlet", function (hooks) {
     );
   });
 });
+
+module(
+  "Integration | Component | plugin-outlet | connector class definitions",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    hooks.beforeEach(function () {
+      registerTemporaryModule(
+        `${PREFIX}/test-name/my-connector`,
+        hbs`<span class='outletArgHelloValue'>{{@outletArgs.hello}}</span><span class='thisHelloValue'>{{this.hello}}</span>`
+      );
+    });
+
+    test("uses classic PluginConnector by default", async function (assert) {
+      await render(
+        hbs`<PluginOutlet @name="test-name" @outletArgs={{hash hello="world"}} />`
+      );
+
+      assert.dom(".outletArgHelloValue").hasText("world");
+      assert.dom(".thisHelloValue").hasText("world");
+    });
+
+    test("uses templateOnly by default when @defaultGlimmer=true", async function (assert) {
+      await render(
+        hbs`<PluginOutlet @name="test-name" @outletArgs={{hash hello="world"}} @defaultGlimmer={{true}} />`
+      );
+
+      assert.dom(".outletArgHelloValue").hasText("world");
+      assert.dom(".thisHelloValue").hasText(""); // `this.` unavailable in templateOnly components
+    });
+
+    test("uses simple object if provided", async function (assert) {
+      this.set("someBoolean", true);
+
+      extraConnectorClass("test-name/my-connector", {
+        shouldRender(args) {
+          return args.someBoolean;
+        },
+
+        setupComponent(args, component) {
+          component.reopen({
+            get hello() {
+              return args.hello + " from setupComponent";
+            },
+          });
+        },
+      });
+
+      await render(
+        hbs`<PluginOutlet @name="test-name" @outletArgs={{hash hello="world" someBoolean=this.someBoolean}} />`
+      );
+
+      assert.dom(".outletArgHelloValue").hasText("world");
+      assert.dom(".thisHelloValue").hasText("world from setupComponent");
+
+      this.set("someBoolean", false);
+      await settled();
+
+      assert.dom(".outletArgHelloValue").doesNotExist();
+    });
+
+    test("ignores classic hooks for glimmer components", async function (assert) {
+      extraConnectorClass("test-name/my-connector", {
+        setupComponent(args, component) {
+          component.reopen({
+            get hello() {
+              return args.hello + " from setupComponent";
+            },
+          });
+        },
+      });
+
+      await withSilencedDeprecationsAsync(
+        "discourse.plugin-outlet-classic-hooks",
+        async () => {
+          await render(
+            hbs`<PluginOutlet @name="test-name" @outletArgs={{hash hello="world"}} @defaultGlimmer={{true}} />`
+          );
+        }
+      );
+
+      assert.dom(".outletArgHelloValue").hasText("world");
+      assert.dom(".thisHelloValue").hasText("");
+    });
+
+    test("uses custom component class if provided", async function (assert) {
+      this.set("someBoolean", true);
+
+      extraConnectorClass(
+        "test-name/my-connector",
+        class MyOutlet extends Component {
+          static shouldRender(args) {
+            return args.someBoolean;
+          }
+
+          get hello() {
+            return this.args.outletArgs.hello + " from custom component";
+          }
+        }
+      );
+
+      await render(
+        hbs`<PluginOutlet @name="test-name" @outletArgs={{hash hello="world" someBoolean=this.someBoolean}} />`
+      );
+
+      assert.dom(".outletArgHelloValue").hasText("world");
+      assert.dom(".thisHelloValue").hasText("world from custom component");
+
+      this.set("someBoolean", false);
+      await settled();
+
+      assert.dom(".outletArgHelloValue").doesNotExist();
+    });
+
+    test("uses custom templateOnly() if provided", async function (assert) {
+      this.set("someBoolean", true);
+
+      extraConnectorClass(
+        "test-name/my-connector",
+        Object.assign(templateOnly(), {
+          shouldRender(args) {
+            return args.someBoolean;
+          },
+        })
+      );
+
+      await render(
+        hbs`<PluginOutlet @name="test-name" @outletArgs={{hash hello="world" someBoolean=this.someBoolean}} />`
+      );
+
+      assert.dom(".outletArgHelloValue").hasText("world");
+      assert.dom(".thisHelloValue").hasText(""); // `this.` unavailable in templateOnly components
+
+      this.set("someBoolean", false);
+      await settled();
+
+      assert.dom(".outletArgHelloValue").doesNotExist();
+    });
+  }
+);

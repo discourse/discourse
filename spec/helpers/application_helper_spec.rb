@@ -683,8 +683,7 @@ RSpec.describe ApplicationHelper do
     end
 
     it "returns two color scheme link tags when dark mode is enabled" do
-      SiteSetting.default_dark_mode_color_scheme_id =
-        ColorScheme.where(name: "Dark").pluck_first(:id)
+      SiteSetting.default_dark_mode_color_scheme_id = ColorScheme.where(name: "Dark").pick(:id)
       cs_stylesheets = helper.discourse_color_scheme_stylesheets
 
       expect(cs_stylesheets).to include("(prefers-color-scheme: dark)")
@@ -740,8 +739,7 @@ RSpec.describe ApplicationHelper do
         helper.request.env[Auth::DefaultCurrentUserProvider::CURRENT_USER_KEY] = user
         @new_cs = Fabricate(:color_scheme, name: "Custom Color Scheme")
 
-        SiteSetting.default_dark_mode_color_scheme_id =
-          ColorScheme.where(name: "Dark").pluck_first(:id)
+        SiteSetting.default_dark_mode_color_scheme_id = ColorScheme.where(name: "Dark").pick(:id)
       end
 
       it "returns no dark scheme stylesheet when user has disabled that option" do

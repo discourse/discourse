@@ -93,6 +93,7 @@ require_relative "app/core_ext/plugin_instance.rb"
 GlobalSetting.add_default(:allow_unsecure_chat_uploads, false)
 
 after_initialize do
+  # Namespace for classes and modules parts of chat plugin
   module ::Chat
     PLUGIN_NAME = "chat"
     HAS_CHAT_ENABLED = "has_chat_enabled"
@@ -121,6 +122,7 @@ after_initialize do
          "../app/controllers/admin/admin_incoming_chat_webhooks_controller.rb",
          __FILE__,
        )
+  load File.expand_path("../app/helpers/with_service_helper.rb", __FILE__)
   load File.expand_path("../app/controllers/chat_base_controller.rb", __FILE__)
   load File.expand_path("../app/controllers/chat_controller.rb", __FILE__)
   load File.expand_path("../app/controllers/emojis_controller.rb", __FILE__)
@@ -167,6 +169,7 @@ after_initialize do
   load File.expand_path("../app/serializers/admin_chat_index_serializer.rb", __FILE__)
   load File.expand_path("../app/serializers/user_chat_message_bookmark_serializer.rb", __FILE__)
   load File.expand_path("../app/serializers/reviewable_chat_message_serializer.rb", __FILE__)
+  load File.expand_path("../app/services/base.rb", __FILE__)
   load File.expand_path("../lib/chat_channel_fetcher.rb", __FILE__)
   load File.expand_path("../lib/chat_channel_hashtag_data_source.rb", __FILE__)
   load File.expand_path("../lib/chat_mailer.rb", __FILE__)
@@ -195,6 +198,8 @@ after_initialize do
   load File.expand_path("../lib/slack_compatibility.rb", __FILE__)
   load File.expand_path("../lib/post_notification_handler.rb", __FILE__)
   load File.expand_path("../lib/secure_uploads_compatibility.rb", __FILE__)
+  load File.expand_path("../lib/endpoint.rb", __FILE__)
+  load File.expand_path("../lib/steps_inspector.rb", __FILE__)
   load File.expand_path("../app/jobs/regular/auto_manage_channel_memberships.rb", __FILE__)
   load File.expand_path("../app/jobs/regular/auto_join_channel_batch.rb", __FILE__)
   load File.expand_path("../app/jobs/regular/process_chat_message.rb", __FILE__)
@@ -211,7 +216,11 @@ after_initialize do
   load File.expand_path("../app/jobs/scheduled/auto_join_users.rb", __FILE__)
   load File.expand_path("../app/jobs/scheduled/chat_periodical_updates.rb", __FILE__)
   load File.expand_path("../app/services/chat_publisher.rb", __FILE__)
+  load File.expand_path("../app/services/trash_channel.rb", __FILE__)
+  load File.expand_path("../app/services/update_channel.rb", __FILE__)
+  load File.expand_path("../app/services/update_channel_status.rb", __FILE__)
   load File.expand_path("../app/services/chat_message_destroyer.rb", __FILE__)
+  load File.expand_path("../app/services/update_user_last_read.rb", __FILE__)
   load File.expand_path("../app/controllers/api_controller.rb", __FILE__)
   load File.expand_path("../app/controllers/api/chat_channels_controller.rb", __FILE__)
   load File.expand_path("../app/controllers/api/chat_current_user_channels_controller.rb", __FILE__)
