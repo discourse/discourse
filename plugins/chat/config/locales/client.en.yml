@@ -343,7 +343,6 @@ en:
         saved: "Saved"
         unfollow: "Leave"
         admin_title: "Admin"
-        retention_info: "Chat history will be saved for %{days} days."
 
       admin:
         title: "Chat"
@@ -415,8 +414,14 @@ en:
           other: "%{commaSeparatedUsernames} and %{count} others are typing"
 
       retention_reminders:
-        public: "Channel history is retained for %{days} days."
-        dm: "Personal chat history is retained for %{days} days."
+        public_none: "Channel history is retained indefinitely."
+        public:
+          one: "Channel history is retained for %{count} day."
+          other: "Channel history is retained for %{count} days."
+        dm_none: "Personal chat history is retained indefinitely."
+        dm:
+          one: "Personal chat history is retained for %{count} day."
+          other: "Personal chat history is retained for %{count} days."
 
       flags:
         off_topic: "This message is not relevant to the current discussion as defined by the channel title, and should probably be moved elsewhere."

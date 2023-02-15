@@ -1,6 +1,5 @@
 import Component from "@ember/component";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "I18n";
 import { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -18,28 +17,9 @@ export default Component.extend({
       !this.chatChannel.isDraft &&
       ((this.chatChannel.isDirectMessageChannel &&
         this.currentUser.needs_dm_retention_reminder) ||
-        (!this.chatChannel.isDirectMessageChannel &&
+        (this.chatChannel.isCategoryChannel &&
           this.currentUser.needs_channel_retention_reminder))
     );
-  },
-
-  @discourseComputed("chatChannel.chatable_type")
-  text() {
-    let days = this.siteSettings.chat_channel_retention_days;
-    let translationKey = "chat.retention_reminders.public";
-
-    if (this.chatChannel.isDirectMessageChannel) {
-      days = this.siteSettings.chat_dm_retention_days;
-      translationKey = "chat.retention_reminders.dm";
-    }
-    return I18n.t(translationKey, { days });
-  },
-
-  @discourseComputed("chatChannel.chatable_type")
-  daysCount() {
-    return this.chatChannel.isDirectMessageChannel
-      ? this.siteSettings.chat_dm_retention_days
-      : this.siteSettings.chat_channel_retention_days;
   },
 
   @action

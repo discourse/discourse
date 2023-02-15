@@ -1,9 +1,9 @@
 {{#if this.show}}
   <div class="chat-retention-reminder">
-    <span class="chat-retention-reminder-text">{{this.text}}</span>
+    <ChatRetentionReminderText @channel={{this.chatChannel}} />
     <DButton
       @class="btn-flat dismiss-btn"
-      @action={{action "dismiss"}}
+      @action={{this.dismiss}}
       @icon="times"
     />
   </div>
