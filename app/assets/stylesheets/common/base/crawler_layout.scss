@@ -5,6 +5,9 @@
 body.crawler,
 body > noscript {
   font-family: serif;
+  h1, h2, h3, h4, h5, h6 {
+    font-family: serif;
+  }
 
   &:after,
   &:before {
@@ -236,7 +239,6 @@ body > noscript {
       display: block;
     }
     h1 {
-      font-size: 2em;
       margin-bottom: 0.25em;
     }
   }
