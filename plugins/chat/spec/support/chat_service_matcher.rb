@@ -25,6 +25,7 @@ module Chat
           end
 
         result[step].merge("spec.fail_step.unexpected_result" => true) if !step_failed?
+
         error_message_with_inspection(message)
       end
 
