@@ -62,10 +62,11 @@
         this.reviewableComponent
         reviewable=this.reviewable
         tagName=""
-      }}{{/component}}
+      }}
+        <ReviewableScores @reviewable={{this.reviewable}} @tagName="" />
+      {{/component}}
     {{/if}}
   </div>
-  <ReviewableScores @reviewable={{this.reviewable}} @tagName="" />
 
   {{#if (eq this.reviewable.type "ReviewableFlaggedPost")}}
     {{#if (eq this.reviewable.status 0)}}
