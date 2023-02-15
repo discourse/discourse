@@ -15,6 +15,7 @@ module Chat
       end
 
       def failure_message
+        set_unexpected_result
         message =
           if !step_exists?
             "Expected #{type} '#{name}' (key: '#{step}') was not found in the result object."
@@ -23,13 +24,11 @@ module Chat
           else
             "expected the service to fail but it succeeded."
           end
-
-        result[step].merge("spec.fail_step.unexpected_result" => true) if !step_failed?
-
         error_message_with_inspection(message)
       end
 
       def failure_message_when_negated
+        set_unexpected_result
         message = "Expected #{type} '#{name}' (key: '#{step}') to succeed but it failed."
         error_message_with_inspection(message)
       end
@@ -55,6 +54,11 @@ module Chat
       def error_message_with_inspection(message)
         inspector = StepsInspector.new(result)
         "#{message}\n\n#{inspector.inspect}\n\n#{inspector.error}"
+      end
+
+      def set_unexpected_result
+        return unless result[step]
+        result[step]["spec.unexpected_result"] = true
       end
     end
 

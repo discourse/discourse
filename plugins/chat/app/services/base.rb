@@ -197,7 +197,7 @@ module Chat
         def call(instance, context)
           method = instance.method(method_name)
           args = {}
-          args = context.to_h if method.arity.positive?
+          args = context.to_h if !method.arity.zero?
           context[result_key] = Context.build
           instance.instance_exec(**args, &method)
         end
@@ -250,7 +250,7 @@ module Chat
           contract = class_name.new(default_values.merge(context.to_h.slice(*attributes)))
           context[contract_name] = contract
           context[result_key] = Context.build
-          if !contract.valid?
+          if contract.invalid?
             context[result_key].fail(errors: contract.errors)
             context.fail!
           end
