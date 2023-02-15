@@ -31,6 +31,10 @@ module Chat
         error_message_with_inspection(message)
       end
 
+      def description
+        "fail a #{type} named '#{name}'"
+      end
+
       private
 
       def step_exists?
@@ -46,7 +50,11 @@ module Chat
       end
 
       def type
-        "step"
+        self.class.name.split("::").last.sub("Fail", "").downcase
+      end
+
+      def step
+        "result.#{type}.#{name}"
       end
 
       def error_message_with_inspection(message)
@@ -56,55 +64,14 @@ module Chat
     end
 
     class FailContract < FailStep
-      attr_reader :error_message
-
-      def step
-        "result.contract.#{name}"
-      end
-
-      def type
-        "contract"
-      end
-
-      def matches?(service)
-        super && has_error?
-      end
-
-      def has_error?
-        result[step].errors.present?
-      end
-
-      def failure_message
-        return "expected contract '#{step}' to have errors" unless has_error?
-        super
-      end
-
-      def description
-        "fail a contract named '#{name}'"
-      end
     end
 
     class FailPolicy < FailStep
-      def type
-        "policy"
-      end
-
-      def step
-        "result.policy.#{name}"
-      end
-
-      def description
-        "fail a policy named '#{name}'"
-      end
     end
 
     class FailToFindModel < FailStep
       def type
         "model"
-      end
-
-      def step
-        "result.model.#{name}"
       end
 
       def description
