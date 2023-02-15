@@ -30,7 +30,7 @@ module Chat
       end
 
       def emoji
-        return "❌" if failure?
+        return spec_fail_unexpected_result? ? "❌ 🚧" : "❌" if failure?
         return "✅" if success?
         ""
       end
@@ -47,6 +47,10 @@ module Chat
 
       def step_result
         result["result.#{type}.#{name}"]
+      end
+
+      def spec_fail_unexpected_result?
+        step_result["spec.fail_step.unexpected_result"]
       end
     end
 

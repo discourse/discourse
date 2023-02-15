@@ -197,7 +197,7 @@ module Chat
         def call(instance, context)
           method = instance.method(method_name)
           args = {}
-          args = context.to_h unless method.arity.zero?
+          args = context.to_h if method.arity.positive?
           context[result_key] = Context.build
           instance.instance_exec(**args, &method)
         end
@@ -217,7 +217,7 @@ module Chat
       class ModelStep < Step
         def call(instance, context)
           context[name] = super
-          raise ArgumentError, "Model not found" unless context[name]
+          raise ArgumentError, "Model not found" if !context[name]
         rescue ArgumentError => exception
           context[result_key].fail(exception: exception)
           context.fail!
@@ -227,7 +227,7 @@ module Chat
       # @!visibility private
       class PolicyStep < Step
         def call(instance, context)
-          unless super
+          if !super
             context[result_key].fail
             context.fail!
           end
@@ -250,7 +250,7 @@ module Chat
           contract = class_name.new(default_values.merge(context.to_h.slice(*attributes)))
           context[contract_name] = contract
           context[result_key] = Context.build
-          unless contract.valid?
+          if !contract.valid?
             context[result_key].fail(errors: contract.errors)
             context.fail!
           end
@@ -384,7 +384,7 @@ module Chat
       #   private
       #
       #   def save_channel(channel:, **)
-      #     fail!("something went wrong") unless channel.save
+      #     fail!("something went wrong") if !channel.save
       #   end
 
       # @!scope class
