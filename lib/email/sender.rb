@@ -294,6 +294,8 @@ module Email
         return skip(SkippedEmailLog.reason_types[:custom], custom_reason: e.message)
       end
 
+      DiscourseEvent.trigger(:after_email_send, @message, @email_type)
+
       email_log.save!
       email_log
     end
