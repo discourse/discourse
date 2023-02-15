@@ -1859,7 +1859,6 @@ ca:
     deactivated_by_staff: "Desactivat per l'equip responsable"
     activated_by_staff: "Activat per l'equip responsable"
     new_user_typed_too_fast: "Un usuari nou ha teclejat massa de pressa"
-    content_matches_auto_block_regex: "El contingut coincideix amb l'expressió regular (regex) de blocatge automàtic"
     username:
       short: "ha de tenir almenys %{min} caràcters"
       long: "no ha de ser més llarg de %{max} caràcters"

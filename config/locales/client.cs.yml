@@ -2411,8 +2411,6 @@ cs:
       images: "Obrázky"
       email_in: "Vlastní příchozí emailová adresa:"
       email_in_allow_strangers: "Přijímat emaily i od neregistrovaných uživatelů"
-      email_in_disabled: "Přidávání nových témat před email je zakázáno v Nastavení fóra. K povolení nových témat přes email,"
-      email_in_disabled_click: 'povolit nastavení "email in"'
       mailinglist_mirror: "Kategorie kopíruje mailing list"
       show_subcategory_list: "Ukázat seznam podkategorií nad tématy v této kategorii."
       num_featured_topics: "Počet témat, která se zobrazují na stránce kategorie "
@@ -2877,6 +2875,9 @@ cs:
         custom:
           save: "Uložit"
           delete: "Smazat"
+          links:
+            icon: "Ikona"
+            name: "Jméno"
         about:
           header_link_text: "O fóru"
         messages:
@@ -3532,6 +3533,22 @@ cs:
           upload_successful: "Nahráno úspěšně. Slova byla přidána "
         test:
           no_matches: "Nebyly nalezeny žádné výsledky"
+      form_templates:
+        nav_title: "Šablony"
+        list_table:
+          headings:
+            name: "Jméno"
+            actions: "Akce"
+        view_template:
+          close: "Zavřít"
+          edit: "Upravit"
+          delete: "Smazat"
+        new_template_form:
+          submit: "Uložit"
+          cancel: "Zrušit"
+        quick_insert_fields:
+          add_new_field: "přidat"
+          dropdown: "Menu"
       impersonate:
         title: "Přihlásit se jako"
         help: "Použijte tento nástroj k přihlášení za jiného uživatele pro ladící a vývojové potřeby. Po dokončení se budete muset odhlásit."
@@ -3866,7 +3883,7 @@ cs:
         allow_title: Povolit užití odzanku jako titul
         multiple_grant: Může být přiděleno několikrát
         listable: Zobrazit odznak na veřejné stránce s odzanky
-        enabled: Povolit odznaky
+        enabled: zapnutý
         icon: Ikona
         image: Obrázek
         query: Dotaz na odznak (SQL)

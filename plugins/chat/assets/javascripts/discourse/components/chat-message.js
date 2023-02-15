@@ -5,7 +5,7 @@ import Component from "@glimmer/component";
 import I18n from "I18n";
 import getURL from "discourse-common/lib/get-url";
 import optionalService from "discourse/lib/optional-service";
-import { afterRender, bind } from "discourse-common/utils/decorators";
+import { bind } from "discourse-common/utils/decorators";
 import EmberObject, { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { cancel, schedule } from "@ember/runloop";
@@ -72,15 +72,15 @@ export default class ChatMessage extends Component {
   }
 
   get deletedAndCollapsed() {
-    return this.args.message?.deleted_at && this.collapsed;
+    return this.args.message?.get("deleted_at") && this.collapsed;
   }
 
   get hiddenAndCollapsed() {
-    return this.args.message?.hidden && this.collapsed;
+    return this.args.message?.get("hidden") && this.collapsed;
   }
 
   get collapsed() {
-    return !this.args.message?.expanded;
+    return !this.args.message?.get("expanded");
   }
 
   @action
@@ -169,7 +169,7 @@ export default class ChatMessage extends Component {
   get showActions() {
     return (
       this.args.canInteractWithChat &&
-      !this.args.message?.staged &&
+      !this.args.message?.get("staged") &&
       this.args.isHovered
     );
   }
@@ -270,14 +270,15 @@ export default class ChatMessage extends Component {
 
   get hasThread() {
     return (
-      this.args.chatChannel.threading_enabled && this.args.message.thread_id
+      this.args.chatChannel?.get("threading_enabled") &&
+      this.args.message?.get("thread_id")
     );
   }
 
   get show() {
     return (
-      !this.args.message?.deleted_at ||
-      this.currentUser.id === this.args.message?.user?.id ||
+      !this.args.message?.get("deleted_at") ||
+      this.currentUser.id === this.args.message?.get("user.id") ||
       this.currentUser.staff ||
       this.args.details?.can_moderate
     );
@@ -330,43 +331,44 @@ export default class ChatMessage extends Component {
 
   get hideUserInfo() {
     return (
-      this.args.message?.hideUserInfo && !this.args.message?.chat_webhook_event
+      this.args.message?.get("hideUserInfo") &&
+      !this.args.message?.get("chat_webhook_event")
     );
   }
 
   get showEditButton() {
     return (
-      !this.args.message?.deleted_at &&
-      this.currentUser?.id === this.args.message?.user?.id &&
+      !this.args.message?.get("deleted_at") &&
+      this.currentUser?.id === this.args.message?.get("user.id") &&
       this.args.chatChannel?.canModifyMessages?.(this.currentUser)
     );
   }
   get canFlagMessage() {
     return (
-      this.currentUser?.id !== this.args.message?.user?.id &&
-      this.args.message?.user_flag_status === undefined &&
+      this.currentUser?.id !== this.args.message?.get("user.id") &&
+      this.args.message?.get("user_flag_status") === undefined &&
       this.args.details?.can_flag &&
-      !this.args.message?.chat_webhook_event &&
-      !this.args.message.deleted_at
+      !this.args.message?.get("chat_webhook_event") &&
+      !this.args.message?.get("deleted_at")
     );
   }
 
   get canManageDeletion() {
-    return this.currentUser?.id === this.args.message.user?.id
+    return this.currentUser?.id === this.args.message.get("user.id")
       ? this.args.details?.can_delete_self
       : this.args.details?.can_delete_others;
   }
 
   get canReply() {
     return (
-      !this.args.message?.deleted_at &&
+      !this.args.message?.get("deleted_at") &&
       this.args.chatChannel?.canModifyMessages?.(this.currentUser)
     );
   }
 
   get canReact() {
     return (
-      !this.args.message?.deleted_at &&
+      !this.args.message?.get("deleted_at") &&
       this.args.chatChannel?.canModifyMessages?.(this.currentUser)
     );
   }
@@ -374,7 +376,7 @@ export default class ChatMessage extends Component {
   get showDeleteButton() {
     return (
       this.canManageDeletion &&
-      !this.args.message?.deleted_at &&
+      !this.args.message?.get("deleted_at") &&
       this.args.chatChannel?.canModifyMessages?.(this.currentUser)
     );
   }
@@ -382,7 +384,7 @@ export default class ChatMessage extends Component {
   get showRestoreButton() {
     return (
       this.canManageDeletion &&
-      this.args.message?.deleted_at &&
+      this.args.message?.get("deleted_at") &&
       this.args.chatChannel?.canModifyMessages?.(this.currentUser)
     );
   }
@@ -458,7 +460,7 @@ export default class ChatMessage extends Component {
   inviteMentioned() {
     const userIds = this.mentionWarning.without_membership.mapBy("id");
 
-    ajax(`/chat/${this.args.details.chat_channel_id}/invite`, {
+    ajax(`/chat/${this.args.message.chat_channel_id}/invite`, {
       method: "PUT",
       data: { user_ids: userIds, chat_message_id: this.args.message.id },
     }).then(() => {
@@ -607,7 +609,7 @@ export default class ChatMessage extends Component {
 
   _publishReaction(emoji, reactAction) {
     return ajax(
-      `/chat/${this.args.details.chat_channel_id}/react/${this.args.message.id}`,
+      `/chat/${this.args.message.chat_channel_id}/react/${this.args.message.id}`,
       {
         type: "PUT",
         data: {
@@ -686,7 +688,7 @@ export default class ChatMessage extends Component {
   @action
   restore() {
     return ajax(
-      `/chat/${this.args.details.chat_channel_id}/restore/${this.args.message.id}`,
+      `/chat/${this.args.message.chat_channel_id}/restore/${this.args.message.id}`,
       {
         type: "PUT",
       }
@@ -730,7 +732,7 @@ export default class ChatMessage extends Component {
   @action
   rebakeMessage() {
     return ajax(
-      `/chat/${this.args.details.chat_channel_id}/${this.args.message.id}/rebake`,
+      `/chat/${this.args.message.chat_channel_id}/${this.args.message.id}/rebake`,
       {
         type: "PUT",
       }
@@ -740,7 +742,7 @@ export default class ChatMessage extends Component {
   @action
   deleteMessage() {
     return ajax(
-      `/chat/${this.args.details.chat_channel_id}/${this.args.message.id}`,
+      `/chat/${this.args.message.chat_channel_id}/${this.args.message.id}`,
       {
         type: "DELETE",
       }
@@ -754,7 +756,6 @@ export default class ChatMessage extends Component {
   }
 
   @action
-  @afterRender
   toggleChecked(e) {
     if (e.shiftKey) {
       this.args.bulkSelectMessages(this.args.message, e.target.checked);
@@ -775,7 +776,7 @@ export default class ChatMessage extends Component {
 
     const { protocol, host } = window.location;
     let url = getURL(
-      `/chat/c/-/${this.args.details.chat_channel_id}/${this.args.message.id}`
+      `/chat/c/-/${this.args.message.chat_channel_id}/${this.args.message.id}`
     );
     url = url.indexOf("/") === 0 ? protocol + "//" + host + url : url;
     clipboardCopy(url);

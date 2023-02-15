@@ -15,20 +15,23 @@ GlimmerManager.getComponentTemplate = (component) => {
 
 export default {
   name: "colocated-template-overrides",
-  after: "populate-template-map",
+  after: ["populate-template-map", "mobile"],
 
   initialize(container) {
-    this.eachThemePluginTemplate((templateKey, moduleNames) => {
-      if (!templateKey.startsWith("components/")) {
-        return;
-      }
+    this.site = container.lookup("service:site");
 
-      if (DiscourseTemplateMap.coreTemplates.has(templateKey)) {
+    this.eachThemePluginTemplate((templateKey, moduleNames, mobile) => {
+      if (!mobile && DiscourseTemplateMap.coreTemplates.has(templateKey)) {
         // It's a non-colocated core component. Template will be overridden at runtime.
         return;
       }
 
-      const componentName = templateKey.slice("components/".length);
+      let componentName = templateKey;
+      if (mobile) {
+        componentName = componentName.slice("mobile/".length);
+      }
+      componentName = componentName.slice("components/".length);
+
       const component = container.owner.resolveRegistration(
         `component:${componentName}`
       );
@@ -43,12 +46,28 @@ export default {
   },
 
   eachThemePluginTemplate(cb) {
-    for (const [key, value] of DiscourseTemplateMap.pluginTemplates) {
-      cb(key, value);
+    const { coreTemplates, pluginTemplates, themeTemplates } =
+      DiscourseTemplateMap;
+
+    const orderedOverrides = [
+      [pluginTemplates, "components/", false],
+      [themeTemplates, "components/", false],
+    ];
+
+    if (this.site.mobileView) {
+      orderedOverrides.push(
+        [coreTemplates, "mobile/components/", true],
+        [pluginTemplates, "mobile/components/", true],
+        [themeTemplates, "mobile/components/", true]
+      );
     }
 
-    for (const [key, value] of DiscourseTemplateMap.themeTemplates) {
-      cb(key, value);
+    for (const [map, prefix, mobile] of orderedOverrides) {
+      for (const [key, value] of map) {
+        if (key.startsWith(prefix)) {
+          cb(key, value, mobile);
+        }
+      }
     }
   },
 

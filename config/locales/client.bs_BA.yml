@@ -2524,8 +2524,6 @@ bs_BA:
       images: "Images"
       email_in: "Custom incoming email address:"
       email_in_allow_strangers: "Accept emails from anonymous users with no accounts"
-      email_in_disabled: "Posting new topics via email is disabled in the Site Settings. To enable posting new topics via email, "
-      email_in_disabled_click: 'enable the "email in" setting.'
       mailinglist_mirror: "Kategorija odražava mailing listu"
       show_subcategory_list: "Prikaži listu podkategorija iznad tema u ovoj kategoriji."
       subcategory_num_featured_topics: "Broj istaknutih tema na stranici roditeljske kategorije:"
@@ -3048,6 +3046,10 @@ bs_BA:
         custom:
           save: "Save"
           delete: "Delete"
+          links:
+            icon: "Icon"
+            name: "Ime"
+            value: "Link"
         about:
           header_link_text: "O nama"
         messages:
@@ -3898,6 +3900,22 @@ bs_BA:
           upload_successful: "Otpremanje je uspješno. Riječi su dodane."
         test:
           no_matches: "Nije pronađen traženi pojam"
+      form_templates:
+        nav_title: "Predlošci"
+        list_table:
+          headings:
+            name: "Ime"
+            actions: "Akcije"
+        view_template:
+          close: "Zatvori"
+          edit: "Edit"
+          delete: "Delete"
+        new_template_form:
+          submit: "Save"
+          cancel: "Odustani"
+        quick_insert_fields:
+          add_new_field: "Add"
+          dropdown: "Ispustiti"
       impersonate:
         title: "Impersonate"
         help: "Use this tool to impersonate a user account for debugging purposes. You will have to log out once finished."
@@ -4244,7 +4262,8 @@ bs_BA:
         allow_title: Allow badge to be used as a title
         multiple_grant: Can be granted multiple times
         listable: Show badge on the public badges page
-        enabled: Enable badge
+        enabled: omogućen
+        disabled: deaktiviran
         icon: Icon
         image: Slika
         icon_help: "Unesite ime ikone fonta Awesome (upotrebite prefiks „daleko“ za regularne ikone i „fab-“ za ikone marke)"

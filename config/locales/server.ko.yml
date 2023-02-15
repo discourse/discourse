@@ -2176,7 +2176,6 @@ ko:
     activated_by_staff: "운영진에 의해 활성화됨"
     new_user_typed_too_fast: "입력이 너무 빠른 신규 사용자"
     content_matches_auto_silence_regex: "콘텐츠가 자동 차단 정규식과 일치합니다"
-    content_matches_auto_block_regex: "콘텐츠가 자동 차단 정규식과 일치합니다"
     username:
       short: "최소 %{min}자 이상이어야 합니다"
       long: "%{max}자 이하여야 합니다"

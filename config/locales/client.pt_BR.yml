@@ -3369,8 +3369,6 @@ pt_BR:
       email_in: "Endereço de e-mail de entrada personalizado:"
       email_in_tooltip: "Você pode separar múltiplos endereços de e-mail com o caractere |."
       email_in_allow_strangers: "Aceitar e-mails de usuários anônimos sem contas"
-      email_in_disabled: "Postar novos tópicos via e-mail está desativado nas configurações do site. Para ativar respostas em novos tópicos via e-mail, "
-      email_in_disabled_click: 'ative a configuração de "e-mail em".'
       mailinglist_mirror: "A categoria espelha uma lista de endereçamento"
       show_subcategory_list: "Exibir lista de subcategorias acima dos tópicos nesta categoria."
       read_only_banner: "Texto do banner quando um usuário não pode criar um tópico nesta categoria:"
@@ -3994,6 +3992,10 @@ pt_BR:
         custom:
           save: "Salvar"
           delete: "Excluir"
+          links:
+            icon: "Ícone"
+            name: "Nome"
+            value: "Link"
         about:
           header_link_text: "Sobre"
         messages:
@@ -5085,6 +5087,22 @@ pt_BR:
           description: "Digite o texto abaixo para verificar as correspondências com palavras acompanhadas"
           found_matches: "Correspondências encontradas:"
           no_matches: "Nenhuma correspondência encontrada"
+      form_templates:
+        nav_title: "Modelos"
+        list_table:
+          headings:
+            name: "Nome"
+            actions: "Ações"
+        view_template:
+          close: "Fechar"
+          edit: "Editar"
+          delete: "Excluir"
+        new_template_form:
+          submit: "Salvar"
+          cancel: "Cancelar"
+        quick_insert_fields:
+          add_new_field: "Adicionar"
+          dropdown: "Menu suspenso"
       impersonate:
         title: "Representar"
         help: "Use esta ferramenta para representar uma conta de usuário(a) para efeitos de depuração. Você terá que sair dela assim que terminar."
@@ -5521,7 +5539,7 @@ pt_BR:
         allow_title: Permitir que o emblema seja usado como título
         multiple_grant: Pode ser concedido várias vezes
         listable: Exibir emblema na página pública de emblemas
-        enabled: Ativar emblema
+        disabled: desativado
         icon: Ícone
         image: Imagem
         graphic: Gráfico

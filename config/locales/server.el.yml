@@ -1406,7 +1406,6 @@ el:
     deactivated_by_staff: "Απενεργοποιήθηκε από τους συνεργάτες"
     activated_by_staff: "Ενεργοποιήθηκε από τους συνεργάτες"
     new_user_typed_too_fast: "Ο νέος χρήστης πληκτρολογούσε πολύ γρήγορα"
-    content_matches_auto_block_regex: "Content matches auto block regex"
     username:
       short: "πρέπει να είναι τουλάχιστον %{min} χαρακτήρες"
       long: "δεν πρέπει να είναι περισσότερο από %{max} χαρακτήρες"

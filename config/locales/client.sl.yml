@@ -2795,8 +2795,6 @@ sl:
       images: "Slike"
       email_in: "Dohodni e-naslov po meri:"
       email_in_allow_strangers: "Dovoli e-sporočila od anonimnih uporabnikov brez računa"
-      email_in_disabled: "Objavljanje novih tem preko e-sporočila je onemogočeno v Nastavitvah strani. Za omogočanje objave novih tem preko e-sporočila, "
-      email_in_disabled_click: 'vključite "email in" nastavitev.'
       mailinglist_mirror: "Kategorija zrcali poštni seznam"
       show_subcategory_list: "Prikaži seznam podkategorij nad temami za to kategorijo."
       num_featured_topics: "Število tem prikazanih na seznamu kategorij:"
@@ -3361,6 +3359,10 @@ sl:
         custom:
           save: "Shrani"
           delete: "Izbriši"
+          links:
+            icon: "Ikona"
+            name: "Ime"
+            value: "Povezava"
         about:
           header_link_text: "O nas"
         messages:
@@ -3903,6 +3905,22 @@ sl:
           success: "Uspeh"
         test:
           no_matches: "Ni zadetkov"
+      form_templates:
+        nav_title: "Predloge"
+        list_table:
+          headings:
+            name: "Ime"
+            actions: "Akcije"
+        view_template:
+          close: "Zapri"
+          edit: "Uredi"
+          delete: "Izbriši"
+        new_template_form:
+          submit: "Shrani"
+          cancel: "Prekliči"
+        quick_insert_fields:
+          add_new_field: "Dodaj"
+          dropdown: "Spustni meni"
       impersonate:
         title: "Poosebi uporabnika"
         help: "Uporabljajte to orodje za poosebljanje uporabnika za iskanje in odpravljanje napak. Ko končate se morate odjaviti."
@@ -4221,7 +4239,8 @@ sl:
         allow_title: Dovoli da se značka uporablja kot naziv
         multiple_grant: Se lahko podeli večkrat
         listable: Prikaži značko na strani javnih značk
-        enabled: Omogoči značko
+        enabled: vključeno
+        disabled: onemogočeno
         icon: Ikona
         image: Slika
         read_only_setting_help: "Prilagodite besedilo"

@@ -2795,8 +2795,6 @@ gl:
       images: "Imaxes"
       email_in: "Personalizar enderezos de mensaxes de correo entrantes:"
       email_in_allow_strangers: "Aceptar correo de usuarios anónimos sen contas"
-      email_in_disabled: "A publicación de novos temas vía correo está desactivada na configuración do sitio. Para activala, "
-      email_in_disabled_click: 'activar o axuste «correo de entrada».'
       mailinglist_mirror: "A categoría replica unha lista de correo"
       show_subcategory_list: "Amosar a lista de subcategorías por riba dos temas desta categoría."
       read_only_banner: "Texto do báner cando o usuario non poida crear un tema nesta categoría:"
@@ -3327,6 +3325,10 @@ gl:
         custom:
           save: "Gardar"
           delete: "Eliminar"
+          links:
+            icon: "Icona"
+            name: "Nome"
+            value: "Ligazón"
         about:
           header_link_text: "Verbo de"
         messages:
@@ -4292,6 +4294,22 @@ gl:
           description: "Escriba texto a continuación para comprobar coincidencias con palabras observadas"
           found_matches: "Coincidencias atopadas:"
           no_matches: "Non se atoparon coincidencias"
+      form_templates:
+        nav_title: "Modelos"
+        list_table:
+          headings:
+            name: "Nome"
+            actions: "Accións"
+        view_template:
+          close: "Pechar"
+          edit: "Editar"
+          delete: "Eliminar"
+        new_template_form:
+          submit: "Gardar"
+          cancel: "Cancelar"
+        quick_insert_fields:
+          add_new_field: "Engadir"
+          dropdown: "Despregábel"
       impersonate:
         title: "Suplantar"
         help: "Usar esta ferramenta para suplantar unha conta de usuario co obxecto de detectar e corrixir erros. Deberá saír da sesión ao rematar."
@@ -4691,7 +4709,8 @@ gl:
         allow_title: Permitir que se use a insignia como un título
         multiple_grant: Pode concederse múltiples veces
         listable: Amosar a insignia na páxina de insignias públicas
-        enabled: Activar a insignia
+        enabled: activado
+        disabled: desactivado
         icon: Icona
         image: Imaxe
         graphic: Gráfico
