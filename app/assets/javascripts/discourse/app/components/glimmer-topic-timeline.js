@@ -62,6 +62,10 @@ export default class GlimmerTopicTimeline extends Component {
 
   @bind
   addUserTip(element) {
+    if (!this.currentUser) {
+      return;
+    }
+
     this.currentUser.showUserTip({
       id: "topic_timeline",
       titleText: I18n.t("user_tips.topic_timeline.title"),
