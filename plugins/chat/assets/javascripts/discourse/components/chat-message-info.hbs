@@ -21,7 +21,11 @@
   {{else}}
     <span
       role="button"
-      class="chat-message-info__username {{this.usernameClasses}} clickable"
+      class={{concat-class
+        "chat-message-info__username"
+        this.usernameClasses
+        "clickable"
+      }}
       data-user-card={{@message.user.username}}
     >
       <span class="chat-message-info__username__name">{{this.name}}</span>
