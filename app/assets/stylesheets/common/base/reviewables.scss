@@ -263,7 +263,7 @@
   .reviewable-actions {
     display: flex;
     flex-wrap: wrap;
-    gap: 1rem;
+    gap: 0.5rem;
     width: 100%;
 
     button {
@@ -271,11 +271,11 @@
 
       &.approve-post {
         background-color: var(--success);
-        color: var(--primary);
+        color: var(--tertiary-or-white);
       }
       &.reject-post {
         background-color: var(--danger);
-        color: var(--primary);
+        color: var(--tertiary-or-white);
       }
     }
 
