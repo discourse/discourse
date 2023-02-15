@@ -13,6 +13,26 @@ body > noscript {
   h6 {
     font-family: serif;
   }
+  &.browser-update {
+    header {
+      height: 50px;
+      margin-bottom: 1em;
+    }
+    .buorg {
+      position: absolute;
+      top: 50px;
+      width: 100%;
+      background: #fdf2ab;
+      text-align: center;
+      font-family: sans-serif;
+      color: #000;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+    #topic-title {
+      margin-top: 2em;
+    }
+  }
 
   &:after,
   &:before {
@@ -312,14 +332,6 @@ body > noscript {
   }
 }
 
-.buorg {
-  background: #fdf2ab;
-  text-align: left;
-  font-family: sans-serif;
-  color: #000;
-  font-size: 14px;
-  margin-bottom: 10px;
-}
 .buorg div {
   padding: 8px;
 }

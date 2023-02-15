@@ -11,18 +11,18 @@
     <%= yield :head %>
     <%= build_plugin_html 'server:before-head-close-crawler' %>
   </head>
-  <body class="crawler">
+  <body class="crawler <% if show_browser_update? %>browser-update<% end %>">
     <%= theme_lookup("header") %>
     <%= render partial: "layouts/noscript_header" %>
     <div id="main-outlet" class="wrap" role="main">
-      <% if show_browser_update? %>
-        <div class="buorg"><div><%= I18n.t("js.browser_update").html_safe %></div></div>
-      <% end %>
       <%= yield %>
     </div>
     <%= render partial: "layouts/noscript_footer" %>
     <%= theme_lookup("footer") %>
     <%= theme_lookup("body_tag") %>
+    <% if show_browser_update? %>
+      <div class="buorg"><div><%= I18n.t("js.browser_update").html_safe %></div></div>
+    <% end %>
   </body>
   <%= yield :after_body %>
 </html>
