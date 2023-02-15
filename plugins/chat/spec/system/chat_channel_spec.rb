@@ -13,21 +13,37 @@ RSpec.describe "Chat channel", type: :system, js: true do
   context "when sending a message" do
     before do
       channel_1.add(current_user)
-      50.times { Fabricate(:chat_message, chat_channel: channel_1) }
       sign_in(current_user)
     end
 
-    it "loads most recent messages" do
-      unloaded_message = Fabricate(:chat_message, chat_channel: channel_1)
-      visit("/chat/message/#{message_1.id}")
+    context "with lots of messages" do
+      before { 50.times { Fabricate(:chat_message, chat_channel: channel_1) } }
 
+      it "loads most recent messages" do
+        unloaded_message = Fabricate(:chat_message, chat_channel: channel_1)
+        visit("/chat/message/#{message_1.id}")
+
+        expect(channel).to have_no_loading_skeleton
+        expect(page).to have_no_css("[data-id='#{unloaded_message.id}']")
+
+        channel.send_message("test_message")
+
+        expect(channel).to have_no_loading_skeleton
+        expect(page).to have_css("[data-id='#{unloaded_message.id}']")
+      end
+    end
+
+    it "allows to edit this message once persisted" do
+      chat.visit_channel(channel_1)
       expect(channel).to have_no_loading_skeleton
-      expect(page).to have_no_css("[data-id='#{unloaded_message.id}']")
+      channel.send_message("aaaaaaaaaaaaaaaaaaaa")
+      expect(page).to have_no_css("[data-staged-id]")
+      last_message = find(".chat-message-container:last-child")
+      last_message.hover
 
-      channel.send_message("test_message")
-
-      expect(channel).to have_no_loading_skeleton
-      expect(page).to have_css("[data-id='#{unloaded_message.id}']")
+      expect(page).to have_css(
+        ".chat-message-actions-container[data-id='#{last_message["data-id"]}']",
+      )
     end
   end
 
