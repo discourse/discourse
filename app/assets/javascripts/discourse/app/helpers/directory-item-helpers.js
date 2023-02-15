@@ -14,7 +14,7 @@ registerUnbound("mobile-directory-item-label", function (args) {
 registerUnbound("directory-item-value", function (args) {
   // Args should include key/values { item, column }
   return htmlSafe(
-    `<span class='number'>${number(args.item.get(args.column.name))}</span>`
+    `<div class='number'>${number(args.item.get(args.column.name))}</div>`
   );
 });
 
@@ -25,7 +25,7 @@ registerUnbound("directory-item-user-field-value", function (args) {
       ? args.item.user.user_fields[args.column.user_field_id]
       : null;
   const content = value || "-";
-  return htmlSafe(`<span class='user-field-value'>${content}</span>`);
+  return htmlSafe(`<div class='user-field-value'>${content}</div>`);
 });
 
 registerUnbound("directory-column-is-automatic", function (args) {

@@ -1,11 +1,6 @@
 .directory {
   margin-bottom: 100px;
 
-  .directory-table-container {
-    width: 100%;
-    overflow-x: auto;
-  }
-
   .directory-table-top-scroll {
     width: 100%;
     overflow-x: auto;
@@ -38,58 +33,6 @@
     margin-bottom: 0.5em;
     color: var(--primary-medium);
     font-size: var(--font-down-1);
-  }
-
-  table {
-    width: 100%;
-    margin-bottom: 1em;
-
-    td,
-    th {
-      padding: 0.5em;
-      text-align: left;
-      border-bottom: 1px solid var(--primary-low);
-      @media screen and (max-width: $small-width) {
-        padding: 0.5em 0.25em;
-      }
-
-      .number,
-      .time-read {
-        font-size: var(--font-up-3);
-        color: var(--primary-medium);
-        @media screen and (max-width: $small-width) {
-          font-size: var(--font-up-1);
-        }
-      }
-      .time-read {
-        white-space: nowrap;
-      }
-      .user-field-value {
-        font-size: var(--font-up-1);
-        color: var(--primary-medium);
-        @media screen and (max-width: $small-width) {
-          font-size: var(--font-0);
-        }
-      }
-    }
-
-    th.sortable {
-      width: 13%;
-      .d-icon-heart {
-        color: var(--love);
-        margin: 0 0.25em 0 0;
-      }
-    }
-  }
-  .me {
-    background-color: var(--highlight-low-or-medium);
-    .username a,
-    .name a,
-    .title,
-    .number,
-    .time-read {
-      color: var(--primary-medium);
-    }
   }
 }
 
@@ -138,4 +81,71 @@
 
 .edit-user-directory-columns-modal .modal-inner-container {
   min-width: 450px;
+}
+
+.directory-table {
+  display: grid;
+  grid-auto-rows: auto;
+  gap: 0;
+  width: 100%;
+  overflow-x: auto;
+  .directory-table__header,
+  .directory-table__body,
+  .directory-table__row {
+    display: contents; // we'll be able to remove this with subgrid support
+  }
+
+  .me {
+    > div {
+      background-color: var(--highlight-low-or-medium);
+    }
+  }
+
+  .user-detail {
+    display: flex;
+    flex-direction: column;
+    min-width: 0; // allow content to shrink and hide overflow
+  }
+
+  .user-info.small {
+    width: auto;
+    display: flex;
+  }
+
+  .directory-table__header div {
+    white-space: nowrap;
+  }
+
+  .directory-table__row > div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.75em 0.5em;
+    border-bottom: 1px solid var(--primary-low);
+  }
+
+  #table-header-toggle-username {
+    justify-content: start;
+  }
+
+  .number {
+    font-size: var(--font-up-3);
+    color: var(--primary-medium);
+  }
+
+  .sortable {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .d-icon {
+      margin-right: 0.25em;
+    }
+    .d-icon-heart {
+      color: var(--love);
+    }
+  }
+
+  .directory-table__header div:first-child {
+    justify-content: start;
+  }
 }

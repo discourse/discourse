@@ -1,39 +1,36 @@
 <div class="directory-table-top-scroll">
   <div class="directory-table-top-scroll-fake-content"></div>
 </div>
-
-<div class="directory-table-container">
-  <table class="directory-table">
-    <thead>
+<div class="directory-table">
+  <div class="directory-table__header">
+    <TableHeaderToggle
+      @field="username"
+      @order={{this.order}}
+      @asc={{this.asc}}
+    />
+    {{#each this.columns as |column|}}
       <TableHeaderToggle
-        @field="username"
+        @field={{column.name}}
+        @icon={{column.icon}}
         @order={{this.order}}
         @asc={{this.asc}}
+        @automatic={{directory-column-is-automatic column=column}}
+        @translated={{column.user_field_id}}
+        @onActiveRender={{this.setActiveHeader}}
       />
-      {{#each this.columns as |column|}}
-        <TableHeaderToggle
-          @field={{column.name}}
-          @icon={{column.icon}}
-          @order={{this.order}}
-          @asc={{this.asc}}
-          @automatic={{directory-column-is-automatic column=column}}
-          @translated={{column.user_field_id}}
-          @onActiveRender={{this.setActiveHeader}}
-        />
-      {{/each}}
+    {{/each}}
 
-      {{#if this.showTimeRead}}
-        <th>{{i18n "directory.time_read"}}</th>
-      {{/if}}
-    </thead>
-    <tbody>
-      {{#each this.items as |item|}}
-        <DirectoryItem
-          @item={{item}}
-          @columns={{this.columns}}
-          @showTimeRead={{this.showTimeRead}}
-        />
-      {{/each}}
-    </tbody>
-  </table>
+    {{#if this.showTimeRead}}
+      <span>{{i18n "directory.time_read"}}</span>
+    {{/if}}
+  </div>
+  <div class="directory-table__body">
+    {{#each this.items as |item|}}
+      <DirectoryItem
+        @item={{item}}
+        @columns={{this.columns}}
+        @showTimeRead={{this.showTimeRead}}
+      />
+    {{/each}}
+  </div>
 </div>

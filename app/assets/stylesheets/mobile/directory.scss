@@ -34,6 +34,7 @@
     }
 
     .user-stat {
+      display: flex;
       flex: 1 1 50%;
       .value {
         font-weight: bold;
