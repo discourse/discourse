@@ -1786,6 +1786,8 @@ id:
         custom:
           save: "Simpan"
           delete: "Hapus"
+          links:
+            name: "Nama"
         about:
           header_link_text: "Tentang"
         messages:
@@ -1997,6 +1999,20 @@ id:
           add: "Menambahkan"
         test:
           no_matches: "Tidak ditemukan yang cocok"
+      form_templates:
+        list_table:
+          headings:
+            name: "Nama"
+            actions: "Aksi"
+        view_template:
+          close: "Tutup"
+          edit: "Ubah"
+          delete: "Hapus"
+        new_template_form:
+          submit: "Simpan"
+          cancel: "Batal"
+        quick_insert_fields:
+          add_new_field: "Menambahkan"
       users:
         title: "Pengguna"
         last_emailed: "Terakhir Surel Dikirimkan"
@@ -2091,6 +2107,7 @@ id:
         revoke: Cabut
         reason: Alasan
         expand: Perluas &hellip;
+        disabled: dinonaktifkan
       emoji:
         uploading: "Mengunggah..."
         name: "Nama"

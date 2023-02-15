@@ -3369,8 +3369,6 @@ de:
       email_in: "Benutzerdefinierte Adresse für eingehende E-Mails:"
       email_in_tooltip: "Du kannst mehrere E-Mail-Adressen mit dem Zeichen | trennen."
       email_in_allow_strangers: "Akzeptiere E-Mails von anonymen Benutzern."
-      email_in_disabled: "Das Erstellen von neuen Themen per E-Mail ist in den Website-Einstellungen deaktiviert. Um das Erstellen von neuen Themen per E-Mail zu erlauben, "
-      email_in_disabled_click: 'Aktiviere die Einstellung „email in“.'
       mailinglist_mirror: "Kategorie spiegelt eine Mailingliste"
       show_subcategory_list: "Zeige Liste von Unterkategorien oberhalb von Themen in dieser Kategorie."
       read_only_banner: "Bannertext, wenn ein Benutzer kein Thema in dieser Kategorie erstellen kann:"
@@ -3994,6 +3992,10 @@ de:
         custom:
           save: "Speichern"
           delete: "Löschen"
+          links:
+            icon: "Symbol"
+            name: "Name"
+            value: "Link"
         about:
           header_link_text: "Über uns"
         messages:
@@ -5084,6 +5086,22 @@ de:
           description: "Füge unten Text ein, um auf Übereinstimmungen mit beobachteten Wörtern zu prüfen"
           found_matches: "Gefundene Übereinstimmungen:"
           no_matches: "Keine Übereinstimmungen gefunden"
+      form_templates:
+        nav_title: "Vorlagen"
+        list_table:
+          headings:
+            name: "Name"
+            actions: "Aktionen"
+        view_template:
+          close: "Beenden"
+          edit: "Bearbeiten"
+          delete: "Löschen"
+        new_template_form:
+          submit: "Speichern"
+          cancel: "Abbrechen"
+        quick_insert_fields:
+          add_new_field: "Hinzufügen"
+          dropdown: "Drop-down-Liste"
       impersonate:
         title: "Nutzersicht"
         help: "Benutze dieses Werkzeug, um zur Fehlersuche in die Rolle eines anderen Benutzers zu schlüpfen. Du musst dich abmelden, wenn du fertig bist."
@@ -5520,7 +5538,8 @@ de:
         allow_title: Abzeichen darf als Titel verwendet werden
         multiple_grant: Kann mehrfach verliehen werden
         listable: Zeige Abzeichen auf der öffentlichen Abzeichenseite an
-        enabled: Abzeichen aktivieren
+        enabled: aktiviert
+        disabled: deaktiviert
         icon: Symbol
         image: Bild
         graphic: Grafik

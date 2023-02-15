@@ -2835,8 +2835,6 @@ nb_NO:
       images: "Bilder"
       email_in: "Egendefinert innkommende e-postadresse:"
       email_in_allow_strangers: "Godta e-post fra anonyme brukere uten brukerkonto"
-      email_in_disabled: "Publisering av nye emner via e-post er deaktivert i innstillingene for nettstedet. For å aktivere publisering av nye emner via e-post,"
-      email_in_disabled_click: 'aktiver innstillingen "e-post inn".'
       mailinglist_mirror: "Kategorien gjenspeiler en e-postliste"
       show_subcategory_list: "Plasser listen over underkategorien i toppen av emner i denne kategorien."
       read_only_banner: "Banner-tekst når en bruker ikke kan opprette et emne i denne kategorien:"
@@ -3390,6 +3388,9 @@ nb_NO:
         custom:
           save: "Lagre"
           delete: "Slett"
+          links:
+            icon: "Ikon"
+            name: "Navn"
         about:
           header_link_text: "Om"
         messages:
@@ -4225,6 +4226,22 @@ nb_NO:
         test:
           button_label: "Test"
           no_matches: "Ingen treff funnet"
+      form_templates:
+        nav_title: "Maler"
+        list_table:
+          headings:
+            name: "Navn"
+            actions: "Handlinger"
+        view_template:
+          close: "Lukk"
+          edit: "Endre"
+          delete: "Slett"
+        new_template_form:
+          submit: "Lagre"
+          cancel: "Avbryt"
+        quick_insert_fields:
+          add_new_field: "Legg til"
+          dropdown: "Nedtrekk"
       impersonate:
         title: "Fremstå som"
         help: "Bruk dette verktøyet for å fremstå som en annen bruker for feilsøking. Du må logge ut når du er ferdig."
@@ -4563,7 +4580,8 @@ nb_NO:
         allow_title: Tillat merke å bli benyttet som en tittel
         multiple_grant: Kan bli tildelt flere ganger
         listable: Vis merket på den offentlige merkesiden
-        enabled: Aktiver merke
+        enabled: aktivert
+        disabled: deaktivert
         icon: Ikon
         image: Bilde
         query: Spørring for merke (SQL)

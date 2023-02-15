@@ -2110,7 +2110,6 @@ ur:
     deactivated_by_staff: "سٹاف نے غیر فعال کیا"
     activated_by_staff: "سٹاف نے فعال کیا"
     new_user_typed_too_fast: "نئے صارف نے بہت تیزی سے ٹائپ کیا"
-    content_matches_auto_block_regex: "مواد خود کار طریقہ سے بلاک کردہ رَیج اَیکس سے مَیچ کرتا ہے"
     username:
       short: "کم از کم %{min} حروف کا ہونا لازمی ہے"
       long: "%{max} حروف سے زیادہ نہ ہونا لازمی ہے"

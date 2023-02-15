@@ -402,8 +402,6 @@ export default Component.extend({
     this.setProperties({
       messages: this._prepareMessages(messages),
       details: {
-        chat_channel_id: this.chatChannel.id,
-        chatable_type: this.chatChannel.chatable_type,
         can_delete_self: meta.can_delete_self,
         can_delete_others: meta.can_delete_others,
         can_flag: meta.can_flag,

@@ -2143,7 +2143,6 @@ gl:
       other: "Desactivado automaticamente despois de %{count} días de inactividade"
     activated_by_staff: "Activado polo equipo"
     new_user_typed_too_fast: "O novo usuario escribe moi rápido"
-    content_matches_auto_block_regex: "O contido coincide cunha expresión regular de bloqueo"
     username:
       short: "debe ter polo menos %{min} caracteres"
       long: "non debe ter máis de %{max} caracteres"

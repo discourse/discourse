@@ -3004,8 +3004,6 @@ ur:
       images: "تصاویر"
       email_in: "اپنی مرضی کا اِنکَمِنگ اِیمیل ایڈریس:"
       email_in_allow_strangers: "اکاؤنٹس نہ رکھنے والے گمنام صارفین کی طرف سے اِیمیلز کو قبول کریں"
-      email_in_disabled: "ای میل کے ذریعے نئے عنوانات پوسٹ کرنا سائٹ کی ترتیبات میں غیر فعال ہے۔ ای میل کے ذریعے نئے عنوانات کی اشاعت کو فعال کرنے کے لیے، "
-      email_in_disabled_click: 'سیٹِنگ میں "اِیمیل اِن" فعال کریں۔'
       mailinglist_mirror: "زُمرہ میلنگ فہرست کا عکس ہے"
       show_subcategory_list: "اس زمرہ میں ذیلی زمرہ جات کی فہرست ٹاپکس سے مندرجہ بالا دکھائیں۔"
       read_only_banner: "بینر ٹیکسٹ جب کوئی صارف اس زمرے میں موضوع نہیں بنا سکتا:"
@@ -3609,6 +3607,10 @@ ur:
         custom:
           save: "محفوظ کریں"
           delete: "مٹائیں"
+          links:
+            icon: "آئیکن"
+            name: "نام"
+            value: "لنک"
         about:
           header_link_text: "بارے میں"
         messages:
@@ -4628,6 +4630,22 @@ ur:
           description: "نظر رکھے ہوئے الفاظ کے ساتھ مَیچ چَیک کرنے کیلئے نیچے ٹَیکسٹ درج کریں۔"
           found_matches: "ملے مَیچ:"
           no_matches: "کوئی میل نہیں ملے"
+      form_templates:
+        nav_title: "ٹَیمپلیٹ"
+        list_table:
+          headings:
+            name: "نام"
+            actions: "عمل"
+        view_template:
+          close: "بند کریں"
+          edit: "ترمیم کریں"
+          delete: "مٹائیں"
+        new_template_form:
+          submit: "محفوظ کریں"
+          cancel: "منسوخ"
+        quick_insert_fields:
+          add_new_field: "اضافہ کریں"
+          dropdown: "ڈراپ ڈاؤن"
       impersonate:
         title: "نقالی"
         help: "ڈِیبَگ مقاصد کیلئے اِس آلے کو استعمال کر کہ ایک صارف کے اکاؤنٹ کی نقالی کریں۔ کام ختم ہونے کے بعد آپ کے ایک دفعہ لاگ آؤٹ کرنا ہو گا۔"
@@ -5045,7 +5063,7 @@ ur:
         allow_title: عنوان کے طور پر بَیج وں کے استعمال کی اجازت دیں
         multiple_grant: ایک سے زیادہ مرتبہ عطا کیا جا سکتا ہے
         listable: پبلک بَیجز کے صفحے پر بَیج دکھائیں
-        enabled: بَیج فعال کریں
+        disabled: غیر فعال
         icon: آئیکن
         image: تصویر
         graphic: گرافک

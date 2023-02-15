@@ -1640,6 +1640,8 @@ var bar = 'bar';
     assert.cookedOptions("a --> b", enabledTypographer, "<p>a \u2192 b</p>");
     assert.cookedOptions("-->", enabledTypographer, "<p> \u2192 </p>");
     assert.cookedOptions("<--", enabledTypographer, "<p> \u2190 </p>");
+    assert.cookedOptions("<->", enabledTypographer, "<p> \u2194 </p>");
+    assert.cookedOptions("<-->", enabledTypographer, "<p> \u2194 </p>");
 
     // Don't replace arrows
     assert.cookedOptions("<!-- an html comment -->", enabledTypographer, "");
@@ -1648,7 +1650,6 @@ var bar = 'bar';
       enabledTypographer,
       "<p>(&lt;–not an arrow)</p>"
     );
-    assert.cookedOptions("<-->", enabledTypographer, "<p>&lt;–&gt;</p>");
     assert.cookedOptions("asd-->", enabledTypographer, "<p>asd–&gt;</p>");
     assert.cookedOptions(" asd--> ", enabledTypographer, "<p>asd–&gt;</p>");
     assert.cookedOptions(" asd-->", enabledTypographer, "<p>asd–&gt;</p>");
