@@ -60,8 +60,22 @@ body > noscript {
       border-bottom: 1px solid #ddd;
       border-bottom: 1px solid var(--primary_low);
       th {
-        width: 10%;
         padding: 0 0 0.5em;
+      }
+      th:first-of-type {
+        width: 60%;
+        padding-left: 0;
+      }
+      th:last-of-type,
+      th.replies {
+        text-align: center;
+      }
+      th:last-of-type {
+        width: 20%;
+      }
+      th.posters,
+      th.replies {
+        width: 10%;
       }
       @media screen and (min-width: 500px) {
         th {
@@ -82,8 +96,19 @@ body > noscript {
     td {
       padding: 10px 0;
     }
-    th:first-of-type {
-      padding-left: 0;
+    td:last-of-type,
+    td.replies {
+      text-align: center;
+    }
+    td:first-of-type {
+      width: 60%;
+    }
+    td:last-of-type {
+      width: 20%;
+    }
+    td.posters,
+    td.replies {
+      width: 10%;
     }
 
     @media (max-width: 850px) {
