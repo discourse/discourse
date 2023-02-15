@@ -31,7 +31,7 @@ end
 
 Fabricator(:image_upload, from: :upload) do
   transient color: "white"
-  transient color_depth: 16
+  transient color_depth: 8
 
   after_create do |upload, transients|
     file = Tempfile.new(%w[fabricated .png])
