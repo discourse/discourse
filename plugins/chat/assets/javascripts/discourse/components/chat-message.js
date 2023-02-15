@@ -280,7 +280,7 @@ export default class ChatMessage extends Component {
       !this.args.message?.get("deleted_at") ||
       this.currentUser.id === this.args.message?.get("user.id") ||
       this.currentUser.staff ||
-      this.args.details?.get("can_moderate")
+      this.args.details?.can_moderate
     );
   }
 
@@ -347,7 +347,7 @@ export default class ChatMessage extends Component {
     return (
       this.currentUser?.id !== this.args.message?.get("user.id") &&
       this.args.message?.get("user_flag_status") === undefined &&
-      this.args.details?.get("can_flag") &&
+      this.args.details?.can_flag &&
       !this.args.message?.get("chat_webhook_event") &&
       !this.args.message?.get("deleted_at")
     );
@@ -355,8 +355,8 @@ export default class ChatMessage extends Component {
 
   get canManageDeletion() {
     return this.currentUser?.id === this.args.message.get("user.id")
-      ? this.args.details?.get("can_delete_self")
-      : this.args.details?.get("can_delete_others");
+      ? this.args.details?.can_delete_self
+      : this.args.details?.can_delete_others;
   }
 
   get canReply() {
