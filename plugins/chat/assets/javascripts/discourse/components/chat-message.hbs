@@ -60,7 +60,7 @@
         @type="checkbox"
         class="chat-message-selector"
         @checked={{@message.selected}}
-        {{on "click" (action "toggleChecked")}}
+        {{on "click" this.toggleChecked}}
       />
     {{/if}}
 
