@@ -458,7 +458,7 @@ export default class ChatMessage extends Component {
   inviteMentioned() {
     const userIds = this.mentionWarning.without_membership.mapBy("id");
 
-    ajax(`/chat/${this.args.details.chat_channel_id}/invite`, {
+    ajax(`/chat/${this.args.message.chat_channel_id}/invite`, {
       method: "PUT",
       data: { user_ids: userIds, chat_message_id: this.args.message.id },
     }).then(() => {
@@ -607,7 +607,7 @@ export default class ChatMessage extends Component {
 
   _publishReaction(emoji, reactAction) {
     return ajax(
-      `/chat/${this.args.details.chat_channel_id}/react/${this.args.message.id}`,
+      `/chat/${this.args.message.chat_channel_id}/react/${this.args.message.id}`,
       {
         type: "PUT",
         data: {
@@ -686,7 +686,7 @@ export default class ChatMessage extends Component {
   @action
   restore() {
     return ajax(
-      `/chat/${this.args.details.chat_channel_id}/restore/${this.args.message.id}`,
+      `/chat/${this.args.message.chat_channel_id}/restore/${this.args.message.id}`,
       {
         type: "PUT",
       }
@@ -730,7 +730,7 @@ export default class ChatMessage extends Component {
   @action
   rebakeMessage() {
     return ajax(
-      `/chat/${this.args.details.chat_channel_id}/${this.args.message.id}/rebake`,
+      `/chat/${this.args.message.chat_channel_id}/${this.args.message.id}/rebake`,
       {
         type: "PUT",
       }
@@ -740,7 +740,7 @@ export default class ChatMessage extends Component {
   @action
   deleteMessage() {
     return ajax(
-      `/chat/${this.args.details.chat_channel_id}/${this.args.message.id}`,
+      `/chat/${this.args.message.chat_channel_id}/${this.args.message.id}`,
       {
         type: "DELETE",
       }
@@ -775,7 +775,7 @@ export default class ChatMessage extends Component {
 
     const { protocol, host } = window.location;
     let url = getURL(
-      `/chat/c/-/${this.args.details.chat_channel_id}/${this.args.message.id}`
+      `/chat/c/-/${this.args.message.chat_channel_id}/${this.args.message.id}`
     );
     url = url.indexOf("/") === 0 ? protocol + "//" + host + url : url;
     clipboardCopy(url);

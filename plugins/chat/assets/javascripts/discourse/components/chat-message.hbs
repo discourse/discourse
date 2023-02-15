@@ -115,14 +115,14 @@
         {{/if}}
 
         {{#if this.hideUserInfo}}
-          <ChatMessageLeftGutter @message={{@message}} @details={{@details}} />
+          <ChatMessageLeftGutter @message={{@message}} />
         {{else}}
           <ChatMessageAvatar @message={{@message}} />
         {{/if}}
 
         <div class="chat-message-content">
           {{#unless this.hideUserInfo}}
-            <ChatMessageInfo @message={{@message}} @details={{@details}} />
+            <ChatMessageInfo @message={{@message}} />
           {{/unless}}
 
           <ChatMessageText
