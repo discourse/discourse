@@ -21,7 +21,43 @@
   }
 
   .reviewable-scores {
+    display: flex;
     width: 100%;
+    overflow-x: scroll;
+
+    thead {
+      border-top: 1px solid var(--primary-low);
+      tr {
+        display: flex;
+        flex-direction: column;
+        border: 0;
+      }
+
+      th:not(last-of-type) {
+        border-bottom: 1px solid var(--primary-low);
+      }
+    }
+
+    tbody {
+      display: flex;
+
+      .reviewable-score {
+        // display: table-row;
+        display: flex;
+        flex-direction: column;
+      }
+      tr {
+        border: 0;
+      }
+
+      td {
+        white-space: nowrap;
+
+        &:not(last-of-type) {
+          border-bottom: 1px solid var(--primary-low);
+        }
+      }
+    }
   }
 }
 
