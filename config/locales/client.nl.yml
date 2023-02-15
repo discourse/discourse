@@ -3369,8 +3369,6 @@ nl:
       email_in: "Aangepast adres voor inkomende e-mail:"
       email_in_tooltip: "Je kunt meerdere e-mailadressen scheiden met het teken |."
       email_in_allow_strangers: "E-mails van anonieme gebruikers zonder account accepteren"
-      email_in_disabled: "Het plaatsen van nieuwe topics via e-mail is uitgeschakeld in de webite-instellingen. Om het plaatsen van nieuwe topics via e-mail mogelijk te maken, "
-      email_in_disabled_click: 'schakel de instelling ''e-mail in'' in.'
       mailinglist_mirror: "Categorie weerspiegelt een mailinglijst"
       show_subcategory_list: "Lijst van subcategorieën weergeven boven topics in deze categorie"
       read_only_banner: "Bannertekst wanneer een gebruiker geen topic in deze categorie kan maken:"
@@ -3994,6 +3992,10 @@ nl:
         custom:
           save: "Opslaan"
           delete: "Verwijderen"
+          links:
+            icon: "Pictogram"
+            name: "Naam"
+            value: "Link"
         about:
           header_link_text: "Over"
         messages:
@@ -5084,6 +5086,22 @@ nl:
           description: "Voer hieronder tekst in om te controleren op matches met geobserveerde woorden"
           found_matches: "Gevonden overeenkomsten:"
           no_matches: "Geen overeenkomsten gevonden"
+      form_templates:
+        nav_title: "Sjablonen"
+        list_table:
+          headings:
+            name: "Naam"
+            actions: "Acties"
+        view_template:
+          close: "Sluiten"
+          edit: "Bewerken"
+          delete: "Verwijderen"
+        new_template_form:
+          submit: "Opslaan"
+          cancel: "Annuleren"
+        quick_insert_fields:
+          add_new_field: "Toevoegen"
+          dropdown: "Vervolgkeuzelijst"
       impersonate:
         title: "Imiteren"
         help: "Gebruik deze tool om een gebruikersaccount te imiteren voor debugdoeleinden. Je moet je afmelden wanneer je klaar bent."
@@ -5520,7 +5538,8 @@ nl:
         allow_title: Badge mag als titel worden gebruikt
         multiple_grant: Kan meerdere malen worden toegekend
         listable: Badge weergeven op de openbare badgespagina
-        enabled: Badge inschakelen
+        enabled: ingeschakeld
+        disabled: uitgeschakeld
         icon: Pictogram
         image: Afbeelding
         graphic: Grafisch

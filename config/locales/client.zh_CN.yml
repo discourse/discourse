@@ -3195,8 +3195,6 @@ zh_CN:
       email_in: "自定义传入电子邮件地址："
       email_in_tooltip: "您可以使用 | 字符分隔多个电子邮件地址。"
       email_in_allow_strangers: "接受来自没有帐户的匿名用户的电子邮件"
-      email_in_disabled: "通过电子邮件发布新话题的功能在站点设置中禁用。要启用通过电子邮件发布新话题，"
-      email_in_disabled_click: '请启用“email in”设置。'
       mailinglist_mirror: "类别镜像一个邮寄名单"
       show_subcategory_list: "在此类别中的话题上方显示子类别列表。"
       read_only_banner: "用户无法在此类别中创建话题时的横幅文本："
@@ -3790,6 +3788,10 @@ zh_CN:
         custom:
           save: "保存"
           delete: "删除"
+          links:
+            icon: "图标"
+            name: "名称"
+            value: "链接"
         about:
           header_link_text: "关于"
         messages:
@@ -4872,6 +4874,22 @@ zh_CN:
           description: "在下方输入文本以检查有无与关注词的匹配"
           found_matches: "找到匹配："
           no_matches: "未找到匹配项"
+      form_templates:
+        nav_title: "模板"
+        list_table:
+          headings:
+            name: "名称"
+            actions: "操作"
+        view_template:
+          close: "关闭"
+          edit: "编辑"
+          delete: "删除"
+        new_template_form:
+          submit: "保存"
+          cancel: "取消"
+        quick_insert_fields:
+          add_new_field: "添加"
+          dropdown: "下拉菜单"
       impersonate:
         title: "模拟"
         help: "使用此工具模拟用户帐户以进行调试。完成后，您必须退出。"
@@ -5303,7 +5321,7 @@ zh_CN:
         allow_title: 允许将徽章用作头衔
         multiple_grant: 可以多次授予
         listable: 在公共徽章页面上显示徽章
-        enabled: 启用徽章
+        disabled: 已
         icon: 图标
         image: 图片
         graphic: 图形

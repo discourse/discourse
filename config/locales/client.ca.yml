@@ -2424,8 +2424,6 @@ ca:
       images: "Imatges"
       email_in: "Adreça de correu electrònic entrant personalitzada:"
       email_in_allow_strangers: "Accepta missatges de correu d'usuaris anònims sense compte"
-      email_in_disabled: "Les publicacions des del correu electrònic estan desactivades en les preferències del lloc web. Per a activar les publicacions des del correu electrònic, "
-      email_in_disabled_click: 'activa l''opció "email in".'
       mailinglist_mirror: "Una categoria reflecteix una llista de correu"
       show_subcategory_list: "Mostra la llista de subcategories de temes en aquesta categoria. "
       num_featured_topics: "Nombre de temes mostrats en la pàgina de categories:"
@@ -2879,6 +2877,9 @@ ca:
         custom:
           save: "Desa"
           delete: "Suprimeix"
+          links:
+            icon: "Icona"
+            name: "Nom"
         about:
           header_link_text: "Quant a"
         messages:
@@ -3732,6 +3733,22 @@ ca:
           description: "Introduïu un text per a comprovar coincidències amb paraules vigilades."
           found_matches: "Coincidències trobades:"
           no_matches: "No s'han trobat coincidències"
+      form_templates:
+        nav_title: "Plantilles"
+        list_table:
+          headings:
+            name: "Nom"
+            actions: "Accions"
+        view_template:
+          close: "Tanca"
+          edit: "Edita"
+          delete: "Suprimeix"
+        new_template_form:
+          submit: "Desa"
+          cancel: "Cancel·la"
+        quick_insert_fields:
+          add_new_field: "Afegeix"
+          dropdown: "Desplega"
       impersonate:
         title: "Suplanta"
         help: "Feu servir aquesta eina per a suplantar comptes amb l'objectiu de depurar. Haureu de tancar la sessió quan acabeu."
@@ -4086,7 +4103,8 @@ ca:
         allow_title: Permet que es faci servir la insígnia com a títol
         multiple_grant: Pot concedir-se moltes vegades
         listable: Mostra la insígnia en la pàgina pública d'insígnies
-        enabled: Activa la insígnia
+        enabled: activat
+        disabled: desactivat
         icon: Icona
         image: Imatge
         icon_help: "Introduïu un nom d'icona Awesome Font (feu servir el prefix \"far-\" per a les icones normals i \"fab-\" per a les icones de marca)"

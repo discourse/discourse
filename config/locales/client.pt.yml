@@ -2961,8 +2961,6 @@ pt:
       images: "Imagens"
       email_in: "Endereço de email personalizado para emails recebidos:"
       email_in_allow_strangers: "Aceitar emails de utilizadores anónimos sem conta"
-      email_in_disabled: "Publicar novos tópicos através do email está desactivado nas Configurações do Sítio. Para permitir a publicação de novos tópicos através do email,"
-      email_in_disabled_click: 'ative a definição "email em".'
       mailinglist_mirror: "Categoria espelha uma lista de e-mails"
       show_subcategory_list: "Mostrar lista de subcategorias acima dos tópicos desta categoria."
       read_only_banner: "Texto do banner para quando um usuário não pode criar um tópico nesta categoria:"
@@ -3479,6 +3477,9 @@ pt:
         custom:
           save: "Guardar"
           delete: "Eliminar"
+          links:
+            icon: "Ícone"
+            name: "Nome"
         about:
           header_link_text: "Sobre"
         messages:
@@ -3731,7 +3732,6 @@ pt:
               create: Envie convites por e-mail ou gere links de convite.
             search:
               show: Pesquise usando o endpoint `/search.json?q=term`.
-              query: Pesquise usando o endpoint /search/query?term=term`.
       web_hooks:
         title: "Webhooks"
         none: "Não existem webhooks neste momento."
@@ -4292,6 +4292,22 @@ pt:
           button_label: "Testar"
           description: "Insira o texto abaixo para verificar as correspondências com palavras vigiadas"
           no_matches: "Não foram encontradas correspondências"
+      form_templates:
+        nav_title: "Templates"
+        list_table:
+          headings:
+            name: "Nome"
+            actions: "Ações"
+        view_template:
+          close: "Fechar"
+          edit: "Editar"
+          delete: "Eliminar"
+        new_template_form:
+          submit: "Guardar"
+          cancel: "Cancelar"
+        quick_insert_fields:
+          add_new_field: "Adicionar"
+          dropdown: "Lista pendente"
       impersonate:
         title: "Personificar"
         help: "Utilize este ferramenta de forma a personificar uma conta de utilizador para fins de depuração. Terá de encerrar a sessão assim que terminar."
@@ -4599,7 +4615,8 @@ pt:
         allow_title: Permitir que o crachá seja usado como título
         multiple_grant: Pode ser concedido múltiplas vezes
         listable: Mostrar crachá na página pública de crachás
-        enabled: Ativar crachá
+        enabled: ativado
+        disabled: desativado
         icon: Ícone
         image: Imagem
         graphic: Gráfico

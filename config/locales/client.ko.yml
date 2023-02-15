@@ -2956,8 +2956,6 @@ ko:
       email_in: "수신 메일 주소 사용자 지정:"
       email_in_tooltip: "| 문자로 여러 이메일 주소를 구분할 수 있습니다."
       email_in_allow_strangers: "계정이 없는 익명 사용자의 이메일을 수신합니다"
-      email_in_disabled: "이메일을 통한 새 주제 게시가 사이트 설정에서 비활성화되었습니다. 이메일을 통해 새 주제를 게시하려면 "
-      email_in_disabled_click: '''이메일'' 설정에서 활성화하세요.'
       mailinglist_mirror: "카테고리가 메일링 목록 반영"
       show_subcategory_list: "이 카테고리에서 주제 위에 서브카테고리 목록을 표시합니다."
       read_only_banner: "사용자가 이 카테고리에서 주제를 생성할 수 없는 경우의 배너 텍스트:"
@@ -3522,6 +3520,10 @@ ko:
         custom:
           save: "저장"
           delete: "삭제하기"
+          links:
+            icon: "아이콘"
+            name: "그룹명"
+            value: "링크"
         about:
           header_link_text: "소개"
         messages:
@@ -4556,6 +4558,22 @@ ko:
           description: "감시 단어와 일치하는지 확인하려면 아래에 텍스트를 입력하세요"
           found_matches: "일치 결과:"
           no_matches: "일치하는 항목이 없음"
+      form_templates:
+        nav_title: "템플릿"
+        list_table:
+          headings:
+            name: "그룹명"
+            actions: "작업"
+        view_template:
+          close: "닫기"
+          edit: "수정"
+          delete: "삭제하기"
+        new_template_form:
+          submit: "저장"
+          cancel: "취소"
+        quick_insert_fields:
+          add_new_field: "추가"
+          dropdown: "드롭다운"
       impersonate:
         title: "가장"
         help: "이 툴을 사용하면 디버깅을 위해 사용자 계정으로 로그인할 수 있습니다. 사용이 끝나면 로그아웃해야 합니다."
@@ -4978,7 +4996,8 @@ ko:
         allow_title: 배지를 타이틀로 사용하도록 허용
         multiple_grant: 중복 부여 가능
         listable: 공개 배지 페이지에 표시
-        enabled: 배지 기능 사용
+        enabled: 활성화
+        disabled: 비활성
         icon: 아이콘
         image: 이미지
         graphic: 그래픽

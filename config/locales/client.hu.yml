@@ -3109,8 +3109,7 @@ hu:
       email_in: "Egyéni e-mail cím a bejövő üzeneteknek:"
       email_in_tooltip: "Több e-mail címet elválaszthat a | karakterrel."
       email_in_allow_strangers: "E-mailek fogadása fiók nélküli névtelen felhasználóktól"
-      email_in_disabled: "Az e-maillel történő témalétrehozáski van kapcsolva az oldal beállításaiban. A bekapcsoláshoz"
-      email_in_disabled_click: 'engedélyezd az "e-mail be" beállítást.'
+      email_in_disabled: "Az új témák e-mailben történő közzététele le van tiltva. Ha engedélyezni szeretné az új témák e-mailben történő közzétételét, engedélyezze a <a href='%{setting_url}'>„e-mail in”</a> beállítást."
       num_featured_topics: "A kategóriák oldalon megjelenő témák száma:"
       subcategory_num_featured_topics: "A kiemelt témák száma a szülő kategória oldalán:"
       sort_order: "Témakörök csoportosítása:"
@@ -3612,6 +3611,10 @@ hu:
         custom:
           save: "Mentés"
           delete: "Törlés"
+          links:
+            icon: "Ikon"
+            name: "Név"
+            value: "Hivatkozás"
         about:
           header_link_text: "Névjegy"
         messages:
@@ -3908,6 +3911,8 @@ hu:
               list_user_badges: A felhasználó jelvényeinek felsorolása.
               assign_badge_to_user: Jelvény kiosztása egy felhasználónak.
               revoke_badge_from_user: Jelvény elvétele egy felhasználótól.
+            search:
+              query: Keresés a `/search/query?term=term` végpont használatával.
       web_hooks:
         title: "Webhooks"
         create: "Létrehoz"
@@ -4483,6 +4488,39 @@ hu:
         test:
           button_label: "Teszt"
           no_matches: "Nem található egyezés"
+      form_templates:
+        nav_title: "Sablonok"
+        new_template: "Új sablon"
+        list_table:
+          headings:
+            name: "Név"
+            actions: "Műveletek"
+          actions:
+            view: "Sablon megtekintése"
+            edit: "Sablon szerkesztése"
+            delete: "Sablon törlése"
+        view_template:
+          close: "Lezárás"
+          edit: "Szerkesztés"
+          delete: "Törlés"
+        new_template_form:
+          submit: "Mentés"
+          cancel: "Mégse"
+          name:
+            label: "Sablon neve"
+            placeholder: "Adja meg a sablon nevét..."
+          template:
+            label: "Sablon"
+            placeholder: "Hozzon létre egy YAML-sablont itt..."
+        delete_confirm: "Biztosan törölni szeretné ezt a sablont?"
+        quick_insert_fields:
+          add_new_field: "Hozzáad"
+          checkbox: "Jelölőnégyzet"
+          input: "Rövid válasz"
+          textarea: "Hosszú válasz"
+          dropdown: "Legördülő menü"
+          upload: "Fájl feltöltése"
+          multiselect: "Több választási lehetőség"
       impersonate:
         title: "Megszemélyesít"
         not_found: "A felhasználó nem található."
@@ -4757,7 +4795,8 @@ hu:
         none_selected: "A kezdéshez válasszon egy jelvényt"
         allow_title: Jelvény címként való használatának engedélyezése
         listable: Jelvény megjelenítése a nyilvános jelvények oldalon
-        enabled: Jelvény engedélyezése
+        enabled: engedélyezve
+        disabled: kikapcsolva
         icon: Ikon
         image: Kép
         select_an_icon: "Válasszon ikont"
