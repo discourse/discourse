@@ -131,6 +131,47 @@ RSpec.describe Chat::StepsInspector do
         OUTPUT
       end
     end
+
+    context "when running in specs" do
+      context "when a successful step is flagged as being an unexpected result" do
+        before { result["result.policy.policy"]["spec.unexpected_result"] = true }
+
+        it "adapts its output accordingly" do
+          expect(output).to eq <<~OUTPUT.chomp
+          [1/7] [model] 'model' ✅
+          [2/7] [policy] 'policy' ✅ ⚠️  <= expected to return false but got true instead
+          [3/7] [contract] 'default' ✅
+          [4/7] [transaction]
+          [5/7]   [step] 'in_transaction_step_1' ✅
+          [6/7]   [step] 'in_transaction_step_2' ✅
+          [7/7] [step] 'final_step' ✅
+          OUTPUT
+        end
+      end
+
+      context "when a failing step is flagged as being an unexpected result" do
+        before do
+          class DummyService
+            def policy
+              false
+            end
+          end
+          result["result.policy.policy"]["spec.unexpected_result"] = true
+        end
+
+        it "adapts its output accordingly" do
+          expect(output).to eq <<~OUTPUT.chomp
+          [1/7] [model] 'model' ✅
+          [2/7] [policy] 'policy' ❌ ⚠️  <= expected to return true but got false instead
+          [3/7] [contract] 'default' 
+          [4/7] [transaction]
+          [5/7]   [step] 'in_transaction_step_1' 
+          [6/7]   [step] 'in_transaction_step_2' 
+          [7/7] [step] 'final_step' 
+          OUTPUT
+        end
+      end
+    end
   end
 
   describe "#error" do
