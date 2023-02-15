@@ -15,6 +15,10 @@ html.has-full-page-chat {
     padding: 0;
 
     .main-chat-outlet {
+      .chat-live-pane {
+        min-width: 0;
+      }
+
       &.has-side-panel-expanded {
         grid-template-columns: 1fr;
         grid-template-areas: "threads";
