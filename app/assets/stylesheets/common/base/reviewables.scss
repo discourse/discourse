@@ -230,7 +230,11 @@
       font-size: var(--font-down-2);
       color: var(--secondary);
       border-radius: 8px;
-      &.-flagged-post {
+      &.-flagged-post,
+      &.-user,
+      &.-flagged-chat-message,
+      &.-aksimet-flagged-post,
+      &.-aksimet-flagged-user {
         background-color: var(--danger-medium);
       }
       &.-queued-post {
@@ -271,11 +275,11 @@
 
       &.approve-post {
         background-color: var(--success);
-        color: var(--tertiary-or-white);
+        color: var(--secondary);
       }
       &.reject-post {
         background-color: var(--danger);
-        color: var(--tertiary-or-white);
+        color: var(--secondary);
       }
     }
 
@@ -308,6 +312,7 @@
 }
 
 .reviewable-scores {
+  margin-top: 1.5rem;
   min-width: 50%;
   color: var(--primary-high);
 
@@ -460,10 +465,26 @@
   }
 
   .post-body {
+    position: relative;
     max-width: var(--topic-body-width);
-    max-height: 300px;
     margin-top: 0.5em;
-    overflow-y: auto;
+
+    &__scroll {
+      max-height: 300px;
+      overflow-y: auto;
+      &:after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 1.5em;
+        background: linear-gradient(
+          to bottom,
+          rgba(var(--secondary-rgb), 0),
+          rgba(var(--secondary-rgb), 100%)
+        );
+      }
+    }
 
     p,
     aside {
