@@ -28,8 +28,8 @@ module Chat
 
       # @!visibility private
       class Contract
-        attribute :thread_id
-        attribute :channel_id
+        attribute :thread_id, :integer
+        attribute :channel_id, :integer
 
         validates :thread_id, :channel_id, presence: true
       end

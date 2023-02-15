@@ -10,11 +10,14 @@ RSpec.describe Chat::Service::LookupThread do
     subject(:result) { described_class.call(params) }
 
     fab!(:current_user) { Fabricate(:user) }
+
     let(:guardian) { Guardian.new(current_user) }
 
     context "when enable_experimental_chat_threaded_discussions is disabled" do
       let(:params) { { thread_id: 999, channel_id: 999 } }
+
       before { SiteSetting.enable_experimental_chat_threaded_discussions = false }
+
       it { is_expected.to fail_a_policy(:threaded_discussions_enabled) }
     end
 
@@ -28,13 +31,14 @@ RSpec.describe Chat::Service::LookupThread do
         let(:params) { { guardian: guardian, thread_id: thread.id, channel_id: thread.channel_id } }
 
         it "is successful" do
-          expect(subject).to be_a_success
-          expect(subject.thread).to eq(thread)
+          expect(result).to be_a_success
+          expect(result.thread).to eq(thread)
         end
       end
 
       context "when params are not valid" do
         let(:params) { {} }
+
         it { is_expected.to fail_a_contract }
       end
 
