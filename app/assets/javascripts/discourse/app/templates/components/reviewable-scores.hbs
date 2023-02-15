@@ -18,4 +18,27 @@
       {{/each}}
     </tbody>
   </table>
+
+  {{#each this.reviewable.reviewable_scores as |rs|}}
+    {{#if rs.reason}}
+      <div class="reviewable-score-reason">{{html-safe rs.reason}}</div>
+    {{/if}}
+
+    {{#if rs.reviewable_conversation}}
+      <div class="reviewable-conversation">
+        {{#each rs.reviewable_conversation.conversation_posts as |p index|}}
+          <ReviewableConversationPost @post={{p}} @index={{index}} />
+        {{/each}}
+        <div class="controls">
+          <a
+            href={{rs.reviewable_conversation.permalink}}
+            class="btn btn-small"
+          >
+            {{i18n "review.conversation.view_full"}}
+          </a>
+        </div>
+      </div>
+    {{/if}}
+  {{/each}}
+
 {{/if}}
