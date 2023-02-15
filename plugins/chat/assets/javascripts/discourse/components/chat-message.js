@@ -5,7 +5,7 @@ import Component from "@glimmer/component";
 import I18n from "I18n";
 import getURL from "discourse-common/lib/get-url";
 import optionalService from "discourse/lib/optional-service";
-import { afterRender, bind } from "discourse-common/utils/decorators";
+import { bind } from "discourse-common/utils/decorators";
 import EmberObject, { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { cancel, schedule } from "@ember/runloop";
@@ -754,7 +754,6 @@ export default class ChatMessage extends Component {
   }
 
   @action
-  @afterRender
   toggleChecked(e) {
     if (e.shiftKey) {
       this.args.bulkSelectMessages(this.args.message, e.target.checked);

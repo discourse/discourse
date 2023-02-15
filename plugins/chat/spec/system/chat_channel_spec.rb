@@ -171,27 +171,6 @@ RSpec.describe "Chat channel", type: :system, js: true do
     end
   end
 
-  context "when visiting another channel" do
-    fab!(:channel_2) { Fabricate(:chat_channel) }
-
-    before do
-      channel_1.add(current_user)
-      channel_2.add(current_user)
-      sign_in(current_user)
-    end
-
-    it "resets message selection" do
-      chat.visit_channel(channel_1)
-      channel.select_message(message_1)
-
-      expect(page).to have_css(".chat-selection-management")
-
-      chat.visit_channel(channel_2)
-
-      expect(page).to have_no_css(".chat-selection-management")
-    end
-  end
-
   context "when a message contains code fence" do
     fab!(:message_2) { Fabricate(:chat_message, chat_channel: channel_1, message: <<~MESSAGE) }
       Here's a message with code highlighting
