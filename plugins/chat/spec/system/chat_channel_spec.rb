@@ -21,7 +21,7 @@ RSpec.describe "Chat channel", type: :system, js: true do
 
       it "loads most recent messages" do
         unloaded_message = Fabricate(:chat_message, chat_channel: channel_1)
-        visit("/chat/message/#{message_1.id}")
+        visit("/chat/c/-/#{channel_1.id}/#{message_1.id}")
 
         expect(channel).to have_no_loading_skeleton
         expect(page).to have_no_css("[data-id='#{unloaded_message.id}']")
