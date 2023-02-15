@@ -6,19 +6,16 @@ import { module, test } from "qunit";
 import { render } from "@ember/test-helpers";
 
 module(
-  "Discourse Chat | Component | chat-retention-reminder",
+  "Discourse Chat | Component | chat-channel-settings-view",
   function (hooks) {
     setupRenderingTest(hooks);
 
     test("display retention info", async function (assert) {
-      this.channel = ChatChannel.create({ chatable_type: "Category" });
-      this.currentUser.set("needs_channel_retention_reminder", true);
+      this.set("channel", ChatChannel.create({ chatable_type: "Category" }));
 
-      await render(
-        hbs`<ChatRetentionReminder @chatChannel={{this.channel}} />`
-      );
+      await render(hbs`<ChatChannelSettingsView @channel={{this.channel}} />`);
 
-      assert.dom(".chat-retention-reminder").includesText(
+      assert.dom(".chat-retention-info").hasText(
         I18n.t("chat.retention_reminders.public", {
           count: this.siteSettings.chat_channel_retention_days,
         })
