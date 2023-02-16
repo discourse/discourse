@@ -84,12 +84,20 @@ export default class ChannelsList extends Component {
 
   @action
   storeScrollPosition() {
+    if (this.chatStateManager.isDrawerActive) {
+      return;
+    }
+
     const scrollTop = document.querySelector(".channels-list")?.scrollTop || 0;
     this.session.channelsListPosition = scrollTop;
   }
 
   @bind
   _applyScrollPosition() {
+    if (this.chatStateManager.isDrawerActive) {
+      return;
+    }
+
     const position = this.chatStateManager.isFullPageActive
       ? this.session.channelsListPosition || 0
       : 0;
