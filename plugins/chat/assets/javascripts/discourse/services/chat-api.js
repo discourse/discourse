@@ -10,8 +10,8 @@ import Collection from "../lib/collection";
  * @implements {@ember/service}
  */
 export default class ChatApi extends Service {
+  @service chat;
   @service chatChannelsManager;
-  @service chatThreadsManager;
 
   /**
    * Get a channel by its ID.
@@ -40,7 +40,7 @@ export default class ChatApi extends Service {
    */
   thread(channelId, threadId) {
     return this.#getRequest(`/channels/${channelId}/threads/${threadId}`).then(
-      (result) => this.chatThreadsManager.store(result.thread)
+      (result) => this.chat.activeChannel.threadsManager.store(result.thread)
     );
   }
 
