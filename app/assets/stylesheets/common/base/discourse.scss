@@ -67,6 +67,7 @@ body {
   background-attachment: fixed;
   background-size: cover;
   min-height: 100%;
+  box-sizing: border-box;
 
   @include clearfix;
 }
