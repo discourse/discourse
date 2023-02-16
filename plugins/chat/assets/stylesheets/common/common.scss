@@ -579,7 +579,7 @@ html.has-full-page-chat {
       flex-direction: column;
       max-height: calc(
         var(--chat-vh, 1vh) * 100 - var(--header-offset, 0px) -
-          var(--composer-height, 0px) - var(--footer-nav-height, 0px)
+          var(--composer-height, 0px)
       );
 
       .full-page-chat {
