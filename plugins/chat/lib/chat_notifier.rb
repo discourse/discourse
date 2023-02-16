@@ -41,7 +41,7 @@ class Chat::ChatNotifier
         :send_message_notifications,
         chat_message_id: chat_message.id,
         timestamp: timestamp.iso8601(6),
-        reason: :edit,
+        reason: "edit",
       )
     end
 
@@ -50,7 +50,7 @@ class Chat::ChatNotifier
         :send_message_notifications,
         chat_message_id: chat_message.id,
         timestamp: timestamp.iso8601(6),
-        reason: :new,
+        reason: "new",
       )
     end
   end

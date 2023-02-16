@@ -6,6 +6,8 @@ import { ajax } from "discourse/lib/ajax";
 import { escapeExpression } from "discourse/lib/utilities";
 import { tracked } from "@glimmer/tracking";
 import slugifyChannel from "discourse/plugins/chat/discourse/lib/slugify-channel";
+import ChatThreadsManager from "discourse/plugins/chat/discourse/lib/chat-threads-manager";
+import { getOwner } from "discourse-common/lib/get-owner";
 
 export const CHATABLE_TYPES = {
   directMessageChannel: "DirectMessage",
@@ -65,6 +67,9 @@ export default class ChatChannel extends RestModel {
   @tracked description;
   @tracked chatableType;
   @tracked status;
+  @tracked activeThread;
+
+  threadsManager = new ChatThreadsManager(getOwner(this));
 
   get escapedTitle() {
     return escapeExpression(this.title);

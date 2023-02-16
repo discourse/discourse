@@ -23,30 +23,34 @@ acceptance("Acceptance | decorateCookedElement", function () {
       DemoComponent
     );
 
-    withPluginApi(0, (api) => {
-      api.decorateCookedElement((cooked, helper) => {
-        if (helper.getModel().post_number !== 1) {
-          return;
-        }
-        cooked.innerHTML =
-          "<div class='existing-wrapper'>Some existing content</div>";
+    withPluginApi(
+      0,
+      (api) => {
+        api.decorateCookedElement((cooked, helper) => {
+          if (helper.getModel().post_number !== 1) {
+            return;
+          }
+          cooked.innerHTML =
+            "<div class='existing-wrapper'>Some existing content</div>";
 
-        // Create new wrapper element and append
-        cooked.appendChild(
+          // Create new wrapper element and append
+          cooked.appendChild(
+            helper.renderGlimmer(
+              "div.glimmer-wrapper",
+              hbs`<@data.component />`,
+              { component: DemoComponent }
+            )
+          );
+
+          // Append to existing element
           helper.renderGlimmer(
-            "div.glimmer-wrapper",
-            hbs`<@data.component />`,
-            { component: DemoComponent }
-          )
-        );
-
-        // Append to existing element
-        helper.renderGlimmer(
-          cooked.querySelector(".existing-wrapper"),
-          hbs` with more content from glimmer`
-        );
-      });
-    });
+            cooked.querySelector(".existing-wrapper"),
+            hbs` with more content from glimmer`
+          );
+        });
+      },
+      { id: "render-glimmer-test" }
+    );
 
     await visit("/t/internationalization-localization/280");
 
