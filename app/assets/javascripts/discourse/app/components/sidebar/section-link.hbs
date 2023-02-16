@@ -28,7 +28,7 @@
       <LinkTo
         class={{this.classNames}}
         @route={{@route}}
-        @query={{@query}}
+        @query={{or @query (hash)}}
         @models={{this.models}}
         @current-when={{@currentWhen}}
         title={{@title}}
