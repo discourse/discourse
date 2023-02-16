@@ -37,7 +37,7 @@ export default class ChatMessageInfo extends Component {
     if (user.new_user) {
       classes.push("is-new-user");
     }
-    if (user?.primary_group_name?.length) {
+    if (user.primary_group_name?.length) {
       classes.push("group--" + user.primary_group_name);
     }
     return classes.join(" ");
