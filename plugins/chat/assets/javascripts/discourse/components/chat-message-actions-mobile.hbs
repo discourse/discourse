@@ -37,7 +37,7 @@
             @translatedLabel={{button.name}}
             @icon={{button.icon}}
             @actionParam={{button.id}}
-            @action={{action "actAndCloseMenu" (get @messageActions button.id)}}
+            @action={{action this.actAndCloseMenu (get @messageActions button.id)}}
           />
         </li>
       {{/each}}
