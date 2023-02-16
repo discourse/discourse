@@ -60,6 +60,7 @@ class Chat::ChatNotifier
     @timestamp = timestamp
     @chat_channel = @chat_message.chat_channel
     @user = @chat_message.user
+    @mentions = Chat::ChatMessageMentions.new(chat_message)
   end
 
   ### Public API
@@ -108,11 +109,12 @@ class Chat::ChatNotifier
   private
 
   def list_users_to_notify
-    direct_mentions_count = direct_mentions_from_cooked.length
-    group_mentions_count = group_name_mentions.length
+    mentions_count =
+      @mentions.parsed_direct_mentions.length + @mentions.parsed_group_mentions.length
+    mentions_count += 1 if @mentions.has_global_mention
+    mentions_count += 1 if @mentions.has_here_mention
 
-    skip_notifications =
-      (direct_mentions_count + group_mentions_count) > SiteSetting.max_mentions_per_chat_message
+    skip_notifications = mentions_count > SiteSetting.max_mentions_per_chat_message
 
     {}.tap do |to_notify|
       # The order of these methods is the precedence
@@ -131,48 +133,13 @@ class Chat::ChatNotifier
     end
   end
 
-  def chat_users
-    User
-      .includes(:user_chat_channel_memberships, :group_users)
-      .distinct
-      .joins("LEFT OUTER JOIN user_chat_channel_memberships uccm ON uccm.user_id = users.id")
-      .joins(:user_option)
-      .real
-      .not_suspended
-      .where(user_options: { chat_enabled: true })
-      .where.not(username_lower: @user.username.downcase)
-  end
-
-  def rest_of_the_channel
-    chat_users.where(
-      user_chat_channel_memberships: {
-        following: true,
-        chat_channel_id: @chat_channel.id,
-      },
-    )
-  end
-
-  def members_accepting_channel_wide_notifications
-    rest_of_the_channel.where(user_options: { ignore_channel_wide_mention: [false, nil] })
-  end
-
-  def direct_mentions_from_cooked
-    @direct_mentions_from_cooked ||=
-      Nokogiri::HTML5.fragment(@chat_message.cooked).css(".mention").map(&:text)
-  end
-
-  def normalized_mentions(mentions)
-    mentions.reduce([]) do |memo, mention|
-      %w[@here @all].include?(mention.downcase) ? memo : (memo << mention[1..-1].downcase)
-    end
-  end
-
   def expand_global_mention(to_notify, already_covered_ids, skip)
-    typed_global_mention = direct_mentions_from_cooked.include?("@all")
+    has_all_mention = @mentions.has_global_mention
 
-    if typed_global_mention && @chat_channel.allow_channel_wide_mentions && !skip
-      to_notify[:global_mentions] = members_accepting_channel_wide_notifications
-        .where.not(username_lower: normalized_mentions(direct_mentions_from_cooked))
+    if has_all_mention && @chat_channel.allow_channel_wide_mentions && !skip
+      to_notify[:global_mentions] = @mentions
+        .global_mentions
+        .where(user_options: { ignore_channel_wide_mention: [false, nil] })
         .where.not(id: already_covered_ids)
         .pluck(:id)
 
@@ -183,12 +150,12 @@ class Chat::ChatNotifier
   end
 
   def expand_here_mention(to_notify, already_covered_ids, skip)
-    typed_here_mention = direct_mentions_from_cooked.include?("@here")
+    has_here_mention = @mentions.has_here_mention
 
-    if typed_here_mention && @chat_channel.allow_channel_wide_mentions && !skip
-      to_notify[:here_mentions] = members_accepting_channel_wide_notifications
-        .where("last_seen_at > ?", 5.minutes.ago)
-        .where.not(username_lower: normalized_mentions(direct_mentions_from_cooked))
+    if has_here_mention && @chat_channel.allow_channel_wide_mentions && !skip
+      to_notify[:here_mentions] = @mentions
+        .here_mentions
+        .where(user_options: { ignore_channel_wide_mention: [false, nil] })
         .where.not(id: already_covered_ids)
         .pluck(:id)
 
@@ -225,10 +192,7 @@ class Chat::ChatNotifier
     if skip
       direct_mentions = []
     else
-      direct_mentions =
-        chat_users
-          .where(username_lower: normalized_mentions(direct_mentions_from_cooked))
-          .where.not(id: already_covered_ids)
+      direct_mentions = @mentions.direct_mentions.where.not(id: already_covered_ids)
     end
 
     grouped = group_users_to_notify(direct_mentions)
@@ -239,48 +203,31 @@ class Chat::ChatNotifier
     already_covered_ids.concat(to_notify[:direct_mentions])
   end
 
-  def group_name_mentions
-    @group_mentions_from_cooked ||=
-      normalized_mentions(
-        Nokogiri::HTML5.fragment(@chat_message.cooked).css(".mention-group").map(&:text),
-      )
-  end
-
-  def visible_groups
-    @visible_groups ||= Group.where("LOWER(name) IN (?)", group_name_mentions).visible_groups(@user)
-  end
-
   def expand_group_mentions(to_notify, already_covered_ids, skip)
-    return [] if skip || visible_groups.empty?
+    return [] if skip || @mentions.visible_groups.empty?
 
-    mentionable_groups =
-      Group.mentionable(@user, include_public: false).where(id: visible_groups.map(&:id))
-
-    mentions_disabled = visible_groups - mentionable_groups
+    reached_by_group =
+      @mentions
+        .group_mentions
+        .where("user_count <= ?", SiteSetting.max_users_notified_per_group_mention)
+        .where.not(id: already_covered_ids)
 
     too_many_members, mentionable =
-      mentionable_groups.partition do |group|
+      @mentions.mentionable_groups.partition do |group|
         group.user_count > SiteSetting.max_users_notified_per_group_mention
       end
 
+    mentions_disabled = @mentions.visible_groups - @mentions.mentionable_groups
     to_notify[:group_mentions_disabled] = mentions_disabled
     to_notify[:too_many_members] = too_many_members
-
     mentionable.each { |g| to_notify[g.name.downcase] = [] }
 
-    reached_by_group =
-      chat_users
-        .includes(:groups)
-        .joins(:groups)
-        .where(groups: mentionable)
-        .where.not(id: already_covered_ids)
-
     grouped = group_users_to_notify(reached_by_group)
-
     grouped[:already_participating].each do |user|
       # When a user is a member of multiple mentioned groups,
       # the most far to the left should take precedence.
-      ordered_group_names = group_name_mentions & mentionable.map { |mg| mg.name.downcase }
+      ordered_group_names =
+        @mentions.parsed_group_mentions & mentionable.map { |mg| mg.name.downcase }
       user_group_names = user.groups.map { |ug| ug.name.downcase }
       group_name = ordered_group_names.detect { |gn| user_group_names.include?(gn) }
 
