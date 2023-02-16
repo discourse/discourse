@@ -10,12 +10,15 @@ RSpec.describe Chat::Service::LookupThread do
     subject(:result) { described_class.call(params) }
 
     fab!(:current_user) { Fabricate(:user) }
+    fab!(:channel) { Fabricate(:chat_channel, threading_enabled: true) }
+    fab!(:private_channel) { Fabricate(:private_category_channel, group: Fabricate(:group)) }
+    fab!(:thread) { Fabricate(:chat_thread, channel: channel) }
+    fab!(:other_thread) { Fabricate(:chat_thread) }
 
     let(:guardian) { Guardian.new(current_user) }
+    let(:params) { { guardian: guardian, thread_id: thread.id, channel_id: thread.channel_id } }
 
     context "when enable_experimental_chat_threaded_discussions is disabled" do
-      let(:params) { { thread_id: 999, channel_id: 999 } }
-
       before { SiteSetting.enable_experimental_chat_threaded_discussions = false }
 
       it { is_expected.to fail_a_policy(:threaded_discussions_enabled) }
@@ -25,57 +28,41 @@ RSpec.describe Chat::Service::LookupThread do
       before { SiteSetting.enable_experimental_chat_threaded_discussions = true }
 
       context "when all steps pass" do
-        fab!(:channel) { Fabricate(:chat_channel, threading_enabled: true) }
-        fab!(:thread) { Fabricate(:chat_thread, channel: channel) }
-
-        let(:params) { { guardian: guardian, thread_id: thread.id, channel_id: thread.channel_id } }
-
-        it "is successful" do
+        it "sets the service result as successful" do
           expect(result).to be_a_success
+        end
+
+        it "fetches the thread" do
           expect(result.thread).to eq(thread)
         end
       end
 
       context "when params are not valid" do
-        let(:params) { {} }
+        before { params.delete(:thread_id) }
 
         it { is_expected.to fail_a_contract }
       end
 
       context "when thread is not found because the channel ID differs" do
-        fab!(:thread) { Fabricate(:chat_thread) }
-        fab!(:channel) { Fabricate(:chat_channel) }
-
-        let(:params) { { guardian: guardian, thread_id: thread.id, channel_id: channel.id } }
+        before { params[:thread_id] = other_thread.id }
 
         it { is_expected.to fail_to_find_a_model(:thread) }
       end
 
       context "when thread is not found" do
-        fab!(:channel) { Fabricate(:chat_channel) }
-        fab!(:thread) { Fabricate(:chat_thread, channel: channel) }
-
         before { thread.destroy! }
-
-        let(:params) { { guardian: guardian, thread_id: thread.id, channel_id: thread.channel_id } }
 
         it { is_expected.to fail_to_find_a_model(:thread) }
       end
 
       context "when user cannot see channel" do
-        fab!(:channel) { Fabricate(:private_category_channel, group: Fabricate(:group)) }
-        fab!(:thread) { Fabricate(:chat_thread, channel: channel) }
-
-        let(:params) { { guardian: guardian, thread_id: thread.id, channel_id: thread.channel_id } }
+        before { thread.update!(channel: private_channel) }
 
         it { is_expected.to fail_a_policy(:invalid_access) }
       end
 
       context "when threading is not enabled for the channel" do
-        fab!(:channel) { Fabricate(:chat_channel) }
-        fab!(:thread) { Fabricate(:chat_thread, channel: channel) }
-
-        let(:params) { { guardian: guardian, thread_id: thread.id, channel_id: thread.channel_id } }
+        before { channel.update!(threading_enabled: false) }
 
         it { is_expected.to fail_a_policy(:threading_enabled_for_channel) }
       end
