@@ -31,7 +31,7 @@
     "@popperjs/core": "^2.11.6",
     "@uppy/aws-s3": "^3.0.4",
     "@uppy/aws-s3-multipart": "^3.1.1",
-    "@uppy/core": "^3.0.4",
+    "@uppy/core": "^3.0.6",
     "@uppy/drop-target": "^2.0.1",
     "@uppy/utils": "^5.1.1",
     "@uppy/xhr-upload": "^3.1.0",
