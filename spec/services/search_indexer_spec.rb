@@ -220,7 +220,7 @@ RSpec.describe SearchIndexer do
       Jobs.run_immediately!
       SiteSetting.max_image_width = 1
 
-      stub_request(:get, "https://meta.discourse.org/some.png").to_return(
+      stub_request(:get, "https://1.2.3.4/some.png").to_return(
         status: 200,
         body: file_from_fixtures("logo.png").read,
       )
