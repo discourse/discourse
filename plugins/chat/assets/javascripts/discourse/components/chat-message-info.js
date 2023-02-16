@@ -8,16 +8,16 @@ export default class ChatMessageInfo extends Component {
 
   @bind
   trackStatus() {
-    this.args.message?.user?.trackStatus?.();
+    this.#user?.trackStatus?.();
   }
 
   @bind
   stopTrackingStatus() {
-    this.args.message?.user?.stopTrackingStatus?.();
+    this.#user?.stopTrackingStatus?.();
   }
 
   get usernameClasses() {
-    const user = this.args.message?.get("user");
+    const user = this.#user;
     const classes = this.prioritizeName ? ["is-full-name"] : ["is-username"];
     if (!user) {
       return classes;
@@ -45,25 +45,33 @@ export default class ChatMessageInfo extends Component {
 
   get name() {
     return this.prioritizeName
-      ? this.args.message?.get("user.name")
-      : this.args.message?.get("user.username");
+      ? this.#user?.get("name")
+      : this.#user?.get("username");
   }
 
   get isFlagged() {
     return (
-      this.args.message?.get("reviewable_id") ||
-      this.args.message?.get("user_flag_status") === 0
+      this.#message?.get("reviewable_id") ||
+      this.#message?.get("user_flag_status") === 0
     );
   }
 
   get prioritizeName() {
     return (
       this.siteSettings.display_name_on_posts &&
-      prioritizeNameInUx(this.args.message?.get("user.name"))
+      prioritizeNameInUx(this.#user?.get("name"))
     );
   }
 
   get showStatus() {
-    return !!this.args.message?.user?.get("status");
+    return !!this.#user?.get("status");
+  }
+
+  get #user() {
+    return this.#message?.get("user");
+  }
+
+  get #message() {
+    return this.args.message;
   }
 }
