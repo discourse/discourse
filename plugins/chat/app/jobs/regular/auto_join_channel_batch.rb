@@ -33,7 +33,8 @@ module Jobs
         permission_type: CategoryGroup.permission_types[:create_post],
       }
 
-      new_member_ids = DB.query_single(create_memberships_query(category), query_args)
+      restricted = join_restricted?(category)
+      new_member_ids = DB.query_single(create_memberships_query(category, restricted), query_args)
 
       # Only do this if we are running auto-join for a single user, if we
       # are doing it for many then we should do it after all batches are
@@ -47,7 +48,7 @@ module Jobs
 
     private
 
-    def create_memberships_query(category)
+    def create_memberships_query(category, restricted)
       query = <<~SQL
         INSERT INTO user_chat_channel_memberships (user_id, chat_channel_id, following, created_at, updated_at, join_mode)
         SELECT DISTINCT(users.id), :chat_channel_id, TRUE, NOW(), NOW(), :mode
@@ -57,7 +58,7 @@ module Jobs
           uccm.chat_channel_id = :chat_channel_id AND uccm.user_id = users.id
       SQL
 
-      query += <<~SQL if category.read_restricted?
+      query += <<~SQL if restricted
           INNER JOIN group_users gu ON gu.user_id = users.id
           LEFT OUTER JOIN category_groups cg ON cg.group_id = gu.group_id AND
           cg.permission_type <= :permission_type
@@ -73,11 +74,20 @@ module Jobs
           uccm.id IS NULL
       SQL
 
-      query += <<~SQL if category.read_restricted?
-          AND cg.category_id = :channel_category
+      query += <<~SQL if restricted
+      AND cg.category_id = :channel_category
         SQL
 
       query += "RETURNING user_chat_channel_memberships.user_id"
+    end
+
+    def join_restricted?(category)
+      category.read_restricted? ||
+        CategoryGroup.exists?(
+          category_id: category.id,
+          group_id: Group::AUTO_GROUPS[:everyone],
+          permission_type: CategoryGroup.permission_types[:readonly],
+        )
     end
   end
 end
