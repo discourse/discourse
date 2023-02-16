@@ -3,13 +3,11 @@ import { openBookmarkModal } from "discourse/controllers/bookmark";
 import { isTesting } from "discourse-common/config/environment";
 import Component from "@glimmer/component";
 import I18n from "I18n";
-import getURL from "discourse-common/lib/get-url";
 import optionalService from "discourse/lib/optional-service";
 import { bind } from "discourse-common/utils/decorators";
 import EmberObject, { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { cancel, schedule } from "@ember/runloop";
-import { clipboardCopy } from "discourse/lib/utilities";
 import { inject as service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseLater from "discourse-common/lib/later";
@@ -246,7 +244,6 @@ export default class ChatMessage extends Component {
     return {
       reply: this.reply,
       react: this.react,
-      copyLinkToMessage: this.copyLinkToMessage,
       edit: this.edit,
       selectMessage: this.selectMessage,
       flag: this.flag,
@@ -762,30 +759,6 @@ export default class ChatMessage extends Component {
       this.args.message,
       event.target.checked
     );
-  }
-
-  @action
-  copyLinkToMessage() {
-    if (!this.messageContainer) {
-      return;
-    }
-
-    this.messageContainer
-      .querySelector(".link-to-message-btn")
-      ?.classList?.add("copied");
-
-    const { protocol, host } = window.location;
-    let url = getURL(
-      `/chat/c/-/${this.args.message.chat_channel_id}/${this.args.message.id}`
-    );
-    url = url.indexOf("/") === 0 ? protocol + "//" + host + url : url;
-    clipboardCopy(url);
-
-    discourseLater(() => {
-      this.messageContainer
-        ?.querySelector(".link-to-message-btn")
-        ?.classList?.remove("copied");
-    }, 250);
   }
 
   get emojiReactions() {

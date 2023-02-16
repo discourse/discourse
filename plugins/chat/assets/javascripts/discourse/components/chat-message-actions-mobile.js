@@ -32,6 +32,16 @@ export default Component.extend({
 
   @action
   actAndCloseMenu(fnId) {
+    if (fnId === "copyLinkToMessage") {
+      this.messageActionsHandler.copyLink(this.message);
+      return this.onCloseMenu();
+    }
+
+    if (fnId === "selectMessage") {
+      this.messageActionsHandler.selectMessage(this.message, true);
+      return this.onCloseMenu();
+    }
+
     this.messageActions[fnId]?.();
     this.onCloseMenu();
   },

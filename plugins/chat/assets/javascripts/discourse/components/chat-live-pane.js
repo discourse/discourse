@@ -2,7 +2,7 @@ import isElementInViewport from "discourse/lib/is-element-in-viewport";
 import { cloneJSON } from "discourse-common/lib/object";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import ChatMessageActions from "discourse/plugins/chat/discourse/lib/chat-message-actions";
-import ChatLivePaneReactor from "discourse/plugins/chat/discourse/lib/chat-live-pane-reactor";
+import ChatLivePanel from "discourse/plugins/chat/discourse/lib/chat-live-panel";
 import Component from "@ember/component";
 import discourseComputed, {
   afterRender,
@@ -50,7 +50,6 @@ export default Component.extend({
 
   allPastMessagesLoaded: false,
   sendingLoading: false,
-  selectingMessages: false,
   stickyScroll: true,
   stickyScrollTimer: null,
   showChatQuoteSuccess: false,
@@ -67,6 +66,9 @@ export default Component.extend({
   lastSelectedMessage: null,
   targetMessageId: null,
   hasNewMessages: null,
+
+  livePanel: null,
+  messageActionsHandler: null,
 
   chat: service(),
   chatChannelsManager: service(),
@@ -111,8 +113,8 @@ export default Component.extend({
     // works the same in threads + live pane, however
     // reactions could be different? replies will be different
     // for sure...
-    this.livePaneReactor = new ChatLivePaneReactor();
-    this.messageActionsHandler = new ChatMessageActions(this.livePaneReactor);
+    this.livePanel = new ChatLivePanel();
+    this.messageActionsHandler = new ChatMessageActions(this.livePanel);
   },
 
   didInsertElement() {
@@ -207,7 +209,7 @@ export default Component.extend({
   // too or ideally just move messages onto the channel
   @observes("messages")
   onMessagesChange() {
-    this.livePaneReactor.messages = this.messages;
+    this.livePanel.messages = this.messages;
   },
 
   @discourseComputed("chatChannel.isDirectMessageChannel")
@@ -1174,8 +1176,7 @@ export default Component.extend({
     this.messageLookup = {};
     this.set("allPastMessagesLoaded", false);
     this.set("registeredChatChannelId", null);
-    this.set("selectingMessages", false);
-    this.livePaneReactor.selectingMessages = false;
+    this.livePanel.cancelSelecting();
   },
 
   _resetAfterSend() {
@@ -1261,45 +1262,8 @@ export default Component.extend({
   },
 
   @action
-  onStartSelectingMessages(message) {
-    this.lastSelectedMessage = message;
-    this.set("selectingMessages", true);
-  },
-
-  @action
-  cancelSelecting() {
-    this.livePaneReactor.selectingMessages = false;
-    this.set("selectingMessages", false);
-    this.messages.setEach("selected", false);
-  },
-
-  @action
-  onSelectMessageOld(message) {
-    this.lastSelectedMessage = message;
-  },
-
-  @action
   navigateToIndex() {
     this.router.transitionTo("chat.index");
-  },
-
-  @action
-  bulkSelectMessages(message, checked) {
-    const lastSelectedIndex = this._findIndexOfMessage(
-      this.lastSelectedMessage
-    );
-    const newlySelectedIndex = this._findIndexOfMessage(message);
-    const sortedIndices = [lastSelectedIndex, newlySelectedIndex].sort(
-      (a, b) => a - b
-    );
-
-    for (let i = sortedIndices[0]; i <= sortedIndices[1]; i++) {
-      this.messages[i].set("selected", checked);
-    }
-  },
-
-  _findIndexOfMessage(message) {
-    return this.messages.findIndex((m) => m.id === message.id);
   },
 
   @action

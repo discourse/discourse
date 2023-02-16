@@ -2,16 +2,16 @@ import getURL from "discourse-common/lib/get-url";
 import { clipboardCopy } from "discourse/lib/utilities";
 
 export default class ChatMessageActions {
-  contextualPanel = null;
+  livePanel = null;
 
-  constructor(contextualPanel) {
+  constructor(livePanel) {
     // now its parent "context" or "scope" needs to
     // be put into the selection mode...we could probably
     // just store a reference to this parent on init?
     //
     // so in live pane and thread panel we would do new
-    // ChatMessageActions(this) and call this.contextualPanel.XX
-    this.contextualPanel = contextualPanel;
+    // ChatMessageActions(this) and call this.livePanel.XX
+    this.livePanel = livePanel;
   }
 
   copyLink(message) {
@@ -27,12 +27,12 @@ export default class ChatMessageActions {
     // naming for all the parent panel stuff should be
     // the same with on- prefix, e.g. onSelectMessage,
     // onDeleteMessage etc.
-    this.contextualPanel.onSelectMessage(message);
+    this.livePanel.onSelectMessage(message);
   }
 
   bulkSelectMessages(message, checked) {
     const lastSelectedIndex = this.#findIndexOfMessage(
-      this.contextualPanel.lastSelectedMessage
+      this.livePanel.lastSelectedMessage
     );
     const newlySelectedIndex = this.#findIndexOfMessage(message);
     const sortedIndices = [lastSelectedIndex, newlySelectedIndex].sort(
@@ -40,11 +40,11 @@ export default class ChatMessageActions {
     );
 
     for (let i = sortedIndices[0]; i <= sortedIndices[1]; i++) {
-      this.messages[i].set("selected", checked);
+      this.livePanel.messages[i].set("selected", checked);
     }
   }
 
   #findIndexOfMessage(message) {
-    return this.messages.findIndex((m) => m.id === message.id);
+    return this.livePanel.messages.findIndex((m) => m.id === message.id);
   }
 }
