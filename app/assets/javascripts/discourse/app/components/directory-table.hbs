@@ -21,7 +21,11 @@
     {{/each}}
 
     {{#if this.showTimeRead}}
-      <span>{{i18n "directory.time_read"}}</span>
+      <div class="directory-table__column-header">
+        <div class="header-contents">
+          {{i18n "directory.time_read"}}
+        </div>
+      </div>
     {{/if}}
   </div>
   <div class="directory-table__body">

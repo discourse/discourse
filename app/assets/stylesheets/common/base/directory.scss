@@ -85,20 +85,134 @@
 
 .directory-table {
   display: grid;
-  grid-auto-rows: auto;
   gap: 0;
   width: 100%;
   overflow-x: auto;
-  .directory-table__header,
-  .directory-table__body,
-  .directory-table__row {
+
+  &__header,
+  &__body,
+  &__row {
     display: contents; // we'll be able to remove this with subgrid support
   }
 
+  &__cell {
+    .directory-table__label {
+      white-space: nowrap;
+    }
+  }
+
+  &__label {
+    color: var(--primary-medium);
+    margin-right: auto;
+    padding-right: 0.5em;
+    @include breakpoint("tablet", min-width) {
+      display: none;
+    }
+  }
+
   .me {
-    > div {
+    @include breakpoint("tablet") {
       background-color: var(--highlight-low-or-medium);
     }
+
+    @include breakpoint("tablet", min-width) {
+      .directory-table__cell,
+      .directory-table__cell--user-field {
+        background-color: var(--highlight-low-or-medium);
+      }
+    }
+  }
+
+  &__column-header,
+  &__cell,
+  &__cell--user-field {
+    display: flex;
+    @include breakpoint("tablet", min-width) {
+      border-bottom: 1px solid var(--primary-low);
+      justify-content: center;
+      align-items: center;
+    }
+  }
+
+  &__column-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    color: var(--primary-medium);
+    padding: 0.5em;
+    .d-icon {
+      margin-right: 0.25em;
+    }
+  }
+
+  &__cell,
+  &__cell--user-field {
+    padding: 0.25em;
+    @include breakpoint("tablet") {
+      &:first-child {
+        width: 100%;
+        padding: 0.5em 0.25em 1em;
+        justify-content: start;
+        grid-column-start: 1;
+        grid-column-end: -1;
+      }
+    }
+    @include breakpoint("tablet", min-width) {
+      padding: 0.75em 0.5em;
+    }
+  }
+
+  @include breakpoint("tablet") {
+    display: flex;
+    flex-direction: column;
+
+    &__row {
+      &:first-child {
+        border-top: 1px solid var(--primary-low);
+      }
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(8em, 1fr));
+      border-bottom: 1px solid var(--primary-low);
+      padding: 0.85em 0.75em 1em;
+      gap: 0 20%;
+    }
+
+    &__header {
+      display: none;
+    }
+
+    &__cell--user-field {
+      flex-wrap: wrap;
+      order: 2;
+      grid-column-start: 1;
+      grid-column-end: -1;
+      .directory-table__label {
+        margin-right: 0.25em;
+      }
+    }
+  }
+
+  // below tablet width we no longer use a table-style layout
+  @include breakpoint("tablet", min-width) {
+    &__value {
+      white-space: nowrap;
+      font-size: var(--font-up-2);
+    }
+
+    &__value--user-field {
+      font-size: var(--font-up-1);
+    }
+
+    &__value,
+    &__value--user-field {
+      color: var(--primary-medium);
+    }
+  }
+
+  .d-icon-heart {
+    font-size: var(--font-down-1);
+    color: var(--love);
   }
 
   .user-detail {
@@ -107,46 +221,36 @@
     min-width: 0; // allow content to shrink and hide overflow
   }
 
-  .user-info.small {
-    width: auto;
+  .user-info {
     display: flex;
+    min-width: 0;
+    width: 100%;
+    .user-image {
+      padding-right: 0.5em;
+      margin-right: 0.5em;
+    }
+    .user-detail {
+      padding: 0;
+      width: 100%;
+      @media screen and (max-width: 600px) {
+        // overrides existing media query
+        font-size: var(--font-0);
+      }
+      @include breakpoint("mobile-medium") {
+        font-size: var(--font-down-1);
+      }
+    }
+    .title {
+      margin: 0;
+    }
   }
 
-  .directory-table__header div {
-    white-space: nowrap;
-    color: var(--primary-medium);
-  }
-
-  .directory-table__row > div {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 0.75em 0.5em;
-    border-bottom: 1px solid var(--primary-low);
+  .header-contents {
+    width: 100%;
+    text-align: center;
   }
 
   #table-header-toggle-username {
-    justify-content: start;
-  }
-
-  .number {
-    font-size: var(--font-up-3);
-    color: var(--primary-medium);
-  }
-
-  .sortable {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    .d-icon {
-      margin-right: 0.25em;
-    }
-    .d-icon-heart {
-      color: var(--love);
-    }
-  }
-
-  .directory-table__header div:first-child {
-    justify-content: start;
+    text-align: left;
   }
 }
