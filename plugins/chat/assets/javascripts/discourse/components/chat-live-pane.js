@@ -90,29 +90,6 @@ export default Component.extend({
     this.set("unreachableGroupMentions", []);
     this.set("overMembersLimitGroupMentions", []);
 
-    // this is quite heavy...maybe we need a sort of panel
-    // proxy, and then instantiate and pass it in, so it
-    // doesn't have tons of stuff attached, only what's
-    // needed.
-    //
-    // something like
-    //
-    // class ChatLivePaneMessageActionReactor {
-    //   onSelectMessage () {}
-    // }
-    //
-    // however...this also needs to be able to change
-    // things in the live pane...so it needs access  to
-    // the this as well, unless the live pane looks
-    // to this for tracked properties etc.
-    //
-    // for example...selectingMessages
-    //
-    // there could also be a base version of this that
-    // can be overridden....maybe selecting/deleting messages
-    // works the same in threads + live pane, however
-    // reactions could be different? replies will be different
-    // for sure...
     this.livePanel = new ChatLivePanel();
     this.messageActionsHandler = new ChatMessageActions(this.livePanel);
   },
@@ -546,7 +523,6 @@ export default Component.extend({
     }
     this._handleMessageHidingAndExpansion(messageData);
     messageData.messageLookupId = this._generateMessageLookupId(messageData);
-    messageData.chat_channel_id = this.chatChannel.id;
     const prepared = ChatMessage.create(messageData);
     this.messageLookup[messageData.messageLookupId] = prepared;
     return prepared;

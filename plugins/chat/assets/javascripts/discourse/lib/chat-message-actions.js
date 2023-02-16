@@ -5,12 +5,6 @@ export default class ChatMessageActions {
   livePanel = null;
 
   constructor(livePanel) {
-    // now its parent "context" or "scope" needs to
-    // be put into the selection mode...we could probably
-    // just store a reference to this parent on init?
-    //
-    // so in live pane and thread panel we would do new
-    // ChatMessageActions(this) and call this.livePanel.XX
     this.livePanel = livePanel;
   }
 
@@ -23,10 +17,6 @@ export default class ChatMessageActions {
 
   selectMessage(message, checked) {
     message.set("selected", checked);
-
-    // naming for all the parent panel stuff should be
-    // the same with on- prefix, e.g. onSelectMessage,
-    // onDeleteMessage etc.
     this.livePanel.onSelectMessage(message);
   }
 
