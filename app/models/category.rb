@@ -142,6 +142,9 @@ class Category < ActiveRecord::Base
   has_many :sidebar_section_links, as: :linkable, dependent: :delete_all
   has_many :embeddable_hosts, dependent: :destroy
 
+  has_many :category_form_templates, dependent: :destroy
+  has_many :form_templates, through: :category_form_templates
+
   belongs_to :reviewable_by_group, class_name: "Group"
 
   scope :latest, -> { order("topic_count DESC") }
@@ -1145,7 +1148,6 @@ end
 #  allow_unlimited_owner_edits_on_first_post :boolean          default(FALSE), not null
 #  default_slow_mode_seconds                 :integer
 #  uploaded_logo_dark_id                     :integer
-#  form_template                             :json
 #
 # Indexes
 #

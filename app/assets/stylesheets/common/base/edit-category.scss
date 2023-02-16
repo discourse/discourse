@@ -176,6 +176,25 @@ div.edit-category {
       margin-bottom: 1em;
     }
   }
+
+  .edit-category-tab-topic-template {
+    &__footer {
+      display: flex;
+      justify-content: flex-end;
+      margin-block: 1rem;
+
+      .btn-toggle-template-type {
+        color: var(--primary-low-mid);
+        text-decoration: underline;
+
+        &:hover,
+        &:focus {
+          text-decoration: none;
+          color: var(--primary-medium);
+        }
+      }
+    }
+  }
 }
 
 .category-permissions-table {

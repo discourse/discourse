@@ -205,6 +205,7 @@ class CategoriesController < ApplicationController
             old_category_params,
             old_permissions: old_permissions,
             old_custom_fields: old_custom_fields,
+            old_form_templates: old_form_templates,
           )
         end
       end
@@ -390,7 +391,7 @@ class CategoriesController < ApplicationController
             :slug,
             :allow_badges,
             :topic_template,
-            :form_template,
+            :form_templates,
             :sort_order,
             :sort_ascending,
             :topic_featured_link_allowed,

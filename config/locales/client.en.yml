@@ -5544,8 +5544,11 @@ en:
           dropdown: "Dropdown"
           upload: "Upload a file"
           multiselect: "Multiple choice"
-        template_chooser:
-          freeform: "Freeform"
+        edit_category:
+          toggle_freeform: "Switch to freeform template"
+          toggle_form_template: "Switch to form template"
+          select_template: "Select a form template"
+
       impersonate:
         title: "Impersonate"
         help: "Use this tool to impersonate a user account for debugging purposes. You will have to log out once finished."

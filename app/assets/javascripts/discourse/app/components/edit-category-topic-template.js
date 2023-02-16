@@ -1,53 +1,36 @@
 import { buildCategoryPanel } from "discourse/components/edit-category-panel";
-import { observes } from "discourse-common/utils/decorators";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { schedule } from "@ember/runloop";
 import FormTemplate from "admin/models/form-template";
-import I18n from "I18n";
-import { action, computed } from "@ember/object";
-import Yaml from "js-yaml";
+import { action } from "@ember/object";
 
 export default buildCategoryPanel("topic-template", {
   // Modals are defined using the singleton pattern.
   // Opening the insert link modal will destroy the edit category modal.
   showInsertLinkButton: false,
+  showFormTemplate: true,
 
   init() {
     this._super(...arguments);
 
     FormTemplate.findAll().then((result) => {
-      const sortedTemplates = this._sortTemplatesByName([
-        this.freeformTemplate,
-        ...result,
-      ]);
-
+      const sortedTemplates = this._sortTemplatesByName(result);
       this.set("templates", sortedTemplates);
     });
   },
 
-  @computed("category.form_template")
-  get selectedTemplate() {
-    if (this.category.form_template) {
-      return JSON.parse(this.category.form_template).name;
+  @discourseComputed("freeformTemplate")
+  templateTypeToggleLabel(freeformTemplate) {
+    if (freeformTemplate) {
+      return "admin.form_templates.edit_category.toggle_freeform";
     }
 
-    return this.freeformTemplate.name;
+    return "admin.form_templates.edit_category.toggle_form_template";
   },
 
-  @computed("selectedTemplate")
-  get templateContent() {
-    if (this.templates) {
-      return this.templates.findBy("name", this.selectedTemplate).template;
-    }
-
-    return Yaml.dump(JSON.parse(this.category.form_template).template);
-  },
-
-  get freeformTemplate() {
-    return {
-      id: 0,
-      name: I18n.t("admin.form_templates.template_chooser.freeform"),
-      template: "",
-    };
+  @action
+  toggleTemplateType() {
+    this.toggleProperty("showFormTemplate");
   },
 
   _sortTemplatesByName(templates) {
@@ -61,21 +44,5 @@ export default buildCategoryPanel("topic-template", {
         this.element.querySelector(".d-editor-input").focus()
       );
     }
-  },
-
-  @action
-  changeTemplate(templateName) {
-    if (templateName === this.freeformTemplate.name) {
-      return this.set("category.form_template", null);
-    }
-
-    const template = this.templates.findBy("name", templateName);
-
-    const parsedTemplate = {
-      name: template.name,
-      template: Yaml.load(template.template),
-    };
-
-    return this.set("category.form_template", JSON.stringify(parsedTemplate));
   },
 });
