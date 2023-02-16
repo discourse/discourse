@@ -193,7 +193,7 @@ module CookedProcessorMixin
     if upload && upload.width && upload.width > 0
       @size_cache[url] = [upload.width, upload.height]
     else
-      @size_cache[url] = FastImage.size(absolute_url)
+      @size_cache[url] = FinalDestination::FastImage.size(absolute_url)
     end
   rescue Zlib::BufError, URI::Error, OpenSSL::SSL::SSLError
     # FastImage.size raises BufError for some gifs, leave it.
