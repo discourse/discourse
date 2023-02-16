@@ -1085,8 +1085,8 @@ class Post < ActiveRecord::Base
       next if Rails.configuration.multisite && src.exclude?(current_db)
 
       src = "#{SiteSetting.force_https ? "https" : "http"}:#{src}" if src.start_with?("//")
-      unless Discourse.store.has_been_uploaded?(src) || Upload.secure_uploads_url?(src) ||
-               (include_local_upload && src =~ %r{\A/[^/]}i)
+      if !Discourse.store.has_been_uploaded?(src) && !Upload.secure_uploads_url?(src) &&
+           !(include_local_upload && src =~ %r{\A/[^/]}i)
         next
       end
 

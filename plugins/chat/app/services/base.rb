@@ -199,7 +199,7 @@ module Chat
         def call(instance, context)
           method = instance.method(method_name)
           args = {}
-          args = context.to_h if !method.arity.zero?
+          args = context.to_h if method.arity.nonzero?
           context[result_key] = Context.build
           instance.instance_exec(**args, &method)
         end

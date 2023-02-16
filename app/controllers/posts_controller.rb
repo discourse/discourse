@@ -541,7 +541,7 @@ class PostsController < ApplicationController
       ] if post_revision.modifications["category_id"].present? &&
         post_revision.modifications["category_id"][0] != topic.category.id
     end
-    return render_json_error(I18n.t("revert_version_same")) unless changes.length > 0
+    return render_json_error(I18n.t("revert_version_same")) if changes.length <= 0
     changes[:edit_reason] = I18n.with_locale(SiteSetting.default_locale) do
       I18n.t("reverted_to_version", version: post_revision.number.to_i - 1)
     end

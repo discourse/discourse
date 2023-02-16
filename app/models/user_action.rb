@@ -411,9 +411,7 @@ class UserAction < ActiveRecord::Base
       visible_post_types: visible_post_types,
     )
 
-    unless (guardian.user && guardian.user.id == user_id) || guardian.is_staff?
-      builder.where("t.visible")
-    end
+    builder.where("t.visible") if guardian.user&.id != user_id && !guardian.is_staff?
 
     filter_private_messages(builder, user_id, guardian, ignore_private_messages)
     filter_categories(builder, guardian)

@@ -25,7 +25,7 @@ module PostGuardian
   # Can the user act on the post in a particular way.
   #  taken_actions = the list of actions the user has already taken
   def post_can_act?(post, action_key, opts: {}, can_see_post: nil)
-    return false unless (can_see_post.nil? && can_see_post?(post)) || can_see_post
+    return false if !(can_see_post.nil? && can_see_post?(post)) && !can_see_post
 
     # no warnings except for staff
     if action_key == :notify_user &&

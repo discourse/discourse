@@ -335,7 +335,15 @@ class ImportScripts::XenForo < ImportScripts::Base
             created_at: Time.zone.at(post["message_date"].to_i),
             import_mode: true,
           }
-          unless post["topic_id"] > 0
+          if post["topic_id"] <= 0
+            topic_id = post["topic_id"]
+            if t = topic_lookup_from_imported_post_id("pm_#{topic_id}")
+              msg[:topic_id] = t[:topic_id]
+            else
+              puts "Topic ID #{topic_id} not found, skipping post #{post["message_id"]} from #{post["user_id"]}"
+              next
+            end
+          else
             msg[:title] = post["title"]
             msg[:archetype] = Archetype.private_message
             to_user_array = PHP.unserialize(post["recipients"])
@@ -343,14 +351,6 @@ class ImportScripts::XenForo < ImportScripts::Base
               discourse_user_ids = to_user_array.keys.map { |id| user_id_from_imported_user_id(id) }
               usernames = User.where(id: [discourse_user_ids]).pluck(:username)
               msg[:target_usernames] = usernames.join(",")
-            end
-          else
-            topic_id = post["topic_id"]
-            if t = topic_lookup_from_imported_post_id("pm_#{topic_id}")
-              msg[:topic_id] = t[:topic_id]
-            else
-              puts "Topic ID #{topic_id} not found, skipping post #{post["message_id"]} from #{post["user_id"]}"
-              next
             end
           end
           msg
