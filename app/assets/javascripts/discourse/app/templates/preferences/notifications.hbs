@@ -23,24 +23,22 @@
   </div>
 </div>
 
-{{#unless this.capabilities.isIOS}}
-  <div class="control-group desktop-notifications">
-    <label class="control-label">{{i18n
-        "user.desktop_notifications.label"
-      }}</label>
-    <DesktopNotificationConfig />
-    <div class="instructions">{{i18n
-        "user.desktop_notifications.each_browser_note"
-      }}</div>
-    <span>
-      <PluginOutlet
-        @name="user-preferences-desktop-notifications"
-        @connectorTagName="div"
-        @outletArgs={{hash model=this.model save=(action "save")}}
-      />
-    </span>
-  </div>
-{{/unless}}
+<div class="control-group desktop-notifications">
+  <label class="control-label">{{i18n
+      "user.desktop_notifications.label"
+    }}</label>
+  <DesktopNotificationConfig />
+  <div class="instructions">{{i18n
+      "user.desktop_notifications.each_browser_note"
+    }}</div>
+  <span>
+    <PluginOutlet
+      @name="user-preferences-desktop-notifications"
+      @connectorTagName="div"
+      @outletArgs={{hash model=this.model save=(action "save")}}
+    />
+  </span>
+</div>
 
 <UserNotificationSchedule @model={{this.model}} />
 
