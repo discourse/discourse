@@ -78,6 +78,8 @@ body.footer-nav-visible {
 
 body.footer-nav-ipad {
   padding-top: var(--footer-nav-height);
+  box-sizing: border-box;
+
   .footer-nav {
     bottom: auto;
     top: 0px;

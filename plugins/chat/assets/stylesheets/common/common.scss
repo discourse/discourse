@@ -579,7 +579,7 @@ html.has-full-page-chat {
       flex-direction: column;
       max-height: calc(
         var(--chat-vh, 1vh) * 100 - var(--header-offset, 0px) -
-          var(--composer-height, 0px)
+          var(--composer-height, 0px) - var(--footer-nav-height, 0px)
       );
 
       .full-page-chat {
@@ -606,21 +606,12 @@ html.has-full-page-chat {
     #main-outlet-wrapper {
       // restrict the row height, including when virtual keyboard is open
       grid-template-rows: calc(
-        var(--chat-vh, 1vh) * 100 - var(--header-offset)
+        var(--chat-vh, 1vh) * 100 - var(--header-offset, 0px) -
+          var(--footer-nav-height, 0px)
       );
       .sidebar-wrapper {
         // prevents sidebar from overflowing behind the virtual keyboard
         height: 100%;
-      }
-    }
-
-    // iPad webview
-    .footer-nav-ipad {
-      #main-outlet-wrapper {
-        // restrict the row height, including when virtual keyboard is open
-        grid-template-rows: calc(
-          var(--chat-vh, 1vh) * 100 - calc(var(--header-offset))
-        );
       }
     }
 
