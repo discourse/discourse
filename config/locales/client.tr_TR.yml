@@ -3345,8 +3345,6 @@ tr_TR:
       email_in: "Kişiselleştirilmiş gelen e-posta adresi:"
       email_in_tooltip: "Birden fazla e-posta adresini | karakteri ile ayırabilirsiniz."
       email_in_allow_strangers: "Hesabı olmayan anonim kullanıcılardan gelen e-postaları kabul edin"
-      email_in_disabled: "E-posta yoluyla yeni konuların gönderilmesi Site Ayarlarında devre dışı bırakılmış. Yeni konuların e-posta yoluyla gönderilmesini etkinleştirmek için "
-      email_in_disabled_click: '"email in" ayarını etkinleştirin.'
       mailinglist_mirror: "Kategori bir posta listesini yansıtır"
       show_subcategory_list: "Bu kategorideki konuların üzerinde alt kategori listesini göster."
       read_only_banner: "Bir kullanıcı bu kategoride konu oluşturamadığında banner metni:"
@@ -3970,6 +3968,10 @@ tr_TR:
         custom:
           save: "Kaydet"
           delete: "Sil"
+          links:
+            icon: "Simge"
+            name: "Ad"
+            value: "Bağlantı"
         about:
           header_link_text: "Hakkında"
         messages:
@@ -5060,6 +5062,22 @@ tr_TR:
           description: "İzlenen kelimelerle eşleşmeleri kontrol etmek için aşağıya metin girin"
           found_matches: "Bulunan eşlemeler:"
           no_matches: "Eşleşme bulunamadı"
+      form_templates:
+        nav_title: "Şablonlar"
+        list_table:
+          headings:
+            name: "Ad"
+            actions: "Eylemler"
+        view_template:
+          close: "Bitir"
+          edit: "Düzenle"
+          delete: "Sil"
+        new_template_form:
+          submit: "Kaydet"
+          cancel: "İptal et"
+        quick_insert_fields:
+          add_new_field: "Ekle"
+          dropdown: "Açılır Menü"
       impersonate:
         title: "Kimliğine Bürün"
         help: "Hata ayıklama amacıyla bir kullanıcı hesabının kimliğine bürünmek için bu aracı kullanın. Bittiğinde oturumu kapatmanız gerekecek."
@@ -5496,7 +5514,8 @@ tr_TR:
         allow_title: Rozetin başlık olarak kullanılmasına izin verin
         multiple_grant: Birden çok kez verilebilir
         listable: Rozeti herkese açık rozetler sayfasında gösterin
-        enabled: Rozeti etkinleştir
+        enabled: etkin mi
+        disabled: devre Dışı
         icon: Simge
         image: Görsel
         graphic: Grafik

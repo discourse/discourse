@@ -235,6 +235,7 @@ pl_PL:
       forwarded: "Przekazano powyższy email"
     topic_admin_menu: "akcje tematu"
     skip_to_main_content: "Przejdź do głównej zawartości"
+    skip_user_nav: "Przejdź do treści profilu"
     emails_are_disabled: "Wszystkie wychodzące wiadomości e-mail zostały globalnie wyłączone przez administratora. Żadne powiadomienia e-mail nie będą wysyłane."
     emails_are_disabled_non_staff: "Poczta wychodząca została wyłączona dla użytkowników niebędących pracownikami."
     software_update_prompt:
@@ -366,6 +367,7 @@ pl_PL:
       edit_bookmark: "Edytuj zakładkę"
       clear_bookmarks: "Wyczyść zakładki"
       help:
+        bookmark: "Kliknij, aby dodać ten temat do zakładek"
         edit_bookmark_for_topic: "Kliknij, aby edytować zakładkę dla tego tematu"
         unbookmark: "Kliknij, aby usunąć wszystkie zakładki z tego tematu"
         unbookmark_with_reminder: "Kliknij, aby usunąć wszystkie zakładki i przypomnienia w tym temacie"
@@ -1088,6 +1090,13 @@ pl_PL:
       profile: "Profil"
       mute: "Wycisz"
       edit: "Edytuj ustawienia"
+      download_archive:
+        title: "Eksportuj swoje dane"
+        description: "Pobierz archiwum aktywności i preferencji konta."
+        button_text: "Poproś o archiwum"
+        confirm: "Czy na pewno chcesz pobrać archiwum aktywności i preferencji swojego konta?"
+        success: "Rozpoczęliśmy gromadzenie Twojego archiwum, otrzymasz wiadomość, gdy proces się zakończy."
+        rate_limit_error: "Archiwa konta można pobrać raz dziennie, spróbuj ponownie jutro."
       new_private_message: "Nowa wiadomość"
       private_message: "Wiadomość"
       private_messages: "Wiadomości"
@@ -1389,8 +1398,12 @@ pl_PL:
         use: "Użyj aplikacji Authenticator"
         enforced_notice: "Aby uzyskać dostęp do tej witryny, musisz włączyć uwierzytelnianie dwuskładnikowe."
         disable: "Wyłącz"
+        disable_confirm: "Czy na pewno chcesz wyłączyć uwierzytelnianie dwuskładnikowe?"
         delete: "Usuń"
+        delete_confirm_header: "Te uwierzytelniacze oparte na tokenach i fizyczne klucze bezpieczeństwa zostaną usunięte:"
         delete_confirm_instruction: "Aby potwierdzić, wpisz <strong>%{confirm}</strong> w polu poniżej."
+        delete_single_confirm_title: "Usuwanie uwierzytelniacza"
+        delete_single_confirm_message: "Usuwasz %{name}. Tej czynności nie można cofnąć. Jeśli zmienisz zdanie, musisz ponownie zarejestrować ten token uwierzytelniający."
         delete_backup_codes_confirm_title: "Usuwanie kodów zapasowych"
         delete_backup_codes_confirm_message: "Usuwasz kody zapasowe. Tej czynności nie można cofnąć. Jeśli zmienisz zdanie, będziesz musiał ponownie wygenerować kody zapasowe."
         save: "Zapisz"
@@ -1984,6 +1997,7 @@ pl_PL:
       second_factor_backup_title: "Kod zapasowy weryfikacji dwuskładnikowej"
       second_factor_backup_description: "Proszę wprowadź jeden ze swoich zapasowych kodów:"
       second_factor: "Zaloguj się przy użyciu aplikacji Authenticator"
+      security_key_description: "Gdy masz przygotowany fizyczny klucz bezpieczeństwa lub kompatybilne urządzenie mobilne, naciśnij znajdujący się poniżej przycisk Uwierzytelnij za pomocą klucza bezpieczeństwa."
       security_key_alternative: "Spróbuj w inny sposób"
       security_key_authenticate: "Uwierzytelnij się za pomocą klucza bezpieczeństwa"
       security_key_not_allowed_error: "Upłynął limit czasu procesu uwierzytelniania klucza bezpieczeństwa lub został on anulowany."
@@ -2057,6 +2071,7 @@ pl_PL:
       success: "Twoje konto zostało utworzone i jesteś teraz zalogowany."
       name_label: "Nazwa"
       password_label: "Hasło"
+      existing_user_can_redeem: "Zrealizuj zaproszenie do tematu lub grupy."
     password_reset:
       continue: "Przejdź do %{site_name}"
     emoji_set:
@@ -2190,12 +2205,19 @@ pl_PL:
         not_allowed: "Wspomniałeś o @%{username}, lecz nie zostanie on powiadomiony, ponieważ nie został zaproszony do tego tematu."
       cannot_see_group_mention:
         not_mentionable: "Nie możesz wspomnieć o grupie @%{group}."
+        some_not_allowed:
+          one: "Wspomniałeś o @%{group}, ale tylko %{count} członek zostanie powiadomiony, ponieważ inni członkowie grupy nie mogą zobaczyć tej osobistej wiadomości. Będziesz musiał zaprosić ich do tej osobistej wiadomości."
+          few: "Wspomniałeś o @%{group}, ale tylko %{count} członkowie zostaną powiadomieni, ponieważ inni członkowie grupy nie mogą zobaczyć tej osobistej wiadomości. Będziesz musiał zaprosić ich do tej osobistej wiadomości."
+          many: "Wspomniałeś o @%{group}, ale tylko %{count} członków zostanie powiadomionych, ponieważ inni członkowie grupy nie mogą zobaczyć tej osobistej wiadomości. Będziesz musiał zaprosić ich do tej osobistej wiadomości."
+          other: "Wspomniałeś o @%{group}, ale tylko %{count} członków zostanie powiadomionych, ponieważ inni członkowie grupy nie mogą zobaczyć tej osobistej wiadomości. Będziesz musiał zaprosić ich do tej osobistej wiadomości."
+        not_allowed: "Wspomniałeś @%{group}, ale żaden z jej członków nie zostanie powiadomiony, ponieważ nie są w stanie zobaczyć tej prywatnej wiadomości. Będziesz musiał zaprosić ich do tej prywatnej wiadomości."
       here_mention:
         one: "Wspominając <b>@%{here}</b>, masz zamiar powiadomić %{count} użytkownika – czy jesteś pewien?"
         few: "Wspominając <b>@%{here}</b>, masz zamiar powiadomić %{count} użytkowników – czy jesteś pewien?"
         many: "Wspominając <b>@%{here}</b>, masz zamiar powiadomić %{count} użytkowników – czy jesteś pewien?"
         other: "Wspominając <b>@%{here}</b>, masz zamiar powiadomić %{count} użytkowników – czy jesteś pewien?"
       duplicate_link: "Wygląda na to, że Twój link do <b>%{domain}</b> został już wcześniej przesłany w tym wątku przez <b>@%{username}</b> w <a href='%{post_url}'>odpowiedzi przesłanej %{ago}</a> - jesteś pewien, że chcesz go wysłać ponownie?"
+      duplicate_link_same_user: "Wygląda na to, że już umieściłeś link do <b>%{domain}</b> w tym temacie w <a href='%{post_url}'>odpowiedzi na %{ago}</a> - czy na pewno chcesz opublikować go ponownie?"
       reference_topic_title: "Odpowiedz: %{title}"
       error:
         title_missing: "Tytuł jest wymagany"
@@ -2278,6 +2300,7 @@ pl_PL:
       abandon: "zamknij kompozytora i odrzuć wersję roboczą"
       enter_fullscreen: "wprowadź kompozytora na pełnym ekranie"
       exit_fullscreen: "zamknij kompozytora na pełnym ekranie"
+      exit_fullscreen_prompt: "Naciśnij <kbd>ESC</kbd>, aby wyjść z pełnego ekranu"
       show_toolbar: "pokaż pasek narzędzi kompozytora"
       hide_toolbar: "ukryj pasek narzędzi kompozytora"
       modal_ok: "OK"
@@ -2821,7 +2844,14 @@ pl_PL:
       read_more_in_category: "Chcesz przeczytać więcej? Przeglądaj inne tematy w %{categoryLink} lub <a href='%{latestLink}'>przeglądaj najnowsze tematy</a>."
       read_more: "Chcesz przeczytać więcej? <a href='%{categoryLink}'>Przeglądaj wszystkie kategorie</a> lub <a href='%{latestLink}'>przeglądaj najnowsze tematy</a>."
       unread_indicator: "Nikt jeszcze nie czytał ostatniego postu w tym temacie."
+      bumped_at_title: |
+        Pierwszy post: %{createdAtDate}
+        Opublikowany: %{bumpedAtDate}
+      browse_all_categories_latest: "<a href='%{basePath}/categories'>Przeglądaj wszystkie kategorie</a> lub <a href='%{basePath}/latest'>przeglądaj najnowsze tematy</a>."
+      browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Przeglądaj wszystkie kategorie</a>, <a href='%{basePath}/latest'>zobacz najnowsze tematy</a> lub zobacz popularne:"
+      browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Przeglądaj wszystkie tagi</a> lub <a href='%{basePath}/latest'>zobacz najnowsze tematy</a>."
       suggest_create_topic: Gotowy na <a href>rozpoczęcie nowej rozmowy?</a>
+      jump_reply: "Przejdź do pierwotnej lokalizacji posta"
       deleted: "Temat został usunięty"
       slow_mode_update:
         title: "Tryb powolny"
@@ -3206,6 +3236,7 @@ pl_PL:
       ignored: "Zignorowana treść"
       wiki_last_edited_on: "wiki ostatnio edytowane %{dateTime}"
       last_edited_on: "post ostatnio edytowany %{dateTime}"
+      edit_history: "historia edycji posta"
       reply_as_new_topic: "Odpowiedz w nowym temacie"
       reply_as_new_private_message: "Odpowiedź w nowej wiadomości do tego samego odbiorcy"
       continue_discussion: "Kontynuując dyskusję z %{postLink}:"
@@ -3216,6 +3247,11 @@ pl_PL:
       collapse: "zawalić się"
       sr_collapse_replies: "Zwiń osadzone odpowiedzi"
       sr_date: "Data wysłania"
+      sr_expand_replies:
+        one: "Ten post ma %{count} odpowiedź"
+        few: "Ten post ma %{count} odpowiedzi"
+        many: "Ten post ma %{count} odpowiedzi"
+        other: "Ten post ma %{count} odpowiedzi"
       expand_collapse: "rozwiń/zwiń"
       sr_below_embedded_posts_description: "post #%{post_number} odpowiedzi"
       sr_embedded_reply_description: "odpowiedź od @%{username} na post #%{post_number}"
@@ -3284,6 +3320,7 @@ pl_PL:
           many: "Przepraszamy, możesz przesłać %{count} plików jednocześnie."
           other: "Przepraszamy, możesz przesłać %{count} plików jednocześnie."
         upload_not_authorized: "Przepraszamy, plik który próbujesz wgrać jest nie dozwolony (dozwolone rozszerzenia: %{authorized_extensions})."
+        no_uploads_authorized: "Przepraszamy, żadne pliki nie są upoważnione do przesyłania."
         image_upload_not_allowed_for_new_user: "Przepraszamy, ale nowi użytkownicy nie mogą wgrywać obrazów."
         attachment_upload_not_allowed_for_new_user: "Przepraszamy, ale nowi użytkownicy nie mogą wgrywać załączników."
         attachment_download_requires_login: "Przepraszamy, musisz się zalogować, aby pobierać załączniki."
@@ -3407,6 +3444,8 @@ pl_PL:
           last: "Ostatnia wersja"
           hide: "Ukryj tę wersję"
           show: "Pokaż tę wersję"
+          destroy: "Usuń wersje"
+          destroy_confirm: "Czy na pewno chcesz usunąć wszystkie wersje tego posta? Ta czynność jest trwała."
           revert: "Przywróć rewizję %{revision}"
           edit_wiki: "Edytuj Wiki"
           edit_post: "Edytuj wpis"
@@ -3440,6 +3479,7 @@ pl_PL:
         updated: "Zaktualizowane"
         name: "Imię"
         name_placeholder: "Do czego ma służyć ta zakładka?"
+        name_input_label: "Nazwa zakładki"
         set_reminder: "Przypomnij mi"
         options: "Opcje"
         actions:
@@ -3535,8 +3575,6 @@ pl_PL:
       images: "Obrazy"
       email_in: "Dedykowany adres email kategorii:"
       email_in_allow_strangers: "Akceptuj wiadomości email od anonimowych, nieposiadających kont użytkowników "
-      email_in_disabled: "Tworzenie nowych tematów emailem jest wyłączone w ustawieniach serwisu. "
-      email_in_disabled_click: 'Kliknij tu, aby włączyć.'
       mailinglist_mirror: "Kategoria odzwierciedla listę mailingową"
       show_subcategory_list: "Pokaż listę subkategorii powyżej tematów w tej kategorii."
       read_only_banner: "Tekst banera, gdy użytkownik nie może utworzyć tematu w tej kategorii:"
@@ -3647,7 +3685,9 @@ pl_PL:
         inappropriate: "Jest nieodpowiednie"
         spam: "Jest odebrane jako spam"
       custom_placeholder_notify_user: "Napisz konkretnie, konstuktywnie i kulturalnie."
+      notify_user_textarea_label: "Wiadomość dla użytkownika"
       custom_placeholder_notify_moderators: "Dlaczego ten wpis wymaga uwagi moderatora? Opisz co konkretnie Cię zaniepokoiło i jeśli to możliwe umieść odpowiednie odnośniki."
+      notify_moderators_textarea_label: "Wiadomość dla moderatorów"
       custom_message:
         at_least:
           one: "wprowadź co najmniej %{count} znak"
@@ -4210,13 +4250,24 @@ pl_PL:
         few: "%{count} nowe"
         many: "%{count} nowych"
         other: "%{count} nowy"
+      toggle_section: "Przełącz sekcję"
       more: "Więcej"
       all_categories: "Wszystkie kategorie"
       all_tags: "Wszystkie tagi"
       sections:
         custom:
+          add: "Dodaj niestandardową sekcję"
+          edit: "Edytuj niestandardową sekcję"
+          name: "Tytuł sekcji"
           save: "Zapisz"
           delete: "Usuń"
+          delete_confirm: "Czy na pewno chcesz usunąć tę sekcję?"
+          links:
+            icon: "Ikona"
+            name: "Nazwa"
+            value: "Odnośnik"
+            add: "Dodaj kolejny link"
+            delete: "Usuń link"
         about:
           header_link_text: "O stronie"
         messages:
@@ -4566,6 +4617,7 @@ pl_PL:
         create: "Stwórz"
         edit: "Edytuj"
         save: "Zapisz"
+        description_label: "Wyzwalacze zdarzeń"
         controls: "Ustawienia"
         go_back: "Powrót do listy"
         payload_url: "Zawartość URL"
@@ -4672,6 +4724,7 @@ pl_PL:
         broken_route: "Nie można skonfigurować łącza do '%{name}'. Upewnij się, że blokery reklam są wyłączone i spróbuj ponownie załadować stronę."
       navigation_menu:
         sidebar: "Pasek boczny"
+        header_dropdown: "Lista rozwijana nagłówka"
         legacy: "Przestarzały"
       backups:
         title: "Kopie zapasowe"
@@ -5000,6 +5053,9 @@ pl_PL:
             description: "Kolor przycisku polubień"
           selected:
             name: "zaznaczone"
+          hover:
+            name: "najechanie"
+            description: "Kolor tła elementów, takich jak elementy listy, gdy są one najechane kursorem lub mają fokus klawiatury."
         robots:
           title: "Nadpisz plik robots.txt swojej witryny:"
           warning: "To ustawienie permanentnie nadpisze wszystkie powiązane ustawienia witryny."
@@ -5130,6 +5186,7 @@ pl_PL:
           no_previous: "Nie ma wcześniejszej wartości."
           deleted: "Nie ma nowej wartości. Zapis został usunięty."
           actions:
+            permanently_delete_post_revisions: "trwale usuń wersje posta"
             delete_user: "usunięcie użytkownika"
             change_trust_level: "zmiana poziomu zaufania"
             change_username: "zmień nazwę użytkownika"
@@ -5313,6 +5370,41 @@ pl_PL:
           description: "Wpisz tekst poniżej, aby sprawdzić dopasowania z obserwowanymi słowami"
           found_matches: "Znalezione wyniki:"
           no_matches: "Nie znaleziono dopasowań"
+      form_templates:
+        nav_title: "Szablony"
+        title: "Szablony formularzy"
+        help: "Utwórz strukturę szablonów, której można użyć do tworzenia nowych tematów, postów i wiadomości."
+        new_template: "Nowy szablon"
+        list_table:
+          headings:
+            name: "Nazwa"
+            actions: "Akcje"
+          actions:
+            view: "Zobacz szablon"
+            edit: "Edytuj szablon"
+            delete: "Usuń szablon"
+        view_template:
+          close: "Zamknij"
+          edit: "Edytuj"
+          delete: "Usuń"
+        new_template_form:
+          submit: "Zapisz"
+          cancel: "Anuluj"
+          name:
+            label: "Nazwa szablonu"
+            placeholder: "Wpisz nazwę tego szablonu..."
+          template:
+            label: "Szablon"
+            placeholder: "Utwórz szablon YAML tutaj..."
+        delete_confirm: "Czy na pewno chcesz usunąć ten szablon?"
+        quick_insert_fields:
+          add_new_field: "Dodaj"
+          checkbox: "Pole wyboru"
+          input: "Krótka odpowiedź"
+          textarea: "Długa odpowiedź"
+          dropdown: "Lista rozwijana"
+          upload: "Prześlij plik"
+          multiselect: "Wielokrotny wybór"
       impersonate:
         title: "Podszywaj się"
         help: "Użyj tego narzędzia, aby podszywać się pod konto użytkownika do celów debugowania. Będziesz musiał się wylogować po zakończeniu."
@@ -5758,7 +5850,8 @@ pl_PL:
         allow_title: Pozwól wykorzystywać odznakę jako tytuł
         multiple_grant: Może być przyznana wielokrotnie
         listable: Wyświetlaj odznakę na publicznych listach odznak
-        enabled: Włącz odznakę
+        enabled: włączona
+        disabled: wyłączone
         icon: Ikona
         image: Grafika
         graphic: Grafika

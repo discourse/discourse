@@ -1,0 +1,10 @@
+<ChatDrawer::Header>
+  <ChatDrawer::Header::Title @title="chat.heading" />
+  <ChatDrawer::Header::RightActions @drawerActions={{@drawerActions}} />
+</ChatDrawer::Header>
+
+{{#if this.chatStateManager.isDrawerExpanded}}
+  <div class="chat-drawer-content">
+    <ChannelsList />
+  </div>
+{{/if}}

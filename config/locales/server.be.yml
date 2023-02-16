@@ -1377,7 +1377,6 @@ be:
     deactivated_by_staff: "Дэактываваны персаналам"
     activated_by_staff: "Актываваны персаналам"
     new_user_typed_too_fast: "Новы карыстальнік надрукаваў занадта хутка"
-    content_matches_auto_block_regex: "Змест адпавядае аўтаматычнай блакаванні рэгулярных выразаў"
     username:
       too_long: "занадта доўга"
       unique: "павінен быць унікальным"

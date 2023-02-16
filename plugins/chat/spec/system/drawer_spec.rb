@@ -10,6 +10,24 @@ RSpec.describe "Drawer", type: :system, js: true do
     sign_in(current_user)
   end
 
+  context "when on channel" do
+    fab!(:channel) { Fabricate(:chat_channel) }
+    fab!(:membership) do
+      Fabricate(:user_chat_channel_membership, user: current_user, chat_channel: channel)
+    end
+
+    context "when clicking channel title" do
+      it "opens channel info page" do
+        visit("/")
+        chat_page.open_from_header
+        drawer.open_channel(channel)
+        page.find(".chat-channel-title").click
+
+        expect(page).to have_current_path("/chat/c/#{channel.slug}/#{channel.id}/info/about")
+      end
+    end
+  end
+
   context "when opening" do
     it "uses stored size" do
       visit("/") # we need to visit the page first to set the local storage

@@ -64,7 +64,6 @@ hu:
         instructions: "A csatorna lezárása megakadályozza, hogy a nem stábtagok új üzeneteket küldjenek vagy szerkesszék a meglévő üzeneteket. Biztos, hogy be akarja zárni ezt a csatornát?"
       channel_delete:
         title: "Csatorna törlése"
-        instructions: "<p>Törli a(z) <strong>%{name}</strong> csatornát és a csevegési előzményeket. Minden üzenet és a kapcsolódó adat, például a reakciók és a feltöltések véglegesen törlődnek. Ha meg szeretné őrizni a csatorna előzményeit, de meg akarja szüntetni, akkor inkább archiválja a csatornát.</p> <p>Biztos, hogy <strong>véglegesen törli </strong> a csatornát? A megerősítéshez írja be a csatorna nevét az alábbi mezőbe.</p>"
         confirm: "Megértem a következményeket, a csatorna törlése"
         confirm_channel_name: "Adja meg a csatorna nevét"
         process_started: "A csatorna törlése megkezdődött. Ez a kérdésablak hamarosan bezárul, és már nem fogja látni a törölt csatornát."

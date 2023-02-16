@@ -2010,11 +2010,8 @@ de:
     delete_merged_stub_topics_after_days: "Anzahl der abzuwartenden Tage, bevor vollständig zusammengeführte Stub-Themen automatisch gelöscht werden. Auf 0 setzen, um Stub-Themen nie zu löschen."
     bootstrap_mode_min_users: "Erforderliche Benutzeranzahl, um den Starthilfe-Modus zu deaktivieren (zum Deaktivieren auf 0 setzen)"
     prevent_anons_from_downloading_files: "Verhindern, dass anonyme Benutzer Anhänge herunterladen können."
-    secure_media: "VERALTET: Verwende stattdessen die Einstellung secure_uploads, wird in Discourse 3.0 entfernt."
     secure_uploads: 'Beschränkt den Zugriff auf ALLE Uploads (Bilder, Videos, Audio, Text, PDFs, ZIPs und andere). Wenn „Anmeldung erforderlich“ aktiviert ist, können nur angemeldete Benutzer auf Uploads zugreifen. Andernfalls ist der Zugriff nur für Medienuploads in privaten Nachrichten und privaten Kategorien beschränkt. WARNUNG: Diese Einstellung ist komplex und erfordert ein umfassendes administratives Verständnis. Siehe <a target="_blank" href="https://meta.discourse.org/t/-/140017">das Thema „Sichere Uploads“ auf Meta</a> für Details.'
-    secure_media_allow_embed_images_in_emails: "VERALTET: secure_uploads_allow_embed_images_in_emails verwenden, wird in Discourse 3.0 entfernt."
     secure_uploads_allow_embed_images_in_emails: "Ermöglicht das Einbetten sicherer Bilder, die normalerweise in E-Mails geschwärzt werden würden, wenn ihre Größe kleiner ist als die Einstellung „secure uploads max email embed image size kb“."
-    secure_media_max_email_embed_image_size_kb: "DEPRECATED: secure_uploads_max_email_embed_image_size_kb verwenden, wird in Discourse 3.0 entfernt."
     secure_uploads_max_email_embed_image_size_kb: "Der Größengrenzwert für sichere Bilder, die in E-Mails eingebettet werden, wenn die Einstellung „secure uploads allow embed in emails“ aktiviert ist. Anderweitig hat diese Einstellung keine Auswirkung."
     slug_generation_method: "Gib eine Methode an, wie Kürzel in URLs generiert werden sollen. „encoded“ erzeugt einen Prozent-encodierten String, bei „none“ wird kein Kürzel verwendet."
     enable_emoji: "Emoji aktivieren"
@@ -2133,7 +2130,6 @@ de:
     default_sidebar_categories: "Ausgewählte Kategorien werden standardmäßig im Abschnitt „Kategorien“ der Seitenleiste angezeigt."
     default_sidebar_tags: "Ausgewählte Schlagwörter werden standardmäßig im Abschnitt „Schlagwörter“ der Seitenleiste angezeigt."
     enable_new_user_profile_nav_groups: "EXPERIMENTELL: Benutzern der ausgewählten Gruppen wird das neue Benutzerprofil-Navigationsmenü angezeigt"
-    enable_experimental_topic_timeline_groups: "EXPERIMENTELL: Benutzern der ausgewählten Gruppen wird die umgestaltete Themenzeitleiste angezeigt"
     enable_experimental_hashtag_autocomplete: "EXPERIMENTELL: Das neue #hashtag-Autovervollständigungssystem für Kategorien und Schlagwörter, das das ausgewählte Element anders darstellt und eine bessere Suche aufweist, verwenden"
     errors:
       invalid_css_color: "Ungültige Farbe. Gib einen Farbnamen oder einen Hexadezimalwert ein."
@@ -2191,7 +2187,6 @@ de:
       search_tokenize_japanese_enabled: "Du musst „search_tokenize_japanese“ deaktivieren, bevor du diese Einstellung aktivierst."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Du kannst DiscourseConnect nicht aktivieren, wenn 2FA erzwungen wird."
       delete_rejected_email_after_days: "Diese Einstellung kann nicht niedriger als die Einstellung delete_email_logs_after_days oder höher als %{max} gesetzt werden"
-      invalid_uncategorized_category_setting: "Die Kategorie „Nicht kategorisiert“ kann nicht ausgewählt werden, wenn „Nicht kategorisierte Themen zulassen“ nicht zulässig ist"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2386,7 +2381,6 @@ de:
     activated_by_staff: "Aktiviert vom Team"
     new_user_typed_too_fast: "Neuer Benutzer hat zu schnell getippt"
     content_matches_auto_silence_regex: "Inhalt stimmt mit regulärem Ausdruck für Auto-Stummschaltung überein"
-    content_matches_auto_block_regex: "Inhalt stimmt mit regulärem Ausdruck für Auto-Block überein"
     username:
       short: "muss mindestens %{min} Zeichen lang sein"
       long: "darf nicht länger als %{max} Zeichen sein"

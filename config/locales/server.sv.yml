@@ -399,6 +399,7 @@ sv:
   too_late_to_edit: "Inlägget skapades för långt tillbaka i tiden. Det kan inte längre redigeras eller tas bort."
   edit_conflict: "Det inlägget redigerades av en annan användare och dina ändringar kan inte längre sparas."
   revert_version_same: "Nuvarande version är den samma som du försöker återgå till."
+  reverted_to_version: "återställd till version nr %{version}"
   cannot_edit_on_slow_mode: "Detta ämne är i långsamt läge. För att uppmuntra eftertänksam och övervägd diskussion är det för närvarande inte tillåtet att redigera gamla inlägg i långsamt läge."
   excerpt_image: "bild"
   bookmarks:
@@ -2023,11 +2024,8 @@ sv:
     delete_merged_stub_topics_after_days: "Antal dagar att vänta innan helt sammanslagna stub-ämnen raderas automatiskt. Ställ in till 0 för att aldrig radera stub-ämnen."
     bootstrap_mode_min_users: "Minsta antal användare som krävs för att inaktivera bootstrap-läget (ange 0 för att inaktivera)"
     prevent_anons_from_downloading_files: "Förhindra att anonyma användare hämtar bilagor."
-    secure_media: "UTFASAT: Använd inställningen secure_uploads istället, kommer att tas bort i Discourse 3.0."
     secure_uploads: 'Begränsar åtkomst för ALLA uppladdningar (bilder, video, ljud, text, pdf, zip med flera). Om "login required" har aktiverats kan endast inloggade användare komma åt uppladdningar. Annars begränsas åtkomst endast till uppladdning av media i privata meddelanden samt privata kategorier. VARNING: Den här inställningen är komplex och kräver djupa administrativa kunskaper. Se detaljer i <a target="_blank" href="https://meta.discourse.org/t/-/140017">ämnet för säkra uppladdningar i Meta</a>.'
-    secure_media_allow_embed_images_in_emails: "UTFASAT: Använd secure_uploads_allow_embed_images_in_emails, kommer att tas bort i Discourse 3.0."
     secure_uploads_allow_embed_images_in_emails: "Gör det möjligt att bädda in säkra bilder som normalt skulle begränsas i e-postmeddelanden, under förutsättning att deras storlek är mindre än inställningen för säkra medias maxstorlek för inbäddning av bild, 'secure uploads max email embed image size kb'."
-    secure_media_max_email_embed_image_size_kb: "UTFASAT: Använd secure_uploads_max_email_embed_image_size_kb, kommer att tas bort i Discourse 3.0."
     secure_uploads_max_email_embed_image_size_kb: "Storleksbegränsningen för säkra bilder som kommer att bäddas in i e-postmeddelanden om inställningen för att tillåta inbäddningar för säkra uppladdningar i e-post är aktiverad, 'secure uploads allow embed in emails' . Om inställningen inte är aktiverad har den här inställningen ingen effekt."
     slug_generation_method: "Välj en genereringsmetod för etiketter. Ange 'none' för att inaktivera generering av etiketter. "
     enable_emoji: "Aktivera emoji"
@@ -2147,7 +2145,6 @@ sv:
     default_sidebar_tags: "Valda taggar kommer att visas under sidofältets sektion Taggar som standard."
     enable_new_notifications_menu: "Aktiverar den nya aviseringsmenyn för den gamla navigeringsmenyn."
     enable_new_user_profile_nav_groups: "EXPERIMENTELL: Användare i de valda grupperna visas den nya navigeringsmenyn för användarprofiler."
-    enable_experimental_topic_timeline_groups: "EXPERIMENTELLT: Användare i de valda grupperna visas det omstrukturerade ämnets tidslinje"
     enable_experimental_hashtag_autocomplete: "EXPERIMENTELLT: Använd det nya #hashtag-autokompletteringssystemet för kategorier och taggar som renderar det valda objektet annorlunda och har förbättrad sökning"
     errors:
       invalid_css_color: "Ogiltig färg. Ange ett färgnamn eller ett hexvärde."
@@ -2205,7 +2202,6 @@ sv:
       search_tokenize_japanese_enabled: "Du måste inaktivera 'search_tokenize_japanese' innan du aktiverar den här inställningen."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Du kan inte aktivera DiscourseConnect om 2FA är obligatoriskt."
       delete_rejected_email_after_days: "Den här inställningen kan inte vara lägre än inställningen delete_email_logs_after_days eller större än %{max}"
-      invalid_uncategorized_category_setting: "Kategorin Okategoriserade kan inte väljas om tillåt okategoriserade ämnen inte är tillåtet"
       enable_new_notifications_menu_not_legacy_navigation_menu: "Du måste ställa in `navigation_menu` till `legacy` innan du aktiverar den här inställningen."
       invalid_search_ranking_weights: "Värdet är ogiltigt för webbplatsinställningen search_ranking_weights. Exempel: '{0.1,0.2,0.3,1.0}'. Observera att maximalt värde för varje vikt är 1,0."
     placeholder:
@@ -2402,7 +2398,6 @@ sv:
     activated_by_staff: "Aktiverades av personalen"
     new_user_typed_too_fast: "Ny användare skrev för fort"
     content_matches_auto_silence_regex: "Innehållet matchar regelbundet uttryck för automatiskt tystande"
-    content_matches_auto_block_regex: "Innehållet matchar regelbundet uttryck för automatisk blockering"
     username:
       short: "måste vara minst %{min} tecken"
       long: "får högst vara %{max} tecken"
@@ -4589,6 +4584,9 @@ sv:
     payload_url:
       blocked_or_internal: "Försändelse-URL:en kan inte användas eftersom den leder till en blockerad eller intern IP-adress."
       unsafe: "Försändelse-URL:en kan inte användas eftersom den är osäker"
+  form_templates:
+    errors:
+      invalid_yaml: "är inte en giltig YAML-sträng"
   activemodel:
     errors:
       <<: *errors

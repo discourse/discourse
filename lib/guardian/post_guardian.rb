@@ -249,6 +249,18 @@ module PostGuardian
       !post_action.post&.topic&.archived?
   end
 
+  def can_receive_post_notifications?(post)
+    return false if !authenticated?
+
+    if is_admin? && SiteSetting.suppress_secured_categories_from_admin
+      topic = post.topic
+      if !topic.private_message? && topic.category.read_restricted
+        return secure_category_ids.include?(topic.category_id)
+      end
+    end
+    can_see_post?(post)
+  end
+
   def can_see_post?(post)
     return false if post.blank?
     return true if is_admin?

@@ -2003,11 +2003,8 @@ tr_TR:
     delete_merged_stub_topics_after_days: "Tamamen birleştirilmiş saplama konularını otomatik olarak silmeden önce beklenecek gün sayısı. Saplama konularını asla silmemek için 0 olarak ayarlayın."
     bootstrap_mode_min_users: "Bootstrap modunu devre dışı bırakmak için gereken minimum kullanıcı sayısı (devre dışı bırakmak için 0 olarak ayarlayın)"
     prevent_anons_from_downloading_files: "Anonim kullanıcıların ekleri indirmesini önleyin."
-    secure_media: "KALDIRILDI: Bunun yerine secure_uploads ayarını kullanın, Discourse 3.0'da kaldırılacak."
     secure_uploads: 'TÜM yüklemelere (resimler, video, ses, metin, pdf''ler, zip''ler ve diğerleri) erişimi sınırlar. "Giriş gerekli" etkinleştirilmişse yüklemelere yalnızca giriş yapmış kullanıcılar erişebilir. Aksi takdirde, erişim yalnızca özel mesajlardaki ve özel kategorilerdeki medya yüklemeleri için sınırlı olacaktır. UYARI: Bu ayar karmaşıktır ve derin bir yönetim anlayışı gerektirir. Ayrıntılar için <a target="_blank" href="https://meta.discourse.org/t/-/140017">Meta''daki güvenli yüklemeler konusuna</a> bakın.'
-    secure_media_allow_embed_images_in_emails: "KALDIRILDI: secure_uploads_allow_embed_images_in_emails kullanın, Discourse 3.0'da kaldırılacak."
     secure_uploads_allow_embed_images_in_emails: "Boyutları \"güvenli yüklemeler maksimum e-posta yerleştirme görüntü boyutu kb\" ayarından küçükse normalde e-postalara redakte edilecek güvenli görüntülerin yerleştirilmesine izin verir."
-    secure_media_max_email_embed_image_size_kb: "KALDIRILDI: secure_uploads_max_email_embed_image_size_kb kullanın, Discourse 3.0'da kaldırılacak."
     secure_uploads_max_email_embed_image_size_kb: "\"Güvenli yüklemeler e-postalarda yerleştirmeye izin verir\" ayarı etkinleştirilmişse e-postalara yerleştirilecek güvenli görüntüler için boyut sınırı. Bu ayar etkinleştirilmediğinde, bu ayarın etkisi yoktur."
     slug_generation_method: "Kısa ad oluşturma yöntemi seçin. \"encoded\" yüzde kodlama dizesi oluşturur. \"none\" kısa adı tamamen devre dışı bırakır."
     enable_emoji: "Emoji'yi etkinleştirin"
@@ -2126,7 +2123,6 @@ tr_TR:
     default_sidebar_categories: "Seçilen kategoriler varsayılan olarak Kenar Çubuğunun Kategoriler bölümünde gösterilir."
     default_sidebar_tags: "Seçilen etiketler varsayılan olarak Kenar Çubuğunun Etiketler bölümünde gösterilir."
     enable_new_user_profile_nav_groups: "DENEYSEL: Seçilen grupların kullanıcılarına yeni kullanıcı profili gezinme menüsü gösterilir"
-    enable_experimental_topic_timeline_groups: "DENEYSEL: Seçilen grupların kullanıcılarına yeniden düzenlenmiş konu zaman çizelgesi gösterilir"
     enable_experimental_hashtag_autocomplete: "DENEYSEL: Seçilen ögeyi farklı şekilde işleyen ve aramayı iyileştiren kategoriler ve etiketler için yeni #hashtag otomatik tamamlama sistemini kullanın"
     errors:
       invalid_css_color: "Geçersiz renk. Bir renk adı veya hex değeri girin."
@@ -2184,7 +2180,6 @@ tr_TR:
       search_tokenize_japanese_enabled: "Bu ayarı etkinleştirmeden önce \"search_tokenize_japanese\" özelliğini devre dışı bırakmalısınız."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "2 adımlı kimlik doğrulama zorunlu ise DiscourseConnect'i etkinleştiremezsiniz."
       delete_rejected_email_after_days: "Bu ayar delete_email_logs_after_days ayarından daha düşük veya %{max} üzerinde bir değere ayarlanamaz."
-      invalid_uncategorized_category_setting: "Kategorize edilmemiş konulara izin verilmiyorsa Kategorize edilmemiş kategorisi seçilemez"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.ornek.com"
@@ -2379,7 +2374,6 @@ tr_TR:
     activated_by_staff: "Personel tarafından etkinleştirildi"
     new_user_typed_too_fast: "Yeni kullanıcı çok hızlı yazdı"
     content_matches_auto_silence_regex: "İçerik otomatik sessize al regex'i ile eşleşiyor"
-    content_matches_auto_block_regex: "İçerik otomatik engelle regex'i ile eşleşiyor"
     username:
       short: "en az %{min} karakter olmalı"
       long: "%{max} karakterden fazla olmamalı"

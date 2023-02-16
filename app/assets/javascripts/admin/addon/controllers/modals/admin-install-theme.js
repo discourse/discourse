@@ -135,6 +135,11 @@ export default Controller.extend(ModalFunctionality, {
       branch: null,
       selection: "popular",
     });
+
+    this.themesController.setProperties({
+      repoName: null,
+      repoUrl: null,
+    });
   },
 
   themeHasSameUrl(theme, url) {

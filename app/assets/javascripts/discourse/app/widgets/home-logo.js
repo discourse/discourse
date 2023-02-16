@@ -13,6 +13,12 @@ export default createWidget("home-logo", {
     href: getURL("/"),
   },
 
+  buildClasses() {
+    if (this.attrs.minimized) {
+      return "title--minimized";
+    }
+  },
+
   href() {
     const href = this.settings.href;
     return typeof href === "function" ? href() : href;

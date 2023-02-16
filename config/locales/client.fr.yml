@@ -3369,8 +3369,6 @@ fr:
       email_in: "Adresse e-mail entrant personnalisée :"
       email_in_tooltip: "Vous pouvez séparer plusieurs adresses e-mail avec le caractère | ."
       email_in_allow_strangers: "Accepter les e-mails d'utilisateurs anonymes sans compte"
-      email_in_disabled: "La création de nouveaux sujets par e-mail est désactivée dans les paramètres. Pour activer la création de nouveaux sujets par e-mail, "
-      email_in_disabled_click: 'activez le paramètre « e-mail entrant ».'
       mailinglist_mirror: "La catégorie reflète une liste de diffusion"
       show_subcategory_list: "Afficher la liste des sous-catégories au-dessus des sujets dans cette catégorie."
       read_only_banner: "Texte du bandeau à afficher lorsqu'un utilisateur ne peut pas créer un sujet dans cette catégorie :"
@@ -3994,6 +3992,10 @@ fr:
         custom:
           save: "Enregistrer"
           delete: "Supprimer"
+          links:
+            icon: "Icône"
+            name: "Nom"
+            value: "Insérer un lien"
         about:
           header_link_text: "À propos"
         messages:
@@ -5085,6 +5087,22 @@ fr:
           description: "Saisissez du texte dans le champ ci-dessous pour vérifier le fonctionnement des mots ou expressions surveillés"
           found_matches: "Correspondances trouvées :"
           no_matches: "Aucune correspondance trouvée"
+      form_templates:
+        nav_title: "Modèles"
+        list_table:
+          headings:
+            name: "Nom"
+            actions: "Actions"
+        view_template:
+          close: "Fermer"
+          edit: "Modifier"
+          delete: "Supprimer"
+        new_template_form:
+          submit: "Enregistrer"
+          cancel: "Annuler"
+        quick_insert_fields:
+          add_new_field: "Ajouter"
+          dropdown: "Menu déroulant"
       impersonate:
         title: "Incarner"
         help: "Utilisez cet outil pour incarner un compte utilisateur à des fins de tests. Vous devrez vous déconnecter une fois que vous aurez terminé."
@@ -5521,7 +5539,8 @@ fr:
         allow_title: Permettre d'utiliser ce badge comme titre sur le profil utilisateur
         multiple_grant: Peut être attribué plusieurs fois
         listable: Afficher le badge sur la page publique des badges
-        enabled: Activer le badge
+        enabled: activée 
+        disabled: désactivée
         icon: Icône
         image: Image
         graphic: Graphique

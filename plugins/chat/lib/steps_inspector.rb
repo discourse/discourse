@@ -30,9 +30,7 @@ module Chat
       end
 
       def emoji
-        return "❌" if failure?
-        return "✅" if success?
-        ""
+        "#{result_emoji}#{unexpected_result_emoji}"
       end
 
       def steps
@@ -47,6 +45,21 @@ module Chat
 
       def step_result
         result["result.#{type}.#{name}"]
+      end
+
+      def result_emoji
+        return "❌" if failure?
+        return "✅" if success?
+        ""
+      end
+
+      def unexpected_result_emoji
+        " ⚠️#{unexpected_result_text}" if step_result.try(:[], "spec.unexpected_result")
+      end
+
+      def unexpected_result_text
+        return "  <= expected to return true but got false instead" if failure?
+        "  <= expected to return false but got true instead"
       end
     end
 

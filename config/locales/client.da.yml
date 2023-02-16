@@ -2997,8 +2997,6 @@ da:
       images: "Billeder"
       email_in: "Brugerindstillet ingående email adresse:"
       email_in_allow_strangers: "Accepter emails fra ikke oprettede brugere"
-      email_in_disabled: "Nye emner via email er deaktiveret i Site opsætning. For at aktivere oprettelse af nye emner via email,"
-      email_in_disabled_click: 'aktiver "email ind" indstilligen.'
       mailinglist_mirror: "Kategori spejler en mailing liste"
       show_subcategory_list: "Vis oversigt med subkategorier ovenover emner i denne kategori."
       read_only_banner: "Bannertekst, når en bruger ikke kan oprette et emne i denne kategori:"
@@ -3587,6 +3585,10 @@ da:
         custom:
           save: "Gem"
           delete: "Slet"
+          links:
+            icon: "Ikon"
+            name: "Navn"
+            value: "Link"
         about:
           header_link_text: "Om"
         messages:
@@ -4598,6 +4600,22 @@ da:
           description: "Indtast tekst nedenfor for at kontrollere, om den indeholder overvågede ord"
           found_matches: "Fundne resultater:"
           no_matches: "Ingen match fundet"
+      form_templates:
+        nav_title: "Skabeloner"
+        list_table:
+          headings:
+            name: "Navn"
+            actions: "Handlinger"
+        view_template:
+          close: "Luk"
+          edit: "Redigér"
+          delete: "Slet"
+        new_template_form:
+          submit: "Gem"
+          cancel: "Annuller"
+        quick_insert_fields:
+          add_new_field: "Tilføj"
+          dropdown: "Rulleboks"
       impersonate:
         title: "Skift personlighed"
         help: "Brug dette værktøj til at udgive dig for en anden bruger til brug for debugging. Du skal logge ud når du er færdig."
@@ -5014,7 +5032,8 @@ da:
         allow_title: Tillad at bruge dette emblem som titel
         multiple_grant: Kan tildeles flere gange
         listable: Vis emblemer på den offentlige emblem side
-        enabled: Aktiver emblem
+        enabled: aktiveret
+        disabled: deaktiveret
         icon: Ikon
         image: Billede
         graphic: Grafik

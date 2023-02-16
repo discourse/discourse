@@ -39,8 +39,8 @@ sv:
       move_to_channel:
         title: "Flytta meddelanden till kanal"
         instructions:
-          one: "Du flyttar <strong>%{count}</strong> meddelande. Välj en destinationskanal. Ett platshållarmeddelande kommer att skapas i kanalen <strong>%{channelTitle}</strong> för att indikera att detta meddelande har flyttats."
-          other: "Du flyttar <strong>%{count}</strong> meddelanden. Välj en destinationskanal. Ett platshållarmeddelande kommer att skapas i kanalen <strong>%{channelTitle}</strong> för att indikera att dessa meddelanden har flyttats."
+          one: "Du flyttar <strong>%{count}</strong> meddelande. Välj en destinationskanal. Ett platshållarmeddelande kommer att skapas i kanalen <strong>%{channelTitle}</strong> för att indikera att detta meddelande har flyttats. Observera att svarskedjor inte kommer att bevaras i den nya kanalen, och meddelanden i den gamla kanalen kommer inte längre att visas som svar på flyttade meddelanden."
+          other: "Du flyttar <strong>%{count}</strong> meddelanden. Välj en destinationskanal. Ett platshållarmeddelande kommer att skapas i kanalen <strong>%{channelTitle}</strong> för att indikera att dessa meddelanden har flyttats. Observera att svarskedjor inte kommer att bevaras i den nya kanalen, och meddelanden i den gamla kanalen kommer inte längre att visas som svar på flyttade meddelanden."
         confirm_move: "Flytta meddelanden"
       channel_settings:
         title: "Kanalinställningar"
@@ -71,7 +71,6 @@ sv:
         instructions: "Genom att stänga kanalen hindras användare som inte är personal att skicka nya meddelanden eller redigera befintliga meddelanden. Är du säker på att du vill stänga denna kanal?"
       channel_delete:
         title: "Radera kanal"
-        instructions: "<p>Tar bort <strong>%{name}</strong> kanalen och chatthistoriken. Alla meddelanden och relaterad data, såsom reaktioner och uppladdningar, kommer att raderas permanent. Om du vill bevara kanalhistoriken men avveckla den, kanske du vill arkivera kanalen istället.</p> <p>Är du säker på att du <strong>permanent vill ta bort</strong> kanalen? För att bekräfta, skriv in namnet på kanalen i rutan nedan.</p>"
         confirm: "Jag förstår konsekvenserna, radera kanalen"
         confirm_channel_name: "Ange kanalnamn"
         process_started: "Processen för att radera kanalen har påbörjats. Denna modal kommer att stängas inom kort och du kommer inte längre att se den raderade kanalen någonstans."

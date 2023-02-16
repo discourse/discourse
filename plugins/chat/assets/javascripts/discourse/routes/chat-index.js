@@ -16,7 +16,7 @@ export default class ChatIndexRoute extends DiscourseRoute {
     const id = this.chat.getIdealFirstChannelId();
     if (id) {
       return this.chatChannelsManager.find(id).then((c) => {
-        return this.chat.openChannel(c);
+        return this.router.transitionTo("chat.channel", ...c.routeModels);
       });
     } else {
       return this.router.transitionTo("chat.browse");

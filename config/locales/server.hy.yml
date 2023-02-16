@@ -1681,7 +1681,6 @@ hy:
     deactivated_by_staff: "Ապակտիվացված է անձնակազմի կողմից"
     activated_by_staff: "Ակտիվացված անձնակազմի կողմից"
     new_user_typed_too_fast: "Նոր օգտատերը չափազանց արագ է տպել"
-    content_matches_auto_block_regex: "Բովանդակությունը համընկնում է ավտոմատ արգելափակման կարգավորմանը"
     username:
       short: "պետք է ունենա առնվազն %{min} սիմվոլ"
       long: "պետք է լինի ավելի քան %{max} սիմվոլ"

@@ -1099,8 +1099,6 @@ te:
       images: "బొమ్మలు"
       email_in: "అనురూప లోపలికి వచ్చే ఈమెయిల్ చిరునామా:"
       email_in_allow_strangers: "ఎటువంటి ఖాతాలు లేని అనామక సభ్యుల నుండి వచ్చే ఈమెయిల్లు అంగీకరించు"
-      email_in_disabled: "సైటు అమరికల్లో ఈమెయిల్ ద్వారా కొత్త విషయాలు రాయుడ అచేతనమైంది. ఈమెయిల్ ద్వారా కొత్త విషయాలు రాయుట చేతనం చేయుటకు,"
-      email_in_disabled_click: '"ఈమెయిల్ ఇన్" అమరికను చేతనం చేయి.'
       allow_badges_label: "ఈ వర్గంలో బ్యాడ్జిలు బహూకరించుట అనుమతించు"
       edit_permissions: "అనుమతులు సవరించు"
       review_group_name: "గుంపు పేరు"
@@ -1348,6 +1346,9 @@ te:
         custom:
           save: "భద్రపరుచు"
           delete: "తొలగించు"
+          links:
+            icon: "ఐకాన్"
+            name: "పేరు"
         about:
           header_link_text: "గురించి"
         messages:
@@ -1740,6 +1741,20 @@ te:
           flag: "కేతనం"
         form:
           add: "కలుపు"
+      form_templates:
+        list_table:
+          headings:
+            name: "పేరు"
+            actions: "చర్యలు"
+        view_template:
+          close: "మూసివేయి"
+          edit: "సవరణ"
+          delete: "తొలగించు"
+        new_template_form:
+          submit: "భద్రపరుచు"
+          cancel: "రద్దుచేయి"
+        quick_insert_fields:
+          add_new_field: "కలుపు"
       impersonate:
         title: "పరకాయప్రవేశించు"
         help: "అనుకరించిన వినియోగదారుని ఖాతా దోషవిశ్లేషణ ప్రయోజనాలకు ఈ ఉపకరణం వినియోగించండి.పూర్తి అయిన తర్వాత మీరు లాగవుట్ చేయండి."
@@ -1983,7 +1998,6 @@ te:
         allow_title: చిహ్నాన్ని శీర్షికగా వాడుకోవడానికి అనుమతి ఇవ్వండి.
         multiple_grant: అనేకసార్లు మంజూరు చేయవచ్చు
         listable: బహిరంగ చిహ్నాల పుటలో చూపండి
-        enabled: బ్యాడ్జి చేతనం చేయి
         icon: ఐకాన్
         image: బొమ్మ
         target_posts: టపాలు లక్ష్యంగా ప్రశ్న

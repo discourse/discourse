@@ -2892,8 +2892,6 @@ lt:
       images: "Paveiksliukai"
       email_in: " papildomas naujas el. pašto adresas:"
       email_in_allow_strangers: "Gauti el. laiškus iš anoniminių paskyrų neturinčių vartotojų "
-      email_in_disabled: "Naujų temų kūrimas per el. paštą yra negalimas Puslapio Nustatymuose. Jei nori skelbti naujas temas per el. paštą,"
-      email_in_disabled_click: 'nustatykite "email in" nustatymus.'
       mailinglist_mirror: "Kategorija atspindi adresatų sąrašą"
       show_subcategory_list: "Rodyti subkategorijų sąrašą virš šios kategorijos temų."
       read_only_banner: "Reklamjuostės tekstas, kai vartotojas negali sukurti temos šioje kategorijoje:"
@@ -3478,6 +3476,10 @@ lt:
         custom:
           save: "Išsaugoti"
           delete: "Pašalinti"
+          links:
+            icon: "Ikona"
+            name: "Vardas"
+            value: "nuoroda"
         about:
           header_link_text: "Apie"
         messages:
@@ -4391,6 +4393,22 @@ lt:
           modal_title: "%{action}: išbandykite žiūrėtus žodžius"
           found_matches: "Rastos atitiktys:"
           no_matches: "Atitikmenų nerasta"
+      form_templates:
+        nav_title: "Juodraščiai"
+        list_table:
+          headings:
+            name: "Vardas"
+            actions: "Veiksmai"
+        view_template:
+          close: "Uždaryti"
+          edit: "Redaguoti"
+          delete: "Pašalinti"
+        new_template_form:
+          submit: "Išsaugoti"
+          cancel: "Atšaukti"
+        quick_insert_fields:
+          add_new_field: "Pridėti"
+          dropdown: "Išskleidimas"
       impersonate:
         title: "Apsimesti"
         help: "Naudok šį įrankį, kad pavaizduotum kito vartotojo paskyrą dėl klaidų paieškos ir sistemos atstatymo. Kai tik baigsi procedūrą, turėsi atsijungti."
@@ -4782,7 +4800,8 @@ lt:
         allow_title: Leisti naudoti ženklelį kaip antraštę
         multiple_grant: Gali būti suteikta keleta kartų
         listable: Rodyti trofėjų viešame trofėjų puslapyje
-        enabled: Įjungti ženklelį
+        enabled: galimas
+        disabled: uždrausta
         icon: Ikona
         image: Paveikslėlis
         graphic: Grafinis

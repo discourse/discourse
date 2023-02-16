@@ -65,7 +65,9 @@ RSpec.describe Chat::Service::UpdateUserLastRead do
 
       context "when message doesn’t exist" do
         before do
-          params[:message_id] = 2
+          message = Fabricate(:chat_message)
+          params[:message_id] = message.id
+          message.trash!
           membership.update!(last_read_message_id: 1)
         end
 

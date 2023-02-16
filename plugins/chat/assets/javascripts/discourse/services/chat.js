@@ -36,7 +36,6 @@ export default class Chat extends Service {
   @service site;
   @service chatChannelsManager;
   @tracked activeChannel = null;
-  @tracked activeThread = null;
   cook = null;
   presenceChannel = null;
   sidebarActive = false;
@@ -188,7 +187,10 @@ export default class Chat extends Service {
       currentList[currentChannelIndex + (directionUp ? -1 : 1)];
     if (nextChannelInSameList) {
       // You're navigating in the same list of channels, just use index +- 1
-      return this.openChannel(nextChannelInSameList);
+      return this.router.transitionTo(
+        "chat.channel",
+        ...nextChannelInSameList.routeModels
+      );
     }
 
     // You need to go to the next list of channels, if it exists.
@@ -198,7 +200,10 @@ export default class Chat extends Service {
       : nextList[0];
 
     if (nextChannel.id !== activeChannel.id) {
-      return this.openChannel(nextChannel);
+      return this.router.transitionTo(
+        "chat.channel",
+        ...nextChannel.routeModels
+      );
     }
   }
 
@@ -262,57 +267,14 @@ export default class Chat extends Service {
     );
   }
 
-  async openChannelAtMessage(channelId, messageId = null) {
-    return this.chatChannelsManager.find(channelId).then((channel) => {
-      return this._openFoundChannelAtMessage(channel, messageId);
-    });
-  }
-
-  async openChannel(channel) {
-    return this._openFoundChannelAtMessage(channel);
-  }
-
-  async _openFoundChannelAtMessage(channel, messageId = null) {
-    if (
-      (this.router.currentRouteName === "chat.channel" ||
-        this.router.currentRouteName === "chat.channel.near-message") &&
-      this.activeChannel?.id === channel.id
-    ) {
-      this.activeChannel = channel;
-      this._fireOpenMessageAppEvent(messageId);
-      return Promise.resolve();
-    }
-
-    this.activeChannel = channel;
-
-    if (
-      this.chatStateManager.isFullPageActive ||
-      this.site.mobileView ||
-      this.chatStateManager.isFullPagePreferred
-    ) {
-      if (messageId) {
-        return this.router.transitionTo(
+  _fireOpenFloatAppEvent(channel, messageId = null) {
+    messageId
+      ? this.router.transitionTo(
           "chat.channel.near-message",
           ...channel.routeModels,
           messageId
-        );
-      } else {
-        return this.router.transitionTo("chat.channel", ...channel.routeModels);
-      }
-    } else {
-      this._fireOpenFloatAppEvent(channel, messageId);
-      return Promise.resolve();
-    }
-  }
-
-  _fireOpenFloatAppEvent(channel, messageId = null) {
-    messageId
-      ? this.appEvents.trigger(
-          "chat:open-channel-at-message",
-          channel,
-          messageId
         )
-      : this.appEvents.trigger("chat:open-channel", channel);
+      : this.router.transitionTo("chat.channel", ...channel.routeModels);
   }
 
   _fireOpenMessageAppEvent(messageId) {

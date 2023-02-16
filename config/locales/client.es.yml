@@ -3356,8 +3356,6 @@ es:
       email_in: "Dirección de correo electrónico personalizada para el correo entrante:"
       email_in_tooltip: "Puedes separar varias direcciones de correo electrónico con el carácter |."
       email_in_allow_strangers: "Aceptar correo electrónicos de usuarios anónimos sin cuenta"
-      email_in_disabled: "La posibilidad de publicar temas nuevos por correo electrónico está desactivada en los ajustes del sitio. Para activar la publicación de temas nuevos por correo electrónico,"
-      email_in_disabled_click: 'activa la opción «correo electrónico»'
       mailinglist_mirror: "La categoría es el reflejo de una lista de correo"
       show_subcategory_list: "Mostrar la lista de subcategorías arriba de la lista de temas en esta categoría."
       read_only_banner: "Texto de banner cuando un usuario no pueda crear un tema en esta categoría:"
@@ -3981,6 +3979,10 @@ es:
         custom:
           save: "Guardar"
           delete: "Eliminar"
+          links:
+            icon: "Icono"
+            name: "Nombre"
+            value: "Enlace"
         about:
           header_link_text: "Acerca de"
         messages:
@@ -5070,6 +5072,22 @@ es:
           description: "Escribe el texto más abajo para buscar coincidencias con las palabras vigiladas"
           found_matches: "Coincidencias encontradas:"
           no_matches: "No se encontraron coincidencias"
+      form_templates:
+        nav_title: "Plantillas"
+        list_table:
+          headings:
+            name: "Nombre"
+            actions: "Acciones"
+        view_template:
+          close: "Cerrar"
+          edit: "Editar"
+          delete: "Eliminar"
+        new_template_form:
+          submit: "Guardar"
+          cancel: "Cancelar"
+        quick_insert_fields:
+          add_new_field: "Añadir"
+          dropdown: "Desplegable"
       impersonate:
         title: "Suplantar"
         help: "Utiliza esta herramienta para suplantar una cuenta de usuario con fines de depuración. Tendrás que cerrar sesión al terminar."
@@ -5506,7 +5524,7 @@ es:
         allow_title: Permitir que se use la insignia como título
         multiple_grant: Se puede conceder varias veces
         listable: Mostrar insignia en la página pública de insignias
-        enabled: Activar insignias
+        disabled: desactivado
         icon: Icono
         image: Imagen
         graphic: Gráfico

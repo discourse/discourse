@@ -37,17 +37,17 @@ export default class ChatRoute extends DiscourseRoute {
     ) {
       transition.abort();
 
-      let URL = transition.intent.url;
+      let url = transition.intent.url;
       if (transition.targetName.startsWith("chat.channel")) {
-        URL ??= this.router.urlFor(
+        url ??= this.router.urlFor(
           transition.targetName,
           ...transition.intent.contexts
         );
       } else {
-        URL ??= this.router.urlFor(transition.targetName);
+        url ??= this.router.urlFor(transition.targetName);
       }
 
-      this.appEvents.trigger("chat:open-url", URL);
+      this.appEvents.trigger("chat:open-url", url);
       return;
     }
 
