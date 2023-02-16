@@ -3,9 +3,8 @@
 require "rails_helper"
 
 RSpec.describe Chat::ChatMessageMentions do
-  fab!(:group1) { Fabricate(:group, mentionable_level: Group::ALIAS_LEVELS[:everyone]) }
-  fab!(:channel_member_1) { Fabricate(:user, group_ids: [group1.id]) }
-  fab!(:channel_member_2) { Fabricate(:user, group_ids: [group1.id]) }
+  fab!(:channel_member_1) { Fabricate(:user) }
+  fab!(:channel_member_2) { Fabricate(:user) }
   fab!(:channel_member_3) { Fabricate(:user) }
   fab!(:not_a_channel_member) { Fabricate(:user) }
   fab!(:chat_channel) { Fabricate(:chat_channel) }
