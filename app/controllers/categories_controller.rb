@@ -205,7 +205,6 @@ class CategoriesController < ApplicationController
             old_category_params,
             old_permissions: old_permissions,
             old_custom_fields: old_custom_fields,
-            old_form_templates: old_form_templates,
           )
         end
       end
