@@ -774,6 +774,7 @@ export default Component.extend({
           staged_id: null,
           excerpt: data.chat_message.excerpt,
           thread_id: data.chat_message.thread_id,
+          chat_channel_id: data.chat_message.chat_channel_id,
         });
 
         const inReplyToMsg =

@@ -6,7 +6,6 @@ RSpec.describe "Deleted message", type: :system, js: true do
 
   fab!(:current_user) { Fabricate(:user) }
   fab!(:channel_1) { Fabricate(:category_channel) }
-  fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1, user: current_user) }
 
   before do
     chat_system_bootstrap
@@ -18,9 +17,10 @@ RSpec.describe "Deleted message", type: :system, js: true do
     it "shows as deleted" do
       chat_page.visit_channel(channel_1)
       expect(channel_page).to have_no_loading_skeleton
-
-      channel_page.expand_message_actions(message_1)
-      find("[data-value='deleteMessage']").click
+      channel_page.send_message("aaaaaaaaaaaaaaaaaaaa")
+      expect(page).to have_no_css("[data-staged-id]")
+      last_message = find(".chat-message-container:last-child")
+      channel_page.delete_message(OpenStruct.new(id: last_message["data-id"]))
 
       expect(page).to have_content(I18n.t("js.chat.deleted"))
     end
