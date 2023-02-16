@@ -19,10 +19,10 @@ task "svgicons:update" do
   dependencies.each do |f|
     src = "#{library_src}/#{f[:source]}/."
 
-    unless f[:destination]
-      filename = f[:source].split("/").last
-    else
+    if f[:destination]
       filename = f[:destination]
+    else
+      filename = f[:source].split("/").last
     end
 
     dest = "#{vendor_svgs}/#{filename}"

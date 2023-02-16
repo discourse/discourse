@@ -116,7 +116,7 @@ class ImportScripts::Base
   def reset_site_settings
     @old_site_settings.each do |key, value|
       current_value = SiteSetting.get(key)
-      SiteSetting.set(key, value) unless current_value != @site_settings_during_import[key]
+      SiteSetting.set(key, value) if current_value == @site_settings_during_import[key]
     end
 
     RateLimiter.enable

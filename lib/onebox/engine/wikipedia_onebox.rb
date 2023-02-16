@@ -23,7 +23,9 @@ module Onebox
           m_url_hash_name = m_url_hash[1]
         end
 
-        unless m_url_hash.nil?
+        if m_url_hash.nil? # no hash found in url
+          paras = raw.search("p") # default get all the paras
+        else
           section_header_title = raw.xpath("//span[@id='#{CGI.unescape(m_url_hash_name)}']")
 
           if section_header_title.empty?
@@ -49,8 +51,6 @@ module Onebox
               end
             end
           end
-        else # no hash found in url
-          paras = raw.search("p") # default get all the paras
         end
 
         unless paras.empty?

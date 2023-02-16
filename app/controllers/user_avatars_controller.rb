@@ -104,7 +104,7 @@ class UserAvatarsController < ApplicationController
     return render_blank if version > OptimizedImage::VERSION
 
     upload_id = upload_id.to_i
-    return render_blank unless upload_id > 0
+    return render_blank if upload_id <= 0
 
     size = params[:size].to_i
     return render_blank if size < 8 || size > 1000

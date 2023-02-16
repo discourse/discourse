@@ -9,13 +9,10 @@ module PrettyText
     # functions here are available to v8
     def t(key, opts)
       key = "js." + key
-      unless opts
-        I18n.t(key)
-      else
-        str = I18n.t(key, Hash[opts.entries].symbolize_keys).dup
-        opts.each { |k, v| str.gsub!("{{#{k.to_s}}}", v.to_s) }
-        str
-      end
+      return I18n.t(key) if opts.blank?
+      str = I18n.t(key, Hash[opts.entries].symbolize_keys).dup
+      opts.each { |k, v| str.gsub!("{{#{k.to_s}}}", v.to_s) }
+      str
     end
 
     def avatar_template(username)

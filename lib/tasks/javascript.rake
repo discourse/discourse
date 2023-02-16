@@ -213,10 +213,10 @@ task "javascript:update" => "clean_up" do
   dependencies.each do |f|
     src = "#{library_src}/#{f[:source]}"
 
-    unless f[:destination]
-      filename = f[:source].split("/").last
-    else
+    if f[:destination]
       filename = f[:destination]
+    else
+      filename = f[:source].split("/").last
     end
 
     if src.include? "highlightjs"
