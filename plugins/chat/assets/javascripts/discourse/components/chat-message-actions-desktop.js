@@ -1,4 +1,4 @@
-import Component from "@ember/component";
+import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { createPopper } from "@popperjs/core";
 import { schedule } from "@ember/runloop";
@@ -6,25 +6,28 @@ import { inject as service } from "@ember/service";
 
 const MSG_ACTIONS_VERTICAL_PADDING = -10;
 
-export default Component.extend({
-  tagName: "",
+export default class ChatMessageActionsDesktop extends Component {
+  @service chatStateManager;
 
-  chatStateManager: service(),
+  popper = null;
 
-  messageActions: null,
-
-  didReceiveAttrs() {
-    this._super(...arguments);
-
+  @action
+  destroyPopper() {
     this.popper?.destroy();
+    this.popper = null;
+  }
+
+  @action
+  attachPopper() {
+    this.destroyPopper();
 
     schedule("afterRender", () => {
       this.popper = createPopper(
         document.querySelector(
-          `.chat-message-container[data-id="${this.message.id}"]`
+          `.chat-message-container[data-id="${this.args.message.id}"]`
         ),
         document.querySelector(
-          `.chat-message-actions-container[data-id="${this.message.id}"] .chat-message-actions`
+          `.chat-message-actions-container[data-id="${this.args.message.id}"] .chat-message-actions`
         ),
         {
           placement: "top-end",
@@ -39,10 +42,10 @@ export default Component.extend({
         }
       );
     });
-  },
+  }
 
   @action
   handleSecondaryButtons(id) {
-    this.messageActions?.[id]?.();
-  },
-});
+    this.args.messageActions?.[id]?.();
+  }
+}
