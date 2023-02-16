@@ -316,6 +316,10 @@
   min-width: 50%;
   color: var(--primary-high);
 
+  &__table-wrapper {
+    overflow-x: scroll;
+  }
+
   th {
     white-space: nowrap;
   }
@@ -365,11 +369,6 @@
         max-width: 150px;
         @include ellipsis;
       }
-    }
-
-    td:last-of-type {
-      width: 100%;
-      white-space: normal;
     }
     > tr > th {
       text-align: left;
@@ -546,28 +545,3 @@
 .flag-modal .modal-inner-container .select-kit.reviewable-action-dropdown {
   width: initial;
 }
-
-// @media screen and (max-width: 1000px) {
-//   table.reviewable-scores {
-//     width: 100%;
-//     display: block;
-//     tbody {
-//       width: calc(100% - 5px);
-//       display: block;
-//       clear: both;
-//     }
-//   }
-//   tr.reviewable-score {
-//     display: grid;
-//     grid-template-columns: auto auto 1fr;
-//   }
-//   td.reviewable-score-spacer {
-//     display: none;
-//   }
-// }
-
-// @include breakpoint("mobile-large") {
-//   tr.reviewable-score {
-//     grid-template-columns: auto auto auto;
-//   }
-// }

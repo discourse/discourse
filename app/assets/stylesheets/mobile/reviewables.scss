@@ -24,25 +24,20 @@
     display: flex;
     width: 100%;
     overflow-x: scroll;
-
+    border-top: 1px solid var(--primary-low);
     thead {
-      border-top: 1px solid var(--primary-low);
       tr {
         display: flex;
         flex-direction: column;
         border: 0;
       }
-
-      th:not(last-of-type) {
-        border-bottom: 1px solid var(--primary-low);
-      }
     }
 
     tbody {
       display: flex;
+      border: 0;
 
       .reviewable-score {
-        // display: table-row;
         display: flex;
         flex-direction: column;
       }
@@ -52,10 +47,6 @@
 
       td {
         white-space: nowrap;
-
-        &:not(last-of-type) {
-          border-bottom: 1px solid var(--primary-low);
-        }
       }
     }
   }
