@@ -43,6 +43,14 @@ export default Component.extend({
 
   @action
   handleSecondaryButtons(id) {
+    if (id === "copyLinkToMessage") {
+      return this.messageActionsHandler.copyLink(this.message);
+    }
+
+    if (id === "selectMessage") {
+      return this.messageActionsHandler.selectMessage(this.message, true);
+    }
+
     this.messageActions?.[id]?.();
   },
 });

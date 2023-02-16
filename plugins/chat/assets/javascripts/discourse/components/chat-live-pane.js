@@ -1,6 +1,8 @@
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
 import { cloneJSON } from "discourse-common/lib/object";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
+import ChatMessageActions from "discourse/plugins/chat/discourse/lib/chat-message-actions";
+import ChatLivePaneReactor from "discourse/plugins/chat/discourse/lib/chat-live-pane-reactor";
 import Component from "@ember/component";
 import discourseComputed, {
   afterRender,
@@ -62,7 +64,7 @@ export default Component.extend({
   messageLookup: null, // Object<Number, Message>
   _unloadedReplyIds: null, // Array
   _nextStagedMessageId: 0, // Iterate on every new message
-  _lastSelectedMessage: null,
+  lastSelectedMessage: null,
   targetMessageId: null,
   hasNewMessages: null,
 
@@ -85,6 +87,32 @@ export default Component.extend({
     this.set("_mentionWarningsSeen", {});
     this.set("unreachableGroupMentions", []);
     this.set("overMembersLimitGroupMentions", []);
+
+    // this is quite heavy...maybe we need a sort of panel
+    // proxy, and then instantiate and pass it in, so it
+    // doesn't have tons of stuff attached, only what's
+    // needed.
+    //
+    // something like
+    //
+    // class ChatLivePaneMessageActionReactor {
+    //   onSelectMessage () {}
+    // }
+    //
+    // however...this also needs to be able to change
+    // things in the live pane...so it needs access  to
+    // the this as well, unless the live pane looks
+    // to this for tracked properties etc.
+    //
+    // for example...selectingMessages
+    //
+    // there could also be a base version of this that
+    // can be overridden....maybe selecting/deleting messages
+    // works the same in threads + live pane, however
+    // reactions could be different? replies will be different
+    // for sure...
+    this.livePaneReactor = new ChatLivePaneReactor();
+    this.messageActionsHandler = new ChatMessageActions(this.livePaneReactor);
   },
 
   didInsertElement() {
@@ -173,6 +201,13 @@ export default Component.extend({
     if (this.chatChannel?.id) {
       this.fetchMessages(this.chatChannel);
     }
+  },
+
+  // TODO (martin) Not ideal....we need this to be trackedarray here
+  // too or ideally just move messages onto the channel
+  @observes("messages")
+  onMessagesChange() {
+    this.livePaneReactor.messages = this.messages;
   },
 
   @discourseComputed("chatChannel.isDirectMessageChannel")
@@ -509,6 +544,7 @@ export default Component.extend({
     }
     this._handleMessageHidingAndExpansion(messageData);
     messageData.messageLookupId = this._generateMessageLookupId(messageData);
+    messageData.chat_channel_id = this.chatChannel.id;
     const prepared = ChatMessage.create(messageData);
     this.messageLookup[messageData.messageLookupId] = prepared;
     return prepared;
@@ -1139,6 +1175,7 @@ export default Component.extend({
     this.set("allPastMessagesLoaded", false);
     this.set("registeredChatChannelId", null);
     this.set("selectingMessages", false);
+    this.livePaneReactor.selectingMessages = false;
   },
 
   _resetAfterSend() {
@@ -1223,26 +1260,22 @@ export default Component.extend({
     return document.querySelector("#chat-progress-bar-container");
   },
 
-  @discourseComputed("messages.@each.selected")
-  selectedMessageIds(messages) {
-    return messages.filter((m) => m.selected).map((m) => m.id);
-  },
-
   @action
   onStartSelectingMessages(message) {
-    this._lastSelectedMessage = message;
+    this.lastSelectedMessage = message;
     this.set("selectingMessages", true);
   },
 
   @action
   cancelSelecting() {
+    this.livePaneReactor.selectingMessages = false;
     this.set("selectingMessages", false);
     this.messages.setEach("selected", false);
   },
 
   @action
-  onSelectMessage(message) {
-    this._lastSelectedMessage = message;
+  onSelectMessageOld(message) {
+    this.lastSelectedMessage = message;
   },
 
   @action
@@ -1253,7 +1286,7 @@ export default Component.extend({
   @action
   bulkSelectMessages(message, checked) {
     const lastSelectedIndex = this._findIndexOfMessage(
-      this._lastSelectedMessage
+      this.lastSelectedMessage
     );
     const newlySelectedIndex = this._findIndexOfMessage(message);
     const sortedIndices = [lastSelectedIndex, newlySelectedIndex].sort(

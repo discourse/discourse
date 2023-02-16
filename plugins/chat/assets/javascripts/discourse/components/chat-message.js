@@ -750,18 +750,18 @@ export default class ChatMessage extends Component {
   }
 
   @action
-  selectMessage() {
-    this.args.message.set("selected", true);
-    this.args.onStartSelectingMessages(this.args.message);
-  }
-
-  @action
-  toggleChecked(e) {
-    if (e.shiftKey) {
-      this.args.bulkSelectMessages(this.args.message, e.target.checked);
+  toggleChecked(event) {
+    if (event.shiftKey) {
+      this.args.messageActionsHandler.bulkSelectMessages(
+        this.args.message,
+        event.target.checked
+      );
     }
 
-    this.args.onSelectMessage(this.args.message);
+    this.args.messageActionsHandler.selectMessage(
+      this.args.message,
+      event.target.checked
+    );
   }
 
   @action

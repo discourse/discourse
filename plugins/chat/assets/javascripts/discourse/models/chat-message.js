@@ -1,8 +1,11 @@
 import RestModel from "discourse/models/rest";
+import { tracked } from "@glimmer/tracking";
 import User from "discourse/models/user";
 import EmberObject from "@ember/object";
 
-export default class ChatMessage extends RestModel {}
+export default class ChatMessage extends RestModel {
+  @tracked selected;
+}
 
 ChatMessage.reopenClass({
   create(args = {}) {

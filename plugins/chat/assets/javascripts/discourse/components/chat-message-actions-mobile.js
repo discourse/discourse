@@ -31,8 +31,8 @@ export default Component.extend({
   },
 
   @action
-  actAndCloseMenu(fn) {
-    fn?.();
+  actAndCloseMenu(fnId) {
+    this.messageActions[fnId]?.();
     this.onCloseMenu();
   },
 

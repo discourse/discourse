@@ -31,10 +31,7 @@
             @translatedLabel={{button.name}}
             @icon={{button.icon}}
             @actionParam={{button.id}}
-            @action={{action
-              "actAndCloseMenu"
-              (get this.messageActions button.id)
-            }}
+            @action={{action "actAndCloseMenu" button.id}}
           />
         </li>
       {{/each}}
@@ -57,7 +54,7 @@
             @class="btn-flat react-btn"
             @action={{action
               "actAndCloseMenu"
-              this.messageActions.startReactionForMessageActions
+							"startReactionForMessageActions"
             }}
             @icon="discourse-emojis"
             @title="chat.react"
@@ -76,7 +73,7 @@
         {{#if this.messageCapabilities.canReply}}
           <DButton
             @class="chat-message-action reply-btn btn-flat"
-            @action={{action "actAndCloseMenu" this.messageActions.reply}}
+            @action={{action "actAndCloseMenu" "reply"}}
             @icon="reply"
             @title="chat.reply"
           />

@@ -73,15 +73,16 @@
         @setReplyTo={{action "setReplyTo"}}
         @replyMessageClicked={{action "replyMessageClicked"}}
         @editButtonClicked={{action "editButtonClicked"}}
-        @selectingMessages={{this.selectingMessages}}
+        @selectingMessages={{this.livePaneReactor.selectingMessages}}
         @onStartSelectingMessages={{this.onStartSelectingMessages}}
-        @onSelectMessage={{this.onSelectMessage}}
+        @onSelectMessage={{this.onSelectMessageOld}}
         @bulkSelectMessages={{this.bulkSelectMessages}}
         @fullPage={{this.fullPage}}
         @afterReactionAdded={{action "reStickScrollIfNeeded"}}
         @isHovered={{eq message.id this.hoveredMessageId}}
         @onHoverMessage={{this.onHoverMessage}}
         @resendStagedMessage={{this.resendStagedMessage}}
+        @messageActionsHandler={{this.messageActionsHandler}}
       />
     {{/each}}
 
@@ -118,9 +119,9 @@
   </div>
 {{/if}}
 
-{{#if this.selectingMessages}}
+{{#if this.livePaneReactor.selectingMessages}}
   <ChatSelectionManager
-    @selectedMessageIds={{this.selectedMessageIds}}
+    @selectedMessageIds={{this.livePaneReactor.selectedMessageIds}}
     @chatChannel={{this.chatChannel}}
     @canModerate={{this.details.can_moderate}}
     @cancelSelecting={{action "cancelSelecting"}}
