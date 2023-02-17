@@ -3,6 +3,8 @@
     <textarea
       placeholder={{i18n "styleguide.sections.char_counter.placeholder"}}
       {{on "input" (action (mut this.charCounterContent) value="target.value")}}
-      class="styleguide--char-counter"></textarea>
+      class="styleguide--char-counter"
+    >
+    </textarea>
   </CharCounter>
 </StyleguideExample>

@@ -1,6 +1,9 @@
-<div class={{concat-class "char-counter" (if (gt @value.length @max) "exceeded")}} ...attributes>
+<div
+  class={{concat-class "char-counter" (if (gt @value.length @max) "exceeded")}}
+  ...attributes
+>
   {{yield}}
-  <small>
+  <small class="char-counter__ratio">
     {{@value.length}}/{{@max}}
   </small>
   <span aria-live="polite" class="sr-only">

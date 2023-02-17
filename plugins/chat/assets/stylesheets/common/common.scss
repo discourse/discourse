@@ -633,22 +633,3 @@ html.has-full-page-chat {
     visibility: hidden;
   }
 }
-
-.char-counter {
-  small {
-    display: block;
-    text-align: right;
-    margin-top: 0.5rem;
-  }
-
-  &.exceeded {
-    textarea {
-      border-color: var(--danger);
-      outline-color: var(--danger);
-    }
-
-    small {
-      color: var(--danger);
-    }
-  }
-}
