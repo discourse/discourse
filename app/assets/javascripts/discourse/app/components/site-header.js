@@ -417,25 +417,28 @@ const SiteHeaderComponent = MountWidget.extend(
 
           const menuTop = headerTop();
 
-          const winHeightOffset = this.currentUser?.redesigned_user_menu_enabled
-            ? 0
-            : 16;
-          let initialWinHeight = window.innerHeight;
-          const winHeight = initialWinHeight - winHeightOffset;
+          let heightReduction = 0;
 
-          let height = winHeight - menuTop;
+          heightReduction += menuTop;
+
+          if (!this.currentUser?.redesigned_user_menu_enabled) {
+            heightReduction += 16;
+          }
 
           const isIPadApp = document.body.classList.contains("footer-nav-ipad"),
-            heightProp = isIPadApp ? "max-height" : "height",
-            iPadOffset = 10;
+            heightProp = isIPadApp ? "max-height" : "height";
 
           if (isIPadApp) {
-            height = winHeight - menuTop - iPadOffset;
+            heightReduction += 10;
           }
 
           ensureElementStyle(panelBody, "height", "100%");
           ensureElementStyle(panel, "top", `${menuTop}px`);
-          ensureElementStyle(panel, heightProp, `${height}px`);
+          ensureElementStyle(
+            panel,
+            heightProp,
+            `calc(100dvh - ${heightReduction}px)`
+          );
           if (headerCloak) {
             ensureElementStyle(headerCloak, "top", `${menuTop}px`);
           }
