@@ -35,6 +35,14 @@ class TranslationOverride < ActiveRecord::Base
       optional_cat
       optional_tags
     ],
+
+    %w[
+      system_messages.welcome_user
+    ] => %w[
+      username
+      name
+      name_or_username
+    ]
   }
 
   include HasSanitizableFields
