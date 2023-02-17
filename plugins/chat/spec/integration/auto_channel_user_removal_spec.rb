@@ -54,18 +54,33 @@ describe "Automatic user removal from channels" do
     end
 
     it "does not remove the user who is in one of the chat_allowed_groups" do
-      SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:trust_level_3]
-      expect(UserChatChannelMembership.exists?(user: user_1, chat_channel: public_channel)).to eq(
+      expect { SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:trust_level_3] }.to change {
+        UserChatChannelMembership.count
+      }.by(-2)
+      expect(UserChatChannelMembership.exists?(user: user_2, chat_channel: public_channel)).to eq(
         true,
       )
+    end
+
+    it "does not remove users from their DM channels" do
+      expect { SiteSetting.chat_allowed_groups = "" }.to change {
+        UserChatChannelMembership.count
+      }.by(-3)
+
+      expect(UserChatChannelMembership.exists?(user: user_1, chat_channel: dm_channel)).to eq(true)
+      expect(UserChatChannelMembership.exists?(user: user_2, chat_channel: dm_channel)).to eq(true)
     end
 
     it "does not remove staff users" do
       staff_user = Fabricate(:admin)
       public_channel.add(staff_user)
-      SiteSetting.chat_allowed_groups = Fabricate(:group).id
+      private_channel.add(staff_user)
+      SiteSetting.chat_allowed_groups = ""
       expect(
         UserChatChannelMembership.exists?(user: staff_user, chat_channel: public_channel),
+      ).to eq(true)
+      expect(
+        UserChatChannelMembership.exists?(user: staff_user, chat_channel: private_channel),
       ).to eq(true)
     end
   end

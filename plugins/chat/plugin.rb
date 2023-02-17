@@ -199,10 +199,9 @@ after_initialize do
   load File.expand_path("../lib/slack_compatibility.rb", __FILE__)
   load File.expand_path("../lib/post_notification_handler.rb", __FILE__)
   load File.expand_path("../lib/secure_uploads_compatibility.rb", __FILE__)
-  load File.expand_path("../lib/auto_remove_membership_event_handler.rb", __FILE__)
   load File.expand_path("../lib/endpoint.rb", __FILE__)
   load File.expand_path("../lib/steps_inspector.rb", __FILE__)
-  load File.expand_path("../app/jobs/regular/auto_manage_channel_memberships.rb", __FILE__)
+  load File.expand_path("../app/jobs/regular/auto_join_channel_memberships.rb", __FILE__)
   load File.expand_path("../app/jobs/regular/auto_join_channel_batch.rb", __FILE__)
   load File.expand_path("../app/jobs/regular/auto_remove_channel_memberships.rb", __FILE__)
   load File.expand_path("../app/jobs/regular/process_chat_message.rb", __FILE__)
@@ -225,6 +224,9 @@ after_initialize do
   load File.expand_path("../app/services/chat_message_destroyer.rb", __FILE__)
   load File.expand_path("../app/services/update_user_last_read.rb", __FILE__)
   load File.expand_path("../app/services/lookup_thread.rb", __FILE__)
+  load File.expand_path("../app/services/auto_remove_membership_event_handler.rb", __FILE__)
+  load File.expand_path("../app/services/auto_remove/outside_chat_allowed_groups.rb", __FILE__)
+  load File.expand_path("../app/services/auto_remove/user_removed_from_group.rb", __FILE__)
   load File.expand_path("../app/controllers/api_controller.rb", __FILE__)
   load File.expand_path("../app/controllers/api/chat_channels_controller.rb", __FILE__)
   load File.expand_path("../app/controllers/api/chat_current_user_channels_controller.rb", __FILE__)
@@ -496,13 +498,13 @@ after_initialize do
     end
 
     if name == :chat_allowed_groups
-      Chat::AutoRemoveMembershipEventHandler.new(
+      Chat::Service::AutoRemoveMembershipEventHandler.call(
         event_type: :chat_allowed_groups_changed,
         event_data: {
           old_allowed_groups: old_value,
           new_allowed_groups: new_value,
         },
-      ).call!
+      )
     end
   end
 
@@ -588,13 +590,13 @@ after_initialize do
   end
 
   on(:user_removed_from_group) do |user, group|
-    Chat::AutoRemoveMembershipEventHandler.new(
+    Chat::Service::AutoRemoveMembershipEventHandler.call(
       event_type: :user_removed_from_group,
       event_data: {
         user: user,
         group: group,
       },
-    ).call!
+    )
   end
 
   on(:category_updated) do |category|
@@ -610,12 +612,18 @@ after_initialize do
         ).enforce_automatic_channel_memberships
       end
 
-      Chat::AutoRemoveMembershipEventHandler.new(
-        event_type: :category_updated,
-        event_data: {
-          channel: category_channel,
-        },
-      ).call!
+      # Chat::AutoRemoveMembershipEventHandler.new(
+      #   event_type: :category_updated,
+      #   event_data: {
+      #     channel: category_channel,
+      #   },
+      # ).call!
+    end
+  end
+
+  reloadable_patch do |plugin|
+    class ::User
+      has_many :user_chat_channel_memberships
     end
   end
 
