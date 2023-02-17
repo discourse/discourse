@@ -54,6 +54,12 @@ const SiteHeaderComponent = MountWidget.extend(
     },
 
     _animateOpening(panel) {
+      window.requestAnimationFrame(
+        this._setAnimateOpeningProperties.bind(this, panel)
+      );
+    },
+
+    _setAnimateOpeningProperties(panel) {
       const headerCloak = document.querySelector(".header-cloak");
       panel.classList.add("animate");
       headerCloak.classList.add("animate");
