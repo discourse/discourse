@@ -190,7 +190,7 @@ module ApplicationHelper
     result << "category-#{@category.slug_path.join("-")}" if @category && @category.url.present?
 
     if current_user.present? && current_user.primary_group_id &&
-         primary_group_name = Group.where(id: current_user.primary_group_id).pluck_first(:name)
+         primary_group_name = Group.where(id: current_user.primary_group_id).pick(:name)
       result << "primary-group-#{primary_group_name.downcase}"
     end
 
@@ -544,7 +544,7 @@ module ApplicationHelper
 
     return if theme_id.blank?
 
-    @scheme_id = Theme.where(id: theme_id).pluck_first(:color_scheme_id)
+    @scheme_id = Theme.where(id: theme_id).pick(:color_scheme_id)
   end
 
   def dark_scheme_id

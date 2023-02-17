@@ -38,9 +38,6 @@ fi:
       browse_all_channels: "Selaa kaikkia kanavia"
       move_to_channel:
         title: "Siirrä viestit kanavalle"
-        instructions:
-          one: "Olet siirtämässä <strong>%{count}</strong> viestin. Valitse kohdekanava. Kanavalle <strong>%{channelTitle}</strong> luodaan paikkamerkkiviesti, joka osoittaa, että tämä viesti on siirretty."
-          other: "Olet siirtämässä <strong>%{count}</strong> viestiä. Valitse kohdekanava. Kanavalle <strong>%{channelTitle}</strong> luodaan paikkamerkkiviesti, joka osoittaa, että nämä viestit on siirretty."
         confirm_move: "Siirrä viestit"
       channel_settings:
         title: "Kanavan asetukset"
@@ -71,7 +68,6 @@ fi:
         instructions: "Kanavan sulkeminen estää muita kuin henkilökunnan käyttäjiä lähettämästä uusia viestejä tai muokkaamasta olemassa olevia viestejä. Haluatko varmasti sulkea tämän kanavan?"
       channel_delete:
         title: "Poista kanava"
-        instructions: "<p>Poistaa kanavan <strong>%{name}</strong> ja chat-historian. Kaikki viestit ja niihin liittyvät tiedot, kuten reaktiot ja lataukset, poistetaan pysyvästi. Jos haluat säilyttää kanavan historian ja poistaa sen käytöstä, voit sen sijaan arkistoida kanavan.</p> <p>Haluatko varmasti <strong>poistaa kanavan psyyvästi</strong>? Vahvista kirjoittamalla kanavan nimi alla olevaan ruutuun.</p>"
         confirm: "Ymmärrän seuraukset, poista kanava"
         confirm_channel_name: "Anna kanavan nimi"
         process_started: "Kanavan poistoprosessi on alkanut. Tämä modaalinen ikkuna sulkeutuu pian, etkä näe enää poistettua kanavaa missään."

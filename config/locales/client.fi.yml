@@ -3369,8 +3369,6 @@ fi:
       email_in: "Mukautettu saapuvan postin sähköpostiosoite:"
       email_in_tooltip: "Voit erottaa useita sähköpostiosoitteita |-merkillä."
       email_in_allow_strangers: "Hyväksy sähköpostit anonyymeiltä käyttäjiltä, joilla ei ole tiliä"
-      email_in_disabled: "Uusien ketjujen aloittaminen sähköpostitse on poistettu käytöstä sivuston asetuksissa. Salliaksesi uusien ketjujen luomisen sähköpostilla, "
-      email_in_disabled_click: 'ota käyttöön saapuvien sähköpostien asetus.'
       mailinglist_mirror: "Alue jäljittelee postituslistaa"
       show_subcategory_list: "Näytä ala-alueiden luettelo ketjujen yläpuolella tällä alueella."
       read_only_banner: "Banneriteksti, joka näytetään, jos käyttäjä ei voi aloittaa ketjua tälle alueelle:"
@@ -3994,6 +3992,10 @@ fi:
         custom:
           save: "Tallenna"
           delete: "Poista"
+          links:
+            icon: "Kuvake"
+            name: "Nimi"
+            value: "Linkki"
         about:
           header_link_text: "Tietoa"
         messages:
@@ -5083,6 +5085,22 @@ fi:
           description: "Tarkastele tekstin osuvuutta tarkkailtuihin sanoihin kirjoittamalla alle"
           found_matches: "Löytyneitä osumia:"
           no_matches: "Ei osumia"
+      form_templates:
+        nav_title: "Mallit"
+        list_table:
+          headings:
+            name: "Nimi"
+            actions: "Toiminnot"
+        view_template:
+          close: "Sulje"
+          edit: "Muokkaa"
+          delete: "Poista"
+        new_template_form:
+          submit: "Tallenna"
+          cancel: "Peruuta"
+        quick_insert_fields:
+          add_new_field: "Lisää"
+          dropdown: "Pudotusvalikko"
       impersonate:
         title: "Esiinny käyttäjänä"
         help: "Tällä työkalulla voi esiintyä toisena käyttäjänä virheiden paikantamista varten. Sinun täytyy kirjautua ulos, kun olet valmis."
@@ -5519,7 +5537,8 @@ fi:
         allow_title: Salli kunniamerkin käyttäminen tittelinä
         multiple_grant: Voidaan myöntää useita kertoja
         listable: Näytä kunniamerkki julkisella kunniamerkkisivulla
-        enabled: Ota kunniamerkki käyttöön
+        enabled: otettu käyttöön
+        disabled: poistettu käytöstä
         icon: Kuvake
         image: Kuva
         graphic: Kuvake

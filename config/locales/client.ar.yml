@@ -4041,8 +4041,6 @@ ar:
       email_in: "العنوان المخصَّص للبريد الوارد:"
       email_in_tooltip: "يمكنك فصل عدة عناوين بريد إلكتروني باستخدام الرمز |."
       email_in_allow_strangers: "قبول الرسائل الإلكترونية من المستخدمين المجهولين الذين لا يملكون حسابات"
-      email_in_disabled: "تم إيقاف نشر الموضوعات الجديدة عبر البريد الإلكتروني في إعدادات الموقع. لتفعيل نشر الموضوعات الجديدة عبر البريد الإلكتروني، "
-      email_in_disabled_click: 'فعليك تفعيل خيار "email in" في الإعدادات.'
       mailinglist_mirror: "الفئة تعكس قائمة بريدية"
       show_subcategory_list: "اعرض قائمة الفئات الفرعية أعلى الموضوعات في هذه الفئة."
       read_only_banner: "نص البانر عندما لا يستطيع المستخدم إنشاء موضوع في هذه الفئة:"
@@ -4786,6 +4784,10 @@ ar:
         custom:
           save: "حفظ"
           delete: "حذف"
+          links:
+            icon: "الأيقونة"
+            name: "الاسم"
+            value: "رابط"
         about:
           header_link_text: "نبذة"
         messages:
@@ -5909,6 +5911,22 @@ ar:
           description: "إدخال النص أدناه للتحقُّق من التطابقات مع الكلمات المُراقَبة"
           found_matches: "التطابقات التي تم العثور عليها:"
           no_matches: "لم يتم العثور على نتائج مطابقة"
+      form_templates:
+        nav_title: "القوالب"
+        list_table:
+          headings:
+            name: "الاسم"
+            actions: "الإجراءات"
+        view_template:
+          close: "إغلاق"
+          edit: "تعديل"
+          delete: "حذف"
+        new_template_form:
+          submit: "حفظ"
+          cancel: "إلغاء"
+        quick_insert_fields:
+          add_new_field: "إضافة"
+          dropdown: "قائمة منسدلة"
       impersonate:
         title: "الانتحال"
         help: "استخدم هذه الأداة لانتحال شخصية حساب مستخدم لأغراض تصحيح الأخطاء. عليك تسجيل الخروج بعد الانتهاء."
@@ -6365,7 +6383,7 @@ ar:
         allow_title: السماح للمستخدمين باستخدام الشارة كعنوان
         multiple_grant: يمكن منحها عدة مرات
         listable: عرض الشارة في صفحة الشارات العامة
-        enabled: فعّل الشارة
+        disabled: متوقف
         icon: الأيقونة
         image: الصورة
         graphic: رمز الشارة

@@ -2116,8 +2116,6 @@ et:
       images: "Pildid"
       email_in: "Sissetuleva meili individuaalne aadress:"
       email_in_allow_strangers: "Aktsepteeri meile kontota anonüümsetelt kasutajatelt"
-      email_in_disabled: "Uute teemade avamine meili teel on saidi sätetes välja lülitatud. Avamiseks"
-      email_in_disabled_click: 'aktiveeri säte "sissetulev meil".'
       show_subcategory_list: "Näita selles foorumis alamfoorumite nimekirja teemadest üleval pool."
       read_only_banner: "Bänneri tekst, mis on näha kui kasutaja ei saa sellesse kategooriasse uusi teemasid lisada:"
       num_featured_topics: "Kategooriate lehel kuvatud teemade arv:"
@@ -2519,6 +2517,9 @@ et:
         custom:
           save: "Salvesta"
           delete: "Kustuta"
+          links:
+            icon: "Ikoon"
+            name: "Nimi"
         about:
           header_link_text: "Teave"
         messages:
@@ -3132,6 +3133,22 @@ et:
         test:
           button_label: "Proovi"
           no_matches: "Midagi ei leitud"
+      form_templates:
+        nav_title: "Mallid"
+        list_table:
+          headings:
+            name: "Nimi"
+            actions: "Tegevused"
+        view_template:
+          close: "Sulge"
+          edit: "Muuda"
+          delete: "Kustuta"
+        new_template_form:
+          submit: "Salvesta"
+          cancel: "Tühista"
+        quick_insert_fields:
+          add_new_field: "isa"
+          dropdown: "Rippmenüü"
       impersonate:
         title: "Kehasta"
         help: "Kasuta seda töövahendit kasutajakonto ülevõtmiseks silumise eesmärgil. Tühistamiseks pead välja logima."
@@ -3439,7 +3456,8 @@ et:
         allow_title: Luba märgise kasutamist tiitlina
         multiple_grant: Võib olla määratud mitmeid kordi
         listable: Näita märgist avalike märgiste lehel
-        enabled: Luba märgis
+        enabled: sisse lülitatud
+        disabled: välja lülitatud
         icon: Ikoon
         image: Pilt
         query: Märgise päring (SQL)

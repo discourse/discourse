@@ -2434,6 +2434,10 @@ th:
         custom:
           save: "บันทึก"
           delete: "ลบ"
+          links:
+            icon: "ไอคอน"
+            name: "ชื่อ"
+            value: "ลิงก์"
         about:
           header_link_text: "เกี่ยวกับ"
         messages:
@@ -2868,6 +2872,22 @@ th:
           upload_successful: "อัปโหลดสำเร็จแล้ว เพิ่มคำเรียบร้อย"
         test:
           no_matches: "ไม่พบผลลัพธ์ที่ตรงกัน"
+      form_templates:
+        nav_title: "รูปแบบ"
+        list_table:
+          headings:
+            name: "ชื่อ"
+            actions: "การกระทำ"
+        view_template:
+          close: "ปิด"
+          edit: "แก้ไข"
+          delete: "ลบ"
+        new_template_form:
+          submit: "บันทึก"
+          cancel: "ยกเลิก"
+        quick_insert_fields:
+          add_new_field: "เพิ่ม"
+          dropdown: "ดร็อปดาวน์"
       impersonate:
         not_found: "ไม่พบผู้ใช้นั้น"
       users:
@@ -3104,6 +3124,7 @@ th:
         revoke: เอาออก
         reason: เหตุผล
         edit_badges: แก้ไขเหรียญ
+        disabled: ปิดใช้งานแล้ว
         icon: ไอคอน
         image: ภาพ
         trigger_type:

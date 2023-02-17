@@ -94,6 +94,38 @@ RSpec.describe TopicGuardian do
       SiteSetting.tl4_delete_posts_and_topics = true
       expect(Guardian.new(tl4_user).can_see_deleted_topics?(topic.category)).to eq(true)
     end
+
+    it "returns false for anonymous user" do
+      SiteSetting.tl4_delete_posts_and_topics = true
+      expect(Guardian.new.can_see_deleted_topics?(topic.category)).to be_falsey
+    end
+  end
+
+  describe "#can_recover_topic?" do
+    fab!(:deleted_topic) { Fabricate(:topic, category: category, deleted_at: 1.day.ago) }
+    it "returns true for staff" do
+      expect(Guardian.new(admin).can_recover_topic?(Topic.with_deleted.last)).to eq(true)
+    end
+
+    it "returns true for group moderator" do
+      SiteSetting.enable_category_group_moderation = true
+      expect(Guardian.new(user).can_recover_topic?(Topic.with_deleted.last)).to eq(false)
+      category.update!(reviewable_by_group_id: group.id)
+      group.add(user)
+      topic.update!(category: category)
+      expect(Guardian.new(user).can_recover_topic?(Topic.with_deleted.last)).to eq(true)
+    end
+
+    it "returns true when tl4 can delete posts and topics" do
+      expect(Guardian.new(tl4_user).can_recover_topic?(Topic.with_deleted.last)).to eq(false)
+      SiteSetting.tl4_delete_posts_and_topics = true
+      expect(Guardian.new(tl4_user).can_recover_topic?(Topic.with_deleted.last)).to eq(true)
+    end
+
+    it "returns false for anonymous user" do
+      SiteSetting.tl4_delete_posts_and_topics = true
+      expect(Guardian.new.can_recover_topic?(Topic.with_deleted.last)).to eq(false)
+    end
   end
 
   describe "#can_edit_topic?" do

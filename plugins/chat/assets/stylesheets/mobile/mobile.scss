@@ -6,13 +6,28 @@
   padding-top: 0.75em;
 }
 
-body.has-full-page-chat {
+html.has-full-page-chat {
   .footer-nav {
     display: none !important;
   }
 
-  #main-outlet {
+  body #main-outlet {
     padding: 0;
+
+    .main-chat-outlet {
+      .chat-live-pane {
+        min-width: 0;
+      }
+
+      &.has-side-panel-expanded {
+        grid-template-columns: 1fr;
+        grid-template-areas: "threads";
+
+        .chat-live-pane {
+          display: none;
+        }
+      }
+    }
   }
 }
 
@@ -74,13 +89,6 @@ body.has-full-page-chat {
         margin-top: 0.5em;
       }
     }
-  }
-}
-
-html.has-full-page-chat body {
-  #main-outlet-wrapper {
-    // restricts the height of the page
-    grid-template-rows: calc(var(--chat-vh, 1vh) * 100 - var(--header-offset));
   }
 }
 

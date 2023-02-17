@@ -2611,8 +2611,6 @@ bg:
       images: "Изображения"
       email_in: "Персонализиран входящ имейл адрес: "
       email_in_allow_strangers: "Приемай имейли от анонимни потребители, които нямат регистрация"
-      email_in_disabled: "Публикуването на нови теми чрез имейл е забранено от настройките на сайта. За да разрешите публикуването на нови теми чрез имейл,"
-      email_in_disabled_click: 'разрешете "email in" настройката '
       show_subcategory_list: "Показване на списъка с подкатегории над темите в тази категория."
       num_featured_topics: "Брой на темите, показвани на страницата с категории:"
       subcategory_num_featured_topics: "Брой на включените теми на страницата на родителската категория:"
@@ -2973,6 +2971,9 @@ bg:
         custom:
           save: "Запази "
           delete: "Изтрий"
+          links:
+            icon: "Икона"
+            name: "Име"
         about:
           header_link_text: "Относно"
         messages:
@@ -3466,6 +3467,22 @@ bg:
           flag: "Сигнализиране"
         form:
           add: "Добави"
+      form_templates:
+        nav_title: "Шаблони"
+        list_table:
+          headings:
+            name: "Име"
+            actions: "Действия"
+        view_template:
+          close: "Затвори"
+          edit: "Редактирай"
+          delete: "Изтрий"
+        new_template_form:
+          submit: "Запази "
+          cancel: "Прекрати"
+        quick_insert_fields:
+          add_new_field: "Добави "
+          dropdown: "Падащо"
       impersonate:
         title: "Представи"
         help: "Използвайте този инструмент, за да предоставите потребителски профили за отстраняване на грешките. Трябва да излезете когато приключите."
@@ -3747,7 +3764,8 @@ bg:
         allow_title: Позволете значките да бъдат ползвани като титли.
         multiple_grant: Може да бъде присъдена няколко пъти
         listable: Показвай значката на страницата със значки
-        enabled: Разрешете значката
+        enabled: да е включен
+        disabled: деактивирани
         icon: Икона
         image: Изображение
         query: Badge Query (SQL)

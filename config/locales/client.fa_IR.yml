@@ -2850,8 +2850,6 @@ fa_IR:
       email_in: "آدرس ایمیل های دریافتی سفارشی:"
       email_in_tooltip: "شما می‌توانید چندیدن آدرس ایمیل را با کارکتر | جدا کنید."
       email_in_allow_strangers: "تایید ایمیل ها از کاربران ناشناس بدون حساب کاربری"
-      email_in_disabled: "ارسال موضوعات جدید با ایمیل در تنظیمات سایت غیر فعال است. برای فعال سازی موضوعات جدید را با ایمیل ارسال کنید،"
-      email_in_disabled_click: 'فعال کردن تنظیمات "email in".'
       show_subcategory_list: "تعداد دسته‌بندی‌های فرزند که بالای موضوعات این دسته‌بندی نمایش داده می‌شوند."
       num_featured_topics: "تعداد موضوعاتی که در صفحه دسته‌بندی نمایش داده می‌شوند:"
       subcategory_num_featured_topics: "تعداد موضوعات برجسته که در دسته‌بندی مادر نمایش داده می‌شوند:"
@@ -3349,8 +3347,8 @@ fa_IR:
           delete: "حذف"
           delete_confirm: "آیا مطمئن هستید که می‌خواهید این بخش را حذف کنید؟"
           links:
-            name: "نام پیوند"
-            add: "افزودن پیوند"
+            icon: "آیکن"
+            name: "نام"
             delete: "حذف پیوند"
         about:
           header_link_text: "درباره"
@@ -4115,6 +4113,22 @@ fa_IR:
           case_sensitivity_label: "به حروف بزرگ و کوچک حساس است"
         test:
           no_matches: "چیزی یافت نشد."
+      form_templates:
+        nav_title: "قالب‌ها"
+        list_table:
+          headings:
+            name: "نام"
+            actions: "عملیات"
+        view_template:
+          close: "بستن"
+          edit: "ویرایش"
+          delete: "حذف"
+        new_template_form:
+          submit: "ذخیره"
+          cancel: "انصراف"
+        quick_insert_fields:
+          add_new_field: "اضافه کردن"
+          dropdown: "کرکره‌ای"
       impersonate:
         title: "جعل هویت کردن"
         help: "با استفاده از ابزار جعل هویت کردن یک حساب کاربری را برای اشکال زدایی انتخاب نمایید، شما باید بعد از اتمام کار یک بار خارج شوید."
@@ -4432,7 +4446,8 @@ fa_IR:
         allow_title: اجازه‌ی استفاده نشان برای عنوان
         multiple_grant: نمی توان چندین بار اعطا کرد
         listable: نشان دادن نشان در صفحه نشان‌های عمومی
-        enabled: فعالسازی نشان
+        enabled: فعال شده
+        disabled: غیرفعال شده
         icon: آیکن
         image: تصویر
         query: پرس جوی نشان (SQL)

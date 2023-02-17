@@ -49,13 +49,13 @@ RSpec.describe PostAction do
       expect(topic_user_ids).to include(codinghorror.id)
       expect(topic_user_ids).to include(mod.id)
 
-      expect(topic.topic_users.where(user_id: mod.id).pluck_first(:notification_level)).to eq(
+      expect(topic.topic_users.where(user_id: mod.id).pick(:notification_level)).to eq(
         TopicUser.notification_levels[:tracking],
       )
 
-      expect(
-        topic.topic_users.where(user_id: codinghorror.id).pluck_first(:notification_level),
-      ).to eq(TopicUser.notification_levels[:watching])
+      expect(topic.topic_users.where(user_id: codinghorror.id).pick(:notification_level)).to eq(
+        TopicUser.notification_levels[:watching],
+      )
 
       # reply to PM should not clear flag
       PostCreator.new(

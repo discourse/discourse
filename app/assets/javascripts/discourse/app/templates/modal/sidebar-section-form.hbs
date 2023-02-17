@@ -3,7 +3,7 @@
     {{this.flashText}}
   </div>
 {{/if}}
-<DModalBody @title="sidebar.sections.custom.add">
+<DModalBody @title={{this.header}}>
   <form class="form-horizontal">
     <div class="input-group">
       <label for="section-name">{{i18n "sidebar.sections.custom.name"}}</label>
@@ -26,6 +26,7 @@
             @value={{link.icon}}
             @options={{hash maximum=1}}
             class={{link.iconCssClass}}
+            @onlyAvailable={{true}}
             @onChange={{action (mut link.icon)}}
           />
         </div>

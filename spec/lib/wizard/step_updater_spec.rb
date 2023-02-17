@@ -370,7 +370,7 @@ RSpec.describe Wizard::StepUpdater do
       expect(SiteSetting.contact_email).to eq("eviltrout@example.com")
 
       # Should update the TOS topic
-      raw = Post.where(topic_id: SiteSetting.tos_topic_id, post_number: 1).pluck_first(:raw)
+      raw = Post.where(topic_id: SiteSetting.tos_topic_id, post_number: 1).pick(:raw)
       expect(raw).to eq("ACME, Inc. - New Jersey law - Fairfield, New Jersey template")
 
       # Can update the TOS topic again
@@ -382,13 +382,13 @@ RSpec.describe Wizard::StepUpdater do
           city_for_disputes: "San Francisco, California",
         )
       updater.update
-      raw = Post.where(topic_id: SiteSetting.tos_topic_id, post_number: 1).pluck_first(:raw)
+      raw = Post.where(topic_id: SiteSetting.tos_topic_id, post_number: 1).pick(:raw)
       expect(raw).to eq("Pied Piper Inc - California law - San Francisco, California template")
 
       # Can update the TOS to nothing
       updater = wizard.create_updater("corporate", {})
       updater.update
-      raw = Post.where(topic_id: SiteSetting.tos_topic_id, post_number: 1).pluck_first(:raw)
+      raw = Post.where(topic_id: SiteSetting.tos_topic_id, post_number: 1).pick(:raw)
       expect(raw).to eq("company_name - governing_law - city_for_disputes template")
 
       expect(wizard.completed_steps?("corporate")).to eq(true)

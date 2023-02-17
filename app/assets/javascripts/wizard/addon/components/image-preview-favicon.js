@@ -1,7 +1,9 @@
-import { createPreviewComponent } from "wizard/lib/preview";
 import { observes } from "discourse-common/utils/decorators";
+import WizardPreviewBaseComponent from "./wizard-preview-base";
 
-export default createPreviewComponent(371, 124, {
+export default WizardPreviewBaseComponent.extend({
+  width: 371,
+  height: 124,
   tab: null,
   image: null,
 

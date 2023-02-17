@@ -446,7 +446,7 @@ class Chat::ChatController < Chat::ChatBaseController
       ChatMessage
         .includes(in_reply_to: [:user, chat_webhook_event: [:incoming_chat_webhook]])
         .includes(:revisions)
-        .includes(:user)
+        .includes(user: :primary_group)
         .includes(chat_webhook_event: :incoming_chat_webhook)
         .includes(reactions: :user)
         .includes(:bookmarks)

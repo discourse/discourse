@@ -70,7 +70,7 @@ class DirectoryItemsController < ApplicationController
     end
 
     if params[:username]
-      user_id = User.where(username_lower: params[:username].to_s.downcase).pluck_first(:id)
+      user_id = User.where(username_lower: params[:username].to_s.downcase).pick(:id)
       if user_id
         result = result.where(user_id: user_id)
       else

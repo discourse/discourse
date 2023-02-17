@@ -48,8 +48,7 @@ export function isPushNotificationsSupported() {
       "PushManager" in window &&
       !caps.isAppWebview &&
       navigator.serviceWorker.controller &&
-      navigator.serviceWorker.controller.state === "activated" &&
-      !caps.isIOS
+      navigator.serviceWorker.controller.state === "activated"
     )
   ) {
     return false;

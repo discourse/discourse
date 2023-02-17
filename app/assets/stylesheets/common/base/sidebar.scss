@@ -1,5 +1,8 @@
 :root {
   --d-sidebar-width: #{$d-sidebar-width};
+  @include breakpoint(large) {
+    --d-sidebar-width: #{$d-sidebar-narrow-width};
+  }
   --d-sidebar-animation-time: 0.25s;
   --d-sidebar-animation-ease: ease-in-out;
   --d-sidebar-row-height: 30px;
@@ -28,6 +31,7 @@
 
   .footer-nav-ipad & {
     top: calc(var(--header-offset) + var(--footer-nav-height));
+    height: calc(100vh - var(--header-offset, 0) - var(--footer-nav-height, 0));
   }
   height: calc(100vh - var(--header-offset, 0));
   align-self: start;

@@ -3534,8 +3534,6 @@ hr:
       email_in: "Prilagođena adresa dolaznog e-maila."
       email_in_tooltip: "Možete odvojiti na više adresa e-pošte s | znakom."
       email_in_allow_strangers: "Prihvati emailove anonimnih korisnika bez računa"
-      email_in_disabled: "Objavljivanje novih tema preko emaila je onemogućeno postavkama stranice. Da to omogućite objavljivanje tema preko emaila"
-      email_in_disabled_click: 'omogućite "pošalji email u" opciju.'
       mailinglist_mirror: "Kategorija odražava mailing listu"
       show_subcategory_list: "Prikaži popis potkategorija iznad tema u ovoj kategoriji."
       read_only_banner: "Tekst bannera kada korisnik ne može stvoriti temu u ovoj kategoriji:"
@@ -4191,6 +4189,10 @@ hr:
         custom:
           save: "Spremi"
           delete: "Pobriši"
+          links:
+            icon: "Ikona"
+            name: "Ime"
+            value: "Veza"
         about:
           header_link_text: "O nama"
         messages:
@@ -5284,6 +5286,22 @@ hr:
           description: "Unesite tekst ispod da provjerite podudaranja s gledanim riječima"
           found_matches: "Pronađeno podudaranja:"
           no_matches: "Nema pronađenih podudaranja"
+      form_templates:
+        nav_title: "Predlošci"
+        list_table:
+          headings:
+            name: "Ime"
+            actions: "Akcije"
+        view_template:
+          close: "Zatvori"
+          edit: "Uredi"
+          delete: "Pobriši"
+        new_template_form:
+          submit: "Spremi"
+          cancel: "Odustani"
+        quick_insert_fields:
+          add_new_field: "Dodaj"
+          dropdown: "Padajući izbornik"
       impersonate:
         title: "Predstavi se kao"
         help: "Koristite ovaj alat da se predstavljate kao određeni korisnički račun za potrebe ispravljanja grešaka. Morat će te se odjaviti kad završite."
@@ -5725,7 +5743,8 @@ hr:
         allow_title: Dopusti da se značka koristi kao titula
         multiple_grant: Može biti dodijeljena više puta
         listable: Prikaži značku na javnoj stranici sa značkama
-        enabled: Omogući značku
+        enabled: omogućeno
+        disabled: onemogućen
         icon: Ikona
         image: Slika
         graphic: Grafički

@@ -80,8 +80,7 @@
         @fullPage={{this.fullPage}}
         @afterReactionAdded={{action "reStickScrollIfNeeded"}}
         @isHovered={{eq message.id this.hoveredMessageId}}
-        @onHoverMessage={{action "onHoverMessage"}}
-        @onSwitchChannel={{this.onSwitchChannel}}
+        @onHoverMessage={{this.onHoverMessage}}
         @resendStagedMessage={{this.resendStagedMessage}}
       />
     {{/each}}
