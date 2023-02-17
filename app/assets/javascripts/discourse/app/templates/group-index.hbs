@@ -31,24 +31,34 @@
   </div>
 
   {{#if this.hasMembers}}
-    <LoadMore @selector=".group-members tr" @action={{action "loadMore"}}>
-      <table
-        class={{if this.isBulk "group-members sticky-header" "group-members"}}
+    <LoadMore
+      @selector=".group-members .directory-table-row"
+      @action={{action "loadMore"}}
+    >
+      <div
+        class="directory-table group-members
+          {{if this.isBulk 'sticky-header' ''}}
+          {{if this.canManageGroup 'group-members--can-manage' ''}}"
       >
-        <thead>
-          <tr>
-            <th class="bulk-select">
-              {{#if this.canManageGroup}}
-                <FlatButton
-                  @class="bulk-select"
-                  @icon="list"
-                  @action={{action "toggleBulkSelect"}}
-                  @title="topics.bulk.toggle"
-                />
-              {{/if}}
-            </th>
-            {{#if this.isBulk}}
-              <th class="bulk-select-buttons">
+        <div class="directory-table__header">
+
+          <TableHeaderToggle
+            @order={{this.order}}
+            @asc={{this.asc}}
+            @field="username_lower"
+            @labelKey="username"
+            @class="username"
+            @automatic={{true}}
+            @colspan="2"
+          >
+            {{#if this.canManageGroup}}
+              <FlatButton
+                @class="bulk-select"
+                @icon="list"
+                @action={{action "toggleBulkSelect"}}
+                @title="topics.bulk.toggle"
+              />
+              {{#if this.isBulk}}
                 <span class="bulk-select-buttons-wrap">
                   {{#if this.bulkSelection}}
                     <BulkGroupMemberDropdown
@@ -67,98 +77,119 @@
                     @label="topics.bulk.clear_all"
                   />
                 </span>
-              </th>
-            {{/if}}
-            <TableHeaderToggle
-              @order={{this.order}}
-              @asc={{this.asc}}
-              @field="username_lower"
-              @labelKey="username"
-              @class="username"
-              @automatic={{true}}
-              @colspan="2"
-            />
-            <TableHeaderToggle
-              @order={{this.order}}
-              @asc={{this.asc}}
-              @field="added_at"
-              @labelKey="groups.member_added"
-              @automatic={{true}}
-            />
-            <TableHeaderToggle
-              @order={{this.order}}
-              @asc={{this.asc}}
-              @field="last_posted_at"
-              @labelKey="last_post"
-              @automatic={{true}}
-            />
-            <TableHeaderToggle
-              @order={{this.order}}
-              @asc={{this.asc}}
-              @field="last_seen_at"
-              @labelKey="last_seen"
-              @automatic={{true}}
-            />
-            <th></th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {{#each this.model.members as |m|}}
-            <tr>
-              {{#if this.isBulk}}
-                <td class="bulk-select">
-                  <Input
-                    @type="checkbox"
-                    class="bulk-select"
-                    {{on "click" (action "selectMember" m)}}
-                  />
-                </td>
               {{/if}}
+            {{/if}}
+          </TableHeaderToggle>
 
-              <td class="group-member" colspan="2">
+          {{#if this.canManageGroup}}
+            <div class="directory-table__column-header"></div>
+          {{/if}}
+
+          <TableHeaderToggle
+            @class="directory-table__column-header"
+            @order={{this.order}}
+            @asc={{this.asc}}
+            @field="added_at"
+            @labelKey="groups.member_added"
+            @automatic={{true}}
+          />
+          <TableHeaderToggle
+            @class="directory-table__column-header"
+            @order={{this.order}}
+            @asc={{this.asc}}
+            @field="last_posted_at"
+            @labelKey="last_post"
+            @automatic={{true}}
+          />
+          <TableHeaderToggle
+            @class="directory-table__column-header"
+            @order={{this.order}}
+            @asc={{this.asc}}
+            @field="last_seen_at"
+            @labelKey="last_seen"
+            @automatic={{true}}
+          />
+
+          {{#if this.canManageGroup}}
+            <div class="directory-table__column-header"></div>
+          {{/if}}
+        </div>
+
+        <div class="directory-table__body">
+          {{#each this.model.members as |m|}}
+            <div class="directory-table__row">
+
+              <div class="directory-table__cell group-member" colspan="2">
+                {{#if this.canManageGroup}}
+                  {{#if this.isBulk}}
+                    <Input
+                      @type="checkbox"
+                      class="bulk-select"
+                      {{on "click" (action "selectMember" m)}}
+                    />
+                  {{/if}}
+                {{/if}}
                 <UserInfo
                   @user={{m}}
                   @skipName={{this.skipName}}
                   @showStatus={{true}}
                   @showStatusTooltip={{true}}
                 />
-              </td>
+              </div>
 
-              <td class="group-owner">
-                {{#if m.owner}}
-                  {{d-icon "shield-alt"}}
-                  {{i18n "groups.members.owner"}}<br />
-                {{/if}}
-                {{#if m.primary}}
-                  {{i18n "groups.members.primary"}}
-                {{/if}}
-              </td>
-              <td>
-                <span class="text">{{bound-date m.added_at}}</span>
-              </td>
-              <td>
-                <span class="text">{{bound-date m.last_posted_at}}</span>
-              </td>
-              <td>
-                <span class="text">{{bound-date m.last_seen_at}}</span>
-              </td>
+              {{#if this.canManageGroup}}
+                <div class="directory-table__cell group-owner">
+                  <div class="directory-table__value">
+                    {{#if m.owner}}
+                      {{d-icon "shield-alt"}}
+                      {{i18n "groups.members.owner"}}<br />
+                    {{/if}}
+                    {{#if m.primary}}
+                      {{i18n "groups.members.primary"}}
+                    {{/if}}
+                  </div>
+                </div>
 
-              <td>
-                {{#if this.canManageGroup}}
+              {{/if}}
+              <div class="directory-table__cell">
+                <span class="directory-table__label">
+                  {{i18n "groups.member_added"}}
+                </span>
+                <span class="directory-table__value">{{bound-date
+                    m.added_at
+                  }}</span>
+              </div>
+              <div class="directory-table__cell">
+                <span class="directory-table__label">
+                  {{i18n "last_post"}}
+                </span>
+                <span class="directory-table__value">{{bound-date
+                    m.last_posted_at
+                  }}</span>
+              </div>
+              <div class="directory-table__cell">
+                <span class="directory-table__label">
+                  {{i18n "last_seen"}}
+                </span>
+                <span class="directory-table__value">{{bound-date
+                    m.last_seen_at
+                  }}</span>
+              </div>
+              {{#if this.canManageGroup}}
+                <div class="directory-table__cell">
                   <GroupMemberDropdown
                     @member={{m}}
                     @canAdminGroup={{this.model.can_admin_group}}
                     @canEditGroup={{this.model.can_edit_group}}
                     @onChange={{action "actOnGroup" m}}
                   />
-                {{/if}}
-                {{! group parameter is used by plugins }}
-              </td>
-            </tr>
+                  {{! group parameter is used by plugins }}
+                </div>
+              {{/if}}
+            </div>
           {{/each}}
-        </tbody>
-      </table>
+        </div>
+      </div>
     </LoadMore>
 
     <ConditionalLoadingSpinner @condition={{this.loading}} />

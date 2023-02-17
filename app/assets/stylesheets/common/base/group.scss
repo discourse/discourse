@@ -118,59 +118,27 @@ table.group-manage-logs {
   }
 }
 
-table.group-members {
-  width: 100%;
+.group-members {
+  grid-template-columns: 3fr repeat(3, minmax(min-content, 1fr));
 
-  th {
-    text-align: center;
+  &--can-manage {
+    grid-template-columns: 3fr repeat(4, minmax(min-content, 1fr)) 3em;
+  }
 
-    &.bulk-select {
-      height: 30px;
-      width: 30px;
-    }
+  &.group-members__requests {
+    grid-template-columns: 3fr repeat(3, minmax(min-content, 1fr));
+  }
 
-    &.bulk-select-buttons {
-      text-align: left;
-      white-space: nowrap;
-      width: 1%;
-
-      .bulk-select-buttons-wrap {
-        display: flex;
-      }
-
-      .btn {
-        margin-right: 0.25em;
-      }
-    }
-
-    &.username {
-      text-align: left;
+  .directory-table__column-header {
+    // hide label to make space for bulk buttons
+    .bulk-select-buttons-wrap + .text {
+      display: none;
     }
   }
 
-  td {
-    color: var(--primary-medium);
-    padding: 0.8em 0;
-    text-align: center;
-
-    &.group-member {
-      text-align: left;
-    }
-  }
-
-  .user-info {
-    display: block;
-
-    .avatar-flair {
-      color: var(--primary);
-    }
-
-    .user-status-message {
-      img.emoji {
-        width: 1em;
-        height: 1em;
-      }
-    }
+  .directory-table__value {
+    font-size: var(--font-0);
+    color: var(--primary);
   }
 }
 

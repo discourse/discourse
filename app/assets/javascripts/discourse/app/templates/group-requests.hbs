@@ -9,10 +9,14 @@
   </div>
 
   {{#if this.hasRequesters}}
-    <LoadMore @selector=".group-members tr" @action={{action "loadMore"}}>
-      <table class="group-members">
-        <thead>
+    <LoadMore
+      @selector=".group-members .directory-table__row"
+      @action={{action "loadMore"}}
+    >
+      <div class="directory-table group-members group-members__requests">
+        <div class="directory-table__header">
           <TableHeaderToggle
+            @class="username"
             @order={{this.order}}
             @asc={{this.asc}}
             @field="username_lower"
@@ -26,22 +30,36 @@
             @labelKey="groups.member_requested"
             @automatic={{true}}
           />
-          <th>{{i18n "groups.requests.reason"}}</th>
-          <th></th>
-          <th></th>
-        </thead>
+          <div class="directory-table__column-header">{{i18n
+              "groups.requests.reason"
+            }}</div>
 
-        <tbody>
+          <div class="directory-table__column-header"></div>
+        </div>
+
+        <div class="directory-table__body">
           {{#each this.model.requesters as |m|}}
-            <tr>
-              <td class="group-member">
+            <div class="directory-table__row">
+              <div class="directory-table__cell group-member">
                 <UserInfo @user={{m}} @skipName={{this.skipName}} />
-              </td>
-              <td>
-                <span class="text">{{bound-date m.requested_at}}</span>
-              </td>
-              <td>{{m.reason}}</td>
-              <td>
+              </div>
+              <div class="directory-table__cell">
+                <span class="directory-table__label">
+                  {{i18n "groups.member_requested"}}
+                </span>
+                <span class="directory-table__value">
+                  {{bound-date m.requested_at}}
+                </span>
+              </div>
+              <div class="directory-table__cell">
+                <span class="directory-table__label">
+                  {{i18n "groups.requests.reason"}}
+                </span>
+                <span class="directory-table__value">
+                  {{m.reason}}
+                </span>
+              </div>
+              <div class="directory-table__cell">
                 {{#if m.request_undone}}
                   {{i18n "groups.requests.undone"}}
                 {{else if m.request_accepted}}
@@ -67,12 +85,11 @@
                     @class="btn-danger"
                   />
                 {{/if}}
-              </td>
-              <td></td>
-            </tr>
+              </div>
+            </div>
           {{/each}}
-        </tbody>
-      </table>
+        </div>
+      </div>
     </LoadMore>
 
     <ConditionalLoadingSpinner @condition={{this.loading}} />

@@ -6,11 +6,15 @@
   aria-label={{this.ariaLabel}}
   aria-pressed={{this.pressedState}}
 >
-  {{directory-table-header-title
-    field=this.field
-    labelKey=this.labelKey
-    icon=this.icon
-    translated=this.translated
-  }}
-  {{this.chevronIcon}}
+
+  {{yield}}
+  <span class="text">
+    {{directory-table-header-title
+      field=this.field
+      labelKey=this.labelKey
+      icon=this.icon
+      translated=this.translated
+    }}
+    {{this.chevronIcon}}
+  </span>
 </div>

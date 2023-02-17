@@ -144,6 +144,12 @@
     .d-icon {
       margin-right: 0.25em;
     }
+
+    &:first-child {
+      .header-contents {
+        text-align: left;
+      }
+    }
   }
 
   &__cell,
@@ -224,6 +230,7 @@
   .user-info {
     display: flex;
     min-width: 0;
+    margin: 0;
     width: 100%;
     .user-image {
       padding-right: 0.5em;
@@ -248,9 +255,5 @@
   .header-contents {
     width: 100%;
     text-align: center;
-  }
-
-  #table-header-toggle-username {
-    text-align: left;
   }
 }
