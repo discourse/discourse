@@ -135,7 +135,6 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
           username: "discobot",
           admin: true,
           moderator: true,
-          groupModerator: true,
           new_user: true,
           primary_group_name: "foo",
         },
@@ -147,7 +146,6 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
     assert.dom(".chat-message-info__username.is-staff").exists();
     assert.dom(".chat-message-info__username.is-admin").exists();
     assert.dom(".chat-message-info__username.is-moderator").exists();
-    assert.dom(".chat-message-info__username.is-category-moderator ").exists();
     assert.dom(".chat-message-info__username.is-new-user").exists();
     assert.dom(".chat-message-info__username.group--foo").exists();
   });
@@ -160,9 +158,6 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
     assert.dom(".chat-message-info__username.is-staff").doesNotExist();
     assert.dom(".chat-message-info__username.is-admin").doesNotExist();
     assert.dom(".chat-message-info__username.is-moderator").doesNotExist();
-    assert
-      .dom(".chat-message-info__username.is-category-moderator ")
-      .doesNotExist();
     assert.dom(".chat-message-info__username.is-new-user").doesNotExist();
     assert.dom(".chat-message-info__username.group--foo").doesNotExist();
   });
