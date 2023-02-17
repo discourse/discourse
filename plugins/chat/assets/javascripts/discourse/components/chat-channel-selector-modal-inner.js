@@ -18,6 +18,7 @@ export default Component.extend({
   searchIndex: 0,
   loading: false,
   chatChannelsManager: service(),
+  router: service(),
 
   didInsertElement() {
     this._super(...arguments);
@@ -103,13 +104,13 @@ export default Component.extend({
       return this.fetchOrCreateChannelForUser(channel).then((response) => {
         const newChannel = this.chatChannelsManager.store(response.channel);
         return this.chatChannelsManager.follow(newChannel).then((c) => {
-          this.chat.openChannel(c);
+          this.router.transitionTo("chat.channel", ...c.routeModels);
           this.close();
         });
       });
     } else {
       return this.chatChannelsManager.follow(channel).then((c) => {
-        this.chat.openChannel(c);
+        this.router.transitionTo("chat.channel", ...c.routeModels);
         this.close();
       });
     }

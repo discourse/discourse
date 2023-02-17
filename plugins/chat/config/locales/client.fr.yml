@@ -38,9 +38,6 @@ fr:
       browse_all_channels: "Parcourir tous les canaux"
       move_to_channel:
         title: "Déplacer les messages vers le canal"
-        instructions:
-          one: "Vous déplacez <strong>%{count}</strong> message. Sélectionnez un canal de destination. Un message de substitution sera créé dans le canal <strong>%{channelTitle}</strong> pour indiquer que ce message a été déplacé."
-          other: "Vous déplacez <strong>%{count}</strong> messages. Sélectionnez un canal de destination. Un message de substitution sera créé dans le canal <strong>%{channelTitle}</strong> pour indiquer que ces messages ont été déplacés."
         confirm_move: "Déplacer les messages"
       channel_settings:
         title: "Paramètres du canal"
@@ -71,7 +68,6 @@ fr:
         instructions: "La fermeture du canal empêche les utilisateurs non responsables d'envoyer de nouveaux messages ou de modifier des messages existants. Voulez-vous vraiment fermer ce canal ?"
       channel_delete:
         title: "Supprimer le canal"
-        instructions: "<p>Supprime le canal <strong>%{name}</strong> et l'historique des discussions. Tous les messages et données associées, telles que les réactions et les téléversements, seront définitivement supprimés. Si vous souhaitez conserver l'historique du canal et le désactiver, vous pouvez plutôt archiver le canal.</p> <p>Voulez-vous vraiment <strong>supprimer définitivement</strong> le canal ? Pour confirmer, saisissez le nom du canal dans la case ci-dessous.</p>"
         confirm: "Je comprends les conséquences. Supprimer le canal"
         confirm_channel_name: "Saisissez le nom du canal"
         process_started: "Le processus de suppression du canal a commencé. Ce modal sera bientôt fermé et vous ne verrez plus le canal supprimé nulle part."
@@ -239,6 +235,8 @@ fr:
           about: À propos
           members: Membres
           settings: Paramètres
+      channel_edit_name_slug_modal:
+        name: Nom du canal
       channel_edit_description_modal:
         title: Modifier la description
         input_placeholder: Ajouter une description

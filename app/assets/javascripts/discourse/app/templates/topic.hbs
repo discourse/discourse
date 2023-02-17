@@ -24,12 +24,16 @@
     <SharedDraftControls @topic={{this.model}} />
   {{/if}}
 
-  <PluginOutlet
-    @name="topic-above-post-stream"
-    @tagName="span"
-    @connectorTagName="div"
-    @args={{hash model=this.model editFirstPost=(action "editFirstPost")}}
-  />
+  <span>
+    <PluginOutlet
+      @name="topic-above-post-stream"
+      @connectorTagName="div"
+      @outletArgs={{hash
+        model=this.model
+        editFirstPost=(action "editFirstPost")
+      }}
+    />
+  </span>
 
   {{#if this.model.postStream.loaded}}
     {{#if this.model.postStream.firstPostPresent}}
@@ -72,12 +76,13 @@
               />
             {{/if}}
 
-            <PluginOutlet
-              @name="edit-topic"
-              @tagName="span"
-              @connectorTagName="div"
-              @args={{hash model=this.model buffered=this.buffered}}
-            />
+            <span>
+              <PluginOutlet
+                @name="edit-topic"
+                @connectorTagName="div"
+                @outletArgs={{hash model=this.model buffered=this.buffered}}
+              />
+            </span>
 
             <div class="edit-controls">
               <DButton
@@ -148,8 +153,7 @@
 
             <PluginOutlet
               @name="topic-title-suffix"
-              @tagName=""
-              @args={{hash model=this.model}}
+              @outletArgs={{hash model=this.model}}
             />
           </h1>
 
@@ -216,11 +220,11 @@
         <PluginOutlet
           @name="topic-navigation"
           @connectorTagName="div"
-          @args={{hash topic=this.model}}
+          @outletArgs={{hash topic=this.model}}
         />
 
         {{#if info.renderTimeline}}
-          {{#if this.currentUser.redesigned_topic_timeline_enabled}}
+          {{#if this.siteSettings.enable_experimental_topic_timeline}}
             <GlimmerTopicTimeline
               @info={{info}}
               @model={{this.model}}
@@ -291,12 +295,16 @@
             @expanded={{info.topicProgressExpanded}}
             @jumpToPost={{action "jumpToPost"}}
           >
-            <PluginOutlet
-              @name="before-topic-progress"
-              @tagName="span"
-              @connectorTagName="div"
-              @args={{hash model=this.model jumpToPost=(action "jumpToPost")}}
-            />
+            <span>
+              <PluginOutlet
+                @name="before-topic-progress"
+                @connectorTagName="div"
+                @outletArgs={{hash
+                  model=this.model
+                  jumpToPost=(action "jumpToPost")
+                }}
+              />
+            </span>
             <TopicAdminMenuButton
               @topic={{this.model}}
               @openUpwards="true"
@@ -329,12 +337,13 @@
               @condition={{this.model.postStream.loadingAbove}}
             />
 
-            <PluginOutlet
-              @name="topic-above-posts"
-              @tagName="span"
-              @connectorTagName="div"
-              @args={{hash model=this.model}}
-            />
+            <span>
+              <PluginOutlet
+                @name="topic-above-posts"
+                @connectorTagName="div"
+                @outletArgs={{hash model=this.model}}
+              />
+            </span>
 
             {{#unless this.model.postStream.loadingFilter}}
               <ScrollingPostStream
@@ -519,12 +528,13 @@
         <SignupCta />
       {{else}}
         {{#if this.currentUser}}
-          <PluginOutlet
-            @name="topic-above-footer-buttons"
-            @tagName="span"
-            @connectorTagName="div"
-            @args={{hash model=this.model}}
-          />
+          <span>
+            <PluginOutlet
+              @name="topic-above-footer-buttons"
+              @connectorTagName="div"
+              @outletArgs={{hash model=this.model}}
+            />
+          </span>
 
           <TopicFooterButtons
             @topic={{this.model}}
@@ -560,12 +570,13 @@
         {{/if}}
       {{/if}}
 
-      <PluginOutlet
-        @name="topic-above-suggested"
-        @tagName="span"
-        @connectorTagName="div"
-        @args={{hash model=this.model}}
-      />
+      <span>
+        <PluginOutlet
+          @name="topic-above-suggested"
+          @connectorTagName="div"
+          @outletArgs={{hash model=this.model}}
+        />
+      </span>
       <div
         class="{{if
             this.model.relatedMessages.length

@@ -120,9 +120,19 @@ acceptance("User menu", function (needs) {
 
   test("clicking on user menu items", async function (assert) {
     updateCurrentUser({ reviewable_count: 1 });
+
     await visit("/");
     await click(".d-header-icons .current-user");
     await click("#user-menu-button-review-queue");
+
+    assert.strictEqual(
+      query(
+        "#user-menu-button-review-queue .badge-notification"
+      ).textContent.trim(),
+      "8",
+      "updates user's reviewable count based on request's response"
+    );
+
     await click("#quick-access-review-queue li.reviewable.pending a");
 
     assert.strictEqual(

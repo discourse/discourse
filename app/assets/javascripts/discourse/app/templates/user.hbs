@@ -1,7 +1,7 @@
 <PluginOutlet
   @name="above-user-profile"
   @connectorTagName="div"
-  @args={{hash model=this.model}}
+  @outletArgs={{hash model=this.model}}
 />
 <div
   class="container
@@ -111,7 +111,7 @@
         <div class="primary">
           <PluginOutlet
             @name="before-user-profile-avatar"
-            @args={{hash model=this.model}}
+            @outletArgs={{hash model=this.model}}
           />
           <UserProfileAvatar @user={{this.model}} @tagName="" />
           <div class="primary-textual">
@@ -146,12 +146,13 @@
                   class="user-profile-names__title"
                 >{{this.model.title}}</div>
               {{/if}}
-              <PluginOutlet
-                @name="user-post-names"
-                @tagName="span"
-                @connectorTagName="div"
-                @args={{hash model=this.model}}
-              />
+              <span>
+                <PluginOutlet
+                  @name="user-post-names"
+                  @connectorTagName="div"
+                  @outletArgs={{hash model=this.model}}
+                />
+              </span>
             </div>
 
             {{#if this.showFeaturedTopic}}
@@ -178,9 +179,10 @@
                 >{{d-icon "map-marker-alt"~}}
                   {{this.model.location}}</div>{{/if}}
               {{#if this.model.website_name}}
-                <div class="user-profile-website">{{d-icon "globe"~}}
+                <div class="user-profile-website">
+                  {{! template-lint-disable link-rel-noopener }}
+                  {{d-icon "globe"~}}
                   {{#if this.linkWebsite~}}
-                    {{~! template-lint-disable ~}}
                     <a
                       href={{this.model.website}}
                       rel="noopener {{unless
@@ -194,14 +196,16 @@
                       title={{this.model.website}}
                     >{{this.model.website_name}}</span>
                   {{/if}}
+                  {{! template-lint-enable link-rel-noopener }}
                 </div>
               {{/if}}
-              <PluginOutlet
-                @name="user-location-and-website"
-                @tagName="span"
-                @connectorTagName="div"
-                @args={{hash model=this.model}}
-              />
+              <span>
+                <PluginOutlet
+                  @name="user-location-and-website"
+                  @connectorTagName="div"
+                  @outletArgs={{hash model=this.model}}
+                />
+              </span>
             </div>
 
             <div class="bio">
@@ -250,24 +254,26 @@
                   {{/if}}
                 {{/each}}
 
-                <PluginOutlet
-                  @name="user-profile-public-fields"
-                  @tagName="span"
-                  @connectorTagName="div"
-                  @args={{hash
-                    publicUserFields=this.publicUserFields
-                    model=this.model
-                  }}
-                />
+                <span>
+                  <PluginOutlet
+                    @name="user-profile-public-fields"
+                    @connectorTagName="div"
+                    @outletArgs={{hash
+                      publicUserFields=this.publicUserFields
+                      model=this.model
+                    }}
+                  />
+                </span>
               </div>
             {{/if}}
 
-            <PluginOutlet
-              @name="user-profile-primary"
-              @tagName="span"
-              @connectorTagName="div"
-              @args={{hash model=this.model}}
-            />
+            <span>
+              <PluginOutlet
+                @name="user-profile-primary"
+                @connectorTagName="div"
+                @outletArgs={{hash model=this.model}}
+              />
+            </span>
           </div>
 
           <section class="controls">
@@ -307,7 +313,7 @@
               <PluginOutlet
                 @name="user-profile-controls"
                 @connectorTagName="li"
-                @args={{hash model=this.model}}
+                @outletArgs={{hash model=this.model}}
               />
 
               {{#if this.canExpandProfile}}
@@ -328,7 +334,7 @@
         </div>
         <PluginOutlet
           @name="user-profile-above-collapsed-info"
-          @args={{hash model=this.model collapsedInfo=this.collapsedInfo}}
+          @outletArgs={{hash model=this.model collapsedInfo=this.collapsedInfo}}
         />
         {{#unless this.collapsedInfo}}
           <div class="secondary" id="collapsed-info-panel">
@@ -418,7 +424,7 @@
             <PluginOutlet
               @name="user-profile-secondary"
               @connectorTagName="div"
-              @args={{hash model=this.model}}
+              @outletArgs={{hash model=this.model}}
             />
           </div>
         {{/unless}}
@@ -487,7 +493,7 @@
             <PluginOutlet
               @name="user-main-nav"
               @connectorTagName="li"
-              @args={{hash model=this.model}}
+              @outletArgs={{hash model=this.model}}
             />
 
             {{#if this.model.can_edit}}

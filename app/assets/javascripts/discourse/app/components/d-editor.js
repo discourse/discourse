@@ -276,6 +276,11 @@ export default Component.extend(TextareaTextManipulation, {
     this._itsatrap.bind("tab", () => this.indentSelection("right"));
     this._itsatrap.bind("shift+tab", () => this.indentSelection("left"));
 
+    const mac = /Mac|iPod|iPhone|iPad/.test(navigator.platform);
+    const mod = mac ? "meta" : "ctrl";
+
+    this._itsatrap.bind(`${mod}+shift+.`, () => this.send("insertCurrentTime"));
+
     // disable clicking on links in the preview
     this.element
       .querySelector(".d-editor-preview")
@@ -761,6 +766,15 @@ export default Component.extend(TextareaTextManipulation, {
           );
         }
       }
+    },
+
+    insertCurrentTime() {
+      const sel = this.getSelected("", { lineVal: true });
+      const timezone = this.currentUser.user_option.timezone;
+      const time = moment().format("HH:mm:ss");
+      const date = moment().format("YYYY-MM-DD");
+
+      this.addText(sel, `[date=${date} time=${time} timezone="${timezone}"]`);
     },
 
     focusIn() {

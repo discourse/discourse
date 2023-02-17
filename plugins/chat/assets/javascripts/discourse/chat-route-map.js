@@ -5,15 +5,18 @@ export default function () {
       path: "/channel/:channelId/:channelTitle",
     });
 
+    this.route("channel", { path: "/c/:channelTitle/:channelId" }, function () {
+      this.route("near-message", { path: "/:messageId" });
+      this.route("thread", { path: "/t/:threadId" });
+    });
+
     this.route(
-      "channel",
-      { path: "/c/:channelTitle/:channelId/" },
+      "channel.info",
+      { path: "/c/:channelTitle/:channelId/info" },
       function () {
-        this.route("info", { path: "/info" }, function () {
-          this.route("about", { path: "/about" });
-          this.route("members", { path: "/members" });
-          this.route("settings", { path: "/settings" });
-        });
+        this.route("about", { path: "/about" });
+        this.route("members", { path: "/members" });
+        this.route("settings", { path: "/settings" });
       }
     );
 

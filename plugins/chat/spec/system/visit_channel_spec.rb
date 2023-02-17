@@ -69,7 +69,7 @@ RSpec.describe "Visit channel", type: :system, js: true do
 
       context "when loading a non existing message of a channel" do
         it "shows an error" do
-          visit("/chat/c/-/#{category_channel_1.id}?messageId=-999")
+          visit("/chat/c/-/#{category_channel_1.id}/-999")
 
           expect(page).to have_content(I18n.t("not_found"))
         end

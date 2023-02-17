@@ -36,6 +36,10 @@ class ChatChannel < ActiveRecord::Base
   delegate :empty?, to: :chat_messages, prefix: true
 
   class << self
+    def editable_statuses
+      statuses.filter { |k, _| !%w[read_only archived].include?(k) }
+    end
+
     def public_channel_chatable_types
       ["Category"]
     end
@@ -164,6 +168,7 @@ end
 #  user_count_stale             :boolean          default(FALSE), not null
 #  slug                         :string
 #  type                         :string
+#  threading_enabled            :boolean          default(FALSE), not null
 #
 # Indexes
 #

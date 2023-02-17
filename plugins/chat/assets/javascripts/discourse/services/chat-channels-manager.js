@@ -99,7 +99,7 @@ export default class ChatChannelsManager extends Service {
         (channel) =>
           channel.isCategoryChannel && channel.currentUserMembership.following
       )
-      .sort((a, b) => a.title.localeCompare(b.title));
+      .sort((a, b) => a?.slug?.localeCompare?.(b?.slug));
   }
 
   get directMessageChannels() {

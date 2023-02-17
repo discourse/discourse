@@ -56,7 +56,6 @@ hr:
         instructions: "Zatvaranje kanala onemogućuje korisnicima koji nisu zaposlenici da šalju nove poruke ili uređuju postojeće poruke. Jeste li sigurni da želite zatvoriti ovaj kanal?"
       channel_delete:
         title: "Izbriši kanal"
-        instructions: "<p>Briše <strong>%{name}</strong> kanal i povijest razgovora. Sve poruke i srodni podaci, kao što su reakcije i prijenosi, trajno će biti izbrisani. Ako želite sačuvati povijest kanala i raspada ga, možda želite arhivirati kanal umjesto.</p> <p>Jeste li sigurni da želite <strong>trajno izbrisati</strong> kanal? Da biste potvrdili, upišite naziv kanala u okvir ispod.</p>"
         confirm: "Razumijem posljedice, obriši kanal"
         confirm_channel_name: "Unesite naziv kanala"
         process_started: "Započeo je proces brisanja kanala. Ovaj modal će se uskoro zatvoriti, više nigdje nećete vidjeti izbrisani kanal."

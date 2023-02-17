@@ -1,38 +1,22 @@
 import DiscourseRoute from "discourse/routes/discourse";
+import withChatChannel from "./chat-channel-decorator";
 import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
-import { schedule } from "@ember/runloop";
 
+@withChatChannel
 export default class ChatChannelRoute extends DiscourseRoute {
   @service chat;
-  @service router;
-  @service chatChannelsManager;
-
-  async model(params) {
-    return this.chatChannelsManager.find(params.channelId);
-  }
-
-  afterModel(model) {
-    this.chat.setActiveChannel(model);
-
-    const { channelTitle, messageId } = this.paramsFor(this.routeName);
-
-    if (channelTitle !== model.slugifiedTitle) {
-      this.router.replaceWith("chat.channel.index", ...model.routeModels, {
-        queryParams: { messageId },
-      });
-    }
-  }
+  @service chatStateManager;
 
   @action
-  didTransition() {
-    const { channelId, messageId } = this.paramsFor(this.routeName);
-    if (channelId && messageId) {
-      schedule("afterRender", () => {
-        this.chat.openChannelAtMessage(channelId, messageId);
-        this.controller.set("messageId", null); // clear the query param
-      });
+  willTransition(transition) {
+    this.chat.activeChannel.activeThread = null;
+    this.chatStateManager.closeSidePanel();
+
+    if (!transition?.to?.name?.startsWith("chat.")) {
+      this.chatStateManager.storeChatURL();
+      this.chat.activeChannel = null;
+      this.chat.updatePresence();
     }
-    return true;
   }
 }

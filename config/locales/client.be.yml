@@ -77,8 +77,6 @@ be:
       close: "схаваць"
     emails_are_disabled: "Адпраўка паведамленняў па электроннай пошце было глабальна адключана адміністратарам. Ні адно апавяшчэнне па электроннай пошце не будзе даслана."
     bootstrap_invite_button_title: "Адправіць запрашэнні"
-    themes:
-      default_description: "Default"
     s3:
       regions:
         ap_northeast_1: "Азія (Токіа)"
@@ -161,7 +159,6 @@ be:
       title: "Абранае"
       clear_bookmarks: "Выдаліць з абранага"
       help:
-        bookmark: "Націсніце каб закласці першы паведамленне ў гэтай тэме"
         unbookmark: "Націсніце каб выдаліць усе закладкі ў гэтай тэме"
     bookmarks:
       not_bookmarked: "закладка гэты пост"
@@ -547,7 +544,6 @@ be:
       email:
         title: "Электронная пошта"
         primary_label: "асноўнай"
-        resent_label: "Ліст адпраўлены"
         update_email: "Змяненне адрасы электроннай пошты"
         invalid: "Калі ласка, увядзіце верны email"
       associated_accounts:
@@ -813,8 +809,6 @@ be:
         title_missing: "Загаловак неабходна"
         category_missing: "Вы павінны выбраць катэгорыю"
       save_edit: "захаваць змены"
-      reply_original: "Адказаць у пачатковай тэме"
-      reply_here: "Адказаць тут"
       reply: "Адказаць"
       cancel: "Адмяніць"
       create_topic: "Стварыць Тэму"
@@ -933,7 +927,6 @@ be:
         close_topics: "Закрыць тэму"
         archive_topics: "Заархіваваныя тэмы"
         move_messages_to_inbox: "Перамясціць у тэчцы Уваходныя"
-        notification_level: "Натыфікацыі..."
       none:
         unread: "У вас няма непрачытаных тэм."
         new: "У вас няма новых тэм."
@@ -976,8 +969,6 @@ be:
       back_to_list: "Вярнуцца да спісу тым"
       options: "Налады тэмы"
       show_links: "паказаць спасылкі ў гэтай тэме"
-      jump_reply_up: перайсці да больш ранняй адказы
-      jump_reply_down: перайсці да больш позняй адказы
       deleted: "Тэма была выдаленая"
       slow_mode_update:
         enable: "Уключыць"
@@ -1084,7 +1075,6 @@ be:
         like: "упадабаць гэты пост"
         edit_action: "Рэдагаваць"
         more: "Болей"
-        grant_badge: "даць Значок..."
         delete_topic: "выдаліць тэму"
       actions:
         people:
@@ -1178,7 +1168,6 @@ be:
         email: "Электронная пошта"
     flagging:
       action: "Пазначыць запіс"
-      take_action: "прыняць меры..."
       take_action_options:
         default:
           title: "прыняць меры"
@@ -1349,6 +1338,12 @@ be:
       more: "Больш"
       all_categories: "Усе катэгорыі"
       sections:
+        custom:
+          save: "захаваць"
+          delete: "выдаляць"
+          links:
+            icon: "Абразка"
+            name: "імя"
         about:
           header_link_text: "Аб тэме"
         messages:
@@ -1465,7 +1460,6 @@ be:
         user: "Карыстальнік"
         title: "API"
         created: створаны
-        never_used: (ніколі)
         generate: "згенераваць"
         revoke: "Адклікнуць"
         all_users: "Усе карыстальнікі"
@@ -1662,9 +1656,6 @@ be:
             user_placeholder: "username"
             address_placeholder: "name@example.com"
             type_placeholder: "digest, signup ..."
-      moderation_history:
-        actions:
-          delete_topic: "Тэма выдаленая"
       logs:
         title: "Логі"
         action: "дзеянне"
@@ -1755,6 +1746,21 @@ be:
         form:
           add: "дадаць"
           success: "поспех"
+      form_templates:
+        nav_title: "шаблоны"
+        list_table:
+          headings:
+            name: "імя"
+            actions: "дзеянні"
+        view_template:
+          close: "зачыніць"
+          edit: "рэдагаваць"
+          delete: "выдаляць"
+        new_template_form:
+          submit: "захаваць"
+          cancel: "адмяніць"
+        quick_insert_fields:
+          add_new_field: "дадаць"
       impersonate:
         title: "ўвасобіцца"
         not_found: "Карыстача не ўдалося знайсці."
@@ -1789,7 +1795,6 @@ be:
         suspended: "Прыпынена?"
         show_admin_profile: "Адміністратар"
         show_public_profile: "Паказаць публічны профіль"
-        impersonate: "ўвасобіцца"
         ip_lookup: "пошук IP"
         log_out: "Выйсці"
         logged_out: "Карыстальнік выйшаў з сістэмы на ўсіх прыладах"
@@ -1964,6 +1969,7 @@ be:
         no_user_badges: " %{Name} не атрымліваў ні аднаго."
         no_badges: Тут няма значкоў, якія могуць быць прадастаўлены.
         allow_title: Дазволіць выкарыстанне значкоў як званняў
+        disabled: адключана
         icon: Абразка
         image: Выява
         trigger: Трыггер старту

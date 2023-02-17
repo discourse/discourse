@@ -112,9 +112,8 @@ input.channel-members-view__search-input {
   align-items: center;
   padding: 0.5rem 0 0.5rem 1px;
 
-  &:hover {
-    background-color: var(--tertiary-very-low);
-    border-radius: 0.25rem;
+  &:not(:last-child) {
+    border-bottom: 1px solid var(--primary-low);
   }
 
   .chat-user-avatar {

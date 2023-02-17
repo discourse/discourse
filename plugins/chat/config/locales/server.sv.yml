@@ -64,6 +64,7 @@ sv:
       delete_channel_failed: "Det gick inte att ta bort kanalen, försök igen."
       minimum_length_not_met: "Meddelandet är för kort, måste ha minst %{minimum} tecken."
       message_too_long: "Meddelandet är för långt, måste ha högst %{maximum} tecken."
+      draft_too_long: "Utkastet är för långt."
       max_reactions_limit_reached: "Nya reaktioner är inte tillåtna för detta meddelande."
       message_move_invalid_channel: "Käll- och destinationskanalen måste vara offentliga kanaler."
       message_move_no_messages_found: "Inga meddelanden hittades med de angivna meddelande-ID:n."
@@ -77,6 +78,7 @@ sv:
       over_chat_max_direct_message_users:
         one: "Du kan bara skapa ett direktmeddelande med dig själv."
         other: "Du kan inte skapa ett direktmeddelande med fler än %{count} andra användare."
+      original_message_not_found: "Det första meddelandet i meddelandekedjan som du svarar på kan inte hittas eller har tagits bort."
     reviewables:
       message_already_handled: "Tack, men vi har redan granskat det här meddelandet och beslutat att det inte behöver flaggas igen."
       actions:

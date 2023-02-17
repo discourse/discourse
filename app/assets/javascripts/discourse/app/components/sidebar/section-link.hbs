@@ -25,13 +25,13 @@
         </span>
       </a>
     {{else}}
-      <Sidebar::SectionLinkTo
-        @class={{this.classNames}}
+      <LinkTo
+        class={{this.classNames}}
         @route={{@route}}
-        @query={{@query}}
+        @query={{or @query (hash)}}
         @models={{this.models}}
         @current-when={{@currentWhen}}
-        @title={{@title}}
+        title={{@title}}
       >
 
         <Sidebar::SectionLinkPrefix
@@ -86,7 +86,7 @@
             </button>
           </span>
         {{/if}}
-      </Sidebar::SectionLinkTo>
+      </LinkTo>
     {{/if}}
   </li>
 {{/if}}

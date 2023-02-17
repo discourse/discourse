@@ -38,9 +38,6 @@ tr_TR:
       browse_all_channels: "Tüm kanallara göz atın"
       move_to_channel:
         title: "Mesajları kanala taşı"
-        instructions:
-          one: "<strong>%{count}</strong> mesajı taşıyorsunuz. Bir hedef kanal seçin. Bu mesajın taşındığını belirtmek için <strong>%{channelTitle}</strong> adlı kanalda bir yer tutucu mesaj oluşturulacak."
-          other: "<strong>%{count}</strong> mesajı taşıyorsunuz. Bir hedef kanal seçin. Bu mesajın taşındığını belirtmek için <strong>%{channelTitle}</strong> adlı kanalda bir yer tutucu mesaj oluşturulacak."
         confirm_move: "Mesajları Taşı"
       channel_settings:
         title: "Kanal ayarları"
@@ -71,7 +68,6 @@ tr_TR:
         instructions: "Kanalın kapatılması, personel olmayan kullanıcıların yeni mesaj göndermesini veya mevcut mesajları düzenlemesini engeller. Bu kanalı kapatmak istediğinizden emin misiniz?"
       channel_delete:
         title: "Kanalı Sil"
-        instructions: "<p> <strong>%{name}</strong> adlı kanalı ve sohbet geçmişini siler. Tepkiler ve yüklemeler gibi tüm mesajlar ve ilgili veriler kalıcı olarak silinir. Kanal geçmişini korumak ve kullanımdan kaldırmak istiyorsanız bunun yerine kanalı arşivlemek isteyebilirsiniz.</p> <p> Kanalı <strong>kalıcı olarak silmek</strong> istediğinizden emin misiniz? Onaylamak için aşağıdaki kutuya kanalın adını yazın.</p>"
         confirm: "Sonuçları anlıyorum, kanalı sil"
         confirm_channel_name: "Kanal adı girin"
         process_started: "Kanalı silme işlemi başladı. Bu mod kısa bir süre sonra kapanacak, silinen kanalı artık hiçbir yerde görmeyeceksiniz."
@@ -237,6 +233,8 @@ tr_TR:
           about: Hakkında
           members: Üyeler
           settings: Ayarlar
+      channel_edit_name_slug_modal:
+        name: Kanal adı
       channel_edit_description_modal:
         title: Açıklamayı düzenle
         input_placeholder: Açıklama ekle

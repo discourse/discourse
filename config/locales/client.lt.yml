@@ -114,11 +114,6 @@ lt:
           few: "%{count} dienos"
           many: "%{count} dienų"
           other: "%{count} dienų"
-        x_months:
-          one: "%{count} mėnuo"
-          few: "%{count} mėnesių"
-          many: "%{count} mėnesių"
-          other: "%{count} mėnesių"
         date_year: "YYYY-MM-D"
       medium_with_ago:
         x_minutes:
@@ -328,11 +323,9 @@ lt:
       edit_bookmark: "Redaguoti žymę"
       clear_bookmarks: "Pašalinti žymes"
       help:
-        bookmark: "Paspausk, kad pažymėtum pirmą įrašą šioje temoje"
-        edit_bookmark: "Spustelėkite, jei norite redaguoti šios temos žymę"
         edit_bookmark_for_topic: "Spustelėkite, jei norite redaguoti šios temos žymę"
         unbookmark: "Paspausk, kad pašalintum visas žymęs šioje temoje"
-        unbookmark_with_reminder: "Spustelėkite, kad pašalintumėte visas šios temos žymes ir priminimus."
+        unbookmark_with_reminder: "Spustelėkite, kad pašalintumėte visas šios temos žymes ir priminimus"
     bookmarks:
       created: "Jūs pažymėjote šį įrašą. %{name}"
       create: "Sukurti žymę"
@@ -374,21 +367,6 @@ lt:
         confirm: "Jūs turite nebaigtą juodraštį šiai tema. Ką norėtumėte daryti su juo?"
         yes_value: "Išmesti"
         no_value: "Tęsti redagavimą"
-    topic_count_categories:
-      one: "Peržiūrėti %{count} naują arba atnaujintą temą"
-      few: "Peržiūrėkite %{count} naujų ar atnaujintų temų"
-      many: "Peržiūrėkite %{count} naujų ar atnaujintų temų"
-      other: "Peržiūrėkite %{count} naujų ar atnaujintų temų"
-    topic_count_latest:
-      one: "Peržiūrėti %{count} naują arba atnaujintą temą"
-      few: "Peržiūrėkite %{count} naujų ar atnaujintų temų"
-      many: "Peržiūrėkite %{count} naujų ar atnaujintų temų"
-      other: "Peržiūrėkite %{count} naujų ar atnaujintų temų"
-    topic_count_unseen:
-      one: "Peržiūrėti %{count} naują arba atnaujintą temą"
-      few: "Peržiūrėkite %{count} naujų ar atnaujintų temų"
-      many: "Peržiūrėkite %{count} naujų ar atnaujintų temų"
-      other: "Peržiūrėkite %{count} naujų ar atnaujintų temų"
     topic_count_new:
       one: "Pamatyk %{count} naują temą"
       few: "Pamatyk %{count} naujas temas"
@@ -469,11 +447,6 @@ lt:
       grouped_by_topic: "Grupuojama pagal temą"
       none: "Nėra elementų, kuriuos reikia peržiūrėti."
       view_pending: "laukiama peržiūros"
-      topic_has_pending:
-        one: "Šioje temoje yra <b>%{count}</b> pranešimas, laukiantis patvirtinimo"
-        few: "Šioje temoje yra <b>%{count}</b> pranešimų, laukiančių patvirtinimo"
-        many: "Šioje temoje yra <b>%{count}</b> pranešimų, laukiančių patvirtinimo"
-        other: "Šioje temoje yra <b>%{count}</b> pranešimų, laukiančių patvirtinimo"
       title: "Peržiūra"
       topic: "Tema:"
       filtered_topic: "Išfiltravote turinį, kurį galima peržiūrėti vienoje temoje."
@@ -490,22 +463,6 @@ lt:
         name: "Vardas"
         fields: "Laukai"
         reject_reason: "Priežastis"
-      user_percentage:
-        agreed:
-          one: "%{count}% sutinka"
-          few: "%{count}% sutinka"
-          many: "%{count}% sutinka"
-          other: "%{count}% sutinka"
-        disagreed:
-          one: "%{count}% nesutinka"
-          few: "%{count}% nesutinka"
-          many: "%{count}% nesutinka"
-          other: "%{count}% nesutinka"
-        ignored:
-          one: "%{count}% ignoruoja"
-          few: "%{count}% ignoruoja"
-          many: "%{count}% ignoruoja"
-          other: "%{count}% ignoruoja"
       topics:
         topic: "Tema"
         reviewable_count: "Skaičiuoti"
@@ -593,16 +550,6 @@ lt:
         title: "Kodėl atmetate šį vartotoją?"
         send_email: "Siųsti atmetimo laišką"
     relative_time_picker:
-      minutes:
-        one: "minutė"
-        few: "minutės"
-        many: "minutės"
-        other: "minutės"
-      hours:
-        one: "valanda"
-        few: "valandos"
-        many: "valandos"
-        other: "valandos"
       days:
         one: "diena"
         few: "dienos"
@@ -954,19 +901,9 @@ lt:
         few: "%{count} temos"
         many: "%{count}temų"
         other: "%{count}temos"
-      topic_stat:
-        one: "%{number} / %{unit}"
-        few: "%{number} / %{unit}"
-        many: "%{number} / %{unit}"
-        other: "%{number} / %{unit}"
       topic_stat_unit:
         week: "savaitė"
         month: "mėnesis"
-      topic_stat_all_time:
-        one: "Iš viso %{number}"
-        few: "Iš viso %{number}"
-        many: "Iš viso %{number}"
-        other: "Iš viso %{number}"
       n_more: "Kategorijos (dar %{count} ) ..."
     ip_lookup:
       title: IP adreso peržiųra
@@ -993,11 +930,6 @@ lt:
       profile: "Profilis"
       mute: "Nutildyti"
       edit: "Redaguoti Nustatymus"
-      download_archive:
-        button_text: "Atsisiųsti viską"
-        confirm: "Ar tikrai norite atsisiųsti savo įrašus?"
-        success: "Eksportavimas pradėtas. Kai procesas bus baigtas, gausite pranešimą"
-        rate_limit_error: "Įrašai gali būti atsiunčiami vieną kartą per dieną, prašome pakartoti operaciją rytoj."
       new_private_message: "Nauja žinutė"
       private_message: "Žinutės"
       private_messages: "Žinutės"
@@ -1553,16 +1485,6 @@ lt:
         time_read_title: "%{duration} (visas laikas)"
         recent_time_read: "paskutinis skaitymo laikas"
         recent_time_read_title: "%{duration} (per paskutines 60 dienų)"
-        topic_count:
-          one: "sukurta tema"
-          few: "sukurtos temos"
-          many: "sukurtos temos"
-          other: "sukurtos temos"
-        post_count:
-          one: "įrašas sukurtas"
-          few: "įrašai sukurti"
-          many: "įrašai sukurti"
-          other: "įrašai sukurti"
         likes_given:
           one: "duota"
           few: "duota"
@@ -1573,16 +1495,6 @@ lt:
           few: "gauta"
           many: "gauta"
           other: "gauta"
-        days_visited:
-          one: "aplankyta diena"
-          few: "apsilankymo diena"
-          many: "apsilankymo dienų"
-          other: "apsilankymo dienų"
-        topics_entered:
-          one: "tema peržiūrėta"
-          few: "peržiūrėtos temos"
-          many: "peržiūrėtos temos"
-          other: "peržiūrėtos temos"
         bookmark_count:
           one: "žymės"
           few: "žymės"
@@ -1803,7 +1715,6 @@ lt:
       twitter:
         name: "Twitter"
         title: "Prisijunkite naudodami “Twitter”"
-        sr_title: "Prisijunkite naudodami “Twitter”"
       instagram:
         name: "Instagram"
         title: "Prisijunkite naudodami “Instagram”"
@@ -1860,27 +1771,12 @@ lt:
         few: "%{count} temos šioje kategorijoje"
         many: "%{count} temų šioje kategorijoje"
         other: "%{count} temos šioje kategorijoje"
-      plus_subcategories_title:
-        one: "%{name} ir viena subkategorija"
-        few: "%{name} ir %{count} subkategorijos"
-        many: "%{name} ir %{count} subkategorijos"
-        other: "%{name} ir %{count} subkategorijos"
-      plus_subcategories:
-        one: "+ %{count} subkategorija"
-        few: "+ %{count} subkategorijos"
-        many: "+ %{count} subkategorijos"
-        other: "+ %{count} subkategorijos"
     select_kit:
       delete_item: "Ištrinti %{name}"
       filter_by: "Filtruoti pagal: %{name}"
       select_to_filter: "Pasirinkite vertę, kurią norite filtruoti"
       default_header_text: Pasirinkti...
       no_content: Atitikmenų nerasta
-      results_count:
-        one: "%{count} rezultatas"
-        few: "%{count} rezultatai"
-        many: "%{count} rezultatai"
-        other: "%{count} rezultatai"
       filter_placeholder: Paieška...
       filter_placeholder_with_any: Ieškoti arba sukurti...
       create: "Sukurti: '%{content}'"
@@ -1942,11 +1838,6 @@ lt:
       similar_topics: "Jūsų tema panaši į..."
       drafts_offline: "juodraščiai ne ryšio zonoje"
       edit_conflict: "redaguoti konfliktą"
-      group_mentioned:
-        one: "Paminėdami %{group}, jūs ketinate pranešti <a href='%{group_link}'>%{count} asmeniui</a> - ar esate tikri?"
-        few: "Minėdami %{group}, jūs ketinate pranešti <a href='%{group_link}'>%{count} žmonėms</a> - ar esate tikri?"
-        many: "Minėdami %{group}, jūs ketinate pranešti <a href='%{group_link}'>%{count} žmonėms</a> - ar esate tikri?"
-        other: "Minėdami %{group}, jūs ketinate pranešti <a href='%{group_link}'>%{count} žmonėms</a> - ar esate tikri?"
       cannot_see_mention:
         category: "Paminėjote @%{username} , tačiau jiems nebus pranešta, nes jie neturi prieigos prie šios kategorijos. Turėsite juos įtraukti į grupę, kuri turi prieigą prie šios kategorijos."
         private: "Paminėjote @%{username} , tačiau jiems nebus pranešta, nes jie negali matyti šio asmeninio pranešimo. Turėsite juos pakviesti į šią asmeninę žinutę."
@@ -1961,8 +1852,6 @@ lt:
         topic_template_not_modified: "Redaguodami temos šabloną, pridėkite prie temos išsamią informaciją ir specifiką."
       save_edit: "Išsaugoti pakeitimus"
       overwrite_edit: "Perrašyti Redaguoti"
-      reply_original: "Atsakyti į Originalią Temą"
-      reply_here: "Atsakyti"
       reply: "Atsakyti"
       cancel: "Atšaukti"
       create_topic: "Sukurti Temą"
@@ -2059,11 +1948,6 @@ lt:
           few: "%{count}neskaitytos žinutės"
           many: "%{count}neskaitytų žinučių"
           other: "%{count}neskaitytos žinutės"
-        high_priority:
-          one: "%{count} neskaitytas aukšto prioriteto pranešimas"
-          few: "%{count} neskaitytų aukšto prioriteto pranešimų"
-          many: "%{count} neskaitytų aukšto prioriteto pranešimų"
-          other: "%{count} neskaitytų aukšto prioriteto pranešimų"
       title: "pranešimai kai paminimas @name , atsakomi tavo įrašai, temos, žinutės ir pan."
       none: "Šiuo metu neįmanoma pakrauti pranešimų."
       empty: "Pranešimų nėra"
@@ -2091,11 +1975,6 @@ lt:
         few: "%{username}, %{username2}ir %{count} kiti"
         many: "%{username}, %{username2} ir %{count}kitų"
         other: "%{username}, %{username2} ir %{count}kitų"
-      liked_consolidated_description:
-        one: "patiko %{count} jūsų įrašų"
-        few: "patiko %{count} jūsų įrašų"
-        many: "patiko %{count} jūsų įrašų"
-        other: "patiko %{count} jūsų įrašų"
       liked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
@@ -2228,7 +2107,6 @@ lt:
       tips:
         category_tag: "filtrai pagal kategoriją ar žymą"
         author: "filtruoti pagal įrašo autorių"
-        in: "filtruoti pagal metaduomenis (pvz. pavadinime)"
         status: "filtruoti pagal temos būseną"
         full_search: "paleidžiama viso puslapio paieška"
         full_search_key: "%{modifier} + Įveskite"
@@ -2318,25 +2196,10 @@ lt:
         delete: "Ištrinti temas"
         dismiss: "Praleisti"
         dismiss_read: "Praleisti visas neperskaitytas"
-        dismiss_read_with_selected:
-          one: "Atmesti %{count} neskaitytą"
-          few: "Atmesti %{count} neskaitytų"
-          many: "Atmesti %{count} neskaitytų"
-          other: "Atmesti %{count} neskaitytų"
         dismiss_button: "Praleisti..."
-        dismiss_button_with_selected:
-          one: "Atsisakyti (%{count})…"
-          few: "Atsisakyti (%{count})…"
-          many: "Atsisakyti (%{count})…"
-          other: "Atsisakyti (%{count})…"
         dismiss_tooltip: "Praleisti tik naujus įrašus ar nebesekti temos"
         also_dismiss_topics: "Nebesekti šių temų, kad jos niekada nebūtų rodomos, kaip neperskaitytos"
         dismiss_new: "Praleisti Naujas"
-        dismiss_new_with_selected:
-          one: "Atsisakyti naujo (%{count})"
-          few: "Atsisakyti naujo (%{count})"
-          many: "Atsisakyti naujo (%{count})"
-          other: "Atsisakyti naujo (%{count})"
         toggle: "perjungti temų pasirinkimus"
         actions: "Veiksmai"
         change_category: "Nustatyti kategoriją..."
@@ -2357,16 +2220,6 @@ lt:
         choose_append_tags: "Pasirinkite naujas žymas, kurias norite pridėti šioms temoms:"
         changed_tags: "Šių temų žymos buvo pakeistos."
         remove_tags: "Pašalinti visas žymes"
-        confirm_remove_tags:
-          one: "Visos žymos bus pašalintos iš šios temos. Ar esate tikras?"
-          few: "Visos žymės bus pašalintos iš %{count} temų. Ar esate tikras?"
-          many: "Visos žymės bus pašalintos iš %{count} temų. Ar esate tikras?"
-          other: "Visos žymės bus pašalintos iš <b>%{count}</b> temų. Ar esate tikras?"
-        progress:
-          one: "Pažanga: <strong>%{count}</strong> tema"
-          few: "Pažanga: <strong>%{count}</strong> temos"
-          many: "Pažanga: <strong>%{count}</strong> temos"
-          other: "Pažanga: <strong>%{count}</strong> temos"
       none:
         unread: "Jūs neturite neperskaitytų temų."
         unseen: "Jūs neturite nematytų temų."
@@ -2449,8 +2302,6 @@ lt:
       expand_details: "išplėsti temos informaciją"
       unread_indicator: "Nė vienas narys dar neperskaitė paskutinio šios temos įrašo."
       suggest_create_topic: Pasirengę <a href>pradėti naują pokalbį?</a>
-      jump_reply_up: Pereiti į ankstesnį atsakymą
-      jump_reply_down: Pereitį į sekantį atsakymą
       deleted: "Tema buvo ištrinta"
       slow_mode_update:
         title: "Lėtas režimas"
@@ -2521,16 +2372,6 @@ lt:
         auto_reminder: "Jums bus priminta apie šią temą %{timeLeft}."
         auto_delete_replies: "Atsakymai šia tema automatiškai ištrinami po %{duration}."
       auto_close_title: "Automatinio uždarymo nustatymai"
-      auto_close_immediate:
-        one: "Paskutinis įrašas temoje jau yra %{count} valandų, todėl tema bus nedelsiant uždaryta."
-        few: "Paskutinis įrašas temoje jau yra %{count} valandų, todėl tema bus nedelsiant uždaryta."
-        many: "Paskutinis įrašas temoje jau yra %{count} valandų, todėl tema bus nedelsiant uždaryta."
-        other: "Paskutinis įrašas temoje jau yra %{count} valandų, todėl tema bus nedelsiant uždaryta."
-      auto_close_momentarily:
-        one: "Paskutinis įrašas temoje jau yra %{count} valandų, todėl tema bus akimirksniu uždaryta."
-        few: "Paskutiniai įrašai temoje jau yra %{count} valandų, todėl temos bus akimirksniu uždaryta."
-        many: "Paskutiniai įrašai temoje jau yra %{count} valandų, todėl temos bus akimirksniu uždaryta."
-        other: "Paskutiniai įrašai temoje jau yra %{count} valandų, todėl temos bus akimirksniu uždaryta."
       timeline:
         back: "Atgal"
         back_description: "Grįžkite prie paskutinio neskaityto įrašo"
@@ -2618,11 +2459,6 @@ lt:
         help: "Pasidalink šios temos nuoroda"
         instructions: "Dalintis nuoroda šioje temoje:"
         copied: "Temos nuoroda nukopijuota."
-        restricted_groups:
-          one: "Matoma tik grupės nariams: %{groupNames}"
-          few: "Matoma tik grupių nariams: %{groupNames}"
-          many: "Matoma tik grupių nariams: %{groupNames}"
-          other: "Matoma tik grupių nariams: %{groupNames}"
         invite_users: "Kviesti"
       print:
         title: "Spausdinti"
@@ -2733,11 +2569,6 @@ lt:
         action: "pereiti prie esamo pranešimo"
         radio_label: "Esama žinutė"
         participants: "Dalyviai"
-        instructions:
-          one: "Pasirinkite pranešimą, į kurį norite perkelti tą įrašą."
-          few: "Pasirinkite pranešimą, į kurį norite perkelti tuos <b>%{count}</b> įrašus."
-          many: "Pasirinkite pranešimą, į kurį norite perkelti tuos <b>%{count}</b> įrašus."
-          other: "Pasirinkite pranešimą, į kurį norite perkelti tuos <b>%{count}</b> įrašus."
       merge_posts:
         title: "Sulieti pasirinktus įrašus"
         action: "sulieti pasirinktus įrašus"
@@ -2760,11 +2591,6 @@ lt:
         action: "pakeisti valdymo teises"
         error: "Įvyko klaida keičiant įrašų valdymo teisę."
         placeholder: "naujojo valdytojo vartotojo vardas"
-        instructions_without_old_user:
-          one: "Pasirinkite naują įrašo savininką"
-          few: "Prašome pasirinkti naujų %{count} įrašų savininką"
-          many: "Prašome pasirinkti naujų %{count} įrašų savininką"
-          other: "Prašome pasirinkti naujų %{count} įrašų savininką"
       change_timestamp:
         action: "pakeisti laiko formatą"
         invalid_timestamp: "Laiko formatas negali būti ateityje."
@@ -2848,16 +2674,6 @@ lt:
         few: "%{count} asmenims patiko šis pranešimas. Spustelėkite, jei norite peržiūrėti"
         many: "%{count} žmonių patiko šis įrašas. Spustelėkite norėdami peržiūrėti"
         other: "%{count} žmonėms patiko šis pranešimas. Spustelėkite, jei norite peržiūrėti"
-      filtered_replies_hint:
-        one: "Peržiūrėkite šį įrašą ir jo atsakymą"
-        few: "Peržiūrėkite šį įrašą ir jo %{count} atsakymus"
-        many: "Peržiūrėkite šį įrašą ir jo %{count} atsakymus"
-        other: "Peržiūrėkite šį įrašą ir jo %{count} atsakymus"
-      filtered_replies_viewing:
-        one: "Peržiūrėti %{count} atsakymą į"
-        few: "Peržiūrėti %{count} atsakymus į"
-        many: "Peržiūrėti %{count} atsakymus į"
-        other: "Peržiūrėti %{count} atsakymus į"
       in_reply_to: "Įkelti pirminį įrašą"
       view_all_posts: "Peržiūrėti visus įrašus"
       errors:
@@ -2867,11 +2683,6 @@ lt:
         file_too_large: "Deja, failas per didelis (maksimalus dydis yra %{max_size_kb}kb). Kodėl neįkėlus didelio failo į bendrinimo debesyje paslaugą ir tuomet įklijuokite nuorodą?"
         file_too_large_humanized: "Deja, failas per didelis (maksimalus dydis yra %{max_size}kb). Kodėl neįkėlus didelio failo į bendrinimo debesyje paslaugą ir tuomet įklijuokite nuorodą?"
         too_many_uploads: "Atsiprašome, bet jūs galite įkelti tik vieną failą vienu metu."
-        too_many_dragged_and_dropped_files:
-          one: "Atsiprašome, galite įkelti tik %{count} failą vienu metu."
-          few: "Atsiprašome, galite įkelti tik %{count} failus vienu metu."
-          many: "Atsiprašome, galite įkelti tik %{count} failus vienu metu."
-          other: "Atsiprašome, galite įkelti tik %{count} failus vienu metu."
         upload_not_authorized: "Atsiprašome, failas, kurį bandote įkelti, nėra autorizuotas (įgalioti plėtiniai: %{authorized_extensions})."
         image_upload_not_allowed_for_new_user: "Atsiprašome, bet nauji vartotojai negali įkelti nuotraukų."
         attachment_upload_not_allowed_for_new_user: "Atsiprašome, bet nauji vartotojai negali įkelti priedų."
@@ -2932,11 +2743,6 @@ lt:
         unlock_post_description: "leisti paskelbusiam asmeniui redaguoti šį įrašą"
         delete_topic_disallowed_modal: "Neturite leidimo ištrinti šios temos. Jei tikrai norite, kad jis būtų ištrintas, kartu su argumentais pateikite vėliavą moderatoriui."
         delete_topic_disallowed: "neturite leidimo ištrinti šios temos"
-        delete_topic_confirm_modal:
-          one: "Ši tema šiuo metu turi daugiau nei %{count} peržiūrą ir gali būti populiari paieškos vieta. Ar tikrai norite visiškai ištrinti šią temą, o ne ją redaguoti, kad patobulintumėte?"
-          few: "Ši tema šiuo metu turi daugiau nei %{count} peržiūrų ir gali būti populiari paieškos vieta. Ar tikrai norite visiškai ištrinti šią temą, o ne ją redaguoti, kad patobulintumėte?"
-          many: "Ši tema šiuo metu turi daugiau nei %{count} peržiūrų ir gali būti populiari paieškos vieta. Ar tikrai norite visiškai ištrinti šią temą, o ne ją redaguoti, kad patobulintumėte?"
-          other: "Ši tema šiuo metu turi daugiau nei %{count} peržiūrų ir gali būti populiari paieškos vieta. Ar tikrai norite visiškai ištrinti šią temą, o ne ją redaguoti, kad patobulintumėte?"
         delete_topic_confirm_modal_yes: "Taip, ištrinti šią temą"
         delete_topic_confirm_modal_no: "Ne, palikti šią temą"
         delete_topic_error: "Ištrinant šią temą įvyko klaida"
@@ -2953,21 +2759,11 @@ lt:
             few: "mėgstate"
             many: "mėgstate"
             other: "mėgstate"
-          read:
-            one: "skaityti"
-            few: "skaityti"
-            many: "skaityti"
-            other: "skaityti"
           like_capped:
             one: "ir %{count}kitas mėgsta tai"
             few: "ir %{count}kitų mėgsta tai"
             many: "ir %{count}kitų mėgsta tai "
             other: "ir %{count} kitų mėgsta tai"
-          read_capped:
-            one: "ir %{count} kiti tai skaito"
-            few: "ir %{count} kiti tai skaito"
-            many: "ir %{count} kiti tai skaito"
-            other: "ir %{count} kiti tai skaito"
           sr_post_likers_list_description: "vartotojai, kuriems patiko šis pranešimas"
           sr_post_readers_list_description: "vartotojai, kurie perskaitė šį pranešimą"
         by_you:
@@ -3096,8 +2892,6 @@ lt:
       images: "Paveiksliukai"
       email_in: " papildomas naujas el. pašto adresas:"
       email_in_allow_strangers: "Gauti el. laiškus iš anoniminių paskyrų neturinčių vartotojų "
-      email_in_disabled: "Naujų temų kūrimas per el. paštą yra negalimas Puslapio Nustatymuose. Jei nori skelbti naujas temas per el. paštą,"
-      email_in_disabled_click: 'nustatykite "email in" nustatymus.'
       mailinglist_mirror: "Kategorija atspindi adresatų sąrašą"
       show_subcategory_list: "Rodyti subkategorijų sąrašą virš šios kategorijos temų."
       read_only_banner: "Reklamjuostės tekstas, kai vartotojas negali sukurti temos šioje kategorijoje:"
@@ -3215,11 +3009,6 @@ lt:
           few: "liko %{count}..."
           many: "liko %{count}..."
           other: "liko %{count}..."
-        left:
-          one: "Liko %{count}"
-          few: "Liko %{count}"
-          many: "Liko %{count}"
-          other: "Liko %{count}"
     flagging_topic:
       title: "Ačiū, kad padedi padedi išlaikyti forumą civilizuotu!"
       action: "Temos su vėliavomis"
@@ -3538,39 +3327,19 @@ lt:
       changed: "žymės pakeistos:"
       tags: "Žymos"
       choose_for_topic: "pasirenkamos žymos"
-      choose_for_topic_required:
-        one: "pasirinkite bent %{count} žymę..."
-        few: "pasirinkite bent %{count} žymų..."
-        many: "pasirinkite bent %{count} žymų..."
-        other: "pasirinkite bent %{count} žymų..."
       info: "Informacija"
       default_info: "Ši žyma neapsiriboja jokiomis kategorijomis ir neturi sinonimų."
       staff_info: "Norėdami pridėti apribojimų, įtraukite šią žymą į <a href=%{basePath}/tag_groups>žymų grupę</a>."
       category_restricted: "Ši žyma skirta tik kategorijoms, prie kurių neturite prieigos teisės."
       synonyms: "Sinonimai"
       save: "Išsaugokite žymos pavadinimą ir aprašymą"
-      category_restrictions:
-        one: "Tai gali būti naudojama tik šioje kategorijoje:"
-        few: "Tai gali būti naudojama tik šiose kategorijose:"
-        many: "Tai gali būti naudojama tik šiose kategorijose:"
-        other: "Tai gali būti naudojama tik šiose kategorijose:"
       edit_synonyms: "Redaguoti sinonimus"
       add_synonyms_label: "Pridėti sinonimus:"
       add_synonyms: "Pridėti"
       remove_synonym: "Pašalinti sinonimą"
       delete_synonym_confirm: 'Ar tikrai norite ištrinti sinonimą "%{tag_name}“?'
       delete_tag: "Ištrinti žymą"
-      delete_confirm:
-        one: "Ar tikrai norite ištrinti šią žymą ir pašalinti ją iš %{count} temos, kuriai ji priskirta?"
-        few: "Ar tikrai norite ištrinti šią žymą ir pašalinti ją iš %{count} temų, kurioms ji priskirta?"
-        many: "Ar tikrai norite ištrinti šią žymą ir pašalinti ją iš %{count} temų, kurioms ji priskirta?"
-        other: "Ar tikrai norite ištrinti šią žymą ir pašalinti ją iš %{count} temų, kurioms ji priskirta?"
       delete_confirm_no_topics: "Ar tikrai norite ištrinti šią žymą?"
-      delete_confirm_synonyms:
-        one: "Jo sinonimas taip pat bus ištrintas."
-        few: "%{count} sinonimai taip pat bus ištrinti."
-        many: "%{count} sinonimai taip pat bus ištrinti."
-        other: "%{count} sinonimai taip pat bus ištrinti."
       edit_tag: "Redaguoti žymos pavadinimą ir aprašymą"
       description: "Aprašymas"
       sort_by: "Rūšiuoti pagal:"
@@ -3581,11 +3350,6 @@ lt:
       upload: "Įkelti žymas"
       upload_description: "Įkelkite csv failą, kad sukurtumėte masines žymas"
       upload_successful: "Žymos sėkmingai įkeltos"
-      delete_unused_confirmation:
-        one: "%{count} žyma bus ištrinta: %{tags}"
-        few: "%{count} žymų bus ištrintos: %{tags}"
-        many: "%{count} žymų bus ištrintos: %{tags}"
-        other: "%{count} žymų bus ištrintos: %{tags}"
       delete_no_unused_tags: "Nėra nepanaudotų žymių."
       tag_list_joiner: ", "
       delete_unused: "Ištrinkite nepanaudotas žymas"
@@ -3662,13 +3426,11 @@ lt:
       enabled: "Saugus režimas įjungtas, norėdami išeiti iš saugaus režimo uždarykite šį naršyklės langą"
     image_removed: "(vaizdas pašalintas)"
     pause_notifications:
-      remaining: "Liko %{remaining}"
       options:
         half_hour: "30 minučių"
         one_hour: "1 valanda"
         two_hours: "2 valandos"
         tomorrow: "Iki rytojaus"
-        custom: "Išskirtinės"
       set_schedule: "Nustatykite pranešimų tvarkaraštį"
     trust_levels:
       names:
@@ -3711,6 +3473,13 @@ lt:
       more: "Daugiau"
       all_categories: "Visos kategorijos"
       sections:
+        custom:
+          save: "Išsaugoti"
+          delete: "Pašalinti"
+          links:
+            icon: "Ikona"
+            name: "Vardas"
+            value: "nuoroda"
         about:
           header_link_text: "Apie"
         messages:
@@ -3749,7 +3518,6 @@ lt:
               content: "Mano Įrašai"
             review:
               content: "Peržiūra"
-    until: "Iki:"
   admin_js:
     type_to_filter: "įrašyk kažką dėl filtro..."
     admin:
@@ -3795,11 +3563,6 @@ lt:
         space_used_and_free: "%{usedSize} (%{freeSize} nemokama)"
         uploads: "Įkėlimai"
         backups: "Atsarginės kopijos"
-        backup_count:
-          one: "%{count} atsarginė kopija %{location}"
-          few: "%{count} atsarginių kopijų %{location}"
-          many: "%{count} atsarginių kopijų %{location}"
-          other: "%{count} atsarginių kopijų %{location}"
         lastest_backup: "Naujausi: %{date}"
         traffic_short: "Srautas"
         traffic: "Application web requests"
@@ -3890,11 +3653,6 @@ lt:
             effects: Efektai
             trust_levels_none: "Nieko"
             automatic_membership_email_domains: "Vartotojai, kurie užsiregistravo su el. paštu, kuris sutampa su šiame sąraše esančiu el. paštu bus automatiškai pridėti į šią grupę:"
-            automatic_membership_user_count:
-              one: "%{count} vartotojas turi naujus el. pašto domenus ir bus pridėtas prie grupės."
-              few: "%{count} vartotojų turi naujus el. pašto domenus ir bus įtraukti į grupę."
-              many: "%{count} vartotojų turi naujus el. pašto domenus ir bus įtraukti į grupę."
-              other: "%{count} vartotojų turi naujus el. pašto domenus ir bus įtraukti į grupę."
             automatic_membership_associated_groups: "Vartotojai, kurie yra čia išvardytos paslaugos grupės nariai, bus automatiškai įtraukti į šią grupę, kai jie prisijungs prie paslaugos."
             primary_group: "Automatiškai nustatyk pagrindinę grupę"
         name_placeholder: "Grupės pavadinimas, be tarpų, taisyklės kaip ir slapyvardžiui"
@@ -4048,19 +3806,8 @@ lt:
         events:
           none: "Nėra susijusių įvykių."
           redeliver: "Iš naujo pristatyti"
-          incoming:
-            one: "Yra naujas įvykis."
-            few: "Yra %{count} naujų įvykių."
-            many: "Yra %{count} naujų įvykių."
-            other: "Yra %{count} naujų įvykių."
-          completed_in:
-            one: "Baigta per %{count} sekundžių."
-            few: "Baigta per %{count} sekundžių."
-            many: "Baigta per %{count} sekundžių."
-            other: "Baigta per %{count} sekundžių."
           request: "Užklausa"
           response: "Atsakymas"
-          headers: "Antraštės"
           body: "Turinys"
           status: "Būsenos kodas"
           event_id: "ID"
@@ -4360,6 +4107,8 @@ lt:
           love:
             name: "patinka"
             description: "Mygtuko \"Patinka\" spalva."
+          selected:
+            name: "pasirinktas"
         robots:
           title: "Nepaisykite savo svetainės robots.txt failo:"
           warning: "Tai visam laikui pakeis visus susijusius svetainės nustatymus."
@@ -4607,11 +4356,6 @@ lt:
         title: "Peržiūrėti Žodžiai"
         search: "paieška"
         clear_filter: "Išvalyti"
-        show_words:
-          one: "rodyti %{count} žodį"
-          few: "rodyti %{count} žodžių"
-          many: "rodyti %{count} žodžių"
-          other: "rodyti %{count} žodžių"
         download: Atsisiųsti
         clear_all: Išvalyti viską
         clear_all_confirm: "Ar tikrai norite išvalyti visus stebėtus žodžius %{action} veiksmui?"
@@ -4649,6 +4393,22 @@ lt:
           modal_title: "%{action}: išbandykite žiūrėtus žodžius"
           found_matches: "Rastos atitiktys:"
           no_matches: "Atitikmenų nerasta"
+      form_templates:
+        nav_title: "Juodraščiai"
+        list_table:
+          headings:
+            name: "Vardas"
+            actions: "Veiksmai"
+        view_template:
+          close: "Uždaryti"
+          edit: "Redaguoti"
+          delete: "Pašalinti"
+        new_template_form:
+          submit: "Išsaugoti"
+          cancel: "Atšaukti"
+        quick_insert_fields:
+          add_new_field: "Pridėti"
+          dropdown: "Išskleidimas"
       impersonate:
         title: "Apsimesti"
         help: "Naudok šį įrankį, kad pavaizduotum kito vartotojo paskyrą dėl klaidų paieškos ir sistemos atstatymo. Kai tik baigsi procedūrą, turėsi atsijungti."
@@ -4735,7 +4495,6 @@ lt:
         staged: "Inscenizuotas?"
         show_admin_profile: "Administravimas"
         show_public_profile: "Rodyti viešą profilį"
-        impersonate: "Apsimesti"
         action_logs: "Veiksmų įrašai"
         ip_lookup: "IP Peržiūra"
         log_out: "Atsijungti"
@@ -4861,11 +4620,6 @@ lt:
           posts: "Pranešimai"
         tl3_requirements:
           title: "Reikalavimai 3 pasitikėjimo lygiui"
-          table_title:
-            one: "Paskutinę dieną:"
-            few: "Per pastarąsias %{count} dienų:"
-            many: "Per pastarąsias %{count} dienų:"
-            other: "Per pastarąsias %{count} dienų:"
           value_heading: "Reikšmė"
           requirement_heading: "Reikalavimas"
           visits: "Apsilankymai"
@@ -5046,7 +4800,8 @@ lt:
         allow_title: Leisti naudoti ženklelį kaip antraštę
         multiple_grant: Gali būti suteikta keleta kartų
         listable: Rodyti trofėjų viešame trofėjų puslapyje
-        enabled: Įjungti ženklelį
+        enabled: galimas
+        disabled: uždrausta
         icon: Ikona
         image: Paveikslėlis
         graphic: Grafinis
@@ -5163,11 +4918,6 @@ lt:
       step: "%{current} iš %{total}"
       uploading: "Įkeliama..."
       upload_error: "Atsiprašome, įvyko klaida įkeliant šį dokumentą. Prašome pamėginti dar kartą."
-      staff_count:
-        one: "Jūsų bendruomenėje yra %{count} darbuotojų (jūs)."
-        few: "Jūsų bendruomenėje yra %{count} darbuotojų, įskaitant jus."
-        many: "Jūsų bendruomenėje yra %{count} darbuotojų, įskaitant jus."
-        other: "Jūsų bendruomenėje yra %{count} darbuotojų, įskaitant jus."
       invites:
         add_user: "pridėti"
         none_added: "Jūs nekvietėte jokių darbuotojų. Ar tikrai norite tęsti?"

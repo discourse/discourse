@@ -1463,8 +1463,6 @@ zh_TW:
     disable_system_edit_notifications: "當 'download_remote_images_to_local' 啟用時禁用系統編輯提醒。"
     automatically_unpin_topics: "當使用者到達底部時自動解除主題置頂。"
     read_time_word_count: "一分鐘閲讀的詞的數量，用於估計閲讀時間。"
-    native_app_install_banner_ios: "將iOS裝置上的DiscourseHub 橫幅主題顯示給一般使用者（信任等級1以上）。"
-    native_app_install_banner_android: "將Android裝置上的 DiscourseHub 橫幅主題顯示給一般使用者（信任等級1以上）。"
     share_anonymized_statistics: "分享匿名使用統計"
     auto_handle_queued_age: "等待多天後系統將自動處理等待審核的記錄，投訴將被忽略。尚未審核的討論話題及使用者將被拒絕。設定為0，可禁用此功能。"
     svg_icon_subset: "用前綴詞'fa-'、'far-'、'fab-'加入你喜歡的 FontAwesome 5 icons\\b 圖案。'fa-'表示實心圖案，'far-'表示一般圖案，'fab-'表示品牌圖案。"
@@ -1709,7 +1707,6 @@ zh_TW:
     deactivated_by_staff: "已由管理員撤銷"
     activated_by_staff: "已由管理員啟動"
     new_user_typed_too_fast: "新的使用者輸入太快"
-    content_matches_auto_block_regex: "內容符合正規表達式"
     username:
       short: "必須至少 %{min} 個字"
       long: "不能超過 %{max} 個字"
@@ -2162,14 +2159,6 @@ zh_TW:
     user_automatically_silenced:
       title: "使用者自動被禁言"
       subject_template: "新使用者%{username}由於社群投訴而被禁言"
-      text_body_template: |
-        這是自動發出的訊息。
-
-        因多位使用者投訴 %{username} 的文章，新使用者 [%{username}](%{base_url}) 已被禁言。
-
-        請[查看這些投訴](%{base_url}/admin/flags)。如果 %{username} 被不合理地阻止貼文，點擊[該用戶管理頁面](%{base_url}%{user_url})內的解除封鎖按鈕。
-
-        您可以調整網站設定中的 `block_new_user` 以變更封鎖門檻值。
     spam_post_blocked:
       title: "因垃圾貼文而被封鎖"
       subject_template: "新用戶 %{username} 由於重複貼連結，文章已被封鎖"
@@ -2231,9 +2220,6 @@ zh_TW:
     reached_limit:
       other: "注意：你達到了每日郵件限額（%{count}），到網站看看哪些訊息可能被延遲了。BTW，感謝你經營的這麼熱絡！"
     in_reply_to: "回覆給"
-    unsubscribe:
-      title: "取消訂閱"
-      description: "不再對這些郵件感興趣？沒問題！點擊以立即取消訂閱："
     reply_by_email: "[訪問主題](%{base_url}%{url})或者發郵件回覆。"
     reply_by_email_pm: "[查看訊息](%{base_url}%{url}) 或回覆此電子郵件以回應%{participants}。"
     only_reply_by_email: "發郵件回覆。"
@@ -2455,7 +2441,6 @@ zh_TW:
       liked_received: "獲得贊"
       new_users: "新使用者"
       popular_topics: "熱門主題"
-      follow_topic: "關注主題"
       join_the_discussion: "閲讀更多"
       popular_posts: "熱門貼文"
       more_new: "新內容與你分享"
@@ -2572,8 +2557,6 @@ zh_TW:
     welcome_message_invite_only: |
       ## [歡迎來到 %{title}](#welcome)
       必須要有一個帳戶，請向現有會員請求邀請或登入以繼續。
-  deleted: "已刪除"
-  image: "圖片"
   upload:
     edit_reason: "下載外部圖片留做存檔"
     unauthorized: "抱歉，你沒有上傳檔案的權限（驗證擴展：%{authorized_extensions}）。"
@@ -2649,88 +2632,6 @@ zh_TW:
     title: "服務條款"
   privacy_topic:
     title: "隱私政策"
-    body: |
-      <a name="collect"></a>
-
-      ## [我們收集什麼信息？](#collect)
-
-      我們從你在我們站點註冊開始從你那開始收集信息，並收集關於你在論壇的閲讀和寫作的數據，並評估分享的內容。
-
-      當在我們站點註冊時，你可能被要求輸入你的名字和郵件地址。然而你可以在不用註冊的情況下訪問站點。你的郵件地將通過一個獨一無二的連結驗證。如果連結被訪問了，我們就知道你控制了該郵件地址。
-
-      當已註冊和發帖時，我們記錄發佈貼文時的 IP 地址。我們也可能保留伺服器日誌，其中包括了每一個向我們伺服器的請求。
-
-      <a name="use"></a>
-
-      ## [我們如何使用你的信息？](#use)
-
-      從你那收集的任何數據將以以下方式使用：
-
-      * 改進你的個人體驗 &mdash; 你的信息幫助我們更好地滿足你的個人需求。
-      * 改進我們的站點 &mdash; 我們基于信息和我們從你那收到的反饋不斷地試圖改進我們的站點。
-      * 改善我們的客戶服務 &mdash; 你的信息幫助我們更有效地回應使用者服務請求和支持。
-      * 用於發送階段性的郵件 &mdash; 你提供的郵件地址可能用於接受信息、你想看到的通知或與你使用者名有關的回覆和詢問，或是其他的請求和問題。
-
-      <a name="protect"></a>
-
-      ## [我們如何保護你的信息?](#protect)
-
-      我們實現了一系列的安全措施保證你輸入、提交或者訪問你個人信息的數據安全。
-
-      <a name="data-retention"></a>
-
-      ## [數據保存政策是什麼？](#data-retention)
-
-      我們將善意地：
-
-      * 保存 90 天內的所有向伺服器的包含 IP 地址的請求。
-      * 保存 5 年內已註冊使用者和與他們的貼文有關的 IP 地址。
-
-      <a name="cookies"></a>
-
-      ## [我們使用 Cookie 嗎？](#cookies)
-
-      是的。Cookie 是網站或它的服務商通過網頁瀏覽器存儲在你電腦硬碟上的小檔案（如果你同意）。這些 Cookie 使站點能分辨你的瀏覽器，並且，如果你註冊了一個賬戶，與你的註冊賬戶關聯。
-
-      我們使用 Cookie 為之後的訪問和編譯一小段關於站點流量和交互的數據來判斷並保存你的個人設置，這樣我們可以在之後提供更好的站點體驗和工具。我們可能使用第三方服務商來幫助我們更好地理解我們的站點訪客。這些服務商是不允許代表我們使用收集的信息，除非是在幫助我們執行和改進我們的站點。
-
-      <a name="disclose"></a>
-
-      ## [我們會在站外提供任何信息嗎？](#disclose)
-
-      我們絶不銷售、教育或任何向外轉移你個人信息的行為。這不包括幫助我們管理站點、改進站定或給你提供服務的第三方團體，這些團體需要保證對這些信息保密。當我們認為提交你的信息符合法律、我們的站點政策或保護我們或其他人的權利、知識產權或安全時，我們也可能提交你的信息。然而，非個人訪問信息可能供其他團體使用，用於市場、廣告或其他用途。
-
-      <a name="third-party"></a>
-
-      ## [第三方連結](#third-party)
-
-      偶爾地，根據我們的判斷，我們可能在我們的站點上包括或提供第三方團體的產品或服務。這些第三方站點用於獨立和不同的隱私政策。因此我們對連結到的站點或活動沒有責任和權利。儘管如此，我們尋求保護我們的整個站點冰鞋歡迎你給這些站點反饋。
-
-      <a name="coppa"></a>
-
-      ## [兒童在綫隱私保護法案合規](#coppa)
-
-      我們的站點、產品和服務提供給 13 歲以上的人們。如果伺服器位於美國，並且你小於 13 歲，根據[兒童在綫隱私保護法案合規](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)，不要使用這個站點。
-
-      <a name="online"></a>
-
-      ## [僅用於在綫隱私政策](#online)
-
-      這個線上隱私政策只適用於通過我們站點收集到的信息，並不包括線下收集的信息。
-
-      <a name="consent"></a>
-
-      ## [你的同意](#consent)
-
-      你使用站點的同時，代表你同意了我們網站的隱私政策。
-
-      <a name="changes"></a>
-
-      ## [隱私政策的更改](#changes)
-
-      如果我們決定更改我們的隱私政策，我們將在此頁更新這些改變。
-
-      文檔以 CC-BY-SA 發佈。最後更新時間為2013年5月31日。
   badges:
     editor:
       name: 編輯
@@ -3054,7 +2955,6 @@ zh_TW:
         title: "你的 Discourse 已經準備就緒！"
   search_logs:
     graph_title: "搜尋計數"
-  joined: "建立日期"
   discourse_push_notifications:
     popup:
       mentioned: '%{username}在"%{topic}"提及您 - %{site_title}'

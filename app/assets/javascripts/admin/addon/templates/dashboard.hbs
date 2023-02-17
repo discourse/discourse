@@ -1,8 +1,6 @@
-<PluginOutlet
-  @name="admin-dashboard-top"
-  @tagName="span"
-  @connectorTagName="div"
-/>
+<span>
+  <PluginOutlet @name="admin-dashboard-top" @connectorTagName="div" />
+</span>
 
 {{#if this.showVersionChecks}}
   <div class="section-top">
@@ -57,8 +55,6 @@
 
 <DashboardNewFeatures @tagName="div" />
 
-<PluginOutlet
-  @name="admin-dashboard-bottom"
-  @tagName="span"
-  @connectorTagName="div"
-/>
+<span>
+  <PluginOutlet @name="admin-dashboard-bottom" @connectorTagName="div" />
+</span>

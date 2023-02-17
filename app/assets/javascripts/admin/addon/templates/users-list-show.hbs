@@ -93,7 +93,7 @@
           />
           <PluginOutlet
             @name="admin-users-list-thead-after"
-            @args={{hash order=this.order asc=this.asc}}
+            @outletArgs={{hash order=this.order asc=this.asc}}
           />
 
           {{#if this.siteSettings.must_approve_users}}
@@ -161,7 +161,7 @@
 
             <PluginOutlet
               @name="admin-users-list-td-after"
-              @args={{hash user=user query=this.query}}
+              @outletArgs={{hash user=user query=this.query}}
             />
 
             {{#if this.siteSettings.must_approve_users}}
@@ -181,7 +181,7 @@
               <PluginOutlet
                 @name="admin-users-list-icon"
                 @connectorTagName="div"
-                @args={{hash user=user query=this.query}}
+                @outletArgs={{hash user=user query=this.query}}
               />
             </td>
           </tr>

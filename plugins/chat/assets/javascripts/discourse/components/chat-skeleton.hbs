@@ -1,119 +1,15 @@
 <div class="chat-skeleton -animation">
-  <div class="chat-skeleton__header">
-    <div class="chat-skeleton__header-img"></div>
-    <div class="chat-skeleton__header-name"></div>
-  </div>
-
-  <div class="chat-skeleton__body">
-    <div class="chat-skeleton__message">
-      <div class="chat-skeleton__message-avatar"></div>
-      <div class="chat-skeleton__message-poster"></div>
-      <div class="chat-skeleton__message-content">
-        <div class="chat-skeleton__message-msg -line1 -small"></div>
-        <div class="chat-skeleton__message-msg -line2 -large"></div>
-      </div>
-
-      <div class="chat-skeleton__message-avatar"></div>
-      <div class="chat-skeleton__message-poster"></div>
-      <div class="chat-skeleton__message-content">
-        <div class="chat-skeleton__message-msg -line1 -large"></div>
-        <div class="chat-skeleton__message-msg -line2 -large"></div>
+  {{#each this.placeholders as |rows|}}
+    <div class="chat-skeleton__body">
+      <div class="chat-skeleton__message">
+        <div class="chat-skeleton__message-avatar"></div>
+        <div class="chat-skeleton__message-poster"></div>
+        <div class="chat-skeleton__message-content">
+          {{#each rows as |row|}}
+            <div class="chat-skeleton__message-msg" style={{row}}></div>
+          {{/each}}
+        </div>
       </div>
     </div>
-  </div>
-
-  <div class="chat-skeleton__header">
-    <div class="chat-skeleton__header-img"></div>
-    <div class="chat-skeleton__header-name"></div>
-  </div>
-
-  <div class="chat-skeleton__body">
-    <div class="chat-skeleton__message">
-      <div class="chat-skeleton__message-avatar"></div>
-      <div class="chat-skeleton__message-poster"></div>
-      <div class="chat-skeleton__message-content">
-        <div class="chat-skeleton__message-msg -line1 -medium"></div>
-        <div class="chat-skeleton__message-msg -line2 -large"></div>
-      </div>
-    </div>
-
-    <div class="chat-skeleton__message">
-      <div class="chat-skeleton__message-avatar"></div>
-      <div class="chat-skeleton__message-poster"></div>
-      <div class="chat-skeleton__message-content">
-        <div class="chat-skeleton__message-msg -line1 -medium"></div>
-        <div class="chat-skeleton__message-msg -line2 -large"></div>
-      </div>
-    </div>
-
-    <div class="chat-skeleton__message">
-      <div class="chat-skeleton__message-avatar"></div>
-      <div class="chat-skeleton__message-poster"></div>
-      <div class="chat-skeleton__message-content">
-        <div class="chat-skeleton__message-msg -line1 -small"></div>
-        <div class="chat-skeleton__message-msg -line2 -large"></div>
-      </div>
-    </div>
-
-    <div class="chat-skeleton__message">
-      <div class="chat-skeleton__message-avatar"></div>
-      <div class="chat-skeleton__message-poster"></div>
-      <div class="chat-skeleton__message-content">
-        <div class="chat-skeleton__message-msg -line1 -medium"></div>
-        <div class="chat-skeleton__message-msg -line2 -small"></div>
-      </div>
-    </div>
-
-    <div class="chat-skeleton__message">
-      <div class="chat-skeleton__message-avatar"></div>
-      <div class="chat-skeleton__message-poster"></div>
-      <div class="chat-skeleton__message-content">
-        <div class="chat-skeleton__message-msg -line1 -medium"></div>
-        <div class="chat-skeleton__message-msg -line2 -medium"></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="chat-skeleton__header">
-    <div class="chat-skeleton__header-img"></div>
-    <div class="chat-skeleton__header-name"></div>
-  </div>
-
-  <div class="chat-skeleton__body">
-    <div class="chat-skeleton__message">
-      <div class="chat-skeleton__message-avatar"></div>
-      <div class="chat-skeleton__message-poster"></div>
-      <div class="chat-skeleton__message-content">
-        <div class="chat-skeleton__message-msg -line1 -small"></div>
-        <div class="chat-skeleton__message-msg -line2 -large"></div>
-      </div>
-    </div>
-
-    <div class="chat-skeleton__message">
-      <div class="chat-skeleton__message-avatar"></div>
-      <div class="chat-skeleton__message-poster"></div>
-      <div class="chat-skeleton__message-content">
-        <div class="chat-skeleton__message-msg -line1 -medium"></div>
-        <div class="chat-skeleton__message-msg -line2 -large"></div>
-      </div>
-    </div>
-
-    <div class="chat-skeleton__message">
-      <div class="chat-skeleton__message-avatar"></div>
-      <div class="chat-skeleton__message-poster"></div>
-      <div class="chat-skeleton__message-content">
-        <div class="chat-skeleton__message-msg -line1 -large"></div>
-        <div class="chat-skeleton__message-msg -line2 -small"></div>
-      </div>
-    </div>
-
-    <div class="chat-skeleton__message">
-      <div class="chat-skeleton__message-avatar"></div>
-      <div class="chat-skeleton__message-poster"></div>
-      <div class="chat-skeleton__message-content">
-        <div class="chat-skeleton__message-msg -line1 -medium"></div>
-        <div class="chat-skeleton__message-msg -line2 -large"></div>
-      </div>
-    </div>
-  </div>
+  {{/each}}
 </div>

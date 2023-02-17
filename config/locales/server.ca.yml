@@ -1570,8 +1570,6 @@ ca:
     automatically_unpin_topics: "Desafixa temes automàticament quan l'usuari arribi al capdavall."
     read_time_word_count: "Recompte de paraules per minut per a calcular el temps estimat de lectura."
     topic_page_title_includes_category: "L'<a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>etiqueta del títol</a>  de la pàgina del tema inclou el nom de la categoria."
-    native_app_install_banner_ios: "Mostra el bàner de l'aplicació DiscourseHub en els dispositius iOS a usuaris habituals (nivell de confiança 1 i superior)."
-    native_app_install_banner_android: "Mostra el bàner de l'aplicació DiscourseHub en els dispositius Android a usuaris habituals (nivell de confiança 1 i superior)."
     app_association_android: "Contingut del punt final (endpoint) <a href='%{base_path}/.well-known/assetlinks.json'>.well-known/assetlinks.json</a>, utilitzat per a l’API de Digital Asset Links de Google."
     app_association_ios: "Contingut del punt final (endpoint) <a href='%{base_path}/apple-app-site-association'>apple-app-site-association</a>, utilitzat per a crear enllaços universals entre aquest lloc i les aplicacions iOS."
     share_anonymized_statistics: "Comparteix estadístiques d'ús anonimitzades."
@@ -1861,7 +1859,6 @@ ca:
     deactivated_by_staff: "Desactivat per l'equip responsable"
     activated_by_staff: "Activat per l'equip responsable"
     new_user_typed_too_fast: "Un usuari nou ha teclejat massa de pressa"
-    content_matches_auto_block_regex: "El contingut coincideix amb l'expressió regular (regex) de blocatge automàtic"
     username:
       short: "ha de tenir almenys %{min} caràcters"
       long: "no ha de ser més llarg de %{max} caràcters"
@@ -2191,7 +2188,6 @@ ca:
     user_automatically_silenced:
       title: "Usuari silenciat automàticament"
       subject_template: "El nou usuari %{username} ha estat silenciat per banderes de la comunitat"
-      text_body_template: "Això és un missatge automàtic. \n\nEl nou usuari [%{username}](%{user_url}) ha estat silenciat automàticament perquè diversos usuaris han marcat amb bandera les publicacions de %{username}. \n\n[Reviseu les banderes](%{base_url}/admin/flags). Si %{username} ha estat silenciat de manera incorrecta, feu clic en el botó de 'Desfés el silenciament' en [la pàgina d'administració per a aquest usuari](%{user_url}). \n\nAquest llindar es pot canviar mitjançant el paràmetre de configuració del lloc web `silence_new_user`.\n"
     spam_post_blocked:
       title: "Publicació de brossa blocada"
       subject_template: "L'usuari nou %{username} té entrades blocades a causa d'enllaços repetits."
@@ -2245,9 +2241,6 @@ ca:
       one: "Alerta! Hem superat el màxim de %{count} correu diari. Comproveu el lloc web per a veure els que poden haver quedat retinguts. PS: Gràcies per ser popular!"
       other: "Alerta! Hem superat el màxim de %{count} correus diaris. Comproveu el lloc web per a veure els que poden haver quedat retinguts. PS: Gràcies per ser popular!"
     in_reply_to: "En resposta a "
-    unsubscribe:
-      title: "Cancel·la la subscripció!"
-      description: "No us interessa rebre aquests correus? Cap problema! Feu clic ací per a cancel·lar la subscripció de seguida:"
     reply_by_email: "[Visita el tema](%{base_url}%{url}) o respon a aquest correu per a contestar."
     reply_by_email_pm: "[Visiteu el missatge](%{base_url}%{url}) o responeu a aquest correu per a respondre a %{participants}."
     only_reply_by_email: "Responeu a aquest correu per a contestar."
@@ -2491,7 +2484,6 @@ ca:
       liked_received: "M'agrades rebuts"
       new_users: "Usuaris nous"
       popular_topics: "Temes populars"
-      follow_topic: "Segueix aquest tema"
       join_the_discussion: "Llegeix-ne més"
       popular_posts: "Publicacions populars"
       more_new: "Nou per a vós"
@@ -2575,8 +2567,6 @@ ca:
     welcome_message_invite_only: |
       ## [Benvingut a %{title}](#welcome)
       Cal tenir un compte. Demaneu a un membre existent una invitació o inicieu sessió per a continuar.
-  deleted: "suprimit"
-  image: "imatge"
   upload:
     edit_reason: "còpia local d'imatges descarregada"
     unauthorized: "El fitxer que intenteu carregar no està autoritzat (extensions permeses: %{authorized_extensions})."
@@ -2653,7 +2643,6 @@ ca:
     title: "Condicions del servei"
   privacy_topic:
     title: "Política de privacitat"
-    body: "<a name=\"collect\"></a> \n\n## [Quina informació recopilem?](#collect)\n\nRecopilem informació quan us registreu en el nostre lloc web i recopilem dades quan participeu en el fòrum llegint, escrivint i avaluant el contingut que s'hi comparteix. \n\nQuan us registreu en el nostre lloc web, se us pot demanar que introduïu el nom i l'adreça de correu electrònic. Així i tot, podeu visitar el lloc web sense registrar-vos. La vostra adreça de correu electrònic es verificarà mitjançant un correu electrònic que conté un enllaç únic. Si es visita aquest enllaç, sabem que controleu l'adreça de correu. \n\nEn registrar-vos i publicar, registrem l'adreça IP des de la qual s'origina la publicació. També podem conservar els registres (logs) del servidor que incloguin l'adreça IP de cada sol·licitud al nostre servidor. \n\n<a name=\"use\"></a> \n\n## [Per a què utilitzem la vostra informació?](#use)\n\nQualsevol de les informacions que recopilem es poden utilitzar d'una de les maneres següents: \n\n* Per a personalitzar la vostra experiència: la vostra informació ens ajuda a respondre millor a les vostres necessitats individuals. \n* Per a millorar el nostre lloc web: ens esforcem contínuament per millorar el que oferim basant-nos en la informació i els comentaris que rebem de vosaltres. \n* Per a millorar el servei al client: la vostra informació ens ajuda a respondre amb més eficàcia a les vostres peticions d'atenció al client i a les vostres necessitats de suport. \n* Per a enviar correus electrònics periòdics: l'adreça de correu electrònic que proporcioneu pot utilitzar-se per a enviar-vos informació, notificacions que sol·liciteu sobre canvis en temes o en resposta al vostre nom d'usuari, respondre a consultes o altres sol·licituds o preguntes. \n\n<a name=\"protect\"></a> \n\n## [Com protegim la vostra informació?](#protect) \n\nImplementem diverses mesures de seguretat per a mantenir segura la vostra informació personal quan introduïu, envieu o accediu a la vostra informació personal. \n\n<a name=\"data-retention\"></a> \n\n## [Quina és la vostra política de retenció de dades?](#data-retention)\n\nFarem un esforç de bona fe per a: \n* Conservar els registres del servidor que continguin l'adreça IP de totes les sol·licituds a aquest servidor no més enllà de 90 dies. \n* Conservar les adreces IP associades amb els usuaris registrats i les seves publicacions no més enllà de 5 anys. \n\n<a name=\"cookies\"></a> \n\n## [Utilitzem galetes?](#cookies)\n\nSí. Les galetes (cookies) són petits fitxers que un lloc web o el seu proveïdor de serveis transfereixen al disc dur del vostre ordinador per mitjà del navegador web (si ho permeteu). Aquestes galetes permeten al lloc web reconèixer el vostre navegador i, si teniu un compte registrat, associar-lo amb el vostre compte registrat. Utilitzem galetes per a entendre i desar les vostres preferències per a visites futures i compilar dades agregades sobre el tràfic i les interaccions del lloc web de manera que puguem oferir millors experiències i eines en el futur. Podem contractar amb proveïdors de serveis de tercers per a ajudar-nos a entendre millor els visitants del nostre lloc web. Aquests proveïdors de serveis no estan autoritzats a utilitzar la informació recopilada en el nostre nom excepte per a ajudar-nos a dur a terme i millorar el nostre negoci. \n\n<a name=\"disclose\"></a>\n\n## [¿Revelem cap informació a parts externes?](#disclose)\n\nNo venem, comercialitzem ni transferim a tercers les vostres dades d'identificació personal. Això no inclou terceres parts de confiança que ens ajudin a operar el lloc web, dur a terme el nostre negoci o atendre-us, sempre que aquestes parts acordin mantenir confidencial aquesta informació. També podem publicar la vostra informació quan creiem que la publicació és adequada per a complir amb la llei, fer complir les polítiques del lloc web o protegir els nostres drets, propietat o seguretat, o els d'altri. Tanmateix, es pot proporcionar informació sobre visitants no identificables individualment a altres parts per a màrqueting, publicitat o altres usos. \n\n<a name=\"third-party\"></a> \n\n## [Enllaços de tercers](#third-party) \n\nA vegades, a la nostra discreció, podem incloure o oferir productes o serveis de tercers en el nostre lloc web. Aquests llocs de tercers tenen polítiques de privacitat separades i independents. Per tant, no tenim cap responsabilitat  pel contingut i les activitats d'aquests llocs enllaçats. Tot i això, mirem de protegir la integritat del nostre lloc web i qualsevol comentari sobre aquests llocs és benvingut. \n\n<a name=\"coppa\"></a> \n\n## [Children's Online Privacy Protection Act Compliance](#coppa) \n\nEl nostre lloc web, els nostres productes i serveis estan dirigits a persones que tinguin almenys 13 anys o més. Si aquest servidor es troba als Estats Units i teniu menys de 13 anys, segons els requisits de COPPA ([Llei de protecció de la privacitat en línia de l'infant](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)), no utilitzeu aquest lloc web. \n\n<a name=\"online\"></a>\n\n## [Política de privacitat sols en línia només](#online)\n\nAquesta política de privacitat en línia només s'aplica a la informació recopilada per mitjà del nostre lloc web i no a la informació recopilada fora de línia. \n\n<a name=\"consent\"></a>\n\n## [El vostre consentiment](#consent)\n\nEn utilitzar el nostre lloc web, accepteu la nostra política de privacitat del lloc web. \n\n<a name=\"changes\"></a>\n\n## [Canvis en la nostra política de privacitat](#changes)\n\nSi decidim canviar la nostra política de privacitat, publicarem els canvis en aquesta pàgina. Aquest document és CC-BY-SA. Es va actualitzar per darrera vegada el 31 de maig de 2013.\n"
   badges:
     editor:
       name: Editor
@@ -2983,7 +2972,6 @@ ca:
         title: "El vostre Discourse està a punt!"
   search_logs:
     graph_title: "Recompte de cerques"
-  joined: "Registrat"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} us ha mencionat en "%{topic}" - %{site_title}'

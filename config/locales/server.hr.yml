@@ -1390,11 +1390,8 @@ hr:
     delete_merged_stub_topics_after_days: "Broj dana čekanja prije automatskog brisanja potpuno spojenih tema. Postavite na 0 da nikada ne brišete nezavršene teme."
     bootstrap_mode_min_users: "Minimalan broj korisnika potreban za onemogućavanje načina pokretanja (postavite na 0 za onemogućavanje)"
     prevent_anons_from_downloading_files: "Spriječite anonimne korisnike u preuzimanju privitaka."
-    secure_media: "ZASTARJELO: Umjesto toga koristite postavku secure_uploads, bit će uklonjena u Discourse 3.0."
     secure_uploads: 'Ograničava pristup SVIM prijenosima (slike, video, audio, tekst, pdf-ovi, zipovi i ostalo). Ako je "potrebna prijava" omogućena, samo prijavljeni korisnici mogu pristupiti učitavanjima. U suprotnom, pristup će biti ograničen samo na učitavanje medija u privatnim porukama i privatnim kategorijama. UPOZORENJE: Ova je postavka složena i zahtijeva duboko administrativno razumijevanje. Pogledajte <a target="_blank" href="https://meta.discourse.org/t/-/140017">sigurnu učitava temu na Meta</a> za detalje.'
-    secure_media_allow_embed_images_in_emails: "ZASTARJELO: Koristite secure_uploads_allow_embed_images_in_emails, uklonit će se u Discourse 3.0."
     secure_uploads_allow_embed_images_in_emails: "Omogućuje ugrađivanje sigurnih slika koje bi se inače redigirale u e-porukama, ako je njihova veličina manja od postavke 'maksimalna veličina slike za ugrađivanje e-pošte u sigurne prijenose kb'."
-    secure_media_max_email_embed_image_size_kb: "ZASTARJELO: Koristite secure_uploads_max_email_embed_image_size_kb, bit će uklonjeno u Discourse 3.0."
     secure_uploads_max_email_embed_image_size_kb: "Ograničenje veličine za sigurne slike koje će biti ugrađene u e-poštu ako je omogućena postavka \"sigurni prijenosi dopuštaju ugradnju u e-poštu\". Bez uključene te postavke, ova postavka nema učinka."
     slug_generation_method: "Odaberite metodu stvaranja puževa. 'encoded' će generirati niz postotnog kodiranja. 'none' će uopće onemogućiti puž."
     enable_emoji: "Omogući emoji"
@@ -1463,7 +1460,6 @@ hr:
     default_sidebar_categories: "Odabrane kategorije će prema zadanim postavkama biti prikazane u odjeljku Kategorije na bočnoj traci."
     default_sidebar_tags: "Odabrane oznake će prema zadanim postavkama biti prikazane u odjeljku Oznake bočne trake."
     enable_new_user_profile_nav_groups: "EKSPERIMENTALNO: Korisnicima odabranih grupa bit će prikazan novi navigacijski izbornik korisničkog profila"
-    enable_experimental_topic_timeline_groups: "EKSPERIMENTALNO: Korisnicima odabranih grupa prikazat će se refaktorirana vremenska traka teme"
     enable_experimental_hashtag_autocomplete: "EKSPERIMENTALNO: Upotrijebite novi #hashtag sustav automatskog dovršavanja za kategorije i oznake koji drugačije prikazuje odabranu stavku i ima poboljšano pretraživanje"
     errors:
       invalid_css_color: "Nevažeća boja. Unesite naziv boje ili hex vrijednost."
@@ -1622,7 +1618,6 @@ hr:
     email:
       sent_test: "poslano!"
   user:
-    content_matches_auto_block_regex: "Sadržaj odgovara regularnom izrazu automatskog blokiranja"
     username:
       short: "mora imati najmanje %{min} znakova"
       long: "ne smije imati više od %{max} znakova"
@@ -1771,8 +1766,6 @@ hr:
       title: "Problemi nadzorne ploče"
       subject_template: "Novi savjeti na vašoj nadzornoj ploči"
   user_notifications:
-    unsubscribe:
-      title: "Odjava"
     user_quoted:
       title: "Korisnik je citirao"
     digest:
@@ -1799,8 +1792,6 @@ hr:
     welcome_message_invite_only: |
       ## [Dobrodošli na %{title}] (#welcome)
       Nužno je prijaviti se korisničkim računom. Molimo upitajte postojećeg korisnika za pozivnicu ili se prijavite za nastavak.
-  deleted: "izbrisao"
-  image: "slika"
   upload:
     unauthorized: "Nažalost, datoteka koju pokušavate prenijeti nije autorizirana (autorizirana proširenja: %{authorized_extensions})."
   color_schemes:
@@ -1903,7 +1894,6 @@ hr:
         fields:
           contact_url:
             placeholder: "https://www.example.com/contact-us"
-  joined: "Prijavljen"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} vas je spomenuo u "%{topic}" - %{site_title}'

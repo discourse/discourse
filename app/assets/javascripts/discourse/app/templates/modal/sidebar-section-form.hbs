@@ -1,0 +1,92 @@
+{{#if this.flashText}}
+  <div id="modal-alert" role="alert" class="alert alert-{{this.flashClass}}">
+    {{this.flashText}}
+  </div>
+{{/if}}
+<DModalBody @title={{this.header}}>
+  <form class="form-horizontal">
+    <div class="input-group">
+      <label for="section-name">{{i18n "sidebar.sections.custom.name"}}</label>
+      <Input
+        name="section-name"
+        @type="text"
+        @value={{this.model.title}}
+        class={{this.model.titleCssClass}}
+        {{on "input" (action (mut this.model.title) value="target.value")}}
+      />
+    </div>
+    {{#each this.activeLinks as |link|}}
+      <div class="row-wrapper">
+        <div class="input-group">
+          <label for="link-name">{{i18n
+              "sidebar.sections.custom.links.icon"
+            }}</label>
+          <IconPicker
+            @name="icon"
+            @value={{link.icon}}
+            @options={{hash maximum=1}}
+            class={{link.iconCssClass}}
+            @onlyAvailable={{true}}
+            @onChange={{action (mut link.icon)}}
+          />
+        </div>
+        <div class="input-group">
+          <label for="link-name">{{i18n
+              "sidebar.sections.custom.links.name"
+            }}</label>
+          <Input
+            name="link-name"
+            @type="text"
+            @value={{link.name}}
+            class={{link.nameCssClass}}
+            {{on "input" (action (mut link.name) value="target.value")}}
+          />
+        </div>
+        <div class="input-group">
+          <label for="link-url">{{i18n
+              "sidebar.sections.custom.links.value"
+            }}</label>
+          <Input
+            name="link-url"
+            @type="text"
+            @value={{link.value}}
+            class={{link.valueCssClass}}
+            {{on "input" (action (mut link.value) value="target.value")}}
+          />
+        </div>
+        <DButton
+          @icon="trash-alt"
+          @action={{action "deleteLink" link}}
+          @class="btn-flat delete-link"
+          @title="sidebar.sections.custom.links.delete"
+        />
+      </div>
+    {{/each}}
+    <DButton
+      @action={{action "addLink"}}
+      @class="btn-flat btn-text add-link"
+      @title="sidebar.sections.custom.links.add"
+      @icon="plus"
+      @label="sidebar.sections.custom.links.add"
+    />
+  </form>
+</DModalBody>
+
+<div class="modal-footer">
+  <DButton
+    @id="save-section"
+    @action={{action "save"}}
+    @class="btn-primary"
+    @label="sidebar.sections.custom.save"
+    @disabled={{not this.model.valid}}
+  />
+  {{#if this.model.id}}
+    <DButton
+      @icon="trash-alt"
+      @id="delete-section"
+      @class="btn-danger delete"
+      @action={{action "delete"}}
+      @label="sidebar.sections.custom.delete"
+    />
+  {{/if}}
+</div>

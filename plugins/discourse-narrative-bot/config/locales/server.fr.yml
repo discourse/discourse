@@ -45,9 +45,6 @@ fr:
       trigger: "jet"
       invalid: |-
         Je regrette, c'est mathématiquement impossible d'obtenir cette combinaison de dés. :confounded:
-      not_enough_dice:
-        one: "Je n'ai que %{count} dé. [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), Je sais !"
-        other: "Je n'ai que %{count} dés. [Honteux](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), Je sais !"
       out_of_range: |-
         Saviez-vous que [le nombre maximal de faces](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) d'un dé non truqué est de 120 ?
       results: |-

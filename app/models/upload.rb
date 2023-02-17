@@ -384,6 +384,8 @@ class Upload < ActiveRecord::Base
               "10",
               "convert",
               local_path,
+              "-depth",
+              "8",
               "-resize",
               "1x1",
               "-define",

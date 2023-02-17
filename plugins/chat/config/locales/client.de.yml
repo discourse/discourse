@@ -38,9 +38,6 @@ de:
       browse_all_channels: "Alle Kanäle durchsuchen"
       move_to_channel:
         title: "Nachrichten in Kanal verschieben"
-        instructions:
-          one: "Du verschiebst <strong>%{count}</strong> Nachricht. Wähle einen Zielkanal aus. Im Kanal <strong>%{channelTitle}</strong> wird eine Platzhalter-Nachricht erstellt, um anzuzeigen, dass diese Nachricht verschoben wurde."
-          other: "Du verschiebst <strong>%{count}</strong> Nachrichten. Wähle einen Zielkanal aus. Im Kanal <strong>%{channelTitle}</strong> wird eine Platzhalter-Nachricht erstellt, um anzuzeigen, dass diese Nachrichten verschoben wurden."
         confirm_move: "Nachrichten verschieben"
       channel_settings:
         title: "Kanaleinstellungen"
@@ -71,7 +68,6 @@ de:
         instructions: "Das Schließen des Kanals verhindert, dass Nicht-Teammitglieder neue Nachrichten senden oder bestehende Nachrichten bearbeiten können. Bist du sicher, dass du diesen Kanal schließen möchtest?"
       channel_delete:
         title: "Kanal löschen"
-        instructions: "<p>Löscht den Kanal <strong>%{name}</strong> und den Chat-Verlauf. Alle Nachrichten und zugehörigen Daten wie Reaktionen und Uploads werden dauerhaft gelöscht. Wenn du den Kanalverlauf beibehalten und den Kanal nur außer Betrieb nehmen möchtest, kannst du ihn stattdessen archivieren.</p> <p>Möchtest du den Kanal wirklich <strong>dauerhaft löschen</strong>? Gib zur Bestätigung den Namen des Kanals in das Feld unten ein.</p>"
         confirm: "Ich verstehe die Konsequenzen und möchte den Kanal löschen"
         confirm_channel_name: "Kanalnamen eingeben"
         process_started: "Der Löschvorgang für den Kanal hat begonnen. Dieser Modal-Dialog wird in Kürze geschlossen und du wirst den gelöschten Kanal nirgendwo mehr sehen."
@@ -237,6 +233,8 @@ de:
           about: Über
           members: Mitglieder
           settings: Einstellungen
+      channel_edit_name_slug_modal:
+        name: Kanalname
       channel_edit_description_modal:
         title: Beschreibung bearbeiten
         input_placeholder: Beschreibung hinzufügen

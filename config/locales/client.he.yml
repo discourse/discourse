@@ -235,6 +235,7 @@ he:
       forwarded: "העברת ההודעה שלעיל"
     topic_admin_menu: "פעולות על נושא"
     skip_to_main_content: "דילוג לתוכן הראשי"
+    skip_user_nav: "דילוג לתוכן הפרופיל"
     emails_are_disabled: "כל הדוא״ל היוצא נוטרל באופן גורף על ידי מנהל אתר. שום הודעת דוא״ל, מכל סוג שהוא, לא תשלח."
     emails_are_disabled_non_staff: "דוא״ל יוצא הושבת עבור משתמשים שאינם מהסגל."
     software_update_prompt:
@@ -366,11 +367,11 @@ he:
       edit_bookmark: "עריכת סימנייה"
       clear_bookmarks: "מחיקת סימניות"
       help:
-        bookmark: "יש ללחוץ כדי ליצור סימנייה לפוסט הראשון בנושא זה"
-        edit_bookmark: "יש ללחוץ כדי לערוך את הסימניה בנושא זה"
+        bookmark: "יש ללחוץ כדי להוסיף סימנייה לנושא הזה"
+        edit_bookmark: "יש ללחוץ כדי לערוך את הסימנייה לפוסט בנושא זה"
         edit_bookmark_for_topic: "יש ללחוץ כדי לערוך את הסימניה לנושא זה"
         unbookmark: "יש ללחוץ כדי להסיר את כל הסימניות בנושא זה"
-        unbookmark_with_reminder: "יש ללחוץ כדי להסיר את כל הסימניות והתזכורות בנושא זה."
+        unbookmark_with_reminder: "יש ללחוץ כדי להסיר את כל הסימניות והתזכורות בנושא זה"
     bookmarks:
       created: "הוספת את הפוסט הזה לסימניות. %{name}"
       created_generic: "הוספת את זה לסימניות. %{name}"
@@ -1091,10 +1092,12 @@ he:
       mute: "השתקה"
       edit: "עריכת העדפות"
       download_archive:
-        button_text: "להוריד הכול"
-        confirm: "להוריד את הפוסטים שלך?"
-        success: "ההורדה החלה, תישלח אליך הודעה עם סיום התהליך."
-        rate_limit_error: "ניתן להוריד פוסטים פעם אחת ביום, נא לנסות שוב מחר."
+        title: "ייצוא הנתונים שלך"
+        description: "הורדת ארכיון של פעילות והעדפות החשבון שלך."
+        button_text: "בקשת ארכיון"
+        confirm: "להוריד ארכיון של פעילות והעדפות החשבון שלך?"
+        success: "התחלנו לאסוף את הארכיון שלך, תישלח הודעה כשהתהליך יסתיים."
+        rate_limit_error: "ניתן להוריד ארכיוני חשבון פעם ביום, נא לנסות שוב מחר."
       new_private_message: "הודעה חדשה"
       private_message: "הודעה"
       private_messages: "הודעות"
@@ -2245,8 +2248,6 @@ he:
         topic_template_not_modified: "נא להוסיף פרטים ותיאורים מדויקים לנושא שלך על ידי עריכת תבנית הנושא."
       save_edit: "שמירת עריכה"
       overwrite_edit: "שכתוב על עריכה"
-      reply_original: "תגובה לנושא המקורי"
-      reply_here: "תגובה כאן"
       reply: "תגובה"
       cancel: "ביטול"
       create_topic: "יצירת נושא"
@@ -2806,6 +2807,7 @@ he:
       show_links: "הצג קישורים בתוך הנושא הזה"
       collapse_details: "צמצום פרטי הנושא"
       expand_details: "הרחבת פרטי הנושא"
+      read_more_in_category: "רוצה לקרוא עוד? אפשר לעיין בנושאים שתחת %{categoryLink} או <a href='%{latestLink}'>להציג את הנושאים האחרונים</a>."
       read_more: "מעניין אותך לקרוא עוד? אפשר <a href='%{categoryLink}'>לעיין בכל הקטגוריות</a> או <a href='%{latestLink}'>לצפות בנושאים העדכניים ביותר</a>."
       unread_indicator: "אף אחד מהחברים לא קרא את הפוסט האחרון של הנושא הזה עדיין."
       bumped_at_title: |
@@ -2815,8 +2817,8 @@ he:
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>עיון בכל הקטגוריות</a>, <a href='%{basePath}/latest'>הצגת הנושאים העדכניים ביותר</a> או צפייה במובילים:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>עיון בכל התגיות</a> או <a href='%{basePath}/latest'>הצגת הנושאים העדכניים ביותר</a>."
       suggest_create_topic: מעניין אותך <a href>לפתוח בדיון חדש?</a>
-      jump_reply_up: קפיצה לתגובה קודמת
-      jump_reply_down: קפיצה לתגובה מאוחרת
+      jump_reply: "קפיצה למיקום המקורי של הפוסט"
+      jump_reply_aria: "קפיצה לפוסט של ‎@%{username} במיקומו המקורי"
       deleted: "הנושא הזה נמחק"
       slow_mode_update:
         title: "מצב אטי"
@@ -3201,6 +3203,7 @@ he:
       ignored: "תוכן בהתעלמות"
       wiki_last_edited_on: "הוויקי נערך לאחרונה ב־%{dateTime}"
       last_edited_on: "הפוסט נערך לאחרונה ב־%{dateTime}"
+      edit_history: "היסטוריית העריכה של הפוסט"
       reply_as_new_topic: "תגובה כנושא מקושר"
       reply_as_new_private_message: "תגובה כהודעה חדשה לאותם נמענים"
       continue_discussion: "ממשיך את הדיון מ %{postLink}:"
@@ -3212,10 +3215,10 @@ he:
       sr_collapse_replies: "צמצום תשובות מוטמעות"
       sr_date: "תאריך פרסום"
       sr_expand_replies:
-        one: "לפוסט הזה יש תגובה %{count}. יורחב בלחיצה"
-        two: "לפוסט הזה יש %{count} תגובות. יורחב בלחיצה"
-        many: "לפוסט הזה יש %{count} תגובות. יורחב בלחיצה"
-        other: "לפוסט הזה יש %{count} תגובות. יורחב בלחיצה"
+        one: "לפוסט הזה יש תגובה אחת"
+        two: "לפוסט הזה יש %{count} תגובות"
+        many: "לפוסט הזה יש %{count} תגובות"
+        other: "לפוסט הזה יש %{count} תגובות"
       expand_collapse: "הרחב/צמצם"
       sr_below_embedded_posts_description: "תגובות לפוסט מס׳ %{post_number}"
       sr_embedded_reply_description: "תגובה מאת ‎@%{username} לפוסט %{post_number}"
@@ -3409,6 +3412,8 @@ he:
           last: "מהדורה אחרונה"
           hide: "הסתרת שינויים"
           show: "הצגת שינויים"
+          destroy: "מחיקת מהדורות"
+          destroy_confirm: "למחוק את כל המהדורות של הפוסט הזה? זו פעולה בלתי הפיכה."
           revert: "החזרה לגרסה %{revision}"
           edit_wiki: "עריכת וויקי"
           edit_post: "עריכת פוסט"
@@ -3442,6 +3447,7 @@ he:
         updated: "עודכן"
         name: "שם"
         name_placeholder: "עבור מה הסימנייה?"
+        name_input_label: "שם סימנייה"
         set_reminder: "להזכיר לי"
         options: "אפשרויות"
         actions:
@@ -3539,8 +3545,7 @@ he:
       email_in: "כתובת דואר נכנס מותאמת אישית:"
       email_in_tooltip: "אפשר להפריד בין כתובות דוא״ל עם התו |."
       email_in_allow_strangers: "קבלת דוא״ל ממשתמשים אלמוניים ללא חשבונות במערכת הפורומים"
-      email_in_disabled: "האפשרות לשליחת נושאים חדשים בדוא״ל הושבתה בהגדרות האתר. כדי להפעיל פרסום של נושאים חדשים דרך דוא״ל,"
-      email_in_disabled_click: 'הפעלת ההגדרה „דוא״ל נכנס”.'
+      email_in_disabled: "פרסום נושאים חדשים בדוא״ל מושבת. כדי לאפשר פרסום נושאים חדשים בדוא״ל, יש להפעיל את ההגדרה <a href='%{setting_url}'>‚דוא״ל נכנס’</a>."
       mailinglist_mirror: "קטגוריה שמשקפת רשימת תפוצה"
       show_subcategory_list: "הצגת רשימת קטגוריות משנה מעל נושאים בקטגוריה זו."
       read_only_banner: "טקסט כרזה כאשר משתמש לא יכול ליצור נושא בקטגוריה הזו:"
@@ -3652,7 +3657,9 @@ he:
         inappropriate: "לא ראוי"
         spam: "זהו ספאם"
       custom_placeholder_notify_user: "היו ממוקדים, חיובים ותמיד אדיבים."
+      notify_user_textarea_label: "הודעה למשתמש"
       custom_placeholder_notify_moderators: "נשמח לשמוע בדיוק מה מטריד אותך ולספק קישורים מתאימים ודוגמאות היכן שניתן."
+      notify_moderators_textarea_label: "הודעה למפקחים"
       custom_message:
         at_least:
           one: "הכניסו לפחות תו אחד"
@@ -3909,6 +3916,7 @@ he:
         title: "חיבור"
         return: "%{shortcut} חזרה לכתיבת פוסט"
         fullscreen: "%{shortcut} כתיבת פוסט במסך מלא"
+        insert_current_time: "%{shortcut} הוספת השעה הנוכחית"
       bookmarks:
         title: "ניהול סימניות"
         enter: "%{shortcut} שמירה וסגירה"
@@ -4163,13 +4171,11 @@ he:
     pause_notifications:
       title: "השהיית התראות למשך…"
       label: "השהיית התראות"
-      remaining: "%{remaining} נותרו"
       options:
         half_hour: "חצי שעה"
         one_hour: "שעה"
         two_hours: "שעתיים"
         tomorrow: "עד מחר"
-        custom: "מותאם"
       set_schedule: "הגדרת תזמון התראות"
     trust_levels:
       names:
@@ -4223,6 +4229,19 @@ he:
       all_categories: "כל הקטגוריות"
       all_tags: "כל התגיות"
       sections:
+        custom:
+          add: "הוספת מקטע משלך"
+          edit: "עריכת מקטע משלך"
+          name: "כותרת מקטע"
+          save: "שמירה"
+          delete: "מחיקה"
+          delete_confirm: "למחוק את המקטע הזה?"
+          links:
+            icon: "סמליל"
+            name: "שם"
+            value: "קישור"
+            add: "הוספת קישור נוסף"
+            delete: "מחיקת קישור"
         about:
           header_link_text: "אודות"
         messages:
@@ -4534,6 +4553,7 @@ he:
               write: יצירת נושא חדש או פרסום לאחד קיים.
               update: עדכון נושא. אפשר לערוך את הכותרת, הקטגוריה, התגיות, המצב, סוג שימוש, קישור מובילים וכו׳.
               read_lists: לקרוא רשימת נושאים כמו מובילים, חדשים, אחרונים וכו׳. יש גם תמיכה ב־RSS.
+              status: "עדכון מצב של נושא. מצב: סגור, ארכיון, גלוי, נעוץ. זמין: אמת, שקר. יש לציין כאן category_id (מזהה קטגוריה) ובמטען של הבקשה כדי לאפשר שינויי מצב בלבד על נושאים בקטגוריה הזאת."
             posts:
               edit: לערוך כל פוסט שהוא או אחד מסוים.
             categories:
@@ -4549,6 +4569,7 @@ he:
               update: עדכון פרטי פרופיל המשתמש.
               log_out: להוציא משתמש מכל ההפעלות שלו.
               anonymize: הפיכת חשבונות משתמשים לאלמוניים.
+              suspend: השעיית חשבונות משתמשים.
               delete: מחיקת חשבונות משתמשים.
               list: קבלת רשימת משתמשים.
             user_status:
@@ -4556,6 +4577,8 @@ he:
               update: עדכון מצב המשתמש.
             email:
               receive_emails: לשלב את התחום הזה עם מקבל הודעות הדוא״ל כדי לעבד הודעות דוא״ל נכנסות.
+            invites:
+              create: לשלוח הזמנות בדוא״ל או לייצר קישורי הצטרפות.
             badges:
               create: יצירת עיטור חדש.
               show: קבלת מידע על עיטור.
@@ -4564,6 +4587,9 @@ he:
               list_user_badges: הצגת עיטורי המשתמש.
               assign_badge_to_user: הקצאת עיטור למשתמש.
               revoke_badge_from_user: שלילת עיטור ממשתמש.
+            search:
+              show: לחפש באמצעות נקודת הקצה ‎`/search.json?q=term`.
+              query: לחפש באמצעות נקודת הקצה `‎/search/query?term=term`.
             wordpress:
               publishing: הכרחי לטובת יכולות הפרסום של תוסף ה־Discourse של WordPress (חובה).
               commenting: הכרחי לטובת יכולות התגובות של תוסף ה־Discourse של WordPress.
@@ -4578,6 +4604,7 @@ he:
         create: "יצירה"
         edit: "עריכה"
         save: "שמירה"
+        description_label: "הקפצות לאירועים"
         controls: "מכוונים"
         go_back: "חזרה לרשימה"
         payload_url: "URL של התוכן"
@@ -4684,6 +4711,7 @@ he:
         broken_route: "לא ניתן להגדיר את הקישור אל ‚%{name}’. כדאי לוודא שחוסמי פרסומות מושבתים ואז לנסות לטעון את הדף מחדש."
       navigation_menu:
         sidebar: "סרגל צד"
+        header_dropdown: "שורת כותרת נגללת"
         legacy: "מיושן"
       backups:
         title: "גיבויים"
@@ -4932,6 +4960,9 @@ he:
           embedded_scss:
             text: "CSS משולב"
             title: "הכניסו CSS מותאם לשליחה עם הגרסה המשולבת של ההערות"
+          embedded_header:
+            text: "כותרת מוטבעת"
+            title: "נא למלא HTML כדי להציג מעל הגרסה המוטבעת של הערות"
           color_definitions:
             text: "ערכות צבע"
             title: "למלא ערכות צבע מותאמות אישית (משתמשים מתקדמים בלבד)"
@@ -5010,6 +5041,12 @@ he:
           love:
             name: "חבב"
             description: "צבע הרקע של הכפתור \"חבב\""
+          selected:
+            name: "נבחרים"
+            description: "צבע הרקע של רכיבים כגון פריטי רשימות כשהם נבחרים/פעילים."
+          hover:
+            name: "ריחוף"
+            description: "צבע הרקע של רכיבים כגון פריטי רשימות כשעוברים מעליהם עם העכבר או שהמיקוד עובר אליהם מהמקלדת."
         robots:
           title: "דריסת קובץ ה־robots.txt של האתר שלך:"
           warning: "הגדרה זו תדרוס הגדרות אתר כלשהן שקשורות לכך."
@@ -5140,6 +5177,7 @@ he:
           no_previous: "אין ערך קודם."
           deleted: "אין ערך חדש. הרשומה נמחקה."
           actions:
+            permanently_delete_post_revisions: "מחיקת המהדורות של הפוסט לצמיתות"
             delete_user: "מחיקת משתמש"
             change_trust_level: "שנוי דרגת אמון"
             change_username: "שינוי שם משתמש/ת"
@@ -5326,6 +5364,41 @@ he:
           description: "נא להקליד טקסט להלן כדי לבדוק התאמות מול מילים שבמעקב"
           found_matches: "נמצאו התאמות:"
           no_matches: "לא נמצאו התאמות"
+      form_templates:
+        nav_title: "תבניות"
+        title: "תבניות טפסים"
+        help: "יצירת מבנה תבנית בו ניתן להשתמש ליצירת נושאים, פוסטים והודעות חדשים."
+        new_template: "תבנית חדשה"
+        list_table:
+          headings:
+            name: "שם"
+            actions: "פעולות"
+          actions:
+            view: "הצגת תבנית"
+            edit: "עריכת תבנית"
+            delete: "מחיקת תבנית"
+        view_template:
+          close: "סגירה"
+          edit: "עריכה"
+          delete: "מחיקה"
+        new_template_form:
+          submit: "שמירה"
+          cancel: "ביטול"
+          name:
+            label: "שם התבנית"
+            placeholder: "נא למלא שם לתבנית…"
+          template:
+            label: "תבנית"
+            placeholder: "יצירת תבנית YAML כאן…"
+        delete_confirm: "למחוק את התבנית הזאת?"
+        quick_insert_fields:
+          add_new_field: "הוספה"
+          checkbox: "תיבת סימון"
+          input: "תשובה קצרה"
+          textarea: "תשובה ארוכה"
+          dropdown: "נפתח"
+          upload: "העלאת קובץ"
+          multiselect: "מגוון אפשרויות"
       impersonate:
         title: "התחזות"
         help: "ניתן להשתמש בכלי הזה כדי להתחזות לחשבון משתמש למטרות טיפול בשגיאות. יהיה עליך לצאת לאחר הסיום."
@@ -5424,7 +5497,6 @@ he:
         show_admin_profile: "מנהל ראשי"
         manage_user: "ניהול משתמש"
         show_public_profile: "הצג פרופיל פומבי"
-        impersonate: "התחזה"
         action_logs: "יומני פעולות"
         ip_lookup: "חיפוש IP"
         log_out: "יציאה"
@@ -5766,7 +5838,8 @@ he:
         allow_title: לאפשר להשתמש בעיטור ככותרת
         multiple_grant: יכולים להינתן מספר פעמים
         listable: הצגת עיטורים בעמוד העיטורים הפומבי
-        enabled: הפעלת עיטור
+        enabled: פעיל
+        disabled: מושבת
         icon: סמליל
         image: תמונה
         graphic: גרפיקה

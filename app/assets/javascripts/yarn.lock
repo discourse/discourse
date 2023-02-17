@@ -956,10 +956,10 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
-"@babel/standalone@^7.20.14":
-  version "7.20.14"
-  resolved "https://registry.yarnpkg.com/@babel/standalone/-/standalone-7.20.14.tgz#26b02632680ca58da9612630b1035d11e62437a1"
-  integrity sha512-zxdQD6+eMQumJFPOLpOZE34JAAGrZPMXCKvHR7Mtat/l+nHDOxlit5u85HDk5WkBXmvN5PhUMeimiC95KXD9+A==
+"@babel/standalone@^7.20.15":
+  version "7.20.15"
+  resolved "https://registry.yarnpkg.com/@babel/standalone/-/standalone-7.20.15.tgz#ef82f1a9789d21d8b23f74d9fa8acecbe6ced02c"
+  integrity sha512-B3LmZ1NHlTb2eFEaw8rftZc730Wh9MlmsH8ubb6IjsNoIk9+SQ2aAA0nrm/1806+PftPRAACPClmKTu8PG7Tew==
 
 "@babel/template@^7.16.7", "@babel/template@^7.18.10", "@babel/template@^7.20.7":
   version "7.20.7"
@@ -1012,6 +1012,20 @@
   version "2.0.10"
   resolved "https://registry.yarnpkg.com/@discourse/itsatrap/-/itsatrap-2.0.10.tgz#c7e750eeb32b54e769e952c4ecc472213eb1385a"
   integrity sha512-Jn1gdiyHMGUsmUfLFf4Q7VnTAv0l7NePbegU6pKhKHEmbzV3FosGxq30fTOYgVyTS1bxqGjlA6LvQttJpv3ROw==
+
+"@discourse/virtual-dom@^2.1.2-0":
+  version "2.1.2-0"
+  resolved "https://registry.yarnpkg.com/@discourse/virtual-dom/-/virtual-dom-2.1.2-0.tgz#74e44261c7b0a99b3bf6db0eac37b86e978906a6"
+  integrity sha512-5sTfdNxyrFK9yb98YLBAChYiO2K6Go7ptErVUQciT7rgueoGyLyw6Sm0FeVkSK1GLfusYFKZG8ch2vGNzJ0wlQ==
+  dependencies:
+    browser-split "0.0.1"
+    error "^4.3.0"
+    ev-store "^7.0.0"
+    global "^4.3.0"
+    is-object "^1.0.1"
+    next-tick "^0.2.2"
+    x-is-array "0.1.0"
+    x-is-string "0.1.0"
 
 "@ember-compat/tracked-built-ins@^0.9.1":
   version "0.9.1"
@@ -1599,20 +1613,20 @@
   resolved "https://registry.yarnpkg.com/@uppy/store-default/-/store-default-3.0.2.tgz#870724c45a2f671d625123cb4a412e3bfae935d9"
   integrity sha512-kIQMCjXui6tjF1E9xGo4YHkvt71McXkU0FStrcQuBrRXuOhb+NcuWh3sMh3KryivVNgT6w5Odrlw2FUFkl9cqA==
 
-"@uppy/utils@^5.0.2", "@uppy/utils@^5.1.1":
-  version "5.1.1"
-  resolved "https://registry.yarnpkg.com/@uppy/utils/-/utils-5.1.1.tgz#9597e8696e17d71413672bd56eb082c7410514a3"
-  integrity sha512-uoI+PcIVQboky0ZbN4PQeK1seZnnJocomzeK7blId9HKJ6QNgZLf2ibk2CQuQxrOuNsWhgrhs5uLO5Si0oM0Yw==
+"@uppy/utils@^5.0.2", "@uppy/utils@^5.1.1", "@uppy/utils@^5.1.2":
+  version "5.1.2"
+  resolved "https://registry.yarnpkg.com/@uppy/utils/-/utils-5.1.2.tgz#136e4a2d3fc7222c6d19e0111fdd56bb2449be60"
+  integrity sha512-a/QSxcYeK1SSOjyyohi0oSwLDMJ9SSWwDELDii1WOKiJwmtt5O6pGCKHTnvrr6RwbiedngG0dZi3koYOG+MdoA==
   dependencies:
     lodash.throttle "^4.1.1"
 
-"@uppy/xhr-upload@^3.0.4":
-  version "3.0.4"
-  resolved "https://registry.yarnpkg.com/@uppy/xhr-upload/-/xhr-upload-3.0.4.tgz#219a92c832bee1f089992958d27ec71dbe9d9d7d"
-  integrity sha512-uJ1oxcwEaSLnrexvi6Lp57hV3z3DsovgVmYIVwg+z/EnrRcL32wNRE7FcIr8Mk9e1jdMiFYlk6cQmiP2dZep8A==
+"@uppy/xhr-upload@^3.0.4", "@uppy/xhr-upload@^3.1.0":
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/@uppy/xhr-upload/-/xhr-upload-3.1.0.tgz#a6a2d11329ac8a8745ff15535c156082ebc41e3a"
+  integrity sha512-v0OsrB74w9RcFU8VMFElxMuGaSFHBuAlkbK30zHEY2YEKUsCfkWMdUbpaWNc1KWERH66Fv57IsA3AbK2HTjWdw==
   dependencies:
-    "@uppy/companion-client" "^3.0.2"
-    "@uppy/utils" "^5.0.2"
+    "@uppy/companion-client" "^3.1.1"
+    "@uppy/utils" "^5.1.2"
     nanoid "^4.0.0"
 
 "@webassemblyjs/ast@1.11.1":
@@ -3734,12 +3748,12 @@ ember-cached-decorator-polyfill@^1.0.1:
     ember-cli-babel "^7.26.11"
     ember-cli-babel-plugin-helpers "^1.1.1"
 
-ember-cli-app-version@^5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/ember-cli-app-version/-/ember-cli-app-version-5.0.0.tgz#adad17c6f706f419b223707eec66dd1cd28530c3"
-  integrity sha512-afhx/CXDOMNXzoe4NDPy5WUfxWmYYHUzMCiTyvPBxCDBXYcMrtxNWxvgaSaeqcoHVEmqzeyBj8V82tzmT1dcyw==
+ember-cli-app-version@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/ember-cli-app-version/-/ember-cli-app-version-6.0.0.tgz#531cdd40c30076f0b14122c76d35a30543de21ef"
+  integrity sha512-XhzETSTy+RMTIyxM/FaZ/8aJvAwT/iIp8HC9zukpOaSPEm5i6Vm4tskeXY4OBnY3VwFWNXWssDt1hgIkUP76WQ==
   dependencies:
-    ember-cli-babel "^7.23.1"
+    ember-cli-babel "^7.26.11"
     git-repo-info "^2.1.1"
 
 ember-cli-babel-plugin-helpers@^1.0.0, ember-cli-babel-plugin-helpers@^1.1.1:
@@ -4516,10 +4530,10 @@ eslint-visitor-keys@^3.3.0:
   resolved "https://registry.yarnpkg.com/eslint-visitor-keys/-/eslint-visitor-keys-3.3.0.tgz#f6480fa6b1f30efe2d1968aa8ac745b862469826"
   integrity sha512-mQ+suqKJVyeuwGYHAdjMFqjCyfl8+Ldnxuyp3ldiMBFKkvytrXUZWaiPCEav8qDHKty44bD+qV1IP4T+w+xXRA==
 
-eslint@^8.33.0:
-  version "8.33.0"
-  resolved "https://registry.yarnpkg.com/eslint/-/eslint-8.33.0.tgz#02f110f32998cb598c6461f24f4d306e41ca33d7"
-  integrity sha512-WjOpFQgKK8VrCnAtl8We0SUOy/oVZ5NHykyMiagV1M9r8IFpIJX7DduK6n1mpfhlG7T1NLWm2SuD8QB7KFySaA==
+eslint@^8.34.0:
+  version "8.34.0"
+  resolved "https://registry.yarnpkg.com/eslint/-/eslint-8.34.0.tgz#fe0ab0ef478104c1f9ebc5537e303d25a8fb22d6"
+  integrity sha512-1Z8iFsucw+7kSqXNZVslXS8Ioa4u2KM7GPwuKtkTFAqZ/cHMcEaR+1+Br0wLlot49cNxIiZk5wp8EAbPcYZxTg==
   dependencies:
     "@eslint/eslintrc" "^1.4.1"
     "@humanwhocodes/config-array" "^0.11.8"
@@ -8213,10 +8227,10 @@ sane@^4.0.0, sane@^4.1.0:
     minimist "^1.1.1"
     walker "~1.0.5"
 
-sass@^1.57.1:
-  version "1.57.1"
-  resolved "https://registry.yarnpkg.com/sass/-/sass-1.57.1.tgz#dfafd46eb3ab94817145e8825208ecf7281119b5"
-  integrity sha512-O2+LwLS79op7GI0xZ8fqzF7X2m/m8WFfI02dHOdsK5R2ECeS5F62zrwg/relM1rjSLy7Vd/DiMNIvPrQGsA0jw==
+sass@^1.58.1:
+  version "1.58.1"
+  resolved "https://registry.yarnpkg.com/sass/-/sass-1.58.1.tgz#17ab0390076a50578ed0733f1cc45429e03405f6"
+  integrity sha512-bnINi6nPXbP1XNRaranMFEBZWUfdW/AF16Ql5+ypRxfTvCRTTKrLsMIakyDcayUt2t/RZotmL4kgJwNH5xO+bg==
   dependencies:
     chokidar ">=3.0.0 <4.0.0"
     immutable "^4.0.0"
@@ -8852,10 +8866,10 @@ terser-webpack-plugin@^5.1.3:
     source-map "^0.6.1"
     terser "^5.7.2"
 
-terser@^5.16.2, terser@^5.3.0, terser@^5.7.2:
-  version "5.16.2"
-  resolved "https://registry.yarnpkg.com/terser/-/terser-5.16.2.tgz#8f495819439e8b5c150e7530fc434a6e70ea18b2"
-  integrity sha512-JKuM+KvvWVqT7muHVyrwv7FVRPnmHDwF6XwoIxdbF5Witi0vu99RYpxDexpJndXt3jbZZmmWr2/mQa6HvSNdSg==
+terser@^5.16.3, terser@^5.3.0, terser@^5.7.2:
+  version "5.16.3"
+  resolved "https://registry.yarnpkg.com/terser/-/terser-5.16.3.tgz#3266017a9b682edfe019b8ecddd2abaae7b39c6b"
+  integrity sha512-v8wWLaS/xt3nE9dgKEWhNUFP6q4kngO5B8eYFUuebsu7Dw/UNAnpUod6UHo04jSSkv8TzKHjZDSd7EXdDQAl8Q==
   dependencies:
     "@jridgewell/source-map" "^0.3.2"
     acorn "^8.5.0"
@@ -9314,20 +9328,6 @@ vary@^1, vary@~1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/vary/-/vary-1.1.2.tgz#2299f02c6ded30d4a5961b0b9f74524a18f634fc"
   integrity sha1-IpnwLG3tMNSllhsLn3RSShj2NPw=
-
-virtual-dom@^2.1.1:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/virtual-dom/-/virtual-dom-2.1.1.tgz#80eda2d481b9ede0c049118cefcb4a05f21d1375"
-  integrity sha1-gO2i1IG57eDASRGM78tKBfIdE3U=
-  dependencies:
-    browser-split "0.0.1"
-    error "^4.3.0"
-    ev-store "^7.0.0"
-    global "^4.3.0"
-    is-object "^1.0.1"
-    next-tick "^0.2.2"
-    x-is-array "0.1.0"
-    x-is-string "0.1.0"
 
 w3c-xmlserializer@^4.0.0:
   version "4.0.0"

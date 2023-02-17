@@ -11,6 +11,19 @@ class ChatMessageDestroyer
       end
   end
 
+  def trash_message(message, actor)
+    ChatMessage.transaction do
+      message.trash!(actor)
+      ChatMention.where(chat_message: message).destroy_all
+      DiscourseEvent.trigger(:chat_message_trashed, message, message.chat_channel, actor)
+
+      # FIXME: We should do something to prevent the blue/green bubble
+      # of other channel members from getting out of sync when a message
+      # gets deleted.
+      ChatPublisher.publish_delete!(message.chat_channel, message)
+    end
+  end
+
   private
 
   def reset_last_read(message_ids)

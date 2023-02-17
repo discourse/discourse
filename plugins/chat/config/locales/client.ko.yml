@@ -138,6 +138,8 @@ ko:
           about: 소개
           members: 회원
           settings: 설정
+      channel_edit_name_slug_modal:
+        name: 채널명
       channel_edit_description_modal:
         title: 설명 수정
         input_placeholder: 설명 추가

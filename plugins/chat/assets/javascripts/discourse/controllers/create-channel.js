@@ -25,6 +25,7 @@ export default class CreateChannelController extends Controller.extend(
   @service dialog;
   @service chatChannelsManager;
   @service chatApi;
+  @service router;
 
   category = null;
   categoryId = null;
@@ -83,7 +84,7 @@ export default class CreateChannelController extends Controller.extend(
       .then((channel) => {
         this.send("closeModal");
         this.chatChannelsManager.follow(channel);
-        this.chat.openChannel(channel);
+        this.router.transitionTo("chat.channel", ...channel.routeModels);
       })
       .catch((e) => {
         this.flash(e.jqXHR.responseJSON.errors[0], "error");

@@ -196,6 +196,7 @@ class CategoriesController < ApplicationController
       category_params[:minimum_required_tags] = 0 if category_params[:minimum_required_tags]&.blank?
 
       old_permissions = cat.permissions_params
+      old_permissions = { "everyone" => 1 } if old_permissions.empty?
 
       if result = cat.update(category_params)
         Scheduler::Defer.later "Log staff action change category settings" do
@@ -364,7 +365,7 @@ class CategoriesController < ApplicationController
         if SiteSetting.enable_category_group_moderation?
           params[:reviewable_by_group_id] = Group.where(
             name: params[:reviewable_by_group_name],
-          ).pluck_first(:id) if params[:reviewable_by_group_name]
+          ).pick(:id) if params[:reviewable_by_group_name]
         end
 
         result =

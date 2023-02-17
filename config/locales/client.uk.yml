@@ -365,11 +365,9 @@ uk:
       edit_bookmark: "Редагувати закладку"
       clear_bookmarks: "Очистити закладки"
       help:
-        bookmark: "Клацніть, щоб додати перший допис на цю тему в закладки"
-        edit_bookmark: "Натисніть, щоб редагувати закладку на цю тему"
         edit_bookmark_for_topic: "Натисніть, щоб редагувати закладку для цієї теми"
         unbookmark: "Натисніть, щоб видалити всі закладки в цій темі"
-        unbookmark_with_reminder: "Натисніть, щоб видалити всі закладки та нагадування в цій темі."
+        unbookmark_with_reminder: "Натисніть, щоб видалити всі закладки та нагадування в цій темі"
     bookmarks:
       created: "Ви додали цей допис в закладки. %{name}"
       created_generic: "Ви створили закладку. %{name}"
@@ -1089,11 +1087,6 @@ uk:
       profile: "Профіль"
       mute: "Приглушити"
       edit: "Редагувати налаштування"
-      download_archive:
-        button_text: "Завантажити все"
-        confirm: "Ви впевнені, що хочете завантажити свої дописи?"
-        success: "Завантаження розпочато, ви отримаєте повідомлення, коли процес завершиться."
-        rate_limit_error: "Дописи можна завантажити раз на день, будь ласка, спробуйте завтра."
       new_private_message: "Нове повідомлення"
       private_message: "Повідомлення"
       private_messages: "Повідомлення"
@@ -2215,8 +2208,6 @@ uk:
         topic_template_not_modified: "Будь ласка, додайте деталі та особливості до вашої теми, відредагувавши шаблон теми."
       save_edit: "Зберегти зміни"
       overwrite_edit: "Перезаписати зміни"
-      reply_original: "Відповісти в початковій темі"
-      reply_here: "Відповісти тут"
       reply: "Відповісти"
       cancel: "Скасувати"
       create_topic: "Створити тему"
@@ -2800,8 +2791,6 @@ uk:
       expand_details: "розгорнути детальну інформацію"
       unread_indicator: "Поки що ніхто з учасників не прочитав останній допис цієї теми."
       suggest_create_topic: Готові <a href>почати нову розмову?</a>
-      jump_reply_up: перейти до попередньої відповіді
-      jump_reply_down: перейти до пізнішої відповіді
       deleted: "Тему було видалено"
       slow_mode_update:
         title: "Повільний режим"
@@ -3196,11 +3185,6 @@ uk:
       collapse: "згорнути"
       sr_collapse_replies: "Згорнути відповіді на допис"
       sr_date: "Дата допису"
-      sr_expand_replies:
-        one: "Цей допис має %{count} відповідь. Натисніть, щоб переглянути"
-        few: "Цей допис має %{count} відповіді. Натисніть, щоб переглянути"
-        many: "Цей допис має %{count} відповідей. Натисніть, щоб переглянути"
-        other: "Цей допис має %{count} відповідей. Натисніть, щоб переглянути"
       expand_collapse: "розгорнути/згорнути"
       sr_below_embedded_posts_description: "Відповіді на допис #%{post_number}"
       sr_embedded_reply_description: "відповідь @%{username} на допис #%{post_number}"
@@ -3521,8 +3505,6 @@ uk:
       images: "Зображення"
       email_in: "Custom incoming email address:"
       email_in_allow_strangers: "Приймати листи від анонімних користувачів без облікових записів"
-      email_in_disabled: "Створення нових тем електронною поштою вимкнено в налаштуваннях сайту. Щоб увімкнути публікацію нових тем електронною поштою, "
-      email_in_disabled_click: 'активуйте налаштування "email in".'
       mailinglist_mirror: "Розділ показує список розсилки"
       show_subcategory_list: "Показувати список підрозділів над списком тем в цьому розділі."
       read_only_banner: "Текст банера, коли користувач не може створити тему в цьому розділі:"
@@ -4143,13 +4125,11 @@ uk:
       enabled: "Включено безпечний режим, щоб вийти з безпечного режиму, закрийте поточне вікно браузера"
     image_removed: "(зображення видалено)"
     pause_notifications:
-      remaining: "%{remaining} залишилось"
       options:
         half_hour: "30 хвилин"
         one_hour: "1 година"
         two_hours: "2 години"
         tomorrow: "До завтра"
-        custom: "Користувацька"
       set_schedule: "Налаштування розкладу сповіщень"
     trust_levels:
       names:
@@ -4200,6 +4180,13 @@ uk:
       all_categories: "Всі розділи"
       all_tags: "Всі теґи"
       sections:
+        custom:
+          save: "Зберегти"
+          delete: "Видалити"
+          links:
+            icon: "Іконка"
+            name: "Імʼя"
+            value: "Посилання"
         about:
           header_link_text: "Про"
         messages:
@@ -4960,6 +4947,8 @@ uk:
           love:
             name: "любов"
             description: "Колір кнопки \"Подобається\"."
+          selected:
+            name: "обраний"
         robots:
           title: "Перевизначите файл robots.txt вашого сайту:"
           warning: "Це назавжди перевизначити будь-які пов’язані налаштування сайту."
@@ -5276,6 +5265,22 @@ uk:
           description: "Введіть текст нижче, щоб перевірити збіги зі стоп словами"
           found_matches: "Знайдені збіги:"
           no_matches: "Збігів, не знайдено"
+      form_templates:
+        nav_title: "Шаблони"
+        list_table:
+          headings:
+            name: "Імʼя"
+            actions: "Дії"
+        view_template:
+          close: "Закрити"
+          edit: "Редагувати"
+          delete: "Видалити"
+        new_template_form:
+          submit: "Зберегти"
+          cancel: "Скасувати"
+        quick_insert_fields:
+          add_new_field: "Додати"
+          dropdown: "Випадаючий список"
       impersonate:
         title: "Втілитися"
         help: "Використовуйте цей інструмент, щоб увійти від імені користувача. Може бути корисно для налагодження. Після цього необхідно вийти та зайти під своїм обліковим записом знову."
@@ -5371,7 +5376,6 @@ uk:
         show_admin_profile: "Адмін"
         manage_user: "Керування користувачем"
         show_public_profile: "Показати публічний профіль"
-        impersonate: "Втілитися"
         action_logs: "Журнал дій"
         ip_lookup: "Пошук IP"
         log_out: "Вийти"
@@ -5712,7 +5716,8 @@ uk:
         allow_title: Дозволити використання значків як звань
         multiple_grant: Можуть бути надані декілька разів
         listable: Відображати нагороди на публічній сторінці Нагороди
-        enabled: Включити відзнаки
+        enabled: включено
+        disabled: вимкнуто
         icon: Іконка
         image: Зображення
         graphic: Іконка бейджа

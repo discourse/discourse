@@ -301,11 +301,11 @@ hu:
       edit_bookmark: "Könyvjelző szerkesztése"
       clear_bookmarks: "Könyvjelzők törlése"
       help:
-        bookmark: "Kattintson a téma első bejegyzésének könyvjelzőzéséhez"
-        edit_bookmark: "Kattintson a témán szereplő könyvjelző szerkesztéséhez"
+        bookmark: "Kattintson a téma könyvjelzővé tételéhez"
+        edit_bookmark: "Kattintson a témában lévő hozzászólás könyvjelzőjének szerkesztéséhez."
         edit_bookmark_for_topic: "Kattintson a témához tartozó könyvjelző szerkesztéséhez"
         unbookmark: "Kattintson a téma valamennyi könyvjelzőjének törléséhez"
-        unbookmark_with_reminder: "Kattintson a téma valamennyi könyvjelzőjének és emlékeztetőjének törléséhez."
+        unbookmark_with_reminder: "Kattintson ide a téma összes könyvjelzőjének és emlékeztetőjének eltávolításához."
     bookmarks:
       created: "Könyvjelzőzte ezt a bejegyzést. %{name}"
       created_generic: "Könyvjelzőzte ezt. %{name}"
@@ -976,10 +976,12 @@ hu:
       mute: "Némítás"
       edit: "Beállítások szerkesztése"
       download_archive:
-        button_text: "Összes letöltése"
-        confirm: "Biztos, hogy letölti a bejegyzéseit?"
-        success: "A letöltés elkezdődött, értesítjük, amint a folyamat véget ért."
-        rate_limit_error: "A bejegyzések naponta csak egyszer töltetők le, próbálja újra holnap."
+        title: "Adatok exportálása"
+        description: "Töltse le a fiók tevékenységének és beállításainak archívumát."
+        button_text: "Archívum kérése"
+        confirm: "Szeretné letölteni a fiók tevékenységének és beállításainak archívumát?"
+        success: "Megkezdtük az archívum összegyűjtését, üzenetet fog kapni, ha a folyamat befejeződik."
+        rate_limit_error: "A fiókarchívumokat naponta egyszer lehet letölteni, kérjük, próbálja meg holnap újra."
       new_private_message: "Új üzenet"
       private_message: "Üzenet"
       private_messages: "Üzenetek"
@@ -2051,8 +2053,6 @@ hu:
         topic_template_not_modified: "Adjon hozzá részleteket és konkrétumokat a témájához a témasablon szerkesztésével."
       save_edit: "Módosítások mentése"
       overwrite_edit: "Módosítások felülírása"
-      reply_original: "Válasz az eredeti témára"
-      reply_here: "Válasz ide"
       reply: "Válasz"
       cancel: "Mégse"
       create_topic: "Téma létrehozása"
@@ -2580,8 +2580,8 @@ hu:
         Első bejegyzés: %{createdAtDate}
         Elküldve: %{bumpedAtDate}
       suggest_create_topic: Készen áll, hogy <a href>új beszélgetést kezdjen?</a>
-      jump_reply_up: ugrás a korábbi válaszhoz
-      jump_reply_down: ugrás a későbbi válaszhoz
+      jump_reply: "Ugrás a hozzászólás eredeti helyére"
+      jump_reply_aria: "Ugrás @%{username} bejegyzésére az eredeti helyén"
       deleted: "A téma törölve lett"
       slow_mode_update:
         title: "Lassú mód"
@@ -2765,7 +2765,6 @@ hu:
           one: "Jelenleg %{count} kítűzött témája van. A túl sok kiemelt téma megzavarhatja az új vagy névtelen felhasználókat. Biztos, hogy kitűz egy újabb témát ebben a kategóriában?"
           other: "Jelenleg %{count} kítűzött témája van. A túl sok kiemelt téma megzavarhatja az új vagy névtelen felhasználókat. Biztos, hogy kitűz egy újabb témát ebben a kategóriában?"
         unpin_globally: "Távolítsa el ezt a témát az összes téma listájának tetejéről."
-        global_pin_note: "A felhasználók saját maguk számára feloldhatják a témát."
         not_pinned_globally: "Nincsenek globálisan rögzített témák."
         already_pinned_globally:
           one: "Jelenleg globálisan kitűzött témák: <strong class='badge badge-notification unread'>%{count}</strong>"
@@ -2971,7 +2970,6 @@ hu:
         convert_to_moderator: "Stábszín hozzáadása"
         revert_to_regular: "Stábszín eltávolítása"
         rebake: "HTML újjáépítése"
-        publish_page: "Oldal közzététele"
         unhide: "Elrejtés visszavonása"
         change_owner: "Tulajdonjog módosítása..."
         grant_badge: "Jelvény adományozása..."
@@ -3111,8 +3109,7 @@ hu:
       email_in: "Egyéni e-mail cím a bejövő üzeneteknek:"
       email_in_tooltip: "Több e-mail címet elválaszthat a | karakterrel."
       email_in_allow_strangers: "E-mailek fogadása fiók nélküli névtelen felhasználóktól"
-      email_in_disabled: "Az e-maillel történő témalétrehozáski van kapcsolva az oldal beállításaiban. A bekapcsoláshoz"
-      email_in_disabled_click: 'engedélyezd az "e-mail be" beállítást.'
+      email_in_disabled: "Az új témák e-mailben történő közzététele le van tiltva. Ha engedélyezni szeretné az új témák e-mailben történő közzétételét, engedélyezze a <a href='%{setting_url}'>„e-mail in”</a> beállítást."
       num_featured_topics: "A kategóriák oldalon megjelenő témák száma:"
       subcategory_num_featured_topics: "A kiemelt témák száma a szülő kategória oldalán:"
       sort_order: "Témakörök csoportosítása:"
@@ -3298,9 +3295,6 @@ hu:
         lower_title_with_count:
           one: "%{count} olvasatlan"
           other: "%{count} olvasatlan"
-      unseen:
-        title: "Nem látott"
-        lower_title: "nem látott"
       new:
         lower_title_with_count:
           one: "%{count} új"
@@ -3496,9 +3490,6 @@ hu:
       manage_groups: "Címke csoport kezelése"
       upload: "Címkék feltöltése"
       upload_successful: "A címkék sikeresen feltöltve"
-      delete_unused_confirmation_more_tags:
-        one: "%{tags} és még %{count}"
-        other: "%{tags} és még %{count}"
       delete_no_unused_tags: "Nincsenek fel nem használt címkék."
       tag_list_joiner: ", "
       delete_unused: "A nem használt címkék törlése"
@@ -3568,14 +3559,11 @@ hu:
       enabled: "A biztonságos mód be van kapcsolva, hogy kilépj a biztonságos módból lépj ki ebből a keresési lapból"
     image_removed: "(kép eltávolítva)"
     pause_notifications:
-      label: "Értesítések szüneteltetése"
-      remaining: "%{remaining} van hátra"
       options:
         half_hour: "30 percig"
         one_hour: "1 óráig"
         two_hours: "2 óráig"
         tomorrow: "Holnapig"
-        custom: "Egyéni"
     trust_levels:
       names:
         newuser: "új felhasználó"
@@ -3620,6 +3608,13 @@ hu:
       all_categories: "Minden kategória"
       all_tags: "Összes címke"
       sections:
+        custom:
+          save: "Mentés"
+          delete: "Törlés"
+          links:
+            icon: "Ikon"
+            name: "Név"
+            value: "Hivatkozás"
         about:
           header_link_text: "Névjegy"
         messages:
@@ -3916,6 +3911,8 @@ hu:
               list_user_badges: A felhasználó jelvényeinek felsorolása.
               assign_badge_to_user: Jelvény kiosztása egy felhasználónak.
               revoke_badge_from_user: Jelvény elvétele egy felhasználótól.
+            search:
+              query: Keresés a `/search/query?term=term` végpont használatával.
       web_hooks:
         title: "Webhooks"
         create: "Létrehoz"
@@ -4247,6 +4244,8 @@ hu:
           love:
             name: "szerelem"
             description: "A kedvelés gomb színe."
+          selected:
+            name: "kiválasztott"
         email_style:
           title: "E-mail stílus"
           heading: "E-mail stílus testreszabása"
@@ -4355,6 +4354,7 @@ hu:
           no_previous: "Nincsen előzőleges érték"
           deleted: "Nincs új érték. A feljegyzés törölve lett"
           actions:
+            permanently_delete_post_revisions: "véglegesen törölni a hozzászólás módosításait"
             delete_user: "felhasználó törlése"
             change_trust_level: "bizalmi szint megváltoztatása"
             change_username: "Felhasználónév módosítása"
@@ -4472,7 +4472,6 @@ hu:
           censor: "Cenzúra"
           require_approval: "Jóváhagyást igényel"
           flag: "Jelölés"
-          replace: "Csere"
           silence: "Elnémítás"
           link: "Hivatkozás"
         action_descriptions:
@@ -4489,6 +4488,39 @@ hu:
         test:
           button_label: "Teszt"
           no_matches: "Nem található egyezés"
+      form_templates:
+        nav_title: "Sablonok"
+        new_template: "Új sablon"
+        list_table:
+          headings:
+            name: "Név"
+            actions: "Műveletek"
+          actions:
+            view: "Sablon megtekintése"
+            edit: "Sablon szerkesztése"
+            delete: "Sablon törlése"
+        view_template:
+          close: "Lezárás"
+          edit: "Szerkesztés"
+          delete: "Törlés"
+        new_template_form:
+          submit: "Mentés"
+          cancel: "Mégse"
+          name:
+            label: "Sablon neve"
+            placeholder: "Adja meg a sablon nevét..."
+          template:
+            label: "Sablon"
+            placeholder: "Hozzon létre egy YAML-sablont itt..."
+        delete_confirm: "Biztosan törölni szeretné ezt a sablont?"
+        quick_insert_fields:
+          add_new_field: "Hozzáad"
+          checkbox: "Jelölőnégyzet"
+          input: "Rövid válasz"
+          textarea: "Hosszú válasz"
+          dropdown: "Legördülő menü"
+          upload: "Fájl feltöltése"
+          multiselect: "Több választási lehetőség"
       impersonate:
         title: "Megszemélyesít"
         not_found: "A felhasználó nem található."
@@ -4572,7 +4604,6 @@ hu:
         staged: "Lépcsőzetes?"
         show_admin_profile: "Adminisztrátor"
         show_public_profile: "Publikus profil megjelenítése"
-        impersonate: "Megszemélyesít"
         ip_lookup: "IP-cím keresés"
         log_out: "Kijelentkezés"
         revoke_admin: "Admin jog visszavonása"
@@ -4735,9 +4766,7 @@ hu:
           dashboard: "Vezérlőpult"
           navigation: "Navigáció"
         default_categories:
-          modal_description: "Szeretné visszamenőleg alkalmazni ezt a változtatást? Ez %{count} felhasználó beállítását fogja módosítani."
           modal_yes: "Igen"
-          modal_no: "Nem, csak mostantól alkalmazza a változtatást"
       badges:
         title: Jelvények
         new_badge: Új jelvény
@@ -4766,7 +4795,8 @@ hu:
         none_selected: "A kezdéshez válasszon egy jelvényt"
         allow_title: Jelvény címként való használatának engedélyezése
         listable: Jelvény megjelenítése a nyilvános jelvények oldalon
-        enabled: Jelvény engedélyezése
+        enabled: engedélyezve
+        disabled: kikapcsolva
         icon: Ikon
         image: Kép
         select_an_icon: "Válasszon ikont"
@@ -4838,7 +4868,6 @@ hu:
         action:
           label: "Szöveg cseréje…"
         modal:
-          title: "Szöveg cseréje"
           categories: "Kategóriák"
           topics: "Témák"
           replace: "Csere"

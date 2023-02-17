@@ -923,3 +923,80 @@ table.permalinks {
     }
   }
 }
+
+.form-templates {
+  &--info {
+    margin-top: 1rem;
+  }
+
+  &--table {
+    margin-bottom: 1rem;
+
+    .admin-list-item .action {
+      text-align: right;
+    }
+  }
+
+  &--form {
+    input {
+      width: 300px;
+    }
+
+    .ace-wrapper {
+      position: relative;
+      height: calc(100vh - 450px);
+      min-height: 200px;
+      width: 100%;
+      box-shadow: shadow("footer-nav");
+      border-radius: 4px;
+    }
+
+    .ace_editor {
+      border-radius: 4px;
+      position: absolute;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+    }
+
+    .ace_placeholder {
+      font-family: inherit;
+      font-size: var(--font-up-1);
+      color: var(--primary-high);
+    }
+
+    .footer-buttons {
+      display: flex;
+      gap: 0.5rem;
+      .btn-danger {
+        margin-left: auto;
+      }
+    }
+  }
+
+  &--quick-insert-field-buttons {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-left: 1rem;
+
+    span {
+      margin-right: 0.25rem;
+    }
+
+    .btn {
+      &:not(:last-child) {
+        border-right: 1px solid var(--primary-low);
+      }
+    }
+  }
+}
+
+.admin-customize-form-template-view-modal {
+  .modal-footer {
+    .btn:last-child {
+      margin-left: auto;
+    }
+  }
+}

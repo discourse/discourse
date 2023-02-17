@@ -38,9 +38,6 @@ es:
       browse_all_channels: "Examinar todos los canales"
       move_to_channel:
         title: "Mover los mensajes al canal"
-        instructions:
-          one: "Estás moviendo <strong>%{count}</strong> mensaje. Selecciona un canal de destino. Se creará un mensaje marcador de posición en el canal <strong>%{channelTitle}</strong> para indicar que se ha movido este mensaje."
-          other: "Estás moviendo <strong>%{count}</strong> mensajes. Selecciona un canal de destino. Se creará un mensaje marcador de posición en el canal <strong>%{channelTitle}</strong> para indicar que se han movido estos mensajes."
         confirm_move: "Mover mensajes"
       channel_settings:
         title: "Ajustes del canal"
@@ -71,7 +68,6 @@ es:
         instructions: "El cierre del canal impide que los usuarios que no son del personal envíen nuevos mensajes o editen los existentes. ¿Seguro que quieres cerrar este canal?"
       channel_delete:
         title: "Eliminar canal"
-        instructions: "<p>Elimina el canal de <strong>%{name}</strong> y el historial de chat. Todos los mensajes y datos relacionados, como las reacciones y las subidas, se eliminarán permanentemente. Si quieres conservar el historial del canal y descomponerlo, quizá quieras archivar el canal en su lugar.</p> <p>¿Seguro que quieres <strong>eliminar permanentemente</strong> el canal? Para confirmarlo, escribe el nombre del canal en la casilla de abajo.</p>"
         confirm: "Comprendo las consecuencias, eliminar el canal"
         confirm_channel_name: "Introduce el nombre del canal"
         process_started: "Se ha iniciado el proceso de eliminación del canal. Este modal se cerrará en breve, ya no verás el canal eliminado en ninguna parte."
@@ -237,6 +233,8 @@ es:
           about: Acerca de
           members: Miembros
           settings: Ajustes
+      channel_edit_name_slug_modal:
+        name: Nombre del canal
       channel_edit_description_modal:
         title: Editar descripción
         input_placeholder: Añade una descripción

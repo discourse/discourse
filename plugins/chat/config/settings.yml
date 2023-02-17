@@ -113,3 +113,7 @@ chat:
   max_chat_draft_length:
     default: 50_000
     hidden: true
+  enable_experimental_chat_threaded_discussions:
+    default: false
+    hidden: true
+    client: true

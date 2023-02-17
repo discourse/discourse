@@ -122,7 +122,7 @@ module Email
           if from_address.blank?
             nil
           else
-            Group.where(email_username: from_address, smtp_enabled: true).pluck_first(:id)
+            Group.where(email_username: from_address, smtp_enabled: true).pick(:id)
           end
         )
 
@@ -293,6 +293,8 @@ module Email
       rescue *SMTP_CLIENT_ERRORS => e
         return skip(SkippedEmailLog.reason_types[:custom], custom_reason: e.message)
       end
+
+      DiscourseEvent.trigger(:after_email_send, @message, @email_type)
 
       email_log.save!
       email_log

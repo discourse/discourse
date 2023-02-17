@@ -37,12 +37,6 @@ const FETCH_MORE_MESSAGES_THROTTLE_MS = isTesting() ? 0 : 500;
 const PAST = "past";
 const FUTURE = "future";
 
-const MENTION_RESULT = {
-  invalid: -1,
-  unreachable: 0,
-  over_members_limit: 1,
-};
-
 export default Component.extend({
   classNameBindings: [":chat-live-pane", "sendingLoading", "loading"],
   chatChannel: null,
@@ -51,7 +45,6 @@ export default Component.extend({
   loadingMorePast: false,
   loadingMoreFuture: false,
   hoveredMessageId: null,
-  onSwitchChannel: null,
 
   allPastMessagesLoaded: false,
   sendingLoading: false,
@@ -72,14 +65,6 @@ export default Component.extend({
   _lastSelectedMessage: null,
   targetMessageId: null,
   hasNewMessages: null,
-
-  // Track mention hints to display warnings
-  unreachableGroupMentions: null, // Array
-  overMembersLimitGroupMentions: null, // Array
-  tooManyMentions: false,
-  mentionsCount: null,
-  // Complimentary structure to avoid repeating mention checks.
-  _mentionWarningsSeen: null, // Hash
 
   chat: service(),
   chatChannelsManager: service(),
@@ -417,8 +402,6 @@ export default Component.extend({
     this.setProperties({
       messages: this._prepareMessages(messages),
       details: {
-        chat_channel_id: this.chatChannel.id,
-        chatable_type: this.chatChannel.chatable_type,
         can_delete_self: meta.can_delete_self,
         can_delete_others: meta.can_delete_others,
         can_flag: meta.can_flag,
@@ -588,6 +571,8 @@ export default Component.extend({
       return;
     }
 
+    this.set("targetMessageId", messageId);
+
     if (this.messageLookup[messageId]) {
       // We have the message rendered. highlight and scrollTo
       this.scrollToMessage(messageId, {
@@ -596,7 +581,6 @@ export default Component.extend({
         autoExpand: true,
       });
     } else {
-      this.set("targetMessageId", messageId);
       this.fetchMessages(this.chatChannel);
     }
   },
@@ -789,7 +773,15 @@ export default Component.extend({
           id: data.chat_message.id,
           staged_id: null,
           excerpt: data.chat_message.excerpt,
+          thread_id: data.chat_message.thread_id,
+          chat_channel_id: data.chat_message.chat_channel_id,
         });
+
+        const inReplyToMsg =
+          this.messageLookup[data.chat_message.in_reply_to?.id];
+        if (inReplyToMsg && !inReplyToMsg.thread_id) {
+          inReplyToMsg.set("thread_id", data.chat_message.thread_id);
+        }
 
         // some markdown is cooked differently on the server-side, e.g.
         // quotes, avatar images etc.
@@ -999,57 +991,58 @@ export default Component.extend({
     }
 
     this.set("_nextStagedMessageId", this._nextStagedMessageId + 1);
-    const cooked = this.cook(message);
-    const stagedId = this._nextStagedMessageId;
-    let data = {
-      message,
-      cooked,
-      staged_id: stagedId,
-      upload_ids: uploads.map((upload) => upload.id),
-    };
-    if (this.replyToMsg) {
-      data.in_reply_to_id = this.replyToMsg.id;
-    }
+    return this.chat.loadCookFunction(this.site.categories).then((cook) => {
+      const cooked = cook(message);
+      const stagedId = this._nextStagedMessageId;
+      let data = {
+        message,
+        cooked,
+        staged_id: stagedId,
+        upload_ids: uploads.map((upload) => upload.id),
+      };
+      if (this.replyToMsg) {
+        data.in_reply_to_id = this.replyToMsg.id;
+      }
 
-    // Start ajax request but don't return here, we want to stage the message instantly when all messages are loaded.
-    // Otherwise, we'll fetch latest and scroll to the one we just created.
-    // Return a resolved promise below.
-    const msgCreationPromise = this.chatApi
-      .sendMessage(this.chatChannel.id, data)
-      .catch((error) => {
-        this._onSendError(data.staged_id, error);
-      })
-      .finally(() => {
-        if (this._selfDeleted) {
-          return;
-        }
-        this.set("sendingLoading", false);
-      });
+      // Start ajax request but don't return here, we want to stage the message instantly when all messages are loaded.
+      // Otherwise, we'll fetch latest and scroll to the one we just created.
+      // Return a resolved promise below.
+      const msgCreationPromise = this.chatApi
+        .sendMessage(this.chatChannel.id, data)
+        .catch((error) => {
+          this._onSendError(data.staged_id, error);
+        })
+        .finally(() => {
+          if (this._selfDeleted) {
+            return;
+          }
+          this.set("sendingLoading", false);
+        });
 
-    if (this.details?.can_load_more_future) {
-      msgCreationPromise.then(() => this._fetchAndScrollToLatest());
-    } else {
-      const stagedMessage = this._prepareSingleMessage(
-        // We need to add the user and created at for presentation of staged message
-        {
-          message,
-          cooked,
-          stagedId,
-          uploads: cloneJSON(uploads),
-          staged: true,
-          user: this.currentUser,
-          in_reply_to: this.replyToMsg,
-          created_at: new Date(),
-        },
-        this.messages[this.messages.length - 1]
-      );
-      this.messages.pushObject(stagedMessage);
-      this._stickScrollToBottom();
-    }
+      if (this.details?.can_load_more_future) {
+        msgCreationPromise.then(() => this._fetchAndScrollToLatest());
+      } else {
+        const stagedMessage = this._prepareSingleMessage(
+          // We need to add the user and created at for presentation of staged message
+          {
+            message,
+            cooked,
+            stagedId,
+            uploads: cloneJSON(uploads),
+            staged: true,
+            user: this.currentUser,
+            in_reply_to: this.replyToMsg,
+            created_at: new Date(),
+          },
+          this.messages[this.messages.length - 1]
+        );
+        this.messages.pushObject(stagedMessage);
+        this._stickScrollToBottom();
+      }
 
-    this._resetAfterSend();
-    this.appEvents.trigger("chat-composer:reply-to-set", null);
-    return Promise.resolve();
+      this._resetAfterSend();
+      this.appEvents.trigger("chat-composer:reply-to-set", null);
+    });
   },
 
   async _upsertChannelWithMessage(channel, message, uploads) {
@@ -1069,7 +1062,7 @@ export default Component.extend({
           upload_ids: (uploads || []).mapBy("id"),
         },
       }).then(() => {
-        this.onSwitchChannel(c);
+        this.router.transitionTo("chat.channel", "-", c.id);
       })
     );
   },
@@ -1324,81 +1317,6 @@ export default Component.extend({
     if (!this.chatChannel.directMessageChannelDraft) {
       this._reportReplyingPresence(value);
     }
-  },
-
-  @action
-  updateMentions(mentions) {
-    const mentionsCount = mentions?.length;
-    this.set("mentionsCount", mentionsCount);
-
-    if (mentionsCount > 0) {
-      if (mentionsCount > this.siteSettings.max_mentions_per_chat_message) {
-        this.set("tooManyMentions", true);
-      } else {
-        this.set("tooManyMentions", false);
-        const newMentions = mentions.filter(
-          (mention) => !(mention in this._mentionWarningsSeen)
-        );
-
-        if (newMentions?.length > 0) {
-          this._recordNewWarnings(newMentions, mentions);
-        } else {
-          this._rebuildWarnings(mentions);
-        }
-      }
-    } else {
-      this.set("tooManyMentions", false);
-      this.set("unreachableGroupMentions", []);
-      this.set("overMembersLimitGroupMentions", []);
-    }
-  },
-
-  _recordNewWarnings(newMentions, mentions) {
-    ajax("/chat/api/mentions/groups.json", {
-      data: { mentions: newMentions },
-    })
-      .then((newWarnings) => {
-        newWarnings.unreachable.forEach((warning) => {
-          this._mentionWarningsSeen[warning] = MENTION_RESULT["unreachable"];
-        });
-
-        newWarnings.over_members_limit.forEach((warning) => {
-          this._mentionWarningsSeen[warning] =
-            MENTION_RESULT["over_members_limit"];
-        });
-
-        newWarnings.invalid.forEach((warning) => {
-          this._mentionWarningsSeen[warning] = MENTION_RESULT["invalid"];
-        });
-
-        this._rebuildWarnings(mentions);
-      })
-      .catch(this._rebuildWarnings(mentions));
-  },
-
-  _rebuildWarnings(mentions) {
-    const newWarnings = mentions.reduce(
-      (memo, mention) => {
-        if (
-          mention in this._mentionWarningsSeen &&
-          !(this._mentionWarningsSeen[mention] === MENTION_RESULT["invalid"])
-        ) {
-          if (
-            this._mentionWarningsSeen[mention] === MENTION_RESULT["unreachable"]
-          ) {
-            memo[0].push(mention);
-          } else {
-            memo[1].push(mention);
-          }
-        }
-
-        return memo;
-      },
-      [[], []]
-    );
-
-    this.set("unreachableGroupMentions", newWarnings[0]);
-    this.set("overMembersLimitGroupMentions", newWarnings[1]);
   },
 
   @action

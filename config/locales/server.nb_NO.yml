@@ -1133,8 +1133,6 @@ nb_NO:
   subject_pm: "[privat samtale]"
   user_notifications:
     previous_discussion: "Tidligere svar"
-    unsubscribe:
-      title: "Avmeld"
     user_invited_to_private_message_pm_group:
       title: "Bruker inviterte gruppe til privat samtale"
     user_invited_to_private_message_pm:
@@ -1169,7 +1167,6 @@ nb_NO:
       liked_received: "Likes mottatt"
       new_users: "Nye brukere"
       popular_topics: "Populære emner"
-      follow_topic: "Følg dette emnet"
       join_the_discussion: "Les mer"
       popular_posts: "Populære innlegg"
       more_new: "Nytt for deg"
@@ -1187,8 +1184,6 @@ nb_NO:
     see_more: "Mer"
     search_title: "Søk i denne siden"
     search_button: "Søk"
-  deleted: "slettet"
-  image: "bilde"
   upload:
     edit_reason: "Last ned lokal kopi av bilder"
     unauthorized: "Beklager, filen du prøver å legge til er ikke autorisert\n(authorized extensions: %{authorized_extensions})."
@@ -1221,88 +1216,6 @@ nb_NO:
     title: "Bruksvilkår"
   privacy_topic:
     title: "Personvernserklæring"
-    body: |
-      <a name="samle"></a>
-
-      ## [Hvilke opplysninger samler vi?](#samle)
-
-      Vi samler opplysninger fra deg når du registrerer deg på nettstedet vårt, og vi samler data når du deltar på forumet ved å lese, skrive og evaluere innholdet som deles her.
-
-      Når du registrerer deg på nettstedet vårt, kan du bli bedt om å oppgi navnet og e-postadressen din. Imidlertid kan du besøke nettstedet vårt uten å registrere deg. E-postadressen din vil bli bekreftet med en e-post som inneholder en unik lenke. Hvis siden den lenker til, blir besøkt, vet vi at du har kontroll over e-postadressen.
-
-      Når du registrerer deg og skriver innlegg, registrerer vi IP-adressen som innlegget stammer fra. Vi kan også oppbevare logger som inkluderer IP-adressen til alle forespørslene sendt til tjeneren vår.
-
-      <a name="bruk"></a>
-
-      ## [Hva bruker vi opplysningene dine til?](#bruk)
-
-      Alle opplysningene vi samler fra deg, kan bli brukt på en av følgende måter:
-
-      * For å gjøre opplevelsen din mer personlig. Opplysningene dine hjelper oss å svare bedre på dine individuelle behov.
-      * For å forbedre nettstedet vårt. Vi jobber konstant for å forbedre nettstedets tilbud basert på opplysningene og tilbakemeldingene vi mottar fra deg.
-      * For å forbedre vår kundeservice. Dine opplysninger hjelper oss å svare mer effektivt på dine forespørsler sendt til kundeservice eller behov om støtte.
-      * For å sende periodiske e-poster. E-postadressen du oppgir, kan bli brukt til å sende deg informasjon, påminnelser som du ber om ved endringer av emner eller ved svar til brukernavnet ditt, til henvendelser, og/eller andre forspørsler eller andre spørsmål.
-
-      <a name="sikre"></a>
-
-      ## [Hvordan sikrer vi opplysningene?](#sikre)
-
-      Vi gjennomfører flere sikkerhetstiltak for å holde personopplysningene dine sikre når du skriver inn, lagrer eller henter dem.
-
-      <a name="datalagring"></a>
-
-      ## [Hva er retningslinjene deres for lagring av data?](#datalagring)
-
-      Vi vil forsøke i god tro å:
-
-      * Ikke oppbevare tjener-logger som inneholder IP-adressen til alle forespørslene til denne tjeneren i lenger enn i 90 dager.
-      * Ikke oppbevare IP-adressene forbundet med registrerte brukere og deres innlegg lenger enn i 5 år.
-
-      <a name="informasjonskapsler"></a>
-
-      ## [Bruker vi informasjonskapsler?](#informasjonskapsler)
-
-      Ja. Informasjonskapsler er små filer som et nettsted eller dets tjenesteleverandør overfører til harddisken på datamaskinen din gjennom nettleseren din (dersom du tillater det). Disse informasjonskapslene gjør det mulig for nettstedet å gjenkjenne nettleseren din og, dersom du har en konto, knytte nettleseren til den.
-
-      Vi bruker informasjonskapsler for å forstå og lagre preferansene dine for fremtidige besøk og for å samle aggregatdata om trafikk på og samhandling med nettstedet slik at vi kan tilby bedre opplevelser og verktøy på nettstedet i fremtiden. Vi kan inngå avtaler med tredjeparts tjenesteleverandører for å bistå oss i å forstå besøkerne våres bedre. Disse tjenesteleverandørene har ikke lov til å bruke opplysningene samlet på våres vegne unntatt til å hjelpe oss å gjennomføre og forbedre anliggendet vårt.
-
-      <a name="gi-videre"></a>
-
-      ## [Gir vi noen opplysninger videre til andre parter?](#gi-videre)
-
-      Vi verken selger, handler med eller overfører på noen annen måte til andre parter dine identifiserbare personopplysninger. Dette inkluderer ikke tredjeparter som har vår tillit og bistår oss i å drive nettstedet, utføre våre anliggender eller yter tjenester til deg, så lenge disse partene samtykker til å behandle disse opplysningene fortrolig. Vi kan også frigi opplysningene dine dersom vi tror at å frigi dem er hensiktsmessig for å overholde loven, håndheve nettstedet retningslinjer eller beskytte våre og andres rettigheter. Imidlertid kan opplysninger som ikke er personlig identifiserbare, bli delt med andre parter for markedsføring, reklame eller annet bruk.
-
-      <a name="tredjepart"></a>
-
-      ## [Tredjeparts lenker](#tredjepart)
-
-      Av og til, etter skjønn, kan vil inkludere eller tilby tredjeparts produkter eller tjenester på nettstedet vårt. Disse tredjeparts nettstedene har separate og selvstendige personvernerklæringer. Vi bærer derfor intet ansvar eller forpliktelser for innholdet eller aktivitetene til disse nettstedene det lenkes til. Ikke mindre prøver vi å bevare vår eget nettsteds integritet og ønsker enhver tilbakemelding om disse nettstedene velkomne.
-
-      <a name="coppa"></a>
-
-      ## [Overensstemmelse med Children's Online Privacy Protection Act](#coppa)
-
-      Nettstedet, produktene og tjenestene våre er rettet mot folk som er minst 13 år gamle. Dersom denne tjeneren er i USA, og du er under 13 år i henhold til kravene i COPPA ([Children's Online Privacy Protection Act](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)), ikke bruk dette nettstedet.
-
-      <a name="nett"></a>
-
-      ## [Personvernerklæring bare for nettet](#nett)
-
-      Denne nett-personvernerklæringen gjelder bare for informasjon samlet gjennom nettstedet vårt og ikke for opplysninger samlet når en er frakoblet.
-
-      <a name="samtykke"></a>
-
-      ## [Ditt samtykke](#samtykke)
-
-      Vet å bruke nettstedet vårt samtykker du til nettstedets personvernerklæring.
-
-      <a name="endringer"></a>
-
-      ## [Changes to our Privacy Policy](#endringer)
-
-      Dersom vi beslutter å endre personvernerklæringen vår, vil vi publisere disse endringene på denne siden.
-
-      Dette dokumentet er lisensiert under CC-BY-SA. De ble sist oppdatert 31. mai 2013.
   badges:
     editor:
       name: Tekstbehandler
@@ -1416,7 +1329,6 @@ nb_NO:
                 label: "Kategorier og siste emner"
               categories_and_top_topics:
                 label: "Kategorier og toppemner"
-  joined: "Medlem fra"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} nevnte deg i "%{topic}" - %{site_title}'

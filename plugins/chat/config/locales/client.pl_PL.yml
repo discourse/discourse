@@ -15,6 +15,11 @@ pl_PL:
           actions:
             chat_channel_status_change: "Zmieniono status kanału czatu"
             chat_channel_delete: "Kanał czatu usunięty"
+      api:
+        scopes:
+          descriptions:
+            chat:
+              create_message: "Utwórz wiadomość na czacie w określonym kanale."
     about:
       chat_messages_count: "Wiadomości czatu"
       chat_channels_count: "Kanały czatu"
@@ -33,11 +38,6 @@ pl_PL:
       browse_all_channels: "Przeglądaj wszystkie kanały"
       move_to_channel:
         title: "Przenieś wiadomości na kanał"
-        instructions:
-          one: "Przenosisz <strong>%{count}</strong> wiadomość. Wybierz kanał docelowy. Na kanale <strong>%{channelTitle}</strong> zostanie utworzona wiadomość zastępcza informująca o przeniesieniu tej wiadomości."
-          few: "Przenosisz <strong>%{count}</strong> wiadomości. Wybierz kanał docelowy. Na kanale <strong>%{channelTitle}</strong> zostanie utworzona wiadomość zastępcza informująca o przeniesieniu tych wiadomości."
-          many: "Przenosisz <strong>%{count}</strong> wiadomości. Wybierz kanał docelowy. Na kanale <strong>%{channelTitle}</strong> zostanie utworzona wiadomość zastępcza informująca o przeniesieniu tych wiadomości."
-          other: "Przenosisz <strong>%{count}</strong> wiadomości. Wybierz kanał docelowy. Na kanale <strong>%{channelTitle}</strong> zostanie utworzona wiadomość zastępcza informująca o przeniesieniu tych wiadomości."
         confirm_move: "Przenieś wiadomości"
       channel_settings:
         title: "Ustawienia kanału"
@@ -62,11 +62,15 @@ pl_PL:
         retry: "Ponów"
       channel_open:
         title: "Otwórz kanał"
+        instructions: "Ponownie otwiera kanał, wszyscy użytkownicy będą mogli wysyłać wiadomości i edytować istniejące wiadomości."
       channel_close:
         title: "Zamknij kanał"
+        instructions: "Zamknięcie kanału uniemożliwia użytkownikom niebędącym personelem wysyłanie nowych wiadomości ani edytowanie istniejących wiadomości. Czy na pewno chcesz zamknąć ten kanał?"
       channel_delete:
         title: "Usuń kanał"
+        confirm: "Rozumiem konsekwencje, usuń kanał"
         confirm_channel_name: "Wpisz nazwę kanału"
+        process_started: "Rozpoczął się proces usuwania kanału. Ten modal zostanie wkrótce zamknięty, nigdzie nie zobaczysz już usuniętego kanału."
       channels_list_popup:
         browse: "Przeglądaj kanały"
         create: "Nowy kanał"
@@ -81,16 +85,20 @@ pl_PL:
       muted: "wyciszono"
       joined: "dołączył"
       empty_state:
+        direct_message_cta: "Rozpocznij czat osobisty"
         direct_message: "Możesz także rozpocząć osobisty czat z jednym lub kilkoma użytkownikami."
         title: "Nie znaleziono żadnych kanałów"
       email_frequency:
+        description: "Wyślemy Ci wiadomość e-mail tylko wtedy, gdy nie widzieliśmy Cię w ciągu ostatnich 15 minut."
         never: "Nigdy"
         title: "Powiadomienia e-mail"
+        when_away: "Tylko gdy jesteś daleko"
       enable: "Włącz czat"
       flag: "Oflaguj"
       emoji: "Wstaw emoji"
       flagged: "Ta wiadomość została oznaczona do sprawdzenia"
       invalid_access: "Nie masz dostępu do tego kanału czatu"
+      invitation_notification: "<span>%{username}</span> <span>zaprosił Cię do dołączenia do kanału czatu</span>"
       in_reply_to: "W odpowiedzi na"
       heading: "Czat"
       join: "Dołącz"
@@ -113,12 +121,37 @@ pl_PL:
           few: "%{username} i %{others} nie dołączyli do tego kanału."
           many: "%{username} i %{others} nie dołączyli do tego kanału."
           other: "%{username} i %{others} nie dołączyli do tego kanału."
+        group_mentions_disabled:
+          one: "%{group_name} nie zezwala na wzmianki"
+          few: "%{group_name} i %{others} nie zezwalają na wzmianki"
+          many: "%{group_name} i %{others} nie zezwalają na wzmianki"
+          other: "%{group_name} i %{others} nie zezwalają na wzmianki"
+        too_many_members:
+          one: "%{group_name} ma zbyt wielu członków. Nikt nie został powiadomiony"
+          few: "%{group_name} i %{others} mają zbyt wielu członków. Nikt nie został powiadomiony"
+          many: "%{group_name} i %{others} mają zbyt wielu członków. Nikt nie został powiadomiony"
+          other: "%{group_name} i %{others} mają zbyt wielu członków. Nikt nie został powiadomiony"
         warning_multiple:
           one: "%{count} inny"
           few: "%{count} inni"
           many: "%{count} inni"
           other: "%{count} inni"
         groups:
+          header:
+            some: "Niektórzy użytkownicy nie zostaną powiadomieni"
+            all: "Nikt nie zostanie powiadomiony"
+          unreachable:
+            one: "@%{group} nie zezwala na wzmianki"
+            few: "@%{group} i @%{group_2} nie zezwalają na wzmianki"
+            many: "@%{group} i @%{group_2} nie zezwalają na wzmianki"
+            other: "@%{group} i @%{group_2} nie zezwalają na wzmianki"
+          unreachable_multiple: "@%{group} i %{count} inni nie zezwalają na wzmianki"
+          too_many_members:
+            one: "Wzmianka @%{group} przekracza %{notification_limit} z %{limit}"
+            few: "Wzmianka zarówno @%{group} lub %{group_2} przekracza %{notification_limit} z %{limit}"
+            many: "Wzmianka zarówno @%{group} lub %{group_2} przekracza %{notification_limit} z %{limit}"
+            other: "Wzmianka zarówno @%{group} lub %{group_2} przekracza %{notification_limit} z %{limit}"
+          too_many_members_multiple: "Te %{count} grup przekracza %{notification_limit} z %{limit}"
           users_limit:
             one: "%{count} użytkownik"
             few: "%{count} użytkownicy"
@@ -211,6 +244,12 @@ pl_PL:
           about: O stronie
           members: Członkowie
           settings: Ustawienia
+      channel_edit_name_slug_modal:
+        title: Edytuj kanał
+        input_placeholder: Dodaj nazwę
+        slug_description: Slug kanału jest używany w adresie URL zamiast nazwy kanału
+        name: Nazwa kanału
+        slug: Slug kanału (opcjonalnie)
       channel_edit_description_modal:
         title: Edytuj opis
         input_placeholder: Dodaj opis
@@ -280,6 +319,7 @@ pl_PL:
         title: "Czat"
       direct_messages:
         title: "Czat osobisty"
+        new: "Utwórz osobisty czat"
         leave: "Opuść ten osobisty czat"
         cannot_create: "Przepraszamy, nie możesz wysyłać bezpośrednich wiadomości."
       incoming_webhooks:
@@ -331,6 +371,7 @@ pl_PL:
         public: "Historia kanału jest przechowywana przez %{days} dni."
         dm: "Historia osobistego czatu jest przechowywana przez %{days} dni."
       emoji_picker:
+        favorites: "Często używane"
         smileys_&_emotion: "Buźki i emocje"
         objects: "Obiekty"
         people_&_body: "Ludzie i ciało"
@@ -346,14 +387,29 @@ pl_PL:
         header: "Nowa wiadomość"
         cancel: "Anuluj"
     notifications:
+      chat_invitation: "zaprosił Cię do dołączenia do kanału czatu"
+      chat_invitation_html: "<span>%{username}</span> <span>zaprosił Cię do dołączenia do kanału czatu</span>"
       chat_quoted: "<span>%{username}</span> %{description}"
       popup:
         chat_mention:
           direct: 'wspomniał o Tobie w "%{channel}"'
+          direct_html: '<span>%{username}</span> <span>wspomniał o Tobie w "%{channel}"</span>'
+          other_plain: 'oznaczył %{identifier} w "%{channel}"'
+          other_html: '<span>%{username}</span> <span>oznaczył %{identifier} w "%{channel}"</span>'
+        direct_message_chat_mention:
+          direct: "wspomniał o tobie na czacie osobistym"
+          direct_html: "<span>%{username}</span> <span>wspomniał o Tobie na czacie osobistym</span>"
+          other_plain: "oznaczył %{identifier} na czacie osobistym"
+          other_html: "<span>%{username}</span> <span>oznaczył %{identifier} na czacie osobistym</span>"
         chat_message: "Nowa wiadomość na czacie"
         chat_quoted: "%{username} zacytował Twoją wiadomość na czacie"
+      titles:
+        chat_mention: "Wzmianka na czacie"
+        chat_invitation: "Zaproszenie do czatu"
+        chat_quoted: "Cytowany czat"
     action_codes:
       chat:
+        enabled: '%{who} włączone <button class="btn-link open-chat">czat</button> %{when}'
         disabled: "%{who} zamknął czat %{when}"
     discourse_automation:
       scriptables:
@@ -382,3 +438,8 @@ pl_PL:
     user_menu:
       tabs:
         chat_notifications: "Powiadomienia czatu"
+        chat_notifications_with_unread:
+          one: "Powiadomienia czatu — %{count} nieprzeczytane powiadomienie"
+          few: "Powiadomienia czatu — %{count} nieprzeczytane powiadomienia"
+          many: "Powiadomienia czatu — %{count} nieprzeczytanych powiadomień"
+          other: "Powiadomienia czatu — %{count} nieprzeczytanych powiadomień"

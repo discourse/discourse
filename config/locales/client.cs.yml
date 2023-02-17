@@ -331,11 +331,9 @@ cs:
       edit_bookmark: "Upravit záložku"
       clear_bookmarks: "Odstranit záložky"
       help:
-        bookmark: "Kliknutím vložíte záložku na první příspěvek tohoto tématu"
-        edit_bookmark: "Kliknutím upravíte záložku tohoto tématu"
         edit_bookmark_for_topic: "Kliknutím upravíte záložku pro toto téma"
         unbookmark: "Kliknutím odstraníte všechny záložky v tématu"
-        unbookmark_with_reminder: "Kliknutím odeberete všechny záložky a připomenutí v tomto tématu."
+        unbookmark_with_reminder: "Kliknutím odeberete všechny záložky a připomenutí v tomto tématu"
     bookmarks:
       created: "Tento příspěvek jste přidali do záložek. %{name}"
       created_generic: "Toto jste si přidali do záložek. %{name}"
@@ -565,31 +563,11 @@ cs:
         title: "Proč odmítáte tohoto uživatele?"
         send_email: "Odeslat e-mail o odmítnutí"
     relative_time_picker:
-      minutes:
-        one: "minuta"
-        few: "minut"
-        many: "minut"
-        other: "minut"
-      hours:
-        one: "hodina"
-        few: "hodin"
-        many: "hodin"
-        other: "hodin"
       days:
         one: "den"
         few: "dní"
         many: "dní"
         other: "dnů"
-      months:
-        one: "měsíc"
-        few: "měsíců"
-        many: "měsíců"
-        other: "měsíců"
-      years:
-        one: "rok"
-        few: "let"
-        many: "let"
-        other: "let"
       relative: "Relativní"
     time_shortcut:
       later_today: "Později dnes"
@@ -861,19 +839,9 @@ cs:
         few: "%{count} témata"
         many: "%{count} témat"
         other: "%{count} témat"
-      topic_stat:
-        one: "%{number} / %{unit}"
-        few: "%{number} / %{unit}"
-        many: "%{number} / %{unit}"
-        other: "%{number} / %{unit}"
       topic_stat_unit:
         week: "týden"
         month: "měsíc"
-      topic_stat_all_time:
-        one: "Celkem %{number}"
-        few: "Celkem %{number}"
-        many: "Celkem %{number}"
-        other: "Celkem %{number}"
       n_more: "Kategorie (%{count} dalších)..."
     ip_lookup:
       title: Vyhledávání podle IP adresy
@@ -900,11 +868,6 @@ cs:
       profile: "Profil"
       mute: "Ignorovat"
       edit: "Upravit nastavení"
-      download_archive:
-        button_text: "Stáhnout vše"
-        confirm: "Jste si jistí, že chcete stáhnout všechny své příspěvky?"
-        success: "Stahování zahájeno, až bude dokončeno, přijde ti zpráva."
-        rate_limit_error: "Příspěvky mohou být staženy jen jednou za den. Zkus to, prosím, zítra."
       new_private_message: "Nová zpráva"
       private_message: "Zpráva"
       private_messages: "Zprávy"
@@ -946,7 +909,6 @@ cs:
       collapse_profile: "Sbalit"
       bookmarks: "Záložky"
       bio: "O mně"
-      timezone: "Časové pásmo"
       invited_by: "Pozvánka od"
       trust_level: "Důvěryhodnost"
       notifications: "Oznámení"
@@ -1051,11 +1013,6 @@ cs:
           many: "Nepřečtená (%{count})"
           other: "Nepřečtená (%{count})"
         new: "Nová"
-        new_with_count:
-          one: "Nové"
-          few: "Nová (%{count})"
-          many: "Nové"
-          other: "Nové"
         archive: "Archív"
         groups: "Moje skupiny"
         move_to_inbox: "Přesunout do doručených"
@@ -1655,8 +1612,6 @@ cs:
         category_missing: "Musíte vybrat kategorii"
       save_edit: "Uložit změnu"
       overwrite_edit: "Přepsat úpravu"
-      reply_original: "Odpovědět na původní téma"
-      reply_here: "Odpovědět sem"
       reply: "Odpovědět"
       cancel: "Zrušit"
       create_topic: "Vytvořit téma"
@@ -1914,11 +1869,9 @@ cs:
         dismiss_new: "Označit jako přečtené vše nové"
         toggle: "hromadný výběr témat"
         actions: "Hromadné akce"
-        change_category: "Nastavit kategorii..."
         close_topics: "Zavřít téma"
         archive_topics: "Archivovat témata"
         move_messages_to_inbox: "Přesunout do doručených"
-        notification_level: "Upozornění..."
         choose_new_category: "Zvolte novou kategorii pro témata:"
         selected:
           one: "Vybrali jste <b>%{count}</b> téma."
@@ -2003,8 +1956,6 @@ cs:
       back_to_list: "Zpátky na seznam témat"
       options: "Možnosti"
       show_links: "zobrazit odkazy v tomto tématu"
-      jump_reply_up: přejít na předchozí odpověď
-      jump_reply_down: přejít na následující odpověď
       deleted: "Téma bylo smazáno"
       slow_mode_update:
         enable: "Zapnout"
@@ -2111,7 +2062,6 @@ cs:
         unarchive: "Navrátit z archivu"
         archive: "Archivovat téma"
         reset_read: "Vynulovat počet čtení"
-        make_public: "Vytvořit Veřejné Téma..."
         make_private: "Vytvořit soukromou zprávu "
         reset_bump_date: "Resetovat datum zvýraznění"
       feature:
@@ -2348,8 +2298,6 @@ cs:
         revert_to_regular: "Zrušit zvýraznění"
         rebake: "Obnovit HTML"
         unhide: "Odkrýt"
-        change_owner: "Změnit autora..."
-        grant_badge: "Udělit odznak..."
         lock_post: "Uzamknout příspěvek "
         lock_post_description: "Zabránit přispěvatelům v úpravách tohoto příspěvku"
         unlock_post: "Odemknout příspěvek"
@@ -2413,15 +2361,8 @@ cs:
             title: "Zobrazit html část emailu"
             button: "HTML"
       bookmarks:
-        create: "Vytvořit záložku"
-        edit: "Upravit záložku"
         name: "Jméno"
         options: "Možnosti"
-        actions:
-          delete_bookmark:
-            name: "Smazat záložku"
-          edit_bookmark:
-            name: "Upravit záložku"
     category:
       none: "(bez kategorie)"
       all: "Všechny kategorie"
@@ -2470,8 +2411,6 @@ cs:
       images: "Obrázky"
       email_in: "Vlastní příchozí emailová adresa:"
       email_in_allow_strangers: "Přijímat emaily i od neregistrovaných uživatelů"
-      email_in_disabled: "Přidávání nových témat před email je zakázáno v Nastavení fóra. K povolení nových témat přes email,"
-      email_in_disabled_click: 'povolit nastavení "email in"'
       mailinglist_mirror: "Kategorie kopíruje mailing list"
       show_subcategory_list: "Ukázat seznam podkategorií nad tématy v této kategorii."
       num_featured_topics: "Počet témat, která se zobrazují na stránce kategorie "
@@ -2532,7 +2471,6 @@ cs:
     flagging:
       title: "Děkujeme, že pomáháte udržovat komunitu zdvořilou!"
       action: "Nahlásit příspěvek"
-      take_action: "Zakročit..."
       take_action_options:
         default:
           title: "Zakročit"
@@ -2892,7 +2830,6 @@ cs:
         delete: "Smazat"
         confirm_delete: "Jste si jistí, že chcete smazat tuto skupinu štítků?"
         everyone_can_use: "Tagy mohou být použity kýmkoliv"
-        parent_tag_placeholder: "Volitelné"
       topics:
         none:
           unread: "Nemáte žádná nepřečtená témata."
@@ -2914,10 +2851,6 @@ cs:
       dismiss: "Označit jako přečtené"
     safe_mode:
       enabled: "Bezpečný režim je povolený, k jeho zakázání zavři toto okno prohlížeče"
-    pause_notifications:
-      remaining: "%{remaining} zbývá"
-      options:
-        custom: "Přizpůsobené"
     trust_levels:
       names:
         newuser: "nový uživatel"
@@ -2939,6 +2872,12 @@ cs:
       more: "Více"
       all_categories: "Všechny kategorie"
       sections:
+        custom:
+          save: "Uložit"
+          delete: "Smazat"
+          links:
+            icon: "Ikona"
+            name: "Jméno"
         about:
           header_link_text: "O fóru"
         messages:
@@ -2963,8 +2902,6 @@ cs:
               content: "Administrace"
             badges:
               content: "Odznaky"
-            everything:
-              content: "Vše"
             faq:
               content: "FAQ"
             groups:
@@ -2973,7 +2910,6 @@ cs:
               content: "Uživatelé"
             my_posts:
               content: "Mé příspěvky"
-    until: "dokud:"
   admin_js:
     type_to_filter: "text pro filtrování..."
     admin:
@@ -2999,7 +2935,6 @@ cs:
         latest_version: "Poslední verze"
         new_features:
           dismiss: "Označit jako přečtené"
-          learn_more: "Více informací"
         last_checked: "Naposledy zkontrolováno"
         refresh_problems: "Obnovit"
         no_problems: "Nenalezeny žádné problémy."
@@ -3093,7 +3028,6 @@ cs:
         user: "Uživatel"
         title: "API"
         created: Vytvořený
-        never_used: (nikdy)
         generate: "Vygenerovat API klíč"
         revoke: "zrušit"
         all_users: "Všichni uživatelé"
@@ -3383,6 +3317,8 @@ cs:
           love:
             name: "láska"
             description: "Barva tlačítka \"Líbí se\"."
+          selected:
+            name: "vybrané"
         email_style:
           css: "CSS"
       email:
@@ -3597,6 +3533,22 @@ cs:
           upload_successful: "Nahráno úspěšně. Slova byla přidána "
         test:
           no_matches: "Nebyly nalezeny žádné výsledky"
+      form_templates:
+        nav_title: "Šablony"
+        list_table:
+          headings:
+            name: "Jméno"
+            actions: "Akce"
+        view_template:
+          close: "Zavřít"
+          edit: "Upravit"
+          delete: "Smazat"
+        new_template_form:
+          submit: "Uložit"
+          cancel: "Zrušit"
+        quick_insert_fields:
+          add_new_field: "přidat"
+          dropdown: "Menu"
       impersonate:
         title: "Přihlásit se jako"
         help: "Použijte tento nástroj k přihlášení za jiného uživatele pro ladící a vývojové potřeby. Po dokončení se budete muset odhlásit."
@@ -3670,7 +3622,6 @@ cs:
         staged: "Staged?"
         show_admin_profile: "Administrace"
         show_public_profile: "Zobrazit veřejný profil"
-        impersonate: "Vydávat se za uživatele"
         action_logs: "Logy akcí"
         ip_lookup: "Vyhledávání IP adresy"
         log_out: "Odhlásit se"
@@ -3932,7 +3883,7 @@ cs:
         allow_title: Povolit užití odzanku jako titul
         multiple_grant: Může být přiděleno několikrát
         listable: Zobrazit odznak na veřejné stránce s odzanky
-        enabled: Povolit odznaky
+        enabled: zapnutý
         icon: Ikona
         image: Obrázek
         query: Dotaz na odznak (SQL)

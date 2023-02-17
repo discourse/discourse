@@ -223,6 +223,7 @@ class ImportScripts::Drupal < ImportScripts::Base
            AND c.status = 1
            AND n.type IN ('blog', 'forum')
            AND n.status = 1
+         ORDER BY c.cid ASC
          LIMIT #{BATCH_SIZE}
         OFFSET #{offset}
       SQL

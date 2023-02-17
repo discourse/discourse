@@ -1,12 +1,13 @@
 <LoadMore @selector=".directory .user" @action={{action "loadMore"}}>
   <div class="container">
     <div class="users-directory directory">
-      <PluginOutlet
-        @name="users-top"
-        @tagName="span"
-        @connectorTagName="div"
-        @args={{hash model=this.model}}
-      />
+      <span>
+        <PluginOutlet
+          @name="users-top"
+          @connectorTagName="div"
+          @outletArgs={{hash model=this.model}}
+        />
+      </span>
 
       <div class="directory-controls">
         <PeriodChooser
@@ -47,7 +48,7 @@
         </div>
         <PluginOutlet
           @name="users-directory-controls"
-          @args={{hash model=this.model}}
+          @outletArgs={{hash model=this.model}}
         />
       </div>
 

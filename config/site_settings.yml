@@ -1395,18 +1395,6 @@ files:
   prevent_anons_from_downloading_files:
     default: false
     client: true
-  secure_media:
-    default: false
-    client: true
-    hidden: true
-  secure_media_allow_embed_images_in_emails:
-    default: true
-    hidden: true
-  secure_media_max_email_embed_image_size_kb:
-    default: 1024
-    min: 1
-    max: 10240
-    hidden: true
   secure_uploads:
     default: false
     client: true
@@ -1806,6 +1794,8 @@ security:
     hidden: true
   include_secure_categories_in_tag_counts:
     default: false
+  display_personal_messages_tag_counts:
+    default: false
 
 onebox:
   post_onebox_maxlength:
@@ -2084,13 +2074,14 @@ developer:
   include_associated_account_ids:
     default: false
     hidden: true
-  enable_experimental_topic_timeline_groups:
+  enable_experimental_topic_timeline:
     client: true
-    type: group_list
-    list_type: compact
-    default: ""
-    allow_any: false
-    refresh: true
+    default: false
+    hidden: true
+  experimental_form_templates:
+    client: true
+    default: false
+    hidden: true
 
 navigation:
   navigation_menu:
@@ -2116,6 +2107,14 @@ navigation:
   enable_new_notifications_menu:
     default: false
     validator: "EnableNewNotificationsMenuValidator"
+  enable_custom_sidebar_sections:
+    client: true
+    type: group_list
+    list_type: compact
+    default: ""
+    allow_any: false
+    refresh: true
+    hidden: true
 
 embedding:
   embed_by_username:
@@ -2192,8 +2191,14 @@ backups:
     client: true
 
 search:
-  enable_search_prefix_matching:
-    default: true
+  user_search_similar_results:
+    default: false
+    hidden: true
+  prioritize_exact_search_title_match:
+    default: false
+    hidden: true
+  max_duplicate_search_index_terms:
+    default: -1
     hidden: true
   use_pg_headlines_for_excerpt:
     default: false
@@ -2205,6 +2210,10 @@ search:
   search_ranking_normalization:
     default: "0"
     hidden: true
+  search_ranking_weights:
+    default: ""
+    hidden: true
+    validator: "SearchRankingWeightsValidator"
   min_search_term_length:
     client: true
     default: 3

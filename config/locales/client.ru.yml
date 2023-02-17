@@ -366,11 +366,9 @@ ru:
       edit_bookmark: "Изменить закладку"
       clear_bookmarks: "Очистить закладки"
       help:
-        bookmark: "Добавить первую запись темы в закладки"
-        edit_bookmark: "Изменить закладку в этой теме"
         edit_bookmark_for_topic: "Изменить закладку для этой темы"
         unbookmark: "Удалить все закладки в этой теме"
-        unbookmark_with_reminder: "Удалить все закладки и напоминания из этой темы."
+        unbookmark_with_reminder: "Удалить все закладки и напоминания из этой темы"
     bookmarks:
       created: "Вы добавили эту запись в закладки: «%{name}»"
       created_generic: "Добавлено в закладки: «%{name}»"
@@ -546,7 +544,7 @@ ru:
         reject_reason: "Причина"
       user_percentage:
         summary:
-          one: "%{agreed}, %{disagreed}, %{ignored}"
+          one: "%{agreed}, %{disagreed}, %{ignored} (из %{count} жалобы)"
           few: "%{agreed}, %{disagreed}, %{ignored} (из %{count} жалоб)"
           many: "%{agreed}, %{disagreed}, %{ignored} (из %{count} жалоб)"
           other: "%{agreed}, %{disagreed}, %{ignored} (из %{count} жалобы)"
@@ -1090,11 +1088,6 @@ ru:
       profile: "Профиль"
       mute: "Отключить"
       edit: "Изменить настройки"
-      download_archive:
-        button_text: "Скачать всё"
-        confirm: "Действительно скачать записи?"
-        success: "Скачивание началось, вы будете уведомлены об окончании процесса."
-        rate_limit_error: "Записи могут быть скачаны лишь раз в день, попробуйте завтра."
       new_private_message: "Новое сообщение"
       private_message: "Сообщение"
       private_messages: "Сообщения"
@@ -2360,8 +2353,6 @@ ru:
         topic_template_not_modified: "Впишите подробности темы в шаблон."
       save_edit: "Сохранить"
       overwrite_edit: "Перезаписать"
-      reply_original: "Ответить в первоначальной теме"
-      reply_here: "Ответить в текущей теме"
       reply: "Ответить"
       cancel: "Отмена"
       create_topic: "Создать тему"
@@ -3007,8 +2998,6 @@ ru:
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Просмотрите все категории</a>, <a href='%{basePath}/latest'>ознакомьтесь с последними</a> или самыми популярными темами:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Просмотрите все теги</a> или <a href='%{basePath}/latest'>ознакомьтесь с последними темами</a>."
       suggest_create_topic: Готовы <a href>начать новое обсуждение</a>?
-      jump_reply_up: Перейти к более ранним ответам
-      jump_reply_down: Перейти к более поздним ответам
       deleted: "Тема удалена"
       slow_mode_update:
         title: "Замедленный режим"
@@ -3403,11 +3392,6 @@ ru:
       collapse: "свернуть"
       sr_collapse_replies: "Свернуть встроенные ответы"
       sr_date: "Дата записи"
-      sr_expand_replies:
-        one: "На эту запись есть %{count} ответ. Нажмите для просмотра."
-        few: "На эту запись есть %{count} ответа. Нажмите для просмотра."
-        many: "На эту запись есть %{count} ответов. Нажмите для просмотра."
-        other: "На эту запись есть %{count} ответа. Нажмите для просмотра."
       expand_collapse: "развернуть/свернуть"
       sr_below_embedded_posts_description: "ответы на запись #%{post_number}"
       sr_embedded_reply_description: "ответ пользователя @%{username} на запись #%{post_number}"
@@ -3731,8 +3715,6 @@ ru:
       email_in: "Специальный адрес для входящих писем:"
       email_in_tooltip: "Адреса электронной почты разделяются символом вертикальной черты «|»."
       email_in_allow_strangers: "Принимать письма от анонимных пользователей, не имеющих аккаунтов"
-      email_in_disabled: "Создание новых тем через электронную почту отключено в настройках сайта. Чтобы разрешить создание новых тем через электронную почту, "
-      email_in_disabled_click: 'включите настройку «email in».'
       mailinglist_mirror: "Категория отражает список рассылки"
       show_subcategory_list: "Показывать список подкатегорий над списком тем в этой категории."
       read_only_banner: "Текст баннера, когда пользователь не может создавать темы в этой категории:"
@@ -4355,13 +4337,11 @@ ru:
     pause_notifications:
       title: "Приостановить уведомления на…"
       label: "Приостановить уведомления"
-      remaining: "Осталось %{remaining}"
       options:
         half_hour: "В течение 30 минут"
         one_hour: "В течение 1 часа"
         two_hours: "В течение 2 часов"
         tomorrow: "До завтра"
-        custom: "Указать продолжительность"
       set_schedule: "Настроить расписание уведомлений"
     trust_levels:
       names:
@@ -4415,6 +4395,13 @@ ru:
       all_categories: "Все категории"
       all_tags: "Все теги"
       sections:
+        custom:
+          save: "Сохранить"
+          delete: "Удалить"
+          links:
+            icon: "Иконка"
+            name: "Название"
+            value: "Ссылки"
         about:
           header_link_text: "Информация"
         messages:
@@ -5203,6 +5190,8 @@ ru:
           love:
             name: "лайки"
             description: "Цвет кнопки «Лайк»."
+          selected:
+            name: "выбрано"
         robots:
           title: "Изменить настройки в файле robots.txt:"
           warning: "Это повлияет на соответствующие настройки сайта."
@@ -5519,6 +5508,22 @@ ru:
           description: "Введите текст, чтобы проверить совпадения с контролируемыми словами:"
           found_matches: "Найденные совпадения:"
           no_matches: "Совпадений не найдено"
+      form_templates:
+        nav_title: "Шаблоны"
+        list_table:
+          headings:
+            name: "Название"
+            actions: "Темы"
+        view_template:
+          close: "Завершить"
+          edit: "Отредактировать"
+          delete: "Удалить"
+        new_template_form:
+          submit: "Сохранить"
+          cancel: "Нет"
+        quick_insert_fields:
+          add_new_field: "Добавить"
+          dropdown: "Выпадающий список"
       impersonate:
         title: "Войти от имени пользователя"
         help: "Позволяет войти от имени пользователя в целях отладки. По окончании отладки необходимо выйти из системы и зайти снова под своим аккаунтом."
@@ -5629,7 +5634,6 @@ ru:
         show_admin_profile: "Администратор"
         manage_user: "Управление пользователем"
         show_public_profile: "Показать публичный профиль"
-        impersonate: "Войти от имени пользователя"
         action_logs: "Журналы действий"
         ip_lookup: "Поиск IP"
         log_out: "Выйти"
@@ -5976,7 +5980,8 @@ ru:
         allow_title: Разрешить использовать название награды в качестве титула
         multiple_grant: Может быть предоставлена несколько раз
         listable: Отображать награду на публичной странице наград
-        enabled: Активировать использование этой награды
+        enabled: включён
+        disabled: отключён
         icon: Иконка
         image: Изображение
         graphic: Иконка награды

@@ -1,0 +1,32 @@
+<div class="form-templates">
+  <FormTemplate::InfoHeader />
+
+  {{#if this.model}}
+    <table class="form-templates--table grid">
+      <thead>
+        <th class="col heading">
+          {{i18n "admin.form_templates.list_table.headings.name"}}
+        </th>
+        <th class="col heading sr-only">
+          {{i18n "admin.form_templates.list_table.headings.actions"}}
+        </th>
+      </thead>
+      <tbody>
+        {{#each this.model as |template|}}
+          <FormTemplate::RowItem
+            @template={{template}}
+            @refreshModel={{this.reload}}
+          />
+        {{/each}}
+      </tbody>
+    </table>
+  {{/if}}
+
+  <DButton
+    @class="btn-primary"
+    @label="admin.form_templates.new_template"
+    @title="admin.form_templates.new_template"
+    @icon="plus"
+    @action={{this.newTemplate}}
+  />
+</div>

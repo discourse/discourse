@@ -1298,6 +1298,14 @@ RSpec.describe PrettyText do
       )
     end
 
+    it "creates a valid URL when data-original-href is missing from Vimeo link" do
+      html =
+        '<iframe src="https://player.vimeo.com/video/508864124?h=fcbbcc92fa" width="640" height="360" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>'
+      expect(PrettyText.format_for_email(html, post)).to match(
+        "https://vimeo.com/508864124/fcbbcc92fa",
+      )
+    end
+
     describe "#convert_vimeo_iframes" do
       it "converts <iframe> to <a>" do
         html = <<~HTML

@@ -671,7 +671,7 @@ class TopicView
   end
 
   def filtered_post_id(post_number)
-    @filtered_posts.where(post_number: post_number).pluck_first(:id)
+    @filtered_posts.where(post_number: post_number).pick(:id)
   end
 
   def is_mega_topic?
@@ -679,7 +679,7 @@ class TopicView
   end
 
   def last_post_id
-    @filtered_posts.reverse_order.pluck_first(:id)
+    @filtered_posts.reverse_order.pick(:id)
   end
 
   def current_post_number

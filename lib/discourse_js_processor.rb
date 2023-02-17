@@ -172,7 +172,10 @@ class DiscourseJsProcessor
       )
 
       # Widget HBS compiler
-      widget_hbs_compiler_source = File.read("#{Rails.root}/lib/javascripts/widget-hbs-compiler.js")
+      widget_hbs_compiler_source =
+        File.read(
+          "#{Rails.root}/app/assets/javascripts/discourse-widget-hbs/lib/widget-hbs-compiler.js",
+        )
       widget_hbs_compiler_source = <<~JS
         define("widget-hbs-compiler", ["exports"], function(exports){
           #{widget_hbs_compiler_source}

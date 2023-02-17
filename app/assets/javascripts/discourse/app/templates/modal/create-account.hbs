@@ -4,11 +4,12 @@
   @action={{action "createAccount"}}
 >
   {{#unless this.complete}}
-    <PluginOutlet
-      @name="create-account-before-modal-body"
-      @tagName="span"
-      @connectorTagName="div"
-    />
+    <span>
+      <PluginOutlet
+        @name="create-account-before-modal-body"
+        @connectorTagName="div"
+      />
+    </span>
     <DModalBody
       @class={{this.modalBodyClasses}}
       @preventModalAlertHiding={{true}}
@@ -115,7 +116,7 @@
 
               <PluginOutlet
                 @name="create-account-before-password"
-                @args={{hash
+                @outletArgs={{hash
                   accountName=this.accountName
                   accountUsername=this.accountUsername
                   accountPassword=this.accountPassword
@@ -200,7 +201,7 @@
 
               <PluginOutlet
                 @name="create-account-after-password"
-                @args={{hash
+                @outletArgs={{hash
                   accountName=this.accountName
                   accountUsername=this.accountUsername
                   accountPassword=this.accountPassword

@@ -6,6 +6,7 @@ module SvgSprite
       %w[
         adjust
         address-book
+        align-left
         ambulance
         anchor
         angle-double-down
@@ -34,6 +35,7 @@ module SvgSprite
         book-reader
         bookmark
         briefcase
+        bullseye
         calendar-alt
         caret-down
         caret-left
@@ -45,11 +47,13 @@ module SvgSprite
         check
         check-circle
         check-square
+        chevron-circle-down
         chevron-down
         chevron-left
         chevron-right
         chevron-up
         circle
+        cloud-upload-alt
         code
         cog
         columns
@@ -134,6 +138,7 @@ module SvgSprite
         gift
         globe
         globe-americas
+        grip-lines
         hand-point-right
         hands-helping
         heart
@@ -421,7 +426,8 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
     false
   end
 
-  def self.icon_picker_search(keyword)
+  def self.icon_picker_search(keyword, only_available = false)
+    icons = all_icons(SiteSetting.default_theme_id) if only_available
     results = Set.new
 
     sprite_sources(SiteSetting.default_theme_id).each do |item|
@@ -431,6 +437,7 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
         .css("symbol")
         .each do |sym|
           icon_id = prepare_symbol(sym, item[:filename])
+          next if only_available && !icons.include?(icon_id)
           if keyword.empty? || icon_id.include?(keyword)
             sym.attributes["id"].value = icon_id
             sym.css("title").each(&:remove)

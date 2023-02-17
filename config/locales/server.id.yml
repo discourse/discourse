@@ -639,8 +639,6 @@ id:
     page_title: "Halaman Tidak Ditemukan"
     see_more: "Selengkapnya"
     search_button: "Cari"
-  deleted: "dihapus"
-  image: "gambar"
   upload:
     images:
       size_not_found: "Maaf, kami tidak dapat mendeteksi ukuran dari gambar. Apa berkas gambar yang Anda unggah rusak?"
@@ -698,7 +696,6 @@ id:
                 label: "Kategori dan Topik Terbaru"
               categories_and_top_topics:
                 label: "Kategori dan Topik Teratas"
-  joined: "Joined"
   reviewables:
     priorities:
       medium: "Sedang"
