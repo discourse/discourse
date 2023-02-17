@@ -221,7 +221,7 @@ class ColorScheme < ActiveRecord::Base
       "highlight_medium" => "E3D0A3",
       "highlight" => "F2F481",
       "highlight_high" => "BCAA7F",
-      "selected" => "E8E6D3",
+      "selected" => "D6D8C7",
       "hover" => "F0EBDA",
       "danger_low" => "F8D9C2",
       "danger" => "e45735",
