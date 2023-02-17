@@ -482,7 +482,7 @@ GEM
     test-prof (1.2.0)
     thor (1.2.1)
     tilt (2.0.11)
-    timeout (0.3.1)
+    timeout (0.3.2)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     uglifier (4.2.0)
