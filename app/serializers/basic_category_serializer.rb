@@ -19,7 +19,7 @@ class BasicCategorySerializer < ApplicationSerializer
              :notification_level,
              :can_edit,
              :topic_template,
-             :form_templates,
+             :form_template_ids,
              :has_children,
              :sort_order,
              :sort_ascending,

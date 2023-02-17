@@ -19,13 +19,25 @@ export default buildCategoryPanel("topic-template", {
     });
   },
 
-  @discourseComputed("freeformTemplate")
-  templateTypeToggleLabel(freeformTemplate) {
-    if (freeformTemplate) {
-      return "admin.form_templates.edit_category.toggle_freeform";
+  @discourseComputed("templates", "category.form_template_ids")
+  selectedFormTemplates(templates, templateIds) {
+    if (!templates) {
+      return;
+    }
+    const selectedTemplates = [];
+    templateIds.forEach((id) => {
+      selectedTemplates.push(templates.findBy("id", id));
+    });
+    return selectedTemplates;
+  },
+
+  @discourseComputed("showFormTemplate")
+  templateTypeToggleLabel(showFormTemplate) {
+    if (showFormTemplate) {
+      return "admin.form_templates.edit_category.toggle_form_template";
     }
 
-    return "admin.form_templates.edit_category.toggle_form_template";
+    return "admin.form_templates.edit_category.toggle_freeform";
   },
 
   @action
@@ -37,9 +49,9 @@ export default buildCategoryPanel("topic-template", {
     return templates.sort((a, b) => a.name.localeCompare(b.name));
   },
 
-  @observes("activeTab")
+  @observes("activeTab", "showFormTemplate")
   _activeTabChanged() {
-    if (this.activeTab) {
+    if (this.activeTab && !this.showFormTemplate) {
       schedule("afterRender", () =>
         this.element.querySelector(".d-editor-input").focus()
       );

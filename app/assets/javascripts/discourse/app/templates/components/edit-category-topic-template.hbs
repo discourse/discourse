@@ -4,19 +4,17 @@
       <MultiSelect
         @class="select-category-template"
         @content={{this.templates}}
-        @value={{this.category.form_templates}}
-        @valueProperty={{null}}
-        @onChange={{action (mut this.category.form_templates)}}
+        @value={{this.category.form_template_ids}}
+        @onChange={{action (mut this.category.form_template_ids)}}
         @options={{hash
           none="admin.form_templates.edit_category.select_template"
-          maximum=1
         }}
       />
-      {{! 👆TODO(@keegan): Remove maximum=1 after adding support for multiple }}
     </div>
 
-    {{#each this.category.form_templates as |t|}}
+    {{#each this.selectedFormTemplates as |t|}}
       <div class="selected-category-template">
+        <p>{{t.name}}</p>
         <pre>
           <code class="yaml hljs language-yaml">{{t.template}}</code>
         </pre>

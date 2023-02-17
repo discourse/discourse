@@ -390,7 +390,6 @@ class CategoriesController < ApplicationController
             :slug,
             :allow_badges,
             :topic_template,
-            :form_templates,
             :sort_order,
             :sort_ascending,
             :topic_featured_link_allowed,
@@ -411,6 +410,7 @@ class CategoriesController < ApplicationController
             allowed_tags: [],
             allowed_tag_groups: [],
             required_tag_groups: %i[name min_count],
+            form_template_ids: [],
           )
 
         if result[:required_tag_groups] && !result[:required_tag_groups].is_a?(Array)

@@ -5547,7 +5547,7 @@ en:
         edit_category:
           toggle_freeform: "Switch to freeform template"
           toggle_form_template: "Switch to form template"
-          select_template: "Select a form template"
+          select_template: "Select form templates"
 
       impersonate:
         title: "Impersonate"
