@@ -410,10 +410,8 @@ const SiteHeaderComponent = MountWidget.extend(
 
           // These values need to be set here, not in the css file - this is to deal with the
           // possibility of the window being resized and the menu changing from .slide-in to .drop-down.
-          if (panel.style.top !== "100%" || panel.style.height !== "auto") {
-            panel.style.setProperty("top", "100%");
-            panel.style.setProperty("height", "auto");
-          }
+          ensureElementStyle(panel, "top", "100%");
+          ensureElementStyle(panel, "height", "auto");
         } else {
           headerCloak.style.display = "block";
 
@@ -435,18 +433,11 @@ const SiteHeaderComponent = MountWidget.extend(
             height = winHeight - menuTop - iPadOffset;
           }
 
-          if (panelBody.style.height !== "100%") {
-            panelBody.style.setProperty("height", "100%");
-          }
-          if (
-            panel.style.top !== `${menuTop}px` ||
-            panel.style[heightProp] !== `${height}px`
-          ) {
-            panel.style.top = `${menuTop}px`;
-            panel.style.setProperty(heightProp, `${height}px`);
-            if (headerCloak) {
-              headerCloak.style.top = `${menuTop}px`;
-            }
+          ensureElementStyle(panelBody, "height", "100%");
+          ensureElementStyle(panel, "top", `${menuTop}px`);
+          ensureElementStyle(panel, heightProp, `${height}px`);
+          if (headerCloak) {
+            ensureElementStyle(headerCloak, "top", `${menuTop}px`);
           }
         }
 
@@ -524,4 +515,10 @@ export default SiteHeaderComponent.extend({
 export function headerTop() {
   const header = document.querySelector("header.d-header");
   return header.offsetTop ? header.offsetTop : 0;
+}
+
+function ensureElementStyle(element, property, value) {
+  if (element.style[property] !== value) {
+    element.style.setProperty(property, value);
+  }
 }
