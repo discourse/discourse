@@ -418,11 +418,7 @@ const SiteHeaderComponent = MountWidget.extend(
         } else {
           headerCloak.style.display = "block";
 
-          const menuTop = headerTop();
-
           let heightReduction = 0;
-
-          heightReduction += menuTop;
 
           if (!this.currentUser?.redesigned_user_menu_enabled) {
             heightReduction += 16;
@@ -436,14 +432,14 @@ const SiteHeaderComponent = MountWidget.extend(
           }
 
           ensureElementStyle(panelBody, "height", "100%");
-          ensureElementStyle(panel, "top", `${menuTop}px`);
+          ensureElementStyle(panel, "top", `var(--header-top)`);
           ensureElementStyle(
             panel,
             heightProp,
-            `calc(100dvh - ${heightReduction}px)`
+            `calc(100dvh - var(--header-top) - ${heightReduction}px)`
           );
           if (headerCloak) {
-            ensureElementStyle(headerCloak, "top", `${menuTop}px`);
+            ensureElementStyle(headerCloak, "top", `var(--header-top)`);
           }
         }
 
@@ -484,12 +480,18 @@ export default SiteHeaderComponent.extend({
 
     this.appEvents.on("site-header:force-refresh", this, "queueRerender");
 
-    const header = document.querySelector(".d-header-wrap");
-    if (header) {
+    const headerWrap = document.querySelector(".d-header-wrap");
+    let header;
+    if (headerWrap) {
       schedule("afterRender", () => {
+        header = headerWrap.querySelector("header.d-header");
         document.documentElement.style.setProperty(
           "--header-offset",
-          `${header.offsetHeight}px`
+          `${headerWrap.offsetHeight}px`
+        );
+        document.documentElement.style.setProperty(
+          "--header-top",
+          `${header.offsetTop}px`
         );
       });
     }
@@ -502,11 +504,15 @@ export default SiteHeaderComponent.extend({
               "--header-offset",
               entry.contentRect.height + "px"
             );
+            document.documentElement.style.setProperty(
+              "--header-top",
+              `${header.offsetTop}px`
+            );
           }
         }
       });
 
-      this._resizeObserver.observe(header);
+      this._resizeObserver.observe(headerWrap);
     }
   },
 
@@ -517,11 +523,6 @@ export default SiteHeaderComponent.extend({
     this.appEvents.off("site-header:force-refresh", this, "queueRerender");
   },
 });
-
-export function headerTop() {
-  const header = document.querySelector("header.d-header");
-  return header.offsetTop ? header.offsetTop : 0;
-}
 
 function ensureElementStyle(element, property, value) {
   if (element.style[property] !== value) {
