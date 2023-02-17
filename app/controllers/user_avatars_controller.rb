@@ -192,7 +192,9 @@ class UserAvatarsController < ApplicationController
   end
 
   def redirect_s3_avatar(url)
-    immutable_for 1.day
+    response.cache_control[:max_age] = 1.hour.to_i
+    response.cache_control[:public] = true
+    response.cache_control[:extras] = ["immutable", "stale-while-revalidate=#{1.day.to_i}"]
     redirect_to url, allow_other_host: true
   end
 

@@ -3,7 +3,7 @@
     {{this.flashText}}
   </div>
 {{/if}}
-<DModalBody @title="sidebar.sections.custom.add">
+<DModalBody @title={{this.header}}>
   <form class="form-horizontal">
     <div class="input-group">
       <label for="section-name">{{i18n "sidebar.sections.custom.name"}}</label>
@@ -19,6 +19,19 @@
       <div class="row-wrapper">
         <div class="input-group">
           <label for="link-name">{{i18n
+              "sidebar.sections.custom.links.icon"
+            }}</label>
+          <IconPicker
+            @name="icon"
+            @value={{link.icon}}
+            @options={{hash maximum=1}}
+            class={{link.iconCssClass}}
+            @onlyAvailable={{true}}
+            @onChange={{action (mut link.icon)}}
+          />
+        </div>
+        <div class="input-group">
+          <label for="link-name">{{i18n
               "sidebar.sections.custom.links.name"
             }}</label>
           <Input
@@ -31,7 +44,7 @@
         </div>
         <div class="input-group">
           <label for="link-url">{{i18n
-              "sidebar.sections.custom.links.points_to"
+              "sidebar.sections.custom.links.value"
             }}</label>
           <Input
             name="link-url"
@@ -42,7 +55,7 @@
           />
         </div>
         <DButton
-          @icon="times"
+          @icon="trash-alt"
           @action={{action "deleteLink" link}}
           @class="btn-flat delete-link"
           @title="sidebar.sections.custom.links.delete"
@@ -53,6 +66,7 @@
       @action={{action "addLink"}}
       @class="btn-flat btn-text add-link"
       @title="sidebar.sections.custom.links.add"
+      @icon="plus"
       @label="sidebar.sections.custom.links.add"
     />
   </form>
@@ -63,7 +77,6 @@
     @id="save-section"
     @action={{action "save"}}
     @class="btn-primary"
-    @icon="plus"
     @label="sidebar.sections.custom.save"
     @disabled={{not this.model.valid}}
   />

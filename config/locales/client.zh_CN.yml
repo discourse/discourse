@@ -84,7 +84,7 @@ zh_CN:
           other: "超过 %{count} 年"
         almost_x_years:
           other: "将近 %{count} 年"
-        date_year: "YY 年 M 月 D 日"
+        date_year: "YY 年 MMM D 日"
       medium_with_ago:
         x_minutes:
           other: "%{count} 分钟前"
@@ -916,11 +916,6 @@ zh_CN:
       profile: "个人资料"
       mute: "免打扰"
       edit: "编辑偏好设置"
-      download_archive:
-        button_text: "全部下载"
-        confirm: "确定要下载您的帖子吗？"
-        success: "下载已开始，完成后将通过消息通知您。"
-        rate_limit_error: "帖子每天只能下载一次，请明天再试。"
       new_private_message: "新消息"
       private_message: "私信"
       private_messages: "消息"
@@ -2048,8 +2043,6 @@ zh_CN:
         topic_template_not_modified: "请通过编辑话题模板为您的话题添加详细信息和细节。"
       save_edit: "保存编辑"
       overwrite_edit: "覆盖编辑"
-      reply_original: "回复原始话题"
-      reply_here: "在此回复"
       reply: "回复"
       cancel: "取消"
       create_topic: "创建话题"
@@ -2176,7 +2169,7 @@ zh_CN:
       bookmark_reminder: "<span>%{username}</span> %{description}"
       replied: "<span>%{username}</span> %{description}"
       posted: "<span>%{username}</span> %{description}"
-      watching_category_or_tag: "<span>%{username} </span>%{description}"
+      watching_category_or_tag: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}、%{username2}</span> %{description}"
@@ -2584,8 +2577,6 @@ zh_CN:
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>浏览所有类别</a>、<a href='%{basePath}/latest'>查看最新话题</a>或查看热门话题："
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>浏览所有标签</a>或<a href='%{basePath}/latest'>查看最新话题</a>。"
       suggest_create_topic: 准备好<a href>开始新对话</a>了吗？
-      jump_reply_up: 跳转到较早的回复
-      jump_reply_down: 跳转到较晚的回复
       deleted: "该话题已被删除"
       slow_mode_update:
         title: "慢速模式"
@@ -2935,8 +2926,6 @@ zh_CN:
       collapse: "收起"
       sr_collapse_replies: "收起嵌入式回复"
       sr_date: "发布日期"
-      sr_expand_replies:
-        other: "此帖子有 %{count} 个回复。点击展开"
       expand_collapse: "展开/收起"
       sr_below_embedded_posts_description: "帖子#%{post_number} 回复"
       sr_embedded_reply_description: "@%{username} 回复帖子 #%{post_number}"
@@ -3206,8 +3195,6 @@ zh_CN:
       email_in: "自定义传入电子邮件地址："
       email_in_tooltip: "您可以使用 | 字符分隔多个电子邮件地址。"
       email_in_allow_strangers: "接受来自没有帐户的匿名用户的电子邮件"
-      email_in_disabled: "通过电子邮件发布新话题的功能在站点设置中禁用。要启用通过电子邮件发布新话题，"
-      email_in_disabled_click: '请启用“email in”设置。'
       mailinglist_mirror: "类别镜像一个邮寄名单"
       show_subcategory_list: "在此类别中的话题上方显示子类别列表。"
       read_only_banner: "用户无法在此类别中创建话题时的横幅文本："
@@ -3746,13 +3733,11 @@ zh_CN:
     pause_notifications:
       title: "暂停通知…"
       label: "暂停通知"
-      remaining: "剩余 %{remaining}"
       options:
         half_hour: "30 分钟"
         one_hour: "1 小时"
         two_hours: "2 小时"
         tomorrow: "直到明天"
-        custom: "自定义"
       set_schedule: "设置通知时间表"
     trust_levels:
       names:
@@ -3800,6 +3785,13 @@ zh_CN:
       all_categories: "所有类别"
       all_tags: "所有标签"
       sections:
+        custom:
+          save: "保存"
+          delete: "删除"
+          links:
+            icon: "图标"
+            name: "名称"
+            value: "链接"
         about:
           header_link_text: "关于"
         messages:
@@ -4882,6 +4874,22 @@ zh_CN:
           description: "在下方输入文本以检查有无与关注词的匹配"
           found_matches: "找到匹配："
           no_matches: "未找到匹配项"
+      form_templates:
+        nav_title: "模板"
+        list_table:
+          headings:
+            name: "名称"
+            actions: "操作"
+        view_template:
+          close: "关闭"
+          edit: "编辑"
+          delete: "删除"
+        new_template_form:
+          submit: "保存"
+          cancel: "取消"
+        quick_insert_fields:
+          add_new_field: "添加"
+          dropdown: "下拉菜单"
       impersonate:
         title: "模拟"
         help: "使用此工具模拟用户帐户以进行调试。完成后，您必须退出。"
@@ -4982,7 +4990,6 @@ zh_CN:
         show_admin_profile: "管理员"
         manage_user: "管理用户"
         show_public_profile: "显示公开个人资料"
-        impersonate: "模拟"
         action_logs: "操作日志"
         ip_lookup: "IP 查询"
         log_out: "退出"
@@ -5314,7 +5321,7 @@ zh_CN:
         allow_title: 允许将徽章用作头衔
         multiple_grant: 可以多次授予
         listable: 在公共徽章页面上显示徽章
-        enabled: 启用徽章
+        disabled: 已
         icon: 图标
         image: 图片
         graphic: 图形

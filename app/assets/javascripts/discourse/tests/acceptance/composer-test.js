@@ -1360,3 +1360,31 @@ acceptance("Composer - default category not set", function (needs) {
   });
 });
 // END: Default Composer Category tests
+
+acceptance("Composer - current time", function (needs) {
+  needs.user();
+
+  test("composer insert current time shortcut", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+
+    await click("#topic-footer-buttons .btn.create");
+    assert.ok(exists(".d-editor-input"), "the composer input is visible");
+    await fillIn(".d-editor-input", "and the time now is: ");
+
+    const mac = /Mac|iPod|iPhone|iPad/.test(navigator.platform);
+    const date = moment().format("YYYY-MM-DD");
+
+    await triggerKeyEvent(".d-editor-input", "keydown", ".", {
+      shiftKey: true,
+      ctrlKey: !mac,
+      metaKey: mac,
+    });
+
+    const inputValue = query("#reply-control .d-editor-input").value.trim();
+
+    assert.ok(
+      inputValue.startsWith(`and the time now is: [date=${date}`),
+      "it adds the current date"
+    );
+  });
+});

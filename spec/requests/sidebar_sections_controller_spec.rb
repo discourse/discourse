@@ -16,8 +16,8 @@ RSpec.describe SidebarSectionsController do
            params: {
              title: "custom section",
              links: [
-               { name: "categories", value: "/categories" },
-               { name: "tags", value: "/tags" },
+               { icon: "link", name: "categories", value: "/categories" },
+               { icon: "link", name: "tags", value: "/tags" },
              ],
            }
 
@@ -30,8 +30,8 @@ RSpec.describe SidebarSectionsController do
            params: {
              title: "custom section",
              links: [
-               { name: "categories", value: "/categories" },
-               { name: "tags", value: "/tags" },
+               { icon: "link", name: "categories", value: "/categories" },
+               { icon: "address-book", name: "tags", value: "/tags" },
              ],
            }
 
@@ -43,8 +43,10 @@ RSpec.describe SidebarSectionsController do
       expect(sidebar_section.title).to eq("custom section")
       expect(sidebar_section.user).to eq(user)
       expect(sidebar_section.sidebar_urls.count).to eq(2)
+      expect(sidebar_section.sidebar_urls.first.icon).to eq("link")
       expect(sidebar_section.sidebar_urls.first.name).to eq("categories")
       expect(sidebar_section.sidebar_urls.first.value).to eq("/categories")
+      expect(sidebar_section.sidebar_urls.second.icon).to eq("address-book")
       expect(sidebar_section.sidebar_urls.second.name).to eq("tags")
       expect(sidebar_section.sidebar_urls.second.value).to eq("/tags")
     end
@@ -67,8 +69,8 @@ RSpec.describe SidebarSectionsController do
           params: {
             title: "custom section edited",
             links: [
-              { id: sidebar_url_1.id, name: "latest", value: "/latest" },
-              { id: sidebar_url_2.id, name: "tags", value: "/tags", _destroy: "1" },
+              { icon: "link", id: sidebar_url_1.id, name: "latest", value: "/latest" },
+              { icon: "link", id: sidebar_url_2.id, name: "tags", value: "/tags", _destroy: "1" },
             ],
           }
 
@@ -89,7 +91,7 @@ RSpec.describe SidebarSectionsController do
       put "/sidebar_sections/#{sidebar_section_2.id}.json",
           params: {
             title: "custom section edited",
-            links: [{ id: sidebar_url_3.id, name: "takeover", value: "/categories" }],
+            links: [{ icon: "link", id: sidebar_url_3.id, name: "takeover", value: "/categories" }],
           }
 
       expect(response.status).to eq(403)
@@ -106,7 +108,7 @@ RSpec.describe SidebarSectionsController do
       put "/sidebar_sections/#{sidebar_section.id}.json",
           params: {
             title: "custom section edited",
-            links: [{ id: sidebar_url_3.id, name: "takeover", value: "/categories" }],
+            links: [{ icon: "link", id: sidebar_url_3.id, name: "takeover", value: "/categories" }],
           }
 
       expect(response.status).to eq(404)

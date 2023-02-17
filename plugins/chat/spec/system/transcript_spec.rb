@@ -25,15 +25,6 @@ RSpec.describe "Quoting chat message transcripts", type: :system, js: true do
     end
   end
 
-  def select_message_mobile(message)
-    i = 0.5
-    try_until_success(timeout: 20) do
-      chat_channel_page.message_by_id(message.id).click(delay: i)
-      first(".chat-message-action-item[data-id=\"selectMessage\"]")
-    end
-    find(".chat-message-action-item[data-id=\"selectMessage\"] button").click
-  end
-
   def cdp_allow_clipboard_access!
     cdp_params = {
       origin: page.server_url,
@@ -230,7 +221,7 @@ RSpec.describe "Quoting chat message transcripts", type: :system, js: true do
 
         expect(chat_channel_page).to have_no_loading_skeleton
 
-        select_message_mobile(message_1)
+        chat_channel_page.click_message_action_mobile(message_1, "selectMessage")
         click_selection_button("quote")
 
         expect(topic_page).to have_expanded_composer

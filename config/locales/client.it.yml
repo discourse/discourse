@@ -145,10 +145,10 @@ it:
       email: "Invia per email"
       url: "Copia e condividi l'URL"
     action_codes:
-      public_topic: "Ha reso questo argomento pubblico %{when}"
-      open_topic: "Convertito in un argomento il %{when}"
-      private_topic: "Ha reso questo argomento un messaggio personale %{when}"
-      split_topic: "Ha separato questo argomento %{when}"
+      public_topic: "Ha reso questo argomento pubblico il %{when}"
+      open_topic: "Ha convertito questo contenuto in un argomento il %{when}"
+      private_topic: "Ha reso questo argomento un messaggio personale il %{when}"
+      split_topic: "Ha separato questo argomento il %{when}"
       invited_user: "Ha invitato %{who} %{when}"
       invited_group: "Ha invitato %{who} %{when}"
       user_left: "%{who} ha rimosso se stesso da questo messaggio %{when}"
@@ -166,16 +166,16 @@ it:
         disabled: "Archiviazione annullata %{when}"
       pinned:
         enabled: "Appuntato %{when}"
-        disabled: "Spuntato %{when}"
+        disabled: "Sbloccato %{when}"
       pinned_globally:
         enabled: "Appuntato globalmente %{when}"
-        disabled: "Spuntato %{when}"
+        disabled: "Sbloccato %{when}"
       visible:
         enabled: "Visibile in elenco %{when}"
-        disabled: "Invisibile in elenco %{when}"
+        disabled: "Non visibile in elenco %{when}"
       banner:
-        enabled: "Lo ha reso un banner il %{when}. Apparirà in cima ad ogni pagina finché non verrà chiuso dall'utente."
-        disabled: "Ha rimosso questo banner il %{when}. Non apparirà più in cima ad ogni pagina."
+        enabled: "Lo ha reso un banner il %{when}. Apparirà in cima a ogni pagina finché non verrà chiuso dall'utente."
+        disabled: "Ha rimosso questo banner il %{when}. Non apparirà più in cima a ogni pagina."
       forwarded: "Ha inoltrato l'email sopra"
     topic_admin_menu: "azioni argomento"
     skip_to_main_content: "Passa al contenuto principale"
@@ -974,11 +974,6 @@ it:
       profile: "Profilo"
       mute: "Silenzia"
       edit: "Modifica opzioni"
-      download_archive:
-        button_text: "Scarica Tutto"
-        confirm: "Vuoi scaricare i tuoi messaggi?"
-        success: "Esportazione iniziata, verrai avvertito con un messaggio al termine del processo."
-        rate_limit_error: "I messaggi possono essere scaricati una volta al giorno, riprova domani."
       new_private_message: "Nuovo Messaggio"
       private_message: "Messaggio"
       private_messages: "Messaggi"
@@ -1271,7 +1266,7 @@ it:
         profile: "Profilo"
         emails: "Email"
         notifications: "Notifiche"
-        tracking: "Seguite"
+        tracking: "Contenuto seguito"
         categories: "Categorie"
         users: "Utenti"
         tags: "Etichette"
@@ -2140,8 +2135,6 @@ it:
         topic_template_not_modified: "Aggiungi dettagli e specificità al tuo argomento modificando il modello di argomento."
       save_edit: "Salva Modifiche"
       overwrite_edit: "Sovrascrivi modifica"
-      reply_original: "Rispondi all'Argomento Originale"
-      reply_here: "Rispondi Qui"
       reply: "Rispondi"
       cancel: "Annulla"
       create_topic: "Crea Argomento"
@@ -2713,8 +2706,6 @@ it:
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Sfoglia tutte le categorie</a>, <a href='%{basePath}/latest'>visualizza gli argomenti più recenti</a> oppure guarda dall'inizio:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Sfoglia tutte le etichette</a> o <a href='%{basePath}/latest'>visualizza gli argomenti più recenti</a>."
       suggest_create_topic: Pronto per <a href>iniziare una nuova conversazione?</a>
-      jump_reply_up: passa a una risposta precedente
-      jump_reply_down: passa a una risposta successiva
       deleted: "L'argomento è stato eliminato"
       slow_mode_update:
         title: "Modalità lenta"
@@ -3079,9 +3070,6 @@ it:
       collapse: "comprimi"
       sr_collapse_replies: "Comprimi risposte incorporate"
       sr_date: "Data di pubblicazione"
-      sr_expand_replies:
-        one: "Questo messaggio ha %{count} risposta. Clicca per espandere"
-        other: "Questo messaggio ha %{count} risposte. Clicca per espandere"
       expand_collapse: "espandi/comprimi"
       sr_below_embedded_posts_description: "risposte al messaggio n°%{post_number}"
       sr_embedded_reply_description: "risposta di @%{username} al messaggio n°%{post_number}"
@@ -3369,8 +3357,6 @@ it:
       email_in: "Indirizzo email personalizzato:"
       email_in_tooltip: "Puoi separare più indirizzi e-mail con il carattere |."
       email_in_allow_strangers: "Accetta email da utenti anonimi senza alcun account"
-      email_in_disabled: "Le Impostazioni Sito non permettono di creare nuovi argomenti via email. Per abilitare la creazione di argomenti via email,"
-      email_in_disabled_click: 'abilita l''impostazione "email in".'
       mailinglist_mirror: "La categoria si comporta come una mailing list"
       show_subcategory_list: "Mostra la lista delle sottocategorie sopra agli argomenti in questa categoria."
       read_only_banner: "Testo dell'annuncio quando un utente non può creare un argomento in questa categoria:"
@@ -3937,13 +3923,11 @@ it:
     pause_notifications:
       title: "Metti in pausa le notifiche per..."
       label: "Metti in pausa le notifiche"
-      remaining: "%{remaining} rimanenti"
       options:
         half_hour: "30 minuti"
-        one_hour: "un'ora"
-        two_hours: "due ore"
+        one_hour: "1 ora"
+        two_hours: "2 ore"
         tomorrow: "Fino a domani"
-        custom: "Personalizzato"
       set_schedule: "Imposta una pianificazione delle notifiche"
     trust_levels:
       names:
@@ -3993,6 +3977,13 @@ it:
       all_categories: "Tutte le categorie"
       all_tags: "Tutte le etichette"
       sections:
+        custom:
+          save: "Salva"
+          delete: "Elimina"
+          links:
+            icon: "Icona"
+            name: "Nome"
+            value: "Link"
         about:
           header_link_text: "Informazioni"
         messages:
@@ -5083,6 +5074,22 @@ it:
           description: "Inserisci il testo qui sotto per verificare la corrispondenza con le parole osservate"
           found_matches: "Trovate corrispondenze:"
           no_matches: "Nessun risultato trovato"
+      form_templates:
+        nav_title: "Modelli"
+        list_table:
+          headings:
+            name: "Nome"
+            actions: "Azioni"
+        view_template:
+          close: "Chiudi"
+          edit: "Modifica"
+          delete: "Cancella"
+        new_template_form:
+          submit: "Salva"
+          cancel: "Annulla"
+        quick_insert_fields:
+          add_new_field: "Aggiungi"
+          dropdown: "A discesa"
       impersonate:
         title: "Impersona utente"
         help: "Usa questo strumento per impersonare un account utente ai fini del debugging. Una volta finito dovrai disconnetterti."
@@ -5183,7 +5190,6 @@ it:
         show_admin_profile: "Amministratore"
         manage_user: "Gestisci utente"
         show_public_profile: "Mostra Profilo Pubblico"
-        impersonate: "Impersona utente"
         action_logs: "Log Azioni"
         ip_lookup: "Ricerca IP"
         log_out: "Disconnetti"
@@ -5520,7 +5526,8 @@ it:
         allow_title: Permetti di utilizzare un distintivo come titolo
         multiple_grant: Può essere assegnato più volte
         listable: Mostra distintivo sulla pagina pubblica dei distintivi
-        enabled: Attiva distintivo
+        enabled: abilitato
+        disabled: disabilitata
         icon: Icona
         image: Immagine
         graphic: Grafico

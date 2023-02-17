@@ -294,7 +294,7 @@ class User < ActiveRecord::Base
         ->(filter) {
           if filter.is_a?(String) && filter =~ /.+@.+/
             # probably an email so try the bypass
-            if user_id = UserEmail.where("lower(email) = ?", filter.downcase).pluck_first(:user_id)
+            if user_id = UserEmail.where("lower(email) = ?", filter.downcase).pick(:user_id)
               return where("users.id = ?", user_id)
             end
           end
@@ -1683,11 +1683,11 @@ class User < ActiveRecord::Base
       group_titles_query.order("groups.id = #{primary_group_id} DESC") if primary_group_id
     group_titles_query = group_titles_query.order("groups.primary_group DESC").limit(1)
 
-    if next_best_group_title = group_titles_query.pluck_first(:title)
+    if next_best_group_title = group_titles_query.pick(:title)
       return next_best_group_title
     end
 
-    next_best_badge_title = badges.where(allow_title: true).pluck_first(:name)
+    next_best_badge_title = badges.where(allow_title: true).pick(:name)
     next_best_badge_title ? Badge.display_name(next_best_badge_title) : nil
   end
 
@@ -1790,14 +1790,17 @@ class User < ActiveRecord::Base
   end
 
   def set_status!(description, emoji, ends_at = nil)
-    status = { description: description, emoji: emoji, set_at: Time.zone.now, ends_at: ends_at }
+    status = {
+      description: description,
+      emoji: emoji,
+      set_at: Time.zone.now,
+      ends_at: ends_at,
+      user_id: id,
+    }
+    validate_status!(status)
+    UserStatus.upsert(status)
 
-    if user_status
-      user_status.update!(status)
-    else
-      self.user_status = UserStatus.create!(status)
-    end
-
+    reload_user_status
     publish_user_status(user_status)
   end
 
@@ -2027,9 +2030,7 @@ class User < ActiveRecord::Base
   def match_primary_group_changes
     return unless primary_group_id_changed?
 
-    if title == Group.where(id: primary_group_id_was).pluck_first(:title)
-      self.title = primary_group&.title
-    end
+    self.title = primary_group&.title if Group.exists?(id: primary_group_id_was, title: title)
 
     self.flair_group_id = primary_group&.id if flair_group_id == primary_group_id_was
   end
@@ -2040,7 +2041,7 @@ class User < ActiveRecord::Base
       .human_users
       .joins(:user_auth_tokens)
       .order("user_auth_tokens.created_at")
-      .pluck_first(:id)
+      .pick(:id)
   end
 
   private
@@ -2174,6 +2175,10 @@ class User < ActiveRecord::Base
           up.id IS NULL
       )
     SQL
+  end
+
+  def validate_status!(status)
+    UserStatus.new(status).validate!
   end
 end
 

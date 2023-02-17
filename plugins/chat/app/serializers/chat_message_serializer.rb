@@ -13,12 +13,18 @@ class ChatMessageSerializer < ApplicationSerializer
              :edited,
              :reactions,
              :bookmark,
-             :available_flags
+             :available_flags,
+             :thread_id,
+             :chat_channel_id
 
   has_one :user, serializer: BasicUserWithStatusSerializer, embed: :objects
   has_one :chat_webhook_event, serializer: ChatWebhookEventSerializer, embed: :objects
   has_one :in_reply_to, serializer: ChatInReplyToSerializer, embed: :objects
   has_many :uploads, serializer: UploadSerializer, embed: :objects
+
+  def channel
+    @channel ||= @options.dig(:chat_channel) || object.chat_channel
+  end
 
   def user
     object.user || DeletedChatUser.new
@@ -129,8 +135,6 @@ class ChatMessageSerializer < ApplicationSerializer
   def available_flags
     return [] if !scope.can_flag_chat_message?(object)
     return [] if reviewable_id.present? && user_flag_status == ReviewableScore.statuses[:pending]
-
-    channel = @options.dig(:chat_channel) || object.chat_channel
 
     PostActionType.flag_types.map do |sym, id|
       next if channel.direct_message_channel? && %i[notify_moderators notify_user].include?(sym)

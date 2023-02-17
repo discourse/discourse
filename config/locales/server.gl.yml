@@ -2143,7 +2143,6 @@ gl:
       other: "Desactivado automaticamente despois de %{count} días de inactividade"
     activated_by_staff: "Activado polo equipo"
     new_user_typed_too_fast: "O novo usuario escribe moi rápido"
-    content_matches_auto_block_regex: "O contido coincide cunha expresión regular de bloqueo"
     username:
       short: "debe ter polo menos %{min} caracteres"
       long: "non debe ter máis de %{max} caracteres"
@@ -2745,14 +2744,6 @@ gl:
     user_automatically_silenced:
       title: "Usuario silenciado automaticamente"
       subject_template: "Usuario novo %{username} silenciado polas denuncias da comunidade"
-      text_body_template: |
-        Esta é unha mensaxe automática.
-
-        O novo usuario [%{username}](%{user_url}) foi silenciado automaticamente porque moitos usuarios denunciaron as publicacións de %{username}.
-
-        [Revise as denuncias](%{base_url}/admin/flags). Se %{username} foi silenciado incorrectamente, prema o botón de retirar o silencio na [páxina de administración para este usuario](%{user_url}).
-
-        Isto pode cambiarse co axuste `silence_new_user` na configuración do sitio.
     spam_post_blocked:
       title: "Publicación lixo bloqueada"
       subject_template: "As publicacións do novo usuario %{username} foron bloqueadas por repetir ligazóns"
@@ -2830,9 +2821,6 @@ gl:
       one: "Advertencia: enviamos un máximo de %{count} correo electrónico diario. Comprobe no sitio o número dos que se poden reter."
       other: "Advertencia: enviamos un máximo de %{count} correos electrónicos diarios. Comprobe no sitio o número dos que se poden reter. Grazas por ser tan popular!"
     in_reply_to: "En resposta a"
-    unsubscribe:
-      title: "Cancelar subscrición"
-      description: "Non ten interese en recibir estes correos electrónicos? Sen problema! Prema embaixo para darse de baixa agora mesmo:"
     reply_by_email: "[Visite o tema](%{base_url}%{url}) ou responda a este correo."
     reply_by_email_pm: "[Visite a mensaxe](%{base_url}%{url}) ou responda a este correo para contestar a %{participants}."
     only_reply_by_email: "Responder a este correo para publicar."
@@ -3114,7 +3102,6 @@ gl:
       liked_received: "Gústame recibidos"
       new_users: "Novos usuarios"
       popular_topics: "Temas populares"
-      follow_topic: "Seguir este tema"
       join_the_discussion: "Ler máis"
       popular_posts: "Publicacións máis populares"
       more_new: "Novo para vostede"
@@ -3306,8 +3293,6 @@ gl:
     welcome_message_invite_only: |
       ## [Dámoslle a benvida a %{title}](#welcome)
       Requírese unha conta. Pídalle a un membro que o convide ou inicie sesión para continuar.
-  deleted: "eliminado"
-  image: "imaxe"
   upload:
     edit_reason: "copias locais de imaxes descargadas"
     unauthorized: "Sentímolo, o ficheiro que tenta subir non está autorizado (extensións permitidas: %{authorized_extensions})."
@@ -3745,7 +3730,6 @@ gl:
           <p>Páseo ben e moita sorte <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>organizando a súa nova comunidade.</a></p>
   search_logs:
     graph_title: "Análise das buscas"
-  joined: "Uniuse"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} mencionouno en "%{topic}" - %{site_title}'

@@ -26,7 +26,7 @@ class Section {
   }
 
   get validTitle() {
-    return !isEmpty(this.title);
+    return !isEmpty(this.title) && this.title.length <= 30;
   }
 
   get titleCssClass() {
@@ -35,12 +35,14 @@ class Section {
 }
 
 class SectionLink {
+  @tracked icon;
   @tracked name;
   @tracked value;
   @tracked _destroy;
 
-  constructor({ router, name, value, id }) {
+  constructor({ router, icon, name, value, id }) {
     this.router = router;
+    this.icon = icon || "link";
     this.name = name;
     this.value = value ? `${this.protocolAndHost}${value}` : value;
     this.id = id;
@@ -55,11 +57,19 @@ class SectionLink {
   }
 
   get valid() {
-    return this.validName && this.validValue;
+    return this.validIcon && this.validName && this.validValue;
+  }
+
+  get validIcon() {
+    return !isEmpty(this.icon) && this.icon.length <= 40;
+  }
+
+  get iconCssClass() {
+    return this.icon === undefined || this.validIcon ? "" : "warning";
   }
 
   get validName() {
-    return !isEmpty(this.name);
+    return !isEmpty(this.name) && this.name.length <= 80;
   }
 
   get nameCssClass() {
@@ -71,6 +81,7 @@ class SectionLink {
       !isEmpty(this.value) &&
       (this.value.startsWith(this.protocolAndHost) ||
         this.value.startsWith("/")) &&
+      this.value.length <= 200 &&
       this.path &&
       this.router.recognize(this.path).name !== "unknown"
     );
@@ -106,6 +117,7 @@ export default Controller.extend(ModalFunctionality, {
             (link) =>
               new SectionLink({
                 router: this.router,
+                icon: link.icon,
                 name: link.name,
                 value: link.value,
                 id: link.id,
@@ -130,6 +142,7 @@ export default Controller.extend(ModalFunctionality, {
         title: this.model.title,
         links: this.model.links.map((link) => {
           return {
+            icon: link.icon,
             name: link.name,
             value: link.path,
           };
@@ -158,6 +171,7 @@ export default Controller.extend(ModalFunctionality, {
         links: this.model.links.map((link) => {
           return {
             id: link.id,
+            icon: link.icon,
             name: link.name,
             value: link.path,
             _destroy: link._destroy,
@@ -187,6 +201,12 @@ export default Controller.extend(ModalFunctionality, {
 
   get activeLinks() {
     return this.model.links.filter((link) => !link._destroy);
+  },
+
+  get header() {
+    return this.model.id
+      ? "sidebar.sections.custom.edit"
+      : "sidebar.sections.custom.add";
   },
 
   actions: {

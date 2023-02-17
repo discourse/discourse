@@ -40,5 +40,6 @@ end
 #
 # Indexes
 #
-#  idx_unique_sidebar_section_links  (user_id,linkable_type,linkable_id) UNIQUE
+#  idx_unique_sidebar_section_links                              (user_id,linkable_type,linkable_id) UNIQUE
+#  index_sidebar_section_links_on_linkable_type_and_linkable_id  (linkable_type,linkable_id)
 #

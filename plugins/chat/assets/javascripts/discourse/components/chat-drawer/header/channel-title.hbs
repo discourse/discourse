@@ -1,0 +1,33 @@
+{{#if @channel}}
+  {{#if this.chatStateManager.isDrawerExpanded}}
+    <LinkTo
+      @route={{if
+        @channel.isDirectMessageChannel
+        "chat.channel.info.settings"
+        "chat.channel.info.members"
+      }}
+      @models={{@channel.routeModels}}
+      class="chat-drawer-header__title"
+    >
+      <div class="chat-drawer-header__top-line">
+        <ChatChannelTitle @channel={{@channel}} />
+      </div>
+    </LinkTo>
+  {{else}}
+    <div
+      role="button"
+      {{on "click" @drawerActions.toggleExpand}}
+      class="chat-drawer-header__title"
+    >
+      <div class="chat-drawer-header__top-line">
+        <ChatChannelTitle @channel={{@channel}}>
+          {{#if @channel.currentUserMembership.unreadCount}}
+            <span class="chat-unread-count">
+              {{@channel.currentUserMembership.unreadCount}}
+            </span>
+          {{/if}}
+        </ChatChannelTitle>
+      </div>
+    </div>
+  {{/if}}
+{{/if}}

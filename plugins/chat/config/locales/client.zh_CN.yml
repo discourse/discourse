@@ -38,8 +38,6 @@ zh_CN:
       browse_all_channels: "浏览所有频道"
       move_to_channel:
         title: "将消息移至频道"
-        instructions:
-          other: "您正在移动 <strong>%{count}</strong> 条消息。选择一个目标频道。 将在<strong>%{channelTitle}</strong>频道中创建一条占位符消息，以表明这些消息已被移动。"
         confirm_move: "移动消息"
       channel_settings:
         title: "频道设置"
@@ -70,7 +68,6 @@ zh_CN:
         instructions: "关闭该频道会阻止非管理人员用户发送新消息或编辑现有消息。确定要关闭此频道吗？"
       channel_delete:
         title: "删除频道"
-        instructions: "<p>删除<strong>%{name}</strong>频道和聊天历史。所有消息和相关数据，例如回应和上传，将被永久删除。如果您想保留频道历史记录，并将其停用，您可能想要归档频道。</p> <p>确定要<strong>永久删除</strong>该频道吗？要确认，请在下面的框中输入频道的名称。</p>"
         confirm: "我明白后果，删除频道"
         confirm_channel_name: "输入频道名称"
         process_started: "删除频道的过程已经开始。此对话框将很快关闭，您将无法再查看被删除的频道。"

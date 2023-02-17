@@ -2010,11 +2010,8 @@ nl:
     delete_merged_stub_topics_after_days: "Aantal dagen dat moet worden gewacht voordat volledig samengevoegde stubtopics automatisch worden verwijderd. Stel dit in op 0 om stubtopics niet te verwijderen."
     bootstrap_mode_min_users: "Minimale aantal vereiste gebruikers om bootstrapmodus uit te schakelen (stel dit in op 0 om uit te schakelen)"
     prevent_anons_from_downloading_files: "Voorkom dat anonieme gebruikers bijlagen downloaden."
-    secure_media: "VEROUDERD: wordt verwijderd in Discourse 3.0, gebruik in plaats hiervan de instelling secure_uploads."
     secure_uploads: 'Beperkt de toegang tot ALLE uploads (afbeeldingen, video, audio, tekst, pdf''s, zips en andere). Als ''aanmelding vereist'' is ingeschakeld, hebben alleen aangemelde gebruikers toegang tot uploads. Anders is de toegang alleen beperkt voor media-uploads in privéberichten en privécategorieën. WAARSCHUWING: deze instelling is complex en vereist diepgaande beheerkennis. Zie <a target="_blank" href="https://meta.discourse.org/t/-/140017">het onderwerp Veilige uploads op Meta</a> voor meer informatie.'
-    secure_media_allow_embed_images_in_emails: "VEROUDERD: wordt verwijderd in Discourse 3.0, gebruik secure_uploads_allow_embed_images_in_emails."
     secure_uploads_allow_embed_images_in_emails: "Staat het insluiten van beveiligde afbeeldingen toe die normaal gesproken zouden worden geredigeerd in e-mails, als hun grootte kleiner is dan de instelling 'veilige uploads max. afbeeldingsgrootte insluiten in e-mail kb'."
-    secure_media_max_email_embed_image_size_kb: "VEROUDERD: wordt verwijderd in Discourse 3.0, gebruik secure_uploads_max_email_embed_image_size_kb."
     secure_uploads_max_email_embed_image_size_kb: "De maximale grootte voor beveiligde afbeeldingen die worden ingesloten in e-mails als de instelling 'veilige uploads insluiten toestaan in e-mails' is ingeschakeld. Als die instelling niet is ingeschakeld, heeft deze instelling geen effect."
     slug_generation_method: "Kies een slug-generatiemodus. 'encoded' genereert een percentage-coderingsstring. 'none' schakelt de slug helemaal uit."
     enable_emoji: "Emoji inschakelen"
@@ -2133,7 +2130,6 @@ nl:
     default_sidebar_categories: "Geselecteerde categorieën worden standaard weergegeven onder de sectie Categorieën van de zijbalk."
     default_sidebar_tags: "Geselecteerde tags worden standaard weergegeven onder de sectie Tags van de zijbalk."
     enable_new_user_profile_nav_groups: "EXPERIMENTEEL: gebruikers van de geselecteerde groepen krijgen het nieuwe navigatiemenu voor gebruikersprofielen te zien"
-    enable_experimental_topic_timeline_groups: "EXPERIMENTEEL: gebruikers in de geselecteerde groepen krijgen de tijdlijn van het geherformuleerde topic te zien"
     enable_experimental_hashtag_autocomplete: "EXPERIMENTEEL: gebruik het nieuwe automatische #hashtag-aanvulsysteem voor categorieën en tags dat het geselecteerde item anders weergeeft en de zoekfunctie verbetert"
     errors:
       invalid_css_color: "Ongeldige kleur. Voer een kleurnaam of hexadecimale waarde in."
@@ -2191,7 +2187,6 @@ nl:
       search_tokenize_japanese_enabled: "Je moet 'search_tokenize_japanese' uitschakelen voordat je deze instelling inschakelt."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Je kunt DiscourseConnect niet inschakelen als 2FA wordt afgedwongen."
       delete_rejected_email_after_days: "Deze instelling kan niet lager worden ingesteld dan de instelling delete_email_logs_after_days of hoger dan %{max}"
-      invalid_uncategorized_category_setting: "De categorie Ongecategoriseerd kan niet worden geselecteerd als het toestaan van ongecategoriseerde topics niet is toegestaan"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2386,7 +2381,6 @@ nl:
     activated_by_staff: "Geactiveerd door medewerker"
     new_user_typed_too_fast: "Nieuwe gebruiker typte te snel"
     content_matches_auto_silence_regex: "Inhoud komt overeen met reguliere expressie voor automatisch dempen"
-    content_matches_auto_block_regex: "Inhoud komt overeen met regex voor auto-blokkeren"
     username:
       short: "moet uit minstens %{min} tekens bestaan"
       long: "mag niet meer dan %{max} tekens zijn"
@@ -3123,14 +3117,6 @@ nl:
     user_automatically_silenced:
       title: "Gebruiker automatisch gedempt"
       subject_template: "Nieuwe gebruiker %{username} gedempt wegens markeringen door community"
-      text_body_template: |
-        Dit is een automatisch bericht.
-
-        De nieuwe gebruiker [%{username}](%{user_url}) is automatisch gedempt, omdat meerdere gebruikers een of meer berichten van %{username} hebben gemarkeerd.
-
-        [Beoordeel de markeringen](%{base_url}/admin/flags). Als %{username} ten onrechte is gedempt, klik dan op de knop voor opheffen van het dempen op [de beheerpagina van deze gebruiker](%{user_url}).
-
-        Deze drempel kan worden gewijzigd via de 'silence_new_user'-website-instellingen.
     spam_post_blocked:
       title: "Spambericht geblokkeerd"
       subject_template: "Berichten van nieuwe gebruiker %{username} geblokkeerd vanwege herhaalde links"
@@ -3209,9 +3195,6 @@ nl:
       one: "Let op: we sturen maximaal %{count} e-mail per dag. Kijk op de site om te zien welke mogelijk worden tegengehouden."
       other: "Let op: we sturen maximaal %{count} e-mails per dag. Kijk op de site om te zien welke mogelijk worden tegengehouden."
     in_reply_to: "In antwoord op"
-    unsubscribe:
-      title: "Uitschrijven"
-      description: "Niet geïnteresseerd in deze e-mails? Geen probleem! Klik hieronder om direct uitgeschreven te worden:"
     reply_by_email: "[Bezoek het topic](%{base_url}%{url}) of beantwoord deze e-mail om te reageren."
     reply_by_email_pm: "[Bezoek het bericht](%{base_url}%{url}) of beantwoord deze e-mail om op %{participants} te reageren."
     only_reply_by_email: "Beantwoord deze e-mail om te reageren."
@@ -3508,7 +3491,6 @@ nl:
       liked_received: "Ontvangen likes"
       new_users: "Nieuwe gebruikers"
       popular_topics: "Populaire topics"
-      follow_topic: "Dit topic volgen"
       join_the_discussion: "Meer lezen"
       popular_posts: "Populaire berichten"
       more_new: "Nieuw voor u"
@@ -3716,8 +3698,6 @@ nl:
     welcome_message_invite_only: |
       ## [Welkom bij %{title}](#welkom)
       Een account is vereist. Vraag een bestaand lid om een uitnodiging of meld je aan om verder te gaan.
-  deleted: "verwijderd"
-  image: "afbeelding"
   upload:
     edit_reason: "lokale kopieën van afbeeldingen gedownload"
     unauthorized: "Sorry, het bestand dat je probeert te uploaden is niet toegestaan (toegestane extensies: %{authorized_extensions})."
@@ -4342,7 +4322,6 @@ nl:
           <p>Veel plezier en succes met het <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>bouwen van je nieuwe community!</a></p>
   search_logs:
     graph_title: "Aantal zoekopdrachten"
-  joined: "Lid sinds"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} heeft je genoemd in ''%{topic}'' - %{site_title}'

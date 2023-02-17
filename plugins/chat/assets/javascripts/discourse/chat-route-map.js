@@ -6,15 +6,19 @@ export default function () {
     });
 
     this.route("channel", { path: "/c/:channelTitle/:channelId" }, function () {
-      this.route("from-params", { path: "/" });
       this.route("near-message", { path: "/:messageId" });
+      this.route("thread", { path: "/t/:threadId" });
+    });
 
-      this.route("info", { path: "/info" }, function () {
+    this.route(
+      "channel.info",
+      { path: "/c/:channelTitle/:channelId/info" },
+      function () {
         this.route("about", { path: "/about" });
         this.route("members", { path: "/members" });
         this.route("settings", { path: "/settings" });
-      });
-    });
+      }
+    );
 
     this.route("draft-channel", { path: "/draft-channel" });
     this.route("browse", { path: "/browse" }, function () {

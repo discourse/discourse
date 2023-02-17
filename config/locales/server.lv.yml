@@ -415,7 +415,6 @@ lv:
     see_more: "Vairāk"
     search_title: "Meklēt šajā vietnē"
     search_button: "Meklēt"
-  image: "bilde"
   upload:
     unauthorized: "Atvainojiet, fails, ko mēģināt augšuplādēt, nav atļauts (atļautie paplašinājumi: %{authorized_extensions})."
   color_schemes:
@@ -458,7 +457,6 @@ lv:
                 label: "Sadaļas un jaunākās tēmas"
               categories_and_top_topics:
                 label: "Kategorijas un populārākās tēmas"
-  joined: "Pievienojās"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} pieminēja jūs "%{topic}" - %{site_title}'

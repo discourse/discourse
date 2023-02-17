@@ -76,9 +76,4 @@ export default Component.extend({
   navigateToIndex() {
     this.router.transitionTo("chat.index");
   },
-
-  @action
-  switchChannel(channel) {
-    return this.chat.openChannel(channel);
-  },
 });

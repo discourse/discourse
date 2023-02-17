@@ -448,10 +448,11 @@ class ColorScheme < ActiveRecord::Base
   end
 
   def resolved_colors
-    from_base = base_colors.except("hover", "selected")
+    from_base = ColorScheme.base_colors
+    from_custom_scheme = base_colors
     from_db = colors.map { |c| [c.name, c.hex] }.to_h
 
-    resolved = from_base.merge(from_db)
+    resolved = from_base.merge(from_custom_scheme).except("hover", "selected").merge(from_db)
 
     # Equivalent to primary-100 in light mode, or primary-low in dark mode
     resolved["hover"] ||= ColorMath.dark_light_diff(

@@ -802,8 +802,6 @@ et:
   user_notifications:
     previous_discussion: "Varasemad vastused"
     in_reply_to: "Vastuseks"
-    unsubscribe:
-      title: "Tühista tellimus"
     user_replied:
       subject_template: "[%{email_prefix}] %{topic_title}"
     user_quoted:
@@ -831,7 +829,6 @@ et:
       liked_received: "Meeldimisi saadud"
       new_users: "Uued kasutajad"
       popular_topics: "Populaarsed teemad"
-      follow_topic: "Jälgi seda teemat"
       join_the_discussion: "Loe lisa"
       popular_posts: "Populaarsed postitused"
       more_new: "Uus sinu jaoks"
@@ -853,8 +850,6 @@ et:
     see_more: "Veel"
     search_title: "Otsi sellelt saidilt"
     search_button: "Otsi"
-  deleted: "kustutatud"
-  image: "pilt"
   upload:
     unauthorized: "Vabandust, fail mida püüad üles laadida, ei ole lubatud (lubatud faililaiendid: %{authorized_extensions})."
     pasted_image_filename: "Asetatud pilt"
@@ -1050,7 +1045,6 @@ et:
         title: "Kutsu meeskonda"
       finished:
         title: "Sinu Discourse on valmis!"
-  joined: "Liitus"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} mainis Sind teemas "%{topic}" - %{site_title}'

@@ -1707,7 +1707,6 @@ zh_TW:
     deactivated_by_staff: "已由管理員撤銷"
     activated_by_staff: "已由管理員啟動"
     new_user_typed_too_fast: "新的使用者輸入太快"
-    content_matches_auto_block_regex: "內容符合正規表達式"
     username:
       short: "必須至少 %{min} 個字"
       long: "不能超過 %{max} 個字"
@@ -2160,14 +2159,6 @@ zh_TW:
     user_automatically_silenced:
       title: "使用者自動被禁言"
       subject_template: "新使用者%{username}由於社群投訴而被禁言"
-      text_body_template: |
-        這是自動發出的訊息。
-
-        因多位使用者投訴 %{username} 的文章，新使用者 [%{username}](%{base_url}) 已被禁言。
-
-        請[查看這些投訴](%{base_url}/admin/flags)。如果 %{username} 被不合理地阻止貼文，點擊[該用戶管理頁面](%{base_url}%{user_url})內的解除封鎖按鈕。
-
-        您可以調整網站設定中的 `block_new_user` 以變更封鎖門檻值。
     spam_post_blocked:
       title: "因垃圾貼文而被封鎖"
       subject_template: "新用戶 %{username} 由於重複貼連結，文章已被封鎖"
@@ -2229,9 +2220,6 @@ zh_TW:
     reached_limit:
       other: "注意：你達到了每日郵件限額（%{count}），到網站看看哪些訊息可能被延遲了。BTW，感謝你經營的這麼熱絡！"
     in_reply_to: "回覆給"
-    unsubscribe:
-      title: "取消訂閱"
-      description: "不再對這些郵件感興趣？沒問題！點擊以立即取消訂閱："
     reply_by_email: "[訪問主題](%{base_url}%{url})或者發郵件回覆。"
     reply_by_email_pm: "[查看訊息](%{base_url}%{url}) 或回覆此電子郵件以回應%{participants}。"
     only_reply_by_email: "發郵件回覆。"
@@ -2453,7 +2441,6 @@ zh_TW:
       liked_received: "獲得贊"
       new_users: "新使用者"
       popular_topics: "熱門主題"
-      follow_topic: "關注主題"
       join_the_discussion: "閲讀更多"
       popular_posts: "熱門貼文"
       more_new: "新內容與你分享"
@@ -2570,8 +2557,6 @@ zh_TW:
     welcome_message_invite_only: |
       ## [歡迎來到 %{title}](#welcome)
       必須要有一個帳戶，請向現有會員請求邀請或登入以繼續。
-  deleted: "已刪除"
-  image: "圖片"
   upload:
     edit_reason: "下載外部圖片留做存檔"
     unauthorized: "抱歉，你沒有上傳檔案的權限（驗證擴展：%{authorized_extensions}）。"
@@ -2970,7 +2955,6 @@ zh_TW:
         title: "你的 Discourse 已經準備就緒！"
   search_logs:
     graph_title: "搜尋計數"
-  joined: "建立日期"
   discourse_push_notifications:
     popup:
       mentioned: '%{username}在"%{topic}"提及您 - %{site_title}'

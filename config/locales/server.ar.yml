@@ -2223,11 +2223,8 @@ ar:
     delete_merged_stub_topics_after_days: "عدد الأيام التي يجب انتظارها قبل حذف الموضوعات البديلة المدمجة بالكامل تلقائيًا. اتعيين القيمة على 0 لعدم حذف الموضوعات البديلة أبدًا."
     bootstrap_mode_min_users: "الحد الأدنى لعدد المستخدمين المطلوب لإيقاف وضع التمهيد (اتعيين القيمة على 0 للإيقاف)"
     prevent_anons_from_downloading_files: "منع المستخدمين المجهولين من تنزيل المرفقات"
-    secure_media: "تم إيقافه: استخدم الإعداد secure_uploads بدلًا من ذلك، ستتم إزالته في Discourse 3.0."
     secure_uploads: 'يقيِّد الوصول إلى كل التحميلات (الصور ومقاطع الفيديو والمقاطع الصوتية والنصوص وملفات PDF وملفات ZIP وغير ذلك). بخلاف ذلك، سيكون الوصول مقيَّدًا فقط لتحميلات الوسائط في الرسائل والفئات الخاصة. تحذير: هذا الإعداد معقَّد ويتطلب فهمًا إداريًا عميقًا. انظر <a target="_blank" href="https://meta.discourse.org/t/-/140017">موضوع التحميلات الآمنة على Meta</a> لمعرفة التفاصيل.'
-    secure_media_allow_embed_images_in_emails: "تم إيقافه: استخدام secure_uploads_allow_embed_images_in_emails، ستتم إزالته في Discourse 3.0."
     secure_uploads_allow_embed_images_in_emails: "يسمح بتضمين الصور الآمنة التي عادةً ما يتم تنقيحها في الرسائل الإلكترونية، إذا كان حجمها أصغر من الإعداد `secure uploads max email embed image size kb`."
-    secure_media_max_email_embed_image_size_kb: "تم إيقافه: استخدام secure_uploads_max_email_embed_image_size_kb، ستتم إزالته في Discourse 3.0."
     secure_uploads_max_email_embed_image_size_kb: "اقتطاع حجم الصور الآمنة التي سيتم تضمينها في الرسائل الإلكترونية إذا تم تفعيل الإعداد `secure uploads allow embed in emails`. سيكون هذا الإعداد بلا أي تأثير دون تفعيله."
     slug_generation_method: "اختيار طريقة إنشاء المسار. سيُنشئ الخيار \"ترميز\" سلسلة ترميز النسبة المئوية، بينما سيوقف الخيار \"لا يوجد\" المسار تمامًا."
     enable_emoji: "تفعيل الرموز التعبيرية"
@@ -2347,7 +2344,6 @@ ar:
     default_sidebar_tags: "سيتم عرض الوسوم المحدَّدة ضمن قسم فئات الشريط الجانبي بشكلٍ افتراضي."
     enable_new_notifications_menu: "يمكِّن قائمة الإشعارات الجديدة لقائمة التنقل القديمة."
     enable_new_user_profile_nav_groups: "تجريبي: سيتم عرض قائمة التنقل الخاصة بملف تعريف المستخدم الجديد لمستخدمي المجموعات المحدَّدة"
-    enable_experimental_topic_timeline_groups: "تجريبي: سيظهر الجدول الزمني المُعاد تصميمه لمستخدمي المجموعات المحدَّدة"
     enable_experimental_hashtag_autocomplete: "تجريبي: استخدم نظام الإكمال التلقائي #hashtag الجديد للفئات والوسوم التي تعرض العنصر المحدَّد بشكلٍ مختلف وحسَّنت نتائج البحث"
     errors:
       invalid_css_color: "لون غير صالح. أدخِل اسم لون أو قيمة سداسية عشرية."
@@ -2405,7 +2401,6 @@ ar:
       search_tokenize_japanese_enabled: "يجب عليك إيقاف 'search_tokenize_japanese' قبل تفعيل هذا الإعداد."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "لا يمكنك تفعيل DiscourseConnect في حال فرض المصادقة الثنائية."
       delete_rejected_email_after_days: "لا يمكن تعيين هذا الإعداد على أقل من الإعداد delete_email_logs_after_days أو أكثر من %{max}"
-      invalid_uncategorized_category_setting: "لا يمكن تحديد الفئة غير المصنَّفة إذا كان السماح بالموضوعات غير المصنَّفة غير مسموح به"
       enable_new_notifications_menu_not_legacy_navigation_menu: "يجب عليك تعيين `navigation_menu` إلى `legacy` قبل تمكين هذا الإعداد."
     placeholder:
       discourse_connect_provider_secrets:
@@ -2681,7 +2676,6 @@ ar:
     activated_by_staff: "تم التفعيل بواسطة فريق العمل"
     new_user_typed_too_fast: "كتب المستخدم الجديد بسرعة كبيرة"
     content_matches_auto_silence_regex: "يتطابق المحتوى مع التعبير العادي للكتم التلقائي"
-    content_matches_auto_block_regex: "يتطابق المحتوى مع التعبير العادي للحظر التلقائي"
     username:
       short: "يجب ألا يقل عدد الأحرف عن %{min}"
       long: "يجب ألا يزيد عدد الأحرف عن %{max}"
@@ -3388,14 +3382,6 @@ ar:
     user_automatically_silenced:
       title: "تم كتم المستخدم تلقائيًا"
       subject_template: "تم كتم المستخدم الجديد %{username} بسبب بلاغات المجتمع"
-      text_body_template: |
-        هذه رسالة تلقائية.
-
-        تم كتم المستخدم الجديد [%{username}](%{user_url}) تلقائيًا بسبب تلقي منشورات %{username} الكثير من البلاغات من المستخدمين.
-
-        يُرجى [مراجعة البلاغات](%{base_url}/admin/flags). إذا تم كتم %{username} بشكلٍ غير صحيح من النشر، فانقر على زر إلغاء الكتم على [صفحة المسؤول لهذا المستخدم](%{user_url}).
-
-        يمكن تغيير هذا الحد من خلال إعدادات الموقع `silence_new_user`.
     spam_post_blocked:
       title: "تم حظر المنشور غير المرغوب فيه"
       subject_template: "تم حظر منشورات المستخدم الجديد %{username} بسبب الروابط المتكررة"
@@ -3486,9 +3472,6 @@ ar:
       many: "تنبيه: نحن نُرسل يوميًا %{count} رسالة إلكترونية كحدٍ أقصى. تحقَّق من الموقع لمعرفة الرسائل التي قد يتم احتجازها. شكرًا على كونك مشهورًا!"
       other: "تنبيه: نحن نُرسل يوميًا %{count} رسالة إلكترونية كحدٍ أقصى. تحقَّق من الموقع لمعرفة الرسائل التي قد يتم احتجازها. شكرًا على كونك مشهورًا!"
     in_reply_to: "ردًا على"
-    unsubscribe:
-      title: "إلغاء الاشتراك"
-      description: "لست مهتمًا بالحصول على هذه الرسائل الإلكترونية؟ لا مشكلة! انقر أدناه لإلغاء الاشتراك على الفور:"
     reply_by_email: "يمكنك [زيارة الموضوع](%{base_url}%{url}) أو الرد على هذه الرسالة الإلكترونية للرد."
     reply_by_email_pm: "[انتقل إلى الرسالة](%{base_url}%{url}) أو قم بالرد على هذه الرسالة الإلكتروني للرد على %{participants}."
     only_reply_by_email: "قم بالرد على هذه الرسالة للرد."
@@ -3789,7 +3772,6 @@ ar:
       liked_received: "تسجيلات الإعجاب المتلقاة"
       new_users: "المستخدمون الجُدد"
       popular_topics: "الموضوعات الرائجة"
-      follow_topic: "تابع هذا الموضوع"
       join_the_discussion: "قراءة المزيد"
       popular_posts: "المنشورات الرائجة"
       more_new: "الجديد لك"
@@ -3981,8 +3963,6 @@ ar:
     welcome_message_invite_only: |
       ## [مرحبًا بك في %{title}](#welcome)
       مطلوب حساب. يُرجى مطالبة أحد الأعضاء الحاليين بدعوة أو تسجيل الدخول للمتابعة.
-  deleted: "تم الحذف"
-  image: "صورة"
   upload:
     edit_reason: "تم تنزيل نسخ محلية من الصور"
     unauthorized: "عذرًا، الملف الذي تحاول تحميله غير مسموح به (الامتدادات المسموح بها: %{authorized_extensions})."
@@ -4534,7 +4514,6 @@ ar:
           <p>استمتع، وحظًا سعيدًا في <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>بناء مجتمعك الجديد!</a></p>
   search_logs:
     graph_title: "عدد مرات البحث"
-  joined: "تاريخ الانضمام"
   discourse_push_notifications:
     popup:
       mentioned: 'أشار %{username} إليك في "%{topic}" - %{site_title}'

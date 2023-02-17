@@ -69,7 +69,7 @@ class UserAction < ActiveRecord::Base
     UserAction
       .where(user_id: user_id, target_topic_id: topic_id, action_type: [RESPONSE, MENTION, QUOTE])
       .order("created_at DESC")
-      .pluck_first(:target_post_id)
+      .pick(:target_post_id)
   end
 
   def self.stats(user_id, guardian)

@@ -1,27 +1,22 @@
 import DiscourseRoute from "discourse/routes/discourse";
+import withChatChannel from "./chat-channel-decorator";
 import { inject as service } from "@ember/service";
+import { action } from "@ember/object";
 
+@withChatChannel
 export default class ChatChannelRoute extends DiscourseRoute {
-  @service chatChannelsManager;
   @service chat;
-  @service router;
+  @service chatStateManager;
 
-  async model(params) {
-    return this.chatChannelsManager.find(params.channelId);
-  }
+  @action
+  willTransition(transition) {
+    this.chat.activeChannel.activeThread = null;
+    this.chatStateManager.closeSidePanel();
 
-  afterModel(model) {
-    this.chat.setActiveChannel(model);
-
-    const { messageId } = this.paramsFor(this.routeName);
-
-    // messageId query param backwards-compatibility
-    if (messageId) {
-      this.router.replaceWith(
-        "chat.channel.near-message",
-        ...model.routeModels,
-        messageId
-      );
+    if (!transition?.to?.name?.startsWith("chat.")) {
+      this.chatStateManager.storeChatURL();
+      this.chat.activeChannel = null;
+      this.chat.updatePresence();
     }
   }
 }

@@ -38,9 +38,6 @@ pt_BR:
       browse_all_channels: "Navegar por todos os canais"
       move_to_channel:
         title: "Mover mensagens para o canal"
-        instructions:
-          one: "Você está movendo <strong>%{count}</strong> mensagem. Selecione um canal de destino. Uma mensagem de espaço reservado será criada no canal <strong>%{channelTitle}</strong> para indicar que esta mensagem foi movida."
-          other: "Você está movendo <strong>%{count}</strong> mensagens. Selecione um canal de destino. Uma mensagem de espaço reservado será criada no canal <strong>%{channelTitle}</strong> para indicar que essas mensagens foram movidas."
         confirm_move: "Mover mensagens"
       channel_settings:
         title: "Definições do canal"
@@ -71,7 +68,6 @@ pt_BR:
         instructions: "Fechar o canal impede que usuários(as) não funcionários(as) enviem novas mensagens ou editem mensagens existentes. Tem certeza de que deseja fechar este canal?"
       channel_delete:
         title: "Excluir canal"
-        instructions: "<p>Exclui o canal <strong>%{name}</strong> e o histórico do chat. Todas as mensagens e dados relacionados, como reações e envios, serão excluídos permanentemente. Se você quiser preservar o histórico do canal e desativá-lo, talvez seja melhor arquivar o canal.</p> <p>Tem certeza de que deseja <strong>excluir permanentemente</strong> o canal? Para confirmar, digite o nome do canal na caixa abaixo.</p>"
         confirm: "Eu entendo as consequências, exclua o canal"
         confirm_channel_name: "Digite o nome do canal"
         process_started: "O processo para excluir o canal foi iniciado. Este modal será fechado em breve, você não verá mais o canal excluído em lugar algum."

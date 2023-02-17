@@ -441,6 +441,7 @@ he:
   too_late_to_edit: "פוסט זה נוצר לפני זמן רב מידי. לא ניתן יותר לערוך או להסיר אותו."
   edit_conflict: "פוסט זה נערך על ידי משתמש אחר ואין אפשרות עוד לשמור את השינויים שלך."
   revert_version_same: "הגרסה הנוכחית זהה לגרסה שמועמדת להחזרה."
+  reverted_to_version: "הוחזר למהדורה מס׳ %{version}"
   cannot_edit_on_slow_mode: "נושא זה נכנס למצב אטי. כדי לעודד דיון מתחשב ואחראי אסור כרגע לערוך פוסטים ישנים בנושא הזה במהלך המצב האטי."
   excerpt_image: "תמונה"
   bookmarks:
@@ -1661,6 +1662,7 @@ he:
     content_security_policy_frame_ancestors: "להגביל מי יכול להטמיע את האתר הזה עם מסגרות iframes דרך CSP. ניתן לשלוח במארחים המורשים דרך <a href='%{base_path}/admin/customize/embedding'>הטמעה</a>"
     content_security_policy_script_src: "מקורות סקריפטים נוספים ברשימת ההיתר. המארח וה־CDN הנוכחיים נכללים כבררת מחדל. ניתן לעיין ב<a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>התקפות XSS בעזרת CSP - מדיניות אבטחת תוכן.</a>"
     invalidate_inactive_admin_email_after_days: "חשבונות מנהלים שלא ביקרו באתר מעל כמות כזו של ימים יאלצו לאמת מחדש את כתובת הדוא״ל שלהם כדי לשוב ולהיכנס. להגדיר כ־0 כדי להשבית."
+    display_personal_messages_tag_counts: "כאשר האפשרות פעילה, מניין ההודעות האישיות שמתויגות בתגית מסוימת יוצגו."
     top_menu: "החליטו אילו פריטים יופיעו בניווט עמוד הבית ובאיזה סדר לדוגמה |אחרונים|חדשים|קטגוריות|מובילים|נקראו|פורסמו|סימניות"
     post_menu: "החליטו אילו פריטים מופיעים בתפריט הפוסט, ובאיזה סדר. למשל like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "פריטי התפריט להסתרה כברירת מחדל בתפריט הפוסט, אלא אם כן נלחץ לחצן ההרחבה."
@@ -1690,6 +1692,7 @@ he:
     whispers_allowed_groups: "לאפשר תקשורת פרטית בתוך נושאים לחברים מקבוצות מסוימות."
     allow_index_in_robots_txt: "יש לציין ב־robots.txt שמותר לאתר הזה להצטרף למאגר של מנועי החיפוש. במקרים יוצאי דופן, ניתן <a href='%{base_path}/admin/customize/robots'>לדרוס את robots.txt</a> באופן קבוע."
     normalize_emails: "לבדוק אם הדוא״ל המנורמל הוא ייחודי. כתובת דוא״ל מנורמלת מסירה את כל הנקודות משם המשתמש וכל מה שבין הסימנים + ו־@."
+    auto_approve_email_domains: "משתמשים עם כתובות דוא״ל מרשימת שמות התחום האלה יאושרו אוטומטית. שמות תת־תחומים יטופלו אוטומטית לשמות התחום שצוינו. אין תמיכה בתווי הכללה כגון * ו־?."
     hide_email_address_taken: "לא להודיע למשתמשים שקיים חשבון עם כתובת דוא״ל שסופקה במהלך רישום או במהלך איפוס ססמה. בנוסף, לדרוש כתובת דוא״ל מלאה לבקשות ‚שכחתי ססמה’."
     log_out_strict: "בהתנתקות, נתקו את כל ההפעלות של המשתמש/ת בכל המכשירים"
     version_checks: "לדגום את Discourse Hub כדי למצוא עדכוני גרסאות ולהציג הודעות של גרסאות חדשות בלוח הניהול <a href='%{base_path}/admin' target='_blank'>‎/admin</a>"
@@ -1858,6 +1861,7 @@ he:
     tl3_requires_likes_given: "מספר הלייקים המזערי שיש להעניק במשך (פרק זמן בדרגת אמון 3) הימים האחרונים כדי לעמוד בתנאי הקידום לדרגת אמון 3."
     tl3_requires_likes_received: "מספר הלייקים המזערי שיש לקבל במשך (פרק זמן בדרגת אמון 3) הימים האחרונים כדי לעמוד בתנאי הקידום לדרגת אמון 3."
     tl3_links_no_follow: "מניעת הסרת rel=nofollow מקישורים שמפורסמים על ידי משתמשים בדרגת אמון 3."
+    tl4_delete_posts_and_topics: "לאפשר למשתמשים בדרגת אמון 4 למחוק פוסטים ונושאים שנוצרו על ידי משתמשים אחרים. משתמשים בדרגת אמון 4 יוכלו גם לצפות בנושאים ובפוסטים שנמחקו."
     trusted_users_can_edit_others: "לאפשר למשתמשים בדרגת אמון גבוהה לערוך תוכן של משתמשים אחרים"
     min_trust_to_create_topic: "דרגת האמון המזערית הנדרשת ליצירת נושא חדש."
     allow_flagging_staff: "אם אפשרות זו פעילה, משתמשים יכולים לסמן בדגל פוסטים שפורסמו על ידי חשבונות סגל."
@@ -1974,6 +1978,11 @@ he:
     block_auto_generated_emails: "לחסום הודעות דוא״ל נכנסות שזוהו ככאלו שנוצרו אוטומטית."
     ignore_by_title: "להתעלם מהודעות דוא״ל נכנסות לפי הכותרת שלהן."
     mailgun_api_key: "מפתח API סודי של Mailgun לאימות של הודעות webhook."
+    sendgrid_verification_key: "מפתח התיקוף של Sendgrid משמש לתיקוף הודעות התליה."
+    mailjet_webhook_token: "אסימון המשמש לתיקוף מטען של התליה. חובה להעביר אותו בתור המשתנה ‚t’ בשאילתה של ההתליה, למשל: https://example.com/webhook/mailjet?t=supersecret"
+    mandrill_authentication_key: "מפתח האימות של Mandrill משמש לאימות הודעות התליה."
+    postmark_webhook_token: "אסימון המשמש לתיקוף מטען של התליה. חובה להעביר אותו בתור המשתנה ‚t’ בשאילתה של ההתליה, למשל: https://example.com/webhook/postmark?t=supersecret"
+    sparkpost_webhook_token: "אסימון המשמש לתיקוף מטען של התליה. חובה להעביר אותו בתור המשתנה ‚t’ בשאילתה של ההתליה, למשל: https://example.com/webhook/sparkpost?t=supersecret"
     soft_bounce_score: "ניקוד-החזר מתווסף למשתמש כאשר מתרחשת החזרה זמנית."
     hard_bounce_score: "ניקוד-החזר מתווסף למשתמש כאשר מתרחשת החזרה קבועה."
     bounce_score_threshold: "ניקוד-החזר מקסימלי לפני שנפסיק לשלוח מיילים למשתמש."
@@ -2094,6 +2103,7 @@ he:
     display_name_on_posts: "הצגת שמם המלא של משתמשים בפוסטים שלהם, בנוסף ל@שם_המשתמש שלהם."
     show_time_gap_days: "אם שני פוסטים נוצרים בהפרש כזה של ימים זה מזה, להציג את הפרש הזמן בנושא."
     short_progress_text_threshold: "לאחר שמספר הפוסטים בנושא עוברים את המספר הזה, מד ההתקדמות יציג רק את המספר של הפוסט הנוכחי. אם תשנו את רוחב מד ההתקדמות, ייתכן שתצטרכו לשנות ערך זה."
+    default_code_lang: "שפת התכנות כברירת המחדל להדגשת תחביר שחלה על מקטעי קוד (auto,‏ text,‏ ruby,‏ python וכו׳). ערך זה חייב להיות גם בהגדרת האתר `highlighted languages` (שפות מודגשות)."
     warn_reviving_old_topic_age: "כשמשתמש מתחיל להגיב לנושא בו התגובה האחרונה נכתבה לפני למעלה מכמות זו של ימים, תופיע אזהרה. 0 להשבתה."
     autohighlight_all_code: "לחייב שימוש בקוד הדגשה לכל קוד מעוצב מראש (preformatted code blocks) אפילו אם הם אינם מציינים את השפה."
     highlighted_languages: "כללי הדגשת תחביר להכללה. (אזהרה: הכללה של שפות רבות מדי פוגעת בביצועים) להדגמה: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a>"
@@ -2114,11 +2124,8 @@ he:
     delete_merged_stub_topics_after_days: "מספר הימים להמתנה לפני מחיקה אוטומטית של נושאים מקוצרים שמוזגו במלואם. יש להגדיר ל־0 כדי לא למחוק נושאים מקוצרים לעולם."
     bootstrap_mode_min_users: "מספר משתמשים מזערי שנדרש כדי להשבית מצב ראשוניות (0 להשבתה)"
     prevent_anons_from_downloading_files: "למנוע ממשתמשים אלמוניים להוריד קבצים מצורפים."
-    secure_media: "יצא מכלל שימוש: נא להשתמש בהגדרה secure_uploads במקום, יוסר ב־Discourse 3.0."
     secure_uploads: 'מגביל גישה לכל ההעלאות (תמונות, סרטונים, שמע, טקסט, קובצי PDF, ארכיוני zip ועוד). אם מופעלת האפשרות „דרישת כניסה”, רק משתמשים שנכנסו למערכת יכולים לגשת להעלאות. אחרת, הגישה תוגבל רק להעלאות מסוגי מדיה בהודעות פרטיות ובקטגוריות פרטיות. אזהרה: מדובר בהגדרה מסובכת שדורשת הבנה עמוקה בניהול המערכת. יש לעיין ב<a target="_blank" href="https://meta.discourse.org/t/-/140017">נושא ההעלאות המאובטחות ב־Meta</a> לקבלת פרטים נוספים.'
-    secure_media_allow_embed_images_in_emails: "יצא מכלל שימוש: יש להשתמש ב־secure_uploads_allow_embed_images_in_emails, יוסר ב־Discourse 3.0."
     secure_uploads_allow_embed_images_in_emails: "מאפשר להטמיע תמונות מאובטחות שבדרך כלל יידחסו אם הגודל שלהן קטן מההגדרה ‚secure uploads max email embed image size kb’ (גודל העלאות מרבי להטמעה כתמונה בקילובתים)."
-    secure_media_max_email_embed_image_size_kb: "יצא מכלל שימוש: יש להשתמש ב־secure_uploads_max_email_embed_image_size_kb, יוסר ב־Discourse 3.0."
     secure_uploads_max_email_embed_image_size_kb: "גודל החיתוך לתמונות מאובטחות שיוטמעו בהודעות דוא״ל אם ההגדרה ‚secure uploads allow embed in emails’ (לאפשר הטמעת העלאות מאובטחת בהודעות דוא״ל) פעילה. אם ההגדרה הזאת אינה פעילה להגדרה זו אין שום משמעות."
     slug_generation_method: "נא לבחור שיטת יצירת כתובת מופשטות. ‚מוצפן’ ייצר מחרוזת עם קידוד באחוזים, ‚ללא’ ישבית את הכתובת המופשטת לחלוטין."
     enable_emoji: "הפעלת אמוג׳י"
@@ -2211,6 +2218,7 @@ he:
     push_notifications_prompt: "הצגת בקשה להסכמת המשתמש."
     push_notifications_icon: "סמל העיטור שמופיע בפינת ההתרעה. מומלץ PNG בצבעים אחידים עם שקיפות בגודל 96 × 96."
     enable_desktop_push_notifications: "הפעלת התראות בדחיפה לשולחן העבודה"
+    push_notification_time_window_mins: "להמתין (n) דקות בטרם שליחת התראה בדחיפה. מסייע במניעת הודעות בדחיפה למשתמשים מחוברים ופעילים."
     base_font: "גופן בסיס לשימוש רוב הטקסט באתר. ערכות עיצוב יכולות לדרוס אותו באמצעות מאפיין ה־CSS‏ ‎`--font-family`‎."
     heading_font: "גופן לשימוש כותרות באתר. ערכות עיצוב יכולות לדרוס אותו באמצעות המאפיין ‎`--heading-font-family`‎"
     enable_sitemap: "ליצור מפת אתר עבור האתר שלך ולכלול אותה בקובץ robots.txt."
@@ -2237,7 +2245,6 @@ he:
     default_sidebar_tags: "התגיות הנבחרות תוצגנה תחת סעיף התגיות של סרגל הצד כברירת מחדל."
     enable_new_notifications_menu: "מפעיל את תפריט ההתראות החדש בתפריט הניווט הישן."
     enable_new_user_profile_nav_groups: "ניסיוני: משתמשים בקבוצות שנבחרו יופיעו בתפריט הניווט החדש של פרופיל המשתמש"
-    enable_experimental_topic_timeline_groups: "ניסיוני: בפני המשתמשים בקבוצות שנבחרו יופיע ציר הזמן המחודש של הנושא"
     enable_experimental_hashtag_autocomplete: "ניסיוני: ניתן להשתמש במערכת אוטומטית להשלמת #תגיות עבור קטגוריות ותגיות שמעבדת את הפריט הנבחר באופן שונה והחיפוש בה משופר"
     errors:
       invalid_css_color: "צבע שגוי. נא למלא את שם הצבע או ערך הקסדצימלי."
@@ -2295,8 +2302,9 @@ he:
       search_tokenize_japanese_enabled: "עליך להשבית את ‚search_tokenize_japanese’ (חיפוש מפרק יפנית) בטרם הפעלת הגדרה זו."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "אי אפשר להפעיל את DiscourseConnect אם נאכף אימות דו־שלבי."
       delete_rejected_email_after_days: "הגדרה זו לא יכולה להיות קטנה מ־delete_email_logs_after_days (ימים שלאחריהם למחוק יומני דוא״ל) או גדולה מ־%{max}"
-      invalid_uncategorized_category_setting: "אי אפשר לבחור בקטגוריה שאינה בין הקטגוריות אם הרשאת נושאים שאינם בקטגוריה אסורה"
+      invalid_uncategorized_category_setting: "אי אפשר לבחור בקטגוריה „ללא קטגוריה” אם ‚הרשאת נושאים ללא קטגוריה’ אסורה."
       enable_new_notifications_menu_not_legacy_navigation_menu: "יש להגדיר את `navigation_menu` לערך `legacy` בטרם הפעלת הגדרה זו."
+      invalid_search_ranking_weights: "הערך שגוי להגדרת האתר search_ranking_weights (משקלי דירוג חיפוש). למשל: ‚{0.1,0.2,0.3,1.0}’. נא לשים לב שהערך המרבי לכל משקל הוא 1.0."
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2531,7 +2539,6 @@ he:
     activated_by_staff: "הופעל על ידי הצוות"
     new_user_typed_too_fast: "משתמש חדש הקליד מהר מידי"
     content_matches_auto_silence_regex: "ביטוי רגולרי לחסימת תוכן אוטומטית"
-    content_matches_auto_block_regex: "ביטוי רגולרי לחסימת תוכן אטוטמטית"
     username:
       short: "חייבים להיות לפחות %{min} תווים"
       long: "נדרשים לא יותר מ-%{max} תווים"
@@ -3273,7 +3280,7 @@ he:
 
         המשתמש החדש [%{username}](%{user_url}) הושתק אוטומטית כיוון שמספר משתמשים סימנו את הפוסט/ים של %{username} בדגל.
 
-        נא [לסקור את הסימונים](%{base_url}/admin/flags). אם ההשתקה של %{username} אינה מוצדקת, יש ללחוץ על כפתור ביטול ההשתקה ב[עמוד הניהול עבור המשתמש הזה](%{user_url}).
+        נא [לסקור את הסימונים](%{base_url}/review). אם ההשתקה של %{username} אינה מוצדקת, יש ללחוץ על כפתור ביטול ההשתקה ב[עמוד הניהול עבור המשתמש הזה](%{user_url}).
 
         ניתן לשנות את הסף הזה בעזרת שינוי `silence_new_user` (השתקת משתמשים חדשים) בהגדרות האתר.
     spam_post_blocked:
@@ -3360,9 +3367,6 @@ he:
       many: "לתשומת לבך: אנו שולחים %{count} הודעות דוא״ל בכל יום לכל היותר. מומלץ לבדוק באתר אם יש כאלו שהוחזקו. דרך אגב, תודה על הפופולריות שלך!"
       other: "לתשומת לבך: אנו שולחים %{count} הודעות דוא״ל בכל יום לכל היותר. מומלץ לבדוק באתר אם יש כאלו שהוחזקו. דרך אגב, תודה על הפופולריות שלך!"
     in_reply_to: "בתגובה ל"
-    unsubscribe:
-      title: "ביטול מנוי"
-      description: "לא מעניין אותך לקבל את ההודעות האלו? אין בעיה! לחיצה למטה תסיר את המנוי שלך מיידית:"
     reply_by_email: "[בקרו בנושא](%{base_url}%{url}) או ענו למייל זה כדי להגיב."
     reply_by_email_pm: "יש [לבקר בהודעה](%{base_url}%{url}) או להשיב להודעת דוא״ל זו כדי להגיב אל %{participants}."
     only_reply_by_email: "השיבו למייל זה כדי לענות."
@@ -3645,7 +3649,6 @@ he:
       liked_received: "לייקים שהתקבלו"
       new_users: "משתמשים חדשים"
       popular_topics: "נושאים פופולאריים"
-      follow_topic: "עיקבו אחרי נושא זה"
       join_the_discussion: "קראו עוד"
       popular_posts: "פוסטים פופולאריים"
       more_new: "חדש בשבילך"
@@ -3851,8 +3854,6 @@ he:
     welcome_message_invite_only: |
       ## [ברוך בואך אל %{title}](#welcome)
       נדרש חשבון. נא לבקש מחבר קיים לשלוח לך הזמנה או להיכנס כדי להמשיך.
-  deleted: "נמחק"
-  image: "תמונה"
   upload:
     edit_reason: "עותקים מקומיים של תמונות שהורדו"
     unauthorized: "הקובץ שמועמד להעלאה אינו מורשה (סיומות מורשות: %{authorized_extensions}), עמך הסליחה."
@@ -4487,7 +4488,9 @@ he:
           <p>רצוי להתפרע והמון הצלחה <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>בבניית הקהילה החדשה שלך!</a></p>
   search_logs:
     graph_title: "מניין חיפושים"
-  joined: "הצטרפו"
+  onebox:
+    discourse:
+      user_joined_community: "מועד הצטרפות: %{date}"
   discourse_push_notifications:
     popup:
       mentioned: ' אוזכרת על ידי %{username} בנושא „%{topic}” - %{site_title}'
@@ -4663,6 +4666,9 @@ he:
     payload_url:
       blocked_or_internal: "לא ניתן להשתמש בכתובת המטען כי היא תואמת ל־IP חסום או פנימי"
       unsafe: "לא ניתן להשתמש בכתובת המטען כיוון שהיא לא מאובטחת"
+  form_templates:
+    errors:
+      invalid_yaml: "איזה מחרוזת YAML תקנית"
   activemodel:
     errors:
       <<: *errors

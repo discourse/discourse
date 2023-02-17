@@ -1958,11 +1958,8 @@ ja:
     delete_merged_stub_topics_after_days: "完全にマージされたスタブトピックを自動的に削除するまで待機する日数。0 に設定すると、スタブトピックは削除されません。"
     bootstrap_mode_min_users: "ブートストラップモードを無効にするために必要な最低ユーザー数 (0 に設定すると無効になります)"
     prevent_anons_from_downloading_files: "匿名ユーザーが添付ファイルをダウンロードできないようにする。"
-    secure_media: "非推奨: 代わりに secure_uploads を使用してください。Discourse 3.0 で削除されます。"
     secure_uploads: 'すべてのアップロード (画像、動画、音声、テキスト、pdf、zip など) へのアクセスを制限する。“login required” が有効である場合、ログイン済みのユーザーのみがアップロードにアクセスできます。そうでない場合は、個人メッセージと非公開カテゴリのメディアアップロードのアクセスのみが制限されます。警告: この設定は複雑であるため、管理を十分に理解している必要があります。詳細については、<a target="_blank" href="https://meta.discourse.org/t/-/140017">メタに関するセキュリティで保護されたアップロードのトピック</a>をご覧ください。'
-    secure_media_allow_embed_images_in_emails: "非推奨: secure_uploads_allow_embed_images_in_emails を使用してください。Discourse 3.0 で削除されます。"
     secure_uploads_allow_embed_images_in_emails: "通常はメールで編集されるセキュリティで保護された画像のサイズが 'secure uploads max email embed image size kb' 設定よりも小さい場合、その埋め込みを許可します。"
-    secure_media_max_email_embed_image_size_kb: "非推奨: secure_uploads_max_email_embed_image_size_kb を使用してください。Discourse 3.0 で削除されます。"
     secure_uploads_max_email_embed_image_size_kb: "'secure uploads allow embed in emails' 設定が有効である場合にメールに埋め込まれるセキュリティで保護された画像のサイズのカットオフ。その設定が有効でない場合、この設定の効果はありません。"
     slug_generation_method: "スラッグ生成方法を選択します。'encode' はパーセントエンコード文字列を生成します。'none'は、スラッグを無効にします。"
     enable_emoji: "絵文字を有効にする"
@@ -2081,7 +2078,6 @@ ja:
     default_sidebar_categories: "選択されたカテゴリは、デフォルトでサイドバーのカテゴリセクションに表示されます。"
     default_sidebar_tags: "選択されたタグは、デフォルトでサイドバーのタグセクションに表示されます。"
     enable_new_user_profile_nav_groups: "実験的: 選択されたグループのユーザーは、新しいユーザープロファイルナビゲーションメニューに表示されます。"
-    enable_experimental_topic_timeline_groups: "実験的: 選択されたグループのユーザーに、リファクタリングされたトピックタイムラインを表示します"
     enable_experimental_hashtag_autocomplete: "実験的: 選択した項目を異なる方法で表示し、改善された検索機能を備えた新しい #hashtag 自動補完システムをカテゴリとタグに使用します。"
     errors:
       invalid_css_color: "無効な色です。色名または 16 進数値を入力してください。"
@@ -2139,7 +2135,6 @@ ja:
       search_tokenize_japanese_enabled: "この設定を有効にする前に 'search_tokenize_japanese' を無効にする必要があります。"
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "2FA が適用されている場合、DiscourseConnect を有効にできません。"
       delete_rejected_email_after_days: "この設定は delete_email_logs_after_days 設定より小さいか %{max} より大きく設定することはできません。"
-      invalid_uncategorized_category_setting: "「未分類トピックを許可」が許可されていない場合、未分類カテゴリを選択できません"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2314,7 +2309,6 @@ ja:
     activated_by_staff: "スタッフによる有効化"
     new_user_typed_too_fast: "新規ユーザーは入力が速すぎます"
     content_matches_auto_silence_regex: "コンテンツは自動投稿禁止の正規表現に一致します"
-    content_matches_auto_block_regex: "コンテンツは自動ブロックの正規表現に一致します"
     username:
       short: "は少なくとも %{min} 文字である必要があります"
       long: "は %{max} 文字以下である必要があります"
@@ -3043,14 +3037,6 @@ ja:
     user_automatically_silenced:
       title: "ユーザーは自動的に投稿禁止にされました"
       subject_template: "新規ユーザー %{username} はコミュニティー通報により投稿禁止になりました"
-      text_body_template: |
-        これは自動メッセージです。
-
-        新規ユーザー [%{username}](%{user_url}) は、複数のユーザーが %{username} の投稿を通報したため自動的に投稿禁止になりました。
-
-        [通報をレビュー](%{base_url}/admin/flags)してください。%{username} が誤って投稿禁止になっている場合は、[このユーザーの管理者ページ](%{user_url})にある投稿禁止解除ボタンをクリックしてください。
-
-        このしきい値は、`silence_new_user` サイト設定から変更できます。
     spam_post_blocked:
       title: "迷惑投稿はブロックされました"
       subject_template: "同一リンクの連続投稿により、新規ユーザー %{username} の投稿をブロック"
@@ -3126,9 +3112,6 @@ ja:
     reached_limit:
       other: "注意: 1 日あたり最大 %{count} 通のメールを送信します。サイトをチェックして、抑制されているメールを確認してください。追伸: 人気者でいてくれてありがとう！"
     in_reply_to: "返信:"
-    unsubscribe:
-      title: "購読解除"
-      description: "メールの購読に興味がありませんか？下のリンクをクリックすると、すぐに購読を解除できます:"
     reply_by_email: "返信するには、[トピックにアクセス](%{base_url}%{url})するか、このメールに返信してください。"
     reply_by_email_pm: "%{participants} に返答するには、[メッセージにアクセス](%{base_url}%{url})するか、このメールに返信してください。"
     only_reply_by_email: "返答するにはこのメールに返信してください。"
@@ -3424,7 +3407,6 @@ ja:
       liked_received: "受け取った「いいね！」"
       new_users: "新規ユーザー"
       popular_topics: "人気のトピック"
-      follow_topic: "このトピックをフォロー"
       join_the_discussion: "もっと読む"
       popular_posts: "人気の投稿"
       more_new: "あなたへの新着情報"
@@ -3616,8 +3598,6 @@ ja:
     welcome_message_invite_only: |
       ## [%{title} へようこそ](#welcome)
       アカウントが必要です。続行するには、既存のメンバーに招待をリクエストするかログインしてください。
-  deleted: "削除"
-  image: "画像"
   upload:
     edit_reason: "ダウンロードされた画像のコピー"
     unauthorized: "アップロードしようとしているファイルは許可されていません (許可されている拡張子: %{authorized_extensions})。"
@@ -4236,7 +4216,6 @@ ja:
           <p>それでは、<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>新しいコミュニティーの構築</a>をお楽しみください！</p>
   search_logs:
     graph_title: "検索数"
-  joined: "参加"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} が「%{topic}」であなたをメンションしました - %{site_title}'

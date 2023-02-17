@@ -409,12 +409,13 @@ RSpec.describe SearchController do
         RateLimiter.enable
         RateLimiter.clear_all!
 
+        t = Time.now
+        freeze_time t
+
         unlimited_request("1.1.1.1")
         unlimited_request("2.2.2.2")
         limited_request("3.3.3.3")
 
-        t = Time.now
-        freeze_time t
         freeze_time(t + 2)
 
         unlimited_request("4.4.4.4")

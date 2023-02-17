@@ -156,26 +156,26 @@ nl:
       removed_group: "Heeft %{who} %{when} verwijderd"
       autobumped: "Heeft %{when} automatisch gebumpt"
       autoclosed:
-        enabled: "%{when} Gesloten"
-        disabled: "%{when} Geopend"
+        enabled: "%{when} gesloten"
+        disabled: "%{when} geopend"
       closed:
-        enabled: "%{when} Gesloten"
-        disabled: "%{when} Geopend"
+        enabled: "%{when} gesloten"
+        disabled: "%{when} geopend"
       archived:
-        enabled: "%{when} Gearchiveerd"
-        disabled: "%{when} Gedearchiveerd"
+        enabled: "%{when} gearchiveerd"
+        disabled: "%{when} gedearchiveerd"
       pinned:
-        enabled: "%{when} Vastgemaakt"
-        disabled: "%{when} Losgemaakt"
+        enabled: "%{when} vastgemaakt"
+        disabled: "%{when} losgemaakt"
       pinned_globally:
-        enabled: "%{when} Globaal vastgemaakt"
+        enabled: "%{when} globaal vastgemaakt"
         disabled: "%{when} Losgemaakt"
       visible:
-        enabled: "%{when} Zichtbaar gemaakt"
-        disabled: "%{when} Onzichtbaar gemaakt"
+        enabled: "%{when} zichtbaar gemaakt"
+        disabled: "%{when} onzichtbaar gemaakt"
       banner:
-        enabled: "Heeft deze banner %{when} gemaakt. De banner wordt weergegeven bovenaan elke pagina, totdat de gebruiker deze sluit."
-        disabled: "Heeft deze banner %{when} verwijderd. De banner wordt niet meer weergegeven bovenaan elke pagina."
+        enabled: "Banner gemaakt op %{when}. De banner wordt weergegeven bovenaan elke pagina totdat de gebruiker deze sluit."
+        disabled: "Deze banner verwijderd op %{when}. De banner wordt niet meer weergegeven bovenaan elke pagina."
       forwarded: "Heeft de bovenstaande e-mail doorgestuurd"
     topic_admin_menu: "topicacties"
     skip_to_main_content: "Overslaan naar hoofdinhoud"
@@ -974,11 +974,6 @@ nl:
       profile: "Profiel"
       mute: "Dempen"
       edit: "Voorkeuren bewerken"
-      download_archive:
-        button_text: "Alles downloaden"
-        confirm: "Weet je zeker dat je je berichten wilt downloaden?"
-        success: "Download is gestart, je ontvangt een melding zodra het proces is voltooid."
-        rate_limit_error: "Berichten kunnen één keer per dag worden gedownload. Probeer het morgen opnieuw."
       new_private_message: "Nieuw bericht"
       private_message: "Bericht"
       private_messages: "Berichten"
@@ -2152,8 +2147,6 @@ nl:
         topic_template_not_modified: "Voeg details en specifieke informatie toe aan je topic door het topicsjabloon te bewerken."
       save_edit: "Bewerking opslaan"
       overwrite_edit: "Bewerking overschrijven"
-      reply_original: "Antwoorden op oorspronkelijke topic"
-      reply_here: "Hier antwoorden"
       reply: "Antwoorden"
       cancel: "Annuleren"
       create_topic: "Topic maken"
@@ -2725,8 +2718,6 @@ nl:
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Blader door alle categorieën</a>, <a href='%{basePath}/latest'>bekijk de nieuwste topics</a> of zie de top:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Blader door alle tags</a> of <a href='%{basePath}/latest'>bekijk de nieuwste topics</a>."
       suggest_create_topic: Klaar om <a href>een nieuw gesprek te beginnen?</a>
-      jump_reply_up: naar eerder antwoord springen
-      jump_reply_down: naar later antwoord springen
       deleted: "Het topic is verwijderd"
       slow_mode_update:
         title: "Langzame modus"
@@ -3091,9 +3082,6 @@ nl:
       collapse: "samenvouwen"
       sr_collapse_replies: "Ingesloten antwoorden samenvouwen"
       sr_date: "Plaatsingsdatum"
-      sr_expand_replies:
-        one: "Dit bericht heeft %{count} reactie. Klik om uit te vouwen"
-        other: "Dit bericht heeft %{count} reacties. Klik om uit te vouwen"
       expand_collapse: "uitvouwen/samenvouwen"
       sr_below_embedded_posts_description: "antwoorden op bericht %{post_number}"
       sr_embedded_reply_description: "antwoord van @%{username} op bericht %{post_number}"
@@ -3381,8 +3369,6 @@ nl:
       email_in: "Aangepast adres voor inkomende e-mail:"
       email_in_tooltip: "Je kunt meerdere e-mailadressen scheiden met het teken |."
       email_in_allow_strangers: "E-mails van anonieme gebruikers zonder account accepteren"
-      email_in_disabled: "Het plaatsen van nieuwe topics via e-mail is uitgeschakeld in de webite-instellingen. Om het plaatsen van nieuwe topics via e-mail mogelijk te maken, "
-      email_in_disabled_click: 'schakel de instelling ''e-mail in'' in.'
       mailinglist_mirror: "Categorie weerspiegelt een mailinglijst"
       show_subcategory_list: "Lijst van subcategorieën weergeven boven topics in deze categorie"
       read_only_banner: "Bannertekst wanneer een gebruiker geen topic in deze categorie kan maken:"
@@ -3949,13 +3935,11 @@ nl:
     pause_notifications:
       title: "Meldingen pauzeren voor..."
       label: "Meldingen pauzeren"
-      remaining: "%{remaining} resterend"
       options:
         half_hour: "30 minuten"
         one_hour: "1 uur"
         two_hours: "2 uur"
         tomorrow: "Tot morgen"
-        custom: "Aangepast"
       set_schedule: "Stel een meldingsschema in"
     trust_levels:
       names:
@@ -4005,6 +3989,13 @@ nl:
       all_categories: "Alle categorieën"
       all_tags: "Alle tags"
       sections:
+        custom:
+          save: "Opslaan"
+          delete: "Verwijderen"
+          links:
+            icon: "Pictogram"
+            name: "Naam"
+            value: "Link"
         about:
           header_link_text: "Over"
         messages:
@@ -5095,6 +5086,22 @@ nl:
           description: "Voer hieronder tekst in om te controleren op matches met geobserveerde woorden"
           found_matches: "Gevonden overeenkomsten:"
           no_matches: "Geen overeenkomsten gevonden"
+      form_templates:
+        nav_title: "Sjablonen"
+        list_table:
+          headings:
+            name: "Naam"
+            actions: "Acties"
+        view_template:
+          close: "Sluiten"
+          edit: "Bewerken"
+          delete: "Verwijderen"
+        new_template_form:
+          submit: "Opslaan"
+          cancel: "Annuleren"
+        quick_insert_fields:
+          add_new_field: "Toevoegen"
+          dropdown: "Vervolgkeuzelijst"
       impersonate:
         title: "Imiteren"
         help: "Gebruik deze tool om een gebruikersaccount te imiteren voor debugdoeleinden. Je moet je afmelden wanneer je klaar bent."
@@ -5195,7 +5202,6 @@ nl:
         show_admin_profile: "Beheerder"
         manage_user: "Gebruiker beheren"
         show_public_profile: "Openbaar profiel weergeven"
-        impersonate: "Imiteren"
         action_logs: "Actielogs"
         ip_lookup: "IP-adres zoeken"
         log_out: "Afmelden"
@@ -5532,7 +5538,8 @@ nl:
         allow_title: Badge mag als titel worden gebruikt
         multiple_grant: Kan meerdere malen worden toegekend
         listable: Badge weergeven op de openbare badgespagina
-        enabled: Badge inschakelen
+        enabled: ingeschakeld
+        disabled: uitgeschakeld
         icon: Pictogram
         image: Afbeelding
         graphic: Grafisch

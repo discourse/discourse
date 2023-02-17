@@ -286,7 +286,6 @@ sw:
         reject_reason: "Sababu"
       topics:
         topic: "Mada"
-        deleted: "[Mada Imefutwa]"
         details: "maelezo"
         unique_users:
           one: "Mtumiaji mmoja"
@@ -583,11 +582,6 @@ sw:
       profile: "Maelezo Mafupi "
       mute: "Nyamazisha"
       edit: "Hariri Mapendekezo"
-      download_archive:
-        button_text: "Pakua Zote"
-        confirm: "Una uhakika unataka kupakua machapisho yako?"
-        success: "Upakuaji umeanza, utajulishwa kwa njia ya ujumbe mfumo ukimaliza."
-        rate_limit_error: "Machapisho yanaweza kupakuliwa mara moja kwa siku, tafadhali jaribu tena kesho."
       new_private_message: "Ujumbe Mpya"
       private_message: "Ujumbe"
       private_messages: "Ujumbe"
@@ -790,7 +784,6 @@ sw:
         primary: "Barua pepe ya awali"
         secondary: "Barua pepe"
         primary_label: "msingi"
-        resent_label: "barua pepe imetumwa"
         update_email: "Badilisha Barua Pepe"
         ok: "Tutakutumia barua pepe kuthibitisha"
         invalid: "Andika barua pepe iliyo sahihi"
@@ -1214,8 +1207,6 @@ sw:
         title_missing: "Kichwa cha habari ni muhimu"
         category_missing: "Ni sharti uchague kategoria"
       save_edit: "Hifadhi Uhariri"
-      reply_original: "Jibu kwenye Mada ya Kwanza"
-      reply_here: "Jibu hapa"
       reply: "Jibu"
       cancel: "Ghairi"
       create_topic: "Unda mada"
@@ -1451,11 +1442,9 @@ sw:
         dismiss_new: "Ondosha Mpya"
         toggle: "Badili kwa wingi chaguo la topiki"
         actions: "Vitendo za Jumla"
-        change_category: "Seti Kategoria..."
         close_topics: "Funga Mada"
         archive_topics: "Hifadhi Mada kwenye nyaraka"
         move_messages_to_inbox: "Hamishia kwenye kisanduku-pokezi"
-        notification_level: "Taarifa..."
         choose_new_category: "Chagua kategoria mpya kwa ajili ya mada:"
         selected:
           one: "Umechagua mada <b>%{count}</b>."
@@ -1526,8 +1515,6 @@ sw:
       back_to_list: "Rudi tena kwenye Orodha ya Mada"
       options: "Machaguo ya Mada"
       show_links: "onyesha viungo ndani ya hii mada"
-      jump_reply_up: fikia jibu la awali
-      jump_reply_down: fikia jibu la baadaye
       deleted: "Mada imefutwa"
       slow_mode_update:
         enable: "Ruhusu"
@@ -1625,7 +1612,6 @@ sw:
         unarchive: "Ondoa Mada kwenye Nyaraka"
         archive: "Weka Mada kwenye Nyaraka"
         reset_read: "Anzisha Upya Usomaji wa Taarifa"
-        make_public: "Fanya Mada iwe ya Umma..."
         make_private: "Tengeneza Ujumbe Binafsi"
       feature:
         pin: "Bandika Mada"
@@ -1809,8 +1795,6 @@ sw:
         revert_to_regular: "Ondoa Rangi ya Wasaidizi"
         rebake: "Tengeneza upya HTML"
         unhide: "Onesha"
-        change_owner: "Badilisha Umiliki..."
-        grant_badge: "Toa Beji..."
         lock_post: "Funga Chapisho"
         lock_post_description: "mzuie mchapishaji kuhariri chapisho hili"
         unlock_post: "Fungua Chapisho"
@@ -1908,8 +1892,6 @@ sw:
       images: "Picha"
       email_in: "Barua Pepe inayoingia:"
       email_in_allow_strangers: "Pokea barua pepe kutoka kwa watumiaji wasiojulikana ambao hawana akaunti"
-      email_in_disabled: "Uchapishaji wa mada mpya kupitia barua pepe umesitishwa kwenye Mipangilio ya Tovuti. Kuruhusu uchapishaji wa mada mpya kupitia barua pepe,"
-      email_in_disabled_click: 'ruhusu mpangilio wa "barua pepe ndani"'
       num_featured_topics: "Idadi ya mada zitakazo onyeshwa ndani ya ukurasa wa kategoria:"
       all_topics_wiki: "Hifadhi mada mpya kama chaguo msingi"
       sort_order: "Orodha ya Maneno Imepangwa Kulingana Na:"
@@ -1958,7 +1940,6 @@ sw:
     flagging:
       title: "Asante kwa kuendeleza ustaarabu kwenye jumuiya yetu!"
       action: "Ripoti Chapisho"
-      take_action: "Fanya Kitendo..."
       take_action_options:
         default:
           title: "Fanya Kitendo"
@@ -2228,7 +2209,6 @@ sw:
         delete: "Futa"
         confirm_delete: "Una uhakika unataka kufuta kikundi cha lebo hii?"
         everyone_can_use: "Lebo zinaweza kutumiwa na kila mtu"
-        parent_tag_placeholder: "Sio muhimu"
       topics:
         none:
           unread: "Hauna mada ambazo hazijasomwa."
@@ -2246,9 +2226,6 @@ sw:
       back: "Nyuma"
       share: "Shirikisha"
       dismiss: "Ondosha"
-    pause_notifications:
-      options:
-        custom: "Binafsi"
     trust_levels:
       names:
         newuser: "mtumiaji mpya"
@@ -2266,6 +2243,12 @@ sw:
       more: "Zaidi"
       all_categories: "Kategoria Zote"
       sections:
+        custom:
+          save: "Hifadhi"
+          delete: "Futa"
+          links:
+            icon: "ikoni"
+            name: "Jina"
         about:
           header_link_text: "Kuhusu"
         messages:
@@ -2323,7 +2306,6 @@ sw:
         latest_version: "Hivi Karibuni"
         new_features:
           dismiss: "Ondosha"
-          learn_more: "Jifunze zaidi"
         last_checked: "Mara ya Mwisho imeangaliwa"
         refresh_problems: "Rudisha Tena"
         no_problems: "Hakuna matatizo yaliyopatikana."
@@ -2423,7 +2405,6 @@ sw:
         user: "Mtumiaji"
         title: "API"
         created: Imetengenezwa
-        never_used: (kamwe)
         generate: "Tengeneza"
         revoke: "Futa"
         all_users: "Watumiaji Wote"
@@ -2906,6 +2887,22 @@ sw:
         test:
           button_label: "Majaribio"
           no_matches: "Hakuna uwiano uliopatikana"
+      form_templates:
+        nav_title: "Violezo"
+        list_table:
+          headings:
+            name: "Jina"
+            actions: "Vitendo"
+        view_template:
+          close: "Funga"
+          edit: "Hariri"
+          delete: "Futa"
+        new_template_form:
+          submit: "Hifadhi"
+          cancel: "Ghairi"
+        quick_insert_fields:
+          add_new_field: "ongeza"
+          dropdown: "Shusha Chini"
       impersonate:
         title: "Iga Utambulisho"
         help: "Tumia kifaa hiki kuiga utambulisho wa mtumiaji ili uweze kutatua matatizo. Itabidi utoke ukishamaliza."
@@ -2979,7 +2976,6 @@ sw:
         staged: "Sehemu ya kujaribu?"
         show_admin_profile: "Msimamizi"
         show_public_profile: "Onyesha Taarifa za Umma"
-        impersonate: "Chukua Utambulisho wa Mtu Mwingine"
         action_logs: "Taarifa za Shughuli Tofauti"
         ip_lookup: "Uangalizi wa anwani ya mtandao"
         log_out: "Jitoe"
@@ -3231,7 +3227,8 @@ sw:
         allow_title: Ruhusu beji iweze kutumika kama cheo
         multiple_grant: Inaweza kutolewa mara nyingi
         listable: Onyesha beji kwenye karatasi ya beji ya umma
-        enabled: Ruhusu beji
+        enabled: imeruhusiwa
+        disabled: imezuiwa
         icon: ikoni
         image: Picha
         query: Maswala ya Beji (SQL)

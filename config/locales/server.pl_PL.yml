@@ -438,6 +438,7 @@ pl_PL:
   too_late_to_edit: "Ten wpis został utworzony zbyt dawno. Nie może być edytowany ani usunięty."
   edit_conflict: "Ten wpis został zmieniony przez innego użytkownika i Twoje zmiany nie zostaną zapisane."
   revert_version_same: "Obecna wersja jest taka sama jak w wersja, którą próbujesz przywrócić."
+  reverted_to_version: "powrócono do wersji #%{version}"
   cannot_edit_on_slow_mode: "Ten temat jest w trybie powolnym. Aby zachęcić do przemyślanej, rozważanej dyskusji, edycja starych postów w tym temacie nie jest obecnie dozwolona w trybie powolnym."
   excerpt_image: "zdjęcie"
   bookmarks:
@@ -1101,6 +1102,7 @@ pl_PL:
       write: "Zapisz wszystko"
       one_time_password: "Stwórz jednorazowy token logowania"
       bookmarks_calendar: "Przeczytaj przypomnienia o zakładkach"
+      user_status: "Odczyt i aktualizacja statusu użytkownika"
     invalid_public_key: "Przepraszamy, klucz publiczny niepoprawny."
     invalid_auth_redirect: "Przepraszamy, ten host auth_redirect nie ma zezwolenia."
     invalid_token: "Brakujący/niepoprawny/wygasły token."
@@ -1523,7 +1525,9 @@ pl_PL:
     educate_until_posts: "Wyświetlaj okno edukacyjne po rozpoczęciu pisania dopóki nowy użytkownik nie napisze tylu wpisów."
     site_description: "Opisz tę stronę w jednym zdaniu. Widoczne dla wszystkich odwiedzających, w tym użytkowników anonimowych."
     short_site_description: "Krótki opis w kilku słowach. Widoczne dla wszystkich odwiedzających, w tym użytkowników anonimowych."
+    contact_url: "Kontaktowy adres URL dla tej witryny. Jeśli jest obecny, zastępuje adres e-mail na stronie <a href='%{base_path}/about' target='_blank'>/about</a> i jest widoczny dla anonimowych użytkowników w witrynach publicznych."
     crawl_images: "Pobieraj grafiki ze zdalnych URLi aby ustawić poprawną wysokość i szerokość w tagu img."
+    download_remote_images_to_local: "Konwertuj zdalne obrazy (hotlinkowane) na obrazy lokalne poprzez ich pobranie; pozwala to zachować zawartość nawet wtedy, gdy obrazy zostaną w przyszłości usunięte ze strony zdalnej."
     download_remote_images_threshold: "Minimalna ilość wolnego miejsca na dysku wymagana przez funkcję pobierania zdalnych grafik (w procentach)"
     disabled_image_download_domains: "Zdalne grafiki z tych domen nie będą pobierane."
     block_hotlinked_media: "Uniemożliwia użytkownikom wprowadzanie zdalnych (hotlinked) mediów w swoich postach. Zdalne nośniki, które nie są pobierane przez 'download_remote_images_to_local' zostaną zastąpione linkiem zastępczym."
@@ -1547,6 +1551,7 @@ pl_PL:
     show_pinned_excerpt_mobile: "Pokaż fragment przypiętych tematów w widoku mobilnym"
     show_pinned_excerpt_desktop: "Pokaż fragment przypiętych tematów w widoku \"wersja komputerowa\""
     post_onebox_maxlength: "Maksymalna długość (ilość znaków) treści wpisu osadzonego via Onebox"
+    blocked_onebox_domains: "Lista domen, które nigdy nie zostaną umieszczone w oneboxie, np. wikipedia.org\n(symbole wieloznaczne * ? nie są obsługiwane)"
     block_onebox_on_redirect: "Blokuj onebox dla adresów URL, które przekierowują."
     allowed_inline_onebox_domains: "Lista domen, które zostaną zamienione na osadzony onebox w zmniejszonej formie, jeśli będą umieszczone w poście bez tytułu"
     enable_inline_onebox_on_all_domains: "Ignoruj ustawienie witryny `inline_onebox_domain_whitelist` i zezwalaj na osadzanie ramek we wszystkich domenach."
@@ -1580,6 +1585,7 @@ pl_PL:
     summary_max_results: "Maksymalna liczba wpisów zwróconych przez „Podsumuj ten temat”"
     summary_timeline_button: "Pokaż przycisk „Podsumuj” na osi czasu"
     enable_personal_messages: "PRZESTARZAŁE, zamiast tego użyj ustawienia 'personal message enabled groups'. Zezwalaj użytkownikom na poziomie zaufania 1 (konfigurowalnym za pomocą minimalnego zaufania do wysyłania wiadomości) na tworzenie wiadomości i odpowiadanie na wiadomości. Pamiętaj, że personel zawsze może wysyłać wiadomości bez względu na wszystko."
+    personal_message_enabled_groups: "Zezwalaj użytkownikom w tych grupach na tworzenie wiadomości i odpowiadanie na nie. Grupy poziomów zaufania zawierają wszystkie poziomy zaufania powyżej tej liczby, na przykład wybranie trust_level_1 umożliwia również użytkownikom z trust_level_2, 3, 4 wysyłać PW. Pamiętaj, że personel zawsze może wysyłać wiadomości bez względu na wszystko."
     enable_system_message_replies: "Pozwala użytkownikom odpowiadać na wiadomości systemowe, nawet jeśli wiadomości osobiste są wyłączone"
     enable_chunked_encoding: "Włącz odpowiedzi fragmentaryczne serwera. Ta funkcja działa w większości konfiguracji, jednak niektóre serwery proxy mogą buforować odpowiedzi, powodując opóźnienia."
     long_polling_base_url: "Podstawowy URL używany dla long polling (kiedy CDN dostarcza dynamicznych treści, upewnij się że ustawiłeś/łaś to w origin pull) np.: http://origin.site.com"
@@ -1857,6 +1863,7 @@ pl_PL:
     max_mentions_per_post: "Maksymalna liczba powiadomień poprzez @nazwę w jednym wpisie (dla wszystkich)."
     max_users_notified_per_group_mention: "Maksymalna liczba użytkowników, którzy mogą otrzymać powiadomienie jeśli ktoś wspomniał(a) o grupie (jeśli próg został osiągnięty, nie będzie żadnych powiadomień)"
     enable_mentions: "Zezwól użytkownikom na wzmianki innych użytkowników."
+    here_mention: "Nazwa używana do @mention, aby umożliwić uprzywilejowanym użytkownikom powiadomienie maksymalnie 'max_here_mentioned' osób uczestniczących w temacie. Nie może to być istniejąca nazwa użytkownika."
     max_here_mentioned: "Maksymalna liczba osób oznaczonych przez @here."
     min_trust_level_for_here_mention: "Minimalny poziom zaufania do oznaczania @here."
     create_thumbnails: "Stwórz miniatury i obrazy lightbox, które są za duże, aby pasować do wpisu."
@@ -1902,6 +1909,7 @@ pl_PL:
     faq_url: "If you have a FAQ hosted elsewhere that you want to use, provide the full URL here."
     tos_url: "If you have a Terms of Service document hosted elsewhere that you want to use, provide the full URL here."
     privacy_policy_url: "If you have a Privacy Policy document hosted elsewhere that you want to use, provide the full URL here."
+    log_anonymizer_details: "Czy zachować dane użytkownika w dzienniku po anonimizacji."
     newuser_spam_host_threshold: "Jak wiele razy użytkownik może zamieścić link do tego samego hosta wewnątrz wpisów `newuser_spam_host_threshold` przed rozważeniem spamu."
     allowed_spam_host_domains: "Lista domen wykluczonych z testowania pod kątem spamu. Nowi użytkownicy nigdy nie będą ograniczani w dodawaniu wpisów z linkami do tych domen."
     staff_like_weight: "Jaką wagę polubienia przypisuje się personelowi (użytkownicy mają wagę 1)"
@@ -1942,6 +1950,7 @@ pl_PL:
     max_emails_per_day_per_user: "Maksymalna liczba e-maili, jakie użytkownik może wysłać w ciągu dnia. 0 wyłącza ograniczenie."
     enable_staged_users: "Automatycznie twórz użytkowników etapowych podczas przetwarzania przychodzących wiadomości e-mail."
     maximum_staged_users_per_email: "Maksymalna liczba użytkowników etapowych utworzonych podczas przetwarzania przychodzącej wiadomości e-mail."
+    maximum_recipients_per_new_group_email: "Blokuj przychodzące e-maile ze zbyt dużą liczbą odbiorców."
     auto_generated_allowlist: "Lista adresów e-mail, które nie będą sprawdzane pod kątem zawartości generowanej automatycznie. Przykład: foo@bar.com|discourse@bar.com"
     block_auto_generated_emails: "Odrzucaj przychodzące e-maile zidentyfikowane jako generowane automatycznie."
     ignore_by_title: "Ignoruj przychodzące wiadomości e-mail w oparciu o ich tytuł."
@@ -1961,6 +1970,7 @@ pl_PL:
     raw_email_max_length: "Ile znaków należy przechowywać dla przychodzących wiadomości e-mail."
     raw_rejected_email_max_length: "Ile znaków należy przechowywać dla odrzuconego przychodzącego e-maila."
     delete_rejected_email_after_days: "Usuń odrzucone wiadomości e-mail starsze niż (n) dni."
+    require_change_email_confirmation: "Wymagaj od użytkowników spoza personelu potwierdzenia starego adresu e-mail przed jego zmianą. Nie dotyczy to użytkowników z personelu, zawsze muszą oni potwierdzić swój stary adres e-mail."
     manual_polling_enabled: "Wykorzystuj funkcję push emails za pomocą API dla odpowiedzi na email."
     pop3_polling_enabled: "Ankieta poprzez POP3 dla odpowiedzi przez email."
     pop3_polling_ssl: "Używaj SSL podczas łączenia z serwerem POP3. (Rekomendowane)"
@@ -2039,6 +2049,7 @@ pl_PL:
     enable_mobile_theme: "Urządzenia mobilne używają dedykowanego mobilnego szablonu. Wyłącz to, jeśli chcesz użyć własnego, pojedynczego i responsywnego szablonu stylów. "
     dominating_topic_minimum_percent: "Odsetek (%) wpisów dodanych przez użytkownika w jednym temacie, po którym otrzyma on upomnienie, że nadmiernie go dominuje."
     disable_avatar_education_message: "Wyłącz wiadomość edukacyjną dla zmiany avataru."
+    pm_warn_user_last_seen_months_ago: "Podczas tworzenia nowej PW ostrzegaj użytkowników, jeśli odbiorca docelowy nie był widziany dłużej niż n miesięcy temu."
     suppress_uncategorized_badge: "Nie pokazuj etykiety z nazwą kategorii Inne na listach tematów."
     header_dropdown_category_count: "Ile kategorii można wyświetlić w rozwijanym menu nagłówka."
     permalink_normalizations: "Zastosuj następujący regex przed dopasowaniem permalinków, na przykład /(topic.*)\\?.*/\\1  spowoduje ściągnięcie ciągu zapytań z dróg tematu. Format to regex+strin używaj \\1 itd aby przechwycić dostęp"
@@ -2084,10 +2095,9 @@ pl_PL:
     delete_merged_stub_topics_after_days: "Liczba dni, po których wątki, z których zostały przeniesione wszystkie posty, zostaną automatycznie usunięte. Aby to wyłączyć, ustaw wartość na 0."
     bootstrap_mode_min_users: "Minimalna liczba użytkowników potrzebnych do wyłączenia trybu rozruchowego (ustaw 0, aby wyłączyć)"
     prevent_anons_from_downloading_files: "Zablokuj możliwość pobierania załączników przez anonimowych użytkowników."
-    secure_media: "PRZESTARZAŁE: Zamiast tego użyj ustawienia secure_uploads, to ustawienie zostanie usunięte w Discourse 3.0."
-    secure_media_allow_embed_images_in_emails: "PRZESTARZAŁE: Użyj secure_uploads_allow_embed_images_in_emails, to ustawienie zostanie usunięte w Discourse 3.0."
+    secure_uploads: 'Ograniczenie dostępu do WSZYSTKICH przesyłanych plików (obrazów, filmów, audio, tekstów, plików pdf, zipów i innych). Jeśli włączona jest opcja "Wymagane logowanie", tylko zalogowani użytkownicy będą mieli dostęp do przesyłanych materiałów. W przeciwnym razie dostęp będzie ograniczony tylko do przesyłania mediów w prywatnych wiadomościach i prywatnych kategoriach. UWAGA: To ustawienie jest skomplikowane i wymaga głębokiej wiedzy administracyjnej. Szczegóły znajdziesz na stronie <a target="_blank" href="https://meta.discourse.org/t/-/140017">w temacie bezpieczne przesyłanie plików na Meta</a> .'
     secure_uploads_allow_embed_images_in_emails: "Umożliwia osadzanie w wiadomościach e-mail bezpiecznych obrazów, które normalnie byłyby pominięte, jeśli ich rozmiar jest mniejszy niż ustawienie 'secure uploads max email embed image size kb'."
-    secure_media_max_email_embed_image_size_kb: "PRZESTARZAŁE: Użyj secure_uploads_max_email_embed_image_size_kb, to ustawienie zostanie usunięte w Discourse 3.0."
+    secure_uploads_max_email_embed_image_size_kb: "Ograniczenie rozmiaru bezpiecznych obrazów, które będą osadzane w wiadomościach e-mail, jeśli włączone jest ustawienie 'secure uploads allow embed in emails'. Bez włączenia tego ustawienia, to ustawienie nie ma żadnego efektu."
     slug_generation_method: "Wybierz metodę tworzenia ślimaka. 'Zakodowane\" stworzy procentowy ciąg kodujący, \"żadne\" wyłączy tą metodę."
     enable_emoji: "Włącz obsługę emoji"
     enable_emoji_shortcuts: "Typowe tekstowe buźki, takie jak :) :p :( zostaną przekonwertowane na emoji"
@@ -2125,6 +2135,7 @@ pl_PL:
     disable_mailing_list_mode: "Nie zezwalaj użytkownikom na włączanie trybu listy mailingowej (zapobiega wysyłaniu wiadomości e-mail z list mailingowych)."
     default_email_previous_replies: "Domyślnie uwzględniaj poprzednie odpowiedzi w emailach."
     default_email_in_reply_to: "Domyślnie uwzględniaj fragment odpowiedzi do wpisu w emailu."
+    default_hide_profile_and_presence: "Domyślnie ukryj publiczny profil użytkownika i funkcje obecności."
     default_other_new_topic_duration_minutes: "Domyślny globalny warunek dla którego temat uznawany jest za nowy."
     default_other_auto_track_topics_after_msecs: "Domyślny globalny czas przed, którym temat jest śledzony automatycznie."
     default_other_notification_level_when_replying: "Globalny domyślny poziom powiadomienia, gdy użytkownik odpowie w temacie."
@@ -2203,7 +2214,6 @@ pl_PL:
     default_sidebar_categories: "Wybrane kategorie będą domyślnie wyświetlane w sekcji Kategorie paska bocznego."
     default_sidebar_tags: "Wybrane tagi będą domyślnie wyświetlane w sekcji Tagi paska bocznego."
     enable_new_user_profile_nav_groups: "EKSPERYMENTALNE: Użytkownikom wybranych grup zostanie wyświetlone nowe menu nawigacyjne profilu użytkownika"
-    enable_experimental_topic_timeline_groups: "EKSPERYMENTALNE: Użytkownikom wybranych grup zostanie pokazana odświeżona oś czasu tematu"
     enable_experimental_hashtag_autocomplete: "EKSPERYMENTALNIE: Użyj nowego systemu autouzupełniania #hashtagów dla kategorii i tagów, który inaczej renderuje wybrany element i usprawnia wyszukiwanie"
     errors:
       invalid_css_color: "Nieprawidłowy kolor. Wpisz nazwę koloru lub wartość szesnastkową."
@@ -2491,7 +2501,6 @@ pl_PL:
     activated_by_staff: "Aktywowane przez personel"
     new_user_typed_too_fast: "Nowy użytkownik wpisany zbyt szybko"
     content_matches_auto_silence_regex: "Treść pasuje do wyrażenia regularnego automatycznego wyciszenia"
-    content_matches_auto_block_regex: "Zawartość pasuje do automatycznej blokady regex"
     username:
       short: "musi zawierać co najmniej %{min} znaków"
       long: "nie może zawierać więcej niż %{max} znaków"
@@ -2504,6 +2513,7 @@ pl_PL:
       must_not_contain_two_special_chars_in_seq: "nie może zawierać sekwencji 2 lub więcej znaków specjalnych (.-_)"
       must_not_end_with_confusing_suffix: "nie może kończyć się w sposób wprowadzający w błąd, np. .json, .png itp."
     email:
+      blank: "nie może być puste."
       invalid: "jest nieprawidłowy."
       not_allowed: "nie jest dopuszczany od tego dostawcy poczty. Użyj innego adresu email."
       blocked: "nie jest dozwolony."
@@ -3223,14 +3233,6 @@ pl_PL:
     user_automatically_silenced:
       title: "Użytkownik automatycznie wyciszony"
       subject_template: "Nowy użytkownik %{username} wyciszony przez flagi społeczności"
-      text_body_template: |
-        To jest automatyczna wiadomość.
-
-        Nowy użytkownik [%{username}](%{user_url}) został automatycznie wyciszony, ponieważ wielu użytkowników oflagowało post(y) %{username}.
-
-        Proszę [przejrzyj zgłoszenia](%{base_url}/admin/flags). Jeśli %{username} został nieprawidłowo wyciszony, kliknij przycisk odciszenia na stronie [administratora tego użytkownika](%{user_url}).
-
-        Ten próg można zmienić w ustawieniach witryny `silence_new_user`.
     spam_post_blocked:
       title: "Spam Zablokowany"
       subject_template: "Wpisy nowego użytkownika %{username} zablokowane za powtarzanie linków"
@@ -3315,9 +3317,6 @@ pl_PL:
       many: "Uwaga: Wysyłamy maksymalnie %{count} dziennych wiadomości e-mail. Sprawdź witrynę, aby zobaczyć te, które mogą być aktualnie wstrzymane."
       other: "Uwaga: Wysyłamy maksymalnie %{count} dziennych wiadomości e-mail. Sprawdź witrynę, aby zobaczyć te, które mogą być aktualnie wstrzymane."
     in_reply_to: "W odpowiedzi do"
-    unsubscribe:
-      title: "Wypisz"
-      description: "Nie chcesz otrzymywać tych emaili? Nie ma problemu! Kliknij poniżej by wypisać się natychmiast:"
     reply_by_email: "[Zobacz Temat](%{base_url}%{url}) lub odpowiedz na ten email aby odpowiedzieć"
     reply_by_email_pm: "[Wyświetl wiadomość](%{base_url}%{url}) lub odpowiedz na tego e-maila, aby odpowiedzieć na %{participants}."
     only_reply_by_email: "Powtórz ten email dla odpowiedzi."
@@ -3616,7 +3615,6 @@ pl_PL:
       liked_received: "Otrzymane Polubienia"
       new_users: "Nowi użytkownicy"
       popular_topics: "Popularne tematy"
-      follow_topic: "Śledź ten temat"
       join_the_discussion: "Czytaj więcej"
       popular_posts: "Popularne wpisy"
       more_new: "Nowe dla ciebie"
@@ -3819,8 +3817,6 @@ pl_PL:
     welcome_message_invite_only: |
       ## [Witamy w %{title}](#welcome)
       Wymagane jest konto. Poproś istniejącego użytkownika o zaproszenie lub zaloguj się, aby kontynuować.
-  deleted: "usunięte"
-  image: "obraz"
   upload:
     edit_reason: "lokalne kopie pobranych obrazów"
     unauthorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
@@ -4424,6 +4420,7 @@ pl_PL:
             label: "Strona internetowa"
             placeholder: "https://www.example.com/contact-us"
           city_for_disputes:
+            label: "Miasto do sporów"
             placeholder: "Kalifornia, San Francisco"
           site_contact:
             label: "Automatyczne wiadomości"
@@ -4443,7 +4440,9 @@ pl_PL:
           <p>Miłej zabawy i powodzenia w <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>budowaniu nowej społeczności!</a></p>
   search_logs:
     graph_title: "Liczba wyszukiwań"
-  joined: "Dołączył"
+  onebox:
+    discourse:
+      user_joined_community: "Dołączył %{date}"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} wspomina o tobie w "%{topic}" - %{site_title}'
@@ -4615,6 +4614,9 @@ pl_PL:
   user_status:
     errors:
       ends_at_should_be_greater_than_set_at: "ends_at powinno być większe niż set_at"
+  form_templates:
+    errors:
+      invalid_yaml: "nie jest prawidłowym ciągiem YAML"
   activemodel:
     errors:
       <<: *errors

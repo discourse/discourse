@@ -1031,11 +1031,6 @@ hr:
       profile: "Profil"
       mute: "Utišaj"
       edit: "Uredi postavke"
-      download_archive:
-        button_text: "Preuzmi sve"
-        confirm: "Želite li preuzeti objave?"
-        success: "Preuzimanje započeto, biti ćete obaviješteni porukom kada proces bude završen."
-        rate_limit_error: "Objave mogu biti preuzimane jednom na dan, molimo pokušajte sutra."
       new_private_message: "Nova poruka"
       private_message: "Poruka"
       private_messages: "Poruke"
@@ -2247,8 +2242,6 @@ hr:
         topic_template_not_modified: "Uređivanjem predloška teme dodajte detalje i pojedinosti svojoj temi."
       save_edit: "Spremi izmjenu"
       overwrite_edit: "Prebriši Uređivanje"
-      reply_original: "Odgovori na originalnu temu"
-      reply_here: "Odgovori ovdje"
       reply: "Odgovori"
       cancel: "Odustani"
       create_topic: "Pokreni temu"
@@ -2857,8 +2850,6 @@ hr:
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Pregledajte sve kategorije</a>, <a href='%{basePath}/latest'>pogledajte najnovije teme</a> ili pogledajte vrh:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Pregledajte sve oznake</a> ili <a href='%{basePath}/latest'>pogledajte najnovije teme</a>."
       suggest_create_topic: Spremni za <a href>započeti novi razgovor?</a>
-      jump_reply_up: skoči na raniji odgovor
-      jump_reply_down: skoči na kasniji odgovor
       deleted: "Tema je obrisana."
       slow_mode_update:
         title: "Usporeni način rada"
@@ -3238,10 +3229,6 @@ hr:
       collapse: "sakrij"
       sr_collapse_replies: "Sažmi ugrađene odgovore"
       sr_date: "Datum objave"
-      sr_expand_replies:
-        one: "Ovaj post ima %{count} odgovora. Kliknite za proširenje"
-        few: "Ovaj post ima %{count} odgovora. Kliknite za proširenje"
-        other: "Ovaj post ima %{count} odgovora. Kliknite za proširenje"
       expand_collapse: "proširi/sruši"
       sr_below_embedded_posts_description: "objavi #%{post_number} odgovora"
       sr_embedded_reply_description: "odgovorite sa @%{username} na objavu broj%{post_number}"
@@ -3547,8 +3534,6 @@ hr:
       email_in: "Prilagođena adresa dolaznog e-maila."
       email_in_tooltip: "Možete odvojiti na više adresa e-pošte s | znakom."
       email_in_allow_strangers: "Prihvati emailove anonimnih korisnika bez računa"
-      email_in_disabled: "Objavljivanje novih tema preko emaila je onemogućeno postavkama stranice. Da to omogućite objavljivanje tema preko emaila"
-      email_in_disabled_click: 'omogućite "pošalji email u" opciju.'
       mailinglist_mirror: "Kategorija odražava mailing listu"
       show_subcategory_list: "Prikaži popis potkategorija iznad tema u ovoj kategoriji."
       read_only_banner: "Tekst bannera kada korisnik ne može stvoriti temu u ovoj kategoriji:"
@@ -4145,13 +4130,11 @@ hr:
     pause_notifications:
       title: "Pauziraj obavijesti za..."
       label: "Pauziraj obavijesti"
-      remaining: "%{remaining} preostalih"
       options:
         half_hour: "30 minuta"
         one_hour: "1 sat"
         two_hours: "2 sata"
         tomorrow: "Do sutra"
-        custom: "Posebna"
       set_schedule: "Postavite raspored obavijesti"
     trust_levels:
       names:
@@ -4203,6 +4186,13 @@ hr:
       all_categories: "Sve kategorije"
       all_tags: "Sve oznake"
       sections:
+        custom:
+          save: "Spremi"
+          delete: "Pobriši"
+          links:
+            icon: "Ikona"
+            name: "Ime"
+            value: "Veza"
         about:
           header_link_text: "O nama"
         messages:
@@ -4265,6 +4255,10 @@ hr:
               content: "Moje objave"
               title: "Moja nedavna aktivnost vezana uz temu"
               title_drafts: "Moje neobjavljene skice"
+              draft_count:
+                one: "%{count} nacrt"
+                few: "%{count} nacrti"
+                other: "%{count} nacrti"
             review:
               content: "Osvrt"
               title: "Označene objave i druge stavke u redu čekanja"
@@ -5292,6 +5286,22 @@ hr:
           description: "Unesite tekst ispod da provjerite podudaranja s gledanim riječima"
           found_matches: "Pronađeno podudaranja:"
           no_matches: "Nema pronađenih podudaranja"
+      form_templates:
+        nav_title: "Predlošci"
+        list_table:
+          headings:
+            name: "Ime"
+            actions: "Akcije"
+        view_template:
+          close: "Zatvori"
+          edit: "Uredi"
+          delete: "Pobriši"
+        new_template_form:
+          submit: "Spremi"
+          cancel: "Odustani"
+        quick_insert_fields:
+          add_new_field: "Dodaj"
+          dropdown: "Padajući izbornik"
       impersonate:
         title: "Predstavi se kao"
         help: "Koristite ovaj alat da se predstavljate kao određeni korisnički račun za potrebe ispravljanja grešaka. Morat će te se odjaviti kad završite."
@@ -5392,7 +5402,6 @@ hr:
         show_admin_profile: "Administrator"
         manage_user: "Upravljanje korisnikom"
         show_public_profile: "Pokaži javni profil"
-        impersonate: "Predstavi se kao"
         action_logs: "Dnevnici akcija"
         ip_lookup: "IP pregled"
         log_out: "Odjava"
@@ -5734,7 +5743,8 @@ hr:
         allow_title: Dopusti da se značka koristi kao titula
         multiple_grant: Može biti dodijeljena više puta
         listable: Prikaži značku na javnoj stranici sa značkama
-        enabled: Omogući značku
+        enabled: omogućeno
+        disabled: onemogućen
         icon: Ikona
         image: Slika
         graphic: Grafički

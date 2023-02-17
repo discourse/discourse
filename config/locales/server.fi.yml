@@ -2010,11 +2010,8 @@ fi:
     delete_merged_stub_topics_after_days: "Kuinka montaa päivää odotetaan ennen kuin täysin yhdistetyt tynkäketjut poistetaan automaattisesti. Jos asetat arvoksi 0, tynkäketjuja ei poistetan koskaan."
     bootstrap_mode_min_users: "Vähimmäismäärä käyttäjiä, joka vaaditaan aloitustilan poistamiseen (aseta 0 poistaaksesi käytöstä)"
     prevent_anons_from_downloading_files: "Estä tuntemattomia käyttäjiä lataamasta liitteitä."
-    secure_media: "VANHENTUNUT: Käytä tämän sijaan secure_uploads-asetusta, poistetaan Discourse 3.0:ssa."
     secure_uploads: 'Rajoittaa pääsyä KAIKKIIN latauksiin (kuvat, videot, äänet, tekstit, pdf-tiedostot, zip-tiedostot ja muut). Jos "sisäänkirjautuminen vaaditaan" on käytössä, vain kirjautuneilla käyttäjillä on pääsy latauksiin. Muussa tapauksessa pääsy rajoitetaan vain yksityisviesteihin ja yksityisiin alueisiin ladattuihin mediatiedostoihin. VAROITUS: Tämä asetus on monimutkainen ja vaatii syvällistä hallinnollista ymmärrystä. Katso lisätietoja <a target="_blank" href="https://meta.discourse.org/t/-/140017">turvallisia latauksia palvelimeen käsittelevästä ketjusta Metassa</a>.'
-    secure_media_allow_embed_images_in_emails: "VANHENTUNUT: Käytä \"secure_uploads_allow_embed_images_in_emails\"-asetusta, poistetaan Discourse 3.0:ssa."
     secure_uploads_allow_embed_images_in_emails: "Sallii turvallisten kuvien upottamisen, jotka normaalisti karsittaisiin sähköposteissa, jos niiden koko on pienempi kuin \"secure uploads max email embed image size kb\" -asetus."
-    secure_media_max_email_embed_image_size_kb: "VANHENTUNUT: Käytä \"secure_uploads_max_email_embed_image_size_kb\"-asetusta, poistetaan Discourse 3.0:ssa."
     secure_uploads_max_email_embed_image_size_kb: "Sähköposteihin upotettavien turvallisten kuvien kokoraja, jos \"secure uploads allow embed in emails\" -asetus on käytössä. Ilman kyseistä asetusta tällä asetuksella ei ole vaikutusta."
     slug_generation_method: "Valitse polkutunnuksen luomisen metodi, 'encoded' käyttää prosenttikoodausta, 'none' poistaa polkutunnukset käytöstä."
     enable_emoji: "Ota emoji käyttöön"
@@ -2133,7 +2130,6 @@ fi:
     default_sidebar_categories: "Valitut alueet näkyvät sivupalkin Alueet-osiossa oletuksena."
     default_sidebar_tags: "Valitut tunnisteet näkyvät sivupalkin Tunnisteet-osiossa oletuksena."
     enable_new_user_profile_nav_groups: "KOKEELLINEN: valittujen ryhmien käyttäjille näytetään uusi käyttäjäprofiilin navigointivalikko"
-    enable_experimental_topic_timeline_groups: "KOKEELLINEN: valittujen ryhmien käyttäjille näytetään uudelleenmuotoiltu ketjun aikajana"
     enable_experimental_hashtag_autocomplete: "KOKEELLINEN: käytä alueille ja tunnisteille uutta automaattista #hashtag-täydennysjärjestelmää, jotka hahmontaa valitun kohteen eri tavalla ja on parantanut hakua"
     errors:
       invalid_css_color: "Virheellinen väri. Anna värin nimi tai heksadesimaaliarvo."
@@ -2191,7 +2187,6 @@ fi:
       search_tokenize_japanese_enabled: "\"search_tokenize_japanese\" on poistettava käytöstä ennen tämän asetuksen käyttöönottoa."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Et voi ottaa DiscourseConnectia käyttöön, jos 2FA on pakotettu."
       delete_rejected_email_after_days: "Tämä asetus ei voi olla pienempi kuin delete_email_logs_after_days-asetus tai suurempi kuin %{max}"
-      invalid_uncategorized_category_setting: "Luokittelemattomat-aluetta ei voi valita, jos luokittelemattomia ketjuja ei ole sallittu"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2386,7 +2381,6 @@ fi:
     activated_by_staff: "Henkilökunta aktivoi"
     new_user_typed_too_fast: "Uusi käyttäjä näppäili liian nopeasti"
     content_matches_auto_silence_regex: "Sisältö vastaa automaattisesti hiljennettävää säännöllistä lauseketta"
-    content_matches_auto_block_regex: "Sisältö vastaa automaattisesti estettävää säännöllistä lauseketta"
     username:
       short: "täytyy olla vähintään %{min} merkkiä"
       long: "ei saa olla yli %{max} merkkiä"
@@ -3120,14 +3114,6 @@ fi:
     user_automatically_silenced:
       title: "Käyttäjä hiljennettiin automaattisesti"
       subject_template: "Yhteisön merkinnät hiljensivät uuden käyttäjän %{username}"
-      text_body_template: |
-        Tämä on automaattinen viesti.
-
-        Uusi käyttäjä [%{username}](%{user_url}) hiljennettiin automaattisesti, koska useampi käyttäjä on liputtanut käyttäjän %{username} viestejä.
-
-        [Tarkasta liputukset](%{base_url}/admin/flags). Jos %{username} hiljennettiin ilman syytä, kumoa hiljennys klikkaamalla painiketta [käyttäjän ylläpitosivulla](%{user_url}).
-
-        Rajaa voi muuttaa sivustoasetuksella `silence_new_user.
     spam_post_blocked:
       title: "Roskapostiviesti estettiin"
       subject_template: "Uuden käyttäjän %{username} viestit estettiin toistuvien linkkien vuoksi"
@@ -3206,9 +3192,6 @@ fi:
       one: "Huom. Olemme lähettäneet jo yhden sähköpostin tänään, mikä on enimmäismäärä. Käy sivustolla, jottet jää mistään paitsi. PS. Kiitos kun olet niin suosittu!"
       other: "Huom. Olemme lähettäneet jo %{count} sähköpostia tänään, mikä on enimmäismäärä. Käy sivustolla, jottet jää mistään paitsi. PS. Kiitos kun olet niin suosittu!"
     in_reply_to: "Vastauksena"
-    unsubscribe:
-      title: "Peru tilaus"
-      description: "Etkö halua vastaanottaa näitä sähköposteja? Ei hätää! Klikkaa alta peruaksesi tilauksen välittömästi:"
     reply_by_email: "Vastaa [vierailemalla ketjussa](%{base_url}%{url}) tai vastaamalla tähän sähköpostiin."
     reply_by_email_pm: "Vastaa käyttäjille %{participants} [vierailemalla keskustelussa](%{base_url}%{url}) tai vastaa vain tähän sähköpostiin."
     only_reply_by_email: "Vastaa vastaamalla tähän sähköpostiin."
@@ -3505,7 +3488,6 @@ fi:
       liked_received: "Saatua tykkäystä"
       new_users: "Uutta käyttäjää"
       popular_topics: "Suosittuja ketjuja"
-      follow_topic: "Seuraa tätä ketjua"
       join_the_discussion: "Lue lisää"
       popular_posts: "Suosittuja viestejä"
       more_new: "Uutta sinulle"
@@ -3707,8 +3689,6 @@ fi:
     welcome_message_invite_only: |
       ## [Tervetuloa sivustolle %{title}](#welcome)
       Käyttäjätili vaaditaan. Pyydä yhteisön jäsentä kutsumaan sinut tai kirjaudu sisään.
-  deleted: "poistettu"
-  image: "kuva"
   upload:
     edit_reason: "lataa kuvista paikalliset kopiot"
     unauthorized: "Tiedosto, jota yrität ladata, ei ole sallittu (sallitut päätteet: %{authorized_extensions})."
@@ -4333,7 +4313,6 @@ fi:
           <p>Onnittelut, ja pidä hauskaa <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>rakentaessasi uutta yhteisöäsi!</a></p>
   search_logs:
     graph_title: "Hakujen määrä"
-  joined: "Liittyi"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} mainitsi sinut ketjussa "%{topic}" – %{site_title}'

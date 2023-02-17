@@ -58,7 +58,7 @@ module ImportScripts
 
     def find_username_by_import_id(import_id)
       user_id = user_id_from_imported_user_id(import_id)
-      User.where(id: user_id).pluck_first(:username) if user_id.present?
+      User.where(id: user_id).pick(:username) if user_id.present?
     end
 
     # Get the Discourse Category id based on the id of the source category

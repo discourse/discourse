@@ -3,6 +3,8 @@
 module PageObjects
   module Pages
     class ChatChannel < PageObjects::Pages::Base
+      include SystemHelpers
+
       def type_in_composer(input)
         find(".chat-composer-input").send_keys(input)
       end
@@ -29,7 +31,20 @@ module PageObjects
 
       def expand_message_actions(message)
         hover_message(message)
-        click_more_buttons(message)
+        click_more_button
+      end
+
+      def expand_message_actions_mobile(message, delay: 2)
+        message_by_id(message.id).click(delay: delay)
+      end
+
+      def click_message_action_mobile(message, message_action)
+        i = 0.5
+        try_until_success(timeout: 20) do
+          expand_message_actions_mobile(message, delay: i)
+          first(".chat-message-action-item[data-id=\"#{message_action}\"]")
+        end
+        find(".chat-message-action-item[data-id=\"#{message_action}\"] button").click
       end
 
       def hover_message(message)
@@ -41,25 +56,42 @@ module PageObjects
         find(".bookmark-btn").click
       end
 
-      def click_more_buttons(message)
+      def click_more_button
         find(".more-buttons").click
       end
 
       def flag_message(message)
         hover_message(message)
-        click_more_buttons(message)
+        click_more_button
         find("[data-value='flag']").click
+      end
+
+      def flag_message(message)
+        hover_message(message)
+        click_more_button
+        find("[data-value='flag']").click
+      end
+
+      def open_message_thread(message)
+        hover_message(message)
+        find(".chat-message-thread-btn").click
       end
 
       def select_message(message)
         hover_message(message)
-        click_more_buttons(message)
+        click_more_button
         find("[data-value='selectMessage']").click
+      end
+
+      def delete_message(message)
+        hover_message(message)
+        click_more_button
+        find("[data-value='deleteMessage']").click
       end
 
       def open_edit_message(message)
         hover_message(message)
-        click_more_buttons(message)
+        click_more_button
         find("[data-value='edit']").click
       end
 

@@ -303,6 +303,8 @@ sv:
       edit_bookmark: "Redigera bokmärke"
       clear_bookmarks: "Töm bokmärken"
       help:
+        bookmark: "Klicka för att bokmärka detta ämne"
+        edit_bookmark: "Klicka för att redigera bokmärket på ett inlägg i detta ämne"
         edit_bookmark_for_topic: "Klicka för att redigera bokmärket för detta ämne"
         unbookmark: "Klicka för att radera alla bokmärken i ämnet"
         unbookmark_with_reminder: "Klicka för att ta bort alla bokmärken och påminnelser i detta ämne"
@@ -976,10 +978,12 @@ sv:
       mute: "Tysta"
       edit: "Redigera inställningar"
       download_archive:
-        button_text: "Ladda ner alla"
-        confirm: "Är du säker på att du vill ladda ner dina inlägg?"
-        success: "Nedladdning påbörjad, du kommer att aviseras via meddelande när processen är klar."
-        rate_limit_error: "Inlägg kan laddas ner en gång per dag, försök igen imorgon."
+        title: "Exportera dina data"
+        description: "Ladda ner ett arkiv med din kontoaktivitet och dina inställningar."
+        button_text: "Begär arkiv"
+        confirm: "Vill du verkligen ladda ner ett arkiv med din kontoaktivitet och dina inställningar?"
+        success: "Vi har börjat samla in ditt arkiv och meddelar dig när den processen är klar."
+        rate_limit_error: "Kontoarkiv kan laddas ner en gång per dag, försök igen imorgon."
       new_private_message: "Nytt meddelande"
       private_message: "Meddelande"
       private_messages: "Meddelanden"
@@ -2129,8 +2133,6 @@ sv:
         topic_template_not_modified: "Lägg till detaljer och specifikationer till ditt ämne genom att redigera ämnesmallen."
       save_edit: "Spara ändring"
       overwrite_edit: "Överskriv redigering"
-      reply_original: "Svara på ursprungsämnet"
-      reply_here: "Svara här"
       reply: "Svara"
       cancel: "Avbryt"
       create_topic: "Skapa ämne"
@@ -2702,8 +2704,8 @@ sv:
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Bläddra bland alla kategorier</a>, <a href='%{basePath}/latest'>visa senaste ämnen</a> eller se toppämnen:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Bläddra bland alla taggar</a> eller <a href='%{basePath}/latest'>visa senaste ämnen</a>."
       suggest_create_topic: Redo att <a href>starta ett nytt samtal?</a>
-      jump_reply_up: hoppa till tidigare svar
-      jump_reply_down: hoppa till senare svar
+      jump_reply: "Hoppa till inläggets ursprungliga plats"
+      jump_reply_aria: "Hoppa till @%{username}s inlägg på dess ursprungliga plats"
       deleted: "Ämnet har raderats"
       slow_mode_update:
         title: "Långsamt läge"
@@ -3058,6 +3060,7 @@ sv:
       ignored: "Ignorerat innehåll"
       wiki_last_edited_on: "wiki redigerades senast den %{dateTime}"
       last_edited_on: "inlägget redigerades senast den %{dateTime}"
+      edit_history: "inläggets redigeringshistorik"
       reply_as_new_topic: "Svara som länkat ämne"
       reply_as_new_private_message: "Svara som nytt meddelande till samma mottagare"
       continue_discussion: "Fortsätter diskussionen från %{postLink}:"
@@ -3069,8 +3072,8 @@ sv:
       sr_collapse_replies: "Förminska inbäddade svar"
       sr_date: "Datum för inlägg"
       sr_expand_replies:
-        one: "Detta inlägg har %{count} svar. Klicka för att utvidga"
-        other: "Detta inlägg har %{count} svar. Klicka för att utvidga"
+        one: "Detta inlägg har %{count} svar"
+        other: "Detta inlägg har %{count} svar"
       expand_collapse: "utvidga/förminska"
       sr_below_embedded_posts_description: "inlägg #%{post_number} svar"
       sr_embedded_reply_description: "svar från @%{username} på inlägg #%{post_number}"
@@ -3361,8 +3364,6 @@ sv:
       email_in: "Egenvald inkommande e-postadress:"
       email_in_tooltip: "Du kan skilja på flera e-postadresser med tecknet |."
       email_in_allow_strangers: "Ta emot e-post från anonyma användare utan konton"
-      email_in_disabled: "Att skapa nya ämnen via e-post är inaktiverat i webbplatsinställningarna. För att aktivera ämnen skapade via e-post "
-      email_in_disabled_click: 'aktiverar du inställningen "inkommande e-post".'
       mailinglist_mirror: "Kategorin speglar en e-postlista"
       show_subcategory_list: "Visa listan med underkategorier ovanför ämnen i denna kategori."
       read_only_banner: "Banderolltext när en användare inte kan skapa ett ämne i denna kategori:"
@@ -3703,6 +3704,7 @@ sv:
         title: "Skapar"
         return: "%{shortcut} Återgå till skaparen"
         fullscreen: "%{shortcut} Helskärmsläge för skaparen"
+        insert_current_time: "%{shortcut} Infoga aktuell tid"
       bookmarks:
         title: "Bokmärkning"
         enter: "%{shortcut} Spara och stäng"
@@ -3931,13 +3933,11 @@ sv:
     pause_notifications:
       title: "Pausa aviseringar för..."
       label: "Pausa aviseringar"
-      remaining: "%{remaining} kvar"
       options:
         half_hour: "30 minuter"
         one_hour: "1 timme"
         two_hours: "2 timmar"
         tomorrow: "Tills imorgon"
-        custom: "Anpassad"
       set_schedule: "Ange ett aviseringsschema"
     trust_levels:
       names:
@@ -3987,6 +3987,19 @@ sv:
       all_categories: "Alla kategorier"
       all_tags: "Alla taggar"
       sections:
+        custom:
+          add: "Lägg till ett anpassat avsnitt"
+          edit: "Redigera anpassat avsnitt"
+          name: "Avsnittstitel"
+          save: "Spara"
+          delete: "Radera"
+          delete_confirm: "Är du säker på att du vill radera det här avsnittet?"
+          links:
+            icon: "Ikon"
+            name: "Namn"
+            value: "Länk"
+            add: "Lägg till ytterligare en länk"
+            delete: "Ta bort länk"
         about:
           header_link_text: "Om"
         messages:
@@ -4326,7 +4339,6 @@ sv:
               revoke_badge_from_user: Återkalla ett märke från en användare.
             search:
               show: Sök med slutpunkten `/search.json?q=term`.
-              query: Sök med slutpunkten /search/query?term=term`.
             wordpress:
               publishing: Nödvändigt för WP Discourse-tilläggets publiceringsfunktioner (krävs).
               commenting: Nödvändigt för WP Discourse-tilläggets kommentarsfunktioner.
@@ -4691,6 +4703,9 @@ sv:
           embedded_scss:
             text: "Inbäddad CSS"
             title: "Ange anpassad CSS som ska levereras med inbäddad version av kommentarer"
+          embedded_header:
+            text: "Inbäddad rubrik"
+            title: "Ange HTML som ska visas ovanför den inbäddade versionen av kommentarerna"
           color_definitions:
             text: "Färgdefinitioner"
             title: "Ange anpassade färgdefinitioner (endast avancerade användare)"
@@ -5090,6 +5105,41 @@ sv:
           description: "Ange text nedan för att leta efter matchningar med bevakade ord"
           found_matches: "Hittade matchande:"
           no_matches: "Hittades inga matchningar"
+      form_templates:
+        nav_title: "Mallar"
+        title: "Formulärmallar"
+        help: "Skapa en mallstruktur som kan användas för att skapa nya ämnen, inlägg och meddelanden."
+        new_template: "Ny mall"
+        list_table:
+          headings:
+            name: "Namn"
+            actions: "Åtgärder"
+          actions:
+            view: "Visa mall"
+            edit: "Redigera mall"
+            delete: "Ta bort mall"
+        view_template:
+          close: "Stäng"
+          edit: "Redigera"
+          delete: "Radera"
+        new_template_form:
+          submit: "Spara"
+          cancel: "Avbryt"
+          name:
+            label: "Mallens namn"
+            placeholder: "Ange ett namn för den här mallen..."
+          template:
+            label: "Mall"
+            placeholder: "Skapa en YAML-mall här..."
+        delete_confirm: "Är du säker på att du vill ta bort den här mallen?"
+        quick_insert_fields:
+          add_new_field: "Lägg till"
+          checkbox: "Kryssruta"
+          input: "Kort svar"
+          textarea: "Långt svar"
+          dropdown: "Rullgardinsmeny"
+          upload: "Ladda upp en fil"
+          multiselect: "Flera val"
       impersonate:
         title: "Imitera"
         help: "Använd det här verktyget för att imitera ett användarkonto för felsökningssyften. Du kommer behöva logga ut när du är klar."
@@ -5190,7 +5240,6 @@ sv:
         show_admin_profile: "Administratör"
         manage_user: "Hantera användare"
         show_public_profile: "Visa offentlig profil"
-        impersonate: "Imitera"
         action_logs: "Åtgärdslogg"
         ip_lookup: "Slå upp IP-adress"
         log_out: "Logga ut"
@@ -5527,7 +5576,8 @@ sv:
         allow_title: Tillåt att utmärkelse används som titel
         multiple_grant: Kan utfärdas flera gånger
         listable: Visa utmärkelse på den offentliga utmärkelsesidan
-        enabled: Aktivera utmärkelse
+        enabled: aktiverad
+        disabled: inaktiverade
         icon: Ikon
         image: Bild
         graphic: Grafik

@@ -1,5 +1,5 @@
 <div class="sidebar-custom-sections">
-  {{#each this.currentUser.sidebarSections as |section|}}
+  {{#each this.sections as |section|}}
     <Sidebar::Section
       @sectionName={{section.slug}}
       @headerLinkText={{section.title}}
@@ -15,19 +15,14 @@
       {{#each section.links as |link|}}
         <Sidebar::SectionLink
           @linkName={{link.name}}
-          @href={{link.value}}
-          @target="_self"
-          @content={{link.name}}
-          @class={{link.class}}
+          @route={{link.route}}
+          @models={{link.models}}
+          @query={{link.query}}
+          @content={{replace-emoji link.name}}
+          @prefixType="icon"
+          @prefixValue={{link.icon}}
         />
       {{/each}}
     </Sidebar::Section>
   {{/each}}
-
-  <DButton
-    @icon="plus"
-    @action={{action this.addSection}}
-    @class="btn-flat add-section"
-    @title="sidebar.sections.custom.add"
-  />
 </div>

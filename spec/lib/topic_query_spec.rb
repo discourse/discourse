@@ -1731,4 +1731,146 @@ RSpec.describe TopicQuery do
       end
     end
   end
+
+  describe "#new_and_unread_results" do
+    fab!(:unread_topic) { Fabricate(:post).topic }
+    fab!(:new_topic) { Fabricate(:post).topic }
+    fab!(:read_topic) { Fabricate(:post).topic }
+
+    before do
+      unread_post = Fabricate(:post, topic: unread_topic)
+      read_post = Fabricate(:post, topic: read_topic)
+
+      TopicUser.change(
+        user.id,
+        unread_topic.id,
+        notification_level: TopicUser.notification_levels[:tracking],
+      )
+      TopicUser.change(
+        user.id,
+        read_topic.id,
+        notification_level: TopicUser.notification_levels[:tracking],
+      )
+      TopicUser.update_last_read(user, unread_topic.id, unread_post.post_number - 1, 1, 1)
+      TopicUser.update_last_read(user, read_topic.id, read_post.post_number, 1, 1)
+    end
+
+    it "includes unread and new topics for the user" do
+      expect(TopicQuery.new(user).new_and_unread_results.pluck(:id)).to contain_exactly(
+        unread_topic.id,
+        new_topic.id,
+      )
+    end
+
+    it "doesn't include deleted topics" do
+      unread_topic.trash!
+      expect(TopicQuery.new(user).new_and_unread_results.pluck(:id)).to contain_exactly(
+        new_topic.id,
+      )
+    end
+
+    it "doesn't include muted topics with unread posts" do
+      TopicUser.change(
+        user.id,
+        unread_topic.id,
+        notification_level: TopicUser.notification_levels[:muted],
+      )
+      expect(TopicQuery.new(user).new_and_unread_results.pluck(:id)).to contain_exactly(
+        new_topic.id,
+      )
+    end
+
+    it "doesn't include muted new topics" do
+      TopicUser.change(
+        user.id,
+        new_topic.id,
+        notification_level: TopicUser.notification_levels[:muted],
+      )
+      expect(TopicQuery.new(user).new_and_unread_results.pluck(:id)).to contain_exactly(
+        unread_topic.id,
+      )
+    end
+
+    it "doesn't include new topics in muted category" do
+      CategoryUser.create!(
+        user_id: user.id,
+        category_id: new_topic.category.id,
+        notification_level: CategoryUser.notification_levels[:muted],
+      )
+      expect(TopicQuery.new(user).new_and_unread_results.pluck(:id)).to contain_exactly(
+        unread_topic.id,
+      )
+    end
+
+    it "includes unread and trakced topics even if they're in a muted category" do
+      new_topic.update!(category: Fabricate(:category))
+      CategoryUser.create!(
+        user_id: user.id,
+        category_id: unread_topic.category.id,
+        notification_level: CategoryUser.notification_levels[:muted],
+      )
+      expect(TopicQuery.new(user).new_and_unread_results.pluck(:id)).to contain_exactly(
+        unread_topic.id,
+        new_topic.id,
+      )
+    end
+
+    it "doesn't include new topics that have a muted tag(s)" do
+      SiteSetting.tagging_enabled = true
+
+      tag = Fabricate(:tag)
+      new_topic.tags << tag
+      new_topic.save!
+
+      TagUser.create!(
+        tag_id: tag.id,
+        user_id: user.id,
+        notification_level: NotificationLevels.all[:muted],
+      )
+      expect(TopicQuery.new(user).new_and_unread_results.pluck(:id)).to contain_exactly(
+        unread_topic.id,
+      )
+    end
+
+    it "includes unread and tracked topics even if they have a muted tag(s)" do
+      SiteSetting.tagging_enabled = true
+
+      tag = Fabricate(:tag)
+      unread_topic.tags << tag
+      unread_topic.save!
+
+      TagUser.create!(
+        tag_id: tag.id,
+        user_id: user.id,
+        notification_level: NotificationLevels.all[:muted],
+      )
+      expect(TopicQuery.new(user).new_and_unread_results.pluck(:id)).to contain_exactly(
+        unread_topic.id,
+        new_topic.id,
+      )
+    end
+
+    it "doesn't include topics in restricted categories that user cannot access" do
+      category = Fabricate(:category_with_definition)
+      group = Fabricate(:group)
+      category.set_permissions(group => :full)
+      category.save!
+
+      unread_topic.update!(category: category)
+      new_topic.update!(category: category)
+
+      expect(TopicQuery.new(user).new_and_unread_results.pluck(:id)).to be_blank
+    end
+
+    it "doesn't include dismissed topics" do
+      DismissedTopicUser.create!(
+        user_id: user.id,
+        topic_id: new_topic.id,
+        created_at: Time.zone.now,
+      )
+      expect(TopicQuery.new(user).new_and_unread_results.pluck(:id)).to contain_exactly(
+        unread_topic.id,
+      )
+    end
+  end
 end

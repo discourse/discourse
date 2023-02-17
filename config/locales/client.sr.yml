@@ -130,10 +130,6 @@ sr:
           one: "%{count} дан раније"
           few: "%{count} дана раније"
           other: "%{count} дана раније"
-        x_months:
-          one: "pre %{count} mesec dana"
-          few: "pre %{count} mesec dana"
-          other: "pre %{count} mesec dana"
       later:
         x_days:
           one: "%{count} дан касније"
@@ -453,8 +449,6 @@ sr:
       types:
         reviewable_user:
           title: "Korisnik"
-        reviewable_post:
-          title: "Post"
       approval:
         title: "Potrebno odobrenje"
         description: "Primili smo tvoj novi post ali on najpre mora biti odobren od strane moderatora. Budi strpljiv."
@@ -615,7 +609,7 @@ sr:
       "12": "Poslato"
       "13": "Primljeno"
       "14": "U toku"
-      "15": "Нацрти"
+      "15": "Drafts"
     categories:
       all: "sve kategorije"
       all_subcategories: "sve"
@@ -656,8 +650,6 @@ sr:
       profile: "Profil"
       mute: "Utišaj"
       edit: "Uredi postavke"
-      download_archive:
-        rate_limit_error: "Poruke mogu biti preuzimate jednom na dan, molimo pokušajte sutra."
       new_private_message: "Nova privatna poruka"
       private_message: "Privatna poruka"
       private_messages: "Poruke"
@@ -686,7 +678,6 @@ sr:
       trust_level: "Nivo poverenja"
       notifications: "Obaveštenja"
       statistics: "Statistike"
-      dismiss: "Одбаци"
       dismiss_notifications_tooltip: "Označi sve nepročitana obavestenja kao pročitana"
       color_schemes:
         regular: "Stalni član"
@@ -791,7 +782,6 @@ sr:
       email:
         title: "E-mail"
         primary_label: "primarna"
-        resent_label: "email je poslat"
         update_email: "Promeni e-mail"
         ok: "Poslaćemo vam e-mail za potvrdu"
         invalid: "Molimo unesite validnu e-mail adresu"
@@ -890,9 +880,6 @@ sr:
         create: "Pozovi"
         invite_link:
           success: "Link pozivnice je uspešno kreiran!"
-        invite:
-          show_advanced: "Прикажи напредне опције"
-          hide_advanced: "Сакриј напредне опције"
       password:
         title: "Šifra"
         too_short: "Vaša šifra je prekratka."
@@ -963,12 +950,8 @@ sr:
         title: "Profilna Slika"
       title:
         title: "Naslov"
-        none: "(ništa)"
-      flair:
-        none: "(ništa)"
       primary_group:
         title: "Primarna Grupa"
-        none: "(ništa)"
       filters:
         all: "Sve"
       stream:
@@ -1103,8 +1086,6 @@ sr:
         title_missing: "Naslov je obavezan"
         category_missing: "Morate odabrati kategoriju"
       save_edit: "Sačuvaj izmenu"
-      reply_original: "Odgovori na originalnu temu"
-      reply_here: "Odgovori ovde"
       reply: "Odgovori"
       cancel: "Odustani"
       create_topic: "Kreiraj temu"
@@ -1208,13 +1189,11 @@ sr:
         select_all: "Izaberi sve"
         defer: "Odloži"
         delete: "Obriši Teme"
-        dismiss: "Одбаци"
         dismiss_new: "Odbaci Novo"
         toggle: "uključi/isključi grupni odabir tema"
         actions: "Grupne aktivnosti"
         close_topics: "Zatvori Teme"
         archive_topics: "Arhiviraj teme"
-        notification_level: "Obaveštenja..."
         choose_new_category: "Izaberite novu kategoriju za vašu temu."
         selected:
           one: "Odabrali ste <b>%{count}</b> temu."
@@ -1278,8 +1257,6 @@ sr:
       back_to_list: "Nazad na listu tema"
       options: "Opcije Teme"
       show_links: "Prikaži linkove u ovoj temi"
-      jump_reply_up: skoči na raniji odgovor
-      jump_reply_down: skoči na kasniji odgovor
       deleted: "Tema je obrisana"
       slow_mode_update:
         enable: "Omogući"
@@ -1298,7 +1275,6 @@ sr:
         replies_short: "%{current} / %{total}"
       progress:
         title: napredak teme
-        jump_prompt_to_date: "до датума"
         jump_prompt_or: "ili"
       notifications:
         reasons:
@@ -1340,7 +1316,6 @@ sr:
         unarchive: "Vrati temu iz arhiva"
         archive: "Arhiviraj temu"
         reset_read: "Poništi podatke o pročitanom"
-        make_public: "Napravi javnu temu..."
       feature:
         pin: "Zakači temu"
         unpin: "Otkači temu"
@@ -1464,7 +1439,6 @@ sr:
         revert_to_regular: "Ukloni Boje Osoblja"
         rebake: "Popravi HTML"
         unhide: "Poništi sakrivanje"
-        grant_badge: "Dodeli Značku..."
         delete_topic: "obriši temu"
       actions:
         by_you:
@@ -1528,8 +1502,6 @@ sr:
       images: "Slike"
       email_in: "Prilagođena adresa dolaznog e-maila."
       email_in_allow_strangers: "Prihvati emailove anonimnih korisnika bez naloga"
-      email_in_disabled: "Objavljivanje novih tema preko emaila je onemogućeno u podešavanjima stranice. Da omogućite objavljivanje tema preko emaila,"
-      email_in_disabled_click: 'omogućite "pošalji email u" podešavanjima.'
       allow_badges_label: "Dozvoli dodjeljivanje značaka u ovoj kategoriji."
       edit_permissions: "Izmeni dozvole"
       review_group_name: "ime grupe"
@@ -1564,7 +1536,6 @@ sr:
     flagging:
       title: "Hvala što pomažete u održavanju naše zajednice pristojnom."
       action: "Označi Poruku Zastavom"
-      take_action: "Preduzmi Akciju..."
       take_action_options:
         default:
           title: "Preduzmi Akciju"
@@ -1762,7 +1733,6 @@ sr:
         few: "+još %{count} član"
         other: "+još %{count} član"
       select_badge_for_title: Odaberi značku koju češ koristit kao titulu
-      none: "(ništa)"
       badge_grouping:
         getting_started:
           name: Početak
@@ -1808,10 +1778,6 @@ sr:
     footer_nav:
       back: "Nazad"
       share: "Podeli"
-      dismiss: "Одбаци"
-    pause_notifications:
-      options:
-        custom: "Posebna"
     trust_levels:
       names:
         member: "član"
@@ -1828,6 +1794,12 @@ sr:
         other: "%{count} nova"
       more: "Više"
       sections:
+        custom:
+          save: "Sačuvaj"
+          delete: "Obriši"
+          links:
+            icon: "Ikona"
+            name: "Ime foruma"
         about:
           header_link_text: "O nama"
         messages:
@@ -1880,9 +1852,6 @@ sr:
         version_check_pending: "Čini se da ste nedavno nadogradili. Fantastično!"
         installed_version: "Instalirano"
         latest_version: "Poslednje"
-        new_features:
-          dismiss: "Одбаци"
-          learn_more: "Saznaj više"
         last_checked: "Zadnje provereno"
         refresh_problems: "Osveži"
         no_problems: "Nisu pronađeni problemi."
@@ -1941,7 +1910,6 @@ sr:
         user: "Korisnik"
         title: "API"
         created: Napravljeno
-        never_used: (nikad)
         generate: "Generiši"
         revoke: "Povuci"
         all_users: "Svi korisnici"
@@ -2217,6 +2185,20 @@ sr:
           flag: "Označi Zastavom"
         form:
           add: "Dodaj"
+      form_templates:
+        list_table:
+          headings:
+            name: "Ime foruma"
+            actions: "Akcije"
+        view_template:
+          close: "Zatvori"
+          edit: "Izmeni"
+          delete: "Obriši"
+        new_template_form:
+          submit: "Sačuvaj"
+          cancel: "Odustani"
+        quick_insert_fields:
+          add_new_field: "Dodaj"
       impersonate:
         title: "Predstavi se kao"
         help: "Koristite ovaj alat da se predstavite kao određeni korisnički nalog za potrebe ispravljanja grešaka. Moraćete se odjaviti kad završite."
@@ -2264,7 +2246,6 @@ sr:
         suspended: "Suspendovan?"
         show_admin_profile: "Administrator"
         show_public_profile: "Pokaži javni profil"
-        impersonate: "Predstavi se kao"
         ip_lookup: "IP Pregled"
         log_out: "Odjava"
         logged_out: "Korisnik je odjavljen sa svih uređaja"
@@ -2472,7 +2453,6 @@ sr:
         allow_title: Dopusti da se značka koristi kao titula
         multiple_grant: Može biti dodeljena više puta
         listable: Prikaži značku na javnoj stranici sa značkama
-        enabled: Omogući značku
         icon: Ikona
         image: Slika
         query: Upitnik Značke (SQL)
@@ -2518,7 +2498,6 @@ sr:
         topic_id: "ID Teme"
         topic_title: "Tema"
         post_id: "ID Poruke"
-        post_title: "Post"
         category_title: "Kategorija"
         form:
           label: "Novo:"

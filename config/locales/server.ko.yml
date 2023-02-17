@@ -2176,7 +2176,6 @@ ko:
     activated_by_staff: "운영진에 의해 활성화됨"
     new_user_typed_too_fast: "입력이 너무 빠른 신규 사용자"
     content_matches_auto_silence_regex: "콘텐츠가 자동 차단 정규식과 일치합니다"
-    content_matches_auto_block_regex: "콘텐츠가 자동 차단 정규식과 일치합니다"
     username:
       short: "최소 %{min}자 이상이어야 합니다"
       long: "%{max}자 이하여야 합니다"
@@ -2830,14 +2829,6 @@ ko:
     user_automatically_silenced:
       title: "사용자가 자동 차단됨"
       subject_template: "커뮤니티 신고로 신규 유저 %{username} 님이 차단됨"
-      text_body_template: |
-        자동 메시지입니다.
-
-        여러 사용자가 %{username} 님의 게시물을 신고하여 신규 사용자 [%{username}](%{user_url})님이 자동 차단되었습니다.
-
-        [신고를 검토](%{base_url}/admin/flags)하고, %{username} 님의 게시 차단이 잘못되었다고 판단되는 경우 [이 사용자의 관리 페이지](%{user_url})에서 차단 해제 버튼을 클릭하세요.
-
-        한계치는 `silence_new_user` 사이트 설정에서 변경할 수 있습니다.
     spam_post_blocked:
       title: "스팸 게시글 차단됨"
       subject_template: "신규 사용자 %{username} 님의 게시물이 연속된 링크로 인해 차단됨"
@@ -2912,9 +2903,6 @@ ko:
     reached_limit:
       other: "주의: 매일 최대 %{count}개의 이메일을 전송합니다. 사이트를 확인하여 보류될 수 있는 사이트가 있는지 확인하세요. 활발한 활동에 감사드립니다!"
     in_reply_to: "답장 대상"
-    unsubscribe:
-      title: "구독 해제"
-      description: "이 이메일에 관심이 없나요? 아래 구독 해제를 눌러서 바로 구독을 해제할 수 있습니다."
     reply_by_email: "[주제를 방문](%{base_url}%{url})하거나 이 이메일에 답장하여 응답하세요."
     reply_by_email_pm: "[주제를 방문](%{base_url}%{url})하거나 이 이메일에 답장하여 %{participants}에 응답하세요."
     only_reply_by_email: "이 이메일에 답장하여 응답하세요."
@@ -3218,7 +3206,6 @@ ko:
       liked_received: "받은 좋아요 수"
       new_users: "신규 사용자"
       popular_topics: "인기 주제"
-      follow_topic: "이 주제 팔로우"
       join_the_discussion: "더 보기"
       popular_posts: "인기 게시물"
       more_new: "맞춤 신규 항목"
@@ -3409,8 +3396,6 @@ ko:
     welcome_message_invite_only: |
       ## [%{title}에 오신 것을 환영합니다](#welcome)
       계정이 필요합니다. 계속하려면 기존 회원에게 초대를 요청하거나 로그인하세요.
-  deleted: "삭제되었습니다"
-  image: "이미지"
   upload:
     edit_reason: "이미지 로컬 사본 다운로드됨"
     unauthorized: "업로드하려는 파일 확장자는 허용되지 않습니다(허용 확장자: %{authorized_extensions})."
@@ -3890,7 +3875,6 @@ ko:
           <p>즐거운 시간 보내세요! <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>새로운 커뮤니티 구축에 행운을 빕니다!</a></p>
   search_logs:
     graph_title: "검색 횟수"
-  joined: "가입일"
   discourse_push_notifications:
     popup:
       mentioned: '''%{topic}'' - %{site_title}에서 %{username} 님이 나를 멘션했습니다'

@@ -2010,11 +2010,8 @@ it:
     delete_merged_stub_topics_after_days: "Numero di giorni di attesa prima di eliminare automaticamente gli argomenti stub completamente uniti. Impostare a 0 per non eliminare mai gli argomenti stub."
     bootstrap_mode_min_users: "Numero minimo di utenti richiesto per disabilitare la modalità bootstrap (imposta a 0 per disattivare)"
     prevent_anons_from_downloading_files: "Impedisci agli utenti anonimi di scaricare allegati."
-    secure_media: "Opzione DEPRECATA: utilizzare al suo posto l'impostazione secure_uploads, verrà rimossa in Discourse 3.0."
     secure_uploads: 'Limita l''accesso a TUTTI i caricamenti (immagini, video, audio, testo, pdf, zip, ecc.). Se l''opzione “accesso richiesto” è attivata, solo gli utenti registrati possono accedere ai caricamenti. In caso contrario, l''accesso sarà limitato solo per i media caricati in messaggi privati e categorie private. ATTENZIONE: Questa impostazione è complessa e richiede una profonda competenza amministrativa. Per maggiori dettagli visita <a target="_blank" href="https://meta.discourse.org/t/-/140017">l''argomento sui caricamenti sicuri su Meta</a>.'
-    secure_media_allow_embed_images_in_emails: "Opzione DEPRECATA: utilizzare al suo posto l'impostazione secure_uploads_allow_embed_images_in_emails, sarà rimossa in Discourse 3.0."
     secure_uploads_allow_embed_images_in_emails: "Consente l'integrazione di immagini sicure che normalmente verrebbero oscurate nelle e-mail, se la loro dimensione è inferiore al valore dell'i'impostazione 'dimensione max in kb immagini da integrare nelle email per caricamenti protetti'."
-    secure_media_max_email_embed_image_size_kb: "Opzione DEPRECATA: utilizzare al suo posto l'impostazione secure_uploads_max_email_embed_image_size_kb, sarà rimossa in Discourse 3.0."
     secure_uploads_max_email_embed_image_size_kb: "Limite di dimensione per le immagini protette che verranno incorporate nelle e-mail se l'impostazione \"secure upload allow embed in emails\" è abilitata. Se tale impostazione non è abilitata, anche questa non avrà alcun effetto."
     slug_generation_method: "Scegli un metodo di generazione delle abbreviazioni. 'encoded' genererà la stringa di codifica percentuale. 'none' disattiverà completamente le abbreviazioni."
     enable_emoji: "Attiva gli emoji"
@@ -2133,7 +2130,6 @@ it:
     default_sidebar_categories: "Le categorie selezionate appariranno, per impostazione predefinita, nella sezione Categorie della barra laterale."
     default_sidebar_tags: "Le etichette selezionate appariranno, per impostazione predefinita, nella sezione Etichette della barra laterale."
     enable_new_user_profile_nav_groups: "SPERIMENTALE: Gli utenti dei gruppi selezionati vedranno il nuovo menu di navigazione del profilo utente"
-    enable_experimental_topic_timeline_groups: "SPERIMENTALE: Gli utenti dei gruppi selezionati vedranno la timeline degli argomenti sottoposta a refactoring"
     enable_experimental_hashtag_autocomplete: "SPERIMENTALE: utilizza il nuovo sistema di completamento automatico degli #hashtag per categorie ed etichette che rende l'elemento selezionato in modo diverso e con ricerca migliorata"
     errors:
       invalid_css_color: "Colore non valido. Immettere un nome o un valore esadecimale per il colore."
@@ -2191,7 +2187,6 @@ it:
       search_tokenize_japanese_enabled: "Devi disattivare \"search_tokenize_japanese\" prima di attivare questa impostazione."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Non è possibile abilitare DiscourseConnect se è stata forzata l'autenticazione a due fattori 2FA."
       delete_rejected_email_after_days: "Questa impostazione non può essere inferiore al valore dell'impostazione delete_email_logs_after_days né maggiore di %{max}"
-      invalid_uncategorized_category_setting: "La categoria Senza categoria non può essere selezionata se gli argomenti senza categoria non sono consentiti"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2386,7 +2381,6 @@ it:
     activated_by_staff: "Attivato dallo staff"
     new_user_typed_too_fast: "Il nuovo utente ha scritto troppo velocemente"
     content_matches_auto_silence_regex: "Il contenuto corrisponde all'espressione regolare per silenziare automaticamente"
-    content_matches_auto_block_regex: "Il contenuto corrisponde al regex del blocco automatico"
     username:
       short: "deve essere almeno di %{min} caratteri"
       long: "non deve essere più lungo di %{max} caratteri"
@@ -3019,14 +3013,6 @@ it:
     user_automatically_silenced:
       title: "Utente Silenziato Automaticamente"
       subject_template: "Nuovo utente %{username} silenziato dalle segnalazioni della comunità"
-      text_body_template: |
-        Questo è un messaggio automatico.
-
-        Il nuovo utente [%{username}](%{user_url}) è stato automaticamente silenziato perché più utenti hanno segnalato i messaggi di %{username}.
-
-        Per favore [controlla le segnalazioni](%{base_url}/admin/flags). Se %{username} è stato silenziato per errore, clicca sul tasto di sblocco nella [pagina di amministrazione di questo utente](%{user_url}).
-
-        Questa soglia può essere modificata tramite l'impostazione del sito `silence_new_user`.
     spam_post_blocked:
       title: "Messaggio di Spam bloccato"
       subject_template: "I messaggi del nuovo utente %{username} sono stati bloccati a causa dell'invio ripetuto di link"
@@ -3095,9 +3081,6 @@ it:
       one: "Avvertimento: Inviamo un massimo di %{count} email al giorno. Controlla il sito per vedere quelle che potrebbero essere state trattenute."
       other: "Avvertimento: Inviamo un massimo di %{count} email giornaliere. Controlla il sito per vedere quelle che potrebbero essere state trattenute. PS grazie per essere popolare!"
     in_reply_to: "In Risposta A"
-    unsubscribe:
-      title: "Annulla iscrizione"
-      description: "Non vuoi ricevere queste email? Nessun problema! Clicca qui sotto per annullare l'iscrizione:"
     reply_by_email: "[Visita Argomento](%{base_url}%{url}) o rispondi a questa email per replicare."
     reply_by_email_pm: "[Visita Messaggio](%{base_url}%{url}) o rispondi a questa email per rispondere a %{participants}."
     only_reply_by_email: "Rispondi a questa email per replicare."
@@ -3389,7 +3372,6 @@ it:
       liked_received: "Mi piace ricevuti"
       new_users: "Nuovi utenti"
       popular_topics: "Argomenti popolari"
-      follow_topic: "Segui questo topic"
       join_the_discussion: "Leggi Altro"
       popular_posts: "Messaggi popolari"
       more_new: "Nuovo per te"
@@ -3568,8 +3550,6 @@ it:
       ## [Benvenuto su %{title}](#welcome)
       E' richiesto un account. Per continuare, crea un nuovo account oppure accedi.
     welcome_message_invite_only: "## [Benvenuto su %{title}](#benvenuto) \nÈ richiesto un account. Per favore, chiedi a un membro esistente un invito o accedi per continuare.\n"
-  deleted: "cancellati"
-  image: "immagine"
   upload:
     edit_reason: "copie locali delle immagini scaricate"
     unauthorized: "Spiacenti, il file che stai cercando di caricare non è autorizzato (estensioni autorizzate: %{authorized_extensions})."
@@ -4097,7 +4077,6 @@ it:
           <p>Divertiti e buona fortuna <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>nel costruire la tua nuova comunità!</a></p>
   search_logs:
     graph_title: "Conteggio Ricerche"
-  joined: "Iscritto"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} ti ha menzionato in ''%{topic}'' - %{site_title}'

@@ -1958,11 +1958,8 @@ zh_CN:
     delete_merged_stub_topics_after_days: "在自动删除完全合并的存根话题之前等待的天数。设置为 0 将从不删除存根话题。"
     bootstrap_mode_min_users: "禁用引导模式所需的最小用户数（设置为 0 将禁用）"
     prevent_anons_from_downloading_files: "阻止匿名用户下载附件。"
-    secure_media: "已弃用：改用 secure_uploads 设置，将在 Discourse 3.0 中移除。"
     secure_uploads: '限制对所有上传（图片、视频、音频、文本、pdf、zip 等）的访问。如果启用“需要登录”，则只有登录用户才能访问上传。否则，访问将仅限于私信和不公开类别中的媒体上传。警告：此设置比较复杂，需要深入理解管理操作。请参阅 <a target="_blank" href="https://meta.discourse.org/t/-/140017">Meta 安全上传话题</a>以了解详情。'
-    secure_media_allow_embed_images_in_emails: "已弃用：使用 secure_uploads_allow_embed_images_in_emails，将在 Discourse 3.0 中移除。"
     secure_uploads_allow_embed_images_in_emails: "如果小于 'secure uploads max email embed image size kb' 设置，则允许嵌入通常会在电子邮件中编辑的安全图片。"
-    secure_media_max_email_embed_image_size_kb: "已弃用：使用 secure_uploads_max_email_embed_image_size_kb，将在 Discourse 3.0 中移除。"
     secure_uploads_max_email_embed_image_size_kb: "如果启用了 'secure uploads allow embed in emails' 设置，将被嵌入到电子邮件的安全图片的大小限制；如果不启用，则此设置无效。"
     slug_generation_method: "选择一种缩略名生成方法。'encoded' 将生成百分比编码字符串。'none' 将完全禁用缩略名。"
     enable_emoji: "启用表情符号"
@@ -2081,7 +2078,6 @@ zh_CN:
     default_sidebar_categories: "所选类别将默认显示在边栏的“类别”版块下。"
     default_sidebar_tags: "所选标签将默认显示在边栏的“标签”版块下。"
     enable_new_user_profile_nav_groups: "实验性：将向所选群组的用户显示新的用户个人资料导航菜单"
-    enable_experimental_topic_timeline_groups: "实验性：所选群组的用户将看到重构的话题时间线"
     enable_experimental_hashtag_autocomplete: "实验性：对类别和标签使用新的 #hashtag 自动补全系统，以不同方式呈现所选条目，并改进了搜索"
     errors:
       invalid_css_color: "颜色无效。输入颜色名称或十六进制值。"
@@ -2139,7 +2135,6 @@ zh_CN:
       search_tokenize_japanese_enabled: "在启用此设置之前，您必须禁用 'search_tokenize_japanese'。"
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "如果强制执行双重身份验证，则无法启用 DiscourseConnect。"
       delete_rejected_email_after_days: "此设置不能设置为低于 delete_email_logs_after_days 设置或大于 %{max}"
-      invalid_uncategorized_category_setting: "如果不允许未分类话题，则无法选择“未分类”类别"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2314,7 +2309,6 @@ zh_CN:
     activated_by_staff: "被管理人员激活"
     new_user_typed_too_fast: "新用户输入过快"
     content_matches_auto_silence_regex: "内容符合自动禁言的正则表达式"
-    content_matches_auto_block_regex: "内容符合自动禁止的正则表达式"
     username:
       short: "必须至少为 %{min} 个字符"
       long: "不得超过 %{max} 个字符"
@@ -3046,14 +3040,6 @@ zh_CN:
     user_automatically_silenced:
       title: "用户被自动禁言"
       subject_template: "新用户 %{username} 因社区举报被禁言"
-      text_body_template: |
-        这是一封自动发送的邮件。
-
-        由于多个用户举报了 %{username} 的帖子，新用户 [%{username}](%{user_url}) 已被自动禁言。
-
-        请[审核举报](%{base_url}/admin/flags)。如果 %{username} 被意外禁言，请点击[此用户管理页面](%{user_url})上的取消禁言按钮。
-
-        此阈值可以通过 `silence_new_user` 站点设置更改。
     spam_post_blocked:
       title: "垃圾信息帖子被屏蔽"
       subject_template: "新用户 %{username} 的帖子因重复链接被屏蔽"
@@ -3129,9 +3115,6 @@ zh_CN:
     reached_limit:
       other: "注意：我们每天最多发送 %{count} 封电子邮件。检查站点以查看可能被阻止的电子邮件。PS：您很受欢迎！"
     in_reply_to: "回复给"
-    unsubscribe:
-      title: "退订"
-      description: "不再对这些电子邮件感兴趣？没问题！点击下面的按钮可以立即退订："
     reply_by_email: "[访问话题](%{base_url}%{url})或者回复此电子邮件以进行回复。"
     reply_by_email_pm: "[访问消息](%{base_url}%{url})或者回复此电子邮件以回复 %{participants}。"
     only_reply_by_email: "回复此电子邮件以进行回复。"
@@ -3427,7 +3410,6 @@ zh_CN:
       liked_received: "获赞"
       new_users: "新用户"
       popular_topics: "热门话题"
-      follow_topic: "关注此话题"
       join_the_discussion: "阅读更多"
       popular_posts: "热门帖子"
       more_new: "新摘要"
@@ -3629,8 +3611,6 @@ zh_CN:
     welcome_message_invite_only: |
       ## [欢迎来到%{title}](#welcome)
       需要一个帐户。请向现有成员请求邀请或登录以继续。
-  deleted: "已删除"
-  image: "图片"
   upload:
     edit_reason: "下载图片的本地副本"
     unauthorized: "抱歉，您尝试上传的文件不被允许（允许的扩展名：%{authorized_extensions}）。"
@@ -4249,7 +4229,6 @@ zh_CN:
           <p>玩得开心，并顺利<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>建立您的新社区</a>！</p>
   search_logs:
     graph_title: "搜索计数"
-  joined: "加入日期："
   discourse_push_notifications:
     popup:
       mentioned: '%{username} 在“%{topic}”中提及了您 - %{site_title}'

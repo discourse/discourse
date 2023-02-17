@@ -1,41 +1,16 @@
 import DiscourseRoute from "discourse/routes/discourse";
 import { inject as service } from "@ember/service";
-import { action } from "@ember/object";
-import { schedule } from "@ember/runloop";
 
+// This route is only here as a convience method for a clean `/c/:channelTitle/:channelId/:messageId` URL.
+// It's not a real route, it just redirects to the real route after setting a param on the controller.
 export default class ChatChannelNearMessage extends DiscourseRoute {
-  @service chat;
   @service router;
 
-  async model() {
-    return this.modelFor("chat-channel");
-  }
-
-  afterModel(model) {
+  beforeModel() {
+    const channel = this.modelFor("chat-channel");
     const { messageId } = this.paramsFor(this.routeName);
-    const { channelTitle } = this.paramsFor("chat.channel");
-
-    if (channelTitle !== model.slugifiedTitle) {
-      this.router.replaceWith(
-        "chat.channel.near-message",
-        ...model.routeModels,
-        messageId
-      );
-    }
-  }
-
-  @action
-  didTransition() {
     this.controllerFor("chat-channel").set("messageId", null);
-
-    const { messageId } = this.paramsFor(this.routeName);
-    const { channelId } = this.paramsFor("chat.channel");
-
-    if (channelId && messageId) {
-      schedule("afterRender", () => {
-        this.chat.openChannelAtMessage(channelId, messageId);
-      });
-    }
-    return true;
+    this.controllerFor("chat-channel").set("targetMessageId", messageId);
+    this.router.replaceWith("chat.channel", ...channel.routeModels);
   }
 }

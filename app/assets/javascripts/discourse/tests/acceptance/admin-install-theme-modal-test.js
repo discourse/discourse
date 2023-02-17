@@ -1,5 +1,5 @@
 import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
-import { click, fillIn, visit } from "@ember/test-helpers";
+import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import I18n from "I18n";
 
@@ -81,6 +81,13 @@ acceptance("Admin - Themes - Install modal", function (needs) {
       query(".install-theme code").textContent.trim(),
       "testUrl",
       "repo url is visible"
+    );
+
+    await click(".d-modal-cancel");
+    assert.strictEqual(
+      currentURL(),
+      "/admin/customize/themes",
+      "query params are cleared after dismissing the modal"
     );
   });
 

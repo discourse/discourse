@@ -11,6 +11,9 @@ acceptance("Glimmer Topic Timeline", function (needs) {
     admin: true,
     redesigned_topic_timeline_enabled: true,
   });
+  needs.settings({
+    enable_experimental_topic_timeline: true,
+  });
   needs.pretender((server, helper) => {
     server.get("/t/129.json", () => {
       return helper.response({

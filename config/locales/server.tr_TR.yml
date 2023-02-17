@@ -2003,11 +2003,8 @@ tr_TR:
     delete_merged_stub_topics_after_days: "Tamamen birleştirilmiş saplama konularını otomatik olarak silmeden önce beklenecek gün sayısı. Saplama konularını asla silmemek için 0 olarak ayarlayın."
     bootstrap_mode_min_users: "Bootstrap modunu devre dışı bırakmak için gereken minimum kullanıcı sayısı (devre dışı bırakmak için 0 olarak ayarlayın)"
     prevent_anons_from_downloading_files: "Anonim kullanıcıların ekleri indirmesini önleyin."
-    secure_media: "KALDIRILDI: Bunun yerine secure_uploads ayarını kullanın, Discourse 3.0'da kaldırılacak."
     secure_uploads: 'TÜM yüklemelere (resimler, video, ses, metin, pdf''ler, zip''ler ve diğerleri) erişimi sınırlar. "Giriş gerekli" etkinleştirilmişse yüklemelere yalnızca giriş yapmış kullanıcılar erişebilir. Aksi takdirde, erişim yalnızca özel mesajlardaki ve özel kategorilerdeki medya yüklemeleri için sınırlı olacaktır. UYARI: Bu ayar karmaşıktır ve derin bir yönetim anlayışı gerektirir. Ayrıntılar için <a target="_blank" href="https://meta.discourse.org/t/-/140017">Meta''daki güvenli yüklemeler konusuna</a> bakın.'
-    secure_media_allow_embed_images_in_emails: "KALDIRILDI: secure_uploads_allow_embed_images_in_emails kullanın, Discourse 3.0'da kaldırılacak."
     secure_uploads_allow_embed_images_in_emails: "Boyutları \"güvenli yüklemeler maksimum e-posta yerleştirme görüntü boyutu kb\" ayarından küçükse normalde e-postalara redakte edilecek güvenli görüntülerin yerleştirilmesine izin verir."
-    secure_media_max_email_embed_image_size_kb: "KALDIRILDI: secure_uploads_max_email_embed_image_size_kb kullanın, Discourse 3.0'da kaldırılacak."
     secure_uploads_max_email_embed_image_size_kb: "\"Güvenli yüklemeler e-postalarda yerleştirmeye izin verir\" ayarı etkinleştirilmişse e-postalara yerleştirilecek güvenli görüntüler için boyut sınırı. Bu ayar etkinleştirilmediğinde, bu ayarın etkisi yoktur."
     slug_generation_method: "Kısa ad oluşturma yöntemi seçin. \"encoded\" yüzde kodlama dizesi oluşturur. \"none\" kısa adı tamamen devre dışı bırakır."
     enable_emoji: "Emoji'yi etkinleştirin"
@@ -2126,7 +2123,6 @@ tr_TR:
     default_sidebar_categories: "Seçilen kategoriler varsayılan olarak Kenar Çubuğunun Kategoriler bölümünde gösterilir."
     default_sidebar_tags: "Seçilen etiketler varsayılan olarak Kenar Çubuğunun Etiketler bölümünde gösterilir."
     enable_new_user_profile_nav_groups: "DENEYSEL: Seçilen grupların kullanıcılarına yeni kullanıcı profili gezinme menüsü gösterilir"
-    enable_experimental_topic_timeline_groups: "DENEYSEL: Seçilen grupların kullanıcılarına yeniden düzenlenmiş konu zaman çizelgesi gösterilir"
     enable_experimental_hashtag_autocomplete: "DENEYSEL: Seçilen ögeyi farklı şekilde işleyen ve aramayı iyileştiren kategoriler ve etiketler için yeni #hashtag otomatik tamamlama sistemini kullanın"
     errors:
       invalid_css_color: "Geçersiz renk. Bir renk adı veya hex değeri girin."
@@ -2184,7 +2180,6 @@ tr_TR:
       search_tokenize_japanese_enabled: "Bu ayarı etkinleştirmeden önce \"search_tokenize_japanese\" özelliğini devre dışı bırakmalısınız."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "2 adımlı kimlik doğrulama zorunlu ise DiscourseConnect'i etkinleştiremezsiniz."
       delete_rejected_email_after_days: "Bu ayar delete_email_logs_after_days ayarından daha düşük veya %{max} üzerinde bir değere ayarlanamaz."
-      invalid_uncategorized_category_setting: "Kategorize edilmemiş konulara izin verilmiyorsa Kategorize edilmemiş kategorisi seçilemez"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.ornek.com"
@@ -2379,7 +2374,6 @@ tr_TR:
     activated_by_staff: "Personel tarafından etkinleştirildi"
     new_user_typed_too_fast: "Yeni kullanıcı çok hızlı yazdı"
     content_matches_auto_silence_regex: "İçerik otomatik sessize al regex'i ile eşleşiyor"
-    content_matches_auto_block_regex: "İçerik otomatik engelle regex'i ile eşleşiyor"
     username:
       short: "en az %{min} karakter olmalı"
       long: "%{max} karakterden fazla olmamalı"
@@ -3103,14 +3097,6 @@ tr_TR:
     user_automatically_silenced:
       title: "Kullanıcı Otomatik Olarak Susturuldu"
       subject_template: "Yeni kullanıcı %{username} topluluk bayraklarıyla susturuldu"
-      text_body_template: |
-        Bu otomatik bir mesajdır.
-
-        Yeni kullanıcı [%{username}](%{user_url}) otomatik olarak susturuldu çünkü birden fazla kullanıcı %{username} adlı kullanıcının gönderilerine bayrak ekledi.
-
-        Lütfen [bayrakları inceleyin](%{base_url}/admin/flags). %{username} adlı kullanıcının gönderileri yanlışlıkla susturulduysa [bu kullanıcının yönetici sayfasındaki](%{user_url}) susturmayı kaldır düğmesine tıklayın.
-
-        Bu eşik, "silence_new_user" site ayarları aracılığıyla değiştirilebilir.
     spam_post_blocked:
       title: "Spam Gönderi Engellendi"
       subject_template: "%{username} adlı yeni kullanıcının gönderileri tekrarlanan bağlantılar nedeniyle engellendi"
@@ -3189,9 +3175,6 @@ tr_TR:
       one: "Dikkat edin: Günlük en fazla %{count} e-posta gönderiyoruz. Bekletilenleri görmek için siteyi kontrol edin."
       other: "Dikkat edin: Günlük en fazla %{count} e-posta gönderiyoruz. Bekletilebilecek olanları görmek için siteyi kontrol edin. Not: Popüler olduğunuz için teşekkürler!"
     in_reply_to: "Yanıt Olarak"
-    unsubscribe:
-      title: "Aboneliği İptal Et"
-      description: "Bu e-postaları almak istemiyor musunuz? Sorun değil! Anında abonelikten çıkmak için aşağıya tıklayın:"
     reply_by_email: "Yanıt vermek için [konuyu ziyaret edin](%{base_url}%{url}) veya bu e-postaya yanıt verin."
     reply_by_email_pm: "%{participants} adlı katılımcıya yanıt vermek için [mesajı ziyaret edin](%{base_url}%{url}) veya bu e-postaya yanıt verin."
     only_reply_by_email: "Yanıt vermek için bu e-postayı yanıtlayın."
@@ -3488,7 +3471,6 @@ tr_TR:
       liked_received: "Alınan Beğeniler"
       new_users: "Yeni Kullanıcılar"
       popular_topics: "Popüler Konular"
-      follow_topic: "Bu konuyu takip et"
       join_the_discussion: "Devamını Okuyun"
       popular_posts: "Popüler Gönderiler"
       more_new: "Sizin için yeni"
@@ -3666,8 +3648,6 @@ tr_TR:
     welcome_message_invite_only: |
       ##[%{title} başlığına hoş geldiniz](#hoşgeldiniz)
       Bir hesap gerekli. Lütfen devam etmek mevcut bir üyeden davet isteyin veya giriş yapın.
-  deleted: "silindi"
-  image: "görüntü"
   upload:
     edit_reason: "görüntülerin yerel kopyaları indirildi"
     unauthorized: "Üzgünüz, yüklemeye çalıştığınız dosyaya izin verilmiyor (izin verilen uzantılar: %{authorized_extensions})."
@@ -4292,7 +4272,6 @@ tr_TR:
           <p>İyi eğlenceler ve <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'> yeni topluluğunuzu oluştururken</a></p> iyi şanslar!
   search_logs:
     graph_title: "Arama Sayısı"
-  joined: "Katıldı"
   discourse_push_notifications:
     popup:
       mentioned: '%{username}, "%{topic}" konusunda sizden bahsetti - %{site_title}'

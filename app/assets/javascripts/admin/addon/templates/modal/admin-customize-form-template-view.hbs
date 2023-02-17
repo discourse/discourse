@@ -1,0 +1,22 @@
+<DModalBody @rawTitle={{this.model.name}}>
+  <HighlightedCode @lang="yaml" @code={{this.model.template}} />
+  {{! ? TODO(@keegan): Perhaps add what places (ex. categories) the templates are active in }}
+</DModalBody>
+<div class="modal-footer">
+  <DButton
+    class="btn-primary"
+    @action={{this.editTemplate}}
+    @icon="pencil-alt"
+    @label="admin.form_templates.view_template.edit"
+  />
+  <DButton
+    @action={{route-action "closeModal"}}
+    @label="admin.form_templates.view_template.close"
+  />
+  <DButton
+    class="btn-danger"
+    @action={{this.deleteTemplate}}
+    @icon="trash-alt"
+    @label="admin.form_templates.view_template.delete"
+  />
+</div>
