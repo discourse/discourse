@@ -1,0 +1,13 @@
+<div
+  class={{concat-class "directory-table" @className}}
+  role="table"
+  aria-label={{@ariaLabel}}
+  style={{@style}}
+>
+  <div class="directory-table__header">
+    {{yield to="header"}}
+  </div>
+  <div class="directory-table__body">
+    {{yield to="body"}}
+  </div>
+</div>

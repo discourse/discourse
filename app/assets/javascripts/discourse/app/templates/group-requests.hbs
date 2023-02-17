@@ -13,8 +13,8 @@
       @selector=".group-members .directory-table__row"
       @action={{action "loadMore"}}
     >
-      <div class="directory-table group-members group-members__requests">
-        <div class="directory-table__header">
+      <ResponsiveTable @className="group-members group-members__requests">
+        <:header>
           <TableHeaderToggle
             @class="username"
             @order={{this.order}}
@@ -33,11 +33,9 @@
           <div class="directory-table__column-header">{{i18n
               "groups.requests.reason"
             }}</div>
-
           <div class="directory-table__column-header"></div>
-        </div>
-
-        <div class="directory-table__body">
+        </:header>
+        <:body>
           {{#each this.model.requesters as |m|}}
             <div class="directory-table__row">
               <div class="directory-table__cell group-member">
@@ -88,13 +86,11 @@
               </div>
             </div>
           {{/each}}
-        </div>
-      </div>
+        </:body>
+      </ResponsiveTable>
     </LoadMore>
-
     <ConditionalLoadingSpinner @condition={{this.loading}} />
   {{else}}
     <div>{{i18n "groups.empty.requests"}}</div>
   {{/if}}
-
 </section>

@@ -35,13 +35,13 @@
       @selector=".group-members .directory-table-row"
       @action={{action "loadMore"}}
     >
-      <div
-        class="directory-table group-members
+
+      <ResponsiveTable
+        @className="group-members
           {{if this.isBulk 'sticky-header' ''}}
           {{if this.canManageGroup 'group-members--can-manage' ''}}"
       >
-        <div class="directory-table__header">
-
+        <:header>
           <TableHeaderToggle
             @order={{this.order}}
             @asc={{this.asc}}
@@ -113,9 +113,9 @@
           {{#if this.canManageGroup}}
             <div class="directory-table__column-header"></div>
           {{/if}}
-        </div>
+        </:header>
 
-        <div class="directory-table__body">
+        <:body>
           {{#each this.model.members as |m|}}
             <div class="directory-table__row">
 
@@ -188,8 +188,10 @@
               {{/if}}
             </div>
           {{/each}}
-        </div>
-      </div>
+        </:body>
+
+      </ResponsiveTable>
+
     </LoadMore>
 
     <ConditionalLoadingSpinner @condition={{this.loading}} />

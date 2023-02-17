@@ -30,11 +30,11 @@
   @action={{action "loadMore"}}
 >
   {{#if this.model}}
-    <div
-      class="directory-table users-list"
-      role="table"
-      aria-label={{this.title}}
-      style={{html-safe
+
+    <ResponsiveTable
+      @className="users-list"
+      @aria-label={{this.title}}
+      @style={{html-safe
         (concat
           "grid-template-columns: minmax(min-content, 2fr) repeat("
           (html-safe this.columnCount)
@@ -42,7 +42,8 @@
         )
       }}
     >
-      <div class="directory-table__header">
+
+      <:header>
         <TableHeaderToggle
           @class="directory-table__column-header--username"
           @field="username"
@@ -117,8 +118,9 @@
         {{/if}}
         <div class="directory-table__column-header">&nbsp;</div>
 
-      </div>
-      <div class="directory-table__body">
+      </:header>
+
+      <:body>
         {{#each this.model as |user|}}
           <div
             class="user
@@ -237,8 +239,10 @@
             </div>
           </div>
         {{/each}}
-      </div>
-    </div>
+      </:body>
+
+    </ResponsiveTable>
+
     <ConditionalLoadingSpinner @condition={{this.refreshing}} />
   {{else}}
     <p>{{i18n "search.no_results"}}</p>

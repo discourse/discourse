@@ -1,8 +1,8 @@
 <div class="directory-table-top-scroll">
   <div class="directory-table-top-scroll-fake-content"></div>
 </div>
-<div class="directory-table">
-  <div class="directory-table__header">
+<ResponsiveTable>
+  <:header>
     <TableHeaderToggle
       @field="username"
       @order={{this.order}}
@@ -26,9 +26,8 @@
           {{i18n "directory.time_read"}}
         </div>
       </div>
-    {{/if}}
-  </div>
-  <div class="directory-table__body">
+    {{/if}}</:header>
+  <:body>
     {{#each this.items as |item|}}
       <DirectoryItem
         @item={{item}}
@@ -36,5 +35,5 @@
         @showTimeRead={{this.showTimeRead}}
       />
     {{/each}}
-  </div>
-</div>
+  </:body>
+</ResponsiveTable>
