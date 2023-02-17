@@ -373,7 +373,6 @@ const SiteHeaderComponent = MountWidget.extend(
         return;
       }
 
-      const windowWidth = document.body.offsetWidth;
       const viewMode =
         this.site.mobileView || this.site.narrowDesktopView
           ? "slide-in"
@@ -382,9 +381,6 @@ const SiteHeaderComponent = MountWidget.extend(
       menuPanels.forEach((panel) => {
         const headerCloak = document.querySelector(".header-cloak");
         let width = parseInt(panel.getAttribute("data-max-width"), 10) || 300;
-        if (windowWidth - width < 50) {
-          width = windowWidth - 50;
-        }
         if (this._panMenuOffset) {
           this._panMenuOffset = -width;
         }
@@ -398,10 +394,10 @@ const SiteHeaderComponent = MountWidget.extend(
             panel.parentElement.classList.contains(this._leftMenuClass())
           ) {
             this._panMenuOrigin = "left";
-            panel.style.setProperty("--offset", `${-windowWidth}px`);
+            panel.style.setProperty("--offset", `-100vw`);
           } else {
             this._panMenuOrigin = "right";
-            panel.style.setProperty("--offset", `${windowWidth}px`);
+            panel.style.setProperty("--offset", `100vw`);
           }
           headerCloak.style.setProperty("--opacity", 0);
         }
