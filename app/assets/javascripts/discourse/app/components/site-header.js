@@ -67,13 +67,16 @@ const SiteHeaderComponent = MountWidget.extend(
     },
 
     _animateClosing(panel, menuOrigin) {
-      const windowWidth = document.body.offsetWidth;
       this._animate = true;
       const headerCloak = document.querySelector(".header-cloak");
       panel.classList.add("animate");
       headerCloak.classList.add("animate");
-      const offsetDirection = menuOrigin === "left" ? -1 : 1;
-      panel.style.setProperty("--offset", `${offsetDirection * windowWidth}px`);
+      if (menuOrigin === "left") {
+        panel.style.setProperty("--offset", `-100vw`);
+      } else {
+        panel.style.setProperty("--offset", `100vw`);
+      }
+
       headerCloak.style.setProperty("--opacity", 0);
       this._scheduledRemoveAnimate = discourseLater(() => {
         panel.classList.remove("animate");
