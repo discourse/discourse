@@ -206,14 +206,13 @@
 // add staff color
 .moderator {
   .regular > .cooked {
-    //background-color: var(--highlight-low-or-medium);
     background-color: var(--highlight-bg);
   }
   .clearfix > .topic-meta-data > .names {
     span.user-title {
       color: var(--primary-high-or-secondary-low);
       a {
-        background-color: var(--highlight-low-or-medium);
+        background-color: var(--highlight-bg);
         padding-left: 4px;
         padding-right: 4px;
       }
