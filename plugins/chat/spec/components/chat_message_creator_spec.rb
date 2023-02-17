@@ -351,6 +351,20 @@ describe Chat::ChatMessageCreator do
       )
     end
 
+    it "creates mentions for suspended users" do
+      user2.update(suspended_till: Time.now + 10.years)
+
+      message =
+        Chat::ChatMessageCreator.create(
+          chat_channel: direct_message_channel,
+          user: user1,
+          content: "hello @#{user2.username}",
+        ).chat_message
+
+      mention = user2.chat_mentions.where(chat_message: message).first
+      expect(mention).to be_present
+    end
+
     it "does not create mention notifications for suspended users" do
       user2.update(suspended_till: Time.now + 10.years)
 

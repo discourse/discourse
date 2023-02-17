@@ -145,6 +145,7 @@ class Chat::ChatNotifier
     if has_all_mention && @chat_channel.allow_channel_wide_mentions && !skip
       to_notify[:global_mentions] = @mentions
         .global_mentions
+        .not_suspended
         .where(user_options: { ignore_channel_wide_mention: [false, nil] })
         .where.not(id: already_covered_ids)
         .pluck(:id)
@@ -161,6 +162,7 @@ class Chat::ChatNotifier
     if has_here_mention && @chat_channel.allow_channel_wide_mentions && !skip
       to_notify[:here_mentions] = @mentions
         .here_mentions
+        .not_suspended
         .where(user_options: { ignore_channel_wide_mention: [false, nil] })
         .where.not(id: already_covered_ids)
         .pluck(:id)
@@ -198,7 +200,7 @@ class Chat::ChatNotifier
     if skip
       direct_mentions = []
     else
-      direct_mentions = @mentions.direct_mentions.where.not(id: already_covered_ids)
+      direct_mentions = @mentions.direct_mentions.not_suspended.where.not(id: already_covered_ids)
     end
 
     grouped = group_users_to_notify(direct_mentions)
@@ -215,6 +217,7 @@ class Chat::ChatNotifier
     reached_by_group =
       @mentions
         .group_mentions
+        .not_suspended
         .where("user_count <= ?", SiteSetting.max_users_notified_per_group_mention)
         .where.not(id: already_covered_ids)
 

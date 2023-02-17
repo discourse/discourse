@@ -79,7 +79,6 @@ class Chat::ChatMessageMentions
       .joins("LEFT OUTER JOIN user_chat_channel_memberships uccm ON uccm.user_id = users.id")
       .joins(:user_option)
       .real
-      .not_suspended
       .where(user_options: { chat_enabled: true })
       .where.not(username_lower: @message.user.username.downcase)
   end
