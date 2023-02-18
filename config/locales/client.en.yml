@@ -5548,9 +5548,12 @@ en:
           upload: "Upload a file"
           multiselect: "Multiple choice"
         edit_category:
-          toggle_freeform: "Switch to freeform template"
-          toggle_form_template: "Switch to form template"
+          toggle_freeform: "form template disabled"
+          toggle_form_template: "form template enabled"
           select_template: "Select form templates"
+          select_template_help:
+            info: "Create or edit form templates at"
+            path: "Customize / Form Templates"
 
       impersonate:
         title: "Impersonate"

@@ -1,4 +1,13 @@
 {{#if this.siteSettings.experimental_form_templates}}
+  <div class="control-group">
+    <DToggleSwitch
+      @state={{this.showFormTemplate}}
+      @label={{this.templateTypeToggleLabel}}
+      {{on "click" this.toggleTemplateType}}
+    />
+
+  </div>
+
   {{#if this.showFormTemplate}}
     <div class="control-group">
       <MultiSelect
@@ -10,33 +19,22 @@
           none="admin.form_templates.edit_category.select_template"
         }}
       />
+
+      <p class="desc">
+        {{i18n "admin.form_templates.edit_category.select_template_help.info"}}
+        <LinkTo @route="adminCustomizeFormTemplates">
+          {{i18n
+            "admin.form_templates.edit_category.select_template_help.path"
+          }}
+        </LinkTo>
+      </p>
     </div>
-
-    {{#each this.selectedFormTemplates as |t|}}
-      <div class="selected-category-template">
-        <p>{{t.name}}</p>
-        <pre>
-          <code class="yaml hljs language-yaml">{{t.template}}</code>
-        </pre>
-        {{! TODO(@keegan): Fix <HiglightedCode> only rendering once }}
-        {{!-- <HighlightedCode @lang="yaml" @code={{this.templateContent}} /> --}}
-      </div>
-    {{/each}}
-
   {{else}}
     <DEditor
       @value={{this.category.topic_template}}
       @showLink={{this.showInsertLinkButton}}
     />
   {{/if}}
-
-  <div class="edit-category-tab-topic-template__footer">
-    <DButton
-      @class="btn-flat btn-text btn-toggle-template-type"
-      @label={{this.templateTypeToggleLabel}}
-      @action={{this.toggleTemplateType}}
-    />
-  </div>
 {{else}}
   <DEditor
     @value={{this.category.topic_template}}
