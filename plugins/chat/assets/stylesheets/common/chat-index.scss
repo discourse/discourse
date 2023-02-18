@@ -1,5 +1,6 @@
 .channels-list {
   overflow-y: auto;
+  overscroll-behavior: contain;
   height: 100%;
   padding-bottom: env(safe-area-inset-bottom);
   position: relative;
