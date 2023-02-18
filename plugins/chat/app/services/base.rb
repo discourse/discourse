@@ -407,18 +407,19 @@ module Chat
         @context = Context.build(initial_context.merge(__steps__: self.class.steps))
       end
 
-      private
-
+      # @!visibility private
       def run
         run!
       rescue Failure => exception
         raise if context.object_id != exception.context.object_id
       end
 
+      # @!visibility private
       def run!
         self.class.steps.each { |step| step.call(self, context) }
       end
 
+      # @!visibility private
       def fail!(message)
         step_name = caller_locations(1, 1)[0].label
         context["result.step.#{step_name}"].fail(error: message)
