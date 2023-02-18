@@ -388,6 +388,7 @@ const SiteHeaderComponent = MountWidget.extend(
         panel.classList.remove("drop-down");
         panel.classList.remove("slide-in");
         panel.classList.add(viewMode);
+
         if (this._animate || this._panMenuOffset !== 0) {
           if (
             (this.site.mobileView || this.site.narrowDesktopView) &&
@@ -402,53 +403,8 @@ const SiteHeaderComponent = MountWidget.extend(
           headerCloak.style.setProperty("--opacity", 0);
         }
 
-        const panelBody = panel.querySelector(".panel-body");
-
-        // We use a mutationObserver to check for style changes, so it's important
-        // we don't set it if it doesn't change. Same goes for the panelBody!
-
-        if (!this.site.mobileView && !this.site.narrowDesktopView) {
-          const buttonPanel = document.querySelectorAll("header ul.icons");
-          if (buttonPanel.length === 0) {
-            return;
-          }
-
-          // These values need to be set here, not in the css file - this is to deal with the
-          // possibility of the window being resized and the menu changing from .slide-in to .drop-down.
-          ensureElementStyle(panel, "top", "100%");
-          ensureElementStyle(panel, "height", "auto");
-        } else {
+        if (viewMode === "slide-in") {
           headerCloak.style.display = "block";
-
-          let heightReduction = 0;
-
-          if (!this.currentUser?.redesigned_user_menu_enabled) {
-            heightReduction += 16;
-          }
-
-          const isIPadApp = document.body.classList.contains("footer-nav-ipad"),
-            heightProp = isIPadApp ? "max-height" : "height";
-
-          if (isIPadApp) {
-            heightReduction += 10;
-          }
-
-          ensureElementStyle(panelBody, "height", "100%");
-          ensureElementStyle(panel, "top", `var(--header-top)`);
-          ensureElementStyle(
-            panel,
-            heightProp,
-            `calc(100dvh - var(--header-top) - ${heightReduction}px)`
-          );
-          if (headerCloak) {
-            ensureElementStyle(headerCloak, "top", `var(--header-top)`);
-          }
-        }
-
-        // TODO: remove the if condition when redesigned_user_menu_enabled is
-        // removed
-        if (!panel.classList.contains("revamped")) {
-          panel.style.setProperty("width", `${width}px`);
         }
         if (this._animate) {
           this._animateOpening(panel);
@@ -525,9 +481,3 @@ export default SiteHeaderComponent.extend({
     this.appEvents.off("site-header:force-refresh", this, "queueRerender");
   },
 });
-
-function ensureElementStyle(element, property, value) {
-  if (element.style[property] !== value) {
-    element.style.setProperty(property, value);
-  }
-}
