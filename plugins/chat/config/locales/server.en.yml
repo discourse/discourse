@@ -127,9 +127,11 @@ en:
         one: "@%{acting_username} moved a message to the [%{channel_name}](%{first_moved_message_url}) channel."
         other: "@%{acting_username} moved %{count} messages to the [%{channel_name}](%{first_moved_message_url}) channel."
       dm_title:
-        single_user: "%{user}"
-        multi_user: "%{users}"
-        multi_user_truncated: "%{users} and %{leftover} others"
+        single_user: "%{username}"
+        multi_user: "%{comma_separated_usernames}"
+        multi_user_truncated:
+          one: "%{comma_separated_usernames} and %{count} other"
+          other: "%{comma_separated_usernames} and %{count} others"
 
     category_channel:
       errors:
