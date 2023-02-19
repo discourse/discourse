@@ -2191,10 +2191,10 @@ search:
     default: false
     hidden: true
   prioritize_exact_search_title_match:
-    default: false
+    default: true
     hidden: true
   max_duplicate_search_index_terms:
-    default: -1
+    default: 6
     hidden: true
   use_pg_headlines_for_excerpt:
     default: false
