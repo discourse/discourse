@@ -103,20 +103,40 @@ export default class CreateChannelController extends Controller.extend(
 
   _updateAutoJoinConfirmWarning(category, catPermissions) {
     const allowedGroups = catPermissions.allowed_groups;
+    let warning;
 
     if (catPermissions.private) {
-      const warningTranslationKey =
-        allowedGroups.length < 3 ? "warning_groups" : "warning_multiple_groups";
-
-      this.set(
-        "autoJoinWarning",
-        I18n.t(`chat.create_channel.auto_join_users.${warningTranslationKey}`, {
-          members_count: catPermissions.members_count,
-          group: escapeExpression(allowedGroups[0]),
-          group_2: escapeExpression(allowedGroups[1]),
-          count: allowedGroups.length,
-        })
-      );
+      switch (allowedGroups.length) {
+        case 1:
+          warning = I18n.t(
+            "chat.create_channel.auto_join_users.warning_1_group",
+            {
+              count: catPermissions.members_count,
+              group: escapeExpression(allowedGroups[0]),
+            }
+          );
+          break;
+        case 2:
+          warning = I18n.t(
+            "chat.create_channel.auto_join_users.warning_2_groups",
+            {
+              count: catPermissions.members_count,
+              group1: escapeExpression(allowedGroups[0]),
+              group2: escapeExpression(allowedGroups[1]),
+            }
+          );
+          break;
+        default:
+          warning = I18n.messageFormat(
+            "chat.create_channel.auto_join_users.warning_multiple_groups_MF",
+            {
+              groupCount: allowedGroups.length - 1,
+              userCount: catPermissions.members_count,
+              groupName: escapeExpression(allowedGroups[0]),
+            }
+          );
+          break;
+      }
     } else {
       this.set(
         "autoJoinWarning",
@@ -125,6 +145,8 @@ export default class CreateChannelController extends Controller.extend(
         })
       );
     }
+
+    this.set("autoJoinWarning", warning);
   }
 
   _updatePermissionsHint(category) {

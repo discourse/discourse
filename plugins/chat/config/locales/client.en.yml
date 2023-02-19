@@ -331,10 +331,27 @@ en:
       create_channel:
         auto_join_users:
           public_category_warning: "%{category} is a public category. Automatically add all recently active users to this channel?"
-          warning_groups:
-            one: Automatically add %{members_count} users from %{group}?
-            other: Automatically add %{members_count} users from %{group} and %{group_2}?
-          warning_multiple_groups: Automatically add %{members_count} users from %{group_1} and %{count} others?
+          warning_1_group:
+            one: "Automatically add %{count} user from %{group}?"
+            other: "Automatically add %{count} users from %{group}?"
+          warning_2_groups:
+            one: "Automatically add %{count} user from %{group1} and %{group2}?"
+            other: "Automatically add %{count} users from %{group1} and %{group2}?"
+          warning_multiple_groups_MF: |
+            { groupCount, plural,
+                one {
+                      { userCount, plural,
+                          one {Automatically add {userCount} user from {groupName} and {groupCount} other group?}
+                        other {Automatically add {userCount} users from {groupName} and {groupCount} other group?}
+                      }
+                    }
+              other {
+                      { userCount, plural,
+                          one {Automatically add {userCount} user from {groupName} and {groupCount} other groups?}
+                        other {Automatically add {userCount} users from {groupName} and {groupCount} other groups?}
+                      }
+                    }
+            }
         choose_category:
           label: "Choose a category"
           none: "select one..."
