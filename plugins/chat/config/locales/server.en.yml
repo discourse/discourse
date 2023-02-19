@@ -63,7 +63,7 @@ en:
       channel_cannot_be_archived: "The channel cannot be archived at this time, it must be either closed or open to archive."
       duplicate_message: "You posted an identical message too recently."
       delete_channel_failed: "Delete channel failed, please try again."
-      minim `um_length_not_met:
+      minimum_length_not_met:
         one: "Message is too short, must have a minimum of %{count} character."
         other: "Message is too short, must have a minimum of %{count} characters."
       message_too_long:
