@@ -49,8 +49,14 @@ en:
     deleted_chat_username: deleted
     errors:
       channel_exists_for_category: "A channel already exists for this category and name"
-      channel_new_message_disallowed: "The channel is %{status}, no new messages can be sent"
-      channel_modify_message_disallowed: "The channel is %{status}, no messages can be edited or deleted"
+      channel_new_message_disallowed:
+        archived: "The channel is archived, no new messages can be sent"
+        closed: "The channel is closed, no new messages can be sent"
+        read_only: "The channel is read only, no new messages can be sent"
+      channel_modify_message_disallowed:
+        archived: "The channel is archived, no messages can be edited or deleted"
+        closed: "The channel is closed, no messages can be edited or deleted"
+        read_only: "The channel is read only, no messages can be edited or deleted"
       user_cannot_send_message: "You cannot send messages at this time."
       rate_limit_exceeded: "Exceeded the limit of chat messages that can be sent within 30 seconds"
       auto_silence_from_flags: "Chat message flagged with score high enough to silence user."
@@ -110,11 +116,6 @@ en:
         transcript_title: "Transcript of previous messages in %{channel_name}"
         transcript_body: "To give you more context, we included a transcript of the previous messages in this conversation (up to ten):\n\n%{transcript}"
     channel:
-      statuses:
-        read_only: "Read Only"
-        archived: "Archived"
-        closed: "Closed"
-        open: "Open"
       archive:
         first_post_raw: "This topic is an archive of the [%{channel_name}](%{channel_url}) chat channel."
       messages_moved:

@@ -528,10 +528,7 @@ describe Chat::ChatMessageUpdater do
         updater = update_message(user1)
         expect(updater.failed?).to eq(true)
         expect(updater.error.message).to eq(
-          I18n.t(
-            "chat.errors.channel_modify_message_disallowed",
-            status: public_chat_channel.status_name,
-          ),
+          I18n.t("chat.errors.channel_modify_message_disallowed.closed"),
         )
       end
 
@@ -548,18 +545,12 @@ describe Chat::ChatMessageUpdater do
         updater = update_message(user1)
         expect(updater.failed?).to eq(true)
         expect(updater.error.message).to eq(
-          I18n.t(
-            "chat.errors.channel_modify_message_disallowed",
-            status: public_chat_channel.status_name,
-          ),
+          I18n.t("chat.errors.channel_modify_message_disallowed.read_only"),
         )
         updater = update_message(admin1)
         expect(updater.failed?).to eq(true)
         expect(updater.error.message).to eq(
-          I18n.t(
-            "chat.errors.channel_modify_message_disallowed",
-            status: public_chat_channel.status_name,
-          ),
+          I18n.t("chat.errors.channel_modify_message_disallowed.read_only"),
         )
       end
     end
@@ -571,18 +562,12 @@ describe Chat::ChatMessageUpdater do
         updater = update_message(user1)
         expect(updater.failed?).to eq(true)
         expect(updater.error.message).to eq(
-          I18n.t(
-            "chat.errors.channel_modify_message_disallowed",
-            status: public_chat_channel.status_name,
-          ),
+          I18n.t("chat.errors.channel_modify_message_disallowed.archived"),
         )
         updater = update_message(admin1)
         expect(updater.failed?).to eq(true)
         expect(updater.error.message).to eq(
-          I18n.t(
-            "chat.errors.channel_modify_message_disallowed",
-            status: public_chat_channel.status_name,
-          ),
+          I18n.t("chat.errors.channel_modify_message_disallowed.archived"),
         )
       end
     end
