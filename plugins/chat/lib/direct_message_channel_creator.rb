@@ -30,12 +30,16 @@ module Chat::DirectMessageChannelCreator
     target_users = target_users.reject { |user| user.id == acting_user.id }
 
     if !acting_user.staff? && target_users.size > SiteSetting.chat_max_direct_message_users
-      raise NotAllowed.new(
-              I18n.t(
-                "chat.errors.over_chat_max_direct_message_users",
-                count: SiteSetting.chat_max_direct_message_users + 1, # +1 for the acting_user
-              ),
-            )
+      if SiteSetting.chat_max_direct_message_users == 0
+        raise NotAllowed.new(I18n.t("chat.errors.over_chat_max_direct_message_users_allow_self"))
+      else
+        raise NotAllowed.new(
+                I18n.t(
+                  "chat.errors.over_chat_max_direct_message_users",
+                  count: SiteSetting.chat_max_direct_message_users + 1, # +1 for the acting_user
+                ),
+              )
+      end
     end
   end
 

@@ -63,7 +63,7 @@ en:
       channel_cannot_be_archived: "The channel cannot be archived at this time, it must be either closed or open to archive."
       duplicate_message: "You posted an identical message too recently."
       delete_channel_failed: "Delete channel failed, please try again."
-      minimum_length_not_met:
+      minim `um_length_not_met:
         one: "Message is too short, must have a minimum of %{count} character."
         other: "Message is too short, must have a minimum of %{count} characters."
       message_too_long:
@@ -80,8 +80,9 @@ en:
       actor_disallowed_dms: "You have chosen to prevent users from sending you private and direct messages, so you cannot create new direct messages."
       actor_preventing_target_user_from_dm: "You have chosen to prevent %{username} from sending you private and direct messages, so you cannot create new direct messages to them."
       user_cannot_send_direct_messages: "Sorry, you cannot send direct messages."
+      over_chat_max_direct_message_users_allow_self: "You can only create a direct message with yourself."
       over_chat_max_direct_message_users:
-        one: "You can only create a direct message with yourself."
+        one: "You can't create a direct message with more than %{count} other user."
         other: "You can't create a direct message with more than %{count} other users."
       original_message_not_found: "The ancestor of the message you are replying cannot be found or has been deleted."
     reviewables:
