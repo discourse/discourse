@@ -108,6 +108,7 @@ RSpec.describe "ImportScripts::FluxBB" do
             "[list=1][*]Example list item 1.[/*][*]Example list item 2.[/*][*]Example list item 3.[/*][/list]\n" +
             "[list=a][*]Example list item 1.[/*][*]Example list item 2.[/*][*]Example list item 3.[/*][/list]\n" +
             "[list][*]Example list items[*]with unclosed[*]list item tags[/list]\n" +
+            "[code]Code[/code]\n" +
             "=) =| =( =D :o :lol: :mad: :rolleyes:\n" +
             "=)=) Smiley whitespace=) https://awkward.com?x=D :mad::mad::mad:"
           }
@@ -141,6 +142,7 @@ RSpec.describe "ImportScripts::FluxBB" do
               "<ol><li>\n\nExample list item 1.</li><li>\n\nExample list item 2.</li><li>\n\nExample list item 3.</li></ol>\n" +
               "<ol class=\"alpha\"><li>\n\nExample list item 1.</li><li>\n\nExample list item 2.</li><li>\n\nExample list item 3.</li></ol>\n" +
               "<ul><li>\n\nExample list items<li>\n\nwith unclosed<li>\n\nlist item tags</ul>\n" +
+              "\n```\nCode\n```\n\n" +
               ":) :| :( :D :O :laughing: :rage: :roll_eyes:\n" +
               ":)=) Smiley whitespace=) https://awkward.com?x=D :rage::mad::mad:"
             )
@@ -151,7 +153,6 @@ RSpec.describe "ImportScripts::FluxBB" do
               "[u]Underlined text[/u]\n" +
               "[email]myname@example.com[/email] - email link without link text\n" +
               "[email=myname@example.com]Email link with link text[/email]" +
-              "[code]Code[/code]\n" +
               "[quote=James]This is the text I want to quote.[/quote]\n" +
               "[quote]This is the text I want to quote.[/quote] \n" +
               ":) :| :( :D :O ;) :/ :P :p :cool:"
