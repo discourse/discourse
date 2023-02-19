@@ -261,8 +261,8 @@ class ImportScripts::FluxBB < ImportScripts::Base
     # Inside [list] tags convert [*][/*] to <li></li>
     s.gsub!(/\[list(?:=.)?\](.*?)\[\/list\]/im) do |list_contents|
       list_contents
-        .gsub(/\[\*\](.*?)\[\/\*\]/m, '<li>\1</li>')
-        .gsub(/\[\*\]/m, '<li>') # Unclosed [*] are also allowed
+        .gsub(/\[\*\](.*?)\[\/\*\]/m, "<li>\n\n\\1</li>")
+        .gsub(/\[\*\]/m, "<li>\n\n") # Unclosed [*] are also allowed
     end
     # convert [list] tags to <ul> and [list=1] tags to <ol>
     s.gsub!(/\[list\](.*?)\[\/list\]/im, '<ul>\1</ul>')

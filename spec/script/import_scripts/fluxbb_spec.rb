@@ -137,10 +137,10 @@ RSpec.describe "ImportScripts::FluxBB" do
               "[567](/profile.php?id=567) - Internal link to fluxbb user without link text\n" +
               "<img src=\"http://www.ruby-lang.org/images/header-ruby-logo.png\"/>\n" +
               "<img src=\"http://www.ruby-lang.org/images/header-ruby-logo.png\" alt=\"FluxBB allows alt text\"/>\n" +
-              "<ul><li>Example list item 1.</li><li>Example list item 2.</li><li>Example list item 3.</li></ul>\n" +
-              "<ol><li>Example list item 1.</li><li>Example list item 2.</li><li>Example list item 3.</li></ol>\n" +
-              "<ol class=\"alpha\"><li>Example list item 1.</li><li>Example list item 2.</li><li>Example list item 3.</li></ol>\n" +
-              "<ul><li>Example list items<li>with unclosed<li>list item tags</ul>\n" +
+              "<ul><li>\n\nExample list item 1.</li><li>\n\nExample list item 2.</li><li>\n\nExample list item 3.</li></ul>\n" +
+              "<ol><li>\n\nExample list item 1.</li><li>\n\nExample list item 2.</li><li>\n\nExample list item 3.</li></ol>\n" +
+              "<ol class=\"alpha\"><li>\n\nExample list item 1.</li><li>\n\nExample list item 2.</li><li>\n\nExample list item 3.</li></ol>\n" +
+              "<ul><li>\n\nExample list items<li>\n\nwith unclosed<li>\n\nlist item tags</ul>\n" +
               ":) :| :( :D :O :laughing: :rage: :roll_eyes:\n" +
               ":)=) Smiley whitespace=) https://awkward.com?x=D :rage::mad::mad:"
             )
