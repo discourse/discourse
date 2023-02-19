@@ -181,7 +181,7 @@ GEM
     http_accept_language (2.1.1)
     i18n (1.12.0)
       concurrent-ruby (~> 1.0)
-    image_optim (0.31.2)
+    image_optim (0.31.3)
       exifr (~> 1.2, >= 1.2.2)
       fspath (~> 3.0)
       image_size (>= 1.5, < 4)
