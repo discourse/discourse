@@ -63,8 +63,12 @@ en:
       channel_cannot_be_archived: "The channel cannot be archived at this time, it must be either closed or open to archive."
       duplicate_message: "You posted an identical message too recently."
       delete_channel_failed: "Delete channel failed, please try again."
-      minimum_length_not_met: "Message is too short, must have a minimum of %{minimum} characters."
-      message_too_long: "Message is too long, messages must be a maximum of %{maximum} characters."
+      minimum_length_not_met:
+        one: "Message is too short, must have a minimum of %{count} character."
+        other: "Message is too short, must have a minimum of %{count} characters."
+      message_too_long:
+        one: "Message is too long, messages must be a maximum of %{count} characters."
+        other: "Message is too long, messages must be a maximum of %{count} characters."
       draft_too_long: "Draft is too long."
       max_reactions_limit_reached: "New reactions are not allowed on this message."
       message_move_invalid_channel: "The source and destination channel must be public channels."
