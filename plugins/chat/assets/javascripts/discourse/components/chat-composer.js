@@ -572,11 +572,15 @@ export default Component.extend(TextareaTextManipulation, {
     }
 
     if (chatChannel.isDraft) {
-      return I18n.t("chat.placeholder_start_conversation", {
-        usernames: chatChannel?.chatable?.users?.length
-          ? chatChannel.chatable.users.mapBy("username").join(", ")
-          : "...",
-      });
+      if (chatChannel?.chatable?.users?.length) {
+        return I18n.t("chat.placeholder_start_conversation_users", {
+          usernames: chatChannel.chatable.users
+            .mapBy("username")
+            .join(I18n.t("word_connector.comma")),
+        });
+      } else {
+        return I18n.t("chat.placeholder_start_conversation");
+      }
     }
 
     if (userSilenced) {
@@ -596,14 +600,14 @@ export default Component.extend(TextareaTextManipulation, {
         return I18n.t("chat.placeholder_self");
       }
 
-      return I18n.t("chat.placeholder_others", {
-        messageRecipient: directMessageRecipients
+      return I18n.t("chat.placeholder_users", {
+        commaSeparatedNames: directMessageRecipients
           .map((u) => u.name || `@${u.username}`)
-          .join(", "),
+          .join(I18n.t("word_connector.comma")),
       });
     } else {
-      return I18n.t("chat.placeholder_others", {
-        messageRecipient: `#${chatChannel.title}`,
+      return I18n.t("chat.placeholder_channel", {
+        channelName: `#${chatChannel.title}`,
       });
     }
   },
