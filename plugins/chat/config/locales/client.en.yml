@@ -215,7 +215,10 @@ en:
       placeholder_self: "Jot something down"
       placeholder_channel: "Chat with %{channelName}"
       placeholder_users: "Chat with %{commaSeparatedNames}"
-      placeholder_new_message_disallowed: "Channel is %{status}, you cannot send new messages right now."
+      placeholder_new_message_disallowed:
+        archived: "Channel is archived, you cannot send new messages right now."
+        closed: "Channel is closed, you cannot send new messages right now."
+        read_only: "Channel is read only, you cannot send new messages right now."
       placeholder_silenced: "You cannot send messages at this time."
       placeholder_start_conversation: "Start a conversation with ..."
       placeholder_start_conversation_users: "Start a conversation with %{commaSeparatedUsernames}"

@@ -19,7 +19,6 @@ import { readOnly, reads } from "@ember/object/computed";
 import { SKIP } from "discourse/lib/autocomplete";
 import { Promise } from "rsvp";
 import { translations } from "pretty-text/emoji/data";
-import { channelStatusName } from "discourse/plugins/chat/discourse/models/chat-channel";
 import { setupHashtagAutocomplete } from "discourse/lib/hashtag-autocomplete";
 import {
   chatComposerButtons,
@@ -566,9 +565,9 @@ export default Component.extend(TextareaTextManipulation, {
   @discourseComputed("userSilenced", "chatChannel.{chatable.users.[],id}")
   placeholder(userSilenced, chatChannel) {
     if (!chatChannel.canModifyMessages(this.currentUser)) {
-      return I18n.t("chat.placeholder_new_message_disallowed", {
-        status: channelStatusName(chatChannel.status).toLowerCase(),
-      });
+      return I18n.t(
+        `chat.placeholder_new_message_disallowed.${chatChannel.status}`
+      );
     }
 
     if (chatChannel.isDraft) {
