@@ -354,10 +354,16 @@ en:
 
       reactions:
         only_you: "You reacted with :%{emoji}:"
-        and_others: "You, %{usernames} reacted with :%{emoji}:"
-        only_others: "%{usernames} reacted with :%{emoji}:"
-        others_and_more: "%{usernames} and %{more} others reacted with :%{emoji}:"
-        you_others_and_more: "You, %{usernames} and %{more} others reacted with :%{emoji}:"
+        you_and_single_user: "You and %{username} reacted with :%{emoji}:"
+        you_and_multiple_users: "You, %{commaSeparatedUsernames} and %{username} reacted with :%{emoji}:"
+        you_multiple_users_and_more:
+          one: "You, %{commaSeparatedUsernames} and %{count} other reacted with :%{emoji}:"
+          other: "You, %{commaSeparatedUsernames} and %{count} others reacted with :%{emoji}:"
+        single_user: "%{username} reacted with :%{emoji}:"
+        multiple_users: "%{commaSeparatedUsernames} and %{username} reacted with :%{emoji}:"
+        multiple_users_and_more:
+          one: "%{commaSeparatedUsernames} and %{count} other reacted with :%{emoji}:"
+          other: "%{commaSeparatedUsernames} and %{count} others reacted with :%{emoji}:"
 
       composer:
         toggle_toolbar: "Toggle toolbar"
