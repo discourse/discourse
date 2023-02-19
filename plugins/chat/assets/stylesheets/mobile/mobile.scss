@@ -92,13 +92,6 @@ html.has-full-page-chat {
   }
 }
 
-html.has-full-page-chat body {
-  #main-outlet-wrapper {
-    // restricts the height of the page
-    grid-template-rows: calc(var(--chat-vh, 1vh) * 100 - var(--header-offset));
-  }
-}
-
 .chat-message-separator {
   margin-left: 0;
 }

@@ -518,7 +518,7 @@ export default class ChatMessage extends Component {
     }
 
     this._updateReactionsList(busData.emoji, busData.action, busData.user);
-    this.afterReactionAdded();
+    this.args.afterReactionAdded();
   }
 
   get capabilities() {

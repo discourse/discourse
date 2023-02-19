@@ -15,6 +15,7 @@ ignored:
   bundler:
     - cgi # Ruby (default gem)
     - date # Ruby (default gem)
+    - digest # Ruby (default gem)
     - io-wait # Ruby (default gem)
     - json # Ruby (default gem)
     - net-http # Ruby (default gem)

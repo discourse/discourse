@@ -1,53 +1,59 @@
-import Component from "@ember/component";
+import Component from "@glimmer/component";
+import { getOwner } from "discourse-common/lib/get-owner";
+import { tracked } from "@glimmer/tracking";
 import discourseLater from "discourse-common/lib/later";
 import { action } from "@ember/object";
 import { isTesting } from "discourse-common/config/environment";
 
-export default Component.extend({
-  tagName: "",
-  hasExpandedReply: false,
-  messageActions: null,
+export default class ChatMessageActionsMobile extends Component {
+  @tracked hasExpandedReply = false;
+  @tracked showFadeIn = false;
 
-  didInsertElement() {
-    this._super(...arguments);
+  messageActions = null;
 
-    discourseLater(this._addFadeIn);
+  get capabilities() {
+    return getOwner(this).lookup("capabilities:main");
+  }
+
+  @action
+  fadeAndVibrate() {
+    discourseLater(this.#addFadeIn.bind(this));
 
     if (this.capabilities.canVibrate && !isTesting()) {
       navigator.vibrate(5);
     }
-  },
+  }
 
   @action
   expandReply(event) {
     event.stopPropagation();
-    this.set("hasExpandedReply", true);
-  },
+    this.hasExpandedReply = true;
+  }
 
   @action
   collapseMenu(event) {
     event.stopPropagation();
-    this.onCloseMenu();
-  },
+    this.#onCloseMenu();
+  }
 
   @action
   actAndCloseMenu(fnId) {
     if (fnId === "copyLinkToMessage") {
-      this.messageActionsHandler.copyLink(this.message);
+      this.args.messageActionsHandler.copyLink(this.message);
       return this.onCloseMenu();
     }
 
     if (fnId === "selectMessage") {
-      this.messageActionsHandler.selectMessage(this.message, true);
+      this.args.messageActionsHandler.selectMessage(this.message, true);
       return this.onCloseMenu();
     }
 
-    this.messageActions[fnId]?.();
-    this.onCloseMenu();
-  },
+    this.args.messageActions[fnId]?.();
+    this.#onCloseMenu();
+  }
 
-  onCloseMenu() {
-    this._removeFadeIn();
+  #onCloseMenu() {
+    this.#removeFadeIn();
 
     // we don't want to remove the component right away as it's animating
     // 200 is equal to the duration of the css animation
@@ -58,19 +64,15 @@ export default Component.extend({
 
       // by ensuring we are not hovering any message anymore
       // we also ensure the menu is fully removed
-      this.onHoverMessage?.(null);
+      this.args.onHoverMessage?.(null);
     }, 200);
-  },
+  }
 
-  _addFadeIn() {
-    document
-      .querySelector(".chat-message-actions-backdrop")
-      ?.classList.add("fade-in");
-  },
+  #addFadeIn() {
+    this.showFadeIn = true;
+  }
 
-  _removeFadeIn() {
-    document
-      .querySelector(".chat-message-actions-backdrop")
-      ?.classList?.remove("fade-in");
-  },
-});
+  #removeFadeIn() {
+    this.showFadeIn = false;
+  }
+}

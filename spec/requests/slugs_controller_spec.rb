@@ -24,6 +24,7 @@ RSpec.describe SlugsController do
 
       it "rate limits" do
         RateLimiter.enable
+        RateLimiter.clear_all!
 
         stub_const(SlugsController, "MAX_SLUG_GENERATIONS_PER_MINUTE", 1) do
           post "/slugs.json?name=#{name}"

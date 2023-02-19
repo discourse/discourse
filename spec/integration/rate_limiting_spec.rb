@@ -44,6 +44,8 @@ RSpec.describe "rate limiter integration" do
       expect(response.cookies.has_key?(name)).to eq(true)
       expect(response.cookies[name]).to be_nil
     end
+
+    RateLimiter.clear_all!
   end
 
   it "can cleanly limit requests and sets a Retry-After header" do

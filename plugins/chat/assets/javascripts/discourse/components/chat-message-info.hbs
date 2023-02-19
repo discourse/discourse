@@ -1,7 +1,16 @@
-<div class="chat-message-info">
+<div
+  class="chat-message-info"
+  {{did-insert this.trackStatus}}
+  {{will-destroy this.stopTrackingStatus}}
+>
   {{#if @message.chat_webhook_event}}
     {{#if @message.chat_webhook_event.username}}
-      <span class="chat-message-info__username {{this.usernameClasses}}">
+      <span
+        class={{concat-class
+          "chat-message-info__username"
+          this.usernameClasses
+        }}
+      >
         {{@message.chat_webhook_event.username}}
       </span>
     {{/if}}
@@ -12,7 +21,11 @@
   {{else}}
     <span
       role="button"
-      class="chat-message-info__username {{this.usernameClasses}} clickable"
+      class={{concat-class
+        "chat-message-info__username"
+        this.usernameClasses
+        "clickable"
+      }}
       data-user-card={{@message.user.username}}
     >
       <span class="chat-message-info__username__name">{{this.name}}</span>

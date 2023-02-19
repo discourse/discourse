@@ -11,6 +11,13 @@ module Chat
     #
     # Currently, there are 5 types of steps:
     #
+    # * +contract(name = :default)+: used to validate the input parameters,
+    #   typically provided by a user calling an endpoint. A special embedded
+    #   +Contract+ class has to be defined to holds the validations. If the
+    #   validations fail, the step will fail. Otherwise, the resulting contract
+    #   will be available in +context[:contract]+. When calling +step(name)+ or
+    #   +model(name = :model)+ methods after validating a contract, the contract
+    #   should be used as an argument instead of context attributes.
     # * +model(name = :model)+: used to instantiate a model (either by building
     #   it or fetching it from the DB). If a falsy value is returned, then the
     #   step will fail. Otherwise the resulting object will be assigned in
@@ -18,11 +25,6 @@ module Chat
     # * +policy(name = :default)+: used to perform a check on the state of the
     #   system. Typically used to run guardians. If a falsy value is returned,
     #   the step will fail.
-    # * +contract(name = :default)+: used to validate the input parameters,
-    #   typically provided by a user calling an endpoint. A special embedded
-    #   +Contract+ class has to be defined to holds the validations. If the
-    #   validations fail, the step will fail. Otherwise, the resulting contract
-    #   will be available in +context[:contract]+.
     # * +step(name)+: used to run small snippets of arbitrary code. The step
     #   doesn’t care about its return value, so to mark the service as failed,
     #   {#fail!} has to be called explicitly.
@@ -34,7 +36,7 @@ module Chat
     # whatever reason a key isn’t found in the current context, then Ruby will
     # raise an exception when the method is called.
     #
-    # Regarding contract classes, they have automatically {ActiveModel} modules
+    # Regarding contract classes, they automatically have {ActiveModel} modules
     # included so all the {ActiveModel} API is available.
     #
     # @example An example from the {TrashChannel} service
@@ -405,18 +407,19 @@ module Chat
         @context = Context.build(initial_context.merge(__steps__: self.class.steps))
       end
 
-      private
-
+      # @!visibility private
       def run
         run!
       rescue Failure => exception
         raise if context.object_id != exception.context.object_id
       end
 
+      # @!visibility private
       def run!
         self.class.steps.each { |step| step.call(self, context) }
       end
 
+      # @!visibility private
       def fail!(message)
         step_name = caller_locations(1, 1)[0].label
         context["result.step.#{step_name}"].fail(error: message)
