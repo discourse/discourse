@@ -2,6 +2,50 @@
 // format with special handling for text and so on
 const TEXT_CODE_CLASSES = ["text", "pre", "plain"];
 
+// Built manually from the highlight.js library using
+// let aliases = {};
+// hljs.listLanguages().forEach((lang) => {
+//   aliases[lang] = hljs.getLanguage(lang).aliases;
+// });
+const HLJS_ALIASES = {
+  bash: ["sh"],
+  c: ["h"],
+  cpp: ["cc", "c++", "h++", "hpp", "hh", "hxx", "cxx"],
+  csharp: ["cs", "c#"],
+  diff: ["patch"],
+  go: ["golang"],
+  graphql: ["gql"],
+  ini: ["toml"],
+  java: ["jsp"],
+  javascript: ["js", "jsx", "mjs", "cjs"],
+  kotlin: ["kt", "kts"],
+  makefile: ["mk", "mak", "make"],
+  markdown: ["md", "mkdown", "mkd"],
+  objectivec: ["mm", "objc", "obj-c", "obj-c++", "objective-c++"],
+  perl: ["pl", "pm"],
+  plaintext: ["text", "txt"],
+  python: ["py", "gyp", "ipython"],
+  "python-repl": ["pycon"],
+  ruby: ["rb", "gemspec", "podspec", "thor", "irb"],
+  rust: ["rs"],
+  shell: ["console", "shellsession"],
+  typescript: ["ts", "tsx"],
+  vbnet: ["vb"],
+  xml: [
+    "html",
+    "xhtml",
+    "rss",
+    "atom",
+    "xjb",
+    "xsd",
+    "xsl",
+    "plist",
+    "wsf",
+    "svg",
+  ],
+  yaml: ["yml"],
+};
+
 function extractTokenInfo(info, md) {
   if (!info) {
     return;
@@ -77,10 +121,20 @@ function render(tokens, idx, options, env, slf, md) {
 
 export function setup(helper) {
   helper.registerOptions((opts, siteSettings) => {
-    opts.defaultCodeLang = siteSettings.default_code_lang;
-    opts.acceptableCodeClasses = (siteSettings.highlighted_languages || "")
+    const languages = (siteSettings.highlighted_languages || "")
       .split("|")
-      .filter(Boolean)
+      .filter(Boolean);
+    const languageAliases = [];
+
+    languages.forEach((lang) => {
+      if (HLJS_ALIASES[lang]) {
+        languageAliases.push(HLJS_ALIASES[lang]);
+      }
+    });
+
+    opts.defaultCodeLang = siteSettings.default_code_lang;
+    opts.acceptableCodeClasses = languages
+      .concat(languageAliases.flat())
       .concat(["auto", "plaintext"]);
   });
 
