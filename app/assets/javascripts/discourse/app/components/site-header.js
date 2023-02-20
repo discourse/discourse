@@ -443,13 +443,15 @@ export default SiteHeaderComponent.extend({
     if (headerWrap) {
       schedule("afterRender", () => {
         header = headerWrap.querySelector("header.d-header");
+        const headerOffset = headerWrap.offsetHeight;
+        const headerTop = header.offsetTop;
         document.documentElement.style.setProperty(
           "--header-offset",
-          `${headerWrap.offsetHeight}px`
+          `${headerOffset}px`
         );
         document.documentElement.style.setProperty(
           "--header-top",
-          `${header.offsetTop}px`
+          `${headerTop}px`
         );
       });
     }
@@ -458,13 +460,15 @@ export default SiteHeaderComponent.extend({
       this._resizeObserver = new ResizeObserver((entries) => {
         for (let entry of entries) {
           if (entry.contentRect) {
+            const headerOffset = entry.contentRect.height;
+            const headerTop = header.offsetTop;
             document.documentElement.style.setProperty(
               "--header-offset",
-              entry.contentRect.height + "px"
+              `${headerOffset}px`
             );
             document.documentElement.style.setProperty(
               "--header-top",
-              `${header.offsetTop}px`
+              `${headerTop}px`
             );
           }
         }
