@@ -6,9 +6,10 @@ import { isDocumentRTL } from "discourse/lib/text-direction";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 
-export default Component.extend({
-  warning: null,
+export default class AdminThemeEditor extends Component {
+  warning = null;
 
+  @fmt("fieldName", "currentTargetName", "%@|%@") editorId;
   @discourseComputed("theme.targets", "onlyOverridden", "showAdvanced")
   visibleTargets(targets, onlyOverridden, showAdvanced) {
     return targets.filter((target) => {
@@ -20,7 +21,7 @@ export default Component.extend({
       }
       return target.edited;
     });
-  },
+  }
 
   @discourseComputed("currentTargetName", "onlyOverridden", "theme.fields")
   visibleFields(targetName, onlyOverridden, fields) {
@@ -29,7 +30,7 @@ export default Component.extend({
       fields = fields.filter((field) => field.edited);
     }
     return fields;
-  },
+  }
 
   @discourseComputed("currentTargetName", "fieldName")
   activeSectionMode(targetName, fieldName) {
@@ -43,7 +44,7 @@ export default Component.extend({
       return "scss";
     }
     return fieldName && fieldName.includes("scss") ? "scss" : "html";
-  },
+  }
 
   @discourseComputed("currentTargetName", "fieldName")
   placeholder(targetName, fieldName) {
@@ -58,30 +59,27 @@ export default Component.extend({
       });
     }
     return "";
-  },
+  }
 
   @discourseComputed("fieldName", "currentTargetName", "theme")
-  activeSection: {
-    get(fieldName, target, model) {
-      return model.getField(target, fieldName);
-    },
-    set(value, fieldName, target, model) {
-      model.setField(target, fieldName, value);
-      return value;
-    },
-  },
+  get activeSection() {
+    return this.model.getField(this.currentTargetName, this.fieldName);
+  }
 
-  editorId: fmt("fieldName", "currentTargetName", "%@|%@"),
+  set activeSection(value) {
+    this.theme.setField(this.fieldName, value);
+    return value;
+  }
 
   @discourseComputed("maximized")
   maximizeIcon(maximized) {
     return maximized ? "discourse-compress" : "discourse-expand";
-  },
+  }
 
   @discourseComputed("currentTargetName", "theme.targets")
   showAddField(currentTargetName, targets) {
     return targets.find((t) => t.name === currentTargetName).customNames;
-  },
+  }
 
   @discourseComputed(
     "currentTargetName",
@@ -90,52 +88,55 @@ export default Component.extend({
   )
   error(target, fieldName) {
     return this.theme.getError(target, fieldName);
-  },
+  }
 
   @action
   toggleShowAdvanced(event) {
     event?.preventDefault();
     this.toggleProperty("showAdvanced");
-  },
+  }
 
   @action
   toggleAddField(event) {
     event?.preventDefault();
     this.toggleProperty("addingField");
-  },
+  }
 
   @action
   toggleMaximize(event) {
     event?.preventDefault();
     this.toggleProperty("maximized");
     next(() => this.appEvents.trigger("ace:resize"));
-  },
+  }
 
-  actions: {
-    cancelAddField() {
-      this.set("addingField", false);
-    },
+  @action
+  cancelAddField() {
+    this.set("addingField", false);
+  }
 
-    addField(name) {
-      if (!name) {
-        return;
-      }
-      name = name.replace(/[^a-zA-Z0-9-_/]/g, "");
-      this.theme.setField(this.currentTargetName, name, "");
-      this.setProperties({ newFieldName: "", addingField: false });
-      this.fieldAdded(this.currentTargetName, name);
-    },
+  @action
+  addField(name) {
+    if (!name) {
+      return;
+    }
+    name = name.replace(/[^a-zA-Z0-9-_/]/g, "");
+    this.theme.setField(this.currentTargetName, name, "");
+    this.setProperties({ newFieldName: "", addingField: false });
+    this.fieldAdded(this.currentTargetName, name);
+  }
 
-    onlyOverriddenChanged(value) {
-      this.onlyOverriddenChanged(value);
-    },
+  @action
+  onlyOverriddenChanged(value) {
+    this.onlyOverriddenChanged(value);
+  }
 
-    save() {
-      this.attrs.save();
-    },
+  @action
+  save() {
+    this.attrs.save();
+  }
 
-    setWarning(message) {
-      this.set("warning", message);
-    },
-  },
-});
+  @action
+  setWarning(message) {
+    this.set("warning", message);
+  }
+}
