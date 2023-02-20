@@ -278,13 +278,12 @@
 .menu-panel {
   .widget-link,
   .categories-link {
-    //where is this used?
     padding: 0.25em 0.5em;
     display: block;
     color: var(--primary);
     &:hover,
     &:focus {
-      background-color: var(--highlight-medium);
+      background-color: var(--d-hover);
       outline: none;
     }
 
