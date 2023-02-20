@@ -1,4 +1,4 @@
-import { HLJS_ALIASES } from "discourse/lib/constants";
+import { HLJS_ALIASES } from "pretty-text/highlightjs-aliases";
 
 // we need a custom renderer for code blocks cause we have a slightly non compliant
 // format with special handling for text and so on

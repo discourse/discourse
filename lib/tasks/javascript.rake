@@ -159,6 +159,29 @@ end
 task "javascript:update_constants" => :environment do
   task_name = "update_constants"
 
+  write_template("discourse/app/lib/constants.js", task_name, <<~JS)
+    export const SEARCH_PRIORITIES = #{Searchable::PRIORITIES.to_json};
+
+    export const SEARCH_PHRASE_REGEXP = '#{Search::PHRASE_MATCH_REGEXP_PATTERN}';
+  JS
+
+  pretty_notifications = Notification.types.map { |n| "  #{n[0]}: #{n[1]}," }.join("\n")
+
+  write_template("discourse/tests/fixtures/concerns/notification-types.js", task_name, <<~JS)
+    export const NOTIFICATION_TYPES = {
+    #{pretty_notifications}
+    };
+  JS
+
+  write_template("pretty-text/addon/emoji/data.js", task_name, <<~JS)
+    export const emojis = #{Emoji.standard.map(&:name).flatten.inspect};
+    export const tonableEmojis = #{Emoji.tonable_emojis.flatten.inspect};
+    export const aliases = #{Emoji.aliases.inspect.gsub("=>", ":")};
+    export const searchAliases = #{Emoji.search_aliases.inspect.gsub("=>", ":")};
+    export const translations = #{Emoji.translations.inspect.gsub("=>", ":")};
+    export const replacements = #{Emoji.unicode_replacements_json};
+  JS
+
   langs = []
   Dir
     .glob("vendor/assets/javascripts/highlightjs/languages/*.min.js")
@@ -179,32 +202,11 @@ task "javascript:update_constants" => :environment do
     aliases;
   JS
 
-  write_template("discourse/app/lib/constants.js", task_name, <<~JS)
-    export const SEARCH_PRIORITIES = #{Searchable::PRIORITIES.to_json};
-
-    export const SEARCH_PHRASE_REGEXP = '#{Search::PHRASE_MATCH_REGEXP_PATTERN}';
-
+  write_template("pretty-text/addon/highlightjs-aliases.js", task_name, <<~JS)
     export const HLJS_ALIASES = #{hljs_aliases.to_json};
   JS
 
   ctx.dispose
-
-  pretty_notifications = Notification.types.map { |n| "  #{n[0]}: #{n[1]}," }.join("\n")
-
-  write_template("discourse/tests/fixtures/concerns/notification-types.js", task_name, <<~JS)
-    export const NOTIFICATION_TYPES = {
-    #{pretty_notifications}
-    };
-  JS
-
-  write_template("pretty-text/addon/emoji/data.js", task_name, <<~JS)
-    export const emojis = #{Emoji.standard.map(&:name).flatten.inspect};
-    export const tonableEmojis = #{Emoji.tonable_emojis.flatten.inspect};
-    export const aliases = #{Emoji.aliases.inspect.gsub("=>", ":")};
-    export const searchAliases = #{Emoji.search_aliases.inspect.gsub("=>", ":")};
-    export const translations = #{Emoji.translations.inspect.gsub("=>", ":")};
-    export const replacements = #{Emoji.unicode_replacements_json};
-  JS
 
   write_template("pretty-text/addon/emoji/version.js", task_name, <<~JS)
     export const IMAGE_VERSION = "#{Emoji::EMOJI_VERSION}";
