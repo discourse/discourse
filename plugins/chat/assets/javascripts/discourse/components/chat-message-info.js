@@ -18,6 +18,7 @@ export default class ChatMessageInfo extends Component {
 
   get usernameClasses() {
     const user = this.#user;
+
     const classes = this.prioritizeName ? ["is-full-name"] : ["is-username"];
     if (!user) {
       return classes;
@@ -30,9 +31,6 @@ export default class ChatMessageInfo extends Component {
     }
     if (user.moderator) {
       classes.push("is-moderator");
-    }
-    if (user.groupModerator) {
-      classes.push("is-category-moderator");
     }
     if (user.new_user) {
       classes.push("is-new-user");

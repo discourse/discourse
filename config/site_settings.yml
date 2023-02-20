@@ -2074,10 +2074,6 @@ developer:
   include_associated_account_ids:
     default: false
     hidden: true
-  enable_experimental_topic_timeline:
-    client: true
-    default: false
-    hidden: true
   experimental_form_templates:
     client: true
     default: false

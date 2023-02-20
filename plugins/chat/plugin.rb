@@ -148,6 +148,7 @@ after_initialize do
   load File.expand_path("../app/models/reviewable_chat_message.rb", __FILE__)
   load File.expand_path("../app/models/chat_view.rb", __FILE__)
   load File.expand_path("../app/models/category_channel.rb", __FILE__)
+  load File.expand_path("../app/serializers/chat_message_user_serializer.rb", __FILE__)
   load File.expand_path("../app/serializers/structured_channel_serializer.rb", __FILE__)
   load File.expand_path("../app/serializers/chat_webhook_event_serializer.rb", __FILE__)
   load File.expand_path("../app/serializers/chat_in_reply_to_serializer.rb", __FILE__)

@@ -84,6 +84,19 @@ RSpec.describe TranslationOverride do
         end
       end
 
+      describe "with valid custom interpolation keys" do
+        it "works" do
+          translation_override =
+            TranslationOverride.upsert!(
+              I18n.locale,
+              "system_messages.welcome_user.text_body_template",
+              "Hello %{name} %{username} %{name_or_username} and welcome to %{site_name}!",
+            )
+
+          expect(translation_override.errors).to be_empty
+        end
+      end
+
       describe "pluralized keys" do
         describe "valid keys" do
           it "converts zero to other" do

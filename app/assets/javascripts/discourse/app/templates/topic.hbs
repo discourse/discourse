@@ -224,70 +224,34 @@
         />
 
         {{#if info.renderTimeline}}
-          {{#if this.siteSettings.enable_experimental_topic_timeline}}
-            <GlimmerTopicTimeline
-              @info={{info}}
-              @model={{this.model}}
-              @replyToPost={{action "replyToPost"}}
-              @showSummary={{action "showSummary"}}
-              @jumpToPostPrompt={{action "jumpToPostPrompt"}}
-              @enteredIndex={{this.enteredIndex}}
-              @prevEvent={{info.prevEvent}}
-              @jumpTop={{action "jumpTop"}}
-              @jumpBottom={{action "jumpBottom"}}
-              @jumpEnd={{action "jumpEnd"}}
-              @jumpToIndex={{action "jumpToIndex"}}
-              @toggleMultiSelect={{action "toggleMultiSelect"}}
-              @showTopicSlowModeUpdate={{route-action
-                "showTopicSlowModeUpdate"
-              }}
-              @deleteTopic={{action "deleteTopic"}}
-              @recoverTopic={{action "recoverTopic"}}
-              @toggleClosed={{action "toggleClosed"}}
-              @toggleArchived={{action "toggleArchived"}}
-              @toggleVisibility={{action "toggleVisibility"}}
-              @showTopicTimerModal={{route-action "showTopicTimerModal"}}
-              @showFeatureTopic={{route-action "showFeatureTopic"}}
-              @showChangeTimestamp={{route-action "showChangeTimestamp"}}
-              @resetBumpDate={{action "resetBumpDate"}}
-              @convertToPublicTopic={{action "convertToPublicTopic"}}
-              @convertToPrivateMessage={{action "convertToPrivateMessage"}}
-              @fullscreen={{info.topicProgressExpanded}}
-              @mobileView={{this.site.mobileView}}
-            />
-          {{else}}
-            <TopicTimeline
-              @topic={{this.model}}
-              @notificationLevel={{this.model.details.notification_level}}
-              @prevEvent={{info.prevEvent}}
-              @fullscreen={{info.topicProgressExpanded}}
-              @enteredIndex={{this.enteredIndex}}
-              @loading={{this.model.postStream.loading}}
-              @jumpToPost={{action "jumpToPost"}}
-              @jumpTop={{action "jumpTop"}}
-              @jumpBottom={{action "jumpBottom"}}
-              @jumpEnd={{action "jumpEnd"}}
-              @jumpToPostPrompt={{action "jumpToPostPrompt"}}
-              @jumpToIndex={{action "jumpToIndex"}}
-              @replyToPost={{action "replyToPost"}}
-              @showSummary={{action "showSummary"}}
-              @toggleMultiSelect={{action "toggleMultiSelect"}}
-              @showTopicSlowModeUpdate={{route-action
-                "showTopicSlowModeUpdate"
-              }}
-              @deleteTopic={{action "deleteTopic"}}
-              @recoverTopic={{action "recoverTopic"}}
-              @toggleClosed={{action "toggleClosed"}}
-              @toggleArchived={{action "toggleArchived"}}
-              @toggleVisibility={{action "toggleVisibility"}}
-              @showTopicTimerModal={{route-action "showTopicTimerModal"}}
-              @showFeatureTopic={{route-action "showFeatureTopic"}}
-              @showChangeTimestamp={{route-action "showChangeTimestamp"}}
-              @resetBumpDate={{action "resetBumpDate"}}
-              @convertToPublicTopic={{action "convertToPublicTopic"}}
-              @convertToPrivateMessage={{action "convertToPrivateMessage"}}
-            />
-          {{/if}}
+          <GlimmerTopicTimeline
+            @info={{info}}
+            @model={{this.model}}
+            @replyToPost={{action "replyToPost"}}
+            @showSummary={{action "showSummary"}}
+            @jumpToPostPrompt={{action "jumpToPostPrompt"}}
+            @enteredIndex={{this.enteredIndex}}
+            @prevEvent={{info.prevEvent}}
+            @jumpTop={{action "jumpTop"}}
+            @jumpBottom={{action "jumpBottom"}}
+            @jumpEnd={{action "jumpEnd"}}
+            @jumpToIndex={{action "jumpToIndex"}}
+            @toggleMultiSelect={{action "toggleMultiSelect"}}
+            @showTopicSlowModeUpdate={{route-action "showTopicSlowModeUpdate"}}
+            @deleteTopic={{action "deleteTopic"}}
+            @recoverTopic={{action "recoverTopic"}}
+            @toggleClosed={{action "toggleClosed"}}
+            @toggleArchived={{action "toggleArchived"}}
+            @toggleVisibility={{action "toggleVisibility"}}
+            @showTopicTimerModal={{route-action "showTopicTimerModal"}}
+            @showFeatureTopic={{route-action "showFeatureTopic"}}
+            @showChangeTimestamp={{route-action "showChangeTimestamp"}}
+            @resetBumpDate={{action "resetBumpDate"}}
+            @convertToPublicTopic={{action "convertToPublicTopic"}}
+            @convertToPrivateMessage={{action "convertToPrivateMessage"}}
+            @fullscreen={{info.topicProgressExpanded}}
+            @mobileView={{this.site.mobileView}}
+          />
         {{else}}
           <TopicProgress
             @prevEvent={{info.prevEvent}}
