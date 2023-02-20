@@ -28,6 +28,8 @@ module Chat
           result = Chat::Service::AutoRemove::OutsideChatAllowedGroups.call(**contract.event_data)
         when :user_removed_from_group
           result = Chat::Service::AutoRemove::UserRemovedFromGroup.call(**contract.event_data)
+        when :category_updated
+          result = Chat::Service::AutoRemove::CategoryUpdated.call(**contract.event_data)
         end
 
         fail!(result.context) if result.failure?

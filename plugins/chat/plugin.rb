@@ -228,6 +228,7 @@ after_initialize do
   load File.expand_path("../app/services/auto_remove_membership_event_handler.rb", __FILE__)
   load File.expand_path("../app/services/auto_remove/outside_chat_allowed_groups.rb", __FILE__)
   load File.expand_path("../app/services/auto_remove/user_removed_from_group.rb", __FILE__)
+  load File.expand_path("../app/services/auto_remove/category_updated.rb", __FILE__)
   load File.expand_path("../app/controllers/api_controller.rb", __FILE__)
   load File.expand_path("../app/controllers/api/chat_channels_controller.rb", __FILE__)
   load File.expand_path("../app/controllers/api/chat_current_user_channels_controller.rb", __FILE__)
@@ -502,7 +503,6 @@ after_initialize do
       Chat::Service::AutoRemoveMembershipEventHandler.call(
         event_type: :chat_allowed_groups_changed,
         event_data: {
-          old_allowed_groups: old_value,
           new_allowed_groups: new_value,
         },
       )
@@ -613,12 +613,12 @@ after_initialize do
         ).enforce_automatic_channel_memberships
       end
 
-      # Chat::AutoRemoveMembershipEventHandler.new(
-      #   event_type: :category_updated,
-      #   event_data: {
-      #     channel: category_channel,
-      #   },
-      # ).call!
+      Chat::Service::AutoRemoveMembershipEventHandler.call(
+        event_type: :category_updated,
+        event_data: {
+          category: category,
+        },
+      )
     end
   end
 

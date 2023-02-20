@@ -10,13 +10,9 @@ module Chat
         step :execute
 
         class Contract
-          attribute :old_allowed_groups
           attribute :new_allowed_groups
 
-          before_validation do
-            self.old_allowed_groups = self.old_allowed_groups.to_s.split("|")
-            self.new_allowed_groups = self.new_allowed_groups.to_s.split("|")
-          end
+          before_validation { self.new_allowed_groups = self.new_allowed_groups.to_s.split("|") }
         end
 
         private
@@ -33,17 +29,18 @@ module Chat
               .distinct
 
           if contract.new_allowed_groups.any?
-            allowed_sql = <<~SQL
+            group_user_sql = <<~SQL
               users.id NOT IN (
                 SELECT DISTINCT group_users.user_id
                 FROM group_users
                 WHERE group_users.group_id IN (#{contract.new_allowed_groups.join(",")})
               )
             SQL
-            users = users.where(allowed_sql)
+            users = users.where(group_user_sql)
           end
 
           user_ids_to_remove = users.pluck(:id)
+          return noop if user_ids_to_remove.empty?
 
           UserChatChannelMembership
             .joins(:chat_channel)
@@ -52,6 +49,10 @@ module Chat
             .delete_all
 
           context.merge(users_removed: user_ids_to_remove.length)
+        end
+
+        def noop
+          context.merge(users_removed: 0)
         end
       end
     end
