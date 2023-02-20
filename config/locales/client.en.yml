@@ -161,6 +161,9 @@ en:
       email: "Send via email"
       url: "Copy and share URL"
 
+    word_connector:
+      comma: ", "
+
     action_codes:
       public_topic: "Made this topic public %{when}"
       open_topic: "Converted this to a topic %{when}"

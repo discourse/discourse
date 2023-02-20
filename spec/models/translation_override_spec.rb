@@ -27,6 +27,7 @@ RSpec.describe TranslationOverride do
             I18n.t(
               "activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys",
               keys: "key, omg",
+              count: 2,
             ),
           )
         end
@@ -61,6 +62,7 @@ RSpec.describe TranslationOverride do
                 I18n.t(
                   "activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys",
                   keys: "something",
+                  count: 1,
                 ),
               )
             end
@@ -78,6 +80,7 @@ RSpec.describe TranslationOverride do
               I18n.t(
                 "activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys",
                 keys: "topic_title_url_encoded",
+                count: 1,
               ),
             )
           end
@@ -132,6 +135,7 @@ RSpec.describe TranslationOverride do
               I18n.t(
                 "activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys",
                 keys: "key3, key4",
+                count: 2,
               ),
             )
           end

@@ -641,7 +641,9 @@ en:
         translation_overrides:
           attributes:
             value:
-              invalid_interpolation_keys: 'The following interpolation key(s) are invalid: "%{keys}"'
+              invalid_interpolation_keys:
+                one: 'The following interpolation key is invalid: %{keys}'
+                other: 'The following interpolation keys are invalid: %{keys}'
         watched_word:
           attributes:
             word:

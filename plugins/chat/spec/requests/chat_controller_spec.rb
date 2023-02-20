@@ -320,7 +320,7 @@ RSpec.describe Chat::ChatController do
         post "/chat/#{chat_channel.id}.json", params: { message: message }
         expect(response.status).to eq(422)
         expect(response.parsed_body["errors"]).to include(
-          I18n.t("chat.errors.channel_new_message_disallowed", status: chat_channel.status_name),
+          I18n.t("chat.errors.channel_new_message_disallowed.closed"),
         )
       end
 
@@ -336,7 +336,7 @@ RSpec.describe Chat::ChatController do
         post "/chat/#{chat_channel.id}.json", params: { message: message }
         expect(response.status).to eq(422)
         expect(response.parsed_body["errors"]).to include(
-          I18n.t("chat.errors.channel_new_message_disallowed", status: chat_channel.status_name),
+          I18n.t("chat.errors.channel_new_message_disallowed.read_only"),
         )
       end
 
@@ -903,7 +903,7 @@ RSpec.describe Chat::ChatController do
       }.not_to change { chat_message.reactions.where(user: user, emoji: emoji).count }
       expect(response.status).to eq(403)
       expect(response.parsed_body["errors"]).to include(
-        I18n.t("chat.errors.channel_modify_message_disallowed", status: chat_channel.status_name),
+        I18n.t("chat.errors.channel_modify_message_disallowed.#{chat_channel.status}"),
       )
     end
 

@@ -55,7 +55,7 @@ RSpec.describe Chat::IncomingChatWebhooksController do
       }.not_to change { ChatMessage.where(chat_channel: chat_channel).count }
       expect(response.status).to eq(422)
       expect(response.parsed_body["errors"]).to include(
-        I18n.t("chat.errors.channel_new_message_disallowed", status: chat_channel.status_name),
+        I18n.t("chat.errors.channel_new_message_disallowed.read_only"),
       )
     end
 

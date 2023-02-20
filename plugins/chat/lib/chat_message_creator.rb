@@ -82,10 +82,7 @@ class Chat::ChatMessageCreator
       raise StandardError.new(I18n.t("chat.errors.user_cannot_send_direct_messages"))
     else
       raise StandardError.new(
-              I18n.t(
-                "chat.errors.channel_new_message_disallowed",
-                status: @chat_channel.status_name,
-              ),
+              I18n.t("chat.errors.channel_new_message_disallowed.#{@chat_channel.status}"),
             )
     end
   end
