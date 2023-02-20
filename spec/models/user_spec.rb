@@ -1938,7 +1938,10 @@ RSpec.describe User do
           .perform(moderator, :agree_and_keep)
 
         post_deferred = Fabricate(:post)
-        PostActionCreator.inappropriate(user, post_deferred).reviewable.perform(moderator, :ignore)
+        PostActionCreator
+          .inappropriate(user, post_deferred)
+          .reviewable
+          .perform(moderator, :ignore_and_do_nothing)
 
         post_disagreed = Fabricate(:post)
         PostActionCreator

@@ -94,7 +94,7 @@ RSpec.describe PostDestroyer do
       expect(reply1.deleted_at).to eq(nil)
 
       # ignore the flag, we should be able to delete the stub
-      reviewable.perform(Discourse.system_user, :ignore)
+      reviewable.perform(Discourse.system_user, :ignore_and_do_nothing)
       PostDestroyer.destroy_stubs
 
       reply1.reload
@@ -938,7 +938,7 @@ RSpec.describe PostDestroyer do
 
     it "should not send the flags_agreed_and_post_deleted message if flags were ignored" do
       expect(ReviewableFlaggedPost.pending.count).to eq(1)
-      flag_result.reviewable.perform(moderator, :ignore)
+      flag_result.reviewable.perform(moderator, :ignore_and_do_nothing)
       second_post.reload
       expect(ReviewableFlaggedPost.pending.count).to eq(0)
 
