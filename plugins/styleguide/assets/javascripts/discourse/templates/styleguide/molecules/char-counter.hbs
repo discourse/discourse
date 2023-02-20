@@ -1,0 +1,10 @@
+<StyleguideExample @title="char-counter">
+  <CharCounter @max="50" @value={{this.charCounterContent}}>
+    <textarea
+      placeholder={{i18n "styleguide.sections.char_counter.placeholder"}}
+      {{on "input" (action (mut this.charCounterContent) value="target.value")}}
+      class="styleguide--char-counter"
+    >
+    </textarea>
+  </CharCounter>
+</StyleguideExample>

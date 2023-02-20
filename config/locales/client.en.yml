@@ -4453,6 +4453,9 @@ en:
 
     until: "Until:"
 
+    char_counter:
+      exceeded: "The maximum number of characters allowed has been exceeded."
+
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
     type_to_filter: "type to filter..."
