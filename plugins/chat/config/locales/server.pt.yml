@@ -34,6 +34,8 @@ pt:
       text_body_template: |
         O arquivamento do canal de chat %{channel_hashtag_or_name} foi concluído com sucesso. As mensagens foram copiadas para o tópico [%{topic_title}](%{topic_url}).
     chat_channel_archive_failed:
+      title: "Falha no Arquivo do Canal de Chat"
+      subject_template: "O arquivo do canal de chat falhou"
       text_body_template: |
         O arquivamento do canal de chat %{channel_hashtag_or_name} falhou. %{messages_archived} mensagens foram arquivadas. As mensagens parcialmente arquivadas foram copiadas para o tópico [%{topic_title}](%{topic_url}). Visite o canal em %{channel_url} para tentar de novo.
     chat_channel_archive_failed_no_topic:

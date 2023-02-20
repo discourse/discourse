@@ -2162,9 +2162,11 @@ nb_NO:
         dismiss_new: "Forkast nye"
         toggle: "slå på/av massevelging av emner"
         actions: "Massehandlinger"
+        change_category: "Velg kategori..."
         close_topics: "Lukk emner"
         archive_topics: "Arkiver emner"
         move_messages_to_inbox: "Flytt til innboks"
+        notification_level: "Varsler..."
         change_notification_level: "Endre varslingsnivå"
         choose_new_category: "Velg den nye kategorien for emnene:"
         selected:
@@ -2393,12 +2395,14 @@ nb_NO:
         open: "Åpne emne"
         close: "Lukk emne"
         multi_select: "Velg innlegg…"
+        slow_mode: "Sett sakte modus..."
         timed_update: "Sett opp tidsbestemt handling for emne…"
         pin: "Fest emne…"
         unpin: "Løsne emne…"
         unarchive: "Opphev arkivering av emne"
         archive: "Arkiver emne"
         reset_read: "Tilbakestill lesedata"
+        make_public: "Gjør til offentlig emne..."
         make_private: "Gjør om til personlig melding"
         reset_bump_date: "Tilbakestille dato emnet ble flyttet øverst"
       feature:
@@ -2682,6 +2686,8 @@ nb_NO:
         rebake: "Generer HTML på nytt"
         publish_page: "Side Publisering"
         unhide: "Vis"
+        change_owner: "Endre eierskap..."
+        grant_badge: "Tildel merke..."
         lock_post: "Lås innlegg"
         lock_post_description: "forhindre innleggsskriveren fra å redigere dette innlegget"
         unlock_post: "Lås opp innlegg"
@@ -2695,6 +2701,8 @@ nb_NO:
         delete_topic_confirm_modal_no: "Nei, behold dette emnet"
         delete_topic_error: "Det oppstod en feil under sletting av emnet"
         delete_topic: "slett emne"
+        add_post_notice: "Legg til medarbeider varsel..."
+        change_post_notice: "Merknad om endring av personalet..."
         delete_post_notice: "Slett personalmerknad"
         remove_timer: "Fjern timer"
         edit_timer: "rediger timeren"
@@ -3425,6 +3433,8 @@ nb_NO:
               content: "Administrator"
             badges:
               content: "Merker"
+            everything:
+              content: "Alt"
             faq:
               content: "O-S-S"
             groups:
@@ -3435,6 +3445,7 @@ nb_NO:
               content: "Mine innlegg"
             review:
               content: "Gjennomgang"
+    until: "Inntil:"
   admin_js:
     type_to_filter: "skriv for å filtrere…"
     admin:
@@ -3597,6 +3608,8 @@ nb_NO:
         user: "Bruker"
         title: "API"
         created: Opprettet
+        updated: Oppdatert
+        never_used: (aldri)
         generate: "Generer API-nøkkel"
         revoke: "Trekk tilbake"
         all_users: "Alle brukere"
@@ -3877,6 +3890,7 @@ nb_NO:
             no_overwrite: "Ugyldig variabelnavn. Kan ikke overskrive en eksisterende variabel."
             must_be_unique: "Ugyldig variabelnavn. Må være unikt."
           upload: "Last opp"
+          discard: "Forkast"
           css_html: "Egendefinert CSS/HTML"
           edit_css_html: "Rediger CSS/HTML"
           edit_css_html_help: "Du har ikke redigert noe CSS eller HTML"
@@ -3884,6 +3898,7 @@ nb_NO:
           import_web_tip: "Pakkebrønn inneholdende drakt"
           is_private: "Drakten er i et privat git repository"
           public_key: "Gi den følgende public keyen tilgang til repoet:"
+          install: "Installer"
           installed: "Installert"
           install_popular: "Populært"
           about_theme: "Om"
@@ -3891,6 +3906,7 @@ nb_NO:
           version: "Versjon:"
           enable: "Aktiver"
           disable: "Deaktiver"
+          disabled: "Denne komponenten har blitt deaktivert."
           update_to_latest: "Oppdater til seneste"
           check_for_updates: "Se etter oppdateringer"
           updating: "Oppdaterer…"
@@ -4538,7 +4554,9 @@ nb_NO:
           dashboard: "Dashbord"
           navigation: "Navigasjon"
         default_categories:
+          modal_description: "Ønsker du å bruke denne endringens historikk? Dette vil endre innstillinger for %{count} eksisterende brukere."
           modal_yes: "Ja"
+          modal_no: "Nei, bare gjelder endring fremover"
       badges:
         title: Merker
         new_badge: Nytt merke

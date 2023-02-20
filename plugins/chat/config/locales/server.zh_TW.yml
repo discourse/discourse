@@ -25,6 +25,8 @@ zh_TW:
           title: "忽略"
     channel:
       statuses:
+        read_only: "唯讀"
+        archived: "已封存"
         closed: "不公開"
         open: "開啟"
   reviewable_score_types:

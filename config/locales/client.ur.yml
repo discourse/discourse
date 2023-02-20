@@ -3645,6 +3645,8 @@ ur:
               content: "ایڈمن"
             badges:
               content: "بَیج"
+            everything:
+              content: "تمام"
             faq:
               content: "عمومی سوالات"
             groups:
@@ -3655,6 +3657,7 @@ ur:
               content: "میری پوسٹ"
             review:
               content: "جائزہ لیں"
+    until: "جب تک:"
   admin_js:
     type_to_filter: "فِلٹر کرنے کے لئے ٹائپ کریں..."
     admin:

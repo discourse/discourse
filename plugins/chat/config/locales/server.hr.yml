@@ -6,6 +6,9 @@
 
 hr:
   system_messages:
+    chat_channel_archive_failed:
+      title: "Arhiva Chat kanala nije uspjela"
+      subject_template: "Arhiva kanala za chat nije uspjela"
     chat_channel_archive_failed_no_topic:
       title: "Arhiva Chat kanala nije uspjela"
       subject_template: "Arhiva kanala za chat nije uspjela"
@@ -27,6 +30,10 @@ hr:
       statuses:
         closed: "Zatvoreno"
         open: "Otvori"
+    category_channel:
+      errors:
+        slug_contains_non_ascii_chars: "sadrži ne-ascii znakove"
+        is_already_in_use: "je već u upotrebi"
   discourse_push_notifications:
     popup:
       chat_mention:
@@ -38,6 +45,7 @@ hr:
       chat_pm_body: "%{link}\n\n%{message}"
   user_notifications:
     chat_summary:
+      deleted_user: "Izbrisani korisnik"
       subject:
         direct_message_from_1: "[%{email_prefix}] Nova poruka od %{username}"
         direct_message_from_2: "[%{email_prefix}] Nova poruka od %{username1} i %{username2}"

@@ -192,6 +192,7 @@ ko:
       direct_messages:
         create: "이동"
         leave: "이 개인 채팅에서 나가기"
+        cannot_create: "죄송합니다. 다이렉트 메시지를 보낼 수 없습니다."
       incoming_webhooks:
         back: "뒤로"
         channel_placeholder: "채널 선택"

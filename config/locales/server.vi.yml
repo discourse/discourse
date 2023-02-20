@@ -145,6 +145,7 @@ vi:
       has_already_been_used: "đã được sử dụng"
       inclusion: không được bao gồm trong danh sách
       invalid: là không hợp lệ
+      is_invalid: "có vẻ không rõ ràng, nó là một câu hoàn chỉnh?"
       invalid_timezone: "'%{tz}' không phải là múi giờ hợp lệ"
       contains_censored_words: "chứa các từ được kiểm duyệt sau: %{censored_words}"
       less_than: phải nhỏ hơn %{count}
@@ -541,6 +542,8 @@ vi:
   post:
     image_placeholder:
       broken: "Hình ảnh này bị hỏng"
+    has_likes:
+      other: "%{count} Lượt thích"
   rate_limiter:
     slow_down: "Bạn đã thực hiện hành động này quá nhiều lần, vui lòng thử lại sau."
     too_many_requests: "Bạn đã thực hiện hành động này quá nhiều lần. Vui lòng đợi %{time_left} trước khi thử lại."
@@ -843,6 +846,7 @@ vi:
       labels:
         term: Thuật ngữ
         searches: Số lần tìm kiếm
+        click_through: CTR
       description: "Các thuật ngữ tìm kiếm phổ biến nhất với tỷ lệ nhấp chuột của họ."
     emails:
       title: "Email đã gửi"
@@ -1631,8 +1635,10 @@ vi:
         ` ``
         [/details]
     flags_agreed_and_post_deleted:
+      title: "Nhân viên đã xóa bài đăng bị gắn cờ"
       subject_template: "Nhân viên đã xóa bài đăng bị gắn cờ"
     flags_agreed_and_post_deleted_for_responders:
+      title: "Trả lời bị xóa khỏi bài đăng bị gắn cờ bởi nhân viên"
       subject_template: "Trả lời bị xóa khỏi bài đăng bị gắn cờ bởi nhân viên"
     welcome_user:
       subject_template: "Chào mừng đến với %{site_name}!"
@@ -1960,6 +1966,7 @@ vi:
     pasted_image_filename: "Hình ảnh được chèn"
     store_failure: "Tải lên lỗi #%{upload_id} cho tài khoản #%{user_id}."
     file_missing: "Xin lỗi, bạn phải cung cấp tập tin để tải lên"
+    size_zero_failure: "Rất tiếc, có vẻ như đã xảy ra sự cố, tệp bạn đang cố tải lên có dung lượng là 0 byte. Vui lòng thử lại."
     attachments:
       too_large: "Xin lỗi, tập tin bạn tải lên quá lớn (kích thước tối đa %{max_size_kb}KB)."
     images:
@@ -1983,6 +1990,8 @@ vi:
     sender_message_to_blank: "message.to rỗng"
     sender_text_part_body_blank: "text_part.body rỗng"
     sender_body_blank: "nội dung rỗng"
+    sender_post_deleted: "bài đăng đã bị xóa"
+    sender_topic_deleted: "chủ đề đã bị xóa"
     group_smtp_post_deleted: "bài đăng đã bị xóa"
     group_smtp_topic_deleted: "chủ đề đã bị xóa"
   color_schemes:
@@ -2156,6 +2165,7 @@ vi:
     aficionado:
       long_description: |
         Huy hiệu này được cấp cho chuyến thăm 100 ngày liên tục. Đó là hơn ba tháng!
+    badge_title_metadata: "%{display_name} huy hiệu trên %{site_title}"
   admin_login:
     success: "Gửi mail lỗi"
     email_input: "Email quản trị"
@@ -2194,6 +2204,8 @@ vi:
                 label: "Các chuyên mục và chủ đề nổi bật"
               categories_and_latest_topics:
                 label: "Các chuyên mục và chủ đề mới"
+              categories_and_latest_topics_created_date:
+                label: "Danh mục và Chủ đề mới nhất (sắp xếp theo chủ đề ngày tạo)"
               categories_and_top_topics:
                 label: "Chuyên mục và Chủ đề nổi bật"
               subcategories_with_featured_topics:
@@ -2248,6 +2260,8 @@ vi:
       delete_single:
         title: "Xóa"
       delete_and_ignore_replies:
+        confirm: "Bạn có chắc chắn muốn xóa các câu trả lời cho bài đăng không?"
+      delete_and_agree_replies:
         confirm: "Bạn có chắc chắn muốn xóa các câu trả lời cho bài đăng không?"
       disagree:
         title: "Không đồng ý"

@@ -2080,6 +2080,10 @@ ro:
       description: Ai vizitat 10 zile consecutive
       long_description: |
         Această insignă este acordată pentru vizitarea timp de 10 zile consecutive. Vă mulțumim că ați rămas alături de noi mai bine de o săptămână!
+    aficionado:
+      description: Ai vizitat 100 zile consecutive
+    devotee:
+      description: Ai vizitat 365 zile consecutive
   admin_login:
     success: "Emailul a fost trimis"
     email_input: "Email Admin"
@@ -2155,9 +2159,11 @@ ro:
       linked: '%{username} a creat o legătură către postarea ta din discuția "%{topic}" - %{site_title}'
   reviewables:
     priorities:
+      low: "Scăzut"
       medium: "Medie"
       high: "Ridicată"
     sensitivity:
+      low: "Scăzut"
       medium: "Medie"
       high: "Ridicată"
     actions:
@@ -2182,6 +2188,7 @@ ro:
       approve:
         title: "Aprobare"
       reject_user:
+        title: "Şterge utilizatorul..."
         delete:
           title: "Şterge utilizatorul"
       reject:

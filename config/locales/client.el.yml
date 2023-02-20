@@ -1941,9 +1941,11 @@ el:
         dismiss_new: "Αγνόησε τα νέα"
         toggle: "εναλλαγή μαζικής επιλογής νημάτων"
         actions: "Μαζικές Ενέργειες"
+        change_category: "Θέσε Κατηγορία..."
         close_topics: "Κλείσιμο Νημάτων"
         archive_topics: "Αρχειοθέτηση Νημάτων"
         move_messages_to_inbox: "Μετακίνηση στα Εισερχόμενα"
+        notification_level: "Ειδοποιήσεις..."
         choose_new_category: "Διάλεξε νέα κατηγορία για τα νήματα:"
         selected:
           one: "Έχεις διαλέξει <b>%{count}</b> νήμα."
@@ -2025,6 +2027,7 @@ el:
         enable: "Ενεργοποίηση"
         remove: "Απενεργοποίηση"
         hours: "ώρες:"
+        minutes: "Λεπτά:"
         durations:
           10_minutes: "10 Λεπτά"
           15_minutes: "15 Λεπτά"
@@ -2143,6 +2146,7 @@ el:
         unarchive: "Επαναφορά Νήματος από Αρχείο"
         archive: "Αρχειοθέτηση Νήματος"
         reset_read: "Μηδενισμός Διαβασμένων"
+        make_public: "Κάνε Δημόσιο το Νήμα..."
         make_private: "Κάνε προσωπικό μήνυμα"
         reset_bump_date: "Επαναφορά ημερομηνίας ώθησης"
       feature:
@@ -2403,6 +2407,8 @@ el:
         rebake: "Ανανέωση HTML"
         publish_page: "Δημοσίευση σελίδας"
         unhide: "Επανεμφάνιση"
+        change_owner: "Αλλαγή Ιδιοκτησίας..."
+        grant_badge: "Απονομή Παράσημου..."
         lock_post: "Κλείδωμα ανάρτησης"
         lock_post_description: "αποτρέψτε τον συντάκτη από την επεξεργασία αυτής της ανάρτησης"
         unlock_post: "Ξεκλείδωμα ανάρτησης"
@@ -2410,6 +2416,7 @@ el:
         delete_topic_disallowed_modal: "Δεν έχετε άδεια διαγραφής αυτού του θέματος. Εάν θέλετε πραγματικά να διαγραφεί, υποβάλετε μια επισήμανση για προσοχή από συντονιστή μαζί με το σκεπτικό."
         delete_topic_disallowed: "δεν έχετε άδεια να διαγράψετε αυτό το θέμα"
         delete_topic: "διαγραφή νήματος"
+        add_post_notice: "Προσθήκη ειδοποίησης προσωπικού..."
         remove_timer: "αφαίρεση χρονοδιακόπτη"
       actions:
         people:
@@ -2614,6 +2621,7 @@ el:
     flagging:
       title: "Ευχαριστούμε για τη συνεισφορά σου!"
       action: "Επισήμανση Ανάρτησης"
+      take_action: "Λάβε Δράση..."
       take_action_options:
         default:
           title: "Λάβε Δράση"
@@ -3000,6 +3008,7 @@ el:
         delete: "Διαγραφή"
         confirm_delete: "Είσαι βέβαιος πως θέλεις να διαγράψεις αυτή την ομάδα ετικετών;"
         everyone_can_use: "Οι ετικέτες μπορούν να χρησιμοποιηθούν από όλους"
+        parent_tag_placeholder: "Προεραιτικό"
       topics:
         none:
           unread: "Δεν έχεις αδιάβαστα νήματα."
@@ -3073,6 +3082,8 @@ el:
               content: "Διαχείριση"
             badges:
               content: "Παράσημα"
+            everything:
+              content: "Τα πάνΤα"
             faq:
               content: "Συχνές ερωτήσεις"
             groups:
@@ -3083,6 +3094,7 @@ el:
               content: "Οι αναρτήσεις μου"
             review:
               content: "Ανασκόπηση"
+    until: "Μέχρι:"
   admin_js:
     type_to_filter: "γράψε εδώ για φιλτράρισμα..."
     admin:
@@ -3112,6 +3124,7 @@ el:
         problems_found: "Μερικές συμβουλές με βάση τις τρέχουσες ρυθμίσεις του ιστότοπού σας"
         new_features:
           dismiss: "Απόρριψη"
+          learn_more: "Μάθε περισσότερα"
         last_checked: "Τελευταίος έλεγχος"
         refresh_problems: "Ανανέωση"
         no_problems: "Δεν βρέθηκε κανένα πρόβλημα."
