@@ -5414,6 +5414,9 @@ en:
             delete_group: "delete group"
             watched_word_create: "add watched word"
             watched_word_destroy: "delete watched word"
+            create_public_sidebar_section: "create public sidebar section"
+            update_public_sidebar_section: "update public sidebar section"
+            destroy_public_sidebar_section: "destroy public sidebar section"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."

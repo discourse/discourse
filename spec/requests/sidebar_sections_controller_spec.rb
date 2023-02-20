@@ -45,6 +45,7 @@ RSpec.describe SidebarSectionsController do
       expect(sidebar_section.title).to eq("custom section")
       expect(sidebar_section.user).to eq(user)
       expect(sidebar_section.public).to be false
+      expect(UserHistory.count).to eq(0)
       expect(sidebar_section.sidebar_urls.count).to eq(2)
       expect(sidebar_section.sidebar_urls.first.icon).to eq("link")
       expect(sidebar_section.sidebar_urls.first.name).to eq("categories")
@@ -84,6 +85,11 @@ RSpec.describe SidebarSectionsController do
       sidebar_section = SidebarSection.last
       expect(sidebar_section.title).to eq("custom section")
       expect(sidebar_section.public).to be true
+
+      user_history = UserHistory.last
+      expect(user_history.action).to eq(UserHistory.actions[:create_public_sidebar_section])
+      expect(user_history.subject).to eq("custom section")
+      expect(user_history.details).to eq("links: categories - /categories, tags - /tags")
     end
   end
 
@@ -112,6 +118,7 @@ RSpec.describe SidebarSectionsController do
       expect(response.status).to eq(200)
 
       expect(sidebar_section.reload.title).to eq("custom section edited")
+      expect(UserHistory.count).to eq(0)
       expect(sidebar_url_1.reload.name).to eq("latest")
       expect(sidebar_url_1.value).to eq("/latest")
       expect { section_link_2.reload }.to raise_error(ActiveRecord::RecordNotFound)
@@ -137,6 +144,11 @@ RSpec.describe SidebarSectionsController do
       expect(sidebar_url_1.value).to eq("/latest")
       expect { section_link_2.reload }.to raise_error(ActiveRecord::RecordNotFound)
       expect { sidebar_url_2.reload }.to raise_error(ActiveRecord::RecordNotFound)
+
+      user_history = UserHistory.last
+      expect(user_history.action).to eq(UserHistory.actions[:update_public_sidebar_section])
+      expect(user_history.subject).to eq("custom section edited")
+      expect(user_history.details).to eq("links: latest - /latest")
     end
 
     it "doesn't allow to edit other's sections" do
@@ -197,6 +209,8 @@ RSpec.describe SidebarSectionsController do
       expect(response.status).to eq(200)
 
       expect { sidebar_section.reload }.to raise_error(ActiveRecord::RecordNotFound)
+
+      expect(UserHistory.count).to eq(0)
     end
 
     it "allows admin to delete public section" do
@@ -207,6 +221,10 @@ RSpec.describe SidebarSectionsController do
       expect(response.status).to eq(200)
 
       expect { sidebar_section.reload }.to raise_error(ActiveRecord::RecordNotFound)
+
+      user_history = UserHistory.last
+      expect(user_history.action).to eq(UserHistory.actions[:destroy_public_sidebar_section])
+      expect(user_history.subject).to eq("Sidebar section")
     end
 
     it "doesn't allow to delete other's sidebar section" do

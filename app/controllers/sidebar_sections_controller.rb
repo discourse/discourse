@@ -11,6 +11,10 @@ class SidebarSectionsController < ApplicationController
         section_params.merge(user: current_user, sidebar_urls_attributes: links_params),
       )
 
+    if sidebar_section.public?
+      StaffActionLogger.new(current_user).log_create_public_sidebar_section(sidebar_section)
+    end
+
     render json: SidebarSectionSerializer.new(sidebar_section)
   rescue ActiveRecord::RecordInvalid => e
     render_json_error(e.record.errors.full_messages.first)
@@ -21,6 +25,10 @@ class SidebarSectionsController < ApplicationController
     @guardian.ensure_can_edit!(sidebar_section)
 
     sidebar_section.update!(section_params.merge(sidebar_urls_attributes: links_params))
+
+    if sidebar_section.public?
+      StaffActionLogger.new(current_user).log_update_public_sidebar_section(sidebar_section)
+    end
 
     render json: SidebarSectionSerializer.new(sidebar_section)
   rescue ActiveRecord::RecordInvalid => e
@@ -33,6 +41,10 @@ class SidebarSectionsController < ApplicationController
     sidebar_section = SidebarSection.find_by(id: section_params["id"])
     @guardian.ensure_can_delete!(sidebar_section)
     sidebar_section.destroy!
+
+    if sidebar_section.public?
+      StaffActionLogger.new(current_user).log_destroy_public_sidebar_section(sidebar_section)
+    end
     render json: SidebarSectionSerializer.new(sidebar_section)
   rescue Discourse::InvalidAccess
     render json: failed_json, status: 403
