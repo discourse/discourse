@@ -25,15 +25,27 @@
   display: flex;
   flex-wrap: wrap;
   width: 100%;
+  gap: 0.5em 0;
 
-  input + .group-members-manage {
-    margin-left: auto;
+  .bulk-select + input {
+    margin-left: 0.5em;
   }
 
-  .group-username-filter {
-    margin: 0 0 5px 0;
-    vertical-align: middle;
+  input {
+    margin: 0 auto 0 0;
   }
+
+  .bulk-select-buttons-wrap {
+    margin-right: 0.5em;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em;
+  }
+}
+
+.group-members-manage {
+  display: flex;
+  gap: 0.5em;
 }
 
 .group-info {
@@ -123,22 +135,41 @@ table.group-manage-logs {
 
   &--can-manage {
     grid-template-columns: 3fr repeat(4, minmax(min-content, 1fr)) 3em;
+    @include breakpoint("tablet") {
+      // positioning the member settings button within the same cell
+      // and avoiding overlap with padding-right on user-info
+      .group-member,
+      .member-settings {
+        grid-row-start: 1;
+        grid-column-start: 1;
+        grid-column-end: -1;
+      }
+      .member-settings {
+        margin-left: auto;
+      }
+      .user-info {
+        padding-right: 3.5em;
+      }
+    }
   }
 
   &.group-members__requests {
     grid-template-columns: 3fr repeat(3, minmax(min-content, 1fr));
   }
 
-  .directory-table__column-header {
-    // hide label to make space for bulk buttons
-    .bulk-select-buttons-wrap + .text {
-      display: none;
-    }
-  }
-
   .directory-table__value {
     font-size: var(--font-0);
     color: var(--primary);
+  }
+
+  .group-accept-deny-buttons {
+    gap: 0.5em;
+  }
+
+  @include breakpoint("tablet") {
+    .directory-table__cell.group-owner {
+      order: 2;
+    }
   }
 }
 

@@ -1,5 +1,15 @@
 <section class="user-content">
   <div class="group-members-actions">
+
+    {{#if this.canManageGroup}}
+      <DButton
+        @class="bulk-select"
+        @icon="list"
+        @action={{action "toggleBulkSelect"}}
+        @title="topics.bulk.toggle"
+      />
+    {{/if}}
+
     {{#if this.model.can_see_members}}
       <TextField
         @value={{this.filterInput}}
@@ -10,6 +20,33 @@
     {{/if}}
 
     {{#if this.canManageGroup}}
+
+      {{#if this.isBulk}}
+        <span class="bulk-select-buttons-wrap">
+          {{#if this.bulkSelection}}
+            <BulkGroupMemberDropdown
+              @bulkSelection={{this.bulkSelection}}
+              @canAdminGroup={{this.model.can_admin_group}}
+              @canEditGroup={{this.model.can_edit_group}}
+              @onChange={{action "actOnSelection" this.bulkSelection}}
+            />
+
+            <DButton
+              @action={{action "bulkClearAll"}}
+              @label="topics.bulk.clear_all"
+              @icon="far-square"
+            />
+          {{/if}}
+
+          <DButton
+            @action={{action "bulkSelectAll"}}
+            @label="topics.bulk.select_all"
+            @icon="check-square"
+          />
+
+        </span>
+      {{/if}}
+
       <div class="group-members-manage">
         <DButton
           @icon="plus"
@@ -50,36 +87,7 @@
             @class="username"
             @automatic={{true}}
             @colspan="2"
-          >
-            {{#if this.canManageGroup}}
-              <FlatButton
-                @class="bulk-select"
-                @icon="list"
-                @action={{action "toggleBulkSelect"}}
-                @title="topics.bulk.toggle"
-              />
-              {{#if this.isBulk}}
-                <span class="bulk-select-buttons-wrap">
-                  {{#if this.bulkSelection}}
-                    <BulkGroupMemberDropdown
-                      @bulkSelection={{this.bulkSelection}}
-                      @canAdminGroup={{this.model.can_admin_group}}
-                      @canEditGroup={{this.model.can_edit_group}}
-                      @onChange={{action "actOnSelection" this.bulkSelection}}
-                    />
-                  {{/if}}
-                  <DButton
-                    @action={{action "bulkSelectAll"}}
-                    @label="topics.bulk.select_all"
-                  />
-                  <DButton
-                    @action={{action "bulkClearAll"}}
-                    @label="topics.bulk.clear_all"
-                  />
-                </span>
-              {{/if}}
-            {{/if}}
-          </TableHeaderToggle>
+          />
 
           {{#if this.canManageGroup}}
             <div class="directory-table__column-header"></div>
@@ -139,7 +147,12 @@
 
               {{#if this.canManageGroup}}
                 <div class="directory-table__cell group-owner">
-                  <div class="directory-table__value">
+                  {{#if (or m.owner m.primary)}}
+                    <span class="directory-table__label">
+                      {{i18n "groups.members.status"}}
+                    </span>
+                  {{/if}}
+                  <span class="directory-table__value">
                     {{#if m.owner}}
                       {{d-icon "shield-alt"}}
                       {{i18n "groups.members.owner"}}<br />
@@ -147,36 +160,40 @@
                     {{#if m.primary}}
                       {{i18n "groups.members.primary"}}
                     {{/if}}
-                  </div>
-                </div>
+                  </span>
 
+                </div>
               {{/if}}
               <div class="directory-table__cell">
                 <span class="directory-table__label">
                   {{i18n "groups.member_added"}}
                 </span>
-                <span class="directory-table__value">{{bound-date
-                    m.added_at
-                  }}</span>
+                <span class="directory-table__value">
+                  {{bound-date m.added_at}}
+                </span>
               </div>
               <div class="directory-table__cell">
-                <span class="directory-table__label">
-                  {{i18n "last_post"}}
+                {{#if m.last_posted_at}}
+                  <span class="directory-table__label">
+                    {{i18n "last_post"}}
+                  </span>
+                {{/if}}
+                <span class="directory-table__value">
+                  {{bound-date m.last_posted_at}}
                 </span>
-                <span class="directory-table__value">{{bound-date
-                    m.last_posted_at
-                  }}</span>
               </div>
               <div class="directory-table__cell">
-                <span class="directory-table__label">
-                  {{i18n "last_seen"}}
+                {{#if m.last_seen_at}}
+                  <span class="directory-table__label">
+                    {{i18n "last_seen"}}
+                  </span>
+                {{/if}}
+                <span class="directory-table__value">
+                  {{bound-date m.last_seen_at}}
                 </span>
-                <span class="directory-table__value">{{bound-date
-                    m.last_seen_at
-                  }}</span>
               </div>
               {{#if this.canManageGroup}}
-                <div class="directory-table__cell">
+                <div class="directory-table__cell member-settings">
                   <GroupMemberDropdown
                     @member={{m}}
                     @canAdminGroup={{this.model.can_admin_group}}
