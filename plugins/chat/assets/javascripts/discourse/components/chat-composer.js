@@ -573,7 +573,7 @@ export default Component.extend(TextareaTextManipulation, {
     if (chatChannel.isDraft) {
       if (chatChannel?.chatable?.users?.length) {
         return I18n.t("chat.placeholder_start_conversation_users", {
-          usernames: chatChannel.chatable.users
+          commaSeparatedUsernames: chatChannel.chatable.users
             .mapBy("username")
             .join(I18n.t("word_connector.comma")),
         });
