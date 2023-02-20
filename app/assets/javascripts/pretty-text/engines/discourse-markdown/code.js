@@ -1,50 +1,8 @@
+import { HLJS_ALIASES } from "discourse/lib/constants";
+
 // we need a custom renderer for code blocks cause we have a slightly non compliant
 // format with special handling for text and so on
 const TEXT_CODE_CLASSES = ["text", "pre", "plain"];
-
-// Built manually from the highlight.js library using
-// let aliases = {};
-// hljs.listLanguages().forEach((lang) => {
-//   aliases[lang] = hljs.getLanguage(lang).aliases;
-// });
-const HLJS_ALIASES = {
-  bash: ["sh"],
-  c: ["h"],
-  cpp: ["cc", "c++", "h++", "hpp", "hh", "hxx", "cxx"],
-  csharp: ["cs", "c#"],
-  diff: ["patch"],
-  go: ["golang"],
-  graphql: ["gql"],
-  ini: ["toml"],
-  java: ["jsp"],
-  javascript: ["js", "jsx", "mjs", "cjs"],
-  kotlin: ["kt", "kts"],
-  makefile: ["mk", "mak", "make"],
-  markdown: ["md", "mkdown", "mkd"],
-  objectivec: ["mm", "objc", "obj-c", "obj-c++", "objective-c++"],
-  perl: ["pl", "pm"],
-  plaintext: ["text", "txt"],
-  python: ["py", "gyp", "ipython"],
-  "python-repl": ["pycon"],
-  ruby: ["rb", "gemspec", "podspec", "thor", "irb"],
-  rust: ["rs"],
-  shell: ["console", "shellsession"],
-  typescript: ["ts", "tsx"],
-  vbnet: ["vb"],
-  xml: [
-    "html",
-    "xhtml",
-    "rss",
-    "atom",
-    "xjb",
-    "xsd",
-    "xsl",
-    "plist",
-    "wsf",
-    "svg",
-  ],
-  yaml: ["yml"],
-};
 
 function extractTokenInfo(info, md) {
   if (!info) {

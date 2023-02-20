@@ -159,11 +159,35 @@ end
 task "javascript:update_constants" => :environment do
   task_name = "update_constants"
 
+  langs = []
+  Dir
+    .glob("vendor/assets/javascripts/highlightjs/languages/*.min.js")
+    .each { |f| langs << File.basename(f, ".min.js") }
+  bundle = HighlightJs.bundle(langs)
+
+  ctx = MiniRacer::Context.new
+  hljs_aliases = ctx.eval(<<~JS)
+    #{bundle}
+
+    let aliases = {};
+    hljs.listLanguages().forEach((lang) => {
+      if (hljs.getLanguage(lang).aliases) {
+        aliases[lang] = hljs.getLanguage(lang).aliases;
+      }
+    });
+
+    aliases;
+  JS
+
   write_template("discourse/app/lib/constants.js", task_name, <<~JS)
     export const SEARCH_PRIORITIES = #{Searchable::PRIORITIES.to_json};
 
     export const SEARCH_PHRASE_REGEXP = '#{Search::PHRASE_MATCH_REGEXP_PATTERN}';
+
+    export const HLJS_ALIASES = #{hljs_aliases.to_json};
   JS
+
+  ctx.dispose
 
   pretty_notifications = Notification.types.map { |n| "  #{n[0]}: #{n[1]}," }.join("\n")
 
