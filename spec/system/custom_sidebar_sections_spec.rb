@@ -88,7 +88,7 @@ describe "Custom sidebar sections", type: :system, js: true do
     expect(page).not_to have_button("My section")
   end
 
-  it "allows admin to created, edit and delete public section" do
+  it "allows admin to create, edit and delete public section" do
     sign_in admin
     visit("/latest")
     sidebar.open_new_custom_section
