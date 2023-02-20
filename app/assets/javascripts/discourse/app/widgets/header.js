@@ -509,10 +509,12 @@ export default createWidget("header", {
           })
         );
       } else if (state.hamburgerVisible) {
-        if (this.siteSettings.navigation_menu !== "legacy") {
-          if (!attrs.sidebarEnabled || this.site.narrowDesktopView) {
-            panels.push(this.attach("revamped-hamburger-menu-wrapper", {}));
-          }
+        if (
+          attrs.navigationMenuQueryParamOverride === "header_dropdown" ||
+          (this.siteSettings.navigation_menu !== "legacy" &&
+            (!attrs.sidebarEnabled || this.site.narrowDesktopView))
+        ) {
+          panels.push(this.attach("revamped-hamburger-menu-wrapper", {}));
         } else {
           panels.push(this.attach("hamburger-menu"));
         }

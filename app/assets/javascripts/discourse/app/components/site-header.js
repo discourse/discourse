@@ -343,6 +343,7 @@ const SiteHeaderComponent = MountWidget.extend(
         canSignUp: this.canSignUp,
         sidebarEnabled: this.sidebarEnabled,
         showSidebar: this.showSidebar,
+        navigationMenuQueryParamOverride: this.navigationMenuQueryParamOverride,
       };
     },
 
