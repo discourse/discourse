@@ -79,7 +79,7 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def sidebar_sections
     SidebarSection
-      .where("public IS TRUE OR user_id = ?", object.id)
+      .where("public OR user_id = ?", object.id)
       .map { |section| SidebarSectionSerializer.new(section, root: false) }
   end
 

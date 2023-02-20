@@ -70,10 +70,16 @@
       @label="sidebar.sections.custom.links.add"
     />
     {{#if this.currentUser.staff}}
-      <label class="checkbox-label">
-        <Input @type="checkbox" @checked={{this.model.public}} />
-        {{i18n "sidebar.sections.custom.public"}}
-      </label>
+      <div class="row-wrapper">
+        <label class="checkbox-label">
+          <Input
+            @type="checkbox"
+            @checked={{this.model.public}}
+            class="mark-public"
+          />
+          {{i18n "sidebar.sections.custom.public"}}
+        </label>
+      </div>
     {{/if}}
   </form>
 </DModalBody>

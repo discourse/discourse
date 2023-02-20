@@ -13,7 +13,7 @@ module PageObjects
       end
 
       def mark_as_public
-        find(".modal .checkbox-label").click
+        find(".modal .mark-public").click
       end
 
       def remove_last_link
