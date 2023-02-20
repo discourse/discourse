@@ -1035,7 +1035,7 @@ class Post < ActiveRecord::Base
   end
 
   def update_uploads_secure_status(source:)
-    if Discourse.store.external?
+    if Discourse.store.external? && SiteSetting.secure_uploads?
       Jobs.enqueue(:update_post_uploads_secure_status, post_id: self.id, source: source)
     end
   end
