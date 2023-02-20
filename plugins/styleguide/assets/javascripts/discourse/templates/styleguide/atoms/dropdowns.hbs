@@ -1,5 +1,5 @@
 <StyleguideExample
-  @title="combo-box"
+  @title="<ComboBox>"
   @initialValue={{this.dummy.options.0.name}}
   as |value|
 >
@@ -11,7 +11,7 @@
 </StyleguideExample>
 
 <StyleguideExample
-  @title="filterable combo-box"
+  @title="filterable <ComboBox>"
   @initialValue={{this.dummy.categories.0.name}}
   as |value|
 >
@@ -24,7 +24,7 @@
 </StyleguideExample>
 
 <StyleguideExample
-  @title="combo-box with a default state"
+  @title="<ComboBox> with a default state"
   @initialValue={{this.dummy.options.0.name}}
   as |value|
 >
@@ -37,7 +37,7 @@
 </StyleguideExample>
 
 <StyleguideExample
-  @title="combo-box clearable"
+  @title="<ComboBox> clearable"
   @initialValue={{this.dummy.options.0.name}}
   as |value|
 >
@@ -51,7 +51,7 @@
 </StyleguideExample>
 
 <StyleguideExample
-  @title="topic-notifications-options"
+  @title="<TopicNotificationOptions>"
   @initialValue={{1}}
   as |value|
 >
@@ -62,31 +62,31 @@
   />
 </StyleguideExample>
 
-<StyleguideExample @title="topic-footer-mobile-dropdown">
+<StyleguideExample @title="<TopicFooterMobileDropdown>">
   <TopicFooterMobileDropdown @topic={{this.dummy.topic}} />
 </StyleguideExample>
 
 <StyleguideExample
-  @title="category-chooser"
+  @title="<CategoryChooser>"
   @initialValue={{this.categories.0.name}}
   as |value|
 >
   <CategoryChooser @value={{value}} @onChange={{fn (mut value)}} />
 </StyleguideExample>
 
-<StyleguideExample @title="pinned-button">
+<StyleguideExample @title="<PinnedButton>">
   <PinnedButton @topic={{this.dummy.pinnedTopic}} />
 </StyleguideExample>
 
-<StyleguideExample @title="pinned-options">
+<StyleguideExample @title="<PinnedOptions>">
   <PinnedOptions @topic={{this.dummy.pinnedTopic}} />
 </StyleguideExample>
 
-<StyleguideExample @title="categories-admin-dropdown">
+<StyleguideExample @title="<CategoriesAdminDropdown>">
   <CategoriesAdminDropdown @onChange={{action "dummy"}} />
 </StyleguideExample>
 
-<StyleguideExample @title="category-notifications-button">
+<StyleguideExample @title="<CategoryNotificationsButton>">
   <CategoryNotificationsButton
     @category={{get this.dummy.categories 0}}
     @value={{1}}
@@ -94,7 +94,7 @@
   />
 </StyleguideExample>
 
-<StyleguideExample @title="notifications-button">
+<StyleguideExample @title="<NotificationsButton>">
   <NotificationsButton
     @options={{hash i18nPrefix="groups.notifications"}}
     @value={{2}}
@@ -102,7 +102,7 @@
   />
 </StyleguideExample>
 
-<StyleguideExample @title="dropdown-select-box">
+<StyleguideExample @title="<DropdownSelectBox>">
   <DropdownSelectBox
     @content={{this.dummy.options}}
     @onChange={{action "dummy"}}
@@ -110,7 +110,7 @@
   />
 </StyleguideExample>
 
-<StyleguideExample @title="future-date-input-selector">
+<StyleguideExample @title="<FutureDateInputSelector>">
   <FutureDateInputSelector
     @input={{this.dummy.topicTimerUpdateDate}}
     @includeWeekend={{true}}
@@ -119,11 +119,11 @@
   />
 </StyleguideExample>
 
-<StyleguideExample @title="multi-select">
+<StyleguideExample @title="<MultiSelect>">
   <MultiSelect @content={{this.dummy.options}} @onChange={{action "dummy"}} />
 </StyleguideExample>
 
-<StyleguideExample @title="admin group-chooser">
+<StyleguideExample @title="admin <GroupChooser>">
   <GroupChooser
     @selected={{this.dummy.selectedGroups}}
     @content={{this.dummy.groups}}
@@ -131,14 +131,14 @@
   />
 </StyleguideExample>
 
-<StyleguideExample @title="list-setting">
+<StyleguideExample @title="<ListSetting>">
   <ListSetting
     @settingValue={{this.dummy.settings}}
     @onChange={{action "dummy"}}
   />
 </StyleguideExample>
 
-<StyleguideExample @title="list-setting with colors">
+<StyleguideExample @title="<ListSetting>">
   <ListSetting
     @settingValue={{this.dummy.colors}}
     @nameProperty="color"
@@ -146,7 +146,7 @@
   />
 </StyleguideExample>
 
-<StyleguideExample @title="user-notifications-dropdown">
+<StyleguideExample @title="<UserNotificationsDropdown>">
   <UserNotificationsDropdown
     @user={{this.currentUser}}
     @value="changeToNormal"

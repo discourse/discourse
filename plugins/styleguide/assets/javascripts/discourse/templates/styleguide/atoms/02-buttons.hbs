@@ -133,7 +133,7 @@
 </StyleguideExample>
 
 <StyleguideExample
-  @title="dbutton btn-flat btn-text - sizes (large, default, small)"
+  @title="<DButton> btn-flat btn-text - sizes (large, default, small)"
 >
   {{#each this.dummy.buttonSizes as |bs|}}
     <DButton
@@ -144,7 +144,7 @@
   {{/each}}
 </StyleguideExample>
 
-<StyleguideExample @title="dbutton btn-flat btn-text - states">
+<StyleguideExample @title="<DButton> btn-flat btn-text - states">
   {{#each this.dummy.buttonStates as |bs|}}
     <DButton
       @class={{concat "btn-flat " bs.class}}
@@ -154,7 +154,7 @@
   {{/each}}
 </StyleguideExample>
 
-<StyleguideExample @title="DToggleSwitch">
+<StyleguideExample @title="<DToggleSwitch>">
   <DToggleSwitch
     @state={{this.dummy.toggleSwitchState}}
     {{on
