@@ -1,4 +1,5 @@
 import Component from "@ember/component";
+
 export default class AdminWrapper extends Component {
   didInsertElement() {
     super.didInsertElement(...arguments);

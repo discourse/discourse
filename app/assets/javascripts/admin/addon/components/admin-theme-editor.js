@@ -10,6 +10,7 @@ export default class AdminThemeEditor extends Component {
   warning = null;
 
   @fmt("fieldName", "currentTargetName", "%@|%@") editorId;
+
   @discourseComputed("theme.targets", "onlyOverridden", "showAdvanced")
   visibleTargets(targets, onlyOverridden, showAdvanced) {
     return targets.filter((target) => {

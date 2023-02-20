@@ -1,6 +1,7 @@
 import { classNameBindings, tagName } from "@ember-decorators/component";
 import { match } from "@ember/object/computed";
 import Component from "@ember/component";
+
 @tagName("tr")
 @classNameBindings("reverseColors")
 export default class AdminReportCounts extends Component {

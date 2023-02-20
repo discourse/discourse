@@ -19,6 +19,7 @@ export default class AdminReportTableCell extends Component {
   @alias("label.mainProperty") property;
   @alias("computedLabel.formattedValue") formattedValue;
   @alias("computedLabel.value") value;
+
   @discourseComputed("label", "data", "options")
   computedLabel(label, data, options) {
     return label.compute(data, options || {});
