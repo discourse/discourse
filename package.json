@@ -7,7 +7,7 @@
   "license": "GPL-2.0-only",
   "dependencies": {
     "@discourse/moment-timezone-names-translations": "^1.0.0",
-    "@fortawesome/fontawesome-free": "5.15.4",
+    "@fortawesome/fontawesome-free": "6.3.0",
     "@highlightjs/cdn-assets": "^11.6.0",
     "@json-editor/json-editor": "^2.6.1",
     "ace-builds": "1.4.13",

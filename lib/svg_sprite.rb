@@ -22,6 +22,7 @@ module SvgSprite
         arrow-up
         arrows-alt-h
         arrows-alt-v
+        arrows-rotate
         at
         asterisk
         backward
@@ -159,6 +160,7 @@ module SvgSprite
         list-ul
         lock
         magic
+        magnifying-glass
         map-marker-alt
         microphone-slash
         minus

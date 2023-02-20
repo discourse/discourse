@@ -51,6 +51,9 @@ export const REPLACEMENTS = {
   "notification.reaction": "bell",
   "notification.votes_released": "plus",
   "notification.chat_quoted": "quote-right",
+  // TODO: Update FA5 to FA6 aliases
+  search: "magnifying-glass",
+  sync: "arrows-rotate",
 };
 
 export function replaceIcon(source, destination) {
