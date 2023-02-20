@@ -57,7 +57,7 @@ class SidebarSectionsController < ApplicationController
   private
 
   def check_access_if_public
-    if params[:public] && !@guardian.can_create_public_sidebar_section?
+    guardian.ensure_can_create_public_sidebar_section! if params[:public]
       raise Discourse::InvalidAccess.new
     end
   end
