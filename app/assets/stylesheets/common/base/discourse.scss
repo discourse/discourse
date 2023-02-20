@@ -552,6 +552,7 @@ table {
         &.active {
           font-weight: bold;
           color: var(--primary);
+          background: var(--d-selected);
         }
       }
     }
