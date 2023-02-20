@@ -4118,6 +4118,7 @@ en:
       granted:
         one: "%{count} granted"
         other: "%{count} granted"
+      granted_text_only: "granted"
       select_badge_for_title: Select a badge to use as your title
       none: "(none)"
       successfully_granted: "Successfully granted %{badge} to %{username}"
