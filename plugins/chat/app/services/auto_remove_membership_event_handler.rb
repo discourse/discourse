@@ -2,13 +2,33 @@
 
 module Chat
   module Service
+    # Used to react to various DiscourseEvents from chat/plugin.rb, and
+    # determine which sub-service to call to handle these events. This class
+    # should be called from the [Jobs::AutoJoinChannelMemberships] job,
+    # rather than inline, since some of the operations may take some time.
+    #
+    # We only log the number of users removed based on the original event,
+    # detailed logging has been intentionally left out for now, as admins
+    # should be able to infer what happened to cause user removals from
+    # channels from other staff action logs.
+    #
+    # @example
+    #  Chat::Service::AutoRemoveMembershipEventHandler.call(
+    #    event_type: :chat_allowed_groups_changed,
+    #    event_data: { new_allowed_groups: "1|11" }
+    #  )
+    #
     class AutoRemoveMembershipEventHandler
       include Base
+
+      # @!method call(event_type:, event_data:)
+      #   @param [String|Symbol] event_type
+      #   @param [Hash] event_data
+      #   @return [Chat::Service::Base::Context]
 
       ALLOWED_EVENTS = %i[chat_allowed_groups_changed user_removed_from_group category_updated]
 
       contract
-      policy :validate_event_type
       step :handle_event
 
       class Contract
@@ -16,13 +36,16 @@ module Chat
         attribute :event_data
 
         before_validation { self.event_type = self.event_type.to_sym }
+
+        validate :event_type_ok
+
+        def event_type_ok
+          return if ALLOWED_EVENTS.include?(self.event_type)
+          errors.add(:event_type, "is invalid")
+        end
       end
 
       private
-
-      def validate_event_type(contract:, **)
-        ALLOWED_EVENTS.include?(contract.event_type)
-      end
 
       def handle_event(contract:, **)
         case contract.event_type
