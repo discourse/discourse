@@ -3,7 +3,7 @@
 module Chat
   module Service
     module AutoRemove
-      class OutsideChatAllowedGroups
+      class HandleChatAllowedGroupsChange
         include Service::Base
 
         contract

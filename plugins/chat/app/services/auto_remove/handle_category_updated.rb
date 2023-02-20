@@ -3,7 +3,7 @@
 module Chat
   module Service
     module AutoRemove
-      class CategoryUpdated
+      class HandleCategoryUpdated
         include Service::Base
 
         contract

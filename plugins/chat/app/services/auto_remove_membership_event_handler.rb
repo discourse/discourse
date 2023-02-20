@@ -50,11 +50,12 @@ module Chat
       def handle_event(contract:, **)
         case contract.event_type
         when :chat_allowed_groups_changed
-          result = Chat::Service::AutoRemove::OutsideChatAllowedGroups.call(**contract.event_data)
+          result =
+            Chat::Service::AutoRemove::HandleChatAllowedGroupsChange.call(**contract.event_data)
         when :user_removed_from_group
-          result = Chat::Service::AutoRemove::UserRemovedFromGroup.call(**contract.event_data)
+          result = Chat::Service::AutoRemove::HandleUserRemovedFromGroup.call(**contract.event_data)
         when :category_updated
-          result = Chat::Service::AutoRemove::CategoryUpdated.call(**contract.event_data)
+          result = Chat::Service::AutoRemove::HandleCategoryUpdated.call(**contract.event_data)
         end
 
         fail!(result.context) if result.failure?

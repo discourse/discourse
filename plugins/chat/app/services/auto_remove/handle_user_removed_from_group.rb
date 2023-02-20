@@ -3,7 +3,7 @@
 module Chat
   module Service
     module AutoRemove
-      class UserRemovedFromGroup
+      class HandleUserRemovedFromGroup
         include Service::Base
 
         contract

@@ -226,9 +226,12 @@ after_initialize do
   load File.expand_path("../app/services/update_user_last_read.rb", __FILE__)
   load File.expand_path("../app/services/lookup_thread.rb", __FILE__)
   load File.expand_path("../app/services/auto_remove_membership_event_handler.rb", __FILE__)
-  load File.expand_path("../app/services/auto_remove/outside_chat_allowed_groups.rb", __FILE__)
-  load File.expand_path("../app/services/auto_remove/user_removed_from_group.rb", __FILE__)
-  load File.expand_path("../app/services/auto_remove/category_updated.rb", __FILE__)
+  load File.expand_path(
+         "../app/services/auto_remove/handle_chat_allowed_groups_change.rb",
+         __FILE__,
+       )
+  load File.expand_path("../app/services/auto_remove/handle_user_removed_from_group.rb", __FILE__)
+  load File.expand_path("../app/services/auto_remove/handle_category_updated.rb", __FILE__)
   load File.expand_path("../app/controllers/api_controller.rb", __FILE__)
   load File.expand_path("../app/controllers/api/chat_channels_controller.rb", __FILE__)
   load File.expand_path("../app/controllers/api/chat_current_user_channels_controller.rb", __FILE__)

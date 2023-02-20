@@ -18,8 +18,8 @@ RSpec.describe Chat::Service::AutoRemoveMembershipEventHandler do
         let(:event_type) { :chat_allowed_groups_changed }
         let(:event_data) { { new_allowed_groups: "1|11" } }
 
-        it "calls OutsideChatAllowedGroups service" do
-          Chat::Service::AutoRemove::OutsideChatAllowedGroups
+        it "calls HandleChatAllowedGroupsChange service" do
+          Chat::Service::AutoRemove::HandleChatAllowedGroupsChange
             .expects(:call)
             .with(new_allowed_groups: event_data[:new_allowed_groups])
             .returns(success_stub)
@@ -28,7 +28,9 @@ RSpec.describe Chat::Service::AutoRemoveMembershipEventHandler do
         end
 
         it "logs in the staff action log" do
-          Chat::Service::AutoRemove::OutsideChatAllowedGroups.stubs(:call).returns(success_stub)
+          Chat::Service::AutoRemove::HandleChatAllowedGroupsChange.stubs(:call).returns(
+            success_stub,
+          )
           expect(result).to be_a_success
 
           action = UserHistory.last
@@ -39,7 +41,7 @@ RSpec.describe Chat::Service::AutoRemoveMembershipEventHandler do
 
         context "when the sub-service fails" do
           before do
-            Chat::Service::AutoRemove::OutsideChatAllowedGroups
+            Chat::Service::AutoRemove::HandleChatAllowedGroupsChange
               .expects(:call)
               .with(new_allowed_groups: event_data[:new_allowed_groups])
               .returns(stub(failure?: true, context: { "error" => "test" }))
@@ -55,8 +57,8 @@ RSpec.describe Chat::Service::AutoRemoveMembershipEventHandler do
         let(:event_type) { :user_removed_from_group }
         let(:event_data) { { user_id: Fabricate(:user).id } }
 
-        it "calls UserRemovedFromGroup service" do
-          Chat::Service::AutoRemove::UserRemovedFromGroup
+        it "calls HandleUserRemovedFromGroup service" do
+          Chat::Service::AutoRemove::HandleUserRemovedFromGroup
             .expects(:call)
             .with(user_id: event_data[:user_id])
             .returns(stub(failure?: false, users_removed: 99))
@@ -68,8 +70,8 @@ RSpec.describe Chat::Service::AutoRemoveMembershipEventHandler do
         let(:event_type) { :category_updated }
         let(:event_data) { { category_id: Fabricate(:category).id } }
 
-        it "calls CategoryUpdated service" do
-          Chat::Service::AutoRemove::CategoryUpdated
+        it "calls HandleCategoryUpdated service" do
+          Chat::Service::AutoRemove::HandleCategoryUpdated
             .expects(:call)
             .with(category_id: event_data[:category_id])
             .returns(stub(failure?: false, users_removed: 99))
