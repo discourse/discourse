@@ -684,20 +684,21 @@ acceptance("Sidebar - Plugin API", function (needs) {
 
         assert.ok(
           exists(
-            `.sidebar-section-link-${category1.name} .sidebar-section-link-suffix.unread`
+            `.sidebar-section-link[data-category-id="${category1.id}"] .sidebar-section-link-suffix.unread`
           ),
           "the right suffix is displayed when custom countable is active"
         );
 
         assert.strictEqual(
-          query(`.sidebar-section-link-${category1.name}`).pathname,
+          query(`.sidebar-section-link[data-category-id="${category1.id}"]`)
+            .pathname,
           `/c/${category1.name}/${category1.id}`,
           "does not use route configured for custom countable when user has elected not to show any counts in sidebar"
         );
 
         assert.notOk(
           exists(
-            `.sidebar-section-link-${category2.name} .sidebar-section-link-suffix.unread`
+            `.sidebar-section-link[data-category-id="${category2.id}"] .sidebar-section-link-suffix.unread`
           ),
           "does not display suffix when custom countable is not registered"
         );
@@ -708,7 +709,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
 
         assert.strictEqual(
           query(
-            `.sidebar-section-link-${category1.name} .sidebar-section-link-content-badge`
+            `.sidebar-section-link[data-category-id="${category1.id}"] .sidebar-section-link-content-badge`
           ).innerText.trim(),
           I18n.t("sidebar.unread_count", { count: 1 }),
           "displays the right badge text in section link when unread is present and custom countable is not prioritised over unread"
@@ -722,20 +723,22 @@ acceptance("Sidebar - Plugin API", function (needs) {
 
         assert.strictEqual(
           query(
-            `.sidebar-section-link-${category1.name} .sidebar-section-link-content-badge`
+            `.sidebar-section-link[data-category-id="${category1.id}"] .sidebar-section-link-content-badge`
           ).innerText.trim(),
           `some custom ${category1.topic_count}`,
           "displays the right badge text in section link when unread is present but custom countable is prioritised over unread"
         );
 
         assert.strictEqual(
-          query(`.sidebar-section-link-${category1.name}`).pathname,
+          query(`.sidebar-section-link[data-category-id="${category1.id}"]`)
+            .pathname,
           `/c/${category1.name}/${category1.id}/l/latest`,
           "has the right pathname for section link"
         );
 
         assert.strictEqual(
-          query(`.sidebar-section-link-${category1.name}`).search,
+          query(`.sidebar-section-link[data-category-id="${category1.id}"]`)
+            .search,
           "?status=open",
           "has the right query params for section link"
         );
