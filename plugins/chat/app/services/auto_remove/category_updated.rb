@@ -69,7 +69,7 @@ module Chat
               users.id NOT IN (
                 SELECT DISTINCT group_users.user_id
                 FROM group_users
-                WHERE group_users.group_id IN (#{reply_and_see_permission_group_ids})
+                WHERE group_users.group_id IN (#{reply_and_see_permission_group_ids.join(",")})
               )
             SQL
             users = users.where(group_user_sql)

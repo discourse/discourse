@@ -95,7 +95,7 @@ RSpec.describe Chat::Service::UpdateChannel do
 
         it "auto joins users" do
           expect_enqueued_with(
-            job: :auto_manage_channel_memberships,
+            job: :auto_join_channel_memberships,
             args: {
               chat_channel_id: channel.id,
             },
