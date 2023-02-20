@@ -70,7 +70,7 @@ RSpec.describe Jobs::ReindexSearch do
     end
 
     it "should not reindex posts with a developmental version" do
-      Fabricate(:post, version: SearchIndexer::MIN_POST_INDEX_VERSION + 1)
+      Fabricate(:post, version: SearchIndexer::POST_INDEX_VERSION + 1)
 
       subject.rebuild_posts(indexer: FakeIndexer)
 
