@@ -52,19 +52,22 @@ class ReviewableFlaggedPost < Reviewable
 
     if post.hidden?
       build_action(actions, :agree_and_keep_hidden, icon: "thumbs-up", bundle: agree)
-      build_action(actions, :delete_and_agree, icon: "far-trash-alt", bundle: agree)
+    else
+      build_action(actions, :agree_and_keep, icon: "thumbs-up", bundle: agree)
     end
 
-    build_action(actions, :delete_and_agree, icon: "far-trash-alt", bundle: agree)
+    if guardian.can_delete_post_or_topic?(post)
+      build_action(actions, :delete_and_agree, icon: "far-trash-alt", bundle: agree)
 
-    if post.reply_count > 0
-      build_action(
-        actions,
-        :delete_and_agree_replies,
-        icon: "far-trash-alt",
-        bundle: delete,
-        confirm: true,
-      )
+      if post.reply_count > 0
+        build_action(
+          actions,
+          :delete_and_agree_replies,
+          icon: "far-trash-alt",
+          bundle: agree,
+          confirm: true,
+        )
+      end
     end
 
     if guardian.can_suspend?(target_created_by)
@@ -101,7 +104,9 @@ class ReviewableFlaggedPost < Reviewable
     if !post.hidden?
       build_action(actions, :ignore_and_do_nothing, icon: "external-link-alt", bundle: ignore)
     end
-    build_action(actions, :delete_and_ignore, icon: "far-trash-alt", bundle: ignore)
+    if guardian.can_delete_post_or_topic?(post)
+      build_action(actions, :delete_and_ignore, icon: "far-trash-alt", bundle: ignore)
+    end
 
     delete_user_actions(actions) if potential_spam? && guardian.can_delete_user?(target_created_by)
 
@@ -241,13 +246,13 @@ class ReviewableFlaggedPost < Reviewable
   end
 
   def perform_delete_and_ignore(performed_by, args)
-    result = perform_ignore(performed_by, args)
+    result = perform_ignore_and_do_nothing(performed_by, args)
     destroyer(performed_by, post).destroy
     result
   end
 
   def perform_delete_and_ignore_replies(performed_by, args)
-    result = perform_ignore(performed_by, args)
+    result = perform_ignore_and_do_nothing(performed_by, args)
     PostDestroyer.delete_with_replies(performed_by, post, self)
 
     result

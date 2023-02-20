@@ -2268,7 +2268,7 @@ RSpec.describe PostsController do
         r2 = PostActionCreator.inappropriate(moderator, post_disagreed).reviewable
 
         r0.perform(admin, :agree_and_keep)
-        r1.perform(admin, :ignore)
+        r1.perform(admin, :ignore_and_do_nothing)
         r2.perform(admin, :disagree)
 
         sign_in(Fabricate(:moderator))

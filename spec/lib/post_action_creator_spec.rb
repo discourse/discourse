@@ -191,7 +191,7 @@ RSpec.describe PostActionCreator do
       end
 
       describe "When the post was already reviewed by staff" do
-        before { reviewable.perform(admin, :ignore) }
+        before { reviewable.perform(admin, :ignore_and_do_nothing) }
 
         it "fails because the post was recently reviewed" do
           freeze_time 10.seconds.from_now
