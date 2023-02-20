@@ -624,12 +624,6 @@ after_initialize do
     end
   end
 
-  reloadable_patch do |plugin|
-    class ::User
-      has_many :user_chat_channel_memberships
-    end
-  end
-
   Chat::Engine.routes.draw do
     namespace :api, defaults: { format: :json } do
       get "/chatables" => "chat_chatables#index"
