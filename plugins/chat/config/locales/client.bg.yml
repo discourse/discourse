@@ -23,10 +23,6 @@ bg:
       join: "Влизане"
       mention_warning:
         dismiss: "отмени"
-        groups:
-          users_limit:
-            one: "%{count} потребител"
-            other: "%{count} потребители"
       reply: "Отговорете"
       edit: "Редактирай"
       rebake_message: "Прегенерирай HTML "

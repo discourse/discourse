@@ -4228,10 +4228,6 @@ de:
         about: "Hier kannst du Gruppenzugehörigkeiten und Gruppennamen bearbeiten."
         group_members: "Gruppenmitglieder"
         delete: "Löschen"
-        delete_confirm: "Bist du sicher, dass du diese Gruppe löschen willst?"
-        delete_with_messages_confirm:
-          one: "Wenn du diese Gruppe löschst, wird %{count} Nachricht verwaist sein, die Gruppenmitglieder haben keinen Zugriff mehr darauf."
-          other: "Wenn du diese Gruppe löschst, werden %{count} Nachrichten verwaist sein, die Gruppenmitglieder haben keinen Zugriff mehr darauf."
         delete_failed: "Gruppe konnte nicht gelöscht werden. Wenn dies eine automatische Gruppe ist, kann sie nicht gelöscht werden."
         delete_automatic_group: Dies ist eine automatische Gruppe und sie kann nicht gelöscht werden.
         delete_owner_confirm: "Eigentümerrechte für „%{username}“ entfernen?"
@@ -4438,7 +4434,6 @@ de:
         enabled: "Aktiviert?"
         is_enabled: "J"
         not_enabled: "N"
-        change_settings: "Einstellungen ändern"
         change_settings_short: "Einstellungen"
         howto: "Wie installiere ich Plug-ins?"
         official: "Offizielles Plug-in"

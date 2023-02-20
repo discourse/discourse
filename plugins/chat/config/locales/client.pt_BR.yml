@@ -105,45 +105,18 @@ pt_BR:
       new_messages: "novas mensagens"
       mention_warning:
         dismiss: "ignorar"
-        cannot_see:
-          one: "%{username} não pode acessar este canal e não recebeu notificação."
-          other: "%{username} e %{others} não podem acessar este canal e não receberam notificação."
         invitations_sent:
           one: "Convite enviado"
           other: "Convites enviados"
         invite: "convidar para canal"
-        without_membership:
-          one: "%{username} não entrou neste canal."
-          other: "%{username} e %{others} não entraram neste canal."
-        group_mentions_disabled:
-          one: "%{group_name} não permite menções"
-          other: "%{group_name} e %{others} não permitem menções"
-        too_many_members:
-          one: "%{group_name} tem membros demais. Ninguém foi notificado"
-          other: "%{group_name} e %{others} têm membros demais. Ninguém foi notificado"
-        warning_multiple:
-          one: "mais %{count}"
-          other: "mais %{count}"
+        without_membership: "%{username} não entrou neste canal."
+        group_mentions_disabled: "%{group_name} não permite menções."
+        too_many_members: "%{group_name} tem membros demais. Ninguém foi notificado."
         groups:
           header:
             some: "Alguns usuários não serão notificados"
             all: "Ninguém será notificado"
-          unreachable:
-            one: "@%{group} não permite menções"
-            other: "@%{group} e @%{group_2} não permitem menções"
-          unreachable_multiple: "@%{group} e outros %{count} não permitem menções"
-          too_many_members:
-            one: "Mencionar @%{group} excede o %{notification_limit} de %{limit}"
-            other: "Mencionar ambos @%{group} ou @%{group_2} excede o %{notification_limit} de %{limit}"
-          too_many_members_multiple: "Esses %{count} grupos excedem o %{notification_limit} de %{limit}"
-          users_limit:
-            one: "%{count} usuário"
-            other: "%{count} usuários"
-          notification_limit: "limite de notificações"
-        too_many_mentions: "Esta mensagem excede o %{notification_limit} de %{limit}"
-        mentions_limit:
-          one: "%{count} menção"
-          other: "%{count} menções"
+          unreachable_1: "@%{group} não permite menções."
       aria_roles:
         header: "Cabeçalho do chat"
         composer: "Compositor de chat"
@@ -160,10 +133,9 @@ pt_BR:
       close_full_page: "Fechar chat em tela cheia"
       open_message: "Abrir mensagem no chat"
       placeholder_self: "Anotar algo"
-      placeholder_others: "Conversar com %{messageRecipient}"
-      placeholder_new_message_disallowed: "O canal é %{status}, você não pode enviar novas mensagens agora."
+      placeholder_users: "Conversar com %{commaSeparatedNames}"
       placeholder_silenced: "Você não pode enviar mensagens neste momento."
-      placeholder_start_conversation: Iniciar uma conversa com %{usernames}
+      placeholder_start_conversation_users: "Iniciar uma conversa com %{commaSeparatedUsernames}"
       remove_upload: "Remover arquivo"
       react: "Reagir com emoji"
       reply: "Responder"
@@ -258,18 +230,10 @@ pt_BR:
       create_channel:
         auto_join_users:
           public_category_warning: "%{category} é uma categoria pública. Deseja adicionar automaticamente todos os(as) usuários(as) recentemente ativos(as) a este canal?"
-          warning_groups:
-            one: Adicionar automaticamente %{members_count} usuários(as) de %{group}?
-            other: Adicionar automaticamente %{members_count} usuários(as) de %{group} e %{group_2}?
-          warning_multiple_groups: Adicionar automaticamente %{members_count} usuários(as) de %{group_1} e outros %{count}?
         choose_category:
           label: "Escolha uma categoria"
           none: "selecionar um..."
           default_hint: Gerencie o acesso ao acessar as <a href=%{link} target="_blank">%{category} configurações de segurança</a>
-          hint_groups:
-            one: Os(as) usuários(as) em %{hint} terão acesso a este canal de acordo com as <a href=%{link} target="_blank">configurações de segurança</a>
-            other: Os(as) usuários(as) em %{hint} e %{hint_2} terão acesso a este canal de acordo com as <a href=%{link} target="_blank">configurações de segurança</a>
-          hint_multiple_groups: Os(as) usuários(as) em %{hint_1} e %{count} terão acesso a este canal de acordo com as <a href=%{link} target="_blank">configurações de segurança</a>
         create: "Criar canal"
         description: "Descrição (opcional)"
         name: "Nome do canal"
@@ -282,10 +246,7 @@ pt_BR:
         type: "Mensagem de chat"
       reactions:
         only_you: "Você reagiu com :%{emoji}:"
-        and_others: "Você, %{usernames} reagiram com :%{emoji}:"
-        only_others: "%{usernames} reagiu com :%{emoji}:"
-        others_and_more: "%{usernames} e mais %{more} reagiram com :%{emoji}:"
-        you_others_and_more: "Você, %{usernames} e mais %{more} reagiram com :%{emoji}:"
+        single_user: "%{username} reagiu com :%{emoji}:"
       composer:
         toggle_toolbar: "Ativar/desativar barra de ferramentas"
         italic_text: "texto enfatizado"
@@ -316,7 +277,6 @@ pt_BR:
         saved: "Salvou"
         unfollow: "Sair"
         admin_title: "Administrador(a)"
-        retention_info: "O histórico do canal será salvo por %{days} dias."
       admin:
         title: "Chat"
       direct_messages:
@@ -381,9 +341,6 @@ pt_BR:
         many_users:
           one: "%{commaSeparatedUsernames} e mais %{count} estão digitando"
           other: "%{commaSeparatedUsernames} e mais %{count} estão digitando"
-      retention_reminders:
-        public: "Histórico do canal é mantido por %{days} dias."
-        dm: "Histórico de conversas pessoais é mantido por %{days} dias."
       flags:
         off_topic: "Esta mensagem não é relevante para a discussão atual, conforme definido pelo título do canal, e provavelmente deve ser movida para outro lugar."
         inappropriate: "Esta mensagem contém conteúdo que uma pessoa razoável consideraria ofensivo, abusivo ou uma violação de <a href=\"%{basePath}/guidelines\">nossas diretrizes da comunidade</a>."

@@ -54,16 +54,17 @@ he:
     deleted_chat_username: נמחק
     errors:
       channel_exists_for_category: "כבר קיים ערוץ לקטגוריה ולשם האלו"
-      channel_new_message_disallowed: "הערוץ %{status}, לא ניתן לשלוח הודעות חדשות"
-      channel_modify_message_disallowed: "הערוץ %{status}, לא ניתן לערוך או למחוק הודעות"
       user_cannot_send_message: "אין לך אפשרות לשלוח הודעות כרגע."
       rate_limit_exceeded: "חריגה ממגבלת הודעות הצ׳אט שניתן לשלוח תוך 30 שניות"
       auto_silence_from_flags: "הודעת צ׳אט שסומנה בציון גבוה מספיק כדי להשתיק את המשתמש."
       channel_cannot_be_archived: "אי אפשר להעביר את הערוץ לארכיון כרגע, הוא חייב להיות סגור או פתוח להעברה לארכיון."
       duplicate_message: "פרסמת הודעה זהה לפני זמן קצר מדי."
       delete_channel_failed: "מחיקת הערוץ נכשלה, נא לנסות שוב."
-      minimum_length_not_met: "ההודעה קצרה מדי, היא חייבת להיות ארוכה מ־%{minimum} תווים"
-      message_too_long: "ההודעה ארוכה מדי, היא חייבת להיות באורך של עד %{maximum} תווים לכל היותר."
+      message_too_long:
+        one: "ההודעה ארוכה מדי, היא חייבת להיות באורך של עד %{count} תווים לכל היותר."
+        two: "ההודעה ארוכה מדי, היא חייבת להיות באורך של עד %{count} תווים לכל היותר."
+        many: "ההודעה ארוכה מדי, היא חייבת להיות באורך של עד %{count} תווים לכל היותר."
+        other: "ההודעה ארוכה מדי, היא חייבת להיות באורך של עד %{count} תווים לכל היותר."
       draft_too_long: "הטיוטה ארוכה מדי."
       max_reactions_limit_reached: "רגשות חדשים אסורים בהודעה זו."
       message_move_invalid_channel: "ערוצי המקור והיעד חייבים להיות ערוצים ציבוריים."
@@ -75,11 +76,8 @@ he:
       actor_disallowed_dms: "בחרת למנוע ממשתמשים לשלוח אליך הודעות פרטיות וישירות כך שאין לך אפשרות ליצור הודעות ישירות חדשות."
       actor_preventing_target_user_from_dm: "בחרת למנוע מ־%{username} לשלוח אליך הודעות פרטיות וישירות כך שאין לך אפשרות ליצור הודעות ישירות חדשות אליהם."
       user_cannot_send_direct_messages: "מחילה, אין לך אפשרות לשלוח הודעות ישירות."
-      over_chat_max_direct_message_users:
-        one: "אין לך אפשרות ליצור הודעות ישירות מול עצמך."
-        two: "אין לך אפשרות ליצור הודעות ישירות מול למעלה מ־%{count} משתמשים נוספים."
-        many: "אין לך אפשרות ליצור הודעות ישירות מול למעלה מ־%{count} משתמשים נוספים."
-        other: "אין לך אפשרות ליצור הודעות ישירות מול למעלה מ־%{count} משתמשים נוספים."
+      over_chat_max_direct_message_users_allow_self: "אין לך אפשרות ליצור הודעות ישירות מול עצמך."
+      original_message_not_found: "מקור ההודעה אליה ניסית להגיב לא נמצא או שנמחק."
     reviewables:
       message_already_handled: "תודה, אבל כבר סקרנו הודעה זו וקבענו שאין צורך לסמן אותה שוב."
       actions:
@@ -116,11 +114,6 @@ he:
         transcript_title: "תמלול הודעות קודמות בערוץ %{channel_name}"
         transcript_body: "כדי לתת לך יותר הקשר, הוספנו תמליל של (עד עשר) ההודעות הקודמות בשיחה זו:\n\n%{transcript}"
     channel:
-      statuses:
-        read_only: "לקריאה בלבד"
-        archived: "בארכיון"
-        closed: "סגורה"
-        open: "פתיחה"
       archive:
         first_post_raw: "הנושא הזה הוא הארכיון של ערוץ הצ׳אט [%{channel_name}](%{channel_url})."
       messages_moved:
@@ -129,9 +122,12 @@ he:
         many: "%{count} הודעות הועברו על ידי ‎@%{acting_username} לערוץ [%{channel_name}](%{first_moved_message_url})."
         other: "%{count} הודעות הועברו על ידי ‎@%{acting_username} לערוץ [%{channel_name}](%{first_moved_message_url})."
       dm_title:
-        single_user: "%{user}"
-        multi_user: "%{users}"
-        multi_user_truncated: "%{users} ועוד %{leftover}"
+        single_user: "%{username}"
+        multi_user_truncated:
+          one: "%{comma_separated_usernames} ועוד %{count}"
+          two: "%{comma_separated_usernames} ועוד %{count}"
+          many: "%{comma_separated_usernames} ועוד %{count}"
+          other: "%{comma_separated_usernames} ועוד %{count}"
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "מכיל תווים שאינם בתחום ASCII"

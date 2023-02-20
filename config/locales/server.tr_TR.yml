@@ -580,10 +580,6 @@ tr_TR:
             duration_minutes:
               cannot_be_zero: "0'dan büyük olmalı."
               exceeds_maximum: "20 yıldan fazla olamaz."
-        translation_overrides:
-          attributes:
-            value:
-              invalid_interpolation_keys: 'Şu enterpolasyon anahtar(lar)ı geçersiz: "%{keys}"'
         watched_word:
           attributes:
             word:

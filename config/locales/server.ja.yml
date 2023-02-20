@@ -562,10 +562,6 @@ ja:
             duration_minutes:
               cannot_be_zero: "は 0 より大きい必要があります。"
               exceeds_maximum: "は 20 年を越えてはいけません。"
-        translation_overrides:
-          attributes:
-            value:
-              invalid_interpolation_keys: '次の補間キーは無効です: "%{keys}"'
         watched_word:
           attributes:
             word:

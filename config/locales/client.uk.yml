@@ -4615,7 +4615,6 @@ uk:
         enabled: "Включено?"
         is_enabled: "Т"
         not_enabled: "Н"
-        change_settings: "Зміна налаштувань"
         change_settings_short: "Налаштування"
         howto: "Як встановити плагін?"
         official: "Офіційний плагін"

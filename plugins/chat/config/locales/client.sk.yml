@@ -24,12 +24,6 @@ sk:
       join: "Pridať sa"
       mention_warning:
         dismiss: "zahodiť"
-        groups:
-          users_limit:
-            one: "%{count} používateľ"
-            few: "%{count} používatelia"
-            many: "%{count} používateľov"
-            other: "%{count} používateľov"
       reply: "Odpoveď"
       edit: "Upraviť"
       rebake_message: "Pregenerovať HTML"

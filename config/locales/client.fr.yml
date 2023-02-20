@@ -4228,10 +4228,6 @@ fr:
         about: "Modifier votre adhésion et les noms ici"
         group_members: "Membres du groupe"
         delete: "Supprimer"
-        delete_confirm: "Voulez-vous vraiment supprimer ce groupe ?"
-        delete_with_messages_confirm:
-          one: "La suppression de ce groupe rendra %{count} message orphelin, les membres du groupe n'y auront plus accès."
-          other: "La suppression de ce groupe rendra %{count} messages orphelins, les membres du groupe n'y auront plus accès."
         delete_failed: "Impossible de supprimer le groupe. S'il s'agit d'un groupe automatique, il ne peut pas être détruit."
         delete_automatic_group: Ce groupe ne peut pas être supprimé car il est constitué de façon automatique.
         delete_owner_confirm: "Retirer les privilèges de propriétaire pour %{username} ?"
@@ -4439,7 +4435,6 @@ fr:
         enabled: "Activée ?"
         is_enabled: "O"
         not_enabled: "N"
-        change_settings: "Changer les paramètres"
         change_settings_short: "Paramètres"
         howto: "Comment installer des extensions ?"
         official: "Extension officielle"
