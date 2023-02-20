@@ -14,6 +14,8 @@ module Chat
       class Contract
         attribute :event_type
         attribute :event_data
+
+        before_validation { self.event_type = self.event_type.to_sym }
       end
 
       private

@@ -7,21 +7,26 @@ module Chat
         include Service::Base
 
         contract
+        model :category
         model :category_channel_ids
         step :execute
 
         class Contract
-          attribute :category
+          attribute :category_id
         end
 
         private
 
-        def fetch_category_channel_ids(contract:, **)
-          ChatChannel.where(chatable: contract.category).pluck(:id)
+        def fetch_category(contract:, **)
+          Category.find(contract.category_id)
         end
 
-        def execute(contract:, category_channel_ids:, **)
-          return noop if !contract.category.read_restricted?
+        def fetch_category_channel_ids(category:, **)
+          ChatChannel.where(chatable: category).pluck(:id)
+        end
+
+        def execute(category:, category_channel_ids:, **)
+          return noop if !category.read_restricted?
           return noop if category_channel_ids.empty?
 
           # if the category doesn't have any secure group IDs anymore,
@@ -32,7 +37,7 @@ module Chat
           # users who are not in groups with reply + see permission for the
           # corresponding category channels will be kicked out
           reply_and_see_permission_group_ids =
-            if contract.category.secure_group_ids.none?
+            if category.secure_group_ids.none?
               []
             else
               # find all groups that can reply + see (reply_and_see permisson) for
@@ -40,8 +45,8 @@ module Chat
               # kicked
               Group
                 .joins("INNER JOIN category_groups ON category_groups.group_id = groups.id")
-                .where("category_groups.group_id IN (?)", contract.category.secure_group_ids)
-                .where("category_groups.category_id = ?", contract.category.id)
+                .where("category_groups.group_id IN (?)", category.secure_group_ids)
+                .where("category_groups.category_id = ?", category.id)
                 .where(
                   "category_groups.permission_type < ?",
                   CategoryGroup.permission_types[:readonly], # create_post and full are 1 and 2, readonly is 3

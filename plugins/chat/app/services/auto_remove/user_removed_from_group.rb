@@ -7,34 +7,38 @@ module Chat
         include Service::Base
 
         contract
+        model :user
         step :remove_if_outside_chat_allowed_groups
         step :remove_from_private_channels
 
         class Contract
-          attribute :user
-          attribute :group
+          attribute :user_id
         end
 
         private
 
-        def remove_if_outside_chat_allowed_groups(contract:, **)
-          return if contract.user.staff?
+        def fetch_user(contract:, **)
+          User.find(contract.user_id)
+        end
+
+        def remove_if_outside_chat_allowed_groups(user:, **)
+          return if user.staff?
 
           # if the group the user was removed from is one of the chat allowed
           # groups, check if they are still in any of the other chat allowed
           # groups, otherwise kick
-          if !GroupUser.exists?(group_id: SiteSetting.chat_allowed_groups_map, user: contract.user)
+          if !GroupUser.exists?(group_id: SiteSetting.chat_allowed_groups_map, user: user)
             # TODO (martin) Maybe extract this to a single user version?
             UserChatChannelMembership
               .joins(:chat_channel)
-              .where(user_id: contract.user.id)
+              .where(user_id: user.id)
               .where.not(chat_channel: { type: "DirectMessageChannel" })
               .delete_all
           end
         end
 
-        def remove_from_private_channels(contract:, **)
-          return noop if contract.user.staff?
+        def remove_from_private_channels(user:, **)
+          return noop if user.staff?
 
           # get a map of all groups that are allowed to access the channels the
           # user is a member of and their permission level. for channels where
@@ -51,7 +55,7 @@ module Chat
 
           channel_ids = channel_group_permission_map.map(&:channel_id).uniq
           user_memberships =
-            UserChatChannelMembership.where(chat_channel_id: channel_ids, user: contract.user)
+            UserChatChannelMembership.where(chat_channel_id: channel_ids, user: user)
 
           membership_ids_to_delete = []
           user_memberships.each do |membership|
@@ -62,7 +66,7 @@ module Chat
                 .select { |cgm| cgm.channel_id == membership.chat_channel_id }
                 .select { |cgm| cgm.permission_type < CategoryGroup.permission_types[:readonly] }
                 .map(&:group_id)
-            next if contract.user.in_any_groups?(see_and_reply_group_ids)
+            next if user.in_any_groups?(see_and_reply_group_ids)
 
             membership_ids_to_delete << membership.id
           end

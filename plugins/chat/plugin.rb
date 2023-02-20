@@ -500,7 +500,8 @@ after_initialize do
     end
 
     if name == :chat_allowed_groups
-      Chat::Service::AutoRemoveMembershipEventHandler.call(
+      Jobs.enqueue(
+        :auto_remove_channel_memberships,
         event_type: :chat_allowed_groups_changed,
         event_data: {
           new_allowed_groups: new_value,
@@ -591,11 +592,11 @@ after_initialize do
   end
 
   on(:user_removed_from_group) do |user, group|
-    Chat::Service::AutoRemoveMembershipEventHandler.call(
+    Jobs.enqueue(
+      :auto_remove_channel_memberships,
       event_type: :user_removed_from_group,
       event_data: {
-        user: user,
-        group: group,
+        user_id: user.id,
       },
     )
   end
@@ -613,10 +614,11 @@ after_initialize do
         ).enforce_automatic_channel_memberships
       end
 
-      Chat::Service::AutoRemoveMembershipEventHandler.call(
+      Jobs.enqueue(
+        :auto_remove_channel_memberships,
         event_type: :category_updated,
         event_data: {
-          category: category,
+          category_id: category.id,
         },
       )
     end
