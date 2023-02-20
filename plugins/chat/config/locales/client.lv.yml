@@ -25,11 +25,6 @@ lv:
       join: "Pievienojieties"
       mention_warning:
         dismiss: "nerādīt"
-        groups:
-          users_limit:
-            zero: "%{count} lietotāji"
-            one: "%{count} lietotājs"
-            other: "%{count} lietotāji"
       reply: "Atbilde"
       edit: "Rediģēt"
       rebake_message: "Pārbūvēt HTML"

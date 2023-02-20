@@ -25,9 +25,6 @@ th:
       join: "เข้าร่วม"
       mention_warning:
         dismiss: "ซ่อน"
-        groups:
-          users_limit:
-            other: "%{count} ผู้ใช้"
       reply: "ตอบ"
       edit: "แก้ไข"
       bookmark_message: "บุ๊คมาร์ค"

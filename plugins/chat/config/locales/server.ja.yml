@@ -44,16 +44,16 @@ ja:
     deleted_chat_username: 削除済み
     errors:
       channel_exists_for_category: "このカテゴリと名前のチャンネルはすでに存在します"
-      channel_new_message_disallowed: "チャンネルは %{status} です。新しいメッセージは送信できません"
-      channel_modify_message_disallowed: "チャンネルは %{status} です。メッセージの編集や削除は行えません"
       user_cannot_send_message: "現在、メッセージを送信できません。"
       rate_limit_exceeded: "30 秒間で送信できるチャットメッセージの件数制限を超えました"
       auto_silence_from_flags: "ユーザーを投稿禁止にするのに十分なスコアで通報されたチャットメッセージ。"
       channel_cannot_be_archived: "現在、チャンネルをアーカイブできません。アーカイブするには閉鎖されているかオープンである必要があります。"
       duplicate_message: "同一のメッセージを最近投稿しました。"
       delete_channel_failed: "チャンネルの削除に失敗しました。もう一度お試しください。"
-      minimum_length_not_met: "メッセージが短すぎます。最低 %{minimum} 文字が必要です。"
-      message_too_long: "メッセージが長すぎます。メッセージは最大 %{maximum} 文字までです。"
+      minimum_length_not_met:
+        other: "メッセージが短すぎます。最低 %{count} 文字が必要です。"
+      message_too_long:
+        other: "メッセージが長すぎます。メッセージは最大 %{count} 文字までです。"
       max_reactions_limit_reached: "このメッセージでは、新しいリアクションは許可されていません。"
       message_move_invalid_channel: "移動元と移動先のチャンネルは公開チャンネルである必要があります。"
       message_move_no_messages_found: "指定されたメッセージ ID を持つメッセージは見つかりませんでした。"
@@ -102,19 +102,14 @@ ja:
         transcript_title: "%{channel_name} の過去のメッセージのトランスクリプト"
         transcript_body: "より文脈を掴みやすいように、この会話の過去のメッセージのトランスクリプトを含めました (最大 10 件)。\n\n%{transcript}"
     channel:
-      statuses:
-        read_only: "より文脈を掴みやすいように、この会話の過去のメッセージのトランスクリプトを含めました (最大 10 件)。\n\n%{transcript}"
-        archived: "アーカイブ済み"
-        closed: "閉鎖"
-        open: "オープン"
       archive:
         first_post_raw: "このトピックは、[%{channel_name}](%{channel_url}) チャットチャンネルのアーカイブです。"
       messages_moved:
         other: "@%{acting_username} が %{count} 件のメッセージを [%{channel_name}](%{first_moved_message_url}) チャンネルに移動しました。"
       dm_title:
-        single_user: "%{user}"
-        multi_user: "%{users}"
-        multi_user_truncated: "%{users} および他 %{leftover} 人"
+        single_user: "%{username}"
+        multi_user_truncated:
+          other: "%{comma_separated_usernames} および他 %{count} 人"
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "に非 ASCII 文字が含まれます"

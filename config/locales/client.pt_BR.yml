@@ -4228,10 +4228,6 @@ pt_BR:
         about: "Edite a associação no seu grupo e os nomes aqui"
         group_members: "Membros do grupo"
         delete: "Apagar"
-        delete_confirm: "Tem certeza de que deseja excluir este grupo?"
-        delete_with_messages_confirm:
-          one: "Excluir este grupo fará com que %{count} mensagem fique órfã. Os membros do grupo não poderão mais acessá-la."
-          other: "Excluir este grupo fará com que %{count} mensagens fiquem órfãs. Os membros do grupo não poderão mais acessá-las."
         delete_failed: "Não é possível excluir o grupo. Se for um grupo automático, não poderá ser desfeito."
         delete_automatic_group: Este é um grupo automático e não pode ser excluído.
         delete_owner_confirm: "Remover privilégio de proprietário(a) de \"%{username}\"?"
@@ -4439,7 +4435,6 @@ pt_BR:
         enabled: "Ativado(a)?"
         is_enabled: "S"
         not_enabled: "N"
-        change_settings: "Alterar configurações"
         change_settings_short: "Configurações"
         howto: "Como instalo plug-ins?"
         official: "Plug-in oficial"

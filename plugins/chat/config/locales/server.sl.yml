@@ -22,9 +22,8 @@ sl:
         ignore:
           title: "Prezri"
     channel:
-      statuses:
-        closed: "Zaprto"
-        open: "Odpri"
+      dm_title:
+        single_user: "%{username}"
   discourse_push_notifications:
     popup:
       chat_mention:

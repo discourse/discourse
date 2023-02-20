@@ -2521,6 +2521,7 @@ pt:
         unarchive: "Desarquivar Tópico"
         archive: "Arquivar Tópico"
         reset_read: "Repor Data de Leitura"
+        make_public: "Criar tópico publico..."
         make_private: "Tornar Mensagem Pessoal"
         reset_bump_date: "Reset à Data do Bump"
       feature:
@@ -2803,6 +2804,7 @@ pt:
         publish_page: "Publicação de Página"
         unhide: "Mostrar"
         change_owner: "Alterar Proprietário..."
+        grant_badge: "Atribuir Crachá..."
         lock_post: "Bloquear Post"
         lock_post_description: "impedir o autor de editar esta publicação"
         unlock_post: "Desbloquear Post"
@@ -2813,6 +2815,8 @@ pt:
         delete_topic_confirm_modal_no: "Não, mantenha este tópico"
         delete_topic_error: "Ocorreu um erro ao excluir este tópico"
         delete_topic: "eliminar tópico"
+        add_post_notice: "Adicionar Nota da Equipe..."
+        change_post_notice: "Alterar Aviso da Equipa..."
         delete_post_notice: "Apagar Aviso da Equipa"
         remove_timer: "remover timer"
         edit_timer: "editar temporizador"
@@ -3427,6 +3431,7 @@ pt:
       topics:
         none:
           unread: "Não tem tópicos por ler."
+          unseen: "Não tem tópicos por ler."
           new: "Não tem novos tópicos."
           read: "Ainda não leu nenhum tópico."
           posted: "Ainda não publicou em qualquer tópico."
@@ -3450,6 +3455,7 @@ pt:
       enabled: "O modo de segurança está activado, para sair do modo de segurança feche esta janela do navegador"
     image_removed: "(imagem removida)"
     pause_notifications:
+      label: "Pausar notificações"
       options:
         half_hour: "30 minutos"
         one_hour: "1 hora"
@@ -3505,6 +3511,8 @@ pt:
               content: "Administrador"
             badges:
               content: "Crachás"
+            everything:
+              content: "Tudo"
             faq:
               content: "FAQ"
             groups:
@@ -3515,6 +3523,7 @@ pt:
               content: "As Minhas publicações"
             review:
               content: "Revisão"
+    until: "Até:"
   admin_js:
     type_to_filter: "digite para filtrar..."
     admin:
@@ -3804,9 +3813,10 @@ pt:
         enabled: "Ativado?"
         is_enabled: "S"
         not_enabled: "N"
-        change_settings: "Alterar Configurações"
         change_settings_short: "Configurações"
         howto: "Como instalo plugins?"
+      navigation_menu:
+        sidebar: "Barra Lateral"
       backups:
         title: "Fazer Cópias de Segurança"
         menu:
@@ -4137,6 +4147,9 @@ pt:
             address_placeholder: "nome@exemplo.com"
             type_placeholder: "resumo, subscrever..."
             reply_key_placeholder: "chave de resposta"
+      moderation_history:
+        actions:
+          delete_topic: "Tópico eliminado"
       logs:
         title: "Logs"
         action: "Ação"
@@ -4189,6 +4202,7 @@ pt:
             change_category_settings: "alterar configurações de categoria"
             delete_category: "eliminar categoria"
             create_category: "criar categoria"
+            silence_user: "silenciar utilizador"
             grant_admin: "conceder administração"
             revoke_admin: "revogar administração"
             grant_moderation: "conceder moderação"

@@ -1414,6 +1414,7 @@ sq:
       approve:
         title: "Aprovo"
       reject_user:
+        title: "Fshij Anëtarin..."
         delete:
           title: "Fshij Anëtarin"
       reject:

@@ -566,10 +566,6 @@ ur:
             duration_minutes:
               cannot_be_zero: "0 سے زیادہ ہونا چاہیے۔"
               exceeds_maximum: "20 سال سے زیادہ نہیں ہو سکتا۔"
-        translation_overrides:
-          attributes:
-            value:
-              invalid_interpolation_keys: 'مندرجہ ذیل اِنٹَرپَولَیشَن کی (ز) غلط ہیں: "%{keys}"'
         watched_word:
           attributes:
             word:
@@ -1889,6 +1885,7 @@ ur:
     default_other_enable_quoting: "ڈِیفالٹ کے طور پر روشنی ڈالے گئے ٹَیکسٹ کے لئے اقتباسی جواب فعال کریں۔"
     default_other_enable_defer: "ڈیفالٹ سے ٹاپک ملتوی خصوصیت فعال کریں۔"
     default_other_dynamic_favicon: "ڈِیفالٹ کے طور پر براؤزر آئکن پر نئے / اَپ ڈیٹ کردہ ٹاپکس کی گنتی دکھائیں۔"
+    default_other_skip_new_user_tips: "نئے صارف آن بورڈنگ تجاویز اور بیجز کو چھوڑ دیں."
     default_other_like_notification_frequency: "ڈِیفالٹ کے طور پر صارفین کو لائیکس پر اطلاع دیں"
     default_topics_automatic_unpin: "ڈِیفالٹ کے طور پر صارفین جب ٹاپک کے آخر تک پہنچ جائیں تو خود بخود ٹاپکس پر سے پِن ہٹا دیں۔"
     default_categories_watching: "زُمرہ جات کی فہرست جو ڈِیفالٹ کے طور پر دیکھے گئے ہوں۔"
@@ -3062,6 +3059,7 @@ ur:
     file_missing: "معذرت، اَپ لوڈ کرنے کیلئے آپ کو ایک فائل فراہم کرنا ضروری ہے۔"
     empty: "معذرت، لیکن آپ کی فراہم کردہ فائل خالی ہے۔"
     png_to_jpg_conversion_failure_message: "PNG سے JPG پر تبدیل کرتے وقت ایک خرابی کا سامنا کرنا پڑا۔"
+    size_zero_failure: "معذرت، ایسا لگتا ہے کہ کچھ غلط ہو گیا ہے، آپ جس فائل کو اپ لوڈ کرنے کی کوشش کر رہے ہیں وہ 0 بائٹس ہے۔ دوبارہ کوشش کریں."
     attachments:
       too_large: "معذرت، جو فائل آپ اَپ لوڈ کرنے کے کوشش کر رہے ہیں وہ بہت بڑی ہے (زیادہ سے زیادہ سائز %{max_size_kb} KB ہے)۔"
     images:
@@ -3476,6 +3474,8 @@ ur:
     user_merged: "%{username} اِس اکاؤنٹ میں ضم کر دیا گیا تھا"
     user_delete_self: "%{url} سے خود حذف کر دیا گیا"
     webhook_deactivation_reason: "آپ کا وَیب ھُوک٘ خود بخود غیر فعال کر دیا گیا ہے۔ ہمیں ایک سے زیادہ '%{status}' HTTP سٹیٹس ناکام جوابات موصول ہوئے۔"
+    api_key:
+      revoked: منسوخ
   reviewables:
     priorities:
       low: "کم"

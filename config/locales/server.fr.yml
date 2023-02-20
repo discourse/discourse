@@ -587,10 +587,6 @@ fr:
             duration_minutes:
               cannot_be_zero: "doit être supérieur à 0."
               exceeds_maximum: "ne peut pas dépasser 20 ans."
-        translation_overrides:
-          attributes:
-            value:
-              invalid_interpolation_keys: 'Les clés d''interpolation suivantes sont invalides : « %{keys} »'
         watched_word:
           attributes:
             word:

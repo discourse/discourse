@@ -4228,10 +4228,6 @@ fi:
         about: "Muokkaa ryhmien jäsenyyksiä ja nimiä täällä"
         group_members: "Ryhmän jäsenet"
         delete: "Poista"
-        delete_confirm: "Oletko varma, että haluat poistaa tämän ryhmän?"
-        delete_with_messages_confirm:
-          one: "Tämän ryhmän poistaminen aiheuttaa %{count} viestin orpoutumisen, ja ryhmän jäsenillä ei ole tämän jälkeen pääsyä siihen."
-          other: "Tämän ryhmän poistaminen aiheuttaa %{count} viestin orpoutumisen, ja ryhmän jäsenillä ei ole tämän jälkeen pääsyä siihen."
         delete_failed: "Ryhmän poistaminen ei onnistu. Jos tämä on automaattinen ryhmä, sitä ei voi poistaa."
         delete_automatic_group: Tämä on automaattisesti luotu ryhmä, eikä sitä voi poistaa.
         delete_owner_confirm: "Perutaanko käyttäjältä '%{username}' isännyys?"
@@ -4437,7 +4433,6 @@ fi:
         enabled: "Otettu käyttöön?"
         is_enabled: "K"
         not_enabled: "E"
-        change_settings: "Muuta asetuksia"
         change_settings_short: "Asetukset"
         howto: "Kuinka asennan lisäosia?"
         official: "Virallinen lisäosa"

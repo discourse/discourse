@@ -587,10 +587,6 @@ nl:
             duration_minutes:
               cannot_be_zero: "moet groter zijn dan 0."
               exceeds_maximum: "kan niet meer dan 20 jaar zijn."
-        translation_overrides:
-          attributes:
-            value:
-              invalid_interpolation_keys: 'De volgende interpolatiesleutel(s) zijn ongeldig: ''%{keys}'''
         watched_word:
           attributes:
             word:

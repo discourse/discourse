@@ -286,6 +286,7 @@ sw:
         reject_reason: "Sababu"
       topics:
         topic: "Mada"
+        deleted: "[Mada Imefutwa]"
         details: "maelezo"
         unique_users:
           one: "Mtumiaji mmoja"
@@ -784,6 +785,7 @@ sw:
         primary: "Barua pepe ya awali"
         secondary: "Barua pepe"
         primary_label: "msingi"
+        resent_label: "barua pepe imetumwa"
         update_email: "Badilisha Barua Pepe"
         ok: "Tutakutumia barua pepe kuthibitisha"
         invalid: "Andika barua pepe iliyo sahihi"
@@ -1442,9 +1444,11 @@ sw:
         dismiss_new: "Ondosha Mpya"
         toggle: "Badili kwa wingi chaguo la topiki"
         actions: "Vitendo za Jumla"
+        change_category: "Seti Kategoria..."
         close_topics: "Funga Mada"
         archive_topics: "Hifadhi Mada kwenye nyaraka"
         move_messages_to_inbox: "Hamishia kwenye kisanduku-pokezi"
+        notification_level: "Taarifa..."
         choose_new_category: "Chagua kategoria mpya kwa ajili ya mada:"
         selected:
           one: "Umechagua mada <b>%{count}</b>."
@@ -1612,6 +1616,7 @@ sw:
         unarchive: "Ondoa Mada kwenye Nyaraka"
         archive: "Weka Mada kwenye Nyaraka"
         reset_read: "Anzisha Upya Usomaji wa Taarifa"
+        make_public: "Fanya Mada iwe ya Umma..."
         make_private: "Tengeneza Ujumbe Binafsi"
       feature:
         pin: "Bandika Mada"
@@ -1795,6 +1800,8 @@ sw:
         revert_to_regular: "Ondoa Rangi ya Wasaidizi"
         rebake: "Tengeneza upya HTML"
         unhide: "Onesha"
+        change_owner: "Badilisha Umiliki..."
+        grant_badge: "Toa Beji..."
         lock_post: "Funga Chapisho"
         lock_post_description: "mzuie mchapishaji kuhariri chapisho hili"
         unlock_post: "Fungua Chapisho"
@@ -1940,6 +1947,7 @@ sw:
     flagging:
       title: "Asante kwa kuendeleza ustaarabu kwenye jumuiya yetu!"
       action: "Ripoti Chapisho"
+      take_action: "Fanya Kitendo..."
       take_action_options:
         default:
           title: "Fanya Kitendo"
@@ -2209,6 +2217,7 @@ sw:
         delete: "Futa"
         confirm_delete: "Una uhakika unataka kufuta kikundi cha lebo hii?"
         everyone_can_use: "Lebo zinaweza kutumiwa na kila mtu"
+        parent_tag_placeholder: "Sio muhimu"
       topics:
         none:
           unread: "Hauna mada ambazo hazijasomwa."
@@ -2306,6 +2315,7 @@ sw:
         latest_version: "Hivi Karibuni"
         new_features:
           dismiss: "Ondosha"
+          learn_more: "Jifunze zaidi"
         last_checked: "Mara ya Mwisho imeangaliwa"
         refresh_problems: "Rudisha Tena"
         no_problems: "Hakuna matatizo yaliyopatikana."
@@ -2405,6 +2415,7 @@ sw:
         user: "Mtumiaji"
         title: "API"
         created: Imetengenezwa
+        never_used: (kamwe)
         generate: "Tengeneza"
         revoke: "Futa"
         all_users: "Watumiaji Wote"
@@ -2476,7 +2487,6 @@ sw:
         enabled: "Imeruhusiwa?"
         is_enabled: "N"
         not_enabled: "H"
-        change_settings: "Badilisha Mipangilio"
         change_settings_short: "Mipangilio"
         howto: "Ninawekaje programu-jalizi?"
         official: "Programu-jalizi Rasmi"

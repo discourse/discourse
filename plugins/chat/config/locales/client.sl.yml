@@ -25,12 +25,6 @@ sl:
       join: "Pridruži se"
       mention_warning:
         dismiss: "opusti"
-        groups:
-          users_limit:
-            one: "%{count} uporabnik"
-            two: "%{count} uporabnika"
-            few: "%{count} uporabniki"
-            other: "%{count} uporabnikov"
       reply: "Odgovori"
       edit: "Uredi"
       rebake_message: "Obnovi HTML"
