@@ -42,12 +42,13 @@
 
       {{#if this.displayCount}}
         <div class="badge-granted">
-          <a
-            href={{this.url}}
-            title={{i18n "badges.granted" count=this.displayCount}}
-            class="grant-count"
-          >{{this.displayCount}}x</a>
-          <span class="grant-text">{{i18n "badges.granted_text_only"}}</span>
+          {{html-safe
+            (i18n
+              "badges.granted_with_count"
+              count=this.displayCount
+              badgeUrl=this.url
+            )
+          }}
         </div>
       {{/if}}
     </div>
