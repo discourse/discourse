@@ -178,6 +178,13 @@ RSpec.describe UserOption do
           ActiveSupport::TimeZone.find_tzinfo("Europe/Paris"),
         )
       end
+
+      it "works for Europe/Kyiv" do
+        user.user_option.update(timezone: "Europe/Kyiv")
+        expect(UserOption.user_tzinfo(user.id)).to eq(
+          ActiveSupport::TimeZone.find_tzinfo("Europe/Kyiv"),
+        )
+      end
     end
 
     context "with user with invalid timezone given" do
