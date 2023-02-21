@@ -1,5 +1,5 @@
 import Controller, { inject as controller } from "@ember/controller";
-import { observes } from "discourse-common/utils/decorators";
+import { observes } from "@ember-decorators/object";
 import I18n from "I18n";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import { popupAjaxError } from "discourse/lib/ajax-error";
