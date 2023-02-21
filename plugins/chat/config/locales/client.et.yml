@@ -24,10 +24,6 @@ et:
       join: "Liitu"
       mention_warning:
         dismiss: "ignoreeri"
-        groups:
-          users_limit:
-            one: "%{count} kasutaja"
-            other: "%{count} kasutajat"
       reply: "Vasta"
       edit: "Muuda"
       rebake_message: "Rekonstrueeri HTML"

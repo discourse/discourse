@@ -75,10 +75,6 @@ class ChatChannel < ActiveRecord::Base
     Chat::ChatChannelMembershipManager.new(self).unfollow(user)
   end
 
-  def status_name
-    I18n.t("chat.channel.statuses.#{self.status}")
-  end
-
   def url
     "#{Discourse.base_url}/chat/c/#{self.slug || "-"}/#{self.id}"
   end

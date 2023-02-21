@@ -411,49 +411,53 @@ export default class ChatMessage extends Component {
   }
 
   get mentionedCannotSeeText() {
-    return I18n.t("chat.mention_warning.cannot_see", {
-      username: this.mentionWarning?.cannot_see?.[0]?.username,
-      count: this.mentionWarning?.cannot_see?.length,
-      others: this._othersTranslation(
-        this.mentionWarning?.cannot_see?.length - 1
-      ),
-    });
+    return this._findTranslatedWarning(
+      "chat.mention_warning.cannot_see",
+      "chat.mention_warning.cannot_see_multiple",
+      {
+        username: this.mentionWarning?.cannot_see?.[0]?.username,
+        count: this.mentionWarning?.cannot_see?.length,
+      }
+    );
   }
 
   get mentionedWithoutMembershipText() {
-    return I18n.t("chat.mention_warning.without_membership", {
-      username: this.mentionWarning?.without_membership?.[0]?.username,
-      count: this.mentionWarning?.without_membership?.length,
-      others: this._othersTranslation(
-        this.mentionWarning?.without_membership?.length - 1
-      ),
-    });
+    return this._findTranslatedWarning(
+      "chat.mention_warning.without_membership",
+      "chat.mention_warning.without_membership_multiple",
+      {
+        username: this.mentionWarning?.without_membership?.[0]?.username,
+        count: this.mentionWarning?.without_membership?.length,
+      }
+    );
   }
 
   get groupsWithDisabledMentions() {
-    return I18n.t("chat.mention_warning.group_mentions_disabled", {
-      group_name: this.mentionWarning?.group_mentions_disabled?.[0],
-      count: this.mentionWarning?.group_mentions_disabled?.length,
-      others: this._othersTranslation(
-        this.mentionWarning?.group_mentions_disabled?.length - 1
-      ),
-    });
+    return this._findTranslatedWarning(
+      "chat.mention_warning.group_mentions_disabled",
+      "chat.mention_warning.group_mentions_disabled_multiple",
+      {
+        group_name: this.mentionWarning?.group_mentions_disabled?.[0],
+        count: this.mentionWarning?.group_mentions_disabled?.length,
+      }
+    );
   }
 
   get groupsWithTooManyMembers() {
-    return I18n.t("chat.mention_warning.too_many_members", {
-      group_name: this.mentionWarning.groups_with_too_many_members?.[0],
-      count: this.mentionWarning.groups_with_too_many_members?.length,
-      others: this._othersTranslation(
-        this.mentionWarning.groups_with_too_many_members?.length - 1
-      ),
-    });
+    return this._findTranslatedWarning(
+      "chat.mention_warning.too_many_members",
+      "chat.mention_warning.too_many_members_multiple",
+      {
+        group_name: this.mentionWarning.groups_with_too_many_members?.[0],
+        count: this.mentionWarning.groups_with_too_many_members?.length,
+      }
+    );
   }
 
-  _othersTranslation(othersCount) {
-    return I18n.t("chat.mention_warning.warning_multiple", {
-      count: othersCount,
-    });
+  _findTranslatedWarning(oneKey, multipleKey, args) {
+    const translationKey = args.count === 1 ? oneKey : multipleKey;
+    args.count--;
+    return I18n.t(translationKey, args);
   }
 
   @action
@@ -521,7 +525,7 @@ export default class ChatMessage extends Component {
     }
 
     this._updateReactionsList(busData.emoji, busData.action, busData.user);
-    this.afterReactionAdded();
+    this.args.afterReactionAdded();
   }
 
   get capabilities() {

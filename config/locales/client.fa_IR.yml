@@ -1425,6 +1425,7 @@ fa_IR:
           edit_title: "ویرایش دعوت‌نامه"
           instructions: "این لینک را برای ارائه دسترسی فوری به سایت٬ به اشتراک بگذارید:"
           copy_link: "کپی پیوند"
+          expires_in_time: "در %{time} منقضی می شود"
           expired_at_time: "منقضی شده در %{time}"
           show_advanced: "نمایش تنظیمات پیشرفته"
           hide_advanced: "پنهان کردن تنظیمات پیشرفته"
@@ -2245,6 +2246,7 @@ fa_IR:
         dismiss_new: "بستن جدید"
         toggle: "تغییر وضعیت انتخاب گروهی موضوعات"
         actions: "عملیات گروهی"
+        change_category: "تنظیم دسته‌بندی..."
         close_topics: "بستن موضوعات"
         archive_topics: "بایگانی موضوعات"
         move_messages_to_inbox: "انتقال به صندوق دریافت"
@@ -2465,6 +2467,7 @@ fa_IR:
         unarchive: "موضوع بایگانی نشده"
         archive: "بایگانی کردن موضوع"
         reset_read: "تنظیم مجدد خواندن داده ها"
+        make_public: "ایجاد موضوع عمومی..."
         make_private: "به پیام تبدیل کن"
         reset_bump_date: "تنظیم مجدد خواندن داده ها"
       feature:
@@ -2707,6 +2710,8 @@ fa_IR:
         revert_to_regular: "حذف رنگ همکاران"
         rebake: "ساخت مجدد HTML"
         unhide: "آشکار کردن"
+        change_owner: "تغییر مالکیت..."
+        grant_badge: "اعطای نشان..."
         lock_post: "قفل کردن پست"
         lock_post_description: "ممانعت از ویرایش پست توسط فرستنده"
         unlock_post: "بازکردن پست"
@@ -2717,6 +2722,8 @@ fa_IR:
         delete_topic_confirm_modal_no: "خیر، این موضوع را نگه دار"
         delete_topic_error: "خطایی در هنگام حذف این موضوع رخ داده است."
         delete_topic: "حذف موضوع"
+        add_post_notice: "اطلاعیه کارکنان را اضافه کنید..."
+        change_post_notice: "تغییر اطلاعیه همکاران..."
         delete_post_notice: "حذف اطلاعیه همکاران"
         remove_timer: "حذف زمان‌سنج"
       actions:
@@ -2914,9 +2921,12 @@ fa_IR:
         moderation: "معتدل"
         appearance: "ظاهر"
         email: "ایمیل"
+      list_filters:
+        all: "همه موضوعات"
     flagging:
       title: "تشکر برای کمک به نگه داشتن جامعه ما بصورت مدنی !"
       action: "پرچم‌گذاری نوشته"
+      take_action: "اقدام..."
       take_action_options:
         default:
           title: "اقدام"
@@ -3043,6 +3053,9 @@ fa_IR:
         lower_title_with_count:
           one: "%{count} خوانده نشده"
           other: "%{count} خوانده نشده"
+      unseen:
+        title: "دیده نشده"
+        lower_title: "دیده نشده"
       new:
         lower_title_with_count:
           one: "%{count} تازه"
@@ -3191,6 +3204,9 @@ fa_IR:
       granted:
         one: "%{count} اعطا شده"
         other: "%{count} اعطا شده"
+      granted_with_count:
+        one: '<a href="%{badgeUrl}" title="%{count} granted" class="grant-count">%{count}x</a> <span class="grant-text">اعطا شده</span>'
+        other: '<a href="%{badgeUrl}" title="%{count} granted" class="grant-count">%{count}x</a> <span class="grant-text">اعطا شده</span>'
       select_badge_for_title: انتخاب یک نشان برای استفاده در عنوان خود
       none: "(هیچی)"
       successfully_granted: "%{badge} به %{username} با موفقیت اعطا شد"
@@ -3284,9 +3300,11 @@ fa_IR:
         everyone_can_use: "برچسب‌ها می‌توانندتوسط همه استفاده شوند"
         usable_only_by_groups: "برچسب ها برای همه قابل مشاهده است، اما فقط گروه های زیر می توانند از آنها استفاده کنند"
         visible_only_to_groups: "برچسب ها فقط برای گروه های زیر قابل مشاهده است"
+        parent_tag_placeholder: "اختیاری"
       topics:
         none:
           unread: "شما موضوع خوانده نشده‌ای ندارید."
+          unseen: "شما هیچ موضوع دیده نشده‌ای ندارید."
           new: "شما موضوع جدیدی ندارید."
           read: "شما هیچ موضوعی را نخوانده‌اید."
           posted: "شما هیچ نوشته‌ای در موضوعات ندارید."
@@ -3436,6 +3454,7 @@ fa_IR:
         problems_found: "چند توصیه براثاث تنظیمات فعلی سایت شما"
         new_features:
           dismiss: "نخواستیم"
+          learn_more: "بیشتر بدانید"
         last_checked: " آخرین بررسی"
         refresh_problems: "تازه کردن"
         no_problems: "هیچ مشکلات پیدا نشد."
@@ -3535,7 +3554,6 @@ fa_IR:
         about: "عضویت و نام‌های گروه را در اینجا ویرایش کنید"
         group_members: "اعضای گروه"
         delete: "حذف"
-        delete_confirm: "آیا مطمئن هستید که می‌خواهید این گروه را حذف کنید؟"
         delete_failed: "قادر به حذف گروه نیستیم. اگر این یک گروه خودکار است، نمی توان آن را از بین برد."
         delete_owner_confirm: "حذف حق مالکیت برای '%{username}'؟"
         add: "اضافه کردن"
@@ -3554,6 +3572,7 @@ fa_IR:
         title: "API"
         created: ساخته شده
         updated: به روز شده
+        never_used: (هرگز)
         generate: "تولید کردن"
         revoke: "ابطال"
         all_users: "همه کاربران"
@@ -3661,7 +3680,6 @@ fa_IR:
         enabled: "فعال شده؟"
         is_enabled: "بله"
         not_enabled: "خیر"
-        change_settings: "تغییر تنظیمات"
         change_settings_short: "تنظیمات"
         howto: "چگونه یک افزونه نصب کنیم؟"
         official: "پلاگین رسمی"
@@ -3979,6 +3997,9 @@ fa_IR:
             address_placeholder: "name@example.com"
             type_placeholder: "خلاصه، ثبت نام..."
             reply_key_placeholder: "کلید پاسخ"
+      moderation_history:
+        actions:
+          delete_topic: "مبحث حذف شده"
       logs:
         title: "گزارش‌ها"
         action: "عمل"

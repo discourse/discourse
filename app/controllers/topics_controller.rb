@@ -89,7 +89,7 @@ class TopicsController < ApplicationController
     end
 
     if opts[:print]
-      raise Discourse::InvalidAccess unless SiteSetting.max_prints_per_hour_per_user > 0
+      raise Discourse::InvalidAccess if SiteSetting.max_prints_per_hour_per_user.zero?
       begin
         unless @guardian.is_admin?
           RateLimiter.new(

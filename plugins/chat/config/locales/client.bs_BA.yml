@@ -25,11 +25,6 @@ bs_BA:
       join: "Učlani se"
       mention_warning:
         dismiss: "odbaci"
-        groups:
-          users_limit:
-            one: "%{count} korisnik"
-            few: "%{count} korisnika"
-            other: "%{count} korisnika"
       reply: "Odgovori"
       edit: "Edit"
       rebake_message: "Popravi HTML"

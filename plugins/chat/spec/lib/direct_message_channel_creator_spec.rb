@@ -212,7 +212,7 @@ describe Chat::DirectMessageChannelCreator do
             subject.create!(acting_user: user_1, target_users: [user_1, user_2])
           }.to raise_error(
             Chat::DirectMessageChannelCreator::NotAllowed,
-            I18n.t("chat.errors.over_chat_max_direct_message_users", count: 1),
+            I18n.t("chat.errors.over_chat_max_direct_message_users_allow_self"),
           )
         end
       end

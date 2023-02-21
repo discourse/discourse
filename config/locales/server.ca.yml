@@ -434,10 +434,6 @@ ca:
           attributes:
             execute_at:
               in_the_past: "ha de ser en el futur."
-        translation_overrides:
-          attributes:
-            value:
-              invalid_interpolation_keys: 'Les claus d''interpolació següents no són vàlides: "%{keys}"'
         watched_word:
           attributes:
             word:

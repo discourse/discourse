@@ -1020,6 +1020,7 @@ hy:
         primary: "Հիմնական Էլ. հասցե"
         secondary: "Երկրորդական Էլ. հասցեներ"
         primary_label: "հիմնական"
+        resent_label: "էլ. նամակն ուղարկված է"
         update_email: "Փոփոխել Էլ. Հասցեն"
         no_secondary: "Երկրորդական էլ. հասցեներ չկան"
         instructions: "Երբեք չի ցուցադրվում հանրությանը"
@@ -1804,9 +1805,11 @@ hy:
         dismiss_new: "Չեղարկել Նորերը"
         toggle: "փոխանջատել թեմաների զանգվածային ընտրությունը"
         actions: "Զանգվածային Գործողությունները"
+        change_category: "Ավելացնել Կատեգորիա..."
         close_topics: "Փակել Թեմաները"
         archive_topics: "Արխիվացնել Թեմաները"
         move_messages_to_inbox: "Տեղափոխել Մուտքերի արկղ"
+        notification_level: "Ծանուցումներ..."
         choose_new_category: "Ընտրել նոր կատեգորիա թեմաների համար՝"
         selected:
           one: "Դուք ընտրել եք <b>%{count}</b> թեմա:"
@@ -1991,6 +1994,7 @@ hy:
         unarchive: "Ապարխիվացնել Թեման"
         archive: "Արխիվացնել Թեման"
         reset_read: "Զրոյացնել Կարդացած Տվյալները"
+        make_public: "Ստեղծել Հրապարակային Թեմա..."
         make_private: "Ստեղծել Անձնական Նամակ"
         reset_bump_date: "Վերահաստատել Բարձրացման Ամսաթիվը"
       feature:
@@ -2244,6 +2248,8 @@ hy:
         rebake: "Վերակառուցել HTML-ը"
         publish_page: "Էջի Հրատարակում"
         unhide: "Դարձնել Տեսանելի"
+        change_owner: "Փոխել Սեփականատիրոջը..."
+        grant_badge: "Շնորհել Կրծքանշան..."
         lock_post: "Արգելափակել Գրառումը"
         lock_post_description: "արգելել հրապարակողին խմբագրել այս գրառումը"
         unlock_post: "Արգելաբացել Գրառումը"
@@ -2251,6 +2257,7 @@ hy:
         delete_topic_disallowed_modal: "Դուք թույլտվություն չունեք ջնջելու այս թեման: Եթե Դուք իսկապես ցանկանում եք, որ այն ջնջվի, դրոշակավորեք այն պատճառաբանության հետ միասին՝ մոդերատորի ուշադրությանը գրավելու համար:"
         delete_topic_disallowed: "Դուք թույլտվություն չունեք ջնջելու այս թեման"
         delete_topic: "ջնջել թեման"
+        add_post_notice: "Հաղորդագրություն Մոդերատորներից..."
         remove_timer: "հեռացնել ժամաչափիչը"
       actions:
         people:
@@ -2442,6 +2449,7 @@ hy:
     flagging:
       title: "Շնորհակալ ենք, որ օգնում եք պահել մեր համայնքը քաղաքակիրթ:"
       action: "Դրոշակավորել Գրառումը"
+      take_action: "Ձեռնարկել Գործողություն..."
       take_action_options:
         default:
           title: "Ձեռնարկել Գործողություն"
@@ -2814,6 +2822,7 @@ hy:
         delete: "Ջնջել"
         confirm_delete: "Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել այս թեգի խումբը:"
         everyone_can_use: "Թեգերը կարող են օգտագործվել բոլորի կողմից:"
+        parent_tag_placeholder: "Ընտրովի"
       topics:
         none:
           unread: "Դուք չունեք չկարդացած թեմաներ:"
@@ -2884,6 +2893,8 @@ hy:
               content: "Ադմին"
             badges:
               content: "Կրծքանշաններ"
+            everything:
+              content: "Բոլորը"
             faq:
               content: "ՀՏՀ"
             groups:
@@ -2923,6 +2934,7 @@ hy:
         problems_found: "Որոշ խորհուրդներ՝ հիմնված Ձեր կայքի ընթացիկ կարգավորումների վրա"
         new_features:
           dismiss: "Չեղարկել"
+          learn_more: "Իմանալ ավելին"
         last_checked: "Վերջին ստուգումը՝ "
         refresh_problems: "Թարմացնել"
         no_problems: "Խնդիրներ չեն գտնվել:"
@@ -3176,7 +3188,6 @@ hy:
         enabled: "Միացվա՞ծ է:"
         is_enabled: "Ա"
         not_enabled: "Ո"
-        change_settings: "Փոխել Կարգավորումները"
         change_settings_short: "Կարգավորումներ"
         howto: "Ինչպե՞ս կարող եմ ես տեղադրել հավելումներ:"
         official: "Պաշտոնական Հավելում"

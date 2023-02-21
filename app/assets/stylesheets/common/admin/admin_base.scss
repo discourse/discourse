@@ -226,7 +226,7 @@ $mobile-breakpoint: 700px;
     border-bottom: 1px solid var(--primary-low);
     margin-bottom: 0.5em;
     &.overridden {
-      background-color: var(--highlight-medium);
+      background-color: var(--highlight-bg);
     }
     h3 {
       font-weight: normal;

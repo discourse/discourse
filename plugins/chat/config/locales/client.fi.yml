@@ -105,45 +105,17 @@ fi:
       new_messages: "uusia viestejä"
       mention_warning:
         dismiss: "hylkää"
-        cannot_see:
-          one: "%{username} ei voi käyttää tätä kanavaa, eikä hänelle ilmoitettu."
-          other: "%{username} ja %{others} eivät voi käyttää tätä kanavaa, eikä heille ilmoitettu."
         invitations_sent:
           one: "Kutsu lähetetty"
           other: "Kutsut lähetettiin"
         invite: "Kutsu kanavalle"
-        without_membership:
-          one: "%{username} ei ole liittynyt tälle kanavalle."
-          other: "%{username} ja %{others} eivät ole liittyneet tälle kanavalle."
-        group_mentions_disabled:
-          one: "%{group_name} ei salli mainintoja"
-          other: "%{group_name} ja %{others} eivät salli mainintoja"
-        too_many_members:
-          one: "Ryhmässä %{group_name} on liian monta jäsentä. Kukaan ei saanut ilmoitusta."
-          other: "Ryhmä %{group_name} ja %{others} sisältävät liikaa jäseniä. Kukaan ei saanut ilmoitusta."
-        warning_multiple:
-          one: "%{count} muu"
-          other: "%{count} muuta"
+        without_membership: "%{username} ei ole liittynyt tälle kanavalle."
+        group_mentions_disabled: "%{group_name} ei salli mainintoja."
         groups:
           header:
             some: "Osa käyttäjistä ei saa ilmoitusta"
             all: "Kukaan ei saa ilmoitusta"
-          unreachable:
-            one: "@%{group} ei salli mainintoja"
-            other: "@%{group} ja @%{group_2} eivät salli mainintoja"
-          unreachable_multiple: "@%{group} ja %{count} muuta eivät salli mainintoja"
-          too_many_members:
-            one: "Ryhmän @%{group} mainitseminen ylittää %{notification_limit}: %{limit}"
-            other: "Ryhmien @%{group} ja @%{group_2} mainitseminen ylittää %{notification_limit}: %{limit}"
-          too_many_members_multiple: "Nämä %{count} ryhmää ylittää %{notification_limit}: %{limit}"
-          users_limit:
-            one: "%{count} käyttäjä"
-            other: "%{count} käyttäjää"
-          notification_limit: "ilmoitusrajan"
-        too_many_mentions: "Tämä viesti ylittää %{notification_limit}: %{limit}"
-        mentions_limit:
-          one: "%{count} maininta"
-          other: "%{count} mainintaa"
+          unreachable_1: "@%{group} ei salli mainintoja."
       aria_roles:
         header: "Chatin ylätunniste"
         composer: "Chatin tekstieditori"
@@ -160,10 +132,9 @@ fi:
       close_full_page: "Sulje koko näytön chat"
       open_message: "Avaa viesti chatissa"
       placeholder_self: "Kirjoita jotakin"
-      placeholder_others: "Chat-keskustelu käyttäjän %{messageRecipient} kanssa"
-      placeholder_new_message_disallowed: "Kanava on %{status}, et voi lähettää uusia viestejä juuri nyt."
+      placeholder_users: "Chat-keskustelu käyttäjän %{commaSeparatedNames} kanssa"
       placeholder_silenced: "Et voi lähettää viestejä tällä hetkellä."
-      placeholder_start_conversation: Aloita keskustelu käyttäjän %{usernames} kanssa
+      placeholder_start_conversation_users: "Aloita keskustelu käyttäjän %{commaSeparatedUsernames} kanssa"
       remove_upload: "Poista tiedosto"
       react: "Reagoi emojilla"
       reply: "Vastaa"
@@ -256,18 +227,10 @@ fi:
       create_channel:
         auto_join_users:
           public_category_warning: "%{category} on julkinen alue. Lisätäänkö kaikki hiljattain aktiiviset käyttäjät automaattisesti tälle kanavalle?"
-          warning_groups:
-            one: Lisätäänkö %{members_count} käyttäjää automaattisesti ryhmästä %{group}?
-            other: Lisätäänkö %{members_count} käyttäjää automaattisesti ryhmistä %{group} ja %{group_2}?
-          warning_multiple_groups: Lisätäänkö %{members_count} käyttäjää automaattisesti ryhmästä %{group_1} ja %{count} muusta?
         choose_category:
           label: "Valitse alue"
           none: "valitse yksi..."
           default_hint: Hallinnoi käyttöoikeutta <a href=%{link} target="_blank">alueen %{category} turvallisuusasetuksissa</a>
-          hint_groups:
-            one: Ryhmän %{hint} käyttäjillä on automaattisesti pääsy tälle kanavalle <a href=%{link} target="_blank">turvallisuusasetusten</a> mukaan
-            other: Ryhmien %{hint} ja %{hint_2} käyttäjillä on automaattisesti pääsy tälle kanavalle <a href=%{link} target="_blank">turvallisuusasetusten</a> mukaan
-          hint_multiple_groups: Ryhmän %{hint_1} ja %{count} muun ryhmän käyttäjillä on automaattisesti pääsy tälle kanavalle <a href=%{link} target="_blank">turvallisuusasetusten</a> mukaan
         create: "Luo kanava"
         description: "Kuvaus (valinnainen)"
         name: "Kanavan nimi"
@@ -280,10 +243,7 @@ fi:
         type: "Chat-viesti"
       reactions:
         only_you: "Reagoit emojilla :%{emoji}:"
-        and_others: "Sinä, %{usernames} reagoitte emojilla :%{emoji}:"
-        only_others: "%{usernames} reagoivat emojilla :%{emoji}:"
-        others_and_more: "%{usernames} ja %{more} muuta reagoivat emojilla :%{emoji}:"
-        you_others_and_more: "Sinä, %{usernames} ja %{more} muuta reagoivat emojilla :%{emoji}:"
+        single_user: "%{username} reagoivat emojilla :%{emoji}:"
       composer:
         toggle_toolbar: "Vaihda työkalupalkki"
         italic_text: "korostettu teksti"
@@ -314,7 +274,6 @@ fi:
         saved: "Tallennettu"
         unfollow: "Poistu"
         admin_title: "Ylläpitäjä"
-        retention_info: "Chat-historia tallennetaan %{days} päivän ajaksi."
       admin:
         title: "Chat"
       direct_messages:
@@ -379,9 +338,6 @@ fi:
         many_users:
           one: "%{commaSeparatedUsernames} ja %{count} muu kirjoittavat"
           other: "%{commaSeparatedUsernames} ja %{count} muuta kirjoittavat"
-      retention_reminders:
-        public: "Kanavan historia säilytetään %{days} päivän ajan."
-        dm: "Henkilökohtainen chat-historia säilytetään %{days} päivän ajan."
       flags:
         off_topic: "Tämä viesti ei liity nykyiseen keskusteluun kanavan otsikon mukaan, ja se pitäisi todennäköisesti siirtää muualle."
         inappropriate: "Tämä viesti sisältää sisältöä, jota kohtuullinen henkilö pitäisi loukkaavana, herjaavana tai <a href=\"%{basePath}/guidelines\">yhteisömme ohjeiden vastaisena</a>."

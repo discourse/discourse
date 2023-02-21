@@ -372,6 +372,9 @@ sw:
       x_seconds:
         one: "%{count}s"
         other: "%{count}s"
+      less_than_x_minutes:
+        one: "< dakika moja"
+        other: "< %{count} dakika"
       x_minutes:
         one: "%{count}m"
         other: "%{count}m"
@@ -2075,6 +2078,7 @@ sw:
       approve:
         title: "Imethibitishwa"
       reject_user:
+        title: "Futa Mtumiaji..."
         delete:
           title: "Futa Mtumiaji"
       reject:

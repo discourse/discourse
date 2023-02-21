@@ -308,7 +308,7 @@ module TopicGuardian
 
   def can_edit_featured_link?(category_id)
     return false unless SiteSetting.topic_featured_link_enabled
-    return false unless @user.trust_level >= TrustLevel.levels[:basic]
+    return false if @user.trust_level == TrustLevel.levels[:newuser]
     Category.where(
       id: category_id || SiteSetting.uncategorized_category_id,
       topic_featured_link_allowed: true,

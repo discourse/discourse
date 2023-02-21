@@ -25,10 +25,6 @@ gl:
       join: "Participar"
       mention_warning:
         dismiss: "desbotar"
-        groups:
-          users_limit:
-            one: "%{count} usuario"
-            other: "%{count} usuarios"
       reply: "Responder"
       edit: "Editar"
       rebake_message: "Reconstruír HTML"

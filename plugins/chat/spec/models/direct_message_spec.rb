@@ -20,7 +20,8 @@ describe DirectMessage do
       expect(direct_message.chat_channel_title_for_user(chat_channel, user1)).to eq(
         I18n.t(
           "chat.channel.dm_title.multi_user",
-          users: [user3, user2].map { |u| "@#{u.username}" }.join(", "),
+          comma_separated_usernames:
+            [user3, user2].map { |u| "@#{u.username}" }.join(I18n.t("word_connector.comma")),
         ),
       )
     end
@@ -36,8 +37,12 @@ describe DirectMessage do
       expect(direct_message.chat_channel_title_for_user(chat_channel, user1)).to eq(
         I18n.t(
           "chat.channel.dm_title.multi_user_truncated",
-          users: users[1..5].sort_by(&:username).map { |u| "@#{u.username}" }.join(", "),
-          leftover: 2,
+          comma_separated_usernames:
+            users[1..5]
+              .sort_by(&:username)
+              .map { |u| "@#{u.username}" }
+              .join(I18n.t("word_connector.comma")),
+          count: 2,
         ),
       )
     end
@@ -46,7 +51,7 @@ describe DirectMessage do
       direct_message = Fabricate(:direct_message, users: [user1, user2])
 
       expect(direct_message.chat_channel_title_for_user(chat_channel, user1)).to eq(
-        I18n.t("chat.channel.dm_title.single_user", user: "@#{user2.username}"),
+        I18n.t("chat.channel.dm_title.single_user", username: "@#{user2.username}"),
       )
     end
 
@@ -54,7 +59,7 @@ describe DirectMessage do
       direct_message = Fabricate(:direct_message, users: [user1])
 
       expect(direct_message.chat_channel_title_for_user(chat_channel, user1)).to eq(
-        I18n.t("chat.channel.dm_title.single_user", user: "@#{user1.username}"),
+        I18n.t("chat.channel.dm_title.single_user", username: "@#{user1.username}"),
       )
     end
 

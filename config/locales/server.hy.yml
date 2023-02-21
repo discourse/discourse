@@ -401,10 +401,6 @@ hy:
           attributes:
             execute_at:
               in_the_past: "պետք է լինի ապագայում:"
-        translation_overrides:
-          attributes:
-            value:
-              invalid_interpolation_keys: 'Հետևյալ interpolation key(եր)-ը անվավեր են՝ "%{keys}"'
         watched_word:
           attributes:
             word:
@@ -2956,6 +2952,7 @@ hy:
       approve:
         title: "Հաստատել"
       reject_user:
+        title: "Ջնջել Օգտատիրոջը..."
         delete:
           title: "Ջնջել Օգտատիրոջը"
       reject:

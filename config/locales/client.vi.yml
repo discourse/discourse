@@ -3556,6 +3556,7 @@ vi:
         other: "%{count} mới"
       more: "Thêm"
       all_categories: "Tất cả danh mục"
+      all_tags: "Tất cả các thẻ"
       sections:
         custom:
           save: "Lưu lại"
@@ -3962,7 +3963,6 @@ vi:
         enabled: "Kích hoạt"
         is_enabled: "Có"
         not_enabled: "Không"
-        change_settings: "Đổi Cấu hình"
         change_settings_short: "Cấu hình"
         howto: "Plugin cài như thế nào?"
         official: "Plugin chính thức"

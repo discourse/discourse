@@ -423,12 +423,12 @@ html.composer-open {
         padding: 0.3em 1em;
 
         @include hover {
-          background-color: var(--highlight-low);
+          background-color: var(--d-hover);
           text-decoration: none;
         }
 
         &.selected {
-          background-color: var(--tertiary-low);
+          background-color: var(--d-selected);
 
           .username,
           .name,

@@ -83,37 +83,91 @@ export default class ChatMessageReaction extends Component {
 
   @computed("reaction")
   get popoverContent() {
-    let usernames = this.reaction.users.mapBy("username").join(", ");
-    if (this.reaction.reacted) {
-      if (this.reaction.count === 1) {
-        return I18n.t("chat.reactions.only_you", {
-          emoji: this.reaction.emoji,
-        });
-      } else if (this.reaction.count > 1 && this.reaction.count < 6) {
-        return I18n.t("chat.reactions.and_others", {
-          usernames,
-          emoji: this.reaction.emoji,
-        });
-      } else if (this.reaction.count >= 6) {
-        return I18n.t("chat.reactions.you_others_and_more", {
-          usernames,
-          emoji: this.reaction.emoji,
-          more: this.reaction.count - 5,
-        });
-      }
-    } else {
-      if (this.reaction.count > 0 && this.reaction.count < 6) {
-        return I18n.t("chat.reactions.only_others", {
-          usernames,
-          emoji: this.reaction.emoji,
-        });
-      } else if (this.reaction.count >= 6) {
-        return I18n.t("chat.reactions.others_and_more", {
-          usernames,
-          emoji: this.reaction.emoji,
-          more: this.reaction.count - 5,
-        });
-      }
+    return this.reaction.reacted
+      ? this._reactionTextWithSelf()
+      : this._reactionText();
+  }
+
+  _reactionTextWithSelf() {
+    const reactionCount = this.reaction.count;
+
+    if (reactionCount === 0) {
+      return;
     }
+
+    if (reactionCount === 1) {
+      return I18n.t("chat.reactions.only_you", {
+        emoji: this.reaction.emoji,
+      });
+    }
+
+    const maxUsernames = 4;
+    const usernames = this.reaction.users
+      .slice(0, maxUsernames)
+      .mapBy("username");
+
+    if (reactionCount === 2) {
+      return I18n.t("chat.reactions.you_and_single_user", {
+        emoji: this.reaction.emoji,
+        username: usernames.pop(),
+      });
+    }
+
+    // `-1` because the current user ("you") isn't included in `usernames`
+    const unnamedUserCount = reactionCount - usernames.length - 1;
+
+    if (unnamedUserCount > 0) {
+      return I18n.t("chat.reactions.you_multiple_users_and_more", {
+        emoji: this.reaction.emoji,
+        commaSeparatedUsernames: this._joinUsernames(usernames),
+        count: unnamedUserCount,
+      });
+    }
+
+    return I18n.t("chat.reactions.you_and_multiple_users", {
+      emoji: this.reaction.emoji,
+      username: usernames.pop(),
+      commaSeparatedUsernames: this._joinUsernames(usernames),
+    });
+  }
+
+  _reactionText() {
+    const reactionCount = this.reaction.count;
+
+    if (reactionCount === 0) {
+      return;
+    }
+
+    const maxUsernames = 5;
+    const usernames = this.reaction.users
+      .slice(0, maxUsernames)
+      .mapBy("username");
+
+    if (reactionCount === 1) {
+      return I18n.t("chat.reactions.single_user", {
+        emoji: this.reaction.emoji,
+        username: usernames.pop(),
+      });
+    }
+
+    const unnamedUserCount = reactionCount - usernames.length;
+
+    if (unnamedUserCount > 0) {
+      return I18n.t("chat.reactions.multiple_users_and_more", {
+        emoji: this.reaction.emoji,
+        commaSeparatedUsernames: this._joinUsernames(usernames),
+        count: unnamedUserCount,
+      });
+    }
+
+    return I18n.t("chat.reactions.multiple_users", {
+      emoji: this.reaction.emoji,
+      username: usernames.pop(),
+      commaSeparatedUsernames: this._joinUsernames(usernames),
+    });
+  }
+
+  _joinUsernames(usernames) {
+    return usernames.join(I18n.t("word_connector.comma"));
   }
 }

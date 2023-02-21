@@ -634,10 +634,6 @@ uk:
             duration_minutes:
               cannot_be_zero: "має бути більше 0."
               exceeds_maximum: "не може бути більше 20 років."
-        translation_overrides:
-          attributes:
-            value:
-              invalid_interpolation_keys: 'Наступні ключі інтерполяції недійсні: "%{keys}"'
         watched_word:
           attributes:
             word:
@@ -2209,7 +2205,6 @@ uk:
     splash_screen: "Показувати екран тимчасового завантаження під час завантаження ресурсів сайту"
     default_sidebar_categories: "Вибрані розділи показуватимуться в секції «Розділи» бічної панелі."
     default_sidebar_tags: "Вибрані теґи показуватимуться в секції Теґи бічної панелі."
-    enable_new_user_profile_nav_groups: "ЕКСПЕРИМЕНТАЛЬНИЙ: користувачам вибраних груп буде показано навігаційне меню нового профілю користувача"
     errors:
       invalid_css_color: "Недійсний колір. Введіть назву кольору або шістнадцяткове значення."
       invalid_email: "Невірна адреса електронної пошти."

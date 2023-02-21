@@ -4215,10 +4215,6 @@ es:
         about: "Edita la membresía de tu grupo y sus nombres aquí"
         group_members: "Miembros del grupo"
         delete: "Eliminar"
-        delete_confirm: "¿Seguro que quieres eliminar este grupo?"
-        delete_with_messages_confirm:
-          one: "Al eliminar este grupo, %{count} mensaje se quedará huérfano, y los miembros del grupo dejarán de tener acceso a él."
-          other: "Al eliminar este grupo, %{count} mensajes se quedará huérfanos, y los miembros del grupo dejarán de tener acceso a ellos."
         delete_failed: "No se pudo eliminar el grupo. Si este es un grupo automático, no se puede destruir."
         delete_automatic_group: Este grupo se ha creado automáticamente y no se puede eliminar.
         delete_owner_confirm: "¿Quitar los privilegios de propietario a «%{username}»?"
@@ -4424,7 +4420,6 @@ es:
         enabled: "¿Activado?"
         is_enabled: "S"
         not_enabled: "N"
-        change_settings: "Cambiar ajustes"
         change_settings_short: "Ajustes"
         howto: "¿Cómo instalo plugins?"
         official: "Plugin oficial"

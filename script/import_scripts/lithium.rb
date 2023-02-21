@@ -803,12 +803,12 @@ class ImportScripts::Lithium < ImportScripts::Base
             import_mode: true,
           }
 
-          unless topic_id
+          if topic_id
+            msg[:topic_id] = topic_id
+          else
             msg[:title] = @htmlentities.decode(topic["subject"]).strip[0...255]
             msg[:archetype] = Archetype.private_message
             msg[:target_usernames] = usernames.join(",")
-          else
-            msg[:topic_id] = topic_id
           end
 
           msg

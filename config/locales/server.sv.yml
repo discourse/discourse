@@ -591,7 +591,9 @@ sv:
         translation_overrides:
           attributes:
             value:
-              invalid_interpolation_keys: 'Följande interpolationsnycklar är ogiltiga: "%{keys}"'
+              invalid_interpolation_keys:
+                one: 'Följande interpolationsnyckel är ogiltig: %{keys}'
+                other: 'Följande interpolationsnycklar är ogiltiga: %{keys}'
         watched_word:
           attributes:
             word:
@@ -2144,7 +2146,6 @@ sv:
     default_sidebar_categories: "Valda kategorier kommer att visas under sidofältets sektion Kategorier som standard."
     default_sidebar_tags: "Valda taggar kommer att visas under sidofältets sektion Taggar som standard."
     enable_new_notifications_menu: "Aktiverar den nya aviseringsmenyn för den gamla navigeringsmenyn."
-    enable_new_user_profile_nav_groups: "EXPERIMENTELL: Användare i de valda grupperna visas den nya navigeringsmenyn för användarprofiler."
     enable_experimental_hashtag_autocomplete: "EXPERIMENTELLT: Använd det nya #hashtag-autokompletteringssystemet för kategorier och taggar som renderar det valda objektet annorlunda och har förbättrad sökning"
     errors:
       invalid_css_color: "Ogiltig färg. Ange ett färgnamn eller ett hexvärde."
@@ -2202,6 +2203,7 @@ sv:
       search_tokenize_japanese_enabled: "Du måste inaktivera 'search_tokenize_japanese' innan du aktiverar den här inställningen."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Du kan inte aktivera DiscourseConnect om 2FA är obligatoriskt."
       delete_rejected_email_after_days: "Den här inställningen kan inte vara lägre än inställningen delete_email_logs_after_days eller större än %{max}"
+      invalid_uncategorized_category_setting: "Kategorin \"Okategoriserade\" kan inte väljas om inte \"tillåt okategoriserade ämnen\" har aktiverats."
       enable_new_notifications_menu_not_legacy_navigation_menu: "Du måste ställa in `navigation_menu` till `legacy` innan du aktiverar den här inställningen."
       invalid_search_ranking_weights: "Värdet är ogiltigt för webbplatsinställningen search_ranking_weights. Exempel: '{0.1,0.2,0.3,1.0}'. Observera att maximalt värde för varje vikt är 1,0."
     placeholder:

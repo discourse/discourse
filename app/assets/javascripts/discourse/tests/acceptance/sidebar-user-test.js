@@ -51,25 +51,6 @@ acceptance(
         "hides the sidebar dropdown"
       );
     });
-
-    test("'enable_sidebar' query param override to enable sidebar", async function (assert) {
-      await visit("/?enable_sidebar=1");
-
-      assert.ok(exists(".sidebar-container"), "sidebar is displayed");
-
-      await click(".btn-sidebar-toggle");
-
-      assert.notOk(
-        exists(".sidebar-hamburger-dropdown"),
-        "does not display the sidebar dropdown"
-      );
-
-      assert.notOk(exists(".sidebar-container"), "sidebar is hidden");
-
-      await click(".btn-sidebar-toggle");
-
-      assert.ok(exists(".sidebar-container"), "sidebar is displayed");
-    });
   }
 );
 
@@ -130,26 +111,6 @@ acceptance(
       await click(".btn-sidebar-toggle");
 
       assert.ok(exists(".sidebar-container"), "displays the sidebar");
-    });
-
-    test("'enable_sidebar' query param override to disable sidebar", async function (assert) {
-      await visit("/?enable_sidebar=0");
-
-      assert.notOk(exists(".sidebar-container"), "sidebar is not displayed");
-
-      await click(".hamburger-dropdown");
-
-      assert.ok(
-        exists(".sidebar-hamburger-dropdown"),
-        "displays the sidebar dropdown"
-      );
-
-      await click(".hamburger-dropdown");
-
-      assert.notOk(
-        exists(".sidebar-hamburger-dropdown"),
-        "hides the sidebar dropdown"
-      );
     });
 
     test("button to toggle between mobile and desktop view on touch devices ", async function (assert) {

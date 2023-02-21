@@ -40,7 +40,7 @@ class ChatMessageSerializer < ApplicationSerializer
       .reactions
       .group_by(&:emoji)
       .each do |emoji, reactions|
-        users = reactions[0..6].map(&:user).filter { |user| user.id != scope&.user&.id }[0..5]
+        users = reactions[0..5].map(&:user).filter { |user| user.id != scope&.user&.id }[0..4]
 
         next unless Emoji.exists?(emoji)
 

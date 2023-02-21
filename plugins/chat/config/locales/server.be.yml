@@ -23,9 +23,6 @@ be:
           title: "не згаджацца"
         ignore:
           title: "ігнараваць"
-    channel:
-      statuses:
-        closed: "Закрыта"
   reviewable_score_types:
     notify_user:
       chat_pm_body: "%{link}\n\n%{message}"

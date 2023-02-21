@@ -7,13 +7,13 @@ import { action } from "@ember/object";
 const HIDE_SIDEBAR_KEY = "sidebar-hidden";
 
 export default Controller.extend({
-  queryParams: [{ sidebarQueryParamOverride: "enable_sidebar" }],
+  queryParams: [{ navigationMenuQueryParamOverride: "navigation_menu" }],
 
   showTop: true,
   showFooter: false,
   router: service(),
   showSidebar: false,
-  sidebarQueryParamOverride: null,
+  navigationMenuQueryParamOverride: null,
   sidebarDisabledRouteOverride: false,
   showSiteHeader: true,
 
@@ -63,13 +63,13 @@ export default Controller.extend({
   },
 
   @discourseComputed(
-    "sidebarQueryParamOverride",
+    "navigationMenuQueryParamOverride",
     "siteSettings.navigation_menu",
     "canDisplaySidebar",
     "sidebarDisabledRouteOverride"
   )
   sidebarEnabled(
-    sidebarQueryParamOverride,
+    navigationMenuQueryParamOverride,
     navigationMenu,
     canDisplaySidebar,
     sidebarDisabledRouteOverride
@@ -82,11 +82,14 @@ export default Controller.extend({
       return false;
     }
 
-    if (sidebarQueryParamOverride === "1") {
+    if (navigationMenuQueryParamOverride === "sidebar") {
       return true;
     }
 
-    if (sidebarQueryParamOverride === "0") {
+    if (
+      navigationMenuQueryParamOverride === "legacy" ||
+      navigationMenuQueryParamOverride === "header_dropdown"
+    ) {
       return false;
     }
 

@@ -81,10 +81,6 @@ da:
       new_messages: "nye beskeder"
       mention_warning:
         dismiss: "afvis"
-        groups:
-          users_limit:
-            one: "%{count} bruger"
-            other: "%{count} brugere"
       reply: "Svar"
       edit: "Rediger"
       rebake_message: "Gendan HTML"
@@ -143,6 +139,7 @@ da:
         create: "Opret kanal"
         description: "Beskrivelse (valgfrit)"
         name: "Kanal navn"
+        title: "Ny kanal"
         type: "Type"
         types:
           category: "Kategori"
@@ -151,10 +148,6 @@ da:
         type: "Chatbesked"
       reactions:
         only_you: "Du reagerede med :%{emoji}:"
-        and_others: "Du, %{usernames} reagerede med :%{emoji}:"
-        only_others: "%{usernames} reagerede med :%{emoji}:"
-        others_and_more: "%{usernames} og %{more} andre reagerede med :%{emoji}:"
-        you_others_and_more: "Du, %{usernames} og %{more} andre reagerede med :%{emoji}:"
       composer:
         italic_text: "kursiv skrift"
         bold_text: "fed skrift"
@@ -199,9 +192,6 @@ da:
           title: "Flyt til ny besked"
       replying_indicator:
         single_user: "%{username} skriver"
-      retention_reminders:
-        public: "Kanalhistorikken gemmes i %{days} dage."
-        dm: "Personlig chathistorik gemmes i %{days} dage."
       emoji_picker:
         objects: "Objekter"
         activities: "Aktiviteter"

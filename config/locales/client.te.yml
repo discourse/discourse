@@ -494,6 +494,7 @@ te:
       email:
         title: "ఈమెయిల్"
         primary_label: "ప్రాథమిక"
+        resent_label: "ఈమెయిల్ పంపిన"
         update_email: "ఈమెయిల్ మార్చు"
         ok: "ద్రువపరుచుటకు మీకు ఈమెయిల్ పంపాము"
         invalid: "దయచేసి చెల్లుబాటులోని ఈమెయిల్ చిరునామా రాయండి"
@@ -1482,7 +1483,6 @@ te:
         none_installed: "ఎటువంటి చొప్పింతలు ప్రతిష్టించిలేవు."
         version: "సంచిక"
         enabled: "చేతమైందా?"
-        change_settings: "అమరికలు మార్చు"
         change_settings_short: "అమరికలు"
         howto: "పొడిగింతలు నేను ఎలా ప్రతిష్టించగలను?"
       backups:

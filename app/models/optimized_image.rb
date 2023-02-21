@@ -24,7 +24,7 @@ class OptimizedImage < ActiveRecord::Base
   end
 
   def self.create_for(upload, width, height, opts = {})
-    return unless width > 0 && height > 0
+    return if width <= 0 || height <= 0
     return if upload.try(:sha1).blank?
 
     # no extension so try to guess it

@@ -251,28 +251,6 @@ RSpec.describe CurrentUserSerializer do
     end
   end
 
-  describe "#redesigned_user_page_nav_enabled" do
-    fab!(:group) { Fabricate(:group) }
-    fab!(:group2) { Fabricate(:group) }
-
-    it "is false when enable_new_user_profile_nav_groups site setting has not been set" do
-      expect(serializer.as_json[:redesigned_user_page_nav_enabled]).to eq(false)
-    end
-
-    it "is false if user does not belong to any of the configured groups in the enable_new_user_profile_nav_groups site setting" do
-      SiteSetting.enable_new_user_profile_nav_groups = "#{group.id}|#{group2.id}"
-
-      expect(serializer.as_json[:redesigned_user_page_nav_enabled]).to eq(false)
-    end
-
-    it "is true if user belongs one of the configured groups in the enable_new_user_profile_nav_groups site setting" do
-      SiteSetting.enable_new_user_profile_nav_groups = "#{group.id}|#{group2.id}"
-      group.add(user)
-
-      expect(serializer.as_json[:redesigned_user_page_nav_enabled]).to eq(true)
-    end
-  end
-
   describe "#associated_account_ids" do
     before do
       UserAssociatedAccount.create(

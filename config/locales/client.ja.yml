@@ -4021,9 +4021,6 @@ ja:
         about: "グループのメンバーシップとグループ名を編集"
         group_members: "グループメンバー"
         delete: "削除"
-        delete_confirm: "このグループを削除してもよろしいですか？"
-        delete_with_messages_confirm:
-          other: "このグループを削除すると %{count} 件のメッセージが孤立し、グループメンバーがアクセスできなくなります。"
         delete_failed: "グループを削除できません。自動作成グループを削除することはできません。"
         delete_automatic_group: これは自動グループであるため削除できません。
         delete_owner_confirm: "'%{username}' のオーナー権限を削除しますか？"
@@ -4228,7 +4225,6 @@ ja:
         enabled: "有効化？"
         is_enabled: "はい"
         not_enabled: "いいえ"
-        change_settings: "設定を変更"
         change_settings_short: "設定"
         howto: "プラグインをインストールするには？"
         official: "公式プラグイン"

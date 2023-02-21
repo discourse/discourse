@@ -73,13 +73,11 @@ zh_TW:
       email_frequency:
         never: "永不"
       flag: "檢舉"
+      heading: "聊天"
       join: "加入"
       mention_warning:
         dismiss: "忽略"
-        groups:
-          users_limit:
-            other: "%{count} 個使用者"
-      placeholder_start_conversation: 從 %{usernames}開始對話
+      placeholder_start_conversation_users: "從 %{commaSeparatedUsernames}開始對話"
       remove_upload: "移除檔案"
       react: "用表情符號反應"
       reply: "回覆"
@@ -101,6 +99,8 @@ zh_TW:
         title: "桌面聊天通知聲音"
       sounds:
         none: "無"
+      title: "聊天"
+      title_capitalized: "聊天"
       exit: "上一步"
       channel_status:
         read_only_header: "頻道為唯讀"
@@ -161,6 +161,8 @@ zh_TW:
         saved: "已儲存"
         unfollow: "離開"
         admin_title: "管理員"
+      admin:
+        title: "聊天"
       incoming_webhooks:
         back: "上一步"
         description: "簡述"
@@ -186,6 +188,7 @@ zh_TW:
         activities: "活動"
         flags: "投訴"
         symbols: "象徵<br>"
+        no_results: "沒有結果"
       draft_channel_screen:
         header: "新訊息"
         cancel: "取消"
@@ -201,3 +204,6 @@ zh_TW:
       types:
         reviewable_chat_message:
           flagged_by: "標記由"
+    keyboard_shortcuts_help:
+      chat:
+        title: "聊天"
