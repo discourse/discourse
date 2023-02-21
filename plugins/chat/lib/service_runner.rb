@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 #
-# = Chat::Endpoint
+# = Chat::ServiceRunner
 #
-# This class is to be used via its helper +with_service+ in a controller. Its
+# This class is to be used via its helper +with_service+ in any class. Its
 # main purpose is to ease how actions can be run upon a service completion.
 # Since a service will likely return the same kind of things over and over,
 # this allows us to not have to repeat the same boilerplate code in every
-# controller.
+# object.
 #
 # There are several available actions and we can add new ones very easily:
 #
@@ -19,8 +19,7 @@
 # * +on_model_not_found(name)+: will execute the provided block if the service
 #   fails and its model is not present
 #
-# @example
-#   # in a controller
+# @example In a controller
 #   def create
 #     with_service MyService do
 #       on_success do
@@ -32,13 +31,21 @@
 #     end
 #   end
 #
+# @example In a job (inheriting from +ServiceJob+)
+#   def execute(args = {})
+#     with_service(MyService, **args) do
+#       on_success { Rails.logger.info "SUCCESS" }
+#       on_failure { Rails.logger.error "FAILURE" }
+#     end
+#   end
+#
 # The actions will be evaluated in the order they appear. So even if the
 # service will ultimately fail with a failed policy, in this example only the
 # +on_failed_policy+ action will be executed and not the +on_failure+ one.
 # The only exception to this being +on_failure+ as it will always be executed
 # last.
 #
-class Chat::Endpoint
+class Chat::ServiceRunner
   # @!visibility private
   NULL_RESULT = OpenStruct.new(failure?: false)
   # @!visibility private
@@ -51,14 +58,14 @@ class Chat::Endpoint
   }.with_indifferent_access.freeze
 
   # @!visibility private
-  attr_reader :service, :controller, :dependencies
+  attr_reader :service, :object, :dependencies
 
-  delegate :result, to: :controller
+  delegate :result, to: :object
 
   # @!visibility private
-  def initialize(service, controller, **dependencies)
+  def initialize(service, object, **dependencies)
     @service = service
-    @controller = controller
+    @object = object
     @dependencies = dependencies
     @actions = {}
   end
@@ -66,14 +73,14 @@ class Chat::Endpoint
   # @param service [Class] a class including {Chat::Service::Base}
   # @param block [Proc] a block containing the steps to match on
   # @return [void]
-  def self.call(service, controller, **dependencies, &block)
-    new(service, controller, **dependencies).call(&block)
+  def self.call(service, object, **dependencies, &block)
+    new(service, object, **dependencies).call(&block)
   end
 
   # @!visibility private
   def call(&block)
     instance_eval(&block)
-    controller.run_service(service, dependencies)
+    object.run_service(service, dependencies)
     # Always have `on_failure` as the last action
     (
       actions
@@ -88,13 +95,13 @@ class Chat::Endpoint
   attr_reader :actions
 
   def failure_for?(key)
-    (controller.result[key] || NULL_RESULT).failure?
+    (object.result[key] || NULL_RESULT).failure?
   end
 
   def add_action(name, *args, &block)
     actions[[name, *args].join("_").to_sym] = [
       -> { instance_exec(*args, &AVAILABLE_ACTIONS[name]) },
-      -> { controller.instance_eval(&block) },
+      -> { object.instance_eval(&block) },
     ]
   end
 
