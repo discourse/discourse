@@ -30,8 +30,6 @@ export default class ChatLivePanel {
   }
 
   get canInteractWithChat() {
-    // not really sure about this, would prefer details is a nice object
-    // that has tracked for all its props....
     return !this.details.user_silenced;
   }
 
@@ -39,7 +37,6 @@ export default class ChatLivePanel {
     return this.messages.filterBy("selected").mapBy("id");
   }
 
-  // reacting to actions
   onSelectMessage(message) {
     this.lastSelectedMessage = message;
     this.selectingMessages = true;
@@ -114,8 +111,6 @@ export default class ChatLivePanel {
     this.lastSelectedMessage = null;
     this.messages.setEach("selected", false);
   }
-
-  // private
 
   @bind
   _debouncedOnHoverMessage(message) {
