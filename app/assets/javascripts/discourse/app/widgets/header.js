@@ -511,7 +511,8 @@ export default createWidget("header", {
       } else if (state.hamburgerVisible) {
         if (
           attrs.navigationMenuQueryParamOverride === "header_dropdown" ||
-          (this.siteSettings.navigation_menu !== "legacy" &&
+          (attrs.navigationMenuQueryParamOverride !== "legacy" &&
+            this.siteSettings.navigation_menu !== "legacy" &&
             (!attrs.sidebarEnabled || this.site.narrowDesktopView))
         ) {
           panels.push(this.attach("revamped-hamburger-menu-wrapper", {}));

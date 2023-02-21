@@ -8,7 +8,7 @@ module PageObjects
       end
 
       def visible?
-        page.has_css?(".revamped.menu-panel.drop-down")
+        page.has_css?(".sidebar-hamburger-dropdown")
       end
     end
   end
