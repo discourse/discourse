@@ -173,7 +173,9 @@ acceptance("User Preferences - Sidebar", function (needs) {
     await visit("/");
 
     assert.ok(
-      exists(".sidebar-section-tags .sidebar-section-link-monkey"),
+      exists(
+        ".sidebar-section-tags .sidebar-section-link[data-tag-name=monkey]"
+      ),
       "monkey tag is displayed in sidebar"
     );
 
@@ -197,12 +199,16 @@ acceptance("User Preferences - Sidebar", function (needs) {
     await click(".dialog-footer .btn-primary");
 
     assert.ok(
-      !exists(".sidebar-section-tags .sidebar-section-link-gazelle"),
+      !exists(
+        ".sidebar-section-tags .sidebar-section-link[data-tag-name=gazelle]"
+      ),
       "gazelle tag is not displayed in sidebar"
     );
 
     assert.ok(
-      exists(".sidebar-section-tags .sidebar-section-link-monkey"),
+      exists(
+        ".sidebar-section-tags .sidebar-section-link[data-tag-name=monkey]"
+      ),
       "monkey tag is displayed in sidebar"
     );
   });
@@ -225,7 +231,9 @@ acceptance("User Preferences - Sidebar", function (needs) {
     await click(".save-changes");
 
     assert.ok(
-      exists(".sidebar-section-tags .sidebar-section-link-monkey"),
+      exists(
+        ".sidebar-section-tags .sidebar-section-link[data-tag-name=monkey]"
+      ),
       "monkey tag has been added to sidebar"
     );
   });
@@ -244,12 +252,16 @@ acceptance("User Preferences - Sidebar", function (needs) {
     await click(".save-changes");
 
     assert.ok(
-      exists(".sidebar-section-tags .sidebar-section-link-monkey"),
+      exists(
+        ".sidebar-section-tags .sidebar-section-link[data-tag-name=monkey]"
+      ),
       "monkey tag has been added to sidebar"
     );
 
     assert.ok(
-      exists(".sidebar-section-tags .sidebar-section-link-gazelle"),
+      exists(
+        ".sidebar-section-tags .sidebar-section-link[data-tag-name=gazelle]"
+      ),
       "gazelle tag has been added to sidebar"
     );
 
