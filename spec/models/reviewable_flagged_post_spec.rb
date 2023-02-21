@@ -179,6 +179,19 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       expect(post.reload.deleted_at).to be_present
     end
 
+    it "delete_and_ignore_replies ignores the flags and deletes post + replies" do
+      reply = create_reply(post)
+      nested_reply = create_reply(reply)
+      post.reload
+
+      reviewable.perform(moderator, :delete_and_ignore_replies)
+      expect(reviewable).to be_ignored
+      expect(score.reload).to be_ignored
+      expect(post.reload.deleted_at).to be_present
+      expect(reply.reload.deleted_at).to be_present
+      expect(nested_reply.reload.deleted_at).to be_present
+    end
+
     it "delete_and_agree agrees with the flags and deletes post" do
       reviewable.perform(moderator, :delete_and_agree)
       expect(reviewable).to be_approved
