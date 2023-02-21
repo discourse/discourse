@@ -1,17 +1,21 @@
-import discourseComputed, { on } from "discourse-common/utils/decorators";
+import { action } from "@ember/object";
+import { classNameBindings } from "@ember-decorators/component";
 import { empty, reads } from "@ember/object/computed";
+import discourseComputed, { on } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import { makeArray } from "discourse-common/lib/helpers";
 
-export default Component.extend({
-  classNameBindings: [":value-list"],
-  inputInvalid: empty("newValue"),
-  inputDelimiter: null,
-  inputType: null,
-  newValue: "",
-  collection: null,
-  values: null,
-  noneKey: reads("addKey"),
+@classNameBindings(":value-list")
+export default class ValueList extends Component {
+  @empty("newValue") inputInvalid;
+
+  inputDelimiter = null;
+  inputType = null;
+  newValue = "";
+  collection = null;
+  values = null;
+
+  @reads("addKey") noneKey;
 
   @on("didReceiveAttrs")
   _setupCollection() {
@@ -25,57 +29,60 @@ export default Component.extend({
       "collection",
       this._splitValues(values, this.inputDelimiter || "\n")
     );
-  },
+  }
 
   @discourseComputed("choices.[]", "collection.[]")
   filteredChoices(choices, collection) {
     return makeArray(choices).filter((i) => !collection.includes(i));
-  },
+  }
 
   keyDown(event) {
     if (event.key === "Enter") {
       this.send("addValue", this.newValue);
     }
-  },
+  }
 
-  actions: {
-    changeValue(index, event) {
-      this._replaceValue(index, event.target.value);
-    },
+  @action
+  changeValue(index, event) {
+    this._replaceValue(index, event.target.value);
+  }
 
-    addValue(newValue) {
-      if (this.inputInvalid) {
-        return;
-      }
+  @action
+  addValue(newValue) {
+    if (this.inputInvalid) {
+      return;
+    }
 
-      this.set("newValue", null);
-      this._addValue(newValue);
-    },
+    this.set("newValue", null);
+    this._addValue(newValue);
+  }
 
-    removeValue(value) {
-      this._removeValue(value);
-    },
+  @action
+  removeValue(value) {
+    this._removeValue(value);
+  }
 
-    selectChoice(choice) {
-      this._addValue(choice);
-    },
+  @action
+  selectChoice(choice) {
+    this._addValue(choice);
+  }
 
-    shift(operation, index) {
-      let futureIndex = index + operation;
+  @action
+  shift(operation, index) {
+    let futureIndex = index + operation;
 
-      if (futureIndex > this.collection.length - 1) {
-        futureIndex = 0;
-      } else if (futureIndex < 0) {
-        futureIndex = this.collection.length - 1;
-      }
+    if (futureIndex > this.collection.length - 1) {
+      futureIndex = 0;
+    } else if (futureIndex < 0) {
+      futureIndex = this.collection.length - 1;
+    }
 
-      const shiftedValue = this.collection[index];
-      this.collection.removeAt(index);
-      this.collection.insertAt(futureIndex, shiftedValue);
+    const shiftedValue = this.collection[index];
+    this.collection.removeAt(index);
+    this.collection.insertAt(futureIndex, shiftedValue);
 
-      this._saveValues();
-    },
-  },
+    this._saveValues();
+  }
 
   _addValue(value) {
     this.collection.addObject(value);
@@ -87,7 +94,7 @@ export default Component.extend({
     }
 
     this._saveValues();
-  },
+  }
 
   _removeValue(value) {
     this.collection.removeObject(value);
@@ -99,12 +106,12 @@ export default Component.extend({
     }
 
     this._saveValues();
-  },
+  }
 
   _replaceValue(index, newValue) {
     this.collection.replace(index, 1, [newValue]);
     this._saveValues();
-  },
+  }
 
   _saveValues() {
     if (this.inputType === "array") {
@@ -113,12 +120,12 @@ export default Component.extend({
     }
 
     this.set("values", this.collection.join(this.inputDelimiter || "\n"));
-  },
+  }
 
   @discourseComputed("collection")
   showUpDownButtons(collection) {
     return collection.length - 1 ? true : false;
-  },
+  }
 
   _splitValues(values, delimiter) {
     if (values && values.length) {
@@ -126,5 +133,5 @@ export default Component.extend({
     } else {
       return [];
     }
-  },
-});
+  }
+}

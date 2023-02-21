@@ -1,11 +1,11 @@
-import Component from "@ember/component";
+import { classNameBindings, tagName } from "@ember-decorators/component";
 import { match } from "@ember/object/computed";
-export default Component.extend({
-  allTime: true,
-  tagName: "tr",
-  reverseColors: match(
-    "report.type",
-    /^(time_to_first_response|topics_with_no_response)$/
-  ),
-  classNameBindings: ["reverseColors"],
-});
+import Component from "@ember/component";
+@tagName("tr")
+@classNameBindings("reverseColors")
+export default class AdminReportCounts extends Component {
+  allTime = true;
+
+  @match("report.type", /^(time_to_first_response|topics_with_no_response)$/)
+  reverseColors;
+}

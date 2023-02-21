@@ -1,14 +1,14 @@
 import Component from "@ember/component";
 import { action, computed } from "@ember/object";
 
-export default Component.extend({
-  tokenSeparator: "|",
-  choices: null,
+export default class HostList extends Component {
+  tokenSeparator = "|";
+  choices = null;
 
   @computed("value")
   get settingValue() {
     return this.value.toString().split(this.tokenSeparator).filter(Boolean);
-  },
+  }
 
   @action
   onChange(value) {
@@ -17,5 +17,5 @@ export default Component.extend({
     }
 
     this.set("value", value.join(this.tokenSeparator));
-  },
-});
+  }
+}

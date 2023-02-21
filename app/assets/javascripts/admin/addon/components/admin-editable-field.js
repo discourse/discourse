@@ -1,28 +1,27 @@
+import { tagName } from "@ember-decorators/component";
 import Component from "@ember/component";
 import { action } from "@ember/object";
 
-export default Component.extend({
-  tagName: "",
-
-  buffer: "",
-  editing: false,
+@tagName("")
+export default class AdminEditableField extends Component {
+  buffer = "";
+  editing = false;
 
   init() {
-    this._super(...arguments);
+    super.init(...arguments);
     this.set("editing", false);
-  },
+  }
 
   @action
   edit(event) {
     event?.preventDefault();
     this.set("buffer", this.value);
     this.toggleProperty("editing");
-  },
+  }
 
-  actions: {
-    save() {
-      // Action has to toggle 'editing' property.
-      this.action(this.buffer);
-    },
-  },
-});
+  @action
+  save() {
+    // Action has to toggle 'editing' property.
+    this.action(this.buffer);
+  }
+}

@@ -1,31 +1,33 @@
+import { action } from "@ember/object";
+import { classNames } from "@ember-decorators/component";
+import { on } from "@ember-decorators/object";
 import Component from "@ember/component";
 import getURL from "discourse-common/lib/get-url";
 import loadScript from "discourse/lib/load-script";
 import I18n from "I18n";
 import { bind, observes } from "discourse-common/utils/decorators";
-import { on } from "@ember/object/evented";
 
 const COLOR_VARS_REGEX =
   /\$(primary|secondary|tertiary|quaternary|header_background|header_primary|highlight|danger|success|love)(\s|;|-(low|medium|high))/g;
 
-export default Component.extend({
-  mode: "css",
-  classNames: ["ace-wrapper"],
-  _editor: null,
-  _skipContentChangeEvent: null,
-  disabled: false,
-  htmlPlaceholder: false,
+@classNames("ace-wrapper")
+export default class AceEditor extends Component {
+  mode = "css";
+  disabled = false;
+  htmlPlaceholder = false;
+  _editor = null;
+  _skipContentChangeEvent = null;
 
   @observes("editorId")
   editorIdChanged() {
     if (this.autofocus) {
       this.send("focus");
     }
-  },
+  }
 
   didRender() {
     this._skipContentChangeEvent = false;
-  },
+  }
 
   @observes("content")
   contentChanged() {
@@ -33,14 +35,14 @@ export default Component.extend({
     if (this._editor && !this._skipContentChangeEvent) {
       this._editor.getSession().setValue(content);
     }
-  },
+  }
 
   @observes("mode")
   modeChanged() {
     if (this._editor && !this._skipContentChangeEvent) {
       this._editor.getSession().setMode("ace/mode/" + this.mode);
     }
-  },
+  }
 
   @observes("placeholder")
   placeholderChanged() {
@@ -49,12 +51,12 @@ export default Component.extend({
         placeholder: this.placeholder,
       });
     }
-  },
+  }
 
   @observes("disabled")
   disabledStateChanged() {
     this.changeDisabledState();
-  },
+  }
 
   changeDisabledState() {
     const editor = this._editor;
@@ -67,9 +69,10 @@ export default Component.extend({
       });
       editor.container.parentNode.setAttribute("data-disabled", disabled);
     }
-  },
+  }
 
-  _destroyEditor: on("willDestroyElement", function () {
+  @on("willDestroyElement")
+  _destroyEditor() {
     if (this._editor) {
       this._editor.destroy();
       this._editor = null;
@@ -80,16 +83,16 @@ export default Component.extend({
     }
 
     $(window).off("ace:resize");
-  }),
+  }
 
   resize() {
     if (this._editor) {
       this._editor.resize();
     }
-  },
+  }
 
   didInsertElement() {
-    this._super(...arguments);
+    super.didInsertElement(...arguments);
     loadScript("/javascripts/ace/ace.js").then(() => {
       window.ace.require(["ace/ace"], (loadedAce) => {
         loadedAce.config.set("loadWorkerFromBlob", false);
@@ -153,13 +156,13 @@ export default Component.extend({
         this._darkModeListener.addListener(this.setAceTheme);
       });
     });
-  },
+  }
 
   willDestroyElement() {
     if (this._darkModeListener) {
       this._darkModeListener.removeListener(this.setAceTheme);
     }
-  },
+  }
 
   @bind
   setAceTheme() {
@@ -170,7 +173,7 @@ export default Component.extend({
     this._editor.setTheme(
       `ace/theme/${schemeType === "dark" ? "chaos" : "chrome"}`
     );
-  },
+  }
 
   warnSCSSDeprecations() {
     if (
@@ -202,16 +205,15 @@ export default Component.extend({
         ? I18n.t("admin.customize.theme.scss_color_variables_warning")
         : false
     );
-  },
+  }
 
-  actions: {
-    focus() {
-      if (this._editor) {
-        this._editor.focus();
-        this._editor.navigateFileEnd();
-      }
-    },
-  },
+  @action
+  focus() {
+    if (this._editor) {
+      this._editor.focus();
+      this._editor.navigateFileEnd();
+    }
+  }
 
   _overridePlaceholder(loadedAce) {
     const originalPlaceholderSetter =
@@ -239,5 +241,5 @@ export default Component.extend({
 
       this.$updatePlaceholder();
     };
-  },
-});
+  }
+}
