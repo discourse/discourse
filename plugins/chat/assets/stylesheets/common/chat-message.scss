@@ -67,7 +67,7 @@
   }
 
   &.chat-action {
-    background-color: var(--highlight-medium);
+    background-color: var(--highlight-bg);
   }
 
   &.errored {
@@ -253,7 +253,7 @@
   }
 
   .chat-message.chat-message-bookmarked {
-    background: var(--highlight-low);
+    background: var(--highlight-bg);
   }
 
   .not-mobile-device & .chat-message-reaction-list .chat-message-react-btn {
@@ -290,7 +290,7 @@
 }
 
 .chat-message.chat-message-bookmarked {
-  background: var(--highlight-low);
+  background: var(--highlight-bg);
 }
 
 .has-full-page-chat .chat-message .onebox:not(img),
