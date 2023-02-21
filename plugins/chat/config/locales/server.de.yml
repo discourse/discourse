@@ -34,25 +34,47 @@ de:
     chat_channel_archive_complete:
       title: "Chat-Kanal-Archivierung abgeschlossen"
       subject_template: "Chat-Kanal-Archivierung erfolgreich abgeschlossen"
+      text_body_template: |
+        Die Archivierung des Chat-Kanals %{channel_hashtag_or_name} wurde erfolgreich abgeschlossen. Die Nachrichten wurden in das Thema [%{topic_title}](%{topic_url}) kopiert.
     chat_channel_archive_failed:
       title: "Chat-Kanal-Archivierung fehlgeschlagen"
       subject_template: "Chat-Kanal-Archivierung fehlgeschlagen"
+      text_body_template: |
+        Die Archivierung des Chat-Kanals %{channel_hashtag_or_name} ist fehlgeschlagen. %{messages_archived} Nachrichten wurden archiviert. Teilweise archivierte Nachrichten wurden in das Thema [%{topic_title}](%{topic_url}) kopiert. Besuche den Kanal unter %{channel_url}, um es erneut zu versuchen.
     chat_channel_archive_failed_no_topic:
       title: "Chat-Kanal-Archivierung fehlgeschlagen"
       subject_template: "Chat-Kanal-Archivierung fehlgeschlagen"
+      text_body_template: |
+        Die Archivierung des Chat-Kanals %{channel_hashtag_or_name} ist fehlgeschlagen. Es wurden keine Nachrichten archiviert. Das Thema wurde aus den folgenden Gründen nicht erfolgreich erstellt:
+
+          %{topic_validation_errors}
+
+        Besuche den Kanal unter %{channel_url} , um es erneut zu versuchen.
   chat:
     deleted_chat_username: gelöscht
     errors:
       channel_exists_for_category: "Für diese Kategorie und diesen Namen existiert bereits ein Kanal"
+      channel_new_message_disallowed:
+        archived: "Der Kanal ist archiviert, es können keine neuen Nachrichten gesendet werden"
+        closed: "Der Kanal ist geschlossen, es können keine neuen Nachrichten gesendet werden"
+        read_only: "Der Kanal ist schreibgeschützt, es können keine neuen Nachrichten gesendet werden"
+      channel_modify_message_disallowed:
+        archived: "Der Kanal ist archiviert, es können keine Nachrichten bearbeitet oder gelöscht werden"
+        closed: "Der Kanal ist geschlossen, es können keine Nachrichten bearbeitet oder gelöscht werden"
+        read_only: "Der Kanal ist schreibgeschützt, es können keine Nachrichten bearbeitet oder gelöscht werden"
       user_cannot_send_message: "Du kannst derzeit keine Nachrichten senden."
       rate_limit_exceeded: "Das Limit der Chat-Nachrichten, die innerhalb von 30 Sekunden gesendet werden können, wurde überschritten"
       auto_silence_from_flags: "Chat-Nachricht wurde mit einer Punktzahl markiert, die hoch genug ist, um den Benutzer stummzuschalten."
       channel_cannot_be_archived: "Der Kanal kann zu diesem Zeitpunkt nicht archiviert werden, er muss entweder geschlossen oder geöffnet sein."
       duplicate_message: "Du hast vor Kurzem eine identische Nachricht gepostet."
       delete_channel_failed: "Löschen des Kanals fehlgeschlagen, bitte versuche es erneut."
+      minimum_length_not_met:
+        one: "Die Nachricht ist zu kurz, sie muss mindestens %{count} Zeichen lang sein."
+        other: "Die Nachricht ist zu kurz, sie muss mindestens %{count} Zeichen lang sein."
       message_too_long:
         one: "Nachricht ist zu lang. Nachrichten dürfen maximal %{count} Zeichen lang sein."
         other: "Nachricht ist zu lang. Nachrichten dürfen maximal %{count} Zeichen lang sein."
+      draft_too_long: "Der Entwurf ist zu lang."
       max_reactions_limit_reached: "Neue Reaktionen auf diese Nachricht sind nicht erlaubt."
       message_move_invalid_channel: "Quell- und Zielkanal müssen öffentliche Kanäle sein."
       message_move_no_messages_found: "Es wurden keine Nachrichten mit den angegebenen Nachrichten-IDs gefunden."
@@ -64,6 +86,10 @@ de:
       actor_preventing_target_user_from_dm: "Du hast dich dafür entschieden, dass %{username} dir keine privaten und Direktnachrichten schicken kann, daher kannst du keine neuen Direktnachrichten an diese Person erstellen."
       user_cannot_send_direct_messages: "Du kannst leider keine Direktnachrichten senden."
       over_chat_max_direct_message_users_allow_self: "Du kannst nur eine Direktnachricht an dich selbst erstellen."
+      over_chat_max_direct_message_users:
+        one: "Du kannst keine Direktnachricht an mehr als %{count} andere Benutzer erstellen."
+        other: "Du kannst keine Direktnachricht an mehr als %{count} andere Benutzer erstellen."
+      original_message_not_found: "Der Vorgänger der Nachricht, die du beantwortest, kann nicht gefunden werden oder wurde gelöscht."
     reviewables:
       message_already_handled: "Danke, aber wir haben diese Nachricht bereits überprüft und festgestellt, dass sie nicht erneut markiert werden muss."
       actions:
@@ -107,6 +133,7 @@ de:
         other: "@%{acting_username} hat %{count} Nachrichten in den Kanal [%{channel_name}](%{first_moved_message_url}) verschoben."
       dm_title:
         single_user: "%{username}"
+        multi_user: "%{comma_separated_usernames}"
         multi_user_truncated:
           one: "%{comma_separated_usernames} und %{count} anderer"
           other: "%{comma_separated_usernames} und %{count} andere"

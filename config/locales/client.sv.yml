@@ -144,6 +144,8 @@ sv:
       facebook: "Dela på Facebook"
       email: "Skicka via e-post"
       url: "Kopiera och dela URL"
+    word_connector:
+      comma: ", "
     action_codes:
       public_topic: "Gjorde det här ämnet publikt %{when}"
       open_topic: "Konverterade detta till ett ämne %{when}"
@@ -3764,6 +3766,9 @@ sv:
       granted:
         one: "%{count} utfärdad"
         other: "%{count} utfärdade"
+      granted_with_count:
+        one: '<a href="%{badgeUrl}" title="%{count} granted" class="grant-count">%{count}x</a> <span class="grant-text">beviljad</span>'
+        other: '<a href="%{badgeUrl}" title="%{count} granted" class="grant-count">%{count}x</a> <span class="grant-text">beviljade</span>'
       select_badge_for_title: Välj en utmärkelse att använda som din titel
       none: "(ingen)"
       successfully_granted: "Beviljade %{badge} till %{username}"
@@ -4075,6 +4080,8 @@ sv:
       description: "Ditt välkomstämne är det första som nya medlemmar kommer att läsa. Tänk på det som din \"snabbpresentation\" eller \"målbeskrivning\". Låt alla veta vem den här gruppen är till för, vad de kan förvänta sig att hitta här och vad du vill att de ska göra först."
       button_title: "Börja redigera"
     until: "T.o.m.:"
+    char_counter:
+      exceeded: "Det maximala antalet tillåtna tecken har överskridits."
   admin_js:
     type_to_filter: "skriv för att filtrera..."
     admin:
@@ -4455,6 +4462,7 @@ sv:
         enabled: "Aktiverad?"
         is_enabled: "J"
         not_enabled: "N"
+        change_settings: "Plugin-inställningar"
         change_settings_short: "Inställningar"
         howto: "Hur installerar jag tillägg?"
         official: "Officiellt tillägg"
