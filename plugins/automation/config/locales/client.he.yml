@@ -134,6 +134,7 @@ he:
               description: יוקפץ רק אם הפוסט נוצר על ידי משתמש בדרגות האמון האלו, ברירת המחדל היא כל דרגת אמון
             restricted_category:
               label: קטגוריה
+              description: רשות, מאפשר להגביל הפעלות בקטגוריה הזאת
         pm_created:
           fields:
             restricted_user:

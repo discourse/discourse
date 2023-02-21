@@ -79,6 +79,10 @@ fa_IR:
           fields:
             restricted_category:
               label: محدود به دسته‌بندی
+        topic:
+          fields:
+            restricted_topic:
+              label: شناسه موضوع
         post_created_edited:
           fields:
             restricted_category:
@@ -124,14 +128,20 @@ fa_IR:
               label: کاربر
         pin_topic:
           fields:
+            pinnable_topic:
+              label: شناسه موضوع
             pinned_until:
               label: سنجاق شده تا
         banner_topic:
           fields:
+            topic_id:
+              label: شناسه موضوع
             user:
               label: کاربر
         close_topic:
           fields:
+            topic:
+              label: شناسه موضوع
             user:
               label: کاربر
         add_user_to_group_through_custom_field:

@@ -151,6 +151,8 @@ hu:
               label: Érvényes bizalmi szintek
         after_post_cook:
           fields:
+            valid_trust_levels:
+              label: Érvényes bizalmi szintek
             restricted_category:
               label: Kategória
             restricted_tags:
@@ -207,5 +209,7 @@ hu:
               label: Felhasználó
         close_topic:
           fields:
+            topic:
+              label: Témaazonosító
             user:
               label: Felhasználó
