@@ -22,9 +22,8 @@ nb_NO:
         ignore:
           title: "Ignorer"
     channel:
-      statuses:
-        closed: "Lukket"
-        open: "Åpne"
+      dm_title:
+        single_user: "%{username}"
   discourse_push_notifications:
     popup:
       chat_mention:

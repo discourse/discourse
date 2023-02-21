@@ -205,6 +205,9 @@ hr:
       enable_s3_uploads_is_required: "Ne možete omogućiti korištenje S3 inventara osim ako niste omogućili S3 prijenose."
       page_publishing_requirements: "Objavljivanje stranice ne može se omogućiti ako je omogućen siguran medij."
       s3_backup_requires_s3_settings: "Ne možete koristiti S3 kao pričuvnu lokaciju osim ako niste unijeli '%{setting_name}'."
+  invite:
+    disabled_errors:
+      invalid_access: "Nemate dopuštenje za pregled traženog izvora."
   bulk_invite:
     error: "Dogodila se greška pri učitavanju te datoteke. Molimo kasnije pokušajte ponovno."
   topic_invite:
@@ -854,6 +857,7 @@ hr:
       labels:
         post: Objava
         editor: Urednik
+        author: Autor
         edit_reason: Razlog
     consolidated_api_requests:
       xaxis:
@@ -902,6 +906,11 @@ hr:
         moderator: Moderator
         suspended: Suspendirani
         silenced: Utišano
+    trending_search:
+      labels:
+        term: Pojam
+        searches: Pretraživanja
+        click_through: CTR
     emails:
       title: "Poslano emailova"
       xaxis: "Dan"
@@ -1050,6 +1059,7 @@ hr:
     top_uploads:
       labels:
         filename: Ime datoteke
+        author: Autor
     top_users_by_likes_received:
       labels:
         user: Korisnik
@@ -1472,6 +1482,7 @@ hr:
       invalid_integer_max: "Vrijednost ne može biti veća od %{max}."
       invalid_integer: "Vrijednost mora biti cijeli broj."
       regex_mismatch: "Vrijednost ne odgovara potrebnom formatu."
+      invalid_string_min: "Mora imati najmanje %{min} znakova."
       invalid_string_max: "Ne smije imati više od %{max} znakova."
   search:
     within_post: "#%{post_number} od %{username}"
@@ -1794,6 +1805,7 @@ hr:
       Nužno je prijaviti se korisničkim računom. Molimo upitajte postojećeg korisnika za pozivnicu ili se prijavite za nastavak.
   upload:
     unauthorized: "Nažalost, datoteka koju pokušavate prenijeti nije autorizirana (autorizirana proširenja: %{authorized_extensions})."
+    size_zero_failure: "Žao nam je, izgleda da je nešto pošlo po zlu, datoteka koju pokušavate prenijeti je 0 bajtova. Molim te pokušaj ponovno."
   color_schemes:
     default_theme_name: "Zadano"
   csv_export:
@@ -1876,8 +1888,12 @@ hr:
             placeholder: "Privatno"
           chat_enabled:
             placeholder: "Omogući chat"
+          enable_sidebar:
+            placeholder: "Omogući bočnu traku"
       styling:
         fields:
+          styling_preview:
+            label: "Pregled"
           homepage_style:
             choices:
               categories_only:
@@ -1886,6 +1902,8 @@ hr:
                 label: "Kategorije s istaknutim temama"
               categories_and_latest_topics:
                 label: "Kategorije i najnovije teme"
+              categories_and_latest_topics_created_date:
+                label: "Kategorije i najnovije teme (poredaj po datumu kreiranja teme)"
               categories_and_top_topics:
                 label: "Kategorije i glavne teme"
               subcategories_with_featured_topics:
@@ -1906,6 +1924,9 @@ hr:
       confirm_title: "Obavijesti omogućene - %{site_title}"
       confirm_body: "Uspjeh! Obavijesti su omogućene."
       custom: "Obavijest od %{username} %{site_title}"
+  staff_action_logs:
+    api_key:
+      revoked: Opoziv
   reviewables:
     priorities:
       low: "Nizak"
@@ -1930,6 +1951,7 @@ hr:
       approve:
         title: "Odobri"
       reject_user:
+        title: "Obriši korisnika..."
         delete:
           title: "Obriši korisnika"
       reject:

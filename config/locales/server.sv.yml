@@ -588,10 +588,6 @@ sv:
             duration_minutes:
               cannot_be_zero: "måste vara mer än 0."
               exceeds_maximum: "får inte vara mer än 20 år."
-        translation_overrides:
-          attributes:
-            value:
-              invalid_interpolation_keys: 'Följande interpolationsnycklar är ogiltiga: "%{keys}"'
         watched_word:
           attributes:
             word:
@@ -2202,6 +2198,7 @@ sv:
       search_tokenize_japanese_enabled: "Du måste inaktivera 'search_tokenize_japanese' innan du aktiverar den här inställningen."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Du kan inte aktivera DiscourseConnect om 2FA är obligatoriskt."
       delete_rejected_email_after_days: "Den här inställningen kan inte vara lägre än inställningen delete_email_logs_after_days eller större än %{max}"
+      invalid_uncategorized_category_setting: "Kategorin \"Okategoriserade\" kan inte väljas om inte \"tillåt okategoriserade ämnen\" har aktiverats."
       enable_new_notifications_menu_not_legacy_navigation_menu: "Du måste ställa in `navigation_menu` till `legacy` innan du aktiverar den här inställningen."
       invalid_search_ranking_weights: "Värdet är ogiltigt för webbplatsinställningen search_ranking_weights. Exempel: '{0.1,0.2,0.3,1.0}'. Observera att maximalt värde för varje vikt är 1,0."
     placeholder:

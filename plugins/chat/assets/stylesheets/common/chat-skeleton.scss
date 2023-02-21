@@ -69,11 +69,16 @@ $radius: 10px;
     }
   }
 
+  *[class^="chat-skeleton__message-"] {
+    position: relative;
+    overflow: hidden;
+  }
+
   &.-animation {
     position: relative;
     overflow: hidden;
 
-    &::after {
+    *[class^="chat-skeleton__message-"]:not(.chat-skeleton__message-content):after {
       position: absolute;
       top: 0;
       right: 0;
@@ -83,11 +88,10 @@ $radius: 10px;
       background: linear-gradient(
         90deg,
         rgba(var(--chat-skeleton-animation-rgb), 0) 0,
-        rgba(var(--chat-skeleton-animation-rgb), 0.2) 20%,
-        rgba(var(--chat-skeleton-animation-rgb), 0.5) 60%,
-        rgba(var(--chat-skeleton-animation-rgb), 0)
+        rgba(var(--chat-skeleton-animation-rgb), 0.3) 50%,
+        rgba(var(--chat-skeleton-animation-rgb), 0.5) 100%
       );
-      animation: shimmer 1.5s infinite;
+      animation: shimmer 1.25s infinite;
       content: "";
     }
 

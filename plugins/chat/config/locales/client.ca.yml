@@ -25,10 +25,6 @@ ca:
       join: "Registre"
       mention_warning:
         dismiss: "descarta-ho"
-        groups:
-          users_limit:
-            one: "%{count} usuari"
-            other: "%{count} usuaris"
       reply: "Respon"
       edit: "Edita"
       rebake_message: "Refés HTML"

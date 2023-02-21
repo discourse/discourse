@@ -4502,11 +4502,6 @@ pl_PL:
         about: "Tu możesz edytować przypisania do grup oraz ich nazwy"
         group_members: "Członkowie grupy"
         delete: "Usuń"
-        delete_with_messages_confirm:
-          one: "Usunięcie tej grupy spowoduje osierocenie %{count} wiadomości, a członkowie grupy utracą do niej dostęp."
-          few: "Usunięcie tej grupy spowoduje osierocenie %{count} wiadomości, a członkowie grupy utracą do niej dostęp."
-          many: "Usunięcie tej grupy spowoduje osierocenie %{count} wiadomości, a członkowie grupy utracą do niej dostęp."
-          other: "Usunięcie tej grupy spowoduje osierocenie %{count} wiadomości, a członkowie grupy utracą do niej dostęp."
         delete_failed: "Nie można usunąć grupy. Jeżeli jest to grupa automatyczna, nie może zostać zniszczona."
         delete_automatic_group: To jest grupa automatyczna i nie można jej usunąć.
         delete_owner_confirm: "Usunąć status właściciela dla '%{username}'?"
@@ -4717,7 +4712,6 @@ pl_PL:
         enabled: "Włączona?"
         is_enabled: "T"
         not_enabled: "N"
-        change_settings: "Zmień ustawienia"
         change_settings_short: "Ustawienia"
         howto: "Jak zainstalować wtyczkę?"
         official: "Oficjalna wtyczka"

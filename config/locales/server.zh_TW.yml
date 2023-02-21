@@ -279,6 +279,7 @@ zh_TW:
   bookmarks:
     reminders:
       later_today: "今日稍晚"
+      next_business_day: "下個工作日"
       tomorrow: "明天"
       next_week: "下週"
       next_month: "下個月"
@@ -412,10 +413,6 @@ zh_TW:
           attributes:
             execute_at:
               in_the_past: "在未來必須是"
-        translation_overrides:
-          attributes:
-            value:
-              invalid_interpolation_keys: '以下的插入操作無效："%{keys}"'
         watched_word:
           attributes:
             word:
@@ -1694,6 +1691,7 @@ zh_TW:
     missing_user_field: "你還沒有填寫完所有使用者字段"
     auth_complete: "已完成認證。"
     click_to_continue: "點擊此處繼續。"
+    second_factor_title: "兩步驟驗證"
     second_factor_description: "請從您的應用程式中輸入所需的驗證碼："
     second_factor_backup_description: "請輸入一組您的備用碼"
     invalid_second_factor_code: "驗證碼無效，每個驗證碼只能使用一次"

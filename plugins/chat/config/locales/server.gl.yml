@@ -24,9 +24,8 @@ gl:
         ignore:
           title: "Ignorar"
     channel:
-      statuses:
-        closed: "Pechado"
-        open: "Abrir"
+      dm_title:
+        single_user: "%{username}"
   discourse_push_notifications:
     popup:
       chat_mention:

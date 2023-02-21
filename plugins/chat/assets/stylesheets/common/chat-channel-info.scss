@@ -142,6 +142,15 @@ input.channel-members-view__search-input {
 }
 
 // Channel info edit description modal
+.chat-channel-edit-description-modal {
+  .exceeded-word-count {
+    .chat-channel-edit-description-modal__description-input {
+      outline: 1px solid var(--danger);
+      border: 1px solid var(--danger);
+    }
+  }
+}
+
 .chat-channel-edit-description-modal__description-input {
   display: flex;
   margin: 0;
@@ -150,6 +159,6 @@ input.channel-members-view__search-input {
 
 .chat-channel-edit-description-modal__description {
   display: flex;
-  padding: 0.75rem 0 0.5rem;
+  padding-bottom: 0.75rem;
   color: var(--primary-medium);
 }

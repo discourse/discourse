@@ -562,10 +562,6 @@ zh_CN:
             duration_minutes:
               cannot_be_zero: "必须大于 0。"
               exceeds_maximum: "不能超过 20 年。"
-        translation_overrides:
-          attributes:
-            value:
-              invalid_interpolation_keys: '以下插值键无效："%{keys}"'
         watched_word:
           attributes:
             word:

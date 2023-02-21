@@ -1,5 +1,4 @@
 import RestModel from "discourse/models/rest";
-import I18n from "I18n";
 import User from "discourse/models/user";
 import UserChatChannelMembership from "discourse/plugins/chat/discourse/models/user-chat-channel-membership";
 import { ajax } from "discourse/lib/ajax";
@@ -20,19 +19,6 @@ export const CHANNEL_STATUSES = {
   closed: "closed",
   archived: "archived",
 };
-
-export function channelStatusName(channelStatus) {
-  switch (channelStatus) {
-    case CHANNEL_STATUSES.open:
-      return I18n.t("chat.channel_status.open");
-    case CHANNEL_STATUSES.readOnly:
-      return I18n.t("chat.channel_status.read_only");
-    case CHANNEL_STATUSES.closed:
-      return I18n.t("chat.channel_status.closed");
-    case CHANNEL_STATUSES.archived:
-      return I18n.t("chat.channel_status.archived");
-  }
-}
 
 export function channelStatusIcon(channelStatus) {
   if (channelStatus === CHANNEL_STATUSES.open) {

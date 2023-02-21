@@ -88,3 +88,7 @@ en:
           description: "Description"
           header: "Header"
           hover_to_see: "Hover to see a tooltip"
+        char_counter:
+          title: "Character Counter"
+          placeholder: "Enter your text here..."
+          

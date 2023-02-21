@@ -161,6 +161,9 @@ en:
       email: "Send via email"
       url: "Copy and share URL"
 
+    word_connector:
+      comma: ", "
+
     action_codes:
       public_topic: "Made this topic public %{when}"
       open_topic: "Converted this to a topic %{when}"
@@ -4118,6 +4121,9 @@ en:
       granted:
         one: "%{count} granted"
         other: "%{count} granted"
+      granted_with_count:
+        one: '<a href="%{badgeUrl}" title="%{count} granted" class="grant-count">%{count}x</a> <span class="grant-text">granted</span>'
+        other: '<a href="%{badgeUrl}" title="%{count} granted" class="grant-count">%{count}x</a> <span class="grant-text">granted</span>'
       select_badge_for_title: Select a badge to use as your title
       none: "(none)"
       successfully_granted: "Successfully granted %{badge} to %{username}"
@@ -4449,6 +4455,9 @@ en:
       button_title: "Start Editing"
 
     until: "Until:"
+
+    char_counter:
+      exceeded: "The maximum number of characters allowed has been exceeded."
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:

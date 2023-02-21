@@ -1,12 +1,15 @@
 # frozen_string_literal: true
 
 class SearchIndexer
-  POST_INDEX_VERSION = 4
-  MIN_POST_REINDEX_VERSION = 3
-  TOPIC_INDEX_VERSION = 3
+  MIN_POST_BLURB_INDEX_VERSION = 4
+
+  POST_INDEX_VERSION = 5
+  TOPIC_INDEX_VERSION = 4
   CATEGORY_INDEX_VERSION = 3
   USER_INDEX_VERSION = 3
   TAG_INDEX_VERSION = 3
+
+  # version to apply when issuing a background reindex
   REINDEX_VERSION = 0
   TS_VECTOR_PARSE_REGEX = /('([^']*|'')*'\:)(([0-9]+[A-D]?,?)+)/
 

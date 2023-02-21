@@ -70,10 +70,6 @@ pt:
       join: "Entrar"
       mention_warning:
         dismiss: "marcar Visto"
-        groups:
-          users_limit:
-            one: "%{count} usuário"
-            other: "%{count} usuários"
       only_chat_push_notifications:
         title: "Enviar notificações push apenas para chat"
       reply: "Responder"
@@ -106,6 +102,7 @@ pt:
         open: "Abrir"
       browse:
         back: "Retroceder"
+        title: Canais
         filter_all: Tudo
         filter_closed: Fechado
       chat_message_separator:
@@ -129,6 +126,7 @@ pt:
         prefix: "Para:"
       create_channel:
         slug: "Slug do canal (opcional)"
+        title: "Novo canal"
         type: "Tipo"
         types:
           category: "Categoria"

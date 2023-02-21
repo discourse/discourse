@@ -196,7 +196,7 @@ task "javascript:update_constants" => :environment do
 
   emoji_sections = groups_json.map { |group| html_for_section(group) }
 
-  components_dir = "discourse/app/templates/components"
+  components_dir = "discourse/app/components"
   write_hbs_template("#{components_dir}/emoji-group-buttons.hbs", task_name, emoji_buttons.join)
   write_hbs_template("#{components_dir}/emoji-group-sections.hbs", task_name, emoji_sections.join)
 end

@@ -339,11 +339,7 @@ createWidget("header-icons", {
       },
     });
 
-    if (
-      this.siteSettings.navigation_menu === "legacy" ||
-      !attrs.sidebarEnabled ||
-      this.site.mobileView
-    ) {
+    if (!attrs.sidebarEnabled || this.site.mobileView) {
       icons.push(hamburger);
     }
 

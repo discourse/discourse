@@ -103,20 +103,40 @@ export default class CreateChannelController extends Controller.extend(
 
   _updateAutoJoinConfirmWarning(category, catPermissions) {
     const allowedGroups = catPermissions.allowed_groups;
+    let warning;
 
     if (catPermissions.private) {
-      const warningTranslationKey =
-        allowedGroups.length < 3 ? "warning_groups" : "warning_multiple_groups";
-
-      this.set(
-        "autoJoinWarning",
-        I18n.t(`chat.create_channel.auto_join_users.${warningTranslationKey}`, {
-          members_count: catPermissions.members_count,
-          group: escapeExpression(allowedGroups[0]),
-          group_2: escapeExpression(allowedGroups[1]),
-          count: allowedGroups.length,
-        })
-      );
+      switch (allowedGroups.length) {
+        case 1:
+          warning = I18n.t(
+            "chat.create_channel.auto_join_users.warning_1_group",
+            {
+              count: catPermissions.members_count,
+              group: escapeExpression(allowedGroups[0]),
+            }
+          );
+          break;
+        case 2:
+          warning = I18n.t(
+            "chat.create_channel.auto_join_users.warning_2_groups",
+            {
+              count: catPermissions.members_count,
+              group1: escapeExpression(allowedGroups[0]),
+              group2: escapeExpression(allowedGroups[1]),
+            }
+          );
+          break;
+        default:
+          warning = I18n.messageFormat(
+            "chat.create_channel.auto_join_users.warning_multiple_groups_MF",
+            {
+              groupCount: allowedGroups.length - 1,
+              userCount: catPermissions.members_count,
+              groupName: escapeExpression(allowedGroups[0]),
+            }
+          );
+          break;
+      }
     } else {
       this.set(
         "autoJoinWarning",
@@ -125,6 +145,8 @@ export default class CreateChannelController extends Controller.extend(
         })
       );
     }
+
+    this.set("autoJoinWarning", warning);
   }
 
   _updatePermissionsHint(category) {
@@ -136,20 +158,42 @@ export default class CreateChannelController extends Controller.extend(
         .then((catPermissions) => {
           this._updateAutoJoinConfirmWarning(category, catPermissions);
           const allowedGroups = catPermissions.allowed_groups;
-          const translationKey =
-            allowedGroups.length < 3 ? "hint_groups" : "hint_multiple_groups";
+          const settingLink = `/c/${escapeExpression(fullSlug)}/edit/security`;
+          let hint;
 
-          this.set(
-            "categoryPermissionsHint",
-            htmlSafe(
-              I18n.t(`chat.create_channel.choose_category.${translationKey}`, {
-                link: `/c/${escapeExpression(fullSlug)}/edit/security`,
-                hint: escapeExpression(allowedGroups[0]),
-                hint_2: escapeExpression(allowedGroups[1]),
-                count: allowedGroups.length,
-              })
-            )
-          );
+          switch (allowedGroups.length) {
+            case 1:
+              hint = I18n.t(
+                "chat.create_channel.choose_category.hint_1_group",
+                {
+                  settingLink,
+                  group: escapeExpression(allowedGroups[0]),
+                }
+              );
+              break;
+            case 2:
+              hint = I18n.t(
+                "chat.create_channel.choose_category.hint_2_groups",
+                {
+                  settingLink,
+                  group1: escapeExpression(allowedGroups[0]),
+                  group2: escapeExpression(allowedGroups[1]),
+                }
+              );
+              break;
+            default:
+              hint = I18n.t(
+                "chat.create_channel.choose_category.hint_multiple_groups",
+                {
+                  settingLink,
+                  group: escapeExpression(allowedGroups[0]),
+                  count: allowedGroups.length - 1,
+                }
+              );
+              break;
+          }
+
+          this.set("categoryPermissionsHint", htmlSafe(hint));
         });
     } else {
       this.set("categoryPermissionsHint", DEFAULT_HINT);

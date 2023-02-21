@@ -687,10 +687,6 @@ ar:
             duration_minutes:
               cannot_be_zero: "يجب أن تكون أكبر من 0."
               exceeds_maximum: "لا يمكن أن يتجاوز 20 سنة."
-        translation_overrides:
-          attributes:
-            value:
-              invalid_interpolation_keys: 'مفتاح (مفاتيح) الاستكمال التالي غير صالح: "%{keys}"'
         watched_word:
           attributes:
             word:

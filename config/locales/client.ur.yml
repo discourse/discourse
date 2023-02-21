@@ -3636,6 +3636,8 @@ ur:
               content: "ایڈمن"
             badges:
               content: "بَیج"
+            everything:
+              content: "تمام"
             faq:
               content: "عمومی سوالات"
             groups:
@@ -3646,6 +3648,7 @@ ur:
               content: "میری پوسٹ"
             review:
               content: "جائزہ لیں"
+    until: "جب تک:"
   admin_js:
     type_to_filter: "فِلٹر کرنے کے لئے ٹائپ کریں..."
     admin:
@@ -3998,7 +4001,6 @@ ur:
         enabled: "فعال؟"
         is_enabled: "Y"
         not_enabled: "N"
-        change_settings: "سیٹنگ تبدیل کریں"
         change_settings_short: "سیٹِنگ"
         howto: "میں پلَگ اِنز کیسے انسٹال کروں؟"
         official: "آفیشل پلَگ اِن"

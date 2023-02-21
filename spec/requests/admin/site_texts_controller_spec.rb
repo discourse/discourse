@@ -580,6 +580,7 @@ RSpec.describe Admin::SiteTextsController do
           I18n.t(
             "activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys",
             keys: "key, omg",
+            count: 2,
           ),
         )
       end

@@ -38,4 +38,10 @@ export const NOTIFICATION_TYPES = {
   chat_quoted: 33,
   assigned: 34,
   question_answer_user_commented: 35,
+  watching_category_or_tag: 36,
+  new_features: 37,
+  following: 800,
+  following_created_topic: 801,
+  following_replied: 802,
+  circles_activity: 900,
 };

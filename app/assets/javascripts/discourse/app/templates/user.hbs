@@ -116,7 +116,7 @@
           <UserProfileAvatar @user={{this.model}} @tagName="" />
           <div class="primary-textual">
             <div class="user-profile-names">
-              <div
+              <h1
                 class="{{if this.nameFirst 'full-name' 'username'}}
                   user-profile-names__primary"
               >
@@ -129,7 +129,7 @@
                 {{#if this.model.status}}
                   <UserStatusMessage @status={{this.model.status}} />
                 {{/if}}
-              </div>
+              </h1>
               <div
                 class="{{if this.nameFirst 'username' 'full-name'}}
                   user-profile-names__secondary"

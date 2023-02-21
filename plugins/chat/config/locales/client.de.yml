@@ -105,45 +105,18 @@ de:
       new_messages: "neue Nachrichten"
       mention_warning:
         dismiss: "verwerfen"
-        cannot_see:
-          one: "%{username} kann nicht auf diesen Kanal zugreifen und wurde nicht benachrichtigt."
-          other: "%{username} und %{others} können nicht auf diesen Kanal zugreifen und wurden nicht benachrichtigt."
         invitations_sent:
           one: "Einladung gesendet"
           other: "Einladungen gesendet"
         invite: "Zum Kanal einladen"
-        without_membership:
-          one: "%{username} ist diesem Kanal nicht beigetreten."
-          other: "%{username} und %{others} sind diesem Kanal nicht beigetreten."
-        group_mentions_disabled:
-          one: "%{group_name} erlaubt keine Erwähnungen"
-          other: "%{group_name} und %{others} erlauben keine Erwähnungen"
-        too_many_members:
-          one: "%{group_name} hat zu viele Mitglieder. Niemand wurde benachrichtigt"
-          other: "%{group_name} und %{others} haben zu viele Mitglieder. Niemand wurde benachrichtigt"
-        warning_multiple:
-          one: "%{count} anderer"
-          other: "%{count} andere"
+        without_membership: "%{username} ist diesem Kanal nicht beigetreten."
+        group_mentions_disabled: "%{group_name} erlaubt keine Erwähnungen."
+        too_many_members: "%{group_name} hat zu viele Mitglieder. Niemand wurde benachrichtigt."
         groups:
           header:
             some: "Einige Benutzer werden nicht benachrichtigt"
             all: "Niemand wird benachrichtigt"
-          unreachable:
-            one: "@%{group} erlaubt keine Erwähnungen"
-            other: "@%{group} und @%{group_2} erlauben keine Erwähnungen"
-          unreachable_multiple: "@%{group} und %{count} andere erlauben keine Erwähnungen"
-          too_many_members:
-            one: "Die Erwähnung von @%{group} übersteigt das %{notification_limit} von %{limit}"
-            other: "Die Erwähnung von @%{group} oder @%{group_2} übersteigt das %{notification_limit} von %{limit}"
-          too_many_members_multiple: "Diese %{count} Gruppen übersteigen das %{notification_limit} von %{limit}"
-          users_limit:
-            one: "%{count} Benutzer"
-            other: "%{count} Benutzer"
-          notification_limit: "Benachrichtigungslimit"
-        too_many_mentions: "Diese Nachricht überschreitet das %{notification_limit} von %{limit}"
-        mentions_limit:
-          one: "%{count} Erwähnung"
-          other: "%{count} Erwähnungen"
+          unreachable_1: "@%{group} erlaubt keine Erwähnungen."
       aria_roles:
         header: "Chat-Kopfzeile"
         composer: "Chat-Composer"
@@ -160,10 +133,9 @@ de:
       close_full_page: "Vollbild-Chat schließen"
       open_message: "Nachricht im Chat öffnen"
       placeholder_self: "Etwas notieren"
-      placeholder_others: "Chat mit %{messageRecipient}"
-      placeholder_new_message_disallowed: "Der Kanal ist %{status}, du kannst im Moment keine neuen Nachrichten senden."
+      placeholder_users: "Chat mit %{commaSeparatedNames}"
       placeholder_silenced: "Du kannst derzeit keine Nachrichten senden."
-      placeholder_start_conversation: Beginne eine Unterhaltung mit %{usernames}
+      placeholder_start_conversation_users: "Beginne eine Unterhaltung mit %{commaSeparatedUsernames}"
       remove_upload: "Datei löschen"
       react: "Mit Emoji reagieren"
       reply: "Antworten"
@@ -256,18 +228,10 @@ de:
       create_channel:
         auto_join_users:
           public_category_warning: "%{category} ist eine öffentliche Kategorie. Alle kürzlich aktiven Benutzer automatisch zu diesem Kanal hinzufügen?"
-          warning_groups:
-            one: Automatisch %{members_count} Benutzer von %{group} hinzufügen?
-            other: Automatisch %{members_count} Benutzer von %{group} und %{group_2} hinzufügen?
-          warning_multiple_groups: Automatisch %{members_count} Benutzer von %{group_1} und %{count} anderen hinzufügen?
         choose_category:
           label: "Kategorie auswählen"
           none: "eine auswählen …"
           default_hint: Verwalte den Zugang, indem du die <a href=%{link} target="_blank">Sicherheitseinstellungen für %{category}</a> besuchst
-          hint_groups:
-            one: Benutzer in %{hint} haben gemäß den <a href=%{link} target="_blank">Sicherheitseinstellungen</a> Zugriff auf diesen Kanal
-            other: Benutzer in %{hint} und %{hint_2} haben gemäß den <a href=%{link} target="_blank">Sicherheitseinstellungen</a> Zugriff auf diesen Kanal
-          hint_multiple_groups: Benutzer in %{hint_1} und %{count} anderen Gruppen haben gemäß den <a href=%{link} target="_blank">Sicherheitseinstellungen</a> Zugriff auf diesen Kanal
         create: "Kanal erstellen"
         description: "Beschreibung (optional)"
         name: "Kanalname"
@@ -280,10 +244,7 @@ de:
         type: "Chat-Nachricht"
       reactions:
         only_you: "Du hast reagiert mit :%{emoji}:"
-        and_others: "Du, %{usernames} haben reagiert mit :%{emoji}:"
-        only_others: "%{usernames} haben reagiert mit :%{emoji}:"
-        others_and_more: "%{usernames} und %{more} andere haben reagiert mit :%{emoji}:"
-        you_others_and_more: "Du, %{usernames} und %{more} andere haben reagiert mit :%{emoji}:"
+        single_user: "%{username} haben reagiert mit :%{emoji}:"
       composer:
         toggle_toolbar: "Symbolleiste umschalten"
         italic_text: "hervorgehobener Text"
@@ -314,7 +275,6 @@ de:
         saved: "Gespeichert"
         unfollow: "Verlassen"
         admin_title: "Administrator"
-        retention_info: "Der Chat-Verlauf wird für %{days} Tage gespeichert."
       admin:
         title: "Chat"
       direct_messages:
@@ -379,9 +339,6 @@ de:
         many_users:
           one: "%{commaSeparatedUsernames} und %{count} andere Person schreiben"
           other: "%{commaSeparatedUsernames} und %{count} andere Personen schreiben"
-      retention_reminders:
-        public: "Der Kanalverlauf wird für %{days} Tage gespeichert."
-        dm: "Der persönliche Chatverlauf wird für %{days} Tage gespeichert."
       flags:
         off_topic: "Diese Nachricht ist für die aktuelle Diskussion im Sinne des Kanaltitels nicht relevant und sollte wahrscheinlich an eine andere Stelle verschoben werden."
         inappropriate: "Diese Nachricht enthält Inhalte, die eine vernünftige Person als anstößig, beleidigend oder als Verstoß gegen <a href=\"%{basePath}/guidelines\">unsere Community-Richtlinien</a> ansehen würde."

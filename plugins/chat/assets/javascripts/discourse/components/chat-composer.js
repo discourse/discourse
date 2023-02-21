@@ -19,7 +19,6 @@ import { readOnly, reads } from "@ember/object/computed";
 import { SKIP } from "discourse/lib/autocomplete";
 import { Promise } from "rsvp";
 import { translations } from "pretty-text/emoji/data";
-import { channelStatusName } from "discourse/plugins/chat/discourse/models/chat-channel";
 import { setupHashtagAutocomplete } from "discourse/lib/hashtag-autocomplete";
 import {
   chatComposerButtons,
@@ -566,17 +565,21 @@ export default Component.extend(TextareaTextManipulation, {
   @discourseComputed("userSilenced", "chatChannel.{chatable.users.[],id}")
   placeholder(userSilenced, chatChannel) {
     if (!chatChannel.canModifyMessages(this.currentUser)) {
-      return I18n.t("chat.placeholder_new_message_disallowed", {
-        status: channelStatusName(chatChannel.status).toLowerCase(),
-      });
+      return I18n.t(
+        `chat.placeholder_new_message_disallowed.${chatChannel.status}`
+      );
     }
 
     if (chatChannel.isDraft) {
-      return I18n.t("chat.placeholder_start_conversation", {
-        usernames: chatChannel?.chatable?.users?.length
-          ? chatChannel.chatable.users.mapBy("username").join(", ")
-          : "...",
-      });
+      if (chatChannel?.chatable?.users?.length) {
+        return I18n.t("chat.placeholder_start_conversation_users", {
+          commaSeparatedUsernames: chatChannel.chatable.users
+            .mapBy("username")
+            .join(I18n.t("word_connector.comma")),
+        });
+      } else {
+        return I18n.t("chat.placeholder_start_conversation");
+      }
     }
 
     if (userSilenced) {
@@ -596,14 +599,14 @@ export default Component.extend(TextareaTextManipulation, {
         return I18n.t("chat.placeholder_self");
       }
 
-      return I18n.t("chat.placeholder_others", {
-        messageRecipient: directMessageRecipients
+      return I18n.t("chat.placeholder_users", {
+        commaSeparatedNames: directMessageRecipients
           .map((u) => u.name || `@${u.username}`)
-          .join(", "),
+          .join(I18n.t("word_connector.comma")),
       });
     } else {
-      return I18n.t("chat.placeholder_others", {
-        messageRecipient: `#${chatChannel.title}`,
+      return I18n.t("chat.placeholder_channel", {
+        channelName: `#${chatChannel.title}`,
       });
     }
   },
