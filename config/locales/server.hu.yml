@@ -258,6 +258,7 @@ hu:
   create_pm_on_existing_topic: "Sajnáljuk, nem hozhatsz létre PM-et egy meglévő témakörben."
   just_posted_that: "túl hasonló ahhoz, amit legutóbb megosztott"
   invalid_characters: "érvénytelen karaktereket tartalmaz"
+  is_invalid: "nem tűnik egyértelműnek, ez egy teljes mondat?"
   next_page: "következő oldal →"
   prev_page: "← előző oldal"
   page_num: "%{num}. oldal"
@@ -557,6 +558,9 @@ hu:
       iphone: "iPhone"
       ipod: "iPod"
       windows: "Windows számítógép"
+    os:
+      android: "Android"
+      chromeos: "Chrome OS"
   change_email:
     confirmed: "Az e-mail címe frissítve lett."
     please_continue: "Tovább a(z) %{site_name} oldalra"
@@ -969,6 +973,7 @@ hu:
     slow_down_crawler_user_agents: 'A forgalmi korlátozás alá elő webes robotok felhasználói ügynökei, ahogy a „robotok sebességének lelassítása” beállításban meg van adva. Minden egyes értéknek legalább 3 karakteresnek kell lennie.'
     content_security_policy: "Tartalom-biztonsági házirend engedélyezése"
     content_security_policy_collect_reports: "Engedélyezze a CSP-szabálysértési jelentések gyűjtését /csp_reports címen."
+    send_welcome_message: "A rövid gyorstalpalóról szóló üzenet elküldése minden új felhasználónak."
     remove_full_quote: "Automatikusan eltávolítja az idézetet, ha (a) a hozzászólás elején jelenik meg, (b) egy teljes hozzászólás, és (c) ha a közvetlenül az előző hozzászólásból származik. A részletekért lásd: <a href='https://meta.discourse.org/t/removal-of-full-quotes-from-direct-replies/106857' target='_blank'>Teljes idézetek eltávolítása a közvetlen válaszokból</a>"
     email_token_valid_hours: "Elfelejtett jelszó / fiókaktiválási tokenek (n) óráig érvényesek."
     enable_badges: "A jelvény rendszer engedélyezése"
@@ -1064,7 +1069,12 @@ hu:
   login:
     invalid_second_factor_method: "A kiválasztott kéttényezős hitelesítés-módszer érvénytelen."
     not_enabled_second_factor_method: "A kiválasztott kéttényezős hitelesítés-módszer nincs engedélyezve a fiókjában."
+    security_key_description: "Ha előkészítette a fizikai biztonsági kulcsot, nyomja meg a lenti „Hitelesítés biztonsági kulccsal” gombot."
+    security_key_alternative: "Próbálkozás más módon"
+    security_key_authenticate: "Hitelesítés biztonsági kulccsal"
+    security_key_not_allowed_error: "A biztonsági hardverkulcsos hitelesítési folyamata során időtúllépés történt, vagy megszakították."
     security_key_no_matching_credential_error: "A megadott biztonsági kulcsban nem található megfelelő hitelesítő adat."
+    security_key_support_missing_error: "Jelenlegi eszköze vagy böngészője nem támogatja a biztonsági kulcsok használatát. Használjon más módszert."
     not_approved: "A fiókját még nem engedélyezték. Értesítve lesz, amint bejelentkezhet."
     incorrect_username_email_or_password: "Hibás felhasználónév, e-mail vagy jelszó"
     wait_approval: "Köszönjük, hogy regisztrált! Értesíteni fogjuk, amint elfogadták a kérelmét."
@@ -1089,6 +1099,8 @@ hu:
     invalid_security_key: "Érvénytelen biztonsági kulcs."
     missing_second_factor_name: "Kérjük, adjon meg egy nevet."
     missing_second_factor_code: "Kérjük, adjon meg egy kódot."
+    second_factor_toggle:
+      backup_code: "Helyette biztonsági kód használata"
   admin:
     email:
       sent_test: "elküldve."
@@ -1845,6 +1857,7 @@ hu:
   deleted: "törölt"
   image: "kép"
   upload:
+    unauthorized: "Sajnos a feltölteni kívánt fájl nem engedélyezett (engedélyezett kiterjesztések: %{authorized_extensions})."
     size_zero_failure: "Sajnáljuk, úgy tűnik, hogy valami hiba történt, a feltöltendő fájl 0 bájtos. Próbálja újra."
     images:
       size_not_found: "Sajnáljuk, de nem tudtuk megállapítani a kép méretét. Lehet, hogy a kép sérült?"
@@ -2141,6 +2154,9 @@ hu:
     step:
       introduction:
         title: "Az Ön webhelyéről"
+        fields:
+          default_locale:
+            label: "Nyelv"
       privacy:
         fields:
           login_required:
@@ -2170,8 +2186,12 @@ hu:
                 label: "Kategóriák funkciók szerint"
               categories_and_latest_topics:
                 label: "Kategóriák és legutóbbi témák"
+              categories_and_latest_topics_created_date:
+                label: "Kategóriák és legutóbbi témák (rendezése a téma létrehozási dátuma szerint)"
               categories_and_top_topics:
                 label: "Kategóriák és legfelső témák"
+              subcategories_with_featured_topics:
+                label: "Alkategóriák kiemelt témákkal"
       branding:
         title: "Webhely logó"
       corporate:
@@ -2200,6 +2220,8 @@ hu:
     not_found: "nem található"
     unknown: "ismeretlen"
     user_merged: "%{username} össze lett vonva ebbe a fiókba"
+    api_key:
+      revoked: Visszavonva
   reviewables:
     priorities:
       low: "Alacsony"
@@ -2252,6 +2274,7 @@ hu:
       approve_post:
         title: "Bejegyzés jóváhagyása"
       reject_user:
+        title: "Felhasználó törlése..."
         delete:
           title: "Felhasználó törlése"
       reject:

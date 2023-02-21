@@ -33,9 +33,12 @@ uk:
       statuses:
         closed: "Закриті"
         open: "Відкрити"
+      dm_title:
+        multi_user_truncated: "%{users} і ще %{leftover}"
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "містить символи, які не є ASCII"
+        is_already_in_use: "вже використовується"
   discourse_push_notifications:
     popup:
       chat_mention:
@@ -52,6 +55,10 @@ uk:
   reviewables:
     reasons:
       chat_message_queued_by_staff: "Член команди обслуговування вважає, що це повідомлення чату потребує перевірки."
+  user_notifications:
+    chat_summary:
+      deleted_user: "Видалений користувач"
+      from: "%{site_name}"
   unsubscribe:
     chat_summary:
       never: Ніколи

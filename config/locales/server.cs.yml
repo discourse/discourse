@@ -1190,6 +1190,7 @@ cs:
       approve:
         title: "Schválit"
       reject_user:
+        title: "Smazat uživatele..."
         delete:
           title: "Smazat uživatele"
       reject:

@@ -369,6 +369,21 @@ lt:
         confirm: "Jūs turite nebaigtą juodraštį šiai tema. Ką norėtumėte daryti su juo?"
         yes_value: "Išmesti"
         no_value: "Tęsti redagavimą"
+    topic_count_categories:
+      one: "Peržiūrėti %{count} naują arba atnaujintą temą"
+      few: "Peržiūrėkite %{count} naujų ar atnaujintų temų"
+      many: "Peržiūrėkite %{count} naujų ar atnaujintų temų"
+      other: "Peržiūrėkite %{count} naujų ar atnaujintų temų"
+    topic_count_latest:
+      one: "Peržiūrėti %{count} naują arba atnaujintą temą"
+      few: "Peržiūrėkite %{count} naujų ar atnaujintų temų"
+      many: "Peržiūrėkite %{count} naujų ar atnaujintų temų"
+      other: "Peržiūrėkite %{count} naujų ar atnaujintų temų"
+    topic_count_unseen:
+      one: "Peržiūrėti %{count} naują arba atnaujintą temą"
+      few: "Peržiūrėkite %{count} naujų ar atnaujintų temų"
+      many: "Peržiūrėkite %{count} naujų ar atnaujintų temų"
+      other: "Peržiūrėkite %{count} naujų ar atnaujintų temų"
     topic_count_new:
       one: "Pamatyk %{count} naują temą"
       few: "Pamatyk %{count} naujas temas"
@@ -552,6 +567,16 @@ lt:
         title: "Kodėl atmetate šį vartotoją?"
         send_email: "Siųsti atmetimo laišką"
     relative_time_picker:
+      minutes:
+        one: "minutė"
+        few: "minutės"
+        many: "minutės"
+        other: "minutės"
+      hours:
+        one: "valanda"
+        few: "valandos"
+        many: "valandos"
+        other: "valandos"
       days:
         one: "diena"
         few: "dienos"
@@ -1492,6 +1517,16 @@ lt:
         time_read_title: "%{duration} (visas laikas)"
         recent_time_read: "paskutinis skaitymo laikas"
         recent_time_read_title: "%{duration} (per paskutines 60 dienų)"
+        topic_count:
+          one: "sukurta tema"
+          few: "sukurtos temos"
+          many: "sukurtos temos"
+          other: "sukurtos temos"
+        post_count:
+          one: "įrašas sukurtas"
+          few: "įrašai sukurti"
+          many: "įrašai sukurti"
+          other: "įrašai sukurti"
         likes_given:
           one: "duota"
           few: "duota"
@@ -1722,6 +1757,7 @@ lt:
       twitter:
         name: "Twitter"
         title: "Prisijunkite naudodami “Twitter”"
+        sr_title: "Prisijunkite naudodami “Twitter”"
       instagram:
         name: "Instagram"
         title: "Prisijunkite naudodami “Instagram”"
@@ -2229,6 +2265,11 @@ lt:
         choose_append_tags: "Pasirinkite naujas žymas, kurias norite pridėti šioms temoms:"
         changed_tags: "Šių temų žymos buvo pakeistos."
         remove_tags: "Pašalinti visas žymes"
+        confirm_remove_tags:
+          one: "Visos žymos bus pašalintos iš šios temos. Ar esate tikras?"
+          few: "Visos žymės bus pašalintos iš %{count} temų. Ar esate tikras?"
+          many: "Visos žymės bus pašalintos iš %{count} temų. Ar esate tikras?"
+          other: "Visos žymės bus pašalintos iš <b>%{count}</b> temų. Ar esate tikras?"
       none:
         unread: "Jūs neturite neperskaitytų temų."
         unseen: "Jūs neturite nematytų temų."
@@ -3022,6 +3063,11 @@ lt:
           few: "liko %{count}..."
           many: "liko %{count}..."
           other: "liko %{count}..."
+        left:
+          one: "Liko %{count}"
+          few: "Liko %{count}"
+          many: "Liko %{count}"
+          other: "Liko %{count}"
     flagging_topic:
       title: "Ačiū, kad padedi padedi išlaikyti forumą civilizuotu!"
       action: "Temos su vėliavomis"
@@ -3526,6 +3572,7 @@ lt:
               content: "Mano Įrašai"
             review:
               content: "Peržiūra"
+    until: "Iki:"
   admin_js:
     type_to_filter: "įrašyk kažką dėl filtro..."
     admin:
@@ -3816,6 +3863,7 @@ lt:
           redeliver: "Iš naujo pristatyti"
           request: "Užklausa"
           response: "Atsakymas"
+          headers: "Antraštės"
           body: "Turinys"
           status: "Būsenos kodas"
           event_id: "ID"

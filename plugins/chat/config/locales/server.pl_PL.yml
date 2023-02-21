@@ -19,6 +19,7 @@ pl_PL:
       draft_too_long: "Wersja robocza jest za długa."
       max_reactions_limit_reached: "Nowe reakcje nie są dozwolone w tej wiadomości."
       not_accepting_dms: "Przepraszamy, ale użytkownik %{username} nie akceptuje w tej chwili wiadomości "
+      user_cannot_send_direct_messages: "Przepraszamy, nie możesz wysyłać bezpośrednich wiadomości."
     reviewables:
       actions:
         agree:
@@ -76,6 +77,8 @@ pl_PL:
       chat_mention:
         direct: '%{username} wspomniał(a) o Tobie w "%{channel}"'
         other_type: '%{username} wspomniał %{identifier} w "%{channel}"'
+      direct_message_chat_mention:
+        other_type: "%{username} oznaczył %{identifier} na czacie osobistym"
   discourse_automation:
     scriptables:
       send_chat_message:

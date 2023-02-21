@@ -287,6 +287,8 @@ ar:
           about: نبذة
           members: الأعضاء
           settings: الإعدادات
+      channel_edit_name_modal:
+        title: تعديل الاسم
       channel_edit_description_modal:
         title: تعديل الوصف
         input_placeholder: أضِف وصفًا

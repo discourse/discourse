@@ -2671,6 +2671,9 @@ da:
         Du er blevet suspenderet fra forummet.
 
         Årsag - %{reason}
+    account_silenced:
+      title: "Konto gjort tavs"
+      subject_template: "[%{email_prefix}] Din konto er blevet bragt til tavshed"
     account_silenced_forever:
       title: "Konto gjort tavs"
       subject_template: "[%{email_prefix}] Din konto er blevet bragt til tavshed"

@@ -2069,6 +2069,7 @@ be:
     latte: "Latte"
     summer: "лета"
     dark_rose: "Dark Rose"
+    default_theme_name: "Default"
     light_theme_name: "святло"
     dark_theme_name: "цёмна"
     neutral_theme_name: "нейтральны"

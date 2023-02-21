@@ -34,12 +34,22 @@ de:
     chat_channel_archive_complete:
       title: "Chat-Kanal-Archivierung abgeschlossen"
       subject_template: "Chat-Kanal-Archivierung erfolgreich abgeschlossen"
+      text_body_template: |
+        Die Archivierung des Chat-Kanals %{channel_hashtag_or_name} wurde erfolgreich abgeschlossen. Die Nachrichten wurden in das Thema [%{topic_title}](%{topic_url}) kopiert.
     chat_channel_archive_failed:
       title: "Chat-Kanal-Archivierung fehlgeschlagen"
       subject_template: "Chat-Kanal-Archivierung fehlgeschlagen"
+      text_body_template: |
+        Die Archivierung des Chat-Kanals %{channel_hashtag_or_name} ist fehlgeschlagen. %{messages_archived} Nachrichten wurden archiviert. Teilweise archivierte Nachrichten wurden in das Thema [%{topic_title}](%{topic_url}) kopiert. Besuche den Kanal unter %{channel_url}, um es erneut zu versuchen.
     chat_channel_archive_failed_no_topic:
       title: "Chat-Kanal-Archivierung fehlgeschlagen"
       subject_template: "Chat-Kanal-Archivierung fehlgeschlagen"
+      text_body_template: |
+        Die Archivierung des Chat-Kanals %{channel_hashtag_or_name} ist fehlgeschlagen. Es wurden keine Nachrichten archiviert. Das Thema wurde aus den folgenden Gründen nicht erfolgreich erstellt:
+
+          %{topic_validation_errors}
+
+        Besuche den Kanal unter %{channel_url} , um es erneut zu versuchen.
   chat:
     deleted_chat_username: gelöscht
     errors:
@@ -54,6 +64,7 @@ de:
       delete_channel_failed: "Löschen des Kanals fehlgeschlagen, bitte versuche es erneut."
       minimum_length_not_met: "Die Nachricht ist zu kurz, sie muss mindestens %{minimum} Zeichen lang sein."
       message_too_long: "Nachricht ist zu lang. Nachrichten dürfen maximal %{maximum} Zeichen lang sein."
+      draft_too_long: "Der Entwurf ist zu lang."
       max_reactions_limit_reached: "Neue Reaktionen auf diese Nachricht sind nicht erlaubt."
       message_move_invalid_channel: "Quell- und Zielkanal müssen öffentliche Kanäle sein."
       message_move_no_messages_found: "Es wurden keine Nachrichten mit den angegebenen Nachrichten-IDs gefunden."

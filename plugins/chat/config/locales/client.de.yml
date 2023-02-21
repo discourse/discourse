@@ -206,6 +206,8 @@ de:
         read_only: "Schreibgeschützt"
         archived_header: "Kanal ist archiviert"
         archived: "Archiviert"
+        archive_failed: "Archivieren des Kanals fehlgeschlagen. %{completed}/%{total} Nachrichten wurden im <a target=\"_blank\" href=\"%{topic_url}\">Zielthema</a> archiviert. Drücke auf „Erneut versuchen“, um zu versuchen, die Archivierung abzuschließen."
+        archive_failed_no_topic: "Archivieren des Kanals fehlgeschlagen. %{completed}/%{total} Nachrichten wurden archiviert, das Zielthema wurde nicht erstellt. Drücke auf „Erneut versuchen“, um zu versuchen, die Archivierung abzuschließen."
         archive_completed: "<a target=\"_blank\" href=\"%{topic_url}\">Archivthema</a> anzeigen"
         closed_header: "Kanal ist geschlossen"
         closed: "Geschlossen"

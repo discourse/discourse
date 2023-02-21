@@ -1098,6 +1098,7 @@ bs_BA:
       approve:
         title: "Odobri"
       reject_user:
+        title: "Delete User..."
         delete:
           title: "Delete User"
       reject:

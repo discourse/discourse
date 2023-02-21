@@ -594,6 +594,11 @@ pt:
     title: "Redefinir Palavra-passe"
     success: "A sua palavra-passe foi alterada com sucesso e está agora ligado."
     success_unapproved: "Palavra-passe modificada com sucesso."
+  user_auth_tokens:
+    device:
+      iphone: "iPhone"
+    os:
+      android: "Android"
   change_email:
     confirmed: "O seu email foi atualizado."
     please_continue: "Continuar para %{site_name}"
@@ -2249,6 +2254,7 @@ pt:
       approve:
         title: "Aprovar"
       reject_user:
+        title: "Eliminar Utilizador..."
         delete:
           title: "Eliminar Utilizador"
       reject:
