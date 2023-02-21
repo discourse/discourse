@@ -5134,7 +5134,7 @@ en:
         title: "Yes"
       agree_and_keep:
         title: "Keep post"
-        description: "Agree with flag and keep the post unchanged."
+        description: "Agree with flag but keep this post unchanged."
       agree_and_keep_hidden:
         title: "Keep post hidden"
         description: "Agree with flag and keep the post hidden."
@@ -5156,17 +5156,17 @@ en:
         title: "Delete..."
       delete_and_ignore:
         title: "Ignore flag and delete post"
-        description: "Ignore the flag by removing it from the queue without consequences and delete post; if the first post, delete the topic as well. "
+        description: "Ignore the flag by removing it from the queue and delete the post; if the first post, delete the topic as well. "
       delete_and_ignore_replies:
-        title: "Delete post and replies"
-        description: "Ignore the flag by removing it from the queue without consequences, delete post and all of its replies; if the first post, delete the topic as well"
+        title: "Ignore flag, delete post and replies"
+        description: "Ignore the flag by removing it from the queue, delete the post and all of its replies; if the first post, delete the topic as well"
         confirm: "Are you sure you want to delete the replies to the post as well?"
       delete_and_agree:
         title: "Delete post"
         description: "Agree with flag and delete this post; if the first post, delete the topic as well."
       delete_and_agree_replies:
         title: "Delete post and replies"
-        description: "Delete post and all of its replies; if the first post, delete the topic as well."
+        description: "Agree with flag and delete this post and all of its replies; if the first post, delete the topic as well."
         confirm: "Are you sure you want to delete the replies to the post as well?"
       disagree_and_restore:
         title: "No, restore post"
