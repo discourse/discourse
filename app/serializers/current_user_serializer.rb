@@ -77,6 +77,13 @@ class CurrentUserSerializer < BasicUserSerializer
 
   has_one :user_option, embed: :object, serializer: CurrentUserOptionSerializer
 
+  def sidebar_sections
+    SidebarSection
+      .where("public OR user_id = ?", object.id)
+      .order("(public IS TRUE) DESC")
+      .map { |section| SidebarSectionSerializer.new(section, root: false) }
+  end
+
   def groups
     owned_group_ids = GroupUser.where(user_id: id, owner: true).pluck(:group_id).to_set
 
