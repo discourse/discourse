@@ -10,8 +10,8 @@ end
 # Table name: category_form_templates
 #
 #  id               :bigint           not null, primary key
-#  category_id      :bigint
-#  form_template_id :bigint
+#  category_id      :bigint           not null
+#  form_template_id :bigint           not null
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
 #
@@ -19,9 +19,4 @@ end
 #
 #  index_category_form_templates_on_category_id       (category_id)
 #  index_category_form_templates_on_form_template_id  (form_template_id)
-#
-# Foreign Keys
-#
-#  fk_rails_...  (category_id => categories.id)
-#  fk_rails_...  (form_template_id => form_templates.id)
 #
