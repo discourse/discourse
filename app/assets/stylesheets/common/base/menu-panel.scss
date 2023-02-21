@@ -29,6 +29,8 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  box-sizing: border-box;
+
   hr {
     margin: 3px 0;
   }
@@ -689,7 +691,7 @@ body.footer-nav-ipad {
   background-color: black;
   --opacity: 0.5;
   opacity: var(--opacity);
-  top: 0;
+  top: var(--header-top);
   left: 0;
   display: none;
   touch-action: pan-y pinch-zoom;
@@ -702,6 +704,23 @@ body.footer-nav-ipad {
 }
 
 .menu-panel.slide-in {
+  top: var(--header-top);
+  box-sizing: border-box;
+
+  /* Use dvh where supported, with fallback to vh */
+  --100dvh: 100vh;
+  --100dvh: 100dvh;
+
+  --base-height: calc(
+    var(--100dvh) - var(--header-top) - env(safe-area-inset-bottom, 0px)
+  );
+
+  height: var(--base-height);
+
+  body.footer-nav-ipad & {
+    height: calc(var(--base-height) - var(--footer-nav-height));
+  }
+
   transform: translateX(var(--offset));
   @media (prefers-reduced-motion: no-preference) {
     &.animate {
