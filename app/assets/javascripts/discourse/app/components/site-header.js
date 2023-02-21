@@ -10,6 +10,9 @@ import ItsATrap from "@discourse/itsatrap";
 import RerenderOnDoNotDisturbChange from "discourse/mixins/rerender-on-do-not-disturb-change";
 import { observes } from "discourse-common/utils/decorators";
 import { topicTitleDecorators } from "discourse/components/topic-title";
+import { isTesting } from "discourse-common/config/environment";
+import { DEBUG } from "@glimmer/env";
+import { registerWaiter, unregisterWaiter } from "@ember/test";
 
 const SiteHeaderComponent = MountWidget.extend(
   Docking,
@@ -54,9 +57,18 @@ const SiteHeaderComponent = MountWidget.extend(
     },
 
     _animateOpening(panel) {
-      window.requestAnimationFrame(
-        this._setAnimateOpeningProperties.bind(this, panel)
-      );
+      let waiter;
+      if (DEBUG && isTesting()) {
+        waiter = () => true;
+        registerWaiter(waiter);
+      }
+
+      window.requestAnimationFrame(() => {
+        this._setAnimateOpeningProperties(panel);
+        if (DEBUG && isTesting()) {
+          unregisterWaiter(waiter);
+        }
+      });
     },
 
     _setAnimateOpeningProperties(panel) {
