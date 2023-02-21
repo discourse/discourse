@@ -20,6 +20,7 @@
     "@babel/standalone": "^7.20.15",
     "@discourse/backburner.js": "^2.7.1-0",
     "@discourse/itsatrap": "^2.0.10",
+    "@discourse/virtual-dom": "^2.1.2-0",
     "@ember-compat/tracked-built-ins": "^0.9.1",
     "@ember/jquery": "^2.0.0",
     "@ember/optional-features": "^2.0.0",
@@ -63,6 +64,7 @@
     "ember-cli-progress-ci": "1.0.0",
     "ember-cli-sri": "^2.1.1",
     "ember-cli-terser": "^4.0.2",
+    "ember-decorators": "^6.1.1",
     "ember-exam": "^8.0.0",
     "ember-export-application-global": "^2.0.1",
     "ember-load-initializers": "^2.1.1",
@@ -94,7 +96,6 @@
     "terser": "^5.16.4",
     "tippy.js": "^6.3.7",
     "util": "^0.12.5",
-    "@discourse/virtual-dom": "^2.1.2-0",
     "webpack": "^5.75.0",
     "wizard": "1.0.0",
     "xss": "^1.0.14"
