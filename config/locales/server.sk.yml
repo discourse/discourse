@@ -1412,6 +1412,7 @@ sk:
       approve:
         title: "Schváliť"
       reject_user:
+        title: "Odstrániť používateľa..."
         delete:
           title: "Odstrániť používateľa"
       reject:

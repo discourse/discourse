@@ -548,10 +548,6 @@ da:
             duration_minutes:
               cannot_be_zero: "skal være større end 0."
               exceeds_maximum: "kan ikke være mere end 20 år."
-        translation_overrides:
-          attributes:
-            value:
-              invalid_interpolation_keys: 'Følgende interpolationsnøgle(r) er ugyldige: "%{keys}"'
         watched_word:
           attributes:
             word:
@@ -2660,6 +2656,9 @@ da:
         Du er blevet suspenderet fra forummet.
 
         Årsag - %{reason}
+    account_silenced:
+      title: "Konto gjort tavs"
+      subject_template: "[%{email_prefix}] Din konto er blevet bragt til tavshed"
     account_silenced_forever:
       title: "Konto gjort tavs"
       subject_template: "[%{email_prefix}] Din konto er blevet bragt til tavshed"

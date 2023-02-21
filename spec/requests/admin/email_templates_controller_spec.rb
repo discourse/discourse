@@ -165,6 +165,7 @@ RSpec.describe Admin::EmailTemplatesController do
               I18n.t(
                 "activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys",
                 keys: "email_wrongfix",
+                count: 1,
               )
             }",
           ]
@@ -183,6 +184,7 @@ RSpec.describe Admin::EmailTemplatesController do
               I18n.t(
                 "activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys",
                 keys: "invalid",
+                count: 1,
               )
             }",
           ]
@@ -201,12 +203,14 @@ RSpec.describe Admin::EmailTemplatesController do
               I18n.t(
                 "activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys",
                 keys: "invalid",
+                count: 1,
               )
             }",
             "<b>Body</b>: #{
               I18n.t(
                 "activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys",
                 keys: "invalid",
+                count: 1,
               )
             }",
           ]

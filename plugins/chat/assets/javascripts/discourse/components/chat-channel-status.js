@@ -4,7 +4,6 @@ import Component from "@ember/component";
 import {
   CHANNEL_STATUSES,
   channelStatusIcon,
-  channelStatusName,
 } from "discourse/plugins/chat/discourse/models/chat-channel";
 
 export default Component.extend({
@@ -38,20 +37,28 @@ export default Component.extend({
   },
 
   _shortStatusMessage(channelStatus) {
-    return channelStatusName(channelStatus);
+    switch (channelStatus) {
+      case CHANNEL_STATUSES.archived:
+        return I18n.t("chat.channel_status.archived");
+      case CHANNEL_STATUSES.closed:
+        return I18n.t("chat.channel_status.closed");
+      case CHANNEL_STATUSES.open:
+        return I18n.t("chat.channel_status.open");
+      case CHANNEL_STATUSES.readOnly:
+        return I18n.t("chat.channel_status.read_only");
+    }
   },
 
   _longStatusMessage(channelStatus) {
     switch (channelStatus) {
-      case CHANNEL_STATUSES.closed:
-        return I18n.t("chat.channel_status.closed_header");
-        break;
-      case CHANNEL_STATUSES.readOnly:
-        return I18n.t("chat.channel_status.read_only_header");
-        break;
       case CHANNEL_STATUSES.archived:
         return I18n.t("chat.channel_status.archived_header");
-        break;
+      case CHANNEL_STATUSES.closed:
+        return I18n.t("chat.channel_status.closed_header");
+      case CHANNEL_STATUSES.open:
+        return I18n.t("chat.channel_status.open_header");
+      case CHANNEL_STATUSES.readOnly:
+        return I18n.t("chat.channel_status.read_only_header");
     }
   },
 });

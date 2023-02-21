@@ -2360,6 +2360,7 @@ fa_IR:
       approve:
         title: "تایید"
       reject_user:
+        title: "حذف کاربر..."
         delete:
           title: "حذف کاربر"
       reject:

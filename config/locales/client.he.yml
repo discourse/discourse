@@ -247,7 +247,7 @@ he:
       many: "כדי להקל על הקמת האתר החדש שלך, כרגע המערכת במצב אתחול ראשוני. לכל המשתמשים החדשים תוענק דרגת האמון 1 ויישלח אליהם תמצות יומי בדוא״ל. אפשרות זו תכבה אוטומטית לאחר שהצטרפו %{count} משתמשים."
       other: "כדי להקל על הקמת האתר החדש שלך, כרגע המערכת במצב אתחול ראשוני. לכל המשתמשים החדשים תוענק דרגת האמון 1 ויישלח אליהם תמצות יומי בדוא״ל. אפשרות זו תכבה אוטומטית לאחר שהצטרפו %{count} משתמשים."
     bootstrap_mode_disabled: "מצב Bootstrap יבוטל תוך 24 שעות."
-    bootstrap_invite_button_title: "משלוח הזמנות"
+    bootstrap_invite_button_title: "שליחת הזמנות"
     bootstrap_wizard_link_title: "סיום אשף ההקמה"
     themes:
       default_description: "ברירת מחדל"
@@ -285,7 +285,7 @@ he:
     not_implemented: "יכולת זו עדיין לא מומשה, עמך הסליחה!"
     no_value: "לא"
     yes_value: "כן"
-    ok_value: "או קיי"
+    ok_value: "אישור"
     cancel_value: "ביטול"
     submit: "הגשה"
     delete: "מחיקה"
@@ -1332,6 +1332,78 @@ he:
         warnings: "אזהרות רשמיות"
         read_more_in_group: "מעניין אותך לקרוא עוד? אפשר לעיין בהודעות אחרות ב־%{groupLink}."
         read_more: "מעניין אותך לקרוא עוד? אפשר לעיין בהודעות אחרות ב<a href='%{basePath}/u/%{username}/messages'>הודעות הפרטיות</a>."
+        read_more_group_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                  one {נותרה <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'>הודעה אחת</a> שלא נקראה}
+                   two {נותרו <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># הודעות</a> שלא נקראו}
+                   many {נותרו <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># הודעות</a> שלא נקראו}
+                other {נותרו <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># הודעות</a> שלא נקראו}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one { ועוד <a href='{basePath}/u/{username}/messages/group/{groupName}/new'>אחת</a> חדשה, או שניתן לעיין בהודעות אחרות תחת {groupLink}}
+                   two { ועוד <a href='{basePath}/u/{username}/messages/group/{groupName}/new'>#</a> חדשות, או שניתן לעיין בהודעות אחרות תחת {groupLink}}
+                   many { ועוד <a href='{basePath}/u/{username}/messages/group/{groupName}/new'>#</a> חדשות, או שניתן לעיין בהודעות אחרות תחת {groupLink}}
+                other { ועוד <a href='{basePath}/u/{username}/messages/group/{groupName}/new'>#</a> חדשות, או שניתן לעיין בהודעות אחרות תחת {groupLink}}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                  one {נותרה <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'>הודעה אחת</a> שלא נקראה, או שניתן לעיין בהודעות אחרות תחת {groupLink}}
+                   two {נותרו <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># הודעות</a> שלא נקראו, או שניתן לעיין בהודעות חדשות תחת {groupLink}}
+                   many {נותרו <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># הודעות</a> שלא נקראו, או שניתן לעיין בהודעות חדשות תחת {groupLink}}
+                other {נותרו <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># הודעות</a> שלא נקראו, או שניתן לעיין בהודעות חדשות תחת {groupLink}}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one {נותרה <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'>הודעה אחת</a> חדשה, או שניתן לעיין בהודעות אחרות תחת {groupLink}}
+                   two {נותרו <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># הודעות</a> חדשות, או שניתן לעיין בהודעות חדשות תחת {groupLink}}
+                   many {נותרו <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># הודעות</a> חדשות, או שניתן לעיין בהודעות חדשות תחת {groupLink}}
+                other {נותרו <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># הודעות</a> חדשות, או שניתן לעיין בהודעות חדשות תחת {groupLink}}
+              }
+            }
+            other {}
+          }
+        read_more_personal_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                  one {נותרה <a href='{basePath}/u/{username}/messages/unread'>הודעה אחת</a> שלא נקראה}
+                   two {נותרו <a href='{basePath}/u/{username}/messages/unread'># הודעות</a> שלא נקראו}
+                   many {נותרו <a href='{basePath}/u/{username}/messages/unread'># הודעות</a> שלא נקראו}
+                other {נותרו <a href='{basePath}/u/{username}/messages/unread'># הודעות</a> שלא נקראו}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one { ועוד <a href='{basePath}/u/{username}/messages/new'>אחת חדשה</a>, או שאפשר לעיין ב<a href='{basePath}/u/{username}/messages'>הודעות אישיות</a> אחרות}
+                   two { ועוד <a href='{basePath}/u/{username}/messages/new'># חדשות</a> , או שאפשר לעיין ב<a href='{basePath}/u/{username}/messages'>הודעות אישיות</a> אחרות}
+                   many { ועוד <a href='{basePath}/u/{username}/messages/new'># חדשות</a> , או שאפשר לעיין ב<a href='{basePath}/u/{username}/messages'>הודעות אישיות</a> אחרות}
+                other { ועוד <a href='{basePath}/u/{username}/messages/new'># חדשות</a> , או שאפשר לעיין ב<a href='{basePath}/u/{username}/messages'>הודעות אישיות</a> אחרות}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                  one {נותרה <a href='{basePath}/u/{username}/messages/unread'>הודעה אחת</a> שלא נקראה, או שניתן לעיין ב<a href='{basePath}/u/{username}/messages'>הודעות אישיות</a> אחרות}
+                   two {נותרו <a href='{basePath}/u/{username}/messages/unread'># הודעות</a> שלא נקראו, או שניתן לעיין ב<a href='{basePath}/u/{username}/messages'>הודעות אישיות</a> אחרות}
+                   many {נותרו <a href='{basePath}/u/{username}/messages/unread'># הודעות</a> שלא נקראו, או שניתן לעיין ב<a href='{basePath}/u/{username}/messages'>הודעות אישיות</a> אחרות}
+                other {נותרו <a href='{basePath}/u/{username}/messages/unread'># הודעות</a> שלא נקראו, או שניתן לעיין ב<a href='{basePath}/u/{username}/messages'>הודעות אישיות</a> אחרות}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one {נותרה <a href='{basePath}/u/{username}/messages/new'>הודעה אחת</a> חדשה, או שניתן לעיין ב<a href='{basePath}/u/{username}/messages'>הודעות אישיות</a> אחרות}
+                   two {נותרו <a href='{basePath}/u/{username}/messages/new'># הודעות</a> חדשות, או שניתן לעיין ב<a href='{basePath}/u/{username}/messages'>הודעות אישיות</a> אחרות}
+                   many {נותרו <a href='{basePath}/u/{username}/messages/new'># הודעות</a> חדשות, או שניתן לעיין ב<a href='{basePath}/u/{username}/messages'>הודעות אישיות</a> אחרות}
+                other {נותרו <a href='{basePath}/u/{username}/messages/new'># הודעות</a> חדשות, או שניתן לעיין ב<a href='{basePath}/u/{username}/messages'>הודעות אישיות</a> אחרות}
+              }
+            }
+            other {}
+          }
       preferences_nav:
         account: "חשבון"
         security: "אבטחה"
@@ -2211,6 +2283,11 @@ he:
         not_allowed: "אזכרת את ‎@%{username} אבל לא תישלח התראה כיוון שמי שאוזכר לא הוזמן לנושא הזה."
       cannot_see_group_mention:
         not_mentionable: "לא ניתן להזכיר את הקבוצה ‎@%{group}."
+        some_not_allowed:
+          one: "אזכרת את ‎@%{group} אבל תישלח התראה רק ל־%{count} מהחברים כיוון ששאר החברים לא יכולים לראות את ההודעה האישית הזאת. יש להזמין את מי שאוזכר להודעה האישית הזאת."
+          two: "אזכרת את ‎@%{group} אבל תישלח התראה רק ל־%{count} מהחברים כיוון ששאר החברים לא יכולים לראות את ההודעה האישית הזאת. יש להזמין את מי שאוזכר להודעה האישית הזאת."
+          many: "אזכרת את ‎@%{group} אבל תישלח התראה רק ל־%{count} מהחברים כיוון ששאר החברים לא יכולים לראות את ההודעה האישית הזאת. יש להזמין את מי שאוזכר להודעה האישית הזאת."
+          other: "אזכרת את ‎@%{group} אבל תישלח התראה רק ל־%{count} מהחברים כיוון ששאר החברים לא יכולים לראות את ההודעה האישית הזאת. יש להזמין את מי שאוזכר להודעה האישית הזאת."
         not_allowed: "אזכרת את ‎@%{group} אבל לא תישלח התראה לאף אחד מחברי הקבוצה כיוון שאין להם איך לצפות בהודעה האישית הזאת. צריך להזמין את מי שאוזכר להודעה האישית הזאת."
       here_mention:
         one: "אזכור של <b>‎@%{here}</b> יודיע למשתמש %{count}, להמשיך?"
@@ -2642,12 +2719,47 @@ he:
       tabs:
         all_notifications: "כל ההתראות"
         replies: "תשובות"
+        replies_with_unread:
+          one: "תגובות - תגובה %{count} שלא נקראה"
+          two: "תגובות - %{count} תגובות שלא נקראו"
+          many: "תגובות - %{count} תגובות שלא נקראו"
+          other: "תגובות - %{count} תגובות שלא נקראו"
         mentions: "אזכורים"
+        mentions_with_unread:
+          one: "אזכורים - אזכור %{count} שלא נראה"
+          two: "אזכורים - %{count} אזכורים שלא נראו"
+          many: "אזכורים - %{count} אזכורים שלא נראו"
+          other: "אזכורים - %{count} אזכורים שלא נראו"
         likes: "לייקים שהוענקו"
+        likes_with_unread:
+          one: "לייקים - לייק %{count} שלא נראה"
+          two: "לייקים - %{count} לייקים שלא נראו"
+          many: "לייקים - %{count} לייקים שלא נראו"
+          other: "לייקים - %{count} לייקים שלא נראו"
         watching: "נושאים במעקב"
+        watching_with_unread:
+          one: "נושאים במעקב - נושא %{count} במעקב שלא נקרא"
+          two: "נושאים במעקב - %{count} נושאים במעקב שלא נקראו"
+          many: "נושאים במעקב - %{count} נושאים במעקב שלא נקראו"
+          other: "נושאים במעקב - %{count} נושאים במעקב שלא נקראו"
         messages: "הודעות פרטיות"
+        messages_with_unread:
+          one: "הודעות פרטיות - הודעה %{count} שלא נקראה"
+          two: "הודעות פרטיות - %{count} הודעות שלא נקראו"
+          many: "הודעות פרטיות - %{count} הודעות שלא נקראו"
+          other: "הודעות פרטיות - %{count} הודעות שלא נקראו"
         bookmarks: "סימניות"
+        bookmarks_with_unread:
+          one: "סימניות - סימנייה %{count} שלא נקראה"
+          two: "סימניות - %{count} סימניות שלא נקראו"
+          many: "סימניות - %{count} סימניות שלא נקראו"
+          other: "סימניות - %{count} סימניות שלא נקראו"
         review_queue: "תור סקירה"
+        review_queue_with_unread:
+          one: "תור לסקירה - פריט %{count} ממתין לסקירה"
+          two: "תור לסקירה - %{count} פריטים ממתינים לסקירה"
+          many: "תור לסקירה - %{count} פריטים ממתינים לסקירה"
+          other: "תור לסקירה - %{count} פריטים ממתינים לסקירה"
         other_notifications: "התראות אחרות"
         other_notifications_with_unread:
           one: "התראות אחרות - התראה %{count} שלא נקראה"
@@ -2810,6 +2922,47 @@ he:
       read_more_in_category: "רוצה לקרוא עוד? אפשר לעיין בנושאים שתחת %{categoryLink} או <a href='%{latestLink}'>להציג את הנושאים האחרונים</a>."
       read_more: "מעניין אותך לקרוא עוד? אפשר <a href='%{categoryLink}'>לעיין בכל הקטגוריות</a> או <a href='%{latestLink}'>לצפות בנושאים העדכניים ביותר</a>."
       unread_indicator: "אף אחד מהחברים לא קרא את הפוסט האחרון של הנושא הזה עדיין."
+      read_more_MF: |
+        { HAS_UNREAD_AND_NEW, select,
+          true {
+            { UNREAD, plural,
+                 =0 {}
+                one {נותר <a href="{basePath}/unread">נושא אחד</a> שלא נקרא}
+                 two {נותרו <a href="{basePath}/unread"># נושאים</a> שלא נקראו}
+                 many {נותרו <a href="{basePath}/unread"># נושאים</a> שלא נקראו}
+              other {נותרו <a href="{basePath}/unread"># נושאים</a> שלא נקראו}
+            }
+            { NEW, plural,
+                 =0 {}
+                one { ועוד <a href="{basePath}/new">אחד חדש</a>,}
+                 two { ועוד <a href="{basePath}/new"># חדשים</a>,}
+                 many { ועוד <a href="{basePath}/new"># חדשים</a>,}
+              other { ועוד <a href="{basePath}/new"># חדשים</a>,}
+            }
+          }
+          false {
+            { UNREAD, plural,
+                 =0 {}
+                one {נותר <a href="{basePath}/unread">נושא אחד</a> שלא נקרא,}
+                 two {נותרו <a href="{basePath}/unread"># נושאים</a> שלא נקראו,}
+                 many {נותרו <a href="{basePath}/unread"># נושאים</a> שלא נקראו,}
+              other {נותרו <a href="{basePath}/unread"># נושאים</a> שלא נקראו,}
+            }
+            { NEW, plural,
+                 =0 {}
+                one {נותר <a href="{basePath}/new">נושא אחד</a> חדש,}
+                 two {נותרו <a href="{basePath}/new"># נושאים</a> חדשים,}
+                 many {נותרו <a href="{basePath}/new"># נושאים</a> חדשים,}
+              other {נותרו <a href="{basePath}/new"># נושאים</a> חדשים,}
+            }
+          }
+          other {}
+        }
+        { HAS_CATEGORY, select,
+          true { או שניתן לעיין בנושאים חדשים תחת {categoryLink}}
+          false { או <a href="{basePath}/latest">לצפות בנושאים העדכניים ביותר</a>}
+          other {}
+        }
       bumped_at_title: |
         פוסט ראשון: %{createdAtDate}
         פורסם: %{bumpedAtDate}
@@ -4480,12 +4633,18 @@ he:
         about: "עריכת חברות הקבוצה שלך והשמות כאן"
         group_members: "חברי הקבוצה"
         delete: "מחיקה"
-        delete_confirm: "למחוק את הקבוצה הזאת?"
+        delete_confirm: "למחוק את %{group}?"
+        delete_details:
+          one: "משתמש %{count} יאבד את הגישה לקבוצה הזאת"
+          two: "%{count} משתמשים יאבדו את הגישה לקבוצה הזאת"
+          many: "%{count} משתמשים יאבדו את הגישה לקבוצה הזאת"
+          other: "%{count} משתמשים יאבדו את הגישה לקבוצה הזאת"
         delete_with_messages_confirm:
-          one: "מחיקת הקבוצה הזאת תוביל להתייתמותה של הודעה %{count}, חברי הקבוצה לא יוכלו לגשת אליה עוד."
-          two: "מחיקת הקבוצה הזאת תוביל להתייתמותן של %{count} הודעות, חברי הקבוצה לא יוכלו לגשת אליהן עוד."
-          many: "מחיקת הקבוצה הזאת תוביל להתייתמותן של %{count} הודעות, חברי הקבוצה לא יוכלו לגשת אליהן עוד."
-          other: "מחיקת הקבוצה הזאת תוביל להתייתמותן של %{count} הודעות, חברי הקבוצה לא יוכלו לגשת אליהן עוד."
+          one: "תיחסם הגישה להודעה %{count} לחברי הקבוצה"
+          two: "תיחסם הגישה ל־%{count} הודעות לחברי הקבוצה"
+          many: "תיחסם הגישה ל־%{count} הודעות לחברי הקבוצה"
+          other: "תיחסם הגישה ל־%{count} הודעות לחברי הקבוצה"
+        delete_warning: "לא ניתן לשחזר קבוצות שנמחקו"
         delete_failed: "לא ניתן להסיר קבוצה זו. אם זו קבוצה אוטומטית, היא בלתי ניתנת למחיקה."
         delete_automatic_group: זו קבוצה אוטומטית ולא ניתן למחוק אותה.
         delete_owner_confirm: "להסיר את הרשאות הניהול של ‚%{username}’?"
@@ -4704,7 +4863,7 @@ he:
         enabled: "מאופשר?"
         is_enabled: "Y"
         not_enabled: "N"
-        change_settings: "שינוי הגדרות"
+        change_settings: "הגדרות תוסף"
         change_settings_short: "הגדרות"
         howto: "איך אני מתקין/ה הרחבות?"
         official: "תוסף רשמי"
@@ -5482,6 +5641,8 @@ he:
         penalty_post_edit: "עריכת הפוסט"
         penalty_post_none: "לא לעשות דבר"
         penalty_count: "ספירת עונשין"
+        penalty_history_MF: >-
+          ב־6 החודשים שחלפו משתמש זה <b>הושעה { SUSPENDED, plural, one {פעם אחת} two {פעמיים} many {# פעמים} other {# פעמים} }</b> ו<b>הושתק { SILENCED, plural, one {פעם אחת} two {פעמיים} many {# פעמים} other {# פעמים} }</b>.
         clear_penalty_history:
           title: "מחיקת היסטוריית עונשין"
           description: "משתמשים עם עונשין לא יכולים להגיע לדרגת אמון 3"
@@ -5641,6 +5802,11 @@ he:
         silenced_count: "מושתק"
         suspended_count: "מושעה"
         last_six_months: "חצי השנה האחרונה"
+        other_matches:
+          one: "יש <b>משתמש %{count} נוסף</b> עם אותה כתובת ה־IP. יש לברור ולבחור את החשודות להענשה יחד עם %{username}."
+          two: "יש <b>%{count} משתמשים נוספים</b> עם אותה כתובת ה־IP. יש לברור ולבחור את החשודות להענשה יחד עם %{username}."
+          many: "יש <b>%{count} משתמשים נוספים</b> עם אותה כתובת ה־IP. יש לברור ולבחור את החשודות להענשה יחד עם %{username}."
+          other: "יש <b>%{count} משתמשים נוספים</b> עם אותה כתובת ה־IP. יש לברור ולבחור את החשודות להענשה יחד עם %{username}."
         other_matches_list:
           username: "שם משתמש"
           trust_level: "דרגת אמון"

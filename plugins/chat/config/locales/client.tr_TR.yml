@@ -105,45 +105,18 @@ tr_TR:
       new_messages: "yeni mesajlar"
       mention_warning:
         dismiss: "kapat"
-        cannot_see:
-          one: "%{username} bu kanala erişemiyor ve bildirim almadı."
-          other: "%{username} ve %{others} bu kanala erişemiyor ve bildirim almadı."
         invitations_sent:
           one: "Davet gönderildi"
           other: "Davet gönderildi"
         invite: "Kanala davet et"
-        without_membership:
-          one: "%{username} bu kanala katılmadı."
-          other: "%{username} ve %{others} bu kanala katılmadı."
-        group_mentions_disabled:
-          one: "%{group_name} bahsetmeye izin vermiyor"
-          other: "%{group_name} ve %{others} bahsetmeye izin vermiyor"
-        too_many_members:
-          one: "%{group_name} çok fazla üyeye sahip. Kimseye bildirim gönderilmedi"
-          other: "%{group_name} ve %{others} çok fazla üyeye sahip. Kimseye bildirim gönderilmedi"
-        warning_multiple:
-          one: "%{count} tane daha"
-          other: "%{count} tane daha"
+        without_membership: "%{username} bu kanala katılmadı."
+        group_mentions_disabled: "%{group_name} bahsetmeye izin vermiyor."
+        too_many_members: "%{group_name} çok fazla üyeye sahip. Kimseye bildirim gönderilmedi."
         groups:
           header:
             some: "Bazı kullanıcılara bildirim gönderilmeyecek"
             all: "Kimseye bildirim gönderilmeyecek"
-          unreachable:
-            one: "@%{group} bahsetmeye izin vermiyor"
-            other: "@%{group} ve @%{group_2} bahsetmeye izin vermiyor"
-          unreachable_multiple: "@%{group} ve %{count} grup daha bahsetmeye izin vermiyor"
-          too_many_members:
-            one: "@%{group} adlı gruptan bahsetmek %{limit} %{notification_limit} değerini aşıyor"
-            other: "Hem @%{group} hem de @%{group_2} adlı gruplardan bahsetmek %{limit} %{notification_limit} değerini aşıyor"
-          too_many_members_multiple: "Bu %{count} grup %{limit} %{notification_limit} değerini aşıyor."
-          users_limit:
-            one: "%{count} kullanıcı"
-            other: "%{count} kullanıcı"
-          notification_limit: "bildirim limiti"
-        too_many_mentions: "Bu mesaj, %{limit} %{notification_limit} değerini aşıyor"
-        mentions_limit:
-          one: "%{count} bahsetme"
-          other: "%{count} bahsetme"
+          unreachable_1: "@%{group} bahsetmeye izin vermiyor."
       aria_roles:
         header: "Sohbet başlığı"
         composer: "Sohbet oluşturucu"
@@ -160,10 +133,9 @@ tr_TR:
       close_full_page: "Tam ekran sohbeti kapat"
       open_message: "Mesajı sohbette aç"
       placeholder_self: "Bir şeyler not edin"
-      placeholder_others: "%{messageRecipient} ile sohbet et"
-      placeholder_new_message_disallowed: "Kanal %{status}, şu anda yeni mesaj gönderemezsiniz."
+      placeholder_users: "%{commaSeparatedNames} ile sohbet et"
       placeholder_silenced: "Şu anda mesaj gönderemezsiniz."
-      placeholder_start_conversation: '%{usernames} ile bir konuşma başlat'
+      placeholder_start_conversation_users: "%{commaSeparatedUsernames} ile bir konuşma başlat"
       remove_upload: "Dosyayı kaldır"
       react: "Emoji ile tepki ver"
       reply: "Yanıtla"
@@ -256,18 +228,10 @@ tr_TR:
       create_channel:
         auto_join_users:
           public_category_warning: "%{category} herkese açık bir kategori. Son zamanlarda aktif olan tüm kullanıcılar bu kanala otomatik olarak eklensin mi?"
-          warning_groups:
-            one: '%{group} grubundaki %{members_count} kullanıcı otomatik olarak eklensin mi?'
-            other: '%{group} ve %{group_2} gruplarındaki %{members_count} kullanıcı otomatik olarak eklensin mi?'
-          warning_multiple_groups: '%{group_1} ve %{count} diğer gruptaki %{members_count} kullanıcı otomatik olarak eklensin mi?'
         choose_category:
           label: "Kategori seçin"
           none: "birini seçin..."
           default_hint: <a href=%{link} target="_blank">%{category} güvenlik ayarlarını</a> ziyaret ederek erişimi yönetin
-          hint_groups:
-            one: '%{hint} ögesindeki kullanıcılar <a href=%{link} target="_blank">güvenlik ayarlarına</a> göre bu kanala erişebilirler'
-            other: '%{hint} ve %{hint_2} ögesindeki kullanıcılar <a href=%{link} target="_blank">güvenlik ayarlarına</a> göre bu kanala erişebilirler'
-          hint_multiple_groups: '%{hint_1} ve %{count} diğer gruptaki kullanıcılar <a href=%{link} target="_blank">güvenlik ayarlarına</a> göre bu kanala erişebilirler'
         create: "Kanal oluştur"
         description: "Açıklama (isteğe bağlı)"
         name: "Kanal adı"
@@ -280,10 +244,7 @@ tr_TR:
         type: "Sohbet mesajı"
       reactions:
         only_you: ":%{emoji}: ile tepki verdiniz"
-        and_others: "Siz, %{usernames} :%{emoji}: ile tepki verdiniz"
-        only_others: "%{usernames} :%{emoji}: ile tepki verdi"
-        others_and_more: "%{usernames} ve %{more} kişi daha :%{emoji}: ile tepki verdi"
-        you_others_and_more: "Siz, %{usernames} ve %{more} kişi daha :%{emoji}: ile tepki verdiniz"
+        single_user: "%{username} :%{emoji}: ile tepki verdi"
       composer:
         toggle_toolbar: "Geçiş yapma araç çubuğu"
         italic_text: "vurgulanan yazı"
@@ -314,7 +275,6 @@ tr_TR:
         saved: "Kaydedildi"
         unfollow: "Ayrıl"
         admin_title: "Yönetici"
-        retention_info: "Sohbet geçmişi %{days} gün boyunca kaydedilecek."
       admin:
         title: "Sohbet"
       direct_messages:
@@ -379,9 +339,6 @@ tr_TR:
         many_users:
           one: "%{commaSeparatedUsernames} ve %{count} kişi daha yazıyor"
           other: "%{commaSeparatedUsernames} ve %{count} kişi daha yazıyor"
-      retention_reminders:
-        public: "Kanal geçmişi %{days} gün boyunca saklanır."
-        dm: "Kişisel sohbet geçmişi %{days} gün boyunca saklanır."
       flags:
         off_topic: "Bu mesaj, kanal başlığı tarafından tanımlanan mevcut tartışma ile ilgili değildir ve muhtemelen başka bir yere taşınmalıdır."
         inappropriate: "Bu mesaj, makul bir kişinin saldırgan, taciz edici veya <a href=\"%{basePath}/guidelines\">topluluk kurallarımızı</a> ihlal ettiğini düşüneceği içerik içeriyor."

@@ -122,6 +122,8 @@ RSpec.describe Search do
 
       before do
         SearchIndexer.enable
+        SiteSetting.max_duplicate_search_index_terms = -1
+        SiteSetting.prioritize_exact_search_title_match = false
         [post1, post2].each { |post| SearchIndexer.index(post, force: true) }
       end
 

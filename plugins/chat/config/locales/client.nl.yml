@@ -105,45 +105,18 @@ nl:
       new_messages: "nieuwe berichten"
       mention_warning:
         dismiss: "negeren"
-        cannot_see:
-          one: "%{username} heeft geen toegang tot dit kanaal en is niet geïnformeerd."
-          other: "%{username} hebben geen toegang tot dit kanaal en zijn niet geïnformeerd."
         invitations_sent:
           one: "Uitnodiging gestuurd"
           other: "Uitnodigingen gestuurd"
         invite: "Uitnodigen voor kanaal"
-        without_membership:
-          one: "%{username} neemt niet deel aan dit kanaal."
-          other: "%{username} en %{others} nemen niet deel aan dit kanaal."
-        group_mentions_disabled:
-          one: "%{group_name} staat geen vermeldingen toe"
-          other: "%{group_name} en %{others} staan geen vermeldingen toe"
-        too_many_members:
-          one: "%{group_name} heeft te veel leden. Niemand is geïnformeerd"
-          other: "%{group_name} en %{others} hebben te veel leden. Niemand is geïnformeerd"
-        warning_multiple:
-          one: "%{count} ander"
-          other: "%{count} anderen"
+        without_membership: "%{username} neemt niet deel aan dit kanaal."
+        group_mentions_disabled: "%{group_name} staat geen vermeldingen toe."
+        too_many_members: "%{group_name} heeft te veel leden. Niemand is geïnformeerd."
         groups:
           header:
             some: "Sommige gebruikers worden niet geïnformeerd"
             all: "Niemand wordt geïnformeerd"
-          unreachable:
-            one: "@%{group} staat geen vermeldingen toe"
-            other: "@%{group} en %{group_2} staan geen vermeldingen toe"
-          unreachable_multiple: "@%{group} en %{count} andere groepen staan geen vermeldingen toe"
-          too_many_members:
-            one: "Het noemen van @%{group} overschrijdt de %{notification_limit} van %{limit}"
-            other: "Het noemen van zowel @%{group} als @%{group_2} overschrijdt de %{notification_limit} van %{limit}"
-          too_many_members_multiple: "Deze %{count} groepen overschrijden de %{notification_limit} van %{limit}"
-          users_limit:
-            one: "%{count} gebruiker"
-            other: "%{count} gebruikers"
-          notification_limit: "meldingslimiet"
-        too_many_mentions: "Dit bericht overschrijdt de %{notification_limit} van %{limit}"
-        mentions_limit:
-          one: "%{count} vermelding"
-          other: "%{count} vermeldingen"
+          unreachable_1: "@%{group} staat geen vermeldingen toe."
       aria_roles:
         header: "Chatkop"
         composer: "Chateditor"
@@ -160,10 +133,9 @@ nl:
       close_full_page: "Chat op volledig scherm sluiten"
       open_message: "Bericht openen in chat"
       placeholder_self: "Schrijf iets"
-      placeholder_others: "Chatten met %{messageRecipient}"
-      placeholder_new_message_disallowed: "Kanaal is %{status}, je kunt momenteel geen nieuwe berichten sturen."
+      placeholder_users: "Chatten met %{commaSeparatedNames}"
       placeholder_silenced: "Je kunt op dit moment geen berichten sturen."
-      placeholder_start_conversation: Begin een gesprek met %{usernames}
+      placeholder_start_conversation_users: "Begin een gesprek met %{commaSeparatedUsernames}"
       remove_upload: "Bestand verwijderen"
       react: "Reageren met emoji"
       reply: "Antwoorden"
@@ -256,18 +228,10 @@ nl:
       create_channel:
         auto_join_users:
           public_category_warning: "%{category} is een openbare categorie. Alle recent actieve gebruikers automatisch toevoegen aan dit kanaal?"
-          warning_groups:
-            one: '%{members_count} gebruikers uit %{group} automatisch toevoegen?'
-            other: '%{members_count} gebruikers uit %{group} en %{group_2} automatisch toevoegen?'
-          warning_multiple_groups: '%{members_count} gebruikers uit %{group_1} en %{count} anderen automatisch toevoegen?'
         choose_category:
           label: "Kies een categorie"
           none: "selecteer een..."
           default_hint: Beheer de toegang door naar <a href=%{link} target="_blank">%{category}beveiligingsinstellingen</a> te gaan
-          hint_groups:
-            one: Gebruikers in %{hint} hebben toegang tot dit kanaal volgens de <a href=%{link} target="_blank">beveiligingsinstellingen</a>
-            other: Gebruikers in %{hint} en %{hint_2} hebben toegang tot dit kanaal volgens de <a href=%{link} target="_blank">beveiligingsinstellingen</a>
-          hint_multiple_groups: Gebruikers in %{hint_1} en %{count} andere groepen hebben toegang tot dit kanaal volgens de <a href=%{link} target="_blank">beveiligingsinstellingen</a>
         create: "Kanaal maken"
         description: "Beschrijving (optioneel)"
         name: "Kanaalnaam"
@@ -280,10 +244,7 @@ nl:
         type: "Chatbericht"
       reactions:
         only_you: "Je hebt gereageerd met :%{emoji}:"
-        and_others: "Jij, %{usernames} hebben gereageerd met :%{emoji}:"
-        only_others: "%{usernames} hebben gereageerd met :%{emoji}:"
-        others_and_more: "%{usernames} en %{more} anderen hebben gereageerd met :%{emoji}:"
-        you_others_and_more: "Jij, %{usernames} en %{more} anderen hebben gereageerd met :%{emoji}:"
+        single_user: "%{username} hebben gereageerd met :%{emoji}:"
       composer:
         toggle_toolbar: "Werkbalk schakelen"
         italic_text: "Cursieve tekst"
@@ -314,7 +275,6 @@ nl:
         saved: "Opgeslagen"
         unfollow: "Verlaten"
         admin_title: "Beheerder"
-        retention_info: "Chatgeschiedenis wordt %{days} dagen bewaard."
       admin:
         title: "Chat"
       direct_messages:
@@ -379,9 +339,6 @@ nl:
         many_users:
           one: "%{commaSeparatedUsernames} en %{count} ander zijn aan het typen"
           other: "%{commaSeparatedUsernames} en %{count} anderen zijn aan het typen"
-      retention_reminders:
-        public: "Kanaalgeschiedenis wordt %{days} dagen bewaard."
-        dm: "Persoonlijke chatgeschiedenis wordt %{days} dagen bewaard."
       flags:
         off_topic: "Dit bericht is niet relevant voor de huidige discussie zoals gedefinieerd door de kanaaltitel en moet waarschijnlijk worden verplaats naar elders."
         inappropriate: "Dit bericht bevat inhoud die een redelijk persoon als aanstootgevend, kwetsend of een overtreding van <a href=\"%{basePath}/guidelines\">onze communityrichtlijnen</a> zou beschouwen."

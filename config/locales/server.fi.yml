@@ -587,10 +587,6 @@ fi:
             duration_minutes:
               cannot_be_zero: "täytyy olla suurempi kuin 0."
               exceeds_maximum: "voi olla enintään 20 vuotta."
-        translation_overrides:
-          attributes:
-            value:
-              invalid_interpolation_keys: 'Nämä interpolaatioavaimet eivät kelpaa: "%{keys}"'
         watched_word:
           attributes:
             word:

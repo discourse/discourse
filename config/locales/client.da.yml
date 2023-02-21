@@ -2521,6 +2521,7 @@ da:
         open: "Åbn emne"
         close: "Luk emne"
         multi_select: "Vælg indlæg..."
+        slow_mode: "Indstil langsom tilstand..."
         timed_update: "Indstil timerfunktion for emne..."
         pin: "Fastgør Emne..."
         unpin: "Fjern fastgøring af Emne..."
@@ -2837,6 +2838,8 @@ da:
         delete_topic_confirm_modal_no: "Nej, behold dette emne"
         delete_topic_error: "Der opstod en fejl under sletning af dette emne"
         delete_topic: "slet emne"
+        add_post_notice: "Tilføj Hjælperteam Notits..."
+        change_post_notice: "Ændre Personale Meddelelse..."
         delete_post_notice: "Slet Personale Meddelelse"
         remove_timer: "fjern timer"
         edit_timer: "rediger timer"
@@ -3609,7 +3612,9 @@ da:
           header_link_text: "Tags"
           configure_defaults: "Konfigurer standardindstillinger"
         categories:
+          click_to_get_started: "Klik her for at komme i gang."
           header_link_text: "Kategorier"
+          configure_defaults: "Konfigurer standardindstillinger"
         community:
           header_link_text: "Fællesskab"
           links:
@@ -3619,6 +3624,8 @@ da:
               content: "Admin"
             badges:
               content: "Emblemer"
+            everything:
+              content: "Alting"
             faq:
               content: "OSS"
             groups:
@@ -3969,7 +3976,6 @@ da:
         enabled: "Aktiveret?"
         is_enabled: "J"
         not_enabled: "N"
-        change_settings: "Skift indstillinger"
         change_settings_short: "Indstillinger"
         howto: "Hvordan installerer jeg plugins?"
         official: "Officielt plugin"

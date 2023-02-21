@@ -34,6 +34,11 @@ describe FinalDestination::Resolver do
     expect(alive_thread_count).to eq(start_thread_count + 1)
   end
 
+  it "reads default query timeout from configuration" do
+    GlobalSetting.stubs(:dns_query_timeout_secs).returns(123)
+    expect(FinalDestination::Resolver.send(:default_dns_query_timeout)).to eq(123)
+  end
+
   it "can lookup correctly" do
     Addrinfo.stubs(:getaddrinfo).with { |addr| addr == "example.com" }.returns(mock_response)
 

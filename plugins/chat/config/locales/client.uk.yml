@@ -33,12 +33,6 @@ uk:
       join: "Приєднатися"
       mention_warning:
         dismiss: "відкласти"
-        groups:
-          users_limit:
-            one: "%{count} користувач"
-            few: "%{count} користувача"
-            many: "%{count} користувача"
-            other: "%{count} користувача"
       reply: "Відповідь"
       edit: "Редагувати"
       rebake_message: "Перебудувати HTML"

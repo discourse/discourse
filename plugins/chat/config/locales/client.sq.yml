@@ -20,10 +20,6 @@ sq:
       flag: "Sinjalizoni"
       mention_warning:
         dismiss: "hiqe"
-        groups:
-          users_limit:
-            one: "%{count} anëtar"
-            other: "%{count} anëtarë"
       reply: "Përgjigju"
       edit: "Redakto"
       rebake_message: "Rindërtoni HTML"

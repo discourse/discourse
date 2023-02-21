@@ -52,7 +52,7 @@ class ChatMessage < ActiveRecord::Base
         :base,
         I18n.t(
           "chat.errors.minimum_length_not_met",
-          minimum: SiteSetting.chat_minimum_message_length,
+          count: SiteSetting.chat_minimum_message_length,
         ),
       )
     end
@@ -60,7 +60,7 @@ class ChatMessage < ActiveRecord::Base
     if message_too_long?
       self.errors.add(
         :base,
-        I18n.t("chat.errors.message_too_long", maximum: SiteSetting.chat_maximum_message_length),
+        I18n.t("chat.errors.message_too_long", count: SiteSetting.chat_maximum_message_length),
       )
     end
   end

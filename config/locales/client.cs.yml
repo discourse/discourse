@@ -909,6 +909,7 @@ cs:
       collapse_profile: "Sbalit"
       bookmarks: "Záložky"
       bio: "O mně"
+      timezone: "Časové pásmo"
       invited_by: "Pozvánka od"
       trust_level: "Důvěryhodnost"
       notifications: "Oznámení"
@@ -1013,6 +1014,11 @@ cs:
           many: "Nepřečtená (%{count})"
           other: "Nepřečtená (%{count})"
         new: "Nová"
+        new_with_count:
+          one: "Nové"
+          few: "Nová (%{count})"
+          many: "Nové"
+          other: "Nové"
         archive: "Archív"
         groups: "Moje skupiny"
         move_to_inbox: "Přesunout do doručených"
@@ -1869,9 +1875,11 @@ cs:
         dismiss_new: "Označit jako přečtené vše nové"
         toggle: "hromadný výběr témat"
         actions: "Hromadné akce"
+        change_category: "Nastavit kategorii..."
         close_topics: "Zavřít téma"
         archive_topics: "Archivovat témata"
         move_messages_to_inbox: "Přesunout do doručených"
+        notification_level: "Upozornění..."
         choose_new_category: "Zvolte novou kategorii pro témata:"
         selected:
           one: "Vybrali jste <b>%{count}</b> téma."
@@ -2062,6 +2070,7 @@ cs:
         unarchive: "Navrátit z archivu"
         archive: "Archivovat téma"
         reset_read: "Vynulovat počet čtení"
+        make_public: "Vytvořit Veřejné Téma..."
         make_private: "Vytvořit soukromou zprávu "
         reset_bump_date: "Resetovat datum zvýraznění"
       feature:
@@ -2298,6 +2307,8 @@ cs:
         revert_to_regular: "Zrušit zvýraznění"
         rebake: "Obnovit HTML"
         unhide: "Odkrýt"
+        change_owner: "Změnit autora..."
+        grant_badge: "Udělit odznak..."
         lock_post: "Uzamknout příspěvek "
         lock_post_description: "Zabránit přispěvatelům v úpravách tohoto příspěvku"
         unlock_post: "Odemknout příspěvek"
@@ -2361,8 +2372,15 @@ cs:
             title: "Zobrazit html část emailu"
             button: "HTML"
       bookmarks:
+        create: "Vytvořit záložku"
+        edit: "Upravit záložku"
         name: "Jméno"
         options: "Možnosti"
+        actions:
+          delete_bookmark:
+            name: "Smazat záložku"
+          edit_bookmark:
+            name: "Upravit záložku"
     category:
       none: "(bez kategorie)"
       all: "Všechny kategorie"
@@ -2471,6 +2489,7 @@ cs:
     flagging:
       title: "Děkujeme, že pomáháte udržovat komunitu zdvořilou!"
       action: "Nahlásit příspěvek"
+      take_action: "Zakročit..."
       take_action_options:
         default:
           title: "Zakročit"
@@ -2830,6 +2849,7 @@ cs:
         delete: "Smazat"
         confirm_delete: "Jste si jistí, že chcete smazat tuto skupinu štítků?"
         everyone_can_use: "Tagy mohou být použity kýmkoliv"
+        parent_tag_placeholder: "Volitelné"
       topics:
         none:
           unread: "Nemáte žádná nepřečtená témata."
@@ -2902,6 +2922,8 @@ cs:
               content: "Administrace"
             badges:
               content: "Odznaky"
+            everything:
+              content: "Vše"
             faq:
               content: "FAQ"
             groups:
@@ -2910,6 +2932,7 @@ cs:
               content: "Uživatelé"
             my_posts:
               content: "Mé příspěvky"
+    until: "dokud:"
   admin_js:
     type_to_filter: "text pro filtrování..."
     admin:
@@ -2935,6 +2958,7 @@ cs:
         latest_version: "Poslední verze"
         new_features:
           dismiss: "Označit jako přečtené"
+          learn_more: "Více informací"
         last_checked: "Naposledy zkontrolováno"
         refresh_problems: "Obnovit"
         no_problems: "Nenalezeny žádné problémy."
@@ -3028,6 +3052,7 @@ cs:
         user: "Uživatel"
         title: "API"
         created: Vytvořený
+        never_used: (nikdy)
         generate: "Vygenerovat API klíč"
         revoke: "zrušit"
         all_users: "Všichni uživatelé"
@@ -3114,7 +3139,6 @@ cs:
         enabled: "Zapnutý?"
         is_enabled: "A"
         not_enabled: "N"
-        change_settings: "Změnit nastavení"
         change_settings_short: "Nastavení"
         howto: "Jak nainstaluji pluginy?"
       backups:

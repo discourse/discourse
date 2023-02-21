@@ -25,10 +25,6 @@ ur:
       join: "شمولیت اختیار کریں"
       mention_warning:
         dismiss: "بر خاست کریں"
-        groups:
-          users_limit:
-            one: "%{count} صارف"
-            other: "%{count} صارفین"
       reply: "جواب"
       edit: "ترمیم کریں"
       rebake_message: "HTML دوبارہ بِلڈ کریں"

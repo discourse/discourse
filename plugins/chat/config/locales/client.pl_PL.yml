@@ -105,65 +105,19 @@ pl_PL:
       new_messages: "nowe wiadomości"
       mention_warning:
         dismiss: "odrzuć"
-        cannot_see:
-          one: "%{username} nie może uzyskać dostępu do tego kanału i nie został powiadomiony."
-          few: "%{username} i %{others} nie mogą uzyskać dostępu do tego kanału i nie zostali powiadomieni."
-          many: "%{username} i %{others} nie mogą uzyskać dostępu do tego kanału i nie zostali powiadomieni."
-          other: "%{username} i %{others} nie mogą uzyskać dostępu do tego kanału i nie zostali powiadomieni."
         invitations_sent:
           one: "Zaproszenie wysłane"
           few: "Zaproszenia wysłane"
           many: "Zaproszenia wysłane"
           other: "Zaproszenia wysłane"
         invite: "Zaproś do kanału"
-        without_membership:
-          one: "%{username} nie dołączył do tego kanału."
-          few: "%{username} i %{others} nie dołączyli do tego kanału."
-          many: "%{username} i %{others} nie dołączyli do tego kanału."
-          other: "%{username} i %{others} nie dołączyli do tego kanału."
-        group_mentions_disabled:
-          one: "%{group_name} nie zezwala na wzmianki"
-          few: "%{group_name} i %{others} nie zezwalają na wzmianki"
-          many: "%{group_name} i %{others} nie zezwalają na wzmianki"
-          other: "%{group_name} i %{others} nie zezwalają na wzmianki"
-        too_many_members:
-          one: "%{group_name} ma zbyt wielu członków. Nikt nie został powiadomiony"
-          few: "%{group_name} i %{others} mają zbyt wielu członków. Nikt nie został powiadomiony"
-          many: "%{group_name} i %{others} mają zbyt wielu członków. Nikt nie został powiadomiony"
-          other: "%{group_name} i %{others} mają zbyt wielu członków. Nikt nie został powiadomiony"
-        warning_multiple:
-          one: "%{count} inny"
-          few: "%{count} inni"
-          many: "%{count} inni"
-          other: "%{count} inni"
+        group_mentions_disabled: "%{group_name} nie zezwala na wzmianki."
+        too_many_members: "%{group_name} ma zbyt wielu członków. Nikt nie został powiadomiony."
         groups:
           header:
             some: "Niektórzy użytkownicy nie zostaną powiadomieni"
             all: "Nikt nie zostanie powiadomiony"
-          unreachable:
-            one: "@%{group} nie zezwala na wzmianki"
-            few: "@%{group} i @%{group_2} nie zezwalają na wzmianki"
-            many: "@%{group} i @%{group_2} nie zezwalają na wzmianki"
-            other: "@%{group} i @%{group_2} nie zezwalają na wzmianki"
-          unreachable_multiple: "@%{group} i %{count} inni nie zezwalają na wzmianki"
-          too_many_members:
-            one: "Wzmianka @%{group} przekracza %{notification_limit} z %{limit}"
-            few: "Wzmianka zarówno @%{group} lub %{group_2} przekracza %{notification_limit} z %{limit}"
-            many: "Wzmianka zarówno @%{group} lub %{group_2} przekracza %{notification_limit} z %{limit}"
-            other: "Wzmianka zarówno @%{group} lub %{group_2} przekracza %{notification_limit} z %{limit}"
-          too_many_members_multiple: "Te %{count} grup przekracza %{notification_limit} z %{limit}"
-          users_limit:
-            one: "%{count} użytkownik"
-            few: "%{count} użytkownicy"
-            many: "%{count} użytkowników"
-            other: "%{count} użytkownicy"
-          notification_limit: "limit powiadomień"
-        too_many_mentions: "Ta wiadomość przekracza %{notification_limit} z %{limit}"
-        mentions_limit:
-          one: "%{count} wzmianka"
-          few: "%{count} wzmianki"
-          many: "%{count} wzmianek"
-          other: "%{count} wzmianek"
+          unreachable_1: "@%{group} nie zezwala na wzmianki."
       aria_roles:
         header: "Nagłówek czatu"
         channels_list: "Lista kanałów czatu"
@@ -172,8 +126,6 @@ pl_PL:
       open_full_page: "Otwórz czat na pełnym ekranie"
       open_message: "Otwórz wiadomość na czacie"
       placeholder_self: "Zanotuj coś"
-      placeholder_others: "Czat z %{messageRecipient}"
-      placeholder_new_message_disallowed: "Kanał ma %{status}, nie możesz teraz wysyłać nowych wiadomości."
       placeholder_silenced: "W tej chwili nie możesz wysyłać wiadomości."
       remove_upload: "Usuń plik"
       react: "Zareaguj z emoji"
@@ -277,6 +229,7 @@ pl_PL:
         create: "Utwórz kanał"
         description: "Opis (opcjonalnie)"
         name: "Nazwa kanału"
+        slug: "Slug kanału (opcjonalnie)"
         title: "Nowy kanał"
         type: "Typ"
         types:
@@ -286,10 +239,6 @@ pl_PL:
         type: "Wiadomość na czacie"
       reactions:
         only_you: "Zareagowałeś z :%{emoji}:"
-        and_others: "Ty, %{usernames} zareagowaliście z :%{emoji}:"
-        only_others: "%{usernames} zareagowali z :%{emoji}:"
-        others_and_more: "%{usernames} i %{more} inni reagowali z :%{emoji}:"
-        you_others_and_more: "Ty, %{usernames} i %{more} inni zareagowaliście z :%{emoji}:"
       composer:
         toggle_toolbar: "Przełącz pasek narzędzi"
         italic_text: "wyróżniony tekst"
@@ -367,9 +316,6 @@ pl_PL:
       replying_indicator:
         single_user: "%{username} pisze"
         multiple_users: "%{commaSeparatedUsernames} i %{lastUsername} piszą"
-      retention_reminders:
-        public: "Historia kanału jest przechowywana przez %{days} dni."
-        dm: "Historia osobistego czatu jest przechowywana przez %{days} dni."
       emoji_picker:
         favorites: "Często używane"
         smileys_&_emotion: "Buźki i emocje"

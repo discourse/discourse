@@ -637,10 +637,6 @@ ru:
             duration_minutes:
               cannot_be_zero: "должно быть больше 0."
               exceeds_maximum: "не может быть более 20 лет."
-        translation_overrides:
-          attributes:
-            value:
-              invalid_interpolation_keys: 'Недопустимые ключи интерполяции: «%{keys}»'
         watched_word:
           attributes:
             word:

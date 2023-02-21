@@ -64,7 +64,7 @@ describe Chat::ChatMessageCreator do
       expect(creator.error.message).to match(
         I18n.t(
           "chat.errors.minimum_length_not_met",
-          { minimum: SiteSetting.chat_minimum_message_length },
+          { count: SiteSetting.chat_minimum_message_length },
         ),
       )
     end
@@ -79,10 +79,7 @@ describe Chat::ChatMessageCreator do
         )
       expect(creator.failed?).to eq(true)
       expect(creator.error.message).to match(
-        I18n.t(
-          "chat.errors.message_too_long",
-          { maximum: SiteSetting.chat_maximum_message_length },
-        ),
+        I18n.t("chat.errors.message_too_long", { count: SiteSetting.chat_maximum_message_length }),
       )
     end
 
@@ -866,10 +863,7 @@ describe Chat::ChatMessageCreator do
         creator = create_message(user1)
         expect(creator.failed?).to eq(true)
         expect(creator.error.message).to eq(
-          I18n.t(
-            "chat.errors.channel_new_message_disallowed",
-            status: public_chat_channel.status_name,
-          ),
+          I18n.t("chat.errors.channel_new_message_disallowed.closed"),
         )
       end
 
@@ -885,18 +879,12 @@ describe Chat::ChatMessageCreator do
         creator = create_message(user1)
         expect(creator.failed?).to eq(true)
         expect(creator.error.message).to eq(
-          I18n.t(
-            "chat.errors.channel_new_message_disallowed",
-            status: public_chat_channel.status_name,
-          ),
+          I18n.t("chat.errors.channel_new_message_disallowed.read_only"),
         )
         creator = create_message(admin1)
         expect(creator.failed?).to eq(true)
         expect(creator.error.message).to eq(
-          I18n.t(
-            "chat.errors.channel_new_message_disallowed",
-            status: public_chat_channel.status_name,
-          ),
+          I18n.t("chat.errors.channel_new_message_disallowed.read_only"),
         )
       end
     end
@@ -908,18 +896,12 @@ describe Chat::ChatMessageCreator do
         creator = create_message(user1)
         expect(creator.failed?).to eq(true)
         expect(creator.error.message).to eq(
-          I18n.t(
-            "chat.errors.channel_new_message_disallowed",
-            status: public_chat_channel.status_name,
-          ),
+          I18n.t("chat.errors.channel_new_message_disallowed.archived"),
         )
         creator = create_message(admin1)
         expect(creator.failed?).to eq(true)
         expect(creator.error.message).to eq(
-          I18n.t(
-            "chat.errors.channel_new_message_disallowed",
-            status: public_chat_channel.status_name,
-          ),
+          I18n.t("chat.errors.channel_new_message_disallowed.archived"),
         )
       end
     end

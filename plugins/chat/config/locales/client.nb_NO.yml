@@ -25,10 +25,6 @@ nb_NO:
       join: "Bli medlem"
       mention_warning:
         dismiss: "forkast"
-        groups:
-          users_limit:
-            one: "%{count} bruker"
-            other: "%{count} brukere"
       reply: "Svar"
       edit: "Endre"
       rebake_message: "Generer HTML på nytt"

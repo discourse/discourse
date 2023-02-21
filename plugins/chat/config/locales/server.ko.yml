@@ -29,20 +29,23 @@ ko:
           title: "메시지 복원"
         agree_and_delete:
           title: "메시지 삭제"
+        delete_and_agree:
+          title: "메시지 삭제"
         disagree:
           title: "동의하지 않음"
         ignore:
           title: "무시"
     channel:
-      statuses:
-        read_only: "읽기 전용"
-        archived: "저장됨"
-        closed: "닫힘"
-        open: "열기"
+      dm_title:
+        single_user: "%{username}"
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "비 ASCII 문자 포함"
+        is_already_in_use: "이미 사용 중"
     personal_chat: "개인 채팅"
+    onebox:
+      x_members:
+        other: "회원 %{count}명"
   discourse_automation:
     scriptables:
       send_chat_message:

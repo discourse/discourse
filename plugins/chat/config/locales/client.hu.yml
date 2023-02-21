@@ -105,10 +105,6 @@ hu:
           one: "Meghívó elküldve"
           other: "Meghívók elküldve"
         invite: "Meghívás a csatornára"
-        groups:
-          users_limit:
-            one: "%{count} felhasználó"
-            other: "%{count} felhasználó"
       aria_roles:
         header: "Csevegés fejléce"
         composer: "Csevegés szerkesztője"
@@ -125,10 +121,7 @@ hu:
       close_full_page: "Teljes képernyős csevegés bezárása"
       open_message: "Üzenet megnyitása a csevegésben"
       placeholder_self: "Jegyezzen le valamit"
-      placeholder_others: "Csevegés vele: %{messageRecipient}"
-      placeholder_new_message_disallowed: "A csatorna „%{status}”, jelenleg nem küldhet új üzeneteket."
       placeholder_silenced: "Jelenleg nem küldhet üzeneteket."
-      placeholder_start_conversation: 'Beszélgetés kezdése a következőkkel: %{usernames}'
       remove_upload: "Fájl eltávolítása"
       react: "Reagálás emodzsival"
       reply: "Válasz"
@@ -223,10 +216,6 @@ hu:
       create_channel:
         auto_join_users:
           public_category_warning: "A(z) %{category} egy nyilvános kategória. Automatikusan hozzáadja az összes nemrég aktív felhasználót ehhez a csatornához?"
-          warning_groups:
-            one: '%{members_count} felhasználó automatikus hozzáadása a(z) %{group} csoportból?'
-            other: '%{members_count} felhasználó automatikus hozzáadása a(z) %{group} és %{group_2} csoportokból?'
-          warning_multiple_groups: Automatikusan hozzáadja a(z) %{group_1} csoport %{members_count} felhasználóját, és további %{count} felhasználót?
         choose_category:
           label: "Válasszon kategóriát"
           none: "válasszon egyet…"
@@ -243,10 +232,6 @@ hu:
         type: "Csevegőüzenet"
       reactions:
         only_you: "Ezzel reagált: :%{emoji}:"
-        and_others: "Ön, %{usernames} ezzel reagált: :%{emoji}:"
-        only_others: "%{usernames} ezzel reagált: :%{emoji}:"
-        others_and_more: "%{usernames} és még %{more} valaki ezzel reagált: :%{emoji}:"
-        you_others_and_more: "Ön, %{usernames} és még %{more} valaki ezzel reagált: :%{emoji}:"
       composer:
         toggle_toolbar: "Eszköztár be/ki"
         italic_text: "dőlt szöveg"
@@ -336,8 +321,8 @@ hu:
           one: "%{commaSeparatedUsernames} és még %{count} valaki gépel"
           other: "%{commaSeparatedUsernames} és még %{count} valaki gépel"
       retention_reminders:
-        public: "A csatorna előzményei %{days} napig maradnak meg."
-        dm: "A személyes csevegési előzményei %{days} napig maradnak meg."
+        public_none: "A csatornaelőzmények korlátlan ideig megőrződnek."
+        dm_none: "A személyes csevegési előzmények korlátlan ideig megőrződnek."
       flagging:
         action: "Üzenet megjelölése"
       emoji_picker:

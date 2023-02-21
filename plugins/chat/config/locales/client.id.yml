@@ -22,9 +22,6 @@ id:
       join: "Gabung"
       mention_warning:
         dismiss: "bubar"
-        groups:
-          users_limit:
-            other: "%{count} pengguna"
       reply: "Balas"
       edit: "Ubah"
       bookmark_message: "Penandaan"

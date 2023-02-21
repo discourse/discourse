@@ -25,7 +25,7 @@ class DirectMessage < ActiveRecord::Base
 
     # direct message to self
     if users.empty?
-      return I18n.t("chat.channel.dm_title.single_user", user: "@#{acting_user.username}")
+      return I18n.t("chat.channel.dm_title.single_user", username: "@#{acting_user.username}")
     end
 
     # all users deleted
@@ -36,13 +36,16 @@ class DirectMessage < ActiveRecord::Base
       return(
         I18n.t(
           "chat.channel.dm_title.multi_user_truncated",
-          users: usernames_formatted[0..4].join(", "),
-          leftover: usernames_formatted.length - 5,
+          comma_separated_usernames: usernames_formatted[0..4].join(I18n.t("word_connector.comma")),
+          count: usernames_formatted.length - 5,
         )
       )
     end
 
-    I18n.t("chat.channel.dm_title.multi_user", users: usernames_formatted.join(", "))
+    I18n.t(
+      "chat.channel.dm_title.multi_user",
+      comma_separated_usernames: usernames_formatted.join(I18n.t("word_connector.comma")),
+    )
   end
 end
 

@@ -634,10 +634,6 @@ uk:
             duration_minutes:
               cannot_be_zero: "має бути більше 0."
               exceeds_maximum: "не може бути більше 20 років."
-        translation_overrides:
-          attributes:
-            value:
-              invalid_interpolation_keys: 'Наступні ключі інтерполяції недійсні: "%{keys}"'
         watched_word:
           attributes:
             word:

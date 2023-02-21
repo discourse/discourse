@@ -54,16 +54,15 @@ fr:
     deleted_chat_username: supprimé
     errors:
       channel_exists_for_category: "Un canal existe déjà pour cette catégorie et ce nom"
-      channel_new_message_disallowed: "Le canal a le statut %{status}, aucun nouveau message ne peut être envoyé"
-      channel_modify_message_disallowed: "Le canal a le statut %{status}, aucun message ne peut être modifié ou supprimé"
       user_cannot_send_message: "Vous ne pouvez pas envoyer de messages pour le moment."
       rate_limit_exceeded: "Dépassement de la limite de messages de discussion pouvant être envoyés dans les 30 secondes"
       auto_silence_from_flags: "Message de discussion marqué avec un score suffisamment élevé pour mettre l'utilisateur en sourdine."
       channel_cannot_be_archived: "Le canal ne peut pas être archivé pour le moment, il doit être soit fermé, soit ouvert à l'archivage."
       duplicate_message: "Vous avez publié un message identique trop récemment."
       delete_channel_failed: "Échec de la suppression du canal, veuillez réessayer."
-      minimum_length_not_met: "Le message est trop court. Il doit comporter au moins %{minimum} caractères."
-      message_too_long: "Le message est trop long, les messages doivent comporter au maximum %{maximum} caractères."
+      message_too_long:
+        one: "Le message est trop long, les messages doivent comporter au maximum %{count} caractères."
+        other: "Le message est trop long, les messages doivent comporter au maximum %{count} caractères."
       max_reactions_limit_reached: "Les nouvelles réactions ne sont pas autorisées sur ce message."
       message_move_invalid_channel: "Le canal source et le canal de destination doivent être des canaux publics."
       message_move_no_messages_found: "Aucun message n'a été trouvé avec les ID de message fournis."
@@ -74,9 +73,7 @@ fr:
       actor_disallowed_dms: "Vous avez choisi d'empêcher les utilisateurs de vous envoyer des messages privés et directs, vous ne pouvez donc pas créer de nouveaux messages directs."
       actor_preventing_target_user_from_dm: "Vous avez choisi d'empêcher %{username} de vous envoyer des messages privés et directs, vous ne pouvez donc pas lui envoyer de nouveaux messages privés."
       user_cannot_send_direct_messages: "Nous sommes désolés, vous ne pouvez pas envoyer de messages privés."
-      over_chat_max_direct_message_users:
-        one: "Vous ne pouvez créer un message privé qu'avec vous-même."
-        other: "Vous ne pouvez pas créer de message privé avec plus de %{count} autres utilisateurs."
+      over_chat_max_direct_message_users_allow_self: "Vous ne pouvez créer un message privé qu'avec vous-même."
     reviewables:
       message_already_handled: "Merci, mais nous avons déjà examiné ce message et déterminé qu'il n'a pas besoin d'être signalé à nouveau."
       actions:
@@ -113,20 +110,16 @@ fr:
         transcript_title: "Transcription des messages précédents dans le canal %{channel_name}"
         transcript_body: "Pour vous donner plus de contexte, nous avons inclus une transcription des messages précédents de cette conversation (jusqu'à dix) :\n\n%{transcript}"
     channel:
-      statuses:
-        read_only: "Lecture seule"
-        archived: "Archivé"
-        closed: "Fermé"
-        open: "Ouvert"
       archive:
         first_post_raw: "Ce sujet est une archive du canal de discussion [%{channel_name}](%{channel_url})."
       messages_moved:
         one: "@%{acting_username} a déplacé un message vers le canal [%{channel_name}](%{first_moved_message_url})."
         other: "@%{acting_username} a déplacé %{count} messages vers le canal [%{channel_name}](%{first_moved_message_url})."
       dm_title:
-        single_user: "%{user}"
-        multi_user: "%{users}"
-        multi_user_truncated: "%{users} et %{leftover} autres utilisateurs"
+        single_user: "%{username}"
+        multi_user_truncated:
+          one: "%{comma_separated_usernames} et %{count} autre participant"
+          other: "%{comma_separated_usernames} et %{count} autres utilisateurs"
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "contient des caractères non ASCII"

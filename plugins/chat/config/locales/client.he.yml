@@ -38,6 +38,11 @@ he:
       browse_all_channels: "עיון בכל הערוצים"
       move_to_channel:
         title: "העברת הודעות לערוץ"
+        instructions:
+          one: "בחרת להעביר הודעה <strong>%{count}</strong>. נא לבחור את ערוץ היעד. הודעה ממלאת מקום תיווצר בערוץ <strong>%{channelTitle}</strong> כדי לציין שההודעה הזאת הועברה. נא לשים לב ששרשורי תגובה לא יישמרו בערוץ החדש והודעות בערוץ הישן לא תופענה עוד כתגובה להודעות כלשהן שהועברו."
+          two: "בחרת להעביר <strong>%{count}</strong> הודעות. נא לבחור את ערוץ היעד. הודעה ממלאת מקום תיווצר בערוץ <strong>%{channelTitle}</strong> כדי לציין שההודעות האלו הועברו. נא לשים לב ששרשורי תגובה לא יישמרו בערוץ החדש והודעות בערוץ הישן לא תופענה עוד כתגובה להודעות כלשהן שהועברו."
+          many: "בחרת להעביר <strong>%{count}</strong> הודעות. נא לבחור את ערוץ היעד. הודעה ממלאת מקום תיווצר בערוץ <strong>%{channelTitle}</strong> כדי לציין שההודעות האלו הועברו. נא לשים לב ששרשורי תגובה לא יישמרו בערוץ החדש והודעות בערוץ הישן לא תופענה עוד כתגובה להודעות כלשהן שהועברו."
+          other: "בחרת להעביר <strong>%{count}</strong> הודעות. נא לבחור את ערוץ היעד. הודעה ממלאת מקום תיווצר בערוץ <strong>%{channelTitle}</strong> כדי לציין שההודעות האלו הועברו. נא לשים לב ששרשורי תגובה לא יישמרו בערוץ החדש והודעות בערוץ הישן לא תופענה עוד כתגובה להודעות כלשהן שהועברו."
         confirm_move: "העברת הודעות"
       channel_settings:
         title: "הגדרות ערוץ"
@@ -68,6 +73,7 @@ he:
         instructions: "סגירת הערוץ מונעת ממשתמשים מחוץ לסגל לשלוח הודעות חדשות או לערוך הודעות קיימות. לסגור את הערוץ הזה?"
       channel_delete:
         title: "מחיקת ערוץ"
+        instructions: "<p>פעולה זו תמחק את הערוץ <strong>%{name}</strong> ואת היסטוריית הצ׳אט. כל ההודעות והנתונים הקשורים, כגון רגשות והעלאות יימחקו לצמיתות. כדי לשמור על היסטוריית הערוץ ולהשבית אותה, יכול להיות שעדיף לך להעביר את הערוץ לארכיון במקום.</p> <p>אכן <strong>למחוק לצמיתות</strong> את הערוץ? כדי לאשר, יש להקליד את שם הערוץ בתיבה שלהלן.</p>"
         confirm: "ההשלכות ברורות לי, נא למחוק את הערוץ"
         confirm_channel_name: "נא למלא את שם הערוץ"
         process_started: "תהליך מחיקת הערוץ החל. חלונית צצה זו תיסגר בקרוב, הערוץ שנמחק לא יופיעו עוד בשום מקום."
@@ -105,55 +111,18 @@ he:
       new_messages: "הודעות חדשות"
       mention_warning:
         dismiss: "התעלמות"
-        cannot_see:
-          one: "ל־%{username} אין גישה לערוץ הזה ולא נשלחה הודעה."
-          two: "ל־%{username} ולעוד %{others} אין גישה לערוץ הזה ולא נשלחו הודעות."
-          many: "ל־%{username} ולעוד %{others} אין גישה לערוץ הזה ולא נשלחו הודעות."
-          other: "ל־%{username} ולעוד %{others} אין גישה לערוץ הזה ולא נשלחו הודעות."
         invitations_sent:
           one: "נשלחה הזמנה"
           two: "נשלחו הזמנות"
           many: "נשלחו הזמנות"
           other: "נשלחו הזמנות"
         invite: "הזמנה לערוץ"
-        group_mentions_disabled:
-          one: "אזכורים אסורים בקבוצה %{group_name}"
-          two: "אזכורים אסורים בקבוצה %{group_name} ובעוד %{others}"
-          many: "אזכורים אסורים בקבוצה %{group_name} ובעוד %{others}"
-          other: "אזכורים אסורים בקבוצה %{group_name} ובעוד %{others}"
-        too_many_members:
-          one: "בקבוצה %{group_name} יש יותר מדי חברים. לא נשלחו התראות."
-          two: "בקבוצה %{group_name} וב־%{others} נוספות יש יותר מדי חברים. לא נשלחו התראות."
-          many: "בקבוצה %{group_name} וב־%{others} נוספות יש יותר מדי חברים. לא נשלחו התראות."
-          other: "בקבוצה %{group_name} וב־%{others} נוספות יש יותר מדי חברים. לא נשלחו התראות."
-        warning_multiple:
-          one: "%{count} נוסף"
-          two: "%{count} נוספים"
-          many: "%{count} נוספים"
-          other: "%{count} נוספים"
+        group_mentions_disabled: "אזכורים אסורים בקבוצה %{group_name}."
         groups:
           header:
             some: "חלק מהמשתמשים לא יקבלו התראה"
             all: "אף אחד לא יקבל התראה"
-          unreachable:
-            one: "אזכורים אסורים בקבוצה ‎@%{group}"
-            two: "אזכורים אסורים בקבוצה ‎@%{group} ובקבוצה ‎@%{group_2}"
-            many: "אזכורים אסורים בקבוצה ‎@%{group} ובקבוצה ‎@%{group_2}"
-            other: "אזכורים אסורים בקבוצה ‎@%{group} ובקבוצה ‎@%{group_2}"
-          unreachable_multiple: "‎@%{group} ועוד %{count} נוספות לא מרשות לאזכר"
-          too_many_members_multiple: "%{count} קבוצות אלו חורגות מ%{notification_limit} של %{limit}"
-          users_limit:
-            one: "משתמש/ת %{count}"
-            two: "%{count} משתמשים"
-            many: "%{count} משתמשים"
-            other: "%{count} משתמשים"
-          notification_limit: "מגבלת התראה"
-        too_many_mentions: "הודעה זו חורגת מ%{notification_limit} של %{limit}"
-        mentions_limit:
-          one: "אזכור %{count}"
-          two: "%{count} אזכורים"
-          many: "%{count} אזכורים"
-          other: "%{count} אזכורים"
+          unreachable_1: "@אזכורים אסורים בקבוצה %{group}."
       aria_roles:
         header: "כותרת צ׳אט"
         composer: "כותב צ׳אט"
@@ -170,10 +139,7 @@ he:
       close_full_page: "סגירת צ׳אט במסך מלא"
       open_message: "פתיחת הודעה בצ׳אט"
       placeholder_self: "לקשקש משהו"
-      placeholder_others: "צ׳אט עם %{messageRecipient}"
-      placeholder_new_message_disallowed: "הערוץ %{status}, אין לך אפשרות לשלוח הודעות חדשות כעת."
       placeholder_silenced: "אין לך אפשרות לשלוח הודעות כרגע."
-      placeholder_start_conversation: פתיחת דיון עם %{usernames}
       remove_upload: "הסרת קובץ"
       react: "להגיב עם אמוג׳י"
       reply: "להגיב"
@@ -214,6 +180,8 @@ he:
         read_only: "לקריאה בלבד"
         archived_header: "הערוץ בארכיון"
         archived: "בארכיון"
+        archive_failed: "העברת הערוץ לארכיון נכשלה. %{completed}/%{total} הודעות הועברו לארכיון. <a target=\"_blank\" href=\"%{topic_url}\">נושא היעד</a>. יש ללחוץ על לנסות שוב כדי לנסות להעביר שוב לארכיון."
+        archive_failed_no_topic: "העברת הערוץ לארכיון נכשלה. %{completed}/%{total} הודעות הועברו לארכיון, נושא היעד לא נוצר. יש ללחוץ על לנסות שוב כדי לנסות להעביר שוב לארכיון."
         archive_completed: "אפשר לעיין ב<a target=\"_blank\" href=\"%{topic_url}\">ארכיון הנושא</a>"
         closed_header: "הערוץ סגור"
         closed: "סגורה"
@@ -274,22 +242,10 @@ he:
       create_channel:
         auto_join_users:
           public_category_warning: "%{category} היא קטגוריה ציבורית. להוסיף את כל המשתמשים שהיו פעילים לאחרונה לערוץ הזה?"
-          warning_groups:
-            one: להוסיף %{members_count} משתמשים מתוך %{group} אוטומטית?
-            two: להוסיף %{members_count} משתמשים מתוך %{group} ומתוך %{group_2} אוטומטית?
-            many: להוסיף %{members_count} משתמשים מתוך %{group} ומתוך %{group_2} אוטומטית?
-            other: להוסיף %{members_count} משתמשים מתוך %{group} ומתוך %{group_2} אוטומטית?
-          warning_multiple_groups: להוסיף %{members_count} משתמשים מתוך %{group_1} ועוד %{count} קבוצות אוטומטית?
         choose_category:
           label: "נא לבחור קטגוריה"
           none: "נא לבחור אחד…"
           default_hint: ניתן לנהל את הגישה באמצעות ביקור ב<a href=%{link} target="_blank">הגדרות האבטחה של %{category}</a>
-          hint_groups:
-            one: למשתמשים ב־%{hint} תהיה גישה לערוץ בהתאם ל<a href=%{link} target="_blank">הגדרות האבטחה</a>
-            two: למשתמשים ב־%{hint} וב־%{hint_2} תהיה גישה לערוץ בהתאם ל<a href=%{link} target="_blank">הגדרות האבטחה</a>
-            many: למשתמשים ב־%{hint} וב־%{hint_2} תהיה גישה לערוץ בהתאם ל<a href=%{link} target="_blank">הגדרות האבטחה</a>
-            other: למשתמשים ב־%{hint} וב־%{hint_2} תהיה גישה לערוץ בהתאם ל<a href=%{link} target="_blank">הגדרות האבטחה</a>
-          hint_multiple_groups: למשתמשים ב־%{hint_1} וב־%{count} קבוצות נוספות תהיה גישה לערוץ בהתאם ל<a href=%{link} target="_blank">הגדרות האבטחה</a>
         create: "יצירת ערוץ"
         description: "תיאור (רשות)"
         name: "שם הערוץ"
@@ -303,10 +259,6 @@ he:
         type: "הודעת צ׳אט"
       reactions:
         only_you: "הגבת עם :%{emoji}:"
-        and_others: "הגבת, יחד עם %{usernames} באמוג׳י :%{emoji}:"
-        only_others: "%{usernames} הגיבו באמוג׳י :%{emoji}:"
-        others_and_more: "%{usernames} ו־%{more} נוספים הגיבו באמוג׳י :%{emoji}:"
-        you_others_and_more: "הגבת, יחד עם %{usernames} ו־%{more} נוספים באמוג׳י :%{emoji}:"
       composer:
         toggle_toolbar: "החלפת מצב סרגל כלים"
         italic_text: "טקסט נטוי"
@@ -321,6 +273,7 @@ he:
         always: "לכל פעילות"
       settings:
         channel_wide_mentions_label: "לאפשר אזכורים של ‎@all (כולם) ו־‎@here (כאן)"
+        channel_wide_mentions_description: "לאפשר למשתמשים להודיע לכל החברים שב־‎#%{channel} באמצעות ‎@all (כולם) או רק לאלו שפעילים כרגע עם ‎@here (כאן)"
         auto_join_users_label: "להוסיף משתמשים אוטומטית"
         auto_join_users_info: "לבדוק כל שעה אילו משתמשים היו פעילים ב־3 החודשים האחרונים. להוסיף אותם לערוץ אם יש להם גישה לקטגוריה %{category}."
         auto_join_users_info_no_category: "לבדוק כל שעה אילו משתמשים היו פעילים ב־3 החודשים האחרונים. להוסיף אותם לערוץ אם יש להם גישה לקטגוריה הנבחרת."
@@ -338,7 +291,6 @@ he:
         saved: "נשמר"
         unfollow: "עזוב"
         admin_title: "הנהלה"
-        retention_info: "היסטוריית הצ׳אט נשמרת למשך %{days} ימים."
       admin:
         title: "צ׳אט"
       direct_messages:
@@ -412,8 +364,18 @@ he:
           many: "%{commaSeparatedUsernames} ועוד %{count} נוספים מקלידים"
           other: "%{commaSeparatedUsernames} ועוד %{count} נוספים מקלידים"
       retention_reminders:
-        public: "היסטוריית הערוץ נשמרת למשך %{days} ימים."
-        dm: "היסטוריית הצ׳אט האישית נשמרת למשך %{days} ימים."
+        public_none: "היסטוריית הערוץ נשמרת לעד."
+        public:
+          one: "היסטוריית הערוץ נשמרת למשך יום %{count}."
+          two: "היסטוריית הערוץ נשמרת למשך %{count} ימים."
+          many: "היסטוריית הערוץ נשמרת למשך %{count} ימים."
+          other: "היסטוריית הערוץ נשמרת למשך %{count} ימים."
+        dm_none: "היסטוריית הצ׳אט האישי נשמרת לעד."
+        dm:
+          one: "היסטוריית הצ׳אט האישי נשמרת למשך יום %{count}."
+          two: "היסטוריית הצ׳אט האישי נשמרת למשך %{count} ימים."
+          many: "היסטוריית הצ׳אט האישי נשמרת למשך %{count} ימים."
+          other: "היסטוריית הצ׳אט האישי נשמרת למשך %{count} ימים."
       flags:
         off_topic: "הודעה זו לא תואמת לדיון הנוכחי כפי שהוגדר בכותרת הערוץ וכנראה שצריך להעביר אותה."
         inappropriate: "הודעה זו מכילה תוכן שאדם מן השורה עשוי להחשיב כפוגעני, נצלני או מפר את <a href=\"%{basePath}/guidelines\">הכללים המנחים את הקהילה שלנו</a>."
@@ -435,6 +397,10 @@ he:
         symbols: "סמלים"
         search_placeholder: "חיפוש לפי שם וכינוי של האמוג׳י…"
         no_results: "אין תוצאות"
+      threads:
+        op_said: "נאמר ע״י פותחי השרשור:"
+        started_by: "נפתח ע״י"
+        open: "פתיחת שרשור"
       draft_channel_screen:
         header: "הודעה חדשה"
         cancel: "ביטול"

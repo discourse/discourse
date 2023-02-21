@@ -264,6 +264,7 @@ nb_NO:
     reminders:
       at_desktop: "Neste gang jeg er på datamaskinen min"
       later_today: "Senere i dag"
+      next_business_day: "Neste virkedag"
       tomorrow: "I morgen"
       next_week: "Neste uke"
       next_month: "Neste måned"
@@ -382,10 +383,6 @@ nb_NO:
           attributes:
             execute_at:
               in_the_past: "må være i fremtiden."
-        translation_overrides:
-          attributes:
-            value:
-              invalid_interpolation_keys: 'De følgende interpolasjonsnøklene er ugyldige: "%{keys}"'
         watched_word:
           attributes:
             word:
@@ -640,6 +637,8 @@ nb_NO:
     description: '"%{application_name}" ber om følgende tilgang til kontoen din:'
     otp_confirmation:
       confirm_title: Fortsett til %{site_name}
+      logging_in_as: Logger inn som %{username}
+      confirm_button: Fullfør innlogging
     no_trust_level: "Beklager, du har ikke det nødvendige tillitsnivået for tilgang til API for brukere"
     generic_error: "Beklager, vi kan ikke utstede API nøkler for brukere, denne funksjonen kan være deaktivert av administratoren"
     scopes:
@@ -665,6 +664,7 @@ nb_NO:
     user_flagging_ratio:
       labels:
         user: Bruker
+        score: Poeng
     moderators_activity:
       labels:
         moderator: Moderator
@@ -1024,6 +1024,7 @@ nb_NO:
     default_include_tl0_in_digests: "Inkluder innlegg fra nye brukere i oppsummerings-e-poster som forvalg. Brukere kan endre dette i innstillingene sine."
     default_email_mailing_list_mode_frequency: "Brukere som slår på e-postlistemodus, vil motta e-poster så ofte som forvalg"
     default_email_previous_replies: "Inkluder tidligere svar i e-poster som forvalg."
+    default_other_skip_new_user_tips: "Hopp over nye brukeropplæringstips og merker."
     default_topics_automatic_unpin: "La det være forvalgt innstilling å fjerne feste for emner automatisk når brukeren når bunnen."
     default_categories_watching: "Liste med kategorier som følges som forvalg"
     default_categories_tracking: "Liste med kategorier som overvåkes som forvalg"
@@ -1076,6 +1077,12 @@ nb_NO:
     autoclosed_disabled: "Dette emnet er nå åpent. Nye svar er tillatt."
     autoclosed_disabled_lastpost: "Dette emnet er nå åpent. Nye svar er tillatt."
   login:
+    security_key_description: "Når du har din fysiske sikkerhetsnøkkel klargjort trykk på autentiseringen med sikkerhetsnøkkelknappen nedenfor."
+    security_key_alternative: "Prøv en annen måte"
+    security_key_authenticate: "Autentiser med sikkerhetsnøkkel"
+    security_key_not_allowed_error: "Autentiseringsprosessen for sikkerhetsnøkkelen ble enten tidsavbrutt eller kansellert."
+    security_key_no_matching_credential_error: "Ingen samsvarende opplysninger ble funnet på den angitte sikkerhetsnøkkelen."
+    security_key_support_missing_error: "Gjeldende enhet eller nettleser støtter ikke bruk av sikkerhetsnøkler. Vennligst bruk en annen metode."
     not_approved: "Kontoen din har ikke blitt godkjent ennå. Du vil få beskjed via e-post når du er klar til å logge inn."
     incorrect_username_email_or_password: "Feil brukernavn, email eller passord"
     wait_approval: "Takk for at du registrerte deg. Vi vil varsle deg når din konto er blitt godkjent."
@@ -1089,7 +1096,10 @@ nb_NO:
     password_too_long: "Passord er begrenset til 200 tegn."
     reserved_username: "Det brukernavnet tillates ikke."
     missing_user_field: "Du har ikke fylt ut alle brukerfeltene."
+    second_factor_title: "To-faktor autentisering"
     second_factor_backup_description: "Vennligst skriv en av reservekodene dine:"
+    second_factor_toggle:
+      backup_code: "Bruk en sikkerhetskode i stedet"
   admin:
     email:
       sent_test: "sendt!"
@@ -1176,6 +1186,8 @@ nb_NO:
       title: "Glemt passord"
     set_password:
       title: "Sett passord"
+    post_approved:
+      title: "Ditt innlegg ble godkjent"
   page_not_found:
     page_title: "Side Ikke funnet"
     title: "Oisann! Den siden finnes ikke eller er privat."
@@ -1337,11 +1349,20 @@ nb_NO:
       replied: '%{username} svarte deg i "%{topic}" - %{site_title}'
       posted: '%{username} skrev noe i "%{topic}" - %{site_title}'
       linked: '%{username} lenket til innlegget ditt i "%{topic}" - %{site_title}'
+      watching_first_post: '%{username} opprettet et nytt emne "%{topic}" - %{site_title}'
       confirm_title: "Varslinger aktivert - %{site_title}"
       confirm_body: "Suksess! Varslinger er nå aktivert."
+      custom: "Varsling fra %{username} på %{site_title}"
   reviewables:
+    priorities:
+      low: "Lav"
+      medium: "Middels"
+      high: "Høy"
     sensitivity:
       disabled: "Deaktivert"
+      low: "Lav"
+      medium: "Middels"
+      high: "Høy"
     actions:
       agree_and_keep:
         title: "Behold innlegg"
@@ -1368,6 +1389,7 @@ nb_NO:
       approve:
         title: "Godkjenn"
       reject_user:
+        title: "Slett bruker..."
         delete:
           title: "Slett bruker"
       reject:

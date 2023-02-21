@@ -1461,7 +1461,7 @@ RSpec.describe PrettyText do
 
     it "replaces some glyphs that are not in the emoji range" do
       expect(PrettyText.cook("☹")).to match(/\:frowning\:/)
-      expect(PrettyText.cook("☺")).to match(/\:relaxed\:/)
+      expect(PrettyText.cook("☺")).to match(/\:smiling_face\:/)
       expect(PrettyText.cook("☻")).to match(/\:slight_smile\:/)
       expect(PrettyText.cook("♡")).to match(/\:heart\:/)
       expect(PrettyText.cook("❤")).to match(/\:heart\:/)

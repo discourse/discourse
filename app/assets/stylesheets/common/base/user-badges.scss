@@ -127,17 +127,23 @@
 
   .check-display {
     position: absolute;
-    left: 5px;
+    right: 5px;
     top: 5px;
   }
 
+  .badge-granted {
+    margin-top: 0.5em;
+  }
+
   .grant-count {
-    position: absolute;
-    right: 5px;
-    top: 5px;
     font-weight: bold;
     color: var(--primary-medium);
-    font-size: var(--font-up-2);
+    line-height: 1;
+  }
+
+  .grant-text {
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
   }
 
   .favorite-btn {
@@ -145,11 +151,11 @@
     right: 0;
     bottom: 0;
   }
-
   .badge-contents {
     display: flex;
-    min-height: 8em;
-    padding: 0 1.5em;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.5em 1.5em;
 
     .badge-link {
       color: var(--primary);
@@ -158,10 +164,8 @@
     .badge-icon {
       display: flex;
       flex-shrink: 0;
-      margin-right: 1.5em;
       align-items: center;
       justify-content: center;
-      width: 64px;
 
       svg {
         font-size: 3.5em;
@@ -190,7 +194,6 @@
       display: flex;
       flex: 1 1 auto;
       align-items: center;
-      padding: 1em 0;
       color: var(--primary);
 
       h3 {
@@ -245,18 +248,10 @@
 
 .badge-group-list {
   display: grid;
-  grid: auto-flow / repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(18em, 1fr));
   grid-gap: 1em;
   width: 100%;
   margin-bottom: 1.5em;
-
-  @include breakpoint(medium) {
-    grid: auto-flow / repeat(2, 1fr);
-  }
-
-  @include breakpoint(mobile-extra-large) {
-    grid: auto-flow / 1fr;
-  }
 
   .title {
     font-size: var(--font-up-1);
