@@ -248,8 +248,13 @@ export default class AdminBadgesShowController extends Controller.extend(
 
   @action
   toggleBadge() {
-    this.model
-      .save({ enabled: !this.buffered.get("enabled") })
-      .catch(popupAjaxError);
+    const originalState = this.buffered.get("enabled");
+    const newState = !this.buffered.get("enabled");
+
+    this.buffered.set("enabled", newState);
+    this.model.save({ enabled: newState }).catch((error) => {
+      this.buffered.set("enabled", originalState);
+      return popupAjaxError(error);
+    });
   }
 }
