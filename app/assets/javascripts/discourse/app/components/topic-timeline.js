@@ -6,7 +6,7 @@ import { bind } from "discourse-common/utils/decorators";
 import I18n from "I18n";
 import { action } from "@ember/object";
 
-export default class GlimmerTopicTimeline extends Component {
+export default class TopicTimeline extends Component {
   @service siteSettings;
   @service currentUser;
 
