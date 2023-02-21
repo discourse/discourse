@@ -22,7 +22,11 @@ class SidebarSectionsController < ApplicationController
 
     if sidebar_section.public?
       StaffActionLogger.new(current_user).log_create_public_sidebar_section(sidebar_section)
-      MessageBus.publish("/refresh-sidebar-sections", nil)
+      MessageBus.publish(
+        "/refresh-sidebar-sections",
+        nil,
+        group_ids: SiteSetting.enable_custom_sidebar_sections_map,
+      )
     end
 
     render json: SidebarSectionSerializer.new(sidebar_section)
@@ -38,7 +42,11 @@ class SidebarSectionsController < ApplicationController
 
     if sidebar_section.public?
       StaffActionLogger.new(current_user).log_update_public_sidebar_section(sidebar_section)
-      MessageBus.publish("/refresh-sidebar-sections", nil)
+      MessageBus.publish(
+        "/refresh-sidebar-sections",
+        nil,
+        group_ids: SiteSetting.enable_custom_sidebar_sections_map,
+      )
     end
 
     render json: SidebarSectionSerializer.new(sidebar_section)
@@ -55,7 +63,11 @@ class SidebarSectionsController < ApplicationController
 
     if sidebar_section.public?
       StaffActionLogger.new(current_user).log_destroy_public_sidebar_section(sidebar_section)
-      MessageBus.publish("/refresh-sidebar-sections", nil)
+      MessageBus.publish(
+        "/refresh-sidebar-sections",
+        nil,
+        group_ids: SiteSetting.enable_custom_sidebar_sections_map,
+      )
     end
     render json: SidebarSectionSerializer.new(sidebar_section)
   rescue Discourse::InvalidAccess

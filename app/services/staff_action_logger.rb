@@ -965,7 +965,6 @@ class StaffActionLogger
   end
 
   def log_create_public_sidebar_section(section)
-    raise Discourse::InvalidParameters.new(:section) if section.nil?
     UserHistory.create!(
       action: UserHistory.actions[:create_public_sidebar_section],
       acting_user_id: @admin.id,
@@ -975,7 +974,6 @@ class StaffActionLogger
   end
 
   def log_update_public_sidebar_section(section)
-    raise Discourse::InvalidParameters.new(:section) if section.nil?
     UserHistory.create!(
       action: UserHistory.actions[:update_public_sidebar_section],
       acting_user_id: @admin.id,
@@ -985,7 +983,6 @@ class StaffActionLogger
   end
 
   def log_destroy_public_sidebar_section(section)
-    raise Discourse::InvalidParameters.new(:section) if section.nil?
     UserHistory.create!(
       action: UserHistory.actions[:destroy_public_sidebar_section],
       acting_user_id: @admin.id,
