@@ -106,38 +106,18 @@ class ReviewableFlaggedPost < Reviewable
     end
     if guardian.can_delete_post_or_topic?(post)
       build_action(actions, :delete_and_ignore, icon: "far-trash-alt", bundle: ignore)
+      if post.reply_count > 0
+        build_action(
+          actions,
+          :delete_and_ignore_replies,
+          icon: "far-trash-alt",
+          confirm: true,
+          bundle: ignore,
+        )
+      end
     end
 
     delete_user_actions(actions) if potential_spam? && guardian.can_delete_user?(target_created_by)
-
-    # if guardian.can_delete_post_or_topic?(post)
-    #   delete =
-    #     actions.add_bundle(
-    #       "#{id}-delete",
-    #       icon: "far-trash-alt",
-    #       label: "reviewables.actions.delete.title",
-    #     )
-    #   build_action(actions, :delete_and_ignore, icon: "external-link-alt", bundle: delete)
-    #   if post.reply_count > 0
-    #     build_action(
-    #       actions,
-    #       :delete_and_ignore_replies,
-    #       icon: "external-link-alt",
-    #       confirm: true,
-    #       bundle: delete,
-    #     )
-    #   end
-    #   build_action(actions, :delete_and_agree, icon: "thumbs-up", bundle: delete)
-    #   if post.reply_count > 0
-    #     build_action(
-    #       actions,
-    #       :delete_and_agree_replies,
-    #       icon: "external-link-alt",
-    #       bundle: delete,
-    #       confirm: true,
-    #     )
-    #   end
-    # end
   end
 
   def perform_ignore_and_do_nothing(performed_by, args)
