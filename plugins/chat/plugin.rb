@@ -204,7 +204,6 @@ after_initialize do
   load File.expand_path("../lib/steps_inspector.rb", __FILE__)
   load File.expand_path("../app/jobs/regular/auto_join_channel_memberships.rb", __FILE__)
   load File.expand_path("../app/jobs/regular/auto_join_channel_batch.rb", __FILE__)
-  load File.expand_path("../app/jobs/regular/auto_remove_channel_memberships.rb", __FILE__)
   load File.expand_path(
          "../app/jobs/regular/auto_remove_membership_handle_category_updated.rb",
          __FILE__,
