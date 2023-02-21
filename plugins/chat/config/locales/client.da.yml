@@ -147,6 +147,7 @@ da:
         create: "Opret kanal"
         description: "Beskrivelse (valgfrit)"
         name: "Kanal navn"
+        title: "Ny kanal"
         type: "Type"
         types:
           category: "Kategori"

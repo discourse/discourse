@@ -251,6 +251,7 @@ sr:
         count: Broj
     post_edits:
       labels:
+        post: Post
         editor: Urednik
         edit_reason: Razlog
     user_flagging_ratio:
@@ -264,6 +265,7 @@ sr:
         flag: Tip
     consolidated_page_views:
       labels:
+        post: Post
         editor: Urednik
         edit_reason: Razlog
     consolidated_api_requests:
@@ -509,6 +511,7 @@ sr:
       approve:
         title: "Odobri"
       reject_user:
+        title: "Obriši Korisnika..."
         delete:
           title: "Obriši Korisnika"
       reject:

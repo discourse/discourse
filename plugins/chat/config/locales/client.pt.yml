@@ -106,6 +106,7 @@ pt:
         open: "Abrir"
       browse:
         back: "Retroceder"
+        title: Canais
         filter_all: Tudo
         filter_closed: Fechado
       chat_message_separator:
@@ -129,6 +130,7 @@ pt:
         title: Nova Mensagem
         prefix: "Para:"
       create_channel:
+        title: "Novo canal"
         type: "Tipo"
         types:
           category: "Categoria"

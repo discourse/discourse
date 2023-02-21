@@ -250,6 +250,8 @@ pl_PL:
           about: O stronie
           members: Członkowie
           settings: Ustawienia
+      channel_edit_name_modal:
+        input_placeholder: Dodaj nazwę
       channel_edit_description_modal:
         title: Edytuj opis
         input_placeholder: Dodaj opis

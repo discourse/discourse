@@ -1798,6 +1798,7 @@ ko:
       categories_and_top_topics: "카테고리 및 주요 글"
       categories_boxes: "서브카테고리가 있는 박스"
       categories_boxes_with_topics: "추천 주제의 박스"
+      subcategories_with_featured_topics: "추천 글이 포함된 하위 카테고리"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -3178,6 +3179,9 @@ ko:
         help: "읽지 않은 게시물을 포함한 현재 구독 또는 추적 중인 주제"
         lower_title_with_count:
           other: "%{count} unread"
+      unseen:
+        title: "읽지 않음"
+        lower_title: "읽지 않음"
       new:
         lower_title_with_count:
           other: "%{count} new"
@@ -3559,6 +3563,7 @@ ko:
               content: "카테고리 추가"
           click_to_get_started: "시작하려면 여기를 클릭하십시오."
           header_link_text: "카테고리"
+          configure_defaults: "기본값 구성"
         community:
           header_link_text: "커뮤니티"
           links:
@@ -3586,6 +3591,7 @@ ko:
     welcome_topic_banner:
       title: "환영 글 만들기"
       button_title: "편집 시작"
+    until: "까지:"
   admin_js:
     type_to_filter: "필터링하려면 입력..."
     admin:

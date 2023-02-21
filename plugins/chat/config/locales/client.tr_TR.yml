@@ -237,6 +237,10 @@ tr_TR:
           about: Hakkında
           members: Üyeler
           settings: Ayarlar
+      channel_edit_name_modal:
+        title: İsmi düzenle
+        input_placeholder: İsim ekle
+        description: Kanalınıza kısa ve açıklayıcı bir isim verin
       channel_edit_description_modal:
         title: Açıklamayı düzenle
         input_placeholder: Açıklama ekle

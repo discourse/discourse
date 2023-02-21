@@ -199,6 +199,8 @@ hu:
           about: Névjegy
           members: Tagok
           settings: Beállítások
+      channel_edit_name_modal:
+        input_placeholder: Név hozzáadása
       channel_edit_description_modal:
         title: Leírás szerkesztése
         input_placeholder: Leírás hozzáadása

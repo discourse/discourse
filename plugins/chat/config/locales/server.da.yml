@@ -70,6 +70,7 @@ da:
       chat_pm_body: "%{link}\n\n%{message}"
   user_notifications:
     chat_summary:
+      deleted_user: "Slettet bruger"
       from: "%{site_name}"
   unsubscribe:
     chat_summary:

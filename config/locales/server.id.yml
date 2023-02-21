@@ -585,6 +585,7 @@ id:
       min_username_length_range: "Anda tidak boleh menentukan minimum lebih dari maksimum."
       max_username_length_range: "Anda tidak bisa menentukan jumlah maksimum dibawah jumlah minimum."
   search:
+    within_post: "#%{post_number} oleh %{username}"
     types:
       category: "Kategori"
       topic: "Hasil"
@@ -663,6 +664,8 @@ id:
   badges:
     member:
       name: Anggota
+    regular:
+      name: Umum
     first_quote:
       name: Kutipan Pertama
     read_guidelines:
@@ -701,9 +704,12 @@ id:
   joined: "Joined"
   reviewables:
     priorities:
+      low: "Rendah"
       medium: "Sedang"
       high: "Tinggi"
     sensitivity:
+      disabled: "Dinonaktifkan"
+      low: "Rendah"
       medium: "Sedang"
       high: "Tinggi"
     actions:
@@ -714,6 +720,7 @@ id:
       approve:
         title: "Terima"
       reject_user:
+        title: "Hapus Pengguna..."
         delete:
           title: "Hapus Pengguna"
       reject:

@@ -84,7 +84,7 @@ ru:
           title: "Заморозить пользователя"
           description: "Согласиться с жалобой и заморозить пользователя."
         agree_and_silence:
-          title: "Pf,kjrbhjdfnm gjkmpjdfntkz"
+          title: "Заблокировать пользователя"
           description: "Согласиться с жалобой и блокировать пользователя."
         agree_and_restore:
           title: "Восстановить сообщение"

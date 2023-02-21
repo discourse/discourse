@@ -122,6 +122,11 @@ he:
           many: "נשלחו הזמנות"
           other: "נשלחו הזמנות"
         invite: "הזמנה לערוץ"
+        without_membership:
+          one: "לא הצטרפו לערוץ הזה: %{username}."
+          two: "לא הצטרפו לערוץ הזה: %{username} ועוד %{others}."
+          many: "לא הצטרפו לערוץ הזה: %{username} ועוד %{others}."
+          other: "לא הצטרפו לערוץ הזה: %{username} ועוד %{others}."
         group_mentions_disabled:
           one: "אזכורים אסורים בקבוצה %{group_name}"
           two: "אזכורים אסורים בקבוצה %{group_name} ובעוד %{others}"
@@ -147,6 +152,11 @@ he:
             many: "אזכורים אסורים בקבוצה ‎@%{group} ובקבוצה ‎@%{group_2}"
             other: "אזכורים אסורים בקבוצה ‎@%{group} ובקבוצה ‎@%{group_2}"
           unreachable_multiple: "‎@%{group} ועוד %{count} נוספות לא מרשות לאזכר"
+          too_many_members:
+            one: "אזכור ‎@%{group} חורג מ%{notification_limit} של %{limit}"
+            two: "אזכור של ‎@%{group} או ‎@%{group_2} חורג מ%{notification_limit} של %{limit}"
+            many: "אזכור של @%{group} או @%{group_2} חורג מ%{notification_limit} של %{limit}"
+            other: "אזכור של @%{group} או @%{group_2} חורג מ%{notification_limit} של %{limit}"
           too_many_members_multiple: "%{count} קבוצות אלו חורגות מ%{notification_limit} של %{limit}"
           users_limit:
             one: "משתמש/ת %{count}"
@@ -220,6 +230,8 @@ he:
         read_only: "לקריאה בלבד"
         archived_header: "הערוץ בארכיון"
         archived: "בארכיון"
+        archive_failed: "העברת הערוץ לארכיון נכשלה. %{completed}/%{total} הודעות הועברו לארכיון. <a target=\"_blank\" href=\"%{topic_url}\">נושא היעד</a>. יש ללחוץ על לנסות שוב כדי לנסות להעביר שוב לארכיון."
+        archive_failed_no_topic: "העברת הערוץ לארכיון נכשלה. %{completed}/%{total} הודעות הועברו לארכיון, נושא היעד לא נוצר. יש ללחוץ על לנסות שוב כדי לנסות להעביר שוב לארכיון."
         archive_completed: "אפשר לעיין ב<a target=\"_blank\" href=\"%{topic_url}\">ארכיון הנושא</a>"
         closed_header: "הערוץ סגור"
         closed: "סגורה"
@@ -324,6 +336,7 @@ he:
         always: "לכל פעילות"
       settings:
         channel_wide_mentions_label: "לאפשר אזכורים של ‎@all (כולם) ו־‎@here (כאן)"
+        channel_wide_mentions_description: "לאפשר למשתמשים להודיע לכל החברים שב־‎#%{channel} באמצעות ‎@all (כולם) או רק לאלו שפעילים כרגע עם ‎@here (כאן)"
         auto_join_users_label: "להוסיף משתמשים אוטומטית"
         auto_join_users_info: "לבדוק כל שעה אילו משתמשים היו פעילים ב־3 החודשים האחרונים ואם יש להם גישה לקטגוריה %{category}, להוסיף אותם לערוץ הזה."
         enable_auto_join_users: "להוסיף אוטומטית את כל המשתמשים שהיו פעילים לאחרונה"

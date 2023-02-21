@@ -437,6 +437,8 @@ bg:
     read: "четене"
     otp_confirmation:
       confirm_title: Продължете към %{site_name}
+      logging_in_as: Влизане като %{username}
+      confirm_button: Завършете влизането
   reports:
     default:
       labels:
@@ -654,6 +656,7 @@ bg:
     memory_warning: "Вашият сървър използва по-малко от 1 ГБ от общата памет. Препоръчва се най-малко 1 ГБ."
     subfolder_ends_in_slash: "Вашата настройка за подпапка е неправилна; DISCOURSE_RELATIVE_URL_ROOT завършва с наклонена черта."
   site_settings:
+    disabled: "деактивирани"
     censored_words: "Думите които ще бъдат автоматично заменени с &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Автоматично изтриване на всички скрити постове, които остават скрити за повече от 30 дни."
     allow_user_locale: "Позволи на потребителите да избират език на интерфейса"
@@ -859,6 +862,7 @@ bg:
     default_other_external_links_in_new_tab: "Отваряй външните връзки в нов раздел по подразбиране."
     default_other_enable_quoting: "Включи отговор с цитат при маркиран текст по подразбиране."
     default_other_dynamic_favicon: "Покажи броя на новите / обновените теми в иконата на браузъра по подразбиране."
+    default_other_skip_new_user_tips: "Пропуснете съвети и значки за въвеждане на нови потребители."
     default_categories_watching: "Списък с категории, които са прегледани, по подразбиране."
     default_categories_tracking: "Списък с категории, които са следени, по подразбиране."
     default_categories_muted: "Списък с категории, които са заглушени, по подразбиране."
@@ -915,6 +919,12 @@ bg:
     autoclosed_disabled: "Тази тема сега е отворена. Новите отговори са разрешени."
     autoclosed_disabled_lastpost: "Тази тема сега е отворена. Новите отговори са разрешени."
   login:
+    security_key_description: "Когато сте подготвили вашия физически ключ за сигурност, натиснете бутона Удостоверяване с ключ за сигурност по-долу."
+    security_key_alternative: "Опитайте друг начин"
+    security_key_authenticate: "Удостоверяване с ключ за сигурност"
+    security_key_not_allowed_error: "Процесът на удостоверяване на ключа за сигурност или изтече, или беше анулиран."
+    security_key_no_matching_credential_error: "В предоставения ключ за сигурност не бяха намерени съответстващи идентификационни данни."
+    security_key_support_missing_error: "Вашето текущо устройство или браузър не поддържа използването на ключове за сигурност. Моля, използвайте различен метод."
     not_approved: "Вашият профил все още не е одобрен. Ще бъдете уведомени с имейл когато е възможно влизането Ви. "
     incorrect_username_email_or_password: "Грешно потребителско име, имейл или парола."
     wait_approval: "Благодарим Ви за регистрацията. Ще Ви уведомим когато вашият профил е одобрен."
@@ -934,7 +944,11 @@ bg:
     missing_user_field: "Вие не сте попълнили всички потребителски полета."
     auth_complete: "Удостоверяването е завършено."
     click_to_continue: "Кликнете тук, за да продължите."
+    second_factor_title: "Двуфакторна автентификация"
     second_factor_description: "Моля, въведете необходимият код за удостоверяване от приложението си:"
+    second_factor_backup_description: "Моля, въведете един от вашите резервни кодове:"
+    second_factor_toggle:
+      backup_code: "Вместо това използвайте резервен код"
   admin:
     email:
       sent_test: "изпратено!"
@@ -1281,6 +1295,14 @@ bg:
             choices:
               latest:
                 label: "Последни теми"
+              categories_only:
+                label: "Само категории"
+              categories_with_featured_topics:
+                label: "Категории с избрани теми"
+              categories_and_latest_topics:
+                label: "Категории и най-новите теми"
+              categories_and_top_topics:
+                label: "Категории и топ теми"
       invites:
         title: "Поканете персонал"
       finished:
@@ -1301,9 +1323,12 @@ bg:
       confirm_body: "Успех! Известяването е включено."
   reviewables:
     priorities:
+      low: "Ниска"
       medium: "Среден"
       high: "Висок"
     sensitivity:
+      disabled: "Деактивирани"
+      low: "Ниска"
       medium: "Среден"
       high: "Висок"
     actions:
@@ -1319,6 +1344,8 @@ bg:
         description: "Възстанови тази публикация така че всички потребители да могат да я виждат."
       disagree:
         title: "Не съм съгласен "
+      ignore:
+        title: "Игнорирай"
       approve:
         title: "Одобри"
       reject_user:
