@@ -16,6 +16,14 @@ import pretender from "discourse/tests/helpers/create-pretender";
 acceptance("Category Edit", function (needs) {
   needs.user();
   needs.settings({ email_in: true, tagging_enabled: true });
+  needs.pretender((server, helper) => {
+    server.get("/admin/customize/form-templates.json", () => {
+      const result = {
+        form_templates: [],
+      };
+      return helper.response(200, result);
+    });
+  });
 
   test("Editing the category", async function (assert) {
     await visit("/c/bug");
