@@ -133,7 +133,7 @@
             @uploads={{@message.uploads}}
             @edited={{@message.edited}}
           >
-            {{#if this.hasReactions}}
+            {{#if @message.hasReactions}}
               <div class="chat-message-reaction-list">
                 {{#if this.reactionLabel}}
                   <div class="reaction-users-list">
@@ -149,7 +149,8 @@
                       count=reactionAttrs.count
                       reacted=reactionAttrs.reacted
                     }}
-                    @react={{this.react}}
+                    @messageActionsHandler={{@messageActionsHandler}}
+                    @message={{@message}}
                     @showUsersList={{true}}
                   />
                 {{/each-in}}

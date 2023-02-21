@@ -10,7 +10,8 @@ export default class ChatMessageReaction extends Component {
   reaction = null;
   showUsersList = false;
   tagName = "";
-  react = null;
+  message = null;
+  messageActionsHandler = null;
   class = null;
 
   didReceiveAttrs() {
@@ -47,7 +48,11 @@ export default class ChatMessageReaction extends Component {
 
   @action
   handleClick() {
-    this?.react(this.reaction.emoji, this.reaction.reacted ? "remove" : "add");
+    this?.messageActionsHandler.react(
+      this.message,
+      this.reaction.emoji,
+      this.reaction.reacted ? "remove" : "add"
+    );
     return false;
   }
 

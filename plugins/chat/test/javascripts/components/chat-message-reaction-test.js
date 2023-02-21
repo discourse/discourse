@@ -71,12 +71,15 @@ module("Discourse Chat | Component | chat-message-reaction", function (hooks) {
 
   test("click action", async function (assert) {
     this.set("count", 0);
-    this.set("react", () => {
-      this.set("count", 1);
+    this.set("message", { id: 1 });
+    this.set("messageActionsHandler", {
+      react: () => {
+        this.set("count", 1);
+      },
     });
 
     await render(hbs`
-      <ChatMessageReaction class="show" @reaction={{hash emoji="heart" count=this.count}} @react={{this.react}} />
+      <ChatMessageReaction class="show" @reaction={{hash emoji="heart" count=this.count}} @message={{this.message}} @messageActionsHandler={{this.messageActionsHandler}} />
     `);
 
     assert.false(exists(".chat-message-reaction .count"));

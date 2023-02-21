@@ -1,11 +1,16 @@
 import getURL from "discourse-common/lib/get-url";
+import { bind } from "discourse-common/utils/decorators";
+import { isTesting } from "discourse-common/config/environment";
 import { clipboardCopy } from "discourse/lib/utilities";
+import { REACTIONS } from "discourse/plugins/chat/discourse/models/chat-message";
 
 export default class ChatMessageActions {
   livePanel = null;
+  currentUser = null;
 
-  constructor(livePanel) {
+  constructor(livePanel, currentUser) {
     this.livePanel = livePanel;
+    this.currentUser = currentUser;
   }
 
   copyLink(message) {
@@ -32,6 +37,45 @@ export default class ChatMessageActions {
     for (let i = sortedIndices[0]; i <= sortedIndices[1]; i++) {
       this.livePanel.messages[i].set("selected", checked);
     }
+  }
+
+  @bind
+  react(message, emoji, reactAction) {
+    if (
+      !this.livePanel.canInteractWithChat ||
+      message.loadingReactions.includes(emoji)
+    ) {
+      return;
+    }
+
+    if (this.livePanel.capabilities.canVibrate && !isTesting()) {
+      navigator.vibrate(5);
+    }
+
+    if (this.livePanel.site.mobileView) {
+      this.livePanel.hoverMessage(null);
+    }
+
+    message.loadingReactions.push(emoji);
+    message.updateReactionsList(emoji, reactAction, this.currentUser, true);
+
+    if (reactAction === REACTIONS.add) {
+      this.livePanel.chatEmojiReactionStore.track(`:${emoji}:`);
+    }
+
+    return message
+      .publishReaction(emoji, reactAction)
+      .then(() => {
+        this.livePanel.onReactMessage();
+      })
+      .catch(() => {
+        message.updateReactionsList(
+          emoji,
+          REACTIONS.remove,
+          this.currentUser,
+          true
+        );
+      });
   }
 
   #findIndexOfMessage(message) {

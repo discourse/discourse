@@ -1,4 +1,5 @@
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
+import { getOwner } from "discourse-common/lib/get-owner";
 import { cloneJSON } from "discourse-common/lib/object";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import ChatMessageActions from "discourse/plugins/chat/discourse/lib/chat-message-actions";
@@ -90,8 +91,11 @@ export default Component.extend({
     this.set("unreachableGroupMentions", []);
     this.set("overMembersLimitGroupMentions", []);
 
-    this.livePanel = new ChatLivePanel();
-    this.messageActionsHandler = new ChatMessageActions(this.livePanel);
+    this.livePanel = new ChatLivePanel(getOwner(this));
+    this.messageActionsHandler = new ChatMessageActions(
+      this.livePanel,
+      this.currentUser
+    );
   },
 
   didInsertElement() {
@@ -182,11 +186,16 @@ export default Component.extend({
     }
   },
 
-  // TODO (martin) Not ideal....we need this to be trackedarray here
+  // TODO (martin) Not ideal....neither of these. We need both of these to only
+  // be tracked in one place. Messages should be be trackedarray here
   // too or ideally just move messages onto the channel
   @observes("messages")
   onMessagesChange() {
     this.livePanel.messages = this.messages;
+  },
+  @observes("details")
+  onDetailsChange() {
+    this.livePanel.details = this.details;
   },
 
   @discourseComputed("chatChannel.isDirectMessageChannel")
@@ -1297,65 +1306,6 @@ export default Component.extend({
     if (this.stickyScroll) {
       this._stickScrollToBottom();
     }
-  },
-
-  @action
-  onHoverMessage(message, options = {}, event) {
-    if (this.site.mobileView && options.desktopOnly) {
-      return;
-    }
-
-    if (message?.staged) {
-      return;
-    }
-
-    if (
-      this.hoveredMessageId &&
-      message?.id &&
-      this.hoveredMessageId === message?.id
-    ) {
-      return;
-    }
-
-    if (event) {
-      if (
-        event.type === "mouseleave" &&
-        (event.toElement || event.relatedTarget)?.closest(
-          ".chat-message-actions-desktop-anchor"
-        )
-      ) {
-        return;
-      }
-
-      if (
-        event.type === "mouseenter" &&
-        (event.fromElement || event.relatedTarget)?.closest(
-          ".chat-message-actions-desktop-anchor"
-        )
-      ) {
-        this.set("hoveredMessageId", message?.id);
-        return;
-      }
-    }
-
-    this._onHoverMessageDebouncedHandler = discourseDebounce(
-      this,
-      this.debouncedOnHoverMessage,
-      message,
-      250
-    );
-  },
-
-  @bind
-  debouncedOnHoverMessage(message) {
-    if (this._selfDeleted) {
-      return;
-    }
-
-    this.set(
-      "hoveredMessageId",
-      message?.id && message.id !== this.hoveredMessageId ? message.id : null
-    );
   },
 
   _reportReplyingPresence(composerValue) {

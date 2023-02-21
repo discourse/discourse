@@ -9,7 +9,8 @@
       {{#each @emojiReactions as |reaction|}}
         <ChatMessageReaction
           @reaction={{reaction}}
-          @react={{@messageActions.react}}
+          @messageActionsHandler={{@messageActionsHandler}}
+          @message={{@message}}
           @class="show"
         />
       {{/each}}

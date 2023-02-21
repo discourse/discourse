@@ -1,5 +1,6 @@
 import Bookmark from "discourse/models/bookmark";
 import { openBookmarkModal } from "discourse/controllers/bookmark";
+import { REACTIONS } from "discourse/plugins/chat/discourse/models/chat-message";
 import { isTesting } from "discourse-common/config/environment";
 import Component from "@glimmer/component";
 import I18n from "I18n";
@@ -28,8 +29,6 @@ export function resetChatMessageDecorators() {
 }
 
 export const MENTION_KEYWORDS = ["here", "all"];
-
-export const REACTIONS = { add: "add", remove: "remove" };
 
 export default class ChatMessage extends Component {
   @service site;
@@ -243,9 +242,7 @@ export default class ChatMessage extends Component {
   get messageActions() {
     return {
       reply: this.reply,
-      react: this.react,
       edit: this.edit,
-      selectMessage: this.selectMessage,
       flag: this.flag,
       deleteMessage: this.deleteMessage,
       restore: this.restore,
@@ -397,12 +394,6 @@ export default class ChatMessage extends Component {
     );
   }
 
-  get hasReactions() {
-    return Object.values(this.args.message.get("reactions")).some(
-      (r) => r.count > 0
-    );
-  }
-
   get mentionWarning() {
     return this.args.message.get("mentionWarning");
   }
@@ -502,7 +493,11 @@ export default class ChatMessage extends Component {
       return;
     }
 
-    this.react(emoji, REACTIONS.remove);
+    this.args.messageActionsHandler.react(
+      this.args.message,
+      emoji,
+      REACTIONS.remove
+    );
   }
 
   @action
@@ -511,117 +506,33 @@ export default class ChatMessage extends Component {
       return;
     }
 
-    this.react(emoji, REACTIONS.add);
+    this.args.messageActionsHandler.react(
+      this.args.message,
+      emoji,
+      REACTIONS.add
+    );
   }
 
   @bind
   _handleReactionMessage(busData) {
-    const loadingReactionIndex = this._loadingReactions.indexOf(busData.emoji);
+    const loadingReactionIndex = this.args.message.loadingReactions.indexOf(
+      busData.emoji
+    );
     if (loadingReactionIndex > -1) {
-      return this._loadingReactions.splice(loadingReactionIndex, 1);
+      return this.args.message.loadingReactions.splice(loadingReactionIndex, 1);
     }
 
-    this._updateReactionsList(busData.emoji, busData.action, busData.user);
+    this.args.message.updateReactionsList(
+      busData.emoji,
+      busData.action,
+      busData.user,
+      this.currentUser.id === busData.user.id
+    );
     this.args.afterReactionAdded();
   }
 
   get capabilities() {
     return getOwner(this).lookup("capabilities:main");
-  }
-
-  @action
-  react(emoji, reactAction) {
-    if (
-      !this.args.canInteractWithChat ||
-      this._loadingReactions.includes(emoji)
-    ) {
-      return;
-    }
-
-    if (this.capabilities.canVibrate && !isTesting()) {
-      navigator.vibrate(5);
-    }
-
-    if (this.site.mobileView) {
-      this.args.onHoverMessage(null);
-    }
-
-    this._loadingReactions.push(emoji);
-    this._updateReactionsList(emoji, reactAction, this.currentUser);
-
-    if (reactAction === REACTIONS.add) {
-      this.chatEmojiReactionStore.track(`:${emoji}:`);
-    }
-
-    return this._publishReaction(emoji, reactAction).then(() => {
-      // creating reaction will create a membership if not present
-      // so we will fully refresh if we were not members of the channel
-      // already
-      if (!this.args.chatChannel.isFollowing || this.args.chatChannel.isDraft) {
-        return this.args.chatChannelsManager
-          .getChannel(this.args.chatChannel.id)
-          .then((reactedChannel) => {
-            this.router.transitionTo("chat.channel", "-", reactedChannel.id);
-          });
-      }
-    });
-  }
-
-  _updateReactionsList(emoji, reactAction, user) {
-    const selfReacted = this.currentUser.id === user.id;
-    if (this.args.message.reactions[emoji]) {
-      if (
-        selfReacted &&
-        reactAction === REACTIONS.add &&
-        this.args.message.reactions[emoji].reacted
-      ) {
-        // User is already has reaction added; do nothing
-        return false;
-      }
-
-      let newCount =
-        reactAction === REACTIONS.add
-          ? this.args.message.reactions[emoji].count + 1
-          : this.args.message.reactions[emoji].count - 1;
-
-      this.args.message.reactions.set(`${emoji}.count`, newCount);
-      if (selfReacted) {
-        this.args.message.reactions.set(
-          `${emoji}.reacted`,
-          reactAction === REACTIONS.add
-        );
-      } else {
-        this.args.message.reactions[emoji].users.pushObject(user);
-      }
-
-      this.args.message.notifyPropertyChange("reactions");
-    } else {
-      if (reactAction === REACTIONS.add) {
-        this.args.message.reactions.set(emoji, {
-          count: 1,
-          reacted: selfReacted,
-          users: selfReacted ? [] : [user],
-        });
-      }
-
-      this.args.message.notifyPropertyChange("reactions");
-    }
-  }
-
-  _publishReaction(emoji, reactAction) {
-    return ajax(
-      `/chat/${this.args.message.chat_channel_id}/react/${this.args.message.id}`,
-      {
-        type: "PUT",
-        data: {
-          react_action: reactAction,
-          emoji,
-        },
-      }
-    ).catch((errResult) => {
-      popupAjaxError(errResult);
-      this._updateReactionsList(emoji, REACTIONS.remove, this.currentUser);
-    });
   }
 
   // TODO(roman): For backwards-compatibility.

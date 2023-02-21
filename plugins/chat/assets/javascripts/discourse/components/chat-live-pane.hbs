@@ -76,8 +76,8 @@
         @selectingMessages={{this.livePanel.selectingMessages}}
         @fullPage={{this.fullPage}}
         @afterReactionAdded={{action "reStickScrollIfNeeded"}}
-        @isHovered={{eq message.id this.hoveredMessageId}}
-        @onHoverMessage={{this.onHoverMessage}}
+        @isHovered={{eq message.id this.livePanel.hoveredMessageId}}
+        @onHoverMessage={{this.livePanel.hoverMessage}}
         @resendStagedMessage={{this.resendStagedMessage}}
         @messageActionsHandler={{this.messageActionsHandler}}
       />

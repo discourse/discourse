@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { getOwner } from "discourse-common/lib/get-owner";
 import I18n from "I18n";
 import { inject as service } from "@ember/service";
 import ChatMessageActions from "discourse/plugins/chat/discourse/lib/chat-message-actions";
@@ -16,8 +17,11 @@ export default class ChatThread extends Component {
   constructor() {
     super(...arguments);
 
-    this.livePanel = new ChatThreadLivePanel();
-    this.messageActionsHandler = new ChatMessageActions(this.livePanel);
+    this.livePanel = new ChatThreadLivePanel(getOwner(this));
+    this.messageActionsHandler = new ChatMessageActions(
+      this.livePanel,
+      this.currentUser
+    );
   }
 
   get thread() {
