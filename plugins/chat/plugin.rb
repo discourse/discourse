@@ -205,6 +205,18 @@ after_initialize do
   load File.expand_path("../app/jobs/regular/auto_join_channel_memberships.rb", __FILE__)
   load File.expand_path("../app/jobs/regular/auto_join_channel_batch.rb", __FILE__)
   load File.expand_path("../app/jobs/regular/auto_remove_channel_memberships.rb", __FILE__)
+  load File.expand_path(
+         "../app/jobs/regular/auto_remove_membership_handle_category_updated.rb",
+         __FILE__,
+       )
+  load File.expand_path(
+         "../app/jobs/regular/auto_remove_membership_handle_user_removed_from_group.rb",
+         __FILE__,
+       )
+  load File.expand_path(
+         "../app/jobs/regular/auto_remove_membership_handle_chat_allowed_groups_change.rb",
+         __FILE__,
+       )
   load File.expand_path("../app/jobs/regular/process_chat_message.rb", __FILE__)
   load File.expand_path("../app/jobs/regular/chat_channel_archive.rb", __FILE__)
   load File.expand_path("../app/jobs/regular/chat_channel_delete.rb", __FILE__)
@@ -504,11 +516,8 @@ after_initialize do
 
     if name == :chat_allowed_groups
       Jobs.enqueue(
-        :auto_remove_channel_memberships,
-        event_type: :chat_allowed_groups_changed,
-        event_data: {
-          new_allowed_groups: new_value,
-        },
+        :auto_remove_membership_handle_chat_allowed_groups_change,
+        new_allowed_groups: new_value,
       )
     end
   end
@@ -595,13 +604,7 @@ after_initialize do
   end
 
   on(:user_removed_from_group) do |user, group|
-    Jobs.enqueue(
-      :auto_remove_channel_memberships,
-      event_type: :user_removed_from_group,
-      event_data: {
-        user_id: user.id,
-      },
-    )
+    Jobs.enqueue(:auto_remove_membership_handle_user_removed_from_group, user_id: user.id)
   end
 
   on(:category_updated) do |category|
@@ -617,13 +620,7 @@ after_initialize do
         ).enforce_automatic_channel_memberships
       end
 
-      Jobs.enqueue(
-        :auto_remove_channel_memberships,
-        event_type: :category_updated,
-        event_data: {
-          category_id: category.id,
-        },
-      )
+      Jobs.enqueue(:auto_remove_membership_handle_category_updated, category_id: category.id)
     end
   end
 
