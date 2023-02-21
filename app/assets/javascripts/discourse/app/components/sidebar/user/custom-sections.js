@@ -3,10 +3,24 @@ import showModal from "discourse/lib/show-modal";
 import { inject as service } from "@ember/service";
 import RouteInfoHelper from "discourse/lib/sidebar/route-info-helper";
 import I18n from "I18n";
+import { ajax } from "discourse/lib/ajax";
 
 export default class SidebarUserCustomSections extends Component {
   @service currentUser;
   @service router;
+  @service messageBus;
+
+  constructor() {
+    super(...arguments);
+    this.messageBus.subscribe(
+      "/refresh-sidebar-sections",
+      this._refresh.bind(this)
+    );
+  }
+
+  willDestroy() {
+    this.messageBus.unsubscribe("/refresh-sidebar-sections");
+  }
 
   get sections() {
     this.currentUser.sidebarSections.forEach((section) => {
@@ -28,5 +42,11 @@ export default class SidebarUserCustomSections extends Component {
       });
     });
     return this.currentUser.sidebarSections;
+  }
+
+  _refresh() {
+    return ajax("/sidebar_sections.json", {}).then((json) => {
+      this.currentUser.set("sidebar_sections", json.sidebar_sections);
+    });
   }
 }

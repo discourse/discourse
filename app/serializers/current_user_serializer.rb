@@ -80,6 +80,7 @@ class CurrentUserSerializer < BasicUserSerializer
   def sidebar_sections
     SidebarSection
       .where("public OR user_id = ?", object.id)
+      .order("(public IS TRUE) DESC")
       .map { |section| SidebarSectionSerializer.new(section, root: false) }
   end
 

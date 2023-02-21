@@ -12,6 +12,29 @@ RSpec.describe SidebarSectionsController do
     SiteSetting.enable_custom_sidebar_sections = group.id.to_s
   end
 
+  describe "#index" do
+    fab!(:sidebar_section) { Fabricate(:sidebar_section, title: "private section", user: user) }
+    fab!(:sidebar_url_1) { Fabricate(:sidebar_url, name: "tags", value: "/tags") }
+    fab!(:section_link_1) do
+      Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url_1)
+    end
+    fab!(:sidebar_section_2) do
+      Fabricate(:sidebar_section, title: "public section", user: admin, public: true)
+    end
+    fab!(:section_link_2) do
+      Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url_1)
+    end
+
+    it "returns public and private sections" do
+      sign_in(user)
+      get "/sidebar_sections.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["sidebar_sections"].map { |section| section["title"] }).to eq(
+        ["public section", "private section"],
+      )
+    end
+  end
+
   describe "#create" do
     it "is not available for anonymous" do
       post "/sidebar_sections.json",
@@ -22,7 +45,6 @@ RSpec.describe SidebarSectionsController do
                { icon: "link", name: "tags", value: "/tags" },
              ],
            }
-
       expect(response.status).to eq(403)
     end
 

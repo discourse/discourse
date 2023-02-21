@@ -5,6 +5,15 @@ class SidebarSectionsController < ApplicationController
   before_action :check_if_member_of_group
   before_action :check_access_if_public
 
+  def index
+    sections =
+      SidebarSection
+        .where("public OR user_id = ?", current_user.id)
+        .order("(public IS TRUE) DESC")
+        .map { |section| SidebarSectionSerializer.new(section, root: false) }
+    render json: sections
+  end
+
   def create
     sidebar_section =
       SidebarSection.create!(
@@ -13,6 +22,7 @@ class SidebarSectionsController < ApplicationController
 
     if sidebar_section.public?
       StaffActionLogger.new(current_user).log_create_public_sidebar_section(sidebar_section)
+      MessageBus.publish("/refresh-sidebar-sections", nil)
     end
 
     render json: SidebarSectionSerializer.new(sidebar_section)
@@ -28,6 +38,7 @@ class SidebarSectionsController < ApplicationController
 
     if sidebar_section.public?
       StaffActionLogger.new(current_user).log_update_public_sidebar_section(sidebar_section)
+      MessageBus.publish("/refresh-sidebar-sections", nil)
     end
 
     render json: SidebarSectionSerializer.new(sidebar_section)
@@ -44,6 +55,7 @@ class SidebarSectionsController < ApplicationController
 
     if sidebar_section.public?
       StaffActionLogger.new(current_user).log_destroy_public_sidebar_section(sidebar_section)
+      MessageBus.publish("/refresh-sidebar-sections", nil)
     end
     render json: SidebarSectionSerializer.new(sidebar_section)
   rescue Discourse::InvalidAccess
