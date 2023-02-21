@@ -2,7 +2,7 @@
   {{#each this.sections as |section|}}
     <Sidebar::Section
       @sectionName={{section.slug}}
-      @headerLinkText={{section.title}}
+      @headerLinkText={{section.decoratedTitle}}
       @collapsable={{true}}
       @headerActions={{section.headerActions}}
       @headerActionsIcon="pencil-alt"

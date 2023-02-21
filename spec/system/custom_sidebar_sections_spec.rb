@@ -71,6 +71,7 @@ describe "Custom sidebar sections", type: :system, js: true do
     expect(page).not_to have_css(
       ".sidebar-section-public-section button.sidebar-section-header-button",
     )
+    expect(page).not_to have_css(".sidebar-section-public-section .d-icon-globe")
   end
 
   it "allows the user to delete custom section" do
@@ -100,6 +101,7 @@ describe "Custom sidebar sections", type: :system, js: true do
 
     expect(page).to have_button("Public section")
     expect(page).to have_link("Sidebar Tags")
+    expect(page).to have_css(".sidebar-section-public-section .d-icon-globe")
 
     sidebar.edit_custom_section("Public section")
     section_modal.fill_name("Edited public section")

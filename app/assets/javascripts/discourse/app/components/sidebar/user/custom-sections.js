@@ -4,6 +4,8 @@ import { inject as service } from "@ember/service";
 import RouteInfoHelper from "discourse/lib/sidebar/route-info-helper";
 import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
+import { iconHTML } from "discourse-common/lib/icon-library";
+import { htmlSafe } from "@ember/template";
 
 export default class SidebarUserCustomSections extends Component {
   @service currentUser;
@@ -34,6 +36,10 @@ export default class SidebarUserCustomSections extends Component {
           },
         ];
       }
+      section.decoratedTitle =
+        section.public && this.currentUser.staff
+          ? htmlSafe(`${iconHTML("globe")} ${section.title}`)
+          : section.title;
       section.links.forEach((link) => {
         const routeInfoHelper = new RouteInfoHelper(this.router, link.value);
         link.route = routeInfoHelper.route;
