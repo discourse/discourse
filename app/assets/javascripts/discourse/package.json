@@ -16,7 +16,7 @@
     "test": "ember test"
   },
   "dependencies": {
-    "@babel/core": "^7.20.12",
+    "@babel/core": "^7.21.0",
     "@babel/standalone": "^7.20.15",
     "@discourse/backburner.js": "^2.7.1-0",
     "@discourse/itsatrap": "^2.0.10",
