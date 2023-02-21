@@ -1,6 +1,7 @@
 {{#if this.siteSettings.experimental_form_templates}}
   <div class="control-group">
     <DToggleSwitch
+      class="toggle-template-type"
       @state={{this.showFormTemplate}}
       @label={{this.templateTypeToggleLabel}}
       {{on "click" this.toggleTemplateType}}
@@ -20,7 +21,7 @@
         }}
       />
 
-      <p class="desc">
+      <p class="select-category-template__info desc">
         {{i18n "admin.form_templates.edit_category.select_template_help.info"}}
         <LinkTo @route="adminCustomizeFormTemplates">
           {{i18n

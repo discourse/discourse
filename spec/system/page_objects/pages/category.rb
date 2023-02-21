@@ -36,21 +36,27 @@ module PageObjects
       end
 
       # Edit Category Page
-      def has_template_value?(value)
-        find(".select-category-template", text: value).present?
+      def has_form_template_enabled?
+        find(".d-toggle-switch .toggle-template-type", visible: false)["aria-checked"] == "true"
       end
 
       def has_d_editor?
         page.has_selector?(".d-editor")
       end
 
-      def has_template_preview?(template_content)
-        find("code.language-yaml", text: template_content).present?
+      def has_selected_template?(template_name)
+        find(".select-category-template .select-kit-header")["data-name"] == template_name
       end
 
-      def toggle_form_template(template_name)
+      def toggle_form_templates
+        find(".d-toggle-switch .d-toggle-switch__checkbox-slider").click
+        self
+      end
+
+      def select_form_template(template_name)
         find(".select-category-template").click
         find(".select-kit-collection .select-kit-row", text: template_name).click
+        find(".select-category-template").click
       end
     end
   end
