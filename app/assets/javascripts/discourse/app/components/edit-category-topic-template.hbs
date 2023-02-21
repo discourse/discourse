@@ -17,12 +17,11 @@
       />
 
       <p class="select-category-template__info desc">
-        {{i18n "admin.form_templates.edit_category.select_template_help.info"}}
-        <LinkTo @route="adminCustomizeFormTemplates">
-          {{i18n
-            "admin.form_templates.edit_category.select_template_help.path"
-          }}
-        </LinkTo>
+        {{#if this.currentUser.staff}}
+          <LinkTo @route="adminCustomizeFormTemplates">
+            {{i18n "admin.form_templates.edit_category.select_template_help"}}
+          </LinkTo>
+        {{/if}}
       </p>
     </div>
   {{else}}

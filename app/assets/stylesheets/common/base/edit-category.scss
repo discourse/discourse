@@ -178,10 +178,9 @@ div.edit-category {
   }
 
   .edit-category-tab-topic-template {
-    .control-group .desc {
-      margin-top: 0.25rem;
+    .select-category-template__info {
+      margin-block: 0.25rem;
       font-size: var(--font-down-1);
-      color: var(--primary-medium);
     }
   }
 }

@@ -5551,9 +5551,7 @@ en:
           toggle_freeform: "form template disabled"
           toggle_form_template: "form template enabled"
           select_template: "Select form templates"
-          select_template_help:
-            info: "Create or edit form templates at"
-            path: "Customize / Form Templates"
+          select_template_help: "Add/Edit Form Templates"
 
       impersonate:
         title: "Impersonate"

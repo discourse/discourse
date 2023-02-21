@@ -1,14 +1,17 @@
 import { buildCategoryPanel } from "discourse/components/edit-category-panel";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { schedule } from "@ember/runloop";
-import { action } from "@ember/object";
-import { notEmpty } from "@ember/object/computed";
+import { action, computed } from "@ember/object";
 
 export default buildCategoryPanel("topic-template", {
-  // Modals are defined using the singleton pattern.
-  // Opening the insert link modal will destroy the edit category modal.
-  showInsertLinkButton: false,
-  showFormTemplate: notEmpty("category.form_template_ids"),
+  showFormTemplate: computed("category.form_template_ids", {
+    get() {
+      return Boolean(this.category.form_template_ids.length);
+    },
+    set(key, value) {
+      return value;
+    },
+  }),
 
   @discourseComputed("showFormTemplate")
   templateTypeToggleLabel(showFormTemplate) {
