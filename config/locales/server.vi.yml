@@ -1372,7 +1372,6 @@ vi:
     dashboard_visible_tabs: "Chọn tab bảng điều khiển nào được hiển thị."
     dashboard_general_tab_activity_metrics: "Chọn các báo cáo sẽ được hiển thị dưới dạng chỉ số hoạt động trên tab chung."
     suggest_weekends_in_date_pickers: "Bao gồm các ngày cuối tuần (Thứ Bảy và Chủ Nhật) trong đề xuất chọn ngày (tắt tính năng này nếu bạn chỉ sử dụng Discourse vào các ngày trong tuần, thứ Hai đến thứ Sáu)."
-    enable_new_user_profile_nav_groups: "THỬ NGHIỆM: Người dùng của các nhóm đã chọn sẽ được hiển thị menu điều hướng hồ sơ người dùng mới"
     errors:
       invalid_email: "Địa chỉ email sai"
       invalid_username: "Không có thành viên với tên đăng nhập này"

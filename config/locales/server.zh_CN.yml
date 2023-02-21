@@ -2073,7 +2073,6 @@ zh_CN:
     navigation_menu: "确定要使用的导航菜单。边栏和标题导航可由用户自定义。旧版选项用于向后兼容。"
     default_sidebar_categories: "所选类别将默认显示在边栏的“类别”版块下。"
     default_sidebar_tags: "所选标签将默认显示在边栏的“标签”版块下。"
-    enable_new_user_profile_nav_groups: "实验性：将向所选群组的用户显示新的用户个人资料导航菜单"
     enable_experimental_hashtag_autocomplete: "实验性：对类别和标签使用新的 #hashtag 自动补全系统，以不同方式呈现所选条目，并改进了搜索"
     errors:
       invalid_css_color: "颜色无效。输入颜色名称或十六进制值。"
