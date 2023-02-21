@@ -3741,6 +3741,9 @@ tr_TR:
       granted:
         one: "%{count} verildi"
         other: "%{count} verildi"
+      granted_with_count:
+        one: '<a href="%{badgeUrl}" title="%{count} granted" class="grant-count">%{count}x</a> <span class="grant-text">verildi</span>'
+        other: '<a href="%{badgeUrl}" title="%{count} granted" class="grant-count">%{count}x</a> <span class="grant-text">verildi</span>'
       select_badge_for_title: Başlığınız olarak kullanmak için bir rozet seçin
       none: "(hiçbiri)"
       successfully_granted: "%{username} adlı kullanıcıya başarıyla %{badge} verildi"
@@ -4046,6 +4049,8 @@ tr_TR:
       description: "Karşılama konunuz, yeni üyelerin okuyacağı ilk şeydir. Bunu “asansör konuşmanız” veya “hedef tanımınız” olarak düşünün. Herkese bu topluluğun kimler için olduğunu, burada ne bulmayı bekleyebileceklerini ve önce ne yapmalarını istediğinizi açıklayın."
       button_title: "Düzenlemeye Başla"
     until: "Şuna kadar:"
+    char_counter:
+      exceeded: "İzin verilen maksimum karakter sayısı aşıldı."
   admin_js:
     type_to_filter: "filtrelemek için yazın..."
     admin:

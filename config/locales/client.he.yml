@@ -200,6 +200,8 @@ he:
       facebook: "שיתוף בפייסבוק"
       email: "שליחה בדוא״ל"
       url: "העתקה ושיתוף של כתובת"
+    word_connector:
+      comma: ", "
     action_codes:
       public_topic: "נושא זה הפך לציבורי ב־%{when}"
       open_topic: "המרה לנושא ב־%{when}"
@@ -4136,6 +4138,11 @@ he:
         two: "%{count} הוענקו"
         many: "%{count} הוענקו"
         other: "%{count} הוענקו"
+      granted_with_count:
+        one: '<span class="grant-text">הוענק</span> <a href="%{badgeUrl}" title="%{count} granted" class="grant-count">פעם %{count}</a>'
+        two: '<span class="grant-text">הוענק</span> <a href="%{badgeUrl}" title="%{count} granted" class="grant-count">%{count} פעמים</a>'
+        many: '<span class="grant-text">הוענק</span> <a href="%{badgeUrl}" title="%{count} granted" class="grant-count">%{count} פעמים</a>'
+        other: '<span class="grant-text">הוענק</span> <a href="%{badgeUrl}" title="%{count} granted" class="grant-count">%{count} פעמים</a>'
       select_badge_for_title: נא לבחור עיטור לשימוש בכותרת שלך
       none: "(ללא)"
       successfully_granted: "העיטור %{badge} הוענק בהצלחה למשתמש %{username}"
@@ -4471,6 +4478,8 @@ he:
       description: "נושא קבלת הפנים שלך הוא הדבר הראשון שחברים חדשים יקראו. אפשר לחשוב על זה כמו על „נאום מעלית” או „הצהרת כוונות”. כדאי לתאר למי מיועדת הקהילה הזאת, מה אפשר לצפות למצוא כאן ומה מומלץ לעשות בהתחלה."
       button_title: "להתחיל לערוך"
     until: "עד:"
+    char_counter:
+      exceeded: "חרגת ממספר התווים המרבי המותר."
   admin_js:
     type_to_filter: "הקלידו לסינון..."
     admin:

@@ -399,6 +399,7 @@ tr_TR:
   too_late_to_edit: "Bu gönderi çok uzun zaman önce oluşturulmuş. Artık düzenlenemez veya silinemez."
   edit_conflict: "Bu gönderi başka bir kullanıcı tarafından düzenlendi ve değişiklikleriniz artık kaydedilemiyor."
   revert_version_same: "Geçerli sürüm, geri dönmeye çalıştığınız sürümle aynı."
+  reverted_to_version: "#%{version} sürümüne geri dönüldü"
   cannot_edit_on_slow_mode: "Bu konu yavaş modda. Üzerinde düşünülmüş bir tartışmayı teşvik etmek için bu konudaki eski gönderileri düzenlemeye şu anda yavaş modda izin verilmiyor."
   excerpt_image: "görüntü"
   bookmarks:
@@ -580,6 +581,12 @@ tr_TR:
             duration_minutes:
               cannot_be_zero: "0'dan büyük olmalı."
               exceeds_maximum: "20 yıldan fazla olamaz."
+        translation_overrides:
+          attributes:
+            value:
+              invalid_interpolation_keys:
+                one: 'Aşağıdaki enterpolasyon anahtarı geçersizdir: %{keys}'
+                other: 'Aşağıdaki enterpolasyon anahtarları geçersizdir: %{keys}'
         watched_word:
           attributes:
             word:
@@ -2381,6 +2388,7 @@ tr_TR:
       must_not_contain_two_special_chars_in_seq: "2 veya daha fazla özel karakterden (.-_) oluşan bir dizi içermemeli"
       must_not_end_with_confusing_suffix: ".json veya .png gibi kafa karıştırıcı bir son ekle bitmemeli."
     email:
+      blank: "boş bırakılamaz."
       invalid: "geçersiz."
       not_allowed: "için bu e-posta sağlayıcısından izin verilmiyor. Lütfen başka bir e-posta adresi kullanın."
       blocked: "için izin verilmiyor."
@@ -4438,6 +4446,9 @@ tr_TR:
     payload_url:
       blocked_or_internal: "Yük URL'si engellenmiş veya dahili bir IP'ye çözümlendiği için kullanılamıyor"
       unsafe: "Yük URL'si güvenli olmadığı için kullanılamıyor"
+  form_templates:
+    errors:
+      invalid_yaml: "geçerli bir YAML dizesi değil"
   activemodel:
     errors:
       <<: *errors

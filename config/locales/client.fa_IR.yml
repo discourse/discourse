@@ -3204,6 +3204,9 @@ fa_IR:
       granted:
         one: "%{count} اعطا شده"
         other: "%{count} اعطا شده"
+      granted_with_count:
+        one: '<a href="%{badgeUrl}" title="%{count} granted" class="grant-count">%{count}x</a> <span class="grant-text">اعطا شده</span>'
+        other: '<a href="%{badgeUrl}" title="%{count} granted" class="grant-count">%{count}x</a> <span class="grant-text">اعطا شده</span>'
       select_badge_for_title: انتخاب یک نشان برای استفاده در عنوان خود
       none: "(هیچی)"
       successfully_granted: "%{badge} به %{username} با موفقیت اعطا شد"

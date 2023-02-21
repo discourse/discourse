@@ -144,6 +144,8 @@ de:
       facebook: "Auf Facebook teilen"
       email: "Per E-Mail senden"
       url: "URL kopieren und teilen"
+    word_connector:
+      comma: ", "
     action_codes:
       public_topic: "Hat dieses Thema öffentlich gemacht, %{when}"
       open_topic: "Hat dies in ein Thema umgewandelt, %{when}"
@@ -179,6 +181,7 @@ de:
       forwarded: "Hat die obige E-Mail weitergeleitet"
     topic_admin_menu: "Themen-Administration"
     skip_to_main_content: "Zum Hauptinhalt springen"
+    skip_user_nav: "Zum Profilinhalt springen"
     emails_are_disabled: "Die ausgehende E-Mail-Kommunikation wurde von einem Administrator global deaktiviert. Es werden keinerlei Benachrichtigungen per E-Mail verschickt."
     emails_are_disabled_non_staff: "Ausgehende E-Mails wurden für Benutzer, die nicht zum Team gehören, deaktiviert."
     software_update_prompt:
@@ -302,6 +305,8 @@ de:
       edit_bookmark: "Lesezeichen bearbeiten"
       clear_bookmarks: "Lesezeichen entfernen"
       help:
+        bookmark: "Klicken, um dieses Thema mit einem Lesezeichen zu markieren"
+        edit_bookmark: "Klicke, um das Lesezeichen für einen Beitrag in diesem Thema zu bearbeiten"
         edit_bookmark_for_topic: "Klicke, um das Lesezeichen für dieses Thema zu bearbeiten"
         unbookmark: "Klicke hier, um alle Lesezeichen in diesem Thema zu entfernen."
         unbookmark_with_reminder: "Klicke, um alle Lesezeichen und Erinnerungen in diesem Thema zu entfernen"
@@ -974,6 +979,13 @@ de:
       profile: "Profil"
       mute: "Stummschalten"
       edit: "Einstellungen bearbeiten"
+      download_archive:
+        title: "Exportiere deine Daten"
+        description: "Lade ein Archiv deiner Kontoaktivitäten und Präferenzen herunter."
+        button_text: "Archiv anfordern"
+        confirm: "Willst du wirklich ein Archiv deiner Kontoaktivitäten und Einstellungen herunterladen?"
+        success: "Wir haben mit dem Sammeln deines Archivs begonnen. Du erhältst eine Nachricht, wenn der Vorgang abgeschlossen ist."
+        rate_limit_error: "Kontoarchive können nur einmal pro Tag heruntergeladen werden, bitte versuche es morgen noch einmal."
       new_private_message: "Neue Nachricht"
       private_message: "Nachricht"
       private_messages: "Nachrichten"
@@ -2718,6 +2730,8 @@ de:
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Durchstöbere alle Kategorien</a>, <a href='%{basePath}/latest'>sieh dir die aktuellen Themen</a> oder die Top-Themen an:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Durchstöbere alle Schlagwörter</a> oder <a href='%{basePath}/latest'>sieh dir die aktuellen Themen an</a>."
       suggest_create_topic: Bereit, <a href>eine neue Unterhaltung zu beginnen?</a>
+      jump_reply: "Zur ursprünglichen Position des Beitrags springen"
+      jump_reply_aria: "Springe zu @%{username}s Beitrag an seinem ursprünglichen Ort"
       deleted: "Das Thema wurde gelöscht"
       slow_mode_update:
         title: "Langsamer Modus"
@@ -3072,6 +3086,7 @@ de:
       ignored: "Ignorierter Inhalt"
       wiki_last_edited_on: "Wiki zuletzt bearbeitet am %{dateTime}"
       last_edited_on: "Beitrag zuletzt bearbeitet am %{dateTime}"
+      edit_history: "Beitragsbearbeitungsverlauf"
       reply_as_new_topic: "Mit verknüpftem Thema antworten"
       reply_as_new_private_message: "Antworte als neue Nachricht an die gleichen Empfänger"
       continue_discussion: "Fortsetzung der Diskussion von %{postLink}:"
@@ -3082,6 +3097,9 @@ de:
       collapse: "zuklappen"
       sr_collapse_replies: "Eingebettete Antworten einklappen"
       sr_date: "Beitragsdatum"
+      sr_expand_replies:
+        one: "Dieser Beitrag hat %{count} Antwort"
+        other: "Dieser Beitrag hat %{count} Antworten"
       expand_collapse: "erweitern/zuklappen"
       sr_below_embedded_posts_description: "Beitrag #%{post_number} Antworten"
       sr_embedded_reply_description: "Antwort von @%{username} auf Beitrag #%{post_number}"
@@ -3239,6 +3257,8 @@ de:
           last: "Letzte Überarbeitung"
           hide: "Überarbeitung verstecken"
           show: "Überarbeitung anzeigen"
+          destroy: "Revisionen löschen"
+          destroy_confirm: "Bist du sicher, dass du alle Änderungen an diesem Beitrag löschen willst? Diese Aktion ist dauerhaft."
           revert: "Auf Überarbeitung %{revision} zurücksetzen"
           edit_wiki: "Wiki bearbeiten"
           edit_post: "Beitrag bearbeiten"
@@ -3272,6 +3292,7 @@ de:
         updated: "Aktualisiert"
         name: "Name"
         name_placeholder: "Wofür dient dieses Lesezeichen?"
+        name_input_label: "Name des Lesezeichens"
         set_reminder: "Erinnere mich"
         options: "Optionen"
         actions:
@@ -3369,6 +3390,7 @@ de:
       email_in: "Benutzerdefinierte Adresse für eingehende E-Mails:"
       email_in_tooltip: "Du kannst mehrere E-Mail-Adressen mit dem Zeichen | trennen."
       email_in_allow_strangers: "Akzeptiere E-Mails von anonymen Benutzern."
+      email_in_disabled: "Das Veröffentlichen neuer Themen per E-Mail ist deaktiviert. Um das Veröffentlichen neuer Themen per E-Mail zu ermöglichen, aktiviere die Einstellung <a href='%{setting_url}'>'email in'</a> ."
       mailinglist_mirror: "Kategorie spiegelt eine Mailingliste"
       show_subcategory_list: "Zeige Liste von Unterkategorien oberhalb von Themen in dieser Kategorie."
       read_only_banner: "Bannertext, wenn ein Benutzer kein Thema in dieser Kategorie erstellen kann:"
@@ -3480,7 +3502,9 @@ de:
         inappropriate: "Unangemessen"
         spam: "Spam"
       custom_placeholder_notify_user: "Sei konkret, konstruktiv und immer freundlich."
+      notify_user_textarea_label: "Nachricht für den Benutzer"
       custom_placeholder_notify_moderators: "Bitte lass uns wissen, was genau dich beunruhigt. Verweise, wenn möglich, auf relevante Links und Beispiele."
+      notify_moderators_textarea_label: "Nachricht für die Moderatoren"
       custom_message:
         at_least:
           one: "gib mindestens %{count} Zeichen ein"
@@ -3707,6 +3731,7 @@ de:
         title: "Schreiben"
         return: "%{shortcut} Zurück zum Editor"
         fullscreen: "%{shortcut} Vollbild-Editor"
+        insert_current_time: "%{shortcut} Aktuelle Uhrzeit einfügen"
       bookmarks:
         title: "Lesezeichen setzen"
         enter: "%{shortcut} Speichern und schließen"
@@ -3765,6 +3790,9 @@ de:
       granted:
         one: "%{count}-mal verliehen"
         other: "%{count}-mal verliehen"
+      granted_with_count:
+        one: '<a href="%{badgeUrl}" title="%{count} gewährt" class="grant-count">%{count}x</a> <span class="grant-text">gewährt</span>'
+        other: '<a href="%{badgeUrl}" title="%{count} gewährt" class="grant-count">%{count}x</a> <span class="grant-text">gewährt</span>'
       select_badge_for_title: Wähle ein Abzeichen als deinen Titel aus
       none: "(keines)"
       successfully_granted: "%{badge} erfolgreich verliehen an %{username}"
@@ -3990,12 +4018,18 @@ de:
       all_tags: "Alle Schlagwörter"
       sections:
         custom:
+          add: "Benutzerdefinierten Abschnitt hinzufügen"
+          edit: "Benutzerdefinierten Abschnitt bearbeiten"
+          name: "Titel des Abschnitts"
           save: "Speichern"
           delete: "Löschen"
+          delete_confirm: "Bist du sicher, dass du diesen Abschnitt löschen willst?"
           links:
             icon: "Symbol"
             name: "Name"
             value: "Link"
+            add: "Einen weiteren Link hinzufügen"
+            delete: "Link löschen"
         about:
           header_link_text: "Über uns"
         messages:
@@ -4070,6 +4104,8 @@ de:
       description: "Dein Willkommen-Thema ist das erste, was neue Mitglieder lesen. Betrachte es als dein „Fahrstuhl-Vorstellungsgespräch“ oder „Leitbild“. Hier erfährt jeder, für wen diese Community gedacht ist, was einen hier erwartet und was man direkt zu Beginn tun soll."
       button_title: "Bearbeitung beginnen"
     until: "Bis:"
+    char_counter:
+      exceeded: "Die maximal zulässige Anzahl von Zeichen wurde überschritten."
   admin_js:
     type_to_filter: "zum Filtern hier eingeben …"
     admin:
@@ -4228,6 +4264,14 @@ de:
         about: "Hier kannst du Gruppenzugehörigkeiten und Gruppennamen bearbeiten."
         group_members: "Gruppenmitglieder"
         delete: "Löschen"
+        delete_confirm: "Möchtest du wirklich %{group} löschen?"
+        delete_details:
+          one: "%{count} Person wird den Zugang zu dieser Gruppe verlieren"
+          other: "%{count} Personen werden den Zugang zu dieser Gruppe verlieren"
+        delete_with_messages_confirm:
+          one: "%{count} Nachricht wird für Gruppenmitglieder unzugänglich"
+          other: "%{count} Nachrichten werden für Gruppenmitglieder unzugänglich"
+        delete_warning: "Gelöschte Gruppen können nicht wiederhergestellt werden"
         delete_failed: "Gruppe konnte nicht gelöscht werden. Wenn dies eine automatische Gruppe ist, kann sie nicht gelöscht werden."
         delete_automatic_group: Dies ist eine automatische Gruppe und sie kann nicht gelöscht werden.
         delete_owner_confirm: "Eigentümerrechte für „%{username}“ entfernen?"
@@ -4293,7 +4337,9 @@ de:
             topics:
               read: Lies ein Thema oder einen bestimmten Beitrag darin. RSS wird ebenfalls unterstützt.
               write: Erstelle ein neues Thema oder schreibe einen Beitrag zu einem bestehenden.
+              update: Aktualisiere ein Thema. Ändere den Titel, die Kategorie, die Tags, den Status, den Archetyp, den featured_link usw.
               read_lists: Lies Themenlisten wie „Angesagt“, „Neu“, „Aktuell“ usw. RSS wird ebenfalls unterstützt.
+              status: "Aktualisiere den Status eines Themas. Status: geschlossen, archiviert, sichtbar, angeheftet. Aktiviert: true, false. Gib hier und im Request Payload eine category_id an, um Statusänderungen nur für Themen dieser Kategorie zuzulassen."
             posts:
               edit: Bearbeite jeden Beitrag oder einen bestimmten.
             categories:
@@ -4309,6 +4355,7 @@ de:
               update: Benutzerprofil-Informationen aktualisieren.
               log_out: Alle Sitzungen für einen Benutzer abmelden.
               anonymize: Benutzerkonten anonymisieren.
+              suspend: Benutzerkonten sperren.
               delete: Benutzerkonten löschen.
               list: Benutzerliste abrufen.
             user_status:
@@ -4316,6 +4363,8 @@ de:
               update: Benutzerstatus aktualisieren.
             email:
               receive_emails: Kombiniere diesen Bereich mit dem E-Mail-Empfänger, um eingehende E-Mails zu verarbeiten.
+            invites:
+              create: Versende Einladungen per E-Mail oder generiere Einladungslinks.
             badges:
               create: Ein neues Abzeichen erstellen.
               show: Informationen über ein Abzeichen abrufen.
@@ -4324,6 +4373,9 @@ de:
               list_user_badges: Abzeichen eines Benutzers auflisten.
               assign_badge_to_user: Einem Benutzer ein Abzeichen zuweisen.
               revoke_badge_from_user: Einem Benutzer ein Abzeichen entziehen.
+            search:
+              show: Suche mit dem Endpunkt `/search.json?q=term`.
+              query: Suche mit dem Endpunkt `/search/query?term=term`.
             wordpress:
               publishing: Erforderlich für die Veröffentlichungsfunktionen des WP-Discourse-Plug-ins (erforderlich).
               commenting: Erforderlich für die Kommentarfunktionen des WP-Discourse-Plug-ins.
@@ -4434,6 +4486,7 @@ de:
         enabled: "Aktiviert?"
         is_enabled: "J"
         not_enabled: "N"
+        change_settings: "Plugin-Einstellungen"
         change_settings_short: "Einstellungen"
         howto: "Wie installiere ich Plug-ins?"
         official: "Offizielles Plug-in"
@@ -4687,6 +4740,9 @@ de:
           embedded_scss:
             text: "Eingebettetes CSS"
             title: "Gib benutzerdefiniertes CSS ein, das mit eingebetteten Versionen von Kommentaren übermittelt wird"
+          embedded_header:
+            text: "Eingebettete Kopfzeile"
+            title: "HTML eingeben, das über der eingebetteten Version der Kommentare angezeigt wird"
           color_definitions:
             text: "Farbdefinitionen"
             title: "Benutzerdefinierte Farbdefinitionen eingeben (nur für fortgeschrittene Benutzer)"
@@ -4767,6 +4823,10 @@ de:
             description: "Die Farbe der „Gefällt mir“-Schaltfläche."
           selected:
             name: "ausgewählt"
+            description: "Die Hintergrundfarbe von Elementen wie Listeneinträgen, wenn sie ausgewählt/aktiv sind."
+          hover:
+            name: "schweben"
+            description: "Die Hintergrundfarbe von Elementen wie Listeneinträgen, wenn sie mit dem Mauszeiger bewegt werden oder den Tastaturfokus haben."
         robots:
           title: "Überschreibe die robots.txt-Datei deiner Website:"
           warning: "Dies wird sämtliche zugehörigen Website-Einstellungen dauerhaft überschreiben."
@@ -4897,6 +4957,7 @@ de:
           no_previous: "Es gibt keinen vorherigen Wert."
           deleted: "Kein neuer Wert. Der Eintrag wurde gelöscht."
           actions:
+            permanently_delete_post_revisions: "Beitragsrevisionen dauerhaft löschen"
             delete_user: "Benutzer löschen"
             change_trust_level: "Vertrauensstufe ändern"
             change_username: "Benutzernamen ändern"
@@ -5083,10 +5144,17 @@ de:
           no_matches: "Keine Übereinstimmungen gefunden"
       form_templates:
         nav_title: "Vorlagen"
+        title: "Formularvorlagen"
+        help: "Erstelle eine Vorlagenstruktur, mit der du neue Themen, Beiträge und Nachrichten erstellen kannst."
+        new_template: "Neue Vorlage"
         list_table:
           headings:
             name: "Name"
             actions: "Aktionen"
+          actions:
+            view: "Vorlage ansehen"
+            edit: "Vorlage bearbeiten"
+            delete: "Vorlage löschen"
         view_template:
           close: "Beenden"
           edit: "Bearbeiten"
@@ -5094,9 +5162,21 @@ de:
         new_template_form:
           submit: "Speichern"
           cancel: "Abbrechen"
+          name:
+            label: "Vorlagenname"
+            placeholder: "Gib einen Namen für diese Vorlage ein..."
+          template:
+            label: "Vorlage"
+            placeholder: "Erstelle hier eine YAML-Vorlage..."
+        delete_confirm: "Bist du sicher, dass du diese Vorlage löschen möchtest?"
         quick_insert_fields:
           add_new_field: "Hinzufügen"
+          checkbox: "Kontrollkästchen"
+          input: "Kurze Antwort"
+          textarea: "Lange Antwort"
           dropdown: "Drop-down-Liste"
+          upload: "Eine Datei hochladen"
+          multiselect: "Mehrfachauswahl"
       impersonate:
         title: "Nutzersicht"
         help: "Benutze dieses Werkzeug, um zur Fehlersuche in die Rolle eines anderen Benutzers zu schlüpfen. Du musst dich abmelden, wenn du fertig bist."

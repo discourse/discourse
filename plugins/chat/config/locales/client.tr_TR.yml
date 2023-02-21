@@ -135,6 +135,7 @@ tr_TR:
       placeholder_self: "Bir şeyler not edin"
       placeholder_users: "%{commaSeparatedNames} ile sohbet et"
       placeholder_silenced: "Şu anda mesaj gönderemezsiniz."
+      placeholder_start_conversation: "Şu kişi ile bir sohbet başlatın:"
       placeholder_start_conversation_users: "%{commaSeparatedUsernames} ile bir konuşma başlat"
       remove_upload: "Dosyayı kaldır"
       react: "Emoji ile tepki ver"
@@ -206,6 +207,8 @@ tr_TR:
           members: Üyeler
           settings: Ayarlar
       channel_edit_name_slug_modal:
+        title: Kanalı düzenle
+        input_placeholder: Bir isim ekle
         name: Kanal adı
       channel_edit_description_modal:
         title: Açıklamayı düzenle

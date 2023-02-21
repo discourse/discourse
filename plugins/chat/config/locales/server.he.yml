@@ -54,6 +54,14 @@ he:
     deleted_chat_username: נמחק
     errors:
       channel_exists_for_category: "כבר קיים ערוץ לקטגוריה ולשם האלו"
+      channel_new_message_disallowed:
+        archived: "הערוץ נמצא בארכיון, לא ניתן לשלוח הודעות חדשות"
+        closed: "הערוץ סגור, לא ניתן לשלוח הודעות חדשות"
+        read_only: "הערוץ הוא לקריאה בלבד, לא ניתן לשלוח הודעות חדשות"
+      channel_modify_message_disallowed:
+        archived: "הערוץ שמור בארכיון, אין אפשרות לערוך או למחוק הודעות"
+        closed: "הערוץ סגור, אין אפשרות לערוך או למחוק הודעות"
+        read_only: "הערוץ הוא לקריאה בלבד, אין אפשרות לערוך או למחוק הודעות"
       user_cannot_send_message: "אין לך אפשרות לשלוח הודעות כרגע."
       rate_limit_exceeded: "חריגה ממגבלת הודעות הצ׳אט שניתן לשלוח תוך 30 שניות"
       auto_silence_from_flags: "הודעת צ׳אט שסומנה בציון גבוה מספיק כדי להשתיק את המשתמש."

@@ -259,6 +259,9 @@ he:
         type: "הודעת צ׳אט"
       reactions:
         only_you: "הגבת עם :%{emoji}:"
+        you_and_single_user: "הגבת יחד עם %{username} את האמוג׳י :%{emoji}:"
+        you_and_multiple_users: "הגבת יחד עם %{commaSeparatedUsernames} ו־%{username} את האמוג׳י :%{emoji}:"
+        single_user: "האמוג׳י שנוסף ע״י %{username} הוא :%{emoji}:"
       composer:
         toggle_toolbar: "החלפת מצב סרגל כלים"
         italic_text: "טקסט נטוי"

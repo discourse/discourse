@@ -399,6 +399,7 @@ de:
   too_late_to_edit: "Dieser Beitrag wurde vor zu langer Zeit erstellt. Er kann nicht mehr bearbeitet oder gelöscht werden."
   edit_conflict: "Dieser Beitrag wurde von einem anderen Benutzer bearbeitet und deine Änderungen können nicht länger gespeichert werden."
   revert_version_same: "Die aktuelle Version entspricht der Version, zu der du zurückkehren möchtest."
+  reverted_to_version: "auf Version #%{version}zurückgesetzt"
   cannot_edit_on_slow_mode: "Dieses Thema befindet sich im langsamen Modus. Um durchdachte, überlegte Diskussionen anzuregen, ist das Bearbeiten alter Beiträge in diesem Thema während des langsamen Modus nicht zulässig."
   excerpt_image: "Bild"
   bookmarks:
@@ -587,6 +588,12 @@ de:
             duration_minutes:
               cannot_be_zero: "muss größer als 0 sein."
               exceeds_maximum: "darf nicht mehr als 20 Jahre betragen."
+        translation_overrides:
+          attributes:
+            value:
+              invalid_interpolation_keys:
+                one: 'Der folgende Variablenname ist ungültig: %{keys}'
+                other: 'Die folgenden Variablennamen sind ungültig: %{keys}'
         watched_word:
           attributes:
             word:
@@ -1553,6 +1560,8 @@ de:
     content_security_policy_frame_ancestors: "Schränke ein, wer diese Website in iframes über CSP einbetten kann. Kontrolliere erlaubte Hosts unter <a href='%{base_path}/admin/customize/embedding'>Einbettung</a>"
     content_security_policy_script_src: "Zusätzlich erlaubte Skriptquellen (Positivliste). Der aktuelle Host und CDN sind standardmäßig enthalten. Siehe <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>XSS-Attacken mit Content Security Policy entschärfen.</a>"
     invalidate_inactive_admin_email_after_days: "Administrator-Konten, die die Website in dieser Anzahl von Tagen nicht besucht haben, müssen ihre E-Mail-Adresse erneut bestätigen, bevor sie sich anmelden können. 0 zum Deaktivieren."
+    include_secure_categories_in_tag_counts: "Wenn diese Option aktiviert ist, werden bei der Zählung der Themen für ein Schlagwort auch die Themen berücksichtigt, die sich in Kategorien mit Lesebeschränkung für alle Nutzer befinden. Wenn diese Option deaktiviert ist, wird normalen Nutzern nur die Anzahl der Themen für einen Tag angezeigt, die sich in öffentlichen Kategorien befinden."
+    display_personal_messages_tag_counts: "Wenn diese Option aktiviert ist, wird die Anzahl der persönlichen Nachrichten mit einem bestimmten Tag angezeigt."
     top_menu: "Legt fest, welche Elemente in welcher Reihenfolge in der Navigationsleiste der Startseite auftauchen sollen. Beispiel: latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "Legt fest, welche Funktionen in welcher Reihenfolge im Beitragsmenü auftauchen. Beispiel: like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "Die Einträge im Menü eines Beitrags, die standardmäßig hinter einer erweiterbaren Ellipse versteckt werden sollen."
@@ -1581,7 +1590,10 @@ de:
     max_favorite_badges: "Maximale Anzahl von Abzeichen, die der Benutzer auswählen kann"
     whispers_allowed_groups: "Private Kommunikation innerhalb von Themen für Mitglieder bestimmter Gruppen erlauben."
     allow_index_in_robots_txt: "Lege in der robots.txt fest, dass diese Website von Websuchmaschinen indiziert werden darf. In Ausnahmefällen kannst du die <a href='%{base_path}/admin/customize/robots'>robots.txt dauerhaft überschreiben</a>."
+    blocked_email_domains: "Eine durch senkrechte Striche getrennte Liste von E-Mail-Domänen, bei denen Benutzer keine Konten registrieren dürfen. Subdomains werden automatisch für die angegebenen Domains behandelt. Wildcard-Symbole * und ? werden nicht unterstützt. Beispiel: mailinator.com|trashmail.net"
+    allowed_email_domains: "Eine durch senkrechte Striche getrennte Liste von E-Mail-Domänen, bei denen Benutzer Konten registrieren MÜSSEN. Subdomains werden automatisch für die angegebenen Domains behandelt. Wildcard-Symbole * und ? werden nicht unterstützt. WARNUNG: Benutzer mit anderen als den aufgeführten E-Mail-Domänen sind nicht zugelassen!"
     normalize_emails: "Überprüfen, ob normalisierte E-Mail-Adressen einzigartig sind. Bei normalisierten E-Mail-Adressen werden alle Punkte aus dem Benutzernamen und alles zwischen + und @ Symbolen entfernt."
+    auto_approve_email_domains: "Nutzer mit E-Mail-Adressen aus dieser Liste von Domänen werden automatisch zugelassen. Subdomains werden automatisch für die angegebenen Domains behandelt. Die Platzhalterzeichen * und ? werden nicht unterstützt."
     hide_email_address_taken: "Benutzer beim Registrieren oder Passwort-Zurücksetzen nicht über ein bereits bestehendes Konto mit dieser E-Mail-Adresse informieren. Erfordert die Angabe vollständiger E-Mail-Adressen zum Passwort-Zurücksetzen."
     log_out_strict: "Beim Abmelden ALLE Sitzungen des Benutzers auf allen Geräten beenden"
     version_checks: "Kontaktiere den Discourse Hub zur Überprüfung auf neue Versionen und zeige Benachrichtigungen über neue Versionen im <a href='%{base_path}/admin' target='_blank'>/admin</a>-Dashboard an."
@@ -1750,6 +1762,7 @@ de:
     tl3_requires_likes_given: "Die Mindestanzahl an „Gefällt mir“, die in den letzten (tl3 time period) Tagen vergeben werden muss, um sich für die Beförderung auf Vertrauensstufe 3 zu qualifizieren."
     tl3_requires_likes_received: "Die Mindestanzahl an „Gefällt mir“, die in den letzten (tl3 time period) Tagen eingehen muss, um sich für die Beförderung auf Vertrauensstufe 3 zu qualifizieren."
     tl3_links_no_follow: "rel=nofollow nicht von Links entfernen, die von Benutzern mit Vertrauensstufe 3 erstellt wurden."
+    tl4_delete_posts_and_topics: "Erlaube TL4-Nutzern, Beiträge und Themen zu löschen, die von anderen Nutzern erstellt wurden. TL4-Nutzer/innen können auch gelöschte Themen und Beiträge sehen."
     trusted_users_can_edit_others: "Erlaube Benutzern mit hohen Vertrauensstufen, Inhalte von anderen Benutzern zu bearbeiten."
     min_trust_to_create_topic: "Minimale Vertrauensstufe, um ein neues Thema zu erstellen."
     allow_flagging_staff: "Wenn aktiviert, können Benutzer auch Beiträge von Team-Konten melden."
@@ -1866,6 +1879,11 @@ de:
     block_auto_generated_emails: "Eingehende E-Mails blockieren, die als automatisch generiert erkannt werden."
     ignore_by_title: "Ignoriere eingehende E-Mails basierend auf ihrem Betreff."
     mailgun_api_key: "Geheimer Mailgun-API-Schlüssel, um Webhook-Nachrichten zu überprüfen."
+    sendgrid_verification_key: "Sendgrid-Verifizierungsschlüssel, der zur Verifizierung von Webhook-Nachrichten verwendet wird."
+    mailjet_webhook_token: "Token, das zur Überprüfung der Webhook-Nutzdaten verwendet wird. Es muss als 't' Abfrageparameter des Webhooks übergeben werden, zum Beispiel: https://example.com/webhook/mailjet?t=supersecret"
+    mandrill_authentication_key: "Mandrill-Authentifizierungsschlüssel, der zur Verifizierung von Webhook-Nachrichten verwendet wird."
+    postmark_webhook_token: "Token, das zur Überprüfung der Webhook-Nutzdaten verwendet wird. Es muss als 't' Abfrageparameter des Webhooks übergeben werden, zum Beispiel: https://example.com/webhook/postmark?t=supersecret"
+    sparkpost_webhook_token: "Token, das zur Überprüfung der Webhook-Nutzdaten verwendet wird. Es muss als 't' Abfrageparameter des Webhooks übergeben werden, zum Beispiel: https://example.com/webhook/sparkpost?t=supersecret"
     soft_bounce_score: "Der Bounce-Score des Benutzers wird um diesen Wert erhöht, wenn eine E-Mail vorübergehend nicht zugestellt werden kann."
     hard_bounce_score: "Der Bounce-Score des Benutzers wird um diesen Wert erhöht, wenn eine E-Mail dauerhaft nicht zugestellt werden konnte."
     bounce_score_threshold: "Bounce-Score, ab dem wir einem Benutzer keine E-Mails mehr senden."
@@ -1973,6 +1991,8 @@ de:
     automatically_unpin_topics: "Themen automatisch loslösen, wenn ein Benutzer das Ende erreicht."
     read_time_word_count: "Wörter pro Minute für die Berechnung der geschätzten Lesezeit."
     topic_page_title_includes_category: "<a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>„title“-Tag</a> der Themen-Seite enthält einen Kategorienamen."
+    native_app_install_banner_ios: "Zeigt das DiscourseHub-App-Banner auf iOS-Geräten für einfache Nutzer (Vertrauensstufe 1) und höher an."
+    native_app_install_banner_android: "Zeigt das DiscourseHub-App-Banner auf Android-Geräten für einfache Nutzer (Vertrauensstufe 1) und höher an."
     app_association_android: "Inhalte des Endpunkts <a href='%{base_path}/.well-known/assetlinks.json'>.well-known/assetlinks.json</a>, verwendet für die Digital Asset Links API von Google."
     app_association_ios: "Inhalt des Endpunkts <a href='%{base_path}/apple-app-site-association'>apple-app-site-association</a>, der verwendet wird, um Universal Links zwischen dieser Website und iOS-Apps zu erstellen."
     share_anonymized_statistics: "Anonymisierte Nutzungsdaten teilen."
@@ -2125,6 +2145,7 @@ de:
     navigation_menu: "Legt fest, welches Navigationsmenü verwendet werden soll. Die Seitenleisten- und Kopfzeilennavigation kann von den Benutzern angepasst werden. Die Legacy-Option ist zur Abwärtskompatibilität verfügbar."
     default_sidebar_categories: "Ausgewählte Kategorien werden standardmäßig im Abschnitt „Kategorien“ der Seitenleiste angezeigt."
     default_sidebar_tags: "Ausgewählte Schlagwörter werden standardmäßig im Abschnitt „Schlagwörter“ der Seitenleiste angezeigt."
+    enable_new_notifications_menu: "Aktiviert das neue Benachrichtigungsmenü für das alte Navigationsmenü."
     enable_experimental_hashtag_autocomplete: "EXPERIMENTELL: Das neue #hashtag-Autovervollständigungssystem für Kategorien und Schlagwörter, das das ausgewählte Element anders darstellt und eine bessere Suche aufweist, verwenden"
     errors:
       invalid_css_color: "Ungültige Farbe. Gib einen Farbnamen oder einen Hexadezimalwert ein."
@@ -2182,6 +2203,9 @@ de:
       search_tokenize_japanese_enabled: "Du musst „search_tokenize_japanese“ deaktivieren, bevor du diese Einstellung aktivierst."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Du kannst DiscourseConnect nicht aktivieren, wenn 2FA erzwungen wird."
       delete_rejected_email_after_days: "Diese Einstellung kann nicht niedriger als die Einstellung delete_email_logs_after_days oder höher als %{max} gesetzt werden"
+      invalid_uncategorized_category_setting: "Die Kategorie „Nicht kategorisiert“ kann nicht ausgewählt werden, wenn „Nicht kategorisierte Themen zulassen“ nicht aktiviert ist."
+      enable_new_notifications_menu_not_legacy_navigation_menu: "Du musst `navigation_menu` auf `legacy` setzen, bevor du diese Einstellung aktivierst."
+      invalid_search_ranking_weights: "Der Wert für die Websiteeinstellung search_ranking_weights ist ungültig. Beispiel: '{0.1,0.2,0.3,1.0}'. Beachte, dass der Maximalwert für jedes Gewicht 1,0 beträgt."
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2388,6 +2412,7 @@ de:
       must_not_contain_two_special_chars_in_seq: "darf keine Folge von 2 oder mehr Sonderzeichen enthalten (.-_)"
       must_not_end_with_confusing_suffix: "darf nicht mit einem irritierenden Suffix wie .json oder .png usw. enden"
     email:
+      blank: "darf nicht leer sein."
       invalid: "ist ungültig."
       not_allowed: "ist für diesen E-Mail-Anbieter nicht erlaubt. Bitte verwende eine andere E-Mail-Adresse."
       blocked: "ist nicht erlaubt."
@@ -4579,6 +4604,9 @@ de:
           <p>Viel Spaß und viel Erfolg <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>beim Aufbau deiner neuen Community!</a></p>
   search_logs:
     graph_title: "Anzahl Suchen"
+  onebox:
+    discourse:
+      user_joined_community: "Beigetreten %{date}"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} hat dich erwähnt in „%{topic}“ – %{site_title}'
@@ -4750,6 +4778,9 @@ de:
     payload_url:
       blocked_or_internal: "Payload-URL kann nicht verwendet werden, da sie in eine blockierte oder interne IP aufgelöst wird"
       unsafe: "Payload-URL kann nicht verwendet werden, da sie unsicher ist"
+  form_templates:
+    errors:
+      invalid_yaml: "ist keine gültige YAML-Zeichenfolge"
   activemodel:
     errors:
       <<: *errors
