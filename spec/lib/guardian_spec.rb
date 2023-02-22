@@ -861,6 +861,11 @@ RSpec.describe Guardian do
       expect(Guardian.new.can_see?(nil)).to be_falsey
     end
 
+    it "returns false when no visibility method is defined for the object" do
+      unguarded_object = 42
+      expect(Guardian.new.can_see?(unguarded_object)).to be_falsey
+    end
+
     describe "a Category" do
       it "allows public categories" do
         public_category = Fabricate(:category, read_restricted: false)
