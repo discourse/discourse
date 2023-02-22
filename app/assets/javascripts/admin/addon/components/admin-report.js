@@ -324,8 +324,6 @@ export default class AdminReport extends Component {
   }
 
   _fetchReport() {
-    undefined;
-
     this.setProperties({ isLoading: true, rateLimitationString: null });
 
     next(() => {
