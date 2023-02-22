@@ -13,7 +13,7 @@ describe "Fast edit", type: :system, js: true do
     sign_in(current_user)
   end
 
-  context "works correctly on basic text" do
+  context "when text selected it opens contact menu and fast editor" do
     it "opens context menu and fast edit dialog" do
       topic_page.visit_topic(topic)
 
@@ -23,7 +23,7 @@ describe "Fast edit", type: :system, js: true do
       topic_page.click_fast_edit_button
       expect(topic_page.fast_edit_input).to be_visible
     end
-    
+
     it "edits first paragraph and saves changes" do
       topic_page.visit_topic(topic)
 

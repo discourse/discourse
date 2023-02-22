@@ -137,7 +137,7 @@ module PageObjects
           selection.removeAllRanges();
           selection.addRange(range);
         JS
-    
+
         page.execute_script(js, selector, offset)
       end
 

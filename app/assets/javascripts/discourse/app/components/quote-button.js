@@ -472,7 +472,7 @@ export default Component.extend(KeyEnterEscape, {
               bestIndex = index;
               return true;
             }
-          });          
+          });
 
           this?.editPost(postModel);
 
