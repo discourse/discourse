@@ -41,36 +41,3 @@
     <td colspan="4"></td>
   {{/if}}
 </tr>
-
-{{!-- {{#unless site.mobileView}}
-  {{#if this.rs.reason}}
-    <tr>
-      <td colspan="7">
-        <div class="reviewable-score-reason">{{html-safe this.rs.reason}}</div>
-      </td>
-    </tr>
-  {{/if}}
-
-  {{#if this.rs.reviewable_conversation}}
-    <tr>
-      <td colspan="7">
-        <div class="reviewable-conversation">
-          {{#each
-            this.rs.reviewable_conversation.conversation_posts
-            as |p index|
-          }}
-            <ReviewableConversationPost @post={{p}} @index={{index}} />
-          {{/each}}
-          <div class="controls">
-            <a
-              href={{this.rs.reviewable_conversation.permalink}}
-              class="btn btn-small"
-            >
-              {{i18n "review.conversation.view_full"}}
-            </a>
-          </div>
-        </div>
-      </td>
-    </tr>
-  {{/if}}
-{{/unless}} --}}
