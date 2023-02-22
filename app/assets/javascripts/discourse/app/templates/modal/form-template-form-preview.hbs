@@ -2,15 +2,5 @@
   @class="form-templates__validation-options"
   @title="admin.form_templates.preview_modal.title"
 >
-  {{#if this.canShowPreview}}
-    {{#each this.parsedContent as |content|}}
-      <FormTemplateField::Wrapper @content={{content}} />
-    {{/each}}
-  {{else}}
-    <p class="alert alert-error">
-      <strong>{{this.error.name}}:</strong>
-      {{this.error.reason}}
-    </p>
-  {{/if}}
-
+  <FormTemplateField::Wrapper @content={{this.model.content}} />
 </DModalBody>

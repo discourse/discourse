@@ -5538,6 +5538,7 @@ en:
           close: "Close"
           edit: "Edit"
           delete: "Delete"
+          toggle_preview: "Toggle Preview"
         new_template_form:
           submit: "Save"
           cancel: "Cancel"

@@ -5252,3 +5252,5 @@ en:
   form_templates:
     errors:
       invalid_yaml: "is not a valid YAML string"
+      invalid_type: "contains an invalid template type: %{type} (valid types are: %{valid_types})"
+      missing_type: "is missing a field type"

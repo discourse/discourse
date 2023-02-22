@@ -6,7 +6,7 @@
     <TextField
       @value={{this.templateName}}
       @name="template-name"
-      @class="form-templates--form-name-input"
+      @class="form-templates__form-name-input"
       @placeholderKey="admin.form_templates.new_template_form.name.placeholder"
     />
   </div>
@@ -36,8 +36,8 @@
       @icon="eye"
       @label="admin.form_templates.new_template_form.preview"
       @action={{this.showPreview}}
+      @disabled={{this.disablePreviewButton}}
     />
-
   </div>
 
   <div class="control-group">
@@ -50,7 +50,7 @@
       @label="admin.form_templates.new_template_form.submit"
       @icon="check"
       @action={{this.onSubmit}}
-      @disabled={{this.formSubmitted}}
+      @disabled={{this.disableSubmitButton}}
     />
 
     <DButton

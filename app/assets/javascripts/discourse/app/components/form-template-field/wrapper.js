@@ -1,19 +1,17 @@
 import Component from "@glimmer/component";
+import Yaml from "js-yaml";
+import { tracked } from "@glimmer/tracking";
 
 export default class FormTemplateFieldWrapper extends Component {
-  ALLOWED_FIELD_TYPES = [
-    "checkbox",
-    "dropdown",
-    "input",
-    "multi-select",
-    "textarea",
-    "upload",
-  ];
+  @tracked error = null;
 
-  get showField() {
-    if (!this.ALLOWED_FIELD_TYPES.includes(this.args.content.type)) {
-      return false;
+  get canShowContent() {
+    try {
+      const parsedContent = Yaml.load(this.args.content);
+      this.parsedContent = parsedContent;
+      return true;
+    } catch (e) {
+      this.error = e;
     }
-    return true;
   }
 }

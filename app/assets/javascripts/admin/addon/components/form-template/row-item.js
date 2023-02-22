@@ -12,8 +12,7 @@ export default class FormTemplateRowItem extends Component {
 
   @action
   viewTemplate() {
-    showModal("admin-customize-form-template-view", {
-      admin: true,
+    showModal("customize-form-template-view", {
       model: this.args.template,
       refreshModel: this.args.refreshModel,
     });

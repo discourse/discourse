@@ -13,8 +13,8 @@ export default class FormTemplateForm extends Component {
   @service dialog;
   @tracked formSubmitted = false;
   @tracked templateContent = this.args.model?.template || "";
+  @tracked templateName = this.args.model?.name || "";
   isEditing = this.args.model?.id ? true : false;
-  templateName = this.args.model?.name;
   quickInsertFields = [
     {
       type: "checkbox",
@@ -42,6 +42,17 @@ export default class FormTemplateForm extends Component {
     },
   ];
 
+  get disablePreviewButton() {
+    return Boolean(!this.templateName.length || !this.templateContent.length);
+  }
+
+  get disableSubmitButton() {
+    return (
+      Boolean(!this.templateName.length || !this.templateContent.length) ||
+      this.formSubmitted
+    );
+  }
+
   @action
   onSubmit() {
     if (!this.formSubmitted) {
@@ -55,27 +66,17 @@ export default class FormTemplateForm extends Component {
 
     if (this.isEditing) {
       postData["id"] = this.args.model.id;
-
-      FormTemplate.updateTemplate(this.args.model.id, postData)
-        .then(() => {
-          this.formSubmitted = false;
-          this.router.transitionTo("adminCustomizeFormTemplates.index");
-        })
-        .catch((e) => {
-          popupAjaxError(e);
-          this.formSubmitted = false;
-        });
-    } else {
-      FormTemplate.createTemplate(postData)
-        .then(() => {
-          this.formSubmitted = false;
-          this.router.transitionTo("adminCustomizeFormTemplates.index");
-        })
-        .catch((e) => {
-          popupAjaxError(e);
-          this.formSubmitted = false;
-        });
     }
+
+    FormTemplate.createOrUpdateTemplate(postData)
+      .then(() => {
+        this.formSubmitted = false;
+        this.router.transitionTo("adminCustomizeFormTemplates.index");
+      })
+      .catch((e) => {
+        popupAjaxError(e);
+        this.formSubmitted = false;
+      });
   }
 
   @action
@@ -117,10 +118,23 @@ export default class FormTemplateForm extends Component {
 
   @action
   showPreview() {
-    return showModal("form-template-form-preview", {
-      model: {
-        content: this.templateContent,
-      },
-    });
+    const data = {
+      name: this.templateName,
+      template: this.templateContent,
+    };
+
+    if (this.isEditing) {
+      data["id"] = this.args.model.id;
+    }
+
+    FormTemplate.validateTemplate(data)
+      .then(() => {
+        return showModal("form-template-form-preview", {
+          model: {
+            content: this.templateContent,
+          },
+        });
+      })
+      .catch(popupAjaxError);
   }
 }
