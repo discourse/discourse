@@ -5568,23 +5568,19 @@ en:
             required:
               key: "required"
               type: "boolean"
-              description: "Requires the field to be completed to submit the form"
-            limit:
-              key: "limit"
-              type: integer
-              description: "Allows only the specified number of items to be selected"
+              description: "Requires the field to be completed to submit the form."
             minimum:
               key: "minimum"
               type: "integer"
-              description: "In text fields, specifies the minimum number of characters allowed"
+              description: "In text fields, specifies the minimum number of characters allowed."
             maximum:
               key: "maximum"
               type: "integer"
-              description: "In text fields, specifies the maximum number of characters allowed"
+              description: "In text fields, specifies the maximum number of characters allowed. In multi select dropdowns, specifies the maximum number of options that can be selected."
             pattern:
               key: "pattern"
               type: "regex string"
-              description: "In text fields, a regular expression specifying the allowed input"
+              description: "In text fields, a regular expression specifying the allowed input."
         preview_modal:
           title: "Preview Template"
         edit_category:

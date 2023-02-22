@@ -2,5 +2,20 @@
   @class="form-templates__validation-options"
   @title="admin.form_templates.preview_modal.title"
 >
-  <h1>Preview goes here</h1>
+  {{#if this.canShowPreview}}
+    {{#each this.parsedContent as |content|}}
+      {{component
+        (concat "form-template-field/" content.type)
+        attributes=content.attributes
+        choices=content.choices
+        validations=content.validations
+      }}
+    {{/each}}
+  {{else}}
+    <p class="alert alert-error">
+      <strong>{{this.error.name}}:</strong>
+      {{this.error.reason}}
+    </p>
+  {{/if}}
+
 </DModalBody>

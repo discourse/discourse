@@ -1,0 +1,14 @@
+<div class="control-group form-template-field" data-field-type="upload">
+  {{#if @attributes.label}}
+    <label class="form-template-field__label">{{@attributes.label}}</label>
+  {{/if}}
+  <input
+    type="file"
+    accept={{@attributes.file_types}}
+    class="form-template-field__upload"
+    multiple={{@attributes.allow_multiple}}
+  />
+  {{#if @attributes.description}}
+    <p class="form-template-field__description">{{@attributes.description}}</p>
+  {{/if}}
+</div>
