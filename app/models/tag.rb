@@ -38,6 +38,7 @@ class Tag < ActiveRecord::Base
         ->(guardian) { where("tags.#{Tag.topic_count_column(guardian)} > 0") }
 
   scope :base_tags, -> { where(target_tag_id: nil) }
+  scope :visible, ->(guardian = nil) { merge(DiscourseTagging.visible_tags(guardian)) }
 
   has_many :tag_users, dependent: :destroy # notification settings
 
