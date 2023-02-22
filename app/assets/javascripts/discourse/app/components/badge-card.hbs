@@ -42,13 +42,8 @@
 
       {{#if this.displayCount}}
         <div class="badge-granted">
-          {{html-safe
-            (i18n
-              "badges.granted_with_count"
-              count=this.displayCount
-              badgeUrl=this.url
-            )
-          }}
+          {{number this.displayCount badgeUrl=this.url}}
+          {{html-safe (i18n "badges.awarded")}}
         </div>
       {{/if}}
     </div>
