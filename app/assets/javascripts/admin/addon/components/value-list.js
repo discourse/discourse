@@ -5,7 +5,7 @@ import discourseComputed, { on } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import { makeArray } from "discourse-common/lib/helpers";
 
-@classNameBindings(":value-list")
+@classNames("value-list")
 export default class ValueList extends Component {
   @empty("newValue") inputInvalid;
 
