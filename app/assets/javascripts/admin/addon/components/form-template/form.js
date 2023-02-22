@@ -6,6 +6,7 @@ import I18n from "I18n";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { templateFormFields } from "admin/lib/template-form-fields";
 import FormTemplate from "admin/models/form-template";
+import showModal from "discourse/lib/show-modal";
 
 export default class FormTemplateForm extends Component {
   @service router;
@@ -105,5 +106,21 @@ export default class FormTemplateForm extends Component {
     } else {
       this.templateContent += `\n${structure}`;
     }
+  }
+
+  @action
+  showValidationOptionsModal() {
+    return showModal("admin-form-template-validation-options", {
+      admin: true,
+    });
+  }
+
+  @action
+  showPreview() {
+    return showModal("form-template-form-preview", {
+      model: {
+        content: this.templateContent,
+      },
+    });
   }
 }

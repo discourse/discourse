@@ -5547,6 +5547,7 @@ en:
           template:
             label: "Template"
             placeholder: "Create a YAML template here..."
+          preview: "Preview"
         delete_confirm: "Are you sure you would like to delete this template?"
         quick_insert_fields:
           add_new_field: "Add"
@@ -5556,6 +5557,36 @@ en:
           dropdown: "Dropdown"
           upload: "Upload a file"
           multiselect: "Multiple choice"
+        validations_modal:
+          button_title: "Validations"
+          modal_title: "Validation Options"
+          table_headers:
+            key: "Key"
+            type: "Type"
+            description: "Description"
+          validations:
+            required:
+              key: "required"
+              type: "boolean"
+              description: "Requires the field to be completed to submit the form"
+            limit:
+              key: "limit"
+              type: integer
+              description: "Allows only the specified number of items to be selected"
+            minimum:
+              key: "minimum"
+              type: "integer"
+              description: "In text fields, specifies the minimum number of characters allowed"
+            maximum:
+              key: "maximum"
+              type: "integer"
+              description: "In text fields, specifies the maximum number of characters allowed"
+            pattern:
+              key: "pattern"
+              type: "regex string"
+              description: "In text fields, a regular expression specifying the allowed input"
+        preview_modal:
+          title: "Preview Template"
         edit_category:
           toggle_freeform: "form template disabled"
           toggle_form_template: "form template enabled"

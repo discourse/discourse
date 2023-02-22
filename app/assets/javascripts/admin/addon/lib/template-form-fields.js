@@ -9,9 +9,7 @@ export const templateFormFields = [
     - "Option 3"
   attributes:
     label: "Enter question here"
-    description: "Enter description here"
-    validations:
-      required: true`,
+    description: "Enter description here"`,
   },
   {
     type: "input",
@@ -19,9 +17,7 @@ export const templateFormFields = [
   attributes:
     label: "Enter input label here"
     description: "Enter input description here"
-    placeholder: "Enter input placeholder here"
-    validations:
-      required: true`,
+    placeholder: "Enter input placeholder here"`,
   },
   {
     type: "textarea",
@@ -29,9 +25,7 @@ export const templateFormFields = [
   attributes:
     label: "Enter textarea label here"
     description: "Enter textarea description here"
-    placeholder: "Enter textarea placeholder here"
-    validations:
-      required: true`,
+    placeholder: "Enter textarea placeholder here"`,
   },
   {
     type: "dropdown",
@@ -42,9 +36,7 @@ export const templateFormFields = [
     - "Option 3"
   attributes:
     label: "Enter dropdown label here"
-    description: "Enter dropdown description here"
-    validations:
-      required: true`,
+    description: "Enter dropdown description here"`,
   },
   {
     type: "upload",
@@ -63,8 +55,6 @@ export const templateFormFields = [
     - "Option 3"
   attributes:
     label: "Enter multiple choice label here"
-    description: "Enter multiple choice description here"
-    validations:
-      required: true`,
+    description: "Enter multiple choice description here"`,
   },
 ];
