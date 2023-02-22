@@ -124,21 +124,7 @@ module PageObjects
       end
 
       def fast_edit_input
-        find("#fast-edit-input")
-      end
-
-      def select_text(selector, offset = 10)
-        js = <<-JS
-          const node = document.querySelector(arguments[0]).childNodes[0];
-          const selection = window.getSelection();
-          const range = document.createRange();
-          range.selectNodeContents(node);
-          range.setEnd(node, arguments[1]);
-          selection.removeAllRanges();
-          selection.addRange(range);
-        JS
-
-        page.execute_script(js, selector, offset)
+        @fast_edit_component.fast_edit_input
       end
 
       private
