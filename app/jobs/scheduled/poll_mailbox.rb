@@ -24,9 +24,14 @@ module Jobs
     end
 
     POLL_MAILBOX_TIMEOUT_ERROR_KEY = "poll_mailbox_timeout_error_key"
+    POLL_MAILBOX_OAUTH2_AUTH_TOKEN_KEY = "pop3_polling_oauth2_access_token"
 
     def poll_pop3
-      pop3 = Net::POP3.new(SiteSetting.pop3_polling_host, SiteSetting.pop3_polling_port)
+      pop3 =
+        Net::POP3.OAUTH2(SiteSetting.pop3_polling_oauth2).new(
+          SiteSetting.pop3_polling_host,
+          SiteSetting.pop3_polling_port,
+        )
 
       if SiteSetting.pop3_polling_ssl
         if SiteSetting.pop3_polling_openssl_verify
@@ -36,7 +41,18 @@ module Jobs
         end
       end
 
-      pop3.start(SiteSetting.pop3_polling_username, SiteSetting.pop3_polling_password) do |pop|
+      Oauth2Pop3Token.refresh_access_token_if_needed() if SiteSetting.pop3_polling_oauth2
+
+      password =
+        (
+          if SiteSetting.pop3_polling_oauth2
+            Discourse.redis.get(POLL_MAILBOX_OAUTH2_AUTH_TOKEN_KEY)
+          else
+            SiteSetting.pop3_polling_password
+          end
+        )
+
+      pop3.start(SiteSetting.pop3_polling_username, password) do |pop|
         pop.each_mail do |p|
           mail_string = p.pop
           next if mail_too_old?(mail_string)
@@ -75,6 +91,10 @@ module Jobs
       mark_as_errored!
       add_admin_dashboard_problem_message("dashboard.poll_pop3_auth_error")
       Discourse.handle_job_exception(e, error_context(@args, "Signing in to poll incoming emails."))
+    rescue Oauth2RefreshFail => e
+      mark_as_errored!
+      add_admin_dashboard_problem_message("dashboard.poll_pop3_oauth2_refresh_error")
+      Discourse.handle_job_exception(e, error_context(@args, "Refreshing OAUTH2 access token"))
     end
 
     POLL_MAILBOX_ERRORS_KEY = "poll_mailbox_errors"

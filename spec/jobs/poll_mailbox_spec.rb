@@ -99,6 +99,51 @@ RSpec.describe Jobs::PollMailbox do
       end
     end
 
+    context "with expired oauth2 access token" do
+      before do
+        Discourse.redis.set(Jobs::PollMailbox::POLL_MAILBOX_OAUTH2_AUTH_TOKEN_KEY, "old_access")
+
+        Discourse.redis.expireat(
+          Jobs::PollMailbox::POLL_MAILBOX_OAUTH2_AUTH_TOKEN_KEY,
+          Time.now.to_i,
+        )
+      end
+      after { Discourse.redis.del(Jobs::PollMailbox::POLL_MAILBOX_OAUTH2_AUTH_TOKEN_KEY) }
+
+      it "refreshes the oauth2 auth token when expired" do
+        SiteSetting.pop3_polling_oauth2 = true
+        SiteSetting.pop3_polling_oauth2_refresh_token = "old_refresh"
+
+        Net::POP3.any_instance.stubs(:start)
+        Oauth2Pop3Token.expects(:get_new_tokens).returns(["access", "refresh", 20])
+
+        poller.poll_pop3
+        expect(Discourse.redis.get(Jobs::PollMailbox::POLL_MAILBOX_OAUTH2_AUTH_TOKEN_KEY)).to eq(
+          "access",
+        )
+        expect(SiteSetting.pop3_polling_oauth2_refresh_token).to eq("refresh")
+      end
+
+      it "add an admin dashboard message on oauth2 refresh error" do
+        SiteSetting.pop3_polling_oauth2 = true
+
+        res = mock("http response")
+        res.stubs(:code).returns(501)
+
+        Net::POP3.any_instance.stubs(:start)
+        Net::HTTP.stubs(:post_form).returns(res)
+        Oauth2Pop3Token.expects(:refresh_access_token).raises(Oauth2RefreshFail).once
+        Discourse.expects(:handle_job_exception).at_least_once
+
+        poller.poll_pop3
+
+        i18n_key = "dashboard.poll_pop3_oauth2_refresh_error"
+        expect(AdminDashboardData.problem_message_check(i18n_key)).to eq(
+          I18n.t(i18n_key, base_path: Discourse.base_path),
+        )
+      end
+    end
+
     it "calls enable_ssl when the setting is enabled" do
       SiteSetting.pop3_polling_ssl = true
       Net::POP3.any_instance.stubs(:start)
@@ -111,6 +156,49 @@ RSpec.describe Jobs::PollMailbox do
       Net::POP3.any_instance.stubs(:start)
       Net::POP3.any_instance.expects(:enable_ssl).never
       poller.poll_pop3
+    end
+
+    it "uses oauth2 when the setting is enabled" do
+      SiteSetting.pop3_polling_oauth2 = true
+      SiteSetting.pop3_polling_ssl = false
+      Socket.stubs(:tcp)
+      Oauth2Pop3Token.stubs(:refresh_access_token_if_needed)
+      Net::POP3Command.any_instance.stubs(:recv_response).returns("+OK")
+      Net::POP3.any_instance.stubs(:do_finish)
+      Net::POP3.any_instance.stubs(:each_mail)
+      Net::POP3Command.any_instance.stubs(:oauth2)
+      Net::POP3Command.any_instance.expects(:oauth2)
+      poller.poll_pop3
+    end
+
+    it "does not uses oauth2 when the setting is disabled" do
+      SiteSetting.pop3_polling_oauth2 = false
+      SiteSetting.pop3_polling_ssl = false
+      Socket.stubs(:tcp)
+      Oauth2Pop3Token.stubs(:refresh_access_token_if_needed)
+      Net::POP3Command.any_instance.stubs(:recv_response).returns("+OK")
+      Net::POP3.any_instance.stubs(:do_finish)
+      Net::POP3.any_instance.stubs(:each_mail)
+      Net::POP3Command.any_instance.stubs(:auth)
+      Net::POP3Command.any_instance.expects(:oauth2).never
+      poller.poll_pop3
+    end
+
+    it "does not refresh the oauth2 auth token when it is not expired" do
+      Discourse.redis.setex(
+        Jobs::PollMailbox::POLL_MAILBOX_OAUTH2_AUTH_TOKEN_KEY,
+        20.seconds,
+        "old_access",
+      )
+      SiteSetting.pop3_polling_oauth2 = true
+      SiteSetting.pop3_polling_oauth2_refresh_token = "old_refresh"
+
+      Net::POP3.any_instance.stubs(:start)
+      Oauth2Pop3Token.expects(:refresh_access_token).never
+
+      poller.poll_pop3
+
+      Discourse.redis.del(Jobs::PollMailbox::POLL_MAILBOX_OAUTH2_AUTH_TOKEN_KEY)
     end
 
     context "when has emails" do

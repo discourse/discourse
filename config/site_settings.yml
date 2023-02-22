@@ -1164,9 +1164,16 @@ email:
   pop3_polling_openssl_verify: true
   pop3_polling_period_mins: 5
   pop3_polling_host: ""
+  pop3_polling_oauth2: false
+  pop3_polling_oauth2_scope: ""
+  pop3_polling_oauth2_endpoint: ""
+  pop3_polling_oauth2_clientid: ""
   pop3_polling_port: 995
   pop3_polling_username: ""
   pop3_polling_password:
+    default: ""
+    secret: true
+  pop3_polling_oauth2_refresh_token:
     default: ""
     secret: true
   pop3_polling_delete_from_server: true

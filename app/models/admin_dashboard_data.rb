@@ -187,6 +187,7 @@ class AdminDashboardData
       dashboard.bad_favicon_url
       dashboard.poll_pop3_timeout
       dashboard.poll_pop3_auth_error
+      dashboard.poll_pop3_oauth2_refresh_error
     ]
 
     add_problem_check :rails_env_check,

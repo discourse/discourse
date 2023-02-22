@@ -3,6 +3,9 @@
 require "net/imap"
 require "net/smtp"
 require "net/pop"
+require "uri"
+require "net/http"
+require "json"
 
 # Usage:
 #
@@ -35,10 +38,13 @@ class EmailSettingsValidator
     password:,
     ssl: SiteSetting.pop3_polling_ssl,
     openssl_verify: SiteSetting.pop3_polling_openssl_verify,
+    oauth2: SiteSetting.pop3_polling_oauth2,
+    oauth2_endpoint: SiteSetting.pop3_polling_oauth2_endpoint,
+    oauth2_client_id: SiteSetting.pop3_polling_oauth2_clientid,
     debug: Rails.env.development?
   )
     begin
-      pop3 = Net::POP3.new(host, port)
+      pop3 = Net::POP3.OAUTH2(oauth2).new(host, port)
 
       # Note that we do not allow which verification mode to be specified
       # like we do for SMTP, we just pick TLS1_2 if the SSL and openSSL verify
@@ -49,6 +55,12 @@ class EmailSettingsValidator
         else
           pop3.enable_ssl(OpenSSL::SSL::VERIFY_NONE)
         end
+      end
+
+      if oauth2
+        Oauth2Pop3Token.refresh_access_token_if_needed()
+
+        password = Discourse.redis.get(Jobs::PollMailbox::POLL_MAILBOX_OAUTH2_AUTH_TOKEN_KEY)
       end
 
       # This disconnects itself, unlike SMTP and IMAP.
