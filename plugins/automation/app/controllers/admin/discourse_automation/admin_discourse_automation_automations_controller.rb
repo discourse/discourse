@@ -2,6 +2,8 @@
 
 module DiscourseAutomation
   class AdminDiscourseAutomationAutomationsController < ::ApplicationController
+    requires_plugin DiscourseAutomation::PLUGIN_NAME
+
     def index
       automations = DiscourseAutomation::Automation.order(:name).all
       serializer =

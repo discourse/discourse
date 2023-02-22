@@ -2,6 +2,7 @@
 
 module DiscourseAutomation
   class AutomationsController < ApplicationController
+    requires_plugin DiscourseAutomation::PLUGIN_NAME
     before_action :ensure_admin
 
     def trigger

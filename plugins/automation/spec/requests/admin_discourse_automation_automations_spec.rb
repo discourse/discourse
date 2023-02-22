@@ -5,6 +5,8 @@ require_relative "../discourse_automation_helper"
 describe DiscourseAutomation::AdminDiscourseAutomationAutomationsController do
   fab!(:automation) { Fabricate(:automation) }
 
+  before { SiteSetting.discourse_automation_enabled = true }
+
   describe "#show" do
     context "when logged in as an admin" do
       before { sign_in(Fabricate(:admin)) }

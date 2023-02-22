@@ -2,6 +2,8 @@
 
 module DiscourseAutomation
   class AdminDiscourseAutomationScriptablesController < ::ApplicationController
+    requires_plugin DiscourseAutomation::PLUGIN_NAME
+
     def index
       scriptables =
         DiscourseAutomation::Scriptable.all.map do |s|

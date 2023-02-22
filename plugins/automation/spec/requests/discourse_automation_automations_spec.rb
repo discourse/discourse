@@ -3,6 +3,8 @@
 require_relative "../discourse_automation_helper"
 
 describe DiscourseAutomation::AdminDiscourseAutomationAutomationsController do
+  before { SiteSetting.discourse_automation_enabled = true }
+
   describe "#trigger" do
     fab!(:automation) { Fabricate(:automation) }
 

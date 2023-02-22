@@ -2,6 +2,8 @@
 
 module DiscourseAutomation
   class AdminDiscourseAutomationTriggerablesController < ::ApplicationController
+    requires_plugin DiscourseAutomation::PLUGIN_NAME
+
     def index
       if params[:automation_id].present?
         automation = DiscourseAutomation::Automation.find(params[:automation_id])

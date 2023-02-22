@@ -2,6 +2,7 @@
 
 module DiscourseAutomation
   class AppendLastCheckedByController < ApplicationController
+    requires_plugin DiscourseAutomation::PLUGIN_NAME
     requires_login
 
     def post_checked

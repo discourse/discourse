@@ -5,6 +5,8 @@ require_relative "../discourse_automation_helper"
 describe DiscourseAutomation::UserGlobalNoticesController do
   fab!(:user_1) { Fabricate(:user) }
 
+  before { SiteSetting.discourse_automation_enabled = true }
+
   describe "#destroy" do
     let!(:notice_1) do
       DiscourseAutomation::UserGlobalNotice.create!(
