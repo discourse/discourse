@@ -1,0 +1,8 @@
+{{#if this.showField}}
+  {{component
+    (concat "form-template-field/" @content.type)
+    attributes=@content.attributes
+    choices=@content.choices
+    validations=@content.validations
+  }}
+{{/if}}
