@@ -42,8 +42,10 @@
 
       {{#if this.displayCount}}
         <div class="badge-granted">
-          {{number this.displayCount badgeUrl=this.url}}
-          {{html-safe (i18n "badges.awarded")}}
+          <LinkTo @route="badges.show" @model={{this.badge}}>
+            {{number this.displayCount}}
+            {{i18n "badges.awarded"}}
+          </LinkTo>
         </div>
       {{/if}}
     </div>
