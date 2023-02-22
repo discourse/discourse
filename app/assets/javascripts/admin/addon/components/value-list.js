@@ -1,5 +1,5 @@
 import { action } from "@ember/object";
-import { classNameBindings } from "@ember-decorators/component";
+import { classNames } from "@ember-decorators/component";
 import { empty, reads } from "@ember/object/computed";
 import discourseComputed, { on } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
