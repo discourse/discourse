@@ -158,6 +158,21 @@ class ApiKeyScope < ActiveRecord::Base
             actions: %w[user_badges#destroy],
           },
         },
+        groups: {
+          manage_groups: {
+            actions: %w[groups#members groups#add_members groups#remove_members],
+            params: %i[id],
+          },
+          administer_groups: {
+            actions: %w[
+              admin/groups#create
+              admin/groups#destroy
+              groups#show
+              groups#update
+              groups#index
+            ],
+          },
+        },
         search: {
           show: {
             actions: %w[search#show],

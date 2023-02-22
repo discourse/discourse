@@ -344,7 +344,7 @@ $search-pad-horizontal: 0.5em;
     // and the focus/hover styles from the header in those cases wouldn't follow
     &:focus,
     &:hover {
-      background-color: var(--highlight-medium);
+      background-color: var(--highlight-bg);
     }
 
     .topic {

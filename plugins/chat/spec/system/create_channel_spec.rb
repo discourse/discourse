@@ -69,7 +69,7 @@ RSpec.describe "Create channel", type: :system, js: true do
       end
     end
 
-    context "when category has a malicous group name" do
+    context "when category has a malicious group name" do
       fab!(:group_1) do
         group = Group.new(name: "<script>e</script>")
         group.save(validate: false)
@@ -123,6 +123,112 @@ RSpec.describe "Create channel", type: :system, js: true do
     end
 
     context "when saving" do
+      context "when user has chosen to automatically add users" do
+        let(:dialog) { PageObjects::Components::Dialog.new }
+        let(:name) { "Cats & Dogs" }
+
+        before do
+          chat_page.visit_browse
+          chat_page.new_channel_button.click
+          channel_modal.fill_name(name)
+        end
+
+        context "for a public category" do
+          before do
+            channel_modal.select_category(category_1)
+            find(".auto-join-channel__label").click
+            channel_modal.click_primary_button
+          end
+
+          it "displays the correct warning" do
+            expect(dialog).to have_content(
+              I18n.t(
+                "js.chat.create_channel.auto_join_users.public_category_warning",
+                category: category_1.name,
+              ),
+            )
+          end
+
+          it "allows the user to proceed with channel creation" do
+            dialog.click_yes
+            expect(page).to have_content(name)
+            created_channel = ChatChannel.find_by(chatable_id: category_1.id)
+            expect(page).to have_current_path(
+              chat.channel_path(created_channel.slug, created_channel.id),
+            )
+          end
+
+          it "does nothing if no is clicked" do
+            dialog.click_no
+            expect(page).to have_css(".create-channel-modal")
+            expect(ChatChannel.exists?(chatable_id: category_1.id)).to eq(false)
+          end
+        end
+
+        context "for a private category" do
+          fab!(:group_1) { Fabricate(:group) }
+          fab!(:user_1) { Fabricate(:user) }
+          fab!(:private_category) { Fabricate(:private_category, group: group_1) }
+
+          before do
+            group_1.add(user_1)
+            channel_modal.select_category(private_category)
+            find(".auto-join-channel__label").click
+            channel_modal.click_primary_button
+          end
+
+          context "when only 1 group can access the category" do
+            it "displays the correct warning" do
+              expect(dialog).to have_content(
+                I18n.t(
+                  "js.chat.create_channel.auto_join_users.warning_1_group",
+                  count: 1,
+                  group: "@#{group_1.name}",
+                ),
+              )
+            end
+          end
+
+          context "when 2 groups can access the category" do
+            fab!(:group_2) { Fabricate(:group) }
+            fab!(:category_group_2) do
+              CategoryGroup.create(group: group_2, category: private_category)
+            end
+
+            it "displays the correct warning" do
+              expect(dialog).to have_content(
+                I18n.t(
+                  "js.chat.create_channel.auto_join_users.warning_2_groups",
+                  count: 1,
+                  group1: "@#{group_1.name}",
+                  group2: "@#{group_2.name}",
+                ),
+              )
+            end
+          end
+
+          context "when > 2 groups can access the category" do
+            fab!(:group_2) { Fabricate(:group) }
+            fab!(:category_group_2) do
+              CategoryGroup.create(group: group_2, category: private_category)
+            end
+
+            fab!(:group_3) { Fabricate(:group) }
+            fab!(:category_group_3) do
+              CategoryGroup.create(group: group_3, category: private_category)
+            end
+
+            it "displays the correct warning" do
+              # NOTE: This has to be hardcoded because the I18n module in ruby
+              # does not support messageFormat.
+              expect(dialog).to have_content(
+                "Automatically add 1 user from @#{group_1.name} and 2 other groups?",
+              )
+            end
+          end
+        end
+      end
+
       context "when error" do
         it "displays the error" do
           existing_channel = Fabricate(:chat_channel)

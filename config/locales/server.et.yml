@@ -1082,6 +1082,7 @@ et:
       approve_user:
         title: "Kiida kasutaja heaks"
       reject_user:
+        title: "Kustuta kasutaja..."
         delete:
           title: "Kustuta kasutaja"
       reject:

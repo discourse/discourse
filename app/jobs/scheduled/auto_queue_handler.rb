@@ -7,7 +7,7 @@ module Jobs
     every 1.day
 
     def execute(args)
-      return unless SiteSetting.auto_handle_queued_age.to_i > 0
+      return if SiteSetting.auto_handle_queued_age.to_i.zero?
 
       Reviewable
         .pending

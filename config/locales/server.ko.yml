@@ -536,10 +536,6 @@ ko:
             duration_minutes:
               cannot_be_zero: "0보다 커야 합니다."
               exceeds_maximum: "20년을 초과할 수 없습니다."
-        translation_overrides:
-          attributes:
-            value:
-              invalid_interpolation_keys: '다음 보간 키가 유효하지 않습니다. "%{keys}"'
         watched_word:
           attributes:
             word:

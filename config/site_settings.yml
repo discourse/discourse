@@ -1027,6 +1027,7 @@ posting:
   notify_about_queued_posts_after:
     type: float
     default: 24
+    min: 0
   auto_close_messages_post_count:
     default: 500
   auto_close_topics_post_count:
@@ -1955,6 +1956,7 @@ rate_limits:
   max_prints_per_hour_per_user:
     default: 5
     client: true
+    min: 0
   max_logins_per_ip_per_hour:
     min: 1
     default: 30
@@ -2064,18 +2066,7 @@ developer:
     default: 20
     client: true
     hidden: true
-  enable_new_user_profile_nav_groups:
-    client: true
-    type: group_list
-    list_type: compact
-    default: ""
-    allow_any: false
-    refresh: true
   include_associated_account_ids:
-    default: false
-    hidden: true
-  enable_experimental_topic_timeline:
-    client: true
     default: false
     hidden: true
   experimental_form_templates:
@@ -2195,10 +2186,10 @@ search:
     default: false
     hidden: true
   prioritize_exact_search_title_match:
-    default: false
+    default: true
     hidden: true
   max_duplicate_search_index_terms:
-    default: -1
+    default: 6
     hidden: true
   use_pg_headlines_for_excerpt:
     default: false

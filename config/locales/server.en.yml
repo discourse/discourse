@@ -641,7 +641,9 @@ en:
         translation_overrides:
           attributes:
             value:
-              invalid_interpolation_keys: 'The following interpolation key(s) are invalid: "%{keys}"'
+              invalid_interpolation_keys:
+                one: 'The following interpolation key is invalid: %{keys}'
+                other: 'The following interpolation keys are invalid: %{keys}'
         watched_word:
           attributes:
             word:
@@ -2395,7 +2397,6 @@ en:
     default_sidebar_categories: "Selected categories will be displayed under Sidebar's Categories section by default."
     default_sidebar_tags: "Selected tags will be displayed under Sidebar's Tags section by default."
     enable_new_notifications_menu: "Enables the new notifications menu for the legacy navigation menu."
-    enable_new_user_profile_nav_groups: "EXPERIMENTAL: Users of the selected groups will be shown the new user profile navigation menu"
     enable_experimental_hashtag_autocomplete: "EXPERIMENTAL: Use the new #hashtag autocompletion system for categories and tags that renders the selected item differently and has improved search"
 
     errors:

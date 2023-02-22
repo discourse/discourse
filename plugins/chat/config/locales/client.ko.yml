@@ -68,9 +68,6 @@ ko:
       new_messages: "새 메시지"
       mention_warning:
         dismiss: "무시"
-        groups:
-          users_limit:
-            other: "사용자 %{count}명"
       aria_roles:
         header: "채팅 헤더"
         composer: "채팅 작성기"
@@ -194,6 +191,7 @@ ko:
       direct_messages:
         create: "이동"
         leave: "이 개인 채팅에서 나가기"
+        cannot_create: "죄송합니다. 다이렉트 메시지를 보낼 수 없습니다."
       incoming_webhooks:
         back: "뒤로"
         channel_placeholder: "채널 선택"

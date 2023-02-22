@@ -13,8 +13,9 @@ class Section {
   @tracked title;
   @tracked links;
 
-  constructor({ title, links, id }) {
+  constructor({ title, links, id, publicSection }) {
     this.title = title;
+    this.public = publicSection;
     this.links = links;
     this.id = id;
   }
@@ -112,6 +113,7 @@ export default Controller.extend(ModalFunctionality, {
     if (this.model) {
       return new Section({
         title: this.model.title,
+        publicSection: this.model.public,
         links: A(
           this.model.links.map(
             (link) =>
@@ -140,6 +142,7 @@ export default Controller.extend(ModalFunctionality, {
       dataType: "json",
       data: JSON.stringify({
         title: this.model.title,
+        public: this.model.public,
         links: this.model.links.map((link) => {
           return {
             icon: link.icon,
@@ -168,6 +171,7 @@ export default Controller.extend(ModalFunctionality, {
       dataType: "json",
       data: JSON.stringify({
         title: this.model.title,
+        public: this.model.public,
         links: this.model.links.map((link) => {
           return {
             id: link.id,

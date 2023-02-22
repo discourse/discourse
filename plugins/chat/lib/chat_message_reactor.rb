@@ -53,10 +53,7 @@ class Chat::ChatMessageReactor
     raise Discourse::InvalidAccess.new(
             nil,
             nil,
-            custom_message: "chat.errors.channel_modify_message_disallowed",
-            custom_message_params: {
-              status: @chat_channel.status_name,
-            },
+            custom_message: "chat.errors.channel_modify_message_disallowed.#{@chat_channel.status}",
           )
   end
 

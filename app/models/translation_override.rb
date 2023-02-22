@@ -35,6 +35,7 @@ class TranslationOverride < ActiveRecord::Base
       optional_cat
       optional_tags
     ],
+    %w[system_messages.welcome_user] => %w[username name name_or_username],
   }
 
   include HasSanitizableFields
@@ -137,7 +138,8 @@ class TranslationOverride < ActiveRecord::Base
           :base,
           I18n.t(
             "activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys",
-            keys: invalid_keys.join(", "),
+            keys: invalid_keys.join(I18n.t("word_connector.comma")),
+            count: invalid_keys.size,
           ),
         )
 

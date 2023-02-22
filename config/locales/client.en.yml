@@ -161,6 +161,9 @@ en:
       email: "Send via email"
       url: "Copy and share URL"
 
+    word_connector:
+      comma: ", "
+
     action_codes:
       public_topic: "Made this topic public %{when}"
       open_topic: "Converted this to a topic %{when}"
@@ -4124,6 +4127,9 @@ en:
       granted:
         one: "%{count} granted"
         other: "%{count} granted"
+      granted_with_count:
+        one: '<a href="%{badgeUrl}" title="%{count} granted" class="grant-count">%{count}x</a> <span class="grant-text">granted</span>'
+        other: '<a href="%{badgeUrl}" title="%{count} granted" class="grant-count">%{count}x</a> <span class="grant-text">granted</span>'
       select_badge_for_title: Select a badge to use as your title
       none: "(none)"
       successfully_granted: "Successfully granted %{badge} to %{username}"
@@ -4373,6 +4379,7 @@ en:
           save: "Save"
           delete: "Delete"
           delete_confirm: "Are you sure you want to delete this section?"
+          public: "Make this section public and visible to everyone"
           links:
             icon: "Icon"
             name: "Name"
@@ -4455,6 +4462,9 @@ en:
       button_title: "Start Editing"
 
     until: "Until:"
+
+    char_counter:
+      exceeded: "The maximum number of characters allowed has been exceeded."
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
@@ -4732,6 +4742,9 @@ en:
               list_user_badges: List user badges.
               assign_badge_to_user: Assign a badge to a user.
               revoke_badge_from_user: Revoke a badge from a user.
+            groups:
+              manage_groups: List, add, and remove group members.
+              administer_groups: List, show, create, update, and delete groups.
             search:
               show: Search using the `/search.json?q=term` endpoint.
               query: Search using the `/search/query?term=term` endpoint.
@@ -4846,7 +4859,7 @@ en:
         enabled: "Enabled?"
         is_enabled: "Y"
         not_enabled: "N"
-        change_settings: "Change Settings"
+        change_settings: "Plugin Settings"
         change_settings_short: "Settings"
         howto: "How do I install plugins?"
         official: "Official Plugin"
@@ -5423,6 +5436,9 @@ en:
             delete_group: "delete group"
             watched_word_create: "add watched word"
             watched_word_destroy: "delete watched word"
+            create_public_sidebar_section: "create public sidebar section"
+            update_public_sidebar_section: "update public sidebar section"
+            destroy_public_sidebar_section: "destroy public sidebar section"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."

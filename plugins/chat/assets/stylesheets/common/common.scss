@@ -277,6 +277,7 @@ $float-height: 530px;
   .chat-messages-scroll {
     flex-grow: 1;
     overflow-y: scroll;
+    overscroll-behavior: contain;
     scrollbar-color: var(--primary-low) transparent;
     transition: scrollbar-color 0.2s ease-in-out;
     display: flex;
@@ -606,21 +607,11 @@ html.has-full-page-chat {
     #main-outlet-wrapper {
       // restrict the row height, including when virtual keyboard is open
       grid-template-rows: calc(
-        var(--chat-vh, 1vh) * 100 - var(--header-offset)
+        var(--chat-vh, 1vh) * 100 - var(--header-offset, 0px)
       );
       .sidebar-wrapper {
         // prevents sidebar from overflowing behind the virtual keyboard
         height: 100%;
-      }
-    }
-
-    // iPad webview
-    .footer-nav-ipad {
-      #main-outlet-wrapper {
-        // restrict the row height, including when virtual keyboard is open
-        grid-template-rows: calc(
-          var(--chat-vh, 1vh) * 100 - calc(var(--header-offset))
-        );
       }
     }
 

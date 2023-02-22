@@ -33,12 +33,6 @@ uk:
       join: "Приєднатися"
       mention_warning:
         dismiss: "відкласти"
-        groups:
-          users_limit:
-            one: "%{count} користувач"
-            few: "%{count} користувача"
-            many: "%{count} користувача"
-            other: "%{count} користувача"
       reply: "Відповідь"
       edit: "Редагувати"
       rebake_message: "Перебудувати HTML"
@@ -68,10 +62,27 @@ uk:
           about: Про
           members: Учасники
           settings: Налаштування
+      channel_edit_name_slug_modal:
+        title: Редагувати канал
+        input_placeholder: Додайте назву
+        slug_description: Замість назви каналу в URL-адресі використовується slug каналу
+        name: Назва каналу
+        slug: Slug каналу (опціонально)
       direct_message_creator:
         title: Нове повідомлення
         prefix: "До:"
       create_channel:
+        auto_join_users:
+          warning_1_group:
+            one: "Автоматично додати %{count} користувача з %{group}?"
+            few: "Автоматично додати %{count} користувачі із %{group}?"
+            many: "Автоматично додати %{count} користувачів із %{group}?"
+            other: "Автоматично додати %{count} користувачів із %{group}?"
+          warning_2_groups:
+            one: "Автоматично додати %{count} користувача з %{group1} та %{group2}?"
+            few: "Автоматично додати %{count} користувачі з %{group1} та %{group2}?"
+            many: "Автоматично додати %{count} користувачів з %{group1} та %{group2}?"
+            other: "Автоматично додати %{count} користувачів з %{group1} та %{group2}?"
         type: "Тип"
         types:
           category: "Розділ"

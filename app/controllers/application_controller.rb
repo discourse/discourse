@@ -645,7 +645,7 @@ class ApplicationController < ActionController::Base
           current_user,
           scope: guardian,
           root: false,
-          enable_sidebar_param: params[:enable_sidebar],
+          navigation_menu_param: params[:navigation_menu],
         ),
       ),
     )

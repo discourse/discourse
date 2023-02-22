@@ -88,6 +88,8 @@ class SystemMessage
     {
       site_name: SiteSetting.title,
       username: @recipient.username,
+      name: @recipient.name,
+      name_or_username: @recipient.name.presence || @recipient.username,
       user_preferences_url: "#{@recipient.full_url}/preferences",
       new_user_tips:
         I18n.with_locale(@recipient.effective_locale) do

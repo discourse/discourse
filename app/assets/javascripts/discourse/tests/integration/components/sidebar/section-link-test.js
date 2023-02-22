@@ -6,6 +6,14 @@ import { render } from "@ember/test-helpers";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { query } from "discourse/tests/helpers/qunit-helpers";
 
+function containsExactly(assert, expectation, actual, message) {
+  assert.deepEqual(
+    Array.from(expectation).sort(),
+    Array.from(actual).sort(),
+    message
+  );
+}
+
 module("Integration | Component | sidebar | section-link", function (hooks) {
   setupRenderingTest(hooks);
 
@@ -14,9 +22,15 @@ module("Integration | Component | sidebar | section-link", function (hooks) {
 
     await render(template);
 
-    assert.strictEqual(
-      query("a").className,
-      "sidebar-section-link sidebar-section-link-test sidebar-row ember-view",
+    containsExactly(
+      assert,
+      query("a").classList,
+      [
+        "ember-view",
+        "sidebar-row",
+        "sidebar-section-link",
+        "sidebar-section-link-test",
+      ],
       "has the right class attribute for the link"
     );
   });
@@ -26,9 +40,17 @@ module("Integration | Component | sidebar | section-link", function (hooks) {
 
     await render(template);
 
-    assert.strictEqual(
-      query("a").className,
-      "sidebar-section-link sidebar-section-link-test sidebar-row 123 abc ember-view",
+    containsExactly(
+      assert,
+      query("a").classList,
+      [
+        "123",
+        "abc",
+        "ember-view",
+        "sidebar-row",
+        "sidebar-section-link",
+        "sidebar-section-link-test",
+      ],
       "has the right class attribute for the link"
     );
   });

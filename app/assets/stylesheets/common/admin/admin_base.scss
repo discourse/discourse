@@ -226,7 +226,7 @@ $mobile-breakpoint: 700px;
     border-bottom: 1px solid var(--primary-low);
     margin-bottom: 0.5em;
     &.overridden {
-      background-color: var(--highlight-medium);
+      background-color: var(--highlight-bg);
     }
     h3 {
       font-weight: normal;
@@ -538,11 +538,6 @@ $mobile-breakpoint: 700px;
       a.active {
         background: var(--primary-medium);
       }
-      &:last-of-type {
-        > a {
-          margin-right: 25px;
-        }
-      }
     }
   }
   h1 {
@@ -624,6 +619,12 @@ $mobile-breakpoint: 700px;
   label {
     display: inline-block;
     margin-right: 5px;
+  }
+
+  .horizontal-overflow-nav__scroll-right,
+  .horizontal-overflow-nav__scroll-left {
+    --fade-color: var(--primary-low-rgb);
+    background: var(--primary-low);
   }
 }
 

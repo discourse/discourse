@@ -17,7 +17,7 @@ class ChatMessageSerializer < ApplicationSerializer
              :thread_id,
              :chat_channel_id
 
-  has_one :user, serializer: BasicUserWithStatusSerializer, embed: :objects
+  has_one :user, serializer: ChatMessageUserSerializer, embed: :objects
   has_one :chat_webhook_event, serializer: ChatWebhookEventSerializer, embed: :objects
   has_one :in_reply_to, serializer: ChatInReplyToSerializer, embed: :objects
   has_many :uploads, serializer: UploadSerializer, embed: :objects
@@ -40,7 +40,7 @@ class ChatMessageSerializer < ApplicationSerializer
       .reactions
       .group_by(&:emoji)
       .each do |emoji, reactions|
-        users = reactions[0..6].map(&:user).filter { |user| user.id != scope&.user&.id }[0..5]
+        users = reactions[0..5].map(&:user).filter { |user| user.id != scope&.user&.id }[0..4]
 
         next unless Emoji.exists?(emoji)
 

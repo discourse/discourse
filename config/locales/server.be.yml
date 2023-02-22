@@ -328,10 +328,6 @@ be:
           attributes:
             execute_at:
               in_the_past: "павінна быць у будучыні."
-        translation_overrides:
-          attributes:
-            value:
-              invalid_interpolation_keys: 'Наступны раздзел (ы) інтэрпаляцыі з''яўляюцца недапушчальнымі: "%{keys}"'
         watched_word:
           attributes:
             word:
@@ -2058,6 +2054,7 @@ be:
     latte: "Latte"
     summer: "лета"
     dark_rose: "Dark Rose"
+    default_theme_name: "Default"
     light_theme_name: "святло"
     dark_theme_name: "цёмна"
     neutral_theme_name: "нейтральны"

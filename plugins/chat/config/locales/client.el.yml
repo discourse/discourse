@@ -25,10 +25,6 @@ el:
       join: "Γίνετε μέλος"
       mention_warning:
         dismiss: "απόρριψη"
-        groups:
-          users_limit:
-            one: "%{count} χρήστης"
-            other: "%{count} χρήστες"
       reply: "Απάντηση"
       edit: "Επεξεργασία"
       rebake_message: "Ανανέωση HTML"

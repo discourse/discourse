@@ -2505,6 +2505,7 @@ el:
       approve:
         title: "Έγκριση"
       reject_user:
+        title: "Διαγραφή Χρήστη..."
         delete:
           title: "Διαγραφή Χρήστη"
       reject:

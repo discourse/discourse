@@ -116,7 +116,7 @@
           <UserProfileAvatar @user={{this.model}} @tagName="" />
           <div class="primary-textual">
             <div class="user-profile-names">
-              <div
+              <h1
                 class="{{if this.nameFirst 'full-name' 'username'}}
                   user-profile-names__primary"
               >
@@ -129,7 +129,7 @@
                 {{#if this.model.status}}
                   <UserStatusMessage @status={{this.model.status}} />
                 {{/if}}
-              </div>
+              </h1>
               <div
                 class="{{if this.nameFirst 'username' 'full-name'}}
                   user-profile-names__secondary"
@@ -431,81 +431,22 @@
       </div>
     </section>
 
-    {{#if this.currentUser.redesigned_user_page_nav_enabled}}
-      <div class="new-user-wrapper">
-        <UserNav
-          @user={{this.model}}
-          @showNotificationsTab={{this.showNotificationsTab}}
-          @showPrivateMessages={{this.showPrivateMessages}}
-          @canInviteToForum={{this.canInviteToForum}}
-          @showBadges={{this.showBadges}}
-          @currentParentRoute={{this.currentParentRoute}}
-          @showRead={{this.showRead}}
-          @showDrafts={{this.showDrafts}}
-          @showBookmarks={{this.showBookmarks}}
-        />
+    <div class="new-user-wrapper">
+      <UserNav
+        @user={{this.model}}
+        @showNotificationsTab={{this.showNotificationsTab}}
+        @showPrivateMessages={{this.showPrivateMessages}}
+        @canInviteToForum={{this.canInviteToForum}}
+        @showBadges={{this.showBadges}}
+        @currentParentRoute={{this.currentParentRoute}}
+        @showRead={{this.showRead}}
+        @showDrafts={{this.showDrafts}}
+        @showBookmarks={{this.showBookmarks}}
+      />
 
-        <div class="new-user-content-wrapper">
-          {{outlet}}
-        </div>
-      </div>
-    {{else}}
-      <div class="user-content-wrapper">
-        <section class="user-primary-navigation">
-          <MobileNav @class="main-nav" @desktopClass="nav nav-pills user-nav">
-            {{#unless this.model.profile_hidden}}
-              <li class="summary"><LinkTo @route="user.summary">{{i18n
-                    "user.summary.title"
-                  }}</LinkTo></li>
-              <li class="activity"><LinkTo @route="userActivity">{{i18n
-                    "user.activity_stream"
-                  }}</LinkTo></li>
-            {{/unless}}
-
-            {{#if this.showNotificationsTab}}
-              <li class="user-notifications">
-                <LinkTo @route="userNotifications">
-                  {{d-icon "bell" class="glyph"}}{{i18n "user.notifications"}}
-                </LinkTo>
-              </li>
-            {{/if}}
-
-            {{#if this.showPrivateMessages}}
-              <li class="private-messages"><LinkTo
-                  @route="userPrivateMessages"
-                >{{d-icon "envelope"}}{{i18n
-                    "user.private_messages"
-                  }}</LinkTo></li>
-            {{/if}}
-
-            {{#if this.canInviteToForum}}
-              <li class="invited"><LinkTo @route="userInvited">{{d-icon
-                    "user-plus"
-                  }}{{i18n "user.invited.title"}}</LinkTo></li>
-            {{/if}}
-
-            {{#if this.showBadges}}
-              <li class="badges"><LinkTo @route="user.badges">{{d-icon
-                    "certificate"
-                  }}{{i18n "badges.title"}}</LinkTo></li>
-            {{/if}}
-
-            <PluginOutlet
-              @name="user-main-nav"
-              @connectorTagName="li"
-              @outletArgs={{hash model=this.model}}
-            />
-
-            {{#if this.model.can_edit}}
-              <li class="preferences"><LinkTo @route="preferences">{{d-icon
-                    "cog"
-                  }}{{i18n "user.preferences"}}</LinkTo></li>
-            {{/if}}
-          </MobileNav>
-        </section>
-
+      <div class="new-user-content-wrapper">
         {{outlet}}
       </div>
-    {{/if}}
+    </div>
   </DSection>
 </div>

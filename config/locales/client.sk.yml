@@ -882,6 +882,7 @@ sk:
         primary: "Primárny e-mail"
         secondary: "Sekundárne e-maily"
         primary_label: "primárny"
+        resent_label: "email odoslaný"
         update_email: "Zmeniť email"
         no_secondary: "Žiadne sekundárne e-maily"
         ok: "Pošleme vám email pre potvrdenie"
@@ -1433,6 +1434,7 @@ sk:
         close_topics: "Uzavrieť tému"
         archive_topics: "Archivuj témy"
         move_messages_to_inbox: "Presuň do prijatej pošty"
+        notification_level: "Upozornenia..."
         choose_new_category: "Vyberte pre tému novú kategóriu:"
         selected:
           one: "Označíli ste <b>%{count}</b> tému."
@@ -1594,6 +1596,7 @@ sk:
         unarchive: "Zruš archiváciu témy"
         archive: "Archívuj tému"
         reset_read: "Zrušiť načítané údaje"
+        make_public: "Spraviť verejnou témou..."
       feature:
         pin: "Pripni tému"
         unpin: "Odopni tému"
@@ -1796,6 +1799,8 @@ sk:
         revert_to_regular: "Odobrať farbu personálu"
         rebake: "Pregenerovať HTML"
         unhide: "Odokryť"
+        change_owner: "Zmeniť vlastníctvo..."
+        grant_badge: "Udeliť odznak..."
         lock_post: "Zamknúť príspevok"
         unlock_post: "Odblokovať príspevok"
         delete_topic: "odstrániť tému"
@@ -1915,6 +1920,7 @@ sk:
     flagging:
       title: "Ďakujeme, že pomáhate udržiavať slušnosť v našej komunite!"
       action: "Označ príspevok"
+      take_action: "Vykonať akciu..."
       take_action_options:
         default:
           title: "Vykonať akciu"
@@ -2228,6 +2234,7 @@ sk:
         save: "Uložiť"
         delete: "Vymazať"
         confirm_delete: "Ste si istý, že chcete zmazať túto skupinu štítkov?"
+        parent_tag_placeholder: "Nepovinné"
       topics:
         none:
           unread: "Nemáte žiadnu neprečítanú tému"
@@ -2326,6 +2333,7 @@ sk:
         latest_version: "Najnovšie"
         new_features:
           dismiss: "Zahodiť"
+          learn_more: "Zistiť viac"
         last_checked: "Naposledy overené"
         refresh_problems: "Obnoviť"
         no_problems: "Nenašli sa žiadne problémy."
@@ -2414,6 +2422,7 @@ sk:
         user: "Používateľ"
         title: "API"
         created: Vytvorené
+        never_used: (nikdy)
         generate: "Generovať"
         revoke: "Zrušiť"
         all_users: "Všetci používatelia"
@@ -2448,7 +2457,6 @@ sk:
         enabled: "Povolené?"
         is_enabled: "A"
         not_enabled: "N"
-        change_settings: "Zmeniť nastavenia"
         change_settings_short: "Nastavenia"
         howto: "Ako nainštalujem pluginy?"
       backups:

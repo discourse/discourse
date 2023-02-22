@@ -105,45 +105,18 @@ fr:
       new_messages: "nouveaux messages"
       mention_warning:
         dismiss: "rejeter"
-        cannot_see:
-          one: "%{username} ne peut pas accéder à ce canal et n'a pas été averti(e)."
-          other: "%{username} et %{others} ne peuvent pas accéder à ce canal et n'ont pas été avertis."
         invitations_sent:
           one: "Invitation envoyée"
           other: "Invitations envoyées"
         invite: "Inviter à rejoindre le canal"
-        without_membership:
-          one: "%{username} n'a pas rejoint ce canal."
-          other: "%{username} et %{others} n'ont pas rejoint ce canal."
-        group_mentions_disabled:
-          one: "%{group_name} n'autorise pas les mentions"
-          other: "%{group_name} et %{others} n'autorisent pas les mentions"
-        too_many_members:
-          one: "%{group_name} a trop de membres. Personne n'a reçu de notification"
-          other: "%{group_name} et %{others} ont trop de membres. Personne n'a reçu de notification"
-        warning_multiple:
-          one: "%{count} autre"
-          other: "%{count} autres"
+        without_membership: "%{username} n'a pas rejoint ce canal."
+        group_mentions_disabled: "%{group_name} n'autorise pas les mentions."
+        too_many_members: "%{group_name} a trop de membres. Personne n'a reçu de notification."
         groups:
           header:
             some: "Certains utilisateurs ne recevront pas de notification"
             all: "Personne ne recevra de notification"
-          unreachable:
-            one: "@%{group} n'autorise pas les mentions"
-            other: "@%{group} et @%{group_2} n'autorisent pas les mentions"
-          unreachable_multiple: "@%{group} et %{count} autres groupes n'autorisent pas les mentions"
-          too_many_members:
-            one: "Mentionner @%{group} dépasse la %{notification_limit} de %{limit}"
-            other: "Mentionner @%{group} et @%{group_2} dépasse la %{notification_limit} de %{limit}"
-          too_many_members_multiple: "Ces %{count} groupes dépassent la %{notification_limit} de %{limit}"
-          users_limit:
-            one: "%{count} utilisateur"
-            other: "%{count} utilisateurs"
-          notification_limit: "limite de notification"
-        too_many_mentions: "Ce message dépasse la %{notification_limit} de %{limit}"
-        mentions_limit:
-          one: "%{count} mention"
-          other: "%{count} mentions"
+          unreachable_1: "@%{group} n'autorise pas les mentions."
       aria_roles:
         header: "En-tête de discussion"
         composer: "Compositeur de discussion"
@@ -160,10 +133,9 @@ fr:
       close_full_page: "Fermer la discussion en plein écran"
       open_message: "Ouvrir le message dans la discussion"
       placeholder_self: "Noter quelque chose"
-      placeholder_others: "Discuter avec %{messageRecipient}"
-      placeholder_new_message_disallowed: "Le canal a le statut %{status}, vous ne pouvez pas envoyer de nouveaux messages pour le moment."
+      placeholder_users: "Discuter avec %{commaSeparatedNames}"
       placeholder_silenced: "Vous ne pouvez pas envoyer de messages pour le moment."
-      placeholder_start_conversation: Démarrer une conversation avec %{usernames}
+      placeholder_start_conversation_users: "Démarrer une conversation avec %{commaSeparatedUsernames}"
       remove_upload: "Supprimer le fichier"
       react: "Réagir avec un émoji"
       reply: "Répondre"
@@ -258,18 +230,10 @@ fr:
       create_channel:
         auto_join_users:
           public_category_warning: "%{category} est une catégorie publique. Ajouter automatiquement tous les utilisateurs récemment actifs à ce canal ?"
-          warning_groups:
-            one: Ajouter automatiquement %{members_count} utilisateurs de %{group} ?
-            other: Ajouter automatiquement %{members_count} utilisateurs de %{group} et de %{group_2} ?
-          warning_multiple_groups: Ajouter automatiquement %{members_count} utilisateurs de %{group_1} et de %{count} autres groupes ?
         choose_category:
           label: "Choisir une catégorie"
           none: "sélectionnez-en une…"
           default_hint: Gérer l'accès en visitant <a href=%{link} target="_blank">les paramètres de sécurité de %{category}</a>
-          hint_groups:
-            one: Les utilisateurs de %{hint} auront accès à ce canal selon les <a href=%{link} target="_blank">paramètres de sécurité</a>
-            other: Les utilisateurs de %{hint} et de %{hint_2} auront accès à ce canal selon les <a href=%{link} target="_blank">paramètres de sécurité</a>
-          hint_multiple_groups: Les utilisateurs de %{hint_1} et de %{count} autres groupes auront accès à ce canal selon les <a href=%{link} target="_blank">paramètres de sécurité</a>
         create: "Créer un canal"
         description: "Description (facultative)"
         name: "Nom du canal"
@@ -282,10 +246,7 @@ fr:
         type: "Message de discussion"
       reactions:
         only_you: "Vous avez réagi avec :%{emoji}:"
-        and_others: "Vous, %{usernames} avez réagi avec :%{emoji}:"
-        only_others: "%{usernames} a réagi avec :%{emoji} :"
-        others_and_more: "%{usernames} et %{more} autres utilisateurs ont réagi avec :%{emoji}:"
-        you_others_and_more: "Vous, %{usernames} et %{more} autres utilisateurs avez réagi avec :%{emoji}:"
+        single_user: "%{username} a réagi avec :%{emoji} :"
       composer:
         toggle_toolbar: "Basculer la barre d'outils"
         italic_text: "texte souligné"
@@ -316,7 +277,6 @@ fr:
         saved: "Enregistré"
         unfollow: "Quitter"
         admin_title: "Administrateur"
-        retention_info: "L'historique des discussions sera enregistré pendant %{days} jours."
       admin:
         title: "Discussion"
       direct_messages:
@@ -381,9 +341,6 @@ fr:
         many_users:
           one: "%{commaSeparatedUsernames} et %{count} autre utilisateur sont en train d'écrire"
           other: "%{commaSeparatedUsernames} et %{count} autres utilisateurs sont en train d'écrire"
-      retention_reminders:
-        public: "L'historique du canal est conservé pendant %{days} jours."
-        dm: "L'historique des discussions privées est conservé pendant %{days} jours."
       flags:
         off_topic: "Ce message n'est pas pertinent pour la discussion en cours telle que définie par le titre du canal et devrait probablement être déplacé ailleurs."
         inappropriate: "Ce message contient du contenu qu'une personne raisonnable considérerait comme offensant, abusif ou contraire à nos <a href=\"%{basePath}/guidelines\">consignes communautaires</a>."

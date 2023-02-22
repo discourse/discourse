@@ -430,7 +430,7 @@ class TopicQuery
       (pinned_topics + unpinned_topics)[0...limit] if limit
     else
       offset = (page * per_page) - pinned_topics.length
-      offset = 0 unless offset > 0
+      offset = 0 if offset <= 0
       unpinned_topics.offset(offset).to_a
     end
   end
@@ -507,21 +507,7 @@ class TopicQuery
         whisperer: @user&.whisperer?,
       ).order("CASE WHEN topics.user_id = tu.user_id THEN 1 ELSE 2 END")
 
-    if @user
-      # micro optimisation so we don't load up all of user stats which we do not need
-      unread_at =
-        DB.query_single("select first_unread_at from user_stats where user_id = ?", @user.id).first
-
-      if max_age = options[:max_age]
-        max_age_date = max_age.days.ago
-        unread_at ||= max_age_date
-        unread_at = unread_at > max_age_date ? unread_at : max_age_date
-      end
-
-      # perf note, in the past we tried doing this in a subquery but performance was
-      # terrible, also tried with a join and it was bad
-      result = result.where("topics.updated_at >= ?", unread_at)
-    end
+    result = apply_max_age_limit(result, options)
 
     self.class.results_filter_callbacks.each do |filter_callback|
       result = filter_callback.call(:unread, result, @user, options)
@@ -546,6 +532,28 @@ class TopicQuery
     end
 
     suggested_ordering(result, options)
+  end
+
+  def new_and_unread_results(options = {})
+    base = default_results(options.reverse_merge(unordered: true))
+
+    new_results =
+      TopicQuery.new_filter(
+        base,
+        treat_as_new_topic_start_date: @user.user_option.treat_as_new_topic_start_date,
+      )
+    new_results = remove_muted(new_results, @user, options)
+    new_results = remove_dismissed(new_results, @user)
+
+    unread_results =
+      apply_max_age_limit(TopicQuery.unread_filter(base, whisperer: @user&.whisperer?), options)
+
+    base.joins_values.concat(new_results.joins_values, unread_results.joins_values)
+    base.joins_values.uniq!
+    results = base.merge(new_results.or(unread_results))
+
+    results = results.order("CASE WHEN topics.user_id = tu.user_id THEN 1 ELSE 2 END")
+    suggested_ordering(results, options)
   end
 
   protected
@@ -1166,5 +1174,24 @@ class TopicQuery
 
     col_name = whisperer ? "highest_staff_post_number" : "highest_post_number"
     list.where("tu.last_read_post_number IS NULL OR tu.last_read_post_number < topics.#{col_name}")
+  end
+
+  def apply_max_age_limit(results, options)
+    if @user
+      # micro optimisation so we don't load up all of user stats which we do not need
+      unread_at =
+        DB.query_single("select first_unread_at from user_stats where user_id = ?", @user.id).first
+
+      if max_age = options[:max_age]
+        max_age_date = max_age.days.ago
+        unread_at ||= max_age_date
+        unread_at = unread_at > max_age_date ? unread_at : max_age_date
+      end
+
+      # perf note, in the past we tried doing this in a subquery but performance was
+      # terrible, also tried with a join and it was bad
+      results = results.where("topics.updated_at >= ?", unread_at)
+    end
+    results
   end
 end

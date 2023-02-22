@@ -24,12 +24,6 @@ cs:
       join: "Přidat se ke skupině"
       mention_warning:
         dismiss: "označit jako přečtené"
-        groups:
-          users_limit:
-            one: "%{count} uživatel"
-            few: "%{count} uživatelů"
-            many: "%{count} uživatelů"
-            other: "%{count} uživatelů"
       reply: "Odpověď"
       edit: "Upravit"
       rebake_message: "Obnovit HTML"

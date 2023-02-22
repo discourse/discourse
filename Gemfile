@@ -105,7 +105,7 @@ gem "pg"
 gem "mini_sql"
 gem "pry-rails", require: false
 gem "pry-byebug", require: false
-gem "rtlcss_wrapper", require: false
+gem "rtlcss", require: false
 gem "rake"
 
 gem "thor", require: false
@@ -279,3 +279,5 @@ gem "webrick", require: false
 
 # Workaround until Ruby ships with cgi version 0.3.6 or higher.
 gem "cgi", ">= 0.3.6", require: false
+
+gem "tzinfo-data"
