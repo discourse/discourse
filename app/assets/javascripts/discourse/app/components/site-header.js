@@ -59,7 +59,7 @@ const SiteHeaderComponent = MountWidget.extend(
     _animateOpening(panel) {
       let waiter;
       if (DEBUG && isTesting()) {
-        waiter = () => true;
+        waiter = () => false;
         registerWaiter(waiter);
       }
 
