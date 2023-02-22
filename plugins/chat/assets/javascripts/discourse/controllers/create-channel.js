@@ -138,11 +138,11 @@ export default class CreateChannelController extends Controller.extend(
           break;
       }
     } else {
-      this.set(
-        "autoJoinWarning",
-        I18n.t(`chat.create_channel.auto_join_users.public_category_warning`, {
+      warning = I18n.t(
+        "chat.create_channel.auto_join_users.public_category_warning",
+        {
           category: escapeExpression(category.name),
-        })
+        }
       );
     }
 
