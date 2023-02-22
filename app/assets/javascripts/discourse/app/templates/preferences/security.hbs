@@ -100,9 +100,7 @@
   </div>
 {{/if}}
 
-{{#if this.currentUser.redesigned_user_page_nav_enabled}}
-  <UserPreferences::UserApiKeys @model={{@model}} />
-{{/if}}
+<UserPreferences::UserApiKeys @model={{@model}} />
 
 <span>
   <PluginOutlet

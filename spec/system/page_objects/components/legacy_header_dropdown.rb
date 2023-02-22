@@ -8,7 +8,7 @@ module PageObjects
       end
 
       def visible?
-        page.has_css?(".menu-panel.drop-down")
+        page.has_css?(".menu-container-general-links")
       end
     end
   end
