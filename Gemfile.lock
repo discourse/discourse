@@ -5,7 +5,6 @@ GIT
     mail (2.8.0.edge)
       mini_mime (>= 0.1.1)
 
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -236,16 +235,16 @@ GEM
     net-smtp (0.3.3)
       net-protocol
     nio4r (2.5.8)
-    nokogiri (1.13.10)
+    nokogiri (1.14.2)
       mini_portile2 (~> 2.8.0)
       racc (~> 1.4)
-    nokogiri (1.13.10-aarch64-linux)
+    nokogiri (1.14.2-aarch64-linux)
       racc (~> 1.4)
-    nokogiri (1.13.10-arm64-darwin)
+    nokogiri (1.14.2-arm64-darwin)
       racc (~> 1.4)
-    nokogiri (1.13.10-x86_64-darwin)
+    nokogiri (1.14.2-x86_64-darwin)
       racc (~> 1.4)
-    nokogiri (1.13.10-x86_64-linux)
+    nokogiri (1.14.2-x86_64-linux)
       racc (~> 1.4)
     oauth (1.1.0)
       oauth-tty (~> 1.0, >= 1.0.1)
