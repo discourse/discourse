@@ -4,9 +4,7 @@ import { test } from "qunit";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 acceptance("User Preferences - Tracking", function (needs) {
-  needs.user({
-    redesigned_user_page_nav_enabled: true,
-  });
+  needs.user();
 
   let putRequestData;
 

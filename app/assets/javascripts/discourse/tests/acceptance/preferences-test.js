@@ -71,14 +71,14 @@ acceptance("User Preferences", function (needs) {
     await click(".pref-activity-summary input[type=checkbox]");
     await savePreferences();
 
-    await click(".user-nav__preferences-notifications a");
+    await click(".user-nav__preferences-tracking a");
 
     await selectKit(
-      ".control-group.notifications .combo-box.duration"
+      ".user-preferences_tracking-topics-controls .combo-box.duration"
     ).expand();
 
     await selectKit(
-      ".control-group.notifications .combo-box.duration"
+      ".user-preferences_tracking-topics-controls .combo-box.duration"
     ).selectRowByValue(1440);
 
     await savePreferences();
