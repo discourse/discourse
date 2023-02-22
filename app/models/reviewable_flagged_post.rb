@@ -120,6 +120,10 @@ class ReviewableFlaggedPost < Reviewable
     delete_user_actions(actions) if potential_spam? && guardian.can_delete_user?(target_created_by)
   end
 
+  def perform_ignore(performed_by, args)
+    perform_ignore_and_do_nothing(performed_by, args)
+  end
+
   def perform_ignore_and_do_nothing(performed_by, args)
     actions =
       PostAction
