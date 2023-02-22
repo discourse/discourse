@@ -44,6 +44,7 @@ acceptance("User Preferences", function (needs) {
       document.body.classList.contains("user-preferences-page"),
       "has the body class"
     );
+
     assert.strictEqual(
       currentURL(),
       "/u/eviltrout/preferences/account",
@@ -62,15 +63,15 @@ acceptance("User Preferences", function (needs) {
     await fillIn(".pref-name input[type=text]", "Jon Snow");
     await savePreferences();
 
-    await click(".preferences-nav .nav-profile a");
+    await click(".user-nav__preferences-profile a");
     await fillIn("#edit-location", "Westeros");
     await savePreferences();
 
-    await click(".preferences-nav .nav-emails a");
+    await click(".user-nav__preferences-emails a");
     await click(".pref-activity-summary input[type=checkbox]");
     await savePreferences();
 
-    await click(".preferences-nav .nav-notifications a");
+    await click(".user-nav__preferences-notifications a");
 
     await selectKit(
       ".control-group.notifications .combo-box.duration"
@@ -82,7 +83,7 @@ acceptance("User Preferences", function (needs) {
 
     await savePreferences();
 
-    await click(".preferences-nav .nav-categories a");
+    await click(".user-nav__preferences-tracking a");
 
     const categorySelector = selectKit(
       ".tracking-controls .category-selector "
@@ -90,26 +91,25 @@ acceptance("User Preferences", function (needs) {
 
     await categorySelector.expand();
     await categorySelector.fillInFilter("faq");
+
+    const tagSelector = selectKit(".tracking-controls .tag-chooser");
+    await tagSelector.expand();
+    await tagSelector.fillInFilter("monkey");
+
     await savePreferences();
 
     this.siteSettings.tagging_enabled = false;
 
-    await visit("/");
-    await visit("/u/eviltrout/preferences");
+    await visit("/u/eviltrout/preferences/tracking");
 
-    assert.ok(
-      !exists(".preferences-nav .nav-tags a"),
-      "tags tab isn't there when tags are disabled"
+    assert.notOk(
+      exists(".tag-notifications"),
+      "updating tags tracking preferences isn't visible when tags are disabled"
     );
 
-    await click(".preferences-nav .nav-interface a");
+    await click(".user-nav__preferences-interface a");
     await click(".control-group.other input[type=checkbox]:nth-of-type(1)");
     await savePreferences();
-
-    assert.ok(
-      !exists(".preferences-nav .nav-apps a"),
-      "apps tab isn't there when you have no authorized apps"
-    );
   });
 });
 
