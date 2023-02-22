@@ -427,6 +427,7 @@ RSpec.describe Admin::ApiController do
           "user_status",
           "global",
           "badges",
+          "groups",
           "categories",
           "search",
           "invites",
