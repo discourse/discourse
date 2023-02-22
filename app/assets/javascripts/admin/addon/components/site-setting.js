@@ -11,6 +11,7 @@ export default class SiteSettingComponent extends Component.extend(
   updateExistingUsers = null;
 
   @readOnly("setting.staffLogFilter") staffLogFilter;
+
   _save() {
     const setting = this.buffered;
     return SiteSetting.update(setting.get("setting"), setting.get("value"), {
