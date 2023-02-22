@@ -74,7 +74,6 @@ acceptance(
       id: 5,
       username: "charlie",
       groups: [{ id: 14, name: "awesome_group", has_messages: true }],
-      redesigned_user_page_nav_enabled: true,
     });
 
     needs.site({
@@ -955,9 +954,7 @@ acceptance(
 acceptance(
   "User Private Messages - user with uppercase username",
   function (needs) {
-    needs.user({
-      redesigned_user_page_nav_enabled: true,
-    });
+    needs.user();
 
     needs.pretender((server, helper) => {
       const response = cloneJSON(userFixtures["/u/charlie.json"]);
