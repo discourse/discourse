@@ -5,6 +5,7 @@ module PageObjects
     class Topic < PageObjects::Pages::Base
       def initialize
         @composer_component = PageObjects::Components::Composer.new
+        @fast_edit_component = PageObjects::Components::FastEditor.new
       end
 
       def visit_topic(topic)
@@ -112,6 +113,32 @@ module PageObjects
 
       def fill_in_composer_title(title)
         @composer_component.fill_title(title)
+      end
+
+      def fast_edit_button
+        find(".quote-button .quote-edit-label")
+      end
+
+      def click_fast_edit_button
+        find(".quote-button .quote-edit-label").click
+      end
+
+      def fast_edit_input
+        find("#fast-edit-input")
+      end
+
+      def select_text(selector, offset = 10)
+        js = <<-JS
+          const node = document.querySelector(arguments[0]).childNodes[0];
+          const selection = window.getSelection();
+          const range = document.createRange();
+          range.selectNodeContents(node);
+          range.setEnd(node, arguments[1]);
+          selection.removeAllRanges();
+          selection.addRange(range);
+        JS
+    
+        page.execute_script(js, selector, offset)
       end
 
       private

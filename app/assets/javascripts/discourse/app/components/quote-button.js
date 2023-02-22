@@ -39,9 +39,10 @@ function getQuoteTitle(element) {
 }
 
 function fixQuotes(str) {
-  // u+201c “
-  // u+201d ”
-  return str.replace(/[\u201C\u201D]/g, '"');
+  // u+201c, u+201d = “ ”
+  // u+2018, u+2019 = ‘ ’
+  let new_str = str.replace(/[\u201C\u201D]/g, '"');
+  return new_str.replace(/[\u2018\u2019]/g, "'");
 }
 
 export default Component.extend(KeyEnterEscape, {
@@ -471,7 +472,7 @@ export default Component.extend(KeyEnterEscape, {
               bestIndex = index;
               return true;
             }
-          });
+          });          
 
           this?.editPost(postModel);
 
