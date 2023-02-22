@@ -594,6 +594,8 @@ table {
 
   #main-outlet {
     grid-area: content;
+    container-type: inline-size;
+    container-name: main-outlet;
   }
 }
 

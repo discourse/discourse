@@ -41,6 +41,7 @@
           ", minmax(min-content, 1fr))"
         )
       }}
+      @updates={{this.model.email}}
     >
 
       <:header>
@@ -136,10 +137,9 @@
               >
                 {{avatar user imageSize="small"}}
               </a>
-              <LinkTo
-                @route="adminUser"
-                @model={{user}}
-              >{{user.username}}</LinkTo>
+              <LinkTo @route="adminUser" @model={{user}}>
+                {{user.username}}
+              </LinkTo>
               {{#if user.staged}}
                 {{d-icon "far-envelope" title="user.staged"}}
               {{/if}}
@@ -148,7 +148,9 @@
               class="directory-table__cell email
                 {{if this.showEmails '' 'hidden'}}"
             >
-              <span>{{~user.email~}}</span>
+              <span class="directory-table__value">
+                {{~user.email~}}
+              </span>
             </div>
 
             {{#if user.last_emailed_at}}
@@ -156,17 +158,21 @@
                 class="directory-table__cell last-emailed"
                 title={{raw-date user.last_emailed_at}}
               >
-                <div class="directory-table__label">{{i18n
-                    "admin.users.last_emailed"
-                  }}</div>
-                <div>{{format-duration user.last_emailed_age}}</div>
+                <span class="directory-table__label">
+                  <span>{{i18n "admin.users.last_emailed"}}</span>
+                </span>
+                <span class="directory-table__value">
+                  {{format-duration user.last_emailed_age}}
+                </span>
               </div>
             {{else}}
               <div class="directory-table__cell last-emailed">
-                <div class="directory-table__label">{{i18n
-                    "admin.users.last_emailed"
-                  }}</div>
-                <div>{{format-duration user.last_emailed_age}}</div>
+                <span class="directory-table__label">
+                  <span>{{i18n "admin.users.last_emailed"}}</span>
+                </span>
+                <span class="directory-table__value">
+                  {{format-duration user.last_emailed_age}}
+                </span>
               </div>
             {{/if}}
 
@@ -174,34 +180,47 @@
               class="directory-table__cell last-seen"
               title={{raw-date user.last_seen_at}}
             >
-              <div class="directory-table__label">{{i18n "last_seen"}}</div>
-              <div>{{format-duration user.last_seen_age}}</div>
+              <span class="directory-table__label">
+                <span>{{i18n "last_seen"}}</span>
+              </span>
+              <span class="directory-table__value">
+                {{format-duration user.last_seen_age}}
+              </span>
             </div>
             <div class="directory-table__cell topics-entered">
-              <div class="directory-table__label">{{i18n
-                  "admin.user.topics_entered"
-                }}</div>
-              <div>{{number user.topics_entered}}</div>
+              <span class="directory-table__label">
+                <span>{{i18n "admin.user.topics_entered"}}</span>
+              </span>
+              <span class="directory-table__value">
+                {{number user.topics_entered}}
+              </span>
             </div>
             <div class="directory-table__cell posts-read">
-              <div class="directory-table__label">{{i18n
-                  "admin.user.posts_read_count"
-                }}</div>
-              <div>{{number user.posts_read_count}}</div>
+              <span class="directory-table__label">
+                <span>{{i18n "admin.user.posts_read_count"}}</span>
+              </span>
+              <span class="directory-table__value">
+                {{number user.posts_read_count}}
+              </span>
             </div>
             <div class="directory-table__cell time-read">
-              <div class="directory-table__label">{{i18n
-                  "admin.user.time_read"
-                }}</div>
-              <div>{{format-duration user.time_read}}</div>
+              <span class="directory-table__label">
+                <span>{{i18n "admin.user.time_read"}}</span>
+              </span>
+              <span class="directory-table__value">
+                {{format-duration user.time_read}}
+              </span>
             </div>
-
             <div
               class="directory-table__cell created"
               title={{raw-date user.created_at}}
             >
-              <div class="directory-table__label">{{i18n "created"}}</div>
-              <div>{{format-duration user.created_at_age}}</div>
+              <span class="directory-table__label">
+                <span>{{i18n "created"}}</span>
+              </span>
+              <span class="directory-table__value">
+                {{format-duration user.created_at_age}}
+              </span>
             </div>
 
             <PluginOutlet
@@ -211,16 +230,20 @@
 
             {{#if this.siteSettings.must_approve_users}}
               <div class="directory-table__cell">
-
-                <div class="directory-table__label">{{i18n
-                    "admin.users.approved"
-                  }}</div>
-                <div>{{i18n-yes-no user.approved}}</div>
+                <span class="directory-table__label">
+                  <span>{{i18n "admin.users.approved"}}</span>
+                </span>
+                <span class="directory-table__value">
+                  {{i18n-yes-no user.approved}}
+                </span>
               </div>
             {{/if}}
 
             <div class="directory-table__cell user-status">
-              <span>
+              <span class="directory-table__label">
+                <span>{{i18n "admin.users.status"}}</span>
+              </span>
+              <span class="directory-table__value">
                 {{#if user.admin}}
                   {{d-icon "shield-alt" title="admin.title"}}
                 {{/if}}

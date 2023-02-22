@@ -135,7 +135,7 @@ table.group-manage-logs {
 
   &--can-manage {
     grid-template-columns: 3fr repeat(4, minmax(min-content, 1fr)) 3em;
-    @include breakpoint("tablet") {
+    @container (max-width: 47em) {
       // positioning the member settings button within the same cell
       // and avoiding overlap with padding-right on user-info
       .group-member,
@@ -166,7 +166,7 @@ table.group-manage-logs {
     gap: 0.5em;
   }
 
-  @include breakpoint("tablet") {
+  @container (max-width: 47em) {
     .directory-table__cell.group-owner {
       order: 2;
     }

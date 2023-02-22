@@ -28,7 +28,7 @@ registerUnbound("directory-item-user-field-value", function (args) {
       : null;
   const content = value || "-";
   return htmlSafe(
-    `<div class='directory-table__value--user-field'>${content}</div>`
+    `<span class='directory-table__value--user-field'>${content}</span>`
   );
 });
 

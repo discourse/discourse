@@ -1,6 +1,3 @@
-<div class="directory-table-top-scroll">
-  <div class="directory-table-top-scroll-fake-content"></div>
-</div>
 <ResponsiveTable>
   <:header>
     <TableHeaderToggle
@@ -26,7 +23,8 @@
           {{i18n "directory.time_read"}}
         </div>
       </div>
-    {{/if}}</:header>
+    {{/if}}
+  </:header>
   <:body>
     {{#each this.items as |item|}}
       <DirectoryItem

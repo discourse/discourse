@@ -1,10 +1,10 @@
+.directory-table-top-scroll {
+  width: 100%;
+  overflow-x: auto;
+}
+
 .directory {
   margin-bottom: 100px;
-
-  .directory-table-top-scroll {
-    width: 100%;
-    overflow-x: auto;
-  }
 
   &.users-directory {
     .directory-group-selector {
@@ -83,12 +83,36 @@
   min-width: 450px;
 }
 
+@container (min-width: 47em) {
+  .users-directory {
+    .directory-table {
+      &__value {
+        white-space: nowrap;
+        font-size: var(--font-up-2);
+        &,
+        &--user-field {
+          color: var(--primary-medium);
+        }
+      }
+    }
+  }
+}
+
 .directory-table {
   display: grid;
   gap: 0;
   width: 100%;
-  overflow-x: auto;
   margin-top: 1em;
+  overflow-x: auto;
+
+  .me {
+    .directory-table__cell {
+      &,
+      &--user-field {
+        background-color: var(--highlight-low-or-medium);
+      }
+    }
+  }
 
   &__header,
   &__body,
@@ -96,43 +120,13 @@
     display: contents; // we'll be able to remove this with subgrid support
   }
 
-  &__cell {
-    .directory-table__label {
-      white-space: nowrap;
-    }
-  }
-
-  &__label {
-    color: var(--primary-medium);
-    margin-right: auto;
-    padding-right: 0.5em;
-    @include breakpoint("tablet", min-width) {
-      display: none;
-    }
-  }
-
-  .me {
-    @include breakpoint("tablet") {
-      background-color: var(--highlight-low-or-medium);
-    }
-
-    @include breakpoint("tablet", min-width) {
-      .directory-table__cell,
-      .directory-table__cell--user-field {
-        background-color: var(--highlight-low-or-medium);
-      }
-    }
-  }
-
   &__column-header,
   &__cell,
   &__cell--user-field {
     display: flex;
-    @include breakpoint("tablet", min-width) {
-      border-bottom: 1px solid var(--primary-low);
-      justify-content: center;
-      align-items: center;
-    }
+    border-bottom: 1px solid var(--primary-low);
+    justify-content: center;
+    align-items: center;
   }
 
   &__column-header {
@@ -153,68 +147,22 @@
     }
   }
 
-  &__cell,
-  &__cell--user-field {
-    padding: 0.25em;
-    @include breakpoint("tablet") {
-      &:first-child {
-        width: 100%;
-        padding: 0.5em 0.25em 1em;
-        justify-content: start;
-        grid-column-start: 1;
-        grid-column-end: -1;
-      }
-    }
-    @include breakpoint("tablet", min-width) {
+  &__cell {
+    &,
+    &--user-field {
       padding: 0.75em 0.5em;
     }
   }
 
-  @include breakpoint("tablet") {
-    display: flex;
-    flex-direction: column;
-
-    &__row {
-      &:first-child {
-        border-top: 1px solid var(--primary-low);
-      }
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(8em, 1fr));
-      border-bottom: 1px solid var(--primary-low);
-      padding: 0.85em 0.75em 1em;
-      gap: 0 20%;
-    }
-
-    &__header {
-      display: none;
-    }
-
-    &__cell--user-field {
-      flex-wrap: wrap;
-      order: 2;
-      grid-column-start: 1;
-      grid-column-end: -1;
-      .directory-table__label {
-        margin-right: 0.25em;
-      }
+  &__value {
+    white-space: nowrap;
+    &--user-field {
+      max-width: 30em;
     }
   }
 
-  // below tablet width we no longer use a table-style layout
-  @include breakpoint("tablet", min-width) {
-    &__value {
-      white-space: nowrap;
-      font-size: var(--font-up-2);
-    }
-
-    &__value--user-field {
-      font-size: var(--font-up-1);
-    }
-
-    &__value,
-    &__value--user-field {
-      color: var(--primary-medium);
-    }
+  &__label {
+    display: none;
   }
 
   .d-icon-heart {
@@ -256,5 +204,99 @@
   .header-contents {
     width: 100%;
     text-align: center;
+  }
+}
+
+// using a container query to switch to a flex-based layout
+// browsers without support for container queries
+// fallback to big horizontal scrolling table
+
+@container (max-width: 47em) {
+  .directory-table {
+    display: flex;
+    flex-direction: column;
+
+    .me {
+      background-color: var(--highlight-low-or-medium);
+    }
+
+    &__label {
+      display: inline-flex;
+      color: var(--primary-medium);
+      padding-right: 0.5em;
+      align-items: baseline;
+      align-self: start;
+      white-space: nowrap;
+      overflow: hidden;
+
+      span {
+        // caution: display flex here can interfere with overflow hiding
+        flex: 0 1 auto; // can shrink if needed
+        margin-right: 0.25em;
+        @include ellipsis;
+      }
+
+      // flexible divider between the label and value
+      &:after {
+        flex: 1 1 0; // can grow or shrink, but should be 0 width if needed
+        color: var(--primary-300);
+        min-width: 0;
+        overflow: hidden;
+        // this needs to be long to account for all possible widths
+        content: "...................................................................................................................................";
+      }
+
+      .d-icon {
+        font-size: 0.8em;
+        vertical-align: baseline;
+      }
+    }
+
+    &__value {
+      font-size: var(--font-0);
+      color: var(--primary);
+    }
+
+    &__row {
+      &:first-child {
+        border-top: 1px solid var(--primary-low);
+      }
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(11em, 1fr));
+      border-bottom: 1px solid var(--primary-low);
+      padding: 0.85em 0.75em 1em;
+      gap: 0 15%;
+    }
+
+    &__header {
+      display: none;
+    }
+
+    &__cell {
+      &,
+      &--user-field {
+        padding: 0.25em;
+        border: none;
+        &:first-child {
+          width: 100%;
+          padding: 0.5em 0.25em 1em;
+          justify-content: start;
+          // force full width of the cell
+          grid-column-start: 1;
+          grid-column-end: -1;
+        }
+      }
+
+      &--user-field {
+        order: 2;
+        // force full width of the cell
+        // because we don't know how much content there is
+        grid-column-start: 1;
+        grid-column-end: -1;
+        .directory-table__label {
+          margin-right: 0.25em;
+        }
+      }
+    }
   }
 }

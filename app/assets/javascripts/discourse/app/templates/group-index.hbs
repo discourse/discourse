@@ -149,7 +149,7 @@
                 <div class="directory-table__cell group-owner">
                   {{#if (or m.owner m.primary)}}
                     <span class="directory-table__label">
-                      {{i18n "groups.members.status"}}
+                      <span>{{i18n "groups.members.status"}}</span>
                     </span>
                   {{/if}}
                   <span class="directory-table__value">
@@ -166,7 +166,7 @@
               {{/if}}
               <div class="directory-table__cell">
                 <span class="directory-table__label">
-                  {{i18n "groups.member_added"}}
+                  <span>{{i18n "groups.member_added"}}</span>
                 </span>
                 <span class="directory-table__value">
                   {{bound-date m.added_at}}
@@ -175,7 +175,7 @@
               <div class="directory-table__cell">
                 {{#if m.last_posted_at}}
                   <span class="directory-table__label">
-                    {{i18n "last_post"}}
+                    <span>{{i18n "last_post"}}</span>
                   </span>
                 {{/if}}
                 <span class="directory-table__value">
@@ -185,7 +185,7 @@
               <div class="directory-table__cell">
                 {{#if m.last_seen_at}}
                   <span class="directory-table__label">
-                    {{i18n "last_seen"}}
+                    <span>{{i18n "last_seen"}}</span>
                   </span>
                 {{/if}}
                 <span class="directory-table__value">

@@ -6,17 +6,19 @@
   {{#if (directory-column-is-user-field column=column)}}
     <div class="directory-table__cell--user-field">
       <span class="directory-table__label">
-        {{column.name}}
+        <span>{{column.name}}</span>
       </span>
       {{directory-item-user-field-value item=this.item column=column}}
     </div>
   {{else}}
     <div class="directory-table__cell">
       <span class="directory-table__label">
-        {{#if column.icon}}
-          {{d-icon column.icon}}
-        {{/if}}
-        {{directory-item-label item=this.item column=column}}
+        <span>
+          {{#if column.icon}}
+            {{d-icon column.icon}}
+          {{/if}}
+          {{directory-item-label item=this.item column=column}}
+        </span>
       </span>
       {{directory-item-value item=this.item column=column}}
     </div>
@@ -27,7 +29,7 @@
 {{#if this.showTimeRead}}
   <div class="directory-table__cell">
     <span class="directory-table__label">
-      {{i18n "directory.time_read"}}
+      <span>{{i18n "directory.time_read"}}</span>
     </span>
     <span class="directory-table__value">
       {{format-duration this.item.time_read}}
