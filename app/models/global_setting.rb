@@ -63,14 +63,12 @@ class GlobalSetting
 
         define_singleton_method(key) do
           val = instance_variable_get("@#{key}_cache")
-          unless val.nil?
-            val == :missing ? nil : val
-          else
+          if val.nil?
             val = provider.lookup(key, default)
             val = :missing if val.nil?
             instance_variable_set("@#{key}_cache", val)
-            val == :missing ? nil : val
           end
+          val == :missing ? nil : val
         end
       end
   end

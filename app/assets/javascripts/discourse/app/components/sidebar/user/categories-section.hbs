@@ -15,7 +15,6 @@
     {{#if (gt this.sectionLinks.length 0)}}
       {{#each this.sectionLinks as |sectionLink|}}
         <Sidebar::SectionLink
-          @linkName={{sectionLink.name}}
           @route={{sectionLink.route}}
           @query={{sectionLink.query}}
           @title={{sectionLink.title}}
@@ -31,6 +30,7 @@
           @suffixCSSClass={{sectionLink.suffixCSSClass}}
           @suffixValue={{sectionLink.suffixValue}}
           @suffixType={{sectionLink.suffixType}}
+          data-category-id={{sectionLink.category.id}}
         />
       {{/each}}
     {{else}}

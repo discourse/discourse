@@ -24,6 +24,7 @@ acceptance("User Routes", function (needs) {
       helper.response(400, {})
     );
   });
+
   test("Invalid usernames", async function (assert) {
     try {
       await visit("/u/eviltrout%2F..%2F..%2F/summary");
@@ -52,6 +53,7 @@ acceptance("User Routes", function (needs) {
 
   test("Notifications", async function (assert) {
     await visit("/u/eviltrout/notifications");
+
     assert.ok(
       document.body.classList.contains("user-notifications-page"),
       "has the body class"
@@ -66,16 +68,20 @@ acceptance("User Routes", function (needs) {
     );
 
     updateCurrentUser({ moderator: true, admin: false });
+
     await visit("/u/charlie/summary");
+
     assert.notOk(
-      exists(".user-nav > .user-notifications"),
+      exists(".user-nav > .user-nav__notifications"),
       "does not have the notifications tab"
     );
 
     updateCurrentUser({ moderator: false, admin: true });
+
     await visit("/u/charlie/summary");
+
     assert.ok(
-      exists(".user-nav > .user-notifications"),
+      exists(".user-nav > .user-nav__notifications"),
       "has the notifications tab"
     );
   });

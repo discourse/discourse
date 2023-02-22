@@ -411,7 +411,7 @@ GEM
       rspec-core (>= 2.14)
     rtlcss (0.2.0)
       mini_racer (~> 0.6.3)
-    rubocop (1.44.1)
+    rubocop (1.45.1)
       json (~> 2.3)
       parallel (~> 1.10)
       parser (>= 3.2.0.0)
@@ -423,15 +423,15 @@ GEM
       unicode-display_width (>= 2.4.0, < 3.0)
     rubocop-ast (1.26.0)
       parser (>= 3.2.1.0)
-    rubocop-capybara (2.17.0)
+    rubocop-capybara (2.17.1)
       rubocop (~> 1.41)
-    rubocop-discourse (3.0.3)
+    rubocop-discourse (3.1.0)
       rubocop (>= 1.1.0)
       rubocop-rspec (>= 2.0.0)
     rubocop-rspec (2.18.1)
       rubocop (~> 1.33)
       rubocop-capybara (~> 2.17)
-    ruby-prof (1.5.0)
+    ruby-prof (1.6.0)
     ruby-progressbar (1.11.0)
     ruby-readability (0.7.0)
       guess_html_encoding (>= 0.0.4)
@@ -486,6 +486,8 @@ GEM
     timeout (0.3.2)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
+    tzinfo-data (1.2022.7)
+      tzinfo (>= 1.0.0)
     uglifier (4.2.0)
       execjs (>= 0.3.0, < 3)
     unf (0.1.4)
@@ -657,6 +659,7 @@ DEPENDENCIES
   syntax_tree-disable_ternary
   test-prof
   thor
+  tzinfo-data
   uglifier
   unf
   unicorn

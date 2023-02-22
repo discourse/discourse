@@ -3690,6 +3690,8 @@ hu:
       description: "Az üdvözlő téma az első dolog, amit az új tagok elolvasnak. Gondoljon rá úgy, mint egy \"lendületbe hozó beszéd\"-re vagy \"küldetésnyilatkozat\"-ra. Tudassa mindenkivel, kiknek szól ez a közösség, mire számíthatnak itt, és mit szeretne, mit csináljanak először."
       button_title: "Szerkesztés megkezdése"
     until: "Eddig:"
+    char_counter:
+      exceeded: "Túllépte a megengedett maximális karakterszámot."
   admin_js:
     type_to_filter: "Írj ide a szűréshez.."
     admin:

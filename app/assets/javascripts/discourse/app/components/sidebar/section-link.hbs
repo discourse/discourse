@@ -10,6 +10,7 @@
         target="_blank"
         class={{this.classNames}}
         title={{@title}}
+        ...attributes
       >
         <Sidebar::SectionLinkPrefix
           @prefixType={{@prefixType}}
@@ -32,6 +33,7 @@
         @models={{this.models}}
         @current-when={{@currentWhen}}
         title={{@title}}
+        ...attributes
       >
 
         <Sidebar::SectionLinkPrefix

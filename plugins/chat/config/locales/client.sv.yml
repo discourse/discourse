@@ -109,18 +109,95 @@ sv:
       new_messages: "nya meddelanden"
       mention_warning:
         dismiss: "avfärda"
+        cannot_see: "%{username} kan inte komma åt den här kanalen och har inte aviserats."
+        cannot_see_multiple:
+          one: "%{username} och %{count} annan användare kan inte komma åt den här kanalen och har inte aviserats."
+          other: "%{username} och %{count} andra användare kan inte komma åt den här kanalen och har inte aviserats."
         invitations_sent:
           one: "Inbjudan skickad"
           other: "Inbjudningar skickade"
         invite: "Bjud in till kanal"
         without_membership: "%{username} har inte gått med i den här kanalen."
+        without_membership_multiple:
+          one: "%{username} och %{count} annan användare har inte gått med i den här kanalen."
+          other: "%{username} och %{count} andra användare har inte gått med i den här kanalen."
         group_mentions_disabled: "%{group_name} tillåter inte omnämnanden."
+        group_mentions_disabled_multiple:
+          one: "%{group_name} och ytterligare %{count} grupp tillåter inte omnämnanden."
+          other: "%{group_name} och ytterligare %{count} grupper tillåter inte omnämnanden."
         too_many_members: "%{group_name} har för många medlemmar. Ingen aviserades."
+        too_many_members_multiple:
+          one: "%{group_name} och %{count} annan grupp har för många medlemmar. Ingen aviserades."
+          other: "%{group_name} och %{count} andra grupper har för många medlemmar. Ingen aviserades."
         groups:
           header:
             some: "Vissa användare kommer inte att aviseras"
             all: "Ingen kommer att aviseras"
           unreachable_1: "@%{group} tillåter inte omnämnanden."
+          unreachable_2: "@%{group1} och @%{group2} tillåter inte omnämnanden."
+          unreachable_multiple:
+            one: "@%{group} och ytterligare %{count} grupp tillåter inte omnämnanden."
+            other: "@%{group} och ytterligare %{count} grupper tillåter inte omnämnanden."
+          too_many_members_MF: |
+            { groupCount, plural,
+                 =1 {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {Att nämna @{group1} överstiger <a href="{siteSettingUrl}" target="_blank">aviseringsgränsen</a> som är # användare.}
+                              other {Att nämna @{group1} överstiger <a href="{siteSettingUrl}" target="_blank">aviseringsgränsen</a> som är # användare.}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {Att nämna @{group1} överstiger aviseringsgränsen som är # användare.}
+                              other {Att nämna @{group1} överstiger aviseringsgränsen som är # användare.}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+                 =2 {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {Att nämna @{group1} och @{group2} överstiger <a href="{siteSettingUrl}" target="_blank">aviseringsgränsen</a> som är # användare.}
+                            other {Att nämna @{group1} och @{group2} överstiger <a href="{siteSettingUrl}" target="_blank">aviseringsgränsen</a> som är # användare.}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {Att nämna @{group1} och @{group2} överstiger aviseringsgränsen som är # användare.}
+                            other {Att nämna @{group1} och @{group2} överstiger aviseringsgränsen som är # användare.}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+              other {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {Att nämna dessa {groupCount} grupper överstiger <a href="{siteSettingUrl}" target="_blank">aviseringsgränsen</a> som är # användare.}
+                            other {Att nämna dessa {groupCount} grupper överstiger <a href="{siteSettingUrl}" target="_blank">aviseringsgränsen</a> som är # användare.}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {Att nämna dessa {groupCount} grupper överstiger aviseringsgränsen som är # användare.}
+                            other {Att nämna dessa {groupCount} grupper överstiger aviseringsgränsen som är # användare.}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+            }
+        too_many_mentions:
+          one: "Detta meddelande överstiger aviseringsgränsen, som är %{count} omnämnande."
+          other: "Detta meddelande överstiger aviseringsgränsen, som är %{count} omnämnanden."
+        too_many_mentions_admin:
+          one: 'Det här meddelandet överstiger <a href="%{siteSettingUrl}" target="_blank">aviseringsgränsen</a> som är %{count} omnämnande.'
+          other: 'Det här meddelandet överstiger <a href="%{siteSettingUrl}" target="_blank">aviseringsgränsen</a> som är %{count} omnämnanden.'
       aria_roles:
         header: "Chatthuvud"
         composer: "Chattkompositör"
@@ -137,7 +214,15 @@ sv:
       close_full_page: "Stäng helskärmschatt"
       open_message: "Öppna meddelande i chatten"
       placeholder_self: "Gör en anteckning"
+      placeholder_channel: "Chatta med %{channelName}"
+      placeholder_users: "Chatta med %{commaSeparatedNames}"
+      placeholder_new_message_disallowed:
+        archived: "Kanalen är arkiverad, och du kan inte skicka nya meddelanden just nu."
+        closed: "Kanalen är stängd, och du kan inte skicka nya meddelanden just nu."
+        read_only: "Kanalen är lässkyddad, och du kan inte skicka nya meddelanden just nu."
       placeholder_silenced: "Du kan inte skicka meddelanden just nu."
+      placeholder_start_conversation: "Inled ett samtal med ..."
+      placeholder_start_conversation_users: "Inled ett samtal med %{commaSeparatedUsernames}"
       remove_upload: "Ta bort fil"
       react: "Reagera med emoji"
       reply: "Svara"
@@ -236,10 +321,36 @@ sv:
       create_channel:
         auto_join_users:
           public_category_warning: "%{category} är en offentlig kategori. Vill du automatiskt lägga till alla nyligen aktiva användare till den här kanalen?"
+          warning_1_group:
+            one: "Vill du automatiskt lägga till %{count} användare från %{group}?"
+            other: "Vill du automatiskt lägga till %{count} användare från %{group}?"
+          warning_2_groups:
+            one: "Vill du automatiskt lägga till %{count} användare från %{group1} och %{group2}?"
+            other: "Vill du automatiskt lägga till %{count} användare från %{group1} och %{group2}?"
+          warning_multiple_groups_MF: |
+            { groupCount, plural,
+                one {
+                      { userCount, plural,
+                          one {Vill du automatiskt lägga till {userCount} användare från {groupName} och ytterligare {groupCount} grupp?}
+                        other {Vill du automatiskt lägga till {userCount} användare från {groupName} och ytterligare {groupCount} grupp?}
+                      }
+                    }
+              other {
+                      { userCount, plural,
+                          one {Vill du automatiskt lägga till {userCount} användare från {groupName} och ytterligare {groupCount} grupper?}
+                        other {Vill du automatiskt lägga till {userCount} användare från {groupName} och ytterligare {groupCount} grupper?}
+                      }
+                    }
+            }
         choose_category:
           label: "Välj en kategori"
           none: "Välj en..."
           default_hint: Hantera åtkomst genom att besöka <a href=%{link} target="_blank">%{category} säkerhetsinställningar</a>
+          hint_1_group: 'Användare i %{group} kommer att ha åtkomst till denna kanal enligt <a href="%{settingLink}" target="_blank">säkerhetsinställningar</a>'
+          hint_2_groups: 'Användare i %{group1} och %{group2} kommer att ha åtkomst till denna kanal enligt <a href="%{settingLink}" target="_blank">säkerhetsinställningar</a>'
+          hint_multiple_groups:
+            one: 'Användare i %{group} och ytterligare %{count} grupp kommer att ha åtkomst till denna kanal enligt <a href="%{settingLink}" target="_blank">säkerhetsinställningarna</a>'
+            other: 'Användare i %{group} och ytterligare %{count} grupper kommer att ha åtkomst till denna kanal enligt <a href="%{settingLink}" target="_blank">säkerhetsinställningarna</a>'
         create: "Skapa kanal"
         description: "Beskrivning (valfritt)"
         name: "Kanalnamn"
@@ -253,6 +364,16 @@ sv:
         type: "Chatt meddelande"
       reactions:
         only_you: "Du reagerade med :%{emoji}:"
+        you_and_single_user: "Du och %{username} reagerade med :%{emoji}:"
+        you_and_multiple_users: "Du, %{commaSeparatedUsernames} och %{username} reagerade med :%{emoji}:"
+        you_multiple_users_and_more:
+          one: "Du, %{commaSeparatedUsernames} och %{count} till reagerade med :%{emoji}:"
+          other: "Du, %{commaSeparatedUsernames} och %{count} till reagerade med :%{emoji}:"
+        single_user: "%{username} reagerade med :%{emoji}:"
+        multiple_users: "%{commaSeparatedUsernames} och %{username} reagerade med :%{emoji}:"
+        multiple_users_and_more:
+          one: "%{commaSeparatedUsernames} och ytterligare %{count} reagerade med :%{emoji}:"
+          other: "%{commaSeparatedUsernames} och ytterligare %{count} reagerade med :%{emoji}:"
       composer:
         toggle_toolbar: "Växla verktygsfält"
         italic_text: "kursiv text"

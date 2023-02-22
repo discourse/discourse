@@ -148,7 +148,7 @@ class PostCreator
         end
       end
 
-      unless @topic.present? && (@opts[:skip_guardian] || guardian.can_create?(Post, @topic))
+      if @topic.blank? || !(@opts[:skip_guardian] || guardian.can_create?(Post, @topic))
         errors.add(:base, I18n.t(:topic_not_found))
         return false
       end
