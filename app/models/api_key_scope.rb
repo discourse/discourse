@@ -31,6 +31,9 @@ class ApiKeyScope < ActiveRecord::Base
             actions: %w[topics#update topics#status],
             params: %i[topic_id category_id],
           },
+          delete: {
+            actions: %w[topics#destroy],
+          },
           read: {
             actions: %w[topics#show topics#feed topics#posts],
             params: %i[topic_id],
@@ -54,6 +57,14 @@ class ApiKeyScope < ActiveRecord::Base
           edit: {
             actions: %w[posts#update],
             params: %i[id],
+          },
+          delete: {
+            actions: %w[posts#destroy],
+          },
+        },
+        tags: {
+          list: {
+            actions: %w[tags#index],
           },
         },
         categories: {
@@ -156,6 +167,21 @@ class ApiKeyScope < ActiveRecord::Base
           },
           revoke_badge_from_user: {
             actions: %w[user_badges#destroy],
+          },
+        },
+        groups: {
+          manage_groups: {
+            actions: %w[groups#members groups#add_members groups#remove_members],
+            params: %i[id],
+          },
+          administer_groups: {
+            actions: %w[
+              admin/groups#create
+              admin/groups#destroy
+              groups#show
+              groups#update
+              groups#index
+            ],
           },
         },
         search: {

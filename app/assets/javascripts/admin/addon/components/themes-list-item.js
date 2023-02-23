@@ -1,3 +1,4 @@
+import { classNameBindings, classNames } from "@ember-decorators/component";
 import { and, gt } from "@ember/object/computed";
 import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
@@ -7,19 +8,22 @@ import { action } from "@ember/object";
 
 const MAX_COMPONENTS = 4;
 
-export default Component.extend({
-  childrenExpanded: false,
-  classNames: ["themes-list-item"],
-  classNameBindings: ["theme.selected:selected"],
-  hasComponents: gt("children.length", 0),
-  displayComponents: and("hasComponents", "theme.isActive"),
-  displayHasMore: gt("theme.childThemes.length", MAX_COMPONENTS),
+@classNames("themes-list-item")
+@classNameBindings("theme.selected:selected")
+export default class ThemesListItem extends Component {
+  childrenExpanded = false;
+
+  @gt("children.length", 0) hasComponents;
+
+  @and("hasComponents", "theme.isActive") displayComponents;
+
+  @gt("theme.childThemes.length", MAX_COMPONENTS) displayHasMore;
 
   click(e) {
     if (!e.target.classList.contains("others-count")) {
       this.navigateToTheme();
     }
-  },
+  }
 
   @discourseComputed(
     "theme.component",
@@ -40,12 +44,12 @@ export default Component.extend({
       const name = escape(t.name);
       return t.enabled ? name : `${iconHTML("ban")} ${name}`;
     });
-  },
+  }
 
   @discourseComputed("children")
   childrenString(children) {
     return children.join(", ");
-  },
+  }
 
   @discourseComputed(
     "theme.childThemes.length",
@@ -58,11 +62,11 @@ export default Component.extend({
       return 0;
     }
     return childrenCount - MAX_COMPONENTS;
-  },
+  }
 
   @action
   toggleChildrenExpanded(event) {
     event?.preventDefault();
     this.toggleProperty("childrenExpanded");
-  },
-});
+  }
+}

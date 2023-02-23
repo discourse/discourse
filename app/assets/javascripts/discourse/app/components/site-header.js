@@ -59,12 +59,13 @@ const SiteHeaderComponent = MountWidget.extend(
     _animateOpening(panel) {
       let waiter;
       if (DEBUG && isTesting()) {
-        waiter = () => true;
+        waiter = () => false;
         registerWaiter(waiter);
       }
 
       window.requestAnimationFrame(() => {
         this._setAnimateOpeningProperties(panel);
+
         if (DEBUG && isTesting()) {
           unregisterWaiter(waiter);
         }
@@ -77,6 +78,7 @@ const SiteHeaderComponent = MountWidget.extend(
       headerCloak.classList.add("animate");
       this._scheduledRemoveAnimate = discourseLater(() => {
         panel.classList.remove("animate");
+        panel.classList.add("animated");
         headerCloak.classList.remove("animate");
       }, 200);
       panel.style.setProperty("--offset", 0);
@@ -88,6 +90,7 @@ const SiteHeaderComponent = MountWidget.extend(
       this._animate = true;
       const headerCloak = document.querySelector(".header-cloak");
       panel.classList.add("animate");
+      panel.classList.remove("animated");
       headerCloak.classList.add("animate");
       if (menuOrigin === "left") {
         panel.style.setProperty("--offset", `-100vw`);

@@ -182,6 +182,32 @@ task "javascript:update_constants" => :environment do
     export const replacements = #{Emoji.unicode_replacements_json};
   JS
 
+  langs = []
+  Dir
+    .glob("vendor/assets/javascripts/highlightjs/languages/*.min.js")
+    .each { |f| langs << File.basename(f, ".min.js") }
+  bundle = HighlightJs.bundle(langs)
+
+  ctx = MiniRacer::Context.new
+  hljs_aliases = ctx.eval(<<~JS)
+    #{bundle}
+
+    let aliases = {};
+    hljs.listLanguages().forEach((lang) => {
+      if (hljs.getLanguage(lang).aliases) {
+        aliases[lang] = hljs.getLanguage(lang).aliases;
+      }
+    });
+
+    aliases;
+  JS
+
+  write_template("pretty-text/addon/highlightjs-aliases.js", task_name, <<~JS)
+    export const HLJS_ALIASES = #{hljs_aliases.to_json};
+  JS
+
+  ctx.dispose
+
   write_template("pretty-text/addon/emoji/version.js", task_name, <<~JS)
     export const IMAGE_VERSION = "#{Emoji::EMOJI_VERSION}";
   JS

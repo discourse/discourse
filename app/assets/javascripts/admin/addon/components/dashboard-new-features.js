@@ -1,18 +1,19 @@
+import { classNameBindings, classNames } from "@ember-decorators/component";
 import Component from "@ember/component";
 import { action, computed } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 
-export default Component.extend({
-  newFeatures: null,
-  classNames: ["section", "dashboard-new-features"],
-  classNameBindings: ["hasUnseenFeatures:ordered-first"],
-  releaseNotesLink: null,
+@classNames("section", "dashboard-new-features")
+@classNameBindings("hasUnseenFeatures:ordered-first")
+export default class DashboardNewFeatures extends Component {
+  newFeatures = null;
+  releaseNotesLink = null;
 
-  init() {
-    this._super(...arguments);
+  constructor() {
+    super(...arguments);
 
     ajax("/admin/dashboard/new-features.json").then((json) => {
-      if (!this.element || this.isDestroying || this.isDestroyed) {
+      if (this.isDestroying || this.isDestroyed) {
         return;
       }
 
@@ -22,16 +23,17 @@ export default Component.extend({
         releaseNotesLink: json.release_notes_link,
       });
     });
-  },
+  }
 
-  columnCountClass: computed("newFeatures", function () {
+  @computed("newFeatures")
+  get columnCountClass() {
     return this.newFeatures.length > 2 ? "three-or-more-items" : "";
-  }),
+  }
 
   @action
   dismissNewFeatures() {
     ajax("/admin/dashboard/mark-new-features-as-seen.json", {
       type: "PUT",
     }).then(() => this.set("hasUnseenFeatures", false));
-  },
-});
+  }
+}

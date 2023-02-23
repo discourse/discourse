@@ -129,7 +129,7 @@
 
   <% content_for :head do %>
     <%= auto_discovery_link_tag(@topic_view, {action: :feed, slug: @topic_view.topic.slug, topic_id: @topic_view.topic.id}, rel: 'alternate nofollow', title: t('rss_posts_in_topic', topic: @topic_view.title), type: 'application/rss+xml') %>
-    <%= raw crawlable_meta_data(title: @topic_view.title, description: @topic_view.summary(strip_images: true), image: @topic_view.image_url, read_time: @topic_view.read_time, like_count: @topic_view.like_count, ignore_canonical: true, published_time: @topic_view.published_time, breadcrumbs: @breadcrumbs, tags: @topic_view.tags) %>
+    <%= raw crawlable_meta_data(title: @topic_view.title, description: @topic_view.summary(strip_images: true), image: @topic_view.image_url, read_time: @topic_view.read_time, like_count: @topic_view.like_count, ignore_canonical: true, published_time: @topic_view.published_time, breadcrumbs: @breadcrumbs, tags: @tags.map(&:name)) %>
 
     <% if @topic_view.prev_page || @topic_view.next_page %>
       <% if @topic_view.prev_page %>
