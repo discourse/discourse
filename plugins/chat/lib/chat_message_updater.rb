@@ -51,10 +51,7 @@ class Chat::ChatMessageUpdater
   def validate_channel_status!
     return if @guardian.can_modify_channel_message?(@chat_channel)
     raise StandardError.new(
-            I18n.t(
-              "chat.errors.channel_modify_message_disallowed",
-              status: @chat_channel.status_name,
-            ),
+            I18n.t("chat.errors.channel_modify_message_disallowed.#{@chat_channel.status}"),
           )
   end
 

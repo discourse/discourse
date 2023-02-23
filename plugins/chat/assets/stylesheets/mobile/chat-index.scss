@@ -70,12 +70,18 @@
       }
 
       &__name {
+        flex-shrink: 0;
         margin-left: 0.75em;
         font-size: var(--font-up-1);
       }
 
       &__category-badge {
         font-size: var(--font-up-1);
+      }
+
+      &__user-status-message {
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
     }
   }

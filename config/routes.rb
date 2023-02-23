@@ -1589,7 +1589,7 @@ Discourse::Application.routes.draw do
     put "user-status" => "user_status#set"
     delete "user-status" => "user_status#clear"
 
-    resources :sidebar_sections, only: %i[create update destroy]
+    resources :sidebar_sections, only: %i[index create update destroy]
 
     get "*url", to: "permalinks#show", constraints: PermalinkConstraint.new
   end

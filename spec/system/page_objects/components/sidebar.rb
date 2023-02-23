@@ -7,6 +7,10 @@ module PageObjects
         page.has_css?("#d-sidebar")
       end
 
+      def not_visible?
+        page.has_no_css?("#d-sidebar")
+      end
+
       def has_category_section_link?(category)
         page.has_link?(category.name, class: "sidebar-section-link")
       end

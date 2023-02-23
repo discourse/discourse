@@ -31,13 +31,13 @@ module FileStore
     end
 
     def self.s3_options_from_env
-      unless ENV["DISCOURSE_S3_BUCKET"].present? && ENV["DISCOURSE_S3_REGION"].present? &&
-               (
-                 (
-                   ENV["DISCOURSE_S3_ACCESS_KEY_ID"].present? &&
-                     ENV["DISCOURSE_S3_SECRET_ACCESS_KEY"].present?
-                 ) || ENV["DISCOURSE_S3_USE_IAM_PROFILE"].present?
-               )
+      if ENV["DISCOURSE_S3_BUCKET"].blank? || ENV["DISCOURSE_S3_REGION"].blank? ||
+           !(
+             (
+               ENV["DISCOURSE_S3_ACCESS_KEY_ID"].present? &&
+                 ENV["DISCOURSE_S3_SECRET_ACCESS_KEY"].present?
+             ) || ENV["DISCOURSE_S3_USE_IAM_PROFILE"].present?
+           )
         raise ToS3MigrationError.new(<<~TEXT)
           Please provide the following environment variables:
             - DISCOURSE_S3_BUCKET

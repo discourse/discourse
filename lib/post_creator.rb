@@ -148,7 +148,7 @@ class PostCreator
         end
       end
 
-      unless @topic.present? && (@opts[:skip_guardian] || guardian.can_create?(Post, @topic))
+      if @topic.blank? || !(@opts[:skip_guardian] || guardian.can_create?(Post, @topic))
         errors.add(:base, I18n.t(:topic_not_found))
         return false
       end
@@ -190,7 +190,7 @@ class PostCreator
         update_user_counts
         create_embedded_topic
         @post.link_post_uploads
-        update_uploads_secure_status
+        @post.update_uploads_secure_status(source: "post creator")
         delete_owned_bookmarks
         ensure_in_allowed_users if guardian.is_staff?
         unarchive_message if !@opts[:import_mode]
@@ -400,10 +400,6 @@ class PostCreator
     embed =
       TopicEmbed.new(topic_id: @post.topic_id, post_id: @post.id, embed_url: @opts[:embed_url])
     rollback_from_errors!(embed) unless embed.save
-  end
-
-  def update_uploads_secure_status
-    @post.update_uploads_secure_status(source: "post creator") if SiteSetting.secure_uploads?
   end
 
   def delete_owned_bookmarks

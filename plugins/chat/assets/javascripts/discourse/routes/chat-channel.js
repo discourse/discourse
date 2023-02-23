@@ -5,12 +5,12 @@ import { action } from "@ember/object";
 
 @withChatChannel
 export default class ChatChannelRoute extends DiscourseRoute {
-  @service chatThreadsManager;
+  @service chat;
   @service chatStateManager;
 
   @action
   willTransition(transition) {
-    this.chat.activeThread = null;
+    this.chat.activeChannel.activeThread = null;
     this.chatStateManager.closeSidePanel();
 
     if (!transition?.to?.name?.startsWith("chat.")) {
@@ -18,9 +18,5 @@ export default class ChatChannelRoute extends DiscourseRoute {
       this.chat.activeChannel = null;
       this.chat.updatePresence();
     }
-  }
-
-  beforeModel() {
-    this.chatThreadsManager.resetCache();
   }
 }

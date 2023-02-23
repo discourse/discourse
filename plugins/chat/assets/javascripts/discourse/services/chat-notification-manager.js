@@ -117,6 +117,7 @@ export default class ChatNotificationManager extends Service {
 
     if (!this._subscribedToChat) {
       this.messageBus.subscribe(this._chatAlertChannel(), this.onMessage);
+      this.set("_subscribedToChat", true);
     }
 
     if (opts.only && this._subscribedToCore) {
@@ -131,6 +132,7 @@ export default class ChatNotificationManager extends Service {
     }
     if (!this._subscribedToCore) {
       this.messageBus.subscribe(this._coreAlertChannel(), this.onMessage);
+      this.set("_subscribedToCore", true);
     }
 
     if (opts.only && this._subscribedToChat) {

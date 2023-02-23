@@ -3741,6 +3741,9 @@ tr_TR:
       granted:
         one: "%{count} verildi"
         other: "%{count} verildi"
+      granted_with_count:
+        one: '<a href="%{badgeUrl}" title="%{count} granted" class="grant-count">%{count}x</a> <span class="grant-text">verildi</span>'
+        other: '<a href="%{badgeUrl}" title="%{count} granted" class="grant-count">%{count}x</a> <span class="grant-text">verildi</span>'
       select_badge_for_title: Başlığınız olarak kullanmak için bir rozet seçin
       none: "(hiçbiri)"
       successfully_granted: "%{username} adlı kullanıcıya başarıyla %{badge} verildi"
@@ -4046,6 +4049,8 @@ tr_TR:
       description: "Karşılama konunuz, yeni üyelerin okuyacağı ilk şeydir. Bunu “asansör konuşmanız” veya “hedef tanımınız” olarak düşünün. Herkese bu topluluğun kimler için olduğunu, burada ne bulmayı bekleyebileceklerini ve önce ne yapmalarını istediğinizi açıklayın."
       button_title: "Düzenlemeye Başla"
     until: "Şuna kadar:"
+    char_counter:
+      exceeded: "İzin verilen maksimum karakter sayısı aşıldı."
   admin_js:
     type_to_filter: "filtrelemek için yazın..."
     admin:
@@ -4204,10 +4209,6 @@ tr_TR:
         about: "Grup üyeliğinizi ve adlarınızı burada düzenleyin"
         group_members: "Grup üyeleri"
         delete: "Sil"
-        delete_confirm: "Bu grubu silmek istediğinizden emin misiniz?"
-        delete_with_messages_confirm:
-          one: "Bu grubun silinmesi %{count} mesajın artık olmasına neden olacak, grup üyeleri artık mesaja erişemeyecek."
-          other: "Bu grubun silinmesi %{count} mesajın artık olmasına neden olacak, grup üyeleri artık bu mesajlara erişemeyecek."
         delete_failed: "Grup silinemiyor. Bu otomatik bir grupsa yok edilemez."
         delete_automatic_group: Bu otomatik bir grup ve silinemez.
         delete_owner_confirm: "\"%{username}\" için sahiplik ayrıcalığı kaldırılsın mı?"
@@ -4414,7 +4415,6 @@ tr_TR:
         enabled: "Etkin mi?"
         is_enabled: "E"
         not_enabled: "H"
-        change_settings: "Ayarları Değiştir"
         change_settings_short: "Ayarlar"
         howto: "Eklentileri nasıl yüklerim?"
         official: "Resmi Eklenti"

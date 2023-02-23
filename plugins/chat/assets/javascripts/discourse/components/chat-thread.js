@@ -9,7 +9,7 @@ export default class ChatThreadPanel extends Component {
   @service router;
 
   get thread() {
-    return this.chat.activeThread;
+    return this.chat.activeChannel.activeThread;
   }
 
   get title() {

@@ -3,19 +3,16 @@ import { inject as service } from "@ember/service";
 
 export default class ChatChannelThread extends DiscourseRoute {
   @service router;
-  @service chatThreadsManager;
   @service chatStateManager;
   @service chat;
 
   async model(params) {
-    return this.chatThreadsManager.find(
-      this.modelFor("chat.channel").id,
-      params.threadId
-    );
+    const channel = this.modelFor("chat.channel");
+    return channel.threadsManager.find(channel.id, params.threadId);
   }
 
   afterModel(model) {
-    this.chat.activeThread = model;
+    this.chat.activeChannel.activeThread = model;
     this.chatStateManager.openSidePanel();
   }
 }

@@ -65,7 +65,7 @@
   }
 
   .field-warning {
-    background-color: var(--highlight-low);
+    background-color: var(--highlight-bg);
   }
 
   .admin-container {
@@ -886,7 +886,7 @@ table.permalinks {
 
 .robots-txt-edit {
   div.overridden {
-    background: var(--highlight-medium);
+    background: var(--highlight-bg);
     padding: 7px;
     margin-bottom: 7px;
   }

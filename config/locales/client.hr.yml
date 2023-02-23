@@ -4428,7 +4428,6 @@ hr:
         about: "Ovdje izmijenite svoje članstvo u grupama i imena grupa"
         group_members: "Članovi grupe"
         delete: "Obriši"
-        delete_confirm: "Jeste li sigurni da želite izbrisati ovu grupu?"
         delete_failed: "Nemoguće obrisati grupu. Ako je ovo automatska grupa, ne možete ju obrisati."
         delete_automatic_group: Ovo je automatska grupa i ne može se izbrisati.
         delete_owner_confirm: "Ukloniti vlasničku privilegiju za \"%{username}\"?"
@@ -4637,7 +4636,6 @@ hr:
         enabled: "Omogućeno?"
         is_enabled: "D"
         not_enabled: "N"
-        change_settings: "Promijenite postavke"
         change_settings_short: "Postavke"
         howto: "Kako instalirati dodatke?"
         official: "Službeni dodatak"

@@ -1,11 +1,12 @@
 import RestModel from "discourse/models/rest";
-import I18n from "I18n";
 import User from "discourse/models/user";
 import UserChatChannelMembership from "discourse/plugins/chat/discourse/models/user-chat-channel-membership";
 import { ajax } from "discourse/lib/ajax";
 import { escapeExpression } from "discourse/lib/utilities";
 import { tracked } from "@glimmer/tracking";
 import slugifyChannel from "discourse/plugins/chat/discourse/lib/slugify-channel";
+import ChatThreadsManager from "discourse/plugins/chat/discourse/lib/chat-threads-manager";
+import { getOwner } from "discourse-common/lib/get-owner";
 
 export const CHATABLE_TYPES = {
   directMessageChannel: "DirectMessage",
@@ -18,19 +19,6 @@ export const CHANNEL_STATUSES = {
   closed: "closed",
   archived: "archived",
 };
-
-export function channelStatusName(channelStatus) {
-  switch (channelStatus) {
-    case CHANNEL_STATUSES.open:
-      return I18n.t("chat.channel_status.open");
-    case CHANNEL_STATUSES.readOnly:
-      return I18n.t("chat.channel_status.read_only");
-    case CHANNEL_STATUSES.closed:
-      return I18n.t("chat.channel_status.closed");
-    case CHANNEL_STATUSES.archived:
-      return I18n.t("chat.channel_status.archived");
-  }
-}
 
 export function channelStatusIcon(channelStatus) {
   if (channelStatus === CHANNEL_STATUSES.open) {
@@ -65,6 +53,9 @@ export default class ChatChannel extends RestModel {
   @tracked description;
   @tracked chatableType;
   @tracked status;
+  @tracked activeThread;
+
+  threadsManager = new ChatThreadsManager(getOwner(this));
 
   get escapedTitle() {
     return escapeExpression(this.title);

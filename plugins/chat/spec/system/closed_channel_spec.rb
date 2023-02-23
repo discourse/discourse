@@ -30,11 +30,7 @@ RSpec.describe "Closed channel", type: :system, js: true do
       chat.visit_channel(channel_1)
 
       expect(page).to have_field(
-        placeholder:
-          I18n.t(
-            "js.chat.placeholder_new_message_disallowed",
-            status: I18n.t("js.chat.channel_status.closed").downcase,
-          ),
+        placeholder: I18n.t("js.chat.placeholder_new_message_disallowed.closed"),
         disabled: true,
       )
     end
@@ -54,7 +50,7 @@ RSpec.describe "Closed channel", type: :system, js: true do
       chat.visit_channel(channel_1)
 
       expect(page).to have_no_field(
-        placeholder: I18n.t("js.chat.placeholder_new_message_disallowed"),
+        placeholder: I18n.t("js.chat.placeholder_new_message_disallowed.closed"),
         disabled: true,
       )
     end

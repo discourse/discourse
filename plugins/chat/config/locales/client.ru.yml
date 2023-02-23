@@ -105,65 +105,16 @@ ru:
       new_messages: "Новые сообщения"
       mention_warning:
         dismiss: "Отклонить"
-        cannot_see:
-          one: "%{username} и еще %{others} не имеют доступа к этому каналу и не были уведомлены."
-          few: "%{username} и еще %{others} не имеют доступа к этому каналу и не были уведомлены."
-          many: "%{username} и еще %{others} не имеют доступа к этому каналу и не были уведомлены."
-          other: "%{username} и еще %{others} не имеют доступа к этому каналу и не были уведомлены."
         invitations_sent:
           one: "Приглашение отправлено"
           few: "Приглашения отправлены"
           many: "Приглашений отправлены"
           other: "Приглашений отправлены"
         invite: "Пригласить в канал"
-        without_membership:
-          one: "%{username} и еще %{others} не являются участниками канала."
-          few: "%{username} и еще %{others} не являются участниками канала."
-          many: "%{username} и еще %{others} не являются участниками канала."
-          other: "%{username} и еще %{others} не являются участниками канала."
-        group_mentions_disabled:
-          one: "Группа «%{group_name}» и еще %{others} не разрешают упоминания"
-          few: "Группа «%{group_name}» и еще %{others} не разрешают упоминания"
-          many: "Группа «%{group_name}» и еще %{others} не разрешают упоминания"
-          other: "Группа «%{group_name}» и еще %{others} не разрешают упоминания"
-        too_many_members:
-          one: "В группе «%{group_name}» и еще %{others} слишком много участников. Никто не был уведомлен."
-          few: "В группе «%{group_name}» и еще %{others} слишком много участников. Никто не был уведомлен."
-          many: "В группе «%{group_name}» и еще %{others} слишком много участников. Никто не был уведомлен."
-          other: "В группе «%{group_name}» и еще %{others} слишком много участников. Никто не был уведомлен."
-        warning_multiple:
-          one: "еще %{count}"
-          few: "еще %{count}"
-          many: "еще %{count}"
-          other: "еще %{count}"
         groups:
           header:
             some: "Некоторые пользователи не будут уведомлены"
             all: "Никто не будет уведомлен"
-          unreachable:
-            one: "Группа «@%{group}» не разрешает упоминания"
-            few: "Группы «@%{group}» и «@%{group_2}» не разрешают упоминания"
-            many: "Группы «@%{group}» и «@%{group_2}» не разрешают упоминания"
-            other: "Группы «@%{group}» и «@%{group_2}» не разрешают упоминания"
-          unreachable_multiple: "Группа «@%{group}» и еще %{count} не разрешают упоминания"
-          too_many_members:
-            one: "Упоминание группы «@%{group}» превышает %{notification_limit} (%{limit})"
-            few: "Упоминание групп «@%{group}» и «%{group_2}» превышает %{notification_limit} (%{limit})"
-            many: "Упоминание групп «@%{group}» и «%{group_2}» превышает %{notification_limit} (%{limit})"
-            other: "Упоминание групп «@%{group}» и «%{group_2}» превышает %{notification_limit} (%{limit})"
-          too_many_members_multiple: "Группы (%{count}) превышают %{notification_limit} (%{limit})"
-          users_limit:
-            one: "%{count} пользователь"
-            few: "%{count} пользователя"
-            many: "%{count} пользователей"
-            other: "%{count} пользователя"
-          notification_limit: "лимит уведомлений"
-        too_many_mentions: "Сообщение превышает %{notification_limit} (%{limit})"
-        mentions_limit:
-          one: "%{count} упоминание"
-          few: "%{count} упоминания"
-          many: "%{count} упоминаний"
-          other: "%{count} упоминания"
       aria_roles:
         header: "Заголовок чата"
         composer: "Редактор чата"
@@ -180,10 +131,9 @@ ru:
       close_full_page: "Закрыть полноэкранный чат"
       open_message: "Открыть сообщение в чате"
       placeholder_self: "Напишите что-нибудь"
-      placeholder_others: "Чат с %{messageRecipient}"
-      placeholder_new_message_disallowed: "Канал %{status}, в данный момент вы не можете отправлять новые сообщения."
+      placeholder_users: "Чат с %{commaSeparatedNames}"
       placeholder_silenced: "В настоящее время вы не можете отправлять сообщения."
-      placeholder_start_conversation: Начать беседу с пользователем %{usernames}
+      placeholder_start_conversation_users: "Начать беседу с пользователем %{commaSeparatedUsernames}"
       remove_upload: "Удалить файл"
       react: "Реакция с помощью эмодзи"
       reply: "Ответить"
@@ -280,22 +230,10 @@ ru:
       create_channel:
         auto_join_users:
           public_category_warning: "Раздел %{category} является общедоступным. Автоматически добавлять в этот канал всех активных пользователей?"
-          warning_groups:
-            one: Автоматически добавить %{members_count} пользователя из группы %{group}?
-            few: Автоматически добавить %{members_count} пользователей из группы %{group} и группы %{group_2}?
-            many: Автоматически добавить %{members_count} пользователей из группы %{group} и группы %{group_2}?
-            other: Автоматически добавить %{members_count} пользователей из группы %{group} и группы %{group_2}?
-          warning_multiple_groups: Автоматически добавить %{members_count} пользователей из группы %{group_1} и ещё из %{count} групп?
         choose_category:
           label: "Выберите раздел"
           none: "выберите раздел…"
           default_hint: Управляйте доступом к разделу через <a href=%{link} target="_blank">%{category}настройки безопасности</a>
-          hint_groups:
-            one: Пользователи группы %{hint} будут иметь доступ к этому каналу в соответствии с <a href=%{link} target="_blank">настройками безопасности</a>
-            few: Пользователи групп %{hint} и %{hint_2} будут иметь доступ к этому каналу в соответствии с <a href=%{link} target="_blank">настройками безопасности</a>
-            many: Пользователи групп %{hint} и %{hint_2} будут иметь доступ к этому каналу в соответствии с <a href=%{link} target="_blank">настройками безопасности</a>
-            other: Пользователи групп %{hint} и %{hint_2} будут иметь доступ к этому каналу в соответствии с <a href=%{link} target="_blank">настройками безопасности</a>
-          hint_multiple_groups: Пользователи группы %{hint_1} и ещё %{count} групп будут иметь доступ к этому каналу в соответствии с <a href=%{link} target="_blank">настройками безопасности</a>
         create: "Создать канал"
         description: "Описание (необязательно)"
         name: "Название канала"
@@ -308,10 +246,7 @@ ru:
         type: "Сообщение чата"
       reactions:
         only_you: "Вы отреагировали при помощи эмодзи :%{emoji}:"
-        and_others: "Вы, %{usernames}, отреагировали при помощи эмодзи :%{emoji}:"
-        only_others: "Пользователи %{usernames} отреагировали при помощи эмодзи %{emoji}:"
-        others_and_more: "Пользователи %{usernames} и %{more} отреагировали при помощи эмодзи %{emoji}:"
-        you_others_and_more: "Вы, %{usernames} и %{more}, отреагировали при помощи эмодзи %{emoji}:"
+        single_user: "Пользователи %{username} отреагировали при помощи эмодзи %{emoji}:"
       composer:
         toggle_toolbar: "Переключить панель инструментов"
         italic_text: "текст, выделенный курсивом"
@@ -342,7 +277,6 @@ ru:
         saved: "Сохранено"
         unfollow: "Отписаться"
         admin_title: "Администрирование"
-        retention_info: "История чата будет храниться %{days} сут."
       admin:
         title: "Чат"
       direct_messages:
@@ -415,9 +349,6 @@ ru:
           few: "Отвечают %{commaSeparatedUsernames} и ещё %{count} пользователя"
           many: "Отвечают %{commaSeparatedUsernames} и ещё %{count} пользователей"
           other: "Отвечают %{commaSeparatedUsernames} и ещё %{count} пользователей"
-      retention_reminders:
-        public: "История канала хранится %{days} дней."
-        dm: "История личного чата хранится %{days} дней."
       flags:
         off_topic: "Эта запись не имеет отношения к текущему обсуждению, как указано в названии канала, и, вероятно, ее следует переместить в другое место."
         inappropriate: "Эта запись содержит контент, который обоснованно можно считать оскорбительным или нарушающим <a href=\"%{basePath}/guidelines\">рекомендации для сообщества</a>."

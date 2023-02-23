@@ -8,12 +8,27 @@ module TurboTests
       start_time = opts.fetch(:start_time) { Time.now }
       verbose = opts.fetch(:verbose, false)
       fail_fast = opts.fetch(:fail_fast, nil)
+      use_runtime_info = opts.fetch(:use_runtime_info, false)
 
       STDERR.puts "VERBOSE" if verbose
 
       reporter = Reporter.from_config(formatters, start_time)
 
-      new(reporter: reporter, files: files, verbose: verbose, fail_fast: fail_fast).run
+      new(
+        reporter: reporter,
+        files: files,
+        verbose: verbose,
+        fail_fast: fail_fast,
+        use_runtime_info: use_runtime_info,
+      ).run
+    end
+
+    def self.default_spec_folders
+      # We do not want to include system specs by default, they are quite slow.
+      Dir
+        .entries("#{Rails.root}/spec")
+        .reject { |entry| !File.directory?("spec/#{entry}") || %w[.. . system].include?(entry) }
+        .map { |entry| "spec/#{entry}" }
     end
 
     def initialize(opts)
@@ -21,6 +36,7 @@ module TurboTests
       @files = opts[:files]
       @verbose = opts[:verbose]
       @fail_fast = opts[:fail_fast]
+      @use_runtime_info = opts[:use_runtime_info]
       @failure_count = 0
 
       @messages = Queue.new
@@ -32,11 +48,10 @@ module TurboTests
       check_for_migrations
 
       @num_processes = ParallelTests.determine_number_of_processes(nil)
-      use_runtime_info = @files == ["spec"]
 
       group_opts = {}
 
-      if use_runtime_info
+      if @use_runtime_info
         group_opts[:runtime_log] = "tmp/turbo_rspec_runtime.log"
       else
         group_opts[:group_by] = :filesize
@@ -47,7 +62,7 @@ module TurboTests
 
       setup_tmp_dir
 
-      subprocess_opts = { record_runtime: use_runtime_info }
+      subprocess_opts = { record_runtime: @use_runtime_info }
 
       start_multisite_subprocess(@files, **subprocess_opts)
 

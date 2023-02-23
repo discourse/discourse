@@ -1,4 +1,3 @@
-import { action } from "@ember/object";
 import Controller from "@ember/controller";
 import { inject as service } from "@ember/service";
 
@@ -22,14 +21,6 @@ export default Controller.extend({
         return p.admin_route;
       })
       .filter(Boolean);
-  },
-
-  @action
-  toggleMenu() {
-    const adminDetail = document.querySelector(".admin-detail");
-    ["mobile-closed", "mobile-open"].forEach((state) => {
-      adminDetail.classList.toggle(state);
-    });
   },
 
   routeExists(routeName) {

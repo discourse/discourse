@@ -4,6 +4,9 @@ class FormTemplate < ActiveRecord::Base
   validates :name, presence: true, uniqueness: true, length: { maximum: 100 }
   validates :template, presence: true, length: { maximum: 2000 }
   validates_with FormTemplateYamlValidator
+
+  has_many :category_form_templates, dependent: :destroy
+  has_many :categories, through: :category_form_templates
 end
 
 # == Schema Information

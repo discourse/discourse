@@ -1,28 +1,26 @@
+import { classNames } from "@ember-decorators/component";
 import { observes, on } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import I18n from "I18n";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { scheduleOnce } from "@ember/runloop";
 
-export default Component.extend({
-  classNames: ["admin-backups-logs"],
-  showLoadingSpinner: false,
-  hasFormattedLogs: false,
-  noLogsMessage: I18n.t("admin.backups.logs.none"),
-
-  init() {
-    this._super(...arguments);
-    this._reset();
-  },
+@classNames("admin-backups-logs")
+export default class AdminBackupsLogs extends Component {
+  showLoadingSpinner = false;
+  hasFormattedLogs = false;
+  noLogsMessage = I18n.t("admin.backups.logs.none");
+  formattedLogs = "";
+  index = 0;
 
   _reset() {
     this.setProperties({ formattedLogs: "", index: 0 });
-  },
+  }
 
   _scrollDown() {
     const div = this.element;
     div.scrollTop = div.scrollHeight;
-  },
+  }
 
   @on("init")
   @observes("logs.[]")
@@ -31,7 +29,7 @@ export default Component.extend({
       this._reset(); // reset the cached logs whenever the model is reset
       this.renderLogs();
     }
-  },
+  }
 
   _updateFormattedLogsFunc() {
     const logs = this.logs;
@@ -55,13 +53,13 @@ export default Component.extend({
     this.renderLogs();
 
     scheduleOnce("afterRender", this, this._scrollDown);
-  },
+  }
 
   @on("init")
   @observes("logs.[]")
   _updateFormattedLogs() {
     discourseDebounce(this, this._updateFormattedLogsFunc, 150);
-  },
+  }
 
   renderLogs() {
     const formattedLogs = this.formattedLogs;
@@ -76,5 +74,5 @@ export default Component.extend({
     } else {
       this.set("showLoadingSpinner", false);
     }
-  },
-});
+  }
+}

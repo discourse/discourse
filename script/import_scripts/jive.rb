@@ -225,11 +225,7 @@ class ImportScripts::Jive < ImportScripts::Base
         next
       end
 
-      unless topic[:post_id]
-        mapped[:category] = category_id_from_imported_category_id(topic[:category_id])
-        mapped[:title] = post[:title]
-        topic[:post_id] = post[:id]
-      else
+      if topic[:post_id]
         parent = topic_lookup_from_imported_post_id(topic[:post_id])
         next unless parent
 
@@ -242,6 +238,10 @@ class ImportScripts::Jive < ImportScripts::Base
             mapped[:reply_to_post_number] = reply_to_post_number
           end
         end
+      else
+        mapped[:category] = category_id_from_imported_category_id(topic[:category_id])
+        mapped[:title] = post[:title]
+        topic[:post_id] = post[:id]
       end
 
       next if topic[:deleted] || post[:deleted]

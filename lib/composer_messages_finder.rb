@@ -197,8 +197,8 @@ class ComposerMessagesFinder
         .pluck(:reply_to_user_id)
         .find_all { |uid| uid != @user.id && uid == reply_to_user_id }
 
-    return unless last_x_replies.size == SiteSetting.get_a_room_threshold
-    return unless @topic.posts.count("distinct user_id") >= min_users_posted
+    return if last_x_replies.size != SiteSetting.get_a_room_threshold
+    return if @topic.posts.count("distinct user_id") < min_users_posted
 
     UserHistory.create!(
       action: UserHistory.actions[:notified_about_get_a_room],

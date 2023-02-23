@@ -89,7 +89,7 @@ class TopicsController < ApplicationController
     end
 
     if opts[:print]
-      raise Discourse::InvalidAccess unless SiteSetting.max_prints_per_hour_per_user > 0
+      raise Discourse::InvalidAccess if SiteSetting.max_prints_per_hour_per_user.zero?
       begin
         unless @guardian.is_admin?
           RateLimiter.new(
@@ -1231,7 +1231,7 @@ class TopicsController < ApplicationController
 
     respond_to do |format|
       format.html do
-        @tags = SiteSetting.tagging_enabled ? @topic_view.topic.tags : []
+        @tags = SiteSetting.tagging_enabled ? @topic_view.topic.tags.visible(guardian) : []
         @breadcrumbs = helpers.categories_breadcrumb(@topic_view.topic) || []
         @description_meta =
           @topic_view.topic.excerpt.present? ? @topic_view.topic.excerpt : @topic_view.summary

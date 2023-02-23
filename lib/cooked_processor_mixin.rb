@@ -135,7 +135,7 @@ module CookedProcessorMixin
 
   def get_size_from_attributes(img)
     w, h = img["width"].to_i, img["height"].to_i
-    return w, h unless w <= 0 || h <= 0
+    return w, h if w > 0 && h > 0
     # if only width or height are specified attempt to scale image
     if w > 0 || h > 0
       w = w.to_f

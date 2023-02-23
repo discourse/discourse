@@ -189,5 +189,7 @@ Fabricator(:chat_thread) do
 
   transient :channel
 
-  original_message { |attrs| Fabricate(:chat_message, chat_channel: attrs[:channel]) }
+  original_message do |attrs|
+    Fabricate(:chat_message, chat_channel: attrs[:channel] || Fabricate(:chat_channel))
+  end
 end

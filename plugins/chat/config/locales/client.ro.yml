@@ -24,11 +24,6 @@ ro:
       join: "Alătură-te"
       mention_warning:
         dismiss: "renunță"
-        groups:
-          users_limit:
-            one: "%{count} utilizator"
-            few: "%{count} utilizatori"
-            other: "%{count} utilizatori"
       reply: "Răspunde"
       edit: "Modifică"
       rebake_message: "Reconstruieşte HTML"

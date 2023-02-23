@@ -43,7 +43,7 @@
 </StyleguideExample>
 
 <StyleguideExample
-  @title="inline-form with combo-box"
+  @title="inline-form with <ComboBox>"
   @initialValue={{this.dummy.options.0.name}}
   as |value|
 >
@@ -63,7 +63,7 @@
   </div>
 </StyleguideExample>
 
-<StyleguideExample @title="inline-form with multi-select">
+<StyleguideExample @title="inline-form with <MultiSelect>">
   <div class="inline-form">
     <TextField />
     <MultiSelect @content={{this.dummy.options}} @onChange={{action "dummy"}} />
@@ -76,7 +76,7 @@
   </div>
 </StyleguideExample>
 
-<StyleguideExample @title="inline-form with multi-select and label">
+<StyleguideExample @title="inline-form with <MultiSelect> and label">
   <div class="inline-form">
     <label>Text:</label>
     <TextField />
@@ -96,7 +96,7 @@
   </div>
 </StyleguideExample>
 
-<StyleguideExample @title="category-notifications-button and regular button">
+<StyleguideExample @title="<CategoryNotificationsButton> and regular button">
   <div class="inline-form">
     <CategoryNotificationsButton
       @category={{get this.dummy.categories 0}}

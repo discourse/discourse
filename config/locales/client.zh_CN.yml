@@ -4021,9 +4021,6 @@ zh_CN:
         about: "在此处编辑您的群组成员资格和名称"
         group_members: "群组成员"
         delete: "删除"
-        delete_confirm: "确定要删除此群组吗？"
-        delete_with_messages_confirm:
-          other: "删除此群组将导致 %{count} 条消息成为孤立消息，群组成员将无法再访问它们。"
         delete_failed: "无法删除群组。如果此群组是自动生成的，则无法删除。"
         delete_automatic_group: 这是一个自动生成的群组，无法删除。
         delete_owner_confirm: "移除 '%{username}' 的所有者权限？"
@@ -4228,7 +4225,6 @@ zh_CN:
         enabled: "已启用？"
         is_enabled: "是"
         not_enabled: "否"
-        change_settings: "更改设置"
         change_settings_short: "设置"
         howto: "如何安装插件？"
         official: "官方插件"

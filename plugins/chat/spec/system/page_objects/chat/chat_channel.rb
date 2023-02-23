@@ -31,7 +31,7 @@ module PageObjects
 
       def expand_message_actions(message)
         hover_message(message)
-        click_more_buttons(message)
+        click_more_button
       end
 
       def expand_message_actions_mobile(message, delay: 2)
@@ -56,13 +56,19 @@ module PageObjects
         find(".bookmark-btn").click
       end
 
-      def click_more_buttons(message)
+      def click_more_button
         find(".more-buttons").click
       end
 
       def flag_message(message)
         hover_message(message)
-        click_more_buttons(message)
+        click_more_button
+        find("[data-value='flag']").click
+      end
+
+      def flag_message(message)
+        hover_message(message)
+        click_more_button
         find("[data-value='flag']").click
       end
 
@@ -73,13 +79,19 @@ module PageObjects
 
       def select_message(message)
         hover_message(message)
-        click_more_buttons(message)
+        click_more_button
         find("[data-value='selectMessage']").click
+      end
+
+      def delete_message(message)
+        hover_message(message)
+        click_more_button
+        find("[data-value='deleteMessage']").click
       end
 
       def open_edit_message(message)
         hover_message(message)
-        click_more_buttons(message)
+        click_more_button
         find("[data-value='edit']").click
       end
 

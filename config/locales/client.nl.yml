@@ -4228,10 +4228,6 @@ nl:
         about: "Bewerk hier je groepslidmaatschap en namen"
         group_members: "Groepsleden"
         delete: "Verwijderen"
-        delete_confirm: "Weet je zeker dat je deze groep wilt verwijderen?"
-        delete_with_messages_confirm:
-          one: "Als je deze groep verwijdert, wordt %{count} bericht verweesd en hebben groepsleden er geen toegang meer toe."
-          other: "Als je deze groep verwijdert, worden %{count} berichten verweesd en hebben groepsleden er geen toegang meer toe."
         delete_failed: "Kan groep niet verwijderen. Als dit een automatische groep is, kan deze niet worden verwijderd."
         delete_automatic_group: Dit is een automatische groep en kan niet worden verwijderd.
         delete_owner_confirm: "Eigenaarsprivileges van '%{username}' verwijderen?"
@@ -4438,7 +4434,6 @@ nl:
         enabled: "Ingeschakeld?"
         is_enabled: "J"
         not_enabled: "N"
-        change_settings: "Instellingen wijzigen"
         change_settings_short: "Instellingen"
         howto: "Hoe kan ik plug-ins installeren?"
         official: "Officiële plug-in"

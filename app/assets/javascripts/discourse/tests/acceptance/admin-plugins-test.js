@@ -44,7 +44,7 @@ acceptance("Admin - Plugins", function (needs) {
     );
 
     assert.true(
-      exists(".admin-plugins .admin-detail .alert-error"),
+      exists(".admin-plugins .admin-container .alert-error"),
       "displays an error for unknown routes"
     );
   });

@@ -539,10 +539,6 @@ gl:
             duration_minutes:
               cannot_be_zero: "debe ser maior que 0"
               exceeds_maximum: "non pode ser ter máis de 20 anos."
-        translation_overrides:
-          attributes:
-            value:
-              invalid_interpolation_keys: 'A(s) seguinte(s) chave(s) de interpolación non é/son válida(s): "%{keys}"'
         watched_word:
           attributes:
             word:

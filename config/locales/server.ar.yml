@@ -687,10 +687,6 @@ ar:
             duration_minutes:
               cannot_be_zero: "يجب أن تكون أكبر من 0."
               exceeds_maximum: "لا يمكن أن يتجاوز 20 سنة."
-        translation_overrides:
-          attributes:
-            value:
-              invalid_interpolation_keys: 'مفتاح (مفاتيح) الاستكمال التالي غير صالح: "%{keys}"'
         watched_word:
           attributes:
             word:
@@ -2343,7 +2339,6 @@ ar:
     default_sidebar_categories: "سيتم عرض الفئات المحدَّدة ضمن قسم فئات الشريط الجانبي بشكلٍ افتراضي."
     default_sidebar_tags: "سيتم عرض الوسوم المحدَّدة ضمن قسم فئات الشريط الجانبي بشكلٍ افتراضي."
     enable_new_notifications_menu: "يمكِّن قائمة الإشعارات الجديدة لقائمة التنقل القديمة."
-    enable_new_user_profile_nav_groups: "تجريبي: سيتم عرض قائمة التنقل الخاصة بملف تعريف المستخدم الجديد لمستخدمي المجموعات المحدَّدة"
     enable_experimental_hashtag_autocomplete: "تجريبي: استخدم نظام الإكمال التلقائي #hashtag الجديد للفئات والوسوم التي تعرض العنصر المحدَّد بشكلٍ مختلف وحسَّنت نتائج البحث"
     errors:
       invalid_css_color: "لون غير صالح. أدخِل اسم لون أو قيمة سداسية عشرية."

@@ -64,7 +64,6 @@ class CurrentUserSerializer < BasicUserSerializer
              :status,
              :grouped_unread_notifications,
              :redesigned_user_menu_enabled,
-             :redesigned_user_page_nav_enabled,
              :display_sidebar_tags,
              :sidebar_tags,
              :sidebar_category_ids,
@@ -76,6 +75,13 @@ class CurrentUserSerializer < BasicUserSerializer
   delegate :any_posts, :draft_count, :pending_posts_count, :read_faq?, to: :user_stat
 
   has_one :user_option, embed: :object, serializer: CurrentUserOptionSerializer
+
+  def sidebar_sections
+    SidebarSection
+      .where("public OR user_id = ?", object.id)
+      .order("(public IS TRUE) DESC")
+      .map { |section| SidebarSectionSerializer.new(section, root: false) }
+  end
 
   def groups
     owned_group_ids = GroupUser.where(user_id: id, owner: true).pluck(:group_id).to_set
@@ -291,14 +297,6 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def include_new_personal_messages_notifications_count?
     redesigned_user_menu_enabled
-  end
-
-  def redesigned_user_page_nav_enabled
-    if SiteSetting.enable_new_user_profile_nav_groups.present?
-      object.in_any_groups?(SiteSetting.enable_new_user_profile_nav_groups_map)
-    else
-      false
-    end
   end
 
   def custom_sidebar_sections_enabled

@@ -40,8 +40,8 @@ module Onebox
       should_ignore_canonical =
         IGNORE_CANONICAL_DOMAINS.map { |hostname| uri.hostname.match?(hostname) }.any?
 
-      unless (ignore_canonical_tag && ignore_canonical_tag["content"].to_s == "true") ||
-               should_ignore_canonical
+      if !(ignore_canonical_tag && ignore_canonical_tag["content"].to_s == "true") &&
+           !should_ignore_canonical
         # prefer canonical link
         canonical_link = doc.at('//link[@rel="canonical"]/@href')
         canonical_uri = Addressable::URI.parse(canonical_link)

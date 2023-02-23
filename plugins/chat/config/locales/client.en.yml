@@ -106,46 +106,96 @@ en:
       new_messages: "new messages"
       mention_warning:
         dismiss: "dismiss"
-        cannot_see:
-          one: "%{username} cannot access this channel and was not notified."
-          other: "%{username} and %{others} cannot access this channel and were not notified."
+        cannot_see: "%{username} can't access this channel and was not notified."
+        cannot_see_multiple:
+          one: "%{username} and %{count} other user cannot access this channel and were not notified."
+          other: "%{username} and %{count} other users cannot access this channel and were not notified."
         invitations_sent:
           one: "Invitation sent"
           other: "Invitations sent"
         invite: "Invite to channel"
-        without_membership:
-          one: "%{username} has not joined this channel."
-          other: "%{username} and %{others} have not joined this channel."
-        group_mentions_disabled:
-          one: "%{group_name} doesn't allow mentions"
-          other: "%{group_name} and %{others} doesn't allow mentions"
-        too_many_members:
-          one: "%{group_name} has too many members. No one was notified"
-          other: "%{group_name} and %{others} have too many members. No one was notified"
-        warning_multiple:
-          one: "%{count} other"
-          other: "%{count} others"
-
+        without_membership: "%{username} has not joined this channel."
+        without_membership_multiple:
+          one: "%{username} and %{count} other user have not joined this channel."
+          other: "%{username} and %{count} other users have not joined this channel."
+        group_mentions_disabled: "%{group_name} doesn't allow mentions."
+        group_mentions_disabled_multiple:
+          one: "%{group_name} and %{count} other group don't allow mentions."
+          other: "%{group_name} and %{count} other groups don't allow mentions."
+        too_many_members: "%{group_name} has too many members. No one was notified."
+        too_many_members_multiple:
+          one: "%{group_name} and %{count} other group have too many members. No one was notified."
+          other: "%{group_name} and %{count} other groups have too many members. No one was notified."
         groups:
           header:
             some: "Some users won't be notified"
             all: "Nobody will be notified"
-          unreachable:
-            one: "@%{group} doesn't allow mentions"
-            other: "@%{group} and @%{group_2} doesn't allow mentions"
-          unreachable_multiple: "@%{group} and %{count} others doesn't allow mentions"
-          too_many_members:
-            one: "Mentioning @%{group} exceeds the %{notification_limit} of %{limit}"
-            other: "Mentioning both @%{group} or @%{group_2} exceeds the %{notification_limit} of %{limit}"
-          too_many_members_multiple: "These %{count} groups exceed the %{notification_limit} of %{limit}"
-          users_limit:
-            one: "%{count} user"
-            other: "%{count} users"
-          notification_limit: "notification limit"
-        too_many_mentions: "This message exceeds the %{notification_limit} of %{limit}"
-        mentions_limit:
-          one: "%{count} mention"
-          other: "%{count} mentions"
+          unreachable_1: "@%{group} doesn't allow mentions."
+          unreachable_2: "@%{group1} and @%{group2} don't allow mentions."
+          unreachable_multiple:
+            one: "@%{group} and %{count} other group don't allow mentions."
+            other: "@%{group} and %{count} other groups don't allow mentions."
+          too_many_members_MF: |
+            { groupCount, plural,
+                 =1 {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {Mentioning @{group1} exceeds the <a href="{siteSettingUrl}" target="_blank">notification limit</a> of # user.}
+                              other {Mentioning @{group1} exceeds the <a href="{siteSettingUrl}" target="_blank">notification limit</a> of # users.}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {Mentioning @{group1} exceeds the notification limit of # user.}
+                              other {Mentioning @{group1} exceeds the notification limit of # users.}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+                 =2 {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {Mentioning @{group1} and @{group2} exceeds the <a href="{siteSettingUrl}" target="_blank">notification limit</a> of # user.}
+                            other {Mentioning @{group1} and @{group2} exceeds the <a href="{siteSettingUrl}" target="_blank">notification limit</a> of # users.}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {Mentioning @{group1} and @{group2} exceeds the notification limit of # user.}
+                            other {Mentioning @{group1} and @{group2} exceeds the notification limit of # users.}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+              other {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {Mentioning these {groupCount} groups exceeds the <a href="{siteSettingUrl}" target="_blank">notification limit</a> of # user.}
+                            other {Mentioning these {groupCount} groups exceeds the <a href="{siteSettingUrl}" target="_blank">notification limit</a> of # users.}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {Mentioning these {groupCount} groups exceeds the notification limit of # user.}
+                            other {Mentioning these {groupCount} groups exceeds the notification limit of # users.}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+            }
+        too_many_mentions:
+          one: "This message exceeds the notification limit of %{count} mention."
+          other: "This message exceeds the notification limit of %{count} mentions."
+        too_many_mentions_admin:
+          one: 'This message exceeds the <a href="%{siteSettingUrl}" target="_blank">notification limit</a> of %{count} mention.'
+          other: 'This message exceeds the <a href="%{siteSettingUrl}" target="_blank">notification limit</a> of %{count} mentions.'
+
       aria_roles:
         header: "Chat header"
         composer: "Chat composer"
@@ -163,10 +213,15 @@ en:
       close_full_page: "Close full-screen chat"
       open_message: "Open message in chat"
       placeholder_self: "Jot something down"
-      placeholder_others: "Chat with %{messageRecipient}"
-      placeholder_new_message_disallowed: "Channel is %{status}, you cannot send new messages right now."
+      placeholder_channel: "Chat with %{channelName}"
+      placeholder_users: "Chat with %{commaSeparatedNames}"
+      placeholder_new_message_disallowed:
+        archived: "Channel is archived, you cannot send new messages right now."
+        closed: "Channel is closed, you cannot send new messages right now."
+        read_only: "Channel is read only, you cannot send new messages right now."
       placeholder_silenced: "You cannot send messages at this time."
-      placeholder_start_conversation: Start a conversation with %{usernames}
+      placeholder_start_conversation: "Start a conversation with ..."
+      placeholder_start_conversation_users: "Start a conversation with %{commaSeparatedUsernames}"
       remove_upload: "Remove file"
       react: "React with emoji"
       reply: "Reply"
@@ -276,18 +331,36 @@ en:
       create_channel:
         auto_join_users:
           public_category_warning: "%{category} is a public category. Automatically add all recently active users to this channel?"
-          warning_groups:
-            one: Automatically add %{members_count} users from %{group}?
-            other: Automatically add %{members_count} users from %{group} and %{group_2}?
-          warning_multiple_groups: Automatically add %{members_count} users from %{group_1} and %{count} others?
+          warning_1_group:
+            one: "Automatically add %{count} user from %{group}?"
+            other: "Automatically add %{count} users from %{group}?"
+          warning_2_groups:
+            one: "Automatically add %{count} user from %{group1} and %{group2}?"
+            other: "Automatically add %{count} users from %{group1} and %{group2}?"
+          warning_multiple_groups_MF: |
+            { groupCount, plural,
+                one {
+                      { userCount, plural,
+                          one {Automatically add {userCount} user from {groupName} and {groupCount} other group?}
+                        other {Automatically add {userCount} users from {groupName} and {groupCount} other group?}
+                      }
+                    }
+              other {
+                      { userCount, plural,
+                          one {Automatically add {userCount} user from {groupName} and {groupCount} other groups?}
+                        other {Automatically add {userCount} users from {groupName} and {groupCount} other groups?}
+                      }
+                    }
+            }
         choose_category:
           label: "Choose a category"
           none: "select one..."
           default_hint: Manage access by visiting <a href=%{link} target="_blank">%{category} security settings</a>
-          hint_groups:
-            one: Users in %{hint} will have access to this channel per the <a href=%{link} target="_blank">security settings</a>
-            other: Users in %{hint} and %{hint_2} will have access to this channel per the <a href=%{link} target="_blank">security settings</a>
-          hint_multiple_groups: Users in %{hint_1} and %{count} other groups will have access to this channel per the <a href=%{link} target="_blank">security settings</a>
+          hint_1_group: 'Users in %{group} will have access to this channel per the <a href="%{settingLink}" target="_blank">security settings</a>'
+          hint_2_groups: 'Users in %{group1} and %{group2} will have access to this channel per the <a href="%{settingLink}" target="_blank">security settings</a>'
+          hint_multiple_groups:
+            one: 'Users in %{group} and %{count} other group will have access to this channel per the <a href="%{settingLink}" target="_blank">security settings</a>'
+            other: 'Users in %{group} and %{count} other groups will have access to this channel per the <a href="%{settingLink}" target="_blank">security settings</a>'
         create: "Create channel"
         description: "Description (optional)"
         name: "Channel name"
@@ -303,10 +376,16 @@ en:
 
       reactions:
         only_you: "You reacted with :%{emoji}:"
-        and_others: "You, %{usernames} reacted with :%{emoji}:"
-        only_others: "%{usernames} reacted with :%{emoji}:"
-        others_and_more: "%{usernames} and %{more} others reacted with :%{emoji}:"
-        you_others_and_more: "You, %{usernames} and %{more} others reacted with :%{emoji}:"
+        you_and_single_user: "You and %{username} reacted with :%{emoji}:"
+        you_and_multiple_users: "You, %{commaSeparatedUsernames} and %{username} reacted with :%{emoji}:"
+        you_multiple_users_and_more:
+          one: "You, %{commaSeparatedUsernames} and %{count} other reacted with :%{emoji}:"
+          other: "You, %{commaSeparatedUsernames} and %{count} others reacted with :%{emoji}:"
+        single_user: "%{username} reacted with :%{emoji}:"
+        multiple_users: "%{commaSeparatedUsernames} and %{username} reacted with :%{emoji}:"
+        multiple_users_and_more:
+          one: "%{commaSeparatedUsernames} and %{count} other reacted with :%{emoji}:"
+          other: "%{commaSeparatedUsernames} and %{count} others reacted with :%{emoji}:"
 
       composer:
         toggle_toolbar: "Toggle toolbar"
@@ -465,11 +544,13 @@ en:
           direct: 'mentioned you in "%{channel}"'
           direct_html: '<span>%{username}</span> <span>mentioned you in "%{channel}"</span>'
           other_plain: 'mentioned %{identifier} in "%{channel}"'
+          # %{identifier} is either @here or @all
           other_html: '<span>%{username}</span> <span>mentioned %{identifier} in "%{channel}"</span>'
         direct_message_chat_mention:
           direct: "mentioned you in personal chat"
           direct_html: "<span>%{username}</span> <span>mentioned you in personal chat</span>"
           other_plain: "mentioned %{identifier} in personal chat"
+          # %{identifier} is either @here or @all
           other_html: "<span>%{username}</span> <span>mentioned %{identifier} in personal chat</span>"
         chat_message: "New chat message"
         chat_quoted: "%{username} quoted your chat message"

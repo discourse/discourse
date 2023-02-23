@@ -244,9 +244,9 @@ class TopicView
       if @topic.category_id != SiteSetting.uncategorized_category_id && @topic.category_id &&
            @topic.category
         title += " - #{@topic.category.name}"
-      elsif SiteSetting.tagging_enabled && @topic.tags.exists?
+      elsif SiteSetting.tagging_enabled && visible_tags.exists?
         title +=
-          " - #{@topic.tags.order("tags.#{Tag.topic_count_column(@guardian)} DESC").first.name}"
+          " - #{visible_tags.order("tags.#{Tag.topic_count_column(@guardian)} DESC").first.name}"
       end
     end
     title
@@ -713,10 +713,6 @@ class TopicView
       end
   end
 
-  def tags
-    @topic.tags.map(&:name)
-  end
-
   protected
 
   def read_posts_set
@@ -820,7 +816,7 @@ class TopicView
   def find_topic(topic_or_topic_id)
     return topic_or_topic_id if topic_or_topic_id.is_a?(Topic)
     # with_deleted covered in #check_and_raise_exceptions
-    Topic.with_deleted.includes(:category, :tags).find_by(id: topic_or_topic_id)
+    Topic.with_deleted.includes(:category).find_by(id: topic_or_topic_id)
   end
 
   def unfiltered_posts
@@ -989,5 +985,9 @@ class TopicView
         StaffActionLogger.new(@user).log_check_personal_message(@topic)
       end
     end
+  end
+
+  def visible_tags
+    @visible_tags ||= topic.tags.visible(guardian)
   end
 end

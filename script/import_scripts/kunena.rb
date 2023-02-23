@@ -95,7 +95,7 @@ class ImportScripts::Kunena < ImportScripts::Base
         cache_rows: false,
       )
     results.each do |u|
-      next unless u["userid"].to_i > 0
+      next if u["userid"].to_i <= 0
       user = @users[u["userid"].to_i]
       if user
         user[:bio] = u["signature"]

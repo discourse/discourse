@@ -3,7 +3,8 @@
 class FinalDestination::Resolver
   @mutex = Mutex.new
   def self.lookup(addr, timeout: nil)
-    timeout ||= 2
+    timeout ||= default_dns_query_timeout
+
     @mutex.synchronize do
       @result = nil
 
@@ -35,6 +36,14 @@ class FinalDestination::Resolver
   end
 
   private
+
+  def self.default_dns_query_timeout
+    if gs = GlobalSetting.dns_query_timeout_secs.presence
+      Integer(gs)
+    else
+      2
+    end
+  end
 
   def self.ensure_lookup_thread
     return if @thread&.alive?

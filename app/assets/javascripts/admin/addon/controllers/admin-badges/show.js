@@ -1,5 +1,5 @@
 import Controller, { inject as controller } from "@ember/controller";
-import { observes } from "discourse-common/utils/decorators";
+import { observes } from "@ember-decorators/object";
 import I18n from "I18n";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -248,8 +248,13 @@ export default class AdminBadgesShowController extends Controller.extend(
 
   @action
   toggleBadge() {
-    this.model
-      .save({ enabled: !this.buffered.get("enabled") })
-      .catch(popupAjaxError);
+    const originalState = this.buffered.get("enabled");
+    const newState = !this.buffered.get("enabled");
+
+    this.buffered.set("enabled", newState);
+    this.model.save({ enabled: newState }).catch((error) => {
+      this.buffered.set("enabled", originalState);
+      return popupAjaxError(error);
+    });
   }
 }
