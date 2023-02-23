@@ -163,10 +163,11 @@ class Site
 
   def self.json_for(guardian)
     if guardian.anonymous? && SiteSetting.login_required
+      filters = Discourse.filters.map(&:to_s).reject { |f| f == "new_new" }
       return(
         {
           periods: TopTopic.periods.map(&:to_s),
-          filters: Discourse.filters.map(&:to_s),
+          filters: filters,
           user_fields:
             UserField
               .includes(:user_field_options)

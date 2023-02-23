@@ -2857,6 +2857,7 @@ en:
       none:
         unread: "You have no unread topics."
         unseen: "You have no unseen topics."
+        new-new: "You have no topics."
         new: "You have no new topics."
         read: "You haven't read any topics yet."
         posted: "You haven't posted in any topics yet."
@@ -2878,6 +2879,7 @@ en:
         tag: "There are no more %{tag} topics."
         top: "There are no more top topics."
         bookmarks: "There are no more bookmarked topics."
+        new-new: "There are no more topics."
 
     topic:
       filter_to:
@@ -3972,6 +3974,10 @@ en:
           one: "%{categoryName} (%{count})"
           other: "%{categoryName} (%{count})"
         help: "latest topics in the %{categoryName} category"
+      new-new:
+        title: "New and unread"
+        lower_title: "new and unread"
+        help: "new topics or topics you are currently watching or tracking with unread posts"
       top:
         title: "Top"
         help: "the most active topics in the last year, month, week or day"
@@ -4278,6 +4284,7 @@ en:
           latest: "There are no latest topics."
           bookmarks: "You have no bookmarked topics yet."
           top: "There are no top topics."
+          new-new: "You have no topics."
 
     invite:
       custom_message: "Make your invite a little bit more personal by writing a <a href>custom message</a>."

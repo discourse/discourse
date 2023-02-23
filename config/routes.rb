@@ -1178,8 +1178,10 @@ Discourse::Application.routes.draw do
       end
 
       Discourse.filters.each do |filter|
-        get "/none/l/#{filter}" => "list#category_none_#{filter}", :as => "category_none_#{filter}"
-        get "/l/#{filter}" => "list#category_#{filter}", :as => "category_#{filter}"
+        get "/none/l/#{Discourse.filter_to_url_mapping(filter)}" => "list#category_none_#{filter}",
+            :as => "category_none_#{filter}"
+        get "/l/#{Discourse.filter_to_url_mapping(filter)}" => "list#category_#{filter}",
+            :as => "category_#{filter}"
       end
 
       get "/all" => "list#category_default",
@@ -1203,7 +1205,9 @@ Discourse::Application.routes.draw do
       get "#{filter}.rss" => "list##{filter}_feed", :format => :rss
     end
 
-    Discourse.filters.each { |filter| get "#{filter}" => "list##{filter}" }
+    Discourse.filters.each do |filter|
+      get "#{Discourse.filter_to_url_mapping(filter)}" => "list##{filter}"
+    end
 
     get "search/query" => "search#query"
     get "search" => "search#show"
@@ -1482,7 +1486,8 @@ Discourse::Application.routes.draw do
         delete "/synonyms/:synonym_id" => "tags#destroy_synonym"
 
         Discourse.filters.each do |filter|
-          get "/l/#{filter}" => "tags#show_#{filter}", :as => "tag_show_#{filter}"
+          get "/l/#{Discourse.filter_to_url_mapping(filter)}" => "tags#show_#{filter}",
+              :as => "tag_show_#{filter}"
         end
       end
 
@@ -1506,12 +1511,14 @@ Discourse::Application.routes.draw do
       constraints(tag_id: %r{[^/]+?}, format: /json|rss/) do
         scope path: "/c/*category_slug_path_with_id" do
           Discourse.filters.each do |filter|
-            get "/none/:tag_id/l/#{filter}" => "tags#show_#{filter}",
+            get "/none/:tag_id/l/#{Discourse.filter_to_url_mapping(filter)}" =>
+                  "tags#show_#{filter}",
                 :as => "tag_category_none_show_#{filter}",
                 :defaults => {
                   no_subcategories: true,
                 }
-            get "/all/:tag_id/l/#{filter}" => "tags#show_#{filter}",
+            get "/all/:tag_id/l/#{Discourse.filter_to_url_mapping(filter)}" =>
+                  "tags#show_#{filter}",
                 :as => "tag_category_all_show_#{filter}",
                 :defaults => {
                   no_subcategories: false,
@@ -1530,7 +1537,7 @@ Discourse::Application.routes.draw do
               }
 
           Discourse.filters.each do |filter|
-            get "/:tag_id/l/#{filter}" => "tags#show_#{filter}",
+            get "/:tag_id/l/#{Discourse.filter_to_url_mapping(filter)}" => "tags#show_#{filter}",
                 :as => "tag_category_show_#{filter}"
           end
 

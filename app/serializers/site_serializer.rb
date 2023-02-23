@@ -128,7 +128,7 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def filters
-    Discourse.filters.map(&:to_s)
+    Discourse.filters_for_frontend(scope.user)
   end
 
   def periods
@@ -136,7 +136,7 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def top_menu_items
-    Discourse.top_menu_items.map(&:to_s)
+    Discourse.top_menu_items_for_frontend(scope.user)
   end
 
   def anonymous_top_menu_items

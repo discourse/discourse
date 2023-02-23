@@ -278,6 +278,10 @@ class TopicQuery
     create_list(:unseen, { unordered: true }, unseen_results)
   end
 
+  def list_new_new
+    create_list(:new_new, { unordered: true }, new_and_unread_results)
+  end
+
   def list_posted
     create_list(:posted) { |l| l.where("tu.posted") }
   end

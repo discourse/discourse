@@ -312,7 +312,7 @@ module Discourse
   end
 
   def self.filters
-    @filters ||= %i[latest unread new unseen top read posted bookmarks]
+    @filters ||= %i[latest unread new unseen new_new top read posted bookmarks]
   end
 
   def self.anonymous_filters
@@ -325,6 +325,24 @@ module Discourse
 
   def self.anonymous_top_menu_items
     @anonymous_top_menu_items ||= Discourse.anonymous_filters + %i[categories top]
+  end
+
+  def self.filter_to_url_mapping(filter)
+    filter = filter.to_s
+    return "new-new" if filter == "new_new"
+    filter
+  end
+
+  def self.filters_for_frontend(user = nil)
+    filters = self.filters.map { |f| self.filter_to_url_mapping(f) }
+    filters.reject! { |f| f == "new-new" } if !user&.new_new_view_enabled?
+    filters
+  end
+
+  def self.top_menu_items_for_frontend(user = nil)
+    items = Discourse.top_menu_items.map { |f| self.filter_to_url_mapping(f) }
+    items.reject! { |f| f == "new-new" } if !user&.new_new_view_enabled?
+    items
   end
 
   PIXEL_RATIOS ||= [1, 1.5, 2, 3]
