@@ -74,7 +74,7 @@ RSpec.describe Admin::FormTemplatesController do
                params: {
                  name: "Bug Reports",
                  template:
-                   "body:\n- type: input\n  attributes:\n    label: Website or apps\n    description: |\n      Which website or app were you using when the bug happened?\n    placeholder: |\n      e.g. website URL, name of the app\n    validations:\n      required: true",
+                   "- type: input\n  attributes:\n    label: Website or apps\n    description: |\n      Which website or app were you using when the bug happened?\n    placeholder: |\n      e.g. website URL, name of the app\n    validations:\n      required: true",
                }
 
           expect(response.status).to eq(200)
@@ -112,13 +112,13 @@ RSpec.describe Admin::FormTemplatesController do
             params: {
               id: form_template.id,
               name: "Updated Template",
-              template: "New yaml: true",
+              template: "- type: checkbox",
             }
 
         expect(response.status).to eq(200)
         form_template.reload
         expect(form_template.name).to eq("Updated Template")
-        expect(form_template.template).to eq("New yaml: true")
+        expect(form_template.template).to eq("- type: checkbox")
       end
     end
 
