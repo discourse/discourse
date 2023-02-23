@@ -423,6 +423,7 @@ RSpec.describe Admin::ApiController do
           "users",
           "email",
           "posts",
+          "tags",
           "uploads",
           "user_status",
           "global",
