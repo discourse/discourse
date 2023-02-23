@@ -64,7 +64,6 @@ class CurrentUserSerializer < BasicUserSerializer
              :status,
              :grouped_unread_notifications,
              :redesigned_user_menu_enabled,
-             :redesigned_user_page_nav_enabled,
              :display_sidebar_tags,
              :sidebar_tags,
              :sidebar_category_ids,
@@ -298,11 +297,6 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def include_new_personal_messages_notifications_count?
     redesigned_user_menu_enabled
-  end
-
-  # TODO(tgxworld): Return true for now until reliance on this attribute has been removed on the client side
-  def redesigned_user_page_nav_enabled
-    true
   end
 
   def custom_sidebar_sections_enabled

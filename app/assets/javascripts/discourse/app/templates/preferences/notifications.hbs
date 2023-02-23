@@ -1,15 +1,6 @@
 <div class="control-group notifications">
   <label class="control-label">{{i18n "user.notifications"}}</label>
 
-  {{#unless this.currentUser.redesigned_user_page_nav_enabled}}
-    <UserPreferences::TopicTracking
-      @considerNewTopicOptions={{this.considerNewTopicOptions}}
-      @model={{this.model}}
-      @autoTrackDurations={{this.autoTrackDurations}}
-      @notificationLevelsForReplying={{this.notificationLevelsForReplying}}
-    />
-  {{/unless}}
-
   <div class="controls controls-dropdown">
     <label>{{i18n "user.like_notification_frequency.title"}}</label>
     <ComboBox
@@ -43,12 +34,6 @@
 {{/unless}}
 
 <UserNotificationSchedule @model={{this.model}} />
-
-{{#if this.showMessageSettings}}
-  {{#unless this.currentUser.redesigned_user_page_nav_enabled}}
-    <UserPreferences::AllowPrivateMessages @model={{this.model}} />
-  {{/unless}}
-{{/if}}
 
 <span>
   <PluginOutlet

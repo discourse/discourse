@@ -4121,9 +4121,7 @@ en:
       granted:
         one: "%{count} granted"
         other: "%{count} granted"
-      granted_with_count:
-        one: '<a href="%{badgeUrl}" title="%{count} granted" class="grant-count">%{count}x</a> <span class="grant-text">granted</span>'
-        other: '<a href="%{badgeUrl}" title="%{count} granted" class="grant-count">%{count}x</a> <span class="grant-text">granted</span>'
+      awarded: awarded
       select_badge_for_title: Select a badge to use as your title
       none: "(none)"
       successfully_granted: "Successfully granted %{badge} to %{username}"
@@ -4736,6 +4734,9 @@ en:
               list_user_badges: List user badges.
               assign_badge_to_user: Assign a badge to a user.
               revoke_badge_from_user: Revoke a badge from a user.
+            groups:
+              manage_groups: List, add, and remove group members.
+              administer_groups: List, show, create, update, and delete groups.
             search:
               show: Search using the `/search.json?q=term` endpoint.
               query: Search using the `/search/query?term=term` endpoint.
