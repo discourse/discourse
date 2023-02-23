@@ -5584,6 +5584,15 @@ en:
               description: "In text fields, a regular expression specifying the allowed input."
         preview_modal:
           title: "Preview Template"
+        field_placeholders:
+          validations: "enter validations here"
+          label: "Enter label here"
+          placeholder: "Enter placeholder here"
+          none_label: "Select an item"
+          choices:
+            first: "Option 1"
+            second: "Option 2"
+            third: "Option 3"
         edit_category:
           toggle_freeform: "form template disabled"
           toggle_form_template: "form template enabled"

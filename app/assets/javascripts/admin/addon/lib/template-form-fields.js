@@ -1,44 +1,51 @@
-// TODO(@keegan): Add translations for template strings
+import I18n from "I18n";
+
 export const templateFormFields = [
   {
     type: "checkbox",
     structure: `- type: checkbox
   attributes:
-    label: "Enter question here"
+    label: "${I18n.t("admin.form_templates.field_placeholders.label")}"
   validations:
-    # enter validations here`,
+    # ${I18n.t("admin.form_templates.field_placeholders.validations")}`,
   },
   {
     type: "input",
     structure: `- type: input
   attributes:
-    label: "Enter input label here"
-    placeholder: "Enter input placeholder here"
+    label: "${I18n.t("admin.form_templates.field_placeholders.label")}"
+    placeholder: "${I18n.t(
+      "admin.form_templates.field_placeholders.placeholder"
+    )}"
   validations:
-    # enter validations here`,
+    # ${I18n.t("admin.form_templates.field_placeholders.validations")}`,
   },
   {
     type: "textarea",
     structure: `- type: textarea
   attributes:
-    label: "Enter textarea label here"
-    placeholder: "Enter textarea placeholder here"
+    label: "${I18n.t("admin.form_templates.field_placeholders.label")}"
+    placeholder: "${I18n.t(
+      "admin.form_templates.field_placeholders.placeholder"
+    )}"
   validations:
-    # enter validations here`,
+    # ${I18n.t("admin.form_templates.field_placeholders.validations")}`,
   },
   {
     type: "dropdown",
     structure: `- type: dropdown
   choices:
-    - "Option 1"
-    - "Option 2"
-    - "Option 3"
+    - "${I18n.t("admin.form_templates.field_placeholders.choices.first")}"
+    - "${I18n.t("admin.form_templates.field_placeholders.choices.second")}"
+    - "${I18n.t("admin.form_templates.field_placeholders.choices.third")}"
   attributes:
-    none_label: "Select an item"
-    label: "Enter dropdown label here"
+    none_label: "${I18n.t(
+      "admin.form_templates.field_placeholders.none_label"
+    )}"
+    label: "${I18n.t("admin.form_templates.field_placeholders.label")}"
     filterable: false
   validations:
-    # enter validations here`,
+    # ${I18n.t("admin.form_templates.field_placeholders.validations")}`,
   },
   {
     type: "upload",
@@ -46,21 +53,23 @@ export const templateFormFields = [
   attributes:
     file_types: "jpg, png, gif"
     allow_multiple: false
-    label: "Enter upload label here"
+    label: "${I18n.t("admin.form_templates.field_placeholders.label")}"
   validations:
-    # enter validations here`,
+    # ${I18n.t("admin.form_templates.field_placeholders.validations")}`,
   },
   {
     type: "multiselect",
     structure: `- type: multi-select
   choices:
-    - "Option 1"
-    - "Option 2"
-    - "Option 3"
+    - "${I18n.t("admin.form_templates.field_placeholders.choices.first")}"
+    - "${I18n.t("admin.form_templates.field_placeholders.choices.second")}"
+    - "${I18n.t("admin.form_templates.field_placeholders.choices.third")}"
   attributes:
-    none_label: "Select an item"
-    label: "Enter multiple choice label here"
+    none_label: "${I18n.t(
+      "admin.form_templates.field_placeholders.none_label"
+    )}"
+    label: "${I18n.t("admin.form_templates.field_placeholders.label")}"
   validations:
-    # enter validations here`,
+    # ${I18n.t("admin.form_templates.field_placeholders.validations")}`,
   },
 ];
