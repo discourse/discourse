@@ -471,7 +471,7 @@ const Topic = RestModel.extend({
           opts.force_destroy ||
           (!deleted_by.staff &&
             !deleted_by.groups.some(
-              (group) => group.name === this.category.reviewable_by_group_name
+              (group) => group.name === this.category?.reviewable_by_group_name
             ) &&
             !(
               this.siteSettings.tl4_delete_posts_and_topics &&
