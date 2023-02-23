@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@babel/core": "^7.21.0",
-    "@babel/standalone": "^7.21.1",
+    "@babel/standalone": "^7.21.2",
     "@discourse/backburner.js": "^2.7.1-0",
     "@discourse/itsatrap": "^2.0.10",
     "@discourse/virtual-dom": "^2.1.2-0",
