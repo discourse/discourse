@@ -262,6 +262,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
         FROM #{DB_PREFIX}node
         WHERE (unpublishdate = 0 OR unpublishdate IS NULL)
         AND (approved = 1 AND showapproved = 1)
+        AND title != ''
         AND parentid IN (
         SELECT nodeid FROM #{DB_PREFIX}node WHERE contenttypeid=#{@channel_typeid} ) AND contenttypeid=#{@text_typeid};",
       ).first[
@@ -280,6 +281,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
           AND t.contenttypeid = #{@text_typeid}
           AND (t.unpublishdate = 0 OR t.unpublishdate IS NULL)
           AND t.approved = 1 AND t.showapproved = 1
+          AND t.title != ''
         ORDER BY t.nodeid
            LIMIT #{BATCH_SIZE}
           OFFSET #{offset}
@@ -685,6 +687,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
         FROM #{DB_PREFIX}node
         WHERE (unpublishdate = 0 OR unpublishdate IS NULL)
         AND (approved = 1 AND showapproved = 1)
+        AND title != ''
         AND parentid IN (
         SELECT nodeid FROM #{DB_PREFIX}node WHERE contenttypeid=#{@channel_typeid} ) AND contenttypeid=#{@text_typeid};",
       ).first[
@@ -701,6 +704,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
           AND t.contenttypeid = #{@text_typeid}
           AND t.approved = 1 AND t.showapproved = 1
           AND (t.unpublishdate = 0 OR t.unpublishdate IS NULL)
+          AND t.title != ''
         ORDER BY t.nodeid
            LIMIT #{BATCH_SIZE}
           OFFSET #{offset}
@@ -715,8 +719,54 @@ class ImportScripts::VBulletin < ImportScripts::Base
 
         begin
           Permalink.create(
-            url: "#{URL_PREFIX}#{topic["p1"]}/#{topic["p2"]}/#{topic["nodeid"]}-#{topic["p3"]}",
+            url: "#{topic["p1"]}/#{topic["p2"]}/#{topic["nodeid"]}-#{topic["p3"]}",
             topic_id: disc_topic[:topic_id],
+          )
+        rescue StandardError
+          nil
+        end
+      end
+    end
+
+    # posts
+    current_count = 0
+    post_count =
+      mysql_query(
+        "SELECT COUNT(nodeid) cnt FROM #{DB_PREFIX}node WHERE parentid NOT IN (
+        SELECT nodeid FROM #{DB_PREFIX}node WHERE contenttypeid=#{@channel_typeid} ) AND contenttypeid=#{@text_typeid} AND title IS NOT NULL;",
+      ).first[
+        "cnt"
+      ]
+
+    batches(BATCH_SIZE) do |offset|
+      posts = mysql_query <<-SQL
+        SELECT p.nodeid AS postid, p.userid AS userid, p.parentid AS threadid, c.parentid AS categoryid, c.urlident AS topicslug, t.urlident AS categoryslug
+        FROM #{DB_PREFIX}node p
+        LEFT JOIN #{DB_PREFIX}nodeview nv ON nv.nodeid=p.nodeid
+        LEFT JOIN #{DB_PREFIX}text txt ON txt.nodeid=p.nodeid
+        LEFT JOIN #{DB_PREFIX}node c ON c.nodeid=p.parentid
+        LEFT JOIN #{DB_PREFIX}node t ON t.nodeid= c.parentid
+        WHERE p.parentid NOT IN ( select nodeid from #{DB_PREFIX}node where contenttypeid=#{@channel_typeid} )
+          AND p.contenttypeid = #{@text_typeid} AND c.title != ''
+        ORDER BY postid
+           LIMIT #{BATCH_SIZE}
+          OFFSET #{offset}
+      SQL
+
+      break if posts.size < 1
+
+      posts.each do |post|
+        current_count += 1
+        print_status current_count, post_count
+        disc_post = post_id_from_imported_post_id(post["postid"])
+
+        next if !disc_post
+
+        begin
+          Permalink.create(
+            url:
+              "#{URL_PREFIX}#{post["categoryslug"]}/#{post["threadid"]}-#{post["topicslug"]}#post#{post["postid"]}",
+            post_id: disc_post,
           )
         rescue StandardError
           nil
@@ -792,7 +842,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
   end
 
   def parse_timestamp(timestamp)
-    Time.zone.at(@tz.utc_to_local(timestamp))
+    Time.zone.at(@tz.to_local(Time.at(timestamp)))
   end
 
   def mysql_query(sql)
