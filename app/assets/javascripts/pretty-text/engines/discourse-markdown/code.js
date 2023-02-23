@@ -79,20 +79,20 @@ function render(tokens, idx, options, env, slf, md) {
 
 export function setup(helper) {
   helper.registerOptions((opts, siteSettings) => {
+    let languageAliases = [];
     const languages = (siteSettings.highlighted_languages || "")
       .split("|")
       .filter(Boolean);
-    const languageAliases = [];
 
     languages.forEach((lang) => {
       if (HLJS_ALIASES[lang]) {
-        languageAliases.push(HLJS_ALIASES[lang]);
+        languageAliases = languageAliases.concat(HLJS_ALIASES[lang]);
       }
     });
 
     opts.defaultCodeLang = siteSettings.default_code_lang;
     opts.acceptableCodeClasses = languages
-      .concat(languageAliases.flat())
+      .concat(languageAliases)
       .concat(["auto", "plaintext"]);
   });
 
