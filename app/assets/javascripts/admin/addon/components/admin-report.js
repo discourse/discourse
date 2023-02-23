@@ -61,11 +61,8 @@ export default class AdminReport extends Component {
   @equal("model.error", "timeout") showTimeoutError;
   @equal("model.error", "exception") showExceptionError;
   @notEmpty("model.data") hasData;
-  init() {
-    super.init(...arguments);
 
-    this._reports = [];
-  }
+  _reports = [];
 
   @computed("siteSettings.dashboard_hidden_reports")
   get isHidden() {

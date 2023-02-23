@@ -10,11 +10,8 @@ export default class AdminBackupsLogs extends Component {
   showLoadingSpinner = false;
   hasFormattedLogs = false;
   noLogsMessage = I18n.t("admin.backups.logs.none");
-
-  init() {
-    super.init(...arguments);
-    this._reset();
-  }
+  formattedLogs = "";
+  index = 0;
 
   _reset() {
     this.setProperties({ formattedLogs: "", index: 0 });

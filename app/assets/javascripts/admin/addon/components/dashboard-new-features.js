@@ -9,8 +9,8 @@ export default class DashboardNewFeatures extends Component {
   newFeatures = null;
   releaseNotesLink = null;
 
-  init() {
-    super.init(...arguments);
+  constructor() {
+    super(...arguments);
 
     ajax("/admin/dashboard/new-features.json").then((json) => {
       if (!this.element || this.isDestroying || this.isDestroyed) {

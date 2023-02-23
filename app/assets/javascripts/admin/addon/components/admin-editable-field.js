@@ -7,11 +7,6 @@ export default class AdminEditableField extends Component {
   buffer = "";
   editing = false;
 
-  init() {
-    super.init(...arguments);
-    this.set("editing", false);
-  }
-
   @action
   edit(event) {
     event?.preventDefault();
