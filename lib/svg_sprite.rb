@@ -243,50 +243,58 @@ module SvgSprite
     badge_icons
   end
 
-  def self.custom_svg_sprites(theme_id)
-    get_set_cache("custom_svg_sprites_#{Theme.transform_ids(theme_id).join(",")}") do
-      plugin_paths = []
-      Discourse
-        .plugins
-        .map { |plugin| File.dirname(plugin.path) }
-        .each { |path| plugin_paths << "#{path}/svg-icons/*.svg" }
+  def self.plugin_svg_sprites
+    plugin_paths = []
+    Discourse
+      .plugins
+      .map { |plugin| File.dirname(plugin.path) }
+      .each { |path| plugin_paths << "#{path}/svg-icons/*.svg" }
 
-      custom_sprite_paths = Dir.glob(plugin_paths)
+    custom_sprite_paths = Dir.glob(plugin_paths)
 
-      custom_sprites =
-        custom_sprite_paths.map do |path|
-          if File.exist?(path)
-            { filename: "#{File.basename(path, ".svg")}", sprite: File.read(path) }
+    custom_sprite_paths.map do |path|
+      { filename: "#{File.basename(path, ".svg")}", sprite: File.read(path) }
+    end
+  end
+
+  def self.theme_svg_sprites(theme_id)
+    if theme_id.present?
+      custom_sprites = []
+
+      ThemeField
+        .where(
+          type_id: ThemeField.types[:theme_upload_var],
+          name: THEME_SPRITE_VAR_NAME,
+          theme_id: Theme.transform_ids(theme_id),
+        )
+        .pluck(:upload_id, :theme_id)
+        .each do |upload_id, child_theme_id|
+          begin
+            upload = Upload.find(upload_id)
+            custom_sprites << {
+              filename: "theme_#{theme_id}_#{upload_id}.svg",
+              sprite: upload.content,
+            }
+          rescue => e
+            name =
+              begin
+                Theme.find(child_theme_id).name
+              rescue StandardError
+                nil
+              end
+            Discourse.warn_exception(e, message: "#{name} theme contains a corrupt svg upload")
           end
         end
 
-      if theme_id.present?
-        ThemeField
-          .where(
-            type_id: ThemeField.types[:theme_upload_var],
-            name: THEME_SPRITE_VAR_NAME,
-            theme_id: Theme.transform_ids(theme_id),
-          )
-          .pluck(:upload_id, :theme_id)
-          .each do |upload_id, child_theme_id|
-            begin
-              upload = Upload.find(upload_id)
-              custom_sprites << {
-                filename: "theme_#{theme_id}_#{upload_id}.svg",
-                sprite: upload.content,
-              }
-            rescue => e
-              name =
-                begin
-                  Theme.find(child_theme_id).name
-                rescue StandardError
-                  nil
-                end
-              Discourse.warn_exception(e, message: "#{name} theme contains a corrupt svg upload")
-            end
-          end
-      end
       custom_sprites
+    else
+      []
+    end
+  end
+
+  def self.custom_svg_sprites(theme_id)
+    get_set_cache("custom_svg_sprites_#{Theme.transform_ids(theme_id).join(",")}") do
+      plugin_svg_sprites + theme_svg_sprites(theme_id)
     end
   end
 
