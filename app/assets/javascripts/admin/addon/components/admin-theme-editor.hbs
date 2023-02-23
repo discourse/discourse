@@ -44,7 +44,7 @@
             @checked={{this.onlyOverridden}}
             {{on
               "click"
-              (action "onlyOverriddenChanged" value="target.checked")
+              (action this.onlyOverriddenChanged value="target.checked")
             }}
           />
           {{i18n "admin.customize.theme.hide_unused_fields"}}
@@ -125,6 +125,6 @@
   @autofocus="true"
   @placeholder={{this.placeholder}}
   @htmlPlaceholder={{true}}
-  @save={{action "save"}}
+  @save={{this.save}}
   @setWarning={{action "setWarning"}}
 />
