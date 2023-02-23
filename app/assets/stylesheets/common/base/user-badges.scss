@@ -132,7 +132,10 @@
   }
 
   .badge-granted {
+    display: block;
     margin-top: 0.5em;
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
   }
 
   .grant-count {
@@ -191,9 +194,6 @@
     }
 
     .badge-info {
-      display: flex;
-      flex: 1 1 auto;
-      align-items: center;
       color: var(--primary);
 
       h3 {
@@ -216,7 +216,6 @@
     }
 
     .badge-contents {
-      padding: 0 5%;
       h3 {
         font-size: var(--font-up-3);
       }
