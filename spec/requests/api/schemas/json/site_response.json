@@ -565,10 +565,6 @@
                 "null"
               ]
             },
-            "form_template_ids": {
-              "type": "array",
-              "items": []
-            },
             "has_children": {
               "type": "boolean"
             },
@@ -698,7 +694,6 @@
             "permission",
             "notification_level",
             "topic_template",
-            "form_template_ids",
             "has_children",
             "sort_order",
             "sort_ascending",
