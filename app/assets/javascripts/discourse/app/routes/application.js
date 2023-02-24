@@ -139,7 +139,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
         offerHelp: null,
         helpSeen: false,
       });
-      showModal("forgotPassword", { title: "forgot_password.title" });
+      showModal("forgot-password", { title: "forgot_password.title" });
     },
 
     showNotActivated(props) {
@@ -266,7 +266,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
       const returnPath = encodeURIComponent(window.location.pathname);
       window.location = getURL("/session/sso?return_path=" + returnPath);
     } else {
-      this._autoLogin("login", "login-modal", {
+      this._autoLogin("login", {
         notAuto: () => this.controllerFor("login").resetForm(),
       });
     }
@@ -277,7 +277,8 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
       const returnPath = encodeURIComponent(window.location.pathname);
       window.location = getURL("/session/sso?return_path=" + returnPath);
     } else {
-      this._autoLogin("createAccount", "create-account", {
+      this._autoLogin("create-account", {
+        modalClass: "create-account",
         signup: true,
         titleAriaElementId: "create-account-title",
       });
@@ -286,8 +287,12 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
 
   _autoLogin(
     modal,
-    modalClass,
-    { notAuto = null, signup = false, titleAriaElementId = null } = {}
+    {
+      modalClass = undefined,
+      notAuto = null,
+      signup = false,
+      titleAriaElementId = null,
+    } = {}
   ) {
     const methods = findAll();
 
@@ -296,11 +301,8 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
         signup,
       });
     } else {
-      showModal(modal, { titleAriaElementId });
-      this.controllerFor("modal").set("modalClass", modalClass);
-      if (notAuto) {
-        notAuto();
-      }
+      showModal(modal, { modalClass, titleAriaElementId });
+      notAuto?.();
     }
   },
 
