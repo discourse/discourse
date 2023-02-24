@@ -62,7 +62,7 @@ export default class HorizontalOverflowNav extends Component {
 
   @bind
   scrollDrag(event) {
-    if (this.site.mobileView) {
+    if (this.site.mobileView || !this.hasScroll) {
       return;
     }
 
