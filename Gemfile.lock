@@ -200,6 +200,7 @@ GEM
       uri_template (~> 0.7)
     jwt (2.7.0)
     kgio (2.11.4)
+    libv8-node (16.10.0.0)
     libv8-node (16.10.0.0-aarch64-linux)
     libv8-node (16.10.0.0-arm64-darwin)
     libv8-node (16.10.0.0-x86_64-darwin)
@@ -230,6 +231,7 @@ GEM
       rack (>= 1.1.3)
     method_source (1.0.0)
     mini_mime (1.1.2)
+    mini_portile2 (2.8.1)
     mini_racer (0.6.3)
       libv8-node (~> 16.10.0.0)
     mini_scheduler (0.15.0)
@@ -256,6 +258,9 @@ GEM
     net-smtp (0.3.3)
       net-protocol
     nio4r (2.5.8)
+    nokogiri (1.14.2)
+      mini_portile2 (~> 2.8.0)
+      racc (~> 1.4)
     nokogiri (1.14.2-aarch64-linux)
       racc (~> 1.4)
     nokogiri (1.14.2-arm64-darwin)
@@ -521,6 +526,7 @@ GEM
 PLATFORMS
   aarch64-linux
   arm64-darwin-20
+  ruby
   x86_64-darwin-18
   x86_64-darwin-19
   x86_64-darwin-20
