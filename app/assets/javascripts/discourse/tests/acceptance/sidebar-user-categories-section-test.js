@@ -615,7 +615,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
 
     assert.strictEqual(
       query(`.sidebar-section-link[data-category-id="${category.id}"]`).title,
-      category.description_text,
+      category.description,
       "category description without HTML entity is used as the link's title"
     );
   });
