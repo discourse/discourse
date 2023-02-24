@@ -197,6 +197,10 @@ module ChatPublisher
     )
   end
 
+  def self.publish_kick_users(channel_id, user_ids)
+    MessageBus.publish("/chat/kick/#{channel_id}", nil, user_ids: user_ids)
+  end
+
   CHANNEL_EDITS_MESSAGE_BUS_CHANNEL = "/chat/channel-edits"
 
   def self.publish_chat_channel_edit(chat_channel, acting_user)

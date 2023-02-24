@@ -7,7 +7,8 @@ module Chat
         include Service::Base
 
         contract
-        step :execute
+        step :remove_users_outside_allowed_groups
+        step :publish
 
         class Contract
           attribute :new_allowed_groups
@@ -17,7 +18,7 @@ module Chat
 
         private
 
-        def execute(contract:, **)
+        def remove_users_outside_allowed_groups(contract:, **)
           users =
             User
               .real
@@ -42,17 +43,32 @@ module Chat
           user_ids_to_remove = users.pluck(:id)
           return noop if user_ids_to_remove.empty?
 
-          UserChatChannelMembership
-            .joins(:chat_channel)
-            .where(user_id: user_ids_to_remove)
-            .where.not(chat_channel: { type: "DirectMessageChannel" })
-            .delete_all
+          memberships_to_remove =
+            UserChatChannelMembership
+              .joins(:chat_channel)
+              .where(user_id: user_ids_to_remove)
+              .where.not(chat_channel: { type: "DirectMessageChannel" })
 
-          context.merge(users_removed: user_ids_to_remove.length)
+          users_removed_map =
+            memberships_to_remove
+              .destroy_all
+              .each_with_object({}) do |obj, hash|
+                hash[obj.chat_channel_id] = [] if !hash.key? obj.chat_channel_id
+                hash[obj.chat_channel_id] << obj.user_id
+              end
+
+          context.merge(users_removed_map: users_removed_map)
+        end
+
+        def publish(users_removed_map:, **)
+          Chat::Service::Actions::AutoRemovedUserPublisher.call(
+            event_type: :chat_allowed_groups_changed,
+            users_removed_map: users_removed_map,
+          )
         end
 
         def noop
-          context.merge(users_removed: 0)
+          context.merge(users_removed_map: {})
         end
       end
     end

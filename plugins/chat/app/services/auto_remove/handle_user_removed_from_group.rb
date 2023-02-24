@@ -10,6 +10,7 @@ module Chat
         model :user
         step :remove_if_outside_chat_allowed_groups
         step :remove_from_private_channels
+        step :publish
 
         class Contract
           attribute :user_id
@@ -18,22 +19,31 @@ module Chat
         private
 
         def fetch_user(contract:, **)
-          User.find(contract.user_id)
+          User.find_by(id: contract.user_id)
         end
 
         def remove_if_outside_chat_allowed_groups(user:, **)
-          return if user.staff?
+          return noop if user.staff?
 
           # if the group the user was removed from is one of the chat allowed
           # groups, check if they are still in any of the other chat allowed
           # groups, otherwise kick
           if !GroupUser.exists?(group_id: SiteSetting.chat_allowed_groups_map, user: user)
-            # TODO (martin) Maybe extract this to a single user version?
-            UserChatChannelMembership
-              .joins(:chat_channel)
-              .where(user_id: user.id)
-              .where.not(chat_channel: { type: "DirectMessageChannel" })
-              .delete_all
+            memberships_to_remove =
+              UserChatChannelMembership
+                .joins(:chat_channel)
+                .where(user_id: user.id)
+                .where.not(chat_channel: { type: "DirectMessageChannel" })
+
+            users_removed_map =
+              memberships_to_remove
+                .destroy_all
+                .each_with_object({}) do |obj, hash|
+                  hash[obj.chat_channel_id] = [] if !hash.key? obj.chat_channel_id
+                  hash[obj.chat_channel_id] << obj.user_id
+                end
+
+            context.merge(users_removed_map: users_removed_map)
           end
         end
 
@@ -53,9 +63,11 @@ module Chat
             INNER JOIN category_groups ON category_groups.category_id = categories.id
           SQL
 
-          channel_ids = channel_group_permission_map.map(&:channel_id).uniq
           user_memberships =
-            UserChatChannelMembership.where(chat_channel_id: channel_ids, user: user)
+            UserChatChannelMembership.where(
+              chat_channel_id: channel_group_permission_map.map(&:channel_id).uniq,
+              user: user,
+            )
 
           membership_ids_to_delete = []
           user_memberships.each do |membership|
@@ -73,13 +85,28 @@ module Chat
 
           return noop if membership_ids_to_delete.empty?
 
-          UserChatChannelMembership.where(id: membership_ids_to_delete).delete_all
+          memberships_to_remove = UserChatChannelMembership.where(id: membership_ids_to_delete)
 
-          context.merge(users_removed: membership_ids_to_delete.length)
+          users_removed_map =
+            memberships_to_remove
+              .destroy_all
+              .each_with_object({}) do |obj, hash|
+                hash[obj.chat_channel_id] = [] if !hash.key? obj.chat_channel_id
+                hash[obj.chat_channel_id] << obj.user_id
+              end
+
+          context.merge(users_removed_map: users_removed_map)
+        end
+
+        def publish(users_removed_map:, **)
+          Chat::Service::Actions::AutoRemovedUserPublisher.call(
+            event_type: :user_removed_from_group,
+            users_removed_map: users_removed_map,
+          )
         end
 
         def noop
-          context.merge(users_removed: 0)
+          context.merge(users_removed_map: context.users_removed_map || {})
         end
       end
     end

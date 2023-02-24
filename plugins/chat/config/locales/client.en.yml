@@ -9,6 +9,7 @@ en:
           actions:
             chat_channel_status_change: "Chat channel status changed"
             chat_channel_delete: "Chat channel deleted"
+            chat_auto_remove_membership: "Memberships automatically removed from channels"
       api:
         scopes:
           descriptions:

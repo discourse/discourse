@@ -202,6 +202,7 @@ after_initialize do
   load File.expand_path("../lib/secure_uploads_compatibility.rb", __FILE__)
   load File.expand_path("../lib/endpoint.rb", __FILE__)
   load File.expand_path("../lib/steps_inspector.rb", __FILE__)
+  load File.expand_path("../app/jobs/regular/kick_users_from_channel.rb", __FILE__)
   load File.expand_path("../app/jobs/regular/auto_join_channel_memberships.rb", __FILE__)
   load File.expand_path("../app/jobs/regular/auto_join_channel_batch.rb", __FILE__)
   load File.expand_path(
@@ -236,13 +237,13 @@ after_initialize do
   load File.expand_path("../app/services/chat_message_destroyer.rb", __FILE__)
   load File.expand_path("../app/services/update_user_last_read.rb", __FILE__)
   load File.expand_path("../app/services/lookup_thread.rb", __FILE__)
-  load File.expand_path("../app/services/auto_remove_membership_event_handler.rb", __FILE__)
   load File.expand_path(
          "../app/services/auto_remove/handle_chat_allowed_groups_change.rb",
          __FILE__,
        )
   load File.expand_path("../app/services/auto_remove/handle_user_removed_from_group.rb", __FILE__)
   load File.expand_path("../app/services/auto_remove/handle_category_updated.rb", __FILE__)
+  load File.expand_path("../app/services/actions/auto_removed_user_publisher.rb", __FILE__)
   load File.expand_path("../app/controllers/api_controller.rb", __FILE__)
   load File.expand_path("../app/controllers/api/chat_channels_controller.rb", __FILE__)
   load File.expand_path("../app/controllers/api/chat_current_user_channels_controller.rb", __FILE__)
