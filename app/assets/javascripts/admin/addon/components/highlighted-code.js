@@ -1,4 +1,4 @@
-import { observes, on } from "discourse-common/utils/decorators";
+import { observes, on } from "@ember-decorators/object";
 import Component from "@ember/component";
 import highlightSyntax from "discourse/lib/highlight-syntax";
 
