@@ -340,22 +340,25 @@
           <div class="secondary" id="collapsed-info-panel">
             <dl>
               {{#if this.model.created_at}}
-                <div><dt>{{i18n "user.created"}}</dt><dd>{{bound-date
-                      this.model.created_at
-                    }}</dd></div>
+                <div><dt class="created-at">{{i18n "user.created"}}</dt><dd
+                    class="created-at"
+                  >{{bound-date this.model.created_at}}</dd></div>
               {{/if}}
               {{#if this.model.last_posted_at}}
-                <div><dt>{{i18n "user.last_posted"}}</dt><dd>{{bound-date
+                <div><dt class="last-posted-at">{{i18n
+                      "user.last_posted"
+                    }}</dt><dd class="last-posted-at">{{bound-date
                       this.model.last_posted_at
                     }}</dd></div>
               {{/if}}
               {{#if this.model.last_seen_at}}
-                <div><dt>{{i18n "user.last_seen"}}</dt><dd>{{bound-date
-                      this.model.last_seen_at
-                    }}</dd></div>
+                <div><dt class="last-seen-at">{{i18n "user.last_seen"}}</dt><dd
+                    class="last-seen-at"
+                  >{{bound-date this.model.last_seen_at}}</dd></div>
               {{/if}}
               {{#if this.model.profile_view_count}}
-                <div><dt>{{i18n "views"}}</dt><dd
+                <div><dt class="profile-view-count">>{{i18n "views"}}</dt><dd
+                    class="profile-view-count"
                   >{{this.model.profile_view_count}}</dd></div>
               {{/if}}
               {{#if this.model.invited_by}}
@@ -372,8 +375,8 @@
                   >{{this.model.trustLevel.name}}</dd></div>
               {{/if}}
               {{#if this.canCheckEmails}}
-                <div><dt>{{i18n "user.email.title"}}</dt>
-                  <dd title={{this.model.email}}>
+                <div><dt class="email">{{i18n "user.email.title"}}</dt>
+                  <dd class="email" title={{this.model.email}}>
                     {{#if this.model.email}}
                       {{this.model.email}}
                     {{else}}
