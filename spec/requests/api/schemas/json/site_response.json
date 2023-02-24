@@ -678,6 +678,10 @@
             },
             "parent_category_id": {
               "type": "integer"
+            },
+            "form_template_ids": {
+              "type": "array",
+              "items": []
             }
           },
           "required": [
