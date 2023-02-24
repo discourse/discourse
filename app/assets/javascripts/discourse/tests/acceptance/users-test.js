@@ -52,13 +52,11 @@ acceptance("User Directory", function () {
   test("Custom user fields are present", async function (assert) {
     await visit("/u");
 
-    const firstRow = query(
-      ".directory .directory-table__body .directory-table__row:first-child"
+    const firstRowUserField = query(
+      ".directory .directory-table__body .directory-table__row:first-child .directory-table__value--user-field"
     );
 
-    const favoriteColorTd = firstRow.children[firstRow.children.length - 1];
-
-    assert.strictEqual(favoriteColorTd.lastChild.textContent, "Blue");
+    assert.strictEqual(firstRowUserField.textContent, "Blue");
   });
 
   test("Can sort table via keyboard", async function (assert) {
