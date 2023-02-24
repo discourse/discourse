@@ -48,9 +48,4 @@ export default class EmailStylesEditor extends Component {
       },
     });
   }
-
-  @action
-  save() {
-    this.attrs.save();
-  }
 }

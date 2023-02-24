@@ -200,7 +200,7 @@ export default class AceEditor extends Component {
 
     this._editor.getSession().setAnnotations(warnings);
 
-    this.setWarning(
+    this.setWarning?.(
       warnings.length
         ? I18n.t("admin.customize.theme.scss_color_variables_warning")
         : false
