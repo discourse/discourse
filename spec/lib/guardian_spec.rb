@@ -3537,6 +3537,12 @@ RSpec.describe Guardian do
       context "when min_trust_to_create_tag is 3" do
         before { SiteSetting.min_trust_to_create_tag = 3 }
 
+        describe "#can_see_tag?" do
+          it "is always true" do
+            expect(Guardian.new.can_see_tag?(anything)).to be_truthy
+          end
+        end
+
         describe "can_create_tag" do
           it "returns false if trust level is too low" do
             expect(Guardian.new(trust_level_2).can_create_tag?).to be_falsey
