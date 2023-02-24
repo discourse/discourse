@@ -4,7 +4,6 @@ globalThis.deprecationWorkflow.config = {
   // `throwOnUnhandled` here since it is easier to toggle.
   workflow: [
     { handler: "silence", matchId: "ember-global" },
-    { handler: "silence", matchId: "ember-string.prototype-extensions" },
     { handler: "silence", matchId: "ember.built-in-components.reopen" },
     { handler: "silence", matchId: "ember.built-in-components.import" },
     { handler: "silence", matchId: "implicit-injections" },
