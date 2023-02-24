@@ -118,6 +118,10 @@ module UserGuardian
     user && can_administer_user?(user)
   end
 
+  def can_see_user?(_user)
+    true
+  end
+
   def can_see_profile?(user)
     return false if user.blank?
     return true if !SiteSetting.allow_users_to_hide_profile?
