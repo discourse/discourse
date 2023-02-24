@@ -1085,7 +1085,7 @@ RSpec.describe ListController do
     end
   end
 
-  describe "#new-new" do
+  describe "#new_new" do
     fab!(:group) { Fabricate(:group) }
 
     before do
