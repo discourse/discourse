@@ -247,6 +247,9 @@ RSpec.configure do |config|
     Capybara.threadsafe = true
     Capybara.disable_animation = false
 
+    # Click offsets is calculated from top left of element
+    Capybara.w3c_click_offset = false
+
     Capybara.configure do |capybara_config|
       capybara_config.server_host = "localhost"
       capybara_config.server_port = 31_337 + ENV["TEST_ENV_NUMBER"].to_i

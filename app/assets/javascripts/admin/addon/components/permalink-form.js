@@ -1,3 +1,5 @@
+import { tagName } from "@ember-decorators/component";
+import { inject as service } from "@ember/service";
 import Component from "@ember/component";
 import I18n from "I18n";
 import Permalink from "admin/models/permalink";
@@ -5,16 +7,18 @@ import discourseComputed, { bind } from "discourse-common/utils/decorators";
 import { fmt } from "discourse/lib/computed";
 import { schedule } from "@ember/runloop";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
 
-export default Component.extend({
-  tagName: "",
-  dialog: service(),
-  formSubmitted: false,
-  permalinkType: "topic_id",
-  permalinkTypePlaceholder: fmt("permalinkType", "admin.permalink.%@"),
-  action: null,
-  permalinkTypeValue: null,
+@tagName("")
+export default class PermalinkForm extends Component {
+  @service dialog;
+
+  formSubmitted = false;
+  permalinkType = "topic_id";
+
+  @fmt("permalinkType", "admin.permalink.%@") permalinkTypePlaceholder;
+
+  action = null;
+  permalinkTypeValue = null;
 
   @discourseComputed
   permalinkTypes() {
@@ -25,21 +29,21 @@ export default Component.extend({
       { id: "tag_name", name: I18n.t("admin.permalink.tag_name") },
       { id: "external_url", name: I18n.t("admin.permalink.external_url") },
     ];
-  },
+  }
 
   @bind
   focusPermalink() {
     schedule("afterRender", () =>
       document.querySelector(".permalink-url")?.focus()
     );
-  },
+  }
 
   @action
   submitFormOnEnter(event) {
     if (event.key === "Enter") {
       this.onSubmit();
     }
-  },
+  }
 
   @action
   onSubmit() {
@@ -84,5 +88,5 @@ export default Component.extend({
           }
         );
     }
-  },
-});
+  }
+}

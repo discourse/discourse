@@ -80,4 +80,19 @@ module SystemHelpers
   def using_session(name, &block)
     Capybara.using_session(name.to_s + self.method_name, &block)
   end
+
+  def select_text_range(selector, start = 0, offset = 5)
+    js = <<-JS
+      const node = document.querySelector(arguments[0]).childNodes[0];
+      const selection = window.getSelection();
+      const range = document.createRange();
+      range.selectNodeContents(node);
+      range.setStart(node, arguments[1]);
+      range.setEnd(node, arguments[1] + arguments[2]);
+      selection.removeAllRanges();
+      selection.addRange(range);
+    JS
+
+    page.execute_script(js, selector, start, offset)
+  end
 end

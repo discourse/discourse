@@ -1,4 +1,38 @@
-<DEditor
-  @value={{this.category.topic_template}}
-  @showLink={{this.showInsertLinkButton}}
-/>
+{{#if this.siteSettings.experimental_form_templates}}
+  <div class="control-group">
+    <DToggleSwitch
+      class="toggle-template-type"
+      @state={{this.showFormTemplate}}
+      @label={{this.templateTypeToggleLabel}}
+      {{on "click" this.toggleTemplateType}}
+    />
+  </div>
+
+  {{#if this.showFormTemplate}}
+    <div class="control-group">
+      <FormTemplateChooser
+        @class="select-category-template"
+        @value={{this.category.form_template_ids}}
+        @onChange={{action (mut this.category.form_template_ids)}}
+      />
+
+      <p class="select-category-template__info desc">
+        {{#if this.currentUser.staff}}
+          <LinkTo @route="adminCustomizeFormTemplates">
+            {{i18n "admin.form_templates.edit_category.select_template_help"}}
+          </LinkTo>
+        {{/if}}
+      </p>
+    </div>
+  {{else}}
+    <DEditor
+      @value={{this.category.topic_template}}
+      @showLink={{this.showInsertLinkButton}}
+    />
+  {{/if}}
+{{else}}
+  <DEditor
+    @value={{this.category.topic_template}}
+    @showLink={{this.showInsertLinkButton}}
+  />
+{{/if}}

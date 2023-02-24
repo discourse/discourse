@@ -19,6 +19,7 @@ class BasicCategorySerializer < ApplicationSerializer
              :notification_level,
              :can_edit,
              :topic_template,
+             :form_template_ids,
              :has_children,
              :sort_order,
              :sort_ascending,
@@ -90,5 +91,9 @@ class BasicCategorySerializer < ApplicationSerializer
 
   def include_custom_fields?
     custom_fields.present?
+  end
+
+  def include_form_template_ids?
+    SiteSetting.experimental_form_templates
   end
 end

@@ -3632,7 +3632,7 @@ en:
       back: "Back to category"
       general: "General"
       settings: "Settings"
-      topic_template: "Topic Template"
+      topic_template: "Template"
       tags: "Tags"
       tags_allowed_tags: "Restrict these tags to this category:"
       tags_allowed_tag_groups: "Restrict these tag groups to this category:"
@@ -4699,10 +4699,14 @@ en:
               read: Read a topic or a specific post in it. RSS is also supported.
               write: Create a new topic or post to an existing one.
               update: Update a topic. Change the title, category, tags, status, archetype, featured_link etc.
+              delete: Delete a topic.
               read_lists: Read topic lists like top, new, latest, etc. RSS is also supported.
               status: "Update a topic's status. Status: closed, archive, visisble, pinned. Enabled: true, false. Specify a category_id here and in the request payload to only allow status changes on topics in that category."
             posts:
               edit: Edit any post or a specific one.
+              delete: Delete a post.
+            tags:
+              list: List tags.
             categories:
               list: Get a list of categories.
               show: Get a single category by id.
@@ -5561,6 +5565,12 @@ en:
           dropdown: "Dropdown"
           upload: "Upload a file"
           multiselect: "Multiple choice"
+        edit_category:
+          toggle_freeform: "form template disabled"
+          toggle_form_template: "form template enabled"
+          select_template: "Select form templates"
+          select_template_help: "Add/Edit Form Templates"
+
       impersonate:
         title: "Impersonate"
         help: "Use this tool to impersonate a user account for debugging purposes. You will have to log out once finished."

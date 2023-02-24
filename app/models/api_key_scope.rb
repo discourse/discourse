@@ -31,6 +31,9 @@ class ApiKeyScope < ActiveRecord::Base
             actions: %w[topics#update topics#status],
             params: %i[topic_id category_id],
           },
+          delete: {
+            actions: %w[topics#destroy],
+          },
           read: {
             actions: %w[topics#show topics#feed topics#posts],
             params: %i[topic_id],
@@ -54,6 +57,14 @@ class ApiKeyScope < ActiveRecord::Base
           edit: {
             actions: %w[posts#update],
             params: %i[id],
+          },
+          delete: {
+            actions: %w[posts#destroy],
+          },
+        },
+        tags: {
+          list: {
+            actions: %w[tags#index],
           },
         },
         categories: {
