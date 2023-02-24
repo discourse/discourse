@@ -1,13 +1,12 @@
-import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import discourseComputed from "discourse-common/utils/decorators";
 import { extractError } from "discourse/lib/ajax-error";
 import { emailValid } from "discourse/lib/utilities";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
+import Modal from "discourse/controllers/modal";
 import I18n from "I18n";
 
-export default Controller.extend(ModalFunctionality, {
+export default Modal.extend({
   loading: false,
 
   usernamesAndEmails: null,

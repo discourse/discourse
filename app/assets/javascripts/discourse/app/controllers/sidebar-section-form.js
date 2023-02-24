@@ -1,5 +1,4 @@
-import Controller from "@ember/controller";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
+import Modal from "discourse/controllers/modal";
 import { ajax } from "discourse/lib/ajax";
 import { isEmpty } from "@ember/utils";
 import { extractError } from "discourse/lib/ajax-error";
@@ -93,7 +92,7 @@ class SectionLink {
   }
 }
 
-export default Controller.extend(ModalFunctionality, {
+export default Modal.extend({
   dialog: service(),
   router: service(),
 

@@ -1,9 +1,8 @@
-import Controller from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
 import { gt, or } from "@ember/object/computed";
 import { next } from "@ember/runloop";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
+import Modal from "discourse/controllers/modal";
 import I18n from "I18n";
 
 export const BAR_CHART_TYPE = "bar";
@@ -18,7 +17,7 @@ const VOTE_POLL_RESULT = "on_vote";
 const CLOSED_POLL_RESULT = "on_close";
 const STAFF_POLL_RESULT = "staff_only";
 
-export default Controller.extend(ModalFunctionality, {
+export default Modal.extend({
   showAdvanced: false,
 
   pollType: REGULAR_POLL_TYPE,

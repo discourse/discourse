@@ -1,10 +1,7 @@
-import Controller from "@ember/controller";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
+import Modal from "discourse/controllers/modal";
 import { action } from "@ember/object";
 
-export default class ChatChannelSelectorModalController extends Controller.extend(
-  ModalFunctionality
-) {
+export default class ChatChannelSelectorModalController extends Modal {
   @action
   closeSelf() {
     this.send("closeModal");

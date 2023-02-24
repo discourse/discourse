@@ -1,12 +1,12 @@
-import Controller, { inject as controller } from "@ember/controller";
+import { inject as controller } from "@ember/controller";
 import I18n from "I18n";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
+import Modal from "discourse/controllers/modal";
 import { action } from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
 
 // Modal that displays confirmation text when user deletes a topic
 // The modal will display only if the topic exceeds a certain amount of views
-export default Controller.extend(ModalFunctionality, {
+export default Modal.extend({
   topicController: controller("topic"),
   deletingTopic: false,
 

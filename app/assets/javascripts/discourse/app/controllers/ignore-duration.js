@@ -1,11 +1,10 @@
-import Controller from "@ember/controller";
 import I18n from "I18n";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
+import Modal from "discourse/controllers/modal";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { timeShortcuts } from "discourse/lib/time-shortcut";
 import discourseComputed from "discourse-common/utils/decorators";
 
-export default Controller.extend(ModalFunctionality, {
+export default Modal.extend({
   loading: false,
   ignoredUntil: null,
 

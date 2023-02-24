@@ -2,7 +2,7 @@ import Controller, { inject as controller } from "@ember/controller";
 import Badge from "discourse/models/badge";
 import GrantBadgeController from "discourse/mixins/grant-badge-controller";
 import I18n from "I18n";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
+import Modal from "discourse/controllers/modal";
 import UserBadge from "discourse/models/user-badge";
 import { all } from "rsvp";
 import discourseComputed from "discourse-common/utils/decorators";

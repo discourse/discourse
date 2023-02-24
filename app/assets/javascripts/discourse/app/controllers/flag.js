@@ -1,8 +1,7 @@
 import { schedule } from "@ember/runloop";
-import Controller from "@ember/controller";
 import I18n from "I18n";
 import { MAX_MESSAGE_LENGTH } from "discourse/models/post-action-type";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
+import Modal from "discourse/controllers/modal";
 import { Promise } from "rsvp";
 import User from "discourse/models/user";
 import discourseComputed, { bind } from "discourse-common/utils/decorators";
@@ -10,7 +9,7 @@ import { not } from "@ember/object/computed";
 import optionalService from "discourse/lib/optional-service";
 import { classify } from "@ember/string";
 
-export default Controller.extend(ModalFunctionality, {
+export default Modal.extend({
   adminTools: optionalService(),
   userDetails: null,
   selected: null,

@@ -1,7 +1,6 @@
 import { fromSeconds, toSeconds } from "discourse/helpers/slow-mode";
-import Controller from "@ember/controller";
 import I18n from "I18n";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
+import Modal from "discourse/controllers/modal";
 import Topic from "discourse/models/topic";
 import { action } from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
@@ -9,7 +8,7 @@ import { equal, or } from "@ember/object/computed";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { timeShortcuts } from "discourse/lib/time-shortcut";
 
-export default Controller.extend(ModalFunctionality, {
+export default Modal.extend({
   selectedSlowMode: null,
   hours: null,
   minutes: null,

@@ -1,8 +1,7 @@
 import EmberObject, { setProperties } from "@ember/object";
-import Controller from "@ember/controller";
 import { FORMAT } from "select-kit/components/future-date-input-selector";
 import I18n from "I18n";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
+import Modal from "discourse/controllers/modal";
 import TopicTimer from "discourse/models/topic-timer";
 import { alias } from "@ember/object/computed";
 import discourseComputed from "discourse-common/utils/decorators";
@@ -16,7 +15,7 @@ export const DELETE_STATUS_TYPE = "delete";
 export const BUMP_TYPE = "bump";
 export const DELETE_REPLIES_TYPE = "delete_replies";
 
-export default Controller.extend(ModalFunctionality, {
+export default Modal.extend({
   loading: false,
   isPublic: "true",
 

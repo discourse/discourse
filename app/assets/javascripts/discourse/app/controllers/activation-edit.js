@@ -1,10 +1,10 @@
-import Controller, { inject as controller } from "@ember/controller";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
+import { inject as controller } from "@ember/controller";
+import Modal from "discourse/controllers/modal";
 import { changeEmail } from "discourse/lib/user-activation";
 import discourseComputed from "discourse-common/utils/decorators";
 import { extractError } from "discourse/lib/ajax-error";
 
-export default Controller.extend(ModalFunctionality, {
+export default Modal.extend({
   login: controller(),
 
   currentEmail: null,

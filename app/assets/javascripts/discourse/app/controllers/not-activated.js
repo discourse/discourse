@@ -1,8 +1,7 @@
-import Controller from "@ember/controller";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
+import Modal from "discourse/controllers/modal";
 import { resendActivationEmail } from "discourse/lib/user-activation";
 
-export default Controller.extend(ModalFunctionality, {
+export default Modal.extend({
   actions: {
     sendActivationEmail() {
       resendActivationEmail(this.username).then(() => {

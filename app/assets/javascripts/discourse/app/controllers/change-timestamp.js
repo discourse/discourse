@@ -1,14 +1,14 @@
-import Controller, { inject as controller } from "@ember/controller";
+import { inject as controller } from "@ember/controller";
 import DiscourseURL from "discourse/lib/url";
 import I18n from "I18n";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
+import Modal from "discourse/controllers/modal";
 import Topic from "discourse/models/topic";
 import discourseComputed from "discourse-common/utils/decorators";
 import { isEmpty } from "@ember/utils";
 import { next } from "@ember/runloop";
 
 // Modal related to changing the timestamp of posts
-export default Controller.extend(ModalFunctionality, {
+export default Modal.extend({
   topicController: controller("topic"),
   saving: false,
   date: "",

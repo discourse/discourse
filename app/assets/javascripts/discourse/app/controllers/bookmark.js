@@ -1,6 +1,5 @@
-import Controller from "@ember/controller";
 import I18n from "I18n";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
+import Modal from "discourse/controllers/modal";
 import { action } from "@ember/object";
 import { Promise } from "rsvp";
 import showModal from "discourse/lib/show-modal";
@@ -55,7 +54,7 @@ export function openBookmarkModal(
   });
 }
 
-export default Controller.extend(ModalFunctionality, {
+export default Modal.extend({
   onShow() {
     this.setProperties({
       model: this.model || {},

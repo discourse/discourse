@@ -1,9 +1,9 @@
 import { COMPONENTS, THEMES } from "admin/models/theme";
-import Controller, { inject as controller } from "@ember/controller";
+import { inject as controller } from "@ember/controller";
 import { alias, equal, match } from "@ember/object/computed";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import I18n from "I18n";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
+import Modal from "discourse/controllers/modal";
 import { POPULAR_THEMES } from "discourse-common/helpers/popular-themes";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -11,7 +11,7 @@ import { set } from "@ember/object";
 
 const MIN_NAME_LENGTH = 4;
 
-export default Controller.extend(ModalFunctionality, {
+export default Modal.extend({
   adminCustomizeThemes: controller(),
   themesController: controller("adminCustomizeThemes"),
   popular: equal("selection", "popular"),

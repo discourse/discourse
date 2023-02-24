@@ -1,5 +1,4 @@
-import Controller from "@ember/controller";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
+import Modal from "discourse/controllers/modal";
 import discourseComputed from "discourse-common/utils/decorators";
 import { equal } from "@ember/object/computed";
 import {
@@ -7,7 +6,7 @@ import {
   toWatchedWord,
 } from "discourse-common/utils/watched-words";
 
-export default Controller.extend(ModalFunctionality, {
+export default Modal.extend({
   isReplace: equal("model.nameKey", "replace"),
   isTag: equal("model.nameKey", "tag"),
   isLink: equal("model.nameKey", "link"),

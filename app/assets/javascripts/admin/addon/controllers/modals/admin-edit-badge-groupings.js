@@ -1,12 +1,11 @@
 import { A } from "@ember/array";
-import Controller from "@ember/controller";
 import I18n from "I18n";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
+import Modal from "discourse/controllers/modal";
 import { ajax } from "discourse/lib/ajax";
 import { observes } from "discourse-common/utils/decorators";
 import { inject as service } from "@ember/service";
 
-export default Controller.extend(ModalFunctionality, {
+export default Modal.extend({
   dialog: service(),
 
   @observes("model")

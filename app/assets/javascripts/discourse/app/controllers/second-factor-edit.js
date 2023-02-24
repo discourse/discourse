@@ -1,7 +1,6 @@
-import Controller from "@ember/controller";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
+import Modal from "discourse/controllers/modal";
 
-export default Controller.extend(ModalFunctionality, {
+export default Modal.extend({
   actions: {
     editSecondFactor() {
       this.user

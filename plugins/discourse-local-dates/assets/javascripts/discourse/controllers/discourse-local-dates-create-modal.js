@@ -1,8 +1,7 @@
-import Controller from "@ember/controller";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
+import Modal from "discourse/controllers/modal";
 import { schedule } from "@ember/runloop";
 
-export default Controller.extend(ModalFunctionality, {
+export default Modal.extend({
   onShow() {
     schedule("afterRender", () => {
       const fromButton = document.getElementById("from-date-time");

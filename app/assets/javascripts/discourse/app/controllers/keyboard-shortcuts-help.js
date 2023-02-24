@@ -1,7 +1,6 @@
-import Controller from "@ember/controller";
 import I18n from "I18n";
 import { translateModKey } from "discourse/lib/utilities";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
+import Modal from "discourse/controllers/modal";
 import { extraKeyboardShortcutsHelp } from "discourse/lib/keyboard-shortcuts";
 
 const KEY = "keyboard_shortcuts_help";
@@ -10,7 +9,6 @@ const ALT = translateModKey("Alt");
 const META = translateModKey("Meta");
 const CTRL = I18n.t("shortcut_modifier_key.ctrl");
 const ENTER = I18n.t("shortcut_modifier_key.enter");
-
 const COMMA = I18n.t(`${KEY}.shortcut_key_delimiter_comma`);
 const PLUS = I18n.t(`${KEY}.shortcut_key_delimiter_plus`);
 
@@ -59,7 +57,7 @@ function buildShortcut(
   return I18n.t(`${KEY}.${key}`, context);
 }
 
-export default Controller.extend(ModalFunctionality, {
+export default Modal.extend({
   onShow() {
     this.set("modal.modalClass", "keyboard-shortcuts-modal");
     this._defineShortcuts();

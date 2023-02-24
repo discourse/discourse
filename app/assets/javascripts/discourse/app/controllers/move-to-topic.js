@@ -1,15 +1,15 @@
-import Controller, { inject as controller } from "@ember/controller";
+import { inject as controller } from "@ember/controller";
 import { alias, equal } from "@ember/object/computed";
 import { mergeTopic, movePosts } from "discourse/models/topic";
 import DiscourseURL from "discourse/lib/url";
 import I18n from "I18n";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
+import Modal from "discourse/controllers/modal";
 import discourseComputed from "discourse-common/utils/decorators";
 import { extractError } from "discourse/lib/ajax-error";
 import { isEmpty } from "@ember/utils";
 import { next } from "@ember/runloop";
 
-export default Controller.extend(ModalFunctionality, {
+export default Modal.extend({
   topicName: null,
   saving: false,
   categoryId: null,

@@ -1,7 +1,7 @@
 import { alias, empty } from "@ember/object/computed";
-import Controller, { inject as controller } from "@ember/controller";
+import { inject as controller } from "@ember/controller";
 import I18n from "I18n";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
+import Modal from "discourse/controllers/modal";
 import { Promise } from "rsvp";
 import Topic from "discourse/models/topic";
 
@@ -117,7 +117,7 @@ addBulkButton("deleteTopics", "delete", {
 });
 
 // Modal for performing bulk actions on topics
-export default Controller.extend(ModalFunctionality, {
+export default Modal.extend({
   userPrivateMessages: controller("user-private-messages"),
   dialog: service(),
   tags: null,

@@ -1,11 +1,10 @@
-import Controller from "@ember/controller";
 import I18n from "I18n";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
+import Modal from "discourse/controllers/modal";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import { alias } from "@ember/object/computed";
 import discourseLater from "discourse-common/lib/later";
 
-export default Controller.extend(ModalFunctionality, {
+export default Modal.extend({
   loading: false,
   errorMessage: null,
   successMessage: null,

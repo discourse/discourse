@@ -1,10 +1,9 @@
-import Controller from "@ember/controller";
 import DiscourseURL from "discourse/lib/url";
 import I18n from "I18n";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
+import Modal from "discourse/controllers/modal";
 import { bind } from "discourse-common/utils/decorators";
 
-export default Controller.extend(ModalFunctionality, {
+export default Modal.extend({
   message: I18n.t("admin.user.merging_user"),
 
   onShow() {

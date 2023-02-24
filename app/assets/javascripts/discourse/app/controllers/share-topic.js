@@ -8,7 +8,7 @@ import { longDateNoYear } from "discourse/lib/formatter";
 import Sharing from "discourse/lib/sharing";
 import showModal from "discourse/lib/show-modal";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
+import Modal from "discourse/controllers/modal";
 import I18n from "I18n";
 import Category from "discourse/models/category";
 import { getOwner } from "discourse-common/lib/get-owner";

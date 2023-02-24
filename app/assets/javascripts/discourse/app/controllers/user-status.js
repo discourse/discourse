@@ -1,5 +1,4 @@
-import Controller from "@ember/controller";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
+import Modal from "discourse/controllers/modal";
 import { action } from "@ember/object";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse-common/utils/decorators";
@@ -9,7 +8,7 @@ import {
   timeShortcuts,
 } from "discourse/lib/time-shortcut";
 
-export default Controller.extend(ModalFunctionality, {
+export default Modal.extend({
   showDeleteButton: false,
   prefilledDateTime: null,
   timeShortcuts: null,

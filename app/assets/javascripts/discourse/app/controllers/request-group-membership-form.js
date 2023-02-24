@@ -1,13 +1,12 @@
-import Controller from "@ember/controller";
 import DiscourseURL from "discourse/lib/url";
 import I18n from "I18n";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
+import Modal from "discourse/controllers/modal";
 import { alias } from "@ember/object/computed";
 import discourseComputed from "discourse-common/utils/decorators";
 import { isEmpty } from "@ember/utils";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
-export default Controller.extend(ModalFunctionality, {
+export default Modal.extend({
   loading: false,
   reason: alias("model.membership_request_template"),
 

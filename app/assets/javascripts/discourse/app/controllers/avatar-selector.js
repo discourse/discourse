@@ -1,6 +1,5 @@
-import Controller from "@ember/controller";
 import { action } from "@ember/object";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
+import Modal from "discourse/controllers/modal";
 import { ajax } from "discourse/lib/ajax";
 import { allowsImages } from "discourse/lib/uploads";
 import discourseComputed from "discourse-common/utils/decorators";
@@ -8,7 +7,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { setting } from "discourse/lib/computed";
 import { isTesting } from "discourse-common/config/environment";
 
-export default Controller.extend(ModalFunctionality, {
+export default Modal.extend({
   gravatarName: setting("gravatar_name"),
   gravatarBaseUrl: setting("gravatar_base_url"),
   gravatarLoginUrl: setting("gravatar_login_url"),
@@ -143,11 +142,12 @@ export default Controller.extend(ModalFunctionality, {
       .catch(popupAjaxError);
   },
 
-  actions: {
-    uploadComplete() {
-      this.set("selected", "custom");
-    },
+  @action
+  uploadComplete() {
+    this.set("selected", "custom");
+  },
 
+  actions: {
     refreshGravatar() {
       this.set("gravatarRefreshDisabled", true);
 

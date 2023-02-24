@@ -1,11 +1,10 @@
-import Controller from "@ember/controller";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
+import Modal from "discourse/controllers/modal";
 import { action } from "@ember/object";
 import { cookAsync } from "discourse/lib/text";
 import discourseComputed from "discourse-common/utils/decorators";
 import { isEmpty } from "@ember/utils";
 
-export default Controller.extend(ModalFunctionality, {
+export default Modal.extend({
   post: null,
   resolve: null,
   reject: null,

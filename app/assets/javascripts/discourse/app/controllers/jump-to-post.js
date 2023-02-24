@@ -1,9 +1,8 @@
-import Controller from "@ember/controller";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
+import Modal from "discourse/controllers/modal";
 import { reads } from "@ember/object/computed";
 import { action } from "@ember/object";
 
-export default Controller.extend(ModalFunctionality, {
+export default Modal.extend({
   model: null,
   postNumber: null,
   postDate: null,

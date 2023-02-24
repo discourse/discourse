@@ -1,6 +1,5 @@
-import Controller from "@ember/controller";
 import I18n from "I18n";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
+import Modal from "discourse/controllers/modal";
 import { ajax } from "discourse/lib/ajax";
 import cookie from "discourse/lib/cookie";
 import discourseComputed from "discourse-common/utils/decorators";
@@ -9,7 +8,7 @@ import { extractError } from "discourse/lib/ajax-error";
 import getURL from "discourse-common/lib/get-url";
 import { isEmpty } from "@ember/utils";
 
-export default Controller.extend(ModalFunctionality, {
+export default Modal.extend({
   offerHelp: null,
   helpSeen: false,
 

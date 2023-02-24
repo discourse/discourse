@@ -1,9 +1,8 @@
 import { observes, on } from "discourse-common/utils/decorators";
-import Controller from "@ember/controller";
 import { action } from "@ember/object";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
+import Modal from "discourse/controllers/modal";
 
-export default Controller.extend(ModalFunctionality, {
+export default Modal.extend({
   @on("init")
   @observes("model.value")
   _setup() {

@@ -1,8 +1,8 @@
-import Controller, { inject as controller } from "@ember/controller";
+import { inject as controller } from "@ember/controller";
 import discourseComputed from "discourse-common/utils/decorators";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
+import Modal from "discourse/controllers/modal";
 
-export default Controller.extend(ModalFunctionality, {
+export default Modal.extend({
   adminBackupsLogs: controller(),
 
   @discourseComputed

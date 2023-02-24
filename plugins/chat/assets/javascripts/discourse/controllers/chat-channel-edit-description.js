@@ -1,14 +1,11 @@
-import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
+import Modal from "discourse/controllers/modal";
 import { tracked } from "@glimmer/tracking";
 import { inject as service } from "@ember/service";
 
 const DESCRIPTION_MAX_LENGTH = 280;
 
-export default class ChatChannelEditDescriptionController extends Controller.extend(
-  ModalFunctionality
-) {
+export default class ChatChannelEditDescriptionController extends Modal {
   @service chatApi;
   @tracked editedDescription = this.model.description || "";
 

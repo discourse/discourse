@@ -7,7 +7,7 @@ import discourseComputed, {
 import { A } from "@ember/array";
 import EmberObject, { action } from "@ember/object";
 import I18n from "I18n";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
+import Modal from "discourse/controllers/modal";
 import NameValidation from "discourse/mixins/name-validation";
 import PasswordValidation from "discourse/mixins/password-validation";
 import { Promise } from "rsvp";

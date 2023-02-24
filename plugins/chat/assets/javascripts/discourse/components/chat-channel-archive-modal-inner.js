@@ -13,7 +13,7 @@ import {
 } from "discourse/plugins/chat/discourse/components/chat-to-topic-selector";
 import { CHANNEL_STATUSES } from "discourse/plugins/chat/discourse/models/chat-channel";
 import { htmlSafe } from "@ember/template";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
+import Modal from "discourse/controllers/modal";
 
 export default Component.extend(ModalFunctionality, {
   chat: service(),

@@ -1,10 +1,9 @@
-import Controller from "@ember/controller";
 import { afterRender } from "discourse-common/utils/decorators";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
+import Modal from "discourse/controllers/modal";
 import highlightSyntax from "discourse/lib/highlight-syntax";
 import CodeblockButtons from "discourse/lib/codeblock-buttons";
 
-export default Controller.extend(ModalFunctionality, {
+export default Modal.extend({
   onShow() {
     this._applyCodeblockButtons();
   },

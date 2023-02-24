@@ -1,14 +1,12 @@
-import Controller from "@ember/controller";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { ajax } from "discourse/lib/ajax";
 import { cancel } from "@ember/runloop";
 import { action, computed } from "@ember/object";
 import { extractError } from "discourse/lib/ajax-error";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
+import Modal from "discourse/controllers/modal";
 import { inject as service } from "@ember/service";
-export default class ChatChannelEditTitleController extends Controller.extend(
-  ModalFunctionality
-) {
+
+export default class ChatChannelEditTitleController extends Modal {
   @service chatApi;
   editedName = "";
   editedSlug = "";

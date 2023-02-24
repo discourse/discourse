@@ -1,11 +1,11 @@
-import Controller, { inject as controller } from "@ember/controller";
+import { inject as controller } from "@ember/controller";
 import { alias, not, or, readOnly } from "@ember/object/computed";
 import { areCookiesEnabled, escapeExpression } from "discourse/lib/utilities";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import { next, schedule } from "@ember/runloop";
 import EmberObject, { action } from "@ember/object";
 import I18n from "I18n";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
+import Modal from "discourse/controllers/modal";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import { ajax } from "discourse/lib/ajax";
 import discourseComputed from "discourse-common/utils/decorators";
@@ -29,7 +29,7 @@ const AuthErrors = [
   "not_allowed_from_ip_address",
 ];
 
-export default Controller.extend(ModalFunctionality, {
+export default Modal.extend({
   createAccount: controller(),
   forgotPassword: controller(),
   application: controller(),

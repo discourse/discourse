@@ -1,9 +1,8 @@
 import { action } from "@ember/object";
-import Controller from "@ember/controller";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
+import Modal from "discourse/controllers/modal";
 import { downloadGoogle, downloadIcs } from "discourse/lib/download-calendar";
 
-export default Controller.extend(ModalFunctionality, {
+export default Modal.extend({
   selectedCalendar: "ics",
   remember: false,
 

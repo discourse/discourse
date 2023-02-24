@@ -1,11 +1,10 @@
-import Controller from "@ember/controller";
 import IncomingEmail from "admin/models/incoming-email";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
+import Modal from "discourse/controllers/modal";
 import Post from "discourse/models/post";
 import { equal } from "@ember/object/computed";
 
 // This controller handles displaying of raw email
-export default Controller.extend(ModalFunctionality, {
+export default Modal.extend({
   rawEmail: "",
   textPart: "",
   htmlPart: "",

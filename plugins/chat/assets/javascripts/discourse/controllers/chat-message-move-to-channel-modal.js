@@ -1,8 +1,5 @@
-import Controller from "@ember/controller";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
+import Modal from "discourse/controllers/modal";
 
-export default class ChatMessageMoveToChannelModalController extends Controller.extend(
-  ModalFunctionality
-) {
+export default class ChatMessageMoveToChannelModalController extends Modal {
   chatChannel = null;
 }

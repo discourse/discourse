@@ -1,13 +1,13 @@
-import Controller, { inject as controller } from "@ember/controller";
+import { inject as controller } from "@ember/controller";
 import EmberObject from "@ember/object";
 import I18n from "I18n";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
+import Modal from "discourse/controllers/modal";
 import { ajax } from "discourse/lib/ajax";
 import { categoryLinkHTML } from "discourse/helpers/category-link";
 import discourseComputed from "discourse-common/utils/decorators";
 import { inject as service } from "@ember/service";
 
-export default Controller.extend(ModalFunctionality, {
+export default Modal.extend({
   topicController: controller("topic"),
   dialog: service(),
 

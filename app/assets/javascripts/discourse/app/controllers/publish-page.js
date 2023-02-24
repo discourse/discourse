@@ -1,7 +1,7 @@
 import { action, computed } from "@ember/object";
 import { equal, not } from "@ember/object/computed";
 import Controller from "@ember/controller";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
+import Modal from "discourse/controllers/modal";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 

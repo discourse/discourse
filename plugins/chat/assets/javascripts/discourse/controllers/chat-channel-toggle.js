@@ -1,11 +1,8 @@
-import Controller from "@ember/controller";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
+import Modal from "discourse/controllers/modal";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 
-export default class ChatChannelToggleController extends Controller.extend(
-  ModalFunctionality
-) {
+export default class ChatChannelToggleController extends Modal {
   @service chat;
   @service router;
 

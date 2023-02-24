@@ -6,7 +6,7 @@ import { extractError } from "discourse/lib/ajax-error";
 import { getNativeContact } from "discourse/lib/pwa-utils";
 import { emailValid, hostnameValid } from "discourse/lib/utilities";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
+import Modal from "discourse/controllers/modal";
 import Group from "discourse/models/group";
 import Invite from "discourse/models/invite";
 import I18n from "I18n";

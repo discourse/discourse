@@ -3,12 +3,11 @@ import {
   isWebauthnSupported,
   stringToBuffer,
 } from "discourse/lib/webauthn";
-import Controller from "@ember/controller";
 import I18n from "I18n";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
+import Modal from "discourse/controllers/modal";
 
 // model for this controller is user
-export default Controller.extend(ModalFunctionality, {
+export default Modal.extend({
   loading: false,
   errorMessage: null,
 

@@ -7,7 +7,7 @@ import { inject as service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseLater from "discourse-common/lib/later";
 import { htmlSafe } from "@ember/template";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
+import Modal from "discourse/controllers/modal";
 
 export default Component.extend(ModalFunctionality, {
   chat: service(),

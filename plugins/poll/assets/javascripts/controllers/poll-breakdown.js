@@ -1,6 +1,5 @@
-import Controller from "@ember/controller";
 import I18n from "I18n";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
+import Modal from "discourse/controllers/modal";
 import { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { classify } from "@ember/string";
@@ -10,7 +9,7 @@ import loadScript from "discourse/lib/load-script";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { inject as service } from "@ember/service";
 
-export default Controller.extend(ModalFunctionality, {
+export default Modal.extend({
   dialog: service(),
   model: null,
   charts: null,

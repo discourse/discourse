@@ -6,9 +6,8 @@ import discourseComputed, {
 } from "discourse-common/utils/decorators";
 import { propertyGreaterThan, propertyLessThan } from "discourse/lib/computed";
 import Category from "discourse/models/category";
-import Controller from "@ember/controller";
 import I18n from "I18n";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
+import Modal from "discourse/controllers/modal";
 import Post from "discourse/models/post";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import { iconHTML } from "discourse-common/lib/icon-library";
@@ -26,7 +25,7 @@ function customTagArray(val) {
 }
 
 // This controller handles displaying of history
-export default Controller.extend(ModalFunctionality, {
+export default Modal.extend({
   dialog: service(),
   loading: true,
   viewMode: "side_by_side",

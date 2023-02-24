@@ -1,10 +1,9 @@
+import Modal from "discourse/controllers/modal";
 import { escapeExpression } from "discourse/lib/utilities";
 import { ajax } from "discourse/lib/ajax";
 import { cancel } from "@ember/runloop";
 import discourseDebounce from "discourse-common/lib/debounce";
-import Controller from "@ember/controller";
 import I18n from "I18n";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { action, computed } from "@ember/object";
 import { gt, notEmpty } from "@ember/object/computed";
 import { inject as service } from "@ember/service";
@@ -18,9 +17,7 @@ const DEFAULT_HINT = htmlSafe(
   })
 );
 
-export default class CreateChannelController extends Controller.extend(
-  ModalFunctionality
-) {
+export default class CreateChannelController extends Modal {
   @service chat;
   @service dialog;
   @service chatChannelsManager;
