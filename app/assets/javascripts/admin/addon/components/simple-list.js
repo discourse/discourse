@@ -2,7 +2,8 @@ import { classNameBindings } from "@ember-decorators/component";
 import { empty } from "@ember/object/computed";
 import Component from "@ember/component";
 import { action } from "@ember/object";
-import discourseComputed, { on } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import { on } from "@ember-decorators/object";
 
 @classNameBindings(":simple-list", ":value-list")
 export default class SimpleList extends Component {
