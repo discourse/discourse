@@ -44,6 +44,11 @@ class ThemeField < ActiveRecord::Base
             .select("DISTINCT ON (X.theme_sort_column) *")
         }
 
+  scope :svg_sprite_fields,
+        -> {
+          where(type_id: ThemeField.theme_var_type_ids, name: SvgSprite.theme_sprite_variable_name)
+        }
+
   def self.types
     @types ||=
       Enum.new(
@@ -656,9 +661,32 @@ class ThemeField < ActiveRecord::Base
     end
   end
 
-  after_save { dependent_fields.each(&:invalidate_baked!) }
+  def upsert_svg_sprite!
+    begin
+      content = upload.content
+    rescue => e
+      Discourse.warn_exception(e, message: "Failed to fetch svg sprite for theme field #{id}")
+    else
+      ThemeSvgSprite.upsert(
+        { theme_id: theme_id, upload_id: upload_id, sprite: upload.content },
+        unique_by: :theme_id,
+      )
+    end
+  end
 
-  after_destroy { DB.after_commit { SvgSprite.expire_cache } if svg_sprite_field? }
+  after_save do
+    dependent_fields.each(&:invalidate_baked!)
+
+    upsert_svg_sprite! if upload && svg_sprite_field?
+  end
+
+  after_destroy do
+    if svg_sprite_field?
+      ThemeSvgSprite.where(theme_id: theme_id).delete_all
+
+      DB.after_commit { SvgSprite.expire_cache }
+    end
+  end
 
   private
 

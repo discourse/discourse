@@ -252,42 +252,18 @@ module SvgSprite
 
     custom_sprite_paths = Dir.glob(plugin_paths)
 
-    custom_sprite_paths.map do |path|
-      { filename: "#{File.basename(path, ".svg")}", sprite: File.read(path) }
-    end
+    custom_sprite_paths.map { |path| { filename: File.basename(path, ".svg"), sprite: File.read(path) } }
   end
 
   def self.theme_svg_sprites(theme_id)
     if theme_id.present?
       get_set_cache("theme_svg_sprites_#{Theme.transform_ids(theme_id).join(",")}") do
-        custom_sprites = []
-
-        ThemeField
-          .where(
-            type_id: ThemeField.types[:theme_upload_var],
-            name: THEME_SPRITE_VAR_NAME,
-            theme_id: Theme.transform_ids(theme_id),
-          )
-          .pluck(:upload_id, :theme_id)
-          .each do |upload_id, child_theme_id|
-            begin
-              upload = Upload.find(upload_id)
-              custom_sprites << {
-                filename: "theme_#{theme_id}_#{upload_id}.svg",
-                sprite: upload.content,
-              }
-            rescue => e
-              name =
-                begin
-                  Theme.find(child_theme_id).name
-                rescue StandardError
-                  nil
-                end
-              Discourse.warn_exception(e, message: "#{name} theme contains a corrupt svg upload")
-            end
+        ThemeSvgSprite
+          .where(theme_id: Theme.transform_ids(theme_id))
+          .pluck(:upload_id, :sprite)
+          .map do |upload_id, sprite|
+            { filename: "theme_#{theme_id}_#{upload_id}.svg", sprite: sprite }
           end
-
-        custom_sprites
       end
     else
       []
