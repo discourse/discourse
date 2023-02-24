@@ -21,8 +21,8 @@ export default class EmbeddableHost extends Component.extend(
 
   @or("host.isNew", "editToggled") editing;
 
-  constructor() {
-    super(...arguments);
+  init() {
+    super.init(...arguments);
 
     const host = this.host;
     const categoryId = host.category_id || this.site.uncategorized_category_id;
