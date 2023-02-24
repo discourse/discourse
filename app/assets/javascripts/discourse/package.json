@@ -93,7 +93,7 @@
     "select-kit": "1.0.0",
     "sinon": "^15.0.1",
     "source-map": "^0.7.4",
-    "terser": "^5.16.4",
+    "terser": "^5.16.5",
     "tippy.js": "^6.3.7",
     "util": "^0.12.5",
     "webpack": "^5.75.0",
