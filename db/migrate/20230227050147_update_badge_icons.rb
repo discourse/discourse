@@ -23,7 +23,7 @@ class UpdateBadgeIcons < ActiveRecord::Migration[7.0]
     execute "UPDATE badges SET icon = 'file-signature' WHERE id IN (#{
               [Badge::NiceTopic, Badge::GoodTopic, Badge::GreatTopic].join(",")
             }) #{unedited}"
-    execute "UPDATE badges SET icon = 'birthday-cake' WHERE id = '#{Badge::Anniversary}'" # far-clock
+    execute "UPDATE badges SET icon = 'birthday-cake' WHERE id = '#{Badge::Anniversary}' AND icon = 'far-clock'"
     execute "UPDATE badges SET icon = 'at' WHERE id = '#{Badge::FirstMention}' #{unedited}"
     execute "UPDATE badges SET icon = 'smile' WHERE id = '#{Badge::FirstEmoji}' #{unedited}"
     execute "UPDATE badges SET icon = 'cube' WHERE id = '#{Badge::FirstOnebox}' #{unedited}"
