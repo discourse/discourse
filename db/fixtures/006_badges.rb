@@ -66,6 +66,7 @@ end
 Badge.seed do |b|
   b.id = Badge::Reader
   b.name = "Reader"
+  b.default_icon = "book-reader"
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
   b.target_posts = false
@@ -79,6 +80,7 @@ end
 Badge.seed do |b|
   b.id = Badge::ReadGuidelines
   b.name = "Read Guidelines"
+  b.default_icon = "file-alt"
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
   b.target_posts = false
@@ -92,6 +94,7 @@ end
 Badge.seed do |b|
   b.id = Badge::FirstLink
   b.name = "First Link"
+  b.default_icon = "link"
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
   b.target_posts = true
@@ -105,6 +108,7 @@ end
 Badge.seed do |b|
   b.id = Badge::FirstQuote
   b.name = "First Quote"
+  b.default_icon = "quote-right"
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
   b.target_posts = true
@@ -118,6 +122,7 @@ end
 Badge.seed do |b|
   b.id = Badge::FirstLike
   b.name = "First Like"
+  b.default_icon = "heart"
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
   b.target_posts = true
@@ -131,6 +136,7 @@ end
 Badge.seed do |b|
   b.id = Badge::FirstFlag
   b.name = "First Flag"
+  b.default_icon = "flag"
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
   b.target_posts = true
@@ -167,6 +173,7 @@ end
 Badge.seed do |b|
   b.id = Badge::FirstShare
   b.name = "First Share"
+  b.default_icon = "share-alt"
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
   b.target_posts = true
@@ -186,6 +193,7 @@ end
   Badge.seed do |b|
     b.id = id
     b.name = name
+    b.default_icon = "share-alt"
     b.badge_type_id = level
     b.multiple_grant = true
     b.target_posts = true
@@ -201,6 +209,7 @@ end
 Badge.seed do |b|
   b.id = Badge::Welcome
   b.name = "Welcome"
+  b.default_icon = "heart"
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
   b.target_posts = true
@@ -214,6 +223,7 @@ end
 Badge.seed do |b|
   b.id = Badge::Autobiographer
   b.name = "Autobiographer"
+  b.default_icon = "user-edit"
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
   b.query = BadgeQueries::Autobiographer
@@ -225,6 +235,7 @@ end
 Badge.seed do |b|
   b.id = Badge::Editor
   b.name = "Editor"
+  b.default_icon = "pen"
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
   b.query = BadgeQueries::Editor
@@ -236,6 +247,7 @@ end
 Badge.seed do |b|
   b.id = Badge::WikiEditor
   b.name = "Wiki Editor"
+  b.default_icon = "pen"
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
   b.target_posts = true
@@ -249,6 +261,23 @@ end
   [Badge::NicePost, "Nice Post", BadgeType::Bronze, false],
   [Badge::GoodPost, "Good Post", BadgeType::Silver, false],
   [Badge::GreatPost, "Great Post", BadgeType::Gold, false],
+].each do |id, name, type, topic|
+  Badge.seed do |b|
+    b.id = id
+    b.name = name
+    b.default_icon = "reply"
+    b.badge_type_id = type
+    b.multiple_grant = true
+    b.target_posts = true
+    b.show_posts = true
+    b.query = BadgeQueries.like_badge(Badge.like_badge_counts[id], topic)
+    b.default_badge_grouping_id = BadgeGrouping::Posting
+    b.trigger = Badge::Trigger::PostAction
+    b.system = true
+  end
+end
+
+[
   [Badge::NiceTopic, "Nice Topic", BadgeType::Bronze, true],
   [Badge::GoodTopic, "Good Topic", BadgeType::Silver, true],
   [Badge::GreatTopic, "Great Topic", BadgeType::Gold, true],
@@ -256,6 +285,7 @@ end
   Badge.seed do |b|
     b.id = id
     b.name = name
+    b.default_icon = "file-signature"
     b.badge_type_id = type
     b.multiple_grant = true
     b.target_posts = true
@@ -270,7 +300,7 @@ end
 Badge.seed do |b|
   b.id = Badge::Anniversary
   b.name = "Anniversary"
-  b.default_icon = "far-clock"
+  b.default_icon = "birthday-cake"
   b.badge_type_id = BadgeType::Silver
   b.default_badge_grouping_id = BadgeGrouping::Community
   b.query = nil
@@ -288,6 +318,7 @@ end
   Badge.seed do |b|
     b.id = id
     b.name = name
+    b.default_icon = "link"
     b.badge_type_id = level
     b.multiple_grant = true
     b.target_posts = true
@@ -357,6 +388,7 @@ end
 Badge.seed do |b|
   b.id = Badge::FirstMention
   b.name = "First Mention"
+  b.default_icon = "at"
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
   b.target_posts = true
@@ -370,6 +402,7 @@ end
 Badge.seed do |b|
   b.id = Badge::FirstEmoji
   b.name = "First Emoji"
+  b.default_icon = "smile"
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
   b.target_posts = true
@@ -383,6 +416,7 @@ end
 Badge.seed do |b|
   b.id = Badge::FirstOnebox
   b.name = "First Onebox"
+  b.default_icon = "cube"
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
   b.target_posts = true
@@ -396,6 +430,7 @@ end
 Badge.seed do |b|
   b.id = Badge::FirstReplyByEmail
   b.name = "First Reply By Email"
+  b.default_icon = "envelope"
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
   b.target_posts = true
@@ -409,6 +444,7 @@ end
 Badge.seed do |b|
   b.id = Badge::NewUserOfTheMonth
   b.name = "New User of the Month"
+  b.default_icon = "medal"
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
   b.target_posts = false
