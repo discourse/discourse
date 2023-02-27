@@ -618,7 +618,7 @@ export default function (options) {
           break;
         }
       }
-      prevIsGood = !allowedLettersRegex.test(prev);
+      prevIsGood = !/\s/.test(prev);
       if (completeTermOption) {
         prevIsGood ||= prev === " ";
       }
