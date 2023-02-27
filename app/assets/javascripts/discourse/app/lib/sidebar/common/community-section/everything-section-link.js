@@ -9,7 +9,7 @@ export default class EverythingSectionLink extends BaseSectionLink {
   @tracked totalNew = 0;
   @tracked hideCount =
     this.currentUser?.sidebarListDestination !== UNREAD_LIST_DESTINATION;
-  linkToNewNewView = !!this.currentUser?.new_new_view_enabled;
+  linkToNew = !!this.currentUser?.new_new_view_enabled;
 
   constructor() {
     super(...arguments);
@@ -27,7 +27,7 @@ export default class EverythingSectionLink extends BaseSectionLink {
 
     this.totalUnread = this.topicTrackingState.countUnread();
 
-    if (this.totalUnread === 0 || this.linkToNewNewView) {
+    if (this.totalUnread === 0 || this.linkToNew) {
       this.totalNew = this.topicTrackingState.countNew();
     }
   }
@@ -49,15 +49,15 @@ export default class EverythingSectionLink extends BaseSectionLink {
   }
 
   get currentWhen() {
-    if (this.linkToNewNewView) {
-      return "discovery.new-new";
+    if (this.linkToNew) {
+      return "discovery.new";
     } else {
       return "discovery.latest discovery.new discovery.unread discovery.top";
     }
   }
 
   get badgeText() {
-    if (this.linkToNewNewView && this.#unreadAndNewCount > 0) {
+    if (this.linkToNew && this.#unreadAndNewCount > 0) {
       return this.#unreadAndNewCount.toString();
     }
     if (this.hideCount) {
@@ -75,8 +75,8 @@ export default class EverythingSectionLink extends BaseSectionLink {
   }
 
   get route() {
-    if (this.linkToNewNewView) {
-      return "discovery.new-new";
+    if (this.linkToNew) {
+      return "discovery.new";
     } else if (
       this.currentUser?.sidebarListDestination === UNREAD_LIST_DESTINATION
     ) {
@@ -106,7 +106,7 @@ export default class EverythingSectionLink extends BaseSectionLink {
     if (
       this.hideCount &&
       (this.totalUnread || this.totalNew) &&
-      !this.linkToNewNewView
+      !this.linkToNew
     ) {
       return "circle";
     }

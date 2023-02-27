@@ -51,9 +51,6 @@ class ListController < ApplicationController
   # Create our filters
   Discourse.filters.each do |filter|
     define_method(filter) do |options = nil|
-      if filter == :new_new && !current_user&.new_new_view_enabled?
-        raise Discourse::InvalidAccess.new
-      end
       list_opts = build_topic_list_options
       list_opts.merge!(options) if options
       user = list_target_user

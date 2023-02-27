@@ -159,7 +159,7 @@ const controllerOpts = {
 
   @discourseComputed("model.filter")
   new(filter) {
-    return filter.endsWith("new") && !filter.endsWith("new-new");
+    return filter?.endsWith("new") && !this.currentUser?.new_new_view_enabled;
   },
 
   @discourseComputed("allLoaded", "model.topics.length")

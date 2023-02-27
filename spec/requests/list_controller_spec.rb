@@ -1084,26 +1084,4 @@ RSpec.describe ListController do
       expect(parsed["topic_list"]["topics"].first["id"]).to eq(welcome_topic.id)
     end
   end
-
-  describe "#new_new" do
-    fab!(:group) { Fabricate(:group) }
-
-    before do
-      group.add(user)
-      SiteSetting.experimental_new_new_view_groups = group.id.to_s
-    end
-
-    it "returns 403 for users who are not members of the groups defined in the experimental_new_new_view_groups setting" do
-      sign_in(admin)
-      get "/new-new.json"
-      expect(response.status).to eq(403)
-    end
-
-    it "responds with 200 for users are members of the groups defined in the experimental_new_new_view_groups setting" do
-      sign_in(user)
-      get "/new-new.json"
-      expect(response.status).to eq(200)
-      expect(response.parsed_body["topic_list"]["topics"]).to be_present
-    end
-  end
 end

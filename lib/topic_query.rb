@@ -267,7 +267,11 @@ class TopicQuery
   end
 
   def list_new
-    create_list(:new, { unordered: true }, new_results)
+    if @user&.new_new_view_enabled?
+      create_list(:new, { unordered: true }, new_and_unread_results)
+    else
+      create_list(:new, { unordered: true }, new_results)
+    end
   end
 
   def list_unread
@@ -276,10 +280,6 @@ class TopicQuery
 
   def list_unseen
     create_list(:unseen, { unordered: true }, unseen_results)
-  end
-
-  def list_new_new
-    create_list(:new_new, { unordered: true }, new_and_unread_results)
   end
 
   def list_posted
