@@ -131,7 +131,7 @@ export default class CategorySectionLink {
   }
 
   get title() {
-    return this.category.description;
+    return this.category.description_text;
   }
 
   get text() {

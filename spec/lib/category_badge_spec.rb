@@ -18,6 +18,6 @@ RSpec.describe CategoryBadge do
     c = Fabricate(:category, description: '<code>\' &lt;b id="x"&gt;</code>')
     html = CategoryBadge.html_for(c)
 
-    expect(html).to include("title='&#x27; &lt;b id=&quot;x&quot;&gt;'")
+    expect(html).to include("title='&#39; &lt;b id=&quot;x&quot;&gt;'")
   end
 end
