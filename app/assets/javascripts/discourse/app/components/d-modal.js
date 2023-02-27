@@ -1,7 +1,7 @@
 import Component from "@ember/component";
 import I18n from "I18n";
 import { next, schedule } from "@ember/runloop";
-import discourseComputed, { bind, on } from "discourse-common/utils/decorators";
+import discourseComputed, { bind } from "discourse-common/utils/decorators";
 
 export default Component.extend({
   classNameBindings: [
@@ -25,6 +25,11 @@ export default Component.extend({
   role: "dialog",
   headerClass: null,
 
+  // We handle ESC ourselves
+  "data-keyboard": "false",
+  // Inform screen readers of the modal
+  "aria-modal": "true",
+
   init() {
     this._super(...arguments);
 
@@ -36,10 +41,25 @@ export default Component.extend({
     }
   },
 
-  // We handle ESC ourselves
-  "data-keyboard": "false",
-  // Inform screenreaders of the modal
-  "aria-modal": "true",
+  didInsertElement() {
+    this._super(...arguments);
+
+    this.appEvents.on("modal:body-shown", this, "_modalBodyShown");
+    document.documentElement.addEventListener(
+      "keydown",
+      this._handleModalEvents
+    );
+  },
+
+  willDestroyElement() {
+    this._super(...arguments);
+
+    this.appEvents.off("modal:body-shown", this, "_modalBodyShown");
+    document.documentElement.removeEventListener(
+      "keydown",
+      this._handleModalEvents
+    );
+  },
 
   @discourseComputed("title", "titleAriaElementId")
   ariaLabelledby(title, titleAriaElementId) {
@@ -51,24 +71,6 @@ export default Component.extend({
     }
 
     return;
-  },
-
-  @on("didInsertElement")
-  setUp() {
-    this.appEvents.on("modal:body-shown", this, "_modalBodyShown");
-    document.documentElement.addEventListener(
-      "keydown",
-      this._handleModalEvents
-    );
-  },
-
-  @on("willDestroyElement")
-  cleanUp() {
-    this.appEvents.off("modal:body-shown", this, "_modalBodyShown");
-    document.documentElement.removeEventListener(
-      "keydown",
-      this._handleModalEvents
-    );
   },
 
   triggerClickOnEnter(e) {
@@ -91,17 +93,15 @@ export default Component.extend({
     if (!this.dismissable) {
       return;
     }
-    const $target = $(e.target);
+
     if (
-      $target.hasClass("modal-middle-container") ||
-      $target.hasClass("modal-outer-container")
+      e.target.classList.contains("modal-middle-container") ||
+      e.target.classList.contains("modal-outer-container")
     ) {
       // Send modal close (which bubbles to ApplicationRoute) if clicked outside.
       // We do this because some CSS of ours seems to cover the backdrop and makes
       // it unclickable.
-      return (
-        this.attrs.closeModal && this.attrs.closeModal("initiatedByClickOut")
-      );
+      return this.attrs.closeModal?.("initiatedByClickOut");
     }
   },
 
@@ -156,10 +156,12 @@ export default Component.extend({
     if (event.key === "Escape" && this.dismissable) {
       next(() => this.attrs.closeModal("initiatedByESC"));
     }
+
     if (event.key === "Enter" && this.triggerClickOnEnter(event)) {
-      this.element?.querySelector(".modal-footer .btn-primary")?.click();
+      this.element.querySelector(".modal-footer .btn-primary")?.click();
       event.preventDefault();
     }
+
     if (event.key === "Tab") {
       this._trapTab(event);
     }
@@ -199,9 +201,10 @@ export default Component.extend({
       return;
     }
 
-    focusableElements = focusableElements + ", button:enabled";
+    focusableElements += ", button:enabled";
+
     const firstFocusableElement =
-      innerContainer.querySelectorAll(focusableElements)?.[0];
+      innerContainer.querySelector(focusableElements);
     const focusableContent = innerContainer.querySelectorAll(focusableElements);
     const lastFocusableElement = focusableContent[focusableContent.length - 1];
 
