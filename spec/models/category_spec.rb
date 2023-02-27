@@ -400,8 +400,8 @@ RSpec.describe Category do
     it "correctly generates text description as needed" do
       c = Category.new
       expect(c.description_text).to be_nil
-      c.description = "&lt;hello <a>test</a>."
-      expect(c.description_text).to eq("&lt;hello test.")
+      c.description = "&lt;hello <a>foo/bar</a>."
+      expect(c.description_text).to eq("&lt;hello foo/bar.")
     end
   end
 
