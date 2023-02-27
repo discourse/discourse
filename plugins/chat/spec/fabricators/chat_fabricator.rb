@@ -65,44 +65,6 @@ Fabricator(:chat_mention) do
 
   user { Fabricate(:user) }
   chat_message { Fabricate(:chat_message) }
-  notification do |attrs|
-    # All this setup should be in a service we could just call here
-    # At the moment the logic is all split in a job
-    channel = attrs[:chat_message].chat_channel
-
-    payload = {
-      is_direct_message_channel: channel.direct_message_channel?,
-      mentioned_by_username: attrs[:chat_message].user.username,
-      chat_channel_id: channel.id,
-      chat_message_id: attrs[:chat_message].id,
-    }
-
-    if channel.direct_message_channel?
-      payload[:chat_channel_title] = channel.title(membership.user)
-      payload[:chat_channel_slug] = channel.slug
-    end
-
-    unless attrs[:identifier] == :direct_mentions
-      case attrs[:identifier]
-      when :here_mentions
-        payload[:identifier] = "here"
-      when :global_mentions
-        payload[:identifier] = "all"
-      else
-        payload[:identifier] = attrs[:identifier] if attrs[:identifier]
-        payload[:is_group_mention] = true
-      end
-    end
-
-    Fabricate(
-      :notification,
-      notification_type: Notification.types[:chat_mention],
-      user: attrs[:user],
-      data: payload.to_json,
-      read: attrs[:read],
-      high_priority: attrs[:high_priority],
-    )
-  end
 end
 
 Fabricator(:chat_message_reaction) do
