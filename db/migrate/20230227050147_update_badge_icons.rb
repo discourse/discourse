@@ -2,32 +2,37 @@
 
 class UpdateBadgeIcons < ActiveRecord::Migration[7.0]
   def change
-    unedited = "AND icon = 'fa-certificate'"
+    icon_id_replacement = [
+      ["book-reader", [Badge::Reader], "fa-certificate"],
+      ["file-alt", [Badge::ReadGuidelines], "fa-certificate"],
+      [
+        "link",
+        [Badge::FirstLink, Badge::PopularLink, Badge::HotLink, Badge::FamousLink],
+        "fa-certificate",
+      ],
+      ["quote-right", [Badge::FirstQuote], "fa-certificate"],
+      ["heart", [Badge::FirstLike, Badge::Welcome], "fa-certificate"],
+      ["flag", [Badge::FirstFlag], "fa-certificate"],
+      [
+        "share-alt",
+        [Badge::FirstShare, Badge::NiceShare, Badge::GoodShare, Badge::GreatShare],
+        "fa-certificate",
+      ],
+      ["user-edit", [Badge::Autobiographer], "fa-certificate"],
+      ["pen", [Badge::Editor], "fa-certificate"],
+      ["far-edit", [Badge::WikiEditor], "fa-certificate"],
+      ["reply", [Badge::NicePost, Badge::GoodPost, Badge::GreatPost], "fa-certificate"],
+      ["file-signature", [Badge::NiceTopic, Badge::GoodTopic, Badge::GreatTopic], "fa-certificate"],
+      ["at", [Badge::FirstMention], "fa-certificate"],
+      ["smile", [Badge::FirstEmoji], "fa-certificate"],
+      ["cube", [Badge::FirstOnebox], "fa-certificate"],
+      ["envelope", [Badge::FirstReplyByEmail], "fa-certificate"],
+      ["medal", [Badge::NewUserOfTheMonth], "fa-certificate"],
+      ["birthday-cake", [Badge::Anniversary], "far-clock"],
+    ]
 
-    execute "UPDATE badges SET icon = 'book-reader' WHERE id = '#{Badge::Reader}' #{unedited}"
-    execute "UPDATE badges SET icon = 'file-alt' WHERE id = '#{Badge::ReadGuidelines}' #{unedited}"
-    execute "UPDATE badges SET icon = 'link' WHERE id IN (#{
-              [Badge::FirstLink, Badge::PopularLink, Badge::HotLink, Badge::FamousLink].join(",")
-            }) #{unedited}"
-    execute "UPDATE badges SET icon = 'quote-right' WHERE id = '#{Badge::FirstQuote}' #{unedited}"
-    execute "UPDATE badges SET icon = 'heart' WHERE id IN (#{[Badge::FirstLike, Badge::Welcome].join(",")}) #{unedited}"
-    execute "UPDATE badges SET icon = 'flag' WHERE id = '#{Badge::FirstFlag}' #{unedited}"
-    execute "UPDATE badges SET icon = 'share-alt' WHERE id IN (#{
-              [Badge::FirstShare, Badge::NiceShare, Badge::GoodShare, Badge::GreatShare].join(",")
-            }) #{unedited}"
-    execute "UPDATE badges SET icon = 'user-edit' WHERE id = '#{Badge::Autobiographer}' #{unedited}"
-    execute "UPDATE badges SET icon = 'pen' WHERE id IN (#{[Badge::Editor, Badge::WikiEditor].join(",")}) #{unedited}"
-    execute "UPDATE badges SET icon = 'reply' WHERE id IN (#{
-              [Badge::NicePost, Badge::GoodPost, Badge::GreatPost].join(",")
-            }) #{unedited}"
-    execute "UPDATE badges SET icon = 'file-signature' WHERE id IN (#{
-              [Badge::NiceTopic, Badge::GoodTopic, Badge::GreatTopic].join(",")
-            }) #{unedited}"
-    execute "UPDATE badges SET icon = 'birthday-cake' WHERE id = '#{Badge::Anniversary}' AND icon = 'far-clock'"
-    execute "UPDATE badges SET icon = 'at' WHERE id = '#{Badge::FirstMention}' #{unedited}"
-    execute "UPDATE badges SET icon = 'smile' WHERE id = '#{Badge::FirstEmoji}' #{unedited}"
-    execute "UPDATE badges SET icon = 'cube' WHERE id = '#{Badge::FirstOnebox}' #{unedited}"
-    execute "UPDATE badges SET icon = 'envelope' WHERE id = '#{Badge::FirstReplyByEmail}' #{unedited}"
-    execute "UPDATE badges SET icon = 'medal' WHERE id = '#{Badge::NewUserOfTheMonth}' #{unedited}"
+    icon_id_replacement.each do |new_icon, badge_ids, old_icon|
+      execute "UPDATE badges SET icon = '#{new_icon}' WHERE id IN (#{badge_ids.join(",")}) AND icon = '#{old_icon}'"
+    end
   end
 end
