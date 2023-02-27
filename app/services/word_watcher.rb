@@ -130,10 +130,10 @@ class WordWatcher
     regexps.inject(text) { |txt, regexp| censor_text_with_regexp(txt, regexp) }
   end
 
-  def self.replace_text(text)
+  def self.replace_text(text, watch_word_type: %i[replace link])
     return text if text.blank?
 
-    %i[replace link]
+    watch_word_type
       .flat_map { |type| word_matcher_regexps(type).to_a }
       .reduce(text) do |t, (word_regexp, attrs)|
         case_flag = attrs[:case_sensitive] ? nil : Regexp::IGNORECASE
