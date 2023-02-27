@@ -455,7 +455,8 @@ class TopicQuery
     if options[:preload_posters]
       user_ids = []
       topics.each do |ft|
-        user_ids << ft.user_id << ft.last_post_user_id << ft.featured_user_ids << ft.allowed_user_ids
+        user_ids << ft.user_id << ft.last_post_user_id << ft.featured_user_ids <<
+          ft.allowed_user_ids
       end
 
       user_lookup = UserLookup.new(user_ids)
