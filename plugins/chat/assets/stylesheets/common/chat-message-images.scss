@@ -3,7 +3,9 @@ $max_image_height: 150px;
 .chat-message {
   // append selectors to set images to a
   // max height of $max_image_height
-  .chat-message-collapser .onebox img:not(.ytp-thumbnail-image),
+  .chat-message-collapser
+    .onebox
+    img:not(.ytp-thumbnail-image, .onebox-avatar-inline),
   .chat-message-collapser img.onebox,
   .chat-message-collapser .chat-uploads img,
   .chat-message-collapser p img,
