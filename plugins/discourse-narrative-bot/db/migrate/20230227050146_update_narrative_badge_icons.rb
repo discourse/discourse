@@ -7,6 +7,7 @@ class UpdateNarrativeBadgeIcons < ActiveRecord::Migration[7.0]
       SET icon = 'stamp'
       WHERE
         name IN ('#{DiscourseNarrativeBot::NewUserNarrative::BADGE_NAME}', '#{DiscourseNarrativeBot::AdvancedUserNarrative::BADGE_NAME}')
+        AND icon = 'fa-certificate'
     SQL
   end
 end
