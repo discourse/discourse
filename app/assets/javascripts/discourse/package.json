@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@babel/core": "^7.21.0",
-    "@babel/standalone": "^7.21.1",
+    "@babel/standalone": "^7.21.2",
     "@discourse/backburner.js": "^2.7.1-0",
     "@discourse/itsatrap": "^2.0.10",
     "@discourse/virtual-dom": "^2.1.2-0",
@@ -93,7 +93,7 @@
     "select-kit": "1.0.0",
     "sinon": "^15.0.1",
     "source-map": "^0.7.4",
-    "terser": "^5.16.4",
+    "terser": "^5.16.5",
     "tippy.js": "^6.3.7",
     "util": "^0.12.5",
     "webpack": "^5.75.0",

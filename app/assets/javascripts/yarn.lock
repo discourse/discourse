@@ -965,10 +965,10 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
-"@babel/standalone@^7.21.1":
-  version "7.21.1"
-  resolved "https://registry.yarnpkg.com/@babel/standalone/-/standalone-7.21.1.tgz#2708eb5a786a5d51508ce73689ebf8ec599ee552"
-  integrity sha512-2xe6GsQVJjHYhuP6Qi4hRrpJ1exapSm90Q/1/oyIB9g+XbF4Xq+nsIVxzfol/5mzlW+q5uWjtavyV4CTXrm31g==
+"@babel/standalone@^7.21.2":
+  version "7.21.2"
+  resolved "https://registry.yarnpkg.com/@babel/standalone/-/standalone-7.21.2.tgz#3a19c6672f8436d2d4154c05d984a4ae40d7d51c"
+  integrity sha512-ySP/TJcyqMJVg1M/lmnPVi6L+F+IJpQ4+0lqtf723LERbk1N8/0JgLgm346cRAzfHaoXkLq/M/mJBd2uo25RBA==
 
 "@babel/template@^7.16.7", "@babel/template@^7.18.10", "@babel/template@^7.20.7":
   version "7.20.7"
@@ -8925,10 +8925,10 @@ terser-webpack-plugin@^5.1.3:
     source-map "^0.6.1"
     terser "^5.7.2"
 
-terser@^5.16.4, terser@^5.3.0, terser@^5.7.2:
-  version "5.16.4"
-  resolved "https://registry.yarnpkg.com/terser/-/terser-5.16.4.tgz#51284b440b93242291a98f2a9903c024cfb70e6e"
-  integrity sha512-5yEGuZ3DZradbogeYQ1NaGz7rXVBDWujWlx1PT8efXO6Txn+eWbfKqB2bTDVmFXmePFkoLU6XI8UektMIEA0ug==
+terser@^5.16.5, terser@^5.3.0, terser@^5.7.2:
+  version "5.16.5"
+  resolved "https://registry.yarnpkg.com/terser/-/terser-5.16.5.tgz#1c285ca0655f467f92af1bbab46ab72d1cb08e5a"
+  integrity sha512-qcwfg4+RZa3YvlFh0qjifnzBHjKGNbtDo9yivMqMFDy9Q6FSaQWSB/j1xKhsoUFJIqDOM3TsN6D5xbrMrFcHbg==
   dependencies:
     "@jridgewell/source-map" "^0.3.2"
     acorn "^8.5.0"

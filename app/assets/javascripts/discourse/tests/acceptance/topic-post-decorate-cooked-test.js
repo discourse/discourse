@@ -23,10 +23,9 @@ acceptance("Acceptance | decorateCookedElement", function () {
       DemoComponent
     );
 
-    withPluginApi(
-      0,
-      (api) => {
-        api.decorateCookedElement((cooked, helper) => {
+    withPluginApi(0, (api) => {
+      api.decorateCookedElement(
+        (cooked, helper) => {
           if (helper.getModel().post_number !== 1) {
             return;
           }
@@ -47,10 +46,10 @@ acceptance("Acceptance | decorateCookedElement", function () {
             cooked.querySelector(".existing-wrapper"),
             hbs` with more content from glimmer`
           );
-        });
-      },
-      { id: "render-glimmer-test" }
-    );
+        },
+        { id: "render-glimmer-test" }
+      );
+    });
 
     await visit("/t/internationalization-localization/280");
 

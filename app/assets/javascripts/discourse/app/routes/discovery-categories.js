@@ -150,7 +150,7 @@ const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
 
   @action
   reorderCategories() {
-    showModal("reorderCategories");
+    showModal("reorder-categories");
   },
 
   @action
