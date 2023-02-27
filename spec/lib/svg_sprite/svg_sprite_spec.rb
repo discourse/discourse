@@ -3,7 +3,10 @@
 RSpec.describe SvgSprite do
   fab!(:theme) { Fabricate(:theme) }
 
-  before { SvgSprite.expire_cache }
+  before do
+    SvgSprite.clear_plugin_svg_sprite_cache!
+    SvgSprite.expire_cache
+  end
 
   it "can generate a bundle" do
     bundle = SvgSprite.bundle

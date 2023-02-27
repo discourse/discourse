@@ -243,16 +243,26 @@ module SvgSprite
     badge_icons
   end
 
+  # Just used in tests
+  def self.clear_plugin_svg_sprite_cache!
+    @plugin_svg_sprites = nil
+  end
+
   def self.plugin_svg_sprites
-    plugin_paths = []
-    Discourse
-      .plugins
-      .map { |plugin| File.dirname(plugin.path) }
-      .each { |path| plugin_paths << "#{path}/svg-icons/*.svg" }
+    @plugin_svg_sprites ||=
+      begin
+        plugin_paths = []
+        Discourse
+          .plugins
+          .map { |plugin| File.dirname(plugin.path) }
+          .each { |path| plugin_paths << "#{path}/svg-icons/*.svg" }
 
-    custom_sprite_paths = Dir.glob(plugin_paths)
+        custom_sprite_paths = Dir.glob(plugin_paths)
 
-    custom_sprite_paths.map { |path| { filename: File.basename(path, ".svg"), sprite: File.read(path) } }
+        custom_sprite_paths.map do |path|
+          { filename: File.basename(path, ".svg"), sprite: File.read(path) }
+        end
+      end
   end
 
   def self.theme_svg_sprites(theme_id)
