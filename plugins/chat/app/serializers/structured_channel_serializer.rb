@@ -29,6 +29,8 @@ class StructuredChannelSerializer < ApplicationSerializer
           chat_message_bus_last_ids[ChatPublisher.new_messages_message_bus_channel(channel.id)],
         new_mentions_message_bus_last_id:
           chat_message_bus_last_ids[ChatPublisher.new_mentions_message_bus_channel(channel.id)],
+        kick_message_bus_last_id:
+          chat_message_bus_last_ids[ChatPublisher.kick_users_message_bus_channel(channel.id)],
       )
     end
   end
@@ -81,6 +83,7 @@ class StructuredChannelSerializer < ApplicationSerializer
         object[:public_channels].each do |channel|
           message_bus_channels.push(ChatPublisher.new_messages_message_bus_channel(channel.id))
           message_bus_channels.push(ChatPublisher.new_mentions_message_bus_channel(channel.id))
+          message_bus_channels.push(ChatPublisher.kick_users_message_bus_channel(channel.id))
         end
 
         object[:direct_message_channels].each do |channel|

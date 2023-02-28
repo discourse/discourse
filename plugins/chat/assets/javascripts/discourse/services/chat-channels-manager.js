@@ -74,6 +74,11 @@ export default class ChatChannelsManager extends Service {
     });
   }
 
+  remove(model) {
+    this.chatSubscriptionsManager.stopChannelSubscription(model);
+    delete this._cached[model.id];
+  }
+
   get unreadCount() {
     let count = 0;
     this.publicMessageChannels.forEach((channel) => {

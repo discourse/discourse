@@ -144,6 +144,10 @@ module ChatPublisher
     "/chat/#{chat_channel_id}/new-mentions"
   end
 
+  def self.kick_users_message_bus_channel(chat_channel_id)
+    "/chat/#{chat_channel_id}/kick"
+  end
+
   def self.publish_new_mention(user_id, chat_channel_id, chat_message_id)
     MessageBus.publish(
       self.new_mentions_message_bus_channel(chat_channel_id),
@@ -198,7 +202,11 @@ module ChatPublisher
   end
 
   def self.publish_kick_users(channel_id, user_ids)
-    MessageBus.publish("/chat/kick/#{channel_id}", nil, user_ids: user_ids)
+    MessageBus.publish(
+      kick_users_message_bus_channel(channel_id),
+      { channel_id: channel_id },
+      user_ids: user_ids,
+    )
   end
 
   CHANNEL_EDITS_MESSAGE_BUS_CHANNEL = "/chat/channel-edits"

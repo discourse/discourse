@@ -203,6 +203,7 @@ en:
         channels_list: "Chat channels list"
 
       no_public_channels: "You have not joined any channels."
+      kicked_from_channel: "You can no longer access this channel."
       only_chat_push_notifications:
         title: "Only send chat push notifications"
         description: "Block all non-chat push notifications from being sent"

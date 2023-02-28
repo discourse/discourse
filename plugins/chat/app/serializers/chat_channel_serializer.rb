@@ -116,6 +116,9 @@ class ChatChannelSerializer < ApplicationSerializer
         new_mentions:
           @opts[:new_mentions_message_bus_last_id] ||
             MessageBus.last_id(ChatPublisher.new_mentions_message_bus_channel(object.id)),
+        kick:
+          @options[:kick_message_bus_last_id] ||
+            MessageBus.last_id(ChatPublisher.kick_users_message_bus_channel(object.id)),
       },
     }
   end
