@@ -7,6 +7,22 @@ import { bind } from "discourse-common/utils/decorators";
 import Category from "discourse/models/category";
 import { UNREAD_LIST_DESTINATION } from "discourse/controllers/preferences/sidebar";
 
+const UNREAD_AND_NEW_COUNTABLE = {
+  propertyName: "unreadAndNewCount",
+  badgeTextFunction: (count) => count.toString(),
+  route: "discovery.newCategory",
+  refreshCountFunction: ({ topicTrackingState, category }) => {
+    return (
+      topicTrackingState.countNew({
+        categoryId: category.id,
+      }) +
+      topicTrackingState.countUnread({
+        categoryId: category.id,
+      })
+    );
+  },
+};
+
 const DEFAULT_COUNTABLES = [
   {
     propertyName: "totalUnread",
@@ -75,6 +91,9 @@ export default class CategorySectionLink {
 
   #countables() {
     const countables = [...DEFAULT_COUNTABLES];
+    if (this.#linkToNew) {
+      countables.unshift(UNREAD_AND_NEW_COUNTABLE);
+    }
 
     if (customCountables.length > 0) {
       customCountables.forEach((customCountable) => {
@@ -127,7 +146,15 @@ export default class CategorySectionLink {
   }
 
   get currentWhen() {
-    return "discovery.unreadCategory discovery.topCategory discovery.newCategory discovery.latestCategory discovery.category discovery.categoryNone discovery.categoryAll";
+    if (this.#linkToNew && this.activeCountable) {
+      if (get(this, this.activeCountable.propertyName) > 0) {
+        return "discovery.newCategory";
+      } else {
+        return "discovery.category";
+      }
+    } else {
+      return "discovery.unreadCategory discovery.topCategory discovery.newCategory discovery.latestCategory discovery.category discovery.categoryNone discovery.categoryAll";
+    }
   }
 
   get title() {
@@ -157,7 +184,7 @@ export default class CategorySectionLink {
   }
 
   get badgeText() {
-    if (this.hideCount) {
+    if (this.hideCount && !this.#linkToNew) {
       return;
     }
 
@@ -171,6 +198,13 @@ export default class CategorySectionLink {
   }
 
   get route() {
+    if (this.#linkToNew && this.activeCountable) {
+      if (get(this, this.activeCountable.propertyName) > 0) {
+        return "discovery.newCategory";
+      } else {
+        return "discovery.category";
+      }
+    }
     if (this.currentUser?.sidebarListDestination === UNREAD_LIST_DESTINATION) {
       const activeCountable = this.activeCountable;
 
@@ -201,8 +235,12 @@ export default class CategorySectionLink {
   }
 
   get suffixValue() {
-    if (this.hideCount && this.activeCountable) {
+    if (this.hideCount && this.activeCountable && !this.#linkToNew) {
       return "circle";
     }
+  }
+
+  get #linkToNew() {
+    return !!this.currentUser?.new_new_view_enabled;
   }
 }
