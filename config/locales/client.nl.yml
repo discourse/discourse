@@ -2934,7 +2934,7 @@ nl:
         not_pinned_globally: "Er zijn geen globaal vastgemaakte topics."
         already_pinned_globally:
           one: "Momenteel globaal vastgemaakte topics: <strong class='badge badge-notification unread'>%{count}</strong>"
-          other: "Momenteel globaal vastgemaakte topics: <strong class='badge badge-notification unread'>%{count}</strong>."
+          other: "Momenteel globaal vastgemaakte topics: <strong class='badge badge-notification unread'>%{count}</strong>"
         make_banner: "Zet dit topic om in een banner die bovenaan alle pagina's wordt weergegeven."
         remove_banner: "Verwijder de banner die bovenaan alle pagina's wordt weergegeven."
         banner_note: "Gebruikers kunnen de banner negeren door deze te sluiten. Er kan maar één bannertopic tegelijk bestaan."
@@ -3490,7 +3490,7 @@ nl:
       submit_tooltip: "Stuur de privémarkering"
       take_action_tooltip: "De markeerdrempel direct bereiken, in plaats van op meer markeringen door de community te wachten"
       cant: "Sorry, je kunt dit bericht momenteel niet markeren."
-      notify_staff: "Beheerders privémelding sturen"
+      notify_staff: "Medewerkers privémelding sturen"
       formatted_name:
         off_topic: "Het is off-topic"
         inappropriate: "Het is ongepast"
@@ -5259,7 +5259,7 @@ nl:
         merge:
           button: "Samenvoegen"
           prompt:
-            title: "Overdragen en @%{username}en verwijderen"
+            title: "Overdragen en @%{username} verwijderen"
             description: |
               <p>Kies een nieuwe eigenaar voor de inhoud van <b>@%{username}</b>.</p>
 

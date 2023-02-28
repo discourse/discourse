@@ -225,6 +225,10 @@ zh_CN:
           about: 关于
           members: 成员
           settings: 设置
+      channel_edit_name_modal:
+        title: 编辑名称
+        input_placeholder: 添加一个名字
+        description: 为你的频道起一个简短的描述性名称
       channel_edit_description_modal:
         title: 编辑描述
         input_placeholder: 添加描述

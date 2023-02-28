@@ -942,7 +942,7 @@ nl:
     you_must_edit: '<p>Je bericht is gemarkeerd door de community. <a href="%{path}">Bekijk je berichten</a>.</p>'
     user_must_edit: "<p>Je bericht is gemarkeerd door de community en is tijdelijk verborgen.</p>"
   ignored:
-    hidden_content: "<p>Verborgen inhoud</p>"
+    hidden_content: "<p>Genegeerde inhoud</p>"
   archetypes:
     regular:
       title: "Normaal topic"
@@ -1106,7 +1106,7 @@ nl:
       description: "API-verzoeken voor reguliere API-sleutels en gebruikers-API-sleutels."
     dau_by_mau:
       title: "DAU/MAU"
-      xaxis: "Day"
+      xaxis: "Dag"
       yaxis: "DAU/MAU"
       description: "Aantal leden dat de afgelopen dag was aangemeld, gedeeld door het aantal leden dat de afgelopen maand was aangemeld – geeft een % terug dat 'plakkerigheid' in de community aangeeft. Het streven is >30%."
     daily_engaged_users:
@@ -1503,7 +1503,7 @@ nl:
     hide_post_sensitivity: "De waarschijnlijkheid dat een gemarkeerd bericht wordt verborgen"
     silence_new_user_sensitivity: "De waarschijnlijkheid dat een nieuwe gebruiker wordt gedempt op basis van spammarkeringen"
     auto_close_topic_sensitivity: "De waarschijnlijkheid dat een gemarkeerd topic automatisch wordt gesloten"
-    cooldown_minutes_after_hiding_posts: "Het aantal minuten dat een gebruiker moet wachten voordat deze een via de community gemarkeerd bericht kan bewerken"
+    cooldown_minutes_after_hiding_posts: "Het aantal minuten dat een gebruiker moet wachten voordat deze een door communitymarkering verborgen bericht kan bewerken"
     max_topics_in_first_day: "Het maximale aantal topics dat een gebruiker in de 24 uursperiode na het schrijven van een eerste bericht mag maken"
     max_replies_in_first_day: "Het maximale aantal antwoorden dat een gebruiker in de 24 uursperiode na het schrijven van een eerste bericht mag maken"
     tl2_additional_likes_per_day_multiplier: "Limiet van likes per dag voor TL2 (lid) verhogen door met dit getal te vermenigvuldigen"
@@ -2006,7 +2006,7 @@ nl:
     allowed_href_schemes: "Toegestane schema's in links, naast http en https."
     embed_post_limit: "Maximale aantal in te bedden berichten."
     embed_username_required: "De gebruikersnaam voor het maken van topics is vereist."
-    notify_about_flags_after: "Als er na dit aantal uren markeringen zijn die nog niet zijn afgehandeld, een privébericht naar medewerkers sturen. Stel dit in op 0 om uit te schakelen."
+    notify_about_flags_after: "Als er na dit aantal uren markeringen zijn die nog niet zijn afgehandeld, een privébericht naar moderators sturen. Stel dit in op 0 om uit te schakelen."
     show_create_topics_notice: "Als de website minder dan 5 publieke topics heeft, een melding weergeven waarin beheerders wordt gevraagd een aantal topics te maken."
     delete_drafts_older_than_n_days: "Concepten ouder dan (n) dagen verwijderen."
     delete_merged_stub_topics_after_days: "Aantal dagen dat moet worden gewacht voordat volledig samengevoegde stubtopics automatisch worden verwijderd. Stel dit in op 0 om stubtopics niet te verwijderen."
