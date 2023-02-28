@@ -227,7 +227,17 @@ class ChatMessage < ActiveRecord::Base
   end
 
   def create_mentions(user_ids)
-    User.where(id: user_ids).each { |user| ChatMention.create!(chat_message: self, user: user) }
+    return if user_ids.empty?
+
+    now = Time.zone.now
+    mentions = []
+    User
+      .where(id: user_ids)
+      .find_each do |user|
+        mentions << { chat_message_id: self.id, user_id: user.id, created_at: now, updated_at: now }
+      end
+
+    ChatMention.insert_all(mentions)
   end
 
   def update_mentions(mentioned_user_ids)
