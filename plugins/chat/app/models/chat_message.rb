@@ -243,8 +243,7 @@ class ChatMessage < ActiveRecord::Base
   private
 
   def delete_mentions(user_ids)
-    mentions_to_drop = chat_mentions.filter { |m| user_ids.include?(m.user.id) }
-    chat_mentions.delete(mentions_to_drop)
+    chat_mentions.where(user_id: user_ids).destroy_all
   end
 
   def message_too_short?
