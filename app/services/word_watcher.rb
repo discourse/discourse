@@ -130,20 +130,20 @@ class WordWatcher
     regexps.inject(text) { |txt, regexp| censor_text_with_regexp(txt, regexp) }
   end
 
-  def self.replace_text(text, watch_word_type: %i[replace link])
+  def self.replace_text(text)
     return text if text.blank?
+    replace(text, :replace)
+  end
 
-    watch_word_type
-      .flat_map { |type| word_matcher_regexps(type).to_a }
-      .reduce(text) do |t, (word_regexp, attrs)|
-        case_flag = attrs[:case_sensitive] ? nil : Regexp::IGNORECASE
-        replace_text_with_regexp(t, Regexp.new(word_regexp, case_flag), attrs[:replacement])
-      end
+  def self.replace_link(text)
+    return text if text.blank?
+    replace(text, :link)
   end
 
   def self.apply_to_text(text)
     text = censor_text(text)
     text = replace_text(text)
+    text = replace_link(text)
     text
   end
 
@@ -246,4 +246,15 @@ class WordWatcher
   end
 
   private_class_method :censor_text_with_regexp
+
+  private
+
+  def self.replace(text, watch_word_type)
+    word_matcher_regexps(watch_word_type)
+      .to_a
+      .reduce(text) do |t, (word_regexp, attrs)|
+        case_flag = attrs[:case_sensitive] ? nil : Regexp::IGNORECASE
+        replace_text_with_regexp(t, Regexp.new(word_regexp, case_flag), attrs[:replacement])
+      end
+  end
 end

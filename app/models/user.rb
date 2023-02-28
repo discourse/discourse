@@ -1524,7 +1524,7 @@ class User < ActiveRecord::Base
   def apply_watched_words
     validatable_user_fields.each do |id, value|
       field = WordWatcher.censor_text(value)
-      field = WordWatcher.replace_text(field, watch_word_type: [:replace])
+      field = WordWatcher.replace_text(field)
       set_user_field(id, field)
     end
   end
