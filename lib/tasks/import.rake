@@ -22,6 +22,7 @@ task "import:ensure_consistency" => :environment do
   update_users
   update_groups
   update_tag_stats
+  update_topic_users
   create_category_definitions
 
   log "Done!"
@@ -413,6 +414,29 @@ end
 
 def update_tag_stats
   Tag.ensure_consistency!
+end
+
+def update_topic_users
+  log "Updating topic users..."
+
+  DB.exec <<-SQL
+    WITH X AS (
+        SELECT p.topic_id
+             , p.user_id
+          FROM posts p
+          JOIN topics t ON t.id = p.topic_id
+         WHERE p.deleted_at IS NULL
+           AND t.deleted_at IS NULL
+           AND NOT p.hidden
+           AND t.visible
+    )
+    UPDATE topic_users tu
+       SET posted = 't'
+      FROM X
+     WHERE tu.topic_id = X.topic_id
+       AND tu.user_id = X.user_id
+       AND posted = 'f'
+  SQL
 end
 
 def create_category_definitions
