@@ -467,11 +467,19 @@ export default createWidget("header", {
       const panels = [this.attach("header-buttons", attrs), headerIcons];
 
       if (state.searchVisible) {
-        panels.push(
-          this.attach("search-menu", {
-            inTopicContext: state.inTopicContext && inTopicRoute,
-          })
-        );
+        if (this.siteSettings.experimental_search_menu) {
+          panels.push(
+            this.attach("glimmer-search-menu", {
+              inTopicContext: state.inTopicContext && inTopicRoute,
+            })
+          );
+        } else {
+          panels.push(
+            this.attach("search-menu", {
+              inTopicContext: state.inTopicContext && inTopicRoute,
+            })
+          );
+        }
       } else if (state.hamburgerVisible) {
         if (
           attrs.navigationMenuQueryParamOverride === "header_dropdown" ||
