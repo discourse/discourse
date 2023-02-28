@@ -30,6 +30,10 @@ end
 
 MS_SPEND_CREATING_POST ||= 5000
 
+# -- TODO: We need to check the queries are actually adding/updating the necessary
+# data, post migration. The ON CONFLICT DO NOTHING may cause the clauses to be ignored
+# when we actually need them to run.
+
 def insert_post_timings
   log "Inserting post timings..."
 
