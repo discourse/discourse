@@ -249,6 +249,10 @@ NavItem.reopenClass({
     }
     let items = args.siteSettings.top_menu.split("|");
 
+    const user = getOwner(this).lookup("service:current-user");
+    if (user?.new_new_view_enabled) {
+      items = items.reject((item) => item === "unread");
+    }
     const filterType = (args.filterMode || "").split("/").pop();
 
     if (!items.some((i) => filterType === i)) {

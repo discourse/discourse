@@ -121,7 +121,7 @@ RSpec.describe DiscourseJsProcessor do
         {
           "id": null,
           "block": "[[[1,[34,0]]],[],false,[\\"somevalue\\"]]",
-          "moduleName": "(unknown template module)",
+          "moduleName": "/blah/mymodule",
           "isStrictMode": false
         });
       });

@@ -6,7 +6,7 @@ class ApiKeyScope < ActiveRecord::Base
 
   class << self
     def list_actions
-      actions = %w[list#category_feed]
+      actions = %w[list#category_feed list#category_default]
 
       %i[latest unread new top].each { |f| actions.concat(["list#category_#{f}", "list##{f}"]) }
 
