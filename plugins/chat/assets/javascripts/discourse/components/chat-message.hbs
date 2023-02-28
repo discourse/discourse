@@ -54,8 +54,8 @@
   data-id={{@message.id}}
   data-staged-id={{if @message.staged @message.stagedId}}
   {{chat/track-message
-    (fn @onVisibleMessage @message)
-    (fn @onNotVisibleMessage @message)
+    (fn @didShowMessage @message)
+    (fn @didHideMessage @message)
   }}
 >
   {{#if this.show}}

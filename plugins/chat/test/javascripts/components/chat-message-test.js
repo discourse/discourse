@@ -55,7 +55,8 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
       onSelectMessage: () => {},
       bulkSelectMessages: () => {},
       onHoverMessage: () => {},
-      onVisibleMessage: () => {},
+      didShowMessage: () => {},
+      didHideMessage: () => {},
     };
   }
 
@@ -72,7 +73,8 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
       @onSelectMessage={{this.onSelectMessage}}
       @bulkSelectMessages={{this.bulkSelectMessages}}
       @onHoverMessage={{this.onHoverMessage}}
-      @onVisibleMessage={{this.onVisibleMessage}}
+      @didShowMessage={{this.didShowMessage}}
+      @didHideMessage={{this.didHideMessage}}
     />
   `;
 

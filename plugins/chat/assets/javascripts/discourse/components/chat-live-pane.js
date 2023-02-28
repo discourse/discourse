@@ -454,14 +454,14 @@ export default class ChatLivePane extends Component {
   }
 
   @action
-  onVisibleMessage(message) {
+  didShowMessage(message) {
     message.visible = true;
     this.updateLastReadMessage(message);
     this.#computeSeparators(message);
   }
 
   @action
-  onNotVisibleMessage(message) {
+  didHideMessage(message) {
     message.visible = false;
   }
 
