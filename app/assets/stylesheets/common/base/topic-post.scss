@@ -1022,15 +1022,7 @@ pre {
 
   .codeblock-button-wrapper {
     position: absolute;
-    right: 0;
     display: flex;
-
-    .copy-cmd {
-      right: 0;
-    }
-    .copy-fullscreen {
-      right: 28px;
-    }
   }
 
   .copy-cmd,
