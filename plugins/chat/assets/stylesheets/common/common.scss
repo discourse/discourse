@@ -144,6 +144,7 @@ $float-height: 530px;
 .chat-messages-container {
   word-wrap: break-word;
   white-space: normal;
+  position: relative;
 
   .chat-message-container {
     display: grid;
@@ -283,6 +284,7 @@ $float-height: 530px;
     display: flex;
     flex-direction: column-reverse;
     z-index: 1;
+    margin: 0 3px 0 0;
 
     &::-webkit-scrollbar {
       width: 15px;
@@ -323,37 +325,62 @@ $float-height: 530px;
   }
 
   .chat-scroll-to-bottom {
-    background: var(--primary-medium);
-    bottom: 1em;
-    border-radius: 100%;
     left: 50%;
-    opacity: 50%;
-    padding: 0.5em;
+    right: 50%;
     position: absolute;
-    transform: translateX(-50%);
-    z-index: 2;
+    z-index: 1;
+    flex-direction: column;
+    bottom: -75px;
+    background: none;
+    opacity: 0;
+    transition: opacity 0.25s ease, transform 0.5s ease;
+    transform: scale(0.1);
+    display: flex;
 
-    &:hover {
+    > * {
+      pointer-events: none;
+    }
+
+    &:hover,
+    &:active,
+    &:focus {
+      background: none;
+    }
+
+    &.visible {
+      transform: translateY(-75px) scale(1);
+      opacity: 1;
+    }
+
+    &__text {
+      color: var(--secondary);
+      padding: 0.5rem;
+      margin-bottom: 0.5rem;
       background: var(--primary-medium);
-      opacity: 100%;
+      border-radius: 3px;
+      text-align: center;
+      font-size: var(--font-down-1);
     }
 
-    .d-icon {
-      color: var(--primary);
-      margin: 0;
-    }
-
-    &.unread-messages {
-      opacity: 85%;
-      border-radius: 0;
-      transition: border-radius 0.1s linear;
-
-      &:hover {
-        opacity: 100%;
-      }
+    &__arrow {
+      display: flex;
+      background: var(--primary-medium);
+      border-radius: 100%;
+      align-items: center;
+      justify-content: center;
+      height: 35px;
+      width: 35px;
 
       .d-icon {
-        margin: 0 0 0 0.5em;
+        color: var(--secondary);
+      }
+    }
+
+    &:hover {
+      .chat-scroll-to-bottom__arrow {
+        .d-icon {
+          color: var(--tertiary);
+        }
       }
     }
   }

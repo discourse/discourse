@@ -1,6 +1,8 @@
 .chat-composer-container {
   display: flex;
   flex-direction: column;
+  z-index: 3;
+  background-color: var(--secondary);
 
   #chat-full-page-uploader,
   #chat-widget-uploader {

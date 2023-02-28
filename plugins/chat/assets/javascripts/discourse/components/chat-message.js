@@ -5,8 +5,7 @@ import Component from "@glimmer/component";
 import I18n from "I18n";
 import getURL from "discourse-common/lib/get-url";
 import optionalService from "discourse/lib/optional-service";
-import { bind } from "discourse-common/utils/decorators";
-import EmberObject, { action } from "@ember/object";
+import { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { cancel, schedule } from "@ember/runloop";
 import { clipboardCopy } from "discourse/lib/utilities";
@@ -18,6 +17,7 @@ import showModal from "discourse/lib/show-modal";
 import ChatMessageFlag from "discourse/plugins/chat/discourse/lib/chat-message-flag";
 import { tracked } from "@glimmer/tracking";
 import { getOwner } from "discourse-common/lib/get-owner";
+import ChatMessageReaction from "discourse/plugins/chat/discourse/models/chat-message-reaction";
 
 let _chatMessageDecorators = [];
 
@@ -51,36 +51,22 @@ export default class ChatMessage extends Component {
 
   cachedFavoritesReactions = null;
 
-  _hasSubscribedToAppEvents = false;
-  _loadingReactions = [];
-
   constructor() {
     super(...arguments);
-
-    this.args.message.id
-      ? this._subscribeToAppEvents()
-      : this._waitForIdToBePopulated();
-
-    if (this.args.message.bookmark) {
-      this.args.message.set(
-        "bookmark",
-        Bookmark.create(this.args.message.bookmark)
-      );
-    }
 
     this.cachedFavoritesReactions = this.chatEmojiReactionStore.favorites;
   }
 
   get deletedAndCollapsed() {
-    return this.args.message?.get("deleted_at") && this.collapsed;
+    return this.args.message?.deletedAt && this.collapsed;
   }
 
   get hiddenAndCollapsed() {
-    return this.args.message?.get("hidden") && this.collapsed;
+    return this.args.message?.hidden && this.collapsed;
   }
 
   get collapsed() {
-    return !this.args.message?.get("expanded");
+    return !this.args.message?.expanded;
   }
 
   @action
@@ -97,30 +83,7 @@ export default class ChatMessage extends Component {
 
   @action
   teardownChatMessage() {
-    if (this.args.message?.stagedId) {
-      this.appEvents.off(
-        `chat-message-staged-${this.args.message.stagedId}:id-populated`,
-        this,
-        "_subscribeToAppEvents"
-      );
-    }
-
-    this.appEvents.off("chat:refresh-message", this, "_refreshedMessage");
-
-    this.appEvents.off(
-      `chat-message-${this.args.message.id}:reaction`,
-      this,
-      "_handleReactionMessage"
-    );
-
     cancel(this._invitationSentTimer);
-  }
-
-  @bind
-  _refreshedMessage(message) {
-    if (message.id === this.args.message.id) {
-      this.decorateCookedMessage();
-    }
   }
 
   @action
@@ -131,45 +94,29 @@ export default class ChatMessage extends Component {
       }
 
       _chatMessageDecorators.forEach((decorator) => {
-        decorator.call(this, this.messageContainer, this.args.chatChannel);
+        decorator.call(this, this.messageContainer, this.args.channel);
       });
     });
   }
 
   get messageContainer() {
-    const id = this.args.message?.id || this.args.message?.stagedId;
-    return (
-      id && document.querySelector(`.chat-message-container[data-id='${id}']`)
-    );
-  }
-
-  _subscribeToAppEvents() {
-    if (!this.args.message.id || this._hasSubscribedToAppEvents) {
-      return;
+    const id = this.args.message?.id;
+    if (id) {
+      return document.querySelector(`.chat-message-container[data-id='${id}']`);
     }
 
-    this.appEvents.on("chat:refresh-message", this, "_refreshedMessage");
-
-    this.appEvents.on(
-      `chat-message-${this.args.message.id}:reaction`,
-      this,
-      "_handleReactionMessage"
-    );
-    this._hasSubscribedToAppEvents = true;
-  }
-
-  _waitForIdToBePopulated() {
-    this.appEvents.on(
-      `chat-message-staged-${this.args.message.stagedId}:id-populated`,
-      this,
-      "_subscribeToAppEvents"
-    );
+    const stagedId = this.args.message?.stagedId;
+    if (stagedId) {
+      return document.querySelector(
+        `.chat-message-container[data-staged-id='${stagedId}']`
+      );
+    }
   }
 
   get showActions() {
     return (
       this.args.canInteractWithChat &&
-      !this.args.message?.get("staged") &&
+      !this.args.message?.staged &&
       this.args.isHovered
     );
   }
@@ -270,17 +217,16 @@ export default class ChatMessage extends Component {
 
   get hasThread() {
     return (
-      this.args.chatChannel?.get("threading_enabled") &&
-      this.args.message?.get("thread_id")
+      this.args.channel?.get("threading_enabled") && this.args.message?.threadId
     );
   }
 
   get show() {
     return (
-      !this.args.message?.get("deleted_at") ||
-      this.currentUser.id === this.args.message?.get("user.id") ||
+      !this.args.message?.deletedAt ||
+      this.currentUser.id === this.args.message?.user?.id ||
       this.currentUser.staff ||
-      this.args.details?.can_moderate
+      this.args.channel?.canModerate
     );
   }
 
@@ -331,83 +277,81 @@ export default class ChatMessage extends Component {
 
   get hideUserInfo() {
     return (
-      this.args.message?.get("hideUserInfo") &&
-      !this.args.message?.get("chat_webhook_event")
+      this.args.message?.hideUserInfo && !this.args.message?.chatWebhookEvent
     );
   }
 
   get showEditButton() {
     return (
-      !this.args.message?.get("deleted_at") &&
-      this.currentUser?.id === this.args.message?.get("user.id") &&
-      this.args.chatChannel?.canModifyMessages?.(this.currentUser)
+      !this.args.message?.deletedAt &&
+      this.currentUser?.id === this.args.message?.user?.id &&
+      this.args.channel?.canModifyMessages?.(this.currentUser)
     );
   }
   get canFlagMessage() {
     return (
-      this.currentUser?.id !== this.args.message?.get("user.id") &&
-      this.args.message?.get("user_flag_status") === undefined &&
-      this.args.details?.can_flag &&
-      !this.args.message?.get("chat_webhook_event") &&
-      !this.args.message?.get("deleted_at")
+      this.currentUser?.id !== this.args.message?.user?.id &&
+      !this.args.channel?.isDirectMessageChannel &&
+      this.args.message?.userFlagStatus === undefined &&
+      this.args.channel?.canFlag &&
+      !this.args.message?.chatWebhookEvent &&
+      !this.args.message?.deletedAt
     );
   }
 
   get canManageDeletion() {
-    return this.currentUser?.id === this.args.message.get("user.id")
-      ? this.args.details?.can_delete_self
-      : this.args.details?.can_delete_others;
+    return this.currentUser?.id === this.args.message.user.id
+      ? this.args.channel?.canDeleteSelf
+      : this.args.channel?.canDeleteOthers;
   }
 
   get canReply() {
     return (
-      !this.args.message?.get("deleted_at") &&
-      this.args.chatChannel?.canModifyMessages?.(this.currentUser)
+      !this.args.message?.deletedAt &&
+      this.args.channel?.canModifyMessages?.(this.currentUser)
     );
   }
 
   get canReact() {
     return (
-      !this.args.message?.get("deleted_at") &&
-      this.args.chatChannel?.canModifyMessages?.(this.currentUser)
+      !this.args.message?.deletedAt &&
+      this.args.channel?.canModifyMessages?.(this.currentUser)
     );
   }
 
   get showDeleteButton() {
     return (
       this.canManageDeletion &&
-      !this.args.message?.get("deleted_at") &&
-      this.args.chatChannel?.canModifyMessages?.(this.currentUser)
+      !this.args.message?.deletedAt &&
+      this.args.channel?.canModifyMessages?.(this.currentUser)
     );
   }
 
   get showRestoreButton() {
     return (
       this.canManageDeletion &&
-      this.args.message?.get("deleted_at") &&
-      this.args.chatChannel?.canModifyMessages?.(this.currentUser)
+      this.args.message?.deletedAt &&
+      this.args.channel?.canModifyMessages?.(this.currentUser)
     );
   }
 
   get showBookmarkButton() {
-    return this.args.chatChannel?.canModifyMessages?.(this.currentUser);
+    return this.args.channel?.canModifyMessages?.(this.currentUser);
   }
 
   get showRebakeButton() {
     return (
       this.currentUser?.staff &&
-      this.args.chatChannel?.canModifyMessages?.(this.currentUser)
+      this.args.channel?.canModifyMessages?.(this.currentUser)
     );
   }
 
   get hasReactions() {
-    return Object.values(this.args.message.get("reactions")).some(
-      (r) => r.count > 0
-    );
+    return Object.values(this.args.message.reactions).some((r) => r.count > 0);
   }
 
   get mentionWarning() {
-    return this.args.message.get("mentionWarning");
+    return this.args.message.mentionWarning;
   }
 
   get mentionedCannotSeeText() {
@@ -464,13 +408,13 @@ export default class ChatMessage extends Component {
   inviteMentioned() {
     const userIds = this.mentionWarning.without_membership.mapBy("id");
 
-    ajax(`/chat/${this.args.message.chat_channel_id}/invite`, {
+    ajax(`/chat/${this.args.message.channelId}/invite`, {
       method: "PUT",
       data: { user_ids: userIds, chat_message_id: this.args.message.id },
     }).then(() => {
-      this.args.message.set("mentionWarning.invitationSent", true);
+      this.args.message.mentionWarning.set("invitationSent", true);
       this._invitationSentTimer = discourseLater(() => {
-        this.args.message.set("mentionWarning", null);
+        this.dismissMentionWarning();
       }, 3000);
     });
 
@@ -479,7 +423,7 @@ export default class ChatMessage extends Component {
 
   @action
   dismissMentionWarning() {
-    this.args.message.set("mentionWarning", null);
+    this.args.message.mentionWarning = null;
   }
 
   @action
@@ -517,27 +461,13 @@ export default class ChatMessage extends Component {
     this.react(emoji, REACTIONS.add);
   }
 
-  @bind
-  _handleReactionMessage(busData) {
-    const loadingReactionIndex = this._loadingReactions.indexOf(busData.emoji);
-    if (loadingReactionIndex > -1) {
-      return this._loadingReactions.splice(loadingReactionIndex, 1);
-    }
-
-    this._updateReactionsList(busData.emoji, busData.action, busData.user);
-    this.args.afterReactionAdded();
-  }
-
   get capabilities() {
     return getOwner(this).lookup("capabilities:main");
   }
 
   @action
   react(emoji, reactAction) {
-    if (
-      !this.args.canInteractWithChat ||
-      this._loadingReactions.includes(emoji)
-    ) {
+    if (!this.args.canInteractWithChat) {
       return;
     }
 
@@ -549,71 +479,19 @@ export default class ChatMessage extends Component {
       this.args.onHoverMessage(null);
     }
 
-    this._loadingReactions.push(emoji);
-    this._updateReactionsList(emoji, reactAction, this.currentUser);
-
     if (reactAction === REACTIONS.add) {
       this.chatEmojiReactionStore.track(`:${emoji}:`);
     }
 
-    return this._publishReaction(emoji, reactAction).then(() => {
-      // creating reaction will create a membership if not present
-      // so we will fully refresh if we were not members of the channel
-      // already
-      if (!this.args.chatChannel.isFollowing || this.args.chatChannel.isDraft) {
-        return this.args.chatChannelsManager
-          .getChannel(this.args.chatChannel.id)
-          .then((reactedChannel) => {
-            this.router.transitionTo("chat.channel", "-", reactedChannel.id);
-          });
-      }
-    });
-  }
+    this.args.message.react(
+      emoji,
+      reactAction,
+      this.currentUser,
+      this.currentUser.id
+    );
 
-  _updateReactionsList(emoji, reactAction, user) {
-    const selfReacted = this.currentUser.id === user.id;
-    if (this.args.message.reactions[emoji]) {
-      if (
-        selfReacted &&
-        reactAction === REACTIONS.add &&
-        this.args.message.reactions[emoji].reacted
-      ) {
-        // User is already has reaction added; do nothing
-        return false;
-      }
-
-      let newCount =
-        reactAction === REACTIONS.add
-          ? this.args.message.reactions[emoji].count + 1
-          : this.args.message.reactions[emoji].count - 1;
-
-      this.args.message.reactions.set(`${emoji}.count`, newCount);
-      if (selfReacted) {
-        this.args.message.reactions.set(
-          `${emoji}.reacted`,
-          reactAction === REACTIONS.add
-        );
-      } else {
-        this.args.message.reactions[emoji].users.pushObject(user);
-      }
-
-      this.args.message.notifyPropertyChange("reactions");
-    } else {
-      if (reactAction === REACTIONS.add) {
-        this.args.message.reactions.set(emoji, {
-          count: 1,
-          reacted: selfReacted,
-          users: selfReacted ? [] : [user],
-        });
-      }
-
-      this.args.message.notifyPropertyChange("reactions");
-    }
-  }
-
-  _publishReaction(emoji, reactAction) {
     return ajax(
-      `/chat/${this.args.message.chat_channel_id}/react/${this.args.message.id}`,
+      `/chat/${this.args.message.channelId}/react/${this.args.message.id}`,
       {
         type: "PUT",
         data: {
@@ -623,7 +501,12 @@ export default class ChatMessage extends Component {
       }
     ).catch((errResult) => {
       popupAjaxError(errResult);
-      this._updateReactionsList(emoji, REACTIONS.remove, this.currentUser);
+      this.args.message.react(
+        emoji,
+        REACTIONS.remove,
+        this.currentUser,
+        this.currentUser.id
+      );
     });
   }
 
@@ -651,17 +534,6 @@ export default class ChatMessage extends Component {
     this.args.setReplyTo(this.args.message.id);
   }
 
-  viewReplyOrThread() {
-    if (this.hasThread) {
-      this.router.transitionTo(
-        "chat.channel.thread",
-        this.args.message.thread_id
-      );
-    } else {
-      this.args.replyMessageClicked(this.args.message.in_reply_to);
-    }
-  }
-
   @action
   edit() {
     this.args.editButtonClicked(this.args.message.id);
@@ -673,12 +545,11 @@ export default class ChatMessage extends Component {
       requirejs.entries["discourse/lib/flag-targets/flag"];
 
     if (targetFlagSupported) {
-      const model = EmberObject.create(this.args.message);
-      model.set("username", model.get("user.username"));
-      model.set("user_id", model.get("user.id"));
+      const model = this.args.message;
+      model.username = model.user?.username;
+      model.user_id = model.user?.id;
       let controller = showModal("flag", { model });
-
-      controller.setProperties({ flagTarget: new ChatMessageFlag() });
+      controller.set("flagTarget", new ChatMessageFlag());
     } else {
       this._legacyFlag();
     }
@@ -686,13 +557,13 @@ export default class ChatMessage extends Component {
 
   @action
   expand() {
-    this.args.message.set("expanded", true);
+    this.args.message.expanded = true;
   }
 
   @action
   restore() {
     return ajax(
-      `/chat/${this.args.message.chat_channel_id}/restore/${this.args.message.id}`,
+      `/chat/${this.args.message.channelId}/restore/${this.args.message.id}`,
       {
         type: "PUT",
       }
@@ -701,10 +572,7 @@ export default class ChatMessage extends Component {
 
   @action
   openThread() {
-    this.router.transitionTo(
-      "chat.channel.thread",
-      this.args.message.thread_id
-    );
+    this.router.transitionTo("chat.channel.thread", this.args.message.threadId);
   }
 
   @action
@@ -719,7 +587,7 @@ export default class ChatMessage extends Component {
       {
         onAfterSave: (savedData) => {
           const bookmark = Bookmark.create(savedData);
-          this.args.message.set("bookmark", bookmark);
+          this.args.message.bookmark = bookmark;
           this.appEvents.trigger(
             "bookmarks:changed",
             savedData,
@@ -727,7 +595,7 @@ export default class ChatMessage extends Component {
           );
         },
         onAfterDelete: () => {
-          this.args.message.set("bookmark", null);
+          this.args.message.bookmark = null;
         },
       }
     );
@@ -736,7 +604,7 @@ export default class ChatMessage extends Component {
   @action
   rebakeMessage() {
     return ajax(
-      `/chat/${this.args.message.chat_channel_id}/${this.args.message.id}/rebake`,
+      `/chat/${this.args.message.channelId}/${this.args.message.id}/rebake`,
       {
         type: "PUT",
       }
@@ -746,7 +614,7 @@ export default class ChatMessage extends Component {
   @action
   deleteMessage() {
     return ajax(
-      `/chat/${this.args.message.chat_channel_id}/${this.args.message.id}`,
+      `/chat/${this.args.message.channelId}/${this.args.message.id}`,
       {
         type: "DELETE",
       }
@@ -755,7 +623,7 @@ export default class ChatMessage extends Component {
 
   @action
   selectMessage() {
-    this.args.message.set("selected", true);
+    this.args.message.selected = true;
     this.args.onStartSelectingMessages(this.args.message);
   }
 
@@ -780,7 +648,7 @@ export default class ChatMessage extends Component {
 
     const { protocol, host } = window.location;
     let url = getURL(
-      `/chat/c/-/${this.args.message.chat_channel_id}/${this.args.message.id}`
+      `/chat/c/-/${this.args.message.channelId}/${this.args.message.id}`
     );
     url = url.indexOf("/") === 0 ? protocol + "//" + host + url : url;
     clipboardCopy(url);
@@ -793,25 +661,22 @@ export default class ChatMessage extends Component {
   }
 
   get emojiReactions() {
-    const favorites = this.cachedFavoritesReactions;
+    let favorites = this.cachedFavoritesReactions;
 
     // may be a {} if no defaults defined in some production builds
     if (!favorites || !favorites.slice) {
       return [];
     }
 
-    const userReactions = Object.keys(this.args.message.reactions || {}).filter(
-      (key) => {
-        return this.args.message.reactions[key].reacted;
-      }
-    );
-
     return favorites.slice(0, 3).map((emoji) => {
-      if (userReactions.includes(emoji)) {
-        return { emoji, reacted: true };
-      } else {
-        return { emoji, reacted: false };
-      }
+      return (
+        this.args.message.reactions.find(
+          (reaction) => reaction.emoji === emoji
+        ) ||
+        ChatMessageReaction.create({
+          emoji,
+        })
+      );
     });
   }
 }

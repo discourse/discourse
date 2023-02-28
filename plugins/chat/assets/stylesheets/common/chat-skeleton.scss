@@ -1,4 +1,4 @@
-$radius: 10px;
+$radius: 3px;
 
 .chat-skeleton {
   height: auto;
@@ -55,11 +55,35 @@ $radius: 10px;
   &__message-content {
     grid-area: content;
     width: 100%;
+    padding: 10px 0;
   }
+
+  &__message-reactions {
+    display: flex;
+    padding: 5px 0 0 0;
+  }
+
+  &__message-reaction {
+    background-color: var(--primary-100);
+    width: 40px;
+    height: 24px;
+    border-radius: $radius;
+
+    & + & {
+      margin-left: 0.5rem;
+    }
+  }
+
+  &__message-text {
+    display: flex;
+    padding: 5px 0;
+    flex-direction: column;
+  }
+
   &__message-msg {
     height: 13px;
     border-radius: $radius;
-    margin: 5px 0;
+    margin: 2px 0;
 
     .chat-skeleton__body:nth-of-type(odd) & {
       background-color: var(--primary-100);
@@ -67,6 +91,14 @@ $radius: 10px;
     .chat-skeleton__body:nth-of-type(even) & {
       background-color: var(--primary-200);
     }
+  }
+
+  &__message-img {
+    height: 80px;
+    border-radius: $radius;
+    margin: 2px 0;
+    width: 200px;
+    background-color: var(--primary-100);
   }
 
   *[class^="chat-skeleton__message-"] {
@@ -78,7 +110,7 @@ $radius: 10px;
     position: relative;
     overflow: hidden;
 
-    *[class^="chat-skeleton__message-"]:not(.chat-skeleton__message-content):after {
+    *[class^="chat-skeleton__message-"]:not(.chat-skeleton__message-content):not(.chat-skeleton__message-text):not(.chat-skeleton__message-reactions):after {
       position: absolute;
       top: 0;
       right: 0;

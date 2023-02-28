@@ -1,28 +1,20 @@
-import Component from "@ember/component";
-import { computed } from "@ember/object";
+import Component from "@glimmer/component";
 import { htmlSafe } from "@ember/template";
 import { escapeExpression } from "discourse/lib/utilities";
 import domFromString from "discourse-common/lib/dom-from-string";
 import I18n from "I18n";
 
 export default class ChatMessageCollapser extends Component {
-  tagName = "";
-  collapsed = false;
-  uploads = null;
-  cooked = null;
-
-  @computed("uploads")
   get hasUploads() {
-    return hasUploads(this.uploads);
+    return hasUploads(this.args.uploads);
   }
 
-  @computed("uploads")
   get uploadsHeader() {
     let name = "";
-    if (this.uploads.length === 1) {
-      name = this.uploads[0].original_filename;
+    if (this.args.uploads.length === 1) {
+      name = this.args.uploads[0].original_filename;
     } else {
-      name = I18n.t("chat.uploaded_files", { count: this.uploads.length });
+      name = I18n.t("chat.uploaded_files", { count: this.args.uploads.length });
     }
     return htmlSafe(
       `<span class="chat-message-collapser-link-small">${escapeExpression(
@@ -31,9 +23,10 @@ export default class ChatMessageCollapser extends Component {
     );
   }
 
-  @computed("cooked")
   get cookedBodies() {
-    const elements = Array.prototype.slice.call(domFromString(this.cooked));
+    const elements = Array.prototype.slice.call(
+      domFromString(this.args.cooked)
+    );
 
     if (hasYoutube(elements)) {
       return this.youtubeCooked(elements);

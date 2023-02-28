@@ -1,13 +1,13 @@
 <div class="chat-message-left-gutter">
-  {{#if @message.reviewable_id}}
+  {{#if @message.reviewableId}}
     <LinkTo
       @route="review.show"
-      @model={{@message.reviewable_id}}
+      @model={{@message.reviewableId}}
       class="chat-message-left-gutter__flag"
     >
       {{d-icon "flag" title="chat.flagged"}}
     </LinkTo>
-  {{else if (eq @message.user_flag_status 0)}}
+  {{else if (eq @message.userFlagStatus 0)}}
     <div class="chat-message-left-gutter__flag">
       {{d-icon "flag" title="chat.you_flagged"}}
     </div>

@@ -51,9 +51,7 @@ module("Discourse Chat | Component | chat-channel-row", function (hooks) {
 
     assert
       .dom(".chat-channel-metadata")
-      .hasText(
-        moment(this.categoryChatChannel.last_message_sent_at).format("l")
-      );
+      .hasText(moment(this.categoryChatChannel.lastMessageSentAt).format("l"));
   });
 
   test("renders membership toggling button when necessary", async function (assert) {

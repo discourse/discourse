@@ -35,23 +35,23 @@ class ChatMessageSerializer < ApplicationSerializer
   end
 
   def reactions
-    reactions_hash = {}
     object
       .reactions
       .group_by(&:emoji)
-      .each do |emoji, reactions|
-        users = reactions[0..5].map(&:user).filter { |user| user.id != scope&.user&.id }[0..4]
-
+      .map do |emoji, reactions|
         next unless Emoji.exists?(emoji)
 
-        reactions_hash[emoji] = {
+        users = reactions[0..5].map(&:user)[0..5]
+
+        {
+          emoji: emoji,
           count: reactions.count,
           users:
             ActiveModel::ArraySerializer.new(users, each_serializer: BasicUserSerializer).as_json,
           reacted: users_reactions.include?(emoji),
         }
       end
-    reactions_hash
+      .compact
   end
 
   def include_reactions?
