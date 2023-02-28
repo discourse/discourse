@@ -480,6 +480,10 @@ after_initialize do
     object.chat_header_indicator_preference
   end
 
+  add_to_serializer(:current_user_option, :chat_header_indicator_preference) do
+    object.chat_header_indicator_preference
+  end
+
   RETENTION_SETTINGS_TO_USER_OPTION_FIELDS = {
     chat_channel_retention_days: :dismissed_channel_retention_reminder,
     chat_dm_retention_days: :dismissed_dm_retention_reminder,
