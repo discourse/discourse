@@ -5,3 +5,295 @@
 # https://translate.discourse.org/
 
 ru:
+  js:
+    discourse_automation:
+      title: Автоматизация
+      create: Создать
+      update: Обновить
+      select_script: Выберите скрипт
+      select_trigger: Выберите триггер
+      confirm_automation_reset: Параметры скрипта и триггера будут сброшены. Новое состояние будет сохранено. Продолжить?
+      confirm_automation_trigger: Будет запущена автоматизация. Продолжить?
+      no_automation_yet: Вы еще не создали автоматизаций.
+      edit_automation:
+        trigger_section:
+          forced: Этот триггер вызван скриптом.
+          next_pending_automation: "Следующая автоматизация сработает %{date}"
+          trigger_now: "Запустить сейчас"
+          title: Когда и что…
+        fields_section:
+          title: Параметры скрипта
+      destroy_automation:
+        confirm: "Действительно удалить `%{name}`?"
+      fields:
+        key_value:
+          label: Настроить
+        user:
+          label: Пользователь
+        pm:
+          title:
+            label: Название
+          raw:
+            label: Тело сообщения
+        pms:
+          confirm_remove_pm: "Действительно удалить это ЛС?"
+          placeholder_title: Название ЛС
+          add_pm: Добавить ЛС
+          no_pm_created: Вы еще не создали личных сообщений. ЛС будут отправлены после запуска автоматизации.
+          title:
+            label: Название
+          raw:
+            label: Тело сообщения
+          delay:
+            label: Задержка (в минутах)
+          encrypt:
+            label: Шифрует ЛС, если это возможно
+        group:
+          label: Группа
+        text:
+          label: Текст
+      triggerables:
+        not_found: Не удалось найти триггер `%{trigger}` для автоматизации `%{automation}`. Проверьте, установлен ли соответствующий плагин.
+        user_badge_granted:
+          fields:
+            badge:
+              label: Награда
+            only_first_grant:
+              label: Только при первой выдаче
+        stalled_topic:
+          durations:
+            PT1H: "Один час"
+            P1D: "Один день"
+            P1W: "Одна неделя"
+            P2W: "Две недели"
+            P1M: "Один месяц"
+            P3M: "Три месяца"
+            P6M: "Шесть месяцев"
+            P1Y: "Один год"
+          fields:
+            categories:
+              label: Ограничено по категориям
+            tags:
+              label: Ограничено по тегам
+            stalled_after:
+              label: Считать неактивной через
+        recurring:
+          every: Кажд.
+          frequencies:
+            minute: минуту
+            hour: час
+            day: день
+            weekday: будний день
+            week: неделю
+            month: месяц
+            year: год
+          fields:
+            recurrence:
+              label: Повторение
+            start_date:
+              label: Дата начала
+        stalled_wiki:
+          durations:
+            PT1H: "Один час"
+            P1D: "Один день"
+            P1W: "Одна неделя"
+            P2W: "Две недели"
+            P1M: "Один месяц"
+            P3M: "Три месяца"
+            P6M: "Шесть месяцев"
+            P1Y: "Один год"
+          fields:
+            restricted_category:
+              label: Ограничено по категории
+            stalled_after:
+              label: Задержка запуска
+              description: Задержка между последним редактированием вики-записи и запуском автоматизации
+            retriggered_after:
+              label: Задержка повторного запуска
+              description: Задержка между первым и следующим срабатыванием, если вики-запись не редактировалась после первого срабатывания
+        user_added_to_group:
+          fields:
+            joined_group:
+              label: Отслеживаемая группа
+        user_removed_from_group:
+          fields:
+            left_group:
+              label: Отслеживаемая группа
+        user_promoted:
+          fields:
+            restricted_group:
+              label: Ограничить по группе
+            trust_level_transition:
+              label: Смена уровня доверия
+          trust_levels:
+            ALL: "Все уровни доверия"
+            TL01: "УД0 — УД1"
+            TL12: "УД1 — УД2"
+            TL23: "УД2 — УД3"
+            TL34: "УД3 — УД4"
+        point_in_time:
+          fields:
+            execute_at:
+              label: Время выполнения
+        topic:
+          fields:
+            restricted_topic:
+              label: Идентификатор темы
+        post_created_edited:
+          fields:
+            valid_trust_levels:
+              label: Допустимые уровни доверия
+              description: Сработает, только если запись создана пользователем на указанных уровнях доверия. По умолчанию — любой уровень.
+            restricted_category:
+              label: Категория
+              description: Необязательно; позволяет ограничить срабатывание триггера указанной категорией
+        pm_created:
+          fields:
+            restricted_user:
+              label: Пользователь
+              description: Позволяет ограничить срабатывание триггера указанным пользователем
+            ignore_staff:
+              label: Игнорировать персонал
+              description: Пропустить триггер, если отправитель является сотрудником
+            valid_trust_levels:
+              label: Допустимые уровни доверия
+              description: Сработает, только если запись создана пользователем на указанных уровнях доверия. По умолчанию — любой уровень.
+        after_post_cook:
+          fields:
+            valid_trust_levels:
+              label: Допустимые уровни доверия
+              description: Сработает, только если запись создана пользователем на указанных уровнях доверия. По умолчанию — любой уровень.
+            restricted_category:
+              label: Категория
+              description: Необязательно; позволяет ограничить срабатывание триггера указанной категорией
+            restricted_tags:
+              label: Теги
+              description: Необязательно; позволяет ограничить срабатывание триггера указанными тегами
+      scriptables:
+        not_found: Не удалось найти скрипт `%{script}` для автоматизации `%{automation}`. Проверьте, установлен ли соответствующий плагин.
+        zapier_webhook:
+          fields:
+            webhook_url:
+              label: URL вебхука
+              description: "Требуется действительный URL вебхука Zapier, например: https://hooks.zapier.com/hooks/catch/xxx/yyy/"
+        auto_responder:
+          fields:
+            once:
+              label: Один раз
+              description: Отвечает только один раз на тему
+            word_answer_list:
+              label: Список пар «слово — ответ»
+              description: "Список групп «ключ — значение», где `ключ` — это искомый термин, а `значение` — текст ответа. В `значении` можно использовать переменную `%%KEY%%`, которая в ответе заменяется на `ключ`. `Ключ` будет анализироваться как регулярное выражение, поэтому служебные символы (например, `.`) нужно экранировать (если вам нужна точка, это будет выглядеть так: `\\.`)."
+            answering_user:
+              label: Отвечающий пользователь
+              description: Пользователь по умолчанию — система
+        post:
+          fields:
+            creator:
+              label: Автор
+            topic:
+              label: Идентификатор темы
+            post:
+              label: Контент записи
+        user_global_notice:
+          fields:
+            level:
+              label: Уровень
+            notice:
+              label: Уведомление
+              description: Принимает HTML — не вводите небезопасные данные!
+          levels:
+            warning: Предупреждение
+            info: Информация
+            success: Выполнено
+            error: Ошибка
+        suspend_user_by_email:
+          fields:
+            suspend_until:
+              label: Заморозить до (по умолчанию)
+            reason:
+              label: Причина (по умолчанию)
+            actor:
+              label: Пользователь
+              description: "Пользователь, ответственный за заморозку (по умолчанию — система)"
+        pin_topic:
+          fields:
+            pinnable_topic:
+              label: Идентификатор темы
+            pinned_globally:
+              label: Закреплено глобально
+            pinned_until:
+              label: Закреплено до
+        banner_topic:
+          fields:
+            topic_id:
+              label: Идентификатор темы
+            banner_until:
+              label: Сделать баннером до
+            user:
+              label: Пользователь
+              description: "Пользователь, создающий баннер (по умолчанию — система)"
+        flag_post_on_words:
+          fields:
+            words:
+              label: Проверенные слова
+        topic_required_words:
+          fields:
+            words:
+              label: Список обязательных слов
+        gift_exchange:
+          fields:
+            gift_exchangers_group:
+              label: Название группы участников
+            giftee_assignment_messages:
+              label: Сообщения, отправленные дарителю
+        send_pms:
+          add_a_pm_btn:
+            label: Добавить ЛС
+          fields:
+            receiver:
+              label: Получатель ЛС
+            sendable_pms:
+              label: ЛС
+            sender:
+              label: Отправитель ЛС
+        close_topic:
+          fields:
+            topic:
+              label: Идентификатор темы
+            message:
+              label: Сообщение о закрытии
+              description: "Необязательное сообщение для показа при закрытии темы"
+            user:
+              label: Пользователь
+              description: "Пользователь, закрывающий тему (по умолчанию — система)"
+        add_user_to_group_through_custom_field:
+          fields:
+            custom_field_name:
+              label: "Название настраиваемого поля пользователя"
+      models:
+        script:
+          name:
+            label: Скрипт
+        trigger:
+          name:
+            label: Триггер
+        automation:
+          name:
+            label: Название
+          trigger:
+            label: Триггер
+          script:
+            label: Скрипт
+          version:
+            label: Версия
+          enabled:
+            label: Включено
+          disabled:
+            label: Отключено
+          placeholders:
+            label: Заполнители
+          last_updated_at:
+            label: Последнее обновление
+          last_updated_by:
+            label: Кем обновлено
