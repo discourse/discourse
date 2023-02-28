@@ -200,7 +200,7 @@ describe "Automatic user removal from channels" do
 
     context "when the secret_group is no longer allowed to access the private category" do
       it "removes the user from the corresponding category channel" do
-        private_category.update!(permissions: {})
+        private_category.update!(permissions: { Group::AUTO_GROUPS[:staff] => :full })
         expect(
           UserChatChannelMembership.exists?(user: user_1, chat_channel: private_channel),
         ).to eq(false)
