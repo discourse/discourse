@@ -91,12 +91,7 @@ export default class ChatMessage {
 
   get firstMessageOfTheDayAt() {
     if (!this.previousMessage) {
-      return moment(this.createdAt).calendar(moment(), {
-        sameDay: `[${I18n.t("chat.chat_message_separator.today")}]`,
-        lastDay: `[${I18n.t("chat.chat_message_separator.yesterday")}]`,
-        lastWeek: "LL",
-        sameElse: "LL",
-      });
+      return this.#calendarDate(this.createdAt);
     }
 
     if (
@@ -105,13 +100,17 @@ export default class ChatMessage {
         new Date(this.createdAt)
       )
     ) {
-      return moment(this.createdAt).calendar(moment(), {
-        sameDay: `[${I18n.t("chat.chat_message_separator.today")}]`,
-        lastDay: `[${I18n.t("chat.chat_message_separator.yesterday")}]`,
-        lastWeek: "LL",
-        sameElse: "LL",
-      });
+      return this.#calendarDate(this.createdAt);
     }
+  }
+
+  #calendarDate(date) {
+    return moment(date).calendar(moment(), {
+      sameDay: `[${I18n.t("chat.chat_message_separator.today")}]`,
+      lastDay: `[${I18n.t("chat.chat_message_separator.yesterday")}]`,
+      lastWeek: "LL",
+      sameElse: "LL",
+    });
   }
 
   @cached
