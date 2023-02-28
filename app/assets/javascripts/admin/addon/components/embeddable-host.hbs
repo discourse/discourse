@@ -10,15 +10,6 @@
     />
   </td>
   <td class="editing-input">
-    <div class="label">{{i18n "admin.embedding.class_name"}}</div>
-    <Input
-      @value={{this.buffered.class_name}}
-      placeholder="class"
-      @enter={{action "save"}}
-      class="class-name"
-    />
-  </td>
-  <td class="editing-input">
     <div class="label">{{i18n "admin.embedding.allowed_paths"}}</div>
     <Input
       @value={{this.buffered.allowed_paths}}
@@ -53,12 +44,6 @@
   <td>
     <div class="label">{{i18n "admin.embedding.host"}}</div>
     {{this.host.host}}
-  </td>
-  <td>
-    <div class="label">
-      {{i18n "admin.embedding.class_name"}}
-    </div>
-    {{this.host.class_name}}
   </td>
   <td>
     <div class="label">
