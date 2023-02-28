@@ -1,7 +1,6 @@
 .chat-message-separator {
   @include unselectable;
   display: flex;
-  font-size: var(--font-down-1);
 
   &-new {
     position: relative;
@@ -23,6 +22,7 @@
         color: var(--danger-medium);
         background-color: var(--secondary);
         padding: 0.25rem 0.5rem;
+        font-size: var(--font-down-1);
       }
     }
 

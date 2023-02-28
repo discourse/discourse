@@ -467,9 +467,10 @@ export default class ChatLivePane extends Component {
 
   @debounce(READ_INTERVAL_MS)
   updateLastReadMessage() {
-    const membership = this.args.channel.currentUserMembership;
+    const lastReadId =
+      this.args.channel.currentUserMembership?.last_read_message_id;
     const lastUnreadVisibleMessage = this.args.channel.visibleMessages.findLast(
-      (message) => message.id > membership.last_read_message_id
+      (message) => !lastReadId || message.id > lastReadId
     );
     if (lastUnreadVisibleMessage) {
       this.args.channel.updateLastReadMessage(lastUnreadVisibleMessage.id);

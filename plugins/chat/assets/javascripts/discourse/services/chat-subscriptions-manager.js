@@ -185,8 +185,9 @@ export default class ChatSubscriptionsManager extends Service {
   _onUserTrackingStateUpdate(busData) {
     this.chatChannelsManager.find(busData.chat_channel_id).then((channel) => {
       if (
+        !channel?.currentUserMembership?.last_read_message_id ||
         parseInt(channel?.currentUserMembership?.last_read_message_id, 10) <=
-        busData.chat_message_id
+          busData.chat_message_id
       ) {
         channel.currentUserMembership.last_read_message_id =
           busData.chat_message_id;
