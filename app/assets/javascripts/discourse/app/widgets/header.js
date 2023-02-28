@@ -13,6 +13,7 @@ import { logSearchLinkClick } from "discourse/lib/search";
 import RenderGlimmer from "discourse/widgets/render-glimmer";
 import { hbs } from "ember-cli-htmlbars";
 import { hideUserTip } from "discourse/lib/user-tips";
+import { registerWidgetShim } from "discourse/widgets/render-glimmer";
 
 let _extraHeaderIcons = [];
 
@@ -422,6 +423,12 @@ createWidget("revamped-user-menu-wrapper", {
     this.closeUserMenu();
   },
 });
+
+registerWidgetShim(
+  "glimmer-search-menu",
+  "div",
+  hbs`<SearchMenu @inTopicContext={{@data.inTopicContext}}/>`
+);
 
 export default createWidget("header", {
   tagName: "header.d-header.clearfix",

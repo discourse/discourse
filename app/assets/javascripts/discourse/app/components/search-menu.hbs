@@ -1,1 +1,8 @@
-<SearchMenu::MenuPanel />
+<div class="search-menu" aria-live="polite">
+  <MenuPanel @maxWidth={{500}}>
+    <SearchMenu::MenuPanelContents
+      @inTopicContext={{this.inTopicContext}}
+      @updateInTopicContext={{this.updateInTopicContext}}
+    />
+  </MenuPanel>
+</div>

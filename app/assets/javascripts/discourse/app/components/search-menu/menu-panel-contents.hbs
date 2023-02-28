@@ -1,0 +1,19 @@
+{{#if @inTopicContext}}
+  <DButton
+    @icon="times"
+    @label="search.in_this_topic"
+    @title="search.in_this_topic_tooltip"
+    @className="btn btn-small search-context"
+    @action={{this.clearTopicContext}}
+    @iconRight={{true}}
+  />
+{{else if @inPMInboxContext}}
+  <DButton
+    @icon="times"
+    @label="search.in_messages"
+    @title="search.in_messages_tooltip"
+    @className="btn btn-small search-context"
+    @action={{this.clearPMInboxContext}}
+    @iconRight={{true}}
+  />
+{{/if}}

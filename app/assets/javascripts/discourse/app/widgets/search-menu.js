@@ -17,8 +17,6 @@ import userSearch from "discourse/lib/user-search";
 import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
 import { cancel } from "@ember/runloop";
 import I18n from "I18n";
-import { hbs } from "ember-cli-htmlbars";
-import { registerWidgetShim } from "discourse/widgets/render-glimmer";
 
 const CATEGORY_SLUG_REGEXP = /(\#[a-zA-Z0-9\-:]*)$/gi;
 const USERNAME_REGEXP = /(\@[a-zA-Z0-9\-\_]*)$/gi;
@@ -595,9 +593,3 @@ createWidget("browser-search-tip", {
     ];
   },
 });
-
-registerWidgetShim(
-  "glimmer-search-menu",
-  "div.search-menu",
-  hbs`<SearchMenu />`
-);
