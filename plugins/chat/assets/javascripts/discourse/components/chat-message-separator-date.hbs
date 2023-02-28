@@ -1,6 +1,9 @@
 {{#if @message.firstMessageOfTheDayAt}}
-  <div class={{concat-class "chat-message-separator-date"}}>
-    <div class="chat-message-separator__text-container">
+  <div class="chat-message-separator-date">
+    <div
+      class="chat-message-separator__text-container"
+      {{chat/track-message-separator-date}}
+    >
       <span class="chat-message-separator__text">
         {{@message.firstMessageOfTheDayAt}}
       </span>

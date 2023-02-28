@@ -6,7 +6,7 @@
 >
   <div class="chat-message-actions">
     {{#if this.chatStateManager.isFullPageActive}}
-      {{#each @emojiReactions as |reaction|}}
+      {{#each @emojiReactions key="emoji" as |reaction|}}
         <ChatMessageReaction
           @reaction={{reaction}}
           @react={{@messageActions.react}}

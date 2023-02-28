@@ -75,6 +75,7 @@
 
     & + .chat-message-separator__line-container {
       padding: 20px 0;
+      box-sizing: border-box;
 
       .chat-message-separator__line {
         border-top: 1px solid var(--secondary-high);

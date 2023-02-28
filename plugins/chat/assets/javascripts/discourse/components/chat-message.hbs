@@ -49,7 +49,6 @@
   {{on "mouseleave" (fn @onHoverMessage null (hash desktopOnly=true))}}
   class={{concat-class
     "chat-message-container"
-    (if @isHovered "is-hovered")
     (if @selectingMessages "selecting-messages")
   }}
   data-id={{@message.id}}

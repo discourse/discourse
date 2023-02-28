@@ -457,6 +457,7 @@ export default class ChatLivePane extends Component {
   onVisibleMessage(message) {
     message.visible = true;
     this.updateLastReadMessage(message);
+    this.#computeSeparators(message);
   }
 
   @action
@@ -1276,5 +1277,28 @@ export default class ChatLivePane extends Component {
       this.appEvents.trigger("chat:insert-text", key);
       composer.focus();
     }
+  }
+
+  #computeSeparators() {
+    schedule("afterRender", () => {
+      const dates = this._scrollerEl.querySelectorAll(
+        ".chat-message-separator-date"
+      );
+      const scrollHeight = document.querySelector(
+        ".chat-messages-scroll"
+      ).scrollHeight;
+
+      const reversedDates = [...dates].reverse();
+      reversedDates.forEach((date, index) => {
+        if (index > 0) {
+          date.style.bottom =
+            scrollHeight - reversedDates[index - 1].offsetTop + "px";
+        } else {
+          date.style.bottom = 0;
+        }
+
+        date.style.top = date.nextElementSibling.offsetTop + "px";
+      });
+    });
   }
 }
