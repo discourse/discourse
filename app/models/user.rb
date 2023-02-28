@@ -2128,10 +2128,7 @@ class User < ActiveRecord::Base
           badges.find do |badge|
             badge.allow_title? && (badge.display_name == title || badge.name == title)
           end
-      user_profile.update(
-        badge_granted_title: badge_matching_title.present?,
-        granted_title_badge_id: badge_matching_title&.id,
-      )
+      user_profile.update!(granted_title_badge_id: badge_matching_title&.id)
     end
   end
 

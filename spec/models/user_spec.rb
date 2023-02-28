@@ -2644,24 +2644,22 @@ RSpec.describe User do
   describe "#title=" do
     fab!(:badge) { Fabricate(:badge, name: "Badge", allow_title: false) }
 
-    it "sets badge_granted_title correctly" do
+    it "sets granted_title_badge_id correctly" do
       BadgeGranter.grant(badge, user)
 
       user.update!(title: badge.name)
-      expect(user.user_profile.reload.badge_granted_title).to eq(false)
+      expect(user.user_profile.reload.granted_title_badge_id).to be_nil
 
       user.update!(title: "Custom")
-      expect(user.user_profile.reload.badge_granted_title).to eq(false)
+      expect(user.user_profile.reload.granted_title_badge_id).to be_nil
 
       badge.update!(allow_title: true)
       user.badges.reload
       user.update!(title: badge.name)
-      expect(user.user_profile.reload.badge_granted_title).to eq(true)
       expect(user.user_profile.reload.granted_title_badge_id).to eq(badge.id)
 
       user.update!(title: nil)
-      expect(user.user_profile.reload.badge_granted_title).to eq(false)
-      expect(user.user_profile.granted_title_badge_id).to eq(nil)
+      expect(user.user_profile.granted_title_badge_id).to be_nil
     end
 
     context "when a custom badge name has been set and it matches the title" do
@@ -2671,12 +2669,11 @@ RSpec.describe User do
         TranslationOverride.upsert!(I18n.locale, Badge.i18n_key(badge.name), customized_badge_name)
       end
 
-      it "sets badge_granted_title correctly" do
+      it "sets granted_title_badge_id correctly" do
         BadgeGranter.grant(badge, user)
 
         badge.update!(allow_title: true)
         user.update!(title: customized_badge_name)
-        expect(user.user_profile.reload.badge_granted_title).to eq(true)
         expect(user.user_profile.reload.granted_title_badge_id).to eq(badge.id)
       end
 
