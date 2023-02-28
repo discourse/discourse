@@ -9,7 +9,7 @@ import discourseDebounce from "discourse-common/lib/debounce";
 import EmberObject, { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { cancel, next, schedule } from "@ember/runloop";
+import { cancel, next, schedule, throttle } from "@ember/runloop";
 import discourseLater from "discourse-common/lib/later";
 import { inject as service } from "@ember/service";
 import { Promise } from "rsvp";
@@ -128,13 +128,7 @@ export default class ChatLivePane extends Component {
 
   @bind
   onScrollHandler(event) {
-    discourseDebounce(
-      this,
-      this.onScroll,
-      event,
-      SCROLL_HANDLER_THROTTLE_MS,
-      false
-    );
+    throttle(this, this.onScroll, event, SCROLL_HANDLER_THROTTLE_MS, false);
   }
 
   @bind
