@@ -3,6 +3,22 @@
 module Chat
   module Service
     module Actions
+      # There is significant complexity around category channel permissions,
+      # since they are inferred from [CategoryGroup] records and their corresponding
+      # permission types.
+      #
+      # To be able to join and chat in a channel, a user must either be staff,
+      # or be in a group that has either `full` or `create_post` permissions
+      # via [CategoryGroup].
+      #
+      # However, there is an edge case. If there are no [CategoryGroup] records
+      # for a given category, this means that the [Group::AUTO_GROUPS[:everyone]]
+      # group has `full` access to the channel, therefore everyone can post in
+      # the chat channel (so long as they are in one of the `SiteSetting.chat_allowed_groups`)
+      #
+      # Here, we can efficiently query the channel category permissions and figure
+      # out which of the users provided should have their [UserChatChannelMembership]
+      # records removed based on those security cases.
       class CalculateMembershipsForRemoval
         def self.call(scoped_users:, channel_ids: nil)
           channel_permissions_map =
