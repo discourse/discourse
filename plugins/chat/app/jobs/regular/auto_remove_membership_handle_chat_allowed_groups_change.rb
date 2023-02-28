@@ -5,9 +5,7 @@ module Jobs
     def execute(args)
       return if !SiteSetting.chat_enabled
 
-      Chat::Service::AutoRemove::HandleChatAllowedGroupsChange.call(
-        new_allowed_groups: args[:new_allowed_groups],
-      )
+      Chat::Service::AutoRemove::HandleChatAllowedGroupsChange.call(**args)
     end
   end
 end

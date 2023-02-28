@@ -5,7 +5,7 @@ module Jobs
     def execute(args)
       return if !SiteSetting.chat_enabled
 
-      Chat::Service::AutoRemove::HandleCategoryUpdated.call(category_id: args[:category_id])
+      Chat::Service::AutoRemove::HandleCategoryUpdated.call(**args)
     end
   end
 end

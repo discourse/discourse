@@ -5,7 +5,7 @@ module Jobs
     def execute(args)
       return if !SiteSetting.chat_enabled
 
-      Chat::Service::AutoRemove::HandleUserRemovedFromGroup.call(user_id: args[:user_id])
+      Chat::Service::AutoRemove::HandleUserRemovedFromGroup.call(**args)
     end
   end
 end

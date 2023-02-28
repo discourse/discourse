@@ -3,6 +3,21 @@
 module Chat
   module Service
     module AutoRemove
+      # Fired from [Jobs::AutoRemoveMembershipHandleUserRemovedFromGroup], which
+      # in turn is enqueued whenever the [DiscourseEvent] for :user_removed_from_group
+      # is triggered.
+      #
+      # Staff users will never be affected by this, they can always chat regardless
+      # of group permissions.
+      #
+      # Since this could have potential wide-ranging impact, we have to check:
+      #   * The chat_allowed_groups [SiteSetting], and if the scoped user
+      #     is still allowed to use public chat channels based on this setting.
+      #   * The channel permissions of all the category chat channels the user
+      #     is a part of, based on [CategoryGroup] records
+      #
+      # Direct message channel memberships are intentionally left alone,
+      # these are private communications between two people.
       class HandleUserRemovedFromGroup
         include Service::Base
 
@@ -48,45 +63,14 @@ module Chat
         def remove_from_private_channels(user:, **)
           return noop if user.staff?
 
-          # get a map of all groups that are allowed to access the channels the
-          # user is a member of and their permission level. for channels where
-          # the user is not a member of any valid groups anymore, kick them out
-          channel_group_permission_map = DB.query(<<~SQL)
-            SELECT chat_channels.id AS channel_id,
-                   chat_channels.chatable_id AS category_id,
-                   category_groups.group_id,
-                   category_groups.permission_type
-            FROM chat_channels
-            INNER JOIN categories ON categories.id = chat_channels.chatable_id AND chat_channels.chatable_type = 'Category'
-            INNER JOIN category_groups ON category_groups.category_id = categories.id
-          SQL
+          memberships_to_remove =
+            Chat::Service::Actions::CalculateMembershipsForRemoval.call(scoped_users: [user])
 
-          user_memberships =
-            UserChatChannelMembership.where(
-              chat_channel_id: channel_group_permission_map.map(&:channel_id).uniq,
-              user: user,
-            )
-
-          membership_ids_to_delete = []
-          user_memberships.each do |membership|
-            # if the user has permission to see + reply with any of the channel groups,
-            # then they are safe
-            see_and_reply_group_ids =
-              channel_group_permission_map
-                .select { |cgm| cgm.channel_id == membership.chat_channel_id }
-                .select { |cgm| cgm.permission_type < CategoryGroup.permission_types[:readonly] }
-                .map(&:group_id)
-            next if user.in_any_groups?(see_and_reply_group_ids)
-
-            membership_ids_to_delete << membership.id
-          end
-
-          return noop if membership_ids_to_delete.empty?
-
-          memberships_to_remove = UserChatChannelMembership.where(id: membership_ids_to_delete)
+          return noop if memberships_to_remove.empty?
 
           users_removed_map =
-            memberships_to_remove
+            UserChatChannelMembership
+              .where(id: memberships_to_remove)
               .destroy_all
               .each_with_object({}) do |obj, hash|
                 hash[obj.chat_channel_id] = [] if !hash.key? obj.chat_channel_id

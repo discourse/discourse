@@ -3,7 +3,16 @@
 module Chat
   module Service
     module Actions
+      # All of the handlers that auto-remove users from chat
+      # (under services/auto_remove) need to publish which users
+      # were removed and from which channel, as well as logging
+      # this in staff actions so its obvious why these users were
+      # removed.
       class AutoRemovedUserPublisher
+        # @param [Symbol] event_type What caused the users to be removed,
+        #   each handler will define this, e.g. category_updated, user_removed_from_group
+        # @param [Hash] users_removed_map A hash with channel_id as its keys and an
+        #   array of user_ids who were removed from the channel.
         def self.call(event_type:, users_removed_map:)
           return if users_removed_map.empty?
 

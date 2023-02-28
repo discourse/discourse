@@ -3,6 +3,19 @@
 module Chat
   module Service
     module AutoRemove
+      # Fired from [Jobs::AutoRemoveMembershipHandleChatAllowedGroupsChange], which
+      # in turn is enqueued whenever the [DiscourseEvent] for :site_setting_changed
+      # is triggered for the chat_allowed_groups setting.
+      #
+      # If any of the chat_allowed_groups is the everyone auto group then nothing
+      # needs to be done.
+      #
+      # Otherwise, if there are no longer any chat_allowed_groups, we have to
+      # remove all non-admin users from category channels. Otherwise we just
+      # remove the ones who are not in any of the chat_allowed_groups.
+      #
+      # Direct message channel memberships are intentionally left alone,
+      # these are private communications between two people.
       class HandleChatAllowedGroupsChange
         include Service::Base
 

@@ -35,17 +35,17 @@ RSpec.describe Chat::Service::AutoRemove::HandleCategoryUpdated do
         updated_category.category_groups.delete_all
       end
 
-      it "kicks all regular users from the category's channels" do
+      it "does not kick regular users since the default permission is Everyone (full)" do
         expect(result).to be_a_success
         expect(
           UserChatChannelMembership.where(
             user: [user_1, user_2],
             chat_channel: [channel_1, channel_2],
           ).count,
-        ).to eq(0)
+        ).to eq(4)
       end
 
-      it "does not kick staff users from the category's channels" do
+      it "does not kick staff users since the default permission is Everyone (full)" do
         expect(result).to be_a_success
         expect(
           UserChatChannelMembership.where(

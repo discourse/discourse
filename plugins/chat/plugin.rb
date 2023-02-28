@@ -250,6 +250,7 @@ after_initialize do
   load File.expand_path("../app/services/auto_remove/handle_category_updated.rb", __FILE__)
   load File.expand_path("../app/services/auto_remove/handle_destroyed_group.rb", __FILE__)
   load File.expand_path("../app/services/actions/auto_removed_user_publisher.rb", __FILE__)
+  load File.expand_path("../app/services/actions/calculate_memberships_for_removal.rb", __FILE__)
   load File.expand_path("../app/controllers/api_controller.rb", __FILE__)
   load File.expand_path("../app/controllers/api/chat_channels_controller.rb", __FILE__)
   load File.expand_path("../app/controllers/api/chat_current_user_channels_controller.rb", __FILE__)
