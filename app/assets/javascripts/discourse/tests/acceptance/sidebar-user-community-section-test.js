@@ -583,6 +583,39 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     );
   });
 
+  test("my posts changes its text when drafts are present and new new view experiment is enabled", async function (assert) {
+    updateCurrentUser({
+      sidebar_list_destination: "unread_new",
+      new_new_view_enabled: true,
+    });
+    await visit("/");
+
+    assert.strictEqual(
+      query(".sidebar-section-link-my-posts").textContent.trim(),
+      I18n.t("sidebar.sections.community.links.my_posts.content"),
+      "displays the default text when no drafts are present"
+    );
+
+    await publishToMessageBus(`/user-drafts/${loggedInUser().id}`, {
+      draft_count: 1,
+    });
+
+    assert.strictEqual(
+      query(
+        ".sidebar-section-link-my-posts .sidebar-section-link-content-text"
+      ).textContent.trim(),
+      I18n.t("sidebar.sections.community.links.my_posts.content_drafts"),
+      "displays the text that's appropriate for when drafts are present"
+    );
+    assert.strictEqual(
+      query(
+        ".sidebar-section-link-my-posts .sidebar-section-link-content-badge"
+      ).textContent.trim(),
+      "1",
+      "displays the draft count with no text"
+    );
+  });
+
   test("visiting top route", async function (assert) {
     await visit("/top");
 
