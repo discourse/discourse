@@ -1034,8 +1034,10 @@ pre {
     min-height: 0;
     font-size: var(--font-down-2);
     opacity: 0.7;
+    cursor: pointer;
 
     &.action-complete {
+      cursor: auto;
       .d-icon {
         color: var(--tertiary);
       }
