@@ -7,7 +7,6 @@ import { ajax } from "discourse/lib/ajax";
 import { categoryLinkHTML } from "discourse/helpers/category-link";
 import discourseComputed, { bind } from "discourse-common/utils/decorators";
 import { htmlSafe } from "@ember/template";
-import { on } from "@ember/object/evented";
 import showModal from "discourse/lib/show-modal";
 import { warn } from "@ember/debug";
 import { action } from "@ember/object";
