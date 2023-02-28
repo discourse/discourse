@@ -3297,7 +3297,6 @@ es:
       back: "Volver a la categoría"
       general: "General"
       settings: "Ajustes"
-      topic_template: "Plantilla de tema"
       tags: "Etiquetas"
       tags_allowed_tags: "Restringir estas etiquetas a esta categoría:"
       tags_allowed_tag_groups: "Restringir estos grupos de etiquetas a esta categoría:"
@@ -5589,10 +5588,8 @@ es:
       embedding:
         get_started: "Si quieres insertar Discourse en otro sitio web, empieza por añadir su host."
         confirm_delete: "¿Seguro que quieres eliminar este host?"
-        sample: "Incluye el siguiente código HTML en tu página para crear e incrustar en ella temas de Discourse. Sustituye <b>REPLACE_ME</b> con la dirección URL real de la página en la que estés incrustando el código."
         title: "Incrustado"
         host: "Hosts permitidos"
-        class_name: "Nombre de clase"
         allowed_paths: "Lista de rutas permitidas"
         edit: "editar"
         category: "Publicar en categoría"

@@ -2811,7 +2811,6 @@ fa_IR:
       back: "بازگشت به دسته‌بندی"
       general: "عمومی"
       settings: "تنظیمات"
-      topic_template: "قالب موضوع"
       tags: "برچسب‌ها"
       tags_allowed_tags: "محدودکردن این برچسب‌ها به این دسته‌بندی:"
       tags_placeholder: "(اختیاری) فهرست برچسب‌های قابل استفاده"
@@ -3204,9 +3203,7 @@ fa_IR:
       granted:
         one: "%{count} اعطا شده"
         other: "%{count} اعطا شده"
-      granted_with_count:
-        one: '<a href="%{badgeUrl}" title="%{count} granted" class="grant-count">%{count}x</a> <span class="grant-text">اعطا شده</span>'
-        other: '<a href="%{badgeUrl}" title="%{count} granted" class="grant-count">%{count}x</a> <span class="grant-text">اعطا شده</span>'
+      awarded: اعطا شده
       select_badge_for_title: انتخاب یک نشان برای استفاده در عنوان خود
       none: "(هیچی)"
       successfully_granted: "%{badge} به %{username} با موفقیت اعطا شد"
@@ -3585,6 +3582,12 @@ fa_IR:
           global: جهانی
           action: اقدام
           descriptions:
+            topics:
+              delete: حذف موضوع.
+            posts:
+              delete: حذف نوشته.
+            tags:
+              list: فهرست برچسب‌ها.
             user_status:
               read: خواندن وضعیت کاربر.
               update: به‌روزرسانی وضعیت کاربر.
@@ -3595,6 +3598,9 @@ fa_IR:
               list_user_badges: فهرست نشان‌های کاربر.
               assign_badge_to_user: یک نشان را به یک کاربر اختصاص دهید.
               revoke_badge_from_user: یک نشان را از کاربر بگیرید.
+            groups:
+              manage_groups: اعضای گروه را فهرست، اضافه و حذف کنید.
+              administer_groups: گروه‌ها را فهرست، نمایش، ایجاد، به‌روزرسانی و حذف کنید.
       web_hooks:
         title: "webhook ها"
         none: "در حال حاضر webhook‌ی وجود ندارد"
@@ -4515,7 +4521,6 @@ fa_IR:
         confirm_delete: "آیا مطمئن هستید که میخواهید آن میزبان را حذف کنید؟"
         title: "جاسازی"
         host: "میزبان های مجاز"
-        class_name: "نام کلاس"
         edit: "ویرایش"
         category: "ارسال به دسته بندی"
         add_host: "اضافه کردن میزبان"

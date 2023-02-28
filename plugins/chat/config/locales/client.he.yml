@@ -111,18 +111,57 @@ he:
       new_messages: "הודעות חדשות"
       mention_warning:
         dismiss: "התעלמות"
+        cannot_see: "ל־%{username} אין גישה לערוץ הזה ולא נשלחה התראה."
+        cannot_see_multiple:
+          one: "ל־%{username} ולעוד %{count} אין גישה לערוץ הזה ולא נשלחו הודעות."
+          two: "ל־%{username} ולעוד %{count} אין גישה לערוץ הזה ולא נשלחו הודעות."
+          many: "ל־%{username} ולעוד %{count} אין גישה לערוץ הזה ולא נשלחו הודעות."
+          other: "ל־%{username} ולעוד %{count} אין גישה לערוץ הזה ולא נשלחו הודעות."
         invitations_sent:
           one: "נשלחה הזמנה"
           two: "נשלחו הזמנות"
           many: "נשלחו הזמנות"
           other: "נשלחו הזמנות"
         invite: "הזמנה לערוץ"
+        without_membership: "לא הצטרפו לערוץ הזה: %{username}."
+        without_membership_multiple:
+          one: "לא הצטרפו לערוץ הזה: %{username} ועוד %{count}."
+          two: "לא הצטרפו לערוץ הזה: %{username} ועוד %{count}."
+          many: "לא הצטרפו לערוץ הזה: %{username} ועוד %{count}."
+          other: "לא הצטרפו לערוץ הזה: %{username} ועוד %{count}."
         group_mentions_disabled: "אזכורים אסורים בקבוצה %{group_name}."
+        group_mentions_disabled_multiple:
+          one: "%{group_name} וקבוצה %{count} נוספת לא מרשות אזכורים."
+          two: "%{group_name} ו־%{count} קבוצות נוספת לא מרשות אזכורים."
+          many: "%{group_name} ו־%{count} קבוצות נוספת לא מרשות אזכורים."
+          other: "%{group_name} ו־%{count} קבוצות נוספת לא מרשות אזכורים."
+        too_many_members: "בקבוצה %{group_name} יש יותר מדי חברים. לא נשלחו התראות."
+        too_many_members_multiple:
+          one: "בקבוצה %{group_name} וב־%{count} נוספת יש יותר מדי חברים. לא נשלחו התראות."
+          two: "בקבוצה %{group_name} וב־%{count} נוספות יש יותר מדי חברים. לא נשלחו התראות."
+          many: "בקבוצה %{group_name} וב־%{count} נוספות יש יותר מדי חברים. לא נשלחו התראות."
+          other: "בקבוצה %{group_name} וב־%{count} נוספות יש יותר מדי חברים. לא נשלחו התראות."
         groups:
           header:
             some: "חלק מהמשתמשים לא יקבלו התראה"
             all: "אף אחד לא יקבל התראה"
           unreachable_1: "@אזכורים אסורים בקבוצה %{group}."
+          unreachable_2: "‎@%{group1} ו־‎@%{group2} לא מרשות אזכורים."
+          unreachable_multiple:
+            one: "‎@%{group} וקבוצה %{count} נוספת לא מרשות אזכורים."
+            two: "‎@%{group} ו־%{count} קבוצות נוספת לא מרשות אזכורים."
+            many: "‎@%{group} ו־%{count} קבוצות נוספת לא מרשות אזכורים."
+            other: "‎@%{group} ו־%{count} קבוצות נוספת לא מרשות אזכורים."
+        too_many_mentions:
+          one: "ההודעה חורגת ממגבלת ההתראות של אזכור %{count}."
+          two: "ההודעה חורגת ממגבלת ההתראות של %{count} אזכורים."
+          many: "ההודעה חורגת ממגבלת ההתראות של %{count} אזכורים."
+          other: "ההודעה חורגת ממגבלת ההתראות של %{count} אזכורים."
+        too_many_mentions_admin:
+          one: 'הודעה זו חורגת מ<a href="%{siteSettingUrl}" target="_blank">מגבלת ההתראות</a> על סך אזכור %{count}.'
+          two: 'הודעה זו חורגת מ<a href="%{siteSettingUrl}" target="_blank">מגבלת ההתראות</a> על סך %{count} אזכורים.'
+          many: 'הודעה זו חורגת מ<a href="%{siteSettingUrl}" target="_blank">מגבלת ההתראות</a> על סך %{count} אזכורים.'
+          other: 'הודעה זו חורגת מ<a href="%{siteSettingUrl}" target="_blank">מגבלת ההתראות</a> על סך %{count} אזכורים.'
       aria_roles:
         header: "כותרת צ׳אט"
         composer: "כותב צ׳אט"
@@ -139,7 +178,15 @@ he:
       close_full_page: "סגירת צ׳אט במסך מלא"
       open_message: "פתיחת הודעה בצ׳אט"
       placeholder_self: "לקשקש משהו"
+      placeholder_channel: "צ׳אט עם %{channelName}"
+      placeholder_users: "צ׳אט עם %{commaSeparatedNames}"
+      placeholder_new_message_disallowed:
+        archived: "הערוץ הועבר לארכיון, אי אפשר לשלוח אליו הודעות חדשות כעת."
+        closed: "הערוץ סגור, אי אפשר לשלוח אליו הודעות חדשות כעת."
+        read_only: "הערוץ לקריאה בלבד, אי אפשר לשלוח אליו הודעות חדשות כעת."
       placeholder_silenced: "אין לך אפשרות לשלוח הודעות כרגע."
+      placeholder_start_conversation: "פציחה בשיחה עם…"
+      placeholder_start_conversation_users: "פציחה בשיחה עם %{commaSeparatedUsernames}"
       remove_upload: "הסרת קובץ"
       react: "להגיב עם אמוג׳י"
       reply: "להגיב"
@@ -242,10 +289,42 @@ he:
       create_channel:
         auto_join_users:
           public_category_warning: "%{category} היא קטגוריה ציבורית. להוסיף את כל המשתמשים שהיו פעילים לאחרונה לערוץ הזה?"
+          warning_1_group:
+            one: "להוסיף משתמש %{count} מהקבוצה %{group} אוטומטית?"
+            two: "להוסיף %{count} משתמשים מהקבוצה %{group} אוטומטית?"
+            many: "להוסיף %{count} משתמשים מהקבוצה %{group} אוטומטית?"
+            other: "להוסיף %{count} משתמשים מהקבוצה %{group} אוטומטית?"
+          warning_2_groups:
+            one: "להוסיף משתמש %{count} מהקבוצות %{group1} וגם %{group2} אוטומטית?"
+            two: "להוסיף %{count} משתמשים מהקבוצות %{group1} וגם %{group2} אוטומטית?"
+            many: "להוסיף %{count} משתמשים מהקבוצות %{group1} וגם %{group2} אוטומטית?"
+            other: "להוסיף %{count} משתמשים מהקבוצות %{group1} וגם %{group2} אוטומטית?"
+          warning_multiple_groups_MF: |
+            { groupCount, plural,
+                one {
+                      { userCount, plural,
+                          one {להוסיף אוטומטית משתמש {userCount} מהקבוצה {groupName} ומ־{groupCount} נוספת?}
+                        other {להוסיף אוטומטית {userCount} משתמשים מהקבוצה {groupName} ומ־{groupCount} נוספת?}
+                      }
+                    }
+              other {
+                      { userCount, plural,
+                          one {להוסיף אוטומטית משתמש {userCount} מהקבוצה {groupName} ומ־{groupCount} נוספות?}
+                        other {להוסיף אוטומטית {userCount} משתמשים מהקבוצה {groupName} ומ־{groupCount} נוספות?}
+                      }
+                    }
+            }
         choose_category:
           label: "נא לבחור קטגוריה"
           none: "נא לבחור אחד…"
           default_hint: ניתן לנהל את הגישה באמצעות ביקור ב<a href=%{link} target="_blank">הגדרות האבטחה של %{category}</a>
+          hint_1_group: 'למשתמשים ב־%{group} תהיה גישה לערוץ הזה בהתאם ל<a href="%{settingLink}" target="_blank">הגדרות האבטחה</a>'
+          hint_2_groups: 'למשתמשים ב־%{group1} וב־%{group2} תהיה גישה לערוץ הזה בהתאם ל<a href="%{settingLink}" target="_blank">הגדרות האבטחה</a>'
+          hint_multiple_groups:
+            one: 'למשתמשים ב־%{group} ובקבוצה %{count} נוספת תהיה גישה לערוץ הזה בהתאם ל<a href="%{settingLink}" target="_blank">הגדרות האבטחה</a>'
+            two: 'למשתמשים ב־%{group} וב־%{count} קבוצות נוספות תהיה גישה לערוץ הזה בהתאם ל<a href="%{settingLink}" target="_blank">הגדרות האבטחה</a>'
+            many: 'למשתמשים ב־%{group} וב־%{count} קבוצות נוספות תהיה גישה לערוץ הזה בהתאם ל<a href="%{settingLink}" target="_blank">הגדרות האבטחה</a>'
+            other: 'למשתמשים ב־%{group} וב־%{count} קבוצות נוספות תהיה גישה לערוץ הזה בהתאם ל<a href="%{settingLink}" target="_blank">הגדרות האבטחה</a>'
         create: "יצירת ערוץ"
         description: "תיאור (רשות)"
         name: "שם הערוץ"
@@ -261,7 +340,18 @@ he:
         only_you: "הגבת עם :%{emoji}:"
         you_and_single_user: "הגבת יחד עם %{username} את האמוג׳י :%{emoji}:"
         you_and_multiple_users: "הגבת יחד עם %{commaSeparatedUsernames} ו־%{username} את האמוג׳י :%{emoji}:"
+        you_multiple_users_and_more:
+          one: "הגבת יחד עם %{commaSeparatedUsernames} ועוד %{count} את האמוג׳י :%{emoji}:"
+          two: "הגבת יחד עם %{commaSeparatedUsernames} ו־%{count} נוספים את האמוג׳י :%{emoji}:"
+          many: "הגבת יחד עם %{commaSeparatedUsernames} ו־%{count} נוספים את האמוג׳י :%{emoji}:"
+          other: "הגבת יחד עם %{commaSeparatedUsernames} ו־%{count} נוספים את האמוג׳י :%{emoji}:"
         single_user: "האמוג׳י שנוסף ע״י %{username} הוא :%{emoji}:"
+        multiple_users: "%{commaSeparatedUsernames} ו־%{username} הגיבו את האמוג׳י :%{emoji}:"
+        multiple_users_and_more:
+          one: "%{commaSeparatedUsernames} ועוד %{count} הגיבו את האמוג׳י :%{emoji}:"
+          two: "%{commaSeparatedUsernames} ועוד %{count} הגיבו את האמוג׳י :%{emoji}:"
+          many: "%{commaSeparatedUsernames} ועוד %{count} הגיבו את האמוג׳י :%{emoji}:"
+          other: "%{commaSeparatedUsernames} ועוד %{count} הגיבו את האמוג׳י :%{emoji}:"
       composer:
         toggle_toolbar: "החלפת מצב סרגל כלים"
         italic_text: "טקסט נטוי"
