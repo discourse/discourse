@@ -153,8 +153,7 @@ describe Chat::ChatMessageCreator do
       user1_mention = user1.chat_mentions.where(chat_message: message).first
       expect(user1_mention).to be_nil
 
-      system_user_mention =
-        User.where(id: -1).first.chat_mentions.where(chat_message: message).first
+      system_user_mention = Discourse.system_user.chat_mentions.where(chat_message: message).first
       expect(system_user_mention).to be_nil
 
       user2_mention = user2.chat_mentions.where(chat_message: message).first
