@@ -3982,7 +3982,6 @@ ar:
       back: "الرجوع إلى الفئة"
       general: "عام"
       settings: "الإعدادات"
-      topic_template: "نموذج الموضوع"
       tags: "الوسوم"
       tags_allowed_tags: "حصر هذه الوسوم على هذه الفئة:"
       tags_allowed_tag_groups: "حصر مجموعات الوسوم هذه على هذه الفئة:"
@@ -6448,10 +6447,8 @@ ar:
       embedding:
         get_started: "إذا كنت تريد تضمين Discourse في موقع آخر، فابدأ بإضافة مضيفه."
         confirm_delete: "هل تريد بالتأكيد حذف هذا المضيف؟"
-        sample: "الصق رمز HTML التالي في موقعك لإنشاء موضوعات Discourse وتضمينها. استبدل <b>REPLACE_ME</b> بعنوان URL الأساسي للصفحة التي تضمِّنه فيها."
         title: "التضمين"
         host: "المضيفون المسموح بهم"
-        class_name: "اسم الفئة"
         allowed_paths: "قائمة السماح بالمسارات"
         edit: "تعديل"
         category: "النشر في الفئة"

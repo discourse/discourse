@@ -399,7 +399,7 @@ de:
   too_late_to_edit: "Dieser Beitrag wurde vor zu langer Zeit erstellt. Er kann nicht mehr bearbeitet oder gelöscht werden."
   edit_conflict: "Dieser Beitrag wurde von einem anderen Benutzer bearbeitet und deine Änderungen können nicht länger gespeichert werden."
   revert_version_same: "Die aktuelle Version entspricht der Version, zu der du zurückkehren möchtest."
-  reverted_to_version: "auf Version #%{version}zurückgesetzt"
+  reverted_to_version: "auf Version #%{version} zurückgesetzt"
   cannot_edit_on_slow_mode: "Dieses Thema befindet sich im langsamen Modus. Um durchdachte, überlegte Diskussionen anzuregen, ist das Bearbeiten alter Beiträge in diesem Thema während des langsamen Modus nicht zulässig."
   excerpt_image: "Bild"
   bookmarks:
@@ -2147,6 +2147,7 @@ de:
     default_sidebar_tags: "Ausgewählte Schlagwörter werden standardmäßig im Abschnitt „Schlagwörter“ der Seitenleiste angezeigt."
     enable_new_notifications_menu: "Aktiviert das neue Benachrichtigungsmenü für das alte Navigationsmenü."
     enable_experimental_hashtag_autocomplete: "EXPERIMENTELL: Das neue #hashtag-Autovervollständigungssystem für Kategorien und Schlagwörter, das das ausgewählte Element anders darstellt und eine bessere Suche aufweist, verwenden"
+    experimental_new_new_view_groups: "EXPERIMENTELL: Aktiviere eine neue Themenliste, die ungelesene und neue Themen kombiniert, und verlinke den Link „Alles“ in der Seitenleiste darauf."
     errors:
       invalid_css_color: "Ungültige Farbe. Gib einen Farbnamen oder einen Hexadezimalwert ein."
       invalid_email: "Ungültige E-Mail-Adresse."

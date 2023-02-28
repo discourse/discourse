@@ -3331,7 +3331,7 @@ de:
       back: "Zurück zur Kategorie"
       general: "Allgemeines"
       settings: "Einstellungen"
-      topic_template: "Themenvorlage"
+      topic_template: "Vorlage"
       tags: "Schlagwörter"
       tags_allowed_tags: "Schlagwörter auf diese Kategorie einschränken:"
       tags_allowed_tag_groups: "Schlagwortgruppen auf diese Kategorie einschränken:"
@@ -3790,9 +3790,7 @@ de:
       granted:
         one: "%{count}-mal verliehen"
         other: "%{count}-mal verliehen"
-      granted_with_count:
-        one: '<a href="%{badgeUrl}" title="%{count} gewährt" class="grant-count">%{count}x</a> <span class="grant-text">gewährt</span>'
-        other: '<a href="%{badgeUrl}" title="%{count} gewährt" class="grant-count">%{count}x</a> <span class="grant-text">gewährt</span>'
+      awarded: prämiert
       select_badge_for_title: Wähle ein Abzeichen als deinen Titel aus
       none: "(keines)"
       successfully_granted: "%{badge} erfolgreich verliehen an %{username}"
@@ -4024,6 +4022,7 @@ de:
           save: "Speichern"
           delete: "Löschen"
           delete_confirm: "Bist du sicher, dass du diesen Abschnitt löschen willst?"
+          public: "Mache diesen Bereich öffentlich und für alle sichtbar"
           links:
             icon: "Symbol"
             name: "Name"
@@ -4338,10 +4337,14 @@ de:
               read: Lies ein Thema oder einen bestimmten Beitrag darin. RSS wird ebenfalls unterstützt.
               write: Erstelle ein neues Thema oder schreibe einen Beitrag zu einem bestehenden.
               update: Aktualisiere ein Thema. Ändere den Titel, die Kategorie, die Tags, den Status, den Archetyp, den featured_link usw.
+              delete: Ein Thema löschen.
               read_lists: Lies Themenlisten wie „Angesagt“, „Neu“, „Aktuell“ usw. RSS wird ebenfalls unterstützt.
               status: "Aktualisiere den Status eines Themas. Status: geschlossen, archiviert, sichtbar, angeheftet. Aktiviert: true, false. Gib hier und im Request Payload eine category_id an, um Statusänderungen nur für Themen dieser Kategorie zuzulassen."
             posts:
               edit: Bearbeite jeden Beitrag oder einen bestimmten.
+              delete: Einen Beitrag löschen.
+            tags:
+              list: Tags auflisten.
             categories:
               list: Eine Liste der Kategorien abrufen.
               show: Eine einzelne Kategorie nach ID abrufen.
@@ -4373,6 +4376,9 @@ de:
               list_user_badges: Abzeichen eines Benutzers auflisten.
               assign_badge_to_user: Einem Benutzer ein Abzeichen zuweisen.
               revoke_badge_from_user: Einem Benutzer ein Abzeichen entziehen.
+            groups:
+              manage_groups: Gruppenmitglieder auflisten, hinzufügen und entfernen.
+              administer_groups: Gruppen auflisten, anzeigen, erstellen, aktualisieren und löschen.
             search:
               show: Suche mit dem Endpunkt `/search.json?q=term`.
               query: Suche mit dem Endpunkt `/search/query?term=term`.
@@ -5049,6 +5055,9 @@ de:
             delete_group: "Gruppe löschen"
             watched_word_create: "beobachtetes Wort hinzufügen"
             watched_word_destroy: "beobachtetes Wort löschen"
+            create_public_sidebar_section: "Öffentlichen Seitenleistenbereich erstellen"
+            update_public_sidebar_section: "Öffentlichen Seitenleistenbereich aktualisieren"
+            destroy_public_sidebar_section: "Öffentlichen Seitenleistenbereich zerstören"
         screened_emails:
           title: "Gefilterte E-Mails"
           description: "Wenn jemand ein Konto erstellt, werden die folgenden E-Mail-Adressen überprüft und es wird die Registrierung blockiert oder eine andere Aktion ausgeführt."
@@ -5177,6 +5186,11 @@ de:
           dropdown: "Drop-down-Liste"
           upload: "Eine Datei hochladen"
           multiselect: "Mehrfachauswahl"
+        edit_category:
+          toggle_freeform: "Formularvorlage deaktiviert"
+          toggle_form_template: "Formularvorlage aktiviert"
+          select_template: "Formularvorlagen auswählen"
+          select_template_help: "Formularvorlagen hinzufügen/bearbeiten"
       impersonate:
         title: "Nutzersicht"
         help: "Benutze dieses Werkzeug, um zur Fehlersuche in die Rolle eines anderen Benutzers zu schlüpfen. Du musst dich abmelden, wenn du fertig bist."
@@ -5684,10 +5698,8 @@ de:
       embedding:
         get_started: "Wenn du Discourse in einer anderen Website einbetten möchtest, beginne mit dem Hinzufügen des Hosts."
         confirm_delete: "Möchtest du wirklich diesen Host löschen?"
-        sample: "Verwende den folgenden HTML-Code auf deiner Website, um Discourse-Themen zu erstellen und einzubetten. Ersetze <b>REPLACE_ME</b> mit der URL der Seite, auf der du den Inhalt einbettest."
         title: "Einbettung"
         host: "Erlaubte Hosts"
-        class_name: "Klassenname"
         allowed_paths: "Pfad-Positivliste"
         edit: "bearbeiten"
         category: "In Kategorie posten"

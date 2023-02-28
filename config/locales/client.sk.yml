@@ -1846,7 +1846,6 @@ sk:
       view: "Prezerať témy v kategórii"
       general: "Všeobecné"
       settings: "Nastavenia"
-      topic_template: "Formulár témy"
       tags: "Štítky"
       tags_placeholder: "(Voliteľné) zoznam povolených štítkov"
       tag_groups_placeholder: "(Voliteľné) zoznam povolených skupín štítkov"

@@ -3641,7 +3641,7 @@ he:
       back: "חזרה לקטגוריה"
       general: "כללי"
       settings: "הגדרות"
-      topic_template: "תבנית נושא"
+      topic_template: "תבנית"
       tags: "תגיות"
       tags_allowed_tags: "הגבלת התגיות האלו לקטגוריה הזו:"
       tags_allowed_tag_groups: "הגבלת קבוצות תגיות אלו לקטגוריה זו:"
@@ -4138,11 +4138,7 @@ he:
         two: "%{count} הוענקו"
         many: "%{count} הוענקו"
         other: "%{count} הוענקו"
-      granted_with_count:
-        one: '<span class="grant-text">הוענק</span> <a href="%{badgeUrl}" title="%{count} granted" class="grant-count">פעם %{count}</a>'
-        two: '<span class="grant-text">הוענק</span> <a href="%{badgeUrl}" title="%{count} granted" class="grant-count">%{count} פעמים</a>'
-        many: '<span class="grant-text">הוענק</span> <a href="%{badgeUrl}" title="%{count} granted" class="grant-count">%{count} פעמים</a>'
-        other: '<span class="grant-text">הוענק</span> <a href="%{badgeUrl}" title="%{count} granted" class="grant-count">%{count} פעמים</a>'
+      awarded: הוענק
       select_badge_for_title: נא לבחור עיטור לשימוש בכותרת שלך
       none: "(ללא)"
       successfully_granted: "העיטור %{badge} הוענק בהצלחה למשתמש %{username}"
@@ -4396,6 +4392,7 @@ he:
           save: "שמירה"
           delete: "מחיקה"
           delete_confirm: "למחוק את המקטע הזה?"
+          public: "להפוך את הסעיף הזה לציבורי וגלוי לכולם"
           links:
             icon: "סמליל"
             name: "שם"
@@ -4720,10 +4717,14 @@ he:
               read: קריאת נושא או פוסט מסוים בתוכו. יש גם תמיכה ב־RSS.
               write: יצירת נושא חדש או פרסום לאחד קיים.
               update: עדכון נושא. אפשר לערוך את הכותרת, הקטגוריה, התגיות, המצב, סוג שימוש, קישור מובילים וכו׳.
+              delete: מחיקת נושא.
               read_lists: לקרוא רשימת נושאים כמו מובילים, חדשים, אחרונים וכו׳. יש גם תמיכה ב־RSS.
               status: "עדכון מצב של נושא. מצב: סגור, ארכיון, גלוי, נעוץ. זמין: אמת, שקר. יש לציין כאן category_id (מזהה קטגוריה) ובמטען של הבקשה כדי לאפשר שינויי מצב בלבד על נושאים בקטגוריה הזאת."
             posts:
               edit: לערוך כל פוסט שהוא או אחד מסוים.
+              delete: מחיקת פוסט.
+            tags:
+              list: הצגת תגיות.
             categories:
               list: קבלת רשימת קטגוריות.
               show: קבלת קטגוריה יחידה לפי מזהה.
@@ -4755,6 +4756,9 @@ he:
               list_user_badges: הצגת עיטורי המשתמש.
               assign_badge_to_user: הקצאת עיטור למשתמש.
               revoke_badge_from_user: שלילת עיטור ממשתמש.
+            groups:
+              manage_groups: להציג, להוסיף ולהסיר חברים מהקבוצה.
+              administer_groups: להציג, לפרט, ליצור, לעדכן ולמחוק קבוצות.
             search:
               show: לחפש באמצעות נקודת הקצה ‎`/search.json?q=term`.
               query: לחפש באמצעות נקודת הקצה `‎/search/query?term=term`.
@@ -5437,6 +5441,9 @@ he:
             delete_group: "הסרת קבוצה"
             watched_word_create: "הוספת מילה בהשגחה"
             watched_word_destroy: "מחיקת מילה בהשגחה"
+            create_public_sidebar_section: "יצירת סעיף ציבורי בסרגל הצד"
+            update_public_sidebar_section: "עדכון סעיף ציבורי בסרגל הצד"
+            destroy_public_sidebar_section: "השמדת סעיף ציבורי בסרגל הצד"
         screened_emails:
           title: "הודעות דואר מסוננות"
           description: "כשמישהו מנסה ליצור חשבון חדש, כתובות הדואר האלקטרוני הבאות ייבדקו וההרשמה תחסם או שיבוצו פעולות אחרות."
@@ -5567,6 +5574,11 @@ he:
           dropdown: "נפתח"
           upload: "העלאת קובץ"
           multiselect: "מגוון אפשרויות"
+        edit_category:
+          toggle_freeform: "תבנית טופס מושבתת"
+          toggle_form_template: "תבנית טופס פעילה"
+          select_template: "בחירת תבניות טופס"
+          select_template_help: "הוספה/עריכה של תבניות טופס"
       impersonate:
         title: "התחזות"
         help: "ניתן להשתמש בכלי הזה כדי להתחזות לחשבון משתמש למטרות טיפול בשגיאות. יהיה עליך לצאת לאחר הסיום."
@@ -6086,10 +6098,8 @@ he:
       embedding:
         get_started: "כדי להטמיע את Discourse באתר אחר, יש להתחיל בהוספת השרת שלו."
         confirm_delete: "האם ברצונכם להסיר את הhost הזה? "
-        sample: "יש להדביק את קוד ה־HTML הבא באתר שלך כדי ליצור ולהטמיע נושאים של Discourse. יש להחליף את <b>REPLACE_ME</b> בכתובת היחסית של העמוד בו תתבצע ההטמעה."
         title: "שילוב (embedding)"
         host: "שרתים מורשים"
-        class_name: "שם מחלקה"
         allowed_paths: "רשימת נתיבים מותרים"
         edit: "עריכה"
         category: "פרסם לקטגוריה"
