@@ -580,7 +580,7 @@ describe ChatMessage do
       message.create_mentions(mentioned_user_ids)
       message.reload
 
-      expect(message.chat_mentions.pluck(:user_id)).to contain_exactly(*mentioned_user_ids)
+      expect(message.chat_mentions.pluck(:user_id)).to match_array(mentioned_user_ids)
     end
 
     it "ignores duplicates in passed user ids" do
@@ -609,7 +609,7 @@ describe ChatMessage do
       message.update_mentions(mentioned_user_ids)
       message.reload
 
-      expect(message.chat_mentions.pluck(:user_id)).to contain_exactly(*mentioned_user_ids)
+      expect(message.chat_mentions.pluck(:user_id)).to match_array(mentioned_user_ids)
       expect(message.chat_mentions.pluck(:id)).to include(*existing_mention_ids) # existing mentions weren't recreated
     end
 
@@ -627,7 +627,7 @@ describe ChatMessage do
       message.update_mentions(mentioned_user_ids)
       message.reload
 
-      expect(message.chat_mentions.pluck(:user_id)).to contain_exactly(*mentioned_user_ids)
+      expect(message.chat_mentions.pluck(:user_id)).to match_array(mentioned_user_ids)
       expect(message.chat_mentions.pluck(:id)).to include(*existing_mention_ids) # the mentions weren't recreated
     end
   end
