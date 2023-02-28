@@ -13,6 +13,7 @@ const CHAT_ATTRS = [
   "ignore_channel_wide_mention",
   "chat_sound",
   "chat_email_frequency",
+  "chat_header_indicator_preference",
 ];
 
 const EMAIL_FREQUENCY_OPTIONS = [
@@ -20,11 +21,24 @@ const EMAIL_FREQUENCY_OPTIONS = [
   { name: I18n.t(`chat.email_frequency.when_away`), value: "when_away" },
 ];
 
+const HEADER_INDICATOR_OPTIONS = [
+  {
+    name: I18n.t(`chat.header_indicator_preference.all_new`),
+    value: "all_new",
+  },
+  {
+    name: I18n.t(`chat.header_indicator_preference.dm_and_mentions`),
+    value: "dm_and_mentions",
+  },
+  { name: I18n.t(`chat.header_indicator_preference.never`), value: "never" },
+];
+
 export default class PreferencesChatController extends Controller {
   @service chatAudioManager;
   subpageTitle = I18n.t("chat.admin.title");
 
   emailFrequencyOptions = EMAIL_FREQUENCY_OPTIONS;
+  headerIndicatorOptions = HEADER_INDICATOR_OPTIONS;
 
   @discourseComputed
   chatSounds() {
