@@ -78,6 +78,7 @@ class Site
               :uploaded_background,
               :tags,
               :tag_groups,
+              :form_templates,
               category_required_tag_groups: :tag_group,
             )
             .joins("LEFT JOIN topics t on t.id = categories.topic_id")

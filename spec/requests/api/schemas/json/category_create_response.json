@@ -74,6 +74,10 @@
             "null"
           ]
         },
+        "form_template_ids": {
+          "type": "array",
+          "items": []
+        },
         "has_children": {
           "type": [
             "string",
