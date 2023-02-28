@@ -1812,6 +1812,10 @@ class User < ActiveRecord::Base
     !SiteSetting.legacy_navigation_menu? || SiteSetting.enable_new_notifications_menu
   end
 
+  def new_new_view_enabled?
+    in_any_groups?(SiteSetting.experimental_new_new_view_groups_map)
+  end
+
   protected
 
   def badge_grant

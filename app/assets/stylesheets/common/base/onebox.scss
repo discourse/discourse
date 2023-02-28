@@ -141,7 +141,7 @@ aside.onebox {
       color: var(--tertiary);
     }
 
-    img:not(.avatar) {
+    img:not(.avatar, .onebox-avatar-inline) {
       max-height: 170px;
       max-width: 20%;
       @media all and (max-width: 600px) {

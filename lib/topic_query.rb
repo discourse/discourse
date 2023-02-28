@@ -267,7 +267,11 @@ class TopicQuery
   end
 
   def list_new
-    create_list(:new, { unordered: true }, new_results)
+    if @user&.new_new_view_enabled?
+      create_list(:new, { unordered: true }, new_and_unread_results)
+    else
+      create_list(:new, { unordered: true }, new_results)
+    end
   end
 
   def list_unread
@@ -451,7 +455,8 @@ class TopicQuery
     if options[:preload_posters]
       user_ids = []
       topics.each do |ft|
-        user_ids << ft.user_id << ft.last_post_user_id << ft.featured_user_ids << ft.allowed_user_ids
+        user_ids << ft.user_id << ft.last_post_user_id << ft.featured_user_ids <<
+          ft.allowed_user_ids
       end
 
       user_lookup = UserLookup.new(user_ids)

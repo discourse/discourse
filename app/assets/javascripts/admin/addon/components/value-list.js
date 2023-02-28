@@ -1,7 +1,8 @@
 import { action } from "@ember/object";
 import { classNames } from "@ember-decorators/component";
+import discourseComputed from "discourse-common/utils/decorators";
+import { on } from "@ember-decorators/object";
 import { empty, reads } from "@ember/object/computed";
-import discourseComputed, { on } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import { makeArray } from "discourse-common/lib/helpers";
 

@@ -91,6 +91,12 @@ RSpec.describe UserGuardian do
     end
   end
 
+  describe "#can_see_user?" do
+    it "is always true" do
+      expect(Guardian.new.can_see_user?(anything)).to eq(true)
+    end
+  end
+
   describe "#can_see_profile?" do
     it "is false for no user" do
       expect(Guardian.new.can_see_profile?(nil)).to eq(false)

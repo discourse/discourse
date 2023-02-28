@@ -3,7 +3,7 @@ import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import { fmt } from "discourse/lib/computed";
 import { isDocumentRTL } from "discourse/lib/text-direction";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { next } from "@ember/runloop";
 
 export default class AdminThemeEditor extends Component {
@@ -62,13 +62,13 @@ export default class AdminThemeEditor extends Component {
     return "";
   }
 
-  @discourseComputed("fieldName", "currentTargetName", "theme")
+  @computed("fieldName", "currentTargetName", "theme")
   get activeSection() {
-    return this.model.getField(this.currentTargetName, this.fieldName);
+    return this.theme.getField(this.currentTargetName, this.fieldName);
   }
 
   set activeSection(value) {
-    this.theme.setField(this.fieldName, value);
+    this.theme.setField(this.currentTargetName, this.fieldName, value);
     return value;
   }
 
@@ -124,16 +124,6 @@ export default class AdminThemeEditor extends Component {
     this.theme.setField(this.currentTargetName, name, "");
     this.setProperties({ newFieldName: "", addingField: false });
     this.fieldAdded(this.currentTargetName, name);
-  }
-
-  @action
-  onlyOverriddenChanged(value) {
-    this.onlyOverriddenChanged(value);
-  }
-
-  @action
-  save() {
-    this.attrs.save();
   }
 
   @action
