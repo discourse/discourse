@@ -112,9 +112,8 @@ module Jobs
           read: is_read,
         )
 
-      mention = ChatMention.where(user: membership.user, chat_message: @chat_message).first
-      mention.notification = notification
-      mention.save!
+      mention = ChatMention.find_by(user: membership.user, chat_message: @chat_message)
+      mention.update!(notification: notification)
     end
 
     def send_notifications(membership, notification_data, os_payload)
