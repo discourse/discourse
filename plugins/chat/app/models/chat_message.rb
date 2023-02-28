@@ -233,11 +233,11 @@ class ChatMessage < ActiveRecord::Base
   def update_mentions(mentioned_user_ids)
     old_mentions = chat_mentions.pluck(:user_id)
     updated_mentions = mentioned_user_ids
-    mentions_to_drop = old_mentions - updated_mentions
-    mentions_to_add = updated_mentions - old_mentions
+    mentioned_user_ids_to_drop = old_mentions - updated_mentions
+    mentioned_user_ids_to_add = updated_mentions - old_mentions
 
-    delete_mentions(mentions_to_drop)
-    create_mentions(mentions_to_add)
+    delete_mentions(mentioned_user_ids_to_drop)
+    create_mentions(mentioned_user_ids_to_add)
   end
 
   private
