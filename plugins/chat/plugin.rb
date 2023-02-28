@@ -217,6 +217,10 @@ after_initialize do
          "../app/jobs/regular/auto_remove_membership_handle_chat_allowed_groups_change.rb",
          __FILE__,
        )
+  load File.expand_path(
+         "../app/jobs/regular/auto_remove_membership_handle_destroyed_group.rb",
+         __FILE__,
+       )
   load File.expand_path("../app/jobs/regular/process_chat_message.rb", __FILE__)
   load File.expand_path("../app/jobs/regular/chat_channel_archive.rb", __FILE__)
   load File.expand_path("../app/jobs/regular/chat_channel_delete.rb", __FILE__)
@@ -244,6 +248,7 @@ after_initialize do
        )
   load File.expand_path("../app/services/auto_remove/handle_user_removed_from_group.rb", __FILE__)
   load File.expand_path("../app/services/auto_remove/handle_category_updated.rb", __FILE__)
+  load File.expand_path("../app/services/auto_remove/handle_destroyed_group.rb", __FILE__)
   load File.expand_path("../app/services/actions/auto_removed_user_publisher.rb", __FILE__)
   load File.expand_path("../app/controllers/api_controller.rb", __FILE__)
   load File.expand_path("../app/controllers/api/chat_channels_controller.rb", __FILE__)
@@ -526,6 +531,10 @@ after_initialize do
   on(:post_alerter_after_save_post) do |post, new_record, notified|
     next if !new_record
     Chat::PostNotificationHandler.new(post, notified).handle
+  end
+
+  on(:group_destroyed) do |group, user_ids|
+    Jobs.enqueue(:auto_remove_membership_handle_destroyed_group, destroyed_group_user_ids: user_ids)
   end
 
   register_presence_channel_prefix("chat") do |channel_name|

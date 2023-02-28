@@ -24,10 +24,8 @@ module Chat
 
         def remove_if_outside_chat_allowed_groups(user:, **)
           return noop if user.staff?
+          return noop if SiteSetting.chat_allowed_groups_map.include?(Group::AUTO_GROUPS[:everyone])
 
-          # if the group the user was removed from is one of the chat allowed
-          # groups, check if they are still in any of the other chat allowed
-          # groups, otherwise kick
           if !GroupUser.exists?(group_id: SiteSetting.chat_allowed_groups_map, user: user)
             memberships_to_remove =
               UserChatChannelMembership

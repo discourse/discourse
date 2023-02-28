@@ -22,6 +22,8 @@ describe "Automatic user removal from channels" do
     public_channel.add(user_1)
     private_channel.add(user_1)
     public_channel.add(user_2)
+
+    CategoryGroup.create(category: public_channel.chatable, group_id: Group::AUTO_GROUPS[:everyone])
   end
 
   context "when the chat_allowed_groups site setting changes" do
@@ -218,6 +220,52 @@ describe "Automatic user removal from channels" do
             UserChatChannelMembership.exists?(user: staff_user, chat_channel: private_channel),
           ).to eq(true)
         end
+      end
+    end
+  end
+
+  context "when a group is destroyed" do
+    context "when it was the last group on the private category" do
+      it "no users are removed because the category defaults to Everyone having full access" do
+        secret_group.destroy!
+
+        expect(
+          UserChatChannelMembership.exists?(user: user_1, chat_channel: private_channel),
+        ).to eq(true)
+        expect(Chat::ChatChannelFetcher.all_secured_channel_ids(user_1_guardian)).to include(
+          private_channel.id,
+        )
+
+        expect(UserChatChannelMembership.exists?(user: user_1, chat_channel: public_channel)).to eq(
+          true,
+        )
+        expect(Chat::ChatChannelFetcher.all_secured_channel_ids(user_1_guardian)).to include(
+          public_channel.id,
+        )
+      end
+    end
+
+    context "when there is another group on the private category" do
+      before do
+        CategoryGroup.create(group_id: Group::AUTO_GROUPS[:staff], category: private_category)
+      end
+
+      it "only removes users who are not in that group" do
+        secret_group.destroy!
+
+        expect(
+          UserChatChannelMembership.exists?(user: user_1, chat_channel: private_channel),
+        ).to eq(false)
+        expect(Chat::ChatChannelFetcher.all_secured_channel_ids(user_1_guardian)).not_to include(
+          private_channel.id,
+        )
+
+        expect(UserChatChannelMembership.exists?(user: user_1, chat_channel: public_channel)).to eq(
+          true,
+        )
+        expect(Chat::ChatChannelFetcher.all_secured_channel_ids(user_1_guardian)).to include(
+          public_channel.id,
+        )
       end
     end
   end

@@ -114,6 +114,21 @@ RSpec.describe Chat::Service::AutoRemove::HandleChatAllowedGroupsChange do
       end
     end
 
+    context "when new_allowed_groups includes everyone" do
+      let(:new_allowed_groups) { Group::AUTO_GROUPS[:everyone] }
+
+      before do
+        public_channel_1.add(user_1)
+        public_channel_2.add(user_1)
+        Group.refresh_automatic_groups!
+      end
+
+      it "does nothing" do
+        expect { result }.not_to change { UserChatChannelMembership.count }
+        expect(result).to be_a_success
+      end
+    end
+
     context "when some users are not in any of the new allowed groups" do
       let(:new_allowed_groups) { Group::AUTO_GROUPS[:trust_level_4] }
 

@@ -13,12 +13,16 @@ module Chat
         class Contract
           attribute :new_allowed_groups
 
-          before_validation { self.new_allowed_groups = self.new_allowed_groups.to_s.split("|") }
+          before_validation do
+            self.new_allowed_groups = self.new_allowed_groups.to_s.split("|").map(&:to_i)
+          end
         end
 
         private
 
         def remove_users_outside_allowed_groups(contract:, **)
+          return noop if contract.new_allowed_groups.include?(Group::AUTO_GROUPS[:everyone])
+
           users =
             User
               .real

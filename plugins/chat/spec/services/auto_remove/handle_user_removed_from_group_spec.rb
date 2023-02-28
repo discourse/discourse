@@ -95,6 +95,20 @@ RSpec.describe Chat::Service::AutoRemove::HandleUserRemovedFromGroup do
           ).to eq(2)
         end
       end
+
+      context "when the only chat_allowed_group is everyone" do
+        before { SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone] }
+
+        it "does not remove them from public channels" do
+          expect(result).to be_a_success
+          expect(
+            UserChatChannelMembership.where(
+              user: [removed_user],
+              chat_channel: [public_channel_1, public_channel_2],
+            ).count,
+          ).to eq(2)
+        end
+      end
     end
 
     context "for private channels" do
