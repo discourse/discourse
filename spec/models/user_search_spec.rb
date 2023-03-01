@@ -226,6 +226,18 @@ RSpec.describe UserSearch do
       expect(results).to be_blank
     end
 
+    it "does not show unapproved users when must_approve_users enabled" do
+      SiteSetting.must_approve_users = true
+      unapproved = Fabricate(:user, username: "mrunapproved", active: true, approved: false)
+      approved = Fabricate(:user, username: "mrapproved", active: true, approved: true)
+
+      users = search_for(unapproved.username)
+      expect(users).to be_blank
+
+      users = search_for(approved.username)
+      expect(users).not_to be_blank
+    end
+
     it "prioritises exact matches" do
       results = search_for("mrB")
       expect(results).to eq [mr_b, mr_brown, mr_blue].map(&:username)

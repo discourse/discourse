@@ -26,6 +26,7 @@ class UserSearch
 
   def scoped_users
     users = User.where(active: true)
+    users = users.where(approved: true) if SiteSetting.must_approve_users?
     users = users.where(staged: false) unless @include_staged_users
     users = users.not_suspended unless @searching_user&.staff?
 
