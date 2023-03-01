@@ -1129,7 +1129,17 @@ class Plugin::Instance
   # table. Some stats may be needed purely for reporting purposes and thus
   # do not need to be shown in the UI to admins/users.
   def register_about_stat_group(plugin_stat_group_name, show_in_ui: false, &block)
-    About.add_plugin_stat_group(plugin_stat_group_name, show_in_ui: show_in_ui, &block)
+    # We do not want to register and display the same group multiple times.
+    if DiscoursePluginRegistry.about_stat_groups.any? { |stat_group|
+         stat_group[:name] == plugin_stat_group_name
+       }
+      return
+    end
+
+    DiscoursePluginRegistry.register_about_stat_group(
+      { name: plugin_stat_group_name, show_in_ui: show_in_ui, block: block },
+      self,
+    )
   end
 
   ##
