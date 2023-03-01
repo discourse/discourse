@@ -622,15 +622,15 @@ after_initialize do
   on(:category_updated) do |category|
     # TODO(roman): remove early return after 2.9 release.
     # There's a bug on core where this event is triggered with an `#update` result (true/false)
-    return if !category.is_a?(Category)
-    category_channel = ChatChannel.find_by(chatable: category)
-    return if category_channel.blank?
+    if category.is_a?(Category) && category_channel = ChatChannel.find_by(chatable: category)
+      if category_channel.auto_join_users
+        Chat::ChatChannelMembershipManager.new(
+          category_channel,
+        ).enforce_automatic_channel_memberships
+      end
 
-    if category_channel.auto_join_users
-      Chat::ChatChannelMembershipManager.new(category_channel).enforce_automatic_channel_memberships
+      Jobs.enqueue(:auto_remove_membership_handle_category_updated, category_id: category.id)
     end
-
-    Jobs.enqueue(:auto_remove_membership_handle_category_updated, category_id: category.id)
   end
 
   Chat::Engine.routes.draw do
