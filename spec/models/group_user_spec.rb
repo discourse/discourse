@@ -293,15 +293,16 @@ RSpec.describe GroupUser do
       user = Fabricate(:user)
       expect(user.trust_level).to eq(1)
 
+      user.change_trust_level!(1, log_action_for: Discourse.system_user)
       user.change_trust_level!(2, log_action_for: Discourse.system_user)
-      user.change_trust_level!(3, log_action_for: Discourse.system_user)
       group.update!(grant_trust_level: 4)
 
       group_user = Fabricate(:group_user, group: group, user: user)
       expect(user.reload.trust_level).to eq(4)
 
       group_user.destroy!
-      expect(user.reload.trust_level).to eq(3)
+      # keep in mind that we do not restore tl3, cause reqs can be lost
+      expect(user.reload.trust_level).to eq(2)
     end
   end
 end

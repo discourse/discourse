@@ -38,7 +38,7 @@ class TrustLevel
     granted_trust_level = user.group_granted_trust_level || 0
     previous_trust_level = use_previous_trust_level ? find_previous_trust_level(user) : 0
 
-    [granted_trust_level, previous_trust_level].max
+    [granted_trust_level, previous_trust_level, SiteSetting.default_trust_level].max
   end
 
   private

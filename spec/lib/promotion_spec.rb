@@ -99,7 +99,16 @@ RSpec.describe Promotion do
         stat.posts_read_count = SiteSetting.tl1_requires_read_posts
         stat.time_read = SiteSetting.tl1_requires_time_spent_mins * 60
         Promotion.recalculate(user)
+
+        expect(user.trust_level).to eq(1)
+
         expect(Jobs::SendSystemMessage.jobs.length).to eq(0)
+      end
+
+      it "respects default trust level" do
+        SiteSetting.default_trust_level = 2
+        Promotion.recalculate(user)
+        expect(user.trust_level).to eq(2)
       end
 
       it "can be turned off" do

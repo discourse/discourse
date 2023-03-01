@@ -253,7 +253,7 @@ RSpec.describe Group do
         tl3_users = Group.find(Group::AUTO_GROUPS[:trust_level_3])
         tl3_users.add(user)
 
-        events = DiscourseEvent.track_events { Group.refresh_automatic_group!(:trust_level_3) }
+        _events = DiscourseEvent.track_events { Group.refresh_automatic_group!(:trust_level_3) }
 
         expect(GroupUser.exists?(group: tl3_users, user: user)).to eq(false)
         publish_event_job_args = Jobs::PublishGroupMembershipUpdates.jobs.last["args"].first
@@ -267,7 +267,7 @@ RSpec.describe Group do
 
         expect(GroupUser.exists?(group: tl0_users, user: user)).to eq(false)
 
-        events = DiscourseEvent.track_events { Group.refresh_automatic_group!(:trust_level_0) }
+        _events = DiscourseEvent.track_events { Group.refresh_automatic_group!(:trust_level_0) }
 
         expect(GroupUser.exists?(group: tl0_users, user: user)).to eq(true)
         publish_event_job_args = Jobs::PublishGroupMembershipUpdates.jobs.last["args"].first
@@ -641,8 +641,8 @@ RSpec.describe Group do
     describe "when a user has qualified for trust level 1" do
       fab!(:user) { Fabricate(:user, trust_level: 1, created_at: Time.zone.now - 10.years) }
 
-      fab!(:group) { Fabricate(:group, grant_trust_level: 1) }
-      fab!(:group2) { Fabricate(:group, grant_trust_level: 0) }
+      fab!(:group) { Fabricate(:group, grant_trust_level: 3) }
+      fab!(:group2) { Fabricate(:group, grant_trust_level: 2) }
 
       before { user.user_stat.update!(topics_entered: 999, posts_read_count: 999, time_read: 999) }
 
@@ -650,11 +650,15 @@ RSpec.describe Group do
         group.add(user)
         group2.add(user)
 
-        expect(user.reload.trust_level).to eq(1)
+        expect(user.reload.trust_level).to eq(3)
 
         group.remove(user)
 
-        expect(user.reload.trust_level).to eq(0)
+        expect(user.reload.trust_level).to eq(2)
+
+        group2.remove(user)
+
+        expect(user.reload.trust_level).to eq(1)
       end
     end
 
