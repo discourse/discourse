@@ -9,6 +9,13 @@ class CategorySetting < ActiveRecord::Base
               greater_than_or_equal_to: 0,
               allow_nil: true,
             }
+
+  validates :auto_bump_cooldown,
+            numericality: {
+              only_integer: true,
+              greater_than_or_equal_to: 0,
+              allow_nil: true,
+            }
 end
 
 # == Schema Information
@@ -22,6 +29,7 @@ end
 #  num_auto_bump_daily    :integer
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
+#  auto_bump_cooldown     :integer          default(1)
 # Indexes
 #
 #  index_category_settings_on_category_id  (category_id) UNIQUE
