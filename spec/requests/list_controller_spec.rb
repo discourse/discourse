@@ -1084,4 +1084,21 @@ RSpec.describe ListController do
       expect(parsed["topic_list"]["topics"].first["id"]).to eq(welcome_topic.id)
     end
   end
+
+  describe "#filter" do
+    it "should respond with 403 response code for an anonymous user" do
+      get "/filter.json"
+
+      expect(response.status).to eq(403)
+    end
+
+    it "should respond with 404 response code when `experimental_topics_filter` site setting has not been enabled" do
+      SiteSetting.experimental_topics_filter = false
+      sign_in(user)
+
+      get "/filter.json"
+
+      expect(response.status).to eq(404)
+    end
+  end
 end

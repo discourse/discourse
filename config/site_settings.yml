@@ -2080,6 +2080,10 @@ developer:
     default: ""
     allow_any: false
     refresh: true
+  experimental_topics_filter:
+    client: true
+    default: false
+    hidden: true
 
 navigation:
   navigation_menu:

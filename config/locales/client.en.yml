@@ -2864,6 +2864,7 @@ en:
         bookmarks: "You have no bookmarked topics yet."
         category: "There are no %{category} topics."
         top: "There are no top topics."
+        filter: "There are no topics."
         educate:
           new: '<p>Your new topics will appear here. By default, topics are considered new and will show a <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> indicator if they were created in the last 2 days.</p><p>Visit your <a href="%{userPrefsUrl}">preferences</a> to change this.</p>'
           unread: '<p>Your unread topics appear here.</p><p>By default, topics are considered unread and will show unread counts <span class="badge unread-posts badge-notification">1</span> if you:</p><ul><li>Created the topic</li><li>Replied to the topic</li><li>Read the topic for more than 4 minutes</li></ul><p>Or if you have explicitly set the topic to Tracked or Watched via the 🔔 in each topic.</p><p>Visit your <a href="%{userPrefsUrl}">preferences</a> to change this.</p>'
@@ -2878,6 +2879,7 @@ en:
         tag: "There are no more %{tag} topics."
         top: "There are no more top topics."
         bookmarks: "There are no more bookmarked topics."
+        filter: "There are no more topics."
 
     topic:
       filter_to:
@@ -3924,6 +3926,10 @@ en:
     filters:
       with_topics: "%{filter} topics"
       with_category: "%{filter} %{category} topics"
+      filter:
+        title: "Filter"
+        button:
+          label: "Filter"
       latest:
         title: "Latest"
         title_with_count:
