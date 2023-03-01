@@ -2911,7 +2911,6 @@ pt:
       back: "Voltar para a categoria"
       general: "Geral"
       settings: "Configurações"
-      topic_template: "Modelo do Tópico"
       tags: "Etiquetas"
       tags_allowed_tags: "Restringir essas tags a esta categoria:"
       tags_allowed_tag_groups: "Restringir esses grupos de tags a esta categoria:"

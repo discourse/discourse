@@ -638,6 +638,14 @@ he:
             duration_minutes:
               cannot_be_zero: "חייב להיות גדול מ־0."
               exceeds_maximum: "לא יכול להיות יותר מ־20 שנה."
+        translation_overrides:
+          attributes:
+            value:
+              invalid_interpolation_keys:
+                one: 'מפתח השילוב הבא שגוי: %{keys}'
+                two: 'מפתחות השילוב הבאים שגויים: %{keys}'
+                many: 'מפתחות השילוב הבאים שגויים: %{keys}'
+                other: 'מפתחות השילוב הבאים שגויים: %{keys}'
         watched_word:
           attributes:
             word:
@@ -2245,6 +2253,7 @@ he:
     default_sidebar_tags: "התגיות הנבחרות תוצגנה תחת סעיף התגיות של סרגל הצד כברירת מחדל."
     enable_new_notifications_menu: "מפעיל את תפריט ההתראות החדש בתפריט הניווט הישן."
     enable_experimental_hashtag_autocomplete: "ניסיוני: ניתן להשתמש במערכת אוטומטית להשלמת #תגיות עבור קטגוריות ותגיות שמעבדת את הפריט הנבחר באופן שונה והחיפוש בה משופר"
+    experimental_new_new_view_groups: "ניסיוני: לאפשר רשימת נושאים חדשה המשלבת נושאים שלא נקראו וחדשים ולקשר אליה את „הכול” בסרגל הצד."
     errors:
       invalid_css_color: "צבע שגוי. נא למלא את שם הצבע או ערך הקסדצימלי."
       invalid_email: "כתובת דוא״ל שגויה."

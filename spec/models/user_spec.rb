@@ -362,6 +362,23 @@ RSpec.describe User do
             end
           end
         end
+
+        context "when watched words are of type 'link'" do
+          let(:value) { "don't replace me" }
+          let!(:replace_word) do
+            Fabricate(
+              :watched_word,
+              word: "replace",
+              replacement: "touch",
+              action: WatchedWord.actions[:link],
+            )
+          end
+
+          it "does not replace anything" do
+            user.save!
+            expect(user_field_value).to eq value
+          end
+        end
       end
 
       context "when user fields do not contain watched words" do

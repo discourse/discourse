@@ -2752,7 +2752,6 @@ sl:
       view: "Poglej teme v kategoriji"
       general: "Splošno"
       settings: "Nastavitve"
-      topic_template: "Predloga teme"
       tags: "Oznake"
       tags_allowed_tags: "Omeji te oznake na to kategorijo:"
       tags_allowed_tag_groups: "Omeji te skupine oznak na to kategorijo:"

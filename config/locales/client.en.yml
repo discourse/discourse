@@ -5547,6 +5547,7 @@ en:
           close: "Close"
           edit: "Edit"
           delete: "Delete"
+          toggle_preview: "Toggle Preview"
         new_template_form:
           submit: "Save"
           cancel: "Cancel"
@@ -5556,6 +5557,7 @@ en:
           template:
             label: "Template"
             placeholder: "Create a YAML template here..."
+          preview: "Preview"
         delete_confirm: "Are you sure you would like to delete this template?"
         quick_insert_fields:
           add_new_field: "Add"
@@ -5565,6 +5567,41 @@ en:
           dropdown: "Dropdown"
           upload: "Upload a file"
           multiselect: "Multiple choice"
+        validations_modal:
+          button_title: "Validations"
+          modal_title: "Validation Options"
+          table_headers:
+            key: "Key"
+            type: "Type"
+            description: "Description"
+          validations:
+            required:
+              key: "required"
+              type: "boolean"
+              description: "Requires the field to be completed to submit the form."
+            minimum:
+              key: "minimum"
+              type: "integer"
+              description: "In text fields, specifies the minimum number of characters allowed."
+            maximum:
+              key: "maximum"
+              type: "integer"
+              description: "In text fields, specifies the maximum number of characters allowed. In multi select dropdowns, specifies the maximum number of options that can be selected."
+            pattern:
+              key: "pattern"
+              type: "regex string"
+              description: "In text fields, a regular expression specifying the allowed input."
+        preview_modal:
+          title: "Preview Template"
+        field_placeholders:
+          validations: "enter validations here"
+          label: "Enter label here"
+          placeholder: "Enter placeholder here"
+          none_label: "Select an item"
+          choices:
+            first: "Option 1"
+            second: "Option 2"
+            third: "Option 3"
         edit_category:
           toggle_freeform: "form template disabled"
           toggle_form_template: "form template enabled"
@@ -6113,10 +6150,14 @@ en:
       embedding:
         get_started: "If you'd like to embed Discourse on another website, begin by adding its host."
         confirm_delete: "Are you sure you want to delete that host?"
-        sample: "Paste the following HTML code into your site to create and embed Discourse topics. Replace <b>REPLACE_ME</b> with the canonical URL of the page you are embedding it on."
+        sample: |
+          <p>Paste the following HTML code into your site to create and embed Discourse topics. Replace <b>EMBED_URL</b> with the canonical URL of the page you are embedding it on.</p>
+
+          <p>If you want to customize the style, uncomment and replace <b>CLASS_NAME</b> with a CSS class defined in the <i>Embedded CSS</i> of your theme.</p>
+
+          <p>Replace <b>DISCOURSE_USERNAME</b> with the Discourse username of the author that should create the topic. Discourse will automatically lookup the user by the <code>content</code> attribute of the <code>&lt;meta&gt;</code> tags with <code>name</code> attribute set to <code>discourse-username</code> or <code>author</code>. The <code>discourseUserName</code> parameter has been deprecated and will be removed in Discourse 3.2.</p>
         title: "Embedding"
         host: "Allowed Hosts"
-        class_name: "Class Name"
         allowed_paths: "Path Allowlist"
         edit: "edit"
         category: "Post to Category"

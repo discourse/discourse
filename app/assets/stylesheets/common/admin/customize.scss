@@ -925,11 +925,11 @@ table.permalinks {
 }
 
 .form-templates {
-  &--info {
+  &__info {
     margin-top: 1rem;
   }
 
-  &--table {
+  &__table {
     margin-bottom: 1rem;
 
     .admin-list-item .action {
@@ -937,7 +937,7 @@ table.permalinks {
     }
   }
 
-  &--form {
+  &__form {
     input {
       width: 300px;
     }
@@ -975,7 +975,13 @@ table.permalinks {
     }
   }
 
-  &--quick-insert-field-buttons {
+  &__editor {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  &__quick-insert-field-buttons {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
@@ -986,14 +992,22 @@ table.permalinks {
     }
 
     .btn {
-      &:not(:last-child) {
+      &:not(:last-of-type) {
         border-right: 1px solid var(--primary-low);
       }
     }
   }
+
+  &__validation-options td {
+    padding: 0.75rem;
+  }
+
+  &__preview-button {
+    margin-left: auto;
+  }
 }
 
-.admin-customize-form-template-view-modal {
+.customize-form-template-view-modal {
   .modal-footer {
     .btn:last-child {
       margin-left: auto;

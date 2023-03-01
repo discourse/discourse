@@ -1,9 +1,9 @@
-{{#if (gt this.chatChannelsManager.unreadUrgentCount 0)}}
+{{#if this.showUrgentIndicator}}
   <div class="chat-channel-unread-indicator urgent">
     <div class="number-wrap">
       <div class="number">{{this.chatChannelsManager.unreadUrgentCount}}</div>
     </div>
   </div>
-{{else if (gt this.chatChannelsManager.unreadCount 0)}}
+{{else if this.showUnreadIndicator}}
   <div class="chat-channel-unread-indicator"></div>
 {{/if}}

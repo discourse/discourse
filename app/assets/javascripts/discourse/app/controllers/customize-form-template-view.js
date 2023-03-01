@@ -5,12 +5,19 @@ import { inject as service } from "@ember/service";
 import I18n from "I18n";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { ajax } from "discourse/lib/ajax";
+import { tracked } from "@glimmer/tracking";
 
 export default class AdminCustomizeFormTemplateView extends Controller.extend(
   ModalFunctionality
 ) {
   @service router;
   @service dialog;
+  @tracked showPreview = false;
+
+  @action
+  togglePreview() {
+    this.showPreview = !this.showPreview;
+  }
 
   @action
   editTemplate() {

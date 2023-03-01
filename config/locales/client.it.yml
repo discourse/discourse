@@ -3298,7 +3298,6 @@ it:
       back: "Torna alla categoria"
       general: "Generale"
       settings: "Impostazioni"
-      topic_template: "Modello di Argomento"
       tags: "Etichette"
       tags_allowed_tags: "Limita queste Etichette a questa Categoria:"
       tags_allowed_tag_groups: "Limita questi gruppi di Etichette a questa Categoria:"
@@ -5592,10 +5591,8 @@ it:
       embedding:
         get_started: "Se lo desideri, puoi incorporare Discourse in un altro sito web. Comincia aggiungendo il nome dell'host."
         confirm_delete: "Sicuro di voler cancellare questo host?"
-        sample: "Incolla il seguente codice HTML nel tuo sito per creare e incorporare argomenti Discourse. Sostituire <b>REPLACE_ME</b> con l'URL canonico della pagina su cui stai eseguendo l'operazione."
         title: "Integrato"
         host: "Host Abilitati"
-        class_name: "Nome Classe"
         allowed_paths: "Lista percorsi permessi"
         edit: "modifica"
         category: "Pubblica nella Categoria"

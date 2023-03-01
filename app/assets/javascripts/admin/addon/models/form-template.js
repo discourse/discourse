@@ -18,6 +18,14 @@ FormTemplate.reopenClass({
     });
   },
 
+  createOrUpdateTemplate(data) {
+    if (data.id) {
+      return this.updateTemplate(data.id, data);
+    } else {
+      return this.createTemplate(data);
+    }
+  },
+
   deleteTemplate(id) {
     return ajax(`/admin/customize/form-templates/${id}.json`, {
       type: "DELETE",
@@ -33,6 +41,13 @@ FormTemplate.reopenClass({
   findById(id) {
     return ajax(`/admin/customize/form-templates/${id}.json`).then((model) => {
       return model.form_template;
+    });
+  },
+
+  validateTemplate(data) {
+    return ajax(`/admin/customize/form-templates/preview.json`, {
+      type: "GET",
+      data,
     });
   },
 });

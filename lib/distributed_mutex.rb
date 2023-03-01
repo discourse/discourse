@@ -30,28 +30,16 @@ class DistributedMutex
     end
   LUA
 
-  def self.synchronize(
-    key,
-    redis: nil,
-    validity: DEFAULT_VALIDITY,
-    max_get_lock_attempts: nil,
-    &blk
-  )
-    self.new(
-      key,
-      redis: redis,
-      validity: validity,
-      max_get_lock_attempts: max_get_lock_attempts,
-    ).synchronize(&blk)
+  def self.synchronize(key, redis: nil, validity: DEFAULT_VALIDITY, &blk)
+    self.new(key, redis: redis, validity: validity).synchronize(&blk)
   end
 
-  def initialize(key, redis: nil, validity: DEFAULT_VALIDITY, max_get_lock_attempts: nil)
+  def initialize(key, redis: nil, validity: DEFAULT_VALIDITY)
     @key = key
     @using_global_redis = true if !redis
     @redis = redis || Discourse.redis
     @mutex = Mutex.new
     @validity = validity
-    @max_get_lock_attempts = max_get_lock_attempts
   end
 
   # NOTE wrapped in mutex to maintain its semantics
@@ -81,15 +69,11 @@ class DistributedMutex
     result
   end
 
-  class MaximumAttemptsExceeded < StandardError
-  end
-
   private
 
   attr_reader :key
   attr_reader :redis
   attr_reader :validity
-  attr_reader :max_get_lock_attempts
 
   def get_lock
     attempts = 0
@@ -107,10 +91,6 @@ class DistributedMutex
       # in readonly we will never be able to get a lock
       if @using_global_redis && Discourse.recently_readonly? && attempts > CHECK_READONLY_ATTEMPTS
         raise Discourse::ReadOnly
-      end
-
-      if max_get_lock_attempts && attempts > max_get_lock_attempts
-        raise DistributedMutex::MaximumAttemptsExceeded
       end
     end
   end

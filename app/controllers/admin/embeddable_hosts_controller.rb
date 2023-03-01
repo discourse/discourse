@@ -25,7 +25,6 @@ class Admin::EmbeddableHostsController < Admin::AdminController
   def save_host(host, action)
     host.host = params[:embeddable_host][:host]
     host.allowed_paths = params[:embeddable_host][:allowed_paths]
-    host.class_name = params[:embeddable_host][:class_name]
     host.category_id = params[:embeddable_host][:category_id]
     host.category_id = SiteSetting.uncategorized_category_id if host.category_id.blank?
 

@@ -41,6 +41,7 @@ el:
       long_date_without_year_with_linebreak: "MMM D <br/>LT"
       long_date_with_year_with_linebreak: "MMM D, 'YY <br/>LT"
       wrap_ago: "%{date} πριν"
+      wrap_on: "στις %{date}"
       tiny:
         half_a_minute: "< 1λ"
         less_than_x_seconds:
@@ -115,6 +116,7 @@ el:
       previous_month: "Προηγούμενος μήνας"
       next_month: "Επόμενος μήνας"
       placeholder: ημερομηνία
+      from_placeholder: "από ημερομηνία"
       to_placeholder: "μέχρι σήμερα"
     share:
       topic_html: 'Θέμα: <span class="topic-title">%{topicTitle}</span>'
@@ -175,6 +177,7 @@ el:
         cn_northwest_1: "Κίνα (Ningxia)"
         eu_central_1: "ΕΕ (Φρανκφούρτη)"
         eu_north_1: "ΕΕ (Στοκχόλμη)"
+        eu_south_1: "ΕΕ (Μιλάνο)"
         eu_west_1: "ΕΕ (Ιρλανδία)"
         eu_west_2: "ΕΕ (Λονδίνο)"
         eu_west_3: "ΕΕ (Παρίσι)"
@@ -233,6 +236,8 @@ el:
     character_count:
       one: "%{count} χαρακτήρα"
       other: "%{count} χαρακτήρες"
+    period_chooser:
+      aria_label: "Φίλτρο ανά περίοδο"
     related_messages:
       title: "Σχετικά μηνύματα"
       see_all: 'Δείτε <a href="%{path}">όλα τα μηνύματα</a> από @%{username}...'
@@ -248,16 +253,22 @@ el:
       moderators: "Συντονιστές"
       stat:
         all_time: "Συνολικά"
+        last_day: "Τελευταίες 24 ώρες"
+        last_7_days: "Τελευταίες 7 ημέρες"
+        last_30_days: "Τελευταίες 30 ημέρες"
       like_count: "Μου αρέσει"
       topic_count: "Θέματα"
       post_count: "Αναρτήσεις"
+      user_count: "Εγγραφές"
       active_user_count: "Ενεργοί χρήστες"
       contact: "Επικοινωνήστε μαζί μας"
       contact_info: "Σε περίπτωση που προκύψει κάποιο κρίσιμο πρόβλημα ή κάποιο επείγον θέμα που αφορά αυτόν τον ιστότοπο, παρακαλούμε να επικοινωνήσετε μαζί μας στο %{contact_info}."
     bookmarked:
       title: "Σελιδοδείκτης"
+      edit_bookmark: "Επεξεργασία Σελιδοδείκτη"
       clear_bookmarks: "Καθαρισμός σελιδοδεικτών"
       help:
+        edit_bookmark_for_topic: "Κάντε κλικ για να επεξεργαστείτε τον σελιδοδείκτη για αυτό το θέμα"
         unbookmark: "Πατήστε εδώ για να αφαιρεθούν όλοι οι σελιδοδείκτες από αυτό το θέμα."
     bookmarks:
       created: "Έχετε προσθέσει σελιδοδείκτη σε αυτήν την ανάρτηση. %{name}"
@@ -274,9 +285,11 @@ el:
       list_permission_denied: "Δεν έχετε άδεια για την προβολή των σελιδοδεικτών αυτού του χρήστη."
       no_user_bookmarks: "Δεν έχετε σελιδοδείκτες. Οι σελιδοδείκτες σας επιτρέπουν να ανατρέξετε γρήγορα σε συγκεκριμένες αναρτήσεις."
       auto_delete_preference:
+        label: "Αφού ειδοποιηθείτε"
         never: "Διατήρηση σελιδοδείκτη"
         when_reminder_sent: "Διαγραφή σελιδοδείκτη"
         on_owner_reply: "Διαγραφή σελιδοδείκτη, μόλις απαντήσω"
+        clear_reminder: "Διατήρηση σελιδοδείκτη και διαγραφή υπενθύμισης"
       search_placeholder: "Αναζήτηση σελιδοδεικτών με βάση το όνομα, τον τίτλο θέματος ή το περιεχόμενο δημοσίευσης"
       search: "Αναζήτηση"
       reminders:
@@ -504,13 +517,25 @@ el:
           other: "Έχετε <strong>%{count}</strong> αναρτήσεις σε εκκρεμότητα."
         ok: "OK"
       example_username: "όνομα χρήστη"
+      reject_reason:
+        title: "Γιατί απορρίπτετε αυτόν τον χρήστη;"
+        send_email: "Αποστολή email απόρριψης"
     relative_time_picker:
+      hours:
+        one: "ώρα"
+        other: "ώρες"
       days:
         one: "ημέρα"
         other: "ημέρες"
+      months:
+        one: "μήνας"
+        other: "μήνες"
     time_shortcut:
       now: "Τώρα"
+      in_one_hour: "Σε μία ώρα"
+      in_two_hours: "Σε δύο ώρες"
       later_today: "Αργότερα σήμερα"
+      two_days: "Δύο ημέρες"
       next_business_day: "Επόμενη εργάσιμη ημέρα"
       tomorrow: "Αύριο"
       later_this_week: "Αργότερα αυτήν την εβδομάδα"
@@ -518,7 +543,11 @@ el:
       start_of_next_business_week: "Τη Δευτέρα"
       start_of_next_business_week_alt: "Την επόμενη Δευτέρα"
       next_week: "Την άλλη εβδομάδα"
+      two_weeks: "Δύο εβδομάδες"
       next_month: "Τον άλλο μήνα"
+      three_months: "Τρεις μήνες"
+      four_months: "Τέσσερις μήνες"
+      six_months: "Έξι μήνες"
       forever: "Για Πάντα"
       never: "Ποτέ"
       custom: "Προσαρμοσμένη ημερομηνία και ώρα"
@@ -1477,6 +1506,9 @@ el:
       intro: "Γεια! Φαίνεται ότι απολαμβάνεις τη συζήτηση, αλλά δεν έχεις εγγραφεί ακόμα για λογαριασμό."
     summary:
       enabled_description: "Βλέπεις μια περίληψη αυτού του νήματος: οι πιο ενδιαφέρουσες αναρτήσεις, όπως αυτές καθορίστηκαν από την κοινότητα."
+      description:
+        one: "Υπάρχει <b>%{count}</b> απάντηση."
+        other: "Υπάρχουν <b>%{count}</b> απαντήσεις."
       enable: "Σύνοψη του Νήματος"
       disable: "Εμφάνιση όλων των αναρτήσεων"
     deleted_filter:
@@ -2132,6 +2164,7 @@ el:
       options: "Ρυθμίσεις Νήματος"
       show_links: "εμφάνιση συνδέσμων εντός του νήματος"
       unread_indicator: "Κανένα μέλος δεν έχει διαβάσει ακόμη την τελευταία ανάρτηση αυτού του θέματος."
+      browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Περιηγηθείτε σε όλες τις ετικέτες</a> ή <a href='%{basePath}/latest'>δείτε τα τελευταία θέματα</a>."
       deleted: "Το νήμα έχει διαγραφεί "
       slow_mode_update:
         enable: "Ενεργοποίηση"
@@ -2642,7 +2675,6 @@ el:
       back: "Επιστροφή στην κατηγορία"
       general: "Γενικά"
       settings: "Ρυθμίσεις"
-      topic_template: "Πρότυπο Νήματος"
       tags: "Ετικέτες"
       tags_allowed_tags: "Περιορίστε αυτές τις ετικέτες σε αυτήν την κατηγορία:"
       tags_allowed_tag_groups: "Περιορίστε αυτές τις ομάδες ετικετών σε αυτήν την κατηγορία:"
@@ -2850,14 +2882,17 @@ el:
       label_with_count: "Εκρεμείς (%{count})"
     original_post: "Αρχική Ανάρτηση"
     views: "Προβολές"
+    sr_views: "Ταξινόμηση κατά προβολές"
     views_lowercase:
       one: "προβολή"
       other: "προβολές"
     replies: "Απαντήσεις"
+    sr_replies: "Ταξινόμηση κατά απαντήσεις"
     views_long:
       one: "αυτό το νήμα έχει προβληθεί %{count} φορά"
       other: "αυτό το νήμα έχει προβληθεί %{number} φορές"
     activity: "Δραστηριότητα"
+    sr_activity: "Ταξινόμηση ανά δραστηριότητα"
     likes: "«Μου αρέσει»"
     likes_lowercase:
       one: "μου αρέσει"
@@ -2867,6 +2902,7 @@ el:
       one: "χρήστης"
       other: "χρήστες"
     category_title: "Κατηγορία"
+    history: "Ιστορικό"
     raw_email:
       title: "Εισερχόμενα email"
       not_available: "Μη διαθέσιμο!"
@@ -2959,6 +2995,7 @@ el:
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
       shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
       title: "Συντομεύσεις Πληκτρολογίου"
+      short_title: "Συντομεύσεις"
       jump_to:
         title: "Μετάβαση Προς"
         home: "%{shortcut} Αρχική"
@@ -3067,8 +3104,16 @@ el:
         posting:
           name: Αναρτάται
     download_calendar:
+      title: "Λήψη ημερολογίου"
+      save_ics: "Λήψη αρχείου .ics"
+      save_google: "Προσθήκη στο ημερολόγιο Google"
+      remember: "Μην με ρωτήσετε ξανά"
       download: "Κατέβασμα"
+      default_calendar: "Προεπιλεγμένο ημερολόγιο"
+      add_to_calendar: "Προσθήκη στο ημερολόγιο"
+      google: "Ημερολόγιο Google"
     tagging:
+      all_tags: "Όλες οι ετικέτες"
       other_tags: "Άλλες ετικέτες"
       selector_all_tags: "όλες οι ετικέτες"
       selector_no_tags: "καμία ετικέτα"
@@ -3145,6 +3190,8 @@ el:
       groups:
         title: "Ομάδες Ετικετών"
         new: "Νέα Ομάδα"
+        new_title: "Δημιουργία Νέας Ομάδας"
+        edit_title: "Επεξεργασία Ομάδας Ετικετών"
         tags_label: "Ετικέτες σε αυτή την ομάδα"
         parent_tag_label: "Μητρική ετικέτα"
         one_per_topic_label: "Περιορισμός μιας ετικέτας για κάθε νήμα από αυτή την ομάδα"
@@ -3154,6 +3201,7 @@ el:
         delete: "Διαγραφή"
         confirm_delete: "Είσαι βέβαιος πως θέλεις να διαγράψεις αυτή την ομάδα ετικετών;"
         everyone_can_use: "Οι ετικέτες μπορούν να χρησιμοποιηθούν από όλους"
+        tags_placeholder: "Αναζήτηση ή δημιουργία ετικετών"
         parent_tag_placeholder: "Προεραιτικό"
       topics:
         none:
@@ -3191,6 +3239,12 @@ el:
         member: "μέλος"
         regular: "τακτικός"
         leader: "αρχηγός"
+    no_group_messages_title: "Δε βρέθηκαν ομαδικά μηνύματα"
+    topic_entrance:
+      sr_jump_top_button: "Μετάβαση στην πρώτη δημοσίευση"
+      sr_jump_bottom_button: "Μετάβαση στην τελευταία δημοσίευση"
+    fullscreen_table:
+      expand_btn: "Ανάπτυξη Πίνακα"
     sidebar:
       unread_count:
         one: "%{count} μη αναγνωσμένο"
@@ -3200,6 +3254,7 @@ el:
         other: "%{count} νέα"
       more: "Περισσότερα"
       all_categories: "Όλες οι κατηγορίες"
+      all_tags: "Όλες οι ετικέτες"
       sections:
         custom:
           save: "Αποθήκευση"
@@ -3212,6 +3267,7 @@ el:
           header_link_text: "Σχετικά"
         messages:
           header_link_text: "Μηνύματα"
+          header_action_title: "Δημιουργία προσωπικού μηνύματος"
           links:
             inbox: "Εισερχόμενα"
             sent: "Απεσταλμένα"
@@ -3221,11 +3277,26 @@ el:
             unread_with_count: "Μη αναγνωσμένα (%{count})"
             archive: "Αρχείο"
         tags:
+          links:
+            add_tags:
+              content: "Προσθήκη ετικετών"
+              title: "Δεν έχετε προσθέσει καμία ετικέτα. Κάντε κλικ για να ξεκινήσετε."
+          none: "Δεν έχετε προσθέσει ετικέτες."
+          click_to_get_started: "Κάντε κλικ εδώ για να ξεκινήσετε."
           header_link_text: "Ετικέτες"
+          header_action_title: "Επεξεργασία των ετικετών πλαϊνής γραμμής"
+          configure_defaults: "Ρύθμιση προεπιλογών"
         categories:
+          links:
+            add_categories:
+              content: "Προσθέστε κατηγορίες"
+          none: "Δεν έχετε προσθέσει καμία κατηγορία."
+          click_to_get_started: "Κάντε κλικ εδώ για να ξεκινήσετε."
           header_link_text: "Κατηγορίες"
+          configure_defaults: "Ρύθμιση προεπιλογών"
         community:
           header_link_text: "Κοινότητα"
+          header_action_title: "Δημιουργήστε ένα θέμα"
           links:
             about:
               content: "Σχετικά"
@@ -3235,16 +3306,21 @@ el:
               content: "Παράσημα"
             everything:
               content: "Τα πάνΤα"
+              title: "Όλα τα θέματα"
             faq:
               content: "Συχνές ερωτήσεις"
             groups:
               content: "Ομάδες"
             users:
               content: "Χρήστες"
+              title: "Λίστα όλων των χρηστών"
             my_posts:
               content: "Οι αναρτήσεις μου"
             review:
               content: "Ανασκόπηση"
+    welcome_topic_banner:
+      title: "Δημιουργήστε το θέμα καλωσορίσματος"
+      button_title: "Έναρξη Επεξεργασίας"
     until: "Μέχρι:"
   admin_js:
     type_to_filter: "γράψε εδώ για φιλτράρισμα..."
@@ -4572,7 +4648,6 @@ el:
         confirm_delete: "Είσαι βέβαιος πως θέλεις να διαγράψεις το host;"
         title: "Ενσωμάτωση"
         host: "Επιτρεπόμενα hosts"
-        class_name: "Class Name"
         allowed_paths: "Λίστα επιτρεπόμενων διαδρομών"
         edit: "επεξεργασία"
         category: "Ανάρτηση στην Κατηγορία"

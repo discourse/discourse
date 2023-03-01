@@ -1,7 +1,8 @@
 <div class="setting-label">
   <h3>
+    {{this.settingName}}
+
     {{#if this.staffLogFilter}}
-      {{this.settingName}}
       <LinkTo
         @route="adminLogs.staffActionLogs"
         @query={{hash filters=this.staffLogFilter force_refresh=true}}
@@ -11,17 +12,18 @@
           {{d-icon "history"}}
         </span>
       </LinkTo>
-    {{else}}
-      {{this.settingName}}
     {{/if}}
   </h3>
+
   {{#if this.defaultIsAvailable}}
-    <a
-      href
-      onClick={{action "setDefaultValues"}}
-    >{{this.setting.setDefaultValuesLabel}}</a>
+    <DButton
+      class="btn-link"
+      @action={{this.setDefaultValues}}
+      @translatedLabel={{this.setting.setDefaultValuesLabel}}
+    />
   {{/if}}
 </div>
+
 <div class="setting-value">
   {{component
     this.componentName
@@ -33,18 +35,20 @@
     allowAny=this.allowAny
   }}
 </div>
+
 {{#if this.dirty}}
   <div class="setting-controls">
-    <DButton @class="ok" @action={{action "update"}} @icon="check" />
-    <DButton @class="cancel" @action={{action "cancel"}} @icon="times" />
+    <DButton class="ok" @action={{this.update}} @icon="check" />
+    <DButton class="cancel" @action={{this.cancel}} @icon="times" />
   </div>
 {{else if this.setting.overridden}}
   {{#if this.setting.secret}}
-    <DButton @action={{action "toggleSecret"}} @icon="far-eye-slash" />
+    <DButton @action={{this.toggleSecret}} @icon="far-eye-slash" />
   {{/if}}
+
   <DButton
-    @class="btn-default undo"
-    @action={{action "resetDefault"}}
+    class="btn-default undo"
+    @action={{this.resetDefault}}
     @icon="undo"
     @label="admin.settings.reset"
   />
