@@ -560,6 +560,7 @@ DEPENDENCIES
   certified
   cgi (>= 0.3.6)
   colored2
+  concurrent-ruby
   cose
   cppjieba_rb
   css_parser

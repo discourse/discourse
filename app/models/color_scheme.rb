@@ -296,7 +296,7 @@ class ColorScheme < ActiveRecord::Base
   end
 
   def self.hex_cache
-    @hex_cache ||= DistributedCache.new("scheme_hex_for_name")
+    @hex_cache ||= Discourse.new_cache("scheme_hex_for_name", max_size_per_site: 100)
   end
 
   attr_accessor :is_base

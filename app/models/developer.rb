@@ -7,7 +7,7 @@ class Developer < ActiveRecord::Base
   after_destroy :rebuild_cache
 
   def self.id_cache
-    @id_cache ||= DistributedCache.new("developer_ids")
+    @id_cache ||= Discourse.new_cache("developer_ids", max_size_per_site: 1)
   end
 
   def self.user_ids

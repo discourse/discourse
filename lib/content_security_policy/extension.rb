@@ -37,7 +37,7 @@ class ContentSecurityPolicy
     private
 
     def cache
-      @cache ||= DistributedCache.new("csp_extensions")
+      @cache ||= Discourse.new_cache("csp_extensions", max_size_per_site: 1000)
     end
 
     def find_theme_extensions(theme_id)

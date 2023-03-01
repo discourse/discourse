@@ -3,7 +3,7 @@
 module SiteIconManager
   extend GlobalPath
 
-  @cache = DistributedCache.new("icon_manager")
+  @cache = Discourse.new_cache("icon_manager", max_size_per_site: 1000)
 
   SKETCH_LOGO_ID = -6
 

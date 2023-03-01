@@ -380,7 +380,7 @@ module SvgSprite
   end
 
   def self.expire_cache
-    cache&.clear
+    cache.clear
   end
 
   def self.svgs_for(theme_id)
@@ -517,6 +517,6 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
   end
 
   def self.cache
-    @cache ||= DistributedCache.new("svg_sprite")
+    @cache ||= Discourse.new_cache("svg_sprite", max_size_per_site: 1000)
   end
 end

@@ -763,7 +763,7 @@ module Discourse
 
   # Shared between processes
   def self.postgres_last_read_only
-    @postgres_last_read_only ||= DistributedCache.new("postgres_last_read_only")
+    @postgres_last_read_only ||= new_cache("postgres_last_read_only", max_size_per_site: 1)
   end
 
   # Per-process
@@ -1215,5 +1215,9 @@ module Discourse
         request.env["HTTP_ACCEPT_LANGUAGE"],
       ) if SiteSetting.set_locale_from_accept_language_header
     locale
+  end
+
+  def self.new_cache(name, max_size_per_site:, namespace: true)
+    LiveCache.new(name, max_size_per_site: max_size_per_site, namespace: namespace)
   end
 end
