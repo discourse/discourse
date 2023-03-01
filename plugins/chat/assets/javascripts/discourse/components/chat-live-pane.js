@@ -606,10 +606,6 @@ export default class ChatLivePane extends Component {
       if (data.chat_message?.cooked !== stagedMessage.cooked) {
         stagedMessage.cooked = data.chat_message.cooked;
       }
-
-      this.appEvents.trigger(
-        `chat-message-staged-${data.stagedId}:id-populated`
-      );
     }
   }
 
