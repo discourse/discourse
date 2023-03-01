@@ -5547,6 +5547,7 @@ en:
           close: "Close"
           edit: "Edit"
           delete: "Delete"
+          toggle_preview: "Toggle Preview"
         new_template_form:
           submit: "Save"
           cancel: "Cancel"
@@ -5556,6 +5557,7 @@ en:
           template:
             label: "Template"
             placeholder: "Create a YAML template here..."
+          preview: "Preview"
         delete_confirm: "Are you sure you would like to delete this template?"
         quick_insert_fields:
           add_new_field: "Add"
@@ -5565,6 +5567,41 @@ en:
           dropdown: "Dropdown"
           upload: "Upload a file"
           multiselect: "Multiple choice"
+        validations_modal:
+          button_title: "Validations"
+          modal_title: "Validation Options"
+          table_headers:
+            key: "Key"
+            type: "Type"
+            description: "Description"
+          validations:
+            required:
+              key: "required"
+              type: "boolean"
+              description: "Requires the field to be completed to submit the form."
+            minimum:
+              key: "minimum"
+              type: "integer"
+              description: "In text fields, specifies the minimum number of characters allowed."
+            maximum:
+              key: "maximum"
+              type: "integer"
+              description: "In text fields, specifies the maximum number of characters allowed. In multi select dropdowns, specifies the maximum number of options that can be selected."
+            pattern:
+              key: "pattern"
+              type: "regex string"
+              description: "In text fields, a regular expression specifying the allowed input."
+        preview_modal:
+          title: "Preview Template"
+        field_placeholders:
+          validations: "enter validations here"
+          label: "Enter label here"
+          placeholder: "Enter placeholder here"
+          none_label: "Select an item"
+          choices:
+            first: "Option 1"
+            second: "Option 2"
+            third: "Option 3"
         edit_category:
           toggle_freeform: "form template disabled"
           toggle_form_template: "form template enabled"

@@ -21,7 +21,14 @@ describe "Admin Customize Form Templates", type: :system, js: true do
     it "should show the form template structure in a modal" do
       visit("/admin/customize/form-templates")
       form_template_page.click_view_form_template
-      expect(form_template_page).to have_template_structure("some yaml template: value")
+      expect(form_template_page).to have_template_structure("- type: input")
+    end
+
+    it "should show a preview of the template in a modal when toggling the preview" do
+      visit("/admin/customize/form-templates")
+      form_template_page.click_view_form_template
+      form_template_page.click_toggle_preview
+      expect(form_template_page).to have_input_field("input")
     end
   end
 
@@ -45,7 +52,7 @@ describe "Admin Customize Form Templates", type: :system, js: true do
       visit("/admin/customize/form-templates/new")
 
       sample_name = "My First Template"
-      sample_template = "test: true"
+      sample_template = "- type: input"
 
       form_template_page.type_in_template_name(sample_name)
       ace_editor.type_input(sample_template)
@@ -53,19 +60,62 @@ describe "Admin Customize Form Templates", type: :system, js: true do
       expect(form_template_page).to have_form_template(sample_name)
     end
 
+    it "should disable the save button until form is filled out" do
+      visit("/admin/customize/form-templates/new")
+      expect(form_template_page).to have_save_button_with_state(true)
+      form_template_page.type_in_template_name("New Template")
+      expect(form_template_page).to have_save_button_with_state(true)
+      ace_editor.type_input("- type: input")
+      expect(form_template_page).to have_save_button_with_state(false)
+    end
+
+    it "should disable the preview button until form is filled out" do
+      visit("/admin/customize/form-templates/new")
+      expect(form_template_page).to have_preview_button_with_state(true)
+      form_template_page.type_in_template_name("New Template")
+      expect(form_template_page).to have_preview_button_with_state(true)
+      ace_editor.type_input("- type: input")
+      expect(form_template_page).to have_preview_button_with_state(false)
+    end
+
+    it "should show validation options in a modal when clicking the validations button" do
+      visit("/admin/customize/form-templates/new")
+      form_template_page.click_validations_button
+      expect(form_template_page).to have_validations_modal
+    end
+
+    it "should show a preview of the template in a modal when clicking the preview button" do
+      visit("/admin/customize/form-templates/new")
+      form_template_page.type_in_template_name("New Template")
+      ace_editor.type_input("- type: input")
+      form_template_page.click_preview_button
+      expect(form_template_page).to have_preview_modal
+      expect(form_template_page).to have_input_field("input")
+    end
+
+    it "should render all the input field types in the preview" do
+      visit("/admin/customize/form-templates/new")
+      form_template_page.type_in_template_name("New Template")
+      ace_editor.type_input(
+        "- type: input\n- type: textarea\n- type: checkbox\n- type: dropdown\n- type: upload\n- type: multi-select",
+      )
+      form_template_page.click_preview_button
+      expect(form_template_page).to have_input_field("input")
+      expect(form_template_page).to have_input_field("textarea")
+      expect(form_template_page).to have_input_field("checkbox")
+      expect(form_template_page).to have_input_field("dropdown")
+      expect(form_template_page).to have_input_field("upload")
+      expect(form_template_page).to have_input_field("multi-select")
+    end
+
     it "should allow quick insertion of checkbox field" do
       quick_insertion_test(
         "checkbox",
         '- type: checkbox
-  choices:
-    - "Option 1"
-    - "Option 2"
-    - "Option 3"
   attributes:
-    label: "Enter question here"
-    description: "Enter description here"
-    validations:
-      required: true',
+    label: "Enter label here"
+  validations:
+    # enter validations here',
       )
     end
 
@@ -74,11 +124,10 @@ describe "Admin Customize Form Templates", type: :system, js: true do
         "input",
         '- type: input
   attributes:
-    label: "Enter input label here"
-    description: "Enter input description here"
-    placeholder: "Enter input placeholder here"
-    validations:
-      required: true',
+    label: "Enter label here"
+    placeholder: "Enter placeholder here"
+  validations:
+    # enter validations here',
       )
     end
 
@@ -87,11 +136,10 @@ describe "Admin Customize Form Templates", type: :system, js: true do
         "textarea",
         '- type: textarea
   attributes:
-    label: "Enter textarea label here"
-    description: "Enter textarea description here"
-    placeholder: "Enter textarea placeholder here"
-    validations:
-      required: true',
+    label: "Enter label here"
+    placeholder: "Enter placeholder here"
+  validations:
+    # enter validations here',
       )
     end
 
@@ -104,10 +152,11 @@ describe "Admin Customize Form Templates", type: :system, js: true do
     - "Option 2"
     - "Option 3"
   attributes:
-    label: "Enter dropdown label here"
-    description: "Enter dropdown description here"
-    validations:
-      required: true',
+    none_label: "Select an item"
+    label: "Enter label here"
+    filterable: false
+  validations:
+    # enter validations here',
       )
     end
 
@@ -117,24 +166,26 @@ describe "Admin Customize Form Templates", type: :system, js: true do
         '- type: upload
   attributes:
     file_types: "jpg, png, gif"
-    label: "Enter upload label here"
-    description: "Enter upload description here"',
+    allow_multiple: false
+    label: "Enter label here"
+  validations:
+    # enter validations here',
       )
     end
 
     it "should allow quick insertion of multiple choice field" do
       quick_insertion_test(
         "multiselect",
-        '- type: multiple_choice
+        '- type: multi-select
   choices:
     - "Option 1"
     - "Option 2"
     - "Option 3"
   attributes:
-    label: "Enter multiple choice label here"
-    description: "Enter multiple choice description here"
-    validations:
-      required: true',
+    none_label: "Select an item"
+    label: "Enter label here"
+  validations:
+    # enter validations here',
       )
     end
   end

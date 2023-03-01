@@ -11,6 +11,25 @@ class Admin::FormTemplatesController < Admin::StaffController
   def new
   end
 
+  def preview
+    params.require(:name)
+    params.require(:template)
+
+    if params[:id].present?
+      template = FormTemplate.find(params[:id])
+      template.assign_attributes(name: params[:name], template: params[:template])
+    else
+      template = FormTemplate.new(name: params[:name], template: params[:template])
+    end
+
+    begin
+      template.validate!
+      render json: success_json
+    rescue FormTemplate::NotAllowed => err
+      render_json_error(err.message)
+    end
+  end
+
   def create
     params.require(:name)
     params.require(:template)
