@@ -4,7 +4,6 @@ class TopicRetriever
   def initialize(embed_url, opts = nil)
     @embed_url = embed_url
     @opts = opts || {}
-    @author_username = @opts[:author_username]
   end
 
   def retrieve
@@ -35,21 +34,18 @@ class TopicRetriever
     # It's possible another process or job found the embed already. So if that happened bail out.
     return if TopicEmbed.where(embed_url: @embed_url).exists?
 
-    fetch_http
-  end
-
-  def fetch_http
-    if @author_username.nil?
-      username =
-        SiteSetting.embed_by_username.presence || SiteSetting.site_contact_username.presence ||
-          Discourse.system_user.username
-    else
-      username = @author_username
+    if @opts[:author_username].present?
+      Discourse.deprecate(
+        "discourse_username parameter has been deprecated. Prefer passing author name using a <meta> tag.",
+        since: "3.1.0.beta1",
+        drop_from: "3.2",
+      )
     end
 
-    user = User.where(username_lower: username.downcase).first
-    return if user.blank?
+    username =
+      @opts[:author_username].present || SiteSetting.embed_by_username.presence ||
+        SiteSetting.site_contact_username.presence || Discourse.system_user.username
 
-    TopicEmbed.import_remote(user, @embed_url)
+    TopicEmbed.import_remote(@embed_url, user: User.find_by(username_lower: username.downcase))
   end
 end

@@ -1330,6 +1330,78 @@ pl_PL:
         warnings: "Oficjalne ostrzeżenia"
         read_more_in_group: "Chcesz przeczytać więcej? Przeglądaj inne wiadomości w %{groupLink}."
         read_more: "Chcesz przeczytać więcej? Przeglądaj inne wiadomości w <a href='%{basePath}/u/%{username}/messages'>wiadomościach osobistych</a>."
+        read_more_group_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Pozostała <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># nieprzeczytana</a>}
+                   few {Pozostały <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># nieprzeczytane</a>}
+                   many {Pozostało <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># nieprzeczytanych</a>}
+                other {Pozostało <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># nieprzeczytanych</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one { i <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nowa</a> wiadomość lub przejrzyj inne wiadomości w {groupLink}}
+                   few { i <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nowe</a> wiadomości lub przejrzyj inne wiadomości w {groupLink}}
+                   many { i <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nowych</a> wiadomości lub przejrzyj inne wiadomości w {groupLink}}
+                other { i <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nowych</a> wiadomości lub przejrzyj inne wiadomości w {groupLink}}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Pozostała <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># nieprzeczytana</a> wiadomość lub przejrzyj inne wiadomości w {groupLink}}
+                   few {Pozostały <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># nieprzeczytane</a> wiadomości lub przejrzyj inne wiadomości w {groupLink}}
+                   many {Pozostało <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># nieprzeczytanych</a> wiadomości lub przejrzyj inne wiadomości w {groupLink}}
+                other {Pozostało <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># nieprzeczytanych</a> wiadomości lub przejrzyj inne wiadomości w {groupLink}}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one {Pozostała <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nowa</a> wiadomość lub przejrzyj inne wiadomości w {groupLink}}
+                   few {Pozostały <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nowe</a> wiadomości lub przejrzyj inne wiadomości w {groupLink}}
+                   many {Pozostały <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nowych</a> wiadomości lub przejrzyj inne wiadomości w {groupLink}}
+                other {Pozostały <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nowych</a> wiadomości lub przejrzyj inne wiadomości w {groupLink}}
+              }
+            }
+            other {}
+          }
+        read_more_personal_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Pozostała <a href='{basePath}/u/{username}/messages/unread'># nieprzeczytana</a>}
+                   few {Pozostały <a href='{basePath}/u/{username}/messages/unread'># nieprzeczytane</a>}
+                   many {Pozostało <a href='{basePath}/u/{username}/messages/unread'># nieprzeczytanych</a>}
+                other {Pozostało <a href='{basePath}/u/{username}/messages/unread'># nieprzeczytanych</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one { i <a href='{basePath}/u/{username}/messages/new'># nowa</a> wiadomość lub przejrzyj inne <a href='{basePath}/u/{username}/messages'>wiadomości osobiste</a>}
+                   few { i <a href='{basePath}/u/{username}/messages/new'># nowe</a> wiadomości lub przejrzyj inne <a href='{basePath}/u/{username}/messages'>wiadomości osobiste</a>}
+                   many { i <a href='{basePath}/u/{username}/messages/new'># nowych</a> wiadomości lub przejrzyj inne <a href='{basePath}/u/{username}/messages'>wiadomości osobiste</a>}
+                other { i <a href='{basePath}/u/{username}/messages/new'># nowych</a> wiadomości lub przejrzyj inne <a href='{basePath}/u/{username}/messages'>wiadomości osobiste</a>}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Pozostała <a href='{basePath}/u/{username}/messages/unread'># nieprzeczytana</a> wiadomości lub przejrzyj inne <a href='{basePath}/u/{username}/messages'>wiadomości osobiste</a>}
+                   few {Pozostały <a href='{basePath}/u/{username}/messages/unread'># nieprzeczytane</a> wiadomości lub przejrzyj inne <a href='{basePath}/u/{username}/messages'>wiadomości osobiste</a>}
+                   many {Pozostało <a href='{basePath}/u/{username}/messages/unread'># nieprzeczytanych</a> wiadomości lub przejrzyj inne <a href='{basePath}/u/{username}/messages'>wiadomości osobiste</a>}
+                other {Pozostało <a href='{basePath}/u/{username}/messages/unread'># nieprzeczytanych</a> wiadomości lub przejrzyj inne <a href='{basePath}/u/{username}/messages'>wiadomości osobiste</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one {Pozostała <a href='{basePath}/u/{username}/messages/new'># nowa</a> wiadomość lub przejrzyj inne <a href='{basePath}/u/{username}/messages'>wiadomości osobiste</a>}
+                   few {Pozostały <a href='{basePath}/u/{username}/messages/new'># nowe</a> wiadomości lub przejrzyj inne <a href='{basePath}/u/{username}/messages'>wiadomości osobiste</a>}
+                   many {Pozostało <a href='{basePath}/u/{username}/messages/new'># nowych</a> wiadomości lub przejrzyj inne <a href='{basePath}/u/{username}/messages'>wiadomości osobiste</a>}
+                other {Pozostało <a href='{basePath}/u/{username}/messages/new'># nowych</a> wiadomości lub przejrzyj inne <a href='{basePath}/u/{username}/messages'>wiadomości osobiste</a>}
+              }
+            }
+            other {}
+          }
       preferences_nav:
         account: "Konto"
         security: "Bezpieczeństwo"
@@ -2844,6 +2916,47 @@ pl_PL:
       read_more_in_category: "Chcesz przeczytać więcej? Przeglądaj inne tematy w %{categoryLink} lub <a href='%{latestLink}'>przeglądaj najnowsze tematy</a>."
       read_more: "Chcesz przeczytać więcej? <a href='%{categoryLink}'>Przeglądaj wszystkie kategorie</a> lub <a href='%{latestLink}'>przeglądaj najnowsze tematy</a>."
       unread_indicator: "Nikt jeszcze nie czytał ostatniego postu w tym temacie."
+      read_more_MF: |
+        { HAS_UNREAD_AND_NEW, select,
+          true {
+            { UNREAD, plural,
+                 =0 {}
+                one {Pozostał <a href="{basePath}/unread"># nieprzeczytany</a>}
+                 few {Pozostały <a href="{basePath}/unread"># nieprzeczytane</a>}
+                 many {Pozostało <a href="{basePath}/unread"># nieprzeczytanych</a>}
+              other {Pozostało <a href="{basePath}/unread"># nieprzeczytanych</a>}
+            }
+            { NEW, plural,
+                 =0 {}
+                one { i <a href="{basePath}/new"># nowy</a> temat,}
+                 few { i <a href="{basePath}/new"># nowe</a> tematy,}
+                 many { i <a href="{basePath}/new"># nowych</a> tematów,}
+              other { i <a href="{basePath}/new"># nowych</a> tematów,}
+            }
+          }
+          false {
+            { UNREAD, plural,
+                 =0 {}
+                one {Pozostał <a href="{basePath}/unread"># nieprzeczytany</a> temat,}
+                 few {Pozostały <a href="{basePath}/unread"># nieprzeczytane</a> tematy,}
+                 many {Pozostało <a href="{basePath}/unread"># nieprzeczytanych</a> tematów,}
+              other {Pozostało <a href="{basePath}/unread"># nieprzeczytanych</a> tematów,}
+            }
+            { NEW, plural,
+                 =0 {}
+                one {Pozostał <a href="{basePath}/new"># nowy</a> temat,}
+                 few {Pozostały <a href="{basePath}/new"># nowe</a> tematy,}
+                 many {Pozostało <a href="{basePath}/new"># nowych</a> tematów,}
+              other {Pozostało <a href="{basePath}/new"># nowych</a> tematów,}
+            }
+          }
+          other {}
+        }
+        { HAS_CATEGORY, select,
+          true { lub przejrzyj inne tematy w {categoryLink}}
+          false { lub <a href="{basePath}/latest">zobacz najnowsze tematy</a>}
+          other {}
+        }
       bumped_at_title: |
         Pierwszy post: %{createdAtDate}
         Opublikowany: %{bumpedAtDate}
@@ -3332,6 +3445,7 @@ pl_PL:
       via_email: "ten wpis został dodany emailem"
       via_auto_generated_email: "ten wpis został dodany poprzez automatycznie wygenerowaną wiadomość e-mail"
       whisper: "ten wpis jest prywatnym szeptem do moderatorów"
+      whisper_groups: "ten post jest prywatnym szeptem widocznym tylko dla %{groupNames}"
       wiki:
         about: "ten wpis jest częścią wiki"
       few_likes_left: "Dziękuję za polubienie! Pozostało Ci tylko parę polubień do wykorzystania dzisiaj"
@@ -3518,7 +3632,7 @@ pl_PL:
       back: "Powrót do kategorii"
       general: "Ogólne"
       settings: "Ustawienia"
-      topic_template: "Szablon tematu"
+      topic_template: "Szablon"
       tags: "Tagi"
       tags_allowed_tags: "Zabroń następujących tagów w tej kategorii: "
       tags_allowed_tag_groups: "Zabroń następujących grup tagów w tej kategorii:"
@@ -3544,6 +3658,7 @@ pl_PL:
       name: "Nazwa kategorii"
       description: "Opis"
       logo: "Grafika z logo kategorii"
+      logo_dark: "Obraz logo kategorii w trybie ciemnym"
       background_image: "Grafika z tłem kategorii"
       badge_colors: "Kolor Etykiety"
       background_color: "Kolor tła"
@@ -3574,6 +3689,7 @@ pl_PL:
       pending_permission_change_alert: "Nie dodałeś/łaś %{group} do tej kategorii; kliknij ten przycisk, aby je dodać."
       images: "Obrazy"
       email_in: "Dedykowany adres email kategorii:"
+      email_in_tooltip: "Możesz oddzielić kilka adresów e-mail znakiem |."
       email_in_allow_strangers: "Akceptuj wiadomości email od anonimowych, nieposiadających kont użytkowników "
       mailinglist_mirror: "Kategoria odzwierciedla listę mailingową"
       show_subcategory_list: "Pokaż listę subkategorii powyżej tematów w tej kategorii."
@@ -3596,6 +3712,7 @@ pl_PL:
       this_year: "ten rok"
       position: "Pozycja na stronie kategorii:"
       default_position: "Domyślna pozycja"
+      position_disabled: "Kategorie będą wyświetlane w kolejności aktywności. Aby kontrolować kolejność kategorii na listach, włącz ustawienie <a href='%{url}'>'fixed category positions'</a>."
       minimum_required_tags: "Minimalna liczba tagów wymaganych w temacie:"
       default_slow_mode: 'Włącz „Tryb powolny” dla nowych tematów w tej kategorii.'
       parent: "Kategoria rodzica"
@@ -4598,6 +4715,9 @@ pl_PL:
               list_user_badges: Lista odznak użytkownika.
               assign_badge_to_user: Przypisz odznakę użytkownikowi.
               revoke_badge_from_user: Odbierz odznakę użytkownikowi.
+            groups:
+              manage_groups: Wyświetlaj, dodawaj i usuwaj członków grupy.
+              administer_groups: Wyświetlaj, pokazuj, twórz, aktualizuj i usuwaj grupy.
             wordpress:
               publishing: Niezbędne do funkcji publikowania wtyczki WP Discourse (wymagane).
               commenting: Niezbędne do funkcji komentowania wtyczki WP Discourse.
@@ -5917,10 +6037,8 @@ pl_PL:
       embedding:
         get_started: "Jeśli chcesz osadzić Discourse na innej stronie, rozpocznij podając jej host."
         confirm_delete: "Czy na pewno chcesz usunąć ten host?"
-        sample: "Wklej poniższy kod HTML na swojej stronie, aby tworzyć i osadzać tematy Discourse. Zastąp <b>REPLACE_ME</b> kanonicznym adresem URL strony, na której go osadzasz."
         title: "Osadzanie"
         host: "Dozwolone hosty"
-        class_name: "Nazwa klasy"
         allowed_paths: "Lista dozwolonych ścieżek"
         edit: "edytuj"
         category: "Publikuj w kategorii"

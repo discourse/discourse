@@ -3310,7 +3310,6 @@ fr:
       back: "Retour à la catégorie"
       general: "Général"
       settings: "Paramètres"
-      topic_template: "Modèle de sujet"
       tags: "Étiquettes"
       tags_allowed_tags: "Réserver l'utilisation de ces étiquettes à cette catégorie :"
       tags_allowed_tag_groups: "Réserver l'utilisation de ces groupes d'étiquettes à cette catégorie :"
@@ -5605,10 +5604,8 @@ fr:
       embedding:
         get_started: "Si vous souhaitez intégrer Discourse dans un autre site, commencez par ajouter son hôte."
         confirm_delete: "Voulez-vous vraiment supprimer cet hôte ?"
-        sample: "Collez le code HTML suivant sur votre site pour créer et intégrer des sujets Discourse. Remplacez <b>REPLACE_ME</b> par l'URL canonique de la page sur laquelle vous souhaitez l'intégrer."
         title: "Intégration externe"
         host: "Hôtes autorisés"
-        class_name: "Nom de classe"
         allowed_paths: "Liste des chemins autorisés"
         edit: "modifier"
         category: "Publier dans la catégorie"

@@ -3310,7 +3310,6 @@ fi:
       back: "Takaisin alueelle"
       general: "Yleistä"
       settings: "Asetukset"
-      topic_template: "Ketjun mallipohja"
       tags: "Tunnisteet"
       tags_allowed_tags: "Rajaa nämä tunnisteet tälle alueelle:"
       tags_allowed_tag_groups: "Rajaa nämä tunnisteryhmät tälle alueelle:"
@@ -5603,10 +5602,8 @@ fi:
       embedding:
         get_started: "Jos haluat upottaa Discoursen toiselle sivustolle, aloita lisäämällä sen isäntä."
         confirm_delete: "Oletko varma, että haluat poistaa tämän isännän?"
-        sample: "Liitä seuraava HTML-koodi sivustollesi, jotta voit luoda ja upottaa Discourse-ketjuja. Korvaa <b>REPLACE_ME</b> sen sivun kanonisella URL-osoitteella, jolle upotat sen."
         title: "Upottaminen"
         host: "Sallitut isännät"
-        class_name: "Luokan nimi"
         allowed_paths: "Sallittu polkulistaus"
         edit: "muokkaa"
         category: "Julkaise alueelle"

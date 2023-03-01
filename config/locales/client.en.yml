@@ -6113,10 +6113,14 @@ en:
       embedding:
         get_started: "If you'd like to embed Discourse on another website, begin by adding its host."
         confirm_delete: "Are you sure you want to delete that host?"
-        sample: "Paste the following HTML code into your site to create and embed Discourse topics. Replace <b>REPLACE_ME</b> with the canonical URL of the page you are embedding it on."
+        sample: |
+          <p>Paste the following HTML code into your site to create and embed Discourse topics. Replace <b>EMBED_URL</b> with the canonical URL of the page you are embedding it on.</p>
+
+          <p>If you want to customize the style, uncomment and replace <b>CLASS_NAME</b> with a CSS class defined in the <i>Embedded CSS</i> of your theme.</p>
+
+          <p>Replace <b>DISCOURSE_USERNAME</b> with the Discourse username of the author that should create the topic. Discourse will automatically lookup the user by the <code>content</code> attribute of the <code>&lt;meta&gt;</code> tags with <code>name</code> attribute set to <code>discourse-username</code> or <code>author</code>. The <code>discourseUserName</code> parameter has been deprecated and will be removed in Discourse 3.2.</p>
         title: "Embedding"
         host: "Allowed Hosts"
-        class_name: "Class Name"
         allowed_paths: "Path Allowlist"
         edit: "edit"
         category: "Post to Category"

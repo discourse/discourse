@@ -22,14 +22,18 @@ class Jobs::NotifyReviewable < ::Jobs::Base
         end
     end
 
-    DistributedMutex.synchronize("notify_reviewable_job", validity: 10, max_get_lock_attempts: 1) do
+    DistributedMutex.synchronize("notify_reviewable_job", validity: 120) do
       counts = Hash.new(0)
-
-      Reviewable.default_visible.pending.each do |r|
-        counts[:admins] += 1
-        counts[:moderators] += 1 if r.reviewable_by_moderator?
-        counts[r.reviewable_by_group_id] += 1 if r.reviewable_by_group_id
-      end
+      Reviewable
+        .default_visible
+        .pending
+        .group(:reviewable_by_moderator, :reviewable_by_group_id)
+        .pluck(:reviewable_by_moderator, :reviewable_by_group_id, "count(*)")
+        .each do |reviewable_by_moderator, reviewable_by_group_id, count|
+          counts[:admins] += count
+          counts[:moderators] += count if reviewable_by_moderator
+          counts[reviewable_by_group_id] += count if reviewable_by_group_id
+        end
 
       if SiteSetting.legacy_navigation_menu?
         notify_legacy(
