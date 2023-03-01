@@ -2,7 +2,7 @@
 
 class ChatChannelUnreadsQuery
   def self.call(channel_id, user_id)
-    builder = DB.build(<<~SQL)
+    sql = <<~SQL
       SELECT (
       SELECT COUNT(*) AS unread_count
       FROM chat_messages
@@ -27,13 +27,14 @@ class ChatChannelUnreadsQuery
     ) AS mention_count;
     SQL
 
-    builder
-      .query_hash(
+    DB
+      .query(
+        sql,
         channel_id: channel_id,
         user_id: user_id,
         notification_type: Notification.types[:chat_mention],
       )
-      &.first
-      &.symbolize_keys || { unread_count: 0, mention_count: 0 }
+      .first
+      .to_h
   end
 end
