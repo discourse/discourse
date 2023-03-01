@@ -3,8 +3,6 @@
 module Jobs
   class AutoRemoveMembershipHandleCategoryUpdated < ::Jobs::Base
     def execute(args)
-      return if !SiteSetting.chat_enabled
-
       Chat::Service::AutoRemove::HandleCategoryUpdated.call(**args)
     end
   end

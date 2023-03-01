@@ -15,6 +15,8 @@ RSpec.describe Chat::Service::AutoRemove::HandleUserRemovedFromGroup do
     fab!(:public_channel_1) { Fabricate(:chat_channel) }
     fab!(:public_channel_2) { Fabricate(:chat_channel) }
 
+    before { SiteSetting.chat_enabled = true }
+
     it "fails model if user is deleted" do
       removed_user.destroy!
       expect(result).to fail_to_find_a_model(:user)
@@ -86,7 +88,7 @@ RSpec.describe Chat::Service::AutoRemove::HandleUserRemovedFromGroup do
         fab!(:removed_user) { Fabricate(:admin) }
 
         it "does not remove them from public channels" do
-          expect(result).to be_a_success
+          expect(result).to fail_a_policy(:user_not_staff)
           expect(
             UserChatChannelMembership.where(
               user: [removed_user],
@@ -100,7 +102,7 @@ RSpec.describe Chat::Service::AutoRemove::HandleUserRemovedFromGroup do
         before { SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone] }
 
         it "does not remove them from public channels" do
-          expect(result).to be_a_success
+          expect(result).to fail_a_policy(:not_everyone_allowed)
           expect(
             UserChatChannelMembership.where(
               user: [removed_user],
@@ -165,7 +167,7 @@ RSpec.describe Chat::Service::AutoRemove::HandleUserRemovedFromGroup do
           fab!(:removed_user) { Fabricate(:admin) }
 
           it "does not remove them from that channel" do
-            expect(result).to be_a_success
+            expect(result).to fail_a_policy(:user_not_staff)
             expect(
               UserChatChannelMembership.where(
                 user: [removed_user],
@@ -196,7 +198,7 @@ RSpec.describe Chat::Service::AutoRemove::HandleUserRemovedFromGroup do
           fab!(:removed_user) { Fabricate(:admin) }
 
           it "does not remove them from that channel" do
-            expect(result).to be_a_success
+            expect(result).to fail_a_policy(:user_not_staff)
             expect(
               UserChatChannelMembership.where(
                 user: [removed_user],

@@ -16,6 +16,8 @@ RSpec.describe Chat::Service::AutoRemove::HandleDestroyedGroup do
     fab!(:channel_1) { Fabricate(:chat_channel) }
     fab!(:channel_2) { Fabricate(:chat_channel) }
 
+    before { SiteSetting.chat_enabled = true }
+
     it "fails model if none of the group_user_ids users exist" do
       User.where(id: params[:destroyed_group_user_ids]).destroy_all
       expect(result).to fail_to_find_a_model(:scoped_users)
@@ -140,7 +142,7 @@ RSpec.describe Chat::Service::AutoRemove::HandleDestroyedGroup do
 
         it "does nothing" do
           expect { result }.not_to change { UserChatChannelMembership.count }
-          expect(result).to be_a_success
+          expect(result).to fail_a_policy(:not_everyone_allowed)
         end
       end
     end

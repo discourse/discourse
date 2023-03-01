@@ -19,73 +19,67 @@ module Chat
       class HandleChatAllowedGroupsChange
         include Service::Base
 
-        contract
+        policy :chat_enabled
+        step :cast_new_allowed_groups_to_array
+        policy :not_everyone_allowed
+        model :users
+        model :memberships_to_remove
         step :remove_users_outside_allowed_groups
         step :publish
 
-        class Contract
-          attribute :new_allowed_groups
-
-          before_validation do
-            self.new_allowed_groups = self.new_allowed_groups.to_s.split("|").map(&:to_i)
-          end
-        end
-
         private
 
-        def remove_users_outside_allowed_groups(contract:, **)
-          return noop if contract.new_allowed_groups.include?(Group::AUTO_GROUPS[:everyone])
-
-          users =
-            User
-              .real
-              .activated
-              .not_suspended
-              .not_staged
-              .where("NOT admin AND NOT moderator")
-              .joins(:user_chat_channel_memberships)
-              .distinct
-
-          if contract.new_allowed_groups.any?
-            group_user_sql = <<~SQL
-              users.id NOT IN (
-                SELECT DISTINCT group_users.user_id
-                FROM group_users
-                WHERE group_users.group_id IN (#{contract.new_allowed_groups.join(",")})
-              )
-            SQL
-            users = users.where(group_user_sql)
-          end
-
-          user_ids_to_remove = users.pluck(:id)
-          return noop if user_ids_to_remove.empty?
-
-          memberships_to_remove =
-            UserChatChannelMembership
-              .joins(:chat_channel)
-              .where(user_id: user_ids_to_remove)
-              .where.not(chat_channel: { type: "DirectMessageChannel" })
-
-          users_removed_map =
-            memberships_to_remove
-              .destroy_all
-              .each_with_object({}) do |obj, hash|
-                hash[obj.chat_channel_id] = [] if !hash.key? obj.chat_channel_id
-                hash[obj.chat_channel_id] << obj.user_id
-              end
-
-          context.merge(users_removed_map: users_removed_map)
+        def chat_enabled
+          SiteSetting.chat_enabled
         end
 
-        def publish(users_removed_map:, **)
-          Chat::Service::Actions::AutoRemovedUserPublisher.call(
-            event_type: :chat_allowed_groups_changed,
-            users_removed_map: users_removed_map,
+        def cast_new_allowed_groups_to_array(new_allowed_groups:, **)
+          context[:new_allowed_groups] = new_allowed_groups.to_s.split("|").map(&:to_i)
+        end
+
+        def not_everyone_allowed(new_allowed_groups:, **)
+          !new_allowed_groups.include?(Group::AUTO_GROUPS[:everyone])
+        end
+
+        def fetch_users(new_allowed_groups:, **)
+          User
+            .real
+            .activated
+            .not_suspended
+            .not_staged
+            .where("NOT admin AND NOT moderator")
+            .joins(:user_chat_channel_memberships)
+            .distinct
+            .then do |users|
+              break users if new_allowed_groups.blank?
+              users.where(<<~SQL, new_allowed_groups)
+                users.id NOT IN (
+                  SELECT DISTINCT group_users.user_id
+                  FROM group_users
+                  WHERE group_users.group_id IN (?)
+                )
+              SQL
+            end
+        end
+
+        def fetch_memberships_to_remove(users:, **)
+          UserChatChannelMembership
+            .joins(:chat_channel)
+            .where(user_id: users.pluck(:id))
+            .where.not(chat_channel: { type: "DirectMessageChannel" })
+        end
+
+        def remove_users_outside_allowed_groups(memberships_to_remove:, **)
+          context[:users_removed_map] = Actions::RemoveMemberships.call(
+            memberships: memberships_to_remove,
           )
         end
 
-        def noop
-          context.merge(users_removed_map: {})
+        def publish(users_removed_map:, **)
+          Chat::Service::Actions::PublishAutoRemovedUser.call(
+            event_type: :chat_allowed_groups_changed,
+            users_removed_map: users_removed_map,
+          )
         end
       end
     end

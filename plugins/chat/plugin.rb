@@ -249,8 +249,9 @@ after_initialize do
   load File.expand_path("../app/services/auto_remove/handle_user_removed_from_group.rb", __FILE__)
   load File.expand_path("../app/services/auto_remove/handle_category_updated.rb", __FILE__)
   load File.expand_path("../app/services/auto_remove/handle_destroyed_group.rb", __FILE__)
-  load File.expand_path("../app/services/actions/auto_removed_user_publisher.rb", __FILE__)
+  load File.expand_path("../app/services/actions/publish_auto_removed_user.rb", __FILE__)
   load File.expand_path("../app/services/actions/calculate_memberships_for_removal.rb", __FILE__)
+  load File.expand_path("../app/services/actions/remove_memberships.rb", __FILE__)
   load File.expand_path("../app/controllers/api_controller.rb", __FILE__)
   load File.expand_path("../app/controllers/api/chat_channels_controller.rb", __FILE__)
   load File.expand_path("../app/controllers/api/chat_current_user_channels_controller.rb", __FILE__)
@@ -623,16 +624,13 @@ after_initialize do
     # There's a bug on core where this event is triggered with an `#update` result (true/false)
     return if !category.is_a?(Category)
     category_channel = ChatChannel.find_by(chatable: category)
+    return if category_channel.blank?
 
-    if category_channel
-      if category_channel&.auto_join_users
-        Chat::ChatChannelMembershipManager.new(
-          category_channel,
-        ).enforce_automatic_channel_memberships
-      end
-
-      Jobs.enqueue(:auto_remove_membership_handle_category_updated, category_id: category.id)
+    if category_channel.auto_join_users
+      Chat::ChatChannelMembershipManager.new(category_channel).enforce_automatic_channel_memberships
     end
+
+    Jobs.enqueue(:auto_remove_membership_handle_category_updated, category_id: category.id)
   end
 
   Chat::Engine.routes.draw do

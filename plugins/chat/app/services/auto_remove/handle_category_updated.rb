@@ -16,16 +16,29 @@ module Chat
         include Service::Base
 
         contract
+        step :assign_defaults
+        policy :chat_enabled
         model :category
         model :category_channel_ids
+        model :users
         step :remove_users_without_channel_permission
         step :publish
 
         class Contract
-          attribute :category_id
+          attribute :category_id, :integer
+
+          validates :category_id, presence: true
         end
 
         private
+
+        def assign_defaults
+          context[:users_removed_map] = {}
+        end
+
+        def chat_enabled
+          SiteSetting.chat_enabled
+        end
 
         def fetch_category(contract:, **)
           Category.find_by(id: contract.category_id)
@@ -35,48 +48,36 @@ module Chat
           ChatChannel.where(chatable: category).pluck(:id)
         end
 
-        def remove_users_without_channel_permission(category:, category_channel_ids:, **)
-          return noop if category_channel_ids.empty?
+        def fetch_users(category_channel_ids:, **)
+          User
+            .real
+            .activated
+            .not_suspended
+            .not_staged
+            .joins(:user_chat_channel_memberships)
+            .where("user_chat_channel_memberships.chat_channel_id IN (?)", category_channel_ids)
+            .where("NOT admin AND NOT moderator")
+        end
 
-          users =
-            User
-              .real
-              .activated
-              .not_suspended
-              .not_staged
-              .joins(:user_chat_channel_memberships)
-              .where("user_chat_channel_memberships.chat_channel_id IN (?)", category_channel_ids)
-              .where("NOT admin AND NOT moderator")
-
+        def remove_users_without_channel_permission(users:, category_channel_ids:, **)
           memberships_to_remove =
             Chat::Service::Actions::CalculateMembershipsForRemoval.call(
               scoped_users: users,
               channel_ids: category_channel_ids,
             )
 
-          return noop if memberships_to_remove.empty?
+          return if memberships_to_remove.blank?
 
-          users_removed_map =
-            UserChatChannelMembership
-              .where(id: memberships_to_remove)
-              .destroy_all
-              .each_with_object({}) do |obj, hash|
-                hash[obj.chat_channel_id] = [] if !hash.key? obj.chat_channel_id
-                hash[obj.chat_channel_id] << obj.user_id
-              end
-
-          context.merge(users_removed_map: users_removed_map)
-        end
-
-        def publish(users_removed_map:, **)
-          Chat::Service::Actions::AutoRemovedUserPublisher.call(
-            event_type: :category_updated,
-            users_removed_map: users_removed_map,
+          context[:users_removed_map] = Actions::RemoveMemberships.call(
+            memberships: UserChatChannelMembership.where(id: memberships_to_remove),
           )
         end
 
-        def noop
-          context.merge(users_removed_map: {})
+        def publish(users_removed_map:, **)
+          Chat::Service::Actions::PublishAutoRemovedUser.call(
+            event_type: :category_updated,
+            users_removed_map: users_removed_map,
+          )
         end
       end
     end

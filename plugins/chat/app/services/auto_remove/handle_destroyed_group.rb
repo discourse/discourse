@@ -23,6 +23,9 @@ module Chat
         include Service::Base
 
         contract
+        step :assign_defaults
+        policy :chat_enabled
+        policy :not_everyone_allowed
         model :scoped_users
         step :remove_users_outside_allowed_groups
         step :remove_users_without_channel_permission
@@ -30,9 +33,23 @@ module Chat
 
         class Contract
           attribute :destroyed_group_user_ids
+
+          validates :destroyed_group_user_ids, presence: true
         end
 
         private
+
+        def assign_defaults
+          context[:users_removed_map] = {}
+        end
+
+        def chat_enabled
+          SiteSetting.chat_enabled
+        end
+
+        def not_everyone_allowed
+          !SiteSetting.chat_allowed_groups_map.include?(Group::AUTO_GROUPS[:everyone])
+        end
 
         def fetch_scoped_users(destroyed_group_user_ids:, **)
           User
@@ -48,8 +65,6 @@ module Chat
         end
 
         def remove_users_outside_allowed_groups(scoped_users:, **)
-          return noop if SiteSetting.chat_allowed_groups_map.include?(Group::AUTO_GROUPS[:everyone])
-
           users = scoped_users
 
           # Remove any of these users from all category channels if they
@@ -67,7 +82,7 @@ module Chat
           end
 
           user_ids_to_remove = users.pluck(:id)
-          return noop if user_ids_to_remove.empty?
+          return if user_ids_to_remove.empty?
 
           memberships_to_remove =
             UserChatChannelMembership
@@ -75,44 +90,32 @@ module Chat
               .where(user_id: user_ids_to_remove)
               .where.not(chat_channel: { type: "DirectMessageChannel" })
 
-          users_removed_map =
-            memberships_to_remove
-              .destroy_all
-              .each_with_object({}) do |obj, hash|
-                hash[obj.chat_channel_id] = [] if !hash.key? obj.chat_channel_id
-                hash[obj.chat_channel_id] << obj.user_id
-              end
+          return if memberships_to_remove.empty?
 
-          context.merge(users_removed_map: users_removed_map)
+          context[:users_removed_map] = Actions::RemoveMemberships.call(
+            memberships: memberships_to_remove,
+          )
         end
 
         def remove_users_without_channel_permission(scoped_users:, **)
           memberships_to_remove =
             Chat::Service::Actions::CalculateMembershipsForRemoval.call(scoped_users: scoped_users)
 
-          return noop if memberships_to_remove.empty?
+          return if memberships_to_remove.empty?
 
-          users_removed_map =
-            UserChatChannelMembership
-              .where(id: memberships_to_remove)
-              .destroy_all
-              .each_with_object({}) do |obj, hash|
-                hash[obj.chat_channel_id] = [] if !hash.key? obj.chat_channel_id
-                hash[obj.chat_channel_id] << obj.user_id
-              end
-
-          context.merge(users_removed_map: users_removed_map)
-        end
-
-        def publish(users_removed_map:, **)
-          Chat::Service::Actions::AutoRemovedUserPublisher.call(
-            event_type: :destroyed_group,
-            users_removed_map: users_removed_map,
+          context.merge(
+            users_removed_map:
+              Actions::RemoveMemberships.call(
+                memberships: UserChatChannelMembership.where(id: memberships_to_remove),
+              ),
           )
         end
 
-        def noop
-          context.merge(users_removed_map: context.users_removed_map || {})
+        def publish(users_removed_map:, **)
+          Chat::Service::Actions::PublishAutoRemovedUser.call(
+            event_type: :destroyed_group,
+            users_removed_map: users_removed_map,
+          )
         end
       end
     end

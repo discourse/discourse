@@ -15,6 +15,8 @@ RSpec.describe Chat::Service::AutoRemove::HandleChatAllowedGroupsChange do
     fab!(:public_channel_1) { Fabricate(:chat_channel) }
     fab!(:public_channel_2) { Fabricate(:chat_channel) }
 
+    before { SiteSetting.chat_enabled = true }
+
     context "when new_allowed_groups is empty" do
       let(:new_allowed_groups) { "" }
 
@@ -110,7 +112,7 @@ RSpec.describe Chat::Service::AutoRemove::HandleChatAllowedGroupsChange do
 
       it "does nothing" do
         expect { result }.not_to change { UserChatChannelMembership.count }
-        expect(result).to be_a_success
+        expect(result).to fail_to_find_a_model(:users)
       end
     end
 
@@ -125,7 +127,7 @@ RSpec.describe Chat::Service::AutoRemove::HandleChatAllowedGroupsChange do
 
       it "does nothing" do
         expect { result }.not_to change { UserChatChannelMembership.count }
-        expect(result).to be_a_success
+        expect(result).to fail_a_policy(:not_everyone_allowed)
       end
     end
 

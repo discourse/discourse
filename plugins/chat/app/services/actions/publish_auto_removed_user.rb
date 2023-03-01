@@ -6,9 +6,9 @@ module Chat
       # All of the handlers that auto-remove users from chat
       # (under services/auto_remove) need to publish which users
       # were removed and from which channel, as well as logging
-      # this in staff actions so its obvious why these users were
+      # this in staff actions so it's obvious why these users were
       # removed.
-      class AutoRemovedUserPublisher
+      class PublishAutoRemovedUser
         # @param [Symbol] event_type What caused the users to be removed,
         #   each handler will define this, e.g. category_updated, user_removed_from_group
         # @param [Hash] users_removed_map A hash with channel_id as its keys and an

@@ -78,9 +78,9 @@ module Chat
             next if channel_permission.blank?
 
             group_ids_with_write_permission =
-              channel_permission.groups_with_write_permissions&.split(",")&.map(&:to_i) || []
+              channel_permission.groups_with_write_permissions.to_s.split(",").map(&:to_i)
             group_ids_with_read_permission =
-              channel_permission.groups_with_readonly_permissions&.split(",")&.map(&:to_i) || []
+              channel_permission.groups_with_readonly_permissions.to_s.split(",").map(&:to_i)
 
             # None of the groups on the channel have permission to do anything
             # more than read only, remove the membership.

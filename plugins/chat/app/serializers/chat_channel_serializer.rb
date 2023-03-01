@@ -110,15 +110,9 @@ class ChatChannelSerializer < ApplicationSerializer
   def meta
     {
       message_bus_last_ids: {
-        new_messages:
-          @opts[:new_messages_message_bus_last_id] ||
-            MessageBus.last_id(ChatPublisher.new_messages_message_bus_channel(object.id)),
-        new_mentions:
-          @opts[:new_mentions_message_bus_last_id] ||
-            MessageBus.last_id(ChatPublisher.new_mentions_message_bus_channel(object.id)),
-        kick:
-          @options[:kick_message_bus_last_id] ||
-            MessageBus.last_id(ChatPublisher.kick_users_message_bus_channel(object.id)),
+        new_messages: new_messages_message_bus_id,
+        new_mentions: new_mentions_message_bus_id,
+        kick: kick_message_bus_id,
       },
     }
   end
@@ -128,4 +122,21 @@ class ChatChannelSerializer < ApplicationSerializer
   alias_method :include_archived_messages?, :include_archive_status?
   alias_method :include_archive_failed?, :include_archive_status?
   alias_method :include_archive_completed?, :include_archive_status?
+
+  private
+
+  def new_messages_message_bus_id
+    @opts[:new_messages_message_bus_last_id] ||
+      MessageBus.last_id(ChatPublisher.new_messages_message_bus_channel(object.id))
+  end
+
+  def new_mentions_message_bus_id
+    @opts[:new_mentions_message_bus_last_id] ||
+      MessageBus.last_id(ChatPublisher.new_mentions_message_bus_channel(object.id))
+  end
+
+  def kick_message_bus_id
+    @opts[:kick_message_bus_last_id] ||
+      MessageBus.last_id(ChatPublisher.kick_users_message_bus_channel(object.id))
+  end
 end

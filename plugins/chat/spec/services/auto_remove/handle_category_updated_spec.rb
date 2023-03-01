@@ -15,6 +15,8 @@ RSpec.describe Chat::Service::AutoRemove::HandleCategoryUpdated do
     fab!(:channel_1) { Fabricate(:chat_channel, chatable: updated_category) }
     fab!(:channel_2) { Fabricate(:chat_channel, chatable: updated_category) }
 
+    before { SiteSetting.chat_enabled = true }
+
     it "fails model if category is deleted" do
       updated_category.destroy!
       expect(result).to fail_to_find_a_model(:category)
