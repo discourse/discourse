@@ -22,13 +22,13 @@ module Chat
       class HandleDestroyedGroup
         include Service::Base
 
-        contract
-        step :assign_defaults
         policy :chat_enabled
         policy :not_everyone_allowed
+        contract
         model :scoped_users
-        step :remove_users_outside_allowed_groups
-        step :remove_users_without_channel_permission
+        step :fetch_users
+        model :memberships_to_remove
+        step :remove_memberships
         step :publish
 
         class Contract
@@ -38,10 +38,6 @@ module Chat
         end
 
         private
-
-        def assign_defaults
-          context[:users_removed_map] = {}
-        end
 
         def chat_enabled
           SiteSetting.chat_enabled
@@ -64,50 +60,34 @@ module Chat
             .distinct
         end
 
-        def remove_users_outside_allowed_groups(scoped_users:, **)
-          users = scoped_users
-
-          # Remove any of these users from all category channels if they
-          # are not in any of the chat_allowed_groups or if there are no
-          # chat allowed groups.
-          if SiteSetting.chat_allowed_groups_map.any?
-            group_user_sql = <<~SQL
+        def fetch_users(scoped_users:, **)
+          context[:users] = scoped_users.then do |users|
+            break users if SiteSetting.chat_allowed_groups_map.blank?
+            users.where(<<~SQL, SiteSetting.chat_allowed_groups_map)
               users.id NOT IN (
                 SELECT DISTINCT group_users.user_id
                 FROM group_users
-                WHERE group_users.group_id IN (#{SiteSetting.chat_allowed_groups_map.join(",")})
+                WHERE group_users.group_id IN (?)
               )
             SQL
-            users = users.where(group_user_sql)
           end
-
-          user_ids_to_remove = users.pluck(:id)
-          return if user_ids_to_remove.empty?
-
-          memberships_to_remove =
-            UserChatChannelMembership
-              .joins(:chat_channel)
-              .where(user_id: user_ids_to_remove)
-              .where.not(chat_channel: { type: "DirectMessageChannel" })
-
-          return if memberships_to_remove.empty?
-
-          context[:users_removed_map] = Actions::RemoveMemberships.call(
-            memberships: memberships_to_remove,
-          )
         end
 
-        def remove_users_without_channel_permission(scoped_users:, **)
-          memberships_to_remove =
-            Chat::Service::Actions::CalculateMembershipsForRemoval.call(scoped_users: scoped_users)
-
-          return if memberships_to_remove.empty?
-
-          context.merge(
-            users_removed_map:
-              Actions::RemoveMemberships.call(
-                memberships: UserChatChannelMembership.where(id: memberships_to_remove),
+        def fetch_memberships_to_remove(scoped_users:, users:, **)
+          UserChatChannelMembership
+            .joins(:chat_channel)
+            .where(user_id: users.pluck(:id))
+            .where.not(chat_channel: { type: "DirectMessageChannel" })
+            .or(
+              UserChatChannelMembership.where(
+                id: Actions::CalculateMembershipsForRemoval.call(scoped_users: scoped_users),
               ),
+            )
+        end
+
+        def remove_memberships(memberships_to_remove:, **)
+          context[:users_removed_map] = Actions::RemoveMemberships.call(
+            memberships: memberships_to_remove,
           )
         end
 

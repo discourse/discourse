@@ -135,13 +135,7 @@ RSpec.describe Chat::Service::AutoRemove::HandleUserRemovedFromGroup do
         before { group_1.remove(removed_user) }
 
         it "does not remove them from that channel" do
-          expect(result).to be_a_success
-          expect(
-            UserChatChannelMembership.where(
-              user: [removed_user],
-              chat_channel: [private_channel_1],
-            ).count,
-          ).to eq(1)
+          expect { result }.not_to change { UserChatChannelMembership.count }
         end
       end
 

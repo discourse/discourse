@@ -123,7 +123,6 @@ RSpec.describe Chat::Service::AutoRemove::HandleDestroyedGroup do
 
         it "does nothing" do
           expect { result }.not_to change { UserChatChannelMembership.count }
-          expect(result).to be_a_success
         end
       end
 
@@ -166,7 +165,6 @@ RSpec.describe Chat::Service::AutoRemove::HandleDestroyedGroup do
 
         it "does nothing because everyone group has full permission" do
           expect { result }.not_to change { UserChatChannelMembership.count }
-          expect(result).to be_a_success
         end
       end
 
