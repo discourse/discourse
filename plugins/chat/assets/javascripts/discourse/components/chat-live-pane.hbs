@@ -45,7 +45,7 @@
         <ChatSkeleton />
       {{/if}}
 
-      {{#each @channel.messages key="id" as |message|}}
+      {{#each @channel.messages as |message|}}
         <ChatMessage
           @message={{message}}
           @canInteractWithChat={{this.canInteractWithChat}}
