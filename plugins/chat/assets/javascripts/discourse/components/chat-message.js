@@ -280,8 +280,12 @@ export default class ChatMessage extends Component {
       !this.args.message?.chatWebhookEvent &&
       !this.args.message?.inReplyTo &&
       !this.args.message?.previousMessage?.deletedAt &&
-      Math.abs(new Date(this.createdAt) - new Date(this.createdAt)) < 300000 && // If the time between messages is over 5 minutes, break.
-      this.user.id === this.args.message?.previousMessage?.user?.id
+      Math.abs(
+        new Date(this.args.message?.createdAt) -
+          new Date(this.args.message?.createdAt)
+      ) < 300000 && // If the time between messages is over 5 minutes, break.
+      this.args.message?.user?.id ===
+        this.args.message?.previousMessage?.user?.id
     );
   }
 
