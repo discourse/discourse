@@ -34,10 +34,10 @@ RSpec.describe Onebox::Engine::GoogleMapsOnebox do
     },
     unresolveable: {
       test:
-        "https://www.google.com/maps/place/Den+Abattoir/@51.2285173,4.4336702,17z/data=!4m7!1m4!3m3!1s0x47c3f7a5ac48e237:0x63d716018f584a33!2zUGnDqXRyYWlu!3b1!3m1!1s0x0000000000000000:0xfbfac0c41c32471a",
+        "https://www.google.com/maps/place/Den+Abattoir/@51.2285173,4.4336702,17.5z/data=!4m7!1m4!3m3!1s0x47c3f7a5ac48e237:0x63d716018f584a33!2zUGnDqXRyYWlu!3b1!3m1!1s0x0000000000000000:0xfbfac0c41c32471a",
       redirect: [
         302,
-        "https://www.google.com/maps/place/Den+Abattoir/@51.2285173,4.4336702,17z/data=!4m7!1m4!3m3!1s0x47c3f7a5ac48e237:0x63d716018f584a33!2zUGnDqXRyYWlu!3b1!3m1!1s0x0000000000000000:0xfbfac0c41c32471a?dg=dbrw&newdg=1",
+        "https://www.google.com/maps/place/Den+Abattoir/@51.2285173,4.4336702,17.5z/data=!4m7!1m4!3m3!1s0x47c3f7a5ac48e237:0x63d716018f584a33!2zUGnDqXRyYWlu!3b1!3m1!1s0x0000000000000000:0xfbfac0c41c32471a?dg=dbrw&newdg=1",
       ],
       expect:
         "https://maps.google.com/maps?ll=51.2285173,4.4336702&z=17&output=embed&dg=ntvb&q=Den+Abattoir&cid=18157036796216755994",
