@@ -142,7 +142,9 @@ const Composer = RestModel.extend({
     set(categoryId) {
       const oldCategoryId = this._categoryId;
 
-      if (isEmpty(categoryId)) {
+      if (this.privateMessage) {
+        categoryId = null;
+      } else if (isEmpty(categoryId)) {
         // Check if there is a default composer category to set
         const defaultComposerCategoryId = parseInt(
           this.siteSettings.default_composer_category,

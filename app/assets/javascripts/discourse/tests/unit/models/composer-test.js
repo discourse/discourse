@@ -317,6 +317,20 @@ module("Unit | Model | composer", function (hooks) {
     );
   });
 
+  test("initial category when creating PM and there is a default composer category", function (assert) {
+    this.siteSettings.default_composer_category = 2;
+    const composer = openComposer.call(this, {
+      action: PRIVATE_MESSAGE,
+      draftKey: "abcd",
+      draftSequence: 1,
+    });
+    assert.strictEqual(
+      composer.categoryId,
+      null,
+      "it doesn't save the category"
+    );
+  });
+
   test("open with a quote", function (assert) {
     const quote =
       '[quote="neil, post:5, topic:413"]\nSimmer down you two.\n[/quote]';
