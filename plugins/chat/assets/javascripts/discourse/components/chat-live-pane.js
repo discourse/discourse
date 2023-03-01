@@ -535,6 +535,7 @@ export default class ChatLivePane extends Component {
       );
 
       if (atBottom) {
+        this.hasNewMessages = false;
         this._fetchMoreMessagesThrottled({ direction: FUTURE });
       }
     }
