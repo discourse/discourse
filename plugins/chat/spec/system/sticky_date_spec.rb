@@ -10,7 +10,7 @@ RSpec.describe "Sticky date", type: :system, js: true do
     chat_system_bootstrap
     channel_1.add(current_user)
     20.times { Fabricate(:chat_message, chat_channel: channel_1, created_at: 1.day.ago) }
-    20.times { Fabricate(:chat_message, chat_channel: channel_1) }
+    25.times { Fabricate(:chat_message, chat_channel: channel_1) }
     sign_in(current_user)
   end
 
