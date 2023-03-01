@@ -14,8 +14,8 @@ RSpec.describe "Sticky date", type: :system, js: true do
     sign_in(current_user)
   end
 
-  context "when clicking a link containing a message id" do
-    it "highlights the correct message" do
+  context "when today separator is out of screen" do
+    it "shows it as a sticky date" do
       chat_page.visit_channel(channel_1)
 
       expect(page.find(".chat-message-separator__text-container.is-pinned")).to have_content(
