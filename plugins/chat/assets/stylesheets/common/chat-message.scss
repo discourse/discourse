@@ -42,6 +42,10 @@
       background: var(--primary-low);
       border-color: var(--primary-low-mid);
     }
+
+    &:focus {
+      background: none;
+    }
   }
 
   .emoji {
