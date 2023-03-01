@@ -1,5 +1,10 @@
 <tr class="admin-list-item">
   <td class="col first">{{@template.name}}</td>
+  <td class="col categories">
+    {{#each this.activeCategories as |category|}}
+      {{category-link category}}
+    {{/each}}
+  </td>
   <td class="col action">
     <DButton
       @title="admin.form_templates.list_table.actions.view"
