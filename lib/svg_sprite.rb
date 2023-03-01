@@ -388,7 +388,7 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
         .each do |sym|
           icon_id = prepare_symbol(sym, item[:filename])
 
-          if icons.include? icon_id
+          if icon_id.present?
             sym.attributes["id"].value = icon_id
             sym.css("title").each(&:remove)
             svg_subset << sym.to_xml
