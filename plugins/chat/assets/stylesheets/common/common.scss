@@ -349,7 +349,7 @@ $float-height: 530px;
 
     &.visible {
       transform: translateY(-75px) scale(1);
-      opacity: 1;
+      opacity: 0.8;
     }
 
     &__text {
@@ -377,9 +377,11 @@ $float-height: 530px;
     }
 
     &:hover {
+      opacity: 1;
+
       .chat-scroll-to-bottom__arrow {
         .d-icon {
-          color: var(--tertiary);
+          color: var(--secondary);
         }
       }
     }
