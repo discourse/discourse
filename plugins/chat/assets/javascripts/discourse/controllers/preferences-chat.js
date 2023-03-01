@@ -16,6 +16,10 @@ const CHAT_ATTRS = [
   "chat_header_indicator_preference",
 ];
 
+export const HEADER_INDICATOR_PREFERENCE_NEVER = "never";
+export const HEADER_INDICATOR_PREFERENCE_DM_AND_MENTIONS = "dm_and_mentions";
+export const HEADER_INDICATOR_PREFERENCE_ALL_NEW = "all_new";
+
 const EMAIL_FREQUENCY_OPTIONS = [
   { name: I18n.t(`chat.email_frequency.never`), value: "never" },
   { name: I18n.t(`chat.email_frequency.when_away`), value: "when_away" },
@@ -24,13 +28,16 @@ const EMAIL_FREQUENCY_OPTIONS = [
 const HEADER_INDICATOR_OPTIONS = [
   {
     name: I18n.t(`chat.header_indicator_preference.all_new`),
-    value: "all_new",
+    value: HEADER_INDICATOR_PREFERENCE_ALL_NEW,
   },
   {
     name: I18n.t(`chat.header_indicator_preference.dm_and_mentions`),
-    value: "dm_and_mentions",
+    value: HEADER_INDICATOR_PREFERENCE_DM_AND_MENTIONS,
   },
-  { name: I18n.t(`chat.header_indicator_preference.never`), value: "never" },
+  {
+    name: I18n.t(`chat.header_indicator_preference.never`),
+    value: HEADER_INDICATOR_PREFERENCE_NEVER,
+  },
 ];
 
 export default class PreferencesChatController extends Controller {

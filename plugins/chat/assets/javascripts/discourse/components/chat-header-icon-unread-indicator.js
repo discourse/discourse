@@ -1,5 +1,10 @@
 import { inject as service } from "@ember/service";
 import Component from "@glimmer/component";
+import {
+  HEADER_INDICATOR_PREFERENCE_ALL_NEW,
+  HEADER_INDICATOR_PREFERENCE_DM_AND_MENTIONS,
+  HEADER_INDICATOR_PREFERENCE_NEVER,
+} from "../controllers/preferences-chat";
 
 export default class ChatHeaderIconUnreadIndicator extends Component {
   @service chatChannelsManager;
@@ -8,14 +13,17 @@ export default class ChatHeaderIconUnreadIndicator extends Component {
   get showUrgentIndicator() {
     return (
       this.chatChannelsManager.unreadUrgentCount > 0 &&
-      this.#hasAnyIndicatorPreference(["all_new", "dm_and_mentions"])
+      this.#hasAnyIndicatorPreference([
+        HEADER_INDICATOR_PREFERENCE_ALL_NEW,
+        HEADER_INDICATOR_PREFERENCE_DM_AND_MENTIONS,
+      ])
     );
   }
 
   get showUnreadIndicator() {
     return (
       this.chatChannelsManager.unreadCount > 0 &&
-      this.#hasAnyIndicatorPreference(["all_new"])
+      this.#hasAnyIndicatorPreference([HEADER_INDICATOR_PREFERENCE_ALL_NEW])
     );
   }
 
@@ -24,7 +32,10 @@ export default class ChatHeaderIconUnreadIndicator extends Component {
   }
 
   #hasAnyIndicatorPreference(preferences) {
-    if (!this.currentUser || this.indicatorPreference === "never") {
+    if (
+      !this.currentUser ||
+      this.indicatorPreference === HEADER_INDICATOR_PREFERENCE_NEVER
+    ) {
       return false;
     }
 
