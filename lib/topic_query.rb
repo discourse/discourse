@@ -260,6 +260,10 @@ class TopicQuery
     create_list(:latest, {}, latest_results)
   end
 
+  def list_filter
+    list_latest
+  end
+
   def list_read
     create_list(:read, unordered: true) do |topics|
       topics.where("tu.last_visited_at IS NOT NULL").order("tu.last_visited_at DESC")
@@ -663,7 +667,7 @@ class TopicQuery
     end
 
     # Start with a list of all topics
-    result = Topic.unscoped.includes(:category)
+    result = Topic.includes(:category)
 
     if @user
       result =
@@ -821,8 +825,6 @@ class TopicQuery
         )
     end
 
-    require_deleted_clause = true
-
     if before = options[:before]
       if (before = before.to_i) > 0
         result = result.where("topics.created_at < ?", before.to_i.days.ago)
@@ -836,24 +838,17 @@ class TopicQuery
     end
 
     if status = options[:status]
-      case status
-      when "open"
-        result = result.where("NOT topics.closed AND NOT topics.archived")
-      when "closed"
-        result = result.where("topics.closed")
-      when "archived"
-        result = result.where("topics.archived")
-      when "listed"
-        result = result.where("topics.visible")
-      when "unlisted"
-        result = result.where("NOT topics.visible")
-      when "deleted"
-        category = Category.find_by(id: options[:category])
-        if @guardian.can_see_deleted_topics?(category)
-          result = result.where("topics.deleted_at IS NOT NULL")
-          require_deleted_clause = false
-        end
-      end
+      options[:q] ||= +""
+      options[:q] << " status:#{status}"
+    end
+
+    if options[:q].present?
+      result =
+        TopicsFilter.new(
+          scope: result,
+          guardian: @guardian,
+          category_id: options[:category],
+        ).filter(options[:q])
     end
 
     if (filter = (options[:filter] || options[:f])) && @user
@@ -876,7 +871,6 @@ class TopicQuery
       result = TopicQuery.tracked_filter(result, @user.id) if filter == "tracked"
     end
 
-    result = result.where("topics.deleted_at IS NULL") if require_deleted_clause
     result = result.where("topics.posts_count <= ?", options[:max_posts]) if options[
       :max_posts
     ].present?
