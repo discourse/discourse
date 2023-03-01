@@ -21,6 +21,10 @@ module PageObjects
         find(".form-templates__table tbody tr td", text: name).present?
       end
 
+      def has_category_in_template_row?(category_name)
+        find(".form-templates__table .categories .category-name", text: category_name).present?
+      end
+
       def has_template_structure?(structure)
         find("code", text: structure).present?
       end

@@ -9,6 +9,13 @@ import I18n from "I18n";
 export default class FormTemplateRowItem extends Component {
   @service router;
   @service dialog;
+  @service site;
+
+  get activeCategories() {
+    return this.site?.categories?.filter((c) =>
+      c["form_template_ids"].includes(this.args.template.id)
+    );
+  }
 
   @action
   viewTemplate() {

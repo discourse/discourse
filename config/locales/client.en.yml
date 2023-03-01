@@ -5538,6 +5538,7 @@ en:
         list_table:
           headings:
             name: "Name"
+            active_categories: "Active Categories"
             actions: "Actions"
           actions:
             view: "View Template"
