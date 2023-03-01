@@ -69,6 +69,21 @@
   {{/if}}
 </div>
 
+<div class="control-group chat-setting controls-dropdown">
+  <label for="user_chat_header_indicator_preference">
+    {{i18n "chat.header_indicator_preference.title"}}
+  </label>
+  <ComboBox
+    @valueProperty="value"
+    @content={{this.headerIndicatorOptions}}
+    @value={{this.model.user_option.chat_header_indicator_preference}}
+    @id="user_chat_header_indicator_preference"
+    @onChange={{action
+      (mut this.model.user_option.chat_header_indicator_preference)
+    }}
+  />
+</div>
+
 <SaveControls
   @id="user_chat_preference_save"
   @model={{this.model}}

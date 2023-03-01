@@ -264,6 +264,7 @@ after_initialize do
   UserUpdater::OPTION_ATTR.push(:chat_sound)
   UserUpdater::OPTION_ATTR.push(:ignore_channel_wide_mention)
   UserUpdater::OPTION_ATTR.push(:chat_email_frequency)
+  UserUpdater::OPTION_ATTR.push(:chat_header_indicator_preference)
 
   register_reviewable_type ReviewableChatMessage
 
@@ -474,6 +475,14 @@ after_initialize do
   end
 
   add_to_serializer(:user_option, :chat_email_frequency) { object.chat_email_frequency }
+
+  add_to_serializer(:user_option, :chat_header_indicator_preference) do
+    object.chat_header_indicator_preference
+  end
+
+  add_to_serializer(:current_user_option, :chat_header_indicator_preference) do
+    object.chat_header_indicator_preference
+  end
 
   RETENTION_SETTINGS_TO_USER_OPTION_FIELDS = {
     chat_channel_retention_days: :dismissed_channel_retention_reminder,
