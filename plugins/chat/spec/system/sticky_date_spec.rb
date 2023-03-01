@@ -19,7 +19,13 @@ RSpec.describe "Sticky date", type: :system, js: true do
       chat_page.visit_channel(channel_1)
 
       expect(page.find(".chat-message-separator__text-container.is-pinned")).to have_content(
-        "Today",
+        I18n.t("js.chat.chat_message_separator.today"),
+      )
+      expect(page).to have_css(
+        ".chat-message-separator__text-container:not(.is-pinned)",
+        visible: :hidden,
+        text:
+          "#{I18n.t("js.chat.chat_message_separator.yesterday")} - #{I18n.t("js.chat.last_visit")}",
       )
     end
   end
