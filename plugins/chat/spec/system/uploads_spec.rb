@@ -37,14 +37,14 @@ describe "Uploading files in chat messages", type: :system, js: true do
     it "allows uploading multiple files" do
       chat.visit_channel(channel_1)
 
-      file_path_2 = file_from_fixtures("logo.jpg", "images").path
+      file_path_1 = file_from_fixtures("logo.png", "images").path
       attach_file([file_path_1]) do
         channel.open_action_menu
         channel.click_action_button("chat-upload-btn")
         find(".chat-composer-input").click
       end
 
-      file_path_1 = file_from_fixtures("logo.png", "images").path
+      file_path_2 = file_from_fixtures("logo.jpg", "images").path
       attach_file([file_path_2]) do
         channel.open_action_menu
         channel.click_action_button("chat-upload-btn")
