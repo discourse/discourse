@@ -277,7 +277,18 @@ export default class ChatMessage extends Component {
 
   get hideUserInfo() {
     return (
-      this.args.message?.hideUserInfo && !this.args.message?.chatWebhookEvent
+      !this.args.message?.chatWebhookEvent &&
+      !this.inReplyTo &&
+      !this.args.message?.previousMessage?.deletedAt &&
+      Math.abs(new Date(this.createdAt) - new Date(this.createdAt)) < 300000 && // If the time between messages is over 5 minutes, break.
+      this.user.id === this.args.message?.previousMessage?.user?.id
+    );
+  }
+
+  get hideReplyToInfo() {
+    return (
+      this.args.message?.inReplyTo?.id ===
+      this.args.message?.previousMessage?.id
     );
   }
 

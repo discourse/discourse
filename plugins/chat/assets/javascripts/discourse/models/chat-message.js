@@ -80,15 +80,6 @@ export default class ChatMessage {
     return this.channel.currentUserMembership?.last_read_message_id >= this.id;
   }
 
-  get hideUserInfo() {
-    return (
-      !this.inReplyTo &&
-      !this.previousMessage?.deletedAt &&
-      Math.abs(new Date(this.createdAt) - new Date(this.createdAt)) < 300000 && // If the time between messages is over 5 minutes, break.
-      this.user.id === this.previousMessage?.user?.id
-    );
-  }
-
   get firstMessageOfTheDayAt() {
     if (!this.previousMessage) {
       return this.#calendarDate(this.createdAt);
