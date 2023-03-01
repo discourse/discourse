@@ -11,7 +11,6 @@ import DiscourseURL from "discourse/lib/url";
 import discourseDebounce from "discourse-common/lib/debounce";
 import getURL from "discourse-common/lib/get-url";
 import { h } from "virtual-dom";
-import { iconNode } from "discourse-common/lib/icon-library";
 import { isiPad, translateModKey } from "discourse/lib/utilities";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { Promise } from "rsvp";
@@ -36,11 +35,12 @@ export default class SearchMenu extends Component {
   @tracked results = {};
   @tracked noResults = false;
   @tracked term;
-  typeFilter = DEFAULT_TYPE_FILTER;
+  @tracked inPMInboxContext =
+    this.search?.searchContext?.type === "private_messages";
+  @tracked typeFilter = DEFAULT_TYPE_FILTER;
   invalidTerm = false;
   suggestionResults = [];
   suggestionKeyword = false;
-  inPMInboxContext = this.search?.searchContext?.type === "private_messages";
   _lastEnterTimestamp = null;
   _debouncer = null;
 
@@ -48,46 +48,13 @@ export default class SearchMenu extends Component {
     super(...arguments);
   }
 
-  //fullSearchUrl(opts) {
-  //let url = "/search";
-  //const params = [];
-
-  //if (searchData.term) {
-  //let query = "";
-
-  //query += `q=${encodeURIComponent(searchData.term)}`;
-
-  //const searchContext = this.searchContext();
-
-  //if (searchContext?.type === "topic") {
-  //query += encodeURIComponent(` topic:${searchContext.id}`);
-  //} else if (searchContext?.type === "private_messages") {
-  //query += encodeURIComponent(` in:messages`);
-  //}
-
-  //if (query) {
-  //params.push(query);
-  //}
-  //}
-
-  //if (opts && opts.expanded) {
-  //params.push("expanded=true");
-  //}
-
-  //if (params.length > 0) {
-  //url = `${url}?${params.join("&")}`;
-  //}
-
-  //return getURL(url);
-  //}
-
-  //clearSearch() {
-  //searchData.term = "";
-  //const searchInput = document.getElementById("search-term");
-  //searchInput.value = "";
-  //searchInput.focus();
-  //this.triggerSearch();
-  //}
+  clearSearch() {
+    searchData.term = "";
+    const searchInput = document.getElementById("search-term");
+    searchInput.value = "";
+    searchInput.focus();
+    this.triggerSearch();
+  }
 
   //mouseDownOutside() {
   //this.sendWidgetAction("toggleSearchMenu");
@@ -214,31 +181,31 @@ export default class SearchMenu extends Component {
   //}
   //}
 
-  //triggerSearch() {
-  //searchData.noResults = false;
-  //if (SearchHelper.includesTopics()) {
-  //if (this.state.inTopicContext) {
-  //this.search.set("highlightTerm", searchData.term);
-  //}
+  triggerSearch() {
+    searchData.noResults = false;
+    if (SearchHelper.includesTopics()) {
+      if (this.state.inTopicContext) {
+        this.search.set("highlightTerm", searchData.term);
+      }
 
-  //searchData.loading = true;
-  //cancel(this.state._debouncer);
-  //SearchHelper.perform(this);
-  //if (this.currentUser) {
-  //updateRecentSearches(this.currentUser, searchData.term);
-  //}
-  //} else {
-  //searchData.loading = false;
-  //if (!this.state.inTopicContext) {
-  //this.state._debouncer = discourseDebounce(
-  //SearchHelper,
-  //SearchHelper.perform,
-  //this,
-  //400
-  //);
-  //}
-  //}
-  //}
+      searchData.loading = true;
+      cancel(this.state._debouncer);
+      SearchHelper.perform(this);
+      if (this.currentUser) {
+        updateRecentSearches(this.currentUser, searchData.term);
+      }
+    } else {
+      searchData.loading = false;
+      if (!this.state.inTopicContext) {
+        this.state._debouncer = discourseDebounce(
+          SearchHelper,
+          SearchHelper.perform,
+          this,
+          400
+        );
+      }
+    }
+  }
 
   //moreOfType(type) {
   //searchData.typeFilter = type;
@@ -247,8 +214,8 @@ export default class SearchMenu extends Component {
 
   @action
   searchTermChanged(term, opts = {}) {
-    searchData.typeFilter = opts.searchTopics ? null : DEFAULT_TYPE_FILTER;
-    searchData.term = term;
+    this.typeFilter = opts.searchTopics ? null : DEFAULT_TYPE_FILTER;
+    this.term = term;
     this.triggerSearch();
   }
 
@@ -270,26 +237,75 @@ export default class SearchMenu extends Component {
   //}
   //}
 
+  @action
+  updateInTopicContext(value) {
+    this.inTopicContext = value;
+  }
+
+  @action
+  focusSearchInput() {
+    if (this.args.searchVisible) {
+      schedule("afterRender", () => {
+        const searchInput = document.querySelector("#search-term");
+        searchInput.focus();
+        searchInput.select();
+      });
+    }
+  }
+
+  setTopicContext() {
+    this.inTopicContext = true;
+    this.focusSearchInput();
+  }
+
+  clearTopicContext() {
+    this.inTopicContext = false;
+    this.focusSearchInput();
+  }
+
   searchContext() {
-    if (this.state.inTopicContext || this.state.inPMInboxContext) {
+    if (this.inTopicContext || this.inPMInboxContext) {
       return this.search.searchContext;
     }
 
     return false;
   }
 
-  clearTopicContext() {
-    this.sendWidgetAction("clearContext");
-  }
-
   clearPMInboxContext() {
-    this.state.inPMInboxContext = false;
-    this.sendWidgetAction("focusSearchInput");
+    this.inPMInboxContext = false;
+    this.focusSearchInput();
   }
 
-  @action
-  updateInTopicContext(value) {
-    this.inTopicContext = value;
+  fullSearchUrl(opts) {
+    let url = "/search";
+    const params = [];
+
+    if (this.term) {
+      let query = "";
+
+      query += `q=${encodeURIComponent(searchData.term)}`;
+
+      const searchContext = this.searchContext();
+      if (searchContext?.type === "topic") {
+        query += encodeURIComponent(` topic:${searchContext.id}`);
+      } else if (searchContext?.type === "private_messages") {
+        query += encodeURIComponent(` in:messages`);
+      }
+
+      if (query) {
+        params.push(query);
+      }
+    }
+
+    if (opts && opts.expanded) {
+      params.push("expanded=true");
+    }
+
+    if (params.length > 0) {
+      url = `${url}?${params.join("&")}`;
+    }
+
+    return getURL(url);
   }
 }
 

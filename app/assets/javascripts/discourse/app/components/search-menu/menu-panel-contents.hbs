@@ -1,24 +1,56 @@
-{{#if @inTopicContext}}
-  <DButton
-    @icon="times"
-    @label="search.in_this_topic"
-    @title="search.in_this_topic_tooltip"
-    @className="btn btn-small search-context"
-    @action={{@clearTopicContext}}
-    @iconRight={{true}}
-  />
-{{else if @inPMInboxContext}}
-  <DButton
-    @icon="times"
-    @label="search.in_messages"
-    @title="search.in_messages_tooltip"
-    @className="btn btn-small search-context"
-    @action={{@clearPMInboxContext}}
-    @iconRight={{true}}
-  />
-{{/if}}
+<div class="search-input">
+  {{#if @inTopicContext}}
+    <DButton
+      @icon="times"
+      @label="search.in_this_topic"
+      @title="search.in_this_topic_tooltip"
+      @className="btn btn-small search-context"
+      @action={{@clearTopicContext}}
+      @iconRight={{true}}
+    />
+  {{else if @inPMInboxContext}}
+    <DButton
+      @icon="times"
+      @label="search.in_messages"
+      @title="search.in_messages_tooltip"
+      @className="btn btn-small search-context"
+      @action={{@clearPMInboxContext}}
+      @iconRight={{true}}
+    />
+  {{/if}}
 
-<SearchMenu::SearchTerm
-  @searchTermChanged={{@searchTermChanged}}
-  @value={{@term}}
-/>
+  <SearchMenu::SearchTerm
+    @searchTermChanged={{@searchTermChanged}}
+    @value={{@term}}
+  />
+
+  {{#if @loading}}
+    <div class="searching">
+      <div class="spinner">
+      </div>
+    </div>
+  {{else}}
+    <div class="searching">
+      {{#if @term}}
+        <MountWidget
+          @widget="link"
+          @args={{hash
+            title="search.clear_search"
+            action="clearSearch"
+            className="clear-search"
+            icon="times"
+          }}
+        />
+      {{/if}}
+      <MountWidget
+        @widget="link"
+        @args={{hash
+          href=this.advancedSearchButtonHref
+          className="show-advanced-search"
+          title="search.open_advanced"
+          icon="sliders-h"
+        }}
+      />
+    </div>
+  {{/if}}
+</div>
