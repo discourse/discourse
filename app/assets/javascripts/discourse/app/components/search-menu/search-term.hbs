@@ -1,0 +1,9 @@
+<Input
+  id="search-term"
+  @type="text"
+  @value={{@value}}
+  autocomplete="off"
+  placeholder={{I18n "search.title"}}
+  aria-label={{I18n "search.title"}}
+  {{on "input" this.updateSearchTerm}}
+/>

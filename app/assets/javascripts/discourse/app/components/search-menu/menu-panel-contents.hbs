@@ -4,7 +4,7 @@
     @label="search.in_this_topic"
     @title="search.in_this_topic_tooltip"
     @className="btn btn-small search-context"
-    @action={{this.clearTopicContext}}
+    @action={{@clearTopicContext}}
     @iconRight={{true}}
   />
 {{else if @inPMInboxContext}}
@@ -13,7 +13,12 @@
     @label="search.in_messages"
     @title="search.in_messages_tooltip"
     @className="btn btn-small search-context"
-    @action={{this.clearPMInboxContext}}
+    @action={{@clearPMInboxContext}}
     @iconRight={{true}}
   />
 {{/if}}
+
+<SearchMenu::SearchTerm
+  @searchTermChanged={{@searchTermChanged}}
+  @value={{@term}}
+/>

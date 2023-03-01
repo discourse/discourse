@@ -35,7 +35,7 @@ export default class SearchMenu extends Component {
   @tracked loading = false;
   @tracked results = {};
   @tracked noResults = false;
-  term = undefined;
+  @tracked term;
   typeFilter = DEFAULT_TYPE_FILTER;
   invalidTerm = false;
   suggestionResults = [];
@@ -245,11 +245,12 @@ export default class SearchMenu extends Component {
   //this.triggerSearch();
   //}
 
-  //searchTermChanged(term, opts = {}) {
-  //searchData.typeFilter = opts.searchTopics ? null : DEFAULT_TYPE_FILTER;
-  //searchData.term = term;
-  //this.triggerSearch();
-  //}
+  @action
+  searchTermChanged(term, opts = {}) {
+    searchData.typeFilter = opts.searchTopics ? null : DEFAULT_TYPE_FILTER;
+    searchData.term = term;
+    this.triggerSearch();
+  }
 
   //triggerAutocomplete(opts = {}) {
   //if (opts.setTopicContext) {
@@ -269,13 +270,22 @@ export default class SearchMenu extends Component {
   //}
   //}
 
-  //searchContext() {
-  //if (this.state.inTopicContext || this.state.inPMInboxContext) {
-  //return this.search.searchContext;
-  //}
+  searchContext() {
+    if (this.state.inTopicContext || this.state.inPMInboxContext) {
+      return this.search.searchContext;
+    }
 
-  //return false;
-  //}
+    return false;
+  }
+
+  clearTopicContext() {
+    this.sendWidgetAction("clearContext");
+  }
+
+  clearPMInboxContext() {
+    this.state.inPMInboxContext = false;
+    this.sendWidgetAction("focusSearchInput");
+  }
 
   @action
   updateInTopicContext(value) {

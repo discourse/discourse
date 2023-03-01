@@ -427,7 +427,11 @@ createWidget("revamped-user-menu-wrapper", {
 registerWidgetShim(
   "glimmer-search-menu",
   "div",
-  hbs`<SearchMenu @inTopicContext={{@data.inTopicContext}}/>`
+  hbs`<SearchMenu
+    @inTopicContext={{@data.inTopicContext}}
+    @clearContext={{@data.clearContext}}
+    @setTopicContext={{@data.setTopicContext}}
+  />`
 );
 
 export default createWidget("header", {
@@ -478,6 +482,8 @@ export default createWidget("header", {
           panels.push(
             this.attach("glimmer-search-menu", {
               inTopicContext: state.inTopicContext && inTopicRoute,
+              clearContext: () => this.clearContext(),
+              setTopicContext: () => this.setTopicContext(),
             })
           );
         } else {
@@ -737,11 +743,13 @@ export default createWidget("header", {
   },
 
   setTopicContext() {
+    console.log("bing");
     this.state.inTopicContext = true;
     this.focusSearchInput();
   },
 
   clearContext() {
+    console.log("bing");
     this.state.inTopicContext = false;
     this.focusSearchInput();
   },
