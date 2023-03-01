@@ -3307,7 +3307,7 @@ sv:
       back: "Tillbaka till kategorin"
       general: "Allmänt"
       settings: "Inställningar"
-      topic_template: "Ämnesmall"
+      topic_template: "Mall"
       tags: "Taggar"
       tags_allowed_tags: "Begränsa dessa taggar till följande kategori:"
       tags_allowed_tag_groups: "Begränsa dessa tagg-grupper till denna kategori:"
@@ -3766,9 +3766,7 @@ sv:
       granted:
         one: "%{count} utfärdad"
         other: "%{count} utfärdade"
-      granted_with_count:
-        one: '<a href="%{badgeUrl}" title="%{count} granted" class="grant-count">%{count}x</a> <span class="grant-text">beviljad</span>'
-        other: '<a href="%{badgeUrl}" title="%{count} granted" class="grant-count">%{count}x</a> <span class="grant-text">beviljade</span>'
+      awarded: tilldelad
       select_badge_for_title: Välj en utmärkelse att använda som din titel
       none: "(ingen)"
       successfully_granted: "Beviljade %{badge} till %{username}"
@@ -4000,6 +3998,7 @@ sv:
           save: "Spara"
           delete: "Radera"
           delete_confirm: "Är du säker på att du vill radera det här avsnittet?"
+          public: "Gör denna sektion offentligt och synligt för alla"
           links:
             icon: "Ikon"
             name: "Namn"
@@ -4314,10 +4313,14 @@ sv:
               read: Läs ett ämne eller ett specifikt inlägg i det. RSS stöds också.
               write: Skapa ett nytt ämne eller inlägg till en befintligt sådan.
               update: Uppdatera ett ämne. Ändra titel, kategori, taggar, status, arketyp, featured_link etc.
+              delete: Ta bort ett ämne.
               read_lists: Läs ämneslistor som topp, ny, senaste osv. RSS stöds också.
               status: "Uppdatera ett ämnes status. Status: stängt, arkiv, synligt, fäst. Aktiverad: sant, falskt. Ange ett kategori-id här och i förfrågans nyttolast för att endast tillåta statusändringar för ämnen i den kategorin."
             posts:
               edit: Redigera ett inlägg eller ett specifikt inlägg.
+              delete: Ta bort ett inlägg.
+            tags:
+              list: Lista etiketter
             categories:
               list: Hämta en lista över kategorier.
               show: Hämta en enskild kategori efter id.
@@ -4349,6 +4352,9 @@ sv:
               list_user_badges: Lista användarens märken.
               assign_badge_to_user: Tilldela ett märke till en användare.
               revoke_badge_from_user: Återkalla ett märke från en användare.
+            groups:
+              manage_groups: Lista, lägg till och ta bort gruppmedlemmar.
+              administer_groups: Lista, visa, skapa, uppdatera och ta bort grupper.
             search:
               show: Sök med slutpunkten `/search.json?q=term`.
               query: Sök med slutpunkten `/search/query?term=term`.
@@ -5025,6 +5031,9 @@ sv:
             delete_group: "radera grupp"
             watched_word_create: "lägg till bevakat ord"
             watched_word_destroy: "radera bevakat ord"
+            create_public_sidebar_section: "skapa offentlig sektion i sidopanel"
+            update_public_sidebar_section: "uppdatera offentlig sektion i sidopanel"
+            destroy_public_sidebar_section: "förstöra doffentlig sektion i sidopanel"
         screened_emails:
           title: "Kontrollerade e-postadresser"
           description: "När någon försöker skapa ett nytt konto, kommer följande e-postadresser att kontrolleras och registreringen blockeras, eller någon annan åtgärd vidtas."
@@ -5153,6 +5162,11 @@ sv:
           dropdown: "Rullgardinsmeny"
           upload: "Ladda upp en fil"
           multiselect: "Flera val"
+        edit_category:
+          toggle_freeform: "formulärmall inaktiverad"
+          toggle_form_template: "formulärmall aktiverad"
+          select_template: "Välj formulärmallar"
+          select_template_help: "Lägg till/redigera formulärmallar"
       impersonate:
         title: "Imitera"
         help: "Använd det här verktyget för att imitera ett användarkonto för felsökningssyften. Du kommer behöva logga ut när du är klar."
@@ -5660,10 +5674,8 @@ sv:
       embedding:
         get_started: "Börja genom att lägga till värden, om du vill bädda in Discourse på en annan hemsida. "
         confirm_delete: "Är du säker på att du vill ta bort värden?"
-        sample: "Klistra in följande HTML-kod på din webbplats för att skapa och bädda in Discourse-ämnen. Byt ut <b>REPLACE_ME</b> mot den vägledande URL-en för sidan som du bäddar in den i."
         title: "Inbäddning"
         host: "Tillåtna värdar"
-        class_name: "Klassnamn"
         allowed_paths: "Sökväg till vitlista"
         edit: "ändra"
         category: "Inlägg till kategori"

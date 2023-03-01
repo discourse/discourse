@@ -378,6 +378,7 @@ zh_CN:
   too_late_to_edit: "该话题在很早之前创建。无法再编辑或者删除。"
   edit_conflict: "该帖子已由其他用户编辑，您的变更无法再保存。"
   revert_version_same: "当前版本与您尝试还原到的版本相同。"
+  reverted_to_version: "恢复到版本 #%{version}"
   cannot_edit_on_slow_mode: "此话题处于慢速模式。为了鼓励深思熟虑的讨论，目前不允许编辑此话题中的旧帖子。"
   excerpt_image: "图片"
   bookmarks:
@@ -1501,6 +1502,7 @@ zh_CN:
     content_security_policy_frame_ancestors: "限制谁可以通过 CSP 将此站点嵌入 iframe 中。在<a href='%{base_path}/admin/customize/embedding'>嵌入</a>上控制允许的主机。"
     content_security_policy_script_src: "其他列入许可名单的脚本源。默认包含当前主机和 CDN。请参阅<a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>使用内容安全策略缓解 XSS 攻击</a>。"
     invalidate_inactive_admin_email_after_days: "在此天数内未访问站点的管理员帐户将需要在登录前重新验证其电子邮件地址。设置为 0 将禁用。"
+    include_secure_categories_in_tag_counts: "启用后，一个标签的话题计数将包括阅读限制类别在内的所有用户话题。禁用时，常规用户只会看到一个标签在公共类别中的话题计数。"
     top_menu: "确定主页导航中显示的条目以及显示顺序。示例：latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "确定帖子菜单中显示的条目以及显示顺序。示例：like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "除非点击扩展省略号，否则在帖子菜单中默认隐藏的菜单项。"

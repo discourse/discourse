@@ -34,6 +34,10 @@
     queryParams.topic_id = DE.topicId;
   }
 
+  if (DE.className) {
+    queryParams.class_name = DE.className;
+  }
+
   var src = DE.discourseUrl + "embed/comments";
   var keys = Object.keys(queryParams);
   if (keys.length > 0) {

@@ -3286,7 +3286,6 @@ tr_TR:
       back: "Kategoriye dön"
       general: "Genel"
       settings: "Ayarlar"
-      topic_template: "Konu Şablonu"
       tags: "Etiketler"
       tags_allowed_tags: "Bu etiketleri bu kategoriyle sınırla:"
       tags_allowed_tag_groups: "Bu etiket gruplarını bu kategoriyle sınırla:"
@@ -3741,9 +3740,6 @@ tr_TR:
       granted:
         one: "%{count} verildi"
         other: "%{count} verildi"
-      granted_with_count:
-        one: '<a href="%{badgeUrl}" title="%{count} granted" class="grant-count">%{count}x</a> <span class="grant-text">verildi</span>'
-        other: '<a href="%{badgeUrl}" title="%{count} granted" class="grant-count">%{count}x</a> <span class="grant-text">verildi</span>'
       select_badge_for_title: Başlığınız olarak kullanmak için bir rozet seçin
       none: "(hiçbiri)"
       successfully_granted: "%{username} adlı kullanıcıya başarıyla %{badge} verildi"
@@ -3971,6 +3967,7 @@ tr_TR:
         custom:
           save: "Kaydet"
           delete: "Sil"
+          public: "Bu bölümü herkese açık ve herkes tarafından görülebilir hale getir"
           links:
             icon: "Simge"
             name: "Ad"
@@ -4274,9 +4271,13 @@ tr_TR:
             topics:
               read: Bir konuyu veya içindeki belirli bir gönderiyi okuyun. RSS de desteklenir.
               write: Yeni bir konu oluşturun veya mevcut bir konuya gönderin.
+              delete: Bir konuyu sil.
               read_lists: En iyi, yeni, en son vb. gibi konu listelerini okuyun. RSS de desteklenir.
             posts:
               edit: Herhangi bir gönderiyi veya belirli bir gönderiyi düzenleyin.
+              delete: Bir gönderiyi sil.
+            tags:
+              list: Etiketleri listele.
             categories:
               list: Kategorilerin bir listesini alın.
               show: Kimliğe göre tek bir kategori alın.
@@ -4305,6 +4306,9 @@ tr_TR:
               list_user_badges: Kullanıcı rozetlerini listeleyin.
               assign_badge_to_user: Kullanıcıya bir rozet atayın.
               revoke_badge_from_user: Kullanıcıdan bir rozeti iptal edin.
+            groups:
+              manage_groups: Grup üyelerini listele, ekle ve kaldır.
+              administer_groups: Grupları listele, göster, oluştur, güncelle ve sil.
             wordpress:
               publishing: WP Discourse eklentisi yayınlama özellikleri için gerekli (zorunlu).
               commenting: WP Discourse eklentisi yorumlama özellikleri için gerekli.
@@ -4969,6 +4973,9 @@ tr_TR:
             delete_group: "grubu sil"
             watched_word_create: "izlenen kelime ekle"
             watched_word_destroy: "izlenen kelimeyi sil"
+            create_public_sidebar_section: "herkese açık kenar çubuğu bölümü oluştur"
+            update_public_sidebar_section: "herkese açık kenar çubuğu bölümünü güncelle"
+            destroy_public_sidebar_section: "herkese açık kenar çubuğu bölümünü yok et"
         screened_emails:
           title: "Taranan E-postalar"
           description: "Biri yeni bir hesap oluşturmaya çalıştığında, aşağıdaki e-posta adresleri kontrol edilir ve kayıt engellenir veya başka bir işlem gerçekleştirilir."
@@ -5585,10 +5592,8 @@ tr_TR:
       embedding:
         get_started: "Discourse'u başka bir web sitesine yerleştirmek istiyorsanız bu sitenin sunucusunu eklemekle işe başlayın."
         confirm_delete: "Bu sunucuyu silmek istediğinizden emin misiniz?"
-        sample: "Discourse konuları oluşturmak ve gömmek için aşağıdaki HTML kodunu sitenize yapıştırın. <b>REPLACE_ME</b> kısmını, gömdüğünüz sayfanın standart URL'si ile değiştirin."
         title: "Yerleştirme"
         host: "İzin Verilen Sunucular"
-        class_name: "Sınıf adı"
         allowed_paths: "Yol İzin Verilenler Listesi"
         edit: "düzenle"
         category: "Kategoriye Gönder"

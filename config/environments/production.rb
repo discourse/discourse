@@ -67,4 +67,8 @@ Discourse::Application.configure do
   end
 
   config.active_record.dump_schema_after_migration = false
+
+  if ENV["RAILS_LOG_TO_STDOUT"].present?
+    config.logger = ActiveSupport::TaggedLogging.new(Logger.new(STDOUT))
+  end
 end

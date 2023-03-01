@@ -68,6 +68,11 @@ he:
       channel_cannot_be_archived: "אי אפשר להעביר את הערוץ לארכיון כרגע, הוא חייב להיות סגור או פתוח להעברה לארכיון."
       duplicate_message: "פרסמת הודעה זהה לפני זמן קצר מדי."
       delete_channel_failed: "מחיקת הערוץ נכשלה, נא לנסות שוב."
+      minimum_length_not_met:
+        one: "ההודעה קצרה מדי, חייבת להיות באורך של תו %{count} לפחות."
+        two: "ההודעה קצרה מדי, חייבת להיות באורך של %{count} תווים לפחות."
+        many: "ההודעה קצרה מדי, חייבת להיות באורך של %{count} תווים לפחות."
+        other: "ההודעה קצרה מדי, חייבת להיות באורך של %{count} תווים לפחות."
       message_too_long:
         one: "ההודעה ארוכה מדי, היא חייבת להיות באורך של עד %{count} תווים לכל היותר."
         two: "ההודעה ארוכה מדי, היא חייבת להיות באורך של עד %{count} תווים לכל היותר."
@@ -85,6 +90,11 @@ he:
       actor_preventing_target_user_from_dm: "בחרת למנוע מ־%{username} לשלוח אליך הודעות פרטיות וישירות כך שאין לך אפשרות ליצור הודעות ישירות חדשות אליהם."
       user_cannot_send_direct_messages: "מחילה, אין לך אפשרות לשלוח הודעות ישירות."
       over_chat_max_direct_message_users_allow_self: "אין לך אפשרות ליצור הודעות ישירות מול עצמך."
+      over_chat_max_direct_message_users:
+        one: "אין לך אפשרות ליצור הודעות ישירות מול למעלה ממשתמש %{count} נוסף."
+        two: "אין לך אפשרות ליצור הודעות ישירות מול למעלה מ־%{count} משתמשים נוספים."
+        many: "אין לך אפשרות ליצור הודעות ישירות מול למעלה מ־%{count} משתמשים נוספים."
+        other: "אין לך אפשרות ליצור הודעות ישירות מול למעלה מ־%{count} משתמשים נוספים."
       original_message_not_found: "מקור ההודעה אליה ניסית להגיב לא נמצא או שנמחק."
     reviewables:
       message_already_handled: "תודה, אבל כבר סקרנו הודעה זו וקבענו שאין צורך לסמן אותה שוב."
@@ -131,6 +141,7 @@ he:
         other: "%{count} הודעות הועברו על ידי ‎@%{acting_username} לערוץ [%{channel_name}](%{first_moved_message_url})."
       dm_title:
         single_user: "%{username}"
+        multi_user: "%{comma_separated_usernames}"
         multi_user_truncated:
           one: "%{comma_separated_usernames} ועוד %{count}"
           two: "%{comma_separated_usernames} ועוד %{count}"

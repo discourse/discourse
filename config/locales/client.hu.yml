@@ -3072,7 +3072,7 @@ hu:
       back: "Vissza a kategóriához"
       general: "Általános"
       settings: "Beállítások"
-      topic_template: "Téma sablonja"
+      topic_template: "Sablon"
       tags: "Címkék"
       required_tag_group:
         delete: "Törlés"
@@ -3438,6 +3438,7 @@ hu:
       granted:
         one: "%{count} kiadva"
         other: "%{count} kiadva"
+      awarded: elnyerte
       select_badge_for_title: Válassz egy jelvényt, hogy címként használd
       none: "(semmi)"
       successfully_granted: "Sikeresen adományoztott %{badge} %{username} számára"
@@ -3617,6 +3618,7 @@ hu:
         custom:
           save: "Mentés"
           delete: "Törlés"
+          public: "Tegye ezt a részt nyilvánossá és mindenki számára láthatóvá"
           links:
             icon: "Ikon"
             name: "Név"
@@ -3894,9 +3896,13 @@ hu:
               read: Olvasson el egy témát vagy egy adott hozzászólást. Az RSS is támogatva van.
               write: Hozzon létre új témát, vagy írjon egy meglévő témához.
               update: Téma frissítése. Módosíthatja a címet, kategóriát, címkéket, státuszt, archetípust, featured_linket stb.
+              delete: Téma törlése.
               read_lists: Témalisták olvasása, mint a top, új, legújabb, stb. Az RSS is támogatva van.
             posts:
               edit: Bármelyik hozzászólás vagy egy adott hozzászólás szerkesztése.
+              delete: Hozzászólás törlése.
+            tags:
+              list: Címkék listázása.
             categories:
               list: A kategóriák listájának lekérdezése.
               show: Egyetlen kategória kinyerése az azonosító alapján.
@@ -3920,6 +3926,9 @@ hu:
               list_user_badges: A felhasználó jelvényeinek felsorolása.
               assign_badge_to_user: Jelvény kiosztása egy felhasználónak.
               revoke_badge_from_user: Jelvény elvétele egy felhasználótól.
+            groups:
+              manage_groups: Csoporttagok listázása, hozzáadása és eltávolítása.
+              administer_groups: Csoportok listázása, megjelenítése, létrehozása, frissítése és törlése.
             search:
               query: Keresés a `/search/query?term=term` végpont használatával.
       web_hooks:
@@ -4441,6 +4450,9 @@ hu:
             delete_group: "csoport törlése"
             watched_word_create: "figyelt szó hozzáadása"
             watched_word_destroy: "figyelt szó törlése"
+            create_public_sidebar_section: "nyilvános oldalsáv szakasz létrehozása"
+            update_public_sidebar_section: "frissítse a nyilvános oldalsáv szakaszt"
+            destroy_public_sidebar_section: "semmisítse meg a nyilvános oldalsáv szakaszt"
         screened_emails:
           title: "Szűrt e-mailek"
           email: "E-mail cím"
@@ -4531,6 +4543,11 @@ hu:
           dropdown: "Legördülő menü"
           upload: "Fájl feltöltése"
           multiselect: "Több választási lehetőség"
+        edit_category:
+          toggle_freeform: "űrlap sablon letiltva"
+          toggle_form_template: "űrlap sablon engedélyezve"
+          select_template: "Űrlapsablonok kiválasztása"
+          select_template_help: "Űrlapsablonok hozzáadása/szerkesztése"
       impersonate:
         title: "Megszemélyesít"
         not_found: "A felhasználó nem található."
