@@ -17,7 +17,7 @@ module(
 
       assert.strictEqual(
         query(".chat-message-separator-new").innerText.trim(),
-        I18n.t("chat.new_messages")
+        I18n.t("chat.last_visit")
       );
     });
   }
