@@ -9,7 +9,7 @@ import discourseDebounce from "discourse-common/lib/debounce";
 import EmberObject, { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { cancel, next, schedule, throttle } from "@ember/runloop";
+import { cancel, schedule, throttle } from "@ember/runloop";
 import discourseLater from "discourse-common/lib/later";
 import { inject as service } from "@ember/service";
 import { Promise } from "rsvp";
@@ -418,9 +418,13 @@ export default class ChatLivePane extends Component {
     }
 
     schedule("afterRender", () => {
-      const messageEl = this._scrollerEl.querySelector(
-        `.chat-message-container[data-id='${messageId}']`
-      );
+      const messageEl =
+        this._scrollerEl.querySelector(
+          `.chat-message-container[data-id='${messageId}']`
+        ) ||
+        this._scrollerEl.querySelector(
+          `.chat-message-container[data-staged-id='${messageId}']`
+        );
 
       if (!messageEl || this._selfDeleted) {
         return;
@@ -473,7 +477,7 @@ export default class ChatLivePane extends Component {
 
   @action
   scrollToBottom() {
-    next(() => {
+    schedule("afterRender", () => {
       if (this.args.channel.canLoadMoreFuture) {
         this._fetchAndScrollToLatest();
       } else {
@@ -482,6 +486,11 @@ export default class ChatLivePane extends Component {
 
         if (message?.id) {
           this.scrollToMessage(message.id, { highlight: false });
+          this.hasNewMessages = false;
+        }
+
+        if (message?.stagedId) {
+          this.scrollToMessage(message.stagedId, { highlight: false });
           this.hasNewMessages = false;
         }
       }
@@ -779,7 +788,6 @@ export default class ChatLivePane extends Component {
     }
 
     this.args.channel.appendMessages([stagedMessage]);
-
     if (!this.args.channel.canLoadMoreFuture) {
       this.scrollToBottom();
     }
