@@ -243,6 +243,15 @@ module SvgSprite
     badge_icons
   end
 
+  def self.core_svg_sprites
+    @core_svg_sprites ||=
+      begin
+        CORE_SVG_SPRITES.map do |path|
+          { filename: File.basename(path, ".svg"), sprite: File.read(path) }
+        end
+      end
+  end
+
   # Just used in tests
   def self.clear_plugin_svg_sprite_cache!
     @plugin_svg_sprites = nil
@@ -316,16 +325,8 @@ module SvgSprite
   end
 
   def self.sprite_sources(theme_id)
-    sprites = []
-
-    CORE_SVG_SPRITES.each do |path|
-      if File.exist?(path)
-        sprites << { filename: "#{File.basename(path, ".svg")}", sprite: File.read(path) }
-      end
-    end
-
-    sprites = sprites + custom_svg_sprites(theme_id) if theme_id.present?
-
+    sprites = core_svg_sprites
+    sprites += custom_svg_sprites(theme_id) if theme_id.present?
     sprites
   end
 
