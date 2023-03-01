@@ -324,7 +324,7 @@ module SvgSprite
     cache&.clear
   end
 
-  def self.sprite_sources(theme_id)
+  def self.sprites_for(theme_id)
     sprites = core_svg_sprites
     sprites += custom_svg_sprites(theme_id) if theme_id.present?
     sprites
@@ -402,7 +402,7 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
   def self.search(searched_icon)
     searched_icon = process(searched_icon.dup)
 
-    sprite_sources(SiteSetting.default_theme_id).each do |item|
+    sprites_for(SiteSetting.default_theme_id).each do |item|
       svg_file = Nokogiri.XML(item[:sprite])
 
       svg_file
@@ -425,7 +425,7 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
     icons = all_icons(SiteSetting.default_theme_id) if only_available
     results = Set.new
 
-    sprite_sources(SiteSetting.default_theme_id).each do |item|
+    sprites_for(SiteSetting.default_theme_id).each do |item|
       svg_file = Nokogiri.XML(item[:sprite])
 
       svg_file
