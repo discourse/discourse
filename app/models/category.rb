@@ -50,6 +50,8 @@ class Category < ActiveRecord::Base
 
   has_and_belongs_to_many :web_hooks
 
+  accepts_nested_attributes_for :category_setting, update_only: true
+
   validates :user_id, presence: true
 
   validates :name,

@@ -193,6 +193,18 @@
       @min="0"
     />
   </section>
+
+  <section class="field auto-bump-cooldown">
+    <label for="category-auto-bump-cooldown">
+      {{i18n "category.auto_bump_cooldown"}}
+    </label>
+    <NumberField
+      @number={{this.category.category_setting.auto_bump_cooldown}}
+      @id="category-auto-bump-cooldown"
+      @type="number"
+      @min="0"
+    />
+  </section>
 </section>
 
 <section>
