@@ -12,7 +12,7 @@ acceptance("Managing Group Tag Notification Defaults", function () {
     await visit("/g/discourse/manage/tags");
 
     assert.ok(
-      exists(".group-members .group-member"),
+      exists(".group-members tr"),
       "it should redirect to members page for an anonymous user"
     );
   });

@@ -1,38 +1,16 @@
-<div class="directory-table__cell">
-  <UserInfo @user={{this.item.user}} />
-</div>
-
+<td><UserInfo @user={{this.item.user}} /></td>
 {{#each this.columns as |column|}}
-  {{#if (directory-column-is-user-field column=column)}}
-    <div class="directory-table__cell--user-field">
-      <span class="directory-table__label">
-        <span>{{column.name}}</span>
-      </span>
+  <td>
+    {{#if (directory-column-is-user-field column=column)}}
       {{directory-item-user-field-value item=this.item column=column}}
-    </div>
-  {{else}}
-    <div class="directory-table__cell">
-      <span class="directory-table__label">
-        <span>
-          {{#if column.icon}}
-            {{d-icon column.icon}}
-          {{/if}}
-          {{directory-item-label item=this.item column=column}}
-        </span>
-      </span>
+    {{else}}
       {{directory-item-value item=this.item column=column}}
-    </div>
-  {{/if}}
-
+    {{/if}}
+  </td>
 {{/each}}
 
 {{#if this.showTimeRead}}
-  <div class="directory-table__cell time-read">
-    <span class="directory-table__label">
-      <span>{{i18n "directory.time_read"}}</span>
-    </span>
-    <span class="directory-table__value">
-      {{format-duration this.item.time_read}}
-    </span>
-  </div>
+  <td><span class="time-read">{{format-duration
+        this.item.time_read
+      }}</span></td>
 {{/if}}

@@ -15,7 +15,7 @@ module.exports = {
         "directory-item-value",
         "directory-table-header-title",
         "loading-spinner",
-        "directory-item-label",
+        "mobile-directory-item-label",
       ],
     },
     "no-implicit-this": {

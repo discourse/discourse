@@ -25,27 +25,15 @@
   display: flex;
   flex-wrap: wrap;
   width: 100%;
-  gap: 0.5em 0;
 
-  .bulk-select + input {
-    margin-left: 0.5em;
+  input + .group-members-manage {
+    margin-left: auto;
   }
 
-  input {
-    margin: 0 auto 0 0;
+  .group-username-filter {
+    margin: 0 0 5px 0;
+    vertical-align: middle;
   }
-
-  .bulk-select-buttons-wrap {
-    margin-right: 0.5em;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5em;
-  }
-}
-
-.group-members-manage {
-  display: flex;
-  gap: 0.5em;
 }
 
 .group-info {
@@ -130,45 +118,58 @@ table.group-manage-logs {
   }
 }
 
-.group-members {
-  grid-template-columns: 3fr repeat(3, minmax(min-content, 1fr));
+table.group-members {
+  width: 100%;
 
-  &--can-manage {
-    grid-template-columns: 3fr repeat(4, minmax(min-content, 1fr)) 3em;
-    @container (max-width: 47em) {
-      // positioning the member settings button within the same cell
-      // and avoiding overlap with padding-right on user-info
-      .group-member,
-      .member-settings {
-        grid-row-start: 1;
-        grid-column-start: 1;
-        grid-column-end: -1;
+  th {
+    text-align: center;
+
+    &.bulk-select {
+      height: 30px;
+      width: 30px;
+    }
+
+    &.bulk-select-buttons {
+      text-align: left;
+      white-space: nowrap;
+      width: 1%;
+
+      .bulk-select-buttons-wrap {
+        display: flex;
       }
-      .member-settings {
-        margin-left: auto;
+
+      .btn {
+        margin-right: 0.25em;
       }
-      .user-info {
-        padding-right: 3.5em;
-      }
+    }
+
+    &.username {
+      text-align: left;
     }
   }
 
-  &.group-members__requests {
-    grid-template-columns: 3fr repeat(3, minmax(min-content, 1fr));
+  td {
+    color: var(--primary-medium);
+    padding: 0.8em 0;
+    text-align: center;
+
+    &.group-member {
+      text-align: left;
+    }
   }
 
-  .directory-table__value {
-    font-size: var(--font-0);
-    color: var(--primary);
-  }
+  .user-info {
+    display: block;
 
-  .group-accept-deny-buttons {
-    gap: 0.5em;
-  }
+    .avatar-flair {
+      color: var(--primary);
+    }
 
-  @container (max-width: 47em) {
-    .directory-table__cell.group-owner {
-      order: 2;
+    .user-status-message {
+      img.emoji {
+        width: 1em;
+        height: 1em;
+      }
     }
   }
 }
