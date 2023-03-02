@@ -83,7 +83,7 @@ class SectionLink {
     );
   }
 
-  get validExternal() {
+  #validExternal() {
     if (this.internal) {
       return false;
     }
