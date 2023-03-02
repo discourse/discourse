@@ -100,9 +100,9 @@ module Jobs
       payload
     end
 
-    def create_notification!(membership, notification_data, mention)
+    def create_notification!(membership, mention, mention_type)
+      notification_data = build_data_for(membership, identifier_type: mention_type)
       is_read = Chat::ChatNotifier.user_has_seen_message?(membership, @chat_message.id)
-
       notification =
         Notification.create!(
           notification_type: Notification.types[:chat_mention],
@@ -115,11 +115,11 @@ module Jobs
       mention.update!(notification: notification)
     end
 
-    def send_notifications(membership, notification_data, os_payload)
+    def send_notifications(membership, os_payload, mention_type)
       mention = ChatMention.find_by(user: membership.user, chat_message: @chat_message)
       return if mention.blank?
 
-      create_notification!(membership, notification_data, mention)
+      create_notification!(membership, mention, mention_type)
 
       if !membership.desktop_notifications_never? && !membership.muted?
         MessageBus.publish(
@@ -138,10 +138,9 @@ module Jobs
       memberships = get_memberships(user_ids)
 
       memberships.each do |membership|
-        notification_data = build_data_for(membership, identifier_type: mention_type)
         payload = build_payload_for(membership, identifier_type: mention_type)
 
-        send_notifications(membership, notification_data, payload)
+        send_notifications(membership, payload, mention_type)
       end
     end
   end
