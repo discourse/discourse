@@ -1,5 +1,6 @@
 {{#if (or this.model.can_chat this.currentUser.admin)}}
   <LinkTo @route="preferences.chat">
-    {{i18n "chat.title_capitalized"}}
+    {{d-icon "comment"}}
+    <span>{{i18n "chat.title_capitalized"}}</span>
   </LinkTo>
 {{/if}}
