@@ -3,6 +3,7 @@
   flex-direction: row;
   margin-right: auto;
   margin-bottom: var(--nav-space);
+  min-width: 50%;
   &__label {
     background-color: var(--primary-low);
     display: flex;
@@ -13,6 +14,7 @@
   }
   &__input {
     position: relative;
+    flex: 1 1;
   }
   &__icon {
     position: absolute;
@@ -25,6 +27,7 @@
     border-color: var(--primary-low-mid);
     padding-left: 1.75em;
     color: var(--primary);
+    width: 100%;
     &:focus {
       border-color: var(--tertiary);
       outline: none;
