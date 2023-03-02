@@ -39,7 +39,7 @@ describe "Custom sidebar sections", type: :system, js: true do
     sidebar.open_new_custom_section
 
     expect(section_modal).to be_visible
-    expect(section_modal).to have_disabled_save
+    expect(section_modal).to have_disabled_save_button
     expect(find("#discourse-modal-title")).to have_content("Add custom section")
 
     section_modal.fill_name("My section")
