@@ -95,6 +95,11 @@ en:
         never: "Never"
         title: "Email Notifications"
         when_away: "Only when away"
+      header_indicator_preference:
+        title: "Show activity indicator in header"
+        all_new: "All New Messages"
+        dm_and_mentions: "Direct Messages and Mentions"
+        never: "Never"
       enable: "Enable chat"
       flag: "Flag"
       emoji: "Insert emoji"

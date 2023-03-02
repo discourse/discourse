@@ -79,6 +79,60 @@ RSpec.describe "Message notifications - with sidebar", type: :system, js: true d
             end
           end
 
+          context "when user chat_header_indicator_preference is set to 'never'" do
+            before do
+              current_user.user_option.update!(
+                chat_header_indicator_preference:
+                  UserOption.chat_header_indicator_preferences[:never],
+              )
+            end
+
+            context "when a message is created" do
+              it "doesn't show any indicator on chat-header-icon" do
+                visit("/")
+                using_session(:user_1) { create_message(channel: channel_1, creator: user_1) }
+
+                expect(page).to have_no_css(".chat-header-icon .chat-channel-unread-indicator")
+              end
+            end
+          end
+
+          context "when user chat_header_indicator_preference is set to 'dm_and_mentions'" do
+            before do
+              current_user.user_option.update!(
+                chat_header_indicator_preference:
+                  UserOption.chat_header_indicator_preferences[:dm_and_mentions],
+              )
+            end
+
+            context "when a message is created" do
+              it "doesn't show any indicator on chat-header-icon" do
+                visit("/")
+                using_session(:user_1) { create_message(channel: channel_1, creator: user_1) }
+
+                expect(page).to have_no_css(
+                  ".chat-header-icon .chat-channel-unread-indicator.urgent",
+                )
+              end
+            end
+
+            context "when a message with a mention is created" do
+              it "does show an indicator on chat-header-icon" do
+                Jobs.run_immediately!
+
+                visit("/")
+                using_session(:user_1) do
+                  create_message(
+                    text: "hey what's going on @#{current_user.username}?",
+                    channel: channel_1,
+                    creator: user_1,
+                  )
+                end
+                expect(page).to have_css(".chat-header-icon .chat-channel-unread-indicator.urgent")
+              end
+            end
+          end
+
           context "when a message is created" do
             it "correctly renders notifications" do
               visit("/")

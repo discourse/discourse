@@ -200,6 +200,7 @@ GEM
       uri_template (~> 0.7)
     jwt (2.7.0)
     kgio (2.11.4)
+    language_server-protocol (3.17.0.3)
     libv8-node (16.10.0.0)
     libv8-node (16.10.0.0-aarch64-linux)
     libv8-node (16.10.0.0-arm64-darwin)
@@ -411,7 +412,7 @@ GEM
       rspec-core (>= 2.14)
     rtlcss (0.2.0)
       mini_racer (~> 0.6.3)
-    rubocop (1.46.0)
+    rubocop (1.47.0)
       json (~> 2.3)
       parallel (~> 1.10)
       parser (>= 3.2.0.0)
@@ -431,8 +432,12 @@ GEM
     rubocop-rspec (2.18.1)
       rubocop (~> 1.33)
       rubocop-capybara (~> 2.17)
+    ruby-lsp (0.4.1)
+      language_server-protocol (~> 3.17.0)
+      sorbet-runtime
+      syntax_tree (>= 6, < 7)
     ruby-prof (1.6.1)
-    ruby-progressbar (1.11.0)
+    ruby-progressbar (1.12.0)
     ruby-readability (0.7.0)
       guess_html_encoding (>= 0.0.4)
       nokogiri (>= 1.6.0)
@@ -471,6 +476,7 @@ GEM
     snaky_hash (2.0.1)
       hashie
       version_gem (~> 1.1, >= 1.1.1)
+    sorbet-runtime (0.5.10693)
     sprockets-rails (3.4.2)
       actionpack (>= 5.2)
       activesupport (>= 5.2)
@@ -643,6 +649,7 @@ DEPENDENCIES
   rswag-specs
   rtlcss
   rubocop-discourse
+  ruby-lsp
   ruby-prof
   ruby-readability
   rubyzip

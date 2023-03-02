@@ -13,6 +13,11 @@ module Chat::UserOptionExtension
       @chat_email_frequencies ||= { never: 0, when_away: 1 }
     end
 
+    def base.chat_header_indicator_preferences
+      @chat_header_indicator_preferences ||= { all_new: 0, dm_and_mentions: 1, never: 2 }
+    end
+
     base.enum :chat_email_frequency, base.chat_email_frequencies, prefix: "send_chat_email"
+    base.enum :chat_header_indicator_preference, base.chat_header_indicator_preferences
   end
 end

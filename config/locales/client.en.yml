@@ -581,27 +581,33 @@ en:
       scores:
         about: "This score is calculated based on the trust level of the reporter, the accuracy of their previous flags, and the priority of the item being reported."
         score: "Score"
-        date: "Date"
-        type: "Type"
+        date: "Report date"
+        type: "Reason"
         status: "Status"
-        submitted_by: "Submitted By"
-        reviewed_by: "Reviewed By"
+        submitted_by: "Reported by"
+        reviewed_by: "Reviewed by"
+        reviewed_timestamp: "Review date"
 
       statuses:
         pending:
           title: "Pending"
         approved:
-          title: "Approved"
+          title: "Flag approved"
         rejected:
-          title: "Rejected"
+          title: "Flag rejected"
         ignored:
-          title: "Ignored"
+          title: "Flag ignored"
         deleted:
-          title: "Deleted"
+          title: "Topic or post deleted"
         reviewed:
           title: "(all reviewed)"
         all:
           title: "(everything)"
+
+      context_question:
+        is_this_post: "Is this post %{reviewable_human_score_types}?"
+        delimiter: "or"
+        something_else_wrong: "Is there something else wrong with this post?"
 
       types:
         reviewable_flagged_post:
@@ -917,6 +923,7 @@ en:
         make_all_primary_description: "Make this the primary group for all selected users"
         remove_all_primary: "Remove as Primary"
         remove_all_primary_description: "Remove this group as primary"
+        status: "Status"
         owner: "Owner"
         primary: "Primary"
         forbidden: "You're not allowed to view the members."
@@ -4438,6 +4445,7 @@ en:
               title: "List of all users"
             my_posts:
               content: "My Posts"
+              content_drafts: "My Drafts"
               title: "My recent topic activity"
               title_drafts: "My unposted drafts"
               draft_count:
@@ -5538,6 +5546,7 @@ en:
         list_table:
           headings:
             name: "Name"
+            active_categories: "Active Categories"
             actions: "Actions"
           actions:
             view: "View Template"
@@ -5547,6 +5556,7 @@ en:
           close: "Close"
           edit: "Edit"
           delete: "Delete"
+          toggle_preview: "Toggle Preview"
         new_template_form:
           submit: "Save"
           cancel: "Cancel"
@@ -5556,6 +5566,7 @@ en:
           template:
             label: "Template"
             placeholder: "Create a YAML template here..."
+          preview: "Preview"
         delete_confirm: "Are you sure you would like to delete this template?"
         quick_insert_fields:
           add_new_field: "Add"
@@ -5565,6 +5576,41 @@ en:
           dropdown: "Dropdown"
           upload: "Upload a file"
           multiselect: "Multiple choice"
+        validations_modal:
+          button_title: "Validations"
+          modal_title: "Validation Options"
+          table_headers:
+            key: "Key"
+            type: "Type"
+            description: "Description"
+          validations:
+            required:
+              key: "required"
+              type: "boolean"
+              description: "Requires the field to be completed to submit the form."
+            minimum:
+              key: "minimum"
+              type: "integer"
+              description: "In text fields, specifies the minimum number of characters allowed."
+            maximum:
+              key: "maximum"
+              type: "integer"
+              description: "In text fields, specifies the maximum number of characters allowed. In multi select dropdowns, specifies the maximum number of options that can be selected."
+            pattern:
+              key: "pattern"
+              type: "regex string"
+              description: "In text fields, a regular expression specifying the allowed input."
+        preview_modal:
+          title: "Preview Template"
+        field_placeholders:
+          validations: "enter validations here"
+          label: "Enter label here"
+          placeholder: "Enter placeholder here"
+          none_label: "Select an item"
+          choices:
+            first: "Option 1"
+            second: "Option 2"
+            third: "Option 3"
         edit_category:
           toggle_freeform: "form template disabled"
           toggle_form_template: "form template enabled"
@@ -5584,6 +5630,7 @@ en:
         not_found: "Sorry, that username doesn't exist in our system."
         id_not_found: "Sorry, that user id doesn't exist in our system."
         active: "Activated"
+        status: "Status"
         show_emails: "Show Emails"
         hide_emails: "Hide Emails"
         nav:

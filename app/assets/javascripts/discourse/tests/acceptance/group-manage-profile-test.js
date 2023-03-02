@@ -12,7 +12,7 @@ acceptance("Managing Group Profile", function () {
     await visit("/g/discourse/manage/profile");
 
     assert.ok(
-      exists(".group-members tr"),
+      exists(".group-members .group-member"),
       "it should redirect to members page for an anonymous user"
     );
   });

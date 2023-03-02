@@ -14,7 +14,7 @@ export default Controller.extend({
 
   filterContentNow(category) {
     // If we have no content, don't bother filtering anything
-    if (!!isEmpty(this.allSiteSettings)) {
+    if (isEmpty(this.allSiteSettings)) {
       return;
     }
 
@@ -73,7 +73,7 @@ export default Controller.extend({
             setting.includes(filter) ||
             setting.replace(/_/g, " ").includes(filter) ||
             item.get("description").toLowerCase().includes(filter) ||
-            (item.get("value") || "").toLowerCase().includes(filter)
+            (item.get("value") || "").toString().toLowerCase().includes(filter)
           );
         } else {
           return true;

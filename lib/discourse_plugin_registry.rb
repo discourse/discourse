@@ -108,6 +108,8 @@ class DiscoursePluginRegistry
 
   define_filtered_register :search_groups_set_query_callbacks
 
+  define_filtered_register :about_stat_groups
+
   def self.register_auth_provider(auth_provider)
     self.auth_providers << auth_provider
   end

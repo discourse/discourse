@@ -1,6 +1,17 @@
 <DModalBody @rawTitle={{this.model.name}}>
-  <HighlightedCode @lang="yaml" @code={{this.model.template}} />
-  {{! ? TODO(@keegan): Perhaps add what places (ex. categories) the templates are active in }}
+  <div class="control-group">
+    <DToggleSwitch
+      class="form-templates__preview-toggle"
+      @state={{this.showPreview}}
+      @label="admin.form_templates.view_template.toggle_preview"
+      {{on "click" this.togglePreview}}
+    />
+  </div>
+  {{#if this.showPreview}}
+    <FormTemplateField::Wrapper @content={{this.model.template}} />
+  {{else}}
+    <HighlightedCode @lang="yaml" @code={{this.model.template}} />
+  {{/if}}
 </DModalBody>
 <div class="modal-footer">
   <DButton
