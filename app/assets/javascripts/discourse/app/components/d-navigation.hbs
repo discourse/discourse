@@ -8,6 +8,7 @@
       <Input
         class="topic-query-filter__filter-term"
         @value={{this.queryString}}
+        placeholder="status:open"
         @enter={{route-action "changeQueryString" this.queryString}}
         @type="text"
       />
