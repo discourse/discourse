@@ -77,14 +77,36 @@ class SectionLink {
     return this.name === undefined || this.validName ? "" : "warning";
   }
 
+  get internal() {
+    return (
+      this.value.startsWith(this.protocolAndHost) || this.value.startsWith("/")
+    );
+  }
+
+  get validExternal() {
+    if (this.internal) {
+      return false;
+    }
+    try {
+      return new URL(this.value);
+    } catch {
+      return false;
+    }
+  }
+
+  get validInternal() {
+    if (!this.internal) {
+      return false;
+    }
+    return this.internal && this.router.recognize(this.path).name !== "unknown";
+  }
+
   get validValue() {
     return (
       !isEmpty(this.value) &&
-      (this.value.startsWith(this.protocolAndHost) ||
-        this.value.startsWith("/")) &&
       this.value.length <= 200 &&
       this.path &&
-      this.router.recognize(this.path).name !== "unknown"
+      (this.validExternal || this.validInternal)
     );
   }
 

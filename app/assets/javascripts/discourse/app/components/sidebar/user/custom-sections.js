@@ -39,10 +39,14 @@ export default class SidebarUserCustomSections extends Component {
           ? htmlSafe(`${iconHTML("globe")} ${section.title}`)
           : section.title;
       section.links.forEach((link) => {
-        const routeInfoHelper = new RouteInfoHelper(this.router, link.value);
-        link.route = routeInfoHelper.route;
-        link.models = routeInfoHelper.models;
-        link.query = routeInfoHelper.query;
+        if (link.value.startsWith("http", "https")) {
+          link.external = true;
+        } else {
+          const routeInfoHelper = new RouteInfoHelper(this.router, link.value);
+          link.route = routeInfoHelper.route;
+          link.models = routeInfoHelper.models;
+          link.query = routeInfoHelper.query;
+        }
       });
     });
     return this.currentUser.sidebarSections;

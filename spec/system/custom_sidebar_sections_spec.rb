@@ -34,6 +34,25 @@ describe "Custom sidebar sections", type: :system, js: true do
     expect(page).to have_link("Sidebar Tags")
   end
 
+  it "allows the user to create custom section with external link" do
+    visit("/latest")
+    sidebar.open_new_custom_section
+
+    expect(section_modal).to be_visible
+    expect(section_modal).to have_disabled_save
+    expect(find("#discourse-modal-title")).to have_content("Add custom section")
+
+    section_modal.fill_name("My section")
+
+    section_modal.fill_link("Discourse Homepage", "https://discourse.org")
+    expect(section_modal).to have_enabled_save
+
+    section_modal.save
+
+    expect(page).to have_button("My section")
+    expect(page).to have_link("Discourse Homepage", href: "https://discourse.org")
+  end
+
   it "allows the user to edit custom section" do
     sidebar_section = Fabricate(:sidebar_section, title: "My section", user: user)
     sidebar_url_1 = Fabricate(:sidebar_url, name: "Sidebar Tags", value: "/tags")
