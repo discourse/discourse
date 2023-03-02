@@ -1594,5 +1594,7 @@ Discourse::Application.routes.draw do
     resources :sidebar_sections, only: %i[index create update destroy]
 
     get "*url", to: "permalinks#show", constraints: PermalinkConstraint.new
+
+    get "/form-templates/:id" => "form_templates#show"
   end
 end
