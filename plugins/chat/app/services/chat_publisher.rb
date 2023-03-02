@@ -12,7 +12,7 @@ module ChatPublisher
         { scope: anonymous_guardian, root: :chat_message },
       ).as_json
     content[:type] = :sent
-    content[:stagedId] = staged_id
+    content[:staged_id] = staged_id
     permissions = permissions(chat_channel)
 
     MessageBus.publish("/chat/#{chat_channel.id}", content.as_json, permissions)
@@ -133,9 +133,13 @@ module ChatPublisher
   end
 
   def self.publish_user_tracking_state(user, chat_channel_id, chat_message_id)
+    data = { chat_channel_id: chat_channel_id, chat_message_id: chat_message_id }.merge(
+      ChatChannelUnreadsQuery.call(channel_id: chat_channel_id, user_id: user.id),
+    )
+
     MessageBus.publish(
       self.user_tracking_state_message_bus_channel(user.id),
-      { chat_channel_id: chat_channel_id, chat_message_id: chat_message_id.to_i }.as_json,
+      data.as_json,
       user_ids: [user.id],
     )
   end

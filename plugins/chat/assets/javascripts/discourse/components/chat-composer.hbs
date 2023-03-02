@@ -79,7 +79,11 @@
 {{#if this.canAttachUploads}}
   <ChatComposerUploads
     @fileUploadElementId={{this.fileUploadElementId}}
-    @onUploadChanged={{action "uploadsChanged"}}
+    @onUploadChanged={{this.uploadsChanged}}
+    @existingUploads={{or
+      this.chatChannel.draft.uploads
+      this.editingMessage.uploads
+    }}
   />
 {{/if}}
 
