@@ -116,11 +116,6 @@ module Jobs
     end
 
     def send_notifications(membership, mention_type)
-      mention = ChatMention.find_by(user: membership.user, chat_message: @chat_message)
-      return if mention.blank?
-
-      create_notification!(membership, mention, mention_type)
-
       payload = build_payload_for(membership, identifier_type: mention_type)
 
       if !membership.desktop_notifications_never? && !membership.muted?
@@ -139,7 +134,13 @@ module Jobs
     def process_mentions(user_ids, mention_type)
       memberships = get_memberships(user_ids)
 
-      memberships.each { |membership| send_notifications(membership, mention_type) }
+      memberships.each do |membership|
+        mention = ChatMention.find_by(user: membership.user, chat_message: @chat_message)
+        if mention.present?
+          create_notification!(membership, mention, mention_type)
+          send_notifications(membership, mention_type)
+        end
+      end
     end
   end
 end
