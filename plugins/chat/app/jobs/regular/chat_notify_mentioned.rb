@@ -115,33 +115,31 @@ module Jobs
       mention.update!(notification: notification)
     end
 
-    def send_notifications(membership, os_payload, mention_type)
+    def send_notifications(membership, mention_type)
       mention = ChatMention.find_by(user: membership.user, chat_message: @chat_message)
       return if mention.blank?
 
       create_notification!(membership, mention, mention_type)
 
+      payload = build_payload_for(membership, identifier_type: mention_type)
+
       if !membership.desktop_notifications_never? && !membership.muted?
         MessageBus.publish(
           "/chat/notification-alert/#{membership.user_id}",
-          os_payload,
+          payload,
           user_ids: [membership.user_id],
         )
       end
 
       if !membership.mobile_notifications_never? && !membership.muted?
-        PostAlerter.push_notification(membership.user, os_payload)
+        PostAlerter.push_notification(membership.user, payload)
       end
     end
 
     def process_mentions(user_ids, mention_type)
       memberships = get_memberships(user_ids)
 
-      memberships.each do |membership|
-        payload = build_payload_for(membership, identifier_type: mention_type)
-
-        send_notifications(membership, payload, mention_type)
-      end
+      memberships.each { |membership| send_notifications(membership, mention_type) }
     end
   end
 end
