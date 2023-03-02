@@ -388,6 +388,13 @@ class TopicTrackingState
         new_filter_sql
       end
 
+    category_topic_id_column_select =
+      if SiteSetting.show_category_definitions_in_topic_lists
+        ""
+      else
+        "c.topic_id AS category_topic_id,"
+      end
+
     select_sql =
       select ||
         "
@@ -398,6 +405,7 @@ class TopicTrackingState
            #{highest_post_number_column_select(whisperer)},
            last_read_post_number,
            c.id as category_id,
+           #{category_topic_id_column_select}
            tu.notification_level,
            us.first_unread_at,
            GREATEST(

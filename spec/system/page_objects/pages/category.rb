@@ -58,6 +58,20 @@ module PageObjects
         find(".select-kit-collection .select-kit-row", text: template_name).click
         find(".select-category-template").click
       end
+
+      CATEGORY_NAVIGATION_NEW_NAV_ITEM_SELECTOR = ".category-navigation .nav-item_new"
+
+      def has_no_new_topics?
+        page.has_no_css?(CATEGORY_NAVIGATION_NEW_NAV_ITEM_SELECTOR)
+      end
+
+      def has_new_topics?
+        page.has_css?(CATEGORY_NAVIGATION_NEW_NAV_ITEM_SELECTOR)
+      end
+
+      def click_new
+        page.find(CATEGORY_NAVIGATION_NEW_NAV_ITEM_SELECTOR).click
+      end
     end
   end
 end
