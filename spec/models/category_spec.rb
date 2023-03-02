@@ -965,6 +965,40 @@ RSpec.describe Category do
       expect(Category.auto_bump_topic!).to eq(false)
     end
 
+    it "should not auto-bump the same topic within the cooldown" do
+      freeze_time
+      category =
+        Fabricate(
+          :category_with_definition,
+          num_auto_bump_daily: 2,
+          created_at: 1.minute.ago,
+          category_setting_attributes: {
+            auto_bump_cooldown: 1,
+          },
+        )
+      category.clear_auto_bump_cache!
+
+      post1 = create_post(category: category, created_at: 15.seconds.ago)
+
+      # no limits on post creation or category creation please
+      RateLimiter.enable
+
+      time = freeze_time 1.month.from_now
+
+      expect(category.auto_bump_topic!).to eq(true)
+      expect(Topic.where(bumped_at: time).count).to eq(1)
+
+      time = freeze_time 13.hours.from_now
+
+      expect(category.auto_bump_topic!).to eq(false)
+      expect(Topic.where(bumped_at: time).count).to eq(0)
+
+      time = freeze_time 13.hours.from_now
+
+      expect(category.auto_bump_topic!).to eq(true)
+      expect(Topic.where(bumped_at: time).count).to eq(1)
+    end
+
     it "should not automatically bump topics with a bump scheduled" do
       freeze_time
       category = Fabricate(:category_with_definition, created_at: 1.second.ago)
