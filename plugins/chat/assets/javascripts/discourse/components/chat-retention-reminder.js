@@ -1,39 +1,34 @@
-import Component from "@ember/component";
-import discourseComputed from "discourse-common/utils/decorators";
+import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { inject as service } from "@ember/service";
 
-export default Component.extend({
-  tagName: "",
-  loading: false,
+export default class ChatRetentionReminder extends Component {
+  @service currentUser;
 
-  @discourseComputed(
-    "chatChannel.chatable_type",
-    "currentUser.{needs_dm_retention_reminder,needs_channel_retention_reminder}"
-  )
-  show() {
+  get show() {
     return (
-      !this.chatChannel.isDraft &&
-      ((this.chatChannel.isDirectMessageChannel &&
-        this.currentUser.needs_dm_retention_reminder) ||
-        (this.chatChannel.isCategoryChannel &&
-          this.currentUser.needs_channel_retention_reminder))
+      !this.args.channel?.isDraft &&
+      ((this.args.channel?.isDirectMessageChannel &&
+        this.currentUser?.get("needs_dm_retention_reminder")) ||
+        (this.args.channel?.isCategoryChannel &&
+          this.currentUser?.get("needs_channel_retention_reminder")))
     );
-  },
+  }
 
   @action
   dismiss() {
     return ajax("/chat/dismiss-retention-reminder", {
       method: "POST",
-      data: { chatable_type: this.chatChannel.chatable_type },
+      data: { chatable_type: this.args.channel.chatableType },
     })
       .then(() => {
-        const field = this.chatChannel.isDirectMessageChannel
+        const field = this.args.channel.isDirectMessageChannel
           ? "needs_dm_retention_reminder"
           : "needs_channel_retention_reminder";
         this.currentUser.set(field, false);
       })
       .catch(popupAjaxError);
-  },
-});
+  }
+}
