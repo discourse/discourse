@@ -41,7 +41,7 @@ class ChatMessageSerializer < ApplicationSerializer
       .map do |emoji, reactions|
         next unless Emoji.exists?(emoji)
 
-        users = reactions[0..5].map(&:user)[0..5]
+        users = reactions.take(5).map(&:user).take(5)
 
         {
           emoji: emoji,

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ChatChannelMembershipsQuery
-  def self.call(channel, limit: 50, offset: 0, username: nil, count_only: false)
+  def self.call(channel:, limit: 50, offset: 0, username: nil, count_only: false)
     query =
       UserChatChannelMembership
         .joins(:user)

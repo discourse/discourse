@@ -132,7 +132,7 @@ export default class ChatChannel extends RestModel {
       this.canLoadMorePast = details.can_load_more_past;
     }
     this.userSilenced = details.user_silenced ?? false;
-    this.status = details.channel_status ?? "open";
+    this.status = details.channel_status;
     this.channelMessageBusLastId = details.channel_message_bus_last_id;
   }
 

@@ -303,6 +303,7 @@ export default class ChatMessage extends Component {
       this.args.channel?.canModifyMessages?.(this.currentUser)
     );
   }
+
   get canFlagMessage() {
     return (
       this.currentUser?.id !== this.args.message?.user?.id &&

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ChatChannelUnreadsQuery
-  def self.call(channel_id, user_id)
+  def self.call(channel_id:, user_id:)
     sql = <<~SQL
       SELECT (
       SELECT COUNT(*) AS unread_count
