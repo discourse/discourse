@@ -3,7 +3,6 @@ import ChatChannel, {
 } from "discourse/plugins/chat/discourse/models/chat-channel";
 import EmberObject from "@ember/object";
 import { Fabricator } from "./fabricator";
-import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 
 const userFabricator = Fabricator(EmberObject, {
   id: 1,
@@ -39,7 +38,7 @@ export default {
     },
   }),
 
-  chatChannelMessage: Fabricator(ChatMessage, {
+  chatChannelMessage: Fabricator(EmberObject, {
     id: 1,
     chat_channel_id: 1,
     user_id: 1,

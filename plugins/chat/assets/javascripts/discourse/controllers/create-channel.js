@@ -36,7 +36,6 @@ export default class CreateChannelController extends Controller.extend(
   categoryPermissionsHint = null;
   autoJoinUsers = null;
   autoJoinWarning = "";
-  loadingPermissionHint = false;
 
   @notEmpty("category") categorySelected;
   @gt("siteSettings.max_chat_auto_joined_users", 0) autoJoinAvailable;
@@ -154,8 +153,6 @@ export default class CreateChannelController extends Controller.extend(
     if (category) {
       const fullSlug = this._buildCategorySlug(category);
 
-      this.set("loadingPermissionHint", true);
-
       return this.chatApi
         .categoryPermissions(category.id)
         .then((catPermissions) => {
@@ -197,9 +194,6 @@ export default class CreateChannelController extends Controller.extend(
           }
 
           this.set("categoryPermissionsHint", htmlSafe(hint));
-        })
-        .finally(() => {
-          this.set("loadingPermissionHint", false);
         });
     } else {
       this.set("categoryPermissionsHint", DEFAULT_HINT);

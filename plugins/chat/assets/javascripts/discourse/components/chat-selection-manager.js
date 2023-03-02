@@ -19,17 +19,16 @@ export default class AdminCustomizeColorsShowController extends Component {
   chatCopySuccess = false;
   showChatCopySuccess = false;
   cancelSelecting = null;
+  canModerate = false;
 
   @computed("selectedMessageIds.length")
   get anyMessagesSelected() {
     return this.selectedMessageIds.length > 0;
   }
 
-  @computed("chatChannel.isDirectMessageChannel", "chatChannel.canModerate")
+  @computed("chatChannel.isDirectMessageChannel", "canModerate")
   get showMoveMessageButton() {
-    return (
-      !this.chatChannel.isDirectMessageChannel && this.chatChannel.canModerate
-    );
+    return !this.chatChannel.isDirectMessageChannel && this.canModerate;
   }
 
   @bind

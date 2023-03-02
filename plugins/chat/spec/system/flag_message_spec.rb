@@ -32,7 +32,7 @@ RSpec.describe "Flag message", type: :system, js: true do
 
   context "when direct message channel" do
     fab!(:dm_channel_1) { Fabricate(:direct_message_channel, users: [current_user]) }
-    fab!(:message_1) { Fabricate(:chat_message, chat_channel: dm_channel_1) }
+    fab!(:message_1) { Fabricate(:chat_message, chat_channel: dm_channel_1, user: current_user) }
 
     it "doesn’t allow to flag a message" do
       chat.visit_channel(dm_channel_1)

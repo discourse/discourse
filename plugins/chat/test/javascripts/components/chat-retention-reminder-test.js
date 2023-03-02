@@ -14,7 +14,9 @@ module(
       this.channel = ChatChannel.create({ chatable_type: "Category" });
       this.currentUser.set("needs_channel_retention_reminder", true);
 
-      await render(hbs`<ChatRetentionReminder @channel={{this.channel}} />`);
+      await render(
+        hbs`<ChatRetentionReminder @chatChannel={{this.channel}} />`
+      );
 
       assert.dom(".chat-retention-reminder").includesText(
         I18n.t("chat.retention_reminders.public", {

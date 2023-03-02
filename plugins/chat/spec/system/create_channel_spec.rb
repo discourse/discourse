@@ -81,7 +81,6 @@ RSpec.describe "Create channel", type: :system, js: true do
         chat_page.visit_browse
         chat_page.new_channel_button.click
         channel_modal.select_category(private_category_1)
-        expect(page).to have_no_css(".loading-permissions")
 
         expect(channel_modal.create_channel_hint["innerHTML"].strip).to include(
           "&lt;script&gt;e&lt;/script&gt;",

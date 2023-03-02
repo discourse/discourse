@@ -60,9 +60,8 @@ RSpec.describe "Navigating to message", type: :system, js: true do
 
       it "highlights the correct message after using the bottom arrow" do
         chat_page.visit_channel(channel_1)
-
         click_link(link)
-        click_button(class: "chat-scroll-to-bottom")
+        click_link(I18n.t("js.chat.scroll_to_bottom"))
         click_link(link)
 
         expect(page).to have_css(
@@ -150,9 +149,8 @@ RSpec.describe "Navigating to message", type: :system, js: true do
         visit("/")
         chat_page.open_from_header
         chat_drawer_page.open_channel(channel_1)
-
         click_link(link)
-        click_button(class: "chat-scroll-to-bottom")
+        click_link(I18n.t("js.chat.scroll_to_bottom"))
         click_link(link)
 
         expect(page).to have_css(

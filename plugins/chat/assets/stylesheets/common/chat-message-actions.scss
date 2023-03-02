@@ -6,6 +6,10 @@
 .chat-message-actions {
   .chat-message-reaction {
     @include chat-reaction;
+
+    &:not(.show) {
+      display: none;
+    }
   }
 }
 

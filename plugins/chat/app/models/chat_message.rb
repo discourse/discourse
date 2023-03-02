@@ -223,7 +223,7 @@ class ChatMessage < ActiveRecord::Base
   end
 
   def url
-    "/chat/c/-/#{self.chat_channel_id}/#{self.id}"
+    "/chat/message/#{self.id}"
   end
 
   private

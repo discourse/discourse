@@ -31,7 +31,6 @@ export default class ChatMessageActionsDesktop extends Component {
         ),
         {
           placement: "top-end",
-          strategy: "fixed",
           modifiers: [
             { name: "hide", enabled: true },
             { name: "eventListeners", options: { scroll: false } },
