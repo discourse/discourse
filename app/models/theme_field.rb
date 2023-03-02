@@ -677,7 +677,10 @@ class ThemeField < ActiveRecord::Base
   after_save do
     dependent_fields.each(&:invalidate_baked!)
 
-    upsert_svg_sprite! if upload && svg_sprite_field?
+    if upload && svg_sprite_field?
+      upsert_svg_sprite!
+      DB.after_commit { SvgSprite.expire_cache }
+    end
   end
 
   after_destroy do
