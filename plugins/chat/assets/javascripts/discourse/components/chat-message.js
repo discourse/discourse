@@ -50,6 +50,7 @@ export default class ChatMessage extends Component {
   @optionalService adminTools;
 
   cachedFavoritesReactions = null;
+  reacting = false;
 
   constructor() {
     super(...arguments);
@@ -487,6 +488,10 @@ export default class ChatMessage extends Component {
       return;
     }
 
+    if (this.reacting) {
+      return;
+    }
+
     if (this.capabilities.canVibrate && !isTesting()) {
       navigator.vibrate(5);
     }
@@ -498,6 +503,8 @@ export default class ChatMessage extends Component {
     if (reactAction === REACTIONS.add) {
       this.chatEmojiReactionStore.track(`:${emoji}:`);
     }
+
+    this.reacting = true;
 
     this.args.message.react(
       emoji,
@@ -515,15 +522,19 @@ export default class ChatMessage extends Component {
           emoji,
         },
       }
-    ).catch((errResult) => {
-      popupAjaxError(errResult);
-      this.args.message.react(
-        emoji,
-        REACTIONS.remove,
-        this.currentUser,
-        this.currentUser.id
-      );
-    });
+    )
+      .catch((errResult) => {
+        popupAjaxError(errResult);
+        this.args.message.react(
+          emoji,
+          REACTIONS.remove,
+          this.currentUser,
+          this.currentUser.id
+        );
+      })
+      .finally(() => {
+        this.reacting = false;
+      });
   }
 
   // TODO(roman): For backwards-compatibility.
