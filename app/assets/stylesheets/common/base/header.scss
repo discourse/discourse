@@ -46,6 +46,11 @@
     display: flex;
     align-items: center;
     height: 100%;
+    // This acts as a placeholder if for some reason the small logo takes a while
+    // to load - prevents topic title from shifting after the small logo loads.
+    // It's hardcoded to 36px because that's the width we use inline for the small
+    // logo in the home-logo widget.
+    min-width: 36px;
     a,
     a:visited {
       color: var(--header_primary);
@@ -62,7 +67,9 @@
   }
 
   #site-logo {
+    height: 2.667em;
     width: auto;
+    max-width: 100%;
   }
 
   #site-text-logo {
@@ -119,7 +126,7 @@
 
 .d-header-icons {
   text-align: center;
-  margin: 0 0 0 5px;
+  margin: 0 0 0 0.5em;
   list-style: none;
 
   > li {
