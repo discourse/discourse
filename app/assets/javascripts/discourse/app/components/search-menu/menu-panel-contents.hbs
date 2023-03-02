@@ -32,25 +32,23 @@
   {{else}}
     <div class="searching">
       {{#if @term}}
-        <MountWidget
-          @widget="link"
-          @args={{hash
-            title="search.clear_search"
-            action="clearSearch"
-            className="clear-search"
-            icon="times"
-          }}
-        />
+        <a
+          class="clear-search"
+          aria-label="clear_input"
+          title={{i18n "search.clear_search"}}
+          href
+          {{on "click" @clearSearch}}
+        >
+          {{d-icon "times"}}
+        </a>
       {{/if}}
-      <MountWidget
-        @widget="link"
-        @args={{hash
-          href=this.advancedSearchButtonHref
-          className="show-advanced-search"
-          title="search.open_advanced"
-          icon="sliders-h"
-        }}
-      />
+      <a
+        class="show-advanced-search"
+        title={{i18n "search.open_advanced"}}
+        href={{this.advancedSearchButtonHref}}
+      >
+        {{d-icon "sliders-h"}}
+      </a>
     </div>
   {{/if}}
 </div>

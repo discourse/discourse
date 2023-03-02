@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
+import { bind } from "discourse-common/utils/decorators";
 import { tracked } from "@glimmer/tracking";
 import {
   isValidSearchTerm,
@@ -29,6 +30,9 @@ export const DEFAULT_TYPE_FILTER = "exclude_topics";
 
 export default class SearchMenu extends Component {
   @service search;
+  @service currentUser;
+  @service siteSettings;
+  @service appEvents;
 
   @tracked inTopicContext = this.args.inTopicContext;
   @tracked loading = false;
@@ -43,17 +47,256 @@ export default class SearchMenu extends Component {
   suggestionKeyword = false;
   _lastEnterTimestamp = null;
   _debouncer = null;
+  _activeSearch = null;
 
   constructor() {
     super(...arguments);
   }
 
-  clearSearch() {
-    searchData.term = "";
+  @bind
+  searchContext() {
+    if (this.inTopicContext || this.inPMInboxContext) {
+      return this.search.searchContext;
+    }
+
+    return false;
+  }
+
+  @bind
+  fullSearchUrl(opts) {
+    let url = "/search";
+    const params = [];
+
+    if (this.term) {
+      let query = "";
+
+      query += `q=${encodeURIComponent(this.term)}`;
+
+      const searchContext = this.searchContext();
+      if (searchContext?.type === "topic") {
+        query += encodeURIComponent(` topic:${searchContext.id}`);
+      } else if (searchContext?.type === "private_messages") {
+        query += encodeURIComponent(` in:messages`);
+      }
+
+      if (query) {
+        params.push(query);
+      }
+    }
+
+    if (opts && opts.expanded) {
+      params.push("expanded=true");
+    }
+
+    if (params.length > 0) {
+      url = `${url}?${params.join("&")}`;
+    }
+
+    return getURL(url);
+  }
+
+  @bind
+  clearSearch(e) {
+    e.preventDefault();
+
+    this.term = "";
     const searchInput = document.getElementById("search-term");
     searchInput.value = "";
     searchInput.focus();
     this.triggerSearch();
+  }
+
+  @action
+  searchTermChanged(term, opts = {}) {
+    console.log(term);
+    this.typeFilter = opts.searchTopics ? null : DEFAULT_TYPE_FILTER;
+    this.term = term;
+    this.triggerSearch();
+  }
+
+  //triggerAutocomplete(opts = {}) {
+  //if (opts.setTopicContext) {
+  //this.sendWidgetAction("setTopicContext");
+  //this.state.inTopicContext = true;
+  //}
+  //this.searchTermChanged(opts.value, { searchTopics: opts.searchTopics });
+  //}
+
+  //fullSearch() {
+  //searchData.loading = false;
+  //SearchHelper.cancel();
+  //const url = this.fullSearchUrl();
+  //if (url) {
+  //this.sendWidgetEvent("linkClicked");
+  //DiscourseURL.routeTo(url);
+  //}
+  //}
+
+  @action
+  updateInTopicContext(value) {
+    this.inTopicContext = value;
+  }
+
+  @action
+  focusSearchInput() {
+    if (this.args.searchVisible) {
+      schedule("afterRender", () => {
+        const searchInput = document.querySelector("#search-term");
+        searchInput.focus();
+        searchInput.select();
+      });
+    }
+  }
+
+  clearPMInboxContext() {
+    this.inPMInboxContext = false;
+    this.focusSearchInput();
+  }
+
+  setTopicContext() {
+    this.inTopicContext = true;
+    this.focusSearchInput();
+  }
+
+  clearTopicContext() {
+    this.inTopicContext = false;
+    this.focusSearchInput();
+  }
+
+  // for cancelling debounced search
+  cancel() {
+    if (this._activeSearch) {
+      this._activeSearch.abort();
+      this._activeSearch = null;
+    }
+  }
+
+  perform() {
+    this.cancel();
+
+    const searchContext = this.searchContext();
+
+    const fullSearchUrl = this.fullSearchUrl();
+    const matchSuggestions = this.matchesSuggestions();
+
+    if (matchSuggestions) {
+      this.noResults = true;
+      this.results = {};
+      this.loading = false;
+      this.suggestionResults = [];
+
+      if (matchSuggestions.type === "category") {
+        const categorySearchTerm = matchSuggestions.categoriesMatch[0].replace(
+          "#",
+          ""
+        );
+
+        const categoryTagSearch = searchCategoryTag(
+          categorySearchTerm,
+          this.siteSettings
+        );
+        Promise.resolve(categoryTagSearch).then((results) => {
+          if (results !== CANCELLED_STATUS) {
+            this.suggestionResults = results;
+            this.suggestionKeyword = "#";
+          }
+        });
+      } else if (matchSuggestions.type === "username") {
+        const userSearchTerm = matchSuggestions.usernamesMatch[0].replace(
+          "@",
+          ""
+        );
+        const opts = { includeGroups: true, limit: 6 };
+        if (userSearchTerm.length > 0) {
+          opts.term = userSearchTerm;
+        } else {
+          opts.lastSeenUsers = true;
+        }
+
+        userSearch(opts).then((result) => {
+          if (result?.users?.length > 0) {
+            this.suggestionResults = result.users;
+            this.suggestionKeyword = "@";
+          } else {
+            this.noResults = true;
+            this.suggestionKeyword = false;
+          }
+        });
+      } else {
+        this.suggestionKeyword = matchSuggestions[0];
+      }
+      return;
+    }
+
+    this.suggestionKeyword = false;
+
+    if (!this.term) {
+      this.noResults = false;
+      this.results = {};
+      this.loading = false;
+      this.invalidTerm = false;
+    } else if (!isValidSearchTerm(this.term, this.siteSettings)) {
+      this.noResults = true;
+      this.results = {};
+      this.loading = false;
+      this.invalidTerm = true;
+    } else {
+      this.invalidTerm = false;
+
+      this._activeSearch = searchForTerm(term, {
+        typeFilter,
+        fullSearchUrl,
+        searchContext,
+      });
+      this._activeSearch
+        .then((results) => {
+          // we ensure the current search term is the one used
+          // when starting the query
+          if (results && this.term === this.term) {
+            if (searchContext) {
+              this.appEvents.trigger("post-stream:refresh", {
+                force: true,
+              });
+            }
+
+            this.noResults = results.resultTypes.length === 0;
+            this.results = results;
+          }
+        })
+        .catch(popupAjaxError)
+        .finally(() => {
+          this.loading = false;
+        });
+    }
+  }
+
+  matchesSuggestions() {
+    if (this.term === undefined || this.includesTopics()) {
+      return false;
+    }
+
+    const term = this.term.trim();
+    const categoriesMatch = term.match(CATEGORY_SLUG_REGEXP);
+
+    if (categoriesMatch) {
+      return { type: "category", categoriesMatch };
+    }
+
+    const usernamesMatch = term.match(USERNAME_REGEXP);
+    if (usernamesMatch) {
+      return { type: "username", usernamesMatch };
+    }
+
+    const suggestionsMatch = term.match(SUGGESTIONS_REGEXP);
+    if (suggestionsMatch) {
+      return suggestionsMatch;
+    }
+
+    return false;
+  }
+
+  includesTopics() {
+    return this.typeFilter !== DEFAULT_TYPE_FILTER;
   }
 
   //mouseDownOutside() {
@@ -182,27 +425,22 @@ export default class SearchMenu extends Component {
   //}
 
   triggerSearch() {
-    searchData.noResults = false;
-    if (SearchHelper.includesTopics()) {
-      if (this.state.inTopicContext) {
-        this.search.set("highlightTerm", searchData.term);
+    this.noResults = false;
+    if (this.includesTopics()) {
+      if (this.inTopicContext) {
+        this.search.set("highlightTerm", this.term);
       }
 
-      searchData.loading = true;
-      cancel(this.state._debouncer);
-      SearchHelper.perform(this);
+      this.loading = true;
+      cancel(this._debouncer);
+      this.perform();
       if (this.currentUser) {
-        updateRecentSearches(this.currentUser, searchData.term);
+        updateRecentSearches(this.currentUser, this.term);
       }
     } else {
-      searchData.loading = false;
-      if (!this.state.inTopicContext) {
-        this.state._debouncer = discourseDebounce(
-          SearchHelper,
-          SearchHelper.perform,
-          this,
-          400
-        );
+      this.loading = false;
+      if (!this.inTopicContext) {
+        this._debouncer = discourseDebounce(this, this.perform, this, 400);
       }
     }
   }
@@ -211,102 +449,6 @@ export default class SearchMenu extends Component {
   //searchData.typeFilter = type;
   //this.triggerSearch();
   //}
-
-  @action
-  searchTermChanged(term, opts = {}) {
-    this.typeFilter = opts.searchTopics ? null : DEFAULT_TYPE_FILTER;
-    this.term = term;
-    this.triggerSearch();
-  }
-
-  //triggerAutocomplete(opts = {}) {
-  //if (opts.setTopicContext) {
-  //this.sendWidgetAction("setTopicContext");
-  //this.state.inTopicContext = true;
-  //}
-  //this.searchTermChanged(opts.value, { searchTopics: opts.searchTopics });
-  //}
-
-  //fullSearch() {
-  //searchData.loading = false;
-  //SearchHelper.cancel();
-  //const url = this.fullSearchUrl();
-  //if (url) {
-  //this.sendWidgetEvent("linkClicked");
-  //DiscourseURL.routeTo(url);
-  //}
-  //}
-
-  @action
-  updateInTopicContext(value) {
-    this.inTopicContext = value;
-  }
-
-  @action
-  focusSearchInput() {
-    if (this.args.searchVisible) {
-      schedule("afterRender", () => {
-        const searchInput = document.querySelector("#search-term");
-        searchInput.focus();
-        searchInput.select();
-      });
-    }
-  }
-
-  setTopicContext() {
-    this.inTopicContext = true;
-    this.focusSearchInput();
-  }
-
-  clearTopicContext() {
-    this.inTopicContext = false;
-    this.focusSearchInput();
-  }
-
-  searchContext() {
-    if (this.inTopicContext || this.inPMInboxContext) {
-      return this.search.searchContext;
-    }
-
-    return false;
-  }
-
-  clearPMInboxContext() {
-    this.inPMInboxContext = false;
-    this.focusSearchInput();
-  }
-
-  fullSearchUrl(opts) {
-    let url = "/search";
-    const params = [];
-
-    if (this.term) {
-      let query = "";
-
-      query += `q=${encodeURIComponent(searchData.term)}`;
-
-      const searchContext = this.searchContext();
-      if (searchContext?.type === "topic") {
-        query += encodeURIComponent(` topic:${searchContext.id}`);
-      } else if (searchContext?.type === "private_messages") {
-        query += encodeURIComponent(` in:messages`);
-      }
-
-      if (query) {
-        params.push(query);
-      }
-    }
-
-    if (opts && opts.expanded) {
-      params.push("expanded=true");
-    }
-
-    if (params.length > 0) {
-      url = `${url}?${params.join("&")}`;
-    }
-
-    return getURL(url);
-  }
 }
 
 //createWidget("browser-search-tip", {
@@ -325,151 +467,3 @@ export default class SearchMenu extends Component {
 //];
 //},
 //});
-//
-// Helps with debouncing and cancelling promises
-const SearchHelper = {
-  _activeSearch: null,
-
-  // for cancelling debounced search
-  cancel() {
-    if (this._activeSearch) {
-      this._activeSearch.abort();
-      this._activeSearch = null;
-    }
-  },
-
-  perform(widget) {
-    this.cancel();
-
-    const { term, typeFilter } = searchData;
-    const searchContext = widget.searchContext();
-
-    const fullSearchUrl = widget.fullSearchUrl();
-    const matchSuggestions = this.matchesSuggestions();
-
-    if (matchSuggestions) {
-      searchData.noResults = true;
-      searchData.results = {};
-      searchData.loading = false;
-      searchData.suggestionResults = [];
-
-      if (matchSuggestions.type === "category") {
-        const categorySearchTerm = matchSuggestions.categoriesMatch[0].replace(
-          "#",
-          ""
-        );
-
-        const categoryTagSearch = searchCategoryTag(
-          categorySearchTerm,
-          widget.siteSettings
-        );
-        Promise.resolve(categoryTagSearch).then((results) => {
-          if (results !== CANCELLED_STATUS) {
-            searchData.suggestionResults = results;
-            searchData.suggestionKeyword = "#";
-          }
-          widget.scheduleRerender();
-        });
-      } else if (matchSuggestions.type === "username") {
-        const userSearchTerm = matchSuggestions.usernamesMatch[0].replace(
-          "@",
-          ""
-        );
-        const opts = { includeGroups: true, limit: 6 };
-        if (userSearchTerm.length > 0) {
-          opts.term = userSearchTerm;
-        } else {
-          opts.lastSeenUsers = true;
-        }
-
-        userSearch(opts).then((result) => {
-          if (result?.users?.length > 0) {
-            searchData.suggestionResults = result.users;
-            searchData.suggestionKeyword = "@";
-          } else {
-            searchData.noResults = true;
-            searchData.suggestionKeyword = false;
-          }
-          widget.scheduleRerender();
-        });
-      } else {
-        searchData.suggestionKeyword = matchSuggestions[0];
-        widget.scheduleRerender();
-      }
-      return;
-    }
-
-    searchData.suggestionKeyword = false;
-
-    if (!term) {
-      searchData.noResults = false;
-      searchData.results = {};
-      searchData.loading = false;
-      searchData.invalidTerm = false;
-
-      widget.scheduleRerender();
-    } else if (!isValidSearchTerm(term, widget.siteSettings)) {
-      searchData.noResults = true;
-      searchData.results = {};
-      searchData.loading = false;
-      searchData.invalidTerm = true;
-
-      widget.scheduleRerender();
-    } else {
-      searchData.invalidTerm = false;
-
-      this._activeSearch = searchForTerm(term, {
-        typeFilter,
-        fullSearchUrl,
-        searchContext,
-      });
-      this._activeSearch
-        .then((results) => {
-          // we ensure the current search term is the one used
-          // when starting the query
-          if (results && term === searchData.term) {
-            if (searchContext) {
-              widget.appEvents.trigger("post-stream:refresh", { force: true });
-            }
-
-            searchData.noResults = results.resultTypes.length === 0;
-            searchData.results = results;
-          }
-        })
-        .catch(popupAjaxError)
-        .finally(() => {
-          searchData.loading = false;
-          widget.scheduleRerender();
-        });
-    }
-  },
-
-  matchesSuggestions() {
-    if (searchData.term === undefined || this.includesTopics()) {
-      return false;
-    }
-
-    const term = searchData.term.trim();
-    const categoriesMatch = term.match(CATEGORY_SLUG_REGEXP);
-
-    if (categoriesMatch) {
-      return { type: "category", categoriesMatch };
-    }
-
-    const usernamesMatch = term.match(USERNAME_REGEXP);
-    if (usernamesMatch) {
-      return { type: "username", usernamesMatch };
-    }
-
-    const suggestionsMatch = term.match(SUGGESTIONS_REGEXP);
-    if (suggestionsMatch) {
-      return suggestionsMatch;
-    }
-
-    return false;
-  },
-
-  includesTopics() {
-    return searchData.typeFilter !== DEFAULT_TYPE_FILTER;
-  },
-};
