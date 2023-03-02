@@ -917,6 +917,7 @@ en:
         make_all_primary_description: "Make this the primary group for all selected users"
         remove_all_primary: "Remove as Primary"
         remove_all_primary_description: "Remove this group as primary"
+        status: "Status"
         owner: "Owner"
         primary: "Primary"
         forbidden: "You're not allowed to view the members."
@@ -5623,6 +5624,7 @@ en:
         not_found: "Sorry, that username doesn't exist in our system."
         id_not_found: "Sorry, that user id doesn't exist in our system."
         active: "Activated"
+        status: "Status"
         show_emails: "Show Emails"
         hide_emails: "Hide Emails"
         nav:
