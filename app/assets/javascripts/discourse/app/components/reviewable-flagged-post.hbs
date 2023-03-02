@@ -15,11 +15,13 @@
       @tagName=""
     />
     <div class="post-body">
-      {{#if this.reviewable.blank_post}}
-        <p>{{i18n "review.deleted_post"}}</p>
-      {{else}}
-        {{html-safe this.reviewable.cooked}}
-      {{/if}}
+      <div class="post-body__scroll">
+        {{#if this.reviewable.blank_post}}
+          <p>{{i18n "review.deleted_post"}}</p>
+        {{else}}
+          {{html-safe this.reviewable.cooked}}
+        {{/if}}
+      </div>
     </div>
     <span>
       <PluginOutlet

@@ -975,7 +975,8 @@ RSpec.describe PostAction do
       end
 
       it "creates events for ignored" do
-        events = DiscourseEvent.track_events { reviewable.perform(moderator, :ignore) }
+        events =
+          DiscourseEvent.track_events { reviewable.perform(moderator, :ignore_and_do_nothing) }
 
         reviewed_event = events.find { |e| e[:event_name] == :flag_reviewed }
         expect(reviewed_event).to be_present

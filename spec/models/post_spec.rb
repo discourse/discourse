@@ -200,7 +200,7 @@ RSpec.describe Post do
 
     it "is_flagged? is true if flag was deferred" do
       result = PostActionCreator.off_topic(user, post)
-      result.reviewable.perform(admin, :ignore)
+      result.reviewable.perform(admin, :ignore_and_do_nothing)
       expect(post.reload.is_flagged?).to eq(true)
     end
 
@@ -214,7 +214,7 @@ RSpec.describe Post do
       result = PostActionCreator.spam(user, post)
       expect(post.reviewable_flag).to eq(result.reviewable)
 
-      result.reviewable.perform(admin, :ignore)
+      result.reviewable.perform(admin, :ignore_and_do_nothing)
       expect(post.reviewable_flag).to be_nil
     end
 

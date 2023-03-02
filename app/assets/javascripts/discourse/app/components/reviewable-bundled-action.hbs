@@ -1,11 +1,11 @@
 {{#if this.multiple}}
   <DropdownSelectBox
-    @class="reviewable-action-dropdown"
+    @class="reviewable-action-dropdown btn-icon-text"
     @nameProperty="label"
     @content={{this.bundle.actions}}
     @onChange={{action "performById"}}
     @options={{hash
-      icon=this.bundle.icon
+      showCaret=true
       disabled=this.reviewableUpdating
       placement=this.placement
       translatedNone=this.bundle.label
@@ -19,7 +19,6 @@
       " "
       this.first.button_class
     }}
-    @icon={{this.first.icon}}
     @action={{action "perform" this.first}}
     @translatedLabel={{this.first.label}}
     @disabled={{this.reviewableUpdating}}
