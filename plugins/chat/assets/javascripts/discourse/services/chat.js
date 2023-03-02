@@ -3,17 +3,28 @@ import { tracked } from "@glimmer/tracking";
 import userSearch from "discourse/lib/user-search";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import Service, { inject as service } from "@ember/service";
+import Site from "discourse/models/site";
 import { ajax } from "discourse/lib/ajax";
+import { generateCookFunction } from "discourse/lib/text";
 import { cancel, next } from "@ember/runloop";
 import { and } from "@ember/object/computed";
 import { computed } from "@ember/object";
+import { Promise } from "rsvp";
+import simpleCategoryHashMentionTransform from "discourse/plugins/chat/discourse/lib/simple-category-hash-mention-transform";
+import discourseDebounce from "discourse-common/lib/debounce";
 import discourseLater from "discourse-common/lib/later";
-import ChatMessageDraft from "discourse/plugins/chat/discourse/models/chat-message-draft";
+import userPresent from "discourse/lib/user-presence";
+
+export const LIST_VIEW = "list_view";
+export const CHAT_VIEW = "chat_view";
+export const DRAFT_CHANNEL_VIEW = "draft_channel_view";
 
 const CHAT_ONLINE_OPTIONS = {
   userUnseenTime: 300000, // 5 minutes seconds with no interaction
   browserHiddenTime: 300000, // Or the browser has been in the background for 5 minutes
 };
+
+const READ_INTERVAL = 1000;
 
 export default class Chat extends Service {
   @service appEvents;
@@ -53,6 +64,13 @@ export default class Chat extends Service {
 
     if (this.userCanChat) {
       this.presenceChannel = this.presence.getChannel("/chat/online");
+      this.draftStore = {};
+
+      if (this.currentUser.chat_drafts) {
+        this.currentUser.chat_drafts.forEach((draft) => {
+          this.draftStore[draft.channel_id] = JSON.parse(draft.data);
+        });
+      }
     }
   }
 
@@ -85,16 +103,6 @@ export default class Chat extends Service {
     [...channels.public_channels, ...channels.direct_message_channels].forEach(
       (channelObject) => {
         const channel = this.chatChannelsManager.store(channelObject);
-
-        if (this.currentUser.chat_drafts) {
-          const storedDraft = this.currentUser.chat_drafts.find(
-            (draft) => draft.channel_id === channel.id
-          );
-          channel.draft = ChatMessageDraft.create(
-            storedDraft ? JSON.parse(storedDraft.data) : null
-          );
-        }
-
         return this.chatChannelsManager.follow(channel);
       }
     );
@@ -106,6 +114,33 @@ export default class Chat extends Service {
     if (this.userCanChat) {
       this.chatSubscriptionsManager.stopChannelsSubscriptions();
     }
+  }
+
+  loadCookFunction(categories) {
+    if (this.cook) {
+      return Promise.resolve(this.cook);
+    }
+
+    const markdownOptions = {
+      featuresOverride: Site.currentProp(
+        "markdown_additional_options.chat.limited_pretty_text_features"
+      ),
+      markdownItRules: Site.currentProp(
+        "markdown_additional_options.chat.limited_pretty_text_markdown_rules"
+      ),
+      hashtagTypesInPriorityOrder:
+        this.site.hashtag_configurations["chat-composer"],
+      hashtagIcons: this.site.hashtag_icons,
+    };
+
+    return generateCookFunction(markdownOptions).then((cookFunction) => {
+      return this.set("cook", (raw) => {
+        return simpleCategoryHashMentionTransform(
+          cookFunction(raw),
+          categories
+        );
+      });
+    });
   }
 
   updatePresence() {
@@ -242,6 +277,10 @@ export default class Chat extends Service {
       : this.router.transitionTo("chat.channel", ...channel.routeModels);
   }
 
+  _fireOpenMessageAppEvent(messageId) {
+    this.appEvents.trigger("chat-live-pane:highlight-message", messageId);
+  }
+
   async followChannel(channel) {
     return this.chatChannelsManager.follow(channel);
   }
@@ -286,6 +325,84 @@ export default class Chat extends Service {
     return ajax("/chat/direct_messages.json", {
       data: { usernames: usernames.uniq().join(",") },
     });
+  }
+
+  _saveDraft(channelId, draft) {
+    const data = { chat_channel_id: channelId };
+    if (draft) {
+      data.data = JSON.stringify(draft);
+    }
+
+    ajax("/chat/drafts.json", { type: "POST", data, ignoreUnsent: false })
+      .then(() => {
+        this.markNetworkAsReliable();
+      })
+      .catch((error) => {
+        // we ignore a draft which can't be saved because it's too big
+        // and only deal with network error for now
+        if (!error.jqXHR?.responseJSON?.errors?.length) {
+          this.markNetworkAsUnreliable();
+        }
+      });
+  }
+
+  setDraftForChannel(channel, draft) {
+    if (
+      draft &&
+      (draft.value || draft.uploads.length > 0 || draft.replyToMsg)
+    ) {
+      this.draftStore[channel.id] = draft;
+    } else {
+      delete this.draftStore[channel.id];
+      draft = null; // _saveDraft will destroy draft
+    }
+
+    discourseDebounce(this, this._saveDraft, channel.id, draft, 2000);
+  }
+
+  getDraftForChannel(channelId) {
+    return (
+      this.draftStore[channelId] || {
+        value: "",
+        uploads: [],
+        replyToMsg: null,
+      }
+    );
+  }
+
+  updateLastReadMessage() {
+    discourseDebounce(this, this._queuedReadMessageUpdate, READ_INTERVAL);
+  }
+
+  _queuedReadMessageUpdate() {
+    const visibleMessages = document.querySelectorAll(
+      ".chat-message-container[data-visible=true]"
+    );
+    const channel = this.activeChannel;
+
+    if (
+      !channel?.isFollowing ||
+      visibleMessages?.length === 0 ||
+      !userPresent()
+    ) {
+      return;
+    }
+
+    const latestUnreadMsgId = parseInt(
+      visibleMessages[visibleMessages.length - 1].dataset.id,
+      10
+    );
+
+    const membership = channel.currentUserMembership;
+    const hasUnreadMessages =
+      latestUnreadMsgId > membership.last_read_message_id;
+    if (
+      hasUnreadMessages ||
+      membership.unread_count > 0 ||
+      membership.unread_mentions > 0
+    ) {
+      channel.updateLastReadMessage(latestUnreadMsgId);
+    }
   }
 
   addToolbarButton() {

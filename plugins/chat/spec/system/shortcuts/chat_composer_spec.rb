@@ -5,7 +5,6 @@ RSpec.describe "Shortcuts | chat composer", type: :system, js: true do
   fab!(:current_user) { Fabricate(:user) }
 
   let(:chat) { PageObjects::Pages::Chat.new }
-  let(:channel_page) { PageObjects::Pages::ChatChannel.new }
 
   KEY_MODIFIER = RUBY_PLATFORM =~ /darwin/i ? :meta : :control
 
@@ -64,9 +63,8 @@ RSpec.describe "Shortcuts | chat composer", type: :system, js: true do
 
     it "edits last editable message" do
       chat.visit_channel(channel_1)
-      expect(channel_page).to have_message(id: message_1.id)
 
-      find(".chat-composer-input").send_keys(:arrow_up)
+      within(".chat-composer-input") { |composer| composer.send_keys(:arrow_up) }
 
       expect(page.find(".chat-composer-message-details")).to have_content(message_1.message)
     end

@@ -19,6 +19,9 @@
   />
 
   {{#if this.previewedChannel}}
-    <ChatLivePane @channel={{this.previewedChannel}} @includeHeader={{false}} />
+    <ChatLivePane
+      @chatChannel={{this.previewedChannel}}
+      @includeHeader={{false}}
+    />
   {{/if}}
 </div>

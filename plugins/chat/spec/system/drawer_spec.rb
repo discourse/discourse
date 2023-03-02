@@ -3,7 +3,6 @@
 RSpec.describe "Drawer", type: :system, js: true do
   fab!(:current_user) { Fabricate(:admin) }
   let(:chat_page) { PageObjects::Pages::Chat.new }
-  let(:channel_page) { PageObjects::Pages::ChatChannel.new }
   let(:drawer) { PageObjects::Pages::ChatDrawer.new }
 
   before do
@@ -51,41 +50,6 @@ RSpec.describe "Drawer", type: :system, js: true do
 
       expect(page.find(".chat-drawer").native.style("width")).to eq("400px")
       expect(page.find(".chat-drawer").native.style("height")).to eq("530px")
-    end
-  end
-
-  context "when going from drawer to full page" do
-    fab!(:channel_1) { Fabricate(:chat_channel) }
-    fab!(:channel_2) { Fabricate(:chat_channel) }
-    fab!(:user_1) { Fabricate(:user) }
-
-    before do
-      channel_1.add(current_user)
-      channel_2.add(current_user)
-      channel_1.add(user_1)
-      channel_2.add(user_1)
-    end
-
-    it "correctly resets subscriptions" do
-      visit("/")
-
-      chat_page.open_from_header
-      drawer.maximize
-      chat_page.minimize_full_page
-      drawer.maximize
-
-      using_session("user_1") do |session|
-        sign_in(user_1)
-        chat_page.visit_channel(channel_1)
-        channel_page.send_message("onlyonce")
-        session.quit
-      end
-
-      expect(page).to have_content("onlyonce", count: 1)
-
-      chat_page.visit_channel(channel_2)
-
-      expect(page).to have_content("onlyonce", count: 0)
     end
   end
 end
