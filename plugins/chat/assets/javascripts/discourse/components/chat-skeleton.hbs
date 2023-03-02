@@ -1,4 +1,8 @@
-<div class="chat-skeleton -animation">
+<div
+  class="chat-skeleton -animation"
+  {{did-insert @onInsert}}
+  {{will-destroy @onDestroy}}
+>
   {{#each this.placeholders as |placeholder|}}
     <div class="chat-skeleton__body">
       <div class="chat-skeleton__message">

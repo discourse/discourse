@@ -326,9 +326,7 @@ $float-height: 530px;
   }
 
   .chat-scroll-to-bottom {
-    left: 0;
-    right: 0;
-    width: 100%;
+    left: calc(50% - calc(45px / 2));
     align-items: center;
     justify-content: center;
     position: absolute;
@@ -339,7 +337,7 @@ $float-height: 530px;
     opacity: 0;
     transition: opacity 0.25s ease, transform 0.5s ease;
     transform: scale(0.1);
-    display: flex;
+    padding: 5px;
 
     > * {
       pointer-events: none;

@@ -9,7 +9,7 @@ import discourseDebounce from "discourse-common/lib/debounce";
 import EmberObject, { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { cancel, schedule, throttle } from "@ember/runloop";
+import { cancel, next, schedule, throttle } from "@ember/runloop";
 import discourseLater from "discourse-common/lib/later";
 import { inject as service } from "@ember/service";
 import { Promise } from "rsvp";
@@ -26,7 +26,7 @@ import { getOwner } from "discourse-common/lib/get-owner";
 const STICKY_SCROLL_LENIENCE = 100;
 const PAGE_SIZE = 50;
 const SCROLL_HANDLER_THROTTLE_MS = isTesting() ? 0 : 150;
-const FETCH_MORE_MESSAGES_DEBOUNCE_MS = isTesting() ? 0 : 500;
+const FETCH_MORE_MESSAGES_THROTTLE_MS = isTesting() ? 0 : 500;
 const PAST = "past";
 const FUTURE = "future";
 const READ_INTERVAL_MS = 1000;
@@ -57,6 +57,7 @@ export default class ChatLivePane extends Component {
   @tracked hasNewMessages = null;
   @tracked isDocked = true;
   @tracked isAlmostDocked = true;
+  @tracked loadedOnce = false;
 
   _loadedChannelId = null;
   _scrollerEl = null;
@@ -160,7 +161,6 @@ export default class ChatLivePane extends Component {
     }
 
     this.loadingMorePast = true;
-    this.loading = true;
     this.args.channel.clearMessages();
 
     const findArgs = { pageSize: PAGE_SIZE };
@@ -191,6 +191,7 @@ export default class ChatLivePane extends Component {
         );
         this.args.channel.appendMessages(messages);
         this.args.channel.details = meta;
+        this.loadedOnce = true;
 
         if (this.requestedTargetMessageId) {
           this.scrollToMessage(findArgs["targetMessageId"], {
@@ -201,6 +202,8 @@ export default class ChatLivePane extends Component {
         } else if (messages.length) {
           this.scrollToMessage(messages.lastObject.id);
         }
+
+        this.fillPaneAttempt();
       })
       .catch(this._handleErrors)
       .finally(() => {
@@ -209,15 +212,23 @@ export default class ChatLivePane extends Component {
         }
 
         this.requestedTargetMessageId = null;
-        this.loading = false;
         this.loadingMorePast = false;
-
-        this.fillPaneAttempt();
       });
   }
 
+  @action
+  onDestroySkeleton() {
+    this._iOSFix();
+    this._throttleComputeSeparators();
+  }
+
+  @action
+  onDidInsertSkeleton() {
+    this._computeSeparators(); // this one is not throttled as we need instant feedback
+  }
+
   @bind
-  _fetchMoreMessages({ direction, scrollTo = true }) {
+  _fetchMoreMessages({ direction }) {
     const loadingPast = direction === PAST;
     const loadingMoreKey = `loadingMore${capitalize(direction)}`;
 
@@ -225,11 +236,15 @@ export default class ChatLivePane extends Component {
       ? this.args.channel.canLoadMorePast
       : this.args.channel.canLoadMoreFuture;
 
-    if (!canLoadMore || this.loading || !this.args.channel.messages.length) {
+    if (
+      !canLoadMore ||
+      this.loading ||
+      this[loadingMoreKey] ||
+      !this.args.channel.messages.length
+    ) {
       return Promise.resolve();
     }
 
-    this.loading = true;
     this[loadingMoreKey] = true;
 
     const messageIndex = loadingPast
@@ -262,89 +277,80 @@ export default class ChatLivePane extends Component {
           results
         );
 
-        this.loading = false;
-        this[loadingMoreKey] = false;
-
         loadingPast
           ? this.args.channel.prependMessages(messages)
           : this.args.channel.appendMessages(messages);
         this.args.channel.details = meta;
 
-        if (this.args.channel.messages.length && scrollTo) {
-          if (loadingPast) {
-            this.scrollToMessage(messages[messages.length - 1].id, {
-              highlight: false,
-              position: "start",
-            });
-          } else {
-            this.scrollToMessage(
-              this.args.channel.messages[
-                this.args.channel.messages.indexOf(messages[0])
-              ].id,
-              {
-                highlight: false,
-                position: "end",
-              }
-            );
+        if (!messages.length) {
+          return;
+        }
+
+        if (!loadingPast) {
+          this.scrollToMessage(messageId, { position: "start" });
+        } else {
+          if (this.site.desktopView) {
+            this.scrollToMessage(messages[messages.length - 1].id);
           }
         }
 
         this.fillPaneAttempt();
       })
       .catch(() => {
-        this.loading = false;
-        this[loadingMoreKey] = false;
         this._handleErrors();
+      })
+      .finally(() => {
+        this[loadingMoreKey] = false;
       });
   }
 
   fillPaneAttempt() {
-    if (this._selfDeleted) {
-      return;
-    }
-
-    // safeguard
-    if (this.args.channel.messages.length > 200) {
-      return;
-    }
-
-    if (!this.args.channel?.canLoadMorePast) {
-      return;
-    }
-
-    schedule("afterRender", () => {
-      const firstMessageId = this.args.channel?.messages?.[0]?.id;
-      if (!firstMessageId) {
+    next(() => {
+      if (this._selfDeleted) {
         return;
       }
 
-      const scroller = document.querySelector(".chat-messages-container");
-      const messageContainer = scroller.querySelector(
-        `.chat-message-container[data-id="${firstMessageId}"]`
-      );
-
-      if (
-        !scroller ||
-        !messageContainer ||
-        !isElementInViewport(messageContainer)
-      ) {
+      // safeguard
+      if (this.args.channel.messages.length > 200) {
         return;
       }
 
-      this._fetchMoreMessagesThrottled({
-        direction: PAST,
-        scrollTo: false,
+      if (!this.args.channel?.canLoadMorePast) {
+        return;
+      }
+
+      schedule("afterRender", () => {
+        const firstMessageId = this.args.channel?.messages?.[0]?.id;
+        if (!firstMessageId) {
+          return;
+        }
+
+        const scroller = document.querySelector(".chat-messages-container");
+        const messageContainer = scroller.querySelector(
+          `.chat-message-container[data-id="${firstMessageId}"]`
+        );
+
+        if (
+          !scroller ||
+          !messageContainer ||
+          !isElementInViewport(messageContainer)
+        ) {
+          return;
+        }
+
+        this._fetchMoreMessagesThrottled({
+          direction: PAST,
+        });
       });
     });
   }
 
   _fetchMoreMessagesThrottled(params) {
-    discourseDebounce(
+    throttle(
       this,
       this._fetchMoreMessages,
       params,
-      FETCH_MORE_MESSAGES_DEBOUNCE_MS,
-      true
+      FETCH_MORE_MESSAGES_THROTTLE_MS
     );
   }
 
@@ -443,7 +449,7 @@ export default class ChatLivePane extends Component {
         }, 3000);
       }
 
-      this._wrapIOSFix(() => {
+      this._iOSFix(() => {
         messageEl.scrollIntoView({
           block: opts.position ?? "center",
         });
@@ -455,12 +461,13 @@ export default class ChatLivePane extends Component {
   didShowMessage(message) {
     message.visible = true;
     this.updateLastReadMessage(message);
-    this.#computeSeparators(message);
+    this._throttleComputeSeparators();
   }
 
   @action
   didHideMessage(message) {
     message.visible = false;
+    this._throttleComputeSeparators();
   }
 
   @debounce(READ_INTERVAL_MS)
@@ -504,7 +511,7 @@ export default class ChatLivePane extends Component {
 
     resetIdle();
 
-    if (this.loading) {
+    if (this.loading || this.loadingMorePast || this.loadingMoreFuture) {
       return;
     }
 
@@ -1214,7 +1221,7 @@ export default class ChatLivePane extends Component {
   // since -webkit-overflow-scrolling: touch can't be used anymore to disable momentum scrolling
   // we now use this hack to disable it
   @bind
-  _wrapIOSFix(callback) {
+  _iOSFix(callback) {
     if (!this._scrollerEl) {
       return;
     }
@@ -1223,7 +1230,7 @@ export default class ChatLivePane extends Component {
       this._scrollerEl.style.overflow = "hidden";
     }
 
-    callback();
+    callback?.();
 
     if (this.capabilities.isIOS) {
       discourseLater(() => {
@@ -1279,25 +1286,33 @@ export default class ChatLivePane extends Component {
     }
   }
 
-  #computeSeparators() {
-    schedule("afterRender", () => {
-      const dates = this._scrollerEl.querySelectorAll(
-        ".chat-message-separator-date"
-      );
-      const scrollHeight = document.querySelector(
-        ".chat-messages-scroll"
-      ).scrollHeight;
+  _throttleComputeSeparators() {
+    throttle(this, this._computeSeparators, 32, false);
+  }
 
-      const reversedDates = [...dates].reverse();
-      reversedDates.forEach((date, index) => {
-        if (index > 0) {
-          date.style.bottom =
-            scrollHeight - reversedDates[index - 1].offsetTop + "px";
-        } else {
-          date.style.bottom = 0;
-        }
+  _computeSeparators() {
+    next(() => {
+      schedule("afterRender", () => {
+        const dates = this._scrollerEl.querySelectorAll(
+          ".chat-message-separator-date"
+        );
+        const scrollHeight = document.querySelector(
+          ".chat-messages-scroll"
+        ).scrollHeight;
 
-        date.style.top = date.nextElementSibling.offsetTop + "px";
+        const reversedDates = [...dates].reverse();
+
+        // TODO (joffrey): optimize this code to trigger less layout computation
+        reversedDates.forEach((date, index) => {
+          if (index > 0) {
+            date.style.bottom =
+              scrollHeight - reversedDates[index - 1].offsetTop + "px";
+          } else {
+            date.style.bottom = 0;
+          }
+
+          date.style.top = date.nextElementSibling.offsetTop + "px";
+        });
       });
     });
   }

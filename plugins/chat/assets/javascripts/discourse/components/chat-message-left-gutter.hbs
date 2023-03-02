@@ -11,7 +11,7 @@
     <div class="chat-message-left-gutter__flag">
       {{d-icon "flag" title="chat.you_flagged"}}
     </div>
-  {{else}}
+  {{else if this.site.desktopView}}
     <span class="chat-message-left-gutter__date">
       {{format-chat-date @message "tiny"}}
     </span>

@@ -134,7 +134,7 @@ module ChatPublisher
 
   def self.publish_user_tracking_state(user, chat_channel_id, chat_message_id)
     data = { chat_channel_id: chat_channel_id, chat_message_id: chat_message_id }.merge(
-      ChatChannelUnreadsQuery.call(chat_channel_id, user.id),
+      ChatChannelUnreadsQuery.call(channel_id: chat_channel_id, user_id: user.id),
     )
 
     MessageBus.publish(

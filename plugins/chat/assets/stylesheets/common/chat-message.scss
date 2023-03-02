@@ -88,27 +88,6 @@
     transition: 2s linear background-color;
   }
 
-  &.user-info-hidden {
-    .chat-time {
-      color: var(--secondary-medium);
-      flex-shrink: 0;
-      font-size: var(--font-down-2);
-      margin-top: 0.4em;
-      display: none;
-      width: var(--message-left-width);
-    }
-
-    &:hover {
-      .chat-message-left-gutter__bookmark {
-        display: none;
-      }
-
-      .chat-time {
-        display: block;
-      }
-    }
-  }
-
   &.is-reply {
     display: grid;
     grid-template-columns: var(--message-left-width) 1fr;

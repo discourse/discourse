@@ -41,8 +41,12 @@
   <div class="chat-messages-scroll chat-messages-container">
     <div class="chat-message-actions-desktop-anchor"></div>
     <div class="chat-messages-container">
+
       {{#if this.loadingMorePast}}
-        <ChatSkeleton />
+        <ChatSkeleton
+          @onInsert={{this.onDidInsertSkeleton}}
+          @onDestroy={{this.onDestroySkeleton}}
+        />
       {{/if}}
 
       {{#each @channel.messages key="id" as |message|}}
@@ -65,12 +69,12 @@
         />
       {{/each}}
 
-      {{#if (or this.loading this.loadingMoreFuture)}}
-        <ChatSkeleton />
+      {{#if (or this.loadingMoreFuture)}}
+        <ChatSkeleton @onDestroy={{this.onDestroySkeleton}} />
       {{/if}}
     </div>
 
-    {{#if (and (not this.loading) (not @channel.canLoadMorePast))}}
+    {{#if (and this.loadedOnce (not @channel.canLoadMorePast))}}
       <div class="all-loaded-message">
         {{i18n "chat.all_loaded"}}
       </div>
