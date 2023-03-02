@@ -564,14 +564,23 @@ task "db:rebuild_indexes" => "environment" do
   end
 end
 
-desc "Check that the DB can be accessed"
+desc "Check that the DB can be accessed and returns information about whether the database has been migrated or not"
 task "db:status:json" do
   begin
     Rake::Task["environment"].invoke
-    DB.query("SELECT 1")
+
+    migrated = DB.query_single(<<~SQL).first
+      SELECT ;;
+
+      SELECT EXISTS (
+        SELECT FROM information_schema.tables
+        WHERE  table_schema = 'public'
+        AND    table_name   = 'schema_migrations'
+      );
+    SQL
   rescue StandardError
     puts({ status: "error" }.to_json)
   else
-    puts({ status: "ok" }.to_json)
+    puts({ status: "ok", migrated: migrated }.to_json)
   end
 end
