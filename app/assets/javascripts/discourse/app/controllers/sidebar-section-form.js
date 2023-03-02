@@ -94,7 +94,7 @@ class SectionLink {
     }
   }
 
-  get validInternal() {
+  #validInternal() {
     if (!this.internal) {
       return false;
     }
