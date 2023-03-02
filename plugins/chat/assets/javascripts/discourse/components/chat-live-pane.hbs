@@ -12,12 +12,11 @@
   {{did-insert this.addAutoFocusEventListener}}
   {{will-destroy this.removeAutoFocusEventListener}}
 >
-  {{#if (and this.chatStateManager.isFullPageActive this.includeHeader)}}
-    <ChatFullPageHeader
-      @channel={{@channel}}
-      @onCloseFullScreen={{this.onCloseFullScreen}}
-    />
-  {{/if}}
+  <ChatFullPageHeader
+    @channel={{@channel}}
+    @onCloseFullScreen={{this.onCloseFullScreen}}
+    @displayed={{this.includeHeader}}
+  />
 
   <ChatRetentionReminder @channel={{@channel}} />
 
