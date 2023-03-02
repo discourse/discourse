@@ -127,6 +127,7 @@ RSpec.describe Chat::Service::AutoRemove::HandleCategoryUpdated do
               },
             ),
           ).to eq(true)
+
           expect(
             job_enqueued?(
               job: :kick_users_from_channel,
