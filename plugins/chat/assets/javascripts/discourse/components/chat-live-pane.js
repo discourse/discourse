@@ -103,6 +103,8 @@ export default class ChatLivePane extends Component {
 
   @action
   updateChannel() {
+    this.loadedOnce = false;
+
     if (this._loadedChannelId !== this.args.channel?.id) {
       this._unsubscribeToUpdates(this._loadedChannelId);
       this.selectingMessages = false;
@@ -497,17 +499,16 @@ export default class ChatLivePane extends Component {
       if (this.args.channel.canLoadMoreFuture) {
         this._fetchAndScrollToLatest();
       } else {
-        const message =
-          this.args.channel.messages[this.args.channel.messages?.length - 1];
+        if (this._scrollerEl) {
+          // Trigger a tiny scrollTop change so Safari scrollbar is placed at bottom.
+          // Setting to just 0 doesn't work (it's at 0 by default, so there is no change)
+          // Very hacky, but no way to get around this Safari bug
+          this._scrollerEl.scrollTop = -1;
 
-        if (message?.id) {
-          this.scrollToMessage(message.id, { highlight: false });
-          this.hasNewMessages = false;
-        }
-
-        if (message?.stagedId) {
-          this.scrollToMessage(message.stagedId, { highlight: false });
-          this.hasNewMessages = false;
+          this._iOSFix(() => {
+            this._scrollerEl.scrollTop = 0;
+            this.hasNewMessages = false;
+          });
         }
       }
     });
@@ -647,7 +648,7 @@ export default class ChatLivePane extends Component {
     if (this.args.channel.canLoadMoreFuture) {
       // If we can load more messages, we just notice the user of new messages
       this.hasNewMessages = true;
-    } else if (this.isDocked) {
+    } else if (this._scrollerEl.scrollTop <= 1) {
       // If we are at the bottom, we append the message and scroll to it
       const message = ChatMessage.create(this.args.channel, data.chat_message);
       this.args.channel.appendMessages([message]);
