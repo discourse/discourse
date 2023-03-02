@@ -21,14 +21,12 @@ describe ChatMessageSerializer do
       it "doesn’t return the reaction" do
         Emoji.clear_cache
 
-        trout_reaction = subject.as_json[:reactions].find { |r| r[:emoji] == "trout" }
-        expect(trout_reaction).to be_present
+        expect(subject.as_json[:reactions]["trout"]).to be_present
 
         custom_emoji.destroy!
         Emoji.clear_cache
 
-        trout_reaction = subject.as_json[:reactions].find { |r| r[:emoji] == "trout" }
-        expect(trout_reaction).to_not be_present
+        expect(subject.as_json[:reactions]["trout"]).to_not be_present
       end
     end
   end

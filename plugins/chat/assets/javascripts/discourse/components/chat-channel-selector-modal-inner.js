@@ -194,7 +194,7 @@ export default Component.extend({
 
   getChannelsWithFilter(filter, opts = { excludeActiveChannel: true }) {
     let sortedChannels = this.chatChannelsManager.channels.sort((a, b) => {
-      return new Date(a.lastMessageSentAt) > new Date(b.lastMessageSentAt)
+      return new Date(a.last_message_sent_at) > new Date(b.last_message_sent_at)
         ? -1
         : 1;
     });

@@ -42,10 +42,6 @@
       background: var(--primary-low);
       border-color: var(--primary-low-mid);
     }
-
-    &:focus {
-      background: none;
-    }
   }
 
   .emoji {
@@ -64,6 +60,10 @@
 
   .chat-message-reaction {
     @include chat-reaction;
+
+    &:not(.show) {
+      display: none;
+    }
   }
 
   &.chat-action {
@@ -84,6 +84,17 @@
 
   &.transition-slow {
     transition: 2s linear background-color;
+  }
+
+  &.user-info-hidden {
+    .chat-time {
+      color: var(--secondary-medium);
+      flex-shrink: 0;
+      font-size: var(--font-down-2);
+      margin-top: 0.4em;
+      display: none;
+      width: var(--message-left-width);
+    }
   }
 
   &.is-reply {
@@ -243,10 +254,6 @@
 
   .chat-message.chat-message-bookmarked {
     background: var(--highlight-bg);
-
-    &:hover {
-      background: var(--highlight-medium);
-    }
   }
 
   .not-mobile-device & .chat-message-reaction-list .chat-message-react-btn {
@@ -277,6 +284,7 @@
   font-style: italic;
 }
 
+.chat-message-container.is-hovered,
 .chat-message.chat-message-selected {
   background: var(--primary-very-low);
 }

@@ -154,7 +154,7 @@ export default class ChatSubscriptionsManager extends Service {
         }
       }
 
-      channel.lastMessageSentAt = new Date();
+      channel.set("last_message_sent_at", new Date());
     });
   }
 
@@ -185,14 +185,13 @@ export default class ChatSubscriptionsManager extends Service {
   _onUserTrackingStateUpdate(busData) {
     this.chatChannelsManager.find(busData.chat_channel_id).then((channel) => {
       if (
-        !channel?.currentUserMembership?.last_read_message_id ||
-        parseInt(channel?.currentUserMembership?.last_read_message_id, 10) <=
-          busData.chat_message_id
+        channel?.currentUserMembership?.last_read_message_id <=
+        busData.chat_message_id
       ) {
         channel.currentUserMembership.last_read_message_id =
           busData.chat_message_id;
-        channel.currentUserMembership.unread_count = busData.unread_count;
-        channel.currentUserMembership.unread_mentions = busData.unread_mentions;
+        channel.currentUserMembership.unread_count = 0;
+        channel.currentUserMembership.unread_mentions = 0;
       }
     });
   }

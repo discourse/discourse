@@ -4,15 +4,15 @@
     (unless this.hasDescription "-no-description")
   }}
 >
-  <ChatChannelTitle @channel={{@channel}} />
+  <ChatChannelTitle @channel={{this.channel}} />
   {{#if this.hasDescription}}
     <p class="chat-channel-preview-card__description">
-      {{@channel.description}}
+      {{this.channel.description}}
     </p>
   {{/if}}
   {{#if this.showJoinButton}}
     <ToggleChannelMembershipButton
-      @channel={{@channel}}
+      @channel={{this.channel}}
       @options={{hash joinClass="btn-primary"}}
     />
   {{/if}}

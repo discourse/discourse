@@ -5,7 +5,6 @@ import { inject as service } from "@ember/service";
 import UppyMediaOptimization from "discourse/lib/uppy-media-optimization-plugin";
 import discourseComputed, { bind } from "discourse-common/utils/decorators";
 import UppyUploadMixin from "discourse/mixins/uppy-upload";
-import { cloneJSON } from "discourse-common/lib/object";
 
 export default Component.extend(UppyUploadMixin, {
   classNames: ["chat-composer-uploads"],
@@ -13,25 +12,16 @@ export default Component.extend(UppyUploadMixin, {
   chatStateManager: service(),
   id: "chat-composer-uploader",
   type: "chat-composer",
-  existingUploads: null,
   uploads: null,
   useMultipartUploadsIfAvailable: true,
 
   init() {
     this._super(...arguments);
     this.setProperties({
+      uploads: [],
       fileInputSelector: `#${this.fileUploadElementId}`,
     });
-  },
-
-  didReceiveAttrs() {
-    this._super(...arguments);
-
-    this.set(
-      "uploads",
-      this.existingUploads ? cloneJSON(this.existingUploads) : []
-    );
-    this._uppyInstance?.cancelAll();
+    this.appEvents.on("chat-composer:load-uploads", this, "_loadUploads");
   },
 
   didInsertElement() {
@@ -42,7 +32,7 @@ export default Component.extend(UppyUploadMixin, {
 
   willDestroyElement() {
     this._super(...arguments);
-
+    this.appEvents.off("chat-composer:load-uploads", this, "_loadUploads");
     this.composerInputEl?.removeEventListener(
       "paste",
       this._pasteEventListener
@@ -89,6 +79,11 @@ export default Component.extend(UppyUploadMixin, {
     return {
       target: targetEl,
     };
+  },
+
+  _loadUploads(uploads) {
+    this._uppyInstance?.cancelAll();
+    this.set("uploads", uploads);
   },
 
   _uppyReady() {

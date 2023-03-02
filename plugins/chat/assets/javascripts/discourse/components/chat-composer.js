@@ -29,10 +29,11 @@ const THROTTLE_MS = 150;
 
 export default Component.extend(TextareaTextManipulation, {
   chatChannel: null,
+  lastChatChannelId: null,
   chat: service(),
   classNames: ["chat-composer-container"],
   classNameBindings: ["emojiPickerVisible:with-emoji-picker"],
-  userSilenced: readOnly("chatChannel.userSilenced"),
+  userSilenced: readOnly("details.user_silenced"),
   chatEmojiReactionStore: service("chat-emoji-reaction-store"),
   chatEmojiPickerManager: service("chat-emoji-picker-manager"),
   chatStateManager: service("chat-state-manager"),
@@ -219,18 +220,18 @@ export default Component.extend(TextareaTextManipulation, {
 
     if (
       !this.editingMessage &&
-      this.chatChannel?.draft &&
+      this.draft &&
       this.chatChannel?.canModifyMessages(this.currentUser)
     ) {
       // uses uploads from draft here...
       this.setProperties({
-        value: this.chatChannel.draft.message,
-        replyToMsg: this.chatChannel.draft.replyToMsg,
+        value: this.draft.value,
+        replyToMsg: this.draft.replyToMsg,
       });
 
       this._captureMentions();
-      this._syncUploads(this.chatChannel.draft.uploads);
-      this.setInReplyToMsg(this.chatChannel.draft.replyToMsg);
+      this._syncUploads(this.draft.uploads);
+      this.setInReplyToMsg(this.draft.replyToMsg);
     }
 
     if (this.editingMessage && !this.loading) {
@@ -243,6 +244,7 @@ export default Component.extend(TextareaTextManipulation, {
       this._focusTextArea({ ensureAtEnd: true, resizeTextarea: false });
     }
 
+    this.set("lastChatChannelId", this.chatChannel.id);
     this.resizeTextarea();
   },
 
@@ -269,6 +271,7 @@ export default Component.extend(TextareaTextManipulation, {
     }
 
     this.set("_uploads", cloneJSON(newUploads));
+    this.appEvents.trigger("chat-composer:load-uploads", this._uploads);
   },
 
   _inProgressUploadsChanged(inProgressUploads) {
@@ -304,9 +307,7 @@ export default Component.extend(TextareaTextManipulation, {
 
   @bind
   _captureMentions() {
-    if (this.value) {
-      this.chatComposerWarningsTracker.trackMentions(this.value);
-    }
+    this.chatComposerWarningsTracker.trackMentions(this.value);
   },
 
   @bind

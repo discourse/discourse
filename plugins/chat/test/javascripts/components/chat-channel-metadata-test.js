@@ -9,17 +9,16 @@ module("Discourse Chat | Component | chat-channel-metadata", function (hooks) {
   setupRenderingTest(hooks);
 
   test("displays last message sent at", async function (assert) {
-    let lastMessageSentAt = moment().subtract(1, "day").format();
+    let lastMessageSentAt = moment().subtract(1, "day");
     this.channel = fabricators.directMessageChatChannel({
       last_message_sent_at: lastMessageSentAt,
     });
-
     await render(hbs`<ChatChannelMetadata @channel={{this.channel}} />`);
 
     assert.dom(".chat-channel-metadata__date").hasText("Yesterday");
 
     lastMessageSentAt = moment();
-    this.channel.lastMessageSentAt = lastMessageSentAt;
+    this.channel.set("last_message_sent_at", lastMessageSentAt);
     await render(hbs`<ChatChannelMetadata @channel={{this.channel}} />`);
 
     assert
