@@ -106,7 +106,7 @@ class SectionLink {
       !isEmpty(this.value) &&
       this.value.length <= 200 &&
       this.path &&
-      (this.validExternal || this.validInternal)
+      this.internal ? this.validInternal : this.validExternal
     );
   }
 
