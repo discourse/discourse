@@ -31,6 +31,21 @@ export default Controller.extend(CanCheckEmails, {
     return I18n.t("admin.users.titles." + query);
   },
 
+  @discourseComputed("showEmails")
+  columnCount(showEmails) {
+    let colCount = 7; // note that the first column is hardcoded in the template
+
+    if (showEmails) {
+      colCount += 1;
+    }
+
+    if (this.siteSettings.must_approve_users) {
+      colCount += 1;
+    }
+
+    return colCount;
+  },
+
   @observes("listFilter")
   _filterUsers() {
     discourseDebounce(this, this.resetFilters, INPUT_DELAY);
