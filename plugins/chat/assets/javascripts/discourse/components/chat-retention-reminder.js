@@ -3,11 +3,9 @@ import { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { inject as service } from "@ember/service";
-import { tracked } from "@glimmer/tracking";
+
 export default class ChatRetentionReminder extends Component {
   @service currentUser;
-
-  @tracked loading = false;
 
   get show() {
     return (
@@ -23,7 +21,7 @@ export default class ChatRetentionReminder extends Component {
   dismiss() {
     return ajax("/chat/dismiss-retention-reminder", {
       method: "POST",
-      data: { chatable_type: this.args.channel.chatable_type },
+      data: { chatable_type: this.args.channel.chatableType },
     })
       .then(() => {
         const field = this.args.channel.isDirectMessageChannel
