@@ -98,6 +98,11 @@
   }
 }
 
+.directory-table-container {
+  container-type: inline-size;
+  container-name: directory-table;
+}
+
 .directory-table {
   display: grid;
   gap: 0;
@@ -243,7 +248,7 @@
         min-width: 0;
         overflow: hidden;
         // this needs to be long to account for all possible widths
-        content: "...................................................................................................................................";
+        content: "................................................................................................................................................................";
       }
 
       .d-icon {
