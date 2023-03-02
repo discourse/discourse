@@ -2578,7 +2578,6 @@ bg:
       view: "Покажи темите в категория "
       general: "Основни"
       settings: "Настройки"
-      topic_template: "Шаблон на темата"
       tags: "Етикети"
       tags_placeholder: "(По желание) списък на позволените етикети"
       required_tag_group:

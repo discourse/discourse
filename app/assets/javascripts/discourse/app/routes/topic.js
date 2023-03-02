@@ -113,13 +113,11 @@ const TopicRoute = DiscourseRoute.extend({
   showTopicTimerModal() {
     const model = this.modelFor("topic");
 
-    const topicTimer = model.get("topic_timer");
-    if (!topicTimer) {
+    if (!model.get("topic_timer")) {
       model.set("topic_timer", {});
     }
 
     showModal("edit-topic-timer", { model });
-    this.controllerFor("modal").set("modalClass", "edit-topic-timer-modal");
   },
 
   @action
@@ -139,11 +137,10 @@ const TopicRoute = DiscourseRoute.extend({
 
   @action
   showFeatureTopic() {
-    showModal("featureTopic", {
+    showModal("feature-topic", {
       model: this.modelFor("topic"),
       title: "topic.feature_topic.title",
     });
-    this.controllerFor("modal").set("modalClass", "feature-topic-modal");
     this.controllerFor("feature_topic").reset();
   },
 

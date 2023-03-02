@@ -113,6 +113,9 @@ export default class CodeblockButtons {
         copyButton.ariaLabel = I18n.t("copy_codeblock.copy");
         copyButton.innerHTML = iconHTML("copy");
         wrapperEl.appendChild(copyButton);
+        wrapperEl.style.right = `${
+          codeBlock.offsetWidth - codeBlock.clientWidth
+        }px`;
       }
 
       if (

@@ -2049,7 +2049,6 @@ th:
       view: "ดูกระทู้ในหมวดหมู่"
       general: "ทั่วไป"
       settings: "การตั้งค่า"
-      topic_template: "รูปแบบกระทู้"
       tags: "แท็ก"
       allow_global_tags_label: "อนุญาตแท็กอื่นด้วย"
       required_tag_group:

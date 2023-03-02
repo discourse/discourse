@@ -162,7 +162,7 @@ class Guardian
   def can_see?(obj)
     if obj
       see_method = method_name_for :see, obj
-      (see_method ? public_send(see_method, obj) : true)
+      see_method && public_send(see_method, obj)
     end
   end
 

@@ -162,6 +162,16 @@ class DiscourseJsProcessor
       )
       load_file_in_context(
         ctx,
+        "node_modules/babel-plugin-ember-template-compilation/src/js-utils.js",
+        wrap_in_module: "babel-plugin-ember-template-compilation/js-utils",
+      )
+      load_file_in_context(
+        ctx,
+        "node_modules/babel-plugin-ember-template-compilation/src/public-types.js",
+        wrap_in_module: "babel-plugin-ember-template-compilation/public-types",
+      )
+      load_file_in_context(
+        ctx,
         "node_modules/babel-import-util/src/index.js",
         wrap_in_module: "babel-import-util",
       )

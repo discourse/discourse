@@ -76,6 +76,30 @@ RSpec.describe Chat::ServiceRunner do
     end
   end
 
+  class FailureWithCollectionModelService
+    include Chat::Service::Base
+
+    model :fake_model, :fetch_fake_model
+
+    private
+
+    def fetch_fake_model
+      []
+    end
+  end
+
+  class SuccessWithCollectionModelService
+    include Chat::Service::Base
+
+    model :fake_model, :fetch_fake_model
+
+    private
+
+    def fetch_fake_model
+      [:models_found]
+    end
+  end
+
   describe ".call(service, &block)" do
     subject(:runner) { described_class.call(service, object, &actions_block) }
 
@@ -207,19 +231,39 @@ RSpec.describe Chat::ServiceRunner do
           end
         BLOCK
 
-      context "when the service failed without a model" do
-        let(:service) { FailureWithModelService }
+      context "when fetching a single model" do
+        context "when the service fails without a model" do
+          let(:service) { FailureWithModelService }
 
-        it "runs the provided block" do
-          expect(runner).to eq :no_model
+          it "runs the provided block" do
+            expect(runner).to eq :no_model
+          end
+        end
+
+        context "when the service does not fail with a model" do
+          let(:service) { SuccessWithModelService }
+
+          it "does not run the provided block" do
+            expect(runner).not_to eq :no_model
+          end
         end
       end
 
-      context "when the service does not fail with a model" do
-        let(:service) { SuccessWithModelService }
+      context "when fetching a collection" do
+        context "when the service fails without a model" do
+          let(:service) { FailureWithCollectionModelService }
 
-        it "does not run the provided block" do
-          expect(runner).not_to eq :no_model
+          it "runs the provided block" do
+            expect(runner).to eq :no_model
+          end
+        end
+
+        context "when the service does not fail with a model" do
+          let(:service) { SuccessWithCollectionModelService }
+
+          it "does not run the provided block" do
+            expect(runner).not_to eq :no_model
+          end
         end
       end
     end

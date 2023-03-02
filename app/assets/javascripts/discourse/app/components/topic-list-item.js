@@ -260,9 +260,9 @@ export default Component.extend({
     // make full row click target on mobile, due to size constraints
     if (
       this.site.mobileView &&
-      (e.target.classList.contains("right") ||
-        e.target.classList.contains("topic-item-stats") ||
-        e.target.classList.contains("main-link"))
+      e.target.matches(
+        ".topic-list-data, .main-link, .right, .topic-item-stats, .topic-item-stats__category-tags, .discourse-tags"
+      )
     ) {
       if (wantsNewWindow(e)) {
         return true;

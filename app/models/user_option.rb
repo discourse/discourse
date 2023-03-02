@@ -292,6 +292,7 @@ end
 #  enable_experimental_sidebar          :boolean          default(FALSE)
 #  seen_popups                          :integer          is an Array
 #  sidebar_list_destination             :integer          default("none_selected"), not null
+#  chat_header_indicator_preference     :integer          default(0), not null
 #
 # Indexes
 #

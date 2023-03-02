@@ -219,7 +219,7 @@ module Chat
       class ModelStep < Step
         def call(instance, context)
           context[name] = super
-          raise ArgumentError, "Model not found" if !context[name]
+          raise ArgumentError, "Model not found" if context[name].blank?
         rescue ArgumentError => exception
           context[result_key].fail(exception: exception)
           context.fail!

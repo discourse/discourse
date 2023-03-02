@@ -1,11 +1,11 @@
 import { action } from "@ember/object";
 import { classNames } from "@ember-decorators/component";
-import { on } from "@ember-decorators/object";
+import { observes, on } from "@ember-decorators/object";
 import Component from "@ember/component";
 import getURL from "discourse-common/lib/get-url";
 import loadScript from "discourse/lib/load-script";
 import I18n from "I18n";
-import { bind, observes } from "discourse-common/utils/decorators";
+import { bind } from "discourse-common/utils/decorators";
 
 const COLOR_VARS_REGEX =
   /\$(primary|secondary|tertiary|quaternary|header_background|header_primary|highlight|danger|success|love)(\s|;|-(low|medium|high))/g;
@@ -200,7 +200,7 @@ export default class AceEditor extends Component {
 
     this._editor.getSession().setAnnotations(warnings);
 
-    this.setWarning(
+    this.setWarning?.(
       warnings.length
         ? I18n.t("admin.customize.theme.scss_color_variables_warning")
         : false

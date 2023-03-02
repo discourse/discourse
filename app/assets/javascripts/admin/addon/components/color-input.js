@@ -1,7 +1,7 @@
 import { classNames } from "@ember-decorators/component";
 import { action, computed } from "@ember/object";
 import Component from "@ember/component";
-import { observes } from "discourse-common/utils/decorators";
+import { observes } from "@ember-decorators/object";
 
 /**
   An input field for a color.

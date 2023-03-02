@@ -709,12 +709,21 @@ const TopicTrackingState = EmberObject.extend({
     let categoryId = category ? get(category, "id") : null;
 
     if (type === "new") {
-      return this.countNew({
+      let count = this.countNew({
         categoryId,
         tagId,
         noSubcategories,
         customFilterFn,
       });
+      if (this.currentUser?.new_new_view_enabled) {
+        count += this.countUnread({
+          categoryId,
+          tagId,
+          noSubcategories,
+          customFilterFn,
+        });
+      }
+      return count;
     } else if (type === "unread") {
       return this.countUnread({
         categoryId,
@@ -790,8 +799,14 @@ const TopicTrackingState = EmberObject.extend({
   // for a particular seen topic has not yet reached the server.
   _fixDelayedServerState(list, filter) {
     for (let index = list.topics.length - 1; index >= 0; index--) {
-      const state = this.findState(list.topics[index].id);
-      if (state && state.last_read_post_number > 0) {
+      const topic = list.topics[index];
+      const state = this.findState(topic.id);
+      if (
+        state &&
+        state.last_read_post_number > 0 &&
+        (topic.last_read_post_number === 0 ||
+          !this.currentUser?.new_new_view_enabled)
+      ) {
         if (filter === "new") {
           list.topics.splice(index, 1);
         } else {

@@ -189,9 +189,13 @@
 
   .topic-item-stats__category-tags {
     margin-right: 0.5em;
-    .category,
+
     .discourse-tags {
       display: inline;
+    }
+
+    .badge-wrapper,
+    .discourse-tag {
       // disabling clicks because these targets are too small on mobile
       pointer-events: none;
     }

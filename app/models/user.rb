@@ -1523,7 +1523,9 @@ class User < ActiveRecord::Base
 
   def apply_watched_words
     validatable_user_fields.each do |id, value|
-      set_user_field(id, WordWatcher.apply_to_text(value))
+      field = WordWatcher.censor_text(value)
+      field = WordWatcher.replace_text(field)
+      set_user_field(id, field)
     end
   end
 
@@ -1810,6 +1812,10 @@ class User < ActiveRecord::Base
 
   def redesigned_user_menu_enabled?
     !SiteSetting.legacy_navigation_menu? || SiteSetting.enable_new_notifications_menu
+  end
+
+  def new_new_view_enabled?
+    in_any_groups?(SiteSetting.experimental_new_new_view_groups_map)
   end
 
   protected

@@ -163,7 +163,15 @@ describe UserNotifications do
 
       describe "email subject" do
         context "with regular mentions" do
-          before { Fabricate(:chat_mention, user: user, chat_message: chat_message) }
+          before do
+            notification = Fabricate(:notification)
+            Fabricate(
+              :chat_mention,
+              user: user,
+              chat_message: chat_message,
+              notification: notification,
+            )
+          end
 
           it "includes the sender username in the subject" do
             expected_subject =
@@ -194,7 +202,13 @@ describe UserNotifications do
               user: user,
               last_read_message_id: another_chat_message.id - 2,
             )
-            Fabricate(:chat_mention, user: user, chat_message: another_chat_message)
+            notification = Fabricate(:notification)
+            Fabricate(
+              :chat_mention,
+              user: user,
+              chat_message: another_chat_message,
+              notification: notification,
+            )
 
             email = described_class.chat_summary(user, {})
 
@@ -227,7 +241,13 @@ describe UserNotifications do
                 user: user,
                 last_read_message_id: another_chat_message.id - 2,
               )
-              Fabricate(:chat_mention, user: user, chat_message: another_chat_message)
+              notification = Fabricate(:notification)
+              Fabricate(
+                :chat_mention,
+                user: user,
+                chat_message: another_chat_message,
+                notification: notification,
+              )
             end
 
             expected_subject =
@@ -253,7 +273,13 @@ describe UserNotifications do
                 target_users: [sender, user],
               )
             Fabricate(:chat_message, user: sender, chat_channel: channel)
-            Fabricate(:chat_mention, user: user, chat_message: chat_message)
+            notification = Fabricate(:notification)
+            Fabricate(
+              :chat_mention,
+              user: user,
+              chat_message: chat_message,
+              notification: notification,
+            )
           end
 
           it "always includes the DM second" do
@@ -273,7 +299,15 @@ describe UserNotifications do
       end
 
       describe "When there are mentions" do
-        before { Fabricate(:chat_mention, user: user, chat_message: chat_message) }
+        before do
+          notification = Fabricate(:notification)
+          Fabricate(
+            :chat_mention,
+            user: user,
+            chat_message: chat_message,
+            notification: notification,
+          )
+        end
 
         describe "selecting mentions" do
           it "doesn't return an email if the user can't see chat" do
@@ -377,7 +411,13 @@ describe UserNotifications do
             )
 
             new_message = Fabricate(:chat_message, user: sender, chat_channel: channel)
-            Fabricate(:chat_mention, user: user, chat_message: new_message)
+            notification = Fabricate(:notification)
+            Fabricate(
+              :chat_mention,
+              user: user,
+              chat_message: new_message,
+              notification: notification,
+            )
 
             email = described_class.chat_summary(user, {})
 
@@ -478,7 +518,8 @@ describe UserNotifications do
           it "includes a view more link when there are more than two mentions" do
             2.times do
               msg = Fabricate(:chat_message, user: sender, chat_channel: channel)
-              Fabricate(:chat_mention, user: user, chat_message: msg)
+              notification = Fabricate(:notification)
+              Fabricate(:chat_mention, user: user, chat_message: msg, notification: notification)
             end
 
             email = described_class.chat_summary(user, {})
@@ -499,7 +540,13 @@ describe UserNotifications do
 
             new_message =
               Fabricate(:chat_message, user: sender, chat_channel: channel, cooked: "New message")
-            Fabricate(:chat_mention, user: user, chat_message: new_message)
+            notification = Fabricate(:notification)
+            Fabricate(
+              :chat_mention,
+              user: user,
+              chat_message: new_message,
+              notification: notification,
+            )
 
             email = described_class.chat_summary(user, {})
             body = email.html_part.body.to_s

@@ -160,14 +160,30 @@ class EmbedController < ApplicationController
 
   def prepare_embeddable
     response.headers.delete("X-Frame-Options")
-    @embeddable_css_class = ""
-    embeddable_host = EmbeddableHost.record_for_url(request.referer)
-    @embeddable_css_class =
-      " class=\"#{embeddable_host.class_name}\"" if embeddable_host.present? &&
-      embeddable_host.class_name.present?
 
-    @data_referer = request.referer
-    @data_referer = "*" if SiteSetting.embed_any_origin? && @data_referer.blank?
+    embeddable_host = EmbeddableHost.record_for_url(request.referer)
+
+    @embeddable_css_class =
+      if params[:class_name]
+        " class=\"#{CGI.escapeHTML(params[:class_name])}\""
+      elsif embeddable_host.present? && embeddable_host.class_name.present?
+        Discourse.deprecate(
+          "class_name field of EmbeddableHost has been deprecated. Prefer passing class_name as a parameter.",
+          since: "3.1.0.beta1",
+          drop_from: "3.2",
+        )
+
+        " class=\"#{CGI.escapeHTML(embeddable_host.class_name)}\""
+      else
+        ""
+      end
+
+    @data_referer =
+      if SiteSetting.embed_any_origin? && @data_referer.blank?
+        "*"
+      else
+        request.referer
+      end
   end
 
   def ensure_api_request

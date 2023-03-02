@@ -1,5 +1,5 @@
 import { classNames } from "@ember-decorators/component";
-import { observes, on } from "discourse-common/utils/decorators";
+import { observes, on } from "@ember-decorators/object";
 import Component from "@ember/component";
 import I18n from "I18n";
 import discourseDebounce from "discourse-common/lib/debounce";

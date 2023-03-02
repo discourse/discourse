@@ -1530,7 +1530,6 @@ sq:
       view: "Shiko temat në kategorinë"
       general: "Karakteristika të përgjithshme"
       settings: "Rregullimet"
-      topic_template: "Shabllon i Temës"
       tags: "Etiketat"
       tags_placeholder: "(Opsionale) lista e etiketave të lejuara"
       tag_groups_placeholder: "(Opsionale) lista e grupeve të etiketave"

@@ -66,6 +66,55 @@ module("Unit | Utility | autocomplete", function (hooks) {
     );
   }
 
+  test("Autocomplete can complete really short terms correctly", async function (assert) {
+    let element = textArea("");
+    let $element = $(element);
+
+    autocomplete.call($element, {
+      key: ":",
+      transformComplete: () => "sad:",
+      dataSource: () => [":sad:"],
+      template: compile(`<div id='ac-testing' class='autocomplete ac-test'>
+  <ul>
+    {{#each options as |option|}}
+      <li>
+        <a href>
+          {{option}}
+        </a>
+      </li>
+    {{/each}}
+  </ul>
+</div>`),
+    });
+
+    simulateKey(element, "a");
+    simulateKey(element, " ");
+
+    simulateKey(element, ":");
+    simulateKey(element, ")");
+    simulateKey(element, "\r");
+
+    let sleep = (millisecs) =>
+      new Promise((promise) => setTimeout(promise, millisecs));
+    // completeTerm awaits transformComplete
+    // we need to wait for it to be done
+    // Note: this is somewhat questionable given that when people
+    // press ENTER on an autocomplete they do not want to be beholden
+    // to an async function.
+    let inputEquals = async function (value) {
+      let count = 3000;
+      while (count > 0 && element.value !== value) {
+        count -= 1;
+        await sleep(1);
+      }
+    };
+
+    await inputEquals("a :sad: ");
+    assert.strictEqual(element.value, "a :sad: ");
+    assert.strictEqual(element.selectionStart, 8);
+    assert.strictEqual(element.selectionEnd, 8);
+  });
+
   test("Autocomplete can account for cursor drift correctly", function (assert) {
     let element = textArea("");
     let $element = $(element);
