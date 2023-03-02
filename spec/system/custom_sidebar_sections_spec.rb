@@ -45,7 +45,7 @@ describe "Custom sidebar sections", type: :system, js: true do
     section_modal.fill_name("My section")
 
     section_modal.fill_link("Discourse Homepage", "https://discourse.org")
-    expect(section_modal).to have_enabled_save
+    expect(section_modal).to have_enabled_save_button
 
     section_modal.save
 
