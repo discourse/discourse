@@ -173,7 +173,7 @@ RSpec.describe Reviewable, type: :model do
         it "can filter by who reviewed the flag" do
           reviewable = Fabricate(:reviewable_flagged_post)
           admin = Fabricate(:admin)
-          reviewable.perform(admin, :ignore)
+          reviewable.perform(admin, :ignore_and_do_nothing)
 
           reviewables = Reviewable.list_for(user, status: :all, reviewed_by: admin.username)
 
@@ -438,7 +438,7 @@ RSpec.describe Reviewable, type: :model do
 
     it "increases flags_ignored when ignored" do
       expect(user.user_stat.flags_ignored).to eq(0)
-      reviewable.perform(Discourse.system_user, :ignore)
+      reviewable.perform(Discourse.system_user, :ignore_and_do_nothing)
       expect(user.user_stat.reload.flags_ignored).to eq(1)
     end
 

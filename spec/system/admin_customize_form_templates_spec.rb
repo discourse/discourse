@@ -5,6 +5,9 @@ describe "Admin Customize Form Templates", type: :system, js: true do
   let(:ace_editor) { PageObjects::Components::AceEditor.new }
   fab!(:admin) { Fabricate(:admin) }
   fab!(:form_template) { Fabricate(:form_template) }
+  fab!(:category) do
+    Fabricate(:category, name: "Cool Category", slug: "cool-cat", topic_count: 3234)
+  end
 
   before do
     SiteSetting.experimental_form_templates = true
@@ -12,10 +15,18 @@ describe "Admin Customize Form Templates", type: :system, js: true do
   end
 
   describe "when visiting the page to customize form templates" do
+    before { category.update(form_template_ids: [form_template.id]) }
+
     it "should show the existing form templates in a table" do
       visit("/admin/customize/form-templates")
       expect(form_template_page).to have_form_template_table
       expect(form_template_page).to have_form_template(form_template.name)
+    end
+
+    it "should show the categories the form template is used in" do
+      visit("/admin/customize/form-templates")
+      expect(form_template_page).to have_form_template_table
+      expect(form_template_page).to have_category_in_template_row(category.name)
     end
 
     it "should show the form template structure in a modal" do
