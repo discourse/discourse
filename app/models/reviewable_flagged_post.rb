@@ -10,6 +10,7 @@ class ReviewableFlaggedPost < Reviewable
       agree_and_silence: :agree_and_keep,
       agree_and_suspend: :agree_and_keep,
       disagree_and_restore: :disagree,
+      ignore_and_do_nothing: :ignore,
     }
   end
 
