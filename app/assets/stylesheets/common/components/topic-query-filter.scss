@@ -3,8 +3,41 @@
   flex-direction: row;
   margin-right: auto;
   margin-bottom: var(--nav-space);
+  min-width: 50%;
 
-  .topic-query-filter__input {
+  &__label {
+    background-color: var(--primary-low);
+    display: flex;
+    align-items: center;
+    padding: 0.25em 0.65em;
+    border: 1px solid var(--primary-low-mid);
+    border-right: 0;
+  }
+
+  &__input {
+    position: relative;
+    flex: 1 1;
+  }
+
+  &__icon {
+    position: absolute;
+    left: 0.5em;
+    top: 0.65em;
+    color: var(--primary-low-mid);
+  }
+
+  input.topic-query-filter__filter-term {
     margin: 0 0.5em 0 0;
+    border-color: var(--primary-low-mid);
+    padding-left: 1.75em;
+    color: var(--primary);
+    width: 100%;
+
+    &:focus {
+      border-color: var(--tertiary);
+      outline: none;
+      outline-offset: 0;
+      box-shadow: inset 0px 0px 0px 1px var(--tertiary);
+    }
   }
 }
