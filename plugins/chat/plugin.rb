@@ -247,7 +247,6 @@ after_initialize do
   load File.expand_path("../app/controllers/api/hints_controller.rb", __FILE__)
   load File.expand_path("../app/controllers/api/chat_channel_threads_controller.rb", __FILE__)
   load File.expand_path("../app/controllers/api/chat_chatables_controller.rb", __FILE__)
-  load File.expand_path("../app/queries/chat_channel_unreads_query.rb", __FILE__)
   load File.expand_path("../app/queries/chat_channel_memberships_query.rb", __FILE__)
 
   if Discourse.allow_dev_populate?

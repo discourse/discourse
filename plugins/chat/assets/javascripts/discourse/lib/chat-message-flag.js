@@ -38,7 +38,7 @@ export default class ChatMessageFlag {
     let flagsAvailable = site.flagTypes;
 
     flagsAvailable = flagsAvailable.filter((flag) => {
-      return model.availableFlags.includes(flag.name_key);
+      return model.available_flags.includes(flag.name_key);
     });
 
     // "message user" option should be at the top

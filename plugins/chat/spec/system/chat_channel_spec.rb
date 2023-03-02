@@ -183,7 +183,7 @@ RSpec.describe "Chat channel", type: :system, js: true do
     it "shows a date separator" do
       chat.visit_channel(channel_1)
 
-      expect(page).to have_selector(".chat-message-separator__text", text: "Today")
+      expect(page).to have_selector(".first-daily-message", text: "Today")
     end
   end
 

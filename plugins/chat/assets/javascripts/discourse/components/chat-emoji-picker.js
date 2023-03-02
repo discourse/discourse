@@ -65,10 +65,6 @@ export default class ChatEmojiPicker extends Component {
   }
 
   get flatEmojis() {
-    if (!this.chatEmojiPickerManager.emojis) {
-      return [];
-    }
-
     // eslint-disable-next-line no-unused-vars
     let { favorites, ...rest } = this.chatEmojiPickerManager.emojis;
     return Object.values(rest).flat();

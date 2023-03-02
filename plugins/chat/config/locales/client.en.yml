@@ -108,7 +108,7 @@ en:
       in_reply_to: "In reply to"
       heading: "Chat"
       join: "Join"
-      last_visit: "last visit"
+      new_messages: "new messages"
       mention_warning:
         dismiss: "dismiss"
         cannot_see: "%{username} can't access this channel and was not notified."
