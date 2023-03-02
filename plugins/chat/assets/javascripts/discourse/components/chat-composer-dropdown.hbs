@@ -1,17 +1,17 @@
-{{#if this.buttons.length}}
+{{#if @buttons.length}}
   <DPopover
     @class="chat-composer-dropdown"
     @options={{hash arrow=null}}
     as |state|
   >
     <FlatButton
-      @disabled={{this.isDisabled}}
+      @disabled={{@isDisabled}}
       @class="chat-composer-dropdown__trigger-btn d-popover-trigger"
       @title="chat.composer.toggle_toolbar"
       @icon={{if state.isExpanded "times" "plus"}}
     />
     <ul class="chat-composer-dropdown__list">
-      {{#each this.buttons as |button|}}
+      {{#each @buttons as |button|}}
         <li class="chat-composer-dropdown__item {{button.id}}">
           <DButton
             @class={{concat "chat-composer-dropdown__action-btn " button.id}}

@@ -1,0 +1,23 @@
+<div class="scroll-stick-wrap">
+  <DButton
+    class={{concat-class
+      "btn-flat"
+      "chat-scroll-to-bottom"
+      (if
+        (or (not @isAlmostDocked) @hasNewMessages @channel.canLoadMoreFuture)
+        "visible"
+      )
+    }}
+    @action={{@scrollToBottom}}
+  >
+    {{#if @hasNewMessages}}
+      <span class="chat-scroll-to-bottom__text">
+        {{i18n "chat.scroll_to_new_messages"}}
+      </span>
+    {{/if}}
+
+    <span class="chat-scroll-to-bottom__arrow">
+      {{d-icon "arrow-down"}}
+    </span>
+  </DButton>
+</div>

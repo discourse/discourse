@@ -53,6 +53,25 @@
 
 .chat-message.user-info-hidden {
   padding: 0.15em 1em;
+
+  .chat-time {
+    color: var(--secondary-medium);
+    flex-shrink: 0;
+    font-size: var(--font-down-2);
+    margin-top: 0.4em;
+    display: none;
+    width: var(--message-left-width);
+  }
+
+  &:hover {
+    .chat-message-left-gutter__bookmark {
+      display: none;
+    }
+
+    .chat-time {
+      display: block;
+    }
+  }
 }
 
 // Full Page Styling in Core

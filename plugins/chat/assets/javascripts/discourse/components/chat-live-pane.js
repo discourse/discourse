@@ -1,17 +1,12 @@
+import { capitalize } from "@ember/string";
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
 import { cloneJSON } from "discourse-common/lib/object";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
-import Component from "@ember/component";
-import discourseComputed, {
-  afterRender,
-  bind,
-  debounce,
-  observes,
-} from "discourse-common/utils/decorators";
+import ChatMessageDraft from "discourse/plugins/chat/discourse/models/chat-message-draft";
+import Component from "@glimmer/component";
+import { bind, debounce } from "discourse-common/utils/decorators";
 import discourseDebounce from "discourse-common/lib/debounce";
 import EmberObject, { action } from "@ember/object";
-import I18n from "I18n";
-import { A } from "@ember/array";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { cancel, next, schedule, throttle } from "@ember/runloop";
@@ -19,85 +14,62 @@ import discourseLater from "discourse-common/lib/later";
 import { inject as service } from "@ember/service";
 import { Promise } from "rsvp";
 import { resetIdle } from "discourse/lib/desktop-notifications";
-import { capitalize } from "@ember/string";
 import {
   onPresenceChange,
   removeOnPresenceChange,
 } from "discourse/lib/user-presence";
 import isZoomed from "discourse/plugins/chat/discourse/lib/zoom-check";
 import { isTesting } from "discourse-common/config/environment";
+import { tracked } from "@glimmer/tracking";
+import { getOwner } from "discourse-common/lib/get-owner";
 
-const MAX_RECENT_MSGS = 100;
-const STICKY_SCROLL_LENIENCE = 50;
+const STICKY_SCROLL_LENIENCE = 100;
 const PAGE_SIZE = 50;
-
-const SCROLL_HANDLER_THROTTLE_MS = isTesting() ? 0 : 100;
+const SCROLL_HANDLER_THROTTLE_MS = isTesting() ? 0 : 150;
 const FETCH_MORE_MESSAGES_THROTTLE_MS = isTesting() ? 0 : 500;
-
 const PAST = "past";
 const FUTURE = "future";
+const READ_INTERVAL_MS = 1000;
 
-export default Component.extend({
-  classNameBindings: [":chat-live-pane", "sendingLoading", "loading"],
-  chatChannel: null,
-  registeredChatChannelId: null, // ?Number
-  loading: false,
-  loadingMorePast: false,
-  loadingMoreFuture: false,
-  hoveredMessageId: null,
+export default class ChatLivePane extends Component {
+  @service chat;
+  @service chatChannelsManager;
+  @service router;
+  @service chatEmojiPickerManager;
+  @service chatComposerPresenceManager;
+  @service chatStateManager;
+  @service chatApi;
+  @service currentUser;
+  @service appEvents;
+  @service messageBus;
+  @service site;
 
-  allPastMessagesLoaded: false,
-  sendingLoading: false,
-  selectingMessages: false,
-  stickyScroll: true,
-  stickyScrollTimer: null,
-  showChatQuoteSuccess: false,
-  showCloseFullScreenBtn: false,
-  includeHeader: true,
+  @tracked loading = false;
+  @tracked loadingMorePast = false;
+  @tracked loadingMoreFuture = false;
+  @tracked hoveredMessageId = null;
+  @tracked sendingLoading = false;
+  @tracked selectingMessages = false;
+  @tracked showChatQuoteSuccess = false;
+  @tracked includeHeader = true;
+  @tracked editingMessage = null;
+  @tracked replyToMsg = null;
+  @tracked hasNewMessages = null;
+  @tracked isDocked = true;
+  @tracked isAlmostDocked = true;
+  @tracked loadedOnce = false;
 
-  editingMessage: null, // ?Message
-  replyToMsg: null, // ?Message
-  details: null, // Object { chat_channel_id,  ... }
-  messages: null, // Array
-  messageLookup: null, // Object<Number, Message>
-  _unloadedReplyIds: null, // Array
-  _nextStagedMessageId: 0, // Iterate on every new message
-  _lastSelectedMessage: null,
-  targetMessageId: null,
-  hasNewMessages: null,
+  _loadedChannelId = null;
+  _scrollerEl = null;
+  _previousScrollTop = null;
+  _lastSelectedMessage = null;
+  _mentionWarningsSeen = {};
+  _unreachableGroupMentions = [];
+  _overMembersLimitGroupMentions = [];
 
-  chat: service(),
-  chatChannelsManager: service(),
-  router: service(),
-  chatEmojiPickerManager: service(),
-  chatComposerPresenceManager: service(),
-  chatStateManager: service(),
-  chatApi: service(),
-
-  getCachedChannelDetails: null,
-  clearCachedChannelDetails: null,
-  _scrollerEl: null,
-
-  init() {
-    this._super(...arguments);
-
-    this.set("messages", []);
-    this.set("_mentionWarningsSeen", {});
-    this.set("unreachableGroupMentions", []);
-    this.set("overMembersLimitGroupMentions", []);
-  },
-
-  didInsertElement() {
-    this._super(...arguments);
-
-    this._unloadedReplyIds = [];
-    this.appEvents.on(
-      "chat-live-pane:highlight-message",
-      this,
-      "highlightOrFetchMessage"
-    );
-
-    this._scrollerEl = this.element.querySelector(".chat-messages-scroll");
+  @action
+  setupListeners(element) {
+    this._scrollerEl = element.querySelector(".chat-messages-scroll");
     this._scrollerEl.addEventListener("scroll", this.onScrollHandler, {
       passive: true,
     });
@@ -106,10 +78,6 @@ export default Component.extend({
       passive: true,
     });
 
-    this.appEvents.on("chat:cancel-message-selection", this, "cancelSelecting");
-
-    this.set("showCloseFullScreenBtn", !this.site.mobileView);
-
     document.addEventListener("scroll", this._forceBodyScroll, {
       passive: true,
     });
@@ -117,82 +85,52 @@ export default Component.extend({
     onPresenceChange({
       callback: this.onPresenceChangeCallback,
     });
-  },
+  }
 
-  willDestroyElement() {
-    this._super(...arguments);
-
-    this.element
+  @action
+  teardownListeners(element) {
+    element
       .querySelector(".chat-messages-scroll")
       ?.removeEventListener("scroll", this.onScrollHandler);
-
     window.removeEventListener("resize", this.onResizeHandler);
     window.removeEventListener("wheel", this.onScrollHandler);
-
-    this.appEvents.off(
-      "chat-live-pane:highlight-message",
-      this,
-      "highlightOrFetchMessage"
-    );
-
-    // don't need to removeEventListener from scroller as the DOM element goes away
-    cancel(this.stickyScrollTimer);
-
     cancel(this.resizeHandler);
-
-    this._resetChannelState();
-    this._unloadedReplyIds = null;
-    this.appEvents.off(
-      "chat:cancel-message-selection",
-      this,
-      "cancelSelecting"
-    );
-
     document.removeEventListener("scroll", this._forceBodyScroll);
-
     removeOnPresenceChange(this.onPresenceChangeCallback);
-  },
+  }
 
-  didReceiveAttrs() {
-    this._super(...arguments);
-
-    this.currentUserTimezone = this.currentUser?.user_option.timezone;
-
-    if (
-      this.chatChannel?.id &&
-      this.registeredChatChannelId !== this.chatChannel.id
-    ) {
-      this._resetChannelState();
+  @action
+  updateChannel() {
+    if (this._loadedChannelId !== this.args.channel?.id) {
+      this._unsubscribeToUpdates(this._loadedChannelId);
+      this.selectingMessages = false;
       this.cancelEditing();
+      this._loadedChannelId = this.args.channel?.id;
+    }
 
-      if (!this.chatChannel.isDraft) {
-        this.loadDraftForChannel(this.chatChannel.id);
+    this.loadMessages();
+    this._subscribeToUpdates(this.args.channel.id);
+  }
+
+  @action
+  loadMessages() {
+    if (this.args.targetMessageId) {
+      this.requestedTargetMessageId = parseInt(this.args.targetMessageId, 10);
+    }
+
+    if (this.args.channel?.id) {
+      if (this.requestedTargetMessageId) {
+        this.highlightOrFetchMessage(this.requestedTargetMessageId);
+      } else {
+        this.fetchMessages();
       }
     }
-
-    if (this.chatChannel?.id) {
-      this.fetchMessages(this.chatChannel);
-    }
-  },
-
-  @discourseComputed("chatChannel.isDirectMessageChannel")
-  displayMembers(isDirectMessageChannel) {
-    return !isDirectMessageChannel;
-  },
-
-  @discourseComputed("displayMembers")
-  infoTabRoute(displayMembers) {
-    if (displayMembers) {
-      return "chat.channel.info.members";
-    }
-
-    return "chat.channel.info.settings";
-  },
+  }
 
   @bind
   onScrollHandler(event) {
-    throttle(this, this.onScroll, event, SCROLL_HANDLER_THROTTLE_MS, true);
-  },
+    throttle(this, this.onScroll, event, SCROLL_HANDLER_THROTTLE_MS, false);
+  }
 
   @bind
   onResizeHandler() {
@@ -203,521 +141,431 @@ export default Component.extend({
       this.details,
       250
     );
-  },
+  }
 
   @bind
   onPresenceChangeCallback(present) {
     if (present) {
-      this.chat.updateLastReadMessage();
+      this.updateLastReadMessage();
     }
-  },
+  }
+
+  get capabilities() {
+    return getOwner(this).lookup("capabilities:main");
+  }
 
   @debounce(100)
-  fetchMessages(channel, options = {}) {
+  fetchMessages(options = {}) {
     if (this._selfDeleted) {
       return;
     }
 
-    this.set("loading", true);
+    this.loadingMorePast = true;
+    this.args.channel.clearMessages();
 
-    return this.chat.loadCookFunction(this.site.categories).then((cook) => {
-      if (this._selfDeleted) {
-        return;
-      }
-
-      this.set("cook", cook);
-
-      const findArgs = {
-        channelId: channel.id,
-        pageSize: PAGE_SIZE,
-      };
-      const fetchingFromLastRead = !options.fetchFromLastMessage;
-
-      if (fetchingFromLastRead) {
-        findArgs["targetMessageId"] =
-          this.targetMessageId || this._getLastReadId();
-      }
-
-      return this.store
-        .findAll("chat-message", findArgs)
-        .then((messages) => {
-          if (this._selfDeleted || this.chatChannel.id !== channel.id) {
-            return;
-          }
-          this.setMessageProps(messages, fetchingFromLastRead);
-
-          if (options.fetchFromLastMessage) {
-            this.set("stickyScroll", true);
-            this._stickScrollToBottom();
-          }
-
-          this._focusComposer();
-        })
-        .catch(this._handleErrors)
-        .finally(() => {
-          if (this._selfDeleted || this.chatChannel.id !== channel.id) {
-            return;
-          }
-
-          this.set("loading", false);
-        });
-    });
-  },
-
-  loadDraftForChannel(channelId) {
-    this.set("draft", this.chat.getDraftForChannel(channelId));
-  },
-
-  @bind
-  _fetchMoreMessages(direction) {
-    const loadingPast = direction === PAST;
-    const canLoadMore = loadingPast
-      ? this.details?.can_load_more_past
-      : this.details?.can_load_more_future;
-    const loadingMoreKey = `loadingMore${capitalize(direction)}`;
-    const loadingMore = this.get(loadingMoreKey);
-
-    if (
-      (this.details && !canLoadMore) ||
-      loadingMore ||
-      this.loading ||
-      !this.messages.length
-    ) {
-      return Promise.resolve();
+    const findArgs = { pageSize: PAGE_SIZE };
+    const fetchingFromLastRead = !options.fetchFromLastMessage;
+    if (this.requestedTargetMessageId) {
+      findArgs["targetMessageId"] = this.requestedTargetMessageId;
+    } else if (fetchingFromLastRead) {
+      findArgs["targetMessageId"] = this._getLastReadId();
     }
 
-    this.set(loadingMoreKey, true);
-    this.ignoreStickyScrolling = true;
-
-    const messageIndex = loadingPast ? 0 : this.messages.length - 1;
-    const messageId = this.messages[messageIndex].id;
-    const findArgs = {
-      channelId: this.chatChannel.id,
-      pageSize: PAGE_SIZE,
-      direction,
-      messageId,
-    };
-    const channelId = this.chatChannel.id;
-
-    return this.store
-      .findAll("chat-message", findArgs)
-      .then((messages) => {
-        if (this._selfDeleted || channelId !== this.chatChannel.id) {
-          return;
-        }
-
-        const newMessages = this._prepareMessages(messages || []);
-        if (newMessages.length) {
-          this.set(
-            "messages",
-            loadingPast
-              ? newMessages.concat(this.messages)
-              : this.messages.concat(newMessages)
+    return this.chatApi
+      .messages(this.args.channel.id, findArgs)
+      .then((results) => {
+        if (
+          this._selfDeleted ||
+          this.args.channel.id !== results.meta.channel_id
+        ) {
+          this.router.transitionTo(
+            "chat.channel",
+            "-",
+            results.meta.channel_id
           );
         }
-        this.setCanLoadMoreDetails(messages.resultSetMeta);
 
-        if (!loadingPast && newMessages.length) {
-          // Adding newer messages also causes a scroll-down,
-          // firing another event, fetching messages again, and so on.
-          // Scroll to the first new one to prevent this.
-          this.scrollToMessage(newMessages.firstObject.messageLookupId);
+        const [messages, meta] = this.afterFetchCallback(
+          this.args.channel,
+          results
+        );
+        this.args.channel.appendMessages(messages);
+        this.args.channel.details = meta;
+        this.loadedOnce = true;
+
+        if (this.requestedTargetMessageId) {
+          this.scrollToMessage(findArgs["targetMessageId"], {
+            highlight: true,
+          });
+        } else if (fetchingFromLastRead) {
+          this.scrollToMessage(findArgs["targetMessageId"]);
+        } else if (messages.length) {
+          this.scrollToMessage(messages.lastObject.id);
         }
 
-        return messages;
+        this.fillPaneAttempt();
       })
       .catch(this._handleErrors)
       .finally(() => {
         if (this._selfDeleted) {
           return;
         }
-        this.set(loadingMoreKey, false);
-        this.ignoreStickyScrolling = false;
+
+        this.requestedTargetMessageId = null;
+        this.loadingMorePast = false;
       });
-  },
+  }
 
-  fillPaneAttempt(meta) {
-    if (this._selfDeleted) {
-      return;
+  @action
+  onDestroySkeleton() {
+    this._iOSFix();
+    this._throttleComputeSeparators();
+  }
+
+  @action
+  onDidInsertSkeleton() {
+    this._computeSeparators(); // this one is not throttled as we need instant feedback
+  }
+
+  @bind
+  _fetchMoreMessages({ direction }) {
+    const loadingPast = direction === PAST;
+    const loadingMoreKey = `loadingMore${capitalize(direction)}`;
+
+    const canLoadMore = loadingPast
+      ? this.args.channel.canLoadMorePast
+      : this.args.channel.canLoadMoreFuture;
+
+    if (
+      !canLoadMore ||
+      this.loading ||
+      this[loadingMoreKey] ||
+      !this.args.channel.messages.length
+    ) {
+      return Promise.resolve();
     }
 
-    // safeguard
-    if (this.messages.length > 200) {
-      return;
-    }
+    this[loadingMoreKey] = true;
 
-    if (!meta?.can_load_more_past) {
-      return;
-    }
-
-    schedule("afterRender", () => {
-      const firstMessageId = this.messages.firstObject?.id;
-      if (!firstMessageId) {
-        return;
-      }
-
-      const scroller = document.querySelector(".chat-messages-container");
-      const messageContainer = document.querySelector(
-        `.chat-message-container[data-id="${firstMessageId}"]`
-      );
-      if (
-        !scroller ||
-        !messageContainer ||
-        !isElementInViewport(messageContainer)
-      ) {
-        return;
-      }
-
-      this._fetchMoreMessagesThrottled(PAST);
-    });
-  },
-
-  _fetchMoreMessagesThrottled(direction) {
-    throttle(
-      this,
-      "_fetchMoreMessages",
+    const messageIndex = loadingPast
+      ? 0
+      : this.args.channel.messages.length - 1;
+    const messageId = this.args.channel.messages[messageIndex].id;
+    const findArgs = {
+      channelId: this.args.channel.id,
+      pageSize: PAGE_SIZE,
       direction,
-      FETCH_MORE_MESSAGES_THROTTLE_MS
-    );
-  },
+      messageId,
+    };
 
-  setCanLoadMoreDetails(meta) {
-    const metaKeys = Object.keys(meta);
-    if (metaKeys.includes("can_load_more_past")) {
-      this.set("details.can_load_more_past", meta.can_load_more_past);
-      this.set(
-        "allPastMessagesLoaded",
-        this.details.can_load_more_past === false
-      );
-    }
-    if (metaKeys.includes("can_load_more_future")) {
-      this.set("details.can_load_more_future", meta.can_load_more_future);
-    }
-  },
+    return this.chatApi
+      .messages(this.args.channel.id, findArgs)
+      .then((results) => {
+        if (
+          this._selfDeleted ||
+          this.args.channel.id !== results.meta.channel_id
+        ) {
+          this.router.transitionTo(
+            "chat.channel",
+            "-",
+            results.meta.channel_id
+          );
+        }
 
-  setMessageProps(messages, fetchingFromLastRead) {
-    this._unloadedReplyIds = [];
-    this.messageLookup = {};
-    const meta = messages.resultSetMeta;
-    this.setProperties({
-      messages: this._prepareMessages(messages),
-      details: {
-        can_delete_self: meta.can_delete_self,
-        can_delete_others: meta.can_delete_others,
-        can_flag: meta.can_flag,
-        user_silenced: meta.user_silenced,
-        can_moderate: meta.can_moderate,
-        channel_message_bus_last_id: meta.channel_message_bus_last_id,
-      },
-      registeredChatChannelId: this.chatChannel.id,
-    });
+        const [messages, meta] = this.afterFetchCallback(
+          this.args.channel,
+          results
+        );
 
-    schedule("afterRender", () => {
+        loadingPast
+          ? this.args.channel.prependMessages(messages)
+          : this.args.channel.appendMessages(messages);
+        this.args.channel.details = meta;
+
+        if (!messages.length) {
+          return;
+        }
+
+        if (!loadingPast) {
+          this.scrollToMessage(messageId, { position: "start" });
+        } else {
+          if (this.site.desktopView) {
+            this.scrollToMessage(messages[messages.length - 1].id);
+          }
+        }
+
+        this.fillPaneAttempt();
+      })
+      .catch(() => {
+        this._handleErrors();
+      })
+      .finally(() => {
+        this[loadingMoreKey] = false;
+      });
+  }
+
+  fillPaneAttempt() {
+    next(() => {
       if (this._selfDeleted) {
         return;
       }
 
-      if (this.targetMessageId) {
-        this.scrollToMessage(this.targetMessageId, {
-          highlight: true,
-          position: "top",
-          autoExpand: true,
-        });
-
-        this.set("targetMessageId", null);
-      } else if (fetchingFromLastRead) {
-        this._markLastReadMessage();
+      // safeguard
+      if (this.args.channel.messages.length > 200) {
+        return;
       }
 
-      this.fillPaneAttempt(messages.resultSetMeta);
+      if (!this.args.channel?.canLoadMorePast) {
+        return;
+      }
+
+      schedule("afterRender", () => {
+        const firstMessageId = this.args.channel?.messages?.[0]?.id;
+        if (!firstMessageId) {
+          return;
+        }
+
+        const scroller = document.querySelector(".chat-messages-container");
+        const messageContainer = scroller.querySelector(
+          `.chat-message-container[data-id="${firstMessageId}"]`
+        );
+
+        if (
+          !scroller ||
+          !messageContainer ||
+          !isElementInViewport(messageContainer)
+        ) {
+          return;
+        }
+
+        this._fetchMoreMessagesThrottled({
+          direction: PAST,
+        });
+      });
     });
+  }
 
-    this.setCanLoadMoreDetails(messages.resultSetMeta);
-    this._subscribeToUpdates(this.chatChannel.id);
-  },
-
-  _prepareMessages(messages) {
-    const preparedMessages = A();
-    let previousMessage;
-    messages.forEach((currentMessage) => {
-      let prepared = this._prepareSingleMessage(
-        currentMessage,
-        previousMessage
-      );
-      preparedMessages.push(prepared);
-      previousMessage = prepared;
-    });
-    return preparedMessages;
-  },
-
-  _areDatesOnSameDay(a, b) {
-    return (
-      a.getFullYear() === b.getFullYear() &&
-      a.getMonth() === b.getMonth() &&
-      a.getDate() === b.getDate()
+  _fetchMoreMessagesThrottled(params) {
+    throttle(
+      this,
+      this._fetchMoreMessages,
+      params,
+      FETCH_MORE_MESSAGES_THROTTLE_MS
     );
-  },
+  }
 
-  _prepareSingleMessage(messageData, previousMessageData) {
-    if (previousMessageData) {
-      if (
-        !this._areDatesOnSameDay(
-          new Date(previousMessageData.created_at),
-          new Date(messageData.created_at)
-        )
-      ) {
-        messageData.firstMessageOfTheDayAt = moment(
-          messageData.created_at
-        ).calendar(moment(), {
-          sameDay: `[${I18n.t("chat.chat_message_separator.today")}]`,
-          lastDay: `[${I18n.t("chat.chat_message_separator.yesterday")}]`,
-          lastWeek: "LL",
-          sameElse: "LL",
-        });
+  @bind
+  afterFetchCallback(channel, results) {
+    const messages = [];
+    let foundFirstNew = false;
+
+    results.chat_messages.forEach((messageData) => {
+      // If a message has been hidden it is because the current user is ignoring
+      // the user who sent it, so we want to unconditionally hide it, even if
+      // we are going directly to the target
+      if (this.currentUser.ignored_users) {
+        messageData.hidden = this.currentUser.ignored_users.includes(
+          messageData.user.username
+        );
       }
-    }
-    if (messageData.in_reply_to?.id === previousMessageData?.id) {
-      // Reply-to message is directly above. Remove `in_reply_to` from message.
-      messageData.in_reply_to = null;
-    }
 
-    if (messageData.in_reply_to) {
-      let inReplyToMessage = this.messageLookup[messageData.in_reply_to.id];
-      if (inReplyToMessage) {
-        // Reply to message has already been added
-        messageData.in_reply_to = inReplyToMessage;
+      if (this.requestedTargetMessageId === messageData.id) {
+        messageData.expanded = !messageData.hidden;
       } else {
-        inReplyToMessage = EmberObject.create(messageData.in_reply_to);
-        this._unloadedReplyIds.push(inReplyToMessage.id);
-        this.messageLookup[inReplyToMessage.id] = inReplyToMessage;
+        messageData.expanded = !(messageData.hidden || messageData.deleted_at);
       }
-    } else {
-      // In reply-to is false. Check if previous message was created by same
-      // user and if so, no need to repeat avatar and username
 
+      // newest has to be in after fetcg callback as we don't want to make it
+      // dynamic or it will make the pane jump around, it will disappear on reload
       if (
-        previousMessageData &&
-        !previousMessageData.deleted_at &&
-        Math.abs(
-          new Date(messageData.created_at) -
-            new Date(previousMessageData.created_at)
-        ) < 300000 && // If the time between messages is over 5 minutes, break.
-        messageData.user.id === previousMessageData.user.id
+        !foundFirstNew &&
+        messageData.id > channel.currentUserMembership.last_read_message_id
       ) {
-        messageData.hideUserInfo = true;
+        foundFirstNew = true;
+        messageData.newest = true;
       }
-    }
-    this._handleMessageHidingAndExpansion(messageData);
-    messageData.messageLookupId = this._generateMessageLookupId(messageData);
-    const prepared = ChatMessage.create(messageData);
-    this.messageLookup[messageData.messageLookupId] = prepared;
-    return prepared;
-  },
 
-  _handleMessageHidingAndExpansion(messageData) {
-    if (this.currentUser.ignored_users) {
-      messageData.hidden = this.currentUser.ignored_users.includes(
-        messageData.user.username
-      );
-    }
+      messages.push(ChatMessage.create(channel, messageData));
+    });
 
-    // If a message has been hidden it is because the current user is ignoring
-    // the user who sent it, so we want to unconditionally hide it, even if
-    // we are going directly to the target
-    if (this.targetMessageId && this.targetMessageId === messageData.id) {
-      messageData.expanded = !messageData.hidden;
-    } else {
-      messageData.expanded = !(messageData.hidden || messageData.deleted_at);
-    }
-  },
-
-  _generateMessageLookupId(message) {
-    return message.id || `staged-${message.stagedId}`;
-  },
+    return [messages, results.meta];
+  }
 
   _getLastReadId() {
-    return this.chatChannel.currentUserMembership.last_read_message_id;
-  },
+    return this.args.channel.currentUserMembership.last_read_message_id;
+  }
 
-  _markLastReadMessage(opts = { reRender: false }) {
-    if (opts.reRender) {
-      this.messages.forEach((m) => {
-        if (m.newestMessage) {
-          m.set("newestMessage", false);
-        }
-      });
-    }
-    const lastReadId = this._getLastReadId();
-    if (!lastReadId) {
-      return;
-    }
-
-    const indexOfLastReadMessage =
-      this.messages.findIndex((m) => m.id === lastReadId) || 0;
-    let newestUnreadMessage = this.messages[indexOfLastReadMessage + 1];
-
-    if (newestUnreadMessage && !this.targetMessageId) {
-      newestUnreadMessage.set("newestMessage", true);
-
-      next(() => this.scrollToMessage(newestUnreadMessage.id));
-
-      return;
-    }
-    this._stickScrollToBottom();
-  },
-
+  @debounce(100)
   highlightOrFetchMessage(messageId) {
-    if (this._selfDeleted) {
-      return;
-    }
-
-    this.set("targetMessageId", messageId);
-
-    if (this.messageLookup[messageId]) {
-      // We have the message rendered. highlight and scrollTo
-      this.scrollToMessage(messageId, {
+    const message = this.args.channel.findMessage(messageId);
+    if (message) {
+      this.scrollToMessage(message.id, {
         highlight: true,
-        position: "top",
+        position: "start",
         autoExpand: true,
       });
+      this.requestedTargetMessageId = null;
     } else {
-      this.fetchMessages(this.chatChannel);
+      this.fetchMessages();
     }
-  },
+  }
 
   scrollToMessage(
     messageId,
-    opts = { highlight: false, position: "top", autoExpand: false }
+    opts = { highlight: false, position: "start", autoExpand: false }
   ) {
     if (this._selfDeleted) {
       return;
     }
-    const message = this.messageLookup[messageId];
-    if (message?.deleted_at && opts.autoExpand) {
-      message.set("expanded", true);
+
+    const message = this.args.channel.findMessage(messageId);
+    if (message?.deletedAt && opts.autoExpand) {
+      message.expanded = true;
     }
 
     schedule("afterRender", () => {
-      const messageEl = this._scrollerEl.querySelector(
-        `.chat-message-container[data-id='${messageId}']`
-      );
+      const messageEl =
+        this._scrollerEl.querySelector(
+          `.chat-message-container[data-id='${messageId}']`
+        ) ||
+        this._scrollerEl.querySelector(
+          `.chat-message-container[data-staged-id='${messageId}']`
+        );
 
       if (!messageEl || this._selfDeleted) {
         return;
       }
 
-      this._wrapIOSFix(() => {
-        messageEl.scrollIntoView({
-          block: opts.position === "top" ? "start" : "end",
-        });
-      });
-
       if (opts.highlight) {
         messageEl.classList.add("highlighted");
-
-        // Remove highlighted class, but keep `transition-slow` on for another 2 seconds
-        // to ensure the background color fades smoothly out
-        if (opts.highlight) {
+        discourseLater(() => {
+          messageEl.classList.add("transition-slow");
+        }, 2000);
+        discourseLater(() => {
+          messageEl.classList.remove("highlighted");
           discourseLater(() => {
-            messageEl.classList.add("transition-slow");
+            messageEl.classList.remove("transition-slow");
           }, 2000);
-
-          discourseLater(() => {
-            messageEl.classList.remove("highlighted");
-
-            discourseLater(() => {
-              messageEl.classList.remove("transition-slow");
-            }, 2000);
-          }, 3000);
-        }
+        }, 3000);
       }
-    });
-  },
 
-  @afterRender
-  _stickScrollToBottom() {
-    if (this.ignoreStickyScrolling) {
+      this._iOSFix(() => {
+        messageEl.scrollIntoView({
+          block: opts.position ?? "center",
+        });
+      });
+    });
+  }
+
+  @action
+  didShowMessage(message) {
+    message.visible = true;
+    this.updateLastReadMessage(message);
+    this._throttleComputeSeparators();
+  }
+
+  @action
+  didHideMessage(message) {
+    message.visible = false;
+    this._throttleComputeSeparators();
+  }
+
+  @debounce(READ_INTERVAL_MS)
+  updateLastReadMessage() {
+    if (this._selfDeleted) {
       return;
     }
 
-    this.set("stickyScroll", true);
-
-    if (this._scrollerEl) {
-      // Trigger a tiny scrollTop change so Safari scrollbar is placed at bottom.
-      // Setting to just 0 doesn't work (it's at 0 by default, so there is no change)
-      // Very hacky, but no way to get around this Safari bug
-      this._scrollerEl.scrollTop = -1;
-
-      this._wrapIOSFix(() => {
-        this._scrollerEl.scrollTop = 0;
-        this.set("showScrollToBottomBtn", false);
-      });
+    const lastReadId =
+      this.args.channel.currentUserMembership?.last_read_message_id;
+    const lastUnreadVisibleMessage = this.args.channel.visibleMessages.findLast(
+      (message) => !lastReadId || message.id > lastReadId
+    );
+    if (lastUnreadVisibleMessage) {
+      this.args.channel.updateLastReadMessage(lastUnreadVisibleMessage.id);
     }
-  },
+  }
 
-  onScroll(event) {
+  @action
+  scrollToBottom() {
+    schedule("afterRender", () => {
+      if (this.args.channel.canLoadMoreFuture) {
+        this._fetchAndScrollToLatest();
+      } else {
+        const message =
+          this.args.channel.messages[this.args.channel.messages?.length - 1];
+
+        if (message?.id) {
+          this.scrollToMessage(message.id, { highlight: false });
+          this.hasNewMessages = false;
+        }
+
+        if (message?.stagedId) {
+          this.scrollToMessage(message.stagedId, { highlight: false });
+          this.hasNewMessages = false;
+        }
+      }
+    });
+  }
+
+  onScroll() {
     if (this._selfDeleted) {
       return;
     }
 
     resetIdle();
 
-    const atTop =
-      Math.abs(
-        this._scrollerEl.scrollHeight -
-          this._scrollerEl.clientHeight +
-          this._scrollerEl.scrollTop
-      ) <= STICKY_SCROLL_LENIENCE;
-
-    if (atTop) {
-      this._fetchMoreMessagesThrottled(PAST);
-    } else if (Math.abs(this._scrollerEl.scrollTop) <= STICKY_SCROLL_LENIENCE) {
-      this._fetchMoreMessagesThrottled(FUTURE);
+    if (this.loading || this.loadingMorePast || this.loadingMoreFuture) {
+      return;
     }
 
-    this._calculateStickScroll(event.forceShowScrollToBottom);
-  },
+    const scrollPosition = Math.abs(this._scrollerEl.scrollTop);
+    const total = this._scrollerEl.scrollHeight - this._scrollerEl.clientHeight;
 
-  _calculateStickScroll(forceShowScrollToBottom) {
-    const absoluteScrollTop = Math.abs(this._scrollerEl.scrollTop);
-    const shouldStick = absoluteScrollTop < STICKY_SCROLL_LENIENCE;
+    this.isAlmostDocked = scrollPosition / this._scrollerEl.offsetHeight < 0.67;
+    this.isDocked = scrollPosition <= 1;
 
-    if (forceShowScrollToBottom) {
-      this.set("showScrollToBottomBtn", forceShowScrollToBottom);
-    } else {
-      this.set(
-        "showScrollToBottomBtn",
-        shouldStick
-          ? false
-          : absoluteScrollTop / this._scrollerEl.offsetHeight > 0.67
+    if (
+      this._previousScrollTop - this._scrollerEl.scrollTop >
+      this._previousScrollTop
+    ) {
+      const atTop = this._isBetween(
+        scrollPosition,
+        total - STICKY_SCROLL_LENIENCE,
+        total + STICKY_SCROLL_LENIENCE
       );
-    }
 
-    if (!this.showScrollToBottomBtn) {
-      this.set("hasNewMessages", false);
-    }
+      if (atTop) {
+        this._fetchMoreMessagesThrottled({ direction: PAST });
+      }
+    } else {
+      const atBottom = this._isBetween(
+        scrollPosition,
+        0 + STICKY_SCROLL_LENIENCE,
+        0 - STICKY_SCROLL_LENIENCE
+      );
 
-    if (shouldStick !== this.stickyScroll) {
-      if (shouldStick) {
-        this._stickScrollToBottom();
-      } else {
-        this.set("stickyScroll", false);
+      if (atBottom) {
+        this.hasNewMessages = false;
+        this._fetchMoreMessagesThrottled({ direction: FUTURE });
       }
     }
-  },
 
-  @observes("chatStateManager.isDrawerActive")
-  onFloatHiddenChange() {
-    if (this.chatStateManager.isDrawerActive) {
-      this.set("expanded", true);
-      this._markLastReadMessage({ reRender: true });
-      this._stickScrollToBottom();
-    }
-  },
+    this._previousScrollTop = this._scrollerEl.scrollTop;
+  }
+
+  _isBetween(target, a, b) {
+    const min = Math.min.apply(Math, [a, b]);
+    const max = Math.max.apply(Math, [a, b]);
+    return target > min && target < max;
+  }
 
   removeMessage(msgData) {
-    delete this.messageLookup[msgData.id];
-  },
+    const message = this.args.channel.findMessage(msgData.id);
+    if (message) {
+      this.args.channel.removeMessage(message);
+    }
+  }
 
   handleMessage(data) {
     switch (data.type) {
@@ -755,92 +603,83 @@ export default Component.extend({
         this.handleFlaggedMessage(data);
         break;
     }
-  },
+  }
 
-  handleSentMessage(data) {
-    if (this.chatChannel.isFollowing) {
-      this.chatChannel.set("last_message_sent_at", new Date());
-    }
+  _handleOwnSentMessage(data) {
+    const stagedMessage = this.args.channel.findStagedMessage(data.staged_id);
+    if (stagedMessage) {
+      stagedMessage.error = null;
+      stagedMessage.id = data.chat_message.id;
+      stagedMessage.stagedId = null;
+      stagedMessage.excerpt = data.chat_message.excerpt;
+      stagedMessage.threadId = data.chat_message.thread_id;
+      stagedMessage.channelId = data.chat_message.chat_channel_id;
 
-    if (data.chat_message.user.id === this.currentUser.id) {
-      // User sent this message. Check staged messages to see if this client sent the message.
-      // If so, need to update the staged message with and id.
-      const stagedMessage = this.messageLookup[`staged-${data.stagedId}`];
-      if (stagedMessage) {
-        stagedMessage.setProperties({
-          error: null,
-          staged: false,
-          id: data.chat_message.id,
-          staged_id: null,
-          excerpt: data.chat_message.excerpt,
-          thread_id: data.chat_message.thread_id,
-          chat_channel_id: data.chat_message.chat_channel_id,
-        });
+      const inReplyToMsg = this.args.channel.findMessage(
+        data.chat_message.in_reply_to?.id
+      );
+      if (inReplyToMsg && !inReplyToMsg.threadId) {
+        inReplyToMsg.threadId = data.chat_message.thread_id;
+      }
 
-        const inReplyToMsg =
-          this.messageLookup[data.chat_message.in_reply_to?.id];
-        if (inReplyToMsg && !inReplyToMsg.thread_id) {
-          inReplyToMsg.set("thread_id", data.chat_message.thread_id);
-        }
-
-        // some markdown is cooked differently on the server-side, e.g.
-        // quotes, avatar images etc.
-        if (
-          data.chat_message.cooked &&
-          data.chat_message.cooked !== stagedMessage.cooked
-        ) {
-          stagedMessage.set("cooked", data.chat_message.cooked);
-        }
-        this.appEvents.trigger(
-          `chat-message-staged-${data.stagedId}:id-populated`
-        );
-
-        this.messageLookup[data.chat_message.id] = stagedMessage;
-        delete this.messageLookup[`staged-${data.stagedId}`];
-        return;
+      // some markdown is cooked differently on the server-side, e.g.
+      // quotes, avatar images etc.
+      if (data.chat_message?.cooked !== stagedMessage.cooked) {
+        stagedMessage.cooked = data.chat_message.cooked;
       }
     }
+  }
 
-    const preparedMessage = this._prepareSingleMessage(
-      data.chat_message,
-      this.messages[this.messages.length - 1]
-    );
-
-    this.messages.pushObject(preparedMessage);
-
-    if (this.messages.length >= MAX_RECENT_MSGS) {
-      this.removeMessage(this.messages.shiftObject());
+  handleSentMessage(data) {
+    if (this.args.channel.isFollowing) {
+      this.args.channel.lastMessageSentAt = new Date();
     }
-    this.reStickScrollIfNeeded();
-  },
+
+    if (data.chat_message.user.id === this.currentUser.id && data.staged_id) {
+      return this._handleOwnSentMessage(data);
+    }
+
+    if (this.args.channel.canLoadMoreFuture) {
+      // If we can load more messages, we just notice the user of new messages
+      this.hasNewMessages = true;
+    } else if (this.isDocked) {
+      // If we are at the bottom, we append the message and scroll to it
+      const message = ChatMessage.create(this.args.channel, data.chat_message);
+      this.args.channel.appendMessages([message]);
+      this.scrollToBottom();
+    } else {
+      // If we are almost at the bottom, we append the message and notice the user
+      const message = ChatMessage.create(this.args.channel, data.chat_message);
+      this.args.channel.appendMessages([message]);
+      this.hasNewMessages = true;
+    }
+  }
 
   handleProcessedMessage(data) {
-    const message = this.messageLookup[data.chat_message.id];
+    const message = this.args.channel.findMessage(data.chat_message.id);
     if (message) {
-      message.set("cooked", data.chat_message.cooked);
-      this.reStickScrollIfNeeded();
+      message.cooked = data.chat_message.cooked;
+      this.scrollToBottom();
     }
-  },
+  }
 
   handleRefreshMessage(data) {
-    const message = this.messageLookup[data.chat_message.id];
+    const message = this.args.channel.findMessage(data.chat_message.id);
     if (message) {
-      this.appEvents.trigger("chat:refresh-message", message);
+      message.version = message.version + 1;
     }
-  },
+  }
 
   handleEditMessage(data) {
-    const message = this.messageLookup[data.chat_message.id];
+    const message = this.args.channel.findMessage(data.chat_message.id);
     if (message) {
-      message.setProperties({
-        message: data.chat_message.message,
-        cooked: data.chat_message.cooked,
-        excerpt: data.chat_message.excerpt,
-        uploads: cloneJSON(data.chat_message.uploads || []),
-        edited: true,
-      });
+      message.message = data.chat_message.message;
+      message.cooked = data.chat_message.cooked;
+      message.excerpt = data.chat_message.excerpt;
+      message.uploads = cloneJSON(data.chat_message.uploads || []);
+      message.edited = true;
     }
-  },
+  }
 
   handleBulkDeleteMessage(data) {
     data.deleted_ids.forEach((deletedId) => {
@@ -849,109 +688,68 @@ export default Component.extend({
         deleted_at: data.deleted_at,
       });
     });
-  },
+  }
 
   handleDeleteMessage(data) {
     const deletedId = data.deleted_id;
-    const targetMsg = this.messageLookup[deletedId];
-    if (this.currentUser.staff || this.currentUser.id === targetMsg.user.id) {
-      targetMsg.setProperties({
-        deleted_at: data.deleted_at,
-        expanded: false,
-      });
-    } else {
-      this.messages.removeObject(targetMsg);
-      this.messageLookup[deletedId] = null;
+    const targetMsg = this.args.channel.findMessage(deletedId);
+
+    if (!targetMsg) {
+      return;
     }
-  },
+
+    if (this.currentUser.staff || this.currentUser.id === targetMsg.user.id) {
+      targetMsg.deletedAt = data.deleted_at;
+      targetMsg.expanded = false;
+    } else {
+      this.args.channel.removeMessage(targetMsg);
+    }
+  }
 
   handleReactionMessage(data) {
-    this.appEvents.trigger(
-      `chat-message-${data.chat_message_id}:reaction`,
-      data
-    );
-  },
-
-  handleRestoreMessage(data) {
-    let message = this.messageLookup[data.chat_message.id];
-    if (message) {
-      message.set("deleted_at", null);
-    } else {
-      // The message isn't present in the list for this user. Find the index
-      // where we should push the message to. Binary search is O(log(n))
-      let newMessageIndex = this.binarySearchForMessagePosition(
-        this.messages,
-        message
-      );
-      const previousMessage =
-        newMessageIndex > 0 ? this.messages[newMessageIndex - 1] : null;
-      message = this._prepareSingleMessage(data.chat_message, previousMessage);
-      if (newMessageIndex === 0) {
-        return;
-      } // Restored post is too old to show
-
-      this.messages.splice(newMessageIndex, 0, message);
-      this.notifyPropertyChange("messages");
-    }
-  },
-
-  binarySearchForMessagePosition(messages, newMessage) {
-    const newMessageCreatedAt = Date.parse(newMessage.created_at);
-    if (newMessageCreatedAt < Date.parse(messages[0].created_at)) {
-      return 0;
-    }
-    if (
-      newMessageCreatedAt > Date.parse(messages[messages.length - 1].created_at)
-    ) {
-      return messages.length;
-    }
-    let m = 0;
-    let n = messages.length - 1;
-    while (m <= n) {
-      let k = Math.floor((n + m) / 2);
-      let comparison = this.compareCreatedAt(newMessageCreatedAt, messages[k]);
-      if (comparison > 0) {
-        m = k + 1;
-      } else if (comparison < 0) {
-        n = k - 1;
-      } else {
-        return k;
+    if (data.user.id !== this.currentUser.id) {
+      const message = this.args.channel.findMessage(data.chat_message_id);
+      if (message) {
+        message.react(data.emoji, data.action, data.user, this.currentUser.id);
       }
     }
-    return m;
-  },
+  }
 
-  compareCreatedAt(newMessageCreatedAt, comparatorMessage) {
-    const compareDate = Date.parse(comparatorMessage.created_at);
-    if (newMessageCreatedAt > compareDate) {
-      return 1;
-    } else if (newMessageCreatedAt < compareDate) {
-      return -1;
+  handleRestoreMessage(data) {
+    const message = this.args.channel.findMessage(data.chat_message.id);
+    if (message) {
+      message.deletedAt = null;
+    } else {
+      this.args.channel.addMessages([
+        ChatMessage.create(this.args.channel, data.chat_message),
+      ]);
     }
-    return 0;
-  },
+  }
 
   handleMentionWarning(data) {
-    this.messageLookup[data.chat_message_id]?.set("mentionWarning", data);
-  },
+    const message = this.args.channel.findMessage(data.chat_message_id);
+    if (message) {
+      message.mentionWarning = EmberObject.create(data);
+    }
+  }
 
   handleSelfFlaggedMessage(data) {
-    this.messageLookup[data.chat_message_id]?.set(
-      "user_flag_status",
-      data.user_flag_status
-    );
-  },
+    const message = this.args.channel.findMessage(data.chat_message_id);
+    if (message) {
+      message.userFlagStatus = data.user_flag_status;
+    }
+  }
 
   handleFlaggedMessage(data) {
-    this.messageLookup[data.chat_message_id]?.set(
-      "reviewable_id",
-      data.reviewable_id
-    );
-  },
+    const message = this.args.channel.findMessage(data.chat_message_id);
+    if (message) {
+      message.reviewableId = data.reviewable_id;
+    }
+  }
 
   get _selfDeleted() {
-    return !this.element || this.isDestroying || this.isDestroyed;
-  },
+    return this.isDestroying || this.isDestroyed;
+  }
 
   @action
   sendMessage(message, uploads = []) {
@@ -961,8 +759,8 @@ export default Component.extend({
       return;
     }
 
-    this.set("sendingLoading", true);
-    this._setDraftForChannel(null);
+    this.sendingLoading = true;
+    this.args.channel.draft = ChatMessageDraft.create();
 
     // TODO: all send message logic is due for massive refactoring
     // This is all the possible case Im currently aware of
@@ -972,78 +770,61 @@ export default Component.extend({
     // - message to a direct channel you were tracking (preview = false, not draft)
     // - message to a public channel you were tracking (preview = false, not draft)
     // - message to a channel when we haven't loaded all future messages yet.
-    if (!this.chatChannel.isFollowing || this.chatChannel.isDraft) {
-      this.set("loading", true);
+    if (!this.args.channel.isFollowing || this.args.channel.isDraft) {
+      this.loading = true;
 
       return this._upsertChannelWithMessage(
-        this.chatChannel,
+        this.args.channel,
         message,
         uploads
       ).finally(() => {
         if (this._selfDeleted) {
           return;
         }
-        this.set("loading", false);
-        this.set("sendingLoading", false);
+        this.loading = false;
+        this.sendingLoading = false;
         this._resetAfterSend();
-        this._stickScrollToBottom();
+        this.scrollToBottom();
       });
     }
 
-    this.set("_nextStagedMessageId", this._nextStagedMessageId + 1);
-    return this.chat.loadCookFunction(this.site.categories).then((cook) => {
-      const cooked = cook(message);
-      const stagedId = this._nextStagedMessageId;
-      let data = {
-        message,
-        cooked,
-        staged_id: stagedId,
-        upload_ids: uploads.map((upload) => upload.id),
-      };
-      if (this.replyToMsg) {
-        data.in_reply_to_id = this.replyToMsg.id;
-      }
-
-      // Start ajax request but don't return here, we want to stage the message instantly when all messages are loaded.
-      // Otherwise, we'll fetch latest and scroll to the one we just created.
-      // Return a resolved promise below.
-      const msgCreationPromise = this.chatApi
-        .sendMessage(this.chatChannel.id, data)
-        .catch((error) => {
-          this._onSendError(data.staged_id, error);
-        })
-        .finally(() => {
-          if (this._selfDeleted) {
-            return;
-          }
-          this.set("sendingLoading", false);
-        });
-
-      if (this.details?.can_load_more_future) {
-        msgCreationPromise.then(() => this._fetchAndScrollToLatest());
-      } else {
-        const stagedMessage = this._prepareSingleMessage(
-          // We need to add the user and created at for presentation of staged message
-          {
-            message,
-            cooked,
-            stagedId,
-            uploads: cloneJSON(uploads),
-            staged: true,
-            user: this.currentUser,
-            in_reply_to: this.replyToMsg,
-            created_at: new Date(),
-          },
-          this.messages[this.messages.length - 1]
-        );
-        this.messages.pushObject(stagedMessage);
-        this._stickScrollToBottom();
-      }
-
-      this._resetAfterSend();
-      this.appEvents.trigger("chat-composer:reply-to-set", null);
+    const stagedMessage = ChatMessage.createStagedMessage(this.args.channel, {
+      message,
+      created_at: new Date(),
+      uploads: cloneJSON(uploads),
+      user: this.currentUser,
     });
-  },
+
+    if (this.replyToMsg) {
+      stagedMessage.inReplyTo = this.replyToMsg;
+    }
+
+    this.args.channel.appendMessages([stagedMessage]);
+    if (!this.args.channel.canLoadMoreFuture) {
+      this.scrollToBottom();
+    }
+
+    return this.chatApi
+      .sendMessage(this.args.channel.id, {
+        message: stagedMessage.message,
+        in_reply_to_id: stagedMessage.inReplyTo?.id,
+        staged_id: stagedMessage.stagedId,
+        upload_ids: stagedMessage.uploads.map((upload) => upload.id),
+      })
+      .then(() => {
+        this.scrollToBottom();
+      })
+      .catch((error) => {
+        this._onSendError(stagedMessage.stagedId, error);
+      })
+      .finally(() => {
+        if (this._selfDeleted) {
+          return;
+        }
+        this.sendingLoading = false;
+        this._resetAfterSend();
+      });
+  }
 
   async _upsertChannelWithMessage(channel, message, uploads) {
     let promise = Promise.resolve(channel);
@@ -1065,37 +846,37 @@ export default Component.extend({
         this.router.transitionTo("chat.channel", "-", c.id);
       })
     );
-  },
+  }
 
   _onSendError(stagedId, error) {
-    const stagedMessage = this.messageLookup[`staged-${stagedId}`];
+    const stagedMessage = this.args.channel.findStagedMessage(stagedId);
     if (stagedMessage) {
       if (error.jqXHR?.responseJSON?.errors?.length) {
-        stagedMessage.set("error", error.jqXHR.responseJSON.errors[0]);
+        stagedMessage.error = error.jqXHR.responseJSON.errors[0];
       } else {
         this.chat.markNetworkAsUnreliable();
-        stagedMessage.set("error", "network_error");
+        stagedMessage.error = "network_error";
       }
     }
 
     this._resetAfterSend();
-  },
+  }
 
   @action
   resendStagedMessage(stagedMessage) {
-    this.set("sendingLoading", true);
+    this.sendingLoading = true;
 
-    stagedMessage.set("error", null);
+    stagedMessage.error = null;
 
     const data = {
       cooked: stagedMessage.cooked,
       message: stagedMessage.message,
-      upload_ids: stagedMessage.upload_ids,
+      upload_ids: stagedMessage.uploads.map((upload) => upload.id),
       staged_id: stagedMessage.stagedId,
     };
 
     this.chatApi
-      .sendMessage(this.chatChannel.id, data)
+      .sendMessage(this.args.channel.id, data)
       .catch((error) => {
         this._onSendError(data.staged_id, error);
       })
@@ -1106,18 +887,18 @@ export default Component.extend({
         if (this._selfDeleted) {
           return;
         }
-        this.set("sendingLoading", false);
+        this.sendingLoading = false;
       });
-  },
+  }
 
   @action
   editMessage(chatMessage, newContent, uploads) {
-    this.set("sendingLoading", true);
+    this.sendingLoading = true;
     let data = {
       new_message: newContent,
       upload_ids: (uploads || []).map((upload) => upload.id),
     };
-    return ajax(`/chat/${this.chatChannel.id}/edit/${chatMessage.id}`, {
+    return ajax(`/chat/${this.args.channel.id}/edit/${chatMessage.id}`, {
       type: "PUT",
       data,
     })
@@ -1129,127 +910,107 @@ export default Component.extend({
         if (this._selfDeleted) {
           return;
         }
-        this.set("sendingLoading", false);
+        this.sendingLoading = false;
       });
-  },
-
-  _resetChannelState() {
-    this._unsubscribeToUpdates(this.registeredChatChannelId);
-    this.messages.clear();
-    this.messageLookup = {};
-    this.set("allPastMessagesLoaded", false);
-    this.set("registeredChatChannelId", null);
-    this.set("selectingMessages", false);
-  },
+  }
 
   _resetAfterSend() {
     if (this._selfDeleted) {
       return;
     }
-    this.setProperties({
-      replyToMsg: null,
-      editingMessage: null,
-    });
-    this.chatComposerPresenceManager.notifyState(this.chatChannel.id, false);
-  },
+
+    this.replyToMsg = null;
+    this.editingMessage = null;
+    this.chatComposerPresenceManager.notifyState(this.args.channel.id, false);
+    this.appEvents.trigger("chat-composer:reply-to-set", null);
+  }
 
   @action
   editLastMessageRequested() {
-    let lastUserMessage = null;
-    for (
-      let messageIndex = this.messages.length - 1;
-      messageIndex >= 0;
-      messageIndex--
-    ) {
-      let message = this.messages[messageIndex];
-      if (
-        !message.staged &&
+    const lastUserMessage = this.args.channel.messages.find(
+      (message) =>
         message.user.id === this.currentUser.id &&
+        !message.staged &&
         !message.error
-      ) {
-        lastUserMessage = message;
-        break;
-      }
-    }
+    );
+
     if (lastUserMessage) {
-      this.set("editingMessage", lastUserMessage);
+      this.editingMessage = lastUserMessage;
       this._focusComposer();
     }
-  },
+  }
 
   @action
   setReplyTo(messageId) {
     if (messageId) {
       this.cancelEditing();
-      this.set("replyToMsg", this.messageLookup[messageId]);
-      this.appEvents.trigger("chat-composer:reply-to-set", this.replyToMsg);
+
+      const message = this.args.channel.findMessage(messageId);
+      this.replyToMsg = message;
+      this.appEvents.trigger("chat-composer:reply-to-set", message);
       this._focusComposer();
     } else {
-      this.set("replyToMsg", null);
+      this.replyToMsg = null;
       this.appEvents.trigger("chat-composer:reply-to-set", null);
     }
-  },
+  }
 
   @action
   replyMessageClicked(message) {
-    const replyMessageFromLookup = this.messageLookup[message.id];
-    if (this._unloadedReplyIds.includes(message.id)) {
-      // Message is not present in the loaded messages. Fetch it!
-      this.set("targetMessageId", message.id);
-      this.fetchMessages(this.chatChannel);
-    } else {
+    const replyMessageFromLookup = this.args.channel.findMessage(message.id);
+    if (replyMessageFromLookup) {
       this.scrollToMessage(replyMessageFromLookup.id, {
         highlight: true,
-        position: "top",
+        position: "start",
         autoExpand: true,
       });
+    } else {
+      // Message is not present in the loaded messages. Fetch it!
+      this.requestedTargetMessageId = message.id;
+      this.fetchMessages();
     }
-  },
+  }
 
   @action
   editButtonClicked(messageId) {
-    const message = this.messageLookup[messageId];
-    this.set("editingMessage", message);
-    next(this.reStickScrollIfNeeded.bind(this));
+    const message = this.args.channel.findMessage(messageId);
+    this.editingMessage = message;
+    this.scrollToBottom();
     this._focusComposer();
-  },
+  }
 
-  @discourseComputed("details.user_silenced")
-  canInteractWithChat(userSilenced) {
-    return !userSilenced;
-  },
+  get canInteractWithChat() {
+    return !this.args.channel?.userSilenced;
+  }
 
-  @discourseComputed
-  chatProgressBarContainer() {
+  get chatProgressBarContainer() {
     return document.querySelector("#chat-progress-bar-container");
-  },
+  }
 
-  @discourseComputed("messages.@each.selected")
-  selectedMessageIds(messages) {
-    return messages.filter((m) => m.selected).map((m) => m.id);
-  },
+  get selectedMessageIds() {
+    return this.args.channel?.messages
+      ?.filter((m) => m.selected)
+      ?.map((m) => m.id);
+  }
 
   @action
   onStartSelectingMessages(message) {
     this._lastSelectedMessage = message;
-    this.set("selectingMessages", true);
-  },
+    this.selectingMessages = true;
+  }
 
   @action
   cancelSelecting() {
-    this.set("selectingMessages", false);
-    this.messages.setEach("selected", false);
-  },
+    this.selectingMessages = false;
+    this.args.channel.messages.forEach((message) => {
+      message.selected = false;
+    });
+  }
 
   @action
   onSelectMessage(message) {
     this._lastSelectedMessage = message;
-  },
-
-  @action
-  navigateToIndex() {
-    this.router.transitionTo("chat.index");
-  },
+  }
 
   @action
   bulkSelectMessages(message, checked) {
@@ -1262,13 +1023,13 @@ export default Component.extend({
     );
 
     for (let i = sortedIndices[0]; i <= sortedIndices[1]; i++) {
-      this.messages[i].set("selected", checked);
+      this.args.channel.messages[i].selected = checked;
     }
-  },
+  }
 
   _findIndexOfMessage(message) {
-    return this.messages.findIndex((m) => m.id === message.id);
-  },
+    return this.args.channel.messages.findIndex((m) => m.id === message.id);
+  }
 
   @action
   onCloseFullScreen() {
@@ -1279,52 +1040,58 @@ export default Component.extend({
         this.chatStateManager.lastKnownChatURL
       );
     });
-  },
+  }
 
   @action
   cancelEditing() {
-    this.set("editingMessage", null);
-  },
-
-  @action
-  _setDraftForChannel(draft) {
-    if (this.chatChannel.isDraft) {
-      return;
-    }
-
-    if (draft?.replyToMsg) {
-      draft.replyToMsg = {
-        id: draft.replyToMsg.id,
-        excerpt: draft.replyToMsg.excerpt,
-        user: draft.replyToMsg.user,
-      };
-    }
-    this.chat.setDraftForChannel(this.chatChannel, draft);
-    this.set("draft", draft);
-  },
+    this.editingMessage = null;
+  }
 
   @action
   setInReplyToMsg(inReplyMsg) {
-    this.set("replyToMsg", inReplyMsg);
-  },
+    this.replyToMsg = inReplyMsg;
+  }
 
   @action
   composerValueChanged(value, uploads, replyToMsg) {
-    if (!this.editingMessage && !this.chatChannel.directMessageChannelDraft) {
-      this._setDraftForChannel({ value, uploads, replyToMsg });
+    if (!this.editingMessage && !this.args.channel.directMessageChannelDraft) {
+      this.args.channel.draft.message = value;
+      this.args.channel.draft.uploads = uploads;
+      this.args.channel.draft.replyToMsg = replyToMsg;
     }
 
-    if (!this.chatChannel.directMessageChannelDraft) {
+    if (!this.args.channel.directMessageChannelDraft) {
       this._reportReplyingPresence(value);
     }
-  },
 
-  @action
-  reStickScrollIfNeeded() {
-    if (this.stickyScroll) {
-      this._stickScrollToBottom();
+    this._persistDraft();
+  }
+
+  @debounce(2000)
+  _persistDraft() {
+    if (!this.args.channel.draft) {
+      return;
     }
-  },
+
+    ajax("/chat/drafts.json", {
+      type: "POST",
+      data: {
+        chat_channel_id: this.args.channel.id,
+        data: this.args.channel.draft.toJSON(),
+      },
+      ignoreUnsent: false,
+    })
+      .then(() => {
+        this.chat.markNetworkAsReliable();
+      })
+      .catch((error) => {
+        // we ignore a draft which can't be saved because it's too big
+        // and only deal with network error for now
+        if (!error.jqXHR?.responseJSON?.errors?.length) {
+          this.chat.markNetworkAsUnreliable();
+        }
+      });
+  }
 
   @action
   onHoverMessage(message, options = {}, event) {
@@ -1360,7 +1127,7 @@ export default Component.extend({
           ".chat-message-actions-desktop-anchor"
         )
       ) {
-        this.set("hoveredMessageId", message?.id);
+        this.hoveredMessageId = message?.id;
         return;
       }
     }
@@ -1371,7 +1138,7 @@ export default Component.extend({
       message,
       250
     );
-  },
+  }
 
   @bind
   debouncedOnHoverMessage(message) {
@@ -1379,57 +1146,51 @@ export default Component.extend({
       return;
     }
 
-    this.set(
-      "hoveredMessageId",
-      message?.id && message.id !== this.hoveredMessageId ? message.id : null
-    );
-  },
+    this.hoveredMessageId =
+      message?.id && message.id !== this.hoveredMessageId ? message.id : null;
+  }
 
   _reportReplyingPresence(composerValue) {
     if (this._selfDeleted) {
       return;
     }
 
-    if (this.chatChannel.isDraft) {
+    if (this.args.channel.isDraft) {
       return;
     }
 
     const replying = !this.editingMessage && !!composerValue;
-    this.chatComposerPresenceManager.notifyState(this.chatChannel.id, replying);
-  },
-
-  @action
-  restickScrolling(event) {
-    event.preventDefault();
-
-    return this._fetchAndScrollToLatest();
-  },
+    this.chatComposerPresenceManager.notifyState(
+      this.args.channel.id,
+      replying
+    );
+  }
 
   _focusComposer() {
     this.appEvents.trigger("chat:focus-composer");
-  },
+  }
 
   _unsubscribeToUpdates(channelId) {
     this.messageBus.unsubscribe(`/chat/${channelId}`, this.onMessage);
-  },
+  }
 
   _subscribeToUpdates(channelId) {
     this._unsubscribeToUpdates(channelId);
     this.messageBus.subscribe(
       `/chat/${channelId}`,
       this.onMessage,
-      this.details.channel_message_bus_last_id
+      this.args.channel.channelMessageBusLastId
     );
-  },
+  }
 
   @bind
   onMessage(busData) {
-    if (!this.details.can_load_more_future || busData.type !== "sent") {
+    if (!this.args.channel.canLoadMoreFuture || busData.type !== "sent") {
       this.handleMessage(busData);
-    } else {
-      this.set("hasNewMessages", true);
+    } else if (busData.chat_message.user.id !== this.currentUser.id) {
+      this.hasNewMessages = true;
     }
-  },
+  }
 
   @bind
   _forceBodyScroll() {
@@ -1442,13 +1203,13 @@ export default Component.extend({
     ) {
       document.documentElement.scrollTo(0, 0);
     }
-  },
+  }
 
   _fetchAndScrollToLatest() {
-    return this.fetchMessages(this.chatChannel, {
+    return this.fetchMessages({
       fetchFromLastMessage: true,
     });
-  },
+  }
 
   _handleErrors(error) {
     switch (error?.jqXHR?.status) {
@@ -1459,12 +1220,12 @@ export default Component.extend({
       default:
         throw error;
     }
-  },
+  }
 
   // since -webkit-overflow-scrolling: touch can't be used anymore to disable momentum scrolling
   // we now use this hack to disable it
   @bind
-  _wrapIOSFix(callback) {
+  _iOSFix(callback) {
     if (!this._scrollerEl) {
       return;
     }
@@ -1473,7 +1234,7 @@ export default Component.extend({
       this._scrollerEl.style.overflow = "hidden";
     }
 
-    callback();
+    callback?.();
 
     if (this.capabilities.isIOS) {
       discourseLater(() => {
@@ -1484,5 +1245,79 @@ export default Component.extend({
         this._scrollerEl.style.overflow = "auto";
       }, 25);
     }
-  },
-});
+  }
+
+  @action
+  addAutoFocusEventListener() {
+    document.addEventListener("keydown", this._autoFocus);
+  }
+
+  @action
+  removeAutoFocusEventListener() {
+    document.removeEventListener("keydown", this._autoFocus);
+  }
+
+  @bind
+  _autoFocus(event) {
+    const { key, metaKey, ctrlKey, code, target } = event;
+
+    if (
+      !key ||
+      // Handles things like Enter, Tab, Shift
+      key.length > 1 ||
+      // Don't need to focus if the user is beginning a shortcut.
+      metaKey ||
+      ctrlKey ||
+      // Space's key comes through as ' ' so it's not covered by key
+      code === "Space" ||
+      // ? is used for the keyboard shortcut modal
+      key === "?"
+    ) {
+      return;
+    }
+
+    if (!target || /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName)) {
+      return;
+    }
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    const composer = document.querySelector(".chat-composer-input");
+    if (composer && !this.args.channel.isDraft) {
+      this.appEvents.trigger("chat:insert-text", key);
+      composer.focus();
+    }
+  }
+
+  _throttleComputeSeparators() {
+    throttle(this, this._computeSeparators, 32, false);
+  }
+
+  _computeSeparators() {
+    next(() => {
+      schedule("afterRender", () => {
+        const dates = this._scrollerEl.querySelectorAll(
+          ".chat-message-separator-date"
+        );
+        const scrollHeight = document.querySelector(
+          ".chat-messages-scroll"
+        ).scrollHeight;
+
+        const reversedDates = [...dates].reverse();
+
+        // TODO (joffrey): optimize this code to trigger less layout computation
+        reversedDates.forEach((date, index) => {
+          if (index > 0) {
+            date.style.bottom =
+              scrollHeight - reversedDates[index - 1].offsetTop + "px";
+          } else {
+            date.style.bottom = 0;
+          }
+
+          date.style.top = date.nextElementSibling.offsetTop + "px";
+        });
+      });
+    });
+  }
+}
