@@ -181,6 +181,7 @@ group :development do
   gem "binding_of_caller"
   gem "yaml-lint"
   gem "yard"
+  gem "ruby-lsp", require: false
 end
 
 if ENV["ALLOW_DEV_POPULATE"] == "1"
