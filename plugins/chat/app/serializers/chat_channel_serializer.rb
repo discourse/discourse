@@ -118,6 +118,7 @@ class ChatChannelSerializer < ApplicationSerializer
           @opts[:new_mentions_message_bus_last_id] ||
             MessageBus.last_id(ChatPublisher.new_mentions_message_bus_channel(object.id)),
       },
+      can_join_chat_channel: scope.can_join_chat_channel?(object),
     }
   end
 

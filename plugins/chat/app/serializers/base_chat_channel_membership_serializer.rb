@@ -8,10 +8,5 @@ class BaseChatChannelMembershipSerializer < ApplicationSerializer
              :chat_channel_id,
              :last_read_message_id,
              :unread_count,
-             :unread_mentions,
-             :meta
-
-  def meta
-    { can_join_chat_channel: scope.can_join_chat_channel?(object.chat_channel) }
-  end
+             :unread_mentions
 end

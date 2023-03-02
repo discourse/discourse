@@ -117,7 +117,7 @@ export default class ChatChannel extends RestModel {
   }
 
   get canJoin() {
-    return this.currentUserMembership.meta?.can_join_chat_channel;
+    return this.meta.can_join_chat_channel;
   }
 
   get visibleMessages() {
