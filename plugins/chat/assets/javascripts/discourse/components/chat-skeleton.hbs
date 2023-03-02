@@ -1,13 +1,31 @@
-<div class="chat-skeleton -animation">
-  {{#each this.placeholders as |rows|}}
+<div
+  class="chat-skeleton -animation"
+  {{did-insert @onInsert}}
+  {{will-destroy @onDestroy}}
+>
+  {{#each this.placeholders as |placeholder|}}
     <div class="chat-skeleton__body">
       <div class="chat-skeleton__message">
         <div class="chat-skeleton__message-avatar"></div>
         <div class="chat-skeleton__message-poster"></div>
         <div class="chat-skeleton__message-content">
-          {{#each rows as |row|}}
-            <div class="chat-skeleton__message-msg" style={{row}}></div>
-          {{/each}}
+          {{#if placeholder.image}}
+            <div class="chat-skeleton__message-img"></div>
+          {{/if}}
+
+          <div class="chat-skeleton__message-text">
+            {{#each placeholder.rows as |row|}}
+              <div class="chat-skeleton__message-msg" style={{row}}></div>
+            {{/each}}
+          </div>
+
+          {{#if placeholder.reactions}}
+            <div class="chat-skeleton__message-reactions">
+              {{#each placeholder.reactions}}
+                <div class="chat-skeleton__message-reaction"></div>
+              {{/each}}
+            </div>
+          {{/if}}
         </div>
       </div>
     </div>

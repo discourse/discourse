@@ -234,6 +234,39 @@ export default class ChatApi extends Service {
   }
 
   /**
+   * Returns messages of a channel, from the last message or a specificed target.
+   * @param {number} channelId - The ID of the channel.
+   * @param {object} data - Params of the query.
+   * @param {integer} data.targetMessageId - ID of the targeted message.
+   * @param {integer} data.messageId - ID of the targeted message.
+   * @param {integer} data.direction - Fetch past or future messages.
+   * @param {integer} data.pageSize - Max number of messages to fetch.
+   * @returns {Promise}
+   */
+  async messages(channelId, data = {}) {
+    let path;
+    const args = {};
+
+    if (data.targetMessageId) {
+      path = `/chat/lookup/${data.targetMessageId}`;
+      args.chat_channel_id = channelId;
+    } else {
+      args.page_size = data.pageSize;
+      path = `/chat/${channelId}/messages`;
+
+      if (data.messageId) {
+        args.message_id = data.messageId;
+      }
+
+      if (data.direction) {
+        args.direction = data.direction;
+      }
+    }
+
+    return ajax(path, { data: args });
+  }
+
+  /**
    * Update notifications settings of current user for a channel.
    * @param {number} channelId - The ID of the channel.
    * @param {object} data - The settings to modify.

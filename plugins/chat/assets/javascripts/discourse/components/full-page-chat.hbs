@@ -1,7 +1,6 @@
 {{#if this.chat.activeChannel}}
   <ChatLivePane
-    @chatChannel={{this.chat.activeChannel}}
-    @onBackClick={{action "navigateToIndex"}}
+    @channel={{this.chat.activeChannel}}
     @targetMessageId={{readonly @targetMessageId}}
   />
 {{/if}}

@@ -1,6 +1,7 @@
 {{! template-lint-disable no-invalid-interactive }}
 
-<ChatMessageSeparator @message={{@message}} />
+<ChatMessageSeparatorDate @message={{@message}} />
+<ChatMessageSeparatorNew @message={{@message}} />
 
 {{#if
   (and
@@ -40,19 +41,22 @@
   {{did-insert this.setMessageActionsAnchors}}
   {{did-insert this.decorateCookedMessage}}
   {{did-update this.decorateCookedMessage @message.id}}
+  {{did-update this.decorateCookedMessage @message.version}}
   {{on "touchmove" this.handleTouchMove passive=true}}
   {{on "touchstart" this.handleTouchStart passive=true}}
   {{on "touchend" this.handleTouchEnd passive=true}}
   {{on "mouseenter" (fn @onHoverMessage @message (hash desktopOnly=true))}}
   {{on "mouseleave" (fn @onHoverMessage null (hash desktopOnly=true))}}
-  {{chat/track-message-visibility}}
   class={{concat-class
     "chat-message-container"
-    (if @isHovered "is-hovered")
     (if @selectingMessages "selecting-messages")
   }}
-  data-id={{or @message.id @message.stagedId}}
+  data-id={{@message.id}}
   data-staged-id={{if @message.staged @message.stagedId}}
+  {{chat/track-message
+    (fn @didShowMessage @message)
+    (fn @didHideMessage @message)
+  }}
 >
   {{#if this.show}}
     {{#if @selectingMessages}}
@@ -85,35 +89,17 @@
         class={{concat-class
           "chat-message"
           (if @message.staged "chat-message-staged")
-          (if @message.deleted_at "deleted")
-          (if @message.in_reply_to "is-reply")
+          (if @message.deletedAt "deleted")
+          (if (and @message.inReplyTo (not this.hideReplyToInfo)) "is-reply")
           (if this.hideUserInfo "user-info-hidden")
           (if @message.error "errored")
           (if @message.bookmark "chat-message-bookmarked")
           (if @isHovered "chat-message-selected")
         }}
       >
-        {{#if @message.in_reply_to}}
-          <div
-            role="button"
-            onclick={{action this.viewReplyOrThread}}
-            class="chat-reply is-direct-reply"
-          >
-            {{d-icon "share" title="chat.in_reply_to"}}
-
-            {{#if @message.in_reply_to.chat_webhook_event.emoji}}
-              <ChatEmojiAvatar
-                @emoji={{@message.in_reply_to.chat_webhook_event.emoji}}
-              />
-            {{else}}
-              <ChatUserAvatar @user={{@message.in_reply_to.user}} />
-            {{/if}}
-
-            <span class="chat-reply__excerpt">
-              {{replace-emoji @message.in_reply_to.excerpt}}
-            </span>
-          </div>
-        {{/if}}
+        {{#unless this.hideReplyToInfo}}
+          <ChatMessageInReplyToIndicator @message={{@message}} />
+        {{/unless}}
 
         {{#if this.hideUserInfo}}
           <ChatMessageLeftGutter @message={{@message}} />
@@ -131,7 +117,7 @@
             @uploads={{@message.uploads}}
             @edited={{@message.edited}}
           >
-            {{#if this.hasReactions}}
+            {{#if @message.reactions.length}}
               <div class="chat-message-reaction-list">
                 {{#if this.reactionLabel}}
                   <div class="reaction-users-list">
@@ -139,18 +125,13 @@
                   </div>
                 {{/if}}
 
-                {{#each-in @message.reactions as |emoji reactionAttrs|}}
+                {{#each @message.reactions as |reaction|}}
                   <ChatMessageReaction
-                    @reaction={{hash
-                      emoji=emoji
-                      users=reactionAttrs.users
-                      count=reactionAttrs.count
-                      reacted=reactionAttrs.reacted
-                    }}
+                    @reaction={{reaction}}
                     @react={{this.react}}
-                    @showUsersList={{true}}
+                    @showTooltip={{true}}
                   />
-                {{/each-in}}
+                {{/each}}
 
                 {{#if @canInteractWithChat}}
                   {{#unless this.site.mobileView}}
@@ -189,7 +170,7 @@
 
           {{#if this.mentionWarning}}
             <div class="alert alert-info chat-message-mention-warning">
-              {{#if this.mentionWarning.invitationSent}}
+              {{#if this.mentionWarning.invitation_sent}}
                 {{d-icon "check"}}
                 <span>
                   {{i18n
