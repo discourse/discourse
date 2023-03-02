@@ -43,14 +43,15 @@
   }
 
   .title {
+    --d-logo-height: 2.667em;
     display: flex;
     align-items: center;
     height: 100%;
-    // This acts as a placeholder if for some reason the small logo takes a while
-    // to load - prevents topic title from shifting after the small logo loads.
-    // It's hardcoded to 36px because that's the width we use inline for the small
-    // logo in the home-logo widget.
-    min-width: 36px;
+    animation: fadein 0.5s;
+    // min-width acts as a placeholder if the small logo takes a while to load
+    // it prevents topic title from shifting after the small logo loads
+    // it's set to match the #site-logo height so square small logos don't resize when titles dock
+    min-width: var(--d-logo-height);
     a,
     a:visited {
       color: var(--header_primary);
@@ -60,16 +61,14 @@
       // allows large logos to be hidden if there are too many other header elements
       // this prioritizes nav elements, especially in cases of high zoom levels
       overflow: hidden;
-      a {
-        min-width: 0;
-      }
     }
   }
 
   #site-logo {
-    height: 2.667em;
+    height: var(--d-logo-height);
     width: auto;
     max-width: 100%;
+    object-fit: contain;
   }
 
   #site-text-logo {
@@ -295,6 +294,7 @@
 
 // topic info in the header
 .extra-info-wrapper {
+  flex: 1 0 0;
   display: flex;
   align-items: center;
   height: 100%;

@@ -6,16 +6,7 @@
   height: 3.66em;
 
   .title {
-    @include ellipsis; // truncate long text-only site titles if needed
-    animation: fadein 0.5s;
-    a {
-      display: block;
-      width: 100%;
-    }
-  }
-
-  #site-logo {
-    height: 2.4em;
+    --d-logo-height: 2.4em;
   }
 
   #site-text-logo {
