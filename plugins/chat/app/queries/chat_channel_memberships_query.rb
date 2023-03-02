@@ -42,6 +42,6 @@ class ChatChannelMembershipsQuery
   end
 
   def self.count(channel)
-    call(channel, count_only: true)
+    call(channel: channel, count_only: true)
   end
 end
