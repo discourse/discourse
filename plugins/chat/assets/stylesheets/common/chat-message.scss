@@ -61,6 +61,8 @@
   background-color: var(--secondary);
   display: flex;
   min-width: 0;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 200px;
 
   .chat-message-reaction {
     @include chat-reaction;

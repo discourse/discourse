@@ -285,6 +285,7 @@ $float-height: 530px;
     flex-direction: column-reverse;
     z-index: 1;
     margin: 0 3px 0 0;
+    will-change: transform;
 
     &::-webkit-scrollbar {
       width: 15px;
@@ -325,8 +326,11 @@ $float-height: 530px;
   }
 
   .chat-scroll-to-bottom {
-    left: 50%;
-    right: 50%;
+    left: 0;
+    right: 0;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
     position: absolute;
     z-index: 1;
     flex-direction: column;
@@ -344,7 +348,7 @@ $float-height: 530px;
     &:hover,
     &:active,
     &:focus {
-      background: none;
+      background: none !important;
     }
 
     &.visible {
