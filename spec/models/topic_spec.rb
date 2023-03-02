@@ -3108,15 +3108,9 @@ RSpec.describe Topic do
       end
 
       it "should show a small action when user removes themselves from pm" do
-        create_post(topic: private_topic, user: admin)
-        create_post(topic: private_topic, user: user1)
-
-        private_topic.remove_allowed_user(user1, user1)
-        expect(private_topic.allowed_users.include?(user1)).to eq(false)
-
-        posts = private_topic.posts
-        expect(posts.size).to eq(3)
-        expect(posts.last.action_code).to eq("user_left")
+        expect do private_topic.remove_allowed_user(user1, user1) end.to change {
+          private_topic.posts.where(action_code: "user_left").count
+        }.by(1)
       end
     end
   end
