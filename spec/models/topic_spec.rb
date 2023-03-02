@@ -3081,6 +3081,17 @@ RSpec.describe Topic do
 
   describe "#remove_allowed_user" do
     fab!(:topic) { Fabricate(:topic) }
+    fab!(:private_topic) do
+      Fabricate(
+        :private_message_topic,
+        title: "Private message",
+        user: admin,
+        topic_allowed_users: [
+          Fabricate.build(:topic_allowed_user, user: admin),
+          Fabricate.build(:topic_allowed_user, user: user1),
+        ],
+      )
+    end
 
     describe "removing oneself" do
       it "should remove onself" do
@@ -3094,6 +3105,18 @@ RSpec.describe Topic do
         expect(post.user).to eq(user1)
         expect(post.post_type).to eq(Post.types[:small_action])
         expect(post.action_code).to eq("user_left")
+      end
+
+      it "should show a small action when user removes themselves from pm" do
+        create_post(topic: private_topic, user: admin)
+        create_post(topic: private_topic, user: user1)
+
+        private_topic.remove_allowed_user(user1, user1)
+        expect(private_topic.allowed_users.include?(user1)).to eq(false)
+
+        posts = private_topic.posts
+        expect(posts.size).to eq(3)
+        expect(posts.last.action_code).to eq("user_left")
       end
     end
   end

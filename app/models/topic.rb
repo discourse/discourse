@@ -1103,14 +1103,13 @@ class Topic < ActiveRecord::Base
       topic_user = topic_allowed_users.find_by(user_id: user.id)
 
       if topic_user
-        topic_user.destroy
-
         if user.id == removed_by&.id
           add_small_action(removed_by, "user_left", user.username)
         else
           add_small_action(removed_by, "removed_user", user.username)
         end
 
+        topic_user.destroy
         return true
       end
     end
