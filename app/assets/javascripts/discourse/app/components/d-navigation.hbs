@@ -1,17 +1,17 @@
 {{#if this.isQueryFilterMode}}
   <div class="topic-query-filter">
-    <Input
-      class="topic-query-filter__input"
-      @value={{this.queryString}}
-      @enter={{route-action "changeQueryString" this.queryString}}
-    />
-
-    <DButton
-      @action={{route-action "changeQueryString" this.queryString}}
-      @icon="filter"
-      @class="btn-primary topic-query-filter__button"
-      @label="filters.filter.button.label"
-    />
+    <div class="topic-query-filter__label">
+      {{i18n "filters.filter.button.label"}}
+    </div>
+    <div class="topic-query-filter__input">
+      {{d-icon "search" class="topic-query-filter__icon"}}
+      <Input
+        class="topic-query-filter__filter-term"
+        @value={{this.queryString}}
+        @enter={{route-action "changeQueryString" this.queryString}}
+        @type="text"
+      />
+    </div>
   </div>
 {{else}}
   <BreadCrumbs
