@@ -276,13 +276,28 @@ module SvgSprite
 
   def self.theme_svg_sprites(theme_id)
     if theme_id.present?
-      get_set_cache("theme_svg_sprites_#{Theme.transform_ids(theme_id).join(",")}") do
-        ThemeSvgSprite
-          .where(theme_id: Theme.transform_ids(theme_id))
-          .pluck(:upload_id, :sprite)
-          .map do |upload_id, sprite|
-            { filename: "theme_#{theme_id}_#{upload_id}.svg", sprite: sprite }
-          end
+      theme_ids = Theme.transform_ids(theme_id)
+
+      get_set_cache("theme_svg_sprites_#{theme_ids.join(",")}") do
+        theme_field_uploads =
+          ThemeField.where(
+            type_id: ThemeField.types[:theme_upload_var],
+            name: THEME_SPRITE_VAR_NAME,
+            theme_id: theme_ids,
+          ).pluck(:upload_id)
+
+        theme_sprites = ThemeSvgSprite.where(theme_id: theme_ids).pluck(:upload_id, :sprite)
+        missing_sprites = (theme_field_uploads - theme_sprites.map(&:first))
+
+        if missing_sprites.present?
+          Rails.logger.warn(
+            "Missing ThemeSvgSprites for theme #{theme_id}, uploads #{missing_sprites.join(", ")}",
+          )
+        end
+
+        theme_sprites.map do |upload_id, sprite|
+          { filename: "theme_#{theme_id}_#{upload_id}.svg", sprite: sprite }
+        end
       end
     else
       []
