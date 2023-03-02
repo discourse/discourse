@@ -15,8 +15,6 @@ RSpec.describe Chat::Service::AutoRemove::HandleCategoryUpdated do
     fab!(:channel_2) { Fabricate(:chat_channel, chatable: updated_category) }
 
     context "when chat is not enabled" do
-      let(:new_allowed_groups) { "1|2" }
-
       before { SiteSetting.chat_enabled = false }
 
       it { is_expected.to fail_a_policy(:chat_enabled) }

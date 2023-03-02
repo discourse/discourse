@@ -16,8 +16,6 @@ RSpec.describe Chat::Service::AutoRemove::HandleUserRemovedFromGroup do
     fab!(:public_channel_2) { Fabricate(:chat_channel) }
 
     context "when chat is not enabled" do
-      let(:new_allowed_groups) { "1|2" }
-
       before { SiteSetting.chat_enabled = false }
 
       it { is_expected.to fail_a_policy(:chat_enabled) }
@@ -103,9 +101,7 @@ RSpec.describe Chat::Service::AutoRemove::HandleUserRemovedFromGroup do
         context "when the user is staff" do
           fab!(:removed_user) { Fabricate(:admin) }
 
-          it "fails the user_not_staff policy" do
-            expect(result).to fail_a_policy(:user_not_staff)
-          end
+          it { is_expected.to fail_a_policy(:user_not_staff) }
 
           it "does not remove them from public channels" do
             expect { result }.not_to change {
@@ -120,9 +116,7 @@ RSpec.describe Chat::Service::AutoRemove::HandleUserRemovedFromGroup do
         context "when the only chat_allowed_group is everyone" do
           before { SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone] }
 
-          it "fails the not_everyone_allowed policy" do
-            expect(result).to fail_a_policy(:not_everyone_allowed)
-          end
+          it { is_expected.to fail_a_policy(:not_everyone_allowed) }
 
           it "does not remove them from public channels" do
             expect { result }.not_to change {
@@ -194,9 +188,7 @@ RSpec.describe Chat::Service::AutoRemove::HandleUserRemovedFromGroup do
           context "when the user is staff" do
             fab!(:removed_user) { Fabricate(:admin) }
 
-            it "fails the user_not_staff policy" do
-              expect(result).to fail_a_policy(:user_not_staff)
-            end
+            it { is_expected.to fail_a_policy(:user_not_staff) }
 
             it "does not remove them from that channel" do
               expect { result }.not_to change {
@@ -231,9 +223,7 @@ RSpec.describe Chat::Service::AutoRemove::HandleUserRemovedFromGroup do
           context "when the user is staff" do
             fab!(:removed_user) { Fabricate(:admin) }
 
-            it "fails the user_not_staff policy" do
-              expect(result).to fail_a_policy(:user_not_staff)
-            end
+            it { is_expected.to fail_a_policy(:user_not_staff) }
 
             it "does not remove them from that channel" do
               expect { result }.not_to change {

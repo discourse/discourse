@@ -122,9 +122,10 @@ RSpec.describe Chat::Service::AutoRemove::HandleChatAllowedGroupsChange do
       context "when new_allowed_groups includes everyone" do
         let(:new_allowed_groups) { Group::AUTO_GROUPS[:everyone] }
 
+        it { is_expected.to fail_a_policy(:not_everyone_allowed) }
+
         it "does nothing" do
           expect { result }.not_to change { UserChatChannelMembership.count }
-          expect(result).to fail_a_policy(:not_everyone_allowed)
         end
       end
 

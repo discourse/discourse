@@ -17,8 +17,6 @@ RSpec.describe Chat::Service::AutoRemove::HandleDestroyedGroup do
     fab!(:channel_2) { Fabricate(:chat_channel) }
 
     context "when chat is not enabled" do
-      let(:new_allowed_groups) { "1|2" }
-
       before { SiteSetting.chat_enabled = false }
 
       it { is_expected.to fail_a_policy(:chat_enabled) }
@@ -38,9 +36,9 @@ RSpec.describe Chat::Service::AutoRemove::HandleDestroyedGroup do
       describe "step remove_users_outside_allowed_groups" do
         context "when chat_allowed_groups is empty" do
           let(:action) { UserHistory.where(custom_type: "chat_auto_remove_membership").last }
-          before { SiteSetting.chat_allowed_groups = "" }
 
           before do
+            SiteSetting.chat_allowed_groups = ""
             channel_1.add(user_1)
             channel_1.add(user_2)
             channel_2.add(user_1)
@@ -113,9 +111,8 @@ RSpec.describe Chat::Service::AutoRemove::HandleDestroyedGroup do
         end
 
         context "when chat_allowed_groups includes all the users in public channels" do
-          before { SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:trust_level_1] }
-
           before do
+            SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:trust_level_1]
             channel_1.add(user_1)
             channel_1.add(user_2)
             channel_2.add(user_1)
@@ -135,9 +132,8 @@ RSpec.describe Chat::Service::AutoRemove::HandleDestroyedGroup do
         end
 
         context "when chat_allowed_groups includes everyone" do
-          before { SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone] }
-
           before do
+            SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
             channel_1.add(user_1)
             channel_1.add(user_2)
             channel_2.add(user_1)
@@ -147,9 +143,7 @@ RSpec.describe Chat::Service::AutoRemove::HandleDestroyedGroup do
             Group.refresh_automatic_groups!
           end
 
-          it "fails the not_everyone_allowed policy" do
-            expect(result).to fail_a_policy(:not_everyone_allowed)
-          end
+          it { is_expected.to fail_a_policy(:not_everyone_allowed) }
 
           it "does not remove any memberships" do
             expect { result }.not_to change { UserChatChannelMembership.count }
