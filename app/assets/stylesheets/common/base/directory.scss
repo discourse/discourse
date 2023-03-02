@@ -1,10 +1,15 @@
-.directory-table-top-scroll {
-  width: 100%;
-  overflow-x: auto;
-}
-
 .directory {
   margin-bottom: 100px;
+
+  .directory-table-container {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  .directory-table-top-scroll {
+    width: 100%;
+    overflow-x: auto;
+  }
 
   &.users-directory {
     .directory-group-selector {
@@ -33,6 +38,58 @@
     margin-bottom: 0.5em;
     color: var(--primary-medium);
     font-size: var(--font-down-1);
+  }
+
+  table {
+    width: 100%;
+    margin-bottom: 1em;
+
+    td,
+    th {
+      padding: 0.5em;
+      text-align: left;
+      border-bottom: 1px solid var(--primary-low);
+      @media screen and (max-width: $small-width) {
+        padding: 0.5em 0.25em;
+      }
+
+      .number,
+      .time-read {
+        font-size: var(--font-up-3);
+        color: var(--primary-medium);
+        @media screen and (max-width: $small-width) {
+          font-size: var(--font-up-1);
+        }
+      }
+      .time-read {
+        white-space: nowrap;
+      }
+      .user-field-value {
+        font-size: var(--font-up-1);
+        color: var(--primary-medium);
+        @media screen and (max-width: $small-width) {
+          font-size: var(--font-0);
+        }
+      }
+    }
+
+    th.sortable {
+      width: 13%;
+      .d-icon-heart {
+        color: var(--love);
+        margin: 0 0.25em 0 0;
+      }
+    }
+  }
+  .me {
+    background-color: var(--highlight-bg);
+    .username a,
+    .name a,
+    .title,
+    .number,
+    .time-read {
+      color: var(--primary-medium);
+    }
   }
 }
 
@@ -81,222 +138,4 @@
 
 .edit-user-directory-columns-modal .modal-inner-container {
   min-width: 450px;
-}
-
-@container (min-width: 47em) {
-  .users-directory {
-    .directory-table {
-      &__value {
-        white-space: nowrap;
-        font-size: var(--font-up-2);
-        &,
-        &--user-field {
-          color: var(--primary-medium);
-        }
-      }
-    }
-  }
-}
-
-.directory-table {
-  display: grid;
-  gap: 0;
-  width: 100%;
-  margin-top: 1em;
-  overflow-x: auto;
-
-  .me {
-    .directory-table__cell {
-      &,
-      &--user-field {
-        background-color: var(--highlight-low-or-medium);
-      }
-    }
-  }
-
-  &__header,
-  &__body,
-  &__row {
-    display: contents; // we'll be able to remove this with subgrid support
-  }
-
-  &__column-header,
-  &__cell,
-  &__cell--user-field {
-    display: flex;
-    border-bottom: 1px solid var(--primary-low);
-    justify-content: center;
-    align-items: center;
-  }
-
-  &__column-header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    white-space: nowrap;
-    color: var(--primary-medium);
-    padding: 0.5em;
-    .d-icon {
-      margin-right: 0.25em;
-    }
-
-    &:first-child {
-      .header-contents {
-        text-align: left;
-      }
-    }
-  }
-
-  &__cell {
-    &,
-    &--user-field {
-      padding: 0.75em 0.5em;
-    }
-  }
-
-  &__value {
-    white-space: nowrap;
-    &--user-field {
-      max-width: 30em;
-    }
-  }
-
-  &__label {
-    display: none;
-  }
-
-  .d-icon-heart {
-    font-size: var(--font-down-1);
-    color: var(--love);
-  }
-
-  .user-detail {
-    display: flex;
-    flex-direction: column;
-    min-width: 0; // allow content to shrink and hide overflow
-  }
-
-  .user-info {
-    display: flex;
-    min-width: 0;
-    margin: 0;
-    width: 100%;
-    .user-image {
-      padding-right: 0.5em;
-      margin-right: 0.5em;
-    }
-    .user-detail {
-      padding: 0;
-      width: 100%;
-      @media screen and (max-width: 600px) {
-        // overrides existing media query
-        font-size: var(--font-0);
-      }
-      @include breakpoint("mobile-medium") {
-        font-size: var(--font-down-1);
-      }
-    }
-    .title {
-      margin: 0;
-    }
-  }
-
-  .header-contents {
-    width: 100%;
-    text-align: center;
-  }
-}
-
-// using a container query to switch to a flex-based layout
-// browsers without support for container queries
-// fallback to big horizontal scrolling table
-
-@container (max-width: 47em) {
-  .directory-table {
-    display: flex;
-    flex-direction: column;
-
-    .me {
-      background-color: var(--highlight-low-or-medium);
-    }
-
-    &__label {
-      display: inline-flex;
-      color: var(--primary-medium);
-      padding-right: 0.5em;
-      align-items: baseline;
-      align-self: start;
-      white-space: nowrap;
-      overflow: hidden;
-
-      span {
-        // caution: display flex here can interfere with overflow hiding
-        flex: 0 1 auto; // can shrink if needed
-        margin-right: 0.25em;
-        @include ellipsis;
-      }
-
-      // flexible divider between the label and value
-      &:after {
-        flex: 1 1 0; // can grow or shrink, but should be 0 width if needed
-        color: var(--primary-300);
-        min-width: 0;
-        overflow: hidden;
-        // this needs to be long to account for all possible widths
-        content: "...................................................................................................................................";
-      }
-
-      .d-icon {
-        font-size: 0.8em;
-        vertical-align: baseline;
-      }
-    }
-
-    &__value {
-      font-size: var(--font-0);
-      color: var(--primary);
-    }
-
-    &__row {
-      &:first-child {
-        border-top: 1px solid var(--primary-low);
-      }
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(11em, 1fr));
-      border-bottom: 1px solid var(--primary-low);
-      padding: 0.85em 0.75em 1em;
-      gap: 0 15%;
-    }
-
-    &__header {
-      display: none;
-    }
-
-    &__cell {
-      &,
-      &--user-field {
-        padding: 0.25em;
-        border: none;
-        &:first-child {
-          width: 100%;
-          padding: 0.5em 0.25em 1em;
-          justify-content: start;
-          // force full width of the cell
-          grid-column-start: 1;
-          grid-column-end: -1;
-        }
-      }
-
-      &--user-field {
-        order: 2;
-        // force full width of the cell
-        // because we don't know how much content there is
-        grid-column-start: 1;
-        grid-column-end: -1;
-        .directory-table__label {
-          margin-right: 0.25em;
-        }
-      }
-    }
-  }
 }

@@ -6,8 +6,8 @@ import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "I18n";
 
 export default Component.extend({
-  tagName: "div",
-  classNames: ["directory-table__column-header", "sortable"],
+  tagName: "th",
+  classNames: ["sortable"],
   attributeBindings: ["title", "colspan", "ariaSort:aria-sort", "role"],
   role: "columnheader",
   labelKey: null,

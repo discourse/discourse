@@ -21,6 +21,35 @@
     color: var(--primary-medium);
     padding: 5px;
   }
+
+  .user {
+    border-top: 1px solid var(--primary-low);
+    padding: 1em;
+    display: flex;
+    flex-wrap: wrap;
+
+    .user-info {
+      width: 100%;
+      margin-bottom: 1em;
+    }
+
+    .user-stat {
+      flex: 1 1 50%;
+      .value {
+        font-weight: bold;
+        &.user-field {
+          font-size: var(--font-down-1);
+        }
+      }
+      .label {
+        margin-left: 0.2em;
+        color: var(--primary-medium);
+      }
+      .d-icon-heart {
+        color: var(--love);
+      }
+    }
+  }
 }
 
 .edit-user-directory-columns-modal .modal-inner-container {
