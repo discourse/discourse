@@ -2,7 +2,7 @@ import PanEvents, {
   SWIPE_DISTANCE_THRESHOLD,
   SWIPE_VELOCITY_THRESHOLD,
 } from "discourse/mixins/pan-events";
-import { cancel, schedule } from "@ember/runloop";
+import { cancel, next, schedule } from "@ember/runloop";
 import discourseLater from "discourse-common/lib/later";
 import Docking from "discourse/mixins/docking";
 import MountWidget from "discourse/components/mount-widget";
@@ -350,6 +350,10 @@ const SiteHeaderComponent = MountWidget.extend(
     },
 
     afterRender() {
+      // glimmer components are not yet loaded in the afterRender hook
+      // so we have to add a longer delay to have the components load before
+      // animating the menu
+      //next(() => {
       const headerTitle = document.querySelector(".header-title .topic-link");
       if (headerTitle && this._topic) {
         topicTitleDecorators.forEach((cb) =>
@@ -357,6 +361,7 @@ const SiteHeaderComponent = MountWidget.extend(
         );
       }
       this._animateMenu();
+      //});
     },
 
     _animateMenu() {

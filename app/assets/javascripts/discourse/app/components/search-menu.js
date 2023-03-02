@@ -108,7 +108,6 @@ export default class SearchMenu extends Component {
 
   @action
   searchTermChanged(term, opts = {}) {
-    console.log(term);
     this.typeFilter = opts.searchTopics ? null : DEFAULT_TYPE_FILTER;
     this.term = term;
     this.triggerSearch();
@@ -138,13 +137,10 @@ export default class SearchMenu extends Component {
   }
 
   @action
-  focusSearchInput() {
+  focusSearchInput(element) {
     if (this.args.searchVisible) {
-      schedule("afterRender", () => {
-        const searchInput = document.querySelector("#search-term");
-        searchInput.focus();
-        searchInput.select();
-      });
+      element.focus();
+      element.select();
     }
   }
 
@@ -303,11 +299,6 @@ export default class SearchMenu extends Component {
   //this.sendWidgetAction("toggleSearchMenu");
   //}
 
-  //clearPMInboxContext() {
-  //this.state.inPMInboxContext = false;
-  //this.sendWidgetAction("focusSearchInput");
-  //}
-
   //keyDown(e) {
   //if (e.key === "Escape") {
   //this.sendWidgetAction("toggleSearchMenu");
@@ -445,25 +436,8 @@ export default class SearchMenu extends Component {
     }
   }
 
-  //moreOfType(type) {
-  //searchData.typeFilter = type;
-  //this.triggerSearch();
-  //}
+  moreOfType(type) {
+    searchData.typeFilter = type;
+    this.triggerSearch();
+  }
 }
-
-//createWidget("browser-search-tip", {
-//buildKey: () => "browser-search-tip",
-//tagName: "div.browser-search-tip",
-
-//html() {
-//return [
-//h(
-//"span.tip-label",
-//I18n.t("search.browser_tip", {
-//modifier: translateModKey("Meta"),
-//})
-//),
-//h("span.tip-description", I18n.t("search.browser_tip_description")),
-//];
-//},
-//});

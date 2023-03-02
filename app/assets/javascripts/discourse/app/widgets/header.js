@@ -429,7 +429,8 @@ registerWidgetShim(
   "div",
   hbs`<SearchMenu
     @inTopicContext={{@data.inTopicContext}}
-    @searchVisible={{@data.state.searchVisible}}
+    @searchVisible={{@data.searchVisible}}
+    @animationClass={{@data.animationClass}}
   />`
 );
 
@@ -481,7 +482,8 @@ export default createWidget("header", {
           panels.push(
             this.attach("glimmer-search-menu", {
               inTopicContext: state.inTopicContext && inTopicRoute,
-              searchVisible: this.state.searchVisible,
+              searchVisible: state.searchVisible,
+              animationClass: this.animationClass(),
             })
           );
         } else {
@@ -539,6 +541,12 @@ export default createWidget("header", {
     if (!this.state.searchVisible) {
       this.search.set("highlightTerm", "");
     }
+  },
+
+  animationClass() {
+    return this.site.mobileView || this.site.narrowDesktopView
+      ? "slide-in"
+      : "drop-down";
   },
 
   closeAll() {

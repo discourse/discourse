@@ -1,5 +1,5 @@
 <div class="search-menu" aria-live="polite">
-  <MenuPanel @maxWidth={{500}}>
+  <MenuPanel @animationClass={{@animationClass}} @maxWidth={{500}}>
     <SearchMenu::MenuPanelContents
       @inTopicContext={{this.inTopicContext}}
       @updateInTopicContext={{this.updateInTopicContext}}
@@ -11,6 +11,14 @@
       @loading={{this.loading}}
       @fullSearchUrl={{this.fullSearchUrl}}
       @clearSearch={{this.clearSearch}}
+      @focusSearchInput={{this.focusSearchInput}}
+      @includesTopics={{this.includesTopics}}
+      @noResults={{this.noResults}}
+      @results={{this.results}}
+      @invalidTerm={{this.invalidTerm}}
+      @suggestionKeyword={{this.suggestionKeyword}}
+      @suggestionResults={{this.suggestionResults}}
+      @searchTopics={{this.includesTopics}}
     />
   </MenuPanel>
 </div>

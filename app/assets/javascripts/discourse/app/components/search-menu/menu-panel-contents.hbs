@@ -22,6 +22,7 @@
   <SearchMenu::SearchTerm
     @searchTermChanged={{@searchTermChanged}}
     @value={{@term}}
+    @focusSearchInput={{@focusSearchInput}}
   />
 
   {{#if @loading}}
@@ -50,5 +51,24 @@
         {{d-icon "sliders-h"}}
       </a>
     </div>
+  {{/if}}
+
+  {{#if (and @inTopicContext @includesTopics)}}
+    {{#unless this.site.isMobileDevice}}
+      <SearchMenu::BrowserSearchTip />
+    {{/unless}}
+  {{else}}
+    {{#unless @loading}}
+      {{! <SearchMenu::Results }}
+      {{!-- @term={{@term}} --}}
+      {{!-- @noResults={{@noResults}} --}}
+      {{!-- @results={{@results}} --}}
+      {{!-- @invalidTerm={{@invalidTerm}} --}}
+      {{!-- @suggestionKeyword={{@suggestionKeyword}} --}}
+      {{!-- @suggestionResults={{@suggestionResults}} --}}
+      {{!-- @searchTopics={{@includesTopics}} --}}
+      {{!-- @inPMInboxContext={{@inPMInboxContext}} --}}
+      {{! /> }}
+    {{/unless}}
   {{/if}}
 </div>
