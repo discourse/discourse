@@ -10,6 +10,7 @@ const MIN_REFRESH_DURATION_MS = 180000; // 3 minutes
 
 export default {
   name: "chat-setup",
+
   initialize(container) {
     this.chatService = container.lookup("service:chat");
     this.siteSettings = container.lookup("service:site-settings");
@@ -19,6 +20,7 @@ export default {
     if (!this.chatService.userCanChat) {
       return;
     }
+
     withPluginApi("0.12.1", (api) => {
       api.registerChatComposerButton({
         id: "chat-upload-btn",

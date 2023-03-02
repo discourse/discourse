@@ -144,6 +144,7 @@ $float-height: 530px;
 .chat-messages-container {
   word-wrap: break-word;
   white-space: normal;
+  position: relative;
 
   .chat-message-container {
     display: grid;
@@ -283,6 +284,8 @@ $float-height: 530px;
     display: flex;
     flex-direction: column-reverse;
     z-index: 1;
+    margin: 0 3px 0 0;
+    will-change: transform;
 
     &::-webkit-scrollbar {
       width: 15px;
@@ -323,37 +326,68 @@ $float-height: 530px;
   }
 
   .chat-scroll-to-bottom {
-    background: var(--primary-medium);
-    bottom: 1em;
-    border-radius: 100%;
-    left: 50%;
-    opacity: 50%;
-    padding: 0.5em;
+    left: calc(50% - calc(32px / 2));
+    align-items: center;
+    justify-content: center;
     position: absolute;
-    transform: translateX(-50%);
-    z-index: 2;
+    z-index: 1;
+    flex-direction: column;
+    bottom: -75px;
+    background: none;
+    opacity: 0;
+    transition: opacity 0.25s ease, transform 0.5s ease;
+    transform: scale(0.1);
+    padding: 0;
 
-    &:hover {
+    > * {
+      pointer-events: none;
+    }
+
+    &:hover,
+    &:active,
+    &:focus {
+      background: none !important;
+    }
+
+    &.visible {
+      transform: translateY(-75px) scale(1);
+      opacity: 0.8;
+    }
+
+    &__text {
+      color: var(--secondary);
+      padding: 0.5rem;
+      margin-bottom: 0.5rem;
       background: var(--primary-medium);
-      opacity: 100%;
+      border-radius: 3px;
+      text-align: center;
+      font-size: var(--font-down-1);
+      bottom: 40px;
+      position: absolute;
     }
 
-    .d-icon {
-      color: var(--primary);
-      margin: 0;
-    }
-
-    &.unread-messages {
-      opacity: 85%;
-      border-radius: 0;
-      transition: border-radius 0.1s linear;
-
-      &:hover {
-        opacity: 100%;
-      }
+    &__arrow {
+      display: flex;
+      background: var(--primary-medium);
+      border-radius: 100%;
+      align-items: center;
+      justify-content: center;
+      height: 32px;
+      width: 32px;
+      position: relative;
 
       .d-icon {
-        margin: 0 0 0 0.5em;
+        color: var(--secondary);
+      }
+    }
+
+    &:hover {
+      opacity: 1;
+
+      .chat-scroll-to-bottom__arrow {
+        .d-icon {
+          color: var(--secondary);
+        }
       }
     }
   }

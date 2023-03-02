@@ -1,148 +1,118 @@
-{{#if (and this.chatStateManager.isFullPageActive this.includeHeader)}}
-  <div
-    class="chat-full-page-header
-      {{unless this.chatChannel.isFollowing '-not-following'}}"
-  >
-    <div class="chat-channel-header-details">
-      {{#if this.site.mobileView}}
-        <div class="chat-full-page-header__left-actions">
-          <DButton
-            @class="chat-full-page-header__back-btn no-text btn-flat"
-            @icon="chevron-left"
-            @action={{this.onBackClick}}
-          />
-        </div>
-      {{/if}}
-
-      <LinkTo
-        @route="chat.channel.info"
-        @models={{this.chatChannel.routeModels}}
-        class="chat-channel-title-wrapper"
-      >
-        <ChatChannelTitle @channel={{this.chatChannel}} />
-      </LinkTo>
-
-      {{#if this.showCloseFullScreenBtn}}
-        <div class="chat-full-page-header__right-actions">
-          <DButton
-            @icon="discourse-compress"
-            @title="chat.close_full_page"
-            class="open-drawer-btn btn-flat no-text"
-            @action={{action this.onCloseFullScreen}}
-          />
-        </div>
-      {{/if}}
-    </div>
-  </div>
-
-  <ChatChannelStatus @channel={{this.chatChannel}} />
-{{/if}}
-
-<ChatRetentionReminder @chatChannel={{this.chatChannel}} />
-
-<ChatMentionWarnings />
-
-<div class="chat-message-actions-mobile-anchor"></div>
 <div
   class={{concat-class
-    "chat-message-emoji-picker-anchor"
-    (if
-      (and
-        this.chatEmojiPickerManager.opened
-        (eq this.chatEmojiPickerManager.context "chat-message")
-      )
-      "-opened"
-    )
+    "chat-live-pane"
+    (if this.loading "loading")
+    (if this.sendingLoading "sending-loading")
   }}
+  {{did-insert this.setupListeners}}
+  {{will-destroy this.teardownListeners}}
+  {{did-insert this.updateChannel}}
+  {{did-update this.loadMessages @targetMessageId}}
+  {{did-update this.updateChannel @channel.id}}
+  {{did-insert this.addAutoFocusEventListener}}
+  {{will-destroy this.removeAutoFocusEventListener}}
 >
-</div>
-
-<div class="chat-messages-scroll chat-messages-container">
-  <div class="chat-message-actions-desktop-anchor"></div>
-  <div class="chat-messages-container">
-    {{#if (or this.loading this.loadingMorePast)}}
-      <ChatSkeleton @tagName="" />
-    {{/if}}
-
-    {{#each this.messages as |message|}}
-      <ChatMessage
-        @message={{message}}
-        @canInteractWithChat={{this.canInteractWithChat}}
-        @details={{this.details}}
-        @chatChannel={{this.chatChannel}}
-        @setReplyTo={{action "setReplyTo"}}
-        @replyMessageClicked={{action "replyMessageClicked"}}
-        @editButtonClicked={{action "editButtonClicked"}}
-        @selectingMessages={{this.selectingMessages}}
-        @onStartSelectingMessages={{this.onStartSelectingMessages}}
-        @onSelectMessage={{this.onSelectMessage}}
-        @bulkSelectMessages={{this.bulkSelectMessages}}
-        @fullPage={{this.fullPage}}
-        @afterReactionAdded={{action "reStickScrollIfNeeded"}}
-        @isHovered={{eq message.id this.hoveredMessageId}}
-        @onHoverMessage={{this.onHoverMessage}}
-        @resendStagedMessage={{this.resendStagedMessage}}
-      />
-    {{/each}}
-
-    {{#if this.loadingMoreFuture}}
-      <ChatSkeleton @tagName="" />
-    {{/if}}
-  </div>
-
-  {{#if this.allPastMessagesLoaded}}
-    <div class="all-loaded-message">
-      {{i18n "chat.all_loaded"}}
-    </div>
-  {{/if}}
-</div>
-
-{{#if this.showScrollToBottomBtn}}
-  <div class="scroll-stick-wrap">
-    <a
-      href
-      title={{i18n "chat.scroll_to_bottom"}}
-      class={{concat-class
-        "btn"
-        "btn-flat"
-        "chat-scroll-to-bottom"
-        (if this.hasNewMessages "unread-messages")
-      }}
-      {{on "click" (action "restickScrolling")}}
-    >
-      {{#if this.hasNewMessages}}
-        {{i18n "chat.scroll_to_new_messages"}}
-      {{/if}}
-      {{d-icon "arrow-down"}}
-    </a>
-  </div>
-{{/if}}
-
-{{#if this.selectingMessages}}
-  <ChatSelectionManager
-    @selectedMessageIds={{this.selectedMessageIds}}
-    @chatChannel={{this.chatChannel}}
-    @canModerate={{this.details.can_moderate}}
-    @cancelSelecting={{action "cancelSelecting"}}
+  <ChatFullPageHeader
+    @channel={{@channel}}
+    @onCloseFullScreen={{this.onCloseFullScreen}}
+    @displayed={{this.includeHeader}}
   />
-{{else}}
-  {{#if (or this.chatChannel.isDraft this.chatChannel.isFollowing)}}
-    <ChatComposer
-      @draft={{this.draft}}
-      @details={{this.details}}
-      @canInteractWithChat={{this.canInteractWithChat}}
-      @sendMessage={{action "sendMessage"}}
-      @editMessage={{action "editMessage"}}
-      @setReplyTo={{action "setReplyTo"}}
-      @loading={{this.sendingLoading}}
-      @editingMessage={{readonly this.editingMessage}}
-      @onCancelEditing={{this.cancelEditing}}
-      @setInReplyToMsg={{this.setInReplyToMsg}}
-      @onEditLastMessageRequested={{this.editLastMessageRequested}}
-      @onValueChange={{action "composerValueChanged"}}
-      @chatChannel={{this.chatChannel}}
+
+  <ChatRetentionReminder @channel={{@channel}} />
+
+  <ChatMentionWarnings />
+
+  <div class="chat-message-actions-mobile-anchor"></div>
+
+  <div
+    class={{concat-class
+      "chat-message-emoji-picker-anchor"
+      (if
+        (and
+          this.chatEmojiPickerManager.opened
+          (eq this.chatEmojiPickerManager.context "chat-message")
+        )
+        "-opened"
+      )
+    }}
+  ></div>
+
+  <div class="chat-messages-scroll chat-messages-container">
+    <div class="chat-message-actions-desktop-anchor"></div>
+    <div class="chat-messages-container">
+
+      {{#if this.loadingMorePast}}
+        <ChatSkeleton
+          @onInsert={{this.onDidInsertSkeleton}}
+          @onDestroy={{this.onDestroySkeleton}}
+        />
+      {{/if}}
+
+      {{#each @channel.messages key="id" as |message|}}
+        <ChatMessage
+          @message={{message}}
+          @canInteractWithChat={{this.canInteractWithChat}}
+          @channel={{@channel}}
+          @setReplyTo={{this.setReplyTo}}
+          @replyMessageClicked={{this.replyMessageClicked}}
+          @editButtonClicked={{this.editButtonClicked}}
+          @selectingMessages={{this.selectingMessages}}
+          @onStartSelectingMessages={{this.onStartSelectingMessages}}
+          @onSelectMessage={{this.onSelectMessage}}
+          @bulkSelectMessages={{this.bulkSelectMessages}}
+          @isHovered={{eq message.id this.hoveredMessageId}}
+          @onHoverMessage={{this.onHoverMessage}}
+          @resendStagedMessage={{this.resendStagedMessage}}
+          @didShowMessage={{this.didShowMessage}}
+          @didHideMessage={{this.didHideMessage}}
+        />
+      {{/each}}
+
+      {{#if (or this.loadingMoreFuture)}}
+        <ChatSkeleton
+          @onInsert={{this.onDidInsertSkeleton}}
+          @onDestroy={{this.onDestroySkeleton}}
+        />
+      {{/if}}
+    </div>
+
+    {{#if (and this.loadedOnce (not @channel.canLoadMorePast))}}
+      <div class="all-loaded-message">
+        {{i18n "chat.all_loaded"}}
+      </div>
+    {{/if}}
+  </div>
+
+  <ChatScrollToBottomArrow
+    @scrollToBottom={{this.scrollToBottom}}
+    @hasNewMessages={{this.hasNewMessages}}
+    @isAlmostDocked={{this.isAlmostDocked}}
+    @channel={{@channel}}
+  />
+
+  {{#if this.selectingMessages}}
+    <ChatSelectionManager
+      @selectedMessageIds={{this.selectedMessageIds}}
+      @chatChannel={{@channel}}
+      @cancelSelecting={{this.cancelSelecting}}
     />
   {{else}}
-    <ChatChannelPreviewCard @channel={{this.chatChannel}} />
+    {{#if (or @channel.isDraft @channel.isFollowing)}}
+      <ChatComposer
+        @canInteractWithChat={{this.canInteractWithChat}}
+        @sendMessage={{this.sendMessage}}
+        @editMessage={{this.editMessage}}
+        @setReplyTo={{this.setReplyTo}}
+        @loading={{this.sendingLoading}}
+        @editingMessage={{readonly this.editingMessage}}
+        @onCancelEditing={{this.cancelEditing}}
+        @setInReplyToMsg={{this.setInReplyToMsg}}
+        @onEditLastMessageRequested={{this.editLastMessageRequested}}
+        @onValueChange={{this.composerValueChanged}}
+        @chatChannel={{@channel}}
+      />
+    {{else}}
+      <ChatChannelPreviewCard @channel={{@channel}} />
+    {{/if}}
   {{/if}}
-{{/if}}
+</div>
