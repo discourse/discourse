@@ -182,7 +182,7 @@ export default class ChatLivePane extends Component {
           this._selfDeleted ||
           this.args.channel.id !== results.meta.channel_id
         ) {
-          this.router.transitionTo("chat");
+          return;
         }
 
         const [messages, meta] = this.afterFetchCallback(
@@ -265,7 +265,7 @@ export default class ChatLivePane extends Component {
           this._selfDeleted ||
           this.args.channel.id !== results.meta.channel_id
         ) {
-          this.router.transitionTo("chat");
+          return;
         }
 
         const [messages, meta] = this.afterFetchCallback(
