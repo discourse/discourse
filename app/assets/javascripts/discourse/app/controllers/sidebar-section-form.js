@@ -47,14 +47,8 @@ class SectionLink {
     this.name = name;
     this.value = value;
     this.id = id;
-  }
-
-  get httpHost() {
-    return "http://" + window.location.host;
-  }
-
-  get httpsHost() {
-    return "https://" + window.location.host;
+    this.httpHost = "http://" + window.location.host;
+    this.httpsHost = "https://" + window.location.host;
   }
 
   get path() {
