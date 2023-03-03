@@ -99,7 +99,6 @@
           (if @isHovered "chat-message-selected")
         }}
       >
-        {{@message.id}}
         {{#unless this.hideReplyToInfo}}
           <ChatMessageInReplyToIndicator @message={{@message}} />
         {{/unless}}
