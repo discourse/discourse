@@ -85,9 +85,12 @@ export default class CategorySectionLink {
   }
 
   #countables() {
-    const countables = [...DEFAULT_COUNTABLES];
+    const countables = [];
+
     if (this.#linkToNew) {
-      countables.unshift(UNREAD_AND_NEW_COUNTABLE);
+      countables.push(UNREAD_AND_NEW_COUNTABLE);
+    } else {
+      countables.push(...DEFAULT_COUNTABLES);
     }
 
     if (customCountables.length > 0) {
@@ -185,14 +188,10 @@ export default class CategorySectionLink {
   }
 
   get route() {
-    if (this.#linkToNew && this.activeCountable) {
-      if (get(this, this.activeCountable.propertyName) > 0) {
-        return "discovery.newCategory";
-      } else {
-        return "discovery.category";
-      }
-    }
-    if (this.currentUser?.sidebarListDestination === UNREAD_LIST_DESTINATION) {
+    if (
+      this.currentUser?.sidebarListDestination === UNREAD_LIST_DESTINATION ||
+      this.#linkToNew
+    ) {
       const activeCountable = this.activeCountable;
 
       if (activeCountable) {
