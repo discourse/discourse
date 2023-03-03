@@ -37,7 +37,7 @@ RSpec.describe "Chat channel", type: :system, js: true do
       chat.visit_channel(channel_1)
       expect(channel).to have_no_loading_skeleton
       channel.send_message("aaaaaaaaaaaaaaaaaaaa")
-      expect(page).to have_no_css("[data-staged-id]")
+      expect(page).to have_no_css(".chat-message-staged")
       last_message = find(".chat-message-container:last-child")
       last_message.hover
 
@@ -183,7 +183,7 @@ RSpec.describe "Chat channel", type: :system, js: true do
     it "shows a date separator" do
       chat.visit_channel(channel_1)
 
-      expect(page).to have_selector(".first-daily-message", text: "Today")
+      expect(page).to have_selector(".chat-message-separator__text", text: "Today")
     end
   end
 

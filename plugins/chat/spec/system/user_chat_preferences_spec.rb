@@ -51,7 +51,8 @@ RSpec.describe "User chat preferences", type: :system, js: true do
 
     it "allows to change settings" do
       visit("/u/#{user_1.username}/preferences")
-      find(".preferences-chat-link").click
+
+      find(".user-nav__preferences-chat").click
 
       expect(page).to have_current_path("/u/#{user_1.username}/preferences/chat")
     end

@@ -6,21 +6,21 @@ import I18n from "I18n";
 import { module, test } from "qunit";
 import { render } from "@ember/test-helpers";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
+import fabricators from "../helpers/fabricators";
 
 module("Discourse Chat | Component | chat-message-info", function (hooks) {
   setupRenderingTest(hooks);
 
   test("chat_webhook_event", async function (assert) {
-    this.set(
-      "message",
-      ChatMessage.create({ chat_webhook_event: { username: "discobot" } })
-    );
+    this.message = ChatMessage.create(fabricators.chatChannel(), {
+      chat_webhook_event: { username: "discobot" },
+    });
 
     await render(hbs`<ChatMessageInfo @message={{this.message}} />`);
 
     assert.strictEqual(
       query(".chat-message-info__username").innerText.trim(),
-      this.message.chat_webhook_event.username
+      this.message.chatWebhookEvent.username
     );
     assert.strictEqual(
       query(".chat-message-info__bot-indicator").textContent.trim(),
@@ -29,7 +29,9 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
   });
 
   test("user", async function (assert) {
-    this.set("message", ChatMessage.create({ user: { username: "discobot" } }));
+    this.message = ChatMessage.create(fabricators.chatChannel(), {
+      user: { username: "discobot" },
+    });
 
     await render(hbs`<ChatMessageInfo @message={{this.message}} />`);
 
@@ -40,13 +42,10 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
   });
 
   test("date", async function (assert) {
-    this.set(
-      "message",
-      ChatMessage.create({
-        user: { username: "discobot" },
-        created_at: moment(),
-      })
-    );
+    this.message = ChatMessage.create(fabricators.chatChannel(), {
+      user: { username: "discobot" },
+      created_at: moment(),
+    });
 
     await render(hbs`<ChatMessageInfo @message={{this.message}} />`);
 
@@ -54,16 +53,13 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
   });
 
   test("bookmark (with reminder)", async function (assert) {
-    this.set(
-      "message",
-      ChatMessage.create({
-        user: { username: "discobot" },
-        bookmark: Bookmark.create({
-          reminder_at: moment(),
-          name: "some name",
-        }),
-      })
-    );
+    this.message = ChatMessage.create(fabricators.chatChannel(), {
+      user: { username: "discobot" },
+      bookmark: Bookmark.create({
+        reminder_at: moment(),
+        name: "some name",
+      }),
+    });
 
     await render(hbs`<ChatMessageInfo @message={{this.message}} />`);
 
@@ -73,15 +69,12 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
   });
 
   test("bookmark (no reminder)", async function (assert) {
-    this.set(
-      "message",
-      ChatMessage.create({
-        user: { username: "discobot" },
-        bookmark: Bookmark.create({
-          name: "some name",
-        }),
-      })
-    );
+    this.message = ChatMessage.create(fabricators.chatChannel(), {
+      user: { username: "discobot" },
+      bookmark: Bookmark.create({
+        name: "some name",
+      }),
+    });
 
     await render(hbs`<ChatMessageInfo @message={{this.message}} />`);
 
@@ -90,7 +83,9 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
 
   test("user status", async function (assert) {
     const status = { description: "off to dentist", emoji: "tooth" };
-    this.set("message", ChatMessage.create({ user: { status } }));
+    this.message = ChatMessage.create(fabricators.chatChannel(), {
+      user: { status },
+    });
 
     await render(hbs`<ChatMessageInfo @message={{this.message}} />`);
 
@@ -98,13 +93,10 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
   });
 
   test("reviewable", async function (assert) {
-    this.set(
-      "message",
-      ChatMessage.create({
-        user: { username: "discobot" },
-        user_flag_status: 0,
-      })
-    );
+    this.message = ChatMessage.create(fabricators.chatChannel(), {
+      user: { username: "discobot" },
+      user_flag_status: 0,
+    });
 
     await render(hbs`<ChatMessageInfo @message={{this.message}} />`);
 
@@ -113,13 +105,12 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
       I18n.t("chat.you_flagged")
     );
 
-    this.set(
-      "message",
-      ChatMessage.create({
-        user: { username: "discobot" },
-        reviewable_id: 1,
-      })
-    );
+    this.message = ChatMessage.create(fabricators.chatChannel(), {
+      user: { username: "discobot" },
+      reviewable_id: 1,
+    });
+
+    await render(hbs`<ChatMessageInfo @message={{this.message}} />`);
 
     assert.strictEqual(
       query(".chat-message-info__flag a .svg-icon-title").title,
@@ -128,18 +119,15 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
   });
 
   test("with username classes", async function (assert) {
-    this.set(
-      "message",
-      ChatMessage.create({
-        user: {
-          username: "discobot",
-          admin: true,
-          moderator: true,
-          new_user: true,
-          primary_group_name: "foo",
-        },
-      })
-    );
+    this.message = ChatMessage.create(fabricators.chatChannel(), {
+      user: {
+        username: "discobot",
+        admin: true,
+        moderator: true,
+        new_user: true,
+        primary_group_name: "foo",
+      },
+    });
 
     await render(hbs`<ChatMessageInfo @message={{this.message}} />`);
 
@@ -151,7 +139,9 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
   });
 
   test("without username classes", async function (assert) {
-    this.set("message", ChatMessage.create({ user: { username: "discobot" } }));
+    this.message = ChatMessage.create(fabricators.chatChannel(), {
+      user: { username: "discobot" },
+    });
 
     await render(hbs`<ChatMessageInfo @message={{this.message}} />`);
 
