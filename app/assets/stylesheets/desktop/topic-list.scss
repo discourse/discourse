@@ -227,17 +227,6 @@
   }
 }
 
-@include breakpoint(large, $sidebar: true) {
-  .topic-list {
-    .topic-list-item .topic-list-data:first-of-type {
-      padding: 0.8em 0.33em;
-    }
-    .topic-list-data {
-      padding: 0.33em;
-    }
-  }
-}
-
 @include breakpoint(medium) {
   .nav-pills {
     > li > a {
