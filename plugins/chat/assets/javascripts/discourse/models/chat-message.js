@@ -130,7 +130,13 @@ export default class ChatMessage {
     if (existingReaction) {
       if (action === "add") {
         if (selfReaction && existingReaction.reacted) {
-          return false;
+          return;
+        }
+
+        // we might receive a message bus event while loading a channel who would
+        // already have the reaction added to the message
+        if (existingReaction.users.find((user) => user.id === actor.id)) {
+          return;
         }
 
         existingReaction.count = existingReaction.count + 1;

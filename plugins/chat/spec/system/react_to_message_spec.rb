@@ -140,5 +140,26 @@ RSpec.describe "React to message", type: :system, js: true do
     context "when mobile", mobile: true do
       include_examples "inline reactions"
     end
+
+    context "when receiving a duplicate reaction event" do
+      fab!(:user_1) { Fabricate(:user) }
+
+      fab!(:reaction_2) do
+        Chat::ChatMessageReactor.new(user_1, category_channel_1).react!(
+          message_id: message_1.id,
+          react_action: :add,
+          emoji: "heart",
+        )
+      end
+
+      it "doesn’t create duplicate reactions" do
+        chat.visit_channel(category_channel_1)
+
+        ChatPublisher.publish_reaction!(category_channel_1, message_1, "add", user_1, "heart")
+        channel.send_message("test") # cheap trick to ensure reaction has been processed
+
+        expect(channel).to have_reaction(message_1, reaction_2, "1")
+      end
+    end
   end
 end
