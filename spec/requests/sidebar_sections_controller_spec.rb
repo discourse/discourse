@@ -54,7 +54,11 @@ RSpec.describe SidebarSectionsController do
            params: {
              title: "custom section",
              links: [
-               { icon: "link", name: "categories", value: "/categories" },
+               {
+                 icon: "link",
+                 name: "categories",
+                 value: "http://#{Discourse.current_hostname}/categories",
+               },
                { icon: "address-book", name: "tags", value: "/tags" },
                {
                  icon: "external-link-alt",

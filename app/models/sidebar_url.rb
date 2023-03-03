@@ -7,7 +7,7 @@ class SidebarUrl < ActiveRecord::Base
 
   validate :path_validator
 
-  before_save :set_external
+  before_save :remove_internal_hostname, :set_external
 
   def path_validator
     if external?
@@ -20,6 +20,14 @@ class SidebarUrl < ActiveRecord::Base
       :value,
       I18n.t("activerecord.errors.models.sidebar_section_link.attributes.linkable_type.invalid"),
     )
+  end
+
+  def remove_internal_hostname
+    self.value =
+      self
+        .value
+        .sub("http://#{Discourse.current_hostname}", "")
+        .sub("https://#{Discourse.current_hostname}", "")
   end
 
   def set_external
