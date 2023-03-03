@@ -30,9 +30,9 @@
             @labelKey="groups.member_requested"
             @automatic={{true}}
           />
-          <div class="directory-table__column-header">{{i18n
-              "groups.requests.reason"
-            }}</div>
+          <div
+            class="directory-table__column-header group-request-reason__column-header"
+          >{{i18n "groups.requests.reason"}}</div>
           <div class="directory-table__column-header"></div>
         </:header>
         <:body>
@@ -49,7 +49,7 @@
                   <span>{{bound-date m.requested_at}}</span>
                 </span>
               </div>
-              <div class="directory-table__cell">
+              <div class="directory-table__cell group-request-reason__content">
                 <span class="directory-table__label">
                   <span>{{i18n "groups.requests.reason"}}</span>
                 </span>
