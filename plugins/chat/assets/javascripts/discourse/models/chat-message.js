@@ -45,6 +45,7 @@ export default class ChatMessage {
   @tracked mentionWarning;
   @tracked availableFlags;
   @tracked newest = false;
+  @tracked highlighted = false;
 
   constructor(channel, args = {}) {
     this.channel = channel;

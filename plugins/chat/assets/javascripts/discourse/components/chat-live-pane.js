@@ -103,8 +103,6 @@ export default class ChatLivePane extends Component {
 
   @action
   updateChannel() {
-    this.loadedOnce = false;
-
     if (this._loadedChannelId !== this.args.channel?.id) {
       this._unsubscribeToUpdates(this._loadedChannelId);
       this.selectingMessages = false;
@@ -118,6 +116,8 @@ export default class ChatLivePane extends Component {
 
   @action
   loadMessages() {
+    this.loadedOnce = false;
+
     if (this.args.targetMessageId) {
       this.requestedTargetMessageId = parseInt(this.args.targetMessageId, 10);
     }
@@ -164,8 +164,8 @@ export default class ChatLivePane extends Component {
       return;
     }
 
+    this.args.channel?.clearMessages();
     this.loadingMorePast = true;
-    this.args.channel.clearMessages();
 
     const findArgs = { pageSize: PAGE_SIZE };
     const fetchingFromLastRead = !options.fetchFromLastMessage;
@@ -436,16 +436,15 @@ export default class ChatLivePane extends Component {
       }
 
       if (opts.highlight) {
-        messageEl.classList.add("highlighted");
+        message.highlighted = true;
+
         discourseLater(() => {
-          messageEl.classList.add("transition-slow");
+          if (this._selfDeleted) {
+            return;
+          }
+
+          message.highlighted = false;
         }, 2000);
-        discourseLater(() => {
-          messageEl.classList.remove("highlighted");
-          discourseLater(() => {
-            messageEl.classList.remove("transition-slow");
-          }, 2000);
-        }, 3000);
       }
 
       this._iOSFix(() => {

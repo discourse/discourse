@@ -82,10 +82,6 @@
     background-color: var(--danger-hover);
   }
 
-  &.transition-slow {
-    transition: 2s linear background-color;
-  }
-
   &.is-reply {
     display: grid;
     grid-template-columns: var(--message-left-width) 1fr;
@@ -277,6 +273,7 @@
   font-style: italic;
 }
 
+.chat-message-container.is-hovered,
 .chat-message.chat-message-selected {
   background: var(--primary-very-low);
 }

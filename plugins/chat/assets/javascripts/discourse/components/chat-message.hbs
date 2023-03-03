@@ -49,7 +49,9 @@
   {{on "mouseleave" (fn @onHoverMessage null (hash desktopOnly=true))}}
   class={{concat-class
     "chat-message-container"
+    (if @isHovered "is-hovered")
     (if @selectingMessages "selecting-messages")
+    (if @message.highlighted "highlighted")
   }}
   data-id={{@message.id}}
   data-staged-id={{if @message.staged @message.stagedId}}
@@ -97,6 +99,7 @@
           (if @isHovered "chat-message-selected")
         }}
       >
+        {{@message.id}}
         {{#unless this.hideReplyToInfo}}
           <ChatMessageInReplyToIndicator @message={{@message}} />
         {{/unless}}
