@@ -27,6 +27,10 @@ function isUnread(topic) {
   );
 }
 
+function isNewOrUnread(topic) {
+  return isUnread(topic) || isNew(topic);
+}
+
 function isUnseen(topic) {
   return !topic.is_seen;
 }
@@ -552,7 +556,22 @@ const TopicTrackingState = EmberObject.extend({
     const mutedCategoryIds = this.currentUser?.muted_category_ids?.concat(
       this.currentUser.indirectly_muted_category_ids
     );
-    let filterFn = type === "new" ? isNew : isUnread;
+
+    let filterFn;
+    switch (type) {
+      case "new":
+        filterFn = isNew;
+        break;
+      case "unread":
+        filterFn = isUnread;
+        break;
+      case "new_and_unread":
+      case "unread_and_new":
+        filterFn = isNewOrUnread;
+        break;
+      default:
+        throw new Error(`Unkown filter type ${type}`);
+    }
 
     return Array.from(this.states.values()).filter((topic) => {
       if (!filterFn(topic)) {
@@ -592,6 +611,21 @@ const TopicTrackingState = EmberObject.extend({
   countUnread({ categoryId, tagId, noSubcategories, customFilterFn } = {}) {
     return this.countCategoryByState({
       type: "unread",
+      categoryId,
+      tagId,
+      noSubcategories,
+      customFilterFn,
+    });
+  },
+
+  countNewAndUnread({
+    categoryId,
+    tagId,
+    noSubcategories,
+    customFilterFn,
+  } = {}) {
+    return this.countCategoryByState({
+      type: "new_and_unread",
       categoryId,
       tagId,
       noSubcategories,
