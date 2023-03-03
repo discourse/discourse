@@ -16,7 +16,8 @@ export default {
       markdownItRules:
         site.markdown_additional_options?.chat
           ?.limited_pretty_text_markdown_rules,
-      hashtagTypesInPriorityOrder: site.hashtag_configurations["chat-composer"],
+      hashtagTypesInPriorityOrder:
+        site.hashtag_configurations?.["chat-composer"],
       hashtagIcons: site.hashtag_icons,
     };
 
