@@ -76,12 +76,12 @@ $radius: 3px;
 
   &__message-text {
     display: flex;
-    padding: 5px 0;
+    padding: 0;
     flex-direction: column;
   }
 
   &__message-msg {
-    height: 13px;
+    height: 10px;
     border-radius: $radius;
     margin: 2px 0;
 
