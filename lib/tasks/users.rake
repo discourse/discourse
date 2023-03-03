@@ -182,6 +182,15 @@ task "users:anonymize_all" => :environment do
   puts "", "#{total} users anonymized.", ""
 end
 
+desc "Anonymize user with the given username"
+task "users:anonymize", [:username] => [:environment] do |_, args|
+  username = args[:username]
+  user = find_user(username)
+  system_user = Discourse.system_user
+  UserAnonymizer.new(user, system_user).make_anonymous
+  puts "User #{username} anonymized"
+end
+
 desc "List all users which have been staff in the last month"
 task "users:list_recent_staff" => :environment do
   current_staff_ids = User.human_users.where("admin OR moderator").pluck(:id)
