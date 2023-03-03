@@ -143,12 +143,11 @@ export default class ChatChannel extends RestModel {
     this.canLoadMorePast = null;
   }
 
-  appendMessages(messages) {
-    this.messages.pushObjects(messages);
-  }
-
-  prependMessages(messages) {
-    this.messages.unshiftObjects(messages);
+  addMessages(messages = []) {
+    this.messages = this.messages
+      .concat(messages)
+      .uniqBy("id")
+      .sortBy("createdAt");
   }
 
   findMessage(messageId) {

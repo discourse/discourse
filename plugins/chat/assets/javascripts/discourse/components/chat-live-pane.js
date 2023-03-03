@@ -189,7 +189,7 @@ export default class ChatLivePane extends Component {
           this.args.channel,
           results
         );
-        this.args.channel.appendMessages(messages);
+        this.args.channel.addMessages(messages);
         this.args.channel.details = meta;
         this.loadedOnce = true;
 
@@ -200,7 +200,7 @@ export default class ChatLivePane extends Component {
         } else if (fetchingFromLastRead) {
           this.scrollToMessage(findArgs["targetMessageId"]);
         } else if (messages.length) {
-          this.scrollToMessage(messages.lastObject.id);
+          this.scrollToMessage(messages[messages.length - 1].id);
         }
 
         this.fillPaneAttempt();
@@ -273,9 +273,7 @@ export default class ChatLivePane extends Component {
           results
         );
 
-        loadingPast
-          ? this.args.channel.prependMessages(messages)
-          : this.args.channel.appendMessages(messages);
+        this.args.channel.addMessages(messages);
         this.args.channel.details = meta;
 
         if (!messages.length) {
@@ -378,7 +376,8 @@ export default class ChatLivePane extends Component {
       // dynamic or it will make the pane jump around, it will disappear on reload
       if (
         !foundFirstNew &&
-        messageData.id > channel.currentUserMembership.last_read_message_id &&
+        messageData.id >
+          this.args.channel.currentUserMembership.last_read_message_id &&
         !channel.messages.some((m) => m.newest)
       ) {
         foundFirstNew = true;
@@ -644,12 +643,12 @@ export default class ChatLivePane extends Component {
     } else if (this._scrollerEl.scrollTop <= 1) {
       // If we are at the bottom, we append the message and scroll to it
       const message = ChatMessage.create(this.args.channel, data.chat_message);
-      this.args.channel.appendMessages([message]);
+      this.args.channel.addMessages([message]);
       this.scrollToBottom();
     } else {
       // If we are almost at the bottom, we append the message and notice the user
       const message = ChatMessage.create(this.args.channel, data.chat_message);
-      this.args.channel.appendMessages([message]);
+      this.args.channel.addMessages([message]);
       this.hasNewMessages = true;
     }
   }
@@ -798,7 +797,7 @@ export default class ChatLivePane extends Component {
       stagedMessage.inReplyTo = this.replyToMsg;
     }
 
-    this.args.channel.appendMessages([stagedMessage]);
+    this.args.channel.addMessages([stagedMessage]);
     if (!this.args.channel.canLoadMoreFuture) {
       this.scrollToBottom();
     }
@@ -1053,7 +1052,7 @@ export default class ChatLivePane extends Component {
 
   @action
   composerValueChanged({ value, uploads, replyToMsg }) {
-    if (!this.editingMessage && !this.args.channel.directMessageChannelDraft) {
+    if (!this.editingMessage && !this.args.channel.isDraft) {
       if (typeof value !== "undefined") {
         this.args.channel.draft.message = value;
       }
@@ -1065,7 +1064,7 @@ export default class ChatLivePane extends Component {
       }
     }
 
-    if (!this.args.channel.directMessageChannelDraft) {
+    if (!this.args.channel.isDraft) {
       this._reportReplyingPresence(value);
     }
 
@@ -1314,9 +1313,7 @@ export default class ChatLivePane extends Component {
         const scrollHeight = document.querySelector(
           ".chat-messages-scroll"
         ).scrollHeight;
-
         const reversedDates = [...dates].reverse();
-
         // TODO (joffrey): optimize this code to trigger less layout computation
         reversedDates.forEach((date, index) => {
           if (index > 0) {
@@ -1325,7 +1322,6 @@ export default class ChatLivePane extends Component {
           } else {
             date.style.bottom = 0;
           }
-
           date.style.top = date.nextElementSibling.offsetTop + "px";
         });
       });
