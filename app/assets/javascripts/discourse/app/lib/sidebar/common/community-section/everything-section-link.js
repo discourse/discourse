@@ -48,15 +48,7 @@ export default class EverythingSectionLink extends BaseSectionLink {
   }
 
   get currentWhen() {
-    if (this.#linkToNew) {
-      if (this.#unreadAndNewCount > 0) {
-        return "discovery.new";
-      } else {
-        return "discovery.latest";
-      }
-    } else {
-      return "discovery.latest discovery.new discovery.unread discovery.top";
-    }
+    return "discovery.latest discovery.new discovery.unread discovery.top";
   }
 
   get badgeText() {

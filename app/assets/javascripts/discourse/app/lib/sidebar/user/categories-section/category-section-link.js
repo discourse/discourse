@@ -12,14 +12,9 @@ const UNREAD_AND_NEW_COUNTABLE = {
   badgeTextFunction: (count) => count.toString(),
   route: "discovery.newCategory",
   refreshCountFunction: ({ topicTrackingState, category }) => {
-    return (
-      topicTrackingState.countNew({
-        categoryId: category.id,
-      }) +
-      topicTrackingState.countUnread({
-        categoryId: category.id,
-      })
-    );
+    return topicTrackingState.countNewAndUnread({
+      categoryId: category.id,
+    });
   },
 };
 
@@ -146,15 +141,7 @@ export default class CategorySectionLink {
   }
 
   get currentWhen() {
-    if (this.#linkToNew && this.activeCountable) {
-      if (get(this, this.activeCountable.propertyName) > 0) {
-        return "discovery.newCategory";
-      } else {
-        return "discovery.category";
-      }
-    } else {
-      return "discovery.unreadCategory discovery.topCategory discovery.newCategory discovery.latestCategory discovery.category discovery.categoryNone discovery.categoryAll";
-    }
+    return "discovery.unreadCategory discovery.topCategory discovery.newCategory discovery.latestCategory discovery.category discovery.categoryNone discovery.categoryAll";
   }
 
   get title() {

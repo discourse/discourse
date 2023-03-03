@@ -1004,3 +1004,143 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     assert.ok(teardownCalled, "section link teardown callback was called");
   });
 });
+
+acceptance(
+  "Sidebar - Logged on user - Community Section - New new view experiment enabled",
+  function (needs) {
+    needs.user({
+      new_new_view_enabled: true,
+    });
+
+    needs.settings({
+      navigation_menu: "sidebar",
+    });
+
+    test("count shown next to the everything link", async function (assert) {
+      this.container.lookup("service:topic-tracking-state").loadStates([
+        {
+          topic_id: 1,
+          highest_post_number: 1,
+          last_read_post_number: null,
+          created_at: "2022-05-11T03:09:31.959Z",
+          category_id: 1,
+          notification_level: null,
+          created_in_new_period: true,
+          treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+        },
+        {
+          topic_id: 2,
+          highest_post_number: 12,
+          last_read_post_number: 11,
+          created_at: "2020-02-09T09:40:02.672Z",
+          category_id: 2,
+          notification_level: 2,
+          created_in_new_period: false,
+          treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+        },
+        {
+          topic_id: 3,
+          highest_post_number: 12,
+          last_read_post_number: 12,
+          created_at: "2020-02-09T09:40:02.672Z",
+          category_id: 2,
+          notification_level: 2,
+          created_in_new_period: false,
+          treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+        },
+      ]);
+
+      await visit("/");
+
+      assert.strictEqual(
+        query(
+          ".sidebar-section-community .sidebar-section-link-everything .sidebar-section-link-content-badge"
+        ).textContent.trim(),
+        "2",
+        "count is 2 because there's 1 unread topic and 1 new topic"
+      );
+    });
+
+    test("everything link href", async function (assert) {
+      this.container.lookup("service:topic-tracking-state").loadStates([
+        {
+          topic_id: 1,
+          highest_post_number: 1,
+          last_read_post_number: null,
+          created_at: "2022-05-11T03:09:31.959Z",
+          category_id: 1,
+          notification_level: null,
+          created_in_new_period: true,
+          treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+        },
+        {
+          topic_id: 2,
+          highest_post_number: 12,
+          last_read_post_number: 11,
+          created_at: "2020-02-09T09:40:02.672Z",
+          category_id: 2,
+          notification_level: 2,
+          created_in_new_period: false,
+          treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+        },
+      ]);
+
+      await visit("/");
+
+      assert.true(
+        query(
+          ".sidebar-section-community .sidebar-section-link-everything"
+        ).href.endsWith("/new"),
+        "links to /new because there are 1 new and 1 unread topics"
+      );
+
+      await publishToMessageBus("/unread", {
+        topic_id: 1,
+        message_type: "read",
+        payload: {
+          last_read_post_number: 3,
+          highest_post_number: 3,
+        },
+      });
+
+      assert.true(
+        query(
+          ".sidebar-section-community .sidebar-section-link-everything"
+        ).href.endsWith("/new"),
+        "links to /new because there is 1 unread topic"
+      );
+
+      await publishToMessageBus("/unread", {
+        topic_id: 2,
+        message_type: "read",
+        payload: {
+          last_read_post_number: 12,
+          highest_post_number: 12,
+        },
+      });
+
+      assert.true(
+        query(
+          ".sidebar-section-community .sidebar-section-link-everything"
+        ).href.endsWith("/latest"),
+        "links to /latest because there are no unread or new topics"
+      );
+
+      await publishToMessageBus("/unread", {
+        topic_id: 1,
+        message_type: "read",
+        payload: {
+          last_read_post_number: null,
+          highest_post_number: 34,
+        },
+      });
+
+      assert.true(
+        query(
+          ".sidebar-section-community .sidebar-section-link-everything"
+        ).href.endsWith("/new"),
+        "links to /new because there is 1 new topic"
+      );
+    });
+  }
+);

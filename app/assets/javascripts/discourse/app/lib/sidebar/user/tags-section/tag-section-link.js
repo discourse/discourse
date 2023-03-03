@@ -56,13 +56,6 @@ export default class TagSectionLink extends BaseTagSectionLink {
   }
 
   get currentWhen() {
-    if (this.#linkToNew) {
-      if (this.#unreadAndNewCount > 0) {
-        return "tag.showNew";
-      } else {
-        return "tag.show";
-      }
-    }
     return "tag.show tag.showNew tag.showUnread tag.showTop";
   }
 
