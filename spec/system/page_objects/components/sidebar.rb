@@ -25,8 +25,9 @@ module PageObjects
       end
 
       def has_link?(name, href: nil)
-        return page.has_link?(name, href: href) if href
-        page.has_link?(name)
+        attributes = {}
+        attributes[:href] = href if href
+        page.has_link?(name, attributes)
       end
 
       def custom_section_modal_title

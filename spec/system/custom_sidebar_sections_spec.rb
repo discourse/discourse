@@ -31,7 +31,7 @@ describe "Custom sidebar sections", type: :system, js: true do
     section_modal.save
 
     expect(page).to have_button("My section")
-    sidebar.has_link?("Sidebar Tags")
+    expect(sidebar).to have_link("Sidebar Tags")
   end
 
   it "allows the user to create custom section with external link" do
@@ -53,7 +53,7 @@ describe "Custom sidebar sections", type: :system, js: true do
     section_modal.save
 
     expect(page).to have_button("My section")
-    sidebar.has_link?("Discourse Homepage", href: "https://discourse.org")
+    expect(sidebar).to have_link("Discourse Homepage", href: "https://discourse.org")
   end
 
   it "allows the user to edit custom section" do
@@ -75,7 +75,8 @@ describe "Custom sidebar sections", type: :system, js: true do
     section_modal.save
 
     expect(page).to have_button("Edited section")
-    sidebar.has_link?("Edited Tags")
+    expect(sidebar).to have_link("Edited Tag")
+
     expect(page).not_to have_link("Sidebar Categories")
   end
 
@@ -122,7 +123,7 @@ describe "Custom sidebar sections", type: :system, js: true do
     section_modal.save
 
     expect(page).to have_button("Public section")
-    sidebar.has_link?("Sidebar Tags")
+    expect(sidebar).to have_link("Sidebar Tags")
     expect(page).to have_css(".sidebar-section-public-section .d-icon-globe")
 
     sidebar.edit_custom_section("Public section")
