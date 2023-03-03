@@ -148,6 +148,7 @@ export default Controller.extend(ModalFunctionality, {
                 icon: link.icon,
                 name: link.name,
                 value: link.value,
+                external: !link.internal,
                 id: link.id,
               })
           )
@@ -174,6 +175,7 @@ export default Controller.extend(ModalFunctionality, {
             icon: link.icon,
             name: link.name,
             value: link.path,
+            external: !link.internal,
           };
         }),
       }),

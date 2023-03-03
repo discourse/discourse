@@ -19,10 +19,6 @@ class SidebarUrl < ActiveRecord::Base
       I18n.t("activerecord.errors.models.sidebar_section_link.attributes.linkable_type.invalid"),
     )
   end
-
-  def external?
-    value.start_with?("http://", "https://")
-  end
 end
 
 # == Schema Information

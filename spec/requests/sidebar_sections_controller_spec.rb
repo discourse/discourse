@@ -56,7 +56,12 @@ RSpec.describe SidebarSectionsController do
              links: [
                { icon: "link", name: "categories", value: "/categories" },
                { icon: "address-book", name: "tags", value: "/tags" },
-               { icon: "external-link-alt", name: "Discourse", value: "https://discourse.org" },
+               {
+                 icon: "external-link-alt",
+                 name: "Discourse",
+                 value: "https://discourse.org",
+                 external: true,
+               },
              ],
            }
 
@@ -73,12 +78,15 @@ RSpec.describe SidebarSectionsController do
       expect(sidebar_section.sidebar_urls.first.icon).to eq("link")
       expect(sidebar_section.sidebar_urls.first.name).to eq("categories")
       expect(sidebar_section.sidebar_urls.first.value).to eq("/categories")
+      expect(sidebar_section.sidebar_urls.first.external).to be false
       expect(sidebar_section.sidebar_urls.second.icon).to eq("address-book")
       expect(sidebar_section.sidebar_urls.second.name).to eq("tags")
       expect(sidebar_section.sidebar_urls.second.value).to eq("/tags")
+      expect(sidebar_section.sidebar_urls.second.external).to be false
       expect(sidebar_section.sidebar_urls.third.icon).to eq("external-link-alt")
       expect(sidebar_section.sidebar_urls.third.name).to eq("Discourse")
       expect(sidebar_section.sidebar_urls.third.value).to eq("https://discourse.org")
+      expect(sidebar_section.sidebar_urls.third.external).to be true
     end
 
     it "does not allow regular user to create public section" do
