@@ -2116,7 +2116,6 @@ navigation:
     default: ""
     allow_any: false
     refresh: true
-    hidden: false
 
 embedding:
   embed_by_username:
