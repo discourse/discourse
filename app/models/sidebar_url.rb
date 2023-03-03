@@ -7,6 +7,8 @@ class SidebarUrl < ActiveRecord::Base
 
   validate :path_validator
 
+  before_save :set_external
+
   def path_validator
     if external?
       raise ActionController::RoutingError if value !~ Discourse::Utils::URI_REGEXP
@@ -18,6 +20,10 @@ class SidebarUrl < ActiveRecord::Base
       :value,
       I18n.t("activerecord.errors.models.sidebar_section_link.attributes.linkable_type.invalid"),
     )
+  end
+
+  def set_external
+    self.external = value.start_with?("http://", "https://")
   end
 end
 
