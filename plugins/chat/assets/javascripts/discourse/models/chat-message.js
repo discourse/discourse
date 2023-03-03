@@ -14,7 +14,8 @@ export default class ChatMessage {
   }
 
   static createStagedMessage(channel, args = {}) {
-    args.staged_id = guid();
+    args.id = guid();
+    args.staged = true;
     return new ChatMessage(channel, args);
   }
 
@@ -22,7 +23,7 @@ export default class ChatMessage {
   @tracked error;
   @tracked selected;
   @tracked channel;
-  @tracked stagedId;
+  @tracked staged = false;
   @tracked channelId;
   @tracked createdAt;
   @tracked deletedAt;
@@ -51,6 +52,7 @@ export default class ChatMessage {
     this.channel = channel;
     this.id = args.id;
     this.newest = args.newest;
+    this.staged = args.staged;
     this.edited = args.edited;
     this.availableFlags = args.available_flags;
     this.hidden = args.hidden;
@@ -71,7 +73,6 @@ export default class ChatMessage {
       args.id,
       args.reactions
     );
-    this.stagedId = args.staged_id;
     this.uploads = new TrackedArray(args.uploads || []);
     this.user = this.#initUserModel(args.user);
     this.bookmark = args.bookmark ? Bookmark.create(args.bookmark) : null;
@@ -118,10 +119,6 @@ export default class ChatMessage {
   @cached
   get nextMessage() {
     return this.channel?.messages?.objectAt?.(this.index + 1);
-  }
-
-  get staged() {
-    return this.stagedId?.length > 0;
   }
 
   react(emoji, action, actor, currentUserId) {

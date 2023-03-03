@@ -162,7 +162,7 @@ export default class ChatChannel extends RestModel {
 
   findStagedMessage(stagedMessageId) {
     return this.messages.find(
-      (message) => message.stagedId === stagedMessageId
+      (message) => message.staged && message.id === stagedMessageId
     );
   }
 

@@ -54,7 +54,6 @@
     (if @message.highlighted "highlighted")
   }}
   data-id={{@message.id}}
-  data-staged-id={{if @message.staged @message.stagedId}}
   {{chat/track-message
     (fn @didShowMessage @message)
     (fn @didHideMessage @message)

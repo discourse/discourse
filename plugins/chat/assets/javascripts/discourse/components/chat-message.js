@@ -105,13 +105,6 @@ export default class ChatMessage extends Component {
     if (id) {
       return document.querySelector(`.chat-message-container[data-id='${id}']`);
     }
-
-    const stagedId = this.args.message?.stagedId;
-    if (stagedId) {
-      return document.querySelector(
-        `.chat-message-container[data-staged-id='${stagedId}']`
-      );
-    }
   }
 
   get showActions() {

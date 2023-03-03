@@ -245,6 +245,10 @@
     }
   }
 
+  .chat-message.chat-message-staged {
+    opacity: 0.6;
+  }
+
   .not-mobile-device & .chat-message-reaction-list .chat-message-react-btn {
     display: none;
   }

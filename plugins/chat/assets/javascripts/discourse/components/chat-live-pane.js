@@ -423,13 +423,9 @@ export default class ChatLivePane extends Component {
     }
 
     schedule("afterRender", () => {
-      const messageEl =
-        this._scrollerEl.querySelector(
-          `.chat-message-container[data-id='${messageId}']`
-        ) ||
-        this._scrollerEl.querySelector(
-          `.chat-message-container[data-staged-id='${messageId}']`
-        );
+      const messageEl = this._scrollerEl.querySelector(
+        `.chat-message-container[data-id='${messageId}']`
+      );
 
       if (!messageEl || this._selfDeleted) {
         return;
@@ -607,10 +603,11 @@ export default class ChatLivePane extends Component {
     if (stagedMessage) {
       stagedMessage.error = null;
       stagedMessage.id = data.chat_message.id;
-      stagedMessage.stagedId = null;
+      stagedMessage.staged = false;
       stagedMessage.excerpt = data.chat_message.excerpt;
       stagedMessage.threadId = data.chat_message.thread_id;
       stagedMessage.channelId = data.chat_message.chat_channel_id;
+      stagedMessage.createdAt = data.chat_message.created_at;
 
       const inReplyToMsg = this.args.channel.findMessage(
         data.chat_message.in_reply_to?.id
@@ -805,14 +802,14 @@ export default class ChatLivePane extends Component {
       .sendMessage(this.args.channel.id, {
         message: stagedMessage.message,
         in_reply_to_id: stagedMessage.inReplyTo?.id,
-        staged_id: stagedMessage.stagedId,
+        staged_id: stagedMessage.id,
         upload_ids: stagedMessage.uploads.map((upload) => upload.id),
       })
       .then(() => {
         this.scrollToBottom();
       })
       .catch((error) => {
-        this._onSendError(stagedMessage.stagedId, error);
+        this._onSendError(stagedMessage.id, error);
       })
       .finally(() => {
         if (this._selfDeleted) {
@@ -845,8 +842,8 @@ export default class ChatLivePane extends Component {
     );
   }
 
-  _onSendError(stagedId, error) {
-    const stagedMessage = this.args.channel.findStagedMessage(stagedId);
+  _onSendError(id, error) {
+    const stagedMessage = this.args.channel.findStagedMessage(id);
     if (stagedMessage) {
       if (error.jqXHR?.responseJSON?.errors?.length) {
         stagedMessage.error = error.jqXHR.responseJSON.errors[0];
@@ -869,7 +866,7 @@ export default class ChatLivePane extends Component {
       cooked: stagedMessage.cooked,
       message: stagedMessage.message,
       upload_ids: stagedMessage.uploads.map((upload) => upload.id),
-      staged_id: stagedMessage.stagedId,
+      staged_id: stagedMessage.id,
     };
 
     this.chatApi
