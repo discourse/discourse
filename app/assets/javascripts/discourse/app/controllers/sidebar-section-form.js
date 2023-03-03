@@ -205,6 +205,7 @@ export default Controller.extend(ModalFunctionality, {
             icon: link.icon,
             name: link.name,
             value: link.path,
+            external: link.external,
             _destroy: link._destroy,
           };
         }),
