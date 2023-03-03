@@ -70,11 +70,6 @@ module ChatPublisher
       type: :reaction,
       chat_message_id: chat_message.id,
     }
-    MessageBus.publish(
-      "/chat/message-reactions/#{chat_message.id}",
-      content.as_json,
-      permissions(chat_channel),
-    )
     MessageBus.publish("/chat/#{chat_channel.id}", content.as_json, permissions(chat_channel))
   end
 
