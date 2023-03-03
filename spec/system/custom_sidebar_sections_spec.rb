@@ -21,7 +21,7 @@ describe "Custom sidebar sections", type: :system, js: true do
 
     expect(section_modal).to be_visible
     expect(section_modal).to have_disabled_save
-    expect(find("#discourse-modal-title")).to have_content("Add custom section")
+    expect(sidebar.custom_section_modal_title).to have_content("Add custom section")
 
     section_modal.fill_name("My section")
 
@@ -31,7 +31,7 @@ describe "Custom sidebar sections", type: :system, js: true do
     section_modal.save
 
     expect(page).to have_button("My section")
-    expect(page).to have_link("Sidebar Tags")
+    sidebar.has_link?("Sidebar Tags")
   end
 
   it "allows the user to create custom section with external link" do
@@ -39,18 +39,21 @@ describe "Custom sidebar sections", type: :system, js: true do
     sidebar.open_new_custom_section
 
     expect(section_modal).to be_visible
-    expect(section_modal).to have_disabled_save_button
-    expect(find("#discourse-modal-title")).to have_content("Add custom section")
+    expect(section_modal).to have_disabled_save
+    expect(sidebar.custom_section_modal_title).to have_content("Add custom section")
 
     section_modal.fill_name("My section")
 
+    section_modal.fill_link("Discourse Homepage", "htt")
+    expect(section_modal).to have_disabled_save
+
     section_modal.fill_link("Discourse Homepage", "https://discourse.org")
-    expect(section_modal).to have_enabled_save_button
+    expect(section_modal).to have_enabled_save
 
     section_modal.save
 
     expect(page).to have_button("My section")
-    expect(page).to have_link("Discourse Homepage", href: "https://discourse.org")
+    sidebar.has_link?("Discourse Homepage", href: "https://discourse.org")
   end
 
   it "allows the user to edit custom section" do
@@ -72,7 +75,7 @@ describe "Custom sidebar sections", type: :system, js: true do
     section_modal.save
 
     expect(page).to have_button("Edited section")
-    expect(page).to have_link("Edited Tags")
+    sidebar.has_link?("Edited Tags")
     expect(page).not_to have_link("Sidebar Categories")
   end
 
@@ -119,7 +122,7 @@ describe "Custom sidebar sections", type: :system, js: true do
     section_modal.save
 
     expect(page).to have_button("Public section")
-    expect(page).to have_link("Sidebar Tags")
+    sidebar.has_link?("Sidebar Tags")
     expect(page).to have_css(".sidebar-section-public-section .d-icon-globe")
 
     sidebar.edit_custom_section("Public section")

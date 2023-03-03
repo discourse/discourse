@@ -45,16 +45,23 @@ class SectionLink {
     this.router = router;
     this.icon = icon || "link";
     this.name = name;
-    this.value = value ? `${this.protocolAndHost}${value}` : value;
+    this.value = value;
+    if (this.internal) {
+      this.value = `${this.httpsHost}${value}`;
+    }
     this.id = id;
   }
 
-  get protocolAndHost() {
-    return window.location.protocol + "//" + window.location.host;
+  get httpHost() {
+    return "http://" + window.location.host;
+  }
+
+  get httpsHost() {
+    return "https://" + window.location.host;
   }
 
   get path() {
-    return this.value?.replace(this.protocolAndHost, "");
+    return this.value?.replace(this.httpHost, "").replace(this.httpsHost, "");
   }
 
   get valid() {
@@ -79,14 +86,14 @@ class SectionLink {
 
   get internal() {
     return (
-      this.value.startsWith(this.protocolAndHost) || this.value.startsWith("/")
+      this.value &&
+      (this.value.startsWith(this.httpHost) ||
+        this.value.startsWith(this.httpsHost) ||
+        this.value.startsWith("/"))
     );
   }
 
   #validExternal() {
-    if (this.internal) {
-      return false;
-    }
     try {
       return new URL(this.value);
     } catch {
@@ -95,19 +102,16 @@ class SectionLink {
   }
 
   #validInternal() {
-    if (!this.internal) {
-      return false;
-    }
-    return this.internal && this.router.recognize(this.path).name !== "unknown";
+    return this.router.recognize(this.path).name !== "unknown";
   }
 
   get validValue() {
-    return (
-      !isEmpty(this.value) &&
+    return !isEmpty(this.value) &&
       this.value.length <= 200 &&
       this.path &&
-      this.internal ? this.validInternal : this.validExternal
-    );
+      this.internal
+      ? this.#validInternal()
+      : this.#validExternal();
   }
 
   get valueCssClass() {

@@ -23,6 +23,15 @@ module PageObjects
         find(".sidebar-section-#{name.parameterize}").hover
         find(".sidebar-section-#{name.parameterize} button.sidebar-section-header-button").click
       end
+
+      def has_link?(name, href: nil)
+        return page.has_link?(name, href: "https://discourse.org") if href
+        page.has_link?(name)
+      end
+
+      def custom_section_modal_title
+        find("#discourse-modal-title")
+      end
     end
   end
 end
