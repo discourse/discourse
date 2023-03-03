@@ -8,6 +8,7 @@ import discourseComputed, {
   observes,
   on,
 } from "discourse-common/utils/decorators";
+import { observes as nativeClassObserves } from "@ember-decorators/object";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import EmberObject from "@ember/object";
@@ -71,14 +72,42 @@ const TestStub = EmberObject.extend({
     this.state = state;
   },
 
-  // Note: it only works in this particular order:
-  // `@observes()` first, then `@debounce()`
   @observes("prop")
+  propChanged() {
+    this.react();
+  },
+
   @debounce(50)
   react() {
     this.otherCounter++;
   },
 });
+
+const ClassSyntaxTestStub = class extends EmberObject {
+  counter = 0;
+  otherCounter = 0;
+  state = null;
+
+  @debounce(50)
+  increment(value) {
+    this.counter += value;
+  }
+
+  @debounce(50, true)
+  setState(state) {
+    this.state = state;
+  }
+
+  @nativeClassObserves("prop")
+  propChanged() {
+    this.react();
+  }
+
+  @debounce(50)
+  react() {
+    this.otherCounter++;
+  }
+};
 
 module("Unit | Utils | decorators", function (hooks) {
   setupRenderingTest(hooks);
@@ -167,15 +196,22 @@ module("Unit | Utils | decorators", function (hooks) {
     assert.strictEqual(stub.state, "foo");
   });
 
-  test("debounce works with @observe", async function (assert) {
-    const stub = TestStub.create();
+  test("debounce works with native class syntax", async function (assert) {
+    const stub = ClassSyntaxTestStub.create();
 
-    stub.set("prop", 1);
-    stub.set("prop", 2);
-    stub.set("prop", 3);
+    stub.increment(1);
+    stub.increment(1);
+    stub.increment(1);
     await settled();
 
-    assert.strictEqual(stub.otherCounter, 1);
+    assert.strictEqual(stub.counter, 1);
+
+    stub.increment(500);
+    stub.increment(1000);
+    stub.increment(5);
+    await settled();
+
+    assert.strictEqual(stub.counter, 6);
   });
 
   test("@observes works via .extend and native class syntax", async function (assert) {

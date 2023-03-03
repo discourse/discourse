@@ -112,6 +112,10 @@ export default Controller.extend({
   },
 
   @observes("filter", "onlyOverridden", "model")
+  optsChanged() {
+    this.filterContent();
+  },
+
   @debounce(INPUT_DELAY)
   filterContent() {
     if (this._skipBounce) {
