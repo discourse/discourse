@@ -16,30 +16,8 @@
   position: relative;
 }
 
-.group-members {
-  .group-member {
-    border-top: 1px solid var(--primary-low);
-
-    .user-info {
-      margin: 0;
-      padding: 0.5em;
-      width: 98%;
-    }
-
-    .btn-group {
-      margin-top: 0;
-    }
-
-    .group-member-info {
-      color: var(--primary-medium);
-
-      label {
-        margin-bottom: 0;
-        font-weight: bold;
-        display: inline-block;
-      }
-    }
-  }
+.group-accept-deny-buttons {
+  justify-content: start;
 }
 
 .group-info {
