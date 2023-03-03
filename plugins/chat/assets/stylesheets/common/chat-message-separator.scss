@@ -45,10 +45,6 @@
     pointer-events: none;
 
     &.last-visit {
-      .chat-message-separator__text {
-        color: var(--danger-medium);
-      }
-
       & + .chat-message-separator__line-container {
         .chat-message-separator__line {
           border-color: var(--danger-medium);
