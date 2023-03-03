@@ -1,4 +1,3 @@
-
 createWidget("random-quick-tip", {
   tagName: "li.search-random-quick-tip",
 
@@ -18,12 +17,13 @@ createWidget("random-quick-tip", {
     ];
   },
 
-  click(e) {
+  onClick(e) {
     if (e.target.classList.contains("tip-clickable")) {
       const searchInput = document.querySelector("#search-term");
       searchInput.value = this.state.label;
       searchInput.focus();
-      this.sendWidgetAction("triggerAutocomplete", {
+      triggerAutocomplete;
+      this.args.triggerAutocomplete({
         value: this.state.label,
         searchTopics: this.state.searchTopics,
       });

@@ -1,0 +1,27 @@
+<div class="results">
+  {{#if @suggestionKeyword}}
+    <SearchMenu::Results::Assistant
+      @term={{@term}}
+      @suggestionKeyword={{@suggestionKeyword}}
+      @results={{@suggestionResults}}
+    />
+  {{/if}}
+
+  {{#if (and @searchTopics @invalidTerm)}}
+    <div class="no-results">
+      {{I18n "search.too_short"}}
+    </div>
+  {{/if}}
+
+  {{#if (and @searchTopics @noResults)}}
+    <div class="no-results">
+      {{I18n "search.no_results"}}
+    </div>
+  {{/if}}
+
+  {{#if (not (and @term @inPMInboxContext))}}
+    <div class="no-results">
+      <SearchMenu::Results::InitialOptions @term={{@term}} />
+    </div>
+  {{/if}}
+</div>

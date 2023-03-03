@@ -158,6 +158,7 @@
             </div>
           {{/if}}
 
+<<<<<<< HEAD
           {{#each-in this.groups as |section emojis|}}
             <div
               class={{concat-class
@@ -246,3 +247,14 @@
     <div class="chat-emoji-picker__backdrop"></div>
   {{/if}}
 {{/if}}
+=======
+{{#if
+  (and
+    this.chatEmojiPickerManager.opened
+    this.site.mobileView
+    (eq this.chatEmojiPickerManager.context "chat-message")
+  )
+}}
+  <div class="chat-emoji-picker__backdrop"></div>
+{{/if}}
+>>>>>>> 5d51ed05c9 (DEV: Update result components)

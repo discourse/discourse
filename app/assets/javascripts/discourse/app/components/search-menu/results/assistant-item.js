@@ -1,8 +1,13 @@
+import Component from "@glimmer/component";
+import { inject as service } from "@ember/service";
+import { action } from "@ember/object";
+import { bind } from "discourse-common/utils/decorators";
+import { tracked } from "@glimmer/tracking";
 
-createWidget("search-menu-assistant-item", {
-  tagName: "li.search-menu-assistant-item",
+export default class AssistantItem extends Component {
+  constructor() {
+    super(...arguments);
 
-  html(attrs) {
     const prefix = attrs.prefix?.trim();
     const attributes = {};
     attributes.href = "#";
@@ -65,7 +70,7 @@ createWidget("search-menu-assistant-item", {
       content.push(h("span.extra-hint", attrs.extraHint));
     }
     return h("a.widget-link.search-link", { attributes }, content);
-  },
+  }
 
   click(e) {
     const searchInput = document.querySelector("#search-term");
@@ -78,5 +83,5 @@ createWidget("search-menu-assistant-item", {
     });
     e.preventDefault();
     return false;
-  },
-});
+  }
+}

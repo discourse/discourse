@@ -11,8 +11,7 @@ import {
 import DiscourseURL from "discourse/lib/url";
 import discourseDebounce from "discourse-common/lib/debounce";
 import getURL from "discourse-common/lib/get-url";
-import { h } from "virtual-dom";
-import { isiPad, translateModKey } from "discourse/lib/utilities";
+import { isiPad } from "discourse/lib/utilities";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { Promise } from "rsvp";
 import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
@@ -113,13 +112,13 @@ export default class SearchMenu extends Component {
     this.triggerSearch();
   }
 
-  //triggerAutocomplete(opts = {}) {
-  //if (opts.setTopicContext) {
-  //this.sendWidgetAction("setTopicContext");
-  //this.state.inTopicContext = true;
-  //}
-  //this.searchTermChanged(opts.value, { searchTopics: opts.searchTopics });
-  //}
+  triggerAutocomplete(opts = {}) {
+    if (opts.setTopicContext) {
+      this.sendWidgetAction("setTopicContext");
+      this.state.inTopicContext = true;
+    }
+    this.searchTermChanged(opts.value, { searchTopics: opts.searchTopics });
+  }
 
   //fullSearch() {
   //searchData.loading = false;

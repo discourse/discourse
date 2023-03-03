@@ -284,33 +284,11 @@ createSearchResult({
   },
 });
 
-export default class SearchMenu extends Component {}
+export default class Results extends Component {}
 
 createWidget("search-menu-results", {
-  tagName: "div.results",
-
   html(attrs) {
     const { term, suggestionKeyword, results, searchTopics } = attrs;
-
-    if (suggestionKeyword) {
-      return this.attach("search-menu-assistant", {
-        term,
-        suggestionKeyword,
-        results: attrs.suggestionResults || [],
-      });
-    }
-
-    if (searchTopics && attrs.invalidTerm) {
-      return h("div.no-results", I18n.t("search.too_short"));
-    }
-
-    if (searchTopics && attrs.noResults) {
-      return h("div.no-results", I18n.t("search.no_results"));
-    }
-
-    if (!term && !attrs.inPMInboxContext) {
-      return this.attach("search-menu-initial-options", { term });
-    }
 
     const resultTypes = results.resultTypes || [];
 

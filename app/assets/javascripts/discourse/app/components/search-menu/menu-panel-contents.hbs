@@ -59,16 +59,16 @@
     {{/unless}}
   {{else}}
     {{#unless @loading}}
-      {{! <SearchMenu::Results }}
-      {{!-- @term={{@term}} --}}
-      {{!-- @noResults={{@noResults}} --}}
-      {{!-- @results={{@results}} --}}
-      {{!-- @invalidTerm={{@invalidTerm}} --}}
-      {{!-- @suggestionKeyword={{@suggestionKeyword}} --}}
-      {{!-- @suggestionResults={{@suggestionResults}} --}}
-      {{!-- @searchTopics={{@includesTopics}} --}}
-      {{!-- @inPMInboxContext={{@inPMInboxContext}} --}}
-      {{! /> }}
+      <SearchMenu::Results
+        @term={{@term}}
+        @noResults={{@noResults}}
+        @results={{@results}}
+        @invalidTerm={{@invalidTerm}}
+        @suggestionKeyword={{@suggestionKeyword}}
+        @suggestionResults={{@suggestionResults}}
+        @searchTopics={{@includesTopics}}
+        @inPMInboxContext={{@inPMInboxContext}}
+      />
     {{/unless}}
   {{/if}}
 </div>

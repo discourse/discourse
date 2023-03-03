@@ -1,8 +1,15 @@
-createWidget("search-menu-initial-options", {
-  tagName: "ul.search-menu-initial-options",
-  services: ["search"],
+import Component from "@glimmer/component";
+import { inject as service } from "@ember/service";
+import { action } from "@ember/object";
+import { bind } from "discourse-common/utils/decorators";
+import { tracked } from "@glimmer/tracking";
 
-  html(attrs) {
+export default class InitialOptions extends Component {
+  @service search;
+
+  constructor() {
+    super(...arguments);
+
     if (attrs.term?.match(MODIFIER_REGEXP)) {
       return this.defaultRow(attrs.term);
     }
@@ -128,7 +135,7 @@ createWidget("search-menu-initial-options", {
     }
 
     return content;
-  },
+  }
 
   defaultRow(term, opts = { withLabel: false }) {
     return this.attach("search-menu-assistant-item", {
@@ -141,11 +148,11 @@ createWidget("search-menu-initial-options", {
           : null,
       ],
     });
-  },
+  }
 
   refreshSearchMenuResults() {
     this.scheduleRerender();
-  },
+  }
 
   loadRecentSearches() {
     User.loadRecentSearches().then((result) => {
@@ -157,5 +164,5 @@ createWidget("search-menu-initial-options", {
         this.scheduleRerender();
       }
     });
-  },
-});
+  }
+}
