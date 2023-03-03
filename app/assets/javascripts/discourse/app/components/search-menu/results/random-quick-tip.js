@@ -1,32 +1,26 @@
-createWidget("random-quick-tip", {
-  tagName: "li.search-random-quick-tip",
+import Component from "@glimmer/component";
+import { inject as service } from "@ember/service";
+import { action } from "@ember/object";
+import { bind } from "discourse-common/utils/decorators";
+import { tracked } from "@glimmer/tracking";
 
-  buildKey: () => "random-quick-tip",
+export default class RandomQuickTip extends Component {
+  constructor() {
+    super(...arguments);
 
-  defaultState() {
-    return QUICK_TIPS[Math.floor(Math.random() * QUICK_TIPS.length)];
-  },
+    //return QUICK_TIPS[Math.floor(Math.random() * QUICK_TIPS.length)];
+  }
 
-  html(attrs, state) {
-    return [
-      h(
-        `span.tip-label${state.clickable ? ".tip-clickable" : ""}`,
-        state.label
-      ),
-      h("span.tip-description", state.description),
-    ];
-  },
-
-  onClick(e) {
+  @action
+  triggerAutocomplete(e) {
     if (e.target.classList.contains("tip-clickable")) {
       const searchInput = document.querySelector("#search-term");
       searchInput.value = this.state.label;
       searchInput.focus();
-      triggerAutocomplete;
-      this.args.triggerAutocomplete({
+      this.sendWidgetAction("triggerAutocomplete", {
         value: this.state.label,
         searchTopics: this.state.searchTopics,
       });
     }
-  },
-});
+  }
+}

@@ -17,7 +17,21 @@ import highlightSearch from "discourse/lib/highlight-search";
 import { iconNode } from "discourse-common/lib/icon-library";
 import renderTag from "discourse/lib/render-tag";
 import { MODIFIER_REGEXP } from "discourse/widgets/search-menu";
-import User from "discourse/models/user";
+import TopicViewComponent from "./results/type/topic";
+import PostViewComponent from "./results/type/post";
+import UserViewComponent from "./results/type/user";
+import TagViewComponent from "./results/type/tag";
+import GroupViewComponent from "./results/type/group";
+import CategoryViewComponent from "./results/type/category";
+
+const SEARCH_RESULTS_COMPONENT_TYPE = {
+  category: CategoryViewComponent,
+  topic: TopicViewComponent,
+  post: PostViewComponent,
+  user: UserViewComponent,
+  tag: TagViewComponent,
+  group: GroupViewComponent,
+};
 
 const suggestionShortcuts = [
   "in:title",
@@ -83,211 +97,200 @@ export function resetQuickSearchRandomTips() {
 
 resetQuickSearchRandomTips();
 
-class Highlighted extends RawHtml {
-  constructor(html, term) {
-    super({ html: `<span>${html}</span>` });
-    this.term = term;
-  }
+//function createSearchResult({ type, linkField, builder }) {
+//return createWidget(`search-result-${type}`, {
+//tagName: "ul.list",
 
-  decorate($html) {
-    highlightSearch($html[0], this.term);
-  }
-}
+//buildAttributes() {
+//return {
+//"aria-label": `${type} ${I18n.t("search.results")}`,
+//};
+//},
 
-function createSearchResult({ type, linkField, builder }) {
-  return createWidget(`search-result-${type}`, {
-    tagName: "ul.list",
+//html(attrs) {
+//return attrs.results.map((r) => {
+//let searchResultId;
 
-    buildAttributes() {
-      return {
-        "aria-label": `${type} ${I18n.t("search.results")}`,
-      };
-    },
+//if (type === "topic") {
+//searchResultId = r.topic_id;
+//} else {
+//searchResultId = r.id;
+//}
 
-    html(attrs) {
-      return attrs.results.map((r) => {
-        let searchResultId;
+//return h(
+//"li.item",
+//this.attach("link", {
+//href: r[linkField],
+//contents: () => builder.call(this, r, attrs.term),
+//className: "search-link",
+//searchResultId,
+//searchResultType: type,
+//searchLogId: attrs.searchLogId,
+//})
+//);
+//});
+//},
+//});
+//}
 
-        if (type === "topic") {
-          searchResultId = r.topic_id;
-        } else {
-          searchResultId = r.id;
-        }
+//function postResult(result, link, term) {
+//const html = [link];
 
-        return h(
-          "li.item",
-          this.attach("link", {
-            href: r[linkField],
-            contents: () => builder.call(this, r, attrs.term),
-            className: "search-link",
-            searchResultId,
-            searchResultType: type,
-            searchLogId: attrs.searchLogId,
-          })
-        );
-      });
-    },
-  });
-}
+//if (!this.site.mobileView) {
+//html.push(
+//h("span.blurb", [
+//dateNode(result.created_at),
+//h("span", " - "),
+//this.siteSettings.use_pg_headlines_for_excerpt
+//? new RawHtml({ html: `<span>${result.blurb}</span>` })
+//: new Highlighted(result.blurb, term),
+//])
+//);
+//}
 
-function postResult(result, link, term) {
-  const html = [link];
+//return html;
+//}
 
-  if (!this.site.mobileView) {
-    html.push(
-      h("span.blurb", [
-        dateNode(result.created_at),
-        h("span", " - "),
-        this.siteSettings.use_pg_headlines_for_excerpt
-          ? new RawHtml({ html: `<span>${result.blurb}</span>` })
-          : new Highlighted(result.blurb, term),
-      ])
-    );
-  }
+//createSearchResult({
+//type: "tag",
+//linkField: "url",
+//builder(t) {
+//const tag = escapeExpression(t.id);
+//return [
+//iconNode("tag"),
+//new RawHtml({ html: renderTag(tag, { tagName: "span" }) }),
+//];
+//},
+//});
 
-  return html;
-}
+//createSearchResult({
+//type: "category",
+//linkField: "url",
+//builder(c) {
+//return this.attach("category-link", { category: c, link: false });
+//},
+//});
 
-createSearchResult({
-  type: "tag",
-  linkField: "url",
-  builder(t) {
-    const tag = escapeExpression(t.id);
-    return [
-      iconNode("tag"),
-      new RawHtml({ html: renderTag(tag, { tagName: "span" }) }),
-    ];
-  },
-});
+//createSearchResult({
+//type: "group",
+//linkField: "url",
+//builder(group) {
+//const fullName = escapeExpression(group.fullName);
+//const name = escapeExpression(group.name);
+//const groupNames = [h("span.name", fullName || name)];
 
-createSearchResult({
-  type: "category",
-  linkField: "url",
-  builder(c) {
-    return this.attach("category-link", { category: c, link: false });
-  },
-});
+//if (fullName) {
+//groupNames.push(h("span.slug", name));
+//}
 
-createSearchResult({
-  type: "group",
-  linkField: "url",
-  builder(group) {
-    const fullName = escapeExpression(group.fullName);
-    const name = escapeExpression(group.name);
-    const groupNames = [h("span.name", fullName || name)];
+//let avatarFlair;
+//if (group.flairUrl) {
+//avatarFlair = this.attach("avatar-flair", {
+//flair_name: name,
+//flair_url: group.flairUrl,
+//flair_bg_color: group.flairBgColor,
+//flair_color: group.flairColor,
+//});
+//} else {
+//avatarFlair = iconNode("users");
+//}
 
-    if (fullName) {
-      groupNames.push(h("span.slug", name));
-    }
+//const groupResultContents = [avatarFlair, h("div.group-names", groupNames)];
 
-    let avatarFlair;
-    if (group.flairUrl) {
-      avatarFlair = this.attach("avatar-flair", {
-        flair_name: name,
-        flair_url: group.flairUrl,
-        flair_bg_color: group.flairBgColor,
-        flair_color: group.flairColor,
-      });
-    } else {
-      avatarFlair = iconNode("users");
-    }
+//return h("div.group-result", groupResultContents);
+//},
+//});
 
-    const groupResultContents = [avatarFlair, h("div.group-names", groupNames)];
+//createSearchResult({
+//type: "user",
+//linkField: "path",
+//builder(u) {
+//const userTitles = [];
 
-    return h("div.group-result", groupResultContents);
-  },
-});
+//if (u.name) {
+//userTitles.push(h("span.name", u.name));
+//}
 
-createSearchResult({
-  type: "user",
-  linkField: "path",
-  builder(u) {
-    const userTitles = [];
+//userTitles.push(h("span.username", formatUsername(u.username)));
 
-    if (u.name) {
-      userTitles.push(h("span.name", u.name));
-    }
+//if (u.custom_data) {
+//u.custom_data.forEach((row) =>
+//userTitles.push(h("span.custom-field", `${row.name}: ${row.value}`))
+//);
+//}
 
-    userTitles.push(h("span.username", formatUsername(u.username)));
+//const userResultContents = [
+//avatarImg("small", {
+//template: u.avatar_template,
+//username: u.username,
+//}),
+//h("div.user-titles", userTitles),
+//];
 
-    if (u.custom_data) {
-      u.custom_data.forEach((row) =>
-        userTitles.push(h("span.custom-field", `${row.name}: ${row.value}`))
-      );
-    }
+//return h("div.user-result", userResultContents);
+//},
+//});
 
-    const userResultContents = [
-      avatarImg("small", {
-        template: u.avatar_template,
-        username: u.username,
-      }),
-      h("div.user-titles", userTitles),
-    ];
+//createSearchResult({
+//type: "topic",
+//linkField: "url",
+//builder(result, term) {
+//const topic = result.topic;
 
-    return h("div.user-result", userResultContents);
-  },
-});
+//const firstLine = [
+//this.attach("topic-status", { topic, disableActions: true }),
+//h(
+//"span.topic-title",
+//{ attributes: { "data-topic-id": topic.id } },
+//this.siteSettings.use_pg_headlines_for_excerpt &&
+//result.topic_title_headline
+//? new RawHtml({
+//html: `<span>${emojiUnescape(
+//result.topic_title_headline
+//)}</span>`,
+//})
+//: new Highlighted(topic.fancyTitle, term)
+//),
+//];
 
-createSearchResult({
-  type: "topic",
-  linkField: "url",
-  builder(result, term) {
-    const topic = result.topic;
+//const secondLine = [
+//this.attach("category-link", {
+//category: topic.category,
+//link: false,
+//}),
+//];
+//if (this.siteSettings.tagging_enabled) {
+//secondLine.push(
+//this.attach("discourse-tags", { topic, tagName: "span" })
+//);
+//}
 
-    const firstLine = [
-      this.attach("topic-status", { topic, disableActions: true }),
-      h(
-        "span.topic-title",
-        { attributes: { "data-topic-id": topic.id } },
-        this.siteSettings.use_pg_headlines_for_excerpt &&
-          result.topic_title_headline
-          ? new RawHtml({
-              html: `<span>${emojiUnescape(
-                result.topic_title_headline
-              )}</span>`,
-            })
-          : new Highlighted(topic.fancyTitle, term)
-      ),
-    ];
+//const link = h("span.topic", [
+//h("span.first-line", firstLine),
+//h("span.second-line", secondLine),
+//]);
 
-    const secondLine = [
-      this.attach("category-link", {
-        category: topic.category,
-        link: false,
-      }),
-    ];
-    if (this.siteSettings.tagging_enabled) {
-      secondLine.push(
-        this.attach("discourse-tags", { topic, tagName: "span" })
-      );
-    }
+//return postResult.call(this, result, link, term);
+//},
+//});
 
-    const link = h("span.topic", [
-      h("span.first-line", firstLine),
-      h("span.second-line", secondLine),
-    ]);
+//createSearchResult({
+//type: "post",
+//linkField: "url",
+//builder(result, term) {
+//return postResult.call(
+//this,
+//result,
+//I18n.t("search.post_format", result),
+//term
+//);
+//},
+//});
 
-    return postResult.call(this, result, link, term);
-  },
-});
+export default class Results extends Component {
+  constructor() {
+    super(...arguments);
 
-createSearchResult({
-  type: "post",
-  linkField: "url",
-  builder(result, term) {
-    return postResult.call(
-      this,
-      result,
-      I18n.t("search.post_format", result),
-      term
-    );
-  },
-});
-
-export default class Results extends Component {}
-
-createWidget("search-menu-results", {
-  html(attrs) {
     const { term, suggestionKeyword, results, searchTopics } = attrs;
 
     const resultTypes = results.resultTypes || [];
@@ -296,29 +299,29 @@ createWidget("search-menu-results", {
     const usersAndGroups = [];
     const categoriesAndTags = [];
 
-    const buildMoreNode = (result) => {
-      const moreArgs = {
-        className: "filter search-link",
-        contents: () => [I18n.t("more"), "..."],
-      };
+    //const buildMoreNode = (result) => {
+    //const moreArgs = {
+    //className: "filter search-link",
+    //contents: () => [I18n.t("more"), "..."],
+    //};
 
-      if (result.moreUrl) {
-        return this.attach(
-          "link",
-          deepMerge(moreArgs, {
-            href: result.moreUrl,
-          })
-        );
-      } else if (result.more) {
-        return this.attach(
-          "link",
-          deepMerge(moreArgs, {
-            action: "moreOfType",
-            actionParam: result.type,
-          })
-        );
-      }
-    };
+    //if (result.moreUrl) {
+    //return this.attach(
+    //"link",
+    //deepMerge(moreArgs, {
+    //href: result.moreUrl,
+    //})
+    //);
+    //} else if (result.more) {
+    //return this.attach(
+    //"link",
+    //deepMerge(moreArgs, {
+    //action: "moreOfType",
+    //actionParam: result.type,
+    //})
+    //);
+    //}
+    //};
 
     const assignContainer = (result, node) => {
       if (searchTopics) {
@@ -345,12 +348,12 @@ createWidget("search-menu-results", {
         }),
       ];
 
-      if (["topic"].includes(rt.type)) {
-        const more = buildMoreNode(rt);
-        if (more) {
-          resultNodeContents.push(h("div.search-menu__show-more", more));
-        }
-      }
+      //if (["topic"].includes(rt.type)) {
+      //const more = buildMoreNode(rt);
+      //if (more) {
+      //resultNodeContents.push(h("div.search-menu__show-more", more));
+      //}
+      //}
 
       assignContainer(rt, h(`div.${rt.componentName}`, resultNodeContents));
     });
@@ -373,5 +376,16 @@ createWidget("search-menu-results", {
     content.push(usersAndGroups);
 
     return content;
-  },
-});
+  }
+}
+
+class Highlighted extends RawHtml {
+  constructor(html, term) {
+    super({ html: `<span>${html}</span>` });
+    this.term = term;
+  }
+
+  decorate($html) {
+    highlightSearch($html[0], this.term);
+  }
+}

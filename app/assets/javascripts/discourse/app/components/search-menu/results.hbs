@@ -5,23 +5,25 @@
       @suggestionKeyword={{@suggestionKeyword}}
       @results={{@suggestionResults}}
     />
-  {{/if}}
-
-  {{#if (and @searchTopics @invalidTerm)}}
+  {{else if (and @searchTopics @invalidTerm)}}
     <div class="no-results">
       {{I18n "search.too_short"}}
     </div>
-  {{/if}}
-
-  {{#if (and @searchTopics @noResults)}}
+  {{else if (and @searchTopics @noResults)}}
     <div class="no-results">
       {{I18n "search.no_results"}}
     </div>
-  {{/if}}
-
-  {{#if (not (and @term @inPMInboxContext))}}
+  {{else if (not (and @term @inPMInboxContext))}}
     <div class="no-results">
       <SearchMenu::Results::InitialOptions @term={{@term}} />
     </div>
+  {{else}}
+    {{#if @mainResultsContent.length}}
+      THIS IS WHERE CONTENT GOES
+    {{else}}
+      <div class="no-results">
+        {{I18n "search.no_results"}}
+      </div>
+    {{/if}}
   {{/if}}
 </div>
