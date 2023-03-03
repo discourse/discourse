@@ -25,7 +25,7 @@ module PageObjects
       end
 
       def has_link?(name, href: nil)
-        return page.has_link?(name, href: "https://discourse.org") if href
+        return page.has_link?(name, href: href) if href
         page.has_link?(name)
       end
 
