@@ -13,7 +13,7 @@ RSpec.describe "Reply indicator", type: :system, js: true do
     sign_in(current_user)
   end
 
-  context "clicking on a reply indicator of a loaded message" do
+  context "when clicking on a reply indicator of a loaded message" do
     fab!(:replied_to_message) do
       Fabricate(:chat_message, chat_channel: channel_1, created_at: 2.hours.ago)
     end
