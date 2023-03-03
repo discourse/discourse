@@ -46,9 +46,6 @@ class SectionLink {
     this.icon = icon || "link";
     this.name = name;
     this.value = value;
-    if (this.internal) {
-      this.value = `${this.httpsHost}${value}`;
-    }
     this.id = id;
   }
 
@@ -84,12 +81,14 @@ class SectionLink {
     return this.name === undefined || this.validName ? "" : "warning";
   }
 
-  get internal() {
+  get external() {
     return (
       this.value &&
-      (this.value.startsWith(this.httpHost) ||
+      !(
+        this.value.startsWith(this.httpHost) ||
         this.value.startsWith(this.httpsHost) ||
-        this.value.startsWith("/"))
+        this.value.startsWith("/")
+      )
     );
   }
 
@@ -106,12 +105,12 @@ class SectionLink {
   }
 
   get validValue() {
-    return !isEmpty(this.value) &&
+    return (
+      !isEmpty(this.value) &&
       this.value.length <= 200 &&
       this.path &&
-      this.internal
-      ? this.#validInternal()
-      : this.#validExternal();
+      (this.external ? this.#validExternal() : this.#validInternal())
+    );
   }
 
   get valueCssClass() {
@@ -148,7 +147,7 @@ export default Controller.extend(ModalFunctionality, {
                 icon: link.icon,
                 name: link.name,
                 value: link.value,
-                external: !link.internal,
+                external: link.external,
                 id: link.id,
               })
           )
@@ -175,7 +174,7 @@ export default Controller.extend(ModalFunctionality, {
             icon: link.icon,
             name: link.name,
             value: link.path,
-            external: !link.internal,
+            external: link.external,
           };
         }),
       }),
