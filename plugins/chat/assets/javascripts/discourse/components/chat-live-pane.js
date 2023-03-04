@@ -306,7 +306,8 @@ export default class ChatLivePane extends Component {
       this,
       this._fetchMoreMessages,
       params,
-      FETCH_MORE_MESSAGES_THROTTLE_MS
+      FETCH_MORE_MESSAGES_THROTTLE_MS,
+      true
     );
   }
 
@@ -315,11 +316,15 @@ export default class ChatLivePane extends Component {
     const messages = [];
     let foundFirstNew = false;
 
-    results.chat_messages.forEach((messageData) => {
-      // If a message has been hidden it is because the current user is ignoring
-      // the user who sent it, so we want to unconditionally hide it, even if
-      // we are going directly to the target
+    results.chat_messages.forEach((messageData, index) => {
+      if (index === 0) {
+        messageData.firstOfResults = true;
+      }
+
       if (this.currentUser.ignored_users) {
+        // If a message has been hidden it is because the current user is ignoring
+        // the user who sent it, so we want to unconditionally hide it, even if
+        // we are going directly to the target
         messageData.hidden = this.currentUser.ignored_users.includes(
           messageData.user.username
         );
