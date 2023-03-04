@@ -332,7 +332,7 @@ $float-height: 530px;
     position: absolute;
     z-index: 1;
     flex-direction: column;
-    bottom: -75px;
+    bottom: -25px;
     background: none;
     opacity: 0;
     transition: opacity 0.25s ease, transform 0.5s ease;
@@ -350,7 +350,7 @@ $float-height: 530px;
     }
 
     &.visible {
-      transform: translateY(-75px) scale(1);
+      transform: translateY(-32px) scale(1);
       opacity: 0.8;
     }
 
