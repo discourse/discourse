@@ -82,6 +82,11 @@ export default class ChatMessage {
     return this.channel.currentUserMembership?.last_read_message_id >= this.id;
   }
 
+  @cached
+  get isFirst() {
+    return this.channel.messages[0] === this;
+  }
+
   get firstMessageOfTheDayAt() {
     if (!this.previousMessage) {
       return this.#calendarDate(this.createdAt);
