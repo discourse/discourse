@@ -3,6 +3,7 @@
     "chat-live-pane"
     (if this.loading "loading")
     (if this.sendingLoading "sending-loading")
+    (if (not this.loadedOnce) "not-loaded-once")
   }}
   {{did-insert this.setupListeners}}
   {{will-destroy this.teardownListeners}}

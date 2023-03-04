@@ -185,13 +185,14 @@ export default class ChatLivePane extends Component {
           results
         );
 
+        this.loadedOnce = true;
+
         if (!messages?.length) {
           return;
         }
 
         this.args.channel.addMessages(messages);
         this.args.channel.details = meta;
-        this.loadedOnce = true;
 
         if (this.requestedTargetMessageId) {
           this.scrollToMessage(findArgs["targetMessageId"], {
