@@ -1181,6 +1181,7 @@ export default class ChatLivePane extends Component {
   }
 
   _fetchAndScrollToLatest() {
+    this.loadedOnce = false;
     return this.fetchMessages({
       fetchFromLastMessage: true,
     });
