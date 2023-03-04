@@ -22,7 +22,6 @@ import { isTesting } from "discourse-common/config/environment";
 import { tracked } from "@glimmer/tracking";
 import { getOwner } from "discourse-common/lib/get-owner";
 
-const STICKY_SCROLL_LENIENCE = 100;
 const PAGE_SIZE = 50;
 const SCROLL_HANDLER_THROTTLE_MS = isTesting() ? 0 : 150;
 const FETCH_MORE_MESSAGES_THROTTLE_MS = isTesting() ? 0 : 500;
@@ -53,9 +52,12 @@ export default class ChatLivePane extends Component {
   @tracked includeHeader = true;
   @tracked editingMessage = null;
   @tracked replyToMsg = null;
-  @tracked hasNewMessages = null;
-  @tracked isDocked = true;
-  @tracked isAlmostDocked = true;
+  @tracked hasNewMessages = false;
+  @tracked isAtBottom = true;
+  @tracked isAlmostAtBottom = false;
+  @tracked isAlmostAtTop = false;
+  @tracked isAtTop = false;
+  @tracked needsArrow = false;
   @tracked loadedOnce = false;
 
   _loadedChannelId = null;
@@ -187,10 +189,6 @@ export default class ChatLivePane extends Component {
 
         this.loadedOnce = true;
 
-        if (!messages?.length) {
-          return;
-        }
-
         this.args.channel.addMessages(messages);
         this.args.channel.details = meta;
 
@@ -212,7 +210,6 @@ export default class ChatLivePane extends Component {
 
         this.requestedTargetMessageId = null;
         this.loadingMorePast = false;
-        this._throttleComputeSeparators();
         this.fillPaneAttempt();
       });
   }
@@ -275,7 +272,6 @@ export default class ChatLivePane extends Component {
       })
       .finally(() => {
         this[loadingMoreKey] = false;
-        this._throttleComputeSeparators();
         this.fillPaneAttempt();
       });
   }
@@ -418,7 +414,6 @@ export default class ChatLivePane extends Component {
   didShowMessage(message) {
     message.visible = true;
     this.updateLastReadMessage(message);
-    this._throttleComputeSeparators();
   }
 
   @action
@@ -476,32 +471,26 @@ export default class ChatLivePane extends Component {
 
     const scrollPosition = Math.abs(this._scrollerEl.scrollTop);
     const total = this._scrollerEl.scrollHeight - this._scrollerEl.clientHeight;
+    const ratio = (scrollPosition / total) * 100;
+    this.isAlmostAtTop = ratio < 99 && ratio >= 60;
+    this.isAlmostAtBottom = ratio > 1 && ratio <= 33;
+    this.isAtBottom = ratio <= 1;
+    this.isAtTop = ratio >= 99;
+    this.needsArrow = ratio >= 5;
 
-    this.isAlmostDocked = scrollPosition / this._scrollerEl.offsetHeight < 0.67;
-    this.isDocked = scrollPosition <= 1;
+    if (this.isAtBottom) {
+      this.hasNewMessages = false;
+    }
 
     if (this._previousScrollTop) {
       if (this._previousScrollTop - scrollPosition <= 0) {
-        const atTop = this._isBetween(
-          scrollPosition,
-          total / 2,
-          total + STICKY_SCROLL_LENIENCE
-        );
-
-        if (atTop) {
+        if (this.isAlmostAtTop || this.isAtTop) {
           this._fetchMoreMessagesThrottled({ direction: PAST });
           this._previousScrollTop = null;
           return;
         }
       } else {
-        const atBottom = this._isBetween(
-          scrollPosition,
-          0 - STICKY_SCROLL_LENIENCE,
-          0 + total / 3
-        );
-
-        if (atBottom) {
-          this.hasNewMessages = false;
+        if (this.isAlmostAtBottom || this.isAtBottom) {
           this._fetchMoreMessagesThrottled({ direction: FUTURE });
           this._previousScrollTop = null;
           return;
@@ -512,8 +501,6 @@ export default class ChatLivePane extends Component {
     } else {
       this._previousScrollTop = scrollPosition;
     }
-
-    this._throttleComputeSeparators();
   }
 
   _isBetween(target, a, b) {
@@ -1267,11 +1254,7 @@ export default class ChatLivePane extends Component {
   }
 
   @action
-  _throttleComputeSeparators() {
-    throttle(this, this._computeSeparators, 32, false);
-  }
-
-  _computeSeparators() {
+  computeDatesSeparators() {
     schedule("afterRender", () => {
       const dates = [
         ...this._scrollerEl.querySelectorAll(".chat-message-separator-date"),

@@ -43,8 +43,10 @@
     {{on "scroll" this.onScrollHandler}}
   >
     <div class="chat-message-actions-desktop-anchor"></div>
-    <div class="chat-messages-container">
-
+    <div
+      class="chat-messages-container"
+      {{chat/did-mutate-childlist this.computeDatesSeparators}}
+    >
       {{#each @channel.messages key="id" as |message|}}
         <ChatMessage
           @message={{message}}
@@ -80,7 +82,7 @@
   <ChatScrollToBottomArrow
     @scrollToBottom={{this.scrollToBottom}}
     @hasNewMessages={{this.hasNewMessages}}
-    @isAlmostDocked={{this.isAlmostDocked}}
+    @show={{or this.needsArrow @channel.canLoadMoreFuture}}
     @channel={{@channel}}
   />
 

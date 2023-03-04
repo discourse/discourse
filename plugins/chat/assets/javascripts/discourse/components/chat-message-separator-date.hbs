@@ -6,10 +6,7 @@
     }}
   >
     <div
-      class={{concat-class
-        "chat-message-separator__text-container"
-        (if @message.isFirst "is-force-pinned")
-      }}
+      class="chat-message-separator__text-container"
       {{chat/track-message-separator-date}}
     >
       <span class="chat-message-separator__text">

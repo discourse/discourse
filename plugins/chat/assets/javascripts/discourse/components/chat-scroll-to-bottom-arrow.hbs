@@ -3,10 +3,7 @@
     class={{concat-class
       "btn-flat"
       "chat-scroll-to-bottom"
-      (if
-        (or (not @isAlmostDocked) @hasNewMessages @channel.canLoadMoreFuture)
-        "visible"
-      )
+      (if (or @show @hasNewMessages) "visible")
     }}
     @action={{@scrollToBottom}}
   >
