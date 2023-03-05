@@ -8,7 +8,7 @@ import discourseDebounce from "discourse-common/lib/debounce";
 import EmberObject, { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { cancel, schedule, throttle } from "@ember/runloop";
+import { cancel, schedule } from "@ember/runloop";
 import discourseLater from "discourse-common/lib/later";
 import { inject as service } from "@ember/service";
 import { Promise } from "rsvp";
@@ -23,8 +23,6 @@ import { tracked } from "@glimmer/tracking";
 import { getOwner } from "discourse-common/lib/get-owner";
 
 const PAGE_SIZE = 50;
-const SCROLL_HANDLER_THROTTLE_MS = isTesting() ? 0 : 150;
-const FETCH_MORE_MESSAGES_THROTTLE_MS = isTesting() ? 0 : 500;
 const PAST = "past";
 const FUTURE = "future";
 const READ_INTERVAL_MS = 1000;
@@ -53,10 +51,10 @@ export default class ChatLivePane extends Component {
   @tracked editingMessage = null;
   @tracked replyToMsg = null;
   @tracked hasNewMessages = false;
-  @tracked isAtBottom = true;
-  @tracked isAlmostAtBottom = false;
-  @tracked isAlmostAtTop = false;
-  @tracked isAtTop = false;
+  isAtBottom = true;
+  isTowardsBottom = false;
+  isTowardsTop = false;
+  isAtTop = false;
   @tracked needsArrow = false;
   @tracked loadedOnce = false;
 
@@ -73,10 +71,6 @@ export default class ChatLivePane extends Component {
     this._scrollerEl = element.querySelector(".chat-messages-scroll");
 
     window.addEventListener("resize", this.onResizeHandler);
-    window.addEventListener("wheel", this.onScrollHandler, {
-      passive: true,
-    });
-
     document.addEventListener("scroll", this._forceBodyScroll, {
       passive: true,
     });
@@ -89,12 +83,16 @@ export default class ChatLivePane extends Component {
   @action
   teardownListeners() {
     window.removeEventListener("resize", this.onResizeHandler);
-    window.removeEventListener("wheel", this.onScrollHandler);
     cancel(this.resizeHandler);
     document.removeEventListener("scroll", this._forceBodyScroll);
     removeOnPresenceChange(this.onPresenceChangeCallback);
     this._unsubscribeToUpdates(this._loadedChannelId);
     this.requestedTargetMessageId = null;
+  }
+
+  @action
+  resetIdle() {
+    resetIdle();
   }
 
   @action
@@ -125,11 +123,6 @@ export default class ChatLivePane extends Component {
         this.fetchMessages({ fetchFromLastMessage: false });
       }
     }
-  }
-
-  @bind
-  onScrollHandler(event) {
-    throttle(this, this.onScroll, event, SCROLL_HANDLER_THROTTLE_MS, false);
   }
 
   @bind
@@ -215,7 +208,7 @@ export default class ChatLivePane extends Component {
   }
 
   @bind
-  _fetchMoreMessages({ direction }) {
+  fetchMoreMessages({ direction }) {
     const loadingPast = direction === PAST;
     const loadingMoreKey = `loadingMore${capitalize(direction)}`;
 
@@ -303,19 +296,9 @@ export default class ChatLivePane extends Component {
       return;
     }
 
-    this._fetchMoreMessagesThrottled({
+    this.fetchMoreMessages({
       direction: PAST,
     });
-  }
-
-  _fetchMoreMessagesThrottled(params) {
-    return throttle(
-      this,
-      this._fetchMoreMessages,
-      params,
-      FETCH_MORE_MESSAGES_THROTTLE_MS,
-      true
-    );
   }
 
   @bind
@@ -462,41 +445,46 @@ export default class ChatLivePane extends Component {
     });
   }
 
-  onScroll() {
+  @action
+  computeScrollState(event) {
     if (this._selfDeleted) {
       return;
     }
 
-    resetIdle();
+    cancel(this.onScrollEndedHandler);
 
-    const scrollPosition = Math.abs(this._scrollerEl.scrollTop);
-    const total = this._scrollerEl.scrollHeight - this._scrollerEl.clientHeight;
+    this.isScrolling = true;
+
+    const scrollPosition = Math.abs(event.target.scrollTop);
+    const total = event.target.scrollHeight - event.target.clientHeight;
     const ratio = (scrollPosition / total) * 100;
-    this.isAlmostAtTop = ratio < 99 && ratio >= 60;
-    this.isAlmostAtBottom = ratio > 1 && ratio <= 33;
+    this.isTowardsTop = ratio < 99 && ratio >= 34;
+    this.isTowardsBottom = ratio > 1 && ratio <= 33;
     this.isAtBottom = ratio <= 1;
     this.isAtTop = ratio >= 99;
     this.needsArrow = ratio >= 5;
 
-    if (this.isAtBottom) {
-      this.hasNewMessages = false;
-    }
-
     if (this._previousScrollTop - scrollPosition <= 0) {
-      if (this.isAlmostAtTop || this.isAtTop) {
-        this._fetchMoreMessagesThrottled({ direction: PAST });
-
-        return;
+      if (this.isTowardsTop || this.isAtTop) {
+        this.fetchMoreMessages({ direction: PAST });
       }
     } else {
-      if (this.isAlmostAtBottom || this.isAtBottom) {
-        this._fetchMoreMessagesThrottled({ direction: FUTURE });
-
-        return;
+      if (this.isTowardsBottom || this.isAtBottom) {
+        this.fetchMoreMessages({ direction: FUTURE });
       }
     }
 
     this._previousScrollTop = scrollPosition;
+    this.onScrollEndedHandler = discourseLater(this, this.onScrollEnded, 25);
+  }
+
+  @bind
+  onScrollEnded() {
+    this.isScrolling = false;
+
+    if (this.isAtBottom) {
+      this.hasNewMessages = false;
+    }
   }
 
   _isBetween(target, a, b) {
@@ -588,7 +576,7 @@ export default class ChatLivePane extends Component {
     if (this.args.channel.canLoadMoreFuture) {
       // If we can load more messages, we just notice the user of new messages
       this.hasNewMessages = true;
-    } else if (this._scrollerEl.scrollTop <= 1) {
+    } else if (this.isAtBottom || this.isTowardsBottom) {
       // If we are at the bottom, we append the message and scroll to it
       const message = ChatMessage.create(this.args.channel, data.chat_message);
       this.args.channel.addMessages([message]);
@@ -1055,6 +1043,10 @@ export default class ChatLivePane extends Component {
       return;
     }
 
+    if (this.isScrolling) {
+      return;
+    }
+
     if (message?.staged) {
       return;
     }
@@ -1086,20 +1078,6 @@ export default class ChatLivePane extends Component {
         this.hoveredMessageId = message?.id;
         return;
       }
-    }
-
-    this._onHoverMessageDebouncedHandler = discourseDebounce(
-      this,
-      this.debouncedOnHoverMessage,
-      message,
-      250
-    );
-  }
-
-  @bind
-  debouncedOnHoverMessage(message) {
-    if (this._selfDeleted) {
-      return;
     }
 
     this.hoveredMessageId =

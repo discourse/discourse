@@ -40,7 +40,8 @@
 
   <div
     class="chat-messages-scroll chat-messages-container"
-    {{on "scroll" this.onScrollHandler}}
+    {{chat/on-throttled-scroll this.computeScrollState (hash delay=50)}}
+    {{chat/on-throttled-scroll this.resetIdle (hash delay=500)}}
   >
     <div class="chat-message-actions-desktop-anchor"></div>
     <div
