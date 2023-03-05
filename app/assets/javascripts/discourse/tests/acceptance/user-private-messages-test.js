@@ -697,7 +697,7 @@ acceptance(
     });
 
     test("navigating between user messages route with dropdown", async function (assert) {
-      await visit("/u/charlie/messages");
+      await visit("/u/Charlie/messages");
 
       const messagesDropdown = selectKit(".user-nav-messages-dropdown");
 
