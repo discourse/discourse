@@ -517,6 +517,8 @@ export default class ChatMessage extends Component {
       this.currentUser.id
     );
 
+    this.args.forceRendering?.();
+
     return ajax(
       `/chat/${this.args.message.channelId}/react/${this.args.message.id}`,
       {

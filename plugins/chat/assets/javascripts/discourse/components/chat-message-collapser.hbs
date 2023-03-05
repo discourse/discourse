@@ -2,18 +2,30 @@
   {{#if this.hasUploads}}
     {{html-safe @cooked}}
 
-    <Collapser @header={{this.uploadsHeader}}>
-      <div class="chat-uploads">
-        {{#each @uploads as |upload|}}
-          <ChatUpload @upload={{upload}} />
-        {{/each}}
-      </div>
+    <Collapser
+      @header={{this.uploadsHeader}}
+      @onToggle={{@onToggleCollapse}}
+      as |collapsed|
+    >
+      {{#unless collapsed}}
+        <div class="chat-uploads">
+          {{#each @uploads as |upload|}}
+            <ChatUpload @upload={{upload}} />
+          {{/each}}
+        </div>
+      {{/unless}}
     </Collapser>
   {{else}}
     {{#each this.cookedBodies as |cooked|}}
       {{#if cooked.needsCollapser}}
-        <Collapser @header={{cooked.header}}>
-          {{cooked.body}}
+        <Collapser
+          @header={{cooked.header}}
+          @onToggle={{@onToggleCollapse}}
+          as |collapsed|
+        >
+          {{#unless collapsed}}
+            {{cooked.body}}
+          {{/unless}}
         </Collapser>
       {{else}}
         {{cooked.body}}

@@ -14,7 +14,7 @@ export default class ChatDidMutateChildlist extends Modifier {
 
     this.mutationObserver.observe(element, {
       childList: true,
-      subtree: false,
+      subtree: true,
     });
   }
 

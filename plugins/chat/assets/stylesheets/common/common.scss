@@ -145,9 +145,13 @@ $float-height: 530px;
   word-wrap: break-word;
   white-space: normal;
   position: relative;
+  will-change: transform;
+  transform: translateZ(0);
 
   .chat-message-container {
     display: grid;
+    will-change: transform;
+    transform: translateZ(0);
 
     &.selecting-messages {
       grid-template-columns: 1.5em 1fr;

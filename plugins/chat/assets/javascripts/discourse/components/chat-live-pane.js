@@ -62,7 +62,7 @@ export default class ChatLivePane extends Component {
 
   _loadedChannelId = null;
   _scrollerEl = null;
-  _previousScrollTop = null;
+  _previousScrollTop = 0;
   _lastSelectedMessage = null;
   _mentionWarningsSeen = {};
   _unreachableGroupMentions = [];
@@ -160,7 +160,7 @@ export default class ChatLivePane extends Component {
       return;
     }
 
-    this._previousScrollTop = null;
+    this._previousScrollTop = 0;
     this.args.channel?.clearMessages();
     this.loadingMorePast = true;
 
@@ -255,6 +255,12 @@ export default class ChatLivePane extends Component {
           return;
         }
 
+        // prevents an edge case where user clicks bottom arrow
+        // just after scrolling to top
+        if (loadingPast && this.isAtBottom) {
+          return;
+        }
+
         const [messages, meta] = this.afterFetchCallback(
           this.args.channel,
           results
@@ -273,6 +279,7 @@ export default class ChatLivePane extends Component {
       .finally(() => {
         this[loadingMoreKey] = false;
         this.fillPaneAttempt();
+        this.computeDatesSeparators();
       });
   }
 
@@ -407,7 +414,7 @@ export default class ChatLivePane extends Component {
         }, 2000);
       }
 
-      this._iOSFix(() => {
+      this.forceRendering(() => {
         messageEl.scrollIntoView({
           block: opts.position ?? "center",
         });
@@ -448,17 +455,9 @@ export default class ChatLivePane extends Component {
       if (this.args.channel.canLoadMoreFuture) {
         this._fetchAndScrollToLatest();
       } else {
-        if (this._scrollerEl) {
-          // Trigger a tiny scrollTop change so Safari scrollbar is placed at bottom.
-          // Setting to just 0 doesn't work (it's at 0 by default, so there is no change)
-          // Very hacky, but no way to get around this Safari bug
-          this._scrollerEl.scrollTop = -1;
-
-          this._iOSFix(() => {
-            this._scrollerEl.scrollTop = 0;
-            this.hasNewMessages = false;
-          });
-        }
+        this.scrollToMessage(
+          this.args.channel.messages[this.args.channel.messages.length - 1].id
+        );
       }
     });
   }
@@ -469,10 +468,6 @@ export default class ChatLivePane extends Component {
     }
 
     resetIdle();
-
-    if (this.loading || this.loadingMorePast || this.loadingMoreFuture) {
-      return;
-    }
 
     const scrollPosition = Math.abs(this._scrollerEl.scrollTop);
     const total = this._scrollerEl.scrollHeight - this._scrollerEl.clientHeight;
@@ -487,25 +482,21 @@ export default class ChatLivePane extends Component {
       this.hasNewMessages = false;
     }
 
-    if (this._previousScrollTop) {
-      if (this._previousScrollTop - scrollPosition <= 0) {
-        if (this.isAlmostAtTop || this.isAtTop) {
-          this._fetchMoreMessagesThrottled({ direction: PAST });
-          this._previousScrollTop = null;
-          return;
-        }
-      } else {
-        if (this.isAlmostAtBottom || this.isAtBottom) {
-          this._fetchMoreMessagesThrottled({ direction: FUTURE });
-          this._previousScrollTop = null;
-          return;
-        }
-      }
+    if (this._previousScrollTop - scrollPosition <= 0) {
+      if (this.isAlmostAtTop || this.isAtTop) {
+        this._fetchMoreMessagesThrottled({ direction: PAST });
 
-      this._previousScrollTop = scrollPosition;
+        return;
+      }
     } else {
-      this._previousScrollTop = scrollPosition;
+      if (this.isAlmostAtBottom || this.isAtBottom) {
+        this._fetchMoreMessagesThrottled({ direction: FUTURE });
+
+        return;
+      }
     }
+
+    this._previousScrollTop = scrollPosition;
   }
 
   _isBetween(target, a, b) {
@@ -1193,26 +1184,31 @@ export default class ChatLivePane extends Component {
   // since -webkit-overflow-scrolling: touch can't be used anymore to disable momentum scrolling
   // we now use this hack to disable it
   @bind
-  _iOSFix(callback) {
-    if (!this._scrollerEl) {
-      return;
-    }
+  forceRendering(callback) {
+    schedule("afterRender", () => {
+      if (!this._scrollerEl) {
+        return;
+      }
 
-    if (this.capabilities.isIOS) {
-      this._scrollerEl.style.overflow = "hidden";
-    }
+      if (this.capabilities.isIOS) {
+        this._scrollerEl.style.transform = "translateZ(0)";
+        this._scrollerEl.style.overflow = "hidden";
+      }
 
-    callback?.();
+      callback?.();
 
-    if (this.capabilities.isIOS) {
-      discourseLater(() => {
-        if (!this._scrollerEl) {
-          return;
-        }
+      if (this.capabilities.isIOS) {
+        discourseLater(() => {
+          if (!this._scrollerEl) {
+            return;
+          }
 
-        this._scrollerEl.style.overflow = "auto";
-      }, 25);
-    }
+          this._scrollerEl.style.overflow = "auto";
+          this._scrollerEl.style.transform = "unset";
+          this.computeDatesSeparators();
+        }, 50);
+      }
+    });
   }
 
   @action
