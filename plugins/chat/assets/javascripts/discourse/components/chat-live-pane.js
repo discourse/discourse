@@ -18,7 +18,6 @@ import {
   removeOnPresenceChange,
 } from "discourse/lib/user-presence";
 import isZoomed from "discourse/plugins/chat/discourse/lib/zoom-check";
-import { isTesting } from "discourse-common/config/environment";
 import { tracked } from "@glimmer/tracking";
 import { getOwner } from "discourse-common/lib/get-owner";
 
