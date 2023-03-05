@@ -437,7 +437,7 @@ GEM
       sorbet-runtime
       syntax_tree (>= 6, < 7)
     ruby-prof (1.6.1)
-    ruby-progressbar (1.12.0)
+    ruby-progressbar (1.13.0)
     ruby-readability (0.7.0)
       guess_html_encoding (>= 0.0.4)
       nokogiri (>= 1.6.0)
