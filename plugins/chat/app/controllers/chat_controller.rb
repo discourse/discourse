@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Chat::ChatController < Chat::ChatBaseController
-  PAST_MESSAGE_LIMIT = 20
+  PAST_MESSAGE_LIMIT = 40
   FUTURE_MESSAGE_LIMIT = 40
   PAST = "past"
   FUTURE = "future"
