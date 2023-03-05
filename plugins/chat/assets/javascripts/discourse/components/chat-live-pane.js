@@ -50,12 +50,13 @@ export default class ChatLivePane extends Component {
   @tracked editingMessage = null;
   @tracked replyToMsg = null;
   @tracked hasNewMessages = false;
+  @tracked needsArrow = false;
+  @tracked loadedOnce = false;
+
   isAtBottom = true;
   isTowardsBottom = false;
   isTowardsTop = false;
   isAtTop = false;
-  @tracked needsArrow = false;
-  @tracked loadedOnce = false;
 
   _loadedChannelId = null;
   _scrollerEl = null;
