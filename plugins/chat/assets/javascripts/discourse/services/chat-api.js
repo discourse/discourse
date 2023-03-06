@@ -243,7 +243,7 @@ export default class ChatApi extends Service {
    * @param {integer} data.pageSize - Max number of messages to fetch.
    * @returns {Promise}
    */
-  async messages(channelId, data = {}) {
+  messages(channelId, data = {}) {
     let path;
     const args = {};
 

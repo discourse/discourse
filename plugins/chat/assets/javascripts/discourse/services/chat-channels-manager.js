@@ -134,6 +134,10 @@ export default class ChatChannelsManager extends Service {
   }
 
   #cache(channel) {
+    if (!channel) {
+      return;
+    }
+
     this._cached[channel.id] = channel;
   }
 

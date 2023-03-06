@@ -1,6 +1,10 @@
 <div class="chat-message-text">
   {{#if this.isCollapsible}}
-    <ChatMessageCollapser @cooked={{@cooked}} @uploads={{@uploads}} />
+    <ChatMessageCollapser
+      @cooked={{@cooked}}
+      @uploads={{@uploads}}
+      @onToggleCollapse={{@onToggleCollapse}}
+    />
   {{else}}
     {{html-safe @cooked}}
   {{/if}}

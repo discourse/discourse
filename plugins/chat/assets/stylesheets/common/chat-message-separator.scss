@@ -44,7 +44,7 @@
     justify-content: center;
     pointer-events: none;
 
-    &.last-visit {
+    &.with-last-visit {
       & + .chat-message-separator__line-container {
         .chat-message-separator__line {
           border-color: var(--danger-medium);
@@ -57,10 +57,15 @@
       position: sticky;
       top: -1px;
 
-      &.is-pinned {
+      &.is-pinned,
+      &.is-force-pinned {
         .chat-message-separator__text {
           border: 1px solid var(--primary-medium);
           border-radius: 3px;
+        }
+
+        .chat-message-separator__last-visit {
+          display: none;
         }
       }
     }

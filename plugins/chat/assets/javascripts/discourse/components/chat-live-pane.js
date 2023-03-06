@@ -1,5 +1,4 @@
 import { capitalize } from "@ember/string";
-import isElementInViewport from "discourse/lib/is-element-in-viewport";
 import { cloneJSON } from "discourse-common/lib/object";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import ChatMessageDraft from "discourse/plugins/chat/discourse/models/chat-message-draft";
@@ -9,7 +8,7 @@ import discourseDebounce from "discourse-common/lib/debounce";
 import EmberObject, { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { cancel, next, schedule, throttle } from "@ember/runloop";
+import { cancel, schedule } from "@ember/runloop";
 import discourseLater from "discourse-common/lib/later";
 import { inject as service } from "@ember/service";
 import { Promise } from "rsvp";
@@ -19,14 +18,10 @@ import {
   removeOnPresenceChange,
 } from "discourse/lib/user-presence";
 import isZoomed from "discourse/plugins/chat/discourse/lib/zoom-check";
-import { isTesting } from "discourse-common/config/environment";
 import { tracked } from "@glimmer/tracking";
 import { getOwner } from "discourse-common/lib/get-owner";
 
-const STICKY_SCROLL_LENIENCE = 100;
 const PAGE_SIZE = 50;
-const SCROLL_HANDLER_THROTTLE_MS = isTesting() ? 0 : 150;
-const FETCH_MORE_MESSAGES_THROTTLE_MS = isTesting() ? 0 : 500;
 const PAST = "past";
 const FUTURE = "future";
 const READ_INTERVAL_MS = 1000;
@@ -54,14 +49,18 @@ export default class ChatLivePane extends Component {
   @tracked includeHeader = true;
   @tracked editingMessage = null;
   @tracked replyToMsg = null;
-  @tracked hasNewMessages = null;
-  @tracked isDocked = true;
-  @tracked isAlmostDocked = true;
+  @tracked hasNewMessages = false;
+  @tracked needsArrow = false;
   @tracked loadedOnce = false;
+
+  isAtBottom = true;
+  isTowardsBottom = false;
+  isTowardsTop = false;
+  isAtTop = false;
 
   _loadedChannelId = null;
   _scrollerEl = null;
-  _previousScrollTop = null;
+  _previousScrollTop = 0;
   _lastSelectedMessage = null;
   _mentionWarningsSeen = {};
   _unreachableGroupMentions = [];
@@ -70,14 +69,8 @@ export default class ChatLivePane extends Component {
   @action
   setupListeners(element) {
     this._scrollerEl = element.querySelector(".chat-messages-scroll");
-    this._scrollerEl.addEventListener("scroll", this.onScrollHandler, {
-      passive: true,
-    });
-    window.addEventListener("resize", this.onResizeHandler);
-    window.addEventListener("wheel", this.onScrollHandler, {
-      passive: true,
-    });
 
+    window.addEventListener("resize", this.onResizeHandler);
     document.addEventListener("scroll", this._forceBodyScroll, {
       passive: true,
     });
@@ -88,17 +81,18 @@ export default class ChatLivePane extends Component {
   }
 
   @action
-  teardownListeners(element) {
-    element
-      .querySelector(".chat-messages-scroll")
-      ?.removeEventListener("scroll", this.onScrollHandler);
+  teardownListeners() {
     window.removeEventListener("resize", this.onResizeHandler);
-    window.removeEventListener("wheel", this.onScrollHandler);
     cancel(this.resizeHandler);
     document.removeEventListener("scroll", this._forceBodyScroll);
     removeOnPresenceChange(this.onPresenceChangeCallback);
     this._unsubscribeToUpdates(this._loadedChannelId);
     this.requestedTargetMessageId = null;
+  }
+
+  @action
+  resetIdle() {
+    resetIdle();
   }
 
   @action
@@ -120,24 +114,19 @@ export default class ChatLivePane extends Component {
 
   @action
   loadMessages() {
-    this.loadedOnce = false;
+    if (!this.args.channel?.id) {
+      return;
+    }
 
     if (this.args.targetMessageId) {
       this.requestedTargetMessageId = parseInt(this.args.targetMessageId, 10);
     }
 
-    if (this.args.channel?.id) {
-      if (this.requestedTargetMessageId) {
-        this.highlightOrFetchMessage(this.requestedTargetMessageId);
-      } else {
-        this.fetchMessages({ fetchFromLastMessage: false });
-      }
+    if (this.requestedTargetMessageId) {
+      this.highlightOrFetchMessage(this.requestedTargetMessageId);
+    } else {
+      this.fetchMessages({ fetchFromLastMessage: false });
     }
-  }
-
-  @bind
-  onScrollHandler(event) {
-    throttle(this, this.onScroll, event, SCROLL_HANDLER_THROTTLE_MS, false);
   }
 
   @bind
@@ -168,7 +157,8 @@ export default class ChatLivePane extends Component {
       return;
     }
 
-    this.args.channel?.clearMessages();
+    this.loadedOnce = false;
+    this._previousScrollTop = 0;
     this.loadingMorePast = true;
 
     const findArgs = { pageSize: PAGE_SIZE };
@@ -193,9 +183,9 @@ export default class ChatLivePane extends Component {
           this.args.channel,
           results
         );
-        this.args.channel.addMessages(messages);
+
+        this.args.channel.messages = messages;
         this.args.channel.details = meta;
-        this.loadedOnce = true;
 
         if (this.requestedTargetMessageId) {
           this.scrollToMessage(findArgs["targetMessageId"], {
@@ -206,8 +196,6 @@ export default class ChatLivePane extends Component {
         } else if (messages.length) {
           this.scrollToMessage(messages[messages.length - 1].id);
         }
-
-        this.fillPaneAttempt();
       })
       .catch(this._handleErrors)
       .finally(() => {
@@ -215,24 +203,15 @@ export default class ChatLivePane extends Component {
           return;
         }
 
+        this.loadedOnce = true;
         this.requestedTargetMessageId = null;
         this.loadingMorePast = false;
+        this.fillPaneAttempt();
       });
   }
 
-  @action
-  onDestroySkeleton() {
-    this._iOSFix();
-    this._throttleComputeSeparators();
-  }
-
-  @action
-  onDidInsertSkeleton() {
-    this._computeSeparators(); // this one is not throttled as we need instant feedback
-  }
-
   @bind
-  _fetchMoreMessages({ direction, scrollTo = true }) {
+  fetchMoreMessages({ direction }) {
     const loadingPast = direction === PAST;
     const loadingMoreKey = `loadingMore${capitalize(direction)}`;
 
@@ -272,87 +251,69 @@ export default class ChatLivePane extends Component {
           return;
         }
 
+        // prevents an edge case where user clicks bottom arrow
+        // just after scrolling to top
+        if (loadingPast && this.isAtBottom) {
+          return;
+        }
+
         const [messages, meta] = this.afterFetchCallback(
           this.args.channel,
           results
         );
 
-        this.args.channel.addMessages(messages);
-        this.args.channel.details = meta;
-
-        if (!messages.length) {
+        if (!messages?.length) {
           return;
         }
 
-        if (scrollTo) {
-          if (!loadingPast) {
-            this.scrollToMessage(messageId, { position: "start" });
-          } else {
-            if (this.site.desktopView) {
-              this.scrollToMessage(messages[messages.length - 1].id);
-            }
-          }
-        }
+        this.args.channel.addMessages(messages);
+        this.args.channel.details = meta;
 
-        this.fillPaneAttempt();
+        // Edge case for IOS to avoid blank screens
+        // and/or scrolling to bottom losing track of scroll position
+        schedule("afterRender", () => {
+          if (
+            !this._selfDeleted &&
+            !loadingPast &&
+            (this.capabilities.isIOS || !this.isScrolling)
+          ) {
+            this.scrollToMessage(messages[0].id, { position: "end" });
+          }
+        });
       })
       .catch(() => {
         this._handleErrors();
       })
       .finally(() => {
         this[loadingMoreKey] = false;
+        this.fillPaneAttempt();
+        this.computeDatesSeparators();
       });
   }
 
+  @debounce(500, false)
   fillPaneAttempt() {
-    next(() => {
-      if (this._selfDeleted) {
-        return;
-      }
+    if (this._selfDeleted) {
+      return;
+    }
 
-      // safeguard
-      if (this.args.channel.messages.length > 200) {
-        return;
-      }
+    // safeguard
+    if (this.args.channel.messages.length > 200) {
+      return;
+    }
 
-      if (!this.args.channel?.canLoadMorePast) {
-        return;
-      }
+    if (!this.args.channel?.canLoadMorePast) {
+      return;
+    }
 
-      schedule("afterRender", () => {
-        const firstMessageId = this.args.channel?.messages?.[0]?.id;
-        if (!firstMessageId) {
-          return;
-        }
+    const firstMessage = this.args.channel?.messages?.[0];
+    if (!firstMessage?.visible) {
+      return;
+    }
 
-        const scroller = document.querySelector(".chat-messages-container");
-        const messageContainer = scroller.querySelector(
-          `.chat-message-container[data-id="${firstMessageId}"]`
-        );
-
-        if (
-          !scroller ||
-          !messageContainer ||
-          !isElementInViewport(messageContainer)
-        ) {
-          return;
-        }
-
-        this._fetchMoreMessagesThrottled({
-          direction: PAST,
-          scrollTo: false,
-        });
-      });
+    this.fetchMoreMessages({
+      direction: PAST,
     });
-  }
-
-  _fetchMoreMessagesThrottled(params) {
-    throttle(
-      this,
-      this._fetchMoreMessages,
-      params,
-      FETCH_MORE_MESSAGES_THROTTLE_MS
-    );
   }
 
   @bind
@@ -360,11 +321,15 @@ export default class ChatLivePane extends Component {
     const messages = [];
     let foundFirstNew = false;
 
-    results.chat_messages.forEach((messageData) => {
-      // If a message has been hidden it is because the current user is ignoring
-      // the user who sent it, so we want to unconditionally hide it, even if
-      // we are going directly to the target
+    results.chat_messages.forEach((messageData, index) => {
+      if (index === 0) {
+        messageData.firstOfResults = true;
+      }
+
       if (this.currentUser.ignored_users) {
+        // If a message has been hidden it is because the current user is ignoring
+        // the user who sent it, so we want to unconditionally hide it, even if
+        // we are going directly to the target
         messageData.hidden = this.currentUser.ignored_users.includes(
           messageData.user.username
         );
@@ -447,7 +412,7 @@ export default class ChatLivePane extends Component {
         }, 2000);
       }
 
-      this._iOSFix(() => {
+      this.forceRendering(() => {
         messageEl.scrollIntoView({
           block: opts.position ?? "center",
         });
@@ -459,13 +424,11 @@ export default class ChatLivePane extends Component {
   didShowMessage(message) {
     message.visible = true;
     this.updateLastReadMessage(message);
-    this._throttleComputeSeparators();
   }
 
   @action
   didHideMessage(message) {
     message.visible = false;
-    this._throttleComputeSeparators();
   }
 
   @debounce(READ_INTERVAL_MS)
@@ -490,65 +453,53 @@ export default class ChatLivePane extends Component {
       if (this.args.channel.canLoadMoreFuture) {
         this._fetchAndScrollToLatest();
       } else {
-        if (this._scrollerEl) {
-          // Trigger a tiny scrollTop change so Safari scrollbar is placed at bottom.
-          // Setting to just 0 doesn't work (it's at 0 by default, so there is no change)
-          // Very hacky, but no way to get around this Safari bug
-          this._scrollerEl.scrollTop = -1;
-
-          this._iOSFix(() => {
-            this._scrollerEl.scrollTop = 0;
-            this.hasNewMessages = false;
-          });
-        }
+        this.scrollToMessage(
+          this.args.channel.messages[this.args.channel.messages.length - 1].id
+        );
       }
     });
   }
 
-  onScroll() {
+  @action
+  computeScrollState(event) {
     if (this._selfDeleted) {
       return;
     }
 
-    resetIdle();
+    cancel(this.onScrollEndedHandler);
 
-    if (this.loading || this.loadingMorePast || this.loadingMoreFuture) {
-      return;
-    }
+    this.isScrolling = true;
 
-    const scrollPosition = Math.abs(this._scrollerEl.scrollTop);
-    const total = this._scrollerEl.scrollHeight - this._scrollerEl.clientHeight;
+    const scrollPosition = Math.abs(event.target.scrollTop);
+    const total = event.target.scrollHeight - event.target.clientHeight;
+    const ratio = (scrollPosition / total) * 100;
+    this.isTowardsTop = ratio < 99 && ratio >= 34;
+    this.isTowardsBottom = ratio > 1 && ratio <= 4;
+    this.isAtBottom = ratio <= 1;
+    this.isAtTop = ratio >= 99;
+    this.needsArrow = ratio >= 5;
 
-    this.isAlmostDocked = scrollPosition / this._scrollerEl.offsetHeight < 0.67;
-    this.isDocked = scrollPosition <= 1;
-
-    if (
-      this._previousScrollTop - this._scrollerEl.scrollTop >
-      this._previousScrollTop
-    ) {
-      const atTop = this._isBetween(
-        scrollPosition,
-        total - STICKY_SCROLL_LENIENCE,
-        total + STICKY_SCROLL_LENIENCE
-      );
-
-      if (atTop) {
-        this._fetchMoreMessagesThrottled({ direction: PAST });
+    if (this._previousScrollTop - scrollPosition <= 0) {
+      if (this.isTowardsTop || this.isAtTop) {
+        this.fetchMoreMessages({ direction: PAST });
       }
     } else {
-      const atBottom = this._isBetween(
-        scrollPosition,
-        0 + STICKY_SCROLL_LENIENCE,
-        0 - STICKY_SCROLL_LENIENCE
-      );
-
-      if (atBottom) {
-        this.hasNewMessages = false;
-        this._fetchMoreMessagesThrottled({ direction: FUTURE });
+      if (this.isTowardsBottom || this.isAtBottom) {
+        this.fetchMoreMessages({ direction: FUTURE });
       }
     }
 
-    this._previousScrollTop = this._scrollerEl.scrollTop;
+    this._previousScrollTop = scrollPosition;
+    this.onScrollEndedHandler = discourseLater(this, this.onScrollEnded, 25);
+  }
+
+  @bind
+  onScrollEnded() {
+    this.isScrolling = false;
+
+    if (this.isAtBottom) {
+      this.hasNewMessages = false;
+    }
   }
 
   _isBetween(target, a, b) {
@@ -640,7 +591,7 @@ export default class ChatLivePane extends Component {
     if (this.args.channel.canLoadMoreFuture) {
       // If we can load more messages, we just notice the user of new messages
       this.hasNewMessages = true;
-    } else if (this._scrollerEl.scrollTop <= 1) {
+    } else if (this.isAtBottom || this.isTowardsBottom) {
       // If we are at the bottom, we append the message and scroll to it
       const message = ChatMessage.create(this.args.channel, data.chat_message);
       this.args.channel.addMessages([message]);
@@ -1107,6 +1058,10 @@ export default class ChatLivePane extends Component {
       return;
     }
 
+    if (this.isScrolling) {
+      return;
+    }
+
     if (message?.staged) {
       return;
     }
@@ -1138,20 +1093,6 @@ export default class ChatLivePane extends Component {
         this.hoveredMessageId = message?.id;
         return;
       }
-    }
-
-    this._onHoverMessageDebouncedHandler = discourseDebounce(
-      this,
-      this.debouncedOnHoverMessage,
-      message,
-      250
-    );
-  }
-
-  @bind
-  debouncedOnHoverMessage(message) {
-    if (this._selfDeleted) {
-      return;
     }
 
     this.hoveredMessageId =
@@ -1216,6 +1157,7 @@ export default class ChatLivePane extends Component {
   }
 
   _fetchAndScrollToLatest() {
+    this.loadedOnce = false;
     return this.fetchMessages({
       fetchFromLastMessage: true,
     });
@@ -1235,26 +1177,31 @@ export default class ChatLivePane extends Component {
   // since -webkit-overflow-scrolling: touch can't be used anymore to disable momentum scrolling
   // we now use this hack to disable it
   @bind
-  _iOSFix(callback) {
-    if (!this._scrollerEl) {
-      return;
-    }
+  forceRendering(callback) {
+    schedule("afterRender", () => {
+      if (!this._scrollerEl) {
+        return;
+      }
 
-    if (this.capabilities.isIOS) {
-      this._scrollerEl.style.overflow = "hidden";
-    }
+      if (this.capabilities.isIOS) {
+        this._scrollerEl.style.transform = "translateZ(0)";
+        this._scrollerEl.style.overflow = "hidden";
+      }
 
-    callback?.();
+      callback?.();
 
-    if (this.capabilities.isIOS) {
-      discourseLater(() => {
-        if (!this._scrollerEl) {
-          return;
-        }
+      if (this.capabilities.isIOS) {
+        discourseLater(() => {
+          if (!this._scrollerEl) {
+            return;
+          }
 
-        this._scrollerEl.style.overflow = "auto";
-      }, 25);
-    }
+          this._scrollerEl.style.overflow = "auto";
+          this._scrollerEl.style.transform = "unset";
+          this.computeDatesSeparators();
+        }, 50);
+      }
+    });
   }
 
   @action
@@ -1300,31 +1247,28 @@ export default class ChatLivePane extends Component {
     }
   }
 
-  _throttleComputeSeparators() {
-    throttle(this, this._computeSeparators, 32, false);
-  }
+  @action
+  computeDatesSeparators() {
+    schedule("afterRender", () => {
+      const dates = [
+        ...this._scrollerEl.querySelectorAll(".chat-message-separator-date"),
+      ].reverse();
+      const scrollHeight = this._scrollerEl.scrollHeight;
 
-  _computeSeparators() {
-    next(() => {
-      schedule("afterRender", () => {
-        const dates = this._scrollerEl.querySelectorAll(
-          ".chat-message-separator-date"
-        );
-        const scrollHeight = document.querySelector(
-          ".chat-messages-scroll"
-        ).scrollHeight;
-        const reversedDates = [...dates].reverse();
-        // TODO (joffrey): optimize this code to trigger less layout computation
-        reversedDates.forEach((date, index) => {
+      dates
+        .map((date, index) => {
+          const item = { bottom: "0px", date };
           if (index > 0) {
-            date.style.bottom =
-              scrollHeight - reversedDates[index - 1].offsetTop + "px";
-          } else {
-            date.style.bottom = 0;
+            item.bottom = scrollHeight - dates[index - 1].offsetTop + "px";
           }
-          date.style.top = date.nextElementSibling.offsetTop + "px";
+          item.top = date.nextElementSibling.offsetTop + "px";
+          return item;
+        })
+        // group all writes at the end
+        .forEach((item) => {
+          item.date.style.bottom = item.bottom;
+          item.date.style.top = item.top;
         });
-      });
     });
   }
 }

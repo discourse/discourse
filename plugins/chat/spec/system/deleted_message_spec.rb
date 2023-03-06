@@ -16,7 +16,6 @@ RSpec.describe "Deleted message", type: :system, js: true do
   context "when deleting a message" do
     it "shows as deleted" do
       chat_page.visit_channel(channel_1)
-      expect(channel_page).to have_no_loading_skeleton
       channel_page.send_message("aaaaaaaaaaaaaaaaaaaa")
       expect(page).to have_no_css(".chat-message-staged")
       last_message = find(".chat-message-container:last-child")

@@ -2,7 +2,7 @@
   <div
     class={{concat-class
       "chat-message-separator-date"
-      (if @message.newest "last-visit")
+      (if @message.newest "with-last-visit")
     }}
   >
     <div
@@ -10,11 +10,13 @@
       {{chat/track-message-separator-date}}
     >
       <span class="chat-message-separator__text">
-        {{@message.firstMessageOfTheDayAt}}
+        <span>{{@message.firstMessageOfTheDayAt}}</span>
 
         {{#if @message.newest}}
-          -
-          {{i18n "chat.last_visit"}}
+          <span class="chat-message-separator__last-visit">
+            -
+            {{i18n "chat.last_visit"}}
+          </span>
         {{/if}}
       </span>
     </div>

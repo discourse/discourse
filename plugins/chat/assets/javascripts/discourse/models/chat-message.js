@@ -47,11 +47,13 @@ export default class ChatMessage {
   @tracked availableFlags;
   @tracked newest = false;
   @tracked highlighted = false;
+  @tracked firstOfResults = false;
 
   constructor(channel, args = {}) {
     this.channel = channel;
     this.id = args.id;
     this.newest = args.newest;
+    this.firstOfResults = args.firstOfResults;
     this.staged = args.staged;
     this.edited = args.edited;
     this.availableFlags = args.available_flags;
