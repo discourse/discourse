@@ -23,11 +23,7 @@ class SidebarUrl < ActiveRecord::Base
   end
 
   def remove_internal_hostname
-    self.value =
-      self
-        .value
-        .sub("http://#{Discourse.current_hostname}", "")
-        .sub("https://#{Discourse.current_hostname}", "")
+    self.value = self.value.sub(%r{\Ahttp(s)?://#{Discourse.current_hostname}}, "")
   end
 
   def set_external
