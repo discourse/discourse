@@ -64,7 +64,6 @@ RSpec.describe SidebarSectionsController do
                  icon: "external-link-alt",
                  name: "Discourse",
                  value: "https://discourse.org",
-                 external: true,
                },
              ],
            }
