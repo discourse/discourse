@@ -57,6 +57,7 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
       onHoverMessage: () => {},
       didShowMessage: () => {},
       didHideMessage: () => {},
+      forceRendering: () => {},
     };
   }
 
@@ -75,6 +76,8 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
       @onHoverMessage={{this.onHoverMessage}}
       @didShowMessage={{this.didShowMessage}}
       @didHideMessage={{this.didHideMessage}}
+      @didHideMessage={{this.didHideMessage}}
+      @forceRendering={{this.forceRendering}}
     />
   `;
 
