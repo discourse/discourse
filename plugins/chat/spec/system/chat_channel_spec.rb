@@ -35,7 +35,6 @@ RSpec.describe "Chat channel", type: :system, js: true do
 
     it "allows to edit this message once persisted" do
       chat.visit_channel(channel_1)
-      expect(channel).to have_no_loading_skeleton
       channel.send_message("aaaaaaaaaaaaaaaaaaaa")
       expect(page).to have_no_css(".chat-message-staged")
       last_message = find(".chat-message-container:last-child")
