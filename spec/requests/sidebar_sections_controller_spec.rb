@@ -60,11 +60,7 @@ RSpec.describe SidebarSectionsController do
                  value: "http://#{Discourse.current_hostname}/categories",
                },
                { icon: "address-book", name: "tags", value: "/tags" },
-               {
-                 icon: "external-link-alt",
-                 name: "Discourse",
-                 value: "https://discourse.org",
-               },
+               { icon: "external-link-alt", name: "Discourse", value: "https://discourse.org" },
              ],
            }
 
