@@ -29,33 +29,32 @@ if defined?(Rack::MiniProfiler) && defined?(Rack::MiniProfiler::Config)
     GlobalSetting.mini_profiler_snapshots_transport_url
   Rack::MiniProfiler.config.snapshots_transport_auth_key =
     GlobalSetting.mini_profiler_snapshots_transport_auth_key
-  Rack::MiniProfiler.config.skip_paths = [
-    %r{^/message-bus},
-    %r{^/extra-locales},
-    %r{topics/timings},
-    /assets/,
-    %r{/user_avatar/},
-    %r{/letter_avatar/},
-    %r{/letter_avatar_proxy/},
-    %r{/highlight-js/},
-    %r{/svg-sprite/},
-    /qunit/,
-    %r{srv/status},
-    /commits-widget/,
-    %r{^/cdn_asset},
-    %r{^/logs},
-    %r{^/site_customizations},
-    %r{^/uploads},
-    %r{^/secure-media-uploads},
-    %r{^/secure-uploads},
-    %r{^/javascripts/},
-    %r{^/images/},
-    %r{^/stylesheets/},
-    %r{^/favicon/proxied},
-    %r{^/theme-javascripts},
-    %r{^/manifest.webmanifest},
-    %r{^/opensearch.xml},
-  ]
+  Rack::MiniProfiler.config.skip_paths =
+    %w[
+      /assets/
+      /cdn_asset/
+      /extra-locales/
+      /favicon/proxied
+      /highlight-js/
+      /images/
+      /javascripts/
+      /letter_avatar_proxy/
+      /letter_avatar/
+      /logs
+      /manifest.webmanifest
+      /message-bus/
+      /opensearch.xml
+      /presence/
+      /secure-media-uploads/
+      /secure-uploads/
+      /srv/status
+      /stylesheets/
+      /svg-sprite/
+      /theme-javascripts
+      /topics/timings
+      /uploads/
+      /user_avatar/
+    ].map { |path| "#{Discourse.base_path}#{path}" }
 
   # we DO NOT WANT mini-profiler loading on anything but real desktops and laptops
   # so let's rule out all handheld, tablet, and mobile devices
