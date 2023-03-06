@@ -17,12 +17,10 @@ import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
 import userSearch from "discourse/lib/user-search";
 import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
 import { cancel } from "@ember/runloop";
-import I18n from "I18n";
 
 const CATEGORY_SLUG_REGEXP = /(\#[a-zA-Z0-9\-:]*)$/gi;
 const USERNAME_REGEXP = /(\@[a-zA-Z0-9\-\_]*)$/gi;
 const SUGGESTIONS_REGEXP = /(in:|status:|order:|:)([a-zA-Z]*)$/gi;
-const SECOND_ENTER_MAX_DELAY = 15000;
 export const MODIFIER_REGEXP = /.*(\#|\@|:).*$/gi;
 export const DEFAULT_TYPE_FILTER = "exclude_topics";
 
@@ -69,10 +67,9 @@ export default class SearchMenu extends Component {
 
       query += `q=${encodeURIComponent(this.term)}`;
 
-      const searchContext = this.searchContext();
-      if (searchContext?.type === "topic") {
+      if (this.searchContext?.type === "topic") {
         query += encodeURIComponent(` topic:${searchContext.id}`);
-      } else if (searchContext?.type === "private_messages") {
+      } else if (this.searchContext?.type === "private_messages") {
         query += encodeURIComponent(` in:messages`);
       }
 
@@ -324,10 +321,5 @@ export default class SearchMenu extends Component {
         this._debouncer = discourseDebounce(this, this.perform, 400);
       }
     }
-  }
-
-  moreOfType(type) {
-    searchData.typeFilter = type;
-    this.triggerSearch();
   }
 }

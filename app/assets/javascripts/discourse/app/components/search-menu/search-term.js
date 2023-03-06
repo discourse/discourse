@@ -5,6 +5,8 @@ import { tracked } from "@glimmer/tracking";
 import { isiPad } from "discourse/lib/utilities";
 import { DEFAULT_TYPE_FILTER } from "discourse/widgets/search-menu";
 
+const SECOND_ENTER_MAX_DELAY = 15000;
+
 export default class SearchTerm extends Component {
   @tracked lastEnterTimestamp = null;
 
@@ -18,15 +20,6 @@ export default class SearchTerm extends Component {
       input,
       200
     );
-  }
-
-  parseAndUpdateSearchTerm(originalVal, newVal) {
-    // remove zero-width chars
-    const parsedVal = newVal.target.value.replace(/[\u200B-\u200D\uFEFF]/, "");
-
-    if (parsedVal !== originalVal) {
-      this.args.searchTermChanged(parsedVal);
-    }
   }
 
   @action
@@ -143,6 +136,15 @@ export default class SearchTerm extends Component {
         this.args.clearTopicContext();
         this.args.clearPMInboxContext();
       }
+    }
+  }
+
+  parseAndUpdateSearchTerm(originalVal, newVal) {
+    // remove zero-width chars
+    const parsedVal = newVal.target.value.replace(/[\u200B-\u200D\uFEFF]/, "");
+
+    if (parsedVal !== originalVal) {
+      this.args.searchTermChanged(parsedVal);
     }
   }
 }

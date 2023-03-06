@@ -6,7 +6,26 @@
       @withLabel={{false}}
     />
   {{else}}
+    {{#if (or @term this.search.searchContext)}}
+
+      {{! this will be the default option here with args set }}
+      {{#if this.search.searchContext}}
+        <SearchMenu::Results::AssistantItem />
+      {{/if}}
+
+      {{#if (and this.currentUser this.siteSettings.log_search_queries)}}
+        {{!-- search-menu-recent-searches --}}
+      {{/if}}
+
+      {{#if @term}}
+        <SearchMenu::Results::AssistantItem
+          @slug={{@term}}
+          @withLabel={{true}}
+        />
+      {{/if}}
+      <SearchMenu::Results::RandomQuickTip />
+
+    {{/if}}
 
   {{/if}}
-  <SearchMenu::Results::RandomQuickTip />
 </ul>

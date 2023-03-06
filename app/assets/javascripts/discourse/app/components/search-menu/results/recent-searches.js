@@ -24,7 +24,6 @@ createWidget("search-menu-recent-searches", {
     return User.resetRecentSearches().then((result) => {
       if (result.success) {
         this.currentUser.recent_searches.clear();
-        this.sendWidgetAction("refreshSearchMenuResults");
       }
     });
   },

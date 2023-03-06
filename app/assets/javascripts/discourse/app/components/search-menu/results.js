@@ -375,6 +375,11 @@ export default class Results extends Component {
 
     //return content;
   }
+
+  moreOfType(type) {
+    searchData.typeFilter = type;
+    this.triggerSearch();
+  }
 }
 
 class Highlighted extends RawHtml {
