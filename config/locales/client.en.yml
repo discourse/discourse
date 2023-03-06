@@ -591,10 +591,18 @@ en:
       statuses:
         pending:
           title: "Pending"
-        approved:
+        approved_flag:
           title: "Flag approved"
-        rejected:
+        approved_user:
+          title: "User approved"
+        approved_post:
+          title: "Post approved"
+        rejected_flag:
           title: "Flag rejected"
+        rejected_user:
+          title: "User rejected"
+        rejected_post:
+          title: "Post rejected"
         ignored:
           title: "Flag ignored"
         deleted:

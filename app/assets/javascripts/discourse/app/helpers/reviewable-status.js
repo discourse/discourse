@@ -9,14 +9,28 @@ import I18n from "I18n";
 import { htmlHelper } from "discourse-common/lib/helpers";
 import { iconHTML } from "discourse-common/lib/icon-library";
 
-function dataFor(status) {
+function dataFor(status, type) {
   switch (status) {
     case PENDING:
       return { name: "pending" };
     case APPROVED:
-      return { icon: "check", name: "approved" };
+      switch (type) {
+        case "QUEUED POST":
+          return { icon: "check", name: "approved_post" };
+        case "USER":
+          return { icon: "check", name: "approved_user" };
+        default:
+          return { icon: "check", name: "approved_flag" };
+      }
     case REJECTED:
-      return { icon: "times", name: "rejected" };
+      switch (type) {
+        case "QUEUED POST":
+          return { icon: "times", name: "rejected_post" };
+        case "USER":
+          return { icon: "times", name: "rejected_user" };
+        default:
+          return { icon: "times", name: "rejected_flag" };
+      }
     case IGNORED:
       return { icon: "external-link-alt", name: "ignored" };
     case DELETED:
