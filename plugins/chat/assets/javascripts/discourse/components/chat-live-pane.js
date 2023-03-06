@@ -103,6 +103,10 @@ export default class ChatLivePane extends Component {
 
   @action
   updateChannel() {
+    // Technically we could keep messages to avoid re-fetching them, but
+    // it's not worth the complexity for now
+    this.args.channel?.clearMessages();
+
     if (this._loadedChannelId !== this.args.channel?.id) {
       this._unsubscribeToUpdates(this._loadedChannelId);
       this.selectingMessages = false;
