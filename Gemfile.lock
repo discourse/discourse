@@ -240,7 +240,7 @@ GEM
     mini_sql (1.4.0)
     mini_suffix (0.3.3)
       ffi (~> 1.9)
-    minitest (5.17.0)
+    minitest (5.18.0)
     mocha (2.0.2)
       ruby2_keywords (>= 0.0.5)
     msgpack (1.6.1)
