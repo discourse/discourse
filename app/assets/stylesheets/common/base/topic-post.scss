@@ -1438,6 +1438,7 @@ span.mention {
 }
 
 .post-notice {
+  box-sizing: border-box;
   align-items: center;
   background-color: var(--tertiary-low);
   border-top: 1px solid var(--primary-low);
