@@ -22,12 +22,12 @@ RSpec.describe "JIT messages", type: :system, js: true do
         chat.visit_channel(channel_1)
         channel.send_message("hi @#{other_user.username}")
 
-      expect(page).to have_content(
-        I18n.t("js.chat.mention_warning.without_membership", username: other_user.username),
-        wait: 5,
-      )
+        expect(page).to have_content(
+          I18n.t("js.chat.mention_warning.without_membership", username: other_user.username),
+          wait: 5,
+        )
+      end
     end
-  end
 
     context "when user can’t access the channel" do
       fab!(:group_1) { Fabricate(:group) }
@@ -45,7 +45,7 @@ RSpec.describe "JIT messages", type: :system, js: true do
         channel.send_message("hi @#{other_user.username}")
 
         expect(page).to have_content(
-          I18n.t("js.chat.mention_warning.cannot_see.one", username: other_user.username),
+          I18n.t("js.chat.mention_warning.cannot_see", username: other_user.username),
           wait: 5,
         )
       end
@@ -74,7 +74,7 @@ RSpec.describe "JIT messages", type: :system, js: true do
         channel.send_message("hi @#{other_user.username}")
 
         expect(page).to have_content(
-          I18n.t("js.chat.mention_warning.cannot_see.one", username: other_user.username),
+          I18n.t("js.chat.mention_warning.cannot_see", username: other_user.username),
           wait: 5,
         )
       end
