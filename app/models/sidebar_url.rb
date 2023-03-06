@@ -26,7 +26,8 @@ class SidebarUrl < ActiveRecord::Base
     self.value =
       self
         .value
-        .sub(/\Ahttp(s)?://#{Discourse.current_hostname}\z/, "")
+        .sub("http://#{Discourse.current_hostname}", "")
+        .sub("https://#{Discourse.current_hostname}", "")
   end
 
   def set_external
