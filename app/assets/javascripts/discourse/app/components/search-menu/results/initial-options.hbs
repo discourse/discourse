@@ -1,3 +1,12 @@
 <ul class="search-menu-initial-options">
+  {{#if this.termMatch}}
+    <SearchMenu::Results::AssistantItem
+      @slug={{@term}}
+      @extraHint={{I18n "search.enter_hint"}}
+      @withLabel={{false}}
+    />
+  {{else}}
+
+  {{/if}}
   <SearchMenu::Results::RandomQuickTip />
 </ul>

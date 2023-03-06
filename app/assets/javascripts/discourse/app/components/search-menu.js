@@ -11,7 +11,6 @@ import {
 import DiscourseURL from "discourse/lib/url";
 import discourseDebounce from "discourse-common/lib/debounce";
 import getURL from "discourse-common/lib/get-url";
-import { isiPad } from "discourse/lib/utilities";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { Promise } from "rsvp";
 import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
@@ -44,7 +43,6 @@ export default class SearchMenu extends Component {
   invalidTerm = false;
   suggestionResults = [];
   suggestionKeyword = false;
-  _lastEnterTimestamp = null;
   _debouncer = null;
   _activeSearch = null;
 
@@ -120,19 +118,24 @@ export default class SearchMenu extends Component {
     this.searchTermChanged(opts.value, { searchTopics: opts.searchTopics });
   }
 
-  //fullSearch() {
-  //searchData.loading = false;
-  //SearchHelper.cancel();
-  //const url = this.fullSearchUrl();
-  //if (url) {
-  //this.sendWidgetEvent("linkClicked");
-  //DiscourseURL.routeTo(url);
-  //}
-  //}
+  @action
+  fullSearch() {
+    this.loading = false;
+    const url = this.fullSearchUrl();
+    if (url) {
+      this.sendWidgetEvent("linkClicked");
+      DiscourseURL.routeTo(url);
+    }
+  }
 
   @action
   updateInTopicContext(value) {
     this.inTopicContext = value;
+  }
+
+  @action
+  updateTypeFilter(value) {
+    this.typeFilter = value;
   }
 
   @action
@@ -143,16 +146,19 @@ export default class SearchMenu extends Component {
     }
   }
 
+  @action
   clearPMInboxContext() {
     this.inPMInboxContext = false;
     this.focusSearchInput();
   }
 
+  @action
   setTopicContext() {
     this.inTopicContext = true;
     this.focusSearchInput();
   }
 
+  @action
   clearTopicContext() {
     this.inTopicContext = false;
     this.focusSearchInput();
@@ -170,7 +176,6 @@ export default class SearchMenu extends Component {
     this.cancel();
 
     const searchContext = this.searchContext();
-
     const fullSearchUrl = this.fullSearchUrl();
     const matchSuggestions = this.matchesSuggestions();
 
@@ -238,16 +243,16 @@ export default class SearchMenu extends Component {
     } else {
       this.invalidTerm = false;
 
-      this._activeSearch = searchForTerm(term, {
-        typeFilter,
-        fullSearchUrl,
+      this._activeSearch = searchForTerm(this.term, {
+        typeFilter: this.typeFilter,
+        fullSearchUrl: this.fullSearchUrl,
         searchContext,
       });
       this._activeSearch
         .then((results) => {
           // we ensure the current search term is the one used
           // when starting the query
-          if (results && this.term === this.term) {
+          if (results) {
             if (searchContext) {
               this.appEvents.trigger("post-stream:refresh", {
                 force: true,
@@ -298,122 +303,7 @@ export default class SearchMenu extends Component {
   //this.sendWidgetAction("toggleSearchMenu");
   //}
 
-  //keyDown(e) {
-  //if (e.key === "Escape") {
-  //this.sendWidgetAction("toggleSearchMenu");
-  //document.querySelector("#search-button").focus();
-  //e.preventDefault();
-  //return false;
-  //}
-
-  //if (searchData.loading) {
-  //return;
-  //}
-
-  //if (e.which === 65 [> a <]) {
-  //if (document.activeElement?.classList.contains("search-link")) {
-  //if (document.querySelector("#reply-control.open")) {
-  //add a link and focus composer
-
-  //this.appEvents.trigger(
-  //"composer:insert-text",
-  //document.activeElement.href,
-  //{
-  //ensureSpace: true,
-  //}
-  //);
-  //this.appEvents.trigger("header:keyboard-trigger", { type: "search" });
-
-  //e.preventDefault();
-  //document.querySelector("#reply-control.open textarea").focus();
-  //return false;
-  //}
-  //}
-  //}
-
-  //const up = e.key === "ArrowUp";
-  //const down = e.key === "ArrowDown";
-  //if (up || down) {
-  //let focused = document.activeElement.closest(".search-menu")
-  //? document.activeElement
-  //: null;
-
-  //if (!focused) {
-  //return;
-  //}
-
-  //let links = document.querySelectorAll(".search-menu .results a");
-  //let results = document.querySelectorAll(
-  //".search-menu .results .search-link"
-  //);
-
-  //if (!results.length) {
-  //return;
-  //}
-
-  //let prevResult;
-  //let result;
-
-  //links.forEach((item) => {
-  //if (item.classList.contains("search-link")) {
-  //prevResult = item;
-  //}
-
-  //if (item === focused) {
-  //result = prevResult;
-  //}
-  //});
-
-  //let index = -1;
-
-  //if (result) {
-  //index = Array.prototype.indexOf.call(results, result);
-  //}
-
-  //if (index === -1 && down) {
-  //document.querySelector(".search-menu .results .search-link").focus();
-  //} else if (index === 0 && up) {
-  //document.querySelector(".search-menu input#search-term").focus();
-  //} else if (index > -1) {
-  //index += down ? 1 : -1;
-  //if (index >= 0 && index < results.length) {
-  //results[index].focus();
-  //}
-  //}
-
-  //e.preventDefault();
-  //return false;
-  //}
-
-  //const searchInput = document.querySelector("#search-term");
-  //if (e.key === "Enter" && e.target === searchInput) {
-  //const recentEnterHit =
-  //this.state._lastEnterTimestamp &&
-  //Date.now() - this.state._lastEnterTimestamp < SECOND_ENTER_MAX_DELAY;
-
-  //same combination as key-enter-escape mixin
-  //if (
-  //e.ctrlKey ||
-  //e.metaKey ||
-  //(isiPad() && e.altKey) ||
-  //(searchData.typeFilter !== DEFAULT_TYPE_FILTER && recentEnterHit)
-  //) {
-  //this.fullSearch();
-  //} else {
-  //searchData.typeFilter = null;
-  //this.triggerSearch();
-  //}
-  //this.state._lastEnterTimestamp = Date.now();
-  //}
-
-  //if (e.target === searchInput && e.key === "Backspace") {
-  //if (!searchInput.value) {
-  //this.clearTopicContext();
-  //this.clearPMInboxContext();
-  //}
-  //}
-  //}
-
+  @action
   triggerSearch() {
     this.noResults = false;
     if (this.includesTopics()) {
@@ -424,13 +314,14 @@ export default class SearchMenu extends Component {
       this.loading = true;
       cancel(this._debouncer);
       this.perform();
+
       if (this.currentUser) {
         updateRecentSearches(this.currentUser, this.term);
       }
     } else {
       this.loading = false;
       if (!this.inTopicContext) {
-        this._debouncer = discourseDebounce(this, this.perform, this, 400);
+        this._debouncer = discourseDebounce(this, this.perform, 400);
       }
     }
   }

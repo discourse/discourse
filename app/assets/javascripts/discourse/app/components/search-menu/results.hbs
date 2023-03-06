@@ -18,7 +18,16 @@
       <SearchMenu::Results::InitialOptions @term={{@term}} />
     </div>
   {{else}}
-    {{#if @mainResultsContent.length}}
+    {{#if this.results}}
+      {{#each this.results as |result|}}
+        <td>
+          <result.component
+            @ctx={{result.ctx}}
+            @params={{result.params}}
+            @textValue={{result.textValue}}
+          />
+        </td>
+      {{/each}}
       THIS IS WHERE CONTENT GOES
     {{else}}
       <div class="no-results">

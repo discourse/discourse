@@ -16,7 +16,6 @@ import { h } from "virtual-dom";
 import highlightSearch from "discourse/lib/highlight-search";
 import { iconNode } from "discourse-common/lib/icon-library";
 import renderTag from "discourse/lib/render-tag";
-import { MODIFIER_REGEXP } from "discourse/widgets/search-menu";
 import TopicViewComponent from "./results/type/topic";
 import PostViewComponent from "./results/type/post";
 import UserViewComponent from "./results/type/user";
@@ -288,16 +287,10 @@ resetQuickSearchRandomTips();
 //});
 
 export default class Results extends Component {
-  constructor() {
-    super(...arguments);
-
-    const { term, suggestionKeyword, results, searchTopics } = attrs;
-
-    const resultTypes = results.resultTypes || [];
-
-    const mainResultsContent = [];
-    const usersAndGroups = [];
-    const categoriesAndTags = [];
+  get results() {
+    //const mainResultsContent = [];
+    //const usersAndGroups = [];
+    //const categoriesAndTags = [];
 
     //const buildMoreNode = (result) => {
     //const moreArgs = {
@@ -323,59 +316,64 @@ export default class Results extends Component {
     //}
     //};
 
-    const assignContainer = (result, node) => {
-      if (searchTopics) {
-        if (["topic"].includes(result.type)) {
-          mainResultsContent.push(node);
-        }
-      } else {
-        if (["user", "group"].includes(result.type)) {
-          usersAndGroups.push(node);
-        }
+    //const assignContainer = (result, node) => {
+    //if (searchTopics) {
+    //if (["topic"].includes(result.type)) {
+    //mainResultsContent.push(node);
+    //}
+    //} else {
+    //if (["user", "group"].includes(result.type)) {
+    //usersAndGroups.push(node);
+    //}
 
-        if (["category", "tag"].includes(result.type)) {
-          categoriesAndTags.push(node);
-        }
-      }
-    };
+    //if (["category", "tag"].includes(result.type)) {
+    //categoriesAndTags.push(node);
+    //}
+    //}
+    //};
 
-    resultTypes.forEach((rt) => {
-      const resultNodeContents = [
-        this.attach(rt.componentName, {
-          searchLogId: attrs.results.grouped_search_result.search_log_id,
-          results: rt.results,
-          term,
-        }),
-      ];
+    //resultTypes.forEach((rt) => {
+    //const resultNodeContents = [
+    //this.attach(rt.componentName, {
+    //searchLogId: attrs.results.grouped_search_result.search_log_id,
+    //results: rt.results,
+    //term,
+    //}),
+    //];
 
-      //if (["topic"].includes(rt.type)) {
-      //const more = buildMoreNode(rt);
-      //if (more) {
-      //resultNodeContents.push(h("div.search-menu__show-more", more));
-      //}
-      //}
+    //if (["topic"].includes(rt.type)) {
+    //const more = buildMoreNode(rt);
+    //if (more) {
+    //resultNodeContents.push(h("div.search-menu__show-more", more));
+    //}
+    //}
 
-      assignContainer(rt, h(`div.${rt.componentName}`, resultNodeContents));
-    });
+    //assignContainer(rt, h(`div.${rt.componentName}`, resultNodeContents));
+    //});
 
     const content = [];
 
-    if (!searchTopics) {
-      if (!attrs.inPMInboxContext) {
-        content.push(this.attach("search-menu-initial-options", { term }));
-      }
-    } else {
-      if (mainResultsContent.length) {
-        content.push(mainResultsContent);
-      } else {
-        return h("div.no-results", I18n.t("search.no_results"));
-      }
-    }
+    return this.results.resultTypes?.map((result) => {
+      debugger;
+      content.push(SEARCH_RESULTS_COMPONENT_TYPE[result.type]);
+    });
 
-    content.push(categoriesAndTags);
-    content.push(usersAndGroups);
+    //if (!searchTopics) {
+    //if (!attrs.inPMInboxContext) {
+    //content.push(this.attach("search-menu-initial-options", { term }));
+    //}
+    //} else {
+    //if (mainResultsContent.length) {
+    //content.push(mainResultsContent);
+    //} else {
+    //return h("div.no-results", I18n.t("search.no_results"));
+    //}
+    //}
 
-    return content;
+    //content.push(categoriesAndTags);
+    //content.push(usersAndGroups);
+
+    //return content;
   }
 }
 

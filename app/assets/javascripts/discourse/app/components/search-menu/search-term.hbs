@@ -6,5 +6,6 @@
   placeholder={{I18n "search.title"}}
   aria-label={{I18n "search.title"}}
   {{on "input" this.updateSearchTerm}}
+  {{on "keydown" this.keyDown}}
   {{did-insert @focusSearchInput}}
 />

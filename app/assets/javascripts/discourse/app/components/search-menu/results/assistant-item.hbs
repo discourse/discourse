@@ -1,3 +1,6 @@
 <li class="search-menu-assistant-item">
-
+  <span class="keyword">{{@term}}</span>
+  {{#if @withLabel}}
+    <span class="label-suffix">{{I18n "search.in_topics_posts"}}</span>
+  {{/if}}
 </li>
