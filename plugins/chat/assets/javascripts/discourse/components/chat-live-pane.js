@@ -473,7 +473,7 @@ export default class ChatLivePane extends Component {
     const scrollPosition = Math.abs(event.target.scrollTop);
     const total = event.target.scrollHeight - event.target.clientHeight;
     const ratio = (scrollPosition / total) * 100;
-    this.isTowardsTop = ratio < 99 && ratio >= 34;
+    this.isTowardsTop = ratio < 99 && ratio >= 80;
     this.isTowardsBottom = ratio > 1 && ratio <= 4;
     this.isAtBottom = ratio <= 1;
     this.isAtTop = ratio >= 99;
