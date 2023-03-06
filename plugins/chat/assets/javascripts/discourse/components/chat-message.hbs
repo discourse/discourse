@@ -117,7 +117,7 @@
             @cooked={{@message.cooked}}
             @uploads={{@message.uploads}}
             @edited={{@message.edited}}
-            @onToggleCollapse={{fn @forceRendering noop}}
+            @onToggleCollapse={{fn @forceRendering (noop)}}
           >
             {{#if @message.reactions.length}}
               <div class="chat-message-reaction-list">
