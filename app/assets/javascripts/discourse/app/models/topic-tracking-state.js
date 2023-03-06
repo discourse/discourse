@@ -582,6 +582,14 @@ const TopicTrackingState = EmberObject.extend({
         return false;
       }
 
+      if (
+        categoryId &&
+        topic.is_category_topic &&
+        categoryId !== topic.category_id
+      ) {
+        return false;
+      }
+
       if (tagId && !topic.tags?.includes(tagId)) {
         return false;
       }
