@@ -180,8 +180,6 @@ export default class ChatLivePane extends Component {
           results
         );
 
-        this.loadedOnce = true;
-
         this.args.channel.addMessages(messages);
         this.args.channel.details = meta;
 
@@ -201,6 +199,7 @@ export default class ChatLivePane extends Component {
           return;
         }
 
+        this.loadedOnce = true;
         this.requestedTargetMessageId = null;
         this.loadingMorePast = false;
         this.fillPaneAttempt();
