@@ -193,7 +193,7 @@ RSpec.describe Report do
 
       let(:report) { Report.find(pluralized) }
 
-      context "no #{pluralized}" do
+      context "when no #{pluralized}" do
         it "returns an empty report" do
           expect(report.data).to be_blank
         end

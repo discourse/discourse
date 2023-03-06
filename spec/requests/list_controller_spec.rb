@@ -68,7 +68,7 @@ RSpec.describe ListController do
     end
 
     (Discourse.anonymous_filters - [:categories]).each do |filter|
-      context "#{filter}" do
+      context "for #{filter}" do
         it "succeeds" do
           get "/#{filter}"
           expect(response.status).to eq(200)

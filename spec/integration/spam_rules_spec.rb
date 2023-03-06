@@ -124,7 +124,7 @@ RSpec.describe "spam rules for users" do
     end
 
     [[:user, trust_level: TrustLevel[2]], [:admin], [:moderator]].each do |spammer_args|
-      context "spammer is trusted #{spammer_args[0]}" do
+      context "when spammer is trusted #{spammer_args[0]}" do
         let!(:spammer) { Fabricate(*spammer_args) }
         let!(:spam_post) { Fabricate(:post, user: spammer) }
         let!(:private_messages_count) { spammer.private_topics_count }

@@ -186,7 +186,7 @@ RSpec.describe StaticController do
       ["tos", :tos_url, I18n.t("js.tos")],
       ["privacy", :privacy_policy_url, I18n.t("js.privacy")],
     ].each do |id, setting_name, text|
-      context "#{id}" do
+      context "for #{id}" do
         context "when #{setting_name} site setting is NOT set" do
           it "renders the #{id} page" do
             get "/#{id}"
