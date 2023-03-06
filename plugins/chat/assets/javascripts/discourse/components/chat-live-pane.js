@@ -114,18 +114,18 @@ export default class ChatLivePane extends Component {
 
   @action
   loadMessages() {
-    this.loadedOnce = false;
+    if (!this.args.channel?.id) {
+      return;
+    }
 
     if (this.args.targetMessageId) {
       this.requestedTargetMessageId = parseInt(this.args.targetMessageId, 10);
     }
 
-    if (this.args.channel?.id) {
-      if (this.requestedTargetMessageId) {
-        this.highlightOrFetchMessage(this.requestedTargetMessageId);
-      } else {
-        this.fetchMessages({ fetchFromLastMessage: false });
-      }
+    if (this.requestedTargetMessageId) {
+      this.highlightOrFetchMessage(this.requestedTargetMessageId);
+    } else {
+      this.fetchMessages({ fetchFromLastMessage: false });
     }
   }
 
@@ -157,8 +157,8 @@ export default class ChatLivePane extends Component {
       return;
     }
 
+    this.loadedOnce = false;
     this._previousScrollTop = 0;
-    this.args.channel?.clearMessages();
     this.loadingMorePast = true;
 
     const findArgs = { pageSize: PAGE_SIZE };
@@ -184,7 +184,7 @@ export default class ChatLivePane extends Component {
           results
         );
 
-        this.args.channel.addMessages(messages);
+        this.args.channel.messages = messages;
         this.args.channel.details = meta;
 
         if (this.requestedTargetMessageId) {

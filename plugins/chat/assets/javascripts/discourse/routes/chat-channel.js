@@ -10,12 +10,6 @@ export default class ChatChannelRoute extends DiscourseRoute {
 
   @action
   willTransition(transition) {
-    if (!transition?.to?.name?.startsWith("chat.channel")) {
-      // Technically we could keep messages to avoid re-fetching them, but
-      // it's not worth the complexity for now
-      this.chat.activeChannel?.clearMessages();
-    }
-
     this.chat.activeChannel.activeThread = null;
     this.chatStateManager.closeSidePanel();
 
