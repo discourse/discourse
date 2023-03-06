@@ -184,7 +184,7 @@ class ThemeSettingsManager
 
   class Upload < self
     def value
-      cdn_url(super)
+      has_record? ? cdn_url(db_record.value) : default
     end
 
     def default
