@@ -54,6 +54,7 @@ if defined?(Rack::MiniProfiler) && defined?(Rack::MiniProfiler::Config)
       /topics/timings
       /uploads/
       /user_avatar/
+      /theme-qunit
     ].map { |path| "#{Discourse.base_path}#{path}" }
 
   # we DO NOT WANT mini-profiler loading on anything but real desktops and laptops
