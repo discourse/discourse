@@ -53,6 +53,8 @@ if defined?(Rack::MiniProfiler) && defined?(Rack::MiniProfiler::Config)
     %r{^/stylesheets/},
     %r{^/favicon/proxied},
     %r{^/theme-javascripts},
+    %r{^/manifest.webmanifest},
+    %r{^/opensearch.xml},
   ]
 
   # we DO NOT WANT mini-profiler loading on anything but real desktops and laptops
