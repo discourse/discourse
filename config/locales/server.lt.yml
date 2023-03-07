@@ -2316,6 +2316,15 @@ lt:
     activation_reminder:
       title: "Aktyvinimo priminimas"
       subject_template: "[%{email_prefix}] Priminimas patvirtinti savo paskyrą"
+      text_body_template: |
+        Sveiki atvykę į %{site_name}!
+
+        Tai draugiškas priminimas suaktyvinti paskyrą.
+
+        Spustelėkite šią nuorodą, kad patvirtintumėte ir suaktyvintumėte savo naują paskyrą:
+        %{base_url}/u/activate-account/%{email_token}
+
+        Jei aukščiau esančios nuorodos negalima spustelėti, pabandykite nukopijuoti ir įklijuoti ją į savo Interneto naršyklės adreso juostą.
     suspicious_login:
       title: "Įspėjimas apie naują prisijungimą"
       subject_template: "[%{site_name}] Naujas prisijungimas iš %{location}"

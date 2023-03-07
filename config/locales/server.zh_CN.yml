@@ -1506,6 +1506,7 @@ zh_CN:
     content_security_policy_script_src: "其他列入许可名单的脚本源。默认包含当前主机和 CDN。请参阅<a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>使用内容安全策略缓解 XSS 攻击</a>。"
     invalidate_inactive_admin_email_after_days: "在此天数内未访问站点的管理员帐户将需要在登录前重新验证其电子邮件地址。设置为 0 将禁用。"
     include_secure_categories_in_tag_counts: "启用后，一个标签的话题计数将包括阅读限制类别在内的所有用户话题。禁用时，常规用户只会看到一个标签在公共类别中的话题计数。"
+    display_personal_messages_tag_counts: "启用后，将显示贴有特定标签的个人信息的数量。"
     top_menu: "确定主页导航中显示的条目以及显示顺序。示例：latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "确定帖子菜单中显示的条目以及显示顺序。示例：like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "除非点击扩展省略号，否则在帖子菜单中默认隐藏的菜单项。"
@@ -2330,6 +2331,7 @@ zh_CN:
       must_not_contain_two_special_chars_in_seq: "不得包含 2 个或更多特殊字符 (.-_) 的序列"
       must_not_end_with_confusing_suffix: "不得以 .json 或 .png 等令人困惑的后缀结尾。"
     email:
+      blank: "不能为空."
       invalid: "无效。"
       not_allowed: "不允许来自该电子邮件提供商。请使用其他电子邮件地址。"
       blocked: "不被允许。"

@@ -789,7 +789,7 @@ ru:
         many: "%{count} ч"
         other: "%{count} ч"
       x_days:
-        one: "%{count} дн"
+        one: "%{count} д"
         few: "%{count} дн"
         many: "%{count} дн"
         other: "%{count} дн"
