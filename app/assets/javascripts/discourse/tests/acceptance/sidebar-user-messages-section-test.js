@@ -376,6 +376,10 @@ acceptance(
         "service:pm-topic-tracking-state"
       );
 
+      await click(
+        ".sidebar-section-messages .sidebar-section-link-group-messages-inbox.group1"
+      );
+
       await publishToMessageBus(pmTopicTrackingState.groupChannel(1), {
         topic_id: 1,
         message_type: "unread",
@@ -397,10 +401,6 @@ acceptance(
           group_ids: [1],
         },
       });
-
-      await click(
-        ".sidebar-section-messages .sidebar-section-link-group-messages-inbox.group1"
-      );
 
       assert.strictEqual(
         query(
@@ -449,6 +449,10 @@ acceptance(
         "service:pm-topic-tracking-state"
       );
 
+      await click(
+        ".sidebar-section-messages .sidebar-section-link-personal-messages-inbox"
+      );
+
       await publishToMessageBus(pmTopicTrackingState.userChannel(), {
         topic_id: 1,
         message_type: "unread",
@@ -459,10 +463,6 @@ acceptance(
           group_ids: [],
         },
       });
-
-      await click(
-        ".sidebar-section-messages .sidebar-section-link-personal-messages-inbox"
-      );
 
       assert.strictEqual(
         query(
