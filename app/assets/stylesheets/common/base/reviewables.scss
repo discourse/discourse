@@ -231,7 +231,6 @@
       color: var(--secondary);
       border-radius: 8px;
       &.-flagged-post,
-      &.-user,
       &.-flagged-chat-message,
       &.-aksimet-flagged-post,
       &.-aksimet-flagged-user {
@@ -239,7 +238,7 @@
       }
       &.-queued-post,
       &.-queued-topic,
-      &.-queued-user {
+      &.-user {
         background-color: var(--tertiary);
       }
     }
