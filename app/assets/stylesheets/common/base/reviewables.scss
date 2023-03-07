@@ -237,7 +237,8 @@
       &.-aksimet-flagged-user {
         background-color: var(--danger-medium);
       }
-      &.-queued-post {
+      &.-queued-post,
+      &.-queued-topic {
         background-color: var(--tertiary);
       }
     }
