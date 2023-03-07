@@ -16,6 +16,7 @@ function dataFor(status, type) {
     case APPROVED:
       switch (type) {
         case "Queued Post":
+        case "ReviewableQueuedPost":
           return { icon: "check", name: "approved_post" };
         case "User":
           return { icon: "check", name: "approved_user" };
@@ -25,6 +26,7 @@ function dataFor(status, type) {
     case REJECTED:
       switch (type) {
         case "Queued Post":
+        case "ReviewableQueuedPost":
           return { icon: "times", name: "rejected_post" };
         case "User":
           return { icon: "times", name: "rejected_user" };
