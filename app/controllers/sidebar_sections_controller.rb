@@ -56,6 +56,21 @@ class SidebarSectionsController < ApplicationController
     render json: failed_json, status: 403
   end
 
+  def reorder
+    sidebar_section = SidebarSection.find_by(id: reorder_params["sidebar_section_id"])
+    @guardian.ensure_can_edit!(sidebar_section)
+
+    order = reorder_params["links_order"].map(&:to_i).each_with_index.to_h
+    links = sidebar_section.sidebar_section_links.sort_by { |link| order[link.id] }
+    sidebar_section.sidebar_section_links.upsert_all(
+      links.map.with_index { |link, index| link.attributes.merge(position: index) },
+      update_only: [:position],
+    )
+    render json: sidebar_section
+  rescue Discourse::InvalidAccess
+    render json: failed_json, status: 403
+  end
+
   def destroy
     sidebar_section = SidebarSection.find_by(id: section_params["id"])
     @guardian.ensure_can_delete!(sidebar_section)
@@ -80,6 +95,10 @@ class SidebarSectionsController < ApplicationController
 
   def links_params
     params.permit(links: %i[icon name value id _destroy])["links"]
+  end
+
+  def reorder_params
+    params.permit(:sidebar_section_id, links_order: [])
   end
 
   def check_if_member_of_group

@@ -232,6 +232,57 @@ RSpec.describe SidebarSectionsController do
     end
   end
 
+  describe "#reorder" do
+    fab!(:sidebar_section) { Fabricate(:sidebar_section, user: user) }
+    fab!(:sidebar_url_1) { Fabricate(:sidebar_url, name: "tags", value: "/tags") }
+    fab!(:sidebar_url_2) { Fabricate(:sidebar_url, name: "categories", value: "/categories") }
+    fab!(:sidebar_url_3) { Fabricate(:sidebar_url, name: "topic", value: "/t/1") }
+    fab!(:section_link_1) do
+      Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url_1)
+    end
+    fab!(:section_link_2) do
+      Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url_2)
+    end
+    fab!(:section_link_3) do
+      Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url_3)
+    end
+
+    it "sorts links" do
+      serializer = SidebarSectionSerializer.new(sidebar_section, root: false).as_json
+      expect(serializer[:links].map(&:id)).to eq(
+        [sidebar_url_1.id, sidebar_url_2.id, sidebar_url_3.id],
+      )
+
+      sign_in(user)
+      post "/sidebar_sections/reorder.json",
+           params: {
+             sidebar_section_id: sidebar_section.id,
+             links_order: [section_link_2.id, section_link_3.id, section_link_1.id],
+           }
+
+      serializer = SidebarSectionSerializer.new(sidebar_section, root: false).as_json
+      expect(serializer[:links].map(&:id)).to eq(
+        [sidebar_url_2.id, sidebar_url_3.id, sidebar_url_1.id],
+      )
+    end
+
+    it "is not allowed for not own sections" do
+      sidebar_section_2 = Fabricate(:sidebar_section)
+      post "/sidebar_sections/reorder.json",
+           params: {
+             sidebar_section_id: sidebar_section_2.id,
+             links_order: [section_link_2.id, section_link_3.id, section_link_1.id],
+           }
+
+      expect(response.status).to eq(403)
+
+      serializer = SidebarSectionSerializer.new(sidebar_section, root: false).as_json
+      expect(serializer[:links].map(&:id)).to eq(
+        [sidebar_url_1.id, sidebar_url_2.id, sidebar_url_3.id],
+      )
+    end
+  end
+
   describe "#destroy" do
     fab!(:sidebar_section) { Fabricate(:sidebar_section, user: user) }
 
