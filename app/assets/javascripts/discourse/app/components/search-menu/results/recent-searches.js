@@ -27,4 +27,25 @@ createWidget("search-menu-recent-searches", {
       }
     });
   },
+
+  loadRecentSearches() {
+    User.loadRecentSearches().then((result) => {
+      if (result.success && result.recent_searches?.length) {
+        this.currentUser.set(
+          "recent_searches",
+          Object.assign(result.recent_searches)
+        );
+      }
+    });
+  },
+
+  init() {
+    if (
+      this.currentUser &&
+      this.siteSettings.log_search_queries &&
+      !this.currentUser.recent_searches?.length
+    ) {
+      this.loadRecentSearches();
+    }
+  },
 });

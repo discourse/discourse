@@ -7,14 +7,15 @@
     />
   {{else}}
     {{#if (or @term this.search.searchContext)}}
-
-      {{! this will be the default option here with args set }}
       {{#if this.search.searchContext}}
-        <SearchMenu::Results::AssistantItem />
-      {{/if}}
-
-      {{#if (and this.currentUser this.siteSettings.log_search_queries)}}
-        {{!-- search-menu-recent-searches --}}
+        <this.contextTypeComponent
+          @term={{this.term}}
+          @suggestionKeyword={{this.suggestionKeyword}}
+          @results={{this.results}}
+          @withInLabel={{this.withInLabel}}
+          @label={{this.label}}
+          @setTopicContext={{this.setTopicContext}}
+        />
       {{/if}}
 
       {{#if @term}}
@@ -23,9 +24,12 @@
           @withLabel={{true}}
         />
       {{/if}}
+    {{else}}
       <SearchMenu::Results::RandomQuickTip />
 
+      {{#if (and this.currentUser this.siteSettings.log_search_queries)}}
+        {{! search-menu-recent-searches }}
+      {{/if}}
     {{/if}}
-
   {{/if}}
 </ul>

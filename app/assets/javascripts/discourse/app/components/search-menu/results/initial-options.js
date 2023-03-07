@@ -4,33 +4,24 @@ import { action } from "@ember/object";
 import { bind } from "discourse-common/utils/decorators";
 import { tracked } from "@glimmer/tracking";
 import { MODIFIER_REGEXP } from "discourse/widgets/search-menu";
+import AssistantItem from "./assistant-item";
+import Assistant from "./assistant";
+
+const SEARCH_CONTEXT_TYPE_COMPONENTS = {
+  topic: AssistantItem,
+  private_messages: AssistantItem,
+  category: Assistant,
+  tag: Assistant,
+  tagIntersection: Assistant,
+  user: AssistantItem,
+};
 
 export default class InitialOptions extends Component {
   @service search;
   @service siteSettings;
   @service currentUser;
 
-  slug;
-  setTopicContext;
-  setTopicContext;
-  results;
-
-  searchContextTypePicker(type) {
-    switch (type) {
-      case "topic":
-        return this.topicContextType(type);
-      case "private_messages":
-        return this.privateMessageContextType(type);
-      case "category":
-        return this.categoryContextType(type);
-      case "tag":
-        return this.tagContextType(type);
-      case "tagIntersection":
-        return this.tagIntersectionContextType(type);
-      case "user":
-        return this.userContextType(type);
-    }
-  }
+  term = this.args.term || "";
 
   get termMatch() {
     return this.args.term?.match(MODIFIER_REGEXP) ? true : false;
@@ -39,141 +30,106 @@ export default class InitialOptions extends Component {
   constructor() {
     super(...arguments);
 
-    if (this.args.term || this.search.searchContext) {
-      if (this.search.searchContext) {
-        this.searchContextTypePicker(this.search.searchContext.type);
-      }
-
-      if (
-        this.currentUser &&
-        this.siteSettings.log_search_queries &&
-        !this.currentUser.recent_searches?.length
-      ) {
-        this.loadRecentSearches();
+    const searchContext = this.search.searchContext;
+    if (this.args.term || searchContext) {
+      if (searchContext) {
+        // set the component we will be using to display results
+        this.contextTypeComponent =
+          SEARCH_CONTEXT_TYPE_COMPONENTS[searchContext.type];
+        // set attributes for the component
+        this.attributesForSearchContextType(searchContext.type);
       }
     }
   }
 
-  defaultRow(term, opts = { withLabel: false }) {
-    return this.attach("search-menu-assistant-item", {
-      slug: term,
-      extraHint: I18n.t("search.enter_hint"),
-      label: [
-        h("span.keyword", `${term}`),
-        opts.withLabel
-          ? h("span.label-suffix", I18n.t("search.in_topics_posts"))
-          : null,
-      ],
-    });
+  attributesForSearchContextType(type) {
+    switch (type) {
+      case "topic":
+        return this.topicContextType();
+      case "private_messages":
+        return this.privateMessageContextType();
+      case "category":
+        return this.categoryContextType();
+      case "tag":
+        return this.tagContextType();
+      case "tagIntersection":
+        return this.tagIntersectionContextType();
+      case "user":
+        return this.userContextType();
+    }
   }
 
-  loadRecentSearches() {
-    User.loadRecentSearches().then((result) => {
-      if (result.success && result.recent_searches?.length) {
-        this.currentUser.set(
-          "recent_searches",
-          Object.assign(result.recent_searches)
-        );
-        this.scheduleRerender();
-      }
-    });
+  topicContextType() {
+    this.slug = this.args.term;
+    this.setTopicContext = true;
+    this.label = [
+      h("span", `${this.args.term} `),
+      h("span.label-suffix", I18n.t("search.in_this_topic")),
+    ];
   }
 
-  topicContextType(type) {
-    content.push(
-      this.attach("search-menu-assistant-item", {
-        slug: term,
-        setTopicContext: true,
-        label: [
-          h("span", `${term} `),
-          h("span.label-suffix", I18n.t("search.in_this_topic")),
-        ],
-      })
-    );
+  privateMessageContextType() {
+    this.slug = `${this.args.term} in:messages`;
   }
 
-  privateMessageContextType(type) {
-    content.push(
-      this.attach("search-menu-assistant-item", {
-        slug: `${term} in:messages`,
-      })
-    );
+  categoryContextType() {
+    const searchContextCategory = this.search.searchContext.category;
+    const fullSlug = searchContextCategory.parentCategory
+      ? `#${searchContextCategory.parentCategory.slug}:${searchContextCategory.slug}`
+      : `#${searchContextCategory.slug}`;
+
+    this.term = `${this.args.term} ${fullSlug}`;
+    this.suggestionKeyword = "#";
+    this.results = [{ model: this.search.searchContext.category }];
+    this.withInLabel = true;
   }
 
-  categoryContextType(type) {
-    const fullSlug = this.search.searchContext.category.parentCategory
-      ? `#${this.search.searchContext.category.parentCategory.slug}:${this.search.searchContext.category.slug}`
-      : `#${this.search.searchContext.category.slug}`;
-
-    content.push(
-      this.attach("search-menu-assistant", {
-        term: `${term} ${fullSlug}`,
-        suggestionKeyword: "#",
-        results: [{ model: this.search.searchContext.category }],
-        withInLabel: true,
-      })
-    );
+  tagContextType() {
+    this.term = `${this.args.term} #${this.search.searchContext.name}`;
+    this.suggestionKeyword = "#";
+    this.results = [{ name: this.search.searchContext.name }];
+    this.withInLabel = true;
   }
 
-  tagContextType(type) {
-    content.push(
-      this.attach("search-menu-assistant", {
-        term: `${term} #${this.search.searchContext.name}`,
-        suggestionKeyword: "#",
-        results: [{ name: this.search.searchContext.name }],
-        withInLabel: true,
-      })
-    );
-  }
+  tagIntersectionContextType() {
+    const searchContext = this.search.searchContext;
 
-  tagIntersectionContextType(type) {
     let tagTerm;
-    if (this.search.searchContext.additionalTags) {
-      const tags = [
-        this.search.searchContext.tagId,
-        ...this.search.searchContext.additionalTags,
-      ];
-      tagTerm = `${term} tags:${tags.join("+")}`;
+    if (searchContext.additionalTags) {
+      const tags = [searchContext.tagId, ...searchContext.additionalTags];
+      tagTerm = `${this.args.term} tags:${tags.join("+")}`;
     } else {
-      tagTerm = `${term} #${this.search.searchContext.tagId}`;
+      tagTerm = `${this.args.term} #${searchContext.tagId}`;
     }
     let suggestionOptions = {
-      tagName: this.search.searchContext.tagId,
-      additionalTags: this.search.searchContext.additionalTags,
+      tagName: searchContext.tagId,
+      additionalTags: searchContext.additionalTags,
     };
-    if (this.search.searchContext.category) {
-      const categorySlug = this.search.searchContext.category.parentCategory
-        ? `#${this.search.searchContext.category.parentCategory.slug}:${this.search.searchContext.category.slug}`
-        : `#${this.search.searchContext.category.slug}`;
+    if (searchContext.category) {
+      const categorySlug = searchContext.category.parentCategory
+        ? `#${searchContext.category.parentCategory.slug}:${searchContext.category.slug}`
+        : `#${searchContext.category.slug}`;
       suggestionOptions.categoryName = categorySlug;
-      suggestionOptions.category = this.search.searchContext.category;
+      suggestionOptions.category = searchContext.category;
       tagTerm = tagTerm + ` ${categorySlug}`;
     }
 
-    content.push(
-      this.attach("search-menu-assistant", {
-        term: tagTerm,
-        suggestionKeyword: "+",
-        results: [suggestionOptions],
-        withInLabel: true,
-      })
-    );
+    this.term = tagTerm;
+    this.suggestionKeyword = "+";
+    this.results = [suggestionOptions];
+    this.withInLabel = true;
   }
 
-  userContextType(type) {
-    content.push(
-      this.attach("search-menu-assistant-item", {
-        slug: `${term} @${this.search.searchContext.user.username}`,
-        label: [
-          h("span", `${term} `),
-          h(
-            "span.label-suffix",
-            I18n.t("search.in_posts_by", {
-              username: this.search.searchContext.user.username,
-            })
-          ),
-        ],
-      })
-    );
+  userContextType() {
+    this.slug = `${this.args.term} @${this.search.searchContext.user.username}`;
+    this.label = [
+      h("span", `${term} `),
+      h(
+        "span.label-suffix",
+        I18n.t("search.in_posts_by", {
+          username: this.search.searchContext.user.username,
+        })
+      ),
+    ];
   }
 }
