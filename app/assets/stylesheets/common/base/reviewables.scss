@@ -491,6 +491,11 @@
       margin: 0 0 1em 0;
     }
 
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+
     pre,
     code {
       word-break: break-all;
