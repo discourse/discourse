@@ -15,18 +15,18 @@ function dataFor(status, type) {
       return { name: "pending" };
     case APPROVED:
       switch (type) {
-        case "QUEUED POST":
+        case "Queued Post":
           return { icon: "check", name: "approved_post" };
-        case "USER":
+        case "User":
           return { icon: "check", name: "approved_user" };
         default:
           return { icon: "check", name: "approved_flag" };
       }
     case REJECTED:
       switch (type) {
-        case "QUEUED POST":
+        case "Queued Post":
           return { icon: "times", name: "rejected_post" };
-        case "USER":
+        case "User":
           return { icon: "times", name: "rejected_user" };
         default:
           return { icon: "times", name: "rejected_flag" };
@@ -38,8 +38,8 @@ function dataFor(status, type) {
   }
 }
 
-export function htmlStatus(status) {
-  let data = dataFor(status);
+export function htmlStatus(status, type) {
+  let data = dataFor(status, type);
   if (!data) {
     return;
   }
@@ -54,6 +54,6 @@ export function htmlStatus(status) {
   `;
 }
 
-export default htmlHelper((status) => {
-  return htmlStatus(status);
+export default htmlHelper((status, type) => {
+  return htmlStatus(status, type);
 });
