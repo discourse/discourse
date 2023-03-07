@@ -411,6 +411,7 @@ module Chat
           .includes(:uploads)
           .includes(chat_channel: :chatable)
           .includes(:thread)
+          .includes(:chat_mentions)
 
       query = query.includes(user: :user_status) if SiteSetting.enable_user_status
 
