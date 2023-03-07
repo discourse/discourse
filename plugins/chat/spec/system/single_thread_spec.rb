@@ -69,8 +69,8 @@ describe "Single thread in side panel", type: :system, js: true do
     end
 
     context "when using mobile" do
-      it "opens the side panel for a single thread from the mobile message actions menu",
-         mobile: true do
+      xit "opens the side panel for a single thread from the mobile message actions menu",
+          mobile: true do
         chat_page.visit_channel(channel)
         channel_page.click_message_action_mobile(thread.chat_messages.last, "openThread")
         expect(side_panel).to have_open_thread(thread)

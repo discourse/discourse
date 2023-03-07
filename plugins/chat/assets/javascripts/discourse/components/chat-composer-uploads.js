@@ -26,12 +26,14 @@ export default Component.extend(UppyUploadMixin, {
 
   didReceiveAttrs() {
     this._super(...arguments);
+    if (this._uppyInstance?.getState?.()?.totalProgress > 0) {
+      this._uppyInstance?.cancelAll();
+    }
 
     this.set(
       "uploads",
       this.existingUploads ? cloneJSON(this.existingUploads) : []
     );
-    this._uppyInstance?.cancelAll();
   },
 
   didInsertElement() {

@@ -14,7 +14,10 @@ export default class ChatMessageInReplyToIndicator extends Component {
 
   get model() {
     if (this.hasThread) {
-      return [this.args.message.threadId];
+      return [
+        ...this.args.message.channel.routeModels,
+        this.args.message.threadId,
+      ];
     } else {
       return [
         ...this.args.message.channel.routeModels,
