@@ -65,22 +65,13 @@ export default class ChatRoute extends DiscourseRoute {
   }
 
   deactivate() {
+    this.chatStateManager.storeChatURL();
+    this.chat.updatePresence();
+
     schedule("afterRender", () => {
       document.body.classList.remove("has-full-page-chat");
       document.documentElement.classList.remove("has-full-page-chat");
       scrollTop();
     });
-  }
-
-  @action
-  willTransition(transition) {
-    if (!transition?.to?.name?.startsWith("chat.channel")) {
-      this.chat.activeChannel = null;
-    }
-
-    if (!transition?.to?.name?.startsWith("chat.")) {
-      this.chatStateManager.storeChatURL();
-      this.chat.updatePresence();
-    }
   }
 }
