@@ -233,8 +233,8 @@
       border-radius: 8px;
       &.-flagged-post,
       &.-flagged-chat-message,
-      &.-aksimet-flagged-post,
-      &.-aksimet-flagged-user {
+      &.-akismet-flagged-post,
+      &.-akismet-flagged-user {
         background-color: var(--danger-medium);
       }
       &.-queued-post,
