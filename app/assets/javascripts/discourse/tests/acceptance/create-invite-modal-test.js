@@ -155,7 +155,7 @@ acceptance("Invites - Email Invites", function (needs) {
       "sends skip_email to server"
     );
 
-    await fillIn("#invite-email", "test2@example.com");
+    await fillIn("#invite-email", "test2@example.com ");
     assert.ok(exists(".send-invite"), "shows save and send email button");
     await click(".send-invite");
     assert.ok(
