@@ -100,10 +100,9 @@ export function debounce(delay, immediate = false) {
     return {
       enumerable: descriptor.enumerable,
       configurable: descriptor.configurable,
-      writable: descriptor.writable,
-      initializer() {
+      get: function () {
         const originalFunction = descriptor.value;
-        const debounced = function (...args) {
+        const debounced = (...args) => {
           return discourseDebounce(
             this,
             originalFunction,
@@ -112,6 +111,13 @@ export function debounce(delay, immediate = false) {
             immediate
           );
         };
+
+        // Memoize on instance for future access
+        Object.defineProperty(this, name, {
+          value: debounced,
+          enumerable: descriptor.enumerable,
+          configurable: descriptor.configurable,
+        });
 
         return debounced;
       },

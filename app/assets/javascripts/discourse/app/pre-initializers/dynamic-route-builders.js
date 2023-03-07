@@ -10,7 +10,18 @@ export default {
   after: "inject-discourse-objects",
   name: "dynamic-route-builders",
 
-  initialize(registry, app) {
+  initialize(container, app) {
+    const siteSettings = container.lookup("service:site-settings");
+
+    if (siteSettings.experimental_topics_filter) {
+      app.register(
+        "controller:discovery.filter",
+        DiscoverySortableController.extend()
+      );
+
+      app.register("route:discovery.filter", buildTopicRoute("filter"));
+    }
+
     app.register(
       "controller:discovery.category",
       DiscoverySortableController.extend()

@@ -98,6 +98,11 @@
   }
 }
 
+.directory-table-container {
+  container-type: inline-size;
+  container-name: directory-table;
+}
+
 .directory-table {
   display: grid;
   gap: 0;
@@ -127,6 +132,7 @@
     border-bottom: 1px solid var(--primary-low);
     justify-content: center;
     align-items: center;
+    box-sizing: border-box;
   }
 
   &__column-header {
@@ -243,7 +249,7 @@
         min-width: 0;
         overflow: hidden;
         // this needs to be long to account for all possible widths
-        content: "...................................................................................................................................";
+        content: "................................................................................................................................................................";
       }
 
       .d-icon {
@@ -255,6 +261,7 @@
     &__value {
       font-size: var(--font-0);
       color: var(--primary);
+      align-self: start;
     }
 
     &__row {
@@ -264,8 +271,8 @@
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(11em, 1fr));
       border-bottom: 1px solid var(--primary-low);
-      padding: 0.85em 0.75em 1em;
-      gap: 0 15%;
+      padding: 0.85em 0.5em 1em;
+      gap: 0 10%;
     }
 
     &__header {
@@ -297,6 +304,10 @@
           margin-right: 0.25em;
         }
       }
+    }
+
+    [class*="--empty"] {
+      display: none;
     }
   }
 }

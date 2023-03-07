@@ -45,16 +45,14 @@ class SectionLink {
     this.router = router;
     this.icon = icon || "link";
     this.name = name;
-    this.value = value ? `${this.protocolAndHost}${value}` : value;
+    this.value = value;
     this.id = id;
-  }
-
-  get protocolAndHost() {
-    return window.location.protocol + "//" + window.location.host;
+    this.httpHost = "http://" + window.location.host;
+    this.httpsHost = "https://" + window.location.host;
   }
 
   get path() {
-    return this.value?.replace(this.protocolAndHost, "");
+    return this.value?.replace(this.httpHost, "").replace(this.httpsHost, "");
   }
 
   get valid() {
@@ -77,14 +75,35 @@ class SectionLink {
     return this.name === undefined || this.validName ? "" : "warning";
   }
 
+  get external() {
+    return (
+      this.value &&
+      !(
+        this.value.startsWith(this.httpHost) ||
+        this.value.startsWith(this.httpsHost) ||
+        this.value.startsWith("/")
+      )
+    );
+  }
+
+  #validExternal() {
+    try {
+      return new URL(this.value);
+    } catch {
+      return false;
+    }
+  }
+
+  #validInternal() {
+    return this.router.recognize(this.path).name !== "unknown";
+  }
+
   get validValue() {
     return (
       !isEmpty(this.value) &&
-      (this.value.startsWith(this.protocolAndHost) ||
-        this.value.startsWith("/")) &&
       this.value.length <= 200 &&
       this.path &&
-      this.router.recognize(this.path).name !== "unknown"
+      (this.external ? this.#validExternal() : this.#validInternal())
     );
   }
 
@@ -178,6 +197,7 @@ export default Controller.extend(ModalFunctionality, {
             icon: link.icon,
             name: link.name,
             value: link.path,
+            external: link.external,
             _destroy: link._destroy,
           };
         }),

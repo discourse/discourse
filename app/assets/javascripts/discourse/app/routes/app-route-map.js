@@ -52,6 +52,8 @@ export default function () {
       });
     });
 
+    this.route("filter", { path: "/filter" });
+
     this.route("categories");
 
     // default filter for a category

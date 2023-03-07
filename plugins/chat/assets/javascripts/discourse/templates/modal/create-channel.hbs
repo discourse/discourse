@@ -54,7 +54,12 @@
     />
 
     {{#if this.categoryPermissionsHint}}
-      <div class="create-channel-hint">
+      <div
+        class={{concat-class
+          "create-channel-hint"
+          (if this.loadingPermissionHint "loading-permissions")
+        }}
+      >
         {{this.categoryPermissionsHint}}
       </div>
     {{/if}}

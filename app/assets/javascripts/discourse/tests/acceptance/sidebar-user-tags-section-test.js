@@ -657,3 +657,148 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
     );
   });
 });
+
+acceptance(
+  "Sidebar - Logged on user - Tags section - New new view enabled",
+  function (needs) {
+    needs.settings({
+      tagging_enabled: true,
+      navigation_menu: "sidebar",
+    });
+
+    needs.user({
+      new_new_view_enabled: true,
+      display_sidebar_tags: true,
+      sidebar_tags: [
+        { name: "tag2", pm_only: false },
+        { name: "tag1", pm_only: false },
+        { name: "tag3", pm_only: false },
+      ],
+    });
+
+    test("count shown next to tag link", async function (assert) {
+      this.container.lookup("service:topic-tracking-state").loadStates([
+        {
+          topic_id: 1,
+          highest_post_number: 1,
+          last_read_post_number: null,
+          created_at: "2022-05-11T03:09:31.959Z",
+          category_id: 1,
+          notification_level: null,
+          created_in_new_period: true,
+          treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+          tags: ["tag1", "tag3"],
+        },
+        {
+          topic_id: 2,
+          highest_post_number: 12,
+          last_read_post_number: 11,
+          created_at: "2020-02-09T09:40:02.672Z",
+          category_id: 2,
+          notification_level: 2,
+          created_in_new_period: false,
+          treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+          tags: ["tag1", "tag2"],
+        },
+        {
+          topic_id: 3,
+          highest_post_number: 15,
+          last_read_post_number: 15,
+          created_at: "2021-06-14T12:41:02.477Z",
+          category_id: 3,
+          notification_level: 2,
+          created_in_new_period: false,
+          treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+          tags: ["tag1"],
+        },
+      ]);
+
+      await visit("/");
+
+      assert.strictEqual(
+        query(
+          '.sidebar-section-link[data-tag-name="tag1"] .sidebar-section-link-content-badge'
+        ).textContent.trim(),
+        "2",
+        "count for tag1 is 2 because it has 1 unread topic and 1 new topic"
+      );
+
+      assert.strictEqual(
+        query(
+          '.sidebar-section-link[data-tag-name="tag2"] .sidebar-section-link-content-badge'
+        ).textContent.trim(),
+        "1",
+        "count for tag2 is 1 because it has 1 unread topic"
+      );
+
+      assert.strictEqual(
+        query(
+          '.sidebar-section-link[data-tag-name="tag3"] .sidebar-section-link-content-badge'
+        ).textContent.trim(),
+        "1",
+        "count for tag3 is 1 because it has 1 new topic"
+      );
+    });
+
+    test("tag link href", async function (assert) {
+      this.container.lookup("service:topic-tracking-state").loadStates([
+        {
+          topic_id: 1,
+          highest_post_number: 1,
+          last_read_post_number: null,
+          created_at: "2022-05-11T03:09:31.959Z",
+          category_id: 1,
+          notification_level: null,
+          created_in_new_period: true,
+          treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+          tags: ["tag1"],
+        },
+        {
+          topic_id: 2,
+          highest_post_number: 12,
+          last_read_post_number: 11,
+          created_at: "2020-02-09T09:40:02.672Z",
+          category_id: 2,
+          notification_level: 2,
+          created_in_new_period: false,
+          treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+          tags: ["tag2"],
+        },
+        {
+          topic_id: 3,
+          highest_post_number: 15,
+          last_read_post_number: 15,
+          created_at: "2021-06-14T12:41:02.477Z",
+          category_id: 3,
+          notification_level: 2,
+          created_in_new_period: false,
+          treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+          tags: ["tag3"],
+        },
+      ]);
+
+      await visit("/");
+
+      assert.true(
+        query('.sidebar-section-link[data-tag-name="tag1"]').href.endsWith(
+          "/tag/tag1/l/new"
+        ),
+        "links to the new topics list for the tag because there's 1 new topic"
+      );
+
+      assert.true(
+        query('.sidebar-section-link[data-tag-name="tag2"]').href.endsWith(
+          "/tag/tag2/l/new"
+        ),
+        "links to the new topics list for the tag because there's 1 unread topic"
+      );
+
+      assert.true(
+        query('.sidebar-section-link[data-tag-name="tag3"]').href.endsWith(
+          "/tag/tag3"
+        ),
+        "links to the latest topics list for the tag because there are no unread or new topics"
+      );
+    });
+  }
+);

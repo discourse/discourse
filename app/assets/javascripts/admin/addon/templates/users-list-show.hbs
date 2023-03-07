@@ -241,7 +241,13 @@
               </div>
             {{/if}}
 
-            <div class="directory-table__cell user-status">
+            <div
+              class="directory-table__cell user-role{{if
+                  (or user.admin user.moderator user.second_factor_enabled)
+                  ''
+                  '--empty'
+                }}"
+            >
               <span class="directory-table__label">
                 <span>{{i18n "admin.users.status"}}</span>
               </span>

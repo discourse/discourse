@@ -25,6 +25,10 @@ export default Controller.extend({
   bulkSelection: null,
 
   @observes("filterInput")
+  filterInputChanged() {
+    this._setFilter();
+  },
+
   @debounce(500)
   _setFilter() {
     this.set("filter", this.filterInput);

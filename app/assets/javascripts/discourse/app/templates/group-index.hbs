@@ -174,7 +174,12 @@
                   {{bound-date m.added_at}}
                 </span>
               </div>
-              <div class="directory-table__cell">
+              <div
+                class="directory-table__cell{{unless
+                    m.last_posted_at
+                    '--empty'
+                  }}"
+              >
                 {{#if m.last_posted_at}}
                   <span class="directory-table__label">
                     <span>{{i18n "last_post"}}</span>
@@ -184,7 +189,9 @@
                   {{bound-date m.last_posted_at}}
                 </span>
               </div>
-              <div class="directory-table__cell">
+              <div
+                class="directory-table__cell{{unless m.last_seen_at '--empty'}}"
+              >
                 {{#if m.last_seen_at}}
                   <span class="directory-table__label">
                     <span>{{i18n "last_seen"}}</span>
@@ -201,6 +208,7 @@
                     @canAdminGroup={{this.model.can_admin_group}}
                     @canEditGroup={{this.model.can_edit_group}}
                     @onChange={{action "actOnGroup" m}}
+                    @options={{hash placementStrategy="absolute"}}
                   />
                   {{! group parameter is used by plugins }}
                 </div>

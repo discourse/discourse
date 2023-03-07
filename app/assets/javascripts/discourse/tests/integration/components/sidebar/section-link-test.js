@@ -54,4 +54,19 @@ module("Integration | Component | sidebar | section-link", function (hooks) {
       "has the right class attribute for the link"
     );
   });
+
+  test("target attribute for link", async function (assert) {
+    const template = hbs`<Sidebar::SectionLink @linkName="test" @href="https://discourse.org" />`;
+    await render(template);
+
+    assert.strictEqual(query("a").target, "_self");
+  });
+
+  test("target attribute for link when user set external links in new tab", async function (assert) {
+    this.currentUser.user_option.external_links_in_new_tab = true;
+    const template = hbs`<Sidebar::SectionLink @linkName="test" @href="https://discourse.org" />`;
+    await render(template);
+
+    assert.strictEqual(query("a").target, "_blank");
+  });
 });

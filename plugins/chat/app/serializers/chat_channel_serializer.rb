@@ -110,6 +110,7 @@ class ChatChannelSerializer < ApplicationSerializer
   def meta
     {
       message_bus_last_ids: {
+        channel_message_bus_last_id: MessageBus.last_id("/chat/#{object.id}"),
         new_messages:
           @opts[:new_messages_message_bus_last_id] ||
             MessageBus.last_id(ChatPublisher.new_messages_message_bus_channel(object.id)),

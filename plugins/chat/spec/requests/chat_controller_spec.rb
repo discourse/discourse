@@ -126,15 +126,17 @@ RSpec.describe Chat::ChatController do
     it "correctly marks reactions as 'reacted' for the current_user" do
       heart_emoji = ":heart:"
       smile_emoji = ":smile"
-
       last_message = chat_channel.chat_messages.last
       last_message.reactions.create(user: user, emoji: heart_emoji)
       last_message.reactions.create(user: admin, emoji: smile_emoji)
 
       get "/chat/#{chat_channel.id}/messages.json", params: { page_size: page_size }
+
       reactions = response.parsed_body["chat_messages"].last["reactions"]
-      expect(reactions[heart_emoji]["reacted"]).to be true
-      expect(reactions[smile_emoji]["reacted"]).to be false
+      heart_reaction = reactions.find { |r| r["emoji"] == heart_emoji }
+      expect(heart_reaction["reacted"]).to be true
+      smile_reaction = reactions.find { |r| r["emoji"] == smile_emoji }
+      expect(smile_reaction["reacted"]).to be false
     end
 
     it "sends the last message bus id for the channel" do

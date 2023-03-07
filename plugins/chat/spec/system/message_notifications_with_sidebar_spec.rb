@@ -15,6 +15,7 @@ RSpec.describe "Message notifications - with sidebar", type: :system, js: true d
     sign_in(creator)
     chat_page.visit_channel(channel)
     chat_channel_page.send_message(text)
+    expect(chat_channel_page).to have_no_css(".chat-message-staged")
     expect(chat_channel_page).to have_message(text: text)
   end
 

@@ -223,7 +223,7 @@ class ChatMessage < ActiveRecord::Base
   end
 
   def url
-    "/chat/message/#{self.id}"
+    "/chat/c/-/#{self.chat_channel_id}/#{self.id}"
   end
 
   def create_mentions(user_ids)

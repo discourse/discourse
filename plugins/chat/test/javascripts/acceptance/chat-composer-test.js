@@ -109,7 +109,7 @@ acceptance("Discourse Chat - Composer - unreliable network", function (needs) {
     await click(".send-btn");
     await publishToMessageBus(`/chat/11`, {
       type: "sent",
-      stagedId: 1,
+      staged_id: 1,
       chat_message: {
         cooked: "network-error-message",
         id: 175,

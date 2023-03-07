@@ -117,6 +117,11 @@ class ListController < ApplicationController
     end
   end
 
+  def filter
+    raise Discourse::NotFound if !SiteSetting.experimental_topics_filter
+    latest
+  end
+
   def category_default
     canonical_url "#{Discourse.base_url_no_prefix}#{@category.url}"
     view_method = @category.default_view

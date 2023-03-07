@@ -23,6 +23,16 @@ module PageObjects
         find(".sidebar-section-#{name.parameterize}").hover
         find(".sidebar-section-#{name.parameterize} button.sidebar-section-header-button").click
       end
+
+      def has_link?(name, href: nil)
+        attributes = {}
+        attributes[:href] = href if href
+        page.has_link?(name, attributes)
+      end
+
+      def custom_section_modal_title
+        find("#discourse-modal-title")
+      end
     end
   end
 end

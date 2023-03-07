@@ -1207,6 +1207,8 @@ Discourse::Application.routes.draw do
 
     Discourse.filters.each { |filter| get "#{filter}" => "list##{filter}" }
 
+    get "filter" => "list#filter"
+
     get "search/query" => "search#query"
     get "search" => "search#show"
     post "search/click" => "search#click"
