@@ -448,6 +448,7 @@
     justify-content: space-between;
     width: var(--topic-body-width);
     align-items: center;
+    max-width: 100%;
 
     .reviewable-reply-to {
       display: flex;
