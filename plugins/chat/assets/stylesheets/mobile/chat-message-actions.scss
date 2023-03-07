@@ -22,6 +22,8 @@
     border-radius: 8px;
 
     .selected-message-reply {
+      margin-left: 5px;
+
       &:not(.is-expanded) {
         @include ellipsis;
       }

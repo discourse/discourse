@@ -113,6 +113,7 @@ class ChatChannelSerializer < ApplicationSerializer
         new_messages: new_messages_message_bus_id,
         new_mentions: new_mentions_message_bus_id,
         kick: kick_message_bus_id,
+        channel_message_bus_last_id: MessageBus.last_id("/chat/#{object.id}"),
       },
     }
   end

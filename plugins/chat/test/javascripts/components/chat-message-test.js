@@ -1,5 +1,5 @@
 import User from "discourse/models/user";
-import { render, waitFor } from "@ember/test-helpers";
+import { render } from "@ember/test-helpers";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -21,9 +21,16 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
         unread_count: 0,
         muted: false,
       },
+      canInteractWithChat: true,
+      canDeleteSelf: true,
+      canDeleteOthers: true,
+      canFlag: true,
+      userSilenced: false,
+      canModerate: true,
     });
     return {
       message: ChatMessage.create(
+        chatChannel,
         Object.assign(
           {
             id: 178,
@@ -38,14 +45,6 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
           messageData
         )
       ),
-      canInteractWithChat: true,
-      details: {
-        can_delete_self: true,
-        can_delete_others: true,
-        can_flag: true,
-        user_silenced: false,
-        can_moderate: true,
-      },
       chatChannel,
       setReplyTo: () => {},
       replyMessageClicked: () => {},
@@ -55,8 +54,10 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
       onStartSelectingMessages: () => {},
       onSelectMessage: () => {},
       bulkSelectMessages: () => {},
-      afterReactionAdded: () => {},
       onHoverMessage: () => {},
+      didShowMessage: () => {},
+      didHideMessage: () => {},
+      forceRendering: () => {},
     };
   }
 
@@ -64,8 +65,7 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
     <ChatMessage
       @message={{this.message}}
       @canInteractWithChat={{this.canInteractWithChat}}
-      @details={{this.details}}
-      @chatChannel={{this.chatChannel}}
+      @channel={{this.chatChannel}}
       @setReplyTo={{this.setReplyTo}}
       @replyMessageClicked={{this.replyMessageClicked}}
       @editButtonClicked={{this.editButtonClicked}}
@@ -74,7 +74,10 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
       @onSelectMessage={{this.onSelectMessage}}
       @bulkSelectMessages={{this.bulkSelectMessages}}
       @onHoverMessage={{this.onHoverMessage}}
-      @afterReactionAdded={{this.reStickScrollIfNeeded}}
+      @didShowMessage={{this.didShowMessage}}
+      @didHideMessage={{this.didHideMessage}}
+      @didHideMessage={{this.didHideMessage}}
+      @forceRendering={{this.forceRendering}}
     />
   `;
 
@@ -90,6 +93,7 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
   test("Deleted message", async function (assert) {
     this.setProperties(generateMessageProps({ deleted_at: moment() }));
     await render(template);
+
     assert.true(
       exists(".chat-message-deleted .chat-message-expand"),
       "has the correct deleted css class and expand button within"
@@ -102,18 +106,6 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
     assert.true(
       exists(".chat-message-hidden .chat-message-expand"),
       "has the correct hidden css class and expand button within"
-    );
-  });
-
-  test("Message marked as visible", async function (assert) {
-    this.setProperties(generateMessageProps());
-
-    await render(template);
-    await waitFor("div[data-visible=true]");
-
-    assert.true(
-      exists(".chat-message-container[data-visible=true]"),
-      "message is marked as visible"
     );
   });
 });

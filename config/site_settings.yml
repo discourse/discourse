@@ -2080,6 +2080,10 @@ developer:
     default: ""
     allow_any: false
     refresh: true
+  experimental_topics_filter:
+    client: true
+    default: false
+    hidden: true
 
 navigation:
   navigation_menu:
@@ -2112,7 +2116,6 @@ navigation:
     default: ""
     allow_any: false
     refresh: true
-    hidden: true
 
 embedding:
   embed_by_username:
@@ -2560,6 +2563,7 @@ uncategorized:
   show_category_definitions_in_topic_lists:
     default: false
     hidden: true
+    client: true
 
   create_revision_on_bulk_topic_moves:
     default: true

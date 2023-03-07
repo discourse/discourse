@@ -128,7 +128,6 @@ export default Component.extend(UtilsMixin, {
   @action
   handleMouseEnter() {
     if (!this.isDestroying || !this.isDestroyed) {
-      this.element.focus({ preventScroll: true });
       this.selectKit.onHover(this.rowValue, this.item);
     }
     return false;
