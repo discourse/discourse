@@ -32,19 +32,6 @@ const SEARCH_RESULTS_COMPONENT_TYPE = {
   group: GroupViewComponent,
 };
 
-const suggestionShortcuts = [
-  "in:title",
-  "in:pinned",
-  "status:open",
-  "status:closed",
-  "status:public",
-  "status:noreplies",
-  "order:latest",
-  "order:views",
-  "order:likes",
-  "order:latest_topic",
-];
-
 const DEFAULT_QUICK_TIPS = [
   {
     label: "#",
@@ -77,12 +64,6 @@ const DEFAULT_QUICK_TIPS = [
 ];
 
 let QUICK_TIPS = [];
-
-export function addSearchSuggestion(value) {
-  if (!suggestionShortcuts.includes(value)) {
-    suggestionShortcuts.push(value);
-  }
-}
 
 export function addQuickSearchRandomTip(tip) {
   if (!QUICK_TIPS.includes(tip)) {
