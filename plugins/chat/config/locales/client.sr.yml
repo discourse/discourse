@@ -19,7 +19,10 @@ sr:
       joined: "pridružen"
       email_frequency:
         never: "Nikad"
+      header_indicator_preference:
+        never: "Nikad"
       flag: "Označi Zastavom"
+      last_visit: "poslednja poseta"
       mention_warning:
         dismiss: "одбаци"
       reply: "Odgovori"

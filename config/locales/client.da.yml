@@ -491,26 +491,18 @@ da:
       scores:
         about: "Denne score er beregnet på baggrund af anmelders tillidsniveau, nøjagtigheden af deres tidligere markeringer og prioriteten for det som rapporteres."
         score: "Score"
-        date: "Dato"
-        type: "Type"
+        type: "Begrundelse"
         status: "Status"
-        submitted_by: "Indsendt af"
-        reviewed_by: "Gennemgået Af"
+        submitted_by: "Rapporteret af"
       statuses:
         pending:
           title: "Afventende"
-        approved:
-          title: "Godkendt"
-        rejected:
-          title: "Afvist"
-        ignored:
-          title: "Ignoreret"
-        deleted:
-          title: "Slettet"
         reviewed:
           title: "(alle gennemgåede)"
         all:
           title: "(alting)"
+      context_question:
+        delimiter: "eller"
       types:
         reviewable_flagged_post:
           title: "Markeret indlæg"
@@ -809,6 +801,7 @@ da:
         make_all_primary_description: "Gør dette til den primære gruppe for alle valgte brugere"
         remove_all_primary: "Fjern som primær"
         remove_all_primary_description: "Fjern denne gruppe som primær"
+        status: "Status"
         owner: "Ejer"
         primary: "Primær"
         forbidden: "Du har ikke tilladelse til at se medlemmerne."
@@ -3198,6 +3191,10 @@ da:
     filters:
       with_topics: "%{filter} emner"
       with_category: "%{filter} %{category} emner"
+      filter:
+        title: "Filter"
+        button:
+          label: "Filter"
       latest:
         title: "Seneste"
         title_with_count:
@@ -4618,9 +4615,22 @@ da:
         new_template_form:
           submit: "Gem"
           cancel: "Annuller"
+          preview: "Forhåndsvisning"
         quick_insert_fields:
           add_new_field: "Tilføj"
           dropdown: "Rulleboks"
+        validations_modal:
+          table_headers:
+            key: "Nøgle"
+            type: "Type"
+            description: "Beskrivelse"
+          validations:
+            required:
+              key: "krævet"
+            minimum:
+              key: "minimum"
+            maximum:
+              key: "maksimum"
       impersonate:
         title: "Skift personlighed"
         help: "Brug dette værktøj til at udgive dig for en anden bruger til brug for debugging. Du skal logge ud når du er færdig."
@@ -4633,6 +4643,7 @@ da:
         not_found: "Beklager, brugernavnet findes ikke i vores system."
         id_not_found: "Desværre, dette bruger id findes ikke på vores system."
         active: "Aktiveret"
+        status: "Status"
         show_emails: "Vis Emails"
         hide_emails: "Skjul emails"
         nav:

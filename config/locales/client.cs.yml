@@ -522,26 +522,17 @@ cs:
       scores:
         about: "Toto skóre je vypočítáno na základě důvěryhodnosti oznamovatele, přesnost jeho předchozích označení a prioritu oznamované položky."
         score: "Skóre"
-        date: "Datum"
-        type: "Typ"
+        type: "Reason"
         status: "Stav"
-        submitted_by: "Odeslal"
-        reviewed_by: "Zkontroloval"
       statuses:
         pending:
           title: "Čeká na schválení"
-        approved:
-          title: "Schváleno"
-        rejected:
-          title: "Odmítnutých"
-        ignored:
-          title: "Ignorováno"
-        deleted:
-          title: "Smazáno"
         reviewed:
           title: "(vše zkontrolováno)"
         all:
           title: "(vše)"
+      context_question:
+        delimiter: "nebo"
       types:
         reviewable_flagged_post:
           title: "Nahlášený příspěvek"
@@ -757,6 +748,7 @@ cs:
         make_all_primary_description: "Nastavit jako primární skupinu pro všechny vybrané uživatele"
         remove_all_primary: "Odebrat jako primární"
         remove_all_primary_description: "Odebrat tuto skupinu jako primární"
+        status: "Stav"
         owner: "Vlastník"
         primary: "Primární"
         forbidden: "Nejste oprávněni prohlížet členy."
@@ -2610,6 +2602,10 @@ cs:
     filters:
       with_topics: "%{filter} témata"
       with_category: "%{filter} %{category} témata"
+      filter:
+        title: "Filtr"
+        button:
+          label: "Filtr"
       latest:
         title: "Aktuální"
         title_with_count:
@@ -3569,9 +3565,17 @@ cs:
         new_template_form:
           submit: "Uložit"
           cancel: "Zrušit"
+          preview: "Náhled"
         quick_insert_fields:
           add_new_field: "přidat"
           dropdown: "Menu"
+        validations_modal:
+          table_headers:
+            type: "Typ"
+            description: "Popis"
+          validations:
+            required:
+              key: "povinné"
       impersonate:
         title: "Přihlásit se jako"
         help: "Použijte tento nástroj k přihlášení za jiného uživatele pro ladící a vývojové potřeby. Po dokončení se budete muset odhlásit."
@@ -3583,6 +3587,7 @@ cs:
         last_emailed: "Email naposledy zaslán"
         not_found: "Bohužel uživatel s tímto jménem není v našem systému."
         id_not_found: "Bohužel uživatel s tímto id není v našem systému."
+        status: "Stav"
         show_emails: "Ukázat emailové adresy"
         nav:
           new: "Noví"

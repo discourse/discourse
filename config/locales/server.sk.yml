@@ -1399,16 +1399,12 @@ sk:
     sensitivity:
       disabled: "Vypnuté"
     actions:
-      agree_and_keep:
-        title: "Ponechať príspevok"
-      agree_and_suspend:
-        title: "Suspendovaný užívateľ"
-      agree_and_silence:
-        title: "Tichý užívateľ"
+      agree:
+        title: "Áno"
       delete_single:
         title: "Odstrániť"
       disagree:
-        title: "Nesúhlasiť"
+        title: "Nie"
       approve:
         title: "Schváliť"
       reject_user:

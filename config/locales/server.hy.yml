@@ -2927,28 +2927,24 @@ hy:
       medium: "Միջին"
       high: "Ցածր"
     actions:
-      agree_and_keep:
-        title: "Պահել Գրառումը"
-        description: "Ընդունել դրոշակը և գրառումը պահել անփոփոխ:"
+      agree:
+        title: "Այո"
       agree_and_suspend:
-        title: "Սառեցնել Օգտատիրոջը"
         description: "Ընդունել դրոշակավորումը և սառեցնել օգտատիրոջը:"
       agree_and_silence:
-        title: "Լռեցնել Օգտատիրոջը"
         description: "Ընդունել դրոշակը և սառեցնել օգտատիրոջը:"
       agree_and_restore:
         description: "Վերականգնել գրառումը, որպեսզի բոլոր օգտատերերը կարողանան տեսնել այն:"
-      agree_and_hide:
-        title: "Թաքցնել Գրառումը"
-        description: "Թաքցնել այս գրառումը և ավտոմատ կերպով հաղորդագրություն ուղարկել օգտագտիրոջը՝ հորդորելով խմբագրել այն:"
       delete_single:
         title: "Ջնջել"
       disagree_and_restore:
         description: "Վերականգնել գրառումը, որպեսզի բոլոր օգտատերերը կարողանան տեսնել այն:"
       disagree:
-        title: "Չընդունել"
+        title: "Ոչ"
       ignore:
         title: "Անտեսել"
+      ignore_and_do_nothing:
+        title: "Ոչինչ չանել"
       approve:
         title: "Հաստատել"
       reject_user:

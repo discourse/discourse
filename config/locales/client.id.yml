@@ -471,26 +471,18 @@ id:
       scores:
         about: "Skor ini dihitung berdasarkan tingkat kepercayaan pelapor, keakuratan bendera mereka sebelumnya, dan tingkat prioritas butir yang dilaporkan."
         score: "Skor"
-        date: "Tanggal"
-        type: "Tipe"
+        type: "Alasan"
         status: "Status"
-        submitted_by: "Dikirim Oleh"
-        reviewed_by: "Diperiksa Oleh"
+        submitted_by: "Dilaporkan oleh"
       statuses:
         pending:
           title: "Tertunda"
-        approved:
-          title: "Disetujui"
-        rejected:
-          title: "Ditolak"
-        ignored:
-          title: "Diabaikan"
-        deleted:
-          title: "Dihapus"
         reviewed:
           title: "(semua ditinjau)"
         all:
           title: "(semuanya)"
+      context_question:
+        delimiter: "atau"
       types:
         reviewable_flagged_post:
           title: "Pos yang Dipanji"
@@ -728,6 +720,7 @@ id:
         make_all_primary: "Jadikan Semua Utama"
         remove_all_primary: "Hapus sebagai Utama"
         remove_all_primary_description: "Hapus grup ini sebagai utama"
+        status: "Status"
         owner: "Pemilik"
         primary: "Utama"
         forbidden: "Anda tidak diizinkan melihat anggota."
@@ -1719,6 +1712,10 @@ id:
     filters:
       with_topics: "%{filter} topik"
       with_category: "%{filter} %{category} topik"
+      filter:
+        title: "Filter"
+        button:
+          label: "Filter"
       latest:
         title: "Terbaru"
       read:
@@ -2054,10 +2051,14 @@ id:
           cancel: "Batal"
         quick_insert_fields:
           add_new_field: "Menambahkan"
+        validations_modal:
+          table_headers:
+            type: "Tipe"
       users:
         title: "Pengguna"
         last_emailed: "Terakhir Surel Dikirimkan"
         not_found: "Maaf, username tersebut tidak ada ditemukan."
+        status: "Status"
         nav:
           new: "Baru"
           active: "Aktif"

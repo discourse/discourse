@@ -1503,6 +1503,7 @@ zh_CN:
     content_security_policy_script_src: "其他列入许可名单的脚本源。默认包含当前主机和 CDN。请参阅<a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>使用内容安全策略缓解 XSS 攻击</a>。"
     invalidate_inactive_admin_email_after_days: "在此天数内未访问站点的管理员帐户将需要在登录前重新验证其电子邮件地址。设置为 0 将禁用。"
     include_secure_categories_in_tag_counts: "启用后，一个标签的话题计数将包括阅读限制类别在内的所有用户话题。禁用时，常规用户只会看到一个标签在公共类别中的话题计数。"
+    display_personal_messages_tag_counts: "启用后，将显示贴有特定标签的个人信息的数量。"
     top_menu: "确定主页导航中显示的条目以及显示顺序。示例：latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "确定帖子菜单中显示的条目以及显示顺序。示例：like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "除非点击扩展省略号，否则在帖子菜单中默认隐藏的菜单项。"
@@ -2075,7 +2076,9 @@ zh_CN:
     navigation_menu: "确定要使用的导航菜单。边栏和标题导航可由用户自定义。旧版选项用于向后兼容。"
     default_sidebar_categories: "所选类别将默认显示在边栏的“类别”版块下。"
     default_sidebar_tags: "所选标签将默认显示在边栏的“标签”版块下。"
+    enable_new_notifications_menu: "为传统导航菜单启用新的通知菜单。"
     enable_experimental_hashtag_autocomplete: "实验性：对类别和标签使用新的 #hashtag 自动补全系统，以不同方式呈现所选条目，并改进了搜索"
+    experimental_new_new_view_groups: "试验性的：启用一个新的主题列表，将未读和新的主题合并，并使侧边栏中的 \"一切 \"链接指向它。"
     errors:
       invalid_css_color: "颜色无效。输入颜色名称或十六进制值。"
       invalid_email: "无效的电子邮件地址。"
@@ -2132,6 +2135,9 @@ zh_CN:
       search_tokenize_japanese_enabled: "在启用此设置之前，您必须禁用 'search_tokenize_japanese'。"
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "如果强制执行双重身份验证，则无法启用 DiscourseConnect。"
       delete_rejected_email_after_days: "此设置不能设置为低于 delete_email_logs_after_days 设置或大于 %{max}"
+      invalid_uncategorized_category_setting: '如果“allow uncategorized topics”设置未启用，则无法选择“未分类”类别。'
+      enable_new_notifications_menu_not_legacy_navigation_menu: "在启用这个设置之前，你必须设置`navigation_menu`为`legacy`。"
+      invalid_search_ranking_weights: "对于 search_ranking_weights 站点设置来说，该值是无效的。示例：'{0.1,0.2,0.3,1.0}'。注意，每个权重的最大值是1.0。"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2318,6 +2324,7 @@ zh_CN:
       must_not_contain_two_special_chars_in_seq: "不得包含 2 个或更多特殊字符 (.-_) 的序列"
       must_not_end_with_confusing_suffix: "不得以 .json 或 .png 等令人困惑的后缀结尾。"
     email:
+      blank: "不能为空."
       invalid: "无效。"
       not_allowed: "不允许来自该电子邮件提供商。请使用其他电子邮件地址。"
       blocked: "不被允许。"
@@ -4226,6 +4233,9 @@ zh_CN:
           <p>玩得开心，并顺利<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>建立您的新社区</a>！</p>
   search_logs:
     graph_title: "搜索计数"
+  onebox:
+    discourse:
+      user_joined_community: "加入于%{date}"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} 在“%{topic}”中提及了您 - %{site_title}'
@@ -4287,10 +4297,10 @@ zh_CN:
         category: 类别设置
     actions:
       agree:
-        title: "同意…"
+        title: "是"
       agree_and_keep:
         title: "保留帖子"
-        description: "同意举报并保持帖子不变。"
+        description: "同意举报，但是保留帖子不变。"
       agree_and_keep_hidden:
         title: "保持帖子隐藏"
         description: "同意举报并保持帖子隐藏。"
@@ -4298,39 +4308,41 @@ zh_CN:
         title: "封禁用户"
         description: "同意举报并封禁用户。"
       agree_and_silence:
-        title: "禁言用户"
+        title: "将用户禁言"
         description: "同意举报并禁言用户。"
       agree_and_restore:
         title: "恢复帖子"
         description: "恢复帖子，以便所有用户都可以看到它。"
       agree_and_hide:
         title: "隐藏帖子"
-        description: "隐藏此帖子并自动向用户发送一条消息，敦促他们进行编辑。"
+        description: "同意举报并隐藏这个帖子 + 自动向用户发送信息敦促他们进行修改。"
       delete_single:
         title: "删除"
       delete:
         title: "删除…"
       delete_and_ignore:
-        title: "删除帖子并忽视"
-        description: "删除帖子；如果是第一个帖子，同时删除话题"
+        title: "忽略举报并删除帖子"
+        description: "将举报从队列中移除，并删除该帖子；如果是第一个帖子，同时删除该主题。 "
       delete_and_ignore_replies:
-        title: "删除帖子 + 回复并忽略"
-        description: "删除帖子及其所有回复；如果是第一个帖子，同时删除话题"
+        title: "忽略举报，删除帖子和回复"
         confirm: "确定要同时删除对帖子的回复吗？"
       delete_and_agree:
-        title: "删除帖子并同意"
-        description: "删除帖子；如果是第一个帖子，同时删除话题"
+        title: "删除帖子"
+        description: "同意举报并删除帖子；如果是第一个帖子，同时删除主题。"
       delete_and_agree_replies:
-        title: "删除帖子 + 回复并同意"
-        description: "删除帖子及其所有回复；如果是第一个帖子，同时删除话题"
+        title: "删除帖子和回复"
+        description: "同意举报并删除此帖子及其所有回复；如果是第一个帖子，同时删除主题。"
         confirm: "确定要同时删除对帖子的回复吗？"
       disagree_and_restore:
-        title: "不同意并恢复帖子"
+        title: "不，恢复帖子"
         description: "恢复帖子，以便所有用户都可以看到它。"
       disagree:
-        title: "不同意"
+        title: "否"
       ignore:
         title: "忽略"
+      ignore_and_do_nothing:
+        title: "无操作"
+        description: "忽略举报，从队列中移除并且不采取任何操作。已隐藏的帖子会保持隐藏并且由自动工具处理。"
       approve:
         title: "批准"
       approve_post:
@@ -4395,6 +4407,11 @@ zh_CN:
     payload_url:
       blocked_or_internal: "无法使用有效负载 URL，因为它解析为被屏蔽的 IP 或内部 IP"
       unsafe: "无法使用有效负载 URL，因为它不安全"
+  form_templates:
+    errors:
+      invalid_yaml: "不是有效的 YAML 字符串"
+      invalid_type: "包含一个无效的模板类型： %{type} （有效类型： %{valid_types}）"
+      missing_type: "缺少一个字段类型"
   activemodel:
     errors:
       <<: *errors

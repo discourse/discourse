@@ -93,6 +93,8 @@ pl_PL:
         never: "Nigdy"
         title: "Powiadomienia e-mail"
         when_away: "Tylko gdy jesteś daleko"
+      header_indicator_preference:
+        never: "Nigdy"
       enable: "Włącz czat"
       flag: "Oflaguj"
       emoji: "Wstaw emoji"
@@ -102,7 +104,7 @@ pl_PL:
       in_reply_to: "W odpowiedzi na"
       heading: "Czat"
       join: "Dołącz"
-      new_messages: "nowe wiadomości"
+      last_visit: "ostatnia wizyta"
       mention_warning:
         dismiss: "odrzuć"
         invitations_sent:

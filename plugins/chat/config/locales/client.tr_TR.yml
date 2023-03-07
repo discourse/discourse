@@ -93,6 +93,11 @@ tr_TR:
         never: "Asla"
         title: "E-posta Bildirimleri"
         when_away: "Sadece uzaktayken"
+      header_indicator_preference:
+        title: "Etkinlik göstergesini başlıkta göster"
+        all_new: "Tüm Yeni Mesajlar"
+        dm_and_mentions: "Direkt Mesajlar ve Bahsetmeler"
+        never: "Asla"
       enable: "Sohbeti etkinleştir"
       flag: "Bayrak ekle"
       emoji: "Emoji ekle"
@@ -102,7 +107,7 @@ tr_TR:
       in_reply_to: "Şuna yanıt olarak:"
       heading: "Sohbet"
       join: "Katıl"
-      new_messages: "yeni mesajlar"
+      last_visit: "son ziyaret"
       mention_warning:
         dismiss: "kapat"
         invitations_sent:

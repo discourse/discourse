@@ -3492,50 +3492,29 @@ ur:
     conflict: "ایک اَپ ڈیٹ کا تنازع آپ کو ایسا کرنے سے روک رہا تھا۔"
     actions:
       agree:
-        title: "اتفاق کریں..."
-      agree_and_keep:
-        title: "پوسٹ برقرار رکھیں"
-        description: "فلَیگ کے ساتھ اتفاق کریں اور پوسٹ کو ویسا ہی رہنے دیں۔"
-      agree_and_keep_hidden:
-        title: "پوسٹ پوشیدہ رکھیں"
-        description: "فلَیگ کے ساتھ اتفاق کریں اور پوسٹ پوشیدہ رکھیں۔"
+        title: "جی ہاں"
       agree_and_suspend:
-        title: "صارف معطل کریں"
         description: "فلَیگ کے ساتھ اتفاق کریں اور صارف معطل کریں۔"
       agree_and_silence:
-        title: "صارف خاموش کریں"
         description: "فلَیگ کے ساتھ اتفاق کریں اور صارف خاموش کریں۔"
       agree_and_restore:
-        title: "پوسٹ بحال کریں"
         description: "پوسٹ کو بحال کریں تاکہ تمام صارفین اِسے دیکھ سکیں۔"
-      agree_and_hide:
-        title: "پوسٹ چھپائیں"
-        description: "اِس پوسٹ کو چھپائیں اور خود کار طریقے سے صارف کو اِس میں ترمیم کرنے کیلئے زور ڈالنے کیلئے پیغام بھیجیں۔"
       delete_single:
         title: "حذف کریں"
       delete:
         title: "حذف کریں..."
-      delete_and_ignore:
-        title: "پوسٹ حذف اور نظر انداز کریں"
-        description: "پوسٹ حذف کریں؛ اگر پہلی پوسٹ ہو، تو ٹاپک بھی ساتھ حذف کریں"
       delete_and_ignore_replies:
-        title: "پوسٹ + جوابات حذف اور نظر انداز کریں"
-        description: "پوسٹ اور اِس کے تمام جوابات کو حذف کریں؛ اگر پہلی پوسٹ ہو، تو ٹاپک بھی ساتھ حذف کریں"
         confirm: "کیا آپ واقعی اِس پوسٹ پر جوابات بھی حذف کرنا چاہتے ہیں؟"
-      delete_and_agree:
-        title: "پوسٹ حذف اور اتفاق کریں"
-        description: "پوسٹ حذف کریں؛ اگر پہلی پوسٹ ہو، تو ٹاپک بھی ساتھ حذف کریں"
       delete_and_agree_replies:
-        title: "پوسٹ + جوابات حذف اور اتفاق کریں"
-        description: "پوسٹ اور اِس کے تمام جوابات کو حذف کریں؛ اگر پہلی پوسٹ ہو، تو ٹاپک بھی ساتھ حذف کریں"
         confirm: "کیا آپ واقعی اِس پوسٹ پر جوابات بھی حذف کرنا چاہتے ہیں؟"
       disagree_and_restore:
-        title: "اختلاف کریں اور پوسٹ بحال کریں"
         description: "پوسٹ کو بحال کریں تاکہ تمام صارفین اِسے دیکھ سکیں۔"
       disagree:
-        title: "اختلاف کریں"
+        title: "نہیں"
       ignore:
         title: "نظر انداز کریں"
+      ignore_and_do_nothing:
+        title: "کچھ نہ کریں"
       approve:
         title: "منظور"
       approve_post:

@@ -2204,7 +2204,7 @@ de:
       search_tokenize_japanese_enabled: "Du musst „search_tokenize_japanese“ deaktivieren, bevor du diese Einstellung aktivierst."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Du kannst DiscourseConnect nicht aktivieren, wenn 2FA erzwungen wird."
       delete_rejected_email_after_days: "Diese Einstellung kann nicht niedriger als die Einstellung delete_email_logs_after_days oder höher als %{max} gesetzt werden"
-      invalid_uncategorized_category_setting: "Die Kategorie „Nicht kategorisiert“ kann nicht ausgewählt werden, wenn „Nicht kategorisierte Themen zulassen“ nicht aktiviert ist."
+      invalid_uncategorized_category_setting: 'Die Kategorie „Nicht kategorisiert“ kann nicht ausgewählt werden, wenn „Nicht kategorisierte Themen zulassen“ nicht aktiviert ist.'
       enable_new_notifications_menu_not_legacy_navigation_menu: "Du musst `navigation_menu` auf `legacy` setzen, bevor du diese Einstellung aktivierst."
       invalid_search_ranking_weights: "Der Wert für die Websiteeinstellung search_ranking_weights ist ungültig. Beispiel: '{0.1,0.2,0.3,1.0}'. Beachte, dass der Maximalwert für jedes Gewicht 1,0 beträgt."
     placeholder:
@@ -4670,10 +4670,10 @@ de:
         category: Kategorie-Einstellungen
     actions:
       agree:
-        title: "Zustimmen …"
+        title: "Ja"
       agree_and_keep:
         title: "Beitrag behalten"
-        description: "Meldung zustimmen und den Beitrag unbearbeitet lassen."
+        description: "Meldung zustimmen aber diesen Beitrag unbearbeitet lassen."
       agree_and_keep_hidden:
         title: "Beitrag ausgeblendet lassen"
         description: "Meldung zustimmen und den Beitrag ausgeblendet lassen."
@@ -4688,32 +4688,35 @@ de:
         description: "Beitrag wiederherstellen, sodass alle Benutzer ihn sehen können."
       agree_and_hide:
         title: "Beitrag verstecken"
-        description: "Verstecke diesen Beitrag und sende dem Benutzer automatisch eine Nachricht mit der Bitte, ihn zu bearbeiten."
+        description: "Stimme der Meldung zu und verstecke diesen Beitrag + sende dem Benutzer automatisch eine Nachricht mit der Bitte, ihn zu bearbeiten."
       delete_single:
         title: "Löschen"
       delete:
         title: "Löschen …"
       delete_and_ignore:
-        title: "Beitrag löschen und ignorieren"
-        description: "Lösche Beitrag; falls dies der erste Beitrag im Thema ist, lösche auch das Thema"
+        title: "Meldung ignorieren und Beitrag löschen"
+        description: "Ignoriere die Meldung, indem du sie aus der Warteschlange entfernst und den Beitrag löschst; wenn es der erste Beitrag ist, lösche auch das Thema. "
       delete_and_ignore_replies:
-        title: "Lösche Beitrag + Antworten und ignoriere"
-        description: "Lösche Beitrag und alle Antworten; falls dies der erste Beitrag im Thema ist, lösche auch das Thema"
+        title: "Meldung ignorieren, Beitrag und Antworten löschen"
+        description: "Ignoriere die Meldung, indem du sie aus der Warteschlange entfernst, lösche den Beitrag und alle seine Antworten; wenn es der erste Beitrag ist, lösche auch das Thema"
         confirm: "Möchtest du wirklich auch die Antworten auf diesen Beitrag löschen?"
       delete_and_agree:
-        title: "Beitrag löschen und zustimmen"
-        description: "Lösche Beitrag; falls dies der erste Beitrag im Thema ist, lösche auch das Thema"
+        title: "Beitrag löschen"
+        description: "Stimme der Meldung zu und lösche diesen Beitrag; wenn es der erste Beitrag ist, lösche auch das Thema."
       delete_and_agree_replies:
-        title: "Lösche Beitrag + Antworten und akzeptiere"
-        description: "Lösche Beitrag und alle Antworten; falls dies der erste Beitrag im Thema ist, lösche auch das Thema"
+        title: "Beitrag und Antworten löschen"
+        description: "Stimme der Meldung zu und lösche diesen Beitrag und alle seine Antworten; wenn es der erste Beitrag ist, lösche auch das Thema."
         confirm: "Möchtest du wirklich auch die Antworten auf diesen Beitrag löschen?"
       disagree_and_restore:
-        title: "Ablehnen und Beitrag wiederherstellen"
+        title: "Nein, Beitrag wiederherstellen"
         description: "Beitrag wiederherstellen, sodass alle Benutzer ihn sehen können."
       disagree:
-        title: "Ablehnen"
+        title: "Nein"
       ignore:
         title: "Ignorieren"
+      ignore_and_do_nothing:
+        title: "Nichts tun"
+        description: "Ignoriere die Meldung, indem du sie aus der Warteschlange entfernst, ohne etwas zu unternehmen. Versteckte Beiträge bleiben versteckt und werden von den Auto-Tools bearbeitet."
       approve:
         title: "Genehmigen"
       approve_post:
@@ -4782,6 +4785,8 @@ de:
   form_templates:
     errors:
       invalid_yaml: "ist keine gültige YAML-Zeichenfolge"
+      invalid_type: "enthält einen ungültigen Vorlagentyp: %{type} (gültige Typen sind: %{valid_types})"
+      missing_type: "fehlt ein Feldtyp"
   activemodel:
     errors:
       <<: *errors

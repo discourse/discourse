@@ -611,26 +611,18 @@ pl_PL:
       scores:
         about: "Wynik jest obliczany na podstawie poziomu zaufania raportującego, akceptacji poprzednich flag i priorytetu raportowanego postu."
         score: "Wynik"
-        date: "Data"
-        type: "Typ"
+        type: "Powód"
         status: "Status"
-        submitted_by: "Wysłany przez"
-        reviewed_by: "Sprawdzony przez"
+        submitted_by: "Zgłoszony przez"
       statuses:
         pending:
           title: "Oczekujące"
-        approved:
-          title: "Zaakceptowany"
-        rejected:
-          title: "Odrzucony"
-        ignored:
-          title: "Zignorowany"
-        deleted:
-          title: "Usunięty"
         reviewed:
           title: "(wszystkie sprawdzone)"
         all:
           title: "(wszystko)"
+      context_question:
+        delimiter: "lub"
       types:
         reviewable_flagged_post:
           title: "Oflagowany wpis"
@@ -953,6 +945,7 @@ pl_PL:
         make_all_primary_description: "Ustaw tę grupę jako podstawową dla wszystkich wybranych użytkowników"
         remove_all_primary: "Usuń jako podstawowy"
         remove_all_primary_description: "Usuń tę grupę jako podstawową"
+        status: "Status"
         owner: "Właściciel"
         primary: "Podstawowy"
         forbidden: "Nie możesz oglądać profili użytkowników."
@@ -3918,6 +3911,10 @@ pl_PL:
     filters:
       with_topics: "%{filter} tematy"
       with_category: "%{filter} tematy w %{category} "
+      filter:
+        title: "Filtr"
+        button:
+          label: "Filtr"
       latest:
         title: "Aktualne"
         title_with_count:
@@ -5510,6 +5507,7 @@ pl_PL:
           template:
             label: "Szablon"
             placeholder: "Utwórz szablon YAML tutaj..."
+          preview: "Podgląd"
         delete_confirm: "Czy na pewno chcesz usunąć ten szablon?"
         quick_insert_fields:
           add_new_field: "Dodaj"
@@ -5519,6 +5517,18 @@ pl_PL:
           dropdown: "Lista rozwijana"
           upload: "Prześlij plik"
           multiselect: "Wielokrotny wybór"
+        validations_modal:
+          table_headers:
+            key: "Klucz"
+            type: "Typ"
+            description: "Opis"
+          validations:
+            required:
+              key: "wymagane"
+            minimum:
+              key: "minimum"
+            maximum:
+              key: "maksimum"
       impersonate:
         title: "Podszywaj się"
         help: "Użyj tego narzędzia, aby podszywać się pod konto użytkownika do celów debugowania. Będziesz musiał się wylogować po zakończeniu."
@@ -5531,6 +5541,7 @@ pl_PL:
         not_found: "Przepraszamy, taka nazwa użytkownika nie istnieje w naszym systemie."
         id_not_found: "Przepraszamy, ten identyfikator użytkownika nie istnieje w naszym systemie."
         active: "Aktywowane"
+        status: "Status"
         show_emails: "Pokaż e-maile"
         hide_emails: "Ukryj e-maile"
         nav:

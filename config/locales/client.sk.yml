@@ -383,15 +383,12 @@ sk:
         refresh: "Obnoviť"
         category: "Kategória"
       scores:
-        date: "Dátum"
-        type: "Typ"
+        type: "Dôvod"
       statuses:
         pending:
           title: "Čakajúce správy"
-        approved:
-          title: "Schválený"
-        rejected:
-          title: "Zamietnuté"
+      context_question:
+        delimiter: "alebo"
       types:
         reviewable_user:
           title: "Používateľ"
@@ -2029,6 +2026,10 @@ sk:
     filters:
       with_topics: "%{filter} témy"
       with_category: "%{filter} %{category} témy"
+      filter:
+        title: "Filter"
+        button:
+          label: "Filter"
       latest:
         title: "Najnovšie"
         title_with_count:
@@ -2803,9 +2804,17 @@ sk:
         new_template_form:
           submit: "Uložiť"
           cancel: "Zrušiť"
+          preview: "Ukážka"
         quick_insert_fields:
           add_new_field: "Pridať"
           dropdown: "Zoznam"
+        validations_modal:
+          table_headers:
+            type: "Typ"
+            description: "Popis"
+          validations:
+            required:
+              key: "povinné"
       impersonate:
         title: "Privlastniť"
         help: "Použite tento nástroj na privlastnenie si používateľského účtu na účely debugovania. Po skončení sa budete musieť odhlásiť."
