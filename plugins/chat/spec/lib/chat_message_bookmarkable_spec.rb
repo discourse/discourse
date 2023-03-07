@@ -11,9 +11,11 @@ describe ChatMessageBookmarkable do
   fab!(:channel) { Fabricate(:category_channel) }
 
   before do
-    Bookmark.register_bookmarkable(ChatMessageBookmarkable)
+    register_test_bookmarkable(ChatMessageBookmarkable)
     UserChatChannelMembership.create(chat_channel: channel, user: user, following: true)
   end
+
+  after { DiscoursePluginRegistry.reset! }
 
   let!(:message1) { Fabricate(:chat_message, chat_channel: channel) }
   let!(:message2) { Fabricate(:chat_message, chat_channel: channel) }
