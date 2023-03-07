@@ -43,7 +43,7 @@ tr_TR:
   views: "görüntülemeler"
   loading: "Yükleniyor"
   powered_by_html: '<a href="https://www.discourse.org">Discourse</a>tarafından destekleniyor, JavaScript etkinleştirildiğinde en iyi şekilde görüntülenebilir'
-  sign_up: "Kayıt Ol"
+  sign_up: "Kaydol"
   log_in: "Giriş Yap"
   submit: "Gönder"
   purge_reason: "Terk edilmiş, devre dışı bırakılmış hesap olarak otomatik olarak silindi"
