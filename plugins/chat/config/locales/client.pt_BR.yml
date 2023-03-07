@@ -93,6 +93,8 @@ pt_BR:
         never: "Nunca"
         title: "Notificações por e-mail"
         when_away: "Só quando estiver ausente"
+      header_indicator_preference:
+        never: "Nunca"
       enable: "Ativar chat"
       flag: "Sinalizar"
       emoji: "Inserir emoji"
@@ -102,7 +104,7 @@ pt_BR:
       in_reply_to: "Em resposta a"
       heading: "Chat"
       join: "Participar"
-      new_messages: "novas mensagens"
+      last_visit: "último acesso"
       mention_warning:
         dismiss: "ignorar"
         invitations_sent:

@@ -4379,50 +4379,30 @@ nl:
         category: categorie-instellingen
     actions:
       agree:
-        title: "Akkoord..."
-      agree_and_keep:
-        title: "Bericht behouden"
-        description: "Akkoord met markering en het bericht ongewijzigd laten."
-      agree_and_keep_hidden:
-        title: "Bericht verborgen houden"
-        description: "Akkoord gaan met markering en het bericht verborgen laten."
+        title: "Ja"
       agree_and_suspend:
-        title: "Gebruiker schorsen"
         description: "Akkoord met markering en de gebruiker schorsen."
       agree_and_silence:
         title: "Gebruiker dempen"
         description: "Akkoord met markering en de gebruiker dempen."
       agree_and_restore:
-        title: "Bericht herstellen"
         description: "Het bericht herstellen, zodat alle gebruikers het kunnen zien."
-      agree_and_hide:
-        title: "Bericht verbergen"
-        description: "Dit bericht verbergen en de gebruiker automatisch een bericht sturen waarin dringend wordt gevraagd het te bewerken."
       delete_single:
         title: "Verwijderen"
       delete:
         title: "Verwijderen..."
-      delete_and_ignore:
-        title: "Bericht verwijderen en negeren"
-        description: "Bericht verwijderen; als dit het eerste bericht is, ook het topic verwijderen"
       delete_and_ignore_replies:
-        title: "Bericht + antwoorden verwijderen en negeren"
-        description: "Bericht en alle antwoorden erop verwijderen; als dit het eerste bericht is, ook het topic verwijderen"
         confirm: "Weet je zeker dat je de antwoorden op het bericht ook wilt verwijderen?"
-      delete_and_agree:
-        title: "Bericht verwijderen en akkoord"
-        description: "Bericht verwijderen; als dit het eerste bericht is, ook het topic verwijderen"
       delete_and_agree_replies:
-        title: "Bericht + antwoorden verwijderen en akkoord"
-        description: "Bericht en alle antwoorden erop verwijderen; als dit het eerste bericht is, ook het topic verwijderen"
         confirm: "Weet je zeker dat je de antwoorden op het bericht ook wilt verwijderen?"
       disagree_and_restore:
-        title: "Niet akkoord en bericht herstellen"
         description: "Het bericht herstellen, zodat alle gebruikers het kunnen zien."
       disagree:
-        title: "Niet akkoord"
+        title: "Nee"
       ignore:
         title: "Negeren"
+      ignore_and_do_nothing:
+        title: "Niets doen"
       approve:
         title: "Goedkeuren"
       approve_post:

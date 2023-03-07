@@ -54,6 +54,7 @@ zh_CN:
         other: "消息太短，必须至少有 %{count} 个字符。"
       message_too_long:
         other: "消息过长，最多只能包含 %{count} 个字符。"
+      draft_too_long: "草稿太长了。"
       max_reactions_limit_reached: "此消息不允许有新的回应。"
       message_move_invalid_channel: "源频道和目标频道必须是公共频道。"
       message_move_no_messages_found: "找不到带有提供的消息 ID 的消息。"

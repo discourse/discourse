@@ -4374,50 +4374,30 @@ es:
         category: ajustes de la categoría
     actions:
       agree:
-        title: "Estar de acuerdo..."
-      agree_and_keep:
-        title: "Mantener publicación"
-        description: "Estar de acuerdo con la denuncia y mantener la publicación intacta."
-      agree_and_keep_hidden:
-        title: "Mantener la publicación oculta"
-        description: "Aceptar la denuncia y mantener la publicación oculta."
+        title: "Sí"
       agree_and_suspend:
-        title: "Suspender usuario"
         description: "Estar de acuerdo con la denuncia y suspender el usuario."
       agree_and_silence:
         title: "Silenciar al usuario"
         description: "Estar de acuerdo con la denuncia y silenciar al usuario."
       agree_and_restore:
-        title: "Restaurar publicación"
         description: "Restaurar la publicación para que los usuarios puedan verla."
-      agree_and_hide:
-        title: "Ocultar publicación"
-        description: "Ocultar la publicación y enviar un mensaje automáticamente al usuario animándole a que la edite."
       delete_single:
         title: "Eliminar"
       delete:
         title: "Eliminar..."
-      delete_and_ignore:
-        title: "Eliminar publicación e ignorar"
-        description: "Eliminar publicación; si es la primera del tema, eliminar el tema también."
       delete_and_ignore_replies:
-        title: "Eliminar publicación + respuestas e ignorar"
-        description: "Eliminar publicación y todas sus respuestas; si es la primera publicación de un tema, eliminarlo también"
         confirm: "¿Seguro que quieres eliminar las respuestas de la publicación también?"
-      delete_and_agree:
-        title: "Eliminar publicación y coincidir"
-        description: "Eliminar publicación; si es la primera del tema, eliminar el tema también."
       delete_and_agree_replies:
-        title: "Eliminar publicación + respuestas y coincidir"
-        description: "Eliminar publicación y todas sus respuestas; si es la primera publicación de un tema, eliminarlo también"
         confirm: "¿Seguro que quieres eliminar las respuestas de la publicación también?"
       disagree_and_restore:
-        title: "Discrepar y restaurar publicación"
         description: "Restaurar la publicación para que los usuarios puedan verla."
       disagree:
-        title: "Discrepar"
+        title: "No"
       ignore:
         title: "Ignorar"
+      ignore_and_do_nothing:
+        title: "No hacer nada"
       approve:
         title: "Aprobar"
       approve_post:

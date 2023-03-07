@@ -21,8 +21,11 @@ sl:
       joined: "pridružen"
       email_frequency:
         never: "Nikoli"
+      header_indicator_preference:
+        never: "Nikoli"
       flag: "Prijavi"
       join: "Pridruži se"
+      last_visit: "zadnji obisk"
       mention_warning:
         dismiss: "opusti"
       reply: "Odgovori"

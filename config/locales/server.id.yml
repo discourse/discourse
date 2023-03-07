@@ -710,8 +710,12 @@ id:
       medium: "Sedang"
       high: "Tinggi"
     actions:
+      agree:
+        title: "Ya"
       delete_single:
         title: "Hapus"
+      disagree:
+        title: "Tidak"
       ignore:
         title: "Abaikan"
       approve:

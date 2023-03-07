@@ -21,8 +21,11 @@ hy:
       joined: "միացել է"
       email_frequency:
         never: "Երբեք"
+      header_indicator_preference:
+        never: "Երբեք"
       flag: "Դրոշակավորել"
       join: "Միանալ"
+      last_visit: "վերջին այցելությունը"
       mention_warning:
         dismiss: "չեղարկել"
       reply: "Պատասխանել"

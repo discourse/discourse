@@ -785,7 +785,7 @@ ru:
         many: "%{count} ч"
         other: "%{count} ч"
       x_days:
-        one: "%{count} дн"
+        one: "%{count} д"
         few: "%{count} дн"
         many: "%{count} дн"
         other: "%{count} дн"
@@ -4554,50 +4554,30 @@ ru:
         category: настройки категории
     actions:
       agree:
-        title: "Согласиться…"
-      agree_and_keep:
-        title: "Оставить запись"
-        description: "Согласиться с жалобой, но оставить запись без изменений."
-      agree_and_keep_hidden:
-        title: "Оставить запись скрытой"
-        description: "Согласиться с жалобой и оставить запись скытой"
+        title: "Да"
       agree_and_suspend:
-        title: "Заморозить пользователя"
         description: "Согласиться с жалобой и заморозить пользователя."
       agree_and_silence:
         title: "Заблокировать пользователя"
         description: "Согласиться с жалобой и заблокировать пользователя."
       agree_and_restore:
-        title: "Восстановить запись"
         description: "Восстановить запись, чтобы все пользователи могли ее видеть."
-      agree_and_hide:
-        title: "Скрыть запись"
-        description: "Скрыть запись и автоматически отправить пользователю уведомление с просьбой ее отредактировать."
       delete_single:
         title: "Удалить"
       delete:
         title: "Удалить…"
-      delete_and_ignore:
-        title: "Удалить запись и игнорировать"
-        description: "Удалить запись; если это первая запись, удалится вся тема"
       delete_and_ignore_replies:
-        title: "Удалить запись + ответы и игнорировать"
-        description: "Удалить запись и все ответы на нее; если это первая запись, удалится вся тема"
         confirm: "Действительно удалить ответы на запись?"
-      delete_and_agree:
-        title: "Удалить запись и согласиться"
-        description: "Удалить запись; если это первая запись, удалится вся тема"
       delete_and_agree_replies:
-        title: "Удалить запись + ответы и согласиться"
-        description: "Удалить запись и все ответы на нее; если это первая запись, удалится вся тема"
         confirm: "Действительно удалить ответы на запись?"
       disagree_and_restore:
-        title: "Отклонить жалобу и восстановить запись"
         description: "Восстановить запись, чтобы все пользователи могли ее видеть."
       disagree:
-        title: "Отклонить"
+        title: "Нет"
       ignore:
         title: "Игнорировать"
+      ignore_and_do_nothing:
+        title: "Ничего не делать"
       approve:
         title: "Одобрить"
       approve_post:

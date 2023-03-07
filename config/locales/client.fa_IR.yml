@@ -491,26 +491,20 @@ fa_IR:
       scores:
         about: "این امتیاز بر اساس سطح اعتماد گزارش دهنده، دقت پرچم‌های قبلی ایشان، و اولویت مورد گزارش شده حساب میشود، "
         score: "امتیاز"
-        date: "تاریخ"
-        type: "نوع"
+        type: "دلیل"
         status: "وضعیت"
-        submitted_by: "ارسال شده توسط"
-        reviewed_by: "بازنگری شده توسط"
+        submitted_by: "گزارش شده توسط"
       statuses:
         pending:
           title: "در انتظار"
-        approved:
-          title: "پذیرفته شده"
-        rejected:
-          title: "رد شده"
-        ignored:
-          title: "صرف نظر شده"
         deleted:
-          title: "حذف شده"
+          title: "موضوع یا نوشته حذف شده"
         reviewed:
           title: "(همه مرور شده)"
         all:
           title: "«همه چیز»"
+      context_question:
+        delimiter: "یا"
       types:
         reviewable_flagged_post:
           title: "نوشته پرچم شده"
@@ -794,6 +788,7 @@ fa_IR:
         remove_members: "اخراج عضو‌ها"
         make_owners: "اعطای مالکیت"
         make_owners_description: "کاربران انتخاب شده را مالک این گروه کن"
+        status: "وضعیت"
         owner: "مالک"
         primary: "اصلی"
         forbidden: "شما مجاز به دیدن کاربران نیستید."
@@ -2277,6 +2272,7 @@ fa_IR:
         bookmarks: "هنوز هیچ موضوع نشانک‌داری ندارید."
         category: "هیچ موضوعی در %{category} نیست."
         top: "موضوع برتری وجود ندارد."
+        filter: "هنوز هیچ موضوعی وجود ندارد."
       bottom:
         latest: "موضوع تازه‌ی دیگری وجود ندارد."
         posted: "هیچ موضوعات نوشته شده ای وجود ندارد"
@@ -3030,6 +3026,10 @@ fa_IR:
     filters:
       with_topics: "%{filter} موضوعات"
       with_category: "%{filter} %{category} موضوعات"
+      filter:
+        title: "فیلتر"
+        button:
+          label: "فیلتر"
       latest:
         title: "آخرین"
         title_with_count:
@@ -4153,9 +4153,22 @@ fa_IR:
         new_template_form:
           submit: "ذخیره"
           cancel: "انصراف"
+          preview: "پیش‌نمایش"
         quick_insert_fields:
           add_new_field: "اضافه کردن"
           dropdown: "کرکره‌ای"
+        validations_modal:
+          table_headers:
+            key: "کلید"
+            type: "نوع"
+            description: "توضیح"
+          validations:
+            required:
+              key: "مورد نیاز "
+            minimum:
+              key: "حداقل"
+            maximum:
+              key: "حداکثر"
       impersonate:
         title: "جعل هویت کردن"
         help: "با استفاده از ابزار جعل هویت کردن یک حساب کاربری را برای اشکال زدایی انتخاب نمایید، شما باید بعد از اتمام کار یک بار خارج شوید."
@@ -4168,6 +4181,7 @@ fa_IR:
         not_found: "متاسفیم٬ این کاربر در سیستم ما وجود ندارد."
         id_not_found: "متاسفیم٬ این شناسه کاربری در سیستم ما وجود ندارد."
         active: "فعال شد"
+        status: "وضعیت"
         show_emails: "ایمیل ها را نشان بده"
         hide_emails: "مخفی کردن رایانامه‌ها"
         nav:

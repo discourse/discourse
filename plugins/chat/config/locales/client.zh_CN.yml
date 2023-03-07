@@ -93,6 +93,10 @@ zh_CN:
         never: "永不"
         title: "电子邮件通知"
         when_away: "仅在离开时"
+      header_indicator_preference:
+        all_new: "所有新消息"
+        dm_and_mentions: "直接消息和提及"
+        never: "永不"
       enable: "启用聊天"
       flag: "举报"
       emoji: "插入表情符号"
@@ -102,7 +106,7 @@ zh_CN:
       in_reply_to: "回复"
       heading: "聊天"
       join: "加入"
-      new_messages: "新消息"
+      last_visit: "上次访问"
       mention_warning:
         dismiss: "忽略"
         invitations_sent:
@@ -200,6 +204,7 @@ zh_CN:
           members: 成员
           settings: 设置
       channel_edit_name_slug_modal:
+        input_placeholder: 添加一个名字
         name: 频道名称
       channel_edit_description_modal:
         title: 编辑描述
@@ -360,6 +365,9 @@ zh_CN:
         symbols: "符号"
         search_placeholder: "按表情符号名称和别名搜索…"
         no_results: "没有结果"
+      threads:
+        started_by: "开始于"
+        open: "打开主题"
       draft_channel_screen:
         header: "新消息"
         cancel: "取消"

@@ -528,10 +528,12 @@ th:
       medium: "ปานกลาง"
       high: "สูง"
     actions:
+      agree:
+        title: "ใช่"
       delete_single:
         title: "ลบ"
       disagree:
-        title: "ไม่เห็นด้วย"
+        title: "ไม่ใช่"
       ignore:
         title: "ไม่สนใจ"
       approve:

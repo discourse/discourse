@@ -93,6 +93,8 @@ fi:
         never: "Ei koskaan"
         title: "Sähköposti-ilmoitukset"
         when_away: "Vain poissa ollessa"
+      header_indicator_preference:
+        never: "Ei koskaan"
       enable: "Ota chat käyttöön"
       flag: "Liputa"
       emoji: "Lisää emoji"
@@ -102,7 +104,7 @@ fi:
       in_reply_to: "Vastauksena:"
       heading: "Chat"
       join: "Liity"
-      new_messages: "uusia viestejä"
+      last_visit: "edellinen vierailu"
       mention_warning:
         dismiss: "hylkää"
         invitations_sent:

@@ -21,8 +21,11 @@ nb_NO:
       joined: "medlem fra"
       email_frequency:
         never: "Aldri"
+      header_indicator_preference:
+        never: "Aldri"
       flag: "Flagg"
       join: "Bli medlem"
+      last_visit: "siste besøk"
       mention_warning:
         dismiss: "forkast"
       reply: "Svar"

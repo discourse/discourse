@@ -20,8 +20,11 @@ sw:
       joined: "alijiunga"
       email_frequency:
         never: "Kamwe"
+      header_indicator_preference:
+        never: "Kamwe"
       flag: "Bendera"
       join: "Jiunge"
+      last_visit: "Mara ya mwisho imetembelewa"
       mention_warning:
         dismiss: "ondosha..."
       reply: "Jibu"

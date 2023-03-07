@@ -4134,50 +4134,30 @@ it:
         category: impostazioni della categoria
     actions:
       agree:
-        title: "Acconsenti..."
-      agree_and_keep:
-        title: "Mantieni il messaggio"
-        description: "Accetta la segnalazione e mantieni invariato il messaggio."
-      agree_and_keep_hidden:
-        title: "Tieni il Messaggio Nascosto"
-        description: "Accetta la segnalazione e lascia il messaggio nascosto."
+        title: "Sì"
       agree_and_suspend:
-        title: "Sospendi Utente"
         description: "Accetta la segnalazione e sospendi l'utente."
       agree_and_silence:
-        title: "Silenzia Utente"
+        title: "Silenzia utente"
         description: "Accetta la segnalazione e silenzia l'utente."
       agree_and_restore:
-        title: "Ripristina Messaggio"
         description: "Ripristina il messaggio in modo che tutti gli utenti possano vederlo."
-      agree_and_hide:
-        title: "Nascondi Messaggio"
-        description: "Nascondi questo messaggio e invia automaticamente all'utente un messaggio privato che lo invita a modificarlo."
       delete_single:
         title: "Elimina"
       delete:
         title: "Elimina..."
-      delete_and_ignore:
-        title: "Elimina il messaggio e ignora"
-        description: "Elimina il messaggio. Se fosse il primo messaggio, elimina anche l'Argomento"
       delete_and_ignore_replies:
-        title: "Elimina il messaggio e le sue risposte, ed ignora la segnalazione"
-        description: "Cancella il messaggio e tutte le relative risposte; se è il primo messaggio, cancella anche l'argomento"
         confirm: "Sei sicuro di voler eliminare anche le risposte al messaggio?"
-      delete_and_agree:
-        title: "Elimina Messaggio e accetta"
-        description: "Elimina il messaggio. Se fosse il primo messaggio, elimina anche l'Argomento"
       delete_and_agree_replies:
-        title: "Elimina il messaggio e le sue risposte, e accetta la segnalazione"
-        description: "Cancella il messaggio e tutte le relative risposte; se è il primo messaggio, cancella anche l'argomento"
         confirm: "Sei sicuro di voler eliminare anche le risposte al messaggio?"
       disagree_and_restore:
-        title: "Esprimi disaccordo e ripristina il Messaggio"
         description: "Ripristina il messaggio in modo che tutti gli utenti possano vederlo."
       disagree:
-        title: "Rifiuta"
+        title: "No"
       ignore:
         title: "Ignora"
+      ignore_and_do_nothing:
+        title: "Non fare nulla"
       approve:
         title: "Approva"
       approve_post:

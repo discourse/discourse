@@ -471,26 +471,18 @@ bg:
       scores:
         about: "Този резултат се изчислява въз основа на нивото на доверие на репортера, точността на предишните му флагове и приоритета на елемента, за който се съобщава."
         score: "Точки"
-        date: "Дата"
-        type: "Тип"
+        type: "Причина"
         status: "Статус"
-        submitted_by: "Изпратено от"
-        reviewed_by: "Прегледан от"
+        submitted_by: "Докладвано от"
       statuses:
         pending:
           title: "Чакащи"
-        approved:
-          title: "Одобрена"
-        rejected:
-          title: "Отхвърлени"
-        ignored:
-          title: "Игнориран"
-        deleted:
-          title: "Изтрита"
         reviewed:
           title: "(всички прегледани)"
         all:
           title: "(всичко)"
+      context_question:
+        delimiter: "или"
       types:
         reviewable_flagged_post:
           title: "Маркирана публикация"
@@ -783,6 +775,7 @@ bg:
         make_all_primary_description: "Направете това основна група за всички избрани потребители"
         remove_all_primary: "Премахване като Основна"
         remove_all_primary_description: "Премахнете тази група като основна"
+        status: "Статус"
         owner: "Собественик"
         primary: "Основен"
         forbidden: "Нямате право да преглеждате потребителите."
@@ -2756,6 +2749,10 @@ bg:
     filters:
       with_topics: "%{filter} теми"
       with_category: "%{filter} %{category} теми"
+      filter:
+        title: "Филтер"
+        button:
+          label: "Филтер"
       latest:
         title: "Последни"
         title_with_count:
@@ -3518,6 +3515,13 @@ bg:
         quick_insert_fields:
           add_new_field: "Добави "
           dropdown: "Падащо"
+        validations_modal:
+          table_headers:
+            type: "Тип"
+            description: "Описание"
+          validations:
+            required:
+              key: "задължително"
       impersonate:
         title: "Представи"
         help: "Използвайте този инструмент, за да предоставите потребителски профили за отстраняване на грешките. Трябва да излезете когато приключите."
@@ -3529,6 +3533,7 @@ bg:
         last_emailed: "Последен имейл"
         not_found: "Съжаляваме, това потребителско име не съществува при нас."
         id_not_found: "Съжаляваме, това потребителско име не съществува при нас. "
+        status: "Статус"
         show_emails: "Покажи имейла"
         nav:
           new: "Нови"

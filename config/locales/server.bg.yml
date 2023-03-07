@@ -1326,18 +1326,16 @@ bg:
       medium: "Среден"
       high: "Висок"
     actions:
-      agree_and_suspend:
-        title: "Преустанови потребител"
+      agree:
+        title: "Да"
       agree_and_restore:
         description: "Възстанови тази публикация така че всички потребители да могат да я виждат."
-      agree_and_hide:
-        description: "Скрий тази публикация и автоматично изпрати съобщение към потребителия спешно да я редактира."
       delete_single:
         title: "Изтрий"
       disagree_and_restore:
         description: "Възстанови тази публикация така че всички потребители да могат да я виждат."
       disagree:
-        title: "Не съм съгласен "
+        title: "Не"
       ignore:
         title: "Игнорирай"
       approve:

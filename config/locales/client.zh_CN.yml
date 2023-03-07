@@ -116,6 +116,8 @@ zh_CN:
       facebook: "分享到 Facebook"
       email: "通过电子邮件发送"
       url: "复制并分享 URL"
+    word_connector:
+      comma: ", "
     action_codes:
       public_topic: "%{when}将此话题设为公开"
       open_topic: "%{when}将此转换为话题"
@@ -476,26 +478,18 @@ zh_CN:
       scores:
         about: "此分数是根据举报人的信任级别、该用户以往举报的准确性以及被举报条目的优先级计算得出的。"
         score: "分数"
-        date: "日期"
-        type: "类型"
+        type: "原因"
         status: "状态"
-        submitted_by: "提交人"
-        reviewed_by: "审核人"
+        submitted_by: "举报人"
       statuses:
         pending:
           title: "待处理"
-        approved:
-          title: "已批准"
-        rejected:
-          title: "已拒绝"
-        ignored:
-          title: "已忽略"
-        deleted:
-          title: "已删除"
         reviewed:
           title: "（所有已审核）"
         all:
           title: "（全部）"
+      context_question:
+        delimiter: "或者"
       types:
         reviewable_flagged_post:
           title: "被举报的帖子"
@@ -794,6 +788,7 @@ zh_CN:
         make_all_primary_description: "将此群组设为全部所选用户的主要群组"
         remove_all_primary: "移除主要群组状态"
         remove_all_primary_description: "将此群组从主要群组中移除"
+        status: "状态"
         owner: "所有者"
         primary: "主要"
         forbidden: "您无权查看成员列表。"
@@ -2916,6 +2911,7 @@ zh_CN:
       ignored: "忽略的内容"
       wiki_last_edited_on: "Wiki 最后编辑于 %{dateTime}"
       last_edited_on: "帖子最后编辑于 %{dateTime}"
+      edit_history: "帖子编辑历史"
       reply_as_new_topic: "作为链接话题回复"
       reply_as_new_private_message: "作为新消息回复给相同的收件人"
       continue_discussion: "从%{postLink}继续讨论："
@@ -2926,6 +2922,8 @@ zh_CN:
       collapse: "收起"
       sr_collapse_replies: "收起嵌入式回复"
       sr_date: "发布日期"
+      sr_expand_replies:
+        other: "这个帖子有 %{count} 的回复"
       expand_collapse: "展开/收起"
       sr_below_embedded_posts_description: "帖子#%{post_number} 回复"
       sr_embedded_reply_description: "@%{username} 回复帖子 #%{post_number}"
@@ -3392,6 +3390,10 @@ zh_CN:
     filters:
       with_topics: "%{filter}话题"
       with_category: "%{filter}%{category}话题"
+      filter:
+        title: "筛选器"
+        button:
+          label: "筛选器"
       latest:
         title: "最新"
         title_with_count:
@@ -3571,6 +3573,7 @@ zh_CN:
         other: "其他 (+%{count})"
       granted:
         other: "已被授予 %{count} 个"
+      awarded: 授予
       select_badge_for_title: 选择一个徽章作为您的头衔使用
       none: "（无）"
       successfully_granted: "已成功将“%{badge}”授予 %{username}"
@@ -3785,12 +3788,17 @@ zh_CN:
       all_tags: "所有标签"
       sections:
         custom:
+          add: "添加自定义部分"
+          edit: "编辑自定义部分"
+          name: "章节标题"
           save: "保存"
           delete: "删除"
           links:
             icon: "图标"
             name: "名称"
             value: "链接"
+            add: "添加另一个链接"
+            delete: "删除链接"
         about:
           header_link_text: "关于"
         messages:
@@ -4882,9 +4890,31 @@ zh_CN:
         new_template_form:
           submit: "保存"
           cancel: "取消"
+          preview: "预览"
         quick_insert_fields:
           add_new_field: "添加"
+          checkbox: "复选框"
+          input: "简要回答"
+          textarea: "长答案"
           dropdown: "下拉菜单"
+          upload: "上传一个文件"
+          multiselect: "多选"
+        validations_modal:
+          table_headers:
+            key: "密钥"
+            type: "类型"
+            description: "描述"
+          validations:
+            required:
+              key: "必选"
+            minimum:
+              key: "最小值"
+            maximum:
+              key: "最大值"
+        edit_category:
+          toggle_form_template: "启用表单模板"
+          select_template: "选择表单模板"
+          select_template_help: "添加/编辑表单模板"
       impersonate:
         title: "模拟"
         help: "使用此工具模拟用户帐户以进行调试。完成后，您必须退出。"
@@ -4897,6 +4927,7 @@ zh_CN:
         not_found: "抱歉，该用户名在我们的系统中不存在。"
         id_not_found: "抱歉，该用户 ID 在我们的系统中不存在。"
         active: "已激活"
+        status: "状态"
         show_emails: "显示电子邮件"
         hide_emails: "隐藏电子邮件"
         nav:

@@ -19,8 +19,11 @@ bg:
       joined: "присъединен"
       email_frequency:
         never: "Никога"
+      header_indicator_preference:
+        never: "Никога"
       flag: "Сигнализиране"
       join: "Влизане"
+      last_visit: "последно посещение"
       mention_warning:
         dismiss: "отмени"
       reply: "Отговорете"

@@ -2254,6 +2254,7 @@ he:
     enable_new_notifications_menu: "מפעיל את תפריט ההתראות החדש בתפריט הניווט הישן."
     enable_experimental_hashtag_autocomplete: "ניסיוני: ניתן להשתמש במערכת אוטומטית להשלמת #תגיות עבור קטגוריות ותגיות שמעבדת את הפריט הנבחר באופן שונה והחיפוש בה משופר"
     experimental_new_new_view_groups: "ניסיוני: לאפשר רשימת נושאים חדשה המשלבת נושאים שלא נקראו וחדשים ולקשר אליה את „הכול” בסרגל הצד."
+    enable_custom_sidebar_sections: "ניסיוני: הפעלת אגפים משלך בסרגל הצד"
     errors:
       invalid_css_color: "צבע שגוי. נא למלא את שם הצבע או ערך הקסדצימלי."
       invalid_email: "כתובת דוא״ל שגויה."
@@ -2310,7 +2311,7 @@ he:
       search_tokenize_japanese_enabled: "עליך להשבית את ‚search_tokenize_japanese’ (חיפוש מפרק יפנית) בטרם הפעלת הגדרה זו."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "אי אפשר להפעיל את DiscourseConnect אם נאכף אימות דו־שלבי."
       delete_rejected_email_after_days: "הגדרה זו לא יכולה להיות קטנה מ־delete_email_logs_after_days (ימים שלאחריהם למחוק יומני דוא״ל) או גדולה מ־%{max}"
-      invalid_uncategorized_category_setting: "אי אפשר לבחור בקטגוריה „ללא קטגוריה” אם ‚הרשאת נושאים ללא קטגוריה’ אסורה."
+      invalid_uncategorized_category_setting: 'אי אפשר לבחור בקטגוריה „ללא קטגוריה” אם ‚הרשאת נושאים ללא קטגוריה’ אסורה.'
       enable_new_notifications_menu_not_legacy_navigation_menu: "יש להגדיר את `navigation_menu` לערך `legacy` בטרם הפעלת הגדרה זו."
       invalid_search_ranking_weights: "הערך שגוי להגדרת האתר search_ranking_weights (משקלי דירוג חיפוש). למשל: ‚{0.1,0.2,0.3,1.0}’. נא לשים לב שהערך המרבי לכל משקל הוא 1.0."
     placeholder:
@@ -4819,10 +4820,10 @@ he:
         category: הגדרות קטגוריה
     actions:
       agree:
-        title: "הסכמה…"
+        title: "כן"
       agree_and_keep:
         title: "להשאיר את הפוסט"
-        description: "הבעת הסכמה עם הדגל והשארת הפוסט ללא שינוי."
+        description: "הבעת הסכמה עם הדגל אך השארת הפוסט ללא שינוי."
       agree_and_keep_hidden:
         title: "להשאיר את הפוסט מוסתר"
         description: "הבעת הסכמה עם הדגל והשארת הפוסט מוסתר."
@@ -4837,32 +4838,30 @@ he:
         description: "יש לשחזר את הפוסט כדי שכל המשתמשים יוכלו לצפות בו."
       agree_and_hide:
         title: "הסתרת פוסט"
-        description: "הסתרת הפוסט הזה ושליחת הודעה אוטומטית למשתמש שמפצירה בו לערוך אותו."
       delete_single:
         title: "מחיקה"
       delete:
         title: "מחיקה…"
       delete_and_ignore:
-        title: "למחוק את הפוסט ולהתעלם"
-        description: "למחוק את הפוסט, אם זה הפוסט הראשון, למחוק גם את הנושא"
+        title: "התעלמות מהדגל ומחיקת הפוסט"
       delete_and_ignore_replies:
-        title: "למחוק את הפוסט יחד עם התגובות ולהתעלם"
-        description: "למחוק את הפוסט ואת כל התגובות שלו, אם זה הפוסט הראשון אז למחוק גם את הנושא"
+        title: "התעלמות מהסימון, למחוק את הפוסט והתגובות"
         confirm: "למחוק גם את התגובות לפוסט?"
       delete_and_agree:
-        title: "למחוק את הפוסט ולהסכים"
-        description: "למחוק את הפוסט, אם זה הפוסט הראשון, למחוק גם את הנושא"
+        title: "מחיקת פוסט"
       delete_and_agree_replies:
-        title: "למחוק את הפוסט + התגובות ולהסכים"
-        description: "למחוק את הפוסט ואת כל התגובות שלו, אם זה הפוסט הראשון אז למחוק גם את הנושא"
+        title: "מחיקת הפוסט והתגובות"
+        description: "להסכים עם הסימון ולמחוק את הפוסט ואת כל התגובות שלו, אם זה הפוסט הראשון אז למחוק גם את הנושא."
         confirm: "למחוק גם את התגובות לפוסט?"
       disagree_and_restore:
-        title: "לסרב ולשחזר פוסט"
+        title: "לא, לשחזר את הפוסט"
         description: "לשחזר את הפוסט כדי שכל המשתמשים יוכלו לצפות בו."
       disagree:
-        title: "אי קבלה"
+        title: "לא"
       ignore:
         title: "התעלמות"
+      ignore_and_do_nothing:
+        title: "לא לעשות דבר"
       approve:
         title: "אשר"
       approve_post:
@@ -4933,6 +4932,8 @@ he:
   form_templates:
     errors:
       invalid_yaml: "איזה מחרוזת YAML תקנית"
+      invalid_type: "מכיל סוג תבנית שגוי: %{type} (הסוגים התקפים הם: %{valid_types})"
+      missing_type: "סוג השדה חסר"
   activemodel:
     errors:
       <<: *errors
