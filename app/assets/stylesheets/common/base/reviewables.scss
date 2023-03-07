@@ -238,7 +238,8 @@
         background-color: var(--danger-medium);
       }
       &.-queued-post,
-      &.-queued-topic {
+      &.-queued-topic,
+      &.-queued-user {
         background-color: var(--tertiary);
       }
     }
