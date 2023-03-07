@@ -7,13 +7,27 @@ class SidebarUrl < ActiveRecord::Base
 
   validate :path_validator
 
+  before_save :remove_internal_hostname, :set_external
+
   def path_validator
-    Rails.application.routes.recognize_path(value)
+    if external?
+      raise ActionController::RoutingError if value !~ Discourse::Utils::URI_REGEXP
+    else
+      Rails.application.routes.recognize_path(value)
+    end
   rescue ActionController::RoutingError
     errors.add(
       :value,
       I18n.t("activerecord.errors.models.sidebar_section_link.attributes.linkable_type.invalid"),
     )
+  end
+
+  def remove_internal_hostname
+    self.value = self.value.sub(%r{\Ahttp(s)?://#{Discourse.current_hostname}}, "")
+  end
+
+  def set_external
+    self.external = value.start_with?("http://", "https://")
   end
 end
 
@@ -27,4 +41,5 @@ end
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  icon       :string(40)       not null
+#  external   :boolean          default(FALSE), not null
 #

@@ -8,15 +8,25 @@
       @headerActionsIcon="pencil-alt"
     >
       {{#each section.links as |link|}}
-        <Sidebar::SectionLink
-          @linkName={{link.name}}
-          @route={{link.route}}
-          @models={{link.models}}
-          @query={{link.query}}
-          @content={{replace-emoji link.name}}
-          @prefixType="icon"
-          @prefixValue={{link.icon}}
-        />
+        {{#if link.external}}
+          <Sidebar::SectionLink
+            @linkName={{link.name}}
+            @content={{replace-emoji link.name}}
+            @prefixType="icon"
+            @prefixValue={{link.icon}}
+            @href={{link.value}}
+          />
+        {{else}}
+          <Sidebar::SectionLink
+            @linkName={{link.name}}
+            @route={{link.route}}
+            @models={{link.models}}
+            @query={{link.query}}
+            @content={{replace-emoji link.name}}
+            @prefixType="icon"
+            @prefixValue={{link.icon}}
+          />
+        {{/if}}
       {{/each}}
     </Sidebar::Section>
   {{/each}}
