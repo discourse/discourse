@@ -2032,6 +2032,10 @@ class Topic < ActiveRecord::Base
     end
   end
 
+  def group_pm?
+    private_message? && all_allowed_users.count > 2
+  end
+
   private
 
   def invite_to_private_message(invited_by, target_user, guardian)
