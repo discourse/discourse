@@ -266,8 +266,9 @@ export default class ChatLivePane extends Component {
           return;
         }
 
-        this.args.channel.addMessages(messages);
         this.args.channel.details = meta;
+
+        this.args.channel.addMessages(messages);
 
         // Edge case for IOS to avoid blank screens
         // and/or scrolling to bottom losing track of scroll position
@@ -472,25 +473,25 @@ export default class ChatLivePane extends Component {
 
     const scrollPosition = Math.abs(event.target.scrollTop);
     const total = event.target.scrollHeight - event.target.clientHeight;
-    const ratio = (scrollPosition / total) * 100;
-    this.isTowardsTop = ratio < 99 && ratio >= 80;
-    this.isTowardsBottom = ratio > 1 && ratio <= 4;
-    this.isAtBottom = ratio <= 1;
-    this.isAtTop = ratio >= 99;
-    this.needsArrow = ratio >= 5;
+    const difference = total - scrollPosition;
+    this.isTowardsTop = difference >= 50 && difference <= 150;
+    this.isTowardsBottom = scrollPosition >= 50 && scrollPosition <= 150;
+    this.needsArrow = scrollPosition >= 50;
+    this.isAtBottom = scrollPosition < 50;
+    this.isAtTop = difference < 50;
 
     if (this._previousScrollTop - scrollPosition <= 0) {
-      if (this.isTowardsTop || this.isAtTop) {
+      if (this.isAtTop) {
         this.fetchMoreMessages({ direction: PAST });
       }
     } else {
-      if (this.isTowardsBottom || this.isAtBottom) {
+      if (this.isAtBottom) {
         this.fetchMoreMessages({ direction: FUTURE });
       }
     }
 
     this._previousScrollTop = scrollPosition;
-    this.onScrollEndedHandler = discourseLater(this, this.onScrollEnded, 25);
+    this.onScrollEndedHandler = discourseLater(this, this.onScrollEnded, 150);
   }
 
   @bind
