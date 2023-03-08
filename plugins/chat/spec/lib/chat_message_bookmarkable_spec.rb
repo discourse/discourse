@@ -15,7 +15,7 @@ describe ChatMessageBookmarkable do
     UserChatChannelMembership.create(chat_channel: channel, user: user, following: true)
   end
 
-  after { DiscoursePluginRegistry.reset! }
+  after { DiscoursePluginRegistry.reset_register!(:bookmarkables) }
 
   let!(:message1) { Fabricate(:chat_message, chat_channel: channel) }
   let!(:message2) { Fabricate(:chat_message, chat_channel: channel) }
