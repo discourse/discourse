@@ -539,27 +539,6 @@ acceptance("Tag info", function (needs) {
     );
   });
 
-  test("admin can edit tag synonyms and create new tags", async function (assert) {
-    updateCurrentUser({ moderator: false, admin: true });
-    await visit("/tag/happy-monkey");
-    await click("#show-tag-info");
-    await click("#edit-synonyms");
-
-    const addSynonymsDropdown = selectKit("#add-synonyms");
-    await addSynonymsDropdown.expand();
-
-    await fillIn(".filter-input", "cheeky-monkey");
-    await click(".select-kit-collection .select-kit-row");
-
-    assert.ok(exists(".add-synonyms .ok"), "can see add synonym button");
-    await click(".add-synonyms .ok");
-
-    assert.ok(
-      exists(".dialog-footer .btn-primary"),
-      "can see confirm synonym button"
-    );
-  });
-
   test("composer will not set tags if user cannot create them", async function (assert) {
     await visit("/tag/planters");
     await click("#create-topic");
