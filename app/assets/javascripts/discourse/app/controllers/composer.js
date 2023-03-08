@@ -1008,7 +1008,9 @@ export default Controller.extend({
     // TODO: This should not happen in model
     const imageSizes = {};
     document
-      .querySelectorAll("#reply-control .d-editor-preview img")
+      .querySelectorAll(
+        "#reply-control .d-editor-preview img:not(.avatar):not(.emoji)"
+      )
       .forEach((e) => {
         const src = e.src;
 
