@@ -78,6 +78,14 @@ class FinalDestination
       ips
     end
 
+    def self.allow_ip_lookups_in_test!
+      @allow_ip_lookups_in_test = true
+    end
+
+    def self.disallow_ip_lookups_in_test!
+      @allow_ip_lookups_in_test = false
+    end
+
     private
 
     def self.ip_in_ranges?(ip, ranges)
@@ -85,7 +93,7 @@ class FinalDestination
     end
 
     def self.lookup_ips(name, timeout: nil)
-      if Rails.env.test?
+      if Rails.env.test? && !@allow_ip_lookups_in_test
         ["1.2.3.4"]
       else
         FinalDestination::Resolver.lookup(name, timeout: timeout)
