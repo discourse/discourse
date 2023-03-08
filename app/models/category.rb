@@ -691,22 +691,13 @@ class Category < ActiveRecord::Base
   end
 
   def self.auto_bump_topic!
-    bumped = false
-
     auto_bumps =
       CategoryCustomField
         .where(name: Category::NUM_AUTO_BUMP_DAILY)
         .where('NULLIF(value, \'\')::int > 0')
-        .pluck(:category_id)
+        .select(:category_id)
 
-    if (auto_bumps.length > 0)
-      auto_bumps.shuffle.each do |category_id|
-        bumped = Category.find_by(id: category_id)&.auto_bump_topic!
-        break if bumped
-      end
-    end
-
-    bumped
+    Category.where(id: auto_bumps).shuffle.any? { |c| c.auto_bump_topic! }
   end
 
   # will automatically bump a single topic
