@@ -3,6 +3,7 @@ import {
   count,
   exists,
   query,
+  queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import {
   click,
@@ -131,14 +132,13 @@ acceptance("Search - Anonymous", function (needs) {
   });
 
   test("search scope", async function (assert) {
-    const firstResult =
-      ".search-menu .results .search-menu-assistant-item:first-child";
+    const contextSelector = ".search-menu .results .search-menu-assistant-item";
 
     await visit("/tag/important");
     await click("#search-button");
 
     assert.strictEqual(
-      query(firstResult).textContent.trim(),
+      queryAll(contextSelector)[0].firstChild.textContent.trim(),
       `${I18n.t("search.in")} test`,
       "contextual tag search is first available option with no term"
     );
@@ -146,22 +146,22 @@ acceptance("Search - Anonymous", function (needs) {
     await fillIn("#search-term", "smth");
 
     assert.strictEqual(
-      query(firstResult).textContent.trim(),
+      queryAll(contextSelector)[1].firstChild.textContent.trim(),
       `smth ${I18n.t("search.in")} test`,
-      "tag-scoped search is first available option"
+      "tag-scoped search is second available option"
     );
 
     await visit("/c/bug");
     await click("#search-button");
 
     assert.strictEqual(
-      query(firstResult).textContent.trim(),
+      queryAll(contextSelector)[1].firstChild.textContent.trim(),
       `smth ${I18n.t("search.in")} bug`,
-      "category-scoped search is first available option"
+      "category-scoped search is first available option with no search term"
     );
 
     assert.ok(
-      exists(`${firstResult} span.badge-wrapper`),
+      exists(`${contextSelector} span.badge-wrapper`),
       "category badge is a span (i.e. not a link)"
     );
 
@@ -169,20 +169,20 @@ acceptance("Search - Anonymous", function (needs) {
     await click("#search-button");
 
     assert.strictEqual(
-      query(firstResult).textContent.trim(),
+      queryAll(contextSelector)[1].firstChild.textContent.trim(),
       `smth ${I18n.t("search.in_this_topic")}`,
-      "topic-scoped search is first available option"
+      "topic-scoped search is first available option with no search term"
     );
 
     await visit("/u/eviltrout");
     await click("#search-button");
 
     assert.strictEqual(
-      query(firstResult).textContent.trim(),
+      queryAll(contextSelector)[1].firstChild.textContent.trim(),
       `smth ${I18n.t("search.in_posts_by", {
         username: "eviltrout",
       })}`,
-      "user-scoped search is first available option"
+      "user-scoped search is first available option with no search term"
     );
   });
 
@@ -197,17 +197,18 @@ acceptance("Search - Anonymous", function (needs) {
     assert.strictEqual(
       query(firstResult).textContent.trim(),
       I18n.t("search.in_this_topic"),
-      "contextual topic search is first available option"
+      "contextual topic search is first available option with no search term"
     );
 
     await fillIn("#search-term", "a proper");
     await query("input#search-term").focus();
     await triggerKeyEvent(".search-menu", "keydown", "ArrowDown");
+    await triggerKeyEvent(".search-menu", "keydown", "ArrowDown");
 
     await click(document.activeElement);
     assert.ok(
       exists(".search-menu .search-result-post ul li"),
-      "clicking first option formats results as posts"
+      "clicking second option scopes search to current topic"
     );
 
     assert.strictEqual(
@@ -233,6 +234,7 @@ acceptance("Search - Anonymous", function (needs) {
     await fillIn("#search-term", "dev");
     await query("input#search-term").focus();
     await triggerKeyEvent(".search-menu", "keydown", "ArrowDown");
+    await triggerKeyEvent(".search-menu", "keydown", "ArrowDown");
     await click(document.activeElement);
 
     assert.ok(
@@ -255,17 +257,17 @@ acceptance("Search - Anonymous", function (needs) {
 
     await click("#search-button");
 
-    const firstResult =
-      ".search-menu .results .search-menu-assistant-item:first-child";
+    const contextSelector = ".search-menu .results .search-menu-assistant-item";
 
     assert.strictEqual(
-      query(firstResult).textContent.trim(),
+      queryAll(contextSelector)[0].firstChild.textContent.trim(),
       I18n.t("search.in_this_topic"),
-      "contextual topic search is first available option"
+      "contextual topic search is first available option with no search term"
     );
 
     await fillIn("#search-term", "proper");
     await query("input#search-term").focus();
+    await triggerKeyEvent(".search-menu", "keydown", "ArrowDown");
     await triggerKeyEvent(".search-menu", "keydown", "ArrowDown");
     await click(document.activeElement);
 
@@ -300,16 +302,16 @@ acceptance("Search - Anonymous", function (needs) {
       query(
         ".search-menu-assistant-item:first-child .search-item-user .label-suffix"
       ).textContent.trim(),
-      I18n.t("search.in_this_topic"),
-      "first result hints in this topic search"
+      I18n.t("search.in_topics_posts"),
+      "first result hints at global search"
     );
 
     assert.strictEqual(
       query(
         ".search-menu-assistant-item:nth-child(2) .search-item-user .label-suffix"
       ).textContent.trim(),
-      I18n.t("search.in_topics_posts"),
-      "second result hints global search"
+      I18n.t("search.in_this_topic"),
+      "second result hints at search within current topic"
     );
   });
 
