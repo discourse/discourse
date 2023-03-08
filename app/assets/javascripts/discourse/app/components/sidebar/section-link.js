@@ -39,7 +39,7 @@ export default class SectionLink extends Component {
   }
 
   get target() {
-    return this.currentUser.user_option.external_links_in_new_tab
+    return this.currentUser?.user_option?.external_links_in_new_tab
       ? "_blank"
       : "_self";
   }
