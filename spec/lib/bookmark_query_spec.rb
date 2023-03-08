@@ -12,7 +12,6 @@ RSpec.describe BookmarkQuery do
 
   describe "#list_all" do
     before do
-      Bookmark.reset_bookmarkables
       register_test_bookmarkable
 
       Fabricate(:topic_user, user: user, topic: post_bookmark.bookmarkable.topic)
@@ -20,13 +19,13 @@ RSpec.describe BookmarkQuery do
       user_bookmark
     end
 
+    after { DiscoursePluginRegistry.reset! }
+
     let(:post_bookmark) { Fabricate(:bookmark, user: user, bookmarkable: Fabricate(:post)) }
     let(:topic_bookmark) { Fabricate(:bookmark, user: user, bookmarkable: Fabricate(:topic)) }
     let(:user_bookmark) do
       Fabricate(:bookmark, user: user, bookmarkable: Fabricate(:user, username: "bookmarkqueen"))
     end
-
-    after { Bookmark.reset_bookmarkables }
 
     it "returns all the bookmarks for a user" do
       expect(bookmark_query.list_all.count).to eq(3)
@@ -77,9 +76,7 @@ RSpec.describe BookmarkQuery do
         )
       end
 
-      before { Bookmark.reset_bookmarkables }
-
-      after { Bookmark.reset_bookmarkables }
+      after { DiscoursePluginRegistry.reset! }
 
       let(:bookmark3) do
         Fabricate(:bookmark, user: user, name: "Check up later", bookmarkable: Fabricate(:post))

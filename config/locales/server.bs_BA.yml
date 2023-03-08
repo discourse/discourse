@@ -1075,20 +1075,20 @@ bs_BA:
       medium: "Srednije"
       high: "Visoko"
     actions:
-      agree_and_keep:
-        description: "Složij se sa prijavom ali ostavi prijavljenu objavu neizmjenjenom"
+      agree:
+        title: "Da"
       agree_and_suspend:
-        title: "Suspend User"
         description: "Složij se sa prijavom i suspendiraj prijavljenog korisnika (suspend)"
       agree_and_silence:
-        title: "Stišaj korisnika"
         description: "Složij se sa prijavom i utišaj prijavljenog korisnika (silence)"
       delete_single:
         title: "Delete"
       disagree:
-        title: "Disagree"
+        title: "Ne"
       ignore:
         title: "Zanemari"
+      ignore_and_do_nothing:
+        title: "Ne radi ništa"
       approve:
         title: "Odobri"
       reject_user:

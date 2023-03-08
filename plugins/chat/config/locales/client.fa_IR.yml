@@ -77,6 +77,10 @@ fa_IR:
       email_frequency:
         never: "هرگز"
         title: "آگاه‌سازی‌های ایمیل"
+      header_indicator_preference:
+        all_new: "همه پیام‌های جدید"
+        dm_and_mentions: "پیام‌های خصوصی و اشاره شده"
+        never: "هرگز"
       enable: "فعال کردن گفتگو"
       flag: "پرچم"
       flagged: "این پیام برای بررسی پرچم گذاری شده است"
@@ -84,7 +88,7 @@ fa_IR:
       in_reply_to: "در پاسخ به"
       heading: "گفتگو"
       join: "عضو شدن"
-      new_messages: "پیام‌های جدید"
+      last_visit: "آخرین بازدید"
       mention_warning:
         dismiss: "رد کردن"
         invitations_sent:

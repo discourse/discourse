@@ -526,26 +526,31 @@ sv:
       scores:
         about: "Denna poäng beräknas på förtroendenivån för de som rapporterar, deras träffsäkerhet på deras tidigare flaggor, samt på prioriteringen av föremål som rapporteras."
         score: "Poäng"
-        date: "Datum"
-        type: "Typ"
+        date: "Rapportdatum"
+        type: "Anledning"
         status: "Status"
-        submitted_by: "Inskickade av"
+        submitted_by: "Rapporterad av"
         reviewed_by: "Granskade av"
+        reviewed_timestamp: "Granskningsdatum"
       statuses:
         pending:
           title: "Väntar"
         approved:
-          title: "Godkända"
+          title: "Flaggning godkänd"
         rejected:
-          title: "Avvisade"
+          title: "Flaggning avvisades"
         ignored:
-          title: "Ignorerade"
+          title: "Flaggning ignoreras"
         deleted:
-          title: "Raderade"
+          title: "Ämne eller inlägg raderat"
         reviewed:
           title: "(alla granskade)"
         all:
           title: "(allting)"
+      context_question:
+        is_this_post: "Är detta inlägg %{reviewable_human_score_types}?"
+        delimiter: "eller"
+        something_else_wrong: "Är det något annat fel med detta inlägg?"
       types:
         reviewable_flagged_post:
           title: "Flaggat inlägg"
@@ -852,6 +857,7 @@ sv:
         make_all_primary_description: "Gör denna till primär grupp för alla markerade användare"
         remove_all_primary: "Ta bort som primär"
         remove_all_primary_description: "Ta bort denna grupp som primär"
+        status: "Status"
         owner: "Ägare"
         primary: "Primär"
         forbidden: "Du är inte tillåten att se medlemmarna."
@@ -2601,6 +2607,7 @@ sv:
         bookmarks: "Du har inga bokmärkta ämnen ännu."
         category: "Det finns inga ämnen i %{category}."
         top: "Det finns inga toppämnen."
+        filter: "Det finns inga ämnen."
         educate:
           new: '<p>Dina nya ämnen hamnar här. Standard är att ämnen anses nya och kommer att visa en <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span>-indikator om de skapades de senaste 2 dagarna.</p><p>Gå till dina <a href="%{userPrefsUrl}">användarinställningar</a> för att ändra detta.</p>'
           unread: "<p>Dina olästa ämnen visas här.</p><p>Som standard betraktas ämnen som olästa och visar olästa värden <span class=\"badge unread-posts badge-notification\">1</span> om du:</p><ul><li>skapade ämnet</li><li>svarade på ämnet</li><li>läste ämnet i mer än 4 minuter</li></ul><p>eller om du uttryckligen har satt ämnet till Följt eller Bevakat via \U0001F514 i varje ämne.</p><p>Gå till dina <a href=\"%{userPrefsUrl}\">inställningar</a> för att ändra detta.</p>"
@@ -2615,6 +2622,7 @@ sv:
         tag: "Det finns inga fler %{tag}-ämnen."
         top: "Det finns inga fler toppämnen."
         bookmarks: "Inga fler bokmärkta ämnen hittades."
+        filter: "Det finns inga fler ämnen."
     topic:
       filter_to:
         one: "%{count} inlägg i ämnet"
@@ -3576,6 +3584,10 @@ sv:
     filters:
       with_topics: "%{filter} ämnen"
       with_category: "%{filter} %{category} ämnen"
+      filter:
+        title: "Filter"
+        button:
+          label: "Filter"
       latest:
         title: "Senaste"
         title_with_count:
@@ -4065,6 +4077,7 @@ sv:
               title: "Lista över alla användare"
             my_posts:
               content: "Mina inlägg"
+              content_drafts: "Mina utkast"
               title: "Min senaste ämnesaktivitet"
               title_drafts: "Mina utkast som inte har publicerats"
               draft_count:
@@ -5135,6 +5148,7 @@ sv:
         list_table:
           headings:
             name: "Namn"
+            active_categories: "Aktiva kategorier"
             actions: "Åtgärder"
           actions:
             view: "Visa mall"
@@ -5144,6 +5158,7 @@ sv:
           close: "Stäng"
           edit: "Redigera"
           delete: "Radera"
+          toggle_preview: "Växla förhandsgranskning"
         new_template_form:
           submit: "Spara"
           cancel: "Avbryt"
@@ -5153,6 +5168,7 @@ sv:
           template:
             label: "Mall"
             placeholder: "Skapa en YAML-mall här..."
+          preview: "Förhandsgranska"
         delete_confirm: "Är du säker på att du vill ta bort den här mallen?"
         quick_insert_fields:
           add_new_field: "Lägg till"
@@ -5162,6 +5178,41 @@ sv:
           dropdown: "Rullgardinsmeny"
           upload: "Ladda upp en fil"
           multiselect: "Flera val"
+        validations_modal:
+          button_title: "Valideringar"
+          modal_title: "Valideringsalternativ"
+          table_headers:
+            key: "Key"
+            type: "Typ"
+            description: "Beskrivning"
+          validations:
+            required:
+              key: "krävs"
+              type: "booleskt"
+              description: "Fältet måste fyllas i för att formuläret ska kunna skickas in."
+            minimum:
+              key: "minst"
+              type: "heltal"
+              description: "I textfält anges det minsta tillåtna antalet tecken."
+            maximum:
+              key: "maximalt"
+              type: "heltal"
+              description: "I textfält anges det högsta tillåtna antalet tecken. I flervalsrullgardinsmenyer anges det högsta tillåtna antalet alternativ som kan väljas."
+            pattern:
+              key: "mönster"
+              type: "regex-sträng"
+              description: "I textfält är detta ett reguljärt uttryck som anger tillåten inmatning."
+        preview_modal:
+          title: "Förhandsgranskningsmall"
+        field_placeholders:
+          validations: "ange valideringar här"
+          label: "Ange etikett här"
+          placeholder: "Ange platshållare här"
+          none_label: "Välj ett föremål"
+          choices:
+            first: "Alternativ 1"
+            second: "Alternativ 2"
+            third: "Alternativ 3"
         edit_category:
           toggle_freeform: "formulärmall inaktiverad"
           toggle_form_template: "formulärmall aktiverad"
@@ -5179,6 +5230,7 @@ sv:
         not_found: "Det användarnamnet finns tyvärr inte i vårt system."
         id_not_found: "Detta användar-ID finns tyvärr inte i vårt system."
         active: "Aktiverad"
+        status: "Status"
         show_emails: "Visa e-post"
         hide_emails: "Dölj e-post"
         nav:
@@ -5674,6 +5726,12 @@ sv:
       embedding:
         get_started: "Börja genom att lägga till värden, om du vill bädda in Discourse på en annan hemsida. "
         confirm_delete: "Är du säker på att du vill ta bort värden?"
+        sample: |
+          <p>Klistra in följande HTML-kod på din webbplats för att skapa och bädda in Discourse-ämnen. Ersätt <b>EMBED_URL</b> med den kanoniska webbadressen till sidan du bäddar in den på.</p>
+
+          <p>Om du vill anpassa stilen, avkommentera och ersätt <b>CLASS_NAME</b> med en CSS-klass som definierats i <i>Embedded CSS</i> i ditt tema.</p>
+
+          <p>Ersätt <b>DISCOURSE_USERNAME</b> med Discourse-användarnamnet för författaren som ska skapa ämnet. Discourse kommer automatiskt att söka efter användaren med <code>&lt;meta&gt;</code> taggarnas <code>innehåll</code> sattribut med <code>namn</code>attributet inställt på <code>discourse-användarnamn</code> eller <code>författare</code>. Parametern <code>discourseUserName</code> har fasats ut och kommer att tas bort i Discourse 3.2.</p>
         title: "Inbäddning"
         host: "Tillåtna värdar"
         allowed_paths: "Sökväg till vitlista"

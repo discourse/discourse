@@ -779,21 +779,21 @@ RSpec.describe UploadsController do
       it "rate limits" do
         RateLimiter.enable
         RateLimiter.clear_all!
+        SiteSetting.max_presigned_put_per_minute = 1
 
-        stub_const(ExternalUploadHelpers, "PRESIGNED_PUT_RATE_LIMIT_PER_MINUTE", 1) do
-          post "/uploads/generate-presigned-put.json",
-               params: {
-                 file_name: "test.png",
-                 type: "card_background",
-                 file_size: 1024,
-               }
-          post "/uploads/generate-presigned-put.json",
-               params: {
-                 file_name: "test.png",
-                 type: "card_background",
-                 file_size: 1024,
-               }
-        end
+        post "/uploads/generate-presigned-put.json",
+             params: {
+               file_name: "test.png",
+               type: "card_background",
+               file_size: 1024,
+             }
+        post "/uploads/generate-presigned-put.json",
+             params: {
+               file_name: "test.png",
+               type: "card_background",
+               file_size: 1024,
+             }
+
         expect(response.status).to eq(429)
       end
     end
@@ -937,25 +937,24 @@ RSpec.describe UploadsController do
       it "rate limits" do
         RateLimiter.enable
         RateLimiter.clear_all!
+        SiteSetting.max_create_multipart_per_minute = 1
 
         stub_create_multipart_request
-        stub_const(ExternalUploadHelpers, "CREATE_MULTIPART_RATE_LIMIT_PER_MINUTE", 1) do
-          post "/uploads/create-multipart.json",
-               params: {
-                 file_name: "test.png",
-                 upload_type: "composer",
-                 file_size: 1024,
-               }
-          expect(response.status).to eq(200)
+        post "/uploads/create-multipart.json",
+             params: {
+               file_name: "test.png",
+               upload_type: "composer",
+               file_size: 1024,
+             }
+        expect(response.status).to eq(200)
 
-          post "/uploads/create-multipart.json",
-               params: {
-                 file_name: "test.png",
-                 upload_type: "composer",
-                 file_size: 1024,
-               }
-          expect(response.status).to eq(429)
-        end
+        post "/uploads/create-multipart.json",
+             params: {
+               file_name: "test.png",
+               upload_type: "composer",
+               file_size: 1024,
+             }
+        expect(response.status).to eq(429)
       end
     end
 
@@ -1334,19 +1333,19 @@ RSpec.describe UploadsController do
       it "rate limits" do
         RateLimiter.enable
         RateLimiter.clear_all!
+        SiteSetting.max_complete_multipart_per_minute = 1
 
-        stub_const(ExternalUploadHelpers, "COMPLETE_MULTIPART_RATE_LIMIT_PER_MINUTE", 1) do
-          post "/uploads/complete-multipart.json",
-               params: {
-                 unique_identifier: "blah",
-                 parts: [{ part_number: 1, etag: "test1" }, { part_number: 2, etag: "test2" }],
-               }
-          post "/uploads/complete-multipart.json",
-               params: {
-                 unique_identifier: "blah",
-                 parts: [{ part_number: 1, etag: "test1" }, { part_number: 2, etag: "test2" }],
-               }
-        end
+        post "/uploads/complete-multipart.json",
+             params: {
+               unique_identifier: "blah",
+               parts: [{ part_number: 1, etag: "test1" }, { part_number: 2, etag: "test2" }],
+             }
+        post "/uploads/complete-multipart.json",
+             params: {
+               unique_identifier: "blah",
+               parts: [{ part_number: 1, etag: "test1" }, { part_number: 2, etag: "test2" }],
+             }
+
         expect(response.status).to eq(429)
       end
     end

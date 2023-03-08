@@ -223,14 +223,12 @@ be:
           score: "кошт"
       scores:
         score: "кошт"
-        type: "тып"
+        type: "прычына"
       statuses:
         pending:
           title: "чакаецца"
-        approved:
-          title: "Адобрана"
-        rejected:
-          title: "адхілена"
+      context_question:
+        delimiter: "або"
       types:
         reviewable_user:
           title: "Карыстальнік"
@@ -1215,6 +1213,10 @@ be:
     category_title: "Катэгорыя"
     categories_list: "Спіс катэгорый"
     filters:
+      filter:
+        title: "Filter"
+        button:
+          label: "Filter"
       latest:
         title: "Апошнія"
         help: "тэмы са свежымі паведамленнямі"
@@ -1771,8 +1773,16 @@ be:
         new_template_form:
           submit: "захаваць"
           cancel: "адмяніць"
+          preview: "папярэдні прагляд"
         quick_insert_fields:
           add_new_field: "дадаць"
+        validations_modal:
+          table_headers:
+            type: "тып"
+            description: "Апісанне"
+          validations:
+            required:
+              key: "абавязковыя"
       impersonate:
         title: "ўвасобіцца"
         not_found: "Карыстача не ўдалося знайсці."

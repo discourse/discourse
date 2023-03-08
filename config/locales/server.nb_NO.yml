@@ -1364,28 +1364,24 @@ nb_NO:
       medium: "Middels"
       high: "Høy"
     actions:
-      agree_and_keep:
-        title: "Behold innlegg"
-        description: "Samtykk med flagg og behold innlegget uendret."
+      agree:
+        title: "Ja"
       agree_and_suspend:
-        title: "Steng ute bruker"
         description: "Si deg enig med rapportering og steng ute bruker. "
       agree_and_silence:
-        title: "Demp bruker"
         description: "Si deg enig med rapportering og demp bruker. "
       agree_and_restore:
         description: "Gjenopprett innlegget slik at alle brukere kan se det."
-      agree_and_hide:
-        title: "Skjul innlegg"
-        description: "Gjem dette innlegget og send en melding til brukeren automatisk med en forespørsel om gjøre endringer."
       delete_single:
         title: "Slett"
       disagree_and_restore:
         description: "Gjenopprett innlegget slik at alle brukere kan se det."
       disagree:
-        title: "Si deg uenig"
+        title: "Nei"
       ignore:
         title: "Ignorer"
+      ignore_and_do_nothing:
+        title: "ikke gjør noe"
       approve:
         title: "Godkjenn"
       reject_user:

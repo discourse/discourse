@@ -27,7 +27,7 @@
     "ember-resolver": "^8.0.3",
     "handlebars": "^4.7.0",
     "truth-helpers": "1.0.0",
-    "webpack": "^5.75.0"
+    "webpack": "^5.76.0"
   },
   "devDependencies": {
     "@babel/core": "^7.21.0",

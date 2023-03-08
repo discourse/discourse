@@ -499,7 +499,9 @@ describe ChatMessage do
     end
 
     describe "bookmarks" do
-      before { Bookmark.register_bookmarkable(ChatMessageBookmarkable) }
+      before { register_test_bookmarkable(ChatMessageBookmarkable) }
+
+      after { DiscoursePluginRegistry.reset_register!(:bookmarkables) }
 
       it "destroys bookmarks" do
         message_1 = Fabricate(:chat_message)
@@ -567,6 +569,68 @@ describe ChatMessage do
       expect { chat_message.attach_uploads([]) }.to not_change {
         chat_upload_count
       }.and not_change { UploadReference.count }
+    end
+  end
+
+  describe "#create_mentions" do
+    fab!(:message) { Fabricate(:chat_message) }
+    fab!(:user1) { Fabricate(:user) }
+    fab!(:user2) { Fabricate(:user) }
+
+    it "creates mentions for passed user ids" do
+      mentioned_user_ids = [user1.id, user2.id]
+      message.create_mentions(mentioned_user_ids)
+      message.reload
+
+      expect(message.chat_mentions.pluck(:user_id)).to match_array(mentioned_user_ids)
+    end
+
+    it "ignores duplicates in passed user ids" do
+      mentioned_user_ids = [user1.id, user1.id, user1.id, user1.id, user1.id]
+      message.create_mentions(mentioned_user_ids)
+      message.reload
+
+      expect(message.chat_mentions.pluck(:user_id)).to contain_exactly(user1.id)
+    end
+  end
+
+  describe "#update_mentions" do
+    fab!(:message) { Fabricate(:chat_message) }
+    fab!(:user1) { Fabricate(:user) }
+    fab!(:user2) { Fabricate(:user) }
+    fab!(:user3) { Fabricate(:user) }
+    fab!(:user4) { Fabricate(:user) }
+    let(:already_mentioned) { [user1.id, user2.id] }
+
+    before { message.create_mentions(already_mentioned) }
+
+    it "creates newly added mentions" do
+      existing_mention_ids = message.chat_mentions.pluck(:id)
+
+      mentioned_user_ids = [*already_mentioned, user3.id, user4.id]
+      message.update_mentions(mentioned_user_ids)
+      message.reload
+
+      expect(message.chat_mentions.pluck(:user_id)).to match_array(mentioned_user_ids)
+      expect(message.chat_mentions.pluck(:id)).to include(*existing_mention_ids) # existing mentions weren't recreated
+    end
+
+    it "drops removed mentions" do
+      message.update_mentions([user1.id]) # user 2 is not mentioned anymore
+      message.reload
+
+      expect(message.chat_mentions.pluck(:user_id)).to contain_exactly(user1.id)
+    end
+
+    it "changes nothing if passed mentions are identical to existing mentions" do
+      existing_mention_ids = message.chat_mentions.pluck(:id)
+
+      mentioned_user_ids = [*already_mentioned]
+      message.update_mentions(mentioned_user_ids)
+      message.reload
+
+      expect(message.chat_mentions.pluck(:user_id)).to match_array(mentioned_user_ids)
+      expect(message.chat_mentions.pluck(:id)).to include(*existing_mention_ids) # the mentions weren't recreated
     end
   end
 

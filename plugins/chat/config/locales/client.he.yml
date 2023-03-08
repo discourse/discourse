@@ -99,6 +99,11 @@ he:
         never: "לעולם לא"
         title: "הודעות בדוא״ל"
         when_away: "רק כשלא במערכת"
+      header_indicator_preference:
+        title: "הצגת מחוון פעילות בכותרת"
+        all_new: "כל ההודעות החדשות"
+        dm_and_mentions: "הודעות ישירות ואזכורים"
+        never: "לעולם לא"
       enable: "הפעלת צ׳אט"
       flag: "דיגול"
       emoji: "הוספת אמוג׳י"
@@ -108,7 +113,7 @@ he:
       in_reply_to: "בתגובה אל"
       heading: "צ׳אט"
       join: "הצטרף"
-      new_messages: "הודעות חדשות"
+      last_visit: "ביקור אחרון"
       mention_warning:
         dismiss: "התעלמות"
         cannot_see: "ל־%{username} אין גישה לערוץ הזה ולא נשלחה התראה."
@@ -152,6 +157,60 @@ he:
             two: "‎@%{group} ו־%{count} קבוצות נוספת לא מרשות אזכורים."
             many: "‎@%{group} ו־%{count} קבוצות נוספת לא מרשות אזכורים."
             other: "‎@%{group} ו־%{count} קבוצות נוספת לא מרשות אזכורים."
+          too_many_members_MF: |
+            { groupCount, plural,
+                 =1 {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {אזכור של ‎@{group1} חורג מ<a href="{siteSettingUrl}" target="_blank">מגבלת ההתראה</a> על סך משתמש #.}
+                              other {אזכור של ‎@{group1} חורג מ<a href="{siteSettingUrl}" target="_blank">מגבלת ההתראה</a> על סך # משתמשים.}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {אזכור של ‎@{group1} חורג ממגבלת ההתראה על סך משתמש #.}
+                              other {אזכור של ‎@{group1} חורג ממגבלת ההתראה על סך # משתמשים.}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+                 =2 {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {אזכור של ‎@{group1} ושל ‎@{group2} חורג מ<a href="{siteSettingUrl}" target="_blank">מגבלת ההתראה</a> על סך משתמש #.}
+                            other {אזכור של ‎@{group1} ושל ‎@{group2} חורג מ<a href="{siteSettingUrl}" target="_blank">מגבלת ההתראה</a> על סך # משתמשים.}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {אזכור של ‎@{group1} ושל ‎@{group2} חורג ממגבלת ההתראה על סך משתמש #.}
+                            other {אזכור של ‎@{group1} ושל ‎@{group2} חורג ממגבלת ההתראה על סך # משתמשים.}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+              other {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {אזכור {groupCount} הקבוצות האלו חורג מ<a href="{siteSettingUrl}" target="_blank">מגבלת ההתראה</a> על סך משתמש #.}
+                            other {אזכור {groupCount} הקבוצות האלו חורג מ<a href="{siteSettingUrl}" target="_blank">מגבלת ההתראה</a> על סך # משתמשים.}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {אזכור {groupCount} הקבוצות האלו חורג ממגבלת ההתראה על סך משתמש #.}
+                            other {אזכור {groupCount} הקבוצות האלו חורג ממגבלת ההתראה על סך # משתמשים.}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+            }
         too_many_mentions:
           one: "ההודעה חורגת ממגבלת ההתראות של אזכור %{count}."
           two: "ההודעה חורגת ממגבלת ההתראות של %{count} אזכורים."

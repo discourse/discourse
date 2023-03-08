@@ -18,9 +18,6 @@ module ChatSystemHelpers
     end
 
     Group.refresh_automatic_groups!
-
-    # this is reset after each test
-    Bookmark.register_bookmarkable(ChatMessageBookmarkable)
   end
 
   def chat_thread_chain_bootstrap(channel:, users:, messages_count: 4)

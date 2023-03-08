@@ -4390,50 +4390,30 @@ fr:
         category: paramètres de la catégorie
     actions:
       agree:
-        title: "Accepter…"
-      agree_and_keep:
-        title: "Conserver le message"
-        description: "Accepter le signalement et conserver le message tel quel."
-      agree_and_keep_hidden:
-        title: "Garder le message masqué"
-        description: "Accepter le signalement et laisser le message masqué."
+        title: "Oui"
       agree_and_suspend:
-        title: "Suspendre l'utilisateur"
         description: "Accepter le signalement et suspendre l'utilisateur."
       agree_and_silence:
-        title: "Mettre l'utilisateur en sourdine"
+        title: "Désactiver l'utilisateur"
         description: "Accepter le signalement et mettre l'utilisateur en sourdine."
       agree_and_restore:
-        title: "Rétablir le message"
         description: "Rétablir le message afin que tous les utilisateurs puissent le voir."
-      agree_and_hide:
-        title: "Masquer le message"
-        description: "Masquer le message et envoyer automatiquement un message à l'utilisateur l'incitant à le modifier."
       delete_single:
         title: "Supprimer"
       delete:
         title: "Supprimer…"
-      delete_and_ignore:
-        title: "Supprimer le message et ignorer"
-        description: "Supprimer le message ; s'il s'agit du premier message, le sujet sera supprimé"
       delete_and_ignore_replies:
-        title: "Supprimer message + réponses et ignorer"
-        description: "Supprimer le message et toutes les réponses ; s'il s'agit du premier message, le sujet sera supprimé"
         confirm: "Voulez-vous vraiment supprimer les réponses à ce message ?"
-      delete_and_agree:
-        title: "Supprimer le message et accepter"
-        description: "Supprimer le message ; s'il s'agit du premier message, le sujet sera supprimé"
       delete_and_agree_replies:
-        title: "Supprimer message + réponses et accepter"
-        description: "Supprimer le message et toutes les réponses ; s'il s'agit du premier message, le sujet sera supprimé"
         confirm: "Voulez-vous vraiment supprimer les réponses à ce message ?"
       disagree_and_restore:
-        title: "Rejeter le signalement et rétablir le message"
         description: "Rétablir le message afin que tous les utilisateurs puissent le voir."
       disagree:
-        title: "Rejeter"
+        title: "Non"
       ignore:
         title: "Ignorer"
+      ignore_and_do_nothing:
+        title: "Ne rien faire"
       approve:
         title: "Approuver"
       approve_post:

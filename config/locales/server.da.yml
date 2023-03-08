@@ -3342,44 +3342,25 @@ da:
       queued_by_staff: "En medarbejder mener, at dette indlæg har brug for gennemgang. Den forbliver skjult indtil da."
     actions:
       agree:
-        title: "Enig..."
-      agree_and_keep:
-        title: "Behold Indlæg"
-      agree_and_keep_hidden:
-        title: "Behold Indlæg Skjult"
-      agree_and_suspend:
-        title: "Suspendér Bruger"
-      agree_and_silence:
-        title: "Mådehold (silence) Bruger"
+        title: "Ja"
       agree_and_restore:
-        title: "Gendan Indlæg"
         description: "Gendan indlægget, så alle brugere kan se det."
-      agree_and_hide:
-        title: "Skjul Indlæg"
-        description: "Skjul dette indlæg og send automatisk brugeren en meddelelse, der opfordrer dem til at redigere det."
       delete_single:
         title: "Slet"
       delete:
         title: "Slet..."
-      delete_and_ignore:
-        title: "Slet Indlæg og Ignorer"
-        description: "Slet indlæg; Hvis det er første indlæg, skal emnet også slettes"
       delete_and_ignore_replies:
-        description: "Slet indlæg og alle dets svar Hvis det er første indlæg, så slet også emnet"
         confirm: "Er du sikker på, at du også vil slette svarene på indlægget?"
-      delete_and_agree:
-        title: "Slet Indlæg og Accepter"
-        description: "Slet indlæg; Hvis det er første indlæg, skal emnet også slettes"
       delete_and_agree_replies:
-        title: "Slet Indlæg + Svar og Accepter"
-        description: "Slet indlæg og alle dets svar Hvis det er første indlæg, så slet også emnet"
         confirm: "Er du sikker på, at du også vil slette svarene på indlægget?"
       disagree_and_restore:
         description: "Gendan indlægget, så alle brugere kan se det."
       disagree:
-        title: "Uenig"
+        title: "Nej"
       ignore:
         title: "Ignorér"
+      ignore_and_do_nothing:
+        title: "Gøre ingenting"
       approve:
         title: "Godkend"
       approve_post:

@@ -475,26 +475,18 @@ nb_NO:
       scores:
         about: "Denne scoren beregnes ut fra tillitsnivået til eksportøren, nøyaktigheten til deres forrige flagg, og prioriteten til posten som skal rapporteres."
         score: "Poeng"
-        date: "Dato"
-        type: "Type"
+        type: "Begrunnelse"
         status: "Status"
-        submitted_by: "Innsendt av"
-        reviewed_by: "Gjennomgått av"
+        submitted_by: "Rapporter av"
       statuses:
         pending:
           title: "På vent"
-        approved:
-          title: "Godkjent"
-        rejected:
-          title: "Avvist"
-        ignored:
-          title: "Ignorert"
-        deleted:
-          title: "Slettet"
         reviewed:
           title: "(alle gjennomgått)"
         all:
           title: "(alt)"
+      context_question:
+        delimiter: "eller"
       types:
         reviewable_flagged_post:
           title: "Rapportert innlegg"
@@ -793,6 +785,7 @@ nb_NO:
         make_all_primary_description: "Gjør denne hovedgruppen til alle valgte brukere"
         remove_all_primary: "Fjern som primær"
         remove_all_primary_description: "Fjern denne gruppen som primær"
+        status: "Status"
         owner: "Eier"
         primary: "Primær"
         forbidden: "Du har ikke tillatelse til å vise medlemmene."
@@ -3040,6 +3033,10 @@ nb_NO:
     filters:
       with_topics: "%{filter} emner"
       with_category: "%{filter} %{category} emner"
+      filter:
+        title: "Filtrer"
+        button:
+          label: "Filtrer"
       latest:
         title: "Siste"
         title_with_count:
@@ -4253,9 +4250,21 @@ nb_NO:
         new_template_form:
           submit: "Lagre"
           cancel: "Avbryt"
+          preview: "Forhåndsvis"
         quick_insert_fields:
           add_new_field: "Legg til"
           dropdown: "Nedtrekk"
+        validations_modal:
+          table_headers:
+            type: "Type"
+            description: "Beskrivelse"
+          validations:
+            required:
+              key: "nødvendig"
+            minimum:
+              key: "minst"
+            maximum:
+              key: "største"
       impersonate:
         title: "Fremstå som"
         help: "Bruk dette verktøyet for å fremstå som en annen bruker for feilsøking. Du må logge ut når du er ferdig."
@@ -4267,6 +4276,7 @@ nb_NO:
         last_emailed: "Sist kontaktet"
         not_found: "Beklager, det brukernavner eksisterer ikke i systemet vårt."
         id_not_found: "Beklager, den bruker-ID-en eksisterer ikke i systemet vårt."
+        status: "Status"
         show_emails: "Vis e-poster"
         nav:
           new: "Ny"

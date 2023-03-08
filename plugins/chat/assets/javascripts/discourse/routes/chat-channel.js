@@ -13,6 +13,16 @@ export default class ChatChannelRoute extends DiscourseRoute {
     this.chat.activeChannel.activeThread = null;
     this.chatStateManager.closeSidePanel();
 
+    if (transition?.to?.name === "chat.channel.index") {
+      const targetChannelId = transition?.to?.parent?.params?.channelId;
+      if (
+        targetChannelId &&
+        parseInt(targetChannelId, 10) !== this.chat.activeChannel.id
+      ) {
+        this.chat.activeChannel.clearMessages();
+      }
+    }
+
     if (!transition?.to?.name?.startsWith("chat.")) {
       this.chatStateManager.storeChatURL();
       this.chat.activeChannel = null;

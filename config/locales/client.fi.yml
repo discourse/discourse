@@ -521,26 +521,18 @@ fi:
       scores:
         about: "Pisteet perustuvat ilmoittajan luottamustasoon, heidän aiempien liputusten osuvuuteen ja raportoidun asian prioriteettiin."
         score: "Arvo"
-        date: "Päivämäärä"
-        type: "Tyyppi"
+        type: "Syy"
         status: "Tila"
-        submitted_by: "Lähettäjä"
-        reviewed_by: "Käsittelijä"
+        submitted_by: "Ilmoittaja"
       statuses:
         pending:
           title: "Odottaa"
-        approved:
-          title: "Hyväksytty"
-        rejected:
-          title: "Hylätty"
-        ignored:
-          title: "Sivuutettu"
-        deleted:
-          title: "Poistettu"
         reviewed:
           title: "(kaikki käsitellyt)"
         all:
           title: "(kaikki)"
+      context_question:
+        delimiter: "tai"
       types:
         reviewable_flagged_post:
           title: "Liputettu viesti"
@@ -847,6 +839,7 @@ fi:
         make_all_primary_description: "Aseta tämä ryhmä ensisijaiseksi kaikille valituille käyttäjille"
         remove_all_primary: "Poista kaikilta ensisijaisuus"
         remove_all_primary_description: "Poista tämä ryhmä kaikilta ensisijaisena ryhmänä"
+        status: "Tila"
         owner: "Isäntä"
         primary: "Ensisijainen"
         forbidden: "Et voi tarkastella jäseniä."
@@ -3575,6 +3568,10 @@ fi:
     filters:
       with_topics: "%{filter} ketjut"
       with_category: "%{filter} %{category} ketjut"
+      filter:
+        title: "Suodatin"
+        button:
+          label: "Suodatin"
       latest:
         title: "Tuoreimmat"
         title_with_count:
@@ -5092,9 +5089,22 @@ fi:
         new_template_form:
           submit: "Tallenna"
           cancel: "Peruuta"
+          preview: "Esikatselu"
         quick_insert_fields:
           add_new_field: "Lisää"
           dropdown: "Pudotusvalikko"
+        validations_modal:
+          table_headers:
+            key: "Avain"
+            type: "Tyyppi"
+            description: "Kuvaus"
+          validations:
+            required:
+              key: "pakollinen"
+            minimum:
+              key: "vähintään"
+            maximum:
+              key: "enintään"
       impersonate:
         title: "Esiinny käyttäjänä"
         help: "Tällä työkalulla voi esiintyä toisena käyttäjänä virheiden paikantamista varten. Sinun täytyy kirjautua ulos, kun olet valmis."
@@ -5107,6 +5117,7 @@ fi:
         not_found: "Tätä käyttäjätunnusta ei löydy järjestelmästä."
         id_not_found: "Tätä käyttäjän tunnusta ei löydy järjestelmästä."
         active: "Aktivoitu"
+        status: "Tila"
         show_emails: "Näytä sähköpostit"
         hide_emails: "Piilota sähköpostit"
         nav:

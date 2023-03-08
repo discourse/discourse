@@ -4272,50 +4272,30 @@ ja:
         category: カテゴリ設定
     actions:
       agree:
-        title: "合意…"
-      agree_and_keep:
-        title: "投稿を維持"
-        description: "通報に合意し、投稿を変更しないままにします。"
-      agree_and_keep_hidden:
-        title: "投稿を非表示のままに維持"
-        description: "通報に合意し、投稿を非表示のままにします。"
+        title: "はい"
       agree_and_suspend:
-        title: "ユーザーの凍結"
         description: "通報に合意し、ユーザーを凍結します。"
       agree_and_silence:
-        title: "ユーザーを投稿禁止"
+        title: "ユーザーを投稿禁止にする"
         description: "通報に同意し、ユーザーを投稿禁止にします。"
       agree_and_restore:
-        title: "投稿の復元"
         description: "すべてのユーザーが閲覧できるように投稿を復元します。"
-      agree_and_hide:
-        title: "投稿を非表示"
-        description: "この投稿を非表示にして、ユーザーに投稿の編集を促すメッセージをユーザーに送信します。"
       delete_single:
         title: "削除"
       delete:
         title: "削除…"
-      delete_and_ignore:
-        title: "投稿の削除と無視"
-        description: "投稿を削除します。最初の投稿である場合、トピックも削除されます"
       delete_and_ignore_replies:
-        title: "投稿と返信を削除して無視する"
-        description: "投稿とそのすべての返信を削除します。最初の投稿である場合、トピックも削除されます"
         confirm: "投稿への返信も削除してよろしいですか？"
-      delete_and_agree:
-        title: "投稿の削除と同意"
-        description: "投稿を削除します。最初の投稿である場合、トピックも削除されます"
       delete_and_agree_replies:
-        title: "投稿と返信を削除して同意する"
-        description: "投稿とそのすべての返信を削除します。最初の投稿である場合、トピックも削除されます"
         confirm: "投稿への返信も削除してよろしいですか？"
       disagree_and_restore:
-        title: "却下して投稿を復元"
         description: "すべてのユーザーが閲覧できるように投稿を復元します。"
       disagree:
-        title: "同意しない"
+        title: "いいえ"
       ignore:
         title: "無視"
+      ignore_and_do_nothing:
+        title: "何もしない"
       approve:
         title: "承認"
       approve_post:

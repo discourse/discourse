@@ -279,14 +279,12 @@ sq:
         refresh: "Rifresko"
         category: "Kategori"
       scores:
-        type: "Lloji"
+        type: "Arsye"
       statuses:
         pending:
           title: "Në pritje"
-        approved:
-          title: "Aprovuar më"
-        rejected:
-          title: "Rejected"
+      context_question:
+        delimiter: "ose"
       types:
         reviewable_user:
           title: "User"
@@ -1700,6 +1698,10 @@ sq:
     filters:
       with_topics: "Temat nga %{filter}"
       with_category: "Temat nga: %{filter}, %{category}"
+      filter:
+        title: "Filtro"
+        button:
+          label: "Filtro"
       latest:
         title: "Më të fundit"
         title_with_count:
@@ -2416,9 +2418,17 @@ sq:
         new_template_form:
           submit: "Ruaj"
           cancel: "Anulo"
+          preview: "Parashikimi"
         quick_insert_fields:
           add_new_field: "Shto"
           dropdown: "Listë Dropdown"
+        validations_modal:
+          table_headers:
+            type: "Lloji"
+            description: "Përshkrimi"
+          validations:
+            required:
+              key: "i nevojshëm"
       impersonate:
         title: "Personifiko"
         help: "Use this tool to impersonate a user account for debugging purposes. You will have to log out once finished."
