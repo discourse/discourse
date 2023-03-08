@@ -26,15 +26,6 @@ describe FinalDestination::HTTP do
     end
   end
 
-  def stub_ip_lookup(stub_addr, ips)
-    Addrinfo
-      .stubs(:getaddrinfo)
-      .with { |addr, _| addr == stub_addr }
-      .returns(
-        ips.map { |ip| Addrinfo.new([IPAddr.new(ip).ipv6? ? "AF_INET6" : "AF_INET", 80, nil, ip]) },
-      )
-  end
-
   def stub_tcp_to_raise(stub_addr, exception)
     Socket.stubs(:tcp).with { |addr| addr == stub_addr }.once.raises(exception)
   end
