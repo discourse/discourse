@@ -115,6 +115,7 @@ export default class ChatLivePane extends Component {
   @action
   loadMessages() {
     if (!this.args.channel?.id) {
+      this.loadedOnce = true;
       return;
     }
 
