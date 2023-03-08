@@ -1009,7 +1009,7 @@ export default Controller.extend({
     const imageSizes = {};
     document
       .querySelectorAll(
-        "#reply-control .d-editor-preview img:not(.avatar):not(.emoji)"
+        "#reply-control .d-editor-preview img:not(.avatar, .emoji)"
       )
       .forEach((e) => {
         const src = e.src;
