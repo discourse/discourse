@@ -39,11 +39,8 @@ module PageObjects
       end
 
       def click_message_action_mobile(message, message_action)
-        i = 0.5
-        try_until_success(timeout: 20) do
-          expand_message_actions_mobile(message, delay: i)
-          first(".chat-message-action-item[data-id=\"#{message_action}\"]")
-        end
+        expand_message_actions_mobile(message, delay: 0.5)
+        wait_for_animation(find(".chat-message-actions"), timeout: 5)
         find(".chat-message-action-item[data-id=\"#{message_action}\"] button").click
       end
 
