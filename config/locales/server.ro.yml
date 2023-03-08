@@ -2079,24 +2079,20 @@ ro:
       medium: "Medie"
       high: "Ridicată"
     actions:
-      agree_and_keep:
-        title: "Păstrează postarea"
-      agree_and_suspend:
-        title: "Suspendă utilizator"
-      agree_and_silence:
-        title: "Suspendă utilizatorul"
+      agree:
+        title: "Da"
       agree_and_restore:
         description: "Restabilește postarea pentru astfel încât toți utilizatorii să o poată vedea."
-      agree_and_hide:
-        title: "Ascunde postarea"
       delete_single:
         title: "Șterge"
       disagree_and_restore:
         description: "Restabilește postarea pentru astfel încât toți utilizatorii să o poată vedea."
       disagree:
-        title: "Nu sunt de acord"
+        title: "Nu"
       ignore:
         title: "Ignoră"
+      ignore_and_do_nothing:
+        title: "Nu face nimic"
       approve:
         title: "Aprobare"
       reject_user:

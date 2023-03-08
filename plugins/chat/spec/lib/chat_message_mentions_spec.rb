@@ -139,7 +139,18 @@ RSpec.describe Chat::ChatMessageMentions do
     end
 
     it "returns an empty list if no group was mentioned" do
-      message = create_message("not mentioning anybody")
+      message = create_message("not mentioning anyone")
+
+      mentions = Chat::ChatMessageMentions.new(message)
+      result = mentions.group_mentions.pluck(:username)
+
+      expect(result).to be_empty
+    end
+
+    it "returns an empty list when mentioning an unmentionable group" do
+      group1.mentionable_level = Group::ALIAS_LEVELS[:nobody]
+      group1.save!
+      message = create_message("mentioning @#{group1.name}")
 
       mentions = Chat::ChatMessageMentions.new(message)
       result = mentions.group_mentions.pluck(:username)

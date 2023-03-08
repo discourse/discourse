@@ -521,26 +521,18 @@ it:
       scores:
         about: "Questo punteggio è calcolato sulla base del Livello di attendibilità dell'autore della segnalazione, dell'accuratezza delle precedenti segnalazioni e della priorità dell'elemento segnalato."
         score: "Punteggio"
-        date: "Data"
-        type: "Tipo"
+        type: "Motivo"
         status: "Stato"
-        submitted_by: "Inviato da"
-        reviewed_by: "Rivisto da"
+        submitted_by: "Segnalato da"
       statuses:
         pending:
           title: "In attesa"
-        approved:
-          title: "Approvato"
-        rejected:
-          title: "Rifiutato"
-        ignored:
-          title: "Ignorato"
-        deleted:
-          title: "Eliminato"
         reviewed:
           title: "(tutti i revisionati)"
         all:
           title: "(tutto)"
+      context_question:
+        delimiter: "o"
       types:
         reviewable_flagged_post:
           title: "Messaggio segnalato"
@@ -847,6 +839,7 @@ it:
         make_all_primary_description: "Rendi questo il gruppo principale per tutti gli utenti selezionati"
         remove_all_primary: "Rimuovi dai primari"
         remove_all_primary_description: "Rimuovi questo gruppo dai primari"
+        status: "Stato"
         owner: "Proprietario"
         primary: "Primario"
         forbidden: "Non puoi visualizzare i membri."
@@ -3563,6 +3556,10 @@ it:
     filters:
       with_topics: "%{filter} argomenti"
       with_category: "%{filter} %{category} argomenti"
+      filter:
+        title: "Filtro"
+        button:
+          label: "Filtro"
       latest:
         title: "Recenti"
         title_with_count:
@@ -5081,9 +5078,22 @@ it:
         new_template_form:
           submit: "Salva"
           cancel: "Annulla"
+          preview: "Anteprima"
         quick_insert_fields:
           add_new_field: "Aggiungi"
           dropdown: "A discesa"
+        validations_modal:
+          table_headers:
+            key: "Chiave"
+            type: "Tipo"
+            description: "Descrizione"
+          validations:
+            required:
+              key: "obbligatorio"
+            minimum:
+              key: "minimo"
+            maximum:
+              key: "massimo"
       impersonate:
         title: "Impersona utente"
         help: "Usa questo strumento per impersonare un account utente ai fini del debugging. Una volta finito dovrai disconnetterti."
@@ -5096,6 +5106,7 @@ it:
         not_found: "Spiacenti, questo nome utente non esiste nel sistema."
         id_not_found: "Spiacenti, nel nostro sistema non esiste questo id utente."
         active: "Attivati"
+        status: "Stato"
         show_emails: "Mostra email"
         hide_emails: "Nascondi email"
         nav:

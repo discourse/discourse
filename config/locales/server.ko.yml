@@ -3927,50 +3927,29 @@ ko:
         category: 카테고리 설정
     actions:
       agree:
-        title: "동의..."
-      agree_and_keep:
-        title: "게시물 유지"
-        description: "신고에 동의하고 게시물을 변경하지 않습니다."
-      agree_and_keep_hidden:
-        title: "게시물 숨김 유지"
-        description: "신고에 동의하고 게시물 숨김을 유지합니다."
+        title: "예"
       agree_and_suspend:
-        title: "사용자 정지"
         description: "신고에 동의하고 사용자를 정지합니다."
       agree_and_silence:
-        title: "사용자 차단"
         description: "신고에 동의하고 사용자를 차단합니다."
       agree_and_restore:
-        title: "게시물 복원"
         description: "모든 사용자가 볼 수 있도록 게시물을 복원합니다."
-      agree_and_hide:
-        title: "게시물 숨기기"
-        description: "이 게시물을 숨기고 사용자에게 편집을 요청하는 메시지를 자동으로 전송합니다."
       delete_single:
         title: "삭제"
       delete:
         title: "삭제..."
-      delete_and_ignore:
-        title: "게시물 삭제 및 무시"
-        description: "게시물 삭제, 첫 게시물인 경우 주제도 삭제합니다."
       delete_and_ignore_replies:
-        title: "게시물 + 댓글 삭제 및 무시"
-        description: "게시물과 모든 댓글을 삭제합니다. 첫 게시물인 경우 주제도 삭제합니다."
         confirm: "게시물에 대한 댓글도 삭제할까요?"
-      delete_and_agree:
-        title: "게시물 삭제 및 동의"
-        description: "게시물 삭제, 첫 게시물인 경우 주제도 삭제합니다."
       delete_and_agree_replies:
-        title: "게시물 + 댓글 삭제 및 동의"
-        description: "게시물과 모든 댓글을 삭제합니다. 첫 게시물인 경우 주제도 삭제합니다."
         confirm: "게시물에 대한 댓글도 삭제할까요?"
       disagree_and_restore:
-        title: "동의하지 않고 게시물 복원"
         description: "모든 사용자가 볼 수 있도록 게시물을 복원합니다."
       disagree:
-        title: "동의하지 않음"
+        title: "아니오"
       ignore:
         title: "무시"
+      ignore_and_do_nothing:
+        title: "아무것도하지 않음"
       approve:
         title: "승인"
       approve_post:

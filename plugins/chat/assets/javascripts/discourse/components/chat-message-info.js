@@ -48,10 +48,7 @@ export default class ChatMessageInfo extends Component {
   }
 
   get isFlagged() {
-    return (
-      this.#message?.get("reviewable_id") ||
-      this.#message?.get("user_flag_status") === 0
-    );
+    return this.#message?.reviewableId || this.#message?.userFlagStatus === 0;
   }
 
   get prioritizeName() {
@@ -66,7 +63,7 @@ export default class ChatMessageInfo extends Component {
   }
 
   get #user() {
-    return this.#message?.get("user");
+    return this.#message?.user;
   }
 
   get #message() {

@@ -21,8 +21,11 @@ bs_BA:
       joined: "pridružio se"
       email_frequency:
         never: "Nikad"
+      header_indicator_preference:
+        never: "Nikad"
       flag: "Prijavi"
       join: "Učlani se"
+      last_visit: "zadnja posjeta"
       mention_warning:
         dismiss: "odbaci"
       reply: "Odgovori"

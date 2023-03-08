@@ -521,26 +521,18 @@ es:
       scores:
         about: "Esta puntuación se calcula en función del nivel de confianza de quien denuncia, la precisión de sus denuncias anteriores y la prioridad del elemento que se denuncia."
         score: "Puntuación"
-        date: "Fecha"
-        type: "Tipo"
+        type: "Motivo"
         status: "Estado"
-        submitted_by: "Enviado por"
-        reviewed_by: "Revisado por"
+        submitted_by: "Denunciado por"
       statuses:
         pending:
           title: "Pendiente"
-        approved:
-          title: "Aprobado"
-        rejected:
-          title: "Rechazado"
-        ignored:
-          title: "Ignorado"
-        deleted:
-          title: "Eliminado"
         reviewed:
           title: "(todo revisado)"
         all:
           title: "(todo)"
+      context_question:
+        delimiter: "o"
       types:
         reviewable_flagged_post:
           title: "Publicación denunciada"
@@ -847,6 +839,7 @@ es:
         make_all_primary_description: "Hacer este grupo el principal de todos los usuarios seleccionados"
         remove_all_primary: "Quitar como principal"
         remove_all_primary_description: "Quitar este grupo como principal"
+        status: "Estado"
         owner: "Propietario"
         primary: "Principal"
         forbidden: "No tienes permitido ver los miembros del grupo."
@@ -3562,6 +3555,10 @@ es:
     filters:
       with_topics: "%{filter} temas"
       with_category: "%{filter} Foro de %{category}"
+      filter:
+        title: "Filtro"
+        button:
+          label: "Filtro"
       latest:
         title: "Recientes"
         title_with_count:
@@ -5079,9 +5076,22 @@ es:
         new_template_form:
           submit: "Guardar"
           cancel: "Cancelar"
+          preview: "Vista previa"
         quick_insert_fields:
           add_new_field: "Añadir"
           dropdown: "Desplegable"
+        validations_modal:
+          table_headers:
+            key: "Clave"
+            type: "Tipo"
+            description: "Descripción"
+          validations:
+            required:
+              key: "obligatorio"
+            minimum:
+              key: "mínimo"
+            maximum:
+              key: "máximo"
       impersonate:
         title: "Suplantar"
         help: "Utiliza esta herramienta para suplantar una cuenta de usuario con fines de depuración. Tendrás que cerrar sesión al terminar."
@@ -5094,6 +5104,7 @@ es:
         not_found: "Lo sentimos, ese usuario no existe en nuestro sistema."
         id_not_found: "Lo sentimos, esa ID de usuario no existe en nuestro sistema."
         active: "Activados"
+        status: "Estado"
         show_emails: "Mostrar correos electrónicos"
         hide_emails: "Ocultar correos electrónicos"
         nav:

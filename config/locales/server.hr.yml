@@ -1937,16 +1937,16 @@ hr:
       medium: "Srednji"
       high: "Visok"
     actions:
-      agree_and_suspend:
-        title: "Suspendiraj korisnika"
-      agree_and_silence:
-        title: "Ušuti korisnika"
+      agree:
+        title: "Da"
       delete_single:
         title: "Pobriši"
       disagree:
-        title: "Odbaci"
+        title: "Ne"
       ignore:
         title: "Zanemari"
+      ignore_and_do_nothing:
+        title: "Ne radi ništa"
       approve:
         title: "Odobri"
       reject_user:

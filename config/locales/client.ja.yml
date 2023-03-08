@@ -476,26 +476,18 @@ ja:
       scores:
         about: "このスコアは、報告者の信頼レベル、以前のフラグの正確性、および報告されている項目の優先度に基づいて計算されます。"
         score: "スコア"
-        date: "日付"
-        type: "タイプ"
+        type: "理由"
         status: "ステータス"
-        submitted_by: "送信者:"
-        reviewed_by: "レビュー者:"
+        submitted_by: "報告者:"
       statuses:
         pending:
           title: "保留中"
-        approved:
-          title: "承認済み"
-        rejected:
-          title: "却下"
-        ignored:
-          title: "無視"
-        deleted:
-          title: "削除済み"
         reviewed:
           title: "(すべてレビュー済み)"
         all:
           title: "(全ステータス)"
+      context_question:
+        delimiter: "または"
       types:
         reviewable_flagged_post:
           title: "通報された投稿"
@@ -794,6 +786,7 @@ ja:
         make_all_primary_description: "これを選択したすべてのユーザーのプライマリーグループにします"
         remove_all_primary: "プライマリーとして削除"
         remove_all_primary_description: "このグループをプライマリーとして削除します"
+        status: "ステータス"
         owner: "オーナー"
         primary: "プライマリー"
         forbidden: "メンバーの表示は許可されていません。"
@@ -3392,6 +3385,10 @@ ja:
     filters:
       with_topics: "%{filter} トピック"
       with_category: "%{filter} %{category} トピック"
+      filter:
+        title: "フィルタ"
+        button:
+          label: "フィルタ"
       latest:
         title: "最新"
         title_with_count:
@@ -4882,9 +4879,22 @@ ja:
         new_template_form:
           submit: "保存"
           cancel: "キャンセル"
+          preview: "プレビュー"
         quick_insert_fields:
           add_new_field: "追加"
           dropdown: "ドロップダウン"
+        validations_modal:
+          table_headers:
+            key: "キー"
+            type: "タイプ"
+            description: "説明"
+          validations:
+            required:
+              key: "必須"
+            minimum:
+              key: "最小"
+            maximum:
+              key: "最大"
       impersonate:
         title: "代理操作"
         help: "このツールを使用して、デバッグ目的でユーザーアカウントを代理操作します。作業を終了したら、ログアウトしてください。"
@@ -4897,6 +4907,7 @@ ja:
         not_found: "申し訳ありません。そのユーザー名はシステムに存在しません。"
         id_not_found: "申し訳ありません。そのユーザー ID はシステムに存在しません。"
         active: "有効"
+        status: "ステータス"
         show_emails: "メールアドレスを表示"
         hide_emails: "メールを非表示"
         nav:

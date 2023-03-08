@@ -223,10 +223,38 @@ class ChatMessage < ActiveRecord::Base
   end
 
   def url
-    "/chat/message/#{self.id}"
+    "/chat/c/-/#{self.chat_channel_id}/#{self.id}"
+  end
+
+  def create_mentions(user_ids)
+    return if user_ids.empty?
+
+    now = Time.zone.now
+    mentions = []
+    User
+      .where(id: user_ids)
+      .find_each do |user|
+        mentions << { chat_message_id: self.id, user_id: user.id, created_at: now, updated_at: now }
+      end
+
+    ChatMention.insert_all(mentions)
+  end
+
+  def update_mentions(mentioned_user_ids)
+    old_mentions = chat_mentions.pluck(:user_id)
+    updated_mentions = mentioned_user_ids
+    mentioned_user_ids_to_drop = old_mentions - updated_mentions
+    mentioned_user_ids_to_add = updated_mentions - old_mentions
+
+    delete_mentions(mentioned_user_ids_to_drop)
+    create_mentions(mentioned_user_ids_to_add)
   end
 
   private
+
+  def delete_mentions(user_ids)
+    chat_mentions.where(user_id: user_ids).destroy_all
+  end
 
   def message_too_short?
     message.length < SiteSetting.chat_minimum_message_length

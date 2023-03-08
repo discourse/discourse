@@ -2024,47 +2024,29 @@ sl:
     conflict: "Prišlo je do konflikta, ki to preprečuje. "
     actions:
       agree:
-        title: "Strinjam se..."
-      agree_and_keep:
-        title: "Ohrani prispevek"
-        description: "Strinjam se z prijavo in pusti prispevek nespremenjen."
+        title: "Ja"
       agree_and_suspend:
-        title: "Suspendiraj uporabnika"
         description: "Strinjam se z prijavo in suspendiraj uporabnika."
       agree_and_silence:
-        title: "Utišaj uporabnika/co"
         description: "Potrdi prijavo in utišaj uporabnika"
       agree_and_restore:
-        title: "Povrni prispevek"
         description: "Povrni prispevek tako da ga lahko vidijo vsi uporabniki"
-      agree_and_hide:
-        title: "Skrij prispevek"
-        description: "Skrij prispevek in samodejno pošlji zasebno sporočilo uporabniku, kjer ga prosiš, da naj spremenijo prispevek."
       delete_single:
         title: "Izbriši"
       delete:
         title: "Izbriši..."
-      delete_and_ignore:
-        title: "Izbriši prispevek in prezri"
-        description: "Izbriši prispevek; če je prvi prispevek, izbriši tudi temo"
       delete_and_ignore_replies:
-        title: "Izbriši prispevek + odgovore in prezri"
-        description: "Izbriši prispevek in vse odgovore; če je prvi prispevek, izbriši tudi temo"
         confirm: "Ali ste prepričani, da hočete izbrisati tudi odgovore na prispevek?"
-      delete_and_agree:
-        title: "Izbriši prispevek in se strinjam"
-        description: "Izbriši prispevek; če je prvi prispevek, izbriši tudi temo"
       delete_and_agree_replies:
-        title: "Izbriši prispevek + odgovore in se strinjam"
-        description: "Izbriši prispevek in vse odgovore; če je prvi prispevek, izbriši tudi temo"
         confirm: "Ali ste prepričani, da hočete izbrisati tudi odgovore na prispevek?"
       disagree_and_restore:
-        title: "Se ne strinjam in povrni prispevek"
         description: "Povrni prispevek tako da ga lahko vidijo vsi uporabniki"
       disagree:
-        title: "Se ne strinjam"
+        title: "Ne"
       ignore:
         title: "Prezri"
+      ignore_and_do_nothing:
+        title: "Ne naredi nič"
       approve:
         title: "Odobri"
       approve_post:

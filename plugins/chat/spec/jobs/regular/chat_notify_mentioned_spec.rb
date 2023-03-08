@@ -21,8 +21,11 @@ describe Jobs::ChatNotifyMentioned do
     end
   end
 
-  def create_chat_message(channel: public_channel, user: user_1)
-    Fabricate(:chat_message, chat_channel: channel, user: user, created_at: 10.minutes.ago)
+  def create_chat_message(channel: public_channel, author: user_1, mentioned_user: user_2)
+    message =
+      Fabricate(:chat_message, chat_channel: channel, user: author, created_at: 10.minutes.ago)
+    Fabricate(:chat_mention, chat_message: message, user: mentioned_user)
+    message
   end
 
   def track_desktop_notification(

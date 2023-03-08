@@ -145,9 +145,6 @@ module TestSetup
     # Don't queue badge grant in test mode
     BadgeGranter.disable_queue
 
-    # Make sure the default Post and Topic bookmarkables are registered
-    Bookmark.reset_bookmarkables
-
     OmniAuth.config.test_mode = false
   end
 end

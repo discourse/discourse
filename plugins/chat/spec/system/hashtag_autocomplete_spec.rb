@@ -25,7 +25,6 @@ describe "Using #hashtag autocompletion to search for and lookup channels",
 
   it "searches for channels, categories, and tags with # and prioritises channels in the results" do
     chat_page.visit_channel(channel1)
-    expect(chat_channel_page).to have_no_loading_skeleton
     chat_channel_page.type_in_composer("this is #ra")
     expect(page).to have_css(
       ".hashtag-autocomplete .hashtag-autocomplete__option .hashtag-autocomplete__link",
@@ -53,7 +52,6 @@ describe "Using #hashtag autocompletion to search for and lookup channels",
 
   it "cooks the hashtags for channels, categories, and tags serverside when the chat message is saved to the database" do
     chat_page.visit_channel(channel1)
-    expect(chat_channel_page).to have_no_loading_skeleton
     chat_channel_page.type_in_composer(
       "this is #random and this is #raspberry-beret and this is #razed which is cool",
     )

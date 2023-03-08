@@ -23,7 +23,7 @@ describe Chat::ChatNotifier do
     end
 
     def build_cooked_msg(message_body, user, chat_channel: channel)
-      ChatMessage.new(
+      ChatMessage.create(
         chat_channel: chat_channel,
         user: user,
         message: message_body,

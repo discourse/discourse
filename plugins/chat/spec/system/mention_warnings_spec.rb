@@ -21,7 +21,6 @@ RSpec.describe "Mentions warnings", type: :system, js: true do
 
         it "displays a warning" do
           chat_page.visit_channel(channel_1)
-          expect(chat_channel_page).to have_no_loading_skeleton
           chat_channel_page.type_in_composer("@#{admin_mentionable_group.name} ")
 
           expect(page).to have_css(".chat-mention-warnings")
@@ -46,7 +45,6 @@ RSpec.describe "Mentions warnings", type: :system, js: true do
 
           it "displays a warning" do
             chat_page.visit_channel(channel_1)
-            expect(chat_channel_page).to have_no_loading_skeleton
             chat_channel_page.type_in_composer("@#{publicly_mentionable_group.name} ")
 
             expect(page).to have_css(".chat-mention-warnings")
@@ -61,7 +59,6 @@ RSpec.describe "Mentions warnings", type: :system, js: true do
 
           it "displays a warning" do
             chat_page.visit_channel(channel_1)
-            expect(chat_channel_page).to have_no_loading_skeleton
             chat_channel_page.type_in_composer(
               "@#{user_2.username} @#{publicly_mentionable_group.name} ",
             )

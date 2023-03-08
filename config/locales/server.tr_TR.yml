@@ -43,7 +43,7 @@ tr_TR:
   views: "görüntülemeler"
   loading: "Yükleniyor"
   powered_by_html: '<a href="https://www.discourse.org">Discourse</a>tarafından destekleniyor, JavaScript etkinleştirildiğinde en iyi şekilde görüntülenebilir'
-  sign_up: "Kayıt Ol"
+  sign_up: "Kaydol"
   log_in: "Giriş Yap"
   submit: "Gönder"
   purge_reason: "Terk edilmiş, devre dışı bırakılmış hesap olarak otomatik olarak silindi"
@@ -2127,6 +2127,7 @@ tr_TR:
     default_sidebar_tags: "Seçilen etiketler varsayılan olarak Kenar Çubuğunun Etiketler bölümünde gösterilir."
     enable_experimental_hashtag_autocomplete: "DENEYSEL: Seçilen ögeyi farklı şekilde işleyen ve aramayı iyileştiren kategoriler ve etiketler için yeni #hashtag otomatik tamamlama sistemini kullanın"
     experimental_new_new_view_groups: "DENEYSEL: Okunmamış ve yeni konuları birleştiren bir yeni konular listesi etkinleştirin ve kenar çubuğundaki \"Her şey\" bağlantısını buna bağlayın."
+    enable_custom_sidebar_sections: "DENEYSEL: Özel kenar çubuğu bölümlerini etkinleştir"
     errors:
       invalid_css_color: "Geçersiz renk. Bir renk adı veya hex değeri girin."
       invalid_email: "Geçersiz e-posta adresi."
@@ -4338,50 +4339,30 @@ tr_TR:
         category: kategori ayarları
     actions:
       agree:
-        title: "Kabul et..."
-      agree_and_keep:
-        title: "Gönderiyi Tut"
-        description: "Bayrağı kabul edin ve gönderiyi değiştirmeyin."
-      agree_and_keep_hidden:
-        title: "Gönderiyi Gizli Tut"
-        description: "Bayrağı kabul edin ve gönderiyi gizli bırakın."
+        title: "Evet"
       agree_and_suspend:
-        title: "Kullanıcıyı Askıya Al"
         description: "Bayrağı kabul edin ve kullanıcıyı askıya alın."
       agree_and_silence:
-        title: "Kullanıcıyı Sustur"
+        title: "Kullanıcıyı sustur"
         description: "Bayrağı kabul edin ve kullanıcıyı susturun."
       agree_and_restore:
-        title: "Gönderiyi Geri Yükle"
         description: "Gönderiyi tüm kullanıcıların görebilmesi için geri yükleyin."
-      agree_and_hide:
-        title: "Gönderiyi Gizle"
-        description: "Bu gönderiyi gizleyin ve kullanıcıya otomatik olarak gönderiyi düzenlemesini isteyen bir mesaj gönderin."
       delete_single:
         title: "Sil"
       delete:
         title: "Sil..."
-      delete_and_ignore:
-        title: "Gönderiyi Sil ve Yok Say"
-        description: "Gönderiyi silin; ilk gönderiyse konuyu da silin"
       delete_and_ignore_replies:
-        title: "Gönderiyi + Yanıtları Silin ve Yok Sayın"
-        description: "Gönderiyi ve tüm yanıtlarını silin; ilk gönderiyse konuyu da silin"
         confirm: "Gönderiye verilen yanıtları da silmek istediğinizden emin misiniz?"
-      delete_and_agree:
-        title: "Gönderiyi Silin ve Kabul Edin"
-        description: "Gönderiyi silin; ilk gönderiyse konuyu da silin"
       delete_and_agree_replies:
-        title: "Gönderiyi + Yanıtları Silin ve Kabul Edin"
-        description: "Gönderiyi ve tüm yanıtlarını silin; ilk gönderiyse konuyu da silin"
         confirm: "Gönderiye verilen yanıtları da silmek istediğinizden emin misiniz?"
       disagree_and_restore:
-        title: "Katılma ve Gönderiyi Geri Yükle"
         description: "Gönderiyi tüm kullanıcıların görebilmesi için geri yükleyin."
       disagree:
-        title: "Katılma"
+        title: "Hayır"
       ignore:
         title: "Yok say"
+      ignore_and_do_nothing:
+        title: "Hiçbir şey yapma"
       approve:
         title: "Onayla"
       approve_post:

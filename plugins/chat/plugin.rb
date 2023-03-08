@@ -247,6 +247,7 @@ after_initialize do
   load File.expand_path("../app/controllers/api/hints_controller.rb", __FILE__)
   load File.expand_path("../app/controllers/api/chat_channel_threads_controller.rb", __FILE__)
   load File.expand_path("../app/controllers/api/chat_chatables_controller.rb", __FILE__)
+  load File.expand_path("../app/queries/chat_channel_unreads_query.rb", __FILE__)
   load File.expand_path("../app/queries/chat_channel_memberships_query.rb", __FILE__)
 
   if Discourse.allow_dev_populate?
@@ -279,7 +280,6 @@ after_initialize do
     Category.prepend Chat::CategoryExtension
     User.prepend Chat::UserExtension
     Jobs::UserEmail.prepend Chat::UserEmailExtension
-    Bookmark.register_bookmarkable(ChatMessageBookmarkable)
   end
 
   if Oneboxer.respond_to?(:register_local_handler)
@@ -776,6 +776,8 @@ after_initialize do
   register_user_destroyer_on_content_deletion_callback(
     Proc.new { |user| Jobs.enqueue(:delete_user_messages, user_id: user.id) },
   )
+
+  register_bookmarkable(ChatMessageBookmarkable)
 end
 
 if Rails.env == "test"

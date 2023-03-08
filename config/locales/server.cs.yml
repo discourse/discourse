@@ -1159,28 +1159,24 @@ cs:
       medium: "Střední"
       high: "Vysoká"
     actions:
-      agree_and_keep:
-        title: "Uchovat příspěvek"
-        description: "Schválit nahlášení a zanechat příspěvek nepozměněný. "
+      agree:
+        title: "Ano"
       agree_and_suspend:
-        title: "Zakázat uživatele"
         description: "Schválit nahlášení a pozastavit uživatele."
       agree_and_silence:
-        title: "Ztišit uživatele"
         description: "Schválit nahlášení a ztišit uživatele."
       agree_and_restore:
         description: "Obnov příspěvek, aby ho mohli vidět všichni ostatní uživatelé."
-      agree_and_hide:
-        title: "Schovat příspěvek"
-        description: "Schovat tento příspěvek a automaticky poslat uživateli zprávu, aby ho urychleně upravil."
       delete_single:
         title: "Smazat"
       disagree_and_restore:
         description: "Obnov příspěvek, aby ho mohli vidět všichni ostatní uživatelé."
       disagree:
-        title: "Neschvaluji"
+        title: "Ne"
       ignore:
         title: "ignorovat"
+      ignore_and_do_nothing:
+        title: "Nic nedělat"
       approve:
         title: "Schválit"
       reject_user:

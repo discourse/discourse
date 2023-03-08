@@ -4575,50 +4575,29 @@ ar:
         category: إعدادات الفئة
     actions:
       agree:
-        title: "الموافقة..."
-      agree_and_keep:
-        title: "الاحتفاظ بالمنشور"
-        description: "الموافقة على البلاغ والاحتفاظ بالمنشور دون تغيير"
-      agree_and_keep_hidden:
-        title: "إبقاء المنشور مخفيًا"
-        description: "الموافقة على البلاغ وترك المنشور مخفيًا"
+        title: "نعم"
       agree_and_suspend:
-        title: "تعليق المستخدم"
         description: "الموافقة على البلاغ وتعليق المستخدم"
       agree_and_silence:
-        title: "كتم المستخدم"
         description: "الموافقة على البلاغ وكتم المستخدم"
       agree_and_restore:
-        title: "استعادة المنشور"
         description: "استعادة المنشور حتى يتمكن جميع المستخدمين من رؤيته"
-      agree_and_hide:
-        title: "إخفاء المنشور"
-        description: "إخفاء هذا المنشور وإرسال رسالة إلى المستخدم تلقائيًا تحثه فيها على تعديله"
       delete_single:
         title: "حذف"
       delete:
         title: "الحذف..."
-      delete_and_ignore:
-        title: "حذف المنشور والتجاهل"
-        description: "حذف المنشور؛ وحذف الموضوع أيضًا إذا كان المنشور الأول"
       delete_and_ignore_replies:
-        title: "حذف المنشور + الردود والتجاهل"
-        description: "حذف المنشور وجميع الردود عليه؛ وحذف الموضوع أيضًا إذا كان المنشور الأول"
         confirm: "هل تريد بالتأكيد حذف الردود على المنشور أيضًا؟"
-      delete_and_agree:
-        title: "حذف المنشور والموافقة"
-        description: "حذف المنشور؛ وحذف الموضوع أيضًا إذا كان المنشور الأول"
       delete_and_agree_replies:
-        title: "حذف المنشور + الردود والموافقة"
-        description: "حذف المنشور وجميع الردود عليه؛ وحذف الموضوع أيضًا إذا كان المنشور الأول"
         confirm: "هل تريد بالتأكيد حذف الردود على المنشور أيضًا؟"
       disagree_and_restore:
-        title: "عدم الموافقة واستعادة المنشور"
         description: "استعادة المنشور حتى يتمكن جميع المستخدمين من رؤيته"
       disagree:
-        title: "عدم الموافقة"
+        title: "لا"
       ignore:
         title: "تجاهل"
+      ignore_and_do_nothing:
+        title: "عدم اتخاذ أي إجراء"
       approve:
         title: "الموافقة"
       approve_post:

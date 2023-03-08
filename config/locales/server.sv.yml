@@ -2147,6 +2147,7 @@ sv:
     default_sidebar_tags: "Valda taggar kommer att visas under sidofältets sektion Taggar som standard."
     enable_new_notifications_menu: "Aktiverar den nya aviseringsmenyn för den gamla navigeringsmenyn."
     enable_experimental_hashtag_autocomplete: "EXPERIMENTELLT: Använd det nya #hashtag-autokompletteringssystemet för kategorier och taggar som renderar det valda objektet annorlunda och har förbättrad sökning"
+    experimental_new_new_view_groups: "EXPERIMENTELLT: Aktivera en ny ämneslista som kombinerar olästa och nya ämnen och gör att länken \"Allt\" i sidofältet länkar till den."
     errors:
       invalid_css_color: "Ogiltig färg. Ange ett färgnamn eller ett hexvärde."
       invalid_email: "Felaktig e-postadress."
@@ -2203,7 +2204,7 @@ sv:
       search_tokenize_japanese_enabled: "Du måste inaktivera 'search_tokenize_japanese' innan du aktiverar den här inställningen."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Du kan inte aktivera DiscourseConnect om 2FA är obligatoriskt."
       delete_rejected_email_after_days: "Den här inställningen kan inte vara lägre än inställningen delete_email_logs_after_days eller större än %{max}"
-      invalid_uncategorized_category_setting: "Kategorin \"Okategoriserade\" kan inte väljas om inte \"tillåt okategoriserade ämnen\" har aktiverats."
+      invalid_uncategorized_category_setting: 'Kategorin "Okategoriserade" kan inte väljas om inte "tillåt okategoriserade ämnen" har aktiverats.'
       enable_new_notifications_menu_not_legacy_navigation_menu: "Du måste ställa in `navigation_menu` till `legacy` innan du aktiverar den här inställningen."
       invalid_search_ranking_weights: "Värdet är ogiltigt för webbplatsinställningen search_ranking_weights. Exempel: '{0.1,0.2,0.3,1.0}'. Observera att maximalt värde för varje vikt är 1,0."
     placeholder:
@@ -4484,50 +4485,53 @@ sv:
         category: kategori inställningar
     actions:
       agree:
-        title: "Godkänn..."
+        title: "Ja"
       agree_and_keep:
         title: "Behåll inlägg"
-        description: "Godkänn flaggning men lämna inlägget oförändrat."
+        description: "Godkänn flaggning men lämna det här inlägget oförändrat."
       agree_and_keep_hidden:
         title: "Fortsätt dölja inlägg"
-        description: "Godkänn flaggning och lämna inlägget som dolt."
+        description: "Godkänn flaggning och fortsätt dölja inlägget."
       agree_and_suspend:
         title: "Stäng av användare"
         description: "Godkänn flaggning och stäng av användaren."
       agree_and_silence:
-        title: "Tysta användaren"
+        title: "Tysta användare"
         description: "Godkänn flaggning och tysta användaren."
       agree_and_restore:
         title: "Återställ inlägg"
         description: "Återställ inlägget så att alla användare kan se det."
       agree_and_hide:
         title: "Dölj inlägg"
-        description: "Dölj detta inlägg och sänd automatiskt användaren ett meddelande som uppmanar om att redigera det."
+        description: "Godkänn flaggning och dölj detta inlägg + sänd automatiskt användaren ett meddelande som uppmanar om att redigera det."
       delete_single:
         title: "Radera"
       delete:
         title: "Radera..."
       delete_and_ignore:
-        title: "Radera inlägg, samt ignorera"
-        description: "Radera inlägg; om det är det första inlägget, radera även ämnet"
+        title: "Ignorera flaggning och radera inlägget"
+        description: "Ignorera flaggningen genom att ta bort den från kön och radera inlägget. Om det är det första inlägget, radera ämnet också. "
       delete_and_ignore_replies:
-        title: "Radera inlägg + svar, samt ignorera"
-        description: "Radera inlägg och alla dess svar; om det är det första inlägget, radera även ämnet"
+        title: "Ignorera flaggning, radera inlägg och svar"
+        description: "Ignorera flaggningen genom att ta bort den från kön och radera inlägget och alla dess svar. Om det är det första inlägget, radera ämnet också"
         confirm: "Är du säker på att du vill radera alla svar på inlägget också?"
       delete_and_agree:
-        title: "Radera inlägg, samt samtyck"
-        description: "Radera inlägg; om det är det första inlägget, radera även ämnet"
+        title: "Radera inlägg"
+        description: "Godkänn flaggning och radera detta inlägg. Om det är det första inlägget, radera ämnet också."
       delete_and_agree_replies:
-        title: "Radera inlägg + svar, samt samtyck"
-        description: "Radera inlägg och alla dess svar; om det är det första inlägget, radera även ämnet"
+        title: "Radera inlägg och svar"
+        description: "Godkänn flaggning och radera detta inlägg och alla dess svar. Om det är det första inlägget, radera ämnet också."
         confirm: "Är du säker på att du vill radera alla svar på inlägget också?"
       disagree_and_restore:
-        title: "Håll inte med och återställ inlägg"
+        title: "Nej, återställ inlägget"
         description: "Återställ inlägget så att alla användare kan se det."
       disagree:
-        title: "Håll inte med"
+        title: "Nej"
       ignore:
         title: "Ignorera"
+      ignore_and_do_nothing:
+        title: "Gör ingenting"
+        description: "Ignorera flaggningen genom att ta bort den från kön utan att vidta några åtgärder. Dolda inlägg kommer att förbli dolda och hanteras av de automatiska verktygen."
       approve:
         title: "Godkänn"
       approve_post:
@@ -4589,6 +4593,8 @@ sv:
   form_templates:
     errors:
       invalid_yaml: "är inte en giltig YAML-sträng"
+      invalid_type: "innehåller en ogiltig malltyp: %{type} (giltiga typer är: %{valid_types})"
+      missing_type: "saknar en fälttyp"
   activemodel:
     errors:
       <<: *errors

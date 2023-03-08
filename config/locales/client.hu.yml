@@ -522,26 +522,18 @@ hu:
       scores:
         about: "Ez a pontszám a jelentő bizalmi szintje, a korábbi megjelöléseinek pontossága és a jelentett elem prioritása alapján számított."
         score: "Pontszám"
-        date: "Dátum"
-        type: "Típus"
+        type: "Ok"
         status: "Állapot"
-        submitted_by: "Beküldte"
-        reviewed_by: "Jóváhagyta"
+        submitted_by: "Jelentette"
       statuses:
         pending:
           title: "Folyamatban"
-        approved:
-          title: "Jóváhagyva"
-        rejected:
-          title: "Elutasítva"
-        ignored:
-          title: "Figyelmen kívül hagyva"
-        deleted:
-          title: "Törölve"
         reviewed:
           title: "(összes jóváhagyott)"
         all:
           title: "(összes)"
+      context_question:
+        delimiter: "vagy"
       types:
         reviewable_flagged_post:
           title: "Megjelölt bejegyzés"
@@ -848,6 +840,7 @@ hu:
         make_all_primary_description: "Ez legyen az összes kijelölt felhasználó elsődleges csoportja"
         remove_all_primary: "Eltávolítás, mint elsődleges"
         remove_all_primary_description: "Csoport eltávolítása, mint elsődleges"
+        status: "Állapot"
         owner: "Tulajdonos"
         primary: "Elsődleges"
         forbidden: "Nem láthatja a tagokat."
@@ -3275,6 +3268,10 @@ hu:
     filters:
       with_topics: "%{filter} témák"
       with_category: "%{filter} %{category} Témák"
+      filter:
+        title: "Szűrő"
+        button:
+          label: "Szűrő"
       latest:
         title: "Legújabb"
         title_with_count:
@@ -4525,6 +4522,7 @@ hu:
           close: "Lezárás"
           edit: "Szerkesztés"
           delete: "Törlés"
+          toggle_preview: "Előnézet átkapcsolása"
         new_template_form:
           submit: "Mentés"
           cancel: "Mégse"
@@ -4534,6 +4532,7 @@ hu:
           template:
             label: "Sablon"
             placeholder: "Hozzon létre egy YAML-sablont itt..."
+          preview: "Előnézet"
         delete_confirm: "Biztosan törölni szeretné ezt a sablont?"
         quick_insert_fields:
           add_new_field: "Hozzáad"
@@ -4543,6 +4542,28 @@ hu:
           dropdown: "Legördülő menü"
           upload: "Fájl feltöltése"
           multiselect: "Több választási lehetőség"
+        validations_modal:
+          button_title: "Érvényesítések"
+          modal_title: "Érvényesítési lehetőségek"
+          table_headers:
+            key: "Kulcs"
+            type: "Típus"
+            description: "Leírás"
+          validations:
+            required:
+              key: "kötelező"
+              type: "logikai érték"
+              description: "Az űrlap elküldéséhez a mező kitöltése szükséges."
+            minimum:
+              key: "legalább"
+              type: "egész szám"
+              description: "Szöveges mezőkben megadja a minimálisan megengedett karakterek számát."
+            maximum:
+              key: "legfeljebb"
+              description: "Szöveges mezőkben megadja a megengedett maximális karakterek számát. A többszörös kiválasztású legördülő menüpontokban megadja a kiválasztható lehetőségek maximális számát."
+            pattern:
+              key: "minta"
+              type: "regex karakterlánc"
         edit_category:
           toggle_freeform: "űrlap sablon letiltva"
           toggle_form_template: "űrlap sablon engedélyezve"
@@ -4558,6 +4579,7 @@ hu:
         not_found: "Sajnos ez a felhasználónév nem létezik."
         id_not_found: "Sajnos ez a felhasználó id nem található a rendszerben."
         active: "Aktíválva"
+        status: "Állapot"
         show_emails: "E-mailek megjelenítése"
         hide_emails: "E-mailek elrejtése"
         nav:

@@ -2312,6 +2312,15 @@ lt:
     activation_reminder:
       title: "Aktyvinimo priminimas"
       subject_template: "[%{email_prefix}] Priminimas patvirtinti savo paskyrą"
+      text_body_template: |
+        Sveiki atvykę į %{site_name}!
+
+        Tai draugiškas priminimas suaktyvinti paskyrą.
+
+        Spustelėkite šią nuorodą, kad patvirtintumėte ir suaktyvintumėte savo naują paskyrą:
+        %{base_url}/u/activate-account/%{email_token}
+
+        Jei aukščiau esančios nuorodos negalima spustelėti, pabandykite nukopijuoti ir įklijuoti ją į savo Interneto naršyklės adreso juostą.
     suspicious_login:
       title: "Įspėjimas apie naują prisijungimą"
       subject_template: "[%{site_name}] Naujas prisijungimas iš %{location}"
@@ -2776,44 +2785,27 @@ lt:
         category: kategorijos nustatymai
     actions:
       agree:
-        title: "Sutinku..."
-      agree_and_keep:
-        title: "Palikti įrašą"
-      agree_and_keep_hidden:
-        title: "Laikyti paslėptą įrašą"
-      agree_and_suspend:
-        title: "Suspenduoti narį"
+        title: "Taip"
       agree_and_silence:
-        title: "Nutildyti narį"
         description: "Sutikti su pranešimu ir nutildyti narį."
       agree_and_restore:
-        title: "Atkurti įrašą"
         description: "Atkurkite įrašą, kad visi vartotojai jį matytų."
-      agree_and_hide:
-        title: "Paslėpti įrašą"
       delete_single:
         title: "Pašalinti"
       delete:
         title: "Ištrinti..."
-      delete_and_ignore:
-        title: "Ištrinti įrašą ir ignoruoti"
-        description: "Ištrinti įrašą; jei pirmasis įrašas, taip pat ištrinkite temą"
       delete_and_ignore_replies:
-        description: "Ištrinti įrašą ir visus jo atsakymus; jei pirmasis įrašas, taip pat ištrinkite temą"
         confirm: "Ar tikrai norite ištrinti ir įrašo atsakymus?"
-      delete_and_agree:
-        title: "Ištrinti įrašą ir sutikti"
-        description: "Ištrinti įrašą; jei pirmasis įrašas, taip pat ištrinkite temą"
       delete_and_agree_replies:
-        description: "Ištrinti įrašą ir visus jo atsakymus; jei pirmasis įrašas, taip pat ištrinkite temą"
         confirm: "Ar tikrai norite ištrinti ir įrašo atsakymus?"
       disagree_and_restore:
-        title: "Nesutikti ir atkurti įrašą"
         description: "Atkurkite įrašą, kad visi vartotojai jį matytų."
       disagree:
-        title: "Nesutinka"
+        title: "Ne"
       ignore:
         title: "Ignoruoti"
+      ignore_and_do_nothing:
+        title: "Nieko nedaryti"
       approve:
         title: "Patvirtinti"
       approve_post:
