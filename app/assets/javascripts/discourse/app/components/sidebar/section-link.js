@@ -30,7 +30,9 @@ export default class SectionLink extends Component {
     if (this.args.linkName) {
       classNames.push(
         `sidebar-section-link-${this.args.linkName
-          .replace(" ", "-")
+          .split(" ")
+          .filter((s) => s)
+          .join("-")
           .toLowerCase()}`
       );
     }
