@@ -19,7 +19,7 @@ export default class ChatTrackMessage extends Modifier {
       this._intersectionObserverCallback,
       {
         root: document,
-        threshold: 0.9,
+        threshold: 0,
       }
     );
 
