@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module DiscourseAutomation
-  class AdminDiscourseAutomationController < ::Admin::AdminController
+  class AdminDiscourseAutomationController < ::ApplicationController
     requires_plugin DiscourseAutomation::PLUGIN_NAME
     before_action :ensure_logged_in
 

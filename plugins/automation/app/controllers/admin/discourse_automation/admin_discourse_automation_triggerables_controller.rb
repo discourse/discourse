@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module DiscourseAutomation
-  class AdminDiscourseAutomationTriggerablesController < ::Admin::AdminController
+  class AdminDiscourseAutomationTriggerablesController < ::ApplicationController
     requires_plugin DiscourseAutomation::PLUGIN_NAME
 
     def index
