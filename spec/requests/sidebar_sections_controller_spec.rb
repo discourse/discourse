@@ -257,7 +257,7 @@ RSpec.describe SidebarSectionsController do
       post "/sidebar_sections/reorder.json",
            params: {
              sidebar_section_id: sidebar_section.id,
-             links_order: [section_link_2.id, section_link_3.id, section_link_1.id],
+             links_order: [sidebar_url_2.id, sidebar_url_3.id, sidebar_url_1.id],
            }
 
       serializer = SidebarSectionSerializer.new(sidebar_section, root: false).as_json
@@ -271,7 +271,7 @@ RSpec.describe SidebarSectionsController do
       post "/sidebar_sections/reorder.json",
            params: {
              sidebar_section_id: sidebar_section_2.id,
-             links_order: [section_link_2.id, section_link_3.id, section_link_1.id],
+             links_order: [sidebar_url_2.id, sidebar_url_3.id, sidebar_url_1.id],
            }
 
       expect(response.status).to eq(403)
