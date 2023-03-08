@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 #
-# Should only be created via the Plugin::Instance#register_bookmarkable
+# Should only be created via the Bookmark.register_bookmarkable
 # method; this is used to let the BookmarkQuery class query and
 # search additional bookmarks for the user bookmark list, and
 # also to enumerate on the registered RegisteredBookmarkable types.
@@ -11,7 +11,7 @@
 # when trying to save the Bookmark record. All things that are bookmarkable
 # must be registered in this way.
 #
-# See Plugin::Instance#register_bookmarkable for some examples on how registering
+# See Bookmark#reset_bookmarkables for some examples on how registering
 # bookmarkables works.
 #
 # See BaseBookmarkable for documentation on what return types should be

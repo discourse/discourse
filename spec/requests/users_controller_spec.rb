@@ -5947,7 +5947,7 @@ RSpec.describe UsersController do
       bookmark3 && bookmark4
     end
 
-    after { DiscoursePluginRegistry.reset! }
+    after { Bookmark.registered_bookmarkables = [] }
 
     let(:bookmark1) { Fabricate(:bookmark, user: user1, bookmarkable: Fabricate(:post)) }
     let(:bookmark2) { Fabricate(:bookmark, user: user1, bookmarkable: Fabricate(:topic)) }

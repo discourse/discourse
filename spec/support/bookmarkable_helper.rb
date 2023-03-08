@@ -72,9 +72,6 @@ class UserTestBookmarkable < BaseBookmarkable
   end
 end
 
-def register_test_bookmarkable(klass = UserTestBookmarkable)
-  DiscoursePluginRegistry.register_bookmarkable(
-    RegisteredBookmarkable.new(klass),
-    stub(enabled?: true),
-  )
+def register_test_bookmarkable
+  Bookmark.register_bookmarkable(UserTestBookmarkable)
 end

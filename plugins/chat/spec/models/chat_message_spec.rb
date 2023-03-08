@@ -499,6 +499,8 @@ describe ChatMessage do
     end
 
     describe "bookmarks" do
+      before { Bookmark.register_bookmarkable(ChatMessageBookmarkable) }
+
       it "destroys bookmarks" do
         message_1 = Fabricate(:chat_message)
         bookmark_1 = Fabricate(:bookmark, bookmarkable: message_1)

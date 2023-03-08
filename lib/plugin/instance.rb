@@ -1221,16 +1221,6 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_user_destroyer_on_content_deletion_callback(callback, self)
   end
 
-  ##
-  # Register a class that implements [BaseBookmarkable], which represents another
-  # [ActiveRecord::Model] that may be bookmarked via the [Bookmark] model's
-  # polymorphic association. The class handles create and destroy hooks, querying,
-  # and reminders among other things.
-  def register_bookmarkable(klass)
-    return if Bookmark.registered_bookmarkable_from_type(klass.model.name).present?
-    DiscoursePluginRegistry.register_bookmarkable(RegisteredBookmarkable.new(klass), self)
-  end
-
   protected
 
   def self.js_path
