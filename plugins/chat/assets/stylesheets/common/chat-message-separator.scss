@@ -78,6 +78,7 @@
       font-size: var(--font-down-1);
       padding: 0.25rem 0.5rem;
       box-sizing: border-box;
+      display: flex;
     }
 
     & + .chat-message-separator__line-container {
