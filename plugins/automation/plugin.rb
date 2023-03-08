@@ -29,7 +29,7 @@ require_relative "lib/discourse_automation/triggerable"
 
 after_initialize do
   %w[
-    app/jobs/regular/discourse_automation_call_zapier_webhook
+    app/jobs/regular/call_zapier_webhook
     app/jobs/scheduled/discourse_automation_tracker
     app/jobs/scheduled/stalled_topic_tracker
     app/jobs/scheduled/stalled_wiki_tracker
