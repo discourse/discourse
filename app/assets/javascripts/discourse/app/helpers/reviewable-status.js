@@ -15,7 +15,6 @@ function dataFor(status, type) {
       return { name: "pending" };
     case APPROVED:
       switch (type) {
-        case "Queued Post":
         case "ReviewableQueuedPost":
           return {
             icon: "check",
@@ -37,7 +36,6 @@ function dataFor(status, type) {
       }
     case REJECTED:
       switch (type) {
-        case "Queued Post":
         case "ReviewableQueuedPost":
           return {
             icon: "times",
