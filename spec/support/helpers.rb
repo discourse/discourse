@@ -192,4 +192,13 @@ module Helpers
 
     queries
   end
+
+  def stub_ip_lookup(stub_addr, ips)
+    Addrinfo
+      .stubs(:getaddrinfo)
+      .with { |addr, _| addr == stub_addr }
+      .returns(
+        ips.map { |ip| Addrinfo.new([IPAddr.new(ip).ipv6? ? "AF_INET6" : "AF_INET", 80, nil, ip]) },
+      )
+  end
 end
