@@ -1,4 +1,8 @@
-<div class="chat-thread" data-id={{this.thread.id}}>
+<div
+  class={{concat-class "chat-thread" (if this.loading "loading")}}
+  data-id={{this.thread.id}}
+  {{did-insert this.loadMessages}}
+>
   <div class="chat-thread__header">
     <div class="chat-thread__info">
       <div class="chat-thread__title">
@@ -14,7 +18,7 @@
       </div>
 
       <p class="chat-thread__om">
-        {{replace-emoji this.thread.original_message.excerpt}}
+        {{replace-emoji this.thread.originalMessage.excerpt}}
       </p>
 
       <div class="chat-thread__omu">
@@ -23,14 +27,36 @@
           }}</span>
         <ChatMessageAvatar
           class="chat-thread__omu-avatar"
-          @message={{this.thread.original_message}}
+          @message={{this.thread.originalMessage}}
         />
         <span
           class="chat-thread__omu-username"
-        >{{this.thread.original_message_user.username}}</span>
+        >{{this.thread.originalMessageUser.username}}</span>
       </div>
     </div>
   </div>
   <div class="chat-thread__messages">
+    <ul>
+      {{#each this.thread.messages as |message|}}
+        <li>{{message.user.username}} sez: {{message.message}}</li>
+      {{/each}}
+    </ul>
+    {{#if (or this.loading this.loadingMoreFuture)}}
+      <ChatSkeleton />
+    {{/if}}
   </div>
+
+  <ChatComposer
+    @canInteractWithChat="true"
+    @sendMessage={{this.sendMessage}}
+    @editMessage={{this.editMessage}}
+    @setReplyTo={{this.setReplyTo}}
+    @loading={{this.sendingLoading}}
+    @editingMessage={{readonly this.editingMessage}}
+    @onCancelEditing={{this.cancelEditing}}
+    @setInReplyToMsg={{this.setInReplyToMsg}}
+    @onEditLastMessageRequested={{this.editLastMessageRequested}}
+    @onValueChange={{this.composerValueChanged}}
+    @chatChannel={{this.channel}}
+  />
 </div>
