@@ -205,8 +205,8 @@ RSpec.describe "Quoting chat message transcripts", type: :system, js: true do
     end
 
     context "when on mobile" do
-      xit "first navigates to the channel's category before opening the topic composer with the quote prefilled",
-          mobile: true do
+      it "first navigates to the channel's category before opening the topic composer with the quote prefilled",
+         mobile: true do
         chat_page.visit_channel(chat_channel_1)
 
         chat_channel_page.click_message_action_mobile(message_1, "selectMessage")
