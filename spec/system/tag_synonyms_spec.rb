@@ -9,7 +9,7 @@ describe "Tag synonyms", type: :system, js: true do
   before { sign_in(current_user) }
 
   describe "when visiting edit tag page" do
-    it "should add existing tag as synonym" do
+    it "allows an admin to add existing tag as a synonym" do
       tags_page.visit_tag(tag_1)
 
       expect(tags_page.tag_info_btn).to be_visible
@@ -33,7 +33,7 @@ describe "Tag synonyms", type: :system, js: true do
       expect(tags_page.tag_box(tag_2.name)).to be_visible
     end
 
-    it "should create a new tag as synonym if tag does not exist" do
+    it "allows an admin to create a new tag as synonym when tag does not exist" do
       tags_page.visit_tag(tag_1)
       tags_page.tag_info_btn.click
       tags_page.edit_synonyms_btn.click
