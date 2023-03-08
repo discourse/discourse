@@ -7,15 +7,7 @@ WebMock::HttpLibAdapterRegistry.instance.register(
 
     def self.enable!
       FinalDestination.send(:remove_const, :HTTP)
-
-      # At this point, `Net::HTTP` has already been patched by WebMock so we need to re-declare `FinalDestination::HTTP`
-      # but inherit from the patched `Net::HTTP` class. This is to allow requests made using `FinalDestination::HTTP` to be
-      # intercepted by WebMock.
-      FinalDestination.send(
-        :const_set,
-        :HTTP,
-        Class.new(Net::HTTP) { include FinalDestination::SSRFSafeNetHTTP },
-      )
+      FinalDestination.send(:const_set, :HTTP, Net::HTTP)
     end
 
     def self.disable!
