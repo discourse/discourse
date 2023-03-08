@@ -517,7 +517,8 @@ export default class ChatLivePane extends Component {
     }
   }
 
-  handleMessage(data) {
+  @bind
+  onMessage(data) {
     switch (data.type) {
       case "sent":
         this.handleSentMessage(data);
@@ -555,29 +556,26 @@ export default class ChatLivePane extends Component {
     }
   }
 
-  _handleOwnSentMessage(data) {
-    const stagedMessage = this.args.channel.findStagedMessage(data.staged_id);
-    if (stagedMessage) {
-      stagedMessage.error = null;
-      stagedMessage.id = data.chat_message.id;
-      stagedMessage.staged = false;
-      stagedMessage.excerpt = data.chat_message.excerpt;
-      stagedMessage.threadId = data.chat_message.thread_id;
-      stagedMessage.channelId = data.chat_message.chat_channel_id;
-      stagedMessage.createdAt = data.chat_message.created_at;
+  _handleStagedMessage(stagedMessage, data) {
+    stagedMessage.error = null;
+    stagedMessage.id = data.chat_message.id;
+    stagedMessage.staged = false;
+    stagedMessage.excerpt = data.chat_message.excerpt;
+    stagedMessage.threadId = data.chat_message.thread_id;
+    stagedMessage.channelId = data.chat_message.chat_channel_id;
+    stagedMessage.createdAt = data.chat_message.created_at;
 
-      const inReplyToMsg = this.args.channel.findMessage(
-        data.chat_message.in_reply_to?.id
-      );
-      if (inReplyToMsg && !inReplyToMsg.threadId) {
-        inReplyToMsg.threadId = data.chat_message.thread_id;
-      }
+    const inReplyToMsg = this.args.channel.findMessage(
+      data.chat_message.in_reply_to?.id
+    );
+    if (inReplyToMsg && !inReplyToMsg.threadId) {
+      inReplyToMsg.threadId = data.chat_message.thread_id;
+    }
 
-      // some markdown is cooked differently on the server-side, e.g.
-      // quotes, avatar images etc.
-      if (data.chat_message?.cooked !== stagedMessage.cooked) {
-        stagedMessage.cooked = data.chat_message.cooked;
-      }
+    // some markdown is cooked differently on the server-side, e.g.
+    // quotes, avatar images etc.
+    if (data.chat_message?.cooked !== stagedMessage.cooked) {
+      stagedMessage.cooked = data.chat_message.cooked;
     }
   }
 
@@ -587,7 +585,10 @@ export default class ChatLivePane extends Component {
     }
 
     if (data.chat_message.user.id === this.currentUser.id && data.staged_id) {
-      return this._handleOwnSentMessage(data);
+      const stagedMessage = this.args.channel.findStagedMessage(data.staged_id);
+      if (stagedMessage) {
+        return this._handleStagedMessage(stagedMessage, data);
+      }
     }
 
     if (this.args.channel.canLoadMoreFuture) {
@@ -1136,13 +1137,6 @@ export default class ChatLivePane extends Component {
       this.onMessage,
       this.args.channel.channelMessageBusLastId
     );
-  }
-
-  @bind
-  onMessage(busData) {
-    if (!this.args.channel.canLoadMoreFuture || busData.type !== "sent") {
-      this.handleMessage(busData);
-    }
   }
 
   @bind
