@@ -14,9 +14,7 @@
       {{I18n "search.no_results"}}
     </div>
   {{else if (not (and @term @inPMInboxContext))}}
-    <div class="no-results">
-      <SearchMenu::Results::InitialOptions @term={{@term}} />
-    </div>
+    <SearchMenu::Results::InitialOptions @term={{@term}} />
   {{else}}
     {{#if this.results}}
       {{#each this.results as |result|}}

@@ -9,7 +9,7 @@
     {{#if (or @term this.search.searchContext)}}
       {{#if this.search.searchContext}}
         <this.contextTypeComponent
-          @term={{this.term}}
+          @term={{this.contextTypeTerm}}
           @suggestionKeyword={{this.suggestionKeyword}}
           @results={{this.results}}
           @withInLabel={{this.withInLabel}}

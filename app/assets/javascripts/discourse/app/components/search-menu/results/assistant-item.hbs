@@ -1,6 +1,65 @@
 <li class="search-menu-assistant-item">
-  <span class="keyword">{{@term}}</span>
-  {{#if @withLabel}}
-    <span class="label-suffix">{{I18n "search.in_topics_posts"}}</span>
-  {{/if}}
+  {{! We need to change up styling to removing the "widget-link" class }}
+  {{! "data-topic-id": topic.id }}
+  <a class="widget-link search-link" href={{this.href}}>
+    <span aria-label={{I18n "search.title"}}>
+      {{d-icon this.icon}}
+    </span>
+
+    {{#if this.prefix}}
+      <span class="search-item-prefix">{{this.prefix}}</span>
+    {{/if}}
+
+    {{#if @withInLabel}}
+      <span class="label-suffix">{{I18n "search.in"}}</span>
+    {{/if}}
+
+    {{#if @category}}
+      {{category-link
+        @category
+        allowUncategorized=true
+        recursive=true
+        link=false
+      }}
+      {{#if (and @tag @isIntersection)}}
+        <span class="search-item-tag">
+          {{d-icon "tag"}}
+          {{@tag}}
+        </span>
+      {{/if}}
+    {{else if @tag}}
+      {{log "in here"}}
+      {{#if (and @isIntersection @additionalTags.length)}}
+        <span class="search-item-tag">{{this.tags}}</span>
+      {{else}}
+        <span class="search-item-tag">
+          {{d-icon "tag"}}
+          {{log @tag}}
+          {{@tag}}
+        </span>
+      {{/if}}
+    {{else if @user}}
+      <span class="search-item-user">
+        {{avatar
+          @user
+          imageSize="small"
+          template=@user.avatar_template
+          username=@user.username
+        }}
+        <span class="username">{{this.formattedUsername}}</span>
+        {{#if @suffix}}
+          <span class="label-suffix">
+            {{@suffix}}
+          </span>
+        {{/if}}
+      </span>
+    {{else}}
+      <span class="search-item-slug">{{this.labelOrSlug}}</span>
+    {{/if}}
+
+    {{!-- <span class="keyword">{{@term}}</span> --}}
+    {{!-- {{#if @withLabel}} --}}
+    {{!-- <span class="label-suffix">{{I18n "search.in_topics_posts"}}</span> --}}
+    {{!-- {{/if}} --}}
+  </a>
 </li>
