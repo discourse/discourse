@@ -14,13 +14,5 @@ globalThis.deprecationWorkflow.config = {
     { handler: "silence", matchId: "this-property-fallback" },
     { handler: "silence", matchId: "ember.globals-resolver" },
     { handler: "silence", matchId: "globals-resolver" },
-    {
-      handler: "silence",
-      matchId: "deprecated-run-loop-and-computed-dot-access",
-    },
-    {
-      handler: "silence",
-      matchId: "ember.built-in-components.legacy-arguments",
-    },
   ],
 };
