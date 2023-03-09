@@ -40,17 +40,16 @@
 
   <div
     class="chat-messages-scroll chat-messages-container"
-    {{chat/on-throttled-scroll this.computeScrollState (hash delay=50)}}
+    {{on "scroll" this.computeScrollState passive=true}}
     {{chat/on-throttled-scroll this.resetIdle (hash delay=500)}}
+    {{chat/on-throttled-scroll this.computeArrow (hash delay=150)}}
   >
     <div class="chat-message-actions-desktop-anchor"></div>
     <div
       class="chat-messages-container"
       {{chat/did-mutate-childlist this.computeDatesSeparators}}
     >
-
       {{#if this.loadedOnce}}
-
         {{#each @channel.messages key="id" as |message|}}
           <ChatMessage
             @message={{message}}

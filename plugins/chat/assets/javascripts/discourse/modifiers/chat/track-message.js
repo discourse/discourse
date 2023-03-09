@@ -11,15 +11,15 @@ export default class ChatTrackMessage extends Modifier {
     registerDestructor(this, (instance) => instance.cleanup());
   }
 
-  modify(element, [visibleCallback, notVisibleCallback]) {
-    this.visibleCallback = visibleCallback;
-    this.notVisibleCallback = notVisibleCallback;
+  modify(element, [callbacks = {}]) {
+    this.visibleCallback = callbacks.visibleCallback;
+    this.notVisibleCallback = callbacks.notVisibleCallback;
 
     this.intersectionObserver = new IntersectionObserver(
       this._intersectionObserverCallback,
       {
         root: document,
-        threshold: 0.9,
+        threshold: 0,
       }
     );
 

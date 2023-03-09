@@ -56,8 +56,10 @@
   }}
   data-id={{@message.id}}
   {{chat/track-message
-    (fn @didShowMessage @message)
-    (fn @didHideMessage @message)
+    (hash
+      visibleCallback=(fn @didShowMessage @message)
+      notVisibleCallback=(fn @didHideMessage @message)
+    )
   }}
 >
   {{#if this.show}}
