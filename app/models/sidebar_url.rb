@@ -7,7 +7,7 @@ class SidebarUrl < ActiveRecord::Base
 
   validate :path_validator
 
-  before_save :remove_internal_hostname, :set_external
+  before_validation :remove_internal_hostname, :set_external
 
   def path_validator
     if external?

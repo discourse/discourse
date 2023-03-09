@@ -26,12 +26,14 @@ export default Component.extend(UppyUploadMixin, {
 
   didReceiveAttrs() {
     this._super(...arguments);
+    if (this.inProgressUploads?.length > 0) {
+      this._uppyInstance?.cancelAll();
+    }
 
     this.set(
       "uploads",
       this.existingUploads ? cloneJSON(this.existingUploads) : []
     );
-    this._uppyInstance?.cancelAll();
   },
 
   didInsertElement() {
@@ -51,7 +53,7 @@ export default Component.extend(UppyUploadMixin, {
 
   uploadDone(upload) {
     this.uploads.pushObject(upload);
-    this.onUploadChanged(this.uploads);
+    this._triggerUploadsChanged();
   },
 
   @discourseComputed("uploads.length", "inProgressUploads.length")
@@ -65,13 +67,13 @@ export default Component.extend(UppyUploadMixin, {
       fileId: upload.id,
     });
     this.uploads.removeObject(upload);
-    this.onUploadChanged(this.uploads);
+    this._triggerUploadsChanged();
   },
 
   @action
   removeUpload(upload) {
     this.uploads.removeObject(upload);
-    this.onUploadChanged(this.uploads);
+    this._triggerUploadsChanged();
   },
 
   _uploadDropTargetOptions() {
@@ -131,5 +133,11 @@ export default Component.extend(UppyUploadMixin, {
     if (event && event.clipboardData && event.clipboardData.files) {
       this._addFiles([...event.clipboardData.files], { pasted: true });
     }
+  },
+
+  _triggerUploadsChanged() {
+    this.onUploadChanged(this.uploads, {
+      inProgressUploadsCount: this.inProgressUploads?.length,
+    });
   },
 });

@@ -33,6 +33,24 @@ RSpec.describe "Chat channel", type: :system, js: true do
       end
     end
 
+    context "with two sessions opened on same channel" do
+      it "syncs the messages" do
+        using_session(:tab_1) do
+          sign_in(current_user)
+          chat.visit_channel(channel_1)
+        end
+
+        using_session(:tab_2) do
+          sign_in(current_user)
+          chat.visit_channel(channel_1)
+        end
+
+        using_session(:tab_1) { channel.send_message("test_message") }
+
+        using_session(:tab_2) { expect(channel).to have_message(text: "test_message") }
+      end
+    end
+
     it "allows to edit this message once persisted" do
       chat.visit_channel(channel_1)
       channel.send_message("aaaaaaaaaaaaaaaaaaaa")

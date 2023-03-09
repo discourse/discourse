@@ -13,6 +13,7 @@ import { click, visit } from "@ember/test-helpers";
 acceptance("Sidebar - Anonymous user - Community Section", function (needs) {
   needs.settings({
     navigation_menu: "sidebar",
+    faq_url: "https://discourse.org",
   });
 
   test("display short site description site setting when it is set", async function (assert) {

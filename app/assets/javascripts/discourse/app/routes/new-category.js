@@ -32,6 +32,7 @@ export default DiscourseRoute.extend({
       topic_featured_link_allowed: true,
       custom_fields: {},
       search_priority: SEARCH_PRIORITIES.normal,
+      required_tag_groups: [],
     });
   },
 

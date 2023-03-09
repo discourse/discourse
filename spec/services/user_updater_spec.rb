@@ -456,12 +456,12 @@ RSpec.describe UserUpdater do
       context "when badge can be used as a title" do
         before { badge.update(allow_title: true) }
 
-        it "can use as title, sets badge_granted_title" do
+        it "can use as title, sets granted_title_badge_id" do
           BadgeGranter.grant(badge, user)
           updater = UserUpdater.new(user, user)
           updater.update(title: badge.name)
           user.reload
-          expect(user.user_profile.badge_granted_title).to eq(true)
+          expect(user.user_profile.granted_title_badge_id).to eq(badge.id)
         end
 
         it "badge has not been granted, does not change title" do
@@ -470,12 +470,12 @@ RSpec.describe UserUpdater do
           updater.update(title: badge.name)
           user.reload
           expect(user.title).not_to eq(badge.name)
-          expect(user.user_profile.badge_granted_title).to eq(false)
+          expect(user.user_profile.granted_title_badge_id).to be_nil
         end
 
-        it "changing to a title that is not from a badge, unsets badge_granted_title" do
+        it "changing to a title that is not from a badge, unsets granted_title_badge_id" do
           user.update(title: badge.name)
-          user.user_profile.update(badge_granted_title: true)
+          user.user_profile.update(granted_title_badge_id: badge.id)
 
           Guardian.any_instance.stubs(:can_grant_title?).with(user, "Dancer").returns(true)
 
@@ -483,7 +483,7 @@ RSpec.describe UserUpdater do
           updater.update(title: "Dancer")
           user.reload
           expect(user.title).to eq("Dancer")
-          expect(user.user_profile.badge_granted_title).to eq(false)
+          expect(user.user_profile.granted_title_badge_id).to be_nil
         end
       end
 
@@ -493,7 +493,7 @@ RSpec.describe UserUpdater do
         updater.update(title: badge.name)
         user.reload
         expect(user.title).not_to eq(badge.name)
-        expect(user.user_profile.badge_granted_title).to eq(false)
+        expect(user.user_profile.granted_title_badge_id).to be_nil
       end
     end
 

@@ -28,7 +28,13 @@ export default class SectionLink extends Component {
     let classNames = ["sidebar-section-link", "sidebar-row"];
 
     if (this.args.linkName) {
-      classNames.push(`sidebar-section-link-${this.args.linkName}`);
+      classNames.push(
+        `sidebar-section-link-${this.args.linkName
+          .split(" ")
+          .filter((s) => s)
+          .join("-")
+          .toLowerCase()}`
+      );
     }
 
     if (this.args.class) {
@@ -39,7 +45,7 @@ export default class SectionLink extends Component {
   }
 
   get target() {
-    return this.currentUser.user_option.external_links_in_new_tab
+    return this.currentUser?.user_option?.external_links_in_new_tab
       ? "_blank"
       : "_self";
   }

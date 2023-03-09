@@ -3458,4 +3458,28 @@ RSpec.describe Topic do
       end
     end
   end
+
+  describe "#group_pm?" do
+    context "when topic is not a private message" do
+      subject(:public_topic) { Fabricate(:topic) }
+
+      it { is_expected.not_to be_a_group_pm }
+    end
+
+    context "when topic is a private message" do
+      subject(:pm_topic) { Fabricate(:private_message_topic) }
+
+      context "when more than two people have access" do
+        let(:other_user) { Fabricate(:user) }
+
+        before { pm_topic.allowed_users << other_user }
+
+        it { is_expected.to be_a_group_pm }
+      end
+
+      context "when no more than two people have access" do
+        it { is_expected.not_to be_a_group_pm }
+      end
+    end
+  end
 end

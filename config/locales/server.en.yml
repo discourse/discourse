@@ -255,6 +255,7 @@ en:
     user_exists: "There's no need to invite <b>%{email}</b>, they already have an account!"
     invite_exists: "You already invited <b>%{email}</b>."
     invalid_email: "%{email} isn't a valid email address."
+    generic_error_response: "There was a problem with your request."
     rate_limit:
       one: "You have already sent %{count} invite in the last 24 hours, please wait %{time_left} before trying again."
       other: "You have already sent %{count} invites in the last 24 hours, please wait %{time_left} before trying again."

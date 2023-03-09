@@ -500,7 +500,6 @@ class BadgeGranter
       WHERE u.title IS NOT NULL
         AND u.title <> ''
         AND up.user_id = u.id
-        AND up.badge_granted_title
         AND up.granted_title_badge_id IS NOT NULL
         AND NOT EXISTS(
           SELECT 1
@@ -514,12 +513,11 @@ class BadgeGranter
 
     DB.exec <<~SQL
       UPDATE user_profiles up
-      SET badge_granted_title    = FALSE,
-          granted_title_badge_id = NULL
+      SET granted_title_badge_id = NULL
       FROM users u
       WHERE up.user_id = u.id
         AND (u.title IS NULL OR u.title = '')
-        AND (up.badge_granted_title OR up.granted_title_badge_id IS NOT NULL)
+        AND up.granted_title_badge_id IS NOT NULL
     SQL
   end
 

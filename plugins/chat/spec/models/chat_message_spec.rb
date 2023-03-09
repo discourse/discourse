@@ -499,7 +499,9 @@ describe ChatMessage do
     end
 
     describe "bookmarks" do
-      before { Bookmark.register_bookmarkable(ChatMessageBookmarkable) }
+      before { register_test_bookmarkable(ChatMessageBookmarkable) }
+
+      after { DiscoursePluginRegistry.reset_register!(:bookmarkables) }
 
       it "destroys bookmarks" do
         message_1 = Fabricate(:chat_message)

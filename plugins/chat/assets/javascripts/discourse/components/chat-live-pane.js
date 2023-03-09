@@ -115,6 +115,7 @@ export default class ChatLivePane extends Component {
   @action
   loadMessages() {
     if (!this.args.channel?.id) {
+      this.loadedOnce = true;
       return;
     }
 
@@ -266,8 +267,9 @@ export default class ChatLivePane extends Component {
           return;
         }
 
-        this.args.channel.addMessages(messages);
         this.args.channel.details = meta;
+
+        this.args.channel.addMessages(messages);
 
         // Edge case for IOS to avoid blank screens
         // and/or scrolling to bottom losing track of scroll position
@@ -472,25 +474,25 @@ export default class ChatLivePane extends Component {
 
     const scrollPosition = Math.abs(event.target.scrollTop);
     const total = event.target.scrollHeight - event.target.clientHeight;
-    const ratio = (scrollPosition / total) * 100;
-    this.isTowardsTop = ratio < 99 && ratio >= 80;
-    this.isTowardsBottom = ratio > 1 && ratio <= 4;
-    this.isAtBottom = ratio <= 1;
-    this.isAtTop = ratio >= 99;
-    this.needsArrow = ratio >= 5;
+    const difference = total - scrollPosition;
+    this.isTowardsTop = difference >= 50 && difference <= 150;
+    this.isTowardsBottom = scrollPosition >= 50 && scrollPosition <= 150;
+    this.needsArrow = scrollPosition >= 50;
+    this.isAtBottom = scrollPosition < 50;
+    this.isAtTop = difference < 50;
 
     if (this._previousScrollTop - scrollPosition <= 0) {
-      if (this.isTowardsTop || this.isAtTop) {
+      if (this.isAtTop) {
         this.fetchMoreMessages({ direction: PAST });
       }
     } else {
-      if (this.isTowardsBottom || this.isAtBottom) {
+      if (this.isAtBottom) {
         this.fetchMoreMessages({ direction: FUTURE });
       }
     }
 
     this._previousScrollTop = scrollPosition;
-    this.onScrollEndedHandler = discourseLater(this, this.onScrollEnded, 25);
+    this.onScrollEndedHandler = discourseLater(this, this.onScrollEnded, 150);
   }
 
   @bind
@@ -515,7 +517,8 @@ export default class ChatLivePane extends Component {
     }
   }
 
-  handleMessage(data) {
+  @bind
+  onMessage(data) {
     switch (data.type) {
       case "sent":
         this.handleSentMessage(data);
@@ -553,29 +556,26 @@ export default class ChatLivePane extends Component {
     }
   }
 
-  _handleOwnSentMessage(data) {
-    const stagedMessage = this.args.channel.findStagedMessage(data.staged_id);
-    if (stagedMessage) {
-      stagedMessage.error = null;
-      stagedMessage.id = data.chat_message.id;
-      stagedMessage.staged = false;
-      stagedMessage.excerpt = data.chat_message.excerpt;
-      stagedMessage.threadId = data.chat_message.thread_id;
-      stagedMessage.channelId = data.chat_message.chat_channel_id;
-      stagedMessage.createdAt = data.chat_message.created_at;
+  _handleStagedMessage(stagedMessage, data) {
+    stagedMessage.error = null;
+    stagedMessage.id = data.chat_message.id;
+    stagedMessage.staged = false;
+    stagedMessage.excerpt = data.chat_message.excerpt;
+    stagedMessage.threadId = data.chat_message.thread_id;
+    stagedMessage.channelId = data.chat_message.chat_channel_id;
+    stagedMessage.createdAt = data.chat_message.created_at;
 
-      const inReplyToMsg = this.args.channel.findMessage(
-        data.chat_message.in_reply_to?.id
-      );
-      if (inReplyToMsg && !inReplyToMsg.threadId) {
-        inReplyToMsg.threadId = data.chat_message.thread_id;
-      }
+    const inReplyToMsg = this.args.channel.findMessage(
+      data.chat_message.in_reply_to?.id
+    );
+    if (inReplyToMsg && !inReplyToMsg.threadId) {
+      inReplyToMsg.threadId = data.chat_message.thread_id;
+    }
 
-      // some markdown is cooked differently on the server-side, e.g.
-      // quotes, avatar images etc.
-      if (data.chat_message?.cooked !== stagedMessage.cooked) {
-        stagedMessage.cooked = data.chat_message.cooked;
-      }
+    // some markdown is cooked differently on the server-side, e.g.
+    // quotes, avatar images etc.
+    if (data.chat_message?.cooked !== stagedMessage.cooked) {
+      stagedMessage.cooked = data.chat_message.cooked;
     }
   }
 
@@ -585,7 +585,10 @@ export default class ChatLivePane extends Component {
     }
 
     if (data.chat_message.user.id === this.currentUser.id && data.staged_id) {
-      return this._handleOwnSentMessage(data);
+      const stagedMessage = this.args.channel.findStagedMessage(data.staged_id);
+      if (stagedMessage) {
+        return this._handleStagedMessage(stagedMessage, data);
+      }
     }
 
     if (this.args.channel.canLoadMoreFuture) {
@@ -1002,14 +1005,24 @@ export default class ChatLivePane extends Component {
   }
 
   @action
-  composerValueChanged({ value, uploads, replyToMsg }) {
+  composerValueChanged({ value, uploads, replyToMsg, inProgressUploadsCount }) {
     if (!this.editingMessage && !this.args.channel.isDraft) {
       if (typeof value !== "undefined") {
         this.args.channel.draft.message = value;
       }
-      if (typeof uploads !== "undefined") {
+
+      // only save the uploads to the draft if we are not still uploading other
+      // ones, otherwise we get into a cycle where we pass the draft uploads as
+      // existingUploads back to the upload component and cause in progress ones
+      // to be cancelled
+      if (
+        typeof uploads !== "undefined" &&
+        inProgressUploadsCount !== "undefined" &&
+        inProgressUploadsCount === 0
+      ) {
         this.args.channel.draft.uploads = uploads;
       }
+
       if (typeof replyToMsg !== "undefined") {
         this.args.channel.draft.replyToMsg = replyToMsg;
       }
@@ -1134,13 +1147,6 @@ export default class ChatLivePane extends Component {
       this.onMessage,
       this.args.channel.channelMessageBusLastId
     );
-  }
-
-  @bind
-  onMessage(busData) {
-    if (!this.args.channel.canLoadMoreFuture || busData.type !== "sent") {
-      this.handleMessage(busData);
-    }
   }
 
   @bind

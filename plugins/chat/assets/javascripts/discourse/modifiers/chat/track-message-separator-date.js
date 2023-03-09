@@ -16,11 +16,15 @@ export default class ChatTrackMessageSeparatorDate extends Modifier {
 
   modify(element) {
     this.intersectionObserver = new IntersectionObserver(
-      ([event]) => {
-        if (event.isIntersecting && event.intersectionRatio < 1) {
-          event.target.classList.add(IS_PINNED_CLASS);
+      ([entry]) => {
+        if (
+          entry.isIntersecting &&
+          entry.intersectionRatio < 1 &&
+          entry.boundingClientRect.y < entry.intersectionRect.y
+        ) {
+          entry.target.classList.add(IS_PINNED_CLASS);
         } else {
-          event.target.classList.remove(IS_PINNED_CLASS);
+          entry.target.classList.remove(IS_PINNED_CLASS);
         }
       },
       { threshold: [0, 1] }
