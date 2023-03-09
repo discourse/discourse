@@ -2,7 +2,7 @@ import { registerDeprecationHandler } from "@ember/debug";
 import { registerDeprecationHandler as registerDiscourseDeprecationHandler } from "discourse-common/lib/deprecated";
 import QUnit from "qunit";
 
-let disabled = true;
+let disabled = false;
 
 export function configureRaiseOnDeprecation() {
   const workflows = window.deprecationWorkflow?.config?.workflow;
