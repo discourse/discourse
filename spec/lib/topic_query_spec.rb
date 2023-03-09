@@ -1393,6 +1393,22 @@ RSpec.describe TopicQuery do
       end
     end
 
+    context "with a custom suggested provider registered" do
+      let!(:topic1) { Fabricate(:topic) }
+      let!(:topic2) { Fabricate(:topic) }
+      let!(:topic3) { Fabricate(:topic) }
+
+      it "should return suggested defined by the custom provider" do
+        TopicQuery.add_custom_list_suggested_for(:test) do |topic|
+          { result: Topic.where(id: topic3.id), params: {} }
+        end
+
+        expect(TopicQuery.new.list_suggested_for(topic1).topics).to eq([topic3])
+
+        TopicQuery.remove_custom_list_suggested_for(:test)
+      end
+    end
+
     context "when logged in" do
       def suggested_for(topic)
         topic_query.list_suggested_for(topic)&.topics&.map { |t| t.id }
