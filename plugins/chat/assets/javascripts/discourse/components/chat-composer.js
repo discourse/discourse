@@ -719,9 +719,9 @@ export default Component.extend(TextareaTextManipulation, {
   },
 
   @action
-  uploadsChanged(uploads) {
+  uploadsChanged(uploads, { inProgressUploadsCount }) {
     this.set("_uploads", cloneJSON(uploads));
-    this.onValueChange?.({ uploads: this._uploads });
+    this.onValueChange?.({ uploads: this._uploads, inProgressUploadsCount });
   },
 
   @action
