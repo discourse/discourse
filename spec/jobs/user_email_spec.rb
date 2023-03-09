@@ -462,7 +462,7 @@ RSpec.describe Jobs::UserEmail do
 
               it "doesn't send email" do
                 send_email
-                expect(ActionMailer::Base.deliveries).to eq([])
+                expect(ActionMailer::Base.deliveries).to be_empty
               end
             end
           end
@@ -563,7 +563,7 @@ RSpec.describe Jobs::UserEmail do
           Jobs::UserEmail.new.message_for_email(
             user,
             post,
-            :user_mentioned,
+            "user_mentioned",
             notification,
             notification_type: notification.notification_type,
             notification_data_hash: notification.data_hash,
@@ -847,7 +847,7 @@ RSpec.describe Jobs::UserEmail do
             Jobs::UserEmail.new.message_for_email(
               suspended,
               Fabricate.build(:post),
-              :user_private_message,
+              "user_private_message",
               notification,
             )
 
@@ -873,7 +873,7 @@ RSpec.describe Jobs::UserEmail do
             Jobs::UserEmail.new.message_for_email(
               suspended,
               @pm_from_staff,
-              :user_private_message,
+              "user_private_message",
               @pm_notification,
             )
           end
