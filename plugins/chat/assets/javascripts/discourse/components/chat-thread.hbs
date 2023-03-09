@@ -38,7 +38,7 @@
   <div class="chat-thread__messages">
     <ul>
       {{#each this.thread.messages as |message|}}
-        <li>{{message.user.username}} sez: {{message.message}}</li>
+        <li><strong>{{message.user.username}}</strong>: {{message.message}}</li>
       {{/each}}
     </ul>
     {{#if (or this.loading this.loadingMoreFuture)}}

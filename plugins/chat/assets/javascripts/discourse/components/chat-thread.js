@@ -215,10 +215,12 @@ export default class ChatThreadPanel extends Component {
   }
 
   @action
-  editMessage(chatMessage, newContent, uploads) {}
+  editMessage() {}
+  // editMessage(chatMessage, newContent, uploads) {}
 
   @action
-  setReplyTo(messageId) {}
+  setReplyTo() {}
+  // setReplyTo(messageId) {}
 
   @action
   setInReplyToMsg(inReplyMsg) {
@@ -234,7 +236,8 @@ export default class ChatThreadPanel extends Component {
   editLastMessageRequested() {}
 
   @action
-  composerValueChanged(value, uploads, replyToMsg) {}
+  composerValueChanged() {}
+  // composerValueChanged(value, uploads, replyToMsg) {}
 
   #handleErrors(error) {
     switch (error?.jqXHR?.status) {
