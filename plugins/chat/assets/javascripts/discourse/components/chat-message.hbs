@@ -56,8 +56,10 @@
   }}
   data-id={{@message.id}}
   {{chat/track-message
-    (fn @didShowMessage @message)
-    (fn @didHideMessage @message)
+    (hash
+      didEnterViewport=(fn @messageDidEnterViewport @message)
+      didLeaveViewport=(fn @messageDidLeaveViewport @message)
+    )
   }}
 >
   {{#if this.show}}
