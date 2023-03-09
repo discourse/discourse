@@ -183,12 +183,15 @@ const Topic = RestModel.extend({
     return postsCount - 1;
   },
 
-  @discourseComputed
-  details() {
-    return this.store.createRecord("topicDetails", {
+  get details() {
+    return (this._details ??= this.store.createRecord("topicDetails", {
       id: this.id,
       topic: this,
-    });
+    }));
+  },
+
+  set details(value) {
+    return (this._details = value);
   },
 
   @discourseComputed("visible")
