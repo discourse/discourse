@@ -107,6 +107,7 @@ CRITICAL_HOST_ENV_VARS = %w{
 )
 
 DEFAULT_DB_NAME = "discourse"
+DEFAULT_DB_PORT = 5432
 DEFAULT_REDIS_PORT = 6379
 
 HOST_RESOLVER_CACHE = {}
@@ -267,12 +268,13 @@ ensure
   client.close if client
 end
 
-def postgres_healthcheck(host:, user:, password:, dbname:)
+def postgres_healthcheck(host:, user:, password:, dbname:, port: DEFAULT_DB_PORT)
   client = PG::Connection.new(
     host: host,
     user: user,
     password: password,
     dbname: dbname,
+    port: port,
     connect_timeout: 2,  # minimum
   )
   client.exec(';').none?
@@ -291,12 +293,14 @@ HEALTH_CHECKS = Hash.new(
       host: addr,
       user: ENV["DISCOURSE_DB_USERNAME"] || DEFAULT_DB_NAME,
       dbname: ENV["DISCOURSE_DB_NAME"] || DEFAULT_DB_NAME,
+      port: ENV["DISCOURSE_DB_PORT"] || DEFAULT_DB_PORT,
       password: ENV["DISCOURSE_DB_PASSWORD"])},
   "DISCOURSE_DB_REPLICA_HOST": lambda { |addr|
     postgres_healthcheck(
       host: addr,
       user: ENV["DISCOURSE_DB_USERNAME"] || DEFAULT_DB_NAME,
       dbname: ENV["DISCOURSE_DB_NAME"] || DEFAULT_DB_NAME,
+      port: ENV["DISCOURSE_DB_REPLICA_PORT"] || DEFAULT_DB_PORT,
       password: ENV["DISCOURSE_DB_PASSWORD"])},
   "DISCOURSE_REDIS_HOST": lambda { |addr|
     redis_healthcheck(
