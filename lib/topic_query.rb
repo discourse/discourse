@@ -117,16 +117,6 @@ class TopicQuery
     results
   end
 
-  @@custom_list_suggested_for ||= {}
-
-  def self.add_custom_list_suggested_for(key, &blk)
-    @@custom_list_suggested_for[key] = blk
-  end
-
-  def self.remove_custom_list_suggested_for(key)
-    @@custom_list_suggested_for.delete(key)
-  end
-
   def initialize(user = nil, options = {})
     options.assert_valid_keys(TopicQuery.valid_options)
     @options = options.dup
@@ -215,9 +205,9 @@ class TopicQuery
 
   # Return a list of suggested topics for a topic
   def list_suggested_for(topic, pm_params: nil)
-    if @@custom_list_suggested_for&.present?
-      @@custom_list_suggested_for.each do |key, filter|
-        suggested = filter.call(topic, pm_params, self)
+    if DiscoursePluginRegistry.list_suggested_for_providers.any?
+      DiscoursePluginRegistry.list_suggested_for_providers.each do |provider|
+        suggested = provider.call(topic, pm_params, self)
         if suggested && !suggested[:result].blank?
           return create_list(:suggested, suggested[:params], suggested[:result])
         end

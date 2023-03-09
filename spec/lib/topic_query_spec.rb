@@ -1397,15 +1397,32 @@ RSpec.describe TopicQuery do
       let!(:topic1) { Fabricate(:topic) }
       let!(:topic2) { Fabricate(:topic) }
       let!(:topic3) { Fabricate(:topic) }
+      let(:plugin_class) do
+        Class.new(Plugin::Instance) do
+          attr_accessor :enabled
+          def enabled?
+            true
+          end
+
+          def self.custom_suggested_topics(topic, pm_params, topic_query)
+            { result: Topic.order("id desc").limit(1), params: {} }
+          end
+        end
+      end
+
+      let(:plugin) { plugin_class.new }
 
       it "should return suggested defined by the custom provider" do
-        TopicQuery.add_custom_list_suggested_for(:test) do |topic|
-          { result: Topic.where(id: topic3.id), params: {} }
-        end
+        DiscoursePluginRegistry.register_list_suggested_for_provider(
+          plugin_class.method(:custom_suggested_topics),
+          plugin,
+        )
 
-        expect(TopicQuery.new.list_suggested_for(topic1).topics).to eq([topic3])
+        expect(TopicQuery.new.list_suggested_for(topic1).topics).to eq(
+          Topic.order("id desc").limit(1),
+        )
 
-        TopicQuery.remove_custom_list_suggested_for(:test)
+        DiscoursePluginRegistry.reset_register!(:list_suggested_for_provider)
       end
     end
 
