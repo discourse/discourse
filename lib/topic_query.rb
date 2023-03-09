@@ -205,15 +205,6 @@ class TopicQuery
 
   # Return a list of suggested topics for a topic
   def list_suggested_for(topic, pm_params: nil)
-    if DiscoursePluginRegistry.list_suggested_for_providers.any?
-      DiscoursePluginRegistry.list_suggested_for_providers.each do |provider|
-        suggested = provider.call(topic, pm_params, self)
-        if suggested && !suggested[:result].blank?
-          return create_list(:suggested, suggested[:params], suggested[:result])
-        end
-      end
-    end
-
     # Don't suggest messages unless we have a user, and private messages are
     # enabled.
     if topic.private_message? &&
@@ -224,6 +215,13 @@ class TopicQuery
     builder = SuggestedTopicsBuilder.new(topic)
 
     pm_params = pm_params || get_pm_params(topic)
+
+    if DiscoursePluginRegistry.list_suggested_for_providers.any?
+      DiscoursePluginRegistry.list_suggested_for_providers.each do |provider|
+        suggested = provider.call(topic, pm_params, self)
+        builder.add_results(suggested[:result]) if suggested && !suggested[:result].blank?
+      end
+    end
 
     # When logged in we start with different results
     if @user

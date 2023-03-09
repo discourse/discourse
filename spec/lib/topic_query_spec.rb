@@ -1397,6 +1397,11 @@ RSpec.describe TopicQuery do
       let!(:topic1) { Fabricate(:topic) }
       let!(:topic2) { Fabricate(:topic) }
       let!(:topic3) { Fabricate(:topic) }
+      let!(:topic4) { Fabricate(:topic) }
+      let!(:topic5) { Fabricate(:topic) }
+      let!(:topic6) { Fabricate(:topic) }
+      let!(:topic7) { Fabricate(:topic) }
+
       let(:plugin_class) do
         Class.new(Plugin::Instance) do
           attr_accessor :enabled
@@ -1418,11 +1423,9 @@ RSpec.describe TopicQuery do
           plugin,
         )
 
-        expect(TopicQuery.new.list_suggested_for(topic1).topics).to eq(
-          Topic.order("id desc").limit(1),
-        )
+        expect(TopicQuery.new.list_suggested_for(topic1).topics).to include(Topic.last)
 
-        DiscoursePluginRegistry.reset_register!(:list_suggested_for_provider)
+        DiscoursePluginRegistry.reset_register!(:list_suggested_for_providers)
       end
     end
 
