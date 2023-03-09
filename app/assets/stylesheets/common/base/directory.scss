@@ -127,6 +127,7 @@
 
   &__column-header,
   &__cell,
+  &__cell--empty,
   &__cell--user-field {
     display: flex;
     border-bottom: 1px solid var(--primary-low);
