@@ -141,6 +141,34 @@ module("Unit | Utility | url", function () {
       ),
       "/c/foo/1"
     );
+
+    assert.strictEqual(
+      getCategoryAndTagUrl(
+        { path: "/c/foo/1", default_list_filter: "none" },
+        false,
+        "bar"
+      ),
+      "/tags/c/foo/1/none/bar"
+    );
+
+    assert.strictEqual(
+      getCategoryAndTagUrl({ path: "/c/foo/1" }, false, "bar"),
+      "/tags/c/foo/1/none/bar"
+    );
+
+    assert.strictEqual(
+      getCategoryAndTagUrl(
+        { path: "/c/foo/1", default_list_filter: "all" },
+        true,
+        "bar"
+      ),
+      "/tags/c/foo/1/all/bar"
+    );
+
+    assert.strictEqual(
+      getCategoryAndTagUrl({ path: "/c/foo/1" }, true, "bar"),
+      "/tags/c/foo/1/all/bar"
+    );
   });
 
   test("routeTo redirects secure uploads URLS because they are server side only", async function (assert) {
