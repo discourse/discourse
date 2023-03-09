@@ -18,11 +18,16 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
 
   @bind
   _generateVideoThumbnail() {
+    if (!this.siteSettings.enable_diffhtml_preview) {
+      return;
+    }
+
     let videos = document.getElementsByClassName("video-container");
     if (!videos) {
       return;
     }
 
+    // Only generate a topic thumbnail for the first video
     let video_container = videos[0];
     if (!video_container) {
       return;
@@ -86,7 +91,8 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
             message = response.body.errors.join("\n");
           }
 
-          this.dialog.alert(message);
+          // eslint-disable-next-line no-console
+          console.error(message);
           this.set("uploading", false);
         });
 
