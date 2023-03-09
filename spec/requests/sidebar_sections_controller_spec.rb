@@ -167,6 +167,7 @@ RSpec.describe SidebarSectionsController do
             links: [
               { icon: "link", id: sidebar_url_1.id, name: "latest", value: "/latest" },
               { icon: "link", id: sidebar_url_2.id, name: "tags", value: "/tags", _destroy: "1" },
+              { icon: "link", name: "homepage", value: "https://discourse.org" },
             ],
           }
 
@@ -178,10 +179,18 @@ RSpec.describe SidebarSectionsController do
       expect { section_link_2.reload }.to raise_error(ActiveRecord::RecordNotFound)
       expect { sidebar_url_2.reload }.to raise_error(ActiveRecord::RecordNotFound)
 
+      expect(sidebar_section.sidebar_section_links.last.position).to eq(2)
+      expect(sidebar_section.sidebar_section_links.last.linkable.name).to eq("homepage")
+      expect(sidebar_section.sidebar_section_links.last.linkable.value).to eq(
+        "https://discourse.org",
+      )
+
       user_history = UserHistory.last
       expect(user_history.action).to eq(UserHistory.actions[:update_public_sidebar_section])
       expect(user_history.subject).to eq("custom section edited")
-      expect(user_history.details).to eq("links: latest - /latest")
+      expect(user_history.details).to eq(
+        "links: latest - /latest, homepage - https://discourse.org",
+      )
     end
 
     it "doesn't allow to edit other's sections" do

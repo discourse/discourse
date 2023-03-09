@@ -50,7 +50,7 @@ class Section {
 
   @bind
   enable() {
-    this.dragCss = undefined;
+    this.dragCss = null;
   }
 
   @bind

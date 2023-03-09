@@ -12,11 +12,7 @@
         {{#if link.external}}
           <div
             class="sidebar-link"
-            {{draggable
-              didStartDrag=link.didStartDrag
-              didEndDrag=link.didEndDrag
-              dragMove=link.dragMove
-            }}
+            {{draggable didEndDrag=link.didEndDrag dragMove=link.dragMove}}
           >
             <Sidebar::SectionLink
               @linkName={{link.name}}
@@ -30,11 +26,7 @@
         {{else}}
           <div
             class="sidebar-link"
-            {{draggable
-              didStartDrag=link.didStartDrag
-              didEndDrag=link.didEndDrag
-              dragMove=link.dragMove
-            }}
+            {{draggable didEndDrag=link.didEndDrag dragMove=link.dragMove}}
           >
             <Sidebar::SectionLink
               @linkName={{link.name}}

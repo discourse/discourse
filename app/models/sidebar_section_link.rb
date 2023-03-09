@@ -13,6 +13,12 @@ class SidebarSectionLink < ActiveRecord::Base
   SUPPORTED_LINKABLE_TYPES = %w[Category Tag SidebarUrl]
 
   before_validation { self.user_id ||= self.sidebar_section&.user_id }
+  before_create do
+    if self.user_id
+      self.position = self.sidebar_section.sidebar_section_links.maximum(:position).to_i + 1
+    end
+  end
+
   after_destroy { self.linkable.destroy! if self.linkable_type == "SidebarUrl" }
 
   private def ensure_supported_linkable_type
