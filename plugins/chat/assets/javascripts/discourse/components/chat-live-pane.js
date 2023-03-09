@@ -1005,14 +1005,24 @@ export default class ChatLivePane extends Component {
   }
 
   @action
-  composerValueChanged({ value, uploads, replyToMsg }) {
+  composerValueChanged({ value, uploads, replyToMsg, inProgressUploadsCount }) {
     if (!this.editingMessage && !this.args.channel.isDraft) {
       if (typeof value !== "undefined") {
         this.args.channel.draft.message = value;
       }
-      if (typeof uploads !== "undefined") {
+
+      // only save the uploads to the draft if we are not still uploading other
+      // ones, otherwise we get into a cycle where we pass the draft uploads as
+      // existingUploads back to the upload component and cause in progress ones
+      // to be cancelled
+      if (
+        typeof uploads !== "undefined" &&
+        inProgressUploadsCount !== "undefined" &&
+        inProgressUploadsCount === 0
+      ) {
         this.args.channel.draft.uploads = uploads;
       }
+
       if (typeof replyToMsg !== "undefined") {
         this.args.channel.draft.replyToMsg = replyToMsg;
       }
