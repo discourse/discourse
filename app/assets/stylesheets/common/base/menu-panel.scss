@@ -111,6 +111,7 @@
     border-left: 1px solid var(--primary-low);
     padding: 0.75em 0 0;
     overflow-y: auto;
+    overscroll-behavior: contain;
   }
 
   .tabs-list {
