@@ -160,7 +160,7 @@ function videoHTML(token) {
   const origSrc = token.attrGet("data-orig-src");
   const dataOrigSrcAttr = origSrc !== null ? `data-orig-src="${origSrc}"` : "";
   return `<div class="video-container">
-    <video width="100%" height="100%" preload="metadata" controls>
+    <video width="100%" height="100%" preload="metadata" crossOrigin="anonymous" controls>
       <source src="${src}" ${dataOrigSrcAttr}>
       <a href="${src}">${src}</a>
     </video>
