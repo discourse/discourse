@@ -1074,7 +1074,7 @@ eviltrout</p>
         lookupUploadUrls,
       },
       `<p><div class="video-container">
-    <video width="100%" height="100%" preload="metadata" controls>
+    <video width="100%" height="100%" preload="metadata" crossorigin="anonymous" controls>
       <source src="/secure-uploads/original/3X/c/b/test.mp4">
       <a href="/secure-uploads/original/3X/c/b/test.mp4">/secure-uploads/original/3X/c/b/test.mp4</a>
     </video>
