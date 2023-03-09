@@ -1,4 +1,5 @@
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
+import { getOwner } from "discourse-common/lib/get-owner";
+import ChatMessagesManager from "discourse/plugins/chat/discourse/lib/chat-messages-manager";
 import User from "discourse/models/user";
 import { escapeExpression } from "discourse/lib/utilities";
 import { tracked } from "@glimmer/tracking";
@@ -13,7 +14,8 @@ export const THREAD_STATUSES = {
 export default class ChatThread {
   @tracked title;
   @tracked status;
-  @tracked messages = new TrackedArray();
+
+  messagesManager = new ChatMessagesManager(getOwner(this));
 
   constructor(args = {}) {
     this.title = args.title;
@@ -21,46 +23,23 @@ export default class ChatThread {
     this.status = args.status;
 
     this.originalMessageUser = this.#initUserModel(args.original_message_user);
+
     // TODO (martin) Not sure if ChatMessage is needed here, original_message
     // only has a small subset of message stuff.
-    // this.originalMessage = new ChatMessage(args.original_message);
     this.originalMessage = args.original_message;
     this.originalMessage.user = this.originalMessageUser;
   }
 
+  get messages() {
+    return this.messagesManager.messages;
+  }
+
+  set messages(messages) {
+    this.messagesManager.messages = messages;
+  }
+
   get escapedTitle() {
     return escapeExpression(this.title);
-  }
-
-  clearMessages() {
-    this.messages.clear();
-
-    this.canLoadMoreFuture = null;
-    this.canLoadMorePast = null;
-  }
-
-  appendMessages(messages) {
-    this.messages.pushObjects(messages);
-  }
-
-  prependMessages(messages) {
-    this.messages.unshiftObjects(messages);
-  }
-
-  findMessage(messageId) {
-    return this.messages.find(
-      (message) => message.id === parseInt(messageId, 10)
-    );
-  }
-
-  removeMessage(message) {
-    return this.messages.removeObject(message);
-  }
-
-  findStagedMessage(stagedMessageId) {
-    return this.messages.find(
-      (message) => message.stagedId === stagedMessageId
-    );
   }
 
   #initUserModel(user) {

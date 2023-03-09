@@ -65,7 +65,7 @@ export default class ChatThreadPanel extends Component {
 
     this.loadingMorePast = true;
     this.loading = true;
-    this.thread.clearMessages();
+    this.thread.messagesManager.clearMessages();
 
     const findArgs = { pageSize: PAGE_SIZE };
 
@@ -91,10 +91,10 @@ export default class ChatThreadPanel extends Component {
         }
 
         const [messages, meta] = this.afterFetchCallback(this.channel, results);
-        this.thread.appendMessages(messages);
+        this.thread.messagesManager.addMessages(messages);
 
         // TODO (martin) ECHO MODE
-        this.channel.appendMessages(messages);
+        this.channel.messagesManager.addMessages(messages);
 
         // TODO (martin) details needed for thread??
         this.thread.details = meta;
@@ -183,7 +183,7 @@ export default class ChatThreadPanel extends Component {
       thread_id: this.thread.id,
     });
 
-    this.thread.appendMessages([stagedMessage]);
+    this.thread.messagesManager.addMessages([stagedMessage]);
 
     // TODO (martin) Scrolling!!
     // if (!this.channel.canLoadMoreFuture) {
@@ -248,7 +248,8 @@ export default class ChatThreadPanel extends Component {
   }
 
   #onSendError(stagedId, error) {
-    const stagedMessage = this.thread.findStagedMessage(stagedId);
+    const stagedMessage =
+      this.thread.messagesManager.findStagedMessage(stagedId);
     if (stagedMessage) {
       if (error.jqXHR?.responseJSON?.errors?.length) {
         stagedMessage.error = error.jqXHR.responseJSON.errors[0];
