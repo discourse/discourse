@@ -3,8 +3,6 @@
 module PageObjects
   module Pages
     class ChatChannel < PageObjects::Pages::Base
-      include SystemHelpers
-
       def type_in_composer(input)
         find(".chat-composer-input").send_keys(input)
       end

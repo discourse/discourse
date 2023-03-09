@@ -5,7 +5,10 @@ describe "Viewing sidebar mobile", type: :system, js: true, mobile: true do
   let(:sidebar_dropdown) { PageObjects::Components::SidebarHeaderDropdown.new }
   let(:composer) { PageObjects::Components::Composer.new }
 
-  before { sign_in(user) }
+  before do
+    SiteSetting.navigation_menu = "sidebar"
+    sign_in(user)
+  end
 
   it "does not display the sidebar by default" do
     visit("/latest")

@@ -5,9 +5,7 @@ module PageObjects
     class SidebarHeaderDropdown < PageObjects::Components::Base
       def click
         page.find(".hamburger-dropdown").click
-
-        # `.animated` is important here because we want to wait until dropdown has finished its animation completely
-        page.has_css?(".menu-panel.animated")
+        wait_for_animation(find(".menu-panel"), timeout: 5)
         self
       end
 
