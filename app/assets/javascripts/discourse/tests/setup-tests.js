@@ -387,7 +387,12 @@ export default function setupTests(config) {
   setupToolbar();
   reportMemoryUsageAfterTests();
   patchFailedAssertion();
-  if (skipPlugins) {
+
+  const hasPluginJs = Array.from(
+    document.querySelector("#dynamic-test-js").content.childNodes
+  ).some((script) => script.dataset?.discoursePlugin);
+
+  if (skipPlugins || !hasPluginJs) {
     configureRaiseOnDeprecation();
   }
 }
