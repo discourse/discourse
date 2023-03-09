@@ -1531,6 +1531,45 @@ RSpec.describe Post do
     expect(post.revisions.pluck(:number)).to eq([1, 2])
   end
 
+  describe "video_thumbnails" do
+    before { SiteSetting.enable_diffhtml_preview = true }
+
+    fab!(:video_upload) { Fabricate(:upload, extension: "mp4") }
+    fab!(:image_upload) { Fabricate(:upload) }
+    fab!(:image_upload_2) { Fabricate(:upload) }
+    let(:base_url) { "#{Discourse.base_url_no_prefix}#{Discourse.base_path}" }
+    let(:video_url) { "#{base_url}#{video_upload.url}" }
+
+    let(:raw_video) { <<~RAW }
+      <video width="100%" height="100%" controls>
+        <source src="#{video_url}">
+        <a href="#{video_url}">#{video_url}</a>
+      </video>
+      RAW
+
+    let(:post) { Fabricate(:post, raw: raw_video) }
+
+    it "has a topic thumbnail" do
+      # Thumbnails are tied to a specific video file by using the
+      # video's sha1 as the image filename
+      image_upload.original_filename = "#{video_upload.sha1}.png"
+      image_upload.save!
+      post.link_post_uploads
+
+      post.topic.reload
+      expect(post.topic.topic_thumbnails.length).to eq(1)
+    end
+
+    it "only applies for video uploads" do
+      image_upload.original_filename = "#{image_upload_2.sha1}.png"
+      image_upload.save!
+      post.link_post_uploads
+
+      post.topic.reload
+      expect(post.topic.topic_thumbnails.length).to eq(0)
+    end
+  end
+
   describe "uploads" do
     fab!(:video_upload) { Fabricate(:upload, extension: "mp4") }
     fab!(:image_upload) { Fabricate(:upload) }
