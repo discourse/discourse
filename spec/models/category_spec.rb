@@ -39,6 +39,10 @@ RSpec.describe Category do
   describe "Associations" do
     it { is_expected.to have_one(:category_setting).dependent(:destroy) }
 
+    it "automatically creates a category setting" do
+      expect { Fabricate(:category) }.to change { CategorySetting.count }.by(1)
+    end
+
     it "should delete associated sidebar_section_links when category is destroyed" do
       category_sidebar_section_link = Fabricate(:category_sidebar_section_link)
       category_sidebar_section_link_2 =

@@ -100,6 +100,7 @@ class Category < ActiveRecord::Base
   before_save :apply_permissions
   before_save :downcase_email
   before_save :downcase_name
+  before_save :ensure_category_setting
 
   after_save :publish_discourse_stylesheet
   after_save :publish_category
@@ -1043,6 +1044,10 @@ class Category < ActiveRecord::Base
   end
 
   private
+
+  def ensure_category_setting
+    self.build_category_setting if self.category_setting.blank?
+  end
 
   def should_update_reviewables?
     SiteSetting.enable_category_group_moderation? && saved_change_to_reviewable_by_group_id?
