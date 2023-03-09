@@ -412,12 +412,12 @@ export default class ChatLivePane extends Component {
   }
 
   @action
-  didShowMessage(message) {
+  messageDidEnterViewport(message) {
     message.visible = true;
   }
 
   @action
-  didHideMessage(message) {
+  messageDidLeaveViewport(message) {
     message.visible = false;
   }
 

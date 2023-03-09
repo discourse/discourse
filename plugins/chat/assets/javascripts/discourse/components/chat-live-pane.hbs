@@ -65,8 +65,8 @@
             @isHovered={{eq message.id this.hoveredMessageId}}
             @onHoverMessage={{this.onHoverMessage}}
             @resendStagedMessage={{this.resendStagedMessage}}
-            @didShowMessage={{this.didShowMessage}}
-            @didHideMessage={{this.didHideMessage}}
+            @messageDidEnterViewport={{this.messageDidEnterViewport}}
+            @messageDidLeaveViewport={{this.messageDidLeaveViewport}}
             @forceRendering={{this.forceRendering}}
           />
         {{/each}}
