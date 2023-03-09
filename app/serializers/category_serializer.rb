@@ -2,7 +2,7 @@
 
 class CategorySerializer < SiteCategorySerializer
   class CategorySettingSerializer < ApplicationSerializer
-    attributes :auto_bump_cooldown,
+    attributes :auto_bump_cooldown_days,
                :num_auto_bump_daily,
                :require_reply_approval,
                :require_topic_approval

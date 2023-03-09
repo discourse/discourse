@@ -48,7 +48,7 @@ class Category < ActiveRecord::Base
 
   has_one :category_setting, dependent: :destroy
 
-  delegate :auto_bump_cooldown, to: :category_setting, allow_nil: true
+  delegate :auto_bump_cooldown_days, to: :category_setting, allow_nil: true
 
   has_and_belongs_to_many :web_hooks
 
@@ -686,7 +686,7 @@ class Category < ActiveRecord::Base
         .exclude_scheduled_bump_topics
         .where(category_id: self.id)
         .where("id <> ?", self.topic_id)
-        .where("bumped_at < ?", (self.auto_bump_cooldown || 1).days.ago)
+        .where("bumped_at < ?", (self.auto_bump_cooldown_days || 1).days.ago)
         .where("pinned_at IS NULL AND NOT closed AND NOT archived")
         .order("bumped_at ASC")
         .limit(1)

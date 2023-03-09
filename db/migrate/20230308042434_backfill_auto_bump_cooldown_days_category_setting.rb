@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-class BackfillAutoBumpCooldownCategorySetting < ActiveRecord::Migration[7.0]
+class BackfillAutoBumpCooldownDaysCategorySetting < ActiveRecord::Migration[7.0]
   def up
     execute(<<~SQL)
       INSERT INTO
         category_settings(
           category_id,
-          auto_bump_cooldown,
+          auto_bump_cooldown_days,
           created_at,
           updated_at
         )
@@ -19,7 +19,7 @@ class BackfillAutoBumpCooldownCategorySetting < ActiveRecord::Migration[7.0]
       ON CONFLICT (category_id)
       DO
         UPDATE SET
-          auto_bump_cooldown = 1,
+          auto_bump_cooldown_days = 1,
           updated_at = NOW();
     SQL
   end

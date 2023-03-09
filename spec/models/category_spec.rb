@@ -973,7 +973,7 @@ RSpec.describe Category do
           num_auto_bump_daily: 2,
           created_at: 1.minute.ago,
           category_setting_attributes: {
-            auto_bump_cooldown: 1,
+            auto_bump_cooldown_days: 1,
           },
         )
       category.clear_auto_bump_cache!
