@@ -2,6 +2,8 @@ import { registerDeprecationHandler } from "@ember/debug";
 import { registerDeprecationHandler as registerDiscourseDeprecationHandler } from "discourse-common/lib/deprecated";
 import QUnit from "qunit";
 
+let disabled = true;
+
 export function configureRaiseOnDeprecation() {
   const workflows = window.deprecationWorkflow?.config?.workflow;
   if (!workflows) {
@@ -13,14 +15,14 @@ export function configureRaiseOnDeprecation() {
   }
 
   registerDeprecationHandler((message, options, next) => {
-    if (workflows.find((w) => w.matchId === options.id)) {
+    if (disabled || workflows.find((w) => w.matchId === options.id)) {
       return next(message, options);
     }
     raiseDeprecationError(message, options);
   });
 
   registerDiscourseDeprecationHandler((message, options) => {
-    if (workflows.find((w) => w.matchId === options.id)) {
+    if (disabled || workflows.find((w) => w.matchId === options?.id)) {
       return;
     }
     raiseDeprecationError(message, options);
@@ -36,4 +38,12 @@ function raiseDeprecationError(message, options) {
     });
   }
   throw new Error(message);
+}
+
+export function disableRaiseOnDeprecation() {
+  disabled = true;
+}
+
+export function enableRaiseOnDeprecation() {
+  disabled = false;
 }
