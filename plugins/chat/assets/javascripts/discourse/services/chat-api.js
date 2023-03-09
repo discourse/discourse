@@ -282,6 +282,13 @@ export default class ChatApi extends Service {
     );
   }
 
+  updateCurrentUserTracking({ channelId, messageId } = {}) {
+    return this.#putRequest(`/tracking/read/me`, {
+      channel_id: channelId,
+      message_id: messageId,
+    });
+  }
+
   get #basePath() {
     return "/chat/api";
   }

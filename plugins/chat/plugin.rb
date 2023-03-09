@@ -381,25 +381,6 @@ after_initialize do
     end
   end
 
-  Discourse::Application.routes.append do
-    mount ::Chat::Engine, at: "/chat"
-
-    get "/admin/plugins/chat" => "chat/admin/incoming_webhooks#index",
-        :constraints => StaffConstraint.new
-    post "/admin/plugins/chat/hooks" => "chat/admin/incoming_webhooks#create",
-         :constraints => StaffConstraint.new
-    put "/admin/plugins/chat/hooks/:incoming_chat_webhook_id" =>
-          "chat/admin/incoming_webhooks#update",
-        :constraints => StaffConstraint.new
-    delete "/admin/plugins/chat/hooks/:incoming_chat_webhook_id" =>
-             "chat/admin/incoming_webhooks#destroy",
-           :constraints => StaffConstraint.new
-    get "u/:username/preferences/chat" => "users#preferences",
-        :constraints => {
-          username: RouteFormat.username,
-        }
-  end
-
   if defined?(DiscourseAutomation)
     add_automation_scriptable("send_chat_message") do
       field :chat_channel_id, component: :text, required: true

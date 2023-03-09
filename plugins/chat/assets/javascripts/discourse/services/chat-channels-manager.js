@@ -1,4 +1,5 @@
 import Service, { inject as service } from "@ember/service";
+import { debounce } from "discourse-common/utils/decorators";
 import Promise from "rsvp";
 import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 import { tracked } from "@glimmer/tracking";
@@ -79,6 +80,16 @@ export default class ChatChannelsManager extends Service {
       model.currentUserMembership = membership;
 
       return model;
+    });
+  }
+
+  @debounce(300)
+  async markAllChannelsRead() {
+    return this.chatApi.updateCurrentUserTracking().then(() => {
+      this.channels.forEach((channel) => {
+        channel.currentUserMembership.unread_count = 0;
+        channel.currentUserMembership.unread_mentions = 0;
+      });
     });
   }
 
