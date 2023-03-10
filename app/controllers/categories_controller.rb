@@ -258,7 +258,8 @@ class CategoriesController < ApplicationController
 
   def find_by_slug
     params.require(:category_slug)
-    @category = Category.find_by_slug_path(params[:category_slug].split("/"))
+    @category =
+      Category.includes(:category_setting).find_by_slug_path(params[:category_slug].split("/"))
 
     raise Discourse::NotFound unless @category.present?
 
@@ -405,6 +406,7 @@ class CategoriesController < ApplicationController
             :read_only_banner,
             :default_list_filter,
             :reviewable_by_group_id,
+            category_setting_attributes: %i[auto_bump_cooldown_days],
             custom_fields: [custom_field_params],
             permissions: [*p.try(:keys)],
             allowed_tags: [],

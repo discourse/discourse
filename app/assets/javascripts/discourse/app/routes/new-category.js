@@ -31,6 +31,7 @@ export default DiscourseRoute.extend({
       allow_badges: true,
       topic_featured_link_allowed: true,
       custom_fields: {},
+      category_setting: {},
       search_priority: SEARCH_PRIORITIES.normal,
       required_tag_groups: [],
       form_template_ids: [],
