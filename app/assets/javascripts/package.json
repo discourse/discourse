@@ -11,9 +11,13 @@
     "discourse-plugins",
     "discourse-widget-hbs",
     "ember-cli-progress-ci",
+    "ember-production-deprecations",
     "pretty-text",
     "select-kit",
     "truth-helpers",
     "wizard"
-  ]
+  ],
+  "resolutions":{
+    "**/babel-plugin-debug-macros": "npm:@discourse/babel-plugin-debug-macros@0.4.0-pre1"
+  }
 }

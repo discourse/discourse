@@ -2189,17 +2189,10 @@ babel-loader@^8.0.6:
     make-dir "^3.1.0"
     schema-utils "^2.6.5"
 
-babel-plugin-debug-macros@^0.2.0:
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/babel-plugin-debug-macros/-/babel-plugin-debug-macros-0.2.0.tgz#0120ac20ce06ccc57bf493b667cf24b85c28da7a"
-  integrity sha512-Wpmw4TbhR3Eq2t3W51eBAQSdKlr+uAyF0GI4GtPfMCD12Y4cIdpKC9l0RjNTH/P9isFypSqqewMPm7//fnZlNA==
-  dependencies:
-    semver "^5.3.0"
-
-babel-plugin-debug-macros@^0.3.4:
-  version "0.3.4"
-  resolved "https://registry.yarnpkg.com/babel-plugin-debug-macros/-/babel-plugin-debug-macros-0.3.4.tgz#22961d0cb851a80654cece807a8b4b73d85c6075"
-  integrity sha512-wfel/vb3pXfwIDZUrkoDrn5FHmlWI96PCJ3UCDv2a86poJ3EQrnArNW5KfHSVJ9IOgxHbo748cQt7sDU+0KCEw==
+babel-plugin-debug-macros@^0.2.0, babel-plugin-debug-macros@^0.3.4, "babel-plugin-debug-macros@npm:@discourse/babel-plugin-debug-macros@0.4.0-pre1":
+  version "0.4.0-pre1"
+  resolved "https://registry.yarnpkg.com/@discourse/babel-plugin-debug-macros/-/babel-plugin-debug-macros-0.4.0-pre1.tgz#f1aa632fcf5d0d673edfba7dc84003acc6b507b3"
+  integrity sha512-faMBuks7QDgwS9Vz+lw60z0CHk5jd0NlLtcxXSIJ13X9Fil5v8k0fOztIF9eYkqKuGHuDoCC2mFQlFNftb1RxA==
   dependencies:
     semver "^5.3.0"
 

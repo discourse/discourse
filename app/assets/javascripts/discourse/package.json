@@ -70,6 +70,7 @@
     "ember-load-initializers": "^2.1.1",
     "ember-modifier": "^4.1.0",
     "ember-on-resize-modifier": "^1.1.0",
+    "ember-production-deprecations": "1.0.0",
     "ember-qunit": "^6.2.0",
     "ember-rfc176-data": "^0.3.18",
     "ember-source": "~3.28.11",
