@@ -14,7 +14,7 @@ class SidebarSectionLink < ActiveRecord::Base
 
   before_validation { self.user_id ||= self.sidebar_section&.user_id }
   before_create do
-    if self.user_id
+    if self.user_id && self.sidebar_section
       self.position = self.sidebar_section.sidebar_section_links.maximum(:position).to_i + 1
     end
   end
@@ -43,6 +43,7 @@ end
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
 #  sidebar_section_id :integer
+#  position           :integer          default(0), not null
 #
 # Indexes
 #
