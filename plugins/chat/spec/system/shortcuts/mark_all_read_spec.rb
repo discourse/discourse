@@ -24,7 +24,6 @@ RSpec.describe "Shortcuts | mark all read", type: :system, js: true do
 
     context "when pressing shift+esc" do
       it "marks all channels read" do
-        pause_test
         expect(page).to have_css(
           ".sidebar-section-link.channel-#{channel_1.id} .sidebar-section-link-suffix.unread",
         )
