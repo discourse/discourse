@@ -87,7 +87,7 @@ export default class ChatChannelsManager extends Service {
   async markAllChannelsRead() {
     return this.chatApi.updateCurrentUserTracking().then((response) => {
       response.updated_memberships.forEach((membership) => {
-        let channel = this.channels.findBy("id", membership.chat_channel_id);
+        let channel = this.channels.findBy("id", membership.channel_id);
         if (channel) {
           channel.currentUserMembership.unread_count = 0;
           channel.currentUserMembership.unread_mentions = 0;
