@@ -117,6 +117,14 @@ export default {
 
       api.addToHeaderIcons("chat-header-icon");
 
+      api.addChatDrawerStateCallback(({ isDrawerActive }) => {
+        if (isDrawerActive) {
+          document.body.classList.add("chat-drawer-active");
+        } else {
+          document.body.classList.remove("chat-drawer-active");
+        }
+      });
+
       api.decorateChatMessage(function (chatMessage, chatChannel) {
         if (!this.currentUser) {
           return;
