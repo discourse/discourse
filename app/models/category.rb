@@ -371,7 +371,10 @@ class Category < ActiveRecord::Base
   end
 
   def clear_related_site_settings
-    SiteSetting.general_category_id = -1 if self.id == SiteSetting.general_category_id
+    if self.id == SiteSetting.general_category_id
+      SiteSetting.general_category_id = -1
+      Site.clear_show_welcome_topic_cache
+    end
   end
 
   def topic_url
