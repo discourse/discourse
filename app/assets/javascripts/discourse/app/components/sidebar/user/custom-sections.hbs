@@ -10,35 +10,27 @@
     >
       {{#each section.links as |link|}}
         {{#if link.external}}
-          <div
-            class="sidebar-link"
+          <Sidebar::SectionLink
+            @linkName={{link.name}}
+            @content={{replace-emoji link.name}}
+            @prefixType="icon"
+            @prefixValue={{link.icon}}
+            @href={{link.value}}
+            @class={{link.linkDragCss}}
             {{draggable didEndDrag=link.didEndDrag dragMove=link.dragMove}}
-          >
-            <Sidebar::SectionLink
-              @linkName={{link.name}}
-              @content={{replace-emoji link.name}}
-              @prefixType="icon"
-              @prefixValue={{link.icon}}
-              @href={{link.value}}
-              @class={{link.linkDragCss}}
-            />
-          </div>
+          />
         {{else}}
-          <div
-            class="sidebar-link"
+          <Sidebar::SectionLink
+            @linkName={{link.name}}
+            @route={{link.route}}
+            @models={{link.models}}
+            @query={{link.query}}
+            @content={{replace-emoji link.name}}
+            @prefixType="icon"
+            @prefixValue={{link.icon}}
+            @class={{link.linkDragCss}}
             {{draggable didEndDrag=link.didEndDrag dragMove=link.dragMove}}
-          >
-            <Sidebar::SectionLink
-              @linkName={{link.name}}
-              @route={{link.route}}
-              @models={{link.models}}
-              @query={{link.query}}
-              @content={{replace-emoji link.name}}
-              @prefixType="icon"
-              @prefixValue={{link.icon}}
-              @class={{link.linkDragCss}}
-            />
-          </div>
+          />
         {{/if}}
       {{/each}}
     </Sidebar::Section>
