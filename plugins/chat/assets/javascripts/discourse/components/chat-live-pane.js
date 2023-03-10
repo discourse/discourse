@@ -609,7 +609,7 @@ export default class ChatLivePane extends Component {
   handleRefreshMessage(data) {
     const message = this.args.channel.findMessage(data.chat_message.id);
     if (message) {
-      message.version = message.version + 1;
+      message.incrementVersion();
     }
   }
 
@@ -621,6 +621,7 @@ export default class ChatLivePane extends Component {
       message.excerpt = data.chat_message.excerpt;
       message.uploads = cloneJSON(data.chat_message.uploads || []);
       message.edited = true;
+      message.incrementVersion();
     }
   }
 
