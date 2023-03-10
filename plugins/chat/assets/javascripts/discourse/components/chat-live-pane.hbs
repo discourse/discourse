@@ -83,7 +83,7 @@
   </div>
 
   <ChatScrollToBottomArrow
-    @scrollToBottom={{this.scrollToBottom}}
+    @scrollToBottom={{this.scrollToLatestMessage}}
     @hasNewMessages={{this.hasNewMessages}}
     @show={{or this.needsArrow @channel.canLoadMoreFuture}}
     @channel={{@channel}}

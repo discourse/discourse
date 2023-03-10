@@ -187,11 +187,19 @@ export default class ChatLivePane extends Component {
           this.scrollToMessage(findArgs["targetMessageId"], {
             highlight: true,
           });
-        } else if (fetchingFromLastRead) {
-          this.scrollToMessage(findArgs["targetMessageId"]);
-        } else if (messages.length) {
-          this.scrollToMessage(messages[messages.length - 1].id);
+          return;
         }
+
+        if (
+          fetchingFromLastRead &&
+          messages.length &&
+          findArgs["targetMessageId"] !== messages[messages.length - 1].id
+        ) {
+          this.scrollToMessage(findArgs["targetMessageId"]);
+          return;
+        }
+
+        this.scrollToBottom();
       })
       .catch(this._handleErrors)
       .finally(() => {
@@ -268,15 +276,9 @@ export default class ChatLivePane extends Component {
 
         // Edge case for IOS to avoid blank screens
         // and/or scrolling to bottom losing track of scroll position
-        schedule("afterRender", () => {
-          if (
-            !this._selfDeleted &&
-            !loadingPast &&
-            (this.capabilities.isIOS || !this.isScrolling)
-          ) {
-            this.scrollToMessage(messages[0].id, { position: "end" });
-          }
-        });
+        if (!loadingPast && (this.capabilities.isIOS || !this.isScrolling)) {
+          this.scrollToMessage(messages[0].id, { position: "end" });
+        }
       })
       .catch(() => {
         this._handleErrors();
@@ -449,7 +451,7 @@ export default class ChatLivePane extends Component {
         lastUnreadVisibleMessage = lastUnreadVisibleMessage.previousMessage;
 
         if (
-          !lastUnreadVisibleMessage &&
+          !lastUnreadVisibleMessage ||
           lastReadId > lastUnreadVisibleMessage.id
         ) {
           return;
@@ -463,6 +465,27 @@ export default class ChatLivePane extends Component {
   @action
   scrollToBottom() {
     schedule("afterRender", () => {
+      if (this._selfDeleted) {
+        return;
+      }
+
+      // A more consistent way to scroll to the bottom when we are sure this is our goal
+      // it will also limit issues with any element changing the height while we are scrolling
+      // to the bottom
+      this._scrollerEl.scrollTop = -1;
+      this.forceRendering(() => {
+        this._scrollerEl.scrollTop = 0;
+      });
+    });
+  }
+
+  @action
+  scrollToLatestMessage() {
+    schedule("afterRender", () => {
+      if (this._selfDeleted) {
+        return;
+      }
+
       if (this.args.channel.canLoadMoreFuture) {
         this._fetchAndScrollToLatest();
       } else if (this.args.channel.messages?.length > 0) {
@@ -589,7 +612,7 @@ export default class ChatLivePane extends Component {
       // If we are at the bottom, we append the message and scroll to it
       const message = ChatMessage.create(this.args.channel, data.chat_message);
       this.args.channel.addMessages([message]);
-      this.scrollToBottom();
+      this.scrollToLatestMessage();
     } else {
       // If we are almost at the bottom, we append the message and notice the user
       const message = ChatMessage.create(this.args.channel, data.chat_message);
@@ -602,7 +625,7 @@ export default class ChatLivePane extends Component {
     const message = this.args.channel.findMessage(data.chat_message.id);
     if (message) {
       message.cooked = data.chat_message.cooked;
-      this.scrollToBottom();
+      this.scrollToLatestMessage();
     }
   }
 
@@ -727,7 +750,7 @@ export default class ChatLivePane extends Component {
         this.loading = false;
         this.sendingLoading = false;
         this._resetAfterSend();
-        this.scrollToBottom();
+        this.scrollToLatestMessage();
       });
     }
 
@@ -744,7 +767,7 @@ export default class ChatLivePane extends Component {
 
     this.args.channel.addMessages([stagedMessage]);
     if (!this.args.channel.canLoadMoreFuture) {
-      this.scrollToBottom();
+      this.scrollToLatestMessage();
     }
 
     return this.chatApi
@@ -755,7 +778,7 @@ export default class ChatLivePane extends Component {
         upload_ids: stagedMessage.uploads.map((upload) => upload.id),
       })
       .then(() => {
-        this.scrollToBottom();
+        this.scrollToLatestMessage();
       })
       .catch((error) => {
         this._onSendError(stagedMessage.id, error);
@@ -918,7 +941,7 @@ export default class ChatLivePane extends Component {
   editButtonClicked(messageId) {
     const message = this.args.channel.findMessage(messageId);
     this.editingMessage = message;
-    this.scrollToBottom();
+    this.scrollToLatestMessage();
     this._focusComposer();
   }
 
