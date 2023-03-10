@@ -190,12 +190,24 @@ RSpec.describe Chat::Api::ChatTrackingController do
 
       it "returns the updated memberships, channels, and last message id" do
         put "/chat/api/tracking/read/me.json"
-        expect(response.parsed_body["updated_memberships"].first).to eq(
-          {
-            "chat_channel_id" => chat_channel_1.id,
-            "last_read_message_id" => message_2.id,
-            "membership_id" => membership_1.id,
-          },
+        expect(response.parsed_body["updated_memberships"]).to match_array(
+          [
+            {
+              "channel_id" => chat_channel_1.id,
+              "last_read_message_id" => message_2.id,
+              "membership_id" => membership_1.id,
+            },
+            {
+              "channel_id" => chat_channel_2.id,
+              "last_read_message_id" => message_4.id,
+              "membership_id" => membership_2.id,
+            },
+            {
+              "channel_id" => chat_channel_3.id,
+              "last_read_message_id" => message_6.id,
+              "membership_id" => membership_3.id,
+            },
+          ],
         )
       end
     end
