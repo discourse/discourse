@@ -98,6 +98,10 @@ class SectionLink {
       this.query = routeInfoHelper.query;
     }
   }
+  @bind
+  didStartDrag(e) {
+    this.mouseY = e.screenY;
+  }
 
   @bind
   didEndDrag() {
@@ -108,9 +112,6 @@ class SectionLink {
   }
   @bind
   dragMove(e) {
-    if (!this.mouseY) {
-      this.mouseY = e.screenY;
-    }
     const distance = e.screenY - this.mouseY;
     if (!this.linkHeight) {
       this.linkHeight = e.srcElement.clientHeight;
