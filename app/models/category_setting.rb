@@ -26,7 +26,7 @@ end
 #  category_id             :bigint           not null
 #  require_topic_approval  :boolean
 #  require_reply_approval  :boolean
-#  num_auto_bump_daily     :integer
+#  num_auto_bump_daily     :integer          default(0)
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
 #  auto_bump_cooldown_days :integer          default(1)

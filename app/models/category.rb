@@ -689,7 +689,7 @@ class Category < ActiveRecord::Base
       .joins(:category_setting)
       .where("category_settings.num_auto_bump_daily > 0")
       .shuffle
-      .any? { |c| c.auto_bump_topic! }
+      .any?(&:auto_bump_topic!)
   end
 
   # will automatically bump a single topic
