@@ -10,7 +10,7 @@ module Chat
     class UpdateUserLastRead
       include Base
 
-      # @!method call(user_id:, channel_id:, message_id:, guardian:)
+      # @!method call(channel_id:, message_id:, guardian:)
       #   @param [Integer] channel_id
       #   @param [Integer] message_id
       #   @param [Guardian] guardian

@@ -159,17 +159,6 @@ class Chat::ChatController < Chat::ChatBaseController
     render json: success_json
   end
 
-  def update_user_last_read
-    with_service(Chat::Service::UpdateUserLastRead, channel_id: params[:chat_channel_id]) do
-      on_failed_policy(:ensure_message_id_recency) do
-        raise Discourse::InvalidParameters.new(:message_id)
-      end
-      on_failed_policy(:ensure_message_exists) { raise Discourse::NotFound }
-      on_model_not_found(:active_membership) { raise Discourse::NotFound }
-      on_model_not_found(:channel) { raise Discourse::NotFound }
-    end
-  end
-
   def messages
     page_size = params[:page_size]&.to_i || 1000
     direction = params[:direction].to_s

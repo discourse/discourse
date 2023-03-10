@@ -282,6 +282,15 @@ export default class ChatApi extends Service {
     );
   }
 
+  /**
+   * Marks messages for a user's chat channel memberships as read. If no
+   * channel ID and no message ID are provided, then all of the user's
+   * followed chat channel memberships will be marked as read.
+   *
+   * @param {number} channelId - The ID of the channel for the message being marked as read.
+   * @param {number} messageId - The ID of the message being marked as read.
+   * @returns {Promise}
+   */
   updateCurrentUserTracking({ channelId, messageId } = {}) {
     return this.#putRequest(`/tracking/read/me`, {
       channel_id: channelId,
