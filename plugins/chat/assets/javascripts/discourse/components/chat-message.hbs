@@ -46,6 +46,7 @@
   {{on "touchstart" this.handleTouchStart passive=true}}
   {{on "touchend" this.handleTouchEnd passive=true}}
   {{on "mouseenter" (fn @onHoverMessage @message (hash desktopOnly=true))}}
+  {{on "mousemove" (fn @onHoverMessage @message (hash desktopOnly=true))}}
   {{on "mouseleave" (fn @onHoverMessage null (hash desktopOnly=true))}}
   class={{concat-class
     "chat-message-container"
@@ -55,8 +56,10 @@
   }}
   data-id={{@message.id}}
   {{chat/track-message
-    (fn @didShowMessage @message)
-    (fn @didHideMessage @message)
+    (hash
+      didEnterViewport=(fn @messageDidEnterViewport @message)
+      didLeaveViewport=(fn @messageDidLeaveViewport @message)
+    )
   }}
 >
   {{#if this.show}}

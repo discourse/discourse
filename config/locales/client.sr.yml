@@ -439,13 +439,12 @@ sr:
       conversation:
         view_full: "pogledaj ceo razgovor"
       scores:
-        type: "Tip"
-        reviewed_by: "Pregledano od strane"
+        type: "Razlog"
       statuses:
         pending:
           title: "U toku"
-        approved:
-          title: "Potvrđenji"
+      context_question:
+        delimiter: "ili"
       types:
         reviewable_user:
           title: "Korisnik"
@@ -1627,6 +1626,10 @@ sr:
     filters:
       with_topics: "%{filter} teme"
       with_category: "%{filter} %{category} teme"
+      filter:
+        title: "Filter"
+        button:
+          label: "Filter"
       latest:
         title: "Poslednje"
         title_with_count:
@@ -2222,6 +2225,13 @@ sr:
           cancel: "Odustani"
         quick_insert_fields:
           add_new_field: "Dodaj"
+        validations_modal:
+          table_headers:
+            type: "Tip"
+            description: "Opis"
+          validations:
+            required:
+              key: "potrebno"
       impersonate:
         title: "Predstavi se kao"
         help: "Koristite ovaj alat da se predstavite kao određeni korisnički nalog za potrebe ispravljanja grešaka. Moraćete se odjaviti kad završite."

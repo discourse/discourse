@@ -20,8 +20,11 @@ cs:
       joined: "účet vytvořen"
       email_frequency:
         never: "Nikdy"
+      header_indicator_preference:
+        never: "Nikdy"
       flag: "Nahlášení"
       join: "Přidat se ke skupině"
+      last_visit: "poslední návštěva"
       mention_warning:
         dismiss: "označit jako přečtené"
       reply: "Odpověď"

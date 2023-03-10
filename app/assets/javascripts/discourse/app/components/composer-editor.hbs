@@ -23,5 +23,9 @@
 </DEditor>
 
 {{#if this.allowUpload}}
-  <PickFilesButton @fileInputId="file-uploader" @allowMultiple={{true}} />
+  <PickFilesButton
+    @fileInputId="file-uploader"
+    @allowMultiple={{true}}
+    name="file-uploader"
+  />
 {{/if}}

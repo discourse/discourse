@@ -4502,50 +4502,29 @@ pl_PL:
         category: ustawienia kategorii
     actions:
       agree:
-        title: "Zgadzam się..."
-      agree_and_keep:
-        title: "Zachowaj wpis"
-        description: "Zgadzam się z flagą i pozostawiam post bez zmian."
-      agree_and_keep_hidden:
-        title: "Zachowaj post ukryty"
-        description: "Zgódź się z flagą i pozostaw post ukryty."
+        title: "Tak"
       agree_and_suspend:
-        title: "Zawieś użytkownika"
         description: "Zgódź się z flagą i zawieś konto użytkownika."
       agree_and_silence:
-        title: "Wycisz użytkownika"
         description: "Zgódź się z flagą i wycisz użytkownika."
       agree_and_restore:
-        title: "Przywróć post"
         description: "Przywróć post, aby wszyscy użytkownicy mogli go zobaczyć."
-      agree_and_hide:
-        title: "Ukryj post"
-        description: "Ukryj ten post i automatycznie wyślij użytkownikowi wiadomość z wezwaniem do jego edycji."
       delete_single:
         title: "Usuń"
       delete:
         title: "Usuń..."
-      delete_and_ignore:
-        title: "Usuń post i ignoruj"
-        description: "Usuń post; jeśli to pierwszy post, usuń również temat"
       delete_and_ignore_replies:
-        title: "Usuń post + Odpowiedzi i Ignoruj"
-        description: "Usuń post i wszystkie odpowiedzi; jeśli to pierwszy post, usuń również temat"
         confirm: "Czy na pewno chcesz usunąć również odpowiedzi na ten post?"
-      delete_and_agree:
-        title: "Usuń post i akceptuj"
-        description: "Usuń post; jeśli to pierwszy post, usuń również temat"
       delete_and_agree_replies:
-        title: "Usuń post + odpowiedzi i zgadzam się"
-        description: "Usuń post i wszystkie odpowiedzi; jeśli to pierwszy post, usuń również temat"
         confirm: "Czy na pewno chcesz usunąć również odpowiedzi na ten post?"
       disagree_and_restore:
-        title: "Nie zgadzam się i przywracam post"
         description: "Przywróć post, aby wszyscy użytkownicy mogli go zobaczyć."
       disagree:
-        title: "Wycofaj"
+        title: "Nie"
       ignore:
         title: "Ignoruj"
+      ignore_and_do_nothing:
+        title: "Nic nie rób"
       approve:
         title: "Zatwierdź"
       approve_post:

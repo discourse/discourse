@@ -326,11 +326,13 @@ $float-height: 530px;
   }
 
   .scroll-stick-wrap {
+    display: flex;
+    justify-content: center;
+    margin: 0 1rem;
     position: relative;
   }
 
   .chat-scroll-to-bottom {
-    left: calc(50% - calc(32px / 2));
     align-items: center;
     justify-content: center;
     position: absolute;

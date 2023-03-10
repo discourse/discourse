@@ -736,12 +736,12 @@ te:
                 label: "వర్గాలు మాత్రమే"
   reviewables:
     actions:
-      agree_and_suspend:
-        title: "సభ్యుడిని సస్పెండు చేయి"
+      agree:
+        title: "అవును"
       delete_single:
         title: "తొలగించు"
       disagree:
-        title: "ఒప్పుకోకు"
+        title: "లేదు"
       approve:
         title: "అంగీకరించు"
       reject_user:

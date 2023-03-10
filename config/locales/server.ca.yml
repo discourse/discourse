@@ -3009,50 +3009,29 @@ ca:
     conflict: "Hi ha hagut un conflicte d'actualització que us impedeix fer això."
     actions:
       agree:
-        title: "D'acord..."
-      agree_and_keep:
-        title: "Manté la publicació"
-        description: "D'acord amb la bandera i manté la publicació sense canviar. "
-      agree_and_keep_hidden:
-        title: "Manté la publicació oculta"
-        description: "D’acord amb la bandera i deixa la publicació oculta."
+        title: "Sí"
       agree_and_suspend:
-        title: "Suspèn l'usuari"
         description: "D'acord amb la bandera i suspèn l'usuari. "
       agree_and_silence:
-        title: "Silencia l'usuari"
         description: "D'acord amb la bandera i silencia l'usuari. "
       agree_and_restore:
-        title: "Restaura la publicació"
         description: "Restaura la publicació de manera que tots els usuaris puguin veure-la."
-      agree_and_hide:
-        title: "Amaga la publicació"
-        description: "Amaga aquesta publicació i envia automàticament a l'usuari un missatge que l'insti a editar-la."
       delete_single:
         title: "Suprimeix"
       delete:
         title: "Suprimeix ..."
-      delete_and_ignore:
-        title: "Elimina la publicació i ignora-la"
-        description: "Suprimeix la publicació; si és la primera, suprimeix també el tema"
       delete_and_ignore_replies:
-        title: "Suprimeix publicacions + respostes i ignora"
-        description: "Suprimeix la publicació i totes les respostes; si és la primera publicació, elimina també el tema."
         confirm: "Esteu segur que també voleu suprimir les respostes a la publicació?"
-      delete_and_agree:
-        title: "Suprimeix la publicació i accepta"
-        description: "Suprimeix la publicació; si és la primera, suprimeix també el tema"
       delete_and_agree_replies:
-        title: "Elimina publicació + respostes i accepta"
-        description: "Suprimeix la publicació i totes les respostes; si és la primera publicació, suprimeix també el tema."
         confirm: "Esteu segur que també voleu suprimir les respostes a la publicació?"
       disagree_and_restore:
-        title: "No estic d'acord i restaura la publicació"
         description: "Restaura la publicació de manera que tots els usuaris puguin veure-la."
       disagree:
-        title: "En desacord"
+        title: "No"
       ignore:
         title: "Ignora"
+      ignore_and_do_nothing:
+        title: "No facis res"
       approve:
         title: "Aprova"
       approve_post:

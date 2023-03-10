@@ -374,18 +374,13 @@ et:
           high: "Kõrge"
       scores:
         score: "Skoor"
-        date: "Date"
-        type: "Liik"
+        type: "Põhjus"
         status: "Staatus"
       statuses:
         pending:
           title: "Ootel"
-        approved:
-          title: "Heakskiidetud"
-        rejected:
-          title: "Tagasi lükatud"
-        ignored:
-          title: "Ignoreeritud"
+      context_question:
+        delimiter: "või"
       types:
         reviewable_user:
           title: "Kasutaja"
@@ -597,6 +592,7 @@ et:
         remove_owners_description: "Eemalda valitud kasutajad selle grupi omanike hulgast"
         make_all_primary: "Tee kõik primaarseks"
         remove_all_primary: "Eemalda kui primaarne"
+        status: "Staatus"
         owner: "Omanik"
         forbidden: "Sul pole lubatud liikmeid vaadata."
       topics: "Teemat"
@@ -2283,6 +2279,10 @@ et:
     filters:
       with_topics: "%{filter} teemat"
       with_category: "%{filter} %{category} teemat"
+      filter:
+        title: "Filter"
+        button:
+          label: "Filter"
       latest:
         title: "Värskeimad"
         title_with_count:
@@ -3154,9 +3154,21 @@ et:
         new_template_form:
           submit: "Salvesta"
           cancel: "Tühista"
+          preview: "Eelvaade"
         quick_insert_fields:
           add_new_field: "isa"
           dropdown: "Rippmenüü"
+        validations_modal:
+          table_headers:
+            type: "Tüüp"
+            description: "Kirjeldus"
+          validations:
+            required:
+              key: "nõutud"
+            minimum:
+              key: "miinimum"
+            maximum:
+              key: "maksimum"
       impersonate:
         title: "Kehasta"
         help: "Kasuta seda töövahendit kasutajakonto ülevõtmiseks silumise eesmärgil. Tühistamiseks pead välja logima."
@@ -3169,6 +3181,7 @@ et:
         not_found: "Vabanda, sellist kasutajanime ei eksisteeri meie süsteemis."
         id_not_found: "Vabanda, sellist kasutajatunnust ei eksisteeri meie süsteemis."
         active: "Aktiveeritud"
+        status: "Staatus"
         show_emails: "Näita meile"
         nav:
           new: "Uus"

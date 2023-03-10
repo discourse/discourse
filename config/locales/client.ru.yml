@@ -609,26 +609,18 @@ ru:
       scores:
         about: "Оценка рассчитывается на основе уровня доверия сообщающего, точности его предыдущих жалоб и приоритета предмета жалобы."
         score: "Оценка"
-        date: "Дата"
-        type: "Тип"
+        type: "Причина"
         status: "Статус"
-        submitted_by: "Отправлено"
-        reviewed_by: "Проверено"
+        submitted_by: "Жалоба от"
       statuses:
         pending:
           title: "В ожидании"
-        approved:
-          title: "Одобренные"
-        rejected:
-          title: "Отклонённые"
-        ignored:
-          title: "Проигнорированные"
-        deleted:
-          title: "Удалённые"
         reviewed:
           title: "(все рассмотренные)"
         all:
           title: "(все)"
+      context_question:
+        delimiter: "или"
       types:
         reviewable_flagged_post:
           title: "На эту запись поступила жалоба"
@@ -951,6 +943,7 @@ ru:
         make_all_primary_description: "Сделать основной группой для всех выбранных пользователей"
         remove_all_primary: "Удалить как основную"
         remove_all_primary_description: "Удалить как основную группу"
+        status: "Статус"
         owner: "Владелец"
         primary: "Основная"
         forbidden: "Вы не можете просматривать участников."
@@ -3939,6 +3932,10 @@ ru:
     filters:
       with_topics: "%{filter} темы"
       with_category: "%{category} — %{filter} темы"
+      filter:
+        title: "Фильтр"
+        button:
+          label: "Фильтр"
       latest:
         title: "Последние"
         title_with_count:
@@ -5513,9 +5510,22 @@ ru:
         new_template_form:
           submit: "Сохранить"
           cancel: "Нет"
+          preview: "Предпросмотр"
         quick_insert_fields:
           add_new_field: "Добавить"
           dropdown: "Выпадающий список"
+        validations_modal:
+          table_headers:
+            key: "Ключ"
+            type: "Тип опроса"
+            description: "Описание"
+          validations:
+            required:
+              key: "Обязательное"
+            minimum:
+              key: "минимум"
+            maximum:
+              key: "максимум"
       impersonate:
         title: "Войти от имени пользователя"
         help: "Позволяет войти от имени пользователя в целях отладки. По окончании отладки необходимо выйти из системы и зайти снова под своим аккаунтом."
@@ -5528,6 +5538,7 @@ ru:
         not_found: "Такое имя пользователя не зарегистрировано."
         id_not_found: "Этот пользователь не зарегистрирован."
         active: "Активирован"
+        status: "Статус"
         show_emails: "Показать адреса эл. почты"
         hide_emails: "Скрыть адреса эл. почты"
         nav:

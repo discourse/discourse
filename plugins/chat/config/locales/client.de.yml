@@ -97,6 +97,11 @@ de:
         never: "Niemals"
         title: "E-Mail-Benachrichtigungen"
         when_away: "Nur bei Abwesenheit"
+      header_indicator_preference:
+        title: "Aktivitätsindikator in der Kopfzeile anzeigen"
+        all_new: "bei allen neuen Nachrichten"
+        dm_and_mentions: "bei Direktnachrichten und Erwähnungen"
+        never: "niemals"
       enable: "Chat aktivieren"
       flag: "Melden"
       emoji: "Emoji einfügen"
@@ -106,7 +111,7 @@ de:
       in_reply_to: "Als Antwort auf"
       heading: "Chat"
       join: "Beitreten"
-      new_messages: "neue Nachrichten"
+      last_visit: "letzter Besuch"
       mention_warning:
         dismiss: "verwerfen"
         cannot_see: "%{username} kann nicht auf diesen Kanal zugreifen und wurde nicht benachrichtigt."

@@ -76,6 +76,7 @@
 }
 
 .reviewable-user-info {
+  max-width: 100%;
   margin: 0.5em 0;
   .reviewable-user-fields {
     margin-bottom: 2em;
@@ -231,13 +232,14 @@
       color: var(--secondary);
       border-radius: 8px;
       &.-flagged-post,
-      &.-user,
       &.-flagged-chat-message,
-      &.-aksimet-flagged-post,
-      &.-aksimet-flagged-user {
+      &.-akismet-flagged-post,
+      &.-akismet-flagged-user {
         background-color: var(--danger-medium);
       }
-      &.-queued-post {
+      &.-queued-post,
+      &.-queued-topic,
+      &.-user {
         background-color: var(--tertiary);
       }
     }
@@ -446,6 +448,7 @@
     justify-content: space-between;
     width: var(--topic-body-width);
     align-items: center;
+    max-width: 100%;
 
     .reviewable-reply-to {
       display: flex;
@@ -488,6 +491,11 @@
     p,
     aside {
       margin: 0 0 1em 0;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
     }
 
     pre,

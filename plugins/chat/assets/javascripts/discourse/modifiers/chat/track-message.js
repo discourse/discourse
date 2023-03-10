@@ -3,23 +3,23 @@ import { registerDestructor } from "@ember/destroyable";
 import { bind } from "discourse-common/utils/decorators";
 
 export default class ChatTrackMessage extends Modifier {
-  visibleCallback = null;
-  notVisibleCallback = null;
+  didEnterViewport = null;
+  didLeaveViewport = null;
 
   constructor(owner, args) {
     super(owner, args);
     registerDestructor(this, (instance) => instance.cleanup());
   }
 
-  modify(element, [visibleCallback, notVisibleCallback]) {
-    this.visibleCallback = visibleCallback;
-    this.notVisibleCallback = notVisibleCallback;
+  modify(element, [callbacks = {}]) {
+    this.didEnterViewport = callbacks.didEnterViewport;
+    this.didLeaveViewport = callbacks.didLeaveViewport;
 
     this.intersectionObserver = new IntersectionObserver(
       this._intersectionObserverCallback,
       {
         root: document,
-        threshold: 0.9,
+        threshold: 0,
       }
     );
 
@@ -34,9 +34,9 @@ export default class ChatTrackMessage extends Modifier {
   _intersectionObserverCallback(entries) {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
-        this.visibleCallback?.();
+        this.didEnterViewport?.();
       } else {
-        this.notVisibleCallback?.();
+        this.didLeaveViewport?.();
       }
     });
   }

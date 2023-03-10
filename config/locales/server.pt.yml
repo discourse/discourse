@@ -2145,14 +2145,14 @@ pt:
     reasons:
       queued_by_staff: "Um membro do pessoal considera que esta publicação necessita de ser revista. Ela permanecerá oculta até lá."
     actions:
-      agree_and_suspend:
-        title: "Utilizador Suspenso"
+      agree:
+        title: "Sim"
       agree_and_silence:
-        title: "Silenciar Usuário"
+        title: "Silenciar utilizador"
       delete_single:
         title: "Eliminar"
       disagree:
-        title: "Discordar"
+        title: "Não"
       ignore:
         title: "Ignorar"
       approve:

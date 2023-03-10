@@ -444,8 +444,8 @@ RSpec.describe InvitesController do
 
           it "doesn’t inform the user" do
             create_invite
-            expect(response).to have_http_status :ok
-            expect(response.parsed_body).to be_blank
+            expect(response).to have_http_status :unprocessable_entity
+            expect(body).to match(/There was a problem with your request./)
           end
         end
       end
@@ -595,8 +595,8 @@ RSpec.describe InvitesController do
 
           it "doesn't inform the user" do
             update_invite
-            expect(response).to have_http_status :ok
-            expect(response.parsed_body).to be_blank
+            expect(response).to have_http_status :unprocessable_entity
+            expect(body).to match(/There was a problem with your request./)
           end
         end
       end

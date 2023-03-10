@@ -4372,50 +4372,30 @@ pt_BR:
         category: configurações de categoria
     actions:
       agree:
-        title: "Concordar…"
-      agree_and_keep:
-        title: "Manter postagem"
-        description: "Concorde com o sinalizador e mantenha a postagem inalterada."
-      agree_and_keep_hidden:
-        title: "Manter postagem oculta"
-        description: "Concorde com o sinalizador e mantenha a postagem oculta."
+        title: "Sim"
       agree_and_suspend:
-        title: "Suspender usuário(a)"
         description: "Concorde com o sinalizador e suspenda o(a) usuário(a)."
       agree_and_silence:
         title: "Silenciar usuário(a)"
         description: "Concorde com o sinalizador e silencie o(a) usuário(a)."
       agree_and_restore:
-        title: "Restaurar postagem"
         description: "Restaure a postagem para que todos os(as) usuários(as) possam ver."
-      agree_and_hide:
-        title: "Ocultar publicação"
-        description: "Oculte esta publicação e envie automaticamente ao(à) usuário(as) uma mensagem pedindo que edite."
       delete_single:
         title: "Excluir"
       delete:
         title: "Excluir…"
-      delete_and_ignore:
-        title: "Excluir postagem e ignorar"
-        description: "Excluir postagem. Se for a primeira postagem, excluir o tópico também"
       delete_and_ignore_replies:
-        title: "Excluir postagem + respostas e ignorar"
-        description: "Excluir postagem e todas as suas respostas. Se for a primeira postagem, excluir o tópico também"
         confirm: "Você tem certeza de que deseja excluir as respostas desta postagem também?"
-      delete_and_agree:
-        title: "Excluir postagem e concordar"
-        description: "Excluir postagem. Se for a primeira postagem, excluir o tópico também"
       delete_and_agree_replies:
-        title: "Excluir postagem + respostas e concordar"
-        description: "Excluir postagem e todas as suas respostas. Se for a primeira postagem, excluir o tópico também"
         confirm: "Você tem certeza de que deseja excluir as respostas desta postagem também?"
       disagree_and_restore:
-        title: "Discordar e restaurar postagem"
         description: "Restaure a postagem para que todos os(as) usuários(as) possam ver."
       disagree:
-        title: "Discordar"
+        title: "Não"
       ignore:
         title: "Ignorar"
+      ignore_and_do_nothing:
+        title: "Não fazer nada"
       approve:
         title: "Aprovar"
       approve_post:

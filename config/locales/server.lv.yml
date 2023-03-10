@@ -514,12 +514,12 @@ lv:
       medium: "Vidējs"
       high: "Augsta"
     actions:
-      agree_and_suspend:
-        title: "Apturētie lietotāji"
+      agree:
+        title: "Jā"
       delete_single:
         title: "Dzēst"
       disagree:
-        title: "Nepiekrist"
+        title: "Nē"
       ignore:
         title: "Ignorēt"
       approve:

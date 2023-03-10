@@ -2996,7 +2996,6 @@ RSpec.describe UsersController do
           }
 
       expect(user1.reload.title).to eq(badge.display_name)
-      expect(user1.user_profile.badge_granted_title).to eq(true)
       expect(user1.user_profile.granted_title_badge_id).to eq(badge.id)
 
       badge.update allow_title: false
@@ -3009,7 +3008,6 @@ RSpec.describe UsersController do
       user1.reload
       user1.user_profile.reload
       expect(user1.title).to eq("")
-      expect(user1.user_profile.badge_granted_title).to eq(false)
       expect(user1.user_profile.granted_title_badge_id).to eq(nil)
     end
 
@@ -5947,7 +5945,7 @@ RSpec.describe UsersController do
       bookmark3 && bookmark4
     end
 
-    after { Bookmark.registered_bookmarkables = [] }
+    after { DiscoursePluginRegistry.reset! }
 
     let(:bookmark1) { Fabricate(:bookmark, user: user1, bookmarkable: Fabricate(:post)) }
     let(:bookmark2) { Fabricate(:bookmark, user: user1, bookmarkable: Fabricate(:topic)) }

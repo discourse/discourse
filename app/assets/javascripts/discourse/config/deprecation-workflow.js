@@ -10,17 +10,8 @@ globalThis.deprecationWorkflow.config = {
     { handler: "silence", matchId: "route-render-template" },
     { handler: "silence", matchId: "routing.transition-methods" },
     { handler: "silence", matchId: "route-disconnect-outlet" },
-    { handler: "silence", matchId: "setting-on-hash" },
     { handler: "silence", matchId: "this-property-fallback" },
     { handler: "silence", matchId: "ember.globals-resolver" },
     { handler: "silence", matchId: "globals-resolver" },
-    {
-      handler: "silence",
-      matchId: "deprecated-run-loop-and-computed-dot-access",
-    },
-    {
-      handler: "silence",
-      matchId: "ember.built-in-components.legacy-arguments",
-    },
   ],
 };

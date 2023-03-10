@@ -190,7 +190,7 @@ class Badge < ActiveRecord::Base
     SQL
     DB.exec(<<~SQL, badge_id: self.id)
       UPDATE user_profiles AS up
-      SET badge_granted_title = false, granted_title_badge_id = NULL
+      SET granted_title_badge_id = NULL
       WHERE up.granted_title_badge_id = :badge_id
     SQL
   end

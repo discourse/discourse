@@ -8,6 +8,13 @@ export default class ChatChannelRoute extends DiscourseRoute {
   @service chat;
   @service chatStateManager;
 
+  afterModel() {
+    super.afterModel?.(...arguments);
+
+    // Clear messages of the previous channel
+    this.chat.activeChannel?.clearMessages();
+  }
+
   @action
   willTransition() {
     if (this.chat.activeChannel) {

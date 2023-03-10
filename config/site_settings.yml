@@ -1985,6 +1985,15 @@ rate_limits:
   max_batch_presign_multipart_per_minute:
     default: 20
     hidden: true
+  max_presigned_put_per_minute:
+    default: 10
+    hidden: true
+  max_create_multipart_per_minute:
+    default: 10
+    hidden: true
+  max_complete_multipart_per_minute:
+    default: 10
+    hidden: true
 
 developer:
   force_hostname:

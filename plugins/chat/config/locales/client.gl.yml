@@ -21,8 +21,11 @@ gl:
       joined: "uniuse"
       email_frequency:
         never: "Nunca"
+      header_indicator_preference:
+        never: "Nunca"
       flag: "Sinalar"
       join: "Participar"
+      last_visit: "última visita"
       mention_warning:
         dismiss: "desbotar"
       reply: "Responder"

@@ -521,26 +521,18 @@ fr:
       scores:
         about: "Ce score est calculé en fonction du niveau de confiance de l'utilisateur qui a signalé le message, de l'exactitude de ses signalements précédents et de la priorité de l'élément signalé."
         score: "Score"
-        date: "Date"
-        type: "Type"
+        type: "Motif d'attribution"
         status: "État"
-        submitted_by: "Soumis par"
-        reviewed_by: "Examiné par"
+        submitted_by: "Signalé par"
       statuses:
         pending:
           title: "En attente"
-        approved:
-          title: "Acceptés"
-        rejected:
-          title: "Rejetés"
-        ignored:
-          title: "Ignorés"
-        deleted:
-          title: "Supprimés"
         reviewed:
           title: "(examinés)"
         all:
           title: "(tous)"
+      context_question:
+        delimiter: "ou"
       types:
         reviewable_flagged_post:
           title: "Message signalé"
@@ -847,6 +839,7 @@ fr:
         make_all_primary_description: "Attribuer le statut de groupe principal pour tous les utilisateurs sélectionnés"
         remove_all_primary: "Supprimer le statut de groupe principal"
         remove_all_primary_description: "Supprimer le statut de groupe principal de ce groupe"
+        status: "État"
         owner: "Propriétaire"
         primary: "Principal"
         forbidden: "Vous n'avez pas l'autorisation de voir les membres."
@@ -3575,6 +3568,10 @@ fr:
     filters:
       with_topics: "Sujets %{filter}"
       with_category: "Sujets %{filter} sur %{category}"
+      filter:
+        title: "Filtrer"
+        button:
+          label: "Filtrer"
       latest:
         title: "Récents"
         title_with_count:
@@ -5094,9 +5091,22 @@ fr:
         new_template_form:
           submit: "Enregistrer"
           cancel: "Annuler"
+          preview: "Aperçu"
         quick_insert_fields:
           add_new_field: "Ajouter"
           dropdown: "Menu déroulant"
+        validations_modal:
+          table_headers:
+            key: "Clé"
+            type: "Type"
+            description: "Description"
+          validations:
+            required:
+              key: "obligatoire"
+            minimum:
+              key: "minimum"
+            maximum:
+              key: "maximum"
       impersonate:
         title: "Incarner"
         help: "Utilisez cet outil pour incarner un compte utilisateur à des fins de tests. Vous devrez vous déconnecter une fois que vous aurez terminé."
@@ -5109,6 +5119,7 @@ fr:
         not_found: "Nous sommes désolés, ce nom d'utilisateur n'existe pas dans notre système."
         id_not_found: "Désolé cet identifiant d'utilisateur n'existe pas dans notre système."
         active: "Activé"
+        status: "État"
         show_emails: "Afficher les adresses e-mail"
         hide_emails: "Masquer les adresses e-mail"
         nav:

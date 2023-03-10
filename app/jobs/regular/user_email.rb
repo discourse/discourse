@@ -108,8 +108,12 @@ module Jobs
         return skip_message(SkippedEmailLog.reason_types[:user_email_anonymous_user])
       end
 
-      if user.suspended? && !%w[user_private_message account_suspended].include?(type.to_s)
-        return skip_message(SkippedEmailLog.reason_types[:user_email_user_suspended_not_pm])
+      if user.suspended?
+        if !type.to_s.in?(%w[user_private_message account_suspended])
+          return skip_message(SkippedEmailLog.reason_types[:user_email_user_suspended_not_pm])
+        elsif post.topic.group_pm?
+          return skip_message(SkippedEmailLog.reason_types[:user_email_user_suspended])
+        end
       end
 
       if type.to_s == "digest"

@@ -17,7 +17,10 @@ sq:
       joined: "anëtarësuar"
       email_frequency:
         never: "Asnjëherë"
+      header_indicator_preference:
+        never: "Asnjëherë"
       flag: "Sinjalizoni"
+      last_visit: "vizita e fundit"
       mention_warning:
         dismiss: "hiqe"
       reply: "Përgjigju"
