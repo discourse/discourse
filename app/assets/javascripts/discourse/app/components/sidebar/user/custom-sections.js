@@ -98,6 +98,7 @@ class SectionLink {
       this.query = routeInfoHelper.query;
     }
   }
+
   @bind
   didStartDrag(e) {
     this.mouseY = e.screenY;
@@ -110,6 +111,7 @@ class SectionLink {
     this.section.enable();
     this.section.reorder();
   }
+
   @bind
   dragMove(e) {
     const distance = e.screenY - this.mouseY;
