@@ -506,12 +506,9 @@ export function getCategoryAndTagUrl(category, subcategories, tag) {
 
   if (category) {
     url = category.path;
-    if (subcategories && (category.default_list_filter === "none" || tag)) {
+    if (subcategories && category.default_list_filter === "none") {
       url += "/all";
-    } else if (
-      !subcategories &&
-      (category.default_list_filter === "all" || tag)
-    ) {
+    } else if (!subcategories && category.default_list_filter === "all") {
       url += "/none";
     }
   }
