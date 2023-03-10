@@ -5,7 +5,7 @@ class CreateThemeSvgSprite < ActiveRecord::Migration[7.0]
     create_table :theme_svg_sprites do |t|
       t.integer :theme_id, null: false
       t.integer :upload_id, null: false
-      t.string :sprite, null: false, limit: 4 * 1024**2
+      t.binary :sprite, null: false
 
       t.timestamps
     end

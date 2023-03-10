@@ -11,7 +11,7 @@ end
 #  id         :bigint           not null, primary key
 #  theme_id   :integer          not null
 #  upload_id  :integer          not null
-#  sprite     :string(4194304)  not null
+#  sprite     :binary           not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #

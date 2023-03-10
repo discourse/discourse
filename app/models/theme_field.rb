@@ -667,10 +667,16 @@ class ThemeField < ActiveRecord::Base
     rescue => e
       Discourse.warn_exception(e, message: "Failed to fetch svg sprite for theme field #{id}")
     else
-      ThemeSvgSprite.upsert(
-        { theme_id: theme_id, upload_id: upload_id, sprite: upload.content },
-        unique_by: :theme_id,
-      )
+      if content.length > 4 * 1024**2
+        Rails.logger.warn(
+          "can't store theme svg sprite for theme #{theme_id} and upload #{upload_id}, sprite too big",
+        )
+      else
+        ThemeSvgSprite.upsert(
+          { theme_id: theme_id, upload_id: upload_id, sprite: content },
+          unique_by: :theme_id,
+        )
+      end
     end
   end
 
