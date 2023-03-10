@@ -388,11 +388,10 @@ export default function setupTests(config) {
   reportMemoryUsageAfterTests();
   patchFailedAssertion();
 
-  const hasPluginJs = Array.from(
-    document.querySelector("#dynamic-test-js").content.childNodes
-  ).some((script) => script.dataset?.discoursePlugin);
+  const hasPluginJs = !!document.querySelector("script[data-discourse-plugin]");
+  const hasThemeJs = !!document.querySelector("script[data-theme-id]");
 
-  if (skipPlugins || !hasPluginJs) {
+  if (!hasPluginJs && !hasThemeJs) {
     configureRaiseOnDeprecation();
   }
 }
