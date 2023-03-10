@@ -5,9 +5,8 @@ RSpec.describe TagsController do
   fab!(:admin) { Fabricate(:admin) }
   fab!(:regular_user) { Fabricate(:trust_level_4) }
   fab!(:moderator) { Fabricate(:moderator) }
-  # -1 keeps tests more stable TopicQuery has `categories.topic_id <> topics.id` which will fail if this is null
-  fab!(:category) { Fabricate(:category, topic_id: -1) }
-  fab!(:subcategory) { Fabricate(:category, topic_id: -1, parent_category_id: category.id) }
+  fab!(:category) { Fabricate(:category) }
+  fab!(:subcategory) { Fabricate(:category, parent_category_id: category.id) }
 
   before { SiteSetting.tagging_enabled = true }
 
