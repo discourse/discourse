@@ -471,6 +471,7 @@ describe ChatMessage do
       message_1.destroy!
 
       expect { mention_1.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      expect { notification.reload }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
     it "destroys chat_webhook_event" do
