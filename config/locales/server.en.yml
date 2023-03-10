@@ -1721,7 +1721,7 @@ en:
     enable_discourse_connect: "Enable sign on via DiscourseConnect (formerly 'Discourse SSO') (WARNING: USERS' EMAIL ADDRESSES *MUST* BE VALIDATED BY THE EXTERNAL SITE!)"
     verbose_discourse_connect_logging: "Log verbose DiscourseConnect related diagnostics to <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     enable_discourse_connect_provider: "Implement DiscourseConnect (formerly 'Discourse SSO') provider protocol at the /session/sso_provider endpoint, requires discourse_connect_provider_secrets to be set"
-    discourse_connect_url: "URL of DiscourseConnect endpoint (must include http:// or https://)"
+    discourse_connect_url: "URL of DiscourseConnect endpoint (must include http:// or https://, and must not include a trailing slash)"
     discourse_connect_secret: "Secret string used to cryptographically authenticate DiscourseConnect information, be sure it is 10 characters or longer"
     discourse_connect_provider_secrets: "A list of domain-secret pairs that are using DiscourseConnect. Make sure DiscourseConnect secret is 10 characters or longer. Wildcard symbol * can be used to match any domain or only a part of it (e.g. *.example.com)."
     discourse_connect_overrides_bio: "Overrides user bio in user profile and prevents user from changing it"
