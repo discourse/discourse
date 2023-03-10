@@ -269,7 +269,7 @@ RSpec.describe SidebarSectionsController do
              links_order: [sidebar_url_2.id, sidebar_url_3.id, sidebar_url_1.id],
            }
 
-      serializer = SidebarSectionSerializer.new(sidebar_section, root: false).as_json
+      serializer = SidebarSectionSerializer.new(sidebar_section.reload, root: false).as_json
       expect(serializer[:links].map(&:id)).to eq(
         [sidebar_url_2.id, sidebar_url_3.id, sidebar_url_1.id],
       )
