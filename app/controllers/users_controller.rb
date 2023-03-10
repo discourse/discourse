@@ -1842,16 +1842,21 @@ class UsersController < ApplicationController
     if unread_notifications.size < USER_MENU_LIST_LIMIT
       exclude_topic_ids = unread_notifications.filter_map(&:topic_id).uniq
       limit = USER_MENU_LIST_LIMIT - unread_notifications.size
+
       messages_list =
         TopicQuery
           .new(current_user, per_page: limit)
-          .list_private_messages_direct_and_groups(current_user) do |query|
+          .list_private_messages_direct_and_groups(
+            current_user,
+            groups_messages_notification_level: :watching,
+          ) do |query|
             if exclude_topic_ids.present?
               query.where("topics.id NOT IN (?)", exclude_topic_ids)
             else
               query
             end
           end
+
       read_notifications =
         Notification
           .for_user_menu(current_user.id, limit: limit)
