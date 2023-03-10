@@ -838,17 +838,12 @@ class TopicQuery
     end
 
     if status = options[:status]
-      options[:q] ||= +""
-      options[:q] << " status:#{status}"
-    end
-
-    if options[:q].present?
       result =
         TopicsFilter.new(
           scope: result,
           guardian: @guardian,
           category_id: options[:category],
-        ).filter(options[:q])
+        ).filter(status: options[:status])
     end
 
     if (filter = (options[:filter] || options[:f])) && @user
