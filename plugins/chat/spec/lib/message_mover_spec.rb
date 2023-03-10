@@ -109,14 +109,7 @@ describe Chat::MessageMover do
     it "updates references for reactions, uploads, revisions, mentions, etc." do
       reaction = Fabricate(:chat_message_reaction, chat_message: message1)
       upload = Fabricate(:upload_reference, target: message1)
-      notification = Fabricate(:notification)
-      mention =
-        Fabricate(
-          :chat_mention,
-          chat_message: message2,
-          user: acting_user,
-          notification: notification,
-        )
+      mention = Fabricate(:chat_mention, chat_message: message2, user: acting_user)
       revision = Fabricate(:chat_message_revision, chat_message: message3)
       webhook_event = Fabricate(:chat_webhook_event, chat_message: message3)
       move!
