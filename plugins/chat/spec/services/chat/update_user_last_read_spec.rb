@@ -18,17 +18,10 @@ RSpec.describe Chat::UpdateUserLastRead do
     fab!(:message_1) { Fabricate(:chat_message, chat_channel: membership.chat_channel) }
 
     let(:guardian) { Guardian.new(current_user) }
-    let(:params) do
-      {
-        guardian: guardian,
-        user_id: current_user.id,
-        channel_id: channel.id,
-        message_id: message_1.id,
-      }
-    end
+    let(:params) { { guardian: guardian, channel_id: channel.id, message_id: message_1.id } }
 
     context "when params are not valid" do
-      before { params.delete(:user_id) }
+      before { params.delete(:message_id) }
 
       it { is_expected.to fail_a_contract }
     end
@@ -37,7 +30,7 @@ RSpec.describe Chat::UpdateUserLastRead do
       context "when user has no membership" do
         before { membership.destroy! }
 
-        it { is_expected.to fail_to_find_a_model(:membership) }
+        it { is_expected.to fail_to_find_a_model(:active_membership) }
       end
 
       context "when user can’t access the channel" do
@@ -56,8 +49,10 @@ RSpec.describe Chat::UpdateUserLastRead do
 
       context "when message_id is older than membership's last_read_message_id" do
         before do
-          params[:message_id] = -2
-          membership.update!(last_read_message_id: -1)
+          message_old = Fabricate(:chat_message, chat_channel: channel)
+          message_new = Fabricate(:chat_message, chat_channel: channel)
+          params[:message_id] = message_old.id
+          membership.update!(last_read_message_id: message_new.id)
         end
 
         it { is_expected.to fail_a_policy(:ensure_message_id_recency) }

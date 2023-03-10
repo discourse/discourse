@@ -19,7 +19,7 @@
 # * +on_model_not_found(name)+: will execute the provided block if the service
 #   fails and its model is not present
 #
-# Default actions for each of these are defined in [Chat::BaseController#default_actions_for_service]
+# Default actions for each of these are defined in [Chat::ApiController#default_actions_for_service]
 #
 # @example In a controller
 #   def create

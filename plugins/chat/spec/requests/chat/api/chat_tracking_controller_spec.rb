@@ -1,114 +1,224 @@
 # frozen_string_literal: true
 
 RSpec.describe Chat::Api::ChatTrackingController do
-  describe "#update_user_last_read" do
-    before { sign_in(user) }
+  fab!(:current_user) { Fabricate(:user) }
 
-    fab!(:message_1) { Fabricate(:chat_message, chat_channel: chat_channel, user: other_user) }
-    fab!(:message_2) { Fabricate(:chat_message, chat_channel: chat_channel, user: other_user) }
+  before do
+    SiteSetting.chat_enabled = true
+    SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
+    sign_in(current_user)
+  end
 
-    it "returns a 404 when the user is not a channel member" do
-      put "/chat/#{chat_channel.id}/read/#{message_1.id}.json"
+  describe "#read" do
+    describe "marking a single message read" do
+      fab!(:chat_channel) { Fabricate(:chat_channel) }
+      fab!(:other_user) { Fabricate(:user) }
+      fab!(:message_1) { Fabricate(:chat_message, chat_channel: chat_channel, user: other_user) }
+      fab!(:message_2) { Fabricate(:chat_message, chat_channel: chat_channel, user: other_user) }
 
-      expect(response.status).to eq(404)
-    end
+      it "returns a 404 when the user is not a channel member" do
+        put "/chat/api/tracking/read/me.json",
+            params: {
+              channel_id: chat_channel.id,
+              message_id: message_1.id,
+            }
 
-    it "returns a 404 when the user is not following the channel" do
-      Fabricate(
-        :user_chat_channel_membership,
-        chat_channel: chat_channel,
-        user: user,
-        following: false,
-      )
-
-      put "/chat/#{chat_channel.id}/read/#{message_1.id}.json"
-
-      expect(response.status).to eq(404)
-    end
-
-    describe "when the user is a channel member" do
-      fab!(:membership) do
-        Fabricate(:user_chat_channel_membership, chat_channel: chat_channel, user: user)
+        expect(response.status).to eq(404)
       end
 
-      context "when message_id param doesn't link to a message of the channel" do
-        it "raises a not found" do
-          put "/chat/#{chat_channel.id}/read/-999.json"
+      it "returns a 404 when the user is not following the channel" do
+        Fabricate(
+          :user_chat_channel_membership,
+          chat_channel: chat_channel,
+          user: current_user,
+          following: false,
+        )
 
-          expect(response.status).to eq(404)
+        put "/chat/api/tracking/read/me.json",
+            params: {
+              channel_id: chat_channel.id,
+              message_id: message_1.id,
+            }
+
+        expect(response.status).to eq(404)
+      end
+
+      describe "when the user is a channel member" do
+        fab!(:membership) do
+          Fabricate(:user_chat_channel_membership, chat_channel: chat_channel, user: current_user)
         end
-      end
 
-      context "when message_id param is inferior to existing last read" do
-        before { membership.update!(last_read_message_id: message_2.id) }
+        context "when message_id param doesn't link to a message of the channel" do
+          it "raises a not found" do
+            put "/chat/api/tracking/read/me.json",
+                params: {
+                  channel_id: chat_channel.id,
+                  message_id: -999,
+                }
 
-        it "raises an invalid request" do
-          put "/chat/#{chat_channel.id}/read/#{message_1.id}.json"
-
-          expect(response.status).to eq(400)
-          expect(response.parsed_body["errors"][0]).to match(/message_id/)
-        end
-      end
-
-      context "when message_id refers to deleted message" do
-        before { message_1.trash!(Discourse.system_user) }
-
-        it "works" do
-          put "/chat/#{chat_channel.id}/read/#{message_1.id}.json"
-
-          expect(response.status).to eq(200)
-        end
-      end
-
-      it "updates timing records" do
-        expect { put "/chat/#{chat_channel.id}/read/#{message_1.id}.json" }.not_to change {
-          UserChatChannelMembership.count
-        }
-
-        membership.reload
-        expect(membership.chat_channel_id).to eq(chat_channel.id)
-        expect(membership.last_read_message_id).to eq(message_1.id)
-        expect(membership.user_id).to eq(user.id)
-      end
-
-      def create_notification_and_mention_for(user, sender, msg)
-        Notification
-          .create!(
-            notification_type: Notification.types[:chat_mention],
-            user: user,
-            high_priority: true,
-            read: false,
-            data: {
-              message: "chat.mention_notification",
-              chat_message_id: msg.id,
-              chat_channel_id: msg.chat_channel_id,
-              chat_channel_title: msg.chat_channel.title(user),
-              chat_channel_slug: msg.chat_channel.slug,
-              mentioned_by_username: sender.username,
-            }.to_json,
-          )
-          .tap do |notification|
-            ChatMention.create!(user: user, chat_message: msg, notification: notification)
+            expect(response.status).to eq(404)
           end
-      end
+        end
 
-      it "marks all mention notifications as read for the channel" do
-        notification = create_notification_and_mention_for(user, other_user, message_1)
+        context "when message_id param is inferior to existing last read" do
+          before { membership.update!(last_read_message_id: message_2.id) }
 
-        put "/chat/#{chat_channel.id}/read/#{message_2.id}.json"
-        expect(response.status).to eq(200)
-        expect(notification.reload.read).to eq(true)
-      end
+          it "raises an invalid request" do
+            put "/chat/api/tracking/read/me.json",
+                params: {
+                  channel_id: chat_channel.id,
+                  message_id: message_1.id,
+                }
 
-      it "doesn't mark notifications of messages that weren't read yet" do
-        message_3 = Fabricate(:chat_message, chat_channel: chat_channel, user: other_user)
-        notification = create_notification_and_mention_for(user, other_user, message_3)
+            expect(response.status).to eq(400)
+            expect(response.parsed_body["errors"][0]).to match(/message_id/)
+          end
+        end
 
-        put "/chat/#{chat_channel.id}/read/#{message_2.id}.json"
+        context "when message_id refers to deleted message" do
+          before { message_1.trash!(Discourse.system_user) }
 
-        expect(response.status).to eq(200)
-        expect(notification.reload.read).to eq(false)
+          it "works" do
+            put "/chat/api/tracking/read/me",
+                params: {
+                  channel_id: chat_channel.id,
+                  message_id: message_1.id,
+                }
+
+            expect(response.status).to eq(200)
+          end
+        end
+
+        it "updates timing records" do
+          expect {
+            put "/chat/api/tracking/read/me.json",
+                params: {
+                  channel_id: chat_channel.id,
+                  message_id: message_1.id,
+                }
+          }.not_to change { UserChatChannelMembership.count }
+
+          membership.reload
+          expect(membership.chat_channel_id).to eq(chat_channel.id)
+          expect(membership.last_read_message_id).to eq(message_1.id)
+          expect(membership.user_id).to eq(current_user.id)
+        end
+
+        it "marks all mention notifications as read for the channel" do
+          notification = create_notification_and_mention_for(current_user, other_user, message_1)
+
+          put "/chat/api/tracking/read/me.json",
+              params: {
+                channel_id: chat_channel.id,
+                message_id: message_2.id,
+              }
+          expect(response.status).to eq(200)
+          expect(notification.reload.read).to eq(true)
+        end
+
+        it "doesn't mark notifications of messages that weren't read yet" do
+          message_3 = Fabricate(:chat_message, chat_channel: chat_channel, user: other_user)
+          notification = create_notification_and_mention_for(current_user, other_user, message_3)
+
+          put "/chat/api/tracking/read/me.json",
+              params: {
+                channel_id: chat_channel.id,
+                message_id: message_2.id,
+              }
+          expect(response.status).to eq(200)
+          expect(notification.reload.read).to eq(false)
+        end
       end
     end
+
+    describe "marking all messages read" do
+      fab!(:chat_channel_1) { Fabricate(:chat_channel) }
+      fab!(:chat_channel_2) { Fabricate(:chat_channel) }
+      fab!(:chat_channel_3) { Fabricate(:chat_channel) }
+
+      fab!(:other_user) { Fabricate(:user) }
+
+      fab!(:message_1) { Fabricate(:chat_message, chat_channel: chat_channel_1, user: other_user) }
+      fab!(:message_2) { Fabricate(:chat_message, chat_channel: chat_channel_1, user: other_user) }
+      fab!(:message_3) { Fabricate(:chat_message, chat_channel: chat_channel_2, user: other_user) }
+      fab!(:message_4) { Fabricate(:chat_message, chat_channel: chat_channel_2, user: other_user) }
+      fab!(:message_5) { Fabricate(:chat_message, chat_channel: chat_channel_3, user: other_user) }
+      fab!(:message_6) { Fabricate(:chat_message, chat_channel: chat_channel_3, user: other_user) }
+
+      fab!(:membership_1) do
+        Fabricate(
+          :user_chat_channel_membership,
+          chat_channel: chat_channel_1,
+          user: current_user,
+          following: true,
+        )
+      end
+      fab!(:membership_2) do
+        Fabricate(
+          :user_chat_channel_membership,
+          chat_channel: chat_channel_2,
+          user: current_user,
+          following: true,
+        )
+      end
+      fab!(:membership_3) do
+        Fabricate(
+          :user_chat_channel_membership,
+          chat_channel: chat_channel_3,
+          user: current_user,
+          following: true,
+        )
+      end
+
+      it "marks all messages as read across the user's channel memberships with the correct last_read_message_id" do
+        put "/chat/api/tracking/read/me.json"
+
+        expect(membership_1.reload.last_read_message_id).to eq(message_2.id)
+        expect(membership_2.reload.last_read_message_id).to eq(message_4.id)
+        expect(membership_3.reload.last_read_message_id).to eq(message_6.id)
+      end
+
+      it "doesn't mark messages for channels the user is not following as read" do
+        membership_1.update!(following: false)
+
+        put "/chat/api/tracking/read/me.json"
+
+        expect(membership_1.reload.last_read_message_id).to eq(nil)
+        expect(membership_2.reload.last_read_message_id).to eq(message_4.id)
+        expect(membership_3.reload.last_read_message_id).to eq(message_6.id)
+      end
+
+      it "returns the updated memberships, channels, and last message id" do
+        put "/chat/api/tracking/read/me.json"
+        expect(response.parsed_body["updated_memberships"].first).to eq(
+          {
+            "chat_channel_id" => chat_channel_1.id,
+            "last_read_message_id" => message_2.id,
+            "membership_id" => membership_1.id,
+          },
+        )
+      end
+    end
+  end
+
+  def create_notification_and_mention_for(user, sender, msg)
+    Notification
+      .create!(
+        notification_type: Notification.types[:chat_mention],
+        user: user,
+        high_priority: true,
+        read: false,
+        data: {
+          message: "chat.mention_notification",
+          chat_message_id: msg.id,
+          chat_channel_id: msg.chat_channel_id,
+          chat_channel_title: msg.chat_channel.title(user),
+          chat_channel_slug: msg.chat_channel.slug,
+          mentioned_by_username: sender.username,
+        }.to_json,
+      )
+      .tap do |notification|
+        ChatMention.create!(user: user, chat_message: msg, notification: notification)
+      end
   end
 end
