@@ -391,7 +391,7 @@ export default function setupTests(config) {
   const hasPluginJs = !!document.querySelector("script[data-discourse-plugin]");
   const hasThemeJs = !!document.querySelector("script[data-theme-id]");
 
-  if (!(hasPluginJs || hasThemeJs)) {
+  if (!hasPluginJs && !hasThemeJs) {
     configureRaiseOnDeprecation();
   }
 }
