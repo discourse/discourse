@@ -193,6 +193,18 @@
       @min="0"
     />
   </section>
+
+  <section class="field auto-bump-cooldown-days">
+    <label for="category-auto-bump-cooldown-days">
+      {{i18n "category.auto_bump_cooldown_days"}}
+    </label>
+    <NumberField
+      @number={{this.category.category_setting.auto_bump_cooldown_days}}
+      @id="category-auto-bump-cooldown-days"
+      @type="number"
+      @min="0"
+    />
+  </section>
 </section>
 
 <section>

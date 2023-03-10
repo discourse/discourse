@@ -10,6 +10,7 @@ module Middleware
           Rack::QueryParser::InvalidParameterError,
           ActionController::BadRequest,
           ActionDispatch::Http::Parameters::ParseError,
+          ActionController::RoutingError,
         ],
       )
 

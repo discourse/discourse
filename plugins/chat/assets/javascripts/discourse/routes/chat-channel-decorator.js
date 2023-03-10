@@ -11,6 +11,8 @@ export default function withChatChannel(extendedClass) {
     }
 
     afterModel(model) {
+      super.afterModel?.(...arguments);
+
       this.controllerFor("chat-channel").set("targetMessageId", null);
       this.chat.activeChannel = model;
 

@@ -5,7 +5,7 @@ describe "Viewing sidebar", type: :system, js: true do
   fab!(:user) { Fabricate(:user) }
   fab!(:category_sidebar_section_link) { Fabricate(:category_sidebar_section_link, user: user) }
 
-  before_all { sign_in(user) }
+  before { sign_in(user) }
 
   describe "when using the legacy navigation menu" do
     before { SiteSetting.navigation_menu = "legacy" }

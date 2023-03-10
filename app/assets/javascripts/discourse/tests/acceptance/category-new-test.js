@@ -22,6 +22,11 @@ acceptance("Category New", function (needs) {
     await fillIn("input.category-name", "testing");
     assert.strictEqual(query(".badge-category").innerText, "testing");
 
+    await click(".edit-category-nav .edit-category-topic-template a");
+    assert
+      .dom(".edit-category-tab-topic-template")
+      .isVisible("it can switch to topic template tab");
+
     await click(".edit-category-nav .edit-category-tags a");
     await click("button.add-required-tag-group");
 

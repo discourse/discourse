@@ -48,7 +48,11 @@ class Category < ActiveRecord::Base
 
   has_one :category_setting, dependent: :destroy
 
+  delegate :auto_bump_cooldown_days, to: :category_setting, allow_nil: true
+
   has_and_belongs_to_many :web_hooks
+
+  accepts_nested_attributes_for :category_setting, update_only: true
 
   validates :user_id, presence: true
 
@@ -96,6 +100,7 @@ class Category < ActiveRecord::Base
   before_save :apply_permissions
   before_save :downcase_email
   before_save :downcase_name
+  before_save :ensure_category_setting
 
   after_save :publish_discourse_stylesheet
   after_save :publish_category
@@ -682,7 +687,7 @@ class Category < ActiveRecord::Base
         .exclude_scheduled_bump_topics
         .where(category_id: self.id)
         .where("id <> ?", self.topic_id)
-        .where("bumped_at < ?", 1.day.ago)
+        .where("bumped_at < ?", (self.auto_bump_cooldown_days || 1).days.ago)
         .where("pinned_at IS NULL AND NOT closed AND NOT archived")
         .order("bumped_at ASC")
         .limit(1)
@@ -1039,6 +1044,10 @@ class Category < ActiveRecord::Base
   end
 
   private
+
+  def ensure_category_setting
+    self.build_category_setting if self.category_setting.blank?
+  end
 
   def should_update_reviewables?
     SiteSetting.enable_category_group_moderation? && saved_change_to_reviewable_by_group_id?
