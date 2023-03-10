@@ -2,6 +2,7 @@
 
 class Category < ActiveRecord::Base
   RESERVED_SLUGS = ["none"]
+  LIST_FILTER_NONE = "none"
 
   self.ignored_columns = [
     :suppress_from_latest, # TODO(2020-11-18): remove

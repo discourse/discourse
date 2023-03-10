@@ -531,6 +531,15 @@ class TagsController < ::ApplicationController
       )
     options[:no_subcategories] = true if params[:no_subcategories] == true ||
       params[:no_subcategories] == "true"
+
+    if options[:category] && params[:no_subcategories].nil? && !options[:no_subcategories] &&
+         Category.where(
+           id: options[:category].to_i,
+           default_list_filter: Category::LIST_FILTER_NONE,
+         ).exists?
+      options[:no_subcategories] = true
+    end
+
     options[:per_page] = params[:per_page].to_i.clamp(1, 30) if params[:per_page].present?
 
     if params[:tag_id] == "none"

@@ -59,6 +59,11 @@ class ListController < ApplicationController
         list_opts[:no_definitions] = true
       end
 
+      if @category && options[:no_subcategories].nil? &&
+           @category.default_list_filter == Category::LIST_FILTER_NONE
+        list_opts[:no_subcategories] = true
+      end
+
       list = TopicQuery.new(user, list_opts).public_send("list_#{filter}")
 
       if guardian.can_create_shared_draft? && @category.present?

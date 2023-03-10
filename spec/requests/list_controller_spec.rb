@@ -154,8 +154,8 @@ RSpec.describe ListController do
   end
 
   describe "categories and X" do
-    let(:category) { Fabricate(:category_with_definition) }
-    let(:sub_category) { Fabricate(:category_with_definition, parent_category: category) }
+    fab!(:category) { Fabricate(:category_with_definition) }
+    fab!(:sub_category) { Fabricate(:category_with_definition, parent_category: category) }
 
     it "returns top topics" do
       Fabricate(:topic, like_count: 1000, posts_count: 100)
@@ -170,10 +170,29 @@ RSpec.describe ListController do
       expect(data["topic_list"]["topics"].length).to eq(2)
     end
 
-    it "returns topics from subcategories when no_subcategories=false" do
-      Fabricate(:topic, category: sub_category)
-      get "/c/#{category.slug}/#{category.id}/l/latest.json?no_subcategories=false"
-      expect(response.parsed_body["topic_list"]["topics"].length).to eq(2)
+    context "with sub topic" do
+      fab!(:sub_topic) do
+        Fabricate(:topic, category: sub_category, posts_count: 100, like_count: 1000)
+      end
+
+      it "returns topics from subcategories when no_subcategories=false" do
+        get "/c/#{category.slug}/#{category.id}/l/latest.json?no_subcategories=false"
+        expect(response.parsed_body["topic_list"]["topics"].length).to eq(2)
+      end
+
+      it "does not return subcategories when omitted by default" do
+        category.update!(default_list_filter: "none")
+        TopTopic.refresh!
+
+        get "/c/#{category.slug}/#{category.id}.json"
+        expect(response.parsed_body["topic_list"]["topics"].length).to eq(1)
+
+        get "/c/#{category.slug}/#{category.id}/l/latest.json"
+        expect(response.parsed_body["topic_list"]["topics"].length).to eq(1)
+
+        get "/c/#{category.slug}/#{category.id}/l/top.json"
+        expect(response.parsed_body["topic_list"]["topics"].length).to eq(0)
+      end
     end
   end
 

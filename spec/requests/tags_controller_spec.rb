@@ -5,8 +5,9 @@ RSpec.describe TagsController do
   fab!(:admin) { Fabricate(:admin) }
   fab!(:regular_user) { Fabricate(:trust_level_4) }
   fab!(:moderator) { Fabricate(:moderator) }
-  fab!(:category) { Fabricate(:category) }
-  fab!(:subcategory) { Fabricate(:category, parent_category_id: category.id) }
+  # -1 keeps tests more stable TopicQuery has `categories.topic_id <> topics.id` which will fail if this is null
+  fab!(:category) { Fabricate(:category, topic_id: -1) }
+  fab!(:subcategory) { Fabricate(:category, topic_id: -1, parent_category_id: category.id) }
 
   before { SiteSetting.tagging_enabled = true }
 
@@ -423,7 +424,7 @@ RSpec.describe TagsController do
     end
 
     it "does not show staff-only tags" do
-      tag_group = Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: ["test"])
+      Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: ["test"])
 
       get "/tag/test"
       expect(response.status).to eq(404)
@@ -487,6 +488,18 @@ RSpec.describe TagsController do
       fab!(:topic_in_subcategory_without_tag) { Fabricate(:topic, category: subcategory) }
 
       fab!(:topic_out_of_subcategory) { Fabricate(:topic, tags: [tag]) }
+
+      it "should not produce topic inside subcategory if it is omitted per category settings" do
+        get "/tags/c/#{category.slug}/#{category.id}/#{tag.name}/l/latest.json"
+        topic_ids = response.parsed_body["topic_list"]["topics"].map { |x| x["id"] }
+        expect(topic_ids).to eq([topic_in_subcategory.id])
+
+        category.update!(default_list_filter: Category::LIST_FILTER_NONE)
+
+        get "/tags/c/#{category.slug}/#{category.id}/#{tag.name}/l/latest.json"
+        topic_ids = response.parsed_body["topic_list"]["topics"].map { |x| x["id"] }
+        expect(topic_ids).to eq([])
+      end
 
       it "should produce the topic inside the subcategory and not the topic outside of it" do
         get "/tags/c/#{category.slug}/#{subcategory.slug}/#{tag.name}.json"
