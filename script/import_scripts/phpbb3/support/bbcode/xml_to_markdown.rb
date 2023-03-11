@@ -203,7 +203,8 @@ module ImportScripts::PhpBB3::BBCode
     def quoted_post(xml_node)
       if @quoted_post_from_post_id
         post_id = to_i(xml_node.attr("post_id"))
-        @quoted_post_from_post_id.call(post_id) if post_id
+        username = quoted_username(xml_node)
+        @quoted_post_from_post_id.call(post_id).merge({ username: username }) if post_id && username
       end
     end
 
