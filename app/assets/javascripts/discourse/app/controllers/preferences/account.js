@@ -216,7 +216,11 @@ export default Controller.extend(CanCheckEmails, {
                   });
                 },
                 () => {
-                  this.dialog.alert(I18n.t("user.delete_yourself_not_allowed"));
+                  next(() =>
+                    this.dialog.alert(
+                      I18n.t("user.delete_yourself_not_allowed")
+                    )
+                  );
                   this.set("deleting", false);
                 }
               );
