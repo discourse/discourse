@@ -121,12 +121,12 @@
     {{#if this.displaySummary}}
       <button
         type="button"
-        class="show-summary btn-small"
-        label={{i18n "summary.short_label"}}
+        class="show-summary btn btn-small"
         title={{i18n "summary.short_title"}}
         {{on "click" @showSummary}}
       >
         {{d-icon "layer-group"}}
+        {{i18n "summary.short_label"}}
       </button>
     {{/if}}
 
