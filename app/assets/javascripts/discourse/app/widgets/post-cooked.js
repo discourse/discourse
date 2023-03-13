@@ -421,11 +421,11 @@ export default class PostCooked {
       return status.description;
     }
 
-    const until_ = until(
-      status.ends_at,
-      this.currentUser.timezone,
-      this.currentUser.locale
-    );
+    const timezone = this.currentUser
+      ? this.currentUser.user_option?.timezone
+      : moment.tz.guess();
+
+    const until_ = until(status.ends_at, timezone, this.currentUser?.locale);
     return escapeExpression(`${status.description} ${until_}`);
   }
 
