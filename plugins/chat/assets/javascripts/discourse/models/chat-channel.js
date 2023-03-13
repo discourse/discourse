@@ -1,6 +1,6 @@
-import RestModel from "discourse/models/rest";
-import User from "discourse/models/user";
+import Category from "discourse/models/category";
 import UserChatChannelMembership from "discourse/plugins/chat/discourse/models/user-chat-channel-membership";
+import ChatDirectMessage from "discourse/plugins/chat/discourse/models/chat-direct-message";
 import { ajax } from "discourse/lib/ajax";
 import { escapeExpression } from "discourse/lib/utilities";
 import { tracked } from "@glimmer/tracking";
@@ -47,7 +47,11 @@ const READONLY_STATUSES = [
   CHANNEL_STATUSES.archived,
 ];
 
-export default class ChatChannel extends RestModel {
+export default class ChatChannel {
+  static create(args) {
+    return new ChatChannel(args);
+  }
+
   @tracked currentUserMembership = null;
   @tracked isDraft = false;
   @tracked title;
@@ -65,8 +69,50 @@ export default class ChatChannel extends RestModel {
   @tracked canModerate;
   @tracked userSilenced;
   @tracked draft;
+  @tracked meta;
+  @tracked threadingEnabled;
 
   threadsManager = new ChatThreadsManager(getOwner(this));
+
+  constructor(args = {}) {
+    this.id = args.id;
+    this.createdAt = args.created_at;
+    this.lastMessageSentAt = args.last_message_sent_at;
+    this.currentUserMembership = this.#initUserMembership(
+      args.current_user_membership
+    );
+    this.meta = args.meta;
+    this.title = args.title;
+    this.description = args.description;
+    this.chatableType = args.chatable_type;
+    this.status = args.status;
+    this.chatable = this.#initChatable(args);
+    this.membershipsCount = args.memberships_count;
+    this.threadingEnabled = args.threading_enabled;
+  }
+
+  #initChatable(args) {
+    if (args.chatable_type === CHATABLE_TYPES.directMessageChannel) {
+      return ChatDirectMessage.create(args.chatable);
+    }
+
+    return Category.findById(args.chatable_id);
+  }
+
+  #initUserMembership(membership) {
+    if (membership instanceof UserChatChannelMembership) {
+      return;
+    }
+
+    return UserChatChannelMembership.create(
+      membership || {
+        following: false,
+        muted: false,
+        unread_count: 0,
+        unread_mentions: 0,
+      }
+    );
+  }
 
   get escapedTitle() {
     return escapeExpression(this.title);
@@ -199,51 +245,6 @@ export default class ChatChannel extends RestModel {
     });
   }
 }
-
-ChatChannel.reopenClass({
-  create(args) {
-    args = args || {};
-
-    this._initUserModels(args);
-    this._initUserMembership(args);
-
-    this._remapKey(args, "chatable_type", "chatableType");
-    this._remapKey(args, "memberships_count", "membershipsCount");
-    this._remapKey(args, "last_message_sent_at", "lastMessageSentAt");
-
-    return this._super(args);
-  },
-
-  _remapKey(obj, oldKey, newKey) {
-    delete Object.assign(obj, { [newKey]: obj[oldKey] })[oldKey];
-  },
-
-  _initUserModels(args) {
-    if (args.chatable?.users?.length) {
-      for (let i = 0; i < args.chatable?.users?.length; i++) {
-        const userData = args.chatable.users[i];
-        args.chatable.users[i] = User.create(userData);
-      }
-    }
-  },
-
-  _initUserMembership(args) {
-    if (args.currentUserMembership instanceof UserChatChannelMembership) {
-      return;
-    }
-
-    args.currentUserMembership = UserChatChannelMembership.create(
-      args.current_user_membership || {
-        following: false,
-        muted: false,
-        unread_count: 0,
-        unread_mentions: 0,
-      }
-    );
-
-    delete args.current_user_membership;
-  },
-});
 
 export function createDirectMessageChannelDraft() {
   return ChatChannel.create({

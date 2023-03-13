@@ -210,9 +210,7 @@ export default class ChatMessage extends Component {
   }
 
   get hasThread() {
-    return (
-      this.args.channel?.get("threading_enabled") && this.args.message?.threadId
-    );
+    return this.args.channel?.threadingEnabled && this.args.message?.threadId;
   }
 
   get show() {
