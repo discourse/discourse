@@ -216,6 +216,13 @@ class TopicQuery
 
     pm_params = pm_params || get_pm_params(topic)
 
+    if DiscoursePluginRegistry.list_suggested_for_providers.any?
+      DiscoursePluginRegistry.list_suggested_for_providers.each do |provider|
+        suggested = provider.call(topic, pm_params, self)
+        builder.add_results(suggested[:result]) if suggested && !suggested[:result].blank?
+      end
+    end
+
     # When logged in we start with different results
     if @user
       if topic.private_message?
