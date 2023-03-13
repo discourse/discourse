@@ -685,7 +685,10 @@ class TopicQuery
         result = result.where("topics.category_id IN (?)", Category.subcategory_ids(category_id))
         if !SiteSetting.show_category_definitions_in_topic_lists
           result =
-            result.where("categories.topic_id <> topics.id OR topics.category_id = ?", category_id)
+            result.where(
+              "categories.topic_id IS DISTINCT FROM topics.id OR topics.category_id = ?",
+              category_id,
+            )
         end
       end
       result = result.references(:categories)
