@@ -2482,6 +2482,7 @@ uncategorized:
   admin_quick_start_topic_id:
     default: -1
     hidden: true
+    client: true
 
   bootstrap_mode_min_users:
     default: 50

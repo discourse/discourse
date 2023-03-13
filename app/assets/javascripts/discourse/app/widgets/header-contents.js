@@ -14,6 +14,10 @@ createWidget("header-contents", {
 
     {{#if attrs.topic}}
       {{header-topic-info attrs=attrs}}
+    {{else if this.siteSettings.bootstrap_mode_enabled}}
+      {{#if this.currentUser.staff}}
+        {{header-bootstrap-mode attrs=attrs}}
+      {{/if}}
     {{/if}}
 
     <div class="panel clearfix" role="navigation">{{yield}}</div>

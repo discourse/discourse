@@ -4,6 +4,10 @@ Congratulations, you are now the proud owner of your very own [Civilized Discour
 
 If you haven't already, launch the [setup wizard](/wizard) and go through the steps to configure your site. You can run the wizard as many times as you want, it's completely safe!
 
+### Bootstrap Mode
+
+To make launching your new site easier, you are in bootstrap mode. All new users will be granted trust level 1 and have daily email summary emails enabled. This will be automatically turned off when more users have joined. To make the sign up process faster, consider [sending out invites](my/invited/pending).
+
 ### Admin Dashboard
 
 Exercise your admin superpowers any time via the admin dashboard at

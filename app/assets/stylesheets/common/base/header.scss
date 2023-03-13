@@ -445,3 +445,15 @@ $mobile-avatar-height: 1.532em;
     margin-left: 5px;
   }
 }
+
+.d-header-mode {
+  background: var(--primary-low);
+  border-radius: 2em;
+  font-size: var(--font-down-1);
+  margin-left: 0.5em;
+  padding: 0.25em 0.5em;
+
+  a {
+    color: var(--primary-medium);
+  }
+}
