@@ -92,7 +92,7 @@
     "qunit-dom": "^2.0.0",
     "sass": "^1.58.3",
     "select-kit": "1.0.0",
-    "sinon": "^15.0.1",
+    "sinon": "^15.0.2",
     "source-map": "^0.7.4",
     "terser": "^5.16.6",
     "tippy.js": "^6.3.7",
