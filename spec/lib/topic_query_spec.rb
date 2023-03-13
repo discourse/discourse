@@ -1909,4 +1909,31 @@ RSpec.describe TopicQuery do
       )
     end
   end
+
+  describe "show_category_definitions_in_topic_lists setting" do
+    fab!(:category) { Fabricate(:category_with_definition) }
+    fab!(:subcategory) { Fabricate(:category_with_definition, parent_category: category) }
+    fab!(:subcategory_regular_topic) { Fabricate(:topic, category: subcategory) }
+
+    it "excludes subcategory definition topics by default" do
+      expect(
+        TopicQuery.new(nil, category: category.id).list_latest.topics.map(&:id),
+      ).to contain_exactly(category.topic_id, subcategory_regular_topic.id)
+    end
+
+    it "works when topic_id is null" do
+      subcategory.topic.destroy!
+      subcategory.update!(topic_id: nil)
+      expect(
+        TopicQuery.new(nil, category: category.id).list_latest.topics.map(&:id),
+      ).to contain_exactly(category.topic_id, subcategory_regular_topic.id)
+    end
+
+    it "includes subcategory definition when setting enabled" do
+      SiteSetting.show_category_definitions_in_topic_lists = true
+      expect(
+        TopicQuery.new(nil, category: category.id).list_latest.topics.map(&:id),
+      ).to contain_exactly(category.topic_id, subcategory.topic_id, subcategory_regular_topic.id)
+    end
+  end
 end

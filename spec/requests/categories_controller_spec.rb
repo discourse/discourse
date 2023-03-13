@@ -131,10 +131,17 @@ RSpec.describe CategoriesController do
       category_list = response.parsed_body["category_list"]
 
       category_response = category_list["categories"].find { |c| c["id"] == category.id }
-      expect(category_response["topics"].map { |c| c["id"] }).to contain_exactly(topic1.id)
+      expect(category_response["topics"].map { |c| c["id"] }).to contain_exactly(
+        topic1.id,
+        topic2.id,
+        topic3.id,
+      )
 
       subcategory_response = category_response["subcategory_list"][0]
-      expect(subcategory_response["topics"].map { |c| c["id"] }).to contain_exactly(topic2.id)
+      expect(subcategory_response["topics"].map { |c| c["id"] }).to contain_exactly(
+        topic2.id,
+        topic3.id,
+      )
 
       subsubcategory_response = subcategory_response["subcategory_list"][0]
       expect(subsubcategory_response["topics"].map { |c| c["id"] }).to contain_exactly(topic3.id)
