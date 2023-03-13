@@ -77,6 +77,15 @@ export default class TopicTimelineScrollArea extends Component {
     this.dockCheck();
   }
 
+  get displaySummary() {
+    return (
+      this.siteSettings.summary_timeline_button &&
+      !this.args.fullScreen &&
+      this.args.model.has_summary &&
+      !this.args.model.postStream.summary
+    );
+  }
+
   get displayTimeLineScrollArea() {
     if (this.args.mobileView) {
       return true;
