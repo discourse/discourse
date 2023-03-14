@@ -10,8 +10,14 @@ import { registerUnbound } from "discourse-common/lib/helpers";
 
 registerUnbound("raw-date", (dt) => htmlSafe(longDate(new Date(dt))));
 
-registerUnbound("age-with-tooltip", (dt) =>
-  htmlSafe(autoUpdatingRelativeAge(new Date(dt), { title: true }))
+registerUnbound("age-with-tooltip", (dt, params) =>
+  htmlSafe(
+    autoUpdatingRelativeAge(new Date(dt), {
+      title: true,
+      addAgo: params.addAgo || false,
+      ...(params.defaultFormat && { defaultFormat: params.defaultFormat }),
+    })
+  )
 );
 
 registerUnbound("number", (orig, params) => {
