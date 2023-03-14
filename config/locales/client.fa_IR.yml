@@ -497,14 +497,31 @@ fa_IR:
       statuses:
         pending:
           title: "در انتظار"
+        approved:
+          title: "پذیرفته شده"
+        approved_flag:
+          title: "پرچم تایید شده"
+        approved_user:
+          title: "کاربر تایید شده"
+        approved_post:
+          title: "نوشته تایید شده"
+        rejected:
+          title: "رد شده"
+        rejected_flag:
+          title: "پرچم رد شده"
+        rejected_user:
+          title: "کاربر رد شده"
+        rejected_post:
+          title: "نوشته رد شده"
         deleted:
           title: "موضوع یا نوشته حذف شده"
         reviewed:
-          title: "(همه مرور شده)"
+          title: "همه بررسی شده"
         all:
-          title: "«همه چیز»"
+          title: "همه چیز"
       context_question:
         delimiter: "یا"
+        something_else_wrong: "آیا مشکلی در این نوشته وجود دارد؟"
       types:
         reviewable_flagged_post:
           title: "نوشته پرچم شده"
@@ -2283,11 +2300,13 @@ fa_IR:
         tag: "هیچ موضوع دیگری در %{tag} نیست."
         top: "موضوع برتر دیگری وجود ندارد"
         bookmarks: "موضوع نشانک‌دار دیگری وجود ندارد."
+        filter: "هیچ موضوع بیشتری وجود ندارد."
     topic:
       filter_to:
         one: "%{count} نوشته در این موضوع وجود دارد"
         other: "%{count} نوشته در این موضوع وجود دارد"
       create: "موضوع جدید"
+      create_disabled_category: "شما مجاز به ایجاد موضوع در این دسته‌بندی نیستید"
       create_long: "ساخت یک موضوع جدید"
       open_draft: "بازکردن پیشنویس"
       private_message: "شروع یک پیام"

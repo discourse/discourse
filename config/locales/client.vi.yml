@@ -480,10 +480,14 @@ vi:
       statuses:
         pending:
           title: "Đang treo"
+        approved:
+          title: "Đã phê duyệt"
+        rejected:
+          title: "Từ chối"
         reviewed:
-          title: "(tất cả đã đánh giá)"
+          title: "Tất cả đã đánh giá"
         all:
-          title: "(mọi thứ)"
+          title: "Mọi thứ"
       context_question:
         delimiter: "hoặc"
       types:

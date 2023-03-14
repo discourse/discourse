@@ -1689,7 +1689,6 @@ uk:
     enable_discourse_connect: "Увімкнути вхід через Discoursconnect (раніше «Дискурс SSO») (ПОПЕРЕДЖЕННЯ: АДРЕСИ ЕЛЕКТРОННОЇ ПОШТИ КОРИСТУВАЧІВ *ПОВИННІ* БУТИ ПІДТВЕРДЖЕНІ ЗОВНІШНІМ САЙТОМ!)"
     verbose_discourse_connect_logging: "Записувати всі дані діагностики, повʼязані з DiscourseConnect у файл <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     enable_discourse_connect_provider: "Використовувати протокол провайдера DiscourseConnect (раніше «Discourse SSO») у кінцевій точці /session/sso_provider, потрібно налаштувати discourse_connect_provider_secrets"
-    discourse_connect_url: "Адреса кінцевої точки DiscourseConnect (має містити http:// або https://)"
     discourse_connect_secret: "Секретний рядок, який використовується для криптографічної автентифікації інформації DiscourseConnect, переконайтеся, що він містить 10 символів або більше"
     discourse_connect_provider_secrets: "Список пар домен-секрет, які використовують DiscourseConnect. Переконайтеся, що секрет DiscourseConnect містить 10 символів або більше. Символ підстановки * можна використовувати для відповідності будь-якому домену або лише його частині (наприклад, *.example.com)."
     discourse_connect_overrides_bio: "Перезаписує інформацію в профіль користувача і не дозволяє користувачеві його змінювати"
@@ -4191,10 +4190,7 @@ uk:
       message: "<p> Ми повторно надіслали електронний лист для активації на <b>%{email}</b>"
   safe_mode:
     title: "Увійти в безпечний режим"
-    description: "Безпечний режим дозволяє тестувати ваш сайт без завантаження втулків або тем."
     no_themes: "Вимкнути компоненти тем і теми"
-    no_unofficial_plugins: "Вимкнути неофіційні втулки"
-    no_plugins: "Вимкнути всі втулки"
     enter: "Увійти в безпечний режим"
     must_select: "Ви повинні вибрати принаймні одну опцію для входу в безпечний режим."
   wizard:

@@ -528,12 +528,27 @@ hu:
       statuses:
         pending:
           title: "Folyamatban"
+        approved:
+          title: "Jóváhagyva"
+        approved_flag:
+          title: "Jóváhagyott zászló"
+        approved_post:
+          title: "Hozzászólás jóváhagyva"
+        rejected:
+          title: "Elutasítva"
+        rejected_flag:
+          title: "Megjelölés elutasítva"
+        rejected_user:
+          title: "Felhasználó elutasítva"
+        rejected_post:
+          title: "A bejegyzés elutasítva"
         reviewed:
-          title: "(összes jóváhagyott)"
+          title: "Minden áttekintve"
         all:
-          title: "(összes)"
+          title: "Összes"
       context_question:
         delimiter: "vagy"
+        something_else_wrong: "Valami baj van ezzel a bejegyzéssel?"
       types:
         reviewable_flagged_post:
           title: "Megjelölt bejegyzés"
@@ -2525,6 +2540,7 @@ hu:
         one: "%{count} bejegyzés a témában"
         other: "%{count} bejegyzés a témában"
       create: "Új téma"
+      create_disabled_category: "Ebben a kategóriában nem hozhatsz létre témákat"
       create_long: "Új téma létrehozása"
       open_draft: "Vázlat megnyitása"
       private_message: "Üzenet indítása"
@@ -3118,6 +3134,7 @@ hu:
       default_position: "Alapértelmezett pozíció"
       parent: "Szülő kategória"
       num_auto_bump_daily: "A naponta automatikusan előrehozandó nyitott témák száma:"
+      auto_bump_cooldown_days: "Minimum napok száma, mielőtt újra feldobná ugyanazt a témát:"
       navigate_to_first_post_after_read: "A témák elolvasása után navigáljon az első hozzászóláshoz"
       notifications:
         watching:

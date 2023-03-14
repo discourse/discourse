@@ -527,10 +527,14 @@ fr:
       statuses:
         pending:
           title: "En attente"
+        approved:
+          title: "Acceptés"
+        rejected:
+          title: "Rejetés"
         reviewed:
-          title: "(examinés)"
+          title: "Examinés"
         all:
-          title: "(tous)"
+          title: "Tout"
       context_question:
         delimiter: "ou"
       types:

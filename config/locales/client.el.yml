@@ -486,10 +486,14 @@ el:
       statuses:
         pending:
           title: "Εκκρεμή"
+        approved:
+          title: "Εγκρίθηκε "
+        rejected:
+          title: "Απορρίφθηκε"
         reviewed:
-          title: "(όλα αναθεωρημένα)"
+          title: "Όλα αναθεωρημένα"
         all:
-          title: "(τα πάντα)"
+          title: "Τα πάνΤα"
       context_question:
         delimiter: "ή"
       types:

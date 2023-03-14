@@ -379,6 +379,10 @@ et:
       statuses:
         pending:
           title: "Ootel"
+        approved:
+          title: "Heakskiidetud"
+        rejected:
+          title: "Tagasi lükatud"
       context_question:
         delimiter: "või"
       types:

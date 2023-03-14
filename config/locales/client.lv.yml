@@ -457,10 +457,14 @@ lv:
       statuses:
         pending:
           title: "Gaidošie"
+        approved:
+          title: "Apstiprināts"
+        rejected:
+          title: "Noraidīts"
         reviewed:
-          title: "(visi pārskatīti)"
+          title: "Visi pārskatīti"
         all:
-          title: "(viss)"
+          title: "Viss"
       context_question:
         delimiter: "vai"
       types:

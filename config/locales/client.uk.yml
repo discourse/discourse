@@ -614,10 +614,14 @@ uk:
       statuses:
         pending:
           title: "В очікуванні"
+        approved:
+          title: "Схвалено"
+        rejected:
+          title: "Відхилено"
         reviewed:
-          title: "(усі розглянуті)"
+          title: "Усі розглянуті"
         all:
-          title: "(усе)"
+          title: "Усе"
       context_question:
         delimiter: "або"
       types:

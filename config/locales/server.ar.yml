@@ -1811,7 +1811,6 @@ ar:
     enable_discourse_connect: "تفعيل تسجيل الدخول عبر DiscourseConnect (المعروف سابقًا باسم \"Discourse SSO\") (تحذير: *يجب* التحقُّق من صحة عناوين البريد الإلكتروني للمستخدمين من خلال الموقع الخارجي!)"
     verbose_discourse_connect_logging: "تسجيل تشخصيات DiscourseConnect المطوَّلة ذات الصلة في <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     enable_discourse_connect_provider: "تنفيذ بروتوكول موفِّر DiscourseConnect (المعروف سابقًا باسم \"Discourse SSO\") في نقطة نهاية /session/sso_provider، يتطلب تعيين discourse_connect_provider_secrets"
-    discourse_connect_url: "عنوان URL لنقطة نهاية DiscourseConnect (يجب أن يتضمَّن http:// أو https://)"
     discourse_connect_secret: "السلسلة السرية المُستخدَمة لمصادقة معلومات DiscourseConnect بشكلٍ مشفَّر، تأكد من أنها تتكوَّن من 10 أحرف أو أكثر"
     discourse_connect_provider_secrets: "قائمة بالأزواج السرية للنطاق والتي تستخدم DiscourseConnect. تأكَّد من أن طول رمز DiscourseConnect السري هو 10 أحرف أو أكثر. يمكن استخدام رمز حرف البدل * لمطابقة أي نطاق أو جزء منه فقط (على سبيل المثال، *.example.com)."
     discourse_connect_overrides_bio: "تجاوز النبذة التعريفية في الملف الشخصي للمستخدم ومنعه من تغييرها"
@@ -4391,10 +4390,7 @@ ar:
       message: "<p> لقد أعدنا إرسال الرسالة الإلكترونية للتنشيط إلى <b>%{email}</b>"
   safe_mode:
     title: "الدخول إلى الوضع الآمن"
-    description: "يسمح لك الوضع الآمن باختبار موقعك دون تحميل المكوِّنات الإضافية أو السمات."
     no_themes: "إيقاف السمات ومكوِّنات السمات"
-    no_unofficial_plugins: "إيقاف المكوِّنات الإضافية غير الرسمية"
-    no_plugins: "إيقاف كل المكوِّنات الإضافية"
     enter: "الدخول إلى الوضع الآمن"
     must_select: "يجب عليك تحديد خيار واحد على الأقل للدخول إلى الوضع الآمن."
   wizard:

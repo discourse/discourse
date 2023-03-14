@@ -477,10 +477,14 @@ bg:
       statuses:
         pending:
           title: "Чакащи"
+        approved:
+          title: "Одобрена"
+        rejected:
+          title: "Отхвърлени"
         reviewed:
-          title: "(всички прегледани)"
+          title: "Всички прегледани"
         all:
-          title: "(всичко)"
+          title: "Всичко"
       context_question:
         delimiter: "или"
       types:

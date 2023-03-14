@@ -272,8 +272,11 @@ zh_CN:
       edit_bookmark: "编辑书签"
       clear_bookmarks: "清除书签"
       help:
+        bookmark: "点击以添加此话题的书签"
+        edit_bookmark: "点击以编辑有关此话题中帖子的书签"
         edit_bookmark_for_topic: "点击以编辑此话题的书签"
         unbookmark: "点击以移除此话题中的所有书签"
+        unbookmark_with_reminder: "点击以移除此话题中的所有书签和提醒"
     bookmarks:
       created: "您已将此帖子加入书签。%{name}"
       created_generic: "您已将此加入书签。%{name}"
@@ -481,15 +484,38 @@ zh_CN:
         type: "原因"
         status: "状态"
         submitted_by: "举报人"
+        reviewed_by: "审核人"
+        reviewed_timestamp: "审核日期"
       statuses:
         pending:
           title: "待处理"
+        approved:
+          title: "已批准"
+        approved_flag:
+          title: "举报已批准"
+        approved_user:
+          title: "用户已批准"
+        approved_post:
+          title: "帖子已批准"
+        rejected:
+          title: "已拒绝"
+        rejected_flag:
+          title: "举报被拒绝"
+        rejected_user:
+          title: "用户被拒绝"
+        rejected_post:
+          title: "帖子被拒绝"
+        ignored:
+          title: "忽略的标记"
+        deleted:
+          title: "话题或帖子已被删除"
         reviewed:
-          title: "（所有已审核）"
+          title: "所有审核"
         all:
-          title: "（全部）"
+          title: "一切"
       context_question:
         delimiter: "或者"
+        something_else_wrong: "这个帖子有什么问题吗？"
       types:
         reviewable_flagged_post:
           title: "被举报的帖子"
@@ -911,6 +937,13 @@ zh_CN:
       profile: "个人资料"
       mute: "免打扰"
       edit: "编辑偏好设置"
+      download_archive:
+        title: "导出您的数据"
+        description: "下载您的帐户活动和偏好设置的归档。"
+        button_text: "请求归档"
+        confirm: "您确定要下载您的帐户活动和偏好设置的归档吗？"
+        success: "我们已经开始收集您的归档，您将在该过程完成后收到一条消息。"
+        rate_limit_error: "帐户归档每天只能下载一次，请明天再试。"
       new_private_message: "新消息"
       private_message: "私信"
       private_messages: "消息"
@@ -2476,6 +2509,7 @@ zh_CN:
         bookmarks: "您还没有将任何话题加入书签。"
         category: "没有%{category}话题。"
         top: "没有热门话题。"
+        filter: "没有话题。"
         educate:
           new: '<p>您的新话题将显示在这里。默认情况下，如果是在过去 2 天内创建的，话题会被视为新话题，还会显示 <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> 指示器。</p><p>访问您的<a href="%{userPrefsUrl}">偏好设置</a>可以更改此设置。</p>'
           unread: "<p>您的未读话题显示在这里。</p><p>默认情况下，如果符合以下条件，话题会被视为未读并且还将显示未读计数 <span class=\"badge unread-posts badge-notification\">1</span>：</p><ul><li>您创建了该话题</li><li>您回复了该话题</li><li>您阅读该话题超过 4 分钟</li></ul><p>或者如果您在每个话题中通过 \U0001F514 将话题显式设为“已跟踪”或“已关注”。</p><p>访问您的<a href=\"%{userPrefsUrl}\">偏好设置</a>可以更改此设置。</p>"
@@ -2490,10 +2524,12 @@ zh_CN:
         tag: "没有更多%{tag}话题了。"
         top: "没有更多热门话题了。"
         bookmarks: "没有更多已加入书签的话题了。"
+        filter: "没有更多话题了。"
     topic:
       filter_to:
         other: "话题中的 %{count} 个帖子"
       create: "新建话题"
+      create_disabled_category: "你不可以在这个类别中创建话题"
       create_long: "创建新话题"
       open_draft: "打开草稿"
       private_message: "开始消息"
@@ -2572,6 +2608,8 @@ zh_CN:
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>浏览所有类别</a>、<a href='%{basePath}/latest'>查看最新话题</a>或查看热门话题："
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>浏览所有标签</a>或<a href='%{basePath}/latest'>查看最新话题</a>。"
       suggest_create_topic: 准备好<a href>开始新对话</a>了吗？
+      jump_reply: "跳转到帖子的原始位置"
+      jump_reply_aria: "跳转到@%{username}帖子的原始位置"
       deleted: "该话题已被删除"
       slow_mode_update:
         title: "慢速模式"
@@ -3063,6 +3101,7 @@ zh_CN:
           last: "上次修订"
           hide: "隐藏修订"
           show: "显示修订"
+          destroy: "删除修订"
           revert: "还原到修订 %{revision}"
           edit_wiki: "编辑 Wiki"
           edit_post: "编辑帖子"
@@ -3096,6 +3135,7 @@ zh_CN:
         updated: "更新"
         name: "名称"
         name_placeholder: "此书签有什么用？"
+        name_input_label: "书签名"
         set_reminder: "提醒我"
         options: "选项"
         actions:
@@ -3134,6 +3174,7 @@ zh_CN:
       back: "返回类别"
       general: "常规"
       settings: "设置"
+      topic_template: "模板"
       tags: "标签"
       tags_allowed_tags: "将这些标签限制在此类别："
       tags_allowed_tag_groups: "将这些标签组限制在此类别："
@@ -3192,6 +3233,7 @@ zh_CN:
       email_in: "自定义传入电子邮件地址："
       email_in_tooltip: "您可以使用 | 字符分隔多个电子邮件地址。"
       email_in_allow_strangers: "接受来自没有帐户的匿名用户的电子邮件"
+      email_in_disabled: "通过电子邮件发布新主题被禁用。要启用通过电子邮件发布新主题功能，请启用 <a href='%{setting_url}'>电子邮件</a> 设置。"
       mailinglist_mirror: "类别镜像一个邮寄名单"
       show_subcategory_list: "在此类别中的话题上方显示子类别列表。"
       read_only_banner: "用户无法在此类别中创建话题时的横幅文本："
@@ -3218,6 +3260,7 @@ zh_CN:
       default_slow_mode: '为此类别中的新话题启用“慢速模式”。'
       parent: "父类别"
       num_auto_bump_daily: "每天自动顶贴的开放话题的数量："
+      auto_bump_cooldown_days: "在再次顶贴同一话题之前，最少需要几天时间。"
       navigate_to_first_post_after_read: "阅读话题后导航到第一个帖子"
       notifications:
         title: "更改此类别的通知级别"
@@ -3303,7 +3346,9 @@ zh_CN:
         inappropriate: "不当言论"
         spam: "垃圾信息"
       custom_placeholder_notify_user: "具体，有建设性，并始终保持友善。"
+      notify_user_textarea_label: "给用户的消息"
       custom_placeholder_notify_moderators: "让我们具体了解您关心的问题，并尽可能提供相关的链接和示例。"
+      notify_moderators_textarea_label: "给版主的消息"
       custom_message:
         at_least:
           other: "至少输入 %{count} 个字符"
@@ -3519,6 +3564,7 @@ zh_CN:
         title: "撰写"
         return: "%{shortcut} 返回编辑器"
         fullscreen: "%{shortcut} 全屏编辑器"
+        insert_current_time: "%{shortcut} 插入当前时间"
       bookmarks:
         title: "书签"
         enter: "%{shortcut} 保存并关闭"
@@ -3793,6 +3839,8 @@ zh_CN:
           name: "章节标题"
           save: "保存"
           delete: "删除"
+          delete_confirm: "确定要删除此板块吗？"
+          public: "将此板块公开并对所有人可见"
           links:
             icon: "图标"
             name: "名称"
@@ -3859,6 +3907,7 @@ zh_CN:
               title: "所有用户列表"
             my_posts:
               content: "我的帖子"
+              content_drafts: "我的草稿"
               title: "我最近的话题活动"
               title_drafts: "我的未发布草稿"
               draft_count:
@@ -3872,6 +3921,8 @@ zh_CN:
       description: "您的欢迎话题是新成员首先会阅读的内容。把它想象成您的“电梯推销”或“使命宣言”。让每个人都知道这个社区是为谁服务的，他们可以在这里找到什么，以及您希望他们首先做什么。"
       button_title: "开始编辑"
     until: "直到："
+    char_counter:
+      exceeded: "已超过允许的最大字符数。"
   admin_js:
     type_to_filter: "输入以筛选…"
     admin:
@@ -4028,6 +4079,12 @@ zh_CN:
         about: "在此处编辑您的群组成员资格和名称"
         group_members: "群组成员"
         delete: "删除"
+        delete_confirm: "确定要删除“%{group}”吗？"
+        delete_details:
+          other: "%{count} 人将无法访问此群组"
+        delete_with_messages_confirm:
+          other: "%{count} 条信息将无法被群组成员访问"
+        delete_warning: "删除的群组无法恢复"
         delete_failed: "无法删除群组。如果此群组是自动生成的，则无法删除。"
         delete_automatic_group: 这是一个自动生成的群组，无法删除。
         delete_owner_confirm: "移除 '%{username}' 的所有者权限？"
@@ -4093,9 +4150,13 @@ zh_CN:
             topics:
               read: 阅读一个话题或其中的一个帖子。也支持 RSS。
               write: 创建一个新话题或发布到现有话题。
+              delete: 删除话题。
               read_lists: 阅读诸如热门、新、最新等话题列表。也支持 RSS。
             posts:
               edit: 编辑任意帖子或特定帖子。
+              delete: 删除帖子。
+            tags:
+              list: 列出标签。
             categories:
               list: 获取类别列表。
               show: 通过 id 获取单个类别。
@@ -4109,6 +4170,7 @@ zh_CN:
               update: 更新用户个人资料信息。
               log_out: 退出用户的所有会话。
               anonymize: 对用户帐户进行匿名化处理。
+              suspend: 封禁用户帐户。
               delete: 删除用户帐户。
               list: 获取用户列表。
             user_status:
@@ -4116,6 +4178,8 @@ zh_CN:
               update: 更新用户状态。
             email:
               receive_emails: 将此范围与邮件收件人结合来处理传入电子邮件。
+            invites:
+              create: 发送电子邮件邀请或生成邀请链接。
             badges:
               create: 创建新徽章。
               show: 获取有关徽章的信息。
@@ -4124,6 +4188,12 @@ zh_CN:
               list_user_badges: 列出用户的徽章。
               assign_badge_to_user: 向用户授予徽章。
               revoke_badge_from_user: 撤销用户的徽章。
+            groups:
+              manage_groups: 列出、添加和移除群组成员。
+              administer_groups: 列出、显示、创建、更新和删除群组。
+            search:
+              show: 使用 `/search.json?q=term` 端点进行搜索。
+              query: 使用 `/search/query?term=term` 端点进行搜索。
             wordpress:
               publishing: WP Discourse 插件发布功能所需（必需）。
               commenting: WP Discourse 插件评论功能所需。
@@ -4232,6 +4302,7 @@ zh_CN:
         enabled: "已启用？"
         is_enabled: "是"
         not_enabled: "否"
+        change_settings: "插件设置"
         change_settings_short: "设置"
         howto: "如何安装插件？"
         official: "官方插件"
@@ -4484,6 +4555,8 @@ zh_CN:
           embedded_scss:
             text: "嵌入式 CSS"
             title: "输入要随嵌入式版本的注释传送的自定义 CSS"
+          embedded_header:
+            text: "嵌入式页眉/标题/标头"
           color_definitions:
             text: "颜色定义"
             title: "输入自定义颜色定义（仅限高级用户）"
@@ -4564,6 +4637,8 @@ zh_CN:
             description: "点赞按钮的颜色。"
           selected:
             name: "已选择"
+          hover:
+            name: "悬停"
         robots:
           title: "替换您的站点的 robots.txt 文件："
           warning: "这将永久替换任何相关的站点设置。"
@@ -4879,10 +4954,15 @@ zh_CN:
           no_matches: "未找到匹配项"
       form_templates:
         nav_title: "模板"
+        title: "表单模板"
         list_table:
           headings:
             name: "名称"
             actions: "操作"
+          actions:
+            view: "查看模板"
+            edit: "编辑模板"
+            delete: "删除模板"
         view_template:
           close: "关闭"
           edit: "编辑"
@@ -4890,7 +4970,14 @@ zh_CN:
         new_template_form:
           submit: "保存"
           cancel: "取消"
+          name:
+            label: "模板名称"
+            placeholder: "输入此模板的名称..."
+          template:
+            label: "模板"
+            placeholder: "在此处创建 YAML 模板..."
           preview: "预览"
+        delete_confirm: "确定要删除此模板吗？"
         quick_insert_fields:
           add_new_field: "添加"
           checkbox: "复选框"
@@ -4907,11 +4994,25 @@ zh_CN:
           validations:
             required:
               key: "必选"
+              description: "需要填写该字段才能提交表单。"
             minimum:
               key: "最小值"
             maximum:
               key: "最大值"
+            pattern:
+              type: "正则表达式"
+        preview_modal:
+          title: "预览模板"
+        field_placeholders:
+          label: "在此处输入标签"
+          placeholder: "在此处输入占位符"
+          none_label: "选择条目"
+          choices:
+            first: "选项1"
+            second: "选项2"
+            third: "选项3"
         edit_category:
+          toggle_freeform: "禁用表单模板"
           toggle_form_template: "启用表单模板"
           select_template: "选择表单模板"
           select_template_help: "添加/编辑表单模板"
@@ -5347,7 +5448,8 @@ zh_CN:
         allow_title: 允许将徽章用作头衔
         multiple_grant: 可以多次授予
         listable: 在公共徽章页面上显示徽章
-        disabled: 已
+        enabled: 已启用
+        disabled: 已禁用
         icon: 图标
         image: 图片
         graphic: 图形
@@ -5416,6 +5518,12 @@ zh_CN:
       embedding:
         get_started: "如果您想将 Discourse 嵌入另一个网站，请先添加其主机。"
         confirm_delete: "确定要删除该主机吗？"
+        sample: |
+          <p>将以下 HTML 代码粘贴到您的站点以创建和嵌入 Discourse 话题。将 <b>EMBED_URL</b> 替换为您要嵌入它的页面的规范 URL。</p>
+
+          <p>如果要自定义样式，请取消注释并将 <b>CLASS_NAME</b> 替换为主题 <i>Embedded CSS</i> 中定义的 CSS 类。</p>
+
+          <p>将 <b>DISCOURSE_USERNAME</b> 替换为话题作者的 Discourse 用户名。 Discourse 将通过 <code>&lt;meta&gt;</code> 标签的 <code>content</code> 属性自动查找用户，其中 <code>name</code> 属性设置为 <code>discourse-username</code> 或 <code>author</code>。 <code>discourseUserName</code> 参数已被弃用，并将在 Discourse 3.2 版本移除。</p>
         title: "嵌入"
         host: "允许的主机"
         allowed_paths: "路径许可名单"

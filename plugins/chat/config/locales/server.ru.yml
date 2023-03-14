@@ -81,8 +81,8 @@ ru:
           title: "Заморозить пользователя"
           description: "Согласиться с жалобой и заморозить пользователя."
         agree_and_silence:
-          title: "Заблокировать пользователя"
-          description: "Согласиться с жалобой и блокировать пользователя."
+          title: "Блокировка пользователя"
+          description: "Согласиться с жалобой и заблокировать пользователя."
         agree_and_restore:
           title: "Восстановить сообщение"
           description: "Восстановить сообщение, чтобы пользователи могли его видеть."
@@ -141,10 +141,10 @@ ru:
     popup:
       chat_mention:
         direct: 'Пользователь %{username} упомянул вас на канале «%{channel}»'
-        other_type: 'Пользователь %{username} упомянул %{identifier} в канале «%{channel}»'
+        other_type: '%{username} упомянул(а) %{identifier} в канале «%{channel}»'
       direct_message_chat_mention:
         direct: "Пользователь %{username} упомянул вас в личном чате"
-        other_type: "Пользователь %{username} упомянул %{identifier} в личном чате"
+        other_type: "%{username} упомянул(а) %{identifier} в личном чате"
       new_chat_message: 'Пользователь %{username} отправил сообщение на канале «%{channel}»'
       new_direct_chat_message: "Пользователь %{username} отправил сообщение в личный чат"
   discourse_automation:
@@ -188,8 +188,8 @@ ru:
           many: "[%{email_prefix}] Новое сообщение в канале «%{channel}» и еще %{count}"
           other: "[%{email_prefix}] Новое сообщение в канале «%{channel}» и еще %{count}"
         chat_channel_and_direct_message: "[%{email_prefix}] Новое сообщение в канале «%{channel}» и от пользователя %{username}"
-      unsubscribe: "Этот дайджест чата рассылается с сайта %{site_link} в период вашего отсутствия на форуме. Для отмены подписки измените %{email_preferences_link} или %{unsubscribe_link}."
-      unsubscribe_no_link: "Этот дайджест чата рассылается с сайта %{site_link} в период вашего отсутствия на форуме. Настройка рассылки: %{email_preferences_link}."
+      unsubscribe: "Эта сводка чата рассылается с сайта %{site_link} в период вашего отсутствия на форуме. Для отмены подписки измените %{email_preferences_link} или %{unsubscribe_link}."
+      unsubscribe_no_link: "Эта сводка чата рассылается с сайта %{site_link} в период вашего отсутствия на форуме. Настройка рассылки: %{email_preferences_link}."
       view_messages:
         one: "Посмотреть %{count} сообщение"
         few: "Посмотреть %{count} сообщения"
@@ -203,7 +203,7 @@ ru:
       your_chat_settings: "Настройка частоты рассылки дайджеста чата"
   unsubscribe:
     chat_summary:
-      select_title: "Настройте частоту получения электронных писем с дайджестами чата:"
+      select_title: "Частота писем со сводками чата:"
       never: Никогда
       when_away: Если вы находитесь офлайн
   category:

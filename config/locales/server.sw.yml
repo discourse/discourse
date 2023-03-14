@@ -1994,8 +1994,6 @@ sw:
       title: "Tuma Tena Barua Pepe ya Uanzisho"
       message: "<p>Tumekutumia tena barua ya uanzishaji<b>%{email}</b>"
   safe_mode:
-    no_unofficial_plugins: "Sitisha programu-jalizi zisizo rasmi"
-    no_plugins: "Sitisha programu-jalizi zote"
     enter: "Ingia Hali-tumizi iliyo salama"
   wizard:
     title: "Mpangilio wa Discourse"

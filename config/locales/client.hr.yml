@@ -571,10 +571,14 @@ hr:
       statuses:
         pending:
           title: "Na čekanju"
+        approved:
+          title: "Odobrio"
+        rejected:
+          title: "Odbio"
         reviewed:
-          title: "(svi pregledani)"
+          title: "Svi pregledani"
         all:
-          title: "(sve)"
+          title: "Sve"
       context_question:
         delimiter: "ili"
       types:
