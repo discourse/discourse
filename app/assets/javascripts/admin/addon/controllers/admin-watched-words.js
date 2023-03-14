@@ -5,9 +5,9 @@ import discourseDebounce from "discourse-common/lib/debounce";
 import { isEmpty } from "@ember/utils";
 import { observes } from "discourse-common/utils/decorators";
 
-export default Controller.extend({
-  filter: null,
-  showWords: false,
+export default class AdminWatchedWordsController extends Controller {
+  filter = null;
+  showWords = false;
 
   _filterContent() {
     if (isEmpty(this.allWatchedWords)) {
@@ -36,17 +36,17 @@ export default Controller.extend({
       );
     });
     this.set("model", model);
-  },
+  }
 
   @observes("filter")
   filterContent() {
     discourseDebounce(this, this._filterContent, INPUT_DELAY);
-  },
+  }
 
   @action
   clearFilter() {
     this.set("filter", "");
-  },
+  }
 
   @action
   toggleMenu() {
@@ -54,5 +54,5 @@ export default Controller.extend({
     ["mobile-closed", "mobile-open"].forEach((state) => {
       adminDetail.classList.toggle(state);
     });
-  },
-});
+  }
+}

@@ -2,14 +2,14 @@ import Controller from "@ember/controller";
 import { DEFAULT_PERIOD } from "admin/controllers/admin-search-logs-index";
 import I18n from "I18n";
 
-export default Controller.extend({
-  loading: false,
-  term: null,
-  period: DEFAULT_PERIOD,
-  searchType: "all",
+export default class AdminSearchLogsTermController extends Controller {
+  loading = false;
+  term = null;
+  period = DEFAULT_PERIOD;
+  searchType = "all";
 
   init() {
-    this._super(...arguments);
+    super.init(...arguments);
 
     this.searchTypeOptions = [
       {
@@ -26,5 +26,5 @@ export default Controller.extend({
         name: I18n.t("admin.logs.search_logs.types.click_through_only"),
       },
     ];
-  },
-});
+  }
+}

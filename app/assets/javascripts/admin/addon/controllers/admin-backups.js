@@ -1,11 +1,10 @@
 import { and, not } from "@ember/object/computed";
 import Controller from "@ember/controller";
-export default Controller.extend({
-  noOperationIsRunning: not("model.isOperationRunning"),
-  rollbackEnabled: and(
-    "model.canRollback",
-    "model.restoreEnabled",
-    "noOperationIsRunning"
-  ),
-  rollbackDisabled: not("rollbackEnabled"),
-});
+export default class AdminBackupsController extends Controller {
+  @not("model.isOperationRunning") noOperationIsRunning;
+
+  @and("model.canRollback", "model.restoreEnabled", "noOperationIsRunning")
+  rollbackEnabled;
+
+  @not("rollbackEnabled") rollbackDisabled;
+}

@@ -1,16 +1,18 @@
+import { alias } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import I18n from "I18n";
 import { INPUT_DELAY } from "discourse-common/config/environment";
-import { alias } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
 import { debounce, observes } from "discourse-common/utils/decorators";
 import { action } from "@ember/object";
 
-export default Controller.extend({
-  filter: null,
-  allSiteSettings: alias("model"),
-  visibleSiteSettings: null,
-  onlyOverridden: false,
+export default class AdminSiteSettingsController extends Controller {
+  filter = null;
+
+  @alias("model") allSiteSettings;
+
+  visibleSiteSettings = null;
+  onlyOverridden = false;
 
   filterContentNow(category) {
     // If we have no content, don't bother filtering anything
@@ -109,12 +111,12 @@ export default Controller.extend({
       "adminSiteSettingsCategory",
       category || "all_results"
     );
-  },
+  }
 
   @observes("filter", "onlyOverridden", "model")
   optsChanged() {
     this.filterContent();
-  },
+  }
 
   @debounce(INPUT_DELAY)
   filterContent() {
@@ -123,12 +125,12 @@ export default Controller.extend({
     } else {
       this.filterContentNow(this.categoryNameKey);
     }
-  },
+  }
 
   @action
   clearFilter() {
     this.setProperties({ filter: "", onlyOverridden: false });
-  },
+  }
 
   @action
   toggleMenu() {
@@ -136,5 +138,5 @@ export default Controller.extend({
     ["mobile-closed", "mobile-open"].forEach((state) => {
       adminDetail.classList.toggle(state);
     });
-  },
-});
+  }
+}

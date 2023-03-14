@@ -2,13 +2,13 @@ import Controller from "@ember/controller";
 import I18n from "I18n";
 export const DEFAULT_PERIOD = "yearly";
 
-export default Controller.extend({
-  loading: false,
-  period: DEFAULT_PERIOD,
-  searchType: "all",
+export default class AdminSearchLogsIndexController extends Controller {
+  loading = false;
+  period = DEFAULT_PERIOD;
+  searchType = "all";
 
   init() {
-    this._super(...arguments);
+    super.init(...arguments);
 
     this.searchTypeOptions = [
       {
@@ -21,5 +21,5 @@ export default Controller.extend({
         name: I18n.t("admin.logs.search_logs.types.full_page"),
       },
     ];
-  },
-});
+  }
+}
