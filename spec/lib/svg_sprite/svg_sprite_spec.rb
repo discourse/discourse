@@ -3,7 +3,10 @@
 RSpec.describe SvgSprite do
   fab!(:theme) { Fabricate(:theme) }
 
-  before { SvgSprite.expire_cache }
+  before do
+    SvgSprite.clear_plugin_svg_sprite_cache!
+    SvgSprite.expire_cache
+  end
 
   it "can generate a bundle" do
     bundle = SvgSprite.bundle
@@ -185,14 +188,14 @@ RSpec.describe SvgSprite do
       expect(sprite_files).to match(/my-custom-theme-icon/)
 
       SvgSprite.bundle(theme.id)
-      expect(SvgSprite.cache.hash.keys).to include("custom_svg_sprites_#{theme.id}")
+      expect(SvgSprite.cache.hash.keys).to include("theme_svg_sprites_#{theme.id}")
 
       external_copy = Discourse.store.download(upload_s3)
       File.delete external_copy.try(:path)
 
       SvgSprite.bundle(theme.id)
       # after a temp file is missing, bundling still works
-      expect(SvgSprite.cache.hash.keys).to include("custom_svg_sprites_#{theme.id}")
+      expect(SvgSprite.cache.hash.keys).to include("theme_svg_sprites_#{theme.id}")
     end
   end
 
