@@ -9,26 +9,22 @@ import showModal from "discourse/lib/show-modal";
 import { ajax } from "discourse/lib/ajax";
 
 export default class AdminApiKeysNewController extends Controller {
-  userModes = null;
-  scopeModes = null;
+  userModes = [
+    { id: "all", name: I18n.t("admin.api.all_users") },
+    { id: "single", name: I18n.t("admin.api.single_user") },
+  ];
+  scopeModes = [
+    { id: "granular", name: I18n.t("admin.api.scopes.granular") },
+    { id: "read_only", name: I18n.t("admin.api.scopes.read_only") },
+    { id: "global", name: I18n.t("admin.api.scopes.global") },
+  ];
   globalScopes = null;
   scopes = null;
 
   @equal("userMode", "single") showUserSelector;
+
   init() {
     super.init(...arguments);
-
-    this.set("userModes", [
-      { id: "all", name: I18n.t("admin.api.all_users") },
-      { id: "single", name: I18n.t("admin.api.single_user") },
-    ]);
-
-    this.set("scopeModes", [
-      { id: "granular", name: I18n.t("admin.api.scopes.granular") },
-      { id: "read_only", name: I18n.t("admin.api.scopes.read_only") },
-      { id: "global", name: I18n.t("admin.api.scopes.global") },
-    ]);
-
     this._loadScopes();
   }
 

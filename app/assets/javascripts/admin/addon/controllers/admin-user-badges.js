@@ -15,18 +15,11 @@ export default class AdminUserBadgesController extends Controller.extend(
   @controller adminUser;
 
   @alias("adminUser.model") user;
-
   @alias("model") userBadges;
-
   @alias("badges") allBadges;
-
   @sort("model", "badgeSortOrder") sortedBadges;
 
-  init() {
-    super.init(...arguments);
-
-    this.badgeSortOrder = ["granted_at:desc"];
-  }
+  badgeSortOrder = ["granted_at:desc"];
 
   @discourseComputed("model", "model.[]", "model.expandedBadges.[]")
   groupedBadges() {

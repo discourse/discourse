@@ -19,6 +19,7 @@ export default class AdminDashboardGeneralController extends Controller.extend(
   PeriodComputationMixin
 ) {
   @controller("exception") exceptionController;
+
   isLoading = false;
   dashboardFetchedAt = null;
 
@@ -27,6 +28,7 @@ export default class AdminDashboardGeneralController extends Controller.extend(
   @staticReport("users_by_type") usersByTypeReport;
   @staticReport("users_by_trust_level") usersByTrustLevelReport;
   @staticReport("storage_report") storageReport;
+
   @discourseComputed("siteSettings.dashboard_general_tab_activity_metrics")
   activityMetrics(metrics) {
     return (metrics || "").split("|").filter(Boolean);

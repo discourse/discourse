@@ -12,11 +12,8 @@ export default class AdminEmailPreviewDigestController extends Controller {
   lastSeen = null;
 
   @empty("email") emailEmpty;
-
   @or("emailEmpty", "sendingEmail") sendEmailDisabled;
-
   @notEmpty("model.html_content") showSendEmailForm;
-
   @empty("model.html_content") htmlEmpty;
 
   @action

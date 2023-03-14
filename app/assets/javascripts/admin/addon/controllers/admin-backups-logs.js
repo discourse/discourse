@@ -6,9 +6,5 @@ export default class AdminBackupsLogsController extends Controller {
 
   @alias("adminBackups.model") status;
 
-  init() {
-    super.init(...arguments);
-
-    this.logs = [];
-  }
+  logs = [];
 }

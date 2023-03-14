@@ -22,37 +22,25 @@ const THEME_UPLOAD_VAR = 2;
 export default class AdminCustomizeThemesShowController extends Controller {
   @service dialog;
 
-  @url("model.id", "/admin/customize/themes/%@/export") downloadUrl;
-
-  @url("model.id", "/admin/themes/%@/preview") previewUrl;
-
-  @empty("selectedChildThemeId") addButtonDisabled;
-
   editRouteName = "adminCustomizeThemes.edit";
 
+  @url("model.id", "/admin/customize/themes/%@/export") downloadUrl;
+  @url("model.id", "/admin/themes/%@/preview") previewUrl;
+  @empty("selectedChildThemeId") addButtonDisabled;
   @mapBy("model.parentThemes", "name") parentThemesNames;
-
   @filterBy("allThemes", "component", false) availableParentThemes;
-
   @filterBy("availableParentThemes", "isActive") availableActiveParentThemes;
-
   @mapBy("availableParentThemes", "name") availableThemesNames;
-
   @mapBy("availableActiveParentThemes", "name") availableActiveThemesNames;
-
   @filterBy("availableChildThemes", "hasParents") availableActiveChildThemes;
-
   @mapBy("availableChildThemes", "name") availableComponentsNames;
-
   @mapBy("availableActiveChildThemes", "name") availableActiveComponentsNames;
-
   @mapBy("model.childThemes", "name") childThemesNames;
-
   @filterBy("model.theme_fields", "target", "extra_js") extraFiles;
-
   @notEmpty("settings") hasSettings;
   @notEmpty("translations") hasTranslations;
   @match("model.remote_theme.remote_url", /^http(s)?:\/\//) sourceIsHttp;
+
   @discourseComputed("model.component", "model.remote_theme")
   showCheckboxes() {
     return !this.model.component || this.model.remote_theme;

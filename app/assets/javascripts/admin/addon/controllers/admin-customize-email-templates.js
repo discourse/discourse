@@ -3,13 +3,8 @@ import Controller from "@ember/controller";
 import { action } from "@ember/object";
 
 export default class AdminCustomizeEmailTemplatesController extends Controller {
+  titleSorting = ["title"];
   @sort("emailTemplates", "titleSorting") sortedTemplates;
-
-  init() {
-    super.init(...arguments);
-
-    this.set("titleSorting", ["title"]);
-  }
 
   @action
   onSelectTemplate(template) {

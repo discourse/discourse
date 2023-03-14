@@ -12,9 +12,7 @@ export default class AdminWebHooksEditController extends Controller {
   @controller adminWebHooks;
 
   @alias("adminWebHooks.eventTypes") eventTypes;
-
   @alias("adminWebHooks.defaultEventTypes") defaultEventTypes;
-
   @alias("adminWebHooks.contentTypes") contentTypes;
 
   @discourseComputed

@@ -22,13 +22,9 @@ export default class AdminUsersListShowController extends Controller.extend(
 
   @i18n("search_hint") searchHint;
 
-  init() {
-    super.init(...arguments);
-
-    this._page = 1;
-    this._results = [];
-    this._canLoadMore = true;
-  }
+  _page = 1;
+  _results = [];
+  _canLoadMore = true;
 
   @discourseComputed("query")
   title(query) {

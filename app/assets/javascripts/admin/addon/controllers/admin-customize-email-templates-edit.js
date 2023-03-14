@@ -10,9 +10,7 @@ export default class AdminCustomizeEmailTemplatesEditController extends Controll
   bufferedProperty("emailTemplate")
 ) {
   @service dialog;
-@controller adminCustomizeEmailTemplates;
-
-
+  @controller adminCustomizeEmailTemplates;
 
   emailTemplate = null;
   saved = false;

@@ -13,11 +13,8 @@ export default class AdminBackupsIndexController extends Controller {
   @controller adminBackups;
 
   @alias("adminBackups.model") status;
-
   @i18n("admin.backups.upload.label") uploadLabel;
-
   @setting("backup_location") backupLocation;
-
   @equal("backupLocation", "local") localBackupStorage;
 
   @discourseComputed("status.allowRestore", "status.isOperationRunning")

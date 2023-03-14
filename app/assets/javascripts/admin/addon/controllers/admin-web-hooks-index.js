@@ -10,13 +10,9 @@ export default class AdminWebHooksIndexController extends Controller {
   @controller adminWebHooks;
 
   @alias("adminWebHooks.contentTypes") contentTypes;
-
   @alias("adminWebHooks.defaultEventTypes") defaultEventTypes;
-
   @alias("adminWebHooks.deliveryStatuses") deliveryStatuses;
-
   @alias("adminWebHooks.eventTypes") eventTypes;
-
   @alias("adminWebHooks.model") model;
 
   @action

@@ -18,9 +18,7 @@ export default class AdminUserIndexController extends Controller.extend(
   CanCheckEmails
 ) {
   @service router;
-
   @service dialog;
-
   @service adminTools;
 
   originalPrimaryGroupId = null;
@@ -31,7 +29,6 @@ export default class AdminUserIndexController extends Controller.extend(
   ssoLastPayload = null;
 
   @setting("enable_badges") showBadges;
-
   @notEmpty("model.manual_locked_trust_level") hasLockedTrustLevel;
 
   @propertyNotEqual("originalPrimaryGroupId", "model.primary_group_id")
@@ -41,6 +38,7 @@ export default class AdminUserIndexController extends Controller.extend(
   canDisableSecondFactor;
 
   @fmt("model.username_lower", userPath("%@/preferences")) preferencesPath;
+
   @discourseComputed("model.customGroups")
   customGroupIds(customGroups) {
     return customGroups.mapBy("id");

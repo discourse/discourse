@@ -9,6 +9,7 @@ const PROBLEMS_CHECK_MINUTES = 1;
 
 export default class AdminDashboardController extends Controller {
   @controller("exception") exceptionController;
+
   isLoading = false;
   dashboardFetchedAt = null;
 

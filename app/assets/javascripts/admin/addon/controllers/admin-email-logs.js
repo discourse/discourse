@@ -4,11 +4,7 @@ import EmberObject, { action } from "@ember/object";
 
 export default class AdminEmailLogsController extends Controller {
   loading = false;
-
-  init() {
-    super.init(...arguments);
-    this.set("filter", EmberObject.create());
-  }
+  filter = EmberObject.create();
 
   loadLogs(sourceModel, loadMore) {
     if ((loadMore && this.loading) || this.get("model.allLoaded")) {

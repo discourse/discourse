@@ -13,14 +13,9 @@ export default class AdminUserFieldsController extends Controller {
   fieldTypes = null;
 
   @gte("model.length", MAX_FIELDS) createDisabled;
-
   @sort("model", "fieldSortOrder") sortedFields;
 
-  init() {
-    super.init(...arguments);
-
-    this.fieldSortOrder = ["position"];
-  }
+  fieldSortOrder = ["position"];
 
   @action
   createField() {
