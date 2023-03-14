@@ -354,7 +354,7 @@ export default Controller.extend({
         .then(() => this.store.findAll("theme"));
     },
 
-    destroy() {
+    destroyTheme() {
       return this.dialog.yesNoConfirm({
         message: I18n.t("admin.customize.delete_confirm", {
           theme_name: this.get("model.name"),

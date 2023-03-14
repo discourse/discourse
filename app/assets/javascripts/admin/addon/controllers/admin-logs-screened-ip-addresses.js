@@ -77,7 +77,7 @@ export default Controller.extend({
         });
     },
 
-    destroy(record) {
+    destroyRecord(record) {
       return this.dialog.yesNoConfirm({
         message: I18n.t("admin.logs.screened_ips.delete_confirm", {
           ip_address: record.get("ip_address"),

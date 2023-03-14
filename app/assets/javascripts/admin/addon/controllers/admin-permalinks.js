@@ -36,7 +36,7 @@ export default Controller.extend({
       clipboardCopy(linkElement.textContent);
     },
 
-    destroy(record) {
+    destroyRecord(record) {
       return this.dialog.yesNoConfirm({
         message: I18n.t("admin.permalink.delete_confirm"),
         didConfirm: () => {

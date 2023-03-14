@@ -49,7 +49,7 @@ export default Controller.extend({
       }
     },
 
-    destroy(f) {
+    destroyField(f) {
       const model = this.model;
 
       // Only confirm if we already been saved

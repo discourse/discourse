@@ -350,7 +350,7 @@ export default Controller.extend(CanCheckEmails, {
         .catch(popupAjaxError);
     },
 
-    destroy() {
+    destroyUser() {
       const postCount = this.get("model.post_count");
       const maxPostCount = this.siteSettings.delete_all_posts_max;
       const location = document.location.pathname;
