@@ -1,18 +1,20 @@
 # frozen_string_literal: true
 
 RSpec.describe BackupRestore::Backuper do
-  it "returns a non-empty parameterized title when site title contains unicode" do
-    SiteSetting.title = "Ɣ"
-    backuper = BackupRestore::Backuper.new(Discourse.system_user.id)
+  describe "#get_parameterized_title" do
+    it "returns a non-empty parameterized title when site title contains unicode" do
+      SiteSetting.title = "Ɣ"
+      backuper = BackupRestore::Backuper.new(Discourse.system_user.id)
 
-    expect(backuper.send(:get_parameterized_title)).to eq("discourse")
-  end
+      expect(backuper.send(:get_parameterized_title)).to eq("discourse")
+    end
 
-  it "returns a valid parameterized site title" do
-    SiteSetting.title = "Coding Horror"
-    backuper = BackupRestore::Backuper.new(Discourse.system_user.id)
+    it "returns a valid parameterized site title" do
+      SiteSetting.title = "Coding Horror"
+      backuper = BackupRestore::Backuper.new(Discourse.system_user.id)
 
-    expect(backuper.send(:get_parameterized_title)).to eq("coding-horror")
+      expect(backuper.send(:get_parameterized_title)).to eq("coding-horror")
+    end
   end
 
   describe "#notify_user" do
@@ -67,6 +69,34 @@ RSpec.describe BackupRestore::Backuper do
       expect(Topic.last.first_post.raw).to include(
         "```text\n...\n[2010-01-01 12:00:00] Line 10\n[2010-01-01 12:00:00] Notifying 'system' of the end of the backup...\n```",
       )
+    end
+  end
+
+  describe "#run" do
+    subject(:run) { backup.run }
+
+    let(:backup) { described_class.new(user.id) }
+    let(:user) { Discourse.system_user }
+    let(:store) { backup.store }
+
+    before { backup.stubs(:success).returns(success) }
+
+    context "when the result isn't successful" do
+      let(:success) { false }
+
+      it "doesn't refresh disk stats" do
+        store.expects(:reset_cache).never
+        run
+      end
+    end
+
+    context "when the result is successful" do
+      let(:success) { true }
+
+      it "refreshes disk stats" do
+        store.expects(:reset_cache)
+        run
+      end
     end
   end
 end
