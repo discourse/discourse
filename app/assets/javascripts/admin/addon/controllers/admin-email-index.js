@@ -4,7 +4,7 @@ import { empty } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
-import { observes } from "discourse-common/utils/decorators";
+import { observes } from "@ember-decorators/object";
 import { htmlSafe } from "@ember/template";
 import { escapeExpression } from "discourse/lib/utilities";
 

@@ -5,7 +5,7 @@ import { INPUT_DELAY } from "discourse-common/config/environment";
 import ScreenedIpAddress from "admin/models/screened-ip-address";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { exportEntity } from "discourse/lib/export-csv";
-import { observes } from "discourse-common/utils/decorators";
+import { observes } from "@ember-decorators/object";
 import { outputExportResult } from "discourse/lib/export-result";
 import { action } from "@ember/object";
 

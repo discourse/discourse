@@ -6,7 +6,7 @@ import I18n from "I18n";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import Permalink from "admin/models/permalink";
 import discourseDebounce from "discourse-common/lib/debounce";
-import { observes } from "discourse-common/utils/decorators";
+import { observes } from "@ember-decorators/object";
 import { clipboardCopy } from "discourse/lib/utilities";
 
 export default class AdminPermalinksController extends Controller {
