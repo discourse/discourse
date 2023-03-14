@@ -25,9 +25,12 @@ export default class ChatChannelRoute extends DiscourseRoute {
   }
 
   @action
-  deactivate() {
+  didTransition() {
     this.chatStateManager.storeChatURL();
+  }
+
+  @action
+  deactivate() {
     this.chat.activeChannel = null;
-    this.chat.updatePresence();
   }
 }

@@ -113,7 +113,13 @@ export default class ChatStateManager extends Service {
   }
 
   storeAppURL(url = null) {
-    this._appURL = url || this.router.currentURL;
+    if (url) {
+      this._appURL = url;
+    } else if (this.router.currentURL?.startsWith("/chat")) {
+      this._appURL = "/";
+    } else {
+      this._appURL = this.router.currentURL;
+    }
   }
 
   storeChatURL(url = null) {

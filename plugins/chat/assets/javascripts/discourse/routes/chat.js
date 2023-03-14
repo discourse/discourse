@@ -64,7 +64,6 @@ export default class ChatRoute extends DiscourseRoute {
   }
 
   deactivate() {
-    this.chatStateManager.storeChatURL();
     this.chat.updatePresence();
 
     schedule("afterRender", () => {
