@@ -4936,10 +4936,10 @@ en:
 
   safe_mode:
     title: "Enter safe mode"
-    description: "Safe mode allows you to test your site without loading plugins or themes."
+    description: "Safe mode allows you to test your site without loading themes or client-side plugin customizations. Server-side plugin customizations remain enabled."
     no_themes: "Disable themes and theme components"
-    no_unofficial_plugins: "Disable unofficial plugins"
-    no_plugins: "Disable all plugins"
+    no_unofficial_plugins: "Disable unofficial client-side plugin customizations"
+    no_plugins: "Disable all client-side plugin customizations"
     enter: "Enter Safe Mode"
     must_select: "You must select at least one option to enter safe mode."
   wizard:
