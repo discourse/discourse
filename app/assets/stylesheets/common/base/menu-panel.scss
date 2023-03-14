@@ -711,9 +711,10 @@ body.footer-nav-ipad {
   top: var(--header-top);
   box-sizing: border-box;
 
-  /* Use dvh where supported, with fallback to vh */
-  --100dvh: 100vh;
-  --100dvh: 100dvh;
+  --100dvh: 100%;
+  @supports (height: 100dvh) {
+    --100dvh: 100dvh;
+  }
 
   --base-height: calc(
     var(--100dvh) - var(--header-top) - env(safe-area-inset-bottom, 0px)
