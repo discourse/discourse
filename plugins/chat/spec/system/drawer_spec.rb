@@ -54,6 +54,20 @@ RSpec.describe "Drawer", type: :system, js: true do
     end
   end
 
+  context "when toggling open/close" do
+    it "toggles a css class on body" do
+      visit("/")
+
+      chat_page.open_from_header
+
+      expect(page.find("body.chat-drawer-active")).to be_visible
+
+      drawer.close
+
+      expect(page.find("body:not(.chat-drawer-active)")).to be_visible
+    end
+  end
+
   context "when going from drawer to full page" do
     fab!(:channel_1) { Fabricate(:chat_channel) }
     fab!(:channel_2) { Fabricate(:chat_channel) }

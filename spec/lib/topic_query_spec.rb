@@ -1393,6 +1393,42 @@ RSpec.describe TopicQuery do
       end
     end
 
+    context "with a custom suggested provider registered" do
+      let!(:topic1) { Fabricate(:topic) }
+      let!(:topic2) { Fabricate(:topic) }
+      let!(:topic3) { Fabricate(:topic) }
+      let!(:topic4) { Fabricate(:topic) }
+      let!(:topic5) { Fabricate(:topic) }
+      let!(:topic6) { Fabricate(:topic) }
+      let!(:topic7) { Fabricate(:topic) }
+
+      let(:plugin_class) do
+        Class.new(Plugin::Instance) do
+          attr_accessor :enabled
+          def enabled?
+            true
+          end
+
+          def self.custom_suggested_topics(topic, pm_params, topic_query)
+            { result: Topic.order("id desc").limit(1), params: {} }
+          end
+        end
+      end
+
+      let(:plugin) { plugin_class.new }
+
+      it "should return suggested defined by the custom provider" do
+        DiscoursePluginRegistry.register_list_suggested_for_provider(
+          plugin_class.method(:custom_suggested_topics),
+          plugin,
+        )
+
+        expect(TopicQuery.new.list_suggested_for(topic1).topics).to include(Topic.last)
+
+        DiscoursePluginRegistry.reset_register!(:list_suggested_for_providers)
+      end
+    end
+
     context "when logged in" do
       def suggested_for(topic)
         topic_query.list_suggested_for(topic)&.topics&.map { |t| t.id }
@@ -1871,6 +1907,33 @@ RSpec.describe TopicQuery do
       expect(TopicQuery.new(user).new_and_unread_results.pluck(:id)).to contain_exactly(
         unread_topic.id,
       )
+    end
+  end
+
+  describe "show_category_definitions_in_topic_lists setting" do
+    fab!(:category) { Fabricate(:category_with_definition) }
+    fab!(:subcategory) { Fabricate(:category_with_definition, parent_category: category) }
+    fab!(:subcategory_regular_topic) { Fabricate(:topic, category: subcategory) }
+
+    it "excludes subcategory definition topics by default" do
+      expect(
+        TopicQuery.new(nil, category: category.id).list_latest.topics.map(&:id),
+      ).to contain_exactly(category.topic_id, subcategory_regular_topic.id)
+    end
+
+    it "works when topic_id is null" do
+      subcategory.topic.destroy!
+      subcategory.update!(topic_id: nil)
+      expect(
+        TopicQuery.new(nil, category: category.id).list_latest.topics.map(&:id),
+      ).to contain_exactly(category.topic_id, subcategory_regular_topic.id)
+    end
+
+    it "includes subcategory definition when setting enabled" do
+      SiteSetting.show_category_definitions_in_topic_lists = true
+      expect(
+        TopicQuery.new(nil, category: category.id).list_latest.topics.map(&:id),
+      ).to contain_exactly(category.topic_id, subcategory.topic_id, subcategory_regular_topic.id)
     end
   end
 end

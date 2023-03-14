@@ -2,6 +2,11 @@ import { module, test } from "qunit";
 import { setupTest } from "ember-qunit";
 import Site from "discourse/models/site";
 import sinon from "sinon";
+import { getOwner } from "discourse-common/lib/get-owner";
+import {
+  addChatDrawerStateCallback,
+  resetChatDrawerStateCallbacks,
+} from "discourse/plugins/chat/discourse/services/chat-state-manager";
 
 module(
   "Discourse Chat | Unit | Service | chat-state-manager",
@@ -9,7 +14,7 @@ module(
     setupTest(hooks);
 
     hooks.beforeEach(function () {
-      this.subject = this.owner.lookup("service:chat-state-manager");
+      this.subject = getOwner(this).lookup("service:chat-state-manager");
     });
 
     hooks.afterEach(function () {
@@ -128,6 +133,25 @@ module(
 
       assert.strictEqual(this.subject.lastKnownChatURL, "/foo");
       sinon.assert.calledTwice(stub);
+    });
+
+    test("callbacks", function (assert) {
+      this.state = null;
+      addChatDrawerStateCallback((state) => {
+        this.state = state;
+      });
+
+      this.subject.didOpenDrawer();
+
+      assert.strictEqual(this.state.isDrawerActive, true);
+      assert.strictEqual(this.state.isDrawerExpanded, true);
+
+      this.subject.didCloseDrawer();
+
+      assert.strictEqual(this.state.isDrawerActive, false);
+      assert.strictEqual(this.state.isDrawerExpanded, false);
+
+      resetChatDrawerStateCallbacks();
     });
   }
 );
