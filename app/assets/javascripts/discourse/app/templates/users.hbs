@@ -1,5 +1,8 @@
 <DSection @pageClass="users">
-  <LoadMore @selector=".directory tbody tr" @action={{action "loadMore"}}>
+  <LoadMore
+    @selector=".directory-table .directory-table__cell"
+    @action={{action "loadMore"}}
+  >
     <div class="container">
       <div class="users-directory directory">
         <span>
