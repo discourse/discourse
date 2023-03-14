@@ -21,7 +21,7 @@ tr_TR:
         Bu rozet, interaktif yeni kullanıcı öğreticisi başarıyla tamamlandıktan sonra verilir. Temel tartışma araçlarını öğrenmek için inisiyatif aldınız ve artık sertifikalısınız!
     licensed:
       name: Lisanslı
-      description: "Gelişmiş kullanıcı öğretimizi tamamladı"
+      description: "Gelişmiş kullanıcı öğreticimizi tamamladı"
       long_description: |
         Bu rozet, interaktif gelişmiş kullanıcı öğreticisi başarıyla tamamlandıktan sonra verilir. Gelişmiş tartışma araçlarında ustalaştınız ve artık tamamen lisanslısınız!
   discourse_narrative_bot:
@@ -251,7 +251,7 @@ tr_TR:
         instructions: |-
           Daha fazla bilgi edinmek isterseniz aşağıdan <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> metnini seçin ve <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **bu kişisel mesaja yer imi ekleyin**. Bunu yaparsanız geleceğinizde bir :gift: olabilir!
         reply: |-
-          Mükemmel! Artık özel sohbetimize istediğiniz zaman, doğrudan [profilinizdeki yer imleri sekmesinden](%{bookmark_url}) kolayca geri dönebilirsiniz. Sağ üstteki profil resminizi seçmeniz yeterli &#8599;
+          Mükemmel! Artık özel konuşmamıza istediğiniz zaman, doğrudan [profilinizdeki yer imleri sekmesinden](%{bookmark_url}) kolayca geri dönebilirsiniz. Sağ üstteki profil resminizi seçmeniz yeterli &#8599;
         not_found: |-
           Hay aksi, bu konuda herhangi bir yer imi göremiyorum. Her gönderinin altında yer imi buldunuz mu? Gerekirse ek eylemleri göstermek için daha fazla göster <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> özelliğini kullanın.
       emoji:

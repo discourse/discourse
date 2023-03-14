@@ -216,7 +216,7 @@ tr_TR:
         title: Kanallar
         filter_all: Tümü
         filter_open: Açıldı
-        filter_closed: Kapatıldı
+        filter_closed: Kapalı
         filter_archived: Arşivlendi
         filter_input_placeholder: Ada göre kanal ara
       chat_message_separator:
@@ -291,7 +291,7 @@ tr_TR:
         others_and_more: "%{usernames} ve %{more} kişi daha :%{emoji}: ile tepki verdi"
         you_others_and_more: "Siz, %{usernames} ve %{more} kişi daha :%{emoji}: ile tepki verdiniz"
       composer:
-        toggle_toolbar: "Geçiş yapma araç çubuğu"
+        toggle_toolbar: "Araç çubuğunu aç/kapat"
         italic_text: "vurgulanan yazı"
         bold_text: "güçlü metin"
         code_text: "kod metni"
@@ -423,7 +423,7 @@ tr_TR:
           direct: '"%{channel}" adlı kanalda sizden bahsetti'
           direct_html: '<span>%{username}</span> <span>"%{channel}" adlı kanalda sizden bahsetti</span>'
           other_plain: '"%{channel}" adlı kanalda %{identifier} bahsetti'
-          other_html: '<span>%{username}</span> <span>"%{channel}" adlı kanalda %{identifier} bahsetti</span>'
+          other_html: '<span>%{username}</span> <span>"%{channel}" adlı kanalda şundan bahsetti: %{identifier}</span>'
         direct_message_chat_mention:
           direct: "kişisel sohbette sizden bahsetti"
           direct_html: "<span>%{username}</span> <span>kişisel sohbette sizden bahsetti</span>"

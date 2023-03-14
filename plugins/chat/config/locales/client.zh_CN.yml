@@ -194,6 +194,8 @@ zh_CN:
         read_only: "只读"
         archived_header: "频道已被归档"
         archived: "已归档"
+        archive_failed: "频道归档失败。 %{completed}/%{total} 消息已存档。 <a target=\"_blank\" href=\"%{topic_url}\">目的地话题</a>．按重试以尝试完成存档。"
+        archive_failed_no_topic: "频道归档失败。 %{completed}/%{total} 消息已存档。 目的地话题未创建．按重试以尝试完成存档。"
         archive_completed: "请参阅<a target=\"_blank\" href=\"%{topic_url}\">归档话题</a>"
         closed_header: "频道已被关闭"
         closed: "已关闭"

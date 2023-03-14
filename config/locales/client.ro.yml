@@ -783,7 +783,7 @@ ro:
         other: "Grupuri"
       activity: "Activitate"
       members:
-        title: "Membrii"
+        title: "Membri"
         filter_placeholder_admin: "nume de utilizator sau email"
         filter_placeholder: "nume de utilizator"
         remove_member: "Elimină membru"

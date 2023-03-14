@@ -7,7 +7,7 @@
 ru:
   js:
     styleguide:
-      title: "Styleguide"
+      title: "Руководство по стилю"
       welcome: "Чтобы начать, выберите раздел в меню слева."
       categories:
         atoms: Атомы
