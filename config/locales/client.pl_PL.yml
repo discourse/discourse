@@ -617,10 +617,14 @@ pl_PL:
       statuses:
         pending:
           title: "Oczekujące"
+        approved:
+          title: "Zaakceptowany"
+        rejected:
+          title: "Odrzucony"
         reviewed:
-          title: "(wszystkie sprawdzone)"
+          title: "Wszystkie sprawdzone"
         all:
-          title: "(wszystko)"
+          title: "Wszystko"
       context_question:
         delimiter: "lub"
       types:

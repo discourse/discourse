@@ -478,10 +478,14 @@ ko:
       statuses:
         pending:
           title: "보류 중"
+        approved:
+          title: "승인됨"
+        rejected:
+          title: "거부됨"
         reviewed:
-          title: "(모두 검토됨)"
+          title: "모두 검토됨"
         all:
-          title: "(모두)"
+          title: "모두"
       context_question:
         delimiter: "또는"
       types:

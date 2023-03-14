@@ -482,10 +482,14 @@ ja:
       statuses:
         pending:
           title: "保留中"
+        approved:
+          title: "承認済み"
+        rejected:
+          title: "却下"
         reviewed:
-          title: "(すべてレビュー済み)"
+          title: "すべてレビュー済み"
         all:
-          title: "(全ステータス)"
+          title: "すべて"
       context_question:
         delimiter: "または"
       types:

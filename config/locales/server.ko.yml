@@ -1478,7 +1478,6 @@ ko:
     enable_discourse_connect: "DiscourseConnect(기존 'Discourse SSO')를 통한 로그인을 활성화합니다(경고: 사용자의 이메일 주소는 *반드시* 외부 사이트에서 검증되어야 합니다!)"
     verbose_discourse_connect_logging: "자세한 DiscourseConnect 관련 진단을 <a href='%{base_path}/logs' target='_blank'>/log</a>에 기록합니다."
     enable_discourse_connect_provider: "/session/sso_provider 엔드포인트에서 DiscourseConnect(기존 'Discourse SSO') 공급자 프로토콜을 구현하려면 discourse_connect_provider_secrets를 설정해야 합니다."
-    discourse_connect_url: "DiscourseConnect 엔드포인트의 URL(반드시 http:// 또는 https://를 포함해야 함)"
     discourse_connect_secret: "DiscourseConnect 정보를 암호화 방식으로 인증하는 데 사용되는 암호 문자열이며, 10자 이상이어야 합니다."
     discourse_connect_provider_secrets: "DiscourseConnect를 사용하는 도메인 암호 쌍의 목록입니다. DiscourseConnect 암호가 10자 이상인지 확인하세요. 와일드카드 기호 *는 모든 도메인 또는 그 일부(예: *.example.com)와 일치하는 데 사용할 수 있습니다."
     discourse_connect_overrides_bio: "사용자 프로필의 사용자 소개 기능를 오버라이드하고 사용자가 변경할 수 없도록 합니다"
@@ -3794,9 +3793,6 @@ ko:
       message: "<p>활성화 이메일을 <b>%{email}</b> 주소로 재전송했습니다."
   safe_mode:
     title: "안전 모드 시작"
-    description: "안전 모드를 사용하면 플러그인이나 사이트 사용자 정의를 로드하지 않고도 사이트를 테스트할 수 있습니다."
-    no_unofficial_plugins: "비공식 플러그인 해제하기"
-    no_plugins: "모든 플러그인 비활성화"
     enter: "안전 모드 시작"
     must_select: "안전 모드를 시작하려면 옵션을 하나 이상 선택하세요."
   wizard:

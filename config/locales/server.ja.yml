@@ -1551,7 +1551,6 @@ ja:
     enable_discourse_connect: "DiscourseConnect (旧 'Discourse SSO') を介したサインオンを有効にする (警告: ユーザーのメールアドレスは外部サイトで *検証される必要があります*！)"
     verbose_discourse_connect_logging: "詳細な DiscourseConnect 関連診断を <a href='%{base_path}/logs' target='_blank'>/logs</a> に記録する"
     enable_discourse_connect_provider: "DiscourseConnect (旧 'Discourse SSO') プロバイダープロトコルを /session/sso_provider エンドポイントに実装する。discourse_connect_provider_secrets を設定する必要があります"
-    discourse_connect_url: "DiscourseConnect エンドポイントの URL (http:// または https:// を含める必要があります)"
     discourse_connect_secret: "DiscourseConnect 認証情報の暗号化に利用する秘密の文字列。10文字以上である必要があります"
     discourse_connect_provider_secrets: "DiscourseConnect を使用しているドメインとシークレットのペアのリスト。DiscourseConnect シークレットは 10 文字以上であることを確認してください。ワイルドカード記号 * を使用して、任意のドメインまたはその一部のみに一致させることができます (例: *.example.com)。"
     discourse_connect_overrides_bio: "ユーザープロファイルのユーザー略歴をオーバーライドし、ユーザーが変更できないようにする"
@@ -4093,10 +4092,7 @@ ja:
       message: "<p><b>%{email}</b> にアクティベーションメールを再送信しました"
   safe_mode:
     title: "セーフモードを開始"
-    description: "セーフモードでは、プラグインやテーマを読み込まずにサイトをテストすることができます。"
     no_themes: "テーマとテーマのコンポーネントを無効にする"
-    no_unofficial_plugins: "非公式のプラグインを無効にする"
-    no_plugins: "すべてのプラグインを無効にする"
     enter: "セーフモードを開始"
     must_select: "セーフモードを開始するには、少なくとも 1 つのオプションを選択する必要があります。"
   wizard:
