@@ -22,7 +22,7 @@
     "webpack": "^5.76.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.21.0",
+    "@babel/core": "^7.21.3",
     "@ember/optional-features": "^2.0.0",
     "@embroider/test-setup": "^2.1.1",
     "@glimmer/component": "^1.1.2",
