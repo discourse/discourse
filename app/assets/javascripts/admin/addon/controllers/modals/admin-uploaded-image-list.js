@@ -1,4 +1,4 @@
-import { observes, on } from "@ember-decorators/object";
+import { observes, on } from "discourse-common/utils/decorators";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import ModalFunctionality from "discourse/mixins/modal-functionality";

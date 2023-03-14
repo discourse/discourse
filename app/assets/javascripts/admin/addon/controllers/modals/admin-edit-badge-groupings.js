@@ -3,7 +3,7 @@ import Controller from "@ember/controller";
 import I18n from "I18n";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { ajax } from "discourse/lib/ajax";
-import { observes } from "@ember-decorators/object";
+import { observes } from "discourse-common/utils/decorators";
 import { inject as service } from "@ember/service";
 
 export default Controller.extend(ModalFunctionality, {

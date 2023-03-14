@@ -1,8 +1,7 @@
 import { COMPONENTS, THEMES } from "admin/models/theme";
 import Controller, { inject as controller } from "@ember/controller";
 import { alias, equal, match } from "@ember/object/computed";
-import discourseComputed from "discourse-common/utils/decorators";
-import { observes } from "@ember-decorators/object";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import I18n from "I18n";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { POPULAR_THEMES } from "discourse-common/helpers/popular-themes";
