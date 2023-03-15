@@ -1,5 +1,6 @@
-import Controller, { inject as controller } from "@ember/controller";
+import { action } from "@ember/object";
 import { and, not } from "@ember/object/computed";
+import Controller, { inject as controller } from "@ember/controller";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import I18n from "I18n";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
@@ -53,18 +54,19 @@ const SCSS_VARIABLE_NAMES = [
   "love-low",
 ];
 
-export default Controller.extend(ModalFunctionality, {
-  adminCustomizeThemesShow: controller(),
+export default class AdminAddUploadController extends Controller.extend(
+  ModalFunctionality
+) {
+  @controller adminCustomizeThemesShow;
 
-  uploadUrl: "/admin/themes/upload_asset",
+  uploadUrl = "/admin/themes/upload_asset";
 
+  @and("nameValid", "fileSelected") enabled;
+  @not("enabled") disabled;
   onShow() {
     this.set("name", null);
     this.set("fileSelected", false);
-  },
-
-  enabled: and("nameValid", "fileSelected"),
-  disabled: not("enabled"),
+  }
 
   @discourseComputed("name", "adminCustomizeThemesShow.model.theme_fields")
   errorMessage(name, themeFields) {
@@ -89,54 +91,54 @@ export default Controller.extend(ModalFunctionality, {
     }
 
     return null;
-  },
+  }
 
   @discourseComputed("errorMessage")
   nameValid(errorMessage) {
     return null === errorMessage;
-  },
+  }
 
   @observes("name")
   uploadChanged() {
     const file = $("#file-input")[0];
     this.set("fileSelected", file && file.files[0]);
-  },
+  }
 
-  actions: {
-    updateName() {
-      let name = this.name;
-      if (isEmpty(name)) {
-        name = $("#file-input")[0].files[0].name;
-        this.set("name", name.split(".")[0]);
-      }
-      this.uploadChanged();
-    },
+  @action
+  updateName() {
+    let name = this.name;
+    if (isEmpty(name)) {
+      name = $("#file-input")[0].files[0].name;
+      this.set("name", name.split(".")[0]);
+    }
+    this.uploadChanged();
+  }
 
-    upload() {
-      const file = $("#file-input")[0].files[0];
+  @action
+  upload() {
+    const file = $("#file-input")[0].files[0];
 
-      const options = {
-        type: "POST",
-        processData: false,
-        contentType: false,
-        data: new FormData(),
-      };
+    const options = {
+      type: "POST",
+      processData: false,
+      contentType: false,
+      data: new FormData(),
+    };
 
-      options.data.append("file", file);
+    options.data.append("file", file);
 
-      ajax(this.uploadUrl, options)
-        .then((result) => {
-          const upload = {
-            upload_id: result.upload_id,
-            name: this.name,
-            original_filename: file.name,
-          };
-          this.adminCustomizeThemesShow.send("addUpload", upload);
-          this.send("closeModal");
-        })
-        .catch((e) => {
-          popupAjaxError(e);
-        });
-    },
-  },
-});
+    ajax(this.uploadUrl, options)
+      .then((result) => {
+        const upload = {
+          upload_id: result.upload_id,
+          name: this.name,
+          original_filename: file.name,
+        };
+        this.adminCustomizeThemesShow.send("addUpload", upload);
+        this.send("closeModal");
+      })
+      .catch((e) => {
+        popupAjaxError(e);
+      });
+  }
+}

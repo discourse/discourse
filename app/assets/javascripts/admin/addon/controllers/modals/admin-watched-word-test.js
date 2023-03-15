@@ -1,16 +1,20 @@
+import { equal } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import discourseComputed from "discourse-common/utils/decorators";
-import { equal } from "@ember/object/computed";
 import {
   createWatchedWordRegExp,
   toWatchedWord,
 } from "discourse-common/utils/watched-words";
 
-export default Controller.extend(ModalFunctionality, {
-  isReplace: equal("model.nameKey", "replace"),
-  isTag: equal("model.nameKey", "tag"),
-  isLink: equal("model.nameKey", "link"),
+export default class AdminWatchedWordTestController extends Controller.extend(
+  ModalFunctionality
+) {
+  @equal("model.nameKey", "replace") isReplace;
+
+  @equal("model.nameKey", "tag") isTag;
+
+  @equal("model.nameKey", "link") isLink;
 
   @discourseComputed(
     "value",
@@ -71,5 +75,5 @@ export default Controller.extend(ModalFunctionality, {
 
       return matches;
     }
-  },
-});
+  }
+}
