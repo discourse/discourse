@@ -11,7 +11,6 @@ export default class AdminDeletePostsConfirmationController extends Controller.e
   @controller adminUserIndex;
 
   @alias("model.username") username;
-
   @alias("model.post_count") postCount;
 
   onShow() {

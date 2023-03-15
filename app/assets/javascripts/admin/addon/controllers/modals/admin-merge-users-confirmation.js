@@ -11,7 +11,6 @@ export default class AdminMergeUsersConfirmationController extends Controller.ex
   @controller adminUserIndex;
 
   @alias("model.username") username;
-
   @alias("model.targetUsername") targetUsername;
 
   onShow() {

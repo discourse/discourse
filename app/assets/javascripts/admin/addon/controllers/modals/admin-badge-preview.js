@@ -6,9 +6,7 @@ import { escapeExpression } from "discourse/lib/utilities";
 
 export default class AdminBadgePreviewController extends Controller {
   @alias("model.sample") sample;
-
   @alias("model.errors") errors;
-
   @alias("model.grant_count") count;
 
   @map("model.sample", (grant) => {
@@ -32,6 +30,7 @@ export default class AdminBadgePreviewController extends Controller {
     return I18n.t(i18nKey, i18nParams);
   })
   processedSample;
+
   @discourseComputed("count", "sample.length")
   countWarning(count, sampleLength) {
     if (count <= 10) {

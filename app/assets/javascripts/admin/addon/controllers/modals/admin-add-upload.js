@@ -1,7 +1,8 @@
 import { action } from "@ember/object";
 import { and, not } from "@ember/object/computed";
 import Controller, { inject as controller } from "@ember/controller";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import { observes } from "@ember-decorators/object";
 import I18n from "I18n";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { ajax } from "discourse/lib/ajax";
@@ -63,6 +64,7 @@ export default class AdminAddUploadController extends Controller.extend(
 
   @and("nameValid", "fileSelected") enabled;
   @not("enabled") disabled;
+
   onShow() {
     this.set("name", null);
     this.set("fileSelected", false);

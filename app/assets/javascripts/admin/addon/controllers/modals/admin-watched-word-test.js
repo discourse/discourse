@@ -13,7 +13,6 @@ export default class AdminWatchedWordTestController extends Controller.extend(
   @equal("model.nameKey", "replace") isReplace;
 
   @equal("model.nameKey", "tag") isTag;
-
   @equal("model.nameKey", "link") isLink;
 
   @discourseComputed(

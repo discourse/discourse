@@ -1,7 +1,8 @@
 import { alias, equal, match } from "@ember/object/computed";
 import { COMPONENTS, THEMES } from "admin/models/theme";
 import Controller, { inject as controller } from "@ember/controller";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import { observes } from "@ember-decorators/object";
 import I18n from "I18n";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { POPULAR_THEMES } from "discourse-common/helpers/popular-themes";
@@ -15,17 +16,12 @@ export default class AdminInstallThemeController extends Controller.extend(
   ModalFunctionality
 ) {
   @controller adminCustomizeThemes;
-
   @controller("adminCustomizeThemes") themesController;
 
   @equal("selection", "popular") popular;
-
   @equal("selection", "local") local;
-
   @equal("selection", "remote") remote;
-
   @equal("selection", "create") create;
-
   @equal("selection", "directRepoInstall") directRepoInstall;
 
   selection = "popular";
@@ -42,19 +38,14 @@ export default class AdminInstallThemeController extends Controller.extend(
   advancedVisible = false;
 
   @alias("themesController.currentTab") selectedType;
-
   @equal("selectedType", COMPONENTS) component;
 
   urlPlaceholder = "https://github.com/discourse/sample_theme";
 
-  init() {
-    super.init(...arguments);
-
-    this.createTypes = [
-      { name: I18n.t("admin.customize.theme.theme"), value: THEMES },
-      { name: I18n.t("admin.customize.theme.component"), value: COMPONENTS },
-    ];
-  }
+  createTypes = [
+    { name: I18n.t("admin.customize.theme.theme"), value: THEMES },
+    { name: I18n.t("admin.customize.theme.component"), value: COMPONENTS },
+  ];
 
   @discourseComputed("themesController.installedThemes")
   themes(installedThemes) {
