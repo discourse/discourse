@@ -23,23 +23,18 @@ export default class AdminInstallThemeController extends Controller.extend(
   @equal("selection", "remote") remote;
   @equal("selection", "create") create;
   @equal("selection", "directRepoInstall") directRepoInstall;
-
   selection = "popular";
   loading = false;
   keyGenUrl = "/admin/themes/generate_key_pair";
   importUrl = "/admin/themes/import";
   recordType = "theme";
-
   @match("uploadUrl", /^ssh:\/\/.+@.+$|.+@.+:.+$/) checkPrivate;
-
   localFile = null;
   uploadUrl = null;
   uploadName = null;
   advancedVisible = false;
-
   @alias("themesController.currentTab") selectedType;
   @equal("selectedType", COMPONENTS) component;
-
   urlPlaceholder = "https://github.com/discourse/sample_theme";
 
   createTypes = [
