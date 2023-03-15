@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Chat::StepsInspector do
   class DummyService
     include Service::Base
