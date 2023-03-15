@@ -1,4 +1,5 @@
 import Route from "@ember/routing/route";
+
 export default class AdminCustomizeColorsShowRoute extends Route {
   model(params) {
     const all = this.modelFor("adminCustomize.colors");
