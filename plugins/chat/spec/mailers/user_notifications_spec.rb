@@ -175,6 +175,7 @@ describe UserNotifications do
           create_chat_message_with_mentions_and_notifications("Mentioning @all")
           email = described_class.chat_summary(user, {})
           expect(email.to).to be_present
+          expect(email.to).to contain_exactly(user.email)
         end
 
         it "returns email for @here mention by default" do
@@ -184,6 +185,7 @@ describe UserNotifications do
           email = described_class.chat_summary(user, {})
 
           expect(email.to).to be_present
+          expect(email.to).to contain_exactly(user.email)
         end
 
         context "when channel-wide mentions are disabled in a channel" do
