@@ -39,12 +39,6 @@ require_relative "lib/chat/engine"
 after_initialize do
   register_seedfu_fixtures(Rails.root.join("plugins", "chat", "db", "fixtures"))
 
-  # if Discourse.allow_dev_populate?
-  #   load File.expand_path("../lib/discourse_dev/public_channel.rb", __FILE__)
-  #   load File.expand_path("../lib/discourse_dev/direct_channel.rb", __FILE__)
-  #   load File.expand_path("../lib/discourse_dev/message.rb", __FILE__)
-  # end
-
   UserNotifications.append_view_path(File.expand_path("../app/views", __FILE__))
 
   register_category_custom_field_type(Chat::HAS_CHAT_ENABLED, :boolean)
