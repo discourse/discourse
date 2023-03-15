@@ -60,7 +60,7 @@ describe "Using #hashtag autocompletion to search for and lookup channels",
     message = nil
     try_until_success do
       message =
-        ChatMessage.find_by(
+        Chat::Message.find_by(
           user: user,
           message: "this is #random and this is #raspberry-beret and this is #razed which is cool",
         )

@@ -4,7 +4,7 @@ module Jobs
   class ChatNotifyMentioned < ::Jobs::Base
     def execute(args = {})
       @chat_message =
-        ChatMessage.includes(:user, :revisions, chat_channel: :chatable).find_by(
+        Chat::Message.includes(:user, :revisions, chat_channel: :chatable).find_by(
           id: args[:chat_message_id],
         )
       if @chat_message.nil? ||
@@ -23,7 +23,7 @@ module Jobs
 
     def get_memberships(user_ids)
       query =
-        UserChatChannelMembership.includes(:user).where(
+        Chat::UserChatChannelMembership.includes(:user).where(
           user_id: (user_ids - @already_notified_user_ids),
           chat_channel_id: @chat_message.chat_channel_id,
         )
@@ -63,7 +63,7 @@ module Jobs
       payload = {
         notification_type: Notification.types[:chat_mention],
         username: @creator.username,
-        tag: Chat::ChatNotifier.push_notification_tag(:mention, @chat_channel.id),
+        tag: Chat::Notifier.push_notification_tag(:mention, @chat_channel.id),
         excerpt: @chat_message.push_notification_excerpt,
         post_url: "#{@chat_channel.relative_url}/#{@chat_message.id}",
       }
@@ -102,7 +102,7 @@ module Jobs
 
     def create_notification!(membership, mention, mention_type)
       notification_data = build_data_for(membership, identifier_type: mention_type)
-      is_read = Chat::ChatNotifier.user_has_seen_message?(membership, @chat_message.id)
+      is_read = Chat::Notifier.user_has_seen_message?(membership, @chat_message.id)
       notification =
         Notification.create!(
           notification_type: Notification.types[:chat_mention],
@@ -135,7 +135,7 @@ module Jobs
       memberships = get_memberships(user_ids)
 
       memberships.each do |membership|
-        mention = ChatMention.find_by(user: membership.user, chat_message: @chat_message)
+        mention = Chat::Mention.find_by(user: membership.user, chat_message: @chat_message)
         if mention.present?
           create_notification!(membership, mention, mention_type)
           send_notifications(membership, mention_type)

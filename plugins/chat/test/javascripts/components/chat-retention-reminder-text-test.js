@@ -39,7 +39,9 @@ module(
 
     test("when channel is a DM channel", async function (assert) {
       const count = 10;
-      this.channel = ChatChannel.create({ chatable_type: "DirectMessage" });
+      this.channel = ChatChannel.create({
+        chatable_type: "Chat::DirectMessage",
+      });
       this.siteSettings.chat_dm_retention_days = count;
 
       await render(

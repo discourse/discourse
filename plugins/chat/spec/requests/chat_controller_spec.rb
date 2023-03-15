@@ -29,7 +29,7 @@ RSpec.describe Chat::ChatController do
   end
 
   def flag_message(message, flagger, flag_type: ReviewableScore.types[:off_topic])
-    Chat::ChatReviewQueue.new.flag_message(message, Guardian.new(flagger), flag_type)[:reviewable]
+    Chat::ReviewQueue.new.flag_message(message, Guardian.new(flagger), flag_type)[:reviewable]
   end
 
   describe "#messages" do
@@ -102,6 +102,7 @@ RSpec.describe Chat::ChatController do
       score = reviewable.reviewable_scores.last
 
       get "/chat/#{chat_channel.id}/messages.json", params: { page_size: page_size }
+
       expect(response.parsed_body["chat_messages"].last["user_flag_status"]).to eq(
         score.status_for_database,
       )
@@ -288,7 +289,11 @@ RSpec.describe Chat::ChatController do
 
       context "when current user is silenced" do
         before do
-          UserChatChannelMembership.create(user: user, chat_channel: chat_channel, following: true)
+          Chat::UserChatChannelMembership.create(
+            user: user,
+            chat_channel: chat_channel,
+            following: true,
+          )
           sign_in(user)
           UserSilencer.new(user).silence
         end
@@ -344,13 +349,17 @@ RSpec.describe Chat::ChatController do
 
       it "sends a message for regular user when staff-only is disabled and they are following channel" do
         sign_in(user)
-        UserChatChannelMembership.create(user: user, chat_channel: chat_channel, following: true)
+        Chat::UserChatChannelMembership.create(
+          user: user,
+          chat_channel: chat_channel,
+          following: true,
+        )
 
         expect { post "/chat/#{chat_channel.id}.json", params: { message: message } }.to change {
-          ChatMessage.count
+          Chat::Message.count
         }.by(1)
         expect(response.status).to eq(200)
-        expect(ChatMessage.last.message).to eq(message)
+        expect(Chat::Message.last.message).to eq(message)
       end
     end
 
@@ -363,22 +372,22 @@ RSpec.describe Chat::ChatController do
       it "forces users to follow the channel" do
         direct_message_channel.remove(user2)
 
-        ChatPublisher.expects(:publish_new_channel).once
+        Chat::Publisher.expects(:publish_new_channel).once
 
         sign_in(user1)
 
         post "/chat/#{direct_message_channel.id}.json", params: { message: message }
 
-        expect(UserChatChannelMembership.find_by(user_id: user2.id).following).to be true
+        expect(Chat::UserChatChannelMembership.find_by(user_id: user2.id).following).to be true
       end
 
       it "errors when the user is not part of the direct message channel" do
-        DirectMessageUser.find_by(user: user1, direct_message: chatable).destroy!
+        Chat::DirectMessageUser.find_by(user: user1, direct_message: chatable).destroy!
         sign_in(user1)
         post "/chat/#{direct_message_channel.id}.json", params: { message: message }
         expect(response.status).to eq(403)
 
-        UserChatChannelMembership.find_by(user_id: user2.id).update!(following: true)
+        Chat::UserChatChannelMembership.find_by(user_id: user2.id).update!(following: true)
         sign_in(user2)
         post "/chat/#{direct_message_channel.id}.json", params: { message: message }
         expect(response.status).to eq(200)
@@ -404,12 +413,12 @@ RSpec.describe Chat::ChatController do
         it "does not force them to follow the channel or send a publish_new_channel message" do
           direct_message_channel.remove(user2)
 
-          ChatPublisher.expects(:publish_new_channel).never
+          Chat::Publisher.expects(:publish_new_channel).never
 
           sign_in(user1)
           post "/chat/#{direct_message_channel.id}.json", params: { message: message }
 
-          expect(UserChatChannelMembership.find_by(user_id: user2.id).following).to be false
+          expect(Chat::UserChatChannelMembership.find_by(user_id: user2.id).following).to be false
         end
       end
     end
@@ -423,7 +432,7 @@ RSpec.describe Chat::ChatController do
         sign_in(Fabricate(:admin))
 
         expect_enqueued_with(
-          job: :process_chat_message,
+          job: :chat_process_message,
           args: {
             chat_message_id: chat_message.id,
           },
@@ -457,7 +466,7 @@ RSpec.describe Chat::ChatController do
           chat_message.update!(message: "new content")
 
           expect_enqueued_with(
-            job: :process_chat_message,
+            job: :chat_process_message,
             args: {
               chat_message_id: chat_message.id,
               is_dirty: true,
@@ -554,7 +563,7 @@ RSpec.describe Chat::ChatController do
     it "doesn't allow a user to delete another user's message" do
       sign_in(other_user)
 
-      delete "/chat/#{chat_channel.id}/#{ChatMessage.last.id}.json"
+      delete "/chat/#{chat_channel.id}/#{Chat::Message.last.id}.json"
       expect(response.status).to eq(403)
     end
 
@@ -573,25 +582,25 @@ RSpec.describe Chat::ChatController do
       expect do
         events =
           DiscourseEvent.track_events do
-            delete "/chat/#{chat_channel.id}/#{ChatMessage.last.id}.json"
+            delete "/chat/#{chat_channel.id}/#{Chat::Message.last.id}.json"
           end
-      end.to change { ChatMessage.count }.by(-1)
+      end.to change { Chat::Message.count }.by(-1)
 
       expect(response.status).to eq(200)
       expect(events.map { |event| event[:event_name] }).to include(:chat_message_trashed)
     end
 
     it "does not allow message delete when chat channel is read_only" do
-      sign_in(ChatMessage.last.user)
+      sign_in(Chat::Message.last.user)
 
       chat_channel.update!(status: :read_only)
-      expect { delete "/chat/#{chat_channel.id}/#{ChatMessage.last.id}.json" }.not_to change {
-        ChatMessage.count
+      expect { delete "/chat/#{chat_channel.id}/#{Chat::Message.last.id}.json" }.not_to change {
+        Chat::Message.count
       }
       expect(response.status).to eq(403)
 
       sign_in(admin)
-      delete "/chat/#{chat_channel.id}/#{ChatMessage.last.id}.json"
+      delete "/chat/#{chat_channel.id}/#{Chat::Message.last.id}.json"
       expect(response.status).to eq(403)
     end
 
@@ -599,14 +608,14 @@ RSpec.describe Chat::ChatController do
       sign_in(admin)
 
       chat_channel.update!(status: :read_only)
-      expect { delete "/chat/#{chat_channel.id}/#{ChatMessage.last.id}.json" }.not_to change {
-        ChatMessage.count
+      expect { delete "/chat/#{chat_channel.id}/#{Chat::Message.last.id}.json" }.not_to change {
+        Chat::Message.count
       }
       expect(response.status).to eq(403)
 
       chat_channel.update!(status: :closed)
-      expect { delete "/chat/#{chat_channel.id}/#{ChatMessage.last.id}.json" }.to change {
-        ChatMessage.count
+      expect { delete "/chat/#{chat_channel.id}/#{Chat::Message.last.id}.json" }.to change {
+        Chat::Message.count
       }.by(-1)
       expect(response.status).to eq(200)
     end
@@ -619,7 +628,7 @@ RSpec.describe Chat::ChatController do
     end
 
     before do
-      ChatMessage.create!(user: user, message: "this is a message", chat_channel: chat_channel)
+      Chat::Message.create!(user: user, message: "this is a message", chat_channel: chat_channel)
     end
 
     describe "for category" do
@@ -632,8 +641,8 @@ RSpec.describe Chat::ChatController do
 
       it "Allows users to delete their own messages" do
         sign_in(user)
-        expect { delete "/chat/#{chat_channel.id}/#{ChatMessage.last.id}.json" }.to change {
-          ChatMessage.count
+        expect { delete "/chat/#{chat_channel.id}/#{Chat::Message.last.id}.json" }.to change {
+          Chat::Message.count
         }.by(-1)
         expect(response.status).to eq(200)
       end
@@ -644,14 +653,14 @@ RSpec.describe Chat::ChatController do
     it "doesn't allow a user to restore another user's message" do
       sign_in(other_user)
 
-      put "/chat/#{chat_channel.id}/restore/#{ChatMessage.unscoped.last.id}.json"
+      put "/chat/#{chat_channel.id}/restore/#{Chat::Message.unscoped.last.id}.json"
       expect(response.status).to eq(403)
     end
 
     it "allows a user to restore their own posts" do
       sign_in(user)
 
-      deleted_message = ChatMessage.unscoped.last
+      deleted_message = Chat::Message.unscoped.last
       put "/chat/#{chat_channel.id}/restore/#{deleted_message.id}.json"
       expect(response.status).to eq(200)
       expect(deleted_message.reload.deleted_at).to be_nil
@@ -660,18 +669,18 @@ RSpec.describe Chat::ChatController do
     it "allows admin to restore others' posts" do
       sign_in(admin)
 
-      deleted_message = ChatMessage.unscoped.last
+      deleted_message = Chat::Message.unscoped.last
       put "/chat/#{chat_channel.id}/restore/#{deleted_message.id}.json"
       expect(response.status).to eq(200)
       expect(deleted_message.reload.deleted_at).to be_nil
     end
 
     it "does not allow message restore when chat channel is read_only" do
-      sign_in(ChatMessage.last.user)
+      sign_in(Chat::Message.last.user)
 
       chat_channel.update!(status: :read_only)
 
-      deleted_message = ChatMessage.unscoped.last
+      deleted_message = Chat::Message.unscoped.last
       put "/chat/#{chat_channel.id}/restore/#{deleted_message.id}.json"
       expect(response.status).to eq(403)
       expect(deleted_message.reload.deleted_at).not_to be_nil
@@ -686,7 +695,7 @@ RSpec.describe Chat::ChatController do
 
       chat_channel.update!(status: :read_only)
 
-      deleted_message = ChatMessage.unscoped.last
+      deleted_message = Chat::Message.unscoped.last
       put "/chat/#{chat_channel.id}/restore/#{deleted_message.id}.json"
       expect(response.status).to eq(403)
       expect(deleted_message.reload.deleted_at).not_to be_nil
@@ -703,7 +712,7 @@ RSpec.describe Chat::ChatController do
 
     before do
       message =
-        ChatMessage.create(user: user, message: "this is a message", chat_channel: chat_channel)
+        Chat::Message.create(user: user, message: "this is a message", chat_channel: chat_channel)
       message.trash!
     end
 
@@ -777,7 +786,7 @@ RSpec.describe Chat::ChatController do
 
       it "updates timing records" do
         expect { put "/chat/#{chat_channel.id}/read/#{message_1.id}.json" }.not_to change {
-          UserChatChannelMembership.count
+          Chat::UserChatChannelMembership.count
         }
 
         membership.reload
@@ -803,7 +812,7 @@ RSpec.describe Chat::ChatController do
             }.to_json,
           )
           .tap do |notification|
-            ChatMention.create!(user: user, chat_message: msg, notification: notification)
+            Chat::Mention.create!(user: user, chat_message: msg, notification: notification)
           end
       end
 
@@ -878,7 +887,7 @@ RSpec.describe Chat::ChatController do
               emoji: ":heart:",
               react_action: "add",
             }
-      }.to change { UserChatChannelMembership.count }.by(1)
+      }.to change { Chat::UserChatChannelMembership.count }.by(1)
       expect(response.status).to eq(200)
     end
 
@@ -1076,7 +1085,10 @@ RSpec.describe Chat::ChatController do
     it "sets `dismissed_dm_retention_reminder` to true" do
       sign_in(user)
       expect {
-        post "/chat/dismiss-retention-reminder.json", params: { chatable_type: "DirectMessage" }
+        post "/chat/dismiss-retention-reminder.json",
+             params: {
+               chatable_type: "Chat::DirectMessage",
+             }
       }.to change { user.user_option.reload.dismissed_dm_retention_reminder }.to (true)
     end
 
@@ -1089,7 +1101,7 @@ RSpec.describe Chat::ChatController do
       post "/chat/dismiss-retention-reminder.json", params: { chatable_type: "Category" }
       expect(response.status).to eq(200)
 
-      post "/chat/dismiss-retention-reminder.json", params: { chatable_type: "DirectMessage" }
+      post "/chat/dismiss-retention-reminder.json", params: { chatable_type: "Chat::DirectMessage" }
       expect(response.status).to eq(200)
     end
   end
@@ -1188,7 +1200,7 @@ RSpec.describe Chat::ChatController do
               chat_message_id: admin_chat_message.id,
               flag_type_id: ReviewableScore.types[:off_topic],
             }
-      }.to change { ReviewableChatMessage.where(target: admin_chat_message).count }.by(1)
+      }.to change { Chat::ReviewableChatMessage.where(target: admin_chat_message).count }.by(1)
       expect(response.status).to eq(200)
     end
 
@@ -1264,10 +1276,10 @@ RSpec.describe Chat::ChatController do
     it "can create and destroy chat drafts" do
       expect {
         post "/chat/drafts.json", params: { chat_channel_id: chat_channel.id, data: "{}" }
-      }.to change { ChatDraft.count }.by(1)
+      }.to change { Chat::Draft.count }.by(1)
 
       expect { post "/chat/drafts.json", params: { chat_channel_id: chat_channel.id } }.to change {
-        ChatDraft.count
+        Chat::Draft.count
       }.by(-1)
     end
 
@@ -1282,17 +1294,17 @@ RSpec.describe Chat::ChatController do
       GroupUser.create!(user: user, group: group)
       expect {
         post "/chat/drafts.json", params: { chat_channel_id: chat_channel.id, data: "{}" }
-      }.to change { ChatDraft.count }.by(1)
+      }.to change { Chat::Draft.count }.by(1)
     end
 
     it "cannot create chat drafts for a direct message channel the user cannot access" do
       post "/chat/drafts.json", params: { chat_channel_id: dm_channel.id, data: "{}" }
       expect(response.status).to eq(403)
 
-      DirectMessageUser.create(user: user, direct_message: dm_channel.chatable)
+      Chat::DirectMessageUser.create(user: user, direct_message: dm_channel.chatable)
       expect {
         post "/chat/drafts.json", params: { chat_channel_id: dm_channel.id, data: "{}" }
-      }.to change { ChatDraft.count }.by(1)
+      }.to change { Chat::Draft.count }.by(1)
     end
 
     it "cannot create a too long chat draft" do
@@ -1372,7 +1384,7 @@ RSpec.describe Chat::ChatController do
         get "/chat/lookup/#{message.id}.json", params: { chat_channel_id: channel.id }
         expect(response.status).to eq(403)
 
-        DirectMessageUser.create!(user: user, direct_message: chatable)
+        Chat::DirectMessageUser.create!(user: user, direct_message: chatable)
         get "/chat/lookup/#{message.id}.json", params: { chat_channel_id: channel.id }
         expect(response.status).to eq(200)
         expect(response.parsed_body["chat_messages"][0]["id"]).to eq(message.id)

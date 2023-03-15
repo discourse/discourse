@@ -468,7 +468,7 @@ export default {
           fancy_title: "Channel Name",
           excerpt: "some excerpt",
           bookmarkable_id: 2437,
-          bookmarkable_type: "ChatMessage",
+          bookmarkable_type: "Chat::Message",
           bookmarkable_url: "http://localhost:4200/chat/message/2437",
           user: {
             id: 4343,

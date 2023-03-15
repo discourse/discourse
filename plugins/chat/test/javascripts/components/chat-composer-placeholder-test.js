@@ -15,7 +15,7 @@ module(
       this.set(
         "chatChannel",
         ChatChannel.create({
-          chatable_type: "DirectMessage",
+          chatable_type: "Chat::DirectMessage",
           chatable: {
             users: [{ id: 1 }],
           },
@@ -34,7 +34,7 @@ module(
       this.set(
         "chatChannel",
         ChatChannel.create({
-          chatable_type: "DirectMessage",
+          chatable_type: "Chat::DirectMessage",
           chatable: {
             users: [
               { name: "Tomtom" },

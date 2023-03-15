@@ -7,7 +7,7 @@ describe Jobs::ChatChannelArchive do
   fab!(:user) { Fabricate(:user, admin: true) }
   fab!(:category) { Fabricate(:category) }
   fab!(:chat_archive) do
-    ChatChannelArchive.create!(
+    Chat::ChannelArchive.create!(
       chat_channel: chat_channel,
       archived_by: user,
       destination_topic_title: "This will be the archive topic",
@@ -34,7 +34,7 @@ describe Jobs::ChatChannelArchive do
   end
 
   it "processes the archive" do
-    Chat::ChatChannelArchiveService.any_instance.expects(:execute)
+    Chat::ChannelArchiveService.any_instance.expects(:execute)
     run_job
   end
 end

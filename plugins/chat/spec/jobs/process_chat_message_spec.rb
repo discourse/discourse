@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe Jobs::ProcessChatMessage do
+describe Jobs::ChatProcessMessage do
   fab!(:chat_message) { Fabricate(:chat_message, message: "https://discourse.org/team") }
 
   it "updates cooked with oneboxes" do
@@ -23,7 +23,7 @@ describe Jobs::ProcessChatMessage do
     fab!(:chat_message) { Fabricate(:chat_message, message: "a very lovely cat") }
 
     it "publishes the update" do
-      ChatPublisher.expects(:publish_processed!).once
+      Chat::Publisher.expects(:publish_processed!).once
       described_class.new.execute(chat_message_id: chat_message.id, is_dirty: true)
     end
   end
@@ -32,14 +32,14 @@ describe Jobs::ProcessChatMessage do
     fab!(:chat_message) { Fabricate(:chat_message, message: "a very lovely cat") }
 
     it "doesn’t publish the update" do
-      ChatPublisher.expects(:publish_processed!).never
+      Chat::Publisher.expects(:publish_processed!).never
       described_class.new.execute(chat_message_id: chat_message.id)
     end
 
     context "when the cooked message changed" do
       it "publishes the update" do
         chat_message.update!(cooked: "another lovely cat")
-        ChatPublisher.expects(:publish_processed!).once
+        Chat::Publisher.expects(:publish_processed!).once
         described_class.new.execute(chat_message_id: chat_message.id)
       end
     end

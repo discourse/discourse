@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe Jobs::DeleteOldChatMessages do
+describe Jobs::ChatDeleteOldMessages do
   base_date = DateTime.parse("2020-12-01 00:00 UTC")
 
   fab!(:public_channel) { Fabricate(:category_channel) }
@@ -85,7 +85,7 @@ describe Jobs::DeleteOldChatMessages do
     SiteSetting.chat_channel_retention_days = 0
     SiteSetting.chat_dm_retention_days = 0
 
-    expect { described_class.new.execute }.not_to change { ChatMessage.count }
+    expect { described_class.new.execute }.not_to change { Chat::Message.count }
   end
 
   describe "public channels" do
@@ -107,7 +107,7 @@ describe Jobs::DeleteOldChatMessages do
 
     it "does nothing when no messages fall in the time range" do
       SiteSetting.chat_channel_retention_days = 800
-      expect { described_class.new.execute }.not_to change { ChatMessage.in_public_channel.count }
+      expect { described_class.new.execute }.not_to change { Chat::Message.in_public_channel.count }
     end
   end
 
@@ -130,7 +130,7 @@ describe Jobs::DeleteOldChatMessages do
 
     it "does nothing when no messages fall in the time range" do
       SiteSetting.chat_dm_retention_days = 800
-      expect { described_class.new.execute }.not_to change { ChatMessage.in_dm_channel.count }
+      expect { described_class.new.execute }.not_to change { Chat::Message.in_dm_channel.count }
     end
   end
 end

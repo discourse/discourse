@@ -14,7 +14,7 @@ describe Jobs::ChatChannelDelete do
     end
     @message_ids = messages.map(&:id)
 
-    10.times { ChatMessageReaction.create(chat_message: messages.sample, user: users.sample) }
+    10.times { Chat::MessageReaction.create(chat_message: messages.sample, user: users.sample) }
 
     10.times do
       upload = Fabricate(:upload, user: users.sample)
@@ -28,14 +28,14 @@ describe Jobs::ChatChannelDelete do
       UploadReference.create(target: message, upload: upload)
     end
 
-    ChatMention.create(
+    Chat::Mention.create(
       user: user2,
       chat_message: messages.sample,
       notification: Fabricate(:notification),
     )
 
     @incoming_chat_webhook_id = Fabricate(:incoming_chat_webhook, chat_channel: chat_channel)
-    ChatWebhookEvent.create(
+    Chat::WebhookEvent.create(
       incoming_chat_webhook: @incoming_chat_webhook_id,
       chat_message: messages.sample,
     )
@@ -48,7 +48,7 @@ describe Jobs::ChatChannelDelete do
       new_message: revision_message.message,
     )
 
-    ChatDraft.create(chat_channel: chat_channel, user: users.sample, data: "wow some draft")
+    Chat::Draft.create(chat_channel: chat_channel, user: users.sample, data: "wow some draft")
 
     Fabricate(:user_chat_channel_membership, chat_channel: chat_channel, user: user1)
     Fabricate(:user_chat_channel_membership, chat_channel: chat_channel, user: user2)
@@ -59,21 +59,21 @@ describe Jobs::ChatChannelDelete do
 
   def counts
     {
-      incoming_webhooks: IncomingChatWebhook.where(chat_channel_id: chat_channel.id).count,
+      incoming_webhooks: Chat::IncomingWebhook.where(chat_channel_id: chat_channel.id).count,
       webhook_events:
-        ChatWebhookEvent.where(incoming_chat_webhook_id: @incoming_chat_webhook_id).count,
-      drafts: ChatDraft.where(chat_channel: chat_channel).count,
-      channel_memberships: UserChatChannelMembership.where(chat_channel: chat_channel).count,
-      revisions: ChatMessageRevision.where(chat_message_id: @message_ids).count,
-      mentions: ChatMention.where(chat_message_id: @message_ids).count,
+        Chat::WebhookEvent.where(incoming_chat_webhook_id: @incoming_chat_webhook_id).count,
+      drafts: Chat::Draft.where(chat_channel: chat_channel).count,
+      channel_memberships: Chat::UserChatChannelMembership.where(chat_channel: chat_channel).count,
+      revisions: Chat::MessageRevision.where(chat_message_id: @message_ids).count,
+      mentions: Chat::Mention.where(chat_message_id: @message_ids).count,
       chat_uploads:
         DB.query_single(
           "SELECT COUNT(*) FROM chat_uploads WHERE chat_message_id IN (#{@message_ids.join(",")})",
         ).first,
       upload_references:
-        UploadReference.where(target_id: @message_ids, target_type: "ChatMessage").count,
-      messages: ChatMessage.where(id: @message_ids).count,
-      reactions: ChatMessageReaction.where(chat_message_id: @message_ids).count,
+        UploadReference.where(target_id: @message_ids, target_type: "Chat::Message").count,
+      messages: Chat::Message.where(id: @message_ids).count,
+      reactions: Chat::MessageReaction.where(chat_message_id: @message_ids).count,
     }
   end
 

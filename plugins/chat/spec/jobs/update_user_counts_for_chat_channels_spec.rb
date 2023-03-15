@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe Jobs::UpdateUserCountsForChatChannels do
+describe Jobs::ChatUpdateUserCountsForChannels do
   fab!(:chat_channel_1) { Fabricate(:category_channel, user_count: 0) }
   fab!(:chat_channel_2) { Fabricate(:category_channel, user_count: 0) }
   fab!(:user_1) { Fabricate(:user) }
@@ -24,7 +24,7 @@ describe Jobs::UpdateUserCountsForChatChannels do
   it "sets the user_count correctly for each chat channel" do
     create_memberships
 
-    Jobs::UpdateUserCountsForChatChannels.new.execute
+    Jobs::ChatUpdateUserCountsForChannels.new.execute
 
     expect(chat_channel_1.reload.user_count).to eq(2)
     expect(chat_channel_2.reload.user_count).to eq(3)
@@ -39,7 +39,7 @@ describe Jobs::UpdateUserCountsForChatChannels do
     user_3.update(staged: true)
     user_4.update(active: false)
 
-    Jobs::UpdateUserCountsForChatChannels.new.execute
+    Jobs::ChatUpdateUserCountsForChannels.new.execute
 
     expect(chat_channel_1.reload.user_count).to eq(1)
     expect(chat_channel_2.reload.user_count).to eq(0)
@@ -49,11 +49,11 @@ describe Jobs::UpdateUserCountsForChatChannels do
     create_memberships
 
     chat_channel_1.update!(status: :archived)
-    Jobs::UpdateUserCountsForChatChannels.new.execute
+    Jobs::ChatUpdateUserCountsForChannels.new.execute
     expect(chat_channel_1.reload.user_count).to eq(0)
 
     chat_channel_1.update!(status: :read_only)
-    Jobs::UpdateUserCountsForChatChannels.new.execute
+    Jobs::ChatUpdateUserCountsForChannels.new.execute
     expect(chat_channel_1.reload.user_count).to eq(0)
   end
 end

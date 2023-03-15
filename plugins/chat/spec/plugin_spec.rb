@@ -17,7 +17,7 @@ describe Chat do
     fab!(:unused_upload) { Fabricate(:upload, user: user, created_at: 1.month.ago) }
 
     let!(:chat_message) do
-      Chat::ChatMessageCreator.create(
+      Chat::MessageCreator.create(
         chat_channel: chat_channel,
         user: user,
         in_reply_to_id: nil,
@@ -43,7 +43,7 @@ describe Chat do
     fab!(:unused_upload) { Fabricate(:upload, user: user, created_at: 1.month.ago) }
 
     let!(:chat_message) do
-      Chat::ChatMessageCreator.create(
+      Chat::MessageCreator.create(
         chat_channel: chat_channel,
         user: user,
         in_reply_to_id: nil,
@@ -53,7 +53,7 @@ describe Chat do
     end
 
     let!(:draft_message) do
-      ChatDraft.create!(
+      Chat::Draft.create!(
         user: user,
         chat_channel: chat_channel,
         data:
@@ -135,7 +135,7 @@ describe Chat do
     fab!(:user_4) { Fabricate(:user, suspended_till: 3.weeks.from_now) }
 
     let!(:chat_message) do
-      Chat::ChatMessageCreator.create(
+      Chat::MessageCreator.create(
         chat_channel: chat_channel,
         user: user,
         in_reply_to_id: nil,
@@ -170,7 +170,7 @@ describe Chat do
         user_2.user_chat_channel_memberships.create!(chat_channel: chat_channel, following: true)
         user_3.user_chat_channel_memberships.create!(chat_channel: chat_channel, following: true)
         user_4.user_chat_channel_memberships.create!(chat_channel: chat_channel, following: true)
-        Jobs::UpdateUserCountsForChatChannels.new.execute({})
+        Jobs::ChatUpdateUserCountsForChannels.new.execute({})
 
         expect(Oneboxer.preview(chat_url)).to match_html <<~HTML
           <aside class="onebox chat-onebox">
@@ -230,7 +230,7 @@ describe Chat do
     before { Jobs.run_immediately! }
 
     def assert_user_following_state(user, channel, following:)
-      membership = UserChatChannelMembership.find_by(user: user, chat_channel: channel)
+      membership = Chat::UserChatChannelMembership.find_by(user: user, chat_channel: channel)
 
       following ? (expect(membership.following).to eq(true)) : (expect(membership).to be_nil)
     end
@@ -423,7 +423,7 @@ describe Chat do
       deletion_opts = { delete_posts: true }
 
       expect { UserDestroyer.new(Discourse.system_user).destroy(user, deletion_opts) }.to change(
-        Jobs::DeleteUserMessages.jobs,
+        Jobs::ChatDeleteUserMessages.jobs,
         :size,
       ).by(1)
     end

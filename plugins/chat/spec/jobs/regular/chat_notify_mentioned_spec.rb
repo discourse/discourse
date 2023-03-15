@@ -77,7 +77,7 @@ describe Jobs::ChatNotifyMentioned do
     it "does nothing when user is not following the channel" do
       message = create_chat_message
 
-      UserChatChannelMembership.where(chat_channel: public_channel, user: user_2).update!(
+      Chat::UserChatChannelMembership.where(chat_channel: public_channel, user: user_2).update!(
         following: false,
       )
 
@@ -95,7 +95,7 @@ describe Jobs::ChatNotifyMentioned do
     it "does nothing when user doesn't have a membership record" do
       message = create_chat_message
 
-      UserChatChannelMembership.find_by(chat_channel: public_channel, user: user_2).destroy!
+      Chat::UserChatChannelMembership.find_by(chat_channel: public_channel, user: user_2).destroy!
 
       PostAlerter.expects(:push_notification).never
 
@@ -146,8 +146,8 @@ describe Jobs::ChatNotifyMentioned do
 
     it "skips desktop notifications based on user preferences" do
       message = create_chat_message
-      UserChatChannelMembership.find_by(chat_channel: public_channel, user: user_2).update!(
-        desktop_notification_level: UserChatChannelMembership::NOTIFICATION_LEVELS[:never],
+      Chat::UserChatChannelMembership.find_by(chat_channel: public_channel, user: user_2).update!(
+        desktop_notification_level: Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:never],
       )
 
       desktop_notification =
@@ -158,8 +158,8 @@ describe Jobs::ChatNotifyMentioned do
 
     it "skips push notifications based on user preferences" do
       message = create_chat_message
-      UserChatChannelMembership.find_by(chat_channel: public_channel, user: user_2).update!(
-        mobile_notification_level: UserChatChannelMembership::NOTIFICATION_LEVELS[:never],
+      Chat::UserChatChannelMembership.find_by(chat_channel: public_channel, user: user_2).update!(
+        mobile_notification_level: Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:never],
       )
 
       PostAlerter.expects(:push_notification).never
@@ -173,8 +173,8 @@ describe Jobs::ChatNotifyMentioned do
 
     it "skips desktop notifications based on user muting preferences" do
       message = create_chat_message
-      UserChatChannelMembership.find_by(chat_channel: public_channel, user: user_2).update!(
-        desktop_notification_level: UserChatChannelMembership::NOTIFICATION_LEVELS[:always],
+      Chat::UserChatChannelMembership.find_by(chat_channel: public_channel, user: user_2).update!(
+        desktop_notification_level: Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:always],
         muted: true,
       )
 
@@ -186,8 +186,8 @@ describe Jobs::ChatNotifyMentioned do
 
     it "skips push notifications based on user muting preferences" do
       message = create_chat_message
-      UserChatChannelMembership.find_by(chat_channel: public_channel, user: user_2).update!(
-        mobile_notification_level: UserChatChannelMembership::NOTIFICATION_LEVELS[:always],
+      Chat::UserChatChannelMembership.find_by(chat_channel: public_channel, user: user_2).update!(
+        mobile_notification_level: Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:always],
         muted: true,
       )
 
@@ -214,7 +214,7 @@ describe Jobs::ChatNotifyMentioned do
       expect(desktop_notification.data[:notification_type]).to eq(Notification.types[:chat_mention])
       expect(desktop_notification.data[:username]).to eq(user_1.username)
       expect(desktop_notification.data[:tag]).to eq(
-        Chat::ChatNotifier.push_notification_tag(:mention, public_channel.id),
+        Chat::Notifier.push_notification_tag(:mention, public_channel.id),
       )
       expect(desktop_notification.data[:excerpt]).to eq(message.push_notification_excerpt)
       expect(desktop_notification.data[:post_url]).to eq(
@@ -230,7 +230,7 @@ describe Jobs::ChatNotifyMentioned do
         {
           notification_type: Notification.types[:chat_mention],
           username: user_1.username,
-          tag: Chat::ChatNotifier.push_notification_tag(:mention, public_channel.id),
+          tag: Chat::Notifier.push_notification_tag(:mention, public_channel.id),
           excerpt: message.push_notification_excerpt,
           post_url: "/chat/c/#{public_channel.slug}/#{public_channel.id}/#{message.id}",
           translated_title: payload_translated_title,
@@ -264,7 +264,7 @@ describe Jobs::ChatNotifyMentioned do
       expect(data_hash[:chat_channel_slug]).to eq(public_channel.slug)
 
       chat_mention =
-        ChatMention.where(notification: created_notification, user: user_2, chat_message: message)
+        Chat::Mention.where(notification: created_notification, user: user_2, chat_message: message)
       expect(chat_mention).to be_present
     end
   end

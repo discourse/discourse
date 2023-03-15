@@ -6,7 +6,7 @@ require "faker"
 module DiscourseDev
   class DirectChannel < Record
     def initialize
-      super(::DirectMessage, 5)
+      super(Chat::DirectMessage, 5)
     end
 
     def data

@@ -6,16 +6,17 @@ require "faker"
 module DiscourseDev
   class Message < Record
     def initialize
-      super(::ChatMessage, 200)
+      super(Chat::Message, 200)
     end
 
     def data
       if Faker::Boolean.boolean(true_ratio: 0.5)
-        channel = ::ChatChannel.where(chatable_type: "DirectMessage").order("RANDOM()").first
+        channel =
+          ::Chat::Channel.where(chatable_type: "Chat::DirectMessage").order("RANDOM()").first
         channel.user_chat_channel_memberships.update_all(following: true)
         user = channel.chatable.users.order("RANDOM()").first
       else
-        membership = ::UserChatChannelMembership.order("RANDOM()").first
+        membership = Chat::UserChatChannelMembership.order("RANDOM()").first
         channel = membership.chat_channel
         user = membership.user
       end
@@ -24,7 +25,7 @@ module DiscourseDev
     end
 
     def create!
-      Chat::ChatMessageCreator.create(data)
+      Chat::MessageCreator.create(data)
     end
   end
 end

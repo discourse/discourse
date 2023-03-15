@@ -115,7 +115,7 @@ RSpec.describe "Chat channel", type: :system, js: true do
       visit("/chat/message/#{message_1.id}")
 
       new_message =
-        Chat::ChatMessageCreator.create(
+        Chat::MessageCreator.create(
           chat_channel: channel_1,
           user: other_user,
           content: "this is fine",

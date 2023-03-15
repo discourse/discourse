@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 #
-# = Chat::ServiceRunner
+# = ServiceRunner
 #
 # This class is to be used via its helper +with_service+ in any class. Its
 # main purpose is to ease how actions can be run upon a service completion.
@@ -45,7 +45,8 @@
 # The only exception to this being +on_failure+ as it will always be executed
 # last.
 #
-class Chat::ServiceRunner
+
+class ServiceRunner
   # @!visibility private
   NULL_RESULT = OpenStruct.new(failure?: false)
   # @!visibility private
@@ -70,7 +71,7 @@ class Chat::ServiceRunner
     @actions = {}
   end
 
-  # @param service [Class] a class including {Chat::Service::Base}
+  # @param service [Class] a class including {Service::Base}
   # @param block [Proc] a block containing the steps to match on
   # @return [void]
   def self.call(service, object, **dependencies, &block)

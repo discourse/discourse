@@ -4,17 +4,17 @@ module Jobs
   class ChatNotifyWatching < ::Jobs::Base
     def execute(args = {})
       @chat_message =
-        ChatMessage.includes(:user, chat_channel: :chatable).find_by(id: args[:chat_message_id])
+        Chat::Message.includes(:user, chat_channel: :chatable).find_by(id: args[:chat_message_id])
       return if @chat_message.nil?
 
       @creator = @chat_message.user
       @chat_channel = @chat_message.chat_channel
       @is_direct_message_channel = @chat_channel.direct_message_channel?
 
-      always_notification_level = UserChatChannelMembership::NOTIFICATION_LEVELS[:always]
+      always_notification_level = Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:always]
 
       members =
-        UserChatChannelMembership
+        Chat::UserChatChannelMembership
           .includes(user: :groups)
           .joins(user: :user_option)
           .where(user_option: { chat_enabled: true })
@@ -44,7 +44,7 @@ module Jobs
       user = membership.user
       guardian = Guardian.new(user)
       return unless guardian.can_chat? && guardian.can_join_chat_channel?(@chat_channel)
-      return if Chat::ChatNotifier.user_has_seen_message?(membership, @chat_message.id)
+      return if Chat::Notifier.user_has_seen_message?(membership, @chat_message.id)
       return if online_user_ids.include?(user.id)
 
       translation_key =
@@ -64,7 +64,7 @@ module Jobs
         notification_type: Notification.types[:chat_message],
         post_url: @chat_channel.relative_url,
         translated_title: I18n.t(translation_key, translation_args),
-        tag: Chat::ChatNotifier.push_notification_tag(:message, @chat_channel.id),
+        tag: Chat::Notifier.push_notification_tag(:message, @chat_channel.id),
         excerpt: @chat_message.push_notification_excerpt,
       }
 

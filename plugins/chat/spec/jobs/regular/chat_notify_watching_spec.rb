@@ -39,7 +39,7 @@ RSpec.describe Jobs::ChatNotifyWatching do
 
     before do
       membership2.update!(
-        desktop_notification_level: UserChatChannelMembership::NOTIFICATION_LEVELS[:always],
+        desktop_notification_level: Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:always],
       )
     end
 
@@ -56,7 +56,7 @@ RSpec.describe Jobs::ChatNotifyWatching do
               "discourse_push_notifications.popup.new_chat_message",
               { username: user1.username, channel: channel.title(user2) },
             ),
-          tag: Chat::ChatNotifier.push_notification_tag(:message, channel.id),
+          tag: Chat::Notifier.push_notification_tag(:message, channel.id),
           excerpt: message.message,
         },
       )
@@ -75,8 +75,8 @@ RSpec.describe Jobs::ChatNotifyWatching do
     context "when mobile_notification_level is always and desktop_notification_level is none" do
       before do
         membership2.update!(
-          desktop_notification_level: UserChatChannelMembership::NOTIFICATION_LEVELS[:never],
-          mobile_notification_level: UserChatChannelMembership::NOTIFICATION_LEVELS[:always],
+          desktop_notification_level: Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:never],
+          mobile_notification_level: Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:always],
         )
       end
 
@@ -93,7 +93,7 @@ RSpec.describe Jobs::ChatNotifyWatching do
                   "discourse_push_notifications.popup.new_chat_message",
                   { username: user1.username, channel: channel.title(user2) },
                 ),
-              tag: Chat::ChatNotifier.push_notification_tag(:message, channel.id),
+              tag: Chat::Notifier.push_notification_tag(:message, channel.id),
               excerpt: message.message,
             },
           ),
@@ -179,7 +179,7 @@ RSpec.describe Jobs::ChatNotifyWatching do
 
     before do
       membership2.update!(
-        desktop_notification_level: UserChatChannelMembership::NOTIFICATION_LEVELS[:always],
+        desktop_notification_level: Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:always],
       )
     end
 
@@ -196,7 +196,7 @@ RSpec.describe Jobs::ChatNotifyWatching do
               "discourse_push_notifications.popup.new_direct_chat_message",
               { username: user1.username, channel: channel.title(user2) },
             ),
-          tag: Chat::ChatNotifier.push_notification_tag(:message, channel.id),
+          tag: Chat::Notifier.push_notification_tag(:message, channel.id),
           excerpt: message.message,
         },
       )
@@ -215,8 +215,8 @@ RSpec.describe Jobs::ChatNotifyWatching do
     context "when mobile_notification_level is always and desktop_notification_level is none" do
       before do
         membership2.update!(
-          desktop_notification_level: UserChatChannelMembership::NOTIFICATION_LEVELS[:never],
-          mobile_notification_level: UserChatChannelMembership::NOTIFICATION_LEVELS[:always],
+          desktop_notification_level: Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:never],
+          mobile_notification_level: Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:always],
         )
       end
 
@@ -233,7 +233,7 @@ RSpec.describe Jobs::ChatNotifyWatching do
                   "discourse_push_notifications.popup.new_direct_chat_message",
                   { username: user1.username, channel: channel.title(user2) },
                 ),
-              tag: Chat::ChatNotifier.push_notification_tag(:message, channel.id),
+              tag: Chat::Notifier.push_notification_tag(:message, channel.id),
               excerpt: message.message,
             },
           ),

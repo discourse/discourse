@@ -5,7 +5,7 @@ module Jobs
     sidekiq_options retry: false
 
     def execute(args = {})
-      channel_archive = ::ChatChannelArchive.find_by(id: args[:chat_channel_archive_id])
+      channel_archive = Chat::ChannelArchive.find_by(id: args[:chat_channel_archive_id])
 
       # this should not really happen, but better to do this than throw an error
       if channel_archive.blank?
@@ -18,7 +18,7 @@ module Jobs
       if channel_archive.complete?
         channel_archive.chat_channel.update!(status: :archived)
 
-        ChatPublisher.publish_archive_status(
+        Chat::Publisher.publish_archive_status(
           channel_archive.chat_channel,
           archive_status: :success,
           archived_messages: channel_archive.archived_messages,
@@ -32,7 +32,7 @@ module Jobs
       DistributedMutex.synchronize(
         "archive_chat_channel_#{channel_archive.chat_channel_id}",
         validity: 20.minutes,
-      ) { Chat::ChatChannelArchiveService.new(channel_archive).execute }
+      ) { Chat::ChannelArchiveService.new(channel_archive).execute }
     end
   end
 end
