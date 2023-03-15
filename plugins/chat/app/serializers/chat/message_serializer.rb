@@ -21,7 +21,7 @@ module Chat
     has_one :user, serializer: Chat::MessageUserSerializer, embed: :objects
     has_one :chat_webhook_event, serializer: Chat::WebhookEventSerializer, embed: :objects
     has_one :in_reply_to, serializer: Chat::InReplyToSerializer, embed: :objects
-    has_many :uploads, serializer: UploadSerializer, embed: :objects
+    has_many :uploads, serializer: ::UploadSerializer, embed: :objects
 
     def channel
       @channel ||= @options.dig(:chat_channel) || object.chat_channel
