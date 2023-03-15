@@ -36,12 +36,8 @@ export default class AdminLogsStaffActionLogsRoute extends DiscourseRoute {
 
   @action
   onFiltersChange(filters) {
-    if (filters && Object.keys(filters) === 0) {
-      this.transitionTo("adminLogs.staffActionLogs");
-    } else {
-      this.transitionTo("adminLogs.staffActionLogs", {
-        queryParams: { filters },
-      });
-    }
+    this.transitionTo("adminLogs.staffActionLogs", {
+      queryParams: { filters },
+    });
   }
 }
