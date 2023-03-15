@@ -1,10 +1,12 @@
+import { computed } from "@ember/object";
 import Controller from "@ember/controller";
 import PeriodComputationMixin from "admin/mixins/period-computation";
-import { computed } from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
 import getURL from "discourse-common/lib/get-url";
 
-export default Controller.extend(PeriodComputationMixin, {
+export default class AdminDashboardModerationController extends Controller.extend(
+  PeriodComputationMixin
+) {
   @discourseComputed
   flagsStatusOptions() {
     return {
@@ -13,17 +15,15 @@ export default Controller.extend(PeriodComputationMixin, {
         perPage: 10,
       },
     };
-  },
+  }
 
-  isModeratorsActivityVisible: computed(
-    "siteSettings.dashboard_hidden_reports",
-    function () {
-      return !(this.siteSettings.dashboard_hidden_reports || "")
-        .split("|")
-        .filter(Boolean)
-        .includes("moderators_activity");
-    }
-  ),
+  @computed("siteSettings.dashboard_hidden_reports")
+  get isModeratorsActivityVisible() {
+    return !(this.siteSettings.dashboard_hidden_reports || "")
+      .split("|")
+      .filter(Boolean)
+      .includes("moderators_activity");
+  }
 
   @discourseComputed
   userFlaggingRatioOptions() {
@@ -33,19 +33,19 @@ export default Controller.extend(PeriodComputationMixin, {
         perPage: 10,
       },
     };
-  },
+  }
 
   @discourseComputed("startDate", "endDate")
   filters(startDate, endDate) {
     return { startDate, endDate };
-  },
+  }
 
   @discourseComputed("lastWeek", "endDate")
   lastWeekfilters(startDate, endDate) {
     return { startDate, endDate };
-  },
+  }
 
   _reportsForPeriodURL(period) {
     return getURL(`/admin/dashboard/moderation?period=${period}`);
-  },
-});
+  }
+}

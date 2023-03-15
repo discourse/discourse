@@ -1,5 +1,7 @@
-import DiscourseURL, { userPath } from "discourse/lib/url";
+import { action } from "@ember/object";
+import { inject as service } from "@ember/service";
 import { and, notEmpty } from "@ember/object/computed";
+import DiscourseURL, { userPath } from "discourse/lib/url";
 import { fmt, propertyNotEqual, setting } from "discourse/lib/computed";
 import AdminUser from "admin/models/admin-user";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
@@ -10,37 +12,37 @@ import discourseComputed from "discourse-common/utils/decorators";
 import getURL from "discourse-common/lib/get-url";
 import { htmlSafe } from "@ember/template";
 import { extractError, popupAjaxError } from "discourse/lib/ajax-error";
-import { inject as service } from "@ember/service";
 import showModal from "discourse/lib/show-modal";
 
-export default Controller.extend(CanCheckEmails, {
-  router: service(),
-  dialog: service(),
-  adminTools: service(),
-  originalPrimaryGroupId: null,
-  customGroupIdsBuffer: null,
-  availableGroups: null,
-  userTitleValue: null,
-  ssoExternalEmail: null,
-  ssoLastPayload: null,
+export default class AdminUserIndexController extends Controller.extend(
+  CanCheckEmails
+) {
+  @service router;
+  @service dialog;
+  @service adminTools;
 
-  showBadges: setting("enable_badges"),
-  hasLockedTrustLevel: notEmpty("model.manual_locked_trust_level"),
+  originalPrimaryGroupId = null;
+  customGroupIdsBuffer = null;
+  availableGroups = null;
+  userTitleValue = null;
+  ssoExternalEmail = null;
+  ssoLastPayload = null;
 
-  primaryGroupDirty: propertyNotEqual(
-    "originalPrimaryGroupId",
-    "model.primary_group_id"
-  ),
+  @setting("enable_badges") showBadges;
+  @notEmpty("model.manual_locked_trust_level") hasLockedTrustLevel;
 
-  canDisableSecondFactor: and(
-    "model.second_factor_enabled",
-    "model.can_disable_second_factor"
-  ),
+  @propertyNotEqual("originalPrimaryGroupId", "model.primary_group_id")
+  primaryGroupDirty;
+
+  @and("model.second_factor_enabled", "model.can_disable_second_factor")
+  canDisableSecondFactor;
+
+  @fmt("model.username_lower", userPath("%@/preferences")) preferencesPath;
 
   @discourseComputed("model.customGroups")
   customGroupIds(customGroups) {
     return customGroups.mapBy("id");
-  },
+  }
 
   @discourseComputed("customGroupIdsBuffer", "customGroupIds")
   customGroupsDirty(buffer, original) {
@@ -51,7 +53,7 @@ export default Controller.extend(CanCheckEmails, {
     return buffer.length === original.length
       ? buffer.any((id) => !original.includes(id))
       : true;
-  },
+  }
 
   @discourseComputed("model.automaticGroups")
   automaticGroups(automaticGroups) {
@@ -61,26 +63,24 @@ export default Controller.extend(CanCheckEmails, {
         return `<a href="/g/${name}">${name}</a>`;
       })
       .join(", ");
-  },
+  }
 
   @discourseComputed("model.associated_accounts")
   associatedAccountsLoaded(associatedAccounts) {
     return typeof associatedAccounts !== "undefined";
-  },
+  }
 
   @discourseComputed("model.associated_accounts")
   associatedAccounts(associatedAccounts) {
     return associatedAccounts
       .map((provider) => `${provider.name} (${provider.description})`)
       .join(", ");
-  },
+  }
 
   @discourseComputed("model.user_fields.[]")
   userFields(userFields) {
     return this.site.collectUserFields(userFields);
-  },
-
-  preferencesPath: fmt("model.username_lower", userPath("%@/preferences")),
+  }
 
   @discourseComputed(
     "model.can_delete_all_posts",
@@ -104,7 +104,7 @@ export default Controller.extend(CanCheckEmails, {
         count: this.siteSettings.delete_user_max_post_age,
       });
     }
-  },
+  }
 
   @discourseComputed("model.canBeDeleted", "model.staff")
   deleteExplanation(canBeDeleted, staff) {
@@ -119,18 +119,18 @@ export default Controller.extend(CanCheckEmails, {
         count: this.siteSettings.delete_user_max_post_age,
       });
     }
-  },
+  }
 
   @discourseComputed("model.username")
   postEditsByEditorFilter(username) {
     return { editor: username };
-  },
+  }
 
   groupAdded(added) {
     this.model
       .groupAdded(added)
       .catch(() => this.dialog.alert(I18n.t("generic_error")));
-  },
+  }
 
   groupRemoved(groupId) {
     this.model
@@ -141,482 +141,533 @@ export default Controller.extend(CanCheckEmails, {
         }
       })
       .catch(() => this.dialog.alert(I18n.t("generic_error")));
-  },
+  }
 
   @discourseComputed("ssoLastPayload")
   ssoPayload(lastPayload) {
     return lastPayload.split("&");
-  },
+  }
 
-  actions: {
-    impersonate() {
-      return this.model
-        .impersonate()
-        .then(() => DiscourseURL.redirectTo("/"))
-        .catch((e) => {
-          if (e.status === 404) {
-            this.dialog.alert(I18n.t("admin.impersonate.not_found"));
+  @action
+  impersonate() {
+    return this.model
+      .impersonate()
+      .then(() => DiscourseURL.redirectTo("/"))
+      .catch((e) => {
+        if (e.status === 404) {
+          this.dialog.alert(I18n.t("admin.impersonate.not_found"));
+        } else {
+          this.dialog.alert(I18n.t("admin.impersonate.invalid"));
+        }
+      });
+  }
+
+  @action
+  logOut() {
+    return this.model
+      .logOut()
+      .then(() => this.dialog.alert(I18n.t("admin.user.logged_out")));
+  }
+
+  @action
+  resetBounceScore() {
+    return this.model.resetBounceScore();
+  }
+
+  @action
+  approve() {
+    return this.model.approve(this.currentUser);
+  }
+
+  @action
+  _formatError(event) {
+    return `http: ${event.status} - ${event.body}`;
+  }
+
+  @action
+  deactivate() {
+    return this.model
+      .deactivate()
+      .then(() =>
+        this.model.setProperties({ active: false, can_activate: true })
+      )
+      .catch((e) => {
+        const error = I18n.t("admin.user.deactivate_failed", {
+          error: this._formatError(e),
+        });
+        this.dialog.alert(error);
+      });
+  }
+
+  @action
+  sendActivationEmail() {
+    return this.model
+      .sendActivationEmail()
+      .then(() => this.dialog.alert(I18n.t("admin.user.activation_email_sent")))
+      .catch(popupAjaxError);
+  }
+
+  @action
+  activate() {
+    return this.model
+      .activate()
+      .then(() =>
+        this.model.setProperties({
+          active: true,
+          can_deactivate: !this.model.staff,
+        })
+      )
+      .catch((e) => {
+        const error = I18n.t("admin.user.activate_failed", {
+          error: this._formatError(e),
+        });
+        this.dialog.alert(error);
+      });
+  }
+
+  @action
+  revokeAdmin() {
+    return this.model.revokeAdmin();
+  }
+
+  @action
+  grantAdmin() {
+    return this.model
+      .grantAdmin()
+      .then((result) => {
+        if (result.email_confirmation_required) {
+          this.dialog.alert(I18n.t("admin.user.grant_admin_confirm"));
+        }
+      })
+      .catch((error) => {
+        const nonce = error.jqXHR?.responseJSON.second_factor_challenge_nonce;
+        if (nonce) {
+          this.router.transitionTo("second-factor-auth", {
+            queryParams: { nonce },
+          });
+        } else {
+          const htmlMessage = error.jqXHR?.responseJSON.html_message;
+          if (htmlMessage) {
+            this.dialog.alert({
+              message: htmlSafe(error.jqXHR?.responseJSON.error),
+            });
           } else {
-            this.dialog.alert(I18n.t("admin.impersonate.invalid"));
+            popupAjaxError(error);
           }
-        });
-    },
-    logOut() {
-      return this.model
-        .logOut()
-        .then(() => this.dialog.alert(I18n.t("admin.user.logged_out")));
-    },
-    resetBounceScore() {
-      return this.model.resetBounceScore();
-    },
-    approve() {
-      return this.model.approve(this.currentUser);
-    },
+        }
+      });
+  }
 
-    _formatError(event) {
-      return `http: ${event.status} - ${event.body}`;
-    },
+  @action
+  revokeModeration() {
+    return this.model.revokeModeration();
+  }
 
-    deactivate() {
-      return this.model
-        .deactivate()
-        .then(() =>
-          this.model.setProperties({ active: false, can_activate: true })
-        )
-        .catch((e) => {
-          const error = I18n.t("admin.user.deactivate_failed", {
+  @action
+  grantModeration() {
+    return this.model.grantModeration();
+  }
+
+  @action
+  saveTrustLevel() {
+    return this.model
+      .saveTrustLevel()
+      .then(() => window.location.reload())
+      .catch((e) => {
+        let error;
+        if (e.jqXHR.responseJSON && e.jqXHR.responseJSON.errors) {
+          error = e.jqXHR.responseJSON.errors[0];
+        }
+        error =
+          error ||
+          I18n.t("admin.user.trust_level_change_failed", {
             error: this._formatError(e),
           });
-          this.dialog.alert(error);
-        });
-    },
-    sendActivationEmail() {
-      return this.model
-        .sendActivationEmail()
-        .then(() =>
-          this.dialog.alert(I18n.t("admin.user.activation_email_sent"))
-        )
-        .catch(popupAjaxError);
-    },
-    activate() {
-      return this.model
-        .activate()
-        .then(() =>
-          this.model.setProperties({
-            active: true,
-            can_deactivate: !this.model.staff,
-          })
-        )
-        .catch((e) => {
-          const error = I18n.t("admin.user.activate_failed", {
+        this.dialog.alert(error);
+      });
+  }
+
+  @action
+  restoreTrustLevel() {
+    return this.model.restoreTrustLevel();
+  }
+
+  @action
+  lockTrustLevel(locked) {
+    return this.model
+      .lockTrustLevel(locked)
+      .then(() => window.location.reload())
+      .catch((e) => {
+        let error;
+        if (e.jqXHR.responseJSON && e.jqXHR.responseJSON.errors) {
+          error = e.jqXHR.responseJSON.errors[0];
+        }
+        error =
+          error ||
+          I18n.t("admin.user.trust_level_change_failed", {
             error: this._formatError(e),
           });
-          this.dialog.alert(error);
-        });
-    },
-    revokeAdmin() {
-      return this.model.revokeAdmin();
-    },
-    grantAdmin() {
-      return this.model
-        .grantAdmin()
-        .then((result) => {
-          if (result.email_confirmation_required) {
-            this.dialog.alert(I18n.t("admin.user.grant_admin_confirm"));
+        this.dialog.alert(error);
+      });
+  }
+
+  @action
+  unsilence() {
+    return this.model.unsilence();
+  }
+
+  @action
+  silence() {
+    return this.model.silence();
+  }
+
+  @action
+  anonymize() {
+    const user = this.model;
+
+    const performAnonymize = () => {
+      this.model
+        .anonymize()
+        .then((data) => {
+          if (data.success) {
+            if (data.username) {
+              document.location = getURL(
+                `/admin/users/${user.get("id")}/${data.username}`
+              );
+            } else {
+              document.location = getURL("/admin/users/list/active");
+            }
+          } else {
+            this.dialog.alert(I18n.t("admin.user.anonymize_failed"));
+            if (data.user) {
+              user.setProperties(data.user);
+            }
           }
         })
-        .catch((error) => {
-          const nonce = error.jqXHR?.responseJSON.second_factor_challenge_nonce;
-          if (nonce) {
-            this.router.transitionTo("second-factor-auth", {
-              queryParams: { nonce },
-            });
-          } else {
-            const htmlMessage = error.jqXHR?.responseJSON.html_message;
-            if (htmlMessage) {
-              this.dialog.alert({
-                message: htmlSafe(error.jqXHR?.responseJSON.error),
-              });
-            } else {
-              popupAjaxError(error);
-            }
-          }
-        });
-    },
-    revokeModeration() {
-      return this.model.revokeModeration();
-    },
-    grantModeration() {
-      return this.model.grantModeration();
-    },
-    saveTrustLevel() {
-      return this.model
-        .saveTrustLevel()
-        .then(() => window.location.reload())
-        .catch((e) => {
-          let error;
-          if (e.jqXHR.responseJSON && e.jqXHR.responseJSON.errors) {
-            error = e.jqXHR.responseJSON.errors[0];
-          }
-          error =
-            error ||
-            I18n.t("admin.user.trust_level_change_failed", {
-              error: this._formatError(e),
-            });
-          this.dialog.alert(error);
-        });
-    },
-    restoreTrustLevel() {
-      return this.model.restoreTrustLevel();
-    },
-    lockTrustLevel(locked) {
-      return this.model
-        .lockTrustLevel(locked)
-        .then(() => window.location.reload())
-        .catch((e) => {
-          let error;
-          if (e.jqXHR.responseJSON && e.jqXHR.responseJSON.errors) {
-            error = e.jqXHR.responseJSON.errors[0];
-          }
-          error =
-            error ||
-            I18n.t("admin.user.trust_level_change_failed", {
-              error: this._formatError(e),
-            });
-          this.dialog.alert(error);
-        });
-    },
-    unsilence() {
-      return this.model.unsilence();
-    },
-    silence() {
-      return this.model.silence();
-    },
+        .catch(() => this.dialog.alert(I18n.t("admin.user.anonymize_failed")));
+    };
 
-    anonymize() {
-      const user = this.model;
-
-      const performAnonymize = () => {
-        this.model
-          .anonymize()
-          .then((data) => {
-            if (data.success) {
-              if (data.username) {
-                document.location = getURL(
-                  `/admin/users/${user.get("id")}/${data.username}`
-                );
-              } else {
-                document.location = getURL("/admin/users/list/active");
-              }
-            } else {
-              this.dialog.alert(I18n.t("admin.user.anonymize_failed"));
-              if (data.user) {
-                user.setProperties(data.user);
-              }
-            }
-          })
-          .catch(() =>
-            this.dialog.alert(I18n.t("admin.user.anonymize_failed"))
-          );
-      };
-
-      this.dialog.alert({
-        message: I18n.t("admin.user.anonymize_confirm"),
-        class: "delete-user-modal",
-        buttons: [
-          {
-            icon: "exclamation-triangle",
-            label: I18n.t("admin.user.anonymize_yes"),
-            class: "btn-danger",
-            action: () => performAnonymize(),
-          },
-          {
-            label: I18n.t("composer.cancel"),
-          },
-        ],
-      });
-    },
-
-    disableSecondFactor() {
-      return this.model.disableSecondFactor();
-    },
-
-    clearPenaltyHistory() {
-      const user = this.model;
-      const path = `/admin/users/${user.get("id")}/penalty_history`;
-
-      return ajax(path, { type: "DELETE" })
-        .then(() => user.set("tl3_requirements.penalty_counts.total", 0))
-        .catch(popupAjaxError);
-    },
-
-    destroy() {
-      const postCount = this.get("model.post_count");
-      const maxPostCount = this.siteSettings.delete_all_posts_max;
-      const location = document.location.pathname;
-
-      const performDestroy = (block) => {
-        this.dialog.notice(I18n.t("admin.user.deleting_user"));
-        let formData = { context: location };
-        if (block) {
-          formData["block_email"] = true;
-          formData["block_urls"] = true;
-          formData["block_ip"] = true;
-        }
-        if (postCount <= maxPostCount) {
-          formData["delete_posts"] = true;
-        }
-        this.model
-          .destroy(formData)
-          .then((data) => {
-            if (data.deleted) {
-              if (/^\/admin\/users\/list\//.test(location)) {
-                document.location = location;
-              } else {
-                document.location = getURL("/admin/users/list/active");
-              }
-            } else {
-              this.dialog.alert(I18n.t("admin.user.delete_failed"));
-            }
-          })
-          .catch(() => {
-            this.dialog.alert(I18n.t("admin.user.delete_failed"));
-          });
-      };
-
-      this.dialog.alert({
-        title: I18n.t("admin.user.delete_confirm_title"),
-        message: I18n.t("admin.user.delete_confirm"),
-        class: "delete-user-modal",
-        buttons: [
-          {
-            label: I18n.t("admin.user.delete_dont_block"),
-            class: "btn-primary",
-            action: () => {
-              return performDestroy(false);
-            },
-          },
-          {
-            icon: "exclamation-triangle",
-            label: I18n.t("admin.user.delete_and_block"),
-            class: "btn-danger",
-            action: () => {
-              return performDestroy(true);
-            },
-          },
-          {
-            label: I18n.t("composer.cancel"),
-          },
-        ],
-      });
-    },
-
-    promptTargetUser() {
-      showModal("admin-merge-users-prompt", {
-        admin: true,
-        model: this.model,
-      });
-    },
-
-    showMergeConfirmation(targetUsername) {
-      showModal("admin-merge-users-confirmation", {
-        admin: true,
-        model: {
-          username: this.model.username,
-          targetUsername,
+    this.dialog.alert({
+      message: I18n.t("admin.user.anonymize_confirm"),
+      class: "delete-user-modal",
+      buttons: [
+        {
+          icon: "exclamation-triangle",
+          label: I18n.t("admin.user.anonymize_yes"),
+          class: "btn-danger",
+          action: () => performAnonymize(),
         },
-      });
-    },
+        {
+          label: I18n.t("composer.cancel"),
+        },
+      ],
+    });
+  }
 
-    merge(targetUsername) {
-      const user = this.model;
-      const location = document.location.pathname;
+  @action
+  disableSecondFactor() {
+    return this.model.disableSecondFactor();
+  }
 
+  @action
+  clearPenaltyHistory() {
+    const user = this.model;
+    const path = `/admin/users/${user.get("id")}/penalty_history`;
+
+    return ajax(path, { type: "DELETE" })
+      .then(() => user.set("tl3_requirements.penalty_counts.total", 0))
+      .catch(popupAjaxError);
+  }
+
+  @action
+  destroyUser() {
+    const postCount = this.get("model.post_count");
+    const maxPostCount = this.siteSettings.delete_all_posts_max;
+    const location = document.location.pathname;
+
+    const performDestroy = (block) => {
+      this.dialog.notice(I18n.t("admin.user.deleting_user"));
       let formData = { context: location };
-
-      if (targetUsername) {
-        formData["target_username"] = targetUsername;
+      if (block) {
+        formData["block_email"] = true;
+        formData["block_urls"] = true;
+        formData["block_ip"] = true;
       }
-
+      if (postCount <= maxPostCount) {
+        formData["delete_posts"] = true;
+      }
       this.model
-        .merge(formData)
-        .then((response) => {
-          if (response.success) {
-            showModal("admin-merge-users-progress", {
-              admin: true,
-              model: this.model,
-            });
+        .destroy(formData)
+        .then((data) => {
+          if (data.deleted) {
+            if (/^\/admin\/users\/list\//.test(location)) {
+              document.location = location;
+            } else {
+              document.location = getURL("/admin/users/list/active");
+            }
           } else {
-            this.dialog.alert(I18n.t("admin.user.merge_failed"));
+            this.dialog.alert(I18n.t("admin.user.delete_failed"));
           }
         })
         .catch(() => {
-          AdminUser.find(user.id).then((u) => user.setProperties(u));
-          this.dialog.alert(I18n.t("admin.user.merge_failed"));
+          this.dialog.alert(I18n.t("admin.user.delete_failed"));
         });
-    },
+    };
 
-    viewActionLogs() {
-      this.adminTools.showActionLogs(this, {
-        target_user: this.get("model.username"),
-      });
-    },
-    showSuspendModal() {
-      this.adminTools.showSuspendModal(this.model);
-    },
-    unsuspend() {
-      this.model.unsuspend().catch(popupAjaxError);
-    },
-    showSilenceModal() {
-      this.adminTools.showSilenceModal(this.model);
-    },
+    this.dialog.alert({
+      title: I18n.t("admin.user.delete_confirm_title"),
+      message: I18n.t("admin.user.delete_confirm"),
+      class: "delete-user-modal",
+      buttons: [
+        {
+          label: I18n.t("admin.user.delete_dont_block"),
+          class: "btn-primary",
+          action: () => {
+            return performDestroy(false);
+          },
+        },
+        {
+          icon: "exclamation-triangle",
+          label: I18n.t("admin.user.delete_and_block"),
+          class: "btn-danger",
+          action: () => {
+            return performDestroy(true);
+          },
+        },
+        {
+          label: I18n.t("composer.cancel"),
+        },
+      ],
+    });
+  }
 
-    saveUsername(newUsername) {
-      const oldUsername = this.get("model.username");
-      this.set("model.username", newUsername);
+  @action
+  promptTargetUser() {
+    showModal("admin-merge-users-prompt", {
+      admin: true,
+      model: this.model,
+    });
+  }
 
-      const path = `/users/${oldUsername.toLowerCase()}/preferences/username`;
+  @action
+  showMergeConfirmation(targetUsername) {
+    showModal("admin-merge-users-confirmation", {
+      admin: true,
+      model: {
+        username: this.model.username,
+        targetUsername,
+      },
+    });
+  }
 
-      return ajax(path, { data: { new_username: newUsername }, type: "PUT" })
-        .catch((e) => {
-          this.set("model.username", oldUsername);
-          popupAjaxError(e);
-        })
-        .finally(() => this.toggleProperty("editingUsername"));
-    },
+  @action
+  merge(targetUsername) {
+    const user = this.model;
+    const location = document.location.pathname;
 
-    saveName(newName) {
-      const oldName = this.get("model.name");
-      this.set("model.name", newName);
+    let formData = { context: location };
 
-      const path = userPath(`${this.get("model.username").toLowerCase()}.json`);
+    if (targetUsername) {
+      formData["target_username"] = targetUsername;
+    }
 
-      return ajax(path, { data: { name: newName }, type: "PUT" })
-        .catch((e) => {
-          this.set("model.name", oldName);
-          popupAjaxError(e);
-        })
-        .finally(() => this.toggleProperty("editingName"));
-    },
-
-    saveTitle(newTitle) {
-      const oldTitle = this.get("model.title");
-      this.set("model.title", newTitle);
-
-      const path = userPath(`${this.get("model.username").toLowerCase()}.json`);
-
-      return ajax(path, { data: { title: newTitle }, type: "PUT" })
-        .catch((e) => {
-          this.set("model.title", oldTitle);
-          popupAjaxError(e);
-        })
-        .finally(() => this.toggleProperty("editingTitle"));
-    },
-
-    saveCustomGroups() {
-      const currentIds = this.customGroupIds;
-      const bufferedIds = this.customGroupIdsBuffer;
-      const availableGroups = this.availableGroups;
-
-      bufferedIds
-        .filter((id) => !currentIds.includes(id))
-        .forEach((id) => this.groupAdded(availableGroups.findBy("id", id)));
-
-      currentIds
-        .filter((id) => !bufferedIds.includes(id))
-        .forEach((id) => this.groupRemoved(id));
-    },
-
-    resetCustomGroups() {
-      this.set("customGroupIdsBuffer", this.model.customGroups.mapBy("id"));
-    },
-
-    savePrimaryGroup() {
-      const primaryGroupId = this.get("model.primary_group_id");
-      const path = `/admin/users/${this.get("model.id")}/primary_group`;
-
-      return ajax(path, {
-        type: "PUT",
-        data: { primary_group_id: primaryGroupId },
-      })
-        .then(() => this.set("originalPrimaryGroupId", primaryGroupId))
-        .catch(() => this.dialog.alert(I18n.t("generic_error")));
-    },
-
-    resetPrimaryGroup() {
-      this.set("model.primary_group_id", this.originalPrimaryGroupId);
-    },
-
-    deleteSSORecord() {
-      return this.dialog.yesNoConfirm({
-        message: I18n.t("admin.user.discourse_connect.confirm_delete"),
-        didConfirm: () => this.model.deleteSSORecord(),
-      });
-    },
-
-    checkSsoEmail() {
-      return ajax(userPath(`${this.model.username_lower}/sso-email.json`), {
-        data: { context: window.location.pathname },
-      }).then((result) => {
-        if (result) {
-          this.set("ssoExternalEmail", result.email);
-        }
-      });
-    },
-
-    checkSsoPayload() {
-      return ajax(userPath(`${this.model.username_lower}/sso-payload.json`), {
-        data: { context: window.location.pathname },
-      }).then((result) => {
-        if (result) {
-          this.set("ssoLastPayload", result.payload);
-        }
-      });
-    },
-
-    showDeletePostsConfirmation() {
-      showModal("admin-delete-posts-confirmation", {
-        admin: true,
-        model: this.model,
-      });
-    },
-
-    deleteAllPosts() {
-      let deletedPosts = 0;
-      let deletedPercentage = 0;
-      const user = this.model;
-
-      const performDelete = (progressModal) => {
-        this.model
-          .deleteAllPosts()
-          .then(({ posts_deleted }) => {
-            if (posts_deleted === 0) {
-              user.set("post_count", 0);
-              progressModal.send("closeModal");
-            } else {
-              deletedPosts += posts_deleted;
-              deletedPercentage = Math.floor(
-                (deletedPosts * 100) / user.get("post_count")
-              );
-              progressModal.setProperties({
-                deletedPercentage,
-              });
-              performDelete(progressModal);
-            }
-          })
-          .catch((e) => {
-            progressModal.send("closeModal");
-            let error;
-            AdminUser.find(user.get("id")).then((u) => user.setProperties(u));
-            error = extractError(e) || I18n.t("admin.user.delete_posts_failed");
-            this.dialog.alert(error);
+    this.model
+      .merge(formData)
+      .then((response) => {
+        if (response.success) {
+          showModal("admin-merge-users-progress", {
+            admin: true,
+            model: this.model,
           });
-      };
-
-      const progressModal = showModal("admin-delete-user-posts-progress", {
-        admin: true,
+        } else {
+          this.dialog.alert(I18n.t("admin.user.merge_failed"));
+        }
+      })
+      .catch(() => {
+        AdminUser.find(user.id).then((u) => user.setProperties(u));
+        this.dialog.alert(I18n.t("admin.user.merge_failed"));
       });
-      performDelete(progressModal);
-    },
-  },
-});
+  }
+
+  @action
+  viewActionLogs() {
+    this.adminTools.showActionLogs(this, {
+      target_user: this.get("model.username"),
+    });
+  }
+
+  @action
+  showSuspendModal() {
+    this.adminTools.showSuspendModal(this.model);
+  }
+
+  @action
+  unsuspend() {
+    this.model.unsuspend().catch(popupAjaxError);
+  }
+
+  @action
+  showSilenceModal() {
+    this.adminTools.showSilenceModal(this.model);
+  }
+
+  @action
+  saveUsername(newUsername) {
+    const oldUsername = this.get("model.username");
+    this.set("model.username", newUsername);
+
+    const path = `/users/${oldUsername.toLowerCase()}/preferences/username`;
+
+    return ajax(path, { data: { new_username: newUsername }, type: "PUT" })
+      .catch((e) => {
+        this.set("model.username", oldUsername);
+        popupAjaxError(e);
+      })
+      .finally(() => this.toggleProperty("editingUsername"));
+  }
+
+  @action
+  saveName(newName) {
+    const oldName = this.get("model.name");
+    this.set("model.name", newName);
+
+    const path = userPath(`${this.get("model.username").toLowerCase()}.json`);
+
+    return ajax(path, { data: { name: newName }, type: "PUT" })
+      .catch((e) => {
+        this.set("model.name", oldName);
+        popupAjaxError(e);
+      })
+      .finally(() => this.toggleProperty("editingName"));
+  }
+
+  @action
+  saveTitle(newTitle) {
+    const oldTitle = this.get("model.title");
+    this.set("model.title", newTitle);
+
+    const path = userPath(`${this.get("model.username").toLowerCase()}.json`);
+
+    return ajax(path, { data: { title: newTitle }, type: "PUT" })
+      .catch((e) => {
+        this.set("model.title", oldTitle);
+        popupAjaxError(e);
+      })
+      .finally(() => this.toggleProperty("editingTitle"));
+  }
+
+  @action
+  saveCustomGroups() {
+    const currentIds = this.customGroupIds;
+    const bufferedIds = this.customGroupIdsBuffer;
+    const availableGroups = this.availableGroups;
+
+    bufferedIds
+      .filter((id) => !currentIds.includes(id))
+      .forEach((id) => this.groupAdded(availableGroups.findBy("id", id)));
+
+    currentIds
+      .filter((id) => !bufferedIds.includes(id))
+      .forEach((id) => this.groupRemoved(id));
+  }
+
+  @action
+  resetCustomGroups() {
+    this.set("customGroupIdsBuffer", this.model.customGroups.mapBy("id"));
+  }
+
+  @action
+  savePrimaryGroup() {
+    const primaryGroupId = this.get("model.primary_group_id");
+    const path = `/admin/users/${this.get("model.id")}/primary_group`;
+
+    return ajax(path, {
+      type: "PUT",
+      data: { primary_group_id: primaryGroupId },
+    })
+      .then(() => this.set("originalPrimaryGroupId", primaryGroupId))
+      .catch(() => this.dialog.alert(I18n.t("generic_error")));
+  }
+
+  @action
+  resetPrimaryGroup() {
+    this.set("model.primary_group_id", this.originalPrimaryGroupId);
+  }
+
+  @action
+  deleteSSORecord() {
+    return this.dialog.yesNoConfirm({
+      message: I18n.t("admin.user.discourse_connect.confirm_delete"),
+      didConfirm: () => this.model.deleteSSORecord(),
+    });
+  }
+
+  @action
+  checkSsoEmail() {
+    return ajax(userPath(`${this.model.username_lower}/sso-email.json`), {
+      data: { context: window.location.pathname },
+    }).then((result) => {
+      if (result) {
+        this.set("ssoExternalEmail", result.email);
+      }
+    });
+  }
+
+  @action
+  checkSsoPayload() {
+    return ajax(userPath(`${this.model.username_lower}/sso-payload.json`), {
+      data: { context: window.location.pathname },
+    }).then((result) => {
+      if (result) {
+        this.set("ssoLastPayload", result.payload);
+      }
+    });
+  }
+
+  @action
+  showDeletePostsConfirmation() {
+    showModal("admin-delete-posts-confirmation", {
+      admin: true,
+      model: this.model,
+    });
+  }
+
+  @action
+  deleteAllPosts() {
+    let deletedPosts = 0;
+    let deletedPercentage = 0;
+    const user = this.model;
+
+    const performDelete = (progressModal) => {
+      this.model
+        .deleteAllPosts()
+        .then(({ posts_deleted }) => {
+          if (posts_deleted === 0) {
+            user.set("post_count", 0);
+            progressModal.send("closeModal");
+          } else {
+            deletedPosts += posts_deleted;
+            deletedPercentage = Math.floor(
+              (deletedPosts * 100) / user.get("post_count")
+            );
+            progressModal.setProperties({
+              deletedPercentage,
+            });
+            performDelete(progressModal);
+          }
+        })
+        .catch((e) => {
+          progressModal.send("closeModal");
+          let error;
+          AdminUser.find(user.get("id")).then((u) => user.setProperties(u));
+          error = extractError(e) || I18n.t("admin.user.delete_posts_failed");
+          this.dialog.alert(error);
+        });
+    };
+
+    const progressModal = showModal("admin-delete-user-posts-progress", {
+      admin: true,
+    });
+    performDelete(progressModal);
+  }
+}
