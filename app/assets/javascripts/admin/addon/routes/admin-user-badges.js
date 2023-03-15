@@ -2,11 +2,11 @@ import Badge from "discourse/models/badge";
 import DiscourseRoute from "discourse/routes/discourse";
 import UserBadge from "discourse/models/user-badge";
 
-export default DiscourseRoute.extend({
+export default class AdminUserBadgesRoute extends DiscourseRoute {
   model() {
     const username = this.modelFor("adminUser").get("username");
     return UserBadge.findByUsername(username);
-  },
+  }
 
   setupController(controller, model) {
     // Find all badges.
@@ -23,5 +23,5 @@ export default DiscourseRoute.extend({
     });
     // Set the model.
     controller.set("model", model);
-  },
-});
+  }
+}

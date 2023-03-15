@@ -2,7 +2,7 @@ import DiscourseRoute from "discourse/routes/discourse";
 import EmberObject from "@ember/object";
 import I18n from "I18n";
 
-export default DiscourseRoute.extend({
+export default class AdminSiteSettingsCategoryRoute extends DiscourseRoute {
   model(params) {
     // The model depends on user input, so let the controller do the work:
     this.controllerFor("adminSiteSettingsCategory").set(
@@ -20,5 +20,5 @@ export default DiscourseRoute.extend({
         "filteredContent"
       ),
     });
-  },
-});
+  }
+}
