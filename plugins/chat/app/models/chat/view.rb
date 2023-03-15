@@ -74,7 +74,7 @@ module Chat
         WHERE
           s.user_id = :user_id AND
           r.target_id IN (:message_ids) AND
-          r.target_type = 'ChatMessage'
+          r.target_type = 'Chat::Message'
     SQL
 
       statuses = {}
