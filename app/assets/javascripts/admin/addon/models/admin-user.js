@@ -10,15 +10,20 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { propertyNotEqual } from "discourse/lib/computed";
 import { userPath } from "discourse/lib/url";
 
-const wrapAdmin = (user) => (user ? AdminUser.create(user) : null);
+class AdminUser extends User {
+  adminUserView = true;
 
-const AdminUser = User.extend({
-  adminUserView: true,
-  customGroups: filter("groups", (g) => !g.automatic && Group.create(g)),
-  automaticGroups: filter("groups", (g) => g.automatic && Group.create(g)),
+  @filter("groups", (g) => !g.automatic && Group.create(g)) customGroups;
 
-  canViewProfile: or("active", "staged"),
+  @filter("groups", (g) => g.automatic && Group.create(g)) automaticGroups;
 
+  @or("active", "staged") canViewProfile;
+
+  @gt("bounce_score", 0) canResetBounceScore;
+  @propertyNotEqual("originalTrustLevel", "trust_level") dirty;
+  @lt("trust_level", 4) canLockTrustLevel;
+  @not("staff") canSuspend;
+  @not("staff") canSilence;
   @discourseComputed("bounce_score", "reset_bounce_score_after")
   bounceScore(bounce_score, reset_bounce_score_after) {
     if (bounce_score > 0) {
@@ -28,7 +33,7 @@ const AdminUser = User.extend({
     } else {
       return bounce_score;
     }
-  },
+  }
 
   @discourseComputed("bounce_score")
   bounceScoreExplanation(bounce_score) {
@@ -39,14 +44,12 @@ const AdminUser = User.extend({
     } else {
       return I18n.t("admin.user.bounce_score_explanation.threshold_reached");
     }
-  },
+  }
 
   @discourseComputed
   bounceLink() {
     return getURL("/admin/email/bounced");
-  },
-
-  canResetBounceScore: gt("bounce_score", 0),
+  }
 
   resetBounceScore() {
     return ajax(`/admin/users/${this.id}/reset_bounce_score`, {
@@ -57,14 +60,14 @@ const AdminUser = User.extend({
         reset_bounce_score_after: null,
       })
     );
-  },
+  }
 
   groupAdded(added) {
     return ajax(`/admin/users/${this.id}/groups`, {
       type: "POST",
       data: { group_id: added.id },
     }).then(() => this.groups.pushObject(added));
-  },
+  }
 
   groupRemoved(groupId) {
     return ajax(`/admin/users/${this.id}/groups/${groupId}`, {
@@ -75,13 +78,13 @@ const AdminUser = User.extend({
         this.set("primary_group_id", null);
       }
     });
-  },
+  }
 
   deleteAllPosts() {
     return ajax(`/admin/users/${this.get("id")}/delete_posts_batch`, {
       type: "PUT",
     });
-  },
+  }
 
   revokeAdmin() {
     return ajax(`/admin/users/${this.id}/revoke_admin`, {
@@ -97,7 +100,7 @@ const AdminUser = User.extend({
         can_delete_all_posts: resp.can_delete_all_posts,
       });
     });
-  },
+  }
 
   grantAdmin(data) {
     return ajax(`/admin/users/${this.id}/grant_admin`, {
@@ -114,7 +117,7 @@ const AdminUser = User.extend({
 
       return resp;
     });
-  },
+  }
 
   revokeModeration() {
     return ajax(`/admin/users/${this.id}/revoke_moderation`, {
@@ -130,7 +133,7 @@ const AdminUser = User.extend({
         });
       })
       .catch(popupAjaxError);
-  },
+  }
 
   grantModeration() {
     return ajax(`/admin/users/${this.id}/grant_moderation`, {
@@ -146,7 +149,7 @@ const AdminUser = User.extend({
         });
       })
       .catch(popupAjaxError);
-  },
+  }
 
   disableSecondFactor() {
     return ajax(`/admin/users/${this.id}/disable_second_factor`, {
@@ -156,7 +159,7 @@ const AdminUser = User.extend({
         this.set("second_factor_enabled", false);
       })
       .catch(popupAjaxError);
-  },
+  }
 
   approve(approvedBy) {
     return ajax(`/admin/users/${this.id}/approve`, {
@@ -168,83 +171,76 @@ const AdminUser = User.extend({
         approved_by: approvedBy,
       });
     });
-  },
+  }
 
   setOriginalTrustLevel() {
     this.set("originalTrustLevel", this.trust_level);
-  },
-
-  dirty: propertyNotEqual("originalTrustLevel", "trust_level"),
+  }
 
   saveTrustLevel() {
     return ajax(`/admin/users/${this.id}/trust_level`, {
       type: "PUT",
       data: { level: this.trust_level },
     });
-  },
+  }
 
   restoreTrustLevel() {
     this.set("trust_level", this.originalTrustLevel);
-  },
+  }
 
   lockTrustLevel(locked) {
     return ajax(`/admin/users/${this.id}/trust_level_lock`, {
       type: "PUT",
       data: { locked: !!locked },
     });
-  },
-
-  canLockTrustLevel: lt("trust_level", 4),
-
-  canSuspend: not("staff"),
-  canSilence: not("staff"),
+  }
 
   @discourseComputed("suspended_till", "suspended_at")
   suspendDuration(suspendedTill, suspendedAt) {
     suspendedAt = moment(suspendedAt);
     suspendedTill = moment(suspendedTill);
     return suspendedAt.format("L") + " - " + suspendedTill.format("L");
-  },
+  }
 
   suspend(data) {
     return ajax(`/admin/users/${this.id}/suspend`, {
       type: "PUT",
       data,
     }).then((result) => this.setProperties(result.suspension));
-  },
+  }
 
   unsuspend() {
     return ajax(`/admin/users/${this.id}/unsuspend`, {
       type: "PUT",
     }).then((result) => this.setProperties(result.suspension));
-  },
+  }
 
   logOut() {
     return ajax("/admin/users/" + this.id + "/log_out", {
       type: "POST",
       data: { username_or_email: this.username },
     });
-  },
+  }
 
   impersonate() {
     return ajax("/admin/impersonate", {
       type: "POST",
       data: { username_or_email: this.username },
     });
-  },
+  }
 
   activate() {
     return ajax(`/admin/users/${this.id}/activate`, {
       type: "PUT",
     });
-  },
+  }
 
   deactivate() {
     return ajax(`/admin/users/${this.id}/deactivate`, {
       type: "PUT",
       data: { context: document.location.pathname },
     });
-  },
+  }
 
   unsilence() {
     this.set("silencingUser", true);
@@ -254,7 +250,7 @@ const AdminUser = User.extend({
     })
       .then((result) => this.setProperties(result.unsilence))
       .finally(() => this.set("silencingUser", false));
-  },
+  }
 
   silence(data) {
     this.set("silencingUser", true);
@@ -265,20 +261,20 @@ const AdminUser = User.extend({
     })
       .then((result) => this.setProperties(result.silence))
       .finally(() => this.set("silencingUser", false));
-  },
+  }
 
   sendActivationEmail() {
     return ajax(userPath("action/send_activation_email"), {
       type: "POST",
       data: { username: this.username },
     });
-  },
+  }
 
   anonymize() {
     return ajax(`/admin/users/${this.id}/anonymize.json`, {
       type: "PUT",
     });
-  },
+  }
 
   destroy(formData) {
     return ajax(`/admin/users/${this.id}.json`, {
@@ -295,14 +291,14 @@ const AdminUser = User.extend({
       .catch(() => {
         this.find(this.id).then((u) => this.setProperties(u));
       });
-  },
+  }
 
   merge(formData) {
     return ajax(`/admin/users/${this.id}/merge.json`, {
       type: "POST",
       data: formData,
     });
-  },
+  }
 
   loadDetails() {
     if (this.loadedDetails) {
@@ -313,23 +309,29 @@ const AdminUser = User.extend({
       const userProperties = Object.assign(result, { loadedDetails: true });
       this.setProperties(userProperties);
     });
-  },
+  }
 
   @discourseComputed("tl3_requirements")
   tl3Requirements(requirements) {
     if (requirements) {
       return this.store.createRecord("tl3Requirements", requirements);
     }
-  },
+  }
 
   @discourseComputed("suspended_by")
-  suspendedBy: wrapAdmin,
+  suspendedBy(user) {
+    user ? AdminUser.create(user) : null;
+  }
 
   @discourseComputed("silenced_by")
-  silencedBy: wrapAdmin,
+  silencedBy(user) {
+    return user ? AdminUser.create(user) : null;
+  }
 
   @discourseComputed("approved_by")
-  approvedBy: wrapAdmin,
+  approvedBy(user) {
+    return user ? AdminUser.create(user) : null;
+  }
 
   deleteSSORecord() {
     return ajax(`/admin/users/${this.id}/sso_record.json`, {
@@ -339,8 +341,8 @@ const AdminUser = User.extend({
         this.set("single_sign_on_record", null);
       })
       .catch(popupAjaxError);
-  },
-});
+  }
+}
 
 AdminUser.reopenClass({
   find(user_id) {

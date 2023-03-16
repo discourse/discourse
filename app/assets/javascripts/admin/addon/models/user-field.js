@@ -4,9 +4,9 @@ import { i18n } from "discourse/lib/computed";
 
 class UserField extends RestModel {}
 
-const UserFieldType = EmberObject.extend({
-  name: i18n("id", "admin.user_fields.field_types.%@"),
-});
+class UserFieldType extends EmberObject {
+  @i18n("id", "admin.user_fields.field_types.%@") name;
+}
 
 UserField.reopenClass({
   fieldTypes() {
