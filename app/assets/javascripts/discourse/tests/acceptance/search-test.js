@@ -139,7 +139,7 @@ acceptance("Search - Anonymous", function (needs) {
 
     assert.strictEqual(
       queryAll(contextSelector)[0].firstChild.textContent.trim(),
-      `${I18n.t("search.in")} test`,
+      `${I18n.t("search.in")} important`,
       "contextual tag search is first available option with no term"
     );
 
@@ -147,7 +147,7 @@ acceptance("Search - Anonymous", function (needs) {
 
     assert.strictEqual(
       queryAll(contextSelector)[1].firstChild.textContent.trim(),
-      `smth ${I18n.t("search.in")} test`,
+      `smth ${I18n.t("search.in")} important`,
       "tag-scoped search is second available option"
     );
 

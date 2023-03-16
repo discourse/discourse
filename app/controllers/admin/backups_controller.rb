@@ -34,6 +34,14 @@ class Admin::BackupsController < Admin::AdminController
   end
 
   def create
+    RateLimiter.new(
+      current_user,
+      "max-backups-per-minute",
+      1,
+      1.minute,
+      apply_limit_to_staff: true,
+    ).performed!
+
     opts = {
       publish_to_message_bus: true,
       with_uploads: params.fetch(:with_uploads) == "true",
