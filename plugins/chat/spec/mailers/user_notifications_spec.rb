@@ -174,7 +174,6 @@ describe UserNotifications do
         it "returns email for @all mention by default" do
           create_chat_message_with_mentions_and_notifications("Mentioning @all")
           email = described_class.chat_summary(user, {})
-          expect(email.to).to be_present
           expect(email.to).to contain_exactly(user.email)
         end
 
@@ -184,7 +183,6 @@ describe UserNotifications do
           create_chat_message_with_mentions_and_notifications("Mentioning @here")
           email = described_class.chat_summary(user, {})
 
-          expect(email.to).to be_present
           expect(email.to).to contain_exactly(user.email)
         end
 
