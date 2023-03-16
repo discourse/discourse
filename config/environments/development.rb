@@ -9,7 +9,7 @@ Discourse::Application.configure do
   config.cache_classes = false
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
-  config.eager_load = false
+  config.eager_load = ENV["DISCOURSE_ZEITWERK_EAGER_LOAD"] == "1"
 
   # Use the schema_cache.yml file generated during db:migrate (via db:schema:cache:dump)
   config.active_record.use_schema_cache_dump = true

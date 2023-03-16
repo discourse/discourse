@@ -159,6 +159,22 @@ jobs:
           path: tmp/turbo_rspec_runtime.log
           key: rspec-runtime-backend-core
 
+      - name: Run Zeitwerk check
+        if: matrix.build_type == 'backend'
+        env:
+          LOAD_PLUGINS: ${{ (matrix.target == 'plugins') && '1' || '0' }}
+        run: |
+          if ! bin/rails zeitwerk:check --trace; then
+            echo
+            echo "---------------------------------------------"
+            echo
+            echo "::error::'bin/rails zeitwerk:check' failed - the app will fail to boot with 'eager_load=true' (e.g. in production)."
+            echo "To reproduce locally, run 'bin/rails zeitwerk:check'."
+            echo "Alternatively, you can run your local server/tests with the 'DISCOURSE_ZEITWERK_EAGER_LOAD=1' environment variable."
+            echo
+            exit 1
+          fi
+
       - name: Core RSpec
         if: matrix.build_type == 'backend' && matrix.target == 'core'
         run: bin/turbo_rspec --verbose
