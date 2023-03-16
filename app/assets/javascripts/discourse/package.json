@@ -46,7 +46,6 @@
     "deepmerge": "^4.3.0",
     "dialog-holder": "1.0.0",
     "discourse-common": "1.0.0",
-    "discourse-ensure-deprecation-order": "1.0.0",
     "discourse-hbr": "1.0.0",
     "discourse-plugins": "1.0.0",
     "discourse-widget-hbs": "1.0.0",
