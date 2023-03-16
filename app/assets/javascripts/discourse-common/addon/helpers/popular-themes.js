@@ -97,7 +97,7 @@ export const POPULAR_THEMES = [
   {
     name: "Header Submenus",
     value: "https://github.com/discourse/discourse-header-submenus",
-    preview: "https://theme-creator.discourse.org/theme/Johani/header-submenus",
+    preview: "https://discourse.theme-creator.io/theme/awesomerobot/header-submenus",
     description: "Lets you build a header menu with submenus (dropdowns).",
     meta_url: "https://meta.discourse.org/t/header-submenus/94584",
     component: true,
