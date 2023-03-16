@@ -89,8 +89,7 @@ export const POPULAR_THEMES = [
   {
     name: "Sidebar Theme Toggle",
     value: "https://github.com/discourse/discourse-sidebar-theme-toggle",
-    description:
-      "Displays a theme selector in the sidebar menu’s footer provided there is more than one user-selectable theme.",
+    description: "Displays a theme selector in the sidebar menu’s footer provided there is more than one user-selectable theme.",
     meta_url: "https://meta.discourse.org/t/sidebar-theme-toggle/242802",
     component: true,
   },
