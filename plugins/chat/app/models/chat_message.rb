@@ -90,7 +90,7 @@ class ChatMessage < ActiveRecord::Base
     return uploads.first.original_filename if cooked.blank? && uploads.present?
 
     # this may return blank for some complex things like quotes, that is acceptable
-    PrettyText.excerpt(cooked, max_length, { text_entities: true })
+    PrettyText.excerpt(message, max_length, { text_entities: true })
   end
 
   def cooked_for_excerpt
