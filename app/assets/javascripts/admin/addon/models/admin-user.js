@@ -10,20 +10,31 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { propertyNotEqual } from "discourse/lib/computed";
 import { userPath } from "discourse/lib/url";
 
-class AdminUser extends User {
+export default class AdminUser extends User {
+  static find(user_id) {
+    return ajax(`/admin/users/${user_id}.json`).then((result) => {
+      result.loadedDetails = true;
+      return AdminUser.create(result);
+    });
+  }
+
+  static findAll(query, userFilter) {
+    return ajax(`/admin/users/list/${query}.json`, {
+      data: userFilter,
+    }).then((users) => users.map((u) => AdminUser.create(u)));
+  }
+
   adminUserView = true;
 
   @filter("groups", (g) => !g.automatic && Group.create(g)) customGroups;
-
   @filter("groups", (g) => g.automatic && Group.create(g)) automaticGroups;
-
   @or("active", "staged") canViewProfile;
-
   @gt("bounce_score", 0) canResetBounceScore;
   @propertyNotEqual("originalTrustLevel", "trust_level") dirty;
   @lt("trust_level", 4) canLockTrustLevel;
   @not("staff") canSuspend;
   @not("staff") canSilence;
+
   @discourseComputed("bounce_score", "reset_bounce_score_after")
   bounceScore(bounce_score, reset_bounce_score_after) {
     if (bounce_score > 0) {
@@ -343,20 +354,3 @@ class AdminUser extends User {
       .catch(popupAjaxError);
   }
 }
-
-AdminUser.reopenClass({
-  find(user_id) {
-    return ajax(`/admin/users/${user_id}.json`).then((result) => {
-      result.loadedDetails = true;
-      return AdminUser.create(result);
-    });
-  },
-
-  findAll(query, userFilter) {
-    return ajax(`/admin/users/list/${query}.json`, {
-      data: userFilter,
-    }).then((users) => users.map((u) => AdminUser.create(u)));
-  },
-});
-
-export default AdminUser;

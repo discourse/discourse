@@ -19,7 +19,183 @@ import round from "discourse/lib/round";
 // and you want to ensure cache is reset
 export const SCHEMA_VERSION = 4;
 
-class Report extends EmberObject {
+export default class Report extends EmberObject {
+  static groupingForDatapoints(count) {
+    if (count < DAILY_LIMIT_DAYS) {
+      return "daily";
+    }
+
+    if (count >= DAILY_LIMIT_DAYS && count < WEEKLY_LIMIT_DAYS) {
+      return "weekly";
+    }
+
+    if (count >= WEEKLY_LIMIT_DAYS) {
+      return "monthly";
+    }
+  }
+
+  static unitForDatapoints(count) {
+    if (count >= DAILY_LIMIT_DAYS && count < WEEKLY_LIMIT_DAYS) {
+      return "week";
+    } else if (count >= WEEKLY_LIMIT_DAYS) {
+      return "month";
+    } else {
+      return "day";
+    }
+  }
+
+  static unitForGrouping(grouping) {
+    switch (grouping) {
+      case "monthly":
+        return "month";
+      case "weekly":
+        return "week";
+      default:
+        return "day";
+    }
+  }
+
+  static collapse(model, data, grouping) {
+    grouping = grouping || Report.groupingForDatapoints(data.length);
+
+    if (grouping === "daily") {
+      return data;
+    } else if (grouping === "weekly" || grouping === "monthly") {
+      const isoKind = grouping === "weekly" ? "isoWeek" : "month";
+      const kind = grouping === "weekly" ? "week" : "month";
+      const startMoment = moment(model.start_date, "YYYY-MM-DD");
+
+      let currentIndex = 0;
+      let currentStart = startMoment.clone().startOf(isoKind);
+      let currentEnd = startMoment.clone().endOf(isoKind);
+      const transformedData = [
+        {
+          x: currentStart.format("YYYY-MM-DD"),
+          y: 0,
+        },
+      ];
+
+      let appliedAverage = false;
+      data.forEach((d) => {
+        const date = moment(d.x, "YYYY-MM-DD");
+
+        if (
+          !date.isSame(currentStart) &&
+          !date.isBetween(currentStart, currentEnd)
+        ) {
+          if (model.average) {
+            transformedData[currentIndex].y = applyAverage(
+              transformedData[currentIndex].y,
+              currentStart,
+              currentEnd
+            );
+
+            appliedAverage = true;
+          }
+
+          currentIndex += 1;
+          currentStart = currentStart.add(1, kind).startOf(isoKind);
+          currentEnd = currentEnd.add(1, kind).endOf(isoKind);
+        } else {
+          appliedAverage = false;
+        }
+
+        if (transformedData[currentIndex]) {
+          transformedData[currentIndex].y += d.y;
+        } else {
+          transformedData[currentIndex] = {
+            x: d.x,
+            y: d.y,
+          };
+        }
+      });
+
+      if (model.average && !appliedAverage) {
+        transformedData[currentIndex].y = applyAverage(
+          transformedData[currentIndex].y,
+          currentStart,
+          moment(model.end_date).subtract(1, "day") // remove 1 day as model end date is at 00:00 of next day
+        );
+      }
+
+      return transformedData;
+    }
+
+    // ensure we return something if grouping is unknown
+    return data;
+  }
+
+  static fillMissingDates(report, options = {}) {
+    const dataField = options.dataField || "data";
+    const filledField = options.filledField || "data";
+    const startDate = options.startDate || "start_date";
+    const endDate = options.endDate || "end_date";
+
+    if (Array.isArray(report[dataField])) {
+      const startDateFormatted = moment
+        .utc(report[startDate])
+        .locale("en")
+        .format("YYYY-MM-DD");
+      const endDateFormatted = moment
+        .utc(report[endDate])
+        .locale("en")
+        .format("YYYY-MM-DD");
+
+      if (report.modes[0] === "stacked_chart") {
+        report[filledField] = report[dataField].map((rep) => {
+          return {
+            req: rep.req,
+            label: rep.label,
+            color: rep.color,
+            data: fillMissingDates(
+              JSON.parse(JSON.stringify(rep.data)),
+              startDateFormatted,
+              endDateFormatted
+            ),
+          };
+        });
+      } else {
+        report[filledField] = fillMissingDates(
+          JSON.parse(JSON.stringify(report[dataField])),
+          startDateFormatted,
+          endDateFormatted
+        );
+      }
+    }
+  }
+
+  static find(type, startDate, endDate, categoryId, groupId) {
+    return ajax("/admin/reports/" + type, {
+      data: {
+        start_date: startDate,
+        end_date: endDate,
+        category_id: categoryId,
+        group_id: groupId,
+      },
+    }).then((json) => {
+      // don’t fill for large multi column tables
+      // which are not date based
+      const modes = json.report.modes;
+      if (modes.length !== 1 && modes[0] !== "table") {
+        Report.fillMissingDates(json.report);
+      }
+
+      const model = Report.create({ type });
+      model.setProperties(json.report);
+
+      if (json.report.related_report) {
+        // TODO: fillMissingDates if xaxis is date
+        const related = Report.create({
+          type: json.report.related_report.type,
+        });
+        related.setProperties(json.report.related_report);
+        model.set("relatedReport", related);
+      }
+
+      return model;
+    });
+  }
+
   average = false;
   percent = false;
   higher_is_better = true;
@@ -529,183 +705,3 @@ function applyAverage(value, start, end) {
   const count = end.diff(start, "day") + 1; // 1 to include start
   return parseFloat((value / count).toFixed(2));
 }
-
-Report.reopenClass({
-  groupingForDatapoints(count) {
-    if (count < DAILY_LIMIT_DAYS) {
-      return "daily";
-    }
-
-    if (count >= DAILY_LIMIT_DAYS && count < WEEKLY_LIMIT_DAYS) {
-      return "weekly";
-    }
-
-    if (count >= WEEKLY_LIMIT_DAYS) {
-      return "monthly";
-    }
-  },
-
-  unitForDatapoints(count) {
-    if (count >= DAILY_LIMIT_DAYS && count < WEEKLY_LIMIT_DAYS) {
-      return "week";
-    } else if (count >= WEEKLY_LIMIT_DAYS) {
-      return "month";
-    } else {
-      return "day";
-    }
-  },
-
-  unitForGrouping(grouping) {
-    switch (grouping) {
-      case "monthly":
-        return "month";
-      case "weekly":
-        return "week";
-      default:
-        return "day";
-    }
-  },
-
-  collapse(model, data, grouping) {
-    grouping = grouping || Report.groupingForDatapoints(data.length);
-
-    if (grouping === "daily") {
-      return data;
-    } else if (grouping === "weekly" || grouping === "monthly") {
-      const isoKind = grouping === "weekly" ? "isoWeek" : "month";
-      const kind = grouping === "weekly" ? "week" : "month";
-      const startMoment = moment(model.start_date, "YYYY-MM-DD");
-
-      let currentIndex = 0;
-      let currentStart = startMoment.clone().startOf(isoKind);
-      let currentEnd = startMoment.clone().endOf(isoKind);
-      const transformedData = [
-        {
-          x: currentStart.format("YYYY-MM-DD"),
-          y: 0,
-        },
-      ];
-
-      let appliedAverage = false;
-      data.forEach((d) => {
-        const date = moment(d.x, "YYYY-MM-DD");
-
-        if (
-          !date.isSame(currentStart) &&
-          !date.isBetween(currentStart, currentEnd)
-        ) {
-          if (model.average) {
-            transformedData[currentIndex].y = applyAverage(
-              transformedData[currentIndex].y,
-              currentStart,
-              currentEnd
-            );
-
-            appliedAverage = true;
-          }
-
-          currentIndex += 1;
-          currentStart = currentStart.add(1, kind).startOf(isoKind);
-          currentEnd = currentEnd.add(1, kind).endOf(isoKind);
-        } else {
-          appliedAverage = false;
-        }
-
-        if (transformedData[currentIndex]) {
-          transformedData[currentIndex].y += d.y;
-        } else {
-          transformedData[currentIndex] = {
-            x: d.x,
-            y: d.y,
-          };
-        }
-      });
-
-      if (model.average && !appliedAverage) {
-        transformedData[currentIndex].y = applyAverage(
-          transformedData[currentIndex].y,
-          currentStart,
-          moment(model.end_date).subtract(1, "day") // remove 1 day as model end date is at 00:00 of next day
-        );
-      }
-
-      return transformedData;
-    }
-
-    // ensure we return something if grouping is unknown
-    return data;
-  },
-
-  fillMissingDates(report, options = {}) {
-    const dataField = options.dataField || "data";
-    const filledField = options.filledField || "data";
-    const startDate = options.startDate || "start_date";
-    const endDate = options.endDate || "end_date";
-
-    if (Array.isArray(report[dataField])) {
-      const startDateFormatted = moment
-        .utc(report[startDate])
-        .locale("en")
-        .format("YYYY-MM-DD");
-      const endDateFormatted = moment
-        .utc(report[endDate])
-        .locale("en")
-        .format("YYYY-MM-DD");
-
-      if (report.modes[0] === "stacked_chart") {
-        report[filledField] = report[dataField].map((rep) => {
-          return {
-            req: rep.req,
-            label: rep.label,
-            color: rep.color,
-            data: fillMissingDates(
-              JSON.parse(JSON.stringify(rep.data)),
-              startDateFormatted,
-              endDateFormatted
-            ),
-          };
-        });
-      } else {
-        report[filledField] = fillMissingDates(
-          JSON.parse(JSON.stringify(report[dataField])),
-          startDateFormatted,
-          endDateFormatted
-        );
-      }
-    }
-  },
-
-  find(type, startDate, endDate, categoryId, groupId) {
-    return ajax("/admin/reports/" + type, {
-      data: {
-        start_date: startDate,
-        end_date: endDate,
-        category_id: categoryId,
-        group_id: groupId,
-      },
-    }).then((json) => {
-      // don’t fill for large multi column tables
-      // which are not date based
-      const modes = json.report.modes;
-      if (modes.length !== 1 && modes[0] !== "table") {
-        Report.fillMissingDates(json.report);
-      }
-
-      const model = Report.create({ type });
-      model.setProperties(json.report);
-
-      if (json.report.related_report) {
-        // TODO: fillMissingDates if xaxis is date
-        const related = Report.create({
-          type: json.report.related_report.type,
-        });
-        related.setProperties(json.report.related_report);
-        model.set("relatedReport", related);
-      }
-
-      return model;
-    });
-  },
-});
-
-export default Report;

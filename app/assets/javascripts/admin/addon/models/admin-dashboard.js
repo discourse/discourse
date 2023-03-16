@@ -7,19 +7,17 @@ const GENERAL_ATTRIBUTES = [
   "release_notes_link",
 ];
 
-class AdminDashboard extends EmberObject {}
-
-AdminDashboard.reopenClass({
-  fetch() {
+export default class AdminDashboard extends EmberObject {
+  static fetch() {
     return ajax("/admin/dashboard.json").then((json) => {
       const model = AdminDashboard.create();
       model.set("version_check", json.version_check);
 
       return model;
     });
-  },
+  }
 
-  fetchGeneral() {
+  static fetchGeneral() {
     return ajax("/admin/dashboard/general.json").then((json) => {
       const model = AdminDashboard.create();
 
@@ -34,15 +32,13 @@ AdminDashboard.reopenClass({
 
       return model;
     });
-  },
+  }
 
-  fetchProblems() {
+  static fetchProblems() {
     return ajax("/admin/dashboard/problems.json").then((json) => {
       const model = AdminDashboard.create(json);
       model.set("loaded", true);
       return model;
     });
-  },
-});
-
-export default AdminDashboard;
+  }
+}

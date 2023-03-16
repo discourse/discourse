@@ -4,7 +4,15 @@ import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
 import discourseComputed from "discourse-common/utils/decorators";
 
-class ScreenedIpAddress extends EmberObject {
+export default class ScreenedIpAddress extends EmberObject {
+  static findAll(filter) {
+    return ajax("/admin/logs/screened_ip_addresses.json", {
+      data: { filter },
+    }).then((screened_ips) =>
+      screened_ips.map((b) => ScreenedIpAddress.create(b))
+    );
+  }
+
   @equal("action_name", "block") isBlocked;
   @discourseComputed("action_name")
   actionName(actionName) {
@@ -37,15 +45,3 @@ class ScreenedIpAddress extends EmberObject {
     });
   }
 }
-
-ScreenedIpAddress.reopenClass({
-  findAll(filter) {
-    return ajax("/admin/logs/screened_ip_addresses.json", {
-      data: { filter },
-    }).then((screened_ips) =>
-      screened_ips.map((b) => ScreenedIpAddress.create(b))
-    );
-  },
-});
-
-export default ScreenedIpAddress;

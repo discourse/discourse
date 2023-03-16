@@ -2,7 +2,13 @@ import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import discourseComputed from "discourse-common/utils/decorators";
 
-class VersionCheck extends EmberObject {
+export default class VersionCheck extends EmberObject {
+  static find() {
+    return ajax("/admin/version_check").then((json) =>
+      VersionCheck.create(json)
+    );
+  }
+
   @discourseComputed("updated_at")
   noCheckPerformed(updatedAt) {
     return updatedAt === null;
@@ -32,13 +38,3 @@ class VersionCheck extends EmberObject {
     }
   }
 }
-
-VersionCheck.reopenClass({
-  find() {
-    return ajax("/admin/version_check").then((json) =>
-      VersionCheck.create(json)
-    );
-  },
-});
-
-export default VersionCheck;

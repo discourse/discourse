@@ -1,12 +1,10 @@
-import discourseComputed, {
-  observes,
-  on,
-} from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import { observes, on } from "@ember-decorators/object";
 import EmberObject from "@ember/object";
 import I18n from "I18n";
 import { propertyNotEqual } from "discourse/lib/computed";
 
-class ColorSchemeColor extends EmberObject {
+export default class ColorSchemeColor extends EmberObject {
   // Whether the current value is different than Discourse's default color scheme.
   @propertyNotEqual("hex", "default_hex") overridden;
   @on("init")
@@ -103,5 +101,3 @@ class ColorSchemeColor extends EmberObject {
     return hex.match(/^([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/) !== null;
   }
 }
-
-export default ColorSchemeColor;

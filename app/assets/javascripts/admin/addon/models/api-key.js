@@ -5,8 +5,9 @@ import { ajax } from "discourse/lib/ajax";
 import discourseComputed from "discourse-common/utils/decorators";
 import { fmt } from "discourse/lib/computed";
 
-class ApiKey extends RestModel {
+export default class ApiKey extends RestModel {
   @fmt("truncated_key", "%@...") truncatedKey;
+
   @computed("_user")
   get user() {
     return this._user;
@@ -52,5 +53,3 @@ class ApiKey extends RestModel {
       .pathFor(this.store, "api-key", this.id);
   }
 }
-
-export default ApiKey;

@@ -7,7 +7,37 @@ import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
 import discourseComputed from "discourse-common/utils/decorators";
 
-class ColorScheme extends EmberObject {
+class ColorSchemes extends ArrayProxy {}
+
+export default class ColorScheme extends EmberObject {
+  static findAll() {
+    const colorSchemes = ColorSchemes.create({ content: [], loading: true });
+    return ajax("/admin/color_schemes").then((all) => {
+      all.forEach((colorScheme) => {
+        colorSchemes.pushObject(
+          ColorScheme.create({
+            id: colorScheme.id,
+            name: colorScheme.name,
+            is_base: colorScheme.is_base,
+            theme_id: colorScheme.theme_id,
+            theme_name: colorScheme.theme_name,
+            base_scheme_id: colorScheme.base_scheme_id,
+            user_selectable: colorScheme.user_selectable,
+            colors: colorScheme.colors.map((c) => {
+              return ColorSchemeColor.create({
+                name: c.name,
+                hex: c.hex,
+                default_hex: c.default_hex,
+                is_advanced: c.is_advanced,
+              });
+            }),
+          })
+        );
+      });
+      return colorSchemes;
+    });
+  }
+
   @not("id") newRecord;
   init() {
     super.init(...arguments);
@@ -144,37 +174,3 @@ class ColorScheme extends EmberObject {
     }
   }
 }
-
-class ColorSchemes extends ArrayProxy {}
-
-ColorScheme.reopenClass({
-  findAll() {
-    const colorSchemes = ColorSchemes.create({ content: [], loading: true });
-    return ajax("/admin/color_schemes").then((all) => {
-      all.forEach((colorScheme) => {
-        colorSchemes.pushObject(
-          ColorScheme.create({
-            id: colorScheme.id,
-            name: colorScheme.name,
-            is_base: colorScheme.is_base,
-            theme_id: colorScheme.theme_id,
-            theme_name: colorScheme.theme_name,
-            base_scheme_id: colorScheme.base_scheme_id,
-            user_selectable: colorScheme.user_selectable,
-            colors: colorScheme.colors.map((c) => {
-              return ColorSchemeColor.create({
-                name: c.name,
-                hex: c.hex,
-                default_hex: c.default_hex,
-                is_advanced: c.is_advanced,
-              });
-            }),
-          })
-        );
-      });
-      return colorSchemes;
-    });
-  },
-});
-
-export default ColorScheme;

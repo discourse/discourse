@@ -15,14 +15,12 @@ const SETTINGS_TYPE_ID = 5;
 
 class Theme extends RestModel {
   @or("default", "user_selectable") isActive;
-
   @gt("remote_theme.commits_behind", 0) isPendingUpdates;
-
   @gt("editedFields.length", 0) hasEditedFields;
-
   @gt("parent_themes.length", 0) hasParents;
 
   changed = false;
+
   @discourseComputed("theme_fields.[]")
   targets() {
     return [

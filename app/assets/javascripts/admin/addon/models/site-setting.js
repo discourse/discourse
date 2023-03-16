@@ -4,22 +4,8 @@ import Setting from "admin/mixins/setting-object";
 import { ajax } from "discourse/lib/ajax";
 import discourseComputed from "discourse-common/utils/decorators";
 
-class SiteSetting extends EmberObject.extend(Setting) {
-  @discourseComputed("setting")
-  staffLogFilter(setting) {
-    if (!setting) {
-      return;
-    }
-
-    return {
-      subject: setting,
-      action_name: "change_site_setting",
-    };
-  }
-}
-
-SiteSetting.reopenClass({
-  findAll() {
+export default class SiteSetting extends EmberObject.extend(Setting) {
+  static findAll() {
     return ajax("/admin/site_settings").then(function (settings) {
       // Group the results by category
       const categories = {};
@@ -38,9 +24,9 @@ SiteSetting.reopenClass({
         };
       });
     });
-  },
+  }
 
-  update(key, value, opts = {}) {
+  static update(key, value, opts = {}) {
     const data = {};
     data[key] = value;
 
@@ -49,7 +35,17 @@ SiteSetting.reopenClass({
     }
 
     return ajax(`/admin/site_settings/${key}`, { type: "PUT", data });
-  },
-});
+  }
 
-export default SiteSetting;
+  @discourseComputed("setting")
+  staffLogFilter(setting) {
+    if (!setting) {
+      return;
+    }
+
+    return {
+      subject: setting,
+      action_name: "change_site_setting",
+    };
+  }
+}

@@ -11,7 +11,30 @@ function format(label, value, escape = true) {
     : "";
 }
 
-class StaffActionLog extends RestModel {
+export default class StaffActionLog extends RestModel {
+  static munge(json) {
+    if (json.acting_user) {
+      json.acting_user = AdminUser.create(json.acting_user);
+    }
+    if (json.target_user) {
+      json.target_user = AdminUser.create(json.target_user);
+    }
+    return json;
+  }
+
+  static findAll(data) {
+    return ajax("/admin/logs/staff_action_logs.json", { data }).then(
+      (result) => {
+        return {
+          staff_action_logs: result.staff_action_logs.map((s) =>
+            StaffActionLog.create(s)
+          ),
+          user_history_actions: result.user_history_actions,
+        };
+      }
+    );
+  }
+
   showFullDetails = false;
 
   @discourseComputed("action_name")
@@ -84,30 +107,3 @@ class StaffActionLog extends RestModel {
     return ["change_theme", "delete_theme"].includes(actionName);
   }
 }
-
-StaffActionLog.reopenClass({
-  munge(json) {
-    if (json.acting_user) {
-      json.acting_user = AdminUser.create(json.acting_user);
-    }
-    if (json.target_user) {
-      json.target_user = AdminUser.create(json.target_user);
-    }
-    return json;
-  },
-
-  findAll(data) {
-    return ajax("/admin/logs/staff_action_logs.json", { data }).then(
-      (result) => {
-        return {
-          staff_action_logs: result.staff_action_logs.map((s) =>
-            StaffActionLog.create(s)
-          ),
-          user_history_actions: result.user_history_actions,
-        };
-      }
-    );
-  },
-});
-
-export default StaffActionLog;

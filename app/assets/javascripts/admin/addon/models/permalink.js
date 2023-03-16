@@ -4,7 +4,15 @@ import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import discourseComputed from "discourse-common/utils/decorators";
 
-class Permalink extends EmberObject {
+export default class Permalink extends EmberObject {
+  static findAll(filter) {
+    return ajax("/admin/permalinks.json", { data: { filter } }).then(function (
+      permalinks
+    ) {
+      return permalinks.map((p) => Permalink.create(p));
+    });
+  }
+
   save() {
     return ajax("/admin/permalinks.json", {
       type: "POST",
@@ -32,15 +40,3 @@ class Permalink extends EmberObject {
     });
   }
 }
-
-Permalink.reopenClass({
-  findAll(filter) {
-    return ajax("/admin/permalinks.json", { data: { filter } }).then(function (
-      permalinks
-    ) {
-      return permalinks.map((p) => Permalink.create(p));
-    });
-  },
-});
-
-export default Permalink;

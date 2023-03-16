@@ -1,5 +1,6 @@
 import { computed } from "@ember/object";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import { observes } from "@ember-decorators/object";
 import Category from "discourse/models/category";
 import Group from "discourse/models/group";
 import RestModel from "discourse/models/rest";
