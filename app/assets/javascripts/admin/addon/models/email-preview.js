@@ -1,7 +1,7 @@
 import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 
-const EmailPreview = EmberObject.extend({});
+class EmailPreview extends EmberObject {}
 
 export function oneWeekAgo() {
   return moment().locale("en").subtract(7, "days").format("YYYY-MM-DD");

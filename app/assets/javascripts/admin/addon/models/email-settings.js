@@ -1,7 +1,7 @@
 import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 
-const EmailSettings = EmberObject.extend({});
+class EmailSettings extends EmberObject {}
 
 EmailSettings.reopenClass({
   find() {

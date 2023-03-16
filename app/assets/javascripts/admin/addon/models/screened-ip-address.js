@@ -1,21 +1,20 @@
+import { equal } from "@ember/object/computed";
 import EmberObject from "@ember/object";
 import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
 import discourseComputed from "discourse-common/utils/decorators";
-import { equal } from "@ember/object/computed";
 
-const ScreenedIpAddress = EmberObject.extend({
+class ScreenedIpAddress extends EmberObject {
+  @equal("action_name", "block") isBlocked;
   @discourseComputed("action_name")
   actionName(actionName) {
     return I18n.t(`admin.logs.screened_ips.actions.${actionName}`);
-  },
-
-  isBlocked: equal("action_name", "block"),
+  }
 
   @discourseComputed("ip_address")
   isRange(ipAddress) {
     return ipAddress.indexOf("/") > 0;
-  },
+  }
 
   save() {
     return ajax(
@@ -30,14 +29,14 @@ const ScreenedIpAddress = EmberObject.extend({
         },
       }
     );
-  },
+  }
 
   destroy() {
     return ajax("/admin/logs/screened_ip_addresses/" + this.id + ".json", {
       type: "DELETE",
     });
-  },
-});
+  }
+}
 
 ScreenedIpAddress.reopenClass({
   findAll(filter) {

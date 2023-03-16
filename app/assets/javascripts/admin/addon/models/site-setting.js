@@ -4,7 +4,7 @@ import Setting from "admin/mixins/setting-object";
 import { ajax } from "discourse/lib/ajax";
 import discourseComputed from "discourse-common/utils/decorators";
 
-const SiteSetting = EmberObject.extend(Setting, {
+class SiteSetting extends EmberObject.extend(Setting) {
   @discourseComputed("setting")
   staffLogFilter(setting) {
     if (!setting) {
@@ -15,8 +15,8 @@ const SiteSetting = EmberObject.extend(Setting, {
       subject: setting,
       action_name: "change_site_setting",
     };
-  },
-});
+  }
+}
 
 SiteSetting.reopenClass({
   findAll() {

@@ -6,14 +6,16 @@ import EmberObject from "@ember/object";
 import I18n from "I18n";
 import { propertyNotEqual } from "discourse/lib/computed";
 
-const ColorSchemeColor = EmberObject.extend({
+class ColorSchemeColor extends EmberObject {
+  // Whether the current value is different than Discourse's default color scheme.
+  @propertyNotEqual("hex", "default_hex") overridden;
   @on("init")
   startTrackingChanges() {
     this.set("originals", { hex: this.hex || "FFFFFF" });
 
     // force changed property to be recalculated
     this.notifyPropertyChange("hex");
-  },
+  }
 
   // Whether value has changed since it was last saved.
   @discourseComputed("hex")
@@ -26,26 +28,23 @@ const ColorSchemeColor = EmberObject.extend({
     }
 
     return false;
-  },
-
-  // Whether the current value is different than Discourse's default color scheme.
-  overridden: propertyNotEqual("hex", "default_hex"),
+  }
 
   // Whether the saved value is different than Discourse's default color scheme.
   @discourseComputed("default_hex", "hex")
   savedIsOverriden(defaultHex) {
     return this.originals.hex !== defaultHex;
-  },
+  }
 
   revert() {
     this.set("hex", this.default_hex);
-  },
+  }
 
   undo() {
     if (this.originals) {
       this.set("hex", this.originals.hex);
     }
-  },
+  }
 
   @discourseComputed("name")
   translatedName(name) {
@@ -54,7 +53,7 @@ const ColorSchemeColor = EmberObject.extend({
     } else {
       return name;
     }
-  },
+  }
 
   @discourseComputed("name")
   description(name) {
@@ -63,7 +62,7 @@ const ColorSchemeColor = EmberObject.extend({
     } else {
       return "";
     }
-  },
+  }
 
   /**
     brightness returns a number between 0 (darkest) to 255 (brightest).
@@ -90,19 +89,19 @@ const ColorSchemeColor = EmberObject.extend({
           1000
       );
     }
-  },
+  }
 
   @observes("hex")
   hexValueChanged() {
     if (this.hex) {
       this.set("hex", this.hex.toString().replace(/[^0-9a-fA-F]/g, ""));
     }
-  },
+  }
 
   @discourseComputed("hex")
   valid(hex) {
     return hex.match(/^([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/) !== null;
-  },
-});
+  }
+}
 
 export default ColorSchemeColor;

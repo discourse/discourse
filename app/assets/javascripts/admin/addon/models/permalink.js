@@ -4,7 +4,7 @@ import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import discourseComputed from "discourse-common/utils/decorators";
 
-const Permalink = EmberObject.extend({
+class Permalink extends EmberObject {
   save() {
     return ajax("/admin/permalinks.json", {
       type: "POST",
@@ -14,24 +14,24 @@ const Permalink = EmberObject.extend({
         permalink_type_value: this.permalink_type_value,
       },
     });
-  },
+  }
 
   @discourseComputed("category_id")
   category(category_id) {
     return Category.findById(category_id);
-  },
+  }
 
   @discourseComputed("external_url")
   linkIsExternal(external_url) {
     return !DiscourseURL.isInternal(external_url);
-  },
+  }
 
   destroy() {
     return ajax("/admin/permalinks/" + this.id + ".json", {
       type: "DELETE",
     });
-  },
-});
+  }
+}
 
 Permalink.reopenClass({
   findAll(filter) {

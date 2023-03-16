@@ -7,7 +7,7 @@ const GENERAL_ATTRIBUTES = [
   "release_notes_link",
 ];
 
-const AdminDashboard = EmberObject.extend({});
+class AdminDashboard extends EmberObject {}
 
 AdminDashboard.reopenClass({
   fetch() {

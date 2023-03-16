@@ -2,7 +2,7 @@ import EmberObject from "@ember/object";
 import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
 
-const WatchedWord = EmberObject.extend({
+class WatchedWord extends EmberObject {
   save() {
     return ajax(
       "/admin/customize/watched_words" +
@@ -19,14 +19,14 @@ const WatchedWord = EmberObject.extend({
         dataType: "json",
       }
     );
-  },
+  }
 
   destroy() {
     return ajax("/admin/customize/watched_words/" + this.id + ".json", {
       type: "DELETE",
     });
-  },
-});
+  }
+}
 
 WatchedWord.reopenClass({
   findAll() {

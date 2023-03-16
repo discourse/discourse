@@ -3,7 +3,7 @@ import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import getURL from "discourse-common/lib/get-url";
 
-const EmailLog = EmberObject.extend({});
+class EmailLog extends EmberObject {}
 
 EmailLog.reopenClass({
   create(attrs) {

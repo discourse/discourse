@@ -11,13 +11,13 @@ function format(label, value, escape = true) {
     : "";
 }
 
-const StaffActionLog = RestModel.extend({
-  showFullDetails: false,
+class StaffActionLog extends RestModel {
+  showFullDetails = false;
 
   @discourseComputed("action_name")
   actionName(actionName) {
     return I18n.t(`admin.logs.staff_actions.actions.${actionName}`);
-  },
+  }
 
   @discourseComputed(
     "email",
@@ -72,18 +72,18 @@ const StaffActionLog = RestModel.extend({
 
     const formatted = lines.filter((l) => l.length > 0).join("<br/>");
     return formatted.length > 0 ? formatted + "<br/>" : "";
-  },
+  }
 
   @discourseComputed("details")
   useModalForDetails(details) {
     return details && details.length > 100;
-  },
+  }
 
   @discourseComputed("action_name")
   useCustomModalForDetails(actionName) {
     return ["change_theme", "delete_theme"].includes(actionName);
-  },
-});
+  }
+}
 
 StaffActionLog.reopenClass({
   munge(json) {

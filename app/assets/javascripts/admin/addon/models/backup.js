@@ -2,18 +2,18 @@ import EmberObject from "@ember/object";
 import MessageBus from "message-bus-client";
 import { ajax } from "discourse/lib/ajax";
 
-const Backup = EmberObject.extend({
+class Backup extends EmberObject {
   destroy() {
     return ajax("/admin/backups/" + this.filename, { type: "DELETE" });
-  },
+  }
 
   restore() {
     return ajax("/admin/backups/" + this.filename + "/restore", {
       type: "POST",
       data: { client_id: MessageBus.clientId },
     });
-  },
-});
+  }
+}
 
 Backup.reopenClass({
   find() {
