@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency "reviewable"
-
 module Chat
   class ReviewableChatMessage < Reviewable
     def self.action_aliases
