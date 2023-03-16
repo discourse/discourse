@@ -151,7 +151,7 @@ RSpec.describe Chat::Api::ChannelsArchivesController do
         archive.update!(archive_error: "bad stuff", archived_messages: 1)
 
         expect { post "/chat/api/channels/#{channel.id}/archives" }.to change(
-          Jobs::ChatChannelArchive.jobs,
+          Jobs::Chat::ChannelArchive.jobs,
           :size,
         ).by (1)
         expect(response.status).to eq(200)

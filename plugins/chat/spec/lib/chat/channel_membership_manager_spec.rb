@@ -42,7 +42,7 @@ RSpec.describe Chat::ChannelMembershipManager do
       described_class.new(channel1).follow(user)
       expect(channel1.reload.user_count_stale).to eq(true)
       expect_job_enqueued(
-        job: :chat_update_channel_user_count,
+        job: Jobs::Chat::UpdateChannelUserCount,
         args: {
           chat_channel_id: channel1.id,
         },
@@ -82,7 +82,7 @@ RSpec.describe Chat::ChannelMembershipManager do
       expect(membership.following).to eq(false)
       expect(channel1.reload.user_count_stale).to eq(true)
       expect_job_enqueued(
-        job: :chat_update_channel_user_count,
+        job: Jobs::Chat::UpdateChannelUserCount,
         args: {
           chat_channel_id: channel1.id,
         },
@@ -98,7 +98,7 @@ RSpec.describe Chat::ChannelMembershipManager do
           following: false,
         )
       expect_not_enqueued_with(
-        job: :chat_update_channel_user_count,
+        job: Jobs::Chat::UpdateChannelUserCount,
         args: {
           chat_channel_id: channel1.id,
         },

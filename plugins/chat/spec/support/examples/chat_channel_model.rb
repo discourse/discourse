@@ -235,7 +235,7 @@ RSpec.shared_examples "a chat channel model" do
       expect(membership.chat_channel).to eq(private_category_channel)
       expect(private_category_channel.user_count_stale).to eq(true)
       expect_job_enqueued(
-        job: :chat_update_channel_user_count,
+        job: Jobs::Chat::UpdateChannelUserCount,
         args: {
           chat_channel_id: private_category_channel.id,
         },
@@ -256,7 +256,7 @@ RSpec.shared_examples "a chat channel model" do
       expect(membership.reload.following).to eq(true)
       expect(private_category_channel.user_count_stale).to eq(true)
       expect_job_enqueued(
-        job: :chat_update_channel_user_count,
+        job: Jobs::Chat::UpdateChannelUserCount,
         args: {
           chat_channel_id: private_category_channel.id,
         },
@@ -273,7 +273,7 @@ RSpec.shared_examples "a chat channel model" do
 
       expect(private_category_channel.user_count_stale).to eq(false)
       expect_not_enqueued_with(
-        job: :chat_update_channel_user_count,
+        job: Jobs::Chat::UpdateChannelUserCount,
         args: {
           chat_channel_id: private_category_channel.id,
         },
@@ -283,7 +283,7 @@ RSpec.shared_examples "a chat channel model" do
     it "does not recalculate user count if it's already been marked as stale" do
       private_category_channel.update!(user_count_stale: true)
       expect_not_enqueued_with(
-        job: :chat_update_channel_user_count,
+        job: Jobs::Chat::UpdateChannelUserCount,
         args: {
           chat_channel_id: private_category_channel.id,
         },
@@ -306,7 +306,7 @@ RSpec.shared_examples "a chat channel model" do
       expect(@membership.reload.following).to eq(false)
       expect(private_category_channel.user_count_stale).to eq(true)
       expect_job_enqueued(
-        job: :chat_update_channel_user_count,
+        job: Jobs::Chat::UpdateChannelUserCount,
         args: {
           chat_channel_id: private_category_channel.id,
         },
@@ -325,7 +325,7 @@ RSpec.shared_examples "a chat channel model" do
 
       expect(private_category_channel.user_count_stale).to eq(false)
       expect_job_enqueued(
-        job: :chat_update_channel_user_count,
+        job: Jobs::Chat::UpdateChannelUserCount,
         args: {
           chat_channel_id: private_category_channel.id,
         },
@@ -335,7 +335,7 @@ RSpec.shared_examples "a chat channel model" do
     it "does not recalculate user count if it's already been marked as stale" do
       private_category_channel.update!(user_count_stale: true)
       expect_not_enqueued_with(
-        job: :chat_update_channel_user_count,
+        job: Jobs::Chat::UpdateChannelUserCount,
         args: {
           chat_channel_id: private_category_channel.id,
         },

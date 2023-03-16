@@ -47,7 +47,7 @@ RSpec.describe(Chat::TrashChannel) do
       end
 
       it "queues a job to delete channel relations" do
-        expect { result }.to change(Jobs::ChatChannelDelete.jobs, :size).by(1)
+        expect { result }.to change(Jobs::Chat::ChannelDelete.jobs, :size).by(1)
       end
     end
   end

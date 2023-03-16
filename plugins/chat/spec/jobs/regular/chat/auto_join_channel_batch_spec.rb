@@ -65,7 +65,7 @@ describe Jobs::Chat::AutoJoinChannelBatch do
     it "enqueues the user count update job and marks the channel user count as stale" do
       subject.execute(chat_channel_id: channel.id, starts_at: user.id, ends_at: user.id)
       expect_job_enqueued(
-        job: :chat_update_channel_user_count,
+        job: Jobs::Chat::UpdateChannelUserCount,
         args: {
           chat_channel_id: channel.id,
         },
@@ -77,7 +77,7 @@ describe Jobs::Chat::AutoJoinChannelBatch do
     it "does not enqueue the user count update job or mark the channel user count as stale when there is more than use user" do
       user_2 = Fabricate(:user)
       expect_not_enqueued_with(
-        job: :chat_update_channel_user_count,
+        job: Jobs::Chat::,
         args: {
           chat_channel_id: channel.id,
         },
