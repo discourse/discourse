@@ -4077,7 +4077,7 @@ export default {
       tags: [
         {
           id: 1,
-          name: "test",
+          name: "important",
           topic_count: 2,
           staff: false,
         },
