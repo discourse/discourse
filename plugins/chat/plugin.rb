@@ -26,8 +26,6 @@ register_svg_icon "file-image"
 # route: /admin/plugins/chat
 add_admin_route "chat.admin.title", "chat"
 
-require_relative "app/core_ext/plugin_instance.rb"
-
 GlobalSetting.add_default(:allow_unsecure_chat_uploads, false)
 
 module ::Chat
@@ -63,6 +61,7 @@ after_initialize do
     Category.prepend Chat::CategoryExtension
     User.prepend Chat::UserExtension
     Jobs::UserEmail.prepend Chat::UserEmailExtension
+    Plugin::Instance.prepend Chat::PluginInstanceExtension
   end
 
   if Oneboxer.respond_to?(:register_local_handler)
