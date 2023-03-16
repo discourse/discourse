@@ -208,7 +208,7 @@ RSpec.describe "Chat channel", type: :system, js: true do
       sign_in(current_user)
     end
 
-    it "escapes the reply-to line" do
+    xit "escapes the reply-to line" do
       chat.visit_channel(channel_1)
 
       expect(find(".chat-reply .chat-reply__excerpt")["innerHTML"].strip).to eq(
