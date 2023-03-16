@@ -15,7 +15,7 @@
         class="chat-channel-card__name-container"
       >
         <span class="chat-channel-card__name">
-          {{replace-emoji @channel.title}}
+          {{replace-emoji @channel.escapedTitle}}
         </span>
         {{#if @channel.chatable.read_restricted}}
           {{d-icon "lock" class="chat-channel-card__read-restricted"}}
@@ -47,7 +47,7 @@
 
     {{#if @channel.description}}
       <div class="chat-channel-card__description">
-        {{replace-emoji @channel.description}}
+        {{replace-emoji @channel.escapedDescription}}
       </div>
     {{/if}}
 

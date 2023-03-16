@@ -7,47 +7,18 @@ class FinalDestination
     class LookupFailedError < SocketError
     end
 
-    # This is a list of private IPv4 IP ranges that are not allowed to be globally reachable as given by
-    # https://www.iana.org/assignments/iana-ipv4-special-registry/iana-ipv4-special-registry.xhtml.
-    PRIVATE_IPV4_RANGES = [
-      IPAddr.new("0.0.0.0/8"),
-      IPAddr.new("10.0.0.0/8"),
-      IPAddr.new("100.64.0.0/10"),
-      IPAddr.new("127.0.0.0/8"),
-      IPAddr.new("169.254.0.0/16"),
-      IPAddr.new("172.16.0.0/12"),
-      IPAddr.new("192.0.0.0/24"),
-      IPAddr.new("192.0.0.0/29"),
-      IPAddr.new("192.0.0.8/32"),
-      IPAddr.new("192.0.0.170/32"),
-      IPAddr.new("192.0.0.171/32"),
-      IPAddr.new("192.0.2.0/24"),
-      IPAddr.new("192.168.0.0/16"),
-      IPAddr.new("192.175.48.0/24"),
-      IPAddr.new("198.18.0.0/15"),
-      IPAddr.new("198.51.100.0/24"),
-      IPAddr.new("203.0.113.0/24"),
-      IPAddr.new("240.0.0.0/4"),
-      IPAddr.new("255.255.255.255/32"),
-    ]
-
-    # This is a list of private IPv6 IP ranges that are not allowed to be globally reachable as given by
-    # https://www.iana.org/assignments/iana-ipv6-special-registry/iana-ipv6-special-registry.xhtml.
-    #
-    # ::ffff:0:0/96 is excluded from the list because it is used for IPv4-mapped IPv6 addresses which is something we want to allow.
-    PRIVATE_IPV6_RANGES = [
-      IPAddr.new("::1/128"),
-      IPAddr.new("::/128"),
-      IPAddr.new("64:ff9b:1::/48"),
-      IPAddr.new("100::/64"),
-      IPAddr.new("2001::/23"),
-      IPAddr.new("2001:2::/48"),
-      IPAddr.new("2001:db8::/32"),
-      IPAddr.new("fc00::/7"),
-      IPAddr.new("fe80::/10"),
-    ]
-
-    PRIVATE_IP_RANGES = PRIVATE_IPV4_RANGES + PRIVATE_IPV6_RANGES
+    def self.standard_private_ranges
+      @private_ranges ||= [
+        IPAddr.new("0.0.0.0/8"),
+        IPAddr.new("127.0.0.1"),
+        IPAddr.new("172.16.0.0/12"),
+        IPAddr.new("192.168.0.0/16"),
+        IPAddr.new("10.0.0.0/8"),
+        IPAddr.new("::1"),
+        IPAddr.new("fc00::/7"),
+        IPAddr.new("fe80::/10"),
+      ]
+    end
 
     def self.blocked_ip_blocks
       SiteSetting
@@ -83,9 +54,10 @@ class FinalDestination
 
     def self.ip_allowed?(ip)
       ip = ip.is_a?(IPAddr) ? ip : IPAddr.new(ip)
-      ip = ip.native
 
-      return false if ip_in_ranges?(ip, blocked_ip_blocks) || ip_in_ranges?(ip, PRIVATE_IP_RANGES)
+      if ip_in_ranges?(ip, blocked_ip_blocks) || ip_in_ranges?(ip, standard_private_ranges)
+        return false
+      end
 
       true
     end

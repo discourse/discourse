@@ -21,7 +21,7 @@
               data-title={{result.fancy_title}}
             >
               <TopicStatus @topic={{result}} @disableActions={{true}} />
-              {{replace-emoji result.title}}
+              {{replace-emoji result.fancy_title}}
               <div class="search-category">
                 {{#if result.category.parentCategory}}
                   {{category-link result.category.parentCategory}}

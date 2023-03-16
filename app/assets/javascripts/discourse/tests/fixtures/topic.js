@@ -6497,7 +6497,7 @@ export default {
         },
         {
           id: 419,
-          name: "<h1>Tim Stone</h1>",
+          name: "Tim Stone",
           username: "tms",
           avatar_template: "/letter_avatar_proxy/v4/letter/t/3be4f8/{size}.png",
           uploaded_avatar_id: 40181,
