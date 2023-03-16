@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Jobs::ChatSendMessageNotifications do
+RSpec.describe Jobs::Chat::SendMessageNotifications do
   describe "#execute" do
     context "when the message doesn't exist" do
       it "does nothing" do

@@ -49,7 +49,7 @@ describe Chat::ChannelArchiveService do
         )
       expect(
         job_enqueued?(
-          job: :chat_channel_archive,
+          job: Jobs::Chat::ChannelArchive,
           args: {
             chat_channel_archive_id: channel_archive.id,
           },

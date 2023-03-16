@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Jobs::ChatDeleteUserMessages do
+RSpec.describe Jobs::Chat::DeleteUserMessages do
   describe "#execute" do
     fab!(:user_1) { Fabricate(:user) }
     fab!(:channel) { Fabricate(:chat_channel) }

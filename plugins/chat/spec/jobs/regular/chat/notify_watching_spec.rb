@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Jobs::ChatNotifyWatching do
+RSpec.describe Jobs::Chat::NotifyWatching do
   fab!(:user1) { Fabricate(:user) }
   fab!(:user2) { Fabricate(:user) }
   fab!(:user3) { Fabricate(:user) }

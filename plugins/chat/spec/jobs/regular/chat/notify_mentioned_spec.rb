@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe Jobs::ChatNotifyMentioned do
+describe Jobs::Chat::NotifyMentioned do
   fab!(:user_1) { Fabricate(:user) }
   fab!(:user_2) { Fabricate(:user) }
   fab!(:public_channel) { Fabricate(:category_channel) }

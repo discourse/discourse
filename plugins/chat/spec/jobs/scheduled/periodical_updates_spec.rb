@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-RSpec.describe Jobs::ChatPeriodicalUpdates do
+RSpec.describe Jobs::Chat::PeriodicalUpdates do
   it "works" do
     # does not blow up, no mocks, everything is called
-    Jobs::ChatPeriodicalUpdates.new.execute(nil)
+    Jobs::Chat::PeriodicalUpdates.new.execute(nil)
   end
 end

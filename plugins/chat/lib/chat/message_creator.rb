@@ -58,7 +58,7 @@ module Chat
         @chat_message.attach_uploads(uploads)
         Chat::Draft.where(user_id: @user.id, chat_channel_id: @chat_channel.id).destroy_all
         Chat::Publisher.publish_new!(@chat_channel, @chat_message, @staged_id)
-        Jobs.enqueue(:chat_process_message, { chat_message_id: @chat_message.id })
+        Jobs.enqueue(Jobs::Chat::ProcessMessage, { chat_message_id: @chat_message.id })
         Chat::Notifier.notify_new(chat_message: @chat_message, timestamp: @chat_message.created_at)
         @chat_channel.touch(:last_message_sent_at)
         DiscourseEvent.trigger(:chat_message_created, @chat_message, @chat_channel, @user)

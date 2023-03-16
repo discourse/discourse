@@ -198,7 +198,7 @@ RSpec.describe Chat::Api::ChannelsController do
           expect(response.status).to eq(200)
           expect(channel_1.reload.trashed?).to eq(true)
           expect(
-            job_enqueued?(job: :chat_channel_delete, args: { chat_channel_id: channel_1.id }),
+            job_enqueued?(job: Jobs::Chat::ChannelDelete, args: { chat_channel_id: channel_1.id }),
           ).to eq(true)
           expect(
             UserHistory.exists?(

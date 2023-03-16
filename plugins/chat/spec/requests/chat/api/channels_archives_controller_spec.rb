@@ -65,7 +65,7 @@ RSpec.describe Chat::Api::ChannelsArchivesController do
       channel_archive = Chat::ChannelArchive.find_by(chat_channel: channel)
       expect(
         job_enqueued?(
-          job: :chat_channel_archive,
+          job: Jobs::Chat::ChannelArchive,
           args: {
             chat_channel_archive_id: channel_archive.id,
           },
@@ -80,7 +80,7 @@ RSpec.describe Chat::Api::ChannelsArchivesController do
       channel_archive = Chat::ChannelArchive.find_by(chat_channel: channel)
       expect(
         job_enqueued?(
-          job: :chat_channel_archive,
+          job: Jobs::Chat::ChannelArchive,
           args: {
             chat_channel_archive_id: channel_archive.id,
           },

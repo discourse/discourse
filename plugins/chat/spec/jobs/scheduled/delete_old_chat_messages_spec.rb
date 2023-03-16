@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe Jobs::ChatDeleteOldMessages do
+describe Jobs::Chat::DeleteOldMessages do
   base_date = DateTime.parse("2020-12-01 00:00 UTC")
 
   fab!(:public_channel) { Fabricate(:category_channel) }

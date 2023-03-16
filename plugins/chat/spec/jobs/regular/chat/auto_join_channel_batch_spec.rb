@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe Jobs::ChatAutoJoinChannelBatch do
+describe Jobs::Chat::AutoJoinChannelBatch do
   describe "#execute" do
     fab!(:category) { Fabricate(:category) }
     let!(:user) { Fabricate(:user, last_seen_at: 15.minutes.ago) }

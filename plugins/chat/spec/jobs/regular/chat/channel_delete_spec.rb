@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::ChatChannelDelete do
+describe Jobs::Chat::ChannelDelete do
   fab!(:chat_channel) { Fabricate(:chat_channel) }
   fab!(:user1) { Fabricate(:user) }
   fab!(:user2) { Fabricate(:user) }

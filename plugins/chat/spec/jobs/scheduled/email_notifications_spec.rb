@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::ChatEmailNotifications do
+describe Jobs::Chat::EmailNotifications do
   before { Jobs.run_immediately! }
 
   context "when chat is enabled" do
@@ -9,7 +9,7 @@ describe Jobs::ChatEmailNotifications do
     it "starts the mailer" do
       Chat::Mailer.expects(:send_unread_mentions_summary)
 
-      Jobs.enqueue(:chat_email_notifications)
+      Jobs.enqueue(Jobs::Chat::EmailNotifications)
     end
   end
 
@@ -19,7 +19,7 @@ describe Jobs::ChatEmailNotifications do
     it "does nothing" do
       Chat::Mailer.expects(:send_unread_mentions_summary).never
 
-      Jobs.enqueue(:chat_email_notifications)
+      Jobs.enqueue(Jobs::Chat::EmailNotifications)
     end
   end
 end

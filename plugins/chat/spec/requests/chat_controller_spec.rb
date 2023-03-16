@@ -432,7 +432,7 @@ RSpec.describe Chat::ChatController do
         sign_in(Fabricate(:admin))
 
         expect_enqueued_with(
-          job: :chat_process_message,
+          job: Jobs::Chat::ProcessMessage,
           args: {
             chat_message_id: chat_message.id,
           },
@@ -466,7 +466,7 @@ RSpec.describe Chat::ChatController do
           chat_message.update!(message: "new content")
 
           expect_enqueued_with(
-            job: :chat_process_message,
+            job: Jobs::Chat::ProcessMessage,
             args: {
               chat_message_id: chat_message.id,
               is_dirty: true,

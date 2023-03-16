@@ -58,7 +58,7 @@ module Chat
     end
 
     def enqueue_delete_channel_relations_job(channel:, **)
-      Jobs.enqueue(:chat_channel_delete, chat_channel_id: channel.id)
+      Jobs.enqueue(Jobs::Chat::ChannelDelete, chat_channel_id: channel.id)
     end
   end
 end

@@ -24,7 +24,7 @@
 # creating user can invite any `welcome_to_join` users to the channel. Target
 # users who are ignoring or muting the creating user _do not_ fall into this bucket.
 #
-# The ignore/mute filtering is also applied via the ChatNotifyWatching job,
+# The ignore/mute filtering is also applied via the Jobs::Chat::NotifyWatching job,
 # which prevents desktop / push notifications being sent.
 module Chat
   class Notifier
@@ -39,7 +39,7 @@ module Chat
 
       def notify_edit(chat_message:, timestamp:)
         Jobs.enqueue(
-          :chat_send_message_notifications,
+          Jobs::Chat::SendMessageNotifications,
           chat_message_id: chat_message.id,
           timestamp: timestamp.iso8601(6),
           reason: "edit",
@@ -48,7 +48,7 @@ module Chat
 
       def notify_new(chat_message:, timestamp:)
         Jobs.enqueue(
-          :chat_send_message_notifications,
+          Jobs::Chat::SendMessageNotifications,
           chat_message_id: chat_message.id,
           timestamp: timestamp.iso8601(6),
           reason: "new",
@@ -271,7 +271,7 @@ module Chat
 
     # Filters out users from global, here, group, and direct mentions that are
     # ignoring or muting the creator of the message, so they will not receive
-    # a notification via the ChatNotifyMentioned job and are not prompted for
+    # a notification via the Jobs::Chat::NotifyMentioned job and are not prompted for
     # invitation by the creator.
     def filter_users_ignoring_or_muting_creator(to_notify, already_covered_ids)
       screen_targets = already_covered_ids.concat(to_notify[:welcome_to_join].map(&:id))
@@ -297,7 +297,7 @@ module Chat
 
     def notify_mentioned_users(to_notify, already_notified_user_ids: [])
       Jobs.enqueue(
-        :chat_notify_mentioned,
+        Jobs::Chat::NotifyMentioned,
         {
           chat_message_id: @chat_message.id,
           to_notify_ids_map: to_notify.as_json,
@@ -309,7 +309,7 @@ module Chat
 
     def notify_watching_users(except: [])
       Jobs.enqueue(
-        :chat_notify_watching,
+        Jobs::Chat::NotifyWatching,
         { chat_message_id: @chat_message.id, except_user_ids: except, timestamp: @timestamp },
       )
     end

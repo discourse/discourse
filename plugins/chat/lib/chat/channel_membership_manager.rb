@@ -55,7 +55,7 @@ module Chat
     def recalculate_user_count
       return if Chat::Channel.exists?(id: channel.id, user_count_stale: true)
       channel.update!(user_count_stale: true)
-      Jobs.enqueue_in(3.seconds, :chat_update_channel_user_count, chat_channel_id: channel.id)
+      Jobs.enqueue_in(3.seconds, Jobs::Chat::UpdateChannelUserCount, chat_channel_id: channel.id)
     end
 
     def unfollow_all_users
@@ -66,12 +66,12 @@ module Chat
     end
 
     def enforce_automatic_channel_memberships
-      Jobs.enqueue(:chat_auto_manage_channel_memberships, chat_channel_id: channel.id)
+      Jobs.enqueue(Jobs::Chat::AutoManageChannelMemberships, chat_channel_id: channel.id)
     end
 
     def enforce_automatic_user_membership(user)
       Jobs.enqueue(
-        :chat_auto_join_channel_batch,
+        Jobs::Chat::AutoJoinChannelBatch,
         chat_channel_id: channel.id,
         starts_at: user.id,
         ends_at: user.id,

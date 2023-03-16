@@ -462,7 +462,7 @@ after_initialize do
   }
 
   register_user_destroyer_on_content_deletion_callback(
-    Proc.new { |user| Jobs.enqueue(:chat_delete_user_messages, user_id: user.id) },
+    Proc.new { |user| Jobs.enqueue(Jobs::Chat::DeleteUserMessages, user_id: user.id) },
   )
 
   register_bookmarkable(Chat::MessageBookmarkable)

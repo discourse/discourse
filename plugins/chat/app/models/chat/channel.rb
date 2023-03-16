@@ -98,11 +98,11 @@ module Chat
       update_counts
     end
 
-    # TODO (martin) Move ChatUpdateUserCountsForChannels into here
+    # TODO (martin) Move Jobs::Chat::UpdateUserCountsForChannels into here
     def self.update_counts
       # NOTE: Chat::Channel#messages_count is not updated every time
       # a message is created or deleted in a channel, so it should not
-      # be displayed in the UI. It is updated eventually via Jobs::ChatPeriodicalUpdates
+      # be displayed in the UI. It is updated eventually via Jobs::Chat::PeriodicalUpdates
       DB.exec <<~SQL
       UPDATE chat_channels channels
       SET messages_count = subquery.messages_count

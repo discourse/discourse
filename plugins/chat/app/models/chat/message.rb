@@ -161,7 +161,7 @@ module Chat
       args[:queue] = priority.to_s if priority && priority != :normal
       args[:is_dirty] = true if previous_cooked != new_cooked
 
-      Jobs.enqueue(:chat_process_message, args)
+      Jobs.enqueue(Jobs::Chat::ProcessMessage, args)
     end
 
     def self.uncooked

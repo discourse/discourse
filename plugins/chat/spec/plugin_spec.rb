@@ -170,7 +170,7 @@ describe Chat do
         user_2.user_chat_channel_memberships.create!(chat_channel: chat_channel, following: true)
         user_3.user_chat_channel_memberships.create!(chat_channel: chat_channel, following: true)
         user_4.user_chat_channel_memberships.create!(chat_channel: chat_channel, following: true)
-        Jobs::ChatUpdateUserCountsForChannels.new.execute({})
+        Jobs::Chat::UpdateUserCountsForChannels.new.execute({})
 
         expect(Oneboxer.preview(chat_url)).to match_html <<~HTML
           <aside class="onebox chat-onebox">
@@ -423,7 +423,7 @@ describe Chat do
       deletion_opts = { delete_posts: true }
 
       expect { UserDestroyer.new(Discourse.system_user).destroy(user, deletion_opts) }.to change(
-        Jobs::ChatDeleteUserMessages.jobs,
+        Jobs::Chat::DeleteUserMessages.jobs,
         :size,
       ).by(1)
     end

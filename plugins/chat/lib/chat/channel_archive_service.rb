@@ -49,7 +49,7 @@ module Chat
             destination_category_id: topic_params[:category_id],
             destination_tags: topic_params[:tags],
           )
-        Jobs.enqueue(:chat_channel_archive, chat_channel_archive_id: archive.id)
+        Jobs.enqueue(Jobs::Chat::ChannelArchive, chat_channel_archive_id: archive.id)
 
         archive
       end
@@ -58,7 +58,7 @@ module Chat
     def self.retry_archive_process(chat_channel:)
       return if !chat_channel.chat_channel_archive&.failed?
       Jobs.enqueue(
-        :chat_channel_archive,
+        Jobs::Chat::ChannelArchive,
         chat_channel_archive_id: chat_channel.chat_channel_archive.id,
       )
       chat_channel.chat_channel_archive

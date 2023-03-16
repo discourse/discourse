@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe Jobs::ChatAutoJoinUsers do
+describe Jobs::Chat::AutoJoinUsers do
   it "works" do
     Jobs.run_immediately!
     channel = Fabricate(:category_channel, auto_join_users: true)
