@@ -24,6 +24,7 @@ export function showUserTip(options) {
     hideOnClick: false,
     trigger: "manual",
     theme: "user-tips",
+    zIndex: 399, // Composer z-index is 400
 
     // It must be interactive to make buttons work.
     interactive: true,
