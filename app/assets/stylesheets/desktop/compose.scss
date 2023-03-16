@@ -91,7 +91,7 @@
   z-index: z("composer", "dropdown") + 1;
   padding: 1.5em;
   box-shadow: shadow("dropdown");
-  background: var(--highlight-medium);
+  background: var(--highlight-bg);
 
   &.urgent {
     background: var(--danger-low);

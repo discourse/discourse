@@ -1,5 +1,3 @@
-/** @module ChatApi */
-
 import Service, { inject as service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import UserChatChannelMembership from "discourse/plugins/chat/discourse/models/user-chat-channel-membership";
@@ -8,10 +6,11 @@ import Collection from "../lib/collection";
 /**
  * Chat API service. Provides methods to interact with the chat API.
  *
- * @class
+ * @module ChatApi
  * @implements {@ember/service}
  */
 export default class ChatApi extends Service {
+  @service chat;
   @service chatChannelsManager;
 
   /**
@@ -30,8 +29,24 @@ export default class ChatApi extends Service {
   }
 
   /**
+   * Get a thread in a channel by its ID.
+   * @param {number} channelId - The ID of the channel.
+   * @param {number} threadId - The ID of the thread.
+   * @returns {Promise}
+   *
+   * @example
+   *
+   *    this.chatApi.thread(5, 1).then(thread => { ... })
+   */
+  thread(channelId, threadId) {
+    return this.#getRequest(`/channels/${channelId}/threads/${threadId}`).then(
+      (result) => this.chat.activeChannel.threadsManager.store(result.thread)
+    );
+  }
+
+  /**
    * List all accessible category channels of the current user.
-   * @returns {module:Collection}
+   * @returns {Collection}
    *
    * @example
    *
@@ -70,17 +85,14 @@ export default class ChatApi extends Service {
   /**
    * Destroys a channel.
    * @param {number} channelId - The ID of the channel.
-   * @param {string} channelName - The name of the channel to be destroyed, used as confirmation.
    * @returns {Promise}
    *
    * @example
    *
-   *    this.chatApi.destroyChannel(1, "foo").then(() => { ... })
+   *    this.chatApi.destroyChannel(1).then(() => { ... })
    */
-  destroyChannel(channelId, channelName) {
-    return this.#deleteRequest(`/channels/${channelId}`, {
-      channel: { name_confirmation: channelName },
-    });
+  destroyChannel(channelId) {
+    return this.#deleteRequest(`/channels/${channelId}`);
   }
 
   /**
@@ -174,7 +186,7 @@ export default class ChatApi extends Service {
   /**
    * Lists members of a channel.
    * @param {number} channelId - The ID of the channel.
-   * @returns {module:Collection}
+   * @returns {Collection}
    */
   listChannelMemberships(channelId) {
     return new Collection(
@@ -219,6 +231,39 @@ export default class ChatApi extends Service {
     return this.#deleteRequest(`/channels/${channelId}/memberships/me`).then(
       (result) => UserChatChannelMembership.create(result.membership)
     );
+  }
+
+  /**
+   * Returns messages of a channel, from the last message or a specificed target.
+   * @param {number} channelId - The ID of the channel.
+   * @param {object} data - Params of the query.
+   * @param {integer} data.targetMessageId - ID of the targeted message.
+   * @param {integer} data.messageId - ID of the targeted message.
+   * @param {integer} data.direction - Fetch past or future messages.
+   * @param {integer} data.pageSize - Max number of messages to fetch.
+   * @returns {Promise}
+   */
+  messages(channelId, data = {}) {
+    let path;
+    const args = {};
+
+    if (data.targetMessageId) {
+      path = `/chat/lookup/${data.targetMessageId}`;
+      args.chat_channel_id = channelId;
+    } else {
+      args.page_size = data.pageSize;
+      path = `/chat/${channelId}/messages`;
+
+      if (data.messageId) {
+        args.message_id = data.messageId;
+      }
+
+      if (data.direction) {
+        args.direction = data.direction;
+      }
+    }
+
+    return ajax(path, { data: args });
   }
 
   /**

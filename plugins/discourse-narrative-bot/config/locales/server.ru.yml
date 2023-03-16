@@ -45,11 +45,6 @@ ru:
       trigger: "кости"
       invalid: |-
         Даже математически невозможно выдать эту комбинацию костей. :confounded:
-      not_enough_dice:
-        one: "У меня только %{count} кость. [Посмотрите](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), что это такое!"
-        few: "У меня только %{count} кости. [Посмотрите](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), что это такое!"
-        many: "У меня только %{count} костей. [Посмотрите](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), что это такое!"
-        other: "У меня только %{count} костей. [Посмотрите](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), что это такое!"
       out_of_range: |-
         Знаете ли вы, что [максимальное количество сторон](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) в кубиках может быть 120?
       results: |-

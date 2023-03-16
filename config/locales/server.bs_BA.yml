@@ -901,9 +901,6 @@ bs_BA:
   subject_pm: "[PM] "
   user_notifications:
     previous_discussion: "Prošli Postovi"
-    unsubscribe:
-      title: "Odjavi se"
-      description: "Niste zainteresovani za ove email-e? Nema problema! Kliknite ovdje da se odjavite:"
     posted_by: "Kreirano od %{username} na dan %{post_date}"
     digest:
       why: "Ukratko šta se dešavalo na %{site_link} od vaše zadnje posjete %{last_seen_at}."
@@ -932,8 +929,6 @@ bs_BA:
     see_more: "Više"
     search_title: "Pretraži stranicu"
     search_button: "Pretraži"
-  deleted: "obrisano"
-  image: "slika"
   upload:
     edit_reason: "downloaded local copies of images"
     unauthorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
@@ -1057,7 +1052,6 @@ bs_BA:
         fields:
           contact_url:
             placeholder: "https://www.example.com/contact-us"
-  joined: "Registrovan"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} vas je spomenuo/la u "%{topic}" - %{site_title}'
@@ -1081,23 +1075,24 @@ bs_BA:
       medium: "Srednije"
       high: "Visoko"
     actions:
-      agree_and_keep:
-        description: "Složij se sa prijavom ali ostavi prijavljenu objavu neizmjenjenom"
+      agree:
+        title: "Da"
       agree_and_suspend:
-        title: "Suspend User"
         description: "Složij se sa prijavom i suspendiraj prijavljenog korisnika (suspend)"
       agree_and_silence:
-        title: "Stišaj korisnika"
         description: "Složij se sa prijavom i utišaj prijavljenog korisnika (silence)"
       delete_single:
         title: "Delete"
       disagree:
-        title: "Disagree"
+        title: "Ne"
       ignore:
         title: "Zanemari"
+      ignore_and_do_nothing:
+        title: "Ne radi ništa"
       approve:
         title: "Odobri"
       reject_user:
+        title: "Delete User..."
         delete:
           title: "Delete User"
       reject:

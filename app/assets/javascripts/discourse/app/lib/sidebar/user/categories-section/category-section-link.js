@@ -7,6 +7,17 @@ import { bind } from "discourse-common/utils/decorators";
 import Category from "discourse/models/category";
 import { UNREAD_LIST_DESTINATION } from "discourse/controllers/preferences/sidebar";
 
+const UNREAD_AND_NEW_COUNTABLE = {
+  propertyName: "unreadAndNewCount",
+  badgeTextFunction: (count) => count.toString(),
+  route: "discovery.newCategory",
+  refreshCountFunction: ({ topicTrackingState, category }) => {
+    return topicTrackingState.countNewAndUnread({
+      categoryId: category.id,
+    });
+  },
+};
+
 const DEFAULT_COUNTABLES = [
   {
     propertyName: "totalUnread",
@@ -74,7 +85,13 @@ export default class CategorySectionLink {
   }
 
   #countables() {
-    const countables = [...DEFAULT_COUNTABLES];
+    const countables = [];
+
+    if (this.#linkToNew) {
+      countables.push(UNREAD_AND_NEW_COUNTABLE);
+    } else {
+      countables.push(...DEFAULT_COUNTABLES);
+    }
 
     if (customCountables.length > 0) {
       customCountables.forEach((customCountable) => {
@@ -157,7 +174,7 @@ export default class CategorySectionLink {
   }
 
   get badgeText() {
-    if (this.hideCount) {
+    if (this.hideCount && !this.#linkToNew) {
       return;
     }
 
@@ -171,7 +188,10 @@ export default class CategorySectionLink {
   }
 
   get route() {
-    if (this.currentUser?.sidebarListDestination === UNREAD_LIST_DESTINATION) {
+    if (
+      this.currentUser?.sidebarListDestination === UNREAD_LIST_DESTINATION ||
+      this.#linkToNew
+    ) {
       const activeCountable = this.activeCountable;
 
       if (activeCountable) {
@@ -201,8 +221,12 @@ export default class CategorySectionLink {
   }
 
   get suffixValue() {
-    if (this.hideCount && this.activeCountable) {
+    if (this.hideCount && this.activeCountable && !this.#linkToNew) {
       return "circle";
     }
+  }
+
+  get #linkToNew() {
+    return !!this.currentUser?.new_new_view_enabled;
   }
 }

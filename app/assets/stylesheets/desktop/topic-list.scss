@@ -202,10 +202,10 @@
     }
     // reduce width for more title space
     .posts {
-      width: 50px;
+      width: 3em;
     }
     .posters {
-      width: 30px;
+      width: 2em;
       text-align: center;
     }
     // show only the first poster
@@ -228,24 +228,21 @@
 }
 
 @include breakpoint(medium) {
-  // slightly smaller font, tighten spacing on nav pills
   .nav-pills {
     > li > a {
       font-size: var(--font-0);
-      padding: 7px 10px;
+      padding: 0.45em 0.67em;
     }
   }
 
   .topic-list {
-    // tighter table header spacing
-    .topic-list-item .topic-list-data:first-of-type {
-      padding: 12px 5px;
-    }
-    // smaller table cell spacing
     .topic-list-data {
-      padding: 10px;
       font-size: var(--font-0);
     }
+  }
+
+  .topic-list-header {
+    font-size: var(--font-down-1);
   }
 }
 

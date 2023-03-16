@@ -170,13 +170,12 @@ describe Chat::ChatMailer do
     it "doesn't mix mentions from other users" do
       mention.destroy!
       user_2 = Fabricate(:user, groups: [chatters_group], last_seen_at: 20.minutes.ago)
-      user_2_membership =
-        Fabricate(
-          :user_chat_channel_membership,
-          user: user_2,
-          chat_channel: chat_channel,
-          last_read_message_id: nil,
-        )
+      Fabricate(
+        :user_chat_channel_membership,
+        user: user_2,
+        chat_channel: chat_channel,
+        last_read_message_id: nil,
+      )
       new_message = Fabricate(:chat_message, chat_channel: chat_channel, user: sender)
       Fabricate(:chat_mention, user: user_2, chat_message: new_message)
 
@@ -266,7 +265,7 @@ describe Chat::ChatMailer do
       assert_only_queued_once
     end
 
-    it "Doesn't mix or update mentions from other users when joining tables" do
+    it "doesn't mix or update mentions from other users when joining tables" do
       user_2 = Fabricate(:user, groups: [chatters_group], last_seen_at: 20.minutes.ago)
       user_2_membership =
         Fabricate(

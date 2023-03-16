@@ -89,7 +89,7 @@ class TopicsController < ApplicationController
     end
 
     if opts[:print]
-      raise Discourse::InvalidAccess unless SiteSetting.max_prints_per_hour_per_user > 0
+      raise Discourse::InvalidAccess if SiteSetting.max_prints_per_hour_per_user.zero?
       begin
         unless @guardian.is_admin?
           RateLimiter.new(
@@ -649,7 +649,9 @@ class TopicsController < ApplicationController
     force_destroy = ActiveModel::Type::Boolean.new.cast(params[:force_destroy])
 
     if force_destroy
-      if !guardian.can_permanently_delete?(topic)
+      if !topic
+        raise Discourse::InvalidAccess
+      elsif !guardian.can_permanently_delete?(topic)
         return render_json_error topic.cannot_permanently_delete_reason(current_user), status: 403
       end
     else
@@ -841,7 +843,7 @@ class TopicsController < ApplicationController
 
     if params[:title].present?
       # when creating a new topic, ensure the 1st post is a regular post
-      if Post.where(topic: topic, id: post_ids).order(:post_number).pluck_first(:post_type) !=
+      if Post.where(topic: topic, id: post_ids).order(:post_number).pick(:post_type) !=
            Post.types[:regular]
         return(
           render_json_error(
@@ -1229,7 +1231,7 @@ class TopicsController < ApplicationController
 
     respond_to do |format|
       format.html do
-        @tags = SiteSetting.tagging_enabled ? @topic_view.topic.tags : []
+        @tags = SiteSetting.tagging_enabled ? @topic_view.topic.tags.visible(guardian) : []
         @breadcrumbs = helpers.categories_breadcrumb(@topic_view.topic) || []
         @description_meta =
           @topic_view.topic.excerpt.present? ? @topic_view.topic.excerpt : @topic_view.summary

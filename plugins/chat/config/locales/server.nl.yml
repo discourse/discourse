@@ -23,6 +23,7 @@ nl:
     default_emoji_reactions: "Standaard emojireacties voor chatberichten. Voeg maximaal 5 emoji's toe voor een snelle reactie."
     direct_message_enabled_groups: "Sta gebruikers binnen deze groepen toe privéchats van gebruiker tot gebruiker te maken. Opmerking: medewerkers kunnen altijd privéchats maken en gebruikers kunnen reageren op privéchats die zijn gestart door gebruikers die toestemming hebben om ze te maken."
     chat_message_flag_allowed_groups: "Gebruikers in deze groepen mogen chatberichten markeren."
+    max_mentions_per_chat_message: "Maximale aantal @naam-vermeldingen dat een gebruiker in een chatbericht kan gebruiken."
     chat_max_direct_message_users: "Gebruikers kunnen niet meer dan dit aantal andere gebruikers toevoegen bij het maken van een nieuw direct bericht. Stel dit in op 0 om alleen berichten aan een gebruiker zelf toe te staan. Medewerkers zijn uitgezonderd van deze instelling."
     chat_allow_archiving_channels: "Medewerkers toestaan om berichten in een topic te archiveren bij het sluiten van een kanaal."
     errors:
@@ -43,16 +44,15 @@ nl:
     deleted_chat_username: verwijderd
     errors:
       channel_exists_for_category: "Er bestaat al een kanaal voor deze categorie en naam"
-      channel_new_message_disallowed: "Het kanaal is %{status}, er kunnen geen nieuwe berichten worden gestuurd"
-      channel_modify_message_disallowed: "Het kanaal is %{status}, er kunnen geen berichten worden bewerkt of verwijderd"
       user_cannot_send_message: "Je kunt op dit moment geen berichten sturen."
       rate_limit_exceeded: "De limiet van chatberichten die binnen 30 seconden kunnen worden gestuurd is overschreden"
       auto_silence_from_flags: "Chatbericht gemarkeerd met een score die hoog genoeg is om de gebruiker te dempen."
       channel_cannot_be_archived: "Het kanaal kan op dit moment niet worden gearchiveerd, het moet gesloten zijn of open voor archivering."
       duplicate_message: "Je hebt te kort geleden een identiek bericht geplaatst."
       delete_channel_failed: "Kanaal verwijderen mislukt, probeer het opnieuw."
-      minimum_length_not_met: "Bericht is te kort, moet minimaal %{minimum} tekens bevatten."
-      message_too_long: "Bericht is te lang, berichten mogen maximaal %{maximum} tekens lang zijn."
+      message_too_long:
+        one: "Bericht is te lang, berichten mogen maximaal %{count} tekens lang zijn."
+        other: "Bericht is te lang, berichten mogen maximaal %{count} tekens lang zijn."
       max_reactions_limit_reached: "Nieuwe reacties op dit bericht zijn niet toegestaan."
       message_move_invalid_channel: "Het bron- en bestemmingskanaal moeten openbare kanalen zijn."
       message_move_no_messages_found: "Er zijn geen berichten gevonden met de opgegeven bericht-ID's."
@@ -63,9 +63,7 @@ nl:
       actor_disallowed_dms: "Je hebt ervoor gekozen om te voorkomen dat gebruikers je privé- en directe berichten sturen, dus je kunt geen nieuwe directe berichten maken."
       actor_preventing_target_user_from_dm: "Je hebt ervoor gekozen om te voorkomen dat %{username} je privé- en directe berichten stuurt, dus je kunt geen nieuwe directe berichten maken."
       user_cannot_send_direct_messages: "Sorry, je kunt geen directe berichten sturen."
-      over_chat_max_direct_message_users:
-        one: "Je kunt alleen een direct bericht met jezelf maken."
-        other: "Je kunt geen direct bericht met meer dan %{count} andere gebruikers maken."
+      over_chat_max_direct_message_users_allow_self: "Je kunt alleen een direct bericht met jezelf maken."
     reviewables:
       message_already_handled: "Bedankt, maar we hebben dat bericht al beoordeeld en vastgesteld dat het niet opnieuw hoeft te worden gemarkeerd."
       actions:
@@ -102,20 +100,16 @@ nl:
         transcript_title: "Transcript van eerdere berichten in %{channel_name}"
         transcript_body: "Om je meer context te geven, hebben we een transcript van de vorige berichten opgenomen in deze conversatie (maximaal tien):\n\n%{transcript}"
     channel:
-      statuses:
-        read_only: "Alleen-lezen"
-        archived: "Gearchiveerd"
-        closed: "Gesloten"
-        open: "Open"
       archive:
         first_post_raw: "Dit topic is een archief van het chatkanaal [%{channel_name}](%{channel_url})."
       messages_moved:
         one: "@%{acting_username} heeft een bericht verplaatst naar het kanaal [%{channel_name}](%{first_moved_message_url})."
         other: "@%{acting_username} heeft %{count} berichten verplaatst naar het kanaal [%{channel_name}](%{first_moved_message_url})."
       dm_title:
-        single_user: "%{user}"
-        multi_user: "%{users}"
-        multi_user_truncated: "%{users} en %{leftover} anderen"
+        single_user: "%{username}"
+        multi_user_truncated:
+          one: "%{comma_separated_usernames} en %{count} ander"
+          other: "%{comma_separated_usernames} en %{count} anderen"
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "bevat niet-ASCII-tekens"
@@ -168,7 +162,16 @@ nl:
       from: "%{site_name}"
       subject:
         direct_message_from_1: "[%{email_prefix}] Nieuw bericht van %{username}"
+        direct_message_from_2: "[%{email_prefix}] Nieuw bericht van %{username1} en %{username2}"
+        direct_message_from_more:
+          one: "[%{email_prefix}] Nieuw bericht van %{username} en %{count} ander"
+          other: "[%{email_prefix}] Nieuw bericht van %{username} en %{count} anderen"
         chat_channel_1: "[%{email_prefix}] Nieuw bericht in %{channel}"
+        chat_channel_2: "[%{email_prefix}] Nieuw bericht in %{channel1} en %{channel2}"
+        chat_channel_more:
+          one: "[%{email_prefix}] Nieuw bericht in %{channel} en %{count} andere groep"
+          other: "[%{email_prefix}] Nieuw bericht in %{channel} en %{count} andere groepen"
+        chat_channel_and_direct_message: "[%{email_prefix}] Nieuw bericht in %{channel} en van %{username}"
       unsubscribe: "Deze chatsamenvatting wordt verzonden van %{site_link} wanneer je afwezig bent. Wijzig je %{email_preferences_link}, of %{unsubscribe_link} om je af te melden."
       unsubscribe_no_link: "Deze chatsamenvatting wordt verzonden van %{site_link} wanneer je afwezig bent. Wijzig je %{email_preferences_link}."
       view_messages:

@@ -977,9 +977,6 @@ sq:
   user_notifications:
     previous_discussion: "Përgjigjet e mëparshme"
     in_reply_to: "Në Përgjigje Të"
-    unsubscribe:
-      title: "Çregjistrohuni"
-      description: "Nuk të interesojnë këto emaila? S'ka problem! Kliko më poshtë për të anuluar abonimin:"
     reply_by_email: "[Shiko Temën](%{base_url}%{url}) ose përgjigjju këtij email-i për të postuar."
     only_reply_by_email: "Përgjigjju këtij email-i për të vazhduar."
     visit_link_to_respond: "[Shiko Temën](%{base_url}%{url}) për tu përgjigjur."
@@ -1181,8 +1178,6 @@ sq:
     see_more: "Më shumë"
     search_title: "Kërko në këtë faqe"
     search_button: "Kërko"
-  deleted: "deleted"
-  image: "imazh"
   upload:
     edit_reason: "downloaded local copies of images"
     unauthorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
@@ -1400,7 +1395,6 @@ sq:
                 label: "Kategoritë dhe temat e zgjedhura"
               categories_and_latest_topics:
                 label: "Kategoritë dhe temat e fundit"
-  joined: "Anëtarësuar"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} ju përmendi në "%{topic}" - %{site_title}'
@@ -1411,15 +1405,16 @@ sq:
       linked: '%{username} vendosi një lidhje për postimin tuaj nga "%{topic}" - %{site_title}'
   reviewables:
     actions:
-      agree_and_suspend:
-        title: "Pezullo anëtarin"
+      agree:
+        title: "Po"
       delete_single:
         title: "Fshij"
       disagree:
-        title: "Jo dakord"
+        title: "Jo"
       approve:
         title: "Aprovo"
       reject_user:
+        title: "Fshij Anëtarin..."
         delete:
           title: "Fshij Anëtarin"
       reject:

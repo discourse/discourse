@@ -964,6 +964,32 @@ class StaffActionLogger
     )
   end
 
+  def log_create_public_sidebar_section(section)
+    UserHistory.create!(
+      action: UserHistory.actions[:create_public_sidebar_section],
+      acting_user_id: @admin.id,
+      subject: section.title,
+      details: custom_section_details(section),
+    )
+  end
+
+  def log_update_public_sidebar_section(section)
+    UserHistory.create!(
+      action: UserHistory.actions[:update_public_sidebar_section],
+      acting_user_id: @admin.id,
+      subject: section.title,
+      details: custom_section_details(section),
+    )
+  end
+
+  def log_destroy_public_sidebar_section(section)
+    UserHistory.create!(
+      action: UserHistory.actions[:destroy_public_sidebar_section],
+      acting_user_id: @admin.id,
+      subject: section.title,
+    )
+  end
+
   private
 
   def get_changes(changes)
@@ -989,5 +1015,10 @@ class StaffActionLogger
 
   def validate_category(category)
     raise Discourse::InvalidParameters.new(:category) unless category && category.is_a?(Category)
+  end
+
+  def custom_section_details(section)
+    urls = section.sidebar_urls.map { |url| "#{url.name} - #{url.value}" }
+    "links: #{urls.join(", ")}"
   end
 end

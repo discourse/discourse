@@ -1027,6 +1027,7 @@ posting:
   notify_about_queued_posts_after:
     type: float
     default: 24
+    min: 0
   auto_close_messages_post_count:
     default: 500
   auto_close_topics_post_count:
@@ -1395,18 +1396,6 @@ files:
   prevent_anons_from_downloading_files:
     default: false
     client: true
-  secure_media:
-    default: false
-    client: true
-    hidden: true
-  secure_media_allow_embed_images_in_emails:
-    default: true
-    hidden: true
-  secure_media_max_email_embed_image_size_kb:
-    default: 1024
-    min: 1
-    max: 10240
-    hidden: true
   secure_uploads:
     default: false
     client: true
@@ -1806,6 +1795,8 @@ security:
     hidden: true
   include_secure_categories_in_tag_counts:
     default: false
+  display_personal_messages_tag_counts:
+    default: false
 
 onebox:
   post_onebox_maxlength:
@@ -1921,12 +1912,18 @@ rate_limits:
   rate_limit_create_post: 5
   rate_limit_new_user_create_topic: 120
   rate_limit_new_user_create_post: 30
-  rate_limit_search_anon_global:
+  rate_limit_search_anon_global_per_minute:
     hidden: true
     default: 150
-  rate_limit_search_anon_user:
+  rate_limit_search_anon_user_per_minute:
     hidden: true
     default: 15
+  rate_limit_search_anon_global_per_second:
+    hidden: true
+    default: 8
+  rate_limit_search_anon_user_per_second:
+    hidden: true
+    default: 2
   rate_limit_search_user:
     hidden: true
     default: 30
@@ -1959,6 +1956,7 @@ rate_limits:
   max_prints_per_hour_per_user:
     default: 5
     client: true
+    min: 0
   max_logins_per_ip_per_hour:
     min: 1
     default: 30
@@ -1986,6 +1984,15 @@ rate_limits:
     hidden: true
   max_batch_presign_multipart_per_minute:
     default: 20
+    hidden: true
+  max_presigned_put_per_minute:
+    default: 10
+    hidden: true
+  max_create_multipart_per_minute:
+    default: 10
+    hidden: true
+  max_complete_multipart_per_minute:
+    default: 10
     hidden: true
 
 developer:
@@ -2068,23 +2075,24 @@ developer:
     default: 20
     client: true
     hidden: true
-  enable_new_user_profile_nav_groups:
-    client: true
-    type: group_list
-    list_type: compact
-    default: ""
-    allow_any: false
-    refresh: true
   include_associated_account_ids:
     default: false
     hidden: true
-  enable_experimental_topic_timeline_groups:
+  experimental_form_templates:
+    client: true
+    default: false
+    hidden: true
+  experimental_new_new_view_groups:
     client: true
     type: group_list
     list_type: compact
     default: ""
     allow_any: false
     refresh: true
+  experimental_topics_filter:
+    client: true
+    default: false
+    hidden: true
 
 navigation:
   navigation_menu:
@@ -2110,6 +2118,13 @@ navigation:
   enable_new_notifications_menu:
     default: false
     validator: "EnableNewNotificationsMenuValidator"
+  enable_custom_sidebar_sections:
+    client: true
+    type: group_list
+    list_type: compact
+    default: ""
+    allow_any: false
+    refresh: true
 
 embedding:
   embed_by_username:
@@ -2186,6 +2201,15 @@ backups:
     client: true
 
 search:
+  user_search_similar_results:
+    default: false
+    hidden: true
+  prioritize_exact_search_title_match:
+    default: true
+    hidden: true
+  max_duplicate_search_index_terms:
+    default: 6
+    hidden: true
   use_pg_headlines_for_excerpt:
     default: false
     hidden: true
@@ -2196,6 +2220,10 @@ search:
   search_ranking_normalization:
     default: "0"
     hidden: true
+  search_ranking_weights:
+    default: ""
+    hidden: true
+    validator: "SearchRankingWeightsValidator"
   min_search_term_length:
     client: true
     default: 3
@@ -2544,6 +2572,7 @@ uncategorized:
   show_category_definitions_in_topic_lists:
     default: false
     hidden: true
+    client: true
 
   create_revision_on_bulk_topic_moves:
     default: true
@@ -2685,6 +2714,7 @@ user_api:
   allowed_user_api_push_urls:
     default: ""
     type: list
+    hidden: true
   allowed_user_api_auth_redirects:
     default: "https://api.discourse.org/api/auth_redirect|discourse://auth_redirect"
     type: list

@@ -21,16 +21,13 @@ lt:
       joined: "prisijungė"
       email_frequency:
         never: "Niekada"
+      header_indicator_preference:
+        never: "Niekada"
       flag: "Pranešti"
       join: "Prisijungti"
+      last_visit: "paskutinis apsilankymas"
       mention_warning:
         dismiss: "praleisti"
-        groups:
-          users_limit:
-            one: "%{count} vartotojas"
-            few: "%{count} vartotojų"
-            many: "%{count} vartotojų"
-            other: "%{count} vartotojų"
       reply: "Atsakyti"
       edit: "Redaguoti"
       rebake_message: "Perkurti HTML"

@@ -254,6 +254,8 @@ createWidget("topic-map-summary", {
           ? "topic.expand_details"
           : "topic.collapse_details",
         icon: state.collapsed ? "chevron-down" : "chevron-up",
+        ariaExpanded: state.collapsed ? "false" : "true",
+        ariaControls: "topic-map-expanded",
         action: "toggleMap",
         className: "btn",
       })
@@ -296,7 +298,7 @@ createWidget("topic-map-link", {
 });
 
 createWidget("topic-map-expanded", {
-  tagName: "section.topic-map-expanded",
+  tagName: "section.topic-map-expanded#topic-map-expanded",
   buildKey: (attrs) => `topic-map-expanded-${attrs.id}`,
 
   defaultState() {

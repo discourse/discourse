@@ -31,6 +31,7 @@ import discourseLater from "discourse-common/lib/later";
 import Component from "@ember/component";
 import Composer from "discourse/models/composer";
 import ComposerUploadUppy from "discourse/mixins/composer-upload-uppy";
+import ComposerVideoThumbnailUppy from "discourse/mixins/composer-video-thumbnail-uppy";
 import EmberObject from "@ember/object";
 import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
@@ -98,462 +99,447 @@ export function addComposerUploadMarkdownResolver(resolver) {
 export function cleanUpComposerUploadMarkdownResolver() {
   uploadMarkdownResolvers = [];
 }
+export default Component.extend(
+  ComposerUploadUppy,
+  ComposerVideoThumbnailUppy,
+  {
+    classNameBindings: ["showToolbar:toolbar-visible", ":wmd-controls"],
 
-export default Component.extend(ComposerUploadUppy, {
-  classNameBindings: ["showToolbar:toolbar-visible", ":wmd-controls"],
+    editorClass: ".d-editor",
+    fileUploadElementId: "file-uploader",
+    mobileFileUploaderId: "mobile-file-upload",
 
-  editorClass: ".d-editor",
-  fileUploadElementId: "file-uploader",
-  mobileFileUploaderId: "mobile-file-upload",
+    composerEventPrefix: "composer",
+    uploadType: "composer",
+    uppyId: "composer-editor-uppy",
+    composerModel: alias("composer"),
+    composerModelContentKey: "reply",
+    editorInputClass: ".d-editor-input",
+    shouldBuildScrollMap: true,
+    scrollMap: null,
+    processPreview: true,
 
-  composerEventPrefix: "composer",
-  uploadType: "composer",
-  uppyId: "composer-editor-uppy",
-  composerModel: alias("composer"),
-  composerModelContentKey: "reply",
-  editorInputClass: ".d-editor-input",
-  shouldBuildScrollMap: true,
-  scrollMap: null,
-  processPreview: true,
+    uploadMarkdownResolvers,
+    uploadPreProcessors,
+    uploadHandlers,
 
-  uploadMarkdownResolvers,
-  uploadPreProcessors,
-  uploadHandlers,
+    init() {
+      this._super(...arguments);
+      this.warnedCannotSeeMentions = [];
+      this.warnedGroupMentions = [];
+    },
 
-  init() {
-    this._super(...arguments);
-    this.warnedCannotSeeMentions = [];
-    this.warnedGroupMentions = [];
-  },
-
-  @discourseComputed("composer.requiredCategoryMissing")
-  replyPlaceholder(requiredCategoryMissing) {
-    if (requiredCategoryMissing) {
-      return "composer.reply_placeholder_choose_category";
-    } else {
-      const key = authorizesOneOrMoreImageExtensions(
-        this.currentUser.staff,
-        this.siteSettings
-      )
-        ? "reply_placeholder"
-        : "reply_placeholder_no_images";
-      return `composer.${key}`;
-    }
-  },
-
-  @discourseComputed
-  showLink() {
-    return this.currentUser && this.currentUser.link_posting_access !== "none";
-  },
-
-  @observes("focusTarget")
-  setFocus() {
-    if (this.focusTarget === "editor") {
-      putCursorAtEnd(this.element.querySelector("textarea"));
-    }
-  },
-
-  @discourseComputed
-  markdownOptions() {
-    return {
-      previewing: true,
-
-      formatUsername,
-
-      lookupAvatarByPostNumber: (postNumber, topicId) => {
-        const topic = this.topic;
-        if (!topic) {
-          return;
-        }
-
-        const posts = topic.get("postStream.posts");
-        if (posts && topicId === topic.get("id")) {
-          const quotedPost = posts.findBy("post_number", postNumber);
-          if (quotedPost) {
-            return tinyAvatar(quotedPost.get("avatar_template"));
-          }
-        }
-      },
-
-      lookupPrimaryUserGroupByPostNumber: (postNumber, topicId) => {
-        const topic = this.topic;
-        if (!topic) {
-          return;
-        }
-
-        const posts = topic.get("postStream.posts");
-        if (posts && topicId === topic.get("id")) {
-          const quotedPost = posts.findBy("post_number", postNumber);
-          if (quotedPost) {
-            return quotedPost.primary_group_name;
-          }
-        }
-      },
-
-      hashtagTypesInPriorityOrder:
-        this.site.hashtag_configurations["topic-composer"],
-      hashtagIcons: this.site.hashtag_icons,
-    };
-  },
-
-  @bind
-  _userSearchTerm(term) {
-    const topicId = this.get("topic.id");
-    // maybe this is a brand new topic, so grab category from composer
-    const categoryId =
-      this.get("topic.category_id") || this.get("composer.categoryId");
-
-    return userSearch({
-      term,
-      topicId,
-      categoryId,
-      includeGroups: true,
-    });
-  },
-
-  @bind
-  _afterMentionComplete(value) {
-    this.composer.set("reply", value);
-
-    // ensures textarea scroll position is correct
-    schedule("afterRender", () => {
-      const input = this.element.querySelector(".d-editor-input");
-      input?.blur();
-      input?.focus();
-    });
-  },
-
-  @on("didInsertElement")
-  _composerEditorInit() {
-    const $input = $(this.element.querySelector(".d-editor-input"));
-
-    if (this.siteSettings.enable_mentions) {
-      $input.autocomplete({
-        template: findRawTemplate("user-selector-autocomplete"),
-        dataSource: this._userSearchTerm,
-        key: "@",
-        transformComplete: (v) => v.username || v.name,
-        afterComplete: this._afterMentionComplete,
-        triggerRule: (textarea) =>
-          !inCodeBlock(textarea.value, caretPosition(textarea)),
-      });
-    }
-
-    this.element
-      .querySelector(".d-editor-input")
-      ?.addEventListener("scroll", this._throttledSyncEditorAndPreviewScroll);
-
-    // Focus on the body unless we have a title
-    if (!this.get("composer.canEditTitle")) {
-      putCursorAtEnd(this.element.querySelector(".d-editor-input"));
-    }
-
-    if (this.allowUpload) {
-      this._bindUploadTarget();
-      this._bindMobileUploadButton();
-    }
-
-    this.appEvents.trigger("composer:will-open");
-  },
-
-  @discourseComputed(
-    "composer.reply",
-    "composer.replyLength",
-    "composer.missingReplyCharacters",
-    "composer.minimumPostLength",
-    "lastValidatedAt"
-  )
-  validation(
-    reply,
-    replyLength,
-    missingReplyCharacters,
-    minimumPostLength,
-    lastValidatedAt
-  ) {
-    const postType = this.get("composer.post.post_type");
-    if (postType === this.site.get("post_types.small_action")) {
-      return;
-    }
-
-    let reason;
-    if (replyLength < 1) {
-      reason = I18n.t("composer.error.post_missing");
-    } else if (missingReplyCharacters > 0) {
-      reason = I18n.t("composer.error.post_length", {
-        count: minimumPostLength,
-      });
-      const tl = this.get("currentUser.trust_level");
-      if (tl === 0 || tl === 1) {
-        reason +=
-          "<br/>" +
-          I18n.t("composer.error.try_like", {
-            heart: iconHTML("heart", {
-              label: I18n.t("likes_lowercase", { count: 1 }),
-            }),
-          });
-      }
-    }
-
-    if (reason) {
-      return EmberObject.create({
-        failed: true,
-        reason,
-        lastShownAt: lastValidatedAt,
-      });
-    }
-  },
-
-  _resetShouldBuildScrollMap() {
-    this.set("shouldBuildScrollMap", true);
-  },
-
-  @bind
-  _handleInputInteraction(event) {
-    const preview = this.element.querySelector(".d-editor-preview-wrapper");
-
-    if (!$(preview).is(":visible")) {
-      return;
-    }
-
-    preview.removeEventListener("scroll", this._handleInputOrPreviewScroll);
-    event.target.addEventListener("scroll", this._handleInputOrPreviewScroll);
-  },
-
-  @bind
-  _handleInputOrPreviewScroll(event) {
-    this._syncScroll(
-      this._syncEditorAndPreviewScroll,
-      $(event.target),
-      $(this.element.querySelector(".d-editor-preview-wrapper"))
-    );
-  },
-
-  @bind
-  _handlePreviewInteraction(event) {
-    this.element
-      .querySelector(".d-editor-input")
-      ?.removeEventListener("scroll", this._handleInputOrPreviewScroll);
-
-    event.target?.addEventListener("scroll", this._handleInputOrPreviewScroll);
-  },
-
-  _syncScroll($callback, $input, $preview) {
-    if (!this.scrollMap || this.shouldBuildScrollMap) {
-      this.set("scrollMap", this._buildScrollMap($input, $preview));
-      this.set("shouldBuildScrollMap", false);
-    }
-
-    throttle(this, $callback, $input, $preview, this.scrollMap, 20);
-  },
-
-  // Adapted from https://github.com/markdown-it/markdown-it.github.io
-  _buildScrollMap($input, $preview) {
-    let sourceLikeDiv = $("<div />")
-      .css({
-        position: "absolute",
-        height: "auto",
-        visibility: "hidden",
-        width: $input[0].clientWidth,
-        "font-size": $input.css("font-size"),
-        "font-family": $input.css("font-family"),
-        "line-height": $input.css("line-height"),
-        "white-space": $input.css("white-space"),
-      })
-      .appendTo("body");
-
-    const linesMap = [];
-    let numberOfLines = 0;
-
-    $input
-      .val()
-      .split("\n")
-      .forEach((text) => {
-        linesMap.push(numberOfLines);
-
-        if (text.length === 0) {
-          numberOfLines++;
-        } else {
-          sourceLikeDiv.text(text);
-
-          let height;
-          let lineHeight;
-          height = parseFloat(sourceLikeDiv.css("height"));
-          lineHeight = parseFloat(sourceLikeDiv.css("line-height"));
-          numberOfLines += Math.round(height / lineHeight);
-        }
-      });
-
-    linesMap.push(numberOfLines);
-    sourceLikeDiv.remove();
-
-    const previewOffsetTop = $preview.offset().top;
-    const offset =
-      $preview.scrollTop() -
-      previewOffsetTop -
-      ($input.offset().top - previewOffsetTop);
-    const nonEmptyList = [];
-    const scrollMap = [];
-    for (let i = 0; i < numberOfLines; i++) {
-      scrollMap.push(-1);
-    }
-
-    nonEmptyList.push(0);
-    scrollMap[0] = 0;
-
-    $preview.find(".preview-sync-line").each((_, element) => {
-      let $element = $(element);
-      let lineNumber = $element.data("line-number");
-      let linesToTop = linesMap[lineNumber];
-      if (linesToTop !== 0) {
-        nonEmptyList.push(linesToTop);
-      }
-      scrollMap[linesToTop] = Math.round($element.offset().top + offset);
-    });
-
-    nonEmptyList.push(numberOfLines);
-    scrollMap[numberOfLines] = $preview[0].scrollHeight;
-
-    let position = 0;
-
-    for (let i = 1; i < numberOfLines; i++) {
-      if (scrollMap[i] !== -1) {
-        position++;
-        continue;
-      }
-
-      let top = nonEmptyList[position];
-      let bottom = nonEmptyList[position + 1];
-
-      scrollMap[i] = (
-        (scrollMap[bottom] * (i - top) + scrollMap[top] * (bottom - i)) /
-        (bottom - top)
-      ).toFixed(2);
-    }
-
-    return scrollMap;
-  },
-
-  @bind
-  _throttledSyncEditorAndPreviewScroll(event) {
-    const $preview = $(this.element.querySelector(".d-editor-preview-wrapper"));
-
-    throttle(
-      this,
-      this._syncEditorAndPreviewScroll,
-      $(event.target),
-      $preview,
-      20
-    );
-  },
-
-  _syncEditorAndPreviewScroll($input, $preview) {
-    if (!$input) {
-      return;
-    }
-
-    if ($input.scrollTop() === 0) {
-      $preview.scrollTop(0);
-      return;
-    }
-
-    const inputHeight = $input[0].scrollHeight;
-    const previewHeight = $preview[0].scrollHeight;
-
-    if ($input.height() + $input.scrollTop() + 100 > inputHeight) {
-      // cheat, special case for bottom
-      $preview.scrollTop(previewHeight);
-      return;
-    }
-
-    const scrollPosition = $input.scrollTop();
-    const factor = previewHeight / inputHeight;
-    const desired = scrollPosition * factor;
-    $preview.scrollTop(desired + 50);
-  },
-
-  _renderUnseenMentions(preview, unseen) {
-    fetchUnseenMentions({
-      names: unseen,
-      topicId: this.get("composer.topic.id"),
-      allowedNames: this.get("composer.targetRecipients")?.split(","),
-    }).then((response) => {
-      linkSeenMentions(preview, this.siteSettings);
-      this._warnMentionedGroups(preview);
-      this._warnCannotSeeMention(preview);
-      this._warnHereMention(response.here_count);
-    });
-  },
-
-  _renderUnseenHashtags(preview) {
-    let unseen;
-    const hashtagContext = this.site.hashtag_configurations["topic-composer"];
-    if (this.siteSettings.enable_experimental_hashtag_autocomplete) {
-      unseen = linkSeenHashtagsInContext(hashtagContext, preview);
-    } else {
-      unseen = linkSeenHashtags(preview);
-    }
-
-    if (unseen.length > 0) {
-      if (this.siteSettings.enable_experimental_hashtag_autocomplete) {
-        fetchUnseenHashtagsInContext(hashtagContext, unseen).then(() => {
-          linkSeenHashtagsInContext(hashtagContext, preview);
-        });
+    @discourseComputed("composer.requiredCategoryMissing")
+    replyPlaceholder(requiredCategoryMissing) {
+      if (requiredCategoryMissing) {
+        return "composer.reply_placeholder_choose_category";
       } else {
-        fetchUnseenHashtags(unseen).then(() => {
-          linkSeenHashtags(preview);
-        });
+        const key = authorizesOneOrMoreImageExtensions(
+          this.currentUser.staff,
+          this.siteSettings
+        )
+          ? "reply_placeholder"
+          : "reply_placeholder_no_images";
+        return `composer.${key}`;
       }
-    }
-  },
+    },
 
-  @debounce(2000)
-  _warnMentionedGroups(preview) {
-    schedule("afterRender", () => {
-      preview
-        .querySelectorAll(".mention-group[data-mentionable-user-count]")
-        .forEach((mention) => {
-          const { name } = mention.dataset;
-          if (
-            this.warnedGroupMentions.includes(name) ||
-            this._isInQuote(mention)
-          ) {
+    @discourseComputed
+    showLink() {
+      return (
+        this.currentUser && this.currentUser.link_posting_access !== "none"
+      );
+    },
+
+    @observes("focusTarget")
+    setFocus() {
+      if (this.focusTarget === "editor") {
+        putCursorAtEnd(this.element.querySelector("textarea"));
+      }
+    },
+
+    @discourseComputed
+    markdownOptions() {
+      return {
+        previewing: true,
+
+        formatUsername,
+
+        lookupAvatarByPostNumber: (postNumber, topicId) => {
+          const topic = this.topic;
+          if (!topic) {
             return;
           }
 
-          this.warnedGroupMentions.push(name);
-          this.groupsMentioned({
-            name,
-            userCount: mention.dataset.mentionableUserCount,
-            maxMentions: mention.dataset.maxMentions,
-          });
+          const posts = topic.get("postStream.posts");
+          if (posts && topicId === topic.get("id")) {
+            const quotedPost = posts.findBy("post_number", postNumber);
+            if (quotedPost) {
+              return tinyAvatar(quotedPost.get("avatar_template"));
+            }
+          }
+        },
+
+        lookupPrimaryUserGroupByPostNumber: (postNumber, topicId) => {
+          const topic = this.topic;
+          if (!topic) {
+            return;
+          }
+
+          const posts = topic.get("postStream.posts");
+          if (posts && topicId === topic.get("id")) {
+            const quotedPost = posts.findBy("post_number", postNumber);
+            if (quotedPost) {
+              return quotedPost.primary_group_name;
+            }
+          }
+        },
+
+        hashtagTypesInPriorityOrder:
+          this.site.hashtag_configurations["topic-composer"],
+        hashtagIcons: this.site.hashtag_icons,
+      };
+    },
+
+    @bind
+    _afterMentionComplete(value) {
+      this.composer.set("reply", value);
+
+      // ensures textarea scroll position is correct
+      schedule("afterRender", () => {
+        const input = this.element.querySelector(".d-editor-input");
+        input?.blur();
+        input?.focus();
+      });
+    },
+
+    @on("didInsertElement")
+    _composerEditorInit() {
+      const $input = $(this.element.querySelector(".d-editor-input"));
+
+      if (this.siteSettings.enable_mentions) {
+        $input.autocomplete({
+          template: findRawTemplate("user-selector-autocomplete"),
+          dataSource: (term) =>
+            userSearch({
+              term,
+              topicId: this.topic?.id,
+              categoryId: this.topic?.category_id || this.composer?.categoryId,
+              includeGroups: true,
+            }),
+          key: "@",
+          transformComplete: (v) => v.username || v.name,
+          afterComplete: this._afterMentionComplete,
+          triggerRule: (textarea) =>
+            !inCodeBlock(textarea.value, caretPosition(textarea)),
         });
-    });
-  },
+      }
 
-  // add a delay to allow for typing, so you don't open the warning right away
-  // previously we would warn after @bob even if you were about to mention @bob2
-  @debounce(2000)
-  _warnCannotSeeMention(preview) {
-    if (this.composer.draftKey === Composer.NEW_PRIVATE_MESSAGE_KEY) {
-      return;
-    }
+      this.element
+        .querySelector(".d-editor-input")
+        ?.addEventListener("scroll", this._throttledSyncEditorAndPreviewScroll);
 
-    preview.querySelectorAll(".mention[data-reason]").forEach((mention) => {
-      const { name } = mention.dataset;
-      if (this.warnedCannotSeeMentions.includes(name)) {
+      // Focus on the body unless we have a title
+      if (!this.get("composer.canEditTitle")) {
+        putCursorAtEnd(this.element.querySelector(".d-editor-input"));
+      }
+
+      if (this.allowUpload) {
+        this._bindUploadTarget();
+        this._bindMobileUploadButton();
+      }
+
+      this.appEvents.trigger("composer:will-open");
+    },
+
+    @discourseComputed(
+      "composer.reply",
+      "composer.replyLength",
+      "composer.missingReplyCharacters",
+      "composer.minimumPostLength",
+      "lastValidatedAt"
+    )
+    validation(
+      reply,
+      replyLength,
+      missingReplyCharacters,
+      minimumPostLength,
+      lastValidatedAt
+    ) {
+      const postType = this.get("composer.post.post_type");
+      if (postType === this.site.get("post_types.small_action")) {
         return;
       }
 
-      this.warnedCannotSeeMentions.push(name);
-      this.cannotSeeMention({
-        name,
-        reason: mention.dataset.reason,
-      });
-    });
+      let reason;
+      if (replyLength < 1) {
+        reason = I18n.t("composer.error.post_missing");
+      } else if (missingReplyCharacters > 0) {
+        reason = I18n.t("composer.error.post_length", {
+          count: minimumPostLength,
+        });
+        const tl = this.get("currentUser.trust_level");
+        if (tl === 0 || tl === 1) {
+          reason +=
+            "<br/>" +
+            I18n.t("composer.error.try_like", {
+              heart: iconHTML("heart", {
+                label: I18n.t("likes_lowercase", { count: 1 }),
+              }),
+            });
+        }
+      }
 
-    preview
-      .querySelectorAll(".mention-group[data-reason]")
-      .forEach((mention) => {
+      if (reason) {
+        return EmberObject.create({
+          failed: true,
+          reason,
+          lastShownAt: lastValidatedAt,
+        });
+      }
+    },
+
+    _resetShouldBuildScrollMap() {
+      this.set("shouldBuildScrollMap", true);
+    },
+
+    @bind
+    _handleInputInteraction(event) {
+      const preview = this.element.querySelector(".d-editor-preview-wrapper");
+
+      if (!$(preview).is(":visible")) {
+        return;
+      }
+
+      preview.removeEventListener("scroll", this._handleInputOrPreviewScroll);
+      event.target.addEventListener("scroll", this._handleInputOrPreviewScroll);
+    },
+
+    @bind
+    _handleInputOrPreviewScroll(event) {
+      this._syncScroll(
+        this._syncEditorAndPreviewScroll,
+        $(event.target),
+        $(this.element.querySelector(".d-editor-preview-wrapper"))
+      );
+    },
+
+    @bind
+    _handlePreviewInteraction(event) {
+      this.element
+        .querySelector(".d-editor-input")
+        ?.removeEventListener("scroll", this._handleInputOrPreviewScroll);
+
+      event.target?.addEventListener(
+        "scroll",
+        this._handleInputOrPreviewScroll
+      );
+    },
+
+    _syncScroll($callback, $input, $preview) {
+      if (!this.scrollMap || this.shouldBuildScrollMap) {
+        this.set("scrollMap", this._buildScrollMap($input, $preview));
+        this.set("shouldBuildScrollMap", false);
+      }
+
+      throttle(this, $callback, $input, $preview, this.scrollMap, 20);
+    },
+
+    // Adapted from https://github.com/markdown-it/markdown-it.github.io
+    _buildScrollMap($input, $preview) {
+      let sourceLikeDiv = $("<div />")
+        .css({
+          position: "absolute",
+          height: "auto",
+          visibility: "hidden",
+          width: $input[0].clientWidth,
+          "font-size": $input.css("font-size"),
+          "font-family": $input.css("font-family"),
+          "line-height": $input.css("line-height"),
+          "white-space": $input.css("white-space"),
+        })
+        .appendTo("body");
+
+      const linesMap = [];
+      let numberOfLines = 0;
+
+      $input
+        .val()
+        .split("\n")
+        .forEach((text) => {
+          linesMap.push(numberOfLines);
+
+          if (text.length === 0) {
+            numberOfLines++;
+          } else {
+            sourceLikeDiv.text(text);
+
+            let height;
+            let lineHeight;
+            height = parseFloat(sourceLikeDiv.css("height"));
+            lineHeight = parseFloat(sourceLikeDiv.css("line-height"));
+            numberOfLines += Math.round(height / lineHeight);
+          }
+        });
+
+      linesMap.push(numberOfLines);
+      sourceLikeDiv.remove();
+
+      const previewOffsetTop = $preview.offset().top;
+      const offset =
+        $preview.scrollTop() -
+        previewOffsetTop -
+        ($input.offset().top - previewOffsetTop);
+      const nonEmptyList = [];
+      const scrollMap = [];
+      for (let i = 0; i < numberOfLines; i++) {
+        scrollMap.push(-1);
+      }
+
+      nonEmptyList.push(0);
+      scrollMap[0] = 0;
+
+      $preview.find(".preview-sync-line").each((_, element) => {
+        let $element = $(element);
+        let lineNumber = $element.data("line-number");
+        let linesToTop = linesMap[lineNumber];
+        if (linesToTop !== 0) {
+          nonEmptyList.push(linesToTop);
+        }
+        scrollMap[linesToTop] = Math.round($element.offset().top + offset);
+      });
+
+      nonEmptyList.push(numberOfLines);
+      scrollMap[numberOfLines] = $preview[0].scrollHeight;
+
+      let position = 0;
+
+      for (let i = 1; i < numberOfLines; i++) {
+        if (scrollMap[i] !== -1) {
+          position++;
+          continue;
+        }
+
+        let top = nonEmptyList[position];
+        let bottom = nonEmptyList[position + 1];
+
+        scrollMap[i] = (
+          (scrollMap[bottom] * (i - top) + scrollMap[top] * (bottom - i)) /
+          (bottom - top)
+        ).toFixed(2);
+      }
+
+      return scrollMap;
+    },
+
+    @bind
+    _throttledSyncEditorAndPreviewScroll(event) {
+      const $preview = $(
+        this.element.querySelector(".d-editor-preview-wrapper")
+      );
+
+      throttle(
+        this,
+        this._syncEditorAndPreviewScroll,
+        $(event.target),
+        $preview,
+        20
+      );
+    },
+
+    _syncEditorAndPreviewScroll($input, $preview) {
+      if (!$input) {
+        return;
+      }
+
+      if ($input.scrollTop() === 0) {
+        $preview.scrollTop(0);
+        return;
+      }
+
+      const inputHeight = $input[0].scrollHeight;
+      const previewHeight = $preview[0].scrollHeight;
+
+      if ($input.height() + $input.scrollTop() + 100 > inputHeight) {
+        // cheat, special case for bottom
+        $preview.scrollTop(previewHeight);
+        return;
+      }
+
+      const scrollPosition = $input.scrollTop();
+      const factor = previewHeight / inputHeight;
+      const desired = scrollPosition * factor;
+      $preview.scrollTop(desired + 50);
+    },
+
+    _renderUnseenMentions(preview, unseen) {
+      fetchUnseenMentions({
+        names: unseen,
+        topicId: this.get("composer.topic.id"),
+        allowedNames: this.get("composer.targetRecipients")?.split(","),
+      }).then((response) => {
+        linkSeenMentions(preview, this.siteSettings);
+        this._warnMentionedGroups(preview);
+        this._warnCannotSeeMention(preview);
+        this._warnHereMention(response.here_count);
+      });
+    },
+
+    _renderUnseenHashtags(preview) {
+      let unseen;
+      const hashtagContext = this.site.hashtag_configurations["topic-composer"];
+      if (this.siteSettings.enable_experimental_hashtag_autocomplete) {
+        unseen = linkSeenHashtagsInContext(hashtagContext, preview);
+      } else {
+        unseen = linkSeenHashtags(preview);
+      }
+
+      if (unseen.length > 0) {
+        if (this.siteSettings.enable_experimental_hashtag_autocomplete) {
+          fetchUnseenHashtagsInContext(hashtagContext, unseen).then(() => {
+            linkSeenHashtagsInContext(hashtagContext, preview);
+          });
+        } else {
+          fetchUnseenHashtags(unseen).then(() => {
+            linkSeenHashtags(preview);
+          });
+        }
+      }
+    },
+
+    @debounce(2000)
+    _warnMentionedGroups(preview) {
+      schedule("afterRender", () => {
+        preview
+          .querySelectorAll(".mention-group[data-mentionable-user-count]")
+          .forEach((mention) => {
+            const { name } = mention.dataset;
+            if (
+              this.warnedGroupMentions.includes(name) ||
+              this._isInQuote(mention)
+            ) {
+              return;
+            }
+
+            this.warnedGroupMentions.push(name);
+            this.groupsMentioned({
+              name,
+              userCount: mention.dataset.mentionableUserCount,
+              maxMentions: mention.dataset.maxMentions,
+            });
+          });
+      });
+    },
+
+    // add a delay to allow for typing, so you don't open the warning right away
+    // previously we would warn after @bob even if you were about to mention @bob2
+    @debounce(2000)
+    _warnCannotSeeMention(preview) {
+      if (this.composer.draftKey === Composer.NEW_PRIVATE_MESSAGE_KEY) {
+        return;
+      }
+
+      preview.querySelectorAll(".mention[data-reason]").forEach((mention) => {
         const { name } = mention.dataset;
         if (this.warnedCannotSeeMentions.includes(name)) {
           return;
@@ -563,374 +549,402 @@ export default Component.extend(ComposerUploadUppy, {
         this.cannotSeeMention({
           name,
           reason: mention.dataset.reason,
-          notifiedCount: mention.dataset.notifiedUserCount,
-          isGroup: true,
         });
       });
-  },
 
-  _warnHereMention(hereCount) {
-    if (!hereCount || hereCount === 0) {
-      return;
-    }
+      preview
+        .querySelectorAll(".mention-group[data-reason]")
+        .forEach((mention) => {
+          const { name } = mention.dataset;
+          if (this.warnedCannotSeeMentions.includes(name)) {
+            return;
+          }
 
-    this.hereMention(hereCount);
-  },
+          this.warnedCannotSeeMentions.push(name);
+          this.cannotSeeMention({
+            name,
+            reason: mention.dataset.reason,
+            notifiedCount: mention.dataset.notifiedUserCount,
+            isGroup: true,
+          });
+        });
+    },
 
-  @bind
-  _handleImageScaleButtonClick(event) {
-    if (!event.target.classList.contains("scale-btn")) {
-      return;
-    }
-
-    const index = parseInt(
-      event.target.closest(".button-wrapper").dataset.imageIndex,
-      10
-    );
-
-    const scale = event.target.dataset.scale;
-    const matchingPlaceholder =
-      this.get("composer.reply").match(IMAGE_MARKDOWN_REGEX);
-
-    if (matchingPlaceholder) {
-      const match = matchingPlaceholder[index];
-
-      if (match) {
-        const replacement = match.replace(
-          IMAGE_MARKDOWN_REGEX,
-          `![$1|$2, ${scale}%$4]($5)`
-        );
-
-        this.appEvents.trigger(
-          "composer:replace-text",
-          matchingPlaceholder[index],
-          replacement,
-          { regex: IMAGE_MARKDOWN_REGEX, index }
-        );
+    _warnHereMention(hereCount) {
+      if (!hereCount || hereCount === 0) {
+        return;
       }
-    }
 
-    event.preventDefault();
-    return;
-  },
+      this.hereMention(hereCount);
+    },
 
-  resetImageControls(buttonWrapper) {
-    const imageResize = buttonWrapper.querySelector(".scale-btn-container");
-    const imageDelete = buttonWrapper.querySelector(".delete-image-button");
+    @bind
+    _handleImageScaleButtonClick(event) {
+      if (!event.target.classList.contains("scale-btn")) {
+        return;
+      }
 
-    const readonlyContainer = buttonWrapper.querySelector(
-      ".alt-text-readonly-container"
-    );
-    const editContainer = buttonWrapper.querySelector(
-      ".alt-text-edit-container"
-    );
+      const index = parseInt(
+        event.target.closest(".button-wrapper").dataset.imageIndex,
+        10
+      );
 
-    imageResize.removeAttribute("hidden");
-    imageDelete.removeAttribute("hidden");
+      const scale = event.target.dataset.scale;
+      const matchingPlaceholder =
+        this.get("composer.reply").match(IMAGE_MARKDOWN_REGEX);
 
-    readonlyContainer.removeAttribute("hidden");
-    buttonWrapper.removeAttribute("editing");
-    editContainer.setAttribute("hidden", "true");
-  },
+      if (matchingPlaceholder) {
+        const match = matchingPlaceholder[index];
 
-  commitAltText(buttonWrapper) {
-    const index = parseInt(buttonWrapper.getAttribute("data-image-index"), 10);
-    const matchingPlaceholder =
-      this.get("composer.reply").match(IMAGE_MARKDOWN_REGEX);
-    const match = matchingPlaceholder[index];
-    const input = buttonWrapper.querySelector("input.alt-text-input");
-    const replacement = match.replace(
-      IMAGE_MARKDOWN_REGEX,
-      `![${input.value}|$2$3$4]($5)`
-    );
+        if (match) {
+          const replacement = match.replace(
+            IMAGE_MARKDOWN_REGEX,
+            `![$1|$2, ${scale}%$4]($5)`
+          );
 
-    this.appEvents.trigger("composer:replace-text", match, replacement);
+          this.appEvents.trigger(
+            "composer:replace-text",
+            matchingPlaceholder[index],
+            replacement,
+            { regex: IMAGE_MARKDOWN_REGEX, index }
+          );
+        }
+      }
 
-    this.resetImageControls(buttonWrapper);
-  },
-
-  @bind
-  _handleAltTextInputKeypress(event) {
-    if (!event.target.classList.contains("alt-text-input")) {
-      return;
-    }
-
-    if (event.key === "[" || event.key === "]") {
       event.preventDefault();
-    }
+      return;
+    },
 
-    if (event.key === "Enter") {
+    resetImageControls(buttonWrapper) {
+      const imageResize = buttonWrapper.querySelector(".scale-btn-container");
+      const imageDelete = buttonWrapper.querySelector(".delete-image-button");
+
+      const readonlyContainer = buttonWrapper.querySelector(
+        ".alt-text-readonly-container"
+      );
+      const editContainer = buttonWrapper.querySelector(
+        ".alt-text-edit-container"
+      );
+
+      imageResize.removeAttribute("hidden");
+      imageDelete.removeAttribute("hidden");
+
+      readonlyContainer.removeAttribute("hidden");
+      buttonWrapper.removeAttribute("editing");
+      editContainer.setAttribute("hidden", "true");
+    },
+
+    commitAltText(buttonWrapper) {
+      const index = parseInt(
+        buttonWrapper.getAttribute("data-image-index"),
+        10
+      );
+      const matchingPlaceholder =
+        this.get("composer.reply").match(IMAGE_MARKDOWN_REGEX);
+      const match = matchingPlaceholder[index];
+      const input = buttonWrapper.querySelector("input.alt-text-input");
+      const replacement = match.replace(
+        IMAGE_MARKDOWN_REGEX,
+        `![${input.value}|$2$3$4]($5)`
+      );
+
+      this.appEvents.trigger("composer:replace-text", match, replacement);
+
+      this.resetImageControls(buttonWrapper);
+    },
+
+    @bind
+    _handleAltTextInputKeypress(event) {
+      if (!event.target.classList.contains("alt-text-input")) {
+        return;
+      }
+
+      if (event.key === "[" || event.key === "]") {
+        event.preventDefault();
+      }
+
+      if (event.key === "Enter") {
+        const buttonWrapper = event.target.closest(".button-wrapper");
+        this.commitAltText(buttonWrapper);
+      }
+    },
+
+    @bind
+    _handleAltTextEditButtonClick(event) {
+      if (!event.target.classList.contains("alt-text-edit-btn")) {
+        return;
+      }
+
+      const buttonWrapper = event.target.closest(".button-wrapper");
+      const imageResize = buttonWrapper.querySelector(".scale-btn-container");
+      const imageDelete = buttonWrapper.querySelector(".delete-image-button");
+
+      const readonlyContainer = buttonWrapper.querySelector(
+        ".alt-text-readonly-container"
+      );
+      const altText = readonlyContainer.querySelector(".alt-text");
+
+      const editContainer = buttonWrapper.querySelector(
+        ".alt-text-edit-container"
+      );
+      const editContainerInput = editContainer.querySelector(".alt-text-input");
+
+      buttonWrapper.setAttribute("editing", "true");
+      imageResize.setAttribute("hidden", "true");
+      imageDelete.setAttribute("hidden", "true");
+      readonlyContainer.setAttribute("hidden", "true");
+      editContainerInput.value = altText.textContent;
+      editContainer.removeAttribute("hidden");
+      editContainerInput.focus();
+      event.preventDefault();
+    },
+
+    @bind
+    _handleAltTextOkButtonClick(event) {
+      if (!event.target.classList.contains("alt-text-edit-ok")) {
+        return;
+      }
+
       const buttonWrapper = event.target.closest(".button-wrapper");
       this.commitAltText(buttonWrapper);
-    }
-  },
+    },
 
-  @bind
-  _handleAltTextEditButtonClick(event) {
-    if (!event.target.classList.contains("alt-text-edit-btn")) {
-      return;
-    }
-
-    const buttonWrapper = event.target.closest(".button-wrapper");
-    const imageResize = buttonWrapper.querySelector(".scale-btn-container");
-    const imageDelete = buttonWrapper.querySelector(".delete-image-button");
-
-    const readonlyContainer = buttonWrapper.querySelector(
-      ".alt-text-readonly-container"
-    );
-    const altText = readonlyContainer.querySelector(".alt-text");
-
-    const editContainer = buttonWrapper.querySelector(
-      ".alt-text-edit-container"
-    );
-    const editContainerInput = editContainer.querySelector(".alt-text-input");
-
-    buttonWrapper.setAttribute("editing", "true");
-    imageResize.setAttribute("hidden", "true");
-    imageDelete.setAttribute("hidden", "true");
-    readonlyContainer.setAttribute("hidden", "true");
-    editContainerInput.value = altText.textContent;
-    editContainer.removeAttribute("hidden");
-    editContainerInput.focus();
-    event.preventDefault();
-  },
-
-  @bind
-  _handleAltTextOkButtonClick(event) {
-    if (!event.target.classList.contains("alt-text-edit-ok")) {
-      return;
-    }
-
-    const buttonWrapper = event.target.closest(".button-wrapper");
-    this.commitAltText(buttonWrapper);
-  },
-
-  @bind
-  _handleAltTextCancelButtonClick(event) {
-    if (!event.target.classList.contains("alt-text-edit-cancel")) {
-      return;
-    }
-
-    const buttonWrapper = event.target.closest(".button-wrapper");
-    this.resetImageControls(buttonWrapper);
-  },
-
-  @bind
-  _handleImageDeleteButtonClick(event) {
-    if (!event.target.classList.contains("delete-image-button")) {
-      return;
-    }
-    const index = parseInt(
-      event.target.closest(".button-wrapper").dataset.imageIndex,
-      10
-    );
-    const matchingPlaceholder =
-      this.get("composer.reply").match(IMAGE_MARKDOWN_REGEX);
-    this.appEvents.trigger(
-      "composer:replace-text",
-      matchingPlaceholder[index],
-      "",
-      { regex: IMAGE_MARKDOWN_REGEX, index }
-    );
-  },
-
-  _registerImageAltTextButtonClick(preview) {
-    preview.addEventListener("click", this._handleAltTextEditButtonClick);
-    preview.addEventListener("click", this._handleAltTextOkButtonClick);
-    preview.addEventListener("click", this._handleAltTextCancelButtonClick);
-    preview.addEventListener("click", this._handleImageDeleteButtonClick);
-    preview.addEventListener("keypress", this._handleAltTextInputKeypress);
-  },
-
-  @on("willDestroyElement")
-  _composerClosed() {
-    this._unbindMobileUploadButton();
-    this.appEvents.trigger("composer:will-close");
-    next(() => {
-      // need to wait a bit for the "slide down" transition of the composer
-      discourseLater(
-        () => this.appEvents.trigger("composer:closed"),
-        isTesting() ? 0 : 400
-      );
-    });
-
-    this.element
-      .querySelector(".d-editor-input")
-      ?.removeEventListener(
-        "scroll",
-        this._throttledSyncEditorAndPreviewScroll
-      );
-
-    const preview = this.element.querySelector(".d-editor-preview-wrapper");
-    preview?.removeEventListener("click", this._handleImageScaleButtonClick);
-    preview?.removeEventListener("click", this._handleAltTextEditButtonClick);
-    preview?.removeEventListener("click", this._handleAltTextOkButtonClick);
-    preview?.removeEventListener("click", this._handleAltTextCancelButtonClick);
-    preview?.removeEventListener("keypress", this._handleAltTextInputKeypress);
-  },
-
-  onExpandPopupMenuOptions(toolbarEvent) {
-    const selected = toolbarEvent.selected;
-    toolbarEvent.selectText(selected.start, selected.end - selected.start);
-    this.storeToolbarState(toolbarEvent);
-  },
-
-  showPreview() {
-    this.send("togglePreview");
-  },
-
-  _isInQuote(element) {
-    let parent = element.parentElement;
-    while (parent && !this._isPreviewRoot(parent)) {
-      if (this._isQuote(parent)) {
-        return true;
+    @bind
+    _handleAltTextCancelButtonClick(event) {
+      if (!event.target.classList.contains("alt-text-edit-cancel")) {
+        return;
       }
 
-      parent = parent.parentElement;
-    }
+      const buttonWrapper = event.target.closest(".button-wrapper");
+      this.resetImageControls(buttonWrapper);
+    },
 
-    return false;
-  },
+    @bind
+    _handleImageDeleteButtonClick(event) {
+      if (!event.target.classList.contains("delete-image-button")) {
+        return;
+      }
+      const index = parseInt(
+        event.target.closest(".button-wrapper").dataset.imageIndex,
+        10
+      );
+      const matchingPlaceholder =
+        this.get("composer.reply").match(IMAGE_MARKDOWN_REGEX);
+      this.appEvents.trigger(
+        "composer:replace-text",
+        matchingPlaceholder[index],
+        "",
+        { regex: IMAGE_MARKDOWN_REGEX, index }
+      );
+    },
 
-  _isPreviewRoot(element) {
-    return (
-      element.tagName === "DIV" &&
-      element.classList.contains("d-editor-preview")
-    );
-  },
+    _registerImageAltTextButtonClick(preview) {
+      preview.addEventListener("click", this._handleAltTextEditButtonClick);
+      preview.addEventListener("click", this._handleAltTextOkButtonClick);
+      preview.addEventListener("click", this._handleAltTextCancelButtonClick);
+      preview.addEventListener("click", this._handleImageDeleteButtonClick);
+      preview.addEventListener("keypress", this._handleAltTextInputKeypress);
+    },
 
-  _isQuote(element) {
-    return element.tagName === "ASIDE" && element.classList.contains("quote");
-  },
+    @on("willDestroyElement")
+    _composerClosed() {
+      this._unbindMobileUploadButton();
+      this.appEvents.trigger("composer:will-close");
+      next(() => {
+        // need to wait a bit for the "slide down" transition of the composer
+        discourseLater(
+          () => this.appEvents.trigger("composer:closed"),
+          isTesting() ? 0 : 400
+        );
+      });
 
-  _cursorIsOnEmptyLine() {
-    const textArea = this.element.querySelector(".d-editor-input");
-    const selectionStart = textArea.selectionStart;
-    if (selectionStart === 0) {
-      return true;
-    } else if (textArea.value.charAt(selectionStart - 1) === "\n") {
-      return true;
-    } else {
-      return false;
-    }
-  },
+      this.element
+        .querySelector(".d-editor-input")
+        ?.removeEventListener(
+          "scroll",
+          this._throttledSyncEditorAndPreviewScroll
+        );
 
-  _findMatchingUploadHandler(fileName) {
-    return this.uploadHandlers.find((handler) => {
-      const ext = handler.extensions.join("|");
-      const regex = new RegExp(`\\.(${ext})$`, "i");
-      return regex.test(fileName);
-    });
-  },
-
-  actions: {
-    importQuote(toolbarEvent) {
-      this.importQuote(toolbarEvent);
+      const preview = this.element.querySelector(".d-editor-preview-wrapper");
+      preview?.removeEventListener("click", this._handleImageScaleButtonClick);
+      preview?.removeEventListener("click", this._handleAltTextEditButtonClick);
+      preview?.removeEventListener("click", this._handleAltTextOkButtonClick);
+      preview?.removeEventListener(
+        "click",
+        this._handleAltTextCancelButtonClick
+      );
+      preview?.removeEventListener(
+        "keypress",
+        this._handleAltTextInputKeypress
+      );
     },
 
     onExpandPopupMenuOptions(toolbarEvent) {
-      this.onExpandPopupMenuOptions(toolbarEvent);
+      const selected = toolbarEvent.selected;
+      toolbarEvent.selectText(selected.start, selected.end - selected.start);
+      this.storeToolbarState(toolbarEvent);
     },
 
-    togglePreview() {
-      this.togglePreview();
+    showPreview() {
+      this.send("togglePreview");
     },
 
-    extraButtons(toolbar) {
-      toolbar.addButton({
-        id: "quote",
-        group: "fontStyles",
-        icon: "far-comment",
-        sendAction: this.importQuote,
-        title: "composer.quote_post_title",
-        unshift: true,
-      });
+    _isInQuote(element) {
+      let parent = element.parentElement;
+      while (parent && !this._isPreviewRoot(parent)) {
+        if (this._isQuote(parent)) {
+          return true;
+        }
 
-      if (this.allowUpload && this.uploadIcon && !this.site.mobileView) {
-        toolbar.addButton({
-          id: "upload",
-          group: "insertions",
-          icon: this.uploadIcon,
-          title: "upload",
-          sendAction: this.showUploadModal,
-        });
+        parent = parent.parentElement;
       }
 
-      toolbar.addButton({
-        id: "options",
-        group: "extras",
-        icon: "cog",
-        title: "composer.options",
-        sendAction: this.onExpandPopupMenuOptions.bind(this),
-        popupMenu: true,
-      });
+      return false;
     },
 
-    previewUpdated(preview) {
-      // cache jquery objects for functions still using jquery
-      const $preview = $(preview);
+    _isPreviewRoot(element) {
+      return (
+        element.tagName === "DIV" &&
+        element.classList.contains("d-editor-preview")
+      );
+    },
 
-      // Paint mentions
-      const unseenMentions = linkSeenMentions(preview, this.siteSettings);
-      if (unseenMentions.length) {
-        discourseDebounce(
-          this,
-          this._renderUnseenMentions,
-          preview,
-          unseenMentions,
-          450
-        );
-      }
+    _isQuote(element) {
+      return element.tagName === "ASIDE" && element.classList.contains("quote");
+    },
 
-      this._warnMentionedGroups(preview);
-      this._warnCannotSeeMention(preview);
-
-      // Paint category, tag, and other data source hashtags
-      let unseenHashtags;
-      const hashtagContext = this.site.hashtag_configurations["topic-composer"];
-      if (this.siteSettings.enable_experimental_hashtag_autocomplete) {
-        unseenHashtags = linkSeenHashtagsInContext(hashtagContext, preview);
+    _cursorIsOnEmptyLine() {
+      const textArea = this.element.querySelector(".d-editor-input");
+      const selectionStart = textArea.selectionStart;
+      if (selectionStart === 0) {
+        return true;
+      } else if (textArea.value.charAt(selectionStart - 1) === "\n") {
+        return true;
       } else {
-        unseenHashtags = linkSeenHashtags(preview);
+        return false;
       }
-      if (unseenHashtags.length > 0) {
-        discourseDebounce(this, this._renderUnseenHashtags, preview, 450);
-      }
-
-      // Paint oneboxes
-      const paintFunc = () => {
-        const post = this.get("composer.post");
-        let refresh = false;
-
-        //If we are editing a post, we'll refresh its contents once.
-        if (post && !post.get("refreshedPost")) {
-          refresh = true;
-        }
-
-        const paintedCount = loadOneboxes(
-          preview,
-          ajax,
-          this.get("composer.topic.id"),
-          this.get("composer.category.id"),
-          this.siteSettings.max_oneboxes_per_post,
-          refresh
-        );
-
-        if (refresh && paintedCount > 0) {
-          post.set("refreshedPost", true);
-        }
-      };
-
-      discourseDebounce(this, paintFunc, 450);
-
-      // Short upload urls need resolution
-      resolveAllShortUrls(ajax, this.siteSettings, preview);
-
-      preview.addEventListener("click", this._handleImageScaleButtonClick);
-      this._registerImageAltTextButtonClick(preview);
-
-      this.trigger("previewRefreshed", preview);
-      this.afterRefresh($preview);
     },
-  },
-});
+
+    _findMatchingUploadHandler(fileName) {
+      return this.uploadHandlers.find((handler) => {
+        const ext = handler.extensions.join("|");
+        const regex = new RegExp(`\\.(${ext})$`, "i");
+        return regex.test(fileName);
+      });
+    },
+
+    actions: {
+      importQuote(toolbarEvent) {
+        this.importQuote(toolbarEvent);
+      },
+
+      onExpandPopupMenuOptions(toolbarEvent) {
+        this.onExpandPopupMenuOptions(toolbarEvent);
+      },
+
+      togglePreview() {
+        this.togglePreview();
+      },
+
+      extraButtons(toolbar) {
+        toolbar.addButton({
+          id: "quote",
+          group: "fontStyles",
+          icon: "far-comment",
+          sendAction: this.importQuote,
+          title: "composer.quote_post_title",
+          unshift: true,
+        });
+
+        if (this.allowUpload && this.uploadIcon && !this.site.mobileView) {
+          toolbar.addButton({
+            id: "upload",
+            group: "insertions",
+            icon: this.uploadIcon,
+            title: "upload",
+            sendAction: this.showUploadModal,
+          });
+        }
+
+        toolbar.addButton({
+          id: "options",
+          group: "extras",
+          icon: "cog",
+          title: "composer.options",
+          sendAction: this.onExpandPopupMenuOptions.bind(this),
+          popupMenu: true,
+        });
+      },
+
+      previewUpdated(preview) {
+        // cache jquery objects for functions still using jquery
+        const $preview = $(preview);
+
+        // Paint mentions
+        const unseenMentions = linkSeenMentions(preview, this.siteSettings);
+        if (unseenMentions.length) {
+          discourseDebounce(
+            this,
+            this._renderUnseenMentions,
+            preview,
+            unseenMentions,
+            450
+          );
+        }
+
+        this._warnMentionedGroups(preview);
+        this._warnCannotSeeMention(preview);
+
+        // Paint category, tag, and other data source hashtags
+        let unseenHashtags;
+        const hashtagContext =
+          this.site.hashtag_configurations["topic-composer"];
+        if (this.siteSettings.enable_experimental_hashtag_autocomplete) {
+          unseenHashtags = linkSeenHashtagsInContext(hashtagContext, preview);
+        } else {
+          unseenHashtags = linkSeenHashtags(preview);
+        }
+        if (unseenHashtags.length > 0) {
+          discourseDebounce(this, this._renderUnseenHashtags, preview, 450);
+        }
+
+        // Paint oneboxes
+        const paintFunc = () => {
+          const post = this.get("composer.post");
+          let refresh = false;
+
+          //If we are editing a post, we'll refresh its contents once.
+          if (post && !post.get("refreshedPost")) {
+            refresh = true;
+          }
+
+          const paintedCount = loadOneboxes(
+            preview,
+            ajax,
+            this.get("composer.topic.id"),
+            this.get("composer.category.id"),
+            this.siteSettings.max_oneboxes_per_post,
+            refresh
+          );
+
+          if (refresh && paintedCount > 0) {
+            post.set("refreshedPost", true);
+          }
+        };
+
+        discourseDebounce(this, paintFunc, 450);
+
+        // Short upload urls need resolution
+        resolveAllShortUrls(ajax, this.siteSettings, preview);
+
+        this._generateVideoThumbnail();
+
+        preview.addEventListener("click", this._handleImageScaleButtonClick);
+        this._registerImageAltTextButtonClick(preview);
+
+        this.trigger("previewRefreshed", preview);
+        this.afterRefresh($preview);
+      },
+    },
+  }
+);

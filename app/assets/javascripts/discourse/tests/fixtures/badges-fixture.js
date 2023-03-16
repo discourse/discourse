@@ -141,7 +141,7 @@ export default {
       },
       {
         id: 2,
-        name: "Regular User",
+        name: "Member",
         description: null,
         grant_count: 467,
         allow_title: false,
@@ -170,7 +170,7 @@ export default {
       },
       {
         id: 4,
-        name: "Elder",
+        name: "Leader",
         description: null,
         grant_count: 4,
         allow_title: true,

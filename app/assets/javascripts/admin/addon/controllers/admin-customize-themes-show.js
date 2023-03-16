@@ -1,4 +1,4 @@
-import { COMPONENTS, THEMES } from "admin/models/theme";
+import { inject as service } from "@ember/service";
 import {
   empty,
   filterBy,
@@ -6,8 +6,9 @@ import {
   match,
   notEmpty,
 } from "@ember/object/computed";
+import { COMPONENTS, THEMES } from "admin/models/theme";
 import Controller from "@ember/controller";
-import EmberObject from "@ember/object";
+import EmberObject, { action } from "@ember/object";
 import I18n from "I18n";
 import ThemeSettings from "admin/models/theme-settings";
 import discourseComputed from "discourse-common/utils/decorators";
@@ -15,31 +16,35 @@ import { makeArray } from "discourse-common/lib/helpers";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import showModal from "discourse/lib/show-modal";
 import { url } from "discourse/lib/computed";
-import { inject as service } from "@ember/service";
 
 const THEME_UPLOAD_VAR = 2;
 
-export default Controller.extend({
-  dialog: service(),
-  downloadUrl: url("model.id", "/admin/customize/themes/%@/export"),
-  previewUrl: url("model.id", "/admin/themes/%@/preview"),
-  addButtonDisabled: empty("selectedChildThemeId"),
-  editRouteName: "adminCustomizeThemes.edit",
-  parentThemesNames: mapBy("model.parentThemes", "name"),
-  availableParentThemes: filterBy("allThemes", "component", false),
-  availableActiveParentThemes: filterBy("availableParentThemes", "isActive"),
-  availableThemesNames: mapBy("availableParentThemes", "name"),
-  availableActiveThemesNames: mapBy("availableActiveParentThemes", "name"),
-  availableActiveChildThemes: filterBy("availableChildThemes", "hasParents"),
-  availableComponentsNames: mapBy("availableChildThemes", "name"),
-  availableActiveComponentsNames: mapBy("availableActiveChildThemes", "name"),
-  childThemesNames: mapBy("model.childThemes", "name"),
-  extraFiles: filterBy("model.theme_fields", "target", "extra_js"),
+export default class AdminCustomizeThemesShowController extends Controller {
+  @service dialog;
+
+  editRouteName = "adminCustomizeThemes.edit";
+
+  @url("model.id", "/admin/customize/themes/%@/export") downloadUrl;
+  @url("model.id", "/admin/themes/%@/preview") previewUrl;
+  @empty("selectedChildThemeId") addButtonDisabled;
+  @mapBy("model.parentThemes", "name") parentThemesNames;
+  @filterBy("allThemes", "component", false) availableParentThemes;
+  @filterBy("availableParentThemes", "isActive") availableActiveParentThemes;
+  @mapBy("availableParentThemes", "name") availableThemesNames;
+  @mapBy("availableActiveParentThemes", "name") availableActiveThemesNames;
+  @filterBy("availableChildThemes", "hasParents") availableActiveChildThemes;
+  @mapBy("availableChildThemes", "name") availableComponentsNames;
+  @mapBy("availableActiveChildThemes", "name") availableActiveComponentsNames;
+  @mapBy("model.childThemes", "name") childThemesNames;
+  @filterBy("model.theme_fields", "target", "extra_js") extraFiles;
+  @notEmpty("settings") hasSettings;
+  @notEmpty("translations") hasTranslations;
+  @match("model.remote_theme.remote_url", /^http(s)?:\/\//) sourceIsHttp;
 
   @discourseComputed("model.component", "model.remote_theme")
   showCheckboxes() {
     return !this.model.component || this.model.remote_theme;
-  },
+  }
 
   @discourseComputed("model.editedFields")
   editedFieldsFormatted() {
@@ -57,13 +62,13 @@ export default Controller.extend({
       descriptions.push(resultString);
     });
     return descriptions;
-  },
+  }
 
   @discourseComputed("colorSchemeId", "model.color_scheme_id")
   colorSchemeChanged(colorSchemeId, existingId) {
     colorSchemeId = colorSchemeId === null ? null : parseInt(colorSchemeId, 10);
     return colorSchemeId !== existingId;
-  },
+  }
 
   @discourseComputed("availableChildThemes", "model.childThemes.[]", "model")
   selectableChildThemes(available, childThemes) {
@@ -73,7 +78,7 @@ export default Controller.extend({
         : available.filter((theme) => !childThemes.includes(theme));
       return themes.length === 0 ? null : themes;
     }
-  },
+  }
 
   @discourseComputed("model.parentThemes.[]")
   relativesSelectorSettingsForComponent() {
@@ -91,7 +96,7 @@ export default Controller.extend({
       allThemes: this.allThemes,
       setDefaultValuesLabel: I18n.t("admin.customize.theme.add_all_themes"),
     });
-  },
+  }
 
   @discourseComputed("model.parentThemes.[]")
   relativesSelectorSettingsForTheme() {
@@ -109,7 +114,7 @@ export default Controller.extend({
       allThemes: this.allThemes,
       setDefaultValuesLabel: I18n.t("admin.customize.theme.add_all"),
     });
-  },
+  }
 
   @discourseComputed("allThemes", "model.component", "model")
   availableChildThemes(allThemes) {
@@ -119,40 +124,36 @@ export default Controller.extend({
         (theme) => theme.get("id") !== themeId && theme.get("component")
       );
     }
-  },
+  }
 
   @discourseComputed("model.component")
   convertKey(component) {
     const type = component ? "component" : "theme";
     return `admin.customize.theme.convert_${type}`;
-  },
+  }
 
   @discourseComputed("model.component")
   convertIcon(component) {
     return component ? "cube" : "";
-  },
+  }
 
   @discourseComputed("model.component")
   convertTooltip(component) {
     const type = component ? "component" : "theme";
     return `admin.customize.theme.convert_${type}_tooltip`;
-  },
+  }
 
   @discourseComputed("model.settings")
   settings(settings) {
     return settings.map((setting) => ThemeSettings.create(setting));
-  },
-
-  hasSettings: notEmpty("settings"),
+  }
 
   @discourseComputed("model.translations")
   translations(translations) {
     return translations.map((setting) =>
       ThemeSettings.create({ ...setting, textarea: true })
     );
-  },
-
-  hasTranslations: notEmpty("translations"),
+  }
 
   @discourseComputed(
     "model.remote_theme.local_version",
@@ -161,12 +162,12 @@ export default Controller.extend({
   )
   hasOverwrittenHistory(localVersion, remoteVersion, commitsBehind) {
     return localVersion !== remoteVersion && commitsBehind === -1;
-  },
+  }
 
   @discourseComputed("model.remoteError", "updatingRemote")
   showRemoteError(errorMessage, updating) {
     return errorMessage && !updating;
-  },
+  }
 
   @discourseComputed(
     "model.remote_theme.remote_url",
@@ -175,13 +176,13 @@ export default Controller.extend({
   )
   finishInstall(remoteUrl, localVersion, commitsBehind) {
     return remoteUrl && !localVersion && !commitsBehind;
-  },
+  }
 
   editedFieldsForTarget(target) {
     return this.get("model.editedFields").filter(
       (field) => field.target === target
     );
-  },
+  }
 
   commitSwitchType() {
     const model = this.model;
@@ -222,7 +223,8 @@ export default Controller.extend({
         });
       })
       .catch(popupAjaxError);
-  },
+  }
+
   transitionToEditRoute() {
     this.transitionToRoute(
       this.editRouteName,
@@ -230,8 +232,7 @@ export default Controller.extend({
       "common",
       "scss"
     );
-  },
-  sourceIsHttp: match("model.remote_theme.remote_url", /^http(s)?:\/\//),
+  }
 
   @discourseComputed(
     "model.remote_theme.remote_url",
@@ -241,168 +242,186 @@ export default Controller.extend({
     return remoteThemeBranch
       ? `${remoteThemeUrl.replace(/\.git$/, "")}/tree/${remoteThemeBranch}`
       : remoteThemeUrl;
-  },
+  }
 
   @discourseComputed("model.user.id", "model.default")
   showConvert(userId, defaultTheme) {
     return userId > 0 && !defaultTheme;
-  },
+  }
 
-  actions: {
-    updateToLatest() {
-      this.set("updatingRemote", true);
-      this.model
-        .updateToLatest()
-        .catch(popupAjaxError)
-        .finally(() => {
-          this.set("updatingRemote", false);
-        });
-    },
-
-    checkForThemeUpdates() {
-      this.set("updatingRemote", true);
-      this.model
-        .checkForUpdates()
-        .catch(popupAjaxError)
-        .finally(() => {
-          this.set("updatingRemote", false);
-        });
-    },
-
-    addUploadModal() {
-      showModal("admin-add-upload", { admin: true, name: "" });
-    },
-
-    addUpload(info) {
-      let model = this.model;
-      model.setField("common", info.name, "", info.upload_id, THEME_UPLOAD_VAR);
-      model.saveChanges("theme_fields").catch((e) => popupAjaxError(e));
-    },
-
-    cancelChangeScheme() {
-      this.set("colorSchemeId", this.get("model.color_scheme_id"));
-    },
-    changeScheme() {
-      let schemeId = this.colorSchemeId;
-      this.set(
-        "model.color_scheme_id",
-        schemeId === null ? null : parseInt(schemeId, 10)
-      );
-      this.model.saveChanges("color_scheme_id");
-    },
-    startEditingName() {
-      this.set("oldName", this.get("model.name"));
-      this.set("editingName", true);
-    },
-    cancelEditingName() {
-      this.set("model.name", this.oldName);
-      this.set("editingName", false);
-    },
-    finishedEditingName() {
-      this.model.saveChanges("name");
-      this.set("editingName", false);
-    },
-
-    editTheme() {
-      if (this.get("model.remote_theme.is_git")) {
-        this.dialog.confirm({
-          message: I18n.t("admin.customize.theme.edit_confirm"),
-          didConfirm: () => this.transitionToEditRoute(),
-        });
-      } else {
-        this.transitionToEditRoute();
-      }
-    },
-
-    applyDefault() {
-      const model = this.model;
-      model.saveChanges("default").then(() => {
-        if (model.get("default")) {
-          this.allThemes.forEach((theme) => {
-            if (theme !== model && theme.get("default")) {
-              theme.set("default", false);
-            }
-          });
-        }
+  @action
+  updateToLatest() {
+    this.set("updatingRemote", true);
+    this.model
+      .updateToLatest()
+      .catch(popupAjaxError)
+      .finally(() => {
+        this.set("updatingRemote", false);
       });
-    },
+  }
 
-    applyUserSelectable() {
-      this.model.saveChanges("user_selectable");
-    },
-
-    applyAutoUpdateable() {
-      this.model.saveChanges("auto_update");
-    },
-
-    addChildTheme() {
-      let themeId = parseInt(this.selectedChildThemeId, 10);
-      let theme = this.allThemes.findBy("id", themeId);
-      this.model.addChildTheme(theme).then(() => this.store.findAll("theme"));
-    },
-
-    removeUpload(upload) {
-      return this.dialog.yesNoConfirm({
-        message: I18n.t("admin.customize.theme.delete_upload_confirm"),
-        didConfirm: () => this.model.removeField(upload),
+  @action
+  checkForThemeUpdates() {
+    this.set("updatingRemote", true);
+    this.model
+      .checkForUpdates()
+      .catch(popupAjaxError)
+      .finally(() => {
+        this.set("updatingRemote", false);
       });
-    },
+  }
 
-    removeChildTheme(theme) {
-      this.model
-        .removeChildTheme(theme)
-        .then(() => this.store.findAll("theme"));
-    },
+  @action
+  addUploadModal() {
+    showModal("admin-add-upload", { admin: true, name: "" });
+  }
 
-    destroy() {
-      return this.dialog.yesNoConfirm({
-        message: I18n.t("admin.customize.delete_confirm", {
-          theme_name: this.get("model.name"),
-        }),
-        didConfirm: () => {
-          const model = this.model;
-          model.setProperties({ recentlyInstalled: false });
-          model.destroyRecord().then(() => {
-            this.allThemes.removeObject(model);
-            this.transitionToRoute("adminCustomizeThemes");
-          });
-        },
+  @action
+  addUpload(info) {
+    let model = this.model;
+    model.setField("common", info.name, "", info.upload_id, THEME_UPLOAD_VAR);
+    model.saveChanges("theme_fields").catch((e) => popupAjaxError(e));
+  }
+
+  @action
+  cancelChangeScheme() {
+    this.set("colorSchemeId", this.get("model.color_scheme_id"));
+  }
+
+  @action
+  changeScheme() {
+    let schemeId = this.colorSchemeId;
+    this.set(
+      "model.color_scheme_id",
+      schemeId === null ? null : parseInt(schemeId, 10)
+    );
+    this.model.saveChanges("color_scheme_id");
+  }
+
+  @action
+  startEditingName() {
+    this.set("oldName", this.get("model.name"));
+    this.set("editingName", true);
+  }
+
+  @action
+  cancelEditingName() {
+    this.set("model.name", this.oldName);
+    this.set("editingName", false);
+  }
+
+  @action
+  finishedEditingName() {
+    this.model.saveChanges("name");
+    this.set("editingName", false);
+  }
+
+  @action
+  editTheme() {
+    if (this.get("model.remote_theme.is_git")) {
+      this.dialog.confirm({
+        message: I18n.t("admin.customize.theme.edit_confirm"),
+        didConfirm: () => this.transitionToEditRoute(),
       });
-    },
+    } else {
+      this.transitionToEditRoute();
+    }
+  }
 
-    switchType() {
-      const relatives = this.get("model.component")
-        ? this.get("model.parentThemes")
-        : this.get("model.childThemes");
-
-      let message = I18n.t(`${this.convertKey}_alert_generic`);
-
-      if (relatives && relatives.length > 0) {
-        message = I18n.t(`${this.convertKey}_alert`, {
-          relatives: relatives
-            .map((relative) => relative.get("name"))
-            .join(", "),
+  @action
+  applyDefault() {
+    const model = this.model;
+    model.saveChanges("default").then(() => {
+      if (model.get("default")) {
+        this.allThemes.forEach((theme) => {
+          if (theme !== model && theme.get("default")) {
+            theme.set("default", false);
+          }
         });
       }
+    });
+  }
 
-      return this.dialog.yesNoConfirm({
-        message,
-        didConfirm: () => this.commitSwitchType(),
+  @action
+  applyUserSelectable() {
+    this.model.saveChanges("user_selectable");
+  }
+
+  @action
+  applyAutoUpdateable() {
+    this.model.saveChanges("auto_update");
+  }
+
+  @action
+  addChildTheme() {
+    let themeId = parseInt(this.selectedChildThemeId, 10);
+    let theme = this.allThemes.findBy("id", themeId);
+    this.model.addChildTheme(theme).then(() => this.store.findAll("theme"));
+  }
+
+  @action
+  removeUpload(upload) {
+    return this.dialog.yesNoConfirm({
+      message: I18n.t("admin.customize.theme.delete_upload_confirm"),
+      didConfirm: () => this.model.removeField(upload),
+    });
+  }
+
+  @action
+  removeChildTheme(theme) {
+    this.model.removeChildTheme(theme).then(() => this.store.findAll("theme"));
+  }
+
+  @action
+  destroyTheme() {
+    return this.dialog.yesNoConfirm({
+      message: I18n.t("admin.customize.delete_confirm", {
+        theme_name: this.get("model.name"),
+      }),
+      didConfirm: () => {
+        const model = this.model;
+        model.setProperties({ recentlyInstalled: false });
+        model.destroyRecord().then(() => {
+          this.allThemes.removeObject(model);
+          this.transitionToRoute("adminCustomizeThemes");
+        });
+      },
+    });
+  }
+
+  @action
+  switchType() {
+    const relatives = this.get("model.component")
+      ? this.get("model.parentThemes")
+      : this.get("model.childThemes");
+
+    let message = I18n.t(`${this.convertKey}_alert_generic`);
+
+    if (relatives && relatives.length > 0) {
+      message = I18n.t(`${this.convertKey}_alert`, {
+        relatives: relatives.map((relative) => relative.get("name")).join(", "),
       });
-    },
+    }
 
-    enableComponent() {
-      this.model.set("enabled", true);
-      this.model
-        .saveChanges("enabled")
-        .catch(() => this.model.set("enabled", false));
-    },
+    return this.dialog.yesNoConfirm({
+      message,
+      didConfirm: () => this.commitSwitchType(),
+    });
+  }
 
-    disableComponent() {
-      this.model.set("enabled", false);
-      this.model
-        .saveChanges("enabled")
-        .catch(() => this.model.set("enabled", true));
-    },
-  },
-});
+  @action
+  enableComponent() {
+    this.model.set("enabled", true);
+    this.model
+      .saveChanges("enabled")
+      .catch(() => this.model.set("enabled", false));
+  }
+
+  @action
+  disableComponent() {
+    this.model.set("enabled", false);
+    this.model
+      .saveChanges("enabled")
+      .catch(() => this.model.set("enabled", true));
+  }
+}

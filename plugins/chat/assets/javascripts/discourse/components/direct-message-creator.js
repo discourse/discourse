@@ -23,7 +23,6 @@ export default Component.extend({
   router: service(),
   chatStateManager: service(),
   isLoading: false,
-  onSwitchChannel: null,
 
   init() {
     this._super(...arguments);

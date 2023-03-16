@@ -150,6 +150,7 @@ zh_TW:
         disabled: "已於 %{when} 移除該橫幅主題。將不再出現於任何頁面。"
     topic_admin_menu: "話題動作"
     skip_to_main_content: "跳到主要內容"
+    skip_user_nav: "跳至個人檔案內容"
     emails_are_disabled: "管理員已停用了全域的外部信件功能。將不再寄出任何類型的電子郵件。"
     emails_are_disabled_non_staff: "非員工用戶的外發電子郵件已被禁用。"
     software_update_prompt:
@@ -267,11 +268,8 @@ zh_TW:
       edit_bookmark: "編輯書籤"
       clear_bookmarks: "清除書籤"
       help:
-        bookmark: "點擊以將此話題的第一篇貼文加入書籤"
-        edit_bookmark: "點擊以編輯此主題的書籤"
         edit_bookmark_for_topic: "按一下以編輯此主題的書籤"
         unbookmark: "點擊以移除此話題所有書籤"
-        unbookmark_with_reminder: "點擊以移除此話題所有書籤和提醒。"
     bookmarks:
       created: "你已將這篇文章加入書籤。 %{name}"
       create: "建立書籤"
@@ -468,11 +466,9 @@ zh_TW:
       scores:
         about: "該分數基於報告者的信任級別，其先前標誌的準確性以及報告的項目的優先級來計算。"
         score: "分數"
-        date: "日期"
-        type: "類型"
+        type: "原因"
         status: "狀態"
-        submitted_by: "送出者"
-        reviewed_by: "審核由"
+        submitted_by: "回報由"
       statuses:
         pending:
           title: "申請中"
@@ -480,12 +476,10 @@ zh_TW:
           title: "已同意"
         rejected:
           title: "被拒絕"
-        ignored:
-          title: "忽略"
-        deleted:
-          title: "刪除"
         all:
-          title: "(所有)"
+          title: "所有"
+      context_question:
+        delimiter: "或"
       types:
         reviewable_flagged_post:
           title: "標記的貼文"
@@ -732,6 +726,7 @@ zh_TW:
         remove_members: "移除成員"
         remove_owners: "移除擁有者"
         make_all_primary: "將全部設為主要"
+        status: "狀態"
         owner: "擁有者"
         primary: "主要"
       topics: "話題"
@@ -845,11 +840,6 @@ zh_TW:
       profile: "個人檔案"
       mute: "靜音"
       edit: "編輯喜好設定"
-      download_archive:
-        button_text: "全部下載"
-        confirm: "你確定要下載你的貼文嗎？"
-        success: "已開始下載，下載完畢後將以訊息通知您"
-        rate_limit_error: "每天僅可下載貼文一次，請明天再重試。"
       new_private_message: "新訊息"
       private_message: "訊息"
       private_messages: "訊息"
@@ -1635,8 +1625,6 @@ zh_TW:
           other: "您至少必須選擇%{count}個標籤"
       save_edit: "儲存編輯"
       overwrite_edit: "覆寫編輯"
-      reply_original: "回覆至原始的話題"
-      reply_here: "在此回覆"
       reply: "回覆"
       cancel: "取消"
       create_topic: "開啟話題"
@@ -1961,8 +1949,6 @@ zh_TW:
       options: "話題選項"
       show_links: "在話題裡顯示連結"
       suggest_create_topic: 準備好 <a href>開始新的對話了嗎？</a>
-      jump_reply_up: 跳到更早的回覆
-      jump_reply_down: 跳到更晚的回覆
       deleted: "此話題已被刪除"
       slow_mode_update:
         title: "慢速模式"
@@ -2351,6 +2337,8 @@ zh_TW:
           last: "最新版"
           hide: "隱藏修訂紀錄"
           show: "顯示修訂紀錄"
+          destroy: "刪除修訂"
+          destroy_confirm: "您確定要刪除此帖子的所有修訂嗎？此操作是永久性的。"
           edit_wiki: "編輯共筆"
           edit_post: "編輯貼文"
           comparing_previous_to_current_out_of_total: "<strong>%{previous}</strong>%{icon}<strong>%{current}</strong>/%{total}"
@@ -2396,7 +2384,6 @@ zh_TW:
       back: "回到類別"
       general: "一般"
       settings: "設定"
-      topic_template: "話題範本"
       tags: "標籤"
       tags_allowed_tags: "將這些標籤（Tags）限制為此分類做使用："
       tags_allowed_tag_groups: "將這些標籤群組限制在此類別使用："
@@ -2441,8 +2428,6 @@ zh_TW:
       images: "圖片"
       email_in: "自訂外來電郵地址:"
       email_in_allow_strangers: "接受非使用者的電郵"
-      email_in_disabled: "\"用電子郵件張貼新的話題\"功能已被關閉。若要使用此功能，"
-      email_in_disabled_click: '請啟用"email in"功能'
       mailinglist_mirror: "以類別來區分郵件列表"
       show_subcategory_list: "在此分類中，將子分類顯示在話題上方。"
       num_featured_topics: "分類頁面中顯示的話題數量："
@@ -2610,6 +2595,10 @@ zh_TW:
     filters:
       with_topics: "%{filter} 話題"
       with_category: "%{filter} %{category} 話題"
+      filter:
+        title: "過濾"
+        button:
+          label: "過濾"
       latest:
         title: "最新"
         title_with_count:
@@ -2666,7 +2655,7 @@ zh_TW:
           title: "周"
         daily:
           title: "日"
-        all_time: "所以時間"
+        all_time: "所有時間"
         this_year: "年"
         this_quarter: "季度"
         this_month: "月"
@@ -2861,13 +2850,11 @@ zh_TW:
     safe_mode:
       enabled: "安全模式已經開啟，關閉該瀏覽器窗口以退出安全模式"
     pause_notifications:
-      remaining: "剩餘 %{remaining}"
       options:
         half_hour: "30 分鐘"
         one_hour: "1 小時"
         two_hours: "2 小時"
         tomorrow: "直到明天"
-        custom: "客製"
       set_schedule: "設定通知時程"
     trust_levels:
       names:
@@ -2885,6 +2872,12 @@ zh_TW:
       all_categories: "所有分類"
       all_tags: "所有標籤"
       sections:
+        custom:
+          save: "保存"
+          delete: "刪除"
+          links:
+            icon: "圖示"
+            name: "名字"
         about:
           header_link_text: "關於"
         messages:
@@ -3179,7 +3172,6 @@ zh_TW:
         enabled: "啟用?"
         is_enabled: "是"
         not_enabled: "否"
-        change_settings: "更改設定"
         change_settings_short: "設定"
         howto: "如何安裝外掛?"
         official: "官方套件"
@@ -3448,6 +3440,8 @@ zh_TW:
           love:
             name: "愛"
             description: "按讚按鈕的顏色"
+          selected:
+            name: "已選取"
         email_style:
           heading: "自訂電子郵件風格"
           css: "CSS"
@@ -3565,6 +3559,7 @@ zh_TW:
           no_previous: "無舊設定值。"
           deleted: "無新設定值，記錄已刪除。"
           actions:
+            permanently_delete_post_revisions: "永久刪除貼文修訂"
             delete_user: "刪除使用者"
             change_trust_level: "修改信任等級"
             change_username: "修改使用者名稱"
@@ -3698,6 +3693,30 @@ zh_TW:
           upload_successful: "上傳成功，文字已被添加。"
         test:
           no_matches: "找不到符合的項目"
+      form_templates:
+        nav_title: "模板"
+        list_table:
+          headings:
+            name: "名字"
+            actions: "動作"
+        view_template:
+          close: "關閉"
+          edit: "編輯"
+          delete: "刪除"
+        new_template_form:
+          submit: "保存"
+          cancel: "取消"
+          preview: "預覽"
+        quick_insert_fields:
+          add_new_field: "加入"
+          dropdown: "下拉"
+        validations_modal:
+          table_headers:
+            type: "類型"
+            description: "簡述"
+          validations:
+            required:
+              key: "必填"
       impersonate:
         title: "檢視角度"
         help: "使用此工具以使用者的檢視角度進行除錯。完成後將需登出。"
@@ -3710,6 +3729,7 @@ zh_TW:
         not_found: "抱歉，系統裡無此使用者名稱。"
         id_not_found: "抱歉，系統裡無此使用者名稱。"
         active: "已啟動"
+        status: "狀態"
         show_emails: "顯示電子郵件"
         hide_emails: "隱藏 email"
         nav:
@@ -3782,7 +3802,6 @@ zh_TW:
         staged: "暫存？"
         show_admin_profile: "管理員"
         show_public_profile: "顯示公開的基本資料"
-        impersonate: "檢視角度"
         action_logs: "操作紀錄"
         ip_lookup: "IP 反查"
         log_out: "登出"
@@ -4050,7 +4069,8 @@ zh_TW:
         allow_title: 允許使用徽章作為稱號
         multiple_grant: 可多次授予
         listable: 在徽章頁面上顯示徽章
-        enabled: 啟用徽章
+        enabled: 啟用
+        disabled: 停用
         icon: 圖示
         image: 圖片
         read_only_setting_help: "自訂文字"
@@ -4100,7 +4120,6 @@ zh_TW:
         confirm_delete: "你確定要刪除此主機？"
         title: "嵌入"
         host: "允許的主機"
-        class_name: "階級名稱"
         edit: "編輯"
         category: "張貼到分類"
         add_host: "新增主機"

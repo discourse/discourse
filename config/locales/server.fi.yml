@@ -587,10 +587,6 @@ fi:
             duration_minutes:
               cannot_be_zero: "täytyy olla suurempi kuin 0."
               exceeds_maximum: "voi olla enintään 20 vuotta."
-        translation_overrides:
-          attributes:
-            value:
-              invalid_interpolation_keys: 'Nämä interpolaatioavaimet eivät kelpaa: "%{keys}"'
         watched_word:
           attributes:
             word:
@@ -1607,7 +1603,6 @@ fi:
     enable_discourse_connect: "Ota käyttöön kirjautuminen DiscourseConnectin (aikaisemmin \"Discourse SSO\") kautta (VAROITUS: KÄYTTÄJIEN SÄHKÖPOSTIEN OSOITTEET *ON TARKISTETTAVA* ULKOISELLA SIVUSTOLLA!)"
     verbose_discourse_connect_logging: "Kirjaa yksityiskohtaiset DiscourseConnect-diagnostiikat lokiin <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     enable_discourse_connect_provider: "Käytä DiscourseConnectin (aikaisemmin '\"Discourse SSO\") palveluntarjoajaprotokollaa /session/sso_provider-päätepisteessä, edellyttää discourse_connect_provider_secretsin asettamista"
-    discourse_connect_url: "DiscourseConnectin päätepisteen URL (täytyy sisältää http:// tai https://)"
     discourse_connect_secret: "Salausavain, jolla todennetaan DiscourseConnectin tiedot, varmista, että se on vähintään 10 merkkiä pitkä"
     discourse_connect_provider_secrets: "Luettelo verkkotunnus-salausavain-pareista, jotka käyttävät DiscourseConnectia. Varmista, että DiscourseConnectin salausavain on vähintään 10 merkin pituinen. Jokerimerkkiä * voi käyttää kelpuuttamaan mikä tahansa verkkotunnus tai verkkotunnuksen osa (esim. *.esimerkki.fi)."
     discourse_connect_overrides_bio: "Syrjäyttää käyttäjän kuvauksen itsestään käyttäjäprofiilissa ja estää sen muokkaamisen"
@@ -1977,8 +1972,6 @@ fi:
     automatically_unpin_topics: "Poista ketjun kiinnitys automaattisesti, kun käyttäjä on sen lopussa."
     read_time_word_count: "Sanamäärä minuutissa, jota käytetään lukuajan arviointiin."
     topic_page_title_includes_category: "Ketjusivun <a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>otsikkotunniste</a> sisältää alueen nimen."
-    native_app_install_banner_ios: "Näyttää DiscourseHub-sovelluksen bannerin iOS-laitteilla tavallisille käyttäjille (luottamustasosta 1 ylöspäin)."
-    native_app_install_banner_android: "Näyttää DiscourseHub-sovelluksen bannerin Android-laitteilla tavallisille käyttäjille (luottamustasosta 1 ylöspäin)."
     app_association_android: "<a href='%{base_path}/.well-known/assetlinks.json'>.well-known/assetlinks.json</a>-päätepisteen sisältö, käytetään Googlen Digital Asset Links APIssa."
     app_association_ios: "Contents of <a href='%{base_path}/apple-app-site-association'>apple-app-site-association</a>-päätepisteen sisältö, käytetään universaalien linkkien luomiseen tämän sivuston ja iOS-sovellusten välille."
     share_anonymized_statistics: "Julkaise yksilöimättömät käyttötilastot."
@@ -2012,11 +2005,8 @@ fi:
     delete_merged_stub_topics_after_days: "Kuinka montaa päivää odotetaan ennen kuin täysin yhdistetyt tynkäketjut poistetaan automaattisesti. Jos asetat arvoksi 0, tynkäketjuja ei poistetan koskaan."
     bootstrap_mode_min_users: "Vähimmäismäärä käyttäjiä, joka vaaditaan aloitustilan poistamiseen (aseta 0 poistaaksesi käytöstä)"
     prevent_anons_from_downloading_files: "Estä tuntemattomia käyttäjiä lataamasta liitteitä."
-    secure_media: "VANHENTUNUT: Käytä tämän sijaan secure_uploads-asetusta, poistetaan Discourse 3.0:ssa."
     secure_uploads: 'Rajoittaa pääsyä KAIKKIIN latauksiin (kuvat, videot, äänet, tekstit, pdf-tiedostot, zip-tiedostot ja muut). Jos "sisäänkirjautuminen vaaditaan" on käytössä, vain kirjautuneilla käyttäjillä on pääsy latauksiin. Muussa tapauksessa pääsy rajoitetaan vain yksityisviesteihin ja yksityisiin alueisiin ladattuihin mediatiedostoihin. VAROITUS: Tämä asetus on monimutkainen ja vaatii syvällistä hallinnollista ymmärrystä. Katso lisätietoja <a target="_blank" href="https://meta.discourse.org/t/-/140017">turvallisia latauksia palvelimeen käsittelevästä ketjusta Metassa</a>.'
-    secure_media_allow_embed_images_in_emails: "VANHENTUNUT: Käytä \"secure_uploads_allow_embed_images_in_emails\"-asetusta, poistetaan Discourse 3.0:ssa."
     secure_uploads_allow_embed_images_in_emails: "Sallii turvallisten kuvien upottamisen, jotka normaalisti karsittaisiin sähköposteissa, jos niiden koko on pienempi kuin \"secure uploads max email embed image size kb\" -asetus."
-    secure_media_max_email_embed_image_size_kb: "VANHENTUNUT: Käytä \"secure_uploads_max_email_embed_image_size_kb\"-asetusta, poistetaan Discourse 3.0:ssa."
     secure_uploads_max_email_embed_image_size_kb: "Sähköposteihin upotettavien turvallisten kuvien kokoraja, jos \"secure uploads allow embed in emails\" -asetus on käytössä. Ilman kyseistä asetusta tällä asetuksella ei ole vaikutusta."
     slug_generation_method: "Valitse polkutunnuksen luomisen metodi, 'encoded' käyttää prosenttikoodausta, 'none' poistaa polkutunnukset käytöstä."
     enable_emoji: "Ota emoji käyttöön"
@@ -2134,8 +2124,6 @@ fi:
     navigation_menu: "Määritä käytettävä navigointivalikko. Sivupalkin ja yläpalkin navigointi ovat käyttäjien mukautettavissa. Vanha vaihtoehto on käytettävissä yhteensopivuuden varmistamiseksi vanhojen versioiden kanssa."
     default_sidebar_categories: "Valitut alueet näkyvät sivupalkin Alueet-osiossa oletuksena."
     default_sidebar_tags: "Valitut tunnisteet näkyvät sivupalkin Tunnisteet-osiossa oletuksena."
-    enable_new_user_profile_nav_groups: "KOKEELLINEN: valittujen ryhmien käyttäjille näytetään uusi käyttäjäprofiilin navigointivalikko"
-    enable_experimental_topic_timeline_groups: "KOKEELLINEN: valittujen ryhmien käyttäjille näytetään uudelleenmuotoiltu ketjun aikajana"
     enable_experimental_hashtag_autocomplete: "KOKEELLINEN: käytä alueille ja tunnisteille uutta automaattista #hashtag-täydennysjärjestelmää, jotka hahmontaa valitun kohteen eri tavalla ja on parantanut hakua"
     errors:
       invalid_css_color: "Virheellinen väri. Anna värin nimi tai heksadesimaaliarvo."
@@ -2193,7 +2181,6 @@ fi:
       search_tokenize_japanese_enabled: "\"search_tokenize_japanese\" on poistettava käytöstä ennen tämän asetuksen käyttöönottoa."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Et voi ottaa DiscourseConnectia käyttöön, jos 2FA on pakotettu."
       delete_rejected_email_after_days: "Tämä asetus ei voi olla pienempi kuin delete_email_logs_after_days-asetus tai suurempi kuin %{max}"
-      invalid_uncategorized_category_setting: "Luokittelemattomat-aluetta ei voi valita, jos luokittelemattomia ketjuja ei ole sallittu"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2388,7 +2375,6 @@ fi:
     activated_by_staff: "Henkilökunta aktivoi"
     new_user_typed_too_fast: "Uusi käyttäjä näppäili liian nopeasti"
     content_matches_auto_silence_regex: "Sisältö vastaa automaattisesti hiljennettävää säännöllistä lauseketta"
-    content_matches_auto_block_regex: "Sisältö vastaa automaattisesti estettävää säännöllistä lauseketta"
     username:
       short: "täytyy olla vähintään %{min} merkkiä"
       long: "ei saa olla yli %{max} merkkiä"
@@ -3122,14 +3108,6 @@ fi:
     user_automatically_silenced:
       title: "Käyttäjä hiljennettiin automaattisesti"
       subject_template: "Yhteisön merkinnät hiljensivät uuden käyttäjän %{username}"
-      text_body_template: |
-        Tämä on automaattinen viesti.
-
-        Uusi käyttäjä [%{username}](%{user_url}) hiljennettiin automaattisesti, koska useampi käyttäjä on liputtanut käyttäjän %{username} viestejä.
-
-        [Tarkasta liputukset](%{base_url}/admin/flags). Jos %{username} hiljennettiin ilman syytä, kumoa hiljennys klikkaamalla painiketta [käyttäjän ylläpitosivulla](%{user_url}).
-
-        Rajaa voi muuttaa sivustoasetuksella `silence_new_user.
     spam_post_blocked:
       title: "Roskapostiviesti estettiin"
       subject_template: "Uuden käyttäjän %{username} viestit estettiin toistuvien linkkien vuoksi"
@@ -3208,9 +3186,6 @@ fi:
       one: "Huom. Olemme lähettäneet jo yhden sähköpostin tänään, mikä on enimmäismäärä. Käy sivustolla, jottet jää mistään paitsi. PS. Kiitos kun olet niin suosittu!"
       other: "Huom. Olemme lähettäneet jo %{count} sähköpostia tänään, mikä on enimmäismäärä. Käy sivustolla, jottet jää mistään paitsi. PS. Kiitos kun olet niin suosittu!"
     in_reply_to: "Vastauksena"
-    unsubscribe:
-      title: "Peru tilaus"
-      description: "Etkö halua vastaanottaa näitä sähköposteja? Ei hätää! Klikkaa alta peruaksesi tilauksen välittömästi:"
     reply_by_email: "Vastaa [vierailemalla ketjussa](%{base_url}%{url}) tai vastaamalla tähän sähköpostiin."
     reply_by_email_pm: "Vastaa käyttäjille %{participants} [vierailemalla keskustelussa](%{base_url}%{url}) tai vastaa vain tähän sähköpostiin."
     only_reply_by_email: "Vastaa vastaamalla tähän sähköpostiin."
@@ -3507,7 +3482,6 @@ fi:
       liked_received: "Saatua tykkäystä"
       new_users: "Uutta käyttäjää"
       popular_topics: "Suosittuja ketjuja"
-      follow_topic: "Seuraa tätä ketjua"
       join_the_discussion: "Lue lisää"
       popular_posts: "Suosittuja viestejä"
       more_new: "Uutta sinulle"
@@ -3709,8 +3683,6 @@ fi:
     welcome_message_invite_only: |
       ## [Tervetuloa sivustolle %{title}](#welcome)
       Käyttäjätili vaaditaan. Pyydä yhteisön jäsentä kutsumaan sinut tai kirjaudu sisään.
-  deleted: "poistettu"
-  image: "kuva"
   upload:
     edit_reason: "lataa kuvista paikalliset kopiot"
     unauthorized: "Tiedosto, jota yrität ladata, ei ole sallittu (sallitut päätteet: %{authorized_extensions})."
@@ -3911,262 +3883,8 @@ fi:
       Kyllä, lakiteksti on tylsää, mutta meidän täytyy suojata itseämme ja sitä kautta sinua sekä tietojasi pahantahtoisilta ihmisiltä. Meillä on [käyttöehdot](%{base_path}/tos), joissa kuvataan sinun (ja meidän) toimintaamme ja oikeuksiamme sisällön, tietosuojan ja lakien osalta. Tämän palvelun käyttämiseksi sinun täytyy hyväksyä [käyttöehtomme](%{base_path}/tos).
   tos_topic:
     title: "Käyttöehdot"
-    body: |
-      Nämä ehdot säätelevät Internet-foorumin käyttöä osoitteessa <%{base_url}>. Käyttääksesi foorumia sinun on hyväksyttävä nämä ehdot yrityksen %{company_name} kanssa, joka on foorumia ylläpitävä yritys.
-
-      Yritys voi tarjota muita tuotteita ja palveluita eri ehdoilla. Näitä ehtoja sovelletaan vain foorumin käyttöön.
-
-      Siirry kohtaan:
-
-      – [Tärkeät ehdot](#heading--important-terms)
-      – [Lupasi käyttää foorumia](#heading--permission)
-      – [Foorumin käytön ehdot](#heading--conditions)
-      – [Hyväksyttävä käyttö](#heading--acceptable-use)
-      – [Sisältöstandardit](#heading--content-standards)
-      – [Täytäntöönpano](#heading--enforcement)
-      – [Tilisi](#heading--your-account)
-      – [Sisältösi](#heading--your-content)
-      – [Vastuusi](#heading--responsibility)
-      – [Vastuuvapausilmoitukset](#heading--disclaimers)
-      – [Vastuurajoitukset](#heading--liability)
-      – [Palaute](#heading--feedback)
-      – [Päättäminen](#heading--termination)
-      – [Riidat](#heading--disputes)
-      – [Yleiset ehdot](#heading--general)
-      – [Yhteydenotto](#heading--contact)
-      – [Muutokset](#heading--changes)
-
-      <h2 id="heading--important-terms"><a href="#heading--important-terms">Tärkeät ehdot</a></h2>
-
-      ***Nämä ehdot sisältävät tärkeitä ehtoja, jotka vaikuttavat oikeuksiisi ja vastuihisi, kuten [vastuuvapausilmoitukset](#heading--disclaimers), yrityksen vastuun rajoitukset sinua kohtaan kohdassa [vastuurajoitukset](#heading--liability), suostumuksesi vastata yritykselle foorumin väärinkäytöstäsi aiheutuneista vahingoista kohdassa [vastuu käytöstäsi](#heading--responsibility) sekä suostumuksesi ratkaista riidat välimiesmenettylyllä kohdassa [riidat](#heading--disputes).***
-
-      <h2 id="heading--permission"><a href="#heading--permission">Lupasi käyttää foorumia</a></h2>
-
-      Yritys antaa sinulle luvan käyttää foorumia näiden ehtojen mukaisesti. Kaikkien on hyväksyttävä nämä ehdot käyttääkseen foorumia.
-
-      <h2 id="heading--conditions"><a href="#heading--conditions">Foorumin käytön ehdot</a></h2>
-
-      Lupasi käyttää foorumia edellyttää seuraavien ehtojen täyttymistä:
-
-      1. Sinun on oltava vähintään 13-vuotias.
-
-      2. Sinun ei tule enää käyttää foorumia, jos yritys ottaa sinuun suoraan yhteyttä ja ilmoittaa sinulle, ettei sinun tule tehdä näin.
-
-      3. Sinun tulee käyttää foorumia [hyväksyttävän käytön](#heading--acceptable-use) ja [sisältöstandardien](#heading--content-standards) mukaisesti.
-
-      <h2 id="heading--acceptable-use"><a href="#heading--acceptable-use">Hyväksyttävä käyttö</a></h2>
-
-      1. Sinun ei tule rikkoa lakia käyttäessäsi foorumia.
-
-      2. Sinun ei tule käyttää tai yrittää käyttää toisen henkilön tiliä foorumilla ilman hänen nimenomaista lupaansa.
-
-      3. Sinun ei tule ostaa, myydä tai muutoin vaihtaa käyttäjätunnuksia tai muita yksilöllisiä tunnisteita foorumilla.
-
-      4. Sinun ei tule lähettää mainoksia, ketjukirjeitä tai muita myyntiyhteydenottoja foorumin kautta tai käyttää foorumia osoitteiden tai muiden henkilötietojen keräämiseen kaupallisia postituslistoja tai tietokantoja varten.
-
-      5. Sinun ei tule automatisoida pääsyä foorumille tai tarkkailla foorumia, kuten hakurobotilla, selaimen lisäosalla tai laajennuksella tai muulla tietokoneohjelmalla, joka ei ole verkkoselain. Voit indeksoida foorumia julkisesti saatavilla olevalle hakukoneelle, jos ylläpidät sellaista.
-
-      6. Sinun ei tule käyttää foorumia lähettääksesi sähköpostia jakeluluetteloille, uutisryhmille tai ryhmäpostialiaksille.
-
-      7. Sinun ei tule virheellisesti antaa ymmärtää, että olet sidoksissa yritykseen tai yrityksen hyväksymä.
-
-      8. Sinun ei tule hyperlinkittää kuviin tai muuhun hyperlinkittämättömään sisältöön foorumilla tai muilla verkkosivuilla.
-
-      9. Sinun ei tule poistaa omistusoikeuden osoittavia merkkejä aineistoista, joita lataat foorumilta.
-
-      10. Sinun ei tule näyttää mitään foorumin osaa muilla verkkosivustoilla <iframe>-kehyksissä.
-
-      11. Sinun ei tule poistaa käytöstä, välttää tai kiertää foorumin turvallisuus- tai pääsyrajoituksia.
-
-      12. Sinun ei tule kuormittaa foorumin infrastruktuuria kohtuuttomalla määrällä pyyntöjä tai pyynnöillä, jotka on suunniteltu asettamaan kohtuuton kuormitus foorumin taustalla oleville tietojärjestelmille.
-
-      13. Sinun ei tule tekeytyä muiksi foorumin kautta.
-
-      14. Sinun ei tule kannustaa tai auttaa ketään näiden ehtojen rikkomisessa.
-
-      <h2 id="heading--content-standards"><a href="#heading--content-standards">Sisältöstandardit</a></h2>
-
-      1. Sinun ei tule lähettää foorumille sisältöä, joka on laitonta, loukkaavaa tai muutoin haitallista muille. Tähän sisältyy sisältö, joka on häiritsevää, sopimatonta, loukkaavaa tai vihamielistä toimintaa.
-
-      2. Sinun ei tule lähettää foorumille sisältöä, joka rikkoo lakia, loukkaa jonkun immateriaalioikeuksia, loukkaa jonkun yksityisyyttä tai rikkoo sopimuksia, joita sinulle on muiden kanssa.
-
-      3. Sinun ei tule lähettää foorumille sisältöä, joka sisältää haitallista tietokonekoodia, kuten tietokoneviruksia tai vakoiluohjelmia.
-
-      4. Sinun ei tule lähettää foorumille sisältöä pelkkänä paikkamerkkinä tietyn osoitteen, käyttäjätunnuksen tai muun yksilöllisen tunnisteen pitämiseksi.
-
-      5. Sinun ei tule käyttää foorumia sellaisten tietojen paljastamiseen, joita sinulla ei ole oikeus paljastaa, kuten muiden luottamuksellisia tai henkilökohtaisia tietoja.
-
-      <h2 id="heading--enforcement"><a href="#heading--enforcement">Täytäntöönpano</a></h2>
-
-      Yritys voi tutkia näiden ehtojen rikkomukset ja panna ne syytteeseen täydessä oikeudellisessa laajuudessa. Yritys voi ilmoittaa lainvalvontaviranomaisille ja tehdä niiden kanssa yhteistyötä lain ja näiden ehtojen rikkomusten syytteeseenpanossa.
-
-      Yritys pidättää oikeuden muuttaa, muokata ja poistaa sisältöä foorumilla mistä tahansa syystä. Jos uskot, että joku on lähettänyt foorumille sisältöä näiden ehtojen vastaisesti, [ota meihin yhteyttä välittömästi](#heading--contact).
-
-      <h2 id="heading--your-account"><a href="#heading--your-account">Tilisi</a></h2>
-
-      Sinun tulee luoda tili ja kirjautua sille käyttääksesi joitakin foorumin ominaisuuksia.
-
-      Luodaksesi tilin sinun on annettava joitakin tietoja itsestäsi. Jos luot tilin, hyväksyt antavasi vähimmillään kelvollisen sähköpostiosoitteen ja pitäväsi tämän osoitteen ajan tasalla. Voit sulkea tilisi milloin tahansa lähettämällä sähköpostiviestin osoitteeseen <%{contact_email}>.
-
-      Hyväksyt olevasi vastuussa kaikista tiliäsi käyttämällä tehdyistä toimista rippumatta siitä, ovatko ne valtuuttamiasi vai ei, kunnes joko suljet tilisi tai ilmoitat yritykselle, että tilisi on vaarantunut. Hyväksyt ilmoittavasi yritykselle välittömästi, jos epäilet, että tilisi on vaarantunut. Hyväksyt valitsevasi turvallisen salasanan tilillesi ja pitäväsi sen salassa.
-
-      Yritys voi rajoittaa tiliäsi, asettaa sen käyttökieltoon tai sulkea sen foorumilla tekijänoikeuksiin liittyvien poistopyyntöjen käsittelyä koskevan käytäntönsä mukaisesti tai jos yritys uskoo kohtuudella, että olet rikkonut näiden ehtojen sääntöä.
-
-      <h2 id="heading--your-content"><a href="#heading--your-content">Sisältösi</a></h2>
-
-      Mikään näissä ehdoissa ei anna yritykselle omistusoikeuksia henkiseen omaisuuteen, jota jaat foorumilla, kuten tilitietoihisi, viesteihisi tai muuhun sisältöön, jota lähetät foorumille. Mikään näissä ehdoissa ei myöskään anna sinulle omistusoikeuksia yrityksen henkiseen omaisuuteen.
-
-      Sinun ja yrityksen välillä sinä pysyt täysin vastuussa sisällöstä, jota lähetät foorumille. Hyväksyt, ettet anna virheellisesti ymmärtää väärin, että foorumille lähettämäsi sisältö on yrityksen sponsoroimaa tai hyväksymää. Nämä ehdot eivät velvoita yritystä tallentamaan, säilyttämään tai tarjoamaan kopioita lähettämästäsi sisällöstä ja muuttamaan sitä näiden ehtojen mukaisesti.
-
-      Foorumille lähettämäsi sisältö kuuluu sinulle, ja sinä päätät, mitä lupia annat muille siihen. Vähimmillään lisensoit yrityksen tarjoamaan foorumille lähettämääsi sisältöä muille foorumin käyttäjille. Tämä erikoislisenssi sallii yrityksen kopioivan, julkaisevan ja analysoivan foorumille lähettämääsi sisältöä.
-
-      Kun lähettämäsi sisältö poistetaan foorumilta joko sinun tai yrityksen toimesta, yrityksen erikoislisenssi päättyy, kun viimeinen kopio katoaa yrityksen varmuuskopioista, välimuisteista ja muista järjestelmistä. Muut lisenssit, joita sovellat lähettämääsi sisältöön, kuten [Creative Commons](https://creativecommons.org) -lisenssit, saattavat jatkua sisältösi poistamisen jälkeen. Nämä lisenssit voivat antaa muille tai yritykselle itselleen oikeuden jakaa sisältöäsi foorumin kautta uudelleen.
-
-      Muut, jotka saavat foorumille lähettämääsi sisältöä, saattavat rikkoa ehtoja, joiden mukaan lisensoit sisältösi. Hyväksyt, että yritys ei ole vastuussa sinulle näistä rikkomuksista tai niiden seurauksista.
-
-      <h2 id="heading--responsibility"><a href="#heading--responsibility">Vastuusi</a></h2>
-
-      Hyväksyt suojaavasi yritystä muiden oikeudellisilta vaateilta, jotka liittyvät näiden ehtojen rikkomiseesi tai näiden ehtojen rikkomiseen muiden toimesta tiliäsi käyttämällä foorumilla. Sekä sinä että yritys hyväksytte ilmoittavanne toiselle osapuolelle oikeudellisista vaateista, joissa saatat joutua suojaamaan yritystä, mahdollisimman pian. Jos yritys ei ilmoita sinulle oikeudellisesta vaateesta viipymättä, sinun ei tarvitse suojata yritystä vahingoilta, joita vastaan olisit voinut puolustautua tai jotka olisit voinut välttää saadessasi ilmoituksen viipymättä. Hyväksyt sallivasi yrityksen hallita niiden oikeudellisten vaateiden tutkintaa, puolustusta ja ratkaisua, joissa sinun täytyisi suojata yritystä, ja tekeväsi yhteistyötä näissä pyrkimyksissä. Yritys hyväksyy, ettei se hyväksy ratkaisua, joka hyväksyy vahinkosi tai asettaa sinulle velvollisuuksia, ilman etukäteistä hyväksyntääsi.
-
-      <h2 id="heading--disclaimers"><a href="#heading--disclaimers">Vastuuvapausilmoitukset</a></h2>
-
-      ***Hyväksyt kaiken foorumin käytön ja foorumin sisällön riskin . Lain sallimassa laajuudessa yritys ja sen toimittajat tarjoavat foorumin sellaisenaan ilman minkäänlaisia takuita.***
-
-      Foorumi voi sisältää hyperlinkkejä muiden ylläpitämille foorumeille ja palveluihin sekä integroida niitä. Yritys ei anna takuita muiden ylläpitämistä palveluista eikä niiden mahdollisesti tarjoamasta sisällöstä. Muiden ylläpitämien palveluiden käyttöön voidaan soveltaa muita sinun ja palvelua ylläpitävän tahon välisiä sopimuksia.
-
-      <h2 id="heading--liability"><a href="#heading--liability">Vastuurajoitukset</a></h2>
-
-      ***Yritys tai sen toimittajat eivät ole vastuussa sinulle sopimusrikkomusvahingoista, joita heidän henkilöstönsä ei olisi voinut kohtuudella ennakoida, kun hyväksyit nämä ehdot.***
-
-      ***Lain sallimassa laajuudessa kokonaisvastuu sinulle kaikista foorumiin tai foorumin sisältöön liittyvistä vaateista on rajoitettu 50 dollariin.***
-
-      <h2 id="heading--feedback"><a href="#heading--feedback">Palaute</a></h2>
-
-      Yritys ottaa mielellään vastaan palautettasi ja ehdotuksia foorumin osalta. Katso tapoja ottaa meihin yhteyttä jäljempänä [Yhteydenotto](#heading--contact)-osasta.
-
-      Hyväksyt, että yritys voi toimia vapaasti antamasi palautteen ja ehdotusten perusteella, ja että yrityksen ei tarvitse ilmoittaa sinulle, että palautettasi käytettiin, saada lupaasi käyttää sitä tai maksaa sinulle. Hyväksyt, ettet lähetä palautetta tai ehdotuksia, joiden uskot olevan luottamuksellisia tai yksinoikeudellisia, sinulle tai muille.
-
-      <h2 id="heading--termination"><a href="#heading--termination">Päättäminen</a></h2>
-
-      Joko sinä tai yritys voitte päättää näissä ehdoissa kuvatun sopimuksen milloin tahansa. Kun sopimuksemme päättyy, lupasi käyttää foorumia päättyy myös.
-
-      Seurravat ehdot jäävät voimaan sopimuksemme päättymisen jälkeen: [Sisältösi](#heading--your-content), [Palaute](#heading--feedback), [Vastuusi](#heading--responsibility), [Vastuuvapausilmoitukset](#heading--disclaimers), [Vastuurajoitukset](#heading--liability) ja [Yleiset ehdot](#heading--general).
-
-      <h2 id="heading--disputes"><a href="#heading--disputes">Riidat</a></h2>
-
-      %{governing_law} on näihin ehtoihin tai foorumin käyttöösi liittyviin riitoihin sovellettava laki.
-
-      Sinä ja yritys hyväksytte tekevänne näihin ehtoihin liittyviä kanteita vain kohteen %{city_for_disputes} osavaltion tai liittovaltion tuomioistuimessa. Sinä tai yritys ette vastusta näiden tuomioistuinten toimivaltaa tai niitä käsittelypaikkana.
-
-      ***Muutoin kuin Computer Fraud and Abuse Act -lain mukaisissa kanteissa sinä ja yritys ratkaisette kaikki riidat sitovalla Yhdysvaltain sovitteluelinten yhdistyksen (American Arbitration Association) välimiesmenettely. Välimiesmenettely noudattaa AAA:n kaupallisia välimiesmenettelysääntöjä ja lisäkäytänteitä kuluttajiin liittyvissä riidoissa. Välimiesmenettely tapahtumapaikka on %{city_for_disputes}. Ratkaiset kaikki riidat yksilönä, et osana ryhmäkannetta tai muuta edustusmenettelyä, joko kantajana tai ryhmän jäsenenä. Välimies ei yhdistä riitaa toiseen riitaan ilman yrityksen lupaa.***
-
-      Välitystuomio sisältää välimiesmenettelyn kustannukset, kohtuulliset asianajajan palkkiot ja kohtuulliset todistajien kustannukset. Sinä ja yritys voitte saada välitystuomion missä tahansa toimivaltaisessa tuomioistuimessa.
-
-      <h2 id="heading--general"><a href="#heading--general">Yleiset ehdot</a></h2>
-
-      Jos näiden ehtojen ehto on täytäntöönpanokelvoton kirjoitusmuodossaan, mutta se voitaisiin muuttaa täytäntöönpanokelpoiseksi, tätä ehtoa tulisi muuttaa vähimmässä määrin, mikä on tarpeellista sen tekemiseksi täytäntöönpanokelpoiseksi. Muutoin tämä ehto tulisi poistaa.
-
-      Et voi siirtää sopimustasi yrityksen kanssa. Yritys voi siirtää sopimuksesi yrityksen sidosryhmälle tai muulle yritykselle, joka saa yrityksen hallinnan, tai muulle yritykselle, joka ostaa yrityksen foorumiin liittyvät omaisuuserät. Näiden ehtojen vastaisilla siirtoyrityksillä ei ole laillista vaikutusta.
-
-      Minkä tahansa tämän sopimuksen mukaisen oikeuden käyttäminen tai tämän sopimuksen rikkomuksesta luopuminen ei mitätöi muita tämän sopimuksen rikkomuksia.
-
-      Nämä ehdot käsittävät kaikki sinun ja yrityksen välisen sopimuksen ehdot foorumin käyttöä koskien. Nämä ehdot korvaavat kokonaan muut sopimukset foorumin käyttöäsi koskien riippumatta siitä, ovatko ne kirjallisia.
-
-      <h2 id="heading--contact"><a href="#heading--contact">Yhteydenotto</a></h2>
-
-      Voit antaa yritykselle näiden ehtojen mukaisen ilmoituksen ja lähettää kysymyksiä yritykselle osoitteeseen <%{contact_email}>.
-
-      Yritys voi antaa sinulle näiden ehtojen mukaisen ilmoituksen käyttämällä sähköpostiosoitetta, jonka annat tilillesi foorumilla, tai lähettämällä viestin foorumin aloitussivulle tai tilisivullesi.
-
-      <h2 id="heading--changes"><a href="#heading--changes">Muutokset</a></h2>
-
-      Yritys päivitti näitä ehtoja viimeksi 12.7.2018 ja voi päivittää näitä ehtoja uudelleen. Yritys julkaisee kaikki päivitykset foorumille. Päivityksistä, jotka sisältävät merkittäviä muutoksia, yritys suostuu lähettävänsä sinulle sähköpostiviestin, jos olet luonut tilin ja antanut kelvollisen sähköpostiosoitteen. Yritys voi myös ilmoittaa päivityksistä erikoisviesteillä tai hälytyksillä foorumilla.
-
-      Kun saat ilmoituksen näiden ehtojen päivityksestä, sinun on hyväksyttävä uudet ehdot, jotta voit jatkaa foorumin käyttöä.
   privacy_topic:
     title: "Tietosuojaseloste"
-    body: |
-      <a name="collect"></a>
-
-      ## [Mitä tietoja keräämme?](#collect)
-
-      Tallennamme tietoa sinusta, kun rekisteröidyt sivustolle, ja keräämme tietoa toimistasi palstalla: lukemisestasi, kirjoittamisestasi ja siitä, miten reagoit täällä jaettuun sisältöön.
-
-      Kun rekisteröidyt sivustolle, sinua voidaan pyytää antamaan nimesi ja sähköpostiosoitteesi. Voit kuitenkin halutessasi vierailla sivustolla rekisteröitymättä. Sähköpostiosoitteesi varmistetaan ainutkertaisen linkin sisältävän sähköpostiviestin avulla. Kun linkkiä klikataan, tiedämme sinun hallinnoivan antamaasi sähköpostiosoitetta.
-
-      Kun olet rekisteröitynyt ja kirjoitat, tallennamme IP-osoitteen, josta viesti lähtee. Voimme myös ylläpitää palvelinlokia, joka sisältää jokaista palvelimellemme lähetettyä pyyntöä vastaavan IP-osoitteen.
-
-      <a name="use"></a>
-
-      ## [Mihin käytämme sinusta kerättyä tietoa?](#use)
-
-      Mitä tahansa sinusta kerättyä tietoa voidaan käyttää jollakin näistä tavoista:
-
-      * Tarjotaksemme yksilöllisen kokemuksen &mdash; tietojen avulla vastaamme sinun henkilökohtaisiin tarpeisiisi.
-      * Parantaaksemme sivustoa &mdash; pyrimme jatkuvasti parantamaan sivuston toimintaa kerätyn tiedon ja käyttäjäpalautteen perusteella.
-      * Parantaaksemme asiakaspalvelua &mdash; tiedot auttavat tarjoamaan tehokkaampaa asiakaspalvelua ja teknistä tukea.
-      * Lähettääksemme ajoittain sähköpostiviestejä &mdash; antamaasi sähköpostiosoitteeseen voidaan lähettää tietoa, valitsemiasi ilmoituksia tapahtumista eri ketjuissa tai käyttäjänimeesi liittyen tai vastineita tiedusteluihisi, pyyntöihisi tai kysymyksiisi.
-
-      <a name="protect"></a>
-
-      ## [Miten suojaamme tietojasi?](#protect)
-
-      Meillä on liuta erilaisia turvallisuuskäytänteitä, joilla pidämme henkilötietosi turvassa kun syötät, tallennat tai tarkastelet tietoa.
-
-      <a name="data-retention"></a>
-
-      ## [Miten tietoja säilötään?](#data-retention)
-
-      Pyrimme parhaamme mukaan:
-
-      * Säilömään kaikkia pyyntöjä vastaavan IP-osoitteen sisältävän palvelinlokin enintään 90 päivän ajan.
-      * Säilömään rekisteröityneeseen käyttäjään ja hänen viesteihinsä liittyvät IP-osoitteet enintään 5 vuoden ajan.
-
-      <a name="cookies"></a>
-
-      ## [Käytämmekö evästeitä?](#cookies)
-
-      Kyllä. Evästeet ovat pieniä tiedostoja, jotka sivusto tai sen palveluntarjoaja siirtää tietokoneesi kiintolevylle verkkoselaimesi kautta (jos sallit sen). Nämä evästeet mahdollistavat selaimesi tunnistamisen, ja jos olet rekisteröitynyt käyttäjä, sen yhdistämisen käyttäjätunnukseesi.
-
-      Evästeiden avulla tunnistamme ja tallennamme asetuksia tulevia vierailuja varten ja keräämme yleisluontoista tietoa sivuston liikennemääristä ja sivustolla liikkumisesta, jotta voimme tarjota tulevaisuudessa paremman käyttökokemuksen ja hyödyllisiä toimintoja. Voimme tehdä yhteistyötä kolmansien osapuolien kanssa ymmärtääksemme paremmin sivustolla vierailevia. Näillä palveluntarjoajilla ei ole lupaa käyttää keräämäämme tietoa muuhun kuin palvelumme kehittämiseen.
-
-      <a name="disclose"></a>
-
-      ## [Paljastammeko tietoa ulkopuolisille tahoille?](#disclose)
-
-      Emme myy, vaihda tai muutoin käy kauppaa ulkopuolisten tahojen kanssa yksilöllisesti tunnistettavilla tiedoilla. Tähän poikkeus on luotetut kolmannet osapuolet, jotka auttavat sivustomme ja toimintamme pyörittämisessä tai sinun palvelemisessa; vaadimme näitä tahoja pitämään tiedot luottamuksellisina. Voimme myös jakaa tietojasi, jos uskomme sen olevan tarpeen lain, sivustomme käytäntöjen, omien tai muiden tahojen oikeuksien tai omaisuuden tai turvallisuuden kannalta. Yksilöimättömiä tietoja voidaan kuitenkin jakaa muiden tahojen kanssa kaupankäynnin tai markkinoinnin avuksi tai muuhun käyttöön.
-
-      <a name="third-party"></a>
-
-      ## [Linkit kolmansien tahojen sivustoille](#third-party)
-
-      Joissain tapauksissa, harkintamme mukaan, voimme sallia tai tarjota kolmannen osapuolen tuotteita tai palveluita sivustollamme. Näillä kolmannen osapuolen sivustoilla on erilliset itsenäiset tietosuojaselosteensa. Emme ole vastuussa sisällöstä tai toiminnasta näillä linkitetyillä sivustoilla. Joka tapauksessa pyrimme vaalimaan sivustomme kunniallisuutta ja otamme ilolla vastaan kaikenlaisen palautteen näitä sivustoja koskien.
-
-      <a name="coppa"></a>
-
-      ## [Lapsen yksilönsuoja internetissä -lain noudattaminen](#coppa)
-
-      Sivustomme, tuotteemme ja palvelumme on suunnattu 13-vuotiaille ja sitä vanhemmille. Jos tämä palvelin on Yhdysvalloissa ja olet alle 13-vuotias, COPPA-lain ([Children's Online Privacy Protection Act](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)) nojalla älä käytä tätä sivustoa.
-
-      <a name="online"></a>
-
-      ## [Tietosuojaseloste koskee vain internetiä](#online)
-
-      Tämä tietosuojaseloste koskee vain sivustomme kautta kerättyä tietoa eikä siten koske verkon ulkopuolelta kerättyä tietoa.
-
-      <a name="consent"></a>
-
-      ## [Suostumuksesi](#consent)
-
-      Käyttämällä sivustoa hyväksyt sivustomme tietosuojaselosteen.
-
-      <a name="changes"></a>
-
-      ## [Muutokset tietosuojaselosteeseen](#changes)
-
-      Jos päätämme muuttaa tietosuojaselostettamme, muutokset ovat nähtävissä tällä sivulla.
-
-      Tämä tiedosto on CC-BY-SA-lisensoitu. Viimeksi päivitetty 31.5.2013.
   badges:
     mass_award:
       errors:
@@ -4471,10 +4189,7 @@ fi:
       message: "<p>Lähetimme uuden aktivointiviestin osoitteeseen <b>%{email}</b>"
   safe_mode:
     title: "Siirry vikasietotilaan"
-    description: "Vikasietotilassa voit testata sivustoasi ilman lisäosia ja teemoja."
     no_themes: "Poista teemat ja teeman komponentit käytöstä"
-    no_unofficial_plugins: "Poista epäviralliset lisäosat käytöstä"
-    no_plugins: "Poista kaikki lisäosat käytöstä"
     enter: "Siirry vikasietotilaan"
     must_select: "Ainakin yksi on valittava, jotta voi siirtyä vikasietotilaan."
   wizard:
@@ -4589,7 +4304,6 @@ fi:
           <p>Onnittelut, ja pidä hauskaa <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>rakentaessasi uutta yhteisöäsi!</a></p>
   search_logs:
     graph_title: "Hakujen määrä"
-  joined: "Liittyi"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} mainitsi sinut ketjussa "%{topic}" – %{site_title}'
@@ -4652,50 +4366,30 @@ fi:
         category: alueen asetukset
     actions:
       agree:
-        title: "Hyväksy..."
-      agree_and_keep:
-        title: "Säilytä viesti"
-        description: "Hyväksy merkintä ja pidä viesti ennallaan."
-      agree_and_keep_hidden:
-        title: "Jätä viesti piiloon"
-        description: "Hyväksy merkintä ja jätä viesti piiloon."
+        title: "Kyllä"
       agree_and_suspend:
-        title: "Hyllytä käyttäjä"
         description: "Hyväksy merkintä ja hyllytä käyttäjä."
       agree_and_silence:
         title: "Hiljennä käyttäjä"
         description: "Hyväksy merkintä ja hiljennä käyttäjä."
       agree_and_restore:
-        title: "Palauta viesti"
         description: "Palauta viesti, niin kaikki käyttäjät näkevät sen."
-      agree_and_hide:
-        title: "Piilota viesti"
-        description: "Piilota viesti ja lähetä käyttäjälle yksityisviesti, jossa pyydetään käyttäjää muokkaamaan viestiä."
       delete_single:
         title: "Poista"
       delete:
         title: "Poista..."
-      delete_and_ignore:
-        title: "Poista viesti ja ohita"
-        description: "Poista viesti: jos on viesti on ketjun ensimmäinen, poista myös ketju"
       delete_and_ignore_replies:
-        title: "Poista viesti + vastaukset ja sivuuta"
-        description: "Poista viesti ja kaikki sen vastaukset; jos viesti on ensimmäinen, poista koko ketju"
         confirm: "Oletko varma, että haluat poistaa myös viestin vastaukset?"
-      delete_and_agree:
-        title: "Poista viesti ja hyväksy merkintä"
-        description: "Poista viesti; jos on viesti on ketjun ensimmäinen, poista myös ketju"
       delete_and_agree_replies:
-        title: "Poista viesti + vastaukset ja hyväksy merkintä"
-        description: "Poista viesti ja kaikki sen vastaukset; jos viesti on ensimmäinen, poista koko ketju"
         confirm: "Oletko varma, että haluat poistaa myös viestin vastaukset?"
       disagree_and_restore:
-        title: "Hylkää merkintä ja palauta viesti"
         description: "Palauta viesti, niin kaikki käyttäjät näkevät sen."
       disagree:
-        title: "Hylkää"
+        title: "Ei"
       ignore:
         title: "Sivuuta"
+      ignore_and_do_nothing:
+        title: "Älä tee mitään"
       approve:
         title: "Hyväksy"
       approve_post:

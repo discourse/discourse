@@ -46,7 +46,13 @@ class Category < ActiveRecord::Base
   has_many :topic_timers, dependent: :destroy
   has_many :upload_references, as: :target, dependent: :destroy
 
+  has_one :category_setting, dependent: :destroy
+
+  delegate :auto_bump_cooldown_days, to: :category_setting, allow_nil: true
+
   has_and_belongs_to_many :web_hooks
+
+  accepts_nested_attributes_for :category_setting, update_only: true
 
   validates :user_id, presence: true
 
@@ -73,6 +79,12 @@ class Category < ActiveRecord::Base
   validate :ensure_slug
   validate :permissions_compatibility_validator
 
+  validates :default_slow_mode_seconds,
+            numericality: {
+              only_integer: true,
+              greater_than: 0,
+            },
+            allow_nil: true
   validates :auto_close_hours,
             numericality: {
               greater_than: 0,
@@ -88,6 +100,7 @@ class Category < ActiveRecord::Base
   before_save :apply_permissions
   before_save :downcase_email
   before_save :downcase_name
+  before_save :ensure_category_setting
 
   after_save :publish_discourse_stylesheet
   after_save :publish_category
@@ -125,12 +138,19 @@ class Category < ActiveRecord::Base
 
   has_many :category_tags, dependent: :destroy
   has_many :tags, through: :category_tags
+  has_many :none_synonym_tags,
+           -> { where(target_tag_id: nil) },
+           through: :category_tags,
+           source: :tag
   has_many :category_tag_groups, dependent: :destroy
   has_many :tag_groups, through: :category_tag_groups
 
   has_many :category_required_tag_groups, -> { order(order: :asc) }, dependent: :destroy
   has_many :sidebar_section_links, as: :linkable, dependent: :delete_all
   has_many :embeddable_hosts, dependent: :destroy
+
+  has_many :category_form_templates, dependent: :destroy
+  has_many :form_templates, through: :category_form_templates
 
   belongs_to :reviewable_by_group, class_name: "Group"
 
@@ -356,7 +376,10 @@ class Category < ActiveRecord::Base
   end
 
   def clear_related_site_settings
-    SiteSetting.general_category_id = -1 if self.id == SiteSetting.general_category_id
+    if self.id == SiteSetting.general_category_id
+      SiteSetting.general_category_id = -1
+      Site.clear_show_welcome_topic_cache
+    end
   end
 
   def topic_url
@@ -373,7 +396,7 @@ class Category < ActiveRecord::Base
     @@cache_text ||= LruRedux::ThreadSafeCache.new(1000)
     @@cache_text.getset(self.description) do
       text = Nokogiri::HTML5.fragment(self.description).text.strip
-      Rack::Utils.escape_html(text).html_safe
+      ERB::Util.html_escape(text).html_safe
     end
   end
 
@@ -667,7 +690,7 @@ class Category < ActiveRecord::Base
         .exclude_scheduled_bump_topics
         .where(category_id: self.id)
         .where("id <> ?", self.topic_id)
-        .where("bumped_at < ?", 1.day.ago)
+        .where("bumped_at < ?", (self.auto_bump_cooldown_days || 1).days.ago)
         .where("pinned_at IS NULL AND NOT closed AND NOT archived")
         .order("bumped_at ASC")
         .limit(1)
@@ -778,9 +801,8 @@ class Category < ActiveRecord::Base
 
   def self.query_parent_category(parent_slug)
     encoded_parent_slug = CGI.escape(parent_slug) if SiteSetting.slug_generation_method == "encoded"
-    self.where(slug: (encoded_parent_slug || parent_slug), parent_category_id: nil).pluck_first(
-      :id,
-    ) || self.where(id: parent_slug.to_i).pluck_first(:id)
+    self.where(slug: (encoded_parent_slug || parent_slug), parent_category_id: nil).pick(:id) ||
+      self.where(id: parent_slug.to_i).pick(:id)
   end
 
   def self.query_category(slug_or_id, parent_category_id)
@@ -1025,6 +1047,10 @@ class Category < ActiveRecord::Base
   end
 
   private
+
+  def ensure_category_setting
+    self.build_category_setting if self.category_setting.blank?
+  end
 
   def should_update_reviewables?
     SiteSetting.enable_category_group_moderation? && saved_change_to_reviewable_by_group_id?

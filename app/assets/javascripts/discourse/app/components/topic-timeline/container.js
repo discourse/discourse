@@ -1,13 +1,13 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { relativeAge } from "discourse/lib/formatter";
 import I18n from "I18n";
 import { htmlSafe } from "@ember/template";
 import { inject as service } from "@ember/service";
 import { bind, debounce } from "discourse-common/utils/decorators";
 import { actionDescriptionHtml } from "discourse/widgets/post-small-action";
 import domUtils from "discourse-common/utils/dom-utils";
+import { headerOffset } from "discourse/lib/offset-calculator";
 
 export const SCROLLER_HEIGHT = 50;
 const MIN_SCROLLAREA_HEIGHT = 170;
@@ -17,6 +17,7 @@ const LAST_READ_HEIGHT = 20;
 export default class TopicTimelineScrollArea extends Component {
   @service appEvents;
   @service siteSettings;
+  @service currentUser;
 
   @tracked showButton = false;
   @tracked current;
@@ -27,11 +28,15 @@ export default class TopicTimelineScrollArea extends Component {
   @tracked total;
   @tracked date;
   @tracked lastReadPercentage = null;
+  @tracked lastRead;
+  @tracked lastReadTop;
   @tracked before;
   @tracked after;
   @tracked timelineScrollareaStyle;
   @tracked dragging = false;
   @tracked excerpt = "";
+
+  intersectionObserver = null;
 
   constructor() {
     super(...arguments);
@@ -43,9 +48,41 @@ export default class TopicTimelineScrollArea extends Component {
       this.appEvents.on("composer:opened", this.calculatePosition);
       this.appEvents.on("composer:resized", this.calculatePosition);
       this.appEvents.on("composer:closed", this.calculatePosition);
+      this.appEvents.on("post-stream:posted", this.calculatePosition);
+    }
+
+    this.intersectionObserver = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        const bounds = entry.boundingClientRect;
+
+        if (entry.target.id === "topic-bottom") {
+          this.topicBottom = bounds.y + window.scrollY;
+        } else {
+          this.topicTop = bounds.y + window.scrollY;
+        }
+      }
+    });
+
+    const elements = [
+      document.querySelector(".container.posts"),
+      document.querySelector("#topic-bottom"),
+    ];
+
+    for (let i = 0; i < elements.length; i++) {
+      this.intersectionObserver.observe(elements[i]);
     }
 
     this.calculatePosition();
+    this.dockCheck();
+  }
+
+  get displaySummary() {
+    return (
+      this.siteSettings.summary_timeline_button &&
+      !this.args.fullScreen &&
+      this.args.model.has_summary &&
+      !this.args.model.postStream.summary
+    );
   }
 
   get displayTimeLineScrollArea() {
@@ -53,8 +90,7 @@ export default class TopicTimelineScrollArea extends Component {
       return true;
     }
 
-    const streamLength = this.args.model.postStream?.stream?.length;
-    if (streamLength === 1) {
+    if (this.total === 1) {
       const postsWrapper = document.querySelector(".posts-wrapper");
       if (postsWrapper && postsWrapper.offsetHeight < 1000) {
         return false;
@@ -116,22 +152,21 @@ export default class TopicTimelineScrollArea extends Component {
     return this.lastReadTop > bottom ? bottom : this.lastReadTop;
   }
 
-  get bottomAge() {
-    return relativeAge(
-      new Date(this.args.model.last_posted_at || this.args.model.created_at),
-      {
-        addAgo: true,
-        defaultFormat: timelineDate,
-      }
-    );
-  }
-
   get startDate() {
     return timelineDate(this.args.model.createdAt);
   }
 
+  get nowDateOptions() {
+    return {
+      addAgo: true,
+      defaultFormat: timelineDate,
+    };
+  }
+
   get nowDate() {
-    return this.bottomAge;
+    return (
+      this.args.model.get("last_posted_at") || this.args.model.get("created_at")
+    );
   }
 
   get lastReadHeight() {
@@ -171,8 +206,8 @@ export default class TopicTimelineScrollArea extends Component {
 
     this.date = date;
 
-    const lastReadId = topic.last_read_post_id;
     const lastReadNumber = topic.last_read_post_number;
+    const lastReadId = topic.last_read_post_id;
 
     if (lastReadId && lastReadNumber) {
       const idx = postStream.stream.indexOf(lastReadId) + 1;
@@ -199,12 +234,6 @@ export default class TopicTimelineScrollArea extends Component {
       this.showButton =
         this.before + SCROLLER_HEIGHT - 5 < this.lastReadTop ||
         this.before > this.lastReadTop + 25;
-    }
-
-    if (this.hasBackPosition) {
-      this.lastReadTop = Math.round(
-        this.lastReadPercentage * scrollareaHeight()
-      );
     }
   }
 
@@ -273,11 +302,46 @@ export default class TopicTimelineScrollArea extends Component {
     this.current = e.postIndex;
     this.percentage = e.percent;
     this.calculatePosition();
+    this.dockCheck();
   }
 
   @action
   goBack() {
     this.args.jumpToIndex(this.lastRead);
+  }
+
+  dockCheck() {
+    const timeline = document.querySelector(".timeline-container");
+    const timelineHeight = (timeline && timeline.offsetHeight) || 400;
+
+    const prevDockAt = this.dockAt;
+    const positionTop = headerOffset() + window.pageYOffset;
+    const currentPosition = positionTop + timelineHeight;
+
+    this.dockBottom = false;
+    if (positionTop < this.topicTop) {
+      this.dockAt = parseInt(this.topicTop, 10);
+    } else if (currentPosition > this.topicBottom) {
+      this.dockAt = parseInt(this.topicBottom - timelineHeight, 10);
+      this.dockBottom = true;
+      if (this.dockAt < 0) {
+        this.dockAt = 0;
+      }
+    } else {
+      this.dockAt = null;
+    }
+
+    if (this.dockAt !== prevDockAt) {
+      if (this.dockAt) {
+        this.args.setDocked(true);
+        if (this.dockBottom) {
+          this.args.setDockedBottom(true);
+        }
+      } else {
+        this.args.setDocked(false);
+        this.args.setDockedBottom(false);
+      }
+    }
   }
 
   commit() {
@@ -302,10 +366,14 @@ export default class TopicTimelineScrollArea extends Component {
 
   willDestroy() {
     if (!this.args.mobileView) {
+      this.intersectionObserver?.disconnect();
+      this.intersectionObserver = null;
+
       this.appEvents.off("composer:opened", this.calculatePosition);
       this.appEvents.off("composer:resized", this.calculatePosition);
       this.appEvents.off("composer:closed", this.calculatePosition);
       this.appEvents.off("topic:current-post-scrolled", this.postScrolled);
+      this.appEvents.off("post-stream:posted", this.calculatePosition);
     }
   }
 

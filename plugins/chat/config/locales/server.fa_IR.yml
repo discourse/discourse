@@ -20,7 +20,10 @@ fa_IR:
     deleted_chat_username: حذف شد
     errors:
       channel_exists_for_category: "یک کانال دیگر از قبل برای این دسته‌بندی و نام وجود دارد"
-      message_too_long: "پیام خیلی طولانی است، پیام‌ها باید حداکثر %{maximum} کاراکتر داشته باشند."
+      message_too_long:
+        one: "پیام خیلی طولانی است، پیام‌ها باید حداکثر %{count} کاراکتر داشته باشند."
+        other: "پیام خیلی طولانی است، پیام‌ها باید حداکثر %{count} کاراکتر داشته باشند."
+      draft_too_long: "پیش‌نویس خیلی طولانی است."
       cant_update_direct_message_channel: "ویژگی پیام مستقیم کانال مانند نام و توضیحات را نمی‌توان به‌روز کرد."
       not_accepting_dms: "با عرض پوزش، کاربر %{username} در حال حاضر پیام نمی‌پذیرد."
       actor_ignoring_target_user: "شما در حال نادیده گرفتن %{username} هستید، بنابراین نمی‌توانید پیامی را برای او ارسال کنید."
@@ -51,15 +54,11 @@ fa_IR:
         transcript_title: "رونوشت پیام‌های قبلی در %{channel_name}"
         transcript_body: "برای ارائه متن بیشتر به شما، رونوشتی از پیام‌های قبلی را در این گفتگو (حداکثر ده مورد) قرار دادیم:\n\n%{transcript}"
     channel:
-      statuses:
-        read_only: "فقط خواندنی"
-        archived: "بایگانی شد"
-        closed: "بسته"
-        open: "باز"
       dm_title:
-        single_user: "%{user}"
-        multi_user: "%{users}"
-        multi_user_truncated: "%{users} و %{leftover} نفر دیگر"
+        single_user: "%{username}"
+        multi_user_truncated:
+          one: "%{comma_separated_usernames} و %{count} نفر دیگر"
+          other: "%{comma_separated_usernames} و %{count} نفر دیگر"
     bookmarkable:
       notification_title: "پیام در %{channel_name}"
     personal_chat: "گفتگوی شخصی"

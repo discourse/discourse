@@ -1,10 +1,10 @@
 import DiscourseRoute from "discourse/routes/discourse";
 
-export default DiscourseRoute.extend({
-  queryParams: {
+export default class AdminUsersListShowRoute extends DiscourseRoute {
+  queryParams = {
     order: { refreshModel: true },
     asc: { refreshModel: true },
-  },
+  };
 
   // TODO: this has been introduced to fix a bug in admin-users-list-show
   // loading AdminUser model multiple times without refactoring the controller
@@ -27,5 +27,5 @@ export default DiscourseRoute.extend({
         controller.resetFilters();
       }
     }
-  },
-});
+  }
+}

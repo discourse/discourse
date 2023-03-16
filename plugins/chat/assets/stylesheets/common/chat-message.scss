@@ -42,6 +42,10 @@
       background: var(--primary-low);
       border-color: var(--primary-low-mid);
     }
+
+    &:focus {
+      background: none;
+    }
   }
 
   .emoji {
@@ -60,14 +64,10 @@
 
   .chat-message-reaction {
     @include chat-reaction;
-
-    &:not(.show) {
-      display: none;
-    }
   }
 
   &.chat-action {
-    background-color: var(--highlight-medium);
+    background-color: var(--highlight-bg);
   }
 
   &.errored {
@@ -80,21 +80,6 @@
 
   .not-mobile-device &.deleted:hover {
     background-color: var(--danger-hover);
-  }
-
-  &.transition-slow {
-    transition: 2s linear background-color;
-  }
-
-  &.user-info-hidden {
-    .chat-time {
-      color: var(--secondary-medium);
-      flex-shrink: 0;
-      font-size: var(--font-down-2);
-      margin-top: 0.4em;
-      display: none;
-      width: var(--message-left-width);
-    }
   }
 
   &.is-reply {
@@ -136,9 +121,16 @@
     .mention.highlighted {
       background: var(--tertiary-low);
       color: var(--primary);
+      display: inline-block;
+      font-size: 0.93em;
+      font-weight: normal;
+      padding: 0 0.3em 0.07em;
+      border-radius: 0.6em;
+      text-decoration: none;
     }
 
-    img.ytp-thumbnail-image {
+    img.ytp-thumbnail-image,
+    img.youtube-thumbnail {
       height: 100%;
       max-height: unset;
 
@@ -246,7 +238,11 @@
   }
 
   .chat-message.chat-message-bookmarked {
-    background: var(--highlight-low);
+    background: var(--highlight-bg);
+
+    &:hover {
+      background: var(--highlight-medium);
+    }
   }
 
   .not-mobile-device & .chat-message-reaction-list .chat-message-react-btn {
@@ -283,7 +279,7 @@
 }
 
 .chat-message.chat-message-bookmarked {
-  background: var(--highlight-low);
+  background: var(--highlight-bg);
 }
 
 .has-full-page-chat .chat-message .onebox:not(img),

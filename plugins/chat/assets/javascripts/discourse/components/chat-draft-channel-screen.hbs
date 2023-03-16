@@ -19,10 +19,6 @@
   />
 
   {{#if this.previewedChannel}}
-    <ChatLivePane
-      @chatChannel={{this.previewedChannel}}
-      @includeHeader={{false}}
-      @onSwitchChannel={{action "onSwitchFromDraftChannel"}}
-    />
+    <ChatLivePane @channel={{this.previewedChannel}} @includeHeader={{false}} />
   {{/if}}
 </div>

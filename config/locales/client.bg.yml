@@ -225,9 +225,6 @@ bg:
     now: "преди малко"
     read_more: "прочетете повече"
     more: "Повече"
-    x_more:
-      one: "Още %{count}"
-      other: "Още %{count}"
     never: "никога"
     every_30_minutes: "на всеки 30 минути"
     every_hour: "на всеки час"
@@ -270,11 +267,9 @@ bg:
       edit_bookmark: "Редактиране на отметка"
       clear_bookmarks: "Изчисти отметките"
       help:
-        bookmark: "Щракнете за да добавите в отметки първата публикация в тази тема"
-        edit_bookmark: "Кликнете, за да редактирате отметката на тази тема"
         edit_bookmark_for_topic: "Кликнете, за да редактирате отметката за тази тема"
         unbookmark: "Щракнете тук за да изтриите всички отметки в тази тема"
-        unbookmark_with_reminder: "Щракнете, за да премахнете всички отметки и напомняния в тази тема."
+        unbookmark_with_reminder: "Щракнете, за да премахнете всички отметки и напомняния в тази тема"
     bookmarks:
       created: "Отбелязахте тази публикация. %{name}"
       edit: "Редактиране на отметката"
@@ -476,11 +471,9 @@ bg:
       scores:
         about: "Този резултат се изчислява въз основа на нивото на доверие на репортера, точността на предишните му флагове и приоритета на елемента, за който се съобщава."
         score: "Точки"
-        date: "Дата"
-        type: "Тип"
+        type: "Причина"
         status: "Статус"
-        submitted_by: "Изпратено от"
-        reviewed_by: "Прегледан от"
+        submitted_by: "Докладвано от"
       statuses:
         pending:
           title: "Чакащи"
@@ -488,14 +481,12 @@ bg:
           title: "Одобрена"
         rejected:
           title: "Отхвърлени"
-        ignored:
-          title: "Игнориран"
-        deleted:
-          title: "Изтрита"
         reviewed:
-          title: "(всички прегледани)"
+          title: "Всички прегледани"
         all:
-          title: "(всичко)"
+          title: "Всичко"
+      context_question:
+        delimiter: "или"
       types:
         reviewable_flagged_post:
           title: "Маркирана публикация"
@@ -788,6 +779,7 @@ bg:
         make_all_primary_description: "Направете това основна група за всички избрани потребители"
         remove_all_primary: "Премахване като Основна"
         remove_all_primary_description: "Премахнете тази група като основна"
+        status: "Статус"
         owner: "Собественик"
         primary: "Основен"
         forbidden: "Нямате право да преглеждате потребителите."
@@ -913,11 +905,6 @@ bg:
       profile: "Профил"
       mute: "Заглуши"
       edit: "Редактирай настройките"
-      download_archive:
-        button_text: "Изтегли всичко"
-        confirm: "Сигурни ли сте, че искате да свалите своите публикации?"
-        success: "Свалянето е инициирано, ще бъдете уведомени чрез съобщение когато процесът е завършен."
-        rate_limit_error: "Публикации могат да бъдат сваляни веднъж дневно, моля опитайте отново утре."
       new_private_message: "Ново Съобщение"
       private_message: "Съобщение"
       private_messages: "Съобщения"
@@ -1821,8 +1808,6 @@ bg:
         topic_template_not_modified: "Моля, добавете подробности към вашата тема, като редактирате шаблона на темата."
       save_edit: "Запази редакцията"
       overwrite_edit: "Презаписване Редактиране"
-      reply_original: "Отговори на Оригинална Тема"
-      reply_here: "Отговори тук"
       reply: "Отговорете"
       cancel: "Прекрати"
       create_topic: "Създай тема"
@@ -2145,8 +2130,6 @@ bg:
       back_to_list: "Назад към Списъка с теми"
       options: "Настройки на темата"
       show_links: "покажи връзките в тази тема"
-      jump_reply_up: към по ранен отговор
-      jump_reply_down: към по-късен отговор
       deleted: "Темата беше изтрита"
       slow_mode_update:
         title: "Бавен режим"
@@ -2592,7 +2575,6 @@ bg:
       view: "Покажи темите в категория "
       general: "Основни"
       settings: "Настройки"
-      topic_template: "Шаблон на темата"
       tags: "Етикети"
       tags_placeholder: "(По желание) списък на позволените етикети"
       required_tag_group:
@@ -2631,8 +2613,6 @@ bg:
       images: "Изображения"
       email_in: "Персонализиран входящ имейл адрес: "
       email_in_allow_strangers: "Приемай имейли от анонимни потребители, които нямат регистрация"
-      email_in_disabled: "Публикуването на нови теми чрез имейл е забранено от настройките на сайта. За да разрешите публикуването на нови теми чрез имейл,"
-      email_in_disabled_click: 'разрешете "email in" настройката '
       show_subcategory_list: "Показване на списъка с подкатегории над темите в тази категория."
       num_featured_topics: "Брой на темите, показвани на страницата с категории:"
       subcategory_num_featured_topics: "Брой на включените теми на страницата на родителската категория:"
@@ -2773,6 +2753,10 @@ bg:
     filters:
       with_topics: "%{filter} теми"
       with_category: "%{filter} %{category} теми"
+      filter:
+        title: "Филтер"
+        button:
+          label: "Филтер"
       latest:
         title: "Последни"
         title_with_count:
@@ -2986,7 +2970,6 @@ bg:
         half_hour: "30 минути"
         one_hour: "1 час"
         two_hours: "2 часа"
-        custom: "По избор"
     trust_levels:
       names:
         newuser: "нов потребител"
@@ -3004,6 +2987,12 @@ bg:
       more: "Повече"
       all_categories: "Всички категории"
       sections:
+        custom:
+          save: "Запази "
+          delete: "Изтрий"
+          links:
+            icon: "Икона"
+            name: "Име"
         about:
           header_link_text: "Относно"
         messages:
@@ -3173,7 +3162,6 @@ bg:
         enabled: "Да е включен?"
         is_enabled: "Y "
         not_enabled: "N "
-        change_settings: "Промени Настройките"
         change_settings_short: "Настройки"
         howto: "Как да инсталирам софтуерни приставки?"
       backups:
@@ -3323,6 +3311,8 @@ bg:
           love:
             name: "любов"
             description: "Цвят на бутона харесвам. "
+          selected:
+            name: "избрани"
         email_style:
           css: "CSS"
           reset: "Обновявам до първоначалното"
@@ -3513,6 +3503,29 @@ bg:
           add: "Добави"
         test:
           no_matches: "Няма намерени съвпадения"
+      form_templates:
+        nav_title: "Шаблони"
+        list_table:
+          headings:
+            name: "Име"
+            actions: "Действия"
+        view_template:
+          close: "Затвори"
+          edit: "Редактирай"
+          delete: "Изтрий"
+        new_template_form:
+          submit: "Запази "
+          cancel: "Прекрати"
+        quick_insert_fields:
+          add_new_field: "Добави "
+          dropdown: "Падащо"
+        validations_modal:
+          table_headers:
+            type: "Тип"
+            description: "Описание"
+          validations:
+            required:
+              key: "задължително"
       impersonate:
         title: "Представи"
         help: "Използвайте този инструмент, за да предоставите потребителски профили за отстраняване на грешките. Трябва да излезете когато приключите."
@@ -3524,6 +3537,7 @@ bg:
         last_emailed: "Последен имейл"
         not_found: "Съжаляваме, това потребителско име не съществува при нас."
         id_not_found: "Съжаляваме, това потребителско име не съществува при нас. "
+        status: "Статус"
         show_emails: "Покажи имейла"
         nav:
           new: "Нови"
@@ -3564,7 +3578,6 @@ bg:
         staged: "Поставен?"
         show_admin_profile: "Админ"
         show_public_profile: "Покажи публичния профил "
-        impersonate: "Представени "
         ip_lookup: "IP търсене "
         log_out: "Изход "
         logged_out: "Потребителя беше разлогнат от всички устройства "
@@ -3799,7 +3812,8 @@ bg:
         allow_title: Позволете значките да бъдат ползвани като титли.
         multiple_grant: Може да бъде присъдена няколко пъти
         listable: Показвай значката на страницата със значки
-        enabled: Разрешете значката
+        enabled: да е включен
+        disabled: деактивирани
         icon: Икона
         image: Изображение
         query: Badge Query (SQL)

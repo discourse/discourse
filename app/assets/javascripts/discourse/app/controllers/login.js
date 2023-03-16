@@ -437,10 +437,9 @@ export default Controller.extend(ModalFunctionality, {
       return;
     }
 
-    const skipConfirmation =
-      options && this.siteSettings.auth_skip_create_confirm;
-
+    const skipConfirmation = this.siteSettings.auth_skip_create_confirm;
     const createAccountController = this.createAccount;
+
     createAccountController.setProperties({
       accountEmail: options.email,
       accountUsername: options.username,
@@ -450,7 +449,7 @@ export default Controller.extend(ModalFunctionality, {
     });
 
     next(() => {
-      showModal("createAccount", {
+      showModal("create-account", {
         modalClass: "create-account",
         titleAriaElementId: "create-account-title",
       });

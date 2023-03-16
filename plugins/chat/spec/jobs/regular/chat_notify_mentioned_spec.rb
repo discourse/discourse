@@ -21,8 +21,11 @@ describe Jobs::ChatNotifyMentioned do
     end
   end
 
-  def create_chat_message(channel: public_channel, user: user_1)
-    Fabricate(:chat_message, chat_channel: channel, user: user, created_at: 10.minutes.ago)
+  def create_chat_message(channel: public_channel, author: user_1, mentioned_user: user_2)
+    message =
+      Fabricate(:chat_message, chat_channel: channel, user: author, created_at: 10.minutes.ago)
+    Fabricate(:chat_mention, chat_message: message, user: mentioned_user)
+    message
   end
 
   def track_desktop_notification(
@@ -215,7 +218,7 @@ describe Jobs::ChatNotifyMentioned do
       )
       expect(desktop_notification.data[:excerpt]).to eq(message.push_notification_excerpt)
       expect(desktop_notification.data[:post_url]).to eq(
-        "/chat/channel/#{public_channel.id}/#{public_channel.slug}?messageId=#{message.id}",
+        "/chat/c/#{public_channel.slug}/#{public_channel.id}/#{message.id}",
       )
     end
 
@@ -229,8 +232,7 @@ describe Jobs::ChatNotifyMentioned do
           username: user_1.username,
           tag: Chat::ChatNotifier.push_notification_tag(:mention, public_channel.id),
           excerpt: message.push_notification_excerpt,
-          post_url:
-            "/chat/channel/#{public_channel.id}/#{public_channel.slug}?messageId=#{message.id}",
+          post_url: "/chat/c/#{public_channel.slug}/#{public_channel.id}/#{message.id}",
           translated_title: payload_translated_title,
         },
       )

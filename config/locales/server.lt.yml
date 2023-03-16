@@ -254,6 +254,11 @@ lt:
       few: "%{count} atsakymai"
       many: "%{count} atsakymai"
       other: "%{count} atsakymai"
+    likes:
+      one: "%{count} patinka"
+      few: "%{count} patinka"
+      many: "%{count} patinka"
+      other: "%{count} patinka"
     last_reply: "Paskutinis atsakymas"
     created: "Sukurta"
     new_topic: "Sukurti naują temą"
@@ -533,6 +538,11 @@ lt:
     image_placeholder:
       broken: "Šis paveikslėlis yra sugadintas"
     hidden_bidi_character: "Dvikrypčiai simboliai gali pakeisti teksto pateikimo tvarką. Tai gali būti naudojama kenkėjiškam kodui paslėpti."
+    has_likes:
+      one: "%{count} patinka"
+      few: "%{count} Patinka"
+      many: "%{count} Patinka"
+      other: "%{count} patinka"
     cannot_permanently_delete:
       wait_or_different_admin: "Prieš visam laikui ištrindami šį įrašą, turite palaukti %{time_left} arba kitas administratorius turi tai padaryti."
   rate_limiter:
@@ -1314,7 +1324,6 @@ lt:
     min_admin_password_length: "Minimalus administratoriaus slaptažodžio ilgis."
     password_unique_characters: "Mažiausias unikalių simbolių skaičius, kurį turi turėti slaptažodis."
     block_common_passwords: "Neleiskite slaptažodžių, kurie yra 10 000 dažniausiai naudojamų slaptažodžių."
-    discourse_connect_url: "„DiscourseConnect“ galutinio taško URL (turi būti http:// arba https://)"
     discourse_connect_secret: "Slapta eilutė, naudojama „DiscourseConnect“ informacijos kriptografiniam autentifikavimui, įsitikinkite, kad ji yra 10 simbolių ar ilgesnė"
     discourse_connect_not_approved_url: "Peradresuoti nepatvirtintas DiscourseConnect paskyras į šį URL"
     allow_new_registrations: "Leisti naujų vartotojų registracijas. Atžymėkite šį žymėjimą, kad niekas negalėtų sukurti naujos paskyros."
@@ -1460,6 +1469,7 @@ lt:
     default_email_digest_frequency: "Kaip dažnai vartotojai pagal numatytuosius nustatymus gauna suvestinius el. laiškus."
     default_include_tl0_in_digests: "Pagal numatytuosius nustatymus įtraukite naujų vartotojų įrašus į suvestinius el. laiškus. Vartotojai gali tai pakeisti savo nustatymuose."
     default_email_level: "Nustatykite numatytąjį pranešimų el. paštu lygį įprastoms temoms."
+    default_other_skip_new_user_tips: "Praleiskite naujų naudotojų patarimus ir ženklelius."
     default_topics_automatic_unpin: "Automatiškai atsegti temas, kai naudotojas pasiekia apačią pagal numatytuosius nustatymus."
     default_categories_watching: "Kategorijų, kurios žiūrimos pagal numatytuosius nustatymus, sąrašas."
     default_categories_tracking: "Kategorijų, kurios stebimos pagal numatytuosius nustatymus, sąrašas."
@@ -1554,10 +1564,14 @@ lt:
   login:
     invalid_second_factor_method: "Pasirinktas dviejų veiksnių metodas yra neteisingas."
     not_enabled_second_factor_method: "Pasirinktas dviejų veiksnių metodas jūsų paskyroje neįjungtas."
+    security_key_description: "Kai paruošite fizinį saugos raktą, paspauskite žemiau esantį mygtuką Autentifikuoti naudojant saugos raktą."
     security_key_alternative: "Išbandykite kitą būdą"
     security_key_authenticate: "Autentifikuokite naudodami saugos raktą"
     security_key_not_allowed_error: "Saugos rakto autentifikavimo procesas buvo nutrauktas arba buvo atšauktas."
+    security_key_no_matching_credential_error: "Pateiktame saugos rakte nepavyko rasti atitinkamų prisijungimo duomenų."
+    security_key_support_missing_error: "Dabartinis įrenginys ar naršyklė nepalaiko saugos raktų naudojimo. Prašome naudoti kitą metodą."
     security_key_invalid: "Įvyko klaida, patvirtinanti saugos raktą."
+    not_approved: "Jūsų paskyra dar nepatvirtinta. Jums bus pranešta elektroniniu paštu, kai būsite pasiruošę prisijungti."
     activate_email: "<p>Beveik baigėte! Išsiuntėme aktyvinimo laišką adresu <b>%{email}</b>. Norėdami suaktyvinti paskyrą, vadovaukitės laiške pateiktomis instrukcijomis.</p><p>Jei laiško negaunate, patikrinkite savo šlamšto aplanką.</p>"
     admin_not_allowed_from_ip_address: "Tu negali prisijungti kaip administratorius iš šio IP adreso."
     errors: "%{errors}"
@@ -1605,6 +1619,8 @@ lt:
     deactivated_by_staff: "Išjungė darbuotojai"
     activated_by_staff: "Aktyvuoja darbuotojai"
     username:
+      short: "turi būti ne mažiau kaip %{min} simbolių"
+      long: "turi būti ne daugiau kaip %{max} simbolių"
       too_long: "yra per ilgas"
       characters: "turi būti tik skaičiai, raidės, brūkšneliai, taškai ir pabraukimai"
       unique: "privalo buti unikalus"
@@ -1642,6 +1658,7 @@ lt:
   custom_invite_mailer:
     subject_template: "%{inviter_name} pakvietė jus į „%{topic_title}“ %{site_domain_name}"
   invite_forum_mailer:
+    subject_template: "%{inviter_name} pakvietė jus prisijungti %{site_domain_name}"
     text_body_template: |
       %{inviter_name} pakvietė jus prisijungti
 
@@ -1740,6 +1757,7 @@ lt:
 
         Jei reikia papildomų nurodymų, skaitykite mūsų [bendruomenės gaires] (%{base_url}/gairės).
     flags_agreed_and_post_deleted_for_responders:
+      title: "Darbuotojai pašalino atsakymą iš pažymėto įrašo"
       subject_template: "Darbuotojai pašalino atsakymą iš pažymėto įrašo"
     usage_tips:
       text_body_template: |
@@ -1931,9 +1949,6 @@ lt:
   user_notifications:
     previous_discussion: "Ankstesni atsakymai"
     in_reply_to: "Atsakant į"
-    unsubscribe:
-      title: "Nebeprenumeruoti"
-      description: "Nenorite gauti šių el. laiškų? Jokiu problemu! Spustelėkite žemiau, jei norite iš karto atsisakyti prenumeratos:"
     only_reply_by_email: "Norėdami atsakyti, atsakykite į šį el. laišką."
     visit_link_to_respond_pm: "[Apsilankykite žinutėje] (%{base_url}%{url}), kad atsakytumėte į %{participants}."
     posted_by: "Paskelbė %{username} %{post_date}"
@@ -2108,9 +2123,14 @@ lt:
         %{message}
     account_suspended:
       title: "Paskyra sustabdyta"
+      subject_template: "[%{email_prefix}] Jūsų paskyra buvo sustabdyta"
     account_suspended_forever:
+      title: "Paskyra sustabdyta"
       subject_template: "[%{email_prefix}] Jūsų paskyra buvo sustabdyta"
     account_silenced:
+      title: "Paskyra nutildyta"
+      subject_template: "[%{email_prefix}] Jūsų paskyra buvo nutildyta"
+    account_silenced_forever:
       title: "Paskyra nutildyta"
       subject_template: "[%{email_prefix}] Jūsų paskyra buvo nutildyta"
     account_exists:
@@ -2135,7 +2155,6 @@ lt:
       liked_received: "Gauta patikimų"
       new_users: "Nauji nariai"
       popular_topics: "Populiarios temos"
-      follow_topic: "Sekti šią temą"
       join_the_discussion: "Skaityti daugiau"
       popular_posts: "Populiarūs įrašai"
       more_new: "Jūs dar neskaitėte"
@@ -2292,6 +2311,15 @@ lt:
     activation_reminder:
       title: "Aktyvinimo priminimas"
       subject_template: "[%{email_prefix}] Priminimas patvirtinti savo paskyrą"
+      text_body_template: |
+        Sveiki atvykę į %{site_name}!
+
+        Tai draugiškas priminimas suaktyvinti paskyrą.
+
+        Spustelėkite šią nuorodą, kad patvirtintumėte ir suaktyvintumėte savo naują paskyrą:
+        %{base_url}/u/activate-account/%{email_token}
+
+        Jei aukščiau esančios nuorodos negalima spustelėti, pabandykite nukopijuoti ir įklijuoti ją į savo Interneto naršyklės adreso juostą.
     suspicious_login:
       title: "Įspėjimas apie naują prisijungimą"
       subject_template: "[%{site_name}] Naujas prisijungimas iš %{location}"
@@ -2319,10 +2347,9 @@ lt:
     welcome_message: |
       ## [Sveiki atvykę į %{title}] (#sveiki atvykę)
       Būtina paskyra. Jei norite tęsti, sukurkite paskyrą arba prisijunkite.
-  deleted: "ištrintas"
-  image: "paveikslėlis"
   upload:
     edit_reason: "atsiųsti mano pranešimų archyvą"
+    unauthorized: "Atsiprašome, failas, kurį bandote įkelti, nėra autorizuotas (įgalioti plėtiniai: %{authorized_extensions})."
     pasted_image_filename: "Įklijuotas vaizdas"
     file_missing: "Atsiprašome, turite pateikti failą, kurį norite įkelti."
     empty: "Atsiprašome, bet jūsų pateiktas failas yra tuščias."
@@ -2554,6 +2581,7 @@ lt:
         Šis ženklelis suteikiamas, kai 20 skirtingų įrašų sulaukia bent vieną paspaudimą „patinka“. Bendruomenė džiaugiasi jūsų indėliu į čia vykstančius pokalbius!
     respected:
       name: Gerbiamas
+      description: 100 įrašų sulaukė 2 „patinka“
       long_description: |
         Šis ženklelis suteikiamas, kai 100 skirtingų įrašų sulaukia bent 2 paspaudimus „Patinka“. Bendruomenė auga ir gerbia jūsų indėlį į pokalbius čia.
     admired:
@@ -2575,6 +2603,7 @@ lt:
         Šis ženklelis suteikiamas, kai 20 dienų naudojate visus %{max_likes_per_day} savo dienos "patinka" paspaudimus. Oho! Jūs esate sektinas pavyzdys, skatinantis savo kolegas, bendruomenės narius!
     thank_you:
       name: Ačiū
+      description: Turi 20 teigiamų įvertinimų ir davė 10 teigiamų įvertinimų
       long_description: |
         Šis ženklelis suteikiamas, kai turite 20 patinkančių įrašų ir mainais skiriate 10 ar daugiau paspaudimų "patinka". Kai kam nors patinka jūsų įrašai, randate laiko pamėgti ir tai, ką skelbia kiti.
     gives_back:
@@ -2612,9 +2641,11 @@ lt:
         Šis ženklelis suteikiamas norint pasveikinti du naujus vartotojus kiekvieną mėnesį už puikų bendrą indėlį, įvertinant tai, kaip dažnai ir kam patiko jų įrašai.
     enthusiast:
       name: Entuziastas
+      description: Lankomiausi 10 dienų iš eilės
       long_description: |
         Šis ženklelis suteikiamas apsilankius 10 dienų iš eilės. Ačiū, kad buvote su mumis daugiau nei savaitę!
     aficionado:
+      description: Lankomiausi 100 dienų iš eilės
       long_description: |
         Šis ženklelis suteikiamas už apsilankymą 100 dienų iš eilės. Tai daugiau nei trys mėnesiai!
     devotee:
@@ -2654,8 +2685,6 @@ lt:
       title: "Persiųsti patvirtinimo laišką"
   safe_mode:
     title: "Įeikite į saugųjį režimą"
-    no_unofficial_plugins: "Išjungti neoficialius įskiepius"
-    no_plugins: "Išjungti visus įskiepius"
     enter: "Įeikite į saugųjį režimą"
     must_select: "Norėdami įjungti saugųjį režimą, turite pasirinkti bent vieną parinktį."
   wizard:
@@ -2709,7 +2738,6 @@ lt:
         title: "Jūsų Discourse paruoštas!"
   search_logs:
     graph_title: "Ieškoti kontakto"
-  joined: "Prisijungė"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} paminėjo tave "%{topic}" - %{site_title}'
@@ -2722,6 +2750,7 @@ lt:
       watching_first_post: '%{username} sukūrė naują temą „%{topic}“ - %{site_title}'
       confirm_title: "Pranešimai įgalinti - %{site_title} svetainėje"
       confirm_body: "Pavyko! Pranešimai buvo įgalinti."
+      custom: "Pranešimas nuo %{username} %{site_title}"
   staff_action_logs:
     not_found: "nerastas"
     unknown: "nežinoma"
@@ -2753,39 +2782,27 @@ lt:
         category: kategorijos nustatymai
     actions:
       agree:
-        title: "Sutinku..."
-      agree_and_keep:
-        title: "Palikti įrašą"
-      agree_and_keep_hidden:
-        title: "Laikyti paslėptą įrašą"
-      agree_and_suspend:
-        title: "Suspenduoti narį"
+        title: "Taip"
       agree_and_silence:
-        title: "Nutildyti narį"
         description: "Sutikti su pranešimu ir nutildyti narį."
       agree_and_restore:
-        title: "Atkurti įrašą"
-      agree_and_hide:
-        title: "Paslėpti įrašą"
+        description: "Atkurkite įrašą, kad visi vartotojai jį matytų."
       delete_single:
         title: "Pašalinti"
       delete:
         title: "Ištrinti..."
-      delete_and_ignore:
-        title: "Ištrinti įrašą ir ignoruoti"
-      delete_and_agree:
-        title: "Ištrinti įrašą ir sutikti"
-        description: "Ištrinti įrašą; jei pirmasis įrašas, taip pat ištrinkite temą"
+      delete_and_ignore_replies:
+        confirm: "Ar tikrai norite ištrinti ir įrašo atsakymus?"
       delete_and_agree_replies:
-        description: "Ištrinti įrašą ir visus jo atsakymus; jei pirmasis įrašas, taip pat ištrinkite temą"
         confirm: "Ar tikrai norite ištrinti ir įrašo atsakymus?"
       disagree_and_restore:
-        title: "Nesutikti ir atkurti įrašą"
         description: "Atkurkite įrašą, kad visi vartotojai jį matytų."
       disagree:
-        title: "Nesutinka"
+        title: "Ne"
       ignore:
         title: "Ignoruoti"
+      ignore_and_do_nothing:
+        title: "Nieko nedaryti"
       approve:
         title: "Patvirtinti"
       approve_post:

@@ -59,18 +59,17 @@ ko:
         never: "알림 받지 않기"
         title: "이메일 알림"
         when_away: "자리를 비울 때만"
+      header_indicator_preference:
+        never: "알림 받지 않기"
       enable: "채팅 활성화"
       flag: "신고"
       emoji: "이모티콘 삽입"
       flagged: "이 메시지는 신고가 되어 검토가 필요합니다."
       heading: "채팅"
       join: "가입"
-      new_messages: "새 메시지"
+      last_visit: "마지막 방문"
       mention_warning:
         dismiss: "무시"
-        groups:
-          users_limit:
-            other: "사용자 %{count}명"
       aria_roles:
         header: "채팅 헤더"
         composer: "채팅 작성기"
@@ -138,6 +137,8 @@ ko:
           about: 소개
           members: 회원
           settings: 설정
+      channel_edit_name_slug_modal:
+        name: 채널명
       channel_edit_description_modal:
         title: 설명 수정
         input_placeholder: 설명 추가
@@ -192,6 +193,7 @@ ko:
       direct_messages:
         create: "이동"
         leave: "이 개인 채팅에서 나가기"
+        cannot_create: "죄송합니다. 다이렉트 메시지를 보낼 수 없습니다."
       incoming_webhooks:
         back: "뒤로"
         channel_placeholder: "채널 선택"

@@ -18,7 +18,7 @@ const rawOpts = {
     enable_mentions: true,
     emoji_set: "twitter",
     external_emoji_url: "",
-    highlighted_languages: "json|ruby|javascript",
+    highlighted_languages: "json|ruby|javascript|xml",
     default_code_lang: "auto",
     enable_markdown_linkify: true,
     markdown_linkify_tlds: "com",
@@ -1640,6 +1640,8 @@ var bar = 'bar';
     assert.cookedOptions("a --> b", enabledTypographer, "<p>a \u2192 b</p>");
     assert.cookedOptions("-->", enabledTypographer, "<p> \u2192 </p>");
     assert.cookedOptions("<--", enabledTypographer, "<p> \u2190 </p>");
+    assert.cookedOptions("<->", enabledTypographer, "<p> \u2194 </p>");
+    assert.cookedOptions("<-->", enabledTypographer, "<p> \u2194 </p>");
 
     // Don't replace arrows
     assert.cookedOptions("<!-- an html comment -->", enabledTypographer, "");
@@ -1648,7 +1650,6 @@ var bar = 'bar';
       enabledTypographer,
       "<p>(&lt;–not an arrow)</p>"
     );
-    assert.cookedOptions("<-->", enabledTypographer, "<p>&lt;–&gt;</p>");
     assert.cookedOptions("asd-->", enabledTypographer, "<p>asd–&gt;</p>");
     assert.cookedOptions(" asd--> ", enabledTypographer, "<p>asd–&gt;</p>");
     assert.cookedOptions(" asd-->", enabledTypographer, "<p>asd–&gt;</p>");
@@ -1773,6 +1774,25 @@ var bar = 'bar';
       opts,
       `<p>${"you".repeat(maxMatches)}one</p>`,
       "does not loop infinitely"
+    );
+  });
+
+  test("highlighted aliased languages", function (assert) {
+    // "js" is an alias of "javascript"
+    assert.cooked(
+      "```js\nvar foo ='foo';\nvar bar = 'bar';\n```",
+      `<pre><code class=\"lang-js\">var foo ='foo';
+var bar = 'bar';
+</code></pre>`,
+      "code block with js alias works"
+    );
+
+    // "html" is an alias of "xml"
+    assert.cooked(
+      "```html\n<strong>fun</strong> times\n```",
+      `<pre><code class=\"lang-html\">&lt;strong&gt;fun&lt;/strong&gt; times
+</code></pre>`,
+      "code block with html alias work"
     );
   });
 });

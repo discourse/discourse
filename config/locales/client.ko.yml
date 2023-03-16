@@ -268,11 +268,9 @@ ko:
       edit_bookmark: "북마크 편집"
       clear_bookmarks: "북마크 지우기"
       help:
-        bookmark: "이 주제의 첫 번째 게시물을 북마크하려면 클릭하세요"
-        edit_bookmark: "이 주제의 북마크를 편집하려면 클릭하세요"
         edit_bookmark_for_topic: "이 주제의 북마크를 편집하려면 클릭하세요"
         unbookmark: "이 주제의 모든 북마크를 제거하려면 클릭하세요"
-        unbookmark_with_reminder: "이 주제의 모든 북마크 및 미리 알림을 제거하려면 클릭하세요"
+        unbookmark_with_reminder: "이 항목의 모든 북마크 및 미리 알림을 제거하려면 클릭하십시오"
     bookmarks:
       created: "이 게시물을 북마크했습니다. %{name}"
       create: "북마크 만들기"
@@ -474,11 +472,9 @@ ko:
       scores:
         about: "이 점수는 보고자의 신뢰 레벨, 이전 신고의 정확도 및 신고된 항목의 우선순위를 기준으로 계산됩니다."
         score: "점수"
-        date: "날짜"
-        type: "유형"
+        type: "이유"
         status: "상태"
-        submitted_by: "제출자"
-        reviewed_by: "검토자"
+        submitted_by: "신고자"
       statuses:
         pending:
           title: "보류 중"
@@ -486,14 +482,12 @@ ko:
           title: "승인됨"
         rejected:
           title: "거부됨"
-        ignored:
-          title: "무시됨"
-        deleted:
-          title: "삭제됨"
         reviewed:
-          title: "(모두 검토됨)"
+          title: "모두 검토됨"
         all:
-          title: "(모두)"
+          title: "모두"
+      context_question:
+        delimiter: "또는"
       types:
         reviewable_flagged_post:
           title: "신고된 게시물"
@@ -790,6 +784,7 @@ ko:
         make_all_primary_description: "선택한 모든 사용자의 기본 그룹으로 만들기"
         remove_all_primary: "기본에서 제거"
         remove_all_primary_description: "이 그룹을 기본 그룹에서 제거"
+        status: "상태"
         owner: "소유자"
         primary: "기본"
         forbidden: "회원을 볼 권한이 없습니다."
@@ -911,11 +906,6 @@ ko:
       profile: "프로필"
       mute: "뮤트"
       edit: "환경설정 편집"
-      download_archive:
-        button_text: "모두 다운로드"
-        confirm: "게시물을 다운로드할까요?"
-        success: "다운로드가 시작되었습니다. 다운로드 과정이 완료되면 메시지로 알림이 전송됩니다."
-        rate_limit_error: "게시물은 하루에 한 번만 다운로드할 수 있습니다. 내일 다시 시도하세요."
       new_private_message: "새 메시지"
       private_message: "메시지"
       private_messages: "메시지"
@@ -1900,8 +1890,6 @@ ko:
         topic_template_not_modified: "주제 템플릿을 편집하여 주제에 상세 정보와 세부 사항을 추가하세요."
       save_edit: "편집 저장"
       overwrite_edit: "편집 덮어쓰기"
-      reply_original: "원래 주제에 댓글 달기"
-      reply_here: "여기에 댓글을 작성하세요"
       reply: "댓글 달기"
       cancel: "취소"
       create_topic: "주제 생성"
@@ -2366,8 +2354,6 @@ ko:
       read_more_in_category: "더 읽고 싶으신가요? %{categoryLink}의 다른 토픽을 살펴보거나 <a href='%{latestLink}'>최신 토픽</a>을 확인해 보세요."
       unread_indicator: "아직 이 주제의 마지막 게시물을 읽은 회원이 없습니다."
       suggest_create_topic: <a href>새 대화를 시작</a>할 준비가 되었나요?
-      jump_reply_up: 이전 댓글로 이동
-      jump_reply_down: 다음 댓글로 이동
       deleted: "글이 삭제되었습니다."
       slow_mode_update:
         title: "느린 모드"
@@ -2911,7 +2897,6 @@ ko:
       back: "카테고리로 돌아가기"
       general: "일반"
       settings: "설정"
-      topic_template: "주제 템플릿"
       tags: "태그"
       tags_allowed_tags: "이 태그를 이 카테고리로 제한:"
       tags_allowed_tag_groups: "이 태그 그룹을 이 카테고리로 제한:"
@@ -2968,8 +2953,6 @@ ko:
       email_in: "수신 메일 주소 사용자 지정:"
       email_in_tooltip: "| 문자로 여러 이메일 주소를 구분할 수 있습니다."
       email_in_allow_strangers: "계정이 없는 익명 사용자의 이메일을 수신합니다"
-      email_in_disabled: "이메일을 통한 새 주제 게시가 사이트 설정에서 비활성화되었습니다. 이메일을 통해 새 주제를 게시하려면 "
-      email_in_disabled_click: '''이메일'' 설정에서 활성화하세요.'
       mailinglist_mirror: "카테고리가 메일링 목록 반영"
       show_subcategory_list: "이 카테고리에서 주제 위에 서브카테고리 목록을 표시합니다."
       read_only_banner: "사용자가 이 카테고리에서 주제를 생성할 수 없는 경우의 배너 텍스트:"
@@ -3160,6 +3143,10 @@ ko:
     filters:
       with_topics: "%{filter} 주제"
       with_category: "%{filter} %{category} 주제"
+      filter:
+        title: "필터"
+        button:
+          label: "필터"
       latest:
         title: "최신"
         title_with_count:
@@ -3493,13 +3480,11 @@ ko:
       enabled: "안전 모드가 활성화되었습니다. 안전 모드를 종료하려면 이 브라우저 창을 닫으세요."
     image_removed: "(이미지 제거됨)"
     pause_notifications:
-      remaining: "%{remaining} 남음"
       options:
         half_hour: "30분"
         one_hour: "1시간"
         two_hours: "2시간"
         tomorrow: "내일까지"
-        custom: "사용자 정의"
       set_schedule: "알림 일정 설정"
     trust_levels:
       names:
@@ -3536,6 +3521,13 @@ ko:
       all_categories: "모든 카테고리"
       all_tags: "모든 태그"
       sections:
+        custom:
+          save: "저장"
+          delete: "삭제하기"
+          links:
+            icon: "아이콘"
+            name: "그룹명"
+            value: "링크"
         about:
           header_link_text: "소개"
         messages:
@@ -3934,7 +3926,6 @@ ko:
         enabled: "활성화되었나요?"
         is_enabled: "예"
         not_enabled: "아니요"
-        change_settings: "설정 변경"
         change_settings_short: "설정"
         howto: "플러그인은 어떻게 설치하나요?"
         official: "공식 플러그인"
@@ -4257,6 +4248,8 @@ ko:
           love:
             name: "하트"
             description: "좋아요 버튼 색입니다."
+          selected:
+            name: "선택됨"
         robots:
           title: "사이트의 robots.txt 파일 오버라이드:"
           warning: "관련된 모든 사이트 설정이 영구적으로 오버라이드됩니다."
@@ -4570,6 +4563,35 @@ ko:
           description: "감시 단어와 일치하는지 확인하려면 아래에 텍스트를 입력하세요"
           found_matches: "일치 결과:"
           no_matches: "일치하는 항목이 없음"
+      form_templates:
+        nav_title: "템플릿"
+        list_table:
+          headings:
+            name: "그룹명"
+            actions: "작업"
+        view_template:
+          close: "닫기"
+          edit: "수정"
+          delete: "삭제하기"
+        new_template_form:
+          submit: "저장"
+          cancel: "취소"
+          preview: "미리 보기"
+        quick_insert_fields:
+          add_new_field: "추가"
+          dropdown: "드롭다운"
+        validations_modal:
+          table_headers:
+            key: "키"
+            type: "유형"
+            description: "내용"
+          validations:
+            required:
+              key: "필수"
+            minimum:
+              key: "최소"
+            maximum:
+              key: "최대"
       impersonate:
         title: "가장"
         help: "이 툴을 사용하면 디버깅을 위해 사용자 계정으로 로그인할 수 있습니다. 사용이 끝나면 로그아웃해야 합니다."
@@ -4582,6 +4604,7 @@ ko:
         not_found: "이 아이디는 시스템에 없습니다."
         id_not_found: "이 사용자 아이디는 시스템에 없습니다."
         active: "활성화됨"
+        status: "상태"
         show_emails: "이메일 표시"
         hide_emails: "이메일 숨기기"
         nav:
@@ -4665,7 +4688,6 @@ ko:
         show_admin_profile: "관리자"
         manage_user: "사용자 관리"
         show_public_profile: "공개 프로필 표시"
-        impersonate: "가장"
         action_logs: "작업 로그"
         ip_lookup: "IP Lookup"
         log_out: "로그아웃"
@@ -4993,7 +5015,8 @@ ko:
         allow_title: 배지를 타이틀로 사용하도록 허용
         multiple_grant: 중복 부여 가능
         listable: 공개 배지 페이지에 표시
-        enabled: 배지 기능 사용
+        enabled: 활성화
+        disabled: 비활성
         icon: 아이콘
         image: 이미지
         graphic: 그래픽
@@ -5063,7 +5086,6 @@ ko:
         confirm_delete: "호스트를 삭제할까요?"
         title: "임베딩"
         host: "허용 Host"
-        class_name: "클래스 이름"
         allowed_paths: "경로 허용 목록"
         edit: "편집"
         category: "카테고리에 게시"

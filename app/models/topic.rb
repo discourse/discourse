@@ -58,7 +58,7 @@ class Topic < ActiveRecord::Base
 
   def thumbnail_info(enqueue_if_missing: false, extra_sizes: [])
     return nil unless original = image_upload
-    return nil unless original.filesize < SiteSetting.max_image_size_kb.kilobytes
+    return nil if original.filesize >= SiteSetting.max_image_size_kb.kilobytes
     return nil unless original.read_attribute(:width) && original.read_attribute(:height)
 
     infos = []
@@ -99,7 +99,7 @@ class Topic < ActiveRecord::Base
   def generate_thumbnails!(extra_sizes: [])
     return nil unless SiteSetting.create_thumbnails
     return nil unless original = image_upload
-    return nil unless original.filesize < SiteSetting.max_image_size_kb.kilobytes
+    return nil if original.filesize >= SiteSetting.max_image_size_kb.kilobytes
     return nil unless original.width && original.height
     extra_sizes = [] unless extra_sizes.kind_of?(Array)
 
@@ -893,7 +893,7 @@ class Topic < ActiveRecord::Base
 
   # If a post is deleted we have to update our highest post counters and last post information
   def self.reset_highest(topic_id)
-    archetype = Topic.where(id: topic_id).pluck_first(:archetype)
+    archetype = Topic.where(id: topic_id).pick(:archetype)
 
     # ignore small_action replies for private messages
     post_type =
@@ -1103,14 +1103,13 @@ class Topic < ActiveRecord::Base
       topic_user = topic_allowed_users.find_by(user_id: user.id)
 
       if topic_user
-        topic_user.destroy
-
         if user.id == removed_by&.id
           add_small_action(removed_by, "user_left", user.username)
         else
           add_small_action(removed_by, "removed_user", user.username)
         end
 
+        topic_user.destroy
         return true
       end
     end
@@ -1892,6 +1891,44 @@ class Topic < ActiveRecord::Base
       .first
   end
 
+  def incoming_email_addresses(group: nil, received_before: Time.zone.now)
+    email_addresses = Set.new
+
+    self
+      .incoming_email
+      .where("created_at <= ?", received_before)
+      .each do |incoming_email|
+        to_addresses = incoming_email.to_addresses_split
+        cc_addresses = incoming_email.cc_addresses_split
+        combined_addresses = [to_addresses, cc_addresses].flatten
+
+        # We only care about the emails addressed to the group or CC'd to the
+        # group if the group is present. If combined addresses is empty we do
+        # not need to do this check, and instead can proceed on to adding the
+        # from address.
+        #
+        # Will not include test1@gmail.com if the only IncomingEmail
+        # is:
+        #
+        # from: test1@gmail.com
+        # to: test+support@discoursemail.com
+        #
+        # Because we don't care about the from addresses and also the to address
+        # is not the email_username, which will be something like test1@gmail.com.
+        if group.present? && combined_addresses.any?
+          next if combined_addresses.none? { |address| address =~ group.email_username_regex }
+        end
+
+        email_addresses.add(incoming_email.from_address)
+        email_addresses.merge(combined_addresses)
+      end
+
+    email_addresses.subtract([nil, ""])
+    email_addresses.delete(group.email_username) if group.present?
+
+    email_addresses.to_a
+  end
+
   def create_invite_notification!(target_user, notification_type, invited_by, post_number: 1)
     if UserCommScreener.new(
          acting_user: invited_by,
@@ -1993,6 +2030,10 @@ class Topic < ActiveRecord::Base
         MessageBus.publish("/topic/#{topic_id}", message, opts.merge(secure_audience))
       end
     end
+  end
+
+  def group_pm?
+    private_message? && all_allowed_users.count > 2
   end
 
   private

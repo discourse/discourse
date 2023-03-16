@@ -19,12 +19,11 @@ id:
       joined: "joined"
       email_frequency:
         never: "Tidak pernah"
+      header_indicator_preference:
+        never: "Tidak pernah"
       join: "Gabung"
       mention_warning:
         dismiss: "bubar"
-        groups:
-          users_limit:
-            other: "%{count} pengguna"
       reply: "Balas"
       edit: "Ubah"
       bookmark_message: "Penandaan"

@@ -67,7 +67,12 @@ const Theme = RestModel.extend({
     }
 
     return {
-      common: [...common, "embedded_scss", "color_definitions"],
+      common: [
+        ...common,
+        "color_definitions",
+        "embedded_scss",
+        "embedded_header",
+      ],
       desktop: common,
       mobile: common,
       settings: ["yaml"],

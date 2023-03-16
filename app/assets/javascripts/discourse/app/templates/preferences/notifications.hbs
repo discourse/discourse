@@ -1,15 +1,6 @@
 <div class="control-group notifications">
   <label class="control-label">{{i18n "user.notifications"}}</label>
 
-  {{#unless this.currentUser.redesigned_user_page_nav_enabled}}
-    <UserPreferences::TopicTracking
-      @considerNewTopicOptions={{this.considerNewTopicOptions}}
-      @model={{this.model}}
-      @autoTrackDurations={{this.autoTrackDurations}}
-      @notificationLevelsForReplying={{this.notificationLevelsForReplying}}
-    />
-  {{/unless}}
-
   <div class="controls controls-dropdown">
     <label>{{i18n "user.like_notification_frequency.title"}}</label>
     <ComboBox
@@ -23,7 +14,7 @@
   </div>
 </div>
 
-{{#unless this.capabilities.isIOS}}
+{{#unless this.capabilities.isAppWebview}}
   <div class="control-group desktop-notifications">
     <label class="control-label">{{i18n
         "user.desktop_notifications.label"
@@ -32,38 +23,35 @@
     <div class="instructions">{{i18n
         "user.desktop_notifications.each_browser_note"
       }}</div>
-    <PluginOutlet
-      @name="user-preferences-desktop-notifications"
-      @tagName="span"
-      @connectorTagName="div"
-      @args={{hash model=this.model save=(action "save")}}
-    />
+    <span>
+      <PluginOutlet
+        @name="user-preferences-desktop-notifications"
+        @connectorTagName="div"
+        @outletArgs={{hash model=this.model save=(action "save")}}
+      />
+    </span>
   </div>
 {{/unless}}
 
 <UserNotificationSchedule @model={{this.model}} />
 
-{{#if this.showMessageSettings}}
-  {{#unless this.currentUser.redesigned_user_page_nav_enabled}}
-    <UserPreferences::AllowPrivateMessages @model={{this.model}} />
-  {{/unless}}
-{{/if}}
-
-<PluginOutlet
-  @name="user-preferences-notifications"
-  @tagName="span"
-  @connectorTagName="div"
-  @args={{hash model=this.model save=(action "save")}}
-/>
+<span>
+  <PluginOutlet
+    @name="user-preferences-notifications"
+    @connectorTagName="div"
+    @outletArgs={{hash model=this.model save=(action "save")}}
+  />
+</span>
 
 <br />
 
-<PluginOutlet
-  @name="user-custom-controls"
-  @tagName="span"
-  @connectorTagName="div"
-  @args={{hash model=this.model}}
-/>
+<span>
+  <PluginOutlet
+    @name="user-custom-controls"
+    @connectorTagName="div"
+    @outletArgs={{hash model=this.model}}
+  />
+</span>
 
 <SaveControls
   @model={{this.model}}

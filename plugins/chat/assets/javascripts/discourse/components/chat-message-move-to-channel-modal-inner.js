@@ -12,6 +12,7 @@ export default class MoveToChannelModalInner extends Component {
   @service chatApi;
   @service router;
   @service chatChannelsManager;
+
   tagName = "";
   sourceChannel = null;
   destinationChannelId = null;
@@ -40,7 +41,9 @@ export default class MoveToChannelModalInner extends Component {
         destination_channel_id: this.destinationChannelId,
       })
       .then((response) => {
-        return this.chat.openChannelAtMessage(
+        this.router.transitionTo(
+          "chat.channel.near-message",
+          "-",
           response.destination_channel_id,
           response.first_moved_message_id
         );

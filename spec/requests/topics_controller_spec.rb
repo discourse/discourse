@@ -36,21 +36,7 @@ RSpec.describe TopicsController do
 
   fab!(:tag) { Fabricate(:tag) }
 
-  before do
-    [
-      user,
-      user_2,
-      post_author1,
-      post_author2,
-      post_author3,
-      post_author4,
-      post_author5,
-      post_author6,
-      trust_level_0,
-      trust_level_1,
-      trust_level_4,
-    ].each { |u| Group.user_trust_level_change!(u.id, u.trust_level) }
-  end
+  before { SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:everyone] }
 
   describe "#wordpress" do
     before { sign_in(moderator) }
@@ -2141,6 +2127,7 @@ RSpec.describe TopicsController do
     end
 
     it "does not result in N+1 queries problem when multiple topic participants have primary or flair group configured" do
+      Group.user_trust_level_change!(post_author1.id, post_author1.trust_level)
       user2 = Fabricate(:user)
       user3 = Fabricate(:user)
       post2 = Fabricate(:post, topic: topic, user: user2)
@@ -2506,6 +2493,28 @@ RSpec.describe TopicsController do
 
         expect(body).to have_tag(:script, src: "/assets/discourse.js")
         expect(body).to have_tag(:meta, with: { name: "fragment" })
+      end
+
+      context "with restricted tags" do
+        let(:tag_group) { Fabricate.build(:tag_group) }
+        let(:tag_group_permission) { Fabricate.build(:tag_group_permission, tag_group: tag_group) }
+        let(:restricted_tag) { Fabricate(:tag) }
+        let(:public_tag) { Fabricate(:tag) }
+
+        before do
+          # avoid triggering a `before_create` callback in `TagGroup` which
+          # messes with permissions
+          tag_group.tag_group_permissions << tag_group_permission
+          tag_group.save!
+          tag_group_permission.tag_group.tags << restricted_tag
+          topic.tags << [public_tag, restricted_tag]
+        end
+
+        it "doesn’t expose restricted tags" do
+          get "/t/#{topic.slug}/#{topic.id}/print", headers: { HTTP_USER_AGENT: "Rails Testing" }
+          expect(response.body).to match(public_tag.name)
+          expect(response.body).not_to match(restricted_tag.name)
+        end
       end
     end
 
@@ -4179,6 +4188,7 @@ RSpec.describe TopicsController do
 
       it "allows a category moderator to create a delete timer" do
         user.update!(trust_level: TrustLevel[4])
+        Group.user_trust_level_change!(user.id, user.trust_level)
         topic.category.update!(reviewable_by_group: user.groups.first)
 
         sign_in(user)

@@ -7,14 +7,13 @@
     .identifier {
       color: var(--primary);
       white-space: nowrap;
+      line-height: var(--line-height-medium);
     }
     .name {
       color: var(--primary-high);
       font-size: var(--font-down-1);
       margin-left: 0.5em;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
+      @include ellipsis;
     }
     .avatar,
     .d-icon {

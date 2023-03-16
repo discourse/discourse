@@ -8,7 +8,7 @@ RSpec.describe ChatChannel do
     context "when the slug is nil" do
       it "uses a - instead" do
         category_channel1.slug = nil
-        expect(category_channel1.relative_url).to eq("/chat/channel/#{category_channel1.id}/-")
+        expect(category_channel1.relative_url).to eq("/chat/c/-/#{category_channel1.id}")
       end
     end
 
@@ -17,7 +17,7 @@ RSpec.describe ChatChannel do
 
       it "includes the slug for the channel" do
         expect(category_channel1.relative_url).to eq(
-          "/chat/channel/#{category_channel1.id}/some-cool-channel",
+          "/chat/c/some-cool-channel/#{category_channel1.id}",
         )
       end
     end

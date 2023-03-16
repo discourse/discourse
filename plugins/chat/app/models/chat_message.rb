@@ -10,6 +10,8 @@ class ChatMessage < ActiveRecord::Base
   belongs_to :user
   belongs_to :in_reply_to, class_name: "ChatMessage"
   belongs_to :last_editor, class_name: "User"
+  belongs_to :thread, class_name: "ChatThread"
+
   has_many :replies, class_name: "ChatMessage", foreign_key: "in_reply_to_id", dependent: :nullify
   has_many :revisions, class_name: "ChatMessageRevision", dependent: :destroy
   has_many :reactions, class_name: "ChatMessageReaction", dependent: :destroy
@@ -20,7 +22,7 @@ class ChatMessage < ActiveRecord::Base
   # TODO (martin) Remove this when we drop the ChatUpload table
   has_many :chat_uploads, dependent: :destroy
   has_one :chat_webhook_event, dependent: :destroy
-  has_one :chat_mention, dependent: :destroy
+  has_many :chat_mentions, dependent: :destroy
 
   scope :in_public_channel,
         -> {
@@ -50,7 +52,7 @@ class ChatMessage < ActiveRecord::Base
         :base,
         I18n.t(
           "chat.errors.minimum_length_not_met",
-          minimum: SiteSetting.chat_minimum_message_length,
+          count: SiteSetting.chat_minimum_message_length,
         ),
       )
     end
@@ -58,7 +60,7 @@ class ChatMessage < ActiveRecord::Base
     if message_too_long?
       self.errors.add(
         :base,
-        I18n.t("chat.errors.message_too_long", maximum: SiteSetting.chat_maximum_message_length),
+        I18n.t("chat.errors.message_too_long", count: SiteSetting.chat_maximum_message_length),
       )
     end
   end
@@ -80,7 +82,7 @@ class ChatMessage < ActiveRecord::Base
     UploadReference.insert_all!(ref_record_attrs)
   end
 
-  def excerpt
+  def excerpt(max_length: 50)
     # just show the URL if the whole message is a URL, because we cannot excerpt oneboxes
     return message if UrlHelper.relaxed_parse(message).is_a?(URI)
 
@@ -88,7 +90,7 @@ class ChatMessage < ActiveRecord::Base
     return uploads.first.original_filename if cooked.blank? && uploads.present?
 
     # this may return blank for some complex things like quotes, that is acceptable
-    PrettyText.excerpt(cooked, 50, {})
+    PrettyText.excerpt(message, max_length, { text_entities: true })
   end
 
   def cooked_for_excerpt
@@ -221,10 +223,38 @@ class ChatMessage < ActiveRecord::Base
   end
 
   def url
-    "/chat/message/#{self.id}"
+    "/chat/c/-/#{self.chat_channel_id}/#{self.id}"
+  end
+
+  def create_mentions(user_ids)
+    return if user_ids.empty?
+
+    now = Time.zone.now
+    mentions = []
+    User
+      .where(id: user_ids)
+      .find_each do |user|
+        mentions << { chat_message_id: self.id, user_id: user.id, created_at: now, updated_at: now }
+      end
+
+    ChatMention.insert_all(mentions)
+  end
+
+  def update_mentions(mentioned_user_ids)
+    old_mentions = chat_mentions.pluck(:user_id)
+    updated_mentions = mentioned_user_ids
+    mentioned_user_ids_to_drop = old_mentions - updated_mentions
+    mentioned_user_ids_to_add = updated_mentions - old_mentions
+
+    delete_mentions(mentioned_user_ids_to_drop)
+    create_mentions(mentioned_user_ids_to_add)
   end
 
   private
+
+  def delete_mentions(user_ids)
+    chat_mentions.where(user_id: user_ids).destroy_all
+  end
 
   def message_too_short?
     message.length < SiteSetting.chat_minimum_message_length
@@ -255,6 +285,7 @@ end
 #  cooked          :text
 #  cooked_version  :integer
 #  last_editor_id  :integer          not null
+#  thread_id       :integer
 #
 # Indexes
 #
@@ -262,4 +293,5 @@ end
 #  index_chat_messages_on_chat_channel_id_and_created_at  (chat_channel_id,created_at)
 #  index_chat_messages_on_chat_channel_id_and_id          (chat_channel_id,id) WHERE (deleted_at IS NULL)
 #  index_chat_messages_on_last_editor_id                  (last_editor_id)
+#  index_chat_messages_on_thread_id                       (thread_id)
 #

@@ -44,9 +44,22 @@ module UserSidebarMixin
     sidebar_navigation_menu?
   end
 
+  def sidebar_sections
+    object
+      .sidebar_sections
+      .order(created_at: :asc)
+      .includes(sidebar_section_links: :linkable)
+      .map { |section| SidebarSectionSerializer.new(section, root: false) }
+  end
+
+  def include_sidebar_sections?
+    sidebar_navigation_menu?
+  end
+
   private
 
   def sidebar_navigation_menu?
-    !SiteSetting.legacy_navigation_menu? || options[:enable_sidebar_param] == "1"
+    !SiteSetting.legacy_navigation_menu? ||
+      %w[sidebar header_dropdown].include?(options[:navigation_menu_param])
   end
 end

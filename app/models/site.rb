@@ -78,6 +78,7 @@ class Site
               :uploaded_background,
               :tags,
               :tag_groups,
+              :form_templates,
               category_required_tag_groups: :tag_group,
             )
             .joins("LEFT JOIN topics t on t.id = categories.topic_id")
@@ -231,19 +232,22 @@ class Site
       .exists?
   end
 
+  def self.clear_show_welcome_topic_cache
+    Discourse
+      .cache
+      .keys("show_welcome_topic_banner:*")
+      .each { |key| Discourse.cache.redis.del(key) }
+  end
+
   def self.show_welcome_topic_banner?(guardian)
     return false if !guardian.is_admin?
+    return false if guardian.user.id != User.first_login_admin_id
     user_id = guardian.user.id
 
     show_welcome_topic_banner = Discourse.cache.read(welcome_topic_banner_cache_key(user_id))
     return show_welcome_topic_banner unless show_welcome_topic_banner.nil?
 
-    show_welcome_topic_banner =
-      if (user_id == User.first_login_admin_id)
-        welcome_topic_exists_and_is_not_edited?
-      else
-        false
-      end
+    show_welcome_topic_banner = welcome_topic_exists_and_is_not_edited?
 
     Discourse.cache.write(welcome_topic_banner_cache_key(user_id), show_welcome_topic_banner)
     show_welcome_topic_banner

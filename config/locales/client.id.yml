@@ -264,11 +264,9 @@ id:
       edit_bookmark: "Edit Bookmark"
       clear_bookmarks: "Bersihkan Penandaan"
       help:
-        bookmark: "Klik untuk membuat penandaan pos pertama di topik ini"
-        edit_bookmark: "Klik untuk menyunting penanda pada topik ini"
         edit_bookmark_for_topic: "Klik untuk menyunting penanda pada topik ini"
         unbookmark: "Klik untuk menghapus semua penandaan di topik ini"
-        unbookmark_with_reminder: "Klik untuk menghapus semua penanda dan pengingat pada topik ini."
+        unbookmark_with_reminder: "Klik untuk menghapus semua penanda dan pengingat pada topik ini"
     bookmarks:
       created: "Anda telah menandai kiriman ini. %{name}"
       created_generic: "Anda telah menandai ini. %{name}"
@@ -473,11 +471,9 @@ id:
       scores:
         about: "Skor ini dihitung berdasarkan tingkat kepercayaan pelapor, keakuratan bendera mereka sebelumnya, dan tingkat prioritas butir yang dilaporkan."
         score: "Skor"
-        date: "Tanggal"
-        type: "Tipe"
+        type: "Alasan"
         status: "Status"
-        submitted_by: "Dikirim Oleh"
-        reviewed_by: "Diperiksa Oleh"
+        submitted_by: "Dilaporkan oleh"
       statuses:
         pending:
           title: "Tertunda"
@@ -485,14 +481,12 @@ id:
           title: "Disetujui"
         rejected:
           title: "Ditolak"
-        ignored:
-          title: "Diabaikan"
-        deleted:
-          title: "Dihapus"
         reviewed:
-          title: "(semua ditinjau)"
+          title: "Semua ditinjau"
         all:
-          title: "(semuanya)"
+          title: "Semuanya"
+      context_question:
+        delimiter: "atau"
       types:
         reviewable_flagged_post:
           title: "Pos yang Dipanji"
@@ -730,6 +724,7 @@ id:
         make_all_primary: "Jadikan Semua Utama"
         remove_all_primary: "Hapus sebagai Utama"
         remove_all_primary_description: "Hapus grup ini sebagai utama"
+        status: "Status"
         owner: "Pemilik"
         primary: "Utama"
         forbidden: "Anda tidak diizinkan melihat anggota."
@@ -834,9 +829,6 @@ id:
       profile: "Profil"
       mute: "Redam"
       edit: "Ubah Preferensi"
-      download_archive:
-        button_text: "Unduh Semua"
-        confirm: "Anda yakin ingin mengunduh pos-pos Anda?"
       new_private_message: "Pesan Baru"
       private_message: "pesan"
       private_messages: "Messages"
@@ -1416,8 +1408,6 @@ id:
         tags_missing:
           other: "Anda harus memilih setidaknya %{count} label"
       save_edit: "Simpah Ubahan"
-      reply_original: "Balas pada Topik Asal"
-      reply_here: "Balas Disini"
       reply: "Balas"
       cancel: "Batal"
       create_topic: "Buat Topik"
@@ -1563,7 +1553,6 @@ id:
       back_to_list: "Kembali ke Daftar Topik"
       options: "Opsi Topik"
       show_links: "tampilkan pranala dalam topik ini"
-      jump_reply_up: lompat ke balasan sebelumnya
       slow_mode_update:
         enable: "Aktifkan"
         remove: "Nonaktifkan"
@@ -1607,8 +1596,10 @@ id:
         help: "share link ke topik ini"
         invite_users: "Undang"
       invite_private:
+        action: "Undang"
         group_name: "nama grup"
       invite_reply:
+        title: "Undang"
         username_placeholder: "nama pengguna"
       filters:
         n_posts:
@@ -1721,9 +1712,14 @@ id:
     category_title: "Kategori"
     raw_email:
       not_available: "Tidak tersedia!"
+    categories_list: "Daftar Kategori"
     filters:
       with_topics: "%{filter} topik"
       with_category: "%{filter} %{category} topik"
+      filter:
+        title: "Filter"
+        button:
+          label: "Filter"
       latest:
         title: "Terbaru"
       read:
@@ -1817,6 +1813,11 @@ id:
       more: "Selengkapnya"
       all_categories: "Semua kategori"
       sections:
+        custom:
+          save: "Simpan"
+          delete: "Hapus"
+          links:
+            name: "Nama"
         about:
           header_link_text: "Tentang"
         messages:
@@ -1964,8 +1965,11 @@ id:
           body_tag:
             text: "Konten"
         colors:
+          title: "Warna"
           undo: "Batalkan perintah"
           revert: "Dibalik"
+          primary:
+            name: "utama"
       email:
         title: "Surel"
         settings: "Pengaturan"
@@ -2037,10 +2041,28 @@ id:
           add: "Menambahkan"
         test:
           no_matches: "Tidak ditemukan yang cocok"
+      form_templates:
+        list_table:
+          headings:
+            name: "Nama"
+            actions: "Aksi"
+        view_template:
+          close: "Tutup"
+          edit: "Ubah"
+          delete: "Hapus"
+        new_template_form:
+          submit: "Simpan"
+          cancel: "Batal"
+        quick_insert_fields:
+          add_new_field: "Menambahkan"
+        validations_modal:
+          table_headers:
+            type: "Tipe"
       users:
         title: "Pengguna"
         last_emailed: "Terakhir Surel Dikirimkan"
         not_found: "Maaf, username tersebut tidak ada ditemukan."
+        status: "Status"
         nav:
           new: "Baru"
           active: "Aktif"
@@ -2063,6 +2085,7 @@ id:
         admin: "Admin?"
         show_admin_profile: "Admin"
         log_out: "Keluar"
+        permissions: Izin
         activity: Aktifitas
         posts_read_count: Tulisan dilihat
         topics_entered: Topik dilihat
@@ -2134,6 +2157,7 @@ id:
         revoke: Cabut
         reason: Alasan
         expand: Perluas &hellip;
+        disabled: dinonaktifkan
       emoji:
         uploading: "Mengunggah..."
         name: "Nama"

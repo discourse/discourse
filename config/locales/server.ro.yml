@@ -1427,9 +1427,6 @@ ro:
   user_notifications:
     previous_discussion: "Răspunsurile precedente"
     in_reply_to: "Ca răspuns la"
-    unsubscribe:
-      title: "Dezabonare"
-      description: "Nu ești interesat în a primi aceste email-uri? Nicio problemă! Fă click dedesubt pentru a te dezabona imediat:"
     reply_by_email: "[Vizitează subiect](%{base_url}%{url}) sau dă reply la acest email pentru a răspunde."
     only_reply_by_email: "Dă reply la acest email pentru a răspunde."
     visit_link_to_respond: "[Vizitează subiect](%{base_url}%{url}) pentru a răspunde."
@@ -1610,7 +1607,6 @@ ro:
       liked_received: "Aprecieri primite"
       new_users: "Utilizatori noi"
       popular_topics: "Subiecte notorii"
-      follow_topic: "Urmărește acest subiect"
       join_the_discussion: "Citește mai mult"
       popular_posts: "Postări notorii"
       unsubscribe: "Acest rezumat este transmis de pe %{site_link} când a trecut ceva vreme de când nu te-am mai văzut. Poți schimba %{email_preferences_link} sau, pentru a te dezabona, %{unsubscribe_link}"
@@ -1679,8 +1675,6 @@ ro:
     see_more: "Mai multe"
     search_title: "Caută în site"
     search_button: "Caută"
-  deleted: "șters"
-  image: "imagine"
   upload:
     edit_reason: "copii locale ale imaginilor descărcate"
     unauthorized: "Ne pare rău, fișierul pe care-l încerci să-l încarci nu este autorizat (extensii autorizate: %{authorized_extensions})."
@@ -1833,87 +1827,6 @@ ro:
     title: "Condiții generale de utilizare"
   privacy_topic:
     title: "Politica de confidențialitate"
-    body: |
-      <a name="collect"></a>
-
-      ## [Ce informații colectăm?](#collect)
-
-      Noi colectăm informații de la tine atunci când te înregistrezi pe site-ul nostru și strângem date atunci când participi la forum citind, scriind sau evaluând conținutul distribuit aici.
-
-      Când te înregistrezi pe site-ul nostru, ți se poate cere să îți introduci numele și adresa. Poți totuși să ne vizitezi site-ul fără să te înregistrezi. Adresa ta de email va fi verificată printr-un email ce conține un link unic. Dacă acel link este vizitat, noi știm că tu deții controlul adresei de email.
-
-      Odată înregistrat și postând, noi înregistrăm adresa de IP de la care a provenit postarea. Putem de asemenea să păstrăm registre de server cu adresele IP ale fiecărei interogări către serverul nostru.
-
-      <a name="use"></a>
-
-      ## [La ce folosim informațiile?](#use)
-
-      Orice informație pe care o colectăm de la tine poate fi folosită într-unul din următoarele moduri:
-
-      * Pentru a-ți personaliza experiența &mdash; informațiile tale ne ajută să răspundem mai bine nevoilor tale specifice.
-      * Să ne îmbunătățim site-ul &mdash; ne zbatem în permanență să ne îmbunătățim funcționalitățile site-ului pe baza informațiilor și al feedback-ului pe care îl primim de la tine.
-      * Să îmbunătățim serviciul clienți &mdash; informațiile tale ne ajută să răspundem mai eficient cererilor tale de serviciu clienți și nevoilor tale de suport.
-      * Să transmitem emailuri periodice &mdash; Adresa de email pe care ne-ai furnizat-o poate fi folosită să îți trimitem informații, notificări pe care le ceri cu privire la schimbări în subiecte sau în legătură cu numele tău utilizator, pentru a răspunde la solicitări și/sau alte cereri sau întrebări.
-
-      <a name="protect"></a>
-
-      ## [Cum îți protejăm informațiile?](#protect)
-
-      Implementăm o gamă variată de măsuri pentru a menține securitatea informațiilor personale pe care le introduci, trimiți sau accesezi.
-
-      <a name="data-retention"></a>
-
-      ## [Care este politica voastră de păstrare a datelor?](#data-retention)
-
-      Vom face eforturi cu bună-credință pentru a:
-
-      * Nu reține mai mult de 90 de zile rapoartele server ce conțin adresele de IP ale tuturor interogărilor către serverul nostru.
-      * Nu reține mai mult de 5 ani adresele de IP asociate cu utilizatorii înregistrați și postările lor.
-
-      <a name="cookies"></a>
-
-      ## [Folosiți cookies](#cookies)
-
-      Da. Cookies sunt fișiere mici pe care un site sau furnizorul său de servicii le transferă pe hard drive-ul computerului tău prin intermediul web browser-ului (dacă permiți) Aceste cookies dau posibilitatea site-ului să îți recunoască browserul și, dacă ai un cont înregistrat, să îl asocieze cu contul tău înregistrat.
-
-      Folosim cookies pentru a-ți înțelege și salva preferințele în vederea vizitelor viitoare și să compilăm și agregăm date despre traficul pe site și interacțiunile site-ului astfel încât să putem oferi experiențe mai și instrumente mai bune pe site, în viitor. Putem contacta terți furnizori de servicii pentru a ne ajuta să ne înțelegem mai bine vizitatorii. Acestor terți furnizori de servicii nu li se va permite să folosească informațiile colectate în numele nostru decât pentru a ne ajuta șă ne desfășurăm și îmbunătățim activitatea..
-
-      <a name="disclose"></a>
-
-      ## [Divulgați aceste informații terților?](#disclose)
-
-      Nu vindem, comercializăm sau transferăm în vreun alt fel către terți informațiile tale personale identificabile. Asta nu include terții de încredere care ne ajută să ne exploatăm site-ul, să ne conducem activitatea, sau să te servim, câtă vreme acești terți sunt de acord să păstreze aceste informații confidențiale. Putem de asemenea să divulgăm informațiile tale atunci când credem că e necesar pentru a ne supune legii, să aplicăm politica site-ului, sau să protejăm drepturile, proprietatea sau siguranța noastră sau a altora. Totuși, informațiile nepersonale ale vizitatorilor pot fi furnizate unor terți în scopuri de marketing, reclamă sau în alte scopuri.
-
-      <a name="third-party"></a>
-
-      ## [Legături cu terți](#third-party)
-
-      Uneori, la discreția noastră, putem include sau oferi produse sau servicii ale terților pe site-ul nostru. Aceste site-uri ale terților au propriile lor politici de confidențialitate separate și independente. De aceea noi nu avem nicio responsabilitate pentru conținutul sau activitățile de pe aceste site-uri către care sunt puse linkuri. Cu toate astea, vom încerca să protejăm integritatea site-ului nostru și suntem dispuși să luam în considerare orice feedback legat de aceste site-uri.
-
-      <a name="coppa"></a>
-
-      ## [Protecția minorilor](#coppa)
-
-      Site-ul nostru, produsele și serviciile sunt destinate direct persoanelor care au vârsta de peste 13 ani. Dacă acest server este în Statele Unite, și dacă ai mai puțin de 13 ani, în conformitate cu COPPA ([Children's Online Privacy Protection Act](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)), nu folosi acest site.
-      <a name="online"></a>
-
-      ## [Politica de confidențialitate online](#online)
-
-      Această politică de confidențialitate se aplică numai informațiilor colectate online prin intermediul site-ului nostru nu și celor colectate offline.
-
-      <a name="consent"></a>
-
-      ## [Acordul tău](#consent)
-
-      Prin utilizarea site-ului nostru, ești de acord cu Politica de confidențialitate a site-ului nostru web.
-
-      <a name="changes"></a>
-
-      ## [Schimbări în politica de confidențialitate](#changes)
-
-      Dacă decidem să ne schimbăm politica de confidențialitate, vom afișa schimbările în această pagină.
-
-      Acest document se supune licenței creative commons CC-BY-SA. A fost actualizat ultima dată pe 31 mai 2013.
   badges:
     editor:
       name: Editor
@@ -2080,6 +1993,10 @@ ro:
       description: Ai vizitat 10 zile consecutive
       long_description: |
         Această insignă este acordată pentru vizitarea timp de 10 zile consecutive. Vă mulțumim că ați rămas alături de noi mai bine de o săptămână!
+    aficionado:
+      description: Ai vizitat 100 zile consecutive
+    devotee:
+      description: Ai vizitat 365 zile consecutive
   admin_login:
     success: "Emailul a fost trimis"
     email_input: "Email Admin"
@@ -2102,8 +2019,6 @@ ro:
       message: "<p>Am trimis un email de activare la <b>%{email}</b>"
   safe_mode:
     title: "Activează modul sigur"
-    no_unofficial_plugins: "Dezactivează plugin-urile neoficiale"
-    no_plugins: "Dezactivează toate plugin-urile"
     enter: "Activează modul sigur"
   wizard:
     title: "Configurare Discourse"
@@ -2143,7 +2058,6 @@ ro:
         description: "Aproape ai încheiat ! Hai să invităm câțiva prieteni să te ajute <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>cu demararea comunității </a> prin discuții și răspunsuri interesante."
       finished:
         title: "Discourse-ul tău e gata!"
-  joined: "Înscris"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} te-a menționat în discuția "%{topic}" - %{site_title}'
@@ -2155,33 +2069,32 @@ ro:
       linked: '%{username} a creat o legătură către postarea ta din discuția "%{topic}" - %{site_title}'
   reviewables:
     priorities:
+      low: "Scăzut"
       medium: "Medie"
       high: "Ridicată"
     sensitivity:
+      low: "Scăzut"
       medium: "Medie"
       high: "Ridicată"
     actions:
-      agree_and_keep:
-        title: "Păstrează postarea"
-      agree_and_suspend:
-        title: "Suspendă utilizator"
-      agree_and_silence:
-        title: "Suspendă utilizatorul"
+      agree:
+        title: "Da"
       agree_and_restore:
         description: "Restabilește postarea pentru astfel încât toți utilizatorii să o poată vedea."
-      agree_and_hide:
-        title: "Ascunde postarea"
       delete_single:
         title: "Șterge"
       disagree_and_restore:
         description: "Restabilește postarea pentru astfel încât toți utilizatorii să o poată vedea."
       disagree:
-        title: "Nu sunt de acord"
+        title: "Nu"
       ignore:
         title: "Ignoră"
+      ignore_and_do_nothing:
+        title: "Nu face nimic"
       approve:
         title: "Aprobare"
       reject_user:
+        title: "Şterge utilizatorul..."
         delete:
           title: "Şterge utilizatorul"
       reject:

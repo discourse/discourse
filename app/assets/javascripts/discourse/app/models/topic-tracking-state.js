@@ -27,6 +27,10 @@ function isUnread(topic) {
   );
 }
 
+function isNewOrUnread(topic) {
+  return isUnread(topic) || isNew(topic);
+}
+
 function isUnseen(topic) {
   return !topic.is_seen;
 }
@@ -83,20 +87,53 @@ const TopicTrackingState = EmberObject.extend({
    *
    * @method establishChannels
    */
-  establishChannels() {
-    this.messageBus.subscribe("/latest", this._processChannelPayload);
+  establishChannels(meta) {
+    meta ??= {};
+    const messageBusDefaultNewMessageId = -1;
+
+    this.messageBus.subscribe(
+      "/latest",
+      this._processChannelPayload,
+      meta["/latest"] || messageBusDefaultNewMessageId
+    );
+
     if (this.currentUser) {
-      this.messageBus.subscribe("/new", this._processChannelPayload);
-      this.messageBus.subscribe(`/unread`, this._processChannelPayload);
+      this.messageBus.subscribe(
+        "/new",
+        this._processChannelPayload,
+        meta["/new"] || messageBusDefaultNewMessageId
+      );
+
+      this.messageBus.subscribe(
+        `/unread`,
+        this._processChannelPayload,
+        meta["/unread"] || messageBusDefaultNewMessageId
+      );
+
       this.messageBus.subscribe(
         `/unread/${this.currentUser.id}`,
-        this._processChannelPayload
+        this._processChannelPayload,
+        meta[`/unread/${this.currentUser.id}`] || messageBusDefaultNewMessageId
       );
     }
 
-    this.messageBus.subscribe("/delete", this.onDeleteMessage);
-    this.messageBus.subscribe("/recover", this.onRecoverMessage);
-    this.messageBus.subscribe("/destroy", this.onDestroyMessage);
+    this.messageBus.subscribe(
+      "/delete",
+      this.onDeleteMessage,
+      meta["/delete"] || messageBusDefaultNewMessageId
+    );
+
+    this.messageBus.subscribe(
+      "/recover",
+      this.onRecoverMessage,
+      meta["/recover"] || messageBusDefaultNewMessageId
+    );
+
+    this.messageBus.subscribe(
+      "/destroy",
+      this.onDestroyMessage,
+      meta["/destroy"] || messageBusDefaultNewMessageId
+    );
   },
 
   @bind
@@ -247,11 +284,12 @@ const TopicTrackingState = EmberObject.extend({
       this._addIncoming(data.topic_id);
     }
 
+    const unreadRecipients = ["all", "unread", "unseen"];
+    if (this.currentUser?.new_new_view_enabled) {
+      unreadRecipients.push("new");
+    }
     // count an unread topic as incoming
-    if (
-      ["all", "unread", "unseen"].includes(filter) &&
-      data.message_type === "unread"
-    ) {
+    if (unreadRecipients.includes(filter) && data.message_type === "unread") {
       const old = this.findState(data);
 
       // the highest post number is equal to last read post number here
@@ -519,7 +557,22 @@ const TopicTrackingState = EmberObject.extend({
     const mutedCategoryIds = this.currentUser?.muted_category_ids?.concat(
       this.currentUser.indirectly_muted_category_ids
     );
-    let filterFn = type === "new" ? isNew : isUnread;
+
+    let filterFn;
+    switch (type) {
+      case "new":
+        filterFn = isNew;
+        break;
+      case "unread":
+        filterFn = isUnread;
+        break;
+      case "new_and_unread":
+      case "unread_and_new":
+        filterFn = isNewOrUnread;
+        break;
+      default:
+        throw new Error(`Unkown filter type ${type}`);
+    }
 
     return Array.from(this.states.values()).filter((topic) => {
       if (!filterFn(topic)) {
@@ -527,6 +580,14 @@ const TopicTrackingState = EmberObject.extend({
       }
 
       if (categoryId && !subcategoryIds.has(topic.category_id)) {
+        return false;
+      }
+
+      if (
+        categoryId &&
+        topic.is_category_topic &&
+        categoryId !== topic.category_id
+      ) {
         return false;
       }
 
@@ -559,6 +620,21 @@ const TopicTrackingState = EmberObject.extend({
   countUnread({ categoryId, tagId, noSubcategories, customFilterFn } = {}) {
     return this.countCategoryByState({
       type: "unread",
+      categoryId,
+      tagId,
+      noSubcategories,
+      customFilterFn,
+    });
+  },
+
+  countNewAndUnread({
+    categoryId,
+    tagId,
+    noSubcategories,
+    customFilterFn,
+  } = {}) {
+    return this.countCategoryByState({
+      type: "new_and_unread",
       categoryId,
       tagId,
       noSubcategories,
@@ -676,12 +752,21 @@ const TopicTrackingState = EmberObject.extend({
     let categoryId = category ? get(category, "id") : null;
 
     if (type === "new") {
-      return this.countNew({
+      let count = this.countNew({
         categoryId,
         tagId,
         noSubcategories,
         customFilterFn,
       });
+      if (this.currentUser?.new_new_view_enabled) {
+        count += this.countUnread({
+          categoryId,
+          tagId,
+          noSubcategories,
+          customFilterFn,
+        });
+      }
+      return count;
     } else if (type === "unread") {
       return this.countUnread({
         categoryId,
@@ -757,8 +842,14 @@ const TopicTrackingState = EmberObject.extend({
   // for a particular seen topic has not yet reached the server.
   _fixDelayedServerState(list, filter) {
     for (let index = list.topics.length - 1; index >= 0; index--) {
-      const state = this.findState(list.topics[index].id);
-      if (state && state.last_read_post_number > 0) {
+      const topic = list.topics[index];
+      const state = this.findState(topic.id);
+      if (
+        state &&
+        state.last_read_post_number > 0 &&
+        (topic.last_read_post_number === 0 ||
+          !this.currentUser?.new_new_view_enabled)
+      ) {
         if (filter === "new") {
           list.topics.splice(index, 1);
         } else {
@@ -1005,10 +1096,13 @@ const TopicTrackingState = EmberObject.extend({
 });
 
 export function startTracking(tracking) {
-  const data = PreloadStore.get("topicTrackingStates");
-  tracking.loadStates(data);
-  tracking.establishChannels();
-  PreloadStore.remove("topicTrackingStates");
+  PreloadStore.getAndRemove("topicTrackingStates").then((data) =>
+    tracking.loadStates(data)
+  );
+
+  PreloadStore.getAndRemove("topicTrackingStateMeta").then((meta) =>
+    tracking.establishChannels(meta)
+  );
 }
 
 export default TopicTrackingState;

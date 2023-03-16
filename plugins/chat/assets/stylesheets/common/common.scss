@@ -144,9 +144,14 @@ $float-height: 530px;
 .chat-messages-container {
   word-wrap: break-word;
   white-space: normal;
+  position: relative;
+  will-change: transform;
+  transform: translateZ(0);
 
   .chat-message-container {
     display: grid;
+    will-change: transform;
+    transform: translateZ(0);
 
     &.selecting-messages {
       grid-template-columns: 1.5em 1fr;
@@ -277,11 +282,14 @@ $float-height: 530px;
   .chat-messages-scroll {
     flex-grow: 1;
     overflow-y: scroll;
+    overscroll-behavior: contain;
     scrollbar-color: var(--primary-low) transparent;
     transition: scrollbar-color 0.2s ease-in-out;
     display: flex;
     flex-direction: column-reverse;
     z-index: 1;
+    margin: 0 3px 0 0;
+    will-change: transform;
 
     &::-webkit-scrollbar {
       width: 15px;
@@ -318,41 +326,74 @@ $float-height: 530px;
   }
 
   .scroll-stick-wrap {
+    display: flex;
+    justify-content: center;
+    margin: 0 1rem;
     position: relative;
   }
 
   .chat-scroll-to-bottom {
-    background: var(--primary-medium);
-    bottom: 1em;
-    border-radius: 100%;
-    left: 50%;
-    opacity: 50%;
-    padding: 0.5em;
+    align-items: center;
+    justify-content: center;
     position: absolute;
-    transform: translateX(-50%);
-    z-index: 2;
+    z-index: 1;
+    flex-direction: column;
+    bottom: -25px;
+    background: none;
+    opacity: 0;
+    transition: opacity 0.25s ease, transform 0.5s ease;
+    transform: scale(0.1);
+    padding: 0;
 
-    &:hover {
+    > * {
+      pointer-events: none;
+    }
+
+    &:hover,
+    &:active,
+    &:focus {
+      background: none !important;
+    }
+
+    &.visible {
+      transform: translateY(-32px) scale(1);
+      opacity: 0.8;
+    }
+
+    &__text {
+      color: var(--secondary);
+      padding: 0.5rem;
+      margin-bottom: 0.5rem;
       background: var(--primary-medium);
-      opacity: 100%;
+      border-radius: 3px;
+      text-align: center;
+      font-size: var(--font-down-1);
+      bottom: 40px;
+      position: absolute;
     }
 
-    .d-icon {
-      color: var(--primary);
-      margin: 0;
-    }
-
-    &.unread-messages {
-      opacity: 85%;
-      border-radius: 0;
-      transition: border-radius 0.1s linear;
-
-      &:hover {
-        opacity: 100%;
-      }
+    &__arrow {
+      display: flex;
+      background: var(--primary-medium);
+      border-radius: 100%;
+      align-items: center;
+      justify-content: center;
+      height: 32px;
+      width: 32px;
+      position: relative;
 
       .d-icon {
-        margin: 0 0 0 0.5em;
+        color: var(--secondary);
+      }
+    }
+
+    &:hover {
+      opacity: 1;
+
+      .chat-scroll-to-bottom__arrow {
+        .d-icon {
+          color: var(--secondary);
+        }
       }
     }
   }
@@ -380,8 +421,6 @@ body.has-full-page-chat {
 }
 
 .full-page-chat {
-  font-family: "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
   display: grid;
   grid-template-columns: var(--full-page-sidebar-width) 1fr;
 
@@ -590,7 +629,7 @@ html.has-full-page-chat {
         padding-bottom: env(safe-area-inset-bottom);
       }
 
-      #main-chat-outlet {
+      .main-chat-outlet {
         min-height: 0;
       }
     }
@@ -608,21 +647,11 @@ html.has-full-page-chat {
     #main-outlet-wrapper {
       // restrict the row height, including when virtual keyboard is open
       grid-template-rows: calc(
-        var(--chat-vh, 1vh) * 100 - var(--header-offset)
+        var(--chat-vh, 1vh) * 100 - var(--header-offset, 0px)
       );
       .sidebar-wrapper {
         // prevents sidebar from overflowing behind the virtual keyboard
         height: 100%;
-      }
-    }
-
-    // iPad webview
-    .footer-nav-ipad {
-      #main-outlet-wrapper {
-        // restrict the row height, including when virtual keyboard is open
-        grid-template-rows: calc(
-          var(--chat-vh, 1vh) * 100 - calc(var(--header-offset))
-        );
       }
     }
 

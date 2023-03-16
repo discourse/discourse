@@ -62,7 +62,7 @@ describe Chat::ChatMessageUpdater do
     expect(updater.error.message).to match(
       I18n.t(
         "chat.errors.minimum_length_not_met",
-        { minimum: SiteSetting.chat_minimum_message_length },
+        { count: SiteSetting.chat_minimum_message_length },
       ),
     )
     expect(chat_message.reload.message).to eq(og_message)
@@ -82,7 +82,7 @@ describe Chat::ChatMessageUpdater do
       )
     expect(updater.failed?).to eq(true)
     expect(updater.error.message).to match(
-      I18n.t("chat.errors.message_too_long", { maximum: SiteSetting.chat_maximum_message_length }),
+      I18n.t("chat.errors.message_too_long", { count: SiteSetting.chat_maximum_message_length }),
     )
     expect(chat_message.reload.message).to eq(og_message)
   end
@@ -150,17 +150,18 @@ describe Chat::ChatMessageUpdater do
     }.not_to change { ChatMention.count }
   end
 
-  it "doesn't create mentions for users without access" do
+  it "doesn't create mention notification for users without access" do
     message = "ping"
     chat_message = create_chat_message(user1, message, public_chat_channel)
 
-    expect {
-      Chat::ChatMessageUpdater.update(
-        guardian: guardian,
-        chat_message: chat_message,
-        new_content: message + " @#{user_without_memberships.username}",
-      )
-    }.not_to change { ChatMention.count }
+    Chat::ChatMessageUpdater.update(
+      guardian: guardian,
+      chat_message: chat_message,
+      new_content: message + " @#{user_without_memberships.username}",
+    )
+
+    mention = user_without_memberships.chat_mentions.where(chat_message: chat_message).first
+    expect(mention.notification).to be_nil
   end
 
   it "destroys mention notifications that should be removed" do
@@ -189,15 +190,17 @@ describe Chat::ChatMessageUpdater do
     expect(user4.chat_mentions.where(chat_message: chat_message)).to be_present
   end
 
-  it "does not create new mentions in direct message for users who don't have access" do
-    chat_message = create_chat_message(user1, "ping nobody", @direct_message_channel)
-    expect {
-      Chat::ChatMessageUpdater.update(
-        guardian: guardian,
-        chat_message: chat_message,
-        new_content: "ping @#{admin1.username}",
-      )
-    }.not_to change { ChatMention.count }
+  it "doesn't create mention notification in direct message for users without access" do
+    message = create_chat_message(user1, "ping nobody", @direct_message_channel)
+
+    Chat::ChatMessageUpdater.update(
+      guardian: guardian,
+      chat_message: message,
+      new_content: "ping @#{admin1.username}",
+    )
+
+    mention = admin1.chat_mentions.where(chat_message: message).first
+    expect(mention.notification).to be_nil
   end
 
   describe "group mentions" do
@@ -528,10 +531,7 @@ describe Chat::ChatMessageUpdater do
         updater = update_message(user1)
         expect(updater.failed?).to eq(true)
         expect(updater.error.message).to eq(
-          I18n.t(
-            "chat.errors.channel_modify_message_disallowed",
-            status: public_chat_channel.status_name,
-          ),
+          I18n.t("chat.errors.channel_modify_message_disallowed.closed"),
         )
       end
 
@@ -548,18 +548,12 @@ describe Chat::ChatMessageUpdater do
         updater = update_message(user1)
         expect(updater.failed?).to eq(true)
         expect(updater.error.message).to eq(
-          I18n.t(
-            "chat.errors.channel_modify_message_disallowed",
-            status: public_chat_channel.status_name,
-          ),
+          I18n.t("chat.errors.channel_modify_message_disallowed.read_only"),
         )
         updater = update_message(admin1)
         expect(updater.failed?).to eq(true)
         expect(updater.error.message).to eq(
-          I18n.t(
-            "chat.errors.channel_modify_message_disallowed",
-            status: public_chat_channel.status_name,
-          ),
+          I18n.t("chat.errors.channel_modify_message_disallowed.read_only"),
         )
       end
     end
@@ -571,18 +565,12 @@ describe Chat::ChatMessageUpdater do
         updater = update_message(user1)
         expect(updater.failed?).to eq(true)
         expect(updater.error.message).to eq(
-          I18n.t(
-            "chat.errors.channel_modify_message_disallowed",
-            status: public_chat_channel.status_name,
-          ),
+          I18n.t("chat.errors.channel_modify_message_disallowed.archived"),
         )
         updater = update_message(admin1)
         expect(updater.failed?).to eq(true)
         expect(updater.error.message).to eq(
-          I18n.t(
-            "chat.errors.channel_modify_message_disallowed",
-            status: public_chat_channel.status_name,
-          ),
+          I18n.t("chat.errors.channel_modify_message_disallowed.archived"),
         )
       end
     end

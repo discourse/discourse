@@ -1,0 +1,10 @@
+.topic-query-filter {
+  display: flex;
+  flex-direction: row;
+  margin-right: auto;
+  margin-bottom: var(--nav-space);
+
+  .topic-query-filter__input {
+    margin: 0 0.5em 0 0;
+  }
+}

@@ -145,9 +145,6 @@ module TestSetup
     # Don't queue badge grant in test mode
     BadgeGranter.disable_queue
 
-    # Make sure the default Post and Topic bookmarkables are registered
-    Bookmark.reset_bookmarkables
-
     OmniAuth.config.test_mode = false
   end
 end
@@ -245,7 +242,10 @@ RSpec.configure do |config|
     end
 
     Capybara.threadsafe = true
-    Capybara.disable_animation = true
+    Capybara.disable_animation = false
+
+    # Click offsets is calculated from top left of element
+    Capybara.w3c_click_offset = false
 
     Capybara.configure do |capybara_config|
       capybara_config.server_host = "localhost"
@@ -283,13 +283,13 @@ RSpec.configure do |config|
         end
 
     Capybara.register_driver :selenium_chrome do |app|
-      Capybara::Selenium::Driver.new(app, browser: :chrome, capabilities: chrome_browser_options)
+      Capybara::Selenium::Driver.new(app, browser: :chrome, options: chrome_browser_options)
     end
 
     Capybara.register_driver :selenium_chrome_headless do |app|
       chrome_browser_options.add_argument("--headless")
 
-      Capybara::Selenium::Driver.new(app, browser: :chrome, capabilities: chrome_browser_options)
+      Capybara::Selenium::Driver.new(app, browser: :chrome, options: chrome_browser_options)
     end
 
     mobile_chrome_browser_options =
@@ -304,20 +304,12 @@ RSpec.configure do |config|
         end
 
     Capybara.register_driver :selenium_mobile_chrome do |app|
-      Capybara::Selenium::Driver.new(
-        app,
-        browser: :chrome,
-        capabilities: mobile_chrome_browser_options,
-      )
+      Capybara::Selenium::Driver.new(app, browser: :chrome, options: mobile_chrome_browser_options)
     end
 
     Capybara.register_driver :selenium_mobile_chrome_headless do |app|
       mobile_chrome_browser_options.add_argument("--headless")
-      Capybara::Selenium::Driver.new(
-        app,
-        browser: :chrome,
-        capabilities: mobile_chrome_browser_options,
-      )
+      Capybara::Selenium::Driver.new(app, browser: :chrome, options: mobile_chrome_browser_options)
     end
 
     if ENV["ELEVATED_UPLOADS_ID"]

@@ -20,14 +20,13 @@ et:
       joined: "liitus"
       email_frequency:
         never: "Mitte kunagi"
+      header_indicator_preference:
+        never: "Mitte kunagi"
       flag: "Tähis"
       join: "Liitu"
+      last_visit: "viimane visiit"
       mention_warning:
         dismiss: "ignoreeri"
-        groups:
-          users_limit:
-            one: "%{count} kasutaja"
-            other: "%{count} kasutajat"
       reply: "Vasta"
       edit: "Muuda"
       rebake_message: "Rekonstrueeri HTML"

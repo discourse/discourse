@@ -1,15 +1,12 @@
 # frozen_string_literal: true
 
-describe "Redesigned user page navigation menu", type: :system, js: true do
+describe "User page navigation menu", type: :system, js: true do
   fab!(:user) { Fabricate(:user) }
   let(:everyone_group) { Group[:everyone] }
   let(:user_preferences_page) { PageObjects::Pages::UserPreferences.new }
 
-  describe "when visiting the user's preferences page with redesigned user page nav enabled" do
+  describe "when visiting the user's preferences page" do
     it "should allow the user to scroll the horizontal navigation menu when window width is narrow" do
-      everyone_group.add(user)
-      SiteSetting.enable_new_user_profile_nav_groups = everyone_group.name
-
       resize_window(width: 400) do
         sign_in(user)
 

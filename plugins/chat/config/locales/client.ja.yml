@@ -38,8 +38,6 @@ ja:
       browse_all_channels: "すべてのチャンネルを閲覧する"
       move_to_channel:
         title: "メッセージをチャンネルに移動する"
-        instructions:
-          other: "<strong>%{count}</strong> 件のメッセージを移動しようとしています。移動先のチャンネルを選択してください。<strong>%{channelTitle}</strong> チャンネルに、これらのメッセージが移動されたことを示すプレースホルダーメッセージが作成されます。"
         confirm_move: "メッセージを移動"
       channel_settings:
         title: "チャンネルの設定"
@@ -70,7 +68,6 @@ ja:
         instructions: "チャンネルを閉鎖すると、スタッフ以外のユーザーが新しいメッセージの送信や既存のメッセージの編集を行えなくなります。このチャンネルを閉鎖してもよろしいですか？"
       channel_delete:
         title: "チャンネルを削除"
-        instructions: "<p><strong>%{name}</strong> チャンネルとチャット履歴を削除します。すべてのメッセージと、リアクションやアップロードといった関連データは永久に削除されます。チャンネルの履歴を保持して閉鎖するには、チャンネルを削除ではなくアーカイブすることをお勧めします。</p><p>チャンネルを<strong>永久に削除</strong>してもよろしいですか？確定するには、チャンネルの名前を下のボックスに入力してください。</p>"
         confirm: "結果を理解し、チャンネルを削除します"
         confirm_channel_name: "チャンネル名を入力してください"
         process_started: "チャンネルの削除処理が開始しました。このモーダルは間もなく閉じられ、削除されたチャンネルがどこにも表示されなくなります。"
@@ -96,6 +93,8 @@ ja:
         never: "なし"
         title: "メール通知"
         when_away: "退席中の時のみ"
+      header_indicator_preference:
+        never: "なし"
       enable: "チャットを有効にする"
       flag: "通報する"
       emoji: "絵文字を挿入する"
@@ -105,17 +104,16 @@ ja:
       in_reply_to: "返信先"
       heading: "チャット"
       join: "参加"
-      new_messages: "新しいメッセージ"
+      last_visit: "最後の訪問"
       mention_warning:
         dismiss: "閉じる"
         invitations_sent:
           other: "招待状を送信しました"
         invite: "チャンネルに招待する"
-        warning_multiple:
-          other: "他 %{count} 件"
         groups:
-          users_limit:
-            other: "%{count} 人のユーザー"
+          header:
+            some: "一部のユーザーには通知されません"
+            all: "誰にも通知されません"
       aria_roles:
         header: "チャットヘッダー"
         composer: "チャット作成ツール"
@@ -132,10 +130,9 @@ ja:
       close_full_page: "全画面チャットを閉じる"
       open_message: "メッセージをチャットで開く"
       placeholder_self: "メモを書き留める"
-      placeholder_others: "%{messageRecipient} とチャット"
-      placeholder_new_message_disallowed: "チャンネルは %{status} です。現在、新しいメッセージを送信できません。"
+      placeholder_users: "%{commaSeparatedNames} とチャット"
       placeholder_silenced: "現在、メッセージを送信できません。"
-      placeholder_start_conversation: '%{usernames} と会話を始める'
+      placeholder_start_conversation_users: "%{commaSeparatedUsernames} と会話を始める"
       remove_upload: "ファイルを削除する"
       react: "絵文字でリアクション"
       reply: "返信"
@@ -204,6 +201,8 @@ ja:
           about: 紹介
           members: メンバー
           settings: 設定
+      channel_edit_name_slug_modal:
+        name: チャンネル名
       channel_edit_description_modal:
         title: 説明を編集する
         input_placeholder: 説明を追加する
@@ -224,16 +223,12 @@ ja:
       create_channel:
         auto_join_users:
           public_category_warning: "%{category} は公開カテゴリです。最近アクティブなすべてのユーザーをこのチャンネルに自動的に追加しますか？"
-          warning_groups:
-            other: '%{group} と %{group_2} から %{members_count} 人のユーザーを自動的に追加しますか？'
-          warning_multiple_groups: '%{group_1} の %{members_count} 人のユーザーと他 %{count} 人を自動的に追加しますか？'
+          warning_2_groups:
+            other: "%{group1} と %{group2} から %{count} 人のユーザーを自動的に追加しますか？"
         choose_category:
           label: "カテゴリを選択する"
           none: "1 つ選択してください..."
           default_hint: <a href=%{link} target="_blank">%{category} のセキュリティ設定</a>に移動し、アクセス権を管理します
-          hint_groups:
-            other: '%{hint} と %{hint_2} のユーザーは、<a href=%{link} target="_blank">セキュリティ設定</a>に従って、このチャンネルにアクセスできます。'
-          hint_multiple_groups: '%{hint_1} と他 %{count} 個のグループのユーザーは、<a href=%{link} target="_blank">セキュリティ設定</a>に従って、このチャンネルにアクセスできます。'
         create: "チャンネルを作成"
         description: "説明 (オプション)"
         name: "チャンネル名"
@@ -246,10 +241,11 @@ ja:
         type: "チャットメッセージ"
       reactions:
         only_you: ":%{emoji}: でリアクションしました"
-        and_others: "あなたと %{usernames} が :%{emoji}: でリアクションしました"
-        only_others: "%{usernames} が :%{emoji}: でリアクションしました"
-        others_and_more: "%{usernames} と他 %{more} 人が :%{emoji}: でリアクションしました"
-        you_others_and_more: "あなた、%{usernames} と他 %{more} 人が :%{emoji}: でリアクションしました"
+        you_multiple_users_and_more:
+          other: "あなた、%{commaSeparatedUsernames} と他 %{count} 人が :%{emoji}: でリアクションしました"
+        single_user: "%{username} が :%{emoji}: でリアクションしました"
+        multiple_users_and_more:
+          other: "%{commaSeparatedUsernames} と他 %{count} 人が :%{emoji}: でリアクションしました"
       composer:
         toggle_toolbar: "ツールバーの切り替え"
         italic_text: "強調文字"
@@ -263,6 +259,8 @@ ja:
         mention: "メンションのみ"
         always: "すべてのアクティビティ"
       settings:
+        channel_wide_mentions_label: "@all と @here メンションを許可する"
+        channel_wide_mentions_description: "@all で #%{channel} の全メンバーに通知するか、@here で現在アクティブなメンバーのみに通知することを許可します"
         auto_join_users_label: "自動的にユーザーを追加する"
         auto_join_users_warning: "このチャンネルのメンバーでなく、%{category} カテゴリにアクセスできるすべてのユーザーが参加します。よろしいですか？"
         desktop_notification_level: "デスクトップ通知"
@@ -278,11 +276,11 @@ ja:
         saved: "保存済み"
         unfollow: "退出"
         admin_title: "管理者"
-        retention_info: "チャット履歴は %{days} 日間保存されます。"
       admin:
         title: "チャット"
       direct_messages:
         title: "パーソナルチャット"
+        new: "パーソナルチャットを作成"
         create: "開始"
         leave: "このパーソナルチャットから退出する"
         cannot_create: "ダイレクトメッセージを送信できません。"
@@ -339,8 +337,10 @@ ja:
         many_users:
           other: "%{commaSeparatedUsernames} と他 %{count} 人が入力中です"
       retention_reminders:
-        public: "チャンネル履歴は %{days} 日間保持されます。"
-        dm: "パーソナルチャット履歴は %{days} 日間保持されます。"
+        public:
+          other: "チャンネル履歴は %{count} 日間保持されます。"
+        dm:
+          other: "パーソナルチャット履歴は %{count} 日間保持されます。"
       flags:
         off_topic: "このメッセージは、チャンネルのタイトルで定義された現在のディスカッションとは関係がないため、おそらく別の場所に移動する必要があります。"
         inappropriate: "このメッセージには、合理的な人が攻撃的、虐待的、または<a href=\"%{basePath}/guidelines\">コミュニティーガイドライン</a>に違反すると見なすコンテンツが含まれます。"

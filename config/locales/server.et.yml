@@ -802,8 +802,6 @@ et:
   user_notifications:
     previous_discussion: "Varasemad vastused"
     in_reply_to: "Vastuseks"
-    unsubscribe:
-      title: "Tühista tellimus"
     user_replied:
       subject_template: "[%{email_prefix}] %{topic_title}"
     user_quoted:
@@ -831,7 +829,6 @@ et:
       liked_received: "Meeldimisi saadud"
       new_users: "Uued kasutajad"
       popular_topics: "Populaarsed teemad"
-      follow_topic: "Jälgi seda teemat"
       join_the_discussion: "Loe lisa"
       popular_posts: "Populaarsed postitused"
       more_new: "Uus sinu jaoks"
@@ -853,8 +850,6 @@ et:
     see_more: "Veel"
     search_title: "Otsi sellelt saidilt"
     search_button: "Otsi"
-  deleted: "kustutatud"
-  image: "pilt"
   upload:
     unauthorized: "Vabandust, fail mida püüad üles laadida, ei ole lubatud (lubatud faililaiendid: %{authorized_extensions})."
     pasted_image_filename: "Asetatud pilt"
@@ -1012,8 +1007,6 @@ et:
       title: "Saada aktiveerimismeil uuesti"
   safe_mode:
     title: "Sisene turvalisse režiimi"
-    no_unofficial_plugins: "Keela kõik mitteametlikud pluginad"
-    no_plugins: "Keela kõik pluginad"
     enter: "Sisene turvalisse režiimi"
   wizard:
     title: "Discourse sätted"
@@ -1050,7 +1043,6 @@ et:
         title: "Kutsu meeskonda"
       finished:
         title: "Sinu Discourse on valmis!"
-  joined: "Liitus"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} mainis Sind teemas "%{topic}" - %{site_title}'
@@ -1071,23 +1063,22 @@ et:
       medium: "Keskmine"
       high: "Kõrge"
     actions:
-      agree_and_suspend:
-        title: "Peata kasutaja"
-      agree_and_silence:
-        title: "Vaigista kasutaja"
-      agree_and_hide:
-        title: "Peida postitus"
+      agree:
+        title: "Jah"
       delete_single:
         title: "Kustuta"
       disagree:
-        title: "Ei nõustu"
+        title: "Ei"
       ignore:
         title: "Ignoreeri"
+      ignore_and_do_nothing:
+        title: "Ära tee midagi"
       approve:
         title: "Kinnita"
       approve_user:
         title: "Kiida kasutaja heaks"
       reject_user:
+        title: "Kustuta kasutaja..."
         delete:
           title: "Kustuta kasutaja"
       reject:

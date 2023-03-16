@@ -18,7 +18,7 @@ else
   # this allows us to include the bits of rails we use without pieces we do not.
   #
   # To issue a rails update bump the version number here
-  rails_version = "7.0.4.1"
+  rails_version = "7.0.4.3"
   gem "actionmailer", rails_version
   gem "actionpack", rails_version
   gem "actionview", rails_version
@@ -105,7 +105,7 @@ gem "pg"
 gem "mini_sql"
 gem "pry-rails", require: false
 gem "pry-byebug", require: false
-gem "r2", require: false
+gem "rtlcss", require: false
 gem "rake"
 
 gem "thor", require: false
@@ -180,6 +180,7 @@ group :development do
   gem "better_errors", platform: :mri, require: !!ENV["BETTER_ERRORS"]
   gem "binding_of_caller"
   gem "yaml-lint"
+  gem "yard"
 end
 
 if ENV["ALLOW_DEV_POPULATE"] == "1"
@@ -229,10 +230,9 @@ gem "logstash-event", require: false
 gem "logstash-logger", require: false
 gem "logster"
 
-# NOTE: later versions of sassc are causing a segfault, possibly dependent on processer architecture
-# and until resolved should be locked at 2.0.1
-gem "sassc", "2.0.1", require: false
-gem "sassc-rails"
+# These are forks of sassc and sassc-rails with dart-sass support
+gem "dartsass-ruby"
+gem "dartsass-sprockets"
 
 gem "rotp", require: false
 
@@ -279,3 +279,5 @@ gem "webrick", require: false
 
 # Workaround until Ruby ships with cgi version 0.3.6 or higher.
 gem "cgi", ">= 0.3.6", require: false
+
+gem "tzinfo-data"

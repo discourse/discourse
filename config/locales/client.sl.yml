@@ -311,7 +311,6 @@ sl:
       title: "Zaznamek"
       clear_bookmarks: "Odstrani zaznamke"
       help:
-        bookmark: "ustvari zaznamek prvega prispevka v tej temi"
         unbookmark: "odstrani vse zaznamke v tej temi"
     bookmarks:
       created: "To objavo ste dodali med zaznamke. %{name}"
@@ -484,11 +483,9 @@ sl:
       scores:
         about: "Ta ocena je izračunana na podlagi nivoja zaupanja prijavitelja, ustreznosti njihovih prejšnjih prijav in prioritete prispevka, ki je bil prijavljen."
         score: "Ocena"
-        date: "Datum"
-        type: "Tip"
+        type: "Razlog"
         status: "Stanje"
-        submitted_by: "Poslano od"
-        reviewed_by: "Pregledano od"
+        submitted_by: "Prijavljen od"
       statuses:
         pending:
           title: "Za potrditev"
@@ -496,14 +493,12 @@ sl:
           title: "Potrjeno"
         rejected:
           title: "Zavrnjeno"
-        ignored:
-          title: "Prezrto"
-        deleted:
-          title: "Izbrisano"
         reviewed:
-          title: "(vsi pregledani)"
+          title: "Vsi pregledani"
         all:
-          title: "(vse)"
+          title: "Vse"
+      context_question:
+        delimiter: "ali"
       types:
         reviewable_flagged_post:
           title: "Prijavljen prispevek"
@@ -777,6 +772,7 @@ sl:
         make_all_primary_description: "Naj bo to primarna skupina za vse izbrane uporabnike"
         remove_all_primary: "Odstrani kot primarno"
         remove_all_primary_description: "Odstrani to skupino kot primarno"
+        status: "Stanje"
         owner: "Skrbnik"
         primary: "Primarna"
         forbidden: "Nimate dovoljenja da vidite člane."
@@ -908,11 +904,6 @@ sl:
       profile: "Profil"
       mute: "Utišaj"
       edit: "Uredi Nastavitve"
-      download_archive:
-        button_text: "Prenesi vse"
-        confirm: "Ste prepričani, da želite prenesti svoje prispevke?"
-        success: "Prenos se je začel, obveščeni boste s sporočilom, ko bo prenos končan."
-        rate_limit_error: "Prispevki so lahko prevešene enkrat dnevno, poskusi ponovno jutri."
       new_private_message: "Novo ZS"
       private_message: "Zasebno sporočilo"
       private_messages: "Zasebna sporočila"
@@ -1826,8 +1817,6 @@ sl:
         topic_template_not_modified: "Dodajte podrobnosti in značilnosti v vašo temo tako da uredite predlogo teme."
       save_edit: "Shrani spremembe"
       overwrite_edit: "Prepiši spremembo"
-      reply_original: "Odgovori v izvorni temi"
-      reply_here: "Odgovori tu"
       reply: "Odgovori"
       cancel: "Prekliči"
       create_topic: "Objavi temo"
@@ -2230,8 +2219,6 @@ sl:
       options: "Možnosti teme"
       show_links: "pokaži povezave v tej temi"
       unread_indicator: "Noben član ni še prebral zadnjega prispevka v tej temi."
-      jump_reply_up: pojdi na prejšni odgovor
-      jump_reply_down: pojdi na naslednji odgovor
       deleted: "Tema je bila izbrisana"
       slow_mode_update:
         title: "Počasni način"
@@ -2762,7 +2749,6 @@ sl:
       view: "Poglej teme v kategoriji"
       general: "Splošno"
       settings: "Nastavitve"
-      topic_template: "Predloga teme"
       tags: "Oznake"
       tags_allowed_tags: "Omeji te oznake na to kategorijo:"
       tags_allowed_tag_groups: "Omeji te skupine oznak na to kategorijo:"
@@ -2814,8 +2800,6 @@ sl:
       images: "Slike"
       email_in: "Dohodni e-naslov po meri:"
       email_in_allow_strangers: "Dovoli e-sporočila od anonimnih uporabnikov brez računa"
-      email_in_disabled: "Objavljanje novih tem preko e-sporočila je onemogočeno v Nastavitvah strani. Za omogočanje objave novih tem preko e-sporočila, "
-      email_in_disabled_click: 'vključite "email in" nastavitev.'
       mailinglist_mirror: "Kategorija zrcali poštni seznam"
       show_subcategory_list: "Prikaži seznam podkategorij nad temami za to kategorijo."
       num_featured_topics: "Število tem prikazanih na seznamu kategorij:"
@@ -3010,6 +2994,10 @@ sl:
     filters:
       with_topics: "%{filter} teme"
       with_category: "%{filter} %{category} teme"
+      filter:
+        title: "Filter"
+        button:
+          label: "Filter"
       latest:
         title: "Najnovejše"
         title_with_count:
@@ -3352,13 +3340,11 @@ sl:
       enabled: "Varni način je vklopljen, za izklop varnega načina zaprite okno brskalnika."
     image_removed: "(slika odstranjena)"
     pause_notifications:
-      remaining: "%{remaining} preostalo"
       options:
         half_hour: "30 minut"
         one_hour: "1 ura"
         two_hours: "2 uri"
         tomorrow: "Do jutri"
-        custom: "Po meri"
       set_schedule: "Nastavi razpored obveščanja"
     trust_levels:
       names:
@@ -3381,6 +3367,13 @@ sl:
       more: "Več"
       all_categories: "Vse kategorije"
       sections:
+        custom:
+          save: "Shrani"
+          delete: "Izbriši"
+          links:
+            icon: "Ikona"
+            name: "Ime"
+            value: "Povezava"
         about:
           header_link_text: "O nas"
         messages:
@@ -3627,7 +3620,6 @@ sl:
         enabled: "Vključeno?"
         is_enabled: "Y"
         not_enabled: "N"
-        change_settings: "Spremeni nastavitve"
         change_settings_short: "Nastavitve"
         howto: "Kako namestim vtičnike?"
       backups:
@@ -3742,6 +3734,8 @@ sl:
             name: "nevarnost"
           success:
             name: "uspeh"
+          selected:
+            name: "izbran"
         email_style:
           css: "CSS"
       email:
@@ -3925,6 +3919,34 @@ sl:
           success: "Uspeh"
         test:
           no_matches: "Ni zadetkov"
+      form_templates:
+        nav_title: "Predloge"
+        list_table:
+          headings:
+            name: "Ime"
+            actions: "Akcije"
+        view_template:
+          close: "Zapri"
+          edit: "Uredi"
+          delete: "Izbriši"
+        new_template_form:
+          submit: "Shrani"
+          cancel: "Prekliči"
+          preview: "Predogled"
+        quick_insert_fields:
+          add_new_field: "Dodaj"
+          dropdown: "Spustni meni"
+        validations_modal:
+          table_headers:
+            type: "Tip"
+            description: "Opis"
+          validations:
+            required:
+              key: "zahtevano"
+            minimum:
+              key: "najmanj"
+            maximum:
+              key: "največ"
       impersonate:
         title: "Poosebi uporabnika"
         help: "Uporabljajte to orodje za poosebljanje uporabnika za iskanje in odpravljanje napak. Ko končate se morate odjaviti."
@@ -3933,6 +3955,7 @@ sl:
         title: "Uporabniki"
         last_emailed: "Zadnja e-pošta"
         active: "Aktiviran"
+        status: "Stanje"
         show_emails: "Pokaži e-naslove"
         hide_emails: "Skrij e-naslove"
         nav:
@@ -4001,7 +4024,6 @@ sl:
         staged: "Prirejen?"
         show_admin_profile: "Admin"
         show_public_profile: "Pokaži javni profil"
-        impersonate: "Poosebi uporabnika"
         action_logs: "Dnevnik akcij"
         ip_lookup: "Poizvedba IP"
         log_out: "Odjava"
@@ -4244,7 +4266,8 @@ sl:
         allow_title: Dovoli da se značka uporablja kot naziv
         multiple_grant: Se lahko podeli večkrat
         listable: Prikaži značko na strani javnih značk
-        enabled: Omogoči značko
+        enabled: vključeno
+        disabled: onemogočeno
         icon: Ikona
         image: Slika
         read_only_setting_help: "Prilagodite besedilo"

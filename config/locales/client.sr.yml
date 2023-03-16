@@ -130,10 +130,6 @@ sr:
           one: "%{count} дан раније"
           few: "%{count} дана раније"
           other: "%{count} дана раније"
-        x_months:
-          one: "pre %{count} mesec dana"
-          few: "pre %{count} mesec dana"
-          other: "pre %{count} mesec dana"
       later:
         x_days:
           one: "%{count} дан касније"
@@ -302,10 +298,8 @@ sr:
       edit_bookmark: "Uredi marker"
       clear_bookmarks: "Očisti markere"
       help:
-        bookmark: "Klikni da markiraš prvi post u ovoj temi"
-        edit_bookmark: "Klikni da bi obirsao sve markere sa ove teme"
         unbookmark: "Klikni da bi obirsao sve markere sa ove teme"
-        unbookmark_with_reminder: "Klikni da bi obirsao sve markere sa ove teme."
+        unbookmark_with_reminder: "Klikni da bi obirsao sve markere sa ove teme"
     bookmarks:
       created: "Obeležili ste ovu poruku. %{name}"
       not_bookmarked: "obeleži ovu poruku"
@@ -445,13 +439,14 @@ sr:
       conversation:
         view_full: "pogledaj ceo razgovor"
       scores:
-        type: "Tip"
-        reviewed_by: "Pregledano od strane"
+        type: "Razlog"
       statuses:
         pending:
           title: "U toku"
         approved:
           title: "Potvrđenji"
+      context_question:
+        delimiter: "ili"
       types:
         reviewable_user:
           title: "Korisnik"
@@ -658,8 +653,6 @@ sr:
       profile: "Profil"
       mute: "Utišaj"
       edit: "Uredi postavke"
-      download_archive:
-        rate_limit_error: "Poruke mogu biti preuzimate jednom na dan, molimo pokušajte sutra."
       new_private_message: "Nova privatna poruka"
       private_message: "Privatna poruka"
       private_messages: "Poruke"
@@ -1105,8 +1098,6 @@ sr:
         title_missing: "Naslov je obavezan"
         category_missing: "Morate odabrati kategoriju"
       save_edit: "Sačuvaj izmenu"
-      reply_original: "Odgovori na originalnu temu"
-      reply_here: "Odgovori ovde"
       reply: "Odgovori"
       cancel: "Odustani"
       create_topic: "Kreiraj temu"
@@ -1280,8 +1271,6 @@ sr:
       back_to_list: "Nazad na listu tema"
       options: "Opcije Teme"
       show_links: "Prikaži linkove u ovoj temi"
-      jump_reply_up: skoči na raniji odgovor
-      jump_reply_down: skoči na kasniji odgovor
       deleted: "Tema je obrisana"
       slow_mode_update:
         enable: "Omogući"
@@ -1530,8 +1519,6 @@ sr:
       images: "Slike"
       email_in: "Prilagođena adresa dolaznog e-maila."
       email_in_allow_strangers: "Prihvati emailove anonimnih korisnika bez naloga"
-      email_in_disabled: "Objavljivanje novih tema preko emaila je onemogućeno u podešavanjima stranice. Da omogućite objavljivanje tema preko emaila,"
-      email_in_disabled_click: 'omogućite "pošalji email u" podešavanjima.'
       allow_badges_label: "Dozvoli dodjeljivanje značaka u ovoj kategoriji."
       edit_permissions: "Izmeni dozvole"
       review_group_name: "ime grupe"
@@ -1641,6 +1628,10 @@ sr:
     filters:
       with_topics: "%{filter} teme"
       with_category: "%{filter} %{category} teme"
+      filter:
+        title: "Filter"
+        button:
+          label: "Filter"
       latest:
         title: "Poslednje"
         title_with_count:
@@ -1811,9 +1802,6 @@ sr:
       back: "Nazad"
       share: "Podeli"
       dismiss: "Одбаци"
-    pause_notifications:
-      options:
-        custom: "Posebna"
     trust_levels:
       names:
         member: "član"
@@ -1830,6 +1818,12 @@ sr:
         other: "%{count} nova"
       more: "Više"
       sections:
+        custom:
+          save: "Sačuvaj"
+          delete: "Obriši"
+          links:
+            icon: "Ikona"
+            name: "Ime foruma"
         about:
           header_link_text: "O nama"
         messages:
@@ -2219,6 +2213,27 @@ sr:
           flag: "Označi Zastavom"
         form:
           add: "Dodaj"
+      form_templates:
+        list_table:
+          headings:
+            name: "Ime foruma"
+            actions: "Akcije"
+        view_template:
+          close: "Zatvori"
+          edit: "Izmeni"
+          delete: "Obriši"
+        new_template_form:
+          submit: "Sačuvaj"
+          cancel: "Odustani"
+        quick_insert_fields:
+          add_new_field: "Dodaj"
+        validations_modal:
+          table_headers:
+            type: "Tip"
+            description: "Opis"
+          validations:
+            required:
+              key: "potrebno"
       impersonate:
         title: "Predstavi se kao"
         help: "Koristite ovaj alat da se predstavite kao određeni korisnički nalog za potrebe ispravljanja grešaka. Moraćete se odjaviti kad završite."
@@ -2266,7 +2281,6 @@ sr:
         suspended: "Suspendovan?"
         show_admin_profile: "Administrator"
         show_public_profile: "Pokaži javni profil"
-        impersonate: "Predstavi se kao"
         ip_lookup: "IP Pregled"
         log_out: "Odjava"
         logged_out: "Korisnik je odjavljen sa svih uređaja"
@@ -2474,7 +2488,6 @@ sr:
         allow_title: Dopusti da se značka koristi kao titula
         multiple_grant: Može biti dodeljena više puta
         listable: Prikaži značku na javnoj stranici sa značkama
-        enabled: Omogući značku
         icon: Ikona
         image: Slika
         query: Upitnik Značke (SQL)

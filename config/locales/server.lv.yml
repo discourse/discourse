@@ -79,6 +79,7 @@ lv:
   next_page: "nākošo lapu →"
   prev_page: "← iepriekšējo lapu"
   page_num: "Lapa %{num}"
+  home_title: "Mājas"
   rss_num_posts:
     zero: "%{count} ieraksti"
     one: "%{count} ieraksts"
@@ -90,9 +91,11 @@ lv:
   bookmarks:
     reminders:
       later_today: "Vēlāk šodien"
+      next_business_day: "Nākamā darba diena"
       tomorrow: "Rītdien"
       next_week: "Nākamā nedēļā"
       next_month: "Nākamā mēnesī"
+      custom: "Pielāgots datums un laiks"
   groups:
     default_names:
       everyone: "ikviens"
@@ -159,6 +162,14 @@ lv:
         zero: "%{count} d"
         one: "%{count} d"
         other: "%{count} d"
+      about_x_months:
+        zero: "%{count}mēn"
+        one: "%{count}mēn"
+        other: "%{count}mēn"
+      x_months:
+        zero: "%{count}mēn"
+        one: "%{count}mēn"
+        other: "%{count}mēn"
       about_x_years:
         zero: "%{count} g"
         one: "%{count} g"
@@ -220,6 +231,8 @@ lv:
     read: "izlasīts"
     otp_confirmation:
       confirm_title: Turpināt %{site_name}
+      logging_in_as: Piesakoties kā %{username}
+      confirm_button: Pabeigt pieteikšanos
   reports:
     default:
       labels:
@@ -233,9 +246,13 @@ lv:
     user_flagging_ratio:
       labels:
         user: Lietotājs
+        score: Rezultāts
     moderators_activity:
       labels:
         moderator: Moderātors
+    flags_status:
+      labels:
+        flag: Tips
     visits:
       xaxis: "Diena"
     signups:
@@ -278,6 +295,9 @@ lv:
     users_by_trust_level:
       xaxis: "Uzticības līmenis"
     users_by_type:
+      xaxis: "Tips"
+      labels:
+        type: Tips
       xaxis_labels:
         admin: Administrators
         moderator: Moderātors
@@ -376,9 +396,11 @@ lv:
         qtt_like: Saņemtās atzinības
   site_settings:
     disabled: "atslēgt"
+    send_welcome_message: "Nosūtiet visiem jaunajiem lietotājiem apsveikuma ziņojumu ar īso darba sākšanas rokasgrāmatu."
     dark_mode_none: "Nav"
     embed_truncate: "Saīsināt iegultos ierakstus."
     embed_post_limit: "Maksimālais iegulto ierakstu skaits."
+    default_other_skip_new_user_tips: "Izlaist padomus un emblēmas par jaunu lietotāju iesaisti."
     errors:
       invalid_email: "Nepareiza e-pasta adrese."
   search:
@@ -386,11 +408,22 @@ lv:
     types:
       category: "Sadaļas"
       user: "Lietotāji"
+    results_page: "Meklēšanas rezultāti vaicājumam “%{term}”"
   login:
+    security_key_description: "Kad esat sagatavojis savu fiziskās drošības atslēgu, nospiediet tālāk esošo pogu Autentificēt ar drošības atslēgu."
+    security_key_alternative: "Izmēģiniet citu veidu"
+    security_key_authenticate: "Autentificēties, izmantojot drošības atslēgu"
+    security_key_not_allowed_error: "Drošības atslēgas autentifikācijas procesam iestājās noildze vai tas tika atcelts."
+    security_key_no_matching_credential_error: "Nodrošinātajā drošības atslēgā nevarēja atrast atbilstošus akreditācijas datus."
+    security_key_support_missing_error: "Jūsu pašreizējā ierīce vai pārlūkprogramma neatbalsta drošības atslēgu izmantošanu. Lūdzu, izmantojiet citu metodi."
     not_approved: "Jūsu konts vēl nav apstiprināts. Jums tiks paziņots e-pastā, kad varēsiet pieslēgties."
     admin_not_allowed_from_ip_address: "Jūs nevarat ieiet kā administrators no šīs IP adreses."
     not_available: "Nav pieejams. Mēģiniet %{suggestion}?"
     omniauth_confirm_button: "Turpināt"
+    second_factor_title: "Divu faktoru autentifikācija"
+    second_factor_backup_description: "Lūdzu, ievadiet vienu no saviem rezerves kodiem:"
+    second_factor_toggle:
+      backup_code: "Tā vietā izmantojiet rezerves kodu"
   admin:
     email:
       sent_test: "nosūtīts!"
@@ -415,7 +448,6 @@ lv:
     see_more: "Vairāk"
     search_title: "Meklēt šajā vietnē"
     search_button: "Meklēt"
-  image: "bilde"
   upload:
     unauthorized: "Atvainojiet, fails, ko mēģināt augšuplādēt, nav atļauts (atļautie paplašinājumi: %{authorized_extensions})."
   color_schemes:
@@ -431,11 +463,15 @@ lv:
   privacy_topic:
     title: "Privātuma politika"
   badges:
+    member:
+      name: Biedrs
     regular:
       name: Regulārs
   tags:
     title: "Birkas"
   finish_installation:
+    register:
+      button: "Reģistrēties"
     resend_email:
       title: "Atkārtoti nosūtīt aktivācijas e-pastu"
   wizard:
@@ -458,7 +494,6 @@ lv:
                 label: "Sadaļas un jaunākās tēmas"
               categories_and_top_topics:
                 label: "Kategorijas un populārākās tēmas"
-  joined: "Pievienojās"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} pieminēja jūs "%{topic}" - %{site_title}'
@@ -467,14 +502,24 @@ lv:
       replied: '%{username} atbildēja jums "%{topic}" - %{site_title}'
       posted: '%{username} ierakstīja "%{topic}" - %{site_title}'
       linked: '%{username} ievietoja saiti uz jūsu ierakstu no "%{topic}" - %{site_title}'
+      confirm_body: "Veiksmi! Paziņojumi ir iespējoti."
   reviewables:
+    priorities:
+      low: "Zems"
+      medium: "Vidējs"
+      high: "Augsta"
+    sensitivity:
+      disabled: "Atslēgt"
+      low: "Zems"
+      medium: "Vidējs"
+      high: "Augsta"
     actions:
-      agree_and_suspend:
-        title: "Apturētie lietotāji"
+      agree:
+        title: "Jā"
       delete_single:
         title: "Dzēst"
       disagree:
-        title: "Nepiekrist"
+        title: "Nē"
       ignore:
         title: "Ignorēt"
       approve:

@@ -1,10 +1,11 @@
 <div class="show-current-style">
-  <PluginOutlet
-    @name="admin-customize-themes-show-top"
-    @tagName="span"
-    @connectorTagName="div"
-    @args={{hash theme=this.model}}
-  />
+  <span>
+    <PluginOutlet
+      @name="admin-customize-themes-show-top"
+      @connectorTagName="div"
+      @outletArgs={{hash theme=this.model}}
+    />
+  </span>
   <div class="title">
     {{#if this.editingName}}
       <TextField @value={{this.model.name}} @autofocus="true" />
@@ -64,7 +65,7 @@
         @label="admin.customize.theme.finish_install"
       />
       <DButton
-        @action={{action "destroy"}}
+        @action={{action "destroyTheme"}}
         @label="admin.customize.delete"
         @icon="trash-alt"
         @class="btn-danger"
@@ -497,7 +498,7 @@
       {{/if}}
 
       <DButton
-        @action={{action "destroy"}}
+        @action={{action "destroyTheme"}}
         @label="admin.customize.delete"
         @icon="trash-alt"
         @class="btn-danger"

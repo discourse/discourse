@@ -19,14 +19,13 @@ bg:
       joined: "присъединен"
       email_frequency:
         never: "Никога"
+      header_indicator_preference:
+        never: "Никога"
       flag: "Сигнализиране"
       join: "Влизане"
+      last_visit: "последно посещение"
       mention_warning:
         dismiss: "отмени"
-        groups:
-          users_limit:
-            one: "%{count} потребител"
-            other: "%{count} потребители"
       reply: "Отговорете"
       edit: "Редактирай"
       rebake_message: "Прегенерирай HTML "

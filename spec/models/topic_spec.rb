@@ -3081,6 +3081,17 @@ RSpec.describe Topic do
 
   describe "#remove_allowed_user" do
     fab!(:topic) { Fabricate(:topic) }
+    fab!(:private_topic) do
+      Fabricate(
+        :private_message_topic,
+        title: "Private message",
+        user: admin,
+        topic_allowed_users: [
+          Fabricate.build(:topic_allowed_user, user: admin),
+          Fabricate.build(:topic_allowed_user, user: user1),
+        ],
+      )
+    end
 
     describe "removing oneself" do
       it "should remove onself" do
@@ -3094,6 +3105,12 @@ RSpec.describe Topic do
         expect(post.user).to eq(user1)
         expect(post.post_type).to eq(Post.types[:small_action])
         expect(post.action_code).to eq("user_left")
+      end
+
+      it "should show a small action when user removes themselves from pm" do
+        expect do private_topic.remove_allowed_user(user1, user1) end.to change {
+          private_topic.posts.where(action_code: "user_left").count
+        }.by(1)
       end
     end
   end
@@ -3271,6 +3288,85 @@ RSpec.describe Topic do
     end
   end
 
+  describe "#incoming_email_addresses" do
+    fab!(:group) do
+      Fabricate(
+        :group,
+        smtp_server: "imap.gmail.com",
+        smtp_port: 587,
+        email_username: "discourse@example.com",
+        email_password: "discourse@example.com",
+      )
+    end
+
+    fab!(:topic) do
+      Fabricate(
+        :private_message_topic,
+        topic_allowed_groups: [Fabricate.build(:topic_allowed_group, group: group)],
+      )
+    end
+
+    let!(:incoming1) do
+      Fabricate(
+        :incoming_email,
+        to_addresses: "discourse@example.com",
+        from_address: "johnsmith@user.com",
+        topic: topic,
+        post: topic.posts.first,
+        created_at: 20.minutes.ago,
+      )
+    end
+    let!(:incoming2) do
+      Fabricate(
+        :incoming_email,
+        from_address: "discourse@example.com",
+        to_addresses: "johnsmith@user.com",
+        topic: topic,
+        post: Fabricate(:post, topic: topic),
+        created_at: 10.minutes.ago,
+      )
+    end
+    let!(:incoming3) do
+      Fabricate(
+        :incoming_email,
+        to_addresses: "discourse@example.com",
+        from_address: "johnsmith@user.com",
+        topic: topic,
+        post: topic.posts.first,
+        cc_addresses: "otherguy@user.com",
+        created_at: 2.minutes.ago,
+      )
+    end
+    let!(:incoming4) do
+      Fabricate(
+        :incoming_email,
+        to_addresses: "unrelated@test.com",
+        from_address: "discourse@example.com",
+        topic: topic,
+        post: topic.posts.first,
+        created_at: 1.minutes.ago,
+      )
+    end
+
+    it "returns an array of all the incoming email addresses" do
+      expect(topic.incoming_email_addresses).to match_array(
+        %w[discourse@example.com johnsmith@user.com otherguy@user.com unrelated@test.com],
+      )
+    end
+
+    it "returns an array of all the incoming email addresses where incoming was received before X" do
+      expect(topic.incoming_email_addresses(received_before: 5.minutes.ago)).to match_array(
+        %w[discourse@example.com johnsmith@user.com],
+      )
+    end
+
+    context "when the group is present" do
+      it "excludes incoming emails that are not to or CCd to the group" do
+        expect(topic.incoming_email_addresses(group: group)).not_to include("unrelated@test.com")
+      end
+    end
+  end
+
   describe "#cannot_permanently_delete_reason" do
     fab!(:post) { Fabricate(:post) }
     let!(:topic) { post.topic }
@@ -3359,6 +3455,30 @@ RSpec.describe Topic do
 
         stats_message = messages.select { |msg| msg.data[:type] == :stats }.first
         expect(stats_message).to be_blank
+      end
+    end
+  end
+
+  describe "#group_pm?" do
+    context "when topic is not a private message" do
+      subject(:public_topic) { Fabricate(:topic) }
+
+      it { is_expected.not_to be_a_group_pm }
+    end
+
+    context "when topic is a private message" do
+      subject(:pm_topic) { Fabricate(:private_message_topic) }
+
+      context "when more than two people have access" do
+        let(:other_user) { Fabricate(:user) }
+
+        before { pm_topic.allowed_users << other_user }
+
+        it { is_expected.to be_a_group_pm }
+      end
+
+      context "when no more than two people have access" do
+        it { is_expected.not_to be_a_group_pm }
       end
     end
   end

@@ -5,6 +5,8 @@ require "rails_helper"
 describe ChatMessage do
   fab!(:message) { Fabricate(:chat_message, message: "hey friend, what's up?!") }
 
+  it { is_expected.to have_many(:chat_mentions).dependent(:destroy) }
+
   describe ".cook" do
     it "does not support HTML tags" do
       cooked = ChatMessage.cook("<h1>test</h1>")
@@ -129,7 +131,7 @@ describe ChatMessage do
       expect(cooked).to eq(<<~COOKED.chomp)
         <div class="chat-transcript chat-transcript-chained" data-message-id="#{msg1.id}" data-username="chatbbcodeuser" data-datetime="#{msg1.created_at.iso8601}" data-channel-name="testchannel" data-channel-id="#{chat_channel.id}">
         <div class="chat-transcript-meta">
-        Originally sent in <a href="/chat/channel/#{chat_channel.id}/-">testchannel</a>
+        Originally sent in <a href="/chat/c/-/#{chat_channel.id}">testchannel</a>
         </div>
         <div class="chat-transcript-user">
         <div class="chat-transcript-user-avatar">
@@ -138,7 +140,7 @@ describe ChatMessage do
         <div class="chat-transcript-username">
         chatbbcodeuser</div>
         <div class="chat-transcript-datetime">
-        <a href="/chat/channel/#{chat_channel.id}/-?messageId=#{msg1.id}" title="#{msg1.created_at.iso8601}"></a>
+        <a href="/chat/c/-/#{chat_channel.id}/#{msg1.id}" title="#{msg1.created_at.iso8601}"></a>
         </div>
         </div>
         <div class="chat-transcript-messages">
@@ -285,24 +287,6 @@ describe ChatMessage do
         COOKED
         )
       expect(message.excerpt).to eq("https://twitter.com/EffinBirds/status/1518743508378697729")
-      message =
-        Fabricate.build(
-          :chat_message,
-          message:
-            "wow check out these birbs https://twitter.com/EffinBirds/status/1518743508378697729",
-        )
-      expect(message.excerpt).to eq(
-        "wow check out these birbs <a href=\"https://twitter.com/EffinBirds/status/1518743508378697729\" class=\"inline-onebox-loading\" rel=\"noopener nofollow ugc\">https://twitter.com/Effi&hellip;</a>",
-      )
-    end
-
-    it "returns an empty string if PrettyText.excerpt returns empty string" do
-      message = Fabricate(:chat_message, message: <<~MSG)
-      [quote="martin, post:30, topic:3179, full:true"]
-      This is a real **quote** topic with some *markdown* in it I can quote.
-      [/quote]
-      MSG
-      expect(message.excerpt).to eq("")
     end
 
     it "excerpts upload file name if message is empty" do
@@ -463,11 +447,13 @@ describe ChatMessage do
 
     it "destroys chat_mention" do
       message_1 = Fabricate(:chat_message)
-      mention_1 = Fabricate(:chat_mention, chat_message: message_1)
+      notification = Fabricate(:notification)
+      mention_1 = Fabricate(:chat_mention, chat_message: message_1, notification: notification)
 
       message_1.destroy!
 
       expect { mention_1.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      expect { notification.reload }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
     it "destroys chat_webhook_event" do
@@ -496,7 +482,9 @@ describe ChatMessage do
     end
 
     describe "bookmarks" do
-      before { Bookmark.register_bookmarkable(ChatMessageBookmarkable) }
+      before { register_test_bookmarkable(ChatMessageBookmarkable) }
+
+      after { DiscoursePluginRegistry.reset_register!(:bookmarkables) }
 
       it "destroys bookmarks" do
         message_1 = Fabricate(:chat_message)
@@ -564,6 +552,68 @@ describe ChatMessage do
       expect { chat_message.attach_uploads([]) }.to not_change {
         chat_upload_count
       }.and not_change { UploadReference.count }
+    end
+  end
+
+  describe "#create_mentions" do
+    fab!(:message) { Fabricate(:chat_message) }
+    fab!(:user1) { Fabricate(:user) }
+    fab!(:user2) { Fabricate(:user) }
+
+    it "creates mentions for passed user ids" do
+      mentioned_user_ids = [user1.id, user2.id]
+      message.create_mentions(mentioned_user_ids)
+      message.reload
+
+      expect(message.chat_mentions.pluck(:user_id)).to match_array(mentioned_user_ids)
+    end
+
+    it "ignores duplicates in passed user ids" do
+      mentioned_user_ids = [user1.id, user1.id, user1.id, user1.id, user1.id]
+      message.create_mentions(mentioned_user_ids)
+      message.reload
+
+      expect(message.chat_mentions.pluck(:user_id)).to contain_exactly(user1.id)
+    end
+  end
+
+  describe "#update_mentions" do
+    fab!(:message) { Fabricate(:chat_message) }
+    fab!(:user1) { Fabricate(:user) }
+    fab!(:user2) { Fabricate(:user) }
+    fab!(:user3) { Fabricate(:user) }
+    fab!(:user4) { Fabricate(:user) }
+    let(:already_mentioned) { [user1.id, user2.id] }
+
+    before { message.create_mentions(already_mentioned) }
+
+    it "creates newly added mentions" do
+      existing_mention_ids = message.chat_mentions.pluck(:id)
+
+      mentioned_user_ids = [*already_mentioned, user3.id, user4.id]
+      message.update_mentions(mentioned_user_ids)
+      message.reload
+
+      expect(message.chat_mentions.pluck(:user_id)).to match_array(mentioned_user_ids)
+      expect(message.chat_mentions.pluck(:id)).to include(*existing_mention_ids) # existing mentions weren't recreated
+    end
+
+    it "drops removed mentions" do
+      message.update_mentions([user1.id]) # user 2 is not mentioned anymore
+      message.reload
+
+      expect(message.chat_mentions.pluck(:user_id)).to contain_exactly(user1.id)
+    end
+
+    it "changes nothing if passed mentions are identical to existing mentions" do
+      existing_mention_ids = message.chat_mentions.pluck(:id)
+
+      mentioned_user_ids = [*already_mentioned]
+      message.update_mentions(mentioned_user_ids)
+      message.reload
+
+      expect(message.chat_mentions.pluck(:user_id)).to match_array(mentioned_user_ids)
+      expect(message.chat_mentions.pluck(:id)).to include(*existing_mention_ids) # the mentions weren't recreated
     end
   end
 

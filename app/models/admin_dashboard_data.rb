@@ -295,7 +295,7 @@ class AdminDashboardData
 
   def queue_size_check
     queue_size = Jobs.queued
-    I18n.t("dashboard.queue_size_warning", queue_size: queue_size) unless queue_size < 100_000
+    I18n.t("dashboard.queue_size_warning", queue_size: queue_size) if queue_size >= 100_000
   end
 
   def ram_check

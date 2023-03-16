@@ -29,6 +29,24 @@ pt:
     errors:
       chat_default_channel: "O canal padrão de chat deve ser um canal público."
       direct_message_enabled_groups_invalid: "Você deve especificar pelo menos um grupo para esta configuração. Se você não deseja que ninguém, exceto a equipe, envie mensagens diretas, escolha o grupo de equipe."
+  system_messages:
+    chat_channel_archive_complete:
+      text_body_template: |
+        O arquivamento do canal de chat %{channel_hashtag_or_name} foi concluído com sucesso. As mensagens foram copiadas para o tópico [%{topic_title}](%{topic_url}).
+    chat_channel_archive_failed:
+      title: "Falha no Arquivo do Canal de Chat"
+      subject_template: "O arquivo do canal de chat falhou"
+      text_body_template: |
+        O arquivamento do canal de chat %{channel_hashtag_or_name} falhou. %{messages_archived} mensagens foram arquivadas. As mensagens parcialmente arquivadas foram copiadas para o tópico [%{topic_title}](%{topic_url}). Visite o canal em %{channel_url} para tentar de novo.
+    chat_channel_archive_failed_no_topic:
+      title: "Falha no Arquivo do Canal de Chat"
+      subject_template: "O arquivo do canal de chat falhou"
+      text_body_template: |
+        O arquivamento do canal de chat %{channel_hashtag_or_name} falhou. Nenhuma mensagem foi arquivada. O tópico não foi criado com sucesso pelas seguintes razões:
+
+          %{topic_validation_errors}
+
+        Visite o canal em %{channel_url} para tentar de novo.
   chat:
     deleted_chat_username: eliminado
     errors:
@@ -44,9 +62,8 @@ pt:
         ignore:
           title: "Ignorar"
     channel:
-      statuses:
-        closed: "Fechado"
-        open: "Abrir"
+      dm_title:
+        single_user: "%{username}"
   discourse_push_notifications:
     popup:
       chat_mention:

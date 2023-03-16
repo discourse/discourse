@@ -82,6 +82,7 @@ class User < ActiveRecord::Base
   has_many :muted_user_records, class_name: "MutedUser", dependent: :delete_all
   has_many :ignored_user_records, class_name: "IgnoredUser", dependent: :delete_all
   has_many :do_not_disturb_timings, dependent: :delete_all
+  has_many :sidebar_sections, dependent: :destroy
   has_one :user_status, dependent: :destroy
 
   # dependent deleting handled via before_destroy (special cases)
@@ -293,7 +294,7 @@ class User < ActiveRecord::Base
         ->(filter) {
           if filter.is_a?(String) && filter =~ /.+@.+/
             # probably an email so try the bypass
-            if user_id = UserEmail.where("lower(email) = ?", filter.downcase).pluck_first(:user_id)
+            if user_id = UserEmail.where("lower(email) = ?", filter.downcase).pick(:user_id)
               return where("users.id = ?", user_id)
             end
           end
@@ -1522,7 +1523,9 @@ class User < ActiveRecord::Base
 
   def apply_watched_words
     validatable_user_fields.each do |id, value|
-      set_user_field(id, WordWatcher.apply_to_text(value))
+      field = WordWatcher.censor_text(value)
+      field = WordWatcher.replace_text(field)
+      set_user_field(id, field)
     end
   end
 
@@ -1682,11 +1685,11 @@ class User < ActiveRecord::Base
       group_titles_query.order("groups.id = #{primary_group_id} DESC") if primary_group_id
     group_titles_query = group_titles_query.order("groups.primary_group DESC").limit(1)
 
-    if next_best_group_title = group_titles_query.pluck_first(:title)
+    if next_best_group_title = group_titles_query.pick(:title)
       return next_best_group_title
     end
 
-    next_best_badge_title = badges.where(allow_title: true).pluck_first(:name)
+    next_best_badge_title = badges.where(allow_title: true).pick(:name)
     next_best_badge_title ? Badge.display_name(next_best_badge_title) : nil
   end
 
@@ -1789,14 +1792,17 @@ class User < ActiveRecord::Base
   end
 
   def set_status!(description, emoji, ends_at = nil)
-    status = { description: description, emoji: emoji, set_at: Time.zone.now, ends_at: ends_at }
+    status = {
+      description: description,
+      emoji: emoji,
+      set_at: Time.zone.now,
+      ends_at: ends_at,
+      user_id: id,
+    }
+    validate_status!(status)
+    UserStatus.upsert(status)
 
-    if user_status
-      user_status.update!(status)
-    else
-      self.user_status = UserStatus.create!(status)
-    end
-
+    reload_user_status
     publish_user_status(user_status)
   end
 
@@ -1806,6 +1812,10 @@ class User < ActiveRecord::Base
 
   def redesigned_user_menu_enabled?
     !SiteSetting.legacy_navigation_menu? || SiteSetting.enable_new_notifications_menu
+  end
+
+  def new_new_view_enabled?
+    in_any_groups?(SiteSetting.experimental_new_new_view_groups_map)
   end
 
   protected
@@ -2026,9 +2036,7 @@ class User < ActiveRecord::Base
   def match_primary_group_changes
     return unless primary_group_id_changed?
 
-    if title == Group.where(id: primary_group_id_was).pluck_first(:title)
-      self.title = primary_group&.title
-    end
+    self.title = primary_group&.title if Group.exists?(id: primary_group_id_was, title: title)
 
     self.flair_group_id = primary_group&.id if flair_group_id == primary_group_id_was
   end
@@ -2039,7 +2047,7 @@ class User < ActiveRecord::Base
       .human_users
       .joins(:user_auth_tokens)
       .order("user_auth_tokens.created_at")
-      .pluck_first(:id)
+      .pick(:id)
   end
 
   private
@@ -2122,10 +2130,7 @@ class User < ActiveRecord::Base
           badges.find do |badge|
             badge.allow_title? && (badge.display_name == title || badge.name == title)
           end
-      user_profile.update(
-        badge_granted_title: badge_matching_title.present?,
-        granted_title_badge_id: badge_matching_title&.id,
-      )
+      user_profile.update!(granted_title_badge_id: badge_matching_title&.id)
     end
   end
 
@@ -2173,6 +2178,10 @@ class User < ActiveRecord::Base
           up.id IS NULL
       )
     SQL
+  end
+
+  def validate_status!(status)
+    UserStatus.new(status).validate!
   end
 end
 
@@ -2222,12 +2231,14 @@ end
 #
 # Indexes
 #
-#  idx_users_admin                    (id) WHERE admin
-#  idx_users_moderator                (id) WHERE moderator
-#  index_users_on_last_posted_at      (last_posted_at)
-#  index_users_on_last_seen_at        (last_seen_at)
-#  index_users_on_secure_identifier   (secure_identifier) UNIQUE
-#  index_users_on_uploaded_avatar_id  (uploaded_avatar_id)
-#  index_users_on_username            (username) UNIQUE
-#  index_users_on_username_lower      (username_lower) UNIQUE
+#  idx_users_admin                     (id) WHERE admin
+#  idx_users_moderator                 (id) WHERE moderator
+#  index_users_on_last_posted_at       (last_posted_at)
+#  index_users_on_last_seen_at         (last_seen_at)
+#  index_users_on_name_trgm            (name) USING gist
+#  index_users_on_secure_identifier    (secure_identifier) UNIQUE
+#  index_users_on_uploaded_avatar_id   (uploaded_avatar_id)
+#  index_users_on_username             (username) UNIQUE
+#  index_users_on_username_lower       (username_lower) UNIQUE
+#  index_users_on_username_lower_trgm  (username_lower) USING gist
 #

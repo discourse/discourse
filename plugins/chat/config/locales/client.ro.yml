@@ -20,15 +20,13 @@ ro:
       joined: "înscris"
       email_frequency:
         never: "Niciodată"
+      header_indicator_preference:
+        never: "Niciodată"
       flag: "Marchează cu marcaj de avertizare"
       join: "Alătură-te"
+      last_visit: "ultima vizită"
       mention_warning:
         dismiss: "renunță"
-        groups:
-          users_limit:
-            one: "%{count} utilizator"
-            few: "%{count} utilizatori"
-            other: "%{count} utilizatori"
       reply: "Răspunde"
       edit: "Modifică"
       rebake_message: "Reconstruieşte HTML"
@@ -56,7 +54,7 @@ ro:
         back_to_channel: "Înapoi"
         tabs:
           about: Despre
-          members: Membrii
+          members: Membri
           settings: Opțiuni
       direct_message_creator:
         title: Mesaj nou

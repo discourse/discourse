@@ -1510,7 +1510,8 @@ module Email
 
     def self.elided_html(elided)
       html = +"\n\n" << "<details class='elided'>" << "\n"
-      html << "<summary title='#{I18n.t("emails.incoming.show_trimmed_content")}'>&#183;&#183;&#183;</summary>" << "\n\n"
+      html << "<summary title='#{I18n.t("emails.incoming.show_trimmed_content")}'>&#183;&#183;&#183;</summary>" <<
+        "\n\n"
       html << elided << "\n\n"
       html << "</details>" << "\n"
       html

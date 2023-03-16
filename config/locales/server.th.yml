@@ -457,8 +457,6 @@ th:
     see_more: "อื่น"
     search_title: "ค้นหาเว็บไซต์นี้"
     search_button: "ค้นหา"
-  deleted: "ลบ"
-  image: "รูปภาพ"
   color_schemes:
     default_theme_name: "ค่าเริ่มต้น"
   csv_export:
@@ -507,7 +505,6 @@ th:
                 label: "หมวดหมู่และกระทู้ล่าสุด"
               categories_and_top_topics:
                 label: "หมวดหมู่และกระทู้ยอดนิยม"
-  joined: "สมัครสมาชิกเมื่อ"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} พูดถึงคุณใน "%{topic}" - %{site_title}'
@@ -531,10 +528,12 @@ th:
       medium: "ปานกลาง"
       high: "สูง"
     actions:
+      agree:
+        title: "ใช่"
       delete_single:
         title: "ลบ"
       disagree:
-        title: "ไม่เห็นด้วย"
+        title: "ไม่ใช่"
       ignore:
         title: "ไม่สนใจ"
       approve:

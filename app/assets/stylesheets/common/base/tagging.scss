@@ -148,20 +148,6 @@
   }
 }
 
-.mobile-view .topic-list-item .discourse-tags {
-  display: inline-flex;
-  flex-wrap: wrap;
-  font-size: var(--font-down-1);
-  margin-top: 0;
-  .discourse-tag {
-    margin-right: 0.2em;
-  }
-  .discourse-tag.box {
-    position: relative;
-    top: 0;
-  }
-}
-
 header .discourse-tag {
   color: var(--primary-medium);
 }

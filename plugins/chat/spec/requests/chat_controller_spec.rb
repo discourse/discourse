@@ -126,15 +126,17 @@ RSpec.describe Chat::ChatController do
     it "correctly marks reactions as 'reacted' for the current_user" do
       heart_emoji = ":heart:"
       smile_emoji = ":smile"
-
       last_message = chat_channel.chat_messages.last
       last_message.reactions.create(user: user, emoji: heart_emoji)
       last_message.reactions.create(user: admin, emoji: smile_emoji)
 
       get "/chat/#{chat_channel.id}/messages.json", params: { page_size: page_size }
+
       reactions = response.parsed_body["chat_messages"].last["reactions"]
-      expect(reactions[heart_emoji]["reacted"]).to be true
-      expect(reactions[smile_emoji]["reacted"]).to be false
+      heart_reaction = reactions.find { |r| r["emoji"] == heart_emoji }
+      expect(heart_reaction["reacted"]).to be true
+      smile_reaction = reactions.find { |r| r["emoji"] == smile_emoji }
+      expect(smile_reaction["reacted"]).to be false
     end
 
     it "sends the last message bus id for the channel" do
@@ -320,7 +322,7 @@ RSpec.describe Chat::ChatController do
         post "/chat/#{chat_channel.id}.json", params: { message: message }
         expect(response.status).to eq(422)
         expect(response.parsed_body["errors"]).to include(
-          I18n.t("chat.errors.channel_new_message_disallowed", status: chat_channel.status_name),
+          I18n.t("chat.errors.channel_new_message_disallowed.closed"),
         )
       end
 
@@ -336,7 +338,7 @@ RSpec.describe Chat::ChatController do
         post "/chat/#{chat_channel.id}.json", params: { message: message }
         expect(response.status).to eq(422)
         expect(response.parsed_body["errors"]).to include(
-          I18n.t("chat.errors.channel_new_message_disallowed", status: chat_channel.status_name),
+          I18n.t("chat.errors.channel_new_message_disallowed.read_only"),
         )
       end
 
@@ -567,10 +569,16 @@ RSpec.describe Chat::ChatController do
     it "Allows admin to delete others' messages" do
       sign_in(admin)
 
-      expect { delete "/chat/#{chat_channel.id}/#{ChatMessage.last.id}.json" }.to change {
-        ChatMessage.count
-      }.by(-1)
+      events = nil
+      expect do
+        events =
+          DiscourseEvent.track_events do
+            delete "/chat/#{chat_channel.id}/#{ChatMessage.last.id}.json"
+          end
+      end.to change { ChatMessage.count }.by(-1)
+
       expect(response.status).to eq(200)
+      expect(events.map { |event| event[:event_name] }).to include(:chat_message_trashed)
     end
 
     it "does not allow message delete when chat channel is read_only" do
@@ -611,7 +619,7 @@ RSpec.describe Chat::ChatController do
     end
 
     before do
-      ChatMessage.create(user: user, message: "this is a message", chat_channel: chat_channel)
+      ChatMessage.create!(user: user, message: "this is a message", chat_channel: chat_channel)
     end
 
     describe "for category" do
@@ -897,7 +905,7 @@ RSpec.describe Chat::ChatController do
       }.not_to change { chat_message.reactions.where(user: user, emoji: emoji).count }
       expect(response.status).to eq(403)
       expect(response.parsed_body["errors"]).to include(
-        I18n.t("chat.errors.channel_modify_message_disallowed", status: chat_channel.status_name),
+        I18n.t("chat.errors.channel_modify_message_disallowed.#{chat_channel.status}"),
       )
     end
 

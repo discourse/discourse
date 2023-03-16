@@ -262,7 +262,6 @@ gl:
       title: "Marcador"
       clear_bookmarks: "Limpar marcadores"
       help:
-        bookmark: "Prema para engadir aos marcadores a publicación inicial deste tema"
         unbookmark: "Prema para retirar todos os marcadores deste tema"
     bookmarks:
       created: "Fixou como marcador esta publicación. %{name}"
@@ -465,11 +464,9 @@ gl:
       scores:
         about: "A puntuación calcúlase con base no nivel de fiabilidade do informador, a precisión das súas alertas anteriores e a prioridade do elemento que se recolle."
         score: "Puntuación"
-        date: "Data"
-        type: "Tipo"
+        type: "Motivo"
         status: "Estado"
-        submitted_by: "Enviado por"
-        reviewed_by: "Revisado por"
+        submitted_by: "Recollido por"
       statuses:
         pending:
           title: "Pendente"
@@ -477,14 +474,12 @@ gl:
           title: "Aprobado"
         rejected:
           title: "Rexeitado"
-        ignored:
-          title: "Ignorado"
-        deleted:
-          title: "Eliminado"
         reviewed:
-          title: "(todas revisadas)"
+          title: "Todas revisadas"
         all:
-          title: "(todo)"
+          title: "Todo"
+      context_question:
+        delimiter: "ou"
       types:
         reviewable_flagged_post:
           title: "Publicación sinalada"
@@ -756,6 +751,7 @@ gl:
         make_all_primary_description: "Facer deste o grupo primario para todos os usuarios seleccionados"
         remove_all_primary: "Retirar como primario"
         remove_all_primary_description: "Retirar este grupo como primario"
+        status: "Estado"
         owner: "Propietario"
         primary: "Primario"
         forbidden: "Non ten permiso para ver os membros."
@@ -879,11 +875,6 @@ gl:
       profile: "Perfil"
       mute: "Silenciar"
       edit: "Editar preferencias"
-      download_archive:
-        button_text: "Descargar todo"
-        confirm: "Confirma a descarga das súas publicacións?"
-        success: "Iniciouse a descarga, notificarémoslle cunha mensaxe o remate do proceso."
-        rate_limit_error: "Só se poden descargar as publicacións unha vez por día. Ténteo de novo mañá."
       new_private_message: "Nova mensaxe"
       private_message: "Mensaxe"
       private_messages: "Mensaxes"
@@ -1817,8 +1808,6 @@ gl:
         topic_template_not_modified: "Engada detalles e aspectos específicos ao tema editando o modelo de tema."
       save_edit: "Gardar a edición"
       overwrite_edit: "Sobrescribir a edición"
-      reply_original: "Responder no tema orixinal"
-      reply_here: "Responder aquí"
       reply: "Responder"
       cancel: "Cancelar"
       create_topic: "Crear tema"
@@ -2219,8 +2208,6 @@ gl:
       options: "Opcións de temas"
       show_links: "amosar as ligazóns a este tema"
       unread_indicator: "Ningún membro leu aínda a última publicación neste tema."
-      jump_reply_up: ir a unha resposta anterior
-      jump_reply_down: ir a unha resposta posterior
       deleted: "Eliminouse o tema"
       slow_mode_update:
         title: "Modo lento"
@@ -2760,7 +2747,6 @@ gl:
       back: "Volver á categoría"
       general: "Xeral"
       settings: "Configuración"
-      topic_template: "Modelo para o tema"
       tags: "Etiquetas"
       tags_allowed_tags: "Restrinxir estas etiquetas a esta categoría:"
       tags_allowed_tag_groups: "Restrinxir estes grupos de etiquetas a esta categoría:"
@@ -2814,8 +2800,6 @@ gl:
       images: "Imaxes"
       email_in: "Personalizar enderezos de mensaxes de correo entrantes:"
       email_in_allow_strangers: "Aceptar correo de usuarios anónimos sen contas"
-      email_in_disabled: "A publicación de novos temas vía correo está desactivada na configuración do sitio. Para activala, "
-      email_in_disabled_click: 'activar o axuste «correo de entrada».'
       mailinglist_mirror: "A categoría replica unha lista de correo"
       show_subcategory_list: "Amosar a lista de subcategorías por riba dos temas desta categoría."
       read_only_banner: "Texto do báner cando o usuario non poida crear un tema nesta categoría:"
@@ -3011,6 +2995,10 @@ gl:
     filters:
       with_topics: "%{filter} temas"
       with_category: "Temas de %{filter} %{category}"
+      filter:
+        title: "Filtro"
+        button:
+          label: "Filtro"
       latest:
         title: "Últimos"
         title_with_count:
@@ -3321,13 +3309,11 @@ gl:
       enabled: "O modo seguro está activado; para saír do modo seguro peche esta xanela do navegador"
     image_removed: "(imaxe retirada)"
     pause_notifications:
-      remaining: "queda %{remaining}"
       options:
         half_hour: "30 minutos"
         one_hour: "1 hora"
         two_hours: "2 horas"
         tomorrow: "Ata mañá"
-        custom: "Personalizado"
       set_schedule: "Estabelecer un calendario de notificacións"
     trust_levels:
       names:
@@ -3346,6 +3332,13 @@ gl:
       more: "Máis"
       all_categories: "Todas as categorías"
       sections:
+        custom:
+          save: "Gardar"
+          delete: "Eliminar"
+          links:
+            icon: "Icona"
+            name: "Nome"
+            value: "Ligazón"
         about:
           header_link_text: "Verbo de"
         messages:
@@ -3700,7 +3693,6 @@ gl:
         enabled: "Activado?"
         is_enabled: "S"
         not_enabled: "N"
-        change_settings: "Cambiar a configuración"
         change_settings_short: "Configuración"
         howto: "Como podo instalar un complemento?"
         official: "Complemento oficial"
@@ -4016,6 +4008,8 @@ gl:
           love:
             name: "amor"
             description: "Cor do botón gústame."
+          selected:
+            name: "seleccionado"
         robots:
           title: "Sobrescribir o ficheiro robots.txt do sitio:"
           warning: "Isto sobrescribirá definitivamente calquera configuración relativa ao sitio."
@@ -4312,6 +4306,35 @@ gl:
           description: "Escriba texto a continuación para comprobar coincidencias con palabras observadas"
           found_matches: "Coincidencias atopadas:"
           no_matches: "Non se atoparon coincidencias"
+      form_templates:
+        nav_title: "Modelos"
+        list_table:
+          headings:
+            name: "Nome"
+            actions: "Accións"
+        view_template:
+          close: "Pechar"
+          edit: "Editar"
+          delete: "Eliminar"
+        new_template_form:
+          submit: "Gardar"
+          cancel: "Cancelar"
+          preview: "Visualizar"
+        quick_insert_fields:
+          add_new_field: "Engadir"
+          dropdown: "Despregábel"
+        validations_modal:
+          table_headers:
+            key: "Chave"
+            type: "Tipo"
+            description: "Descrición"
+          validations:
+            required:
+              key: "obrigatorio"
+            minimum:
+              key: "mínimo"
+            maximum:
+              key: "máximo"
       impersonate:
         title: "Suplantar"
         help: "Usar esta ferramenta para suplantar unha conta de usuario co obxecto de detectar e corrixir erros. Deberá saír da sesión ao rematar."
@@ -4324,6 +4347,7 @@ gl:
         not_found: "Sentímolo pero o nome do usuario non existe no sistema."
         id_not_found: "Sentímolo pero o usuario non existe no sistema."
         active: "Activado"
+        status: "Estado"
         show_emails: "Amosar correos"
         hide_emails: "Agochar correos"
         nav:
@@ -4404,7 +4428,6 @@ gl:
         staged: "Transitorio?"
         show_admin_profile: "Administración"
         show_public_profile: "Amosar o perfil público"
-        impersonate: "Suplantar"
         action_logs: "Rexistros de accións"
         ip_lookup: "Busca de IP"
         log_out: "Saír da sesión"
@@ -4712,7 +4735,8 @@ gl:
         allow_title: Permitir que se use a insignia como un título
         multiple_grant: Pode concederse múltiples veces
         listable: Amosar a insignia na páxina de insignias públicas
-        enabled: Activar a insignia
+        enabled: activado
+        disabled: desactivado
         icon: Icona
         image: Imaxe
         graphic: Gráfico
@@ -4778,7 +4802,6 @@ gl:
         confirm_delete: "Confirma a eliminación deste servidor?"
         title: "Incorporando"
         host: "Servidores permitidos"
-        class_name: "Nome da clase"
         allowed_paths: "Lista de camiños admitidos"
         edit: "editar"
         category: "Publicación na categoría"

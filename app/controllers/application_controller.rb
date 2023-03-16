@@ -645,21 +645,16 @@ class ApplicationController < ActionController::Base
           current_user,
           scope: guardian,
           root: false,
-          enable_sidebar_param: params[:enable_sidebar],
+          navigation_menu_param: params[:navigation_menu],
         ),
       ),
     )
 
     report = TopicTrackingState.report(current_user)
+    serializer = TopicTrackingStateSerializer.new(report, scope: guardian, root: false)
 
-    serializer =
-      ActiveModel::ArraySerializer.new(
-        report,
-        each_serializer: TopicTrackingStateSerializer,
-        scope: guardian,
-      )
-
-    store_preloaded("topicTrackingStates", MultiJson.dump(serializer))
+    store_preloaded("topicTrackingStates", MultiJson.dump(serializer.as_json[:data]))
+    store_preloaded("topicTrackingStateMeta", MultiJson.dump(serializer.as_json[:meta]))
   end
 
   def custom_html_json

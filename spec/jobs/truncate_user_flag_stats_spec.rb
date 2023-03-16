@@ -53,7 +53,7 @@ RSpec.describe Jobs::TruncateUserFlagStats do
 
     r0.perform(Discourse.system_user, :agree_and_keep)
     r1.perform(Discourse.system_user, :disagree)
-    r2.perform(Discourse.system_user, :ignore)
+    r2.perform(Discourse.system_user, :ignore_and_do_nothing)
     r3.perform(Discourse.system_user, :agree_and_keep)
 
     user.user_stat.reload

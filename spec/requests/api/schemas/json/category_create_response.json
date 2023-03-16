@@ -74,6 +74,10 @@
             "null"
           ]
         },
+        "form_template_ids": {
+          "type": "array",
+          "items": []
+        },
         "has_children": {
           "type": [
             "string",
@@ -155,6 +159,12 @@
                 "min_count"
               ]
             }
+        },
+        "category_setting": {
+          "auto_bump_cooldown_days": 1,
+          "num_auto_bump_daily": null,
+          "require_reply_approval": null,
+          "require_topic_approval": null
         },
         "read_only_banner": {
           "type": [

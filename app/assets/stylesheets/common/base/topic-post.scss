@@ -206,13 +206,13 @@
 // add staff color
 .moderator {
   .regular > .cooked {
-    background-color: var(--highlight-low-or-medium);
+    background-color: var(--highlight-bg);
   }
   .clearfix > .topic-meta-data > .names {
     span.user-title {
       color: var(--primary-high-or-secondary-low);
       a {
-        background-color: var(--highlight-low-or-medium);
+        background-color: var(--highlight-bg);
         padding-left: 4px;
         padding-right: 4px;
       }
@@ -808,10 +808,11 @@ aside.quote {
         align-items: center;
         justify-content: center;
         box-sizing: border-box;
-        border-radius: 0 0.25em 0.25em 0;
+        border-radius: 0 var(--border-radius) var(--border-radius) 0;
         padding-top: 0;
         padding-bottom: 0;
-        height: 100%;
+        height: calc(100% + 0.25em);
+        margin-right: -4px;
       }
     }
   }
@@ -1021,15 +1022,7 @@ pre {
 
   .codeblock-button-wrapper {
     position: absolute;
-    right: 0;
     display: flex;
-
-    .copy-cmd {
-      right: 0;
-    }
-    .copy-fullscreen {
-      right: 28px;
-    }
   }
 
   .copy-cmd,
@@ -1041,8 +1034,10 @@ pre {
     min-height: 0;
     font-size: var(--font-down-2);
     opacity: 0.7;
+    cursor: pointer;
 
     &.action-complete {
+      cursor: auto;
       .d-icon {
         color: var(--tertiary);
       }
@@ -1443,6 +1438,7 @@ span.mention {
 }
 
 .post-notice {
+  box-sizing: border-box;
   align-items: center;
   background-color: var(--tertiary-low);
   border-top: 1px solid var(--primary-low);

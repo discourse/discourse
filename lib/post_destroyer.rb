@@ -55,18 +55,17 @@ class PostDestroyer
   def initialize(user, post, opts = {})
     @user = user
     @post = post
-    @topic = post.topic if post
+    @topic = post.topic || Topic.with_deleted.find_by(id: @post.topic_id)
     @opts = opts
   end
 
   def destroy
     payload = WebHook.generate_payload(:post, @post) if WebHook.active_web_hooks(:post).exists?
-    topic = Topic.with_deleted.find_by(id: @post.topic_id)
-    is_first_post = @post.is_first_post? && topic
+    is_first_post = @post.is_first_post? && @topic
     has_topic_web_hooks = is_first_post && WebHook.active_web_hooks(:topic).exists?
 
     if has_topic_web_hooks
-      topic_view = TopicView.new(topic.id, Discourse.system_user, skip_staff_action: true)
+      topic_view = TopicView.new(@topic.id, Discourse.system_user, skip_staff_action: true)
       topic_payload = WebHook.generate_payload(:topic, topic_view, WebHookTopicViewSerializer)
     end
 
@@ -74,7 +73,7 @@ class PostDestroyer
       @opts[:delete_removed_posts_after] || SiteSetting.delete_removed_posts_after
 
     if delete_removed_posts_after < 1 || post_is_reviewable? ||
-         Guardian.new(@user).can_moderate_topic?(topic) || permanent?
+         Guardian.new(@user).can_moderate_topic?(@topic) || permanent?
       perform_delete
     elsif @user.id == @post.user_id
       mark_for_deletion(delete_removed_posts_after)
@@ -84,13 +83,13 @@ class PostDestroyer
 
     DiscourseEvent.trigger(:post_destroyed, @post, @opts, @user)
     WebHook.enqueue_post_hooks(:post_destroyed, @post, payload)
-    Jobs.enqueue(:sync_topic_user_bookmarked, topic_id: topic.id) if topic
+    Jobs.enqueue(:sync_topic_user_bookmarked, topic_id: @topic.id) if @topic
 
     if is_first_post
-      UserProfile.remove_featured_topic_from_all_profiles(topic)
-      UserActionManager.topic_destroyed(topic)
-      DiscourseEvent.trigger(:topic_destroyed, topic, @user)
-      WebHook.enqueue_topic_hooks(:topic_destroyed, topic, topic_payload) if has_topic_web_hooks
+      UserProfile.remove_featured_topic_from_all_profiles(@topic)
+      UserActionManager.topic_destroyed(@topic)
+      DiscourseEvent.trigger(:topic_destroyed, @topic, @user)
+      WebHook.enqueue_topic_hooks(:topic_destroyed, @topic, topic_payload) if has_topic_web_hooks
     end
   end
 
@@ -101,23 +100,23 @@ class PostDestroyer
     elsif @user.staff? || @user.id == @post.user_id
       user_recovered
     end
-    topic = Topic.with_deleted.find @post.topic_id
-    topic.update_column(:user_id, Discourse::SYSTEM_USER_ID) if !topic.user_id
-    topic.recover!(@user) if @post.is_first_post?
-    topic.update_statistics
-    Topic.publish_stats_to_clients!(topic.id, :recovered)
+
+    @topic.update_column(:user_id, Discourse::SYSTEM_USER_ID) if !@topic.user_id
+    @topic.recover!(@user) if @post.is_first_post?
+    @topic.update_statistics
+    Topic.publish_stats_to_clients!(@topic.id, :recovered)
 
     UserActionManager.post_created(@post)
     DiscourseEvent.trigger(:post_recovered, @post, @opts, @user)
-    Jobs.enqueue(:sync_topic_user_bookmarked, topic_id: topic.id) if topic
+    Jobs.enqueue(:sync_topic_user_bookmarked, topic_id: @topic.id) if @topic
     Jobs.enqueue(:notify_mailing_list_subscribers, post_id: @post.id)
 
     if @post.is_first_post?
-      UserActionManager.topic_created(topic)
-      DiscourseEvent.trigger(:topic_recovered, topic, @user)
+      UserActionManager.topic_created(@topic)
+      DiscourseEvent.trigger(:topic_recovered, @topic, @user)
       if @user.id != @post.user_id
         StaffActionLogger.new(@user).log_topic_delete_recover(
-          topic,
+          @topic,
           "recover_topic",
           @opts.slice(:context),
         )
@@ -194,10 +193,11 @@ class PostDestroyer
         end
       end
 
-      if @post.topic && @post.is_first_post?
-        permanent? ? @post.topic.destroy! : @post.topic.trash!(@user)
-        PublishedPage.unpublish!(@user, @post.topic) if @post.topic.published_page
+      if @topic && @post.is_first_post?
+        permanent? ? @topic.destroy! : @topic.trash!(@user)
+        PublishedPage.unpublish!(@user, @topic) if @topic.published_page
       end
+
       TopicLink.where(link_post_id: @post.id).destroy_all
       update_associated_category_latest_topic
       update_user_counts if !permanent?
@@ -281,8 +281,7 @@ class PostDestroyer
   def post_is_reviewable?
     return true if @user.staff?
 
-    topic = @post.topic || Topic.with_deleted.find(@post.topic_id)
-    Guardian.new(@user).can_review_topic?(topic) && Reviewable.exists?(target: @post)
+    Guardian.new(@user).can_review_topic?(@topic) && Reviewable.exists?(target: @post)
   end
 
   # we need topics to change if ever a post in them is deleted or created
@@ -358,7 +357,7 @@ class PostDestroyer
   end
 
   def ignore(reviewable)
-    reviewable.perform_ignore(@user, post_was_deleted: true)
+    reviewable.perform_ignore_and_do_nothing(@user, post_was_deleted: true)
     reviewable.transition_to(:ignored, @user)
   end
 
@@ -431,8 +430,8 @@ class PostDestroyer
 
   def update_associated_category_latest_topic
     return unless @post.topic && @post.topic.category
-    unless @post.id == @post.topic.category.latest_post_id ||
-             (@post.is_first_post? && @post.topic_id == @post.topic.category.latest_topic_id)
+    if @post.id != @post.topic.category.latest_post_id &&
+         !(@post.is_first_post? && @post.topic_id == @post.topic.category.latest_topic_id)
       return
     end
 

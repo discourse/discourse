@@ -21,14 +21,13 @@ nb_NO:
       joined: "medlem fra"
       email_frequency:
         never: "Aldri"
+      header_indicator_preference:
+        never: "Aldri"
       flag: "Flagg"
       join: "Bli medlem"
+      last_visit: "siste besøk"
       mention_warning:
         dismiss: "forkast"
-        groups:
-          users_limit:
-            one: "%{count} bruker"
-            other: "%{count} brukere"
       reply: "Svar"
       edit: "Endre"
       rebake_message: "Generer HTML på nytt"

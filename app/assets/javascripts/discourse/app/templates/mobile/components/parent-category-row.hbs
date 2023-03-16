@@ -1,7 +1,7 @@
 {{#unless this.isHidden}}
   <PluginOutlet
     @name="category-list-above-each-category"
-    @args={{hash category=this.category}}
+    @outletArgs={{hash category=this.category}}
   />
   <div
     data-category-id={{this.category.id}}

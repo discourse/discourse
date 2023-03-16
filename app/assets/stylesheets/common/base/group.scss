@@ -2,6 +2,8 @@
 // To style group content differently, use the existing classes with a .group parent class.
 // For example: .group .user-secondary-navigation
 
+@use "sass:math";
+
 .group-details-container {
   background: var(--primary-very-low);
   padding: 20px;
@@ -23,15 +25,27 @@
   display: flex;
   flex-wrap: wrap;
   width: 100%;
+  gap: 0.5em 0;
 
-  input + .group-members-manage {
-    margin-left: auto;
+  .bulk-select + input {
+    margin-left: 0.5em;
   }
 
-  .group-username-filter {
-    margin: 0 0 5px 0;
-    vertical-align: middle;
+  input {
+    margin: 0 auto 0 0;
   }
+
+  .bulk-select-buttons-wrap {
+    margin-right: 0.5em;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em;
+  }
+}
+
+.group-members-manage {
+  display: flex;
+  gap: 0.5em;
 }
 
 .group-info {
@@ -55,7 +69,7 @@
   }
 
   $size: 50px;
-  $icon-size: $size / 1.8;
+  $icon-size: math.div($size, 1.8);
 
   .avatar-flair-image {
     width: $size;
@@ -116,58 +130,65 @@ table.group-manage-logs {
   }
 }
 
-table.group-members {
-  width: 100%;
+.group-members {
+  grid-template-columns: 3fr repeat(3, minmax(min-content, 1fr));
 
-  th {
-    text-align: center;
-
-    &.bulk-select {
-      height: 30px;
-      width: 30px;
-    }
-
-    &.bulk-select-buttons {
-      text-align: left;
-      white-space: nowrap;
-      width: 1%;
-
-      .bulk-select-buttons-wrap {
-        display: flex;
+  &--can-manage {
+    grid-template-columns: 3fr repeat(4, minmax(min-content, 1fr)) 3em;
+    @container (max-width: 47em) {
+      // positioning the member settings button within the same cell
+      // and avoiding overlap with padding-right on user-info
+      .group-member,
+      .member-settings {
+        grid-row-start: 1;
+        grid-column-start: 1;
+        grid-column-end: -1;
       }
-
-      .btn {
-        margin-right: 0.25em;
+      .member-settings {
+        margin-left: auto;
       }
-    }
-
-    &.username {
-      text-align: left;
+      .user-info {
+        padding-right: 3.5em;
+      }
     }
   }
 
-  td {
-    color: var(--primary-medium);
-    padding: 0.8em 0;
-    text-align: center;
+  &.group-members__requests {
+    grid-template-columns: 3fr repeat(3, minmax(max-content, 1fr));
+  }
 
-    &.group-member {
-      text-align: left;
+  .directory-table__value {
+    font-size: var(--font-0);
+    color: var(--primary);
+  }
+
+  .group-accept-deny-buttons {
+    gap: 0.5em;
+  }
+
+  [class*="group-request-reason__"] {
+    justify-content: start;
+  }
+
+  .group-request-reason__content {
+    .directory-table__value {
+      white-space: normal;
+      max-width: 30em;
     }
   }
 
-  .user-info {
-    display: block;
-
-    .avatar-flair {
-      color: var(--primary);
+  @container (max-width: 47em) {
+    .directory-table__cell {
+      grid-column-start: 1;
+      grid-column-end: -1;
     }
 
-    .user-status-message {
-      img.emoji {
-        width: 1em;
-        height: 1em;
-      }
+    .group-accept-deny-buttons {
+      justify-content: start;
+    }
+
+    .directory-table__cell.group-owner {
+      order: 2;
     }
   }
 }

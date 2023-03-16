@@ -21,14 +21,13 @@ ca:
       joined: "registrat"
       email_frequency:
         never: "Mai"
+      header_indicator_preference:
+        never: "Mai"
       flag: "Bandera"
       join: "Registre"
+      last_visit: "darrera visita"
       mention_warning:
         dismiss: "descarta-ho"
-        groups:
-          users_limit:
-            one: "%{count} usuari"
-            other: "%{count} usuaris"
       reply: "Respon"
       edit: "Edita"
       rebake_message: "Refés HTML"

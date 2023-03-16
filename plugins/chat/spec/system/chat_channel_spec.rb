@@ -13,21 +13,54 @@ RSpec.describe "Chat channel", type: :system, js: true do
   context "when sending a message" do
     before do
       channel_1.add(current_user)
-      50.times { Fabricate(:chat_message, chat_channel: channel_1) }
       sign_in(current_user)
     end
 
-    it "loads most recent messages" do
-      unloaded_message = Fabricate(:chat_message, chat_channel: channel_1)
-      visit("/chat/message/#{message_1.id}")
+    context "with lots of messages" do
+      before { 50.times { Fabricate(:chat_message, chat_channel: channel_1) } }
 
-      expect(channel).to have_no_loading_skeleton
-      expect(page).to have_no_css("[data-id='#{unloaded_message.id}']")
+      it "loads most recent messages" do
+        unloaded_message = Fabricate(:chat_message, chat_channel: channel_1)
+        visit("/chat/c/-/#{channel_1.id}/#{message_1.id}")
 
-      channel.send_message("test_message")
+        expect(channel).to have_no_loading_skeleton
+        expect(page).to have_no_css("[data-id='#{unloaded_message.id}']")
 
-      expect(channel).to have_no_loading_skeleton
-      expect(page).to have_css("[data-id='#{unloaded_message.id}']")
+        channel.send_message("test_message")
+
+        expect(channel).to have_no_loading_skeleton
+        expect(page).to have_css("[data-id='#{unloaded_message.id}']")
+      end
+    end
+
+    context "with two sessions opened on same channel" do
+      it "syncs the messages" do
+        using_session(:tab_1) do
+          sign_in(current_user)
+          chat.visit_channel(channel_1)
+        end
+
+        using_session(:tab_2) do
+          sign_in(current_user)
+          chat.visit_channel(channel_1)
+        end
+
+        using_session(:tab_1) { channel.send_message("test_message") }
+
+        using_session(:tab_2) { expect(channel).to have_message(text: "test_message") }
+      end
+    end
+
+    it "allows to edit this message once persisted" do
+      chat.visit_channel(channel_1)
+      channel.send_message("aaaaaaaaaaaaaaaaaaaa")
+      expect(page).to have_no_css(".chat-message-staged")
+      last_message = find(".chat-message-container:last-child")
+      last_message.hover
+
+      expect(page).to have_css(
+        ".chat-message-actions-container[data-id='#{last_message["data-id"]}']",
+      )
     end
   end
 
@@ -156,6 +189,34 @@ RSpec.describe "Chat channel", type: :system, js: true do
     end
   end
 
+  context "when replying to message that has tags" do
+    fab!(:other_user) { Fabricate(:user) }
+    fab!(:message_2) do
+      Fabricate(
+        :chat_message,
+        user: other_user,
+        chat_channel: channel_1,
+        message: "<mark>not marked</mark>",
+      )
+    end
+
+    before do
+      Fabricate(:chat_message, user: other_user, chat_channel: channel_1)
+      Fabricate(:chat_message, in_reply_to: message_2, user: current_user, chat_channel: channel_1)
+      channel_1.add(other_user)
+      channel_1.add(current_user)
+      sign_in(current_user)
+    end
+
+    xit "escapes the reply-to line" do
+      chat.visit_channel(channel_1)
+
+      expect(find(".chat-reply .chat-reply__excerpt")["innerHTML"].strip).to eq(
+        "&lt;mark&gt;not marked&lt;/mark&gt;",
+      )
+    end
+  end
+
   context "when messages are separated by a day" do
     before do
       Fabricate(:chat_message, chat_channel: channel_1, created_at: 2.days.ago)
@@ -167,28 +228,7 @@ RSpec.describe "Chat channel", type: :system, js: true do
     it "shows a date separator" do
       chat.visit_channel(channel_1)
 
-      expect(page).to have_selector(".first-daily-message", text: "Today")
-    end
-  end
-
-  context "when visiting another channel" do
-    fab!(:channel_2) { Fabricate(:chat_channel) }
-
-    before do
-      channel_1.add(current_user)
-      channel_2.add(current_user)
-      sign_in(current_user)
-    end
-
-    it "resets message selection" do
-      chat.visit_channel(channel_1)
-      channel.select_message(message_1)
-
-      expect(page).to have_css(".chat-selection-management")
-
-      chat.visit_channel(channel_2)
-
-      expect(page).to have_no_css(".chat-selection-management")
+      expect(page).to have_selector(".chat-message-separator__text", text: "Today")
     end
   end
 

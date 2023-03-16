@@ -26,6 +26,7 @@ class UserSearch
 
   def scoped_users
     users = User.where(active: true)
+    users = users.where(approved: true) if SiteSetting.must_approve_users?
     users = users.where(staged: false) unless @include_staged_users
     users = users.not_suspended unless @searching_user&.staff?
 
@@ -160,6 +161,8 @@ class UserSearch
         .each { |id| users << id }
     end
 
+    return users.to_a if users.size >= @limit
+
     # 5. last seen users (for search auto-suggestions)
     if @last_seen_users
       scoped_users
@@ -167,6 +170,27 @@ class UserSearch
         .limit(@limit - users.size)
         .pluck(:id)
         .each { |id| users << id }
+    end
+
+    return users.to_a if users.size >= @limit
+
+    # 6. similar usernames / names
+    if @term.present? && SiteSetting.user_search_similar_results
+      if SiteSetting.enable_names?
+        scoped_users
+          .where("username_lower <-> ? < 1 OR name <-> ? < 1", @term, @term)
+          .order(["LEAST(username_lower <-> ?, name <-> ?) ASC", @term, @term])
+          .limit(@limit - users.size)
+          .pluck(:id)
+          .each { |id| users << id }
+      else
+        scoped_users
+          .where("username_lower <-> ? < 1", @term)
+          .order(["username_lower <-> ? ASC", @term])
+          .limit(@limit - users.size)
+          .pluck(:id)
+          .each { |id| users << id }
+      end
     end
 
     users.to_a

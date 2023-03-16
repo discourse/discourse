@@ -488,18 +488,6 @@ createWidget("search-menu-assistant", {
           const user = attrs.results[0];
           content.push(
             this.attach("search-menu-assistant-item", {
-              prefix,
-              user,
-              setTopicContext: true,
-              slug: `${prefix}@${user.username}`,
-              suffix: h(
-                "span.label-suffix",
-                ` ${I18n.t("search.in_this_topic")}`
-              ),
-            })
-          );
-          content.push(
-            this.attach("search-menu-assistant-item", {
               extraHint: I18n.t("search.enter_hint"),
               prefix,
               user,
@@ -507,6 +495,18 @@ createWidget("search-menu-assistant", {
               suffix: h(
                 "span.label-suffix",
                 ` ${I18n.t("search.in_topics_posts")}`
+              ),
+            })
+          );
+          content.push(
+            this.attach("search-menu-assistant-item", {
+              prefix,
+              user,
+              setTopicContext: true,
+              slug: `${prefix}@${user.username}`,
+              suffix: h(
+                "span.label-suffix",
+                ` ${I18n.t("search.in_this_topic")}`
               ),
             })
           );
@@ -552,6 +552,10 @@ createWidget("search-menu-initial-options", {
     const content = [];
 
     if (attrs.term || ctx) {
+      if (attrs.term) {
+        content.push(this.defaultRow(attrs.term, { withLabel: true }));
+      }
+
       if (ctx) {
         const term = attrs.term || "";
         switch (ctx.type) {
@@ -650,9 +654,6 @@ createWidget("search-menu-initial-options", {
         }
       }
 
-      if (attrs.term) {
-        content.push(this.defaultRow(attrs.term, { withLabel: true }));
-      }
       return content;
     }
 

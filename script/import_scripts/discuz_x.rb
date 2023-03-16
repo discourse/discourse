@@ -887,7 +887,7 @@ class ImportScripts::DiscuzX < ImportScripts::Base
                               LIMIT 1",
         )
 
-      return discuzx_link unless results.size > 0
+      return discuzx_link if results.size.zero?
 
       linked_post_id = results.first["pid"]
       lookup = topic_lookup_from_imported_post_id(linked_post_id)

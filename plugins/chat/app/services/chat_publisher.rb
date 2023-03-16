@@ -12,7 +12,7 @@ module ChatPublisher
         { scope: anonymous_guardian, root: :chat_message },
       ).as_json
     content[:type] = :sent
-    content[:stagedId] = staged_id
+    content[:staged_id] = staged_id
     permissions = permissions(chat_channel)
 
     MessageBus.publish("/chat/#{chat_channel.id}", content.as_json, permissions)
@@ -24,6 +24,7 @@ module ChatPublisher
         message_id: chat_message.id,
         user_id: chat_message.user.id,
         username: chat_message.user.username,
+        thread_id: chat_message.thread_id,
       },
       permissions,
     )
@@ -69,11 +70,6 @@ module ChatPublisher
       type: :reaction,
       chat_message_id: chat_message.id,
     }
-    MessageBus.publish(
-      "/chat/message-reactions/#{chat_message.id}",
-      content.as_json,
-      permissions(chat_channel),
-    )
     MessageBus.publish("/chat/#{chat_channel.id}", content.as_json, permissions(chat_channel))
   end
 
@@ -132,9 +128,13 @@ module ChatPublisher
   end
 
   def self.publish_user_tracking_state(user, chat_channel_id, chat_message_id)
+    data = { chat_channel_id: chat_channel_id, chat_message_id: chat_message_id }.merge(
+      ChatChannelUnreadsQuery.call(channel_id: chat_channel_id, user_id: user.id),
+    )
+
     MessageBus.publish(
       self.user_tracking_state_message_bus_channel(user.id),
-      { chat_channel_id: chat_channel_id, chat_message_id: chat_message_id.to_i }.as_json,
+      data.as_json,
       user_ids: [user.id],
     )
   end
@@ -205,6 +205,7 @@ module ChatPublisher
         chat_channel_id: chat_channel.id,
         name: chat_channel.title(acting_user),
         description: chat_channel.description,
+        slug: chat_channel.slug,
       },
       permissions(chat_channel),
     )

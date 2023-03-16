@@ -29,9 +29,15 @@
 </div>
 
 {{#if this.currentUser.can_send_private_messages}}
-  {{#if this.currentUser.redesigned_user_page_nav_enabled}}
-    <UserPreferences::AllowPrivateMessages @model={{this.model}} />
-  {{/if}}
+  <div class="control-group private-messages">
+    <label class="control-label">{{i18n "user.private_messages"}}</label>
+    <div class="controls">
+      <PreferenceCheckbox
+        @labelKey="user.allow_private_messages"
+        @checked={{this.model.user_option.allow_private_messages}}
+      />
+    </div>
+  </div>
 
   <div class="control-group user-allow-pm">
     <div class="controls">
@@ -56,12 +62,13 @@
   </div>
 {{/if}}
 
-<PluginOutlet
-  @name="user-custom-controls"
-  @tagName="span"
-  @connectorTagName="div"
-  @args={{hash model=this.model}}
-/>
+<span>
+  <PluginOutlet
+    @name="user-custom-controls"
+    @connectorTagName="div"
+    @outletArgs={{hash model=this.model}}
+  />
+</span>
 
 <SaveControls
   @model={{this.model}}

@@ -59,9 +59,12 @@ Fabricator(:chat_message) do
 end
 
 Fabricator(:chat_mention) do
-  chat_message { Fabricate(:chat_message) }
+  transient read: false
+  transient high_priority: true
+  transient identifier: :direct_mentions
+
   user { Fabricate(:user) }
-  notification { Fabricate(:notification) }
+  chat_message { Fabricate(:chat_message) }
 end
 
 Fabricator(:chat_message_reaction) do
@@ -137,5 +140,18 @@ Fabricator(:chat_draft) do
 
   data do |attrs|
     { value: attrs[:value], replyToMsg: attrs[:reply_to_msg], uploads: attrs[:uploads] }.to_json
+  end
+end
+
+Fabricator(:chat_thread) do
+  before_create do |thread, transients|
+    thread.original_message_user = original_message.user
+    thread.channel = original_message.chat_channel
+  end
+
+  transient :channel
+
+  original_message do |attrs|
+    Fabricate(:chat_message, chat_channel: attrs[:channel] || Fabricate(:chat_channel))
   end
 end

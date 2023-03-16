@@ -145,7 +145,8 @@ class TopicEmbed < ActiveRecord::Base
     end
 
     raw_doc = Nokogiri.HTML5(html)
-    auth_element = raw_doc.at('meta[@name="author"]')
+    auth_element =
+      raw_doc.at('meta[@name="discourse-username"]') || raw_doc.at('meta[@name="author"]')
     if auth_element.present?
       response.author = User.where(username_lower: auth_element[:content].strip).first
     end
@@ -202,12 +203,13 @@ class TopicEmbed < ActiveRecord::Base
     response
   end
 
-  def self.import_remote(import_user, url, opts = nil)
+  def self.import_remote(url, opts = nil)
     opts = opts || {}
     response = find_remote(url)
     return if response.nil?
 
     response.title = opts[:title] if opts[:title].present?
+    import_user = opts[:user] if opts[:user].present?
     import_user = response.author if response.author.present?
 
     TopicEmbed.import(import_user, url, response.title, response.body)
@@ -254,9 +256,7 @@ class TopicEmbed < ActiveRecord::Base
 
   def self.topic_id_for_embed(embed_url)
     embed_url = normalize_url(embed_url).sub(%r{\Ahttps?\://}, "")
-    TopicEmbed.where("embed_url ~* ?", "^https?://#{Regexp.escape(embed_url)}$").pluck_first(
-      :topic_id,
-    )
+    TopicEmbed.where("embed_url ~* ?", "^https?://#{Regexp.escape(embed_url)}$").pick(:topic_id)
   end
 
   def self.first_paragraph_from(html)
@@ -281,7 +281,7 @@ class TopicEmbed < ActiveRecord::Base
     Discourse
       .cache
       .fetch("embed-topic:#{post.topic_id}", expires_in: 10.minutes) do
-        url = TopicEmbed.where(topic_id: post.topic_id).pluck_first(:embed_url)
+        url = TopicEmbed.where(topic_id: post.topic_id).pick(:embed_url)
         response = TopicEmbed.find_remote(url)
 
         body = response.body

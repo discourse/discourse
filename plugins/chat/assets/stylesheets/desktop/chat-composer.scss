@@ -1,5 +1,8 @@
 .chat-composer-container {
   .chat-composer {
-    margin: 0.25rem 10px 0 10px;
+    margin: 0.25rem 5px 0 5px;
+  }
+  html.keyboard-visible .footer-nav-ipad & {
+    margin: 0.25rem 10px 1rem 10px;
   }
 }

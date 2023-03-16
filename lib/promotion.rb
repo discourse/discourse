@@ -133,17 +133,23 @@ class Promotion
   # Figure out what a user's trust level should be from scratch
   def self.recalculate(user, performed_by = nil, use_previous_trust_level: false)
     granted_trust_level =
-      TrustLevel.calculate(user, use_previous_trust_level: use_previous_trust_level)
-    return user.update(trust_level: granted_trust_level) if granted_trust_level.present?
+      TrustLevel.calculate(user, use_previous_trust_level: use_previous_trust_level) ||
+        TrustLevel[0]
 
-    user.update_column(:trust_level, TrustLevel[0])
+    # TrustLevel.calculate always returns a value, however we added extra protection just
+    # in case this changes
+    user.update_column(:trust_level, TrustLevel[granted_trust_level])
 
-    p = Promotion.new(user)
-    p.review_tl0
-    p.review_tl1
-    p.review_tl2
-    if user.trust_level == 3 && Promotion.tl3_lost?(user)
-      user.change_trust_level!(2, log_action_for: performed_by || Discourse.system_user)
+    return if user.manual_locked_trust_level.present?
+
+    promotion = Promotion.new(user)
+
+    promotion.review_tl0 if granted_trust_level < TrustLevel[1]
+    promotion.review_tl1 if granted_trust_level < TrustLevel[2]
+    promotion.review_tl2 if granted_trust_level < TrustLevel[3]
+
+    if user.trust_level == TrustLevel[3] && Promotion.tl3_lost?(user)
+      user.change_trust_level!(TrustLevel[2], log_action_for: performed_by || Discourse.system_user)
     end
   end
 end

@@ -100,22 +100,22 @@
   </div>
 {{/if}}
 
-{{#if this.currentUser.redesigned_user_page_nav_enabled}}
-  <UserPreferences::UserApiKeys @model={{@model}} />
-{{/if}}
+<UserPreferences::UserApiKeys @model={{@model}} />
 
-<PluginOutlet
-  @name="user-preferences-security"
-  @tagName="span"
-  @connectorTagName="div"
-  @args={{hash model=this.model save=(action "save")}}
-/>
+<span>
+  <PluginOutlet
+    @name="user-preferences-security"
+    @connectorTagName="div"
+    @outletArgs={{hash model=this.model save=(action "save")}}
+  />
+</span>
 
 <br />
 
-<PluginOutlet
-  @name="user-custom-controls"
-  @tagName="span"
-  @connectorTagName="div"
-  @args={{hash model=this.model}}
-/>
+<span>
+  <PluginOutlet
+    @name="user-custom-controls"
+    @connectorTagName="div"
+    @outletArgs={{hash model=this.model}}
+  />
+</span>

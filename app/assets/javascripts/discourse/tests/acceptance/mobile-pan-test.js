@@ -7,6 +7,10 @@ import {
 import { click, triggerEvent, visit } from "@ember/test-helpers";
 
 async function triggerSwipeStart(touchTarget) {
+  const emberTesting = document.querySelector("#ember-testing-container");
+  emberTesting.scrollTop = 0;
+  emberTesting.scrollLeft = 0;
+
   // Other tests are shown in a transformed viewport, and this is a multiple for the offsets
   let scale = parseFloat(
     window

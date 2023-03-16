@@ -439,18 +439,18 @@ RSpec.describe StaffActionLogger do
       expect(name_user_history.new_value).to eq("new_name")
     end
 
-    it "does not log permissions changes for category visible to everyone" do
+    it "logs permissions changes even if the category is visible to everyone" do
       attributes = { name: "new_name" }
-      old_permission = category.permissions_params
+      old_permission = { "everyone" => 1 }
       category.update!(attributes)
 
       logger.log_category_settings_change(
         category,
-        attributes.merge(permissions: { "everyone" => 1 }),
+        attributes.merge(permissions: { "trust_level_3" => 1 }),
         old_permissions: old_permission,
       )
 
-      expect(UserHistory.count).to eq(1)
+      expect(UserHistory.count).to eq(2)
       expect(UserHistory.find_by_subject("name").category).to eq(category)
     end
 

@@ -179,6 +179,7 @@ pt:
       forwarded: "Encaminhou o e-mail acima"
     topic_admin_menu: "ações do tópico"
     skip_to_main_content: "Saltar para o conteúdo principal"
+    skip_user_nav: "Saltar para o conteúdo do perfil"
     emails_are_disabled: "Todos os envios de e-mail foram globalmente desativados por um administrador. Nenhum e-mail de notificação será enviado."
     emails_are_disabled_non_staff: "O envio de e-mail foi desativado para usuários que não são da equipe."
     software_update_prompt:
@@ -299,10 +300,8 @@ pt:
       edit_bookmark: "Editar Favorito"
       clear_bookmarks: "Remover Marcadores"
       help:
-        bookmark: "Clique para adicionar um marcador à primeira publicação neste tópico"
-        edit_bookmark: "Clique para editar o favorito neste tópico"
         unbookmark: "Clique para remover todos os marcadores deste tópico"
-        unbookmark_with_reminder: "Clique para remover todos os favoritos e lembretes neste tópico."
+        unbookmark_with_reminder: "Clique para remover todos os favoritos e lembretes neste tópico"
     bookmarks:
       created: "Adicionou este post aos favoritos. %{name}"
       create: "Criar favorito"
@@ -507,11 +506,9 @@ pt:
       scores:
         about: "Esta pontuação é calculada com base no nível de confiança do utilizador que sinaliza, a precisão das suas anteriores denúncias e a prioridade do item sinalizado."
         score: "Pontuação"
-        date: "Data"
-        type: "Tipo"
+        type: "Motivo"
         status: "Estado"
-        submitted_by: "Enviado por"
-        reviewed_by: "Revisto por"
+        submitted_by: "Reportado por"
       statuses:
         pending:
           title: "Pendente"
@@ -519,14 +516,12 @@ pt:
           title: "Aprovado"
         rejected:
           title: "Rejeitado"
-        ignored:
-          title: "Ignorados"
-        deleted:
-          title: "Eliminado"
         reviewed:
-          title: "(todos revistos)"
+          title: "Todos revistos"
         all:
-          title: "(tudo)"
+          title: "Tudo"
+      context_question:
+        delimiter: "ou"
       types:
         reviewable_flagged_post:
           title: "Publicação Sinalizada"
@@ -831,6 +826,7 @@ pt:
         make_all_primary_description: "Tornar este o grupo principal para todos os usuários selecionados"
         remove_all_primary: "Remover como Principal"
         remove_all_primary_description: "Remover este grupo como principal"
+        status: "Estado"
         owner: "Dono(a)"
         primary: "Principal"
         forbidden: "Não tem permissão para visualizar os membros."
@@ -953,11 +949,6 @@ pt:
       profile: "Perfil"
       mute: "Silenciar"
       edit: "Editar Preferências"
-      download_archive:
-        button_text: "Transferir Tudo"
-        confirm: "Tem a certeza que deseja transferir as suas mensagens?"
-        success: "Transferência iniciada, será notificado via mensagem assim que o processo estiver concluído."
-        rate_limit_error: "As mensagens podem ser transferidas uma vez por dia, por favor, tente novamente amanhã."
       new_private_message: "Nova Mensagem"
       private_message: "Mensagem"
       private_messages: "Mensagens"
@@ -1934,8 +1925,6 @@ pt:
         topic_template_not_modified: "Adicione detalhes e especificações ao tópico, editando o modelo de tópico."
       save_edit: "Guardar Edição"
       overwrite_edit: "Guardar Edição"
-      reply_original: "Responder no Tópico Original"
-      reply_here: "Responda Aqui"
       reply: "Responder"
       cancel: "Cancelar"
       create_topic: "Criar Tópico"
@@ -2382,8 +2371,6 @@ pt:
       expand_details: "expandir detalhes do tópico"
       unread_indicator: "Nenhum membro leu o último post deste tópico ainda."
       suggest_create_topic: Pronto para <a href>iniciar uma nova conversa?</a>
-      jump_reply_up: avançar para resposta mais recente
-      jump_reply_down: avançar para resposta mais antiga
       deleted: "Este tópico foi eliminado"
       slow_mode_update:
         title: "Modo lento"
@@ -2858,6 +2845,8 @@ pt:
           last: "Última revisão"
           hide: "Esconder revisão"
           show: "Mostrar revisão"
+          destroy: "Apagar revisões"
+          destroy_confirm: "Tem certeza de que deseja apagar todas as revisões deste post? Esta ação é permanente."
           revert: "Reverter para a versão %{revision}"
           edit_wiki: "Editar Wiki"
           edit_post: "Editar Mensagem"
@@ -2919,7 +2908,6 @@ pt:
       back: "Voltar para a categoria"
       general: "Geral"
       settings: "Configurações"
-      topic_template: "Modelo do Tópico"
       tags: "Etiquetas"
       tags_allowed_tags: "Restringir essas tags a esta categoria:"
       tags_allowed_tag_groups: "Restringir esses grupos de tags a esta categoria:"
@@ -2973,8 +2961,6 @@ pt:
       images: "Imagens"
       email_in: "Endereço de email personalizado para emails recebidos:"
       email_in_allow_strangers: "Aceitar emails de utilizadores anónimos sem conta"
-      email_in_disabled: "Publicar novos tópicos através do email está desactivado nas Configurações do Sítio. Para permitir a publicação de novos tópicos através do email,"
-      email_in_disabled_click: 'ative a definição "email em".'
       mailinglist_mirror: "Categoria espelha uma lista de e-mails"
       show_subcategory_list: "Mostrar lista de subcategorias acima dos tópicos desta categoria."
       read_only_banner: "Texto do banner para quando um usuário não pode criar um tópico nesta categoria:"
@@ -3068,7 +3054,9 @@ pt:
         inappropriate: "É inapropriado"
         spam: "É Spam"
       custom_placeholder_notify_user: "Seja específico, seja construtivo e seja sempre amável."
+      notify_user_textarea_label: "Mensagem para o utilizador"
       custom_placeholder_notify_moderators: "Diga-nos especificamente quais são as suas preocupações, e forneça-nos hiperligações relevantes e exemplo se possível."
+      notify_moderators_textarea_label: "Mensagem para os moderadores"
       custom_message:
         at_least:
           one: "insira pelo menos %{count} caráter"
@@ -3148,6 +3136,10 @@ pt:
     filters:
       with_topics: "%{filter} tópicos"
       with_category: "%{filter} %{category} tópicos"
+      filter:
+        title: "Filtrar"
+        button:
+          label: "Filtrar"
       latest:
         title: "Recente"
         title_with_count:
@@ -3464,13 +3456,11 @@ pt:
     image_removed: "(imagem removida)"
     pause_notifications:
       label: "Pausar notificações"
-      remaining: "%{remaining} restante"
       options:
         half_hour: "30 minutos"
         one_hour: "1 hora"
         two_hours: "2 horas"
         tomorrow: "Até amanhã"
-        custom: "Personalizar"
       set_schedule: "Definir um horário de notificação"
     trust_levels:
       names:
@@ -3490,6 +3480,12 @@ pt:
       more: "Mais"
       all_categories: "Todas as categorias"
       sections:
+        custom:
+          save: "Guardar"
+          delete: "Eliminar"
+          links:
+            icon: "Ícone"
+            name: "Nome"
         about:
           header_link_text: "Sobre"
         messages:
@@ -3737,8 +3733,14 @@ pt:
             topics:
               read: Ler um tópico ou um post específico nele. RSS também é suportado.
               write: Criar um novo tópico ou poste em um já existente.
+              update: Atualize um tópico. Altere o título, categoria, tags, status, arquétipo, feature_link etc.
             users:
               show: Obter informações sobre um utilizador.
+              suspend: Suspender contas de utilizador.
+            invites:
+              create: Envie convites por e-mail ou gere links de convite.
+            search:
+              show: Pesquise usando o endpoint `/search.json?q=term`.
       web_hooks:
         title: "Webhooks"
         none: "Não existem webhooks neste momento."
@@ -3811,7 +3813,6 @@ pt:
         enabled: "Ativado?"
         is_enabled: "S"
         not_enabled: "N"
-        change_settings: "Alterar Configurações"
         change_settings_short: "Configurações"
         howto: "Como instalo plugins?"
       navigation_menu:
@@ -4067,6 +4068,8 @@ pt:
           love:
             name: "amor"
             description: "A cor do botão 'gosto'."
+          selected:
+            name: "selecionado"
         robots:
           title: "Substitua o arquivo robots.txt do seu site:"
           warning: "Isso substituirá permanentemente todas as configurações de site relacionadas."
@@ -4199,6 +4202,7 @@ pt:
             change_category_settings: "alterar configurações de categoria"
             delete_category: "eliminar categoria"
             create_category: "criar categoria"
+            silence_user: "silenciar utilizador"
             grant_admin: "conceder administração"
             revoke_admin: "revogar administração"
             grant_moderation: "conceder moderação"
@@ -4302,6 +4306,35 @@ pt:
           button_label: "Testar"
           description: "Insira o texto abaixo para verificar as correspondências com palavras vigiadas"
           no_matches: "Não foram encontradas correspondências"
+      form_templates:
+        nav_title: "Templates"
+        list_table:
+          headings:
+            name: "Nome"
+            actions: "Ações"
+        view_template:
+          close: "Fechar"
+          edit: "Editar"
+          delete: "Eliminar"
+        new_template_form:
+          submit: "Guardar"
+          cancel: "Cancelar"
+          preview: "Pré-visualização"
+        quick_insert_fields:
+          add_new_field: "Adicionar"
+          dropdown: "Lista pendente"
+        validations_modal:
+          table_headers:
+            key: "Chave"
+            type: "Tipo"
+            description: "Descrição"
+          validations:
+            required:
+              key: "obrigatório"
+            minimum:
+              key: "mínimo"
+            maximum:
+              key: "máximo"
       impersonate:
         title: "Personificar"
         help: "Utilize este ferramenta de forma a personificar uma conta de utilizador para fins de depuração. Terá de encerrar a sessão assim que terminar."
@@ -4313,6 +4346,7 @@ pt:
         last_emailed: "Último email enviado"
         not_found: "Pedimos desculpa, esse nome de utilizador não existe no nosso sistema."
         id_not_found: "Pedimos desculpa, esse id de utilizador não existe no nosso sistema."
+        status: "Estado"
         show_emails: "Mostrar Emails"
         nav:
           new: "Novo"
@@ -4365,7 +4399,6 @@ pt:
         staged: "Temporário?"
         show_admin_profile: "Administração"
         show_public_profile: "Mostrar Perfil Público"
-        impersonate: "Personificar"
         ip_lookup: "Pesquisa de IP"
         log_out: "Sair"
         logged_out: "Sessão do utilizador encerrada em todos os dispositivos"
@@ -4610,7 +4643,8 @@ pt:
         allow_title: Permitir que o crachá seja usado como título
         multiple_grant: Pode ser concedido múltiplas vezes
         listable: Mostrar crachá na página pública de crachás
-        enabled: Ativar crachá
+        enabled: ativado
+        disabled: desativado
         icon: Ícone
         image: Imagem
         graphic: Gráfico

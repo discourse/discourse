@@ -161,7 +161,6 @@ be:
       title: "Абранае"
       clear_bookmarks: "Выдаліць з абранага"
       help:
-        bookmark: "Націсніце каб закласці першы паведамленне ў гэтай тэме"
         unbookmark: "Націсніце каб выдаліць усе закладкі ў гэтай тэме"
     bookmarks:
       not_bookmarked: "закладка гэты пост"
@@ -224,7 +223,7 @@ be:
           score: "кошт"
       scores:
         score: "кошт"
-        type: "тып"
+        type: "прычына"
       statuses:
         pending:
           title: "чакаецца"
@@ -232,6 +231,8 @@ be:
           title: "Адобрана"
         rejected:
           title: "адхілена"
+      context_question:
+        delimiter: "або"
       types:
         reviewable_user:
           title: "Карыстальнік"
@@ -465,6 +466,7 @@ be:
       experimental_sidebar:
         options: "Налады"
         navigation_section: "рух"
+      suspended_reason: "прычына: "
       tag_settings: "Цэтлікі"
       watched_tags_instructions: "Вы будзеце аўтаматычна адсочваць усе новыя тэмы па гэтых цэтліках. Таксама вам будуць прыходзіць паведамленні пра новыя пасты і тэмы, а падлік непрачытаных і новых пастоў адлюструюцца побач з тэмамі."
       tracked_tags_instructions: "Вы будзеце аўтаматычна адсочваць усе тэмы па гэтых цэтліках. Падлік непрачытаных і новых пастоў побач адлюструюцца побач з тэмамі."
@@ -813,8 +815,6 @@ be:
         title_missing: "Загаловак неабходна"
         category_missing: "Вы павінны выбраць катэгорыю"
       save_edit: "захаваць змены"
-      reply_original: "Адказаць у пачатковай тэме"
-      reply_here: "Адказаць тут"
       reply: "Адказаць"
       cancel: "Адмяніць"
       create_topic: "Стварыць Тэму"
@@ -976,8 +976,6 @@ be:
       back_to_list: "Вярнуцца да спісу тым"
       options: "Налады тэмы"
       show_links: "паказаць спасылкі ў гэтай тэме"
-      jump_reply_up: перайсці да больш ранняй адказы
-      jump_reply_down: перайсці да больш позняй адказы
       deleted: "Тэма была выдаленая"
       slow_mode_update:
         enable: "Уключыць"
@@ -1077,6 +1075,7 @@ be:
     post:
       quote_edit: "Рэдагаваць"
       quote_share: "Падзяліцца тэмай"
+      edit_reason: "прычына: "
       errors:
         upload: "Выбачайце, пры загрузцы гэтага файла адбылася памылка. Калі ласка, паспрабуйце яшчэ раз."
         upload_not_authorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
@@ -1218,6 +1217,10 @@ be:
     category_title: "Катэгорыя"
     categories_list: "Спіс катэгорый"
     filters:
+      filter:
+        title: "Filter"
+        button:
+          label: "Filter"
       latest:
         title: "Апошнія"
         help: "тэмы са свежымі паведамленнямі"
@@ -1349,6 +1352,12 @@ be:
       more: "Больш"
       all_categories: "Усе катэгорыі"
       sections:
+        custom:
+          save: "захаваць"
+          delete: "выдаляць"
+          links:
+            icon: "Абразка"
+            name: "імя"
         about:
           header_link_text: "Аб тэме"
         messages:
@@ -1755,6 +1764,29 @@ be:
         form:
           add: "дадаць"
           success: "поспех"
+      form_templates:
+        nav_title: "шаблоны"
+        list_table:
+          headings:
+            name: "імя"
+            actions: "дзеянні"
+        view_template:
+          close: "зачыніць"
+          edit: "рэдагаваць"
+          delete: "выдаляць"
+        new_template_form:
+          submit: "захаваць"
+          cancel: "адмяніць"
+          preview: "папярэдні прагляд"
+        quick_insert_fields:
+          add_new_field: "дадаць"
+        validations_modal:
+          table_headers:
+            type: "тып"
+            description: "Апісанне"
+          validations:
+            required:
+              key: "абавязковыя"
       impersonate:
         title: "ўвасобіцца"
         not_found: "Карыстача не ўдалося знайсці."
@@ -1789,7 +1821,6 @@ be:
         suspended: "Прыпынена?"
         show_admin_profile: "Адміністратар"
         show_public_profile: "Паказаць публічны профіль"
-        impersonate: "ўвасобіцца"
         ip_lookup: "пошук IP"
         log_out: "Выйсці"
         logged_out: "Карыстальнік выйшаў з сістэмы на ўсіх прыладах"
@@ -1964,6 +1995,7 @@ be:
         no_user_badges: " %{Name} не атрымліваў ні аднаго."
         no_badges: Тут няма значкоў, якія могуць быць прадастаўлены.
         allow_title: Дазволіць выкарыстанне значкоў як званняў
+        disabled: адключана
         icon: Абразка
         image: Выява
         trigger: Трыггер старту

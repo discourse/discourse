@@ -825,6 +825,25 @@ RSpec.describe TopicView do
             it { is_expected.not_to include(tag1.name) }
             it { is_expected.not_to include(tag2.name) }
           end
+
+          context "with restricted tags" do
+            let(:tag_group) { Fabricate.build(:tag_group) }
+            let(:tag_group_permission) do
+              Fabricate.build(:tag_group_permission, tag_group: tag_group)
+            end
+
+            before do
+              SiteSetting.tagging_enabled = true
+              # avoid triggering a `before_create` callback in `TagGroup` which
+              # messes with permissions
+              tag_group.tag_group_permissions << tag_group_permission
+              tag_group.save!
+              tag_group_permission.tag_group.tags << tag2
+            end
+
+            it { is_expected.not_to include(tag2.name) }
+            it { is_expected.to include(tag1.name) }
+          end
         end
       end
     end
@@ -1070,19 +1089,6 @@ RSpec.describe TopicView do
       context "when category is not moderated" do
         it { expect(topic_view.queued_posts_enabled?).to be(nil) }
       end
-    end
-  end
-
-  describe "#tags" do
-    subject(:topic_view_tags) { topic_view.tags }
-
-    let(:topic_view) { described_class.new(topic, user) }
-    let(:topic) { Fabricate.build(:topic, tags: tags) }
-    let(:tags) { Fabricate.build_times(2, :tag) }
-    let(:user) { Fabricate(:user) }
-
-    it "returns the tags names" do
-      expect(topic_view_tags).to match tags.map(&:name)
     end
   end
 end

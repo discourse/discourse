@@ -33,16 +33,16 @@ hu:
     deleted_chat_username: törölt
     errors:
       channel_exists_for_category: "Már létezik csatorna ehhez a kategóriával, és ezzel a névvel"
-      channel_new_message_disallowed: "A csatorna „%{status}”, új üzenet nem küldhető"
-      channel_modify_message_disallowed: "A csatorna „%{status}”, az üzenetek nem szerkeszthetők vagy törölhetők"
       user_cannot_send_message: "Jelenleg nem küldhet üzeneteket."
       rate_limit_exceeded: "Túllépte a 30 másodpercen belül elküldhető csevegőüzenetek korlátját"
       auto_silence_from_flags: "A csevegőüzenet elég magas pontszámmal lett megjelölve, hogy a felhasználó némítva legyen."
       channel_cannot_be_archived: "A csatorna jelenleg nem archiválható, a csatornát vagy le kell zárni, vagy meg kell nyitni az archiváláshoz."
       duplicate_message: "Nemrég küldött egy azonos tartalmú üzenetet."
       delete_channel_failed: "A csatorna törlése sikertelen, próbálja meg újra."
-      minimum_length_not_met: "Az üzenet túl rövid, legalább %{minimum} karaktert kell tartalmaznia."
-      message_too_long: "Az üzenet túl hosszú, az üzenetek legfeljebb %{maximum} karakterekből állhatnak."
+      message_too_long:
+        one: "Az üzenet túl hosszú, az üzenetek legfeljebb %{count} karakterekből állhatnak."
+        other: "Az üzenet túl hosszú, az üzenetek legfeljebb %{count} karakterekből állhatnak."
+      draft_too_long: "A vázlat túl hosszú."
       max_reactions_limit_reached: "Új reakciók nem engedélyezettek ezen az üzeneten."
       message_move_invalid_channel: "A forrás- és célcsatornának nyilvános csatornának kell lennie."
       message_move_no_messages_found: "A megadott üzenetazonosítókkal nem találhatók üzenetek."
@@ -78,20 +78,16 @@ hu:
         ignore:
           title: "Letiltás"
     channel:
-      statuses:
-        read_only: "Csak olvasható"
-        archived: "Archivált"
-        closed: "Zárt"
-        open: "Megnyitás"
       archive:
         first_post_raw: "Ez a téma a(z) [%{channel_name}](%{channel_url}) csevegőcsatorna archívuma."
       messages_moved:
         one: "@%{acting_username} áthelyezett egy üzenetet a(z) [%{channel_name}](%{first_moved_message_url}) csatornába."
         other: "@%{acting_username} áthelyezett %{count} üzenetet a(z) [%{channel_name}](%{first_moved_message_url}) csatornába."
       dm_title:
-        single_user: "%{user}"
-        multi_user: "%{users}"
-        multi_user_truncated: "%{users} és még %{leftover} fő"
+        single_user: "%{username}"
+        multi_user_truncated:
+          one: "%{comma_separated_usernames} és még %{count} fő"
+          other: "%{comma_separated_usernames} és még %{count} fő"
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "nem ASCII karaktereket tartalmaz"

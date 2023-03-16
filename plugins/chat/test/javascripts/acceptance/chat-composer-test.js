@@ -45,7 +45,7 @@ acceptance("Discourse Chat - Composer", function (needs) {
   });
 
   skip("when pasting html in composer", async function (assert) {
-    await visit("/chat/channel/11/another-category");
+    await visit("/chat/c/another-category/11");
 
     const clipboardEvent = new Event("paste", { bubbles: true });
     clipboardEvent.clipboardData = {
@@ -96,7 +96,7 @@ acceptance("Discourse Chat - Composer - unreliable network", function (needs) {
   });
 
   skip("Sending a message with unreliable network", async function (assert) {
-    await visit("/chat/channel/11/-");
+    await visit("/chat/c/-/11");
     await fillIn(".chat-composer-input", "network-error-message");
     await click(".send-btn");
 
@@ -109,7 +109,7 @@ acceptance("Discourse Chat - Composer - unreliable network", function (needs) {
     await click(".send-btn");
     await publishToMessageBus(`/chat/11`, {
       type: "sent",
-      stagedId: 1,
+      staged_id: 1,
       chat_message: {
         cooked: "network-error-message",
         id: 175,
@@ -133,7 +133,7 @@ acceptance("Discourse Chat - Composer - unreliable network", function (needs) {
   });
 
   skip("Draft with unreliable network", async function (assert) {
-    await visit("/chat/channel/11/-");
+    await visit("/chat/c/-/11");
     this.chatService.set("isNetworkUnreliable", true);
     await settled();
 

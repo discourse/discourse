@@ -1,23 +1,12 @@
 # frozen_string_literal: true
 
 class About
-  cattr_reader :plugin_stat_groups
-
-  def self.add_plugin_stat_group(prefix, show_in_ui: false, &block)
-    @@displayed_plugin_stat_groups << prefix if show_in_ui
-    @@plugin_stat_groups[prefix] = block
-  end
-
-  def self.clear_plugin_stat_groups
-    @@displayed_plugin_stat_groups = Set.new
-    @@plugin_stat_groups = {}
-  end
-
   def self.displayed_plugin_stat_groups
-    @@displayed_plugin_stat_groups.to_a
+    DiscoursePluginRegistry
+      .about_stat_groups
+      .select { |stat_group| stat_group[:show_in_ui] }
+      .map { |stat_group| stat_group[:name] }
   end
-
-  clear_plugin_stat_groups
 
   class CategoryMods
     include ActiveModel::Serialization
@@ -103,13 +92,13 @@ class About
 
   def plugin_stats
     final_plugin_stats = {}
-    @@plugin_stat_groups.each do |plugin_stat_group_name, stat_group|
+    DiscoursePluginRegistry.about_stat_groups.each do |stat_group|
       begin
-        stats = stat_group.call
+        stats = stat_group[:block].call
       rescue StandardError => err
         Discourse.warn_exception(
           err,
-          message: "Unexpected error when collecting #{plugin_stat_group_name} About stats.",
+          message: "Unexpected error when collecting #{stat_group[:name]} About stats.",
         )
         next
       end
@@ -117,11 +106,11 @@ class About
       if !stats.key?(:last_day) || !stats.key?("7_days") || !stats.key?("30_days") ||
            !stats.key?(:count)
         Rails.logger.warn(
-          "Plugin stat group #{plugin_stat_group_name} for About stats does not have all required keys, skipping.",
+          "Plugin stat group #{stat_group[:name]} for About stats does not have all required keys, skipping.",
         )
       else
         final_plugin_stats.merge!(
-          stats.transform_keys { |key| "#{plugin_stat_group_name}_#{key}".to_sym },
+          stats.transform_keys { |key| "#{stat_group[:name]}_#{key}".to_sym },
         )
       end
     end

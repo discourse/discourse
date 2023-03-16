@@ -536,10 +536,6 @@ ko:
             duration_minutes:
               cannot_be_zero: "0보다 커야 합니다."
               exceeds_maximum: "20년을 초과할 수 없습니다."
-        translation_overrides:
-          attributes:
-            value:
-              invalid_interpolation_keys: '다음 보간 키가 유효하지 않습니다. "%{keys}"'
         watched_word:
           attributes:
             word:
@@ -1482,7 +1478,6 @@ ko:
     enable_discourse_connect: "DiscourseConnect(기존 'Discourse SSO')를 통한 로그인을 활성화합니다(경고: 사용자의 이메일 주소는 *반드시* 외부 사이트에서 검증되어야 합니다!)"
     verbose_discourse_connect_logging: "자세한 DiscourseConnect 관련 진단을 <a href='%{base_path}/logs' target='_blank'>/log</a>에 기록합니다."
     enable_discourse_connect_provider: "/session/sso_provider 엔드포인트에서 DiscourseConnect(기존 'Discourse SSO') 공급자 프로토콜을 구현하려면 discourse_connect_provider_secrets를 설정해야 합니다."
-    discourse_connect_url: "DiscourseConnect 엔드포인트의 URL(반드시 http:// 또는 https://를 포함해야 함)"
     discourse_connect_secret: "DiscourseConnect 정보를 암호화 방식으로 인증하는 데 사용되는 암호 문자열이며, 10자 이상이어야 합니다."
     discourse_connect_provider_secrets: "DiscourseConnect를 사용하는 도메인 암호 쌍의 목록입니다. DiscourseConnect 암호가 10자 이상인지 확인하세요. 와일드카드 기호 *는 모든 도메인 또는 그 일부(예: *.example.com)와 일치하는 데 사용할 수 있습니다."
     discourse_connect_overrides_bio: "사용자 프로필의 사용자 소개 기능를 오버라이드하고 사용자가 변경할 수 없도록 합니다"
@@ -1830,8 +1825,6 @@ ko:
     automatically_unpin_topics: "주제 하단에 도달하면 주제를 자동으로 고정 해제합니다."
     read_time_word_count: "추정 읽은 시간 계산을 위한 1분당 워드 카운트입니다."
     topic_page_title_includes_category: "주제 페이지 <a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>제목 태그</a>에는 카테고리 이름이 포함됩니다."
-    native_app_install_banner_ios: "iOS 디바이스의 DiscourseHub 앱 배너를 일반 사용자(신뢰 레벨 1 이상)에게 표시합니다."
-    native_app_install_banner_android: "일반 사용자(신뢰 레벨 1 이상)에게 Android 디바이스에 DiscourseHub 앱 배너를 표시합니다."
     app_association_android: "Google의 Digital Asset Links API에 사용되는 <a href='%{base_path}/.well-known/assetlinks.json'>.well-known/assetlinks.json</a> 엔드포인트의 콘텐츠입니다."
     app_association_ios: "이 사이트와 iOS 앱 간의 범용 링크를 만드는 데 사용되는 <a href='%{base_path}/apple-app-site-association'>apple-app-site-association</a> 엔드포인트의 콘텐츠입니다."
     share_anonymized_statistics: "익명화된 사용 통계 공유"
@@ -2178,7 +2171,6 @@ ko:
     activated_by_staff: "운영진에 의해 활성화됨"
     new_user_typed_too_fast: "입력이 너무 빠른 신규 사용자"
     content_matches_auto_silence_regex: "콘텐츠가 자동 차단 정규식과 일치합니다"
-    content_matches_auto_block_regex: "콘텐츠가 자동 차단 정규식과 일치합니다"
     username:
       short: "최소 %{min}자 이상이어야 합니다"
       long: "%{max}자 이하여야 합니다"
@@ -2832,14 +2824,6 @@ ko:
     user_automatically_silenced:
       title: "사용자가 자동 차단됨"
       subject_template: "커뮤니티 신고로 신규 유저 %{username} 님이 차단됨"
-      text_body_template: |
-        자동 메시지입니다.
-
-        여러 사용자가 %{username} 님의 게시물을 신고하여 신규 사용자 [%{username}](%{user_url})님이 자동 차단되었습니다.
-
-        [신고를 검토](%{base_url}/admin/flags)하고, %{username} 님의 게시 차단이 잘못되었다고 판단되는 경우 [이 사용자의 관리 페이지](%{user_url})에서 차단 해제 버튼을 클릭하세요.
-
-        한계치는 `silence_new_user` 사이트 설정에서 변경할 수 있습니다.
     spam_post_blocked:
       title: "스팸 게시글 차단됨"
       subject_template: "신규 사용자 %{username} 님의 게시물이 연속된 링크로 인해 차단됨"
@@ -2914,9 +2898,6 @@ ko:
     reached_limit:
       other: "주의: 매일 최대 %{count}개의 이메일을 전송합니다. 사이트를 확인하여 보류될 수 있는 사이트가 있는지 확인하세요. 활발한 활동에 감사드립니다!"
     in_reply_to: "답장 대상"
-    unsubscribe:
-      title: "구독 해제"
-      description: "이 이메일에 관심이 없나요? 아래 구독 해제를 눌러서 바로 구독을 해제할 수 있습니다."
     reply_by_email: "[주제를 방문](%{base_url}%{url})하거나 이 이메일에 답장하여 응답하세요."
     reply_by_email_pm: "[주제를 방문](%{base_url}%{url})하거나 이 이메일에 답장하여 %{participants}에 응답하세요."
     only_reply_by_email: "이 이메일에 답장하여 응답하세요."
@@ -3220,7 +3201,6 @@ ko:
       liked_received: "받은 좋아요 수"
       new_users: "신규 사용자"
       popular_topics: "인기 주제"
-      follow_topic: "이 주제 팔로우"
       join_the_discussion: "더 보기"
       popular_posts: "인기 게시물"
       more_new: "맞춤 신규 항목"
@@ -3411,8 +3391,6 @@ ko:
     welcome_message_invite_only: |
       ## [%{title}에 오신 것을 환영합니다](#welcome)
       계정이 필요합니다. 계속하려면 기존 회원에게 초대를 요청하거나 로그인하세요.
-  deleted: "삭제되었습니다"
-  image: "이미지"
   upload:
     edit_reason: "이미지 로컬 사본 다운로드됨"
     unauthorized: "업로드하려는 파일 확장자는 허용되지 않습니다(허용 확장자: %{authorized_extensions})."
@@ -3815,9 +3793,6 @@ ko:
       message: "<p>활성화 이메일을 <b>%{email}</b> 주소로 재전송했습니다."
   safe_mode:
     title: "안전 모드 시작"
-    description: "안전 모드를 사용하면 플러그인이나 사이트 사용자 정의를 로드하지 않고도 사이트를 테스트할 수 있습니다."
-    no_unofficial_plugins: "비공식 플러그인 해제하기"
-    no_plugins: "모든 플러그인 비활성화"
     enter: "안전 모드 시작"
     must_select: "안전 모드를 시작하려면 옵션을 하나 이상 선택하세요."
   wizard:
@@ -3892,7 +3867,6 @@ ko:
           <p>즐거운 시간 보내세요! <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>새로운 커뮤니티 구축에 행운을 빕니다!</a></p>
   search_logs:
     graph_title: "검색 횟수"
-  joined: "가입일"
   discourse_push_notifications:
     popup:
       mentioned: '''%{topic}'' - %{site_title}에서 %{username} 님이 나를 멘션했습니다'
@@ -3949,50 +3923,29 @@ ko:
         category: 카테고리 설정
     actions:
       agree:
-        title: "동의..."
-      agree_and_keep:
-        title: "게시물 유지"
-        description: "신고에 동의하고 게시물을 변경하지 않습니다."
-      agree_and_keep_hidden:
-        title: "게시물 숨김 유지"
-        description: "신고에 동의하고 게시물 숨김을 유지합니다."
+        title: "예"
       agree_and_suspend:
-        title: "사용자 정지"
         description: "신고에 동의하고 사용자를 정지합니다."
       agree_and_silence:
-        title: "사용자 차단"
         description: "신고에 동의하고 사용자를 차단합니다."
       agree_and_restore:
-        title: "게시물 복원"
         description: "모든 사용자가 볼 수 있도록 게시물을 복원합니다."
-      agree_and_hide:
-        title: "게시물 숨기기"
-        description: "이 게시물을 숨기고 사용자에게 편집을 요청하는 메시지를 자동으로 전송합니다."
       delete_single:
         title: "삭제"
       delete:
         title: "삭제..."
-      delete_and_ignore:
-        title: "게시물 삭제 및 무시"
-        description: "게시물 삭제, 첫 게시물인 경우 주제도 삭제합니다."
       delete_and_ignore_replies:
-        title: "게시물 + 댓글 삭제 및 무시"
-        description: "게시물과 모든 댓글을 삭제합니다. 첫 게시물인 경우 주제도 삭제합니다."
         confirm: "게시물에 대한 댓글도 삭제할까요?"
-      delete_and_agree:
-        title: "게시물 삭제 및 동의"
-        description: "게시물 삭제, 첫 게시물인 경우 주제도 삭제합니다."
       delete_and_agree_replies:
-        title: "게시물 + 댓글 삭제 및 동의"
-        description: "게시물과 모든 댓글을 삭제합니다. 첫 게시물인 경우 주제도 삭제합니다."
         confirm: "게시물에 대한 댓글도 삭제할까요?"
       disagree_and_restore:
-        title: "동의하지 않고 게시물 복원"
         description: "모든 사용자가 볼 수 있도록 게시물을 복원합니다."
       disagree:
-        title: "동의하지 않음"
+        title: "아니오"
       ignore:
         title: "무시"
+      ignore_and_do_nothing:
+        title: "아무것도하지 않음"
       approve:
         title: "승인"
       approve_post:

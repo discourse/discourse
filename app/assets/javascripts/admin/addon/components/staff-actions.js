@@ -1,10 +1,10 @@
+import { tagName } from "@ember-decorators/component";
 import { action } from "@ember/object";
 import Component from "@ember/component";
 import DiscourseURL from "discourse/lib/url";
 
-export default Component.extend({
-  tagName: "",
-
+@tagName("")
+export default class StaffActions extends Component {
   @action
   openLinks(event) {
     const dataset = event.target.dataset;
@@ -20,5 +20,5 @@ export default Component.extend({
 
       DiscourseURL.routeTo(`/t/${dataset.linkTopicId}`);
     }
-  },
-});
+  }
+}

@@ -9,7 +9,7 @@ class Chat::Api::ChatChannelsMembershipsController < Chat::Api::ChatChannelsCont
 
     memberships =
       ChatChannelMembershipsQuery.call(
-        channel_from_params,
+        channel: channel_from_params,
         offset: offset,
         limit: limit,
         username: params[:username],

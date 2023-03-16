@@ -3,7 +3,7 @@
 class ChatMention < ActiveRecord::Base
   belongs_to :user
   belongs_to :chat_message
-  belongs_to :notification
+  belongs_to :notification, dependent: :destroy
 end
 
 # == Schema Information

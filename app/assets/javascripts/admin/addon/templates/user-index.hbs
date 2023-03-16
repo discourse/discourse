@@ -28,7 +28,7 @@
     {{/if}}
     <PluginOutlet
       @name="admin-user-controls-after"
-      @args={{hash model=this.model}}
+      @outletArgs={{hash model=this.model}}
     />
   </div>
 
@@ -50,7 +50,10 @@
     />
   </div>
 
-  <PluginOutlet @name="admin-user-below-names" @args={{hash user=this.model}} />
+  <PluginOutlet
+    @name="admin-user-below-names"
+    @outletArgs={{hash user=this.model}}
+  />
 
   {{#if this.canCheckEmails}}
     <div class="display-row email">
@@ -259,12 +262,13 @@
   </section>
 {{/if}}
 
-<PluginOutlet
-  @name="admin-user-details"
-  @tagName="span"
-  @connectorTagName="div"
-  @args={{hash model=this.model}}
-/>
+<span>
+  <PluginOutlet
+    @name="admin-user-details"
+    @connectorTagName="div"
+    @outletArgs={{hash model=this.model}}
+  />
+</span>
 
 <section class="details">
   <h1>{{i18n "admin.user.permissions"}}</h1>
@@ -857,12 +861,13 @@
   </section>
 {{/if}}
 
-<PluginOutlet
-  @name="after-user-details"
-  @tagName="span"
-  @connectorTagName="div"
-  @args={{hash model=this.model}}
-/>
+<span>
+  <PluginOutlet
+    @name="after-user-details"
+    @connectorTagName="div"
+    @outletArgs={{hash model=this.model}}
+  />
+</span>
 
 <section>
   <hr />
@@ -893,7 +898,7 @@
         @label="admin.user.delete"
         @icon="trash-alt"
         @class="btn-danger btn-user-delete"
-        @action={{action "destroy"}}
+        @action={{action "destroyUser"}}
       />
     {{/if}}
 

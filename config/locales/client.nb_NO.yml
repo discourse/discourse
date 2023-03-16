@@ -268,10 +268,8 @@ nb_NO:
       edit_bookmark: "Rediger bokmerke"
       clear_bookmarks: "Fjern bokmerker"
       help:
-        bookmark: "Klikk for å bokmerke det første innlegget i dette emnet"
-        edit_bookmark: "Klikk for å redigere bokmerket på dette emnet"
         unbookmark: "Klikk for å fjerne alle bokmerker i dette emnet"
-        unbookmark_with_reminder: "Klikk for å fjerne alle bokmerkene og påminnelsene i dette emnet."
+        unbookmark_with_reminder: "Klikk for å fjerne alle bokmerkene og påminnelsene i dette emnet"
     bookmarks:
       created: "Du har bokmerket dette innlegget. %{name}"
       create: "Opprett bokmerke"
@@ -477,11 +475,9 @@ nb_NO:
       scores:
         about: "Denne scoren beregnes ut fra tillitsnivået til eksportøren, nøyaktigheten til deres forrige flagg, og prioriteten til posten som skal rapporteres."
         score: "Poeng"
-        date: "Dato"
-        type: "Type"
+        type: "Begrunnelse"
         status: "Status"
-        submitted_by: "Innsendt av"
-        reviewed_by: "Gjennomgått av"
+        submitted_by: "Rapporter av"
       statuses:
         pending:
           title: "På vent"
@@ -489,14 +485,12 @@ nb_NO:
           title: "Godkjent"
         rejected:
           title: "Avvist"
-        ignored:
-          title: "Ignorert"
-        deleted:
-          title: "Slettet"
         reviewed:
-          title: "(alle gjennomgått)"
+          title: "Alle gjennomgått"
         all:
-          title: "(alt)"
+          title: "Alt"
+      context_question:
+        delimiter: "eller"
       types:
         reviewable_flagged_post:
           title: "Rapportert innlegg"
@@ -795,6 +789,7 @@ nb_NO:
         make_all_primary_description: "Gjør denne hovedgruppen til alle valgte brukere"
         remove_all_primary: "Fjern som primær"
         remove_all_primary_description: "Fjern denne gruppen som primær"
+        status: "Status"
         owner: "Eier"
         primary: "Primær"
         forbidden: "Du har ikke tillatelse til å vise medlemmene."
@@ -878,15 +873,9 @@ nb_NO:
       topic_sentence:
         one: "%{count} emne"
         other: "%{count} emner"
-      topic_stat:
-        one: "%{number} / %{unit}"
-        other: "%{number} / %{unit}"
       topic_stat_unit:
         week: "uke"
         month: "måned"
-      topic_stat_all_time:
-        one: "%{number} totalt"
-        other: "%{number} totalt"
       n_more: "Kategorier (ytterligere%{count})..."
     ip_lookup:
       title: Slå opp IP-adresse
@@ -913,11 +902,6 @@ nb_NO:
       profile: "Profil"
       mute: "Ignorer"
       edit: "Rediger innstillinger"
-      download_archive:
-        button_text: "Last ned alle"
-        confirm: "Er du sikker på at du vil laste ned innleggene dine?"
-        success: "Nedlasting iverksatt. Du vil bli varslet med en melding når prosessen er fullført."
-        rate_limit_error: "Innlegg kan lastes ned en gang om dagen, prøv igjen i morgen."
       new_private_message: "Ny Melding"
       private_message: "Melding"
       private_messages: "Meldinger"
@@ -1851,8 +1835,6 @@ nb_NO:
         topic_template_not_modified: "Vennligst legg til detaljer og spesifikasjoner for emnet ditt ved å redigere emnemalen."
       save_edit: "Lagre endring"
       overwrite_edit: "Overskriv Rediger"
-      reply_original: "Svar på det opprinnelige emnet"
-      reply_here: "Svar her"
       reply: "Svar"
       cancel: "Avbryt"
       create_topic: "Opprett emne"
@@ -2163,15 +2145,9 @@ nb_NO:
           one: "Avvis %{count} uleste"
           other: "Avvis %{count} uleste"
         dismiss_button: "Forkast…"
-        dismiss_button_with_selected:
-          one: "Avvis (%{count})…"
-          other: "Avvis (%{count})…"
         dismiss_tooltip: "Forkast kun nye innlegg eller slutt å overvåke emner"
         also_dismiss_topics: "Slutt å overvåke disse emnene slik at de aldri igjen vises til meg som ulest"
         dismiss_new: "Forkast nye"
-        dismiss_new_with_selected:
-          one: "Avvis Ny (%{count})"
-          other: "Avvis Ny (%{count})"
         toggle: "slå på/av massevelging av emner"
         actions: "Massehandlinger"
         change_category: "Velg kategori..."
@@ -2265,8 +2241,6 @@ nb_NO:
       expand_details: "utvid emnebeskrivelse"
       unread_indicator: "Ingen medlem har lest den siste posten i dette emnet ennå."
       suggest_create_topic: Klar til å <a href>starte en ny samtale?</a>
-      jump_reply_up: hopp til tidligere svar
-      jump_reply_down: hopp til senere svar
       deleted: "Emnet ble slettet"
       slow_mode_update:
         title: "Langsom Modus"
@@ -2812,7 +2786,6 @@ nb_NO:
       back: "Tilbake til kategori"
       general: "Generelt"
       settings: "Innstillinger"
-      topic_template: "Mal for emne"
       tags: "Stikkord"
       tags_allowed_tags: "Begrens disse taggene til denne kategorien:"
       tags_allowed_tag_groups: "Begrens disse tagggruppene til denne kategorien:"
@@ -2866,8 +2839,6 @@ nb_NO:
       images: "Bilder"
       email_in: "Egendefinert innkommende e-postadresse:"
       email_in_allow_strangers: "Godta e-post fra anonyme brukere uten brukerkonto"
-      email_in_disabled: "Publisering av nye emner via e-post er deaktivert i innstillingene for nettstedet. For å aktivere publisering av nye emner via e-post,"
-      email_in_disabled_click: 'aktiver innstillingen "e-post inn".'
       mailinglist_mirror: "Kategorien gjenspeiler en e-postliste"
       show_subcategory_list: "Plasser listen over underkategorien i toppen av emner i denne kategorien."
       read_only_banner: "Banner-tekst når en bruker ikke kan opprette et emne i denne kategorien:"
@@ -3066,6 +3037,10 @@ nb_NO:
     filters:
       with_topics: "%{filter} emner"
       with_category: "%{filter} %{category} emner"
+      filter:
+        title: "Filtrer"
+        button:
+          label: "Filtrer"
       latest:
         title: "Siste"
         title_with_count:
@@ -3390,13 +3365,11 @@ nb_NO:
       enabled: "Sikkert modus er påskrudd, for å skru av sikkert modus, lukk dette nettleservinduet"
     image_removed: "(bilde fjernet)"
     pause_notifications:
-      remaining: "%{remaining} gjenstående"
       options:
         half_hour: "30 minutter"
         one_hour: "1 time"
         two_hours: "2 timer"
         tomorrow: "Frem til i morgen"
-        custom: "Egendefinert"
       set_schedule: "Angi en varslingsplan"
     trust_levels:
       names:
@@ -3420,6 +3393,12 @@ nb_NO:
       more: "Mer"
       all_categories: "Alle kategorier"
       sections:
+        custom:
+          save: "Lagre"
+          delete: "Slett"
+          links:
+            icon: "Ikon"
+            name: "Navn"
         about:
           header_link_text: "Om"
         messages:
@@ -3732,7 +3711,6 @@ nb_NO:
         enabled: "Aktivert?"
         is_enabled: "J"
         not_enabled: "N"
-        change_settings: "Endre instillinger"
         change_settings_short: "Innstillinger"
         howto: "Hvordan installerer jeg utvidelser?"
         official: "Offisiell Plugin"
@@ -3985,6 +3963,8 @@ nb_NO:
           love:
             name: "liker"
             description: "Fargen til Liker-knappen."
+          selected:
+            name: "valgt"
         robots:
           title: "Overstyr nettstedets robots.txt fil:"
           warning: "Dette vil permanent overstyre alle relaterte nettstedsinnstillinger."
@@ -4261,6 +4241,34 @@ nb_NO:
         test:
           button_label: "Test"
           no_matches: "Ingen treff funnet"
+      form_templates:
+        nav_title: "Maler"
+        list_table:
+          headings:
+            name: "Navn"
+            actions: "Handlinger"
+        view_template:
+          close: "Lukk"
+          edit: "Endre"
+          delete: "Slett"
+        new_template_form:
+          submit: "Lagre"
+          cancel: "Avbryt"
+          preview: "Forhåndsvis"
+        quick_insert_fields:
+          add_new_field: "Legg til"
+          dropdown: "Nedtrekk"
+        validations_modal:
+          table_headers:
+            type: "Type"
+            description: "Beskrivelse"
+          validations:
+            required:
+              key: "nødvendig"
+            minimum:
+              key: "minst"
+            maximum:
+              key: "største"
       impersonate:
         title: "Fremstå som"
         help: "Bruk dette verktøyet for å fremstå som en annen bruker for feilsøking. Du må logge ut når du er ferdig."
@@ -4272,6 +4280,7 @@ nb_NO:
         last_emailed: "Sist kontaktet"
         not_found: "Beklager, det brukernavner eksisterer ikke i systemet vårt."
         id_not_found: "Beklager, den bruker-ID-en eksisterer ikke i systemet vårt."
+        status: "Status"
         show_emails: "Vis e-poster"
         nav:
           new: "Ny"
@@ -4339,7 +4348,6 @@ nb_NO:
         staged: "Arrangert?"
         show_admin_profile: "Admin"
         show_public_profile: "Vis offentlig profil"
-        impersonate: "Gi deg ut for å være en annen"
         action_logs: "Handlingslogger"
         ip_lookup: "IP Lookup"
         log_out: "Logg ut"
@@ -4602,7 +4610,8 @@ nb_NO:
         allow_title: Tillat merke å bli benyttet som en tittel
         multiple_grant: Kan bli tildelt flere ganger
         listable: Vis merket på den offentlige merkesiden
-        enabled: Aktiver merke
+        enabled: aktivert
+        disabled: deaktivert
         icon: Ikon
         image: Bilde
         query: Spørring for merke (SQL)
@@ -4648,7 +4657,6 @@ nb_NO:
         confirm_delete: "Er du sikker på at du vil slette den verten?"
         title: "Innbygging"
         host: "Tillatte verter"
-        class_name: "Klassenavn"
         edit: "rediger"
         category: "Legg til innlegg i kategori"
         add_host: "Legg til vert"

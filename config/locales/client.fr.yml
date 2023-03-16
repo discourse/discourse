@@ -145,37 +145,37 @@ fr:
       email: "Envoyer par e-mail"
       url: "Copier et partager l'URL"
     action_codes:
-      public_topic: "A rendu ce sujet public %{when}"
-      open_topic: "A converti ceci en sujet %{when}"
-      private_topic: "A fAit de ce sujet un messAge direct %{when}"
-      split_topic: "A scindé ce sujet %{when}"
-      invited_user: "A invité %{who} %{when}"
-      invited_group: "A invité %{who} %{when}"
+      public_topic: "A rendu ce sujet public (%{when})"
+      open_topic: "A converti ceci en sujet (%{when})"
+      private_topic: "A fait de ce sujet un message direct (%{when})"
+      split_topic: "A scindé ce sujet (%{when})"
+      invited_user: "A invité %{who} (%{when})"
+      invited_group: "A invité %{who} (%{when})"
       user_left: "%{who} a quitté cette conversation %{when}"
-      removed_user: "A retiré %{who} %{when}"
-      removed_group: "A retiré %{who} %{when}"
-      autobumped: "Remonté automatiquement dans la liste %{when}"
+      removed_user: "A retiré %{who} (%{when})"
+      removed_group: "A retiré %{who} (%{when})"
+      autobumped: "Remonté automatiquement dans la liste (%{when})"
       autoclosed:
-        enabled: "A fermé ce sujet %{when}"
-        disabled: "A ouvert ce sujet %{when}"
+        enabled: "A fermé ce sujet (%{when})"
+        disabled: "A ouvert ce sujet (%{when})"
       closed:
-        enabled: "A fermé ce sujet %{when}"
-        disabled: "A ouvert ce sujet %{when}"
+        enabled: "A fermé ce sujet (%{when})"
+        disabled: "A ouvert ce sujet (%{when})"
       archived:
-        enabled: "A Archivé ce sujet %{when}"
-        disabled: "A désArchivé ce sujet %{when}"
+        enabled: "A archivé ce sujet (%{when})"
+        disabled: "A désarchivé ce sujet (%{when})"
       pinned:
-        enabled: "A épinglé ce sujet %{when}"
-        disabled: "A désépinglé ce sujet %{when}"
+        enabled: "A épinglé ce sujet (%{when})"
+        disabled: "A désépinglé ce sujet (%{when})"
       pinned_globally:
-        enabled: "A épinglé ce sujet globAlement %{when}"
-        disabled: "A désépinglé ce sujet %{when}"
+        enabled: "A épinglé ce sujet globalement (%{when})"
+        disabled: "A désépinglé ce sujet (%{when})"
       visible:
-        enabled: "A rendu ce sujet visible %{when}"
-        disabled: "A rendu ce sujet invisible %{when}"
+        enabled: "A rendu ce sujet visible (%{when})"
+        disabled: "A rendu ce sujet invisible (%{when})"
       banner:
-        enabled: "A mis à lA une %{when}. Il serA Affiché en hAut de chAque pAge jusqu'à ce qu'il soit ignoré pAr un utilisAteur."
-        disabled: "A supprimé de lA une %{when}. Il ne serA plus Affiché en hAut de chAque pAge."
+        enabled: "A mis ce sujet à la une (%{when}). Il sera affiché en haut de chaque page jusqu'à ce qu'il soit ignoré par l'utilisateur."
+        disabled: "A supprimé ce sujet de la une (%{when}). Il ne sera plus affiché en haut de chaque page."
       forwarded: "A transmis l'e-mail ci-dessus"
     topic_admin_menu: "actions du sujet"
     skip_to_main_content: "Passer au contenu principal"
@@ -302,11 +302,9 @@ fr:
       edit_bookmark: "Modifier le signet"
       clear_bookmarks: "Retirer les signets"
       help:
-        bookmark: "Cliquez pour mettre un signet sur le premier message de ce sujet"
-        edit_bookmark: "Cliquez pour modifier le signet sur ce sujet"
         edit_bookmark_for_topic: "Cliquez pour modifier le signet associé à ce sujet"
         unbookmark: "Cliquez pour retirer tous les signets de ce sujet"
-        unbookmark_with_reminder: "Cliquez pour retirer tous les signets et rappels de ce sujet."
+        unbookmark_with_reminder: "Cliquez pour retirer tous les signets et rappels de ce sujet"
     bookmarks:
       created: "Vous avez mis un signet à ce message. %{name}"
       created_generic: "Vous avez mis ceci en signet. %{name}"
@@ -523,11 +521,9 @@ fr:
       scores:
         about: "Ce score est calculé en fonction du niveau de confiance de l'utilisateur qui a signalé le message, de l'exactitude de ses signalements précédents et de la priorité de l'élément signalé."
         score: "Score"
-        date: "Date"
-        type: "Type"
+        type: "Motif d'attribution"
         status: "État"
-        submitted_by: "Soumis par"
-        reviewed_by: "Examiné par"
+        submitted_by: "Signalé par"
       statuses:
         pending:
           title: "En attente"
@@ -535,14 +531,12 @@ fr:
           title: "Acceptés"
         rejected:
           title: "Rejetés"
-        ignored:
-          title: "Ignorés"
-        deleted:
-          title: "Supprimés"
         reviewed:
-          title: "(examinés)"
+          title: "Examinés"
         all:
-          title: "(tous)"
+          title: "Tout"
+      context_question:
+        delimiter: "ou"
       types:
         reviewable_flagged_post:
           title: "Message signalé"
@@ -849,6 +843,7 @@ fr:
         make_all_primary_description: "Attribuer le statut de groupe principal pour tous les utilisateurs sélectionnés"
         remove_all_primary: "Supprimer le statut de groupe principal"
         remove_all_primary_description: "Supprimer le statut de groupe principal de ce groupe"
+        status: "État"
         owner: "Propriétaire"
         primary: "Principal"
         forbidden: "Vous n'avez pas l'autorisation de voir les membres."
@@ -976,11 +971,6 @@ fr:
       profile: "Profil"
       mute: "Mettre en sourdine"
       edit: "Modifier les préférences"
-      download_archive:
-        button_text: "Tout télécharger"
-        confirm: "Voulez-vous vraiment télécharger vos messages ?"
-        success: "Le téléchargement a démarré ; vous recevrez une notification lorsqu'il sera terminé."
-        rate_limit_error: "Les messages peuvent être téléchargés une fois par jour, veuillez réessayer demain."
       new_private_message: "Créer un message direct"
       private_message: "Message direct"
       private_messages: "Messages directs"
@@ -2154,8 +2144,6 @@ fr:
         topic_template_not_modified: "Veuillez ajouter des détails à votre sujet en modifiant le modèle de sujet."
       save_edit: "Enregistrer les modifications"
       overwrite_edit: "Écraser la modification"
-      reply_original: "Répondre dans le sujet d'origine"
-      reply_here: "Répondre ici"
       reply: "Répondre"
       cancel: "Annuler"
       create_topic: "Créer le sujet"
@@ -2272,8 +2260,8 @@ fr:
           one: "%{count} notification de nouveau message"
           other: "%{count} notifications de nouveaux messages"
         new_reviewable:
-          one: "%{count} nouveau message à examiner"
-          other: "%{count} nouveaux messages à examiner"
+          one: "%{count} nouvel élément à examiner"
+          other: "%{count} nouveaux éléments à examiner"
       title: "notifications des mentions de votre nom d'utilisateur, des réponses à vos messages et sujets, etc."
       none: "Impossible de charger les notifications pour le moment."
       empty: "Aucune notification trouvée."
@@ -2727,8 +2715,6 @@ fr:
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Parcourez toutes les catégories</a>, <a href='%{basePath}/latest'>consultez les derniers sujets</a> ou consultez les principaux sujets :"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Parcourez toutes les étiquettes</a> ou <a href='%{basePath}/latest'>consultez les derniers sujets</a>."
       suggest_create_topic: Prêt à <a href>démarrer une nouvelle conversation ?</a>
-      jump_reply_up: accéder aux réponses précédentes
-      jump_reply_down: accéder aux réponses ultérieures
       deleted: "Ce sujet a été supprimé"
       slow_mode_update:
         title: "Mode ralenti"
@@ -3093,9 +3079,6 @@ fr:
       collapse: "réduire"
       sr_collapse_replies: "Masquer les réponses"
       sr_date: "Date de publication"
-      sr_expand_replies:
-        one: "Ce message a reçu %{count} réponse. Cliquez pour développer l'affichage"
-        other: "Ce message a reçu %{count} réponses. Cliquez pour développer l'affichage"
       expand_collapse: "développer/réduire"
       sr_below_embedded_posts_description: "réponses à la publication #%{post_number}"
       sr_embedded_reply_description: "réponse de @%{username} au message #%{post_number}"
@@ -3324,7 +3307,6 @@ fr:
       back: "Retour à la catégorie"
       general: "Général"
       settings: "Paramètres"
-      topic_template: "Modèle de sujet"
       tags: "Étiquettes"
       tags_allowed_tags: "Réserver l'utilisation de ces étiquettes à cette catégorie :"
       tags_allowed_tag_groups: "Réserver l'utilisation de ces groupes d'étiquettes à cette catégorie :"
@@ -3383,8 +3365,6 @@ fr:
       email_in: "Adresse e-mail entrant personnalisée :"
       email_in_tooltip: "Vous pouvez séparer plusieurs adresses e-mail avec le caractère | ."
       email_in_allow_strangers: "Accepter les e-mails d'utilisateurs anonymes sans compte"
-      email_in_disabled: "La création de nouveaux sujets par e-mail est désactivée dans les paramètres. Pour activer la création de nouveaux sujets par e-mail, "
-      email_in_disabled_click: 'activez le paramètre « e-mail entrant ».'
       mailinglist_mirror: "La catégorie reflète une liste de diffusion"
       show_subcategory_list: "Afficher la liste des sous-catégories au-dessus des sujets dans cette catégorie."
       read_only_banner: "Texte du bandeau à afficher lorsqu'un utilisateur ne peut pas créer un sujet dans cette catégorie :"
@@ -3592,6 +3572,10 @@ fr:
     filters:
       with_topics: "Sujets %{filter}"
       with_category: "Sujets %{filter} sur %{category}"
+      filter:
+        title: "Filtrer"
+        button:
+          label: "Filtrer"
       latest:
         title: "Récents"
         title_with_count:
@@ -3951,13 +3935,11 @@ fr:
     pause_notifications:
       title: "Suspendre les notifications pour…"
       label: "Suspendre les notifications"
-      remaining: "Encore %{remaining}"
       options:
         half_hour: "30 minutes"
         one_hour: "1 heure"
         two_hours: "2 heures"
         tomorrow: "Jusqu'à demain"
-        custom: "Personnalisé"
       set_schedule: "Planifier les notifications"
     trust_levels:
       names:
@@ -4007,6 +3989,13 @@ fr:
       all_categories: "Toutes les catégories"
       all_tags: "Toutes les étiquettes"
       sections:
+        custom:
+          save: "Enregistrer"
+          delete: "Supprimer"
+          links:
+            icon: "Icône"
+            name: "Nom"
+            value: "Insérer un lien"
         about:
           header_link_text: "À propos"
         messages:
@@ -4239,10 +4228,6 @@ fr:
         about: "Modifier votre adhésion et les noms ici"
         group_members: "Membres du groupe"
         delete: "Supprimer"
-        delete_confirm: "Voulez-vous vraiment supprimer ce groupe ?"
-        delete_with_messages_confirm:
-          one: "La suppression de ce groupe rendra %{count} message orphelin, les membres du groupe n'y auront plus accès."
-          other: "La suppression de ce groupe rendra %{count} messages orphelins, les membres du groupe n'y auront plus accès."
         delete_failed: "Impossible de supprimer le groupe. S'il s'agit d'un groupe automatique, il ne peut pas être détruit."
         delete_automatic_group: Ce groupe ne peut pas être supprimé car il est constitué de façon automatique.
         delete_owner_confirm: "Retirer les privilèges de propriétaire pour %{username} ?"
@@ -4450,7 +4435,6 @@ fr:
         enabled: "Activée ?"
         is_enabled: "O"
         not_enabled: "N"
-        change_settings: "Changer les paramètres"
         change_settings_short: "Paramètres"
         howto: "Comment installer des extensions ?"
         official: "Extension officielle"
@@ -4782,6 +4766,8 @@ fr:
           love:
             name: "aimer"
             description: "La couleur du bouton « J'aime »."
+          selected:
+            name: "sélectionné"
         robots:
           title: "Remplacez le fichier robots.txt de votre site :"
           warning: "Cela remplacera définitivement tous les paramètres associés."
@@ -4961,7 +4947,7 @@ fr:
             post_edit: "message modifié"
             post_unlocked: "message déverrouillé"
             check_personal_message: "vérifier un message direct"
-            disabled_second_factor: "désactiver l'authentification à deux facteurs"
+            disabled_second_factor: "désactiver la validation en deux étapes"
             topic_published: "sujet publié"
             post_approved: "message approuvé"
             post_rejected: "message rejeté"
@@ -5096,6 +5082,35 @@ fr:
           description: "Saisissez du texte dans le champ ci-dessous pour vérifier le fonctionnement des mots ou expressions surveillés"
           found_matches: "Correspondances trouvées :"
           no_matches: "Aucune correspondance trouvée"
+      form_templates:
+        nav_title: "Modèles"
+        list_table:
+          headings:
+            name: "Nom"
+            actions: "Actions"
+        view_template:
+          close: "Fermer"
+          edit: "Modifier"
+          delete: "Supprimer"
+        new_template_form:
+          submit: "Enregistrer"
+          cancel: "Annuler"
+          preview: "Aperçu"
+        quick_insert_fields:
+          add_new_field: "Ajouter"
+          dropdown: "Menu déroulant"
+        validations_modal:
+          table_headers:
+            key: "Clé"
+            type: "Type"
+            description: "Description"
+          validations:
+            required:
+              key: "obligatoire"
+            minimum:
+              key: "minimum"
+            maximum:
+              key: "maximum"
       impersonate:
         title: "Incarner"
         help: "Utilisez cet outil pour incarner un compte utilisateur à des fins de tests. Vous devrez vous déconnecter une fois que vous aurez terminé."
@@ -5108,6 +5123,7 @@ fr:
         not_found: "Nous sommes désolés, ce nom d'utilisateur n'existe pas dans notre système."
         id_not_found: "Désolé cet identifiant d'utilisateur n'existe pas dans notre système."
         active: "Activé"
+        status: "État"
         show_emails: "Afficher les adresses e-mail"
         hide_emails: "Masquer les adresses e-mail"
         nav:
@@ -5196,7 +5212,6 @@ fr:
         show_admin_profile: "Administration"
         manage_user: "Gérer l'utilisateur"
         show_public_profile: "Afficher le profil public"
-        impersonate: "Incarner"
         action_logs: "Journaux d'actions"
         ip_lookup: "Localiser l'adresse IP"
         log_out: "Déconnecter l'utilisateur"
@@ -5220,7 +5235,7 @@ fr:
         private_topics_count: Sujets privés
         posts_read_count: Messages lus
         post_count: Messages créés
-        second_factor_enabled: Authentification à deux facteurs activée
+        second_factor_enabled: Validation en deux étapes activée
         topics_entered: Sujets vus
         flags_given_count: Signalements effectués
         flags_received_count: Signalements reçus
@@ -5533,7 +5548,8 @@ fr:
         allow_title: Permettre d'utiliser ce badge comme titre sur le profil utilisateur
         multiple_grant: Peut être attribué plusieurs fois
         listable: Afficher le badge sur la page publique des badges
-        enabled: Activer le badge
+        enabled: activée 
+        disabled: désactivée
         icon: Icône
         image: Image
         graphic: Graphique
@@ -5603,10 +5619,8 @@ fr:
       embedding:
         get_started: "Si vous souhaitez intégrer Discourse dans un autre site, commencez par ajouter son hôte."
         confirm_delete: "Voulez-vous vraiment supprimer cet hôte ?"
-        sample: "Collez le code HTML suivant sur votre site pour créer et intégrer des sujets Discourse. Remplacez <b>REPLACE_ME</b> par l'URL canonique de la page sur laquelle vous souhaitez l'intégrer."
         title: "Intégration externe"
         host: "Hôtes autorisés"
-        class_name: "Nom de classe"
         allowed_paths: "Liste des chemins autorisés"
         edit: "modifier"
         category: "Publier dans la catégorie"

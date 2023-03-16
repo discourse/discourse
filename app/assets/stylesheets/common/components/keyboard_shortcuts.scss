@@ -27,20 +27,36 @@
   background-color: inherit;
 }
 
-.keyboard-shortcuts-modal .modal-body {
-  max-height: 560px;
-}
-
-.keyboard-shortcuts-modal .modal-inner-container {
-  max-width: 880px;
+.keyboard-shortcuts-modal {
+  .modal-inner-container {
+    --modal-max-width: 80vw;
+  }
 }
 
 #keyboard-shortcuts-help {
-  display: grid;
-  grid-gap: 0.5em 1.25em;
-  grid-template-columns: repeat(3, 1fr);
+  box-sizing: border-box;
+  padding: 1em;
+  overflow-x: hidden;
+  overflow-y: auto;
+  width: 80vw;
+  max-width: 1500px;
+  max-height: 85vh !important; // overrides a default modal !important for extra space
+
+  .keyboard-shortcuts-help__container {
+    columns: auto 20em;
+    section {
+      display: inline-block;
+      margin-bottom: 1.5em;
+      width: 100%;
+    }
+  }
+
   &:focus {
     outline: none;
+  }
+
+  kbd:first-child {
+    margin-left: 0;
   }
 
   @for $i from 1 through 25 {
@@ -51,8 +67,7 @@
 
   ul {
     list-style: none;
-    margin-bottom: 2rem;
-    margin-left: 0;
+    margin: 0;
 
     li {
       align-items: center;
@@ -62,7 +77,6 @@
     }
 
     span {
-      background: var(--primary-very-low);
       border-radius: 3px;
       display: inline-flex;
       margin: 0 6px;

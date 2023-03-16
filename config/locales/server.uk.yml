@@ -634,10 +634,6 @@ uk:
             duration_minutes:
               cannot_be_zero: "має бути більше 0."
               exceeds_maximum: "не може бути більше 20 років."
-        translation_overrides:
-          attributes:
-            value:
-              invalid_interpolation_keys: 'Наступні ключі інтерполяції недійсні: "%{keys}"'
         watched_word:
           attributes:
             word:
@@ -1693,7 +1689,6 @@ uk:
     enable_discourse_connect: "Увімкнути вхід через Discoursconnect (раніше «Дискурс SSO») (ПОПЕРЕДЖЕННЯ: АДРЕСИ ЕЛЕКТРОННОЇ ПОШТИ КОРИСТУВАЧІВ *ПОВИННІ* БУТИ ПІДТВЕРДЖЕНІ ЗОВНІШНІМ САЙТОМ!)"
     verbose_discourse_connect_logging: "Записувати всі дані діагностики, повʼязані з DiscourseConnect у файл <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     enable_discourse_connect_provider: "Використовувати протокол провайдера DiscourseConnect (раніше «Discourse SSO») у кінцевій точці /session/sso_provider, потрібно налаштувати discourse_connect_provider_secrets"
-    discourse_connect_url: "Адреса кінцевої точки DiscourseConnect (має містити http:// або https://)"
     discourse_connect_secret: "Секретний рядок, який використовується для криптографічної автентифікації інформації DiscourseConnect, переконайтеся, що він містить 10 символів або більше"
     discourse_connect_provider_secrets: "Список пар домен-секрет, які використовують DiscourseConnect. Переконайтеся, що секрет DiscourseConnect містить 10 символів або більше. Символ підстановки * можна використовувати для відповідності будь-якому домену або лише його частині (наприклад, *.example.com)."
     discourse_connect_overrides_bio: "Перезаписує інформацію в профіль користувача і не дозволяє користувачеві його змінювати"
@@ -2061,8 +2056,6 @@ uk:
     automatically_unpin_topics: "Автоматично відкріплювати теми, коли користувач досягає кінця."
     read_time_word_count: "Кількість слів за хвилину для обчислення орієнтовного часу читання."
     topic_page_title_includes_category: "На сторінці теми <a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>теґ title</a> сторінки містить назву розділу."
-    native_app_install_banner_ios: "Показує банер програми DiscourseHub на пристроях iOS звичайним користувачам (рівень довіри 1 і вище)."
-    native_app_install_banner_android: "Показує банер програми DiscourseHub на пристроях Android звичайним користувачам (рівень довіри 1 і вище)."
     app_association_android: "Вміст кінцевої точки <a href='%{base_path}/.well-known/assetlinks.json'>.well-known/assetlinks.json</a>, що використовується для Google Digital Asset Links API."
     app_association_ios: "Вміст кінцевої точки <a href='%{base_path}/apple-app-site-association'>apple-app-site-association</a>, що використовується для створення універсальних посилань між цим сайтом і програмами iOS."
     share_anonymized_statistics: "Діліться анонімною статистикою використання."
@@ -2095,11 +2088,8 @@ uk:
     delete_merged_stub_topics_after_days: "Кількість днів очікування до автоматичного видалення тем, з яких переміщено всі повідомлення. Встановіть 0, щоб ніколи не видаляти теми-заглушки."
     bootstrap_mode_min_users: "Мінімальна кількість користувачів, необхідна для вимкнення режиму початкового завантаження (встановіть 0, щоб вимкнути)"
     prevent_anons_from_downloading_files: "Заборонити анонімним користувачам завантажувати вкладення."
-    secure_media: "ЗАСТАРІЛО: замість цього використовуйте налаштування secure_uploads, яке буде видалено в Discourse 3.0."
     secure_uploads: 'Обмежити доступ до УСІХ завантажень (зображень, відео, аудіо, тексту, PDF-файлів, архівів та інших). Якщо ввімкнено параметр «Потрібний вхід», доступ до завантажень мають лише користувачі, які ввійшли в систему. В іншому випадку доступ буде обмежено лише для медіа-завантажень у приватних повідомленнях та приватних категоріях. ПОПЕРЕДЖЕННЯ. Цей параметр є складним і вимагає глибокого адміністративного розуміння. Дивіться тему <a target="_blank" href="https://meta.discourse.org/t/-/140017">the secure uploads topic on Meta</a> для отримання детальної інформації.'
-    secure_media_allow_embed_images_in_emails: "ЗАСТАРІЛО: використовуйте secure_uploads_allow_embed_images_in_emails, буде видалено в Discourse 3.0."
     secure_uploads_allow_embed_images_in_emails: "Дозволяти вбудовувати зображення з обмеженим доступом до листів, якщо їх розмір не перевищує значення, вказаного у параметрі 'secure uploads max email embed image size kb'."
-    secure_media_max_email_embed_image_size_kb: "ЗАСТАРІЛО: використовувати secure_uploads_max_email_embed_image_size_kb, буде видалено в Discourse 3.0."
     secure_uploads_max_email_embed_image_size_kb: "Обмеження розміру захищених зображень, які вставлятимуться в електронні листи, якщо ввімкнено параметр «захищені завантаження дозволяють вбудовувати в електронні листи». Якщо це налаштування не ввімкнено, це налаштування не матиме ефекту."
     slug_generation_method: "Виберіть метод генерації slug (рядок ідентифікатор). 'encoded' створить рядок кодування у відсотках. 'none' взагалі вимкне slug."
     enable_emoji: "Увімкнути емодзі"
@@ -2214,7 +2204,6 @@ uk:
     splash_screen: "Показувати екран тимчасового завантаження під час завантаження ресурсів сайту"
     default_sidebar_categories: "Вибрані розділи показуватимуться в секції «Розділи» бічної панелі."
     default_sidebar_tags: "Вибрані теґи показуватимуться в секції Теґи бічної панелі."
-    enable_new_user_profile_nav_groups: "ЕКСПЕРИМЕНТАЛЬНИЙ: користувачам вибраних груп буде показано навігаційне меню нового профілю користувача"
     errors:
       invalid_css_color: "Недійсний колір. Введіть назву кольору або шістнадцяткове значення."
       invalid_email: "Невірна адреса електронної пошти."
@@ -2271,7 +2260,6 @@ uk:
       search_tokenize_japanese_enabled: "Ви повинні вимкнути 'search_tokenize_japanese' перед увімкненням цього параметра."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Ви не можете ввімкнути DiscourseConnect, якщо застосовано 2FA."
       delete_rejected_email_after_days: "Цей параметр не може бути нижчим за параметр delete_email_logs_after_days або більшим за %{max}"
-      invalid_uncategorized_category_setting: "Розділ \"Без розділів\" не можна вибрати, якщо не дозволити теми без розділів"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2506,7 +2494,6 @@ uk:
     activated_by_staff: "Активовано командою обслуговування"
     new_user_typed_too_fast: "Новий користувач набирає текст занадто швидко"
     content_matches_auto_silence_regex: "Вміст відповідає автоматичному блокуванню за regex (регулярним виразом)"
-    content_matches_auto_block_regex: "Вміст відповідає автоматичному блоку regex (регулярний вираз)"
     username:
       short: "має бути найменше %{min} символів"
       long: "має містити не більше %{max} символів"
@@ -3212,14 +3199,6 @@ uk:
     user_automatically_silenced:
       title: "Користувача автоматично заблоковано"
       subject_template: "Новий користувач %{username} заблокований позначками спільноти"
-      text_body_template: |
-        Це автоматичне повідомлення.
-
-        Новий користувач [%{username}](%{user_url}) був автоматично заблокований, оскільки кілька користувачів позначили дописи %{username}.
-
-        Будь ласка, [перегляньте позначки](%{base_url}/admin/flags). Якщо %{username} було помилково заблоковано, натисніть кнопку зняття блокування на [сторінці керування цього користувача](%{user_url}).
-
-        Цей поріг можна змінити в налаштуваннях сайту `silence_new_user`.
     spam_post_blocked:
       title: "Заблоковано за спам-повідомлення"
       subject_template: "Повідомлення користувача %{username} заблоковані через повторні посилання"
@@ -3302,9 +3281,6 @@ uk:
       many: "Попередження: щодня ми надсилаємо максимум %{count} листів. Перевірте сайт, щоб побачити ті, які можуть бути затримані."
       other: "Попередження: щодня ми надсилаємо максимум %{count} листів. Перевірте сайт, щоб побачити ті, які можуть бути затримані."
     in_reply_to: "У відповідь на"
-    unsubscribe:
-      title: "Відписатися"
-      description: "Не зацікавлені в отриманні цих листів? Немає проблем! Натисніть нижче, щоб відписатися назавжди:"
     reply_by_email: "[Відвідайте тему](%{base_url}%{url}) або надішліть відповідь на цей електронний лист, щоб відповісти."
     reply_by_email_pm: "[Відвідайте повідомлення](%{base_url}%{url}) або дайте відповідь на це повідомлення електронною поштою, щоб відповісти на %{participants}."
     only_reply_by_email: "Надіслати відповідь на це повідомлення електронною поштою."
@@ -3587,7 +3563,6 @@ uk:
       liked_received: "Отримані вподобання"
       new_users: "Нові користувачі"
       popular_topics: "Популярні теми"
-      follow_topic: "Слідкуйте за цією темою"
       join_the_discussion: "Читати більше"
       popular_posts: "Популярні дописи"
       more_new: "Нове для вас"
@@ -3795,8 +3770,6 @@ uk:
       ## [Ласкаво просимо до %{title}](#welcome)
       Потрібно зареєструватися. Створіть обліковий запис або увійдіть, щоб продовжити.
     welcome_message_invite_only: "## [Ласкаво просимо до %{title}](#welcome) \nПотрібен обліковий запис. Будь ласка, попросіть когось з учасників запросити вас, або увійдіть, щоб продовжити.\n"
-  deleted: "видалено"
-  image: "зображення"
   upload:
     edit_reason: "завантажені локальні копії зображень"
     unauthorized: "На жаль, ви не можете завантажити файл даного типу (список дозволених типів файлів: %{authorized_extensions})."
@@ -4217,10 +4190,7 @@ uk:
       message: "<p> Ми повторно надіслали електронний лист для активації на <b>%{email}</b>"
   safe_mode:
     title: "Увійти в безпечний режим"
-    description: "Безпечний режим дозволяє тестувати ваш сайт без завантаження втулків або тем."
     no_themes: "Вимкнути компоненти тем і теми"
-    no_unofficial_plugins: "Вимкнути неофіційні втулки"
-    no_plugins: "Вимкнути всі втулки"
     enter: "Увійти в безпечний режим"
     must_select: "Ви повинні вибрати принаймні одну опцію для входу в безпечний режим."
   wizard:
@@ -4305,7 +4275,6 @@ uk:
           <p>Насолоджуйтесь, бажаємо успіхів <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>у створенні вашої нової спільноти!</a></p>
   search_logs:
     graph_title: "Кількість пошуків"
-  joined: "Приєднався(лась)"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} згадав вас у "%{topic}" - %{site_title}'
@@ -4370,50 +4339,29 @@ uk:
         category: налаштування розділу
     actions:
       agree:
-        title: "Погоджуюся…"
-      agree_and_keep:
-        title: "Залишити допис"
-        description: "Погодитися з прапором і залишити допис без змін"
-      agree_and_keep_hidden:
-        title: "Залишити допис прихованим"
-        description: "Погодитись з прапором і залишити допис прихованим."
+        title: "Так"
       agree_and_suspend:
-        title: "Призупинити користувача"
         description: "Погодитися з прапором та призупинити користувача."
       agree_and_silence:
-        title: "Заблокувати користувача"
         description: "Погодитися з прапором та заблокувати користувача."
       agree_and_restore:
-        title: "Відновити допис"
         description: "Відновити допис, щоб усі користувачі могли його бачити."
-      agree_and_hide:
-        title: "Сховати допис"
-        description: "Приховати цей допис і автоматично надіслати користувачеві повідомлення з проханням відредагувати його."
       delete_single:
         title: "Видалити"
       delete:
         title: "Видалити…"
-      delete_and_ignore:
-        title: "Видалити допис та Ігнорувати"
-        description: "Видалити допис; якщо це перший допис, видалиться також тема"
       delete_and_ignore_replies:
-        title: "Видалити допис + Відповіді та ігнорувати"
-        description: "Видалити допис і всі відповіді до нього; якщо це перший допис, то видалити також тему"
         confirm: "Ви впевнені, що хочете також видалити відповіді до посту?"
-      delete_and_agree:
-        title: "Видалити допис і погодитися"
-        description: "Видалити допис; якщо це перший допис, то видалиться також тема"
       delete_and_agree_replies:
-        title: "Видалити допис + Відповіді та Погодитися"
-        description: "Видалити допис і всі відповіді до нього; якщо це перший допис, то видалити також тему"
         confirm: "Ви впевнені, що хочете також видалити відповіді до допису?"
       disagree_and_restore:
-        title: "Відхилити та відновити допис"
         description: "Відновити допис, щоб усі користувачі могли його бачити."
       disagree:
-        title: "Відмовити"
+        title: "Ні"
       ignore:
         title: "Ігнорувати"
+      ignore_and_do_nothing:
+        title: "Нічого не робити"
       approve:
         title: "Схвалити"
       approve_post:

@@ -135,7 +135,7 @@ module CookedProcessorMixin
 
   def get_size_from_attributes(img)
     w, h = img["width"].to_i, img["height"].to_i
-    return w, h unless w <= 0 || h <= 0
+    return w, h if w > 0 && h > 0
     # if only width or height are specified attempt to scale image
     if w > 0 || h > 0
       w = w.to_f
@@ -193,7 +193,7 @@ module CookedProcessorMixin
     if upload && upload.width && upload.width > 0
       @size_cache[url] = [upload.width, upload.height]
     else
-      @size_cache[url] = FastImage.size(absolute_url)
+      @size_cache[url] = FinalDestination::FastImage.size(absolute_url)
     end
   rescue Zlib::BufError, URI::Error, OpenSSL::SSL::SSLError
     # FastImage.size raises BufError for some gifs, leave it.

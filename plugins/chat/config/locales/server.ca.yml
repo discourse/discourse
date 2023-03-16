@@ -24,9 +24,8 @@ ca:
         ignore:
           title: "Ignora"
     channel:
-      statuses:
-        closed: "Tancat"
-        open: "Obre"
+      dm_title:
+        single_user: "%{username}"
   discourse_push_notifications:
     popup:
       chat_mention:

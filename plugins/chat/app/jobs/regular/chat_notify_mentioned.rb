@@ -65,7 +65,7 @@ module Jobs
         username: @creator.username,
         tag: Chat::ChatNotifier.push_notification_tag(:mention, @chat_channel.id),
         excerpt: @chat_message.push_notification_excerpt,
-        post_url: "#{@chat_channel.relative_url}?messageId=#{@chat_message.id}",
+        post_url: "#{@chat_channel.relative_url}/#{@chat_message.id}",
       }
 
       translation_prefix =
@@ -100,9 +100,9 @@ module Jobs
       payload
     end
 
-    def create_notification!(membership, notification_data)
+    def create_notification!(membership, mention, mention_type)
+      notification_data = build_data_for(membership, identifier_type: mention_type)
       is_read = Chat::ChatNotifier.user_has_seen_message?(membership, @chat_message.id)
-
       notification =
         Notification.create!(
           notification_type: Notification.types[:chat_mention],
@@ -111,26 +111,23 @@ module Jobs
           data: notification_data.to_json,
           read: is_read,
         )
-      ChatMention.create!(
-        notification: notification,
-        user: membership.user,
-        chat_message: @chat_message,
-      )
+
+      mention.update!(notification: notification)
     end
 
-    def send_notifications(membership, notification_data, os_payload)
-      create_notification!(membership, notification_data)
+    def send_notifications(membership, mention_type)
+      payload = build_payload_for(membership, identifier_type: mention_type)
 
       if !membership.desktop_notifications_never? && !membership.muted?
         MessageBus.publish(
           "/chat/notification-alert/#{membership.user_id}",
-          os_payload,
+          payload,
           user_ids: [membership.user_id],
         )
       end
 
       if !membership.mobile_notifications_never? && !membership.muted?
-        PostAlerter.push_notification(membership.user, os_payload)
+        PostAlerter.push_notification(membership.user, payload)
       end
     end
 
@@ -138,10 +135,11 @@ module Jobs
       memberships = get_memberships(user_ids)
 
       memberships.each do |membership|
-        notification_data = build_data_for(membership, identifier_type: mention_type)
-        payload = build_payload_for(membership, identifier_type: mention_type)
-
-        send_notifications(membership, notification_data, payload)
+        mention = ChatMention.find_by(user: membership.user, chat_message: @chat_message)
+        if mention.present?
+          create_notification!(membership, mention, mention_type)
+          send_notifications(membership, mention_type)
+        end
       end
     end
   end

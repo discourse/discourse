@@ -23,7 +23,7 @@ Hosting Rails applications is complicated. Even if you already have Postgres, Re
 
 - [Postgres 13](https://www.postgresql.org/download/)
 - [Redis 7](https://redis.io/download)
-- [Ruby 3.1+](https://www.ruby-lang.org/en/downloads/)
+- [Ruby 3.2+](https://www.ruby-lang.org/en/downloads/)
 ## Security
 
 We take security very seriously at Discourse, and all our code is 100% open source and peer reviewed. Please read [our security guide](https://github.com/discourse/discourse/blob/main/docs/SECURITY.md) for an overview of security measures in Discourse.

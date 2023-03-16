@@ -221,7 +221,7 @@
             display: block;
             &:hover,
             &:focus {
-              background-color: var(--highlight-medium);
+              background-color: var(--highlight-bg);
             }
             .search-category {
               display: flex;
@@ -279,6 +279,12 @@
 }
 
 .reply-where-modal {
+  .dialog-content {
+    width: 100%;
+    min-width: unset;
+    max-width: 30em;
+  }
+
   .dialog-footer {
     display: block;
   }
@@ -291,19 +297,69 @@
     overflow: hidden;
     width: 100%;
 
-    &:first-of-type {
-      margin-top: 0.25em;
+    &.dialog-close {
+      display: none;
     }
 
-    &.btn-reply-on-original,
+    &.btn-reply-on-original {
+      --text-color: var(--secondary);
+    }
+
+    &.btn-reply-where__cancel {
+      padding-left: 0;
+      margin: 0;
+    }
+
     &.btn-reply-here {
-      font-size: var(--font-up-1);
-      line-height: var(--line-height-medium);
-      font-weight: bold;
+      --text-color: var(--primary);
+      .discourse-no-touch & {
+        &:hover {
+          --text-color: var(--secondary);
+        }
+      }
+    }
+
+    &.btn-reply-where {
+      min-height: 3em; // for situations when there are no categories/tags
     }
 
     .topic-title {
-      font-weight: normal;
+      .d-icon {
+        color: var(--text-color);
+        margin: 0;
+      }
+    }
+
+    .fancy-title {
+      display: inline-block;
+      width: 100%;
+
+      @include ellipsis;
+    }
+
+    .topic-title__top-line {
+      display: flex;
+      align-items: baseline;
+      color: var(--text-color);
+      font-size: var(--font-up-1);
+    }
+
+    .topic-statuses {
+      display: flex;
+      font-size: 0.95em;
+    }
+
+    .topic-title__bottom-line {
+      margin-top: 0.15em;
+      display: flex;
+      align-items: baseline;
+      .discourse-tags {
+        font-size: var(--font-down-1);
+      }
+      .category-name,
+      .discourse-tag {
+        color: var(--text-color);
+      }
     }
   }
 }
@@ -703,4 +759,15 @@
   button {
     top: 21px;
   }
+}
+
+.json-editor-btn-delete {
+  @extend .btn-danger;
+  @extend .no-text;
+}
+
+.json-editor-btn-collapse {
+  @extend .no-text;
+  @extend .btn-flat;
+  @extend .btn-small;
 }

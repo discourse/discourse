@@ -1,7 +1,10 @@
-import { createPreviewComponent, drawHeader } from "wizard/lib/preview";
+import { drawHeader } from "wizard/lib/preview";
 import { observes } from "discourse-common/utils/decorators";
+import WizardPreviewBaseComponent from "./wizard-preview-base";
 
-export default createPreviewComponent(400, 100, {
+export default WizardPreviewBaseComponent.extend({
+  width: 400,
+  height: 100,
   image: null,
 
   @observes("field.value")

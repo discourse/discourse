@@ -141,7 +141,7 @@ aside.onebox {
       color: var(--tertiary);
     }
 
-    img {
+    img:not(.avatar, .onebox-avatar-inline) {
       max-height: 170px;
       max-width: 20%;
       @media all and (max-width: 600px) {
@@ -406,7 +406,7 @@ pre.onebox code ol.lines li {
 }
 
 pre.onebox code li.selected {
-  background-color: var(--highlight-low-or-medium);
+  background-color: var(--highlight-bg);
 }
 
 pre.onebox code {
@@ -921,7 +921,7 @@ iframe.vimeo-onebox {
 
 .video-container {
   .notice {
-    background-color: var(--highlight-medium);
+    background-color: var(--highlight-bg);
     padding: 10px 20px;
     position: absolute;
     width: calc(100% - 40px);

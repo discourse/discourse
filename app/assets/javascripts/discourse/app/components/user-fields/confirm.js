@@ -1,3 +1,3 @@
-import Component from "@ember/component";
+import UserFieldBase from "./base";
 
-export default Component.extend({});
+export default class UserFieldConfirm extends UserFieldBase {}

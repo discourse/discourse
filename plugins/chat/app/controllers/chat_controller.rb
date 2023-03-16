@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Chat::ChatController < Chat::ChatBaseController
-  PAST_MESSAGE_LIMIT = 20
+  PAST_MESSAGE_LIMIT = 40
   FUTURE_MESSAGE_LIMIT = 40
   PAST = "past"
   FUTURE = "future"
@@ -260,13 +260,9 @@ class Chat::ChatController < Chat::ChatBaseController
   def delete
     guardian.ensure_can_delete_chat!(@message, @chatable)
 
-    updated = @message.trash!(current_user)
-    if updated
-      ChatPublisher.publish_delete!(@chat_channel, @message)
-      render json: success_json
-    else
-      render_json_error(@message)
-    end
+    ChatMessageDestroyer.new.trash_message(@message, current_user)
+
+    head :ok
   end
 
   def restore
@@ -450,7 +446,7 @@ class Chat::ChatController < Chat::ChatBaseController
       ChatMessage
         .includes(in_reply_to: [:user, chat_webhook_event: [:incoming_chat_webhook]])
         .includes(:revisions)
-        .includes(:user)
+        .includes(user: :primary_group)
         .includes(chat_webhook_event: :incoming_chat_webhook)
         .includes(reactions: :user)
         .includes(:bookmarks)

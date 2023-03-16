@@ -20,7 +20,12 @@ class ChatChannelSerializer < ApplicationSerializer
              :archive_topic_id,
              :memberships_count,
              :current_user_membership,
-             :meta
+             :meta,
+             :threading_enabled
+
+  def threading_enabled
+    SiteSetting.enable_experimental_chat_threaded_discussions && object.threading_enabled
+  end
 
   def initialize(object, opts)
     super(object, opts)
@@ -105,6 +110,7 @@ class ChatChannelSerializer < ApplicationSerializer
   def meta
     {
       message_bus_last_ids: {
+        channel_message_bus_last_id: MessageBus.last_id("/chat/#{object.id}"),
         new_messages:
           @opts[:new_messages_message_bus_last_id] ||
             MessageBus.last_id(ChatPublisher.new_messages_message_bus_channel(object.id)),

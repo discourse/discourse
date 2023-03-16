@@ -1,116 +1,113 @@
-{{#if this.currentUser.redesigned_user_page_nav_enabled}}
-  <DSection @pageClass="user-preferences" />
-  <div class="user-navigation user-navigation-secondary">
-    <HorizontalOverflowNav @ariaLabel="User secondary - preferences">
-      <UserNav::PreferencesNav
-        @currentUser={{this.currentUser}}
-        @model={{this.model}}
-        @siteSettings={{this.siteSettings}}
-        @ariaCurrentContext="subNav"
-      />
-    </HorizontalOverflowNav>
-  </div>
-{{else}}
-  <DSection @pageClass="user-preferences" @class="user-secondary-navigation">
-    <MobileNav
-      @class="preferences-nav"
-      @desktopClass="preferences-list action-list nav-stacked"
+<DSection @pageClass="user-preferences" />
+
+<div class="user-navigation user-navigation-secondary">
+  <HorizontalOverflowNav @ariaLabel="User secondary - preferences">
+    <DNavigationItem
+      @route="preferences.account"
+      @class="user-nav__preferences-account"
+      @ariaCurrentContext="subNav"
     >
-      <li class="nav-account">
-        <LinkTo @route="preferences.account">
-          {{i18n "user.preferences_nav.account"}}
-        </LinkTo>
-      </li>
-      <li class="nav-security">
-        <LinkTo @route="preferences.security">
-          {{i18n "user.preferences_nav.security"}}
-        </LinkTo>
-      </li>
-      <li class="nav-profile">
-        <LinkTo @route="preferences.profile">
-          {{i18n "user.preferences_nav.profile"}}
-        </LinkTo>
-      </li>
-      <li class="nav-emails">
-        <LinkTo @route="preferences.emails">
-          {{i18n "user.preferences_nav.emails"}}
-        </LinkTo>
-      </li>
-      <li class="nav-notifications">
-        <LinkTo @route="preferences.notifications">
-          {{i18n "user.preferences_nav.notifications"}}
-        </LinkTo>
-      </li>
-      {{#if this.model.can_change_tracking_preferences}}
-        <li class="indent nav-categories">
-          <LinkTo @route="preferences.categories">
-            {{i18n "user.preferences_nav.categories"}}
-          </LinkTo>
-        </li>
-      {{/if}}
-      <li class="indent nav-users">
-        <LinkTo @route="preferences.users">
-          {{i18n "user.preferences_nav.users"}}
-        </LinkTo>
-      </li>
-      {{#if
-        (and
-          this.model.can_change_tracking_preferences
-          this.siteSettings.tagging_enabled
-        )
-      }}
-        <li class="indent nav-tags">
-          <LinkTo @route="preferences.tags">
-            {{i18n "user.preferences_nav.tags"}}
-          </LinkTo>
-        </li>
-      {{/if}}
-      <li class="nav-interface">
-        <LinkTo @route="preferences.interface">
-          {{i18n "user.preferences_nav.interface"}}
-        </LinkTo>
-      </li>
+      {{d-icon "user"}}
+      <span>{{i18n "user.preferences_nav.account"}}</span>
+    </DNavigationItem>
 
-      {{#if (not (eq this.siteSettings.navigation_menu "legacy"))}}
-        <li class="indent nav-sidebar">
-          <LinkTo @route="preferences.sidebar">
-            {{i18n "user.preferences_nav.sidebar"}}
-          </LinkTo>
-        </li>
-      {{/if}}
+    <DNavigationItem
+      @route="preferences.security"
+      @class="user-nav__preferences-security"
+      @ariaCurrentContext="subNav"
+    >
+      {{d-icon "lock"}}
+      <span>{{i18n "user.preferences_nav.security"}}</span>
+    </DNavigationItem>
 
-      <PluginOutlet
-        @name="user-preferences-nav-under-interface"
-        @tagName="span"
-        @connectorTagName="div"
-        @args={{hash model=this.model}}
-      />
+    <DNavigationItem
+      @route="preferences.profile"
+      @class="user-nav__preferences-profile"
+      @ariaCurrentContext="subNav"
+    >
+      {{d-icon "user"}}
+      <span>{{i18n "user.preferences_nav.profile"}}</span>
+    </DNavigationItem>
 
-      {{#if this.model.userApiKeys}}
-        <li class="nav-apps">
-          <LinkTo @route="preferences.apps">
-            {{i18n "user.preferences_nav.apps"}}
-          </LinkTo>
-        </li>
-      {{/if}}
+    <DNavigationItem
+      @route="preferences.emails"
+      @class="user-nav__preferences-emails"
+      @ariaCurrentContext="subNav"
+    >
+      {{d-icon "envelope"}}
+      <span>{{i18n "user.preferences_nav.emails"}}</span>
+    </DNavigationItem>
 
-      <PluginOutlet
-        @name="user-preferences-nav"
-        @tagName="span"
-        @connectorTagName="li"
-        @args={{hash model=this.model}}
-      />
-    </MobileNav>
-  </DSection>
-{{/if}}
+    <DNavigationItem
+      @route="preferences.notifications"
+      @class="user-nav__preferences-notifications"
+      @ariaCurrentContext="subNav"
+    >
+      {{d-icon "bell"}}
+      <span>{{i18n "user.preferences_nav.notifications"}}</span>
+    </DNavigationItem>
+
+    {{#if this.model.can_change_tracking_preferences}}
+      <DNavigationItem
+        @route="preferences.tracking"
+        @class="user-nav__preferences-tracking"
+        @ariaCurrentContext="subNav"
+      >
+        {{d-icon "plus"}}
+        <span>{{i18n "user.preferences_nav.tracking"}}</span>
+      </DNavigationItem>
+    {{/if}}
+
+    <DNavigationItem
+      @route="preferences.users"
+      @class="user-nav__preferences-users"
+      @ariaCurrentContext="subNav"
+    >
+      {{d-icon "users"}}
+      <span>{{i18n "user.preferences_nav.users"}}</span>
+    </DNavigationItem>
+
+    <DNavigationItem
+      @route="preferences.interface"
+      @class="user-nav__preferences-interface"
+      @ariaCurrentContext="subNav"
+    >
+      {{d-icon "desktop"}}
+      <span>{{i18n "user.preferences_nav.interface"}}</span>
+    </DNavigationItem>
+
+    {{#if (not (eq this.siteSettings.navigation_menu "legacy"))}}
+      <DNavigationItem
+        @route="preferences.sidebar"
+        @class="user-nav__preferences-sidebar"
+        @ariaCurrentContext="subNav"
+      >
+        {{d-icon "bars"}}
+        <span>{{i18n "user.preferences_nav.sidebar"}}</span>
+      </DNavigationItem>
+    {{/if}}
+
+    <PluginOutlet
+      @name="user-preferences-nav-under-interface"
+      @connectorTagName="div"
+      @outletArgs={{hash model=this.model}}
+    />
+    <PluginOutlet
+      @name="user-preferences-nav"
+      @connectorTagName="li"
+      @outletArgs={{hash model=this.model}}
+    />
+  </HorizontalOverflowNav>
+</div>
 
 <section class="user-content user-preferences" id="user-content">
-  <PluginOutlet
-    @name="above-user-preferences"
-    @tagName="span"
-    @connectorTagName="div"
-    @args={{hash model=this.model}}
-  />
+  <span>
+    <PluginOutlet
+      @name="above-user-preferences"
+      @connectorTagName="div"
+      @outletArgs={{hash model=this.model}}
+    />
+  </span>
 
   <form class="form-vertical">
     {{outlet}}

@@ -2,6 +2,10 @@
 
 #mixin for all guardian methods dealing with tagging permissions
 module TagGuardian
+  def can_see_tag?(_tag)
+    true
+  end
+
   def can_create_tag?
     SiteSetting.tagging_enabled &&
       @user.has_trust_level_or_staff?(SiteSetting.min_trust_to_create_tag)
