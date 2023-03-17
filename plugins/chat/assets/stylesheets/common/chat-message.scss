@@ -129,16 +129,6 @@
       text-decoration: none;
     }
 
-    img.ytp-thumbnail-image,
-    img.youtube-thumbnail {
-      height: 100%;
-      max-height: unset;
-
-      &:hover {
-        border-radius: 0;
-      }
-    }
-
     // Automatic aspect-ratio mapping https://developer.mozilla.org/en-US/docs/Web/Media/images/aspect_ratio_mapping
     p img:not(.emoji) {
       max-width: 100%;

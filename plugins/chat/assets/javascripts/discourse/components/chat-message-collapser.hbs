@@ -24,7 +24,13 @@
           as |collapsed|
         >
           {{#unless collapsed}}
-            {{cooked.body}}
+            {{#if cooked.videoAttributes}}
+              <div class="chat-message-collapser-lazy-video">
+                <LazyVideo @videoAttributes={{cooked.videoAttributes}} />
+              </div>
+            {{else}}
+              {{cooked.body}}
+            {{/if}}
           {{/unless}}
         </Collapser>
       {{else}}
