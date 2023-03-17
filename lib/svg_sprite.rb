@@ -260,19 +260,10 @@ module SvgSprite
       .to_h
   end
 
-  def self.core_svg_sprites
-    @core_svg_sprites ||=
-      begin
-        CORE_SVG_SPRITES.map do |path|
-          { filename: File.basename(path, ".svg"), sprite: File.read(path) }
-        end
-      end
-  end
-
   def self.core_svgs
     @core_svgs ||=
-      core_svg_sprites.reduce({}) do |symbols, item|
-        symbols.merge!(symbols_for(*item.values_at(:filename, :sprite), strict: true))
+      CORE_SVG_SPRITES.reduce({}) do |symbols, path|
+        symbols.merge!(symbols_for(File.basename(path, ".svg"), File.read(path), strict: true))
       end
   end
 
