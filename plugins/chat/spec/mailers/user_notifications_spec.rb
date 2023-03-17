@@ -54,7 +54,10 @@ describe UserNotifications do
             user: another_participant,
             chat_channel: channel,
           )
-          DirectMessageUser.create!(direct_message: channel.chatable, user: another_participant)
+          Chat::DirectMessageUser.create!(
+            direct_message: channel.chatable,
+            user: another_participant,
+          )
           expected_subject =
             I18n.t(
               "user_notifications.chat_summary.subject.direct_message_from_1",
@@ -168,7 +171,7 @@ describe UserNotifications do
           # Sometimes it's not enough to just fabricate a message
           # and we have to create it like here. In this case all the necessary
           # db records for mentions and notifications will be created under the hood.
-          Chat::ChatMessageCreator.create(chat_channel: channel, user: sender, content: content)
+          Chat::MessageCreator.create(chat_channel: channel, user: sender, content: content)
         end
 
         it "returns email for @all mention by default" do

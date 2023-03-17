@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-RSpec.describe Chat::ServiceRunner do
+RSpec.describe ServiceRunner do
   class SuccessService
-    include Chat::Service::Base
+    include Service::Base
   end
 
   class FailureService
-    include Chat::Service::Base
+    include Service::Base
 
     step :fail_step
 
@@ -16,7 +16,7 @@ RSpec.describe Chat::ServiceRunner do
   end
 
   class FailedPolicyService
-    include Chat::Service::Base
+    include Service::Base
 
     policy :test
 
@@ -26,7 +26,7 @@ RSpec.describe Chat::ServiceRunner do
   end
 
   class SuccessPolicyService
-    include Chat::Service::Base
+    include Service::Base
 
     policy :test
 
@@ -36,7 +36,7 @@ RSpec.describe Chat::ServiceRunner do
   end
 
   class FailedContractService
-    include Chat::Service::Base
+    include Service::Base
 
     class Contract
       attribute :test
@@ -47,13 +47,13 @@ RSpec.describe Chat::ServiceRunner do
   end
 
   class SuccessContractService
-    include Chat::Service::Base
+    include Service::Base
 
     contract
   end
 
   class FailureWithModelService
-    include Chat::Service::Base
+    include Service::Base
 
     model :fake_model, :fetch_fake_model
 
@@ -65,7 +65,7 @@ RSpec.describe Chat::ServiceRunner do
   end
 
   class SuccessWithModelService
-    include Chat::Service::Base
+    include Service::Base
 
     model :fake_model, :fetch_fake_model
 
@@ -77,7 +77,7 @@ RSpec.describe Chat::ServiceRunner do
   end
 
   class FailureWithCollectionModelService
-    include Chat::Service::Base
+    include Service::Base
 
     model :fake_model, :fetch_fake_model
 
@@ -89,7 +89,7 @@ RSpec.describe Chat::ServiceRunner do
   end
 
   class SuccessWithCollectionModelService
-    include Chat::Service::Base
+    include Service::Base
 
     model :fake_model, :fetch_fake_model
 
@@ -109,7 +109,7 @@ RSpec.describe Chat::ServiceRunner do
     let(:actions) { "proc {}" }
     let(:object) do
       Class
-        .new(Chat::Api) do
+        .new(Chat::ApiController) do
           def request
             OpenStruct.new
           end
@@ -126,7 +126,7 @@ RSpec.describe Chat::ServiceRunner do
 
     it "runs the provided service in the context of a controller" do
       runner
-      expect(result).to be_a Chat::Service::Base::Context
+      expect(result).to be_a Service::Base::Context
       expect(result).to be_a_success
     end
 
