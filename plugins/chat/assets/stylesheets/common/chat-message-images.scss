@@ -21,7 +21,7 @@ $max_image_height: 150px;
   .chat-message-collapser
     .chat-message-collapser-header
     + div
-    .chat-message-collapser-youtube {
+    .chat-message-collapser-lazy-video {
     object-fit: contain;
     height: $max_image_height;
     width: calc(#{$max_image_height} / 9 * 16);
