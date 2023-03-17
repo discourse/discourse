@@ -1,0 +1,172 @@
+.lazy-video-container {
+  z-index: z("base");
+  position: relative;
+  display: block;
+  height: 0;
+  padding: 0 0 56.25% 0;
+  background-color: #000;
+  margin-bottom: 12px;
+
+  .video-thumbnail {
+    cursor: pointer;
+
+    img {
+      object-fit: cover;
+      width: 100%;
+    }
+
+    &:hover,
+    &:focus {
+      .icon {
+        transform: translate(-50%, -50%) scale(1.1);
+      }
+    }
+
+    &:focus {
+      outline: 5px auto Highlight;
+      outline: 5px auto -webkit-focus-ring-color;
+    }
+
+    &:active {
+      outline: 0px;
+    }
+  }
+
+  .title-container {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    top: 0;
+    z-index: 935;
+    width: 100%;
+    height: 60px;
+    overflow: hidden;
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(255, 0, 0, 0));
+
+    .title-wrapper {
+      overflow: hidden;
+      padding-inline: 20px;
+      padding-block: 10px;
+
+      .title-link {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: #fff;
+        text-decoration: none;
+        font-size: 18px;
+        font-family: Arial, sans-serif;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+
+  iframe {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  .icon {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    transition: 150ms;
+
+    // Default play button
+    background: svg-uri(
+      "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><path fill='#181818' d='M512 256c0 141.4-114.6 256-256 256S0 397.4 0 256S114.6 0 256 0S512 114.6 512 256zM188.3 147.1c-7.6 4.2-12.3 12.3-12.3 20.9V344c0 8.7 4.7 16.7 12.3 20.9s16.8 4.1 24.3-.5l144-88c7.1-4.4 11.5-12.1 11.5-20.5s-4.4-16.1-11.5-20.5l-144-88c-7.4-4.5-16.7-4.7-24.3-.5z'/></svg>"
+    );
+    width: 60px;
+    height: 60px;
+
+    &.youtube-icon {
+      width: 68px;
+      height: 48px;
+      background: svg-uri(
+        "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 68 48'><path d='M66.52,7.74c-0.78-2.93-2.49-5.41-5.42-6.19C55.79,.13,34,0,34,0S12.21,.13,6.9,1.55 C3.97,2.33,2.27,4.81,1.48,7.74C0.06,13.05,0,24,0,24s0.06,10.95,1.48,16.26c0.78,2.93,2.49,5.41,5.42,6.19 C12.21,47.87,34,48,34,48s21.79-0.13,27.1-1.55c2.93-0.78,4.64-3.26,5.42-6.19C67.94,34.95,68,24,68,24S67.94,13.05,66.52,7.74z' fill='#f00'></path><path d='M 45,24 27,14 27,34' fill='#fff'></path></svg>"
+      );
+    }
+
+    &.vimeo-icon {
+      width: 77px;
+      height: 44px;
+      background: svg-uri(
+        "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 37.042 21.167'><g transform='translate(.026013)'><rect x='-.026013' y='8.8818e-16' width='37.042' height='21.167' rx='1.3229' ry='1.3229' fill='#00adef' stroke-width='.33658'/><g transform='matrix(.39688 0 0 .39688 10.557 2.6459)' display='block' fill='none'><path d='m31.666 20c0 0.5928-0.3148 1.141-0.8269 1.4397l-20 11.667c-0.5155 0.3007-1.1524 0.3029-1.6699 0.0056-0.51749-0.2972-0.83656-0.8484-0.83656-1.4452v-23.333c0-0.59677 0.31907-1.148 0.83656-1.4452s1.1544-0.29509 1.6699 0.00561l20 11.667c0.5121 0.2987 0.8269 0.8469 0.8269 1.4396z' fill='#fff'/></g></g></svg>"
+      );
+    }
+
+    &.tiktok-icon {
+      width: 58px;
+      height: 64px;
+      background: svg-uri(
+        "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 29 32'> <g stroke='none' stroke-width='1' fill='none' fill-rule='evenodd' > <g id='编组-2' transform='translate(0.979236, 0.000000)' fill-rule='nonzero' > <path d='M10.7907645,12.33 L10.7907645,11.11 C10.3672629,11.0428887 9.93950674,11.0061284 9.51076448,10.9999786 C5.35996549,10.9912228 1.68509679,13.6810205 0.438667694,17.6402658 C-0.807761399,21.5995112 0.663505842,25.9093887 4.07076448,28.28 C1.51848484,25.5484816 0.809799545,21.5720834 2.26126817,18.1270053 C3.71273679,14.6819273 7.05329545,12.4115428 10.7907645,12.33 L10.7907645,12.33 Z' id='路径' fill='#25F4EE' ></path> <path d='M11.0207645,26.15 C13.3415287,26.1468776 15.2491662,24.3185414 15.3507645,22 L15.3507645,1.31 L19.1307645,1.31 C19.0536068,0.877682322 19.0167818,0.439130992 19.0207645,0 L13.8507645,0 L13.8507645,20.67 C13.764798,23.0003388 11.8526853,24.846212 9.52076448,24.85 C8.82390914,24.844067 8.13842884,24.6726969 7.52076448,24.35 C8.33268245,25.4749154 9.63346203,26.1438878 11.0207645,26.15 Z' id='路径' fill='#25F4EE' ></path> <path d='M26.1907645,8.33 L26.1907645,7.18 C24.79964,7.18047625 23.4393781,6.76996242 22.2807645,6 C23.2964446,7.18071769 24.6689622,7.99861177 26.1907645,8.33 L26.1907645,8.33 Z' id='路径' fill='#25F4EE' ></path> <path d='M22.2807645,6 C21.1394675,4.70033161 20.5102967,3.02965216 20.5107645,1.3 L19.1307645,1.3 C19.4909812,3.23268519 20.6300383,4.93223067 22.2807645,6 L22.2807645,6 Z' id='路径' fill='#FE2C55' ></path> <path d='M9.51076448,16.17 C7.51921814,16.1802178 5.79021626,17.544593 5.31721201,19.4791803 C4.84420777,21.4137677 5.74860956,23.4220069 7.51076448,24.35 C6.55594834,23.0317718 6.42106871,21.2894336 7.16162883,19.8399613 C7.90218896,18.3904889 9.39306734,17.4787782 11.0207645,17.48 C11.4547752,17.4854084 11.8857908,17.5527546 12.3007645,17.68 L12.3007645,12.42 C11.8769919,12.3565056 11.4492562,12.3230887 11.0207645,12.32 L10.7907645,12.32 L10.7907645,16.32 C10.3736368,16.2081544 9.94244934,16.1576246 9.51076448,16.17 Z' id='路径' fill='#FE2C55' ></path> <path d='M26.1907645,8.33 L26.1907645,12.33 C23.61547,12.3250193 21.107025,11.5098622 19.0207645,10 L19.0207645,20.51 C19.0097352,25.7544158 14.7551919,30.0000116 9.51076448,30 C7.56312784,30.0034556 5.66240321,29.4024912 4.07076448,28.28 C6.72698674,31.1368108 10.8608257,32.0771989 14.4914706,30.6505586 C18.1221155,29.2239183 20.5099375,25.7208825 20.5107645,21.82 L20.5107645,11.34 C22.604024,12.8399663 25.1155724,13.6445013 27.6907645,13.64 L27.6907645,8.49 C27.1865925,8.48839535 26.6839313,8.43477816 26.1907645,8.33 Z' id='路径' fill='#FE2C55' ></path> <path d='M19.0207645,20.51 L19.0207645,10 C21.1134087,11.5011898 23.6253623,12.3058546 26.2007645,12.3 L26.2007645,8.3 C24.6792542,7.97871265 23.3034403,7.17147491 22.2807645,6 C20.6300383,4.93223067 19.4909812,3.23268519 19.1307645,1.3 L15.3507645,1.3 L15.3507645,22 C15.2751521,23.8467664 14.0381991,25.4430201 12.268769,25.9772302 C10.4993389,26.5114403 8.58570942,25.8663815 7.50076448,24.37 C5.73860956,23.4420069 4.83420777,21.4337677 5.30721201,19.4991803 C5.78021626,17.564593 7.50921814,16.2002178 9.50076448,16.19 C9.934903,16.1938693 10.3661386,16.2612499 10.7807645,16.39 L10.7807645,12.39 C7.0223379,12.4536691 3.65653929,14.7319768 2.20094561,18.1976761 C0.745351938,21.6633753 1.47494493,25.6617476 4.06076448,28.39 C5.66809542,29.4755063 7.57158782,30.0378224 9.51076448,30 C14.7551919,30.0000116 19.0097352,25.7544158 19.0207645,20.51 Z' id='路径' fill='#000000' ></path> </g> </g> </svg> "
+      );
+    }
+  }
+}
+
+// TikTok iframe isn't fluid
+.lazy-video-container.tiktok-onebox {
+  width: 332px;
+  height: 745px;
+  padding: 0;
+
+  .video-thumbnail.tiktok img {
+    height: 745px;
+  }
+
+  iframe {
+    min-width: 332px;
+    height: 742px;
+    background-color: #fff;
+    border-top: 3px solid #fff;
+    border-radius: 9px;
+  }
+}
+
+// Temporary styles until we support chat
+
+.chat-message-content .lazy-video-container {
+  padding: 0;
+  margin-bottom: 0;
+  background-color: transparent;
+  object-fit: contain;
+  height: 175px;
+  text-overflow: ellipsis;
+
+  &::before {
+    content: attr(data-provider-name) " | " attr(data-video-title);
+    text-transform: capitalize;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    height: 25px;
+  }
+
+  a {
+    display: block;
+    height: 150px;
+
+    img {
+      height: 100%;
+      pointer-events: none;
+    }
+  }
+}
+
+.ytp-thumbnail-image {
+  max-height: 150px !important;
+  width: unset !important;
+  pointer-events: none !important;
+  display: block;
+}
