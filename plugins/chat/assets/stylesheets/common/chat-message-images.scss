@@ -26,4 +26,18 @@ $max_image_height: 150px;
     height: $max_image_height;
     width: calc(#{$max_image_height} / 9 * 16);
   }
+
+  // Prevent overflow of lazy-yt images
+  .lazyYT.lazyYT-container {
+    border: none;
+    a {
+      display: flex;
+    }
+    .ytp-thumbnail-image {
+      object-fit: contain;
+      height: $max_image_height;
+      width: calc(#{$max_image_height} / 9 * 16);
+      pointer-events: none;
+    }
+  }
 }
