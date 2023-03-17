@@ -331,7 +331,7 @@ export default class AdminUser extends User {
 
   @discourseComputed("suspended_by")
   suspendedBy(user) {
-    user ? AdminUser.create(user) : null;
+    return user ? AdminUser.create(user) : null;
   }
 
   @discourseComputed("silenced_by")
