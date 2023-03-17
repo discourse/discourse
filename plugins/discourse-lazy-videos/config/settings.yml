@@ -1,0 +1,17 @@
+plugins:
+  lazy_videos_enabled:
+    default: true
+    client: true
+    hidden: false
+  lazy_youtube_enabled:
+    default: true
+    client: true
+    hidden: false
+  lazy_vimeo_enabled:
+    default: true
+    client: true
+    hidden: false
+  lazy_tiktok_enabled:
+    default: false
+    client: true
+    hidden: false
