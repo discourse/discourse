@@ -94,8 +94,8 @@
                     @value={{this.accountName}}
                     @id="new-account-name"
                     @class={{value-entered this.accountName}}
-                    @aria-describedby="fullname-validation"
-                    @aria-invalid={{this.nameValidation.failed}}
+                    aria-describedby="fullname-validation"
+                    aria-invalid={{this.nameValidation.failed}}
                   />
                   <label class="alt-placeholder" for="new-account-name">
                     {{i18n "user.name.title"}}
@@ -134,8 +134,8 @@
                     id="new-account-password"
                     @autocomplete="current-password"
                     @capsLockOn={{this.capsLockOn}}
-                    @aria-describedby="password-validation"
-                    @aria-invalid={{this.passwordValidation.failed}}
+                    aria-describedby="password-validation"
+                    aria-invalid={{this.passwordValidation.failed}}
                   />
                   <label class="alt-placeholder" for="new-account-password">
                     {{i18n "user.password.title"}}
