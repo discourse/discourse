@@ -5,9 +5,12 @@ import { isEmpty } from "@ember/utils";
 import { isTesting } from "discourse-common/config/environment";
 import { schedule } from "@ember/runloop";
 import { action } from "@ember/object";
+import { inject as service } from "@ember/service";
 
 // This route is used for retrieving a topic based on params
 export default DiscourseRoute.extend({
+  composer: service(),
+
   // Avoid default model hook
   model(params) {
     params = params || {};
@@ -56,7 +59,6 @@ export default DiscourseRoute.extend({
     }
 
     const topicController = this.controllerFor("topic");
-    const composerController = this.controllerFor("composer");
     const topic = this.modelFor("topic");
     const postStream = topic.postStream;
 
@@ -105,7 +107,7 @@ export default DiscourseRoute.extend({
     }
 
     if (!isEmpty(topic.draft)) {
-      composerController.open({
+      this.composer.open({
         draft: Draft.getLocal(topic.draft_key, topic.draft),
         draftKey: topic.draft_key,
         draftSequence: topic.draft_sequence,
