@@ -318,6 +318,7 @@ module SvgSprite
               "Bad XML in custom sprite in theme with ID=#{theme_id}. Error info: #{e.inspect}",
             )
           end
+
           symbols
         end
       end
@@ -397,8 +398,8 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
 
     symbols = svgs_for(SiteSetting.default_theme_id)
     symbols.slice!(*icons) if only_available
-    symbols.delete_if! { |icon_id, sym| !icon_id.include?(keyword) } unless keyword.empty?
-    symbols.sort_by(&:first).map(&:second)
+    symbols.reject! { |icon_id, sym| !icon_id.include?(keyword) } unless keyword.empty?
+    symbols.sort_by(&:first).map { |icon_id, symbol| { id: icon_id, symbol: symbol } }
   end
 
   # For use in no_ember .html.erb layouts
