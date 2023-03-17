@@ -540,7 +540,7 @@ describe Chat::Message do
       expect(chat_upload_count([upload_1, upload_2])).to eq(0)
       expect(upload_references.count).to eq(2)
       expect(upload_references.map(&:target_id).uniq).to eq([chat_message.id])
-      expect(upload_references.map(&:target_type).uniq).to eq(["ChatMessage"])
+      expect(upload_references.map(&:target_type).uniq).to eq([Chat::Message.sti_name])
     end
 
     it "does nothing if the message record is new" do

@@ -13,7 +13,7 @@ module Chat
 
       # the model used when loading target_type column
       def self.polymorphic_class_for(name)
-        return Chat::Message if name == "ChatMessage"
+        return Chat::Message if name == Chat::Message.sti_name
         super(name)
       end
 

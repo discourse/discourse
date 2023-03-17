@@ -71,7 +71,7 @@ describe Jobs::Chat::ChannelDelete do
           "SELECT COUNT(*) FROM chat_uploads WHERE chat_message_id IN (#{@message_ids.join(",")})",
         ).first,
       upload_references:
-        UploadReference.where(target_id: @message_ids, target_type: "ChatMessage").count,
+        UploadReference.where(target_id: @message_ids, target_type: Chat::Message.sti_name).count,
       messages: Chat::Message.where(id: @message_ids).count,
       reactions: Chat::MessageReaction.where(chat_message_id: @message_ids).count,
     }

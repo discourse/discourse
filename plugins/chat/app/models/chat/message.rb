@@ -29,11 +29,13 @@ module Chat
              dependent: :destroy,
              foreign_key: :chat_message_id
     has_many :bookmarks,
-             -> { unscope(where: :bookmarkable_type).where(bookmarkable_type: "ChatMessage") },
+             -> {
+               unscope(where: :bookmarkable_type).where(bookmarkable_type: Chat::Message.sti_name)
+             },
              as: :bookmarkable,
              dependent: :destroy
     has_many :upload_references,
-             -> { unscope(where: :target_type).where(target_type: "ChatMessage") },
+             -> { unscope(where: :target_type).where(target_type: Chat::Message.sti_name) },
              dependent: :destroy,
              foreign_key: :target_id
     has_many :uploads, through: :upload_references, class_name: "::Upload"

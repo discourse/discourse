@@ -96,7 +96,7 @@ Fabricator(:chat_reviewable_message, class_name: "Chat::ReviewableMessage") do
   reviewable_by_moderator true
   type "ReviewableChatMessage"
   created_by { Fabricate(:user) }
-  target_type "ChatMessage"
+  target_type Chat::Message.sti_name
   target { Fabricate(:chat_message) }
   reviewable_scores { |p| [Fabricate.build(:reviewable_score, reviewable_id: p[:id])] }
 end

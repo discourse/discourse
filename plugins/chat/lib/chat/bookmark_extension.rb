@@ -6,7 +6,7 @@ module Chat
 
     prepended do
       def valid_bookmarkable_type
-        return true if self.bookmarkable_type == "ChatMessage"
+        return true if self.bookmarkable_type == Chat::Message.sti_name
         super if defined?(super)
       end
 

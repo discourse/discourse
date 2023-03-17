@@ -143,11 +143,11 @@ module Chat
       WHERE cmr.chat_message_id = mm.old_chat_message_id
     SQL
 
-      DB.exec(<<~SQL)
+      DB.exec(<<~SQL, target_type: Chat::Message.sti_name)
       UPDATE upload_references uref
       SET target_id = mm.new_chat_message_id
       FROM moved_chat_messages mm
-      WHERE uref.target_id = mm.old_chat_message_id AND uref.target_type = 'ChatMessage'
+      WHERE uref.target_id = mm.old_chat_message_id AND uref.target_type = :target_type
     SQL
 
       DB.exec(<<~SQL)
