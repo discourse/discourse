@@ -269,6 +269,13 @@ module SvgSprite
       end
   end
 
+  def self.core_svgs
+    @core_svgs ||=
+      core_svg_sprites.reduce({}) do |symbols, item|
+        symbols.merge!(symbols_for(*item.values_at(:filename, :sprite), strict: true))
+      end
+  end
+
   # Just used in tests
   def self.clear_plugin_svg_sprite_cache!
     @plugin_svg_sprites = nil
@@ -360,14 +367,6 @@ module SvgSprite
     sprites = core_svg_sprites
     sprites += custom_svg_sprites(theme_id) if theme_id.present?
     sprites
-  end
-
-  def self.core_svgs
-    @core_svgs ||=
-      CORE_SVG_SPRITES.reduce({}) do |symbols, filename|
-        svg_filename = "#{File.basename(filename, ".svg")}"
-        symbols.merge!(symbols_for(svg_filename, File.open(filename), strict: true))
-      end
   end
 
   def self.bundle(theme_id = nil)
