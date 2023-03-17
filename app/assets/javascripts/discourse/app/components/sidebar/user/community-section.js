@@ -16,8 +16,11 @@ import SidebarCommonCommunitySection from "discourse/components/sidebar/common/c
 
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
+import { inject as service } from "@ember/service";
 
 export default class SidebarUserCommunitySection extends SidebarCommonCommunitySection {
+  @service composer;
+
   constructor() {
     super(...arguments);
 
@@ -68,7 +71,7 @@ export default class SidebarUserCommunitySection extends SidebarCommonCommunityS
     }
 
     next(() => {
-      getOwner(this).lookup("controller:composer").open(composerArgs);
+      this.composer.open(composerArgs);
     });
   }
 }

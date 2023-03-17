@@ -1,10 +1,11 @@
 import { not, or, reads } from "@ember/object/computed";
 import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
-import { getOwner } from "discourse-common/lib/get-owner";
 import { htmlSafe } from "@ember/template";
+import { inject as service } from "@ember/service";
 
 export default Component.extend({
+  composer: service(),
   tagName: "a",
   classNameBindings: [":popup-tip", "good", "bad", "lastShownAt::hide"],
   attributeBindings: ["role", "ariaLabel", "tabindex"],
@@ -28,8 +29,7 @@ export default Component.extend({
 
   dismiss() {
     this.set("shownAt", null);
-    const composer = getOwner(this).lookup("controller:composer");
-    composer.clearLastValidatedAt();
+    this.composer.clearLastValidatedAt();
     this.element.previousElementSibling?.focus();
   },
 

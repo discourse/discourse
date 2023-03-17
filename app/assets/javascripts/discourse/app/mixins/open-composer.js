@@ -1,6 +1,7 @@
 // This mixin allows a route to open the composer
 import Composer from "discourse/models/composer";
 import Mixin from "@ember/object/mixin";
+import { getOwner } from "discourse-common/lib/get-owner";
 
 export default Mixin.create({
   openComposer(controller) {
@@ -13,13 +14,15 @@ export default Mixin.create({
       categoryId = null;
     }
 
-    this.controllerFor("composer").open({
-      prioritizedCategoryId: categoryId,
-      topicCategoryId: categoryId,
-      action: Composer.CREATE_TOPIC,
-      draftKey: controller.get("model.draft_key") || Composer.NEW_TOPIC_KEY,
-      draftSequence: controller.get("model.draft_sequence") || 0,
-    });
+    getOwner(this)
+      .lookup("service:composer")
+      .open({
+        prioritizedCategoryId: categoryId,
+        topicCategoryId: categoryId,
+        action: Composer.CREATE_TOPIC,
+        draftKey: controller.get("model.draft_key") || Composer.NEW_TOPIC_KEY,
+        draftSequence: controller.get("model.draft_sequence") || 0,
+      });
   },
 
   openComposerWithTopicParams(
@@ -29,15 +32,17 @@ export default Mixin.create({
     topicCategoryId,
     topicTags
   ) {
-    this.controllerFor("composer").open({
-      action: Composer.CREATE_TOPIC,
-      topicTitle,
-      topicBody,
-      topicCategoryId,
-      topicTags,
-      draftKey: controller.get("model.draft_key") || Composer.NEW_TOPIC_KEY,
-      draftSequence: controller.get("model.draft_sequence"),
-    });
+    getOwner(this)
+      .lookup("service:composer")
+      .open({
+        action: Composer.CREATE_TOPIC,
+        topicTitle,
+        topicBody,
+        topicCategoryId,
+        topicTags,
+        draftKey: controller.get("model.draft_key") || Composer.NEW_TOPIC_KEY,
+        draftSequence: controller.get("model.draft_sequence"),
+      });
   },
 
   openComposerWithMessageParams({
@@ -46,7 +51,7 @@ export default Mixin.create({
     topicBody = "",
     hasGroups = false,
   } = {}) {
-    this.controllerFor("composer").open({
+    getOwner(this).lookup("service:composer").open({
       action: Composer.PRIVATE_MESSAGE,
       recipients,
       topicTitle,
