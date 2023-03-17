@@ -10,8 +10,7 @@ class Bookmark < ActiveRecord::Base
     Set.new(DEFAULT_BOOKMARKABLES | DiscoursePluginRegistry.bookmarkables)
   end
 
-  def self.registered_bookmarkable_from_type(bookmarkable_type)
-    type = Bookmark.polymorphic_class_for(bookmarkable_type).name
+  def self.registered_bookmarkable_from_type(type)
     Bookmark.registered_bookmarkables.find { |bm| bm.model.name == type }
   end
 
@@ -47,7 +46,8 @@ class Bookmark < ActiveRecord::Base
   validates :name, length: { maximum: 100 }
 
   def registered_bookmarkable
-    Bookmark.registered_bookmarkable_from_type(self.bookmarkable_type)
+    type = Bookmark.polymorphic_class_for(self.bookmarkable_type).name
+    Bookmark.registered_bookmarkable_from_type(type)
   end
 
   def polymorphic_columns_present
