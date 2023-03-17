@@ -1,6 +1,6 @@
-import RESTAdapter from "discourse/adapters/rest";
+import RestAdapter from "discourse/adapters/rest";
 
-export default class ApiKey extends RESTAdapter {
+export default class ApiKey extends RestAdapter {
   jsonMode = true;
 
   basePath() {
