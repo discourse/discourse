@@ -2,10 +2,8 @@ import AdminUser from "admin/models/admin-user";
 import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 
-const IncomingEmail = EmberObject.extend({});
-
-IncomingEmail.reopenClass({
-  create(attrs) {
+export default class IncomingEmail extends EmberObject {
+  static create(attrs) {
     attrs = attrs || {};
 
     if (attrs.user) {
@@ -13,17 +11,17 @@ IncomingEmail.reopenClass({
     }
 
     return this._super(attrs);
-  },
+  }
 
-  find(id) {
+  static find(id) {
     return ajax(`/admin/email/incoming/${id}.json`);
-  },
+  }
 
-  findByBounced(id) {
+  static findByBounced(id) {
     return ajax(`/admin/email/incoming_from_bounced/${id}.json`);
-  },
+  }
 
-  findAll(filter, offset) {
+  static findAll(filter, offset) {
     filter = filter || {};
     offset = offset || 0;
 
@@ -35,11 +33,9 @@ IncomingEmail.reopenClass({
     }).then((incomings) =>
       incomings.map((incoming) => IncomingEmail.create(incoming))
     );
-  },
+  }
 
-  loadRawEmail(id) {
+  static loadRawEmail(id) {
     return ajax(`/admin/email/incoming/${id}/raw.json`);
-  },
-});
-
-export default IncomingEmail;
+  }
+}

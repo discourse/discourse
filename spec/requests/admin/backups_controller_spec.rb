@@ -137,7 +137,10 @@ RSpec.describe Admin::BackupsController do
 
   describe "#create" do
     context "when logged in as an admin" do
-      before { sign_in(admin) }
+      before do
+        sign_in(admin)
+        BackupRestore.stubs(:backup!)
+      end
 
       it "starts a backup" do
         BackupRestore.expects(:backup!).with(
@@ -148,6 +151,22 @@ RSpec.describe Admin::BackupsController do
         post "/admin/backups.json", params: { with_uploads: false, client_id: "foo" }
 
         expect(response.status).to eq(200)
+      end
+
+      context "with rate limiting enabled" do
+        before do
+          RateLimiter.clear_all!
+          RateLimiter.enable
+        end
+
+        after { RateLimiter.disable }
+
+        it "is rate limited" do
+          post "/admin/backups.json", params: { with_uploads: false, client_id: "foo" }
+          post "/admin/backups.json", params: { with_uploads: false, client_id: "foo" }
+
+          expect(response).to have_http_status :too_many_requests
+        end
       end
     end
 

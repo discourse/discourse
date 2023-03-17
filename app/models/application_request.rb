@@ -32,20 +32,14 @@ class ApplicationRequest < ActiveRecord::Base
   end
 
   def self.write_cache!(req_type, count, date)
-    id = req_id(date, req_type)
-    where(id: id).update_all(["count = count + ?", count])
-  end
-
-  def self.req_id(date, req_type, retries = 0)
     req_type_id = req_types[req_type]
 
-    create_or_find_by!(date: date, req_type: req_type_id).id
-  rescue StandardError # primary key violation
-    if retries == 0
-      req_id(date, req_type, 1)
-    else
-      raise
-    end
+    DB.exec(<<~SQL, date: date, req_type_id: req_type_id, count: count)
+      INSERT INTO application_requests (date, req_type, count)
+      VALUES (:date, :req_type_id, :count)
+      ON CONFLICT (date, req_type)
+      DO UPDATE SET count = application_requests.count + excluded.count
+    SQL
   end
 
   def self.stats

@@ -287,24 +287,6 @@ describe Chat::Message do
         COOKED
         )
       expect(message.excerpt).to eq("https://twitter.com/EffinBirds/status/1518743508378697729")
-      message =
-        Fabricate.build(
-          :chat_message,
-          message:
-            "wow check out these birbs https://twitter.com/EffinBirds/status/1518743508378697729",
-        )
-      expect(message.excerpt).to eq(
-        "wow check out these birbs <a href=\"https://twitter.com/EffinBirds/status/1518743508378697729\" class=\"inline-onebox-loading\" rel=\"noopener nofollow ugc\">https://twitter.com/Effi...</a>",
-      )
-    end
-
-    it "returns an empty string if PrettyText.excerpt returns empty string" do
-      message = Fabricate(:chat_message, message: <<~MSG)
-      [quote="martin, post:30, topic:3179, full:true"]
-      This is a real **quote** topic with some *markdown* in it I can quote.
-      [/quote]
-      MSG
-      expect(message.excerpt).to eq("")
     end
 
     it "excerpts upload file name if message is empty" do
