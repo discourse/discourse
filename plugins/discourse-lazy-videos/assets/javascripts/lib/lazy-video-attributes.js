@@ -1,5 +1,3 @@
-import { sanitize } from "discourse/lib/text";
-
 export default function getVideoAttributes(cooked) {
   if (!cooked.classList.contains("lazy-video-container")) {
     return {};
@@ -7,9 +5,9 @@ export default function getVideoAttributes(cooked) {
 
   const url = cooked.querySelector("a")?.getAttribute("href");
   const thumbnail = cooked.querySelector("img")?.getAttribute("src");
-  const title = sanitize(cooked.dataset.videoTitle);
+  const title = cooked.dataset.videoTitle;
   const providerName = cooked.dataset.providerName;
-  const id = sanitize(cooked.dataset.videoId);
+  const id = cooked.dataset.videoId;
 
   return { url, thumbnail, title, providerName, id };
 }
