@@ -5,7 +5,12 @@ RSpec.describe BookmarksController do
   let(:bookmark_message) { Fabricate(:chat_message) }
   let(:bookmark_user) { current_user }
 
-  before { sign_in(current_user) }
+  before do
+    register_test_bookmarkable(Chat::MessageBookmarkable)
+    sign_in(current_user)
+  end
+
+  after { DiscoursePluginRegistry.reset_register!(:bookmarkables) }
 
   context "when bookmarking a chat message" do
     describe "#create" do
