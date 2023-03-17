@@ -9,10 +9,14 @@
 
   .video-thumbnail {
     cursor: pointer;
+    overflow: hidden;
+    height: 0;
+    padding: 0 0 56.25% 0;
 
     img {
       object-fit: cover;
       width: 100%;
+      pointer-events: none;
     }
 
     &:hover,
@@ -131,42 +135,4 @@
     border-top: 3px solid #fff;
     border-radius: 9px;
   }
-}
-
-// Temporary styles until we support chat
-
-.chat-message-content .lazy-video-container {
-  padding: 0;
-  margin-bottom: 0;
-  background-color: transparent;
-  object-fit: contain;
-  height: 175px;
-  text-overflow: ellipsis;
-
-  &::before {
-    content: attr(data-provider-name) " | " attr(data-video-title);
-    text-transform: capitalize;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: block;
-    height: 25px;
-  }
-
-  a {
-    display: block;
-    height: 150px;
-
-    img {
-      height: 100%;
-      pointer-events: none;
-    }
-  }
-}
-
-.ytp-thumbnail-image {
-  max-height: 150px !important;
-  width: unset !important;
-  pointer-events: none !important;
-  display: block;
 }
