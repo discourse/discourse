@@ -3,8 +3,6 @@ globalThis.deprecationWorkflow.config = {
   // We're using RAISE_ON_DEPRECATION in environment.js instead of
   // `throwOnUnhandled` here since it is easier to toggle.
   workflow: [
-    { handler: "silence", matchId: "ember.built-in-components.reopen" },
-    { handler: "silence", matchId: "ember.built-in-components.import" },
     { handler: "silence", matchId: "implicit-injections" },
     { handler: "silence", matchId: "route-render-template" },
     { handler: "silence", matchId: "routing.transition-methods" },
