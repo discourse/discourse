@@ -2,6 +2,10 @@
 
 module Chat
   class ReviewableMessage < Reviewable
+    def serializer
+      Chat::ReviewableMessageSerializer
+    end
+
     def self.action_aliases
       {
         agree_and_keep_hidden: :agree_and_delete,
