@@ -47,7 +47,7 @@ module Jobs
           ::DB.exec("DELETE FROM chat_uploads WHERE chat_message_id IN (#{message_ids.join(",")})")
           ::UploadReference.where(
             target_id: message_ids,
-            target_type: Chat::Message.sti_name,
+            target_type: ::Chat::Message.sti_name,
           ).delete_all
 
           # only the messages and the channel are Trashable, everything else gets
