@@ -11,10 +11,8 @@ import {
   cannotPostAgain,
   durationTextFromSeconds,
 } from "discourse/helpers/slow-mode";
-import discourseComputed, {
-  observes,
-  on,
-} from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import { observes, on } from "@ember-decorators/object";
 import DiscourseURL from "discourse/lib/url";
 import Draft from "discourse/models/draft";
 import I18n from "I18n";
@@ -95,27 +93,33 @@ export function addComposerSaveErrorCallback(callback) {
   _composerSaveErrorCallbacks.push(callback);
 }
 
-export default Controller.extend({
-  topicController: controller("topic"),
-  router: service(),
-  dialog: service(),
+export default class ComposerController extends Controller {
+  @service router;
+  @service dialog;
+  @controller("topic") topicController;
 
-  checkedMessages: false,
-  messageCount: null,
-  showEditReason: false,
-  editReason: null,
-  scopedCategoryId: null,
-  prioritizedCategoryId: null,
-  lastValidatedAt: null,
-  isUploading: false,
-  isProcessingUpload: false,
-  topic: null,
-  linkLookup: null,
-  showPreview: true,
-  composerHeight: null,
-  forcePreview: and("site.mobileView", "showPreview"),
-  whisperOrUnlistTopic: or("isWhispering", "model.unlistTopic"),
-  categories: alias("site.categoriesList"),
+  checkedMessages = false;
+  messageCount = null;
+  showEditReason = false;
+  editReason = null;
+  scopedCategoryId = null;
+  prioritizedCategoryId = null;
+  lastValidatedAt = null;
+  isUploading = false;
+  isProcessingUpload = false;
+  topic = null;
+  linkLookup = null;
+  showPreview = true;
+  composerHeight = null;
+
+  @and("site.mobileView", "showPreview") forcePreview;
+  @or("isWhispering", "model.unlistTopic") whisperOrUnlistTopic;
+  @alias("site.categoriesList") categories;
+  @alias("topicController.model") topicModel;
+  @reads("currentUser.staff") isStaffUser;
+  @reads("currentUser.whisperer") whisperer;
+  @and("model.creatingTopic", "isStaffUser") canUnlistTopic;
+  @or("replyingToWhisper", "model.whisper") isWhispering;
 
   @on("init")
   _setupPreview() {
@@ -123,7 +127,7 @@ export default Controller.extend({
       ? false
       : this.keyValueStore.get("composer.showPreview") || "true";
     this.set("showPreview", val === "true");
-  },
+  }
 
   @computed(
     "model.loading",
@@ -138,18 +142,18 @@ export default Controller.extend({
       this.isProcessingUpload ||
       this._disableSubmit
     );
-  },
+  }
 
   set disableSubmit(value) {
     return this.set("_disableSubmit", value);
-  },
+  }
 
   @discourseComputed("showPreview")
   toggleText(showPreview) {
     return showPreview
       ? I18n.t("composer.hide_preview")
       : I18n.t("composer.show_preview");
-  },
+  }
 
   @observes("showPreview")
   showPreviewChanged() {
@@ -159,7 +163,7 @@ export default Controller.extend({
         value: this.showPreview,
       });
     }
-  },
+  }
 
   @discourseComputed(
     "model.replyingToTopic",
@@ -186,33 +190,31 @@ export default Controller.extend({
     }
 
     return "title";
-  },
+  }
 
-  showToolbar: computed({
-    get() {
-      const keyValueStore = getOwner(this).lookup("service:key-value-store");
-      const storedVal = keyValueStore.get("toolbar-enabled");
-      if (this._toolbarEnabled === undefined && storedVal === undefined) {
-        // iPhone 6 is 375, anything narrower and toolbar should
-        // be default disabled.
-        // That said we should remember the state
-        this._toolbarEnabled =
-          window.innerWidth > 370 && !this.capabilities.isAndroid;
-      }
-      return this._toolbarEnabled || storedVal === "true";
-    },
-    set(key, val) {
-      const keyValueStore = getOwner(this).lookup("service:key-value-store");
-      this._toolbarEnabled = val;
-      keyValueStore.set({
-        key: "toolbar-enabled",
-        value: val ? "true" : "false",
-      });
-      return val;
-    },
-  }),
+  @computed
+  get showToolbar() {
+    const keyValueStore = getOwner(this).lookup("service:key-value-store");
+    const storedVal = keyValueStore.get("toolbar-enabled");
+    if (this._toolbarEnabled === undefined && storedVal === undefined) {
+      // iPhone 6 is 375, anything narrower and toolbar should
+      // be default disabled.
+      // That said we should remember the state
+      this._toolbarEnabled =
+        window.innerWidth > 370 && !this.capabilities.isAndroid;
+    }
+    return this._toolbarEnabled || storedVal === "true";
+  }
 
-  topicModel: alias("topicController.model"),
+  set showToolbar(val) {
+    const keyValueStore = getOwner(this).lookup("service:key-value-store");
+    this._toolbarEnabled = val;
+    keyValueStore.set({
+      key: "toolbar-enabled",
+      value: val ? "true" : "false",
+    });
+    return val;
+  }
 
   @discourseComputed("model.canEditTitle", "model.creatingPrivateMessage")
   canEditTags(canEditTitle, creatingPrivateMessage) {
@@ -228,36 +230,29 @@ export default Controller.extend({
       this.site.can_tag_topics &&
       (!isPrivateMessage || this.site.can_tag_pms)
     );
-  },
+  }
 
   @discourseComputed("model.editingPost", "model.topic.details.can_edit")
   disableCategoryChooser(editingPost, canEditTopic) {
     return editingPost && !canEditTopic;
-  },
+  }
 
   @discourseComputed("model.editingPost", "model.topic.canEditTags")
   disableTagsChooser(editingPost, canEditTags) {
     return editingPost && !canEditTags;
-  },
-
-  isStaffUser: reads("currentUser.staff"),
-  whisperer: reads("currentUser.whisperer"),
-
-  canUnlistTopic: and("model.creatingTopic", "isStaffUser"),
+  }
 
   @discourseComputed("canWhisper", "replyingToWhisper")
   showWhisperToggle(canWhisper, replyingToWhisper) {
     return canWhisper && !replyingToWhisper;
-  },
+  }
 
   @discourseComputed("model.post")
   replyingToWhisper(repliedToPost) {
     return (
       repliedToPost && repliedToPost.post_type === this.site.post_types.whisper
     );
-  },
-
-  isWhispering: or("replyingToWhisper", "model.whisper"),
+  }
 
   @discourseComputed("model.action", "isWhispering", "model.privateMessage")
   saveIcon(modelAction, isWhispering, privateMessage) {
@@ -269,7 +264,7 @@ export default Controller.extend({
     }
 
     return SAVE_ICONS[modelAction];
-  },
+  }
 
   // Note we update when some other attributes like tag/category change to allow
   // text customizations to use those.
@@ -296,12 +291,12 @@ export default Controller.extend({
     }
 
     return SAVE_LABELS[modelAction];
-  },
+  }
 
   @discourseComputed("whisperer", "model.action")
   canWhisper(whisperer, modelAction) {
     return whisperer && modelAction === Composer.REPLY;
-  },
+  }
 
   _setupPopupMenuOption(callback) {
     let option = callback(this);
@@ -318,12 +313,12 @@ export default Controller.extend({
     }
 
     return option;
-  },
+  }
 
   @discourseComputed("model.requiredCategoryMissing", "model.replyLength")
   disableTextarea(requiredCategoryMissing, replyLength) {
     return requiredCategoryMissing && replyLength === 0;
-  },
+  }
 
   @discourseComputed("model.composeState", "model.creatingTopic", "model.post")
   popupMenuOptions(composeState) {
@@ -390,7 +385,7 @@ export default Controller.extend({
           .filter((o) => o)
       );
     }
-  },
+  }
 
   @discourseComputed("model.creatingPrivateMessage", "model.targetRecipients")
   showWarning(creatingPrivateMessage, usernames) {
@@ -410,12 +405,12 @@ export default Controller.extend({
     }
 
     return creatingPrivateMessage;
-  },
+  }
 
   @discourseComputed("model.topic.title")
   draftTitle(topicTitle) {
     return emojiUnescape(escapeExpression(topicTitle));
-  },
+  }
 
   @discourseComputed
   allowUpload() {
@@ -423,12 +418,12 @@ export default Controller.extend({
       this.currentUser.staff,
       this.siteSettings
     );
-  },
+  }
 
   @discourseComputed()
   uploadIcon() {
     return uploadIcon(this.currentUser.staff, this.siteSettings);
-  },
+  }
 
   // Use this to open the composer when you are not sure whether it is
   // already open and whether it already has a draft being worked on. Supports
@@ -448,7 +443,7 @@ export default Controller.extend({
   async focusComposer(opts = {}) {
     await this._openComposerForFocus(opts);
     this._focusAndInsertText(opts.insertText);
-  },
+  }
 
   async _openComposerForFocus(opts) {
     if (this.get("model.viewOpen")) {
@@ -477,7 +472,7 @@ export default Controller.extend({
         ...(opts.openOpts || {}),
       });
     }
-  },
+  }
 
   _focusAndInsertText(insertText) {
     scheduleOnce("afterRender", () => {
@@ -487,7 +482,7 @@ export default Controller.extend({
         this.model.appendText(insertText, null, { new_line: true });
       }
     });
-  },
+  }
 
   @action
   openIfDraft(event) {
@@ -510,30 +505,30 @@ export default Controller.extend({
     );
 
     return true;
-  },
+  }
 
   @action
   removeFullScreenExitPrompt() {
     this.set("model.showFullScreenExitPrompt", false);
-  },
+  }
 
   @action
   async cancel(event) {
     event?.preventDefault();
     await this.cancelComposer();
-  },
+  }
 
   @action
   cancelUpload(event) {
     event?.preventDefault();
     this.set("model.uploadCancelled", true);
-  },
+  }
 
   @action
   togglePreview(event) {
     event?.preventDefault();
     this.toggleProperty("showPreview");
-  },
+  }
 
   @action
   viewNewReply(event) {
@@ -543,332 +538,355 @@ export default Controller.extend({
     event?.preventDefault();
     DiscourseURL.routeTo(this.get("model.createdPost.url"));
     this.close();
-  },
+  }
 
-  actions: {
-    closeComposer() {
-      this.close();
-    },
+  @action
+  closeComposer() {
+    this.close();
+  }
 
-    async openComposer(options, post, topic) {
-      await this.open(options);
+  @action
+  async openComposer(options, post, topic) {
+    await this.open(options);
 
-      let url = post?.url || topic?.url;
-      const topicTitle = topic?.title;
+    let url = post?.url || topic?.url;
+    const topicTitle = topic?.title;
 
-      if (!url || !topicTitle) {
-        return;
-      }
+    if (!url || !topicTitle) {
+      return;
+    }
 
-      url = `${location.protocol}//${location.host}${url}`;
-      const link = `[${escapeExpression(topicTitle)}](${url})`;
-      const continueDiscussion = I18n.t("post.continue_discussion", {
-        postLink: link,
-      });
+    url = `${location.protocol}//${location.host}${url}`;
+    const link = `[${escapeExpression(topicTitle)}](${url})`;
+    const continueDiscussion = I18n.t("post.continue_discussion", {
+      postLink: link,
+    });
 
-      const reply = this.get("model.reply");
-      if (reply?.includes(continueDiscussion)) {
-        return;
-      }
+    const reply = this.get("model.reply");
+    if (reply?.includes(continueDiscussion)) {
+      return;
+    }
 
-      this.model.prependText(continueDiscussion, {
-        new_line: true,
-      });
-    },
+    this.model.prependText(continueDiscussion, {
+      new_line: true,
+    });
+  }
 
-    onPopupMenuAction(menuAction) {
-      this.send(menuAction);
-    },
+  @action
+  onPopupMenuAction(menuAction) {
+    this.send(menuAction);
+  }
 
-    storeToolbarState(toolbarEvent) {
-      this.set("toolbarEvent", toolbarEvent);
-    },
+  @action
+  storeToolbarState(toolbarEvent) {
+    this.set("toolbarEvent", toolbarEvent);
+  }
 
-    typed() {
-      this.checkReplyLength();
-      this.model.typing();
-    },
+  @action
+  typed() {
+    this.checkReplyLength();
+    this.model.typing();
+  }
 
-    cancelled() {
-      this.send("hitEsc");
-    },
+  @action
+  cancelled() {
+    this.send("hitEsc");
+  }
 
-    addLinkLookup(linkLookup) {
-      this.set("linkLookup", linkLookup);
-    },
+  @action
+  addLinkLookup(linkLookup) {
+    this.set("linkLookup", linkLookup);
+  }
 
-    afterRefresh($preview) {
-      const topic = this.get("model.topic");
-      const linkLookup = this.linkLookup;
+  @action
+  afterRefresh($preview) {
+    const topic = this.get("model.topic");
+    const linkLookup = this.linkLookup;
 
-      if (!topic || !linkLookup) {
-        return;
-      }
+    if (!topic || !linkLookup) {
+      return;
+    }
 
-      // Don't check if there's only one post
-      if (topic.posts_count === 1) {
-        return;
-      }
+    // Don't check if there's only one post
+    if (topic.posts_count === 1) {
+      return;
+    }
 
-      const post = this.get("model.post");
-      const $links = $("a[href]", $preview);
-      $links.each((idx, l) => {
-        const href = l.href;
-        if (href && href.length) {
-          // skip links added by watched words
-          if (l.dataset.word !== undefined) {
+    const post = this.get("model.post");
+    const $links = $("a[href]", $preview);
+    $links.each((idx, l) => {
+      const href = l.href;
+      if (href && href.length) {
+        // skip links added by watched words
+        if (l.dataset.word !== undefined) {
+          return true;
+        }
+
+        // skip links in quotes and oneboxes
+        for (let element = l; element; element = element.parentElement) {
+          if (
+            element.tagName === "DIV" &&
+            element.classList.contains("d-editor-preview")
+          ) {
+            break;
+          }
+
+          if (
+            element.tagName === "ASIDE" &&
+            element.classList.contains("quote")
+          ) {
             return true;
           }
 
-          // skip links in quotes and oneboxes
-          for (let element = l; element; element = element.parentElement) {
-            if (
-              element.tagName === "DIV" &&
-              element.classList.contains("d-editor-preview")
-            ) {
-              break;
-            }
-
-            if (
-              element.tagName === "ASIDE" &&
-              element.classList.contains("quote")
-            ) {
-              return true;
-            }
-
-            if (
-              element.tagName === "ASIDE" &&
-              element.classList.contains("onebox") &&
-              href !== element.dataset["onebox-src"]
-            ) {
-              return true;
-            }
+          if (
+            element.tagName === "ASIDE" &&
+            element.classList.contains("onebox") &&
+            href !== element.dataset["onebox-src"]
+          ) {
+            return true;
           }
+        }
 
-          const [linkWarn, linkInfo] = linkLookup.check(post, href);
+        const [linkWarn, linkInfo] = linkLookup.check(post, href);
 
-          if (linkWarn && !this.get("isWhispering")) {
-            let body;
-            if (linkInfo.username === this.currentUser.username) {
-              body = I18n.t("composer.duplicate_link_same_user", {
-                domain: linkInfo.domain,
-                post_url: topic.urlForPostNumber(linkInfo.post_number),
-                ago: shortDate(linkInfo.posted_at),
-              });
-            } else {
-              body = I18n.t("composer.duplicate_link", {
-                domain: linkInfo.domain,
-                username: linkInfo.username,
-                post_url: topic.urlForPostNumber(linkInfo.post_number),
-                ago: shortDate(linkInfo.posted_at),
-              });
-            }
-            this.appEvents.trigger("composer-messages:create", {
-              extraClass: "custom-body",
-              templateName: "education",
-              body,
+        if (linkWarn && !this.get("isWhispering")) {
+          let body;
+          if (linkInfo.username === this.currentUser.username) {
+            body = I18n.t("composer.duplicate_link_same_user", {
+              domain: linkInfo.domain,
+              post_url: topic.urlForPostNumber(linkInfo.post_number),
+              ago: shortDate(linkInfo.posted_at),
             });
-            return false;
+          } else {
+            body = I18n.t("composer.duplicate_link", {
+              domain: linkInfo.domain,
+              username: linkInfo.username,
+              post_url: topic.urlForPostNumber(linkInfo.post_number),
+              ago: shortDate(linkInfo.posted_at),
+            });
           }
+          this.appEvents.trigger("composer-messages:create", {
+            extraClass: "custom-body",
+            templateName: "education",
+            body,
+          });
+          return false;
         }
-        return true;
-      });
-    },
-
-    toggleWhisper() {
-      this.toggleProperty("model.whisper");
-    },
-
-    toggleInvisible() {
-      this.toggleProperty("model.unlistTopic");
-    },
-
-    toggleToolbar() {
-      this.toggleProperty("showToolbar");
-    },
-
-    // Toggle the reply view
-    async toggle() {
-      this.closeAutocomplete();
-
-      const composer = this.model;
-
-      if (isEmpty(composer?.reply) && isEmpty(composer?.title)) {
-        this.close();
-      } else if (composer?.viewOpenOrFullscreen) {
-        this.shrink();
-      } else {
-        await this.cancelComposer();
       }
-    },
+      return true;
+    });
+  }
 
-    fullscreenComposer() {
+  @action
+  toggleWhisper() {
+    this.toggleProperty("model.whisper");
+  }
+
+  @action
+  toggleInvisible() {
+    this.toggleProperty("model.unlistTopic");
+  }
+
+  @action
+  toggleToolbar() {
+    this.toggleProperty("showToolbar");
+  }
+
+  // Toggle the reply view
+  @action
+  async toggle() {
+    this.closeAutocomplete();
+
+    const composer = this.model;
+
+    if (isEmpty(composer?.reply) && isEmpty(composer?.title)) {
+      this.close();
+    } else if (composer?.viewOpenOrFullscreen) {
+      this.shrink();
+    } else {
+      await this.cancelComposer();
+    }
+  }
+
+  @action
+  fullscreenComposer() {
+    this.toggleFullscreen();
+    return false;
+  }
+
+  // Import a quote from the post
+  @action
+  async importQuote(toolbarEvent) {
+    const postStream = this.get("topic.postStream");
+    let postId = this.get("model.post.id");
+
+    // If there is no current post, use the first post id from the stream
+    if (!postId && postStream) {
+      postId = postStream.get("stream.firstObject");
+    }
+
+    // If we're editing a post, fetch the reply when importing a quote
+    if (this.get("model.editingPost")) {
+      const replyToPostNumber = this.get("model.post.reply_to_post_number");
+      if (replyToPostNumber) {
+        const replyPost = postStream.posts.findBy(
+          "post_number",
+          replyToPostNumber
+        );
+
+        if (replyPost) {
+          postId = replyPost.id;
+        }
+      }
+    }
+
+    if (!postId) {
+      return;
+    }
+
+    this.set("model.loading", true);
+
+    const post = await this.store.find("post", postId);
+    const quote = buildQuote(post, post.raw, { full: true });
+
+    toolbarEvent.addText(quote);
+    this.set("model.loading", false);
+  }
+
+  @action
+  displayEditReason() {
+    this.set("showEditReason", true);
+  }
+
+  @action
+  hitEsc() {
+    if (document.querySelectorAll(".emoji-picker-modal.fadeIn").length === 1) {
+      this.appEvents.trigger("emoji-picker:close");
+      return;
+    }
+
+    if ((this.messageCount || 0) > 0) {
+      this.appEvents.trigger("composer-messages:close");
+      return;
+    }
+
+    const composer = this.model;
+
+    if (composer?.viewOpen) {
+      this.shrink();
+    }
+
+    if (composer?.viewFullscreen) {
       this.toggleFullscreen();
-      return false;
-    },
+      this.focusComposer();
+    }
+  }
 
-    // Import a quote from the post
-    async importQuote(toolbarEvent) {
-      const postStream = this.get("topic.postStream");
-      let postId = this.get("model.post.id");
+  @action
+  groupsMentioned({ name, userCount, maxMentions }) {
+    if (
+      this.get("model.creatingPrivateMessage") ||
+      this.get("model.topic.isPrivateMessage")
+    ) {
+      return;
+    }
 
-      // If there is no current post, use the first post id from the stream
-      if (!postId && postStream) {
-        postId = postStream.get("stream.firstObject");
-      }
+    maxMentions = parseInt(maxMentions, 10);
+    userCount = parseInt(userCount, 10);
 
-      // If we're editing a post, fetch the reply when importing a quote
-      if (this.get("model.editingPost")) {
-        const replyToPostNumber = this.get("model.post.reply_to_post_number");
-        if (replyToPostNumber) {
-          const replyPost = postStream.posts.findBy(
-            "post_number",
-            replyToPostNumber
-          );
+    let body;
+    const groupLink = getURL(`/g/${name}/members`);
 
-          if (replyPost) {
-            postId = replyPost.id;
-          }
-        }
-      }
-
-      if (!postId) {
-        return;
-      }
-
-      this.set("model.loading", true);
-
-      const post = await this.store.find("post", postId);
-      const quote = buildQuote(post, post.raw, { full: true });
-
-      toolbarEvent.addText(quote);
-      this.set("model.loading", false);
-    },
-
-    save(ignore, event) {
-      this.save(false, {
-        jump:
-          !(event?.shiftKey && this.get("model.replyingToTopic")) &&
-          !this.skipJumpOnSave,
+    if (userCount > maxMentions) {
+      body = I18n.t("composer.group_mentioned_limit", {
+        group: `@${name}`,
+        count: maxMentions,
+        group_link: groupLink,
       });
-    },
+    } else if (userCount > 0) {
+      body = I18n.t("composer.group_mentioned", {
+        group: `@${name}`,
+        count: userCount,
+        group_link: groupLink,
+      });
+    }
 
-    displayEditReason() {
-      this.set("showEditReason", true);
-    },
-
-    hitEsc() {
-      if (
-        document.querySelectorAll(".emoji-picker-modal.fadeIn").length === 1
-      ) {
-        this.appEvents.trigger("emoji-picker:close");
-        return;
-      }
-
-      if ((this.messageCount || 0) > 0) {
-        this.appEvents.trigger("composer-messages:close");
-        return;
-      }
-
-      const composer = this.model;
-
-      if (composer?.viewOpen) {
-        this.shrink();
-      }
-
-      if (composer?.viewFullscreen) {
-        this.toggleFullscreen();
-        this.focusComposer();
-      }
-    },
-
-    groupsMentioned({ name, userCount, maxMentions }) {
-      if (
-        this.get("model.creatingPrivateMessage") ||
-        this.get("model.topic.isPrivateMessage")
-      ) {
-        return;
-      }
-
-      maxMentions = parseInt(maxMentions, 10);
-      userCount = parseInt(userCount, 10);
-
-      let body;
-      const groupLink = getURL(`/g/${name}/members`);
-
-      if (userCount > maxMentions) {
-        body = I18n.t("composer.group_mentioned_limit", {
-          group: `@${name}`,
-          count: maxMentions,
-          group_link: groupLink,
-        });
-      } else if (userCount > 0) {
-        body = I18n.t("composer.group_mentioned", {
-          group: `@${name}`,
-          count: userCount,
-          group_link: groupLink,
-        });
-      }
-
-      if (body) {
-        this.appEvents.trigger("composer-messages:create", {
-          extraClass: "custom-body",
-          templateName: "education",
-          body,
-        });
-      }
-    },
-
-    cannotSeeMention({ name, reason, notifiedCount, isGroup }) {
-      notifiedCount = parseInt(notifiedCount, 10);
-
-      let body;
-      if (isGroup) {
-        body = I18n.t(`composer.cannot_see_group_mention.${reason}`, {
-          group: name,
-          count: notifiedCount,
-        });
-      } else {
-        body = I18n.t(`composer.cannot_see_mention.${reason}`, {
-          username: name,
-        });
-      }
-
+    if (body) {
       this.appEvents.trigger("composer-messages:create", {
         extraClass: "custom-body",
         templateName: "education",
         body,
       });
-    },
+    }
+  }
 
-    hereMention(count) {
-      this.appEvents.trigger("composer-messages:create", {
-        extraClass: "custom-body",
-        templateName: "education",
-        body: I18n.t("composer.here_mention", {
-          here: this.siteSettings.here_mention,
-          count,
-        }),
+  @action
+  cannotSeeMention({ name, reason, notifiedCount, isGroup }) {
+    notifiedCount = parseInt(notifiedCount, 10);
+
+    let body;
+    if (isGroup) {
+      body = I18n.t(`composer.cannot_see_group_mention.${reason}`, {
+        group: name,
+        count: notifiedCount,
       });
-    },
+    } else {
+      body = I18n.t(`composer.cannot_see_mention.${reason}`, {
+        username: name,
+      });
+    }
 
-    applyFormatCode() {
-      this.toolbarEvent.formatCode();
-    },
+    this.appEvents.trigger("composer-messages:create", {
+      extraClass: "custom-body",
+      templateName: "education",
+      body,
+    });
+  }
 
-    applyUnorderedList() {
-      this.toolbarEvent.applyList("* ", "list_item");
-    },
+  @action
+  hereMention(count) {
+    this.appEvents.trigger("composer-messages:create", {
+      extraClass: "custom-body",
+      templateName: "education",
+      body: I18n.t("composer.here_mention", {
+        here: this.siteSettings.here_mention,
+        count,
+      }),
+    });
+  }
 
-    applyOrderedList() {
-      this.toolbarEvent.applyList(
-        (i) => (!i ? "1. " : `${parseInt(i, 10) + 1}. `),
-        "list_item"
-      );
-    },
-  },
+  @action
+  applyFormatCode() {
+    this.toolbarEvent.formatCode();
+  }
 
-  save(force, options = {}) {
+  @action
+  applyUnorderedList() {
+    this.toolbarEvent.applyList("* ", "list_item");
+  }
+
+  @action
+  applyOrderedList() {
+    this.toolbarEvent.applyList(
+      (i) => (!i ? "1. " : `${parseInt(i, 10) + 1}. `),
+      "list_item"
+    );
+  }
+
+  @action
+  save(force, optionsOrEvent = {}) {
+    let options;
+    if (optionsOrEvent instanceof Event) {
+      // Called from `KeyEnterEscape` mixin
+      options = {
+        jump:
+          !(event?.shiftKey && this.get("model.replyingToTopic")) &&
+          !this.skipJumpOnSave,
+      };
+    } else {
+      options = optionsOrEvent;
+    }
+
     if (this.disableSubmit) {
       return;
     }
@@ -1125,7 +1143,7 @@ export default Controller.extend({
     promise.finally(() => this.messageBus.resume());
 
     return promise;
-  },
+  }
 
   // Notify the composer messages controller that a reply has been typed. Some
   // messages only appear after typing.
@@ -1133,7 +1151,7 @@ export default Controller.extend({
     if (!isEmpty("model.reply")) {
       this.appEvents.trigger("composer:typed-reply");
     }
-  },
+  }
 
   /**
     Open the composer view
@@ -1270,7 +1288,7 @@ export default Controller.extend({
     } finally {
       this.skipAutoSave = false;
     }
-  },
+  }
 
   // Given a potential instance and options, set the model for this composer.
   async _setModel(optionalComposerModel, opts) {
@@ -1345,7 +1363,7 @@ export default Controller.extend({
       "--composer-height",
       defaultComposerHeight
     );
-  },
+  }
 
   _getDefaultComposerHeight() {
     if (this.keyValueStore.getItem("composerHeight")) {
@@ -1358,7 +1376,7 @@ export default Controller.extend({
     } else {
       return "var(--new-topic-composer-height, 400px)";
     }
-  },
+  }
 
   async destroyDraft(draftSequence = null) {
     const key = this.get("model.draftKey");
@@ -1378,7 +1396,7 @@ export default Controller.extend({
     const sequence = draftSequence || this.get("model.draftSequence");
     await Draft.clear(key, sequence);
     this.appEvents.trigger("draft:destroyed", key);
-  },
+  }
 
   confirmDraftAbandon(data) {
     if (!data.draft) {
@@ -1420,7 +1438,7 @@ export default Controller.extend({
         ],
       });
     });
-  },
+  }
 
   cancelComposer() {
     this.skipAutoSave = true;
@@ -1472,7 +1490,7 @@ export default Controller.extend({
     }).finally(() => {
       this.skipAutoSave = false;
     });
-  },
+  }
 
   shrink() {
     if (
@@ -1483,7 +1501,7 @@ export default Controller.extend({
     } else {
       this.close();
     }
-  },
+  }
 
   _saveDraft() {
     if (!this.model) {
@@ -1500,7 +1518,7 @@ export default Controller.extend({
           this._saveDraftPromise = null;
         });
     }
-  },
+  }
 
   @observes("model.reply", "model.title")
   _shouldSaveDraft() {
@@ -1524,7 +1542,7 @@ export default Controller.extend({
         );
       }
     }
-  },
+  }
 
   @discourseComputed("model.categoryId", "lastValidatedAt")
   categoryValidation(categoryId, lastValidatedAt) {
@@ -1535,7 +1553,7 @@ export default Controller.extend({
         lastShownAt: lastValidatedAt,
       });
     }
-  },
+  }
 
   @discourseComputed("model.category", "model.tags", "lastValidatedAt")
   tagValidation(category, tags, lastValidatedAt) {
@@ -1552,13 +1570,13 @@ export default Controller.extend({
         });
       }
     }
-  },
+  }
 
   collapse() {
     this._saveDraft();
     this.set("model.composeState", Composer.DRAFT);
     document.documentElement.style.setProperty("--composer-height", "40px");
-  },
+  }
 
   toggleFullscreen() {
     this._saveDraft();
@@ -1571,12 +1589,12 @@ export default Controller.extend({
       composer?.set("composeState", Composer.FULLSCREEN);
       composer?.set("showFullScreenExitPrompt", true);
     }
-  },
+  }
 
   @discourseComputed("model.viewFullscreen", "model.showFullScreenExitPrompt")
   showFullScreenPrompt(isFullscreen, showExitPrompt) {
     return isFullscreen && showExitPrompt && !this.capabilities.touch;
-  },
+  }
 
   close() {
     // the 'fullscreen-composer' class is added to remove scrollbars from the
@@ -1590,23 +1608,23 @@ export default Controller.extend({
     document.activeElement?.blur();
     document.documentElement.style.removeProperty("--composer-height");
     this.setProperties({ model: null, lastValidatedAt: null });
-  },
+  }
 
   closeAutocomplete() {
     $(".d-editor-input").autocomplete({ cancel: true });
-  },
+  }
 
   @discourseComputed("model.action")
   canEdit(modelAction) {
     return modelAction === "edit" && this.currentUser.can_edit;
-  },
+  }
 
   @discourseComputed("model.composeState")
   visible(state) {
     return state && state !== "closed";
-  },
+  }
 
   clearLastValidatedAt() {
     this.set("lastValidatedAt", null);
-  },
-});
+  }
+}
