@@ -12,21 +12,25 @@ function initLazyEmbed(api) {
       const lazyContainers = cooked.querySelectorAll(".lazy-video-container");
 
       lazyContainers.forEach((container) => {
-        const callback = () => {
-          const postId = cooked.closest("article")?.dataset?.postId;
-          if (postId) {
-            api.preventCloak(parseInt(postId, 10));
-          }
-        };
-
+        const siteSettings = api.container.lookup("site-settings:main");
         const videoAttributes = getVideoAttributes(container);
-        const lazyVideo = helper.renderGlimmer(
-          "p.lazy-video-wrapper",
-          hbs`<LazyVideo @videoAttributes={{@data.param}} @callback={{@data.callback}}/>`,
-          { param: videoAttributes, callback }
-        );
 
-        container.replaceWith(lazyVideo);
+        if (siteSettings[`lazy_${videoAttributes.providerName}_enabled`]) {
+          const callback = () => {
+            const postId = cooked.closest("article")?.dataset?.postId;
+            if (postId) {
+              api.preventCloak(parseInt(postId, 10));
+            }
+          };
+
+          const lazyVideo = helper.renderGlimmer(
+            "p.lazy-video-wrapper",
+            hbs`<LazyVideo @videoAttributes={{@data.param}} @callback={{@data.callback}}/>`,
+            { param: videoAttributes, callback }
+          );
+
+          container.replaceWith(lazyVideo);
+        }
       });
     },
     { onlyStream: true, id: "discourse-lazy-videos" }
