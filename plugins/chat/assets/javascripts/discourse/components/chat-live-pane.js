@@ -613,6 +613,7 @@ export default class ChatLivePane extends Component {
       const message = ChatMessage.create(this.args.channel, data.chat_message);
       this.args.channel.addMessages([message]);
       this.scrollToLatestMessage();
+      this.updateLastReadMessage();
     } else {
       // If we are almost at the bottom, we append the message and notice the user
       const message = ChatMessage.create(this.args.channel, data.chat_message);
