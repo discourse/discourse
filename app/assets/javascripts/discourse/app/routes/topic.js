@@ -325,7 +325,6 @@ const TopicRoute = DiscourseRoute.extend({
     this._super(...arguments);
 
     this.searchService.set("searchContext", null);
-    this.controllerFor("user-card").set("visible", false);
 
     const topicController = this.controllerFor("topic");
     const postStream = topicController.get("model.postStream");
