@@ -171,7 +171,7 @@ describe UserNotifications do
           # Sometimes it's not enough to just fabricate a message
           # and we have to create it like here. In this case all the necessary
           # db records for mentions and notifications will be created under the hood.
-          Chat::ChatMessageCreator.create(chat_channel: channel, user: sender, content: content)
+          Chat::MessageCreator.create(chat_channel: channel, user: sender, content: content)
         end
 
         it "returns email for @all mention by default" do
