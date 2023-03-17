@@ -278,11 +278,11 @@ module SvgSprite
 
   # Just used in tests
   def self.clear_plugin_svg_sprite_cache!
-    @plugin_svg_sprites = nil
+    @plugin_svgs = nil
   end
 
-  def self.plugin_svg_sprites
-    @plugin_svg_sprites ||=
+  def self.plugin_svgs
+    @plugin_svgs ||=
       begin
         plugin_paths = []
         Discourse
@@ -292,13 +292,13 @@ module SvgSprite
 
         custom_sprite_paths = Dir.glob(plugin_paths)
 
-        custom_sprite_paths.map do |path|
-          { filename: File.basename(path, ".svg"), sprite: File.read(path) }
+        custom_sprite_paths.reduce({}) do |symbols, path|
+          symbols.merge!(symbols_for(File.basename(path, ".svg"), File.read(path), strict: true))
         end
       end
   end
 
-  def self.theme_svg_sprites(theme_id)
+  def self.theme_svgs(theme_id)
     if theme_id.present?
       theme_ids = Theme.transform_ids(theme_id)
 
@@ -319,17 +319,24 @@ module SvgSprite
           )
         end
 
-        theme_sprites.map do |upload_id, sprite|
-          { filename: "theme_#{theme_id}_#{upload_id}.svg", sprite: sprite }
+        theme_sprites.reduce({}) do |symbols, (upload_id, sprite)|
+          begin
+            symbols.merge!(symbols_for("theme_#{theme_id}_#{upload_id}.svg", sprite, strict: false))
+          rescue => e
+            Rails.logger.warn(
+              "Bad XML in custom sprite in theme with ID=#{theme_id}. Error info: #{e.inspect}",
+            )
+          end
+          symbols
         end
       end
     else
-      []
+      {}
     end
   end
 
-  def self.custom_svg_sprites(theme_id)
-    plugin_svg_sprites + theme_svg_sprites(theme_id)
+  def self.custom_svgs(theme_id)
+    plugin_svgs.merge(theme_svgs(theme_id))
   end
 
   def self.all_icons(theme_id = nil)
@@ -363,10 +370,10 @@ module SvgSprite
     cache&.clear
   end
 
-  def self.sprites_for(theme_id)
-    sprites = core_svg_sprites
-    sprites += custom_svg_sprites(theme_id) if theme_id.present?
-    sprites
+  def self.svgs_for(theme_id)
+    svgs = core_svgs
+    svgs = svgs.merge(custom_svgs(theme_id)) if theme_id.present?
+    svgs
   end
 
   def self.bundle(theme_id = nil)
@@ -383,20 +390,7 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
         "".dup
 
     svg_subset << core_svgs.slice(*icons).values.join
-
-    svg_subset << custom_svg_sprites(theme_id)
-      .filter_map do |item|
-        begin
-          symbols = symbols_for(*item.values_at(:filename, :sprite), strict: false)
-        rescue => e
-          Rails.logger.warn(
-            "Bad XML in custom sprite in theme with ID=#{theme_id}. Error info: #{e.inspect}",
-          )
-        end
-
-        symbols&.values&.join
-      end
-      .join
+    svg_subset << custom_svgs(theme_id).values.join
 
     svg_subset << "</svg>"
   end
@@ -404,26 +398,16 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
   def self.search(searched_icon)
     searched_icon = process(searched_icon.dup)
 
-    sprites_for(SiteSetting.default_theme_id)
-      .lazy
-      .filter_map do |item|
-        symbols_for(*item.values_at(:filename, :sprite), strict: false)[searched_icon]
-      end
-      .first || false
+    svgs_for(SiteSetting.default_theme_id)[searched_icon] || false
   end
 
   def self.icon_picker_search(keyword, only_available = false)
     icons = all_icons(SiteSetting.default_theme_id) if only_available
 
-    sprites_for(SiteSetting.default_theme_id)
-      .reduce({}) do |results, item|
-        symbols = symbols_for(*item.values_at(:filename, :sprite), strict: false)
-        symbols.slice!(*icons) if only_available
-        symbols.delete_if! { |icon_id, sym| !icon_id.include?(keyword) } unless keyword.empty?
-        results.merge!(symbols)
-      end
-      .sort_by(&:first)
-      .map(&:second)
+    symbols = svgs_for(SiteSetting.default_theme_id)
+    symbols.slice!(*icons) if only_available
+    symbols.delete_if! { |icon_id, sym| !icon_id.include?(keyword) } unless keyword.empty?
+    symbols.sort_by(&:first).map(&:second)
   end
 
   # For use in no_ember .html.erb layouts
@@ -506,9 +490,7 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
 
   def self.custom_icons(theme_id)
     # Automatically register icons in sprites added via themes or plugins
-    custom_svg_sprites(theme_id).flat_map do |item|
-      symbols_for(*item.values_at(:filename, :sprite), strict: false).keys
-    end
+    custom_svgs(theme_id).keys
   end
 
   def self.process(icon_name)
