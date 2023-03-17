@@ -253,7 +253,7 @@ RSpec.describe Chat::ChatController do
         Guardian.any_instance.expects(:can_join_chat_channel?).with(channel)
 
         sign_in(admin)
-        post "/chat/enable.json", params: { chatable_type: "category", chatable_id: category.id }
+        post "/chat/enable.json", params: { chatable_type: "Category", chatable_id: category.id }
       end
 
       # TODO: rewrite specs to ensure no exception is raised
@@ -261,7 +261,7 @@ RSpec.describe Chat::ChatController do
         Guardian.any_instance.expects(:can_join_chat_channel?)
 
         sign_in(admin)
-        post "/chat/enable.json", params: { chatable_type: "category", chatable_id: category.id }
+        post "/chat/enable.json", params: { chatable_type: "Category", chatable_id: category.id }
       end
     end
   end
@@ -276,7 +276,7 @@ RSpec.describe Chat::ChatController do
         Guardian.any_instance.expects(:can_join_chat_channel?).with(channel)
 
         sign_in(admin)
-        post "/chat/disable.json", params: { chatable_type: "category", chatable_id: category.id }
+        post "/chat/disable.json", params: { chatable_type: "Category", chatable_id: category.id }
       end
     end
   end
@@ -1085,10 +1085,7 @@ RSpec.describe Chat::ChatController do
     it "sets `dismissed_dm_retention_reminder` to true" do
       sign_in(user)
       expect {
-        post "/chat/dismiss-retention-reminder.json",
-             params: {
-               chatable_type: "Chat::DirectMessage",
-             }
+        post "/chat/dismiss-retention-reminder.json", params: { chatable_type: "DirectMessage" }
       }.to change { user.user_option.reload.dismissed_dm_retention_reminder }.to (true)
     end
 
@@ -1101,7 +1098,7 @@ RSpec.describe Chat::ChatController do
       post "/chat/dismiss-retention-reminder.json", params: { chatable_type: "Category" }
       expect(response.status).to eq(200)
 
-      post "/chat/dismiss-retention-reminder.json", params: { chatable_type: "Chat::DirectMessage" }
+      post "/chat/dismiss-retention-reminder.json", params: { chatable_type: "DirectMessage" }
       expect(response.status).to eq(200)
     end
   end
@@ -1200,7 +1197,7 @@ RSpec.describe Chat::ChatController do
               chat_message_id: admin_chat_message.id,
               flag_type_id: ReviewableScore.types[:off_topic],
             }
-      }.to change { Chat::ReviewableChatMessage.where(target: admin_chat_message).count }.by(1)
+      }.to change { Chat::ReviewableMessage.where(target: admin_chat_message).count }.by(1)
       expect(response.status).to eq(200)
     end
 

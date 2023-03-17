@@ -4,6 +4,10 @@ module Chat
   class DirectMessageChannel < Channel
     alias_attribute :direct_message, :chatable
 
+    def self.polymorphic_class_for(name)
+      Chat::Chatable.polymorphic_class_for(name) || super(name)
+    end
+
     def direct_message_channel?
       true
     end

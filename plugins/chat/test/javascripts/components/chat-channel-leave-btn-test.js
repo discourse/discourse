@@ -14,7 +14,7 @@ module("Discourse Chat | Component | chat-channel-leave-btn", function (hooks) {
     this.set("onLeaveChannel", () => this.set("foo", 2));
     this.set("channel", {
       id: 1,
-      chatable_type: "Chat::DirectMessage",
+      chatable_type: "DirectMessage",
       chatable: {
         users: [{ id: 1 }],
       },
@@ -34,7 +34,7 @@ module("Discourse Chat | Component | chat-channel-leave-btn", function (hooks) {
   });
 
   test("has a specific title for direct message channel", async function (assert) {
-    this.set("channel", { chatable_type: "Chat::DirectMessage" });
+    this.set("channel", { chatable_type: "DirectMessage" });
 
     await render(hbs`<ChatChannelLeaveBtn @channel={{this.channel}} />`);
 

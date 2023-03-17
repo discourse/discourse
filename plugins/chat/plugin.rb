@@ -48,7 +48,7 @@ after_initialize do
   UserUpdater::OPTION_ATTR.push(:chat_email_frequency)
   UserUpdater::OPTION_ATTR.push(:chat_header_indicator_preference)
 
-  register_reviewable_type Chat::ReviewableChatMessage
+  register_reviewable_type Chat::ReviewableMessage
 
   reloadable_patch do |plugin|
     ReviewableScore.add_new_types([:needs_review])
@@ -59,6 +59,8 @@ after_initialize do
     UserNotifications.prepend Chat::UserNotificationsExtension
     UserOption.prepend Chat::UserOptionExtension
     Category.prepend Chat::CategoryExtension
+    Reviewable.prepend Chat::ReviewableExtension
+    Bookmark.prepend Chat::BookmarkExtension
     User.prepend Chat::UserExtension
     Jobs::UserEmail.prepend Chat::UserEmailExtension
     Plugin::Instance.prepend Chat::PluginInstanceExtension

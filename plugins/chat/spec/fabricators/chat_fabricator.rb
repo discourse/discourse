@@ -17,9 +17,9 @@ Fabricator(:chat_channel, class_name: "Chat::Channel") do
   chatable { Fabricate(:category) }
   type do |attrs|
     if attrs[:chatable_type] == "Category" || attrs[:chatable]&.is_a?(Category)
-      "Chat::CategoryChannel"
+      "CategoryChannel"
     else
-      "Chat::DirectMessageChannel"
+      "DirectMessageChannel"
     end
   end
   status { :open }
@@ -92,11 +92,11 @@ Fabricator(:chat_message_revision, class_name: "Chat::MessageRevision") do
   user { |attrs| attrs[:chat_message].user }
 end
 
-Fabricator(:reviewable_chat_message, class_name: "Chat::ReviewableChatMessage") do
+Fabricator(:chat_reviewable_message, class_name: "Chat::ReviewableMessage") do
   reviewable_by_moderator true
-  type "Chat::ReviewableChatMessage"
+  type "ReviewableChatMessage"
   created_by { Fabricate(:user) }
-  target_type "Chat::Message"
+  target_type "ChatMessage"
   target { Fabricate(:chat_message) }
   reviewable_scores { |p| [Fabricate.build(:reviewable_score, reviewable_id: p[:id])] }
 end

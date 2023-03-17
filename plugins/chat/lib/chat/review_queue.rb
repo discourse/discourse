@@ -47,7 +47,7 @@ module Chat
       queued_for_review = !!ActiveRecord::Type::Boolean.new.deserialize(opts[:queue_for_review])
 
       reviewable =
-        Chat::ReviewableChatMessage.needs_review!(
+        Chat::ReviewableMessage.needs_review!(
           created_by: guardian.user,
           target: chat_message,
           reviewable_by_moderator: true,
@@ -84,7 +84,7 @@ module Chat
     def enforce_auto_silence_threshold(reviewable)
       auto_silence_duration = SiteSetting.chat_auto_silence_from_flags_duration
       return if auto_silence_duration.zero?
-      return if reviewable.score <= Chat::ReviewableChatMessage.score_to_silence_user
+      return if reviewable.score <= Chat::ReviewableMessage.score_to_silence_user
 
       user = reviewable.target_created_by
       return unless user

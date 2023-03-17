@@ -147,7 +147,7 @@ module Chat
       UPDATE upload_references uref
       SET target_id = mm.new_chat_message_id
       FROM moved_chat_messages mm
-      WHERE uref.target_id = mm.old_chat_message_id AND uref.target_type = 'Chat::Message'
+      WHERE uref.target_id = mm.old_chat_message_id AND uref.target_type = 'ChatMessage'
     SQL
 
       DB.exec(<<~SQL)

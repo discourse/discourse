@@ -25,7 +25,7 @@ RSpec.describe Chat::MessageDestroyer do
       guardian = Guardian.new(Discourse.system_user)
       Chat::ReviewQueue.new.flag_message(message_1, guardian, ReviewableScore.types[:off_topic])
 
-      reviewable = Chat::ReviewableChatMessage.last
+      reviewable = Chat::ReviewableMessage.last
       expect(reviewable).to be_present
 
       described_class.new.destroy_in_batches(Chat::Message.where(id: message_1.id))

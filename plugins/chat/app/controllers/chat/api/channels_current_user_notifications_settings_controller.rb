@@ -8,7 +8,7 @@ class Chat::Api::ChannelsCurrentUserNotificationsSettingsController < Chat::Api:
     membership_from_params.update!(settings_params.to_h)
     render_serialized(
       membership_from_params,
-      Chat::UserChatChannelMembershipSerializer,
+      Chat::UserChannelMembershipSerializer,
       root: "membership",
     )
   end

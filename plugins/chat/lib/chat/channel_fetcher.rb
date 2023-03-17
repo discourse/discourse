@@ -50,8 +50,8 @@ module Chat
             .select(:id)
             .joins(
               "INNER JOIN direct_message_channels ON direct_message_channels.id = chat_channels.chatable_id
-            AND chat_channels.chatable_type = 'Chat::DirectMessage'
-        INNER JOIN direct_message_users ON direct_message_users.direct_message_channel_id = direct_message_channels.id",
+               AND chat_channels.chatable_type = 'DirectMessage'
+               INNER JOIN direct_message_users ON direct_message_users.direct_message_channel_id = direct_message_channels.id",
             )
             .where("direct_message_users.user_id = :user_id", user_id: guardian.user.id)
             .to_sql
@@ -160,7 +160,9 @@ module Chat
     def self.preload_custom_fields_for(channels)
       preload_fields = Category.instance_variable_get(:@custom_field_types).keys
       Category.preload_custom_fields(
-        channels.select { |c| c.chatable_type == "Category" }.map(&:chatable),
+        channels
+          .select { |c| c.chatable_type == "Category" || c.chatable_type == "category" }
+          .map(&:chatable),
         preload_fields,
       )
     end
@@ -173,7 +175,7 @@ module Chat
         query
           .joins(:user_chat_channel_memberships)
           .where(user_chat_channel_memberships: { user_id: user_id, following: true })
-          .where(chatable_type: "Chat::DirectMessage")
+          .where(chatable_type: Chat::Channel.direct_channel_chatable_types)
           .where("chat_channels.id IN (#{generate_allowed_channel_ids_sql(guardian)})")
           .order(last_message_sent_at: :desc)
           .to_a

@@ -3,7 +3,7 @@
 require_dependency "reviewable_serializer"
 
 module Chat
-  class ReviewableChatMessageSerializer < ReviewableSerializer
+  class ReviewableMessageSerializer < ReviewableSerializer
     target_attributes :cooked
     payload_attributes :transcript_topic_id, :message_cooked
     attributes :target_id

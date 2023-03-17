@@ -17,7 +17,7 @@ class Chat::Api::ChannelsMembershipsController < Chat::Api::ChannelsController
 
     render_serialized(
       memberships,
-      Chat::UserChatChannelMembershipSerializer,
+      Chat::UserChannelMembershipSerializer,
       root: "memberships",
       meta: {
         total_rows: channel_from_params.user_count,

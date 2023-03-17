@@ -8,16 +8,20 @@ module Chat
 
     belongs_to :chatable, polymorphic: true
 
-    def self.find_sti_class(type_name)
-      return Chat::CategoryChannel if type_name == "CategoryChannel"
-      return Chat::DirectMessageChannel if type_name == "DirectMessageChannel"
-      super(type_name)
+    def self.sti_class_for(type_name)
+      Chat::Chatable.sti_class_for(type_name) || super(type_name)
+    end
+
+    def self.sti_name
+      Chat::Chatable.sti_name_for(self) || super
     end
 
     belongs_to :direct_message,
-               -> { where(chat_channels: { chatable_type: "Chat::DirectMessage" }) },
-               foreign_key: "chatable_id",
-               class_name: "Chat::DirectMessage"
+               class_name: "Chat::DirectMessage",
+               foreign_key: :chatable_id,
+               inverse_of: :direct_message_channel,
+               optional: true
+
     has_many :chat_messages, class_name: "Chat::Message", foreign_key: :chat_channel_id
     has_many :user_chat_channel_memberships,
              class_name: "Chat::UserChatChannelMembership",
@@ -52,11 +56,15 @@ module Chat
       end
 
       def public_channel_chatable_types
-        ["Category"]
+        %w[Category]
+      end
+
+      def direct_channel_chatable_types
+        %w[DirectMessage]
       end
 
       def chatable_types
-        public_channel_chatable_types << "Chat::DirectMessage"
+        public_channel_chatable_types + direct_channel_chatable_types
       end
     end
 

@@ -10,7 +10,7 @@ import { getOwner } from "discourse-common/lib/get-owner";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
 
 export const CHATABLE_TYPES = {
-  directMessageChannel: "Chat::DirectMessage",
+  directMessageChannel: "DirectMessage",
   categoryChannel: "Category",
 };
 

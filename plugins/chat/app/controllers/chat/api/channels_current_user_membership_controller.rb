@@ -6,7 +6,7 @@ class Chat::Api::ChannelsCurrentUserMembershipController < Chat::Api::ChannelsCo
 
     render_serialized(
       channel_from_params.add(current_user),
-      Chat::UserChatChannelMembershipSerializer,
+      Chat::UserChannelMembershipSerializer,
       root: "membership",
     )
   end
@@ -14,7 +14,7 @@ class Chat::Api::ChannelsCurrentUserMembershipController < Chat::Api::ChannelsCo
   def destroy
     render_serialized(
       channel_from_params.remove(current_user),
-      Chat::UserChatChannelMembershipSerializer,
+      Chat::UserChannelMembershipSerializer,
       root: "membership",
     )
   end

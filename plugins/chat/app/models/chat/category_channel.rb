@@ -7,6 +7,10 @@ module Chat
     delegate :read_restricted?, to: :category
     delegate :url, to: :chatable, prefix: true
 
+    def self.polymorphic_class_for(name)
+      Chat::Chatable.polymorphic_class_for(name) || super(name)
+    end
+
     %i[category_channel? public_channel? chatable_has_custom_fields?].each do |name|
       define_method(name) { true }
     end

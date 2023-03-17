@@ -32,7 +32,7 @@ describe Chat::ReviewQueue do
     it "stores the message cooked content inside the reviewable" do
       queue.flag_message(message, guardian, ReviewableScore.types[:off_topic])
 
-      reviewable = Chat::ReviewableChatMessage.last
+      reviewable = Chat::ReviewableMessage.last
 
       expect(reviewable.payload["message_cooked"]).to eq(message.cooked)
     end
@@ -73,7 +73,7 @@ describe Chat::ReviewQueue do
           queue.flag_message(message, admin_guardian, ReviewableScore.types[:off_topic])
         expect(second_flag_result).to include success: true
 
-        reviewable = Chat::ReviewableChatMessage.find_by(target: message)
+        reviewable = Chat::ReviewableMessage.find_by(target: message)
         scores = reviewable.reviewable_scores
 
         expect(scores.size).to eq(2)
@@ -99,7 +99,7 @@ describe Chat::ReviewQueue do
       before do
         queue.flag_message(message, guardian, ReviewableScore.types[:spam])
 
-        reviewable = Chat::ReviewableChatMessage.last
+        reviewable = Chat::ReviewableMessage.last
         reviewable.perform(admin, :ignore)
       end
 
@@ -109,7 +109,7 @@ describe Chat::ReviewQueue do
       end
 
       it "allows the user to re-flag after the cooldown period" do
-        reviewable = Chat::ReviewableChatMessage.last
+        reviewable = Chat::ReviewableMessage.last
         reviewable.update!(updated_at: (SiteSetting.cooldown_hours_until_reflag.to_i + 1).hours.ago)
 
         expect(second_flag_result).to include success: true
@@ -157,7 +157,7 @@ describe Chat::ReviewQueue do
           .map(&:data)
 
       flag_msg = messages.detect { |m| m["type"] == "flag" }
-      new_reviewable = Chat::ReviewableChatMessage.find_by(target: message)
+      new_reviewable = Chat::ReviewableMessage.find_by(target: message)
 
       expect(flag_msg["chat_message_id"]).to eq(message.id)
       expect(flag_msg["reviewable_id"]).to eq(new_reviewable.id)
@@ -261,7 +261,7 @@ describe Chat::ReviewQueue do
           take_action: true,
         )
 
-        reviewable = Chat::ReviewableChatMessage.find_by(target: message)
+        reviewable = Chat::ReviewableMessage.find_by(target: message)
 
         expect(reviewable.approved?).to eq(true)
         expect(message.reload.trashed?).to eq(true)
@@ -289,7 +289,7 @@ describe Chat::ReviewQueue do
         queue.flag_message(message, guardian, ReviewableScore.types[:off_topic])
 
         reviewable =
-          Chat::ReviewableChatMessage.includes(:reviewable_scores).find_by(target_id: message)
+          Chat::ReviewableMessage.includes(:reviewable_scores).find_by(target_id: message)
         scores = reviewable.reviewable_scores
 
         expect(scores.size).to eq(1)
@@ -325,7 +325,7 @@ describe Chat::ReviewQueue do
         )
 
         reviewable =
-          Chat::ReviewableChatMessage.includes(:reviewable_scores).find_by(target_id: message)
+          Chat::ReviewableMessage.includes(:reviewable_scores).find_by(target_id: message)
         score = reviewable.reviewable_scores.first
 
         expect(score.reason).to eq("chat_message_queued_by_staff")
@@ -399,7 +399,7 @@ describe Chat::ReviewQueue do
 
       it "includes a transcript of the previous 10 message for the rest of the flags" do
         queue.flag_message(dm_message_12, guardian, ReviewableScore.types[:off_topic])
-        reviewable = Chat::ReviewableChatMessage.last
+        reviewable = Chat::ReviewableMessage.last
         expect(reviewable.target).to eq(dm_message_12)
         transcript_post = Post.find_by(topic_id: reviewable.payload["transcript_topic_id"])
 
@@ -411,7 +411,7 @@ describe Chat::ReviewQueue do
       it "doesn't include a transcript if there a no previous messages" do
         queue.flag_message(dm_message_1, guardian, ReviewableScore.types[:off_topic])
 
-        reviewable = Chat::ReviewableChatMessage.last
+        reviewable = Chat::ReviewableMessage.last
 
         expect(reviewable.payload["transcript_topic_id"]).to be_nil
       end
@@ -424,7 +424,7 @@ describe Chat::ReviewQueue do
 
         queue.flag_message(dm_message_12, guardian, ReviewableScore.types[:off_topic])
 
-        reviewable = Chat::ReviewableChatMessage.last
+        reviewable = Chat::ReviewableMessage.last
         transcript_topic = Topic.find(reviewable.payload["transcript_topic_id"])
 
         expect(guardian.can_see_topic?(transcript_topic)).to eq(false)

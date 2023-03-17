@@ -23,7 +23,7 @@ module Chat
           (uccm.last_unread_mention_when_emailed_id IS NULL OR chat_messages.id > uccm.last_unread_mention_when_emailed_id) AND
           (
             (cm.user_id = :user_id AND uccm.following IS true AND chat_channels.chatable_type = 'Category') OR
-            (chat_channels.chatable_type = 'Chat::DirectMessage')
+            (chat_channels.chatable_type = 'DirectMessage')
           )
         SQL
           .to_a

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Chat
-  class ReviewableChatMessage < Reviewable
+  class ReviewableMessage < Reviewable
     def self.action_aliases
       {
         agree_and_keep_hidden: :agree_and_delete,

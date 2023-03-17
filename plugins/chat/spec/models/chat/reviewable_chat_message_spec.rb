@@ -2,13 +2,13 @@
 
 require "rails_helper"
 
-RSpec.describe Chat::ReviewableChatMessage, type: :model do
+RSpec.describe Chat::ReviewableMessage, type: :model do
   fab!(:moderator) { Fabricate(:moderator) }
   fab!(:user) { Fabricate(:user) }
   fab!(:chat_channel) { Fabricate(:chat_channel) }
   fab!(:chat_message) { Fabricate(:chat_message, chat_channel: chat_channel, user: user) }
   fab!(:reviewable) do
-    Fabricate(:reviewable_chat_message, target: chat_message, created_by: moderator)
+    Fabricate(:chat_reviewable_message, target: chat_message, created_by: moderator)
   end
 
   it "agree_and_keep agrees with the flag and doesn't delete the message" do

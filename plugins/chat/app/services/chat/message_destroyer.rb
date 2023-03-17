@@ -34,7 +34,7 @@ module Chat
     end
 
     def delete_flags(message_ids)
-      Chat::ReviewableChatMessage.where(target_id: message_ids).destroy_all
+      Chat::ReviewableMessage.where(target_id: message_ids).destroy_all
     end
   end
 end

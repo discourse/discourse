@@ -79,7 +79,7 @@ describe Chat::MessageSerializer do
       let(:options) { { scope: guardian, root: nil, chat_channel: message_1.chat_channel } }
 
       it "returns an empty list if the user already flagged the message" do
-        reviewable = Fabricate(:reviewable_chat_message, target: message_1)
+        reviewable = Fabricate(:chat_reviewable_message, target: message_1)
 
         serialized =
           described_class.new(
@@ -98,7 +98,7 @@ describe Chat::MessageSerializer do
       end
 
       it "return available flags if staff already reviewed the previous flag" do
-        reviewable = Fabricate(:reviewable_chat_message, target: message_1)
+        reviewable = Fabricate(:chat_reviewable_message, target: message_1)
 
         serialized =
           described_class.new(

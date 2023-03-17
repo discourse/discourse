@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Chat
-  class UserChatChannelMembershipSerializer < BaseChatChannelMembershipSerializer
+  class UserChannelMembershipSerializer < BaseChannelMembershipSerializer
     has_one :user, serializer: BasicUserSerializer, embed: :objects
 
     def user

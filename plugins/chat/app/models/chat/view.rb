@@ -43,7 +43,7 @@ module Chat
           reviewable_scores s ON reviewable_id = r.id
         WHERE
           r.target_id IN (:message_ids) AND
-          r.target_type = 'Chat::Message' AND
+          r.target_type = 'ChatMessage' AND
           s.status = :pending
         GROUP BY
           target_id
@@ -74,7 +74,7 @@ module Chat
         WHERE
           s.user_id = :user_id AND
           r.target_id IN (:message_ids) AND
-          r.target_type = 'Chat::Message'
+          r.target_type = 'ChatMessage'
     SQL
 
       statuses = {}

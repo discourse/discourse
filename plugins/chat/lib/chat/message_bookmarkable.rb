@@ -7,7 +7,7 @@ module Chat
     end
 
     def self.serializer
-      Chat::UserChatMessageBookmarkSerializer
+      Chat::UserMessageBookmarkSerializer
     end
 
     def self.preload_associations
@@ -18,11 +18,11 @@ module Chat
       accessible_channel_ids = Chat::ChannelFetcher.all_secured_channel_ids(guardian)
       return if accessible_channel_ids.empty?
       user
-        .bookmarks_of_type("Chat::Message")
+        .bookmarks_of_type("ChatMessage")
         .joins(
           "INNER JOIN chat_messages ON chat_messages.id = bookmarks.bookmarkable_id
           AND chat_messages.deleted_at IS NULL
-          AND bookmarks.bookmarkable_type = 'Chat::Message'",
+          AND bookmarks.bookmarkable_type = 'ChatMessage'",
         )
         .where("chat_messages.chat_channel_id IN (?)", accessible_channel_ids)
     end
@@ -63,7 +63,8 @@ module Chat
       DB.query(<<~SQL, grace_time: 3.days.ago)
       DELETE FROM bookmarks b
       USING chat_messages cm
-      WHERE b.bookmarkable_id = cm.id AND b.bookmarkable_type = 'Chat::Message'
+      WHERE b.bookmarkable_id = cm.id
+      AND b.bookmarkable_type = 'ChatMessage'
       AND (cm.deleted_at < :grace_time)
     SQL
     end

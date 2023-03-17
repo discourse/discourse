@@ -6,10 +6,16 @@ module Chat
 
     include Chatable
 
+    def self.polymorphic_name
+      Chat::Chatable.polymorphic_name_for(self) || super
+    end
+
     has_many :direct_message_users,
              class_name: "Chat::DirectMessageUser",
              foreign_key: :direct_message_channel_id
     has_many :users, through: :direct_message_users
+
+    has_one :direct_message_channel, as: :chatable, class_name: "Chat::DirectMessageChannel"
 
     def self.for_user_ids(user_ids)
       joins(:users)

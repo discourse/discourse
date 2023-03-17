@@ -82,7 +82,7 @@ module Chat
       return unless upload_info[:changed]
 
       DB.exec("DELETE FROM chat_uploads WHERE chat_message_id = #{@chat_message.id}")
-      UploadReference.where(target_id: @chat_message).destroy_all
+      UploadReference.where(target: @chat_message).destroy_all
       @chat_message.attach_uploads(upload_info[:uploads])
     end
 

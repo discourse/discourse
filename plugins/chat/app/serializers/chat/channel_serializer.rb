@@ -55,7 +55,7 @@ module Chat
       case object.chatable_type
       when "Category"
         BasicCategorySerializer.new(object.chatable, root: false).as_json
-      when "Chat::DirectMessage"
+      when "DirectMessage"
         Chat::DirectMessageSerializer.new(object.chatable, scope: scope, root: false).as_json
       when "Site"
         nil
@@ -101,7 +101,7 @@ module Chat
     def current_user_membership
       @current_user_membership.chat_channel = object
 
-      Chat::BaseChatChannelMembershipSerializer.new(
+      Chat::BaseChannelMembershipSerializer.new(
         @current_user_membership,
         scope: scope,
         root: false,

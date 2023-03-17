@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Chat
-  class UserChatMessageBookmarkSerializer < UserBookmarkBaseSerializer
+  class UserMessageBookmarkSerializer < UserBookmarkBaseSerializer
     attr_reader :chat_message
 
     def title
