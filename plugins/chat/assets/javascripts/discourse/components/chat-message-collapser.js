@@ -60,7 +60,7 @@ export default class ChatMessageCollapser extends Component {
         const videoAttributes = getVideoAttributes(e);
 
         if (this.siteSettings[`lazy_${videoAttributes.providerName}_enabled`]) {
-          const link = videoAttributes.url;
+          const link = escapeExpression(videoAttributes.url);
           const title = videoAttributes.title;
           const header = htmlSafe(
             `<a target="_blank" class="chat-message-collapser-link" rel="noopener noreferrer" href="${link}">${title}</a>`

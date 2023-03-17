@@ -10,9 +10,9 @@ import { module, test } from "qunit";
 
 const youtubeCooked =
   "<p>written text</p>" +
-  '<div class="onebox lazyYT-container" data-youtube-id="ytId1" data-youtube-title="Cats are great">Vid 1</div>' +
+  '<div class="youtube-onebox lazy-video-container" data-video-id="ytId1" data-video-title="Cats are great" data-provider-name="youtube"> <a href="https://www.youtube.com/watch?v=ytId1"></a>Vid 1</div>' +
   "<p>more written text</p>" +
-  '<div class="onebox lazyYT-container" data-youtube-id="ytId2" data-youtube-title="Kittens are great">Vid 2</div>' +
+  '<div class="youtube-onebox lazy-video-container" data-video-id="ytId2" data-video-title="Kittens are great" data-provider-name="youtube"> <a href="https://www.youtube.com/watch?v=ytId2"></a>Vid 2</div>' +
   "<p>and even more</p>";
 
 const animatedImageCooked =
@@ -71,7 +71,13 @@ module(
     setupRenderingTest(hooks);
 
     test("escapes youtube header", async function (assert) {
-      this.set("cooked", youtubeCooked.replace("ytId1", evilString));
+      this.set(
+        "cooked",
+        youtubeCooked.replace(
+          "https://www.youtube.com/watch?v=ytId1",
+          `https://www.youtube.com/watch?v=${evilString}`
+        )
+      );
       await render(hbs`<ChatMessageCollapser @cooked={{this.cooked}} />`);
 
       assert.true(
@@ -124,7 +130,7 @@ module(
 
       await render(hbs`<ChatMessageCollapser @cooked={{this.cooked}} />`);
 
-      const youtubeDivs = queryAll(".onebox");
+      const youtubeDivs = queryAll(".youtube-onebox");
 
       assert.strictEqual(
         youtubeDivs.length,
@@ -138,11 +144,11 @@ module(
       );
 
       assert.false(
-        visible(".onebox[data-youtube-id='ytId1']"),
+        visible(".youtube-onebox[data-video-id='ytId1']"),
         "first youtube preview hidden"
       );
       assert.true(
-        visible(".onebox[data-youtube-id='ytId2']"),
+        visible(".youtube-onebox[data-video-id='ytId2']"),
         "second youtube preview still visible"
       );
 
@@ -160,11 +166,11 @@ module(
       );
 
       assert.true(
-        visible(".onebox[data-youtube-id='ytId1']"),
+        visible(".youtube-onebox[data-video-id='ytId1']"),
         "first youtube preview still visible"
       );
       assert.false(
-        visible(".onebox[data-youtube-id='ytId2']"),
+        visible(".youtube-onebox[data-video-id='ytId2']"),
         "second youtube preview hidden"
       );
 
