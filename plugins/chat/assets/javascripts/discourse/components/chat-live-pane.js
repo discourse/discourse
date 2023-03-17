@@ -895,16 +895,19 @@ export default class ChatLivePane extends Component {
   @action
   editLastMessageRequested() {
     const lastUserMessage = this.args.channel.messages.findLast(
-      (message) =>
-        message.user.id === this.currentUser.id &&
-        !message.staged &&
-        !message.error
+      (message) => message.user.id === this.currentUser.id
     );
 
-    if (lastUserMessage) {
-      this.editingMessage = lastUserMessage;
-      this._focusComposer();
+    if (!lastUserMessage) {
+      return;
     }
+
+    if (lastUserMessage.staged || lastUserMessage.error) {
+      return;
+    }
+
+    this.editingMessage = lastUserMessage;
+    this._focusComposer();
   }
 
   @action
