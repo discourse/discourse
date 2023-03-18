@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Chat::Api::ChatTrackingController do
+RSpec.describe Chat::Api::TrackingController do
   fab!(:current_user) { Fabricate(:user) }
 
   before do
@@ -96,7 +96,7 @@ RSpec.describe Chat::Api::ChatTrackingController do
                   channel_id: chat_channel.id,
                   message_id: message_1.id,
                 }
-          }.not_to change { UserChatChannelMembership.count }
+          }.not_to change { Chat::UserChatChannelMembership.count }
 
           membership.reload
           expect(membership.chat_channel_id).to eq(chat_channel.id)
@@ -230,7 +230,7 @@ RSpec.describe Chat::Api::ChatTrackingController do
         }.to_json,
       )
       .tap do |notification|
-        ChatMention.create!(user: user, chat_message: msg, notification: notification)
+        Chat::Mention.create!(user: user, chat_message: msg, notification: notification)
       end
   end
 end

@@ -5,7 +5,7 @@ module Chat
   # member of _and following_ as read, including mentions.
   #
   # @example
-  #  Chat::Service::MarkAllUserChannelsRead.call(guardian: guardian)
+  #  Chat::MarkAllUserChannelsRead.call(guardian: guardian)
   #
   class MarkAllUserChannelsRead
     include ::Service::Base
