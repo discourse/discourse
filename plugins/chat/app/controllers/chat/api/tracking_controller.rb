@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Chat::Api::ChatTrackingController < Chat::Api
+class Chat::Api::TrackingController < Chat::Api
   def read
     params.permit(:channel_id, :message_id)
 
@@ -17,7 +17,7 @@ class Chat::Api::ChatTrackingController < Chat::Api
   private
 
   def mark_single_message_read(channel_id, message_id)
-    with_service(Chat::Service::UpdateUserLastRead) do
+    with_service(Chat::UpdateUserLastRead) do
       on_failed_policy(:ensure_message_id_recency) do
         raise Discourse::InvalidParameters.new(:message_id)
       end
@@ -28,7 +28,7 @@ class Chat::Api::ChatTrackingController < Chat::Api
   end
 
   def mark_all_messages_read
-    with_service(Chat::Service::MarkAllUserChannelsRead) do
+    with_service(Chat::MarkAllUserChannelsRead) do
       on_success do
         render(json: success_json.merge(updated_memberships: result.updated_memberships))
       end
