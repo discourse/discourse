@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Chat::Service::MarkAllUserChannelsRead do
+RSpec.describe Chat::MarkAllUserChannelsRead do
   describe ".call" do
     subject(:result) { described_class.call(params) }
 
@@ -78,12 +78,12 @@ RSpec.describe Chat::Service::MarkAllUserChannelsRead do
       let(:messages) { MessageBus.track_publish { result } }
 
       before do
-        ChatMention.create!(
+        Chat::Mention.create!(
           notification: notification_1,
           user: current_user,
           chat_message: message_1,
         )
-        ChatMention.create!(
+        Chat::Mention.create!(
           notification: notification_2,
           user: current_user,
           chat_message: message_3,

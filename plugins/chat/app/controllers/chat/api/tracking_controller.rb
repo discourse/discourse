@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Chat::Api::TrackingController < Chat::Api
+class Chat::Api::TrackingController < Chat::ApiController
   def read
     params.permit(:channel_id, :message_id)
 
