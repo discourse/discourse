@@ -101,7 +101,7 @@ class SectionLink {
 
   @bind
   didStartDrag(e) {
-    this.mouseY = e.screenY;
+    this.mouseY = e.targetTouches ? e.targetTouches[0].screenY : e.screenY;
   }
 
   @bind
@@ -114,20 +114,23 @@ class SectionLink {
 
   @bind
   dragMove(e) {
-    const distance = e.screenY - this.mouseY;
+    const currentMouseY = e.targetTouches
+      ? e.targetTouches[0].screenY
+      : e.screenY;
+    const distance = currentMouseY - this.mouseY;
     if (!this.linkHeight) {
       this.linkHeight = e.srcElement.clientHeight;
     }
     if (distance > this.linkHeight) {
       if (this.section.links.indexOf(this) !== this.section.links.length - 1) {
         this.section.moveLinkDown(this);
-        this.mouseY = e.screenY;
+        this.mouseY = currentMouseY;
       }
     }
     if (distance < -this.linkHeight) {
       if (this.section.links.indexOf(this) !== 0) {
         this.section.moveLinkUp(this);
-        this.mouseY = e.screenY;
+        this.mouseY = currentMouseY;
       }
     }
     this.linkDragCss = "drag";
