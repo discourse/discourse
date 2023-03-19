@@ -477,10 +477,14 @@ id:
       statuses:
         pending:
           title: "Tertunda"
+        approved:
+          title: "Disetujui"
+        rejected:
+          title: "Ditolak"
         reviewed:
-          title: "(semua ditinjau)"
+          title: "Semua ditinjau"
         all:
-          title: "(semuanya)"
+          title: "Semuanya"
       context_question:
         delimiter: "atau"
       types:

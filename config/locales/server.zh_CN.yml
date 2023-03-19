@@ -230,6 +230,7 @@ zh_CN:
     user_exists: "不需要邀请 <b>%{email}</b>，他们已经拥有帐户！"
     invite_exists: "您已经邀请 <b>%{email}</b>。"
     invalid_email: "%{email} 不是有效的电子邮件地址。"
+    generic_error_response: "你的请求有问题。"
     rate_limit:
       other: "您在过去 24 小时内发出了 %{count} 个邀请，请等待 %{time_left}，然后重试。"
     confirm_email: "<p>快完成了！我们向您的电子邮件地址发送了一封激活邮件。请按照邮件中的说明操作来激活您的帐户。</p><p>如果您没有收到邮件，请检查您的垃圾邮件文件夹。</p>"
@@ -563,6 +564,11 @@ zh_CN:
             duration_minutes:
               cannot_be_zero: "必须大于 0。"
               exceeds_maximum: "不能超过 20 年。"
+        translation_overrides:
+          attributes:
+            value:
+              invalid_interpolation_keys:
+                other: '以下插值键无效： %{keys}'
         watched_word:
           attributes:
             word:
@@ -1532,7 +1538,10 @@ zh_CN:
     max_favorite_badges: "用户可以选择的最大徽章数"
     whispers_allowed_groups: "允许指定群组的成员在话题内进行不公开交流。"
     allow_index_in_robots_txt: "在 robots.txt 中指定此站点允许被网络搜索引擎索引。在特殊情况下，您可以永久<a href='%{base_path}/admin/customize/robots'>替换 robots.txt</a>。"
+    blocked_email_domains: "以竖线分隔的不允许用户注册帐户的电子邮件域的列表。自域名会被自动处理。不支持通配符 * 和 ?。示例：mailinator.com|trashmail.net"
+    allowed_email_domains: "以竖线分隔的电子邮件域名列表，用户必须使用该列中的域名注册帐户。系统会自动处理指定域的子域名。不支持通配符* 和？。警告：使用列表以外的遇见云贵注册的用户将不被允许。"
     normalize_emails: "检查规范化电子邮件是否唯一。规范化电子邮件移除了用户名中的所有点以及 + 和 @ 符号之间的所有内容。"
+    auto_approve_email_domains: "拥有来自该域名列表的电子邮件地址的用户将被自动批准。对于指定的域，将自动处理子域。不支持通配符*和?。"
     hide_email_address_taken: "在注册或忘记密码的过程中，不要告知用户存在一个使用给定电子邮件地址的帐户。对于“忘记密码”请求，需要完整的电子邮件。"
     log_out_strict: "退出时，退出用户在所有设备上的会话"
     version_checks: "Ping Discourse Hub 以获取版本更新并在 <a href='%{base_path}/admin' target='_blank'>/admin</a> 信息中心上显示新版本消息"
@@ -1554,7 +1563,7 @@ zh_CN:
     enable_discourse_connect: "通过 DiscourseConnect（以前称为“Discourse SSO”）启用登录（警告：用户的电子邮件地址*必须*由外部站点验证！）"
     verbose_discourse_connect_logging: "将详细的 DiscourseConnect 相关诊断记录到 <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     enable_discourse_connect_provider: "在 /session/sso_provider 端点上实现 DiscourseConnect（以前称为“Discourse SSO”）提供商协议，要求设置 discourse_connect_provider_secrets"
-    discourse_connect_url: "DiscourseConnect 端点的 URL（必须包括 http://或 https://）"
+    discourse_connect_url: "DiscourseConnect 的端点 URL (必须包含 http:// 或 https://，并且不得包含尾部斜杠)"
     discourse_connect_secret: "用于加密验证 DiscourseConnect 信息的密钥字符串，确保长度至少为 10 个字符"
     discourse_connect_provider_secrets: "使用 DiscourseConnect 的网域-密钥对列表。确保 DiscourseConnect 密钥长度至少为 10 个字符。通配符 * 可用于匹配任何网域或仅匹配其中的一部分（例如 *.example.com）。"
     discourse_connect_overrides_bio: "替换用户个人资料中的用户个人简介，并阻止用户对其进行更改"
@@ -1701,6 +1710,7 @@ zh_CN:
     tl3_requires_likes_given: "为了有资格升级到信任级别 3，在过去 (tl3 time period) 天内必须送出的最少赞数。"
     tl3_requires_likes_received: "为了有资格升级到信任级别 3，在过去 (tl3 time period) 天内必须收到的最少赞数。"
     tl3_links_no_follow: "不从信任级别 3 用户发布的链接中移除 rel=nofollow。"
+    tl4_delete_posts_and_topics: "允许 TL4 用户删除其他用户创建的帖子和话题。 TL4 用户还可以查看已删除的话题和帖子。"
     trusted_users_can_edit_others: "允许具有高信任级别的用户编辑其他用户的内容"
     min_trust_to_create_topic: "创建新话题所需的最低信任级别。"
     allow_flagging_staff: "如果启用，用户可以举报来自管理人员帐户的帖子。"
@@ -1817,6 +1827,10 @@ zh_CN:
     block_auto_generated_emails: "阻止识别为自动生成的传入电子邮件。"
     ignore_by_title: "根据标题忽略传入电子邮件。"
     mailgun_api_key: "用于验证网络钩子消息的 Mailgun Secret API 密钥。"
+    sendgrid_verification_key: "用于验证webhook消息的Sendgrid验证密钥。"
+    mailjet_webhook_token: "用于验证 webhook 负载的令牌。它必须作为 webhook 的“t”查询参数传递，例如：https://example.com/webhook/mailjet?t=supersecret"
+    mandrill_authentication_key: "用于验证 webhook 消息的 Mandrill 身份验证密钥。"
+    postmark_webhook_token: "用于验证 webhook 负载的令牌。它必须作为 webhook 的“t”查询参数传递，例如：https://example.com/webhook/postmark?t=supersecret"
     soft_bounce_score: "发生临时退回时，向用户添加的退回分数。"
     hard_bounce_score: "发生永久退回时，向用户添加的退回分数。"
     bounce_score_threshold: "在我们停止向用户发送电子邮件之前的最大退回分数。"
@@ -3044,6 +3058,14 @@ zh_CN:
     user_automatically_silenced:
       title: "用户被自动禁言"
       subject_template: "新用户 %{username} 因社区举报被禁言"
+      text_body_template: |
+        这是一封自动发送的邮件。
+
+        由于多个用户举报了 %{username} 的帖子，新用户 [%{username}](%{user_url}) 已被自动禁言。
+
+        请[审核举报](%{base_url}/review)。如果 %{username} 被意外禁言，请点击[此用户管理页面](%{user_url})上的取消禁言按钮。
+
+        此阈值可以通过 `silence_new_user` 站点设置更改。
     spam_post_blocked:
       title: "垃圾信息帖子被屏蔽"
       subject_template: "新用户 %{username} 的帖子因重复链接被屏蔽"
@@ -4115,10 +4137,7 @@ zh_CN:
       message: "<p>我们已将激活电子邮件重新发送至 <b>%{email}</b>"
   safe_mode:
     title: "进入安全模式"
-    description: "安全模式允许您在不加载插件或主题的情况下测试您的站点。"
     no_themes: "禁用主题和主题组件"
-    no_unofficial_plugins: "禁用非官方插件"
-    no_plugins: "禁用所有插件"
     enter: "进入安全模式"
     must_select: "您必须至少选择一个选项才能进入安全模式。"
   wizard:
@@ -4308,7 +4327,7 @@ zh_CN:
         title: "封禁用户"
         description: "同意举报并封禁用户。"
       agree_and_silence:
-        title: "将用户禁言"
+        title: "禁言用户"
         description: "同意举报并禁言用户。"
       agree_and_restore:
         title: "恢复帖子"
@@ -4325,6 +4344,7 @@ zh_CN:
         description: "将举报从队列中移除，并删除该帖子；如果是第一个帖子，同时删除该主题。 "
       delete_and_ignore_replies:
         title: "忽略举报，删除帖子和回复"
+        description: "将举报从队列中移除，并删除该帖子及所有回复；如果是第一个帖子，同时删除该主题"
         confirm: "确定要同时删除对帖子的回复吗？"
       delete_and_agree:
         title: "删除帖子"
@@ -4341,7 +4361,7 @@ zh_CN:
       ignore:
         title: "忽略"
       ignore_and_do_nothing:
-        title: "无操作"
+        title: "不进行操作"
         description: "忽略举报，从队列中移除并且不采取任何操作。已隐藏的帖子会保持隐藏并且由自动工具处理。"
       approve:
         title: "批准"

@@ -483,10 +483,14 @@ ca:
       statuses:
         pending:
           title: "Pendent"
+        approved:
+          title: "Aprovat"
+        rejected:
+          title: "Rebutjat"
         reviewed:
-          title: "(tots revisats)"
+          title: "Tots revisats"
         all:
-          title: "(qualsevol cosa)"
+          title: "Qualsevol cosa"
       context_question:
         delimiter: "o"
       types:

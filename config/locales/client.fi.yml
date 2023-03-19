@@ -527,10 +527,14 @@ fi:
       statuses:
         pending:
           title: "Odottaa"
+        approved:
+          title: "Hyväksytty"
+        rejected:
+          title: "Hylätty"
         reviewed:
-          title: "(kaikki käsitellyt)"
+          title: "Kaikki käsitellyt"
         all:
-          title: "(kaikki)"
+          title: "Kaikki"
       context_question:
         delimiter: "tai"
       types:

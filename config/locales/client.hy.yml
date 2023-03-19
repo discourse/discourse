@@ -433,10 +433,14 @@ hy:
       statuses:
         pending:
           title: "Սպասող"
+        approved:
+          title: "Հաստատված է"
+        rejected:
+          title: "Մերժված"
         reviewed:
-          title: "(բոլորը վերանայված են)"
+          title: "Բոլորը վերանայված են"
         all:
-          title: "(բոլորը)"
+          title: "Բոլորը"
       context_question:
         delimiter: "կամ"
       types:

@@ -1864,7 +1864,7 @@ en:
     composer_media_optimization_image_bytes_optimization_threshold: "Minimum image file size to trigger client-side optimization"
     composer_media_optimization_image_resize_dimensions_threshold: "Minimum image width to trigger client-side resize"
     composer_media_optimization_image_resize_width_target: "Images with widths larger than `composer_media_optimization_image_dimensions_resize_threshold` will be resized to this width. Must be >= than `composer_media_optimization_image_dimensions_resize_threshold`."
-    composer_media_optimization_image_encode_quality: "JPEG encode quality used in the re-encode process."
+    composer_media_optimization_image_encode_quality: "JPG encode quality used in the re-encode process."
 
     min_ratio_to_crop: "Ratio used to crop tall images. Enter the result of width / height."
 
@@ -4936,10 +4936,10 @@ en:
 
   safe_mode:
     title: "Enter safe mode"
-    description: "Safe mode allows you to test your site without loading plugins or themes."
+    description: "Safe mode allows you to test your site without loading themes or client-side plugin customizations. Server-side plugin customizations remain enabled."
     no_themes: "Disable themes and theme components"
-    no_unofficial_plugins: "Disable unofficial plugins"
-    no_plugins: "Disable all plugins"
+    no_unofficial_plugins: "Disable unofficial client-side plugin customizations"
+    no_plugins: "Disable all client-side plugin customizations"
     enter: "Enter Safe Mode"
     must_select: "You must select at least one option to enter safe mode."
   wizard:

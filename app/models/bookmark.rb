@@ -46,7 +46,8 @@ class Bookmark < ActiveRecord::Base
   validates :name, length: { maximum: 100 }
 
   def registered_bookmarkable
-    Bookmark.registered_bookmarkable_from_type(self.bookmarkable_type)
+    type = Bookmark.polymorphic_class_for(self.bookmarkable_type).name
+    Bookmark.registered_bookmarkable_from_type(type)
   end
 
   def polymorphic_columns_present

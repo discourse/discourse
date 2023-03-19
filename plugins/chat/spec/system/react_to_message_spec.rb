@@ -16,7 +16,7 @@ RSpec.describe "React to message", type: :system, js: true do
 
   context "when other user has reacted" do
     fab!(:reaction_1) do
-      Chat::ChatMessageReactor.new(Fabricate(:user), category_channel_1).react!(
+      Chat::MessageReactor.new(Fabricate(:user), category_channel_1).react!(
         message_id: message_1.id,
         react_action: :add,
         emoji: "female_detective",
@@ -47,7 +47,7 @@ RSpec.describe "React to message", type: :system, js: true do
 
   context "when current user reacts" do
     fab!(:reaction_1) do
-      Chat::ChatMessageReactor.new(Fabricate(:user), category_channel_1).react!(
+      Chat::MessageReactor.new(Fabricate(:user), category_channel_1).react!(
         message_id: message_1.id,
         react_action: :add,
         emoji: "female_detective",
@@ -113,7 +113,7 @@ RSpec.describe "React to message", type: :system, js: true do
 
   context "when current user has reacted" do
     fab!(:reaction_1) do
-      Chat::ChatMessageReactor.new(current_user, category_channel_1).react!(
+      Chat::MessageReactor.new(current_user, category_channel_1).react!(
         message_id: message_1.id,
         react_action: :add,
         emoji: "female_detective",
@@ -145,7 +145,7 @@ RSpec.describe "React to message", type: :system, js: true do
       fab!(:user_1) { Fabricate(:user) }
 
       fab!(:reaction_2) do
-        Chat::ChatMessageReactor.new(user_1, category_channel_1).react!(
+        Chat::MessageReactor.new(user_1, category_channel_1).react!(
           message_id: message_1.id,
           react_action: :add,
           emoji: "heart",
@@ -155,7 +155,7 @@ RSpec.describe "React to message", type: :system, js: true do
       it "doesn’t create duplicate reactions" do
         chat.visit_channel(category_channel_1)
 
-        ChatPublisher.publish_reaction!(category_channel_1, message_1, "add", user_1, "heart")
+        Chat::Publisher.publish_reaction!(category_channel_1, message_1, "add", user_1, "heart")
         channel.send_message("test") # cheap trick to ensure reaction has been processed
 
         expect(channel).to have_reaction(message_1, reaction_2, "1")

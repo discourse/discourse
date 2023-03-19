@@ -527,10 +527,14 @@ cs:
       statuses:
         pending:
           title: "Čeká na schválení"
+        approved:
+          title: "Schváleno"
+        rejected:
+          title: "Odmítnutých"
         reviewed:
-          title: "(vše zkontrolováno)"
+          title: "Vše zkontrolováno"
         all:
-          title: "(vše)"
+          title: "Vše"
       context_question:
         delimiter: "nebo"
       types:

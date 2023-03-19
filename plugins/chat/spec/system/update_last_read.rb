@@ -7,7 +7,7 @@ RSpec.describe "Update last read", type: :system, js: true do
 
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
-  let(:membership) { Chat::ChatChannelMembershipManager.new(channel_1).find_for_user(current_user) }
+  let(:membership) { Chat::ChannelMembershipManager.new(channel_1).find_for_user(current_user) }
 
   before do
     chat_system_bootstrap

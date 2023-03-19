@@ -55,7 +55,7 @@ RSpec.describe "User card", type: :system, js: true do
             # at this point the ChatChannel is not created yet
             expect(page).to have_css(".chat-drawer.is-expanded")
             expect(page).to have_css(
-              ".chat-drawer.is-expanded[data-chat-channel-id='#{ChatChannel.last.id}']",
+              ".chat-drawer.is-expanded[data-chat-channel-id='#{Chat::Channel.last.id}']",
             )
           end
         end

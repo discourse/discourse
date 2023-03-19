@@ -1603,7 +1603,6 @@ nl:
     enable_discourse_connect: "Schakel aanmelden via DiscourseConnect (voorheen 'Discourse SSO') in (WAARSCHUWING: E-MAILADRESSEN VAN GEBRUIKERS *MOETEN* WORDEN GEVALIDEERD DOOR DE EXTERNE SITE!)"
     verbose_discourse_connect_logging: "Log uitgebreide DiscourseConnect-gerelateerde diagnostiek naar <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     enable_discourse_connect_provider: "Implementeer providerprotocol DiscourseConnect (voorheen 'Discourse SSO') op het eindpunt /session/sso_provider, vereist dat discourse_connect_provider_secrets is ingesteld"
-    discourse_connect_url: "URL van DiscourseConnect-eindpunt (moet http:// of https:// bevatten)"
     discourse_connect_secret: "Geheime tekenreeks die wordt gebruikt om DiscourseConnect-gegevens cryptografisch te verifiëren, zorg dat deze 10 tekens of langer is"
     discourse_connect_provider_secrets: "Een lijst met domeingeheimparen die DiscourseConnect gebruiken. Zorg dat het DiscourseConnect-geheim 10 tekens of langer is. Het jokerteken * kan worden gebruikt om elk domein of slechts een deel ervan te matchen (bijvoorbeeld *.voorbeeld.com)."
     discourse_connect_overrides_bio: "Overschrijft biografie in gebruikersprofiel en voorkomt dat gebruiker deze kan wijzigen"
@@ -4199,10 +4198,7 @@ nl:
       message: "<p>We hebben de activerings-e-mail opnieuw naar <b>%{email}</b> gestuurd"
   safe_mode:
     title: "Veilige modus starten"
-    description: "In de veilige modus kun je je website testen zonder plug-ins of thema's te laden."
     no_themes: "Thema's en themacomponenten uitschakelen"
-    no_unofficial_plugins: "Niet-officiële plug-ins uitschakelen"
-    no_plugins: "Alle plug-ins uitschakelen"
     enter: "Veilige modus starten"
     must_select: "Je moet ten minste één optie selecteren om naar de veilige modus te gaan."
   wizard:

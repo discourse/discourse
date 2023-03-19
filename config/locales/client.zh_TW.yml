@@ -472,8 +472,12 @@ zh_TW:
       statuses:
         pending:
           title: "申請中"
+        approved:
+          title: "已同意"
+        rejected:
+          title: "被拒絕"
         all:
-          title: "(所有)"
+          title: "所有"
       context_question:
         delimiter: "或"
       types:

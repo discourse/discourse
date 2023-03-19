@@ -545,10 +545,14 @@ lt:
       statuses:
         pending:
           title: "Laukiama"
+        approved:
+          title: "Patvirtinta"
+        rejected:
+          title: "Atmesta"
         reviewed:
-          title: "(visi peržiūrėti)"
+          title: "Visi peržiūrėti"
         all:
-          title: "(viskas)"
+          title: "Viskas"
       context_question:
         delimiter: "arba"
       types:

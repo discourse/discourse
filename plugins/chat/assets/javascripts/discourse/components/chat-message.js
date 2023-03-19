@@ -612,7 +612,7 @@ export default class ChatMessage extends Component {
       this.args.message.bookmark ||
         Bookmark.createFor(
           this.currentUser,
-          "ChatMessage",
+          "Chat::Message",
           this.args.message.id
         ),
       {

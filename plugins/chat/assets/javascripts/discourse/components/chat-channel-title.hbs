@@ -59,9 +59,8 @@
         {{/if}}
       </span>
       <span class="chat-channel-title__name">
-        {{replace-emoji @channel.escapedTitle}}
+        {{replace-emoji @channel.title}}
       </span>
-
       {{#if (has-block)}}
         {{yield}}
       {{/if}}

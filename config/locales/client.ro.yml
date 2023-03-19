@@ -521,10 +521,14 @@ ro:
       statuses:
         pending:
           title: "În așteptare"
+        approved:
+          title: "Aprobat"
+        rejected:
+          title: "Respinse"
         reviewed:
-          title: "(toate revizuite)"
+          title: "Toate revizuite"
         all:
-          title: "(totul)"
+          title: "Totul"
       context_question:
         delimiter: "sau"
       types:
@@ -773,7 +777,7 @@ ro:
         other: "Grupuri"
       activity: "Activitate"
       members:
-        title: "Membrii"
+        title: "Membri"
         filter_placeholder_admin: "nume de utilizator sau email"
         filter_placeholder: "nume de utilizator"
         remove_member: "Elimină membru"

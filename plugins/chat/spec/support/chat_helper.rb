@@ -9,7 +9,7 @@ module ChatHelper
     chat_channel = Fabricate(:chat_channel, chatable: chatable)
 
     count.times do |n|
-      ChatMessage.new(
+      Chat::Message.new(
         chat_channel: chat_channel,
         user: users[n % users.length],
         message: "Chat message for test #{n}",

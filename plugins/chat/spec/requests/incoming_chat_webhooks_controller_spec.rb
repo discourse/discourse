@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Chat::IncomingChatWebhooksController do
+RSpec.describe Chat::IncomingWebhooksController do
   fab!(:chat_channel) { Fabricate(:category_channel) }
   fab!(:webhook) { Fabricate(:incoming_chat_webhook, chat_channel: chat_channel) }
 
@@ -30,10 +30,10 @@ RSpec.describe Chat::IncomingChatWebhooksController do
     it "creates a new chat message" do
       expect {
         post "/chat/hooks/#{webhook.key}.json", params: { text: "A new signup woo!" }
-      }.to change { ChatMessage.where(chat_channel: chat_channel).count }.by(1)
+      }.to change { Chat::Message.where(chat_channel: chat_channel).count }.by(1)
       expect(response.status).to eq(200)
-      chat_webhook_event = ChatWebhookEvent.last
-      expect(chat_webhook_event.chat_message_id).to eq(ChatMessage.last.id)
+      chat_webhook_event = Chat::WebhookEvent.last
+      expect(chat_webhook_event.chat_message_id).to eq(Chat::Message.last.id)
     end
 
     it "handles create message failures gracefully and does not create the chat message" do
@@ -41,7 +41,7 @@ RSpec.describe Chat::IncomingChatWebhooksController do
 
       expect {
         post "/chat/hooks/#{webhook.key}.json", params: { text: "hey #{watched_word.word}" }
-      }.not_to change { ChatMessage.where(chat_channel: chat_channel).count }
+      }.not_to change { Chat::Message.where(chat_channel: chat_channel).count }
       expect(response.status).to eq(422)
       expect(response.parsed_body["errors"]).to include(
         "Sorry, you can't post the word '#{watched_word.word}'; it's not allowed.",
@@ -52,7 +52,7 @@ RSpec.describe Chat::IncomingChatWebhooksController do
       chat_channel.update!(status: :read_only)
       expect {
         post "/chat/hooks/#{webhook.key}.json", params: { text: "hey this is a message" }
-      }.not_to change { ChatMessage.where(chat_channel: chat_channel).count }
+      }.not_to change { Chat::Message.where(chat_channel: chat_channel).count }
       expect(response.status).to eq(422)
       expect(response.parsed_body["errors"]).to include(
         I18n.t("chat.errors.channel_new_message_disallowed.read_only"),
@@ -74,9 +74,9 @@ RSpec.describe Chat::IncomingChatWebhooksController do
     it "processes the text param with SlackCompatibility" do
       expect {
         post "/chat/hooks/#{webhook.key}/slack.json", params: { text: "A new signup woo <!here>!" }
-      }.to change { ChatMessage.where(chat_channel: chat_channel).count }.by(1)
+      }.to change { Chat::Message.where(chat_channel: chat_channel).count }.by(1)
       expect(response.status).to eq(200)
-      expect(ChatMessage.last.message).to eq("A new signup woo @here!")
+      expect(Chat::Message.last.message).to eq("A new signup woo @here!")
     end
 
     it "processes the attachments param with SlackCompatibility, using the fallback" do
@@ -94,14 +94,14 @@ RSpec.describe Chat::IncomingChatWebhooksController do
         ],
       }
       expect { post "/chat/hooks/#{webhook.key}/slack.json", params: payload_data }.to change {
-        ChatMessage.where(chat_channel: chat_channel).count
+        Chat::Message.where(chat_channel: chat_channel).count
       }.by(1)
-      expect(ChatMessage.last.message).to eq(
+      expect(Chat::Message.last.message).to eq(
         "New alert: \"[StatusCake] https://www.test_notification.com (StatusCake Test Alert): Down,\" [46353](https://eu.opsg.in/a/i/test/blahguid)\nTags: ",
       )
       expect {
         post "/chat/hooks/#{webhook.key}/slack.json", params: { payload: payload_data }
-      }.to change { ChatMessage.where(chat_channel: chat_channel).count }.by(1)
+      }.to change { Chat::Message.where(chat_channel: chat_channel).count }.by(1)
     end
 
     it "can process the payload when it's a JSON string" do
@@ -120,8 +120,8 @@ RSpec.describe Chat::IncomingChatWebhooksController do
       }
       expect {
         post "/chat/hooks/#{webhook.key}/slack.json", params: { payload: payload_data.to_json }
-      }.to change { ChatMessage.where(chat_channel: chat_channel).count }.by(1)
-      expect(ChatMessage.last.message).to eq(
+      }.to change { Chat::Message.where(chat_channel: chat_channel).count }.by(1)
+      expect(Chat::Message.last.message).to eq(
         "New alert: \"[StatusCake] https://www.test_notification.com (StatusCake Test Alert): Down,\" [46353](https://eu.opsg.in/a/i/test/blahguid)\nTags: ",
       )
     end

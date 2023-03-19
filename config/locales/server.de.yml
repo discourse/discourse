@@ -238,6 +238,7 @@ de:
     user_exists: "Es ist nicht nötig, <b>%{email}</b> einzuladen. Die Person hat bereits ein Konto!"
     invite_exists: "Du hast <b>%{email}</b> bereits eingeladen."
     invalid_email: "%{email} ist keine gültige E-Mail-Adresse."
+    generic_error_response: "Es gab ein Problem mit deiner Anfrage."
     rate_limit:
       one: "Du hast in den letzten 24 Stunden bereits %{count} Einladung verschickt, bitte warte %{time_left}, bevor du es erneut versuchst."
       other: "Du hast in den letzten 24 Stunden bereits %{count} Einladungen verschickt, bitte warte %{time_left}, bevor du es erneut versuchst."
@@ -1615,7 +1616,7 @@ de:
     enable_discourse_connect: "Aktiviere die Anmeldung über DiscourseConnect (ehemals „Discourse SSO“) (WARNUNG: E-MAIL-ADRESSEN DER BENUTZER *MÜSSEN* VON DER EXTERNEN WEBSITE VALIDIERT WERDEN!)"
     verbose_discourse_connect_logging: "Protokolliere ausführliche DiscourseConnect-bezogene Diagnose in <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     enable_discourse_connect_provider: "Implementiere das DiscourseConnect-Anbieter-Protokoll (früher „Discourse SSO“) am Endpunkt /session/sso_provider; discourse_connect_provider_secrets muss festgelegt sein"
-    discourse_connect_url: "URL des DiscourseConnect-Endpunkts (muss http:// oder https:// enthalten)"
+    discourse_connect_url: "URL des DiscourseConnect-Endpunkts (muss http:// oder https:// enthalten und darf keinen abschließenden Schrägstrich enthalten)"
     discourse_connect_secret: "Geheime Zeichenfolge zur kryptografischen Authentifizierung von DiscourseConnect-Informationen. Stelle sicher, dass sie 10 Zeichen oder länger ist"
     discourse_connect_provider_secrets: "Eine Liste von Domain-Geheimnis-Paaren, die DiscourseConnect verwenden. Stelle sicher, dass das DiscourseConnect-Geheimnis 10 Zeichen oder länger ist. Das Platzhaltersymbol * kann verwendet werden, um eine Domain oder nur einen Teil davon auszuwählen (z. B. * .example.com)."
     discourse_connect_overrides_bio: "Überschreibt die Benutzerbiografie im Benutzerprofil und verhindert, dass der Benutzer sie ändert"
@@ -2148,6 +2149,7 @@ de:
     enable_new_notifications_menu: "Aktiviert das neue Benachrichtigungsmenü für das alte Navigationsmenü."
     enable_experimental_hashtag_autocomplete: "EXPERIMENTELL: Das neue #hashtag-Autovervollständigungssystem für Kategorien und Schlagwörter, das das ausgewählte Element anders darstellt und eine bessere Suche aufweist, verwenden"
     experimental_new_new_view_groups: "EXPERIMENTELL: Aktiviere eine neue Themenliste, die ungelesene und neue Themen kombiniert, und verlinke den Link „Alles“ in der Seitenleiste darauf."
+    enable_custom_sidebar_sections: "EXPERIMENTELL: Aktiviere benutzerdefinierte Seitenleistenabschnitte"
     errors:
       invalid_css_color: "Ungültige Farbe. Gib einen Farbnamen oder einen Hexadezimalwert ein."
       invalid_email: "Ungültige E-Mail-Adresse."
@@ -4487,10 +4489,7 @@ de:
       message: "<p>Wir haben die Aktivierungs-E-Mail noch einmal an <b>%{email}</b> gesendet"
   safe_mode:
     title: "Abgesicherten Modus betreten"
-    description: "Der abgesicherte Modus ermöglicht es dir, deine Website zu testen, ohne Plug-ins oder Themes zu laden."
     no_themes: "Themes und Theme-Komponente deaktivieren"
-    no_unofficial_plugins: "Inoffizielle Plug-ins deaktivieren"
-    no_plugins: "Alle Plug-ins deaktivieren"
     enter: "Abgesicherten Modus betreten"
     must_select: "Du musst mindestens eine Option auswählen, um den abgesicherten Modus zu betreten."
   wizard:

@@ -492,10 +492,14 @@ bs_BA:
       statuses:
         pending:
           title: "Na čekanju"
+        approved:
+          title: "Dozvojeno"
+        rejected:
+          title: "Odbijeni"
         reviewed:
-          title: "(sve pregledano)"
+          title: "Sve pregledano"
         all:
-          title: "(sve)"
+          title: "Sve"
       context_question:
         delimiter: "ili"
       types:

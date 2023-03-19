@@ -6,7 +6,6 @@
     "dialog-holder",
     "discourse",
     "discourse-common",
-    "discourse-ensure-deprecation-order",
     "discourse-hbr",
     "discourse-plugins",
     "discourse-widget-hbs",

@@ -512,10 +512,14 @@ pt:
       statuses:
         pending:
           title: "Pendente"
+        approved:
+          title: "Aprovado"
+        rejected:
+          title: "Rejeitado"
         reviewed:
-          title: "(todos revistos)"
+          title: "Todos revistos"
         all:
-          title: "(tudo)"
+          title: "Tudo"
       context_question:
         delimiter: "ou"
       types:

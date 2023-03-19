@@ -500,10 +500,14 @@ ur:
       statuses:
         pending:
           title: "زیرِاِلتوَاء"
+        approved:
+          title: "منظورشدہ"
+        rejected:
+          title: "مسترد کر دی گئی"
         reviewed:
-          title: "(تمام جائزہ کردہ)"
+          title: "تمام جائزہ کردہ"
         all:
-          title: "(تمام)"
+          title: "تمام"
       context_question:
         delimiter: "یا"
       types:

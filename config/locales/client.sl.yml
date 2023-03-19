@@ -489,10 +489,14 @@ sl:
       statuses:
         pending:
           title: "Za potrditev"
+        approved:
+          title: "Potrjeno"
+        rejected:
+          title: "Zavrnjeno"
         reviewed:
-          title: "(vsi pregledani)"
+          title: "Vsi pregledani"
         all:
-          title: "(vse)"
+          title: "Vse"
       context_question:
         delimiter: "ali"
       types:

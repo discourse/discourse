@@ -65,6 +65,10 @@ export default Controller.extend(ModalFunctionality, {
     return this._selected ?? this.defaultSelection;
   },
 
+  set selected(value) {
+    this._selected = value;
+  },
+
   @action
   onSelectedChanged(value) {
     this._selected = value;

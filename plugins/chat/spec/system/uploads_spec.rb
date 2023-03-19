@@ -31,7 +31,7 @@ describe "Uploading files in chat messages", type: :system, js: true do
 
       expect(page).not_to have_css(".chat-composer-upload")
       expect(channel).to have_message(text: "upload testing")
-      expect(ChatMessage.last.uploads.count).to eq(1)
+      expect(Chat::Message.last.uploads.count).to eq(1)
     end
 
     it "allows uploading multiple files" do
@@ -49,7 +49,7 @@ describe "Uploading files in chat messages", type: :system, js: true do
 
       expect(page).not_to have_css(".chat-composer-upload")
       expect(channel).to have_message(text: "upload testing")
-      expect(ChatMessage.last.uploads.count).to eq(2)
+      expect(Chat::Message.last.uploads.count).to eq(2)
     end
 
     it "allows uploading a huge image file with preprocessing" do
@@ -75,7 +75,7 @@ describe "Uploading files in chat messages", type: :system, js: true do
 
       expect(page).not_to have_css(".chat-composer-upload")
       expect(channel).to have_message(text: "upload testing")
-      expect(ChatMessage.last.uploads.count).to eq(1)
+      expect(Chat::Message.last.uploads.count).to eq(1)
     end
   end
 

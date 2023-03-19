@@ -443,6 +443,8 @@ sr:
       statuses:
         pending:
           title: "U toku"
+        approved:
+          title: "Potvrđenji"
       context_question:
         delimiter: "ili"
       types:

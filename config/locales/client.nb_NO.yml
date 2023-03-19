@@ -481,10 +481,14 @@ nb_NO:
       statuses:
         pending:
           title: "På vent"
+        approved:
+          title: "Godkjent"
+        rejected:
+          title: "Avvist"
         reviewed:
-          title: "(alle gjennomgått)"
+          title: "Alle gjennomgått"
         all:
-          title: "(alt)"
+          title: "Alt"
       context_question:
         delimiter: "eller"
       types:

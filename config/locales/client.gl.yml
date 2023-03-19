@@ -470,10 +470,14 @@ gl:
       statuses:
         pending:
           title: "Pendente"
+        approved:
+          title: "Aprobado"
+        rejected:
+          title: "Rexeitado"
         reviewed:
-          title: "(todas revisadas)"
+          title: "Todas revisadas"
         all:
-          title: "(todo)"
+          title: "Todo"
       context_question:
         delimiter: "ou"
       types:
