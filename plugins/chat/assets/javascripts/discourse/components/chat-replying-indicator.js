@@ -1,67 +1,20 @@
 import { isBlank, isPresent } from "@ember/utils";
-import Component from "@ember/component";
+import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
-import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "I18n";
-import { fmt } from "discourse/lib/computed";
 import { next } from "@ember/runloop";
+import { tracked } from "@glimmer/tracking";
+import I18n from "I18n";
+import { action } from "@ember/object";
 
-export default Component.extend({
-  tagName: "",
-  presence: service(),
-  presenceChannel: null,
-  chatChannel: null,
+export default class ChatReplyingIndicator extends Component {
+  @service presence;
+  @service currentUser;
 
-  @discourseComputed("presenceChannel.users.[]")
-  usernames(users) {
-    return users
-      ?.filter((u) => u.id !== this.currentUser.id)
-      ?.mapBy("username");
-  },
+  @tracked presenceChannel;
 
-  @discourseComputed("usernames.[]")
-  text(usernames) {
-    if (isBlank(usernames)) {
-      return;
-    }
-
-    if (usernames.length === 1) {
-      return I18n.t("chat.replying_indicator.single_user", {
-        username: usernames[0],
-      });
-    }
-
-    if (usernames.length < 4) {
-      const lastUsername = usernames.pop();
-      const commaSeparatedUsernames = usernames.join(
-        I18n.t("word_connector.comma")
-      );
-      return I18n.t("chat.replying_indicator.multiple_users", {
-        commaSeparatedUsernames,
-        lastUsername,
-      });
-    }
-
-    const commaSeparatedUsernames = usernames
-      .slice(0, 2)
-      .join(I18n.t("word_connector.comma"));
-    return I18n.t("chat.replying_indicator.many_users", {
-      commaSeparatedUsernames,
-      count: usernames.length - 2,
-    });
-  },
-
-  @discourseComputed("usernames.[]")
-  shouldDisplay(usernames) {
-    return isPresent(usernames);
-  },
-
-  channelName: fmt("chatChannel.id", "/chat-reply/%@"),
-
-  didReceiveAttrs() {
-    this._super(...arguments);
-
-    if (!this.chatChannel || this.chatChannel.isDraft) {
+  @action
+  setupPresence() {
+    if (!this.args.channel || this.args.channel.isDraft) {
       this.presenceChannel?.unsubscribe();
       return;
     }
@@ -75,15 +28,65 @@ export default Component.extend({
         }
 
         const presenceChannel = this.presence.getChannel(this.channelName);
-        this.set("presenceChannel", presenceChannel);
+        presenceChannel.__yoo = 1;
+        this.presenceChannel = presenceChannel;
         presenceChannel.subscribe();
       });
     }
-  },
+  }
 
-  willDestroyElement() {
-    this._super(...arguments);
-
+  @action
+  teardownPresence() {
     this.presenceChannel?.unsubscribe();
-  },
-});
+  }
+
+  get presenceChannelUsers() {
+    return this.presenceChannel?.get("users") || [];
+  }
+
+  get usernames() {
+    return this.presenceChannelUsers
+      ?.filter((u) => u.id !== this.currentUser.id)
+      ?.map((user) => user.username);
+  }
+
+  get text() {
+    if (isBlank(this.usernames)) {
+      return;
+    }
+
+    if (this.usernames.length === 1) {
+      return I18n.t("chat.replying_indicator.single_user", {
+        username: this.usernames[0],
+      });
+    }
+
+    if (this.usernames.length < 4) {
+      const lastUsername = this.usernames.pop();
+      const commaSeparatedUsernames = this.usernames.join(
+        I18n.t("word_connector.comma")
+      );
+      return I18n.t("chat.replying_indicator.multiple_users", {
+        commaSeparatedUsernames,
+        lastUsername,
+      });
+    }
+
+    const commaSeparatedUsernames = this.usernames
+      .slice(0, 2)
+      .join(I18n.t("word_connector.comma"));
+    return I18n.t("chat.replying_indicator.many_users", {
+      commaSeparatedUsernames,
+      count: this.usernames.length - 2,
+    });
+  }
+
+  get shouldRender() {
+    console.log(this.usernames);
+    return isPresent(this.usernames);
+  }
+
+  get channelName() {
+    return `/chat-reply/${this.args.channel.id}`;
+  }
+}

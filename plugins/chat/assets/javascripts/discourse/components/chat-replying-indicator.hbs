@@ -1,5 +1,10 @@
-<div class="chat-replying-indicator">
-  {{#if this.shouldDisplay}}
+<div
+  class="chat-replying-indicator"
+  {{did-insert this.setupPresence}}
+  {{did-update this.setupPresence @channel}}
+  {{will-destroy this.teardownPresence}}
+>
+  {{#if this.shouldRender}}
     <span class="chat-replying-indicator__text">{{this.text}}</span>
     <span class="chat-replying-indicator__wave">
       <span class="chat-replying-indicator__dot">.</span>
