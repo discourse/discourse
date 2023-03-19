@@ -1,33 +1,35 @@
-import Component from "@ember/component";
+import Component from "@glimmer/component";
 import { htmlSafe } from "@ember/template";
-import { computed } from "@ember/object";
-import { gt, reads } from "@ember/object/computed";
+import { inject as service } from "@ember/service";
 
 export default class ChatChannelTitle extends Component {
-  tagName = "";
-  channel = null;
+  @service site;
 
-  @reads("channel.chatable.users.[]") users;
-  @gt("users.length", 1) multiDm;
+  get multiDm() {
+    return this.users.length > 1;
+  }
 
-  @computed("users")
+  get users() {
+    return this.args.channel?.chatable?.users || [];
+  }
+
   get usernames() {
-    return this.users.mapBy("username").join(", ");
+    return this.users.map((user) => user.username).join(", ");
   }
 
-  @computed("channel.chatable.color")
+  get color() {
+    return this.args.channel?.chatable?.color;
+  }
+
   get channelColorStyle() {
-    return htmlSafe(`color: #${this.channel.chatable.color}`);
+    if (!this.color) {
+      return;
+    }
+
+    return htmlSafe(`color: #${this.color}`);
   }
 
-  @computed(
-    "channel.chatable.users.length",
-    "channel.chatable.users.@each.status"
-  )
   get showUserStatus() {
-    return !!(
-      this.channel.chatable.users.length === 1 &&
-      this.channel.chatable.users[0].status
-    );
+    return !!(this.users.length === 1 && this.users[0].status);
   }
 }
