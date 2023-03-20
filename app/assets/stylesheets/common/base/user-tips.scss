@@ -1,3 +1,7 @@
+.user-tip {
+  z-index: z("composer", "content") - 1;
+}
+
 .user-tip-container {
   min-width: 300px;
   padding: 0.5em;
