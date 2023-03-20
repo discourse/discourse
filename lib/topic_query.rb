@@ -59,7 +59,6 @@ class TopicQuery
       no_subcategories
       no_tags
       exclude_tag
-      additional_tag_ids
     ]
   end
 

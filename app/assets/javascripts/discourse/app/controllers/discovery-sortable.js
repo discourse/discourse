@@ -21,7 +21,6 @@ export const queryParams = {
   no_subcategories: { replace: true, refreshModel: true },
   no_tags: { replace: true, refreshModel: true },
   exclude_tag: { replace: true, refreshModel: true },
-  additional_tag_ids: { replace: true, refreshModel: true },
 };
 
 // Basic controller options

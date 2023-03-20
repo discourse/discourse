@@ -394,7 +394,7 @@ RSpec.describe TagsController do
     end
 
     context "with a tag intersection" do
-      it "should pass the `additional_tag_ids` param to the `load_more_topic` url" do
+      it "should generate a tag intersection `load_more_topic` url" do
         tag = Fabricate(:tag)
         tag_2 = Fabricate(:tag)
 
@@ -402,13 +402,12 @@ RSpec.describe TagsController do
         3.times { Fabricate(:topic, tags: [tag, tag_2]) }
 
         sign_in(admin)
-        get "/tags/#{tag.name}.json", params: { per_page: 2, additional_tag_ids: tag_2.name }
+        get "/tags/intersection/#{tag.name}/#{tag_2.name}.json?per_page=2"
 
         expect(response.status).to eq(200)
-        pp parsed_body
-        #expect(response.parsed_body["topic_list"]["more_topics_url"]).to eq(
-          #"/tags/intersection/#{tag.name}/#{tag_2.name}?match_all_tags=true&page=1&per_page=2&tags%5B%5D=#{tag.name}&tags%5B%5D=#{tag_2.name}",
-        #)
+        expect(response.parsed_body["topic_list"]["more_topics_url"]).to eq(
+          "/tags/intersection/#{tag.name}/#{tag_2.name}?match_all_tags=true&page=1&per_page=2&tags%5B%5D=#{tag.name}&tags%5B%5D=#{tag_2.name}",
+        )
       end
     end
   end

@@ -102,9 +102,8 @@ class TagsController < ::ApplicationController
   Discourse.filters.each do |filter|
     define_method("show_#{filter}") do
       @tag_id = params[:tag_id].force_encoding("UTF-8")
-      if params[:additional_tag_ids]
-        @additional_tags = params[:additional_tag_ids].to_s.split("/").map { |t| t.force_encoding("UTF-8") }
-      end
+      @additional_tags =
+        params[:additional_tag_ids].to_s.split("/").map { |t| t.force_encoding("UTF-8") }
 
       list_opts = build_topic_list_options
       @list = nil
@@ -484,6 +483,8 @@ class TagsController < ::ApplicationController
   def url_method(opts = {})
     if opts[:category_slug_path_with_id]
       "tag_category_#{action_name}_path"
+    elsif params[:additional_tag_ids]
+      "tag_intersection_path"
     else
       "tag_#{action_name}_path"
     end
@@ -529,7 +530,6 @@ class TagsController < ::ApplicationController
         state: params[:state],
         search: params[:search],
         q: params[:q],
-        additional_tag_ids: params[:additional_tag_ids]
       )
     options[:no_subcategories] = true if params[:no_subcategories] == true ||
       params[:no_subcategories] == "true"
