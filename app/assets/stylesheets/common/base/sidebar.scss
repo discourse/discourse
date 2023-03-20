@@ -31,7 +31,9 @@
 
   .footer-nav-ipad & {
     top: calc(var(--header-offset) + var(--footer-nav-height));
-    height: calc(100vh - var(--header-offset, 0px) - var(--footer-nav-height, 0px));
+    height: calc(
+      100vh - var(--header-offset, 0px) - var(--footer-nav-height, 0px)
+    );
   }
   height: calc(100vh - var(--header-offset, 0px));
   align-self: start;
