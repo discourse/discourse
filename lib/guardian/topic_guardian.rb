@@ -294,12 +294,9 @@ module TopicGuardian
     records =
       (
         if allowed_category_ids.size == 0
-          records.where("topics.category_id IS NULL")
+          records.where("categories.id IS NULL")
         else
-          records.where(
-            "topics.category_id IS NULL or topics.category_id IN (?)",
-            allowed_category_ids,
-          )
+          records.where("categories.id IS NULL or categories.id IN (?)", allowed_category_ids)
         end
       )
 

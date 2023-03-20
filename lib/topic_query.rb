@@ -942,12 +942,12 @@ class TopicQuery
       ].flatten.map(&:to_i)
       category_ids << category_id if category_id.present? && category_ids.exclude?(category_id)
 
-      list = list.where("topics.category_id IN (?)", category_ids) if category_ids.present?
+      list = list.where("categories.id IN (?)", category_ids) if category_ids.present?
     else
       category_ids = SiteSetting.default_categories_muted.split("|").map(&:to_i)
       category_ids -= [category_id] if category_id.present? && category_ids.include?(category_id)
 
-      list = list.where("topics.category_id NOT IN (?)", category_ids) if category_ids.present?
+      list = list.where("categories.id NOT IN (?)", category_ids) if category_ids.present?
     end
 
     list
