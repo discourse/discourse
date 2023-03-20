@@ -95,7 +95,10 @@ class SectionLink {
   }
 
   #validInternal() {
-    return this.router.recognize(this.path).name !== "unknown";
+    return (
+      this.router.recognize(this.path).name !== "unknown" ||
+      this.path.match(/^\/my\/[a-z_\-\/]+$/)
+    );
   }
 
   get validValue() {
