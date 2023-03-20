@@ -612,7 +612,7 @@ HTML
 
   describe "SVG sprite theme fields" do
     let :svg_content do
-      "<svg></svg>"
+      "<svg><symbol id='test'></symbol></svg>"
     end
 
     let :upload_file do
@@ -651,10 +651,10 @@ HTML
 
     it "clears SVG sprite cache when upload is deleted" do
       theme_field
-      expect(SvgSprite.custom_svg_sprites(theme.id).size).to eq(1)
+      expect(SvgSprite.custom_svgs(theme.id).size).to eq(1)
 
       theme_field.destroy!
-      expect(SvgSprite.custom_svg_sprites(theme.id).size).to eq(0)
+      expect(SvgSprite.custom_svgs(theme.id).size).to eq(0)
     end
 
     it "crashes gracefully when svg is invalid" do
