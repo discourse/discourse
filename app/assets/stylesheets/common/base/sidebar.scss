@@ -31,9 +31,9 @@
 
   .footer-nav-ipad & {
     top: calc(var(--header-offset) + var(--footer-nav-height));
-    height: calc(100vh - var(--header-offset, 0) - var(--footer-nav-height, 0));
+    height: calc(100vh - var(--header-offset, 0px) - var(--footer-nav-height, 0px));
   }
-  height: calc(100vh - var(--header-offset, 0));
+  height: calc(100vh - var(--header-offset, 0px));
   align-self: start;
   overflow-y: auto;
 
@@ -46,7 +46,7 @@
     padding: 0;
     overflow-x: hidden;
     // allows sidebar to scroll to the bottom when the composer is open
-    height: calc(100% - var(--composer-height, 0));
+    height: calc(100% - var(--composer-height, 0px));
   }
 
   .sidebar-sections {
