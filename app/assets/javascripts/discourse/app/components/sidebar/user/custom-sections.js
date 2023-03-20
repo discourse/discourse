@@ -154,7 +154,7 @@ export default class SidebarUserCustomSections extends Component {
 
   get sections() {
     return this.currentUser.sidebarSections.map((section) => {
-      return new Section(section, this.currentUser, this.router);
+      return new Section({ section, currentUser: this.currentUser, router: this.router });
     });
   }
 
