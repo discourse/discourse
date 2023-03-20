@@ -434,6 +434,28 @@ RSpec.describe TagsController do
       expect(response.status).to eq(200)
     end
 
+    it "can handle additional tags in query params" do
+      tag2 = Fabricate(:tag)
+      topic_with_two_tags = Fabricate(:topic, tags: [tag, tag2])
+
+      get "/tag/test.json?match_all_tags=true&tags[]=#{tag2.name}"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["topic_list"]["topics"].map { |t| t["id"] }).to contain_exactly(
+        topic_with_two_tags.id,
+      )
+    end
+
+    it "can handle duplicate tags in query params" do
+      tag2 = Fabricate(:tag)
+      topic_with_two_tags = Fabricate(:topic, tags: [tag, tag2])
+
+      get "/tag/test.json?match_all_tags=true&tags[]=test&tags[]=#{tag2.name}"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["topic_list"]["topics"].map { |t| t["id"] }).to contain_exactly(
+        topic_with_two_tags.id,
+      )
+    end
+
     it "handles special tag 'none'" do
       SiteSetting.pm_tags_allowed_for_groups = "1|2|3"
 
