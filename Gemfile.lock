@@ -501,7 +501,7 @@ GEM
     uniform_notifier (1.16.0)
     uri (0.12.0)
     uri_template (0.7.0)
-    version_gem (1.1.1)
+    version_gem (1.1.2)
     web-push (3.0.0)
       hkdf (~> 1.0)
       jwt (~> 2.0)
