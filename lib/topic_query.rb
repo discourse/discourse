@@ -776,7 +776,11 @@ class TopicQuery
 
     result = apply_ordering(result, options)
 
-    all_listable_topics = @guardian.filter_allowed_categories(Topic.unscoped.listable_topics)
+    all_listable_topics =
+      @guardian.filter_allowed_categories(
+        Topic.unscoped.listable_topics,
+        category_id_column: "categories.id",
+      )
 
     if options[:include_pms] || options[:include_all_pms]
       all_pm_topics =
