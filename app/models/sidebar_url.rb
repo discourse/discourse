@@ -10,8 +10,8 @@ class SidebarUrl < ActiveRecord::Base
   before_validation :remove_internal_hostname, :set_external
 
   def path_validator
-    if external?
-      raise ActionController::RoutingError if value !~ Discourse::Utils::URI_REGEXP
+    if external? && !my_link?
+      raise ActionController::RoutingError.new("Not Found") if value !~ Discourse::Utils::URI_REGEXP
     else
       Rails.application.routes.recognize_path(value)
     end
@@ -27,7 +27,11 @@ class SidebarUrl < ActiveRecord::Base
   end
 
   def set_external
-    self.external = value.start_with?("http://", "https://")
+    self.external = value.start_with?("http://", "https://") || my_link?
+  end
+
+  def my_link?
+    value.start_with?("/my/")
   end
 end
 

@@ -95,7 +95,10 @@ class SectionLink {
   }
 
   #validInternal() {
-    return this.router.recognize(this.path).name !== "unknown";
+    return (
+      this.router.recognize(this.path).name !== "unknown" ||
+      this.path.match(/^\/my\/[a-z_\-\/]+$/)
+    );
   }
 
   get validValue() {
@@ -197,7 +200,6 @@ export default Controller.extend(ModalFunctionality, {
             icon: link.icon,
             name: link.name,
             value: link.path,
-            external: link.external,
             _destroy: link._destroy,
           };
         }),
