@@ -178,7 +178,7 @@ describe Chat do
               <h3 class="chat-onebox-title">
                 <a href="#{chat_url}">
                   <span class="category-chat-badge" style="color: ##{chat_channel.chatable.color}">
-                    <svg class="fa d-icon d-icon-hashtag svg-icon svg-string" xmlns="http://www.w3.org/2000/svg"><use href="#hashtag"></use></svg>
+                    <svg class="fa d-icon d-icon-d-chat svg-icon svg-string" xmlns="http://www.w3.org/2000/svg"><use href="#d-chat"></use></svg>
                  </span>
                   <span class="clear-badge">#{chat_channel.name}</span>
                 </a>
@@ -210,7 +210,7 @@ describe Chat do
               </div>
               <a class="chat-transcript-channel" href="/chat/c/-/#{chat_channel.id}">
                 <span class="category-chat-badge" style="color: ##{chat_channel.chatable.color}">
-                  <svg class="fa d-icon d-icon-hashtag svg-icon svg-string" xmlns="http://www.w3.org/2000/svg"><use href="#hashtag"></use></svg>
+                  <svg class="fa d-icon d-icon-chat svg-icon svg-string" xmlns="http://www.w3.org/2000/svg"><use href="#d-chat"></use></svg>
                 </span>
                 #{chat_channel.name}
               </a>
