@@ -1235,6 +1235,10 @@ export default class ChatLivePane extends Component {
 
   @action
   addAutoFocusEventListener() {
+    if (this.args.skipRegisteringAutoFocus) {
+      return;
+    }
+
     document.addEventListener("keydown", this._autoFocus);
   }
 

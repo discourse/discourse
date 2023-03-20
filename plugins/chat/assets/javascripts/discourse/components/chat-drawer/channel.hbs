@@ -19,6 +19,7 @@
       <ChatLivePane
         @targetMessageId={{readonly @params.messageId}}
         @channel={{this.chat.activeChannel}}
+        @skipRegisteringAutoFocus={{true}}
       />
     {{/if}}
   </div>
