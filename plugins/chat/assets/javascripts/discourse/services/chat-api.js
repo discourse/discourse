@@ -291,11 +291,12 @@ export default class ChatApi extends Service {
    * @param {number} messageId - The ID of the message being marked as read.
    * @returns {Promise}
    */
-  updateCurrentUserTracking({ channelId, messageId } = {}) {
-    return this.#putRequest(`/tracking/read/me`, {
-      channel_id: channelId,
-      message_id: messageId,
-    });
+  updateCurrentUserRead({ channelId, messageId } = {}) {
+    if (channelId && messageId) {
+      return this.#putRequest(`/channels/${channelId}/read/${messageId}`);
+    } else {
+      return this.#putRequest(`/channels/read`);
+    }
   }
 
   get #basePath() {

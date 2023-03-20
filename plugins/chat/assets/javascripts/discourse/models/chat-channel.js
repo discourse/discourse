@@ -194,9 +194,8 @@ export default class ChatChannel extends RestModel {
 
     // TODO (martin) Change this to use chatApi service once we change this
     // class not to use RestModel
-    return ajax(`/chat/api/tracking/read/me`, {
+    return ajax(`/chat/api/channels/${this.id}/read/${messageId}`, {
       method: "PUT",
-      data: { message_id: messageId, channel_id: this.id },
     }).then(() => {
       this.currentUserMembership.last_read_message_id = messageId;
     });

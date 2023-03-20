@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Chat::Api::TrackingController do
+RSpec.describe Chat::Api::ReadsController do
   fab!(:current_user) { Fabricate(:user) }
 
   before do
@@ -17,12 +17,7 @@ RSpec.describe Chat::Api::TrackingController do
       fab!(:message_2) { Fabricate(:chat_message, chat_channel: chat_channel, user: other_user) }
 
       it "returns a 404 when the user is not a channel member" do
-        put "/chat/api/tracking/read/me.json",
-            params: {
-              channel_id: chat_channel.id,
-              message_id: message_1.id,
-            }
-
+        put "/chat/api/channels/#{chat_channel.id}/read/#{message_1.id}.json"
         expect(response.status).to eq(404)
       end
 
@@ -34,12 +29,7 @@ RSpec.describe Chat::Api::TrackingController do
           following: false,
         )
 
-        put "/chat/api/tracking/read/me.json",
-            params: {
-              channel_id: chat_channel.id,
-              message_id: message_1.id,
-            }
-
+        put "/chat/api/channels/#{chat_channel.id}/read/#{message_1.id}.json"
         expect(response.status).to eq(404)
       end
 
@@ -50,12 +40,7 @@ RSpec.describe Chat::Api::TrackingController do
 
         context "when message_id param doesn't link to a message of the channel" do
           it "raises a not found" do
-            put "/chat/api/tracking/read/me.json",
-                params: {
-                  channel_id: chat_channel.id,
-                  message_id: -999,
-                }
-
+            put "/chat/api/channels/#{chat_channel.id}/read/-999.json"
             expect(response.status).to eq(404)
           end
         end
@@ -64,12 +49,7 @@ RSpec.describe Chat::Api::TrackingController do
           before { membership.update!(last_read_message_id: message_2.id) }
 
           it "raises an invalid request" do
-            put "/chat/api/tracking/read/me.json",
-                params: {
-                  channel_id: chat_channel.id,
-                  message_id: message_1.id,
-                }
-
+            put "/chat/api/channels/#{chat_channel.id}/read/#{message_1.id}.json"
             expect(response.status).to eq(400)
             expect(response.parsed_body["errors"][0]).to match(/message_id/)
           end
@@ -79,23 +59,14 @@ RSpec.describe Chat::Api::TrackingController do
           before { message_1.trash!(Discourse.system_user) }
 
           it "works" do
-            put "/chat/api/tracking/read/me",
-                params: {
-                  channel_id: chat_channel.id,
-                  message_id: message_1.id,
-                }
-
+            put "/chat/api/channels/#{chat_channel.id}/read/#{message_1.id}"
             expect(response.status).to eq(200)
           end
         end
 
         it "updates timing records" do
           expect {
-            put "/chat/api/tracking/read/me.json",
-                params: {
-                  channel_id: chat_channel.id,
-                  message_id: message_1.id,
-                }
+            put "/chat/api/channels/#{chat_channel.id}/read/#{message_1.id}.json"
           }.not_to change { Chat::UserChatChannelMembership.count }
 
           membership.reload
@@ -107,11 +78,7 @@ RSpec.describe Chat::Api::TrackingController do
         it "marks all mention notifications as read for the channel" do
           notification = create_notification_and_mention_for(current_user, other_user, message_1)
 
-          put "/chat/api/tracking/read/me.json",
-              params: {
-                channel_id: chat_channel.id,
-                message_id: message_2.id,
-              }
+          put "/chat/api/channels/#{chat_channel.id}/read/#{message_2.id}.json"
           expect(response.status).to eq(200)
           expect(notification.reload.read).to eq(true)
         end
@@ -120,11 +87,7 @@ RSpec.describe Chat::Api::TrackingController do
           message_3 = Fabricate(:chat_message, chat_channel: chat_channel, user: other_user)
           notification = create_notification_and_mention_for(current_user, other_user, message_3)
 
-          put "/chat/api/tracking/read/me.json",
-              params: {
-                channel_id: chat_channel.id,
-                message_id: message_2.id,
-              }
+          put "/chat/api/channels/#{chat_channel.id}/read/#{message_2.id}.json"
           expect(response.status).to eq(200)
           expect(notification.reload.read).to eq(false)
         end
@@ -171,7 +134,7 @@ RSpec.describe Chat::Api::TrackingController do
       end
 
       it "marks all messages as read across the user's channel memberships with the correct last_read_message_id" do
-        put "/chat/api/tracking/read/me.json"
+        put "/chat/api/channels/read.json"
 
         expect(membership_1.reload.last_read_message_id).to eq(message_2.id)
         expect(membership_2.reload.last_read_message_id).to eq(message_4.id)
@@ -181,7 +144,7 @@ RSpec.describe Chat::Api::TrackingController do
       it "doesn't mark messages for channels the user is not following as read" do
         membership_1.update!(following: false)
 
-        put "/chat/api/tracking/read/me.json"
+        put "/chat/api/channels/read.json"
 
         expect(membership_1.reload.last_read_message_id).to eq(nil)
         expect(membership_2.reload.last_read_message_id).to eq(message_4.id)
@@ -189,7 +152,7 @@ RSpec.describe Chat::Api::TrackingController do
       end
 
       it "returns the updated memberships, channels, and last message id" do
-        put "/chat/api/tracking/read/me.json"
+        put "/chat/api/channels/read.json"
         expect(response.parsed_body["updated_memberships"]).to match_array(
           [
             {
