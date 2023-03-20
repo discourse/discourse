@@ -9,6 +9,8 @@ import { sanitize } from "discourse/lib/text";
 import { tracked } from "@glimmer/tracking";
 import { A } from "@ember/array";
 
+const MY_LINKS_REGEX = /^\/my\/[a-z_\-\/]+$/;
+
 class Section {
   @tracked title;
   @tracked links;
@@ -97,7 +99,7 @@ class SectionLink {
   #validInternal() {
     return (
       this.router.recognize(this.path).name !== "unknown" ||
-      this.path.match(/^\/my\/[a-z_\-\/]+$/)
+      this.path.match(MY_LINKS_REGEX)
     );
   }
 
