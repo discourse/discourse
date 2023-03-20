@@ -61,11 +61,13 @@ class SidebarSectionsController < ApplicationController
     @guardian.ensure_can_edit!(sidebar_section)
 
     order = reorder_params["links_order"].map(&:to_i).each_with_index.to_h
-    links = sidebar_section.sidebar_section_links.sort_by { |link| order[link.linkable_id] }
-    sidebar_section.sidebar_section_links.upsert_all(
-      links.map.with_index { |link, index| link.attributes.merge(position: index) },
-      update_only: [:position],
-    )
+    links =
+      sidebar_section
+        .sidebar_section_links
+        .sort_by { |link| order[link.linkable_id] }
+        .map
+        .with_index { |link, index| link.attributes.merge(position: index) }
+    sidebar_section.sidebar_section_links.upsert_all(links, update_only: [:position])
     render json: sidebar_section
   rescue Discourse::InvalidAccess
     render json: failed_json, status: 403
