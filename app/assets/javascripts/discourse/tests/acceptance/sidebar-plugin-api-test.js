@@ -98,7 +98,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
                   }
 
                   get prefixValue() {
-                    return "hashtag";
+                    return "d-chat";
                   }
 
                   get prefixColor() {
