@@ -303,7 +303,6 @@
 
       &--user-field {
         display: flex;
-        grid-template-columns: auto fit-content;
         order: 2;
         // force full width of the cell
         // because we don't know how much content there is
