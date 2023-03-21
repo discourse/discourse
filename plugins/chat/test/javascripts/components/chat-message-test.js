@@ -21,7 +21,6 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
         unread_count: 0,
         muted: false,
       },
-      canInteractWithChat: true,
       canDeleteSelf: true,
       canDeleteOthers: true,
       canFlag: true,
@@ -64,7 +63,6 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
   const template = hbs`
     <ChatMessage
       @message={{this.message}}
-      @canInteractWithChat={{this.canInteractWithChat}}
       @channel={{this.chatChannel}}
       @setReplyTo={{this.setReplyTo}}
       @replyMessageClicked={{this.replyMessageClicked}}

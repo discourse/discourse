@@ -975,10 +975,6 @@ export default class ChatLivePane extends Component {
     this._focusComposer();
   }
 
-  get canInteractWithChat() {
-    return !this.args.channel?.userSilenced;
-  }
-
   get chatProgressBarContainer() {
     return document.querySelector("#chat-progress-bar-container");
   }

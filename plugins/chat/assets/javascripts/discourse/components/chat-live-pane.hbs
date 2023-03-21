@@ -53,7 +53,6 @@
         {{#each @channel.messages key="id" as |message|}}
           <ChatMessage
             @message={{message}}
-            @canInteractWithChat={{this.canInteractWithChat}}
             @channel={{@channel}}
             @setReplyTo={{this.setReplyTo}}
             @replyMessageClicked={{this.replyMessageClicked}}
@@ -98,7 +97,6 @@
   {{else}}
     {{#if (or @channel.isDraft @channel.isFollowing)}}
       <ChatComposer
-        @canInteractWithChat={{this.canInteractWithChat}}
         @sendMessage={{this.sendMessage}}
         @editMessage={{this.editMessage}}
         @setReplyTo={{this.setReplyTo}}

@@ -109,7 +109,7 @@ export default class ChatMessage extends Component {
 
   get showActions() {
     return (
-      this.args.canInteractWithChat &&
+      this.chat.userCanInteractWithChat &&
       !this.args.message?.staged &&
       this.args.isHovered
     );
@@ -466,7 +466,7 @@ export default class ChatMessage extends Component {
   }
 
   deselectReaction(emoji) {
-    if (!this.args.canInteractWithChat) {
+    if (!this.chat.userCanInteractWithChat) {
       return;
     }
 
@@ -475,7 +475,7 @@ export default class ChatMessage extends Component {
 
   @action
   selectReaction(emoji) {
-    if (!this.args.canInteractWithChat) {
+    if (!this.chat.userCanInteractWithChat) {
       return;
     }
 
@@ -488,7 +488,7 @@ export default class ChatMessage extends Component {
 
   @action
   react(emoji, reactAction) {
-    if (!this.args.canInteractWithChat) {
+    if (!this.chat.userCanInteractWithChat) {
       return;
     }
 

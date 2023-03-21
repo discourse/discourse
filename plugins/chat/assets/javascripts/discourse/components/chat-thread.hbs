@@ -37,8 +37,24 @@
   </div>
   <div class="chat-thread__messages">
     <ul>
-      {{#each this.thread.messages as |message|}}
-        <li><strong>{{message.user.username}}</strong>: {{message.message}}</li>
+      {{#each this.thread.messages key="id" as |message|}}
+        <ChatMessage
+          @message={{message}}
+          @channel={{@channel}}
+          @setReplyTo={{this.setReplyTo}}
+          @replyMessageClicked={{this.replyMessageClicked}}
+          @editButtonClicked={{this.editButtonClicked}}
+          @selectingMessages={{this.selectingMessages}}
+          @onStartSelectingMessages={{this.onStartSelectingMessages}}
+          @onSelectMessage={{this.onSelectMessage}}
+          @bulkSelectMessages={{this.bulkSelectMessages}}
+          @isHovered={{eq message.id this.hoveredMessageId}}
+          @onHoverMessage={{this.onHoverMessage}}
+          @resendStagedMessage={{this.resendStagedMessage}}
+          @messageDidEnterViewport={{this.messageDidEnterViewport}}
+          @messageDidLeaveViewport={{this.messageDidLeaveViewport}}
+          @forceRendering={{this.forceRendering}}
+        />
       {{/each}}
     </ul>
     {{#if (or this.loading this.loadingMoreFuture)}}
@@ -47,7 +63,6 @@
   </div>
 
   <ChatComposer
-    @canInteractWithChat="true"
     @sendMessage={{this.sendMessage}}
     @editMessage={{this.editMessage}}
     @setReplyTo={{this.setReplyTo}}

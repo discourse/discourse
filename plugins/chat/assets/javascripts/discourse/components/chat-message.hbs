@@ -138,7 +138,7 @@
                   />
                 {{/each}}
 
-                {{#if @canInteractWithChat}}
+                {{#if this.chat.userCanInteractWithChat}}
                   {{#unless this.site.mobileView}}
                     <DButton
                       @class="chat-message-react-btn"

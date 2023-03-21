@@ -48,6 +48,10 @@ export default class Chat extends Service {
     );
   }
 
+  get userCanInteractWithChat() {
+    return !this.activeChannel?.userSilenced;
+  }
+
   init() {
     super.init(...arguments);
 

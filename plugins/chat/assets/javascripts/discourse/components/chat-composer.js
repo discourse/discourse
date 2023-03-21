@@ -549,14 +549,11 @@ export default Component.extend(TextareaTextManipulation, {
     this.set("emojiPickerIsActive", false);
   },
 
-  @discourseComputed(
-    "chatChannel.{id,chatable.users.[]}",
-    "canInteractWithChat"
-  )
-  disableComposer(channel, canInteractWithChat) {
+  @discourseComputed("chatChannel.{id,chatable.users.[]}")
+  disableComposer(channel) {
     return (
       (channel.isDraft && isEmpty(channel?.chatable?.users)) ||
-      !canInteractWithChat ||
+      !this.chat.userCanInteractWithChat ||
       !channel.canModifyMessages(this.currentUser)
     );
   },
