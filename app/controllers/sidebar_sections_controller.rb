@@ -61,12 +61,15 @@ class SidebarSectionsController < ApplicationController
     @guardian.ensure_can_edit!(sidebar_section)
 
     order = reorder_params["links_order"].map(&:to_i).each_with_index.to_h
+    position_generator =
+      (0..sidebar_section.sidebar_section_links.count * 2).excluding(
+        sidebar_section.sidebar_section_links.map(&:position),
+      ).each
     links =
       sidebar_section
         .sidebar_section_links
         .sort_by { |link| order[link.linkable_id] }
-        .map
-        .with_index { |link, index| link.attributes.merge(position: index) }
+        .map { |link| link.attributes.merge(position: position_generator.next) }
     sidebar_section.sidebar_section_links.upsert_all(links, update_only: [:position])
     render json: sidebar_section
   rescue Discourse::InvalidAccess

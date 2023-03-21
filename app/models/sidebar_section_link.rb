@@ -49,5 +49,5 @@ end
 #
 #  idx_unique_sidebar_section_links                              (user_id,linkable_type,linkable_id) UNIQUE
 #  index_sidebar_section_links_on_linkable_type_and_linkable_id  (linkable_type,linkable_id)
-#  links_user_id_section_id_position                             (user_id,sidebar_section_id,position)
+#  links_user_id_section_id_position                             (user_id,sidebar_section_id,position) UNIQUE
 #
