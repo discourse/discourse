@@ -123,6 +123,7 @@ class UserHistory < ActiveRecord::Base
         create_public_sidebar_section: 101,
         update_public_sidebar_section: 102,
         destroy_public_sidebar_section: 103,
+        reset_bounce_score: 104,
       )
   end
 
@@ -221,6 +222,7 @@ class UserHistory < ActiveRecord::Base
       create_public_sidebar_section
       update_public_sidebar_section
       destroy_public_sidebar_section
+      reset_bounce_score
     ]
   end
 
