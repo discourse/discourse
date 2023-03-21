@@ -161,9 +161,8 @@ export default class ChatLivePane extends Component {
     if (this.requestedTargetMessageId) {
       findArgs["targetMessageId"] = this.requestedTargetMessageId;
     } else if (fetchingFromLastRead) {
-      findArgs[
-        "targetMessageId"
-      ] = this.args.channel.currentUserMembership.last_read_message_id;
+      findArgs["targetMessageId"] =
+        this.args.channel.currentUserMembership.last_read_message_id;
     }
 
     return this.chatApi
@@ -431,8 +430,8 @@ export default class ChatLivePane extends Component {
         return;
       }
 
-      const lastReadId = this.args.channel.currentUserMembership
-        ?.last_read_message_id;
+      const lastReadId =
+        this.args.channel.currentUserMembership?.last_read_message_id;
       let lastUnreadVisibleMessage = this.args.channel.visibleMessages.findLast(
         (message) => !lastReadId || message.id > lastReadId
       );
@@ -841,9 +840,8 @@ export default class ChatLivePane extends Component {
   }
 
   _onSendError(id, error) {
-    const stagedMessage = this.args.channel.messagesManager.findStagedMessage(
-      id
-    );
+    const stagedMessage =
+      this.args.channel.messagesManager.findStagedMessage(id);
     if (stagedMessage) {
       if (error.jqXHR?.responseJSON?.errors?.length) {
         stagedMessage.error = error.jqXHR.responseJSON.errors[0];
@@ -954,9 +952,8 @@ export default class ChatLivePane extends Component {
 
   @action
   replyMessageClicked(message) {
-    const replyMessageFromLookup = this.args.channel.messagesManager.findMessage(
-      message.id
-    );
+    const replyMessageFromLookup =
+      this.args.channel.messagesManager.findMessage(message.id);
     if (replyMessageFromLookup) {
       this.scrollToMessage(replyMessageFromLookup.id, {
         highlight: true,
