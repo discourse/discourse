@@ -14,7 +14,7 @@ export default class ChatOnResize extends Modifier {
         this,
         fn,
         entries,
-        options.delay ?? 100,
+        options.delay ?? 0,
         options.immediate ?? false
       );
     });
