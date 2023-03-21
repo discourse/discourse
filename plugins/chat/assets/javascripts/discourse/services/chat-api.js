@@ -286,6 +286,34 @@ export default class ChatApi extends Service {
     );
   }
 
+  /**
+   * Saves a draft for the channel, which includes message contents and uploads.
+   * @param {number} channelId - The ID of the channel.
+   * @param {object} data - The draft data, see ChatMessageDraft.toJSON() for more details.
+   * @returns {Promise}
+   */
+  saveDraft(channelId, data) {
+    // TODO (martin) Change this to postRequest after moving DraftsController into Api::DraftsController
+    return ajax("/chat/drafts", {
+      type: "POST",
+      data: {
+        chat_channel_id: channelId,
+        data,
+      },
+      ignoreUnsent: false,
+    })
+      .then(() => {
+        this.chat.markNetworkAsReliable();
+      })
+      .catch((error) => {
+        // we ignore a draft which can't be saved because it's too big
+        // and only deal with network error for now
+        if (!error.jqXHR?.responseJSON?.errors?.length) {
+          this.chat.markNetworkAsUnreliable();
+        }
+      });
+  }
+
   get #basePath() {
     return "/chat/api";
   }

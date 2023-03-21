@@ -45,7 +45,6 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
         )
       ),
       chatChannel,
-      setReplyTo: () => {},
       replyMessageClicked: () => {},
       editButtonClicked: () => {},
       afterExpand: () => {},
@@ -64,7 +63,6 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
     <ChatMessage
       @message={{this.message}}
       @channel={{this.chatChannel}}
-      @setReplyTo={{this.setReplyTo}}
       @replyMessageClicked={{this.replyMessageClicked}}
       @editButtonClicked={{this.editButtonClicked}}
       @selectingMessages={{this.selectingMessages}}

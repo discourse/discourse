@@ -54,7 +54,6 @@
           <ChatMessage
             @message={{message}}
             @channel={{@channel}}
-            @setReplyTo={{this.setReplyTo}}
             @replyMessageClicked={{this.replyMessageClicked}}
             @editButtonClicked={{this.editButtonClicked}}
             @selectingMessages={{this.selectingMessages}}
@@ -67,6 +66,8 @@
             @messageDidEnterViewport={{this.messageDidEnterViewport}}
             @messageDidLeaveViewport={{this.messageDidLeaveViewport}}
             @forceRendering={{this.forceRendering}}
+            @livePanel={{this.livePanel}}
+            @messageActions={{this.messageActions}}
           />
         {{/each}}
       {{else}}
@@ -99,14 +100,13 @@
       <ChatComposer
         @sendMessage={{this.sendMessage}}
         @editMessage={{this.editMessage}}
-        @setReplyTo={{this.setReplyTo}}
         @loading={{this.sendingLoading}}
         @editingMessage={{readonly this.editingMessage}}
         @onCancelEditing={{this.cancelEditing}}
-        @setInReplyToMsg={{this.setInReplyToMsg}}
         @onEditLastMessageRequested={{this.editLastMessageRequested}}
-        @onValueChange={{this.composerValueChanged}}
         @chatChannel={{@channel}}
+        @livePanel={{this.livePanel}}
+        @messageActions={{this.messageActions}}
       />
     {{else}}
       <ChatChannelPreviewCard @channel={{@channel}} />

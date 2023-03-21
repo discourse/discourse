@@ -2,6 +2,8 @@ import { capitalize } from "@ember/string";
 import { cloneJSON } from "discourse-common/lib/object";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import ChatMessageDraft from "discourse/plugins/chat/discourse/models/chat-message-draft";
+import ChatMessageActions from "discourse/plugins/chat/discourse/lib/chat-message-actions";
+import ChatLivePanel from "discourse/plugins/chat/discourse/lib/chat-live-panel";
 import Component from "@glimmer/component";
 import { bind, debounce } from "discourse-common/utils/decorators";
 import discourseDebounce from "discourse-common/lib/debounce";
@@ -48,10 +50,15 @@ export default class ChatLivePane extends Component {
   @tracked showChatQuoteSuccess = false;
   @tracked includeHeader = true;
   @tracked editingMessage = null;
-  @tracked replyToMsg = null;
   @tracked hasNewMessages = false;
   @tracked needsArrow = false;
   @tracked loadedOnce = false;
+
+  livePanel = new ChatLivePanel(getOwner(this), this);
+  messageActionsHandler = new ChatMessageActions(
+    this.livePanel,
+    this.currentUser
+  );
 
   _loadedChannelId = null;
   _scrollerEl = null;
@@ -734,6 +741,8 @@ export default class ChatLivePane extends Component {
     }
   }
 
+  // TODO (martin) Maybe change this to public, since its referred to by
+  // livePanel.linkedComponent at the moment.
   get _selfDeleted() {
     return this.isDestroying || this.isDestroyed;
   }
@@ -786,8 +795,8 @@ export default class ChatLivePane extends Component {
       user: this.currentUser,
     });
 
-    if (this.replyToMsg) {
-      stagedMessage.inReplyTo = this.replyToMsg;
+    if (this.livePanel.replyToMsg) {
+      stagedMessage.inReplyTo = this.livePanel.replyToMsg;
     }
 
     this.args.channel.messagesManager.addMessages([stagedMessage]);
@@ -911,7 +920,7 @@ export default class ChatLivePane extends Component {
       return;
     }
 
-    this.replyToMsg = null;
+    this.livePanel.replyToMsg = null;
     this.editingMessage = null;
     this.chatComposerPresenceManager.notifyState(this.args.channel.id, false);
     this.appEvents.trigger("chat-composer:reply-to-set", null);
@@ -933,21 +942,6 @@ export default class ChatLivePane extends Component {
 
     this.editingMessage = lastUserMessage;
     this._focusComposer();
-  }
-
-  @action
-  setReplyTo(messageId) {
-    if (messageId) {
-      this.cancelEditing();
-
-      const message = this.args.channel.messagesManager.findMessage(messageId);
-      this.replyToMsg = message;
-      this.appEvents.trigger("chat-composer:reply-to-set", message);
-      this._focusComposer();
-    } else {
-      this.replyToMsg = null;
-      this.appEvents.trigger("chat-composer:reply-to-set", null);
-    }
   }
 
   @action
@@ -1040,72 +1034,6 @@ export default class ChatLivePane extends Component {
   }
 
   @action
-  setInReplyToMsg(inReplyMsg) {
-    this.replyToMsg = inReplyMsg;
-  }
-
-  @action
-  composerValueChanged({ value, uploads, replyToMsg, inProgressUploadsCount }) {
-    if (!this.editingMessage && !this.args.channel.isDraft) {
-      if (typeof value !== "undefined") {
-        this.args.channel.draft.message = value;
-      }
-
-      // only save the uploads to the draft if we are not still uploading other
-      // ones, otherwise we get into a cycle where we pass the draft uploads as
-      // existingUploads back to the upload component and cause in progress ones
-      // to be cancelled
-      if (
-        typeof uploads !== "undefined" &&
-        inProgressUploadsCount !== "undefined" &&
-        inProgressUploadsCount === 0
-      ) {
-        this.args.channel.draft.uploads = uploads;
-      }
-
-      if (typeof replyToMsg !== "undefined") {
-        this.args.channel.draft.replyToMsg = replyToMsg;
-      }
-    }
-
-    if (!this.args.channel.isDraft) {
-      this._reportReplyingPresence(value);
-    }
-
-    this._persistDraft();
-  }
-
-  @debounce(2000)
-  _persistDraft() {
-    if (this._selfDeleted) {
-      return;
-    }
-
-    if (!this.args.channel.draft) {
-      return;
-    }
-
-    ajax("/chat/drafts.json", {
-      type: "POST",
-      data: {
-        chat_channel_id: this.args.channel.id,
-        data: this.args.channel.draft.toJSON(),
-      },
-      ignoreUnsent: false,
-    })
-      .then(() => {
-        this.chat.markNetworkAsReliable();
-      })
-      .catch((error) => {
-        // we ignore a draft which can't be saved because it's too big
-        // and only deal with network error for now
-        if (!error.jqXHR?.responseJSON?.errors?.length) {
-          this.chat.markNetworkAsUnreliable();
-        }
-      });
-  }
-
-  @action
   onHoverMessage(message, options = {}, event) {
     if (this.site.mobileView && options.desktopOnly) {
       return;
@@ -1150,26 +1078,6 @@ export default class ChatLivePane extends Component {
 
     this.hoveredMessageId =
       message?.id && message.id !== this.hoveredMessageId ? message.id : null;
-  }
-
-  _reportReplyingPresence(composerValue) {
-    if (this._selfDeleted) {
-      return;
-    }
-
-    if (this.args.channel.isDraft) {
-      return;
-    }
-
-    const replying = !this.editingMessage && !!composerValue;
-    this.chatComposerPresenceManager.notifyState(
-      this.args.channel.id,
-      replying
-    );
-  }
-
-  _focusComposer() {
-    this.appEvents.trigger("chat:focus-composer");
   }
 
   _unsubscribeToUpdates(channelId) {

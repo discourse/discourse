@@ -37,7 +37,6 @@ export default Component.extend(TextareaTextManipulation, {
   chatEmojiPickerManager: service("chat-emoji-picker-manager"),
   chatStateManager: service("chat-state-manager"),
   editingMessage: null,
-  onValueChange: null,
   timer: null,
   value: "",
   inProgressUploads: null,
@@ -71,7 +70,6 @@ export default Component.extend(TextareaTextManipulation, {
   init() {
     this._super(...arguments);
 
-    this.appEvents.on("chat-composer:reply-to-set", this, "_replyToMsgChanged");
     this.appEvents.on(
       "upload-mixin:chat-composer-uploader:in-progress-uploads",
       this,
@@ -135,11 +133,6 @@ export default Component.extend(TextareaTextManipulation, {
     this._super(...arguments);
 
     this.appEvents.off(
-      "chat-composer:reply-to-set",
-      this,
-      "_replyToMsgChanged"
-    );
-    this.appEvents.off(
       "upload-mixin:chat-composer-uploader:in-progress-uploads",
       this,
       "_inProgressUploadsChanged"
@@ -200,9 +193,9 @@ export default Component.extend(TextareaTextManipulation, {
 
     if (event.keyCode === 27) {
       // keyCode for 'Escape'
-      if (this.replyToMsg) {
+      if (this.livePanel.replyToMsg) {
         this.set("value", "");
-        this._replyToMsgChanged(null);
+        this.livePanel.setReplyTo(null);
         return false;
       } else if (this.editingMessage) {
         this.set("value", "");
@@ -223,21 +216,17 @@ export default Component.extend(TextareaTextManipulation, {
       this.chatChannel?.canModifyMessages(this.currentUser)
     ) {
       // uses uploads from draft here...
-      this.setProperties({
-        value: this.chatChannel.draft.message,
-        replyToMsg: this.chatChannel.draft.replyToMsg,
-      });
+      this.set("value", this.chatChannel.draft.message);
+      this.livePanel.setReplyTo(this.chatChannel.draft.replyToMsg);
 
       this._captureMentions();
       this._syncUploads(this.chatChannel.draft.uploads);
-      this.setInReplyToMsg(this.chatChannel.draft.replyToMsg);
     }
 
     if (this.editingMessage && !this.loading) {
-      this.setProperties({
-        replyToMsg: null,
-        value: this.editingMessage.message,
-      });
+      this.set("value", this.editingMessage.message);
+
+      this.livePanel.setReplyTo(null);
 
       this._syncUploads(this.editingMessage.uploads);
       this._focusTextArea({ ensureAtEnd: true, resizeTextarea: false });
@@ -281,11 +270,6 @@ export default Component.extend(TextareaTextManipulation, {
     });
   },
 
-  _replyToMsgChanged(replyToMsg) {
-    this.set("replyToMsg", replyToMsg);
-    this.onValueChange?.({ replyToMsg });
-  },
-
   @action
   onTextareaInput(value) {
     this.set("value", value);
@@ -299,7 +283,7 @@ export default Component.extend(TextareaTextManipulation, {
 
   @bind
   _handleTextareaInput() {
-    this.onValueChange?.({ value: this.value });
+    this.livePanel.onComposerValueChange?.({ value: this.value });
   },
 
   @bind
@@ -688,14 +672,16 @@ export default Component.extend(TextareaTextManipulation, {
     this._captureMentions();
     this._syncUploads([]);
     this._focusTextArea({ ensureAtEnd: true, resizeTextarea: true });
-    this.onValueChange?.(this.value, this._uploads, this.replyToMsg);
+    this.livePanel.onComposerValueChange?.(
+      this.value,
+      this._uploads,
+      this.livePanel.replyToMsg
+    );
   },
 
   @action
   cancelReplyTo() {
-    this.set("replyToMsg", null);
-    this.setInReplyToMsg(null);
-    this.onValueChange?.({ replyToMsg: null });
+    this.livePanel.setReplyTo(null);
   },
 
   @action
@@ -718,7 +704,10 @@ export default Component.extend(TextareaTextManipulation, {
   @action
   uploadsChanged(uploads, { inProgressUploadsCount }) {
     this.set("_uploads", cloneJSON(uploads));
-    this.onValueChange?.({ uploads: this._uploads, inProgressUploadsCount });
+    this.livePanel.onComposerValueChange?.({
+      uploads: this._uploads,
+      inProgressUploadsCount,
+    });
   },
 
   @action

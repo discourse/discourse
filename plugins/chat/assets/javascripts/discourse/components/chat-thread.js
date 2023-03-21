@@ -219,25 +219,12 @@ export default class ChatThreadPanel extends Component {
   // editMessage(chatMessage, newContent, uploads) {}
 
   @action
-  setReplyTo() {}
-  // setReplyTo(messageId) {}
-
-  @action
-  setInReplyToMsg(inReplyMsg) {
-    this.replyToMsg = inReplyMsg;
-  }
-
-  @action
   cancelEditing() {
     this.editingMessage = null;
   }
 
   @action
   editLastMessageRequested() {}
-
-  @action
-  composerValueChanged() {}
-  // composerValueChanged(value, uploads, replyToMsg) {}
 
   #handleErrors(error) {
     switch (error?.jqXHR?.status) {

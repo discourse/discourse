@@ -1,6 +1,6 @@
-{{#if this.replyToMsg}}
+{{#if this.livePanel.replyToMsg}}
   <ChatComposerMessageDetails
-    @message={{this.replyToMsg}}
+    @message={{this.livePanel.replyToMsg}}
     @icon="reply"
     @action={{action "cancelReplyTo"}}
   />
