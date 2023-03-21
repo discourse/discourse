@@ -4,7 +4,6 @@ import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import ChatMessageDraft from "discourse/plugins/chat/discourse/models/chat-message-draft";
 import Component from "@glimmer/component";
 import { bind, debounce } from "discourse-common/utils/decorators";
-import discourseDebounce from "discourse-common/lib/debounce";
 import EmberObject, { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
