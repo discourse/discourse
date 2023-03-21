@@ -325,6 +325,11 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
 
         cacheShortUploadUrl(upload.short_url, upload);
 
+        // video/mp4, video/webm, video/quicktime, etc.
+        if (file.type.split("/")[0] === "video") {
+          this._generateVideoThumbnail(file, upload.url);
+        }
+
         if (this.useUploadPlaceholders) {
           this.appEvents.trigger(
             `${this.composerEventPrefix}:replace-text`,

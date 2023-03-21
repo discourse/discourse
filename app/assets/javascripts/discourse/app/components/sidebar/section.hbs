@@ -1,5 +1,12 @@
 {{#if this.displaySection}}
-  <div class={{concat "sidebar-section-wrapper sidebar-section-" @sectionName}}>
+  <div
+    class={{concat
+      "sidebar-section-wrapper sidebar-section-"
+      @sectionName
+      " "
+      @class
+    }}
+  >
     <div class="sidebar-section-header-wrapper sidebar-row">
       <Sidebar::SectionHeader
         @collapsable={{@collapsable}}

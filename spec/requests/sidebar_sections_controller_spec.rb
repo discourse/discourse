@@ -167,6 +167,7 @@ RSpec.describe SidebarSectionsController do
             links: [
               { icon: "link", id: sidebar_url_1.id, name: "latest", value: "/latest" },
               { icon: "link", id: sidebar_url_2.id, name: "tags", value: "/tags", _destroy: "1" },
+              { icon: "link", name: "homepage", value: "https://discourse.org" },
             ],
           }
 
@@ -178,10 +179,18 @@ RSpec.describe SidebarSectionsController do
       expect { section_link_2.reload }.to raise_error(ActiveRecord::RecordNotFound)
       expect { sidebar_url_2.reload }.to raise_error(ActiveRecord::RecordNotFound)
 
+      expect(sidebar_section.sidebar_section_links.last.position).to eq(2)
+      expect(sidebar_section.sidebar_section_links.last.linkable.name).to eq("homepage")
+      expect(sidebar_section.sidebar_section_links.last.linkable.value).to eq(
+        "https://discourse.org",
+      )
+
       user_history = UserHistory.last
       expect(user_history.action).to eq(UserHistory.actions[:update_public_sidebar_section])
       expect(user_history.subject).to eq("custom section edited")
-      expect(user_history.details).to eq("links: latest - /latest")
+      expect(user_history.details).to eq(
+        "links: latest - /latest, homepage - https://discourse.org",
+      )
     end
 
     it "doesn't allow to edit other's sections" do
@@ -229,6 +238,57 @@ RSpec.describe SidebarSectionsController do
       expect(response.status).to eq(404)
 
       expect(sidebar_url_3.reload.name).to eq("other_tags")
+    end
+  end
+
+  describe "#reorder" do
+    fab!(:sidebar_section) { Fabricate(:sidebar_section, user: user) }
+    fab!(:sidebar_url_1) { Fabricate(:sidebar_url, name: "tags", value: "/tags") }
+    fab!(:sidebar_url_2) { Fabricate(:sidebar_url, name: "categories", value: "/categories") }
+    fab!(:sidebar_url_3) { Fabricate(:sidebar_url, name: "topic", value: "/t/1") }
+    fab!(:section_link_1) do
+      Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url_1)
+    end
+    fab!(:section_link_2) do
+      Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url_2)
+    end
+    fab!(:section_link_3) do
+      Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url_3)
+    end
+
+    it "sorts links" do
+      serializer = SidebarSectionSerializer.new(sidebar_section, root: false).as_json
+      expect(serializer[:links].map(&:id)).to eq(
+        [sidebar_url_1.id, sidebar_url_2.id, sidebar_url_3.id],
+      )
+
+      sign_in(user)
+      post "/sidebar_sections/reorder.json",
+           params: {
+             sidebar_section_id: sidebar_section.id,
+             links_order: [sidebar_url_2.id, sidebar_url_3.id, sidebar_url_1.id],
+           }
+
+      serializer = SidebarSectionSerializer.new(sidebar_section.reload, root: false).as_json
+      expect(serializer[:links].map(&:id)).to eq(
+        [sidebar_url_2.id, sidebar_url_3.id, sidebar_url_1.id],
+      )
+    end
+
+    it "is not allowed for not own sections" do
+      sidebar_section_2 = Fabricate(:sidebar_section)
+      post "/sidebar_sections/reorder.json",
+           params: {
+             sidebar_section_id: sidebar_section_2.id,
+             links_order: [sidebar_url_2.id, sidebar_url_3.id, sidebar_url_1.id],
+           }
+
+      expect(response.status).to eq(403)
+
+      serializer = SidebarSectionSerializer.new(sidebar_section, root: false).as_json
+      expect(serializer[:links].map(&:id)).to eq(
+        [sidebar_url_1.id, sidebar_url_2.id, sidebar_url_3.id],
+      )
     end
   end
 

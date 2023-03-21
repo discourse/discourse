@@ -172,7 +172,10 @@ export default Controller.extend(ModalFunctionality, {
       }),
     })
       .then((data) => {
-        this.currentUser.sidebar_sections.pushObject(data.sidebar_section);
+        this.currentUser.set(
+          "sidebar_sections",
+          this.currentUser.sidebar_sections.concat(data.sidebar_section)
+        );
         this.send("closeModal");
       })
       .catch((e) =>

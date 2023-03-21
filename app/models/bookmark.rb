@@ -11,7 +11,14 @@ class Bookmark < ActiveRecord::Base
   end
 
   def self.registered_bookmarkable_from_type(type)
-    Bookmark.registered_bookmarkables.find { |bm| bm.model.name == type }
+    begin
+      resolved_type = Bookmark.polymorphic_class_for(type).name
+      Bookmark.registered_bookmarkables.find { |bm| bm.model.name == resolved_type }
+
+      # If the class cannot be found from the provided type using polymorphic_class_for,
+      # then the type is not valid and thus there will not be any registered bookmarkable.
+    rescue NameError
+    end
   end
 
   def self.valid_bookmarkable_types
@@ -46,8 +53,7 @@ class Bookmark < ActiveRecord::Base
   validates :name, length: { maximum: 100 }
 
   def registered_bookmarkable
-    type = Bookmark.polymorphic_class_for(self.bookmarkable_type).name
-    Bookmark.registered_bookmarkable_from_type(type)
+    Bookmark.registered_bookmarkable_from_type(self.bookmarkable_type)
   end
 
   def polymorphic_columns_present
