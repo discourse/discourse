@@ -76,6 +76,13 @@ RSpec.describe Emoji do
       expect(Emoji.exists?("test")).to be(true)
     end
 
+    it "finds a custom emoji with a name with :t1 in the middle" do
+      CustomEmoji.create!(name: "test:t1:foo", upload_id: 9999)
+      Emoji.clear_cache
+      expect(Emoji.exists?(":test:t1:foo:")).to be(true)
+      expect(Emoji.exists?("test:t1:foo")).to be(true)
+    end
+
     it "doesn’t find non-existing emoji" do
       expect(Emoji.exists?(":foo-bar:")).to be(false)
       expect(Emoji.exists?(":blonde_woman:t7:")).to be(false)
