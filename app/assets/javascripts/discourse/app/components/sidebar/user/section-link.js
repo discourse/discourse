@@ -45,13 +45,13 @@ export default class SectionLink {
         "sidebar-section-link-wrapper"
       )[0].clientHeight;
     }
-    if (distance > this.linkHeight) {
+    if (distance >= this.linkHeight) {
       if (this.section.links.indexOf(this) !== this.section.links.length - 1) {
         this.section.moveLinkDown(this);
         this.mouseY = currentMouseY;
       }
     }
-    if (distance < -this.linkHeight) {
+    if (distance <= -this.linkHeight) {
       if (this.section.links.indexOf(this) !== 0) {
         this.section.moveLinkUp(this);
         this.mouseY = currentMouseY;
