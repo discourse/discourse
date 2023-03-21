@@ -81,15 +81,19 @@ RSpec.describe "React to message", type: :system, js: true do
               chat.visit_channel(category_channel_1)
             end
 
-            using_session(:tab_1) do
+            using_session(:tab_1) do |session|
               channel.hover_message(message_1)
               find(".chat-message-react-btn").click
               find(".chat-emoji-picker [data-emoji=\"#{reaction.emoji}\"]").click
 
               expect(channel).to have_reaction(message_1, reaction)
+              session.quit
             end
 
-            using_session(:tab_2) { expect(channel).to have_reaction(message_1, reaction) }
+            using_session(:tab_2) do |session|
+              expect(channel).to have_reaction(message_1, reaction)
+              session.quit
+            end
           end
         end
       end
