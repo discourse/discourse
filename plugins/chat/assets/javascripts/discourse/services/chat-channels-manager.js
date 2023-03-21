@@ -85,7 +85,7 @@ export default class ChatChannelsManager extends Service {
 
   @debounce(300)
   async markAllChannelsRead() {
-    return this.chatApi.updateCurrentUserRead().then((response) => {
+    return this.chatApi.markAllChannelsAsRead().then((response) => {
       response.updated_memberships.forEach((membership) => {
         let channel = this.channels.findBy("id", membership.channel_id);
         if (channel) {

@@ -283,20 +283,25 @@ export default class ChatApi extends Service {
   }
 
   /**
-   * Marks messages for a user's chat channel memberships as read. If no
-   * channel ID and no message ID are provided, then all of the user's
-   * followed chat channel memberships will be marked as read.
+   * Marks messages for all of a user's chat channel memberships as read.
    *
-   * @param {number} channelId - The ID of the channel for the message being marked as read.
-   * @param {number} messageId - The ID of the message being marked as read.
    * @returns {Promise}
    */
-  updateCurrentUserRead({ channelId, messageId } = {}) {
-    if (channelId && messageId) {
-      return this.#putRequest(`/channels/${channelId}/read/${messageId}`);
-    } else {
-      return this.#putRequest(`/channels/read`);
-    }
+  markAllChannelsAsRead() {
+    return this.#putRequest(`/channels/read`);
+  }
+
+  /**
+   * Marks messages for a single user chat channel membership as read. If no
+   * message ID is provided, then the latest message for the channel is fetched
+   * on the server and used for the last read message.
+   *
+   * @param {number} channelId - The ID of the channel for the message being marked as read.
+   * @param {number} [messageId] - The ID of the message being marked as read.
+   * @returns {Promise}
+   */
+  markChannelAsRead(channelId, messageId = null) {
+    return this.#putRequest(`/channels/${channelId}/read/${messageId}`);
   }
 
   get #basePath() {

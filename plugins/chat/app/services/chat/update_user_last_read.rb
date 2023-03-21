@@ -13,7 +13,7 @@ module Chat
     #   @param [Integer] channel_id
     #   @param [Integer] message_id
     #   @param [Guardian] guardian
-    #   @return [Chat::Service::Base::Context]
+    #   @return [Service::Base::Context]
 
     contract
     model :channel
@@ -61,15 +61,11 @@ module Chat
     end
 
     def mark_associated_mentions_as_read(active_membership:, contract:, **)
-      ::Notification
-        .where(notification_type: Notification.types[:chat_mention])
-        .where(user: active_membership.user)
-        .where(read: false)
-        .joins("INNER JOIN chat_mentions ON chat_mentions.notification_id = notifications.id")
-        .joins("INNER JOIN chat_messages ON chat_mentions.chat_message_id = chat_messages.id")
-        .where("chat_messages.id <= ?", contract.message_id)
-        .where("chat_messages.chat_channel_id = ?", active_membership.chat_channel.id)
-        .update_all(read: true)
+      Chat::Action::MarkMentionsRead.call(
+        active_membership.user,
+        channel_ids: [active_membership.chat_channel.id],
+        message_id: contract.message_id,
+      )
     end
 
     def publish_new_last_read_to_clients(guardian:, channel:, contract:, **)

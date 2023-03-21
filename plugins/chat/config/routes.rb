@@ -6,8 +6,10 @@ Chat::Engine.routes.draw do
     get "/channels" => "channels#index"
     get "/channels/me" => "current_user_channels#index"
     post "/channels" => "channels#create"
+    put "/channels/read/" => "reads#update_all"
+    put "/channels/:channel_id/read/:message_id" => "reads#update"
     delete "/channels/:channel_id" => "channels#destroy"
-    put "/channels/:channel_id" => "channels#update", :constraints => { channel_id: /\d+/ }
+    put "/channels/:channel_id" => "channels#update"
     get "/channels/:channel_id" => "channels#show"
     put "/channels/:channel_id/status" => "channels_status#update"
     post "/channels/:channel_id/messages/moves" => "channels_messages_moves#create"
@@ -17,8 +19,6 @@ Chat::Engine.routes.draw do
     post "/channels/:channel_id/memberships/me" => "channels_current_user_membership#create"
     put "/channels/:channel_id/notifications-settings/me" =>
           "channels_current_user_notifications_settings#update"
-    put "/channels/read/" => "reads#update_all"
-    put "/channels/:channel_id/read/:message_id" => "reads#update"
 
     # Category chatables controller hints. Only used by staff members, we don't want to leak category permissions.
     get "/category-chatables/:id/permissions" => "category_chatables#permissions",

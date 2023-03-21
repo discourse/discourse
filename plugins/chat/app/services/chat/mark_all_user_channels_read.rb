@@ -12,7 +12,7 @@ module Chat
 
     # @!method call(guardian:)
     #   @param [Guardian] guardian
-    #   @return [Chat::Service::Base::Context]
+    #   @return [Service::Base::Context]
 
     transaction do
       step :update_last_read_message_ids
@@ -46,14 +46,10 @@ module Chat
     def mark_associated_mentions_as_read(guardian:, updated_memberships:, **)
       return if updated_memberships.empty?
 
-      Notification
-        .where(notification_type: ::Notification.types[:chat_mention])
-        .where(user: guardian.user)
-        .where(read: false)
-        .joins("INNER JOIN chat_mentions ON chat_mentions.notification_id = notifications.id")
-        .joins("INNER JOIN chat_messages ON chat_mentions.chat_message_id = chat_messages.id")
-        .where("chat_messages.chat_channel_id IN (?)", updated_memberships.map(&:channel_id))
-        .update_all(read: true)
+      Chat::Action::MarkMentionsRead.call(
+        guardian.user,
+        channel_ids: updated_memberships.map(&:channel_id),
+      )
     end
   end
 end
