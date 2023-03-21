@@ -180,7 +180,6 @@ zh_CN:
       restore: "恢复已删除的消息"
       save: "保存"
       select: "选择"
-      silence: "将用户禁言"
       return_to_list: "返回频道列表"
       scroll_to_bottom: "滚动到底部"
       scroll_to_new_messages: "查看新消息"

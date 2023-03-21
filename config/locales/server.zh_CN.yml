@@ -1681,7 +1681,7 @@ zh_CN:
     composer_media_optimization_image_bytes_optimization_threshold: "触发客户端优化的最小图片文件大小"
     composer_media_optimization_image_resize_dimensions_threshold: "触发客户端大小调整的最小图片宽度"
     composer_media_optimization_image_resize_width_target: "宽度大于 `composer_media_optimization_image_dimensions_resize_threshold` 的图片将调整为此宽度。必须 >= `composer_media_optimization_image_dimensions_resize_threshold`。"
-    composer_media_optimization_image_encode_quality: "重新编码过程中使用的 JPEG 编码质量。"
+    composer_media_optimization_image_encode_quality: "重新编码过程中使用的 JPG 编码质量。"
     min_ratio_to_crop: "用于裁剪高图片的比率。输入宽度/高度的结果。"
     simultaneous_uploads: "可以在编辑器中拖放的最大文件数"
     default_invitee_trust_level: "受邀用户的默认信任级别 (0-4)。"
@@ -1831,6 +1831,7 @@ zh_CN:
     mailjet_webhook_token: "用于验证 webhook 负载的令牌。它必须作为 webhook 的“t”查询参数传递，例如：https://example.com/webhook/mailjet?t=supersecret"
     mandrill_authentication_key: "用于验证 webhook 消息的 Mandrill 身份验证密钥。"
     postmark_webhook_token: "用于验证 webhook 负载的令牌。它必须作为 webhook 的“t”查询参数传递，例如：https://example.com/webhook/postmark?t=supersecret"
+    sparkpost_webhook_token: "用来验证 webhook 有效载荷的 Token。它必须作为 webhook 的't' 查询参数传递，例如：https://example.com/webhook/sparkpost?t=supersecret"
     soft_bounce_score: "发生临时退回时，向用户添加的退回分数。"
     hard_bounce_score: "发生永久退回时，向用户添加的退回分数。"
     bounce_score_threshold: "在我们停止向用户发送电子邮件之前的最大退回分数。"
@@ -4137,7 +4138,10 @@ zh_CN:
       message: "<p>我们已将激活电子邮件重新发送至 <b>%{email}</b>"
   safe_mode:
     title: "进入安全模式"
+    description: "安全模式允许你在不加载主题或客户端的自定义插件的情况下测试你的站点。服务器端的自定义插件保持启用状态。"
     no_themes: "禁用主题和主题组件"
+    no_unofficial_plugins: "禁用非官方的客户端自定义插件"
+    no_plugins: "禁用所有客户端自定义插件"
     enter: "进入安全模式"
     must_select: "您必须至少选择一个选项才能进入安全模式。"
   wizard:

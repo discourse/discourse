@@ -148,7 +148,6 @@ ja:
       restore: "削除されたメッセージを復元する"
       save: "保存"
       select: "選択"
-      silence: "ユーザーを投稿禁止にする"
       return_to_list: "チャンネルリストに戻る"
       scroll_to_bottom: "一番下にスクロール"
       scroll_to_new_messages: "新しいメッセージを見る"

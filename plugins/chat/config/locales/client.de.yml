@@ -243,7 +243,6 @@ de:
       restore: "Gelöschte Nachricht wiederherstellen"
       save: "Speichern"
       select: "Auswählen"
-      silence: "Benutzer stummschalten"
       return_to_list: "Zurück zur Kanalliste"
       scroll_to_bottom: "Nach unten scrollen"
       scroll_to_new_messages: "Neue Nachrichten anzeigen"
