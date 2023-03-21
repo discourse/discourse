@@ -69,7 +69,7 @@ export default {
               }
 
               get icon() {
-                return "comment";
+                return "d-chat";
               }
 
               get label() {
@@ -112,7 +112,7 @@ export default {
             }
 
             get icon() {
-              return "comment";
+              return "d-chat";
             }
 
             get count() {

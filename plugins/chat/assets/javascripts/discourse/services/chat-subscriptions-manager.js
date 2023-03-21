@@ -315,14 +315,16 @@ export default class ChatSubscriptionsManager extends Service {
 
   @bind
   _onChannelMetadata(busData) {
-    this.chatChannelsManager.find(busData.chat_channel_id).then((channel) => {
-      if (channel) {
-        channel.setProperties({
-          memberships_count: busData.memberships_count,
-        });
-        this.appEvents.trigger("chat:refresh-channel-members");
-      }
-    });
+    this.chatChannelsManager
+      .find(busData.chat_channel_id, { fetchIfNotFound: false })
+      .then((channel) => {
+        if (channel) {
+          channel.setProperties({
+            memberships_count: busData.memberships_count,
+          });
+          this.appEvents.trigger("chat:refresh-channel-members");
+        }
+      });
   }
 
   @bind

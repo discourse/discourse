@@ -98,7 +98,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
                   }
 
                   get prefixValue() {
-                    return "hashtag";
+                    return "d-chat";
                   }
 
                   get prefixColor() {
@@ -285,7 +285,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
     );
 
     assert.strictEqual(
-      links[0].children[0].children[0].classList.contains("d-icon-hashtag"),
+      links[0].children[0].children[0].classList.contains("d-icon-d-chat"),
       true,
       "displays prefix icon"
     );

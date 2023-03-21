@@ -2265,4 +2265,31 @@ RSpec.describe Admin::UsersController do
       end
     end
   end
+
+  describe "#reset_bounce_score" do
+    before { user.user_stat.update!(bounce_score: 10) }
+
+    context "when logged in as a moderator" do
+      before { sign_in(moderator) }
+
+      it "will reset the bounce score" do
+        post "/admin/users/#{user.id}/reset-bounce-score.json"
+
+        expect(response.status).to eq(200)
+        expect(user.reload.user_stat.bounce_score).to eq(0)
+        expect(UserHistory.last.action).to eq(UserHistory.actions[:reset_bounce_score])
+      end
+    end
+
+    context "when logged in as a non-staff user" do
+      before { sign_in(user) }
+
+      it "prevents resetting the bounce score with a 404 response" do
+        post "/admin/users/#{user.id}/reset-bounce-score.json"
+
+        expect(response.status).to eq(404)
+        expect(user.reload.user_stat.bounce_score).to eq(10)
+      end
+    end
+  end
 end

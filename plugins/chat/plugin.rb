@@ -17,7 +17,6 @@ register_asset "stylesheets/mobile/index.scss", :mobile
 
 register_svg_icon "comments"
 register_svg_icon "comment-slash"
-register_svg_icon "hashtag"
 register_svg_icon "lock"
 register_svg_icon "file-audio"
 register_svg_icon "file-video"
