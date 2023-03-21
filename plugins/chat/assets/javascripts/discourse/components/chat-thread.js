@@ -228,11 +228,6 @@ export default class ChatThreadPanel extends Component {
   // editMessage(chatMessage, newContent, uploads) {}
 
   @action
-  cancelEditing() {
-    this.editingMessage = null;
-  }
-
-  @action
   editLastMessageRequested() {}
 
   #handleErrors(error) {
@@ -266,8 +261,8 @@ export default class ChatThreadPanel extends Component {
       return;
     }
 
-    this.replyToMsg = null;
-    this.editingMessage = null;
+    this.livePanel.replyToMsg = null;
+    this.livePanel.editingMessage = null;
     this.chatComposerPresenceManager.notifyState(this.channel.id, false);
     this.appEvents.trigger("chat-composer:reply-to-set", null);
   }

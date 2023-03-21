@@ -569,7 +569,7 @@ export default class ChatMessage extends Component {
 
   @action
   edit() {
-    this.args.editButtonClicked(this.args.message.id);
+    this.args.livePanel.editButtonClicked(this.args.message.id);
   }
 
   @action

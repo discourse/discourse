@@ -83,6 +83,18 @@ export default class ChatLivePanel {
     this.editingMessage = null;
   }
 
+  @action
+  editButtonClicked(messageId) {
+    const message =
+      this.chat.activeChannel.messagesManager.findMessage(messageId);
+    this.editingMessage = message;
+
+    // TODO (martin) Move scrollToLatestMessage to live panel.
+    // this.scrollToLatestMessage();
+
+    this.#focusComposer();
+  }
+
   #focusComposer() {
     this.appEvents.trigger("chat:focus-composer");
   }

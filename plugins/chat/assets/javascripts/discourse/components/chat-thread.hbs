@@ -41,7 +41,6 @@
         <ChatMessage
           @message={{message}}
           @channel={{@channel}}
-          @editButtonClicked={{this.editButtonClicked}}
           @selectingMessages={{this.selectingMessages}}
           @onStartSelectingMessages={{this.onStartSelectingMessages}}
           @onSelectMessage={{this.onSelectMessage}}
@@ -66,7 +65,6 @@
     @sendMessage={{this.sendMessage}}
     @editMessage={{this.editMessage}}
     @loading={{this.sendingLoading}}
-    @editingMessage={{readonly this.editingMessage}}
     @onCancelEditing={{this.cancelEditing}}
     @onEditLastMessageRequested={{this.editLastMessageRequested}}
     @chatChannel={{this.channel}}

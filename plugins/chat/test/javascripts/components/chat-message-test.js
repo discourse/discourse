@@ -45,7 +45,6 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
         )
       ),
       chatChannel,
-      editButtonClicked: () => {},
       afterExpand: () => {},
       selectingMessages: false,
       onStartSelectingMessages: () => {},
@@ -62,7 +61,6 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
     <ChatMessage
       @message={{this.message}}
       @channel={{this.chatChannel}}
-      @editButtonClicked={{this.editButtonClicked}}
       @selectingMessages={{this.selectingMessages}}
       @onStartSelectingMessages={{this.onStartSelectingMessages}}
       @onSelectMessage={{this.onSelectMessage}}

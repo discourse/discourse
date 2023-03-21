@@ -49,7 +49,6 @@ export default class ChatLivePane extends Component {
   @tracked selectingMessages = false;
   @tracked showChatQuoteSuccess = false;
   @tracked includeHeader = true;
-  @tracked editingMessage = null;
   @tracked hasNewMessages = false;
   @tracked needsArrow = false;
   @tracked loadedOnce = false;
@@ -107,7 +106,7 @@ export default class ChatLivePane extends Component {
     if (this._loadedChannelId !== this.args.channel?.id) {
       this._unsubscribeToUpdates(this._loadedChannelId);
       this.selectingMessages = false;
-      this.cancelEditing();
+      this.livePanel.cancelEditing();
       this._loadedChannelId = this.args.channel?.id;
     }
 
@@ -921,7 +920,7 @@ export default class ChatLivePane extends Component {
     }
 
     this.livePanel.replyToMsg = null;
-    this.editingMessage = null;
+    this.livePanel.editingMessage = null;
     this.chatComposerPresenceManager.notifyState(this.args.channel.id, false);
     this.appEvents.trigger("chat-composer:reply-to-set", null);
   }
@@ -940,15 +939,7 @@ export default class ChatLivePane extends Component {
       return;
     }
 
-    this.editingMessage = lastUserMessage;
-    this._focusComposer();
-  }
-
-  @action
-  editButtonClicked(messageId) {
-    const message = this.args.channel.messagesManager.findMessage(messageId);
-    this.editingMessage = message;
-    this.scrollToLatestMessage();
+    this.livePanel.editingMessage = lastUserMessage;
     this._focusComposer();
   }
 
@@ -1009,11 +1000,6 @@ export default class ChatLivePane extends Component {
         this.chatStateManager.lastKnownChatURL
       );
     });
-  }
-
-  @action
-  cancelEditing() {
-    this.editingMessage = null;
   }
 
   @action

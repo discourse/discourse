@@ -4,6 +4,7 @@ import showModal from "discourse/lib/show-modal";
 import discourseComputed, {
   afterRender,
   bind,
+  observes,
 } from "discourse-common/utils/decorators";
 import I18n from "I18n";
 import TextareaTextManipulation from "discourse/mixins/textarea-text-manipulation";
@@ -36,7 +37,6 @@ export default Component.extend(TextareaTextManipulation, {
   chatEmojiReactionStore: service("chat-emoji-reaction-store"),
   chatEmojiPickerManager: service("chat-emoji-picker-manager"),
   chatStateManager: service("chat-state-manager"),
-  editingMessage: null,
   timer: null,
   value: "",
   inProgressUploads: null,
@@ -185,7 +185,7 @@ export default Component.extend(TextareaTextManipulation, {
     if (
       event.key === "ArrowUp" &&
       this._messageIsEmpty() &&
-      !this.editingMessage
+      !this.livePanel.editingMessage
     ) {
       event.preventDefault();
       this.onEditLastMessageRequested();
@@ -197,7 +197,7 @@ export default Component.extend(TextareaTextManipulation, {
         this.set("value", "");
         this.livePanel.setReplyTo(null);
         return false;
-      } else if (this.editingMessage) {
+      } else if (this.livePanel.editingMessage) {
         this.set("value", "");
         this.cancelEditing();
         return false;
@@ -211,7 +211,7 @@ export default Component.extend(TextareaTextManipulation, {
     this._super(...arguments);
 
     if (
-      !this.editingMessage &&
+      !this.livePanel.editingMessage &&
       this.chatChannel?.draft &&
       this.chatChannel?.canModifyMessages(this.currentUser)
     ) {
@@ -223,16 +223,21 @@ export default Component.extend(TextareaTextManipulation, {
       this._syncUploads(this.chatChannel.draft.uploads);
     }
 
-    if (this.editingMessage && !this.loading) {
-      this.set("value", this.editingMessage.message);
+    this.resizeTextarea();
+  },
+
+  // FIXME (martin) Is this okay to do?? Can't use didReceiveAttrs because now
+  // livePanel.editingMessage is changing not a scoped attribute for this component.
+  @observes("livePanel.editingMessage")
+  updateEditingMessage() {
+    if (this.livePanel.editingMessage && !this.loading) {
+      this.set("value", this.livePanel.editingMessage.message);
 
       this.livePanel.setReplyTo(null);
 
-      this._syncUploads(this.editingMessage.uploads);
+      this._syncUploads(this.livePanel.editingMessage.uploads);
       this._focusTextArea({ ensureAtEnd: true, resizeTextarea: false });
     }
-
-    this.resizeTextarea();
   },
 
   // the chat-composer needs to be able to set the internal list of uploads
@@ -617,7 +622,7 @@ export default Component.extend(TextareaTextManipulation, {
       return;
     }
 
-    this.editingMessage
+    this.livePanel.editingMessage
       ? this.internalEditMessage()
       : this.internalSendMessage();
   },
@@ -630,7 +635,7 @@ export default Component.extend(TextareaTextManipulation, {
   @action
   internalEditMessage() {
     return this.editMessage(
-      this.editingMessage,
+      this.livePanel.editingMessage,
       this.value,
       this._uploads
     ).then(this.reset);
