@@ -945,23 +945,6 @@ export default class ChatLivePane extends Component {
   }
 
   @action
-  replyMessageClicked(message) {
-    const replyMessageFromLookup =
-      this.args.channel.messagesManager.findMessage(message.id);
-    if (replyMessageFromLookup) {
-      this.scrollToMessage(replyMessageFromLookup.id, {
-        highlight: true,
-        position: "start",
-        autoExpand: true,
-      });
-    } else {
-      // Message is not present in the loaded messages. Fetch it!
-      this.requestedTargetMessageId = message.id;
-      this.fetchMessages();
-    }
-  }
-
-  @action
   editButtonClicked(messageId) {
     const message = this.args.channel.messagesManager.findMessage(messageId);
     this.editingMessage = message;

@@ -8,6 +8,9 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind, debounce } from "discourse-common/utils/decorators";
 import I18n from "I18n";
 import { inject as service } from "@ember/service";
+import ChatMessageActions from "discourse/plugins/chat/discourse/lib/chat-message-actions";
+import ChatLivePanel from "discourse/plugins/chat/discourse/lib/chat-live-panel";
+import { getOwner } from "discourse-common/lib/get-owner";
 
 const PAGE_SIZE = 50;
 
@@ -22,6 +25,12 @@ export default class ChatThreadPanel extends Component {
 
   @tracked loading;
   @tracked loadingMorePast;
+
+  livePanel = new ChatLivePanel(getOwner(this), this);
+  messageActionsHandler = new ChatMessageActions(
+    this.livePanel,
+    this.currentUser
+  );
 
   get thread() {
     return this.channel.activeThread;
