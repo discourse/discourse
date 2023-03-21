@@ -527,10 +527,14 @@ it:
       statuses:
         pending:
           title: "In attesa"
+        approved:
+          title: "Approvato"
+        rejected:
+          title: "Rifiutato"
         reviewed:
-          title: "(tutti i revisionati)"
+          title: "Tutti i revisionati"
         all:
-          title: "(tutto)"
+          title: "Tutti"
       context_question:
         delimiter: "o"
       types:

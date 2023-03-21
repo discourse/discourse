@@ -703,10 +703,14 @@ ar:
       statuses:
         pending:
           title: "قيد الانتظار"
+        approved:
+          title: "تمت الموافقة"
+        rejected:
+          title: "تم الرفض"
         reviewed:
-          title: "(تمت مراجعة الكل)"
+          title: "تمت مراجعة الكل"
         all:
-          title: "(كل شيء)"
+          title: "كل شىء"
       context_question:
         delimiter: "أو"
       types:

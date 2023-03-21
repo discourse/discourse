@@ -227,6 +227,10 @@ be:
       statuses:
         pending:
           title: "чакаецца"
+        approved:
+          title: "Адобрана"
+        rejected:
+          title: "адхілена"
       context_question:
         delimiter: "або"
       types:

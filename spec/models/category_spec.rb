@@ -39,6 +39,10 @@ RSpec.describe Category do
   describe "Associations" do
     it { is_expected.to have_one(:category_setting).dependent(:destroy) }
 
+    it "automatically creates a category setting" do
+      expect { Fabricate(:category) }.to change { CategorySetting.count }.by(1)
+    end
+
     it "should delete associated sidebar_section_links when category is destroyed" do
       category_sidebar_section_link = Fabricate(:category_sidebar_section_link)
       category_sidebar_section_link_2 =
@@ -963,6 +967,40 @@ RSpec.describe Category do
       category.save!
 
       expect(Category.auto_bump_topic!).to eq(false)
+    end
+
+    it "should not auto-bump the same topic within the cooldown" do
+      freeze_time
+      category =
+        Fabricate(
+          :category_with_definition,
+          num_auto_bump_daily: 2,
+          created_at: 1.minute.ago,
+          category_setting_attributes: {
+            auto_bump_cooldown_days: 1,
+          },
+        )
+      category.clear_auto_bump_cache!
+
+      post1 = create_post(category: category, created_at: 15.seconds.ago)
+
+      # no limits on post creation or category creation please
+      RateLimiter.enable
+
+      time = freeze_time 1.month.from_now
+
+      expect(category.auto_bump_topic!).to eq(true)
+      expect(Topic.where(bumped_at: time).count).to eq(1)
+
+      time = freeze_time 13.hours.from_now
+
+      expect(category.auto_bump_topic!).to eq(false)
+      expect(Topic.where(bumped_at: time).count).to eq(0)
+
+      time = freeze_time 13.hours.from_now
+
+      expect(category.auto_bump_topic!).to eq(true)
+      expect(Topic.where(bumped_at: time).count).to eq(1)
     end
 
     it "should not automatically bump topics with a bump scheduled" do

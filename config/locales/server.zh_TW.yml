@@ -2897,8 +2897,6 @@ zh_TW:
       message: "<p>我們已重發啟用信件至 <b>%{email}</b>"
   safe_mode:
     title: "進入安全模式"
-    no_unofficial_plugins: "停用非官方套件"
-    no_plugins: "停用所有套件"
     enter: "進入安全模式"
     must_select: "您必須至少選擇一個選項才能進入安全模式。"
   wizard:

@@ -128,16 +128,16 @@ class ChatChannelSerializer < ApplicationSerializer
 
   def new_messages_message_bus_id
     @opts[:new_messages_message_bus_last_id] ||
-      MessageBus.last_id(ChatPublisher.new_messages_message_bus_channel(object.id))
+      MessageBus.last_id(Chat::Publisher.new_messages_message_bus_channel(object.id))
   end
 
   def new_mentions_message_bus_id
     @opts[:new_mentions_message_bus_last_id] ||
-      MessageBus.last_id(ChatPublisher.new_mentions_message_bus_channel(object.id))
+      MessageBus.last_id(Chat::Publisher.new_mentions_message_bus_channel(object.id))
   end
 
   def kick_message_bus_id
     @opts[:kick_message_bus_last_id] ||
-      MessageBus.last_id(ChatPublisher.kick_users_message_bus_channel(object.id))
+      MessageBus.last_id(Chat::Publisher.kick_users_message_bus_channel(object.id))
   end
 end

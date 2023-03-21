@@ -123,6 +123,10 @@ export default class ChatMessage {
     return this.channel?.messages?.objectAt?.(this.index + 1);
   }
 
+  incrementVersion() {
+    this.version++;
+  }
+
   react(emoji, action, actor, currentUserId) {
     const selfReaction = actor.id === currentUserId;
     const existingReaction = this.reactions.find(

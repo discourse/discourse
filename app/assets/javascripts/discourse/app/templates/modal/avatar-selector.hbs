@@ -23,6 +23,7 @@
           @name="logo"
           @value="logo"
           @selection={{this.selected}}
+          @onChange={{this.onSelectedChanged}}
         />
         <label class="radio" for="logo-small">{{bound-avatar-template
             this.siteSettings.site_logo_small_url
@@ -37,6 +38,7 @@
         @name="avatar"
         @value="system"
         @selection={{this.selected}}
+        @onChange={{this.onSelectedChanged}}
       />
       <label class="radio" for="system-avatar">{{bound-avatar-template
           this.user.system_avatar_template
@@ -51,6 +53,7 @@
           @name="avatar"
           @value="gravatar"
           @selection={{this.selected}}
+          @onChange={{this.onSelectedChanged}}
         />
         <label class="radio" for="gravatar">{{bound-avatar-template
             this.user.gravatar_avatar_template
@@ -90,6 +93,7 @@
           @name="avatar"
           @value="custom"
           @selection={{this.selected}}
+          @onChange={{this.onSelectedChanged}}
         />
         <label class="radio" for="uploaded-avatar">
           {{#if this.user.custom_avatar_template}}

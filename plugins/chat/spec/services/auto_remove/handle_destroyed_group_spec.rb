@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Chat::Service::AutoRemove::HandleDestroyedGroup do
+RSpec.describe Chat::AutoRemove::HandleDestroyedGroup do
   describe ".call" do
     subject(:result) { described_class.call(params) }
 
@@ -53,7 +53,7 @@ RSpec.describe Chat::Service::AutoRemove::HandleDestroyedGroup do
 
           it "removes the destroyed_group_user_ids from all public channels" do
             expect { result }.to change {
-              UserChatChannelMembership.where(
+              Chat::UserChatChannelMembership.where(
                 user: [user_1, user_2],
                 chat_channel: [channel_1, channel_2],
               ).count
@@ -62,7 +62,7 @@ RSpec.describe Chat::Service::AutoRemove::HandleDestroyedGroup do
 
           it "does not remove admin users from public channels" do
             expect { result }.not_to change {
-              UserChatChannelMembership.where(
+              Chat::UserChatChannelMembership.where(
                 user: [admin_1, admin_2],
                 chat_channel: [channel_1],
               ).count
@@ -71,7 +71,9 @@ RSpec.describe Chat::Service::AutoRemove::HandleDestroyedGroup do
 
           it "does not remove regular or admin users from direct message channels" do
             expect { result }.not_to change {
-              UserChatChannelMembership.where(chat_channel: [dm_channel_1, dm_channel_2]).count
+              Chat::UserChatChannelMembership.where(
+                chat_channel: [dm_channel_1, dm_channel_2],
+              ).count
             }
           end
 
@@ -80,7 +82,7 @@ RSpec.describe Chat::Service::AutoRemove::HandleDestroyedGroup do
             result
             expect(
               job_enqueued?(
-                job: :kick_users_from_channel,
+                job: Jobs::Chat::KickUsersFromChannel,
                 at: 5.seconds.from_now,
                 args: {
                   user_ids: [user_1.id, user_2.id],
@@ -90,7 +92,7 @@ RSpec.describe Chat::Service::AutoRemove::HandleDestroyedGroup do
             ).to eq(true)
             expect(
               job_enqueued?(
-                job: :kick_users_from_channel,
+                job: Jobs::Chat::KickUsersFromChannel,
                 at: 5.seconds.from_now,
                 args: {
                   user_ids: [user_1.id, user_2.id],
@@ -127,7 +129,7 @@ RSpec.describe Chat::Service::AutoRemove::HandleDestroyedGroup do
           end
 
           it "does not remove any memberships" do
-            expect { result }.not_to change { UserChatChannelMembership.count }
+            expect { result }.not_to change { Chat::UserChatChannelMembership.count }
           end
         end
 
@@ -146,7 +148,7 @@ RSpec.describe Chat::Service::AutoRemove::HandleDestroyedGroup do
           it { is_expected.to fail_a_policy(:not_everyone_allowed) }
 
           it "does not remove any memberships" do
-            expect { result }.not_to change { UserChatChannelMembership.count }
+            expect { result }.not_to change { Chat::UserChatChannelMembership.count }
           end
         end
       end
@@ -169,7 +171,7 @@ RSpec.describe Chat::Service::AutoRemove::HandleDestroyedGroup do
           end
 
           it "does not remove any memberships" do
-            expect { result }.not_to change { UserChatChannelMembership.count }
+            expect { result }.not_to change { Chat::UserChatChannelMembership.count }
           end
         end
 
@@ -194,7 +196,7 @@ RSpec.describe Chat::Service::AutoRemove::HandleDestroyedGroup do
 
           it "removes the destroyed_group_user_ids from the channel" do
             expect { result }.to change {
-              UserChatChannelMembership.where(
+              Chat::UserChatChannelMembership.where(
                 user: [user_1, user_2],
                 chat_channel: [channel_1],
               ).count
@@ -203,7 +205,7 @@ RSpec.describe Chat::Service::AutoRemove::HandleDestroyedGroup do
 
           it "does not remove any admin destroyed_group_user_ids from the channel" do
             expect { result }.not_to change {
-              UserChatChannelMembership.where(
+              Chat::UserChatChannelMembership.where(
                 user: [admin_1, admin_2],
                 chat_channel: [channel_1],
               ).count
@@ -235,7 +237,7 @@ RSpec.describe Chat::Service::AutoRemove::HandleDestroyedGroup do
 
             it "removes the destroyed_group_user_ids from the channel" do
               expect { result }.to change {
-                UserChatChannelMembership.where(
+                Chat::UserChatChannelMembership.where(
                   user: [user_1, user_2],
                   chat_channel: [channel_1],
                 ).count

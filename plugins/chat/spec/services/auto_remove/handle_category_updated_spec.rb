@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Chat::Service::AutoRemove::HandleCategoryUpdated do
+RSpec.describe Chat::AutoRemove::HandleCategoryUpdated do
   describe ".call" do
     subject(:result) { described_class.call(params) }
 
@@ -57,7 +57,7 @@ RSpec.describe Chat::Service::AutoRemove::HandleCategoryUpdated do
 
         it "does not kick any users since the default permission is Everyone (full)" do
           expect { result }.not_to change {
-            UserChatChannelMembership.where(
+            Chat::UserChatChannelMembership.where(
               user: [user_1, user_2, admin_1, admin_2],
               chat_channel: [channel_1, channel_2],
             ).count
@@ -98,7 +98,7 @@ RSpec.describe Chat::Service::AutoRemove::HandleCategoryUpdated do
 
         it "kicks all regular users who are not in any groups with reply + see permissions" do
           expect { result }.to change {
-            UserChatChannelMembership.where(
+            Chat::UserChatChannelMembership.where(
               user: [user_1, user_2],
               chat_channel: [channel_1, channel_2],
             ).count
@@ -107,7 +107,7 @@ RSpec.describe Chat::Service::AutoRemove::HandleCategoryUpdated do
 
         it "does not kick admin users who are not in any groups with reply + see permissions" do
           expect { result }.not_to change {
-            UserChatChannelMembership.where(
+            Chat::UserChatChannelMembership.where(
               user: [admin_1, admin_2],
               chat_channel: [channel_1, channel_2],
             ).count
@@ -119,7 +119,7 @@ RSpec.describe Chat::Service::AutoRemove::HandleCategoryUpdated do
           result
           expect(
             job_enqueued?(
-              job: :kick_users_from_channel,
+              job: Jobs::Chat::KickUsersFromChannel,
               at: 5.seconds.from_now,
               args: {
                 user_ids: [user_2.id],
@@ -130,7 +130,7 @@ RSpec.describe Chat::Service::AutoRemove::HandleCategoryUpdated do
 
           expect(
             job_enqueued?(
-              job: :kick_users_from_channel,
+              job: Jobs::Chat::KickUsersFromChannel,
               at: 5.seconds.from_now,
               args: {
                 user_ids: [user_2.id],

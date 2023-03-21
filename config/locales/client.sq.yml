@@ -283,6 +283,10 @@ sq:
       statuses:
         pending:
           title: "Në pritje"
+        approved:
+          title: "Aprovuar më"
+        rejected:
+          title: "Rejected"
       context_question:
         delimiter: "ose"
       types:

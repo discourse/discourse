@@ -131,7 +131,7 @@ tr_TR:
     popup:
       chat_mention:
         direct: '%{username} "%{channel}" adlı kanalda sizden bahsetti'
-        other_type: '%{username} "%{channel}" adlı kanalda %{identifier} adlı kullanıcıdan bahsetti'
+        other_type: '%{username} "%{channel}" adlı kanalda şundan bahsetti: %{identifier}'
       direct_message_chat_mention:
         direct: "%{username} kişisel sohbette sizden bahsetti"
         other_type: "%{username} kişisel sohbette %{identifier} adlı kullanıcıdan bahsetti"

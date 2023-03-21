@@ -24,6 +24,7 @@ export function showUserTip(options) {
     hideOnClick: false,
     trigger: "manual",
     theme: "user-tips",
+    zIndex: "",
 
     // It must be interactive to make buttons work.
     interactive: true,
@@ -55,6 +56,8 @@ export function showUserTip(options) {
       </div>`,
 
     onCreate(instance) {
+      instance.popper.classList.add("user-tip");
+
       instance.popper
         .querySelector(".btn-dismiss")
         .addEventListener("click", (event) => {

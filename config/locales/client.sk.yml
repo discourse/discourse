@@ -387,6 +387,10 @@ sk:
       statuses:
         pending:
           title: "Čakajúce správy"
+        approved:
+          title: "Schválený"
+        rejected:
+          title: "Zamietnuté"
       context_question:
         delimiter: "alebo"
       types:

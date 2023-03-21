@@ -34,6 +34,25 @@ describe "Custom sidebar sections", type: :system, js: true do
     expect(sidebar).to have_link("Sidebar Tags")
   end
 
+  it "allows the user to create custom section with /my link" do
+    visit("/latest")
+    sidebar.open_new_custom_section
+
+    expect(section_modal).to be_visible
+    expect(section_modal).to have_disabled_save
+    expect(sidebar.custom_section_modal_title).to have_content("Add custom section")
+
+    section_modal.fill_name("My section")
+
+    section_modal.fill_link("My preferences", "/my/preferences")
+    expect(section_modal).to have_enabled_save
+
+    section_modal.save
+
+    expect(page).to have_button("My section")
+    expect(sidebar).to have_link("My preferences")
+  end
+
   it "allows the user to create custom section with external link" do
     visit("/latest")
     sidebar.open_new_custom_section
@@ -78,6 +97,33 @@ describe "Custom sidebar sections", type: :system, js: true do
     expect(sidebar).to have_link("Edited Tag")
 
     expect(page).not_to have_link("Sidebar Categories")
+  end
+
+  it "allows the user to reorder links in custom section" do
+    sidebar_section = Fabricate(:sidebar_section, title: "My section", user: user)
+    sidebar_url_1 = Fabricate(:sidebar_url, name: "Sidebar Tags", value: "/tags")
+    Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url_1)
+    sidebar_url_2 = Fabricate(:sidebar_url, name: "Sidebar Categories", value: "/categories")
+    Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url_2)
+
+    visit("/latest")
+    within(".sidebar-custom-sections .sidebar-section-link-wrapper:nth-child(1)") do
+      expect(page).to have_css(".sidebar-section-link-sidebar-tags")
+    end
+    within(".sidebar-custom-sections .sidebar-section-link-wrapper:nth-child(2)") do
+      expect(page).to have_css(".sidebar-section-link-sidebar-categories")
+    end
+
+    tags_link = find(".sidebar-section-link-sidebar-tags")
+    categories_link = find(".sidebar-section-link-sidebar-categories")
+    tags_link.drag_to(categories_link)
+
+    within(".sidebar-custom-sections .sidebar-section-link-wrapper:nth-child(1)") do
+      expect(page).to have_css(".sidebar-section-link-sidebar-categories")
+    end
+    within(".sidebar-custom-sections .sidebar-section-link-wrapper:nth-child(2)") do
+      expect(page).to have_css(".sidebar-section-link-sidebar-tags")
+    end
   end
 
   it "does not allow the user to edit public section" do

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Chat::Service::AutoRemove::HandleChatAllowedGroupsChange do
+RSpec.describe Chat::AutoRemove::HandleChatAllowedGroupsChange do
   describe ".call" do
     subject(:result) { described_class.call(params) }
 
@@ -47,7 +47,7 @@ RSpec.describe Chat::Service::AutoRemove::HandleChatAllowedGroupsChange do
 
         it "removes users from all public channels" do
           expect { result }.to change {
-            UserChatChannelMembership.where(
+            Chat::UserChatChannelMembership.where(
               user: [user_1, user_2],
               chat_channel: [public_channel_1, public_channel_2],
             ).count
@@ -56,7 +56,7 @@ RSpec.describe Chat::Service::AutoRemove::HandleChatAllowedGroupsChange do
 
         it "does not remove admin users from public channels" do
           expect { result }.not_to change {
-            UserChatChannelMembership.where(
+            Chat::UserChatChannelMembership.where(
               user: [admin_1, admin_2],
               chat_channel: [public_channel_1],
             ).count
@@ -65,7 +65,7 @@ RSpec.describe Chat::Service::AutoRemove::HandleChatAllowedGroupsChange do
 
         it "does not remove users from direct message channels" do
           expect { result }.not_to change {
-            UserChatChannelMembership.where(chat_channel: [dm_channel_1, dm_channel_2]).count
+            Chat::UserChatChannelMembership.where(chat_channel: [dm_channel_1, dm_channel_2]).count
           }
         end
 
@@ -73,7 +73,7 @@ RSpec.describe Chat::Service::AutoRemove::HandleChatAllowedGroupsChange do
           result
           expect(
             job_enqueued?(
-              job: :kick_users_from_channel,
+              job: Jobs::Chat::KickUsersFromChannel,
               at: 5.seconds.from_now,
               args: {
                 user_ids: [user_1.id, user_2.id],
@@ -83,7 +83,7 @@ RSpec.describe Chat::Service::AutoRemove::HandleChatAllowedGroupsChange do
           ).to eq(true)
           expect(
             job_enqueued?(
-              job: :kick_users_from_channel,
+              job: Jobs::Chat::KickUsersFromChannel,
               at: 5.seconds.from_now,
               args: {
                 user_ids: [user_1.id, user_2.id],
@@ -114,7 +114,7 @@ RSpec.describe Chat::Service::AutoRemove::HandleChatAllowedGroupsChange do
         end
 
         it "does nothing" do
-          expect { result }.not_to change { UserChatChannelMembership.count }
+          expect { result }.not_to change { Chat::UserChatChannelMembership.count }
           expect(result).to fail_to_find_a_model(:users)
         end
       end
@@ -125,7 +125,7 @@ RSpec.describe Chat::Service::AutoRemove::HandleChatAllowedGroupsChange do
         it { is_expected.to fail_a_policy(:not_everyone_allowed) }
 
         it "does nothing" do
-          expect { result }.not_to change { UserChatChannelMembership.count }
+          expect { result }.not_to change { Chat::UserChatChannelMembership.count }
         end
       end
 
@@ -143,7 +143,7 @@ RSpec.describe Chat::Service::AutoRemove::HandleChatAllowedGroupsChange do
 
         it "removes them from public channels" do
           expect { result }.to change {
-            UserChatChannelMembership.where(
+            Chat::UserChatChannelMembership.where(
               chat_channel: [public_channel_1, public_channel_2],
             ).count
           }.by(-2)
@@ -151,7 +151,7 @@ RSpec.describe Chat::Service::AutoRemove::HandleChatAllowedGroupsChange do
 
         it "does not remove them from direct message channels" do
           expect { result }.not_to change {
-            UserChatChannelMembership.where(chat_channel: [dm_channel_2]).count
+            Chat::UserChatChannelMembership.where(chat_channel: [dm_channel_2]).count
           }
         end
       end

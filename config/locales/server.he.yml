@@ -254,6 +254,7 @@ he:
     user_exists: "אין צורך להזמין את <b>%{email}</b>, יש כבר חשבון עם הכתובת הזאת!"
     invite_exists: "כבר הזמנת את <b>%{email}</b>."
     invalid_email: "%{email} אינה כתובת דוא״ל תקפה."
+    generic_error_response: "אירעה בעיה עם הבקשה שלך."
     rate_limit:
       one: "כבר שלחת הזמנה %{count} ביום האחרון, נא להמתין %{time_left} בטרם ניסיון קודם."
       two: "כבר שלחת %{count} הזמנות ביום האחרון, נא להמתין %{time_left} בטרם ניסיון קודם."
@@ -1721,7 +1722,7 @@ he:
     enable_discourse_connect: "הפעלת כניסה דרך DiscourseConnect (לשעבר ‚הכניסה האחודה של Discourse’) (אזהרה: *חובה* לאמת את כתובות הדוא״ל של המשתמשים על ידי האתר החיצוני!)"
     verbose_discourse_connect_logging: "תיעוד ניתוח נרחב בכל מה שקשור ב־DiscourseConnect אל <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     enable_discourse_connect_provider: "הטמעת פרוטוקול ספק DiscourseConnect ‏(‚Discourse SSO’ לשעבר) בנקודת הגישה ‎/session/sso_provider, דורשת את ההגדרה discourse_connect_provider_secrets (סודות ספק השירות)"
-    discourse_connect_url: "כתובת נקודת הגישה אל DiscourseConnect (חייבת לכלול http://‎ או https://‎)"
+    discourse_connect_url: "כתובת נקודת הקצה של DiscourseConnect (חייבת לכלול http://‎ או https://‎, ובלי לוכסן בסוף)"
     discourse_connect_secret: "מחרוזת סודית המשמשת לאמת מידע של DiscourseConnect באופן מוצפן, נא לוודא שאורכה 10 תווים לפחות"
     discourse_connect_provider_secrets: "רשימת צמדי סודות שמות תחום שמשתמשים ב־DiscourseConnect. עליך לוודא שאורך הסוד של DiscourseConnect הוא 10 תווים ומעלה. ניתן להשתמש בתו המכליל * כדי להרחיב את ההתאמה לכל שם תחום שהוא או לחלק מסוים משם תחום (למשל: ‎*.example.com)"
     discourse_connect_overrides_bio: "דריסת הביוגרפיה בפרופיל המשתמש ומניעת השינוי מצד המשתמש"
@@ -4635,10 +4636,7 @@ he:
       message: "<p>הודעת ההפעלה נשלחה מחדש בדוא״ל אל <b>%{email}</b>"
   safe_mode:
     title: "כנסו למצב בטוח"
-    description: "מצב בטוח מאפשר לכם לבחון את האתר שלכם מבלי לטעון תוספים או ערכות עיצוב."
     no_themes: "השבתת ערכות עיצוב ורכיבי ערכת עיצוב"
-    no_unofficial_plugins: "השבתת תוספים בלתי רשמיים"
-    no_plugins: "השבתת כל התוספים"
     enter: "כנסו למצב בטוח"
     must_select: "עליך לבחור באפשרות אחת לפחות כדי להיכנס למצב בטוח."
   wizard:

@@ -29,7 +29,7 @@ module Jobs
         suspended_until: Time.zone.now,
         last_seen_at: 3.months.ago,
         channel_category: channel.chatable_id,
-        mode: UserChatChannelMembership.join_modes[:automatic],
+        mode: Chat::UserChatChannelMembership.join_modes[:automatic],
       }
 
       new_member_ids = DB.query_single(create_memberships_query(category), query_args)
@@ -41,7 +41,7 @@ module Jobs
         Chat::ChatChannelMembershipManager.new(channel).recalculate_user_count
       end
 
-      ChatPublisher.publish_new_channel(channel.reload, User.where(id: new_member_ids))
+      Chat::Publisher.publish_new_channel(channel.reload, User.where(id: new_member_ids))
     end
 
     private

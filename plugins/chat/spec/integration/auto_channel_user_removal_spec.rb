@@ -29,20 +29,20 @@ describe "Automatic user removal from channels" do
   context "when the chat_allowed_groups site setting changes" do
     it "removes the user who is no longer in chat_allowed_groups" do
       expect { SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:trust_level_3] }.to change {
-        UserChatChannelMembership.count
+        Chat::UserChatChannelMembership.count
       }.by(-3)
 
-      expect(UserChatChannelMembership.exists?(user: user_1, chat_channel: public_channel)).to eq(
-        false,
-      )
-      expect(Chat::ChatChannelFetcher.all_secured_channel_ids(user_1_guardian)).not_to include(
+      expect(
+        Chat::UserChatChannelMembership.exists?(user: user_1, chat_channel: public_channel),
+      ).to eq(false)
+      expect(Chat::ChannelFetcher.all_secured_channel_ids(user_1_guardian)).not_to include(
         public_channel.id,
       )
 
-      expect(UserChatChannelMembership.exists?(user: user_1, chat_channel: private_channel)).to eq(
-        false,
-      )
-      expect(Chat::ChatChannelFetcher.all_secured_channel_ids(user_1_guardian)).not_to include(
+      expect(
+        Chat::UserChatChannelMembership.exists?(user: user_1, chat_channel: private_channel),
+      ).to eq(false)
+      expect(Chat::ChannelFetcher.all_secured_channel_ids(user_1_guardian)).not_to include(
         private_channel.id,
       )
     end
@@ -50,20 +50,24 @@ describe "Automatic user removal from channels" do
     it "does not remove the user who is in one of the chat_allowed_groups" do
       user_2.change_trust_level!(TrustLevel[4])
       expect { SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:trust_level_3] }.to change {
-        UserChatChannelMembership.count
+        Chat::UserChatChannelMembership.count
       }.by(-2)
-      expect(UserChatChannelMembership.exists?(user: user_2, chat_channel: public_channel)).to eq(
-        true,
-      )
+      expect(
+        Chat::UserChatChannelMembership.exists?(user: user_2, chat_channel: public_channel),
+      ).to eq(true)
     end
 
     it "does not remove users from their DM channels" do
       expect { SiteSetting.chat_allowed_groups = "" }.to change {
-        UserChatChannelMembership.count
+        Chat::UserChatChannelMembership.count
       }.by(-3)
 
-      expect(UserChatChannelMembership.exists?(user: user_1, chat_channel: dm_channel)).to eq(true)
-      expect(UserChatChannelMembership.exists?(user: user_2, chat_channel: dm_channel)).to eq(true)
+      expect(Chat::UserChatChannelMembership.exists?(user: user_1, chat_channel: dm_channel)).to eq(
+        true,
+      )
+      expect(Chat::UserChatChannelMembership.exists?(user: user_2, chat_channel: dm_channel)).to eq(
+        true,
+      )
     end
 
     context "for staff users" do
@@ -74,7 +78,7 @@ describe "Automatic user removal from channels" do
         private_channel.add(staff_user)
         SiteSetting.chat_allowed_groups = ""
         expect(
-          UserChatChannelMembership.where(
+          Chat::UserChatChannelMembership.where(
             user: staff_user,
             chat_channel: [public_channel, private_channel],
           ).count,
@@ -84,7 +88,10 @@ describe "Automatic user removal from channels" do
       it "does not remove them from DM channels" do
         staff_dm_channel = Fabricate(:direct_message_channel, users: [user_1, staff_user])
         expect(
-          UserChatChannelMembership.where(user: staff_user, chat_channel: [staff_dm_channel]).count,
+          Chat::UserChatChannelMembership.where(
+            user: staff_user,
+            chat_channel: [staff_dm_channel],
+          ).count,
         ).to eq(1)
       end
     end
@@ -102,7 +109,7 @@ describe "Automatic user removal from channels" do
       it "removes the user from the category channels" do
         group.remove(user_1)
         expect(
-          UserChatChannelMembership.where(
+          Chat::UserChatChannelMembership.where(
             user: user_1,
             chat_channel: [public_channel, private_channel],
           ).count,
@@ -111,9 +118,9 @@ describe "Automatic user removal from channels" do
 
       it "does not remove the user from DM channels" do
         group.remove(user_1)
-        expect(UserChatChannelMembership.where(user: user_1, chat_channel: dm_channel).count).to eq(
-          1,
-        )
+        expect(
+          Chat::UserChatChannelMembership.where(user: user_1, chat_channel: dm_channel).count,
+        ).to eq(1)
       end
 
       context "for staff users" do
@@ -126,7 +133,7 @@ describe "Automatic user removal from channels" do
           group.remove(staff_user)
 
           expect(
-            UserChatChannelMembership.where(
+            Chat::UserChatChannelMembership.where(
               user: staff_user,
               chat_channel: [public_channel, private_channel],
             ).count,
@@ -150,9 +157,9 @@ describe "Automatic user removal from channels" do
         it "does not remove them from the corresponding channel" do
           secret_group.remove(user_1)
           expect(
-            UserChatChannelMembership.exists?(user: user_1, chat_channel: private_channel),
+            Chat::UserChatChannelMembership.exists?(user: user_1, chat_channel: private_channel),
           ).to eq(true)
-          expect(Chat::ChatChannelFetcher.all_secured_channel_ids(user_1_guardian)).to include(
+          expect(Chat::ChannelFetcher.all_secured_channel_ids(user_1_guardian)).to include(
             private_channel.id,
           )
         end
@@ -162,9 +169,9 @@ describe "Automatic user removal from channels" do
         it "removes them from the corresponding channel" do
           secret_group.remove(user_1)
           expect(
-            UserChatChannelMembership.exists?(user: user_1, chat_channel: private_channel),
+            Chat::UserChatChannelMembership.exists?(user: user_1, chat_channel: private_channel),
           ).to eq(false)
-          expect(Chat::ChatChannelFetcher.all_secured_channel_ids(user_1_guardian)).not_to include(
+          expect(Chat::ChannelFetcher.all_secured_channel_ids(user_1_guardian)).not_to include(
             private_channel.id,
           )
         end
@@ -177,9 +184,9 @@ describe "Automatic user removal from channels" do
       it "removes the user from the corresponding category channel" do
         private_category.update!(permissions: { secret_group.id => :readonly })
         expect(
-          UserChatChannelMembership.exists?(user: user_1, chat_channel: private_channel),
+          Chat::UserChatChannelMembership.exists?(user: user_1, chat_channel: private_channel),
         ).to eq(false)
-        expect(Chat::ChatChannelFetcher.all_secured_channel_ids(user_1_guardian)).not_to include(
+        expect(Chat::ChannelFetcher.all_secured_channel_ids(user_1_guardian)).not_to include(
           private_channel.id,
         )
       end
@@ -192,7 +199,10 @@ describe "Automatic user removal from channels" do
           private_channel.add(staff_user)
           private_category.update!(permissions: { secret_group.id => :readonly })
           expect(
-            UserChatChannelMembership.exists?(user: staff_user, chat_channel: private_channel),
+            Chat::UserChatChannelMembership.exists?(
+              user: staff_user,
+              chat_channel: private_channel,
+            ),
           ).to eq(true)
         end
       end
@@ -202,9 +212,9 @@ describe "Automatic user removal from channels" do
       it "removes the user from the corresponding category channel" do
         private_category.update!(permissions: { Group::AUTO_GROUPS[:staff] => :full })
         expect(
-          UserChatChannelMembership.exists?(user: user_1, chat_channel: private_channel),
+          Chat::UserChatChannelMembership.exists?(user: user_1, chat_channel: private_channel),
         ).to eq(false)
-        expect(Chat::ChatChannelFetcher.all_secured_channel_ids(user_1_guardian)).not_to include(
+        expect(Chat::ChannelFetcher.all_secured_channel_ids(user_1_guardian)).not_to include(
           private_channel.id,
         )
       end
@@ -217,7 +227,10 @@ describe "Automatic user removal from channels" do
           private_channel.add(staff_user)
           private_category.update!(permissions: {})
           expect(
-            UserChatChannelMembership.exists?(user: staff_user, chat_channel: private_channel),
+            Chat::UserChatChannelMembership.exists?(
+              user: staff_user,
+              chat_channel: private_channel,
+            ),
           ).to eq(true)
         end
       end
@@ -230,16 +243,16 @@ describe "Automatic user removal from channels" do
         secret_group.destroy!
 
         expect(
-          UserChatChannelMembership.exists?(user: user_1, chat_channel: private_channel),
+          Chat::UserChatChannelMembership.exists?(user: user_1, chat_channel: private_channel),
         ).to eq(true)
-        expect(Chat::ChatChannelFetcher.all_secured_channel_ids(user_1_guardian)).to include(
+        expect(Chat::ChannelFetcher.all_secured_channel_ids(user_1_guardian)).to include(
           private_channel.id,
         )
 
-        expect(UserChatChannelMembership.exists?(user: user_1, chat_channel: public_channel)).to eq(
-          true,
-        )
-        expect(Chat::ChatChannelFetcher.all_secured_channel_ids(user_1_guardian)).to include(
+        expect(
+          Chat::UserChatChannelMembership.exists?(user: user_1, chat_channel: public_channel),
+        ).to eq(true)
+        expect(Chat::ChannelFetcher.all_secured_channel_ids(user_1_guardian)).to include(
           public_channel.id,
         )
       end
@@ -254,16 +267,16 @@ describe "Automatic user removal from channels" do
         secret_group.destroy!
 
         expect(
-          UserChatChannelMembership.exists?(user: user_1, chat_channel: private_channel),
+          Chat::UserChatChannelMembership.exists?(user: user_1, chat_channel: private_channel),
         ).to eq(false)
-        expect(Chat::ChatChannelFetcher.all_secured_channel_ids(user_1_guardian)).not_to include(
+        expect(Chat::ChannelFetcher.all_secured_channel_ids(user_1_guardian)).not_to include(
           private_channel.id,
         )
 
-        expect(UserChatChannelMembership.exists?(user: user_1, chat_channel: public_channel)).to eq(
-          true,
-        )
-        expect(Chat::ChatChannelFetcher.all_secured_channel_ids(user_1_guardian)).to include(
+        expect(
+          Chat::UserChatChannelMembership.exists?(user: user_1, chat_channel: public_channel),
+        ).to eq(true)
+        expect(Chat::ChannelFetcher.all_secured_channel_ids(user_1_guardian)).to include(
           public_channel.id,
         )
       end

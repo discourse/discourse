@@ -399,10 +399,14 @@ th:
       statuses:
         pending:
           title: "อยู่ระหว่างการพิจารณา"
+        approved:
+          title: "อนุมัติ"
+        rejected:
+          title: "ปฏิเสธ"
         reviewed:
-          title: "(ถูกรีวิวทั้งหมด)"
+          title: "ถูกรีวิวทั้งหมด"
         all:
-          title: "(ทุกสิ่ง)"
+          title: "ทุกสิ่ง"
       context_question:
         delimiter: "หรือ"
       types:

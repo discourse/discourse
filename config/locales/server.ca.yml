@@ -2916,8 +2916,6 @@ ca:
       message: "<p>Hem tornat a enviar el correu d'activació a <b>%{email}</b>"
   safe_mode:
     title: "Entra en mode segur"
-    no_unofficial_plugins: "Inhabilita tots els connectors no oficials"
-    no_plugins: "Inhabilita tots els connectors"
     enter: "Entra en mode segur"
     must_select: "Cal seleccionar almenys una opció per a entrar en mode segur."
   wizard:

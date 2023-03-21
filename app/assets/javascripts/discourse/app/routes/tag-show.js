@@ -17,6 +17,7 @@ import { makeArray } from "discourse-common/lib/helpers";
 import { setTopicList } from "discourse/lib/topic-list-tracker";
 import showModal from "discourse/lib/show-modal";
 import { action } from "@ember/object";
+import PreloadStore from "discourse/lib/preload-store";
 
 const NONE = "none";
 const ALL = "all";
@@ -89,6 +90,20 @@ export default DiscourseRoute.extend(FilterModeMixin, {
       filter = `tag/${tagId}/l/${topicFilter}`;
     }
 
+    if (
+      this.noSubcategories === undefined &&
+      category?.default_list_filter === "none" &&
+      topicFilter === "latest"
+    ) {
+      // TODO: avoid throwing away preload data by redirecting on the server
+      PreloadStore.getAndRemove("topic_list");
+      return this.replaceWith(
+        "tags.showCategoryNone",
+        params.category_slug_path_with_id,
+        tagId
+      );
+    }
+
     const list = await findTopicList(
       this.store,
       this.topicTrackingState,
@@ -123,10 +138,7 @@ export default DiscourseRoute.extend(FilterModeMixin, {
   },
 
   setupController(controller, model) {
-    const noSubcategories =
-      this.noSubcategories === undefined
-        ? model.category?.default_list_filter === NONE
-        : this.noSubcategories;
+    const noSubcategories = this.noSubcategories;
 
     this.controllerFor("tag.show").setProperties({
       model: model.tag,

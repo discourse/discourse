@@ -56,6 +56,7 @@
     {{#if this.hasInactiveThemes}}
       {{#each this.inactiveThemes as |theme|}}
         <ThemesListItem
+          @classNames="inactive-theme"
           @theme={{theme}}
           @navigateToTheme={{action "navigateToTheme" theme}}
         />

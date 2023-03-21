@@ -101,6 +101,10 @@
 .directory-table-container {
   container-type: inline-size;
   container-name: directory-table;
+  transform: translateX(0px);
+  // transform here creates a containing blocks which
+  // is used by fixed-positioned dropdowns
+  // if omitted, `overflow-x: auto;` below will clip them
 }
 
 .directory-table {
@@ -127,6 +131,7 @@
 
   &__column-header,
   &__cell,
+  &__cell--empty,
   &__cell--user-field {
     display: flex;
     border-bottom: 1px solid var(--primary-low);

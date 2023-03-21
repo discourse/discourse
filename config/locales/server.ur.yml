@@ -1513,7 +1513,6 @@ ur:
     enable_discourse_connect: "DiscourseConnect (سابقہ 'Discourse SSO') کے ذریعے سائن آن کو فعال کریں (انتباہ: صارفین کے ای میل ایڈریس *ضروری ہے* کی توثیق بیرونی سائٹ سے کی جائے!)"
     verbose_discourse_connect_logging: "لاگ وربوز DiscourseConnect متعلقہ تشخیص کو <a href='%{base_path}/logs' target='_blank'>/لاگز</a>سے منسلک کریں۔"
     enable_discourse_connect_provider: "/session/sso_provider اینڈ پوائنٹ پر DiscourseConnect (پہلے 'Discourse SSO') فراہم کنندہ پروٹوکول کو نافذ کریں، discourse_connect_provider_secrets کو سیٹ کرنے کی ضرورت ہے۔"
-    discourse_connect_url: "DiscourseConnect اینڈ پوائنٹ کا URL (اس میں http:// یا https:// شامل ہونا چاہیے)"
     discourse_connect_secret: "خفیہ سٹرنگ کو خفیہ طور پر DiscourseConnect کی معلومات کی توثیق کرنے کے لیے استعمال کیا جاتا ہے، یقینی بنائیں کہ یہ 10 حروف یا اس سے زیادہ ہے۔"
     discourse_connect_provider_secrets: "ڈومین خفیہ جوڑوں کی فہرست جو DiscourseConnect استعمال کر رہی ہے۔ یقینی بنائیں کہ DiscourseConnect سیکرٹ ۱۰ حروف یا اس سے زیادہ ہے۔ وائلڈ کارڈ کی علامت * کسی بھی ڈومین یا اس کے صرف ایک حصے سے ملنے کے لیے استعمال کیا جا سکتا ہے (جیسے *.example.com)۔"
     discourse_connect_overrides_bio: "صارف پروفائل میں صارف کی بائیو کی جگہ لے لیتا ہے اور اِس کو تبدیل کرنے سے صارف کو روک دیتا ہے"
@@ -3399,8 +3398,6 @@ ur:
       message: "<p>ہم نے <b>%{email}</b> پر ایکٹیویشن اِیمیل دوبارہ بھیج دی ہے"
   safe_mode:
     title: "سَیف مَوڈ میں داخل ہوں"
-    no_unofficial_plugins: "غیر آفیشل پلگ اِن غیر فعال کریں"
-    no_plugins: "تمام پلگ اِن غیر فعال کریں"
     enter: "سَیف مَوڈ میں داخل ہوں"
     must_select: "سَیف مَوڈ میں داخل ہونے کیلئے آپ کا کم از کم ایک آپشن منتخب کرنا ضروری ہے۔"
   wizard:

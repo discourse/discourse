@@ -624,17 +624,29 @@ he:
         pending:
           title: "בהמתנה"
         approved:
+          title: "אושר"
+        approved_flag:
           title: "הסימון אושר"
+        approved_user:
+          title: "המשתמש אישר"
+        approved_post:
+          title: "הפוסט אושר"
         rejected:
+          title: "נדחה"
+        rejected_flag:
           title: "הסימון נדחה"
+        rejected_user:
+          title: "המשתמש דחה"
+        rejected_post:
+          title: "הפוסט נדחה"
         ignored:
           title: "הסימון זכה להתעלמות"
         deleted:
           title: "הנושא או הפוסט נמחקו"
         reviewed:
-          title: "(כל אלו שנסקרו)"
+          title: "כל אלו שנסקרו"
         all:
-          title: "(הכול)"
+          title: "הכול"
       context_question:
         is_this_post: "הפוסט הזה %{reviewable_human_score_types}?"
         delimiter: "או"
@@ -2878,6 +2890,7 @@ he:
         many: "%{count} פוסטים בנושא"
         other: "%{count} פוסטים בנושא"
       create: "נושא חדש"
+      create_disabled_category: "אסור לך ליצור נושאים בקטגוריה הזאת"
       create_long: "יצירת נושא חדש"
       open_draft: "פתח טיוטה"
       private_message: "תחילת הודעה"
@@ -3735,6 +3748,7 @@ he:
       default_slow_mode: 'להפעיל „מצב אטי” לנושאים חדשים בקטגוריה הזאת.'
       parent: "קטגורית אם"
       num_auto_bump_daily: "מספר הנושאים הפתוחים להקפצה מדי יום:"
+      auto_bump_cooldown_days: "כמות הימים המזערית להקפצת אותו הנושא שוב:"
       navigate_to_first_post_after_read: "ניווט לפוסט הראשוני לאחר שהנושאים נקראו"
       notifications:
         title: "שינוי רמת ההתראות לקטגוריה הזו"

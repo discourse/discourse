@@ -9,4 +9,11 @@ RSpec.describe CategorySetting do
       .is_greater_than_or_equal_to(0)
       .allow_nil
   end
+
+  it do
+    is_expected.to validate_numericality_of(:auto_bump_cooldown_days)
+      .only_integer
+      .is_greater_than_or_equal_to(0)
+      .allow_nil
+  end
 end

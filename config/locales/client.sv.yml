@@ -536,21 +536,33 @@ sv:
         pending:
           title: "Väntar"
         approved:
+          title: "Godkända"
+        approved_flag:
           title: "Flaggning godkänd"
+        approved_user:
+          title: "Användaren godkändes"
+        approved_post:
+          title: "Inlägget godkändes"
         rejected:
+          title: "Avvisade"
+        rejected_flag:
           title: "Flaggning avvisades"
+        rejected_user:
+          title: "Användaren avvisades"
+        rejected_post:
+          title: "Inlägget avvisades"
         ignored:
           title: "Flaggning ignoreras"
         deleted:
           title: "Ämne eller inlägg raderat"
         reviewed:
-          title: "(alla granskade)"
+          title: "Alla granskade"
         all:
-          title: "(allting)"
+          title: "Allting"
       context_question:
         is_this_post: "Är detta inlägg %{reviewable_human_score_types}?"
         delimiter: "eller"
-        something_else_wrong: "Är det något annat fel med detta inlägg?"
+        something_else_wrong: "Är det något fel med detta inlägg?"
       types:
         reviewable_flagged_post:
           title: "Flaggat inlägg"
@@ -2628,6 +2640,7 @@ sv:
         one: "%{count} inlägg i ämnet"
         other: "%{count} inlägg i ämnet"
       create: "Nytt ämne"
+      create_disabled_category: "Du får inte skapa ämnen i den här kategorin"
       create_long: "Skapa ett nytt ämne"
       open_draft: "Öppna utkast"
       private_message: "Skriv meddelande"
@@ -3401,6 +3414,7 @@ sv:
       default_slow_mode: 'Aktivera "Långsamt läge" för nya ämnen i denna kategori.'
       parent: "Överordnad kategori"
       num_auto_bump_daily: "Antalet öppnade ämnen för att dagligen automatiskt knuffa ett ämne:"
+      auto_bump_cooldown_days: "Minsta antal dagar innan samma ämne får knuffas:"
       navigate_to_first_post_after_read: "Navigera till första inlägget efter att ämnen är lästa"
       notifications:
         title: "ändra aviseringsnivå för denna kategori"

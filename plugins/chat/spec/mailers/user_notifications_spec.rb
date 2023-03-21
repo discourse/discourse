@@ -54,7 +54,10 @@ describe UserNotifications do
             user: another_participant,
             chat_channel: channel,
           )
-          DirectMessageUser.create!(direct_message: channel.chatable, user: another_participant)
+          Chat::DirectMessageUser.create!(
+            direct_message: channel.chatable,
+            user: another_participant,
+          )
           expected_subject =
             I18n.t(
               "user_notifications.chat_summary.subject.direct_message_from_1",
@@ -159,6 +162,72 @@ describe UserNotifications do
         email = described_class.chat_summary(user, {})
 
         expect(email.to).to be_blank
+      end
+
+      context "with channel-wide mentions" do
+        before { Jobs.run_immediately! }
+
+        def create_chat_message_with_mentions_and_notifications(content)
+          # Sometimes it's not enough to just fabricate a message
+          # and we have to create it like here. In this case all the necessary
+          # db records for mentions and notifications will be created under the hood.
+          Chat::MessageCreator.create(chat_channel: channel, user: sender, content: content)
+        end
+
+        it "returns email for @all mention by default" do
+          create_chat_message_with_mentions_and_notifications("Mentioning @all")
+          email = described_class.chat_summary(user, {})
+          expect(email.to).to contain_exactly(user.email)
+        end
+
+        it "returns email for @here mention by default" do
+          user.update(last_seen_at: 1.second.ago)
+
+          create_chat_message_with_mentions_and_notifications("Mentioning @here")
+          email = described_class.chat_summary(user, {})
+
+          expect(email.to).to contain_exactly(user.email)
+        end
+
+        context "when channel-wide mentions are disabled in a channel" do
+          before { channel.update!(allow_channel_wide_mentions: false) }
+
+          it "doesn't return email for @all mention" do
+            create_chat_message_with_mentions_and_notifications("Mentioning @all")
+            email = described_class.chat_summary(user, {})
+
+            expect(email.to).to be_blank
+          end
+
+          it "doesn't return email for @here mention" do
+            user.update(last_seen_at: 1.second.ago)
+
+            create_chat_message_with_mentions_and_notifications("Mentioning @here")
+            email = described_class.chat_summary(user, {})
+
+            expect(email.to).to be_blank
+          end
+        end
+
+        context "when user has disabled channel-wide mentions" do
+          before { user.user_option.update!(ignore_channel_wide_mention: true) }
+
+          it "doesn't return email for @all mention" do
+            create_chat_message_with_mentions_and_notifications("Mentioning @all")
+            email = described_class.chat_summary(user, {})
+
+            expect(email.to).to be_blank
+          end
+
+          it "doesn't return email for @here mention" do
+            user.update(last_seen_at: 1.second.ago)
+
+            create_chat_message_with_mentions_and_notifications("Mentioning @here")
+            email = described_class.chat_summary(user, {})
+
+            expect(email.to).to be_blank
+          end
+        end
       end
 
       describe "email subject" do

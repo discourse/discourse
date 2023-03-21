@@ -592,22 +592,34 @@ en:
         pending:
           title: "Pending"
         approved:
+          title: "Approved"
+        approved_flag:
           title: "Flag approved"
+        approved_user:
+          title: "User approved"
+        approved_post:
+          title: "Post approved"
         rejected:
+          title: "Rejected"
+        rejected_flag:
           title: "Flag rejected"
+        rejected_user:
+          title: "User rejected"
+        rejected_post:
+          title: "Post rejected"
         ignored:
           title: "Flag ignored"
         deleted:
           title: "Topic or post deleted"
         reviewed:
-          title: "(all reviewed)"
+          title: "All reviewed"
         all:
-          title: "(everything)"
+          title: "Everything"
 
       context_question:
         is_this_post: "Is this post %{reviewable_human_score_types}?"
         delimiter: "or"
-        something_else_wrong: "Is there something else wrong with this post?"
+        something_else_wrong: "Is there something wrong with this post?"
 
       types:
         reviewable_flagged_post:
@@ -3728,6 +3740,7 @@ en:
       default_slow_mode: 'Enable "Slow Mode" for new topics in this category.'
       parent: "Parent Category"
       num_auto_bump_daily: "Number of open topics to automatically bump daily:"
+      auto_bump_cooldown_days: "Minimum days before bumping the same topic again:"
       navigate_to_first_post_after_read: "Navigate to first post after topics are read"
       notifications:
         title: "change notification level for this category"

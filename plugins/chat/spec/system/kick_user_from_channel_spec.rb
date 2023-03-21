@@ -19,7 +19,7 @@ describe "Kick user from chat channel", type: :system, js: true do
   end
 
   def publish_kick
-    ChatPublisher.publish_kick_users(channel_1.id, [current_user.id])
+    Chat::Publisher.publish_kick_users(channel_1.id, [current_user.id])
   end
 
   context "when the user is looking at the channel they are kicked from" do

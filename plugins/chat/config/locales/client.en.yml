@@ -244,7 +244,6 @@ en:
       restore: "Restore deleted message"
       save: "Save"
       select: "Select"
-      silence: "Silence user"
       return_to_list: "Return to channels list"
       scroll_to_bottom: "Scroll to bottom"
       scroll_to_new_messages: "See new messages"

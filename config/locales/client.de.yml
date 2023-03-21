@@ -536,21 +536,33 @@ de:
         pending:
           title: "Ausstehend"
         approved:
+          title: "Genehmigt"
+        approved_flag:
           title: "Meldung genehmigt"
+        approved_user:
+          title: "Benutzer genehmigt"
+        approved_post:
+          title: "Beitrag genehmigt"
         rejected:
+          title: "Abgelehnt"
+        rejected_flag:
           title: "Meldung abgelehnt"
+        rejected_user:
+          title: "Benutzer abgelehnt"
+        rejected_post:
+          title: "Beitrag abgelehnt"
         ignored:
           title: "Meldung ignoriert"
         deleted:
           title: "Thema oder Beitrag gelöscht"
         reviewed:
-          title: "(alle überprüft)"
+          title: "Alle überprüft"
         all:
-          title: "(alles)"
+          title: "Alles"
       context_question:
         is_this_post: "Ist dieser Beitrag %{reviewable_human_score_types}?"
         delimiter: "oder"
-        something_else_wrong: "Ist an diesem Beitrag noch etwas falsch?"
+        something_else_wrong: "Ist an diesem Beitrag etwas falsch?"
       types:
         reviewable_flagged_post:
           title: "Gemeldeter Beitrag"
@@ -2652,6 +2664,7 @@ de:
         one: "%{count} Beitrag im Thema"
         other: "%{count} Beiträge im Thema"
       create: "Neues Thema"
+      create_disabled_category: "Du darfst keine Themen in dieser Kategorie erstellen"
       create_long: "Ein neues Thema erstellen"
       open_draft: "Entwurf öffnen"
       private_message: "Eine Unterhaltung beginnen"
@@ -3425,6 +3438,7 @@ de:
       default_slow_mode: '„Langsamer Modus“ für neue Themen in dieser Kategorie aktivieren.'
       parent: "Übergeordnete Kategorie"
       num_auto_bump_daily: "Anzahl der offenen Themen, die automatisch täglich nach oben verschoben werden:"
+      auto_bump_cooldown_days: "Mindestanzahl an Tagen, bevor das gleiche Thema erneut angesprochen wird:"
       navigate_to_first_post_after_read: "Gehe zum ersten Beitrag, nachdem Themen gelesen wurden"
       notifications:
         title: "Benachrichtigungsstufe für diese Kategorie ändern"

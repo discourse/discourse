@@ -85,7 +85,7 @@ RSpec.describe "Archive channel", type: :system, js: true do
 
             other_user = Fabricate(:user)
             channel_1.add(other_user)
-            Chat::ChatMessageCreator.create(
+            Chat::MessageCreator.create(
               chat_channel: channel_1,
               user: other_user,
               content: "this is fine @#{current_user.username}",
@@ -108,7 +108,7 @@ RSpec.describe "Archive channel", type: :system, js: true do
         before { channel_1.update!(status: :read_only) }
 
         fab!(:archive) do
-          ChatChannelArchive.create!(
+          Chat::ChannelArchive.create!(
             chat_channel: channel_1,
             archived_by: current_user,
             destination_topic_title: "This will be the archive topic",

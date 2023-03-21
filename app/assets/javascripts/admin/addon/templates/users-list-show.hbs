@@ -28,7 +28,7 @@
 </div>
 <LoadMore
   @class="users-list-container"
-  @selector=".users-list tr"
+  @selector=".directory-table .directory-table__cell"
   @action={{action "loadMore"}}
 >
   {{#if this.model}}

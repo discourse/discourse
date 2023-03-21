@@ -238,6 +238,7 @@ sv:
     user_exists: "Det finns ingen anledning att bjuda in <b>%{email}</b>, de har redan ett konto!"
     invite_exists: "Du har redan bjudit in <b>%{email}</b>."
     invalid_email: "%{email} är inte en giltig e-postadress."
+    generic_error_response: "Det uppstod ett problem med din förfrågan."
     rate_limit:
       one: "Du har redan skickat %{count} inbjudan den senaste dagen, vänta %{time_left} innan du försöker igen."
       other: "Du har redan skickat %{count} inbjudningar den senaste dagen, vänta %{time_left} innan du försöker igen."
@@ -1615,7 +1616,7 @@ sv:
     enable_discourse_connect: "Aktivera inloggning via DiscourseConnect (tidigare 'Discourse SSO') (VARNING: ANVÄNDARES E-POSTADRESSER *MÅSTE* VALIDERAS AV DEN EXTERNA WEBBPLATSEN!)"
     verbose_discourse_connect_logging: "Logga detaljerad DiscourseConnect-relaterad diagnostik i <a href='%{base_path}/logs' target='_blank'>/loggar</a>"
     enable_discourse_connect_provider: "Implementera leverantörsprotokoll för DiscourseConnect (tidigare 'Discourse SSO') vid slutpunkten /session/sso_provider, kräver att discourse_connect_provider_secrets är inställd"
-    discourse_connect_url: "URL till DiscourseConnect-slutpunkt (måste innehålla http:// eller https://)"
+    discourse_connect_url: "DiscourseConnect-slutpunktens URL (måste innehålla http:// eller https:// och får inte innehålla ett avslutande snedstreck)."
     discourse_connect_secret: "Hemlig sträng som används för att kryptografiskt autentisera DiscourseConnect-information, se till att den är 10 tecken eller längre"
     discourse_connect_provider_secrets: "En lista med domänhemliga par som använder DiscourseConnect. Se till att DiscourseConnect-hemligheten är 10 tecken eller längre. Jokertecknet * kan användas för att matcha valfri domän eller bara en del av den (t.ex. * .exempel.com)."
     discourse_connect_overrides_bio: "Åsidosätter användarbiografi i användarprofilen och hindrar användare från att ändra den"
@@ -2148,6 +2149,7 @@ sv:
     enable_new_notifications_menu: "Aktiverar den nya aviseringsmenyn för den gamla navigeringsmenyn."
     enable_experimental_hashtag_autocomplete: "EXPERIMENTELLT: Använd det nya #hashtag-autokompletteringssystemet för kategorier och taggar som renderar det valda objektet annorlunda och har förbättrad sökning"
     experimental_new_new_view_groups: "EXPERIMENTELLT: Aktivera en ny ämneslista som kombinerar olästa och nya ämnen och gör att länken \"Allt\" i sidofältet länkar till den."
+    enable_custom_sidebar_sections: "EXPERIMENTELLT: Aktivera anpassade sidofältssektioner"
     errors:
       invalid_css_color: "Ogiltig färg. Ange ett färgnamn eller ett hexvärde."
       invalid_email: "Felaktig e-postadress."
@@ -4302,10 +4304,7 @@ sv:
       message: "<p>Vi har sänt om aktiveringsbrevet till <b>%{email}</b>"
   safe_mode:
     title: "Gå över i felsäkert läge"
-    description: "I felsäkert läge kan du testa din webbplats utan att ladda några tillägg eller teman."
     no_themes: "Inaktivera teman och temakomponenter"
-    no_unofficial_plugins: "Inaktivera alla inofficiella plugins"
-    no_plugins: "Inaktivera alla plugins"
     enter: "Starta felsäkert läge"
     must_select: "Du måste välja minst ett alternativ för att aktivera felsäkert läge."
   wizard:

@@ -497,10 +497,14 @@ da:
       statuses:
         pending:
           title: "Afventende"
+        approved:
+          title: "Godkendt"
+        rejected:
+          title: "Afvist"
         reviewed:
-          title: "(alle gennemgåede)"
+          title: "Alle gennemgåede"
         all:
-          title: "(alting)"
+          title: "Alting"
       context_question:
         delimiter: "eller"
       types:
