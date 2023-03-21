@@ -161,8 +161,9 @@ export default class ChatLivePane extends Component {
     if (this.requestedTargetMessageId) {
       findArgs["targetMessageId"] = this.requestedTargetMessageId;
     } else if (fetchingFromLastRead) {
-      findArgs["targetMessageId"] =
-        this.args.channel.currentUserMembership.last_read_message_id;
+      findArgs[
+        "targetMessageId"
+      ] = this.args.channel.currentUserMembership.last_read_message_id;
     }
 
     return this.chatApi
@@ -358,7 +359,7 @@ export default class ChatLivePane extends Component {
 
   @debounce(100)
   highlightOrFetchMessage(messageId) {
-    const message = this.args.channel.messagesManager.findMessage(messageId);
+    const message = this.#messagesManager?.findMessage(messageId);
     if (message) {
       this.scrollToMessage(message.id, {
         highlight: true,
@@ -379,7 +380,7 @@ export default class ChatLivePane extends Component {
       return;
     }
 
-    const message = this.args.channel.messagesManager.findMessage(messageId);
+    const message = this.#messagesManager?.findMessage(messageId);
     if (message?.deletedAt && opts.autoExpand) {
       message.expanded = true;
     }
@@ -430,8 +431,8 @@ export default class ChatLivePane extends Component {
         return;
       }
 
-      const lastReadId =
-        this.args.channel.currentUserMembership?.last_read_message_id;
+      const lastReadId = this.args.channel.currentUserMembership
+        ?.last_read_message_id;
       let lastUnreadVisibleMessage = this.args.channel.visibleMessages.findLast(
         (message) => !lastReadId || message.id > lastReadId
       );
@@ -486,7 +487,7 @@ export default class ChatLivePane extends Component {
         return;
       }
 
-      if (this.args.channel.messagesManager.canLoadMoreFuture) {
+      if (this.#messagesManager?.canLoadMoreFuture) {
         this._fetchAndScrollToLatest();
       } else if (this.args.channel.messages?.length > 0) {
         this.scrollToMessage(
@@ -738,6 +739,10 @@ export default class ChatLivePane extends Component {
     return this.isDestroying || this.isDestroyed;
   }
 
+  get #messagesManager() {
+    return this.args.channel?.messagesManager;
+  }
+
   @action
   sendMessage(message, uploads = []) {
     resetIdle();
@@ -836,8 +841,9 @@ export default class ChatLivePane extends Component {
   }
 
   _onSendError(id, error) {
-    const stagedMessage =
-      this.args.channel.messagesManager.findStagedMessage(id);
+    const stagedMessage = this.args.channel.messagesManager.findStagedMessage(
+      id
+    );
     if (stagedMessage) {
       if (error.jqXHR?.responseJSON?.errors?.length) {
         stagedMessage.error = error.jqXHR.responseJSON.errors[0];
@@ -948,8 +954,9 @@ export default class ChatLivePane extends Component {
 
   @action
   replyMessageClicked(message) {
-    const replyMessageFromLookup =
-      this.args.channel.messagesManager.findMessage(message.id);
+    const replyMessageFromLookup = this.args.channel.messagesManager.findMessage(
+      message.id
+    );
     if (replyMessageFromLookup) {
       this.scrollToMessage(replyMessageFromLookup.id, {
         highlight: true,
