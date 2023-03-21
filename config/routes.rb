@@ -156,7 +156,7 @@ Discourse::Application.routes.draw do
         get "tl3_requirements"
         put "anonymize"
         post "merge"
-        post "reset_bounce_score"
+        post "reset-bounce-score" => "users#reset_bounce_score"
         put "disable_second_factor"
         delete "sso_record"
       end
