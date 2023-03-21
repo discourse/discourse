@@ -59,8 +59,8 @@ class Emoji
 
   def self.[](name)
     name = name.delete_prefix(":").delete_suffix(":")
-    is_toned = name.match?(/.+:t[1-6]/)
-    normalized_name = name.gsub(/(.+):t[1-6]/, '\1')
+    is_toned = name.match?(/\A.+:t[1-6]\z/)
+    normalized_name = name.gsub(/\A(.+):t[1-6]\z/, '\1')
 
     found_emoji = nil
 
