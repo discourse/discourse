@@ -8,7 +8,18 @@ RSpec.describe Chat::IncomingWebhooksController do
 
   before { SiteSetting.chat_debug_webhook_payloads = true }
 
+  let(:valid_payload) { { text: "A new signup woo!" } }
+
   describe "#create_message" do
+    context "with chat disabled" do
+      before { SiteSetting.chat_enabled = false }
+
+      it "returns a 404" do
+        post "/chat/hooks/#{webhook.key}.json", params: valid_payload
+        expect(response.status).to eq(404)
+      end
+    end
+
     it "errors with invalid key" do
       post "/chat/hooks/null.json"
       expect(response.status).to eq(400)
@@ -28,9 +39,9 @@ RSpec.describe Chat::IncomingWebhooksController do
     end
 
     it "creates a new chat message" do
-      expect {
-        post "/chat/hooks/#{webhook.key}.json", params: { text: "A new signup woo!" }
-      }.to change { Chat::Message.where(chat_channel: chat_channel).count }.by(1)
+      expect { post "/chat/hooks/#{webhook.key}.json", params: valid_payload }.to change {
+        Chat::Message.where(chat_channel: chat_channel).count
+      }.by(1)
       expect(response.status).to eq(200)
       chat_webhook_event = Chat::WebhookEvent.last
       expect(chat_webhook_event.chat_message_id).to eq(Chat::Message.last.id)
@@ -62,15 +73,24 @@ RSpec.describe Chat::IncomingWebhooksController do
     it "rate limits" do
       RateLimiter.enable
       RateLimiter.clear_all!
-      10.times { post "/chat/hooks/#{webhook.key}.json", params: { text: "A new signup woo!" } }
+      10.times { post "/chat/hooks/#{webhook.key}.json", params: valid_payload }
       expect(response.status).to eq(200)
 
-      post "/chat/hooks/#{webhook.key}.json", params: { text: "A new signup woo!" }
+      post "/chat/hooks/#{webhook.key}.json", params: valid_payload
       expect(response.status).to eq(429)
     end
   end
 
   describe "#create_message_slack_compatible" do
+    context "with chat disabled" do
+      before { SiteSetting.chat_enabled = false }
+
+      it "returns a 404" do
+        post "/chat/hooks/#{webhook.key}/slack.json", params: valid_payload
+        expect(response.status).to eq(404)
+      end
+    end
+
     it "processes the text param with SlackCompatibility" do
       expect {
         post "/chat/hooks/#{webhook.key}/slack.json", params: { text: "A new signup woo <!here>!" }

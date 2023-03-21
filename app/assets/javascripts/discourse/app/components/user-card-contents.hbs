@@ -241,8 +241,8 @@
                 this.user.featured_topic.slug
                 this.user.featured_topic.id
               }}
-            >{{html-safe
-                (replace-emoji this.user.featured_topic.fancy_title)
+            >{{replace-emoji
+                (html-safe this.user.featured_topic.fancy_title)
               }}</LinkTo>
           </div>
         </div>

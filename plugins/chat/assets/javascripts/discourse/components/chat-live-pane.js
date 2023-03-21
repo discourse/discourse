@@ -1266,6 +1266,10 @@ export default class ChatLivePane extends Component {
 
   @bind
   _autoFocus(event) {
+    if (this.chatStateManager.isDrawerActive) {
+      return;
+    }
+
     const { key, metaKey, ctrlKey, code, target } = event;
 
     if (

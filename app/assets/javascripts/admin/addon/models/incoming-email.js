@@ -10,7 +10,7 @@ export default class IncomingEmail extends EmberObject {
       attrs.user = AdminUser.create(attrs.user);
     }
 
-    return this._super(attrs);
+    return super.create(attrs);
   }
 
   static find(id) {

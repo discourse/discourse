@@ -139,6 +139,24 @@ RSpec.describe SearchIndexer do
       }
     end
 
+    it "should work with edge case domain names" do
+      # 00E5A4 stems to 00e5 and a4, which is odd, but by-design
+      # this may cause internal indexing to fail due to indexes not aligning
+      # when stuffing terms for domains
+      post.update!(cooked: <<~HTML)
+        Test.00E5A4.1
+      HTML
+
+      SearchIndexer.update_posts_index(
+        post_id: post.id,
+        topic_title: post.topic.title,
+        category_name: post.topic.category&.name,
+        topic_tags: post.topic.tags.map(&:name).join(" "),
+        cooked: post.cooked,
+        private_message: post.topic.private_message?,
+      )
+    end
+
     it "should work with invalid HTML" do
       post.update!(cooked: "<FD>" * Nokogiri::Gumbo::DEFAULT_MAX_TREE_DEPTH)
 
