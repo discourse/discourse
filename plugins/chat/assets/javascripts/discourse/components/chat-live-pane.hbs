@@ -46,14 +46,6 @@
   >
     <div class="chat-message-actions-desktop-anchor"></div>
     <div class="chat-messages-container" {{chat/on-resize this.didResizePane}}>
-      {{#if
-        (and this.loadedOnce (not @channel.messagesManager.canLoadMorePast))
-      }}
-        <div class="all-loaded-message">
-          {{i18n "chat.all_loaded"}}
-        </div>
-      {{/if}}
-
       {{#if this.loadedOnce}}
         {{#each @channel.messages key="id" as |message|}}
           <ChatMessage
@@ -78,6 +70,13 @@
         <ChatSkeleton />
       {{/if}}
     </div>
+
+    {{! at bottom even if shown at top due to column-reverse  }}
+    {{#if (and this.loadedOnce (not @channel.messagesManager.canLoadMorePast))}}
+      <div class="all-loaded-message">
+        {{i18n "chat.all_loaded"}}
+      </div>
+    {{/if}}
   </div>
 
   <ChatScrollToBottomArrow
