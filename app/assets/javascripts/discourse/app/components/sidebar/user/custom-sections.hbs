@@ -6,6 +6,7 @@
       @collapsable={{true}}
       @headerActions={{section.headerActions}}
       @headerActionsIcon="pencil-alt"
+      @class={{section.dragCss}}
     >
       {{#each section.links as |link|}}
         {{#if link.external}}
@@ -15,6 +16,12 @@
             @prefixType="icon"
             @prefixValue={{link.icon}}
             @href={{link.value}}
+            @class={{link.linkDragCss}}
+            {{draggable
+              didStartDrag=link.didStartDrag
+              didEndDrag=link.didEndDrag
+              dragMove=link.dragMove
+            }}
           />
         {{else}}
           <Sidebar::SectionLink
@@ -25,6 +32,12 @@
             @content={{replace-emoji link.name}}
             @prefixType="icon"
             @prefixValue={{link.icon}}
+            @class={{link.linkDragCss}}
+            {{draggable
+              didStartDrag=link.didStartDrag
+              didEndDrag=link.didEndDrag
+              dragMove=link.dragMove
+            }}
           />
         {{/if}}
       {{/each}}

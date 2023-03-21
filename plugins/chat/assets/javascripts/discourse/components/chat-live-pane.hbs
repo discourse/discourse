@@ -81,7 +81,7 @@
   <ChatScrollToBottomArrow
     @scrollToBottom={{this.scrollToLatestMessage}}
     @hasNewMessages={{this.hasNewMessages}}
-    @show={{or this.needsArrow @channel.canLoadMoreFuture}}
+    @show={{or this.needsArrow @channel.messagesManager.canLoadMoreFuture}}
     @channel={{@channel}}
   />
 

@@ -17,30 +17,12 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
   useUploadPlaceholders: true,
 
   @bind
-  _generateVideoThumbnail() {
-    if (!this.siteSettings.enable_diffhtml_preview) {
-      return;
-    }
+  _generateVideoThumbnail(videoFile, uploadUrl) {
+    let video = document.createElement("video");
+    video.src = URL.createObjectURL(videoFile.data);
 
-    let videos = document.getElementsByClassName("video-container");
-    if (!videos) {
-      return;
-    }
-
-    // Only generate a topic thumbnail for the first video
-    let video_container = videos[0];
-    if (!video_container) {
-      return;
-    }
-
-    let video = video_container.querySelector("video:first-of-type");
-    if (!video) {
-      return;
-    }
-
-    let video_src = video.getElementsByTagName("source")[0].src;
-    let video_sha1 = video_src
-      .substring(video_src.lastIndexOf("/") + 1)
+    let videoSha1 = uploadUrl
+      .substring(uploadUrl.lastIndexOf("/") + 1)
       .split(".")[0];
 
     // Wait for the video element to load, otherwise the canvas will be empty
@@ -58,10 +40,10 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
       // upload video thumbnail
       canvas.toBlob((blob) => {
         this._uppyInstance = new Uppy({
-          id: `screenshot-placeholder`,
+          id: "video-thumbnail",
           meta: {
             upload_type: `thumbnail`,
-            video_sha1,
+            videoSha1,
           },
           autoProceed: true,
         });
@@ -99,7 +81,7 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
         try {
           this._uppyInstance.addFile({
             source: `${this.id} thumbnail`,
-            name: video_sha1,
+            name: `${videoSha1}`,
             type: blob.type,
             data: blob,
           });

@@ -8,15 +8,16 @@
 }
 
 html.discourse-no-touch {
-  .btn-default:not(.btn-flat),
-  .btn-icon:not(.btn-flat) {
+  .btn-default:not(.btn-flat, .btn-danger, .btn-primary),
+  .btn-icon:not(.btn-flat, .btn-danger, .btn-primary) {
     &.btn-default {
       .d-icon {
         color: var(--primary-medium);
       }
     }
     &:hover,
-    &.btn-hover {
+    &.btn-hover,
+    &:focus {
       .d-icon {
         color: var(--secondary);
       }
@@ -27,7 +28,7 @@ html.discourse-no-touch {
   }
   .btn-icon.ok,
   .btn-icon.cancel,
-  .btn-danger {
+  .btn-danger:not(.btn-flat) {
     .d-icon {
       color: var(--secondary);
     }
@@ -41,6 +42,10 @@ html.discourse-no-touch {
         color: var(--primary);
       }
     }
+  }
+
+  .select-kit.single-select .select-kit-header:focus {
+    border-color: var(--primary-medium);
   }
 }
 

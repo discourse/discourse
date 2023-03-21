@@ -937,8 +937,6 @@ export default Component.extend(
         // Short upload urls need resolution
         resolveAllShortUrls(ajax, this.siteSettings, preview);
 
-        this._generateVideoThumbnail();
-
         preview.addEventListener("click", this._handleImageScaleButtonClick);
         this._registerImageAltTextButtonClick(preview);
 
