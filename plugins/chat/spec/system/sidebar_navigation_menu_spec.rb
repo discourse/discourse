@@ -30,7 +30,7 @@ RSpec.describe "Sidebar navigation menu", type: :system, js: true do
       visit("/")
 
       expect(sidebar_page.channels_section).to have_css(
-        ".sidebar-section-link-#{channel_1.slug} .sidebar-section-link-prefix svg.prefix-icon.d-icon-hashtag",
+        ".sidebar-section-link-#{channel_1.slug} .sidebar-section-link-prefix svg.prefix-icon.d-icon-d-chat",
       )
     end
 
