@@ -33,7 +33,7 @@ const chatNotificationItem = {
     const title = this.notificationTitle(notificationName, data);
     const text = this.text(notificationName, data);
     const html = new RawHtml({ html: `<div>${text}</div>` });
-    const contents = [iconNode("comment"), html];
+    const contents = [iconNode("d-chat"), html];
     const href = this.url(data);
 
     return h(

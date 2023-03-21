@@ -6,11 +6,10 @@ import ChatMessageActions from "discourse/plugins/chat/discourse/lib/chat-messag
 import ChatLivePanel from "discourse/plugins/chat/discourse/lib/chat-live-panel";
 import Component from "@glimmer/component";
 import { bind, debounce } from "discourse-common/utils/decorators";
-import discourseDebounce from "discourse-common/lib/debounce";
 import EmberObject, { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { cancel, schedule } from "@ember/runloop";
+import { cancel, schedule, throttle } from "@ember/runloop";
 import discourseLater from "discourse-common/lib/later";
 import { inject as service } from "@ember/service";
 import { Promise } from "rsvp";
@@ -70,7 +69,6 @@ export default class ChatLivePane extends Component {
   setupListeners(element) {
     this._scrollerEl = element.querySelector(".chat-messages-scroll");
 
-    window.addEventListener("resize", this.onResizeHandler);
     document.addEventListener("scroll", this._forceBodyScroll, {
       passive: true,
     });
@@ -82,12 +80,17 @@ export default class ChatLivePane extends Component {
 
   @action
   teardownListeners() {
-    window.removeEventListener("resize", this.onResizeHandler);
-    cancel(this.resizeHandler);
     document.removeEventListener("scroll", this._forceBodyScroll);
     removeOnPresenceChange(this.onPresenceChangeCallback);
     this._unsubscribeToUpdates(this._loadedChannelId);
     this.requestedTargetMessageId = null;
+  }
+
+  @action
+  didResizePane() {
+    this.fillPaneAttempt();
+    this.computeDatesSeparators();
+    this.forceRendering();
   }
 
   @action
@@ -130,17 +133,6 @@ export default class ChatLivePane extends Component {
     } else {
       this.fetchMessages({ fetchFromLastMessage: false });
     }
-  }
-
-  @bind
-  onResizeHandler() {
-    cancel(this.resizeHandler);
-    this.resizeHandler = discourseDebounce(
-      this,
-      this.fillPaneAttempt,
-      this.details,
-      250
-    );
   }
 
   @bind
@@ -292,7 +284,6 @@ export default class ChatLivePane extends Component {
       .finally(() => {
         this[loadingMoreKey] = false;
         this.fillPaneAttempt();
-        this.computeDatesSeparators();
       });
   }
 
@@ -690,13 +681,11 @@ export default class ChatLivePane extends Component {
   }
 
   handleReactionMessage(data) {
-    if (data.user.id !== this.currentUser.id) {
-      const message = this.args.channel.messagesManager.findMessage(
-        data.chat_message_id
-      );
-      if (message) {
-        message.react(data.emoji, data.action, data.user, this.currentUser.id);
-      }
+    const message = this.args.channel.messagesManager.findMessage(
+      data.chat_message_id
+    );
+    if (message) {
+      message.react(data.emoji, data.action, data.user, this.currentUser.id);
     }
   }
 
@@ -1111,7 +1100,6 @@ export default class ChatLivePane extends Component {
       }
 
       if (this.capabilities.isIOS) {
-        this._scrollerEl.style.transform = "translateZ(0)";
         this._scrollerEl.style.overflow = "hidden";
       }
 
@@ -1124,8 +1112,6 @@ export default class ChatLivePane extends Component {
           }
 
           this._scrollerEl.style.overflow = "auto";
-          this._scrollerEl.style.transform = "unset";
-          this.computeDatesSeparators();
         }, 50);
       }
     });
@@ -1180,25 +1166,48 @@ export default class ChatLivePane extends Component {
 
   @action
   computeDatesSeparators() {
+    throttle(this, this._computeDatesSeparators, 50, false);
+  }
+
+  _computeDatesSeparators() {
     schedule("afterRender", () => {
       const dates = [
         ...this._scrollerEl.querySelectorAll(".chat-message-separator-date"),
       ].reverse();
-      const scrollHeight = this._scrollerEl.scrollHeight;
+      const height = this._scrollerEl.querySelector(
+        ".chat-messages-container"
+      ).clientHeight;
 
       dates
         .map((date, index) => {
-          const item = { bottom: "0px", date };
+          const item = { bottom: 0, date };
+          const line = date.nextElementSibling;
+
           if (index > 0) {
-            item.bottom = scrollHeight - dates[index - 1].offsetTop + "px";
+            const prevDate = dates[index - 1];
+            const prevLine = prevDate.nextElementSibling;
+            item.bottom = height - prevLine.offsetTop;
           }
-          item.top = date.nextElementSibling.offsetTop + "px";
+
+          if (dates.length === 1) {
+            item.height = height;
+          } else {
+            if (index === 0) {
+              item.height = height - line.offsetTop;
+            } else {
+              const prevDate = dates[index - 1];
+              const prevLine = prevDate.nextElementSibling;
+              item.height =
+                height - line.offsetTop - (height - prevLine.offsetTop);
+            }
+          }
+
           return item;
         })
         // group all writes at the end
         .forEach((item) => {
-          item.date.style.bottom = item.bottom;
-          item.date.style.top = item.top;
+          item.date.style.bottom = item.bottom + "px";
+          item.date.style.height = item.height + "px";
         });
     });
   }

@@ -53,7 +53,6 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
       onHoverMessage: () => {},
       messageDidEnterViewport: () => {},
       messageDidLeaveViewport: () => {},
-      forceRendering: () => {},
     };
   }
 
@@ -68,7 +67,6 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
       @onHoverMessage={{this.onHoverMessage}}
       @messageDidEnterViewport={{this.messageDidEnterViewport}}
       @messageDidLeaveViewport={{this.messageDidLeaveViewport}}
-      @forceRendering={{this.forceRendering}}
     />
   `;
 

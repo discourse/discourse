@@ -3,7 +3,7 @@ import { registerDestructor } from "@ember/destroyable";
 import { cancel, throttle } from "@ember/runloop";
 import { bind } from "discourse-common/utils/decorators";
 
-export default class ChatOnThrottledScroll extends Modifier {
+export default class ChatOnScroll extends Modifier {
   constructor(owner, args) {
     super(owner, args);
     registerDestructor(this, (instance) => instance.cleanup());
