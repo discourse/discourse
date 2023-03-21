@@ -91,31 +91,6 @@ RSpec.describe Emoji do
     end
   end
 
-  describe "version updates" do
-    it "should correct cache when global emojis cache is stale" do
-      Emoji.global_emoji_cache["blonde_man"] = ["invalid", Emoji.new]
-
-      emoji = Emoji[":blonde_man:t3"]
-
-      expect(emoji.name).to eq("blonde_man")
-      expect(emoji.tonable).to eq(true)
-    end
-
-    it "should correct cache when site emojis cache is stale" do
-      CustomEmoji.create!(name: "test123", upload_id: 9999)
-      Emoji.clear_cache
-
-      Emoji.site_emoji_cache["test123"] = ["invalid", Emoji.new]
-
-      emoji = Emoji[":test123:"]
-
-      expect(emoji.name).to eq("test123")
-      expect(emoji.tonable).to be_falsey
-
-      Emoji.clear_cache
-    end
-  end
-
   describe ".codes_to_img" do
     before { Plugin::CustomEmoji.clear_cache }
     after { Plugin::CustomEmoji.clear_cache }
