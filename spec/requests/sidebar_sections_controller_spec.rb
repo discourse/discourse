@@ -61,6 +61,7 @@ RSpec.describe SidebarSectionsController do
                },
                { icon: "address-book", name: "tags", value: "/tags" },
                { icon: "external-link-alt", name: "Discourse", value: "https://discourse.org" },
+               { icon: "external-link-alt", name: "My preferences", value: "/my/preferences" },
              ],
            }
 
@@ -73,7 +74,7 @@ RSpec.describe SidebarSectionsController do
       expect(sidebar_section.user).to eq(user)
       expect(sidebar_section.public).to be false
       expect(UserHistory.count).to eq(0)
-      expect(sidebar_section.sidebar_urls.count).to eq(3)
+      expect(sidebar_section.sidebar_urls.count).to eq(4)
       expect(sidebar_section.sidebar_urls.first.icon).to eq("link")
       expect(sidebar_section.sidebar_urls.first.name).to eq("categories")
       expect(sidebar_section.sidebar_urls.first.value).to eq("/categories")
@@ -86,6 +87,10 @@ RSpec.describe SidebarSectionsController do
       expect(sidebar_section.sidebar_urls.third.name).to eq("Discourse")
       expect(sidebar_section.sidebar_urls.third.value).to eq("https://discourse.org")
       expect(sidebar_section.sidebar_urls.third.external).to be true
+      expect(sidebar_section.sidebar_urls.fourth.icon).to eq("external-link-alt")
+      expect(sidebar_section.sidebar_urls.fourth.name).to eq("My preferences")
+      expect(sidebar_section.sidebar_urls.fourth.value).to eq("/my/preferences")
+      expect(sidebar_section.sidebar_urls.fourth.external).to be false
     end
 
     it "does not allow regular user to create public section" do

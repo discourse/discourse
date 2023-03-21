@@ -9,6 +9,8 @@ import { sanitize } from "discourse/lib/text";
 import { tracked } from "@glimmer/tracking";
 import { A } from "@ember/array";
 
+const FULL_RELOAD_LINKS_REGEX = [/^\/my\/[a-z_\-\/]+$/, /^\/safe-mode$/];
+
 class Section {
   @tracked title;
   @tracked links;
@@ -95,7 +97,10 @@ class SectionLink {
   }
 
   #validInternal() {
-    return this.router.recognize(this.path).name !== "unknown";
+    return (
+      this.router.recognize(this.path).name !== "unknown" ||
+      FULL_RELOAD_LINKS_REGEX.some((regex) => this.path.match(regex))
+    );
   }
 
   get validValue() {
@@ -200,7 +205,6 @@ export default Controller.extend(ModalFunctionality, {
             icon: link.icon,
             name: link.name,
             value: link.path,
-            external: link.external,
             _destroy: link._destroy,
           };
         }),
