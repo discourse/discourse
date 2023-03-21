@@ -675,13 +675,11 @@ export default class ChatLivePane extends Component {
   }
 
   handleReactionMessage(data) {
-    if (data.user.id !== this.currentUser.id) {
-      const message = this.args.channel.messagesManager.findMessage(
-        data.chat_message_id
-      );
-      if (message) {
-        message.react(data.emoji, data.action, data.user, this.currentUser.id);
-      }
+    const message = this.args.channel.messagesManager.findMessage(
+      data.chat_message_id
+    );
+    if (message) {
+      message.react(data.emoji, data.action, data.user, this.currentUser.id);
     }
   }
 
