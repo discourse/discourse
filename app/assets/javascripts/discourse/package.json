@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@babel/core": "^7.21.3",
-    "@babel/standalone": "^7.21.2",
+    "@babel/standalone": "^7.21.3",
     "@discourse/backburner.js": "^2.7.1-0",
     "@discourse/itsatrap": "^2.0.10",
     "@discourse/virtual-dom": "^2.1.2-0",
@@ -44,7 +44,7 @@
     "bootstrap": "3.4.1",
     "bootstrap-json": "1.0.0",
     "broccoli-asset-rev": "^3.0.0",
-    "deepmerge": "^4.3.0",
+    "deepmerge": "^4.3.1",
     "dialog-holder": "1.0.0",
     "discourse-common": "1.0.0",
     "discourse-hbr": "1.0.0",

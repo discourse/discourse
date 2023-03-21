@@ -2,6 +2,8 @@
 
 module Chat
   class IncomingWebhooksController < ::ApplicationController
+    requires_plugin Chat::PLUGIN_NAME
+
     WEBHOOK_MESSAGES_PER_MINUTE_LIMIT = 10
 
     skip_before_action :verify_authenticity_token, :redirect_to_login_if_required

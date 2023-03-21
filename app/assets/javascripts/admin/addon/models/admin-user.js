@@ -63,7 +63,7 @@ export default class AdminUser extends User {
   }
 
   resetBounceScore() {
-    return ajax(`/admin/users/${this.id}/reset_bounce_score`, {
+    return ajax(`/admin/users/${this.id}/reset-bounce-score`, {
       type: "POST",
     }).then(() =>
       this.setProperties({

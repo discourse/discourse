@@ -10,8 +10,7 @@ export default class ChatChannelRoute extends DiscourseRoute {
 
   @action
   willTransition(transition) {
-    this.chat.activeChannel.activeThread = null;
-    this.chatStateManager.closeSidePanel();
+    this.#closeThread();
 
     if (transition?.to?.name === "chat.channel.index") {
       const targetChannelId = transition?.to?.parent?.params?.channelId;
@@ -19,7 +18,7 @@ export default class ChatChannelRoute extends DiscourseRoute {
         targetChannelId &&
         parseInt(targetChannelId, 10) !== this.chat.activeChannel.id
       ) {
-        this.chat.activeChannel.clearMessages();
+        this.chat.activeChannel.messagesManager.clearMessages();
       }
     }
 
@@ -28,5 +27,11 @@ export default class ChatChannelRoute extends DiscourseRoute {
       this.chat.activeChannel = null;
       this.chat.updatePresence();
     }
+  }
+
+  #closeThread() {
+    this.chat.activeChannel.activeThread?.messagesManager?.clearMessages();
+    this.chat.activeChannel.activeThread = null;
+    this.chatStateManager.closeSidePanel();
   }
 }

@@ -32,7 +32,7 @@ export default class DraggableModifier extends Modifier {
       this.hasStarted = true;
 
       if (this.didStartDragCallback) {
-        this.didStartDragCallback();
+        this.didStartDragCallback(e);
       }
 
       // Register a global event to capture mouse moves when element 'clicked'.
