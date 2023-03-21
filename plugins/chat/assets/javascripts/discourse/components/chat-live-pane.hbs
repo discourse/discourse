@@ -75,7 +75,7 @@
       {{/if}}
     </div>
 
-    {{#if (and this.loadedOnce (not @channel.canLoadMorePast))}}
+    {{#if (and this.loadedOnce (not @channel.messagesManager.canLoadMorePast))}}
       <div class="all-loaded-message">
         {{i18n "chat.all_loaded"}}
       </div>
@@ -85,7 +85,7 @@
   <ChatScrollToBottomArrow
     @scrollToBottom={{this.scrollToLatestMessage}}
     @hasNewMessages={{this.hasNewMessages}}
-    @show={{or this.needsArrow @channel.canLoadMoreFuture}}
+    @show={{or this.needsArrow @channel.messagesManager.canLoadMoreFuture}}
     @channel={{@channel}}
   />
 

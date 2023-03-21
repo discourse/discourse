@@ -261,6 +261,10 @@ export default class ChatApi extends Service {
       if (data.direction) {
         args.direction = data.direction;
       }
+
+      if (data.threadId) {
+        args.thread_id = data.threadId;
+      }
     }
 
     return ajax(path, { data: args });
