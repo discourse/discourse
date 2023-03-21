@@ -235,6 +235,7 @@
       align-self: start;
       white-space: nowrap;
       overflow: hidden;
+      flex: 1 0 calc(50% - 0.5em + 5%); // 50% - padding + half the gap
 
       span {
         // caution: display flex here can interfere with overflow hiding
@@ -263,6 +264,11 @@
       font-size: var(--font-0);
       color: var(--primary);
       align-self: start;
+      &--user-field {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        min-width: 0;
+      }
     }
 
     &__row {
@@ -296,6 +302,8 @@
       }
 
       &--user-field {
+        display: flex;
+        grid-template-columns: auto fit-content;
         order: 2;
         // force full width of the cell
         // because we don't know how much content there is
