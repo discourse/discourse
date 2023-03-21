@@ -155,7 +155,7 @@
   .quick-access-panel {
     width: 320px;
     padding: 0.75em;
-    padding-bottom: env(safe-area-inset-bottom, 0.75em);
+    padding-bottom: max(env(safe-area-inset-bottom), 0.75em);
     justify-content: space-between;
     box-sizing: border-box;
     min-width: 0; // makes sure menu tabs don't go off screen

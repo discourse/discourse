@@ -43,7 +43,7 @@ export default class ChatThreadsManager {
     let model = this.#findStale(threadObject.id);
 
     if (!model) {
-      model = ChatThread.create(threadObject);
+      model = new ChatThread(threadObject);
       this.#cache(model);
     }
 
@@ -55,7 +55,6 @@ export default class ChatThreadsManager {
       .thread(channelId, threadId)
       .catch(popupAjaxError)
       .then((thread) => {
-        this.#cache(thread);
         return thread;
       });
   }

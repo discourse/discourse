@@ -41,14 +41,11 @@
   <div
     class="chat-messages-scroll chat-messages-container"
     {{on "scroll" this.computeScrollState passive=true}}
-    {{chat/on-throttled-scroll this.resetIdle (hash delay=500)}}
-    {{chat/on-throttled-scroll this.computeArrow (hash delay=150)}}
+    {{chat/on-scroll this.resetIdle (hash delay=500)}}
+    {{chat/on-scroll this.computeArrow (hash delay=150)}}
   >
     <div class="chat-message-actions-desktop-anchor"></div>
-    <div
-      class="chat-messages-container"
-      {{chat/did-mutate-childlist this.computeDatesSeparators}}
-    >
+    <div class="chat-messages-container" {{chat/on-resize this.didResizePane}}>
       {{#if this.loadedOnce}}
         {{#each @channel.messages key="id" as |message|}}
           <ChatMessage
@@ -67,7 +64,6 @@
             @resendStagedMessage={{this.resendStagedMessage}}
             @messageDidEnterViewport={{this.messageDidEnterViewport}}
             @messageDidLeaveViewport={{this.messageDidLeaveViewport}}
-            @forceRendering={{this.forceRendering}}
           />
         {{/each}}
       {{else}}
@@ -75,7 +71,8 @@
       {{/if}}
     </div>
 
-    {{#if (and this.loadedOnce (not @channel.canLoadMorePast))}}
+    {{! at bottom even if shown at top due to column-reverse  }}
+    {{#if (and this.loadedOnce (not @channel.messagesManager.canLoadMorePast))}}
       <div class="all-loaded-message">
         {{i18n "chat.all_loaded"}}
       </div>
@@ -85,7 +82,7 @@
   <ChatScrollToBottomArrow
     @scrollToBottom={{this.scrollToLatestMessage}}
     @hasNewMessages={{this.hasNewMessages}}
-    @show={{or this.needsArrow @channel.canLoadMoreFuture}}
+    @show={{or this.needsArrow @channel.messagesManager.canLoadMoreFuture}}
     @channel={{@channel}}
   />
 
