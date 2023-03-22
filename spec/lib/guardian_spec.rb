@@ -2773,6 +2773,10 @@ RSpec.describe Guardian do
       expect(Guardian.new(user).can_anonymize_user?(user)).to be_falsey
     end
 
+    it "it false for an annoymized user" do
+      expect(Guardian.new(user).can_anonymize_user?(anonymous_user)).to be_falsey
+    end
+
     it "is true for admin anonymizing a regular user" do
       expect(Guardian.new(admin).can_anonymize_user?(user)).to eq(true)
     end
