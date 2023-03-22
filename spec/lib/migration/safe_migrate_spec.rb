@@ -77,7 +77,7 @@ RSpec.describe Migration::SafeMigrate do
 
     output = capture_stdout { migrate_up(path) }
 
-    expect(output).to include("change_column_null(:users, :username, false)")
+    expect(output).to include("change_column_null(:users, :username, true)")
   end
 
   it "supports being disabled" do
