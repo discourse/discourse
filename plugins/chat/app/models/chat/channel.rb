@@ -3,19 +3,11 @@
 module Chat
   class Channel < ActiveRecord::Base
     include Trashable
+    include TypeMappable
 
     self.table_name = "chat_channels"
 
     belongs_to :chatable, polymorphic: true
-
-    def self.sti_class_for(type_name)
-      Chat::Chatable.sti_class_for(type_name) || super(type_name)
-    end
-
-    def self.sti_name
-      Chat::Chatable.sti_name_for(self) || super
-    end
-
     belongs_to :direct_message,
                class_name: "Chat::DirectMessage",
                foreign_key: :chatable_id,
@@ -51,6 +43,14 @@ module Chat
     delegate :empty?, to: :chat_messages, prefix: true
 
     class << self
+      def sti_class_mapping =
+        {
+          "CategoryChannel" => Chat::CategoryChannel,
+          "DirectMessageChannel" => Chat::DirectMessageChannel,
+        }
+
+      def polymorphic_class_mapping = { "DirectMessage" => Chat::DirectMessage }
+
       def editable_statuses
         statuses.filter { |k, _| !%w[read_only archived].include?(k) }
       end
