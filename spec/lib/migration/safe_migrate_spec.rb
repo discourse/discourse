@@ -70,6 +70,16 @@ RSpec.describe Migration::SafeMigrate do
     expect { User.first.username }.not_to raise_error
   end
 
+  it "allows dropping NOT NULL" do
+    Migration::SafeMigrate.enable!
+
+    path = File.expand_path "#{Rails.root}/spec/fixtures/db/migrate/drop_not_null"
+
+    output = capture_stdout { migrate_up(path) }
+
+    expect(output).to include("change_column_null(:users, :username, false)")
+  end
+
   it "supports being disabled" do
     Migration::SafeMigrate.enable!
     Migration::SafeMigrate.disable!
