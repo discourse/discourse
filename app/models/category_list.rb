@@ -119,13 +119,14 @@ class CategoryList
   end
 
   def find_categories
-    @categories = Category.includes(
-      :uploaded_background,
-      :uploaded_logo,
-      :uploaded_logo_dark,
-      :topic_only_relative_url,
-      subcategories: [:topic_only_relative_url],
-    )
+    @categories =
+      Category.includes(
+        :uploaded_background,
+        :uploaded_logo,
+        :uploaded_logo_dark,
+        :topic_only_relative_url,
+        subcategories: [:topic_only_relative_url],
+      )
 
     CategoryList.preload(self)
 
