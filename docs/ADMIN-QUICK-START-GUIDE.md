@@ -6,7 +6,7 @@ If you haven't already, launch the [setup wizard](/wizard) and go through the st
 
 ### Bootstrap Mode
 
-To make launching your new site easier, you are in bootstrap mode. All new users will be granted trust level 1 and have daily email summary emails enabled. This will be automatically turned off when more users have joined. To make the sign up process faster, consider [sending out invites](my/invited/pending).
+Bootstrap mode makes launching your new site easier. All new users will be granted trust level 1 and have daily email summary emails enabled. This will be automatically turned off when more users have joined, configurable using [site settings](/admin/site_settings/category/all_results?filter=bootstrap+mode+min+users). To make the sign up process faster, consider [sending out invites](my/invited/pending).
 
 ### Admin Dashboard
 
