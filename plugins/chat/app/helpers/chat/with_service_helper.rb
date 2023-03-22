@@ -5,6 +5,9 @@ module Chat
       @_result
     end
 
+    # @param service [Class] A class including {Chat::Service::Base}
+    # @param dependencies [kwargs] Any additional params to load into the service context,
+    #   in addition to controller @params.
     def with_service(service, default_actions: true, **dependencies, &block)
       object = self
       merged_block =

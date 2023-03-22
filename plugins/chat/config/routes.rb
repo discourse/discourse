@@ -6,6 +6,8 @@ Chat::Engine.routes.draw do
     get "/channels" => "channels#index"
     get "/channels/me" => "current_user_channels#index"
     post "/channels" => "channels#create"
+    put "/channels/read/" => "reads#update_all"
+    put "/channels/:channel_id/read/:message_id" => "reads#update"
     delete "/channels/:channel_id" => "channels#destroy"
     put "/channels/:channel_id" => "channels#update"
     get "/channels/:channel_id" => "channels#show"
