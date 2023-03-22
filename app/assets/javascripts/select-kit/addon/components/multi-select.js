@@ -2,12 +2,10 @@ import SelectKitComponent from "select-kit/components/select-kit";
 import { computed } from "@ember/object";
 import { isPresent } from "@ember/utils";
 import { next } from "@ember/runloop";
-import layout from "select-kit/templates/components/multi-select";
 import { makeArray } from "discourse-common/lib/helpers";
 
 export default SelectKitComponent.extend({
   pluginApiIdentifiers: ["multi-select"],
-  layout,
   classNames: ["multi-select"],
   multiSelect: true,
 
@@ -193,5 +191,5 @@ export default SelectKitComponent.extend({
     }
 
     return true;
-  },
+  }
 });

@@ -1,11 +1,9 @@
 import SelectKitComponent from "select-kit/components/select-kit";
 import { computed } from "@ember/object";
 import { isEmpty } from "@ember/utils";
-import layout from "select-kit/templates/components/single-select";
 
 export default SelectKitComponent.extend({
   pluginApiIdentifiers: ["single-select"],
-  layout,
   classNames: ["single-select"],
   singleSelect: true,
 
@@ -44,5 +42,5 @@ export default SelectKitComponent.extend({
         return this.selectKit.noneItem;
       }
     }
-  ),
+  )
 });

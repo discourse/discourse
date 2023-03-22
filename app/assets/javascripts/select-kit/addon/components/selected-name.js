@@ -2,13 +2,11 @@ import { guidFor } from "@ember/object/internals";
 import { computed, get } from "@ember/object";
 import Component from "@ember/component";
 import UtilsMixin from "select-kit/mixins/utils";
-import layout from "select-kit/templates/components/selected-name";
 import { makeArray } from "discourse-common/lib/helpers";
 import { reads } from "@ember/object/computed";
 
 export default Component.extend(UtilsMixin, {
   tagName: "",
-  layout,
   name: null,
   value: null,
   headerTitle: null,
@@ -78,5 +76,5 @@ export default Component.extend(UtilsMixin, {
     }
 
     return get(content, name);
-  },
+  }
 });

@@ -1,12 +1,10 @@
 import ComboBoxSelectBoxHeaderComponent from "select-kit/components/combo-box/combo-box-header";
 import discourseComputed from "discourse-common/utils/decorators";
-import layout from "select-kit/templates/components/category-drop/category-drop-header";
 import { readOnly } from "@ember/object/computed";
 import { schedule } from "@ember/runloop";
 import { htmlSafe } from "@ember/template";
 
 export default ComboBoxSelectBoxHeaderComponent.extend({
-  layout,
   classNames: ["category-drop-header"],
   classNameBindings: ["categoryStyleClass"],
   categoryStyleClass: readOnly("site.category_style"),
@@ -60,5 +58,5 @@ export default ComboBoxSelectBoxHeaderComponent.extend({
           .setAttribute("style", this.categoryStyle);
       }
     });
-  },
+  }
 });

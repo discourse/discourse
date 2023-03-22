@@ -4,12 +4,10 @@ import Category from "discourse/models/category";
 import SelectKitRowComponent from "select-kit/components/select-kit/select-kit-row";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import { computed } from "@ember/object";
-import layout from "select-kit/templates/components/category-row";
 import { setting } from "discourse/lib/computed";
 import { htmlSafe } from "@ember/template";
 
 export default SelectKitRowComponent.extend({
-  layout,
   classNames: ["category-row"],
   hideParentCategory: bool("selectKit.options.hideParentCategory"),
   allowUncategorized: bool("selectKit.options.allowUncategorized"),
