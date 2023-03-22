@@ -396,7 +396,7 @@ class SearchIndexer
     end
 
     MENTION_CLASSES ||= %w[mention mention-group]
-    ATTRIBUTES ||= %w[alt title href data-youtube-title]
+    ATTRIBUTES ||= %w[alt title href data-video-title]
 
     def start_element(_name, attributes = [])
       attributes = Hash[*attributes.flatten]
