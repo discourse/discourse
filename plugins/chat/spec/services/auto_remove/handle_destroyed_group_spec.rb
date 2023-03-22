@@ -35,8 +35,6 @@ RSpec.describe Chat::AutoRemove::HandleDestroyedGroup do
 
       describe "step remove_users_outside_allowed_groups" do
         context "when chat_allowed_groups is empty" do
-          let(:action) { UserHistory.where(custom_type: "chat_auto_remove_membership").last }
-
           before do
             SiteSetting.chat_allowed_groups = ""
             channel_1.add(user_1)
@@ -104,11 +102,22 @@ RSpec.describe Chat::AutoRemove::HandleDestroyedGroup do
 
           it "logs a staff action" do
             result
-            expect(action).to have_attributes(
-              details: "users_removed: 2\nchannel_id: #{channel_2.id}\nevent: destroyed_group",
-              acting_user_id: Discourse.system_user.id,
-              custom_type: "chat_auto_remove_membership",
-            )
+            actions = UserHistory.where(custom_type: "chat_auto_remove_membership")
+            expect(actions.count).to eq(2)
+            expect(
+              actions.exists?(
+                details: "users_removed: 2\nchannel_id: #{channel_2.id}\nevent: destroyed_group",
+                acting_user_id: Discourse.system_user.id,
+                custom_type: "chat_auto_remove_membership",
+              ),
+            ).to eq(true)
+            expect(
+              actions.exists?(
+                details: "users_removed: 2\nchannel_id: #{channel_1.id}\nevent: destroyed_group",
+                acting_user_id: Discourse.system_user.id,
+                custom_type: "chat_auto_remove_membership",
+              ),
+            ).to eq(true)
           end
         end
 
