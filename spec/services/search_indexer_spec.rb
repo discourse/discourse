@@ -28,7 +28,7 @@ RSpec.describe SearchIndexer do
 
   it "extract youtube title" do
     html =
-      "<div class=\"lazyYT\" data-youtube-id=\"lmFgeFh2nlw\" data-youtube-title=\"Metallica Mixer Explains Missing Bass on 'And Justice for All' [Exclusive]\" data-width=\"480\" data-height=\"270\" data-parameters=\"feature=oembed&amp;wmode=opaque\"></div>"
+      "<div class=\"lazy-video-container\" data-video-id=\"lmFgeFh2nlw\" data-video-title=\"Metallica Mixer Explains Missing Bass on 'And Justice for All' [Exclusive]\" data-provider-name=\"youtube\"></div>"
     scrubbed = SearchIndexer::HtmlScrubber.scrub(html)
     expect(scrubbed).to eq(
       "Metallica Mixer Explains Missing Bass on 'And Justice for All' [Exclusive]",
