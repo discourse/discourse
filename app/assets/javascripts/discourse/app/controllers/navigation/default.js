@@ -6,6 +6,7 @@ import { TRACKED_QUERY_PARAM_VALUE } from "discourse/lib/topic-list-tracked-filt
 
 export default Controller.extend(FilterModeMixin, {
   discovery: controller(),
+  discoveryFilter: controller("discovery.filter"),
   router: service(),
 
   @discourseComputed("router.currentRoute.queryParams.f")
