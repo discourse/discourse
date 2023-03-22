@@ -5,7 +5,6 @@
       <Input
         class="topic-query-filter__filter-term"
         @value={{this.queryString}}
-        placeholder="status:closed"
         @enter={{action @updateTopicsListQueryParams this.queryString}}
         @type="text"
       />
