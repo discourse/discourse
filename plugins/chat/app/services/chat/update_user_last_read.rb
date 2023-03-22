@@ -4,23 +4,23 @@ module Chat
   # Service responsible for updating the last read message id of a membership.
   #
   # @example
-  #  Chat::UpdateUserLastRead.call(user_id: 1, channel_id: 2, message_id: 3, guardian: guardian)
+  #  Chat::UpdateUserLastRead.call(channel_id: 2, message_id: 3, guardian: guardian)
   #
   class UpdateUserLastRead
-    include Service::Base
+    include ::Service::Base
 
-    # @!method call(user_id:, channel_id:, message_id:, guardian:)
-    #   @param [Integer] user_id
+    # @!method call(channel_id:, message_id:, guardian:)
     #   @param [Integer] channel_id
     #   @param [Integer] message_id
     #   @param [Guardian] guardian
     #   @return [Service::Base::Context]
 
     contract
-    model :membership, :fetch_active_membership
+    model :channel
+    model :active_membership
     policy :invalid_access
-    policy :ensure_message_id_recency
     policy :ensure_message_exists
+    policy :ensure_message_id_recency
     step :update_last_read_message_id
     step :mark_associated_mentions_as_read
     step :publish_new_last_read_to_clients
@@ -28,52 +28,48 @@ module Chat
     # @!visibility private
     class Contract
       attribute :message_id, :integer
-      attribute :user_id, :integer
       attribute :channel_id, :integer
 
-      validates :message_id, :user_id, :channel_id, presence: true
+      validates :message_id, :channel_id, presence: true
     end
 
     private
 
-    def fetch_active_membership(user_id:, channel_id:, **)
-      Chat::UserChatChannelMembership.includes(:user, :chat_channel).find_by(
-        user_id: user_id,
-        chat_channel_id: channel_id,
-        following: true,
+    def fetch_channel(contract:, **)
+      ::Chat::Channel.find_by(id: contract.channel_id)
+    end
+
+    def fetch_active_membership(guardian:, channel:, **)
+      ::Chat::ChannelMembershipManager.new(channel).find_for_user(guardian.user, following: true)
+    end
+
+    def invalid_access(guardian:, active_membership:, **)
+      guardian.can_join_chat_channel?(active_membership.chat_channel)
+    end
+
+    def ensure_message_exists(channel:, contract:, **)
+      ::Chat::Message.with_deleted.exists?(chat_channel_id: channel.id, id: contract.message_id)
+    end
+
+    def ensure_message_id_recency(contract:, active_membership:, **)
+      !active_membership.last_read_message_id ||
+        contract.message_id >= active_membership.last_read_message_id
+    end
+
+    def update_last_read_message_id(contract:, active_membership:, **)
+      active_membership.update!(last_read_message_id: contract.message_id)
+    end
+
+    def mark_associated_mentions_as_read(active_membership:, contract:, **)
+      Chat::Action::MarkMentionsRead.call(
+        active_membership.user,
+        channel_ids: [active_membership.chat_channel.id],
+        message_id: contract.message_id,
       )
     end
 
-    def invalid_access(guardian:, membership:, **)
-      guardian.can_join_chat_channel?(membership.chat_channel)
-    end
-
-    def ensure_message_id_recency(message_id:, membership:, **)
-      !membership.last_read_message_id || message_id >= membership.last_read_message_id
-    end
-
-    def ensure_message_exists(channel_id:, message_id:, **)
-      Chat::Message.with_deleted.exists?(chat_channel_id: channel_id, id: message_id)
-    end
-
-    def update_last_read_message_id(message_id:, membership:, **)
-      membership.update!(last_read_message_id: message_id)
-    end
-
-    def mark_associated_mentions_as_read(membership:, message_id:, **)
-      Notification
-        .where(notification_type: Notification.types[:chat_mention])
-        .where(user: membership.user)
-        .where(read: false)
-        .joins("INNER JOIN chat_mentions ON chat_mentions.notification_id = notifications.id")
-        .joins("INNER JOIN chat_messages ON chat_mentions.chat_message_id = chat_messages.id")
-        .where("chat_messages.id <= ?", message_id)
-        .where("chat_messages.chat_channel_id = ?", membership.chat_channel.id)
-        .update_all(read: true)
-    end
-
-    def publish_new_last_read_to_clients(guardian:, channel_id:, message_id:, **)
-      Chat::Publisher.publish_user_tracking_state(guardian.user, channel_id, message_id)
+    def publish_new_last_read_to_clients(guardian:, channel:, contract:, **)
+      ::Chat::Publisher.publish_user_tracking_state(guardian.user, channel.id, contract.message_id)
     end
   end
 end

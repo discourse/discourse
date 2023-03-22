@@ -161,47 +161,6 @@ module Chat
       render json: success_json
     end
 
-    def update_user_last_read
-      membership =
-        Chat::ChannelMembershipManager.new(@chat_channel).find_for_user(
-          current_user,
-          following: true,
-        )
-      raise Discourse::NotFound if membership.nil?
-
-      if membership.last_read_message_id &&
-           params[:message_id].to_i < membership.last_read_message_id
-        raise Discourse::InvalidParameters.new(:message_id)
-      end
-
-      unless Chat::Message.with_deleted.exists?(
-               chat_channel_id: @chat_channel.id,
-               id: params[:message_id],
-             )
-        raise Discourse::NotFound
-      end
-
-      membership.update!(last_read_message_id: params[:message_id])
-
-      Notification
-        .where(notification_type: Notification.types[:chat_mention])
-        .where(user: current_user)
-        .where(read: false)
-        .joins("INNER JOIN chat_mentions ON chat_mentions.notification_id = notifications.id")
-        .joins("INNER JOIN chat_messages ON chat_mentions.chat_message_id = chat_messages.id")
-        .where("chat_messages.id <= ?", params[:message_id].to_i)
-        .where("chat_messages.chat_channel_id = ?", @chat_channel.id)
-        .update_all(read: true)
-
-      Chat::Publisher.publish_user_tracking_state(
-        current_user,
-        @chat_channel.id,
-        params[:message_id],
-      )
-
-      render json: success_json
-    end
-
     def messages
       page_size = params[:page_size]&.to_i || 1000
       direction = params[:direction].to_s

@@ -600,6 +600,7 @@ en:
           composer_code: "%{shortcut} Code (composer only)"
           drawer_open: "%{shortcut} Open chat drawer"
           drawer_close: "%{shortcut} Close chat drawer"
+          mark_all_channels_read: "%{shortcut} Mark all channels read"
     topic_statuses:
       chat:
         help: "Chat is enabled for this topic"
