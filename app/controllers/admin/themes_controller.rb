@@ -3,6 +3,8 @@
 require "base64"
 
 class Admin::ThemesController < Admin::AdminController
+  MAX_REMOTE_LENGTH = 10_000
+
   skip_before_action :check_xhr, only: %i[show preview export]
   before_action :ensure_admin
 
@@ -86,6 +88,15 @@ class Admin::ThemesController < Admin::AdminController
         render json: @theme.errors, status: :unprocessable_entity
       end
     elsif remote = params[:remote]
+      if remote.length > MAX_REMOTE_LENGTH
+        render_json_error I18n.t(
+                            "themes.import_error.not_allowed_theme",
+                            { repo: remote[0..MAX_REMOTE_LENGTH] },
+                          ),
+                          status: 422
+        return
+      end
+
       begin
         guardian.ensure_allowed_theme_repo_import!(remote.strip)
       rescue Discourse::InvalidAccess
