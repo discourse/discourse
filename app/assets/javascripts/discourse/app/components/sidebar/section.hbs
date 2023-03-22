@@ -1,9 +1,7 @@
 {{#if this.displaySection}}
   <div
-    class={{concat
-      "sidebar-section-wrapper sidebar-section-"
-      @sectionName
-      " "
+    class={{concat-class
+      (concat "sidebar-section-wrapper sidebar-section-" @sectionName)
       @class
     }}
   >

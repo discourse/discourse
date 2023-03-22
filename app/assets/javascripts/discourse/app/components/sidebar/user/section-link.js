@@ -23,7 +23,7 @@ export default class SectionLink {
 
   @bind
   didStartDrag(e) {
-    this.mouseY = e.targetTouches ? e.targetTouches[0].screenY : e.screenY;
+    this.mouseY = e.screenY;
   }
 
   @bind
@@ -36,9 +36,7 @@ export default class SectionLink {
 
   @bind
   dragMove(e) {
-    const currentMouseY = e.targetTouches
-      ? e.targetTouches[0].screenY
-      : e.screenY;
+    const currentMouseY = e.screenY;
     const distance = currentMouseY - this.mouseY;
     if (!this.linkHeight) {
       this.linkHeight = document.getElementsByClassName(
