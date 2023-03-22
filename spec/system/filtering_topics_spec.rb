@@ -8,7 +8,7 @@ describe "Filtering topics", type: :system, js: true do
 
   before { SiteSetting.experimental_topics_filter = true }
 
-  it "should allow users to enter a custom query string to filter through topics" do
+  it "should allow users to input a custom query string to filter through topics" do
     sign_in(user)
 
     visit("/filter")
@@ -21,19 +21,19 @@ describe "Filtering topics", type: :system, js: true do
 
     expect(topic_list).to have_topic(topic)
     expect(topic_list).to have_no_topic(closed_topic)
-    expect(page).to have_current_path("/filter?q=status%3Aopen")
+    expect(page).to have_current_path("/filter?status=open")
 
     topic_query_filter.fill_in("status:closed")
 
     expect(topic_list).to have_no_topic(topic)
     expect(topic_list).to have_topic(closed_topic)
-    expect(page).to have_current_path("/filter?q=status%3Aclosed")
+    expect(page).to have_current_path("/filter?status=closed")
   end
 
-  it "should filter topics when 'q' query params is present" do
+  it "should filter topics when 'status' query params is present" do
     sign_in(user)
 
-    visit("/filter?q=status:open")
+    visit("/filter?status=open")
 
     expect(topic_list).to have_topic(topic)
     expect(topic_list).to have_no_topic(closed_topic)

@@ -1,5 +1,4 @@
 import {
-  changeQueryString,
   changeSort,
   queryParams,
   resetParams,
@@ -166,11 +165,6 @@ export default function (filter, extras) {
       @action
       changeSort(sortBy) {
         changeSort.call(this, sortBy);
-      },
-
-      @action
-      changeQueryString(queryString) {
-        changeQueryString.call(this, queryString);
       },
 
       @action
