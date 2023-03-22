@@ -1805,7 +1805,6 @@ uk:
     composer_media_optimization_image_bytes_optimization_threshold: "Мінімальний розмір файлу зображення для запуску оптимізації на стороні клієнта"
     composer_media_optimization_image_resize_dimensions_threshold: "Мінімальна ширина зображення для зміни розміру на стороні клієнта"
     composer_media_optimization_image_resize_width_target: "Зображення з шириною більше, ніж `composer_media_optimization_image_dimensions_resize_pigold` буде змінено до цієї ширини. Значення має бути >= ніж `composer_media_оптимізація_image_dimensions_resize_pigold`."
-    composer_media_optimization_image_encode_quality: "Якість кодування JPEG, що використовується в процесі перекодування."
     min_ratio_to_crop: "Коефіцієнт, що використовується для обрізання високих зображень. Введіть відношення ширини / висоти."
     simultaneous_uploads: "Максимальна кількість файлів, які можна перетягнути в редактор"
     default_invitee_trust_level: "Стандартний рівень довіри запрошених користувачів (від 0 до 4)."

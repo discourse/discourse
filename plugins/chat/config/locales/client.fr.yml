@@ -153,7 +153,6 @@ fr:
       restore: "Restaurer le message supprimé"
       save: "Enregistrer"
       select: "Sélectionner"
-      silence: "Désactiver l'utilisateur"
       return_to_list: "Retour à la liste des canaux"
       scroll_to_bottom: "Défiler vers le bas"
       scroll_to_new_messages: "Voir les nouveaux messages"

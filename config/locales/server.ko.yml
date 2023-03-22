@@ -1585,7 +1585,6 @@ ko:
     composer_media_optimization_image_bytes_optimization_threshold: "클라이언트 측 최적화를 트리거하기 위한 최소 이미지 파일 크기"
     composer_media_optimization_image_resize_dimensions_threshold: "클라이언트 측 크기 조정을 트리거하는 최소 이미지 너비"
     composer_media_optimization_image_resize_width_target: "너비가 `composer_media_optimization_image_dimensions_resize_threshold` 보다 큰 이미지는 이 너비로 크기가 조정됩니다. `composer_media_optimization_image_dimensions_resize_threshold` 보다 크거나 같아야 합니다."
-    composer_media_optimization_image_encode_quality: "재인코딩 프로세스에 사용되는 JPEG 인코딩 퀄리티입니다."
     min_ratio_to_crop: "큰 이미지를 자르는 데 사용되는 비율입니다. 너비 / 높이의 결과를 입력하세요."
     simultaneous_uploads: "작성기에서 드래그 앤 드롭할 수 있는 최대 파일 수"
     default_invitee_trust_level: "초대된 사용자의 디폴트 신뢰 레벨(0~4)입니다."

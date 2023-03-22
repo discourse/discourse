@@ -1928,7 +1928,6 @@ ar:
     composer_media_optimization_image_bytes_optimization_threshold: "الحد الأدنى لحجم ملف الصورة لبدء التحسين من جانب العميل"
     composer_media_optimization_image_resize_dimensions_threshold: "الحد الأدنى لعرض الصورة لتشغيل تغيير الحجم من جانب العميل"
     composer_media_optimization_image_resize_width_target: "سيتم تغيير حجم الصور التي يزيد عرضها عن `composer_media_optimization_image_dimensions_resize_threshold` إلى هذا العرض. يجب أن تكون أكبر من أو تساوي `composer_media_optimization_image_dimensions_resize_threshold`."
-    composer_media_optimization_image_encode_quality: "جودة ترميز JPEG المُستخدَم في عملية إعادة الترميز"
     min_ratio_to_crop: "النسبة المُستخدَمة لاقتصاص الصور الطويلة. أدخل نتيجة العرض/الارتفاع."
     simultaneous_uploads: "أقصى عدد من الملفات التي يمكن سحبها وإسقاطها في أداة الإنشاء"
     default_invitee_trust_level: "مستوى الثقة الافتراضي (0-4) للمستخدمين المدعوين"

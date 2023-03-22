@@ -95,7 +95,6 @@ zh_TW:
       restore: "還原已刪除的訊息"
       save: "保存"
       select: "選擇"
-      silence: "使用者靜音"
       scroll_to_bottom: "捲動到底部"
       scroll_to_new_messages: "查看新訊息"
       sound:

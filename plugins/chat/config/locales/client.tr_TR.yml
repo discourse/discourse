@@ -157,7 +157,6 @@ tr_TR:
       restore: "Silinen mesajı geri yükle"
       save: "Kaydet"
       select: "Seç"
-      silence: "Kullanıcıyı sustur"
       return_to_list: "Kanal listesine dön"
       scroll_to_bottom: "En alta kaydır"
       scroll_to_new_messages: "Yeni mesajlara bak"

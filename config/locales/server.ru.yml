@@ -1824,7 +1824,6 @@ ru:
     composer_media_optimization_image_bytes_optimization_threshold: "Минимальный размер файла изображения для запуска оптимизации на стороне клиента"
     composer_media_optimization_image_resize_dimensions_threshold: "Минимальная ширина изображения для изменения размера изображения на стороне клиента"
     composer_media_optimization_image_resize_width_target: "Для изображений с шириной больше, чем указано в параметре `composer_media_optimization_image_dimensions_resize_threshold`, ширина будет изменена до указанного здесь значения. Значение должно быть больше или равно параметру `composer_media_optimization_image_dimensions_resize_threshold`."
-    composer_media_optimization_image_encode_quality: "Качество JPEG-кодирования, используемое в процессе оптимизации."
     min_ratio_to_crop: "Отношение, используемое для обрезки высоких изображений. Введите необходимое отношение ширины к высоте."
     simultaneous_uploads: "Максимальное количество файлов, которые можно вставить в редактор."
     default_invitee_trust_level: "Уровень доверия для приглашённых пользователей (от 0 до 4)."

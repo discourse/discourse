@@ -153,6 +153,7 @@ sk:
       placeholder: Dátum
     share:
       close: "zatvoriť"
+      twitter: "Zdieľať na Twitteri"
     action_codes:
       public_topic: "Téma je verejná%{when}"
       private_topic: "Urobil(a) z témy osobnú správu%{when}"
@@ -346,6 +347,8 @@ sk:
     choose_message:
       none_found: "Žiadne správy."
     review:
+      order_by: "Zoradiť podľa"
+      in_reply_to: "v odpovedi na"
       explain:
         total: "Celkovo"
       delete: "Odstrániť"
@@ -1516,6 +1519,7 @@ sk:
       back_to_list: "Naspäť na zoznam tém"
       options: "Možnosti tém"
       show_links: "zobrazovať odkazy v tejto téme"
+      suggest_create_topic: Ste pripravení <a href>začať novú konverzáciu?</a>
       deleted: "Téma bola vymazaná"
       slow_mode_update:
         enable: "Zapnúť"
@@ -1746,6 +1750,8 @@ sk:
         few: "zobraziť %{count} skryté odpovede"
         many: "zobraziť %{count} skrytých odpovedí"
         other: "zobraziť %{count} skrytých odpovedí"
+      notice:
+        new_user: "%{user} prispel(a) po prvýkrát — privítajme ho/ju v našej komunite!"
       unread: "Príspevok je neprečítaný."
       has_replies:
         one: "%{count} Odpoveď"
@@ -2091,7 +2097,7 @@ sk:
           other: "%{categoryName} (%{count})"
         help: "najnovšie témy v kategórii %{categoryName}"
       top:
-        title: "Top"
+        title: "Najlepšie"
         help: "najaktívnejšie témy za posledný rok, mesiac, týždeň, alebo deň"
         all:
           title: "Za celú dobu"
@@ -2306,6 +2312,8 @@ sk:
               content: "Administrátor"
             badges:
               content: "Odznaky"
+            everything:
+              content: "Všetko"
             faq:
               content: "Časté otázky"
             groups:
